@@ -23,6 +23,6 @@ internal sealed class Strings
     public static IStringLocalizer For(Func<CultureInfo> culture)
     {
         ArgumentNullException.ThrowIfNull(culture);
-        return new HackStringLocalizer(HackLocalization.GetResourceManager(typeof(Strings)), culture);
+        return new KazoStringLocalizer(KazoLocalization.GetResourceManager(typeof(Strings)), culture);
     }
 }

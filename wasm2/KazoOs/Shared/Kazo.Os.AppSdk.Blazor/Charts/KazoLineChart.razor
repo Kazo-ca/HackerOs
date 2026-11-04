@@ -1,0 +1,53 @@
+@namespace Kazo.Os.AppSdk.Blazor.Charts
+
+@* A native SVG line chart for live measurements (ADR 0058 section 2): no chart library, no JavaScript. *@
+<figure class="hos-chart @SizeClass @Class">
+    <figcaption class="hos-chart-header">
+        <span class="hos-chart-title">@Title</span>
+        <span class="hos-chart-scale" title="@L["Chart.ScaleTop"]">@FormatValue(EffectiveMaximum)</span>
+    </figcaption>
+
+    <div class="hos-chart-plot">
+        <svg class="hos-chart-svg" viewBox="@ViewBox" preserveAspectRatio="none" role="img" aria-label="@AccessibleLabel">
+            @* Coordinates are pre-formatted with the invariant culture: "25,5" is not an SVG number. *@
+            @foreach (string y in GridRows)
+            {
+                <line class="hos-chart-grid" x1="0" y1="@y" x2="@PlotWidth" y2="@y" />
+            }
+            @foreach (string x in GridColumns)
+            {
+                <line class="hos-chart-grid" x1="@x" y1="0" x2="@x" y2="@PlotHeight" />
+            }
+            @for (int index = 0; index < Series.Count; index++)
+            {
+                KazoChartSeries line = Series[index];
+                string colorClass = SeriesClass(index);
+                @if (Filled)
+                {
+                    <polygon class="hos-chart-area @colorClass" points="@KazoChartGeometry.BuildArea(line.Values, EffectiveCapacity, EffectiveMaximum)" />
+                }
+                <polyline class="hos-chart-line @colorClass" points="@KazoChartGeometry.BuildPoints(line.Values, EffectiveCapacity, EffectiveMaximum)" />
+            }
+        </svg>
+    </div>
+
+    <div class="hos-chart-axis" aria-hidden="true">
+        <span>@AxisLabel</span>
+        <span>@L["Chart.Now"]</span>
+    </div>
+
+    @if (ShowLegend && Series.Count > 0)
+    {
+        <ul class="hos-chart-legend">
+            @for (int index = 0; index < Series.Count; index++)
+            {
+                KazoChartSeries line = Series[index];
+                <li class="hos-chart-legend-item">
+                    <span class="hos-chart-swatch @SeriesClass(index)" aria-hidden="true"></span>
+                    <span class="hos-chart-legend-name">@line.Name</span>
+                    <span class="hos-chart-legend-value">@(line.Values.Count > 0 ? FormatValue(line.Values[^1]) : "—")</span>
+                </li>
+            }
+        </ul>
+    }
+</figure>

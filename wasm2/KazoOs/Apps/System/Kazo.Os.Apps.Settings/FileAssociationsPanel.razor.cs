@@ -14,7 +14,7 @@ namespace Kazo.Os.Apps.Settings;
 /// <param name="UserAppId">The user's own default, when one is set and still installed.</param>
 /// <param name="SystemAppId">The administrator's default, when one is set and still installed.</param>
 internal sealed record FileAssociationRow(
-    string Target, string Action, IReadOnlyList<HackAppInfo> Candidates, string? UserAppId, string? SystemAppId)
+    string Target, string Action, IReadOnlyList<KazoAppInfo> Candidates, string? UserAppId, string? SystemAppId)
 {
     /// <summary>Gets a stable key for rendering.</summary>
     public string Key => Target + "|" + Action;
@@ -33,10 +33,10 @@ internal sealed record FileAssociationRow(
 /// installed window apps declare and lets the user pick the app that opens each one for them.
 /// </summary>
 /// <remarks>
-/// A pick is written with <see cref="HackApps.SetDefaultHandlerAsync"/> to the user's
+/// A pick is written with <see cref="KazoApps.SetDefaultHandlerAsync"/> to the user's
 /// <c>~/.config/hackeros/file-associations.json</c>, like GNOME's "Default Applications" writing
 /// <c>~/.config/mimeapps.list</c>; the first entry, "system default", removes the user's choice with
-/// <see cref="HackApps.ResetDefaultHandlerAsync"/>. The machine-wide file is shown, never written:
+/// <see cref="KazoApps.ResetDefaultHandlerAsync"/>. The machine-wide file is shown, never written:
 /// it stays an administrator's job (<c>sudo nano /etc/hackeros/file-associations.json</c>).
 /// </remarks>
 public sealed partial class FileAssociationsPanel
@@ -82,19 +82,19 @@ public sealed partial class FileAssociationsPanel
     /// candidate, since the OS skips one that names an uninstalled app.
     /// </summary>
     /// <param name="apps">Installed apps.</param>
-    /// <param name="defaults">Configured defaults, the user's first (<see cref="HackApps.GetDefaultHandlersAsync"/>).</param>
-    internal static IReadOnlyList<FileAssociationRow> BuildRows(IReadOnlyList<HackAppInfo> apps, IReadOnlyList<HackFileAssociation> defaults)
+    /// <param name="defaults">Configured defaults, the user's first (<see cref="KazoApps.GetDefaultHandlersAsync"/>).</param>
+    internal static IReadOnlyList<FileAssociationRow> BuildRows(IReadOnlyList<KazoAppInfo> apps, IReadOnlyList<KazoFileAssociation> defaults)
     {
-        Dictionary<(string Target, string Action), SortedSet<HackAppInfo>> declared = [];
-        Comparer<HackAppInfo> byName = Comparer<HackAppInfo>.Create(static (a, b) =>
+        Dictionary<(string Target, string Action), SortedSet<KazoAppInfo>> declared = [];
+        Comparer<KazoAppInfo> byName = Comparer<KazoAppInfo>.Create(static (a, b) =>
         {
             int name = StringComparer.OrdinalIgnoreCase.Compare(a.Name, b.Name);
             return name != 0 ? name : StringComparer.Ordinal.Compare(a.Id, b.Id);
         });
 
-        foreach (HackAppInfo app in apps.Where(static app => app.Kind == AppKind.Window))
+        foreach (KazoAppInfo app in apps.Where(static app => app.Kind == AppKind.Window))
         {
-            foreach (HackAppFileHandler handler in app.FileHandlers)
+            foreach (KazoAppFileHandler handler in app.FileHandlers)
             {
                 IEnumerable<string> targets = handler.Extensions.Select(static e => e.ToLowerInvariant());
                 if (handler.MediaType is { } mediaType)
@@ -106,9 +106,9 @@ public sealed partial class FileAssociationsPanel
                 {
                     foreach (string action in handler.Actions.Select(static a => a.ToLowerInvariant()))
                     {
-                        if (!declared.TryGetValue((target, action), out SortedSet<HackAppInfo>? set))
+                        if (!declared.TryGetValue((target, action), out SortedSet<KazoAppInfo>? set))
                         {
-                            declared[(target, action)] = set = new SortedSet<HackAppInfo>(byName);
+                            declared[(target, action)] = set = new SortedSet<KazoAppInfo>(byName);
                         }
 
                         set.Add(app);
@@ -120,13 +120,13 @@ public sealed partial class FileAssociationsPanel
         return [.. declared
             .Select(pair =>
             {
-                HackAppInfo[] candidates = [.. pair.Value];
+                KazoAppInfo[] candidates = [.. pair.Value];
                 return new FileAssociationRow(
                     pair.Key.Target,
                     pair.Key.Action,
                     candidates,
-                    FindDefault(defaults, pair.Key, HackFileAssociationLayer.User, candidates),
-                    FindDefault(defaults, pair.Key, HackFileAssociationLayer.System, candidates));
+                    FindDefault(defaults, pair.Key, KazoFileAssociationLayer.User, candidates),
+                    FindDefault(defaults, pair.Key, KazoFileAssociationLayer.System, candidates));
             })
             .OrderBy(static row => Group(row.Target))
             .ThenBy(static row => row.Target, StringComparer.Ordinal)
@@ -134,7 +134,7 @@ public sealed partial class FileAssociationsPanel
     }
 
     private static string? FindDefault(
-        IReadOnlyList<HackFileAssociation> defaults, (string Target, string Action) key, HackFileAssociationLayer layer, HackAppInfo[] candidates) =>
+        IReadOnlyList<KazoFileAssociation> defaults, (string Target, string Action) key, KazoFileAssociationLayer layer, KazoAppInfo[] candidates) =>
         defaults.FirstOrDefault(row => row.Layer == layer
                 && string.Equals(row.Target, key.Target, StringComparison.Ordinal)
                 && string.Equals(row.Action, key.Action, StringComparison.Ordinal)
@@ -148,11 +148,11 @@ public sealed partial class FileAssociationsPanel
     {
         try
         {
-            IReadOnlyList<HackAppInfo> apps = await HackApps.GetInstalledAsync(Context.CancellationToken);
-            IReadOnlyList<HackFileAssociation> defaults = await HackApps.GetDefaultHandlersAsync(Context.CancellationToken);
+            IReadOnlyList<KazoAppInfo> apps = await KazoApps.GetInstalledAsync(Context.CancellationToken);
+            IReadOnlyList<KazoFileAssociation> defaults = await KazoApps.GetDefaultHandlersAsync(Context.CancellationToken);
             _rows = BuildRows(apps, defaults);
         }
-        catch (HackUnauthorizedAccessException exception)
+        catch (KazoUnauthorizedAccessException exception)
         {
             ShowError(L["FileAssociations.Error.Read", exception.Message]);
         }
@@ -175,10 +175,10 @@ public sealed partial class FileAssociationsPanel
         try
         {
             bool reset = string.IsNullOrEmpty(appId);
-            HackDefaultHandlerStatus status = reset
-                ? await HackApps.ResetDefaultHandlerAsync(row.Target, row.Action, Context.CancellationToken)
-                : await HackApps.SetDefaultHandlerAsync(row.Target, appId!, row.Action, Context.CancellationToken);
-            if (status == HackDefaultHandlerStatus.Changed)
+            KazoDefaultHandlerStatus status = reset
+                ? await KazoApps.ResetDefaultHandlerAsync(row.Target, row.Action, Context.CancellationToken)
+                : await KazoApps.SetDefaultHandlerAsync(row.Target, appId!, row.Action, Context.CancellationToken);
+            if (status == KazoDefaultHandlerStatus.Changed)
             {
                 string? name = reset ? null : row.Candidates.FirstOrDefault(app => app.Id == appId)?.Name;
                 _message = name is null ? L["FileAssociations.Saved.Reset", row.Label] : L["FileAssociations.Saved", row.Label, name];
@@ -191,7 +191,7 @@ public sealed partial class FileAssociationsPanel
 
             await LoadAsync();
         }
-        catch (HackUnauthorizedAccessException exception)
+        catch (KazoUnauthorizedAccessException exception)
         {
             ShowError(L["FileAssociations.Error.Write", exception.Message]);
         }

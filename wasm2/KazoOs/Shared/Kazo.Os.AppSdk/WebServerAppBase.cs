@@ -32,21 +32,21 @@ public abstract class WebServerAppBase : ServiceAppBase
     /// <summary>Gets the URLs the site listens on (<c>web.urls</c> of its manifest).</summary>
     public IReadOnlyList<string> Urls => Manifest.Web?.Urls ?? [];
 
-    /// <summary>Handles one request: fill <see cref="HackHttpListenerContext.Response"/>.</summary>
+    /// <summary>Handles one request: fill <see cref="KazoHttpListenerContext.Response"/>.</summary>
     /// <param name="context">The request and its response.</param>
     /// <param name="cancellationToken">Signals that the site is stopping.</param>
     /// <returns>A task that ends when the response is ready.</returns>
-    protected abstract Task ProcessRequestAsync(HackHttpListenerContext context, CancellationToken cancellationToken);
+    protected abstract Task ProcessRequestAsync(KazoHttpListenerContext context, CancellationToken cancellationToken);
 
     /// <summary>Called once the listener is open, before the first request is read.</summary>
     /// <param name="listener">The open listener.</param>
     /// <param name="cancellationToken">Signals that the site is stopping.</param>
-    protected virtual Task OnListeningAsync(HackHttpListener listener, CancellationToken cancellationToken) => Task.CompletedTask;
+    protected virtual Task OnListeningAsync(KazoHttpListener listener, CancellationToken cancellationToken) => Task.CompletedTask;
 
     /// <inheritdoc />
     protected sealed override async Task RunCoreAsync(IAppExecutionContext context, CancellationToken sessionCancellationToken)
     {
-        await using HackHttpListener listener = new();
+        await using KazoHttpListener listener = new();
         foreach (string url in Urls)
         {
             listener.Prefixes.Add(url);
@@ -56,7 +56,7 @@ public abstract class WebServerAppBase : ServiceAppBase
         await OnListeningAsync(listener, sessionCancellationToken).ConfigureAwait(false);
         while (!sessionCancellationToken.IsCancellationRequested)
         {
-            HackHttpListenerContext request;
+            KazoHttpListenerContext request;
             try
             {
                 request = await listener.GetContextAsync(sessionCancellationToken).ConfigureAwait(false);
@@ -70,7 +70,7 @@ public abstract class WebServerAppBase : ServiceAppBase
         }
     }
 
-    private async Task ServeAsync(HackHttpListenerContext request, CancellationToken cancellationToken)
+    private async Task ServeAsync(KazoHttpListenerContext request, CancellationToken cancellationToken)
     {
         try
         {
@@ -79,7 +79,7 @@ public abstract class WebServerAppBase : ServiceAppBase
         catch (Exception exception) when (exception is not OutOfMemoryException)
         {
             // Like Kestrel without the developer page: a bare 500, the detail goes to the log.
-            HackExecutionContext.Current.Logging.Log(
+            KazoExecutionContext.Current.Logging.Log(
                 Kazo.Os.Simulation.Abstractions.Diagnostics.DiagnosticSeverity.Error,
                 $"{request.Request.HttpMethod} {request.Request.RawUrl}: {exception.GetType().Name}: {exception.Message}");
             if (request.Response.IsClosed)

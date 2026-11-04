@@ -1,11 +1,11 @@
 @namespace Kazo.Os.Samples.BlazorSite.Pages
 @page "/hello/{Name}"
-@inherits HackComponentBase
+@inherits KazoComponentBase
 @*
     A page with a route parameter that calls the site's own API through Site.Http: the request goes
     through the simulated network to the same site, as the renderer process.
 *@
-<HackPageTitle Title="@($"Hello {Name} - Blazor Sample Site")" />
+<KazoPageTitle Title="@($"Hello {Name} - Blazor Sample Site")" />
 <h1>Hello, @Name</h1>
 @if (_greeting is null)
 {

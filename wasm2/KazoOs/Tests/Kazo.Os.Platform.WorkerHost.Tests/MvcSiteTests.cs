@@ -36,7 +36,7 @@ public sealed class MvcSiteTests
 
         ShellRun created = await os.RunAsync("curl -i -d name=neo http://mvc.hack/api/items").WaitAsync(TimeSpan.FromSeconds(20));
         ShellRun redirected = await os.RunAsync("curl http://mvc.hack/home/go").WaitAsync(TimeSpan.FromSeconds(20));
-        // The 302 of Enter set .HackSession; curl's cookie jar sent it back on the second hop.
+        // The 302 of Enter set .KazoSession; curl's cookie jar sent it back on the second hop.
         ShellRun session = await os.RunAsync("curl http://mvc.hack/home/enter").WaitAsync(TimeSpan.FromSeconds(20));
         // Each curl run has its own jar, as with the real curl: a new run is a new session.
         ShellRun stranger = await os.RunAsync("curl http://mvc.hack/home/visits").WaitAsync(TimeSpan.FromSeconds(20));

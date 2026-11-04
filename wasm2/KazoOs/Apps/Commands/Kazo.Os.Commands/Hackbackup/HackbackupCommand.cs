@@ -11,7 +11,7 @@ namespace Kazo.Os.Commands.Hackbackup;
 
 /// <summary>
 /// <c>hackbackup create | restore [--merge|--replace]</c> (ADR 0099, section 1): the terminal side
-/// of Settings &gt; Backup, through <see cref="HackSystemBackup"/>.
+/// of Settings &gt; Backup, through <see cref="KazoSystemBackup"/>.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -48,16 +48,16 @@ public sealed class HackbackupCommand(AppManifest manifest) : TerminalAppBase(ma
             return 2;
         }
 
-        HackBackupRestoreMode mode = HackBackupRestoreMode.Merge;
+        KazoBackupRestoreMode mode = KazoBackupRestoreMode.Merge;
         foreach (string option in args.Skip(1))
         {
             switch (option)
             {
                 case "--merge" when verb == "restore":
-                    mode = HackBackupRestoreMode.Merge;
+                    mode = KazoBackupRestoreMode.Merge;
                     break;
                 case "--replace" when verb == "restore":
-                    mode = HackBackupRestoreMode.Replace;
+                    mode = KazoBackupRestoreMode.Replace;
                     break;
                 default:
                     await context.StandardError.WriteLineAsync(text["InvalidOption", option]);
@@ -73,7 +73,7 @@ public sealed class HackbackupCommand(AppManifest manifest) : TerminalAppBase(ma
             return 1;
         }
 
-        if (!HackSystemBackup.IsSupportedFor(context.App))
+        if (!KazoSystemBackup.IsSupportedFor(context.App))
         {
             await context.StandardError.WriteLineAsync(text["Unsupported"]);
             return 1;
@@ -85,7 +85,7 @@ public sealed class HackbackupCommand(AppManifest manifest) : TerminalAppBase(ma
                 ? await CreateAsync(context, cancellationToken)
                 : await RestoreAsync(context, mode, cancellationToken);
         }
-        catch (HackBackupInvalidException exception)
+        catch (KazoBackupInvalidException exception)
         {
             await context.StandardError.WriteLineAsync(text["InvalidBackup", exception.Message]);
             return 1;
@@ -108,18 +108,18 @@ public sealed class HackbackupCommand(AppManifest manifest) : TerminalAppBase(ma
     {
         IStringLocalizer<Strings> text = context.App.GetLocalizer<Strings>();
         await context.StandardOutput.WriteLineAsync(text["Exporting"]);
-        HackBackupInfo backup = await HackSystemBackup.CreateAsync(context.App, cancellationToken);
+        KazoBackupInfo backup = await KazoSystemBackup.CreateAsync(context.App, cancellationToken);
         await context.StandardOutput.WriteLineAsync(text[
             "Downloaded", backup.FileName, CommandIO.HumanSize(backup.SizeBytes), backup.RecordCount.ToString(CultureInfo.InvariantCulture)]);
         return 0;
     }
 
-    private static async Task<int> RestoreAsync(TerminalExecutionContext context, HackBackupRestoreMode mode, CancellationToken cancellationToken)
+    private static async Task<int> RestoreAsync(TerminalExecutionContext context, KazoBackupRestoreMode mode, CancellationToken cancellationToken)
     {
         IStringLocalizer<Strings> text = context.App.GetLocalizer<Strings>();
-        string modeName = mode == HackBackupRestoreMode.Replace ? "replace" : "merge";
+        string modeName = mode == KazoBackupRestoreMode.Replace ? "replace" : "merge";
         await context.StandardOutput.WriteLineAsync(text["ChooseFile", modeName]);
-        HackBackupInfo? restored = await HackSystemBackup.RestoreAsync(context.App, mode, cancellationToken);
+        KazoBackupInfo? restored = await KazoSystemBackup.RestoreAsync(context.App, mode, cancellationToken);
         if (restored is null)
         {
             await context.StandardError.WriteLineAsync(text["NoFileChosen"]);

@@ -2,7 +2,7 @@
 
 # Presse-papiers de l'OS et partage avec l'hôte
 
-L'API du presse-papiers pour les apps (`HackClipboard`, listes de fichiers, format GNOME) est dans [`clipboard-api.md`](../framework/clipboard-api.md).
+L'API du presse-papiers pour les apps (`KazoClipboard`, listes de fichiers, format GNOME) est dans [`clipboard-api.md`](../framework/clipboard-api.md).
 
 ## Objet
 
@@ -17,7 +17,7 @@ l'explorateur (couper, copier, coller, conflits de noms) est décrit dans
 ## Architecture
 
 ```text
-App ──► HackClipboard ──► IAppClipboardGateway ──► AppClipboardGateway ──► SystemClipboard (une entrée par session)
+App ──► KazoClipboard ──► IAppClipboardGateway ──► AppClipboardGateway ──► SystemClipboard (une entrée par session)
                                                        clipboard.read / .write          │ Changed, séquence, origine
                                                                                           ▼
               /etc/hackeros/clipboard.config ──► HostClipboardBridge (Platform Core)
@@ -122,5 +122,5 @@ la convention de l'ADR 0044.
 - [x] `BrowserHostClipboardChannel` et `hostClipboard.js` dans Infrastructure.Browser.
 - [x] Enregistrement dans `AddHackerOsEcosystem`, démarrage dans `App.razor`.
 - [x] `FileView` : Ctrl+V par `paste`, fichiers de l'hôte collés importés comme un dépôt.
-- [x] Diagnostic copie par `HackClipboard` (`clipboard.write`) ; `BrowserClipboard` `[Obsolete]`, puis retiré en 1.0 (ADR 0114).
+- [x] Diagnostic copie par `KazoClipboard` (`clipboard.write`) ; `BrowserClipboard` `[Obsolete]`, puis retiré en 1.0 (ADR 0114).
 - [x] Tests et documentation.

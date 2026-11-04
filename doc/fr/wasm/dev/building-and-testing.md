@@ -62,14 +62,14 @@ Deux propriétés MSBuild choisissent le code de mesure livré par les hôtes
 
 | Propriété | Défaut | Effet à `false` |
 |---|---|---|
-| `HackerOsCpuAccounting` | `true` | mesure du temps CPU (ADR 0067) coupée ; option d'exécution `Kazo.Os.ResourceAccounting.Cpu.IsSupported=false` |
-| `HackerOsMemoryAccounting` | `true` | mesure de la mémoire (ADR 0068) coupée ; option `Kazo.Os.ResourceAccounting.Memory.IsSupported=false` |
+| `KazoOsCpuAccounting` | `true` | mesure du temps CPU (ADR 0067) coupée ; option d'exécution `Kazo.Os.ResourceAccounting.Cpu.IsSupported=false` |
+| `KazoOsMemoryAccounting` | `true` | mesure de la mémoire (ADR 0068) coupée ; option `Kazo.Os.ResourceAccounting.Memory.IsSupported=false` |
 
 Les deux à `false` : `Kazo.Os.Platform.ResourceAccounting` n'est plus
 référencé, son code n'est pas dans le binaire.
 
 ```bash
-dotnet build Kazo.Os.sln -p:HackerOsCpuAccounting=false -p:HackerOsMemoryAccounting=false
+dotnet build Kazo.Os.sln -p:KazoOsCpuAccounting=false -p:KazoOsMemoryAccounting=false
 ```
 
 En ligne de commande (ou dans un `Directory.Build.props`), la propriété vaut
@@ -175,7 +175,7 @@ RESULT: PASS
 | Parcours | Hôte | Mesures (ADR 0066) | `CpuSource:` / `MemSource:` attendus |
 |---|---|---|---|
 | `ecosystem` | PWA publiée | build et réglage par défaut | `measured` |
-| `ecosystem-build-off` | PWA publiée avec `-p:HackerOsCpuAccounting=false -p:HackerOsMemoryAccounting=false` | coupées au build ; aucun `Kazo.Os.Platform.ResourceAccounting*` ne doit être publié | `simulated` |
+| `ecosystem-build-off` | PWA publiée avec `-p:KazoOsCpuAccounting=false -p:KazoOsMemoryAccounting=false` | coupées au build ; aucun `Kazo.Os.Platform.ResourceAccounting*` ne doit être publié | `simulated` |
 | `ecosystem-settings-off` | même publication que `ecosystem`, `wwwroot/appsettings.json` réécrit avec `Enabled: false` pour `Cpu` et `Memory` | coupées au démarrage | `simulated` |
 | `ecosystem-limits-off` | même publication que `ecosystem`, `wwwroot/appsettings.json` réécrit avec `HackerOs:ResourceLimits:Enabled: false` (ADR 0125) | build et réglage par défaut | `measured` |
 | `ecosystem-oom` | même publication que `ecosystem`, `wwwroot/appsettings.json` réécrit avec `HackerOs:Hardware:MemoryMiB` = `${OOM_MEMORY_MIB:-512}` (ADR 0142 §11) | build et réglage par défaut | `measured` |
@@ -336,11 +336,11 @@ dotnet test Kazo.Os.sln
 |---|---|
 | `Tests/*.Tests` (hors E2E) | Tests unitaires et de composants (xUnit, bUnit), un projet par projet de code. Rapides, sans navigateur. |
 | `Tests/Kazo.Os.AppSdk.Web.Tests` | ASP.Hack : routeur, pipeline d'un site compilé avec le générateur de routes, générateur piloté sur des extraits (`HOSWEB*`), page hôte et `blazor.boot.json` d'un site Blazor. |
-| `Tests/Kazo.Os.AppSdk.Web.Blazor.Tests` | Sites Blazor : routeur (`HackSiteRouter`), gestionnaire de navigation de l'onglet, `HackWebSite`. |
-| `Tests/Kazo.Os.Samples.Intranet.Tests` | Exemple Intranet en mémoire (`HackWebHost.CreateApplication`) : vues `.cshtml` et `.razor`, `wwwroot`, session, anti-falsification, CRUD par formulaires, API REST, page hôte du tableau Blazor. Le parcours dans Chromium est `BrowserIntranetTests` (UI E2E). |
+| `Tests/Kazo.Os.AppSdk.Web.Blazor.Tests` | Sites Blazor : routeur (`KazoSiteRouter`), gestionnaire de navigation de l'onglet, `KazoWebSite`. |
+| `Tests/Kazo.Os.Samples.Intranet.Tests` | Exemple Intranet en mémoire (`KazoWebHost.CreateApplication`) : vues `.cshtml` et `.razor`, `wwwroot`, session, anti-falsification, CRUD par formulaires, API REST, page hôte du tableau Blazor. Le parcours dans Chromium est `BrowserIntranetTests` (UI E2E). |
 | `Tests/Kazo.Os.Tools.ManifestGenerator.Tests` | Builds MSBuild réels des projets `Tests/ManifestGenerator.Fixtures.*` : génération, agrégation, frontière du SDK. Plus lents. |
 | `Tests/Kazo.Os.E2E.Tests`, `Kazo.Os.UI.E2E.Tests`, `Kazo.Os.Pwa.E2E.Tests` | Playwright contre l'OS lancé dans Chromium. Pièges connus : [`old/common-pitfalls.md`](old/common-pitfalls.md) §4 à §6. |
-| `Tests/Kazo.Os.Templates.E2E.Tests` | Modèles `dotnet new` (ADR 0098 §6) : empaquette tout avec `build/pack-local.sh` (ou prend le flux de `HACKEROS_LOCAL_FEED`), génère et compile chaque modèle hors du dépôt avec un cache NuGet isolé, puis lance l'hôte généré dans Chromium avec une app fenêtrée et une commande générées, et un autre qui vérifie qu'un hôte référençant les apps compilées contre les SDK 1.0.0 et 1.1.0 ne se construit pas (`HOSAPP0021`), puis qu'avec l'app compilée contre le SDK 2.0.0 il démarre, montre `HackFileView` dans sa fenêtre et exécute sa commande (ADR 0114, ADR 0132 §1, ADR 0161 §3). |
+| `Tests/Kazo.Os.Templates.E2E.Tests` | Modèles `dotnet new` (ADR 0098 §6) : empaquette tout avec `build/pack-local.sh` (ou prend le flux de `HACKEROS_LOCAL_FEED`), génère et compile chaque modèle hors du dépôt avec un cache NuGet isolé, puis lance l'hôte généré dans Chromium avec une app fenêtrée et une commande générées, et un autre qui vérifie qu'un hôte référençant les apps compilées contre les SDK 1.0.0 et 1.1.0 ne se construit pas (`HOSAPP0021`), puis qu'avec l'app compilée contre le SDK 2.0.0 il démarre, montre `KazoFileView` dans sa fenêtre et exécute sa commande (ADR 0114, ADR 0132 §1, ADR 0161 §3). |
 | `Tests/Kazo.Os.SdkCompatibility.Tests` | Apps compilées contre les SDK 1.0.0, 1.1.0 et 2.0.0, gardées dans `Tests/fixtures/sdk-compat` (ADR 0114 §4, ADR 0132 §1, ADR 0161 §3) : le catalogue refuse les apps 1.x (`catalog.sdk.incompatible`) et admet l'app 2.0 ; pour celle-ci, références, compilation JIT de chaque méthode et exécution de la commande contre le SDK courant (`build/Versions.props`). Sans navigateur, lancé par `dotnet test Kazo.Os.sln`. |
 | `Tests/Kazo.Os.HostSmoke.Tests` | Démarrage d'un hôte déjà lancé, piloté par `build/verify-hosts.sh` (voir plus haut) ; « skipped » sans `HACKEROS_SMOKE_URL`. |
 
@@ -434,7 +434,7 @@ un magasin sans chemin de clé ; aucun pour l'instant).
    `IndexedDbUpgradeFixtureCatalogTests` ; ajouter la version au
    `[InlineData]` du premier.
 
-**Règle :** tout chantier qui augmente `HackerOsIndexedDbSchema.CurrentVersion`
+**Règle :** tout chantier qui augmente `KazoOsIndexedDbSchema.CurrentVersion`
 ajoute le vidage de la version précédente, produit par cette procédure à partir
 du dernier commit de cette version, et l'ajoute au test E2E.
 `IndexedDbUpgradeFixtureCatalogTests` échoue tant qu'il manque.
@@ -515,7 +515,7 @@ dotnet test Tests/Kazo.Os.UI.E2E.Tests -c Release --no-build --filter "FullyQual
 ## Tâches de ce document
 
 - [x] Prérequis et installation de .NET dans un conteneur.
-- [x] Propriétés `HackerOsCpuAccounting` et `HackerOsMemoryAccounting` (ADR 0066).
+- [x] Propriétés `KazoOsCpuAccounting` et `KazoOsMemoryAccounting` (ADR 0066).
 - [x] Build de la solution et contournements Linux connus.
 - [x] Lancement des trois hôtes et publication de la PWA.
 - [x] Suites de tests, filtrage, outils de test des apps, état connu.

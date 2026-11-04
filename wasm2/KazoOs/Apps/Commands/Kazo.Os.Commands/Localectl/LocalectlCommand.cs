@@ -41,7 +41,7 @@ public sealed class LocalectlCommand : TerminalAppBase
             case "status":
                 return await StatusAsync(context, text, cancellationToken);
             case "list-locales":
-                foreach (string locale in HackLocale.AvailableLocales)
+                foreach (string locale in KazoLocale.AvailableLocales)
                 {
                     await context.StandardOutput.WriteLineAsync(locale);
                 }
@@ -65,7 +65,7 @@ public sealed class LocalectlCommand : TerminalAppBase
             return 1;
         }
 
-        IReadOnlyDictionary<string, string> variables = HackLocale.ParseLocaleConf(read.Content);
+        IReadOnlyDictionary<string, string> variables = KazoLocale.ParseLocaleConf(read.Content);
         string label = text["SystemLocale"];
         if (variables.Count == 0)
         {
@@ -75,7 +75,7 @@ public sealed class LocalectlCommand : TerminalAppBase
 
         string indent = new(' ', label.Length + 2);
         bool first = true;
-        foreach (KeyValuePair<string, string> variable in variables.OrderBy(v => v.Key == HackLocale.LangVariable ? 0 : 1).ThenBy(v => v.Key, StringComparer.Ordinal))
+        foreach (KeyValuePair<string, string> variable in variables.OrderBy(v => v.Key == KazoLocale.LangVariable ? 0 : 1).ThenBy(v => v.Key, StringComparer.Ordinal))
         {
             await context.StandardOutput.WriteLineAsync($"{(first ? label + ": " : indent)}{variable.Key}={variable.Value}");
             first = false;
@@ -98,15 +98,15 @@ public sealed class LocalectlCommand : TerminalAppBase
         {
             // A bare locale means LANG, as in "localectl set-locale fr_FR.UTF-8".
             int equals = argument.IndexOf('=', StringComparison.Ordinal);
-            string name = equals < 0 ? HackLocale.LangVariable : argument[..equals];
+            string name = equals < 0 ? KazoLocale.LangVariable : argument[..equals];
             string value = equals < 0 ? argument : argument[(equals + 1)..];
-            if (!HackLocale.LocaleConfVariables.Contains(name))
+            if (!KazoLocale.LocaleConfVariables.Contains(name))
             {
                 await context.StandardError.WriteLineAsync(text["InvalidVariable", name]);
                 return 1;
             }
 
-            if (name != "LANGUAGE" && !HackLocale.IsAvailable(value))
+            if (name != "LANGUAGE" && !KazoLocale.IsAvailable(value))
             {
                 await context.StandardError.WriteLineAsync(text["InvalidLocale", value]);
                 return 1;
@@ -115,7 +115,7 @@ public sealed class LocalectlCommand : TerminalAppBase
             variables[name] = value;
         }
 
-        string content = HackLocale.FormatLocaleConf(variables, "System locale, written by localectl (ADR 0104).");
+        string content = KazoLocale.FormatLocaleConf(variables, "System locale, written by localectl (ADR 0104).");
         FileSystemError? failure = await SettingsTextFile.WriteAllAsync(context.App.FileSystem, s_localeFile, content, cancellationToken);
         if (failure is not null)
         {

@@ -63,7 +63,7 @@ public static class ResourceAccountingServiceCollectionExtensions
     /// <param name="build">What the build compiled in.</param>
     /// <param name="hookInstaller">
     /// Installs the context-switch hook with the given observer and returns its installation;
-    /// <see langword="null"/> uses the real hook on <c>HackExecutionContext</c>. Never called when no
+    /// <see langword="null"/> uses the real hook on <c>KazoExecutionContext</c>. Never called when no
     /// measurement is active.
     /// </param>
     /// <param name="images">

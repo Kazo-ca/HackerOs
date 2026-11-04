@@ -21,7 +21,7 @@ namespace Kazo.Os.Server.Tests;
 public sealed class ProxyRelayTests : IDisposable
 {
     private const string TestApp = "org.hackeros.test";
-    private readonly HackerOsServerDbContext _db;
+    private readonly KazoOsServerDbContext _db;
     private readonly AuditService _audit;
     private readonly ProxyConnectionPinAccessor _pin = new();
     private readonly FakeHttpMessageHandler _handler;
@@ -29,7 +29,7 @@ public sealed class ProxyRelayTests : IDisposable
 
     public ProxyRelayTests()
     {
-        _db = new HackerOsServerDbContext(new DbContextOptionsBuilder<HackerOsServerDbContext>()
+        _db = new KazoOsServerDbContext(new DbContextOptionsBuilder<KazoOsServerDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString())
             .Options);
         _audit = new AuditService(_db);

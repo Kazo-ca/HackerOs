@@ -110,7 +110,7 @@ public sealed class AppIntentGatewayTests
         Description = "Exercises IAppExecutionContext.Intents as a calling app.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", "org.hackeros.filemanager.EntryPoint"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Capabilities = [AppCapabilities.AppsLaunch],
         Resources = AppResourceProfileManifest.None
@@ -125,7 +125,7 @@ public sealed class AppIntentGatewayTests
         Description = "A simple text editor.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", "org.hackeros.notepad.EntryPoint"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         FileHandlers = [new FileHandlerManifest("text/plain", [".txt"], ["open", "edit"])]
@@ -140,7 +140,7 @@ public sealed class AppIntentGatewayTests
         Description = "An advanced text editor.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", "org.hackeros.texteditor.EntryPoint"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         FileHandlers = [new FileHandlerManifest("text/plain", [".txt"], ["open", "edit"])]

@@ -16,7 +16,7 @@ $ErrorActionPreference = "Stop"
 $root = Resolve-Path (Join-Path $PSScriptRoot "..")
 if ($Output -eq "") { $Output = Join-Path $root "artifacts/local-nupkg" }
 [xml] $versions = Get-Content (Join-Path $root "build/Versions.props")
-$version = $versions.Project.PropertyGroup.HackerOsVersion
+$version = $versions.Project.PropertyGroup.KazoOsVersion
 New-Item -ItemType Directory -Force -Path $Output, (Join-Path $root "artifacts") | Out-Null
 
 $projects = Get-ChildItem -Path $root -Recurse -Filter *.csproj |

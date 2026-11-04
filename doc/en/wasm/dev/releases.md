@@ -10,12 +10,12 @@ nuget.org ([ADR 0173](adr/0173-automatic-releases-from-the-version-file.md)).
 ## The version file
 
 ```xml
-<HackerOsVersion>2.2.2</HackerOsVersion>
+<KazoOsVersion>2.2.2</KazoOsVersion>
 ```
 
 `Directory.Build.props` imports it: every assembly, each of the 42 `Kazo.Os.*`
 packages, the `dotnet new` templates, the generated manifests
-(`sdkCompatibility.minimumVersion`) and `HackerOsSdk.Version` (shown in
+(`sdkCompatibility.minimumVersion`) and `KazoOsSdk.Version` (shown in
 Settings ▸ About and on the welcome screen) derive from it. No code or test
 repeats the number.
 
@@ -34,7 +34,7 @@ Pick the number following SemVer
 1. Create a branch from `main`.
 2. For a minor or major version, fold the public API:
    `build/tools/ship-public-api.sh` (`--check` to see without changing anything).
-3. Change `HackerOsVersion` in `build/Versions.props`.
+3. Change `KazoOsVersion` in `build/Versions.props`.
    In the same PR, group the entries of `changes/unreleased/` into
    `changes/<version>.json` ([`change-list.md`](change-list.md), ADR 0186).
 4. (Advised) build once (`dotnet build Kazo.Os.sln -c Release`) and commit the
@@ -49,7 +49,7 @@ Pick the number following SemVer
 File: `.github/workflows/release.yml`. It starts when *Verify Kazo OS WASM*
 ends **successfully** after a push to `main`, then:
 
-1. reads `HackerOsVersion` from the verified commit; if the `v<version>` tag
+1. reads `KazoOsVersion` from the verified commit; if the `v<version>` tag
    already exists, it stops (nothing to release);
 2. packs with `build/pack-local.sh --ci`;
 3. keeps only the `Kazo.Os.*.<version>.nupkg` and `.snupkg` files;

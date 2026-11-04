@@ -27,7 +27,7 @@ public interface IProxyGrantAuthority
 /// </summary>
 /// <param name="policy">The effective relay policy.</param>
 /// <param name="db">The server database holding the synchronized grants.</param>
-public sealed class ProxyGrantAuthority(ProxyRelayPolicy policy, HackerOsServerDbContext db) : IProxyGrantAuthority
+public sealed class ProxyGrantAuthority(ProxyRelayPolicy policy, KazoOsServerDbContext db) : IProxyGrantAuthority
 {
     /// <summary>The capability the relay requires.</summary>
     public const string RealNetworkCapability = "network.real.access";

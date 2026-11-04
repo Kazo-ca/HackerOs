@@ -51,8 +51,8 @@ internal sealed class IndexedDbInteropAdapter : IAsyncDisposable
         await module.InvokeVoidAsync(
             "openDatabase",
             cancellationToken,
-            HackerOsIndexedDbSchema.DatabaseName,
-            HackerOsIndexedDbSchema.CurrentVersion,
+            KazoOsIndexedDbSchema.DatabaseName,
+            KazoOsIndexedDbSchema.CurrentVersion,
             migrationPlan).ConfigureAwait(false);
     }
 
@@ -109,7 +109,7 @@ internal sealed class IndexedDbInteropAdapter : IAsyncDisposable
         ArgumentException.ThrowIfNullOrWhiteSpace(boundaryName);
         ArgumentNullException.ThrowIfNull(operations);
 
-        IndexedDbTransactionBoundary boundary = HackerOsIndexedDbSchema.TransactionBoundaries
+        IndexedDbTransactionBoundary boundary = KazoOsIndexedDbSchema.TransactionBoundaries
             .SingleOrDefault(candidate => StringComparer.Ordinal.Equals(candidate.Name, boundaryName))
             ?? throw new ArgumentException(
                 $"Unknown IndexedDB transaction boundary '{boundaryName}'.", nameof(boundaryName));
@@ -141,8 +141,8 @@ internal sealed class IndexedDbInteropAdapter : IAsyncDisposable
             results = await module.InvokeAsync<JsonElement[]>(
                 "executeTransaction",
                 cancellationToken,
-                HackerOsIndexedDbSchema.DatabaseName,
-                HackerOsIndexedDbSchema.CurrentVersion,
+                KazoOsIndexedDbSchema.DatabaseName,
+                KazoOsIndexedDbSchema.CurrentVersion,
                 boundary.ObjectStoreNames,
                 mode == IndexedDbTransactionMode.ReadOnly ? "readonly" : "readwrite",
                 operations).ConfigureAwait(false);
@@ -235,7 +235,7 @@ internal sealed record IndexedDbMigrationPlan
     public IndexedDbMigrationPlan(IReadOnlyList<IndexedDbMigrationStep> steps)
     {
         ArgumentNullException.ThrowIfNull(steps);
-        if (steps.Count == 0 || steps[^1].TargetVersion != HackerOsIndexedDbSchema.CurrentVersion)
+        if (steps.Count == 0 || steps[^1].TargetVersion != KazoOsIndexedDbSchema.CurrentVersion)
         {
             throw new ArgumentException(
                 "The migration chain must end at the current schema version.", nameof(steps));
@@ -261,7 +261,7 @@ internal sealed record IndexedDbMigrationPlan
     [
         new(
             1,
-            HackerOsIndexedDbSchema.ObjectStores,
+            KazoOsIndexedDbSchema.ObjectStores,
             [],
             [],
             []),
@@ -270,21 +270,21 @@ internal sealed record IndexedDbMigrationPlan
             [],
             [],
             [new IndexedDbIndexChange(
-                HackerOsIndexedDbSchema.FileSystemEntryStoreName,
+                KazoOsIndexedDbSchema.FileSystemEntryStoreName,
                 new IndexedDbIndexDefinition("contentHash", ["contentHash"]))],
             []),
         new(
             3,
-            [HackerOsIndexedDbSchema.ObjectStores.Single(
-                store => store.Name == HackerOsIndexedDbSchema.ServerConnectionStoreName)],
+            [KazoOsIndexedDbSchema.ObjectStores.Single(
+                store => store.Name == KazoOsIndexedDbSchema.ServerConnectionStoreName)],
             [],
             [],
             []),
         new(
             4,
-            [.. HackerOsIndexedDbSchema.ObjectStores.Where(store =>
-                store.Name is HackerOsIndexedDbSchema.SyncCursorStoreName
-                    or HackerOsIndexedDbSchema.SyncRecordStateStoreName)],
+            [.. KazoOsIndexedDbSchema.ObjectStores.Where(store =>
+                store.Name is KazoOsIndexedDbSchema.SyncCursorStoreName
+                    or KazoOsIndexedDbSchema.SyncRecordStateStoreName)],
             [],
             [],
             [])

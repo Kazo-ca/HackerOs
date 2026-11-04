@@ -6,7 +6,7 @@ namespace Kazo.Os.Apps.Settings;
 
 public partial class SettingsWindow
 {
-    private HackSettingsDocument? _mobilePreferences;
+    private KazoSettingsDocument? _mobilePreferences;
     private bool _mobileMouseHelpers = true;
     private bool _savingMobile;
     private string? _mobileMessage;
@@ -16,7 +16,7 @@ public partial class SettingsWindow
     {
         try
         {
-            _mobilePreferences = await HackSettings.OpenSystemAsync(AppContext, "mobile", AppContext.CancellationToken);
+            _mobilePreferences = await KazoSettings.OpenSystemAsync(AppContext, "mobile", AppContext.CancellationToken);
             _mobilePreferences.Changed += MobilePreferencesChanged;
             _mobileMouseHelpers = _mobilePreferences.Get<bool>("mouseHelpers");
         }
@@ -26,7 +26,7 @@ public partial class SettingsWindow
         }
     }
 
-    private void MobilePreferencesChanged(object? sender, HackSettingsChangedEventArgs args) => _ = InvokeAsync(() =>
+    private void MobilePreferencesChanged(object? sender, KazoSettingsChangedEventArgs args) => _ = InvokeAsync(() =>
     {
         if (_mobilePreferences is not null && !_savingMobile) _mobileMouseHelpers = _mobilePreferences.Get<bool>("mouseHelpers");
         StateHasChanged();

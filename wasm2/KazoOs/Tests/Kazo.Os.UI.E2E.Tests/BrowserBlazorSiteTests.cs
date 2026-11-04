@@ -56,7 +56,7 @@ public sealed class BrowserBlazorSiteTests(ITestOutputHelper output)
             await Assertions.Expect(site.Locator("#greeting")).ToHaveTextAsync(new System.Text.RegularExpressions.Regex("^Hello, World!"), new() { Timeout = 30000 });
             await Assertions.Expect(addressInput).ToHaveValueAsync("http://blazor-sample.hack/hello/World");
             await Assertions.Expect(page.Locator(".browser-statusbar")).ToContainTextAsync("Hello World - Blazor Sample Site");
-            // HackNavLink marks the active page: the home link (Match=All) is no longer active, the
+            // KazoNavLink marks the active page: the home link (Match=All) is no longer active, the
             // menu's Hello link (/hello/KazoOS) becomes active once followed with its own parameter.
             await Assertions.Expect(site.Locator("#nav-home")).Not.ToHaveClassAsync(new System.Text.RegularExpressions.Regex("active"));
             await site.Locator("#nav-hello").ClickAsync();

@@ -12,22 +12,22 @@ namespace Kazo.Os.Apps.Settings;
 /// refused by you, refused by the administrator, blocked by the policy, pending).
 /// </summary>
 /// <remarks>
-/// Uses only <see cref="HackPermissionAdministration"/> (ADR 0056 section 9, capability
+/// Uses only <see cref="KazoPermissionAdministration"/> (ADR 0056 section 9, capability
 /// <c>permissions.manage</c>). A machine change makes the OS ask an administrator for their password
 /// in its own secure window (ADR 0055 section 5); this panel never sees it. Withdrawing one's own
 /// refusal needs no administrator. Every change applies at the app's next launch.
 /// </remarks>
 public sealed partial class AppPermissionsPanel
 {
-    private IReadOnlyList<HackAppPermissionInfo> _overview = [];
-    private HackDangerousCapabilityPolicy _policy;
+    private IReadOnlyList<KazoAppPermissionInfo> _overview = [];
+    private KazoDangerousCapabilityPolicy _policy;
     private bool _isAvailable = true;
     private string? _message;
     private bool _isBusy;
 
     /// <summary>
     /// Gets the Settings window's execution context, cascaded by the window host. The panel derives
-    /// from <c>HackComponentBase</c> so its lifecycle and event handlers run inside the app's ambient
+    /// from <c>KazoComponentBase</c> so its lifecycle and event handlers run inside the app's ambient
     /// frame (ADR 0067: otherwise their time would be charged to the compositor).
     /// </summary>
     private IAppExecutionContext Context => AppContext
@@ -54,27 +54,27 @@ public sealed partial class AppPermissionsPanel
 
     private async Task RefreshAsync()
     {
-        _policy = await HackPermissionAdministration.GetPolicyAsync(Context, Context.CancellationToken);
-        _overview = await HackPermissionAdministration.GetOverviewAsync(Context, Context.CancellationToken);
+        _policy = await KazoPermissionAdministration.GetPolicyAsync(Context, Context.CancellationToken);
+        _overview = await KazoPermissionAdministration.GetOverviewAsync(Context, Context.CancellationToken);
     }
 
-    private Task ChangePolicyAsync(HackDangerousCapabilityPolicy policy) =>
+    private Task ChangePolicyAsync(KazoDangerousCapabilityPolicy policy) =>
         policy == _policy
             ? Task.CompletedTask
             : RunAsync(
-                () => HackPermissionAdministration.SetPolicyAsync(Context, policy, Context.CancellationToken),
-                policy == HackDangerousCapabilityPolicy.Block ? L["Permissions.Message.PolicyBlock"] : L["Permissions.Message.PolicyPrompt"]);
+                () => KazoPermissionAdministration.SetPolicyAsync(Context, policy, Context.CancellationToken),
+                policy == KazoDangerousCapabilityPolicy.Block ? L["Permissions.Message.PolicyBlock"] : L["Permissions.Message.PolicyPrompt"]);
 
     private Task SetMachineDecisionAsync(
-        HackAppPermissionInfo app, HackCapabilityPermissionInfo capability, HackPermissionDecision decision) =>
+        KazoAppPermissionInfo app, KazoCapabilityPermissionInfo capability, KazoPermissionDecision decision) =>
         RunAsync(
-            () => HackPermissionAdministration.SetMachineDecisionAsync(
+            () => KazoPermissionAdministration.SetMachineDecisionAsync(
                 Context, app.AppId, capability.Capability, decision, Context.CancellationToken),
             L["Permissions.Message.DecisionSaved", app.AppName]);
 
-    private Task RemoveOwnDenialAsync(HackAppPermissionInfo app, HackCapabilityPermissionInfo capability) =>
+    private Task RemoveOwnDenialAsync(KazoAppPermissionInfo app, KazoCapabilityPermissionInfo capability) =>
         RunAsync(
-            () => HackPermissionAdministration.RemoveOwnDenialAsync(
+            () => KazoPermissionAdministration.RemoveOwnDenialAsync(
                 Context, app.AppId, capability.Capability, Context.CancellationToken),
             L["Permissions.Message.DenialRemoved", app.AppName]);
 
@@ -102,23 +102,23 @@ public sealed partial class AppPermissionsPanel
         }
     }
 
-    private string PolicyClass(HackDangerousCapabilityPolicy policy) =>
+    private string PolicyClass(KazoDangerousCapabilityPolicy policy) =>
         policy == _policy ? "policy-option selected" : "policy-option";
 
-    private string StateLabel(HackPermissionState state) => state switch
+    private string StateLabel(KazoPermissionState state) => state switch
     {
-        HackPermissionState.System => L["Permissions.State.System"],
-        HackPermissionState.Allowed => L["Permissions.State.Allowed"],
-        HackPermissionState.DeniedByUser => L["Permissions.State.DeniedByUser"],
-        HackPermissionState.DeniedByAdministrator => L["Permissions.State.DeniedByAdministrator"],
-        HackPermissionState.BlockedByPolicy => L["Permissions.State.BlockedByPolicy"],
+        KazoPermissionState.System => L["Permissions.State.System"],
+        KazoPermissionState.Allowed => L["Permissions.State.Allowed"],
+        KazoPermissionState.DeniedByUser => L["Permissions.State.DeniedByUser"],
+        KazoPermissionState.DeniedByAdministrator => L["Permissions.State.DeniedByAdministrator"],
+        KazoPermissionState.BlockedByPolicy => L["Permissions.State.BlockedByPolicy"],
         _ => L["Permissions.State.Pending"]
     };
 
-    private static string StateClass(HackPermissionState state) => state switch
+    private static string StateClass(KazoPermissionState state) => state switch
     {
-        HackPermissionState.System or HackPermissionState.Allowed => "capability-state granted",
-        HackPermissionState.Pending => "capability-state pending",
+        KazoPermissionState.System or KazoPermissionState.Allowed => "capability-state granted",
+        KazoPermissionState.Pending => "capability-state pending",
         _ => "capability-state denied"
     };
 }

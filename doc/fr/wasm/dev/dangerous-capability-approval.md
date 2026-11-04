@@ -75,7 +75,7 @@ Une app système a l'état `System` pour toutes ses capacités dangereuses
 | `IDangerousCapabilityApprovalPrompt` | Platform.Core/Policy | contrat de l'invite (fenêtre ou terminal) |
 | `DangerousCapabilityApprovalBroker` | Platform.Blazor/Security | invite par défaut de l'hôte : file des demandes pour la fenêtre |
 | `DangerousCapabilityApprovalOverlay` | Platform.Blazor/Security | la fenêtre spéciale, rendue par `DesktopShell` et `MobileShell` |
-| `ShellHostPrompts` | Platform.Core/Shell | mode texte pour une commande lancée depuis un shell hébergé (`HackShell`, [`shell-host.md`](../framework/shell-host.md)) ; écrit et lit par le `HackCredentialPrompt` du terminal |
+| `ShellHostPrompts` | Platform.Core/Shell | mode texte pour une commande lancée depuis un shell hébergé (`KazoShell`, [`shell-host.md`](../framework/shell-host.md)) ; écrit et lit par le `KazoCredentialPrompt` du terminal |
 | `AppPermissionAdministration`, `AppPermissionsPanel` | Platform.Core/Policy, Apps.Settings | onglet Permissions des Paramètres |
 
 ### Lancement
@@ -99,7 +99,7 @@ processus :
    prochain lancement, et les capacités d'une instance restent figées à son
    lancement (ADR 0042).
 
-Une app démarrée sans une capacité reçoit `HackUnauthorizedAccessException`
+Une app démarrée sans une capacité reçoit `KazoUnauthorizedAccessException`
 quand elle l'utilise, comme pour toute capacité absente.
 
 ### Invite
@@ -146,11 +146,11 @@ décision.
 
 ### Mode texte du terminal
 
-Un shell hébergé par `HackShell` (ADR 0056 §7) passe son `ShellHostPrompts` à
+Un shell hébergé par `KazoShell` (ADR 0056 §7) passe son `ShellHostPrompts` à
 l'interpréteur, qui le transmet au lancement de chaque commande. Il
 écrit le bandeau d'avertissement et la liste des capacités dans le terminal,
 propose Oui (administrateur) / Non (refuser) / Annuler, puis demande le nom et le
-mot de passe avec la même boîte que `sudo` (par le `HackCredentialPrompt` du
+mot de passe avec la même boîte que `sudo` (par le `KazoCredentialPrompt` du
 terminal : `TerminalCredentialPrompt` pour `TerminalPanel`), jusqu'à trois essais (« Désolé,
 réessayez. »). Les commandes de l'hôte sont système : seules des commandes
 tierces voient ce mode.

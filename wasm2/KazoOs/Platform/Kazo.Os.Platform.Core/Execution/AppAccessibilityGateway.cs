@@ -57,7 +57,7 @@ internal sealed class AppAccessibilityGateway : IAppAccessibilityGateway
     internal void BindAmbientContext(Kazo.Os.AppSdk.IAppExecutionContext context) => _ambient.Bind(context);
 
     /// <inheritdoc />
-    public ValueTask<HackAccessibilityPreferences> GetPreferencesAsync(CancellationToken cancellationToken = default)
+    public ValueTask<KazoAccessibilityPreferences> GetPreferencesAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
         return ValueTask.FromResult(_preferences.Effective);

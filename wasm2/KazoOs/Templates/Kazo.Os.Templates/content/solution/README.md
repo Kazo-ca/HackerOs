@@ -45,10 +45,10 @@ submodule with local changes or off its tag.
 
 | Profile | Kazo OS comes from | Use |
 | --- | --- | --- |
-| `Debug` | the projects of the submodule (`HackerOsUseSource=true`) | step into the SDK and the OS, breakpoints anywhere |
+| `Debug` | the projects of the submodule (`KazoOsUseSource=true`) | step into the SDK and the OS, breakpoints anywhere |
 | `Release` | the `Kazo.Os.*` packages of nuget.org, at the submodule's version | CI, `dotnet publish`, the Hack Store |
 
-Force either one with `-p:HackerOsUseSource=true` or `false`.
+Force either one with `-p:KazoOsUseSource=true` or `false`.
 
 ## Publishing to the Hack Store
 
@@ -81,7 +81,7 @@ users then install it with `hackpkg install <owner>/<repo>`, without the Hack St
 Sign your packages so that nobody else can publish under your name:
 
 1. Once, on your machine, outside the repository:
-   `dotnet build src/Kazo.Os.Template.Solution -t:HackerOsKeyGen -p:HackerOsSigningKeyFile=$HOME/hackeros-signing-key.pem`.
+   `dotnet build src/Kazo.Os.Template.Solution -t:KazoOsKeyGen -p:KazoOsSigningKeyFile=$HOME/hackeros-signing-key.pem`.
    The private key goes to that new file (`*.pem` is ignored by git); the public key is printed.
 2. Put the content of the file in the `HACKEROS_APP_SIGNING_KEY` secret of this repository
    (Settings ▸ Secrets and variables ▸ Actions), then keep the file offline.
@@ -91,6 +91,6 @@ Sign your packages so that nobody else can publish under your name:
    badly signed package of yours is refused.
 
 Without the secret the package is published unsigned (SHA-256 only) and the run shows a warning.
-To sign locally, set `HACKEROS_APP_SIGNING_KEY` or pass `-p:HackerOsSigningKeyFile=<file.pem>` to
-`HackerOsPack`. To change keys without a break, have the new key added after the old one
+To sign locally, set `HACKEROS_APP_SIGNING_KEY` or pass `-p:KazoOsSigningKeyFile=<file.pem>` to
+`KazoOsPack`. To change keys without a break, have the new key added after the old one
 (separated by a comma), change the secret, then have the old one removed.

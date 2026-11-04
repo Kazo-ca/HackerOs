@@ -79,7 +79,7 @@ public interface IHackShell : IAsyncDisposable
         TextWriter standardOutput,
         TextWriter standardError,
         CancellationToken cancellationToken = default) =>
-        ExecuteAsync(commandLine, new HackShellExecution
+        ExecuteAsync(commandLine, new KazoShellExecution
         {
             StandardInput = standardInput,
             StandardOutput = standardOutput,
@@ -92,7 +92,7 @@ public interface IHackShell : IAsyncDisposable
     /// <param name="cancellationToken">Ctrl+C: stops every command of the running line (exit status 130).</param>
     /// <returns>The exit status of the last pipeline that ran (<c>$?</c>).</returns>
     /// <exception cref="ObjectDisposedException">The shell has exited.</exception>
-    Task<int> ExecuteAsync(string commandLine, HackShellExecution execution, CancellationToken cancellationToken = default);
+    Task<int> ExecuteAsync(string commandLine, KazoShellExecution execution, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Completes the word under the cursor, as <c>bash</c> does on Tab (ADR 0058, section 4): the
@@ -107,11 +107,11 @@ public interface IHackShell : IAsyncDisposable
     /// <param name="cursor">Cursor position in <paramref name="commandLine"/> (0 to its length).</param>
     /// <param name="cancellationToken">Cancels the lookup.</param>
     /// <returns>The candidates, never <see langword="null"/>; empty when nothing matches.</returns>
-    Task<HackShellCompletion> CompleteAsync(string commandLine, int cursor, CancellationToken cancellationToken = default);
+    Task<KazoShellCompletion> CompleteAsync(string commandLine, int cursor, CancellationToken cancellationToken = default);
 }
 
-/// <summary>Options of <see cref="HackShell.StartAsync(HackShellOptions, CancellationToken)"/>.</summary>
-public sealed record HackShellOptions
+/// <summary>Options of <see cref="KazoShell.StartAsync(KazoShellOptions, CancellationToken)"/>.</summary>
+public sealed record KazoShellOptions
 {
     /// <summary>
     /// Gets the starting directory: absolute, relative to the caller's directory, or
@@ -124,11 +124,11 @@ public sealed record HackShellOptions
     /// Gets where the shell asks for credentials (<c>sudo</c>, approvals). Without it, <c>sudo</c>
     /// fails and no approval is offered.
     /// </summary>
-    public HackCredentialPrompt? CredentialPrompt { get; init; }
+    public KazoCredentialPrompt? CredentialPrompt { get; init; }
 }
 
-/// <summary>Streams of one line run by <see cref="IHackShell.ExecuteAsync(string, HackShellExecution, CancellationToken)"/>.</summary>
-public sealed record HackShellExecution
+/// <summary>Streams of one line run by <see cref="IHackShell.ExecuteAsync(string, KazoShellExecution, CancellationToken)"/>.</summary>
+public sealed record KazoShellExecution
 {
     /// <summary>Gets what the first command of each pipeline reads; <see langword="null"/> for an empty input.</summary>
     public TextReader? StandardInput { get; init; }
@@ -152,11 +152,11 @@ public sealed record HackShellExecution
 /// Matching words, sorted, without duplicates. A directory ends with <c>/</c>, as <c>bash</c>
 /// shows it.
 /// </param>
-public sealed record HackShellCompletion(int WordStart, int WordLength, IReadOnlyList<string> Candidates)
+public sealed record KazoShellCompletion(int WordStart, int WordLength, IReadOnlyList<string> Candidates)
 {
     /// <summary>Gets an empty completion at <paramref name="cursor"/>.</summary>
     /// <param name="cursor">Cursor position.</param>
-    public static HackShellCompletion None(int cursor) => new(cursor, 0, []);
+    public static KazoShellCompletion None(int cursor) => new(cursor, 0, []);
 
     /// <summary>
     /// Gets the longest prefix shared by every candidate: what Tab inserts when several match.

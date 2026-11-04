@@ -184,7 +184,7 @@
         else if (ShowsSite)
         {
             @* A Blazor site (ADR 0084 §4): its root component, drawn here as the site's renderer process. *@
-            <HackWebSiteView @ref="_siteView" Process="_site!" Url="_siteUrl!" Cookies="_cookies"
+            <KazoWebSiteView @ref="_siteView" Process="_site!" Url="_siteUrl!" Cookies="_cookies"
                              OnLocationChanged="HandleSiteLocationChangedAsync" OnNavigate="HandleSiteNavigateAsync"
                              OnTitleChanged="HandleSiteTitleChangedAsync" OnFaulted="HandleSiteFaultedAsync" />
         }

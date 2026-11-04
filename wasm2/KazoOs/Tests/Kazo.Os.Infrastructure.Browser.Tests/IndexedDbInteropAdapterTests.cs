@@ -25,8 +25,8 @@ public sealed class IndexedDbInteropAdapterTests
         Assert.Equal(2, module.Invocations.Count);
         JsInvocation open = module.Invocations[0];
         Assert.Equal("openDatabase", open.Identifier);
-        Assert.Equal(HackerOsIndexedDbSchema.DatabaseName, open.Arguments[0]);
-        Assert.Equal(HackerOsIndexedDbSchema.CurrentVersion, open.Arguments[1]);
+        Assert.Equal(KazoOsIndexedDbSchema.DatabaseName, open.Arguments[0]);
+        Assert.Equal(KazoOsIndexedDbSchema.CurrentVersion, open.Arguments[1]);
         Assert.IsType<IndexedDbMigrationPlan>(open.Arguments[2]);
     }
 
@@ -36,11 +36,11 @@ public sealed class IndexedDbInteropAdapterTests
         IndexedDbMigrationPlan plan = IndexedDbMigrationPlan.CreateCurrent();
 
         Assert.Equal(
-            Enumerable.Range(1, HackerOsIndexedDbSchema.CurrentVersion),
+            Enumerable.Range(1, KazoOsIndexedDbSchema.CurrentVersion),
             plan.Steps.Select(step => step.TargetVersion));
-        Assert.Equal(HackerOsIndexedDbSchema.ObjectStores, plan.Steps[0].CreateObjectStores);
+        Assert.Equal(KazoOsIndexedDbSchema.ObjectStores, plan.Steps[0].CreateObjectStores);
         IndexedDbIndexChange contentHashIndex = Assert.Single(plan.Steps[1].CreateIndexes);
-        Assert.Equal(HackerOsIndexedDbSchema.FileSystemEntryStoreName, contentHashIndex.ObjectStoreName);
+        Assert.Equal(KazoOsIndexedDbSchema.FileSystemEntryStoreName, contentHashIndex.ObjectStoreName);
         Assert.Equal("contentHash", contentHashIndex.Index.Name);
     }
 
@@ -50,7 +50,7 @@ public sealed class IndexedDbInteropAdapterTests
         Assert.Throws<ArgumentException>(() => new IndexedDbMigrationPlan(
         [
             new IndexedDbMigrationStep(
-                HackerOsIndexedDbSchema.CurrentVersion + 1,
+                KazoOsIndexedDbSchema.CurrentVersion + 1,
                 [],
                 [],
                 [],
@@ -75,7 +75,7 @@ public sealed class IndexedDbInteropAdapterTests
     {
         FakeJsRuntime runtime = new(new FakeJsObjectReference());
         await using IndexedDbInteropAdapter adapter = new(runtime);
-        IndexedDbOperation operation = new("get", HackerOsIndexedDbSchema.SettingsStoreName, Key: "settings-key");
+        IndexedDbOperation operation = new("get", KazoOsIndexedDbSchema.SettingsStoreName, Key: "settings-key");
 
         await Assert.ThrowsAsync<ArgumentException>(async () =>
             await adapter.ExecuteAsync("UserAccountWrite", IndexedDbTransactionMode.ReadOnly, [operation]));
@@ -92,8 +92,8 @@ public sealed class IndexedDbInteropAdapterTests
         await using IndexedDbInteropAdapter adapter = new(new FakeJsRuntime(module));
         IndexedDbOperation[] operations =
         [
-            new("get", HackerOsIndexedDbSchema.UserStoreName, Key: "one"),
-            new("count", HackerOsIndexedDbSchema.UserStoreName)
+            new("get", KazoOsIndexedDbSchema.UserStoreName, Key: "one"),
+            new("count", KazoOsIndexedDbSchema.UserStoreName)
         ];
 
         IReadOnlyList<JsonElement> results = await adapter.ExecuteAsync(
@@ -104,9 +104,9 @@ public sealed class IndexedDbInteropAdapterTests
         Assert.Equal(2, results.Count);
         JsInvocation execute = Assert.Single(module.Invocations);
         Assert.Equal("executeTransaction", execute.Identifier);
-        Assert.Equal(HackerOsIndexedDbSchema.DatabaseName, execute.Arguments[0]);
-        Assert.Equal(HackerOsIndexedDbSchema.CurrentVersion, execute.Arguments[1]);
-        Assert.Equal([HackerOsIndexedDbSchema.UserStoreName], Assert.IsAssignableFrom<IReadOnlyList<string>>(execute.Arguments[2]));
+        Assert.Equal(KazoOsIndexedDbSchema.DatabaseName, execute.Arguments[0]);
+        Assert.Equal(KazoOsIndexedDbSchema.CurrentVersion, execute.Arguments[1]);
+        Assert.Equal([KazoOsIndexedDbSchema.UserStoreName], Assert.IsAssignableFrom<IReadOnlyList<string>>(execute.Arguments[2]));
         Assert.Equal("readonly", execute.Arguments[3]);
         Assert.Same(operations, execute.Arguments[4]);
     }
@@ -121,7 +121,7 @@ public sealed class IndexedDbInteropAdapterTests
         object replacement = new { id = "settings", revision = 5 };
         IndexedDbOperation operation = new(
             "compareAndPut",
-            HackerOsIndexedDbSchema.SettingsStoreName,
+            KazoOsIndexedDbSchema.SettingsStoreName,
             Key: "settings",
             Value: replacement,
             CompareProperty: "revision",
@@ -155,11 +155,11 @@ public sealed class IndexedDbInteropAdapterTests
         [
             new(
                 "assertPropertyEquals",
-                HackerOsIndexedDbSchema.FileSystemEntryStoreName,
+                KazoOsIndexedDbSchema.FileSystemEntryStoreName,
                 Key: "parent",
                 CompareProperty: "revision",
                 ExpectedValue: 4L),
-            new("add", HackerOsIndexedDbSchema.FileSystemLinkStoreName, Value: new { parentId = "parent" })
+            new("add", KazoOsIndexedDbSchema.FileSystemLinkStoreName, Value: new { parentId = "parent" })
         ];
 
         await adapter.ExecuteAsync(
@@ -187,7 +187,7 @@ public sealed class IndexedDbInteropAdapterTests
             await adapter.ExecuteAsync(
                 "UserAccountWrite",
                 IndexedDbTransactionMode.ReadWrite,
-                [new IndexedDbOperation("put", HackerOsIndexedDbSchema.UserStoreName, Value: new { id = "user" })]));
+                [new IndexedDbOperation("put", KazoOsIndexedDbSchema.UserStoreName, Value: new { id = "user" })]));
 
         Assert.IsType<JSException>(exception.InnerException);
         Assert.Contains("not committed", exception.Message, StringComparison.Ordinal);

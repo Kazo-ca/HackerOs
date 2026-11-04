@@ -80,7 +80,7 @@ public sealed partial class AppLifecycleOrchestratorTests
         Description = "A web app with a Blazor root.",
         Kind = AppKind.Web,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", typeof(BlazorSiteApp).FullName!),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Hidden, []),
         Resources = AppResourceProfileManifest.None,
         Capabilities = [AppCapabilities.NetworkListen, AppCapabilities.NetworkSimulatedRead],
@@ -90,7 +90,7 @@ public sealed partial class AppLifecycleOrchestratorTests
     /// <summary>The site's server side: a web app that answers nothing useful (the renderer is what these tests are about).</summary>
     private sealed class BlazorSiteApp(AppManifest manifest) : WebServerAppBase(manifest)
     {
-        protected override Task ProcessRequestAsync(HackHttpListenerContext context, CancellationToken cancellationToken)
+        protected override Task ProcessRequestAsync(KazoHttpListenerContext context, CancellationToken cancellationToken)
         {
             context.Response.Write("site");
             return Task.CompletedTask;

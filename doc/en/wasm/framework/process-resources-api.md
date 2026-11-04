@@ -2,7 +2,7 @@
 
 # Process resources for apps (CPU, memory, OOM killer)
 
-This document describes what an app sees and can do with the CPU time, memory and OOM killer of a process: `HackProcess`, `/proc/<pid>/stat`, `/proc/<pid>/status`, `/proc/meminfo` and `/proc/<pid>/oom_score_adj`. The implementation is in [`../dev/cpu-accounting.md`](../dev/cpu-accounting.md), [`../dev/memory-accounting.md`](../dev/memory-accounting.md) and [`../dev/oom-killer.md`](../dev/oom-killer.md).
+This document describes what an app sees and can do with the CPU time, memory and OOM killer of a process: `KazoProcess`, `/proc/<pid>/stat`, `/proc/<pid>/status`, `/proc/meminfo` and `/proc/<pid>/oom_score_adj`. The implementation is in [`../dev/cpu-accounting.md`](../dev/cpu-accounting.md), [`../dev/memory-accounting.md`](../dev/memory-accounting.md) and [`../dev/oom-killer.md`](../dev/oom-killer.md).
 
 ## What measurement changes for an app
 
@@ -21,7 +21,7 @@ cat /proc/stat
 ```
 
 ```csharp
-HackProcess editor = await HackProcess.GetProcessByIdAsync(42);
+KazoProcess editor = await KazoProcess.GetProcessByIdAsync(42);
 TimeSpan user = editor.UserProcessorTime;          // utime
 TimeSpan system = editor.PrivilegedProcessorTime;  // stime
 TimeSpan total = editor.TotalProcessorTime;
@@ -42,7 +42,7 @@ which runs no code) is not measured: it keeps its simulated values.
 - **Warning (ADR 0127 §4)**: a windowed app runs on the main thread.
   A long loop without `await` freezes the whole desktop there, mouse included, and
   no dialog can be displayed during the freeze. Heavy computation goes into
-  `HackBackground.RunAsync` (ADR 0128); a long loop that must stay on the
+  `KazoBackground.RunAsync` (ADR 0128); a long loop that must stay on the
   thread calls `CheckpointAsync` (ADR 0069) often enough to yield control.
 
 An unresponsive window is described in [`app-responsiveness-api.md`](app-responsiveness-api.md).
@@ -71,7 +71,7 @@ RssAnon:	3000 kB
 RssFile:	1200 kB
 VmData:	512 kB
 VmExe:	40 kB
-HackAllocBytes:	123456789
+KazoAllocBytes:	123456789
 Cpu:	0.0
 CpuSource:	simulated
 MemSource:	measured
@@ -90,7 +90,7 @@ Slab:               4096 kB
 - `MemTotal` stays that of the `VirtualHardwareProfile`.
 - Used memory = `AnonPages + Mapped + Slab` + simulated memory of the
   processes that remained simulated.
-- `HackProcess.WorkingSet64` reads `VmRSS`; `HackProcess.PrivateMemorySize64`
+- `KazoProcess.WorkingSet64` reads `VmRSS`; `KazoProcess.PrivateMemorySize64`
   reads `RssAnon` (and equals `WorkingSet64` when memory is simulated), like
   `System.Diagnostics.Process`.
 

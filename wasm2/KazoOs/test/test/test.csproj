@@ -37,7 +37,7 @@
     <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.ErrorLogViewer\Kazo.Os.Apps.ErrorLogViewer.csproj" />
     <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.FileExplorer\Kazo.Os.Apps.FileExplorer.csproj" />
     <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.Desktop\Kazo.Os.Apps.Desktop.csproj" />
-    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.HackPaint\Kazo.Os.Apps.HackPaint.csproj" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.KazoPaint\Kazo.Os.Apps.KazoPaint.csproj" />
     <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.Settings\Kazo.Os.Apps.Settings.csproj" />
     <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.SystemMonitor\Kazo.Os.Apps.SystemMonitor.csproj" />
     <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.Terminal\Kazo.Os.Apps.Terminal.csproj" />
@@ -55,7 +55,7 @@
     <BlazorWebAssemblyLazyLoad Include="Kazo.Os.Apps.ErrorLogViewer.dll" />
     <BlazorWebAssemblyLazyLoad Include="Kazo.Os.Apps.FileExplorer.dll" />
     <BlazorWebAssemblyLazyLoad Include="Kazo.Os.Apps.Desktop.dll" />
-    <BlazorWebAssemblyLazyLoad Include="Kazo.Os.Apps.HackPaint.dll" />
+    <BlazorWebAssemblyLazyLoad Include="Kazo.Os.Apps.KazoPaint.dll" />
     <BlazorWebAssemblyLazyLoad Include="Kazo.Os.Apps.Settings.dll" />
     <BlazorWebAssemblyLazyLoad Include="Kazo.Os.Apps.SystemMonitor.dll" />
     <BlazorWebAssemblyLazyLoad Include="Kazo.Os.Apps.Terminal.dll" />
@@ -66,7 +66,7 @@
     <BlazorWebAssemblyLazyLoad Include="Kazo.Os.Samples.Intranet.dll" />
   </ItemGroup>
 
-  <!-- ADR 0066: optional CPU/memory accounting (HackerOsCpuAccounting, HackerOsMemoryAccounting). -->
+  <!-- ADR 0066: optional CPU/memory accounting (KazoOsCpuAccounting, KazoOsMemoryAccounting). -->
   <Import Project="..\..\build\Kazo.Os.ResourceAccounting.targets" />
 
 </Project>

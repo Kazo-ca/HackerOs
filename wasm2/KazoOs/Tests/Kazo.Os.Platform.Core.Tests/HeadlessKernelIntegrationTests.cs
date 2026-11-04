@@ -123,7 +123,7 @@ public sealed class HeadlessKernelIntegrationTests
         Description = "Waits for cancellation or shutdown.",
         Kind = AppKind.Service,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", typeof(WaiterServiceApp).FullName!),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None
     };
@@ -160,7 +160,7 @@ public sealed class HeadlessKernelIntegrationTests
             Description = "Exercises the filesystem gateway and settings files end to end.",
             Kind = AppKind.Terminal,
             EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", typeof(KernelSmokeApp).FullName!),
-            SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+            SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
             Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
             Resources = AppResourceProfileManifest.None,
             Terminal = new TerminalCommandManifest("kernel-smoke", [], "kernel-smoke"),
@@ -236,14 +236,14 @@ public sealed class HeadlessKernelIntegrationTests
 
             // Settings are real files (ADR 0044): the default applies, then a write lands in
             // ~/.config/<appId>/settings.config and is read back through the same files.
-            if (await HackSettings.GetAsync<string>(app, "greeting", cancellationToken) != "unset")
+            if (await KazoSettings.GetAsync<string>(app, "greeting", cancellationToken) != "unset")
             {
                 await context.StandardError.WriteLineAsync("settings-default-failed");
                 return 1;
             }
 
-            await HackSettings.SetAsync(app, "greeting", "hello", cancellationToken);
-            if (await HackSettings.GetAsync<string>(app, "greeting", cancellationToken) != "hello")
+            await KazoSettings.SetAsync(app, "greeting", "hello", cancellationToken);
+            if (await KazoSettings.GetAsync<string>(app, "greeting", cancellationToken) != "hello")
             {
                 await context.StandardError.WriteLineAsync("settings-roundtrip-failed");
                 return 1;

@@ -89,7 +89,7 @@ public sealed class ContextMenuRegistrationTests : IDisposable
         Description = id,
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Tests.dll", "Tests.Window"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("utilities", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         Capabilities = [AppCapabilities.ShellContextMenu]

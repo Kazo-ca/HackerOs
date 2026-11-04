@@ -102,10 +102,10 @@ file sealed class UnsupportedCatalog : Kazo.Os.AppSdk.Apps.IAppCatalogGateway
         remove { }
     }
 
-    public ValueTask<IReadOnlyList<Kazo.Os.AppSdk.Apps.HackAppInfo>> GetInstalledAsync(CancellationToken cancellationToken = default) =>
+    public ValueTask<IReadOnlyList<Kazo.Os.AppSdk.Apps.KazoAppInfo>> GetInstalledAsync(CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This IAppExecutionContext implementation does not provide a Catalog gateway.");
 
-    public ValueTask<IReadOnlyList<Kazo.Os.AppSdk.Apps.HackAppInfo>> GetHandlersAsync(
+    public ValueTask<IReadOnlyList<Kazo.Os.AppSdk.Apps.KazoAppInfo>> GetHandlersAsync(
         VirtualPath path, string? mediaType = null, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This IAppExecutionContext implementation does not provide a Catalog gateway.");
 }

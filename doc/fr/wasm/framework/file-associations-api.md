@@ -2,7 +2,7 @@
 
 # Associations de fichiers par utilisateur (API et formats)
 
-Ce document décrit ce qu'une app ou un tiers voit des associations de fichiers : le format des deux fichiers, l'ordre de résolution, l'API `HackApps` et les capacités. La mise en œuvre (couches, index, panneau des Paramètres, « Ouvrir avec », `xdg-mime`, tests) est dans [`../dev/user-file-associations.md`](../dev/user-file-associations.md).
+Ce document décrit ce qu'une app ou un tiers voit des associations de fichiers : le format des deux fichiers, l'ordre de résolution, l'API `KazoApps` et les capacités. La mise en œuvre (couches, index, panneau des Paramètres, « Ouvrir avec », `xdg-mime`, tests) est dans [`../dev/user-file-associations.md`](../dev/user-file-associations.md).
 
 ## Fichiers et format
 
@@ -37,19 +37,19 @@ séparément. L'ordre vaut pour `OpenFile`, `EditFile`, `OpenUri`, `RevealFile`
 
 | Membre | Rôle | Capacités |
 |---|---|---|
-| `HackApps.GetDefaultHandlersAsync()` | Lignes `HackFileAssociation(Target, Action, AppId, Layer)` : celles de l'utilisateur, puis celles de la machine. La première ligne d'une cible et d'une action est celle utilisée. | `file-associations.read` |
-| `HackApps.SetDefaultHandlerAsync(target, appId, action = "open")` | Écrit le choix de l'utilisateur. L'app doit déclarer la cible et l'action. | `file-associations.read`, `filesystem.user-home.write` |
-| `HackApps.ResetDefaultHandlerAsync(target, action = "open")` | Retire le choix de l'utilisateur. | idem |
+| `KazoApps.GetDefaultHandlersAsync()` | Lignes `KazoFileAssociation(Target, Action, AppId, Layer)` : celles de l'utilisateur, puis celles de la machine. La première ligne d'une cible et d'une action est celle utilisée. | `file-associations.read` |
+| `KazoApps.SetDefaultHandlerAsync(target, appId, action = "open")` | Écrit le choix de l'utilisateur. L'app doit déclarer la cible et l'action. | `file-associations.read`, `filesystem.user-home.write` |
+| `KazoApps.ResetDefaultHandlerAsync(target, action = "open")` | Retire le choix de l'utilisateur. | idem |
 
-`HackDefaultHandlerStatus` : `Changed`, `InvalidTarget`, `InvalidAction`,
+`KazoDefaultHandlerStatus` : `Changed`, `InvalidTarget`, `InvalidAction`,
 `AppNotFound`, `AppCannotHandle`, `FileInvalid`, `WriteFailed`. Une cible est
 `.ext` ou `type/sous-type`, mise en minuscules. Une passerelle antérieure à
 l'ADR 0121 lève `NotSupportedException`.
 
 ```csharp
-HackDefaultHandlerStatus status = await HackApps.SetDefaultHandlerAsync(".md", "org.hackeros.code-editor");
-await HackApps.SetDefaultHandlerAsync("x-scheme-handler/https", "com.example.browser");
-await HackApps.ResetDefaultHandlerAsync(".md");
+KazoDefaultHandlerStatus status = await KazoApps.SetDefaultHandlerAsync(".md", "org.hackeros.code-editor");
+await KazoApps.SetDefaultHandlerAsync("x-scheme-handler/https", "com.example.browser");
+await KazoApps.ResetDefaultHandlerAsync(".md");
 ```
 
 ## Capacités

@@ -35,17 +35,17 @@ public sealed partial class FileDialogBrowser
     private IHackFileView? _controller;
     private ContextMenuScope? _menus;
     private VirtualPath _currentDirectory = VirtualPath.Parse("/");
-    private HackFileViewMode _mode = HackFileViewMode.Details;
+    private KazoFileViewMode _mode = KazoFileViewMode.Details;
     private string? _error;
     private bool _initialized;
     private bool _openOnTap;
 
-    // Built once: HackFileView hands its provider a new parameter set only when a value changes.
-    private Func<HackFileViewItem, bool> _filter = default!;
-    private EventCallback<HackFileViewMode> _modeChanged;
-    private EventCallback<HackFileViewOpeningEventArgs> _opening;
+    // Built once: KazoFileView hands its provider a new parameter set only when a value changes.
+    private Func<KazoFileViewItem, bool> _filter = default!;
+    private EventCallback<KazoFileViewMode> _modeChanged;
+    private EventCallback<KazoFileViewOpeningEventArgs> _opening;
     private EventCallback<string> _navigated;
-    private EventCallback<IReadOnlyList<HackFileViewItem>> _selectionChanged;
+    private EventCallback<IReadOnlyList<KazoFileViewItem>> _selectionChanged;
     private EventCallback<string> _errorOccurred;
     private EventCallback<IHackFileView?> _controllerChanged;
     private Func<FileSystemDirectoryItem, bool> _fallbackFilter = default!;
@@ -80,12 +80,12 @@ public sealed partial class FileDialogBrowser
     public bool AllowMultipleSelection { get; set; }
 
     /// <summary>
-    /// Gets or sets what the control may do beside browsing (ADR 0155 §3): <see cref="HackFileViewFeatures.None"/>
+    /// Gets or sets what the control may do beside browsing (ADR 0155 §3): <see cref="KazoFileViewFeatures.None"/>
     /// in an Open dialog, new folders and renaming in a Save or Choose folder dialog. The platform's
     /// browser only browses.
     /// </summary>
     [Parameter]
-    public HackFileViewFeatures Features { get; set; } = HackFileViewFeatures.None;
+    public KazoFileViewFeatures Features { get; set; } = KazoFileViewFeatures.None;
 
     /// <summary>
     /// Gets or sets which regular files are shown, from their name and media type
@@ -129,7 +129,7 @@ public sealed partial class FileDialogBrowser
     /// <summary>Gets whether the toolbar offers "New folder": the dialog allows it and the control is shown.</summary>
     [MemberNotNullWhen(true, nameof(_controller))]
     private bool CanCreateFolder =>
-        _controller is not null && (Features & HackFileViewFeatures.CreateFolder) != 0;
+        _controller is not null && (Features & KazoFileViewFeatures.CreateFolder) != 0;
 
     /// <summary>The OS context menus; absent in a host without the platform shell (a test page).</summary>
     [Inject]
@@ -166,10 +166,10 @@ public sealed partial class FileDialogBrowser
     protected override void OnInitialized()
     {
         _filter = item => item.IsDirectory || FileFilter?.Invoke(item.Name, item.MediaType) != false;
-        _modeChanged = EventCallback.Factory.Create<HackFileViewMode>(this, SetMode);
-        _opening = EventCallback.Factory.Create<HackFileViewOpeningEventArgs>(this, OnOpeningAsync);
+        _modeChanged = EventCallback.Factory.Create<KazoFileViewMode>(this, SetMode);
+        _opening = EventCallback.Factory.Create<KazoFileViewOpeningEventArgs>(this, OnOpeningAsync);
         _navigated = EventCallback.Factory.Create<string>(this, OnNavigatedAsync);
-        _selectionChanged = EventCallback.Factory.Create<IReadOnlyList<HackFileViewItem>>(this, OnSelectionChangedAsync);
+        _selectionChanged = EventCallback.Factory.Create<IReadOnlyList<KazoFileViewItem>>(this, OnSelectionChangedAsync);
         _errorOccurred = EventCallback.Factory.Create<string>(this, message => _error = message);
         _controllerChanged = EventCallback.Factory.Create<IHackFileView?>(this, OnControllerChanged);
         _fallbackFilter = entry => FileFilter?.Invoke(entry.Name.Value, (entry.Metadata as FileMetadata)?.MediaType) != false;
@@ -230,11 +230,11 @@ public sealed partial class FileDialogBrowser
         }
 
         _error = null;
-        await _controller.ExecuteAsync(HackFileMenuItems.NewFolder);
+        await _controller.ExecuteAsync(KazoFileMenuItems.NewFolder);
     }
 
     /// <summary>A file activated: the dialog takes it instead of the control opening it in its default app.</summary>
-    private async Task OnOpeningAsync(HackFileViewOpeningEventArgs args)
+    private async Task OnOpeningAsync(KazoFileViewOpeningEventArgs args)
     {
         if (args.Item.IsDirectory)
         {
@@ -259,7 +259,7 @@ public sealed partial class FileDialogBrowser
         return DirectoryChanged.InvokeAsync(snapshot.Path);
     }
 
-    private Task OnSelectionChangedAsync(IReadOnlyList<HackFileViewItem> items)
+    private Task OnSelectionChangedAsync(IReadOnlyList<KazoFileViewItem> items)
     {
         VirtualPath[] selection = [.. items
             .Where(item => item.IsDirectory ? AllowDirectorySelection : AllowFileSelection)
@@ -291,7 +291,7 @@ public sealed partial class FileDialogBrowser
         return NavigateAsync(VirtualPath.Parse(separator <= 0 ? "/" : value[..separator]));
     }
 
-    private void SetMode(HackFileViewMode mode) => _mode = mode;
+    private void SetMode(KazoFileViewMode mode) => _mode = mode;
 
     private bool IsMobilePlatform() =>
         Services.GetService(typeof(UiPlatformPreferenceService)) is UiPlatformPreferenceService preference

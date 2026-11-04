@@ -37,7 +37,7 @@ public enum WebSiteState
 /// <param name="App">The web app of an external site.</param>
 /// <param name="Urls">Its addresses, main one first.</param>
 /// <param name="State">Its state.</param>
-public sealed record WebSiteRow(string Name, HackWebSiteDeclaration? Declaration, HackAppInfo? App, IReadOnlyList<string> Urls, WebSiteState State)
+public sealed record WebSiteRow(string Name, KazoWebSiteDeclaration? Declaration, KazoAppInfo? App, IReadOnlyList<string> Urls, WebSiteState State)
 {
     /// <summary>Gets whether the row is a <c>.site</c> file the user may edit (with approval for a system site).</summary>
     public bool IsEditable => Declaration is not null;
@@ -51,13 +51,13 @@ public sealed record WebSiteRow(string Name, HackWebSiteDeclaration? Declaration
 /// <param name="Daemon">The <c>hackwebd</c> service, or <see langword="null"/> when it is not installed.</param>
 /// <param name="Rows">System sites, then the user's, then external sites.</param>
 /// <param name="Listeners">Every listening socket of the machine.</param>
-public sealed record WebServerSnapshot(HackServiceController? Daemon, IReadOnlyList<WebSiteRow> Rows, IReadOnlyList<HackTcpListenerInfo> Listeners);
+public sealed record WebServerSnapshot(KazoServiceController? Daemon, IReadOnlyList<WebSiteRow> Rows, IReadOnlyList<KazoTcpListenerInfo> Listeners);
 
 /// <summary>
 /// The logic of Web Server Manager, without UI (ADR 0077, section 3): it only drives the OS through the
 /// public SDK, like IIS Manager editing <c>applicationHost.config</c>. Sites are <c>.site</c> files;
 /// their live state is read from the listening sockets of <c>hackwebd</c>
-/// (<see cref="HackIPGlobalProperties"/>, what <c>netstat -tlnp</c> prints).
+/// (<see cref="KazoIPGlobalProperties"/>, what <c>netstat -tlnp</c> prints).
 /// </summary>
 public static class WebSiteStore
 {
@@ -68,11 +68,11 @@ public static class WebSiteStore
     /// <param name="cancellationToken">Cancels the reads.</param>
     public static async Task<WebServerSnapshot> LoadAsync(CancellationToken cancellationToken = default)
     {
-        IReadOnlyList<HackWebSiteDeclaration> declarations = await HackWebSiteFile.ReadAllAsync(cancellationToken).ConfigureAwait(false);
-        HackServiceController[] services = await HackServiceController.GetServicesAsync(cancellationToken).ConfigureAwait(false);
-        HackServiceController? daemon = services.FirstOrDefault(static service => service.ServiceName == HackWebdApp.AppId);
-        IReadOnlyList<HackTcpListenerInfo> listeners = await HackIPGlobalProperties.GetActiveTcpListenersAsync(cancellationToken).ConfigureAwait(false);
-        IReadOnlyList<HackAppInfo> apps = await HackApps.GetInstalledAsync(cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<KazoWebSiteDeclaration> declarations = await KazoWebSiteFile.ReadAllAsync(cancellationToken).ConfigureAwait(false);
+        KazoServiceController[] services = await KazoServiceController.GetServicesAsync(cancellationToken).ConfigureAwait(false);
+        KazoServiceController? daemon = services.FirstOrDefault(static service => service.ServiceName == KazoWebdApp.AppId);
+        IReadOnlyList<KazoTcpListenerInfo> listeners = await KazoIPGlobalProperties.GetActiveTcpListenersAsync(cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<KazoAppInfo> apps = await KazoApps.GetInstalledAsync(cancellationToken).ConfigureAwait(false);
 
         HashSet<string> served = new(
             listeners
@@ -81,13 +81,13 @@ public static class WebSiteStore
             StringComparer.Ordinal);
 
         List<WebSiteRow> rows = [];
-        foreach (HackWebSiteDeclaration declaration in declarations)
+        foreach (KazoWebSiteDeclaration declaration in declarations)
         {
             IReadOnlyList<string> urls = declaration.Site?.Bindings ?? [];
             rows.Add(new WebSiteRow(declaration.Name, declaration, null, urls, StateOf(declaration, served)));
         }
 
-        foreach (HackAppInfo app in apps.Where(static app => app.Kind == AppKind.Web).OrderBy(static app => app.Name, StringComparer.OrdinalIgnoreCase))
+        foreach (KazoAppInfo app in apps.Where(static app => app.Kind == AppKind.Web).OrderBy(static app => app.Name, StringComparer.OrdinalIgnoreCase))
         {
             rows.Add(new WebSiteRow(app.Name, null, app, app.Urls, WebSiteState.External));
         }
@@ -98,7 +98,7 @@ public static class WebSiteStore
     /// <summary>Computes the state of a declared site from the prefixes <c>hackwebd</c> listens on.</summary>
     /// <param name="declaration">The site file.</param>
     /// <param name="servedPrefixes">Normalized prefixes of the sockets owned by <c>hackwebd</c>.</param>
-    public static WebSiteState StateOf(HackWebSiteDeclaration declaration, IReadOnlySet<string> servedPrefixes)
+    public static WebSiteState StateOf(KazoWebSiteDeclaration declaration, IReadOnlySet<string> servedPrefixes)
     {
         ArgumentNullException.ThrowIfNull(declaration);
         if (!declaration.IsValid)
@@ -112,7 +112,7 @@ public static class WebSiteStore
         }
 
         int listening = declaration.Site.Bindings.Count(binding =>
-            HackWebSiteFile.TryParseBinding(binding, out WebBinding parsed, out _) && servedPrefixes.Contains(parsed.ToString()));
+            KazoWebSiteFile.TryParseBinding(binding, out WebBinding parsed, out _) && servedPrefixes.Contains(parsed.ToString()));
         return listening == declaration.Site.Bindings.Count ? WebSiteState.Running
             : listening > 0 ? WebSiteState.Partial
             : WebSiteState.Down;
@@ -124,15 +124,15 @@ public static class WebSiteStore
     /// </summary>
     /// <param name="folder">Absolute path of the folder.</param>
     /// <param name="snapshot">The current state (to avoid taken names and ports).</param>
-    public static HackWebSite Suggest(string folder, WebServerSnapshot snapshot)
+    public static KazoWebSite Suggest(string folder, WebServerSnapshot snapshot)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(folder);
         ArgumentNullException.ThrowIfNull(snapshot);
-        string baseName = new([.. (HackPath.GetFileName(folder.TrimEnd('/')) ?? "site")
+        string baseName = new([.. (KazoPath.GetFileName(folder.TrimEnd('/')) ?? "site")
             .ToLowerInvariant()
             .Select(static c => char.IsAsciiLetterOrDigit(c) || c is '.' or '-' or '_' ? c : '-')]);
         baseName = baseName.Trim('-', '.', '_');
-        if (!HackWebSiteFile.IsValidName(baseName))
+        if (!KazoWebSiteFile.IsValidName(baseName))
         {
             baseName = "site";
         }
@@ -162,12 +162,12 @@ public static class WebSiteStore
             port++;
         }
 
-        return new HackWebSite
+        return new KazoWebSite
         {
             Name = name,
             Root = folder.TrimEnd('/') is { Length: > 0 } root ? root : "/",
             Bindings = [$"http://localhost:{port}/"],
-            DefaultDocuments = HackWebSite.DefaultDefaultDocuments,
+            DefaultDocuments = KazoWebSite.DefaultDefaultDocuments,
             DirectoryBrowsing = false,
             Enabled = true
         };
@@ -175,9 +175,9 @@ public static class WebSiteStore
 
     /// <summary>Gets the directory of the sites of <paramref name="scope"/> for the current user.</summary>
     /// <param name="scope">The scope.</param>
-    public static string DirectoryOf(HackWebSiteScope scope) => scope == HackWebSiteScope.System
-        ? HackWebSiteFile.SystemSitesDirectory
-        : HackWebSiteFile.GetUserSitesDirectory(HackUser.Current.HomeDirectory);
+    public static string DirectoryOf(KazoWebSiteScope scope) => scope == KazoWebSiteScope.System
+        ? KazoWebSiteFile.SystemSitesDirectory
+        : KazoWebSiteFile.GetUserSitesDirectory(KazoUser.Current.HomeDirectory);
 
     /// <summary>
     /// Writes a site file. Renaming a site writes the new file, then deletes the old one. Writing in
@@ -190,27 +190,27 @@ public static class WebSiteStore
     /// <param name="cancellationToken">Cancels the writes.</param>
     /// <returns>The path written.</returns>
     /// <exception cref="ArgumentException">The site is invalid for <paramref name="scope"/>.</exception>
-    public static async Task<string> SaveAsync(HackWebSite site, HackWebSiteScope scope, string? previousPath, CancellationToken cancellationToken = default)
+    public static async Task<string> SaveAsync(KazoWebSite site, KazoWebSiteScope scope, string? previousPath, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(site);
-        IReadOnlyList<string> errors = HackWebSiteFile.Validate(site, scope);
+        IReadOnlyList<string> errors = KazoWebSiteFile.Validate(site, scope);
         if (errors.Count > 0)
         {
             throw new ArgumentException(string.Join("; ", errors), nameof(site));
         }
 
         string directory = DirectoryOf(scope);
-        if (!await HackDirectory.ExistsAsync(directory, cancellationToken).ConfigureAwait(false))
+        if (!await KazoDirectory.ExistsAsync(directory, cancellationToken).ConfigureAwait(false))
         {
-            await HackDirectory.CreateDirectoryAsync(directory, cancellationToken).ConfigureAwait(false);
+            await KazoDirectory.CreateDirectoryAsync(directory, cancellationToken).ConfigureAwait(false);
         }
 
-        string path = HackWebSiteFile.GetPath(directory, site.Name);
-        await HackFile.WriteAllTextAsync(path, HackWebSiteFile.Serialize(site), cancellationToken).ConfigureAwait(false);
+        string path = KazoWebSiteFile.GetPath(directory, site.Name);
+        await KazoFile.WriteAllTextAsync(path, KazoWebSiteFile.Serialize(site), cancellationToken).ConfigureAwait(false);
         if (previousPath is not null && !string.Equals(previousPath, path, StringComparison.Ordinal)
-            && await HackFile.ExistsAsync(previousPath, cancellationToken).ConfigureAwait(false))
+            && await KazoFile.ExistsAsync(previousPath, cancellationToken).ConfigureAwait(false))
         {
-            await HackFile.DeleteAsync(previousPath, cancellationToken).ConfigureAwait(false);
+            await KazoFile.DeleteAsync(previousPath, cancellationToken).ConfigureAwait(false);
         }
 
         return path;
@@ -219,10 +219,10 @@ public static class WebSiteStore
     /// <summary>Deletes a site file; <c>hackwebd</c> closes its sockets at once.</summary>
     /// <param name="declaration">The site.</param>
     /// <param name="cancellationToken">Cancels the delete.</param>
-    public static Task DeleteAsync(HackWebSiteDeclaration declaration, CancellationToken cancellationToken = default)
+    public static Task DeleteAsync(KazoWebSiteDeclaration declaration, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(declaration);
-        return HackFile.DeleteAsync(declaration.Path, cancellationToken);
+        return KazoFile.DeleteAsync(declaration.Path, cancellationToken);
     }
 
     /// <summary>
@@ -238,7 +238,7 @@ public static class WebSiteStore
             return null;
         }
 
-        if (!await HackDirectory.ExistsAsync(root, cancellationToken).ConfigureAwait(false))
+        if (!await KazoDirectory.ExistsAsync(root, cancellationToken).ConfigureAwait(false))
         {
             return Strings.Ambient["Warning.RootMissing", root];
         }
@@ -256,9 +256,9 @@ public static class WebSiteStore
     public static async Task<(IReadOnlyList<string> Access, IReadOnlyList<string> Errors)> ReadLogsAsync(
         string site, int maxLines = 100, CancellationToken cancellationToken = default)
     {
-        IReadOnlyList<string> access = await TailAsync(HackWebdLog.AccessLogPath(site), static _ => true, maxLines, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<string> access = await TailAsync(KazoWebdLog.AccessLogPath(site), static _ => true, maxLines, cancellationToken).ConfigureAwait(false);
         IReadOnlyList<string> errors = await TailAsync(
-            HackWebdLog.ErrorLogPath,
+            KazoWebdLog.ErrorLogPath,
             line => line.Contains($": {site}: ", StringComparison.Ordinal),
             maxLines,
             cancellationToken).ConfigureAwait(false);
@@ -269,12 +269,12 @@ public static class WebSiteStore
     {
         try
         {
-            if (!await HackFile.ExistsAsync(path, cancellationToken).ConfigureAwait(false))
+            if (!await KazoFile.ExistsAsync(path, cancellationToken).ConfigureAwait(false))
             {
                 return [];
             }
 
-            string[] lines = await HackFile.ReadAllLinesAsync(path, cancellationToken).ConfigureAwait(false);
+            string[] lines = await KazoFile.ReadAllLinesAsync(path, cancellationToken).ConfigureAwait(false);
             return [.. lines.Where(static line => line.Length > 0).Where(filter).TakeLast(maxLines)];
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)

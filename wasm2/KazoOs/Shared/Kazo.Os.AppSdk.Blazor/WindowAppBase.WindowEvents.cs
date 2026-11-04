@@ -18,14 +18,14 @@ public abstract partial class WindowAppBase
     /// </summary>
     protected bool IsWindowActive { get; private set; }
 
-    /// <summary>Gets the current state of the app's window. <see cref="HackWindowState.Normal"/> until told otherwise.</summary>
-    protected HackWindowState WindowState { get; private set; } = HackWindowState.Normal;
+    /// <summary>Gets the current state of the app's window. <see cref="KazoWindowState.Normal"/> until told otherwise.</summary>
+    protected KazoWindowState WindowState { get; private set; } = KazoWindowState.Normal;
 
     /// <summary>
     /// Gets the last client size the window manager reported, or <see langword="null"/> before the
     /// first resize (the initial size is the one the app was laid out in).
     /// </summary>
-    protected HackWindowSize? WindowSize { get; private set; }
+    protected KazoWindowSize? WindowSize { get; private set; }
 
     /// <summary>
     /// Runs when the app gains the keyboard focus. Called once per transition, never twice in a row.
@@ -53,32 +53,32 @@ public abstract partial class WindowAppBase
     /// </summary>
     /// <param name="previous">State before the change.</param>
     /// <param name="current">State after the change, also in <see cref="WindowState"/>.</param>
-    protected virtual void OnWindowStateChanged(HackWindowState previous, HackWindowState current)
+    protected virtual void OnWindowStateChanged(KazoWindowState previous, KazoWindowState current)
     {
     }
 
     /// <summary>Asynchronous variant of <see cref="OnWindowStateChanged"/>, called right after it.</summary>
     /// <param name="previous">State before the change.</param>
     /// <param name="current">State after the change.</param>
-    protected virtual Task OnWindowStateChangedAsync(HackWindowState previous, HackWindowState current) => Task.CompletedTask;
+    protected virtual Task OnWindowStateChangedAsync(KazoWindowState previous, KazoWindowState current) => Task.CompletedTask;
 
     /// <summary>
     /// Runs once a resize is over: when the pointer is released, a keyboard resize is validated, or
     /// the window is maximized or restored. Never once per pixel.
     /// </summary>
     /// <param name="size">New client size, also in <see cref="WindowSize"/>.</param>
-    protected virtual void OnWindowResized(HackWindowSize size)
+    protected virtual void OnWindowResized(KazoWindowSize size)
     {
     }
 
     /// <summary>Asynchronous variant of <see cref="OnWindowResized"/>, called right after it.</summary>
     /// <param name="size">New client size.</param>
-    protected virtual Task OnWindowResizedAsync(HackWindowSize size) => Task.CompletedTask;
+    protected virtual Task OnWindowResizedAsync(KazoWindowSize size) => Task.CompletedTask;
 
     /// <summary>
     /// Follows a detached display surface the app opened (ADR 0078, ADR 0081): the focus, blur and
     /// resize of the browser window that carries it call the same hooks as the desktop window. The app
-    /// is active while either has the focus; <see cref="HackWindowSize.DisplaySurfaceId"/> tells a
+    /// is active while either has the focus; <see cref="KazoWindowSize.DisplaySurfaceId"/> tells a
     /// surface resize from a window resize.
     /// </summary>
     /// <param name="surface">The open surface.</param>
@@ -106,7 +106,7 @@ public abstract partial class WindowAppBase
         });
 
     /// <inheritdoc />
-    Task IWindowAppEventTarget.NotifyStateChangedAsync(HackWindowState previous, HackWindowState current) =>
+    Task IWindowAppEventTarget.NotifyStateChangedAsync(KazoWindowState previous, KazoWindowState current) =>
         RunWindowHookAsync(nameof(OnWindowStateChanged), async () =>
         {
             WindowState = current;
@@ -115,7 +115,7 @@ public abstract partial class WindowAppBase
         });
 
     /// <inheritdoc />
-    Task IWindowAppEventTarget.NotifyResizedAsync(HackWindowSize size) =>
+    Task IWindowAppEventTarget.NotifyResizedAsync(KazoWindowSize size) =>
         RunWindowHookAsync(nameof(OnWindowResized), async () =>
         {
             if (size.DisplaySurfaceId is null)
@@ -249,7 +249,7 @@ public abstract partial class WindowAppBase
                 _width = surface.Width;
                 _height = surface.Height;
                 _ = ((IWindowAppEventTarget)_owner).NotifyResizedAsync(
-                    new HackWindowSize(_width, _height) { DisplaySurfaceId = surface.Id });
+                    new KazoWindowSize(_width, _height) { DisplaySurfaceId = surface.Id });
             }
         }
 

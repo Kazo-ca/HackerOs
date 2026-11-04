@@ -49,8 +49,8 @@ Two MSBuild properties, read by `build/Kazo.Os.ResourceAccounting.targets`
 imported by each host:
 
 ```xml
-<HackerOsCpuAccounting>true</HackerOsCpuAccounting>       <!-- default -->
-<HackerOsMemoryAccounting>true</HackerOsMemoryAccounting> <!-- default -->
+<HackerOsCpuAccounting>true</KazoOsCpuAccounting>       <!-- default -->
+<HackerOsMemoryAccounting>true</KazoOsMemoryAccounting> <!-- default -->
 ```
 
 - If both are `false`, the host does not reference the project: the measurement

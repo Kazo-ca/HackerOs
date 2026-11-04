@@ -32,29 +32,29 @@ internal sealed class AppPermissionAdministrationGateway : IAppPermissionAdminis
     }
 
     /// <inheritdoc />
-    public async ValueTask<HackDangerousCapabilityPolicy> GetPolicyAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<KazoDangerousCapabilityPolicy> GetPolicyAsync(CancellationToken cancellationToken = default)
     {
         _capabilities.Require(AppCapabilities.PermissionsManage);
         return ToPublic(await _administration().GetPolicyAsync(cancellationToken).ConfigureAwait(false));
     }
 
     /// <inheritdoc />
-    public async ValueTask<IReadOnlyList<HackAppPermissionInfo>> GetOverviewAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<IReadOnlyList<KazoAppPermissionInfo>> GetOverviewAsync(CancellationToken cancellationToken = default)
     {
         _capabilities.Require(AppCapabilities.PermissionsManage);
         IReadOnlyList<AppPermissionOverview> overview = await _administration().GetOverviewAsync(cancellationToken).ConfigureAwait(false);
         // The Settings app shows these texts: they follow its process's language (ADR 0104).
         System.Globalization.CultureInfo language = _gate.Language;
-        return [.. overview.Select(app => new HackAppPermissionInfo(
+        return [.. overview.Select(app => new KazoAppPermissionInfo(
             app.Manifest.Id,
             app.Manifest.Name,
             app.IsSystemApp,
             [.. app.Capabilities.Select(status => Describe(status, language))]))];
 
-        static HackCapabilityPermissionInfo Describe(DangerousCapabilityStatus status, System.Globalization.CultureInfo language)
+        static KazoCapabilityPermissionInfo Describe(DangerousCapabilityStatus status, System.Globalization.CultureInfo language)
         {
             CapabilityDescription description = CapabilityText.Localize(status.Description, language);
-            return new HackCapabilityPermissionInfo(
+            return new KazoCapabilityPermissionInfo(
                 status.Capability,
                 description.Title,
                 description.RiskDescription ?? string.Empty,
@@ -63,11 +63,11 @@ internal sealed class AppPermissionAdministrationGateway : IAppPermissionAdminis
     }
 
     /// <inheritdoc />
-    public async ValueTask SetPolicyAsync(HackDangerousCapabilityPolicy policy, CancellationToken cancellationToken = default)
+    public async ValueTask SetPolicyAsync(KazoDangerousCapabilityPolicy policy, CancellationToken cancellationToken = default)
     {
         _capabilities.Require(AppCapabilities.PermissionsManage);
         string admin = await _gate.AuthenticateAsync(
-            policy == HackDangerousCapabilityPolicy.Block
+            policy == KazoDangerousCapabilityPolicy.Block
                 ? _gate.Text["Admin.Policy.Block"]
                 : _gate.Text["Admin.Policy.Prompt"],
             "permissions.policy",
@@ -80,15 +80,15 @@ internal sealed class AppPermissionAdministrationGateway : IAppPermissionAdminis
 
     /// <inheritdoc />
     public async ValueTask SetMachineDecisionAsync(
-        string appId, string capability, HackPermissionDecision decision, CancellationToken cancellationToken = default)
+        string appId, string capability, KazoPermissionDecision decision, CancellationToken cancellationToken = default)
     {
         _capabilities.Require(AppCapabilities.PermissionsManage);
         AppPermissionAdministration administration = _administration();
         administration.ValidateMachineDecision(appId, capability);
         string textKey = decision switch
         {
-            HackPermissionDecision.Allow => "Admin.Decision.Allow",
-            HackPermissionDecision.Deny => "Admin.Decision.Deny",
+            KazoPermissionDecision.Allow => "Admin.Decision.Allow",
+            KazoPermissionDecision.Deny => "Admin.Decision.Deny",
             _ => "Admin.Decision.Ask"
         };
         string admin = await _gate.AuthenticateAsync(
@@ -108,27 +108,27 @@ internal sealed class AppPermissionAdministrationGateway : IAppPermissionAdminis
         await _administration().RemoveOwnDenialAsync(appId, capability, cancellationToken).ConfigureAwait(false);
     }
 
-    private static HackDangerousCapabilityPolicy ToPublic(DangerousCapabilityPolicy policy) =>
-        policy == DangerousCapabilityPolicy.Block ? HackDangerousCapabilityPolicy.Block : HackDangerousCapabilityPolicy.Prompt;
+    private static KazoDangerousCapabilityPolicy ToPublic(DangerousCapabilityPolicy policy) =>
+        policy == DangerousCapabilityPolicy.Block ? KazoDangerousCapabilityPolicy.Block : KazoDangerousCapabilityPolicy.Prompt;
 
-    private static DangerousCapabilityPolicy ToInternal(HackDangerousCapabilityPolicy policy) =>
-        policy == HackDangerousCapabilityPolicy.Block ? DangerousCapabilityPolicy.Block : DangerousCapabilityPolicy.Prompt;
+    private static DangerousCapabilityPolicy ToInternal(KazoDangerousCapabilityPolicy policy) =>
+        policy == KazoDangerousCapabilityPolicy.Block ? DangerousCapabilityPolicy.Block : DangerousCapabilityPolicy.Prompt;
 
-    private static AppPermissionDecision? ToInternal(HackPermissionDecision decision) => decision switch
+    private static AppPermissionDecision? ToInternal(KazoPermissionDecision decision) => decision switch
     {
-        HackPermissionDecision.Allow => AppPermissionDecision.Allow,
-        HackPermissionDecision.Deny => AppPermissionDecision.Deny,
-        HackPermissionDecision.Ask => null,
+        KazoPermissionDecision.Allow => AppPermissionDecision.Allow,
+        KazoPermissionDecision.Deny => AppPermissionDecision.Deny,
+        KazoPermissionDecision.Ask => null,
         _ => throw new ArgumentOutOfRangeException(nameof(decision), decision, "Unknown permission decision.")
     };
 
-    private static HackPermissionState ToPublic(DangerousCapabilityState state) => state switch
+    private static KazoPermissionState ToPublic(DangerousCapabilityState state) => state switch
     {
-        DangerousCapabilityState.System => HackPermissionState.System,
-        DangerousCapabilityState.Allowed => HackPermissionState.Allowed,
-        DangerousCapabilityState.DeniedByUser => HackPermissionState.DeniedByUser,
-        DangerousCapabilityState.DeniedByAdministrator => HackPermissionState.DeniedByAdministrator,
-        DangerousCapabilityState.BlockedByPolicy => HackPermissionState.BlockedByPolicy,
-        _ => HackPermissionState.Pending
+        DangerousCapabilityState.System => KazoPermissionState.System,
+        DangerousCapabilityState.Allowed => KazoPermissionState.Allowed,
+        DangerousCapabilityState.DeniedByUser => KazoPermissionState.DeniedByUser,
+        DangerousCapabilityState.DeniedByAdministrator => KazoPermissionState.DeniedByAdministrator,
+        DangerousCapabilityState.BlockedByPolicy => KazoPermissionState.BlockedByPolicy,
+        _ => KazoPermissionState.Pending
     };
 }

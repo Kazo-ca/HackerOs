@@ -166,7 +166,7 @@ public sealed class BuildKnownLazyAppsTests
         // ADR 0049 "Conséquences": the base experience shows no approval window. Single, deliberate
         // exception (ADR 0056 section 11): Diagnostic stays uninstallable and its first launch asks an
         // administrator for system.storage.inspect, because the raw snapshot bypasses file rights.
-        // ADR 0146: its isolation badge reads HackCrossOriginIsolation, which needs no capability,
+        // ADR 0146: its isolation badge reads KazoCrossOriginIsolation, which needs no capability,
         // so system.storage.inspect stays its only dangerous one.
         AppCatalog catalog = BuildKnownLazyApps.Catalog;
         const string diagnostic = "org.hackeros.diagnostic";

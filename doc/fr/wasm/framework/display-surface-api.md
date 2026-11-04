@@ -10,7 +10,7 @@ Ce document décrit comment une app ouvre une surface, dessine son contenu dedan
 |---|---|
 | `Shared/Kazo.Os.AppSdk.Blazor/Display/DisplaySurfaceContracts.cs` | Contrat public : `IDisplaySurfaceService`, `IDisplaySurface`, `DisplaySurfaceOptions`, `DisplaySurfaceOpenResult`, `DisplaySurfaceOpenStatus`, `DisplaySurfaceState`. |
 | `Shared/Kazo.Os.AppSdk.Blazor/Display/DisplaySurfaceContent.razor(.cs,.css)` | Portail : rend son contenu ici, puis déplace son élément dans la surface ; le rend avant d'être supprimé. `Surface` est facultatif (ADR 0084 §7) : sans surface ouverte, le contenu reste en place, ce qui permet de le rendre une seule fois et de garder son état au détachement. |
-| `Shared/Kazo.Os.AppSdk/Apps/HackBrowser.cs` | `HackBrowser.OpenAsync(url)`, `HackBrowser.OpenDetachedAsync(url)`. |
+| `Shared/Kazo.Os.AppSdk/Apps/KazoBrowser.cs` | `KazoBrowser.OpenAsync(url)`, `KazoBrowser.OpenDetachedAsync(url)`. |
 
 ## Ouvrir une surface
 
@@ -50,7 +50,7 @@ l'ancre.
 `IDisplaySurface.Changed` signale la taille (`Width`, `Height`), le focus
 (`HasFocus`), le titre et l'état. Il arrive hors de tout événement Blazor et
 hors du contexte de l'app : un composant le traite avec `InvokeAsync` et, s'il
-appelle le SDK, `HackExecutionContext.Enter(AppContext)`.
+appelle le SDK, `KazoExecutionContext.Enter(AppContext)`.
 
 | État | Quand |
 |---|---|
@@ -67,13 +67,13 @@ surfaces.
 
 ```csharp
 // Depuis un clic : le navigateur hôte refuse une fenêtre sans geste.
-await HackBrowser.OpenDetachedAsync("https://intranet.hack/rapport");
+await KazoBrowser.OpenDetachedAsync("https://intranet.hack/rapport");
 ```
 
 Lance le navigateur avec `--detached <url>` (capacité `apps.launch`) : la
 fenêtre détachée s'ouvre avant la première navigation. Si elle est bloquée, la
 page s'affiche dans le navigateur de l'OS, avec le bandeau et la notification.
-`HackBrowser.OpenAsync(url)` ouvre simplement l'adresse dans un nouveau
+`KazoBrowser.OpenAsync(url)` ouvre simplement l'adresse dans un nouveau
 navigateur.
 
 ## Limites pour les apps

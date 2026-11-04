@@ -51,7 +51,7 @@ public sealed class KernelMemoryChargeTests
         // UTF-16: two bytes per character of the media type and of the content.
         Assert.Equal((SystemClipboard.TextMediaType.Length + 5) * 2, ledger.BytesOf(10, KernelMemoryKind.Clipboard));
 
-        clipboard.SetFileDropList(Session, new HackClipboardFileList(HackClipboardFileOperation.Copy, ["/etc/hostname"]), explorer);
+        clipboard.SetFileDropList(Session, new KazoClipboardFileList(KazoClipboardFileOperation.Copy, ["/etc/hostname"]), explorer);
         Assert.Equal(0, ledger.BytesOf(10, KernelMemoryKind.Clipboard));
         Assert.True(ledger.BytesOf(11, KernelMemoryKind.Clipboard) > 0);
 

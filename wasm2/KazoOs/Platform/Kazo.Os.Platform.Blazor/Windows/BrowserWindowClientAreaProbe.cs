@@ -17,13 +17,13 @@ public sealed class BrowserWindowClientAreaProbe(IJSRuntime jsRuntime) : IWindow
     private IJSObjectReference? _module;
 
     /// <inheritdoc />
-    public async ValueTask<HackWindowSize?> MeasureAsync(WindowId windowId)
+    public async ValueTask<KazoWindowSize?> MeasureAsync(WindowId windowId)
     {
         try
         {
             _module ??= await _jsRuntime.InvokeAsync<IJSObjectReference>("import", ModulePath);
             ClientArea? area = await _module.InvokeAsync<ClientArea?>("measureWindowClient", windowId.ToString());
-            return area is null ? null : new HackWindowSize(area.Width, area.Height);
+            return area is null ? null : new KazoWindowSize(area.Width, area.Height);
         }
         catch (Exception exception) when (exception is JSException or JSDisconnectedException or InvalidOperationException or TaskCanceledException)
         {

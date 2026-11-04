@@ -34,7 +34,7 @@ public sealed class IndexedDbLocalGroupRepository : ILocalGroupRepository, IAsyn
             await _adapter.ExecuteAsync(
                 TransactionBoundary,
                 IndexedDbTransactionMode.ReadWrite,
-                [new IndexedDbOperation("add", HackerOsIndexedDbSchema.GroupStoreName, Value: record)],
+                [new IndexedDbOperation("add", KazoOsIndexedDbSchema.GroupStoreName, Value: record)],
                 cancellationToken).ConfigureAwait(false);
         }
         catch (JSException exception) when (exception.Message.Contains("ConstraintError", StringComparison.Ordinal))
@@ -54,7 +54,7 @@ public sealed class IndexedDbLocalGroupRepository : ILocalGroupRepository, IAsyn
         IReadOnlyList<JsonElement> results = await _adapter.ExecuteAsync(
             TransactionBoundary,
             IndexedDbTransactionMode.ReadOnly,
-            [new IndexedDbOperation("get", HackerOsIndexedDbSchema.GroupStoreName, Key: id.ToString())],
+            [new IndexedDbOperation("get", KazoOsIndexedDbSchema.GroupStoreName, Key: id.ToString())],
             cancellationToken).ConfigureAwait(false);
 
         JsonElement result = results.Single();
@@ -74,7 +74,7 @@ public sealed class IndexedDbLocalGroupRepository : ILocalGroupRepository, IAsyn
             IndexedDbTransactionMode.ReadOnly,
             [new IndexedDbOperation(
                 "get",
-                HackerOsIndexedDbSchema.GroupStoreName,
+                KazoOsIndexedDbSchema.GroupStoreName,
                 Key: name.Value,
                 IndexName: "name")],
             cancellationToken).ConfigureAwait(false);
@@ -102,7 +102,7 @@ public sealed class IndexedDbLocalGroupRepository : ILocalGroupRepository, IAsyn
             await _adapter.ExecuteAsync(
                 TransactionBoundary,
                 IndexedDbTransactionMode.ReadWrite,
-                [new IndexedDbOperation("put", HackerOsIndexedDbSchema.GroupStoreName, Value: LocalGroupRecord.FromDomain(renamed))],
+                [new IndexedDbOperation("put", KazoOsIndexedDbSchema.GroupStoreName, Value: LocalGroupRecord.FromDomain(renamed))],
                 cancellationToken).ConfigureAwait(false);
         }
         catch (JSException exception) when (exception.Message.Contains("ConstraintError", StringComparison.Ordinal))
@@ -120,7 +120,7 @@ public sealed class IndexedDbLocalGroupRepository : ILocalGroupRepository, IAsyn
         await _adapter.ExecuteAsync(
             TransactionBoundary,
             IndexedDbTransactionMode.ReadWrite,
-            [new IndexedDbOperation("delete", HackerOsIndexedDbSchema.GroupStoreName, Key: id.ToString())],
+            [new IndexedDbOperation("delete", KazoOsIndexedDbSchema.GroupStoreName, Key: id.ToString())],
             cancellationToken).ConfigureAwait(false);
     }
 

@@ -22,14 +22,14 @@ internal static class ShellText
 {
     /// <summary>Gets the language of <paramref name="session"/>'s messages: <c>en</c> or <c>fr</c>.</summary>
     /// <param name="session">The shell whose variables decide.</param>
-    public static CultureInfo Language(ShellSession session) => HackLocale.ResolveLanguage(session.GetVariable);
+    public static CultureInfo Language(ShellSession session) => KazoLocale.ResolveLanguage(session.GetVariable);
 
     /// <summary>Gets the shell's texts in <paramref name="session"/>'s language.</summary>
     /// <param name="session">The shell whose variables decide.</param>
     public static IStringLocalizer For(ShellSession session) => Strings.For(Language(session));
 
     /// <summary>Gets the English texts, the ones kept in exception messages and logs.</summary>
-    public static IStringLocalizer English => Strings.For(HackLocale.DefaultLanguage);
+    public static IStringLocalizer English => Strings.For(KazoLocale.DefaultLanguage);
 
     /// <summary>
     /// Translates the reason of a <c>Hack*</c> file API failure (the <c>strerror</c> text a shell
@@ -41,13 +41,13 @@ internal static class ShellText
     /// <param name="texts">The shell's texts.</param>
     public static string DescribeError(Exception exception, IStringLocalizer texts) => exception switch
     {
-        HackUnauthorizedAccessException { ErrorCode: FileSystemErrorCode.NotFile } => texts["Errno.IsDirectory"],
+        KazoUnauthorizedAccessException { ErrorCode: FileSystemErrorCode.NotFile } => texts["Errno.IsDirectory"],
         UnauthorizedAccessException => texts["Errno.PermissionDenied"],
-        HackFileNotFoundException or HackDirectoryNotFoundException => texts["Errno.NoSuchFile"],
-        HackIOException { ErrorCode: FileSystemErrorCode.NotDirectory } => texts["Errno.NotDirectory"],
-        HackIOException { ErrorCode: FileSystemErrorCode.NoSpace } => texts["Errno.NoSpace"],
-        HackIOException { ErrorCode: FileSystemErrorCode.FileTooLarge } => texts["Errno.FileTooLarge"],
-        HackIOException { ErrorCode: FileSystemErrorCode.TooManyOpenFiles } => texts["Errno.TooManyOpenFiles"],
+        KazoFileNotFoundException or KazoDirectoryNotFoundException => texts["Errno.NoSuchFile"],
+        KazoIOException { ErrorCode: FileSystemErrorCode.NotDirectory } => texts["Errno.NotDirectory"],
+        KazoIOException { ErrorCode: FileSystemErrorCode.NoSpace } => texts["Errno.NoSpace"],
+        KazoIOException { ErrorCode: FileSystemErrorCode.FileTooLarge } => texts["Errno.FileTooLarge"],
+        KazoIOException { ErrorCode: FileSystemErrorCode.TooManyOpenFiles } => texts["Errno.TooManyOpenFiles"],
         ArgumentException => texts["Errno.InvalidPath"],
         _ => exception.Message
     };

@@ -24,7 +24,7 @@ The task manager ([`task-manager.md`](task-manager.md), work item
 | `/proc/diskstats` | requests, sectors and time of the `hda` disk | **counted**: IndexedDB transactions of the file system |
 | `/proc/net/dev` | bytes and packets of `lo` and `eth0` | **counted**: apps' network gateway |
 | `/proc/mounts` | mount table | mount router |
-| `HackDriveInfo` | size and free space of `/` | hardware profile, stored content, browser quota |
+| `KazoDriveInfo` | size and free space of `/` | hardware profile, stored content, browser quota |
 | `/proc/hackeros/workers` | cross-origin isolation of the page (ADR 0131, 0143), then the OS's Web Workers: role, state, core, runtime memory, heartbeat age, busy time, processes (ADR 0070) | **measured**: heartbeat of each worker, every 250 ms; isolated page, memory of each worker measured by the browser (`performance.measureUserAgentSpecificMemory()`, every 20 s, `memory-measure: browser`) ([`worker-processes.md`](worker-processes.md)); absent when the host has no workers |
 
 A `cat` of a large file raises the process's `rchar` and the sectors read of
@@ -37,14 +37,14 @@ CPU per app: since phase 5, the OS times it itself at each context switch
 
 | Source | When | Indicator |
 | --- | --- | --- |
-| **simulated**: `IResourceSimulator`, the app's `ResourceProfile` profile | accounting switched off at build (`HackerOsCpuAccounting`, `HackerOsMemoryAccounting`) or in `appsettings.json` (`HackerOs:ResourceAccounting`), accounting not yet implemented, simulated process without code | `CpuSource: simulated`, `MemSource: simulated`; "estimated" mention in the task manager |
+| **simulated**: `IResourceSimulator`, the app's `ResourceProfile` profile | accounting switched off at build (`KazoOsCpuAccounting`, `KazoOsMemoryAccounting`) or in `appsettings.json` (`HackerOs:ResourceAccounting`), accounting not yet implemented, simulated process without code | `CpuSource: simulated`, `MemSource: simulated`; "estimated" mention in the task manager |
 | **measured**: `ICpuTimeAccountant`, `IMemoryAccountant` fed by the context-switch hook | accounting delivered and enabled, and the accountant answers for this process | `CpuSource: measured`, `MemSource: measured` |
 
 The `/proc` provider receives the two accountants through `ProcMetricsSources`
 (`CpuAccountant`, `MemoryAccountant`) and falls back to the simulator as soon
 as an accountant does not answer. Since the `exec` series,
 `ProcMetricsSources` also carries the limits tables (`ResourceLimits`) and
-descriptor tables (`FileDescriptors`), the `HackBackground` tasks
+descriptor tables (`FileDescriptors`), the `KazoBackground` tasks
 (`BackgroundJobs`), the `oom_score_adj` table (`OomScores`), the `OomKills`
 counter and the isolation state (`CrossOriginIsolation`). The
 `5-accounting-switches` work item delivers the switches, the hook and the null
@@ -62,7 +62,7 @@ reconstructed in four layers ([`memory-accounting.md`](memory-accounting.md)):
 | --- | --- | --- | --- |
 | Image | `VmExe`, `RssFile` | size of the assemblies, measured by the host build (`BuiltInApplications.json`) | exact |
 | OS resources | `VmData` | stream buffers, clipboard, pipes, in-flight sockets, fixed cost per window | exact |
-| Allocations | `HackAllocBytes` | `GC.GetAllocatedBytesForCurrentThread()` at each context switch | exact |
+| Allocations | `KazoAllocBytes` | `GC.GetAllocatedBytesForCurrentThread()` at each context switch | exact |
 | Resident | `RssAnon` | real heap distributed after each GC in proportion to recent allocations | **estimate** |
 
 `VmRSS = RssAnon + RssFile + VmData`. `/proc/meminfo` keeps `MemTotal` from the
@@ -124,7 +124,7 @@ persisted.
 | `FileSystemService` | `Platform.Core/FileSystem` | counts each process's reads and writes |
 | `AppNetworkGateway` + `NetworkTrafficMeter` | `Platform.Core/Network` | counts each app's traffic |
 | `ProcFileSystemProvider` + `ProcMetricsSources` | `Platform.Core/FileSystem/Virtual` | renders the files |
-| `AppDriveGateway` | `Platform.Core/Execution` | the OS's `statfs` behind `HackDriveInfo` |
+| `AppDriveGateway` | `Platform.Core/Execution` | the OS's `statfs` behind `KazoDriveInfo` |
 | `IndexedDbInteropAdapter` | `Infrastructure.Browser/Interop` | times each transaction and reports it to `hda` |
 | `IndexedDbStorageUsageProvider` | `Infrastructure.Browser/FileSystem` | real used space and quota of the browser (`navigator.storage.estimate()`, ADR 0099 §2); with no known quota, deduplicated content |
 
@@ -245,9 +245,9 @@ loopback by `hackdns`) is counted on `lo` and not on `eth0`
 `/dev/hda <point> idbfs rw`. The `/proc` provider reads the router on demand,
 because the router contains it.
 
-### Disk space (`HackDriveInfo`)
+### Disk space (`KazoDriveInfo`)
 
-`AppDriveGateway` returns a `HackDriveSnapshot` per non-virtual mount
+`AppDriveGateway` returns a `KazoDriveSnapshot` per non-virtual mount
 (currently `/`):
 
 - **size**: `StorageCapacityBytes`, brought down to the browser quota when it is
@@ -265,11 +265,11 @@ No capability is required, like `df`.
 
 ```csharp
 // Usage CPU entre deux lectures, comme top.
-string before = await HackFile.ReadAllTextAsync("/proc/stat");
+string before = await KazoFile.ReadAllTextAsync("/proc/stat");
 await Task.Delay(1000);
-string after = await HackFile.ReadAllTextAsync("/proc/stat");
+string after = await KazoFile.ReadAllTextAsync("/proc/stat");
 
-foreach (HackDriveInfo drive in await HackDriveInfo.GetDrivesAsync())
+foreach (KazoDriveInfo drive in await KazoDriveInfo.GetDrivesAsync())
 {
     Console.WriteLine($"{drive.Name} {drive.DriveFormat} {drive.AvailableFreeSpace}/{drive.TotalSize}");
 }
@@ -282,7 +282,7 @@ only the owner and the `System` authority read it.
 
 - **File counting in `FileSystemService`.** The ADR speaks of "the file
   gateway": this is the service behind all the gateways
-  (`AppFileSystemGateway`, commands, `HackFile`). Only it knows whether a path
+  (`AppFileSystemGateway`, commands, `KazoFile`). Only it knows whether a path
   touches storage or a virtual mount.
 - **`ResourceSamplingService` is new.** The ADR assumes the simulator advances
   at each tick; no code called it. Sampling happens every simulated second, not
@@ -296,7 +296,7 @@ only the owner and the `System` authority read it.
   and ICMP headers around the data actually exchanged.
 - **Disk time in real time.** The milliseconds of `diskstats` are measured on
   the real clock: this is the real time spent by IndexedDB.
-- **`HackDriveInfo` reads its values once.** The browser only answers
+- **`KazoDriveInfo` reads its values once.** The browser only answers
   asynchronously; `GetDrivesAsync` returns frozen instances, to be requested
   again for fresh values.
 - **Real browser figures (ADR 0099 §2).** `df` shows the used space and quota
@@ -314,7 +314,7 @@ only the owner and the `System` authority read it.
   service, without storage bytes for `/proc`; private `io`; busy time weighted
   by the queue.
 - `Tests/Kazo.Os.Platform.Core.Tests/Execution/AppDriveGatewayTests.cs`: size,
-  quota, free space never negative, `HackDriveInfo` in the ambient context.
+  quota, free space never negative, `KazoDriveInfo` in the ambient context.
 - `Tests/Kazo.Os.Network.Tests/Wave4NetworkTests.ProcMetrics.cs`: DNS, ping,
   HTTP and capability refusal counted (or not) on `eth0` and in `rchar`/`wchar`.
 - `Tests/Kazo.Os.Infrastructure.Browser.Tests/IndexedDbFileSystemReaderTests.cs`:
@@ -329,7 +329,7 @@ only the owner and the `System` authority read it.
 - [x] Traffic counting in `AppNetworkGateway` (`NetworkTrafficMeter`).
 - [x] Counting of the file system's IndexedDB transactions for `hda`.
 - [x] `/proc/stat`, `/proc/<pid>/io`, `/proc/diskstats`, `/proc/net/dev`, `/proc/mounts`.
-- [x] `HackDriveInfo`, `IAppDriveGateway`, `IAppExecutionContext.Drives`, `AppDriveGateway`, `IndexedDbStorageUsageProvider`.
+- [x] `KazoDriveInfo`, `IAppDriveGateway`, `IAppExecutionContext.Drives`, `AppDriveGateway`, `IndexedDbStorageUsageProvider`.
 - [x] Wiring in the Ecosystem host.
 - [x] Tests.
 - [x] Documentation: this document, `virtual-proc-and-dev.md`, `app-sdk.md`, `sdk-network.md`, index.

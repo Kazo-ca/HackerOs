@@ -69,7 +69,7 @@ public partial class SettingsWindow
 
     /// <summary>The pages of the menu, without Backup when the host lacks it and without Application when no app is named.</summary>
     private IReadOnlyList<SettingsPage> VisiblePages => PagesFor(
-        Kazo.Os.AppSdk.Administration.HackSystemBackup.IsSupportedFor(AppContext),
+        Kazo.Os.AppSdk.Administration.KazoSystemBackup.IsSupportedFor(AppContext),
         _appPageId is not null);
 
     /// <summary>The menu's pages for a host with or without backup, and with or without an app page.</summary>

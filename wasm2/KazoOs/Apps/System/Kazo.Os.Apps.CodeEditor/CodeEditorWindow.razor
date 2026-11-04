@@ -90,14 +90,14 @@
                     title="@L["Activity.Explorer.Title"]" aria-label="@L["Activity.Explorer"]"
                     aria-pressed="@(_sidebarVisible && _view == SideView.Explorer ? "true" : "false")"
                     @onclick="() => ToggleView(SideView.Explorer)">
-                <HackerIcon Library="IconLibrary.Lucide" Name="files" Size="22" />
+                <KazoIcon Library="IconLibrary.Lucide" Name="files" Size="22" />
             </button>
             <button type="button" id="code-activity-search"
                     class="activity-button @(_sidebarVisible && _view == SideView.Search ? "is-active" : null)"
                     title="@L["Activity.Search.Title"]" aria-label="@L["Activity.Search"]"
                     aria-pressed="@(_sidebarVisible && _view == SideView.Search ? "true" : "false")"
                     @onclick="() => ToggleView(SideView.Search)">
-                <HackerIcon Library="IconLibrary.Lucide" Name="search" Size="22" />
+                <KazoIcon Library="IconLibrary.Lucide" Name="search" Size="22" />
             </button>
             <span class="activity-spacer"></span>
             <button type="button" id="code-toggle-terminal"
@@ -105,7 +105,7 @@
                     title="@L["Activity.Terminal.Title"]" aria-label="@L["Activity.Terminal"]"
                     aria-pressed="@(_showPanel && _dockView == DockView.Terminal ? "true" : "false")"
                     @onclick="ToggleTerminalPanel">
-                <HackerIcon Library="IconLibrary.Lucide" Name="terminal" Size="22" />
+                <KazoIcon Library="IconLibrary.Lucide" Name="terminal" Size="22" />
             </button>
         </nav>
 
@@ -153,7 +153,7 @@
                             <button class="tab-select"
                                     aria-pressed="@(active ? "true" : "false")"
                                     @onclick="() => ActivateDocumentAsync(document.Id)">
-                                <HackerIcon Library="IconLibrary.Lucide" Name="file-code" Size="14" />
+                                <KazoIcon Library="IconLibrary.Lucide" Name="file-code" Size="14" />
                                 <span class="tab-name">@document.Title</span>
                                 @if (hint is not null)
                                 {
@@ -256,7 +256,7 @@
                                             title="@(tab.Terminal?.WorkingDirectory ?? tab.Options.WorkingDirectory)"
                                             aria-pressed="@(tab.Id == _activeTerminalTabId ? "true" : "false")"
                                             @onclick="() => ActivateTerminalTab(tab.Id)">
-                                        <HackerIcon Library="IconLibrary.Lucide" Name="terminal" Size="13" />
+                                        <KazoIcon Library="IconLibrary.Lucide" Name="terminal" Size="13" />
                                         <span>@tab.Number: @tab.Label</span>
                                     </button>
                                     <button class="terminal-tab-close"
@@ -272,13 +272,13 @@
                         {
                             <button type="button" class="panel-button" aria-label="@L["Terminals.New"]" title="@L["Terminals.New"]" @onclick="() => AddTerminalTab()">+</button>
                             <button type="button" class="panel-button" aria-label="@L["Terminals.Clear"]" title="@L["Terminals.Clear"]" @onclick="ClearActiveTerminalAsync">
-                                <HackerIcon Library="IconLibrary.Lucide" Name="eraser" Size="14" />
+                                <KazoIcon Library="IconLibrary.Lucide" Name="eraser" Size="14" />
                             </button>
                         }
                         else if (_dockView == DockView.Status)
                         {
                             <button type="button" class="panel-button" aria-label="@L["Panel.ClearStatusLog"]" title="@L["Panel.ClearStatusLog"]" @onclick="ClearStatusLog">
-                                <HackerIcon Library="IconLibrary.Lucide" Name="eraser" Size="14" />
+                                <KazoIcon Library="IconLibrary.Lucide" Name="eraser" Size="14" />
                             </button>
                         }
                         <button type="button" class="panel-button" aria-label="@L["Menu.View.HidePanel"]" title="@L["Panel.Hide.Title"]" @onclick="TogglePanel">×</button>
@@ -315,8 +315,8 @@
                     {
                         <div class="terminal-instance @(tab.Id == _activeTerminalTabId ? "is-active" : null)" @key="tab.Id">
                             @* The Terminal app's own terminal, embedded by contract (ADR 0063). *@
-                            <HackEmbeddedComponent TController="IHackTerminal"
-                                                   Contract="@HackComponentContracts.Terminal"
+                            <KazoEmbeddedComponent TController="IHackTerminal"
+                                                   Contract="@KazoComponentContracts.Terminal"
                                                    Options="tab.Options"
                                                    ControllerChanged="terminal => OnTerminalReady(tab, terminal)" />
                         </div>
@@ -335,7 +335,7 @@
             @if (_workspace is not null)
             {
                 <span class="status-item" title="@_workspace.Root.Value">
-                    <HackerIcon Library="IconLibrary.Lucide" Name="folder-open" Size="13" />
+                    <KazoIcon Library="IconLibrary.Lucide" Name="folder-open" Size="13" />
                     @_workspace.Name
                 </span>
             }
@@ -347,7 +347,7 @@
             @if (_dirtyCount > 0)
             {
                 <span class="status-item" title="@L["StatusBar.UnsavedEditors"]">
-                    <HackerIcon Library="IconLibrary.Lucide" Name="circle-dot" Size="13" />
+                    <KazoIcon Library="IconLibrary.Lucide" Name="circle-dot" Size="13" />
                     @(Strings.Count(L, "StatusBar.Unsaved", _dirtyCount))
                 </span>
             }

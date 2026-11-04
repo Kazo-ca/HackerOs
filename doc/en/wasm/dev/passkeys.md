@@ -24,12 +24,12 @@ The passkey is added to the password: the account keeps its password
 | Keyring | `Platform.Core/Keyring/UserKeyringService.cs`, `KeyringFileFormat.cs` | Format 2 with slots ([`sensitive-settings.md`](sensitive-settings.md#2-login-keyring)). |
 | Administrator | `AdminElevationVerifier.VerifyWithPasskeyAsync`, `AdministratorAuthenticationAgent.PasskeyVerifier` | Administrator confirmation by passkey ([`admin-authentication-agent.md`](admin-authentication-agent.md)). |
 | Interface | `App.razor` (sign-in screen), `AdministratorAuthenticationOverlay`, Settings ▸ Users (`PasskeysPanel`) | "Use a passkey" buttons and key management. |
-| SDK | `HackUserAccounts.ListPasskeysAsync`, `AddPasskeyAsync`, `RemovePasskeyAsync` | The keys of the session, without a capability ([`../framework/system-administration.md`](../framework/system-administration.md)). |
+| SDK | `KazoUserAccounts.ListPasskeysAsync`, `AddPasskeyAsync`, `RemovePasskeyAsync` | The keys of the session, without a capability ([`../framework/system-administration.md`](../framework/system-administration.md)). |
 
 ## Registering a key
 
 1. Settings ▸ Users ▸ "My passkeys": the user gives a
-   name ("Phone", "YubiKey"), then `HackUserAccounts.AddPasskeyAsync`.
+   name ("Phone", "YubiKey"), then `KazoUserAccounts.AddPasskeyAsync`.
 2. `PasskeyService.RegisterAsync` draws a 32-byte challenge and PRF salt, then
    asks the browser for a creation: relying party = host name of the page,
    user identifier = GUID of the account, `attestation: "none"`,
@@ -46,7 +46,7 @@ The passkey is added to the password: the account keeps its password
 ## Signing in
 
 1. Sign-in screen: the "Use a passkey" button appears when
-   the chosen account has one (`HackUserAccount.PasskeyCount`).
+   the chosen account has one (`KazoUserAccount.PasskeyCount`).
 2. `LoginWithPasskeyAsync` → `PasskeyService.AuthenticateAsync`: new challenge,
    `allowCredentials` = the keys of the account, PRF `evalByCredential` with the salt
    of each key.

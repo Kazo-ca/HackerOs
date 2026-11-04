@@ -1,4 +1,4 @@
-@inherits Kazo.Os.AppSdk.Blazor.HackComponentBase
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
 @using Kazo.Os.App.Abstractions
 @using Kazo.Os.AppSdk.Icons
 @implements IDisposable
@@ -13,13 +13,13 @@
         <span>@L["Search.Title"]</span>
         <span class="title-actions">
             <button type="button" class="icon-button" title="@L["Search.Refresh"]" aria-label="@L["Search.Refresh.Label"]" @onclick="RunNowAsync" disabled="@(Workspace is null)">
-                <HackerIcon Library="IconLibrary.Lucide" Name="refresh-cw" Size="15" />
+                <KazoIcon Library="IconLibrary.Lucide" Name="refresh-cw" Size="15" />
             </button>
             <button type="button" class="icon-button" title="@L["Search.Clear"]" aria-label="@L["Search.Clear"]" @onclick="Clear">
-                <HackerIcon Library="IconLibrary.Lucide" Name="x" Size="15" />
+                <KazoIcon Library="IconLibrary.Lucide" Name="x" Size="15" />
             </button>
             <button type="button" class="icon-button" title="@L["Search.CollapseAll"]" aria-label="@L["Search.CollapseAll.Label"]" @onclick="CollapseAll">
-                <HackerIcon Library="IconLibrary.Lucide" Name="chevrons-down-up" Size="15" />
+                <KazoIcon Library="IconLibrary.Lucide" Name="chevrons-down-up" Size="15" />
             </button>
         </span>
     </div>
@@ -47,13 +47,13 @@
                        @onkeydown="OnSearchKeyDownAsync" />
                 <span class="search-toggles">
                     <button type="button" class="toggle @(_matchCase ? "is-on" : null)" title="@L["Search.MatchCase"]" aria-label="@L["Search.MatchCase"]" aria-pressed="@(_matchCase ? "true" : "false")" @onclick="ToggleMatchCase">
-                        <HackerIcon Library="IconLibrary.Lucide" Name="case-sensitive" Size="15" />
+                        <KazoIcon Library="IconLibrary.Lucide" Name="case-sensitive" Size="15" />
                     </button>
                     <button type="button" class="toggle @(_wholeWord ? "is-on" : null)" title="@L["Search.WholeWord"]" aria-label="@L["Search.WholeWord"]" aria-pressed="@(_wholeWord ? "true" : "false")" @onclick="ToggleWholeWord">
-                        <HackerIcon Library="IconLibrary.Lucide" Name="whole-word" Size="15" />
+                        <KazoIcon Library="IconLibrary.Lucide" Name="whole-word" Size="15" />
                     </button>
                     <button type="button" class="toggle @(_useRegex ? "is-on" : null)" title="@L["Search.Regex"]" aria-label="@L["Search.Regex"]" aria-pressed="@(_useRegex ? "true" : "false")" @onclick="ToggleRegex">
-                        <HackerIcon Library="IconLibrary.Lucide" Name="regex" Size="15" />
+                        <KazoIcon Library="IconLibrary.Lucide" Name="regex" Size="15" />
                     </button>
                 </span>
             </div>
@@ -89,8 +89,8 @@
                 bool collapsed = _collapsed.Contains(file.File.RelativePath);
                 <div class="result-file" @key="file.File.RelativePath">
                     <button type="button" class="file-row" title="@file.File.Path.Value" aria-expanded="@(!collapsed ? "true" : "false")" @onclick="() => ToggleFile(file.File.RelativePath)">
-                        <HackerIcon Library="IconLibrary.Lucide" Name="@(collapsed ? "chevron-right" : "chevron-down")" Size="14" />
-                        <HackerIcon Library="IconLibrary.Lucide" Name="file-text" Size="14" />
+                        <KazoIcon Library="IconLibrary.Lucide" Name="@(collapsed ? "chevron-right" : "chevron-down")" Size="14" />
+                        <KazoIcon Library="IconLibrary.Lucide" Name="file-text" Size="14" />
                         <span class="file-name">@file.File.Name</span>
                         <span class="file-directory">@file.File.Directory</span>
                         <span class="match-count">@file.Matches.Count</span>

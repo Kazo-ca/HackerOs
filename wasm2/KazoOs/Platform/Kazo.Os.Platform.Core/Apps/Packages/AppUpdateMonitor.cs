@@ -22,7 +22,7 @@ namespace Kazo.Os.Platform.Core.Apps.Packages;
 /// <para>
 /// A notification is posted only when the set of available updates changes, so a check every six
 /// hours that finds the same update says it once. The Store's own check
-/// (<c>HackAppPackages.GetUpdatesAsync</c>) goes through <see cref="Publish"/> too, so an update the
+/// (<c>KazoAppPackages.GetUpdatesAsync</c>) goes through <see cref="Publish"/> too, so an update the
 /// Store already shows is not notified again.
 /// </para>
 /// </remarks>

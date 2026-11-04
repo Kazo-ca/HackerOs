@@ -34,7 +34,7 @@ internal static class StorageSnapshotRedactor
 
     /// <summary>Returns a copy of <paramref name="snapshot"/> whose secret file contents are masked.</summary>
     /// <param name="snapshot">Raw snapshot.</param>
-    public static HackStorageSnapshot Redact(HackStorageSnapshot snapshot)
+    public static KazoStorageSnapshot Redact(KazoStorageSnapshot snapshot)
     {
         ArgumentNullException.ThrowIfNull(snapshot);
         HashSet<string> secretEntries = new(
@@ -46,7 +46,7 @@ internal static class StorageSnapshotRedactor
         }
 
         HashSet<string> secretHashes = new(StringComparer.Ordinal);
-        foreach (HackStorageStoreSnapshot store in snapshot.Stores.Where(static store => store.Kind == HackStorageStoreKind.FileEntries))
+        foreach (KazoStorageStoreSnapshot store in snapshot.Stores.Where(static store => store.Kind == KazoStorageStoreKind.FileEntries))
         {
             foreach (JsonElement entry in Records(store))
             {
@@ -72,7 +72,7 @@ internal static class StorageSnapshotRedactor
         };
     }
 
-    private static HackStorageStoreSnapshot MaskContent(HackStorageStoreSnapshot store, HashSet<string> secretHashes)
+    private static KazoStorageStoreSnapshot MaskContent(KazoStorageStoreSnapshot store, HashSet<string> secretHashes)
     {
         JsonArray masked = [];
         foreach (JsonElement record in Records(store))
@@ -93,6 +93,6 @@ internal static class StorageSnapshotRedactor
         return store with { FormattedJson = json, Records = document.RootElement.Clone() };
     }
 
-    private static IEnumerable<JsonElement> Records(HackStorageStoreSnapshot store) =>
+    private static IEnumerable<JsonElement> Records(KazoStorageStoreSnapshot store) =>
         store.Records.ValueKind == JsonValueKind.Array ? store.Records.EnumerateArray() : [];
 }

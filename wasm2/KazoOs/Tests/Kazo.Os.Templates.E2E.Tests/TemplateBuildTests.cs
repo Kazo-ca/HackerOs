@@ -31,7 +31,7 @@ public sealed class TemplateBuildTests(TemplateWorkspace workspace)
 
     /// <summary>
     /// ADR 0176 §8, ADR 0207: a repository made with <c>hackeros-solution</c>, its Kazo OS submodule
-    /// replaced by this repository (<c>HackerOsSourceRoot</c>), builds and tests both profiles. Debug
+    /// replaced by this repository (<c>KazoOsSourceRoot</c>), builds and tests both profiles. Debug
     /// compiles Kazo OS from the sources (every Kazo OS reference is a project, the host aggregates
     /// the app with the base apps, system apps included); Release takes the packages of the local
     /// feed. Without the submodule the build stops with HOSAPP0070.
@@ -40,14 +40,14 @@ public sealed class TemplateBuildTests(TemplateWorkspace workspace)
     public async Task The_solution_template_builds_and_tests_both_profiles()
     {
         string directory = Path.Combine(workspace.Root, "Contoso.Board");
-        string sourceRoot = "-p:HackerOsSourceRoot=" + workspace.RepositoryRoot + Path.DirectorySeparatorChar;
+        string sourceRoot = "-p:KazoOsSourceRoot=" + workspace.RepositoryRoot + Path.DirectorySeparatorChar;
         await workspace.RunCheckedAsync(workspace.Root, "new", "hackeros-solution", "-n", "Contoso.Board", "-o", directory,
             "--appId", "com.contoso.board", "--repository", "contoso/Os-App-Board");
 
         Assert.True(File.Exists(Path.Combine(directory, "Contoso.Board.sln")));
         Assert.Contains("external/HackerOs", File.ReadAllText(Path.Combine(directory, ".gitmodules")), StringComparison.Ordinal);
         Assert.Contains("contoso/Os-App-Board", File.ReadAllText(Path.Combine(directory, "store", "store.json")), StringComparison.Ordinal);
-        // The catalog builds this project, not the solution (whose tests project has no HackerOsPack target).
+        // The catalog builds this project, not the solution (whose tests project has no KazoOsPack target).
         Assert.Contains("\"project\": \"src/Contoso.Board/Contoso.Board.csproj\"", File.ReadAllText(Path.Combine(directory, "store", "store.json")), StringComparison.Ordinal);
         Assert.Contains("src/Contoso.Board", File.ReadAllText(Path.Combine(directory, ".github", "workflows", "publish-to-hack-store.yml")), StringComparison.Ordinal);
         // ADR 0219 §3: the packages branch workflow is named for the app and private keys stay out of git.
@@ -81,7 +81,7 @@ public sealed class TemplateBuildTests(TemplateWorkspace workspace)
         Assert.Contains("\"com.contoso.board\"", releaseCatalog, StringComparison.Ordinal);
 
         // The publishing workflow packs the app the same way (ADR 0188 §7, ADR 0182).
-        await workspace.RunCheckedAsync(directory, "build", Path.Combine("src", "Contoso.Board"), "-c", "Release", "-t:HackerOsPack", sourceRoot);
+        await workspace.RunCheckedAsync(directory, "build", Path.Combine("src", "Contoso.Board"), "-c", "Release", "-t:KazoOsPack", sourceRoot);
         Assert.True(File.Exists(Path.Combine(directory, "src", "Contoso.Board", "bin", "hackeros-packages", "index.json")));
     }
 
@@ -214,13 +214,13 @@ public sealed class TemplateBuildTests(TemplateWorkspace workspace)
             await page.GetByRole(AriaRole.Button, new PageGetByRoleOptions { Name = "Create local profile" }).ClickAsync();
 
             // The window app of SDK 2.0.0, lazy-loaded from its package, shows the OS file control
-            // (HackFileView, provided by the File Explorer).
+            // (KazoFileView, provided by the File Explorer).
             await page.GetByText("Applications", new PageGetByTextOptions { Exact = true }).ClickAsync(new LocatorClickOptions { Timeout = 60_000 });
             await page.GetByText("SDK 2.0 Window", new PageGetByTextOptions { Exact = true }).First.ClickAsync();
             await page.GetByText("Compiled against SDK 2.0.0").WaitForAsync(new LocatorWaitForOptions { Timeout = 30_000 });
             await page.Locator(".compat-files table.file-view-details").WaitForAsync(new LocatorWaitForOptions { Timeout = 30_000 });
 
-            // Its command, run from the Terminal, copies a file with HackFileOperations.
+            // Its command, run from the Terminal, copies a file with KazoFileOperations.
             await page.GetByText("Applications", new PageGetByTextOptions { Exact = true }).ClickAsync();
             await page.GetByText("Terminal", new PageGetByTextOptions { Exact = true }).First.ClickAsync();
             await page.GetByText("Type 'help'").WaitForAsync(new LocatorWaitForOptions { Timeout = 30_000 });

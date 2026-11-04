@@ -15,38 +15,38 @@
       Kazo OS host (ADR 0047, ADR 0098 §2): the build aggregates the manifests of every app package
       below into this assembly, read back by HostAppCatalog.Load, and lazy-loads their assemblies.
       IsSystemApp="true" makes an app a system app (not uninstallable, dangerous capabilities granted).
-      $(HackerOsVersion) comes from the submodule; in Debug the packages become its projects (ADR 0176 §4).
+      $(KazoOsVersion) comes from the submodule; in Debug the packages become its projects (ADR 0176 §4).
     -->
-    <HackerOsAppHost>true</HackerOsAppHost>
+    <KazoOsAppHost>true</KazoOsAppHost>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.13" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.13" PrivateAssets="all" />
-    <PackageReference Include="Kazo.Os.App.Build" Version="$(HackerOsVersion)" PrivateAssets="all" />
-    <PackageReference Include="Kazo.Os.Ecosystem.Host" Version="$(HackerOsVersion)" />
+    <PackageReference Include="Kazo.Os.App.Build" Version="$(KazoOsVersion)" PrivateAssets="all" />
+    <PackageReference Include="Kazo.Os.Ecosystem.Host" Version="$(KazoOsVersion)" />
   </ItemGroup>
 
   <ItemGroup>
     <!-- The base apps. Add your own apps as ProjectReference or PackageReference items. -->
     <ProjectReference Include="..\Kazo.Os.Template.Solution\Kazo.Os.Template.Solution.csproj" />
-    <PackageReference Include="Kazo.Os.Commands" Version="$(HackerOsVersion)" IsSystemApp="true" />
-    <PackageReference Include="Kazo.Os.Apps.Terminal" Version="$(HackerOsVersion)" IsSystemApp="true" />
-    <PackageReference Include="Kazo.Os.Apps.Settings" Version="$(HackerOsVersion)" IsSystemApp="true" />
-    <PackageReference Include="Kazo.Os.Apps.FileExplorer" Version="$(HackerOsVersion)" IsSystemApp="true" />
-    <PackageReference Include="Kazo.Os.Apps.Desktop" Version="$(HackerOsVersion)" IsSystemApp="true" />
-    <PackageReference Include="Kazo.Os.Apps.TextEditor" Version="$(HackerOsVersion)" IsSystemApp="true" />
-    <PackageReference Include="Kazo.Os.Apps.CodeEditor" Version="$(HackerOsVersion)" IsSystemApp="true" />
-    <PackageReference Include="Kazo.Os.Apps.SystemMonitor" Version="$(HackerOsVersion)" IsSystemApp="true" />
-    <PackageReference Include="Kazo.Os.Apps.ErrorLogViewer" Version="$(HackerOsVersion)" IsSystemApp="true" />
-    <PackageReference Include="Kazo.Os.Apps.WebServer" Version="$(HackerOsVersion)" IsSystemApp="true" />
-    <PackageReference Include="Kazo.Os.Apps.ThemeEditor" Version="$(HackerOsVersion)" IsSystemApp="true" />
-    <PackageReference Include="Kazo.Os.Apps.Store" Version="$(HackerOsVersion)" IsSystemApp="true" />
-    <PackageReference Include="Kazo.Os.Apps.Browser" Version="$(HackerOsVersion)" />
-    <PackageReference Include="Kazo.Os.Apps.Calculator" Version="$(HackerOsVersion)" />
-    <PackageReference Include="Kazo.Os.Apps.HackPaint" Version="$(HackerOsVersion)" />
-    <PackageReference Include="Kazo.Os.Apps.IconViewer" Version="$(HackerOsVersion)" />
-    <PackageReference Include="Kazo.Os.Apps.Diagnostic" Version="$(HackerOsVersion)" />
+    <PackageReference Include="Kazo.Os.Commands" Version="$(KazoOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="Kazo.Os.Apps.Terminal" Version="$(KazoOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="Kazo.Os.Apps.Settings" Version="$(KazoOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="Kazo.Os.Apps.FileExplorer" Version="$(KazoOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="Kazo.Os.Apps.Desktop" Version="$(KazoOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="Kazo.Os.Apps.TextEditor" Version="$(KazoOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="Kazo.Os.Apps.CodeEditor" Version="$(KazoOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="Kazo.Os.Apps.SystemMonitor" Version="$(KazoOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="Kazo.Os.Apps.ErrorLogViewer" Version="$(KazoOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="Kazo.Os.Apps.WebServer" Version="$(KazoOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="Kazo.Os.Apps.ThemeEditor" Version="$(KazoOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="Kazo.Os.Apps.Store" Version="$(KazoOsVersion)" IsSystemApp="true" />
+    <PackageReference Include="Kazo.Os.Apps.Browser" Version="$(KazoOsVersion)" />
+    <PackageReference Include="Kazo.Os.Apps.Calculator" Version="$(KazoOsVersion)" />
+    <PackageReference Include="Kazo.Os.Apps.KazoPaint" Version="$(KazoOsVersion)" />
+    <PackageReference Include="Kazo.Os.Apps.IconViewer" Version="$(KazoOsVersion)" />
+    <PackageReference Include="Kazo.Os.Apps.Diagnostic" Version="$(KazoOsVersion)" />
   </ItemGroup>
 
 </Project>

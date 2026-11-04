@@ -16,7 +16,7 @@ namespace Kazo.Os.Server.Tests;
 
 public sealed class ProxyServiceTests : IDisposable
 {
-    private readonly HackerOsServerDbContext _db;
+    private readonly KazoOsServerDbContext _db;
     private readonly ProxyService _proxy;
     private readonly AuditService _audit;
     private readonly FakeHttpMessageHandler _fakeHandler;
@@ -29,10 +29,10 @@ public sealed class ProxyServiceTests : IDisposable
 
     public ProxyServiceTests()
     {
-        var options = new DbContextOptionsBuilder<HackerOsServerDbContext>()
+        var options = new DbContextOptionsBuilder<KazoOsServerDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString())
             .Options;
-        _db = new HackerOsServerDbContext(options);
+        _db = new KazoOsServerDbContext(options);
         _audit = new AuditService(_db);
         _db.Devices.Add(new DeviceEntity
         {

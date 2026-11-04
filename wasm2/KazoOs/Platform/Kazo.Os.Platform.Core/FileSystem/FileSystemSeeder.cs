@@ -75,7 +75,7 @@ public sealed class FileSystemSeeder(
             LoginEnvironment.SystemLocaleFilePath.Value, LoginEnvironment.DefaultSystemLocaleFileContent, 0x01A4, system, cancellationToken);
         // ADR 0074, section 4: the static host table read first by hackdns, root-owned 0644.
         await EnsureFileAsync(
-            Network.Local.HackDnsResolver.HostsFilePath.Value, Network.Local.HackDnsResolver.DefaultHostsFileContent, 0x01A4, system, cancellationToken);
+            Network.Local.KazoDnsResolver.HostsFilePath.Value, Network.Local.KazoDnsResolver.DefaultHostsFileContent, 0x01A4, system, cancellationToken);
         // ADR 0182 section 3, ADR 0189 section 1: hosts, catalogs and trusted sources of app packages,
         // from the host's build, root-owned 0644.
         await EnsureFileAsync(
@@ -114,7 +114,7 @@ public sealed class FileSystemSeeder(
         await EnsureDirectoryAsync($"{home}/Downloads", 0x01C0, userProvisioning, cancellationToken);
         await EnsureDirectoryAsync($"{home}/.config", 0x01C0, userProvisioning, cancellationToken);
         // ADR 0044: settings directories are 0755 like on Linux; the 0700 home already keeps
-        // other users out. ~/.config/<appId>/ is created by HackSettings on first write.
+        // other users out. ~/.config/<appId>/ is created by KazoSettings on first write.
         await EnsureDirectoryAsync($"{home}/.config/hackeros", 0x01ED, userProvisioning, cancellationToken);
         await EnsureDirectoryAsync($"{home}/.local", 0x01ED, userProvisioning, cancellationToken);
         await EnsureDirectoryAsync($"{home}/.local/state", 0x01ED, userProvisioning, cancellationToken);

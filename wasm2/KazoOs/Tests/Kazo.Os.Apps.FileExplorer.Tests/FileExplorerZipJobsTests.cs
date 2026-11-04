@@ -8,7 +8,7 @@ using Xunit;
 namespace Kazo.Os.Apps.FileExplorer.Tests;
 
 /// <summary>
-/// ADR 0140: Compress and Extract run as HackBackground tasks; without the OS (a unit test) the task
+/// ADR 0140: Compress and Extract run as KazoBackground tasks; without the OS (a unit test) the task
 /// runs inline, with the same JSON crossing of its input and result.
 /// </summary>
 public sealed class FileExplorerZipJobsTests
@@ -21,7 +21,7 @@ public sealed class FileExplorerZipJobsTests
             .WithDirectory("/home/u/docs")
             .WithFile("/home/u/docs/a.txt", "alpha")
             .WithFile("/home/u/b.txt", "beta");
-        using IDisposable scope = HackExecutionContext.Enter(new MinimalAppExecutionContext(
+        using IDisposable scope = KazoExecutionContext.Enter(new MinimalAppExecutionContext(
             AppDefinitionMapper.ToManifest(new FileExplorerApp()), fileSystem: fileSystem));
 
         string? compressed = await FileExplorerZipService.CompressInBackgroundAsync(

@@ -21,7 +21,7 @@
     <ProjectReference Include="..\..\Apps\Commands\Kazo.Os.Commands\Kazo.Os.Commands.csproj" />
     <ProjectReference Include="..\..\Platform\Kazo.Os.Platform.Core\Kazo.Os.Platform.Core.csproj" />
     <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.Calculator\Kazo.Os.Apps.Calculator.csproj" />
-    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.HackPaint\Kazo.Os.Apps.HackPaint.csproj" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.KazoPaint\Kazo.Os.Apps.KazoPaint.csproj" />
   </ItemGroup>
 
 </Project>

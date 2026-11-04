@@ -18,10 +18,10 @@ public sealed record EndTaskReport(IReadOnlyList<ProcessRow> Ended, IReadOnlyLis
 /// <summary>How "End task" stops a process (ADR 0069, section 4).</summary>
 public enum EndTaskMode
 {
-    /// <summary>"End task": <c>SIGTERM</c>, the process gets 5 seconds to end by itself (<c>HackProcess.TerminateAsync</c>).</summary>
+    /// <summary>"End task": <c>SIGTERM</c>, the process gets 5 seconds to end by itself (<c>KazoProcess.TerminateAsync</c>).</summary>
     Terminate,
 
-    /// <summary>"Force kill": <c>SIGKILL</c>, immediate (<c>HackProcess.KillAsync</c>).</summary>
+    /// <summary>"Force kill": <c>SIGKILL</c>, immediate (<c>KazoProcess.KillAsync</c>).</summary>
     ForceKill
 }
 
@@ -40,7 +40,7 @@ public static class EndTaskRunner
     /// <summary>Ends every row with <paramref name="end"/>.</summary>
     /// <param name="rows">The selected processes.</param>
     /// <param name="end">
-    /// Ends one process: <c>HackProcess.TerminateAsync</c> for "End task", <c>HackProcess.KillAsync</c>
+    /// Ends one process: <c>KazoProcess.TerminateAsync</c> for "End task", <c>KazoProcess.KillAsync</c>
     /// for "Force kill".
     /// </param>
     /// <returns>The processes ended and the failures, in the order of <paramref name="rows"/>.</returns>
@@ -68,13 +68,13 @@ public static class EndTaskRunner
     }
 
     /// <summary>
-    /// Stops one process the way <paramref name="mode"/> says: <see cref="HackProcess.TerminateAsync"/>
-    /// (<c>SIGTERM</c>, 5 s) or <see cref="HackProcess.KillAsync"/> (<c>SIGKILL</c>).
+    /// Stops one process the way <paramref name="mode"/> says: <see cref="KazoProcess.TerminateAsync"/>
+    /// (<c>SIGTERM</c>, 5 s) or <see cref="KazoProcess.KillAsync"/> (<c>SIGKILL</c>).
     /// </summary>
     /// <param name="process">The process.</param>
     /// <param name="mode">"End task" or "Force kill".</param>
     /// <param name="cancellationToken">Cancels the wait.</param>
-    public static Task End(HackProcess process, EndTaskMode mode, CancellationToken cancellationToken = default)
+    public static Task End(KazoProcess process, EndTaskMode mode, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(process);
         return mode == EndTaskMode.ForceKill
@@ -90,10 +90,10 @@ public static class EndTaskRunner
             await end(row);
             return null;
         }
-        catch (HackUnauthorizedAccessException)
+        catch (KazoUnauthorizedAccessException)
         {
             // The reason is shown in the window: in the language of the process running this code.
-            return new EndTaskFailure(row.Pid, row.Name, HackLocalization.GetLocalizer<Strings>()["EndTask.AccessDenied"]);
+            return new EndTaskFailure(row.Pid, row.Name, KazoLocalization.GetLocalizer<Strings>()["EndTask.AccessDenied"]);
         }
         catch (InvalidOperationException)
         {

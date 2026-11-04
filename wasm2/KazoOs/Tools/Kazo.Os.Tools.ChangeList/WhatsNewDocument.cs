@@ -37,7 +37,7 @@ internal static class WhatsNewDocument
 
     /// <summary>Builds the document.</summary>
     /// <param name="folder">The change list.</param>
-    /// <param name="version">The version being built (<c>HackerOsVersion</c>): the next group says "since" it.</param>
+    /// <param name="version">The version being built (<c>KazoOsVersion</c>): the next group says "since" it.</param>
     /// <param name="repositoryUrl">The GitHub repository that repository paths and pull requests point to.</param>
     public static JsonObject Build(ChangeFolder folder, string version, string repositoryUrl = DefaultRepositoryUrl)
     {

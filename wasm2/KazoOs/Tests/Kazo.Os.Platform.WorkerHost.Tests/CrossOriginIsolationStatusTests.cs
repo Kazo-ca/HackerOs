@@ -6,7 +6,7 @@ using Kazo.Os.Platform.WorkerHost.Protocol;
 namespace Kazo.Os.Platform.WorkerHost.Tests;
 
 /// <summary>
-/// <c>HackCrossOriginIsolation.GetStatusAsync</c> (ADR 0146): the status the boot probe recorded, with
+/// <c>KazoCrossOriginIsolation.GetStatusAsync</c> (ADR 0146): the status the boot probe recorded, with
 /// no capability, the same on the main thread and in a worker.
 /// </summary>
 public sealed class CrossOriginIsolationStatusTests
@@ -47,8 +47,8 @@ public sealed class CrossOriginIsolationStatusTests
     [Fact]
     public void Every_field_crosses_the_worker_boundary()
     {
-        HackCrossOriginIsolationStatus status = AppCrossOriginIsolationGateway.ToSdk(Isolated with { Mode = CrossOriginIsolationMode.On });
-        HackCrossOriginIsolationStatus missing = AppCrossOriginIsolationGateway.ToSdk(CrossOriginIsolationStatus.NotBrowser with
+        KazoCrossOriginIsolationStatus status = AppCrossOriginIsolationGateway.ToSdk(Isolated with { Mode = CrossOriginIsolationMode.On });
+        KazoCrossOriginIsolationStatus missing = AppCrossOriginIsolationGateway.ToSdk(CrossOriginIsolationStatus.NotBrowser with
         {
             Mode = CrossOriginIsolationMode.Off,
             Reason = CrossOriginIsolationReason.Setting
@@ -59,7 +59,7 @@ public sealed class CrossOriginIsolationStatusTests
         Assert.Null(RoundTrip(missing).EmbedderPolicy);
     }
 
-    private static HackCrossOriginIsolationStatus RoundTrip(HackCrossOriginIsolationStatus status)
+    private static KazoCrossOriginIsolationStatus RoundTrip(KazoCrossOriginIsolationStatus status)
     {
         using MemoryStream buffer = new();
         using (Utf8JsonWriter writer = new(buffer))

@@ -62,15 +62,15 @@ Kazo.Os.Ecosystem.EcosystemServiceCollectionExtensions
 Kazo.Os.Ecosystem.FileDialogServiceFactory
 Kazo.Os.Ecosystem.FileDialogServiceFactory.Create(Kazo.Os.Simulation.Abstractions.Sessions.SessionId sessionId) -> Kazo.Os.AppSdk.Blazor.IFileDialogService!
 Kazo.Os.Ecosystem.FileDialogServiceFactory.FileDialogServiceFactory(Kazo.Os.Simulation.Abstractions.Gateways.IFileSystemSelectedResourceHandleRegistry! handleRegistry) -> void
-Kazo.Os.Ecosystem.HackerOsBrowserHostExtensions
-Kazo.Os.Ecosystem.HackerOsBrowserHostOptions
-Kazo.Os.Ecosystem.HackerOsBrowserHostOptions.<Clone>$() -> Kazo.Os.Ecosystem.HackerOsBrowserHostOptions!
-Kazo.Os.Ecosystem.HackerOsBrowserHostOptions.Equals(Kazo.Os.Ecosystem.HackerOsBrowserHostOptions? other) -> bool
-Kazo.Os.Ecosystem.HackerOsBrowserHostOptions.HackerOsBrowserHostOptions() -> void
-Kazo.Os.Ecosystem.HackerOsBrowserHostOptions.RootSelector.get -> string!
-Kazo.Os.Ecosystem.HackerOsBrowserHostOptions.RootSelector.init -> void
-Kazo.Os.Ecosystem.HackerOsBrowserHostOptions.WorkerPreloadAssemblies.get -> System.Collections.Generic.IReadOnlyList<string!>?
-Kazo.Os.Ecosystem.HackerOsBrowserHostOptions.WorkerPreloadAssemblies.init -> void
+Kazo.Os.Ecosystem.KazoOsBrowserHostExtensions
+Kazo.Os.Ecosystem.KazoOsBrowserHostOptions
+Kazo.Os.Ecosystem.KazoOsBrowserHostOptions.<Clone>$() -> Kazo.Os.Ecosystem.KazoOsBrowserHostOptions!
+Kazo.Os.Ecosystem.KazoOsBrowserHostOptions.Equals(Kazo.Os.Ecosystem.KazoOsBrowserHostOptions? other) -> bool
+Kazo.Os.Ecosystem.KazoOsBrowserHostOptions.KazoOsBrowserHostOptions() -> void
+Kazo.Os.Ecosystem.KazoOsBrowserHostOptions.RootSelector.get -> string!
+Kazo.Os.Ecosystem.KazoOsBrowserHostOptions.RootSelector.init -> void
+Kazo.Os.Ecosystem.KazoOsBrowserHostOptions.WorkerPreloadAssemblies.get -> System.Collections.Generic.IReadOnlyList<string!>?
+Kazo.Os.Ecosystem.KazoOsBrowserHostOptions.WorkerPreloadAssemblies.init -> void
 Kazo.Os.Ecosystem.HardwareServiceCollectionExtensions
 Kazo.Os.Ecosystem.HostAppCatalog
 Kazo.Os.Ecosystem.HostAppCatalog.Catalog.get -> Kazo.Os.Platform.Core.AppCatalog!
@@ -174,9 +174,9 @@ override Kazo.Os.Ecosystem.CpuAccountingRegistration.ToString() -> string!
 override Kazo.Os.Ecosystem.EcosystemBootResult.Equals(object? obj) -> bool
 override Kazo.Os.Ecosystem.EcosystemBootResult.GetHashCode() -> int
 override Kazo.Os.Ecosystem.EcosystemBootResult.ToString() -> string!
-override Kazo.Os.Ecosystem.HackerOsBrowserHostOptions.Equals(object? obj) -> bool
-override Kazo.Os.Ecosystem.HackerOsBrowserHostOptions.GetHashCode() -> int
-override Kazo.Os.Ecosystem.HackerOsBrowserHostOptions.ToString() -> string!
+override Kazo.Os.Ecosystem.KazoOsBrowserHostOptions.Equals(object? obj) -> bool
+override Kazo.Os.Ecosystem.KazoOsBrowserHostOptions.GetHashCode() -> int
+override Kazo.Os.Ecosystem.KazoOsBrowserHostOptions.ToString() -> string!
 override Kazo.Os.Ecosystem.LoginProgressScreen.OnInitialized() -> void
 override Kazo.Os.Ecosystem.MemoryAccountingRegistration.Equals(object? obj) -> bool
 override Kazo.Os.Ecosystem.MemoryAccountingRegistration.GetHashCode() -> int
@@ -192,9 +192,9 @@ static Kazo.Os.Ecosystem.CpuAccountingRegistration.operator ==(Kazo.Os.Ecosystem
 static Kazo.Os.Ecosystem.EcosystemBootResult.operator !=(Kazo.Os.Ecosystem.EcosystemBootResult? left, Kazo.Os.Ecosystem.EcosystemBootResult? right) -> bool
 static Kazo.Os.Ecosystem.EcosystemBootResult.operator ==(Kazo.Os.Ecosystem.EcosystemBootResult? left, Kazo.Os.Ecosystem.EcosystemBootResult? right) -> bool
 static Kazo.Os.Ecosystem.EcosystemServiceCollectionExtensions.AddHackerOsEcosystem(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services, Kazo.Os.Platform.Core.AppCatalog? catalog = null, System.Func<System.IServiceProvider!, System.Collections.Generic.IReadOnlyDictionary<string!, Kazo.Os.Platform.Core.Discovery.AppDescriptor!>!>? descriptorProvider = null, System.Func<System.IServiceProvider!, Kazo.Os.Platform.Core.Lifecycle.IAppDescriptorLoader?>? descriptorLoaderProvider = null) -> Microsoft.Extensions.DependencyInjection.IServiceCollection!
-static Kazo.Os.Ecosystem.HackerOsBrowserHostExtensions.AddHackerOsBrowserHost(this Microsoft.AspNetCore.Components.WebAssembly.Hosting.WebAssemblyHostBuilder! builder, Kazo.Os.Ecosystem.HostAppCatalog! apps, Kazo.Os.Ecosystem.HackerOsBrowserHostOptions? options = null) -> Microsoft.AspNetCore.Components.WebAssembly.Hosting.WebAssemblyHostBuilder!
-static Kazo.Os.Ecosystem.HackerOsBrowserHostOptions.operator !=(Kazo.Os.Ecosystem.HackerOsBrowserHostOptions? left, Kazo.Os.Ecosystem.HackerOsBrowserHostOptions? right) -> bool
-static Kazo.Os.Ecosystem.HackerOsBrowserHostOptions.operator ==(Kazo.Os.Ecosystem.HackerOsBrowserHostOptions? left, Kazo.Os.Ecosystem.HackerOsBrowserHostOptions? right) -> bool
+static Kazo.Os.Ecosystem.KazoOsBrowserHostExtensions.AddHackerOsBrowserHost(this Microsoft.AspNetCore.Components.WebAssembly.Hosting.WebAssemblyHostBuilder! builder, Kazo.Os.Ecosystem.HostAppCatalog! apps, Kazo.Os.Ecosystem.KazoOsBrowserHostOptions? options = null) -> Microsoft.AspNetCore.Components.WebAssembly.Hosting.WebAssemblyHostBuilder!
+static Kazo.Os.Ecosystem.KazoOsBrowserHostOptions.operator !=(Kazo.Os.Ecosystem.KazoOsBrowserHostOptions? left, Kazo.Os.Ecosystem.KazoOsBrowserHostOptions? right) -> bool
+static Kazo.Os.Ecosystem.KazoOsBrowserHostOptions.operator ==(Kazo.Os.Ecosystem.KazoOsBrowserHostOptions? left, Kazo.Os.Ecosystem.KazoOsBrowserHostOptions? right) -> bool
 static Kazo.Os.Ecosystem.HardwareServiceCollectionExtensions.AddHackerOsHardware(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services, Microsoft.Extensions.Configuration.IConfiguration? configuration) -> Kazo.Os.Simulation.Abstractions.Processes.VirtualHardwareProfile!
 static Kazo.Os.Ecosystem.HardwareServiceCollectionExtensions.ReadProfile(Microsoft.Extensions.Configuration.IConfiguration? configuration) -> Kazo.Os.Simulation.Abstractions.Processes.VirtualHardwareProfile!
 static Kazo.Os.Ecosystem.HostAppCatalog.Load(System.Reflection.Assembly! hostAssembly) -> Kazo.Os.Ecosystem.HostAppCatalog!

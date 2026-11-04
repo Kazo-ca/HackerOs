@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis;
 namespace Kazo.Os.Tools.BackgroundAnalyzer;
 
 /// <summary>
-/// Build errors of <c>HackBackground.RunAsync</c> (ADR 0128 section 2, ADR 0140). Every one is an
+/// Build errors of <c>KazoBackground.RunAsync</c> (ADR 0128 section 2, ADR 0140). Every one is an
 /// error: a task the build cannot prove runnable in another .NET runtime never reaches the user.
 /// The OS checks the same rules again at run time, for a call made by reflection.
 /// </summary>
@@ -20,11 +20,11 @@ internal static class BackgroundDiagnostics
         DiagnosticSeverity.Error,
         isEnabledByDefault: true);
 
-    /// <summary>An input or result type is not declared by a <c>HackWireContext</c> of the app.</summary>
+    /// <summary>An input or result type is not declared by a <c>KazoWireContext</c> of the app.</summary>
     public static readonly DiagnosticDescriptor UndeclaredType = new(
         "HOSBG0002",
-        "A background task's type must be serializable by the app's HackWireContext",
-        "The {0} type '{1}' of the background task is not in a JsonSerializerContext the assembly declares with [assembly: HackWireContext(...)]: add [JsonSerializable(typeof({1}))] to that context",
+        "A background task's type must be serializable by the app's KazoWireContext",
+        "The {0} type '{1}' of the background task is not in a JsonSerializerContext the assembly declares with [assembly: KazoWireContext(...)]: add [JsonSerializable(typeof({1}))] to that context",
         Category,
         DiagnosticSeverity.Error,
         isEnabledByDefault: true);

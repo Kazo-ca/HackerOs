@@ -50,7 +50,7 @@ public sealed record ServerConnectionGatewayServices(
 /// <para>
 /// The server is optional (<c>AGENTS.md</c>): with no services the state is "not connected" and a
 /// sync does nothing. Transport and server errors of a request the user made are rethrown as
-/// <see cref="HackServerConnectionException"/>.
+/// <see cref="KazoServerConnectionException"/>.
 /// </para>
 /// </remarks>
 internal sealed class AppServerConnectionGateway : IAppServerConnectionGateway
@@ -84,38 +84,38 @@ internal sealed class AppServerConnectionGateway : IAppServerConnectionGateway
     {
         _services = services;
         _capabilities = capabilities ?? throw new ArgumentNullException(nameof(capabilities));
-        _language = language ?? (static () => Kazo.Os.AppSdk.Globalization.HackLocale.DefaultLanguage);
+        _language = language ?? (static () => Kazo.Os.AppSdk.Globalization.KazoLocale.DefaultLanguage);
     }
 
     /// <inheritdoc />
-    public async ValueTask<HackServerConnectionState> GetStateAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<KazoServerConnectionState> GetStateAsync(CancellationToken cancellationToken = default)
     {
         _capabilities.Require(AppCapabilities.ServerConnectionManage);
         if (_services is null)
         {
-            return HackServerConnectionState.NotConnected;
+            return KazoServerConnectionState.NotConnected;
         }
 
         return ToPublic(await _services.Connection().GetStateAsync(cancellationToken).ConfigureAwait(false));
     }
 
     /// <inheritdoc />
-    public ValueTask<HackServerConnectionState> ConnectAsync(
+    public ValueTask<KazoServerConnectionState> ConnectAsync(
         Uri serverUrl, string login, string password, CancellationToken cancellationToken = default) =>
         ConnectCoreAsync(serverUrl, login, password, createAccount: false, cancellationToken);
 
     /// <inheritdoc />
-    public ValueTask<HackServerConnectionState> CreateAccountAsync(
+    public ValueTask<KazoServerConnectionState> CreateAccountAsync(
         Uri serverUrl, string login, string password, CancellationToken cancellationToken = default) =>
         ConnectCoreAsync(serverUrl, login, password, createAccount: true, cancellationToken);
 
     /// <inheritdoc />
-    public async ValueTask<HackServerConnectionState> PairAsync(Uri serverUrl, string code, CancellationToken cancellationToken = default)
+    public async ValueTask<KazoServerConnectionState> PairAsync(Uri serverUrl, string code, CancellationToken cancellationToken = default)
     {
         _capabilities.Require(AppCapabilities.ServerConnectionManage);
         if (_services is null)
         {
-            throw new HackServerConnectionException("This Kazo OS host has no optional-server support.");
+            throw new KazoServerConnectionException("This Kazo OS host has no optional-server support.");
         }
 
         try
@@ -129,18 +129,18 @@ internal sealed class AppServerConnectionGateway : IAppServerConnectionGateway
         }
         catch (Exception exception) when (exception is ServerConnectionException or HttpRequestException)
         {
-            throw new HackServerConnectionException($"Could not pair: {exception.Message}", exception);
+            throw new KazoServerConnectionException($"Could not pair: {exception.Message}", exception);
         }
     }
 
     /// <inheritdoc />
-    public async ValueTask<HackServerProbe> TestAsync(Uri serverUrl, CancellationToken cancellationToken = default)
+    public async ValueTask<KazoServerProbe> TestAsync(Uri serverUrl, CancellationToken cancellationToken = default)
     {
         _capabilities.Require(AppCapabilities.ServerConnectionManage);
         ArgumentNullException.ThrowIfNull(serverUrl);
         if (_services?.HostInfo is not { } hostInfo)
         {
-            return new HackServerProbe(false, null, null, "This Kazo OS host cannot test a server address.");
+            return new KazoServerProbe(false, null, null, "This Kazo OS host cannot test a server address.");
         }
 
         try
@@ -148,19 +148,19 @@ internal sealed class AppServerConnectionGateway : IAppServerConnectionGateway
             Kazo.Os.Server.Contracts.Hosting.HostInfoResponse info =
                 await hostInfo().GetHostInfoAsync(serverUrl, cancellationToken).ConfigureAwait(false);
             return info.IsServer
-                ? new HackServerProbe(true, info.ServerVersion, info.ApiVersion, null)
-                : new HackServerProbe(false, null, null, $"{serverUrl} answered, but not as a Kazo OS server.");
+                ? new KazoServerProbe(true, info.ServerVersion, info.ApiVersion, null)
+                : new KazoServerProbe(false, null, null, $"{serverUrl} answered, but not as a Kazo OS server.");
         }
         catch (ServerConnectionException exception)
         {
-            return new HackServerProbe(false, null, null, exception.Message);
+            return new KazoServerProbe(false, null, null, exception.Message);
         }
         catch (Exception exception) when (exception is HttpRequestException
             or TaskCanceledException && !cancellationToken.IsCancellationRequested)
         {
             // A browser reports a refused connection, a blocked one (mixed content, an untrusted
             // certificate, CORS) and an unknown name the same way: say which ones to check.
-            return new HackServerProbe(false, null, null,
+            return new KazoServerProbe(false, null, null,
                 $"{serverUrl} could not be reached (is the server started? for HTTPS, is its certificate approved on this device?): {exception.Message}");
         }
     }
@@ -176,10 +176,10 @@ internal sealed class AppServerConnectionGateway : IAppServerConnectionGateway
     }
 
     /// <inheritdoc />
-    public async ValueTask SyncAsync(HackSyncDomain domain, HackSyncDirection direction, CancellationToken cancellationToken = default)
+    public async ValueTask SyncAsync(KazoSyncDomain domain, KazoSyncDirection direction, CancellationToken cancellationToken = default)
     {
         _capabilities.Require(AppCapabilities.ServerConnectionManage);
-        if (domain == HackSyncDomain.Grants && direction == HackSyncDirection.Push)
+        if (domain == KazoSyncDomain.Grants && direction == KazoSyncDirection.Push)
         {
             throw new ArgumentException("Grants are issued by the server: this domain can only be pulled (ADR 0031).", nameof(direction));
         }
@@ -193,23 +193,23 @@ internal sealed class AppServerConnectionGateway : IAppServerConnectionGateway
         {
             Task pass = (domain, direction) switch
             {
-                (HackSyncDomain.FileSystem, HackSyncDirection.Push) => _services.FileSystemSync?.Invoke().PushAsync(cancellationToken),
-                (HackSyncDomain.FileSystem, HackSyncDirection.Pull) => _services.FileSystemSync?.Invoke().PullAsync(cancellationToken),
-                (HackSyncDomain.Grants, _) => _services.GrantsSync?.Invoke().PullAsync(cancellationToken),
-                (HackSyncDomain.FileAssociations, HackSyncDirection.Push) => _services.FileAssociationsSync?.Invoke().PushAsync(cancellationToken),
-                (HackSyncDomain.FileAssociations, HackSyncDirection.Pull) => _services.FileAssociationsSync?.Invoke().PullAsync(cancellationToken),
+                (KazoSyncDomain.FileSystem, KazoSyncDirection.Push) => _services.FileSystemSync?.Invoke().PushAsync(cancellationToken),
+                (KazoSyncDomain.FileSystem, KazoSyncDirection.Pull) => _services.FileSystemSync?.Invoke().PullAsync(cancellationToken),
+                (KazoSyncDomain.Grants, _) => _services.GrantsSync?.Invoke().PullAsync(cancellationToken),
+                (KazoSyncDomain.FileAssociations, KazoSyncDirection.Push) => _services.FileAssociationsSync?.Invoke().PushAsync(cancellationToken),
+                (KazoSyncDomain.FileAssociations, KazoSyncDirection.Pull) => _services.FileAssociationsSync?.Invoke().PullAsync(cancellationToken),
                 _ => throw new ArgumentOutOfRangeException(nameof(domain), domain, "Unknown sync domain.")
             } ?? Task.CompletedTask;
             await pass.ConfigureAwait(false);
         }
         catch (Exception exception) when (exception is ServerConnectionException or HttpRequestException)
         {
-            throw new HackServerConnectionException($"Sync failed: {exception.Message}", exception);
+            throw new KazoServerConnectionException($"Sync failed: {exception.Message}", exception);
         }
     }
 
     /// <inheritdoc />
-    public async ValueTask<IReadOnlyList<HackSyncConflict>> GetConflictsAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<IReadOnlyList<KazoSyncConflict>> GetConflictsAsync(CancellationToken cancellationToken = default)
     {
         _capabilities.Require(AppCapabilities.ServerConnectionManage);
         if (_services?.FileSystemSync is not { } fileSystemSync)
@@ -218,11 +218,11 @@ internal sealed class AppServerConnectionGateway : IAppServerConnectionGateway
         }
 
         IReadOnlyList<SyncFileConflict> conflicts = await fileSystemSync().GetConflictsAsync(cancellationToken).ConfigureAwait(false);
-        return [.. conflicts.Select(conflict => new HackSyncConflict(HackSyncDomain.FileSystem, conflict.RelativePath, conflict.DetectedAtUtc))];
+        return [.. conflicts.Select(conflict => new KazoSyncConflict(KazoSyncDomain.FileSystem, conflict.RelativePath, conflict.DetectedAtUtc))];
     }
 
     /// <inheritdoc />
-    public async ValueTask<HackServerRelayPolicy?> GetRelayPolicyAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<KazoServerRelayPolicy?> GetRelayPolicyAsync(CancellationToken cancellationToken = default)
     {
         _capabilities.Require(AppCapabilities.ServerConnectionManage);
         if (_services?.Proxy is not { } proxyFactory)
@@ -242,7 +242,7 @@ internal sealed class AppServerConnectionGateway : IAppServerConnectionGateway
             ProxyPolicyResponse policy = await proxyFactory()
                 .GetPolicyAsync(new Uri(state.ServerBaseUrl), token, cancellationToken)
                 .ConfigureAwait(false);
-            return new HackServerRelayPolicy(
+            return new KazoServerRelayPolicy(
                 policy.Enabled,
                 policy.HttpPorts ?? [],
                 policy.TcpPorts ?? [],
@@ -261,7 +261,7 @@ internal sealed class AppServerConnectionGateway : IAppServerConnectionGateway
         }
         catch (Exception exception) when (exception is ServerConnectionException or HttpRequestException)
         {
-            throw new HackServerConnectionException($"Could not read the relay policy: {exception.Message}", exception);
+            throw new KazoServerConnectionException($"Could not read the relay policy: {exception.Message}", exception);
         }
     }
 
@@ -290,10 +290,10 @@ internal sealed class AppServerConnectionGateway : IAppServerConnectionGateway
     }
 
     /// <inheritdoc />
-    public ValueTask<HackSyncStatus> GetSyncStatusAsync(CancellationToken cancellationToken = default)
+    public ValueTask<KazoSyncStatus> GetSyncStatusAsync(CancellationToken cancellationToken = default)
     {
         _capabilities.Require(AppCapabilities.ServerConnectionManage);
-        return ValueTask.FromResult(_services?.Scheduler is { } scheduler ? ToPublic(scheduler().Status) : HackSyncStatus.Inactive);
+        return ValueTask.FromResult(_services?.Scheduler is { } scheduler ? ToPublic(scheduler().Status) : KazoSyncStatus.Inactive);
     }
 
     /// <inheritdoc />
@@ -302,7 +302,7 @@ internal sealed class AppServerConnectionGateway : IAppServerConnectionGateway
         _capabilities.Require(AppCapabilities.ServerConnectionManage);
         if (_services?.Settings is not { } settings)
         {
-            throw new HackServerConnectionException("This Kazo OS host has no periodic synchronization.");
+            throw new KazoServerConnectionException("This Kazo OS host has no periodic synchronization.");
         }
 
         await settings().SetAsync(
@@ -315,23 +315,23 @@ internal sealed class AppServerConnectionGateway : IAppServerConnectionGateway
     }
 
     /// <inheritdoc />
-    public async ValueTask<HackSyncStatus> SyncNowAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<KazoSyncStatus> SyncNowAsync(CancellationToken cancellationToken = default)
     {
         _capabilities.Require(AppCapabilities.ServerConnectionManage);
         if (_services is null)
         {
-            return HackSyncStatus.Inactive;
+            return KazoSyncStatus.Inactive;
         }
 
         if (_services.Scheduler is not { } scheduler)
         {
             // A host without the scheduler: the same order, one domain after the other.
-            await SyncAsync(HackSyncDomain.FileSystem, HackSyncDirection.Push, cancellationToken).ConfigureAwait(false);
-            await SyncAsync(HackSyncDomain.FileSystem, HackSyncDirection.Pull, cancellationToken).ConfigureAwait(false);
-            await SyncAsync(HackSyncDomain.Grants, HackSyncDirection.Pull, cancellationToken).ConfigureAwait(false);
-            await SyncAsync(HackSyncDomain.FileAssociations, HackSyncDirection.Push, cancellationToken).ConfigureAwait(false);
-            await SyncAsync(HackSyncDomain.FileAssociations, HackSyncDirection.Pull, cancellationToken).ConfigureAwait(false);
-            return HackSyncStatus.Inactive;
+            await SyncAsync(KazoSyncDomain.FileSystem, KazoSyncDirection.Push, cancellationToken).ConfigureAwait(false);
+            await SyncAsync(KazoSyncDomain.FileSystem, KazoSyncDirection.Pull, cancellationToken).ConfigureAwait(false);
+            await SyncAsync(KazoSyncDomain.Grants, KazoSyncDirection.Pull, cancellationToken).ConfigureAwait(false);
+            await SyncAsync(KazoSyncDomain.FileAssociations, KazoSyncDirection.Push, cancellationToken).ConfigureAwait(false);
+            await SyncAsync(KazoSyncDomain.FileAssociations, KazoSyncDirection.Pull, cancellationToken).ConfigureAwait(false);
+            return KazoSyncStatus.Inactive;
         }
 
         try
@@ -340,13 +340,13 @@ internal sealed class AppServerConnectionGateway : IAppServerConnectionGateway
         }
         catch (Exception exception) when (exception is ServerConnectionException or HttpRequestException or IOException)
         {
-            throw new HackServerConnectionException($"Sync failed: {exception.Message}", exception);
+            throw new KazoServerConnectionException($"Sync failed: {exception.Message}", exception);
         }
 
         return ToPublic(scheduler().Status);
     }
 
-    private static HackSyncStatus ToPublic(SyncSchedulerStatus status) => new(
+    private static KazoSyncStatus ToPublic(SyncSchedulerStatus status) => new(
         status.IsActive,
         status.IsPaused,
         status.IsOnline,
@@ -356,13 +356,13 @@ internal sealed class AppServerConnectionGateway : IAppServerConnectionGateway
         status.LastError,
         status.Interval);
 
-    private async ValueTask<HackServerConnectionState> ConnectCoreAsync(
+    private async ValueTask<KazoServerConnectionState> ConnectCoreAsync(
         Uri serverUrl, string login, string password, bool createAccount, CancellationToken cancellationToken)
     {
         _capabilities.Require(AppCapabilities.ServerConnectionManage);
         if (_services is null)
         {
-            throw new HackServerConnectionException("This Kazo OS host has no optional-server support.");
+            throw new KazoServerConnectionException("This Kazo OS host has no optional-server support.");
         }
 
         try
@@ -378,14 +378,14 @@ internal sealed class AppServerConnectionGateway : IAppServerConnectionGateway
         }
         catch (Exception exception) when (exception is ServerConnectionException or HttpRequestException)
         {
-            throw new HackServerConnectionException($"Could not connect: {exception.Message}", exception);
+            throw new KazoServerConnectionException($"Could not connect: {exception.Message}", exception);
         }
     }
 
-    private static HackServerConnectionState ToPublic(ServerState? state) =>
+    private static KazoServerConnectionState ToPublic(ServerState? state) =>
         state is null
-            ? HackServerConnectionState.NotConnected
-            : new HackServerConnectionState(
+            ? KazoServerConnectionState.NotConnected
+            : new KazoServerConnectionState(
                 true,
                 Uri.TryCreate(state.ServerBaseUrl, UriKind.Absolute, out Uri? url) ? url : null,
                 state.AccountId,

@@ -2,7 +2,7 @@ using System.Collections.Immutable;
 using Kazo.Os.App.Abstractions;
 using Kazo.Os.AppSdk;
 using Kazo.Os.Apps.Calculator;
-using Kazo.Os.Apps.HackPaint;
+using Kazo.Os.Apps.KazoPaint;
 using Kazo.Os.Commands.Alias;
 using Kazo.Os.Commands.Clear;
 using Kazo.Os.Commands.Diff;

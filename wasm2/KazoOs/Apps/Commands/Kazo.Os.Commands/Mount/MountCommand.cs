@@ -90,7 +90,7 @@ public sealed class MountCommand(AppManifest manifest) : TerminalAppBase(manifes
     {
         try
         {
-            HackDriveInfo? drive = await HackDriveInfo.MountHostFolderAsync(mountPoint, cancellationToken);
+            KazoDriveInfo? drive = await KazoDriveInfo.MountHostFolderAsync(mountPoint, cancellationToken);
             if (drive is null)
             {
                 await context.StandardError.WriteLineAsync(text["Cancelled"]);
@@ -115,7 +115,7 @@ public sealed class MountCommand(AppManifest manifest) : TerminalAppBase(manifes
     {
         try
         {
-            if (await HackDriveInfo.ReconnectAsync(mountPoint, cancellationToken))
+            if (await KazoDriveInfo.ReconnectAsync(mountPoint, cancellationToken))
             {
                 return 0;
             }
@@ -136,7 +136,7 @@ public sealed class MountCommand(AppManifest manifest) : TerminalAppBase(manifes
         string[] lines;
         try
         {
-            lines = await HackFile.ReadAllLinesAsync("/proc/mounts", cancellationToken);
+            lines = await KazoFile.ReadAllLinesAsync("/proc/mounts", cancellationToken);
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
         {

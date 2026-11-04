@@ -21,11 +21,11 @@ Core ni Infrastructure.Browser.
 
 | Couche | Fichiers |
 |---|---|
-| SDK (contrats, façades) | `Shared/Kazo.Os.AppSdk/Administration/` (`HackPermissionAdministration`, `HackComponentProviders`, `HackServerConnection`, `HackSystem`, `HackStorageDiagnostics`, `HackScreens` et leurs contrats), `Shared/Kazo.Os.AppSdk/Settings/IAppSystemSettingsGateway.cs`, `SettingsDocumentStores.cs` |
+| SDK (contrats, façades) | `Shared/Kazo.Os.AppSdk/Administration/` (`KazoPermissionAdministration`, `KazoComponentProviders`, `KazoServerConnection`, `KazoSystem`, `KazoStorageDiagnostics`, `KazoScreens` et leurs contrats), `Shared/Kazo.Os.AppSdk/Settings/IAppSystemSettingsGateway.cs`, `SettingsDocumentStores.cs` |
 | Platform Core (passerelles) | `Platform/Kazo.Os.Platform.Core/Administration/` : `AppSystemSettingsGateway`, `AppPermissionAdministrationGateway`, `AppServerConnectionGateway`, `AppSystemPowerGateway`, `AppStorageDiagnosticsGateway`, `AppSystemBackupGateway`, `AppUserAccountsGateway`, `AppScreensGateway` (sur `IScreenControl`, ADR 0184), `AdministratorGate`, `SystemAdministrationGatewayServices` |
 | Platform Core (services) | `Power/SystemPowerService.cs` (séquence d'arrêt, `RestartAfterAsync`), `Backup/SystemBackupService.cs`, `Sessions/LocalPasswordService.cs` (ADR 0120), `Settings/OsSettingsDocumentRegistry.cs`, `Policy/AppPermissionAdministration.cs` (`ApplyMachineDecisionAsync`, `ApplyPolicyAsync`) |
 | Hôte Ecosystem | `Administration/BrowserSystemPowerDevice.cs` (`location.reload`, suppression de la base IndexedDB), `Administration/BrowserSystemBackupDevice.cs` (export, téléchargement, sélecteur de l'hôte), `Administration/IndexedDbStorageInspector.cs` (adaptateur de `IndexedDbInspectorService`) |
-| SDK Blazor | `Interop/BrowserClipboard.cs` et `wwwroot/clipboard.js` (presse-papiers de l'hôte), `[Obsolete]` depuis l'ADR 0065 puis retirés au gel du SDK 1.0 (ADR 0114) : Diagnostic copie par `HackClipboard`, que l'OS recopie vers l'hôte ([`clipboard.md`](../dev/clipboard.md)) |
+| SDK Blazor | `Interop/BrowserClipboard.cs` et `wwwroot/clipboard.js` (presse-papiers de l'hôte), `[Obsolete]` depuis l'ADR 0065 puis retirés au gel du SDK 1.0 (ADR 0114) : Diagnostic copie par `KazoClipboard`, que l'OS recopie vers l'hôte ([`clipboard.md`](../dev/clipboard.md)) |
 
 `AppExecutionContextFactory` reçoit un `SystemAdministrationGatewayServices`
 (résolutions paresseuses ; `Passwords` est une propriété `init` ajoutée en 1.1) et crée, pour chaque instance, les sept passerelles
@@ -40,7 +40,7 @@ ensuite lui-même.
 ### Documents de l'OS
 
 ```csharp
-await using HackSettingsDocument appearance = await HackSettings.OpenSystemAsync(AppContext, "appearance");
+await using KazoSettingsDocument appearance = await KazoSettings.OpenSystemAsync(AppContext, "appearance");
 await appearance.SetAsync("accent", "cyan");                               // couche utilisateur
 await appearance.SetManyAsync(values, SettingLayer.System);                // /etc : une seule approbation
 ```
@@ -66,17 +66,17 @@ toute demande d'identifiants.
 (push, pull), `Grants` (pull seulement : `ArgumentException` sinon),
 `FileAssociations` (push, pull). Sans serveur configuré : `NotConnected`, et
 la synchronisation ne fait rien. Les erreurs réseau deviennent
-`HackServerConnectionException`.
+`KazoServerConnectionException`.
 
 `GetRelayPolicyAsync` rend la politique du relais réseau du serveur connecté
-(`HackServerRelayPolicy` : ports, plages privées, quotas, flux ouverts, apps
+(`KazoServerRelayPolicy` : ports, plages privées, quotas, flux ouverts, apps
 accordées, avertissements), ou `null` sans serveur ; Paramètres l'affiche
 dans sa section du serveur ([`server-network-relay.md`](../dev/server-network-relay.md)).
 
 ADR 0101 (chantier `v3/9-sync`) : `GetConflictsAsync` lit les conflits en
 attente enregistrés dans `~/.local/state/hackeros/sync-conflicts.json`
-(`HackSyncConflict` porte `DetectedAt`) ; `ShowConflictsAsync` ouvre le
-dialogue de conflit de l'OS ; `GetSyncStatusAsync` rend un `HackSyncStatus`
+(`KazoSyncConflict` porte `DetectedAt`) ; `ShowConflictsAsync` ouvre le
+dialogue de conflit de l'OS ; `GetSyncStatusAsync` rend un `KazoSyncStatus`
 (synchro périodique active, suspendue, en ligne, dernier passage, envoyés,
 reçus, dernière erreur, intervalle) ; `SetSyncPausedAsync` suspend ou reprend
 la synchro de l'utilisateur (`~/.config/hackeros/sync.config`) ;
@@ -86,7 +86,7 @@ synchro périodique sont décrits dans
 
 ### Alimentation (`system.power`)
 
-`HackSystem.RebootAsync` et `HackSystem.FactoryResetAsync` demandent toujours
+`KazoSystem.RebootAsync` et `KazoSystem.FactoryResetAsync` demandent toujours
 un administrateur (`system.reboot`, `system.factory-reset`). Séquence de
 `SystemPowerService`, comme un `shutdown` :
 
@@ -98,7 +98,7 @@ un administrateur (`system.reboot`, `system.factory-reset`). Séquence de
 
 ### Stockage (`system.storage.inspect`)
 
-`HackStorageDiagnostics.GetSnapshotAsync` rend un `HackStorageSnapshot`
+`KazoStorageDiagnostics.GetSnapshotAsync` rend un `KazoStorageSnapshot`
 (magasins, nombre d'enregistrements, JSON, chemins résolus, liens) et
 `ToExportJson()`. L'instantané contourne les droits des fichiers : c'est
 pourquoi Diagnostic, app non système, demande un administrateur à son premier
@@ -112,7 +112,7 @@ montre sous *Website databases*.
 
 ### Sauvegarde (`system.backup`)
 
-`HackSystemBackup.CreateAsync` télécharge une archive `.hosbak` de toute la
+`KazoSystemBackup.CreateAsync` télécharge une archive `.hosbak` de toute la
 machine sur l'ordinateur hôte ; `RestoreAsync(Merge | Replace)` ouvre le
 sélecteur de l'hôte, valide l'archive, **puis** demande un administrateur,
 ferme la session, restaure et redémarre. Création et restauration vont dans
@@ -120,7 +120,7 @@ ferme la session, restaure et redémarre. Création et restauration vont dans
 
 ### Écrans (`screens.manage`)
 
-`HackScreens` (ADR 0184) liste, ouvre, restaure, ferme et identifie les écrans
+`KazoScreens` (ADR 0184) liste, ouvre, restaure, ferme et identifie les écrans
 secondaires de la session, met l'écran de la fenêtre appelante en plein écran et
 demande la permission `window-management`. Capacité normale, sans
 administrateur : le navigateur limite déjà chaque appel au clic de
@@ -130,7 +130,7 @@ l'utilisateur. `IsSupportedFor(context)` est faux sur un hôte sans écrans
 
 ### Comptes et mots de passe (`users.manage`)
 
-`HackUserAccounts.ListAsync` et `ChangePasswordAsync` (son propre mot de passe,
+`KazoUserAccounts.ListAsync` et `ChangePasswordAsync` (son propre mot de passe,
 après le mot de passe courant) ne demandent aucune capacité ;
 `ResetPasswordAsync` et `RemovePasswordAsync` exigent `users.manage` et un
 administrateur (actions `users.password-reset` et `users.password-delete`).
@@ -138,7 +138,7 @@ Le trousseau du compte visé est mis de côté. Détails :
 [`sensitive-settings.md`](../dev/sensitive-settings.md#4-mots-de-passe--passwd-et-réinitialisation)
 et [ADR 0120](../dev/adr/0120-passwd-and-administrator-password-reset.md).
 
-`CreateAsync(new HackNewUserAccount(login, nomAffiché, autorité, motDePasse))`
+`CreateAsync(new KazoNewUserAccount(login, nomAffiché, autorité, motDePasse))`
 et `DeleteAsync(login, removeHome)` exigent aussi `users.manage` et un
 administrateur (actions `users.add` et `users.delete`, ADR 0169). La création
 donne au compte son propre groupe, et `administrators` pour un administrateur ;
@@ -146,21 +146,21 @@ le dossier personnel naît à la première connexion. La suppression refuse le
 compte de la session et le dernier administrateur actif, emporte les clés
 d'accès du compte et, avec `removeHome`, son dossier `/home/<login>`.
 `ValidateNewAccount` vérifie un compte avant l'envoi (nom de connexion, nom
-affiché de 128 caractères au plus, mot de passe). `HackUserAccount.PasskeyCount`
+affiché de 128 caractères au plus, mot de passe). `KazoUserAccount.PasskeyCount`
 donne le nombre de clés d'accès de chaque compte.
 
 Clés d'accès de la session (ADR 0168), sans capacité : `ListPasskeysAsync`,
 `AddPasskeyAsync(nom)` (le navigateur demande la présence de l'utilisateur ;
 `OperationCanceledException` si la demande est fermée, `NotSupportedException`
-sans WebAuthn) et `RemovePasskeyAsync(id)`. `HackPasskey.UnlocksKeyring` dit si
+sans WebAuthn) et `RemovePasskeyAsync(id)`. `KazoPasskey.UnlocksKeyring` dit si
 la clé ouvre le trousseau. Détails : [`passkeys.md`](../dev/passkeys.md).
 
 ## Décisions
 
 - Voir l'ADR 0060 : propriété `SystemPower` (pas `System`),
-  `HackPermissionDecision.Ask`, couche système écrite avec les droits de
+  `KazoPermissionDecision.Ask`, couche système écrite avec les droits de
   l'appelant, `SetManyAsync`, presse-papiers de l'hôte pour Diagnostic
-  (ce dernier point est remplacé par l'ADR 0065 : `HackClipboard` et
+  (ce dernier point est remplacé par l'ADR 0065 : `KazoClipboard` et
   `clipboard.write`).
 - `IndexedDbInspectorService` reste dans Infrastructure.Browser ;
   l'adaptateur vers le SDK vit dans l'hôte Ecosystem.

@@ -15,7 +15,7 @@ namespace Kazo.Os.Server.Tests;
 
 public sealed class ContentBlobServiceTests : IDisposable
 {
-    private readonly HackerOsServerDbContext _db;
+    private readonly KazoOsServerDbContext _db;
     private readonly ContentBlobService _svc;
     private readonly string _blobRoot;
 
@@ -23,10 +23,10 @@ public sealed class ContentBlobServiceTests : IDisposable
 
     public ContentBlobServiceTests()
     {
-        var options = new DbContextOptionsBuilder<HackerOsServerDbContext>()
+        var options = new DbContextOptionsBuilder<KazoOsServerDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString())
             .Options;
-        _db = new HackerOsServerDbContext(options);
+        _db = new KazoOsServerDbContext(options);
 
         _blobRoot = Path.Combine(Path.GetTempPath(), "hackeros-blob-tests", Guid.NewGuid().ToString("N"));
         var configuration = new ConfigurationBuilder()

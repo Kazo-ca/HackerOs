@@ -10,7 +10,7 @@ namespace Kazo.Os.Platform.Core.Network.Local;
 /// <param name="Ports">Listening ports.</param>
 /// <param name="Resolver">The resolver.</param>
 /// <param name="Activator">On-demand activation; <see langword="null"/> leaves web apps to be started by hand.</param>
-public sealed record LocalNetworkServices(ListeningPortTable Ports, HackDnsResolver Resolver, WebAppActivator? Activator = null);
+public sealed record LocalNetworkServices(ListeningPortTable Ports, KazoDnsResolver Resolver, WebAppActivator? Activator = null);
 
 /// <summary>
 /// Who calls the local network stack through one <see cref="AppNetworkGateway"/>: what the OS needs

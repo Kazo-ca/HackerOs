@@ -12,11 +12,11 @@ namespace Kazo.Os.Platform.Core.Apps.Packages;
 /// A host sets them with MSBuild properties (<c>build/Kazo.Os.Apps.targets</c>), which become
 /// <see cref="AssemblyMetadataAttribute"/>s of the host assembly read by <see cref="FromAssembly"/>:
 /// <list type="table">
-/// <item><term><c>HackerOsAppCatalogs</c></term><description><c>name=https://…/catalog.json</c>, comma separated.</description></item>
-/// <item><term><c>HackerOsTrustedAppSources</c></term><description><c>catalog:official,github.com/Kazo-ca</c>.</description></item>
-/// <item><term><c>HackerOsAppUpdateIntervalHours</c></term><description><c>6</c>.</description></item>
-/// <item><term><c>HackerOsAppSigningKeys</c></term><description><c>catalog:official=MFkw…</c>, comma separated, one item per key (ADR 0214 §2).</description></item>
-/// <item><term><c>HackerOsBlockedApps</c>, <c>HackerOsBlockedAppCategories</c>, <c>HackerOsBlockedAppCapabilities</c></term><description>empty by default.</description></item>
+/// <item><term><c>KazoOsAppCatalogs</c></term><description><c>name=https://…/catalog.json</c>, comma separated.</description></item>
+/// <item><term><c>KazoOsTrustedAppSources</c></term><description><c>catalog:official,github.com/Kazo-ca</c>.</description></item>
+/// <item><term><c>KazoOsAppUpdateIntervalHours</c></term><description><c>6</c>.</description></item>
+/// <item><term><c>KazoOsAppSigningKeys</c></term><description><c>catalog:official=MFkw…</c>, comma separated, one item per key (ADR 0214 §2).</description></item>
+/// <item><term><c>KazoOsBlockedApps</c>, <c>KazoOsBlockedAppCategories</c>, <c>KazoOsBlockedAppCapabilities</c></term><description>empty by default.</description></item>
 /// </list>
 /// A property left unset keeps <see cref="Standard"/>'s value; an invalid item is skipped.
 /// </remarks>

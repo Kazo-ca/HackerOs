@@ -1,12 +1,12 @@
 @namespace Kazo.Os.Samples.BlazorSite.Pages
 @page "/"
-@inherits HackComponentBase
+@inherits KazoComponentBase
 @*
     The home page: a counter kept in the site's state (cascaded by the layout), so it keeps its
     value while the user navigates within the site (no reload) and loses it on Reload (a new
     renderer process).
 *@
-<HackPageTitle Title="Home - Blazor Sample Site" />
+<KazoPageTitle Title="Home - Blazor Sample Site" />
 <h1>Welcome</h1>
 <p>This page is a Blazor component, drawn in the browser's page area by a renderer process of the site.</p>
 <p class="counter">
@@ -18,7 +18,7 @@
 
 @code {
     [CascadingParameter]
-    private HackWebSite? Site { get; set; }
+    private KazoWebSite? Site { get; set; }
 
     [CascadingParameter]
     private SiteState? State { get; set; }

@@ -6,7 +6,7 @@ namespace Kazo.Os.AppSdk.Administration;
 
 /// <summary>
 /// Machine power operations for one app instance (ADR 0056, section 11), behind
-/// <see cref="HackSystem"/>. Every member requires the dangerous capability <c>system.power</c> and
+/// <see cref="KazoSystem"/>. Every member requires the dangerous capability <c>system.power</c> and
 /// an administrator through the OS authentication agent, like <c>reboot</c> under Linux.
 /// </summary>
 public interface IAppSystemPowerGateway
@@ -22,22 +22,22 @@ public interface IAppSystemPowerGateway
 
 /// <summary>
 /// Raw storage inspection for one app instance (ADR 0056, section 11), behind
-/// <see cref="HackStorageDiagnostics"/>. Requires the dangerous capability
+/// <see cref="KazoStorageDiagnostics"/>. Requires the dangerous capability
 /// <c>system.storage.inspect</c>: the snapshot bypasses file permissions.
 /// </summary>
 public interface IAppStorageDiagnosticsGateway
 {
     /// <summary>Reads every object store of the OS database in one transaction.</summary>
     /// <param name="cancellationToken">Cancels the read.</param>
-    ValueTask<HackStorageSnapshot> GetSnapshotAsync(CancellationToken cancellationToken = default);
+    ValueTask<KazoStorageSnapshot> GetSnapshotAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Lists the browser databases of web sites, <c>hackweb.*</c> (ADR 0088, section 4): they are not in
     /// the OS database nor in its files. Defaults to none so existing implementations keep compiling.
     /// </summary>
     /// <param name="cancellationToken">Cancels the read.</param>
-    ValueTask<IReadOnlyList<HackWebSiteDatabaseInfo>> GetWebSiteDatabasesAsync(CancellationToken cancellationToken = default) =>
-        ValueTask.FromResult<IReadOnlyList<HackWebSiteDatabaseInfo>>([]);
+    ValueTask<IReadOnlyList<KazoWebSiteDatabaseInfo>> GetWebSiteDatabasesAsync(CancellationToken cancellationToken = default) =>
+        ValueTask.FromResult<IReadOnlyList<KazoWebSiteDatabaseInfo>>([]);
 
     /// <summary>
     /// Deletes the browser database of a web site; the site recreates it empty, with its schema, on its
@@ -51,7 +51,7 @@ public interface IAppStorageDiagnosticsGateway
 }
 
 /// <summary>Role of one object store, so a viewer can render the filesystem stores specially.</summary>
-public enum HackStorageStoreKind
+public enum KazoStorageStoreKind
 {
     /// <summary>Any other store, shown as JSON.</summary>
     Other = 0,
@@ -71,11 +71,11 @@ public enum HackStorageStoreKind
 /// <param name="RecordCount">Number of records.</param>
 /// <param name="FormattedJson">Records as indented JSON.</param>
 /// <param name="Records">Records as a JSON array.</param>
-public sealed record HackStorageStoreSnapshot(
+public sealed record KazoStorageStoreSnapshot(
     string Name,
     string Purpose,
     IReadOnlyList<string> KeyPath,
-    HackStorageStoreKind Kind,
+    KazoStorageStoreKind Kind,
     int RecordCount,
     string FormattedJson,
     JsonElement Records);
@@ -90,11 +90,11 @@ public sealed record HackStorageStoreSnapshot(
 /// <param name="Stores">Every object store, in schema order.</param>
 /// <param name="ResolvedPaths">Entry id to absolute virtual path.</param>
 /// <param name="TotalLinkCount">Number of directory links read.</param>
-public sealed record HackStorageSnapshot(
+public sealed record KazoStorageSnapshot(
     DateTimeOffset CapturedAtUtc,
     string DatabaseName,
     int DatabaseVersion,
-    IReadOnlyList<HackStorageStoreSnapshot> Stores,
+    IReadOnlyList<KazoStorageStoreSnapshot> Stores,
     IReadOnlyDictionary<string, string> ResolvedPaths,
     int TotalLinkCount)
 {
@@ -125,7 +125,7 @@ public sealed record HackStorageSnapshot(
         root["resolvedFilePaths"] = paths;
 
         JsonObject stores = [];
-        foreach (HackStorageStoreSnapshot store in Stores)
+        foreach (KazoStorageStoreSnapshot store in Stores)
         {
             stores[store.Name] = new JsonObject
             {

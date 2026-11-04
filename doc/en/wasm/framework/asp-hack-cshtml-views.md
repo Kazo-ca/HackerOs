@@ -13,7 +13,7 @@ An ASP.Hack site can write its views as in ASP.NET Core MVC: `.cshtml` files
 with `@model`, `@inject`, `@section`, `@functions`, inline
 templates, `_Layout.cshtml`, `_ViewStart.cshtml` and `_ViewImports.cshtml`. The
 .NET SDK's Razor compiler compiles them at build time, without ASP.NET MVC (which does not
-run in the browser): the base class is ASP.Hack's `HackRazorPage<TModel>`.
+run in the browser): the base class is ASP.Hack's `KazoRazorPage<TModel>`.
 `View()` finds either `Views/<Controller>/<Action>.razor`
 or `.cshtml`, and the two kinds can be mixed (`.cshtml` view in a `.razor`
 layout, `.razor` partial in a `.cshtml` view, etc.).
@@ -29,7 +29,7 @@ ADR 0076 §8 asked for a proof before the code. It was done with the .NET SDK
    `PushWriter`...) and names only a few attributes, three namespaces,
    `HelperResult` and the types of the five implicit `@inject`s from ASP.NET.
 2. A root `_ViewImports.cshtml` replaces the base class
-   (`@inherits HackRazorPage<TModel>`, `TModel` being replaced by the type of
+   (`@inherits KazoRazorPage<TModel>`, `TModel` being replaced by the type of
    `@model`) and the five implicit `@inject`s (a property of the same name wins).
 3. With these names declared as internal types of the site, a view with `@model`,
    `@inject`, `@section`, `@foreach`, `@if`, `@functions`, a `_ViewStart` and a
@@ -97,30 +97,30 @@ The controller does not change: `return View(store.All);`, `return View(note);`.
 ## Architecture
 
 ```text
-Build (build/Kazo.Os.Apps.targets, cible _HackerOsAspHackRazorViews)
+Build (build/Kazo.Os.Apps.targets, cible _KazoOsAspHackRazorViews)
   si le projet référence Kazo.Os.AppSdk.Web et a des .cshtml :
     + build/asp-hack/_ViewImports.cshtml lié en _ViewImports.cshtml racine
-      (@inherits HackRazorPage<TModel>, Html/Json/Component/Url/ModelExpressionProvider)
-    + build/asp-hack/HackRazorCompat.cs (types internes aux noms Microsoft.AspNetCore.*)
+      (@inherits KazoRazorPage<TModel>, Html/Json/Component/Url/ModelExpressionProvider)
+    + build/asp-hack/KazoRazorCompat.cs (types internes aux noms Microsoft.AspNetCore.*)
   compilateur Razor du SDK → classe par .cshtml
-  générateur de routes (ADR 0082) → HackWebGeneratedRoutes.Views (genres Component et RazorPage)
+  générateur de routes (ADR 0082) → KazoWebGeneratedRoutes.Views (genres Component et RazorPage)
 
 Rendu (Shared/Kazo.Os.AppSdk.Web/Views/)
-  HackViewEngine.RenderAsync
+  KazoViewEngine.RenderAsync
     ├─ vue .cshtml : _ViewStart.cshtml de Views/ puis des dossiers → Layout initial
-    │                HackRazorPage.RenderAsync : @inject remplis, ExecuteAsync, sections → HTML
+    │                KazoRazorPage.RenderAsync : @inject remplis, ExecuteAsync, sections → HTML
     ├─ vue .razor  : passe HtmlRenderer (ADR 0083)
     └─ layouts de l'intérieur vers l'extérieur, de l'un ou l'autre genre
-HackRazorPage / HackRazorPage<TModel>    HackRazorPage.cs
-HackHtmlHelper<TModel>, HackHtmlForm, HackJsonHelper, HackViewComponentHelper,
-  HackModelExpressionProvider<TModel>    HackHtmlHelper.cs
-IHackHtmlContent, HackHtmlString, HackHelperResult   HackHtmlContent.cs
-HackViewKind, HackViewDescriptor.Kind, HackViewTable.Find(Type)   HackViewTable.cs
+KazoRazorPage / KazoRazorPage<TModel>    KazoRazorPage.cs
+KazoHtmlHelper<TModel>, KazoHtmlForm, KazoJsonHelper, KazoViewComponentHelper,
+  KazoModelExpressionProvider<TModel>    KazoHtmlHelper.cs
+IHackHtmlContent, KazoHtmlString, KazoHelperResult   KazoHtmlContent.cs
+KazoViewKind, KazoViewDescriptor.Kind, KazoViewTable.Find(Type)   KazoViewTable.cs
 ```
 
 ## `.cshtml` pages
 
-- **Base class.** Every page derives from `HackRazorPage<TModel>` (without `@model`,
+- **Base class.** Every page derives from `KazoRazorPage<TModel>` (without `@model`,
   `TModel` is `dynamic`, as in ASP.NET; prefer `@model`). Members:
   `Model`, `ViewData`, `ViewContext`, `Context` (the request), `Request`,
   `ModelState`, `Layout`, `Output`, `RenderBody()`, `RenderSection(...)`,
@@ -163,24 +163,24 @@ HackViewKind, HackViewDescriptor.Kind, HackViewTable.Find(Type)   HackViewTable.
 | `Html.AntiForgeryToken()` | The hidden field for a hand-written `<form>`. |
 | `Html.TextBox/Hidden/Password/TextArea/CheckBox(name, ...)` | Fields; after a refused `POST`, the posted value comes back and the error adds `input-validation-error`. |
 | `Html.TextBoxFor/HiddenFor/TextAreaFor/CheckBoxFor(m => m.X)`, `NameFor`, `IdFor`, `ValueFor`, `DisplayNameFor`, `LabelFor` | Fields bound to the model by a member chain (`m => m.Address.City` → `Address.City`); `[Display(Name)]` respected. |
-| `Html.ValidationMessage(name)`, `Html.ValidationMessageFor(m => m.X)`, `Html.ValidationSummary(excludePropertyErrors)` | Same HTML as `HackValidationMessage` and `HackValidationSummary` (ADR 0083). |
+| `Html.ValidationMessage(name)`, `Html.ValidationMessageFor(m => m.X)`, `Html.ValidationSummary(excludePropertyErrors)` | Same HTML as `KazoValidationMessage` and `KazoValidationSummary` (ADR 0083). |
 | `await Html.PartialAsync(name, model?)`, `await Html.RenderPartialAsync(...)` | A `.cshtml` or `.razor` partial (controller folder, then `Shared/`, or path). |
 | `Json.Serialize(value)` | JSON with the site's options (camelCase). |
 | `@(await Component.InvokeAsync<TComponent>(parameters))` | A Razor component rendered in the page, with the view's context (the `.razor` helpers of ADR 0083 work). The parentheses are needed because of the generic `<`. |
 | `Url.Action(...)`, `Url.RouteUrl(...)`, `Url.Content("~/...")` | The site's `IHackUrlHelper`. |
 
 `htmlAttributes` and the route values of an anonymous object go through
-`HackRoute.Values(new { @class = "nav" })` (a `_` becomes `-`: `data_id` →
+`KazoRoute.Values(new { @class = "nav" })` (a `_` becomes `-`: `data_id` →
 `data-id`).
 
 ## Mixing kinds
 
 - A `.cshtml` view can have a `.razor` layout (`Layout = "_Layout"` finds
-  `Shared/_Layout.razor`): its sections arrive in `<HackRenderSection>`.
+  `Shared/_Layout.razor`): its sections arrive in `<KazoRenderSection>`.
 - A `.razor` view can take a `.cshtml` layout by setting
   `Layout = typeof(AspNetCoreGeneratedDocument.Views_Shared__Layout)`; its
-  `<HackSection>`s are rendered to HTML before the layout.
-- `<HackPartial Name="_Card" />` in a `.razor` also renders a `.cshtml` partial.
+  `<KazoSection>`s are rendered to HTML before the layout.
+- `<KazoPartial Name="_Card" />` in a `.razor` also renders a `.cshtml` partial.
 - A `.razor` and a `.cshtml` at the same path is the build error `HOSWEB0008`.
 
 ## Tests
@@ -216,7 +216,7 @@ HackViewKind, HackViewDescriptor.Kind, HackViewTable.Find(Type)   HackViewTable.
 
 - [x] Feasibility proof (build-time compilation without MVC) and ADR 0086.
 - [x] Root `_ViewImports.cshtml` and compatibility types added at build time, `RAZORSDK1004` as a message.
-- [x] `HackRazorPage`/`HackRazorPage<TModel>`: writing, attributes, inline templates, sections, body, activation of `@inject`s.
+- [x] `KazoRazorPage`/`KazoRazorPage<TModel>`: writing, attributes, inline templates, sections, body, activation of `@inject`s.
 - [x] `Html`, `Json`, `Component`, `ModelExpressionProvider` helpers.
 - [x] Engine: `Component`/`RazorPage` kinds, `_ViewStart`, `.cshtml` layouts, mixing, partials of both kinds, `ViewData` without key → `null`.
 - [x] Generator: `.cshtml` views in the table, `HOSWEB0008`.

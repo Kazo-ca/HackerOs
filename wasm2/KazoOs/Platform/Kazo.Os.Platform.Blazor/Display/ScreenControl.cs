@@ -6,7 +6,7 @@ using Kazo.Os.Windowing.Core;
 namespace Kazo.Os.Platform.Blazor.Display;
 
 /// <summary>
-/// The browser host's <see cref="IScreenControl"/> (ADR 0184): <c>HackScreens</c> over the screen
+/// The browser host's <see cref="IScreenControl"/> (ADR 0184): <c>KazoScreens</c> over the screen
 /// service and the window manager. One instance per session scope, like <see cref="ScreenService"/>.
 /// </summary>
 public sealed class ScreenControl : IScreenControl, IDisposable
@@ -31,14 +31,14 @@ public sealed class ScreenControl : IScreenControl, IDisposable
     public bool IsAvailable => _screens.IsStarted;
 
     /// <inheritdoc />
-    public HackScreensState GetState(Guid appInstanceId)
+    public KazoScreensState GetState(Guid appInstanceId)
     {
         WindowBounds primary = _runtime.GetWorkArea(DisplayId.Primary);
-        List<HackScreenInfo> screens = [new(1, null, (int)primary.Width, (int)primary.Height, _screens.IsPrimaryFullScreen)];
+        List<KazoScreenInfo> screens = [new(1, null, (int)primary.Width, (int)primary.Height, _screens.IsPrimaryFullScreen)];
         foreach (SecondaryScreen screen in _screens.Screens)
         {
             WindowBounds area = _runtime.GetWorkArea(screen.Id);
-            screens.Add(new HackScreenInfo(
+            screens.Add(new KazoScreenInfo(
                 screen.Id.Number,
                 string.IsNullOrWhiteSpace(screen.MonitorLabel) ? null : screen.MonitorLabel,
                 (int)area.Width,
@@ -46,17 +46,17 @@ public sealed class ScreenControl : IScreenControl, IDisposable
                 screen.IsFullScreen));
         }
 
-        return new HackScreensState(
+        return new KazoScreensState(
             screens,
-            (HackScreenPermission)_screens.Permission,
+            (KazoScreenPermission)_screens.Permission,
             _screens.CanOpenScreen,
             [.. _screens.RestorableScreens.Select(static id => id.Number)],
             CallerDisplay(appInstanceId).Number);
     }
 
     /// <inheritdoc />
-    public async Task<HackScreenOpenStatus> OpenScreenAsync(CancellationToken cancellationToken) =>
-        (HackScreenOpenStatus)(await _screens.OpenScreenAsync(cancellationToken)).Status;
+    public async Task<KazoScreenOpenStatus> OpenScreenAsync(CancellationToken cancellationToken) =>
+        (KazoScreenOpenStatus)(await _screens.OpenScreenAsync(cancellationToken)).Status;
 
     /// <inheritdoc />
     public Task<int> RestoreScreensAsync(CancellationToken cancellationToken) => _screens.RestoreScreensAsync(cancellationToken);
@@ -81,8 +81,8 @@ public sealed class ScreenControl : IScreenControl, IDisposable
     }
 
     /// <inheritdoc />
-    public async Task<HackScreenPermission> RequestPermissionAsync() =>
-        (HackScreenPermission)await _screens.RequestPermissionAsync();
+    public async Task<KazoScreenPermission> RequestPermissionAsync() =>
+        (KazoScreenPermission)await _screens.RequestPermissionAsync();
 
     /// <inheritdoc />
     public void Dispose() => _screens.Changed -= OnChanged;

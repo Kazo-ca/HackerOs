@@ -174,10 +174,10 @@ public sealed class TestCommand(AppManifest manifest) : TerminalAppBase(manifest
 
             try
             {
-                HackFileInfo file = await HackFileInfo.GetAsync(operand, cancellationToken);
-                bool isDirectory = await HackDirectory.ExistsAsync(operand, cancellationToken);
+                KazoFileInfo file = await KazoFileInfo.GetAsync(operand, cancellationToken);
+                bool isDirectory = await KazoDirectory.ExistsAsync(operand, cancellationToken);
                 bool exists = file.Exists || isDirectory;
-                UnixFileMode mode = exists ? await HackFile.GetUnixFileModeAsync(operand, cancellationToken) : 0;
+                UnixFileMode mode = exists ? await KazoFile.GetUnixFileModeAsync(operand, cancellationToken) : 0;
                 bool owner = file.Owner is { } ownerId && (ownerId == context.App.UserId || ownerId == context.App.UserLoginName);
                 bool root = context.App.IsRootElevated;
                 return op switch
@@ -217,8 +217,8 @@ public sealed class TestCommand(AppManifest manifest) : TerminalAppBase(manifest
                 case ">":
                     return string.CompareOrdinal(left, right) > 0;
                 case "-nt" or "-ot" or "-ef":
-                    HackFileInfo a = await HackFileInfo.GetAsync(left, cancellationToken);
-                    HackFileInfo b = await HackFileInfo.GetAsync(right, cancellationToken);
+                    KazoFileInfo a = await KazoFileInfo.GetAsync(left, cancellationToken);
+                    KazoFileInfo b = await KazoFileInfo.GetAsync(right, cancellationToken);
                     return op switch
                     {
                         "-nt" => a.Exists && (!b.Exists || a.LastWriteTimeUtc > b.LastWriteTimeUtc),

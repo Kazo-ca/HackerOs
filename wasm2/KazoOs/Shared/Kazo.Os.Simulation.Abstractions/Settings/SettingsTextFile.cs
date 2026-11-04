@@ -30,7 +30,7 @@ public sealed record SettingsFileReadResult(string? Content, long? Revision, Fil
 /// <summary>
 /// Reads and edits settings files through an authorized <see cref="IAppFileSystemGateway"/>, so
 /// capabilities, authority, mode bits and elevation tickets apply exactly as for any other file
-/// (ADR 0044 section 1). Shared by the SDK (<c>HackSettings</c>) and the platform
+/// (ADR 0044 section 1). Shared by the SDK (<c>KazoSettings</c>) and the platform
 /// (<c>OsSettingsService</c>, the migration).
 /// </summary>
 /// <remarks>

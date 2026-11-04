@@ -12,7 +12,7 @@ namespace Kazo.Os.Server.Tests;
 
 public sealed class SyncServiceTests : IDisposable
 {
-    private readonly HackerOsServerDbContext _db;
+    private readonly KazoOsServerDbContext _db;
     private readonly SyncService _svc;
     private readonly AuditService _audit;
 
@@ -21,10 +21,10 @@ public sealed class SyncServiceTests : IDisposable
 
     public SyncServiceTests()
     {
-        var options = new DbContextOptionsBuilder<HackerOsServerDbContext>()
+        var options = new DbContextOptionsBuilder<KazoOsServerDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString())
             .Options;
-        _db = new HackerOsServerDbContext(options);
+        _db = new KazoOsServerDbContext(options);
         _audit = new AuditService(_db);
         _svc = new SyncService(_db, _audit);
     }

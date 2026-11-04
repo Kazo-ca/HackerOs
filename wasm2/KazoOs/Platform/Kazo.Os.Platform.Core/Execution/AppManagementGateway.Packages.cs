@@ -12,7 +12,7 @@ using Kazo.Os.Simulation.Abstractions.Settings;
 namespace Kazo.Os.Platform.Core.Execution;
 
 /// <summary>
-/// Apps installed from their GitHub repository (ADR 0182, ADR 0189) behind <see cref="HackAppPackages"/>.
+/// Apps installed from their GitHub repository (ADR 0182, ADR 0189) behind <see cref="KazoAppPackages"/>.
 /// The OS reads its own files and downloads by itself. A personal install from a trusted source is
 /// written as the session user; a system install, an untrusted source or a blocked app needs the
 /// two-step approval of ADR 0189 §4 (a fresh administrator sign-in, then the OS's approval window),
@@ -21,21 +21,21 @@ namespace Kazo.Os.Platform.Core.Execution;
 internal sealed partial class AppManagementGateway
 {
     /// <inheritdoc />
-    public async ValueTask<HackPackageSources> GetPackageSourcesAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<KazoPackageSources> GetPackageSourcesAsync(CancellationToken cancellationToken = default)
     {
         AppPackageInstaller packages = RequirePackages();
         return ToPublic(await packages.ReadSourcesAsync(CreateSystemWriter(), cancellationToken).ConfigureAwait(false));
     }
 
     /// <inheritdoc />
-    public async ValueTask<IReadOnlyList<HackInstalledPackage>> GetInstalledPackagesAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<IReadOnlyList<KazoInstalledPackage>> GetInstalledPackagesAsync(CancellationToken cancellationToken = default)
     {
         AppPackageInstaller packages = RequirePackages();
         InstalledAppsReadResult system = await packages.ReadInstalledAsync(CreateSystemWriter(), cancellationToken).ConfigureAwait(false);
         InstalledAppsReadResult personal = await packages
             .ReadPersonalInstalledAsync(CreateUserWriter(), _principal.HomePath, cancellationToken)
             .ConfigureAwait(false);
-        List<HackInstalledPackage> result = [];
+        List<KazoInstalledPackage> result = [];
         foreach ((string appId, AppPackageSource source) in system.Sources)
         {
             result.Add(await WithPreviousAsync(packages, ToPublic(appId, source, systemWide: true), source, null, cancellationToken).ConfigureAwait(false));
@@ -50,8 +50,8 @@ internal sealed partial class AppManagementGateway
         return [.. result.OrderBy(static package => package.AppId, StringComparer.Ordinal)];
     }
 
-    private async ValueTask<HackInstalledPackage> WithPreviousAsync(
-        AppPackageInstaller packages, HackInstalledPackage package, AppPackageSource source, string? home, CancellationToken cancellationToken)
+    private async ValueTask<KazoInstalledPackage> WithPreviousAsync(
+        AppPackageInstaller packages, KazoInstalledPackage package, AppPackageSource source, string? home, CancellationToken cancellationToken)
     {
         if (source.Version is not { } current)
         {
@@ -64,7 +64,7 @@ internal sealed partial class AppManagementGateway
     }
 
     /// <inheritdoc />
-    public async ValueTask<HackPackageInfo> GetPackageInfoAsync(string source, CancellationToken cancellationToken = default)
+    public async ValueTask<KazoPackageInfo> GetPackageInfoAsync(string source, CancellationToken cancellationToken = default)
     {
         AppPackageInstaller packages = RequirePackages();
         IAppFileSystemGateway reader = CreateSystemWriter();
@@ -87,7 +87,7 @@ internal sealed partial class AppManagementGateway
         }
 
         AppSourceTrust trust = sources.GetTrust(parsed);
-        return new HackPackageInfo(
+        return new KazoPackageInfo(
             parsed.Name,
             index.AppId,
             [.. index.Versions.Select(static entry => entry.Version.ToString())],
@@ -102,8 +102,8 @@ internal sealed partial class AppManagementGateway
     }
 
     /// <inheritdoc />
-    public async ValueTask<HackPackageInstallReport> InstallPackageAsync(
-        string source, HackPackageScope scope = HackPackageScope.Auto, CancellationToken cancellationToken = default)
+    public async ValueTask<KazoPackageInstallReport> InstallPackageAsync(
+        string source, KazoPackageScope scope = KazoPackageScope.Auto, CancellationToken cancellationToken = default)
     {
         AppPackageInstaller packages = RequirePackages();
         IAppFileSystemGateway system = CreateSystemWriter();
@@ -167,7 +167,7 @@ internal sealed partial class AppManagementGateway
             .CommitAsync(plan.SystemWide ? system : user, plan, by, cancellationToken, personalCopies)
             .ConfigureAwait(false);
         await ActivateInstalledAppsAsync(CancellationToken.None).ConfigureAwait(false);
-        return new HackPackageInstallReport(
+        return new KazoPackageInstallReport(
             manifest.Id,
             manifest.Name,
             plan.Package.Version.ToString(),
@@ -186,14 +186,14 @@ internal sealed partial class AppManagementGateway
     }
 
     /// <inheritdoc />
-    public async ValueTask<HackInstalledPackage> RemovePackageAsync(
-        string appId, HackPackageScope scope = HackPackageScope.Auto, CancellationToken cancellationToken = default)
+    public async ValueTask<KazoInstalledPackage> RemovePackageAsync(
+        string appId, KazoPackageScope scope = KazoPackageScope.Auto, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(appId);
         AppPackageInstaller packages = RequirePackages();
         IAppFileSystemGateway user = CreateUserWriter();
         InstalledAppsReadResult personal = await packages.ReadPersonalInstalledAsync(user, _principal.HomePath, cancellationToken).ConfigureAwait(false);
-        bool forUser = scope == HackPackageScope.User || (scope == HackPackageScope.Auto && personal.Sources.ContainsKey(appId));
+        bool forUser = scope == KazoPackageScope.User || (scope == KazoPackageScope.Auto && personal.Sources.ContainsKey(appId));
         if (forUser)
         {
             AppPackageSource removedForUser = await Translate(
@@ -207,7 +207,7 @@ internal sealed partial class AppManagementGateway
         InstalledAppsReadResult installed = await packages.ReadInstalledAsync(system, cancellationToken).ConfigureAwait(false);
         if (!installed.Sources.TryGetValue(appId, out AppPackageSource? source))
         {
-            throw new HackPackageException("apps.package.not-installed", $"{appId} was not installed from a package.");
+            throw new KazoPackageException("apps.package.not-installed", $"{appId} was not installed from a package.");
         }
 
         AppSourcesConfig sources = await packages.ReadSourcesAsync(system, cancellationToken).ConfigureAwait(false);
@@ -238,25 +238,25 @@ internal sealed partial class AppManagementGateway
     }
 
     /// <inheritdoc />
-    public async ValueTask<HackPackageInstallReport> RollbackPackageAsync(
-        string appId, HackPackageScope scope = HackPackageScope.Auto, CancellationToken cancellationToken = default)
+    public async ValueTask<KazoPackageInstallReport> RollbackPackageAsync(
+        string appId, KazoPackageScope scope = KazoPackageScope.Auto, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(appId);
         AppPackageInstaller packages = RequirePackages();
         IAppFileSystemGateway system = CreateSystemWriter();
         IAppFileSystemGateway user = CreateUserWriter();
         InstalledAppsReadResult personal = await packages.ReadPersonalInstalledAsync(user, _principal.HomePath, cancellationToken).ConfigureAwait(false);
-        bool forUser = scope == HackPackageScope.User || (scope == HackPackageScope.Auto && personal.Sources.ContainsKey(appId));
+        bool forUser = scope == KazoPackageScope.User || (scope == KazoPackageScope.Auto && personal.Sources.ContainsKey(appId));
         InstalledAppsReadResult installed = forUser ? personal : await packages.ReadInstalledAsync(system, cancellationToken).ConfigureAwait(false);
         string? home = forUser ? _principal.HomePath : null;
         IAppFileSystemGateway writer = forUser ? user : system;
         if (!installed.Sources.TryGetValue(appId, out AppPackageSource? source) || source.Version is not { } current)
         {
-            throw new HackPackageException("apps.package.not-installed", $"{appId} was not installed from a package.");
+            throw new KazoPackageException("apps.package.not-installed", $"{appId} was not installed from a package.");
         }
 
         SemanticVersion previous = await packages.FindPreviousVersionAsync(writer, appId, current, cancellationToken, home).ConfigureAwait(false)
-            ?? throw new HackPackageException("apps.package.no-previous", $"{appId} {current} has no previous version kept.");
+            ?? throw new KazoPackageException("apps.package.no-previous", $"{appId} {current} has no previous version kept.");
         AppSourcesConfig sources = await packages.ReadSourcesAsync(system, cancellationToken).ConfigureAwait(false);
         AppSourceTrust trust = sources.GetTrust(source);
         AppManifest? manifest = _catalog.Manifests.TryGetValue(appId, out AppManifest? loaded) ? loaded : null;
@@ -293,7 +293,7 @@ internal sealed partial class AppManagementGateway
         (AppPackageSource from, AppPackageSource to) = await Translate(() => packages.RollbackAsync(writer, appId, by, cancellationToken, home))
             .ConfigureAwait(false);
         await ActivateInstalledAppsAsync(CancellationToken.None).ConfigureAwait(false);
-        return new HackPackageInstallReport(
+        return new KazoPackageInstallReport(
             appId,
             name,
             to.Version?.ToString() ?? string.Empty,
@@ -329,13 +329,13 @@ internal sealed partial class AppManagementGateway
     }
 
     /// <inheritdoc />
-    public async ValueTask<HackPackageSources> AddPackageSourceAsync(string source, bool trusted, CancellationToken cancellationToken = default)
+    public async ValueTask<KazoPackageSources> AddPackageSourceAsync(string source, bool trusted, CancellationToken cancellationToken = default)
     {
         AppPackageInstaller packages = RequirePackages();
         AppSourceSpecification parsed = ParseSourceSpecification(source);
         if (parsed.IsCatalog && parsed.CatalogAddress is null)
         {
-            throw new HackPackageException("apps.source.invalid", $"A new catalog needs its address: {parsed.Name}=https://…/catalog.json.");
+            throw new KazoPackageException("apps.source.invalid", $"A new catalog needs its address: {parsed.Name}=https://…/catalog.json.");
         }
 
         IAppFileSystemGateway system = await AuthorizePackageAsync(
@@ -351,7 +351,7 @@ internal sealed partial class AppManagementGateway
     }
 
     /// <inheritdoc />
-    public async ValueTask<HackPackageSources> RemovePackageSourceAsync(string source, CancellationToken cancellationToken = default)
+    public async ValueTask<KazoPackageSources> RemovePackageSourceAsync(string source, CancellationToken cancellationToken = default)
     {
         AppPackageInstaller packages = RequirePackages();
         AppSourceSpecification parsed = ParseSourceSpecification(source);
@@ -361,7 +361,7 @@ internal sealed partial class AppManagementGateway
             || current.UntrustedKeys.Contains(parsed.TrustKey);
         if (!listed)
         {
-            throw new HackPackageException("apps.source.not-found", $"{parsed.Name} is not in {AppSourcesConfigDocument.MachinePath.Value}.");
+            throw new KazoPackageException("apps.source.not-found", $"{parsed.Name} is not in {AppSourcesConfigDocument.MachinePath.Value}.");
         }
 
         IAppFileSystemGateway system = await AuthorizePackageAsync(
@@ -377,15 +377,15 @@ internal sealed partial class AppManagementGateway
     }
 
     /// <inheritdoc />
-    public async ValueTask<HackPackagePolicy> GetPackagePolicyAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<KazoPackagePolicy> GetPackagePolicyAsync(CancellationToken cancellationToken = default)
     {
         AppPackageInstaller packages = RequirePackages();
         return ToPublic(await packages.ReadPolicyAsync(CreateSystemWriter(), cancellationToken).ConfigureAwait(false));
     }
 
     /// <inheritdoc />
-    public async ValueTask<HackPackagePolicy> SetPackagePolicyAsync(
-        HackPackageBlockKind kind, string value, bool blocked, CancellationToken cancellationToken = default)
+    public async ValueTask<KazoPackagePolicy> SetPackagePolicyAsync(
+        KazoPackageBlockKind kind, string value, bool blocked, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(value);
         AppPackageInstaller packages = RequirePackages();
@@ -394,7 +394,7 @@ internal sealed partial class AppManagementGateway
         string key = value.Trim();
         if (key.Any(static c => char.IsWhiteSpace(c) || c is '=' or '[' or ']' or '#' or ';'))
         {
-            throw new HackPackageException("apps.policy.invalid", $"'{value}' cannot be a key of [{section}].");
+            throw new KazoPackageException("apps.policy.invalid", $"'{value}' cannot be a key of [{section}].");
         }
 
         IAppFileSystemGateway system = await AuthorizePackageAsync(
@@ -415,7 +415,7 @@ internal sealed partial class AppManagementGateway
         return _packages?.Invoke() ?? throw new NotSupportedException("This host cannot install apps from a repository.");
     }
 
-    private HackInstalledPackage ToPublic(string appId, AppPackageSource source, bool systemWide) => new(
+    private KazoInstalledPackage ToPublic(string appId, AppPackageSource source, bool systemWide) => new(
         appId,
         source.Name,
         source.Version?.ToString() ?? string.Empty,
@@ -426,14 +426,14 @@ internal sealed partial class AppManagementGateway
         SystemWide = systemWide,
     };
 
-    private static HackPackageTrust ToPublic(AppSourceTrust trust) => (HackPackageTrust)trust;
+    private static KazoPackageTrust ToPublic(AppSourceTrust trust) => (KazoPackageTrust)trust;
 
-    private static HackPackageSources ToPublic(AppSourcesConfig sources) =>
+    private static KazoPackageSources ToPublic(AppSourcesConfig sources) =>
         new(sources.GitHubHost, [.. sources.TrustedKeys.Order(StringComparer.OrdinalIgnoreCase)], sources.Warnings)
         {
             Catalogs = [.. sources.Catalogs
                 .OrderBy(static pair => pair.Key, StringComparer.OrdinalIgnoreCase)
-                .Select(pair => new HackPackageCatalog(
+                .Select(pair => new KazoPackageCatalog(
                     pair.Key,
                     pair.Value.AbsoluteUri,
                     ToPublic(sources.GetCatalogTrust(pair.Key)),
@@ -443,7 +443,7 @@ internal sealed partial class AppManagementGateway
             UpdateIntervalHours = sources.UpdateIntervalHours,
         };
 
-    private static HackPackagePolicy ToPublic(AppPolicy policy) => new(
+    private static KazoPackagePolicy ToPublic(AppPolicy policy) => new(
         [.. policy.BlockedApps.Order(StringComparer.Ordinal)],
         [.. policy.BlockedCategories.Order(StringComparer.OrdinalIgnoreCase)],
         [.. policy.BlockedCapabilities.Order(StringComparer.Ordinal)],
@@ -454,7 +454,7 @@ internal sealed partial class AppManagementGateway
         ArgumentException.ThrowIfNullOrWhiteSpace(source);
         return AppSourceSpecification.TryParse(source, out AppSourceSpecification? parsed)
             ? parsed
-            : throw new HackPackageException(
+            : throw new KazoPackageException(
                 "apps.source.invalid",
                 $"'{source}' is not a source: use name=https://…/catalog.json, catalog:name, github:owner or github:owner/repo.");
     }
@@ -467,7 +467,7 @@ internal sealed partial class AppManagementGateway
         }
         catch (AppPackageException exception)
         {
-            throw new HackPackageException(exception.Code, exception.Message);
+            throw new KazoPackageException(exception.Code, exception.Message);
         }
     }
 
@@ -499,7 +499,7 @@ internal sealed partial class AppManagementGateway
         AdministratorAuthenticationResult authentication = await AuthenticateAsync(operation, action, _isRootElevated, cancellationToken).ConfigureAwait(false);
         if (!authentication.Succeeded)
         {
-            throw new HackUnauthorizedAccessException(
+            throw new KazoUnauthorizedAccessException(
                 $"Administrator authentication failed ({authentication.FailureReason}).", path: AppSourcesConfigDocument.MachinePath.Value);
         }
 
@@ -518,20 +518,20 @@ internal sealed partial class AppManagementGateway
         AdministratorAuthenticationResult authentication = await AuthenticateAsync(operation, action, isRootElevated: false, cancellationToken).ConfigureAwait(false);
         if (!authentication.Succeeded)
         {
-            throw new HackUnauthorizedAccessException(
+            throw new KazoUnauthorizedAccessException(
                 $"Administrator authentication failed ({authentication.FailureReason}).", path: InstalledAppsLayout.Root);
         }
 
         string administrator = authentication.AdministratorLogin ?? "root";
         IAppInstallApprovalPrompt prompt = _approval?.Invoke()
-            ?? throw new HackUnauthorizedAccessException(
+            ?? throw new KazoUnauthorizedAccessException(
                 "No approval window is available on this host (ADR 0189 section 4).", path: InstalledAppsLayout.Root);
         AppInstallApprovalOutcome outcome = await prompt
             .RequestAsync(request with { AdministratorLogin = administrator }, cancellationToken)
             .ConfigureAwait(false);
         if (outcome != AppInstallApprovalOutcome.Approved)
         {
-            throw new HackUnauthorizedAccessException(
+            throw new KazoUnauthorizedAccessException(
                 $"The administrator {administrator} did not approve ({outcome.ToString().ToLowerInvariant()}).", path: InstalledAppsLayout.Root);
         }
 
@@ -542,7 +542,7 @@ internal sealed partial class AppManagementGateway
         string operation, string action, bool isRootElevated, CancellationToken cancellationToken)
     {
         IAdministratorAuthenticationAgent agent = _agent?.Invoke()
-            ?? throw new HackUnauthorizedAccessException(
+            ?? throw new KazoUnauthorizedAccessException(
                 "No administrator authentication agent is available on this host.", path: InstalledAppsLayout.Root);
         return await agent.AuthenticateAsync(
             new AdministratorAuthenticationRequest(_caller, operation, action, _principal, isRootElevated),

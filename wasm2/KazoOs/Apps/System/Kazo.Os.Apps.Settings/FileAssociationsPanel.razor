@@ -1,4 +1,4 @@
-@inherits Kazo.Os.AppSdk.Blazor.HackComponentBase
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
 @using Kazo.Os.AppSdk.Apps
 @using Kazo.Os.AppSdk.Blazor.Settings
 @using Kazo.Os.Simulation.Abstractions.Settings
@@ -53,7 +53,7 @@
                                 value="@(row.UserAppId ?? string.Empty)"
                                 @onchange="args => ChooseAsync(row, args.Value as string)">
                             <option value="">@FallbackLabel(row)</option>
-                            @foreach (HackAppInfo app in row.Candidates)
+                            @foreach (KazoAppInfo app in row.Candidates)
                             {
                                 <option value="@app.Id">@app.Name</option>
                             }

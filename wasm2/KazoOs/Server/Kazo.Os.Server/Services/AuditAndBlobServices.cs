@@ -18,10 +18,10 @@ public interface IAuditService
 /// <inheritdoc />
 public sealed class AuditService : IAuditService
 {
-    private readonly HackerOsServerDbContext _db;
+    private readonly KazoOsServerDbContext _db;
 
     /// <inheritdoc />
-    public AuditService(HackerOsServerDbContext db) => _db = db;
+    public AuditService(KazoOsServerDbContext db) => _db = db;
 
     /// <inheritdoc />
     public async Task RecordAsync(Guid accountId, Guid? deviceId, string eventCode, string? detailsJson, CancellationToken ct)
@@ -71,11 +71,11 @@ public interface IContentBlobService
 public sealed class ContentBlobService : IContentBlobService
 {
     private const int DefaultChunkSizeBytes = 256 * 1024; // 256 KiB
-    private readonly HackerOsServerDbContext _db;
+    private readonly KazoOsServerDbContext _db;
     private readonly IConfiguration _configuration;
 
     /// <inheritdoc />
-    public ContentBlobService(HackerOsServerDbContext db, IConfiguration configuration)
+    public ContentBlobService(KazoOsServerDbContext db, IConfiguration configuration)
     {
         _db = db;
         _configuration = configuration;

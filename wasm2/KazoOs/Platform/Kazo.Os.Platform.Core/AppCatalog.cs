@@ -110,7 +110,7 @@ public sealed class AppCatalog
 
     /// <summary>
     /// Gets the apps the host shipped but this OS refuses to load (ADR 0098 §3), ordered by id: an
-    /// SDK range that does not contain <see cref="HackerOsSdk.Version"/>
+    /// SDK range that does not contain <see cref="KazoOsSdk.Version"/>
     /// (<c>catalog.sdk.incompatible</c>), or a required dependency refused for that reason
     /// (<c>catalog.dependency.unavailable</c>). They are not in <see cref="Manifests"/>, so nothing
     /// can launch them; Settings lists them as incompatible with the range they asked for.
@@ -182,14 +182,14 @@ public sealed class AppCatalog
     public static AppCatalogBuildResult Build(IEnumerable<AppManifest> manifests) => Build(manifests, []);
 
     /// <summary>
-    /// Builds a catalog for the SDK version of this process (<see cref="HackerOsSdk.SemanticVersion"/>).
+    /// Builds a catalog for the SDK version of this process (<see cref="KazoOsSdk.SemanticVersion"/>).
     /// See <see cref="Build(IEnumerable{AppManifest}, IEnumerable{string}, SemanticVersion)"/>.
     /// </summary>
     /// <param name="manifests">Candidate manifests selected by the build or package policy.</param>
     /// <param name="systemAppIds">IDs the trusted host declared system apps.</param>
     /// <returns>A catalog or every deterministic validation error.</returns>
     public static AppCatalogBuildResult Build(IEnumerable<AppManifest> manifests, IEnumerable<string> systemAppIds) =>
-        Build(manifests, systemAppIds, HackerOsSdk.SemanticVersion);
+        Build(manifests, systemAppIds, KazoOsSdk.SemanticVersion);
 
     /// <summary>
     /// Builds a host catalog from its aggregated <c>BuiltInApplications.json</c> entries: the
@@ -416,7 +416,7 @@ public sealed class AppCatalog
         List<AppCatalogRejection> rejected = [];
         foreach (AppManifest manifest in byId.Values.OrderBy(static item => item.Id, StringComparer.Ordinal).ToArray())
         {
-            if (HackerOsSdk.IsCompatible(manifest.SdkCompatibility, sdkVersion))
+            if (KazoOsSdk.IsCompatible(manifest.SdkCompatibility, sdkVersion))
             {
                 continue;
             }

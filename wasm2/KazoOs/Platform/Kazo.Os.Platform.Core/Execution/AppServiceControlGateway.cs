@@ -11,7 +11,7 @@ namespace Kazo.Os.Platform.Core.Execution;
 /// through the real <see cref="AppIntentDispatcher"/>, so any app can start, stop, or reconfigure
 /// a companion service (same assembly) or, holding <see cref="AppCapabilities.ServicesManage"/>,
 /// any other installed service — instead of only components with direct Blazor DI access to the
-/// orchestrator. Apps reach it through <c>HackServiceController</c> (ADR 0056, section 5).
+/// orchestrator. Apps reach it through <c>KazoServiceController</c> (ADR 0056, section 5).
 /// </summary>
 internal sealed class AppServiceControlGateway(
     Func<AppIntentDispatcher> dispatcherProvider,

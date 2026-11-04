@@ -1,18 +1,18 @@
 namespace Kazo.Os.AppSdk.Apps;
 
 /// <summary>What an entry of a catalog installs (<c>kind</c> of <c>catalog.json</c>, ADR 0213 §2).</summary>
-public enum HackCatalogItemKind
+public enum KazoCatalogItemKind
 {
-    /// <summary>An app (<c>.hackapp</c>), installed with <see cref="HackAppPackages.InstallAsync"/>.</summary>
+    /// <summary>An app (<c>.hackapp</c>), installed with <see cref="KazoAppPackages.InstallAsync"/>.</summary>
     App = 0,
 
-    /// <summary>A theme pack (<c>.hacktheme</c>), installed with <see cref="HackAppPackages.InstallThemePackAsync"/>.</summary>
+    /// <summary>A theme pack (<c>.hacktheme</c>), installed with <see cref="KazoAppPackages.InstallThemePackAsync"/>.</summary>
     ThemePack = 1
 }
 
 /// <summary>The parts a theme pack holds (ADR 0190 §1).</summary>
 [Flags]
-public enum HackThemePackParts
+public enum KazoThemePackParts
 {
     /// <summary>Nothing.</summary>
     None = 0,
@@ -40,7 +40,7 @@ public enum HackThemePackParts
 /// <param name="Source">Where it came from, such as <c>catalog:official/org.example.neon@1.0.0</c>.</param>
 /// <param name="SystemWide">Whether it is installed for every user (otherwise for the session user only).</param>
 /// <param name="Parts">What it holds.</param>
-public sealed record HackInstalledThemePack(string PackId, string Name, string Version, string Source, bool SystemWide, HackThemePackParts Parts);
+public sealed record KazoInstalledThemePack(string PackId, string Name, string Version, string Source, bool SystemWide, KazoThemePackParts Parts);
 
 /// <summary>What the install or the update of a theme pack did (ADR 0213 §4).</summary>
 /// <param name="PackId">Pack id.</param>
@@ -51,15 +51,15 @@ public sealed record HackInstalledThemePack(string PackId, string Name, string V
 /// <param name="SystemWide">Whether it was installed for every user.</param>
 /// <param name="Parts">What it holds.</param>
 /// <param name="Trust">Trust level of its catalog.</param>
-public sealed record HackThemePackInstallReport(
+public sealed record KazoThemePackInstallReport(
     string PackId,
     string Name,
     string Version,
     string Source,
     string? PreviousVersion,
     bool SystemWide,
-    HackThemePackParts Parts,
-    HackPackageTrust Trust)
+    KazoThemePackParts Parts,
+    KazoPackageTrust Trust)
 {
     /// <summary>Gets whether the OS must restart: never, a pack is data the catalogs read at once.</summary>
     public bool RestartRequired => false;

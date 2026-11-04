@@ -109,7 +109,7 @@
     /// <summary>Gets the key caps in the app's language, or the ambient app's without a cascaded one.</summary>
     private Microsoft.Extensions.Localization.IStringLocalizer<Strings> L => AppContext is { } context
         ? context.GetLocalizer<Strings>()
-        : HackLocalization.GetLocalizer<Strings>();
+        : KazoLocalization.GetLocalizer<Strings>();
 
     /// <summary>A modifier's cap: the host's label when it set one, the translated default otherwise.</summary>
     private string Label(string configured, string defaultLabel, string key) =>

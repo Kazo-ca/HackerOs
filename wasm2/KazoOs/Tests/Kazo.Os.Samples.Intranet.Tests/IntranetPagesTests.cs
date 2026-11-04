@@ -13,7 +13,7 @@ public sealed class IntranetPagesTests
     {
         IntranetClient client = new();
 
-        HackWebResponseData home = await client.GetAsync("/");
+        KazoWebResponseData home = await client.GetAsync("/");
 
         Assert.Equal(200, home.StatusCode);
         Assert.StartsWith("text/html", home.ContentType);
@@ -36,7 +36,7 @@ public sealed class IntranetPagesTests
     [InlineData("/js/notes.js", "javascript")]
     public async Task The_embedded_wwwroot_is_served(string path, string type)
     {
-        HackWebResponseData file = await new IntranetClient().GetAsync(path);
+        KazoWebResponseData file = await new IntranetClient().GetAsync(path);
 
         Assert.Equal(200, file.StatusCode);
         Assert.Contains(type, file.ContentType);
@@ -50,19 +50,19 @@ public sealed class IntranetPagesTests
         string form = (await client.GetAsync("/Home/Profile")).ReadAsString();
         Assert.Contains("<label for=\"Name\">Display name</label>", form);
 
-        HackWebResponseData forged = await client.PostFormAsync("/Home/Profile", formPage: null, ("Name", "Mallory"));
+        KazoWebResponseData forged = await client.PostFormAsync("/Home/Profile", formPage: null, ("Name", "Mallory"));
         Assert.Equal(400, forged.StatusCode);
 
-        HackWebResponseData invalid = await client.PostFormAsync("/Home/Profile", form, ("Name", "x"));
+        KazoWebResponseData invalid = await client.PostFormAsync("/Home/Profile", form, ("Name", "x"));
         Assert.Equal(200, invalid.StatusCode);
         string redisplayed = invalid.ReadAsString();
         Assert.Contains("field-validation-error", redisplayed);
         Assert.Contains("input-validation-error", redisplayed);
 
-        HackWebResponseData saved = await client.PostFormAsync("/Home/Profile", form, ("Name", "Neo"));
+        KazoWebResponseData saved = await client.PostFormAsync("/Home/Profile", form, ("Name", "Neo"));
         Assert.Equal(302, saved.StatusCode);
         Assert.Equal("/", IntranetClient.Location(saved));
-        Assert.Contains(".HackSession", client.Cookies.Keys);
+        Assert.Contains(".KazoSession", client.Cookies.Keys);
 
         string home = (await client.GetAsync("/")).ReadAsString();
         Assert.Contains("Welcome back, Neo", home);
@@ -70,7 +70,7 @@ public sealed class IntranetPagesTests
         Assert.Contains("\"displayName\":\"Neo\"", (await client.GetAsync("/api/me")).ReadAsString());
 
         string profile = (await client.GetAsync("/Home/Profile")).ReadAsString();
-        HackWebResponseData forgotten = await client.PostFormAsync("/Home/SignOut", profile);
+        KazoWebResponseData forgotten = await client.PostFormAsync("/Home/SignOut", profile);
         Assert.Equal(302, forgotten.StatusCode);
         Assert.Contains("\"displayName\":null", (await client.GetAsync("/api/me")).ReadAsString());
     }
@@ -89,12 +89,12 @@ public sealed class IntranetPagesTests
 
         string create = (await client.GetAsync("/Notes/Create")).ReadAsString();
         Assert.Contains("action=\"/Notes/Create\"", create);
-        HackWebResponseData refused = await client.PostFormAsync("/Notes/Create", create, ("Title", "ab"), ("Body", "too short a title"));
+        KazoWebResponseData refused = await client.PostFormAsync("/Notes/Create", create, ("Title", "ab"), ("Body", "too short a title"));
         Assert.Equal(200, refused.StatusCode);
         Assert.Contains("field-validation-error", refused.ReadAsString());
         Assert.Contains("too short a title", refused.ReadAsString());
 
-        HackWebResponseData created = await client.PostFormAsync("/Notes/Create", create, ("Title", "Server room"), ("Body", "Badge required."), ("Pinned", "on"));
+        KazoWebResponseData created = await client.PostFormAsync("/Notes/Create", create, ("Title", "Server room"), ("Body", "Badge required."), ("Pinned", "on"));
         Assert.Equal(302, created.StatusCode);
         Assert.Equal("/Notes/Details/4", IntranetClient.Location(created));
 
@@ -106,13 +106,13 @@ public sealed class IntranetPagesTests
         string edit = (await client.GetAsync("/Notes/Edit/4")).ReadAsString();
         Assert.Contains("action=\"/Notes/Edit/4\"", edit);
         Assert.Contains("checked", edit);
-        HackWebResponseData edited = await client.PostFormAsync("/Notes/Edit/4", edit, ("Title", "Server room B"), ("Body", "Badge and PIN required."));
+        KazoWebResponseData edited = await client.PostFormAsync("/Notes/Edit/4", edit, ("Title", "Server room B"), ("Body", "Badge and PIN required."));
         Assert.Equal("/Notes/Details/4", IntranetClient.Location(edited));
         string after = (await client.GetAsync("/Notes/Details/4")).ReadAsString();
         Assert.Contains("Badge and PIN required.", after);
         Assert.DoesNotContain(">pinned<", after);
 
-        HackWebResponseData deleted = await client.PostFormAsync("/Notes/Delete/4", after);
+        KazoWebResponseData deleted = await client.PostFormAsync("/Notes/Delete/4", after);
         Assert.Equal("/Notes", IntranetClient.Location(deleted));
         Assert.Equal(404, (await client.GetAsync("/Notes/Details/4")).StatusCode);
     }
@@ -134,7 +134,7 @@ public sealed class IntranetPagesTests
     [Fact]
     public async Task An_unknown_note_is_a_404_page()
     {
-        HackWebResponseData missing = await new IntranetClient().GetAsync("/Notes/Edit/99");
+        KazoWebResponseData missing = await new IntranetClient().GetAsync("/Notes/Edit/99");
 
         Assert.Equal(404, missing.StatusCode);
     }

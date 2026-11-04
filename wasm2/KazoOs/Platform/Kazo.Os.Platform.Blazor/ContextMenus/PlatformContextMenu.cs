@@ -6,11 +6,11 @@ namespace Kazo.Os.Platform.Blazor.ContextMenus;
 
 /// <summary>
 /// The platform's provider of the contract <c>hackeros.context-menu</c> (ADR 0150 §1), rendered in
-/// place of an app's <see cref="HackContextMenu"/>. It draws nothing there: it registers the app's
+/// place of an app's <see cref="KazoContextMenu"/>. It draws nothing there: it registers the app's
 /// menu with its window's menus and hands back the controller; the menu itself is drawn by the
 /// shell's <see cref="ContextMenuOverlay"/>, above every window.
 /// </summary>
-public sealed class PlatformContextMenu : HackEmbeddableComponent, IHackContextMenu, IDisposable
+public sealed class PlatformContextMenu : KazoEmbeddableComponent, IHackContextMenu, IDisposable
 {
     private IDisposable? _registration;
     private string? _registeredName;
@@ -30,11 +30,11 @@ public sealed class PlatformContextMenu : HackEmbeddableComponent, IHackContextM
 
     /// <summary>Gets or sets the SDK's builder of the menu from its markup entries.</summary>
     [Parameter]
-    public Func<HackMenuDefinition>? Build { get; set; }
+    public Func<KazoMenuDefinition>? Build { get; set; }
 
     /// <summary>Gets or sets the app's handler run before the menu is drawn.</summary>
     [Parameter]
-    public EventCallback<HackMenuOpeningEventArgs> Opening { get; set; }
+    public EventCallback<KazoMenuOpeningEventArgs> Opening { get; set; }
 
     /// <inheritdoc />
     string IHackContextMenu.Name => Name;
@@ -58,10 +58,10 @@ public sealed class PlatformContextMenu : HackEmbeddableComponent, IHackContextM
 
         // The registration reads the current parameters at each opening: a re-render with new
         // titles or a new Opening lambda needs no new registration.
-        _registration = Host.Register(new HackMenuRegistration(
+        _registration = Host.Register(new KazoMenuRegistration(
             Name,
-            () => Build?.Invoke() ?? new HackMenuDefinition(Name),
-            new EventCallback<HackMenuOpeningEventArgs>(null, (Func<HackMenuOpeningEventArgs, Task>)(args => Opening.InvokeAsync(args)))));
+            () => Build?.Invoke() ?? new KazoMenuDefinition(Name),
+            new EventCallback<KazoMenuOpeningEventArgs>(null, (Func<KazoMenuOpeningEventArgs, Task>)(args => Opening.InvokeAsync(args)))));
     }
 
     /// <inheritdoc />

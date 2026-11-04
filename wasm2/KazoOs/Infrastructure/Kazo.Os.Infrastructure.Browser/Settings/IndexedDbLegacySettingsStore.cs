@@ -36,7 +36,7 @@ public sealed class IndexedDbLegacySettingsStore : ILegacySettingsStore, IAsyncD
         IReadOnlyList<JsonElement> results = await _adapter.ExecuteAsync(
             TransactionBoundary,
             IndexedDbTransactionMode.ReadOnly,
-            [new IndexedDbOperation("getAll", HackerOsIndexedDbSchema.SettingsStoreName)],
+            [new IndexedDbOperation("getAll", KazoOsIndexedDbSchema.SettingsStoreName)],
             cancellationToken).ConfigureAwait(false);
 
         List<LegacySettingsRecord> records = [];

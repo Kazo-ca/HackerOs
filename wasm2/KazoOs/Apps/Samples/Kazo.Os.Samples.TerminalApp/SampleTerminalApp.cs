@@ -21,7 +21,7 @@ namespace Kazo.Os.Samples.TerminalApp;
 ///   <c>--kill &lt;pid&gt;</c> does the same with <c>Kill</c>, whose refusal (no <c>process.manage</c>)
 ///   comes back from the OS as for a local call.</item>
 ///   <item><c>--isolation</c>: the page's cross-origin isolation through
-///   <see cref="Kazo.Os.AppSdk.Diagnostics.HackCrossOriginIsolation"/> (ADR 0146), which needs no
+///   <see cref="Kazo.Os.AppSdk.Diagnostics.KazoCrossOriginIsolation"/> (ADR 0146), which needs no
 ///   capability and answers the same in a worker and on the main thread.</item>
 /// </list>
 /// </remarks>
@@ -57,8 +57,8 @@ public class SampleTerminalApp : TerminalAppBase
 
         if (context.Arguments.Contains("--isolation", StringComparer.OrdinalIgnoreCase))
         {
-            Kazo.Os.AppSdk.Diagnostics.HackCrossOriginIsolationStatus isolation =
-                await Kazo.Os.AppSdk.Diagnostics.HackCrossOriginIsolation.GetStatusAsync(cancellationToken);
+            Kazo.Os.AppSdk.Diagnostics.KazoCrossOriginIsolationStatus isolation =
+                await Kazo.Os.AppSdk.Diagnostics.KazoCrossOriginIsolation.GetStatusAsync(cancellationToken);
             await context.StandardOutput.WriteLineAsync(
                 $"isolation: {(isolation.IsIsolated ? "yes" : "no")} {isolation.Reason}".AsMemory(), cancellationToken);
             return 0;

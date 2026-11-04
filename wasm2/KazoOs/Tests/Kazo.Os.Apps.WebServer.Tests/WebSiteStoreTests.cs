@@ -9,17 +9,17 @@ namespace Kazo.Os.Apps.WebServer.Tests;
 /// <summary>The pure parts of Web Server Manager: site states, suggestions and log lines.</summary>
 public sealed class WebSiteStoreTests
 {
-    private static HackWebSiteDeclaration Declaration(string name, bool enabled = true, params string[] bindings) =>
-        HackWebSiteFile.Parse(
+    private static KazoWebSiteDeclaration Declaration(string name, bool enabled = true, params string[] bindings) =>
+        KazoWebSiteFile.Parse(
             $"/home/alice/.config/hackweb/sites/{name}.site",
-            HackWebSiteFile.Serialize(new HackWebSite { Name = name, Root = "/home/alice/" + name, Bindings = bindings, Enabled = enabled }),
-            HackWebSiteScope.User,
+            KazoWebSiteFile.Serialize(new KazoWebSite { Name = name, Root = "/home/alice/" + name, Bindings = bindings, Enabled = enabled }),
+            KazoWebSiteScope.User,
             "alice");
 
     [Fact]
     public void State_follows_the_sockets_hackwebd_owns()
     {
-        HackWebSiteDeclaration site = Declaration("docs", true, "http://docs.hack:8080/", "http://localhost:8081/");
+        KazoWebSiteDeclaration site = Declaration("docs", true, "http://docs.hack:8080/", "http://localhost:8081/");
         HashSet<string> none = [];
         HashSet<string> one = ["http://docs.hack:8080/"];
         HashSet<string> both = ["http://docs.hack:8080/", "http://localhost:8081/"];
@@ -35,15 +35,15 @@ public sealed class WebSiteStoreTests
     public void Suggest_picks_the_folder_name_and_the_first_free_port()
     {
         WebSiteRow taken = new("my-site", Declaration("my-site", true, "http://localhost:8080/"), null, ["http://localhost:8080/"], WebSiteState.Running);
-        HackTcpListenerInfo other = new(IPAddress.Any, 8081, 12, "python3", "alice", []);
+        KazoTcpListenerInfo other = new(IPAddress.Any, 8081, 12, "python3", "alice", []);
         WebServerSnapshot snapshot = new(null, [taken], [other]);
 
-        HackWebSite site = WebSiteStore.Suggest("/home/alice/My Site/", snapshot);
+        KazoWebSite site = WebSiteStore.Suggest("/home/alice/My Site/", snapshot);
 
         Assert.Equal("my-site-2", site.Name);
         Assert.Equal("/home/alice/My Site", site.Root);
         Assert.Equal(["http://localhost:8082/"], site.Bindings);
-        Assert.Empty(HackWebSiteFile.Validate(site, HackWebSiteScope.User));
+        Assert.Empty(KazoWebSiteFile.Validate(site, KazoWebSiteScope.User));
     }
 
     [Fact]
@@ -51,8 +51,8 @@ public sealed class WebSiteStoreTests
     {
         DateTimeOffset at = new(2026, 10, 16, 9, 5, 7, TimeSpan.Zero);
 
-        Assert.Equal("2026/10/16 09:05:07 [error] 42#0: docs: open() failed", HackWebdLog.FormatError("error", "docs", "open() failed", at, 42));
-        Assert.Equal("2026/10/16 09:05:07 [notice] 42#0: exiting", HackWebdLog.FormatError("notice", null, "exiting", at, 42));
-        Assert.Equal("/var/log/hackweb/docs.access.log", HackWebdLog.AccessLogPath("docs"));
+        Assert.Equal("2026/10/16 09:05:07 [error] 42#0: docs: open() failed", KazoWebdLog.FormatError("error", "docs", "open() failed", at, 42));
+        Assert.Equal("2026/10/16 09:05:07 [notice] 42#0: exiting", KazoWebdLog.FormatError("notice", null, "exiting", at, 42));
+        Assert.Equal("/var/log/hackweb/docs.access.log", KazoWebdLog.AccessLogPath("docs"));
     }
 }

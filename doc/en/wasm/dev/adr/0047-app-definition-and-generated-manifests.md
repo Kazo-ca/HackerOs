@@ -179,7 +179,7 @@ the list of manifests produced and the name of its assembly. It is used by the h
 
 ### 3. Aggregation in the host: `BuiltInApplications.json` (D7, D8)
 
-A host project declares itself with `<HackerOsAppHost>true</HackerOsAppHost>`. Only
+A host project declares itself with `<HackerOsAppHost>true</KazoOsAppHost>`. Only
 `OS/Kazo.Os.Ecosystem` does so today. `test/test` reuses the compiled
 Ecosystem catalog (`BuildKnownLazyApps.Catalog`) and does not aggregate itself.
 

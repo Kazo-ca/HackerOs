@@ -106,7 +106,7 @@ public partial class FileExplorerMobileWindow
     }
 
     /// <summary>The selection mode ends with its last item, as on a phone.</summary>
-    private void OnMobileSelectionChanged(IReadOnlyList<HackFileViewItem> selection)
+    private void OnMobileSelectionChanged(IReadOnlyList<KazoFileViewItem> selection)
     {
         if (selection.Count == 0 && _selecting)
         {

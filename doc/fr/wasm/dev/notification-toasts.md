@@ -79,7 +79,7 @@ seules les bulles les prennent. L'entrée (glissé + fondu, 180 ms) ne joue que 
 | `OsSoundService.DoNotDisturb` | Ne joue pas le son d'une notification pendant que le mode est activé ; les autres sons restent. |
 | `ClockPanel` | Interrupteur `role="switch"` à côté du titre Notifications. |
 | `DoNotDisturbIndicator` (public) | La lune de la zone de notification, posée par `DesktopShell` ; `OnClick` ouvre le panneau. `MobileShell` montre la lune sur la poignée du volet et l'ajoute à son nom. |
-| `NotificationsPanel` (Paramètres) | Page `--page=notifications`, par le SDK public (`HackSettings.OpenSystemAsync`). |
+| `NotificationsPanel` (Paramètres) | Page `--page=notifications`, par le SDK public (`KazoSettings.OpenSystemAsync`). |
 
 Tests : `DoNotDisturbServiceTests`, `OsSoundServiceTests.Do_not_disturb_mutes_the_notification_sounds_only`,
 `NotificationsPanelTests`, `DoNotDisturbTests` (UI.E2E : interrupteur, lune, rechargement).

@@ -1,4 +1,4 @@
-@inherits HackLayout
+@inherits KazoLayout
 @*
     The layout of every MVC page of the site, .cshtml and .razor views alike (ADR 0086 "mixing").
     It is rendered after the view, so it sees the title and the "Scripts" section the view set.
@@ -14,16 +14,16 @@
 </head>
 <body>
     <header class="topbar">
-        <HackLink Action="Index" Controller="Home" class="brand">intranet<span>.hack</span></HackLink>
+        <KazoLink Action="Index" Controller="Home" class="brand">intranet<span>.hack</span></KazoLink>
         <nav class="topnav" aria-label="Site">
-            <HackLink Action="Index" Controller="Home" class="@NavClass("Home")" id="nav-home">Home</HackLink>
-            <HackLink Action="Index" Controller="Notes" class="@NavClass("Notes")" id="nav-notes">Notes</HackLink>
-            <HackLink Action="Index" Controller="People" class="@NavClass("People")" id="nav-people">People</HackLink>
+            <KazoLink Action="Index" Controller="Home" class="@NavClass("Home")" id="nav-home">Home</KazoLink>
+            <KazoLink Action="Index" Controller="Notes" class="@NavClass("Notes")" id="nav-notes">Notes</KazoLink>
+            <KazoLink Action="Index" Controller="People" class="@NavClass("People")" id="nav-people">People</KazoLink>
             <a href="/board" id="nav-board">Board</a>
         </nav>
         <div class="whoami">
             <span class="whoami-name" id="whoami">@(DisplayName ?? IntranetSession.Anonymous)</span>
-            <HackLink Action="Profile" Controller="Home" id="nav-profile">profile</HackLink>
+            <KazoLink Action="Profile" Controller="Home" id="nav-profile">profile</KazoLink>
         </div>
     </header>
     <main class="page">
@@ -33,6 +33,6 @@
         <span>ASP.Hack · served by the site process</span>
         <code>@Request.Method @Request.Path</code>
     </footer>
-    <HackRenderSection Name="Scripts" Required="false" />
+    <KazoRenderSection Name="Scripts" Required="false" />
 </body>
 </html>

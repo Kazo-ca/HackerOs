@@ -17,23 +17,23 @@ namespace Kazo.Os.Apps.Settings;
 /// <remarks>
 /// Uses only the public SDK (ADR 0055, ADR 0056 section 3): <see cref="IAppManagementGateway"/>
 /// (capability <c>apps.manage</c>) for the list and the changes, <see cref="IAppCatalogGateway.Changed"/>
-/// to refresh after any <c>apps.config</c> change, and <see cref="HackUser"/> to know whether the
+/// to refresh after any <c>apps.config</c> change, and <see cref="KazoUser"/> to know whether the
 /// "for all users" scope is offered. A machine-scope change makes the OS ask an administrator to
 /// authenticate in its own window; this panel never sees a password.
 /// </remarks>
 public partial class InstalledAppsPanel : IDisposable
 {
-    private IReadOnlyList<HackAppInstallInfo>? _apps;
-    private HackAppInstallInfo? _pending;
-    private HackUninstallPlan? _plan;
-    private HackInstallScope _scope = HackInstallScope.User;
+    private IReadOnlyList<KazoAppInstallInfo>? _apps;
+    private KazoAppInstallInfo? _pending;
+    private KazoUninstallPlan? _plan;
+    private KazoInstallScope _scope = KazoInstallScope.User;
     private IAppCatalogGateway? _catalog;
     private bool _isBusy;
     private string? _message;
 
     /// <summary>
     /// Gets the Settings window's execution context, cascaded by the window host. The panel derives
-    /// from <c>HackComponentBase</c> so its lifecycle and event handlers run inside the app's ambient
+    /// from <c>KazoComponentBase</c> so its lifecycle and event handlers run inside the app's ambient
     /// frame (ADR 0067: otherwise their time would be charged to the compositor).
     /// </summary>
     private IAppExecutionContext Context => AppContext
@@ -52,17 +52,17 @@ public partial class InstalledAppsPanel : IDisposable
     public string? OnlyAppId { get; set; }
 
     /// <summary>Window apps, sorted by name. Services are managed from System Monitor's Services tab.</summary>
-    private IReadOnlyList<HackAppInstallInfo> Applications => OnlyAppId is { } only
+    private IReadOnlyList<KazoAppInstallInfo> Applications => OnlyAppId is { } only
         ? [.. (_apps ?? []).Where(entry => entry.App.Id == only)]
         : [.. (_apps ?? []).Where(static entry => entry.App.Kind == AppKind.Window)];
 
     /// <summary>Terminal commands, sorted by name; all are system apps on the Ecosystem host.</summary>
-    private IReadOnlyList<HackAppInstallInfo> Commands => OnlyAppId is not null
+    private IReadOnlyList<KazoAppInstallInfo> Commands => OnlyAppId is not null
         ? []
         : [.. (_apps ?? []).Where(static entry => entry.App.Kind == AppKind.Terminal)];
 
     /// <summary>Only an administrator is offered "for all users" (ADR 0048 section 3); the OS still asks for their password.</summary>
-    private bool IsAdministrator => HackUser.Describe(Context).IsAdministrator;
+    private bool IsAdministrator => KazoUser.Describe(Context).IsAdministrator;
 
     /// <inheritdoc />
     protected override async Task OnInitializedAsync()
@@ -108,7 +108,7 @@ public partial class InstalledAppsPanel : IDisposable
         closure.Where(id => _apps?.FirstOrDefault(entry => entry.App.Id == id)?.App.Kind == Kazo.Os.App.Abstractions.AppKind.Web);
 
     /// <summary>The result line after an uninstall: which processes were stopped, and which had to be forced.</summary>
-    private string? DescribeStopped(HackUninstallReport report)
+    private string? DescribeStopped(KazoUninstallReport report)
     {
         if (report.StoppedProcesses.Count == 0)
         {
@@ -116,28 +116,28 @@ public partial class InstalledAppsPanel : IDisposable
         }
 
         string stopped = string.Join(", ", report.StoppedProcesses.Select(p => L["Apps.ProcessItem", p.Name, p.Pid].Value));
-        IReadOnlyList<HackRunningProcessInfo> forced = report.ForcedProcesses;
+        IReadOnlyList<KazoRunningProcessInfo> forced = report.ForcedProcesses;
         return forced.Count == 0
             ? L["Apps.Stopped", stopped]
             : L["Apps.StoppedAndForced", stopped, string.Join(", ", forced.Select(p => L["Apps.ProcessItem", p.Name, p.Pid].Value))];
     }
 
-    private static string RowClass(HackAppInstallInfo entry) =>
-        entry.State == HackAppInstallState.Incompatible ? "is-incompatible"
-        : entry.State == HackAppInstallState.Damaged ? "is-damaged"
+    private static string RowClass(KazoAppInstallInfo entry) =>
+        entry.State == KazoAppInstallState.Incompatible ? "is-incompatible"
+        : entry.State == KazoAppInstallState.Damaged ? "is-damaged"
         : entry.App.IsSystemApp ? "is-system"
-        : entry.State == HackAppInstallState.Installed ? "is-installed"
+        : entry.State == KazoAppInstallState.Installed ? "is-installed"
         : "is-uninstalled";
 
-    private string ScopeClass(HackInstallScope scope) =>
+    private string ScopeClass(KazoInstallScope scope) =>
         scope == _scope ? "scope-option is-selected" : "scope-option";
 
-    private async Task AskUninstall(HackAppInstallInfo entry)
+    private async Task AskUninstall(KazoAppInstallInfo entry)
     {
         _message = null;
         _pending = entry;
         _plan = null;
-        _scope = HackInstallScope.User;
+        _scope = KazoInstallScope.User;
         try
         {
             // ADR 0097 section 5: the dialog names the processes the uninstall will stop.
@@ -165,8 +165,8 @@ public partial class InstalledAppsPanel : IDisposable
             return;
         }
 
-        HackInstallScope scope = IsAdministrator ? _scope : HackInstallScope.User;
-        HackUninstallReport? report = null;
+        KazoInstallScope scope = IsAdministrator ? _scope : KazoInstallScope.User;
+        KazoUninstallReport? report = null;
         bool done = await RunAsync(async () =>
         {
             report = await Context.AppManagement.UninstallWithReportAsync(entry.App.Id, scope, Context.CancellationToken);
@@ -180,12 +180,12 @@ public partial class InstalledAppsPanel : IDisposable
         }
     }
 
-    private Task ReinstallAsync(HackAppInstallInfo entry)
+    private Task ReinstallAsync(KazoAppInstallInfo entry)
     {
         _message = null;
-        HackInstallScope scope = entry.State == HackAppInstallState.UninstalledForMachine
-            ? HackInstallScope.Machine
-            : HackInstallScope.User;
+        KazoInstallScope scope = entry.State == KazoAppInstallState.UninstalledForMachine
+            ? KazoInstallScope.Machine
+            : KazoInstallScope.User;
         return RunAsync(() => Context.AppManagement.ReinstallAsync(entry.App.Id, scope, Context.CancellationToken));
     }
 

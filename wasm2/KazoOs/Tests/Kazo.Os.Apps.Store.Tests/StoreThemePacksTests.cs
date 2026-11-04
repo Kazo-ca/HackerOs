@@ -9,29 +9,29 @@ public sealed class StoreThemePacksTests
 {
     private static readonly CultureInfo English = CultureInfo.GetCultureInfo("en");
 
-    private static HackCatalogApp Pack(string catalog, string id, string name, string latest = "1.1.0", params string[] tags) =>
+    private static KazoCatalogApp Pack(string catalog, string id, string name, string latest = "1.1.0", params string[] tags) =>
         new(catalog, id, name, "themes", tags,
             new Dictionary<string, string> { ["en"] = "A dark pack", ["fr"] = "Un pack sombre" },
             "CC-BY-4.0", "https://github.com/example/" + id, latest,
-            [new HackCatalogAppVersion(latest, 4096, [])],
-            HackPackageTrust.Verified)
+            [new KazoCatalogAppVersion(latest, 4096, [])],
+            KazoPackageTrust.Verified)
         {
-            Kind = HackCatalogItemKind.ThemePack,
+            Kind = KazoCatalogItemKind.ThemePack,
         };
 
-    private static HackCatalogApp App(string catalog, string id) =>
+    private static KazoCatalogApp App(string catalog, string id) =>
         new(catalog, id, "Notes", "utilities", [], new Dictionary<string, string>(), "MIT", "https://github.com/example/notes", "1.0.0",
-            [new HackCatalogAppVersion("1.0.0", 1024, [])], HackPackageTrust.Verified);
+            [new KazoCatalogAppVersion("1.0.0", 1024, [])], KazoPackageTrust.Verified);
 
-    private static HackAppCatalog Catalog(string name, params HackCatalogApp[] items) => new(name, HackPackageTrust.Verified, [], items);
+    private static KazoAppCatalog Catalog(string name, params KazoCatalogApp[] items) => new(name, KazoPackageTrust.Verified, [], items);
 
-    private static HackInstalledThemePack Installed(string id, string source, string version, bool systemWide = false) =>
-        new(id, "Installed " + id, version, source, systemWide, HackThemePackParts.Themes);
+    private static KazoInstalledThemePack Installed(string id, string source, string version, bool systemWide = false) =>
+        new(id, "Installed " + id, version, source, systemWide, KazoThemePackParts.Themes);
 
     [Fact]
     public void Only_theme_packs_are_listed_and_the_apps_tab_ignores_them()
     {
-        HackAppCatalog official = Catalog("official", Pack("official", "org.example.neon", "Neon"), App("official", "org.example.notes"));
+        KazoAppCatalog official = Catalog("official", Pack("official", "org.example.neon", "Neon"), App("official", "org.example.notes"));
 
         StoreThemePacks packs = new([official], []);
         StoreCatalog apps = new([official], [], [], new HashSet<string>());
@@ -58,8 +58,8 @@ public sealed class StoreThemePacksTests
     [Fact]
     public void The_first_catalog_wins_unless_the_pack_was_installed_from_another()
     {
-        HackAppCatalog official = Catalog("official", Pack("official", "org.example.neon", "Neon"));
-        HackAppCatalog school = Catalog("school", Pack("school", "org.example.neon", "Neon school"));
+        KazoAppCatalog official = Catalog("official", Pack("official", "org.example.neon", "Neon"));
+        KazoAppCatalog school = Catalog("school", Pack("school", "org.example.neon", "Neon school"));
 
         StoreThemePacks fresh = new([official, school], []);
         StoreThemePacks fromSchool = new([official, school], [Installed("org.example.neon", "catalog:school/org.example.neon@1.1.0", "1.1.0")]);

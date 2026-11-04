@@ -13,7 +13,7 @@ public sealed class ManifestLocalizationGeneratorTests : IDisposable
     public void Dispose() => Directory.Delete(_directory, recursive: true);
 
     private static IReadOnlyList<GeneratedManifest> Generate(params Type[] types) =>
-        AppDefinitionInspector.Inspect(typeof(ValidCommandApp).Assembly, types, HackerOsSdk.Version).Manifests;
+        AppDefinitionInspector.Inspect(typeof(ValidCommandApp).Assembly, types, KazoOsSdk.Version).Manifests;
 
     private void WriteResx(string culture, params (string Key, string Value)[] entries)
     {

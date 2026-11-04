@@ -288,7 +288,7 @@ public sealed class PlatformShellSwitchCoordinatorTests
             Description = "Platform switch coordinator test app.",
             Kind = AppKind.Window,
             EntryPoint = new AppEntryPointManifest("Test.dll", "Test.Window"),
-            SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+            SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
             Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
             Resources = AppResourceProfileManifest.None
         };
@@ -307,7 +307,7 @@ public sealed class PlatformShellSwitchCoordinatorTests
                     [WellKnownAppPlatforms.Desktop.Value, WellKnownAppPlatforms.Mobile.Value],
                     "Test.dll",
                     "Test.SharedWindow")]),
-            SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+            SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
             Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
             Resources = AppResourceProfileManifest.None
         };

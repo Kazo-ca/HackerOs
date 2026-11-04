@@ -10,7 +10,7 @@ namespace Kazo.Os.Ecosystem;
 /// <summary>
 /// The apps a host was built with (ADR 0047 §3, ADR 0098 §2): the
 /// <c>Kazo.Os.BuiltInApplications.json</c> resource the build aggregates into the host project's own
-/// assembly (<c>HackerOsAppHost</c>) from every app it references, as a project or as a package.
+/// assembly (<c>KazoOsAppHost</c>) from every app it references, as a project or as a package.
 /// </summary>
 /// <remarks>
 /// Only JSON is read: app assemblies stay lazy and their <c>AppDefinition</c> classes are never
@@ -137,14 +137,14 @@ public sealed class HostAppCatalog
     /// <param name="hostAssembly">The host project's assembly (for example <c>typeof(Program).Assembly</c>).</param>
     /// <returns>The host's apps.</returns>
     /// <exception cref="InvalidOperationException">
-    /// The assembly embeds no catalog (its project does not set <c>HackerOsAppHost</c>), or the catalog is invalid.
+    /// The assembly embeds no catalog (its project does not set <c>KazoOsAppHost</c>), or the catalog is invalid.
     /// </exception>
     public static HostAppCatalog Load(Assembly hostAssembly)
     {
         ArgumentNullException.ThrowIfNull(hostAssembly);
         using Stream builtIn = hostAssembly.GetManifestResourceStream(BuiltInApplicationsJsonSerializer.ResourceName)
             ?? throw new InvalidOperationException(
-                $"'{hostAssembly.GetName().Name}' does not embed '{BuiltInApplicationsJsonSerializer.ResourceName}': set HackerOsAppHost to true in its project (ADR 0047).");
+                $"'{hostAssembly.GetName().Name}' does not embed '{BuiltInApplicationsJsonSerializer.ResourceName}': set KazoOsAppHost to true in its project (ADR 0047).");
         using StreamReader reader = new(builtIn);
         return new HostAppCatalog(BuiltInApplicationsJsonSerializer.DeserializeStrict(reader.ReadToEnd()));
     }

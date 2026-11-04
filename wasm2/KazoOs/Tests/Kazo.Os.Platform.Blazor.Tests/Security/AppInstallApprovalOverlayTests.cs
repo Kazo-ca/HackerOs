@@ -131,7 +131,7 @@ public sealed class AppInstallApprovalOverlayTests
             PublisherId = "pub.hackeros",
             Description = "Overlay fixture.",
             Kind = AppKind.Terminal,
-            SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+            SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
             Presentation = new PresentationManifest("system", AppLaunchVisibility.Hidden, []),
             Resources = AppResourceProfileManifest.None
         };

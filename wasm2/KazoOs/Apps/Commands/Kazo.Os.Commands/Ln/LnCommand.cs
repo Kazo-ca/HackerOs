@@ -9,7 +9,7 @@ namespace Kazo.Os.Commands.Ln;
 
 /// <summary>
 /// <c>ln -s [-f] [-n] [-v] TARGET [LINK]</c>, <c>ln -s TARGET... DIRECTORY</c> (ADR 0064):
-/// creates symbolic links through <see cref="HackFile.CreateSymbolicLinkAsync"/>; the target text
+/// creates symbolic links through <see cref="KazoFile.CreateSymbolicLinkAsync"/>; the target text
 /// is stored as given and may dangle. Without <c>-s</c> coreutils makes a hard link, which the
 /// Kazo OS filesystem does not support (one entry per inode, like FAT): <c>ln</c> then fails
 /// with <c>Operation not supported</c> and suggests <c>-s</c>.
@@ -60,14 +60,14 @@ public sealed class LnCommand(AppManifest manifest) : TerminalAppBase(manifest)
         // must be a directory receiving one link per target.
         List<(string Target, string Link)> links = [];
         string last = operands[^1];
-        bool intoDirectory = operands.Count > 1 && !noDereference && await HackDirectory.ExistsAsync(last, cancellationToken);
+        bool intoDirectory = operands.Count > 1 && !noDereference && await KazoDirectory.ExistsAsync(last, cancellationToken);
         if (operands.Count == 1)
         {
             links.Add((operands[0], BaseName(operands[0])));
         }
         else if (intoDirectory)
         {
-            links.AddRange(operands.Take(operands.Count - 1).Select(target => (target, HackPath.Combine(last, BaseName(target)))));
+            links.AddRange(operands.Take(operands.Count - 1).Select(target => (target, KazoPath.Combine(last, BaseName(target)))));
         }
         else if (operands.Count == 2)
         {
@@ -92,12 +92,12 @@ public sealed class LnCommand(AppManifest manifest) : TerminalAppBase(manifest)
 
             try
             {
-                if (force && (await HackFile.ExistsAsync(link, cancellationToken) || (await HackFileInfo.GetAsync(link, cancellationToken)).IsSymbolicLink))
+                if (force && (await KazoFile.ExistsAsync(link, cancellationToken) || (await KazoFileInfo.GetAsync(link, cancellationToken)).IsSymbolicLink))
                 {
-                    await HackFile.DeleteAsync(link, cancellationToken);
+                    await KazoFile.DeleteAsync(link, cancellationToken);
                 }
 
-                await HackFile.CreateSymbolicLinkAsync(link, target, cancellationToken);
+                await KazoFile.CreateSymbolicLinkAsync(link, target, cancellationToken);
                 if (verbose)
                 {
                     await context.StandardOutput.WriteLineAsync($"'{link}' -> '{target}'");
@@ -105,7 +105,7 @@ public sealed class LnCommand(AppManifest manifest) : TerminalAppBase(manifest)
             }
             catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException)
             {
-                string reason = exception is HackIOException && !force && await HackFile.ExistsAsync(link, cancellationToken)
+                string reason = exception is KazoIOException && !force && await KazoFile.ExistsAsync(link, cancellationToken)
                     ? CommandText.Reason(context, Errno.FileExists)
                     : CommandText.Describe(context, exception);
                 await context.StandardError.WriteLineAsync(text["SymbolicLinkFailed", link, reason]);

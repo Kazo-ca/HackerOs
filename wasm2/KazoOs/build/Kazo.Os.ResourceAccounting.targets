@@ -3,8 +3,8 @@
     ADR 0066: optional resource accounting, chosen at build time. Imported explicitly at the end of
     each host project (OS/Kazo.Os.Ecosystem, test/test, Server/Kazo.Os.Server).
 
-      <HackerOsCpuAccounting>false</HackerOsCpuAccounting>       measured CPU time (ADR 0067)
-      <HackerOsMemoryAccounting>false</HackerOsMemoryAccounting> measured memory (ADR 0068)
+      <KazoOsCpuAccounting>false</KazoOsCpuAccounting>       measured CPU time (ADR 0067)
+      <KazoOsMemoryAccounting>false</KazoOsMemoryAccounting> measured memory (ADR 0068)
 
     Both default to true. With both false, the host does not reference
     Kazo.Os.Platform.ResourceAccounting: the measuring code is not in the binary. Each property
@@ -12,29 +12,29 @@
     switched off at build is ignored at startup even while the other one keeps the assembly.
 
     The service composition lives in Kazo.Os.Ecosystem, which test/test and the server reference:
-    set the properties in a Directory.Build.props or on the command line (-p:HackerOsCpuAccounting=false)
+    set the properties in a Directory.Build.props or on the command line (-p:KazoOsCpuAccounting=false)
     to switch the whole graph; a property set only in a host's .csproj only changes that host's
     runtime switch (see doc/en/wasm/dev/resource-accounting.md).
   -->
   <PropertyGroup>
-    <HackerOsCpuAccounting Condition="'$(HackerOsCpuAccounting)' == ''">true</HackerOsCpuAccounting>
-    <HackerOsMemoryAccounting Condition="'$(HackerOsMemoryAccounting)' == ''">true</HackerOsMemoryAccounting>
-    <HackerOsResourceAccountingIncluded>false</HackerOsResourceAccountingIncluded>
-    <HackerOsResourceAccountingIncluded Condition="'$(HackerOsCpuAccounting)' == 'true' or '$(HackerOsMemoryAccounting)' == 'true'">true</HackerOsResourceAccountingIncluded>
+    <KazoOsCpuAccounting Condition="'$(KazoOsCpuAccounting)' == ''">true</KazoOsCpuAccounting>
+    <KazoOsMemoryAccounting Condition="'$(KazoOsMemoryAccounting)' == ''">true</KazoOsMemoryAccounting>
+    <KazoOsResourceAccountingIncluded>false</KazoOsResourceAccountingIncluded>
+    <KazoOsResourceAccountingIncluded Condition="'$(KazoOsCpuAccounting)' == 'true' or '$(KazoOsMemoryAccounting)' == 'true'">true</KazoOsResourceAccountingIncluded>
     <!-- Lets the composition code (#if HACKEROS_RESOURCE_ACCOUNTING) compile without the project. -->
-    <DefineConstants Condition="'$(HackerOsResourceAccountingIncluded)' == 'true'">$(DefineConstants);HACKEROS_RESOURCE_ACCOUNTING</DefineConstants>
+    <DefineConstants Condition="'$(KazoOsResourceAccountingIncluded)' == 'true'">$(DefineConstants);HACKEROS_RESOURCE_ACCOUNTING</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
     <RuntimeHostConfigurationOption Include="Kazo.Os.ResourceAccounting.Cpu.IsSupported"
-                                    Value="$([System.String]::Copy('$(HackerOsCpuAccounting)').ToLowerInvariant())"
+                                    Value="$([System.String]::Copy('$(KazoOsCpuAccounting)').ToLowerInvariant())"
                                     Trim="true" />
     <RuntimeHostConfigurationOption Include="Kazo.Os.ResourceAccounting.Memory.IsSupported"
-                                    Value="$([System.String]::Copy('$(HackerOsMemoryAccounting)').ToLowerInvariant())"
+                                    Value="$([System.String]::Copy('$(KazoOsMemoryAccounting)').ToLowerInvariant())"
                                     Trim="true" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(HackerOsResourceAccountingIncluded)' == 'true'">
+  <ItemGroup Condition="'$(KazoOsResourceAccountingIncluded)' == 'true'">
     <ProjectReference Include="$(MSBuildThisFileDirectory)../Platform/Kazo.Os.Platform.ResourceAccounting/Kazo.Os.Platform.ResourceAccounting.csproj" />
   </ItemGroup>
 </Project>

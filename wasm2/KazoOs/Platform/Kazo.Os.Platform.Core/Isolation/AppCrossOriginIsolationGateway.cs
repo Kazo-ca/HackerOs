@@ -3,7 +3,7 @@ using Kazo.Os.AppSdk.Diagnostics;
 namespace Kazo.Os.Platform.Core.Isolation;
 
 /// <summary>
-/// Trusted <see cref="IAppCrossOriginIsolationGateway"/> behind <see cref="HackCrossOriginIsolation"/>
+/// Trusted <see cref="IAppCrossOriginIsolationGateway"/> behind <see cref="KazoCrossOriginIsolation"/>
 /// (ADR 0146): the status the boot probe recorded in <see cref="CrossOriginIsolationState"/>, the same
 /// one <c>/proc/hackeros/workers</c> prints. No capability is checked: like <c>uname</c>, it describes
 /// the machine, not another app.
@@ -18,7 +18,7 @@ public sealed class AppCrossOriginIsolationGateway : IAppCrossOriginIsolationGat
         _status = status ?? throw new ArgumentNullException(nameof(status));
 
     /// <inheritdoc />
-    public ValueTask<HackCrossOriginIsolationStatus> GetStatusAsync(CancellationToken cancellationToken = default)
+    public ValueTask<KazoCrossOriginIsolationStatus> GetStatusAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
         return ValueTask.FromResult(ToSdk(_status() ?? CrossOriginIsolationStatus.NotBrowser));
@@ -26,25 +26,25 @@ public sealed class AppCrossOriginIsolationGateway : IAppCrossOriginIsolationGat
 
     /// <summary>Maps the platform's status to the SDK's record.</summary>
     /// <param name="status">What the page found at boot.</param>
-    public static HackCrossOriginIsolationStatus ToSdk(CrossOriginIsolationStatus status)
+    public static KazoCrossOriginIsolationStatus ToSdk(CrossOriginIsolationStatus status)
     {
         ArgumentNullException.ThrowIfNull(status);
-        return new HackCrossOriginIsolationStatus(
+        return new KazoCrossOriginIsolationStatus(
             status.IsIsolated,
             status.Reason switch
             {
-                CrossOriginIsolationReason.None => HackCrossOriginIsolationReason.None,
-                CrossOriginIsolationReason.Setting => HackCrossOriginIsolationReason.Setting,
-                CrossOriginIsolationReason.MissingHeaders => HackCrossOriginIsolationReason.MissingHeaders,
-                CrossOriginIsolationReason.InsecureContext => HackCrossOriginIsolationReason.InsecureContext,
-                CrossOriginIsolationReason.Browser => HackCrossOriginIsolationReason.Browser,
-                _ => HackCrossOriginIsolationReason.NotBrowser
+                CrossOriginIsolationReason.None => KazoCrossOriginIsolationReason.None,
+                CrossOriginIsolationReason.Setting => KazoCrossOriginIsolationReason.Setting,
+                CrossOriginIsolationReason.MissingHeaders => KazoCrossOriginIsolationReason.MissingHeaders,
+                CrossOriginIsolationReason.InsecureContext => KazoCrossOriginIsolationReason.InsecureContext,
+                CrossOriginIsolationReason.Browser => KazoCrossOriginIsolationReason.Browser,
+                _ => KazoCrossOriginIsolationReason.NotBrowser
             },
             status.Mode switch
             {
-                CrossOriginIsolationMode.On => HackCrossOriginIsolationSetting.On,
-                CrossOriginIsolationMode.Off => HackCrossOriginIsolationSetting.Off,
-                _ => HackCrossOriginIsolationSetting.Auto
+                CrossOriginIsolationMode.On => KazoCrossOriginIsolationSetting.On,
+                CrossOriginIsolationMode.Off => KazoCrossOriginIsolationSetting.Off,
+                _ => KazoCrossOriginIsolationSetting.Auto
             },
             status.EmbedderPolicy,
             status.SharedPipes,

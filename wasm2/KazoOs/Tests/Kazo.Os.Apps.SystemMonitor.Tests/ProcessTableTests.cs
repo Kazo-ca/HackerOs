@@ -108,7 +108,7 @@ public sealed class ProcessTableTests
             [Rows[1], Rows[0], Rows[2]],
             row => row.Pid switch
             {
-                1 => throw new HackUnauthorizedAccessException("denied", requiredCapability: "process.manage"),
+                1 => throw new KazoUnauthorizedAccessException("denied", requiredCapability: "process.manage"),
                 11 => throw new InvalidOperationException("Process 11 has exited."),
                 _ => Record(row.Pid)
             });

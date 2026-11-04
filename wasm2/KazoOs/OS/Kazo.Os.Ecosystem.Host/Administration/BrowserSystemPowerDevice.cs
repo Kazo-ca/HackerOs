@@ -28,7 +28,7 @@ internal sealed class BrowserSystemPowerDevice(IJSRuntime runtime) : ISystemPowe
             .InvokeAsync<IJSObjectReference>("import", cancellationToken, IndexedDbModulePath)
             .ConfigureAwait(false))
         {
-            await indexedDb.InvokeVoidAsync("deleteDatabase", cancellationToken, HackerOsIndexedDbSchema.DatabaseName).ConfigureAwait(false);
+            await indexedDb.InvokeVoidAsync("deleteDatabase", cancellationToken, KazoOsIndexedDbSchema.DatabaseName).ConfigureAwait(false);
         }
 
         // ADR 0227: then everything else the origin keeps. A step that fails is reported by the

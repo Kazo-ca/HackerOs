@@ -18,7 +18,7 @@ namespace Kazo.Os.Platform.Core.Processes;
 /// </para>
 /// <para>
 /// Once killed, the block never comes back: the PID is never reused during a boot (ADR 0012), and
-/// leftover code of the process keeps hitting <see cref="HackProcessKilledException"/>.
+/// leftover code of the process keeps hitting <see cref="KazoProcessKilledException"/>.
 /// </para>
 /// </remarks>
 public sealed class ProcessControlBlock
@@ -127,17 +127,17 @@ public sealed class ProcessControlBlock
 
     /// <summary>
     /// Marks the process killed (ADR 0069, section 3, step 3): from now on its scheduler drops every
-    /// new continuation, its gateways throw <see cref="HackProcessKilledException"/>, and
+    /// new continuation, its gateways throw <see cref="KazoProcessKilledException"/>, and
     /// <see cref="RunAsync{T}"/> stops waiting for it.
     /// </summary>
     public void MarkKilled() => _killed.TrySetResult();
 
-    /// <summary>Throws <see cref="HackProcessKilledException"/> when the process was killed.</summary>
+    /// <summary>Throws <see cref="KazoProcessKilledException"/> when the process was killed.</summary>
     public void ThrowIfKilled()
     {
         if (IsKilled)
         {
-            throw new HackProcessKilledException(Pid.Value);
+            throw new KazoProcessKilledException(Pid.Value);
         }
     }
 
@@ -149,7 +149,7 @@ public sealed class ProcessControlBlock
     /// <typeparam name="T">Result of the entry point.</typeparam>
     /// <param name="entryPoint">Starts the process's work.</param>
     /// <returns>
-    /// The entry point's result; faults with <see cref="HackProcessKilledException"/> as soon as the
+    /// The entry point's result; faults with <see cref="KazoProcessKilledException"/> as soon as the
     /// process is killed, without waiting for its code, whose continuations are dropped.
     /// </returns>
     public Task<T> RunAsync<T>(Func<Task<T>> entryPoint)
@@ -173,7 +173,7 @@ public sealed class ProcessControlBlock
             // anyway so it never surfaces as an unobserved task exception.
             _ = work.ContinueWith(static task => _ = task.Exception, CancellationToken.None,
                 TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
-            throw new HackProcessKilledException(Pid.Value);
+            throw new KazoProcessKilledException(Pid.Value);
         }
 
         return await work.ConfigureAwait(false);

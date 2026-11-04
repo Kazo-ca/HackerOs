@@ -120,7 +120,7 @@ public sealed class StaticSitesTests
         Assert.Equal("<h1>intranet</h1>\n", page.Stdout);
         Assert.Contains("HTTP/1.1 403", secret.Stdout, StringComparison.Ordinal);
         Assert.Contains("HTTP/1.1 403", home.Stdout, StringComparison.Ordinal);
-        Assert.Contains($"0.0.0.0:80              0.0.0.0:*               LISTEN      {os.FindPid(Kazo.Os.Apps.WebServer.HackWebdApp.AppId)}/hackwebd", netstat.Stdout, StringComparison.Ordinal);
+        Assert.Contains($"0.0.0.0:80              0.0.0.0:*               LISTEN      {os.FindPid(Kazo.Os.Apps.WebServer.KazoWebdApp.AppId)}/hackwebd", netstat.Stdout, StringComparison.Ordinal);
     }
 
     [Fact]

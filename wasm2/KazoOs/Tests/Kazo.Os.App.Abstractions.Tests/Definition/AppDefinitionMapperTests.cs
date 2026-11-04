@@ -167,7 +167,7 @@ public sealed class AppDefinitionMapperTests
 
     [Fact]
     public void ToManifest_WithoutExplicitVersion_UsesTheProcessSdkVersion() =>
-        Assert.Equal(new AppSdkCompatibilityManifest(HackerOsSdk.Version), AppDefinitionMapper.ToManifest(new MinimalWindowApp()).SdkCompatibility);
+        Assert.Equal(new AppSdkCompatibilityManifest(KazoOsSdk.Version), AppDefinitionMapper.ToManifest(new MinimalWindowApp()).SdkCompatibility);
 
     [Fact]
     public void ToManifest_KeepsARangeTheDefinitionDeclares() =>

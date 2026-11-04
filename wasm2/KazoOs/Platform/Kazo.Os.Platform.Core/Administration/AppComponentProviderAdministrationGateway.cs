@@ -43,15 +43,15 @@ internal sealed class AppComponentProviderAdministrationGateway : IAppComponentP
     }
 
     /// <inheritdoc />
-    public async ValueTask<IReadOnlyList<HackComponentContractInfo>> GetOverviewAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<IReadOnlyList<KazoComponentContractInfo>> GetOverviewAsync(CancellationToken cancellationToken = default)
     {
         _capabilities.Require(AppCapabilities.AppsManage);
         IReadOnlyList<ComponentProviderOverview> overview = await Service().GetOverviewAsync(cancellationToken).ConfigureAwait(false);
-        return [.. overview.Select(contract => new HackComponentContractInfo(
+        return [.. overview.Select(contract => new KazoComponentContractInfo(
             contract.Contract,
             contract.SelectedAppId,
             contract.DefaultAppId,
-            [.. contract.Providers.Select(provider => new HackComponentProviderInfo(
+            [.. contract.Providers.Select(provider => new KazoComponentProviderInfo(
                 provider.AppId, provider.Name, provider.IsSystemApp, provider.IsInstalled))]))];
     }
 
@@ -71,7 +71,7 @@ internal sealed class AppComponentProviderAdministrationGateway : IAppComponentP
                 .ConfigureAwait(false);
             if (outcome != ComponentProviderChangeOutcome.Applied)
             {
-                throw new HackUnauthorizedAccessException(
+                throw new KazoUnauthorizedAccessException(
                     $"The provider of {contractList} was not changed ({outcome}).", path: ComponentProvidersDocument.SystemPath);
             }
 

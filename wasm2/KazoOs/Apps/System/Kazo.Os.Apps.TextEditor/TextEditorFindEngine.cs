@@ -182,7 +182,7 @@ public static class TextEditorFindEngine
     /// the process running the code (English outside any app).
     /// </param>
     public static string DescribeReplacementCount(int count, Microsoft.Extensions.Localization.IStringLocalizer? text = null) =>
-        Strings.Plural(text ?? AppSdk.Globalization.HackLocalization.GetLocalizer<Strings>(), "Replace.Count", count);
+        Strings.Plural(text ?? AppSdk.Globalization.KazoLocalization.GetLocalizer<Strings>(), "Replace.Count", count);
 
     private static bool IsWholeWordAt(string content, int start, int length)
     {

@@ -16,7 +16,7 @@ Chaque processus Kazo OS porte désormais, comme sous Linux :
 Ces valeurs sont fixées à la création (copiées du parent, comme `fork`), ne
 changent que pour le processus lui-même, et sont visibles dans
 `/proc/<pid>/cmdline`, `environ` et `cwd`. Les apps les lisent et les
-modifient avec `HackEnvironment`, calqué sur `System.Environment`.
+modifient avec `KazoEnvironment`, calqué sur `System.Environment`.
 
 ## Architecture
 
@@ -32,8 +32,8 @@ modifient avec `HackEnvironment`, calqué sur `System.Environment`.
 | `IAppEnvironmentGateway` | `Shared/Kazo.Os.Simulation.Abstractions/Gateways/AppEnvironmentGatewayContracts.cs` | Vue d'une app sur **son** processus. Aucune capacité requise. |
 | `AppEnvironmentGateway` | `Platform/Kazo.Os.Platform.Core/Execution/` | Passerelle liée au PID de l'app ; `DetachedAppEnvironmentGateway` quand il n'y a pas de table (tests). |
 | `IAppExecutionContext.Environment` | `Shared/Kazo.Os.AppSdk/IAppExecutionContext.cs` | Membre par défaut détaché (dossier personnel, `HOME`), remplacé par la fabrique de confiance. |
-| `HackEnvironment` | `Shared/Kazo.Os.AppSdk/HackEnvironment.cs` | Façade statique du SDK. |
-| `HackExecutionContext.WorkingDirectory` | `Shared/Kazo.Os.AppSdk/HackExecutionContext.cs` | Lit le répertoire du processus, sauf si `Enter(context, dir)` en a fixé un et qu'aucun `SetCurrentDirectoryAsync` ne l'a remplacé depuis. |
+| `KazoEnvironment` | `Shared/Kazo.Os.AppSdk/KazoEnvironment.cs` | Façade statique du SDK. |
+| `KazoExecutionContext.WorkingDirectory` | `Shared/Kazo.Os.AppSdk/KazoExecutionContext.cs` | Lit le répertoire du processus, sauf si `Enter(context, dir)` en a fixé un et qu'aucun `SetCurrentDirectoryAsync` ne l'a remplacé depuis. |
 | `ProcFileSystemProvider` | `FileSystem/Virtual/` | `cmdline`, `environ`, `cwd` lus dans la table à chaque lecture. |
 | `FileSystemSeeder` | `FileSystem/` | Crée `/etc/hostname` (`hackeros`) et `/etc/environment` (commentaire) s'ils sont absents, `0644`, root. Ne les réécrit jamais. |
 
@@ -77,14 +77,14 @@ l'identifiant d'app, un fichier vide et le dossier personnel.
 ## Utilisation
 
 ```csharp
-string[] argv = HackEnvironment.GetCommandLineArgs();      // ["grep", "-i", "motif"]
-string? editor = HackEnvironment.GetEnvironmentVariable("EDITOR");
-HackEnvironment.SetEnvironmentVariable("EDITOR", "nano");  // null supprime ; "" est une valeur
-await HackEnvironment.SetCurrentDirectoryAsync("Documents"); // relatif, absolu ou ~
-string full = HackPath.GetFullPath("notes.txt");           // résolu dans le nouveau répertoire
-int pid = HackEnvironment.ProcessId;
-string user = HackEnvironment.UserName;                     // nom de connexion
-string host = HackEnvironment.MachineName;                  // /etc/hostname
+string[] argv = KazoEnvironment.GetCommandLineArgs();      // ["grep", "-i", "motif"]
+string? editor = KazoEnvironment.GetEnvironmentVariable("EDITOR");
+KazoEnvironment.SetEnvironmentVariable("EDITOR", "nano");  // null supprime ; "" est une valeur
+await KazoEnvironment.SetCurrentDirectoryAsync("Documents"); // relatif, absolu ou ~
+string full = KazoPath.GetFullPath("notes.txt");           // résolu dans le nouveau répertoire
+int pid = KazoEnvironment.ProcessId;
+string user = KazoEnvironment.UserName;                     // nom de connexion
+string host = KazoEnvironment.MachineName;                  // /etc/hostname
 ```
 
 Toutes les opérations visent le processus courant. Une commande qui fait
@@ -130,7 +130,7 @@ L'invite du terminal affiche le nom de la machine (`alice@hackeros:~$`) lu par
   `cmdline`, `environ`, `cwd`.
 - `Tests/Kazo.Os.Platform.Core.Tests/Lifecycle/AppLifecycleOrchestratorTests.cs` :
   processus racine et enfant de bout en bout, lecture une fois par session.
-- `Tests/Kazo.Os.AppSdk.Tests/HackEnvironmentTests.cs` : façade du SDK.
+- `Tests/Kazo.Os.AppSdk.Tests/KazoEnvironmentTests.cs` : façade du SDK.
 
 ## Liste des tâches
 
@@ -139,7 +139,7 @@ L'invite du terminal affiche le nom de la machine (`alice@hackeros:~$`) lu par
 - [x] Environnement de connexion, `/etc/environment`, `/etc/hostname` et leur amorçage.
 - [x] `argv`, répertoire et environnement calculés par `AppLifecycleOrchestrator`, `AppLaunchRequest.Environment`.
 - [x] `IAppEnvironmentGateway`, `IAppExecutionContext.Environment`, passerelle de la fabrique.
-- [x] `HackEnvironment` et `HackExecutionContext.WorkingDirectory` relié au processus.
+- [x] `KazoEnvironment` et `KazoExecutionContext.WorkingDirectory` relié au processus.
 - [x] `/proc/<pid>/cmdline`, `environ`, `cwd`.
 - [x] Invite du terminal depuis `/etc/hostname`.
 - [x] Câblage de l'hôte Ecosystem.

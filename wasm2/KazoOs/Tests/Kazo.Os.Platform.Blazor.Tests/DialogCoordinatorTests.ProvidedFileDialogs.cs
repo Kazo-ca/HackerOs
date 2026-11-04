@@ -21,7 +21,7 @@ public sealed partial class DialogCoordinatorTests
         Task<OpenWithDialogResult> pending = coordinator.OpenWithAsync(context, request).AsTask();
 
         ProvidedFileDialogPresentation active = Assert.IsType<ProvidedFileDialogPresentation>(coordinator.ActiveRequest);
-        Assert.Equal(HackFileDialogs.OpenWith, active.Dialog);
+        Assert.Equal(KazoFileDialogs.OpenWith, active.Dialog);
         Assert.Same(request, active.Request);
         Assert.Same(context, active.Context);
 
@@ -82,7 +82,7 @@ public sealed partial class DialogCoordinatorTests
         Task<FileConflictDialogResult> conflict = coordinator.ResolveFileConflictAsync(
             context, new FileConflictDialogRequest("/a", "/b/a", true, true)).AsTask();
         ProvidedFileDialogPresentation active = Assert.IsType<ProvidedFileDialogPresentation>(coordinator.ActiveRequest);
-        Assert.Equal(HackFileDialogs.Conflict, active.Dialog);
+        Assert.Equal(KazoFileDialogs.Conflict, active.Dialog);
 
         coordinator.CompleteProvided(active.Id, new FileConflictDialogResult(FileConflictDialogChoice.KeepBoth, ApplyToAll: true));
 

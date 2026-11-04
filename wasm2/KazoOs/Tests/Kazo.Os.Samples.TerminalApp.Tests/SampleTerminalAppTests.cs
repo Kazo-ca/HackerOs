@@ -25,7 +25,7 @@ public sealed class SampleTerminalAppTests
         Description = "Sample Terminal command application",
         Kind = AppKind.Terminal,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Samples.TerminalApp.dll", "Kazo.Os.Samples.TerminalApp.SampleTerminalApp"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("utilities", AppLaunchVisibility.Visible, []),
         Terminal = new TerminalCommandManifest("sample-cmd", ["sample"], "Executes sample SDK terminal command"),
         Capabilities = [AppCapabilities.FileSystemUserHomeRead, AppCapabilities.FileSystemUserHomeWrite],

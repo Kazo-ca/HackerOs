@@ -89,7 +89,7 @@ public interface IAppPermissionErrorGateway
 public interface IAppFileSystemGateway
 {
     /// <summary>
-    /// Opens a charge for the in-memory buffer of a write stream (<c>HackFileStream</c>), counted in
+    /// Opens a charge for the in-memory buffer of a write stream (<c>KazoFileStream</c>), counted in
     /// the process's kernel memory when memory is measured (ADR 0068). The stream resizes it as its
     /// buffer grows and disposes it when it is released.
     /// </summary>
@@ -99,7 +99,7 @@ public interface IAppFileSystemGateway
     /// <summary>
     /// Opens one descriptor of the calling process for <paramref name="path"/> and holds it until the
     /// returned handle is disposed (ADR 0125, <c>RLIMIT_NOFILE</c>): what a write stream
-    /// (<c>HackFileStream</c>) holds while it buffers. A read handle from <see cref="ReadAsync"/>
+    /// (<c>KazoFileStream</c>) holds while it buffers. A read handle from <see cref="ReadAsync"/>
     /// already holds its own descriptor.
     /// </summary>
     /// <param name="path">The file the descriptor designates.</param>
@@ -331,7 +331,7 @@ public interface IAppProcessGateway
     ProcessRecord Kill(ProcessId pid, ProcessExitReason reason = ProcessExitReason.Killed);
 
     /// <summary>
-    /// Asynchronous form of <see cref="Kill"/>, used by <c>HackProcess.KillAsync</c>. A process running
+    /// Asynchronous form of <see cref="Kill"/>, used by <c>KazoProcess.KillAsync</c>. A process running
     /// in a Web Worker (ADR 0070) cannot wait synchronously for the OS: its gateway answers here.
     /// Defaults to <see cref="Kill"/> so existing implementations keep compiling.
     /// </summary>

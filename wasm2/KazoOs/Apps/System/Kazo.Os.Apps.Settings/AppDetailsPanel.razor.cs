@@ -14,17 +14,17 @@ namespace Kazo.Os.Apps.Settings;
 /// <c>ShowAppSettingsIntent</c> when the app has no settings page of its own.
 /// </summary>
 /// <remarks>
-/// Uses only the public SDK (ADR 0055): <see cref="HackApps"/> for the identity, declared
-/// capabilities and file handlers; <see cref="HackPermissionAdministration"/> for the state of the
-/// dangerous ones; <see cref="HackServiceController"/> (capabilities <c>process.list</c> and
+/// Uses only the public SDK (ADR 0055): <see cref="KazoApps"/> for the identity, declared
+/// capabilities and file handlers; <see cref="KazoPermissionAdministration"/> for the state of the
+/// dangerous ones; <see cref="KazoServiceController"/> (capabilities <c>process.list</c> and
 /// <c>services.manage</c>) for a service's state and start mode; <see cref="InstalledAppsPanel"/>
 /// for uninstalling.
 /// </remarks>
 public sealed partial class AppDetailsPanel
 {
-    private HackAppInfo? _app;
-    private HackAppPermissionInfo? _permissions;
-    private HackServiceController? _service;
+    private KazoAppInfo? _app;
+    private KazoAppPermissionInfo? _permissions;
+    private KazoServiceController? _service;
     private string? _serviceMessage;
     private bool _loaded;
     private bool _isBusy;
@@ -57,7 +57,7 @@ public sealed partial class AppDetailsPanel
         _permissions = null;
         _service = null;
         _serviceMessage = null;
-        IReadOnlyList<HackAppInfo> installed = await HackApps.GetInstalledAsync(Context.CancellationToken);
+        IReadOnlyList<KazoAppInfo> installed = await KazoApps.GetInstalledAsync(Context.CancellationToken);
         _app = installed.FirstOrDefault(app => string.Equals(app.Id, AppId, StringComparison.Ordinal));
         _loaded = true;
         if (_app is null)
@@ -67,7 +67,7 @@ public sealed partial class AppDetailsPanel
 
         try
         {
-            IReadOnlyList<HackAppPermissionInfo> overview = await HackPermissionAdministration.GetOverviewAsync(Context, Context.CancellationToken);
+            IReadOnlyList<KazoAppPermissionInfo> overview = await KazoPermissionAdministration.GetOverviewAsync(Context, Context.CancellationToken);
             _permissions = overview.FirstOrDefault(entry => entry.AppId == AppId);
         }
         catch (Exception exception) when (exception is NotSupportedException or UnauthorizedAccessException)
@@ -85,7 +85,7 @@ public sealed partial class AppDetailsPanel
     {
         try
         {
-            HackServiceController[] services = await HackServiceController.GetServicesAsync(Context.CancellationToken);
+            KazoServiceController[] services = await KazoServiceController.GetServicesAsync(Context.CancellationToken);
             _service = services.FirstOrDefault(service => service.ServiceName == AppId);
             _serviceMessage = _service is null ? L["Details.ServiceUnavailable"].Value : null;
         }
@@ -104,7 +104,7 @@ public sealed partial class AppDetailsPanel
             ? RunServiceAsync(service => service.SetStartTypeAsync(mode, Context.CancellationToken), L["Details.StartModeSet", StartModeLabel(mode)])
             : Task.CompletedTask;
 
-    private async Task RunServiceAsync(Func<HackServiceController, Task> action, string success)
+    private async Task RunServiceAsync(Func<KazoServiceController, Task> action, string success)
     {
         if (_service is null || _isBusy)
         {
@@ -136,14 +136,14 @@ public sealed partial class AppDetailsPanel
         _ => kind.ToString()
     };
 
-    private string StateLabel(HackPermissionState state) => state switch
+    private string StateLabel(KazoPermissionState state) => state switch
     {
-        HackPermissionState.System => L["Details.Permission.System"],
-        HackPermissionState.Allowed => L["Details.Permission.Allowed"],
-        HackPermissionState.Pending => L["Details.Permission.Pending"],
-        HackPermissionState.DeniedByUser => L["Details.Permission.Refused", L["Permissions.State.DeniedByUser"].Value],
-        HackPermissionState.DeniedByAdministrator => L["Details.Permission.Refused", L["Permissions.State.DeniedByAdministrator"].Value],
-        HackPermissionState.BlockedByPolicy => L["Details.Permission.Refused", L["Permissions.State.BlockedByPolicy"].Value],
+        KazoPermissionState.System => L["Details.Permission.System"],
+        KazoPermissionState.Allowed => L["Details.Permission.Allowed"],
+        KazoPermissionState.Pending => L["Details.Permission.Pending"],
+        KazoPermissionState.DeniedByUser => L["Details.Permission.Refused", L["Permissions.State.DeniedByUser"].Value],
+        KazoPermissionState.DeniedByAdministrator => L["Details.Permission.Refused", L["Permissions.State.DeniedByAdministrator"].Value],
+        KazoPermissionState.BlockedByPolicy => L["Details.Permission.Refused", L["Permissions.State.BlockedByPolicy"].Value],
         _ => L["Details.Permission.Refused", state.ToString()]
     };
 
@@ -157,17 +157,17 @@ public sealed partial class AppDetailsPanel
     };
 
     /// <summary>A service controller status, translated.</summary>
-    private string ServiceStatusLabel(HackServiceControllerStatus status) => status switch
+    private string ServiceStatusLabel(KazoServiceControllerStatus status) => status switch
     {
-        HackServiceControllerStatus.Running => L["Details.ServiceStatus.Running"],
-        HackServiceControllerStatus.Stopped => L["Details.ServiceStatus.Stopped"],
-        HackServiceControllerStatus.StartPending => L["Details.ServiceStatus.StartPending"],
-        HackServiceControllerStatus.StopPending => L["Details.ServiceStatus.StopPending"],
+        KazoServiceControllerStatus.Running => L["Details.ServiceStatus.Running"],
+        KazoServiceControllerStatus.Stopped => L["Details.ServiceStatus.Stopped"],
+        KazoServiceControllerStatus.StartPending => L["Details.ServiceStatus.StartPending"],
+        KazoServiceControllerStatus.StopPending => L["Details.ServiceStatus.StopPending"],
         _ => status.ToString()
     };
 
     /// <summary>A handler as a reader sees it: <c>x-scheme-handler/https</c> becomes "https: links".</summary>
-    private string DescribeHandler(HackAppFileHandler handler)
+    private string DescribeHandler(KazoAppFileHandler handler)
     {
         if (handler.MediaType is { } mediaType
             && mediaType.StartsWith(AppIntentIds.SchemeHandlerMediaTypePrefix, StringComparison.OrdinalIgnoreCase))

@@ -42,18 +42,18 @@ public partial class FileExplorerWindow
     internal const string SendToDrivePrefix = "explorer.send-to.drive:";
 
     /// <summary>Adds the window's entries to a menu over items (none on the folder's background).</summary>
-    private protected async Task OnFileMenuOpeningAsync(HackFileMenuOpeningEventArgs args)
+    private protected async Task OnFileMenuOpeningAsync(KazoFileMenuOpeningEventArgs args)
     {
         if (args.Items.Count == 0 || _showTrash)
         {
             return;
         }
 
-        IReadOnlyList<HackFileViewItem> items = args.Items;
-        IReadOnlyList<HackDriveInfo> drives = await ReadNetworkDrivesAsync();
-        HackMenuGroupDefinition group = BuildMenuGroup(items, drives, run => EventCallback.Factory.Create<object?>(this, _ => run()), key => L[key], InArchive);
+        IReadOnlyList<KazoFileViewItem> items = args.Items;
+        IReadOnlyList<KazoDriveInfo> drives = await ReadNetworkDrivesAsync();
+        KazoMenuGroupDefinition group = BuildMenuGroup(items, drives, run => EventCallback.Factory.Create<object?>(this, _ => run()), key => L[key], InArchive);
 
-        int properties = IndexOfGroup(args.Menu, HackFileMenuItems.Properties);
+        int properties = IndexOfGroup(args.Menu, KazoFileMenuItems.Properties);
         if (properties < 0)
         {
             args.Menu.Groups.Add(group);
@@ -73,14 +73,14 @@ public partial class FileExplorerWindow
     /// <param name="click">The click callback of an entry, given what it runs.</param>
     /// <param name="text">The explorer's texts.</param>
     /// <param name="readOnlyArchive">The items are in a read-only archive (ADR 0185 §9): no Compress, no Send to.</param>
-    internal HackMenuGroupDefinition BuildMenuGroup(
-        IReadOnlyList<HackFileViewItem> items,
-        IReadOnlyList<HackDriveInfo> drives,
+    internal KazoMenuGroupDefinition BuildMenuGroup(
+        IReadOnlyList<KazoFileViewItem> items,
+        IReadOnlyList<KazoDriveInfo> drives,
         Func<Func<Task>, EventCallback<object?>> click,
         Func<string, string> text,
         bool readOnlyArchive = false)
     {
-        HackMenuGroupDefinition group = new();
+        KazoMenuGroupDefinition group = new();
         // In a read-only archive (ADR 0185 §9) only what reads the items stays: Download and Copy path.
         if (!readOnlyArchive)
         {
@@ -94,9 +94,9 @@ public partial class FileExplorerWindow
             return group;
         }
 
-        HackMenuItemDefinition sendTo = group.Add(SendToMenuItem, text("Menu.SendTo"));
+        KazoMenuItemDefinition sendTo = group.Add(SendToMenuItem, text("Menu.SendTo"));
         sendTo.Icon = Icon("send");
-        HackMenuGroupDefinition local = new();
+        KazoMenuGroupDefinition local = new();
         Entry(local, SendToDesktopMenuItem, text("Menu.SendTo.Desktop"), "monitor", click(() => SendToDesktopAsync(items)));
         Entry(local, SendToZipMenuItem, text("Menu.SendTo.Zip"), "archive", click(() => CompressToDefaultNameAsync(items)));
         Entry(local, SendToComputerMenuItem, text("Menu.SendTo.Computer"), "hard-drive-download", click(() => DownloadAsync(items)));
@@ -104,8 +104,8 @@ public partial class FileExplorerWindow
 
         if (drives.Count > 0)
         {
-            HackMenuGroupDefinition network = new();
-            foreach (HackDriveInfo drive in drives)
+            KazoMenuGroupDefinition network = new();
+            foreach (KazoDriveInfo drive in drives)
             {
                 string mountPoint = drive.Name;
                 string label = string.Format(System.Globalization.CultureInfo.CurrentCulture, text("Menu.SendTo.Drive"), DriveLabel(mountPoint));
@@ -126,7 +126,7 @@ public partial class FileExplorerWindow
     }
 
     /// <summary>The default archive name: the one item's name, or <c>Archive</c>, with <c>.zip</c>.</summary>
-    internal static string DefaultArchiveName(IReadOnlyList<HackFileViewItem> items) =>
+    internal static string DefaultArchiveName(IReadOnlyList<KazoFileViewItem> items) =>
         items.Count == 1 ? items[0].Name + ".zip" : "Archive.zip";
 
     /// <summary>The first free name among <c>name.zip</c>, <c>name (2).zip</c>, … given the names taken.</summary>
@@ -144,11 +144,11 @@ public partial class FileExplorerWindow
     }
 
     /// <summary>"Copy path": the absolute paths of the items, one per line, as text on the clipboard.</summary>
-    private protected async Task CopyPathsAsync(IReadOnlyList<HackFileViewItem> items)
+    private protected async Task CopyPathsAsync(IReadOnlyList<KazoFileViewItem> items)
     {
         try
         {
-            await HackClipboard.SetTextAsync(string.Join('\n', items.Select(static item => item.Path)), AppContext.CancellationToken);
+            await KazoClipboard.SetTextAsync(string.Join('\n', items.Select(static item => item.Path)), AppContext.CancellationToken);
         }
         catch (Exception exception) when (exception is InvalidOperationException or NotSupportedException or UnauthorizedAccessException)
         {
@@ -157,12 +157,12 @@ public partial class FileExplorerWindow
     }
 
     /// <summary>"Send to ▸ Desktop": a shortcut to each item on the desktop (ADR 0185 §13), not a copy.</summary>
-    private protected async Task SendToDesktopAsync(IReadOnlyList<HackFileViewItem> items)
+    private protected async Task SendToDesktopAsync(IReadOnlyList<KazoFileViewItem> items)
     {
-        string desktop = HackEnvironment.GetFolderPath(HackSpecialFolder.Desktop);
+        string desktop = KazoEnvironment.GetFolderPath(KazoSpecialFolder.Desktop);
         try
         {
-            await HackDirectory.CreateDirectoryAsync(desktop, AppContext.CancellationToken);
+            await KazoDirectory.CreateDirectoryAsync(desktop, AppContext.CancellationToken);
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
         {
@@ -171,11 +171,11 @@ public partial class FileExplorerWindow
         }
 
         List<string> failures = [];
-        foreach (HackFileViewItem item in items)
+        foreach (KazoFileViewItem item in items)
         {
             try
             {
-                await HackDesktopLink.CreateLinkAsync(desktop, item.Path, item.Name, AppContext.CancellationToken);
+                await KazoDesktopLink.CreateLinkAsync(desktop, item.Path, item.Name, AppContext.CancellationToken);
             }
             catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException)
             {
@@ -190,7 +190,7 @@ public partial class FileExplorerWindow
     }
 
     /// <summary>"Send to ▸ Compressed folder": a <c>.zip</c> next to the items, named after them, without asking.</summary>
-    private protected async Task CompressToDefaultNameAsync(IReadOnlyList<HackFileViewItem> items)
+    private protected async Task CompressToDefaultNameAsync(IReadOnlyList<KazoFileViewItem> items)
     {
         if (_files is null || items.Count == 0) return;
 
@@ -201,21 +201,21 @@ public partial class FileExplorerWindow
     }
 
     /// <summary>"Send to ▸ &lt;network drive&gt;": a copy of the items at the root of the drive.</summary>
-    private protected async Task CopyToDriveAsync(IReadOnlyList<HackFileViewItem> items, string mountPoint)
+    private protected async Task CopyToDriveAsync(IReadOnlyList<KazoFileViewItem> items, string mountPoint)
     {
-        HackFileTransferResult result = await TrackOperation(HackFileOperations.CopyAsync(
+        KazoFileTransferResult result = await TrackOperation(KazoFileOperations.CopyAsync(
             [.. items.Select(static item => item.Path)], mountPoint, AppContext.CancellationToken));
         ReportTransfer(result, TransferVerb.Copy);
         StateHasChanged();
     }
 
     /// <summary>The network drives ready for a copy; none when the drives cannot be read.</summary>
-    private async Task<IReadOnlyList<HackDriveInfo>> ReadNetworkDrivesAsync()
+    private async Task<IReadOnlyList<KazoDriveInfo>> ReadNetworkDrivesAsync()
     {
         try
         {
-            HackDriveInfo[] drives = await HackDriveInfo.GetDrivesAsync(AppContext.CancellationToken);
-            return [.. drives.Where(static drive => drive.DriveType == HackDriveType.Network && drive.IsReady)];
+            KazoDriveInfo[] drives = await KazoDriveInfo.GetDrivesAsync(AppContext.CancellationToken);
+            return [.. drives.Where(static drive => drive.DriveType == KazoDriveType.Network && drive.IsReady)];
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or NotSupportedException or InvalidOperationException)
         {
@@ -223,7 +223,7 @@ public partial class FileExplorerWindow
         }
     }
 
-    private static int IndexOfGroup(HackMenuDefinition menu, string id)
+    private static int IndexOfGroup(KazoMenuDefinition menu, string id)
     {
         for (int index = 0; index < menu.Groups.Count; index++)
         {
@@ -236,12 +236,12 @@ public partial class FileExplorerWindow
         return -1;
     }
 
-    private static void Entry(HackMenuGroupDefinition group, string id, string title, string icon, EventCallback<object?> onClick)
+    private static void Entry(KazoMenuGroupDefinition group, string id, string title, string icon, EventCallback<object?> onClick)
     {
-        HackMenuItemDefinition entry = group.Add(id, title);
+        KazoMenuItemDefinition entry = group.Add(id, title);
         entry.Icon = Icon(icon);
         entry.OnClick = onClick;
     }
 
-    private static HackIcon Icon(string name) => HackIcons.Vector(IconLibrary.Lucide, name);
+    private static KazoIcon Icon(string name) => KazoIcons.Vector(IconLibrary.Lucide, name);
 }

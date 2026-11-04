@@ -31,10 +31,10 @@ internal sealed class LocaleTestContext(string locale) : IAppExecutionContext
     public IAppProcessGateway Processes => throw new NotSupportedException();
 
     /// <summary>The language resolved from <c>LANG</c>, as a live process does.</summary>
-    public CultureInfo Culture => HackLocale.ResolveLanguage(Variable);
+    public CultureInfo Culture => KazoLocale.ResolveLanguage(Variable);
 
     /// <summary>The format culture resolved from <c>LANG</c>.</summary>
-    public CultureInfo FormatCulture => HackLocale.ResolveFormatCulture(Variable);
+    public CultureInfo FormatCulture => KazoLocale.ResolveFormatCulture(Variable);
 
-    private string? Variable(string name) => name == HackLocale.LangVariable ? locale : null;
+    private string? Variable(string name) => name == KazoLocale.LangVariable ? locale : null;
 }

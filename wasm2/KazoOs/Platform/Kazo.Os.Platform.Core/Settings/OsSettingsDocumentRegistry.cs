@@ -5,7 +5,7 @@ using Kazo.Os.Platform.Core.Shell;
 namespace Kazo.Os.Platform.Core.Settings;
 
 /// <summary>
-/// The OS settings documents an app may open with <c>HackSettings.OpenSystemAsync</c> (ADR 0056,
+/// The OS settings documents an app may open with <c>KazoSettings.OpenSystemAsync</c> (ADR 0056,
 /// section 8). Only layered <c>.config</c> documents with a declared schema are listed; whole-file
 /// JSON documents (<c>file-associations.json</c>) and per-app state files are not.
 /// </summary>
@@ -21,7 +21,7 @@ public static class OsSettingsDocumentRegistry
         [PolicySettingsDocuments.Document.DocumentId] = PolicySettingsDocuments.Document,
         [Clipboard.ClipboardSettingsDocuments.Document.DocumentId] = Clipboard.ClipboardSettingsDocuments.Document,
         [WindowKeyBindingsSettingsDocuments.Document.DocumentId] = WindowKeyBindingsSettingsDocuments.Document,
-        // ADR 0126: Settings > Memory switches the OOM killer through HackSettings.OpenSystemAsync.
+        // ADR 0126: Settings > Memory switches the OOM killer through KazoSettings.OpenSystemAsync.
         [Processes.MemorySettingsDocuments.Document.DocumentId] = Processes.MemorySettingsDocuments.Document,
         // ADR 0179 §7: Settings > Screens chooses primary-taskbar and forgets remembered screen places.
         [ScreensSettingsDocuments.Document.DocumentId] = ScreensSettingsDocuments.Document,

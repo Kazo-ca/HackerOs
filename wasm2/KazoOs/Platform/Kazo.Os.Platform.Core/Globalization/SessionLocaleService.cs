@@ -39,7 +39,7 @@ public sealed class SessionLocaleService
     private readonly ILogger _logger;
     private IReadOnlyDictionary<string, string> _variables = new Dictionary<string, string>(StringComparer.Ordinal)
     {
-        [HackLocale.LangVariable] = HackLocale.DefaultLocale
+        [KazoLocale.LangVariable] = KazoLocale.DefaultLocale
     };
 
     /// <summary>Creates the service.</summary>
@@ -60,13 +60,13 @@ public sealed class SessionLocaleService
     }
 
     /// <summary>Gets the language of the platform's texts: <c>en</c> or <c>fr</c>.</summary>
-    public CultureInfo Culture { get; private set; } = HackLocale.DefaultLanguage;
+    public CultureInfo Culture { get; private set; } = KazoLocale.DefaultLanguage;
 
     /// <summary>Gets the culture of the platform's dates and numbers (the taskbar clock), e.g. <c>fr-CA</c>.</summary>
-    public CultureInfo FormatCulture { get; private set; } = HackLocale.DefaultFormatCulture;
+    public CultureInfo FormatCulture { get; private set; } = KazoLocale.DefaultFormatCulture;
 
     /// <summary>Gets the effective <c>LANG</c> of the platform, e.g. <c>fr_CA.UTF-8</c>.</summary>
-    public string LocaleName => _variables.GetValueOrDefault(HackLocale.LangVariable) ?? HackLocale.DefaultLocale;
+    public string LocaleName => _variables.GetValueOrDefault(KazoLocale.LangVariable) ?? KazoLocale.DefaultLocale;
 
     /// <summary>Raised after <see cref="Culture"/> or <see cref="FormatCulture"/> changed.</summary>
     public event Action? Changed;
@@ -80,7 +80,7 @@ public sealed class SessionLocaleService
     {
         Dictionary<string, string> variables = new(StringComparer.Ordinal)
         {
-            [HackLocale.LangVariable] = HackLocale.DefaultLocale
+            [KazoLocale.LangVariable] = KazoLocale.DefaultLocale
         };
 
         IAppFileSystemGateway root = new AppFileSystemGateway(_fileSystem, _clock, RootOperation(), ["system"]);
@@ -92,7 +92,7 @@ public sealed class SessionLocaleService
             _logger.LogWarning("locale: cannot read {Path}: {Code}, English used", LoginEnvironment.SystemLocaleFilePath.Value, error.Code);
         }
 
-        foreach (KeyValuePair<string, string> variable in HackLocale.ParseLocaleConf(read.Content))
+        foreach (KeyValuePair<string, string> variable in KazoLocale.ParseLocaleConf(read.Content))
         {
             variables[variable.Key] = variable.Value;
         }
@@ -120,8 +120,8 @@ public sealed class SessionLocaleService
     public void Apply(IReadOnlyDictionary<string, string> variables)
     {
         ArgumentNullException.ThrowIfNull(variables);
-        CultureInfo culture = HackLocale.ResolveLanguage(name => variables.GetValueOrDefault(name));
-        CultureInfo format = HackLocale.ResolveFormatCulture(name => variables.GetValueOrDefault(name));
+        CultureInfo culture = KazoLocale.ResolveLanguage(name => variables.GetValueOrDefault(name));
+        CultureInfo format = KazoLocale.ResolveFormatCulture(name => variables.GetValueOrDefault(name));
         bool changed = !culture.Equals(Culture) || !format.Equals(FormatCulture);
         _variables = new Dictionary<string, string>(variables, StringComparer.Ordinal);
         Culture = culture;

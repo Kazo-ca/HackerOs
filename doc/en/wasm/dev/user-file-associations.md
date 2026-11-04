@@ -2,7 +2,7 @@
 
 # Per-user default applications
 
-This document covers the implementation of per-user file associations. The formats of the two files, the resolution order, the `HackApps` API and the capabilities are in [`../framework/file-associations-api.md`](../framework/file-associations-api.md).
+This document covers the implementation of per-user file associations. The formats of the two files, the resolution order, the `KazoApps` API and the capabilities are in [`../framework/file-associations-api.md`](../framework/file-associations-api.md).
 
 Work item `v3/4b`, follow-up to `v3/4-intents`, following
 [ADR 0121](adr/0121-user-file-associations.md). Completes
@@ -20,7 +20,7 @@ precedence over `/etc/xdg/mimeapps.list` on Linux.
 
 ```text
 Paramètres / « Ouvrir avec » / xdg-mime
-        │ HackApps.Get/Set/ResetDefaultHandlerAsync
+        │ KazoApps.Get/Set/ResetDefaultHandlerAsync
         ▼
 IAppCatalogGateway (AppCatalogGateway ; RemoteCatalogGateway dans un worker : cat.defaults, cat.setdef)
         │ capacités file-associations.read (+ filesystem.user-home.write pour écrire)

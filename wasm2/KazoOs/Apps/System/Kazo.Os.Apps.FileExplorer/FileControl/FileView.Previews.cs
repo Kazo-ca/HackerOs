@@ -55,7 +55,7 @@ public partial class FileView
     public async Task LoadFolderPreviewsAsync(string[] paths)
     {
         // Called from JavaScript, outside any frame: enter the app's frame first (ADR 0161 §1).
-        using IDisposable? scope = AppContext is { } context ? HackExecutionContext.Enter(context) : null;
+        using IDisposable? scope = AppContext is { } context ? KazoExecutionContext.Enter(context) : null;
         HashSet<string> wanted = new(paths ?? [], StringComparer.Ordinal);
         bool changed = false;
         foreach (FileViewItem item in Items.Where(item => item.IsDirectory && wanted.Contains(item.FullPath.Value)).ToList())

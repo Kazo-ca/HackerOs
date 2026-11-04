@@ -28,7 +28,7 @@ public sealed class IndexedDbServerConnectionRepository : IServerConnectionRepos
         IReadOnlyList<JsonElement> results = await _adapter.ExecuteAsync(
             TransactionBoundary,
             IndexedDbTransactionMode.ReadOnly,
-            [new IndexedDbOperation("get", HackerOsIndexedDbSchema.ServerConnectionStoreName, Key: RecordKey)],
+            [new IndexedDbOperation("get", KazoOsIndexedDbSchema.ServerConnectionStoreName, Key: RecordKey)],
             cancellationToken).ConfigureAwait(false);
 
         JsonElement result = results.Single();
@@ -46,7 +46,7 @@ public sealed class IndexedDbServerConnectionRepository : IServerConnectionRepos
         await _adapter.ExecuteAsync(
             TransactionBoundary,
             IndexedDbTransactionMode.ReadWrite,
-            [new IndexedDbOperation("put", HackerOsIndexedDbSchema.ServerConnectionStoreName, Value: record)],
+            [new IndexedDbOperation("put", KazoOsIndexedDbSchema.ServerConnectionStoreName, Value: record)],
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -57,7 +57,7 @@ public sealed class IndexedDbServerConnectionRepository : IServerConnectionRepos
         await _adapter.ExecuteAsync(
             TransactionBoundary,
             IndexedDbTransactionMode.ReadWrite,
-            [new IndexedDbOperation("delete", HackerOsIndexedDbSchema.ServerConnectionStoreName, Key: RecordKey)],
+            [new IndexedDbOperation("delete", KazoOsIndexedDbSchema.ServerConnectionStoreName, Key: RecordKey)],
             cancellationToken).ConfigureAwait(false);
     }
 

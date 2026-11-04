@@ -129,7 +129,7 @@ public static class GeneratorCodes
     /// </summary>
     public const string PackageFailed = "HOSAPP0060";
 
-    // HOSAPP0061 is raised by the HackerOsKeyGen MSBuild target itself: HackerOsSigningKeyFile not set (ADR 0219 §1).
+    // HOSAPP0061 is raised by the KazoOsKeyGen MSBuild target itself: KazoOsSigningKeyFile not set (ADR 0219 §1).
 
     /// <summary><c>keygen</c> or <c>sign</c> (ADR 0219 §1): the key file exists already, or the key or package cannot be used.</summary>
     public const string SigningFailed = "HOSAPP0062";

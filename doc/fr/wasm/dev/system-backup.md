@@ -2,7 +2,7 @@
 
 # Sauvegarde de la machine et espace de stockage
 
-Ce document couvre la mise en œuvre de la sauvegarde et de l'espace de stockage. Ce qu'une app voit (API `HackSystemBackup`, archive `.hosbak`, codes `NoSpace` et `FileTooLarge`) est dans [`../framework/system-backup-api.md`](../framework/system-backup-api.md).
+Ce document couvre la mise en œuvre de la sauvegarde et de l'espace de stockage. Ce qu'une app voit (API `KazoSystemBackup`, archive `.hosbak`, codes `NoSpace` et `FileTooLarge`) est dans [`../framework/system-backup-api.md`](../framework/system-backup-api.md).
 
 ## Objet
 
@@ -34,7 +34,7 @@ mkdir: cannot create directory 'projets': No space left on device
 | Couche | Fichiers |
 |---|---|
 | Contrats de simulation | `Shared/Kazo.Os.Simulation.Abstractions/FileSystem/FileSystemResults.cs` (`NoSpace = 1800`, `FileTooLarge = 1801`), `Metrics/StorageSpaceContracts.cs` (`StorageCapacity`, `IStorageCapacityProbe`, `IStorageSpaceGuard`, `StorageSpacePolicy`), `Notifications/NotificationContracts.cs` (`NotificationAction.LaunchApp`) |
-| SDK | `Shared/Kazo.Os.AppSdk/Administration/HackSystemBackup.cs`, `SystemBackupContracts.cs` (`IAppSystemBackupGateway`, `HackBackupRestoreMode`, `HackBackupInfo`, `HackBackupInvalidException`) ; `IO/HackFileSystemErrorTranslator.cs` et `ShellErrorText.cs` pour les deux codes |
+| SDK | `Shared/Kazo.Os.AppSdk/Administration/KazoSystemBackup.cs`, `SystemBackupContracts.cs` (`IAppSystemBackupGateway`, `KazoBackupRestoreMode`, `KazoBackupInfo`, `KazoBackupInvalidException`) ; `IO/KazoFileSystemErrorTranslator.cs` et `ShellErrorText.cs` pour les deux codes |
 | SDK Blazor | `Interop/BrowserFilePicker.cs` et `wwwroot/pickFile.js` (pendant de `download.js` pour ouvrir un fichier de l'hôte) |
 | Platform Core | `Backup/SystemBackupService.cs` (`ISystemBackupDevice`, séquence), `Administration/AppSystemBackupGateway.cs`, `Storage/StorageSpaceMonitor.cs`, `FileSystem/FileSystemService.cs` (réserve), `Diagnostics/LogFileWriter.cs` (lignes perdues), `Power/SystemPowerService.cs` (`RestartAfterAsync`) |
 | Infrastructure.Browser | `Backup/IndexedDbBackupService.cs` (gzip, `ReadArchive`, `Inspect`, fusion par `put`), `Storage/BrowserStorageManager.cs` (`IStorageCapacityProbe`), `FileSystem/IndexedDbFileSystemProvider.cs` (`QuotaExceededError` → `NoSpace`), `IndexedDbFileContentRepository.cs` (16 Mio → `FileTooLarge`), `IndexedDbStorageUsageProvider.cs` (`df`) |
@@ -43,7 +43,7 @@ mkdir: cannot create directory 'projets': No space left on device
 
 Les trois hôtes appellent `AddHackerOsEcosystem`. La sauvegarde n'est branchée
 que dans un navigateur (`OperatingSystem.IsBrowser()`) : l'hôte Server en rendu
-serveur n'a pas IndexedDB, `HackSystemBackup.IsSupported` y vaut `false` et
+serveur n'a pas IndexedDB, `KazoSystemBackup.IsSupported` y vaut `false` et
 l'onglet est masqué (ADR 0099, conséquences).
 
 ## Sauvegarde et restauration (ADR 0099 §1)
@@ -179,8 +179,8 @@ Vidages des versions 2 et 3 dans `Tests/fixtures/indexeddb/` (la version 1 n'a j
   inconnu) ; `FileSystemServiceTests` (réserve : utilisateur refusé, système
   accepté, nouvelle mesure demandée) ; `LogFileWriterTests` (lignes perdues
   comptées puis signalées une fois).
-- `Tests/Kazo.Os.AppSdk.Tests/IO/HackErrorTranslationTests.cs` : deux codes
-  traduits en `HackIOException` et en message Linux.
+- `Tests/Kazo.Os.AppSdk.Tests/IO/KazoErrorTranslationTests.cs` : deux codes
+  traduits en `KazoIOException` et en message Linux.
 - `Tests/Kazo.Os.Commands.Wave5.Tests/HackbackupCommandTests.cs` : usage,
   root exigé, création, fusion par défaut, remplacement, archive refusée,
   hôte sans sauvegarde.
@@ -199,7 +199,7 @@ Vidages des versions 2 et 3 dans `Tests/fixtures/indexeddb/` (la version 1 n'a j
 - [x] `StorageSpaceMonitor` : mesure, notification unique, réserve de root.
 - [x] Réserve appliquée par `FileSystemService` ; `df` avec les vrais chiffres.
 - [x] `LogFileWriter` : lignes perdues comptées puis signalées.
-- [x] `HackSystemBackup`, passerelle, `SystemBackupService`, appareil du navigateur, `pickFile.js`.
+- [x] `KazoSystemBackup`, passerelle, `SystemBackupService`, appareil du navigateur, `pickFile.js`.
 - [x] Onglet *Backup* de Paramètres et commande `hackbackup`.
 - [x] Actions de notification qui lancent une app.
 - [x] Cache PWA abîmé : vidage et rechargement une fois, écran hors ligne.

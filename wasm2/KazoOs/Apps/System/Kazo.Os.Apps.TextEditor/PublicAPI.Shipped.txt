@@ -79,7 +79,7 @@ override Kazo.Os.Apps.TextEditor.TextEditorReplaceAllResult.GetHashCode() -> int
 override Kazo.Os.Apps.TextEditor.TextEditorReplaceResult.GetHashCode() -> int
 override Kazo.Os.Apps.TextEditor.TextEditorWindow.OnAppAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
 override Kazo.Os.Apps.TextEditor.TextEditorWindow.OnAppInitializedAsync() -> System.Threading.Tasks.Task!
-override Kazo.Os.Apps.TextEditor.TextEditorWindow.OnAppStopRequestedAsync(Kazo.Os.AppSdk.Diagnostics.HackStopRequestedEventArgs! e) -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.TextEditor.TextEditorWindow.OnAppStopRequestedAsync(Kazo.Os.AppSdk.Diagnostics.KazoStopRequestedEventArgs! e) -> System.Threading.Tasks.Task!
 override Kazo.Os.Apps.TextEditor.TextEditorWindow.OnPermissionErrorRaised(Kazo.Os.Simulation.Abstractions.Gateways.AppPermissionErrorEventArgs! e) -> void
 static Kazo.Os.Apps.TextEditor.TextEditorFindEngine.DescribeReplacementCount(int count, Microsoft.Extensions.Localization.IStringLocalizer? text = null) -> string!
 static Kazo.Os.Apps.TextEditor.TextEditorFindEngine.FindMatches(string! content, string! query) -> System.Collections.Generic.List<int>!

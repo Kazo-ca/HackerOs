@@ -22,7 +22,7 @@ read them with ordinary file permissions.
 ## Architecture
 
 ```text
-ILogger<T> ──► HackerOsDiagnosticLoggerProvider ─┐
+ILogger<T> ──► KazoOsDiagnosticLoggerProvider ─┐
 IAppLoggingGateway ──► AppLoggingGateway ────────┼─► LogFileWriter ─► IFileSystemService ─► /var/log/…
 IAuditLog ──► FileAuditLog ──────────────────────┘        │ (bounded channel, grouped flush, rotation)
 HostExceptionReporter ───────────────────────────┘        ▼
@@ -92,7 +92,7 @@ HostExceptionReporter ───────────────────�
   it is refused, the window offers administrator approval (ADR 0042), then a
   second click succeeds.
 - **Temporary deviation from ADR 0045 §6:** the reader goes through
-  `IAppFileSystemGateway` and not `HackFile`/`HackFileSystemWatcher`, which
+  `IAppFileSystemGateway` and not `KazoFile`/`KazoFileSystemWatcher`, which
   arrive with the `rebuild/1-file-api` branch (ADR 0043). The switch to
   `Hack*` will happen once that API is merged; the behavior does not change.
 
@@ -122,4 +122,4 @@ HostExceptionReporter ───────────────────�
 - [x] Error Log Viewer reads the files.
 - [x] Contract tests.
 - [x] Lines lost for lack of space, counted then reported (`v3/7`, ADR 0099 §2).
-- [ ] Move Error Log Viewer to `HackFile` after the ADR 0043 merge.
+- [ ] Move Error Log Viewer to `KazoFile` after the ADR 0043 merge.

@@ -31,7 +31,7 @@ internal enum StoreView
 /// </summary>
 /// <remarks>
 /// <para>
-/// Only the public SDK: <see cref="HackAppPackages"/> reads the catalogs (downloaded by the OS
+/// Only the public SDK: <see cref="KazoAppPackages"/> reads the catalogs (downloaded by the OS
 /// itself), installs and removes; the OS asks an administrator in its own windows when the install is
 /// for every user, from an untrusted source or of a blocked app (ADR 0189 §4). The Store never sees
 /// a password.
@@ -74,7 +74,7 @@ public partial class StoreWindow
     private IStringLocalizer<Strings> L => _localizer ??= AppContext.GetLocalizer<Strings>();
 
     /// <summary>The language of the Store process, for the catalogs' texts.</summary>
-    private CultureInfo Culture => L is HackStringLocalizer hack ? hack.Culture : HackLocale.DefaultLanguage;
+    private CultureInfo Culture => L is KazoStringLocalizer hack ? hack.Culture : KazoLocale.DefaultLanguage;
 
     private StoreEntry? Selected => _selectedAppId is null ? null : _store.Find(_selectedAppId);
 
@@ -119,9 +119,9 @@ public partial class StoreWindow
         _isLoading = true;
         try
         {
-            IReadOnlyList<HackAppCatalog> catalogs = await HackAppPackages.GetCatalogsAsync(refresh);
-            IReadOnlyList<HackInstalledPackage> installed = await HackAppPackages.GetInstalledAsync();
-            IReadOnlyList<HackPackageUpdate> updates = await HackAppPackages.GetUpdatesAsync();
+            IReadOnlyList<KazoAppCatalog> catalogs = await KazoAppPackages.GetCatalogsAsync(refresh);
+            IReadOnlyList<KazoInstalledPackage> installed = await KazoAppPackages.GetInstalledAsync();
+            IReadOnlyList<KazoPackageUpdate> updates = await KazoAppPackages.GetUpdatesAsync();
             _store = new StoreCatalog(catalogs, installed, updates, _removed);
             _themePacks = new StoreThemePacks(catalogs, await ReadInstalledThemePacksAsync());
         }
@@ -133,7 +133,7 @@ public partial class StoreWindow
         {
             ShowError(L["Error.NotAllowed"]);
         }
-        catch (Exception exception) when (exception is HackPackageException or IOException)
+        catch (Exception exception) when (exception is KazoPackageException or IOException)
         {
             ShowError(L["Error.Generic", exception.Message]);
         }
@@ -144,11 +144,11 @@ public partial class StoreWindow
     }
 
     /// <summary>Reads the installed packs; an OS without theme packs keeps the apps working.</summary>
-    private async Task<IReadOnlyList<HackInstalledThemePack>> ReadInstalledThemePacksAsync()
+    private async Task<IReadOnlyList<KazoInstalledThemePack>> ReadInstalledThemePacksAsync()
     {
         try
         {
-            IReadOnlyList<HackInstalledThemePack> packs = await HackAppPackages.GetInstalledThemePacksAsync();
+            IReadOnlyList<KazoInstalledThemePack> packs = await KazoAppPackages.GetInstalledThemePacksAsync();
             _themePacksUnsupported = false;
             return packs;
         }
@@ -241,9 +241,9 @@ public partial class StoreWindow
         _isDescriptionLoading = true;
         try
         {
-            _description = await HackAppPackages.GetCatalogDescriptionAsync(app, language: Culture.TwoLetterISOLanguageName);
+            _description = await KazoAppPackages.GetCatalogDescriptionAsync(app, language: Culture.TwoLetterISOLanguageName);
         }
-        catch (Exception exception) when (exception is HackPackageException or IOException or NotSupportedException)
+        catch (Exception exception) when (exception is KazoPackageException or IOException or NotSupportedException)
         {
             // The page still shows the short description and the facts.
             _description = null;
@@ -254,10 +254,10 @@ public partial class StoreWindow
         }
     }
 
-    private Task InstallAsync(StoreEntry entry, HackPackageScope scope) =>
+    private Task InstallAsync(StoreEntry entry, KazoPackageScope scope) =>
         RunAsync(entry, async () =>
         {
-            HackPackageInstallReport report = await HackAppPackages.InstallAsync(entry.App!.Source, scope);
+            KazoPackageInstallReport report = await KazoAppPackages.InstallAsync(entry.App!.Source, scope);
             _removed.Remove(entry.AppId);
             ShowInfo(L[report.SystemWide ? "Message.InstalledForEveryone" : "Message.InstalledForMe", report.Name, report.Version]);
         });
@@ -265,10 +265,10 @@ public partial class StoreWindow
     private Task UpdateAsync(StoreEntry entry) =>
         RunAsync(entry, async () =>
         {
-            HackPackageUpdate update = entry.Update!;
-            HackPackageInstallReport report = await HackAppPackages.InstallAsync(
+            KazoPackageUpdate update = entry.Update!;
+            KazoPackageInstallReport report = await KazoAppPackages.InstallAsync(
                 $"{update.Source}@{update.AvailableVersion}",
-                update.SystemWide ? HackPackageScope.System : HackPackageScope.User);
+                update.SystemWide ? KazoPackageScope.System : KazoPackageScope.User);
             ShowInfo(L["Message.Updated", report.Name, report.Version]);
         });
 
@@ -287,9 +287,9 @@ public partial class StoreWindow
     private Task RemoveAsync(StoreEntry entry) =>
         RunAsync(entry, async () =>
         {
-            HackInstalledPackage removed = await HackAppPackages.RemoveAsync(
+            KazoInstalledPackage removed = await KazoAppPackages.RemoveAsync(
                 entry.AppId,
-                entry.Installed?.SystemWide == true ? HackPackageScope.System : HackPackageScope.User);
+                entry.Installed?.SystemWide == true ? KazoPackageScope.System : KazoPackageScope.User);
             // Hot-add (ADR 0214 §1): only an app loaded in the page waits for the restart.
             if (removed.Loaded)
             {
@@ -302,51 +302,51 @@ public partial class StoreWindow
     private Task RollbackAsync(StoreEntry entry) =>
         RunAsync(entry, async () =>
         {
-            HackPackageInstallReport report = await HackAppPackages.RollbackAsync(
+            KazoPackageInstallReport report = await KazoAppPackages.RollbackAsync(
                 entry.AppId,
-                entry.Installed?.SystemWide == true ? HackPackageScope.System : HackPackageScope.User);
+                entry.Installed?.SystemWide == true ? KazoPackageScope.System : KazoPackageScope.User);
             ShowInfo(L[report.RestartRequired ? "Message.RolledBackRestart" : "Message.RolledBack", report.Name, report.Version]);
         });
 
     private Task OpenAsync(StoreEntry entry) =>
-        RunAsync(entry, async () => await HackApps.LaunchAsync(entry.AppId), reload: false);
+        RunAsync(entry, async () => await KazoApps.LaunchAsync(entry.AppId), reload: false);
 
-    private Task InstallThemePackAsync(StoreThemePackEntry entry, HackPackageScope scope) =>
+    private Task InstallThemePackAsync(StoreThemePackEntry entry, KazoPackageScope scope) =>
         RunAsync(entry.PackId, async () =>
         {
-            HackThemePackInstallReport report = await HackAppPackages.InstallThemePackAsync(entry.Pack!.Source, scope);
+            KazoThemePackInstallReport report = await KazoAppPackages.InstallThemePackAsync(entry.Pack!.Source, scope);
             ShowInfo(L[report.SystemWide ? "Message.PackInstalledForEveryone" : "Message.PackInstalledForMe", report.Name, report.Version]);
         });
 
     private Task UpdateThemePackAsync(StoreThemePackEntry entry) =>
         RunAsync(entry.PackId, async () =>
         {
-            HackThemePackInstallReport report = await HackAppPackages.InstallThemePackAsync(
+            KazoThemePackInstallReport report = await KazoAppPackages.InstallThemePackAsync(
                 $"{entry.Pack!.Source}@{entry.AvailableUpdate}",
-                entry.Installed!.SystemWide ? HackPackageScope.System : HackPackageScope.User);
+                entry.Installed!.SystemWide ? KazoPackageScope.System : KazoPackageScope.User);
             ShowInfo(L["Message.PackUpdated", report.Name, report.Version]);
         });
 
     private Task RemoveThemePackAsync(StoreThemePackEntry entry) =>
         RunAsync(entry.PackId, async () =>
         {
-            HackInstalledThemePack removed = await HackAppPackages.RemoveThemePackAsync(
+            KazoInstalledThemePack removed = await KazoAppPackages.RemoveThemePackAsync(
                 entry.PackId,
-                entry.Installed!.SystemWide ? HackPackageScope.System : HackPackageScope.User);
+                entry.Installed!.SystemWide ? KazoPackageScope.System : KazoPackageScope.User);
             ShowInfo(L["Message.PackRemoved", removed.Name]);
         });
 
     /// <summary>Opens Settings ▸ Appearance, where the pack's theme, wallpaper, icons and cursors are chosen (Q3 A).</summary>
     private Task OpenAppearanceAsync(StoreThemePackEntry entry) =>
-        RunAsync(entry.PackId, async () => await HackApps.LaunchAsync(SettingsAppId, [AppearancePageArgument]), reload: false);
+        RunAsync(entry.PackId, async () => await KazoApps.LaunchAsync(SettingsAppId, [AppearancePageArgument]), reload: false);
 
     private const string SettingsAppId = "org.hackeros.settings";
     private const string AppearancePageArgument = "--page=appearance";
 
     private IReadOnlyList<StoreThemePackEntry> VisibleThemePacks => _themePacks.Search(_query, Culture);
 
-    private string PartsText(HackThemePackParts parts) => string.Join(" · ", Enum.GetValues<HackThemePackParts>()
-        .Where(part => part != HackThemePackParts.None && parts.HasFlag(part))
+    private string PartsText(KazoThemePackParts parts) => string.Join(" · ", Enum.GetValues<KazoThemePackParts>()
+        .Where(part => part != KazoThemePackParts.None && parts.HasFlag(part))
         .Select(part => L["Part." + part].Value));
 
     private async Task RestartAsync()
@@ -354,13 +354,13 @@ public partial class StoreWindow
         _isBusy = true;
         try
         {
-            await HackAppPackages.RestartToFinishAsync();
+            await KazoAppPackages.RestartToFinishAsync();
         }
-        catch (HackPackageException exception) when (exception.Code == "apps.package.nothing-pending")
+        catch (KazoPackageException exception) when (exception.Code == "apps.package.nothing-pending")
         {
             ShowInfo(L["Message.NothingPending"]);
         }
-        catch (Exception exception) when (exception is HackPackageException or NotSupportedException or UnauthorizedAccessException or AppGatewayAccessDeniedException)
+        catch (Exception exception) when (exception is KazoPackageException or NotSupportedException or UnauthorizedAccessException or AppGatewayAccessDeniedException)
         {
             ShowError(L["Error.Generic", exception.Message]);
         }
@@ -387,7 +387,7 @@ public partial class StoreWindow
                 await LoadAsync(refresh: false);
             }
         }
-        catch (HackPackageException exception)
+        catch (KazoPackageException exception)
         {
             ShowError(DescribePackageError(exception));
         }
@@ -395,7 +395,7 @@ public partial class StoreWindow
         {
             ShowError(L["Error.NotApproved"]);
         }
-        catch (Exception exception) when (exception is HackAppLaunchException or NotSupportedException or IOException)
+        catch (Exception exception) when (exception is KazoAppLaunchException or NotSupportedException or IOException)
         {
             ShowError(L["Error.Generic", exception.Message]);
         }
@@ -406,7 +406,7 @@ public partial class StoreWindow
         }
     }
 
-    private string DescribePackageError(HackPackageException exception) => exception.Code switch
+    private string DescribePackageError(KazoPackageException exception) => exception.Code switch
     {
         "apps.package.blocked" => L["Error.Blocked"],
         "apps.package.installed-for-system" => L["Error.InstalledForSystem"],
@@ -438,24 +438,24 @@ public partial class StoreWindow
             ? L["Category.Other"]
             : _store.Categories.FirstOrDefault(category => category.Id == categoryId)?.GetLabel(Culture) ?? categoryId;
 
-    private string TrustText(HackPackageTrust trust) => trust switch
+    private string TrustText(KazoPackageTrust trust) => trust switch
     {
-        HackPackageTrust.Verified => L["Trust.Verified"],
-        HackPackageTrust.Trusted => L["Trust.Trusted"],
+        KazoPackageTrust.Verified => L["Trust.Verified"],
+        KazoPackageTrust.Trusted => L["Trust.Trusted"],
         _ => L["Trust.Untrusted"]
     };
 
-    private static string TrustClass(HackPackageTrust trust) => trust switch
+    private static string TrustClass(KazoPackageTrust trust) => trust switch
     {
-        HackPackageTrust.Verified => "is-verified",
-        HackPackageTrust.Trusted => "is-trusted",
+        KazoPackageTrust.Verified => "is-verified",
+        KazoPackageTrust.Trusted => "is-trusted",
         _ => "is-untrusted"
     };
 
-    private static string TrustIcon(HackPackageTrust trust) => trust switch
+    private static string TrustIcon(KazoPackageTrust trust) => trust switch
     {
-        HackPackageTrust.Verified => "shield-check",
-        HackPackageTrust.Trusted => "shield",
+        KazoPackageTrust.Verified => "shield-check",
+        KazoPackageTrust.Trusted => "shield",
         _ => "shield-alert"
     };
 

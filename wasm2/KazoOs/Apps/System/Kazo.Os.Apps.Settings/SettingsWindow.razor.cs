@@ -20,14 +20,14 @@ namespace Kazo.Os.Apps.Settings;
 /// <remarks>
 /// Uses only the public SDK (ADR 0055, ADR 0056 sections 8 to 11):
 /// <list type="bullet">
-/// <item><see cref="HackSettings.OpenSystemAsync(string, CancellationToken)"/> for
+/// <item><see cref="KazoSettings.OpenSystemAsync(string, CancellationToken)"/> for
 /// <c>appearance.config</c>; the shell applies a new theme by itself as soon as the file changes;</item>
-/// <item><see cref="HackApps"/> for the file handlers of the installed apps;</item>
-/// <item><see cref="HackServerConnection"/> (capability <c>server.connection.manage</c>) for the
+/// <item><see cref="KazoApps"/> for the file handlers of the installed apps;</item>
+/// <item><see cref="KazoServerConnection"/> (capability <c>server.connection.manage</c>) for the
 /// optional server;</item>
-/// <item><see cref="HackSystem"/> (capability <c>system.power</c>) for restart and factory reset;
+/// <item><see cref="KazoSystem"/> (capability <c>system.power</c>) for restart and factory reset;
 /// the OS asks an administrator in its own window, this app never sees the password.</item>
-/// <item><see cref="HackSystemBackup"/> (capability <c>system.backup</c>, ADR 0099) on the Backup page,
+/// <item><see cref="KazoSystemBackup"/> (capability <c>system.backup</c>, ADR 0099) on the Backup page,
 /// shown only when the host supports it.</item>
 /// </list>
 /// </remarks>
@@ -51,7 +51,7 @@ public partial class SettingsWindow : IAsyncDisposable
     private const string ResetConfirmPhrase = "RESET";
 
     private const string ThemeEditorAppId = "org.hackeros.theme-editor";
-    private HackSettingsDocument? _appearance;
+    private KazoSettingsDocument? _appearance;
     private UserThemeLibraryResult _userThemes = UserThemeLibraryResult.Empty;
     private ThemePreferences _appearanceSettings = ThemePreferences.Default;
     private SettingLayer _targetLayer = SettingLayer.User;
@@ -65,7 +65,7 @@ public partial class SettingsWindow : IAsyncDisposable
     private string? _resetErrorMessage;
     private string? _systemMessage;
 
-    private HackServerConnectionState _connectionState = HackServerConnectionState.NotConnected;
+    private KazoServerConnectionState _connectionState = KazoServerConnectionState.NotConnected;
     private string _serverUrl = string.Empty;
     private string _username = string.Empty;
     private string _password = string.Empty;
@@ -74,8 +74,8 @@ public partial class SettingsWindow : IAsyncDisposable
     private bool _isSyncing;
     private string? _syncStatusMessage;
     private int _conflictCount;
-    private HackSyncStatus _syncStatus = HackSyncStatus.Inactive;
-    private IReadOnlyList<HackSyncConflict> _conflicts = [];
+    private KazoSyncStatus _syncStatus = KazoSyncStatus.Inactive;
+    private IReadOnlyList<KazoSyncConflict> _conflicts = [];
 
     private IStringLocalizer<Strings>? _localizer;
 
@@ -172,13 +172,13 @@ public partial class SettingsWindow : IAsyncDisposable
         try
         {
             _userThemes = await UserThemeLibrary.LoadAsync(
-                async (directory, token) => await HackDirectory.GetFilesAsync(directory, "*" + ThemeFile.Extension, cancellationToken: token),
-                async (directory, token) => await HackDirectory.GetDirectoriesAsync(directory, cancellationToken: token),
-                (path, token) => HackFile.ReadAllTextAsync(path, token),
-                HackUser.Describe(AppContext).HomeDirectory,
+                async (directory, token) => await KazoDirectory.GetFilesAsync(directory, "*" + ThemeFile.Extension, cancellationToken: token),
+                async (directory, token) => await KazoDirectory.GetDirectoriesAsync(directory, cancellationToken: token),
+                (path, token) => KazoFile.ReadAllTextAsync(path, token),
+                KazoUser.Describe(AppContext).HomeDirectory,
                 AppContext.CancellationToken);
         }
-        catch (Exception exception) when (exception is HackIOException or HackUnauthorizedAccessException)
+        catch (Exception exception) when (exception is KazoIOException or KazoUnauthorizedAccessException)
         {
             _userThemes = UserThemeLibraryResult.Empty;
         }
@@ -193,9 +193,9 @@ public partial class SettingsWindow : IAsyncDisposable
     {
         try
         {
-            await HackApps.LaunchAsync(ThemeEditorAppId, themePath is null ? [] : [themePath], AppContext.CancellationToken);
+            await KazoApps.LaunchAsync(ThemeEditorAppId, themePath is null ? [] : [themePath], AppContext.CancellationToken);
         }
-        catch (Exception exception) when (exception is HackAppLaunchException or HackUnauthorizedAccessException)
+        catch (Exception exception) when (exception is KazoAppLaunchException or KazoUnauthorizedAccessException)
         {
             _appearanceMessage = exception.Message;
         }
@@ -207,7 +207,7 @@ public partial class SettingsWindow : IAsyncDisposable
         OpenFileDialogResult result = await OpenFileAsync(new OpenFileDialogRequest
         {
             Title = L["Wallpaper.Browse.Title"],
-            InitialDirectory = VirtualPath.Parse(HackUser.Describe(AppContext).HomeDirectory),
+            InitialDirectory = VirtualPath.Parse(KazoUser.Describe(AppContext).HomeDirectory),
             Filters = [new FileDialogFilter(L["Wallpaper.Browse.Filter"], [".png", ".jpg", ".jpeg", ".webp"], ["image/png", "image/jpeg", "image/webp"])],
             RequestedAccess = SelectedFileAccess.Read
         });
@@ -235,7 +235,7 @@ public partial class SettingsWindow : IAsyncDisposable
     {
         try
         {
-            _appearance = await HackSettings.OpenSystemAsync(AppContext, AppearanceDocumentId, AppContext.CancellationToken);
+            _appearance = await KazoSettings.OpenSystemAsync(AppContext, AppearanceDocumentId, AppContext.CancellationToken);
             _appearance.Changed += OnAppearanceChanged;
             _appearanceSettings = ReadAppearance(_appearance);
         }
@@ -246,7 +246,7 @@ public partial class SettingsWindow : IAsyncDisposable
     }
 
     /// <summary>An external edit (<c>nano /etc/hackeros/appearance.config</c>) or another window changed the file.</summary>
-    private void OnAppearanceChanged(object? sender, HackSettingsChangedEventArgs args) =>
+    private void OnAppearanceChanged(object? sender, KazoSettingsChangedEventArgs args) =>
         _ = InvokeAsync(() =>
         {
             if (_appearance is not null && !_isSavingAppearance)
@@ -257,7 +257,7 @@ public partial class SettingsWindow : IAsyncDisposable
             StateHasChanged();
         });
 
-    private static ThemePreferences ReadAppearance(HackSettingsDocument document) => new(
+    private static ThemePreferences ReadAppearance(KazoSettingsDocument document) => new(
         document.Get<string>(DesktopThemeKey),
         document.Get<string>(MobileThemeKey),
         document.Get<string>(AccentKey),
@@ -309,7 +309,7 @@ public partial class SettingsWindow : IAsyncDisposable
     /// write is one atomic edit of the settings file and runs to its end, so the change the user
     /// just made is either fully saved or reported, never half applied.
     /// </summary>
-    protected override Task OnAppStopRequestedAsync(Kazo.Os.AppSdk.Diagnostics.HackStopRequestedEventArgs e) =>
+    protected override Task OnAppStopRequestedAsync(Kazo.Os.AppSdk.Diagnostics.KazoStopRequestedEventArgs e) =>
         Task.WhenAll(_appearanceWrite ?? Task.CompletedTask, _mobileWrite ?? Task.CompletedTask);
 
     /// <summary>
@@ -355,7 +355,7 @@ public partial class SettingsWindow : IAsyncDisposable
                 await _appearance.SetAsync(key, value!, SettingLayer.User, CancellationToken.None);
             }
         }
-        catch (HackSettingLockedException exception)
+        catch (KazoSettingLockedException exception)
         {
             _appearanceMessage = exception.Message;
         }
@@ -382,12 +382,12 @@ public partial class SettingsWindow : IAsyncDisposable
     {
         try
         {
-            _connectionState = await HackServerConnection.GetStateAsync(AppContext, AppContext.CancellationToken);
+            _connectionState = await KazoServerConnection.GetStateAsync(AppContext, AppContext.CancellationToken);
             await RefreshSyncAsync();
         }
         catch (Exception exception) when (exception is UnauthorizedAccessException or NotSupportedException)
         {
-            _connectionState = HackServerConnectionState.NotConnected;
+            _connectionState = KazoServerConnectionState.NotConnected;
             _connectionErrorMessage = L["Server.Error.Unavailable", exception.Message];
         }
     }
@@ -407,11 +407,11 @@ public partial class SettingsWindow : IAsyncDisposable
         {
             Uri serverUrl = new(_serverUrl, UriKind.Absolute);
             _connectionState = createNewAccount
-                ? await HackServerConnection.CreateAccountAsync(AppContext, serverUrl, _username, _password, AppContext.CancellationToken)
-                : await HackServerConnection.ConnectAsync(AppContext, serverUrl, _username, _password, AppContext.CancellationToken);
+                ? await KazoServerConnection.CreateAccountAsync(AppContext, serverUrl, _username, _password, AppContext.CancellationToken)
+                : await KazoServerConnection.ConnectAsync(AppContext, serverUrl, _username, _password, AppContext.CancellationToken);
             _password = string.Empty;
         }
-        catch (Exception exception) when (exception is HackServerConnectionException or UnauthorizedAccessException)
+        catch (Exception exception) when (exception is KazoServerConnectionException or UnauthorizedAccessException)
         {
             _connectionErrorMessage = exception.Message;
         }
@@ -428,7 +428,7 @@ public partial class SettingsWindow : IAsyncDisposable
     }
 
     /// <summary>The Local server panel linked this device with a pairing code (ADR 0191 §6).</summary>
-    private async Task OnLocalServerPairedAsync(HackServerConnectionState state)
+    private async Task OnLocalServerPairedAsync(KazoServerConnectionState state)
     {
         _connectionState = state;
         _connectionErrorMessage = null;
@@ -444,8 +444,8 @@ public partial class SettingsWindow : IAsyncDisposable
             return;
         }
 
-        await HackServerConnection.DisconnectAsync(AppContext, AppContext.CancellationToken);
-        _connectionState = HackServerConnectionState.NotConnected;
+        await KazoServerConnection.DisconnectAsync(AppContext, AppContext.CancellationToken);
+        _connectionState = KazoServerConnectionState.NotConnected;
         _serverUrl = string.Empty;
         _username = string.Empty;
         _password = string.Empty;
@@ -470,14 +470,14 @@ public partial class SettingsWindow : IAsyncDisposable
             // ADR 0101 section 4: one complete pass in the OS's order (FileSystem push then pull, so a
             // concurrent edit is caught as a conflict first; Grants pull; FileAssociations). User
             // settings are home files (ADR 0044), so they travel with the FileSystem domain.
-            _syncStatus = await HackServerConnection.SyncNowAsync(AppContext, AppContext.CancellationToken);
+            _syncStatus = await KazoServerConnection.SyncNowAsync(AppContext, AppContext.CancellationToken);
             await RefreshSyncAsync();
             string now = DateTimeOffset.Now.ToString("t", Formats);
             _syncStatusMessage = _conflictCount > 0
                 ? L["Sync.LastSyncedWithConflicts", now, _conflictCount]
                 : L["Sync.LastSynced", now];
         }
-        catch (HackServerConnectionException exception)
+        catch (KazoServerConnectionException exception)
         {
             _syncStatusMessage = exception.Message;
         }
@@ -490,8 +490,8 @@ public partial class SettingsWindow : IAsyncDisposable
     /// <summary>Reads the periodic-sync state and the pending conflicts (ADR 0101).</summary>
     private async Task RefreshSyncAsync()
     {
-        _syncStatus = await HackServerConnection.GetSyncStatusAsync(AppContext, AppContext.CancellationToken);
-        _conflicts = await HackServerConnection.GetConflictsAsync(AppContext, AppContext.CancellationToken);
+        _syncStatus = await KazoServerConnection.GetSyncStatusAsync(AppContext, AppContext.CancellationToken);
+        _conflicts = await KazoServerConnection.GetConflictsAsync(AppContext, AppContext.CancellationToken);
         _conflictCount = _conflicts.Count;
     }
 
@@ -512,11 +512,11 @@ public partial class SettingsWindow : IAsyncDisposable
     {
         try
         {
-            await HackServerConnection.SetSyncPausedAsync(AppContext, paused, AppContext.CancellationToken);
+            await KazoServerConnection.SetSyncPausedAsync(AppContext, paused, AppContext.CancellationToken);
             await RefreshSyncAsync();
             _syncStatus = _syncStatus with { IsPaused = paused };
         }
-        catch (Exception exception) when (exception is HackServerConnectionException or UnauthorizedAccessException or IOException)
+        catch (Exception exception) when (exception is KazoServerConnectionException or UnauthorizedAccessException or IOException)
         {
             _syncStatusMessage = L["Sync.Error.CannotChange", exception.Message];
         }
@@ -524,7 +524,7 @@ public partial class SettingsWindow : IAsyncDisposable
 
     private async Task ShowConflictsAsync()
     {
-        await HackServerConnection.ShowConflictsAsync(AppContext, AppContext.CancellationToken);
+        await KazoServerConnection.ShowConflictsAsync(AppContext, AppContext.CancellationToken);
     }
 
     private async Task RebootAsync()
@@ -540,7 +540,7 @@ public partial class SettingsWindow : IAsyncDisposable
         try
         {
             // The OS asks an administrator, flushes the logs, ends every process and reloads.
-            await HackSystem.RebootAsync(AppContext, AppContext.CancellationToken);
+            await KazoSystem.RebootAsync(AppContext, AppContext.CancellationToken);
         }
         catch (UnauthorizedAccessException)
         {
@@ -588,7 +588,7 @@ public partial class SettingsWindow : IAsyncDisposable
         try
         {
             // The OS asks an administrator, erases its database and restarts as freshly installed.
-            await HackSystem.FactoryResetAsync(AppContext, AppContext.CancellationToken);
+            await KazoSystem.FactoryResetAsync(AppContext, AppContext.CancellationToken);
         }
         catch (UnauthorizedAccessException)
         {

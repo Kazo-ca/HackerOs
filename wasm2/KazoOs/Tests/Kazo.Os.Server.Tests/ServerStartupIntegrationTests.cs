@@ -80,7 +80,7 @@ public sealed class ServerStartupIntegrationTests : IAsyncLifetime
         Assert.Equal(HttpStatusCode.Unauthorized, protectedResponse.StatusCode);
 
         await using var scope = factory.Services.CreateAsyncScope();
-        var database = scope.ServiceProvider.GetRequiredService<HackerOsServerDbContext>();
+        var database = scope.ServiceProvider.GetRequiredService<KazoOsServerDbContext>();
         Assert.True(await database.Database.CanConnectAsync());
         Assert.Equal(_databasePath, database.Database.GetDbConnection().DataSource);
         Assert.True(File.Exists(_databasePath));
@@ -121,7 +121,7 @@ public sealed class ServerStartupIntegrationTests : IAsyncLifetime
         await backups.RestoreAsync("integration.db", CancellationToken.None);
 
         await using var restoredScope = factory.Services.CreateAsyncScope();
-        var restoredDatabase = restoredScope.ServiceProvider.GetRequiredService<HackerOsServerDbContext>();
+        var restoredDatabase = restoredScope.ServiceProvider.GetRequiredService<KazoOsServerDbContext>();
         Assert.False(await restoredDatabase.Accounts.AnyAsync(account => account.Username == "restore-proof"));
     }
 

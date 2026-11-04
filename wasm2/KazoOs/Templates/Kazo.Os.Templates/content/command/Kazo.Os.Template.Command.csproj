@@ -10,15 +10,15 @@
     -->
     <IsTrimmable>true</IsTrimmable>
     <!-- A Kazo OS app; also read by the Debug profile of a hackeros-solution repository (ADR 0207). -->
-    <HackerOsAppProject>true</HackerOsAppProject>
+    <KazoOsAppProject>true</KazoOsAppProject>
     <!-- One version for every Kazo OS package (ADR 0098 §1). -->
-    <HackerOsVersion>0.0.0-dev</HackerOsVersion>
+    <KazoOsVersion>0.0.0-dev</KazoOsVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Kazo.Os.AppSdk" Version="$(HackerOsVersion)" />
+    <PackageReference Include="Kazo.Os.AppSdk" Version="$(KazoOsVersion)" />
     <!-- Generates manifest.json after the build and checks the SDK boundary (HOSAPP0030). -->
-    <PackageReference Include="Kazo.Os.App.Build" Version="$(HackerOsVersion)" PrivateAssets="all" />
+    <PackageReference Include="Kazo.Os.App.Build" Version="$(KazoOsVersion)" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>

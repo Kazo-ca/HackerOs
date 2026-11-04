@@ -85,7 +85,7 @@ public static class AppPackageSignature
     public const int PublicKeyLength = 91;
 
     /// <summary>
-    /// Reads a public key written in base64 (<c>[signing-keys]</c>, <c>HackerOsAppSigningKeys</c>): the
+    /// Reads a public key written in base64 (<c>[signing-keys]</c>, <c>KazoOsAppSigningKeys</c>): the
     /// SubjectPublicKeyInfo of an uncompressed P-256 key, checked by its shape only (the browser
     /// imports it at verification time).
     /// </summary>

@@ -119,7 +119,7 @@ public sealed partial class AppPackageInstaller
     /// <summary>Creates the installer.</summary>
     /// <param name="downloader">Downloads the index and the package.</param>
     /// <param name="runtime">The loaded runtime the references are checked against (Q1); the page's own by default.</param>
-    /// <param name="sdkVersion">SDK version of this OS; <see cref="HackerOsSdk.SemanticVersion"/> by default.</param>
+    /// <param name="sdkVersion">SDK version of this OS; <see cref="KazoOsSdk.SemanticVersion"/> by default.</param>
     /// <param name="logger">Writes the <c>/var/log/syslog</c> lines.</param>
     /// <param name="defaults">Sources and block list the host was built with; <see cref="AppPackageDefaults.Standard"/> by default.</param>
     /// <param name="clock">Clock of the catalog cache; the system clock by default.</param>
@@ -140,7 +140,7 @@ public sealed partial class AppPackageInstaller
         _clock = clock ?? (static () => DateTimeOffset.UtcNow);
         _downloader = downloader ?? throw new ArgumentNullException(nameof(downloader));
         _runtime = runtime ?? LoadedRuntimeApiSurface.Instance;
-        _sdkVersion = sdkVersion ?? HackerOsSdk.SemanticVersion;
+        _sdkVersion = sdkVersion ?? KazoOsSdk.SemanticVersion;
         _logger = (ILogger?)logger ?? NullLogger.Instance;
         Defaults = defaults ?? AppPackageDefaults.Standard;
     }
@@ -627,7 +627,7 @@ public sealed partial class AppPackageInstaller
             throw new AppPackageException("apps.package.built-in", $"{package.AppId} is an app of this OS; a package cannot replace it.");
         }
 
-        if (!HackerOsSdk.IsCompatible(manifest.SdkCompatibility, _sdkVersion))
+        if (!KazoOsSdk.IsCompatible(manifest.SdkCompatibility, _sdkVersion))
         {
             throw new AppPackageException(
                 "apps.package.sdk-incompatible",

@@ -32,9 +32,9 @@ public interface IShellSession
     /// <param name="path">Absolute path, or a path relative to <see cref="WorkingDirectory"/>.</param>
     /// <param name="cancellationToken">Cancels the existence check.</param>
     /// <exception cref="ArgumentException">The path is empty or malformed.</exception>
-    /// <exception cref="IO.HackDirectoryNotFoundException">The path does not exist.</exception>
-    /// <exception cref="IO.HackIOException">The path is not a directory.</exception>
-    /// <exception cref="IO.HackUnauthorizedAccessException">The path cannot be looked up.</exception>
+    /// <exception cref="IO.KazoDirectoryNotFoundException">The path does not exist.</exception>
+    /// <exception cref="IO.KazoIOException">The path is not a directory.</exception>
+    /// <exception cref="IO.KazoUnauthorizedAccessException">The path cannot be looked up.</exception>
     ValueTask ChangeDirectoryAsync(string path, CancellationToken cancellationToken);
 
     /// <summary>Sets one variable of the shell; commands started afterwards inherit it.</summary>

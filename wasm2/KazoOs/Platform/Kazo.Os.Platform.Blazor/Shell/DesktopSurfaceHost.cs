@@ -101,7 +101,7 @@ public sealed class DesktopSurfaceHost : ComponentBase, IDisposable
 
     /// <summary>
     /// "Send to ▸ Desktop" from the Start menu (ADR 0160 §6): hands the app id to the running desktop,
-    /// as a second activation carrying the <see cref="HackDesktopItems.CreateShortcutIntent"/> intent.
+    /// as a second activation carrying the <see cref="KazoDesktopItems.CreateShortcutIntent"/> intent.
     /// </summary>
     /// <param name="appId">The app the shortcut opens.</param>
     /// <returns>Whether the desktop received it.</returns>
@@ -120,7 +120,7 @@ public sealed class DesktopSurfaceHost : ComponentBase, IDisposable
             DesktopAppId,
             principal,
             [],
-            Intent: new AppIntentDelivery(HackDesktopItems.CreateShortcutIntent, payload, ShellSenderId)));
+            Intent: new AppIntentDelivery(KazoDesktopItems.CreateShortcutIntent, payload, ShellSenderId)));
         return result.IsSuccess;
     }
 

@@ -188,7 +188,7 @@ public sealed class UserFileAssociationTests
         Description = "An app for ADR 0121 tests.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", $"{id}.EntryPoint"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         FileHandlers = handlers

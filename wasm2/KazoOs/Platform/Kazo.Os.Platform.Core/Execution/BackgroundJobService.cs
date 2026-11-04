@@ -11,7 +11,7 @@ using Kazo.Os.Simulation.Abstractions.Processes;
 namespace Kazo.Os.Platform.Core.Execution;
 
 /// <summary>
-/// Runs the background tasks of <see cref="HackBackground"/> (ADR 0128, ADR 0140): each one is a
+/// Runs the background tasks of <see cref="KazoBackground"/> (ADR 0128, ADR 0140): each one is a
 /// child process of the app that asked, with the same user, session and granted capabilities, named
 /// <c>&lt;app command&gt;:&lt;task&gt;</c>. It goes to a Web Worker of the pool when the host has some,
 /// otherwise it runs on the main thread, with the same serialization of its input and result.
@@ -102,8 +102,8 @@ public sealed class BackgroundJobService
     internal async Task<string?> RunAsync(
         IAppExecutionContext caller,
         Func<ProcessRecord, IAppExecutionContext> createChildContext,
-        HackBackgroundJobRequest request,
-        Action<HackBackgroundProgress>? progress,
+        KazoBackgroundJobRequest request,
+        Action<KazoBackgroundProgress>? progress,
         CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(caller);
@@ -161,12 +161,12 @@ public sealed class BackgroundJobService
                 End(process.Pid, 0);
                 return result;
             }
-            catch (HackProcessKilledException)
+            catch (KazoProcessKilledException)
             {
                 // Usually already ended by the kill; a worker that died takes the process with it (128 + 9).
                 ProcessExitReason reason = KillReasonOf(process.Pid);
                 End(process.Pid, 137);
-                throw new HackProcessKilledException(process.Pid.Value, reason);
+                throw new KazoProcessKilledException(process.Pid.Value, reason);
             }
             catch (OperationCanceledException)
             {
@@ -202,27 +202,27 @@ public sealed class BackgroundJobService
     private static async Task<string?> RunOnMainThreadAsync(
         IAppExecutionContext child,
         Assembly? assembly,
-        HackBackgroundJobRequest request,
-        Action<HackBackgroundProgress>? progress,
+        KazoBackgroundJobRequest request,
+        Action<KazoBackgroundProgress>? progress,
         CancellationToken cancellationToken)
     {
         Assembly resolved = assembly ?? FindLoadedAssembly(request.Target.AssemblyName)
             ?? throw new ArgumentException($"The assembly '{request.Target.AssemblyName}' of the background task is not loaded.", nameof(request));
-        HackBackgroundJobRunner.PreparedJob job = HackBackgroundJobRunner.Prepare(resolved, request.Target, request.InputJson);
+        KazoBackgroundJobRunner.PreparedJob job = KazoBackgroundJobRunner.Prepare(resolved, request.Target, request.InputJson);
         using CancellationTokenSource linked = CancellationTokenSource.CreateLinkedTokenSource(child.CancellationToken, cancellationToken);
-        HackBackgroundContext context = new(child.ProcessId.Value, linked.Token, progress);
-        using IDisposable ambient = HackExecutionContext.Enter(child);
+        KazoBackgroundContext context = new(child.ProcessId.Value, linked.Token, progress);
+        using IDisposable ambient = KazoExecutionContext.Enter(child);
         return child is AppExecutionContext trusted
-            ? await trusted.Control.RunAsync(() => HackBackgroundFaults.RunAsync(job, context)).ConfigureAwait(false)
-            : await HackBackgroundFaults.RunAsync(job, context).ConfigureAwait(false);
+            ? await trusted.Control.RunAsync(() => KazoBackgroundFaults.RunAsync(job, context)).ConfigureAwait(false)
+            : await KazoBackgroundFaults.RunAsync(job, context).ConfigureAwait(false);
     }
 
     /// <summary>The task in a Web Worker of the pool (ADR 0128, section 3), and how it ended.</summary>
     private static async Task<string?> RunInWorkerAsync(
         IRemoteProcessHost remote,
         IAppExecutionContext child,
-        HackBackgroundJobRequest request,
-        Action<HackBackgroundProgress>? progress,
+        KazoBackgroundJobRequest request,
+        Action<KazoBackgroundProgress>? progress,
         CancellationToken cancellationToken)
     {
         RemoteProcessExit exit = await remote.RunBackgroundJobAsync(
@@ -236,14 +236,14 @@ public sealed class BackgroundJobService
                 cancellationToken.ThrowIfCancellationRequested();
                 throw new OperationCanceledException("The background task honored its stop request.", child.CancellationToken);
             case RemoteProcessExitStatus.Killed:
-                throw new HackProcessKilledException(child.ProcessId.Value);
+                throw new KazoProcessKilledException(child.ProcessId.Value);
             default:
                 if (exit.JobRejected)
                 {
                     throw new ArgumentException(exit.JobFault?.Message ?? exit.FaultMessage ?? "The worker refused the background task.", nameof(request));
                 }
 
-                throw exit.JobFault ?? new HackBackgroundJobException(
+                throw exit.JobFault ?? new KazoBackgroundJobException(
                     typeof(InvalidOperationException).FullName!,
                     exit.FaultMessage ?? $"The background task's process exited with code {exit.ExitCode}.",
                     originalStackTrace: null);
@@ -256,7 +256,7 @@ public sealed class BackgroundJobService
     /// </summary>
     /// <returns>The app's assembly when it is known here, otherwise <see langword="null"/>.</returns>
     /// <exception cref="ArgumentException">A rule is broken.</exception>
-    private Assembly? CheckRequest(AppManifest manifest, HackBackgroundJobRequest request)
+    private Assembly? CheckRequest(AppManifest manifest, KazoBackgroundJobRequest request)
     {
         ArgumentNullException.ThrowIfNull(request.Target);
         ArgumentNullException.ThrowIfNull(request.InputJson);
@@ -289,7 +289,7 @@ public sealed class BackgroundJobService
     /// <summary>The largest input or result of a task, in UTF-8 bytes of JSON (the largest file, ADR 0094).</summary>
     public const int MaxPayloadBytes = 16 * 1024 * 1024;
 
-    private static string NameOf(HackBackgroundJobRequest request) => request.Name ?? request.Target.DisplayName;
+    private static string NameOf(KazoBackgroundJobRequest request) => request.Name ?? request.Target.DisplayName;
 
     private static Assembly? FindLoadedAssembly(string name) =>
         AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(assembly => string.Equals(assembly.GetName().Name, name, StringComparison.Ordinal));
@@ -344,6 +344,6 @@ internal sealed class AppBackgroundGateway(
     Func<ProcessRecord, IAppExecutionContext> createChildContext) : IAppBackgroundGateway
 {
     /// <inheritdoc />
-    public Task<string?> RunAsync(HackBackgroundJobRequest request, Action<HackBackgroundProgress>? progress, CancellationToken cancellationToken) =>
+    public Task<string?> RunAsync(KazoBackgroundJobRequest request, Action<KazoBackgroundProgress>? progress, CancellationToken cancellationToken) =>
         service().RunAsync(caller(), createChildContext, request, progress, cancellationToken);
 }

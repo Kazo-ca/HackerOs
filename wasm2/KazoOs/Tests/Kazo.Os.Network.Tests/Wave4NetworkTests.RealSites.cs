@@ -20,11 +20,11 @@ public sealed partial class Wave4NetworkTests
         relay.On("https://real-external-site.example/", 200, "<h1>real</h1>", ("Content-Type", "text/html"));
         UseServer(new ConnectedServerConnectionService(), relay);
         EnterApp(new GrantAllCapabilityChecker());
-        using HackHttpClient client = new();
+        using KazoHttpClient client = new();
 
-        HackHttpResponse response = await client.GetAsync("https://real-external-site.example/");
+        KazoHttpResponse response = await client.GetAsync("https://real-external-site.example/");
 
-        Assert.Equal(HackHttpResponseSource.RealNetwork, response.Source);
+        Assert.Equal(KazoHttpResponseSource.RealNetwork, response.Source);
         Assert.Equal("<h1>real</h1>", response.Content);
         Assert.Equal("text/html", response.ContentType);
         ProxyHttpRequest sent = Assert.Single(relay.Requests);
@@ -35,11 +35,11 @@ public sealed partial class Wave4NetworkTests
     public async Task A_simulated_site_response_says_it_came_from_the_simulated_network()
     {
         EnterApp(new GrantAllCapabilityChecker());
-        using HackHttpClient client = new();
+        using KazoHttpClient client = new();
 
-        HackHttpResponse response = await client.GetAsync("http://hackersearch.net/");
+        KazoHttpResponse response = await client.GetAsync("http://hackersearch.net/");
 
-        Assert.Equal(HackHttpResponseSource.Simulated, response.Source);
+        Assert.Equal(KazoHttpResponseSource.Simulated, response.Source);
     }
 
     [Fact]
@@ -50,13 +50,13 @@ public sealed partial class Wave4NetworkTests
         relay.On("https://real-external-site.example/account", 200, "welcome");
         UseServer(new ConnectedServerConnectionService(), relay);
         EnterApp(new GrantAllCapabilityChecker());
-        HackCookieContainer cookies = new();
-        using HackHttpClient client = new(cookies);
+        KazoCookieContainer cookies = new();
+        using KazoHttpClient client = new(cookies);
 
-        HackHttpResponse login = await client.GetAsync("https://real-external-site.example/login");
+        KazoHttpResponse login = await client.GetAsync("https://real-external-site.example/login");
         await client.GetAsync("https://real-external-site.example/account");
 
-        Assert.Contains(new HackCookie("real-external-site.example", "session", "abc"), login.SetCookies);
+        Assert.Contains(new KazoCookie("real-external-site.example", "session", "abc"), login.SetCookies);
         Assert.Equal("session=abc", relay.CookieHeaderOf("https://real-external-site.example/account"));
     }
 
@@ -69,16 +69,16 @@ public sealed partial class Wave4NetworkTests
         relay.On("https://real-external-site.example/home", 200, "home");
         UseServer(new ConnectedServerConnectionService(), relay);
         EnterApp(new GrantAllCapabilityChecker());
-        HackCookieContainer cookies = new();
-        using HackHttpClient client = new(cookies);
+        KazoCookieContainer cookies = new();
+        using KazoHttpClient client = new(cookies);
 
-        HackHttpResponse response = await client.GetAsync("https://real-external-site.example/login");
+        KazoHttpResponse response = await client.GetAsync("https://real-external-site.example/login");
 
         Assert.Equal(200, response.StatusCode);
         Assert.Equal(1, response.RedirectCount);
         Assert.Equal(new Uri("https://real-external-site.example/home"), response.RequestUri);
         Assert.Equal("session=xyz", relay.CookieHeaderOf("https://real-external-site.example/home"));
-        Assert.Contains(new HackCookie("real-external-site.example", "session", "xyz"), cookies.GetAllCookies());
+        Assert.Contains(new KazoCookie("real-external-site.example", "session", "xyz"), cookies.GetAllCookies());
     }
 
     [Fact]
@@ -92,8 +92,8 @@ public sealed partial class Wave4NetworkTests
         relay.On("https://other-site.example/", 200, "other");
         UseServer(new ConnectedServerConnectionService(), relay);
         EnterApp(new GrantAllCapabilityChecker());
-        HackCookieContainer cookies = new();
-        using HackHttpClient client = new(cookies);
+        KazoCookieContainer cookies = new();
+        using KazoHttpClient client = new(cookies);
 
         await client.GetAsync("https://accounts.real-external-site.example/");
         await client.GetAsync("https://www.real-external-site.example/");
@@ -113,9 +113,9 @@ public sealed partial class Wave4NetworkTests
         relay.On("https://real-external-site.example/", 200, "bye");
         UseServer(new ConnectedServerConnectionService(), relay);
         EnterApp(new GrantAllCapabilityChecker());
-        HackCookieContainer cookies = new();
-        cookies.Add(new HackCookie("real-external-site.example", "session", "abc"));
-        using HackHttpClient client = new(cookies);
+        KazoCookieContainer cookies = new();
+        cookies.Add(new KazoCookie("real-external-site.example", "session", "abc"));
+        using KazoHttpClient client = new(cookies);
 
         await client.GetAsync("https://real-external-site.example/logout");
 
@@ -129,33 +129,33 @@ public sealed partial class Wave4NetworkTests
         ScriptedRelay relay = new();
         UseServer(new ConnectedServerConnectionService(), relay);
         EnterApp(new GrantAllCapabilityChecker(AppCapabilities.NetworkRealAccess));
-        using HackHttpClient client = new();
+        using KazoHttpClient client = new();
 
-        HackHttpRequestException failure = await Assert.ThrowsAsync<HackHttpRequestException>(
+        KazoHttpRequestException failure = await Assert.ThrowsAsync<KazoHttpRequestException>(
             () => client.GetAsync("https://real-external-site.example/"));
 
-        Assert.Equal(HackNetworkError.HostNotFound, failure.NetworkError);
+        Assert.Equal(KazoNetworkError.HostNotFound, failure.NetworkError);
         Assert.Empty(relay.Requests);
     }
 
     [Theory]
-    [InlineData(ProxyErrorCode.BlockedPort, HackNetworkError.BlockedByAdministrator)]
-    [InlineData(ProxyErrorCode.BlockedAddress, HackNetworkError.BlockedByAdministrator)]
-    [InlineData(ProxyErrorCode.GrantMissing, HackNetworkError.BlockedByAdministrator)]
-    [InlineData(ProxyErrorCode.Timeout, HackNetworkError.TimedOut)]
-    [InlineData(ProxyErrorCode.QuotaExceeded, HackNetworkError.ConnectionFailed)]
-    [InlineData("", HackNetworkError.ConnectionFailed)]
-    public async Task A_relay_refusal_becomes_the_error_a_browser_shows(string errorCode, HackNetworkError expected)
+    [InlineData(ProxyErrorCode.BlockedPort, KazoNetworkError.BlockedByAdministrator)]
+    [InlineData(ProxyErrorCode.BlockedAddress, KazoNetworkError.BlockedByAdministrator)]
+    [InlineData(ProxyErrorCode.GrantMissing, KazoNetworkError.BlockedByAdministrator)]
+    [InlineData(ProxyErrorCode.Timeout, KazoNetworkError.TimedOut)]
+    [InlineData(ProxyErrorCode.QuotaExceeded, KazoNetworkError.ConnectionFailed)]
+    [InlineData("", KazoNetworkError.ConnectionFailed)]
+    public async Task A_relay_refusal_becomes_the_error_a_browser_shows(string errorCode, KazoNetworkError expected)
     {
         UseServer(new ConnectedServerConnectionService(), new ScriptedRelay { Refusal = errorCode });
         EnterApp(new GrantAllCapabilityChecker());
-        using HackHttpClient client = new();
+        using KazoHttpClient client = new();
 
-        HackHttpRequestException failure = await Assert.ThrowsAsync<HackHttpRequestException>(
+        KazoHttpRequestException failure = await Assert.ThrowsAsync<KazoHttpRequestException>(
             () => client.GetAsync("https://real-external-site.example:8443/"));
 
         Assert.Equal(expected, failure.NetworkError);
-        Assert.Equal(HackNetworkErrorCodes.ToCode(expected), failure.ErrorCode);
+        Assert.Equal(KazoNetworkErrorCodes.ToCode(expected), failure.ErrorCode);
     }
 
     [Fact]
@@ -169,12 +169,12 @@ public sealed partial class Wave4NetworkTests
             ("Set-Cookie", "d=1; Expires=Thu, 01 Jan 1970 00:00:00 GMT"));
         UseServer(new ConnectedServerConnectionService(), relay);
         EnterApp(new GrantAllCapabilityChecker());
-        HackCookieContainer cookies = new();
-        using HackHttpClient client = new(cookies);
+        KazoCookieContainer cookies = new();
+        using KazoHttpClient client = new(cookies);
 
         await client.GetAsync("https://www.example.org/");
 
-        Assert.Equal([new HackCookie(".example.org", "c", "1")], cookies.GetAllCookies());
+        Assert.Equal([new KazoCookie(".example.org", "c", "1")], cookies.GetAllCookies());
     }
 
     /// <summary>

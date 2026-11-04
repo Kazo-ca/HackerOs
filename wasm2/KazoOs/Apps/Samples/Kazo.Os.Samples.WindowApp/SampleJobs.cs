@@ -5,7 +5,7 @@ using Kazo.Os.Samples.WindowApp;
 
 // ADR 0128 section 2: the inputs and results of this app's background tasks cross as JSON, through
 // this context. The HOSBG analyzer refuses a task whose types it does not declare.
-[assembly: HackWireContext(typeof(SampleJobsJsonContext))]
+[assembly: KazoWireContext(typeof(SampleJobsJsonContext))]
 
 namespace Kazo.Os.Samples.WindowApp;
 
@@ -37,7 +37,7 @@ public static class SampleJobs
     /// <param name="input">The limit.</param>
     /// <param name="context">The task's context: progress, cancellation, checkpoints.</param>
     /// <returns>How many primes, and the largest.</returns>
-    public static async Task<PrimeCountResult> CountPrimes(PrimeCountInput input, HackBackgroundContext context)
+    public static async Task<PrimeCountResult> CountPrimes(PrimeCountInput input, KazoBackgroundContext context)
     {
         const int Block = 20_000;
         int count = 0;

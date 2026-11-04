@@ -11,8 +11,8 @@ namespace Kazo.Os.Commands.Netstat;
 /// <summary>
 /// <c>netstat [-tulnap] [-i] [-r] [-s]</c> (ADR 0064), net-tools style (also answers as
 /// <c>ss</c>). The listening sockets come from the OS table of listening ports (ADR 0074,
-/// section 2, <see cref="HackIPGlobalProperties"/>, the same table as <c>/proc/net/tcp</c>): the
-/// sockets apps opened with <c>HackHttpListener</c> and the system daemons. With <c>-p</c>, the
+/// section 2, <see cref="KazoIPGlobalProperties"/>, the same table as <c>/proc/net/tcp</c>): the
+/// sockets apps opened with <c>KazoHttpListener</c> and the system daemons. With <c>-p</c>, the
 /// owner of a socket is shown only to its user and to root, as on Linux. <c>-i</c> shows the
 /// <c>/proc/net/dev</c> counters, <c>-r</c> the routing table, <c>-s</c> totals.
 /// </summary>
@@ -92,7 +92,7 @@ public sealed class NetstatCommand(AppManifest manifest) : TerminalAppBase(manif
             return 0;
         }
 
-        IReadOnlyList<HackTcpListenerInfo> listeners = await HackIPGlobalProperties.GetActiveTcpListenersAsync(cancellationToken);
+        IReadOnlyList<KazoTcpListenerInfo> listeners = await KazoIPGlobalProperties.GetActiveTcpListenersAsync(cancellationToken);
         if (programs && listeners.Any(static listener => listener.ProcessId is null))
         {
             // net-tools prints this before the table when some owners are hidden from the caller.
@@ -100,7 +100,7 @@ public sealed class NetstatCommand(AppManifest manifest) : TerminalAppBase(manif
             await context.StandardError.WriteLineAsync(text["HiddenOwners.Line2"]);
         }
 
-        foreach (HackTcpListenerInfo listener in listeners)
+        foreach (KazoTcpListenerInfo listener in listeners)
         {
             string address = numeric || !listener.Address.Equals(System.Net.IPAddress.Loopback)
                 ? listener.Address.ToString()

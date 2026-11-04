@@ -17,7 +17,7 @@ public sealed class SystemClipboardTests
         Assert.Equal(0, clipboard.GetSequenceNumber(Session));
 
         clipboard.SetText(Session, "a");
-        clipboard.SetFileDropList(Session, new HackClipboardFileList(HackClipboardFileOperation.Copy, ["/etc/hostname"]));
+        clipboard.SetFileDropList(Session, new KazoClipboardFileList(KazoClipboardFileOperation.Copy, ["/etc/hostname"]));
         clipboard.Clear(Session);
         clipboard.Clear(Session);   // already empty: no change
 
@@ -46,12 +46,12 @@ public sealed class SystemClipboardTests
     public void A_file_list_is_offered_as_gnome_copied_files_and_as_text_by_an_app()
     {
         using SystemClipboard clipboard = new();
-        clipboard.SetFileDropList(Session, new HackClipboardFileList(HackClipboardFileOperation.Cut, ["/home/alice/a.txt"]));
+        clipboard.SetFileDropList(Session, new KazoClipboardFileList(KazoClipboardFileOperation.Cut, ["/home/alice/a.txt"]));
 
         SystemClipboardEntry entry = clipboard.GetEntry(Session)!;
         Assert.Equal(SystemClipboardOrigin.Guest, entry.Origin);
         Assert.Equal("/home/alice/a.txt", entry.Text);
-        Assert.Equal("cut\nfile:///home/alice/a.txt", entry.Targets[HackClipboardFileList.GnomeCopiedFilesMediaType]);
+        Assert.Equal("cut\nfile:///home/alice/a.txt", entry.Targets[KazoClipboardFileList.GnomeCopiedFilesMediaType]);
     }
 
     [Fact]

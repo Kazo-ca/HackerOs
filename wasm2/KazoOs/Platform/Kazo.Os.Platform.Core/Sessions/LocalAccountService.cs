@@ -75,7 +75,7 @@ public sealed class LocalAccountService
     /// <exception cref="ArgumentException">A field breaks the rules, or the name is taken or reserved.</exception>
     public async ValueTask<LocalUser> CreateAsync(
         string administratorLogin,
-        HackNewUserAccount account,
+        KazoNewUserAccount account,
         CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(administratorLogin);
@@ -83,7 +83,7 @@ public sealed class LocalAccountService
         string requested = account.LoginName?.Trim() ?? string.Empty;
         try
         {
-            if (HackUserAccounts.ValidateNewAccount(account) is { } reason)
+            if (KazoUserAccounts.ValidateNewAccount(account) is { } reason)
             {
                 throw new ArgumentException($"useradd: {reason}", nameof(account));
             }

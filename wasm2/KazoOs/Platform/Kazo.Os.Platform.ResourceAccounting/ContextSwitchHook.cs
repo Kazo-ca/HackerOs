@@ -5,7 +5,7 @@ namespace Kazo.Os.Platform.ResourceAccounting;
 
 /// <summary>
 /// Installs the context-switch hook shared by the CPU and memory measurements (ADR 0067, section 1)
-/// on <see cref="HackExecutionContext"/>'s ambient frame.
+/// on <see cref="KazoExecutionContext"/>'s ambient frame.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -23,7 +23,7 @@ namespace Kazo.Os.Platform.ResourceAccounting;
 public static class ContextSwitchHook
 {
     /// <summary>Gets whether the hook is installed.</summary>
-    public static bool IsInstalled => HackExecutionContext.IsContextSwitchHookInstalled;
+    public static bool IsInstalled => KazoExecutionContext.IsContextSwitchHookInstalled;
 
     /// <summary>Installs the hook with its single observer (normally a <see cref="ContextSwitchDispatcher"/>).</summary>
     /// <param name="observer">The observer receiving every context switch.</param>
@@ -31,7 +31,7 @@ public static class ContextSwitchHook
     /// <exception cref="InvalidOperationException">A hook is already installed, or an execution scope is open.</exception>
     public static IDisposable Install(IExecutionContextSwitchObserver observer)
     {
-        HackExecutionContext.InstallContextSwitchHook(observer);
+        KazoExecutionContext.InstallContextSwitchHook(observer);
         return new Installation();
     }
 
@@ -43,7 +43,7 @@ public static class ContextSwitchHook
         {
             if (Interlocked.Exchange(ref _disposed, 1) == 0)
             {
-                HackExecutionContext.UninstallContextSwitchHook();
+                KazoExecutionContext.UninstallContextSwitchHook();
             }
         }
     }

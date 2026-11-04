@@ -5,7 +5,7 @@ using Kazo.Os.App.Abstractions;
 namespace Kazo.Os.Tools.ManifestGenerator.Tests;
 
 /// <summary>
-/// ADR 0221 §1: <c>HackerOsPack</c> puts every static web resource of the project in the package,
+/// ADR 0221 §1: <c>KazoOsPack</c> puts every static web resource of the project in the package,
 /// from the build's <c>staticwebassets.build.json</c>, and declares the undeclared ones.
 /// </summary>
 public sealed class PackagedWebAssetsTests

@@ -32,7 +32,7 @@ public sealed class HostReleaseMonitor : IAsyncDisposable
 
     /// <summary>Creates the monitor.</summary>
     /// <param name="probe">Reads the served <c>version.json</c>.</param>
-    /// <param name="runningVersion">The version of the running OS (<c>HackerOsSdk.Version</c>).</param>
+    /// <param name="runningVersion">The version of the running OS (<c>KazoOsSdk.Version</c>).</param>
     /// <param name="buildMonitor">Also checked at each tick, when given.</param>
     public HostReleaseMonitor(IHostReleaseProbe probe, string runningVersion, HostBuildUpdateMonitor? buildMonitor = null)
     {

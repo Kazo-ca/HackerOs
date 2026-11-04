@@ -24,11 +24,11 @@ public sealed class IndexedDbBackupServiceTests
         Assert.Equal(1, result.RecordCount);
         TransactionInvocation export = module.Transactions[0];
         Assert.Equal("readonly", export.Mode);
-        Assert.Equal(HackerOsIndexedDbSchema.ObjectStores.Count, export.Operations.Count);
+        Assert.Equal(KazoOsIndexedDbSchema.ObjectStores.Count, export.Operations.Count);
         Assert.All(export.Operations, operation => Assert.Equal("getAll", operation.Kind));
         TransactionInvocation restore = module.Transactions[1];
         Assert.Equal("readwrite", restore.Mode);
-        Assert.Equal(HackerOsIndexedDbSchema.ObjectStores.Count, restore.Operations.Count(operation => operation.Kind == "clear"));
+        Assert.Equal(KazoOsIndexedDbSchema.ObjectStores.Count, restore.Operations.Count(operation => operation.Kind == "clear"));
         Assert.Single(restore.Operations, operation => operation.Kind == "put");
     }
 
@@ -75,7 +75,7 @@ public sealed class IndexedDbBackupServiceTests
         Assert.Equal(0x8B, archive[1]);
         IndexedDbBackupSummary summary = IndexedDbBackupService.Inspect(json);
         Assert.Equal(1, summary.RecordCount);
-        Assert.Equal(1, summary.StoreRecordCounts[HackerOsIndexedDbSchema.UserStoreName]);
+        Assert.Equal(1, summary.StoreRecordCounts[KazoOsIndexedDbSchema.UserStoreName]);
         Assert.Equal(json, IndexedDbBackupService.ReadArchive(System.Text.Encoding.UTF8.GetBytes(json)));
     }
 
@@ -96,7 +96,7 @@ public sealed class IndexedDbBackupServiceTests
         await using IndexedDbBackupService service = new(new FakeJsRuntime(module));
         string backup = await service.ExportAsync();
         string older = backup.Replace(
-            $"\"databaseSchemaVersion\":{HackerOsIndexedDbSchema.CurrentVersion}",
+            $"\"databaseSchemaVersion\":{KazoOsIndexedDbSchema.CurrentVersion}",
             "\"databaseSchemaVersion\":3",
             StringComparison.Ordinal);
 
@@ -104,16 +104,16 @@ public sealed class IndexedDbBackupServiceTests
             () => IndexedDbBackupService.Inspect(older));
 
         Assert.Contains("version 3", exception.Message, StringComparison.Ordinal);
-        Assert.Contains($"version {HackerOsIndexedDbSchema.CurrentVersion}", exception.Message, StringComparison.Ordinal);
+        Assert.Contains($"version {KazoOsIndexedDbSchema.CurrentVersion}", exception.Message, StringComparison.Ordinal);
     }
 
     private static JsonElement[] CreateSnapshot()
     {
         JsonElement empty = JsonDocument.Parse("[]").RootElement.Clone();
-        JsonElement[] stores = Enumerable.Repeat(empty, HackerOsIndexedDbSchema.ObjectStores.Count).ToArray();
-        int userIndex = HackerOsIndexedDbSchema.ObjectStores
+        JsonElement[] stores = Enumerable.Repeat(empty, KazoOsIndexedDbSchema.ObjectStores.Count).ToArray();
+        int userIndex = KazoOsIndexedDbSchema.ObjectStores
             .Select((store, index) => (store, index))
-            .Single(item => item.store.Name == HackerOsIndexedDbSchema.UserStoreName)
+            .Single(item => item.store.Name == KazoOsIndexedDbSchema.UserStoreName)
             .index;
         stores[userIndex] = JsonDocument.Parse("[{\"id\":\"user-one\",\"loginName\":\"alice\"}]")
             .RootElement.Clone();

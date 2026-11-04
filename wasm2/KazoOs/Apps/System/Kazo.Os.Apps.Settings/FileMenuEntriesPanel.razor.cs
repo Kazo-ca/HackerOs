@@ -11,13 +11,13 @@ namespace Kazo.Os.Apps.Settings;
 /// by app, each with a switch that hides or shows it for the session user.
 /// </summary>
 /// <remarks>
-/// Uses only <see cref="HackFileMenuEntries"/> (capability <c>apps.manage</c>). The choice is written
+/// Uses only <see cref="KazoFileMenuEntries"/> (capability <c>apps.manage</c>). The choice is written
 /// to the user's <c>~/.config/hackeros/context-menus.config</c> and applies to the next menu opened.
 /// A submenu entry whose parent is hidden is shown greyed: hiding the parent hides the whole submenu.
 /// </remarks>
 public sealed partial class FileMenuEntriesPanel
 {
-    private IReadOnlyList<HackFileMenuEntryInfo> _entries = [];
+    private IReadOnlyList<KazoFileMenuEntryInfo> _entries = [];
     private bool _isAvailable = true;
     private bool _isBusy;
     private string? _message;
@@ -30,7 +30,7 @@ public sealed partial class FileMenuEntriesPanel
     private IStringLocalizer<Strings> L => _localizer ??= AppContext.GetLocalizer<Strings>();
 
     /// <summary>Gets the entries, as last read.</summary>
-    internal IReadOnlyList<HackFileMenuEntryInfo> Entries => _entries;
+    internal IReadOnlyList<KazoFileMenuEntryInfo> Entries => _entries;
 
     /// <summary>Gets whether the host lists the entries.</summary>
     internal bool IsAvailable => _isAvailable;
@@ -53,10 +53,10 @@ public sealed partial class FileMenuEntriesPanel
     }
 
     private async Task RefreshAsync() =>
-        _entries = await HackFileMenuEntries.GetEntriesAsync(Context, Context.CancellationToken);
+        _entries = await KazoFileMenuEntries.GetEntriesAsync(Context, Context.CancellationToken);
 
     /// <summary>Shows (<paramref name="visible"/>) or hides one entry, then reads the list again.</summary>
-    internal async Task ToggleAsync(HackFileMenuEntryInfo entry, bool visible)
+    internal async Task ToggleAsync(KazoFileMenuEntryInfo entry, bool visible)
     {
         if (_isBusy)
         {
@@ -67,7 +67,7 @@ public sealed partial class FileMenuEntriesPanel
         _message = null;
         try
         {
-            await HackFileMenuEntries.SetHiddenAsync(Context, entry.AppId, entry.Name, !visible, Context.CancellationToken);
+            await KazoFileMenuEntries.SetHiddenAsync(Context, entry.AppId, entry.Name, !visible, Context.CancellationToken);
             await RefreshAsync();
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException
@@ -82,23 +82,23 @@ public sealed partial class FileMenuEntriesPanel
     }
 
     /// <summary>An app's entries with each submenu right under its parent (depth first, declaration order).</summary>
-    internal static IEnumerable<HackFileMenuEntryInfo> Ordered(IEnumerable<HackFileMenuEntryInfo> entries)
+    internal static IEnumerable<KazoFileMenuEntryInfo> Ordered(IEnumerable<KazoFileMenuEntryInfo> entries)
     {
-        HackFileMenuEntryInfo[] all = [.. entries];
-        IEnumerable<HackFileMenuEntryInfo> Children(string? parent) => all
+        KazoFileMenuEntryInfo[] all = [.. entries];
+        IEnumerable<KazoFileMenuEntryInfo> Children(string? parent) => all
             .Where(entry => entry.Parent == parent)
             .SelectMany(entry => Children(entry.Name).Prepend(entry));
 
         // Entries whose parent is missing (never in a valid manifest) still show, at the end.
-        HackFileMenuEntryInfo[] ordered = [.. Children(null)];
+        KazoFileMenuEntryInfo[] ordered = [.. Children(null)];
         return ordered.Concat(all.Except(ordered));
     }
 
     /// <summary>The depth of an entry in its app's submenus, 0 at the top of the menu.</summary>
-    internal int DepthOf(HackFileMenuEntryInfo entry)
+    internal int DepthOf(KazoFileMenuEntryInfo entry)
     {
         int depth = 0;
-        for (HackFileMenuEntryInfo? current = entry; current?.Parent is { } parent && depth < 3; depth++)
+        for (KazoFileMenuEntryInfo? current = entry; current?.Parent is { } parent && depth < 3; depth++)
         {
             current = _entries.FirstOrDefault(other => other.AppId == entry.AppId && other.Name == parent);
         }
@@ -107,12 +107,12 @@ public sealed partial class FileMenuEntriesPanel
     }
 
     /// <summary>Whether one of the entry's parents is hidden, which hides the entry whatever its own switch.</summary>
-    internal bool IsHiddenByParent(HackFileMenuEntryInfo entry)
+    internal bool IsHiddenByParent(KazoFileMenuEntryInfo entry)
     {
         string? parent = entry.Parent;
         for (int depth = 0; parent is not null && depth < 3; depth++)
         {
-            HackFileMenuEntryInfo? found = _entries.FirstOrDefault(other => other.AppId == entry.AppId && other.Name == parent);
+            KazoFileMenuEntryInfo? found = _entries.FirstOrDefault(other => other.AppId == entry.AppId && other.Name == parent);
             if (found is null)
             {
                 return false;
@@ -129,7 +129,7 @@ public sealed partial class FileMenuEntriesPanel
         return false;
     }
 
-    private string EntryClass(HackFileMenuEntryInfo entry)
+    private string EntryClass(KazoFileMenuEntryInfo entry)
     {
         string css = $"file-menus-entry depth-{DepthOf(entry)}";
         return entry.IsHidden || IsHiddenByParent(entry) ? css + " hidden" : css;

@@ -13,8 +13,8 @@
     (Cat/CatApp.cs + Cat/CatCommand.cs, namespace Kazo.Os.Commands.Cat). Each [AppManifest] class
     produces manifests/<appId>.json (ADR 0047); the host references this project once, with
     IsSystemApp="true", and lazy-loads the whole assembly on first use.
-    ADR 0055/0056: only abstractions and the SDK; the network commands go through HackDns,
-    HackPing, HackHttpClient and HackTcpClient, never Platform Core or the server contracts.
+    ADR 0055/0056: only abstractions and the SDK; the network commands go through KazoDns,
+    KazoPing, KazoHttpClient and KazoTcpClient, never Platform Core or the server contracts.
   -->
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>

@@ -7,7 +7,7 @@
         @if (IconName(Presentation.Request.Icon) is { } icon)
         {
             <span class="message-box-icon @Presentation.Request.Icon.ToString().ToLowerInvariant()" aria-hidden="true">
-                <HackerIcon Library="IconLibrary.Lucide" Name="@icon" Size="28" />
+                <KazoIcon Library="IconLibrary.Lucide" Name="@icon" Size="28" />
             </span>
         }
         <p class="message-box-content">@Presentation.Request.Content</p>

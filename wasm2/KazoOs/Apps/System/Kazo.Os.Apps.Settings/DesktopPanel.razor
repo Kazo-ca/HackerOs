@@ -1,5 +1,5 @@
 @using Kazo.Os.AppSdk.Files
-@inherits Kazo.Os.AppSdk.Blazor.HackComponentBase
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
 
 @*
     Settings > Desktop (ADR 0160 §8): the [view] group of ~/.config/hackeros/desktop.config. The desktop
@@ -17,7 +17,7 @@ else
             @LocalizedMarkup.Format(L["Desktop.Description"], LocalizedMarkup.Code("~/Desktop"), LocalizedMarkup.Code("~/.config/hackeros/desktop.config"))
         </p>
         <div class="desk-options" role="radiogroup" aria-labelledby="desk-size-title">
-            @foreach (HackDesktopIconSize size in IconSizes)
+            @foreach (KazoDesktopIconSize size in IconSizes)
             {
                 <button type="button" role="radio" class="@OptionClass(_options.IconSize == size)"
                         aria-checked="@(_options.IconSize == size ? "true" : "false")"
@@ -65,7 +65,7 @@ else
         <h4 id="desk-sort-title">@L["Desktop.Sort.Title"]</h4>
         <p class="setting-desc">@L["Desktop.Sort.Description"]</p>
         <div class="desk-options" role="radiogroup" aria-labelledby="desk-sort-title">
-            @foreach (HackDesktopSort sort in Sorts)
+            @foreach (KazoDesktopSort sort in Sorts)
             {
                 <button type="button" role="radio" class="@OptionClass(_options.Sort == sort)"
                         aria-checked="@(_options.Sort == sort ? "true" : "false")"

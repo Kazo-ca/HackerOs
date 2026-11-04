@@ -167,7 +167,7 @@ public sealed partial class ShellInterpreterTests
     {
         Fixture fixture = await Fixture.CreateAsync();
 
-        await Assert.ThrowsAsync<HackDirectoryNotFoundException>(() => fixture.Session.ChangeDirectoryAsync("/nope"));
+        await Assert.ThrowsAsync<KazoDirectoryNotFoundException>(() => fixture.Session.ChangeDirectoryAsync("/nope"));
 
         Assert.Equal("/home/alice", fixture.Session.CurrentDirectory);
     }
@@ -529,7 +529,7 @@ public sealed partial class ShellInterpreterTests
         public override async ValueTask<int> ExecuteAsync(TerminalExecutionContext context, CancellationToken cancellationToken)
         {
             await context.StandardOutput.WriteLineAsync(
-                $"{HackEnvironment.CurrentDirectory} {HackEnvironment.GetEnvironmentVariable("PWD")} {HackEnvironment.GetEnvironmentVariable("HOME")}");
+                $"{KazoEnvironment.CurrentDirectory} {KazoEnvironment.GetEnvironmentVariable("PWD")} {KazoEnvironment.GetEnvironmentVariable("HOME")}");
             return 0;
         }
     }
@@ -570,7 +570,7 @@ public sealed partial class ShellInterpreterTests
     {
         public override async ValueTask<int> ExecuteAsync(TerminalExecutionContext context, CancellationToken cancellationToken)
         {
-            await context.StandardOutput.WriteLineAsync(HackEnvironment.GetEnvironmentVariable(context.Arguments[0]) ?? "<unset>");
+            await context.StandardOutput.WriteLineAsync(KazoEnvironment.GetEnvironmentVariable(context.Arguments[0]) ?? "<unset>");
             return 0;
         }
     }
@@ -579,7 +579,7 @@ public sealed partial class ShellInterpreterTests
     {
         public override async ValueTask<int> ExecuteAsync(TerminalExecutionContext context, CancellationToken cancellationToken)
         {
-            await context.StandardOutput.WriteAsync(await HackFile.ReadAllTextAsync(context.Arguments[0], cancellationToken));
+            await context.StandardOutput.WriteAsync(await KazoFile.ReadAllTextAsync(context.Arguments[0], cancellationToken));
             return 0;
         }
     }
@@ -731,26 +731,26 @@ public sealed partial class ShellInterpreterTests
 
         public async Task<string> ReadFileAsync(string path)
         {
-            using IDisposable scope = HackExecutionContext.Enter(Host);
-            return await HackFile.ReadAllTextAsync(path);
+            using IDisposable scope = KazoExecutionContext.Enter(Host);
+            return await KazoFile.ReadAllTextAsync(path);
         }
 
         public async Task WriteFileAsync(string path, string content)
         {
-            using IDisposable scope = HackExecutionContext.Enter(Host);
-            await HackFile.WriteAllTextAsync(path, content);
+            using IDisposable scope = KazoExecutionContext.Enter(Host);
+            await KazoFile.WriteAllTextAsync(path, content);
         }
 
         public async Task SetModeAsync(string path, UnixFileMode mode)
         {
-            using IDisposable scope = HackExecutionContext.Enter(Host);
-            await HackFile.SetUnixFileModeAsync(path, mode);
+            using IDisposable scope = KazoExecutionContext.Enter(Host);
+            await KazoFile.SetUnixFileModeAsync(path, mode);
         }
 
         public async Task MakeDirectoryAsync(string path)
         {
-            using IDisposable scope = HackExecutionContext.Enter(Host);
-            await HackDirectory.CreateDirectoryAsync(path);
+            using IDisposable scope = KazoExecutionContext.Enter(Host);
+            await KazoDirectory.CreateDirectoryAsync(path);
         }
 
         /// <summary>The real catalog commands the shell relies on (ADR 0051).</summary>
@@ -788,7 +788,7 @@ public sealed partial class ShellInterpreterTests
             Description = "Hosts the shell.",
             Kind = AppKind.Window,
             EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", "org.hackeros.terminal.EntryPoint"),
-            SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+            SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
             Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
             Resources = AppResourceProfileManifest.None,
             Capabilities = [.. FileCapabilities, AppCapabilities.AppsLaunch]
@@ -803,7 +803,7 @@ public sealed partial class ShellInterpreterTests
             Description = $"Test command {name}.",
             Kind = AppKind.Terminal,
             EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", typeof(TCommand).FullName!),
-            SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+            SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
             Presentation = new PresentationManifest("test", AppLaunchVisibility.Hidden, []),
             Resources = AppResourceProfileManifest.None,
             Capabilities = FileCapabilities,

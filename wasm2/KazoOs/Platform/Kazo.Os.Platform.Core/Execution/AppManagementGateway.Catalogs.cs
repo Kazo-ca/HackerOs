@@ -6,7 +6,7 @@ using Kazo.Os.Simulation.Abstractions.Gateways;
 namespace Kazo.Os.Platform.Core.Execution;
 
 /// <summary>
-/// The catalogs of the Hack Store behind <see cref="HackAppPackages"/> (ADR 0188, ADR 0212): the
+/// The catalogs of the Hack Store behind <see cref="KazoAppPackages"/> (ADR 0188, ADR 0212): the
 /// OS downloads each <c>catalog.json</c> itself and hands the app its apps, with the catalog's trust
 /// level; the update check, and the restart that finishes an install.
 /// </summary>
@@ -22,26 +22,26 @@ internal sealed partial class AppManagementGateway
     public Func<IInstalledAppsActivator?>? InstalledAppsActivator { get; init; }
 
     /// <inheritdoc />
-    public async ValueTask<IReadOnlyList<HackAppCatalog>> GetPackageCatalogsAsync(bool refresh = false, CancellationToken cancellationToken = default)
+    public async ValueTask<IReadOnlyList<KazoAppCatalog>> GetPackageCatalogsAsync(bool refresh = false, CancellationToken cancellationToken = default)
     {
         AppPackageInstaller packages = RequirePackages();
         AppSourcesConfig sources = await packages.ReadSourcesAsync(CreateSystemWriter(), cancellationToken).ConfigureAwait(false);
-        List<HackAppCatalog> catalogs = [];
+        List<KazoAppCatalog> catalogs = [];
         foreach (string name in AppPackageInstaller.GetCatalogSearchOrder(sources))
         {
-            HackPackageTrust trust = ToPublic(sources.GetCatalogTrust(name));
+            KazoPackageTrust trust = ToPublic(sources.GetCatalogTrust(name));
             try
             {
                 AppCatalogListing listing = await packages.GetCatalogAsync(name, sources, cancellationToken, refresh).ConfigureAwait(false);
-                catalogs.Add(new HackAppCatalog(
+                catalogs.Add(new KazoAppCatalog(
                     name,
                     trust,
-                    [.. listing.Categories.Select(static category => new HackCatalogCategory(category.Id, category.Labels))],
+                    [.. listing.Categories.Select(static category => new KazoCatalogCategory(category.Id, category.Labels))],
                     [.. listing.Apps.Select(app => ToPublic(listing, app, trust))]));
             }
             catch (AppPackageException exception)
             {
-                catalogs.Add(new HackAppCatalog(name, trust, [], []) { Error = exception.Message });
+                catalogs.Add(new KazoAppCatalog(name, trust, [], []) { Error = exception.Message });
             }
         }
 
@@ -75,7 +75,7 @@ internal sealed partial class AppManagementGateway
     }
 
     /// <inheritdoc />
-    public async ValueTask<IReadOnlyList<HackPackageUpdate>> GetPackageUpdatesAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<IReadOnlyList<KazoPackageUpdate>> GetPackageUpdatesAsync(CancellationToken cancellationToken = default)
     {
         AppPackageInstaller packages = RequirePackages();
         IAppFileSystemGateway system = CreateSystemWriter();
@@ -87,7 +87,7 @@ internal sealed partial class AppManagementGateway
             .ConfigureAwait(false);
         // What the Store shows is not notified again (ADR 0215 §1).
         UpdateMonitor?.Invoke()?.Publish(report.Updates);
-        return [.. report.Updates.Select(static update => new HackPackageUpdate(
+        return [.. report.Updates.Select(static update => new KazoPackageUpdate(
             update.AppId,
             update.Installed.Name,
             update.Installed.Version?.ToString() ?? string.Empty,
@@ -102,7 +102,7 @@ internal sealed partial class AppManagementGateway
         Func<Task> restart = RestartForPackages ?? throw new NotSupportedException("This host cannot restart the OS.");
         if (!await HasPendingPackageChangesAsync(packages, cancellationToken).ConfigureAwait(false))
         {
-            throw new HackPackageException("apps.package.nothing-pending", "No installed, updated or removed app waits for a restart.");
+            throw new KazoPackageException("apps.package.nothing-pending", "No installed, updated or removed app waits for a restart.");
         }
 
         cancellationToken.ThrowIfCancellationRequested();
@@ -143,7 +143,7 @@ internal sealed partial class AppManagementGateway
     /// </summary>
     private async ValueTask<bool> HasPendingPackageChangesAsync(AppPackageInstaller packages, CancellationToken cancellationToken)
     {
-        IReadOnlyList<HackInstalledPackage> installed = await GetInstalledPackagesAsync(cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<KazoInstalledPackage> installed = await GetInstalledPackagesAsync(cancellationToken).ConfigureAwait(false);
         if (installed.Any(static package => !package.Loaded))
         {
             return true;
@@ -179,7 +179,7 @@ internal sealed partial class AppManagementGateway
 
         if (!AppPackageSource.IsValidAppId(text))
         {
-            throw new HackPackageException(
+            throw new KazoPackageException(
                 "apps.package.bad-source",
                 $"'{source}' is not a source: use an app ID, catalog:name/app.id, github:owner/repo, owner/repo or https://github.com/owner/repo, optionally followed by @version.");
         }
@@ -187,7 +187,7 @@ internal sealed partial class AppManagementGateway
         return await Translate(() => packages.FindInCatalogsAsync(text, version, sources, cancellationToken)).ConfigureAwait(false);
     }
 
-    private static HackCatalogApp ToPublic(AppCatalogListing listing, AppCatalogEntry app, HackPackageTrust trust) => new(
+    private static KazoCatalogApp ToPublic(AppCatalogListing listing, AppCatalogEntry app, KazoPackageTrust trust) => new(
         listing.Name,
         app.AppId,
         app.Name,
@@ -197,7 +197,7 @@ internal sealed partial class AppManagementGateway
         app.License,
         app.Repository,
         app.LatestVersion.ToString(),
-        [.. app.Versions.Select(version => new HackCatalogAppVersion(version.Version.ToString(), version.Size, version.Capabilities)
+        [.. app.Versions.Select(version => new KazoCatalogAppVersion(version.Version.ToString(), version.Size, version.Capabilities)
         {
             PublishedAt = version.PublishedAt,
             MinimumSdkVersion = version.MinimumSdkVersion,
@@ -207,6 +207,6 @@ internal sealed partial class AppManagementGateway
         })],
         trust)
     {
-        Kind = app.Kind == AppCatalogEntryKind.ThemePack ? HackCatalogItemKind.ThemePack : HackCatalogItemKind.App,
+        Kind = app.Kind == AppCatalogEntryKind.ThemePack ? KazoCatalogItemKind.ThemePack : KazoCatalogItemKind.App,
     };
 }

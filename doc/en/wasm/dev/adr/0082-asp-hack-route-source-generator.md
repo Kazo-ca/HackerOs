@@ -45,7 +45,7 @@ startup time in the web worker).
      `EntryPoint => typeof(<Name>WebHost)` and a class
      `<Name>WebHost : HackWebHost`. The manifest generator then reads this
      `EntryPoint` as for any app: nothing changes for it.
-3. **A single template parser.** `Shared/Kazo.Os.AppSdk.Web/Routing/HackRouteTemplate.cs`
+3. **A single template parser.** `Shared/Kazo.Os.AppSdk.Web/Routing/KazoRouteTemplate.cs`
    is compiled into the library (the router uses it) **and** linked into the
    generator: build and runtime understand a template in exactly the same
    way.

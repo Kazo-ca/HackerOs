@@ -279,7 +279,7 @@ public sealed class LocalSessionServiceTests
             Description = "Test Editor",
             Kind = AppKind.Window,
             EntryPoint = new AppEntryPointManifest("Kazo.Os.Apps.TextEditor", "Kazo.Os.Apps.TextEditor.TextEditorWindow"),
-            SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+            SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
             Presentation = new PresentationManifest("utilities", AppLaunchVisibility.Visible, []),
             Resources = AppResourceProfileManifest.None,
             Capabilities = [AppCapabilities.DialogFileSave, AppCapabilities.FileSystemUserHomeRead]

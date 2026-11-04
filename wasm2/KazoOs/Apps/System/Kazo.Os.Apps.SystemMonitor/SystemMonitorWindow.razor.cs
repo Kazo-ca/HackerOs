@@ -26,7 +26,7 @@ namespace Kazo.Os.Apps.SystemMonitor;
 /// </para>
 /// <para>
 /// <b>End task.</b> The selection is confirmed in a dialog that lists the processes, then each one
-/// is killed through <see cref="HackProcess.KillAsync"/>. A refusal (<c>process.manage</c> missing
+/// is killed through <see cref="KazoProcess.KillAsync"/>. A refusal (<c>process.manage</c> missing
 /// for one process) is reported per process and does not stop the others.
 /// </para>
 /// </remarks>
@@ -46,9 +46,9 @@ public partial class SystemMonitorWindow
     private readonly SystemMetrics _metrics = new();
     private readonly CancellationTokenSource _lifetime = new();
     private readonly SemaphoreSlim _refreshGate = new(1, 1);
-    private IReadOnlyDictionary<long, HackProcess> _processes = new Dictionary<long, HackProcess>();
+    private IReadOnlyDictionary<long, KazoProcess> _processes = new Dictionary<long, KazoProcess>();
     private IReadOnlyList<ProcCpuInfoEntry> _cpuInfo = [];
-    private IReadOnlyList<HackDriveInfo> _drives = [];
+    private IReadOnlyList<KazoDriveInfo> _drives = [];
     private EndTaskReport? _endTaskReport;
     private ElementReference _root;
     private IJSObjectReference? _module;
@@ -83,7 +83,7 @@ public partial class SystemMonitorWindow
     {
         // A JavaScript callback runs outside the app's ambient scope (ADR 0043): enter it first, so
         // this work is the app's, not the compositor's (ADR 0067).
-        using IDisposable scope = HackExecutionContext.Enter(AppContext);
+        using IDisposable scope = KazoExecutionContext.Enter(AppContext);
         bool resumed = visible && !_windowVisible;
         _windowVisible = visible;
         if (!resumed)
@@ -177,7 +177,7 @@ public partial class SystemMonitorWindow
         {
             // Closing.
         }
-        catch (Exception exception) when (exception is HackIOException or HackUnauthorizedAccessException or InvalidOperationException)
+        catch (Exception exception) when (exception is KazoIOException or KazoUnauthorizedAccessException or InvalidOperationException)
         {
             _error = L["Error.CannotReadProc", exception.Message];
         }
@@ -232,14 +232,14 @@ public partial class SystemMonitorWindow
 
         _endTaskReport = await EndTaskRunner.EndAsync(
             rows,
-            row => _processes.TryGetValue(row.Pid, out HackProcess? process)
+            row => _processes.TryGetValue(row.Pid, out KazoProcess? process)
                 ? EndTaskRunner.End(process, mode, _lifetime.Token)
                 : Task.CompletedTask);
         _table.ClearSelection();
         await RefreshAsync();
     }
 
-    private static ProcessRow ToRow(HackProcess process, ProcessIoRate rate) => new(
+    private static ProcessRow ToRow(KazoProcess process, ProcessIoRate rate) => new(
         process.Id,
         process.ParentId,
         process.ProcessName,
@@ -262,7 +262,7 @@ public partial class SystemMonitorWindow
     /// Reads a <c>CpuSource:</c>/<c>MemSource:</c> line of <c>/proc/&lt;pid&gt;/status</c> (ADR 0066).
     /// A missing line (an OS older than phase 5) means simulated.
     /// </summary>
-    private static bool IsMeasured(HackProcess process, string field) =>
+    private static bool IsMeasured(KazoProcess process, string field) =>
         process.Status.TryGetValue(field, out string? source) && string.Equals(source, "measured", StringComparison.Ordinal);
 
     /// <inheritdoc />

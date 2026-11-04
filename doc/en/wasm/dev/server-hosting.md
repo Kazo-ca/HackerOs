@@ -42,7 +42,7 @@ Work item `exec/8-server-wasm` (`exec` series), ADRs
 | State and retry | `Platform/Kazo.Os.Platform.Core/ServerConnection/ServerPresenceService.cs` |
 | Icon and panel | `Platform/Kazo.Os.Platform.Blazor/Shell/ServerStatusIndicator.razor` (`.razor.cs`, `.razor.css`) |
 | Notification area | `Platform/Kazo.Os.Taskbar.Blazor/Taskbar.razor` (`NotificationAreaContent`) |
-| Composition | `OS/Kazo.Os.Ecosystem.Host/EcosystemServiceCollectionExtensions.cs`, `HackerOsBrowserHostExtensions.cs` |
+| Composition | `OS/Kazo.Os.Ecosystem.Host/EcosystemServiceCollectionExtensions.cs`, `KazoOsBrowserHostExtensions.cs` |
 
 ## Starting the server
 

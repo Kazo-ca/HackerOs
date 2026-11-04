@@ -29,7 +29,7 @@ solide et reste en place (D2). Il manque une façade familière à un développe
 - Projet : `Shared/Kazo.Os.AppSdk` (aucune dépendance Blazor, utilisable par les
   apps fenêtre, terminal et service).
 - Dossier `Shared/Kazo.Os.AppSdk/IO/`, namespace public **`Kazo.Os.AppSdk.IO`**.
-- Le contexte ambiant vit dans `Shared/Kazo.Os.AppSdk/HackExecutionContext.cs`,
+- Le contexte ambiant vit dans `Shared/Kazo.Os.AppSdk/KazoExecutionContext.cs`,
   namespace **`Kazo.Os.AppSdk`**.
 - La façade n'appelle **que** `IAppFileSystemGateway` et
   `IAppFileSystemWatchGateway` du contexte courant. Elle ne référence ni

@@ -56,7 +56,7 @@
 ### Schema & Transaction Boundaries
 **Location:** `wasm2/KazoOs/Infrastructure/Kazo.Os.Infrastructure.Browser/Schema/`
 
-- **HackerOsIndexedDbSchema** (static class)
+- **KazoOsIndexedDbSchema** (static class)
   - Constants: DatabaseName = "hackeros", CurrentVersion = 1
   - Object stores:
     - `fsEntries`: `[id]` ← entry metadata
@@ -192,6 +192,6 @@ These are transactional consistency concerns, not blockers; they're already desi
 ## References
 - `docs/virtual-filesystem.md` — filesystem design
 - `docs/browser-storage.md` — IndexedDB schema and boundaries
-- `Infrastructure/Kazo.Os.Infrastructure.Browser/Schema/HackerOsIndexedDbSchema.cs` — schema declaration
+- `Infrastructure/Kazo.Os.Infrastructure.Browser/Schema/KazoOsIndexedDbSchema.cs` — schema declaration
 - `Platform/Kazo.Os.Platform.Core/FileSystem/InMemoryFileSystemRepository.cs` — in-memory reference
 - `Tests/Kazo.Os.Platform.Core.Tests/FileSystem/` — contract suites

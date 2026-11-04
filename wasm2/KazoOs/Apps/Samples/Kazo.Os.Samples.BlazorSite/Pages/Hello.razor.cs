@@ -15,7 +15,7 @@ public sealed partial class Hello
     public string Name { get; set; } = string.Empty;
 
     [CascadingParameter]
-    private HackWebSite? Site { get; set; }
+    private KazoWebSite? Site { get; set; }
 
     /// <inheritdoc />
     protected override async Task OnParametersSetAsync()

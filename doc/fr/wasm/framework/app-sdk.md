@@ -26,13 +26,13 @@ API publiques, la [référence du SDK](sdk-reference.md).
 | Projet | Contenu |
 |---|---|
 | `Shared/Kazo.Os.AppSdk` | `IAppExecutionContext` et ses passerelles, façades statiques `Hack*`, classes de base des points d'entrée (`TerminalAppBase`…). |
-| `Shared/Kazo.Os.AppSdk.Blazor` | Composants et services Blazor des apps fenêtrées (fenêtre, téléchargement, graphiques, composants intégrables `HackEmbeddedComponent<T>`…). |
+| `Shared/Kazo.Os.AppSdk.Blazor` | Composants et services Blazor des apps fenêtrées (fenêtre, téléchargement, graphiques, composants intégrables `KazoEmbeddedComponent<T>`…). |
 | `Shared/Kazo.Os.AppSdk.Icons` | Catalogue d'icônes. |
-| `Shared/Kazo.Os.AppSdk.Terminal` | Terminal xterm.js (`TerminalPanel`, ADR 0061), qui héberge un shell par `HackShell`, et console à onglets (`TerminalTabs`). |
+| `Shared/Kazo.Os.AppSdk.Terminal` | Terminal xterm.js (`TerminalPanel`, ADR 0061), qui héberge un shell par `KazoShell`, et console à onglets (`TerminalTabs`). |
 | `Shared/Kazo.Os.AppSdk.VirtualKeyboard` | Clavier virtuel. |
 
 Toute bibliothèque `Shared/Kazo.Os.AppSdk` ou `Shared/Kazo.Os.AppSdk.*` est
-une **bibliothèque SDK** (propriété MSBuild `HackerOsSdkLibrary`, calculée par
+une **bibliothèque SDK** (propriété MSBuild `KazoOsSdkLibrary`, calculée par
 `build/Kazo.Os.Apps.targets`). Un projet de tests nommé de la même façon n'en
 est pas une : seul l'emplacement sous `Shared/` compte.
 
@@ -42,7 +42,7 @@ est pas une : seul l'emplacement sous `Shared/` compte.
 
 | Projet | Peut référencer | Sinon |
 |---|---|---|
-| Projet d'app (`HackerOsAppProject=true`, tout projet sous `Apps/`) | `Shared/Kazo.Os.{App,Simulation,Theming}.Abstractions`, les bibliothèques SDK, `Platform/Kazo.Os.Theming.Blazor`, un autre projet sous `Apps/` | `HOSAPP0030` |
+| Projet d'app (`KazoOsAppProject=true`, tout projet sous `Apps/`) | `Shared/Kazo.Os.{App,Simulation,Theming}.Abstractions`, les bibliothèques SDK, `Platform/Kazo.Os.Theming.Blazor`, un autre projet sous `Apps/` | `HOSAPP0030` |
 | Bibliothèque SDK | les trois `*.Abstractions` ci-dessus, une autre bibliothèque SDK | `HOSSDK0001` |
 
 Seules les références **directes** du projet comptent : une référence
@@ -118,15 +118,15 @@ l'injection (`HOSAPP0031`) tourne de la même façon.
 Ces trois vérifications sont toujours des **erreurs** : aucun projet ne peut les
 ramener à des avertissements. Le rôle d'un projet vient de son emplacement
 (`Apps/` pour une app, `Shared/Kazo.Os.AppSdk*` pour une bibliothèque SDK) ; un
-`.csproj` sous ces dossiers qui fixe lui-même `HackerOsAppProject` ou
-`HackerOsSdkLibrary` fait échouer
+`.csproj` sous ces dossiers qui fixe lui-même `KazoOsAppProject` ou
+`KazoOsSdkLibrary` fait échouer
 `SdkBoundarySourceTests.No_app_or_sdk_project_overrides_its_boundary_role`, et
 `Build_targets_have_no_exemption_mechanism` échoue si une exemption ou un
 `<Warning>` réapparaît dans `Kazo.Os.Apps.targets`.
 
 ## Fin des exemptions temporaires (ADR 0055 §6)
 
-`4-sdk-boundary` avait introduit une liste `HackerOsSdkBoundaryExemption` dans
+`4-sdk-boundary` avait introduit une liste `KazoOsSdkBoundaryExemption` dans
 `build/Kazo.Os.Apps.targets` : un projet listé recevait des avertissements au
 lieu d'erreurs, et le test `IJSRuntime` l'ignorait. Neuf projets y figuraient ;
 chaque chantier de la phase 4 a retiré les siens :
@@ -140,16 +140,16 @@ chaque chantier de la phase 4 a retiré les siens :
 | `Kazo.Os.Apps.Settings`, `Kazo.Os.Apps.Diagnostic` | `4-sdk-system-admin` ([`system-administration.md`](system-administration.md)) |
 
 `4-sdk-boundary-final` (2026-10-11) a supprimé le mécanisme : l'élément
-`HackerOsSdkBoundaryExemption`, la cible `_HackerOsResolveSdkBoundaryExemption`
-et sa propriété `_HackerOsSdkBoundaryExempt`, l'avertissement `HOSAPP0030` /
+`KazoOsSdkBoundaryExemption`, la cible `_KazoOsResolveSdkBoundaryExemption`
+et sa propriété `_KazoOsSdkBoundaryExempt`, l'avertissement `HOSAPP0030` /
 `HOSSDK0001` de la cible `ValidateHackerOsSdkBoundary`, l'option
 `--boundary-exempt` du générateur et le paramètre `severity` de
 `GeneratorDiagnostic.ToMsBuildLine`. Toutes les apps de `Apps/` et toutes les
 bibliothèques `Kazo.Os.AppSdk*` compilent sans aucun diagnostic de frontière.
 
-Les références `Platform.Core` inutilisées de Calculator, HackPaint,
+Les références `Platform.Core` inutilisées de Calculator, KazoPaint,
 IconViewer, TextEditor et Browser ont été retirées par `4-sdk-boundary` :
-Calculator, HackPaint et IconViewer passaient déjà sans exemption.
+Calculator, KazoPaint et IconViewer passaient déjà sans exemption.
 
 ## Comment une app obtient un service de l'OS (ADR 0055 §4)
 
@@ -163,7 +163,7 @@ Uniquement par le SDK :
 - une **façade statique** `Hack*` qui lit le contexte ambiant (ADR 0043) et
   appelle la passerelle. C'est la forme recommandée.
 
-Une capacité manquante lève `HackUnauthorizedAccessException` et passe par
+Une capacité manquante lève `KazoUnauthorizedAccessException` et passe par
 `IAppPermissionErrorGateway`.
 
 ## API du SDK
@@ -172,16 +172,16 @@ Façades statiques existantes au début de la phase 4 :
 
 | Façade | Rôle | Document |
 |---|---|---|
-| `HackFile`, `HackDirectory`, `HackPath` | fichiers | [`hack-file-api.md`](hack-file-api.md) |
-| `HackExecutionContext` | contexte ambiant | [`hack-file-api.md`](hack-file-api.md) |
-| `HackEnvironment` | arguments, répertoire courant, variables | [`process-environment.md`](../dev/process-environment.md) |
-| `HackSettings` | paramètres en fichiers | [`settings-files.md`](settings-files.md) |
-| `HackTrash` | corbeille | [`trash.md`](../dev/trash.md), [`trash-api.md`](trash-api.md) |
-| `HackDns`, `HackPing`, `HackHttpClient`, `HackTcpClient`, `HackUdpClient` | réseau, repli réel décidé par l'OS (`4-sdk-network`), sockets relayés (`v3/10`) | [`sdk-network.md`](sdk-network.md) |
-| `HackDriveInfo` | taille et espace libre des disques (`4-proc-metrics`) | [`system-metrics.md`](../dev/system-metrics.md) |
-| `HackCrossOriginIsolation` | page isolée ou non, et ce que ça active (ADR 0146, SDK 2.0) | [`worker-processes.md`](../dev/worker-processes.md#isolation-cross-origin-adr-0131-adr-0143) |
-| `HackClipboard` | presse-papiers de session, texte et liste de fichiers (`4-file-explorer`) | [`file-explorer.md`](../dev/file-explorer.md), [`clipboard-api.md`](clipboard-api.md) |
-| `HackTextContent` | texte ou binaire décidé sur le contenu, comme `file` (`4-file-explorer`) | [`text-editor.md`](../dev/text-editor.md) |
+| `KazoFile`, `KazoDirectory`, `KazoPath` | fichiers | [`hack-file-api.md`](hack-file-api.md) |
+| `KazoExecutionContext` | contexte ambiant | [`hack-file-api.md`](hack-file-api.md) |
+| `KazoEnvironment` | arguments, répertoire courant, variables | [`process-environment.md`](../dev/process-environment.md) |
+| `KazoSettings` | paramètres en fichiers | [`settings-files.md`](settings-files.md) |
+| `KazoTrash` | corbeille | [`trash.md`](../dev/trash.md), [`trash-api.md`](trash-api.md) |
+| `KazoDns`, `KazoPing`, `KazoHttpClient`, `KazoTcpClient`, `KazoUdpClient` | réseau, repli réel décidé par l'OS (`4-sdk-network`), sockets relayés (`v3/10`) | [`sdk-network.md`](sdk-network.md) |
+| `KazoDriveInfo` | taille et espace libre des disques (`4-proc-metrics`) | [`system-metrics.md`](../dev/system-metrics.md) |
+| `KazoCrossOriginIsolation` | page isolée ou non, et ce que ça active (ADR 0146, SDK 2.0) | [`worker-processes.md`](../dev/worker-processes.md#isolation-cross-origin-adr-0131-adr-0143) |
+| `KazoClipboard` | presse-papiers de session, texte et liste de fichiers (`4-file-explorer`) | [`file-explorer.md`](../dev/file-explorer.md), [`clipboard-api.md`](clipboard-api.md) |
+| `KazoTextContent` | texte ou binaire décidé sur le contenu, comme `file` (`4-file-explorer`) | [`text-editor.md`](../dev/text-editor.md) |
 
 Passerelles de `IAppExecutionContext` : `FileSystem`, `Events`,
 `Notifications`, `Logging`, `Clock`, `Processes`, `Intents`, `Watch`,
@@ -197,20 +197,20 @@ Passerelles de `IAppExecutionContext` : `FileSystem`, `Events`,
 `ShellErrorText.Describe(exception)` reste en anglais (texte identique à
 `strerror` en locale C) ; `Describe(exception, context)` le donne dans la
 langue du processus de l'app (ADR 0104). De même,
-`HackWebSiteFile.Validate(site, scope, context)` traduit les messages de
+`KazoWebSiteFile.Validate(site, scope, context)` traduit les messages de
 validation d'un `.site` affichés par une app.
 
 ### Utilisateur courant (ADR 0056 §1)
 
 ```csharp
-HackUserInfo me = HackUser.Current;     // LoginName, DisplayName, HomeDirectory, IsAdministrator
-string docs = HackEnvironment.GetFolderPath(HackSpecialFolder.MyDocuments);   // /home/benoit/Documents
-HackUserInfo cached = HackUser.Describe(AppContext);   // sans contexte ambiant (rendu d'un composant)
+KazoUserInfo me = KazoUser.Current;     // LoginName, DisplayName, HomeDirectory, IsAdministrator
+string docs = KazoEnvironment.GetFolderPath(KazoSpecialFolder.MyDocuments);   // /home/benoit/Documents
+KazoUserInfo cached = KazoUser.Describe(AppContext);   // sans contexte ambiant (rendu d'un composant)
 ```
 
-- `HackUser.Current` décrit l'utilisateur **effectif** : `HackUser.Root`
+- `KazoUser.Current` décrit l'utilisateur **effectif** : `KazoUser.Root`
   (`root`, `/root`, administrateur) pour un processus lancé par `sudo`.
-- `HackSpecialFolder` : `UserProfile` (`~`), `Desktop`, `MyDocuments`
+- `KazoSpecialFolder` : `UserProfile` (`~`), `Desktop`, `MyDocuments`
   (`~/Documents`), `ApplicationData` (`~/.config`), `LocalApplicationData`
   (`~/.local/share`). Le chemin est calculé, pas vérifié.
 - Aucune capacité. `IAppExecutionContext` gagne `UserLoginName` et
@@ -219,18 +219,18 @@ HackUserInfo cached = HackUser.Describe(AppContext);   // sans contexte ambiant 
 - Remplace `ISessionService.CurrentPrincipal` dans FileExplorer, TextEditor et
   CodeEditor. Comme `BuildRenderTree` ne tourne pas dans le contexte ambiant,
   un composant qui affiche le dossier personnel utilise
-  `HackUser.Describe(AppContext)`.
+  `KazoUser.Describe(AppContext)`.
 
 ### Catalogue des apps (ADR 0056 §2)
 
 ```csharp
-IReadOnlyList<HackAppInfo> apps = await HackApps.GetInstalledAsync();
-IReadOnlyList<HackAppInfo> editors = await HackApps.GetHandlersAsync("~/notes.md");
-await HackApps.LaunchAsync("org.hackeros.text-editor", ["/home/benoit/notes.md"]);
-HackOpenFileResult opened = await HackApps.OpenFileAsync("~/notes.md");   // Opened, ChooserRequired (+ CandidateAppIds), NoHandler
+IReadOnlyList<KazoAppInfo> apps = await KazoApps.GetInstalledAsync();
+IReadOnlyList<KazoAppInfo> editors = await KazoApps.GetHandlersAsync("~/notes.md");
+await KazoApps.LaunchAsync("org.hackeros.text-editor", ["/home/benoit/notes.md"]);
+KazoOpenFileResult opened = await KazoApps.OpenFileAsync("~/notes.md");   // Opened, ChooserRequired (+ CandidateAppIds), NoHandler
 ```
 
-- `HackAppInfo` : `Id`, `Name`, `Description`, `Kind`, `Category`, `Icon`,
+- `KazoAppInfo` : `Id`, `Name`, `Description`, `Kind`, `Category`, `Icon`,
   `Version`, `PublisherId`, `IsSystemApp`, `IsHidden`, `FileHandlers`, `Urls`
   (adresses `web.urls` d'une app web, vide sinon ; liste des sites externes du
   Web Server Manager).
@@ -246,12 +246,12 @@ HackOpenFileResult opened = await HackApps.OpenFileAsync("~/notes.md");   // Ope
   (`file-associations.read`, plus `filesystem.user-home.write` pour écrire) ;
   voir [`user-file-associations.md`](../dev/user-file-associations.md).
 - `LaunchAsync` et `OpenFileAsync` passent par `IAppIntentGateway`
-  (`apps.launch`). Échec : `HackAppLaunchException` (app inconnue,
+  (`apps.launch`). Échec : `KazoAppLaunchException` (app inconnue,
   désinstallée, ou erreur au démarrage).
 - `EditFileAsync`, `RevealFileAsync`, `OpenUriAsync`, `ShowSettingsAsync` et
   `SendIntentAsync` (ADR 0096, chantier `v3/4`) passent aussi par
   `IAppIntentGateway` ; voir [`app-intents.md`](app-intents.md).
-- `HackApps.Changed` (ou `AppContext.Catalog.Changed`, à préférer quand on se
+- `KazoApps.Changed` (ou `AppContext.Catalog.Changed`, à préférer quand on se
   désabonne dans `Dispose`, hors contexte ambiant) signale une installation ou
   une désinstallation ; les gestionnaires s'exécutent dans le contexte de
   l'app abonnée.
@@ -260,22 +260,22 @@ HackOpenFileResult opened = await HackApps.OpenFileAsync("~/notes.md");   // Ope
 ### Gestion des apps (ADR 0056 §3)
 
 ```csharp
-IReadOnlyList<HackAppInstallInfo> all = await HackAppManagement.GetAllAsync();   // App, State, UninstallClosure
-IReadOnlyList<string> removed = await HackAppManagement.UninstallAsync("org.hackeros.calculator", HackInstallScope.User);
-await HackAppManagement.ReinstallAsync("org.hackeros.calculator", HackInstallScope.Machine);
+IReadOnlyList<KazoAppInstallInfo> all = await KazoAppManagement.GetAllAsync();   // App, State, UninstallClosure
+IReadOnlyList<string> removed = await KazoAppManagement.UninstallAsync("org.hackeros.calculator", KazoInstallScope.User);
+await KazoAppManagement.ReinstallAsync("org.hackeros.calculator", KazoInstallScope.Machine);
 ```
 
 - **Capacité `apps.manage`** (dangereuse) pour tous les membres. Paramètres la
   déclare désormais.
-- `HackAppInstallState` : `Installed` (y compris une app système, signalée par
+- `KazoAppInstallState` : `Installed` (y compris une app système, signalée par
   `App.IsSystemApp`), `UninstalledForUser`, `UninstalledForMachine`,
   `Incompatible` (refusée au chargement : version du SDK, ADR 0098 §3) et
-  `Damaged` (ressource altérée, ADR 0098 §5) ; `HackAppInstallInfo.Problem`
+  `Damaged` (ressource altérée, ADR 0098 §5) ; `KazoAppInstallInfo.Problem`
   donne alors la raison, affichée par Paramètres.
 - Portée `Machine` : l'agent d'authentification de l'OS demande un
   administrateur ([`admin-authentication-agent.md`](../dev/admin-authentication-agent.md)),
   puis l'OS écrit `/etc/hackeros/apps.config` lui-même. Refus ou annulation :
-  `HackUnauthorizedAccessException`.
+  `KazoUnauthorizedAccessException`.
 - App système, ou fermeture qui en contient une : `InvalidOperationException`,
   avant toute demande de mot de passe. Réinstaller pour soi une app
   désinstallée par l'administrateur : `InvalidOperationException`. App
@@ -285,13 +285,13 @@ await HackAppManagement.ReinstallAsync("org.hackeros.calculator", HackInstallSco
 
 ### Réseau (ADR 0056 §6)
 
-`HackDns`, `HackPing`, `HackHttpClient` et `HackTcpClient`, passerelle
+`KazoDns`, `KazoPing`, `KazoHttpClient` et `KazoTcpClient`, passerelle
 `IAppNetworkGateway Network`, repli réel décidé par l'OS : voir
 [`sdk-network.md`](sdk-network.md).
 
 ### Disques (ADR 0057 §7)
 
-`HackDriveInfo.GetDrivesAsync()` rend les montages qui ont une taille
+`KazoDriveInfo.GetDrivesAsync()` rend les montages qui ont une taille
 (aujourd'hui `/`), sur le modèle de `System.IO.DriveInfo` : `Name`,
 `DriveFormat` (`idbfs`), `DriveType` (`Fixed`), `VolumeLabel` (`hda`),
 `TotalSize`, `AvailableFreeSpace`, `TotalFreeSpace`, `RootDirectory`. Aucune
@@ -302,7 +302,7 @@ Les mesures CPU, disque et réseau, elles, sont des fichiers de `/proc` : voir
 
 ### Isolation cross-origin (ADR 0146)
 
-`HackCrossOriginIsolation.GetStatusAsync()` (espace `Diagnostics`) rend
+`KazoCrossOriginIsolation.GetStatusAsync()` (espace `Diagnostics`) rend
 l'isolation que l'OS a décidée au démarrage : `IsIsolated`, `Reason`
 (`None`, `Setting`, `MissingHeaders`, `InsecureContext`, `Browser`,
 `NotBrowser`), `Setting` (`Auto`, `On`, `Off`), `EmbedderPolicy`,
@@ -316,8 +316,8 @@ l'isolation que l'OS a décidée au démarrage : `IsIsolated`, `Reason`
 
 | API | Passerelle | Capacité | Remplace | Document |
 |---|---|---|---|---|
-| `HackProcess` (`GetProcessesAsync`, `GetProcessByIdAsync`, `GetCurrentProcessAsync`, `RefreshAsync`, `GetEnvironmentVariablesAsync`, `KillAsync`, `TerminateAsync`, `CloseMainWindowAsync`, `Current`, `CheckpointAsync` ; `WorkingSet64` lit `VmRSS`, `PrivateMemorySize64` lit `RssAnon`, ADR 0068 ; `UserProcessorTime`, `PrivilegedProcessorTime`, `TotalProcessorTime`, `Responding` lus dans `/proc/<pid>/stat` et `status`, ADR 0067), `HackCurrentProcess`, `HackStopRequestedEventArgs`, `HackProcessKilledException`, `HackProcessState`, `HackProcessIoCounters` | lecture : `IAppExecutionContext.FileSystem` sur `/proc` ; action : `IAppExecutionContext.Processes` (`IAppProcessGateway`) | `filesystem.system.read` pour lire `/proc` ; `process.list` (normale) pour voir les autres processus ; `process.manage` (dangereuse) pour arrêter un autre processus | `IProcessManager`, `AppLifecycleOrchestrator`, `IEventBus` | [`task-manager.md`](../dev/task-manager.md) |
-| `HackServiceController` (`GetServicesAsync`, `RefreshAsync`, `StartAsync`, `StopAsync`, `SetStartTypeAsync`), `HackServiceControllerStatus` | `Catalog` (liste), `/proc` (état), `Services` (`IAppServiceControlGateway`) | aucune pour lister ; `services.manage` (dangereuse) pour agir sur le service d'une autre app ou lire son type de démarrage | `AppCatalog` filtré sur `AppKind.Service`, orchestrateur | [`task-manager.md`](../dev/task-manager.md) |
+| `KazoProcess` (`GetProcessesAsync`, `GetProcessByIdAsync`, `GetCurrentProcessAsync`, `RefreshAsync`, `GetEnvironmentVariablesAsync`, `KillAsync`, `TerminateAsync`, `CloseMainWindowAsync`, `Current`, `CheckpointAsync` ; `WorkingSet64` lit `VmRSS`, `PrivateMemorySize64` lit `RssAnon`, ADR 0068 ; `UserProcessorTime`, `PrivilegedProcessorTime`, `TotalProcessorTime`, `Responding` lus dans `/proc/<pid>/stat` et `status`, ADR 0067), `KazoCurrentProcess`, `KazoStopRequestedEventArgs`, `KazoProcessKilledException`, `KazoProcessState`, `KazoProcessIoCounters` | lecture : `IAppExecutionContext.FileSystem` sur `/proc` ; action : `IAppExecutionContext.Processes` (`IAppProcessGateway`) | `filesystem.system.read` pour lire `/proc` ; `process.list` (normale) pour voir les autres processus ; `process.manage` (dangereuse) pour arrêter un autre processus | `IProcessManager`, `AppLifecycleOrchestrator`, `IEventBus` | [`task-manager.md`](../dev/task-manager.md) |
+| `KazoServiceController` (`GetServicesAsync`, `RefreshAsync`, `StartAsync`, `StopAsync`, `SetStartTypeAsync`), `KazoServiceControllerStatus` | `Catalog` (liste), `/proc` (état), `Services` (`IAppServiceControlGateway`) | aucune pour lister ; `services.manage` (dangereuse) pour agir sur le service d'une autre app ou lire son type de démarrage | `AppCatalog` filtré sur `AppKind.Service`, orchestrateur | [`task-manager.md`](../dev/task-manager.md) |
 
 Les données d'un processus viennent de `/proc`, exactement ce que `ps` lit ; il
 n'y a pas d'abonnement aux événements de processus : un gestionnaire de tâches
@@ -333,20 +333,20 @@ préviennent pas.
 
 | API | Rôle |
 |---|---|
-| `HackProcess.Current` (`HackCurrentProcess` : `Id`, `StopToken`, `IsStopRequested`, `StopRequest`, `StopRequested`) | Le processus courant vu de l'intérieur, sur le modèle de `IHostApplicationLifetime.ApplicationStopping`. Aussi `IAppExecutionContext.StopRequested` / `StopRequest`. |
-| `HackStopRequestedEventArgs` (`Reason`, `RequestedAt`, `Deadline`, `GracePeriod`, `Defer(Task)`) | Raison (`CloseRequested`, `Terminated`, `Logout`, `Shutdown`…) et échéance ; `Defer` demande à l'OS d'attendre un travail (brouillon, étape en cours) avant son action par défaut, jamais au-delà de l'échéance. |
-| `HackProcess.CheckpointAsync(token)` | Point d'arrêt volontaire : lève `OperationCanceledException` si l'arrêt est demandé ; rend la main (`Task.Yield`) quand la tranche courante dépasse 8 ms ; sinon retourne tout de suite, sans allocation. |
-| `HackProcess.TerminateAsync(timeout)` | `SIGTERM` d'un autre processus (raison `Terminated`, 5 s par défaut), sous `process.manage` ; `true` si le processus s'est terminé seul. |
-| `HackProcessKilledException` | Levée par toute passerelle appelée pour un processus tué (dérive de `OperationCanceledException`). |
+| `KazoProcess.Current` (`KazoCurrentProcess` : `Id`, `StopToken`, `IsStopRequested`, `StopRequest`, `StopRequested`) | Le processus courant vu de l'intérieur, sur le modèle de `IHostApplicationLifetime.ApplicationStopping`. Aussi `IAppExecutionContext.StopRequested` / `StopRequest`. |
+| `KazoStopRequestedEventArgs` (`Reason`, `RequestedAt`, `Deadline`, `GracePeriod`, `Defer(Task)`) | Raison (`CloseRequested`, `Terminated`, `Logout`, `Shutdown`…) et échéance ; `Defer` demande à l'OS d'attendre un travail (brouillon, étape en cours) avant son action par défaut, jamais au-delà de l'échéance. |
+| `KazoProcess.CheckpointAsync(token)` | Point d'arrêt volontaire : lève `OperationCanceledException` si l'arrêt est demandé ; rend la main (`Task.Yield`) quand la tranche courante dépasse 8 ms ; sinon retourne tout de suite, sans allocation. |
+| `KazoProcess.TerminateAsync(timeout)` | `SIGTERM` d'un autre processus (raison `Terminated`, 5 s par défaut), sous `process.manage` ; `true` si le processus s'est terminé seul. |
+| `KazoProcessKilledException` | Levée par toute passerelle appelée pour un processus tué (dérive de `OperationCanceledException`). |
 | `WindowAppBase.OnAppStopRequestedAsync(e)` | Crochet d'une app à fenêtre ; la fenêtre se ferme quand la tâche renvoyée se termine (action par défaut de `SIGTERM`). Pas appelé quand l'utilisateur ferme la fenêtre : `IWindowCloseGuard` s'en charge. |
 | `ServiceAppBase.OnStoppingAsync` | Appelé une seule fois, dès `StopRequested` (`ServiceStopReason.Terminated` pour `kill`/« End task »/`systemctl stop`), et au plus tard à l'arrêt par l'OS. |
-| `HackRecoveryDraft` (`Open`, `SaveAsync`, `TryReadAsync`, `TakeAsync`, `DeleteAsync`) | Brouillon de récupération dans `~/.local/state/<appId>/recovery/` (dossier `0700`), à écrire sur `StopRequested` et à proposer au démarrage suivant. |
+| `KazoRecoveryDraft` (`Open`, `SaveAsync`, `TryReadAsync`, `TakeAsync`, `DeleteAsync`) | Brouillon de récupération dans `~/.local/state/<appId>/recovery/` (dossier `0700`), à écrire sur `StopRequested` et à proposer au démarrage suivant. |
 
 Escalade (ADR 0069 §3) : délai passé, le processus est tué (`Timeout`) ;
 l'ordonnanceur de son processus (`ProcessTaskScheduler`, installé pour les
 commandes et les services) jette ses continuations, ses abonnements et
 minuteries ne sont plus rappelés, et ses passerelles lèvent
-`HackProcessKilledException`. Les apps à fenêtre restent sur le dispatcher du
+`KazoProcessKilledException`. Les apps à fenêtre restent sur le dispatcher du
 rendu : leurs fenêtres sont fermées.
 
 Ce que font les apps existantes (section 5.1 du
@@ -354,14 +354,14 @@ Ce que font les apps existantes (section 5.1 du
 
 | App | Sur `StopRequested` | Boucles longues avec `CheckpointAsync` |
 |---|---|---|
-| TextEditor | brouillon `HackRecoveryDraft` si le document est modifié ; restauré au démarrage suivant comme nouveau tampon non enregistré | — |
+| TextEditor | brouillon `KazoRecoveryDraft` si le document est modifié ; restauré au démarrage suivant comme nouveau tampon non enregistré | — |
 | CodeEditor | instantané de récupération écrit tout de suite (au lieu d'attendre l'anti-rebond de 1,5 s) | recherche dans le dossier, parcours du dossier |
-| FileExplorer | attend l'élément en cours ; `HackFileOperations` s'arrête entre deux éléments (atomiques) et rapporte les autres « stopped before this item » (`HackFileTransferResult.Cancelled`) | copie, déplacement, import, corbeille, zip, extraction, restauration de la corbeille |
+| FileExplorer | attend l'élément en cours ; `KazoFileOperations` s'arrête entre deux éléments (atomiques) et rapporte les autres « stopped before this item » (`KazoFileTransferResult.Cancelled`) | copie, déplacement, import, corbeille, zip, extraction, restauration de la corbeille |
 | Settings | attend l'écriture de réglage en cours, qui n'utilise plus le jeton du processus | — |
 | Services (`SampleTickerService`) | `OnStoppingAsync` (une fois) | — |
 | `Kazo.Os.Commands` | jeton annulé : sortie 130 ; tuée : 137 | `find`, `grep` (dont `-r`), `du`, `zip`, `unzip`, `locate` |
 
-HackPaint n'a pas d'enregistrement : rien à garder. Les autres apps n'ont ni
+KazoPaint n'a pas d'enregistrement : rien à garder. Les autres apps n'ont ni
 état non enregistré ni boucle longue.
 
 ### Processus dans des Web Workers (ADR 0070 et 0071)
@@ -397,13 +397,13 @@ worker, qui attend la réponse de l'OS comme un appel système bloquant.
 Détails : [`worker-processes.md`](../dev/worker-processes.md), [`app-execution-hosts.md`](app-execution-hosts.md).
 
 **Événements et surveillance de fichiers dans un worker (ADR 0124, ADR
-0138).** `HackEvents` et `HackFileSystemWatcher` marchent dans un worker : l'OS
+0138).** `KazoEvents` et `KazoFileSystemWatcher` marchent dans un worker : l'OS
 tient l'abonnement au nom du processus et lui envoie chaque message. La charge
 traverse en JSON ; les événements de l'OS sont déjà pris en charge, un type de
 l'app doit être déclaré par un `JsonSerializerContext` de son assembly :
 
 ```csharp
-[assembly: HackWireContext(typeof(MyEventsJsonContext))]
+[assembly: KazoWireContext(typeof(MyEventsJsonContext))]
 
 [JsonSerializable(typeof(MyTickEvent))]
 internal sealed partial class MyEventsJsonContext : JsonSerializerContext;
@@ -428,8 +428,8 @@ sont toujours asynchrones dans un worker.
 
 ### Graphiques (ADR 0058 §2)
 
-`HackLineChart` (`Kazo.Os.AppSdk.Blazor.Charts`) trace en SVG natif une ou
-plusieurs `HackChartSeries`, la valeur la plus récente à droite, avec une
+`KazoLineChart` (`Kazo.Os.AppSdk.Blazor.Charts`) trace en SVG natif une ou
+plusieurs `KazoChartSeries`, la valeur la plus récente à droite, avec une
 légende et une échelle automatique ; ni bibliothèque ni JavaScript. Les
 couleurs viennent du thème (`--hos-chart-series-0` à `7`). Voir
 [`task-manager.md`](../dev/task-manager.md).
@@ -437,9 +437,9 @@ couleurs viennent du thème (`--hos-chart-series-0` à `7`). Voir
 ### Presse-papiers (ADR 0056 §12)
 
 ```csharp
-await HackClipboard.SetFileDropListAsync(["~/rapport.txt"], HackClipboardFileOperation.Cut);
-HackClipboardFileList? files = await HackClipboard.GetFileDropListAsync();   // Operation + Paths
-string? text = await HackClipboard.GetTextAsync();
+await KazoClipboard.SetFileDropListAsync(["~/rapport.txt"], KazoClipboardFileOperation.Cut);
+KazoClipboardFileList? files = await KazoClipboard.GetFileDropListAsync();   // Operation + Paths
+string? text = await KazoClipboard.GetTextAsync();
 ```
 
 - Un presse-papiers par **session**, partagé par toutes ses apps (`SystemClipboard`,
@@ -456,7 +456,7 @@ string? text = await HackClipboard.GetTextAsync();
   l'entrée courante, selon la clé `sharing` de `/etc/hackeros/clipboard.config`.
   Une app ne parle jamais à `navigator.clipboard` ; `BrowserClipboard` a été
   retiré au gel du SDK 1.0 (ADR 0114 §3). Voir [`clipboard.md`](../dev/clipboard.md), [`clipboard-api.md`](clipboard-api.md).
-- `HackDirectory.CopyAsync` (copie récursive) et `HackFileOperations`
+- `KazoDirectory.CopyAsync` (copie récursive) et `KazoFileOperations`
   (`Kazo.Os.AppSdk.IO`, ex-`FileTransfer`, transferts de l'explorateur et de
   toute app depuis le SDK 2.0) sont décrits dans
   [`file-explorer.md`](../dev/file-explorer.md).
@@ -464,23 +464,23 @@ string? text = await HackClipboard.GetTextAsync();
 ### Administration du système (ADR 0056 §8 à §11, ADR 0060)
 
 ```csharp
-await using HackSettingsDocument appearance = await HackSettings.OpenSystemAsync("appearance");
-await HackPermissionAdministration.SetMachineDecisionAsync(appId, capability, HackPermissionDecision.Deny);
-HackServerConnectionState server = await HackServerConnection.GetStateAsync();
-await HackSystem.RebootAsync();
-HackStorageSnapshot snapshot = await HackStorageDiagnostics.GetSnapshotAsync();
+await using KazoSettingsDocument appearance = await KazoSettings.OpenSystemAsync("appearance");
+await KazoPermissionAdministration.SetMachineDecisionAsync(appId, capability, KazoPermissionDecision.Deny);
+KazoServerConnectionState server = await KazoServerConnection.GetStateAsync();
+await KazoSystem.RebootAsync();
+KazoStorageSnapshot snapshot = await KazoStorageDiagnostics.GetSnapshotAsync();
 ```
 
-- `HackSettings.OpenSystemAsync` : documents de l'OS (`appearance`,
+- `KazoSettings.OpenSystemAsync` : documents de l'OS (`appearance`,
   `ui-platform-preference`, `security`, `policy`), sans capacité ; les droits
-  des fichiers décident. `HackSettingsDocument.SetManyAsync` écrit plusieurs
+  des fichiers décident. `KazoSettingsDocument.SetManyAsync` écrit plusieurs
   clés en une seule modification (une seule approbation pour `/etc`).
-- `HackComponentProviders` (`apps.manage`, ADR 0156) : l'app qui fournit le
+- `KazoComponentProviders` (`apps.manage`, ADR 0156) : l'app qui fournit le
   contrôle de fichiers et ses dialogues pour toute la machine ; une app non
   système passe par la fenêtre d'approbation de l'OS.
-- `HackPermissionAdministration` (`permissions.manage`), `HackServerConnection`
-  (`server.connection.manage`), `HackSystem` (`system.power`),
-  `HackStorageDiagnostics` (`system.storage.inspect`) : capacités dangereuses.
+- `KazoPermissionAdministration` (`permissions.manage`), `KazoServerConnection`
+  (`server.connection.manage`), `KazoSystem` (`system.power`),
+  `KazoStorageDiagnostics` (`system.storage.inspect`) : capacités dangereuses.
   Les changements machine et l'alimentation passent par l'agent
   d'authentification de l'OS.
 - Passerelles : `SystemSettings`, `PermissionAdministration`,
@@ -492,15 +492,15 @@ HackStorageSnapshot snapshot = await HackStorageDiagnostics.GetSnapshotAsync();
 
 | API | Passerelle | Capacité | Remplace | Document |
 |---|---|---|---|---|
-| `HackShell.StartAsync`, `IHackShell` (`ExecuteAsync`, `CompleteAsync`, `GetInstalledCommands`, `WorkingDirectory`, `ExitStatus`, `Prompt`, historique), `HackShellOptions`, `HackShellCompletion`, `HackCredentialPrompt` | `IAppExecutionContext.ShellHost` (`IAppShellHostGateway`) | `shell.host` (dangereuse) | `ShellInterpreter`, `ISessionService`, `IElevationService` dans `TerminalPanel` | [`shell-host.md`](shell-host.md) |
+| `KazoShell.StartAsync`, `IHackShell` (`ExecuteAsync`, `CompleteAsync`, `GetInstalledCommands`, `WorkingDirectory`, `ExitStatus`, `Prompt`, historique), `KazoShellOptions`, `KazoShellCompletion`, `KazoCredentialPrompt` | `IAppExecutionContext.ShellHost` (`IAppShellHostGateway`) | `shell.host` (dangereuse) | `ShellInterpreter`, `ISessionService`, `IElevationService` dans `TerminalPanel` | [`shell-host.md`](shell-host.md) |
 
-`4-terminal` ajoute la complétion des chemins, `HackShellCompletion.DisplayCandidates`,
+`4-terminal` ajoute la complétion des chemins, `KazoShellCompletion.DisplayCandidates`,
 `IShellSession.Exit` (commande `exit`) et le composant d'onglets `TerminalTabs`
 de `Kazo.Os.AppSdk.Terminal` ([`terminal-console.md`](../dev/terminal-console.md)).
 
 Le shell est un processus `hsh` enfant de l'app ; ses commandes sont ses
 enfants et gardent leurs propres capacités. Le terminal lit les identifiants
-(`HackCredentialPrompt`), l'OS les vérifie.
+(`KazoCredentialPrompt`), l'OS les vérifie.
 
 ### Arguments de lancement d'une fenêtre
 
@@ -514,8 +514,8 @@ l'app associée avec ce chemin : une app de document lit son fichier initial là
 
 `WindowAppBase` reçoit les crochets `OnWindowActivated`, `OnWindowDeactivated`,
 `OnWindowStateChanged` et `OnWindowResized` (avec leurs versions `Async`) et
-l'état `IsWindowActive`, `WindowState`, `WindowSize`. Les types `HackWindowState`,
-`HackWindowSize` et `IWindowAppEventTarget` sont dans `Kazo.Os.AppSdk.Blazor` ;
+l'état `IsWindowActive`, `WindowState`, `WindowSize`. Les types `KazoWindowState`,
+`KazoWindowSize` et `IWindowAppEventTarget` sont dans `Kazo.Os.AppSdk.Blazor` ;
 `WindowOptions` (tailles déclarées par `AppDefinition.Window`, et depuis le SDK 1.1
 `RememberGeometry`, ADR 0116) est dans `Kazo.Os.App.Abstractions`. Aucune app n'injecte de service pour les recevoir :
 l'OS les appelle. Voir [`window-model.md`](window-model.md).
@@ -537,11 +537,11 @@ dans la [référence du SDK](sdk-reference.md).
 
 | API | Rôle | Capacité | Document |
 |---|---|---|---|
-| `[assembly: HackWireContext(typeof(…))]` (`HackWireContextAttribute`) | Types d'une app qui traversent la frontière d'un worker : charges de `HackEvents`, entrées et résultats de `HackBackground` | — | [ci-dessus](#processus-dans-des-web-workers-adr-0070-et-0071), [ADR 0124](../dev/adr/0124-remote-event-and-watch-gateways.md) |
-| `HackProcess.GetResourceLimitsAsync` → `HackResourceLimits`, `SetResourceLimitAsync` ; `ProcessLimitExceededException` (`EAGAIN`), `FileSystemErrorCode.TooManyOpenFiles` (`EMFILE`), `ProcessExitReason.CpuLimitExceeded`, `MemoryLimitExceeded` | Limites façon `setrlimit` d'un processus | `process.manage` pour un autre processus | [`process-limits.md`](../dev/process-limits.md) |
+| `[assembly: KazoWireContext(typeof(…))]` (`KazoWireContextAttribute`) | Types d'une app qui traversent la frontière d'un worker : charges de `KazoEvents`, entrées et résultats de `KazoBackground` | — | [ci-dessus](#processus-dans-des-web-workers-adr-0070-et-0071), [ADR 0124](../dev/adr/0124-remote-event-and-watch-gateways.md) |
+| `KazoProcess.GetResourceLimitsAsync` → `KazoResourceLimits`, `SetResourceLimitAsync` ; `ProcessLimitExceededException` (`EAGAIN`), `FileSystemErrorCode.TooManyOpenFiles` (`EMFILE`), `ProcessExitReason.CpuLimitExceeded`, `MemoryLimitExceeded` | Limites façon `setrlimit` d'un processus | `process.manage` pour un autre processus | [`process-limits.md`](../dev/process-limits.md) |
 | `AppDefinition.OomScoreAdjust` (manifeste `oomScoreAdj`), `ProcessExitReason.OutOfMemory` | `oom_score_adj` de départ, négatif pour une app système seulement (`HOSAPP0024`) ; raison de fin d'une victime de l'OOM killer | — | [`oom-killer.md`](../dev/oom-killer.md) |
-| `HackProcess.Nice`, `BasePriority`, `IShellSession.RunNicedAsync`, `ProcessNice` | Priorité `nice` d'un processus ; lancer une commande avec un ajustement | `process.manage` hors de son processus et de ses enfants ; `shell.control` | [`process-priority-and-unresponsive-windows.md`](../dev/process-priority-and-unresponsive-windows.md) |
-| `HackBackground.RunAsync`, `HackBackgroundJob<TInput, TResult>`, `HackBackgroundContext`, `IAppExecutionContext.Background` ; analyseur `HOSBG0001` à `HOSBG0004` | Calcul long dans un processus enfant de l'app, placé dans un worker ; méthode statique vérifiée au build | — | [`background-jobs.md`](background-jobs.md) |
+| `KazoProcess.Nice`, `BasePriority`, `IShellSession.RunNicedAsync`, `ProcessNice` | Priorité `nice` d'un processus ; lancer une commande avec un ajustement | `process.manage` hors de son processus et de ses enfants ; `shell.control` | [`process-priority-and-unresponsive-windows.md`](../dev/process-priority-and-unresponsive-windows.md) |
+| `KazoBackground.RunAsync`, `KazoBackgroundJob<TInput, TResult>`, `KazoBackgroundContext`, `IAppExecutionContext.Background` ; analyseur `HOSBG0001` à `HOSBG0004` | Calcul long dans un processus enfant de l'app, placé dans un worker ; méthode statique vérifiée au build | — | [`background-jobs.md`](background-jobs.md) |
 
 ### API du SDK 2.0 (série du bureau, ADR 0148 à 0161)
 
@@ -551,13 +551,13 @@ est le paquet `Kazo.Os.AppSdk.FileView` ; le tableau de migration est dans
 
 | API | Rôle | Capacité | Document |
 |---|---|---|---|
-| `HackFileView`, `IHackFileView` (`Kazo.Os.AppSdk.Blazor.Files`) | Contrôle de fichiers fourni par l'OS (l'explorateur par défaut), avec les droits de l'app qui l'affiche | celles des fichiers montrés | [`embedded-components.md`](embedded-components.md), [`file-explorer.md`](../dev/file-explorer.md), [`file-control-api.md`](file-control-api.md) |
-| `Menus.Attach`, `Menus.Define`, `HackContextMenu`, `HackMenuDefinition` | Menu contextuel de l'OS, multi-niveaux, clavier et appui long | — | [`context-menu.md`](context-menu.md) |
-| `[RegisterFileContextMenu]`, `RegisterFileContextMenuContext`, `HackFileMenuItems` | Entrées d'une app dans les menus des fichiers, inscrites au build | `shell.context-menu` | [`context-menu.md`](context-menu.md#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4) |
-| `HackFileOperations`, `IDialogService.AsFileConflictResolver` | Copie, déplacement, import, corbeille, conflits à la Nautilus (ex-`FileTransfer`) | celles des fichiers | [`file-explorer.md`](../dev/file-explorer.md), [`file-operations-api.md`](file-operations-api.md) |
-| `HackDesktopSettings`, `HackDesktopEntry`, `HackDesktopLayout` | Réglages, raccourcis `.desktop` et grille du bureau | celles du dossier perso | [`desktop.md`](../dev/desktop.md), [`desktop-api.md`](desktop-api.md) |
-| `HackComponentProviders`, `HackFileMenuEntries` | Choisir le fournisseur d'un contrat, masquer une entrée de menu | `apps.manage` | [`embedded-components.md`](embedded-components.md) |
-| `IAppEventGateway.PublishAsync`, `HackCrossOriginIsolation` | Prévus pour une 1.3 jamais publiée (ADR 0145, 0146) | — | ci-dessus |
+| `KazoFileView`, `IHackFileView` (`Kazo.Os.AppSdk.Blazor.Files`) | Contrôle de fichiers fourni par l'OS (l'explorateur par défaut), avec les droits de l'app qui l'affiche | celles des fichiers montrés | [`embedded-components.md`](embedded-components.md), [`file-explorer.md`](../dev/file-explorer.md), [`file-control-api.md`](file-control-api.md) |
+| `Menus.Attach`, `Menus.Define`, `KazoContextMenu`, `KazoMenuDefinition` | Menu contextuel de l'OS, multi-niveaux, clavier et appui long | — | [`context-menu.md`](context-menu.md) |
+| `[RegisterFileContextMenu]`, `RegisterFileContextMenuContext`, `KazoFileMenuItems` | Entrées d'une app dans les menus des fichiers, inscrites au build | `shell.context-menu` | [`context-menu.md`](context-menu.md#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4) |
+| `KazoFileOperations`, `IDialogService.AsFileConflictResolver` | Copie, déplacement, import, corbeille, conflits à la Nautilus (ex-`FileTransfer`) | celles des fichiers | [`file-explorer.md`](../dev/file-explorer.md), [`file-operations-api.md`](file-operations-api.md) |
+| `KazoDesktopSettings`, `KazoDesktopEntry`, `KazoDesktopLayout` | Réglages, raccourcis `.desktop` et grille du bureau | celles du dossier perso | [`desktop.md`](../dev/desktop.md), [`desktop-api.md`](desktop-api.md) |
+| `KazoComponentProviders`, `KazoFileMenuEntries` | Choisir le fournisseur d'un contrat, masquer une entrée de menu | `apps.manage` | [`embedded-components.md`](embedded-components.md) |
+| `IAppEventGateway.PublishAsync`, `KazoCrossOriginIsolation` | Prévus pour une 1.3 jamais publiée (ADR 0145, 0146) | — | ci-dessus |
 
 ### API ajoutées après la phase 4 (ADR 0061 à 0065)
 
@@ -567,12 +567,12 @@ le `[AppManifest]`) ; leur détail est dans la
 
 | API | Rôle | Capacité | Document |
 |---|---|---|---|
-| `HackConsole`, passerelle `IAppExecutionContext.Console` (`IAppConsoleGateway`) | Flux standard d'une instance : ceux du shell qui l'a lancée par son nom, `/dev/null` depuis le bureau | — | [`shell-interpreter.md`](../dev/shell-interpreter.md#apps-lancées-par-leur-nom) |
+| `KazoConsole`, passerelle `IAppExecutionContext.Console` (`IAppConsoleGateway`) | Flux standard d'une instance : ceux du shell qui l'a lancée par son nom, `/dev/null` depuis le bureau | — | [`shell-interpreter.md`](../dev/shell-interpreter.md#apps-lancées-par-leur-nom) |
 | `IShellSession` : `GetVariable`, `AssignVariable`, `RunAsync`, `Jobs`, `KillJob` ; `IHackShell.NeedsMoreInput` | Built-ins `read`, `watch`, `jobs`, `kill %n` écrits comme des commandes ordinaires ; invite de continuation | `shell.control` ; `shell.host` | [`shell-commands.md`](../dev/shell-commands.md), [`shell-host.md`](shell-host.md) |
 | `IFullScreenTerminalSession` (`TerminalExecutionContext.FullScreen`), `TerminalInputReader` | Écran alternatif (`nano`, `top`, `htop`) et entrée standard du terminal | — | [`terminal-emulator.md`](../dev/terminal-emulator.md), [`terminal-api.md`](terminal-api.md) |
-| `HackFile.CreateSymbolicLinkAsync` | `ln -s` | droits du chemin | [`hack-file-api.md`](hack-file-api.md) |
-| `AppDefinition.Components` (`AppComponent`), `HackEmbeddedComponent<T>`, `HackContractComponent<T>`, `HackEmbeddableComponent`, `HackComponentContracts`, `IHackTerminal` | Composant d'une app affiché par une autre, par contrat (`hackeros.terminal`) | celles de l'app qui affiche le composant (CodeEditor déclare `shell.host` pour le terminal embarqué) | [`embedded-components.md`](embedded-components.md) |
-| `HackClipboard` partagé avec l'hôte (`BrowserClipboard` retiré en 1.0) | Le texte copié part vers la vraie machine selon `clipboard.config` | `clipboard.read`, `clipboard.write` | [`clipboard.md`](../dev/clipboard.md) |
+| `KazoFile.CreateSymbolicLinkAsync` | `ln -s` | droits du chemin | [`hack-file-api.md`](hack-file-api.md) |
+| `AppDefinition.Components` (`AppComponent`), `KazoEmbeddedComponent<T>`, `KazoContractComponent<T>`, `KazoEmbeddableComponent`, `KazoComponentContracts`, `IHackTerminal` | Composant d'une app affiché par une autre, par contrat (`hackeros.terminal`) | celles de l'app qui affiche le composant (CodeEditor déclare `shell.host` pour le terminal embarqué) | [`embedded-components.md`](embedded-components.md) |
+| `KazoClipboard` partagé avec l'hôte (`BrowserClipboard` retiré en 1.0) | Le texte copié part vers la vraie machine selon `clipboard.config` | `clipboard.read`, `clipboard.write` | [`clipboard.md`](../dev/clipboard.md) |
 
 Aucune de ces API ne donne accès à un service interne : les apps qui les
 utilisent (Terminal, CodeEditor, Diagnostic, FileExplorer, `Kazo.Os.Commands`)
@@ -592,16 +592,16 @@ passent la vérification de la frontière sans exception (voir
 - Le contrôle d'injection compare les types par nom (assembly, nom complet) :
   l'assembly de l'app est chargée dans un contexte isolé.
 
-- `HackAppInfo` ajoute `PublisherId` et `IsHidden` à la liste de l'ADR 0056 :
+- `KazoAppInfo` ajoute `PublisherId` et `IsHidden` à la liste de l'ADR 0056 :
   l'onglet « Installed Apps » affiche l'éditeur, et un lanceur doit savoir
-  qu'une app est cachée. `HackApps.OpenFileAsync` rend un résultat plutôt que
+  qu'une app est cachée. `KazoApps.OpenFileAsync` rend un résultat plutôt que
   rien, parce que l'explorateur doit proposer un choix quand plusieurs apps
-  conviennent. Les méthodes de `HackAppManagement` rendent les ids écrits.
-- Un composant enfant qui n'hérite pas de `HackComponentBase` appelle les
+  conviennent. Les méthodes de `KazoAppManagement` rendent les ids écrits.
+- Un composant enfant qui n'hérite pas de `KazoComponentBase` appelle les
   passerelles de `AppContext` directement (`AppContext.Catalog`,
   `AppContext.AppManagement`) : ses gestionnaires d'événements ne sont pas dans
   le contexte ambiant. *Phase 5 :* les panneaux de Settings (`InstalledAppsPanel`,
-  `AppPermissionsPanel`) héritent désormais de `HackComponentBase` et reçoivent
+  `AppPermissionsPanel`) héritent désormais de `KazoComponentBase` et reçoivent
   le contexte en cascade, comme tous les composants de `Apps/`
   ([`resource-accounting.md`](../dev/resource-accounting.md#apps-existantes)).
 
@@ -636,37 +636,37 @@ commandes Linux, presse-papiers partagé avec l'hôte) :
 ## Liste des tâches du chantier `rebuild/4-sdk-boundary`
 
 - [x] Cible MSBuild `ValidateHackerOsSdkBoundary` (`HOSAPP0030`, `HOSSDK0001`), références directes seulement.
-- [x] Propriété `HackerOsSdkLibrary` pour les bibliothèques SDK.
+- [x] Propriété `KazoOsSdkLibrary` pour les bibliothèques SDK.
 - [x] `SdkBoundaryInspector` dans le générateur (`HOSAPP0031`), option `--boundary-exempt`.
-- [x] Liste `HackerOsSdkBoundaryExemption` (9 projets) et test qui l'empêche de grandir.
+- [x] Liste `KazoOsSdkBoundaryExemption` (9 projets) et test qui l'empêche de grandir.
 - [x] Test de sources `IJSRuntime` dans `Kazo.Os.Ecosystem.Tests`.
-- [x] Retrait des références `Platform.Core` inutilisées (Calculator, HackPaint, IconViewer, TextEditor, Browser).
+- [x] Retrait des références `Platform.Core` inutilisées (Calculator, KazoPaint, IconViewer, TextEditor, Browser).
 - [x] Projets de test `ManifestGenerator.Fixtures.ForbiddenReference` et `ForbiddenInjection`, tests unitaires de l'inspecteur.
 - [x] ADR 0059 (numéros des codes), ce document, `app-model.md`, plan et index à jour.
 
 ## Liste des tâches du chantier `rebuild/4-sdk-user-and-apps`
 
-- [x] `HackUser`, `HackUserInfo`, `HackEnvironment.GetFolderPath`, `HackSpecialFolder`.
+- [x] `KazoUser`, `KazoUserInfo`, `KazoEnvironment.GetFolderPath`, `KazoSpecialFolder`.
 - [x] `IAppExecutionContext` : `UserLoginName`, `UserDisplayName`, passerelles `Catalog` et `AppManagement`.
-- [x] `HackApps`, `HackAppInfo`, `IAppCatalogGateway` et `AppCatalogGateway`.
-- [x] `HackAppManagement`, `IAppManagementGateway` et `AppManagementGateway` (`apps.manage`).
+- [x] `KazoApps`, `KazoAppInfo`, `IAppCatalogGateway` et `AppCatalogGateway`.
+- [x] `KazoAppManagement`, `IAppManagementGateway` et `AppManagementGateway` (`apps.manage`).
 - [x] Agent d'authentification de l'OS, courtier et fenêtre ([`admin-authentication-agent.md`](../dev/admin-authentication-agent.md)).
 - [x] Migration de FileExplorer (« Open with », dossier personnel), TextEditor et CodeEditor ; FileExplorer perd sa référence à `Platform.Core`.
 - [x] Onglet « Installed Apps » de Paramètres sur le SDK ; `apps.manage` déclarée par Paramètres.
 - [x] Exemptions retirées : FileExplorer, TextEditor, CodeEditor ; Paramètres reste pour `4-sdk-system-admin`.
-- [x] Tests : agent, passerelles, `HackUser`, fenêtre.
+- [x] Tests : agent, passerelles, `KazoUser`, fenêtre.
 
 ## Liste des tâches du chantier `rebuild/4-file-explorer`
 
-- [x] `HackClipboard`, `HackClipboardFileList`, passerelle `IAppExecutionContext.Clipboard` ; `SystemClipboard` et `AppClipboardGateway` dans Platform Core.
-- [x] `HackDirectory.CopyAsync`, `FileTransfer` et les ajouts de `FileView` ([`file-explorer.md`](../dev/file-explorer.md)).
+- [x] `KazoClipboard`, `KazoClipboardFileList`, passerelle `IAppExecutionContext.Clipboard` ; `SystemClipboard` et `AppClipboardGateway` dans Platform Core.
+- [x] `KazoDirectory.CopyAsync`, `FileTransfer` et les ajouts de `FileView` ([`file-explorer.md`](../dev/file-explorer.md)).
 - [x] Explorateur sur ces API ; capacités `clipboard.read`, `clipboard.write`, `notifications.post` déclarées. Aucune exemption à retirer (FileExplorer était déjà sorti de la liste).
 
 ## Liste des tâches du chantier `rebuild/4-sdk-system-admin`
 
 - [x] Capacités `permissions.manage`, `server.connection.manage`, `system.power`, `system.storage.inspect` (dangereuses).
-- [x] `HackSettings.OpenSystemAsync`, `HackSettingsDocument.SetManyAsync`, `IAppSystemSettingsGateway`.
-- [x] `HackPermissionAdministration`, `HackServerConnection`, `HackSystem`, `HackStorageDiagnostics` et leurs passerelles Platform Core, avec l'agent d'authentification.
+- [x] `KazoSettings.OpenSystemAsync`, `KazoSettingsDocument.SetManyAsync`, `IAppSystemSettingsGateway`.
+- [x] `KazoPermissionAdministration`, `KazoServerConnection`, `KazoSystem`, `KazoStorageDiagnostics` et leurs passerelles Platform Core, avec l'agent d'authentification.
 - [x] `SystemPowerService` (Platform Core) et appareil navigateur (`BrowserSystemPowerDevice`, `IndexedDbStorageInspector` dans l'hôte Ecosystem).
 - [x] Paramètres et Diagnostic sur le SDK public ; exemptions retirées (liste vide).
 - [x] Tests `SystemAdministrationGatewayTests` ; ADR 0060 ; doc [`system-administration.md`](system-administration.md).
@@ -674,7 +674,7 @@ commandes Linux, presse-papiers partagé avec l'hôte) :
 ## Liste des tâches du chantier `rebuild/4-sdk-boundary-final`
 
 - [x] Vérifier que la liste d'exemptions est vide et que la solution compile sans diagnostic `HOSAPP0030`, `HOSAPP0031` ni `HOSSDK0001`.
-- [x] Supprimer le mécanisme de `build/Kazo.Os.Apps.targets` (élément, cible `_HackerOsResolveSdkBoundaryExemption`, propriété, avertissement).
+- [x] Supprimer le mécanisme de `build/Kazo.Os.Apps.targets` (élément, cible `_KazoOsResolveSdkBoundaryExemption`, propriété, avertissement).
 - [x] Supprimer l'option `--boundary-exempt` du générateur et la sévérité `warning` de `GeneratorDiagnostic`.
 - [x] Remplacer les tests de la liste par `Build_targets_have_no_exemption_mechanism` et `No_app_or_sdk_project_overrides_its_boundary_role` ; le test `IJSRuntime` couvre toutes les apps.
 - [x] Ce document, le plan (phase 4 cochée) et l'index à jour.

@@ -20,7 +20,7 @@ public sealed partial class SdkBoundarySourceTests
     /// Build properties that would take a project out of the boundary. The targets file derives them
     /// from the project's location; a project setting one itself is a hidden exemption.
     /// </summary>
-    private static readonly string[] BoundaryRoleProperties = ["HackerOsAppProject", "HackerOsSdkLibrary"];
+    private static readonly string[] BoundaryRoleProperties = ["KazoOsAppProject", "KazoOsSdkLibrary"];
 
     [Fact]
     public void Build_targets_have_no_exemption_mechanism()
@@ -29,8 +29,8 @@ public sealed partial class SdkBoundarySourceTests
 
         // ADR 0055 §6: the list and its plumbing were removed by 4-sdk-boundary-final; any of these
         // names coming back means a violation can be downgraded to a warning again.
-        Assert.DoesNotContain("HackerOsSdkBoundaryExemption", targets, StringComparison.Ordinal);
-        Assert.DoesNotContain("_HackerOsSdkBoundaryExempt", targets, StringComparison.Ordinal);
+        Assert.DoesNotContain("KazoOsSdkBoundaryExemption", targets, StringComparison.Ordinal);
+        Assert.DoesNotContain("_KazoOsSdkBoundaryExempt", targets, StringComparison.Ordinal);
         Assert.DoesNotContain("boundary-exempt", targets, StringComparison.Ordinal);
         Assert.DoesNotContain("<Warning", targets, StringComparison.Ordinal);
     }

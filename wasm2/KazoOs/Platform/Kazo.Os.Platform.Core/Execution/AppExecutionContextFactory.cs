@@ -100,7 +100,7 @@ public sealed class AppExecutionContextFactory
     /// <param name="metrics">
     /// Counters and drive information of ADR 0057: each app's network traffic is counted for
     /// <c>/proc/net/dev</c> and its <c>/proc/&lt;pid&gt;/io</c>, and
-    /// <see cref="IAppExecutionContext.Drives"/> answers <c>HackDriveInfo</c>. <see langword="null"/>
+    /// <see cref="IAppExecutionContext.Drives"/> answers <c>KazoDriveInfo</c>. <see langword="null"/>
     /// counts nothing and leaves drives unsupported.
     /// </param>
     /// <param name="clipboard">
@@ -265,7 +265,7 @@ public sealed class AppExecutionContextFactory
 
         // The process's language (ADR 0104), read at each use: the OS texts it asks for (the
         // operation shown in an administrator prompt) follow its LANG, as its own texts do.
-        Func<System.Globalization.CultureInfo> language = () => Kazo.Os.AppSdk.Globalization.HackLocale.ResolveLanguage(environment.GetVariable);
+        Func<System.Globalization.CultureInfo> language = () => Kazo.Os.AppSdk.Globalization.KazoLocale.ResolveLanguage(environment.GetVariable);
         AppPermissionErrorGateway permissionErrors = new();
         AppEventGateway events = new(_eventBus, _topicBus, manifest.Id, userId, process.Pid.ToString());
         AppClockGateway clock = new(_clock);
@@ -559,12 +559,12 @@ public sealed record AppCatalogGatewayServices(
 {
     /// <summary>
     /// Gets the installer of apps from their GitHub repository (ADR 0182) behind
-    /// <c>HackAppPackages</c>; <see langword="null"/> leaves it unsupported.
+    /// <c>KazoAppPackages</c>; <see langword="null"/> leaves it unsupported.
     /// </summary>
     public Func<Apps.Packages.AppPackageInstaller?>? Packages { get; init; }
 
     /// <summary>
-    /// Gets the window of the two-step approval (ADR 0189 §4) behind <c>HackAppPackages</c>;
+    /// Gets the window of the two-step approval (ADR 0189 §4) behind <c>KazoAppPackages</c>;
     /// <see langword="null"/> refuses every install that needs an administrator.
     /// </summary>
     public Func<Elevation.IAppInstallApprovalPrompt?>? InstallApproval { get; init; }

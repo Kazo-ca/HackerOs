@@ -46,7 +46,7 @@
                         class="iconviewer-tile @(IsSelected(icon) ? "selected" : "")"
                         title="@icon.DisplayName"
                         @onclick="() => SelectIcon(icon)">
-                    <HackerIcon Icon="icon" Size="28" />
+                    <KazoIcon Icon="icon" Size="28" />
                     <span class="iconviewer-tile-name">@icon.Name</span>
                 </button>
             }
@@ -68,7 +68,7 @@
     {
         <aside class="iconviewer-detail" aria-label="@L["Detail.AriaLabel"]">
             <button type="button" class="iconviewer-detail-close" aria-label="@L["Detail.Close"]" @onclick="() => SelectIcon(null)">&times;</button>
-            <HackerIcon Icon="selected" Size="56" />
+            <KazoIcon Icon="selected" Size="56" />
             <h3>@selected.DisplayName</h3>
             <dl>
                 <dt>@L["Detail.Library"]</dt>
@@ -170,7 +170,7 @@
         _activeLibrary == library ? "active" : string.Empty;
 
     private static string RazorSnippet(IconDescriptor icon) =>
-        $"<HackerIcon Library=\"IconLibrary.{icon.Library}\" Name=\"{icon.Name}\" />";
+        $"<KazoIcon Library=\"IconLibrary.{icon.Library}\" Name=\"{icon.Name}\" />";
 
     private async Task SelectSnippetText()
     {

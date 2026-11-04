@@ -45,7 +45,7 @@ temps de démarrage dans le worker web).
      `EntryPoint => typeof(<Nom>WebHost)` et une classe
      `<Nom>WebHost : HackWebHost`. Le générateur de manifestes lit ensuite cet
      `EntryPoint` comme pour toute app : rien ne change pour lui.
-3. **Un seul analyseur de gabarit.** `Shared/Kazo.Os.AppSdk.Web/Routing/HackRouteTemplate.cs`
+3. **Un seul analyseur de gabarit.** `Shared/Kazo.Os.AppSdk.Web/Routing/KazoRouteTemplate.cs`
    est compilé dans la bibliothèque (le routeur s'en sert) **et** lié dans le
    générateur : le build et l'exécution comprennent un gabarit exactement de la
    même façon.

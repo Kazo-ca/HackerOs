@@ -181,7 +181,7 @@ public sealed class CursorThemePanelTests
             PanelHarness harness = new(services, new HtmlRenderer(services, NullLoggerFactory.Instance), context);
             harness._root = await harness._renderer.Dispatcher.InvokeAsync(() =>
             {
-                using (HackExecutionContext.Enter(context))
+                using (KazoExecutionContext.Enter(context))
                 {
                     return harness._renderer.RenderComponentAsync<PanelHost>(ParameterView.FromDictionary(new Dictionary<string, object?>
                     {
@@ -198,7 +198,7 @@ public sealed class CursorThemePanelTests
         public Task RunAsync(Func<CursorThemePanel, Task> action) =>
             _renderer.Dispatcher.InvokeAsync(async () =>
             {
-                using (HackExecutionContext.Enter(_context))
+                using (KazoExecutionContext.Enter(_context))
                 {
                     await action(Panel);
                 }

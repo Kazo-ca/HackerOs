@@ -21,7 +21,7 @@ namespace Kazo.Os.Commands.Stress;
 /// (ADR 0069, step 4) — the desktop never freezes.
 /// </para>
 /// <para>
-/// With <c>--yield</c> it is a good citizen: it calls <see cref="HackProcess.CheckpointAsync"/> on
+/// With <c>--yield</c> it is a good citizen: it calls <see cref="KazoProcess.CheckpointAsync"/> on
 /// every slice, so it stays responsive and stops on <c>SIGTERM</c> (exit 130).
 /// </para>
 /// <para>
@@ -138,7 +138,7 @@ public sealed class StressCommand : TerminalAppBase
                     await Task.Delay(50, cancellationToken);
                 }
 
-                await HackProcess.CheckpointAsync(cancellationToken);
+                await KazoProcess.CheckpointAsync(cancellationToken);
             }
 
             for (int hog = 0; hog < cpuHogs; hog++)
@@ -151,7 +151,7 @@ public sealed class StressCommand : TerminalAppBase
 
             if (yieldSlices && vmHogs == 0)
             {
-                await HackProcess.CheckpointAsync(cancellationToken);
+                await KazoProcess.CheckpointAsync(cancellationToken);
             }
         }
 

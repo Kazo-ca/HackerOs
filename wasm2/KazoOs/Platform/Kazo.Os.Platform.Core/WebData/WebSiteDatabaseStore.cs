@@ -7,7 +7,7 @@ namespace Kazo.Os.Platform.Core.WebData;
 /// <summary>
 /// Where the browser databases of web sites live (ADR 0088, section 1): the host browser's IndexedDB
 /// (<c>IndexedDbWebSiteDatabaseStore</c> of <c>Infrastructure.Browser</c>), or memory on a host without it.
-/// Every name it accepts starts with <see cref="HackWebDbNames.Prefix"/>; the OS database is out of reach.
+/// Every name it accepts starts with <see cref="KazoWebDbNames.Prefix"/>; the OS database is out of reach.
 /// </summary>
 public interface IWebSiteDatabaseStore
 {
@@ -15,17 +15,17 @@ public interface IWebSiteDatabaseStore
     /// <param name="databaseName">A <c>hackweb.*</c> name.</param>
     /// <param name="schema">The site's schema.</param>
     /// <param name="cancellationToken">Cancels the call.</param>
-    ValueTask OpenAsync(string databaseName, HackWebDbSchemaDefinition schema, CancellationToken cancellationToken = default);
+    ValueTask OpenAsync(string databaseName, KazoWebDbSchemaDefinition schema, CancellationToken cancellationToken = default);
 
     /// <summary>Runs one batch in one transaction.</summary>
     /// <param name="databaseName">A <c>hackweb.*</c> name.</param>
     /// <param name="request">The batch.</param>
     /// <param name="cancellationToken">Cancels the call.</param>
-    ValueTask<IReadOnlyList<string?>> ExecuteAsync(string databaseName, HackWebDbRequest request, CancellationToken cancellationToken = default);
+    ValueTask<IReadOnlyList<string?>> ExecuteAsync(string databaseName, KazoWebDbRequest request, CancellationToken cancellationToken = default);
 
     /// <summary>Lists every site database with its stores and size.</summary>
     /// <param name="cancellationToken">Cancels the read.</param>
-    ValueTask<IReadOnlyList<HackWebSiteDatabaseInfo>> ListAsync(CancellationToken cancellationToken = default);
+    ValueTask<IReadOnlyList<KazoWebSiteDatabaseInfo>> ListAsync(CancellationToken cancellationToken = default);
 
     /// <summary>Deletes a site database (no error when it does not exist).</summary>
     /// <param name="databaseName">A <c>hackweb.*</c> name.</param>
@@ -41,9 +41,9 @@ public static class WebSiteDatabaseNames
     /// <exception cref="ArgumentException">Not a site database name.</exception>
     public static void Require(string databaseName)
     {
-        if (HackWebDbNames.AppIdOf(databaseName) is null)
+        if (KazoWebDbNames.AppIdOf(databaseName) is null)
         {
-            throw new ArgumentException($"'{databaseName}' is not a site database name ('{HackWebDbNames.Prefix}<app id>').", nameof(databaseName));
+            throw new ArgumentException($"'{databaseName}' is not a site database name ('{KazoWebDbNames.Prefix}<app id>').", nameof(databaseName));
         }
     }
 }
@@ -56,10 +56,10 @@ public sealed class InMemoryWebSiteDatabaseStore : IWebSiteDatabaseStore
 {
     private readonly Lock _gate = new();
     private readonly Dictionary<string, InMemoryWebDatabase> _databases = new(StringComparer.Ordinal);
-    private readonly Dictionary<string, HackWebDbSchemaDefinition> _schemas = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, KazoWebDbSchemaDefinition> _schemas = new(StringComparer.Ordinal);
 
     /// <inheritdoc />
-    public ValueTask OpenAsync(string databaseName, HackWebDbSchemaDefinition schema, CancellationToken cancellationToken = default)
+    public ValueTask OpenAsync(string databaseName, KazoWebDbSchemaDefinition schema, CancellationToken cancellationToken = default)
     {
         WebSiteDatabaseNames.Require(databaseName);
         ArgumentNullException.ThrowIfNull(schema);
@@ -73,11 +73,11 @@ public sealed class InMemoryWebSiteDatabaseStore : IWebSiteDatabaseStore
     }
 
     /// <inheritdoc />
-    public ValueTask<IReadOnlyList<string?>> ExecuteAsync(string databaseName, HackWebDbRequest request, CancellationToken cancellationToken = default)
+    public ValueTask<IReadOnlyList<string?>> ExecuteAsync(string databaseName, KazoWebDbRequest request, CancellationToken cancellationToken = default)
     {
         WebSiteDatabaseNames.Require(databaseName);
         InMemoryWebDatabase database = Get(databaseName, create: true)!;
-        HackWebDbSchemaDefinition? schema;
+        KazoWebDbSchemaDefinition? schema;
         lock (_gate)
         {
             _schemas.TryGetValue(databaseName, out schema);
@@ -93,7 +93,7 @@ public sealed class InMemoryWebSiteDatabaseStore : IWebSiteDatabaseStore
     }
 
     /// <inheritdoc />
-    public ValueTask<IReadOnlyList<HackWebSiteDatabaseInfo>> ListAsync(CancellationToken cancellationToken = default)
+    public ValueTask<IReadOnlyList<KazoWebSiteDatabaseInfo>> ListAsync(CancellationToken cancellationToken = default)
     {
         List<InMemoryWebDatabase> databases;
         lock (_gate)
@@ -101,14 +101,14 @@ public sealed class InMemoryWebSiteDatabaseStore : IWebSiteDatabaseStore
             databases = [.. _databases.Values.Where(database => database.Version > 0).OrderBy(database => database.Name, StringComparer.Ordinal)];
         }
 
-        return ValueTask.FromResult<IReadOnlyList<HackWebSiteDatabaseInfo>>([.. databases.Select(database =>
+        return ValueTask.FromResult<IReadOnlyList<KazoWebSiteDatabaseInfo>>([.. databases.Select(database =>
         {
             (IReadOnlyList<(string Name, int Records)> stores, long size) = database.Describe();
-            return new HackWebSiteDatabaseInfo(
+            return new KazoWebSiteDatabaseInfo(
                 database.Name,
-                HackWebDbNames.AppIdOf(database.Name)!,
+                KazoWebDbNames.AppIdOf(database.Name)!,
                 database.Version,
-                [.. stores.Select(store => new HackWebSiteDatabaseStoreInfo(store.Name, store.Records))],
+                [.. stores.Select(store => new KazoWebSiteDatabaseStoreInfo(store.Name, store.Records))],
                 size);
         })]);
     }
@@ -157,18 +157,18 @@ internal sealed class AppWebDatabaseGateway : IAppWebDatabaseGateway
     {
         _store = store;
         _manifest = manifest ?? throw new ArgumentNullException(nameof(manifest));
-        DatabaseName = HackWebDbNames.ForApp(manifest.Id);
+        DatabaseName = KazoWebDbNames.ForApp(manifest.Id);
     }
 
     /// <inheritdoc />
     public string DatabaseName { get; }
 
     /// <inheritdoc />
-    public ValueTask OpenAsync(HackWebDbSchemaDefinition schema, CancellationToken cancellationToken = default) =>
+    public ValueTask OpenAsync(KazoWebDbSchemaDefinition schema, CancellationToken cancellationToken = default) =>
         Store().OpenAsync(DatabaseName, schema, cancellationToken);
 
     /// <inheritdoc />
-    public ValueTask<IReadOnlyList<string?>> ExecuteAsync(HackWebDbRequest request, CancellationToken cancellationToken = default) =>
+    public ValueTask<IReadOnlyList<string?>> ExecuteAsync(KazoWebDbRequest request, CancellationToken cancellationToken = default) =>
         Store().ExecuteAsync(DatabaseName, request, cancellationToken);
 
     private IWebSiteDatabaseStore Store()

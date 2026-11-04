@@ -65,7 +65,7 @@ public sealed record AppChooserPresentation(
 /// <param name="AppInstanceId">The requesting window's instance.</param>
 /// <param name="ProcessId">The requesting process.</param>
 /// <param name="UserId">The user the dialog is shown to.</param>
-/// <param name="Dialog">The dialog's name (<c>HackFileDialogs.OpenWith</c>…).</param>
+/// <param name="Dialog">The dialog's name (<c>KazoFileDialogs.OpenWith</c>…).</param>
 /// <param name="Request">The request record of that dialog.</param>
 /// <param name="Context">The requesting app, whose rights the provider uses (ADR 0148 §4).</param>
 public sealed record ProvidedFileDialogPresentation(
@@ -243,7 +243,7 @@ public sealed class DialogCoordinator : IDialogService, IDisposable
         CancellationToken cancellationToken = default) =>
         EnqueueProvided(
             context,
-            HackFileDialogs.OpenWith,
+            KazoFileDialogs.OpenWith,
             request,
             static () => new OpenWithDialogResult(OpenWithDialogStatus.Cancelled, null, false),
             cancellationToken);
@@ -255,7 +255,7 @@ public sealed class DialogCoordinator : IDialogService, IDisposable
         CancellationToken cancellationToken = default) =>
         EnqueueProvided(
             context,
-            HackFileDialogs.Properties,
+            KazoFileDialogs.Properties,
             request,
             static () => new FilePropertiesDialogResult(FilePropertiesDialogStatus.Closed),
             cancellationToken);
@@ -267,7 +267,7 @@ public sealed class DialogCoordinator : IDialogService, IDisposable
         CancellationToken cancellationToken = default) =>
         EnqueueProvided(
             context,
-            HackFileDialogs.Conflict,
+            KazoFileDialogs.Conflict,
             request,
             static () => new FileConflictDialogResult(FileConflictDialogChoice.Skip, false),
             cancellationToken);

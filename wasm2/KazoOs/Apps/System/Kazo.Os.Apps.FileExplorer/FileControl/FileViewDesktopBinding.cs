@@ -6,7 +6,7 @@ namespace Kazo.Os.Apps.FileExplorer.FileControl;
 
 /// <summary>
 /// What the desktop mode of <see cref="FileView"/> needs from its provider, the File Explorer (ADR 0160):
-/// the <c>[view]</c> options and positions its host passed to <c>HackFileView</c>, where to send new
+/// the <c>[view]</c> options and positions its host passed to <c>KazoFileView</c>, where to send new
 /// positions, and the behavior of the Home and Trash system icons, which are not files.
 /// </summary>
 /// <remarks>
@@ -18,13 +18,13 @@ internal sealed class FileViewDesktopBinding
     private static readonly IReadOnlyDictionary<string, object> NoAttributes = new Dictionary<string, object>();
 
     /// <summary>Gets or sets the <c>[view]</c> options: icon size, auto-arrange, alignment, sort, system icons.</summary>
-    public HackDesktopOptions Options { get; set; } = HackDesktopOptions.Default;
+    public KazoDesktopOptions Options { get; set; } = KazoDesktopOptions.Default;
 
     /// <summary>Gets or sets the saved cell of each item, by file name or system key.</summary>
-    public IReadOnlyDictionary<string, HackDesktopCell> Positions { get; set; } = new Dictionary<string, HackDesktopCell>();
+    public IReadOnlyDictionary<string, KazoDesktopCell> Positions { get; set; } = new Dictionary<string, KazoDesktopCell>();
 
     /// <summary>Gets or sets what receives the positions to save (the host's <c>DesktopPositionsChanged</c>).</summary>
-    public Func<IReadOnlyDictionary<string, HackDesktopCell>, Task> SavePositions { get; set; } = static _ => Task.CompletedTask;
+    public Func<IReadOnlyDictionary<string, KazoDesktopCell>, Task> SavePositions { get; set; } = static _ => Task.CompletedTask;
 
     /// <summary>Gets or sets the label of the Home icon, in the host's language.</summary>
     public string HomeLabel { get; set; } = "Home";
@@ -38,7 +38,7 @@ internal sealed class FileViewDesktopBinding
     /// <summary>Gets or sets whether the trash holds something: its icon is drawn full.</summary>
     public bool IsTrashFull { get; set; }
 
-    /// <summary>Gets or sets the attributes that open the OS menu of a system icon (<see cref="HackDesktopItems"/> key).</summary>
+    /// <summary>Gets or sets the attributes that open the OS menu of a system icon (<see cref="KazoDesktopItems"/> key).</summary>
     public Func<string, IReadOnlyDictionary<string, object>> AttachSystemMenu { get; set; } = static _ => NoAttributes;
 
     /// <summary>Gets or sets what opens a system icon (double click, Enter).</summary>

@@ -5,28 +5,28 @@ namespace Kazo.Os.AppSdk.Administration;
 /// <param name="Name">Its display name.</param>
 /// <param name="IsSystemApp">Whether it is a system app: choosing it needs no approval window, only an administrator.</param>
 /// <param name="IsInstalled">Whether it is installed for the session user.</param>
-public sealed record HackComponentProviderInfo(string AppId, string Name, bool IsSystemApp, bool IsInstalled);
+public sealed record KazoComponentProviderInfo(string AppId, string Name, bool IsSystemApp, bool IsInstalled);
 
 /// <summary>A contract an administrator chooses the provider of, such as <c>hackeros.file-view</c> (ADR 0156).</summary>
 /// <param name="Contract">The contract name.</param>
 /// <param name="SelectedAppId">The app chosen in <c>/etc/hackeros/components.config</c>, or <see langword="null"/> for the default.</param>
 /// <param name="DefaultAppId">The app used without a choice (the File Explorer), or <see langword="null"/> when none is installed.</param>
 /// <param name="Providers">Every app registering the contract, system apps first, then by id.</param>
-public sealed record HackComponentContractInfo(
+public sealed record KazoComponentContractInfo(
     string Contract,
     string? SelectedAppId,
     string? DefaultAppId,
-    IReadOnlyList<HackComponentProviderInfo> Providers);
+    IReadOnlyList<KazoComponentProviderInfo> Providers);
 
 /// <summary>
-/// Trusted OS gateway behind <see cref="HackComponentProviders"/> (ADR 0156 §3). Every member
+/// Trusted OS gateway behind <see cref="KazoComponentProviders"/> (ADR 0156 §3). Every member
 /// requires the capability <c>apps.manage</c>.
 /// </summary>
 public interface IAppComponentProviderAdministrationGateway
 {
     /// <summary>Lists each contract an administrator chooses, its providers and the current choice.</summary>
     /// <param name="cancellationToken">Cancels the read.</param>
-    ValueTask<IReadOnlyList<HackComponentContractInfo>> GetOverviewAsync(CancellationToken cancellationToken = default);
+    ValueTask<IReadOnlyList<KazoComponentContractInfo>> GetOverviewAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Makes <paramref name="appId"/> the provider of <paramref name="contracts"/> for the whole

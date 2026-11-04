@@ -74,8 +74,8 @@
 
                         <fieldset class="wsm-field wsm-scope">
                             <legend>@L["Form.DeclaredIn"]</legend>
-                            <label><input type="radio" name="scope" checked="@(editor.Scope == HackWebSiteScope.User)" @onchange="() => SetScopeAsync(HackWebSiteScope.User)" /> @L["Form.Scope.User"] <code>~/.config/hackweb/sites</code> @L["Form.Scope.User.Hint"]</label>
-                            <label><input type="radio" name="scope" checked="@(editor.Scope == HackWebSiteScope.System)" @onchange="() => SetScopeAsync(HackWebSiteScope.System)" /> @L["Form.Scope.System"] <code>/etc/hackweb/sites</code> @L["Form.Scope.System.Hint"]</label>
+                            <label><input type="radio" name="scope" checked="@(editor.Scope == KazoWebSiteScope.User)" @onchange="() => SetScopeAsync(KazoWebSiteScope.User)" /> @L["Form.Scope.User"] <code>~/.config/hackweb/sites</code> @L["Form.Scope.User.Hint"]</label>
+                            <label><input type="radio" name="scope" checked="@(editor.Scope == KazoWebSiteScope.System)" @onchange="() => SetScopeAsync(KazoWebSiteScope.System)" /> @L["Form.Scope.System"] <code>/etc/hackweb/sites</code> @L["Form.Scope.System.Hint"]</label>
                         </fieldset>
 
                         <label class="wsm-field">

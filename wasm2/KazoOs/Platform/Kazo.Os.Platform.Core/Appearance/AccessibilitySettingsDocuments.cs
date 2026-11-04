@@ -112,7 +112,7 @@ public static class AccessibilitySettingsDocuments
     /// <param name="settings">What the files ask for.</param>
     /// <param name="host">What the host asks for.</param>
     /// <param name="animationsEnabled">The <c>animationsEnabled</c> key of <c>appearance.config</c>.</param>
-    public static AppSdk.Accessibility.HackAccessibilityPreferences Resolve(
+    public static AppSdk.Accessibility.KazoAccessibilityPreferences Resolve(
         AccessibilitySettings settings, HostAccessibilitySignals host, bool animationsEnabled)
     {
         ArgumentNullException.ThrowIfNull(settings);
@@ -129,7 +129,7 @@ public static class AccessibilitySettingsDocuments
             AccessibilityMode.Off => false,
             _ => host.PrefersReducedMotion
         };
-        return new AppSdk.Accessibility.HackAccessibilityPreferences(highContrast, settings.TextScale, reducedMotion);
+        return new AppSdk.Accessibility.KazoAccessibilityPreferences(highContrast, settings.TextScale, reducedMotion);
     }
 
     private static AccessibilityMode ParseMode(string value) => value switch

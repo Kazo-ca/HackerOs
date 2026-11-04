@@ -2,12 +2,12 @@
 @using Kazo.Os.AppSdk.Blazor.Components
 @using Kazo.Os.AppSdk.Components
 @using Kazo.Os.AppSdk.Terminal
-@inherits HackEmbeddableComponent
+@inherits KazoEmbeddableComponent
 
 @*
     The Terminal app's terminal, registered with the OS for the contract hackeros.terminal
     (TerminalApp.Components, ADR 0063): another app renders it in its own window through
-    HackEmbeddedComponent<IHackTerminal> and drives it through IHackTerminal, which TerminalPanel
+    KazoEmbeddedComponent<IHackTerminal> and drives it through IHackTerminal, which TerminalPanel
     implements. The shell is a child of the host app, as when the host draws the panel itself.
 *@
 <div class="terminal-embed">

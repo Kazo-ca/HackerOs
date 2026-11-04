@@ -35,7 +35,7 @@ public sealed class LanguagePanelTests
         await harness.RunAsync(panel => panel.ChooseAsync("fr_CA.UTF-8"));
 
         string content = await harness.ReadAsync(UserFile);
-        Assert.Equal("fr_CA.UTF-8", HackLocale.ParseLocaleConf(content)["LANG"]);
+        Assert.Equal("fr_CA.UTF-8", KazoLocale.ParseLocaleConf(content)["LANG"]);
         Assert.StartsWith("# " + LanguagePanel.FileHeader, content, StringComparison.Ordinal);
         Assert.Equal("fr_CA.UTF-8", harness.Panel.ChosenLocale);
         Assert.False(harness.Panel.MessageIsError);
@@ -73,7 +73,7 @@ public sealed class LanguagePanelTests
 
         await harness.RunAsync(panel => panel.ChooseAsync(null));
 
-        IReadOnlyDictionary<string, string> variables = HackLocale.ParseLocaleConf(await harness.ReadAsync(UserFile));
+        IReadOnlyDictionary<string, string> variables = KazoLocale.ParseLocaleConf(await harness.ReadAsync(UserFile));
         Assert.False(variables.ContainsKey("LANG"));
         Assert.Equal("en_GB.UTF-8", variables["LC_TIME"]);
     }
@@ -105,7 +105,7 @@ public sealed class LanguagePanelTests
         Assert.Contains(">en_US.UTF-8</code>", html, StringComparison.Ordinal);
         Assert.Contains("Follow the system language", html, StringComparison.Ordinal);
         Assert.Contains("Currently English (Canada) — en_CA.UTF-8", html, StringComparison.Ordinal);
-        foreach (string locale in HackLocale.AvailableLocales)
+        foreach (string locale in KazoLocale.AvailableLocales)
         {
             Assert.Contains($">{locale}</span>", html, StringComparison.Ordinal);
         }
@@ -179,7 +179,7 @@ public sealed class LanguagePanelTests
         public Task RunAsync(Func<LanguagePanel, Task> action) =>
             _renderer.Dispatcher.InvokeAsync(async () =>
             {
-                using (HackExecutionContext.Enter(_context))
+                using (KazoExecutionContext.Enter(_context))
                 {
                     await action(Panel);
                 }
@@ -191,9 +191,9 @@ public sealed class LanguagePanelTests
 
         public async Task<string> ReadAsync(string path)
         {
-            using (HackExecutionContext.Enter(_context))
+            using (KazoExecutionContext.Enter(_context))
             {
-                return await Kazo.Os.AppSdk.IO.HackFile.ReadAllTextAsync(path);
+                return await Kazo.Os.AppSdk.IO.KazoFile.ReadAllTextAsync(path);
             }
         }
 

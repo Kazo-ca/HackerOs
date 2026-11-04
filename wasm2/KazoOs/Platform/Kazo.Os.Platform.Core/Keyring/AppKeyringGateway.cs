@@ -56,7 +56,7 @@ internal sealed class AppKeyringGateway : IAppKeyringGateway
         _keyring.DeleteAsync(_userId, _appId, id, cancellationToken);
 
     /// <inheritdoc />
-    public async ValueTask<IReadOnlyList<HackKeyringEntry>> ListAsync(bool allApps, CancellationToken cancellationToken = default)
+    public async ValueTask<IReadOnlyList<KazoKeyringEntry>> ListAsync(bool allApps, CancellationToken cancellationToken = default)
     {
         if (allApps)
         {
@@ -66,7 +66,7 @@ internal sealed class AppKeyringGateway : IAppKeyringGateway
         IReadOnlyList<KeyringEntryRecord> entries = await _keyring
             .ListAsync(_userId, allApps ? null : _appId, cancellationToken)
             .ConfigureAwait(false);
-        return [.. entries.Select(static entry => new HackKeyringEntry(entry.AppId, entry.Id, entry.Label, entry.UpdatedAtUtc))];
+        return [.. entries.Select(static entry => new KazoKeyringEntry(entry.AppId, entry.Id, entry.Label, entry.UpdatedAtUtc))];
     }
 
     private void RequireReadAll()
@@ -77,7 +77,7 @@ internal sealed class AppKeyringGateway : IAppKeyringGateway
         }
         catch (AppGatewayAccessDeniedException exception)
         {
-            throw HackGatewayErrors.ToUnauthorized(exception);
+            throw KazoGatewayErrors.ToUnauthorized(exception);
         }
     }
 }

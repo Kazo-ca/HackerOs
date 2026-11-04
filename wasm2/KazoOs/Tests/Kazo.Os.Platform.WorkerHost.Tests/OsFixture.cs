@@ -105,7 +105,7 @@ internal sealed class OsFixture : IAsyncDisposable
         Log = new LogFileWriter(Clock, new BoundedDiagnosticSink(maxEntries: 1000), EventBus);
 
         // ADR 0077/0080: hackwebd, a system app of the host as in the Ecosystem build.
-        AppManifest hackwebd = AppDefinitionMapper.ToManifest(new Kazo.Os.Apps.WebServer.HackWebdApp());
+        AppManifest hackwebd = AppDefinitionMapper.ToManifest(new Kazo.Os.Apps.WebServer.KazoWebdApp());
         // ADR 0124: two sample projects of their own assemblies, a command and a service, run in workers.
         AppManifest sampleCommand = AppDefinitionMapper.ToManifest(new Kazo.Os.Samples.TerminalApp.TerminalSampleApp());
         AppManifest sampleService = AppDefinitionMapper.ToManifest(new Kazo.Os.Samples.ServiceApp.ServiceSampleApp());
@@ -118,7 +118,7 @@ internal sealed class OsFixture : IAsyncDisposable
             {
                 ["Kazo.Os.Commands.dll"] = typeof(Kazo.Os.Commands.Cd.CdCommand).Assembly,
                 [TestCommands.AssemblyFile] = typeof(OsFixture).Assembly,
-                ["Kazo.Os.Apps.WebServer.dll"] = typeof(Kazo.Os.Apps.WebServer.HackWebdApp).Assembly,
+                ["Kazo.Os.Apps.WebServer.dll"] = typeof(Kazo.Os.Apps.WebServer.KazoWebdApp).Assembly,
                 ["Kazo.Os.Samples.TerminalApp.dll"] = typeof(Kazo.Os.Samples.TerminalApp.TerminalSampleApp).Assembly,
                 ["Kazo.Os.Samples.ServiceApp.dll"] = typeof(Kazo.Os.Samples.ServiceApp.ServiceSampleApp).Assembly
             });
@@ -136,7 +136,7 @@ internal sealed class OsFixture : IAsyncDisposable
             () => network.GetHost("127.0.0.1") is { } localhost
                 ? localhost.Ports.Where(static port => port.State == SimulatedPortState.Open).Select(static port => port.PortNumber)
                 : []);
-        Resolver = new HackDnsResolver(
+        Resolver = new KazoDnsResolver(
             network, fileSystem, Clock, () => Catalog.Manifests.Values.Where(manifest => enablement.IsEnabled(manifest.Id)),
             new HostedSiteNameSource(fileSystem, Clock));
         LocalNetworkServices localNetwork = new(Ports, Resolver, new WebAppActivator(() => Orchestrator!, Ports));
@@ -150,12 +150,12 @@ internal sealed class OsFixture : IAsyncDisposable
             shellHostProvider: () => ShellHost!,
             metrics: new SystemMetricsServices(Drives: new AppDriveGateway(() => router, VirtualHardwareProfile.Default))
             {
-                // ADR 0146: HackCrossOriginIsolation reads what a test puts in Isolation.
+                // ADR 0146: KazoCrossOriginIsolation reads what a test puts in Isolation.
                 CrossOriginIsolation = new Kazo.Os.Platform.Core.Isolation.AppCrossOriginIsolationGateway(() => Isolation.Status)
             },
             localNetwork: localNetwork)
         {
-            // ADR 0128: HackBackground tasks as child processes, in a worker when the fixture has some.
+            // ADR 0128: KazoBackground tasks as child processes, in a worker when the fixture has some.
             BackgroundJobs = () => BackgroundJobs!
         };
 
@@ -255,7 +255,7 @@ internal sealed class OsFixture : IAsyncDisposable
     public ListeningPortTable Ports { get; }
 
     /// <summary>Gets the resolver hackdns.</summary>
-    public HackDnsResolver Resolver { get; }
+    public KazoDnsResolver Resolver { get; }
 
     public SystemStartupSignal Startup { get; } = new();
 
@@ -347,43 +347,43 @@ internal sealed class OsFixture : IAsyncDisposable
 
     public async Task<string> ReadFileAsync(string path)
     {
-        using IDisposable scope = HackExecutionContext.Enter(Host);
-        return await HackFile.ReadAllTextAsync(path);
+        using IDisposable scope = KazoExecutionContext.Enter(Host);
+        return await KazoFile.ReadAllTextAsync(path);
     }
 
     public async Task WriteFileAsync(string path, string content)
     {
-        using IDisposable scope = HackExecutionContext.Enter(Host);
-        string? directory = HackPath.GetDirectoryName(path);
+        using IDisposable scope = KazoExecutionContext.Enter(Host);
+        string? directory = KazoPath.GetDirectoryName(path);
         if (directory is not null)
         {
-            await HackDirectory.CreateDirectoryAsync(directory);
+            await KazoDirectory.CreateDirectoryAsync(directory);
         }
 
-        await HackFile.WriteAllTextAsync(path, content);
+        await KazoFile.WriteAllTextAsync(path, content);
     }
 
     /// <summary>Lists every file and directory under <paramref name="root"/> with its content, for comparing two runs.</summary>
     public async Task<string> SnapshotTreeAsync(string root)
     {
-        using IDisposable scope = HackExecutionContext.Enter(Host);
+        using IDisposable scope = KazoExecutionContext.Enter(Host);
         List<string> lines = [];
         await WalkAsync(root);
         return string.Join('\n', lines);
 
         async Task WalkAsync(string directory)
         {
-            foreach (string entry in (await HackDirectory.GetFileSystemEntriesAsync(directory)).Order(StringComparer.Ordinal))
+            foreach (string entry in (await KazoDirectory.GetFileSystemEntriesAsync(directory)).Order(StringComparer.Ordinal))
             {
-                if (await HackDirectory.ExistsAsync(entry))
+                if (await KazoDirectory.ExistsAsync(entry))
                 {
                     lines.Add($"{entry}/");
                     await WalkAsync(entry);
                 }
                 else
                 {
-                    UnixFileMode mode = await HackFile.GetUnixFileModeAsync(entry);
-                    byte[] content = await HackFile.ReadAllBytesAsync(entry);
+                    UnixFileMode mode = await KazoFile.GetUnixFileModeAsync(entry);
+                    byte[] content = await KazoFile.ReadAllBytesAsync(entry);
                     lines.Add($"{entry} {Convert.ToString((int)mode, 8)} {Convert.ToBase64String(content)}");
                 }
             }
@@ -444,7 +444,7 @@ internal sealed class OsFixture : IAsyncDisposable
         Description = "Hosts the shell.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.WorkerHost.Tests", "org.hackeros.terminal.EntryPoint"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         Capabilities = HostCapabilities

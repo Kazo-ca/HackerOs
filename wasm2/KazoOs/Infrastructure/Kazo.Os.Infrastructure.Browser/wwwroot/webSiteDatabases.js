@@ -3,7 +3,7 @@
 // One IndexedDB database per site, "hackweb.<app id>", opened by the OS for the site: C# passes
 // the schema and each transaction as JSON, this module runs them with the real IndexedDB and
 // returns JSON. Every name must start with "hackweb.", so the OS database stays out of reach.
-// Errors are thrown as "<DOMException name>: <message>" so C# can rebuild HackWebDbException.
+// Errors are thrown as "<DOMException name>: <message>" so C# can rebuild KazoWebDbException.
 
 const prefix = "hackweb.";
 const connections = new Map();

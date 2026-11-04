@@ -138,7 +138,7 @@ public sealed class CleanProfileCapabilityGrantSeederTests
         Description = "A manifest fixture for clean-profile default grant tests.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Apps.Sample", "Kazo.Os.Apps.Sample.SampleApp"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         Capabilities = capabilities

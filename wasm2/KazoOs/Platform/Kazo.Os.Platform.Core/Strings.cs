@@ -20,6 +20,6 @@ public sealed class Strings
     public static IStringLocalizer For(CultureInfo culture)
     {
         ArgumentNullException.ThrowIfNull(culture);
-        return new HackStringLocalizer(HackLocalization.GetResourceManager(typeof(Strings)), () => culture);
+        return new KazoStringLocalizer(KazoLocalization.GetResourceManager(typeof(Strings)), () => culture);
     }
 }

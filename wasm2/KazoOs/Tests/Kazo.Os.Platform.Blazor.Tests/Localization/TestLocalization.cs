@@ -53,7 +53,7 @@ internal static class TestLocalization
         ManualSimulationClock clock = new(Now, TimeSpan.FromSeconds(1));
 
         SessionLocaleService locale = new(new LoginEnvironmentProvider(fileSystem, clock), fileSystem, clock);
-        locale.Apply(new Dictionary<string, string> { [HackLocale.LangVariable] = lang });
+        locale.Apply(new Dictionary<string, string> { [KazoLocale.LangVariable] = lang });
         return locale;
     }
 

@@ -166,12 +166,12 @@ Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice.TransmitPackets.init -> void
 Kazo.Os.Apps.SystemMonitor.Metrics.ProcReader
 Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh
 Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh.<Clone>$() -> Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh!
-Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh.Deconstruct(out System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Diagnostics.HackProcess!>! Processes, out Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading! Metrics) -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh.Deconstruct(out System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Diagnostics.KazoProcess!>! Processes, out Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading! Metrics) -> void
 Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh.Equals(Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh? other) -> bool
 Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh.Metrics.get -> Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading!
 Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh.Metrics.init -> void
-Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh.ProcRefresh(System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Diagnostics.HackProcess!>! Processes, Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading! Metrics) -> void
-Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh.Processes.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Diagnostics.HackProcess!>!
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh.ProcRefresh(System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Diagnostics.KazoProcess!>! Processes, Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading! Metrics) -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh.Processes.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Diagnostics.KazoProcess!>!
 Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh.Processes.init -> void
 Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat
 Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat.<Clone>$() -> Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat!
@@ -351,7 +351,7 @@ Kazo.Os.Apps.SystemMonitor.SystemMonitorWindow.SetWindowVisible(bool visible) ->
 Kazo.Os.Apps.SystemMonitor.SystemMonitorWindow.SystemMonitorWindow() -> void
 Kazo.Os.Apps.SystemMonitor.Tabs.DiskTab
 Kazo.Os.Apps.SystemMonitor.Tabs.DiskTab.DiskTab() -> void
-Kazo.Os.Apps.SystemMonitor.Tabs.DiskTab.Drives.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.IO.HackDriveInfo!>!
+Kazo.Os.Apps.SystemMonitor.Tabs.DiskTab.Drives.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.IO.KazoDriveInfo!>!
 Kazo.Os.Apps.SystemMonitor.Tabs.DiskTab.Drives.set -> void
 Kazo.Os.Apps.SystemMonitor.Tabs.DiskTab.Metrics.get -> Kazo.Os.Apps.SystemMonitor.Metrics.SystemMetrics!
 Kazo.Os.Apps.SystemMonitor.Tabs.DiskTab.Metrics.set -> void
@@ -368,13 +368,13 @@ Kazo.Os.Apps.SystemMonitor.Tabs.PerformanceTab.PerformanceTab() -> void
 Kazo.Os.Apps.SystemMonitor.Tabs.PerformanceTab.ProcessCount.get -> int
 Kazo.Os.Apps.SystemMonitor.Tabs.PerformanceTab.ProcessCount.set -> void
 Kazo.Os.Apps.SystemMonitor.Tabs.ProcessDetailPanel
-Kazo.Os.Apps.SystemMonitor.Tabs.ProcessDetailPanel.AllProcesses.get -> System.Collections.Generic.IEnumerable<Kazo.Os.AppSdk.Diagnostics.HackProcess!>!
+Kazo.Os.Apps.SystemMonitor.Tabs.ProcessDetailPanel.AllProcesses.get -> System.Collections.Generic.IEnumerable<Kazo.Os.AppSdk.Diagnostics.KazoProcess!>!
 Kazo.Os.Apps.SystemMonitor.Tabs.ProcessDetailPanel.AllProcesses.set -> void
 Kazo.Os.Apps.SystemMonitor.Tabs.ProcessDetailPanel.OnClose.get -> Microsoft.AspNetCore.Components.EventCallback
 Kazo.Os.Apps.SystemMonitor.Tabs.ProcessDetailPanel.OnClose.set -> void
 Kazo.Os.Apps.SystemMonitor.Tabs.ProcessDetailPanel.OnSelectProcess.get -> Microsoft.AspNetCore.Components.EventCallback<long>
 Kazo.Os.Apps.SystemMonitor.Tabs.ProcessDetailPanel.OnSelectProcess.set -> void
-Kazo.Os.Apps.SystemMonitor.Tabs.ProcessDetailPanel.Process.get -> Kazo.Os.AppSdk.Diagnostics.HackProcess!
+Kazo.Os.Apps.SystemMonitor.Tabs.ProcessDetailPanel.Process.get -> Kazo.Os.AppSdk.Diagnostics.KazoProcess!
 Kazo.Os.Apps.SystemMonitor.Tabs.ProcessDetailPanel.Process.set -> void
 Kazo.Os.Apps.SystemMonitor.Tabs.ProcessDetailPanel.ProcessDetailPanel() -> void
 Kazo.Os.Apps.SystemMonitor.Tabs.ProcessesTab
@@ -386,13 +386,13 @@ Kazo.Os.Apps.SystemMonitor.Tabs.ProcessesTab.OnEndTask.get -> Microsoft.AspNetCo
 Kazo.Os.Apps.SystemMonitor.Tabs.ProcessesTab.OnEndTask.set -> void
 Kazo.Os.Apps.SystemMonitor.Tabs.ProcessesTab.OnForceKill.get -> Microsoft.AspNetCore.Components.EventCallback<System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow!>!>
 Kazo.Os.Apps.SystemMonitor.Tabs.ProcessesTab.OnForceKill.set -> void
-Kazo.Os.Apps.SystemMonitor.Tabs.ProcessesTab.Processes.get -> System.Collections.Generic.IReadOnlyDictionary<long, Kazo.Os.AppSdk.Diagnostics.HackProcess!>!
+Kazo.Os.Apps.SystemMonitor.Tabs.ProcessesTab.Processes.get -> System.Collections.Generic.IReadOnlyDictionary<long, Kazo.Os.AppSdk.Diagnostics.KazoProcess!>!
 Kazo.Os.Apps.SystemMonitor.Tabs.ProcessesTab.Processes.set -> void
 Kazo.Os.Apps.SystemMonitor.Tabs.ProcessesTab.ProcessesTab() -> void
 Kazo.Os.Apps.SystemMonitor.Tabs.ProcessesTab.Table.get -> Kazo.Os.Apps.SystemMonitor.Processes.ProcessTable!
 Kazo.Os.Apps.SystemMonitor.Tabs.ProcessesTab.Table.set -> void
 Kazo.Os.Apps.SystemMonitor.Tabs.ServicesTab
-Kazo.Os.Apps.SystemMonitor.Tabs.ServicesTab.Processes.get -> System.Collections.Generic.IReadOnlyDictionary<long, Kazo.Os.AppSdk.Diagnostics.HackProcess!>!
+Kazo.Os.Apps.SystemMonitor.Tabs.ServicesTab.Processes.get -> System.Collections.Generic.IReadOnlyDictionary<long, Kazo.Os.AppSdk.Diagnostics.KazoProcess!>!
 Kazo.Os.Apps.SystemMonitor.Tabs.ServicesTab.Processes.set -> void
 Kazo.Os.Apps.SystemMonitor.Tabs.ServicesTab.ServicesTab() -> void
 Kazo.Os.Apps.SystemMonitor._Imports
@@ -485,7 +485,7 @@ static Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice.operator !=(Kazo.Os.Apps
 static Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice.operator ==(Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice? left, Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice? right) -> bool
 static Kazo.Os.Apps.SystemMonitor.Metrics.ProcReader.ReadAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh!>!
 static Kazo.Os.Apps.SystemMonitor.Metrics.ProcReader.ReadCpuInfoAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry!>!>!
-static Kazo.Os.Apps.SystemMonitor.Metrics.ProcReader.ReadDrivesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.IO.HackDriveInfo!>!>!
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcReader.ReadDrivesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.IO.KazoDriveInfo!>!>!
 static Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh.operator !=(Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh? left, Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh? right) -> bool
 static Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh.operator ==(Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh? left, Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh? right) -> bool
 static Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat.operator !=(Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat? left, Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat? right) -> bool
@@ -512,7 +512,7 @@ static Kazo.Os.Apps.SystemMonitor.Processes.EndTaskFailure.operator !=(Kazo.Os.A
 static Kazo.Os.Apps.SystemMonitor.Processes.EndTaskFailure.operator ==(Kazo.Os.Apps.SystemMonitor.Processes.EndTaskFailure? left, Kazo.Os.Apps.SystemMonitor.Processes.EndTaskFailure? right) -> bool
 static Kazo.Os.Apps.SystemMonitor.Processes.EndTaskReport.operator !=(Kazo.Os.Apps.SystemMonitor.Processes.EndTaskReport? left, Kazo.Os.Apps.SystemMonitor.Processes.EndTaskReport? right) -> bool
 static Kazo.Os.Apps.SystemMonitor.Processes.EndTaskReport.operator ==(Kazo.Os.Apps.SystemMonitor.Processes.EndTaskReport? left, Kazo.Os.Apps.SystemMonitor.Processes.EndTaskReport? right) -> bool
-static Kazo.Os.Apps.SystemMonitor.Processes.EndTaskRunner.End(Kazo.Os.AppSdk.Diagnostics.HackProcess! process, Kazo.Os.Apps.SystemMonitor.Processes.EndTaskMode mode, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+static Kazo.Os.Apps.SystemMonitor.Processes.EndTaskRunner.End(Kazo.Os.AppSdk.Diagnostics.KazoProcess! process, Kazo.Os.Apps.SystemMonitor.Processes.EndTaskMode mode, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 static Kazo.Os.Apps.SystemMonitor.Processes.EndTaskRunner.EndAsync(System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow!>! rows, System.Func<Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow!, System.Threading.Tasks.Task!>! end) -> System.Threading.Tasks.Task<Kazo.Os.Apps.SystemMonitor.Processes.EndTaskReport!>!
 static Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.operator !=(Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow? left, Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow? right) -> bool
 static Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.operator ==(Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow? left, Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow? right) -> bool

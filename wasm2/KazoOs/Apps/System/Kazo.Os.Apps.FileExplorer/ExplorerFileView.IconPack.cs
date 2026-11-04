@@ -15,7 +15,7 @@ namespace Kazo.Os.Apps.FileExplorer;
 /// </summary>
 public sealed partial class ExplorerFileView
 {
-    private HackSettingsDocument? _iconSettings;
+    private KazoSettingsDocument? _iconSettings;
     private IconPack? _iconPack;
     private IShellIconProvider? _iconProvider;
     private string? _iconPackId;
@@ -30,14 +30,14 @@ public sealed partial class ExplorerFileView
     private ShellIconDescriptor AppShortcutIcon(string appId, string? category) =>
         _iconPack?.FindApp(appId, category) is { } url
             ? ShellIconDescriptor.Png(url)
-            : ShellIconDescriptor.Vector(IconLibrary.Lucide, HackAppIcons.LucideName(appId, category));
+            : ShellIconDescriptor.Vector(IconLibrary.Lucide, KazoAppIcons.LucideName(appId, category));
 
     /// <summary>Opens <c>icons.config</c>, loads its pack and follows its changes. Never fails the control.</summary>
     private async Task StartIconPackAsync()
     {
         try
         {
-            _iconSettings = await HackSettings.OpenSystemAsync(HostContext, IconPackLibrary.SettingsDocumentId, HostContext.CancellationToken);
+            _iconSettings = await KazoSettings.OpenSystemAsync(HostContext, IconPackLibrary.SettingsDocumentId, HostContext.CancellationToken);
         }
         catch (Exception exception) when (exception is NotSupportedException or ArgumentException or IOException or UnauthorizedAccessException)
         {
@@ -49,7 +49,7 @@ public sealed partial class ExplorerFileView
         await LoadIconPackAsync();
     }
 
-    private void OnIconSettingsChanged(object? sender, HackSettingsChangedEventArgs args) =>
+    private void OnIconSettingsChanged(object? sender, KazoSettingsChangedEventArgs args) =>
         _ = InvokeAsync(async () =>
         {
             await LoadIconPackAsync();
@@ -83,12 +83,12 @@ public sealed partial class ExplorerFileView
         {
             try
             {
-                using IDisposable scope = HackExecutionContext.Enter(HostContext);
+                using IDisposable scope = KazoExecutionContext.Enter(HostContext);
                 IconPackFileAccess files = new(
-                    async (directory, token) => await HackDirectory.GetDirectoriesAsync(directory, cancellationToken: token),
-                    async (directory, token) => await HackDirectory.GetFilesAsync(directory, cancellationToken: token),
-                    HackFile.ReadAllBytesAsync);
-                string home = HackUser.Describe(HostContext).HomeDirectory;
+                    async (directory, token) => await KazoDirectory.GetDirectoriesAsync(directory, cancellationToken: token),
+                    async (directory, token) => await KazoDirectory.GetFilesAsync(directory, cancellationToken: token),
+                    KazoFile.ReadAllBytesAsync);
+                string home = KazoUser.Describe(HostContext).HomeDirectory;
                 IconPackListResult packs = await IconPackLibrary.ListAsync(files, home, HostContext.CancellationToken);
                 if (packs.Find(id) is { } info)
                 {

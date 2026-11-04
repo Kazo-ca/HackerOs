@@ -21,8 +21,8 @@ public sealed class WindowAppBaseWindowEventsTests
         IWindowAppEventTarget target = app;
 
         await target.NotifyActivatedAsync();
-        await target.NotifyStateChangedAsync(HackWindowState.Normal, HackWindowState.Maximized);
-        await target.NotifyResizedAsync(new HackWindowSize(1278, 640));
+        await target.NotifyStateChangedAsync(KazoWindowState.Normal, KazoWindowState.Maximized);
+        await target.NotifyResizedAsync(new KazoWindowSize(1278, 640));
         await target.NotifyDeactivatedAsync();
 
         Assert.Equal(
@@ -34,8 +34,8 @@ public sealed class WindowAppBaseWindowEventsTests
             ],
             app.Calls);
         Assert.False(app.Active);
-        Assert.Equal(HackWindowState.Maximized, app.State);
-        Assert.Equal(new HackWindowSize(1278, 640), app.Size);
+        Assert.Equal(KazoWindowState.Maximized, app.State);
+        Assert.Equal(new KazoWindowSize(1278, 640), app.Size);
     }
 
     [Fact]
@@ -60,9 +60,9 @@ public sealed class WindowAppBaseWindowEventsTests
         app.ThrowOnStateChange = true;
         IWindowAppEventTarget target = app;
 
-        await target.NotifyStateChangedAsync(HackWindowState.Normal, HackWindowState.Minimized);
+        await target.NotifyStateChangedAsync(KazoWindowState.Normal, KazoWindowState.Minimized);
 
-        Assert.Equal(HackWindowState.Minimized, app.State);
+        Assert.Equal(KazoWindowState.Minimized, app.State);
         (DiagnosticSeverity severity, string message) = Assert.Single(logging.Entries);
         Assert.Equal(DiagnosticSeverity.Error, severity);
         Assert.Contains("OnWindowStateChanged", message, StringComparison.Ordinal);
@@ -118,9 +118,9 @@ public sealed class WindowAppBaseWindowEventsTests
 
         public bool Active => IsWindowActive;
 
-        public HackWindowState State => WindowState;
+        public KazoWindowState State => WindowState;
 
-        public HackWindowSize? Size => WindowSize;
+        public KazoWindowSize? Size => WindowSize;
 
         public void Bind(IAppExecutionContext context) => AppContext = context;
 
@@ -142,7 +142,7 @@ public sealed class WindowAppBaseWindowEventsTests
             return Task.CompletedTask;
         }
 
-        protected override void OnWindowStateChanged(HackWindowState previous, HackWindowState current)
+        protected override void OnWindowStateChanged(KazoWindowState previous, KazoWindowState current)
         {
             if (ThrowOnStateChange)
             {
@@ -152,18 +152,18 @@ public sealed class WindowAppBaseWindowEventsTests
             Calls.Add($"state {previous}->{current}");
         }
 
-        protected override Task OnWindowStateChangedAsync(HackWindowState previous, HackWindowState current)
+        protected override Task OnWindowStateChangedAsync(KazoWindowState previous, KazoWindowState current)
         {
             Calls.Add($"state-async {previous}->{current}");
             return Task.CompletedTask;
         }
 
-        protected override void OnWindowResized(HackWindowSize size) =>
+        protected override void OnWindowResized(KazoWindowSize size) =>
             Calls.Add(size.DisplaySurfaceId is null
                 ? $"resized {size.Width}x{size.Height}"
                 : $"resized {size.Width}x{size.Height} on {size.DisplaySurfaceId}");
 
-        protected override Task OnWindowResizedAsync(HackWindowSize size)
+        protected override Task OnWindowResizedAsync(KazoWindowSize size)
         {
             if (size.DisplaySurfaceId is null)
             {
@@ -233,7 +233,7 @@ public sealed class WindowAppBaseWindowEventsTests
             Resources = AppResourceProfileManifest.None,
         };
 
-        public event EventHandler<Kazo.Os.AppSdk.Diagnostics.HackStopRequestedEventArgs>? StopRequested
+        public event EventHandler<Kazo.Os.AppSdk.Diagnostics.KazoStopRequestedEventArgs>? StopRequested
         {
             add { }
             remove { }

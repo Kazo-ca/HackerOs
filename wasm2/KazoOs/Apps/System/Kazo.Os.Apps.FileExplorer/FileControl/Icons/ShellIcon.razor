@@ -1,5 +1,5 @@
 @namespace Kazo.Os.Apps.FileExplorer.FileControl.Icons
-@inherits Kazo.Os.AppSdk.Blazor.HackComponentBase
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
 
 @*
     Renders one ShellIconDescriptor regardless of its Kind, so callers never branch on icon kind
@@ -9,7 +9,7 @@
     @if (Icon is { Kind: ShellIconKind.Vector, LibraryOrPath: not null, Name: not null } vectorIcon
         && Enum.TryParse<IconLibrary>(vectorIcon.LibraryOrPath, out IconLibrary library))
     {
-        <HackerIcon Library="library" Name="@vectorIcon.Name" Size="Size" />
+        <KazoIcon Library="library" Name="@vectorIcon.Name" Size="Size" />
     }
     else if (Icon is { Kind: ShellIconKind.Png, LibraryOrPath: not null })
     {
@@ -21,6 +21,6 @@
     /// <summary>The icon to render.</summary>
     [Parameter] public ShellIconDescriptor? Icon { get; set; }
 
-    /// <summary>The rendered width/height in pixels. Defaults to 20, matching <c>HackerIcon</c>.</summary>
+    /// <summary>The rendered width/height in pixels. Defaults to 20, matching <c>KazoIcon</c>.</summary>
     [Parameter] public int Size { get; set; } = 20;
 }

@@ -43,7 +43,7 @@ public sealed class LocalServerPanelTests
         await using PanelHarness harness = await PanelHarness.RenderAsync(gateway);
 
         string html = harness.Html();
-        Assert.Contains($"hackeros-server-{HackerOsSdk.Version}-win-x64.zip", html, StringComparison.Ordinal);
+        Assert.Contains($"hackeros-server-{KazoOsSdk.Version}-win-x64.zip", html, StringComparison.Ordinal);
         Assert.Contains("ghcr.io/kazo-ca/hackeros-server", html, StringComparison.Ordinal);
         Assert.Contains("href=\"https://github.com/Kazo-ca/Os/releases/latest\"", html, StringComparison.Ordinal);
         Assert.Contains("value=\"http://localhost:5888\"", html, StringComparison.Ordinal);
@@ -53,7 +53,7 @@ public sealed class LocalServerPanelTests
     [Fact]
     public async Task Test_shows_what_the_address_answered()
     {
-        FakeServerConnection gateway = new() { Probe = new HackServerProbe(true, "2.1.0", "1.0", null) };
+        FakeServerConnection gateway = new() { Probe = new KazoServerProbe(true, "2.1.0", "1.0", null) };
         await using PanelHarness harness = await PanelHarness.RenderAsync(gateway);
 
         await harness.InvokeAsync(() => harness.Panel.TestAsync());
@@ -73,7 +73,7 @@ public sealed class LocalServerPanelTests
         await harness.InvokeAsync(() => harness.Panel.PairAsync());
 
         Assert.Equal((new Uri("https://192.168.1.20:5889/"), "H9R4-JYYG"), gateway.Paired);
-        HackServerConnectionState state = Assert.IsType<HackServerConnectionState>(harness.PairedState);
+        KazoServerConnectionState state = Assert.IsType<KazoServerConnectionState>(harness.PairedState);
         Assert.True(state.IsConnected);
         Assert.Equal(string.Empty, harness.Panel.Code);
     }
@@ -96,7 +96,7 @@ public sealed class LocalServerPanelTests
     {
         public int Calls { get; private set; }
 
-        public HackServerProbe Probe { get; init; } = new(false, null, null, "refused");
+        public KazoServerProbe Probe { get; init; } = new(false, null, null, "refused");
 
         public bool RefusePairing { get; init; }
 
@@ -104,51 +104,51 @@ public sealed class LocalServerPanelTests
 
         public (Uri Url, string Code)? Paired { get; private set; }
 
-        public ValueTask<HackServerProbe> TestAsync(Uri serverUrl, CancellationToken cancellationToken = default)
+        public ValueTask<KazoServerProbe> TestAsync(Uri serverUrl, CancellationToken cancellationToken = default)
         {
             Calls++;
             TestedUrl = serverUrl;
             return ValueTask.FromResult(Probe);
         }
 
-        public ValueTask<HackServerConnectionState> PairAsync(Uri serverUrl, string code, CancellationToken cancellationToken = default)
+        public ValueTask<KazoServerConnectionState> PairAsync(Uri serverUrl, string code, CancellationToken cancellationToken = default)
         {
             Calls++;
             if (RefusePairing)
             {
-                throw new HackServerConnectionException("Could not pair: 401");
+                throw new KazoServerConnectionException("Could not pair: 401");
             }
 
             Paired = (serverUrl, code);
-            return ValueTask.FromResult(new HackServerConnectionState(true, serverUrl, Guid.NewGuid(), Guid.NewGuid()));
+            return ValueTask.FromResult(new KazoServerConnectionState(true, serverUrl, Guid.NewGuid(), Guid.NewGuid()));
         }
 
-        public ValueTask<HackServerConnectionState> GetStateAsync(CancellationToken cancellationToken = default) =>
-            ValueTask.FromResult(HackServerConnectionState.NotConnected);
+        public ValueTask<KazoServerConnectionState> GetStateAsync(CancellationToken cancellationToken = default) =>
+            ValueTask.FromResult(KazoServerConnectionState.NotConnected);
 
-        public ValueTask<HackServerConnectionState> ConnectAsync(Uri serverUrl, string login, string password, CancellationToken cancellationToken = default) =>
+        public ValueTask<KazoServerConnectionState> ConnectAsync(Uri serverUrl, string login, string password, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
-        public ValueTask<HackServerConnectionState> CreateAccountAsync(Uri serverUrl, string login, string password, CancellationToken cancellationToken = default) =>
+        public ValueTask<KazoServerConnectionState> CreateAccountAsync(Uri serverUrl, string login, string password, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
         public ValueTask DisconnectAsync(CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
-        public ValueTask SyncAsync(HackSyncDomain domain, HackSyncDirection direction, CancellationToken cancellationToken = default) =>
+        public ValueTask SyncAsync(KazoSyncDomain domain, KazoSyncDirection direction, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
-        public ValueTask<IReadOnlyList<HackSyncConflict>> GetConflictsAsync(CancellationToken cancellationToken = default) =>
+        public ValueTask<IReadOnlyList<KazoSyncConflict>> GetConflictsAsync(CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
         public ValueTask ShowConflictsAsync(CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
-        public ValueTask<HackSyncStatus> GetSyncStatusAsync(CancellationToken cancellationToken = default) =>
+        public ValueTask<KazoSyncStatus> GetSyncStatusAsync(CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
         public ValueTask SetSyncPausedAsync(bool paused, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
-        public ValueTask<HackSyncStatus> SyncNowAsync(CancellationToken cancellationToken = default) =>
+        public ValueTask<KazoSyncStatus> SyncNowAsync(CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
     }
 
@@ -166,7 +166,7 @@ public sealed class LocalServerPanelTests
 
         public LocalServerPanel Panel { get; private set; } = default!;
 
-        public HackServerConnectionState? PairedState { get; private set; }
+        public KazoServerConnectionState? PairedState { get; private set; }
 
         public static async Task<PanelHarness> RenderAsync(IAppServerConnectionGateway gateway, string lang = "en_US.UTF-8")
         {
@@ -185,7 +185,7 @@ public sealed class LocalServerPanelTests
                 {
                     [nameof(PanelHost.Context)] = context,
                     [nameof(PanelHost.Captured)] = (Action<LocalServerPanel>)(panel => harness.Panel = panel),
-                    [nameof(PanelHost.Paired)] = (Action<HackServerConnectionState>)(state => harness.PairedState = state)
+                    [nameof(PanelHost.Paired)] = (Action<KazoServerConnectionState>)(state => harness.PairedState = state)
                 })));
             await harness._root.QuiescenceTask;
             return harness;
@@ -211,7 +211,7 @@ public sealed class LocalServerPanelTests
         public Action<LocalServerPanel> Captured { get; set; } = default!;
 
         [Parameter]
-        public Action<HackServerConnectionState> Paired { get; set; } = default!;
+        public Action<KazoServerConnectionState> Paired { get; set; } = default!;
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
@@ -221,7 +221,7 @@ public sealed class LocalServerPanelTests
             {
                 child.OpenComponent<LocalServerPanel>(0);
                 child.AddComponentParameter(1, nameof(LocalServerPanel.OnPaired),
-                    EventCallback.Factory.Create<HackServerConnectionState>(this, Paired));
+                    EventCallback.Factory.Create<KazoServerConnectionState>(this, Paired));
                 child.AddComponentReferenceCapture(2, reference => Captured((LocalServerPanel)reference));
                 child.CloseComponent();
             }));

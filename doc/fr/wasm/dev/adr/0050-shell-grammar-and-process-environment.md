@@ -215,7 +215,7 @@ lien vers le répertoire courant réel.
 
 ### 6. `HackEnvironment` dans le SDK
 
-`Shared/Kazo.Os.AppSdk/HackEnvironment.cs`, statique, calqué sur
+`Shared/Kazo.Os.AppSdk/KazoEnvironment.cs`, statique, calqué sur
 `System.Environment`, et lu dans le contexte ambiant de l'ADR 0043 :
 
 ```csharp

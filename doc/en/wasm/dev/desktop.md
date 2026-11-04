@@ -2,7 +2,7 @@
 
 # Desktop: icons, shortcuts and `desktop.config`
 
-The `HackDesktop*` types, the `desktop.config` file, the `.desktop` shortcuts and the shortcut-creation intent intended for apps are in [`desktop-api.md`](../framework/desktop-api.md).
+The `KazoDesktop*` types, the `desktop.config` file, the `.desktop` shortcuts and the shortcut-creation intent intended for apps are in [`desktop-api.md`](../framework/desktop-api.md).
 
 Work item `desk/5-desktop` of the plan
 [`desktop-and-context-menu-plan.md`](plans/desktop-and-context-menu-plan.md) (§5).
@@ -41,7 +41,7 @@ On mobile, there are no desktop icons (ADR 0152 §7).
 DesktopShell ──► DesktopArea.BackgroundContent (BackgroundInteractive)
                    └─ DesktopSurfaceHost ── launches org.hackeros.desktop (real process)
                         └─ DesktopSurface (Desktop app, rights from its manifest)
-                             └─ HackFileView Mode=Desktop ──► registry ──► ExplorerFileView
+                             └─ KazoFileView Mode=Desktop ──► registry ──► ExplorerFileView
                                                                 └─ FileView ─► FileViewDesktop (grid)
 ```
 
@@ -98,7 +98,7 @@ Page after Appearance: icon size, auto-arrange, alignment, system icons, sort,
 
 ## Tests
 
-- `Kazo.Os.AppSdk.Tests/Files/HackDesktopTests.cs`: order, placement,
+- `Kazo.Os.AppSdk.Tests/Files/KazoDesktopTests.cs`: order, placement,
   collisions, off-screen, auto-arrange, moves, shortcuts (reading, writing,
   rejection, numbered names), `desktop.config` (reading, writing, encoded
   keys, folder creation).
@@ -113,9 +113,9 @@ Page after Appearance: icon size, auto-arrange, alignment, system icons, sort,
 ## Tasks (work item `desk/5-desktop`)
 
 - [x] ADR 0160 (adjustments to ADR 0152).
-- [x] SDK contract: `HackDesktop*`, `HackDesktopEntry`, `HackDesktopSettings`,
-  `HackAppIcons`, `HackFileMenuItems.EmptyTrash`.
-- [x] `HackFileView`: `HackFileViewMode.Desktop`, `DesktopOptions`,
+- [x] SDK contract: `KazoDesktop*`, `KazoDesktopEntry`, `KazoDesktopSettings`,
+  `KazoAppIcons`, `KazoFileMenuItems.EmptyTrash`.
+- [x] `KazoFileView`: `KazoFileViewMode.Desktop`, `DesktopOptions`,
   `DesktopPositions`, `DesktopPositionsChanged`.
 - [x] `FileViewDesktop`: grid, selection, lasso, keyboard, renaming,
   drag and drop, system icons.

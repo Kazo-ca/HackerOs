@@ -96,7 +96,7 @@ public sealed class WebRouteGeneratorTests
                 public override IReadOnlyList<string> Urls => ["http://intranet.hack/"];
             }
 
-            public sealed class HomeController : HackController
+            public sealed class HomeController : KazoController
             {
                 public string Index() => "home";
             }
@@ -104,7 +104,7 @@ public sealed class WebRouteGeneratorTests
 
         Assert.Empty(diagnostics);
         Assert.Empty(output.GetDiagnostics().Where(diagnostic => diagnostic.Severity == DiagnosticSeverity.Error));
-        Assert.NotNull(output.GetTypeByMetadataName("Kazo.Os.AppSdk.Web.Generated.HackWebGeneratedRoutes"));
+        Assert.NotNull(output.GetTypeByMetadataName("Kazo.Os.AppSdk.Web.Generated.KazoWebGeneratedRoutes"));
         Assert.NotNull(output.GetTypeByMetadataName("IntranetWebHost"));
     }
 
@@ -113,7 +113,7 @@ public sealed class WebRouteGeneratorTests
     {
         Assert.Contains("HOSWEB0001", Ids("""
             [Route("api/notes")]
-            public sealed class NotesController : HackApiController
+            public sealed class NotesController : KazoApiController
             {
                 [HttpGet("{id:int}")] public string A(int id) => "a";
                 [HttpGet("{key:int}")] public string B(int key) => "b";
@@ -126,7 +126,7 @@ public sealed class WebRouteGeneratorTests
     {
         Assert.Empty(Ids("""
             [Route("api/notes")]
-            public sealed class NotesController : HackApiController
+            public sealed class NotesController : KazoApiController
             {
                 [HttpGet("{id:int}")] public string Get(int id) => "a";
                 [HttpDelete("{id:int}")] public string Delete(int id) => "b";
@@ -138,7 +138,7 @@ public sealed class WebRouteGeneratorTests
     public void An_invalid_template_is_reported()
     {
         Assert.Contains("HOSWEB0002", Ids("""
-            public sealed class NotesController : HackApiController
+            public sealed class NotesController : KazoApiController
             {
                 [HttpGet("notes/{id")] public string Get(int id) => "a";
             }
@@ -149,7 +149,7 @@ public sealed class WebRouteGeneratorTests
     public void A_duplicate_route_name_is_reported()
     {
         Assert.Contains("HOSWEB0003", Ids("""
-            public sealed class NotesController : HackApiController
+            public sealed class NotesController : KazoApiController
             {
                 [HttpGet("a", Name = "same")] public string A() => "a";
                 [HttpGet("b", Name = "same")] public string B() => "b";
@@ -161,7 +161,7 @@ public sealed class WebRouteGeneratorTests
     public void A_parameter_that_cannot_be_bound_is_reported()
     {
         Assert.Contains("HOSWEB0004", Ids("""
-            public sealed class NotesController : HackController
+            public sealed class NotesController : KazoController
             {
                 public string Get(System.IO.Stream stream) => "a";
             }
@@ -172,7 +172,7 @@ public sealed class WebRouteGeneratorTests
     public void A_controller_without_public_constructor_is_reported()
     {
         Assert.Contains("HOSWEB0005", Ids("""
-            public sealed class NotesController : HackController
+            public sealed class NotesController : KazoController
             {
                 private NotesController() { }
                 public string Index() => "a";
@@ -198,7 +198,7 @@ public sealed class WebRouteGeneratorTests
     public void An_api_action_without_attribute_route_is_reported()
     {
         Assert.Contains("HOSWEB0007", Ids("""
-            public sealed class NotesController : HackApiController
+            public sealed class NotesController : KazoApiController
             {
                 public string List() => "a";
             }
@@ -233,7 +233,7 @@ public sealed class WebRouteGeneratorTests
 
         Assert.Empty(diagnostics);
         Assert.Empty(output.GetDiagnostics().Where(diagnostic => diagnostic.Severity == DiagnosticSeverity.Error));
-        string table = output.SyntaxTrees.Single(tree => tree.FilePath.EndsWith("HackWebGeneratedRoutes.g.cs", StringComparison.Ordinal)).ToString();
+        string table = output.SyntaxTrees.Single(tree => tree.FilePath.EndsWith("KazoWebGeneratedRoutes.g.cs", StringComparison.Ordinal)).ToString();
         Assert.Contains("""new("Home/Index", typeof(global::Example.Intranet_Site.Views.Home.Index))""", table);
         Assert.Contains("""new("Home/2 items", typeof(global::Example.Intranet_Site.Views.Home._2_items))""", table);
         Assert.Contains("""new("Shared/_Layout", typeof(global::Example.Intranet_Site.Views.Shared._Layout))""", table);
@@ -241,7 +241,7 @@ public sealed class WebRouteGeneratorTests
         Assert.Contains("""new("Widgets/Deep/Card", typeof(global::Custom.Imported.Card))""", table);
         Assert.DoesNotContain("_Imports", table);
         Assert.DoesNotContain("NotAView", table);
-        Assert.Contains("HackWebGeneratedRoutes.Views)", output.SyntaxTrees.Single(tree => tree.FilePath.EndsWith("WebHost.g.cs", StringComparison.Ordinal)).ToString());
+        Assert.Contains("KazoWebGeneratedRoutes.Views)", output.SyntaxTrees.Single(tree => tree.FilePath.EndsWith("WebHost.g.cs", StringComparison.Ordinal)).ToString());
     }
 
     [Fact]
@@ -270,11 +270,11 @@ public sealed class WebRouteGeneratorTests
             new RazorFile("Views/Area/_ViewImports.cshtml", "@namespace Custom.Area"),
             new RazorFile("Views/Area/Deep/Card.cshtml"),
             new RazorFile("Views/Area/Own.cshtml", "@namespace Own"),
-            new RazorFile("_ViewImports.cshtml", "@inherits HackRazorPage<TModel>"));
+            new RazorFile("_ViewImports.cshtml", "@inherits KazoRazorPage<TModel>"));
 
         Assert.Empty(diagnostics);
         Assert.Empty(output.GetDiagnostics().Where(diagnostic => diagnostic.Severity == DiagnosticSeverity.Error));
-        string table = output.SyntaxTrees.Single(tree => tree.FilePath.EndsWith("HackWebGeneratedRoutes.g.cs", StringComparison.Ordinal)).ToString();
+        string table = output.SyntaxTrees.Single(tree => tree.FilePath.EndsWith("KazoWebGeneratedRoutes.g.cs", StringComparison.Ordinal)).ToString();
         Assert.Contains("""new("Home/Index", typeof(global::AspNetCoreGeneratedDocument.Views_Home_Index))""", table);
         Assert.Contains("""new("_ViewStart", typeof(global::AspNetCoreGeneratedDocument.Views__ViewStart))""", table);
         Assert.Contains("""new("My-Dir/1 a.b", typeof(global::AspNetCoreGeneratedDocument.Views_My_Dir_1_a_b))""", table);
@@ -290,7 +290,7 @@ public sealed class WebRouteGeneratorTests
         (ImmutableArray<Diagnostic> diagnostics, _) = Run("""
             namespace AspNetCoreGeneratedDocument { internal sealed class Views_Home_Index { } }
             namespace Example.Intranet_Site.Views.Home { public sealed class Index : Microsoft.AspNetCore.Components.ComponentBase { } }
-            public sealed class HomeController : HackController { public IHackActionResult Index() => View(); }
+            public sealed class HomeController : KazoController { public IHackActionResult Index() => View(); }
             """,
             new RazorFile("Views/Home/Index.cshtml"),
             new RazorFile("Views/Home/Index.razor"));

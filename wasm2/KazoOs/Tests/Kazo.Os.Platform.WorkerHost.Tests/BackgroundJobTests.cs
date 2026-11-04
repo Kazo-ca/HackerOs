@@ -9,7 +9,7 @@ using Kazo.Os.Platform.WorkerHost.Tests;
 using Kazo.Os.Simulation.Abstractions.Processes;
 
 // ADR 0128, section 2: the inputs and results of the test tasks cross as JSON.
-[assembly: HackWireContext(typeof(BackgroundJobsJsonContext))]
+[assembly: KazoWireContext(typeof(BackgroundJobsJsonContext))]
 
 namespace Kazo.Os.Platform.WorkerHost.Tests;
 
@@ -30,7 +30,7 @@ public sealed record UndeclaredJobInput(int N);
 internal sealed partial class BackgroundJobsJsonContext : JsonSerializerContext;
 
 /// <summary>
-/// ADR 0128: <c>HackBackground.RunAsync</c> runs a static method of the app as a child process, on
+/// ADR 0128: <c>KazoBackground.RunAsync</c> runs a static method of the app as a child process, on
 /// the main thread without workers and in a worker with them, with the same result, reports,
 /// cancellation, faults and kill. Each scenario runs in both modes.
 /// </summary>
@@ -334,7 +334,7 @@ internal static class BackgroundJobCommands
     // ---- the tasks: static methods of the app's assembly -------------------------------------
 
     /// <summary>Adds 1..Count, one report per step.</summary>
-    public static async Task<SumResult> Sum(SumInput input, HackBackgroundContext context)
+    public static async Task<SumResult> Sum(SumInput input, KazoBackgroundContext context)
     {
         long total = 0;
         for (int i = 1; i <= input.Count; i++)
@@ -344,7 +344,7 @@ internal static class BackgroundJobCommands
             await Task.Delay(input.Delay, context.CancellationToken);
         }
 
-        IAppExecutionContext current = HackExecutionContext.Current;
+        IAppExecutionContext current = KazoExecutionContext.Current;
         return new SumResult(
             total,
             current.GetType().Name == "RemoteAppExecutionContext" ? "worker" : "main",
@@ -352,9 +352,9 @@ internal static class BackgroundJobCommands
             current.Processes.OwnProcess.ParentPid?.Value ?? 0);
     }
 
-    public static void Explode(int input, HackBackgroundContext context) => throw new InvalidOperationException("kaboom");
+    public static void Explode(int input, KazoBackgroundContext context) => throw new InvalidOperationException("kaboom");
 
-    public static async Task Forever(int input, HackBackgroundContext context)
+    public static async Task Forever(int input, KazoBackgroundContext context)
     {
         while (true)
         {
@@ -364,7 +364,7 @@ internal static class BackgroundJobCommands
     }
 
     /// <summary>Waits for the test to release it, ignoring its token: only a kill ends it early.</summary>
-    public static async Task<int> Hold(int input, HackBackgroundContext context)
+    public static async Task<int> Hold(int input, KazoBackgroundContext context)
     {
         Volatile.Write(ref s_lastPid, context.ProcessId);
         Interlocked.Increment(ref s_started);
@@ -376,12 +376,12 @@ internal static class BackgroundJobCommands
         return input;
     }
 
-    public static int Undeclared(UndeclaredJobInput input, HackBackgroundContext context) => input.N;
+    public static int Undeclared(UndeclaredJobInput input, KazoBackgroundContext context) => input.N;
 
     /// <summary>Counts characters, as a task class.</summary>
-    public sealed class LengthJob : HackBackgroundJob<string, int>
+    public sealed class LengthJob : KazoBackgroundJob<string, int>
     {
-        public override Task<int> RunAsync(string input, HackBackgroundContext context) => Task.FromResult(input.Length);
+        public override Task<int> RunAsync(string input, KazoBackgroundContext context) => Task.FromResult(input.Length);
     }
 
     // ---- the commands --------------------------------------------------------------------------
@@ -390,8 +390,8 @@ internal static class BackgroundJobCommands
     {
         public override async ValueTask<int> ExecuteAsync(TerminalExecutionContext context, CancellationToken cancellationToken)
         {
-            ConcurrentQueue<HackBackgroundProgress> reports = new();
-            SumResult result = await HackBackground.RunAsync<SumInput, SumResult>(
+            ConcurrentQueue<KazoBackgroundProgress> reports = new();
+            SumResult result = await KazoBackground.RunAsync<SumInput, SumResult>(
                 Sum, new SumInput(int.Parse(context.Arguments[0]), 5),
                 new SyncProgress(reports.Enqueue), cancellationToken: cancellationToken);
             await context.StandardOutput.WriteLineAsync($"total={result.Total}");
@@ -399,7 +399,7 @@ internal static class BackgroundJobCommands
             bool child = result.Pid != context.App.ProcessId.Value && result.ParentPid == context.App.ProcessId.Value;
             await context.StandardOutput.WriteLineAsync($"child={(child ? "yes" : "no")}");
             await context.StandardOutput.WriteLineAsync($"progress={(reports.Count is > 0 and < 20 ? "yes" : "no:" + reports.Count)}");
-            HackBackgroundProgress last = reports.Last();
+            KazoBackgroundProgress last = reports.Last();
             await context.StandardOutput.WriteLineAsync(FormattableString.Invariant($"last={last.Fraction:0.00} {last.Message}"));
             return 0;
         }
@@ -409,7 +409,7 @@ internal static class BackgroundJobCommands
     {
         public override async ValueTask<int> ExecuteAsync(TerminalExecutionContext context, CancellationToken cancellationToken)
         {
-            int length = await HackBackground.RunAsync<LengthJob, string, int>(context.Arguments[0], cancellationToken: cancellationToken);
+            int length = await KazoBackground.RunAsync<LengthJob, string, int>(context.Arguments[0], cancellationToken: cancellationToken);
             await context.StandardOutput.WriteLineAsync(length.ToString(System.Globalization.CultureInfo.InvariantCulture));
             return 0;
         }
@@ -421,10 +421,10 @@ internal static class BackgroundJobCommands
         {
             try
             {
-                await HackBackground.RunAsync<int>(Explode, 1, cancellationToken: cancellationToken);
+                await KazoBackground.RunAsync<int>(Explode, 1, cancellationToken: cancellationToken);
                 await context.StandardOutput.WriteLineAsync("no fault");
             }
-            catch (HackBackgroundJobException exception)
+            catch (KazoBackgroundJobException exception)
             {
                 string trace = string.IsNullOrEmpty(exception.OriginalStackTrace) ? "no" : "yes";
                 await context.StandardOutput.WriteLineAsync($"{exception.OriginalTypeName}: {exception.Message} trace={trace}");
@@ -441,7 +441,7 @@ internal static class BackgroundJobCommands
         {
             try
             {
-                await HackBackground.RunAsync<int>(Forever, 0, cancellationToken: CancellationToken.None);
+                await KazoBackground.RunAsync<int>(Forever, 0, cancellationToken: CancellationToken.None);
             }
             catch (OperationCanceledException)
             {
@@ -459,7 +459,7 @@ internal static class BackgroundJobCommands
             using CancellationTokenSource cancel = new();
             try
             {
-                await HackBackground.RunAsync<int>(
+                await KazoBackground.RunAsync<int>(
                     Forever, 0, new SyncProgress(_ => cancel.Cancel()), cancellationToken: cancel.Token);
                 await context.StandardOutput.WriteLineAsync("ended");
             }
@@ -478,7 +478,7 @@ internal static class BackgroundJobCommands
         public override async ValueTask<int> ExecuteAsync(TerminalExecutionContext context, CancellationToken cancellationToken)
         {
             int count = int.Parse(context.Arguments[0]);
-            Task<int>[] tasks = [.. Enumerable.Range(0, count).Select(_ => HackBackground.RunAsync<int, int>(Hold, 1, options: new HackBackgroundOptions { Nice = 5 }, cancellationToken: cancellationToken))];
+            Task<int>[] tasks = [.. Enumerable.Range(0, count).Select(_ => KazoBackground.RunAsync<int, int>(Hold, 1, options: new KazoBackgroundOptions { Nice = 5 }, cancellationToken: cancellationToken))];
             if (context.Arguments.Count > 1)
             {
                 await Task.WhenAll(tasks);
@@ -490,7 +490,7 @@ internal static class BackgroundJobCommands
                 int[] results = await Task.WhenAll(tasks);
                 await context.StandardOutput.WriteLineAsync($"held {results.Sum()}");
             }
-            catch (HackProcessKilledException exception)
+            catch (KazoProcessKilledException exception)
             {
                 await context.StandardOutput.WriteLineAsync($"killed {exception.Reason}");
             }
@@ -505,7 +505,7 @@ internal static class BackgroundJobCommands
         {
             try
             {
-                await HackBackground.RunAsync<UndeclaredJobInput, int>(Undeclared, new UndeclaredJobInput(1), cancellationToken: cancellationToken);
+                await KazoBackground.RunAsync<UndeclaredJobInput, int>(Undeclared, new UndeclaredJobInput(1), cancellationToken: cancellationToken);
                 await context.StandardOutput.WriteLineAsync("accepted");
             }
             catch (ArgumentException exception)
@@ -526,8 +526,8 @@ internal static class BackgroundJobCommands
             try
             {
                 await context.App.Background.RunAsync(
-                    new HackBackgroundJobRequest(
-                        new HackBackgroundJobTarget("Kazo.Os.Commands", "Kazo.Os.Commands.Cd.CdCommand", "Run", typeof(int).FullName!),
+                    new KazoBackgroundJobRequest(
+                        new KazoBackgroundJobTarget("Kazo.Os.Commands", "Kazo.Os.Commands.Cd.CdCommand", "Run", typeof(int).FullName!),
                         "1"),
                     null,
                     cancellationToken);
@@ -548,7 +548,7 @@ internal static class BackgroundJobCommands
     {
         public override async ValueTask<int> ExecuteAsync(TerminalExecutionContext context, CancellationToken cancellationToken)
         {
-            Task<int> task = HackBackground.RunAsync<int, int>(Hold, 1, cancellationToken: cancellationToken);
+            Task<int> task = KazoBackground.RunAsync<int, int>(Hold, 1, cancellationToken: cancellationToken);
             while (Started == 0)
             {
                 await Task.Delay(10, cancellationToken);
@@ -560,7 +560,7 @@ internal static class BackgroundJobCommands
             {
                 await task;
             }
-            catch (HackProcessKilledException exception)
+            catch (KazoProcessKilledException exception)
             {
                 await context.StandardOutput.WriteLineAsync($"killed {exception.Reason}");
             }
@@ -570,8 +570,8 @@ internal static class BackgroundJobCommands
     }
 
     /// <summary>An <see cref="IProgress{T}"/> that reports on the caller's thread, without a synchronization context.</summary>
-    private sealed class SyncProgress(Action<HackBackgroundProgress> report) : IProgress<HackBackgroundProgress>
+    private sealed class SyncProgress(Action<KazoBackgroundProgress> report) : IProgress<KazoBackgroundProgress>
     {
-        public void Report(HackBackgroundProgress value) => report(value);
+        public void Report(KazoBackgroundProgress value) => report(value);
     }
 }

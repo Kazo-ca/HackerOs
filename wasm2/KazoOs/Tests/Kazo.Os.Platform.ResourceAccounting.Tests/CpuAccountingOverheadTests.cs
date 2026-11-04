@@ -107,7 +107,7 @@ public sealed class CpuAccountingOverheadTests(ITestOutputHelper output)
         StringBuilder document = new();
         for (int key = 0; key < Keystrokes; key++)
         {
-            using (HackExecutionContext.Enter(editor))
+            using (KazoExecutionContext.Enter(editor))
             {
                 await Task.Yield();
                 document.Append((char)('a' + (key % 26)));

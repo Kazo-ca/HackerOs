@@ -26,7 +26,7 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-version="$(sed -n 's:.*<HackerOsVersion>\(.*\)</HackerOsVersion>.*:\1:p' "$root/build/Versions.props")"
+version="$(sed -n 's:.*<KazoOsVersion>\(.*\)</KazoOsVersion>.*:\1:p' "$root/build/Versions.props")"
 mkdir -p "$output" "$root/artifacts"
 
 # Solution filter of the published projects (paths relative to the solution).
@@ -50,7 +50,7 @@ dotnet run --project "$root/Tools/Kazo.Os.Tools.ChangeList/Kazo.Os.Tools.ChangeL
 
 echo "Packing ${#projects[@]} projects, version $version, into $output"
 dotnet pack "$filter" -c "$configuration" -o "$output" -p:ContinuousIntegrationBuild="$continuous_integration" \
-  -p:HackerOsPackageReleaseNotesFile="$notes"
+  -p:KazoOsPackageReleaseNotesFile="$notes"
 
 cache="${NUGET_PACKAGES:-$HOME/.nuget/packages}"
 for package in "$output"/*."$version".nupkg; do

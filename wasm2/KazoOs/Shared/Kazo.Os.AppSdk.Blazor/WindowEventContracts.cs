@@ -4,7 +4,7 @@ namespace Kazo.Os.AppSdk.Blazor;
 /// Visible state of an app's window (ADR 0095 §1), the SDK's own copy of the window manager's
 /// state so apps never reference <c>Kazo.Os.Windowing.*</c> (ADR 0055).
 /// </summary>
-public enum HackWindowState
+public enum KazoWindowState
 {
     /// <summary>The window has its own position and size on the desktop.</summary>
     Normal,
@@ -22,7 +22,7 @@ public enum HackWindowState
 /// </summary>
 /// <param name="Width">Client width in CSS pixels.</param>
 /// <param name="Height">Client height in CSS pixels.</param>
-public readonly record struct HackWindowSize(double Width, double Height)
+public readonly record struct KazoWindowSize(double Width, double Height)
 {
     /// <summary>
     /// Gets the detached display surface whose host window was resized (ADR 0078), or
@@ -51,9 +51,9 @@ public interface IWindowAppEventTarget
     /// <summary>The window was minimized, maximized or restored.</summary>
     /// <param name="previous">State before the change.</param>
     /// <param name="current">State after the change.</param>
-    Task NotifyStateChangedAsync(HackWindowState previous, HackWindowState current);
+    Task NotifyStateChangedAsync(KazoWindowState previous, KazoWindowState current);
 
     /// <summary>The window's client area has a new size (end of a resize, maximize, restore).</summary>
     /// <param name="size">New client size.</param>
-    Task NotifyResizedAsync(HackWindowSize size);
+    Task NotifyResizedAsync(KazoWindowSize size);
 }

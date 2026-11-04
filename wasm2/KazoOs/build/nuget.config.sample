@@ -7,7 +7,7 @@
 -->
 <configuration>
   <packageSources>
-    <add key="hackeros-local" value="../HackerSimulator/wasm2/KazoOs/artifacts/local-nupkg" />
+    <add key="hackeros-local" value="../KazoSimulator/wasm2/KazoOs/artifacts/local-nupkg" />
     <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
   </packageSources>
   <packageSourceMapping>

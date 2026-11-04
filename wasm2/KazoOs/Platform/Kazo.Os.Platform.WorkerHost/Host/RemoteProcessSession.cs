@@ -104,7 +104,7 @@ internal sealed class RemoteProcessSession
     public RemoteProcessLaunch? Launch { get; }
 
     /// <summary>Receives the reports of a background task (ADR 0128), or <see langword="null"/>.</summary>
-    public Action<Kazo.Os.AppSdk.Threading.HackBackgroundProgress>? JobProgress { get; }
+    public Action<Kazo.Os.AppSdk.Threading.KazoBackgroundProgress>? JobProgress { get; }
 
     /// <summary>
     /// Receives the <c>ui</c> outputs of a window rendered in the worker (ADR 0129 trial), on the
@@ -255,7 +255,7 @@ internal sealed class RemoteProcessSession
     }
 
     /// <summary>The process answered a request of one of its listening sockets (<c>hres</c>).</summary>
-    public void OnHttpResponse(int socketId, long exchangeId, Kazo.Os.AppSdk.Net.HackHttpListenerReply reply)
+    public void OnHttpResponse(int socketId, long exchangeId, Kazo.Os.AppSdk.Net.KazoHttpListenerReply reply)
     {
         Kazo.Os.AppSdk.Net.IHackHttpListenerSocket? socket;
         lock (_gate)
@@ -394,7 +394,7 @@ internal sealed class RemoteProcessSession
         _exit.TrySetResult(exit);
     }
 
-    private void OnStopRequested(object? sender, HackStopRequestedEventArgs e)
+    private void OnStopRequested(object? sender, KazoStopRequestedEventArgs e)
     {
         // The OS waits for the work the app defers in the worker, within the grace period.
         e.Defer(_stopWorkDone.Task);
@@ -486,14 +486,14 @@ internal sealed class RemoteProcessSession
     private async Task<Action<Utf8JsonWriter>> RunBackgroundJobAsync(JsonElement a, CancellationToken cancellationToken)
     {
         JsonElement target = a.GetProperty("jt");
-        Kazo.Os.AppSdk.Threading.HackBackgroundJobRequest request = new(
-            new Kazo.Os.AppSdk.Threading.HackBackgroundJobTarget(
+        Kazo.Os.AppSdk.Threading.KazoBackgroundJobRequest request = new(
+            new Kazo.Os.AppSdk.Threading.KazoBackgroundJobTarget(
                 target.GetString("asm"), target.GetString("ty"), target.GetOptionalString("me"), target.GetString("it")),
             a.GetString("ji"),
             a.GetOptionalString("n"),
             a.GetOptional("ni")?.GetInt32() ?? 0);
         int job = a.GetInt32("j");
-        Action<Kazo.Os.AppSdk.Threading.HackBackgroundProgress>? progress = a.GetFlag("pg")
+        Action<Kazo.Os.AppSdk.Threading.KazoBackgroundProgress>? progress = a.GetFlag("pg")
             ? report => _worker.Post(WorkerMessage.Create(WorkerMessageType.BackgroundJobProgress, writer =>
             {
                 writer.WriteNumber("p", Pid);
@@ -535,7 +535,7 @@ internal sealed class RemoteProcessSession
             if (_listenersClosed)
             {
                 _ = socket.DisposeAsync();
-                throw new HackProcessKilledException(Pid);
+                throw new KazoProcessKilledException(Pid);
             }
 
             id = ++_nextListener;
@@ -545,7 +545,7 @@ internal sealed class RemoteProcessSession
         _ = PumpListenerAsync(id, socket);
         return writer =>
         {
-            writer.WriteNumber("ne", (int)Kazo.Os.AppSdk.Net.HackNetworkError.None);
+            writer.WriteNumber("ne", (int)Kazo.Os.AppSdk.Net.KazoNetworkError.None);
             writer.WriteNumber("sk", id);
             WireCodec.WriteStrings(writer, "px", socket.Prefixes);
         };
@@ -579,8 +579,8 @@ internal sealed class RemoteProcessSession
     /// <summary>Runs one operation through the process's own gateways and returns the writer of its value.</summary>
     private async Task<Action<Utf8JsonWriter>> ServeAsync(string operation, JsonElement a, CancellationToken cancellationToken)
     {
-        using IDisposable frame = HackExecutionContext.Enter(_context);
-        using HackExecutionContext.KernelScope kernel = HackExecutionContext.EnterKernel();
+        using IDisposable frame = KazoExecutionContext.Enter(_context);
+        using KazoExecutionContext.KernelScope kernel = KazoExecutionContext.EnterKernel();
         IAppExecutionContext c = _context;
         switch (operation)
         {
@@ -637,7 +637,7 @@ internal sealed class RemoteProcessSession
 
             case RemoteOps.BackgroundProgress:
                 // ADR 0128 section 4: the task's own process reports; already throttled in the worker.
-                JobProgress?.Invoke(new Kazo.Os.AppSdk.Threading.HackBackgroundProgress(
+                JobProgress?.Invoke(new Kazo.Os.AppSdk.Threading.KazoBackgroundProgress(
                     Math.Clamp(a.GetDouble("f"), 0d, 1d), a.GetOptionalString("m")));
                 return static _ => { };
             case RemoteOps.BackgroundRun:
@@ -784,7 +784,7 @@ internal sealed class RemoteProcessSession
             }
             case RemoteOps.CatalogSetDefault:
             {
-                Kazo.Os.AppSdk.Apps.HackDefaultHandlerStatus status = await c.Catalog.SetUserDefaultHandlerAsync(
+                Kazo.Os.AppSdk.Apps.KazoDefaultHandlerStatus status = await c.Catalog.SetUserDefaultHandlerAsync(
                     a.GetString("t"), a.GetString("a"), a.GetOptionalString("id"), cancellationToken).ConfigureAwait(false);
                 return writer => writer.WriteNumber("s", (int)status);
             }
@@ -818,7 +818,7 @@ internal sealed class RemoteProcessSession
             }
             case RemoteOps.DriveMount:
             {
-                Kazo.Os.AppSdk.IO.HackDriveSnapshot? drive = await c.Drives.MountHostFolderAsync(a.GetOptionalString("p"), cancellationToken).ConfigureAwait(false);
+                Kazo.Os.AppSdk.IO.KazoDriveSnapshot? drive = await c.Drives.MountHostFolderAsync(a.GetOptionalString("p"), cancellationToken).ConfigureAwait(false);
                 return writer => WireCodec.WriteDrive(writer, drive);
             }
             case RemoteOps.DriveReconnect:
@@ -831,7 +831,7 @@ internal sealed class RemoteProcessSession
                 return static _ => { };
             case RemoteOps.CrossOriginIsolation:
             {
-                HackCrossOriginIsolationStatus isolation = await c.CrossOriginIsolation.GetStatusAsync(cancellationToken).ConfigureAwait(false);
+                KazoCrossOriginIsolationStatus isolation = await c.CrossOriginIsolation.GetStatusAsync(cancellationToken).ConfigureAwait(false);
                 return writer => WireCodec.WriteCrossOriginIsolation(writer, isolation);
             }
             case RemoteOps.IntentLaunch:
@@ -968,17 +968,17 @@ internal sealed class RemoteProcessSession
             }
             case RemoteOps.WebDbOpen:
                 await c.WebDatabase.OpenAsync(
-                    JsonSerializer.Deserialize(a.GetString("j"), Kazo.Os.AppSdk.WebData.HackWebDbJsonContext.Default.HackWebDbSchemaDefinition)
+                    JsonSerializer.Deserialize(a.GetString("j"), Kazo.Os.AppSdk.WebData.KazoWebDbJsonContext.Default.KazoWebDbSchemaDefinition)
                         ?? throw new ArgumentException("No schema.", "j"),
                     cancellationToken).ConfigureAwait(false);
                 return static _ => { };
             case RemoteOps.WebDbExecute:
             {
                 IReadOnlyList<string?> results = await c.WebDatabase.ExecuteAsync(
-                    JsonSerializer.Deserialize(a.GetString("j"), Kazo.Os.AppSdk.WebData.HackWebDbJsonContext.Default.HackWebDbRequest)
+                    JsonSerializer.Deserialize(a.GetString("j"), Kazo.Os.AppSdk.WebData.KazoWebDbJsonContext.Default.KazoWebDbRequest)
                         ?? throw new ArgumentException("No request.", "j"),
                     cancellationToken).ConfigureAwait(false);
-                string json = JsonSerializer.Serialize([.. results], Kazo.Os.AppSdk.WebData.HackWebDbJsonContext.Default.ListString);
+                string json = JsonSerializer.Serialize([.. results], Kazo.Os.AppSdk.WebData.KazoWebDbJsonContext.Default.ListString);
                 return writer => writer.WriteString("r", json);
             }
             case RemoteOps.FsDescriptorOpen:
@@ -1030,7 +1030,7 @@ internal sealed class RemoteProcessSession
         {
             // The process ended while the descriptor was being opened.
             result.Value!.Dispose();
-            throw new HackProcessKilledException(Pid);
+            throw new KazoProcessKilledException(Pid);
         }
 
         return writer => WireCodec.WriteResult(writer, FileSystemResult<int>.Success(id), static (w, value) => w.WriteNumber("fd", value));

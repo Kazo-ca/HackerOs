@@ -157,7 +157,7 @@ public sealed class CoreCommandsTests
             using StringWriter stderr = new();
             using StringReader stdin = new(string.Empty);
             TerminalExecutionContext context = CreateContext(arguments, stdout, stderr, stdin, "/", seed: Seed);
-            using IDisposable scope = HackExecutionContext.Enter(context.App);
+            using IDisposable scope = KazoExecutionContext.Enter(context.App);
             int code = await command.ExecuteAsync(context, CancellationToken.None);
             return (code, stdout.ToString(), stderr.ToString());
         }
@@ -295,7 +295,7 @@ public sealed class CoreCommandsTests
             arguments, stdout, stderr, stdin, "/",
             timeZone: TimeZoneInfo.FindSystemTimeZoneById(zone),
             now: new DateTimeOffset(2026, 10, 29, 14, 5, 9, TimeSpan.Zero));
-        using IDisposable scope = HackExecutionContext.Enter(context.App);
+        using IDisposable scope = KazoExecutionContext.Enter(context.App);
         int code = await command.ExecuteAsync(context, CancellationToken.None);
         return (code, stdout.ToString(), stderr.ToString());
     }
@@ -388,7 +388,7 @@ public sealed class CoreCommandsTests
             Description = "Command line tool",
             Kind = AppKind.Terminal,
             EntryPoint = new AppEntryPointManifest("Assembly.dll", "Type"),
-            SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+            SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
             Presentation = new PresentationManifest("utilities", AppLaunchVisibility.Hidden, []),
             Resources = AppResourceProfileManifest.None,
             Capabilities = [AppCapabilities.FileSystemUserHomeRead, AppCapabilities.FileSystemUserHomeWrite],

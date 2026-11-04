@@ -231,7 +231,7 @@ public static class SettingsPrivateFiles
 }
 
 /// <summary>
-/// Pure merge engine shared by the SDK (<c>HackSettings</c>) and the platform
+/// Pure merge engine shared by the SDK (<c>KazoSettings</c>) and the platform
 /// (<c>IOsSettingsService</c>), implementing ADR 0044 sections 3 to 6.
 /// </summary>
 /// <remarks>

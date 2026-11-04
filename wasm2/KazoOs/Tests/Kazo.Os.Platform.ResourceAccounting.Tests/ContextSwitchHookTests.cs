@@ -5,7 +5,7 @@ namespace Kazo.Os.Platform.ResourceAccounting.Tests;
 
 /// <summary>
 /// The common context-switch hook of ADR 0067, section 1, prepared by ADR 0066: installed on
-/// <see cref="HackExecutionContext"/>'s ambient frame, it sees every process enter and leave the
+/// <see cref="KazoExecutionContext"/>'s ambient frame, it sees every process enter and leave the
 /// thread, including when the runtime restores a context in an async continuation.
 /// </summary>
 public sealed class ContextSwitchHookTests
@@ -23,9 +23,9 @@ public sealed class ContextSwitchHookTests
         using (ContextSwitchHook.Install(observer))
         {
             Assert.True(ContextSwitchHook.IsInstalled);
-            using (HackExecutionContext.Enter(TestContexts.Process(10)))
+            using (KazoExecutionContext.Enter(TestContexts.Process(10)))
             {
-                Assert.Equal(10, HackExecutionContext.Current.ProcessId.Value);
+                Assert.Equal(10, KazoExecutionContext.Current.ProcessId.Value);
             }
 
             Assert.Equal(
@@ -63,9 +63,9 @@ public sealed class ContextSwitchHookTests
         RecordingObserver observer = new();
         using (ContextSwitchHook.Install(observer))
         {
-            using (HackExecutionContext.Enter(TestContexts.Process(30)))
+            using (KazoExecutionContext.Enter(TestContexts.Process(30)))
             {
-                await Task.Run(() => Assert.Equal(30, HackExecutionContext.Current.ProcessId.Value));
+                await Task.Run(() => Assert.Equal(30, KazoExecutionContext.Current.ProcessId.Value));
             }
 
             Assert.True(observer.Entered(30, threadContextChanged: true));
@@ -78,9 +78,9 @@ public sealed class ContextSwitchHookTests
         RecordingObserver observer = new();
         using (ContextSwitchHook.Install(observer))
         {
-            using (HackExecutionContext.Enter(TestContexts.Process(40)))
+            using (KazoExecutionContext.Enter(TestContexts.Process(40)))
             {
-                using (HackExecutionContext.Enter(TestContexts.Process(41)))
+                using (KazoExecutionContext.Enter(TestContexts.Process(41)))
                 {
                 }
             }
@@ -102,9 +102,9 @@ public sealed class ContextSwitchHookTests
         RecordingObserver observer = new();
         using (ContextSwitchHook.Install(observer))
         {
-            using (HackExecutionContext.Enter(TestContexts.Process(50)))
+            using (KazoExecutionContext.Enter(TestContexts.Process(50)))
             {
-                using (HackExecutionContext.Enter(TestContexts.Process(50), "/tmp"))
+                using (KazoExecutionContext.Enter(TestContexts.Process(50), "/tmp"))
                 {
                 }
             }
@@ -126,10 +126,10 @@ public sealed class ContextSwitchHookTests
     public void Installing_while_a_scope_is_open_is_refused()
     {
         // Swapping the AsyncLocal now would make this flow lose its app context.
-        using (HackExecutionContext.Enter(TestContexts.Process(60)))
+        using (KazoExecutionContext.Enter(TestContexts.Process(60)))
         {
             Assert.Throws<InvalidOperationException>(() => ContextSwitchHook.Install(new RecordingObserver()));
-            Assert.Equal(60, HackExecutionContext.Current.ProcessId.Value);
+            Assert.Equal(60, KazoExecutionContext.Current.ProcessId.Value);
         }
 
         Assert.False(ContextSwitchHook.IsInstalled);
@@ -140,12 +140,12 @@ public sealed class ContextSwitchHookTests
     {
         using (ContextSwitchHook.Install(new ThrowingObserver()))
         {
-            using (HackExecutionContext.Enter(TestContexts.Process(70)))
+            using (KazoExecutionContext.Enter(TestContexts.Process(70)))
             {
-                Assert.Equal(70, HackExecutionContext.Current.ProcessId.Value);
+                Assert.Equal(70, KazoExecutionContext.Current.ProcessId.Value);
             }
 
-            Assert.Null(HackExecutionContext.CurrentOrNull);
+            Assert.Null(KazoExecutionContext.CurrentOrNull);
         }
     }
 
@@ -155,9 +155,9 @@ public sealed class ContextSwitchHookTests
         RecordingObserver observer = new();
         ContextSwitchHook.Install(observer).Dispose();
 
-        using (HackExecutionContext.Enter(TestContexts.Process(80)))
+        using (KazoExecutionContext.Enter(TestContexts.Process(80)))
         {
-            Assert.Equal(80, HackExecutionContext.Current.ProcessId.Value);
+            Assert.Equal(80, KazoExecutionContext.Current.ProcessId.Value);
         }
 
         Assert.Empty(observer.Switches);
@@ -166,11 +166,11 @@ public sealed class ContextSwitchHookTests
 
     private static async Task<long> RunAsProcessAsync(long pid)
     {
-        using (HackExecutionContext.Enter(TestContexts.Process(pid)))
+        using (KazoExecutionContext.Enter(TestContexts.Process(pid)))
         {
             await Task.Yield();
             await Task.Delay(1);
-            return HackExecutionContext.Current.ProcessId.Value;
+            return KazoExecutionContext.Current.ProcessId.Value;
         }
     }
 

@@ -100,7 +100,7 @@ All routes consult `IAppEnablementRegistry`:
 | `FileAssociationResolver` | neither default nor candidate; the preferences of `/etc/hackeros/file-associations.json` and `~/.config/hackeros/file-associations.json` are **not** rewritten (a stale entry is skipped, ADR 0121) |
 | Launcher and search (`LauncherAppProjection`) | absent; the open menu updates on `Changed` |
 | Explorer, "Open With..." | absent from the list |
-| File control and dialogs (`HackComponentHost`) | skipped; if it was the chosen provider, the explorer takes over (`component.fallback`); an uninstall for the machine removes its line from `/etc/hackeros/components.config` (ADR 0156 §4, ADR 0158 §6) |
+| File control and dialogs (`KazoComponentHost`) | skipped; if it was the chosen provider, the explorer takes over (`component.fallback`); an uninstall for the machine removes its line from `/etc/hackeros/components.config` (ADR 0156 §4, ADR 0158 §6) |
 | Terminal (`ShellCommandResolver`, `ShellInterpreter`) | `command not found`, absent from `help` and from completion |
 
 ## Usage
@@ -125,8 +125,8 @@ public interface IAppInstallationService
   changing anything. Settings lists them in the confirmation ("These processes
   will be stopped"). The result of `UninstallAsync` gives
   `StoppedProcesses`, with `Forced` for those killed after their delay; each is
-  written to `/var/log/syslog`. In the SDK: `HackAppManagement.PlanUninstallAsync`
-  and `UninstallWithReportAsync` (`HackUninstallPlan`, `HackUninstallReport`).
+  written to `/var/log/syslog`. In the SDK: `KazoAppManagement.PlanUninstallAsync`
+  and `UninstallWithReportAsync` (`KazoUninstallPlan`, `KazoUninstallReport`).
 - `UninstallAsync` writes the entire closure in the scope's file.
   Refusals: `apps.app.system:<id>`, `apps.closure.system-app:<system id>`,
   `apps.app.not-found:<id>`, `apps.session.required`.
@@ -135,7 +135,7 @@ public interface IAppInstallationService
   uninstalled for the machine: `apps.uninstalled-by-administrator:<id>`.
 - `writer`: gateway whose rights decide on a **machine** write,
   normally the calling app's `AppContext.FileSystem`. A refusal throws
-  `HackUnauthorizedAccessException`, which triggers the administrator approval
+  `KazoUnauthorizedAccessException`, which triggers the administrator approval
   prompt of ADR 0042; the app retries once approval is given.
   Without `writer`, the session user writes with their own rights. The user
   scope is always written as the session user.
@@ -143,7 +143,7 @@ public interface IAppInstallationService
   `apps: org.hackeros.calculator uninstalled (scope=machine, by=alice)`.
 
 Since phase 4 (`rebuild/4-sdk-user-and-apps`), apps no longer use this
-service directly: they go through the SDK's `HackAppManagement`, behind the
+service directly: they go through the SDK's `KazoAppManagement`, behind the
 dangerous capability `apps.manage` (ADR 0056 §3, [`app-sdk.md`](../framework/app-sdk.md)).
 For the machine scope, the gateway first asks the OS authentication
 agent to confirm an administrator
@@ -151,7 +151,7 @@ agent to confirm an administrator
 writes `/etc/hackeros/apps.config` itself as `system`: the `writer` parameter
 receives this system gateway, and the prompt of ADR 0042 is no longer
 used for this file. The list of installed apps is read
-by `HackApps` without a capability.
+by `KazoApps` without a capability.
 
 ### Settings app, "Installed Apps" tab
 
@@ -173,7 +173,7 @@ by `HackApps` without a capability.
 - the old enable/disable switch is gone;
 - since phase 4, the panel uses only the SDK: `AppContext.AppManagement`
   for the list and the changes, `AppContext.Catalog.Changed` to
-  refresh, `HackUser.Describe(AppContext)` to know whether the user is
+  refresh, `KazoUser.Describe(AppContext)` to know whether the user is
   an administrator.
 
 ## Implementation decisions
@@ -218,7 +218,7 @@ by `HackApps` without a capability.
 - system app and closure containing a system app refused;
 - `apps.config` lines of a system app or with an invalid value ignored with a
   warning, unknown identifier silently ignored;
-- machine scope without rights: `HackUnauthorizedAccessException`; approved
+- machine scope without rights: `KazoUnauthorizedAccessException`; approved
   write: file written, effect for all users;
 - effective state machine OR user, user layer removed at
   logout, user reinstall refused for a machine
@@ -266,8 +266,8 @@ approval:
   `interval-hours` (1 to 720, 6 by default). The defaults are fixed when the
   host is compiled (official catalog, `catalog:official` and
   `github.com/Kazo-ca` trusted) by the MSBuild properties
-  `HackerOsAppCatalogs`, `HackerOsTrustedAppSources` and
-  `HackerOsAppUpdateIntervalHours`. An administrator adds a source without
+  `KazoOsAppCatalogs`, `KazoOsTrustedAppSources` and
+  `KazoOsAppUpdateIntervalHours`. An administrator adds a source without
   redeploying, with `hackpkg sources add`, Settings ▸ Apps ▸ Sources and block
   list, or `sudo nano`. The startup creates the file only when it is missing
   and never rewrites it: a file with **no `[catalogs]` section at all** (one
@@ -278,8 +278,8 @@ approval:
   built-in source or one set to `true`, *untrusted* otherwise.
 - **Block list**: `/etc/hackeros/app-policy.config` (created at startup) has
   `[blocked-apps]`, `[blocked-categories]` and `[blocked-capabilities]`, with
-  defaults fixed at compile time (`HackerOsBlockedApps`,
-  `HackerOsBlockedAppCategories`, `HackerOsBlockedAppCapabilities`). A blocked
+  defaults fixed at compile time (`KazoOsBlockedApps`,
+  `KazoOsBlockedAppCategories`, `KazoOsBlockedAppCapabilities`). A blocked
   app cannot be installed for oneself: only for everyone, after approval.
 - **Install for oneself**: without `--system`, an app from a trusted source,
   not blocked and not already installed for the system, is installed in
@@ -312,9 +312,9 @@ approval:
   loaded in the page waits for a restart of Kazo OS; `hackpkg list` shows
   `(restart pending)` until then.
 - **Dangerous capabilities**: asked at first launch, as for any non-system app.
-- **Publishing**: `dotnet build -c Release -t:HackerOsPack` in the app project
+- **Publishing**: `dotnet build -c Release -t:KazoOsPack` in the app project
   writes the package and `index.json` to `bin/hackeros-packages` (property
-  `HackerOsPackageOutput`), to push to the `hackeros-packages` branch; the
+  `KazoOsPackageOutput`), to push to the `hackeros-packages` branch; the
   `publish-packages.yml` workflow of the `hackeros-solution` template does it on
   a `v*` tag ([ADR 0219](adr/0219-app-authors-signing-tool.md)). The
   package holds every static resource of the project, declared or not: the
@@ -422,12 +422,12 @@ completes the Hack Store.
   `AppCatalog.ReplaceContents`, `AppCatalog.Changed` event) and adds the
   assemblies to the lazy-loading registry. An app with an assembly already
   loaded keeps its version until the restart
-  (`HackPackageInstallReport.RestartRequired`).
+  (`KazoPackageInstallReport.RestartRequired`).
 - **Signing**: optional `signature` field of each version (`index.json`,
   `catalog.json`), ECDSA P-256 / SHA-256 in IEEE P1363, base64. Public keys are
   in `[signing-keys]` of `/etc/hackeros/app-sources.config`
   (`catalog:official=MFkw…`, several keys separated by commas) and in the host's
-  `HackerOsAppSigningKeys` MSBuild property, always required. A source with a key
+  `KazoOsAppSigningKeys` MSBuild property, always required. A source with a key
   refuses an unsigned package (`apps.package.unsigned`) or a badly signed one
   (`apps.package.bad-signature`). Verification goes through Web Crypto in the
   browser (`BrowserAppPackageSignatureVerifier`, `webAuthn.js` `verify`), through
@@ -437,14 +437,14 @@ completes the Hack Store.
   `catalog:official`). Every package of the official Hack Store must carry the
   signature the catalog's `publish.yml` makes with the `HACK_STORE_SIGNING_KEY`
   secret; an unsigned or forged package is refused. To change keys without a
-  break: add the new one to `[signing-keys]` (or `HackerOsAppSigningKeys`),
+  break: add the new one to `[signing-keys]` (or `KazoOsAppSigningKeys`),
   republish with it, then replace the constant.
 - **Signing by an app's author** ([ADR 0219](adr/0219-app-authors-signing-tool.md),
-  issue #321): `dotnet build -t:HackerOsKeyGen -p:HackerOsSigningKeyFile=<file.pem>`
+  issue #321): `dotnet build -t:KazoOsKeyGen -p:KazoOsSigningKeyFile=<file.pem>`
   creates the pair (private key in a new file, public key printed, `HOSAPP0061`
-  without the property); `HackerOsPack` signs each package with the
+  without the property); `KazoOsPack` signs each package with the
   `HACKEROS_APP_SIGNING_KEY` variable (secret of the app repository) or
-  `HackerOsSigningKeyFile`, and checks the signature before writing it. Without
+  `KazoOsSigningKeyFile`, and checks the signature before writing it. Without
   a key, the package is published unsigned with warning `HOSAPP0063`.
   `index.json` keeps the signatures of the versions already published. Generator
   commands: `keygen --private-key <file.pem>`, `sign --package <file.hackapp>`.

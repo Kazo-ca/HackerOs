@@ -39,13 +39,13 @@ public sealed partial class BlazorSampleSite : WebAppDefinition
         [AppCapabilities.NetworkListen, AppCapabilities.NetworkSimulatedRead, AppCapabilities.NetworkSimulatedWrite];
 
     /// <summary>The site's routes besides its Blazor pages: the host page comes last, after these.</summary>
-    public override void Configure(HackWebApplicationBuilder builder)
+    public override void Configure(KazoWebApplicationBuilder builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
         builder.Json.SerializerOptions.TypeInfoResolverChain.Insert(0, BlazorSampleJsonContext.Default);
-        HackWebApplication app = builder.Build();
+        KazoWebApplication app = builder.Build();
         app.MapGet("/api/greeting/{name}", context =>
-            HackResults.Json(new Greeting($"Hello, {context.Request.RouteValues["name"]}!", DateTimeOffset.UtcNow)));
+            KazoResults.Json(new Greeting($"Hello, {context.Request.RouteValues["name"]}!", DateTimeOffset.UtcNow)));
         app.MapControllers();
     }
 }

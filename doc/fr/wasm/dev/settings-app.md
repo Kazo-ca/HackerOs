@@ -44,22 +44,22 @@ Synchronisation), Système (Utilisateurs, Mémoire, Sauvegarde, Nouveautés, À 
 |---|---|---|
 | Apparence (`appearance`) | (dans `SettingsWindow.razor`) | Couche d'écriture (utilisateur ou système), thème du bureau et du mobile, accent, animations, thèmes utilisateur (`/etc/hackeros/themes` et `~/.config/hackeros/themes`, `UserThemeLibrary`), fond d'écran (`WallpaperPanel`, ADR 0202) ; écrit `appearance.config`. |
 | Bureau (`desktop`) | `DesktopPanel` | Options et disposition du bureau (`desktop.config`, ADR 0160). |
-| Écrans (`screens`) | `ScreensPanel` | Écrans ouverts par `HackScreens` (Identifier, Nouvel écran, Restaurer, Fermer, Plein écran, permission ; ADR 0184) ; `screens.config` : choix de `primary-taskbar`, écrans retenus et Oublier (ADR 0179 §7, [`screens-settings.md`](screens-settings.md)). |
+| Écrans (`screens`) | `ScreensPanel` | Écrans ouverts par `KazoScreens` (Identifier, Nouvel écran, Restaurer, Fermer, Plein écran, permission ; ADR 0184) ; `screens.config` : choix de `primary-taskbar`, écrans retenus et Oublier (ADR 0179 §7, [`screens-settings.md`](screens-settings.md)). |
 | Accessibilité (`accessibility`) | `AccessibilityPanel` | Contraste élevé, taille du texte, mouvement réduit (ADR 0105). |
 | Langue (`language`) | `LanguagePanel` | Langue de l'interface. |
-| Associations de fichiers (`file-associations`) | `FileAssociationsPanel` | Applications par défaut, couche système ou utilisateur (`HackFileAssociationLayer`, ADR 0121). |
+| Associations de fichiers (`file-associations`) | `FileAssociationsPanel` | Applications par défaut, couche système ou utilisateur (`KazoFileAssociationLayer`, ADR 0121). |
 | Autorisations accordées (`capabilities`) | (dans la fenêtre) | Capacités accordées à l'utilisateur. |
 | Permissions (`permissions`) | `AppPermissionsPanel` | Décisions par app et approbations des capacités dangereuses (ADR 0049). |
 | Applications installées (`installed-apps`) | `InstalledAppsPanel` | Liste des apps et de leurs commandes, désinstallation et réinstallation (ADR 0048). |
-| Composants de l'OS (`os-components`) | `OsComponentsPanel` | Fournisseur choisi pour chaque contrat (`HackComponentProviders.GetOverviewAsync`, `SetProviderAsync`). |
+| Composants de l'OS (`os-components`) | `OsComponentsPanel` | Fournisseur choisi pour chaque contrat (`KazoComponentProviders.GetOverviewAsync`, `SetProviderAsync`). |
 | Menus des fichiers (`file-menus`) | `FileMenuEntriesPanel` | Entrées de menu inscrites par les apps (ADR 0151). |
-| Connexion au serveur (`server`) | `ServerRelayPolicyPanel` (+ la fenêtre) | Serveur optionnel, relais réseau (ADR 0102, 0134). Visible dans tous les cas, l'état vient de `HackServerConnection`. Sans connexion, `LocalServerPanel` liste les téléchargements du serveur installable, teste une adresse et appaire l'appareil par code ([`installable-server.md`](installable-server.md), ADR 0191). |
+| Connexion au serveur (`server`) | `ServerRelayPolicyPanel` (+ la fenêtre) | Serveur optionnel, relais réseau (ADR 0102, 0134). Visible dans tous les cas, l'état vient de `KazoServerConnection`. Sans connexion, `LocalServerPanel` liste les téléchargements du serveur installable, teste une adresse et appaire l'appareil par code ([`installable-server.md`](installable-server.md), ADR 0191). |
 | Synchronisation (`sync`) | (dans la fenêtre) | État de la synchro et conflits (ADR 0101). |
 | Utilisateurs (`users`) | `UsersPanel` (+ `PasskeysPanel`) | Comptes, mots de passe, ajout et suppression de comptes par un administrateur, clés d'accès de la session (ADR 0120, 0168, 0169 ; voir [Page Utilisateurs](#page-utilisateurs)). |
 | Mémoire (`memory`) | `MemoryPanel` | Fichier `/etc/hackeros/memory.config`, section `[oom-killer]` (ADR 0126). |
-| Sauvegarde (`backup`) | `BackupPanel` | Présent seulement si `HackSystemBackup.IsSupportedFor` le permet (ADR 0099). |
-| Nouveautés (`whats-new`) | `WhatsNewPanel` | Liste des changements de l'OS par version, la prochaine en premier, avec un badge **Nouveau** sur ce qui n'a pas été vu ; tout devient vu à la fermeture de la page (`HackWhatsNew`, ADR 0186). La notification après connexion l'ouvre avec `--page=whats-new`. |
-| À propos (`about`) | (dans la fenêtre) | Autorité, redémarrage (`HackSystem.RebootAsync`), zone de danger : réinitialisation d'usine (`HackSystem.FactoryResetAsync`), confirmée par la saisie de `RESET`, qui efface tout ce que l'OS garde dans le navigateur ([ADR 0227](adr/0227-factory-reset-erases-everything.md)). Un bouton **Quoi de neuf ?** à côté de la version ouvre la page Nouveautés. |
+| Sauvegarde (`backup`) | `BackupPanel` | Présent seulement si `KazoSystemBackup.IsSupportedFor` le permet (ADR 0099). |
+| Nouveautés (`whats-new`) | `WhatsNewPanel` | Liste des changements de l'OS par version, la prochaine en premier, avec un badge **Nouveau** sur ce qui n'a pas été vu ; tout devient vu à la fermeture de la page (`KazoWhatsNew`, ADR 0186). La notification après connexion l'ouvre avec `--page=whats-new`. |
+| À propos (`about`) | (dans la fenêtre) | Autorité, redémarrage (`KazoSystem.RebootAsync`), zone de danger : réinitialisation d'usine (`KazoSystem.FactoryResetAsync`), confirmée par la saisie de `RESET`, qui efface tout ce que l'OS garde dans le navigateur ([ADR 0227](adr/0227-factory-reset-erases-everything.md)). Un bouton **Quoi de neuf ?** à côté de la version ouvre la page Nouveautés. |
 | Application (`application`) | `AppDetailsPanel` | Ajouté seulement avec `--app=<id>` (ADR 0096) : détails et réglages d'une app. |
 
 ## Arguments de lancement
@@ -75,13 +75,13 @@ Synchronisation), Système (Utilisateurs, Mémoire, Sauvegarde, Nouveautés, À 
 
 | Donnée | Accès | Capacité |
 |---|---|---|
-| `appearance.config`, `mobile` (documents système) | `HackSettings.OpenSystemAsync` | `filesystem.system.*` pour écrire `/etc` |
-| Apps installées, gestionnaires par défaut | `HackApps` (`GetInstalledAsync`, `GetDefaultHandlersAsync`, `SetDefaultHandlerAsync`, `ResetDefaultHandlerAsync`), `HackAppInstallInfo` | `apps.launch`, `apps.manage`, `file-associations.read` / `.write` |
-| Serveur | `HackServerConnection` | `server.connection.manage` |
-| Processus et services | `HackServiceController`, liste des processus | `process.list`, `services.manage` |
-| Sauvegarde | `HackSystemBackup` | `system.backup` |
-| Redémarrage, réinitialisation | `HackSystem` | `system.power` |
-| Permissions, utilisateurs | `HackPermissionAdministration`, `HackUserAccounts` | `permissions.manage`, `users.manage` |
+| `appearance.config`, `mobile` (documents système) | `KazoSettings.OpenSystemAsync` | `filesystem.system.*` pour écrire `/etc` |
+| Apps installées, gestionnaires par défaut | `KazoApps` (`GetInstalledAsync`, `GetDefaultHandlersAsync`, `SetDefaultHandlerAsync`, `ResetDefaultHandlerAsync`), `KazoAppInstallInfo` | `apps.launch`, `apps.manage`, `file-associations.read` / `.write` |
+| Serveur | `KazoServerConnection` | `server.connection.manage` |
+| Processus et services | `KazoServiceController`, liste des processus | `process.list`, `services.manage` |
+| Sauvegarde | `KazoSystemBackup` | `system.backup` |
+| Redémarrage, réinitialisation | `KazoSystem` | `system.power` |
+| Permissions, utilisateurs | `KazoPermissionAdministration`, `KazoUserAccounts` | `permissions.manage`, `users.manage` |
 
 Les deux opérations d'administration (redémarrage, réinitialisation) font
 confirmer un administrateur par l'OS dans sa propre fenêtre ; l'app ne voit
@@ -93,7 +93,7 @@ jamais le mot de passe ([`admin-authentication-agent.md`](admin-authentication-a
 
 - **Bandeau de l'invité** (session du compte invité seulement, ADR 0187) :
   « Vous utilisez le compte invité » et le bouton « Créer mon compte », qui
-  demande le formulaire à l'OS (`HackUserAccounts.RequestGuestAccountCreationAsync`) ;
+  demande le formulaire à l'OS (`KazoUserAccounts.RequestGuestAccountCreationAsync`) ;
   la session invité se ferme et le formulaire s'ouvre sur l'écran de
   connexion. Voir [`guest-account.md`](guest-account.md).
 - **Liste des comptes** : nom de connexion, nom affiché, badges
@@ -101,12 +101,12 @@ jamais le mot de passe ([`admin-authentication-agent.md`](admin-authentication-a
   un administrateur, un lien « Supprimer » sur chaque compte autre que le sien
   ouvre une confirmation avec la case « Supprimer aussi son dossier
   personnel `/home/<login>` », décochée par défaut
-  (`HackUserAccounts.DeleteAsync(login, removeHome)`).
+  (`KazoUserAccounts.DeleteAsync(login, removeHome)`).
 - **Ajouter un compte** (administrateur seulement, et absent tant que le
   compte invité existe) : nom de connexion, nom
   affiché, type standard ou administrateur, mot de passe initial et
-  confirmation, vérifiés par `HackUserAccounts.ValidateNewAccount` avant
-  l'envoi (`HackUserAccounts.CreateAsync`).
+  confirmation, vérifiés par `KazoUserAccounts.ValidateNewAccount` avant
+  l'envoi (`KazoUserAccounts.CreateAsync`).
 - **Mes clés d'accès** (tout le monde) : nom, date d'ajout et de dernière
   utilisation, badge « trousseau » si la clé ouvre le trousseau (PRF), bouton
   « Retirer », et un champ « Nom » + « Ajouter une clé d'accès » qui lance la

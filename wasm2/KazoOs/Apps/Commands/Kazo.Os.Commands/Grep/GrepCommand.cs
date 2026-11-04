@@ -17,7 +17,7 @@ namespace Kazo.Os.Commands.Grep;
 /// recursively, the working directory when no file is given).
 /// </summary>
 /// <remarks>
-/// ADR 0069: every line read and every file visited is a <see cref="HackProcess.CheckpointAsync"/>,
+/// ADR 0069: every line read and every file visited is a <see cref="KazoProcess.CheckpointAsync"/>,
 /// so <c>grep -r</c> over a large tree keeps the OS responsive and stops at once on <c>kill</c>.
 /// </remarks>
 public sealed class GrepCommand : TerminalAppBase
@@ -88,7 +88,7 @@ public sealed class GrepCommand : TerminalAppBase
             string? line;
             while ((line = await context.StandardInput.ReadLineAsync(cancellationToken)) != null)
             {
-                await HackProcess.CheckpointAsync(cancellationToken);
+                await KazoProcess.CheckpointAsync(cancellationToken);
                 lineNo++;
                 bool matches = regex.IsMatch(line);
                 if (invertMatch ? !matches : matches)
@@ -105,7 +105,7 @@ public sealed class GrepCommand : TerminalAppBase
             foreach (var file in files)
             {
                 var resolved = ResolvePath(context.WorkingDirectory, file);
-                if (recursive && await HackDirectory.ExistsAsync(resolved, cancellationToken))
+                if (recursive && await KazoDirectory.ExistsAsync(resolved, cancellationToken))
                 {
                     await CollectFilesAsync(file, resolved, targets, cancellationToken);
                 }
@@ -118,7 +118,7 @@ public sealed class GrepCommand : TerminalAppBase
             bool showNames = targets.Count > 1 || recursive;
             foreach ((string file, string resolved) in targets)
             {
-                await HackProcess.CheckpointAsync(cancellationToken);
+                await KazoProcess.CheckpointAsync(cancellationToken);
                 var req = new FileSystemReadRequest(VirtualPath.Parse(resolved));
                 var res = await context.App.FileSystem.ReadAsync(req, cancellationToken);
                 if (!res.Succeeded || res.Value is null)
@@ -132,7 +132,7 @@ public sealed class GrepCommand : TerminalAppBase
                 string? line;
                 while ((line = await reader.ReadLineAsync(cancellationToken)) != null)
                 {
-                    await HackProcess.CheckpointAsync(cancellationToken);
+                    await KazoProcess.CheckpointAsync(cancellationToken);
                     lineNo++;
                     bool matches = regex.IsMatch(line);
                     if (invertMatch ? !matches : matches)
@@ -156,17 +156,17 @@ public sealed class GrepCommand : TerminalAppBase
     private static async Task CollectFilesAsync(
         string display, string directory, List<(string Display, string Path)> targets, CancellationToken cancellationToken)
     {
-        HackDirectoryInfo info = await HackDirectoryInfo.GetAsync(directory, cancellationToken);
-        foreach (HackFileSystemInfo child in (await info.GetFileSystemInfosAsync(cancellationToken: cancellationToken)).OrderBy(c => c.Name, StringComparer.Ordinal))
+        KazoDirectoryInfo info = await KazoDirectoryInfo.GetAsync(directory, cancellationToken);
+        foreach (KazoFileSystemInfo child in (await info.GetFileSystemInfosAsync(cancellationToken: cancellationToken)).OrderBy(c => c.Name, StringComparer.Ordinal))
         {
-            await HackProcess.CheckpointAsync(cancellationToken);
+            await KazoProcess.CheckpointAsync(cancellationToken);
             if (child.IsSymbolicLink)
             {
                 continue;
             }
 
             string childDisplay = display == "." ? child.Name : display.TrimEnd('/') + "/" + child.Name;
-            if (child is HackDirectoryInfo)
+            if (child is KazoDirectoryInfo)
             {
                 await CollectFilesAsync(childDisplay, child.FullName, targets, cancellationToken);
             }

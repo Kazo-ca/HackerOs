@@ -120,7 +120,7 @@ public sealed class LauncherAppProjectionTests
         Description = description,
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.TestApp", "Kazo.Os.TestApp.TestWindow"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest(category, AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None
     };

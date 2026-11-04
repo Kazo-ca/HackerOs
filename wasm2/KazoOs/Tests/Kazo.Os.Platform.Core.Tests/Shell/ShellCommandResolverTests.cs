@@ -101,7 +101,7 @@ public sealed class ShellCommandResolverTests
         Description = description,
         Kind = AppKind.Terminal,
         EntryPoint = new AppEntryPointManifest($"{name}.dll", $"{name}.Command"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("utilities", AppLaunchVisibility.Hidden, []),
         Capabilities = [],
         Resources = AppResourceProfileManifest.None,

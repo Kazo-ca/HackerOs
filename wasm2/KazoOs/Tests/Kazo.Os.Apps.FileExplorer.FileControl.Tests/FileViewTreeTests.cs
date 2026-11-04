@@ -305,7 +305,7 @@ public sealed class FileViewTreeTests
         TestComponentRenderer renderer, FileView owner, FileViewTree root, FileViewTreeNodeState node) =>
         renderer.RenderAsync(new TestableFileViewTreeNode { Owner = owner, Root = root, Node = node, Depth = 1 });
 
-    /// <summary>Suppresses the real markup (ShellIcon/HackerIcon) so tests can attach a real RenderHandle and exercise the C# backing directly.</summary>
+    /// <summary>Suppresses the real markup (ShellIcon/KazoIcon) so tests can attach a real RenderHandle and exercise the C# backing directly.</summary>
     private sealed class TestableFileViewTreeNode : FileViewTreeNode
     {
         protected override void BuildRenderTree(RenderTreeBuilder builder)

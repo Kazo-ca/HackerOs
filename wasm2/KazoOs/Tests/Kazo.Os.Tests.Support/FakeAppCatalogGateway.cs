@@ -9,8 +9,8 @@ namespace Kazo.Os.Tests.Support;
 /// </summary>
 public sealed class FakeAppCatalogGateway : IAppCatalogGateway
 {
-    private readonly List<HackAppInfo> _apps = [];
-    private readonly List<HackFileAssociation> _systemDefaults = [];
+    private readonly List<KazoAppInfo> _apps = [];
+    private readonly List<KazoFileAssociation> _systemDefaults = [];
 
     /// <inheritdoc />
     public event EventHandler? Changed
@@ -20,13 +20,13 @@ public sealed class FakeAppCatalogGateway : IAppCatalogGateway
     }
 
     /// <summary>The user's choices, in the order they were made (a reset removes the row).</summary>
-    public List<HackFileAssociation> UserDefaults { get; } = [];
+    public List<KazoFileAssociation> UserDefaults { get; } = [];
 
     /// <summary>The next result of <see cref="SetUserDefaultHandlerAsync"/>, when a test forces one.</summary>
-    public HackDefaultHandlerStatus? NextSetResult { get; set; }
+    public KazoDefaultHandlerStatus? NextSetResult { get; set; }
 
     /// <summary>Adds an installed app.</summary>
-    public FakeAppCatalogGateway WithApp(HackAppInfo app)
+    public FakeAppCatalogGateway WithApp(KazoAppInfo app)
     {
         _apps.Add(app);
         return this;
@@ -35,29 +35,29 @@ public sealed class FakeAppCatalogGateway : IAppCatalogGateway
     /// <summary>Adds a default of <c>/etc/hackeros/file-associations.json</c>.</summary>
     public FakeAppCatalogGateway WithSystemDefault(string target, string appId, string action = "open")
     {
-        _systemDefaults.Add(new HackFileAssociation(target, action, appId, HackFileAssociationLayer.System));
+        _systemDefaults.Add(new KazoFileAssociation(target, action, appId, KazoFileAssociationLayer.System));
         return this;
     }
 
     /// <inheritdoc />
-    public ValueTask<IReadOnlyList<HackAppInfo>> GetInstalledAsync(CancellationToken cancellationToken = default) =>
-        ValueTask.FromResult<IReadOnlyList<HackAppInfo>>([.. _apps]);
+    public ValueTask<IReadOnlyList<KazoAppInfo>> GetInstalledAsync(CancellationToken cancellationToken = default) =>
+        ValueTask.FromResult<IReadOnlyList<KazoAppInfo>>([.. _apps]);
 
     /// <inheritdoc />
-    public ValueTask<IReadOnlyList<HackAppInfo>> GetHandlersAsync(
+    public ValueTask<IReadOnlyList<KazoAppInfo>> GetHandlersAsync(
         VirtualPath path, string? mediaType = null, CancellationToken cancellationToken = default)
     {
         string extension = Path.GetExtension(path.Value).ToLowerInvariant();
-        return ValueTask.FromResult<IReadOnlyList<HackAppInfo>>([.. _apps.Where(app => app.FileHandlers.Any(handler =>
+        return ValueTask.FromResult<IReadOnlyList<KazoAppInfo>>([.. _apps.Where(app => app.FileHandlers.Any(handler =>
             handler.Extensions.Contains(extension, StringComparer.OrdinalIgnoreCase)))]);
     }
 
     /// <inheritdoc />
-    public ValueTask<IReadOnlyList<HackFileAssociation>> GetDefaultHandlersAsync(CancellationToken cancellationToken = default) =>
-        ValueTask.FromResult<IReadOnlyList<HackFileAssociation>>([.. UserDefaults, .. _systemDefaults]);
+    public ValueTask<IReadOnlyList<KazoFileAssociation>> GetDefaultHandlersAsync(CancellationToken cancellationToken = default) =>
+        ValueTask.FromResult<IReadOnlyList<KazoFileAssociation>>([.. UserDefaults, .. _systemDefaults]);
 
     /// <inheritdoc />
-    public ValueTask<HackDefaultHandlerStatus> SetUserDefaultHandlerAsync(
+    public ValueTask<KazoDefaultHandlerStatus> SetUserDefaultHandlerAsync(
         string target, string action, string? appId, CancellationToken cancellationToken = default)
     {
         if (NextSetResult is { } forced)
@@ -68,15 +68,15 @@ public sealed class FakeAppCatalogGateway : IAppCatalogGateway
         string normalized = target.ToLowerInvariant();
         if (!normalized.StartsWith('.') && !normalized.Contains('/'))
         {
-            return ValueTask.FromResult(HackDefaultHandlerStatus.InvalidTarget);
+            return ValueTask.FromResult(KazoDefaultHandlerStatus.InvalidTarget);
         }
 
         if (appId is not null)
         {
-            HackAppInfo? app = _apps.FirstOrDefault(candidate => candidate.Id == appId);
+            KazoAppInfo? app = _apps.FirstOrDefault(candidate => candidate.Id == appId);
             if (app is null)
             {
-                return ValueTask.FromResult(HackDefaultHandlerStatus.AppNotFound);
+                return ValueTask.FromResult(KazoDefaultHandlerStatus.AppNotFound);
             }
 
             bool declares = app.FileHandlers.Any(handler =>
@@ -85,20 +85,20 @@ public sealed class FakeAppCatalogGateway : IAppCatalogGateway
                 && handler.Actions.Contains(action, StringComparer.OrdinalIgnoreCase));
             if (!declares)
             {
-                return ValueTask.FromResult(HackDefaultHandlerStatus.AppCannotHandle);
+                return ValueTask.FromResult(KazoDefaultHandlerStatus.AppCannotHandle);
             }
         }
 
         UserDefaults.RemoveAll(row => row.Target == normalized && row.Action == action);
         if (appId is not null)
         {
-            UserDefaults.Add(new HackFileAssociation(normalized, action, appId, HackFileAssociationLayer.User));
+            UserDefaults.Add(new KazoFileAssociation(normalized, action, appId, KazoFileAssociationLayer.User));
         }
 
-        return ValueTask.FromResult(HackDefaultHandlerStatus.Changed);
+        return ValueTask.FromResult(KazoDefaultHandlerStatus.Changed);
     }
 
     /// <summary>A window app that declares <paramref name="handlers"/>, for tests.</summary>
-    public static HackAppInfo Window(string id, string name, params HackAppFileHandler[] handlers) =>
+    public static KazoAppInfo Window(string id, string name, params KazoAppFileHandler[] handlers) =>
         new(id, name, name, AppKind.Window, "test", null, "1.0.0", "pub.test", false, false, handlers);
 }

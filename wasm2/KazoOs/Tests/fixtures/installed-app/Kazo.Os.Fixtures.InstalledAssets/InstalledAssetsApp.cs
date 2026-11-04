@@ -8,7 +8,7 @@ namespace Kazo.Os.Fixtures.InstalledAssets;
 /// </summary>
 /// <remarks>
 /// ADR 0221: <c>engine/engine.js</c>, <c>ProbeWindow.razor.js</c> and the scoped CSS bundle are not
-/// declared here; <c>HackerOsPack</c> adds them to the package's manifest.
+/// declared here; <c>KazoOsPack</c> adds them to the package's manifest.
 /// </remarks>
 [AppManifest]
 public sealed class InstalledAssetsApp : AppDefinition

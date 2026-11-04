@@ -150,7 +150,7 @@ public sealed class ScreenService : IAsyncDisposable
         _runtime = runtime ?? throw new ArgumentNullException(nameof(runtime));
         _settings = settings;
         _logger = (ILogger?)logger ?? NullLogger.Instance;
-        _text = Strings.For(() => locale?.Culture ?? HackLocale.DefaultLanguage);
+        _text = Strings.For(() => locale?.Culture ?? KazoLocale.DefaultLanguage);
     }
 
     /// <summary>Raised after a screen opened, closed or changed, and after the offers changed. Raised outside any Blazor event.</summary>

@@ -19,7 +19,7 @@
                        InitialDirectory="@EffectiveInitialDirectory"
                        AllowFileSelection="false"
                        AllowDirectorySelection="true"
-                       Features="@(Presentation.Request.AllowCreateFolder ? HackFileViewFeatures.CreateFolder | HackFileViewFeatures.Rename : HackFileViewFeatures.None)"
+                       Features="@(Presentation.Request.AllowCreateFolder ? KazoFileViewFeatures.CreateFolder | KazoFileViewFeatures.Rename : KazoFileViewFeatures.None)"
                        DirectoryChanged="DirectoryChanged"
                        SelectionChanged="SelectionChanged"
                        FileControlChanged="FileControlChanged" />

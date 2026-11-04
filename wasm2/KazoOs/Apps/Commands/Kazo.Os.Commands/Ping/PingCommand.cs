@@ -9,7 +9,7 @@ namespace Kazo.Os.Commands.Ping;
 
 /// <summary>
 /// Simulated <c>ping</c> terminal command (P4-W4-006): four echo requests through
-/// <see cref="HackPing"/>, then the usual statistics block. Resolution and the real-network
+/// <see cref="KazoPing"/>, then the usual statistics block. Resolution and the real-network
 /// fallback (ADR 0028) belong to the OS (ADR 0056, section 6): a host outside the simulated
 /// network is reached through the optional server only when the OS can, otherwise the name simply
 /// does not resolve.
@@ -39,7 +39,7 @@ public sealed class PingCommand : TerminalAppBase
         }
 
         string target = context.Arguments[0];
-        List<HackPingReply> replies = [];
+        List<KazoPingReply> replies = [];
         for (int sequence = 1; sequence <= EchoCount; sequence++)
         {
             if (cancellationToken.IsCancellationRequested)
@@ -47,12 +47,12 @@ public sealed class PingCommand : TerminalAppBase
                 break;
             }
 
-            HackPingReply reply;
+            KazoPingReply reply;
             try
             {
-                reply = await HackPing.SendAsync(target, cancellationToken: cancellationToken).ConfigureAwait(false);
+                reply = await KazoPing.SendAsync(target, cancellationToken: cancellationToken).ConfigureAwait(false);
             }
-            catch (HackPingException)
+            catch (KazoPingException)
             {
                 context.StandardOutput.WriteLine(text["CannotResolve", target]);
                 return 2;
@@ -69,11 +69,11 @@ public sealed class PingCommand : TerminalAppBase
             string from = reply.Address?.ToString() ?? target;
             switch (reply.Status)
             {
-                case HackIPStatus.Success:
+                case KazoIPStatus.Success:
                     context.StandardOutput.WriteLine(
                         text["Reply", from, sequence, reply.Ttl, FormatMilliseconds(reply.RoundtripTime)]);
                     break;
-                case HackIPStatus.DestinationHostUnreachable:
+                case KazoIPStatus.DestinationHostUnreachable:
                     context.StandardOutput.WriteLine(text["Unreachable", from, sequence]);
                     break;
                 default:
@@ -86,9 +86,9 @@ public sealed class PingCommand : TerminalAppBase
     }
 
     /// <summary>Writes the summary <c>ping</c> prints on exit and returns its status: 0 if any reply came back.</summary>
-    private static int WriteStatistics(TerminalExecutionContext context, IStringLocalizer<Strings> text, string target, IReadOnlyList<HackPingReply> replies)
+    private static int WriteStatistics(TerminalExecutionContext context, IStringLocalizer<Strings> text, string target, IReadOnlyList<KazoPingReply> replies)
     {
-        double[] times = [.. replies.Where(r => r.Status == HackIPStatus.Success).Select(r => r.RoundtripTime.TotalMilliseconds)];
+        double[] times = [.. replies.Where(r => r.Status == KazoIPStatus.Success).Select(r => r.RoundtripTime.TotalMilliseconds)];
         int lossPercent = replies.Count == 0 ? 100 : (int)Math.Round(100.0 * (replies.Count - times.Length) / replies.Count);
 
         context.StandardOutput.WriteLine();

@@ -82,7 +82,7 @@ strategy.
   original to `https://hackos.kazo.ca/legacy`. Ports do not affect this test;
   look-alike subdomains and URL parameters do not enable it.
 - WASM recovery and fatal errors: same credits and the same version.
-- Settings, About: current version through `HackerOsSdk.Version`, author (kazo.ca
+- Settings, About: current version through `KazoOsSdk.Version`, author (kazo.ca
   link) and GitHub project in the same format.
 - Legacy Settings, About: GitHub URL visible, legacy version unchanged.
 - Package metadata also points to the new repository. The common version is

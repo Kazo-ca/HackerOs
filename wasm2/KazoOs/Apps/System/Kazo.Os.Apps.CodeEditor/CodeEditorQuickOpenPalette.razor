@@ -1,4 +1,4 @@
-@inherits Kazo.Os.AppSdk.Blazor.HackComponentBase
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
 @using Kazo.Os.AppSdk.Icons
 @implements IDisposable
 
@@ -43,7 +43,7 @@
                         aria-selected="@(index == _selected ? "true" : "false")"
                         @onmouseenter="() => _selected = index"
                         @onclick="() => PickAsync(file)">
-                        <HackerIcon Library="IconLibrary.Lucide" Name="file-code" Size="15" />
+                        <KazoIcon Library="IconLibrary.Lucide" Name="file-code" Size="15" />
                         <span class="item-name">@file.Name</span>
                         <span class="item-directory">@file.Directory</span>
                     </li>

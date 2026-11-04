@@ -18,10 +18,10 @@ public sealed partial class MvcSite : WebAppDefinition
 
     public override IReadOnlyList<string> Urls => ["http://mvc.hack/"];
 
-    public override void Configure(HackWebApplicationBuilder builder)
+    public override void Configure(KazoWebApplicationBuilder builder)
     {
         builder.Services.AddSingleton<MvcCounter>();
-        HackWebApplication app = builder.Build();
+        KazoWebApplication app = builder.Build();
         app.UseExceptionPage();
         app.UseStaticFiles();
         app.UseCookieSession();
@@ -42,7 +42,7 @@ public sealed class MvcCounter
 
 /// <summary>An API controller of the site.</summary>
 [Route("api/[controller]")]
-public sealed class ItemsController(MvcCounter counter) : HackApiController
+public sealed class ItemsController(MvcCounter counter) : KazoApiController
 {
     [HttpGet("{id:int}")]
     public IHackActionResult Get(int id) => id == 0 ? NotFound() : Content($"item {id} #{counter.Next()}");
@@ -52,9 +52,9 @@ public sealed class ItemsController(MvcCounter counter) : HackApiController
 }
 
 /// <summary>A page controller on the default conventional route.</summary>
-public sealed class HomeController : HackController
+public sealed class HomeController : KazoController
 {
-    public string Index() => $"home in={(HackExecutionContext.Current.GetType().Name == "RemoteAppExecutionContext" ? "worker" : "main")}";
+    public string Index() => $"home in={(KazoExecutionContext.Current.GetType().Name == "RemoteAppExecutionContext" ? "worker" : "main")}";
 
     public IHackActionResult Visits()
     {

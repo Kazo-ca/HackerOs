@@ -193,7 +193,7 @@ public sealed class FileDialogCoordinatorTests
             Description = "Dialog coordinator test app.",
             Kind = AppKind.Window,
             EntryPoint = new AppEntryPointManifest("Tests", "DialogTest"),
-            SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+            SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
             Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
             Resources = AppResourceProfileManifest.None,
         };

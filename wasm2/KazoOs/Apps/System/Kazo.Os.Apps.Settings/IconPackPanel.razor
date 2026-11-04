@@ -1,7 +1,7 @@
 @using Kazo.Os.AppSdk.Icons
 @using Kazo.Os.Theming.Abstractions.IconPacks
 @using Kazo.Os.Simulation.Abstractions.Settings
-@inherits Kazo.Os.AppSdk.Blazor.HackComponentBase
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
 
 @*
     Settings > Appearance > Icon pack (ADR 0203 §5): the packs of /usr/share/icons and
@@ -33,9 +33,9 @@
                     disabled="@IsDisabled"
                     @onclick="() => SelectAsync(IconPackLibrary.BuiltInId)">
                 <span class="icon-pack-preview is-builtin" aria-hidden="true">
-                    <HackerIcon Library="IconLibrary.Lucide" Name="folder" Size="22" Title="" />
-                    <HackerIcon Library="IconLibrary.Lucide" Name="file-text" Size="22" Title="" />
-                    <HackerIcon Library="IconLibrary.Lucide" Name="settings" Size="22" Title="" />
+                    <KazoIcon Library="IconLibrary.Lucide" Name="folder" Size="22" Title="" />
+                    <KazoIcon Library="IconLibrary.Lucide" Name="file-text" Size="22" Title="" />
+                    <KazoIcon Library="IconLibrary.Lucide" Name="settings" Size="22" Title="" />
                 </span>
                 <span class="icon-pack-name">@L["IconPack.BuiltIn"]</span>
                 <span class="icon-pack-meta">@L["IconPack.BuiltIn.Description"]</span>

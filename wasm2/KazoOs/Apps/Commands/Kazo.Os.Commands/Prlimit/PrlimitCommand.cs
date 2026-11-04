@@ -11,8 +11,8 @@ namespace Kazo.Os.Commands.Prlimit;
 
 /// <summary>
 /// Implements <c>prlimit</c> (util-linux, ADR 0125 section 4): prints or changes the resource limits
-/// of a process through the public SDK (<see cref="HackProcess.GetResourceLimitsAsync"/>,
-/// <see cref="HackProcess.SetResourceLimitAsync"/>).
+/// of a process through the public SDK (<see cref="KazoProcess.GetResourceLimitsAsync"/>,
+/// <see cref="KazoProcess.SetResourceLimitAsync"/>).
 /// </summary>
 /// <remarks>
 /// <list type="bullet">
@@ -102,15 +102,15 @@ public sealed class PrlimitCommand : TerminalAppBase
             return 1;
         }
 
-        HackProcess process;
-        HackResourceLimits limits;
-        long target = pid ?? HackEnvironment.ProcessId;
+        KazoProcess process;
+        KazoResourceLimits limits;
+        long target = pid ?? KazoEnvironment.ProcessId;
         try
         {
-            process = await HackProcess.GetProcessByIdAsync(target, cancellationToken);
+            process = await KazoProcess.GetProcessByIdAsync(target, cancellationToken);
             limits = await process.GetResourceLimitsAsync(cancellationToken);
         }
-        catch (Exception exception) when (exception is ArgumentException or InvalidOperationException or HackIOException or HackUnauthorizedAccessException)
+        catch (Exception exception) when (exception is ArgumentException or InvalidOperationException or KazoIOException or KazoUnauthorizedAccessException)
         {
             await context.StandardError.WriteLineAsync(text["GetFailed", requested.Count == 1 ? requested[0].Resource.Name : "process", text["NoSuchProcess"]]);
             return 1;
@@ -169,7 +169,7 @@ public sealed class PrlimitCommand : TerminalAppBase
 
     /// <summary>Applies <c>soft:hard</c>, <c>value</c>, <c>soft:</c> or <c>:hard</c>.</summary>
     private static async Task<int> SetAsync(
-        TerminalExecutionContext context, IStringLocalizer<Strings> text, HackProcess process, HackResourceLimits limits,
+        TerminalExecutionContext context, IStringLocalizer<Strings> text, KazoProcess process, KazoResourceLimits limits,
         Resource resource, string value, CancellationToken cancellationToken)
     {
         ResourceLimit current = limits[resource.Kind];
@@ -194,7 +194,7 @@ public sealed class PrlimitCommand : TerminalAppBase
         {
             await context.StandardError.WriteLineAsync(text["SetFailed", resource.Name, text["InvalidArgument"]]);
         }
-        catch (Exception exception) when (exception is HackUnauthorizedAccessException or NotSupportedException)
+        catch (Exception exception) when (exception is KazoUnauthorizedAccessException or NotSupportedException)
         {
             await context.StandardError.WriteLineAsync(text["SetFailed", resource.Name, text["OperationNotPermitted"]]);
         }
@@ -219,7 +219,7 @@ public sealed class PrlimitCommand : TerminalAppBase
 
     /// <summary>The table of util-linux: <c>RESOURCE DESCRIPTION SOFT HARD UNITS</c>.</summary>
     private static async Task PrintAsync(
-        TerminalExecutionContext context, IStringLocalizer<Strings> text, HackResourceLimits limits, IReadOnlyList<Resource> resources, bool headings)
+        TerminalExecutionContext context, IStringLocalizer<Strings> text, KazoResourceLimits limits, IReadOnlyList<Resource> resources, bool headings)
     {
         List<string[]> rows = [];
         if (headings)

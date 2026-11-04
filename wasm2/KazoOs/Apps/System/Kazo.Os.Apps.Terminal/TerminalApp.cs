@@ -49,7 +49,7 @@ public sealed class TerminalApp : AppDefinition
     /// this window, controlled through <c>IHackTerminal</c>.
     /// </summary>
     public override IReadOnlyList<AppComponent> Components =>
-        [new(HackComponentContracts.Terminal, typeof(TerminalEmbed))];
+        [new(KazoComponentContracts.Terminal, typeof(TerminalEmbed))];
 
     /// <inheritdoc />
     public override AppResourceProfileManifest Resources => new(

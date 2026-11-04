@@ -9,7 +9,7 @@ namespace Kazo.Os.AppSdk.Blazor;
 /// </summary>
 public abstract partial class WindowAppBase
 {
-    private HackMenus? _menus;
+    private KazoMenus? _menus;
 
     /// <summary>Gets or sets the window's context menus, cascaded by the OS (ADR 0150 §4).</summary>
     [CascadingParameter]
@@ -20,7 +20,7 @@ public abstract partial class WindowAppBase
     /// on any element, <c>Menus.Define(name, builder =&gt; …)</c> in C#, and <c>Menus.OpenAsync</c>
     /// for a menu button. Callbacks defined here run in the app's context and re-render the window.
     /// </summary>
-    protected HackMenus Menus => _menus is { } menus && menus.Host == MenuHost
+    protected KazoMenus Menus => _menus is { } menus && menus.Host == MenuHost
         ? menus
-        : _menus = new HackMenus(MenuHost, this);
+        : _menus = new KazoMenus(MenuHost, this);
 }

@@ -3,7 +3,7 @@ using System.Globalization;
 namespace Kazo.Os.AppSdk.WhatsNew;
 
 /// <summary>Category of a change of the change list (ADR 0186 §2).</summary>
-public enum HackChangeCategory
+public enum KazoChangeCategory
 {
     /// <summary>Something the user can do that was not possible before (<c>new</c>).</summary>
     New,
@@ -26,9 +26,9 @@ public enum HackChangeCategory
 /// <param name="PullRequestUrl">The pull request that made it, or <see langword="null"/>.</param>
 /// <param name="Links">Pages that tell more (documentation, decision records).</param>
 /// <param name="IsNew">Whether the user has not seen it yet: the page shows a <b>New</b> badge.</param>
-public sealed record HackChangeEntry(
+public sealed record KazoChangeEntry(
     string Id,
-    HackChangeCategory Category,
+    KazoChangeCategory Category,
     string Title,
     string? Description,
     Uri? PullRequestUrl,
@@ -40,11 +40,11 @@ public sealed record HackChangeEntry(
 /// <param name="Since">For the next version: the version it follows (« Since 2.1.0 »); otherwise <see langword="null"/>.</param>
 /// <param name="Date">The release date of a published version, when known.</param>
 /// <param name="Entries">Its changes, by category (new, improved, fixed, developer).</param>
-public sealed record HackChangeGroup(
+public sealed record KazoChangeGroup(
     string? Version,
     string? Since,
     DateOnly? Date,
-    IReadOnlyList<HackChangeEntry> Entries)
+    IReadOnlyList<KazoChangeEntry> Entries)
 {
     /// <summary>Gets whether the group holds the changes deployed before their version is published.</summary>
     public bool IsNextVersion => Version is null;
@@ -53,14 +53,14 @@ public sealed record HackChangeGroup(
 /// <summary>What changed in Kazo OS, as the session user sees it (ADR 0186 §4).</summary>
 /// <param name="Groups">One group per version, the most recent first.</param>
 /// <param name="NewCount">The number of changes the user has not seen yet.</param>
-public sealed record HackChangeList(IReadOnlyList<HackChangeGroup> Groups, int NewCount)
+public sealed record KazoChangeList(IReadOnlyList<KazoChangeGroup> Groups, int NewCount)
 {
     /// <summary>Gets an empty list: no change list was served (offline, or a host without one).</summary>
-    public static HackChangeList Empty { get; } = new([], 0);
+    public static KazoChangeList Empty { get; } = new([], 0);
 }
 
 /// <summary>
-/// Trusted OS gateway behind <see cref="HackWhatsNew"/> (ADR 0186 §4). It always works for the
+/// Trusted OS gateway behind <see cref="KazoWhatsNew"/> (ADR 0186 §4). It always works for the
 /// session user: no capability is needed to read what changed or to mark it seen.
 /// </summary>
 public interface IAppWhatsNewGateway
@@ -71,7 +71,7 @@ public interface IAppWhatsNewGateway
     /// <summary>Reads the change list and which changes the session user has seen.</summary>
     /// <param name="culture">The language of the texts.</param>
     /// <param name="cancellationToken">Cancels the read.</param>
-    ValueTask<HackChangeList> GetAsync(CultureInfo culture, CancellationToken cancellationToken = default);
+    ValueTask<KazoChangeList> GetAsync(CultureInfo culture, CancellationToken cancellationToken = default);
 
     /// <summary>Marks changes as seen by the session user: they lose their <b>New</b> badge.</summary>
     /// <param name="ids">The ids of the changes.</param>

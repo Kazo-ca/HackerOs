@@ -19,7 +19,7 @@ Deux principes guident tout le reste
 ([`ecosystem-rebuild-plan.md`](plans/ecosystem-rebuild-plan.md), section 1) :
 
 1. **Pour le développeur d'app**, ajouter une app est simple : l'API fichier
-   ressemble à `System.IO` (`HackFile`, `HackDirectory`…), le manifeste est une
+   ressemble à `System.IO` (`KazoFile`, `KazoDirectory`…), le manifeste est une
    classe C#, et une seule `ProjectReference` installe l'app.
 2. **Pour l'utilisateur**, l'OS se comporte comme un vrai Linux : tout est
    fichier (paramètres dans `/etc` et `~/.config`, journaux dans `/var/log`,
@@ -69,8 +69,8 @@ plateforme et ne référencent jamais `Platform.*` ni `Infrastructure.*`
 | Projet | Contenu |
 |---|---|
 | `Kazo.Os.AppSdk` | Façades `Hack*` (fichiers, environnement, paramètres, réseau, processus, presse-papiers, administration…), `IAppExecutionContext`, classes de base `TerminalAppBase`, `ServiceAppBase` et `WebServerAppBase`. |
-| `Kazo.Os.AppSdk.Blazor` | `WindowAppBase`, `HackComponentBase`, dialogues (fichiers, message, saisie, « Ouvrir avec », propriétés, conflit de noms), graphiques `HackLineChart`, téléchargement et presse-papiers du navigateur ; contrats fournis par l'OS à l'exécution (`HackContractComponent<T>`, `HackFileView`), menu contextuel de l'OS (`Menus.Attach`) et `[RegisterFileContextMenu]` (SDK 2.0). |
-| `Kazo.Os.AppSdk.Icons` | Bibliothèques d'icônes et composant `HackerIcon`. |
+| `Kazo.Os.AppSdk.Blazor` | `WindowAppBase`, `KazoComponentBase`, dialogues (fichiers, message, saisie, « Ouvrir avec », propriétés, conflit de noms), graphiques `KazoLineChart`, téléchargement et presse-papiers du navigateur ; contrats fournis par l'OS à l'exécution (`KazoContractComponent<T>`, `KazoFileView`), menu contextuel de l'OS (`Menus.Attach`) et `[RegisterFileContextMenu]` (SDK 2.0). |
+| `Kazo.Os.AppSdk.Icons` | Bibliothèques d'icônes et composant `KazoIcon`. |
 | `Kazo.Os.AppSdk.Terminal` | Émulateur de terminal xterm.js (`TerminalPanel`, `TerminalTabs`). |
 | `Kazo.Os.AppSdk.Web` | ASP.Hack : sites internes façon ASP.NET Core MVC (pipeline, routage, contrôleurs, session ; [`asp-hack-mvc.md`](../framework/asp-hack-mvc.md)). |
 | `Kazo.Os.AppSdk.Web.Blazor` | Sites Blazor interactifs : routeur, navigation, vue de site dessinée par le navigateur ([`blazor-sites.md`](../framework/blazor-sites.md)). |
@@ -83,7 +83,7 @@ Le détail de chaque API est dans la [référence du SDK](../framework/sdk-refer
 | Projet | Contenu |
 |---|---|
 | `Kazo.Os.Platform.Core` | Services de l'OS, sans interface graphique : catalogue d'apps, cycle de vie et processus, système de fichiers et montages (`/proc`, `/dev`), paramètres en fichiers, journaux, politique et capacités, élévation (`sudo`), sessions, shell `hsh` et son interpréteur, réseau simulé, presse-papiers, notifications, horloge, mesures. Les passerelles du SDK y sont implémentées ([`platform-core.md`](platform-core.md) : carte des dossiers). |
-| `Kazo.Os.Platform.ResourceAccounting` | Mesure optionnelle du CPU et de la mémoire par processus (ADR 0066 à 0068) : crochet de changement de contexte sur le frame ambiant, diffuseur vers les mesures, interrupteurs. Dépend de Platform Core ; un hôte ne le référence que si `HackerOsCpuAccounting` ou `HackerOsMemoryAccounting` vaut `true` ([`resource-accounting.md`](resource-accounting.md)). |
+| `Kazo.Os.Platform.ResourceAccounting` | Mesure optionnelle du CPU et de la mémoire par processus (ADR 0066 à 0068) : crochet de changement de contexte sur le frame ambiant, diffuseur vers les mesures, interrupteurs. Dépend de Platform Core ; un hôte ne le référence que si `KazoOsCpuAccounting` ou `KazoOsMemoryAccounting` vaut `true` ([`resource-accounting.md`](resource-accounting.md)). |
 | `Kazo.Os.Platform.WorkerHost` | Processus sans interface dans des Web Workers (ADR 0070, 0071) : côté OS, le pool de workers (un par cœur virtuel, worker prêt, débordement, workers dédiés), les sessions qui servent les appels sous les mêmes contrôles de capacités, le battement de cœur et l'escalade ; côté worker, le runtime .NET qui exécute la commande ou le service avec des passerelles distantes. Référencé par l'hôte Ecosystem dans le navigateur seulement ([`worker-processes.md`](worker-processes.md)). |
 | `Kazo.Os.Platform.RemoteRendering` | Essai de l'ADR 0129, verdict « on s'arrête » (ADR 0133) : une fenêtre Blazor rendue par un `Renderer` dans un worker, ses lots traduits en opérations DOM appliquées par `RemoteWindowHost` sur la page. Coupé par défaut (`HackerOs:RemoteWindowRendering`) ; aucune app ne doit en dépendre ([`remote-window-rendering.md`](remote-window-rendering.md)). |
 | `Kazo.Os.Platform.Blazor` | Interface de l'OS : bureau, menu Démarrer, hôte de fenêtres (`WindowAppRenderer`), dialogues, fenêtre d'approbation des capacités dangereuses, agent d'authentification, chargement différé des apps. |
@@ -104,7 +104,7 @@ navigateur est ici ([`browser-infrastructure.md`](browser-infrastructure.md)).
 
 | Dossier | Contenu |
 |---|---|
-| `Apps/System/` | Les 15 apps fenêtrées de base : Bureau (surface cachée rendue par la coquille sous les fenêtres, [`desktop.md`](desktop.md)), Terminal, File Explorer, Text Editor, Code Editor, Settings ([`settings-app.md`](settings-app.md)), System Monitor (gestionnaire de tâches), Error Log Viewer, Diagnostic, Browser, Calculator, HackPaint ([`hack-paint.md`](hack-paint.md)), Theme Editor ([`theme-editor.md`](theme-editor.md)), Icon Viewer, Web Server Manager (avec le service `hackwebd`, [`static-sites.md`](static-sites.md)). |
+| `Apps/System/` | Les 15 apps fenêtrées de base : Bureau (surface cachée rendue par la coquille sous les fenêtres, [`desktop.md`](desktop.md)), Terminal, File Explorer, Text Editor, Code Editor, Settings ([`settings-app.md`](settings-app.md)), System Monitor (gestionnaire de tâches), Error Log Viewer, Diagnostic, Browser, Calculator, KazoPaint ([`hack-paint.md`](hack-paint.md)), Theme Editor ([`theme-editor.md`](theme-editor.md)), Icon Viewer, Web Server Manager (avec le service `hackwebd`, [`static-sites.md`](static-sites.md)). |
 | `Apps/Commands/Kazo.Os.Commands` | Les 74 commandes du shell dans un seul projet (`ls`, `cat`, `cd`, `cp`, `mv`, `rm`, `grep`, `nano`, `sudo`, `ping`, `curl`, `nmap`, et depuis l'ADR 0064 `sort`, `cut`, `zip`, `top`, `htop`, `systemctl`, `ip`, `test`, `read`… : [`linux-commands.md`](linux-commands.md)), une classe `[AppManifest]` par commande (ADR 0051) ; elles tournent dans le pool de Web Workers sauf les 18 marquées `Execution = AppExecutionHost.MainThread` (ADR 0070). |
 | `Apps/Samples/` | Apps d'exemple, une par genre (fenêtre, terminal, service, plateforme, site Blazor, site ASP.Hack complet) ; elles ne sont pas installées dans l'hôte, sauf les deux sites `Kazo.Os.Samples.BlazorSite` (`http://blazor-sample.hack/`, ADR 0084) et `Kazo.Os.Samples.Intranet` (`http://intranet.hack/`, ADR 0087, [guide ASP.Hack](../framework/asp-hack-developer-guide.md)), apps cachées installées pour que le navigateur puisse les servir. |
 
@@ -133,14 +133,14 @@ Plus de détails sur les hôtes dans [`old/hosting-model.md`](old/hosting-model.
 | `Tools/Kazo.Os.Tools.WebRouteGenerator` | Générateur de sources Roslyn branché sur chaque app : table de routes des contrôleurs ASP.Hack et entrée des sites, erreurs `HOSWEB*` (ADR 0082, [`asp-hack-mvc.md`](../framework/asp-hack-mvc.md)). |
 | `Tools/Kazo.Os.App.Build` | Paquet de l'intégration de build pour un autre dépôt : `build/Kazo.Os.Apps.targets`, générateur de manifestes, générateur de routes ([`sdk-packages.md`](../framework/sdk-packages.md)). |
 | `Templates/Kazo.Os.Templates` | Modèles `dotnet new` : `hackeros-window`, `-command`, `-service`, `-site`, `-host` (ADR 0098 §6). |
-| `Tools/Kazo.Os.Tools.BackgroundAnalyzer` | Analyseur Roslyn des appels à `HackBackground.RunAsync` : vérifie chaque appel contre les règles des tâches de fond (ADR 0128). |
+| `Tools/Kazo.Os.Tools.BackgroundAnalyzer` | Analyseur Roslyn des appels à `KazoBackground.RunAsync` : vérifie chaque appel contre les règles des tâches de fond (ADR 0128). |
 | `Tools/icon-import` | Script Node d'import des bibliothèques d'icônes. |
 | `Samples/Kazo.Os.Windowing.SampleHost` | Hôte d'exemple du gestionnaire de fenêtres seul. |
 | `Tests/` | Un projet de tests xUnit par projet de code, des tests d'intégration MSBuild du générateur, des suites E2E Playwright (`Kazo.Os.E2E.Tests`, `Kazo.Os.UI.E2E.Tests`, `Kazo.Os.Pwa.E2E.Tests`) le test de démarrage des trois hôtes (`Kazo.Os.HostSmoke.Tests`, lancé par `build/verify-hosts.sh`), le test de la publication trimmée (`Kazo.Os.TrimmedPublish.E2E.Tests`, lancé par `build/publish-trimmed.sh`) le test des modèles (`Kazo.Os.Templates.E2E.Tests`) et le test de compatibilité du SDK (`Kazo.Os.SdkCompatibility.Tests`, apps de compatibilité gardées dans `Tests/fixtures/sdk-compat` : 1.0.0 et 1.1.0 refusées, 2.0.0 admise ; ADR 0114, ADR 0149). `Kazo.Os.Tests.Support` fournit des faux contextes et passerelles ; `Kazo.Os.E2E.Support`, le lancement de Chromium commun aux suites Playwright. |
 | `build/Kazo.Os.Apps.targets` | Cibles MSBuild du modèle d'app (génération, agrégation, frontière du SDK, empaquetage des manifestes). |
 | `build/Versions.props`, `build/pack-local.sh`/`.ps1` | Version unique de tout ce qui est publié et production des paquets locaux dans `artifacts/local-nupkg` ([`sdk-packages.md`](../framework/sdk-packages.md)). |
-| `build/Kazo.Os.ResourceAccounting.targets` | Propriétés `HackerOsCpuAccounting` et `HackerOsMemoryAccounting` ([`resource-accounting.md`](resource-accounting.md)). |
-| `build/asp-hack/`, `build/tools/ship-public-api.sh`, `build/nuget.config.sample`, `build/run-test-suite.ps1`, `build/assemble-pages.ps1` | Générateurs et contrôles ASP.Hack (`HackRazorCompat.cs`, `_ViewImports.cshtml`), publication de la surface publique du SDK, modèle de `nuget.config` pour un autre dépôt, suite de tests complète, assemblage du site Pages (ADR 0167). |
+| `build/Kazo.Os.ResourceAccounting.targets` | Propriétés `KazoOsCpuAccounting` et `KazoOsMemoryAccounting` ([`resource-accounting.md`](resource-accounting.md)). |
+| `build/asp-hack/`, `build/tools/ship-public-api.sh`, `build/nuget.config.sample`, `build/run-test-suite.ps1`, `build/assemble-pages.ps1` | Générateurs et contrôles ASP.Hack (`KazoRazorCompat.cs`, `_ViewImports.cshtml`), publication de la surface publique du SDK, modèle de `nuget.config` pour un autre dépôt, suite de tests complète, assemblage du site Pages (ADR 0167). |
 
 ## Le système simulé
 

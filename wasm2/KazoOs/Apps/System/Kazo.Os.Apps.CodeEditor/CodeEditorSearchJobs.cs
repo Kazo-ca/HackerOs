@@ -6,7 +6,7 @@ using Kazo.Os.AppSdk.Threading;
 using Kazo.Os.Apps.CodeEditor;
 
 // ADR 0128 section 2: the search task's input and result cross as JSON, through this context.
-[assembly: HackWireContext(typeof(CodeEditorJobsJsonContext))]
+[assembly: KazoWireContext(typeof(CodeEditorJobsJsonContext))]
 
 namespace Kazo.Os.Apps.CodeEditor;
 
@@ -37,7 +37,7 @@ internal static class CodeEditorSearchJobs
     /// <param name="input">The query and the files.</param>
     /// <param name="context">Progress (share of files visited), cancellation, checkpoints.</param>
     /// <returns>The matches, by file index.</returns>
-    public static async Task<CodeEditorSearchJobOutput> Search(CodeEditorSearchJobInput input, HackBackgroundContext context)
+    public static async Task<CodeEditorSearchJobOutput> Search(CodeEditorSearchJobInput input, KazoBackgroundContext context)
     {
         // The window already checked the pattern; an invalid one here means nothing to find.
         Regex? matcher = CodeEditorTextSearch.BuildMatcher(input.Query, out _);
@@ -57,7 +57,7 @@ internal static class CodeEditorSearchJobs
             input.Query,
             matcher,
             path => open.TryGetValue(path.Value, out string? content) ? content : null,
-            new CodeEditorFileService(HackExecutionContext.Current.FileSystem),
+            new CodeEditorFileService(KazoExecutionContext.Current.FileSystem),
             context.CheckpointAsync,
             visited => context.Report((double)visited / count),
             context.CancellationToken);

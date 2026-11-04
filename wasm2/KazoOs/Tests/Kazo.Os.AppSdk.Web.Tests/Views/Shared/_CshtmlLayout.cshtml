@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="@Url.Content("~/css/site.css")" />
 </head>
 <body data-starts="@ViewData["Starts"]">
-    <nav>@Html.ActionLink("Home", "Index", "Cshtml", HackRoute.Values(new { @class = "brand" }))</nav>
+    <nav>@Html.ActionLink("Home", "Index", "Cshtml", KazoRoute.Values(new { @class = "brand" }))</nav>
     <main>@RenderBody()</main>
     <footer>@Context.Request.Path</footer>
     @RenderSection("Scripts", required: false)

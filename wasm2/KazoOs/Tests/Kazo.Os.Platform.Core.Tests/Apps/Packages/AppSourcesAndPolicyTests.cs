@@ -197,7 +197,7 @@ public sealed class AppSourcesAndPolicyTests
         Description = id,
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Test", $"{id}.EntryPoint"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest(category, AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         Capabilities = capabilities,

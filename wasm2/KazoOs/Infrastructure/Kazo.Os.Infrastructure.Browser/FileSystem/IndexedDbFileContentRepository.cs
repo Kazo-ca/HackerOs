@@ -87,7 +87,7 @@ internal sealed class IndexedDbFileContentRepository : IAsyncDisposable
         IReadOnlyList<IndexedDbOperation> operations = [.. chunks.Select((chunk, index) =>
             new IndexedDbOperation(
                 "addIfAbsent",
-                HackerOsIndexedDbSchema.FileContentStoreName,
+                KazoOsIndexedDbSchema.FileContentStoreName,
                 Key: new object[] { contentHash, index },
                 Value: new IndexedDbFileContentChunkRecord(
                     contentHash,
@@ -118,7 +118,7 @@ internal sealed class IndexedDbFileContentRepository : IAsyncDisposable
             IndexedDbTransactionMode.ReadOnly,
             [new IndexedDbOperation(
                 "getAll",
-                HackerOsIndexedDbSchema.FileContentStoreName,
+                KazoOsIndexedDbSchema.FileContentStoreName,
                 IndexName: "contentHash",
                 Query: contentHash)],
             cancellationToken,
@@ -179,7 +179,7 @@ internal sealed class IndexedDbFileContentRepository : IAsyncDisposable
         IReadOnlyList<JsonElement> discovery = await _adapter.ExecuteAsync(
             Boundary,
             IndexedDbTransactionMode.ReadOnly,
-            [new IndexedDbOperation("getAll", HackerOsIndexedDbSchema.FileContentStoreName)],
+            [new IndexedDbOperation("getAll", KazoOsIndexedDbSchema.FileContentStoreName)],
             cancellationToken).ConfigureAwait(false);
         long cutoffUtcMs = (_timeProvider.GetUtcNow() - _policy.OrphanRetention).ToUnixTimeMilliseconds();
         IndexedDbFileContentChunkRecord[] chunks = discovery.Single().ValueKind == JsonValueKind.Array
@@ -202,10 +202,10 @@ internal sealed class IndexedDbFileContentRepository : IAsyncDisposable
         IReadOnlyList<IndexedDbOperation> operations = [.. candidates.Select(contentHash =>
             new IndexedDbOperation(
                 "deleteAllByIndexIfUnreferenced",
-                HackerOsIndexedDbSchema.FileContentStoreName,
+                KazoOsIndexedDbSchema.FileContentStoreName,
                 IndexName: "contentHash",
                 Query: contentHash,
-                ReferenceObjectStoreName: HackerOsIndexedDbSchema.FileSystemEntryStoreName,
+                ReferenceObjectStoreName: KazoOsIndexedDbSchema.FileSystemEntryStoreName,
                 ReferenceIndexName: "contentHash"))];
         IReadOnlyList<JsonElement> results = await _adapter.ExecuteAsync(
             "FileSystemContentCleanup",

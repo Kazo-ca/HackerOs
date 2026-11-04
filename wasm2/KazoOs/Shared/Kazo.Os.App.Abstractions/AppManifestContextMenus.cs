@@ -84,7 +84,7 @@ public sealed record AppContextMenuEntryManifest
 /// <param name="Text">The title in that language.</param>
 public sealed record AppContextMenuTitleManifest(string Culture, string Text);
 
-/// <summary>The icon of a registered menu entry, the same description as <c>HackIcon</c> without its rendering.</summary>
+/// <summary>The icon of a registered menu entry, the same description as <c>KazoIcon</c> without its rendering.</summary>
 /// <param name="Kind"><c>vector</c> or <c>image</c>.</param>
 /// <param name="Source">The icon's name in its library, or the image's asset path (relative to the app's <c>wwwroot/</c>) or absolute URI.</param>
 /// <param name="Library">The vector library (<c>lucide</c>, <c>bootstrap</c>, <c>fontawesome</c>, <c>simpleicons</c>); <see langword="null"/> for an image.</param>
@@ -155,7 +155,7 @@ public static class AppContextMenus
 
     /// <summary>
     /// The ids of the file control's default entries (plan §7, ADR 0151 §1): the same values as the
-    /// SDK's <c>HackFileMenuItems</c>, which a test keeps equal. An entry may be placed after one of
+    /// SDK's <c>KazoFileMenuItems</c>, which a test keeps equal. An entry may be placed after one of
     /// them, or after an entry of its own app.
     /// </summary>
     public static IReadOnlySet<string> DefaultItemIds { get; } = new[]

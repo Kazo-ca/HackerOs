@@ -25,7 +25,7 @@ d'exécution » de sa section 9. Les décisions sont dans les ADR 0066 à 0071.
 - `/proc/<pid>/status` (`VmRSS`, `Cpu`) et `/proc/stat` affichent des valeurs
   tirées du `ResourceProfile` de l'app (ADR 0012, 0057). Le disque et le réseau
   sont déjà réellement comptés.
-- `HackExecutionContext` sait à chaque instant quel processus exécute du code
+- `KazoExecutionContext` sait à chaque instant quel processus exécute du code
   (`AsyncLocal`, ADR 0043) : c'est la base de la mesure.
 - `StopAsync` fait déjà `SIGTERM` puis `SIGKILL` ; « End task » fait un
   `kill -9`.
@@ -74,9 +74,9 @@ Chaque branche part de `rebuild/base` et sa PR vise `rebuild/base`.
 | Branche | Contenu | Dépend de |
 |---|---|---|
 | `rebuild/5-accounting-switches` | ADR 0066 : propriétés MSBuild, `build/Kazo.Os.ResourceAccounting.targets`, `RuntimeHostConfigurationOption`, projet `Kazo.Os.Platform.ResourceAccounting` (vide de mesure, avec le **crochet de changement de contexte** commun aux deux mesures), contrats nuls dans Simulation Abstractions, `wwwroot/appsettings.json` des hôtes, `CpuSource`/`MemSource`, mention « estimated ». | — |
-| `rebuild/5-cpu-accounting` | ADR 0067 : comptage `utime`/`stime`, compositeur, `/proc/<pid>/stat`, `/proc/stat` réel, `HackProcess.*ProcessorTime`, long tasks, « Not responding » et `Responding:`, test de surcoût (< 5 %). | `5-accounting-switches` |
+| `rebuild/5-cpu-accounting` | ADR 0067 : comptage `utime`/`stime`, compositeur, `/proc/<pid>/stat`, `/proc/stat` réel, `KazoProcess.*ProcessorTime`, long tasks, « Not responding » et `Responding:`, test de surcoût (< 5 %). | `5-accounting-switches` |
 | `rebuild/5-memory-accounting` | ADR 0068 : quatre couches, champs de `/proc/<pid>/status`, `/proc/meminfo`, `PrivateMemorySize64`. | `5-accounting-switches` |
-| `rebuild/5-graceful-stop` | ADR 0069 : `StopRequested`, `CheckpointAsync`, `TerminateAsync`, `Terminated`, ordonnanceur par processus et `HackProcessKilledException`, « End task » poli et « Force kill », `CheckpointAsync` dans les commandes longues. | — |
+| `rebuild/5-graceful-stop` | ADR 0069 : `StopRequested`, `CheckpointAsync`, `TerminateAsync`, `Terminated`, ordonnanceur par processus et `KazoProcessKilledException`, « End task » poli et « Force kill », `CheckpointAsync` dans les commandes longues. | — |
 | `rebuild/5-worker-processes` | ADR 0070 et 0071 : worker toujours prêt après le boot, débordement et plafond, `/proc/hackeros/workers`, `AppExecutionHost` dans le manifeste, `Kazo.Os.Platform.WorkerHost`, passerelles distantes et tests de parité, pool et réserve, battement de cœur, escalade étape 4, d'abord pour `Kazo.Os.Commands`. | les quatre autres |
 | `rebuild/5-host-smoke` | Section 5.2 : `build/verify-hosts.sh`, test Playwright de démarrage des trois hôtes avec repli sur le Chromium du conteneur, combinaisons des mesures ; corrige aussi le lancement des suites E2E existantes dans un conteneur. | — |
 | `rebuild/5-final` | Vérification de bout en bout, `system-metrics.md`, `task-manager.md`, `app-sdk.md`, `sdk-reference.md`, index, cette liste à jour. | tous |
@@ -85,7 +85,7 @@ Chaque branche part de `rebuild/base` et sa PR vise `rebuild/base`.
 
 | Chantier | Migration des apps existantes |
 |---|---|
-| `5-accounting-switches` | Vérifier que tout le code des apps passe par un frame ambiant (`WindowAppBase`, `HackComponentBase`, `TerminalAppBase`, `ServiceAppBase`) ; ajouter un test qui échoue si une app de `Apps/` exécute du code hors frame, faute de quoi son temps irait au compositeur. |
+| `5-accounting-switches` | Vérifier que tout le code des apps passe par un frame ambiant (`WindowAppBase`, `KazoComponentBase`, `TerminalAppBase`, `ServiceAppBase`) ; ajouter un test qui échoue si une app de `Apps/` exécute du code hors frame, faute de quoi son temps irait au compositeur. |
 | `5-cpu-accounting`, `5-memory-accounting` | Aucune modification de code d'app ; le générateur de manifeste fournit la taille des assemblies (couche image) pour **toutes** les apps ; tests de `/proc/<pid>/stat` et `status` sur un échantillon de chaque famille (fenêtre, commande, service). |
 | `5-graceful-stop` | Chaque app à fenêtre et chaque service qui tient un état (éditeurs, explorateur pendant une copie, Paramètres, services) réagit à `StopRequested` : finit ou annule proprement son opération en cours, sans perte silencieuse (un éditeur avec des modifications non enregistrées garde un brouillon de récupération). Toute boucle longue de `Apps/` (commandes, copie récursive de l'explorateur, recherche du CodeEditor, zip) appelle `CheckpointAsync`. |
 | `5-worker-processes` | Chaque commande de `Kazo.Os.Commands` et chaque service déclare son `AppExecutionHost` (ou reçoit le bon défaut) ; les tests de parité exécutent **toutes** les commandes intégrées dans les deux modes ; une app qui ne peut pas tourner en worker reste en `MainThread`, avec la raison en commentaire. |
@@ -104,7 +104,7 @@ lancé par une seule commande (`build/verify-hosts.sh`) :
   le terminal, exécute `ps` et `cat /proc/self/status`, ouvre le gestionnaire de
   tâches, puis ferme tout ;
 - refait le parcours d'Ecosystem avec les mesures coupées au build
-  (`-p:HackerOsCpuAccounting=false -p:HackerOsMemoryAccounting=false`) et par
+  (`-p:KazoOsCpuAccounting=false -p:KazoOsMemoryAccounting=false`) et par
   `appsettings.json`.
 
 Tant que ce test n'est pas fusionné, chaque chantier fait la même vérification à
@@ -137,7 +137,7 @@ Fait par `rebuild/5-accounting-switches` ([`resource-accounting.md`](../resource
 ### CPU (ADR 0067)
 Fait par `rebuild/5-cpu-accounting` ([`cpu-accounting.md`](../cpu-accounting.md)).
 - [x] Comptage `utime`/`stime`/compositeur sur le crochet de changement de contexte (crochet livré par `5-accounting-switches`).
-- [x] `/proc/<pid>/stat`, `/proc/stat` réel, `HackProcess.*ProcessorTime`.
+- [x] `/proc/<pid>/stat`, `/proc/stat` réel, `KazoProcess.*ProcessorTime`.
 - [x] Long tasks, « Not responding », `Responding:` et colonne du gestionnaire de tâches.
 - [x] Test de surcoût.
 
@@ -149,7 +149,7 @@ Fait par `rebuild/5-memory-accounting` ([`memory-accounting.md`](../memory-accou
 ### Arrêt propre (ADR 0069)
 - [x] `StopRequested`, `TerminateAsync`, `ProcessExitReason.Terminated`.
 - [x] `CheckpointAsync` et son usage dans les commandes longues.
-- [x] Ordonnanceur par processus, continuations jetées, `HackProcessKilledException`.
+- [x] Ordonnanceur par processus, continuations jetées, `KazoProcessKilledException`.
 - [x] « End task » en `SIGTERM`, « Force kill » ajouté.
 
 Précisions de mise en œuvre (`rebuild/5-graceful-stop`, détail dans
@@ -163,7 +163,7 @@ Précisions de mise en œuvre (`rebuild/5-graceful-stop`, détail dans
 - L'ordonnanceur par processus est installé pour les commandes et les services
   (point d'entrée lancé par l'orchestrateur), en contexte de synchronisation et
   en `TaskScheduler` ; les apps à fenêtre restent sur le dispatcher du rendu.
-- `HackStopRequestedEventArgs.Defer(Task)` laisse une app finir un travail
+- `KazoStopRequestedEventArgs.Defer(Task)` laisse une app finir un travail
   avant l'action par défaut ; l'action par défaut de `SIGTERM` pour une app à
   fenêtre est de fermer sa fenêtre, le processus finit alors avec la raison de
   la demande (`Terminated`) au lieu d'attendre le délai.
@@ -171,7 +171,7 @@ Précisions de mise en œuvre (`rebuild/5-graceful-stop`, détail dans
   aussi `StopRequested` (`Logout`, `Shutdown`) ; une fenêtre que l'utilisateur
   ferme ne le reçoit pas (`IWindowCloseGuard` a déjà posé la question).
 - La tranche de `CheckpointAsync` est un horodatage par thread
-  (`HackProcessSlice`), recommencé par l'ordonnanceur à chaque continuation ;
+  (`KazoProcessSlice`), recommencé par l'ordonnanceur à chaque continuation ;
   l'ADR 0067 pourra le remplacer par la mesure.
 
 ### Web Workers (ADR 0070)

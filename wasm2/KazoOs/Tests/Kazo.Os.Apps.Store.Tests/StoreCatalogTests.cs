@@ -8,17 +8,17 @@ public sealed class StoreCatalogTests
 {
     private static readonly CultureInfo French = CultureInfo.GetCultureInfo("fr");
 
-    private static HackCatalogApp App(string catalog, string appId, string name, string category, string description = "", params string[] tags) =>
+    private static KazoCatalogApp App(string catalog, string appId, string name, string category, string description = "", params string[] tags) =>
         new(catalog, appId, name, category, tags,
             new Dictionary<string, string> { ["en"] = description, ["fr"] = "fr " + description },
             "MIT", "https://github.com/example/" + name, "1.1.0",
-            [new HackCatalogAppVersion("1.1.0", 2048, ["storage.app"]), new HackCatalogAppVersion("1.0.0", 1024, [])],
-            HackPackageTrust.Verified);
+            [new KazoCatalogAppVersion("1.1.0", 2048, ["storage.app"]), new KazoCatalogAppVersion("1.0.0", 1024, [])],
+            KazoPackageTrust.Verified);
 
-    private static HackAppCatalog Catalog(string name, params HackCatalogApp[] apps) =>
-        new(name, HackPackageTrust.Verified,
-            [new HackCatalogCategory("utilities", new Dictionary<string, string> { ["en"] = "Utilities", ["fr"] = "Utilitaires" }),
-             new HackCatalogCategory("graphics", new Dictionary<string, string> { ["en"] = "Graphics" })],
+    private static KazoAppCatalog Catalog(string name, params KazoCatalogApp[] apps) =>
+        new(name, KazoPackageTrust.Verified,
+            [new KazoCatalogCategory("utilities", new Dictionary<string, string> { ["en"] = "Utilities", ["fr"] = "Utilitaires" }),
+             new KazoCatalogCategory("graphics", new Dictionary<string, string> { ["en"] = "Graphics" })],
             apps);
 
     [Fact]
@@ -38,7 +38,7 @@ public sealed class StoreCatalogTests
         StoreCatalog store = new(
             [Catalog("official", App("official", "org.example.notes", "Notes", "utilities")),
              Catalog("school", App("school", "org.example.notes", "Notes school", "utilities"))],
-            [new HackInstalledPackage("org.example.notes", "catalog:school/org.example.notes", "1.0.0", true)],
+            [new KazoInstalledPackage("org.example.notes", "catalog:school/org.example.notes", "1.0.0", true)],
             [], new HashSet<string>());
 
         Assert.Equal("school", store.Find("org.example.notes")!.App!.Catalog);
@@ -54,11 +54,11 @@ public sealed class StoreCatalogTests
                 App("official", "org.example.c", "C", "utilities"),
                 App("official", "org.example.d", "D", "utilities"),
                 App("official", "org.example.e", "E", "utilities"))],
-            [new HackInstalledPackage("org.example.b", "catalog:official/org.example.b", "1.1.0", true),
-             new HackInstalledPackage("org.example.c", "catalog:official/org.example.c", "1.0.0", true),
-             new HackInstalledPackage("org.example.d", "catalog:official/org.example.d", "1.1.0", false),
-             new HackInstalledPackage("org.example.e", "catalog:official/org.example.e", "1.1.0", true)],
-            [new HackPackageUpdate("org.example.c", "catalog:official/org.example.c", "1.0.0", "1.1.0", true)],
+            [new KazoInstalledPackage("org.example.b", "catalog:official/org.example.b", "1.1.0", true),
+             new KazoInstalledPackage("org.example.c", "catalog:official/org.example.c", "1.0.0", true),
+             new KazoInstalledPackage("org.example.d", "catalog:official/org.example.d", "1.1.0", false),
+             new KazoInstalledPackage("org.example.e", "catalog:official/org.example.e", "1.1.0", true)],
+            [new KazoPackageUpdate("org.example.c", "catalog:official/org.example.c", "1.0.0", "1.1.0", true)],
             new HashSet<string> { "org.example.e" });
 
         Assert.Equal(StoreAppState.NotInstalled, store.Find("org.example.a")!.State);
@@ -76,8 +76,8 @@ public sealed class StoreCatalogTests
     {
         StoreCatalog store = new(
             [Catalog("official", App("official", "org.example.a", "A", "utilities"))],
-            [new HackInstalledPackage("org.example.a", "catalog:official/org.example.a", "1.0.0", true) { SystemWide = false },
-             new HackInstalledPackage("org.example.a", "catalog:official/org.example.a", "1.1.0", true) { SystemWide = true }],
+            [new KazoInstalledPackage("org.example.a", "catalog:official/org.example.a", "1.0.0", true) { SystemWide = false },
+             new KazoInstalledPackage("org.example.a", "catalog:official/org.example.a", "1.1.0", true) { SystemWide = true }],
             [], new HashSet<string>());
 
         Assert.True(store.Find("org.example.a")!.Installed!.SystemWide);
@@ -88,7 +88,7 @@ public sealed class StoreCatalogTests
     {
         StoreCatalog store = new(
             [Catalog("official")],
-            [new HackInstalledPackage("org.example.gone", "github:example/gone", "1.0.0", true)],
+            [new KazoInstalledPackage("org.example.gone", "github:example/gone", "1.0.0", true)],
             [], new HashSet<string>());
 
         StoreEntry entry = Assert.Single(store.Installed);
@@ -135,7 +135,7 @@ public sealed class StoreCatalogTests
     public void Failed_catalogs_are_reported()
     {
         StoreCatalog store = new(
-            [Catalog("official"), new HackAppCatalog("school", HackPackageTrust.Trusted, [], []) { Error = "offline" }],
+            [Catalog("official"), new KazoAppCatalog("school", KazoPackageTrust.Trusted, [], []) { Error = "offline" }],
             [], [], new HashSet<string>());
 
         Assert.Equal("school", Assert.Single(store.FailedCatalogs).Name);

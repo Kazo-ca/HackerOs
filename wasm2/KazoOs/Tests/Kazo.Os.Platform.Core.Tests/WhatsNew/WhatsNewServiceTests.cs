@@ -41,7 +41,7 @@ public sealed class WhatsNewServiceTests
         FakeSettings settings = new();
         WhatsNewService service = new(new FakeSource(Document), settings);
 
-        HackChangeList list = await service.GetAsync(English);
+        KazoChangeList list = await service.GetAsync(English);
 
         Assert.Equal(2, list.NewCount);
         Assert.Equal([Next, Latest], NewIds(list));
@@ -97,7 +97,7 @@ public sealed class WhatsNewServiceTests
         FakeSettings settings = new();
         WhatsNewService service = new(new FakeSource(null), settings);
 
-        HackChangeList list = await service.GetAsync(English);
+        KazoChangeList list = await service.GetAsync(English);
 
         Assert.Empty(list.Groups);
         Assert.Equal(0, list.NewCount);
@@ -144,8 +144,8 @@ public sealed class WhatsNewServiceTests
     {
         WhatsNewService service = new(new FakeSource(Document), new FakeSettings());
 
-        HackChangeList french = await service.GetAsync(French);
-        HackChangeList german = await service.GetAsync(CultureInfo.GetCultureInfo("de-DE"));
+        KazoChangeList french = await service.GetAsync(French);
+        KazoChangeList german = await service.GetAsync(CultureInfo.GetCultureInfo("de-DE"));
 
         Assert.Equal("Titre " + Next, french.Groups[0].Entries[0].Title);
         Assert.Equal("Title " + Next, german.Groups[0].Entries[0].Title);
@@ -295,7 +295,7 @@ public sealed class WhatsNewServiceTests
     private static string Entry(string id, string category) =>
         $$"""{ "id": "{{id}}", "category": "{{category}}", "title": { "en": "Title {{id}}", "fr": "Titre {{id}}" } }""";
 
-    private static string[] NewIds(HackChangeList list) =>
+    private static string[] NewIds(KazoChangeList list) =>
         [.. list.Groups.SelectMany(static group => group.Entries).Where(static entry => entry.IsNew).Select(static entry => entry.Id)];
 
     private sealed class FakeSource(string? document) : IWhatsNewSource

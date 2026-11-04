@@ -12,7 +12,7 @@ using Microsoft.Extensions.Localization;
 namespace Kazo.Os.Commands.Curl;
 
 /// <summary>
-/// Simulated <c>curl</c> terminal command (P4-W4-006) on <see cref="HackHttpClient"/>
+/// Simulated <c>curl</c> terminal command (P4-W4-006) on <see cref="KazoHttpClient"/>
 /// (ADR 0056, section 6), writing the raw response body (ADR 0074, section 1).
 /// </summary>
 /// <remarks>
@@ -39,7 +39,7 @@ namespace Kazo.Os.Commands.Curl;
 /// </remarks>
 public sealed class CurlCommand : TerminalAppBase
 {
-    private readonly HackCookieContainer _cookies = new();
+    private readonly KazoCookieContainer _cookies = new();
 
     /// <summary>Initializes the command with its manifest.</summary>
     public CurlCommand(AppManifest manifest) : base(manifest)
@@ -138,7 +138,7 @@ public sealed class CurlCommand : TerminalAppBase
             return 3;
         }
 
-        HackHttpContent? content = null;
+        KazoHttpContent? content = null;
         if (data.Count > 0)
         {
             byte[] bytes;
@@ -155,7 +155,7 @@ public sealed class CurlCommand : TerminalAppBase
             // An explicit -H "Content-Type: …" wins over the type the data option implies.
             string contentType = TakeHeader(headers, "Content-Type")
                 ?? (json ? SimulatedMediaTypes.ApplicationJson : SimulatedMediaTypes.FormUrlEncoded);
-            content = new HackByteArrayContent(bytes, contentType);
+            content = new KazoByteArrayContent(bytes, contentType);
         }
 
         if (json && !headers.Any(static header => header.Key.Equals("Accept", StringComparison.OrdinalIgnoreCase)))
@@ -184,10 +184,10 @@ public sealed class CurlCommand : TerminalAppBase
             context.StandardOutput.WriteLine(">");
         }
 
-        HackHttpResponse response;
+        KazoHttpResponse response;
         try
         {
-            using HackHttpClient client = new(_cookies);
+            using KazoHttpClient client = new(_cookies);
             client.DefaultRequestHeaders["User-Agent"] = "curl/7.88.1";
             foreach (KeyValuePair<string, string> header in headers)
             {
@@ -197,12 +197,12 @@ public sealed class CurlCommand : TerminalAppBase
             response = await client.SendAsync(new HttpMethod(method), uri.AbsoluteUri, content, cancellationToken)
                 .ConfigureAwait(false);
         }
-        catch (HackHttpRequestException exception)
+        catch (KazoHttpRequestException exception)
         {
             (int code, string message) = exception.NetworkError switch
             {
-                HackNetworkError.HostNotFound => (6, text["ResolveFailed", uri.Host].Value),
-                HackNetworkError.TooManyRedirects => (47, text["TooManyRedirects"].Value),
+                KazoNetworkError.HostNotFound => (6, text["ResolveFailed", uri.Host].Value),
+                KazoNetworkError.TooManyRedirects => (47, text["TooManyRedirects"].Value),
                 _ => (7, text["ConnectFailed", uri.Host, uri.Port, exception.Message].Value)
             };
             context.StandardError.WriteLine($"curl: ({code}) {message}");
@@ -253,7 +253,7 @@ public sealed class CurlCommand : TerminalAppBase
         {
             try
             {
-                await HackFile.WriteAllBytesAsync(outputFile, response.ContentBytes, cancellationToken).ConfigureAwait(false);
+                await KazoFile.WriteAllBytesAsync(outputFile, response.ContentBytes, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException)
             {
@@ -315,10 +315,10 @@ public sealed class CurlCommand : TerminalAppBase
             byte[] bytes = part.Kind switch
             {
                 DataKind.Ascii when part.Value.StartsWith('@') =>
-                    [.. (await HackFile.ReadAllBytesAsync(part.Value[1..], cancellationToken).ConfigureAwait(false))
+                    [.. (await KazoFile.ReadAllBytesAsync(part.Value[1..], cancellationToken).ConfigureAwait(false))
                         .Where(static b => b is not (byte)'\r' and not (byte)'\n')],
                 DataKind.Binary when part.Value.StartsWith('@') =>
-                    await HackFile.ReadAllBytesAsync(part.Value[1..], cancellationToken).ConfigureAwait(false),
+                    await KazoFile.ReadAllBytesAsync(part.Value[1..], cancellationToken).ConfigureAwait(false),
                 DataKind.UrlEncode => Encoding.UTF8.GetBytes(UrlEncodePart(part.Value)),
                 _ => Encoding.UTF8.GetBytes(part.Value)
             };

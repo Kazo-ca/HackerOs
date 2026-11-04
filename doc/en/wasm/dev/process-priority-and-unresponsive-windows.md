@@ -2,7 +2,7 @@
 
 # `nice` priority and windows that do not respond
 
-This document covers the implementation of the `nice` priority and of the detection of windows that do not respond. What an app sees and must do (`HackProcess.Nice` API, priority rules, the "Not responding" box, limits of a loop on the main thread) is in [`../framework/app-responsiveness-api.md`](../framework/app-responsiveness-api.md).
+This document covers the implementation of the `nice` priority and of the detection of windows that do not respond. What an app sees and must do (`KazoProcess.Nice` API, priority rules, the "Not responding" box, limits of a loop on the main thread) is in [`../framework/app-responsiveness-api.md`](../framework/app-responsiveness-api.md).
 
 Implementation of [ADR 0127](adr/0127-priority-and-not-responding-dialog.md),
 work item `exec/4-not-responding-ui` of the "follow-ups of step 5" series
@@ -63,7 +63,7 @@ The priority rules (range, inheritance, permissions, effect on the worker queue,
 | `nice`, `renice` | `Apps/Commands/Kazo.Os.Commands` | Commands (main thread: they need the shell or the process table). |
 | `ps`, `top`, `htop` | same | `NI` and `PRI`/`PR` columns. |
 | `ProcFileSystemProvider` | Core | Fields 18 and 19 of `/proc/<pid>/stat`. |
-| `HackProcess.Nice`, `HackProcess.BasePriority`, `HackProcess.ParseStatNice` | `Shared/Kazo.Os.AppSdk` | Read from `/proc/<pid>/stat`. |
+| `KazoProcess.Nice`, `KazoProcess.BasePriority`, `KazoProcess.ParseStatNice` | `Shared/Kazo.Os.AppSdk` | Read from `/proc/<pid>/stat`. |
 | `WorkerRunQueue` | `Platform/Kazo.Os.Platform.WorkerHost` | Queue of commands waiting for a worker, ordered by niceness then arrival. |
 | `ProcessTable.ShowPriority`, `ProcessColumn.Priority` | `Apps/System/Kazo.Os.Apps.SystemMonitor` | Priority column hidden by default. |
 
@@ -170,7 +170,7 @@ will render it in its own surface with the same layer.
 | `Kazo.Os.Platform.Core.Tests` (`InMemoryProcessManagerTests.Nice`, `ProcFileSystemProviderTests`) | Value 0, inheritance, explicit value, bounds, finished process, gateway root/owner/capability rules, fields 18 and 19 of `stat`. |
 | `Kazo.Os.Platform.WorkerHost.Tests` (`WorkerRunQueueTests`, `CommandParityTests`) | Queue order (niceness then arrival, bounds), always-ready worker, parity of `nice`, `renice` and `ps -o` in a worker. |
 | `Kazo.Os.Commands.Wave5.Tests` (`PsCommandTests`) | `ps -l` (`PRI` 85 for `nice` 5), `ps -o pid,ni,comm`, unknown field. |
-| `Kazo.Os.AppSdk.Tests` (`HackProcessNiceTests`) | Reading of field 19, name with parentheses, short or invalid line, bounds. |
+| `Kazo.Os.AppSdk.Tests` (`KazoProcessNiceTests`) | Reading of field 19, name with parentheses, short or invalid line, bounds. |
 | `Kazo.Os.Apps.SystemMonitor.Tests` (`ProcessTableTests`) | Priority column hidden by default, sorting, return to CPU sorting when it is hidden. |
 | `Kazo.Os.Windowing.Core.Tests` (`WindowRespondingTests`) | Flag, single event, title unchanged, persistence until cleared. |
 | `Kazo.Os.Platform.Blazor.Tests` (`WindowResponsivenessMonitorTests`) | The three cases with a fake clock, old flag ignored, wait charged to another process, end by fast input, short slice or inactivity, Wait then return, close button, End (2 s, `Terminated`), without measurement, window without a process. |
@@ -182,7 +182,7 @@ will render it in its own surface with the same layer.
 - [x] Process gateway: root, owner and capability checks.
 - [x] `nice` and `renice` (en/fr), `IShellSession.RunNicedAsync`.
 - [x] `ps -l`, `ps -o`, `top`, `htop`: `NI` and `PRI`/`PR`.
-- [x] `/proc/<pid>/stat` fields 18 and 19; `HackProcess.Nice`/`BasePriority`.
+- [x] `/proc/<pid>/stat` fields 18 and 19; `KazoProcess.Nice`/`BasePriority`.
 - [x] Worker queue ordered by niceness (`WorkerRunQueue`), always-ready worker left to interactive commands.
 - [x] Priority column hidden by default in the task manager.
 - [x] Window `IsResponding` state, command and event.

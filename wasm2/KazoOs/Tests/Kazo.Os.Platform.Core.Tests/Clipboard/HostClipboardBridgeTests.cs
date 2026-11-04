@@ -28,7 +28,7 @@ public sealed class HostClipboardBridgeTests
     {
         (_, SystemClipboard clipboard, FakeChannel channel, HostClipboardBridge bridge, SessionId session) = await StartAsync();
 
-        clipboard.SetFileDropList(session, new HackClipboardFileList(HackClipboardFileOperation.Cut, ["/home/alice/a.txt", "/home/alice/b"]));
+        clipboard.SetFileDropList(session, new KazoClipboardFileList(KazoClipboardFileOperation.Cut, ["/home/alice/a.txt", "/home/alice/b"]));
         await bridge.FlushAsync();
 
         Assert.Equal([("/home/alice/a.txt\n/home/alice/b", true)], channel.Syncs);
@@ -38,7 +38,7 @@ public sealed class HostClipboardBridgeTests
     public async Task A_host_paste_becomes_the_current_entry_and_is_not_echoed_back()
     {
         (_, SystemClipboard clipboard, FakeChannel channel, HostClipboardBridge bridge, SessionId session) = await StartAsync();
-        clipboard.SetFileDropList(session, new HackClipboardFileList(HackClipboardFileOperation.Copy, ["/etc/hostname"]));
+        clipboard.SetFileDropList(session, new KazoClipboardFileList(KazoClipboardFileOperation.Copy, ["/etc/hostname"]));
         await bridge.FlushAsync();
         channel.Syncs.Clear();
         long before = clipboard.GetSequenceNumber(session);
@@ -50,7 +50,7 @@ public sealed class HostClipboardBridgeTests
         Assert.Equal("from the host", entry.Text);
         Assert.Equal(SystemClipboardOrigin.Host, entry.Origin);
         Assert.Equal(before + 1, entry.SequenceNumber);
-        Assert.False(entry.Targets.ContainsKey(HackClipboardFileList.GnomeCopiedFilesMediaType));
+        Assert.False(entry.Targets.ContainsKey(KazoClipboardFileList.GnomeCopiedFilesMediaType));
         Assert.Empty(channel.Syncs);
 
         bridge.OnHostPaste("from the host", []);

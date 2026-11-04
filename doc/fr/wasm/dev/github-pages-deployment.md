@@ -81,7 +81,7 @@ d'isolation au legacy. Les autres chemins gardent la stratégie offline existant
   n'affectent pas ce test ; les sous-domaines ressemblants et les paramètres
   d'URL ne l'activent pas.
 - Récupération et erreurs fatales du WASM : mêmes crédits et même version.
-- Paramètres, À propos : version courante via `HackerOsSdk.Version`, auteur (lien kazo.ca)
+- Paramètres, À propos : version courante via `KazoOsSdk.Version`, auteur (lien kazo.ca)
   et projet GitHub au même format.
 - Paramètres legacy, About : URL GitHub visible, version legacy inchangée.
 - Les métadonnées des paquets pointent aussi vers le nouveau dépôt. La version

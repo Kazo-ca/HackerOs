@@ -11,11 +11,11 @@ public sealed class PageBridgeHandlerTests
 {
     private static readonly Uri Page = new("https://intranet.hack/app/");
 
-    private static (PageBridgeHandler Handler, PageSession Session, DevToolsLog Log, HackCookieContainer Cookies) Create(FakeBrowserTransport transport, Uri? page = null)
+    private static (PageBridgeHandler Handler, PageSession Session, DevToolsLog Log, KazoCookieContainer Cookies) Create(FakeBrowserTransport transport, Uri? page = null)
     {
         DevToolsLog log = new();
         BrowserResourceLoader loader = new(transport, log);
-        HackCookieContainer cookies = new();
+        KazoCookieContainer cookies = new();
         return (new PageBridgeHandler(loader, cookies), new PageSession(page ?? Page, "t", loader, CancellationToken.None), log, cookies);
     }
 
@@ -27,7 +27,7 @@ public sealed class PageBridgeHandlerTests
     {
         FakeBrowserTransport transport = new FakeBrowserTransport().Serve("https://intranet.hack/api/items", "application/json", "[1,2]", ("X-Total", "2"), ("Set-Cookie", "a=b"));
         var (handler, session, log, cookies) = Create(transport);
-        cookies.Add(new HackCookie("intranet.hack", "sid", "42"));
+        cookies.Add(new KazoCookie("intranet.hack", "sid", "42"));
 
         BridgeFetchReply reply = await handler.FetchAsync(session, Fetch("https://intranet.hack/api/items", "POST", "{\"x\":1}", headers: [["Content-Type", "application/json"], ["X-Req", "1"]]));
 

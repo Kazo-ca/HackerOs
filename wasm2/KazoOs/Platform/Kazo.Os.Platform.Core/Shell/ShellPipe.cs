@@ -24,7 +24,7 @@ namespace Kazo.Os.Platform.Core.Shell;
 /// </para>
 /// <para>
 /// <b>Broken pipe.</b> Once the read end is closed (the reading stage exited), every write throws
-/// <see cref="HackIOException"/> "Broken pipe"; the orchestrator maps an uncaught one to exit code
+/// <see cref="KazoIOException"/> "Broken pipe"; the orchestrator maps an uncaught one to exit code
 /// 141, like a process killed by <c>SIGPIPE</c>.
 /// </para>
 /// </remarks>
@@ -106,7 +106,7 @@ public sealed class ShellPipe
 
     private static TaskCompletionSource NewSignal() => new(TaskCreationOptions.RunContinuationsAsynchronously);
 
-    private static HackIOException BrokenPipe() => new ShellBrokenPipeException();
+    private static KazoIOException BrokenPipe() => new ShellBrokenPipeException();
 
     /// <summary>Appends without waiting (the synchronous write path).</summary>
     private void WriteNow(ReadOnlySpan<char> text)
@@ -429,6 +429,6 @@ public sealed class ShellPipe
 
 /// <summary>
 /// "Broken pipe": a write to a pipe whose reader has exited (ADR 0050, section 4). Commands see an
-/// ordinary <see cref="HackIOException"/>; the orchestrator recognizes this type to exit with 141.
+/// ordinary <see cref="KazoIOException"/>; the orchestrator recognizes this type to exit with 141.
 /// </summary>
-internal sealed class ShellBrokenPipeException() : HackIOException("Broken pipe");
+internal sealed class ShellBrokenPipeException() : KazoIOException("Broken pipe");

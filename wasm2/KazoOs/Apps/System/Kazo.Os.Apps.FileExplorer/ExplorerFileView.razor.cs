@@ -19,7 +19,7 @@ namespace Kazo.Os.Apps.FileExplorer;
 
 /// <summary>
 /// The File Explorer's provider of <c>hackeros.file-view</c> (ADR 0148, ADR 0155): the explorer
-/// registers it in its manifest, every app shows it through <c>HackFileView</c>, and the explorer
+/// registers it in its manifest, every app shows it through <c>KazoFileView</c>, and the explorer
 /// shows it itself, which makes it the one source of truth of the file control.
 /// </summary>
 /// <remarks>
@@ -32,7 +32,7 @@ namespace Kazo.Os.Apps.FileExplorer;
 /// <para>
 /// Everything runs with the <b>host</b>'s rights (ADR 0148 §4): the gateways are those of
 /// <c>HostContext</c>, and the callbacks run in the host's ambient
-/// context (the window's dispatch, <see cref="HackComponentBase"/>), so an app sees no file more by
+/// context (the window's dispatch, <see cref="KazoComponentBase"/>), so an app sees no file more by
 /// showing the explorer's control.
 /// </para>
 /// </remarks>
@@ -40,8 +40,8 @@ public sealed partial class ExplorerFileView : IHackFileView
 {
     private readonly FileViewMenuBinding _binding = new();
     private readonly string _menuName = "hackeros.file-view." + Guid.NewGuid().ToString("N");
-    private readonly ConditionalWeakTable<FileViewItem, HackFileViewItem> _snapshots = new();
-    private readonly ConditionalWeakTable<HackFileViewItem, FileViewItem> _items = new();
+    private readonly ConditionalWeakTable<FileViewItem, KazoFileViewItem> _snapshots = new();
+    private readonly ConditionalWeakTable<KazoFileViewItem, FileViewItem> _items = new();
 
     /// <summary>Copies, moves, deletions and pastes in flight (ADR 0069): a closing window waits for them.</summary>
     private readonly HashSet<Task> _operations = [];
@@ -72,15 +72,15 @@ public sealed partial class ExplorerFileView : IHackFileView
 
     /// <summary>Gets or sets the layout.</summary>
     [Parameter]
-    public HackFileViewMode Mode { get; set; } = HackFileViewMode.Details;
+    public KazoFileViewMode Mode { get; set; } = KazoFileViewMode.Details;
 
     /// <summary>Gets or sets the callback told when the user changes the layout.</summary>
     [Parameter]
-    public EventCallback<HackFileViewMode> ModeChanged { get; set; }
+    public EventCallback<KazoFileViewMode> ModeChanged { get; set; }
 
     /// <summary>Gets or sets what the control does by itself.</summary>
     [Parameter]
-    public HackFileViewFeatures Features { get; set; } = HackFileViewFeatures.All;
+    public KazoFileViewFeatures Features { get; set; } = KazoFileViewFeatures.All;
 
     /// <summary>Gets or sets whether several items can be selected at once.</summary>
     [Parameter]
@@ -92,11 +92,11 @@ public sealed partial class ExplorerFileView : IHackFileView
 
     /// <summary>Gets or sets which items are shown.</summary>
     [Parameter]
-    public Func<HackFileViewItem, bool>? Filter { get; set; }
+    public Func<KazoFileViewItem, bool>? Filter { get; set; }
 
     /// <summary>Gets or sets what runs before an item opens.</summary>
     [Parameter]
-    public EventCallback<HackFileViewOpeningEventArgs> Opening { get; set; }
+    public EventCallback<KazoFileViewOpeningEventArgs> Opening { get; set; }
 
     /// <summary>Gets or sets the callback told the new folder after each navigation.</summary>
     [Parameter]
@@ -104,19 +104,19 @@ public sealed partial class ExplorerFileView : IHackFileView
 
     /// <summary>Gets or sets the callback told the new selection.</summary>
     [Parameter]
-    public EventCallback<IReadOnlyList<HackFileViewItem>> SelectionChanged { get; set; }
+    public EventCallback<IReadOnlyList<KazoFileViewItem>> SelectionChanged { get; set; }
 
     /// <summary>Gets or sets the callback told after a rename in place.</summary>
     [Parameter]
-    public EventCallback<HackFileViewRenamedEventArgs> Renamed { get; set; }
+    public EventCallback<KazoFileViewRenamedEventArgs> Renamed { get; set; }
 
     /// <summary>Gets or sets the callback told after items went to the trash or were deleted.</summary>
     [Parameter]
-    public EventCallback<HackFileViewDeletedEventArgs> Deleted { get; set; }
+    public EventCallback<KazoFileViewDeletedEventArgs> Deleted { get; set; }
 
     /// <summary>Gets or sets what runs before a file menu is drawn.</summary>
     [Parameter]
-    public EventCallback<HackFileMenuOpeningEventArgs> ContextMenuOpening { get; set; }
+    public EventCallback<KazoFileMenuOpeningEventArgs> ContextMenuOpening { get; set; }
 
     /// <summary>Gets or sets the callback receiving the control's errors; notifications otherwise.</summary>
     [Parameter]
@@ -167,14 +167,14 @@ public sealed partial class ExplorerFileView : IHackFileView
 
     private FileViewMode ViewMode => Mode switch
     {
-        HackFileViewMode.Icons => FileViewMode.Icons,
-        HackFileViewMode.Tree => FileViewMode.Tree,
-        HackFileViewMode.Desktop => FileViewMode.Desktop,
+        KazoFileViewMode.Icons => FileViewMode.Icons,
+        KazoFileViewMode.Tree => FileViewMode.Tree,
+        KazoFileViewMode.Desktop => FileViewMode.Desktop,
         _ => FileViewMode.Details
     };
 
     private EventCallback<FileViewClipboardRequestedEventArgs> ClipboardCallback =>
-        Has(HackFileViewFeatures.Clipboard) ? _clipboardRequested : default;
+        Has(KazoFileViewFeatures.Clipboard) ? _clipboardRequested : default;
 
     // ---- IHackFileView -------------------------------------------------------------------------------
 
@@ -182,13 +182,13 @@ public sealed partial class ExplorerFileView : IHackFileView
     public string CurrentDirectory => _view?.CurrentDirectory.Value ?? _initialDirectory.Value;
 
     /// <inheritdoc />
-    public IReadOnlyList<HackFileViewItem> Items => _view is null ? [] : [.. _view.Items.Select(Snapshot)];
+    public IReadOnlyList<KazoFileViewItem> Items => _view is null ? [] : [.. _view.Items.Select(Snapshot)];
 
     /// <inheritdoc />
-    public IReadOnlyList<HackFileViewItem> SelectedItems => _view is null ? [] : [.. _view.SelectedItems.Select(Snapshot)];
+    public IReadOnlyList<KazoFileViewItem> SelectedItems => _view is null ? [] : [.. _view.SelectedItems.Select(Snapshot)];
 
     /// <inheritdoc />
-    public bool CanPaste => _canPaste && Has(HackFileViewFeatures.Clipboard);
+    public bool CanPaste => _canPaste && Has(KazoFileViewFeatures.Clipboard);
 
     /// <inheritdoc />
     public bool IsBusy => _operations.Count > 0;
@@ -226,16 +226,16 @@ public sealed partial class ExplorerFileView : IHackFileView
         return command switch
         {
             _ when IsInArchive && ArchiveWriteCommands.Contains(command) => false,
-            HackFileMenuItems.Open => selection.Count > 0,
-            HackFileMenuItems.OpenWithOther => selection.Count == 1 && Has(HackFileViewFeatures.OpenWith),
-            HackFileMenuItems.Cut or HackFileMenuItems.Copy => selection.Count > 0 && Has(HackFileViewFeatures.Clipboard),
-            HackFileMenuItems.Paste => CanPaste,
-            HackFileMenuItems.PasteInto => CanPaste && selection is [{ IsDirectory: true }],
-            HackFileMenuItems.Rename => selection.Count == 1 && Has(HackFileViewFeatures.Rename),
-            HackFileMenuItems.Delete or HackFileMenuItems.DeletePermanently => selection.Count > 0 && Has(HackFileViewFeatures.Delete),
-            HackFileMenuItems.NewFolder => Has(HackFileViewFeatures.CreateFolder) && _view.HasListing,
-            HackFileMenuItems.Refresh => true,
-            HackFileMenuItems.Properties => selection.Count <= 1 && Has(HackFileViewFeatures.Properties),
+            KazoFileMenuItems.Open => selection.Count > 0,
+            KazoFileMenuItems.OpenWithOther => selection.Count == 1 && Has(KazoFileViewFeatures.OpenWith),
+            KazoFileMenuItems.Cut or KazoFileMenuItems.Copy => selection.Count > 0 && Has(KazoFileViewFeatures.Clipboard),
+            KazoFileMenuItems.Paste => CanPaste,
+            KazoFileMenuItems.PasteInto => CanPaste && selection is [{ IsDirectory: true }],
+            KazoFileMenuItems.Rename => selection.Count == 1 && Has(KazoFileViewFeatures.Rename),
+            KazoFileMenuItems.Delete or KazoFileMenuItems.DeletePermanently => selection.Count > 0 && Has(KazoFileViewFeatures.Delete),
+            KazoFileMenuItems.NewFolder => Has(KazoFileViewFeatures.CreateFolder) && _view.HasListing,
+            KazoFileMenuItems.Refresh => true,
+            KazoFileMenuItems.Properties => selection.Count <= 1 && Has(KazoFileViewFeatures.Properties),
             _ => false
         };
     }
@@ -275,8 +275,8 @@ public sealed partial class ExplorerFileView : IHackFileView
     protected override void OnParametersSet()
     {
         SetInitialDirectory();
-        _binding.AllowRename = Has(HackFileViewFeatures.Rename);
-        _binding.AllowDelete = Has(HackFileViewFeatures.Delete);
+        _binding.AllowRename = Has(KazoFileViewFeatures.Rename);
+        _binding.AllowDelete = Has(KazoFileViewFeatures.Delete);
         ConfigureDesktop();
     }
 
@@ -307,7 +307,7 @@ public sealed partial class ExplorerFileView : IHackFileView
         SetInitialDirectory();
         // ADR 0203: the selected icon pack draws the files and shortcuts from the first listing.
         await StartIconPackAsync();
-        if (!Has(HackFileViewFeatures.Clipboard))
+        if (!Has(KazoFileViewFeatures.Clipboard))
         {
             return;
         }
@@ -391,8 +391,8 @@ public sealed partial class ExplorerFileView : IHackFileView
     private void OnViewPathChanged(object? sender, FileViewPathChangedEventArgs e)
     {
         // Inside an archive the view renames and deletes nothing by itself (ADR 0185 §9).
-        _binding.AllowRename = Has(HackFileViewFeatures.Rename) && !IsInArchive;
-        _binding.AllowDelete = Has(HackFileViewFeatures.Delete) && !IsInArchive;
+        _binding.AllowRename = Has(KazoFileViewFeatures.Rename) && !IsInArchive;
+        _binding.AllowDelete = Has(KazoFileViewFeatures.Delete) && !IsInArchive;
         RaiseStateChanged();
         if (Navigated.HasDelegate)
         {
@@ -405,7 +405,7 @@ public sealed partial class ExplorerFileView : IHackFileView
         RaiseStateChanged();
         if (SelectionChanged.HasDelegate)
         {
-            IReadOnlyList<HackFileViewItem> selection = [.. e.Selection.Select(Snapshot)];
+            IReadOnlyList<KazoFileViewItem> selection = [.. e.Selection.Select(Snapshot)];
             _ = InvokeAsync(() => SelectionChanged.InvokeAsync(selection));
         }
     }
@@ -426,16 +426,16 @@ public sealed partial class ExplorerFileView : IHackFileView
         {
             string newPath = e.Item.FullPath.Value;
             string oldPath = Combine(ParentOf(newPath), e.PreviousName);
-            _ = InvokeAsync(() => Renamed.InvokeAsync(new HackFileViewRenamedEventArgs(oldPath, newPath)));
+            _ = InvokeAsync(() => Renamed.InvokeAsync(new KazoFileViewRenamedEventArgs(oldPath, newPath)));
         }
     }
 
     private Task OnModeChangedAsync(FileViewMode mode) => ModeChanged.InvokeAsync(mode switch
     {
-        FileViewMode.Icons => HackFileViewMode.Icons,
-        FileViewMode.Tree => HackFileViewMode.Tree,
-        FileViewMode.Desktop => HackFileViewMode.Desktop,
-        _ => HackFileViewMode.Details
+        FileViewMode.Icons => KazoFileViewMode.Icons,
+        FileViewMode.Tree => KazoFileViewMode.Tree,
+        FileViewMode.Desktop => KazoFileViewMode.Desktop,
+        _ => KazoFileViewMode.Details
     });
 
     /// <summary>
@@ -481,14 +481,14 @@ public sealed partial class ExplorerFileView : IHackFileView
             return false;
         }
 
-        HackFileViewOpeningEventArgs args = new(Snapshot(item));
+        KazoFileViewOpeningEventArgs args = new(Snapshot(item));
         await Opening.InvokeAsync(args);
         return args.Handled;
     }
 
     private bool MatchesHostFilter(FileViewItem item) => Filter is not { } filter || filter(Snapshot(item));
 
-    private bool Has(HackFileViewFeatures feature) => (Features & feature) == feature;
+    private bool Has(KazoFileViewFeatures feature) => (Features & feature) == feature;
 
     // ---- Snapshots -----------------------------------------------------------------------------------
 
@@ -496,11 +496,11 @@ public sealed partial class ExplorerFileView : IHackFileView
     /// The SDK's snapshot of an item. The same view item always gives the same snapshot, so the token
     /// <c>Menus.Attach</c> gives its element stays the same from one render to the next (ADR 0154 §3).
     /// </summary>
-    private HackFileViewItem Snapshot(FileViewItem item) => _snapshots.GetValue(item, CreateSnapshot);
+    private KazoFileViewItem Snapshot(FileViewItem item) => _snapshots.GetValue(item, CreateSnapshot);
 
-    private HackFileViewItem CreateSnapshot(FileViewItem item)
+    private KazoFileViewItem CreateSnapshot(FileViewItem item)
     {
-        HackFileViewItem snapshot = new(
+        KazoFileViewItem snapshot = new(
             item.FullPath.Value,
             item.FileName,
             item.IsDirectory,

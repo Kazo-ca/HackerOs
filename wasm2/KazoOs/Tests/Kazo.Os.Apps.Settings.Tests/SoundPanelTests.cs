@@ -183,8 +183,8 @@ public sealed class SoundPanelTests
             PanelHarness harness = new(services, new HtmlRenderer(services, NullLoggerFactory.Instance), context);
             harness._root = await harness._renderer.Dispatcher.InvokeAsync(() =>
             {
-                // The panel lists the themes with HackDirectory and HackFile, which read the ambient app.
-                using (HackExecutionContext.Enter(context))
+                // The panel lists the themes with KazoDirectory and KazoFile, which read the ambient app.
+                using (KazoExecutionContext.Enter(context))
                 {
                     return harness._renderer.RenderComponentAsync<PanelHost>(
                         ParameterView.FromDictionary(new Dictionary<string, object?>
@@ -202,7 +202,7 @@ public sealed class SoundPanelTests
         public Task RunAsync(Func<SoundPanel, Task> action) =>
             _renderer.Dispatcher.InvokeAsync(async () =>
             {
-                using (HackExecutionContext.Enter(_context))
+                using (KazoExecutionContext.Enter(_context))
                 {
                     await action(Panel);
                 }

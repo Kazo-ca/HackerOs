@@ -27,7 +27,7 @@ alternatif) est décrit dans [`terminal-emulator.md`](terminal-emulator.md)
 
 Calculée par `ShellCompletion` (Platform Core) dans le contexte d'exécution du
 shell : un chemin relatif part du répertoire **du shell**, et la lecture du
-dossier passe par l'API publique `HackDirectoryInfo` avec les droits du shell,
+dossier passe par l'API publique `KazoDirectoryInfo` avec les droits du shell,
 comme un `ls` qu'il lancerait.
 
 | Mot sous le curseur | Candidats |
@@ -51,7 +51,7 @@ Règles des chemins :
 - un dossier absent ou illisible (droits, capacité) ne propose rien, sans
   erreur.
 
-`HackShellCompletion.DisplayCandidates` donne ce que le terminal liste au
+`KazoShellCompletion.DisplayCandidates` donne ce que le terminal liste au
 second Tab : le dernier segment, sans ses échappements (`My Notes.txt`,
 `sub/`), comme `bash`.
 
@@ -158,7 +158,7 @@ les raccourcis d'onglets ci-dessus jusqu'à `TerminalTabs`.
 ## Liste des tâches du chantier `rebuild/4-terminal`
 
 - [x] Complétion des chemins dans `ShellCompletion`, avec les droits et le répertoire du shell.
-- [x] `HackShellCompletion.DisplayCandidates`, liste courte au second Tab.
+- [x] `KazoShellCompletion.DisplayCandidates`, liste courte au second Tab.
 - [x] `IShellSession.Exit`, `ShellSession.RequestExit`, arrêt de la ligne, fin du processus `hsh`.
 - [x] Commande `exit [n]` dans `Kazo.Os.Commands`.
 - [x] `TerminalTabs`, `TerminalTabSet`, raccourcis, titre des onglets ; fenêtre Terminal sur `TerminalTabs`, fermée avec le dernier onglet.

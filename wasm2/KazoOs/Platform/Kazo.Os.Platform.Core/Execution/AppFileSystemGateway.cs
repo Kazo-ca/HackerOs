@@ -122,7 +122,7 @@ public sealed class AppFileSystemGateway : IAppFileSystemGateway
         FileSystemReadRequest request, CancellationToken cancellationToken = default)
     {
         // ADR 0067: time spent in the gateway is the caller's stime (kernel sub-frame).
-        using Kazo.Os.AppSdk.HackExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.HackExecutionContext.EnterKernel();
+        using Kazo.Os.AppSdk.KazoExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.KazoExecutionContext.EnterKernel();
         // ADR 0125: a read handle is an open descriptor until the handle (or its stream) is disposed.
         if (!TryOpenDescriptor(request.Path, FileSystemOperation.Read, out ProcessDescriptorLease? lease, out FileSystemError? tooMany))
         {
@@ -162,7 +162,7 @@ public sealed class AppFileSystemGateway : IAppFileSystemGateway
         FileSystemEnumerateRequest request, CancellationToken cancellationToken = default)
     {
         // ADR 0067: time spent in the gateway is the caller's stime (kernel sub-frame).
-        using Kazo.Os.AppSdk.HackExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.HackExecutionContext.EnterKernel();
+        using Kazo.Os.AppSdk.KazoExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.KazoExecutionContext.EnterKernel();
         return _fileSystem.EnumerateAsync(request, BuildContext(), cancellationToken);
     }
 
@@ -171,7 +171,7 @@ public sealed class AppFileSystemGateway : IAppFileSystemGateway
         FileSystemCreateRequest request, CancellationToken cancellationToken = default)
     {
         // ADR 0067: time spent in the gateway is the caller's stime (kernel sub-frame).
-        using Kazo.Os.AppSdk.HackExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.HackExecutionContext.EnterKernel();
+        using Kazo.Os.AppSdk.KazoExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.KazoExecutionContext.EnterKernel();
         FileSystemMutationResult result = await _fileSystem.CreateAsync(request, BuildContext(), cancellationToken);
         NotifyIfPermissionError(result.Transaction.Error);
         return result;
@@ -182,7 +182,7 @@ public sealed class AppFileSystemGateway : IAppFileSystemGateway
         FileSystemWriteRequest request, IFileSystemContentSource content, CancellationToken cancellationToken = default)
     {
         // ADR 0067: time spent in the gateway is the caller's stime (kernel sub-frame).
-        using Kazo.Os.AppSdk.HackExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.HackExecutionContext.EnterKernel();
+        using Kazo.Os.AppSdk.KazoExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.KazoExecutionContext.EnterKernel();
         FileSystemMutationResult result = await _fileSystem.WriteAsync(request, content, BuildContext(), cancellationToken);
         NotifyIfPermissionError(result.Transaction.Error);
         return result;
@@ -193,7 +193,7 @@ public sealed class AppFileSystemGateway : IAppFileSystemGateway
         FileSystemMoveRequest request, CancellationToken cancellationToken = default)
     {
         // ADR 0067: time spent in the gateway is the caller's stime (kernel sub-frame).
-        using Kazo.Os.AppSdk.HackExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.HackExecutionContext.EnterKernel();
+        using Kazo.Os.AppSdk.KazoExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.KazoExecutionContext.EnterKernel();
         FileSystemMutationResult result = await _fileSystem.MoveAsync(request, BuildContext(), cancellationToken);
         NotifyIfPermissionError(result.Transaction.Error);
         return result;
@@ -204,7 +204,7 @@ public sealed class AppFileSystemGateway : IAppFileSystemGateway
         FileSystemCopyRequest request, CancellationToken cancellationToken = default)
     {
         // ADR 0067: time spent in the gateway is the caller's stime (kernel sub-frame).
-        using Kazo.Os.AppSdk.HackExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.HackExecutionContext.EnterKernel();
+        using Kazo.Os.AppSdk.KazoExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.KazoExecutionContext.EnterKernel();
         FileSystemMutationResult result = await _fileSystem.CopyAsync(request, BuildContext(), cancellationToken);
         NotifyIfPermissionError(result.Transaction.Error);
         return result;
@@ -215,7 +215,7 @@ public sealed class AppFileSystemGateway : IAppFileSystemGateway
         FileSystemDeleteRequest request, CancellationToken cancellationToken = default)
     {
         // ADR 0067: time spent in the gateway is the caller's stime (kernel sub-frame).
-        using Kazo.Os.AppSdk.HackExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.HackExecutionContext.EnterKernel();
+        using Kazo.Os.AppSdk.KazoExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.KazoExecutionContext.EnterKernel();
         FileSystemMutationResult result = await _fileSystem.DeleteAsync(request, BuildContext(), cancellationToken);
         NotifyIfPermissionError(result.Transaction.Error);
         return result;
@@ -226,7 +226,7 @@ public sealed class AppFileSystemGateway : IAppFileSystemGateway
         FileSystemStatRequest request, CancellationToken cancellationToken = default)
     {
         // ADR 0067: time spent in the gateway is the caller's stime (kernel sub-frame).
-        using Kazo.Os.AppSdk.HackExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.HackExecutionContext.EnterKernel();
+        using Kazo.Os.AppSdk.KazoExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.KazoExecutionContext.EnterKernel();
         return _fileSystem.StatAsync(request, BuildContext(), cancellationToken);
     }
 
@@ -235,7 +235,7 @@ public sealed class AppFileSystemGateway : IAppFileSystemGateway
         FileSystemSetPermissionsRequest request, CancellationToken cancellationToken = default)
     {
         // ADR 0067: time spent in the gateway is the caller's stime (kernel sub-frame).
-        using Kazo.Os.AppSdk.HackExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.HackExecutionContext.EnterKernel();
+        using Kazo.Os.AppSdk.KazoExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.KazoExecutionContext.EnterKernel();
         FileSystemMutationResult result = await _fileSystem.SetPermissionsAsync(request, BuildContext(), cancellationToken);
         NotifyIfPermissionError(result.Transaction.Error);
         return result;

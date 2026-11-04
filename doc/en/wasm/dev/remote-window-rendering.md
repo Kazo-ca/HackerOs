@@ -5,7 +5,7 @@
 > **Status: trial finished, verdict "we stop here"** ([ADR 0133](adr/0133-window-rendering-in-worker-verdict.md)).
 > The code stays in the repository, off by default. No app must
 > depend on it; windows run on the main thread (ADR 0070 §1) and a
-> heavy load goes through `HackBackground` ([`background-jobs.md`](../framework/background-jobs.md)).
+> heavy load goes through `KazoBackground` ([`background-jobs.md`](../framework/background-jobs.md)).
 
 ## Role
 

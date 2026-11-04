@@ -14,14 +14,14 @@ public sealed class FileViewLocalizationTests
     [Fact]
     public void Transfer_failures_are_summarised_in_the_language_of_the_app()
     {
-        HackFileTransferResult result = new(
+        KazoFileTransferResult result = new(
             [],
             [],
-            [new HackFileTransferFailure("/home/alice/a.txt", "permission refusée"), new HackFileTransferFailure("/home/alice/b.txt", "n'existe plus")]);
+            [new KazoFileTransferFailure("/home/alice/a.txt", "permission refusée"), new KazoFileTransferFailure("/home/alice/b.txt", "n'existe plus")]);
 
         string? french = result.DescribeFailures("copy", Context("fr_FR.UTF-8"));
         string? english = result.DescribeFailures("copy", Context("en_US.UTF-8"));
-        string? custom = new HackFileTransferResult([], [], [new HackFileTransferFailure("/x", "busy")]).DescribeFailures("frobnicate", Context("fr_FR.UTF-8"));
+        string? custom = new KazoFileTransferResult([], [], [new KazoFileTransferFailure("/x", "busy")]).DescribeFailures("frobnicate", Context("fr_FR.UTF-8"));
 
         Assert.Equal("Impossible de copier 2 éléments : « a.txt » : permission refusée; « b.txt » : n'existe plus.", french);
         Assert.StartsWith("Could not copy 2 items", english, StringComparison.Ordinal);
@@ -31,7 +31,7 @@ public sealed class FileViewLocalizationTests
     [Fact]
     public void A_french_app_names_columns_and_sizes_in_french()
     {
-        var text = HackLocalization.GetLocalizer<Strings>(Context("fr_FR.UTF-8"));
+        var text = KazoLocalization.GetLocalizer<Strings>(Context("fr_FR.UTF-8"));
 
         Assert.Equal("Dossier", text["Type.Folder"].Value);
         Assert.Equal("1,5 Ko", text["Size.Kilobytes", 1.5].Value);
@@ -40,7 +40,7 @@ public sealed class FileViewLocalizationTests
     [Fact]
     public void Every_file_view_text_exists_in_english_and_in_french()
     {
-        ResourceManager resources = HackLocalization.GetResourceManager(typeof(Strings));
+        ResourceManager resources = KazoLocalization.GetResourceManager(typeof(Strings));
 
         HashSet<string> english = Keys(resources.GetResourceSet(CultureInfo.InvariantCulture, createIfNotExists: true, tryParents: false));
         HashSet<string> french = Keys(resources.GetResourceSet(CultureInfo.GetCultureInfo("fr"), createIfNotExists: true, tryParents: false));

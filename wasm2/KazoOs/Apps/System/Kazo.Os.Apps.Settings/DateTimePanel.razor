@@ -1,5 +1,5 @@
 @using Kazo.Os.AppSdk.Globalization
-@inherits Kazo.Os.AppSdk.Blazor.HackComponentBase
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
 @implements IAsyncDisposable
 
 @*
@@ -14,7 +14,7 @@
         <dt>UTC</dt>
         <dd class="datetime-utc">@Context.Clock.UtcNow.ToString("F", Context.FormatCulture)</dd>
         <dt>@L["DateTime.State.Zone"]</dt>
-        <dd class="datetime-zone"><code>@HackTimeZone.GetId(EffectiveZone)</code> (@HackTimeZone.FormatOffset(EffectiveZone, Context.Clock.UtcNow))</dd>
+        <dd class="datetime-zone"><code>@KazoTimeZone.GetId(EffectiveZone)</code> (@KazoTimeZone.FormatOffset(EffectiveZone, Context.Clock.UtcNow))</dd>
     </dl>
 </div>
 
@@ -35,11 +35,11 @@ else
             <button type="button" role="radio" class="@OptionClass(IsAutomatic)"
                     aria-checked="@(IsAutomatic ? "true" : "false")"
                     disabled="@(_isBusy || IsLocked)"
-                    @onclick="() => SetAsync(HackTimeZone.Automatic)">
+                    @onclick="() => SetAsync(KazoTimeZone.Automatic)">
                 <span class="datetime-tag" aria-hidden="true">AUTO</span>
                 <span class="datetime-text">
                     <span class="datetime-label">@L["DateTime.Zone.Automatic"]</span>
-                    <span class="datetime-detail">@L["DateTime.Zone.Automatic.Detail", Describe(HackTimeZone.Device)]</span>
+                    <span class="datetime-detail">@L["DateTime.Zone.Automatic.Detail", Describe(KazoTimeZone.Device)]</span>
                 </span>
             </button>
             <button type="button" role="radio" class="@OptionClass(!IsAutomatic)"
@@ -68,7 +68,7 @@ else
                         @onchange="OnZoneChanged">
                     @foreach (TimeZoneInfo zone in FilteredZones)
                     {
-                        string id = HackTimeZone.GetId(zone);
+                        string id = KazoTimeZone.GetId(zone);
                         <option value="@id" selected="@(id == Setting)">@Describe(zone)</option>
                     }
                 </select>

@@ -8,7 +8,7 @@ namespace Kazo.Os.Simulation.Abstractions.Gateways;
 /// capability is required, like <c>getenv</c>/<c>chdir</c> on Linux.
 /// </summary>
 /// <remarks>
-/// App code reaches this through the static <c>HackEnvironment</c> facade of the SDK, which adds the
+/// App code reaches this through the static <c>KazoEnvironment</c> facade of the SDK, which adds the
 /// filesystem checks (an existing directory for a change of working directory).
 /// </remarks>
 public interface IAppEnvironmentGateway
@@ -21,7 +21,7 @@ public interface IAppEnvironmentGateway
 
     /// <summary>
     /// Records a new working directory for the process. The gateway does not check the path
-    /// exists: <c>HackEnvironment.SetCurrentDirectoryAsync</c> does, before calling this.
+    /// exists: <c>KazoEnvironment.SetCurrentDirectoryAsync</c> does, before calling this.
     /// </summary>
     /// <exception cref="NotSupportedException">This context has no live process environment.</exception>
     void SetCurrentDirectory(VirtualPath directory);

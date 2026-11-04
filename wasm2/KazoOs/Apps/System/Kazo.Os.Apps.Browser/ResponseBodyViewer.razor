@@ -1,4 +1,4 @@
-@inherits Kazo.Os.AppSdk.Blazor.HackComponentBase
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
 @* Shows a response body that is not a structured simulated page (ADR 0074, section 1). *@
 
 <div class="body-viewer" data-kind="@View.Kind.ToString().ToLowerInvariant()">
@@ -72,7 +72,7 @@
     /// <summary>The size in the units of the process's language, its number in the process's format culture.</summary>
     private string FormatSize(int bytes)
     {
-        System.Globalization.CultureInfo numbers = AppContext?.FormatCulture ?? HackLocale.DefaultFormatCulture;
+        System.Globalization.CultureInfo numbers = AppContext?.FormatCulture ?? KazoLocale.DefaultFormatCulture;
         return bytes switch
         {
             < 1024 => L["Size.Bytes", bytes.ToString(numbers)],

@@ -62,7 +62,7 @@ public sealed class AppAssetStoreTests
             Description = "Icons",
             Kind = AppKind.Window,
             EntryPoint = new AppEntryPointManifest("Tests.Icons.dll", "Tests.Icons.Window"),
-            SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+            SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
             Presentation = new PresentationManifest("utilities", AppLaunchVisibility.Visible, ["icons/app.svg"]),
             Resources = AppResourceProfileManifest.None,
             Assets = [new AssetManifest("icons/app.svg", AssetKind.Image, sha256, "icon-32")]

@@ -3,7 +3,7 @@ namespace Kazo.Os.Platform.Core.ServerConnection;
 /// <summary>
 /// Decides when the OS conflict dialog (ADR 0101 section 2) is on screen. The shell renders the
 /// dialog; this class only holds the request so platform code (the Settings app's "Résoudre" through
-/// <c>HackServerConnection.ShowConflictsAsync</c>) can open it without knowing the UI.
+/// <c>KazoServerConnection.ShowConflictsAsync</c>) can open it without knowing the UI.
 /// </summary>
 /// <remarks>
 /// The dialog opens by itself when a pass finds a conflict the user has not seen yet and when a

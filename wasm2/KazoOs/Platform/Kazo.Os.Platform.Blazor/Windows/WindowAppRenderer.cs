@@ -92,7 +92,7 @@ public sealed class WindowAppRenderer : ComponentBase, IDisposable
     /// <inheritdoc />
     /// <remarks>
     /// The app is wrapped in a fixed <see cref="CascadingValue{TValue}"/> carrying its context, so
-    /// <see cref="HackComponentBase"/> children run inside the same ambient app scope as the window
+    /// <see cref="KazoComponentBase"/> children run inside the same ambient app scope as the window
     /// (ADR 0043). The context never changes for a rendered window (rebinding is rejected).
     /// </remarks>
     protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -112,7 +112,7 @@ public sealed class WindowAppRenderer : ComponentBase, IDisposable
             return;
         }
 
-        // ADR 0150 §4: Menus.Attach and HackContextMenu find the window's menus in cascade.
+        // ADR 0150 §4: Menus.Attach and KazoContextMenu find the window's menus in cascade.
         builder.OpenComponent<CascadingValue<IHackMenuHost>>(0);
         builder.AddComponentParameter(1, nameof(CascadingValue<IHackMenuHost>.Value), _menus);
         builder.AddComponentParameter(2, nameof(CascadingValue<IHackMenuHost>.IsFixed), true);

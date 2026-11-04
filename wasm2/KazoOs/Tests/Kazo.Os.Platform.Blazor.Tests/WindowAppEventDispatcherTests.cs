@@ -70,7 +70,7 @@ public sealed class WindowAppEventDispatcherTests
     public async Task Maximize_and_restore_report_the_state_then_the_new_size()
     {
         WindowRuntime runtime = new(new WindowBounds(0, 0, 1280, 720));
-        WindowAppEventDispatcher dispatcher = new(runtime, new FixedProbe(new HackWindowSize(1000, 600)));
+        WindowAppEventDispatcher dispatcher = new(runtime, new FixedProbe(new KazoWindowSize(1000, 600)));
         WindowRuntimeState window = CreateState(1);
         runtime.Apply(new CreateWindowCommand(window));
         RecordingTarget app = new();
@@ -121,7 +121,7 @@ public sealed class WindowAppEventDispatcherTests
     [Fact]
     public void The_estimated_client_area_removes_the_title_bar_and_borders()
     {
-        HackWindowSize size = WindowAppEventDispatcher.EstimateClientSize(new WindowBounds(0, 0, 800, 560));
+        KazoWindowSize size = WindowAppEventDispatcher.EstimateClientSize(new WindowBounds(0, 0, 800, 560));
 
         Assert.Equal(798, size.Width);
         Assert.Equal(560 - 37.6 - 3, size.Height, precision: 6);
@@ -140,9 +140,9 @@ public sealed class WindowAppEventDispatcherTests
             WindowVisualState.Normal,
             new WindowConstraints(true, 320, 240));
 
-    private sealed class FixedProbe(HackWindowSize size) : IWindowClientAreaProbe
+    private sealed class FixedProbe(KazoWindowSize size) : IWindowClientAreaProbe
     {
-        public ValueTask<HackWindowSize?> MeasureAsync(WindowId windowId) => ValueTask.FromResult<HackWindowSize?>(size);
+        public ValueTask<KazoWindowSize?> MeasureAsync(WindowId windowId) => ValueTask.FromResult<KazoWindowSize?>(size);
     }
 
     private sealed class RecordingTarget : IWindowAppEventTarget
@@ -161,13 +161,13 @@ public sealed class WindowAppEventDispatcherTests
             return Task.CompletedTask;
         }
 
-        public Task NotifyStateChangedAsync(HackWindowState previous, HackWindowState current)
+        public Task NotifyStateChangedAsync(KazoWindowState previous, KazoWindowState current)
         {
             Calls.Add($"state {previous}->{current}");
             return Task.CompletedTask;
         }
 
-        public Task NotifyResizedAsync(HackWindowSize size)
+        public Task NotifyResizedAsync(KazoWindowSize size)
         {
             // The estimate is used without a probe: report the outer size back for readability.
             Calls.Add(size.Width == 1000

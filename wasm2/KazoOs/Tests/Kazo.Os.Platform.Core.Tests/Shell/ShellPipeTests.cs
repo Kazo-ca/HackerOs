@@ -69,8 +69,8 @@ public sealed class ShellPipeTests
 
         pipe.Reader.Dispose();
 
-        HackIOException pending = await Assert.ThrowsAnyAsync<HackIOException>(() => blocked.WaitAsync(TimeSpan.FromSeconds(5)));
+        KazoIOException pending = await Assert.ThrowsAnyAsync<KazoIOException>(() => blocked.WaitAsync(TimeSpan.FromSeconds(5)));
         Assert.Equal("Broken pipe", pending.Message);
-        Assert.ThrowsAny<HackIOException>(() => pipe.Writer.Write("x"));
+        Assert.ThrowsAny<KazoIOException>(() => pipe.Writer.Write("x"));
     }
 }

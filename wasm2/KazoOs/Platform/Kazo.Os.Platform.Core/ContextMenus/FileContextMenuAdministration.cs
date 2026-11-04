@@ -12,7 +12,7 @@ namespace Kazo.Os.Platform.Core.ContextMenus;
 public sealed record FileMenuEntryOverview(string AppId, string AppName, AppContextMenuEntryManifest Entry, string Title, bool IsHidden);
 
 /// <summary>
-/// The service behind <c>HackFileMenuEntries</c> (ADR 0159 §8): joins the entries of
+/// The service behind <c>KazoFileMenuEntries</c> (ADR 0159 §8): joins the entries of
 /// <see cref="FileContextMenuRegistry"/> with the user's <see cref="FileContextMenuPreferences"/>.
 /// </summary>
 public sealed class FileContextMenuAdministration

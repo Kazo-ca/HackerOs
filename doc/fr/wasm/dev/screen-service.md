@@ -52,7 +52,7 @@ ScreenService ── AddDisplay / ChangeViewport / RemoveDisplay ──► Windo
 | `TogglePrimaryFullScreenAsync()`, `IsPrimaryFullScreen` | Plein écran de l'onglet principal (écran 1), depuis un clic (ADR 0184). |
 | `IdentifyAsync()`, `IsIdentifying` | Montre le numéro de chaque écran pendant 3 s ; un nouvel appel repart à zéro (ADR 0184). |
 | `RequestPermissionAsync()` | Demande la permission `window-management` pendant un clic et rend la réponse (ADR 0184). |
-| `IsStarted` | Vrai après `StartAsync` et avant la fin : `ScreenControl` en déduit `HackScreens.IsSupported`. |
+| `IsStarted` | Vrai après `StartAsync` et avant la fin : `ScreenControl` en déduit `KazoScreens.IsSupported`. |
 | `Screens`, `RestorableScreens`, `Permission`, `IsPrimaryHidden`, `CanOpenScreen`, `Changed` | État lu par l'interface. |
 | `PrimaryTaskbar`, `SetPrimaryTaskbarAsync(mode)` | Réglage `primary-taskbar` de `[taskbar]`, suivi pendant la session (chantier 5, [`per-screen-taskbars.md`](per-screen-taskbars.md)). |
 

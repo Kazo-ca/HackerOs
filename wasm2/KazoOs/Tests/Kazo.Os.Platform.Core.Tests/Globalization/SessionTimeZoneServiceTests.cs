@@ -30,7 +30,7 @@ public sealed class SessionTimeZoneServiceTests
         using SessionTimeZoneService service = new(harness.Settings, Device);
         await service.InitializeAsync();
 
-        Assert.Equal(HackTimeZone.Automatic, service.Setting);
+        Assert.Equal(KazoTimeZone.Automatic, service.Setting);
         Assert.Same(Device, service.TimeZone);
     }
 
@@ -43,7 +43,7 @@ public sealed class SessionTimeZoneServiceTests
         await harness.LoginAsync(harness.Alice);
         using SessionTimeZoneService service = new(harness.Settings, Device);
         await service.InitializeAsync();
-        Assert.Equal("Europe/Paris", HackTimeZone.GetId(service.TimeZone));
+        Assert.Equal("Europe/Paris", KazoTimeZone.GetId(service.TimeZone));
 
         int notifications = 0;
         service.Changed += () => notifications++;
@@ -51,7 +51,7 @@ public sealed class SessionTimeZoneServiceTests
         await service.RefreshAsync();
 
         Assert.Equal("America/Toronto", service.Setting);
-        Assert.Equal("America/Toronto", HackTimeZone.GetId(service.TimeZone));
+        Assert.Equal("America/Toronto", KazoTimeZone.GetId(service.TimeZone));
         Assert.True(notifications >= 1);
     }
 

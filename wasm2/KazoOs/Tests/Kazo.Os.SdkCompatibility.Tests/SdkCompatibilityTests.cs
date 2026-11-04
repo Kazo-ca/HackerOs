@@ -40,7 +40,7 @@ public sealed class SdkCompatibilityTests
 
     /// <summary>
     /// The 2.0.0 window app registered a file menu entry at build (<c>[RegisterFileContextMenu]</c>,
-    /// ADR 0151) and shows the OS file control (<c>HackFileView</c>, ADR 0148): the promise of 2.x
+    /// ADR 0151) and shows the OS file control (<c>KazoFileView</c>, ADR 0148): the promise of 2.x
     /// covers both.
     /// </summary>
     [Fact]
@@ -58,7 +58,7 @@ public sealed class SdkCompatibilityTests
             reference => reference.Name == "Kazo.Os.AppSdk.Blazor");
         using PEReader pe = new(new MemoryStream(fixture.Image));
         MetadataReader metadata = pe.GetMetadataReader();
-        Assert.Contains(metadata.TypeReferences, handle => metadata.GetString(metadata.GetTypeReference(handle).Name) == "HackFileView");
+        Assert.Contains(metadata.TypeReferences, handle => metadata.GetString(metadata.GetTypeReference(handle).Name) == "KazoFileView");
     }
 
     [Theory]
@@ -73,8 +73,8 @@ public sealed class SdkCompatibilityTests
         Assert.True(result.IsSuccess, string.Join("; ", result.Errors.Select(error => error.ToString())));
         Assert.Empty(result.Catalog!.Rejected);
         Assert.All(fixture.Manifests, manifest => Assert.True(
-            HackerOsSdk.IsCompatible(manifest.SdkCompatibility!),
-            $"{manifest.Id} needs SDK {manifest.SdkCompatibility!.MinimumVersion}, the OS has {HackerOsSdk.Version}."));
+            KazoOsSdk.IsCompatible(manifest.SdkCompatibility!),
+            $"{manifest.Id} needs SDK {manifest.SdkCompatibility!.MinimumVersion}, the OS has {KazoOsSdk.Version}."));
     }
 
     /// <summary>
@@ -96,7 +96,7 @@ public sealed class SdkCompatibilityTests
             fixture.Manifests.Select(manifest => manifest.Id).Order(StringComparer.Ordinal),
             result.Catalog.Rejected.Select(rejection => rejection.AppId).Order(StringComparer.Ordinal));
         Assert.All(result.Catalog.Rejected, rejection => Assert.Equal("catalog.sdk.incompatible", rejection.Code));
-        Assert.All(fixture.Manifests, manifest => Assert.False(HackerOsSdk.IsCompatible(manifest.SdkCompatibility!)));
+        Assert.All(fixture.Manifests, manifest => Assert.False(KazoOsSdk.IsCompatible(manifest.SdkCompatibility!)));
     }
 
     /// <summary>
@@ -167,7 +167,7 @@ public sealed class SdkCompatibilityTests
 
     /// <summary>
     /// The 2.0.0 command, started the way the OS starts a terminal app, writes a file and copies it
-    /// with the SDK 2.0 copy rules (<c>HackFileOperations</c>, ADR 0161 §2), which name the copy.
+    /// with the SDK 2.0 copy rules (<c>KazoFileOperations</c>, ADR 0161 §2), which name the copy.
     /// </summary>
     [Fact]
     public async Task The_SDK_2_0_0_command_runs_on_the_current_SDK()
@@ -180,7 +180,7 @@ public sealed class SdkCompatibilityTests
         Assert.Equal("still binds", fileSystem.ContentOf("/home/user/sdk2-compat.txt"));
         Assert.Equal("still binds", fileSystem.ContentOf("/home/user/sdk2-compat (copy).txt"));
         Assert.Equal(
-            $"sdk2-compat: still binds [sdk2-compat (copy).txt] (compiled against 2.0.0, running on {HackerOsSdk.Version})",
+            $"sdk2-compat: still binds [sdk2-compat (copy).txt] (compiled against 2.0.0, running on {KazoOsSdk.Version})",
             stdout);
     }
 
@@ -193,7 +193,7 @@ public sealed class SdkCompatibilityTests
             FixturePackage fixture = FixturePackage.Open(Path.GetFileName(path));
             bool current = fixture.Manifests.All(manifest =>
                 SemanticVersion.TryParse(manifest.SdkCompatibility!.MinimumVersion, out SemanticVersion minimum)
-                && minimum.Major == HackerOsSdk.SemanticVersion.Major);
+                && minimum.Major == KazoOsSdk.SemanticVersion.Major);
             if (current == sameMajor)
             {
                 data.Add(Path.GetFileName(path));
@@ -221,7 +221,7 @@ public sealed class SdkCompatibilityTests
             new Dictionary<string, string>(StringComparer.Ordinal) { ["HOME"] = "/home/user", ["USER"] = "user" });
 
         int exitCode;
-        using (HackExecutionContext.Enter(app, "/home/user"))
+        using (KazoExecutionContext.Enter(app, "/home/user"))
         {
             exitCode = await command.ExecuteAsync(context, CancellationToken.None);
         }

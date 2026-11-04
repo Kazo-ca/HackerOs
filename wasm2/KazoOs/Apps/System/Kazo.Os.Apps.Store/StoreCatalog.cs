@@ -25,7 +25,7 @@ internal enum StoreAppState
 /// <param name="Installed">What is installed, or <see langword="null"/>.</param>
 /// <param name="Update">A newer version of its source, or <see langword="null"/>.</param>
 /// <param name="Removed">Whether it was removed in this session (still loaded until a restart).</param>
-internal sealed record StoreEntry(HackCatalogApp? App, HackInstalledPackage? Installed, HackPackageUpdate? Update, bool Removed)
+internal sealed record StoreEntry(KazoCatalogApp? App, KazoInstalledPackage? Installed, KazoPackageUpdate? Update, bool Removed)
 {
     /// <summary>Gets the app ID.</summary>
     public string AppId => App?.AppId ?? Installed!.AppId;
@@ -64,9 +64,9 @@ internal sealed class StoreCatalog
     /// <param name="updates">The available updates.</param>
     /// <param name="removed">The apps removed in this session.</param>
     public StoreCatalog(
-        IReadOnlyList<HackAppCatalog> catalogs,
-        IReadOnlyList<HackInstalledPackage> installed,
-        IReadOnlyList<HackPackageUpdate> updates,
+        IReadOnlyList<KazoAppCatalog> catalogs,
+        IReadOnlyList<KazoInstalledPackage> installed,
+        IReadOnlyList<KazoPackageUpdate> updates,
         IReadOnlySet<string> removed)
     {
         ArgumentNullException.ThrowIfNull(catalogs);
@@ -75,19 +75,19 @@ internal sealed class StoreCatalog
         ArgumentNullException.ThrowIfNull(removed);
         Catalogs = catalogs;
         // One copy per app (ADR 0208 §3): the system copy wins over a personal one.
-        Dictionary<string, HackInstalledPackage> byId = installed
+        Dictionary<string, KazoInstalledPackage> byId = installed
             .GroupBy(static package => package.AppId, StringComparer.Ordinal)
             .ToDictionary(static group => group.Key, static group => group.OrderByDescending(static package => package.SystemWide).First(), StringComparer.Ordinal);
-        Dictionary<string, HackPackageUpdate> updateById = updates
+        Dictionary<string, KazoPackageUpdate> updateById = updates
             .GroupBy(static update => update.AppId, StringComparer.Ordinal)
             .ToDictionary(static group => group.Key, static group => group.First(), StringComparer.Ordinal);
         _entries = new Dictionary<string, StoreEntry>(StringComparer.Ordinal);
-        foreach (HackAppCatalog catalog in catalogs)
+        foreach (KazoAppCatalog catalog in catalogs)
         {
             // Theme packs have their own tab (ADR 0213 §5): StoreThemePacks.
-            foreach (HackCatalogApp app in catalog.Apps.Where(static item => item.Kind == HackCatalogItemKind.App))
+            foreach (KazoCatalogApp app in catalog.Apps.Where(static item => item.Kind == KazoCatalogItemKind.App))
             {
-                byId.TryGetValue(app.AppId, out HackInstalledPackage? package);
+                byId.TryGetValue(app.AppId, out KazoInstalledPackage? package);
                 // The first catalog wins, except that an installed copy shows the page of the catalog it came from.
                 bool installedFromHere = package is not null && package.Source.Equals(app.Source, StringComparison.OrdinalIgnoreCase);
                 if (_entries.ContainsKey(app.AppId) && !installedFromHere)
@@ -100,7 +100,7 @@ internal sealed class StoreCatalog
             }
         }
 
-        foreach (HackInstalledPackage package in byId.Values.Where(package => !_entries.ContainsKey(package.AppId)))
+        foreach (KazoInstalledPackage package in byId.Values.Where(package => !_entries.ContainsKey(package.AppId)))
         {
             _entries[package.AppId] = new StoreEntry(null, package, updateById.GetValueOrDefault(package.AppId), removed.Contains(package.AppId));
         }
@@ -112,13 +112,13 @@ internal sealed class StoreCatalog
     }
 
     /// <summary>Gets the catalogs as read, with their errors.</summary>
-    public IReadOnlyList<HackAppCatalog> Catalogs { get; }
+    public IReadOnlyList<KazoAppCatalog> Catalogs { get; }
 
     /// <summary>Gets the categories of every catalog, once each.</summary>
-    public IReadOnlyList<HackCatalogCategory> Categories { get; }
+    public IReadOnlyList<KazoCatalogCategory> Categories { get; }
 
     /// <summary>Gets the catalogs that could not be read.</summary>
-    public IEnumerable<HackAppCatalog> FailedCatalogs => Catalogs.Where(static catalog => catalog.Error is not null);
+    public IEnumerable<KazoAppCatalog> FailedCatalogs => Catalogs.Where(static catalog => catalog.Error is not null);
 
     /// <summary>Gets the apps a catalog lists, by name.</summary>
     public IReadOnlyList<StoreEntry> Available =>
@@ -147,10 +147,10 @@ internal sealed class StoreCatalog
     /// The home page (ADR 0188 §2): each category that has apps, in the catalogs' order, then the
     /// apps whose category no catalog names.
     /// </summary>
-    public IReadOnlyList<(HackCatalogCategory Category, IReadOnlyList<StoreEntry> Apps)> Home()
+    public IReadOnlyList<(KazoCatalogCategory Category, IReadOnlyList<StoreEntry> Apps)> Home()
     {
-        List<(HackCatalogCategory, IReadOnlyList<StoreEntry>)> sections = [];
-        foreach (HackCatalogCategory category in Categories)
+        List<(KazoCatalogCategory, IReadOnlyList<StoreEntry>)> sections = [];
+        foreach (KazoCatalogCategory category in Categories)
         {
             IReadOnlyList<StoreEntry> apps = InCategory(category.Id);
             if (apps.Count > 0)
@@ -163,7 +163,7 @@ internal sealed class StoreCatalog
         IReadOnlyList<StoreEntry> others = [.. Available.Where(entry => !named.Contains(entry.App!.Category))];
         if (others.Count > 0)
         {
-            sections.Add((new HackCatalogCategory(OtherCategoryId, new Dictionary<string, string>()), others));
+            sections.Add((new KazoCatalogCategory(OtherCategoryId, new Dictionary<string, string>()), others));
         }
 
         return sections;
@@ -189,7 +189,7 @@ internal sealed class StoreCatalog
 
         return [.. Available.Where(entry =>
         {
-            HackCatalogApp app = entry.App!;
+            KazoCatalogApp app = entry.App!;
             string haystack = Normalize(string.Join(' ', new[]
             {
                 app.Name,

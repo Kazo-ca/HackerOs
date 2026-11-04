@@ -29,7 +29,7 @@ public sealed class AppEventGateway : IAppEventGateway
     }
 
     /// <inheritdoc />
-    /// <remarks>The handler runs inside this app's <see cref="Kazo.Os.AppSdk.HackExecutionContext"/> scope (ADR 0043).</remarks>
+    /// <remarks>The handler runs inside this app's <see cref="Kazo.Os.AppSdk.KazoExecutionContext"/> scope (ADR 0043).</remarks>
     public IDisposable Subscribe<TEvent>(Action<TEvent> handler) where TEvent : notnull =>
         _eventBus.Subscribe(_ambient.Wrap(handler));
 
@@ -43,7 +43,7 @@ public sealed class AppEventGateway : IAppEventGateway
     }
 
     /// <inheritdoc />
-    /// <remarks>The handler runs inside this app's <see cref="Kazo.Os.AppSdk.HackExecutionContext"/> scope (ADR 0043).</remarks>
+    /// <remarks>The handler runs inside this app's <see cref="Kazo.Os.AppSdk.KazoExecutionContext"/> scope (ADR 0043).</remarks>
     public IDisposable Subscribe<TPayload>(TopicName topic, Action<TopicMessage<TPayload>> handler) where TPayload : notnull =>
         _topicBus.Subscribe(topic, _identity, _ambient.Wrap(handler));
 

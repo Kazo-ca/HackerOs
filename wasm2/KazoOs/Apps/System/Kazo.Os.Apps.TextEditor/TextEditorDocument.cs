@@ -44,7 +44,7 @@ public sealed class TextEditorDocument
     /// </param>
     public TextEditorDocument(IStringLocalizer? text = null)
     {
-        _text = text ?? HackLocalization.GetLocalizer<Strings>();
+        _text = text ?? KazoLocalization.GetLocalizer<Strings>();
         Title = _text["Title.Untitled"];
         Content = string.Empty;
         LoadState = TextEditorLoadState.New;

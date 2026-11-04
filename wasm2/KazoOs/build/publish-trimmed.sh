@@ -33,7 +33,7 @@ LOGS="$OUT/logs"
 HOST_PROJECT="$ROOT/OS/Kazo.Os.Ecosystem/Kazo.Os.Ecosystem.csproj"
 TEST_PROJECT="$ROOT/Tests/Kazo.Os.TrimmedPublish.E2E.Tests/Kazo.Os.TrimmedPublish.E2E.Tests.csproj"
 CATALOG="$ROOT/OS/Kazo.Os.Ecosystem/obj/Release/net10.0/BuiltInApplications.json"
-# ADR 0206: the test package hackpkg installs (Tests/fixtures/installed-app), packed by HackerOsPack.
+# ADR 0206: the test package hackpkg installs (Tests/fixtures/installed-app), packed by KazoOsPack.
 PACKAGE_PROJECT="$ROOT/Tests/fixtures/installed-app/Kazo.Os.Fixtures.InstalledAssets/Kazo.Os.Fixtures.InstalledAssets.csproj"
 PACKAGES="$OUT/hackeros-packages"
 
@@ -158,7 +158,7 @@ if [[ $SKIP_BUILD -eq 0 ]]; then
     fi
     log "packing the test package of installed apps (ADR 0206)"
     rm -rf "$PACKAGES"
-    if ! dotnet build "$PACKAGE_PROJECT" -c Release -t:HackerOsPack -p:HackerOsPackageOutput="$PACKAGES" >"$LOGS/pack.log" 2>&1; then
+    if ! dotnet build "$PACKAGE_PROJECT" -c Release -t:KazoOsPack -p:KazoOsPackageOutput="$PACKAGES" >"$LOGS/pack.log" 2>&1; then
         grep -E ' error ' "$LOGS/pack.log" | sort -u | head -20 | sed 's/^/    /'
         log "RESULT: FAIL (test package)"
         exit 1

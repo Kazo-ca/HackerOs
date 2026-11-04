@@ -5,7 +5,7 @@ namespace Kazo.Os.Platform.Core.Administration;
 /// <summary>
 /// The OS's secondary screens as <see cref="AppScreensGateway"/> drives them (ADR 0184). The browser
 /// host implements it over its screen service and window manager; a host without screens leaves it
-/// out, and <c>HackScreens</c> stays unsupported.
+/// out, and <c>KazoScreens</c> stays unsupported.
 /// </summary>
 public interface IScreenControl
 {
@@ -16,12 +16,12 @@ public interface IScreenControl
     bool IsAvailable { get; }
 
     /// <summary>Reads the screens of the session as one app instance sees them.</summary>
-    /// <param name="appInstanceId">The caller, whose window gives <see cref="HackScreensState.CallerScreen"/>.</param>
-    HackScreensState GetState(Guid appInstanceId);
+    /// <param name="appInstanceId">The caller, whose window gives <see cref="KazoScreensState.CallerScreen"/>.</param>
+    KazoScreensState GetState(Guid appInstanceId);
 
     /// <summary>Opens a secondary screen with the smallest free number, during the user's click.</summary>
     /// <param name="cancellationToken">Cancels the request.</param>
-    Task<HackScreenOpenStatus> OpenScreenAsync(CancellationToken cancellationToken);
+    Task<KazoScreenOpenStatus> OpenScreenAsync(CancellationToken cancellationToken);
 
     /// <summary>Reopens the screens of the last session, during the user's click.</summary>
     /// <param name="cancellationToken">Cancels the request.</param>
@@ -43,5 +43,5 @@ public interface IScreenControl
 
     /// <summary>Asks the browser for the <c>window-management</c> permission, during the user's click.</summary>
     /// <returns>The permission after the user answered.</returns>
-    Task<HackScreenPermission> RequestPermissionAsync();
+    Task<KazoScreenPermission> RequestPermissionAsync();
 }

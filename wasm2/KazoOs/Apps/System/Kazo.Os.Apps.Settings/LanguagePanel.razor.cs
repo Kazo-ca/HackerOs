@@ -8,14 +8,14 @@ namespace Kazo.Os.Apps.Settings;
 
 /// <summary>
 /// Settings &gt; Language (ADR 0104): shows the language and locale of this session, lets the user
-/// choose one of <see cref="HackLocale.AvailableLocales"/> or follow the system language, and shows
+/// choose one of <see cref="KazoLocale.AvailableLocales"/> or follow the system language, and shows
 /// the system locale.
 /// </summary>
 /// <remarks>
 /// <para>
 /// Like GNOME's region settings on Linux, the choice is a file, not a live switch: picking a locale
 /// writes <c>LANG=&lt;locale&gt;</c> to <c>~/.config/locale.conf</c> (systemd format, through
-/// <see cref="HackLocale.FormatLocaleConf"/>); "follow the system language" removes <c>LANG</c> from
+/// <see cref="KazoLocale.FormatLocaleConf"/>); "follow the system language" removes <c>LANG</c> from
 /// it, deleting the file when nothing else is left. The login environment reads that file at the
 /// next sign-in (<c>/etc/locale.conf</c> first, then the user's file), so the desktop and the apps
 /// started afterwards speak the new language; this session keeps its own until then.
@@ -24,8 +24,8 @@ namespace Kazo.Os.Apps.Settings;
 /// The session's language is read from the Settings process itself (its <c>LANG</c>,
 /// <c>LC_MESSAGES</c>, <c>LC_ALL</c>, ADR 0050), which inherited the login environment. The system
 /// locale (<c>/etc/locale.conf</c>) is shown read-only: changing it is an administrator's job
-/// (<c>sudo localectl set-locale</c>). Uses only the public SDK: <see cref="HackFile"/>,
-/// <see cref="HackDirectory"/> and the home directory of <see cref="HackUser"/>.
+/// (<c>sudo localectl set-locale</c>). Uses only the public SDK: <see cref="KazoFile"/>,
+/// <see cref="KazoDirectory"/> and the home directory of <see cref="KazoUser"/>.
 /// </para>
 /// </remarks>
 public sealed partial class LanguagePanel
@@ -59,10 +59,10 @@ public sealed partial class LanguagePanel
     private IStringLocalizer<Strings> L => _localizer ??= AppContext.GetLocalizer<Strings>();
 
     /// <summary>Gets the absolute path of the user's locale file.</summary>
-    internal string UserLocaleFilePath => $"{HackUser.Describe(Context).HomeDirectory.TrimEnd('/')}/{UserLocaleFileRelativePath}";
+    internal string UserLocaleFilePath => $"{KazoUser.Describe(Context).HomeDirectory.TrimEnd('/')}/{UserLocaleFileRelativePath}";
 
     /// <summary>Gets the <c>LANG</c> of the user's file: their choice, or <see langword="null"/> when they follow the system.</summary>
-    internal string? ChosenLocale => _userVariables.TryGetValue(HackLocale.LangVariable, out string? locale) ? locale : null;
+    internal string? ChosenLocale => _userVariables.TryGetValue(KazoLocale.LangVariable, out string? locale) ? locale : null;
 
     /// <summary>Gets the text of the last outcome (saved or failed), or <see langword="null"/>.</summary>
     internal string? Message => _message;
@@ -71,16 +71,16 @@ public sealed partial class LanguagePanel
     internal bool MessageIsError => _messageIsError;
 
     /// <summary>Gets the <c>LANG</c> of this process (the session's, unless the process was started with another).</summary>
-    private string? SessionLang => Context.Environment.GetVariable(HackLocale.LangVariable) is { Length: > 0 } lang ? lang : null;
+    private string? SessionLang => Context.Environment.GetVariable(KazoLocale.LangVariable) is { Length: > 0 } lang ? lang : null;
 
     /// <summary>Gets the variables that override <c>LANG</c> for the texts of this process, when set.</summary>
     private IEnumerable<(string Name, string Value)> SessionOverrides =>
-        new[] { HackLocale.MessagesVariable, HackLocale.AllVariable }
+        new[] { KazoLocale.MessagesVariable, KazoLocale.AllVariable }
             .Select(name => (Name: name, Value: Context.Environment.GetVariable(name) ?? string.Empty))
             .Where(static variable => variable.Value.Length > 0);
 
     /// <summary>Gets the system locale, or the built-in default when <c>/etc/locale.conf</c> sets none.</summary>
-    private string SystemLocaleOrDefault => _systemLocale ?? HackLocale.DefaultLocale;
+    private string SystemLocaleOrDefault => _systemLocale ?? KazoLocale.DefaultLocale;
 
     /// <summary>Gets the <c>LANG</c> the next sign-in will start with (the user's file wins over the system's).</summary>
     private string? NextSignInLocale => _loaded ? ChosenLocale ?? SystemLocaleOrDefault : null;
@@ -104,10 +104,10 @@ public sealed partial class LanguagePanel
         _systemError = null;
         try
         {
-            string content = await HackFile.ReadAllTextAsync(SystemLocaleFilePath, Context.CancellationToken);
-            _systemLocale = HackLocale.ParseLocaleConf(content).GetValueOrDefault(HackLocale.LangVariable);
+            string content = await KazoFile.ReadAllTextAsync(SystemLocaleFilePath, Context.CancellationToken);
+            _systemLocale = KazoLocale.ParseLocaleConf(content).GetValueOrDefault(KazoLocale.LangVariable);
         }
-        catch (HackFileNotFoundException)
+        catch (KazoFileNotFoundException)
         {
             _systemLocale = null;
         }
@@ -119,11 +119,11 @@ public sealed partial class LanguagePanel
 
         try
         {
-            string content = await HackFile.ReadAllTextAsync(UserLocaleFilePath, Context.CancellationToken);
-            _userVariables = HackLocale.ParseLocaleConf(content);
+            string content = await KazoFile.ReadAllTextAsync(UserLocaleFilePath, Context.CancellationToken);
+            _userVariables = KazoLocale.ParseLocaleConf(content);
             _userFileExists = true;
         }
-        catch (Exception exception) when (exception is HackFileNotFoundException or HackDirectoryNotFoundException)
+        catch (Exception exception) when (exception is KazoFileNotFoundException or KazoDirectoryNotFoundException)
         {
             _userVariables = new Dictionary<string, string>(StringComparer.Ordinal);
             _userFileExists = false;
@@ -143,7 +143,7 @@ public sealed partial class LanguagePanel
     /// or, when <see langword="null"/>, removes <c>LANG</c> so the system language applies again (the
     /// file is deleted when it holds nothing else). Other variables of the file (<c>LC_TIME</c>…) are kept.
     /// </summary>
-    /// <param name="locale">One of <see cref="HackLocale.AvailableLocales"/>, or <see langword="null"/> to follow the system.</param>
+    /// <param name="locale">One of <see cref="KazoLocale.AvailableLocales"/>, or <see langword="null"/> to follow the system.</param>
     internal async Task ChooseAsync(string? locale)
     {
         if (_isBusy)
@@ -151,7 +151,7 @@ public sealed partial class LanguagePanel
             return;
         }
 
-        if (locale is not null && !HackLocale.IsAvailable(locale))
+        if (locale is not null && !KazoLocale.IsAvailable(locale))
         {
             ShowError(L["Language.Error.Unknown", locale]);
             StateHasChanged();
@@ -165,12 +165,12 @@ public sealed partial class LanguagePanel
             Dictionary<string, string> variables = new(_userVariables, StringComparer.Ordinal);
             if (locale is null)
             {
-                variables.Remove(HackLocale.LangVariable);
+                variables.Remove(KazoLocale.LangVariable);
                 if (variables.Count == 0)
                 {
                     if (_userFileExists)
                     {
-                        await HackFile.DeleteAsync(UserLocaleFilePath, Context.CancellationToken);
+                        await KazoFile.DeleteAsync(UserLocaleFilePath, Context.CancellationToken);
                     }
                 }
                 else
@@ -182,7 +182,7 @@ public sealed partial class LanguagePanel
             }
             else
             {
-                variables[HackLocale.LangVariable] = locale;
+                variables[KazoLocale.LangVariable] = locale;
                 await WriteAsync(variables);
                 ShowSaved(L["Language.Saved.Locale", Describe(locale)]);
             }
@@ -209,8 +209,8 @@ public sealed partial class LanguagePanel
     private async Task WriteAsync(IReadOnlyDictionary<string, string> variables)
     {
         string directory = UserLocaleFilePath[..UserLocaleFilePath.LastIndexOf('/')];
-        await HackDirectory.CreateDirectoryAsync(directory, Context.CancellationToken);
-        await HackFile.WriteAllTextAsync(UserLocaleFilePath, HackLocale.FormatLocaleConf(variables, FileHeader), Context.CancellationToken);
+        await KazoDirectory.CreateDirectoryAsync(directory, Context.CancellationToken);
+        await KazoFile.WriteAllTextAsync(UserLocaleFilePath, KazoLocale.FormatLocaleConf(variables, FileHeader), Context.CancellationToken);
     }
 
     private void ShowSaved(string message)
@@ -244,7 +244,7 @@ public sealed partial class LanguagePanel
     /// The human name of a locale, in its own language like GNOME's list ("Français (Canada)",
     /// "English (United States)"); the <c>C</c> locale has a translated description.
     /// </summary>
-    internal string LocaleName(string locale) => HackLocale.ToCulture(locale) switch
+    internal string LocaleName(string locale) => KazoLocale.ToCulture(locale) switch
     {
         null => locale,
         { Name.Length: 0 } => L["Language.Locale.Posix"],

@@ -79,7 +79,7 @@
                 {
                     <div class="diag-sidebar-empty">@(_sitesError ?? L["Sites.Empty"])</div>
                 }
-                @foreach (HackWebSiteDatabaseInfo entry in _sites)
+                @foreach (KazoWebSiteDatabaseInfo entry in _sites)
                 {
                     <button class="diag-store-item diag-site-item @(entry.Name == _selectedSiteName ? "active" : "")"
                             @onclick="() => SelectSite(entry.Name)">
@@ -108,7 +108,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (HackWebSiteDatabaseStoreInfo store in site.Stores)
+                                @foreach (KazoWebSiteDatabaseStoreInfo store in site.Stores)
                                 {
                                     <tr>
                                         <td class="diag-path-highlight">@store.Name</td>
@@ -151,7 +151,7 @@
                     {
                         <pre class="diag-json-viewer">@activeStore.FormattedJson</pre>
                     }
-                    else if (activeStore.Kind == HackStorageStoreKind.FileEntries)
+                    else if (activeStore.Kind == KazoStorageStoreKind.FileEntries)
                     {
                         <div class="diag-table-wrapper">
                             <table class="diag-table">
@@ -179,7 +179,7 @@
                             </table>
                         </div>
                     }
-                    else if (activeStore.Kind == HackStorageStoreKind.FileLinks)
+                    else if (activeStore.Kind == KazoStorageStoreKind.FileLinks)
                     {
                         <div class="diag-table-wrapper">
                             <table class="diag-table">

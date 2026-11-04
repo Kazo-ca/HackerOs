@@ -45,7 +45,7 @@ public sealed class PageSession
 /// <c>fetch</c>/<c>XMLHttpRequest</c> go through the simulated network with the fetch rules
 /// (credentials mode, CORS check, opaque <c>no-cors</c> responses, no <c>file://</c>), resources
 /// added by script are loaded and inlined, and <c>document.cookie</c> reads and writes the tab's
-/// <see cref="HackCookieContainer"/>.
+/// <see cref="KazoCookieContainer"/>.
 /// </summary>
 public sealed class PageBridgeHandler
 {
@@ -56,10 +56,10 @@ public sealed class PageBridgeHandler
     };
 
     private readonly BrowserResourceLoader _loader;
-    private readonly HackCookieContainer _cookies;
+    private readonly KazoCookieContainer _cookies;
 
     /// <summary>Initializes the handler of one tab.</summary>
-    public PageBridgeHandler(BrowserResourceLoader loader, HackCookieContainer cookies)
+    public PageBridgeHandler(BrowserResourceLoader loader, KazoCookieContainer cookies)
     {
         _loader = loader ?? throw new ArgumentNullException(nameof(loader));
         _cookies = cookies ?? throw new ArgumentNullException(nameof(cookies));
@@ -119,7 +119,7 @@ public sealed class PageBridgeHandler
         }
         else
         {
-            _cookies.Add(new HackCookie(host, name, value));
+            _cookies.Add(new KazoCookie(host, name, value));
         }
 
         return GetDocumentCookies(documentUrl);

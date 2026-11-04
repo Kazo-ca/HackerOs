@@ -9,21 +9,21 @@ namespace Kazo.Os.Ecosystem.Administration;
 /// <summary>
 /// <see cref="IStorageInspector"/> over the OS IndexedDB database (ADR 0056, section 11): reads it
 /// with <see cref="IndexedDbInspectorService"/> and copies the result into the SDK's
-/// <see cref="HackStorageSnapshot"/>, so the Diagnostic app depends on the SDK only.
+/// <see cref="KazoStorageSnapshot"/>, so the Diagnostic app depends on the SDK only.
 /// </summary>
 internal sealed class IndexedDbStorageInspector(IJSRuntime runtime) : IStorageInspector
 {
     /// <inheritdoc />
-    public async Task<HackStorageSnapshot> CaptureAsync(CancellationToken cancellationToken = default)
+    public async Task<KazoStorageSnapshot> CaptureAsync(CancellationToken cancellationToken = default)
     {
         IndexedDbSnapshot snapshot = await new IndexedDbInspectorService(runtime)
             .InspectDatabaseAsync(cancellationToken)
             .ConfigureAwait(false);
-        return new HackStorageSnapshot(
+        return new KazoStorageSnapshot(
             snapshot.CapturedAtUtc,
             snapshot.DatabaseName,
             snapshot.DatabaseVersion,
-            [.. snapshot.Stores.Select(store => new HackStorageStoreSnapshot(
+            [.. snapshot.Stores.Select(store => new KazoStorageStoreSnapshot(
                 store.Name,
                 store.Purpose,
                 store.KeyPath,
@@ -35,10 +35,10 @@ internal sealed class IndexedDbStorageInspector(IJSRuntime runtime) : IStorageIn
             snapshot.TotalLinkCount);
     }
 
-    private static HackStorageStoreKind KindOf(string storeName) => storeName switch
+    private static KazoStorageStoreKind KindOf(string storeName) => storeName switch
     {
-        HackerOsIndexedDbSchema.FileSystemEntryStoreName => HackStorageStoreKind.FileEntries,
-        HackerOsIndexedDbSchema.FileSystemLinkStoreName => HackStorageStoreKind.FileLinks,
-        _ => HackStorageStoreKind.Other
+        KazoOsIndexedDbSchema.FileSystemEntryStoreName => KazoStorageStoreKind.FileEntries,
+        KazoOsIndexedDbSchema.FileSystemLinkStoreName => KazoStorageStoreKind.FileLinks,
+        _ => KazoStorageStoreKind.Other
     };
 }

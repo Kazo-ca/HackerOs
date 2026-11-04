@@ -13,11 +13,11 @@ namespace Kazo.Os.Platform.WorkerHost.Worker;
 internal sealed class RemoteBackgroundGateway(RemoteProcessChannel channel) : IAppBackgroundGateway
 {
     private readonly Lock _gate = new();
-    private readonly Dictionary<int, Action<HackBackgroundProgress>> _progress = [];
+    private readonly Dictionary<int, Action<KazoBackgroundProgress>> _progress = [];
     private int _nextJob;
 
     /// <inheritdoc />
-    public async Task<string?> RunAsync(HackBackgroundJobRequest request, Action<HackBackgroundProgress>? progress, CancellationToken cancellationToken)
+    public async Task<string?> RunAsync(KazoBackgroundJobRequest request, Action<KazoBackgroundProgress>? progress, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
         int job;
@@ -68,9 +68,9 @@ internal sealed class RemoteBackgroundGateway(RemoteProcessChannel channel) : IA
     /// <summary>Delivers one <c>bgp</c> report to the task's caller, in this process's thread.</summary>
     /// <param name="job">The number the call carried.</param>
     /// <param name="progress">The report.</param>
-    public void Deliver(int job, HackBackgroundProgress progress)
+    public void Deliver(int job, KazoBackgroundProgress progress)
     {
-        Action<HackBackgroundProgress>? target;
+        Action<KazoBackgroundProgress>? target;
         lock (_gate)
         {
             _progress.TryGetValue(job, out target);

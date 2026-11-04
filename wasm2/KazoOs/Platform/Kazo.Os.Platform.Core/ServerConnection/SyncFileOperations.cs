@@ -9,7 +9,7 @@ namespace Kazo.Os.Platform.Core.ServerConnection;
 /// Filesystem operations the FileSystem sync needs (ADR 0101), done as the session user through
 /// <see cref="IFileSystemService"/>: read, write, stat, move, recursive delete and "move to the
 /// user's trash". The sync runs inside the platform, outside any app scope, so it cannot use
-/// <see cref="HackTrash"/>; it writes the same freedesktop.org layout (ADR 0052) itself.
+/// <see cref="KazoTrash"/>; it writes the same freedesktop.org layout (ADR 0052) itself.
 /// </summary>
 internal sealed class SyncFileOperations(IFileSystemService fileSystem, FileSystemAuthorizationContext context)
 {
@@ -177,7 +177,7 @@ internal sealed class SyncFileOperations(IFileSystemService fileSystem, FileSyst
     /// <summary>
     /// Moves an entry of <paramref name="homePath"/> to the user's trash, with a <c>.trashinfo</c>
     /// saying it was deleted on another device (ADR 0101 section 1). An entry already inside the
-    /// trash is deleted for good instead, exactly like <see cref="HackTrash.MoveToTrashAsync"/>.
+    /// trash is deleted for good instead, exactly like <see cref="KazoTrash.MoveToTrashAsync"/>.
     /// </summary>
     /// <param name="homePath">The user's home directory.</param>
     /// <param name="source">Entry to trash.</param>
@@ -205,14 +205,14 @@ internal sealed class SyncFileOperations(IFileSystemService fileSystem, FileSyst
         await EnsureDirectoryAsync(infoDirectory, PrivateDirectoryMode, cancellationToken).ConfigureAwait(false);
 
         string originalName = source.Value[(source.Value.LastIndexOf('/') + 1)..];
-        string infoContent = HackTrashInfo.Format(source.Value, deletedAtLocal)
+        string infoContent = KazoTrashInfo.Format(source.Value, deletedAtLocal)
             + $"{OriginKey}={OriginDeletedOnAnotherDevice}\n{DeviceKey}={originDeviceId:D}\n";
 
         for (int attempt = 1; attempt <= 10_000; attempt++)
         {
-            string candidate = HackTrashInfo.CandidateName(originalName, attempt);
+            string candidate = KazoTrashInfo.CandidateName(originalName, attempt);
             VirtualPath element = VirtualPath.Parse($"{filesDirectory.Value}/{candidate}");
-            VirtualPath info = VirtualPath.Parse($"{infoDirectory.Value}/{candidate}{HackTrash.InfoExtension}");
+            VirtualPath info = VirtualPath.Parse($"{infoDirectory.Value}/{candidate}{KazoTrash.InfoExtension}");
             if (await StatAsync(element, cancellationToken).ConfigureAwait(false) is not null)
             {
                 continue;

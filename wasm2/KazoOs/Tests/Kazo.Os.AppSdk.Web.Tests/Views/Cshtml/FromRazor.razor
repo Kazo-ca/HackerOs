@@ -1,7 +1,7 @@
-@inherits HackView
+@inherits KazoView
 <p class="from-razor">razor in cshtml layout</p>
-<HackSection Name="Scripts"><script src="/js/from-razor.js"></script></HackSection>
-<ul><HackPartial Name="_CshtmlCard" Model="_nine" /></ul>
+<KazoSection Name="Scripts"><script src="/js/from-razor.js"></script></KazoSection>
+<ul><KazoPartial Name="_CshtmlCard" Model="_nine" /></ul>
 @code {
     private readonly Note _nine = new() { Id = 9, Title = "Nine" };
 

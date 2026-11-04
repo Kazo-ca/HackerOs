@@ -103,16 +103,16 @@ public sealed partial class ShellInterpreter
             return 1;
         }
 
-        using (HackExecutionContext.Enter(session.Host, session.CurrentDirectory))
+        using (KazoExecutionContext.Enter(session.Host, session.CurrentDirectory))
         {
-            HackProcess process;
-            HackResourceLimits limits;
+            KazoProcess process;
+            KazoResourceLimits limits;
             try
             {
-                process = await HackProcess.GetProcessByIdAsync(pid.Value, exec.Token).ConfigureAwait(false);
+                process = await KazoProcess.GetProcessByIdAsync(pid.Value, exec.Token).ConfigureAwait(false);
                 limits = await process.GetResourceLimitsAsync(exec.Token).ConfigureAwait(false);
             }
-            catch (Exception exception) when (exception is ArgumentException or InvalidOperationException or HackIOException or HackUnauthorizedAccessException)
+            catch (Exception exception) when (exception is ArgumentException or InvalidOperationException or KazoIOException or KazoUnauthorizedAccessException)
             {
                 await exec.Err.WriteLineAsync(ErrorPrefix(exec) + exec.Text["Shell.UlimitNoProcess"]).ConfigureAwait(false);
                 return 1;
@@ -141,7 +141,7 @@ public sealed partial class ShellInterpreter
 
     /// <summary>Changes one limit; bash's messages for an invalid value or a refused change.</summary>
     private static async Task<int> SetUlimitAsync(
-        Exec exec, HackProcess process, UlimitResource resource, HackResourceLimits limits, string text, bool soft, bool hard)
+        Exec exec, KazoProcess process, UlimitResource resource, KazoResourceLimits limits, string text, bool soft, bool hard)
     {
         long requested;
         if (text is "unlimited" or "infinity")
@@ -194,7 +194,7 @@ public sealed partial class ShellInterpreter
         {
             await exec.Err.WriteLineAsync(ErrorPrefix(exec) + exec.Text["Shell.UlimitCannotModify", resource.Label, exec.Text["Errno.InvalidArgument"]]).ConfigureAwait(false);
         }
-        catch (Exception exception) when (exception is HackUnauthorizedAccessException or NotSupportedException or InvalidOperationException)
+        catch (Exception exception) when (exception is KazoUnauthorizedAccessException or NotSupportedException or InvalidOperationException)
         {
             await exec.Err.WriteLineAsync(ErrorPrefix(exec) + exec.Text["Shell.UlimitCannotModify", resource.Label, exec.Text["Errno.OperationNotPermitted"]]).ConfigureAwait(false);
         }
@@ -203,7 +203,7 @@ public sealed partial class ShellInterpreter
     }
 
     /// <summary>The value of one resource in <c>ulimit</c>'s unit.</summary>
-    private static string FormatUlimit(UlimitResource resource, HackResourceLimits limits, bool hard)
+    private static string FormatUlimit(UlimitResource resource, KazoResourceLimits limits, bool hard)
     {
         if (resource.Kind is not { } kind)
         {

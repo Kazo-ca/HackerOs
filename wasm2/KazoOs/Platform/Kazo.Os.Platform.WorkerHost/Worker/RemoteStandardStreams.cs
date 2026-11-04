@@ -467,7 +467,7 @@ internal sealed class RemoteStandardInput : TextReader
 /// The reader of a process's output went away: the "Broken pipe" error a write to a closed pipe
 /// gives in-process (ADR 0050, section 4). Escaping the entry point, it ends the process with 141.
 /// </summary>
-public sealed class RemoteBrokenPipeException : HackIOException
+public sealed class RemoteBrokenPipeException : KazoIOException
 {
     /// <summary>Initializes the exception.</summary>
     public RemoteBrokenPipeException()

@@ -34,7 +34,7 @@ internal sealed class IndexedDbFileSystemReader : IAsyncDisposable
         IReadOnlyList<JsonElement> results = await _adapter.ExecuteAsync(
             Boundary,
             IndexedDbTransactionMode.ReadOnly,
-            [new IndexedDbOperation("getAll", HackerOsIndexedDbSchema.FileSystemEntryStoreName)],
+            [new IndexedDbOperation("getAll", KazoOsIndexedDbSchema.FileSystemEntryStoreName)],
             cancellationToken).ConfigureAwait(false);
         JsonElement entries = results.Single();
         if (entries.ValueKind != JsonValueKind.Array)
@@ -97,10 +97,10 @@ internal sealed class IndexedDbFileSystemReader : IAsyncDisposable
             IndexedDbTransactionMode.ReadOnly,
             [new IndexedDbOperation(
                 "resolvePath",
-                HackerOsIndexedDbSchema.FileSystemEntryStoreName,
+                KazoOsIndexedDbSchema.FileSystemEntryStoreName,
                 Key: IndexedDbFileSystemBootstrapper.RootEntryId.ToString(),
                 Query: names,
-                ReferenceObjectStoreName: HackerOsIndexedDbSchema.FileSystemLinkStoreName)],
+                ReferenceObjectStoreName: KazoOsIndexedDbSchema.FileSystemLinkStoreName)],
             cancellationToken).ConfigureAwait(false);
         JsonElement chain = results.Single();
         if (chain.ValueKind != JsonValueKind.Array)
@@ -164,7 +164,7 @@ internal sealed class IndexedDbFileSystemReader : IAsyncDisposable
             IndexedDbTransactionMode.ReadOnly,
             [new IndexedDbOperation(
                 "getAll",
-                HackerOsIndexedDbSchema.FileSystemLinkStoreName,
+                KazoOsIndexedDbSchema.FileSystemLinkStoreName,
                 IndexName: "parentId",
                 Query: directory.Id)],
             cancellationToken).ConfigureAwait(false);
@@ -185,7 +185,7 @@ internal sealed class IndexedDbFileSystemReader : IAsyncDisposable
             IndexedDbTransactionMode.ReadOnly,
             [.. links.Select(link => new IndexedDbOperation(
                 "get",
-                HackerOsIndexedDbSchema.FileSystemEntryStoreName,
+                KazoOsIndexedDbSchema.FileSystemEntryStoreName,
                 Key: link.EntryId))],
             cancellationToken).ConfigureAwait(false);
 
@@ -214,7 +214,7 @@ internal sealed class IndexedDbFileSystemReader : IAsyncDisposable
         IReadOnlyList<JsonElement> results = await _adapter.ExecuteAsync(
             Boundary,
             IndexedDbTransactionMode.ReadOnly,
-            [new IndexedDbOperation("get", HackerOsIndexedDbSchema.FileSystemEntryStoreName, Key: id)],
+            [new IndexedDbOperation("get", KazoOsIndexedDbSchema.FileSystemEntryStoreName, Key: id)],
             cancellationToken).ConfigureAwait(false);
         return IsMissing(results.Single()) ? null : IndexedDbFileSystemEntryRecord.FromJson(results.Single());
     }

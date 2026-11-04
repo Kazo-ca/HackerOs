@@ -437,7 +437,7 @@ public sealed class DangerousCapabilityApprovalTests
         Description = "Dangerous-capability fixture.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Apps.Sample", "Kazo.Os.Apps.Sample.SampleApp"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         Capabilities = capabilities

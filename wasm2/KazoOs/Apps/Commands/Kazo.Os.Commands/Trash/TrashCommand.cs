@@ -17,7 +17,7 @@ namespace Kazo.Os.Commands.Trash;
 /// <item><c>trash rm &lt;name...&gt;</c> — deletes elements permanently;</item>
 /// <item><c>trash empty</c> — empties the trash.</item>
 /// </list>
-/// Every subcommand goes through <see cref="HackTrash"/>, so it acts on the effective user's trash
+/// Every subcommand goes through <see cref="KazoTrash"/>, so it acts on the effective user's trash
 /// (<c>/root/.local/share/Trash</c> under <c>sudo</c>).
 /// </summary>
 public sealed class TrashCommand : TerminalAppBase
@@ -102,13 +102,13 @@ public sealed class TrashCommand : TerminalAppBase
             return Fail(context, text["List.TooManyArguments"]);
         }
 
-        foreach (HackTrashItem item in await HackTrash.GetItemsAsync(cancellationToken))
+        foreach (KazoTrashItem item in await KazoTrash.GetItemsAsync(cancellationToken))
         {
             string date = item.DeletedAt?.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture) ?? "????-??-?? ??:??:??";
             string path = item.OriginalPath ?? text["List.UnknownOrigin"];
 
             // Show the trash name when it is not obvious from the path, so `trash rm <name>` is usable.
-            string suffix = item.OriginalPath is null || HackPath.GetFileName(item.OriginalPath) != item.Name ? $"  [{item.Name}]" : string.Empty;
+            string suffix = item.OriginalPath is null || KazoPath.GetFileName(item.OriginalPath) != item.Name ? $"  [{item.Name}]" : string.Empty;
             string origin = item.DeletedOnAnotherDevice ? text["List.OtherDevice"] : string.Empty;
             context.StandardOutput.WriteLine($"{date}  {path}{suffix}{origin}");
         }
@@ -124,15 +124,15 @@ public sealed class TrashCommand : TerminalAppBase
             return Fail(context, text["Restore.Expected"]);
         }
 
-        IReadOnlyList<HackTrashItem> items = await HackTrash.GetItemsAsync(cancellationToken);
-        HackTrashItem? item = Find(items, context, arguments[0]);
+        IReadOnlyList<KazoTrashItem> items = await KazoTrash.GetItemsAsync(cancellationToken);
+        KazoTrashItem? item = Find(items, context, arguments[0]);
         if (item is null)
         {
             return Fail(context, text["Restore.NotInTrash", arguments[0]]);
         }
 
         string? destination = arguments.Length == 2 ? Resolve(context, arguments[1]) : null;
-        await HackTrash.RestoreAsync(item, destination, cancellationToken);
+        await KazoTrash.RestoreAsync(item, destination, cancellationToken);
         return 0;
     }
 
@@ -144,11 +144,11 @@ public sealed class TrashCommand : TerminalAppBase
             return Fail(context, text["Rm.MissingName"]);
         }
 
-        IReadOnlyList<HackTrashItem> items = await HackTrash.GetItemsAsync(cancellationToken);
+        IReadOnlyList<KazoTrashItem> items = await KazoTrash.GetItemsAsync(cancellationToken);
         int status = 0;
         foreach (string name in arguments)
         {
-            HackTrashItem? item = items.FirstOrDefault(candidate => candidate.Name == name);
+            KazoTrashItem? item = items.FirstOrDefault(candidate => candidate.Name == name);
             if (item is null)
             {
                 context.StandardError.WriteLine(text["Rm.NotInTrash", name]);
@@ -156,7 +156,7 @@ public sealed class TrashCommand : TerminalAppBase
                 continue;
             }
 
-            await HackTrash.DeleteAsync(item, cancellationToken);
+            await KazoTrash.DeleteAsync(item, cancellationToken);
         }
 
         return status;
@@ -169,14 +169,14 @@ public sealed class TrashCommand : TerminalAppBase
             return Fail(context, Text(context)["Empty.TooManyArguments"]);
         }
 
-        await HackTrash.EmptyAsync(cancellationToken);
+        await KazoTrash.EmptyAsync(cancellationToken);
         return 0;
     }
 
     /// <summary>Finds an element by trash name first, then by original path (most recent deletion wins).</summary>
-    private static HackTrashItem? Find(IReadOnlyList<HackTrashItem> items, TerminalExecutionContext context, string key)
+    private static KazoTrashItem? Find(IReadOnlyList<KazoTrashItem> items, TerminalExecutionContext context, string key)
     {
-        HackTrashItem? byName = items.FirstOrDefault(item => item.Name == key);
+        KazoTrashItem? byName = items.FirstOrDefault(item => item.Name == key);
         if (byName is not null)
         {
             return byName;
@@ -194,7 +194,7 @@ public sealed class TrashCommand : TerminalAppBase
     {
         try
         {
-            return path.StartsWith('~') ? HackPath.GetFullPath(path) : HackPath.GetFullPath(path, context.WorkingDirectory);
+            return path.StartsWith('~') ? KazoPath.GetFullPath(path) : KazoPath.GetFullPath(path, context.WorkingDirectory);
         }
         catch (ArgumentException)
         {

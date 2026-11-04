@@ -21,7 +21,7 @@ public interface IWhatsNewSource
 /// <param name="Links">Pages that tell more.</param>
 public sealed record WhatsNewCatalogEntry(
     string Id,
-    HackChangeCategory Category,
+    KazoChangeCategory Category,
     IReadOnlyDictionary<string, string> Title,
     IReadOnlyDictionary<string, string> Description,
     Uri? PullRequestUrl,
@@ -30,7 +30,7 @@ public sealed record WhatsNewCatalogEntry(
     /// <summary>The entry in <paramref name="culture"/>'s language, English when it has no text in it.</summary>
     /// <param name="culture">The caller's language.</param>
     /// <param name="isNew">Whether the user has not seen it.</param>
-    public HackChangeEntry Localize(CultureInfo culture, bool isNew) =>
+    public KazoChangeEntry Localize(CultureInfo culture, bool isNew) =>
         new(Id, Category, Pick(Title, culture) ?? Id, Pick(Description, culture), PullRequestUrl, Links, isNew);
 
     private static string? Pick(IReadOnlyDictionary<string, string> texts, CultureInfo culture) =>
@@ -163,12 +163,12 @@ public sealed record WhatsNewCatalog(IReadOnlyList<WhatsNewCatalogGroup> Groups)
         return new WhatsNewCatalogEntry(id, category, title, Texts(item, "description"), HttpsUri(String(item, "prUrl")), links);
     }
 
-    private static HackChangeCategory? ParseCategory(string? category) => category switch
+    private static KazoChangeCategory? ParseCategory(string? category) => category switch
     {
-        "new" => HackChangeCategory.New,
-        "improved" => HackChangeCategory.Improved,
-        "fixed" => HackChangeCategory.Fixed,
-        "developer" => HackChangeCategory.Developer,
+        "new" => KazoChangeCategory.New,
+        "improved" => KazoChangeCategory.Improved,
+        "fixed" => KazoChangeCategory.Fixed,
+        "developer" => KazoChangeCategory.Developer,
         _ => null
     };
 

@@ -4,7 +4,7 @@
 // (sandbox="allow-scripts allow-forms", opaque origin, CSP connect-src 'none'). It is the page's
 // only way out: fetch, XMLHttpRequest, links, forms, cookies, storage and dynamically added
 // resources become messages to BrowserPageView.razor.js, which hands them to C#. The C# side
-// sends them through the simulated network with HackHttpClient, so a site's JavaScript never
+// sends them through the simulated network with KazoHttpClient, so a site's JavaScript never
 // reaches Kazo OS nor the real Internet.
 //
 // Not a host script: it cannot be served from _content/ because the frame may load nothing but

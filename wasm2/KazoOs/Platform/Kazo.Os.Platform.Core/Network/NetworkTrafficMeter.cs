@@ -81,7 +81,7 @@ internal sealed class NetworkTrafficMeter(
     }
 
     /// <summary>Records one HTTP exchange, every redirect hop included.</summary>
-    public void Http(HackHttpRequest request, HackNetworkResult<HackHttpResponse> result, bool local = false)
+    public void Http(KazoHttpRequest request, KazoNetworkResult<KazoHttpResponse> result, bool local = false)
     {
         if (!IsEnabled)
         {
@@ -96,7 +96,7 @@ internal sealed class NetworkTrafficMeter(
             return;
         }
 
-        HackHttpResponse response = result.Value!;
+        KazoHttpResponse response = result.Value!;
         // Each redirect is a full round trip: the same request, and a header-only 3xx answer.
         for (int hop = 0; hop < response.RedirectCount; hop++)
         {
@@ -109,7 +109,7 @@ internal sealed class NetworkTrafficMeter(
     }
 
     /// <summary>Records a TCP probe: one SYN per port, one SYN-ACK or RST per port that answered.</summary>
-    public void Probe(HackNetworkResult<IReadOnlyList<HackPortProbeResult>> result, int portCount, bool local = false)
+    public void Probe(KazoNetworkResult<IReadOnlyList<KazoPortProbeResult>> result, int portCount, bool local = false)
     {
         if (!IsEnabled)
         {
@@ -124,10 +124,10 @@ internal sealed class NetworkTrafficMeter(
             return;
         }
 
-        foreach (HackPortProbeResult port in result.Value!)
+        foreach (KazoPortProbeResult port in result.Value!)
         {
             Transmit(segment, local);
-            if (port.State != HackPortState.Filtered)
+            if (port.State != KazoPortState.Filtered)
             {
                 Receive(segment, local);
             }
@@ -203,7 +203,7 @@ internal sealed class NetworkTrafficMeter(
         ReceiveError(local: false);
     }
 
-    private static int RequestSize(HackHttpRequest request)
+    private static int RequestSize(KazoHttpRequest request)
     {
         StringBuilder head = new();
         head.Append(request.Method).Append(' ').Append(request.RequestUri.PathAndQuery).Append(" HTTP/1.1\r\n");
@@ -231,7 +231,7 @@ internal sealed class NetworkTrafficMeter(
         return IpHeader + TcpHeader + Encoding.UTF8.GetByteCount(head.ToString()) + body;
     }
 
-    private static int ResponseSize(HackHttpResponse response)
+    private static int ResponseSize(KazoHttpResponse response)
     {
         StringBuilder head = new();
         head.Append("HTTP/1.1 ").Append(response.StatusCode).Append(' ').Append(response.ReasonPhrase).Append("\r\n");

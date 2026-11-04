@@ -17,7 +17,7 @@ namespace Kazo.Os.Apps.Settings;
 /// <remarks>
 /// <para>
 /// The choices are the keys of <c>~/.config/hackeros/sound.config</c>, written through
-/// <see cref="HackSettings.OpenSystemAsync(IAppExecutionContext, string, CancellationToken)"/>. The shell's
+/// <see cref="KazoSettings.OpenSystemAsync(IAppExecutionContext, string, CancellationToken)"/>. The shell's
 /// sound service re-reads the file at once and plays the notification sound of the new choice, so the
 /// user hears it without a "test" button.
 /// </para>
@@ -43,7 +43,7 @@ public sealed partial class SoundPanel
 
     private const string DocumentFileName = DocumentId + ".config";
 
-    private HackSettingsDocument? _document;
+    private KazoSettingsDocument? _document;
     private IReadOnlyList<SoundThemeChoice> _themes = [];
     private bool _enabled = true;
     private string _theme = OsSoundEvents.DefaultThemeId;
@@ -88,7 +88,7 @@ public sealed partial class SoundPanel
     {
         try
         {
-            _document = await HackSettings.OpenSystemAsync(Context, DocumentId, Context.CancellationToken);
+            _document = await KazoSettings.OpenSystemAsync(Context, DocumentId, Context.CancellationToken);
             _document.Changed += OnDocumentChanged;
             ReadDocument();
             _themes = await ListThemesAsync(Context.CancellationToken);
@@ -153,7 +153,7 @@ public sealed partial class SoundPanel
             ReadDocument();
             ShowSaved(savedMessage);
         }
-        catch (HackSettingLockedException exception)
+        catch (KazoSettingLockedException exception)
         {
             ShowError(exception.Message);
         }
@@ -188,26 +188,26 @@ public sealed partial class SoundPanel
     private async Task AddThemesAsync(
         List<SoundThemeChoice> themes, string root, bool isUserTheme, bool isPackRoot, CancellationToken cancellationToken)
     {
-        if (!await HackDirectory.ExistsAsync(root, cancellationToken))
+        if (!await KazoDirectory.ExistsAsync(root, cancellationToken))
         {
             return;
         }
 
-        foreach (string folder in (await HackDirectory.GetDirectoriesAsync(root, cancellationToken: cancellationToken)).Order(StringComparer.Ordinal))
+        foreach (string folder in (await KazoDirectory.GetDirectoriesAsync(root, cancellationToken: cancellationToken)).Order(StringComparer.Ordinal))
         {
             string id = folder[(folder.LastIndexOf('/') + 1)..];
             string directory = isPackRoot ? $"{folder}/{ThemePackLayout.SoundsFolder}" : folder;
             string index = $"{directory}/{OsSoundEvents.IndexFileName}";
             if (!OsSoundEvents.IsValidThemeId(id)
                 || themes.Any(theme => theme.Id == id)
-                || !await HackFile.ExistsAsync(index, cancellationToken))
+                || !await KazoFile.ExistsAsync(index, cancellationToken))
             {
                 continue;
             }
 
             try
             {
-                SoundThemeIndex theme = SoundThemeIndex.Parse(id, await HackFile.ReadAllTextAsync(index, cancellationToken));
+                SoundThemeIndex theme = SoundThemeIndex.Parse(id, await KazoFile.ReadAllTextAsync(index, cancellationToken));
                 themes.Add(new SoundThemeChoice(
                     id, theme.GetName(Context.Culture), theme.GetComment(Context.Culture), directory, isUserTheme));
             }
@@ -238,7 +238,7 @@ public sealed partial class SoundPanel
     }
 
     /// <summary>An external edit (<c>nano ~/.config/hackeros/sound.config</c>) changed the file.</summary>
-    private void OnDocumentChanged(object? sender, HackSettingsChangedEventArgs args) =>
+    private void OnDocumentChanged(object? sender, KazoSettingsChangedEventArgs args) =>
         _ = InvokeAsync(() =>
         {
             if (!_isBusy)

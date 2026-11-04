@@ -73,8 +73,8 @@ internal static class FileExplorerSettings
     internal static async Task<int> ReadSidebarWidthAsync(string homeDirectory, CancellationToken cancellationToken)
     {
         string path = GetPath(homeDirectory);
-        return await HackFile.ExistsAsync(path, cancellationToken)
-            ? ParseSidebarWidth(await HackFile.ReadAllTextAsync(path, cancellationToken))
+        return await KazoFile.ExistsAsync(path, cancellationToken)
+            ? ParseSidebarWidth(await KazoFile.ReadAllTextAsync(path, cancellationToken))
             : DefaultSidebarWidth;
     }
 
@@ -83,14 +83,14 @@ internal static class FileExplorerSettings
     {
         string path = GetPath(homeDirectory);
         string directory = path[..path.LastIndexOf('/')];
-        if (!await HackDirectory.ExistsAsync(directory, cancellationToken))
+        if (!await KazoDirectory.ExistsAsync(directory, cancellationToken))
         {
-            await HackDirectory.CreateDirectoryAsync(directory, cancellationToken);
+            await KazoDirectory.CreateDirectoryAsync(directory, cancellationToken);
         }
 
-        string? content = await HackFile.ExistsAsync(path, cancellationToken)
-            ? await HackFile.ReadAllTextAsync(path, cancellationToken)
+        string? content = await KazoFile.ExistsAsync(path, cancellationToken)
+            ? await KazoFile.ReadAllTextAsync(path, cancellationToken)
             : null;
-        await HackFile.WriteAllTextAsync(path, WithSidebarWidth(content, width), cancellationToken);
+        await KazoFile.WriteAllTextAsync(path, WithSidebarWidth(content, width), cancellationToken);
     }
 }

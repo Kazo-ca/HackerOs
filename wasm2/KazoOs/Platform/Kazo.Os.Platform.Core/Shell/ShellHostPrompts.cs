@@ -8,7 +8,7 @@ using Microsoft.Extensions.Localization;
 namespace Kazo.Os.Platform.Core.Shell;
 
 /// <summary>
-/// Turns the terminal's <see cref="HackCredentialPrompt"/> into the three questions the
+/// Turns the terminal's <see cref="KazoCredentialPrompt"/> into the three questions the
 /// interpreter asks (ADR 0056, section 7): <c>sudo</c>'s ticket, the one-shot approval after a
 /// permission denial (ADR 0042) and the text-mode approval of dangerous capabilities (ADR 0049,
 /// section 5). The terminal reads; this class verifies through the OS. Its texts are in the
@@ -16,7 +16,7 @@ namespace Kazo.Os.Platform.Core.Shell;
 /// </summary>
 internal sealed class ShellHostPrompts : IDangerousCapabilityApprovalPrompt
 {
-    private readonly HackCredentialPrompt _prompt;
+    private readonly KazoCredentialPrompt _prompt;
     private readonly IElevationService _elevation;
     private readonly Func<System.Globalization.CultureInfo> _language;
 
@@ -24,11 +24,11 @@ internal sealed class ShellHostPrompts : IDangerousCapabilityApprovalPrompt
     /// <param name="prompt">The terminal's prompt.</param>
     /// <param name="elevation">Verifies the credentials and mints tickets (ADR 0042).</param>
     /// <param name="language">The shell's current language, read at each prompt; English when <see langword="null"/>.</param>
-    public ShellHostPrompts(HackCredentialPrompt prompt, IElevationService elevation, Func<System.Globalization.CultureInfo>? language = null)
+    public ShellHostPrompts(KazoCredentialPrompt prompt, IElevationService elevation, Func<System.Globalization.CultureInfo>? language = null)
     {
         _prompt = prompt ?? throw new ArgumentNullException(nameof(prompt));
         _elevation = elevation ?? throw new ArgumentNullException(nameof(elevation));
-        _language = language ?? (static () => Kazo.Os.AppSdk.Globalization.HackLocale.DefaultLanguage);
+        _language = language ?? (static () => Kazo.Os.AppSdk.Globalization.KazoLocale.DefaultLanguage);
     }
 
     /// <summary>Gets the core's texts in the shell's current language.</summary>
@@ -41,8 +41,8 @@ internal sealed class ShellHostPrompts : IDangerousCapabilityApprovalPrompt
     /// </summary>
     public async Task<ShellElevation?> RequestSudoAsync(string description, CancellationToken cancellationToken)
     {
-        HackCredential? credential = await _prompt.ReadCredentialAsync(
-            new HackCredentialRequest(Text["Prompt.Sudo.Title"], description), cancellationToken).ConfigureAwait(false);
+        KazoCredential? credential = await _prompt.ReadCredentialAsync(
+            new KazoCredentialRequest(Text["Prompt.Sudo.Title"], description), cancellationToken).ConfigureAwait(false);
         if (credential is null)
         {
             return null;
@@ -55,7 +55,7 @@ internal sealed class ShellHostPrompts : IDangerousCapabilityApprovalPrompt
             return new ShellElevation(token, ElevationScope.SudoRoot);
         }
 
-        await _prompt.WriteLineAsync(Text["Prompt.SorryTryAgain"], HackPromptLineKind.Error, cancellationToken).ConfigureAwait(false);
+        await _prompt.WriteLineAsync(Text["Prompt.SorryTryAgain"], KazoPromptLineKind.Error, cancellationToken).ConfigureAwait(false);
         return null;
     }
 
@@ -66,8 +66,8 @@ internal sealed class ShellHostPrompts : IDangerousCapabilityApprovalPrompt
     public async Task<ShellElevation?> RequestPermissionApprovalAsync(ShellPermissionDenial denial, CancellationToken cancellationToken)
     {
         FileSystemError denied = denial.Error;
-        HackCredential? credential = await _prompt.ReadCredentialAsync(
-            new HackCredentialRequest(
+        KazoCredential? credential = await _prompt.ReadCredentialAsync(
+            new KazoCredentialRequest(
                 Text["Prompt.PermissionApproval.Title"],
                 Text["Prompt.PermissionApproval.Description", denial.CommandName, denied.Code, denied.Path?.ToString() ?? string.Empty]),
             cancellationToken).ConfigureAwait(false);
@@ -83,7 +83,7 @@ internal sealed class ShellHostPrompts : IDangerousCapabilityApprovalPrompt
             return new ShellElevation(token, ElevationScope.CapabilityApproval);
         }
 
-        await _prompt.WriteLineAsync(Text["Prompt.SorryTryAgain"], HackPromptLineKind.Error, cancellationToken).ConfigureAwait(false);
+        await _prompt.WriteLineAsync(Text["Prompt.SorryTryAgain"], KazoPromptLineKind.Error, cancellationToken).ConfigureAwait(false);
         return null;
     }
 
@@ -102,46 +102,46 @@ internal sealed class ShellHostPrompts : IDangerousCapabilityApprovalPrompt
         AppManifest app = request.Manifest;
         IStringLocalizer text = Text;
 
-        await WriteAsync(text["Prompt.Dangerous.Banner"], HackPromptLineKind.Warning).ConfigureAwait(false);
+        await WriteAsync(text["Prompt.Dangerous.Banner"], KazoPromptLineKind.Warning).ConfigureAwait(false);
         await WriteAsync(
             text["Prompt.Dangerous.Request", app.Terminal?.Name ?? app.Name, app.Id, app.PublisherId, app.Version],
-            HackPromptLineKind.Warning).ConfigureAwait(false);
+            KazoPromptLineKind.Warning).ConfigureAwait(false);
         foreach (CapabilityDescription capability in request.Capabilities.Select(description =>
                      Kazo.Os.Platform.Core.Policy.CapabilityText.Localize(description, _language())))
         {
-            await WriteAsync($"  - {capability.Title} [{capability.Capability}]", HackPromptLineKind.Warning).ConfigureAwait(false);
+            await WriteAsync($"  - {capability.Title} [{capability.Capability}]", KazoPromptLineKind.Warning).ConfigureAwait(false);
             if (!string.IsNullOrEmpty(capability.RiskDescription))
             {
-                await WriteAsync($"    {capability.RiskDescription}", HackPromptLineKind.Warning).ConfigureAwait(false);
+                await WriteAsync($"    {capability.RiskDescription}", KazoPromptLineKind.Warning).ConfigureAwait(false);
             }
         }
 
-        await WriteAsync(text["Prompt.Dangerous.AuditNotice"], HackPromptLineKind.Info).ConfigureAwait(false);
+        await WriteAsync(text["Prompt.Dangerous.AuditNotice"], KazoPromptLineKind.Info).ConfigureAwait(false);
 
-        HackConfirmation choice = await _prompt.ConfirmAsync(new HackConfirmationRequest(
+        KazoConfirmation choice = await _prompt.ConfirmAsync(new KazoConfirmationRequest(
             text["Prompt.Dangerous.Title"],
             text["Prompt.Dangerous.Question", app.Name]), cancellationToken).ConfigureAwait(false);
 
-        if (choice == HackConfirmation.No)
+        if (choice == KazoConfirmation.No)
         {
-            await WriteAsync(text["Prompt.Dangerous.Refused"], HackPromptLineKind.Info).ConfigureAwait(false);
+            await WriteAsync(text["Prompt.Dangerous.Refused"], KazoPromptLineKind.Info).ConfigureAwait(false);
             return DangerousCapabilityApprovalOutcome.Refused;
         }
 
-        if (choice != HackConfirmation.Yes)
+        if (choice != KazoConfirmation.Yes)
         {
-            await WriteAsync(text["Prompt.Dangerous.Dismissed"], HackPromptLineKind.Info).ConfigureAwait(false);
+            await WriteAsync(text["Prompt.Dangerous.Dismissed"], KazoPromptLineKind.Info).ConfigureAwait(false);
             return DangerousCapabilityApprovalOutcome.Dismissed;
         }
 
         while (true)
         {
-            HackCredential? credential = await _prompt.ReadCredentialAsync(new HackCredentialRequest(
+            KazoCredential? credential = await _prompt.ReadCredentialAsync(new KazoCredentialRequest(
                 text["Prompt.Dangerous.Title"],
                 text["Prompt.Dangerous.CredentialDescription", app.Name]), cancellationToken).ConfigureAwait(false);
             if (credential is null)
             {
-                await WriteAsync(text["Prompt.Dangerous.Dismissed"], HackPromptLineKind.Info).ConfigureAwait(false);
+                await WriteAsync(text["Prompt.Dangerous.Dismissed"], KazoPromptLineKind.Info).ConfigureAwait(false);
                 return DangerousCapabilityApprovalOutcome.Dismissed;
             }
 
@@ -149,7 +149,7 @@ internal sealed class ShellHostPrompts : IDangerousCapabilityApprovalPrompt
                 credential.LoginName, credential.Password, cancellationToken).ConfigureAwait(false);
             if (attempt.Succeeded)
             {
-                await WriteAsync(text["Prompt.Dangerous.Approved"], HackPromptLineKind.Info).ConfigureAwait(false);
+                await WriteAsync(text["Prompt.Dangerous.Approved"], KazoPromptLineKind.Info).ConfigureAwait(false);
                 return DangerousCapabilityApprovalOutcome.Approved;
             }
 
@@ -157,13 +157,13 @@ internal sealed class ShellHostPrompts : IDangerousCapabilityApprovalPrompt
             {
                 await WriteAsync(
                     text["Prompt.Dangerous.TooManyAttempts", DangerousCapabilityApprovalRequest.MaxAttempts],
-                    HackPromptLineKind.Error).ConfigureAwait(false);
+                    KazoPromptLineKind.Error).ConfigureAwait(false);
                 return DangerousCapabilityApprovalOutcome.Dismissed;
             }
 
-            await WriteAsync(text["Prompt.SorryTryAgain"], HackPromptLineKind.Error).ConfigureAwait(false);
+            await WriteAsync(text["Prompt.SorryTryAgain"], KazoPromptLineKind.Error).ConfigureAwait(false);
         }
 
-        Task WriteAsync(string text, HackPromptLineKind kind) => _prompt.WriteLineAsync(text, kind, cancellationToken);
+        Task WriteAsync(string text, KazoPromptLineKind kind) => _prompt.WriteLineAsync(text, kind, cancellationToken);
     }
 }

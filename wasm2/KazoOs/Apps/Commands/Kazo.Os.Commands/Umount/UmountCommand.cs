@@ -28,7 +28,7 @@ public sealed class UmountCommand(AppManifest manifest) : TerminalAppBase(manife
         string mountPoint = Mount.MountCommand.Absolute(context, operands[0]);
         try
         {
-            await HackDriveInfo.UnmountAsync(mountPoint, cancellationToken);
+            await KazoDriveInfo.UnmountAsync(mountPoint, cancellationToken);
             return 0;
         }
         catch (Exception exception) when (exception is NotSupportedException or InvalidOperationException or IOException or UnauthorizedAccessException)

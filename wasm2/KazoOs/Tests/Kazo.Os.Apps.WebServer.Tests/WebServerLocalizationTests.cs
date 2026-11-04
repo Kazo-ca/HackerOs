@@ -14,8 +14,8 @@ public sealed class WebServerLocalizationTests
     [Fact]
     public void Texts_InFrench_AreTranslated_AndKeepCommandNames()
     {
-        HackStringLocalizer french = new(Resources, static () => CultureInfo.GetCultureInfo("fr"));
-        HackStringLocalizer english = new(Resources, static () => HackLocale.DefaultLanguage);
+        KazoStringLocalizer french = new(Resources, static () => CultureInfo.GetCultureInfo("fr"));
+        KazoStringLocalizer english = new(Resources, static () => KazoLocale.DefaultLanguage);
 
         Assert.Equal("hackwebd en cours d'exécution · pid 42", french["Daemon.Running", 42].Value);
         Assert.Equal("hackwebd running · pid 42", english["Daemon.Running", 42].Value);

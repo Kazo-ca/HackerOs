@@ -987,7 +987,7 @@ public sealed class AppIntentDispatcherTests
         Description = "A Window app for ADR 0096 tests.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", $"{appId}.EntryPoint"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None
     };
@@ -1001,7 +1001,7 @@ public sealed class AppIntentDispatcherTests
         Description = "Echoes its arguments.",
         Kind = AppKind.Terminal,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", typeof(EchoTerminalApp).FullName!),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         Terminal = new TerminalCommandManifest("echo", ["say"], "echo [text]")
@@ -1016,7 +1016,7 @@ public sealed class AppIntentDispatcherTests
         Description = "A simple text editor.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", "org.hackeros.notepad.EntryPoint"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         FileHandlers = [new FileHandlerManifest("text/plain", [".txt"], ["open", "edit"])]
@@ -1031,7 +1031,7 @@ public sealed class AppIntentDispatcherTests
         Description = "A directory-capable Window app for Phase 5 tests.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", $"{appId}.EntryPoint"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         FileHandlers = [new FileHandlerManifest("inode/directory", [], ["open"])]
@@ -1047,7 +1047,7 @@ public sealed class AppIntentDispatcherTests
         Kind = AppKind.Terminal,
         EntryPoint = new AppEntryPointManifest(
             "Kazo.Os.Platform.Core.Tests", typeof(FullScreenTerminalApp).FullName!),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Hidden, []),
         Resources = AppResourceProfileManifest.None,
         Terminal = new TerminalCommandManifest("screen", [], "screen [wait]")
@@ -1062,7 +1062,7 @@ public sealed class AppIntentDispatcherTests
         Description = "An advanced text editor.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", "org.hackeros.texteditor.EntryPoint"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         FileHandlers = [new FileHandlerManifest("text/plain", [".txt"], ["open", "edit"])]
@@ -1077,7 +1077,7 @@ public sealed class AppIntentDispatcherTests
         Description = "Waits for cancellation.",
         Kind = AppKind.Service,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", typeof(WaiterServiceApp).FullName!),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None
     };

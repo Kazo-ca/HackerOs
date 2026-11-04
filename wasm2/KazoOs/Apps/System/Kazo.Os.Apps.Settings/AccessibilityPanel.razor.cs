@@ -14,7 +14,7 @@ namespace Kazo.Os.Apps.Settings;
 /// <remarks>
 /// <para>
 /// Each choice is one key of <c>~/.config/hackeros/accessibility.config</c>, written through
-/// <see cref="HackSettings.OpenSystemAsync(IAppExecutionContext, string, CancellationToken)"/>; the
+/// <see cref="KazoSettings.OpenSystemAsync(IAppExecutionContext, string, CancellationToken)"/>; the
 /// shell re-reads the file and applies the change at once, like it does for a theme. The machine's
 /// default (<c>/etc/hackeros/accessibility.config</c>, also used by the sign-in screen) is an
 /// administrator's file, edited with <c>sudo nano</c>.
@@ -23,7 +23,7 @@ namespace Kazo.Os.Apps.Settings;
 /// "Reduce animations" is the only motion setting left (it replaces the Appearance switch):
 /// <c>animationsEnabled = false</c> in <c>appearance.config</c> still counts as <c>reducedMotion = on</c>,
 /// so choosing "auto" or "off" here also turns the user's own <c>animationsEnabled</c> back on.
-/// The readout shows the effective state from <see cref="HackAccessibility"/>.
+/// The readout shows the effective state from <see cref="KazoAccessibility"/>.
 /// </para>
 /// </remarks>
 public sealed partial class AccessibilityPanel
@@ -50,9 +50,9 @@ public sealed partial class AccessibilityPanel
     /// <summary>The text sizes, as written in the file.</summary>
     internal static readonly string[] TextScaleValues = ["1.0", "1.25", "1.5", "2.0"];
 
-    private HackSettingsDocument? _document;
-    private HackSettingsDocument? _appearance;
-    private HackAccessibilityPreferences _effective = HackAccessibilityPreferences.Default;
+    private KazoSettingsDocument? _document;
+    private KazoSettingsDocument? _appearance;
+    private KazoAccessibilityPreferences _effective = KazoAccessibilityPreferences.Default;
     private string _highContrast = "auto";
     private string _textScale = "1.0";
     private string _reducedMotion = "auto";
@@ -69,7 +69,7 @@ public sealed partial class AccessibilityPanel
     private IStringLocalizer<Strings> L => _localizer ??= AppContext.GetLocalizer<Strings>();
 
     /// <summary>Gets the effective preferences shown in the readout.</summary>
-    internal HackAccessibilityPreferences Effective => _effective;
+    internal KazoAccessibilityPreferences Effective => _effective;
 
     /// <summary>Gets the <c>highContrast</c> value of the file (all layers merged).</summary>
     internal string HighContrast => _highContrast;
@@ -99,7 +99,7 @@ public sealed partial class AccessibilityPanel
     {
         try
         {
-            _document = await HackSettings.OpenSystemAsync(Context, DocumentId, Context.CancellationToken);
+            _document = await KazoSettings.OpenSystemAsync(Context, DocumentId, Context.CancellationToken);
             _document.Changed += OnDocumentChanged;
             ReadDocument();
         }
@@ -110,7 +110,7 @@ public sealed partial class AccessibilityPanel
 
         try
         {
-            _appearance = await HackSettings.OpenSystemAsync(Context, AppearanceDocumentId, Context.CancellationToken);
+            _appearance = await KazoSettings.OpenSystemAsync(Context, AppearanceDocumentId, Context.CancellationToken);
         }
         catch (Exception exception) when (exception is NotSupportedException or IOException or UnauthorizedAccessException)
         {
@@ -145,7 +145,7 @@ public sealed partial class AccessibilityPanel
             ReadDocument();
             ShowSaved(L["Accessibility.Saved"]);
         }
-        catch (HackSettingLockedException exception)
+        catch (KazoSettingLockedException exception)
         {
             ShowError(exception.Message);
         }
@@ -208,7 +208,7 @@ public sealed partial class AccessibilityPanel
     }
 
     /// <summary>An external edit (<c>nano ~/.config/hackeros/accessibility.config</c>) changed the file.</summary>
-    private void OnDocumentChanged(object? sender, HackSettingsChangedEventArgs args) =>
+    private void OnDocumentChanged(object? sender, KazoSettingsChangedEventArgs args) =>
         _ = InvokeAsync(() =>
         {
             if (!_isBusy)

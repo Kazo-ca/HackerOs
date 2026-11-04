@@ -12,7 +12,7 @@ namespace Kazo.Os.Apps.Settings;
 /// </summary>
 /// <remarks>
 /// <para>
-/// Uses only <see cref="HackComponentProviders"/> (capability <c>apps.manage</c>). Choosing an app that
+/// Uses only <see cref="KazoComponentProviders"/> (capability <c>apps.manage</c>). Choosing an app that
 /// is not a system app makes the OS show its approval window of the dangerous capabilities, with the
 /// risk sentence of each contract; a system app, or the way back to the File Explorer, only needs an
 /// administrator in the OS's secure window. This panel never sees a password.
@@ -24,7 +24,7 @@ namespace Kazo.Os.Apps.Settings;
 /// </remarks>
 public sealed partial class OsComponentsPanel
 {
-    private IReadOnlyList<HackComponentContractInfo> _overview = [];
+    private IReadOnlyList<KazoComponentContractInfo> _overview = [];
     private PendingChoice? _pending;
     private bool _applyToOther = true;
     private bool _isAvailable = true;
@@ -40,7 +40,7 @@ public sealed partial class OsComponentsPanel
     private IStringLocalizer<Strings> L => _localizer ??= AppContext.GetLocalizer<Strings>();
 
     /// <summary>Gets the contracts and their providers, as last read.</summary>
-    internal IReadOnlyList<HackComponentContractInfo> Overview => _overview;
+    internal IReadOnlyList<KazoComponentContractInfo> Overview => _overview;
 
     /// <summary>Gets the choice waiting for confirmation, or <see langword="null"/>.</summary>
     internal PendingChoice? Pending => _pending;
@@ -63,10 +63,10 @@ public sealed partial class OsComponentsPanel
     }
 
     private async Task RefreshAsync() =>
-        _overview = await HackComponentProviders.GetOverviewAsync(Context, Context.CancellationToken);
+        _overview = await KazoComponentProviders.GetOverviewAsync(Context, Context.CancellationToken);
 
     /// <summary>Prepares the choice of <paramref name="provider"/>; nothing is written before <see cref="ApplyAsync"/>.</summary>
-    internal void Choose(HackComponentContractInfo contract, HackComponentProviderInfo provider)
+    internal void Choose(KazoComponentContractInfo contract, KazoComponentProviderInfo provider)
     {
         _message = null;
         bool unchanged = contract.SelectedAppId is { } selected
@@ -85,17 +85,17 @@ public sealed partial class OsComponentsPanel
     }
 
     /// <summary>Prepares the way back to the default provider (the File Explorer).</summary>
-    internal void ChooseDefault(HackComponentContractInfo contract)
+    internal void ChooseDefault(KazoComponentContractInfo contract)
     {
         _message = null;
         _pending = CreatePending(contract, null, null, needsApproval: false);
     }
 
-    private PendingChoice CreatePending(HackComponentContractInfo contract, string? appId, string? appName, bool needsApproval)
+    private PendingChoice CreatePending(KazoComponentContractInfo contract, string? appId, string? appName, bool needsApproval)
     {
         // Offer the other contract when the same choice makes sense there: the app provides it too,
         // or, for the way back, the other contract has a choice of its own to undo.
-        HackComponentContractInfo? other = _overview.FirstOrDefault(item => item.Contract != contract.Contract);
+        KazoComponentContractInfo? other = _overview.FirstOrDefault(item => item.Contract != contract.Contract);
         bool offerOther = other is not null && (appId is null
             ? other.SelectedAppId is not null
             : other.Providers.Any(provider => provider.AppId == appId && provider.IsInstalled) && other.SelectedAppId != appId);
@@ -121,7 +121,7 @@ public sealed partial class OsComponentsPanel
         _message = null;
         try
         {
-            await HackComponentProviders.SetProviderAsync(Context, contracts, pending.AppId, Context.CancellationToken);
+            await KazoComponentProviders.SetProviderAsync(Context, contracts, pending.AppId, Context.CancellationToken);
             _pending = null;
             Show(pending.AppId is null ? L["Components.Saved.Default"] : L["Components.Saved", pending.AppName], isError: false);
             await RefreshAsync();
@@ -147,14 +147,14 @@ public sealed partial class OsComponentsPanel
     }
 
     /// <summary>The provider in use: the administrator's choice when installed, else the default.</summary>
-    private static bool IsActive(HackComponentContractInfo contract, HackComponentProviderInfo provider)
+    private static bool IsActive(KazoComponentContractInfo contract, KazoComponentProviderInfo provider)
     {
         bool selectedInstalled = contract.SelectedAppId is { } selected
             && contract.Providers.Any(item => item.AppId == selected && item.IsInstalled);
         return selectedInstalled ? provider.AppId == contract.SelectedAppId : provider.AppId == contract.DefaultAppId;
     }
 
-    private string ProviderClass(HackComponentContractInfo contract, HackComponentProviderInfo provider)
+    private string ProviderClass(KazoComponentContractInfo contract, KazoComponentProviderInfo provider)
     {
         string css = "components-provider";
         if (IsActive(contract, provider))
@@ -172,15 +172,15 @@ public sealed partial class OsComponentsPanel
 
     private string ContractTitle(string contract) => contract switch
     {
-        HackComponentContracts.FileView => L["Components.FileView.Title"],
-        HackComponentContracts.FileDialogs => L["Components.FileDialogs.Title"],
+        KazoComponentContracts.FileView => L["Components.FileView.Title"],
+        KazoComponentContracts.FileDialogs => L["Components.FileDialogs.Title"],
         _ => contract
     };
 
     private string ContractDescription(string contract) => contract switch
     {
-        HackComponentContracts.FileView => L["Components.FileView.Description"],
-        HackComponentContracts.FileDialogs => L["Components.FileDialogs.Description"],
+        KazoComponentContracts.FileView => L["Components.FileView.Description"],
+        KazoComponentContracts.FileDialogs => L["Components.FileDialogs.Description"],
         _ => string.Empty
     };
 

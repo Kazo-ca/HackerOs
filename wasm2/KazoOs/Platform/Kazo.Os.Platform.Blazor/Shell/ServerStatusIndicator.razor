@@ -17,7 +17,7 @@
                 aria-haspopup="dialog"
                 aria-expanded="@_isOpen.ToString().ToLowerInvariant()"
                 @onclick="TogglePanel">
-            <HackerIcon Library="IconLibrary.Lucide" Name="@IconName" Size="17" Title="" class="server-status-icon" />
+            <KazoIcon Library="IconLibrary.Lucide" Name="@IconName" Size="17" Title="" class="server-status-icon" />
         </button>
         <span class="server-status-live" aria-live="polite" role="status">@StatusText</span>
 
@@ -72,18 +72,18 @@
                         @if (_presence.Status == ServerPresenceStatus.ConnectedAnonymous)
                         {
                             <button type="button" class="server-status-button is-primary" @onclick="StartIdentify">
-                                <HackerIcon Library="IconLibrary.Lucide" Name="log-in" Size="15" Title="" />
+                                <KazoIcon Library="IconLibrary.Lucide" Name="log-in" Size="15" Title="" />
                                 @L["Server.Identify"]
                             </button>
                         }
                         <button type="button" class="server-status-button" disabled="@_isBusy" @onclick="ReconnectAsync">
-                            <HackerIcon Library="IconLibrary.Lucide" Name="refresh-cw" Size="15" Title="" />
+                            <KazoIcon Library="IconLibrary.Lucide" Name="refresh-cw" Size="15" Title="" />
                             @L["Server.Reconnect"]
                         </button>
                         @if (OnOpenSettings.HasDelegate)
                         {
                             <button type="button" class="server-status-button" @onclick="OpenSettingsAsync">
-                                <HackerIcon Library="IconLibrary.Lucide" Name="settings" Size="15" Title="" />
+                                <KazoIcon Library="IconLibrary.Lucide" Name="settings" Size="15" Title="" />
                                 @L["Server.Settings"]
                             </button>
                         }

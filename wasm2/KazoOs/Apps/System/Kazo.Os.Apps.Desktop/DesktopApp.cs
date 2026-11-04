@@ -11,7 +11,7 @@ namespace Kazo.Os.Apps.Desktop;
 /// The desktop is an app like the others, with the rights of the signed-in user only (public SDK, no
 /// system right): the shell starts it at sign-in and draws it under the windows, never in a window of
 /// its own. Hidden from the Start menu, one per user. "Send to ▸ Desktop" reaches the running instance
-/// as the <see cref="HackDesktopItems.CreateShortcutIntent"/> intent.
+/// as the <see cref="KazoDesktopItems.CreateShortcutIntent"/> intent.
 /// </remarks>
 [AppManifest]
 public sealed class DesktopApp : AppDefinition
@@ -56,7 +56,7 @@ public sealed class DesktopApp : AppDefinition
     ];
 
     /// <inheritdoc />
-    public override IReadOnlyList<AppIntentDeclarationManifest> Intents => [new(HackDesktopItems.CreateShortcutIntent)];
+    public override IReadOnlyList<AppIntentDeclarationManifest> Intents => [new(KazoDesktopItems.CreateShortcutIntent)];
 
     /// <inheritdoc />
     public override AppResourceProfileManifest Resources => new(

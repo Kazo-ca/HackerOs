@@ -13,8 +13,8 @@ using Microsoft.Extensions.Logging.Abstractions;
 namespace Kazo.Os.AppSdk.Blazor.Tests;
 
 /// <summary>
-/// ADR 0043: window apps and <see cref="HackComponentBase"/> children run their lifecycle, UI events and
-/// after-render work inside the app's <see cref="HackExecutionContext"/> scope.
+/// ADR 0043: window apps and <see cref="KazoComponentBase"/> children run their lifecycle, UI events and
+/// after-render work inside the app's <see cref="KazoExecutionContext"/> scope.
 /// </summary>
 public sealed class AmbientContextComponentTests
 {
@@ -33,7 +33,7 @@ public sealed class AmbientContextComponentTests
         Assert.Same(context, app.SeenAfterRender);
         Assert.Same(context, app.SeenOnClick);
         Assert.Same(context, app.SeenAfterClickAwait);
-        Assert.Null(HackExecutionContext.CurrentOrNull);
+        Assert.Null(KazoExecutionContext.CurrentOrNull);
     }
 
     [Fact]
@@ -62,7 +62,7 @@ public sealed class AmbientContextComponentTests
         Description = "Ambient context component test.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.AppSdk.Blazor.Tests", "ProbeWindowApp"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None
     };
@@ -76,14 +76,14 @@ public sealed class AmbientContextComponentTests
 
         public async Task OnClickAsync()
         {
-            SeenOnClick = HackExecutionContext.CurrentOrNull;
+            SeenOnClick = KazoExecutionContext.CurrentOrNull;
             await Task.Yield();
-            SeenAfterClickAwait = HackExecutionContext.CurrentOrNull;
+            SeenAfterClickAwait = KazoExecutionContext.CurrentOrNull;
         }
 
-        protected override void OnAppInitialized() => SeenOnInitialized = HackExecutionContext.CurrentOrNull;
+        protected override void OnAppInitialized() => SeenOnInitialized = KazoExecutionContext.CurrentOrNull;
 
-        protected override void OnAppAfterRender(bool firstRender) => SeenAfterRender = HackExecutionContext.CurrentOrNull;
+        protected override void OnAppAfterRender(bool firstRender) => SeenAfterRender = KazoExecutionContext.CurrentOrNull;
     }
 
     private sealed class CascadeHost : ComponentBase
@@ -108,17 +108,17 @@ public sealed class AmbientContextComponentTests
         }
     }
 
-    private sealed class ProbeChild : HackComponentBase
+    private sealed class ProbeChild : KazoComponentBase
     {
         public IAppExecutionContext? SeenOnInitialized { get; private set; }
         public IAppExecutionContext? SeenAfterRender { get; private set; }
         public IAppExecutionContext? SeenOnClick { get; private set; }
 
-        public void OnClick() => SeenOnClick = HackExecutionContext.CurrentOrNull;
+        public void OnClick() => SeenOnClick = KazoExecutionContext.CurrentOrNull;
 
-        protected override void OnInitialized() => SeenOnInitialized = HackExecutionContext.CurrentOrNull;
+        protected override void OnInitialized() => SeenOnInitialized = KazoExecutionContext.CurrentOrNull;
 
-        protected override void OnAfterRender(bool firstRender) => SeenAfterRender = HackExecutionContext.CurrentOrNull;
+        protected override void OnAfterRender(bool firstRender) => SeenAfterRender = KazoExecutionContext.CurrentOrNull;
     }
 
     /// <summary>Attaches components to a real render handle, discarding render batches (no bUnit in this solution).</summary>

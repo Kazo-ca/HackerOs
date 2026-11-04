@@ -8,7 +8,7 @@ et agrégation des paquets d'applications par un hôte.
 <PackageReference Include="Kazo.Os.App.Build" Version="1.0.0" PrivateAssets="all" />
 ```
 
-Un hôte ajoute `<HackerOsAppHost>true</HackerOsAppHost>`. Publié avec `PublishTrimmed=true`, il garde
+Un hôte ajoute `<KazoOsAppHost>true</KazoOsAppHost>`. Publié avec `PublishTrimmed=true`, il garde
 entières les assemblies `Kazo.Os.*` et celles de chaque app installée (racines générées depuis les
 manifestes, ADR 0106 et 0113) ; un projet d'app reçoit `IsTrimmable` et l'analyse de trimming s'il ne les
 règle pas. Voir `doc/en/wasm/framework/sdk-packages.md` et `doc/en/wasm/dev/trimmed-publish.md` dans le dépôt.

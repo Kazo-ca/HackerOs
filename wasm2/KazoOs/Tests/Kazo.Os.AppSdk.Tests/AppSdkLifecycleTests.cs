@@ -70,7 +70,7 @@ public sealed class AppSdkLifecycleTests
         Description = "App SDK lifecycle test application.",
         Kind = kind,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.AppSdk.Tests", $"Test{kind}App"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None
     };

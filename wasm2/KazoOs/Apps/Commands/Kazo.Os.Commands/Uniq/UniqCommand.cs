@@ -59,7 +59,7 @@ public sealed class UniqCommand(AppManifest manifest) : TerminalAppBase(manifest
         {
             try
             {
-                await HackFile.WriteAllTextAsync(operands[1], output.ToString(), cancellationToken);
+                await KazoFile.WriteAllTextAsync(operands[1], output.ToString(), cancellationToken);
             }
             catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException)
             {

@@ -276,7 +276,7 @@ public sealed class FileViewIconsTests
         return renderer.RenderAsync(icons);
     }
 
-    /// <summary>Suppresses the real markup (ShellIcon/HackerIcon) so tests can attach a real RenderHandle and exercise the C# backing directly.</summary>
+    /// <summary>Suppresses the real markup (ShellIcon/KazoIcon) so tests can attach a real RenderHandle and exercise the C# backing directly.</summary>
     private sealed class TestableFileViewIcons : FileViewIcons
     {
         protected override void BuildRenderTree(RenderTreeBuilder builder)

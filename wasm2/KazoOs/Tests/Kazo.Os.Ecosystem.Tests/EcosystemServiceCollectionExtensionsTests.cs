@@ -79,11 +79,11 @@ public sealed class EcosystemServiceCollectionExtensionsTests
 
         // ADR 0150 §1: the platform itself provides the OS context menu, without loading an app.
         Assert.NotNull(provider.GetRequiredService<Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuService>());
-        Kazo.Os.AppSdk.Blazor.Components.HackComponentResolution menu = await provider
+        Kazo.Os.AppSdk.Blazor.Components.KazoComponentResolution menu = await provider
             .GetRequiredService<Kazo.Os.AppSdk.Blazor.Components.IHackComponentHost>()
-            .ResolveAsync(Kazo.Os.AppSdk.Components.HackComponentContracts.ContextMenu);
+            .ResolveAsync(Kazo.Os.AppSdk.Components.KazoComponentContracts.ContextMenu);
         Assert.Equal(typeof(Kazo.Os.Platform.Blazor.ContextMenus.PlatformContextMenu), menu.ComponentType);
-        Assert.Equal(Kazo.Os.AppSdk.Blazor.Components.HackComponentResolution.PlatformProviderId, menu.ProviderAppId);
+        Assert.Equal(Kazo.Os.AppSdk.Blazor.Components.KazoComponentResolution.PlatformProviderId, menu.ProviderAppId);
 
         SessionId sessionId = SessionId.FromGuid(Guid.NewGuid());
         IFileDialogService dialogs = provider.GetRequiredService<FileDialogServiceFactory>().Create(sessionId);

@@ -51,7 +51,7 @@
     /// <summary>Gets the screen's label texts in the app's language, or the ambient app's without a cascaded one.</summary>
     private Microsoft.Extensions.Localization.IStringLocalizer<Strings> L => AppContext is { } context
         ? context.GetLocalizer<Strings>()
-        : HackLocalization.GetLocalizer<Strings>();
+        : KazoLocalization.GetLocalizer<Strings>();
 
     /// <summary>Gets or sets the immutable frame currently owned by the command.</summary>
     [Parameter]

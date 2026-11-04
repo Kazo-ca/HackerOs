@@ -40,7 +40,7 @@
         </section>
 
         <section class="sample-section" data-sample-background>
-            <h3>Background Task (HackBackground)</h3>
+            <h3>Background Task (KazoBackground)</h3>
             <div class="button-row">
                 <label class="sample-label">
                     Primes below
@@ -57,25 +57,25 @@
         <section class="sample-section" data-sample-context-menu>
             <h3>Context Menu (ADR 0150)</h3>
             @* Drawn by the OS: right click, long press, the Menu key or Shift+F10 on a note. *@
-            <HackContextMenu Name="sample-notes" Opening="OnNotesMenuOpening">
-                <HackMenuItem Id="open" Title="Open" Icon="FileIcon" OnClick="@(item => ShowNote(item, "opened"))" />
-                <HackMenuGroup>
-                    <HackMenuItem Id="copy-name" Title="Copy name" Shortcut="Ctrl+C" OnClick="@(item => ShowNote(item, "name copied"))" />
-                    <HackMenuItem Id="label" Title="Label" Icon="TagIcon">
-                        <HackMenuItem Id="label-red" Title="Red" OnClick="@(item => LabelNote(item, "red"))" />
-                        <HackMenuItem Id="label-green" Title="Green" OnClick="@(item => LabelNote(item, "green"))" />
-                        <HackMenuGroup>
-                            <HackMenuItem Id="label-more" Title="More colours">
-                                <HackMenuItem Id="label-blue" Title="Blue" OnClick="@(item => LabelNote(item, "blue"))" />
-                                <HackMenuItem Id="label-amber" Title="Amber" OnClick="@(item => LabelNote(item, "amber"))" />
-                            </HackMenuItem>
-                        </HackMenuGroup>
-                    </HackMenuItem>
-                </HackMenuGroup>
-                <HackMenuGroup>
-                    <HackMenuItem Id="delete" Title="Delete" Icon="TrashIcon" Shortcut="Del" OnClick="DeleteNote" />
-                </HackMenuGroup>
-            </HackContextMenu>
+            <KazoContextMenu Name="sample-notes" Opening="OnNotesMenuOpening">
+                <KazoMenuItem Id="open" Title="Open" Icon="FileIcon" OnClick="@(item => ShowNote(item, "opened"))" />
+                <KazoMenuGroup>
+                    <KazoMenuItem Id="copy-name" Title="Copy name" Shortcut="Ctrl+C" OnClick="@(item => ShowNote(item, "name copied"))" />
+                    <KazoMenuItem Id="label" Title="Label" Icon="TagIcon">
+                        <KazoMenuItem Id="label-red" Title="Red" OnClick="@(item => LabelNote(item, "red"))" />
+                        <KazoMenuItem Id="label-green" Title="Green" OnClick="@(item => LabelNote(item, "green"))" />
+                        <KazoMenuGroup>
+                            <KazoMenuItem Id="label-more" Title="More colours">
+                                <KazoMenuItem Id="label-blue" Title="Blue" OnClick="@(item => LabelNote(item, "blue"))" />
+                                <KazoMenuItem Id="label-amber" Title="Amber" OnClick="@(item => LabelNote(item, "amber"))" />
+                            </KazoMenuItem>
+                        </KazoMenuGroup>
+                    </KazoMenuItem>
+                </KazoMenuGroup>
+                <KazoMenuGroup>
+                    <KazoMenuItem Id="delete" Title="Delete" Icon="TrashIcon" Shortcut="Del" OnClick="DeleteNote" />
+                </KazoMenuGroup>
+            </KazoContextMenu>
             <ul class="sample-notes" @attributes="@(Menus.Attach(NotesAreaMenu))">
                 @foreach (SampleNote note in _notes)
                 {
@@ -109,9 +109,9 @@
 
     // ADR 0150: the notes of the context menu demo, and a second menu defined in C#.
     private const string NotesAreaMenu = "sample-notes-area";
-    private static readonly HackIcon FileIcon = HackIcons.Vector(IconLibrary.Lucide, "file-text");
-    private static readonly HackIcon TagIcon = HackIcons.Vector(IconLibrary.Lucide, "tag");
-    private static readonly HackIcon TrashIcon = HackIcons.Vector(IconLibrary.Lucide, "trash-2");
+    private static readonly KazoIcon FileIcon = KazoIcons.Vector(IconLibrary.Lucide, "file-text");
+    private static readonly KazoIcon TagIcon = KazoIcons.Vector(IconLibrary.Lucide, "tag");
+    private static readonly KazoIcon TrashIcon = KazoIcons.Vector(IconLibrary.Lucide, "trash-2");
     private readonly List<SampleNote> _notes = [new("readme.md"), new("todo.txt"), new("ideas.txt")];
     private string _menuStatus = "Right-click a note, or the empty area below the notes.";
     private int _created;
@@ -126,7 +126,7 @@
                 _notes.Add(new SampleNote($"note-{++_created}.txt"));
                 _menuStatus = $"Created note-{_created}.txt.";
                 return Task.CompletedTask;
-            }, icon: HackIcons.Vector(IconLibrary.Lucide, "file-plus"))
+            }, icon: KazoIcons.Vector(IconLibrary.Lucide, "file-plus"))
             .Group(group => group
                 .Submenu("sort", "Sort by", sort => sort
                     .Item("sort-name", "Name", _ => SortNotesAsync())
@@ -168,7 +168,7 @@
     }
 
     /// <summary>The readme cannot be deleted: its entry is shown disabled for it only.</summary>
-    private void OnNotesMenuOpening(HackMenuOpeningEventArgs args)
+    private void OnNotesMenuOpening(KazoMenuOpeningEventArgs args)
     {
         if (args.Item is SampleNote { Name: "readme.md" })
         {
@@ -185,10 +185,10 @@
 
     protected override void OnWindowDeactivated() => RecordWindowEvent("deactivated");
 
-    protected override void OnWindowStateChanged(HackWindowState previous, HackWindowState current) =>
+    protected override void OnWindowStateChanged(KazoWindowState previous, KazoWindowState current) =>
         RecordWindowEvent($"{previous} → {current}");
 
-    protected override void OnWindowResized(HackWindowSize size) =>
+    protected override void OnWindowResized(KazoWindowSize size) =>
         RecordWindowEvent($"resized to {size.Width:0}×{size.Height:0}");
 
     private void RecordWindowEvent(string entry)
@@ -207,7 +207,7 @@
     // Worker when the host has some; the window only awaits it and shows its reports.
     private int _primeLimit = 3_000_000;
     private CancellationTokenSource? _taskCancel;
-    private HackBackgroundProgress _taskProgress;
+    private KazoBackgroundProgress _taskProgress;
     private long? _taskPid;
     private string _taskStatus = "Counts primes off the window's thread: watch it in ps or the task manager.";
 
@@ -219,7 +219,7 @@
         _taskProgress = default;
         _taskStatus = "Starting…";
         // Delivered on the renderer's synchronization context, at most ten times a second.
-        Progress<HackBackgroundProgress> progress = new(report =>
+        Progress<KazoBackgroundProgress> progress = new(report =>
         {
             _taskProgress = report;
             _taskPid ??= ParsePid(report.Message);
@@ -229,14 +229,14 @@
 
         try
         {
-            PrimeCountResult result = await HackBackground.RunAsync<PrimeCountInput, PrimeCountResult>(
+            PrimeCountResult result = await KazoBackground.RunAsync<PrimeCountInput, PrimeCountResult>(
                 SampleJobs.CountPrimes,
                 new PrimeCountInput(Math.Max(1000, _primeLimit)),
                 progress,
                 cancellationToken: _taskCancel.Token);
             _taskStatus = $"{result.Count} primes below {_primeLimit}; the largest is {result.Largest}.";
         }
-        catch (HackProcessKilledException exception)
+        catch (KazoProcessKilledException exception)
         {
             // kill -9, the task manager, or the Kill button: the task's process is gone, the window is not.
             _taskStatus = $"The task's process was killed ({exception.Reason}).";
@@ -245,7 +245,7 @@
         {
             _taskStatus = "Cancelled.";
         }
-        catch (HackBackgroundJobException exception)
+        catch (KazoBackgroundJobException exception)
         {
             _taskStatus = $"The task failed: {exception.OriginalTypeName}: {exception.Message}";
         }

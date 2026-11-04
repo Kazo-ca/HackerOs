@@ -1,4 +1,4 @@
-@inherits Kazo.Os.AppSdk.Blazor.HackComponentBase
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
 @using Kazo.Os.AppSdk.Administration
 
 @*
@@ -18,16 +18,16 @@
                 @LocalizedMarkup.Format(L["Permissions.Policy.Description"], LocalizedMarkup.Code("/etc/hackeros/security.config"))
             </p>
             <div class="policy-options" role="radiogroup" aria-label="@L["Permissions.Policy.AriaLabel"]">
-                <button type="button" role="radio" class="@PolicyClass(HackDangerousCapabilityPolicy.Prompt)"
-                        aria-checked="@(_policy == HackDangerousCapabilityPolicy.Prompt ? "true" : "false")"
+                <button type="button" role="radio" class="@PolicyClass(KazoDangerousCapabilityPolicy.Prompt)"
+                        aria-checked="@(_policy == KazoDangerousCapabilityPolicy.Prompt ? "true" : "false")"
                         disabled="@_isBusy"
-                        @onclick="() => ChangePolicyAsync(HackDangerousCapabilityPolicy.Prompt)">
+                        @onclick="() => ChangePolicyAsync(KazoDangerousCapabilityPolicy.Prompt)">
                     @L["Permissions.Policy.Prompt"]
                 </button>
-                <button type="button" role="radio" class="@PolicyClass(HackDangerousCapabilityPolicy.Block)"
-                        aria-checked="@(_policy == HackDangerousCapabilityPolicy.Block ? "true" : "false")"
+                <button type="button" role="radio" class="@PolicyClass(KazoDangerousCapabilityPolicy.Block)"
+                        aria-checked="@(_policy == KazoDangerousCapabilityPolicy.Block ? "true" : "false")"
                         disabled="@_isBusy"
-                        @onclick="() => ChangePolicyAsync(HackDangerousCapabilityPolicy.Block)">
+                        @onclick="() => ChangePolicyAsync(KazoDangerousCapabilityPolicy.Block)">
                     @L["Permissions.Policy.Block"]
                 </button>
             </div>
@@ -43,7 +43,7 @@
             <p class="setting-desc">@L["Permissions.Empty"]</p>
         }
 
-        @foreach (HackAppPermissionInfo app in _overview)
+        @foreach (KazoAppPermissionInfo app in _overview)
         {
             <section key="@app.AppId" class="setting-group permissions-app">
                 <header class="permissions-app-header">
@@ -54,7 +54,7 @@
                     </span>
                 </header>
                 <ul class="permissions-capabilities">
-                    @foreach (HackCapabilityPermissionInfo capability in app.Capabilities)
+                    @foreach (KazoCapabilityPermissionInfo capability in app.Capabilities)
                     {
                         <li key="@capability.Capability" class="permissions-capability">
                             <div class="permissions-capability-text">
@@ -66,25 +66,25 @@
                             @if (!app.IsSystemApp)
                             {
                                 <div class="permissions-actions">
-                                    @if (capability.State == HackPermissionState.DeniedByUser)
+                                    @if (capability.State == KazoPermissionState.DeniedByUser)
                                     {
                                         <button type="button" class="btn-secondary" disabled="@_isBusy"
                                                 @onclick="() => RemoveOwnDenialAsync(app, capability)">@L["Permissions.RemoveDenial"]</button>
                                     }
-                                    @if (capability.State is not HackPermissionState.Allowed and not HackPermissionState.BlockedByPolicy)
+                                    @if (capability.State is not KazoPermissionState.Allowed and not KazoPermissionState.BlockedByPolicy)
                                     {
                                         <button type="button" class="btn-danger" disabled="@_isBusy"
-                                                @onclick="() => SetMachineDecisionAsync(app, capability, HackPermissionDecision.Allow)">@L["Permissions.AllowMachine"]</button>
+                                                @onclick="() => SetMachineDecisionAsync(app, capability, KazoPermissionDecision.Allow)">@L["Permissions.AllowMachine"]</button>
                                     }
-                                    @if (capability.State == HackPermissionState.Allowed)
+                                    @if (capability.State == KazoPermissionState.Allowed)
                                     {
                                         <button type="button" class="btn-secondary" disabled="@_isBusy"
-                                                @onclick="() => SetMachineDecisionAsync(app, capability, HackPermissionDecision.Deny)">@L["Permissions.Revoke"]</button>
+                                                @onclick="() => SetMachineDecisionAsync(app, capability, KazoPermissionDecision.Deny)">@L["Permissions.Revoke"]</button>
                                     }
-                                    @if (capability.State == HackPermissionState.DeniedByAdministrator)
+                                    @if (capability.State == KazoPermissionState.DeniedByAdministrator)
                                     {
                                         <button type="button" class="btn-secondary" disabled="@_isBusy"
-                                                @onclick="() => SetMachineDecisionAsync(app, capability, HackPermissionDecision.Ask)">@L["Permissions.AskAgain"]</button>
+                                                @onclick="() => SetMachineDecisionAsync(app, capability, KazoPermissionDecision.Ask)">@L["Permissions.AskAgain"]</button>
                                     }
                                 </div>
                             }

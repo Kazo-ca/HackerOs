@@ -31,7 +31,7 @@ public sealed class SampleTickerServiceTests
         Description = "Deterministic status and ticker background service for Kazo OS sessions",
         Kind = AppKind.Service,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Samples.ServiceApp.dll", "Kazo.Os.Samples.ServiceApp.SampleTickerService"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("utilities", AppLaunchVisibility.Hidden, []),
         Capabilities = ["notifications.post"],
         Resources = new AppResourceProfileManifest(0.01, 0.05, 0.02, 0.05, 0.0, 0.0, 0.0, 0.0),

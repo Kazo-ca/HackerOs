@@ -28,7 +28,7 @@ public sealed class LocalAccountServiceTests
     [Fact]
     public async Task A_new_standard_account_has_its_own_group_and_signs_in_with_its_password()
     {
-        LocalUser created = await _accounts.CreateAsync("admin", new HackNewUserAccount("carol", " Carol ", AppAuthority.User, NewPassword));
+        LocalUser created = await _accounts.CreateAsync("admin", new KazoNewUserAccount("carol", " Carol ", AppAuthority.User, NewPassword));
 
         Assert.Equal("Carol", created.DisplayName);
         Assert.Equal(AppAuthority.User, created.Authority);
@@ -44,7 +44,7 @@ public sealed class LocalAccountServiceTests
     [Fact]
     public async Task A_new_administrator_also_joins_the_administrators_group()
     {
-        LocalUser created = await _accounts.CreateAsync("admin", new HackNewUserAccount("dave", "Dave", AppAuthority.Administrator, NewPassword));
+        LocalUser created = await _accounts.CreateAsync("admin", new KazoNewUserAccount("dave", "Dave", AppAuthority.Administrator, NewPassword));
 
         LocalGroup administrators = (await _groups.FindByNameAsync(LocalLoginName.Parse(LocalAccountService.AdministratorsGroupName)))!;
         Assert.Equal(AppAuthority.Administrator, created.Authority);
@@ -61,7 +61,7 @@ public sealed class LocalAccountServiceTests
     public async Task A_reserved_taken_or_malformed_name_is_refused_and_logged(string login)
     {
         await Assert.ThrowsAsync<ArgumentException>(
-            () => _accounts.CreateAsync("admin", new HackNewUserAccount(login, "Someone", AppAuthority.User, NewPassword)).AsTask());
+            () => _accounts.CreateAsync("admin", new KazoNewUserAccount(login, "Someone", AppAuthority.User, NewPassword)).AsTask());
 
         Assert.Contains(_harness.Audit.Entries, entry => entry.Action == "users.add" && entry.Outcome == AuditOutcome.Denied);
     }
@@ -106,7 +106,7 @@ public sealed class LocalAccountServiceTests
     [Fact]
     public async Task The_last_administrator_cannot_be_deleted()
     {
-        LocalUser admin = await _accounts.CreateAsync("root", new HackNewUserAccount("admin", "Admin", AppAuthority.Administrator, NewPassword));
+        LocalUser admin = await _accounts.CreateAsync("root", new KazoNewUserAccount("admin", "Admin", AppAuthority.Administrator, NewPassword));
         AuthenticatedPrincipal alice = await _harness.LoginAsync(_harness.Alice);
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => _accounts.DeleteAsync(alice, "root", "admin", removeHome: false).AsTask());

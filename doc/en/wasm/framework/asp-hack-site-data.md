@@ -1,6 +1,6 @@
 > [Version française](../../../fr/wasm/framework/asp-hack-site-data.md)
 
-# Site data: `HackWebDb` database, debug log, autofill
+# Site data: `KazoWebDb` database, debug log, autofill
 
 Work item `web/12-site-data` of the web phase ([`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md)). Decisions:
 [ADR 0088](../dev/adr/0088-site-data-debug-logs-and-form-history.md), which implements ADR 0073 §3.
@@ -13,7 +13,7 @@ three things:
 
 | Building block | Where the data lives | Who sees it |
 |---|---|---|
-| **`HackWebDb`**: one IndexedDB database per site | `hackweb.<app id>` database of the host browser | the site; Diagnostics (list, size, clearing) |
+| **`KazoWebDb`**: one IndexedDB database per site | `hackweb.<app id>` database of the host browser | the site; Diagnostics (list, size, clearing) |
 | **Debug log** (`ILogger<T>`) | `/var/log/hackweb/<id>.log`, an OS file | `cat`, `tail`, `grep` in a terminal |
 | Browser **autofill** | `~/.local/share/hackeros/browser/form-history.json` | the OS browser, for all sites |
 
@@ -22,20 +22,20 @@ three things:
 ```text
  Site (worker web ou thread principal)          OS (thread principal)                 Navigateur hôte
  ─────────────────────────────────────          ────────────────────                  ───────────────
- HackWebDb ─► IAppWebDatabaseGateway ──wdb.open/wdb.exec──► AppWebDatabaseGateway ─► IWebSiteDatabaseStore
+ KazoWebDb ─► IAppWebDatabaseGateway ──wdb.open/wdb.exec──► AppWebDatabaseGateway ─► IWebSiteDatabaseStore
    (SDK web)   (RemoteWebDatabaseGateway                     (nom imposé :            IndexedDbWebSiteDatabaseStore
                 dans le worker)                               hackweb.<id>, Web seul)   └► webSiteDatabases.js ─► IndexedDB
- ILogger<T> ─► HackWebDebugLogProvider ─► IAppLoggingGateway ──log.site──► AppLoggingGateway.AppendToSiteDebugLog
+ ILogger<T> ─► KazoWebDebugLogProvider ─► IAppLoggingGateway ──log.site──► AppLoggingGateway.AppendToSiteDebugLog
                                                                               └► LogFileWriter ─► /var/log/hackweb/<id>.log
  Page HTML (iframe) ─ PageBridge.js ─"formhistory"─► BrowserWindow ─► FormHistory ─► form-history.json
 ```
 
 | Class | Project | Role |
 |---|---|---|
-| `IAppWebDatabaseGateway`, `HackWebDbNames`, `HackWebDb*` contracts | `Shared/Kazo.Os.AppSdk/WebData` | contract between the site and the OS, in JSON |
-| `InMemoryWebDatabase`, `HackWebDbInMemoryBackend` | same | in-memory IndexedDB engine (hosts without a browser, tests) |
-| `HackWebDb`, `HackWebDbStore<T>`, `HackWebDbIndex<T>`, `HackWebDbTransaction` | `Shared/Kazo.Os.AppSdk.Web/Data` | site API |
-| `HackWebLoggingOptions`, `IHackWebDebugLogSink` | `Shared/Kazo.Os.AppSdk.Web/Logging` | debug log |
+| `IAppWebDatabaseGateway`, `KazoWebDbNames`, `KazoWebDb*` contracts | `Shared/Kazo.Os.AppSdk/WebData` | contract between the site and the OS, in JSON |
+| `InMemoryWebDatabase`, `KazoWebDbInMemoryBackend` | same | in-memory IndexedDB engine (hosts without a browser, tests) |
+| `KazoWebDb`, `KazoWebDbStore<T>`, `KazoWebDbIndex<T>`, `KazoWebDbTransaction` | `Shared/Kazo.Os.AppSdk.Web/Data` | site API |
+| `KazoWebLoggingOptions`, `IHackWebDebugLogSink` | `Shared/Kazo.Os.AppSdk.Web/Logging` | debug log |
 | `AppWebDatabaseGateway`, `IWebSiteDatabaseStore`, `InMemoryWebSiteDatabaseStore` | `Platform/Kazo.Os.Platform.Core/WebData` | trusted gateway, in-memory store |
 | `WebSiteDatabaseInterop`, `wwwroot/webSiteDatabases.js` | `Infrastructure/Kazo.Os.Infrastructure.Browser` | real IndexedDB |
 | `IndexedDbWebSiteDatabaseStore` | `OS/Kazo.Os.Ecosystem/WebData` | Ecosystem host store |
@@ -49,7 +49,7 @@ Like `IDBOpenDBRequest.onupgradeneeded`, each version describes what changes; ve
 one another without gaps, and the OS applies the missing ones in order.
 
 ```csharp
-public override void Configure(HackWebApplicationBuilder builder)
+public override void Configure(KazoWebApplicationBuilder builder)
 {
     builder.Services.AddHackWebDb(db => db
         .Version(1, v => v
@@ -68,9 +68,9 @@ public override void Configure(HackWebApplicationBuilder builder)
 ### Reading and writing
 
 ```csharp
-public sealed class NoteStore(HackWebDb db)
+public sealed class NoteStore(KazoWebDb db)
 {
-    private HackWebDbStore<Note> Notes => db.Store<Note>("notes");
+    private KazoWebDbStore<Note> Notes => db.Store<Note>("notes");
 
     public Task<IReadOnlyList<Note>> ByAuthorAsync(string author) =>
         Notes.Index("byAuthor").GetAllAsync(author);
@@ -87,8 +87,8 @@ public sealed class NoteStore(HackWebDb db)
 | `PutAsync(value, key?)` | `put`: replaces |
 | `DeleteAsync(key \| range)`, `ClearAsync()` | `delete`, `clear` |
 | `Index(name).GetAsync/GetAllAsync/CountAsync` | `IDBIndex` |
-| `HackWebDbKeyRange.Only/LowerBound/UpperBound/Bound` | `IDBKeyRange` |
-| `HackWebDbKey.Array(...)` | array key |
+| `KazoWebDbKeyRange.Only/LowerBound/UpperBound/Bound` | `IDBKeyRange` |
+| `KazoWebDbKey.Array(...)` | array key |
 
 Keys follow IndexedDB's order: numbers, then strings, then arrays.
 
@@ -103,13 +103,13 @@ A transaction is a batch (ADR 0088 §2): writes are queued then sent together, a
 succeed or fail together.
 
 ```csharp
-HackWebDbTransaction tx = db.BeginTransaction("notes", "meta");
+KazoWebDbTransaction tx = db.BeginTransaction("notes", "meta");
 tx.Store<Note>("notes").Add(first).Add(second);
 tx.Store<string>("meta").Put("done", "seeded");
-IReadOnlyList<HackWebDbKey?> keys = await tx.CommitAsync();   // une clé par écriture
+IReadOnlyList<KazoWebDbKey?> keys = await tx.CommitAsync();   // une clé par écriture
 ```
 
-Errors are `HackWebDbException`s whose `Name` repeats the `DOMException`:
+Errors are `KazoWebDbException`s whose `Name` repeats the `DOMException`:
 `ConstraintError`, `NotFoundError`, `DataError`, `VersionError`, `InvalidStateError`,
 `QuotaExceededError`.
 
@@ -121,10 +121,10 @@ context: the stored type must appear in it (`[JsonSerializable(typeof(Note))]`).
 
 ### Outside Kazo OS and in tests
 
-- `HackWebHost.CreateApplication` without an OS: the database is in memory (`hackweb.in-memory`), specific to
+- `KazoWebHost.CreateApplication` without an OS: the database is in memory (`hackweb.in-memory`), specific to
   the application. The Intranet tests run this way without any configuration.
 - To inspect a test's database, register the gateway before `AddHackWebDb`:
-  `services.AddSingleton<IAppWebDatabaseGateway>(new HackWebDbInMemoryBackend("hackweb.test"))`,
+  `services.AddSingleton<IAppWebDatabaseGateway>(new KazoWebDbInMemoryBackend("hackweb.test"))`,
   then read `backend.Database.Describe()`.
 
 ### What the user sees
@@ -144,7 +144,7 @@ builder.Logging.EnableDebugLog();                       // LogLevel.Debug et au-
 // builder.Logging.EnableDebugLog(LogLevel.Information);
 // builder.Logging.LogRequests = false;                 // sans les lignes de requêtes
 
-public sealed class NotesController(NoteStore store, ILogger<NotesController> logger) : HackController
+public sealed class NotesController(NoteStore store, ILogger<NotesController> logger) : KazoController
 {
     ...
     logger.LogInformation("Note {NoteId} created by {Author}", created.Id, created.Author);
@@ -163,7 +163,7 @@ $ tail /var/log/hackweb/org.hackeros.samples.intranet.log
 - Without `EnableDebugLog`, `ILogger<T>` is injectable but writes nothing.
 - The file is written by the OS (`system:system`, `0644`, rotation 1 MiB × 5, ADR 0045).
 - Only a `Web` app can write this log; any other receives `UnauthorizedAccessException`.
-- A test registers `HackWebDebugLogMemorySink` as `IHackWebDebugLogSink` to read the lines.
+- A test registers `KazoWebDebugLogMemorySink` as `IHackWebDebugLogSink` to read the lines.
 
 ## Autofill
 
@@ -183,8 +183,8 @@ Forms of a Blazor site (ADR 0084) do not go through the bridge and do not benefi
 
 | Suite | What it proves |
 |---|---|
-| `Kazo.Os.AppSdk.Web.Tests/Data/HackWebDbTests` | key generator, unique and `multiEntry` indexes, key order, ranges, atomic transactions, migrations, `VersionError`, in-memory fallback |
-| `Kazo.Os.AppSdk.Web.Tests/Logging/HackWebDebugLogTests` | log silent by default, request lines, `ILogger<T>`, exceptions, minimum level |
+| `Kazo.Os.AppSdk.Web.Tests/Data/KazoWebDbTests` | key generator, unique and `multiEntry` indexes, key order, ranges, atomic transactions, migrations, `VersionError`, in-memory fallback |
+| `Kazo.Os.AppSdk.Web.Tests/Logging/KazoWebDebugLogTests` | log silent by default, request lines, `ILogger<T>`, exceptions, minimum level |
 | `Kazo.Os.Platform.Core.Tests/WebData/WebSiteDatabaseTests` | enforced name, non-`Web` apps refused, listing and clearing subject to `system.storage.inspect`, file `/var/log/hackweb/<id>.log` |
 | `Kazo.Os.Platform.Core.Tests/Apps/AppInstallationServiceTests` | uninstalling a site deletes its database, and only its own |
 | `Kazo.Os.Apps.Browser.Tests/FormHistoryTests` | user's file, sort by usage, limits, cards refused, clearing |
@@ -202,10 +202,10 @@ Forms of a Blazor site (ADR 0084) do not go through the bridge and do not benefi
 ## Tasks
 
 - [x] ADR 0088.
-- [x] `HackWebDb*` contracts, in-memory engine, `IAppExecutionContext.WebDatabase` gateway.
+- [x] `KazoWebDb*` contracts, in-memory engine, `IAppExecutionContext.WebDatabase` gateway.
 - [x] Worker remote operations (`wdb.open`, `wdb.exec`, `log.site`).
 - [x] `webSiteDatabases.js` module, Ecosystem IndexedDB store.
-- [x] `HackWebDb` API of the web SDK, in-memory fallback outside the OS.
+- [x] `KazoWebDb` API of the web SDK, in-memory fallback outside the OS.
 - [x] `ILogger<T>` and `/var/log/hackweb/<id>.log` log.
 - [x] Diagnostics: listing and clearing; uninstall: deletion announced and done.
 - [x] Browser form history (`<datalist>`, `Ctrl+Shift+Delete`).

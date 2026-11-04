@@ -26,12 +26,12 @@ public static class FileMenuEntryPlacement
     /// <param name="AppId">The app that registered it.</param>
     /// <param name="Entry">The registration (position fields).</param>
     /// <param name="Item">The menu item.</param>
-    public sealed record Candidate(string AppId, AppContextMenuEntryManifest Entry, HackMenuItemDefinition Item);
+    public sealed record Candidate(string AppId, AppContextMenuEntryManifest Entry, KazoMenuItemDefinition Item);
 
     /// <summary>Places <paramref name="candidates"/> in <paramref name="menu"/>, in their order.</summary>
     /// <param name="menu">The menu, with the default entries.</param>
     /// <param name="candidates">The filtered entries, in installation rank then declaration order.</param>
-    public static void Place(HackMenuDefinition menu, IReadOnlyList<Candidate> candidates)
+    public static void Place(KazoMenuDefinition menu, IReadOnlyList<Candidate> candidates)
     {
         ArgumentNullException.ThrowIfNull(menu);
         ArgumentNullException.ThrowIfNull(candidates);
@@ -40,9 +40,9 @@ public static class FileMenuEntryPlacement
             return;
         }
 
-        HackMenuGroupDefinition? firstGroup = null;
-        HackMenuGroupDefinition? commonGroup = null;
-        Dictionary<string, HackMenuGroupDefinition> afterGroups = new(StringComparer.Ordinal);
+        KazoMenuGroupDefinition? firstGroup = null;
+        KazoMenuGroupDefinition? commonGroup = null;
+        Dictionary<string, KazoMenuGroupDefinition> afterGroups = new(StringComparer.Ordinal);
         Dictionary<string, string> lastAfter = new(StringComparer.Ordinal);
 
         // Entries anchored to an entry of their own app may come before it in declaration order: place
@@ -63,7 +63,7 @@ public static class FileMenuEntryPlacement
                 else if (entry.After is { } after)
                 {
                     string anchor = AnchorId(candidate.AppId, after);
-                    if (!TryLocate(menu, lastAfter.GetValueOrDefault(anchor, anchor), out HackMenuGroupDefinition? group, out int index))
+                    if (!TryLocate(menu, lastAfter.GetValueOrDefault(anchor, anchor), out KazoMenuGroupDefinition? group, out int index))
                     {
                         if (IsOwnEntry(candidate, after, candidates))
                         {
@@ -81,13 +81,13 @@ public static class FileMenuEntryPlacement
                 else if (entry.AfterGroup is { } afterGroup)
                 {
                     string anchor = AnchorId(candidate.AppId, afterGroup);
-                    if (afterGroups.TryGetValue(anchor, out HackMenuGroupDefinition? shared))
+                    if (afterGroups.TryGetValue(anchor, out KazoMenuGroupDefinition? shared))
                     {
                         shared.Items.Add(candidate.Item);
                     }
-                    else if (TryLocate(menu, anchor, out HackMenuGroupDefinition? group, out _))
+                    else if (TryLocate(menu, anchor, out KazoMenuGroupDefinition? group, out _))
                     {
-                        HackMenuGroupDefinition created = InsertGroup(menu, menu.Groups.IndexOf(group) + 1);
+                        KazoMenuGroupDefinition created = InsertGroup(menu, menu.Groups.IndexOf(group) + 1);
                         created.Items.Add(candidate.Item);
                         afterGroups[anchor] = created;
                     }
@@ -126,12 +126,12 @@ public static class FileMenuEntryPlacement
         && candidates.Any(other => other.AppId == candidate.AppId && other.Entry.Name == anchor && !ReferenceEquals(other, candidate));
 
     private static bool TryLocate(
-        HackMenuDefinition menu,
+        KazoMenuDefinition menu,
         string id,
-        [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out HackMenuGroupDefinition? group,
+        [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out KazoMenuGroupDefinition? group,
         out int index)
     {
-        foreach (HackMenuGroupDefinition candidate in menu.Groups)
+        foreach (KazoMenuGroupDefinition candidate in menu.Groups)
         {
             for (int position = 0; position < candidate.Items.Count; position++)
             {
@@ -150,23 +150,23 @@ public static class FileMenuEntryPlacement
     }
 
     /// <summary>The shared group of the apps, created right before the group of "Properties", or at the end.</summary>
-    private static HackMenuGroupDefinition Common(HackMenuDefinition menu, ref HackMenuGroupDefinition? common)
+    private static KazoMenuGroupDefinition Common(KazoMenuDefinition menu, ref KazoMenuGroupDefinition? common)
     {
         if (common is not null)
         {
             return common;
         }
 
-        int index = TryLocate(menu, HackFileMenuItems.Properties, out HackMenuGroupDefinition? properties, out _)
+        int index = TryLocate(menu, KazoFileMenuItems.Properties, out KazoMenuGroupDefinition? properties, out _)
             ? menu.Groups.IndexOf(properties)
             : menu.Groups.Count;
         common = InsertGroup(menu, index);
         return common;
     }
 
-    private static HackMenuGroupDefinition InsertGroup(HackMenuDefinition menu, int index)
+    private static KazoMenuGroupDefinition InsertGroup(KazoMenuDefinition menu, int index)
     {
-        HackMenuGroupDefinition group = new();
+        KazoMenuGroupDefinition group = new();
         menu.Groups.Insert(index, group);
         return group;
     }

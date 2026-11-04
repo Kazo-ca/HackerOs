@@ -205,7 +205,7 @@ public sealed class LocalPasswordService
 
     private static void ThrowIfInvalid(string newPassword)
     {
-        if (HackUserAccounts.ValidateNewPassword(newPassword) is { } reason)
+        if (KazoUserAccounts.ValidateNewPassword(newPassword) is { } reason)
         {
             throw new ArgumentException($"BAD PASSWORD: {reason}", nameof(newPassword));
         }

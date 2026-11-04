@@ -179,7 +179,7 @@ la liste des manifestes produits et le nom de son assembly. Elle sert à l'hôte
 
 ### 3. Agrégation dans l'hôte : `BuiltInApplications.json` (D7, D8)
 
-Un projet hôte se déclare avec `<HackerOsAppHost>true</HackerOsAppHost>`. Seul
+Un projet hôte se déclare avec `<HackerOsAppHost>true</KazoOsAppHost>`. Seul
 `OS/Kazo.Os.Ecosystem` le fait aujourd'hui. `test/test` réutilise le catalogue
 compilé de l'Ecosystem (`BuildKnownLazyApps.Catalog`) et ne s'agrège pas lui-même.
 

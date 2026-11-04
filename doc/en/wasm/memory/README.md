@@ -40,7 +40,7 @@ at the end of each series or when a convention changes.
 | Web phase | ASP.Hack (MVC, `.razor`/`.cshtml` views), Blazor sites, static sites, browser HTML rendering, detached windows | [`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md) |
 | V3 (`v3/1` to `v3/16`) | End of the wasm v3 migration, SDK 1.0 frozen, trimmed publishing | [`wasm-v3-final-status.md`](../dev/plans/wasm-v3-final-status.md) |
 | V3.1 | Window geometry and title, SDK 1.1 | [`v3-1-series-plan.md`](../dev/plans/v3-1-series-plan.md) |
-| EXEC (`exec/*`) | Process limits, OOM killer, remote gateways, "not responding" box, `HackBackground`, OS served by `Kazo.Os.Server`, cross-origin isolation, SDK 1.2 | [`execution-followups-plan.md`](../dev/plans/execution-followups-plan.md) |
+| EXEC (`exec/*`) | Process limits, OOM killer, remote gateways, "not responding" box, `KazoBackground`, OS served by `Kazo.Os.Server`, cross-origin isolation, SDK 1.2 | [`execution-followups-plan.md`](../dev/plans/execution-followups-plan.md) |
 | DESK (`desk/0` to `desk/6`) | OS-provided file control, central context menu, app menu entries, desktop, SDK 2.0 | [`desktop-and-context-menu-plan.md`](../dev/plans/desktop-and-context-menu-plan.md) |
 | Multi-monitor (`multi-monitor/0` to `multi-monitor/9`) | Extended desktop: one screen per display surface, `DisplayId` and work area per screen, windows moved through a portal, screen service (Chrome/Edge, fallback elsewhere), one taskbar per screen, "Other screen" menus and identification veil, Settings ▸ Screens, drag between screens; no change to the app SDK | [`multi-monitor-plan.md`](../dev/plans/multi-monitor-plan.md) |
 | File Explorer (`explorer/1` to `explorer/9`) | Resizable sidebar, empty state inside the list, drag out to the computer, shortcuts, tracked network drives, errors in a `MessageBox`; the `.zip` opened as a folder is done in `todo/base` (`todo/10-zip-as-folder`, issue #241) | [ADR 0185](../dev/adr/0185-file-explorer-improvements.md), [`file-explorer.md`](../dev/file-explorer.md) |
@@ -58,7 +58,7 @@ at the end of each series or when a convention changes.
   (next minor).
 - **Mobile explorer** (October 2026, PR #212 to `main`): mobile entry point of
   apps honored, mobile file explorer, full-screen dialogs on mobile, one tap
-  opens (`HackFileView.OpenOnTap`) (ADR 0171).
+  opens (`KazoFileView.OpenOnTap`) (ADR 0171).
 - **Since multi-monitor** (on `main`, October 28 to 30, 2026): a folder of
   the computer mounted as a network drive (ADR 0181), `hackpkg install` from
   GitHub (ADR 0182), features overview `features.md` (ADR 0192), local time
@@ -122,7 +122,7 @@ at the end of each series or when a convention changes.
 - **Hack Store, next steps** (ADR 0214, `TODO` issue #251, series
   `todo/base`, branch `todo/19-hackstore-later`): adding without a restart
   (live catalog `AppCatalog.Changed`), ECDSA P-256 signatures
-  (`[signing-keys]`, `HackerOsAppSigningKeys`), `.transaction` journal,
+  (`[signing-keys]`, `KazoOsAppSigningKeys`), `.transaction` journal,
   `hackpkg rollback`/`repair`, `AppDataGuard`. Five questions asked to Benoit,
   answer A to each. Benoit created the official catalog key on 2026-11-01
   (`keygen`, the catalog's `HACK_STORE_SIGNING_KEY` secret); its public key is in
@@ -202,7 +202,7 @@ of [`AGENTS.md`](../../../../AGENTS.md), which Claude Code reads through
 - **SDK**: the public API is tracked by `PublicAPI.Shipped.txt` /
   `PublicAPI.Unshipped.txt`; an addition goes through `Unshipped` until the
   next release (`build/tools/ship-public-api.sh`).
-- **Publishing**: change `HackerOsVersion` in `build/Versions.props` and
+- **Publishing**: change `KazoOsVersion` in `build/Versions.props` and
   merge into `main`; the `Release Kazo OS` workflow creates the tag, the
   GitHub Release and pushes to nuget.org ([`releases.md`](../dev/releases.md),
   ADR 0173).

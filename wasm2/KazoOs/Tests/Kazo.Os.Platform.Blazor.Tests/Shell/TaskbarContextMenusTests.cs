@@ -112,8 +112,8 @@ public sealed class TaskbarContextMenusTests
         Assert.True(Entry(session, TaskbarContextMenus.SettingsItemId).IsDisabled);
     }
 
-    private static HackMenuItemDefinition Entry(ContextMenuSession session, string id) =>
-        session.Root.Rows.Select(row => row.Item).OfType<HackMenuItemDefinition>().Single(item => item.Id == id);
+    private static KazoMenuItemDefinition Entry(ContextMenuSession session, string id) =>
+        session.Root.Rows.Select(row => row.Item).OfType<KazoMenuItemDefinition>().Single(item => item.Id == id);
 
     private sealed class Harness : IDisposable
     {
@@ -163,7 +163,7 @@ public sealed class TaskbarContextMenusTests
         public async Task<ContextMenuSession> OpenAsync(IReadOnlyDictionary<string, object>? attributes)
         {
             Assert.NotNull(attributes);
-            string token = (string)attributes[HackMenuAttributes.Token];
+            string token = (string)attributes[KazoMenuAttributes.Token];
             Assert.True(await ContextMenus.OpenFromTokenAsync(token, 10, 10, ContextMenuOrigin.Pointer));
             return ContextMenus.Current!;
         }

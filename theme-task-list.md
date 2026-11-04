@@ -1,4 +1,4 @@
-# HackerSimulator Theme Personalization Task List
+# KazoSimulator Theme Personalization Task List
 
 ## 1. Theme System Foundation
 - [ ] Create a Theme interface in `src/core/theme.ts` to define theme structure

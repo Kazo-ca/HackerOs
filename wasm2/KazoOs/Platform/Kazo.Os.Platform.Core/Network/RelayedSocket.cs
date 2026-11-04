@@ -40,7 +40,7 @@ internal sealed class RelayedSocket : IHackSocket
     /// <inheritdoc />
     public async ValueTask SendAsync(ReadOnlyMemory<byte> data, CancellationToken cancellationToken = default)
     {
-        using Kazo.Os.AppSdk.HackExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.HackExecutionContext.EnterKernel();
+        using Kazo.Os.AppSdk.KazoExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.KazoExecutionContext.EnterKernel();
         if (Volatile.Read(ref _disposed) != 0)
         {
             throw new SocketException((int)SocketError.NotConnected);
@@ -62,7 +62,7 @@ internal sealed class RelayedSocket : IHackSocket
     /// <inheritdoc />
     public async ValueTask<byte[]?> ReceiveAsync(CancellationToken cancellationToken = default)
     {
-        using Kazo.Os.AppSdk.HackExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.HackExecutionContext.EnterKernel();
+        using Kazo.Os.AppSdk.KazoExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.KazoExecutionContext.EnterKernel();
         if (Volatile.Read(ref _disposed) != 0)
         {
             return null;

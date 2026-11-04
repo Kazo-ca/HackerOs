@@ -11,13 +11,13 @@ namespace Kazo.Os.Apps.Settings;
 /// the relay to, and a warning per setting that weakens the defaults.
 /// </summary>
 /// <remarks>
-/// Uses only <see cref="HackServerConnection.GetRelayPolicyAsync(IAppExecutionContext, CancellationToken)"/>
+/// Uses only <see cref="KazoServerConnection.GetRelayPolicyAsync(IAppExecutionContext, CancellationToken)"/>
 /// (capability <c>server.connection.manage</c>, which Settings declares). Rendered only while the
 /// device is connected; a server that cannot be reached shows its error instead of the table.
 /// </remarks>
 public sealed partial class ServerRelayPolicyPanel
 {
-    private HackServerRelayPolicy? _policy;
+    private KazoServerRelayPolicy? _policy;
     private string? _error;
     private bool _isLoading = true;
 
@@ -34,9 +34,9 @@ public sealed partial class ServerRelayPolicyPanel
     {
         try
         {
-            _policy = await HackServerConnection.GetRelayPolicyAsync(Context, Context.CancellationToken);
+            _policy = await KazoServerConnection.GetRelayPolicyAsync(Context, Context.CancellationToken);
         }
-        catch (HackServerConnectionException exception)
+        catch (KazoServerConnectionException exception)
         {
             _error = exception.Message;
         }
@@ -55,7 +55,7 @@ public sealed partial class ServerRelayPolicyPanel
     private string Ports(IReadOnlyList<int> ports) =>
         _policy is { AllowAllPorts: true } || ports.Count == 0 ? L["Relay.AllPorts"] : string.Join(", ", ports);
 
-    private string Quotas(HackServerRelayPolicy policy) =>
+    private string Quotas(KazoServerRelayPolicy policy) =>
         policy.QuotasEnabled
             ? L["Relay.QuotasValue",
                 policy.MaxConcurrentRequests,

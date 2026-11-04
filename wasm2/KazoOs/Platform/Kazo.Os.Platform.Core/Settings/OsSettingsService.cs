@@ -15,7 +15,7 @@ namespace Kazo.Os.Platform.Core.Settings;
 
 /// <summary>
 /// Reads and writes the OS's own settings files (<c>/etc/hackeros</c>, <c>~/.config/hackeros</c>,
-/// <c>~/.local/state/hackeros</c>) with the same layering engine as the SDK's <c>HackSettings</c>
+/// <c>~/.local/state/hackeros</c>) with the same layering engine as the SDK's <c>KazoSettings</c>
 /// (ADR 0044 section 8).
 /// </summary>
 public interface IOsSettingsService

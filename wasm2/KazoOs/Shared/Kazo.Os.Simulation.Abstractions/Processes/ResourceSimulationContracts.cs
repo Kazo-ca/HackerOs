@@ -70,7 +70,7 @@ public sealed record VirtualHardwareProfile
     public double NetworkIoCapacityBytesPerTick { get; }
 
     /// <summary>
-    /// Gets the size of the virtual disk behind <c>/</c>, in bytes. <c>HackDriveInfo.TotalSize</c>
+    /// Gets the size of the virtual disk behind <c>/</c>, in bytes. <c>KazoDriveInfo.TotalSize</c>
     /// reports it, lowered to the browser quota when the browser grants less (ADR 0057 section 7).
     /// </summary>
     public long StorageCapacityBytes { get; }

@@ -11,7 +11,7 @@ namespace Kazo.Os.Tools.ManifestGenerator;
 /// project compiles; writes its <c>manifest.json</c>.</item>
 /// <item><c>aggregate</c>: run by the <c>CollectHackerOsBuiltInApplications</c> MSBuild target of a
 /// host; writes its <c>BuiltInApplications.json</c>.</item>
-/// <item><c>pack</c>: run by the <c>HackerOsPack</c> MSBuild target of an app project; writes its
+/// <item><c>pack</c>: run by the <c>KazoOsPack</c> MSBuild target of an app project; writes its
 /// <c>.hackapp</c> package and adds it to <c>index.json</c> (ADR 0182 §1, §2), signed when the author's
 /// key is given (ADR 0219).</item>
 /// <item><c>keygen --private-key &lt;file.pem&gt;</c>: creates an author's key pair, writes the private key

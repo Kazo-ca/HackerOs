@@ -1,4 +1,4 @@
-@inherits HackView<IReadOnlyList<Note>>
+@inherits KazoView<IReadOnlyList<Note>>
 @layout _Layout
 @*
     The notes list: a .razor view rendered to static HTML. The pin buttons are wired by
@@ -8,7 +8,7 @@
 <section class="panel">
     <div class="panel-head">
         <h1>Notes <span class="muted" id="notes-count">@Model.Count</span></h1>
-        <HackLink Action="Create" class="button" id="note-new">New note</HackLink>
+        <KazoLink Action="Create" class="button" id="note-new">New note</KazoLink>
     </div>
     @if (Model.Count == 0)
     {
@@ -19,11 +19,11 @@
         <ul class="cards" id="notes-list" data-api="@Url.Content("~/api/notes")">
             @foreach (Note note in Model)
             {
-                <HackPartial Name="_NoteCard" Model="note" />
+                <KazoPartial Name="_NoteCard" Model="note" />
             }
         </ul>
     }
 </section>
-<HackSection Name="Scripts">
+<KazoSection Name="Scripts">
     <script src="@Url.Content("~/js/notes.js")"></script>
-</HackSection>
+</KazoSection>

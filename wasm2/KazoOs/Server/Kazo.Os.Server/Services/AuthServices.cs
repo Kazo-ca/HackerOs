@@ -22,20 +22,20 @@ namespace Kazo.Os.Server.Services;
 // =============================================================================
 
 /// <summary>Options for the HackerOs bearer authentication scheme (no configuration fields).</summary>
-public sealed class HackerOsBearerOptions : AuthenticationSchemeOptions { }
+public sealed class KazoOsBearerOptions : AuthenticationSchemeOptions { }
 
 /// <summary>
 /// Custom bearer token authentication handler.
 /// Validates opaque access tokens against the server's token cache.
 /// Never decodes a JWT; never trusts client-supplied claims.
 /// </summary>
-public sealed class HackerOsBearerHandler : AuthenticationHandler<HackerOsBearerOptions>
+public sealed class KazoOsBearerHandler : AuthenticationHandler<KazoOsBearerOptions>
 {
     private readonly ITokenService _tokenService;
 
     /// <inheritdoc />
-    public HackerOsBearerHandler(
-        IOptionsMonitor<HackerOsBearerOptions> options,
+    public KazoOsBearerHandler(
+        IOptionsMonitor<KazoOsBearerOptions> options,
         ILoggerFactory logger,
         UrlEncoder encoder,
         ITokenService tokenService)

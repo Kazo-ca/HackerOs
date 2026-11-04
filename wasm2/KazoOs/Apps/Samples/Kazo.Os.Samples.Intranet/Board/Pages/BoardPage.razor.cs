@@ -14,7 +14,7 @@ public sealed partial class BoardPage
     private bool _busy;
 
     [CascadingParameter]
-    private HackWebSite? Site { get; set; }
+    private KazoWebSite? Site { get; set; }
 
     [CascadingParameter]
     private BoardSession? Session { get; set; }
@@ -22,7 +22,7 @@ public sealed partial class BoardPage
     /// <inheritdoc />
     protected override Task OnInitializedAsync() => RunAsync(LoadAsync);
 
-    private async Task LoadAsync(HackWebSite site)
+    private async Task LoadAsync(KazoWebSite site)
     {
         IReadOnlyList<BoardTask>? tasks = await site.Http.GetFromJsonAsync("api/tasks", IntranetJsonContext.Default.IReadOnlyListBoardTask);
         _tasks = [.. tasks ?? []];
@@ -31,7 +31,7 @@ public sealed partial class BoardPage
     private Task AddAsync() => RunAsync(async site =>
     {
         BoardTask draft = new() { Title = _newTitle.Trim(), Assignee = Session?.DisplayName ?? string.Empty, Column = BoardColumns.Todo };
-        HackHttpResponse response = await site.Http.PostAsync("api/tasks", HackJsonContent.Create(draft, IntranetJsonContext.Default.BoardTask));
+        KazoHttpResponse response = await site.Http.PostAsync("api/tasks", KazoJsonContent.Create(draft, IntranetJsonContext.Default.BoardTask));
         _tasks?.Add(Read(response));
         _newTitle = string.Empty;
     });
@@ -45,19 +45,19 @@ public sealed partial class BoardPage
         }
 
         BoardTask moved = new() { Id = task.Id, Title = task.Title, Assignee = task.Assignee, Column = BoardColumns.All[index], CreatedAt = task.CreatedAt };
-        HackHttpResponse response = await site.Http.PutAsync($"api/tasks/{task.Id}", HackJsonContent.Create(moved, IntranetJsonContext.Default.BoardTask));
+        KazoHttpResponse response = await site.Http.PutAsync($"api/tasks/{task.Id}", KazoJsonContent.Create(moved, IntranetJsonContext.Default.BoardTask));
         Replace(Read(response));
     });
 
     private Task DeleteAsync(BoardTask task) => RunAsync(async site =>
     {
-        HackHttpResponse response = await site.Http.DeleteAsync($"api/tasks/{task.Id}");
+        KazoHttpResponse response = await site.Http.DeleteAsync($"api/tasks/{task.Id}");
         response.EnsureSuccessStatusCode();
         _tasks?.RemoveAll(existing => existing.Id == task.Id);
     });
 
     // Every call goes through the simulated network: a failure (site stopped, 4xx) becomes a message, not a crash.
-    private async Task RunAsync(Func<HackWebSite, Task> work)
+    private async Task RunAsync(Func<KazoWebSite, Task> work)
     {
         if (Site is null)
         {
@@ -89,7 +89,7 @@ public sealed partial class BoardPage
         }
     }
 
-    private static BoardTask Read(HackHttpResponse response) =>
+    private static BoardTask Read(KazoHttpResponse response) =>
         response.EnsureSuccessStatusCode().ReadFromJson(IntranetJsonContext.Default.BoardTask)
         ?? throw new HttpRequestException("The server answered an empty card.");
 }

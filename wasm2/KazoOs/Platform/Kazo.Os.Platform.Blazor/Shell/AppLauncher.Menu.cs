@@ -46,10 +46,10 @@ public partial class AppLauncher : IAsyncDisposable
         }
 
         _menus = service.CreateScope(null);
-        _menuRegistration = _menus.Register(new HackMenuRegistration(
+        _menuRegistration = _menus.Register(new KazoMenuRegistration(
             AppMenuName,
-            static () => new HackMenuDefinition(AppMenuName),
-            EventCallback.Factory.Create<HackMenuOpeningEventArgs>(this, OnAppMenuOpening)));
+            static () => new KazoMenuDefinition(AppMenuName),
+            EventCallback.Factory.Create<KazoMenuOpeningEventArgs>(this, OnAppMenuOpening)));
     }
 
     /// <summary>The attributes that open the app's menu on its row (none without the OS menu).</summary>
@@ -62,7 +62,7 @@ public partial class AppLauncher : IAsyncDisposable
         return attributes;
     }
 
-    private void OnAppMenuOpening(HackMenuOpeningEventArgs args)
+    private void OnAppMenuOpening(KazoMenuOpeningEventArgs args)
     {
         if (args.Item is not string appId || FindLaunchableApp(appId) is not { } app)
         {
@@ -70,23 +70,23 @@ public partial class AppLauncher : IAsyncDisposable
             return;
         }
 
-        HackMenuDefinition menu = args.Menu;
+        KazoMenuDefinition menu = args.Menu;
         menu.Groups.Clear();
-        HackMenuItemDefinition open = menu.AddGroup().Add("open", L["Launcher.Menu.Open"]);
-        open.Icon = HackIcons.Vector(IconLibrary.Lucide, "play");
+        KazoMenuItemDefinition open = menu.AddGroup().Add("open", L["Launcher.Menu.Open"]);
+        open.Icon = KazoIcons.Vector(IconLibrary.Lucide, "play");
         open.OnClick = EventCallback.Factory.Create<object?>(this, _ => LaunchAppAsync(app));
 
         bool pinned = IsPinned(app.Id);
-        HackMenuItemDefinition pin = menu.AddGroup().Add(pinned ? "unpin" : "pin", pinned ? L["Launcher.Unpin"] : L["Launcher.Pin"]);
-        pin.Icon = HackIcons.Vector(IconLibrary.Lucide, pinned ? "pin-off" : "pin");
+        KazoMenuItemDefinition pin = menu.AddGroup().Add(pinned ? "unpin" : "pin", pinned ? L["Launcher.Unpin"] : L["Launcher.Pin"]);
+        pin.Icon = KazoIcons.Vector(IconLibrary.Lucide, pinned ? "pin-off" : "pin");
         pin.IsDisabled = !CanManagePins;
         pin.OnClick = EventCallback.Factory.Create<object?>(this, _ => TogglePinAsync(app.Id));
 
-        HackMenuItemDefinition sendTo = menu.AddGroup().Add("send-to", L["Launcher.Menu.SendTo"]);
-        sendTo.Icon = HackIcons.Vector(IconLibrary.Lucide, "send");
-        HackMenuGroupDefinition targets = new();
-        HackMenuItemDefinition desktop = targets.Add("send-to-desktop", L["Launcher.Menu.Desktop"]);
-        desktop.Icon = HackIcons.Vector(IconLibrary.Lucide, "monitor");
+        KazoMenuItemDefinition sendTo = menu.AddGroup().Add("send-to", L["Launcher.Menu.SendTo"]);
+        sendTo.Icon = KazoIcons.Vector(IconLibrary.Lucide, "send");
+        KazoMenuGroupDefinition targets = new();
+        KazoMenuItemDefinition desktop = targets.Add("send-to-desktop", L["Launcher.Menu.Desktop"]);
+        desktop.Icon = KazoIcons.Vector(IconLibrary.Lucide, "monitor");
         desktop.IsDisabled = !OnSendToDesktop.HasDelegate;
         desktop.OnClick = EventCallback.Factory.Create<object?>(this, _ => OnSendToDesktop.InvokeAsync(app));
         sendTo.Children.Add(targets);

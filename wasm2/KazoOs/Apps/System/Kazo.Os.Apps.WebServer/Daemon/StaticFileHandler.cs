@@ -12,13 +12,13 @@ namespace Kazo.Os.Apps.WebServer.Daemon;
 /// <summary>One site as <c>hackwebd</c> serves it on one binding.</summary>
 /// <param name="Declaration">The site's <c>.site</c> file.</param>
 /// <param name="Binding">The binding the request came in on (its path is the site's base path).</param>
-public sealed record ServedSite(HackWebSiteDeclaration Declaration, WebBinding Binding)
+public sealed record ServedSite(KazoWebSiteDeclaration Declaration, WebBinding Binding)
 {
     /// <summary>Gets the site.</summary>
-    public HackWebSite Site => Declaration.Site!;
+    public KazoWebSite Site => Declaration.Site!;
 
     /// <summary>Gets whether files are read as <c>www-data</c> (a system site) rather than as the declaring user.</summary>
-    public bool ServesAsWwwData => Declaration.Scope == HackWebSiteScope.System;
+    public bool ServesAsWwwData => Declaration.Scope == KazoWebSiteScope.System;
 }
 
 /// <summary>What a request produced, for the access log.</summary>
@@ -43,13 +43,13 @@ public static class StaticFileHandler
     /// <param name="site">The site and binding the request came in on.</param>
     /// <param name="context">The request and its response.</param>
     /// <param name="cancellationToken">Cancels the file reads.</param>
-    public static async Task<StaticFileResult> HandleAsync(ServedSite site, HackHttpListenerContext context, CancellationToken cancellationToken)
+    public static async Task<StaticFileResult> HandleAsync(ServedSite site, KazoHttpListenerContext context, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(site);
         ArgumentNullException.ThrowIfNull(context);
-        HackHttpListenerRequest request = context.Request;
-        HackHttpListenerResponse response = context.Response;
-        response.AddHeader("Server", HackWebdLog.ServerSignature);
+        KazoHttpListenerRequest request = context.Request;
+        KazoHttpListenerResponse response = context.Response;
+        response.AddHeader("Server", KazoWebdLog.ServerSignature);
 
         switch (request.HttpMethod)
         {
@@ -69,10 +69,10 @@ public static class StaticFileHandler
             return ErrorPage(response, 400, "Bad Request", request, $"refused URL \"{request.RawUrl}\" (outside the site root)");
         }
 
-        HackDirectoryInfo directory;
+        KazoDirectoryInfo directory;
         try
         {
-            directory = await HackDirectoryInfo.GetAsync(path, cancellationToken).ConfigureAwait(false);
+            directory = await KazoDirectoryInfo.GetAsync(path, cancellationToken).ConfigureAwait(false);
         }
         catch (UnauthorizedAccessException)
         {
@@ -138,10 +138,10 @@ public static class StaticFileHandler
     }
 
     private static async Task<StaticFileResult> ServeDirectoryAsync(
-        ServedSite site, HackHttpListenerContext context, string path, CancellationToken cancellationToken)
+        ServedSite site, KazoHttpListenerContext context, string path, CancellationToken cancellationToken)
     {
-        HackHttpListenerRequest request = context.Request;
-        HackHttpListenerResponse response = context.Response;
+        KazoHttpListenerRequest request = context.Request;
+        KazoHttpListenerResponse response = context.Response;
         if (!request.Url.AbsolutePath.EndsWith('/'))
         {
             // Like Apache's mod_dir: relative links of index.html only work under the trailing slash.
@@ -154,7 +154,7 @@ public static class StaticFileHandler
         foreach (string document in site.Site.DefaultDocuments)
         {
             string candidate = path + "/" + document;
-            HackFileInfo file = await HackFileInfo.GetAsync(candidate, cancellationToken).ConfigureAwait(false);
+            KazoFileInfo file = await KazoFileInfo.GetAsync(candidate, cancellationToken).ConfigureAwait(false);
             if (file.Exists)
             {
                 return await ServeFileAsync(site, context, candidate, cancellationToken).ConfigureAwait(false);
@@ -171,10 +171,10 @@ public static class StaticFileHandler
             return ErrorPage(response, 403, "Forbidden", request, $"opendir() \"{path}\" failed (13: Permission denied for {WwwDataAccess.AccountName})");
         }
 
-        HackFileSystemInfo[] entries;
+        KazoFileSystemInfo[] entries;
         try
         {
-            entries = await new HackDirectoryInfo(path).GetFileSystemInfosAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+            entries = await new KazoDirectoryInfo(path).GetFileSystemInfosAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
         catch (UnauthorizedAccessException)
         {
@@ -186,14 +186,14 @@ public static class StaticFileHandler
     }
 
     private static async Task<StaticFileResult> ServeFileAsync(
-        ServedSite site, HackHttpListenerContext context, string path, CancellationToken cancellationToken)
+        ServedSite site, KazoHttpListenerContext context, string path, CancellationToken cancellationToken)
     {
-        HackHttpListenerRequest request = context.Request;
-        HackHttpListenerResponse response = context.Response;
-        HackFileInfo file;
+        KazoHttpListenerRequest request = context.Request;
+        KazoHttpListenerResponse response = context.Response;
+        KazoFileInfo file;
         try
         {
-            file = await HackFileInfo.GetAsync(path, cancellationToken).ConfigureAwait(false);
+            file = await KazoFileInfo.GetAsync(path, cancellationToken).ConfigureAwait(false);
         }
         catch (UnauthorizedAccessException)
         {
@@ -224,7 +224,7 @@ public static class StaticFileHandler
         byte[] content;
         try
         {
-            content = await HackFile.ReadAllBytesAsync(path, cancellationToken).ConfigureAwait(false);
+            content = await KazoFile.ReadAllBytesAsync(path, cancellationToken).ConfigureAwait(false);
         }
         catch (UnauthorizedAccessException)
         {
@@ -247,7 +247,7 @@ public static class StaticFileHandler
     /// Applies the conditional-request rules of RFC 9110 §13.2.2: <c>If-None-Match</c> wins when
     /// present (<c>*</c> or a matching tag); otherwise <c>If-Modified-Since</c> at the second.
     /// </summary>
-    private static bool IsNotModified(HackHttpListenerRequest request, string etag, DateTime lastModified)
+    private static bool IsNotModified(KazoHttpListenerRequest request, string etag, DateTime lastModified)
     {
         if (request.Headers["If-None-Match"] is { Length: > 0 } ifNoneMatch)
         {
@@ -263,13 +263,13 @@ public static class StaticFileHandler
     private static DateTime TruncateToSeconds(DateTime value) =>
         new(value.Ticks - (value.Ticks % TimeSpan.TicksPerSecond), DateTimeKind.Utc);
 
-    private static StaticFileResult ErrorPage(HackHttpListenerResponse response, int status, string reason, HackHttpListenerRequest request, string? error = null)
+    private static StaticFileResult ErrorPage(KazoHttpListenerResponse response, int status, string reason, KazoHttpListenerRequest request, string? error = null)
     {
         StaticFileResult written = WriteHtml(response, status, StatusPage(status, reason), request);
         return written with { Error = error };
     }
 
-    private static StaticFileResult WriteHtml(HackHttpListenerResponse response, int status, string html, HackHttpListenerRequest request)
+    private static StaticFileResult WriteHtml(KazoHttpListenerResponse response, int status, string html, KazoHttpListenerRequest request)
     {
         response.StatusCode = status;
         response.ContentType = "text/html; charset=utf-8";
@@ -288,12 +288,12 @@ public static class StaticFileHandler
     /// <param name="reason">Its reason phrase.</param>
     public static string StatusPage(int status, string reason) =>
         $"<html>\n<head><title>{status} {reason}</title></head>\n<body>\n<center><h1>{status} {reason}</h1></center>\n" +
-        $"<hr><center>{HackWebdLog.ServerSignature}</center>\n</body>\n</html>\n";
+        $"<hr><center>{KazoWebdLog.ServerSignature}</center>\n</body>\n</html>\n";
 
     /// <summary>An "Index of" page like nginx's <c>autoindex</c>: directories first, then files, with size and date.</summary>
     /// <param name="urlPath">The decoded URL path of the directory (ends with <c>/</c>).</param>
     /// <param name="entries">The directory's entries.</param>
-    public static string DirectoryListing(string urlPath, IEnumerable<HackFileSystemInfo> entries)
+    public static string DirectoryListing(string urlPath, IEnumerable<KazoFileSystemInfo> entries)
     {
         string title = WebUtility.HtmlEncode($"Index of {urlPath}");
         StringBuilder html = new();
@@ -303,14 +303,14 @@ public static class StaticFileHandler
             html.Append("<a href=\"../\">../</a>\n");
         }
 
-        foreach (HackFileSystemInfo entry in entries
-            .OrderBy(static entry => entry is HackFileInfo)
+        foreach (KazoFileSystemInfo entry in entries
+            .OrderBy(static entry => entry is KazoFileInfo)
             .ThenBy(static entry => entry.Name, StringComparer.Ordinal))
         {
-            bool isDirectory = entry is HackDirectoryInfo;
+            bool isDirectory = entry is KazoDirectoryInfo;
             string name = entry.Name + (isDirectory ? "/" : string.Empty);
             string href = Uri.EscapeDataString(entry.Name) + (isDirectory ? "/" : string.Empty);
-            string size = entry is HackFileInfo file ? file.Length.ToString(CultureInfo.InvariantCulture) : "-";
+            string size = entry is KazoFileInfo file ? file.Length.ToString(CultureInfo.InvariantCulture) : "-";
             string date = entry.LastWriteTimeUtc.ToString("dd-MMM-yyyy HH:mm", CultureInfo.InvariantCulture);
             string shown = name.Length > 50 ? name[..47] + "..>" : name;
             html.Append("<a href=\"").Append(href).Append("\">").Append(WebUtility.HtmlEncode(shown)).Append("</a>")

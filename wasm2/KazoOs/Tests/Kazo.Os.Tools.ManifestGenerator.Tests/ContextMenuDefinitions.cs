@@ -36,7 +36,7 @@ public class MenuApp : AppDefinition
     [RegisterFileContextMenu]
     public static void RegisterFileContextMenu(RegisterFileContextMenuContext context)
     {
-        context.Register("Extract here", "extract", intent: ExtractIntent, types: [".zip"], after: HackFileMenuItems.Open);
+        context.Register("Extract here", "extract", intent: ExtractIntent, types: [".zip"], after: KazoFileMenuItems.Open);
         context.Register("Tools", "tools", scope: FileMenuScope.File | FileMenuScope.Directory);
         context.Register("Hash", "hash", intent: ExtractIntent, parent: "tools");
     }

@@ -57,7 +57,7 @@ Capabilities: home folder read and write, open and save dialogs, and
 - **Toolbar**: *New from* (base theme), *Open…*, *Save* (to
   `~/.config/hackeros/themes/<id>.theme`, folder created if needed), *Export…*
   (anywhere through the dialog), *Use on desktop* / *Use on mobile* (writes the
-  id in the user layer of `appearance` through `HackSettings.OpenSystemAsync`).
+  id in the user layer of `appearance` through `KazoSettings.OpenSystemAsync`).
 - **Left column**: name, id (follows the name as long as it is not edited by
   hand), base theme, offered form factors, path; list of installed themes and
   warnings of their files.
@@ -90,7 +90,7 @@ The reading API of the `Kazo.Os.Theming.Abstractions` package (localized message
 - Files are read and written through the app's file gateway
   (`IAppFileSystemGateway`), like the text editor: a file chosen in a dialog
   outside the home folder is accessible only through the token the dialog
-  handed over, which `HackFile` cannot carry. This is C#; JS never touches files
+  handed over, which `KazoFile` cannot carry. This is C#; JS never touches files
   (ADR 0103 §1 and §2).
 - Folder reading is shared through delegates (`UserThemeLibrary.LoadAsync`) so
   that the shell (OS gateways) and the apps (SDK) use the same rules without a

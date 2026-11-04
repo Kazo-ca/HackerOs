@@ -53,9 +53,9 @@ public sealed class IndexedDbCapabilityGrantRepositoryTests
         {
             Assert.Equal(
                 [
-                    HackerOsIndexedDbSchema.GrantStoreName,
-                    HackerOsIndexedDbSchema.AuditStoreName,
-                    HackerOsIndexedDbSchema.LocalBookkeepingStoreName
+                    KazoOsIndexedDbSchema.GrantStoreName,
+                    KazoOsIndexedDbSchema.AuditStoreName,
+                    KazoOsIndexedDbSchema.LocalBookkeepingStoreName
                 ],
                 invocation.StoreNames);
             Assert.Equal(
@@ -237,7 +237,7 @@ public sealed class IndexedDbCapabilityGrantRepositoryTests
 
             if (operation.Kind == "get")
             {
-                if (operation.ObjectStoreName == HackerOsIndexedDbSchema.LocalBookkeepingStoreName)
+                if (operation.ObjectStoreName == KazoOsIndexedDbSchema.LocalBookkeepingStoreName)
                 {
                     return _revision!.Value;
                 }
@@ -264,7 +264,7 @@ public sealed class IndexedDbCapabilityGrantRepositoryTests
             if (operation.Kind == "put")
             {
                 JsonElement value = Serialize(operation.Value);
-                if (operation.ObjectStoreName == HackerOsIndexedDbSchema.GrantStoreName)
+                if (operation.ObjectStoreName == KazoOsIndexedDbSchema.GrantStoreName)
                 {
                     Grant = value;
                 }

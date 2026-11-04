@@ -166,7 +166,7 @@ public sealed class FileAssociationResolverTests
         Description = "A directory-capable app for INT-007 tests.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", $"{appId}.EntryPoint"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         FileHandlers = [new FileHandlerManifest("inode/directory", [], ["open"])]
@@ -181,7 +181,7 @@ public sealed class FileAssociationResolverTests
         Description = "A simple text editor.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", "org.hackeros.notepad.EntryPoint"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         FileHandlers = [new FileHandlerManifest("text/plain", [".txt"], ["open", "edit"])]
@@ -196,7 +196,7 @@ public sealed class FileAssociationResolverTests
         Description = "An advanced text editor.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", "org.hackeros.texteditor.EntryPoint"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         FileHandlers = [new FileHandlerManifest("text/plain", [".txt"], ["open", "edit"])]

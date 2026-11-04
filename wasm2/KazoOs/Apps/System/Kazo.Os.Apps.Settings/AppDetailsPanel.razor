@@ -1,4 +1,4 @@
-@inherits Kazo.Os.AppSdk.Blazor.HackComponentBase
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
 @using Kazo.Os.App.Abstractions
 @using Kazo.Os.AppSdk.Administration
 @using Kazo.Os.AppSdk.Apps
@@ -50,7 +50,7 @@
                 <ul class="capability-list">
                     @foreach (string capability in _app.Capabilities.Order(StringComparer.Ordinal))
                     {
-                        HackCapabilityPermissionInfo? dangerous = _permissions?.Capabilities.FirstOrDefault(entry => entry.Capability == capability);
+                        KazoCapabilityPermissionInfo? dangerous = _permissions?.Capabilities.FirstOrDefault(entry => entry.Capability == capability);
                         <li class="capability-item @(dangerous is null ? "" : dangerous.IsGranted ? "is-granted" : "is-refused")">
                             <code>@capability</code>
                             @if (dangerous is not null)
@@ -68,7 +68,7 @@
             <section class="setting-group">
                 <h4>@L["Details.FileTypes"]</h4>
                 <ul class="handler-list">
-                    @foreach (HackAppFileHandler handler in _app.FileHandlers)
+                    @foreach (KazoAppFileHandler handler in _app.FileHandlers)
                     {
                         <li>
                             <span class="handler-type">@DescribeHandler(handler)</span>
@@ -102,8 +102,8 @@
                                 }
                             </select>
                         </label>
-                        <button type="button" class="apps-btn" disabled="@(_isBusy || _service.Status == HackServiceControllerStatus.Running)" @onclick="StartServiceAsync">@L["Details.Start"]</button>
-                        <button type="button" class="apps-btn" disabled="@(_isBusy || _service.Status == HackServiceControllerStatus.Stopped)" @onclick="StopServiceAsync">@L["Details.Stop"]</button>
+                        <button type="button" class="apps-btn" disabled="@(_isBusy || _service.Status == KazoServiceControllerStatus.Running)" @onclick="StartServiceAsync">@L["Details.Start"]</button>
+                        <button type="button" class="apps-btn" disabled="@(_isBusy || _service.Status == KazoServiceControllerStatus.Stopped)" @onclick="StopServiceAsync">@L["Details.Stop"]</button>
                     </div>
                     @if (!string.IsNullOrEmpty(_serviceMessage))
                     {

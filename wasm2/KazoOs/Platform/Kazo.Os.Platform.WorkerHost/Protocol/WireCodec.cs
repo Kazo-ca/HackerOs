@@ -21,7 +21,7 @@ namespace Kazo.Os.Platform.WorkerHost.Protocol;
 /// <para>
 /// Written by hand rather than with reflection-based serialization: the contracts validate in their
 /// constructors and several are built only through factories (<see cref="FileSystemResult{T}"/>,
-/// <see cref="FileSystemTransactionResult"/>, <see cref="HackNetworkResult{T}"/>), and the project
+/// <see cref="FileSystemTransactionResult"/>, <see cref="KazoNetworkResult{T}"/>), and the project
 /// is trim-analyzed. Each type is rebuilt on the other side through its public constructor or
 /// factory, so a value that crosses the boundary is exactly as valid as the original.
 /// </para>
@@ -399,7 +399,7 @@ internal static class WireCodec
 
     // ---- Network ------------------------------------------------------------------------------
 
-    public static void WriteNetwork<T>(Utf8JsonWriter writer, HackNetworkResult<T> result, Action<Utf8JsonWriter, T> writeValue)
+    public static void WriteNetwork<T>(Utf8JsonWriter writer, KazoNetworkResult<T> result, Action<Utf8JsonWriter, T> writeValue)
     {
         writer.WriteNumber("ne", (int)result.Error);
         if (result.Message is { } message)
@@ -413,15 +413,15 @@ internal static class WireCodec
         }
     }
 
-    public static HackNetworkResult<T> ReadNetwork<T>(JsonElement element, Func<JsonElement, T> readValue)
+    public static KazoNetworkResult<T> ReadNetwork<T>(JsonElement element, Func<JsonElement, T> readValue)
     {
-        HackNetworkError error = (HackNetworkError)element.GetInt32("ne");
-        return error == HackNetworkError.None
-            ? HackNetworkResult<T>.Success(readValue(element))
-            : HackNetworkResult<T>.Failure(error, element.GetOptionalString("nm"));
+        KazoNetworkError error = (KazoNetworkError)element.GetInt32("ne");
+        return error == KazoNetworkError.None
+            ? KazoNetworkResult<T>.Success(readValue(element))
+            : KazoNetworkResult<T>.Failure(error, element.GetOptionalString("nm"));
     }
 
-    public static void WriteHostEntry(Utf8JsonWriter writer, HackHostEntry entry)
+    public static void WriteHostEntry(Utf8JsonWriter writer, KazoHostEntry entry)
     {
         writer.WriteString("h", entry.HostName);
         WriteStrings(writer, "ad", entry.AddressList.Select(static address => address.ToString()));
@@ -433,18 +433,18 @@ internal static class WireCodec
         }
     }
 
-    public static HackHostEntry ReadHostEntry(JsonElement element) => new(
+    public static KazoHostEntry ReadHostEntry(JsonElement element) => new(
         element.GetString("h"),
         [.. ReadStrings(element, "ad").Select(IPAddress.Parse)],
         ReadStrings(element, "al"))
     {
-        Source = element.TryGetProperty("so", out JsonElement source) ? (HackDnsSource)source.GetInt32() : HackDnsSource.Unknown,
+        Source = element.TryGetProperty("so", out JsonElement source) ? (KazoDnsSource)source.GetInt32() : KazoDnsSource.Unknown,
         SourceDetail = element.GetOptionalString("sd")
     };
 
     // ---- Listening sockets (ADR 0074, section 2) ------------------------------------------------
 
-    public static void WriteListenerExchange(Utf8JsonWriter writer, string name, HackHttpListenerExchange exchange)
+    public static void WriteListenerExchange(Utf8JsonWriter writer, string name, KazoHttpListenerExchange exchange)
     {
         writer.WriteStartObject(name);
         writer.WriteNumber("x", exchange.Id);
@@ -462,7 +462,7 @@ internal static class WireCodec
         writer.WriteEndObject();
     }
 
-    public static HackHttpListenerExchange ReadListenerExchange(JsonElement element) => new(
+    public static KazoHttpListenerExchange ReadListenerExchange(JsonElement element) => new(
         element.GetInt64("x"),
         element.GetString("me"),
         new Uri(element.GetString("u"), UriKind.Absolute),
@@ -472,7 +472,7 @@ internal static class WireCodec
         IPEndPoint.Parse(element.GetString("ra")),
         IPEndPoint.Parse(element.GetString("la")));
 
-    public static void WriteListenerReply(Utf8JsonWriter writer, string name, HackHttpListenerReply reply)
+    public static void WriteListenerReply(Utf8JsonWriter writer, string name, KazoHttpListenerReply reply)
     {
         writer.WriteStartObject(name);
         writer.WriteNumber("sc", reply.StatusCode);
@@ -491,17 +491,17 @@ internal static class WireCodec
         writer.WriteEndObject();
     }
 
-    public static HackHttpListenerReply ReadListenerReply(JsonElement element) => new(
+    public static KazoHttpListenerReply ReadListenerReply(JsonElement element) => new(
         element.GetInt32("sc"),
         element.GetOptionalString("rp"),
         ReadPairs(element.GetProperty("hd")),
         element.GetOptionalString("ct"),
         element.GetProperty("b").GetBytesFromBase64());
 
-    public static void WriteListeners(Utf8JsonWriter writer, IReadOnlyList<HackTcpListenerInfo> listeners)
+    public static void WriteListeners(Utf8JsonWriter writer, IReadOnlyList<KazoTcpListenerInfo> listeners)
     {
         writer.WriteStartArray("ls");
-        foreach (HackTcpListenerInfo listener in listeners)
+        foreach (KazoTcpListenerInfo listener in listeners)
         {
             writer.WriteStartObject();
             writer.WriteString("ad", listener.Address.ToString());
@@ -528,9 +528,9 @@ internal static class WireCodec
         writer.WriteEndArray();
     }
 
-    public static IReadOnlyList<HackTcpListenerInfo> ReadListeners(JsonElement element) =>
+    public static IReadOnlyList<KazoTcpListenerInfo> ReadListeners(JsonElement element) =>
     [
-        .. element.GetProperty("ls").EnumerateArray().Select(static item => new HackTcpListenerInfo(
+        .. element.GetProperty("ls").EnumerateArray().Select(static item => new KazoTcpListenerInfo(
             IPAddress.Parse(item.GetString("ad")),
             item.GetInt32("po"),
             item.GetOptional("p")?.GetInt64(),
@@ -539,7 +539,7 @@ internal static class WireCodec
             ReadStrings(item, "px")))
     ];
 
-    public static void WritePingReply(Utf8JsonWriter writer, HackPingReply reply)
+    public static void WritePingReply(Utf8JsonWriter writer, KazoPingReply reply)
     {
         if (reply.Address is { } address)
         {
@@ -551,16 +551,16 @@ internal static class WireCodec
         writer.WriteNumber("ttl", reply.Ttl);
     }
 
-    public static HackPingReply ReadPingReply(JsonElement element) => new(
+    public static KazoPingReply ReadPingReply(JsonElement element) => new(
         element.GetOptionalString("ad") is { } address ? IPAddress.Parse(address) : null,
-        (HackIPStatus)element.GetInt32("st"),
+        (KazoIPStatus)element.GetInt32("st"),
         TimeSpan.FromTicks(element.GetInt64("rt")),
         element.GetInt32("ttl"));
 
-    private static void WriteCookies(Utf8JsonWriter writer, string name, IEnumerable<HackCookie> cookies)
+    private static void WriteCookies(Utf8JsonWriter writer, string name, IEnumerable<KazoCookie> cookies)
     {
         writer.WriteStartArray(name);
-        foreach (HackCookie cookie in cookies)
+        foreach (KazoCookie cookie in cookies)
         {
             writer.WriteStartArray();
             writer.WriteStringValue(cookie.Domain);
@@ -572,10 +572,10 @@ internal static class WireCodec
         writer.WriteEndArray();
     }
 
-    private static HackCookie[] ReadCookies(JsonElement element) =>
-        [.. element.EnumerateArray().Select(static cookie => new HackCookie(cookie[0].GetString()!, cookie[1].GetString()!, cookie[2].GetString()!))];
+    private static KazoCookie[] ReadCookies(JsonElement element) =>
+        [.. element.EnumerateArray().Select(static cookie => new KazoCookie(cookie[0].GetString()!, cookie[1].GetString()!, cookie[2].GetString()!))];
 
-    public static void WriteHttpRequest(Utf8JsonWriter writer, HackHttpRequest request)
+    public static void WriteHttpRequest(Utf8JsonWriter writer, KazoHttpRequest request)
     {
         writer.WriteString("me", request.Method);
         writer.WriteString("u", request.RequestUri.OriginalString);
@@ -590,20 +590,20 @@ internal static class WireCodec
         WriteCookies(writer, "ck", request.Cookies);
     }
 
-    public static HackHttpRequest ReadHttpRequest(JsonElement element) => new(
+    public static KazoHttpRequest ReadHttpRequest(JsonElement element) => new(
         element.GetString("me"),
         new Uri(element.GetString("u"), UriKind.Absolute),
         ReadPairs(element.GetProperty("hd")),
         element.GetOptional("bd") is { } body
-            ? new HackHttpContent(body.GetBytesFromBase64(), element.GetString("ct"))
+            ? new KazoHttpContent(body.GetBytesFromBase64(), element.GetString("ct"))
             : null,
         ReadCookies(element.GetProperty("ck")));
 
     /// <summary>
-    /// Writes a response without its structured <see cref="HackHttpResponse.Page"/>: only the browser
+    /// Writes a response without its structured <see cref="KazoHttpResponse.Page"/>: only the browser
     /// window app renders it, and window apps never run in a worker (ADR 0070, section 1).
     /// </summary>
-    public static void WriteHttpResponse(Utf8JsonWriter writer, HackHttpResponse response)
+    public static void WriteHttpResponse(Utf8JsonWriter writer, KazoHttpResponse response)
     {
         writer.WriteNumber("sc", response.StatusCode);
         writer.WriteString("rp", response.ReasonPhrase);
@@ -615,7 +615,7 @@ internal static class WireCodec
         writer.WriteNumber("src", (int)response.Source);
     }
 
-    public static HackHttpResponse ReadHttpResponse(JsonElement element) => new(
+    public static KazoHttpResponse ReadHttpResponse(JsonElement element) => new(
         element.GetInt32("sc"),
         element.GetString("rp"),
         new Uri(element.GetString("u"), UriKind.Absolute),
@@ -625,13 +625,13 @@ internal static class WireCodec
         element.GetInt32("rc"),
         ReadCookies(element.GetProperty("sk")))
     {
-        Source = element.TryGetProperty("src", out JsonElement source) ? (HackHttpResponseSource)source.GetInt32() : HackHttpResponseSource.Simulated
+        Source = element.TryGetProperty("src", out JsonElement source) ? (KazoHttpResponseSource)source.GetInt32() : KazoHttpResponseSource.Simulated
     };
 
-    public static void WritePortProbes(Utf8JsonWriter writer, IReadOnlyList<HackPortProbeResult> probes)
+    public static void WritePortProbes(Utf8JsonWriter writer, IReadOnlyList<KazoPortProbeResult> probes)
     {
         writer.WriteStartArray("pp");
-        foreach (HackPortProbeResult probe in probes)
+        foreach (KazoPortProbeResult probe in probes)
         {
             writer.WriteStartObject();
             writer.WriteNumber("po", probe.Port);
@@ -652,11 +652,11 @@ internal static class WireCodec
         writer.WriteEndArray();
     }
 
-    public static IReadOnlyList<HackPortProbeResult> ReadPortProbes(JsonElement element) =>
-        [.. element.GetProperty("pp").EnumerateArray().Select(static probe => new HackPortProbeResult(
-            probe.GetInt32("po"), (HackPortState)probe.GetInt32("st"), probe.GetOptionalString("sn"), probe.GetOptionalString("sv")))];
+    public static IReadOnlyList<KazoPortProbeResult> ReadPortProbes(JsonElement element) =>
+        [.. element.GetProperty("pp").EnumerateArray().Select(static probe => new KazoPortProbeResult(
+            probe.GetInt32("po"), (KazoPortState)probe.GetInt32("st"), probe.GetOptionalString("sn"), probe.GetOptionalString("sv")))];
 
-    public static void WriteFingerprint(Utf8JsonWriter writer, HackOsFingerprint? fingerprint)
+    public static void WriteFingerprint(Utf8JsonWriter writer, KazoOsFingerprint? fingerprint)
     {
         if (fingerprint is null)
         {
@@ -670,15 +670,15 @@ internal static class WireCodec
         writer.WriteEndObject();
     }
 
-    public static HackOsFingerprint? ReadFingerprint(JsonElement element) =>
-        element.GetOptional("os") is { } os ? new HackOsFingerprint(os.GetString("n"), os.GetString("v"), os.GetInt32("a")) : null;
+    public static KazoOsFingerprint? ReadFingerprint(JsonElement element) =>
+        element.GetOptional("os") is { } os ? new KazoOsFingerprint(os.GetString("n"), os.GetString("v"), os.GetInt32("a")) : null;
 
     // ---- Apps, services, drives, intents ---------------------------------------------------------
 
-    public static void WriteApps(Utf8JsonWriter writer, IReadOnlyList<HackAppInfo> apps)
+    public static void WriteApps(Utf8JsonWriter writer, IReadOnlyList<KazoAppInfo> apps)
     {
         writer.WriteStartArray("apps");
-        foreach (HackAppInfo app in apps)
+        foreach (KazoAppInfo app in apps)
         {
             writer.WriteStartObject();
             writer.WriteString("id", app.Id);
@@ -696,7 +696,7 @@ internal static class WireCodec
             writer.WriteBoolean("sys", app.IsSystemApp);
             writer.WriteBoolean("hid", app.IsHidden);
             writer.WriteStartArray("fh");
-            foreach (HackAppFileHandler handler in app.FileHandlers)
+            foreach (KazoAppFileHandler handler in app.FileHandlers)
             {
                 writer.WriteStartObject();
                 if (handler.MediaType is { } mediaType)
@@ -718,8 +718,8 @@ internal static class WireCodec
         writer.WriteEndArray();
     }
 
-    public static IReadOnlyList<HackAppInfo> ReadApps(JsonElement element) =>
-        [.. element.GetProperty("apps").EnumerateArray().Select(static app => new HackAppInfo(
+    public static IReadOnlyList<KazoAppInfo> ReadApps(JsonElement element) =>
+        [.. element.GetProperty("apps").EnumerateArray().Select(static app => new KazoAppInfo(
             app.GetString("id"),
             app.GetString("n"),
             app.GetString("d"),
@@ -730,7 +730,7 @@ internal static class WireCodec
             app.GetString("pb"),
             app.GetFlag("sys"),
             app.GetFlag("hid"),
-            [.. app.GetProperty("fh").EnumerateArray().Select(static handler => new HackAppFileHandler(
+            [.. app.GetProperty("fh").EnumerateArray().Select(static handler => new KazoAppFileHandler(
                 handler.GetOptionalString("mt"), ReadStrings(handler, "ex"), ReadStrings(handler, "ac")))])
         {
             Urls = app.TryGetProperty("u", out _) ? ReadStrings(app, "u") : [],
@@ -738,10 +738,10 @@ internal static class WireCodec
         })];
 
     /// <summary>Writes the default handlers of <c>cat.defaults</c> (ADR 0121).</summary>
-    public static void WriteAssociations(Utf8JsonWriter writer, IReadOnlyList<HackFileAssociation> associations)
+    public static void WriteAssociations(Utf8JsonWriter writer, IReadOnlyList<KazoFileAssociation> associations)
     {
         writer.WriteStartArray("fa");
-        foreach (HackFileAssociation association in associations)
+        foreach (KazoFileAssociation association in associations)
         {
             writer.WriteStartObject();
             writer.WriteString("t", association.Target);
@@ -755,9 +755,9 @@ internal static class WireCodec
     }
 
     /// <summary>Reads what <see cref="WriteAssociations"/> wrote.</summary>
-    public static IReadOnlyList<HackFileAssociation> ReadAssociations(JsonElement element) =>
-        [.. element.GetProperty("fa").EnumerateArray().Select(static row => new HackFileAssociation(
-            row.GetString("t"), row.GetString("a"), row.GetString("id"), (HackFileAssociationLayer)row.GetInt32("l")))];
+    public static IReadOnlyList<KazoFileAssociation> ReadAssociations(JsonElement element) =>
+        [.. element.GetProperty("fa").EnumerateArray().Select(static row => new KazoFileAssociation(
+            row.GetString("t"), row.GetString("a"), row.GetString("id"), (KazoFileAssociationLayer)row.GetInt32("l")))];
 
     public static void WriteServiceResult(Utf8JsonWriter writer, ServiceControlResult result)
     {
@@ -827,10 +827,10 @@ internal static class WireCodec
         element.GetOptional("h") is { } health ? (ServiceHealth)health.GetInt32() : null,
         element.GetOptionalString("st"));
 
-    public static void WriteDrives(Utf8JsonWriter writer, IReadOnlyList<HackDriveSnapshot> drives)
+    public static void WriteDrives(Utf8JsonWriter writer, IReadOnlyList<KazoDriveSnapshot> drives)
     {
         writer.WriteStartArray("dr");
-        foreach (HackDriveSnapshot drive in drives)
+        foreach (KazoDriveSnapshot drive in drives)
         {
             writer.WriteStartObject();
             WriteDriveFields(writer, drive);
@@ -840,11 +840,11 @@ internal static class WireCodec
         writer.WriteEndArray();
     }
 
-    public static IReadOnlyList<HackDriveSnapshot> ReadDrives(JsonElement element) =>
+    public static IReadOnlyList<KazoDriveSnapshot> ReadDrives(JsonElement element) =>
         [.. element.GetProperty("dr").EnumerateArray().Select(ReadDriveFields)];
 
     /// <summary>One drive, or none (<c>MountHostFolderAsync</c> when the user closed the dialog).</summary>
-    public static void WriteDrive(Utf8JsonWriter writer, HackDriveSnapshot? drive)
+    public static void WriteDrive(Utf8JsonWriter writer, KazoDriveSnapshot? drive)
     {
         if (drive is not null)
         {
@@ -854,10 +854,10 @@ internal static class WireCodec
         }
     }
 
-    public static HackDriveSnapshot? ReadDrive(JsonElement element) =>
+    public static KazoDriveSnapshot? ReadDrive(JsonElement element) =>
         element.GetOptional("d") is { } drive ? ReadDriveFields(drive) : null;
 
-    private static void WriteDriveFields(Utf8JsonWriter writer, HackDriveSnapshot drive)
+    private static void WriteDriveFields(Utf8JsonWriter writer, KazoDriveSnapshot drive)
     {
         writer.WriteString("n", drive.Name);
         writer.WriteString("f", drive.DriveFormat);
@@ -869,14 +869,14 @@ internal static class WireCodec
         writer.WriteBoolean("rd", drive.IsReady);
     }
 
-    private static HackDriveSnapshot ReadDriveFields(JsonElement drive) =>
+    private static KazoDriveSnapshot ReadDriveFields(JsonElement drive) =>
         new(drive.GetString("n"), drive.GetString("f"), drive.GetString("l"), drive.GetInt64("t"), drive.GetInt64("a"))
         {
-            DriveType = drive.GetOptional("ty") is { } type ? (HackDriveType)type.GetInt32() : HackDriveType.Fixed,
+            DriveType = drive.GetOptional("ty") is { } type ? (KazoDriveType)type.GetInt32() : KazoDriveType.Fixed,
             IsReady = drive.GetOptional("rd")?.GetBoolean() ?? true
         };
 
-    public static void WriteCrossOriginIsolation(Utf8JsonWriter writer, HackCrossOriginIsolationStatus status)
+    public static void WriteCrossOriginIsolation(Utf8JsonWriter writer, KazoCrossOriginIsolationStatus status)
     {
         writer.WriteBoolean("i", status.IsIsolated);
         writer.WriteNumber("r", (int)status.Reason);
@@ -892,10 +892,10 @@ internal static class WireCodec
         writer.WriteNumber("tr", status.TimerResolution.Ticks);
     }
 
-    public static HackCrossOriginIsolationStatus ReadCrossOriginIsolation(JsonElement element) => new(
+    public static KazoCrossOriginIsolationStatus ReadCrossOriginIsolation(JsonElement element) => new(
         element.GetProperty("i").GetBoolean(),
-        (HackCrossOriginIsolationReason)element.GetInt32("r"),
-        (HackCrossOriginIsolationSetting)element.GetInt32("s"),
+        (KazoCrossOriginIsolationReason)element.GetInt32("r"),
+        (KazoCrossOriginIsolationSetting)element.GetInt32("s"),
         element.GetOptionalString("e"),
         element.GetProperty("sp").GetBoolean(),
         element.GetProperty("sc").GetBoolean(),
@@ -983,7 +983,7 @@ internal static class WireCodec
             Arguments = ReadStrings(element, "ar")
         };
 
-    public static void WriteClipboardFiles(Utf8JsonWriter writer, HackClipboardFileList? files)
+    public static void WriteClipboardFiles(Utf8JsonWriter writer, KazoClipboardFileList? files)
     {
         if (files is null)
         {
@@ -996,9 +996,9 @@ internal static class WireCodec
         writer.WriteEndObject();
     }
 
-    public static HackClipboardFileList? ReadClipboardFiles(JsonElement element) =>
+    public static KazoClipboardFileList? ReadClipboardFiles(JsonElement element) =>
         element.GetOptional("cf") is { } files
-            ? new HackClipboardFileList((HackClipboardFileOperation)files.GetInt32("op"), ReadStrings(files, "ps"))
+            ? new KazoClipboardFileList((KazoClipboardFileOperation)files.GetInt32("op"), ReadStrings(files, "ps"))
             : null;
 
     // ---- Processes ------------------------------------------------------------------------------

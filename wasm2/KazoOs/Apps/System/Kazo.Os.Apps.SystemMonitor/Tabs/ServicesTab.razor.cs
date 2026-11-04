@@ -10,7 +10,7 @@ namespace Kazo.Os.Apps.SystemMonitor.Tabs;
 
 /// <summary>
 /// The Services tab (ADR 0058, section 2): every installed service with its state, health, start
-/// type, and start/stop actions, on <see cref="HackServiceController"/> (ADR 0056, section 5).
+/// type, and start/stop actions, on <see cref="KazoServiceController"/> (ADR 0056, section 5).
 /// </summary>
 /// <remarks>
 /// The list and the start types are read when the tab opens and after each action. The state
@@ -20,7 +20,7 @@ namespace Kazo.Os.Apps.SystemMonitor.Tabs;
 /// </remarks>
 public partial class ServicesTab
 {
-    private IReadOnlyList<HackServiceController> _services = [];
+    private IReadOnlyList<KazoServiceController> _services = [];
     private bool _busy;
     private bool _refreshing;
     private bool _hasManagerState = true;
@@ -32,7 +32,7 @@ public partial class ServicesTab
 
     /// <summary>Gets or sets the processes of the last refresh, by PID, for the live status.</summary>
     [Parameter, EditorRequired]
-    public IReadOnlyDictionary<long, HackProcess> Processes { get; set; } = new Dictionary<long, HackProcess>();
+    public IReadOnlyDictionary<long, KazoProcess> Processes { get; set; } = new Dictionary<long, KazoProcess>();
 
     /// <inheritdoc />
     protected override Task OnInitializedAsync() => LoadAsync();
@@ -49,7 +49,7 @@ public partial class ServicesTab
         _refreshing = true;
         try
         {
-            foreach (HackServiceController service in _services)
+            foreach (KazoServiceController service in _services)
             {
                 _hasManagerState = await service.RefreshStatusAsync();
                 if (!_hasManagerState)
@@ -58,7 +58,7 @@ public partial class ServicesTab
                 }
             }
         }
-        catch (Exception exception) when (exception is HackIOException or NotSupportedException)
+        catch (Exception exception) when (exception is KazoIOException or NotSupportedException)
         {
             _hasManagerState = false;
         }
@@ -73,7 +73,7 @@ public partial class ServicesTab
         _busy = true;
         try
         {
-            _services = await HackServiceController.GetServicesAsync();
+            _services = await KazoServiceController.GetServicesAsync();
         }
         catch (NotSupportedException)
         {
@@ -87,7 +87,7 @@ public partial class ServicesTab
     }
 
     /// <summary>Runs one action on a service; <paramref name="deniedKey"/> names the message shown when it is refused.</summary>
-    private async Task RunAsync(HackServiceController service, Func<CancellationToken, Task> action, string deniedKey)
+    private async Task RunAsync(KazoServiceController service, Func<CancellationToken, Task> action, string deniedKey)
     {
         _busy = true;
         try
@@ -95,7 +95,7 @@ public partial class ServicesTab
             await action(CancellationToken.None);
             _message = null;
         }
-        catch (HackUnauthorizedAccessException)
+        catch (KazoUnauthorizedAccessException)
         {
             _message = L[deniedKey, service.DisplayName];
         }
@@ -111,7 +111,7 @@ public partial class ServicesTab
         await LoadAsync();
     }
 
-    private async Task SetStartTypeAsync(HackServiceController service, object? value)
+    private async Task SetStartTypeAsync(KazoServiceController service, object? value)
     {
         if (value is string text && Enum.TryParse(text, out ServiceStartMode mode))
         {
@@ -123,31 +123,31 @@ public partial class ServicesTab
     /// The state to show: the service manager's (refreshed every second); on a host that keeps none,
     /// derived from the processes read this second, where nothing is ever failed.
     /// </summary>
-    private HackServiceActiveState LiveState(HackServiceController service) =>
+    private KazoServiceActiveState LiveState(KazoServiceController service) =>
         _hasManagerState
             ? service.ActiveState
             : FindProcess(service)?.State switch
             {
-                null or HackProcessState.Dead or HackProcessState.Zombie => HackServiceActiveState.Inactive,
-                HackProcessState.Idle or HackProcessState.Sleeping => HackServiceActiveState.Activating,
-                HackProcessState.Stopping => HackServiceActiveState.Deactivating,
-                _ => HackServiceActiveState.Active
+                null or KazoProcessState.Dead or KazoProcessState.Zombie => KazoServiceActiveState.Inactive,
+                KazoProcessState.Idle or KazoProcessState.Sleeping => KazoServiceActiveState.Activating,
+                KazoProcessState.Stopping => KazoServiceActiveState.Deactivating,
+                _ => KazoServiceActiveState.Active
             };
 
-    private long? LivePid(HackServiceController service) =>
-        _hasManagerState && service.ActiveState is HackServiceActiveState.Inactive or HackServiceActiveState.Failed
+    private long? LivePid(KazoServiceController service) =>
+        _hasManagerState && service.ActiveState is KazoServiceActiveState.Inactive or KazoServiceActiveState.Failed
             ? null
             : FindProcess(service)?.Id ?? service.ProcessId;
 
-    private HackProcess? FindProcess(HackServiceController service) =>
+    private KazoProcess? FindProcess(KazoServiceController service) =>
         Processes.Values.FirstOrDefault(process => string.Equals(process.AppId, service.ServiceName, StringComparison.Ordinal));
 
-    private string StateText(HackServiceController service, HackServiceActiveState state) => state switch
+    private string StateText(KazoServiceController service, KazoServiceActiveState state) => state switch
     {
-        HackServiceActiveState.Active => L["Services.State.Running"],
-        HackServiceActiveState.Activating => L["Services.State.Starting"],
-        HackServiceActiveState.Deactivating => L["Services.State.Stopping"],
-        HackServiceActiveState.Failed => L["Services.State.Failed", HackServiceStates.ToSystemdName(service.Result)],
+        KazoServiceActiveState.Active => L["Services.State.Running"],
+        KazoServiceActiveState.Activating => L["Services.State.Starting"],
+        KazoServiceActiveState.Deactivating => L["Services.State.Stopping"],
+        KazoServiceActiveState.Failed => L["Services.State.Failed", KazoServiceStates.ToSystemdName(service.Result)],
         _ => L["Services.State.Stopped"]
     };
 
@@ -161,12 +161,12 @@ public partial class ServicesTab
     };
 
     /// <summary>The state's tooltip: systemd's own words (<c>failed (Result: exit-code, status=1)</c>), then since when.</summary>
-    private string StateTitle(HackServiceController service, HackServiceActiveState state)
+    private string StateTitle(KazoServiceController service, KazoServiceActiveState state)
     {
-        string text = $"{HackServiceStates.ToSystemdName(state)}";
-        if (state == HackServiceActiveState.Failed)
+        string text = $"{KazoServiceStates.ToSystemdName(state)}";
+        if (state == KazoServiceActiveState.Failed)
         {
-            text += $" (Result: {HackServiceStates.ToSystemdName(service.Result)}{(service.ExitCode is { } code ? $", status={code}" : string.Empty)})";
+            text += $" (Result: {KazoServiceStates.ToSystemdName(service.Result)}{(service.ExitCode is { } code ? $", status={code}" : string.Empty)})";
         }
 
         return service.ActiveStateChangedAt is { } since
@@ -174,11 +174,11 @@ public partial class ServicesTab
             : text;
     }
 
-    private string HealthText(HackServiceHealth health) => health switch
+    private string HealthText(KazoServiceHealth health) => health switch
     {
-        HackServiceHealth.Healthy => L["Services.Health.Healthy"],
-        HackServiceHealth.Degraded => L["Services.Health.Degraded"],
-        HackServiceHealth.Unhealthy => L["Services.Health.Unhealthy"],
+        KazoServiceHealth.Healthy => L["Services.Health.Healthy"],
+        KazoServiceHealth.Degraded => L["Services.Health.Degraded"],
+        KazoServiceHealth.Unhealthy => L["Services.Health.Unhealthy"],
         _ => L["Services.Health.Unknown"]
     };
 }

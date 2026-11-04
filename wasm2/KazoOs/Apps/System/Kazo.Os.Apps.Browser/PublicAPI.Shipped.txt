@@ -212,7 +212,7 @@ Kazo.Os.Apps.Browser.Bridge.PageBridgeHandler.ApplyDocumentCookie(System.Uri! do
 Kazo.Os.Apps.Browser.Bridge.PageBridgeHandler.FetchAsync(Kazo.Os.Apps.Browser.Bridge.PageSession! session, Kazo.Os.Apps.Browser.Bridge.BridgeFetchRequest! request) -> System.Threading.Tasks.Task<Kazo.Os.Apps.Browser.Bridge.BridgeFetchReply!>!
 Kazo.Os.Apps.Browser.Bridge.PageBridgeHandler.GetDocumentCookies(System.Uri! documentUrl) -> string!
 Kazo.Os.Apps.Browser.Bridge.PageBridgeHandler.LoadResourceAsync(Kazo.Os.Apps.Browser.Bridge.PageSession! session, Kazo.Os.Apps.Browser.Bridge.BridgeResourceRequest! request) -> System.Threading.Tasks.Task<Kazo.Os.Apps.Browser.Bridge.BridgeResourceReply!>!
-Kazo.Os.Apps.Browser.Bridge.PageBridgeHandler.PageBridgeHandler(Kazo.Os.Apps.Browser.Net.BrowserResourceLoader! loader, Kazo.Os.AppSdk.Net.HackCookieContainer! cookies) -> void
+Kazo.Os.Apps.Browser.Bridge.PageBridgeHandler.PageBridgeHandler(Kazo.Os.Apps.Browser.Net.BrowserResourceLoader! loader, Kazo.Os.AppSdk.Net.KazoCookieContainer! cookies) -> void
 Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext
 Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.PageBridgeJsonContext() -> void
 Kazo.Os.Apps.Browser.Bridge.PageBridgeJsonContext.PageBridgeJsonContext(System.Text.Json.JsonSerializerOptions! options) -> void
@@ -429,7 +429,7 @@ Kazo.Os.Apps.Browser.Net.DirectoryListingPage
 Kazo.Os.Apps.Browser.Net.IBrowserTransport
 Kazo.Os.Apps.Browser.Net.IBrowserTransport.SendAsync(Kazo.Os.Apps.Browser.Net.BrowserRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Apps.Browser.Net.BrowserFetchResult!>!
 Kazo.Os.Apps.Browser.Net.SdkBrowserTransport
-Kazo.Os.Apps.Browser.Net.SdkBrowserTransport.SdkBrowserTransport(Kazo.Os.AppSdk.Net.HackCookieContainer! cookies) -> void
+Kazo.Os.Apps.Browser.Net.SdkBrowserTransport.SdkBrowserTransport(Kazo.Os.AppSdk.Net.KazoCookieContainer! cookies) -> void
 Kazo.Os.Apps.Browser.Net.SdkBrowserTransport.SendAsync(Kazo.Os.Apps.Browser.Net.BrowserRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Apps.Browser.Net.BrowserFetchResult!>!
 Kazo.Os.Apps.Browser.PageFrameDocument
 Kazo.Os.Apps.Browser.PageFrameDocument.<Clone>$() -> Kazo.Os.Apps.Browser.PageFrameDocument!
@@ -550,10 +550,10 @@ Kazo.Os.Apps.Browser.Storage.FormHistoryEntry.TimesUsed.get -> int
 Kazo.Os.Apps.Browser.Storage.FormHistoryEntry.TimesUsed.init -> void
 Kazo.Os.Apps.Browser.Storage.FormHistoryEntry.Value.get -> string!
 Kazo.Os.Apps.Browser.Storage.FormHistoryEntry.Value.init -> void
-Kazo.Os.Apps.Browser.Storage.HackBrowserStorageFiles
-Kazo.Os.Apps.Browser.Storage.HackBrowserStorageFiles.HackBrowserStorageFiles() -> void
-Kazo.Os.Apps.Browser.Storage.HackBrowserStorageFiles.ReadTextAsync(string! path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<string?>!
-Kazo.Os.Apps.Browser.Storage.HackBrowserStorageFiles.WriteTextAsync(string! path, string! text, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Kazo.Os.Apps.Browser.Storage.KazoBrowserStorageFiles
+Kazo.Os.Apps.Browser.Storage.KazoBrowserStorageFiles.KazoBrowserStorageFiles() -> void
+Kazo.Os.Apps.Browser.Storage.KazoBrowserStorageFiles.ReadTextAsync(string! path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<string?>!
+Kazo.Os.Apps.Browser.Storage.KazoBrowserStorageFiles.WriteTextAsync(string! path, string! text, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 Kazo.Os.Apps.Browser.Storage.IBrowserStorageFiles
 Kazo.Os.Apps.Browser.Storage.IBrowserStorageFiles.ReadTextAsync(string! path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<string?>!
 Kazo.Os.Apps.Browser.Storage.IBrowserStorageFiles.WriteTextAsync(string! path, string! text, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!

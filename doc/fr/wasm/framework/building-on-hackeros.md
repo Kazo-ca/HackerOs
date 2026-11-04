@@ -65,7 +65,7 @@ ré-empaqueté n'est jamais servi périmé.
 ```text
 mon-depot/
 ├─ nuget.config                 # flux local seulement (build/nuget.config.sample)
-├─ Directory.Build.props        # HackerOsVersion épinglée une fois
+├─ Directory.Build.props        # KazoOsVersion épinglée une fois
 ├─ MonDepot.sln
 ├─ src/
 │  ├─ Contoso.Os/               # l'hôte (dotnet new hackeros-host)
@@ -94,13 +94,13 @@ de là :
 
 `Directory.Build.props` : une seule version pour tous les paquets Kazo OS
 (ils sont publiés ensemble, ADR 0098 §1). Les modèles écrivent
-`<HackerOsVersion>` dans chaque projet ; retirez-la des projets pour ne garder
+`<KazoOsVersion>` dans chaque projet ; retirez-la des projets pour ne garder
 que celle-ci :
 
 ```xml
 <Project>
   <PropertyGroup>
-    <HackerOsVersion>2.2.2</HackerOsVersion>
+    <KazoOsVersion>2.2.2</KazoOsVersion>
   </PropertyGroup>
 </Project>
 ```
@@ -138,7 +138,7 @@ de `Kazo.Os.Ecosystem.Host`, les apps sont ses références.
   <!-- …ou en paquets d'apps. -->
   <PackageReference Include="Contoso.Tools" Version="2.3.0" />
   <!-- Les apps de base que vous gardez (retirez les autres). -->
-  <PackageReference Include="Kazo.Os.Apps.Terminal" Version="$(HackerOsVersion)" IsSystemApp="true" />
+  <PackageReference Include="Kazo.Os.Apps.Terminal" Version="$(KazoOsVersion)" IsSystemApp="true" />
 </ItemGroup>
 ```
 
@@ -164,7 +164,7 @@ par le `packageSourceMapping`.
 - Une commande se teste sans navigateur : créer la commande avec son manifeste
   (`AppDefinitionMapper.ToManifest(new MonApp())`), une
   `TerminalExecutionContext` sur des passerelles factices, et
-  `HackExecutionContext.Enter(app)` autour de `ExecuteAsync`
+  `KazoExecutionContext.Enter(app)` autour de `ExecuteAsync`
   ([`sdk-developer-guide.md`](sdk-developer-guide.md), test d'une commande).
 - Un hôte se teste comme `Kazo.Os.Templates.E2E.Tests` : `dotnet run` de
   l'hôte, puis Playwright (création de l'administrateur, menu Applications,
@@ -188,7 +188,7 @@ statique ; le service worker ne s'enregistre que hors de `localhost`. Voir
 ## 9. Monter de version
 
 1. Produire le flux de la nouvelle version (§2).
-2. Changer `HackerOsVersion` dans `Directory.Build.props`.
+2. Changer `KazoOsVersion` dans `Directory.Build.props`.
 3. Mineure : reconstruire ; lire « Ruptures hors SDK » de
    [`sdk-packages.md`](sdk-packages.md) si vous avez un hôte. Majeure :
    reconstruire **toutes** les apps, l'OS refuse celles de l'ancienne majeure.
@@ -203,9 +203,9 @@ recompilée contre les paquets 2.x (2.2.2 aujourd'hui ; vérifié par `Tests/fix
 où les apps 1.0.0 et 1.1.0 sont refusées et l'app 2.0.0 tourne).
 
 - **Seule rupture** : le paquet `Kazo.Os.AppSdk.FileView` n'existe plus. Une
-  app qui affichait `FileView` affiche `HackFileView` (contrôle de fichiers
+  app qui affichait `FileView` affiche `KazoFileView` (contrôle de fichiers
   fourni par l'OS, `Kazo.Os.AppSdk.Blazor.Files`) ; `FileTransfer` devient
-  `HackFileOperations` (`Kazo.Os.AppSdk.IO`). Le tableau complet est dans
+  `KazoFileOperations` (`Kazo.Os.AppSdk.IO`). Le tableau complet est dans
   [`sdk-packages.md`](sdk-packages.md#migration-dune-app-1x).
 - **Menu contextuel de l'OS** : `Menus.Attach(nom, élément)` sur n'importe quel
   élément, `Menus.Define` en C#, sous-menus, clavier et appui long
@@ -213,13 +213,13 @@ où les apps 1.0.0 et 1.1.0 sont refusées et l'app 2.0.0 tourne).
 - **Entrées dans les menus des fichiers** : `[RegisterFileContextMenu]` dans la
   classe `[AppManifest]`, capacité `shell.context-menu` ; l'entrée lance l'app
   avec un intent et les chemins (ADR 0151, 0159).
-- **Bureau** : `HackDesktopSettings`, raccourcis `.desktop` (`HackDesktopEntry`,
+- **Bureau** : `KazoDesktopSettings`, raccourcis `.desktop` (`KazoDesktopEntry`,
   ADR 0152, 0160, [`desktop.md`](../dev/desktop.md)).
 - **Fournir un contrôle de l'OS** : une app peut fournir `hackeros.file-view`
   et `hackeros.file-dialogs` ; l'administrateur choisit le fournisseur
   (ADR 0156, 0158, [`embedded-components.md`](embedded-components.md)).
 - **Aussi** : `IAppEventGateway.PublishAsync` (ADR 0145) et
-  `HackCrossOriginIsolation` (ADR 0146), prévus pour une 1.3 jamais publiée.
+  `KazoCrossOriginIsolation` (ADR 0146), prévus pour une 1.3 jamais publiée.
 
 Les ruptures hors SDK d'un hôte (explorateur de fichiers, éditeur de code,
 `IShellIconProvider` de l'hôte) sont dans
@@ -230,14 +230,14 @@ Les ruptures hors SDK d'un hôte (explorateur de fichiers, éditeur de code,
 Une mineure : une app compilée contre 1.0.0 ou 1.1.0 tournait sans changement
 sur l'OS 1.2. Ses ajouts font partie de la 2.0.
 
-- **Tâches lourdes hors de la fenêtre** : `HackBackground.RunAsync` avec une
+- **Tâches lourdes hors de la fenêtre** : `KazoBackground.RunAsync` avec une
   méthode statique et des arguments sérialisables, ou une classe
-  `HackBackgroundJob<TInput, TResult>` ; progression, annulation et
-  `CheckpointAsync` par `HackBackgroundContext`. L'analyseur `HOSBG0001` à
+  `KazoBackgroundJob<TInput, TResult>` ; progression, annulation et
+  `CheckpointAsync` par `KazoBackgroundContext`. L'analyseur `HOSBG0001` à
   `HOSBG0004`, livré dans `Kazo.Os.AppSdk`, refuse une lambda qui capture
   (ADR 0128, 0140, [`background-jobs.md`](background-jobs.md)).
-- **Limites par processus** : `HackProcess.GetResourceLimitsAsync`,
-  `SetResourceLimitAsync`, `HackResourceLimits` ; `EMFILE`
+- **Limites par processus** : `KazoProcess.GetResourceLimitsAsync`,
+  `SetResourceLimitAsync`, `KazoResourceLimits` ; `EMFILE`
   (`FileSystemErrorCode.TooManyOpenFiles`) et `EAGAIN`
   (`ProcessLimitExceededException`) à traiter comme des erreurs d'E/S
   ordinaires ; nouvelles raisons de sortie `CpuLimitExceeded`,
@@ -246,11 +246,11 @@ sur l'OS 1.2. Ses ajouts font partie de la 2.0.
 - **OOM killer** : `AppDefinition.OomScoreAdjust` pour qu'une app soit tuée
   plus tard (ou plus tôt) quand la mémoire manque ; l'OOM killer est coupé par
   défaut (ADR 0126, 0142, [`oom-killer.md`](../dev/oom-killer.md)).
-- **Priorité** : `HackProcess.Nice`, `BasePriority` (ADR 0127,
+- **Priorité** : `KazoProcess.Nice`, `BasePriority` (ADR 0127,
   [`process-priority-and-unresponsive-windows.md`](../dev/process-priority-and-unresponsive-windows.md)).
 - **Commandes en worker qui écoutent des événements** :
-  `[assembly: HackWireContext(typeof(MonContexteJson))]` pour que
-  `HackEvents` et `Watch` passent par la passerelle distante (ADR 0124, 0138,
+  `[assembly: KazoWireContext(typeof(MonContexteJson))]` pour que
+  `KazoEvents` et `Watch` passent par la passerelle distante (ADR 0124, 0138,
   [`worker-processes.md`](../dev/worker-processes.md)).
 
 La liste exacte et la rupture hors SDK d'un hôte (constructeur
@@ -261,7 +261,7 @@ d'`EcosystemBootCoordinator`) sont dans
 
 Une mineure : une app compilée contre 1.0.0 tourne sans changement sur l'OS
 1.1 (vérifié par l'app figée de `Tests/fixtures/sdk-compat`). Pour utiliser les
-ajouts, passer `HackerOsVersion` à `1.1.0` et reconstruire ; l'app exige alors
+ajouts, passer `KazoOsVersion` à `1.1.0` et reconstruire ; l'app exige alors
 un OS 1.1 ou plus récent.
 
 - **Titre de fenêtre** : `WindowAppBase.SetWindowTitleAsync`, `WindowTitle`,
@@ -270,11 +270,11 @@ un OS 1.1 ou plus récent.
 - **Taille des fenêtres retenue** : `WindowOptions.RememberGeometry = false`
   pour qu'une fenêtre ne reprenne pas sa dernière taille (ADR 0116, 0122,
   [`window-geometry.md`](../dev/window-geometry.md)).
-- **Comptes et mots de passe** : `HackUserAccounts` (`ListAsync`,
+- **Comptes et mots de passe** : `KazoUserAccounts` (`ListAsync`,
   `ChangePasswordAsync`, `ResetPasswordAsync` avec la capacité `users.manage`),
   `TerminalExecutionContext.ReadSecretLineAsync` pour une saisie sans écho
   (ADR 0120, [`sensitive-settings.md`](../dev/sensitive-settings.md)).
-- **Applications par défaut de l'utilisateur** : `HackApps.SetDefaultHandlerAsync`,
+- **Applications par défaut de l'utilisateur** : `KazoApps.SetDefaultHandlerAsync`,
   `ResetDefaultHandlerAsync`, `GetDefaultHandlersAsync` (ADR 0121,
   [`user-file-associations.md`](../dev/user-file-associations.md)).
 

@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <!--
-    HackBackground analyzer (ADR 0128 section 2, ADR 0140): a Roslyn analyzer that refuses, at build
+    KazoBackground analyzer (ADR 0128 section 2, ADR 0140): a Roslyn analyzer that refuses, at build
     time, a background task the OS could not run in a Web Worker: a lambda or an instance method, a
     method of another assembly or of a generic type, an input or result type no
-    [assembly: HackWireContext] context declares (HOSBGnnnn). Shipped in the Kazo.Os.AppSdk package
+    [assembly: KazoWireContext] context declares (HOSBGnnnn). Shipped in the Kazo.Os.AppSdk package
     (analyzers/dotnet/cs); in-repo apps get it through build/Kazo.Os.Apps.targets.
   -->
   <PropertyGroup>

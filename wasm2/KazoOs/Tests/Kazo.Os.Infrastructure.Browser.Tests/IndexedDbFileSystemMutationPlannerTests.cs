@@ -41,10 +41,10 @@ public sealed class IndexedDbFileSystemMutationPlannerTests
             operations.Select(operation => operation.Kind));
         Assert.Equal(
             [
-                HackerOsIndexedDbSchema.FileSystemEntryStoreName,
-                HackerOsIndexedDbSchema.FileSystemEntryStoreName,
-                HackerOsIndexedDbSchema.FileSystemEntryStoreName,
-                HackerOsIndexedDbSchema.FileSystemLinkStoreName
+                KazoOsIndexedDbSchema.FileSystemEntryStoreName,
+                KazoOsIndexedDbSchema.FileSystemEntryStoreName,
+                KazoOsIndexedDbSchema.FileSystemEntryStoreName,
+                KazoOsIndexedDbSchema.FileSystemLinkStoreName
             ],
             operations.Select(operation => operation.ObjectStoreName));
         Assert.Equal(parent.Id, operations[0].Key);

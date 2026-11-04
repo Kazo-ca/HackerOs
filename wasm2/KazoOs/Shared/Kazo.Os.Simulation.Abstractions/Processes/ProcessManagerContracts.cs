@@ -83,7 +83,7 @@ public sealed record ProcessStartRequest(
     /// ending at once, and is killed if it still runs at the end of this period. A <c>SIGKILL</c> of
     /// the parent (<c>kill -9</c>, a limit, the OOM killer) still ends it at once.
     /// <see langword="null"/> or zero ends it with its parent, as before; the background tasks of
-    /// <c>HackBackground</c> use 5 seconds.
+    /// <c>KazoBackground</c> use 5 seconds.
     /// </summary>
     public TimeSpan? ParentExitGracePeriod { get; init; }
 }

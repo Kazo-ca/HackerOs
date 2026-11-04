@@ -26,7 +26,7 @@ public sealed partial class ExplorerFileView
     /// the selection; an item inside it acts on the whole selection. Each entry acts on the targets
     /// captured here, not on whatever is selected when it is clicked.
     /// </remarks>
-    private async Task OnMenuOpeningAsync(HackMenuOpeningEventArgs args)
+    private async Task OnMenuOpeningAsync(KazoMenuOpeningEventArgs args)
     {
         if (_view is null)
         {
@@ -34,7 +34,7 @@ public sealed partial class ExplorerFileView
             return;
         }
 
-        FileViewItem? clicked = args.Item is HackFileViewItem snapshot && _items.TryGetValue(snapshot, out FileViewItem? item)
+        FileViewItem? clicked = args.Item is KazoFileViewItem snapshot && _items.TryGetValue(snapshot, out FileViewItem? item)
             ? item
             : null;
 
@@ -51,10 +51,10 @@ public sealed partial class ExplorerFileView
         }
 
         VirtualPath directory = _view.CurrentDirectory;
-        IReadOnlyList<HackFileViewItem> snapshots = [.. targets.Select(Snapshot)];
+        IReadOnlyList<KazoFileViewItem> snapshots = [.. targets.Select(Snapshot)];
         // ADR 0151, ADR 0160 §7: the background of a desktop is its own scope, for the apps' entries and the host.
         FileMenuScope scope = snapshots.Count == 0 && IsDesktop ? FileMenuScope.Desktop : ExplorerFileMenu.ScopeOf(snapshots);
-        IReadOnlyList<HackAppInfo> handlers = snapshots is [{ IsDirectory: false }] && Has(HackFileViewFeatures.OpenWith)
+        IReadOnlyList<KazoAppInfo> handlers = snapshots is [{ IsDirectory: false }] && Has(KazoFileViewFeatures.OpenWith)
             ? await GetHandlersAsync(targets[0])
             : [];
 
@@ -70,11 +70,11 @@ public sealed partial class ExplorerFileView
         }
 
         // ADR 0159 §5: tells the OS what this menu is drawn for, so it adds the entries apps registered.
-        args.Menu.FileMenu = new HackFileMenuContext(scope, snapshots, directory.Value);
+        args.Menu.FileMenu = new KazoFileMenuContext(scope, snapshots, directory.Value);
 
         if (ContextMenuOpening.HasDelegate)
         {
-            HackFileMenuOpeningEventArgs hostArgs = new(scope, snapshots, directory.Value, args.Menu);
+            KazoFileMenuOpeningEventArgs hostArgs = new(scope, snapshots, directory.Value, args.Menu);
             await ContextMenuOpening.InvokeAsync(hostArgs);
             args.Cancel = hostArgs.Cancel;
         }
@@ -86,9 +86,9 @@ public sealed partial class ExplorerFileView
     /// </summary>
     private Task RunMenuCommandAsync(string id, IReadOnlyList<FileViewItem> targets, VirtualPath directory)
     {
-        if (id.StartsWith(HackFileMenuItems.OpenWithAppPrefix, StringComparison.Ordinal))
+        if (id.StartsWith(KazoFileMenuItems.OpenWithAppPrefix, StringComparison.Ordinal))
         {
-            return OpenWithAppAsync(id[HackFileMenuItems.OpenWithAppPrefix.Length..], targets[0]);
+            return OpenWithAppAsync(id[KazoFileMenuItems.OpenWithAppPrefix.Length..], targets[0]);
         }
 
         if (ArchiveWriteCommands.Contains(id) && IsInsideArchive(directory))
@@ -98,24 +98,24 @@ public sealed partial class ExplorerFileView
 
         return id switch
         {
-            HackFileMenuItems.Open => OpenItemsAsync(targets),
-            HackFileMenuItems.OpenWithOther => ChooseAppForAsync(targets[0]),
-            HackFileMenuItems.Cut => PutOnClipboardAsync(targets, HackClipboardFileOperation.Cut),
-            HackFileMenuItems.Copy => PutOnClipboardAsync(targets, HackClipboardFileOperation.Copy),
-            HackFileMenuItems.PasteInto => PasteIntoAsync(targets[0].FullPath),
-            HackFileMenuItems.Paste => PasteIntoAsync(directory),
-            HackFileMenuItems.Rename => RenameAsync(targets[0]),
-            HackFileMenuItems.Delete => DeleteItemsAsync(targets, permanent: false),
-            HackFileMenuItems.DeletePermanently => DeleteItemsAsync(targets, permanent: true),
-            HackFileMenuItems.NewFolder => _view?.CreateFolderInteractiveAsync() ?? Task.CompletedTask,
-            HackFileMenuItems.Refresh => _view?.RefreshAsync() ?? Task.CompletedTask,
-            HackFileMenuItems.Properties => ShowPropertiesAsync(targets.Count == 1 ? targets[0].FullPath.Value : directory.Value),
+            KazoFileMenuItems.Open => OpenItemsAsync(targets),
+            KazoFileMenuItems.OpenWithOther => ChooseAppForAsync(targets[0]),
+            KazoFileMenuItems.Cut => PutOnClipboardAsync(targets, KazoClipboardFileOperation.Cut),
+            KazoFileMenuItems.Copy => PutOnClipboardAsync(targets, KazoClipboardFileOperation.Copy),
+            KazoFileMenuItems.PasteInto => PasteIntoAsync(targets[0].FullPath),
+            KazoFileMenuItems.Paste => PasteIntoAsync(directory),
+            KazoFileMenuItems.Rename => RenameAsync(targets[0]),
+            KazoFileMenuItems.Delete => DeleteItemsAsync(targets, permanent: false),
+            KazoFileMenuItems.DeletePermanently => DeleteItemsAsync(targets, permanent: true),
+            KazoFileMenuItems.NewFolder => _view?.CreateFolderInteractiveAsync() ?? Task.CompletedTask,
+            KazoFileMenuItems.Refresh => _view?.RefreshAsync() ?? Task.CompletedTask,
+            KazoFileMenuItems.Properties => ShowPropertiesAsync(targets.Count == 1 ? targets[0].FullPath.Value : directory.Value),
             _ => Task.CompletedTask
         };
     }
 
     /// <summary>The apps that declare the file, the default first (ADR 0121); none when the host may not read the catalog.</summary>
-    private async Task<IReadOnlyList<HackAppInfo>> GetHandlersAsync(FileViewItem item)
+    private async Task<IReadOnlyList<KazoAppInfo>> GetHandlersAsync(FileViewItem item)
     {
         try
         {

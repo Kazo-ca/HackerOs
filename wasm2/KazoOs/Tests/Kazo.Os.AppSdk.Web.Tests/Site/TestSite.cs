@@ -21,13 +21,13 @@ public sealed partial class TestSite : WebAppDefinition
 
     public override IReadOnlyList<string> Urls => ["http://intranet.hack/"];
 
-    public override void Configure(HackWebApplicationBuilder builder)
+    public override void Configure(KazoWebApplicationBuilder builder)
     {
         builder.Services.AddSingleton<NoteStore>();
         builder.Services.AddScoped<RequestCounter>();
         builder.Json.SerializerOptions.TypeInfoResolverChain.Insert(0, TestSiteJsonContext.Default);
         builder.Mvc.Filters.Add(new TraceFilter("global"));
-        HackWebApplication app = builder.Build();
+        KazoWebApplication app = builder.Build();
         app.UseExceptionPage();
         app.UseStaticFiles();
         app.Use(async (context, next) =>
@@ -37,7 +37,7 @@ public sealed partial class TestSite : WebAppDefinition
             await next();
         });
         app.UseCookieSession();
-        app.MapGet("/health", () => HackResults.Ok("up"));
+        app.MapGet("/health", () => KazoResults.Ok("up"));
         app.MapGet("/boom", _ => Boom());
         app.MapPost("/echo", async context =>
         {
@@ -102,26 +102,26 @@ public sealed class RequestCounter
 }
 
 /// <summary>A filter that records the order filters run in (header <c>X-Trace</c>).</summary>
-public sealed class TraceFilter(string name) : HackActionFilterAttribute
+public sealed class TraceFilter(string name) : KazoActionFilterAttribute
 {
     public string Name { get; } = name;
 
-    public override void OnActionExecuting(HackActionExecutingContext context) => Append(context.HttpContext, $"{Name}>");
+    public override void OnActionExecuting(KazoActionExecutingContext context) => Append(context.HttpContext, $"{Name}>");
 
-    public override void OnActionExecuted(HackActionExecutedContext context) => Append(context.HttpContext, $"<{Name}");
+    public override void OnActionExecuted(KazoActionExecutedContext context) => Append(context.HttpContext, $"<{Name}");
 
-    private static void Append(HackHttpContext context, string step) =>
+    private static void Append(KazoHttpContext context, string step) =>
         context.Response.Headers["X-Trace"] = (context.Response.Headers["X-Trace"] ?? string.Empty) + step;
 }
 
 /// <summary>A filter that answers <c>403</c> without running the action when <c>?deny=1</c>.</summary>
-public sealed class DenyFilterAttribute : HackActionFilterAttribute
+public sealed class DenyFilterAttribute : KazoActionFilterAttribute
 {
-    public override void OnActionExecuting(HackActionExecutingContext context)
+    public override void OnActionExecuting(KazoActionExecutingContext context)
     {
         if (context.HttpContext.Request.Query["deny"] == "1")
         {
-            context.Result = new HackContentResult { Content = "denied", StatusCode = 403 };
+            context.Result = new KazoContentResult { Content = "denied", StatusCode = 403 };
         }
     }
 }
@@ -129,7 +129,7 @@ public sealed class DenyFilterAttribute : HackActionFilterAttribute
 /// <summary>An HTTP API (attribute routes, JSON body, problem details).</summary>
 [Route("api/[controller]")]
 [TraceFilter("controller", Order = 0)]
-public sealed class NotesController(NoteStore store, RequestCounter counter) : HackApiController
+public sealed class NotesController(NoteStore store, RequestCounter counter) : KazoApiController
 {
     [HttpGet]
     public IReadOnlyList<Note> List([FromQuery] bool? done = null) =>
@@ -204,7 +204,7 @@ public sealed class ContactForm
 }
 
 /// <summary>Pages with the default conventional route (<c>{controller=Home}/{action=Index}/{id?}</c>).</summary>
-public sealed class HomeController : HackController
+public sealed class HomeController : KazoController
 {
     public string Index() => "home";
 
@@ -242,7 +242,7 @@ public sealed class HomeController : HackController
 
     public IHackActionResult Away() => LocalRedirect("https://evil.example/");
 
-    public override void OnActionExecuting(HackActionExecutingContext context)
+    public override void OnActionExecuting(KazoActionExecutingContext context)
     {
         if (context.HttpContext.Request.Query["stop"] == "1")
         {
@@ -252,7 +252,7 @@ public sealed class HomeController : HackController
 }
 
 /// <summary>A controller of pages rendered by Razor views (web/7, ADR 0083).</summary>
-public sealed class PagesController(NoteStore store) : HackController
+public sealed class PagesController(NoteStore store) : KazoController
 {
     public IHackActionResult Index() => View(store);
 
@@ -301,11 +301,11 @@ public sealed class PagesController(NoteStore store) : HackController
 
     public IHackActionResult Injected() => View();
 
-    public IHackActionResult Status() => new HackViewResult { ViewName = "Plain", StatusCode = 418 };
+    public IHackActionResult Status() => new KazoViewResult { ViewName = "Plain", StatusCode = 418 };
 }
 
 /// <summary>A controller of pages rendered by .cshtml views (web/8, ADR 0086).</summary>
-public sealed class CshtmlController(NoteStore store) : HackController
+public sealed class CshtmlController(NoteStore store) : KazoController
 {
     public IHackActionResult Index() => View(store);
 
@@ -356,9 +356,9 @@ public sealed partial class BareSite : WebAppDefinition
 
     public override IReadOnlyList<string> Urls => ["http://bare.hack/"];
 
-    public override void Configure(HackWebApplicationBuilder builder)
+    public override void Configure(KazoWebApplicationBuilder builder)
     {
-        HackWebApplication app = builder.Build();
+        KazoWebApplication app = builder.Build();
         app.MapGet("/fail", () => throw new InvalidOperationException("hidden"));
     }
 }

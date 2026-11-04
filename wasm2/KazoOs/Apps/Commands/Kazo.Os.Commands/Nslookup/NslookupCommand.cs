@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Nslookup;
 
 /// <summary>
 /// <c>nslookup &lt;name|address&gt;</c> (ADR 0074, section 4): asks <c>hackdns</c>, the OS
-/// resolver, through <see cref="HackDns"/>, and prints the answer the way BIND's
+/// resolver, through <see cref="KazoDns"/>, and prints the answer the way BIND's
 /// <c>nslookup</c> does against the local stub resolver (<c>127.0.0.53</c>, as on a
 /// <c>systemd-resolved</c> machine). Unlike the real tool, it also says which source answered
 /// (<c>/etc/hosts</c> and its line, <c>localhost</c>, a web app's URLs, a hosted site, or the
@@ -42,12 +42,12 @@ public sealed class NslookupCommand(AppManifest manifest) : TerminalAppBase(mani
         {
             if (IPAddress.TryParse(target, out IPAddress? address))
             {
-                HackHostEntry reverse = await HackDns.GetHostEntryAsync(address, cancellationToken);
+                KazoHostEntry reverse = await KazoDns.GetHostEntryAsync(address, cancellationToken);
                 await context.StandardOutput.WriteLineAsync($"{ReverseName(address)}\tname = {reverse.HostName}.");
                 return 0;
             }
 
-            HackHostEntry entry = await HackDns.GetHostEntryAsync(target, cancellationToken);
+            KazoHostEntry entry = await KazoDns.GetHostEntryAsync(target, cancellationToken);
             await context.StandardOutput.WriteLineAsync(SourceLine(text, entry));
             if (!string.Equals(entry.HostName, target.TrimEnd('.'), StringComparison.OrdinalIgnoreCase))
             {
@@ -72,13 +72,13 @@ public sealed class NslookupCommand(AppManifest manifest) : TerminalAppBase(mani
     }
 
     /// <summary>The line that says where the answer came from, in the comment style of <c>dig</c>.</summary>
-    private static string SourceLine(IStringLocalizer<Strings> text, HackHostEntry entry) => entry.Source switch
+    private static string SourceLine(IStringLocalizer<Strings> text, KazoHostEntry entry) => entry.Source switch
     {
-        HackDnsSource.HostsFile => text["Source.HostsFile", entry.SourceDetail ?? "/etc/hosts"],
-        HackDnsSource.Loopback => text["Source.Loopback"],
-        HackDnsSource.WebApp => text["Source.WebApp", entry.SourceDetail ?? string.Empty],
-        HackDnsSource.HostedSite => text["Source.HostedSite", entry.SourceDetail ?? string.Empty],
-        HackDnsSource.SimulatedNetwork => text["Source.NonAuthoritative"],
+        KazoDnsSource.HostsFile => text["Source.HostsFile", entry.SourceDetail ?? "/etc/hosts"],
+        KazoDnsSource.Loopback => text["Source.Loopback"],
+        KazoDnsSource.WebApp => text["Source.WebApp", entry.SourceDetail ?? string.Empty],
+        KazoDnsSource.HostedSite => text["Source.HostedSite", entry.SourceDetail ?? string.Empty],
+        KazoDnsSource.SimulatedNetwork => text["Source.NonAuthoritative"],
         _ => text["Source.Unknown"]
     };
 

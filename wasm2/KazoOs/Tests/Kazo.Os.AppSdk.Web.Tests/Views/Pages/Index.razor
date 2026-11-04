@@ -1,13 +1,13 @@
-@inherits HackView<NoteStore>
+@inherits KazoView<NoteStore>
 @layout _Layout
 @{ ViewData.Title = "Notes"; }
 <h1>@Model.All.Count notes</h1>
 <ul>
     @foreach (Note note in Model.All)
     {
-        <HackPartial Name="_NoteCard" Model="note" />
+        <KazoPartial Name="_NoteCard" Model="note" />
     }
 </ul>
-<HackSection Name="Scripts">
+<KazoSection Name="Scripts">
     <script src="@Url.Content("~/js/notes.js")"></script>
-</HackSection>
+</KazoSection>

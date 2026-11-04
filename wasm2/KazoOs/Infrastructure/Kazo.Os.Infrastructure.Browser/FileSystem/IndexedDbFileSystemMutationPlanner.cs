@@ -45,22 +45,22 @@ internal static class IndexedDbFileSystemMutationPlanner
         [
             new IndexedDbOperation(
                 "assertPropertyEquals",
-                HackerOsIndexedDbSchema.FileSystemEntryStoreName,
+                KazoOsIndexedDbSchema.FileSystemEntryStoreName,
                 Key: parent.Id,
                 CompareProperty: "revision",
                 ExpectedValue: parent.Revision,
                 FailureCode: "filesystem.revision-conflict"),
             new IndexedDbOperation(
                 "put",
-                HackerOsIndexedDbSchema.FileSystemEntryStoreName,
+                KazoOsIndexedDbSchema.FileSystemEntryStoreName,
                 Value: updatedParent),
             new IndexedDbOperation(
                 "add",
-                HackerOsIndexedDbSchema.FileSystemEntryStoreName,
+                KazoOsIndexedDbSchema.FileSystemEntryStoreName,
                 Value: child),
             new IndexedDbOperation(
                 "add",
-                HackerOsIndexedDbSchema.FileSystemLinkStoreName,
+                KazoOsIndexedDbSchema.FileSystemLinkStoreName,
                 Value: link)
         ];
     }
@@ -87,14 +87,14 @@ internal static class IndexedDbFileSystemMutationPlanner
         [
             new IndexedDbOperation(
                 "assertPropertyEquals",
-                HackerOsIndexedDbSchema.FileSystemEntryStoreName,
+                KazoOsIndexedDbSchema.FileSystemEntryStoreName,
                 Key: entry.Id,
                 CompareProperty: "revision",
                 ExpectedValue: entry.Revision,
                 FailureCode: "filesystem.revision-conflict"),
             new IndexedDbOperation(
                 "put",
-                HackerOsIndexedDbSchema.FileSystemEntryStoreName,
+                KazoOsIndexedDbSchema.FileSystemEntryStoreName,
                 Value: updated)
         ];
     }
@@ -131,7 +131,7 @@ internal static class IndexedDbFileSystemMutationPlanner
         return
         [
             RevisionAssertion(entry),
-            new IndexedDbOperation("put", HackerOsIndexedDbSchema.FileSystemEntryStoreName, Value: updated)
+            new IndexedDbOperation("put", KazoOsIndexedDbSchema.FileSystemEntryStoreName, Value: updated)
         ];
     }
 
@@ -183,22 +183,22 @@ internal static class IndexedDbFileSystemMutationPlanner
         }
 
         operations.Add(new IndexedDbOperation(
-            "put", HackerOsIndexedDbSchema.FileSystemEntryStoreName, Value: updatedEntry));
+            "put", KazoOsIndexedDbSchema.FileSystemEntryStoreName, Value: updatedEntry));
         operations.Add(new IndexedDbOperation(
-            "put", HackerOsIndexedDbSchema.FileSystemEntryStoreName, Value: updatedSourceParent));
+            "put", KazoOsIndexedDbSchema.FileSystemEntryStoreName, Value: updatedSourceParent));
         if (!sameParent)
         {
             operations.Add(new IndexedDbOperation(
-                "put", HackerOsIndexedDbSchema.FileSystemEntryStoreName, Value: updatedDestinationParent));
+                "put", KazoOsIndexedDbSchema.FileSystemEntryStoreName, Value: updatedDestinationParent));
         }
 
         operations.Add(new IndexedDbOperation(
             "delete",
-            HackerOsIndexedDbSchema.FileSystemLinkStoreName,
+            KazoOsIndexedDbSchema.FileSystemLinkStoreName,
             Key: new object[] { sourceParent.Id, sourceName.Value }));
         operations.Add(new IndexedDbOperation(
             "add",
-            HackerOsIndexedDbSchema.FileSystemLinkStoreName,
+            KazoOsIndexedDbSchema.FileSystemLinkStoreName,
             Value: new IndexedDbFileSystemLinkRecord(destinationParent.Id, destinationName.Value, entry.Id)));
         return operations;
     }
@@ -231,16 +231,16 @@ internal static class IndexedDbFileSystemMutationPlanner
         List<IndexedDbOperation> operations = [RevisionAssertion(parent)];
         operations.AddRange(removals.Select(removal => RevisionAssertion(removal.Entry)));
         operations.Add(new IndexedDbOperation(
-            "put", HackerOsIndexedDbSchema.FileSystemEntryStoreName, Value: updatedParent));
+            "put", KazoOsIndexedDbSchema.FileSystemEntryStoreName, Value: updatedParent));
         foreach (IndexedDbFileSystemDeletionEntry removal in removals.Reverse())
         {
             operations.Add(new IndexedDbOperation(
                 "delete",
-                HackerOsIndexedDbSchema.FileSystemLinkStoreName,
+                KazoOsIndexedDbSchema.FileSystemLinkStoreName,
                 Key: new object[] { removal.ParentId, removal.Name.Value }));
             operations.Add(new IndexedDbOperation(
                 "delete",
-                HackerOsIndexedDbSchema.FileSystemEntryStoreName,
+                KazoOsIndexedDbSchema.FileSystemEntryStoreName,
                 Key: removal.Entry.Id));
         }
 
@@ -275,14 +275,14 @@ internal static class IndexedDbFileSystemMutationPlanner
         List<IndexedDbOperation> operations = [RevisionAssertion(destinationParent)];
         operations.AddRange(copies.Select(copy => RevisionAssertion(copy.Source)));
         operations.Add(new IndexedDbOperation(
-            "put", HackerOsIndexedDbSchema.FileSystemEntryStoreName, Value: updatedParent));
+            "put", KazoOsIndexedDbSchema.FileSystemEntryStoreName, Value: updatedParent));
         foreach (IndexedDbFileSystemCopyEntry copy in copies)
         {
             operations.Add(new IndexedDbOperation(
-                "add", HackerOsIndexedDbSchema.FileSystemEntryStoreName, Value: copy.Copy));
+                "add", KazoOsIndexedDbSchema.FileSystemEntryStoreName, Value: copy.Copy));
             operations.Add(new IndexedDbOperation(
                 "add",
-                HackerOsIndexedDbSchema.FileSystemLinkStoreName,
+                KazoOsIndexedDbSchema.FileSystemLinkStoreName,
                 Value: new IndexedDbFileSystemLinkRecord(copy.DestinationParentId, copy.Name.Value, copy.Copy.Id)));
         }
 
@@ -291,7 +291,7 @@ internal static class IndexedDbFileSystemMutationPlanner
 
     private static IndexedDbOperation RevisionAssertion(IndexedDbFileSystemEntryRecord entry) => new(
         "assertPropertyEquals",
-        HackerOsIndexedDbSchema.FileSystemEntryStoreName,
+        KazoOsIndexedDbSchema.FileSystemEntryStoreName,
         Key: entry.Id,
         CompareProperty: "revision",
         ExpectedValue: entry.Revision,

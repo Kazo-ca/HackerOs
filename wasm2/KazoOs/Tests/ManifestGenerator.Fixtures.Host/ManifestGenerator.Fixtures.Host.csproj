@@ -7,7 +7,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <HackerOsAppHost>true</HackerOsAppHost>
+    <KazoOsAppHost>true</KazoOsAppHost>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\ManifestGenerator.Fixtures.SingleApp\ManifestGenerator.Fixtures.SingleApp.csproj" IsSystemApp="true" />

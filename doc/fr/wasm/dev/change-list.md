@@ -81,7 +81,7 @@ Au build de `OS/Kazo.Os.Ecosystem`, l'outil `Tools/Kazo.Os.Tools.ChangeList` lit
 écrit `obj/…/hackeros-whats-new/whats-new.json`, servi à la racine du site comme `/version.json`
 (ADR 0186 §4.1). Il ne garde que les entrées dont le public contient `user`, groupées par
 version, la plus récente en haut ; les entrées de `unreleased/` forment le premier groupe
-(`"version": null`, `"since": "<HackerOsVersion>"`). Dans un groupe, les entrées sont triées par
+(`"version": null`, `"since": "<KazoOsVersion>"`). Dans un groupe, les entrées sont triées par
 catégorie (`new`, `improved`, `fixed`, `developer`), puis de la PR la plus récente à la plus
 ancienne. Les chemins de `links` deviennent des URL GitHub et `pr` donne aussi `prUrl`.
 
@@ -102,7 +102,7 @@ Côté OS :
   est marqué vu sauf les entrées de la dernière version publiée et celles de la prochaine version
   déjà déployée, et le fichier est écrit tout de suite. Sans liste servie (hors ligne), rien
   n'est écrit : la règle attend une liste.
-- Les apps lisent la liste par le SDK, sans capacité : `HackWhatsNew.GetAsync()` (textes dans la
+- Les apps lisent la liste par le SDK, sans capacité : `KazoWhatsNew.GetAsync()` (textes dans la
   langue de l'app, repli sur l'anglais), `MarkSeenAsync(ids)` et `WatchAsync` (voir
   [`sdk-reference.md`](../framework/sdk-reference.md)).
 

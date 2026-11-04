@@ -266,7 +266,7 @@ public sealed class CodeEditorWorkspaceSearch
         // stop request between files.
         return await SearchFilesAsync(
             listing, query, matcher, openContent, _files,
-            () => HackProcess.CheckpointAsync(cancellationToken), progress: null, cancellationToken);
+            () => KazoProcess.CheckpointAsync(cancellationToken), progress: null, cancellationToken);
     }
 
     /// <summary>
@@ -282,7 +282,7 @@ public sealed class CodeEditorWorkspaceSearch
     internal async Task<CodeEditorSearchResult> SearchInBackgroundAsync(
         CodeEditorSearchQuery query,
         Func<VirtualPath, string?>? openContent,
-        IProgress<HackBackgroundProgress>? progress,
+        IProgress<KazoBackgroundProgress>? progress,
         CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(query);
@@ -296,11 +296,11 @@ public sealed class CodeEditorWorkspaceSearch
         // The task sees nothing of the window: the files cross as paths, unsaved tabs as their text.
         List<CodeEditorSearchJobFile> files = [.. listing.Files.Select(file =>
             new CodeEditorSearchJobFile(file.Path.Value, file.RelativePath, file.Length, openContent?.Invoke(file.Path)))];
-        CodeEditorSearchJobOutput output = await HackBackground.RunAsync<CodeEditorSearchJobInput, CodeEditorSearchJobOutput>(
+        CodeEditorSearchJobOutput output = await KazoBackground.RunAsync<CodeEditorSearchJobInput, CodeEditorSearchJobOutput>(
             CodeEditorSearchJobs.Search,
             new CodeEditorSearchJobInput(query, files, listing.Truncated),
             progress,
-            new HackBackgroundOptions { Name = "search" },
+            new KazoBackgroundOptions { Name = "search" },
             cancellationToken);
         return new CodeEditorSearchResult(
             [.. output.Files.Select(found => new CodeEditorSearchFileResult(listing.Files[found.FileIndex], found.Matches))],

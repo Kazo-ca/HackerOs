@@ -133,13 +133,13 @@ public sealed class CrossOriginIsolationTests
     }
 
     [Theory]
-    [InlineData(CrossOriginIsolationReason.None, Kazo.Os.AppSdk.Diagnostics.HackCrossOriginIsolationReason.None)]
-    [InlineData(CrossOriginIsolationReason.Setting, Kazo.Os.AppSdk.Diagnostics.HackCrossOriginIsolationReason.Setting)]
-    [InlineData(CrossOriginIsolationReason.MissingHeaders, Kazo.Os.AppSdk.Diagnostics.HackCrossOriginIsolationReason.MissingHeaders)]
-    [InlineData(CrossOriginIsolationReason.InsecureContext, Kazo.Os.AppSdk.Diagnostics.HackCrossOriginIsolationReason.InsecureContext)]
-    [InlineData(CrossOriginIsolationReason.Browser, Kazo.Os.AppSdk.Diagnostics.HackCrossOriginIsolationReason.Browser)]
-    [InlineData(CrossOriginIsolationReason.NotBrowser, Kazo.Os.AppSdk.Diagnostics.HackCrossOriginIsolationReason.NotBrowser)]
-    public void The_sdk_status_keeps_every_reason(CrossOriginIsolationReason reason, Kazo.Os.AppSdk.Diagnostics.HackCrossOriginIsolationReason expected) =>
+    [InlineData(CrossOriginIsolationReason.None, Kazo.Os.AppSdk.Diagnostics.KazoCrossOriginIsolationReason.None)]
+    [InlineData(CrossOriginIsolationReason.Setting, Kazo.Os.AppSdk.Diagnostics.KazoCrossOriginIsolationReason.Setting)]
+    [InlineData(CrossOriginIsolationReason.MissingHeaders, Kazo.Os.AppSdk.Diagnostics.KazoCrossOriginIsolationReason.MissingHeaders)]
+    [InlineData(CrossOriginIsolationReason.InsecureContext, Kazo.Os.AppSdk.Diagnostics.KazoCrossOriginIsolationReason.InsecureContext)]
+    [InlineData(CrossOriginIsolationReason.Browser, Kazo.Os.AppSdk.Diagnostics.KazoCrossOriginIsolationReason.Browser)]
+    [InlineData(CrossOriginIsolationReason.NotBrowser, Kazo.Os.AppSdk.Diagnostics.KazoCrossOriginIsolationReason.NotBrowser)]
+    public void The_sdk_status_keeps_every_reason(CrossOriginIsolationReason reason, Kazo.Os.AppSdk.Diagnostics.KazoCrossOriginIsolationReason expected) =>
         Assert.Equal(expected, AppCrossOriginIsolationGateway.ToSdk(CrossOriginIsolationStatus.NotBrowser with { Reason = reason }).Reason);
 
     [Fact]
@@ -147,15 +147,15 @@ public sealed class CrossOriginIsolationTests
     {
         CrossOriginIsolationState state = new();
         AppCrossOriginIsolationGateway gateway = new(() => state.Status);
-        Assert.Equal(Kazo.Os.AppSdk.Diagnostics.HackCrossOriginIsolationReason.NotBrowser, (await gateway.GetStatusAsync()).Reason);
+        Assert.Equal(Kazo.Os.AppSdk.Diagnostics.KazoCrossOriginIsolationReason.NotBrowser, (await gateway.GetStatusAsync()).Reason);
 
         state.Status = new CrossOriginIsolationStatus(
             CrossOriginIsolationMode.Off, false, CrossOriginIsolationReason.Setting, null, false, false, false, TimeSpan.FromMicroseconds(100));
-        Kazo.Os.AppSdk.Diagnostics.HackCrossOriginIsolationStatus status = await gateway.GetStatusAsync();
+        Kazo.Os.AppSdk.Diagnostics.KazoCrossOriginIsolationStatus status = await gateway.GetStatusAsync();
 
         Assert.False(status.IsIsolated);
-        Assert.Equal(Kazo.Os.AppSdk.Diagnostics.HackCrossOriginIsolationSetting.Off, status.Setting);
+        Assert.Equal(Kazo.Os.AppSdk.Diagnostics.KazoCrossOriginIsolationSetting.Off, status.Setting);
         Assert.Equal(TimeSpan.FromMicroseconds(100), status.TimerResolution);
-        Assert.Equal(Kazo.Os.AppSdk.Diagnostics.HackCrossOriginIsolationReason.NotBrowser, (await new AppCrossOriginIsolationGateway(() => null).GetStatusAsync()).Reason);
+        Assert.Equal(Kazo.Os.AppSdk.Diagnostics.KazoCrossOriginIsolationReason.NotBrowser, (await new AppCrossOriginIsolationGateway(() => null).GetStatusAsync()).Reason);
     }
 }

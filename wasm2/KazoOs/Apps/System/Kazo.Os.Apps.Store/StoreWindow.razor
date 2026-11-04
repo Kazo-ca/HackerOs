@@ -6,7 +6,7 @@
 <div class="store-root">
     <header class="store-header">
         <div class="store-brand">
-            <HackerIcon Library="IconLibrary.Lucide" Name="shopping-bag" Size="20" Title="" />
+            <KazoIcon Library="IconLibrary.Lucide" Name="shopping-bag" Size="20" Title="" />
             <span class="store-title">Hack Store</span>
         </div>
         <input class="store-search"
@@ -34,14 +34,14 @@
             </button>
         </nav>
         <button type="button" class="store-icon-button" title="@L["Refresh"]" aria-label="@L["Refresh"]" disabled="@(_isLoading || _isBusy)" @onclick="RefreshAsync">
-            <HackerIcon Library="IconLibrary.Lucide" Name="refresh-cw" Size="16" Title="" />
+            <KazoIcon Library="IconLibrary.Lucide" Name="refresh-cw" Size="16" Title="" />
         </button>
     </header>
 
     @if (_store.HasPendingRestart)
     {
         <div class="store-banner is-restart" role="status">
-            <HackerIcon Library="IconLibrary.Lucide" Name="rotate-ccw" Size="16" Title="" />
+            <KazoIcon Library="IconLibrary.Lucide" Name="rotate-ccw" Size="16" Title="" />
             <span>@L["Restart.Text"]</span>
             <button type="button" class="store-button is-primary" disabled="@_isBusy" @onclick="RestartAsync">@L["Restart.Button"]</button>
         </div>
@@ -55,10 +55,10 @@
         </div>
     }
 
-    @foreach (HackAppCatalog failed in _store.FailedCatalogs)
+    @foreach (KazoAppCatalog failed in _store.FailedCatalogs)
     {
         <div class="store-banner is-warning" role="status">
-            <HackerIcon Library="IconLibrary.Lucide" Name="triangle-alert" Size="16" Title="" />
+            <KazoIcon Library="IconLibrary.Lucide" Name="triangle-alert" Size="16" Title="" />
             <span>@L["Catalog.Failed", failed.Name]</span>
         </div>
     }
@@ -92,7 +92,7 @@
         else if (_categoryId is { } categoryId)
         {
             <button type="button" class="store-back" @onclick="ShowHome">
-                <HackerIcon Library="IconLibrary.Lucide" Name="arrow-left" Size="16" Title="" /> @L["Back"]
+                <KazoIcon Library="IconLibrary.Lucide" Name="arrow-left" Size="16" Title="" /> @L["Back"]
             </button>
             <h2 class="store-section-title">@CategoryLabel(categoryId)</h2>
             @RenderGrid(categoryId == StoreCatalog.OtherCategoryId ? _store.Home().LastOrDefault().Apps ?? [] : _store.InCategory(categoryId))
@@ -103,7 +103,7 @@
             {
                 <p class="store-empty">@L["Home.Empty"]</p>
             }
-            @foreach ((HackCatalogCategory category, IReadOnlyList<StoreEntry> apps) in _store.Home())
+            @foreach ((KazoCatalogCategory category, IReadOnlyList<StoreEntry> apps) in _store.Home())
             {
                 <section class="store-section" aria-label="@CategoryLabel(category.Id)">
                     <div class="store-section-head">
@@ -157,7 +157,7 @@
                         else
                         {
                             <span class="store-pack-preview is-placeholder" aria-hidden="true">
-                                <HackerIcon Library="IconLibrary.Lucide" Name="palette" Size="40" Title="" />
+                                <KazoIcon Library="IconLibrary.Lucide" Name="palette" Size="40" Title="" />
                             </span>
                         }
                         <div class="store-pack-body">
@@ -198,10 +198,10 @@
             @switch (pack.State)
             {
                 case StoreThemePackState.NotInstalled when pack.Pack is not null:
-                    <button type="button" class="store-button is-primary" disabled="@busy" @onclick="() => InstallThemePackAsync(pack, HackPackageScope.User)">
-                        <HackerIcon Library="IconLibrary.Lucide" Name="download" Size="14" Title="" /> @L["Action.InstallForMe"]
+                    <button type="button" class="store-button is-primary" disabled="@busy" @onclick="() => InstallThemePackAsync(pack, KazoPackageScope.User)">
+                        <KazoIcon Library="IconLibrary.Lucide" Name="download" Size="14" Title="" /> @L["Action.InstallForMe"]
                     </button>
-                    <button type="button" class="store-button" disabled="@busy" @onclick="() => InstallThemePackAsync(pack, HackPackageScope.System)">@L["Action.InstallForEveryone"]</button>
+                    <button type="button" class="store-button" disabled="@busy" @onclick="() => InstallThemePackAsync(pack, KazoPackageScope.System)">@L["Action.InstallForEveryone"]</button>
                     break;
                 case StoreThemePackState.UpdateAvailable:
                     <button type="button" class="store-button is-primary" disabled="@busy" @onclick="() => UpdateThemePackAsync(pack)">@L["Action.Update", pack.AvailableUpdate!]</button>
@@ -210,7 +210,7 @@
                     break;
                 case StoreThemePackState.Installed:
                     <button type="button" class="store-button is-primary" disabled="@busy" @onclick="() => OpenAppearanceAsync(pack)">
-                        <HackerIcon Library="IconLibrary.Lucide" Name="palette" Size="14" Title="" /> @L["Action.OpenAppearance"]
+                        <KazoIcon Library="IconLibrary.Lucide" Name="palette" Size="14" Title="" /> @L["Action.OpenAppearance"]
                     </button>
                     <button type="button" class="store-button is-danger" disabled="@busy" @onclick="() => RemoveThemePackAsync(pack)">@L["Action.Remove"]</button>
                     break;
@@ -259,7 +259,7 @@
         else
         {
             <span class="store-app-icon is-placeholder" aria-hidden="true">
-                <HackerIcon Library="IconLibrary.Lucide" Name="package" Size="@(size / 2)" Title="" />
+                <KazoIcon Library="IconLibrary.Lucide" Name="package" Size="@(size / 2)" Title="" />
             </span>
         }
     };
@@ -271,10 +271,10 @@
             @switch (entry.State)
             {
                 case StoreAppState.NotInstalled when entry.App is not null:
-                    <button type="button" class="store-button is-primary" disabled="@busy" @onclick="() => InstallAsync(entry, HackPackageScope.User)">
-                        <HackerIcon Library="IconLibrary.Lucide" Name="download" Size="14" Title="" /> @L["Action.InstallForMe"]
+                    <button type="button" class="store-button is-primary" disabled="@busy" @onclick="() => InstallAsync(entry, KazoPackageScope.User)">
+                        <KazoIcon Library="IconLibrary.Lucide" Name="download" Size="14" Title="" /> @L["Action.InstallForMe"]
                     </button>
-                    <button type="button" class="store-button" disabled="@busy" @onclick="() => InstallAsync(entry, HackPackageScope.System)">@L["Action.InstallForEveryone"]</button>
+                    <button type="button" class="store-button" disabled="@busy" @onclick="() => InstallAsync(entry, KazoPackageScope.System)">@L["Action.InstallForEveryone"]</button>
                     break;
                 case StoreAppState.UpdateAvailable:
                     <button type="button" class="store-button is-primary" disabled="@busy" @onclick="() => UpdateAsync(entry)">@L["Action.Update", entry.Update!.AvailableVersion]</button>
@@ -282,19 +282,19 @@
                     @if (entry.Installed?.PreviousVersion is { } previous)
                     {
                         <button type="button" class="store-button" disabled="@busy" @onclick="() => RollbackAsync(entry)">
-                            <HackerIcon Library="IconLibrary.Lucide" Name="undo-2" Size="14" Title="" /> @L["Action.Rollback", previous]
+                            <KazoIcon Library="IconLibrary.Lucide" Name="undo-2" Size="14" Title="" /> @L["Action.Rollback", previous]
                         </button>
                     }
                     <button type="button" class="store-button is-danger" disabled="@busy" @onclick="() => RemoveAsync(entry)">@L["Action.Uninstall"]</button>
                     break;
                 case StoreAppState.Installed:
                     <button type="button" class="store-button is-primary" disabled="@busy" @onclick="() => OpenAsync(entry)">
-                        <HackerIcon Library="IconLibrary.Lucide" Name="play" Size="14" Title="" /> @L["Action.Open"]
+                        <KazoIcon Library="IconLibrary.Lucide" Name="play" Size="14" Title="" /> @L["Action.Open"]
                     </button>
                     @if (entry.Installed?.PreviousVersion is { } kept)
                     {
                         <button type="button" class="store-button" disabled="@busy" @onclick="() => RollbackAsync(entry)">
-                            <HackerIcon Library="IconLibrary.Lucide" Name="undo-2" Size="14" Title="" /> @L["Action.Rollback", kept]
+                            <KazoIcon Library="IconLibrary.Lucide" Name="undo-2" Size="14" Title="" /> @L["Action.Rollback", kept]
                         </button>
                     }
                     <button type="button" class="store-button is-danger" disabled="@busy" @onclick="() => RemoveAsync(entry)">@L["Action.Uninstall"]</button>
@@ -307,7 +307,7 @@
                     }
                     else if (entry.Removed && entry.App is not null)
                     {
-                        <button type="button" class="store-button" disabled="@busy" @onclick="() => InstallAsync(entry, HackPackageScope.User)">@L["Action.InstallForMe"]</button>
+                        <button type="button" class="store-button" disabled="@busy" @onclick="() => InstallAsync(entry, KazoPackageScope.User)">@L["Action.InstallForMe"]</button>
                     }
                     break;
             }
@@ -320,11 +320,11 @@
 
     private RenderFragment RenderDetail(StoreEntry entry) => __builder =>
     {
-        HackCatalogApp? app = entry.App;
-        HackCatalogAppVersion? latest = app?.Latest;
+        KazoCatalogApp? app = entry.App;
+        KazoCatalogAppVersion? latest = app?.Latest;
         <article class="store-detail">
             <button type="button" class="store-back" @onclick="CloseDetail">
-                <HackerIcon Library="IconLibrary.Lucide" Name="arrow-left" Size="16" Title="" /> @L["Back"]
+                <KazoIcon Library="IconLibrary.Lucide" Name="arrow-left" Size="16" Title="" /> @L["Back"]
             </button>
             <div class="store-detail-head">
                 @RenderIcon(entry, 96)
@@ -334,7 +334,7 @@
                     {
                         <p class="store-detail-short">@app.GetShortDescription(Culture)</p>
                         <span class="store-trust @TrustClass(app.Trust)">
-                            <HackerIcon Library="IconLibrary.Lucide" Name="@TrustIcon(app.Trust)" Size="14" Title="" />
+                            <KazoIcon Library="IconLibrary.Lucide" Name="@TrustIcon(app.Trust)" Size="14" Title="" />
                             @TrustText(app.Trust) · @L["Detail.Catalog", app.Catalog]
                         </span>
                     }

@@ -13,16 +13,16 @@ namespace Kazo.Os.Platform.Blazor.ContextMenus;
 /// <summary>
 /// Adds the entries apps registered (ADR 0151) to a file menu the OS is about to draw (ADR 0159 §5).
 /// The context menu service calls it after the menu's own <c>Opening</c> handler, for every menu whose
-/// <see cref="HackMenuDefinition.FileMenu"/> the provider of the file control set: the entries are
+/// <see cref="KazoMenuDefinition.FileMenu"/> the provider of the file control set: the entries are
 /// therefore the same whichever app provides the control, in the explorer, on the desktop, in the
-/// file dialogs and in any app that shows <c>HackFileView</c>.
+/// file dialogs and in any app that shows <c>KazoFileView</c>.
 /// </summary>
 public interface IFileMenuEntrySource
 {
     /// <summary>Places the registered entries that apply to <paramref name="menu"/>'s file context.</summary>
-    /// <param name="menu">This opening's copy of the menu; <see cref="HackMenuDefinition.FileMenu"/> is set.</param>
+    /// <param name="menu">This opening's copy of the menu; <see cref="KazoMenuDefinition.FileMenu"/> is set.</param>
     /// <param name="cancellationToken">Cancels the read of the user's preferences.</param>
-    Task ApplyAsync(HackMenuDefinition menu, CancellationToken cancellationToken = default);
+    Task ApplyAsync(KazoMenuDefinition menu, CancellationToken cancellationToken = default);
 }
 
 /// <summary>
@@ -72,7 +72,7 @@ public sealed class FileMenuEntries : IFileMenuEntrySource
     private static readonly IReadOnlySet<int> SingleScreen = new HashSet<int> { 1 };
 
     /// <inheritdoc />
-    public async Task ApplyAsync(HackMenuDefinition menu, CancellationToken cancellationToken = default)
+    public async Task ApplyAsync(KazoMenuDefinition menu, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(menu);
         if (menu.FileMenu is not { } context || _registry.Apps.Count == 0)
@@ -128,7 +128,7 @@ public sealed class FileMenuEntries : IFileMenuEntrySource
     /// <summary>Converts a registered icon to the menu's description.</summary>
     /// <param name="assembly">The app's entry-point assembly, whose static assets (<c>_content/&lt;assembly&gt;/</c>) an image path is relative to.</param>
     /// <param name="icon">The registered icon.</param>
-    public static HackIcon? IconOf(string? assembly, AppContextMenuIconManifest? icon)
+    public static KazoIcon? IconOf(string? assembly, AppContextMenuIconManifest? icon)
     {
         if (icon is null)
         {
@@ -144,14 +144,14 @@ public sealed class FileMenuEntries : IFileMenuEntrySource
                 "simpleicons" => IconLibrary.SimpleIcons,
                 _ => IconLibrary.Lucide
             };
-            return HackIcons.Vector(library, icon.Source);
+            return KazoIcons.Vector(library, icon.Source);
         }
 
         // An asset path is relative to the app's wwwroot/, published as _content/<assembly>/ (ADR 0098 §5); a URI is kept.
         string source = icon.Source.Contains(':', StringComparison.Ordinal) || assembly is null
             ? icon.Source
             : $"_content/{assembly}/{icon.Source.TrimStart('/')}";
-        return HackIcons.FromImage(source);
+        return KazoIcons.FromImage(source);
     }
 
     private string? AssemblyOf(string appId) => _catalog.Manifests.TryGetValue(appId, out AppManifest? manifest)
@@ -159,7 +159,7 @@ public sealed class FileMenuEntries : IFileMenuEntrySource
         : null;
 
     /// <summary>Builds the menu item of an entry and its visible submenu; <see langword="null"/> for a submenu left empty.</summary>
-    private HackMenuItemDefinition? Build(
+    private KazoMenuItemDefinition? Build(
         RegisteredFileMenuApp app,
         AppContextMenuEntryManifest entry,
         Func<AppContextMenuEntryManifest, bool> visible,
@@ -168,7 +168,7 @@ public sealed class FileMenuEntries : IFileMenuEntrySource
         CultureInfo culture,
         int depth)
     {
-        HackMenuItemDefinition item = new(IdOf(app.AppId, entry.Name), FileContextMenuMatcher.TitleOf(entry, culture))
+        KazoMenuItemDefinition item = new(IdOf(app.AppId, entry.Name), FileContextMenuMatcher.TitleOf(entry, culture))
         {
             Icon = IconOf(AssemblyOf(app.AppId), entry.Icon)
         };
@@ -185,7 +185,7 @@ public sealed class FileMenuEntries : IFileMenuEntrySource
             return null;
         }
 
-        HackMenuGroupDefinition group = new();
+        KazoMenuGroupDefinition group = new();
         foreach (AppContextMenuEntryManifest child in children.Where(visible))
         {
             if (Build(app, child, visible, payloadScope, paths, culture, depth + 1) is { } childItem)

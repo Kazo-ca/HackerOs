@@ -25,7 +25,7 @@ namespace Kazo.Os.Platform.WorkerHost.Protocol;
 /// Two sources, tried in order: the event types of the OS's own contracts, written by hand like the
 /// rest of the wire format (<see cref="WireCodec"/>: their constructors validate and some values,
 /// such as <see cref="VirtualPath"/>, are only built through factories); then the
-/// <see cref="JsonSerializerContext"/> an app assembly declares with <see cref="HackWireContextAttribute"/>,
+/// <see cref="JsonSerializerContext"/> an app assembly declares with <see cref="KazoWireContextAttribute"/>,
 /// whose metadata is generated at build time (no reflection-based serialization, ADR 0113).
 /// </para>
 /// <para>A type covered by neither cannot cross: <see cref="Unsupported"/> says what to add.</para>
@@ -91,7 +91,7 @@ internal static class WirePayloadCodec
     public static NotSupportedException Unsupported(Type type) =>
         new($"'{type.FullName}' cannot cross between a worker and the OS: it is neither an event type of the OS " +
             "nor declared by a JsonSerializerContext of its assembly. Add [JsonSerializable(typeof(" + type.Name + "))] " +
-            "to a context and [assembly: HackWireContext(typeof(TheContext))] to the assembly (ADR 0124), " +
+            "to a context and [assembly: KazoWireContext(typeof(TheContext))] to the assembly (ADR 0124), " +
             "or declare [AppManifest(Execution = AppExecutionHost.MainThread)].");
 
     /// <summary>Parses a topic name a worker sent, validating every segment again (a worker cannot forge one).</summary>
@@ -128,7 +128,7 @@ internal static class WirePayloadCodec
             return builtIn;
         }
 
-        foreach (HackWireContextAttribute declared in type.Assembly.GetCustomAttributes<HackWireContextAttribute>())
+        foreach (KazoWireContextAttribute declared in type.Assembly.GetCustomAttributes<KazoWireContextAttribute>())
         {
             if (Context(declared) is { } context && context.GetTypeInfo(type) is { } info)
             {
@@ -142,7 +142,7 @@ internal static class WirePayloadCodec
     }
 
     /// <summary>Creates the declared context once; a type that is not a context is ignored, like a missing one.</summary>
-    private static JsonSerializerContext? Context(HackWireContextAttribute declared) =>
+    private static JsonSerializerContext? Context(KazoWireContextAttribute declared) =>
         s_contexts.GetOrAdd(declared.ContextType, _ =>
             typeof(JsonSerializerContext).IsAssignableFrom(declared.ContextType) && !declared.ContextType.IsAbstract
                 ? Activator.CreateInstance(declared.ContextType) as JsonSerializerContext

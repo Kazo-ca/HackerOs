@@ -31,7 +31,7 @@ public sealed class IndexedDbInspectorService
     {
         await using IndexedDbInteropAdapter adapter = new(_runtime);
         
-        string[] storeNames = [.. HackerOsIndexedDbSchema.ObjectStores.Select(s => s.Name)];
+        string[] storeNames = [.. KazoOsIndexedDbSchema.ObjectStores.Select(s => s.Name)];
         IndexedDbOperation[] operations = [.. storeNames.Select(storeName =>
             new IndexedDbOperation("getAll", storeName))];
 
@@ -49,7 +49,7 @@ public sealed class IndexedDbInspectorService
 
         // Build path resolution lookup from fsLinks (parentId + name -> entryId)
         Dictionary<string, (string ParentId, string Name)> linkMap = [];
-        if (storeData.TryGetValue(HackerOsIndexedDbSchema.FileSystemLinkStoreName, out JsonElement linksElement)
+        if (storeData.TryGetValue(KazoOsIndexedDbSchema.FileSystemLinkStoreName, out JsonElement linksElement)
             && linksElement.ValueKind == JsonValueKind.Array)
         {
             foreach (JsonElement link in linksElement.EnumerateArray())
@@ -67,7 +67,7 @@ public sealed class IndexedDbInspectorService
 
         // Resolve virtual path for every entryId in fsEntries
         Dictionary<string, string> resolvedPaths = [];
-        if (storeData.TryGetValue(HackerOsIndexedDbSchema.FileSystemEntryStoreName, out JsonElement entriesElement)
+        if (storeData.TryGetValue(KazoOsIndexedDbSchema.FileSystemEntryStoreName, out JsonElement entriesElement)
             && entriesElement.ValueKind == JsonValueKind.Array)
         {
             foreach (JsonElement entry in entriesElement.EnumerateArray())
@@ -81,7 +81,7 @@ public sealed class IndexedDbInspectorService
         }
 
         List<IndexedDbStoreSnapshot> stores = [];
-        foreach (IndexedDbObjectStoreDefinition storeDef in HackerOsIndexedDbSchema.ObjectStores)
+        foreach (IndexedDbObjectStoreDefinition storeDef in KazoOsIndexedDbSchema.ObjectStores)
         {
             JsonElement element = storeData.GetValueOrDefault(storeDef.Name);
             int count = element.ValueKind == JsonValueKind.Array ? element.GetArrayLength() : 0;
@@ -100,8 +100,8 @@ public sealed class IndexedDbInspectorService
 
         return new IndexedDbSnapshot(
             DateTimeOffset.UtcNow,
-            HackerOsIndexedDbSchema.DatabaseName,
-            HackerOsIndexedDbSchema.CurrentVersion,
+            KazoOsIndexedDbSchema.DatabaseName,
+            KazoOsIndexedDbSchema.CurrentVersion,
             stores,
             resolvedPaths,
             linkMap.Count);

@@ -17,7 +17,7 @@ public sealed record AppSystemSettingsDocumentInfo(
 
 /// <summary>
 /// Access to the OS's own layered settings documents (ADR 0056, section 8), behind
-/// <see cref="HackSettings.OpenSystemAsync(string, CancellationToken)"/>.
+/// <see cref="KazoSettings.OpenSystemAsync(string, CancellationToken)"/>.
 /// </summary>
 /// <remarks>
 /// No capability is required: the files' permissions decide (decision D16). Everybody reads both

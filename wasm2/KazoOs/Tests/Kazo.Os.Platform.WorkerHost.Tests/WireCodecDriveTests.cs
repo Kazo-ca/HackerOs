@@ -11,13 +11,13 @@ public sealed class WireCodecDriveTests
     [Fact]
     public void Drives_keep_their_type_and_readiness()
     {
-        HackDriveSnapshot[] drives =
+        KazoDriveSnapshot[] drives =
         [
             new("/", "idbfs", "hda", 100, 40),
-            new("/mnt/Projects", "hostfs", "Projects", 0, 0) { DriveType = HackDriveType.Network, IsReady = false }
+            new("/mnt/Projects", "hostfs", "Projects", 0, 0) { DriveType = KazoDriveType.Network, IsReady = false }
         ];
 
-        IReadOnlyList<HackDriveSnapshot> copy = RoundTrip(writer => WireCodec.WriteDrives(writer, drives), WireCodec.ReadDrives);
+        IReadOnlyList<KazoDriveSnapshot> copy = RoundTrip(writer => WireCodec.WriteDrives(writer, drives), WireCodec.ReadDrives);
 
         Assert.Equal(drives, copy);
     }
@@ -28,9 +28,9 @@ public sealed class WireCodecDriveTests
         Assert.Null(RoundTrip(writer => WireCodec.WriteDrive(writer, null), WireCodec.ReadDrive));
 
         using JsonDocument old = JsonDocument.Parse("{\"d\":{\"n\":\"/\",\"f\":\"idbfs\",\"l\":\"hda\",\"t\":1,\"a\":1}}");
-        HackDriveSnapshot drive = WireCodec.ReadDrive(old.RootElement)!;
+        KazoDriveSnapshot drive = WireCodec.ReadDrive(old.RootElement)!;
 
-        Assert.Equal(HackDriveType.Fixed, drive.DriveType);
+        Assert.Equal(KazoDriveType.Fixed, drive.DriveType);
         Assert.True(drive.IsReady);
     }
 

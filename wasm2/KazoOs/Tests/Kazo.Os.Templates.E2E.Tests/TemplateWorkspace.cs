@@ -35,7 +35,7 @@ public sealed class TemplateWorkspace : IAsyncLifetime
     {
         Directory.CreateDirectory(Root);
         Version = XDocument.Load(Path.Combine(RepositoryRoot, "build", "Versions.props"))
-            .Descendants("HackerOsVersion").Single().Value.Trim();
+            .Descendants("KazoOsVersion").Single().Value.Trim();
 
         Feed = Environment.GetEnvironmentVariable("HACKEROS_LOCAL_FEED") is { Length: > 0 } feed
             ? Path.GetFullPath(feed)

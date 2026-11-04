@@ -102,11 +102,11 @@ public partial class CodeEditorExplorer
     private void OnControllerChanged(IHackFileView? files) => _files = files;
 
     /// <summary>VS Code previews a file on a single click; folders just expand.</summary>
-    private Task OnSelectionChanged(IReadOnlyList<HackFileViewItem> selection) =>
+    private Task OnSelectionChanged(IReadOnlyList<KazoFileViewItem> selection) =>
         selection is [{ IsDirectory: false } file] ? OnPreviewFile.InvokeAsync(VirtualPath.Parse(file.Path)) : Task.CompletedTask;
 
     /// <summary>A file activated (double click, Enter) opens in a tab, not in its default app.</summary>
-    private async Task OnOpening(HackFileViewOpeningEventArgs e)
+    private async Task OnOpening(KazoFileViewOpeningEventArgs e)
     {
         if (!e.Item.IsDirectory)
         {
@@ -115,7 +115,7 @@ public partial class CodeEditorExplorer
         }
     }
 
-    private Task OnRenamedItem(HackFileViewRenamedEventArgs e) =>
+    private Task OnRenamedItem(KazoFileViewRenamedEventArgs e) =>
         OnRenamed.InvokeAsync((VirtualPath.Parse(e.OldPath), VirtualPath.Parse(e.NewPath)));
 
     /// <summary>
@@ -123,12 +123,12 @@ public partial class CodeEditorExplorer
     /// "New Folder" with the name typed first replace the control's "New folder"; on a folder, the same
     /// pair, "Find in Folder..." and "Open in Integrated Terminal".
     /// </summary>
-    private void OnContextMenuOpening(HackFileMenuOpeningEventArgs e)
+    private void OnContextMenuOpening(KazoFileMenuOpeningEventArgs e)
     {
         switch (e.Scope)
         {
             case FileMenuScope.Background:
-                e.Menu.Hide(HackFileMenuItems.NewFolder);
+                e.Menu.Hide(KazoFileMenuItems.NewFolder);
                 AddGroup(e.Menu,
                     Item("explorer-new-file", L["Explorer.NewFile.Title"], "file-plus", () => BeginCreateAsync(CreationKind.File, Workspace?.Root)),
                     Item("explorer-new-folder", L["Explorer.NewFolder.Title"], "folder-plus", () => BeginCreateAsync(CreationKind.Folder, Workspace?.Root)));
@@ -145,10 +145,10 @@ public partial class CodeEditorExplorer
     }
 
     /// <summary>Adds the editor's entries as one group, right after the control's first group.</summary>
-    private static void AddGroup(HackMenuDefinition menu, params HackMenuItemDefinition[] items)
+    private static void AddGroup(KazoMenuDefinition menu, params KazoMenuItemDefinition[] items)
     {
-        HackMenuGroupDefinition group = new();
-        foreach (HackMenuItemDefinition item in items)
+        KazoMenuGroupDefinition group = new();
+        foreach (KazoMenuItemDefinition item in items)
         {
             group.Items.Add(item);
         }
@@ -270,10 +270,10 @@ public partial class CodeEditorExplorer
     }
 
     /// <summary>One entry of the editor's own, run in the editor's context (the component that owns it).</summary>
-    private HackMenuItemDefinition Item(string id, string label, string icon, Func<Task> onActivate) =>
+    private KazoMenuItemDefinition Item(string id, string label, string icon, Func<Task> onActivate) =>
         new(id, label)
         {
-            Icon = HackIcons.Vector(IconLibrary.Lucide, icon),
+            Icon = KazoIcons.Vector(IconLibrary.Lucide, icon),
             OnClick = EventCallback.Factory.Create<object?>(this, _ => onActivate())
         };
 }

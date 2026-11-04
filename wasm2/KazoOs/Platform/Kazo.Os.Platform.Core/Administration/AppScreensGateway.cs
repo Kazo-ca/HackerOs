@@ -37,7 +37,7 @@ internal sealed class AppScreensGateway : IAppScreensGateway
     internal void BindAmbientContext(Kazo.Os.AppSdk.IAppExecutionContext context) => _ambient.Bind(context);
 
     /// <inheritdoc />
-    public HackScreensState GetState() => Control().GetState(_appInstanceId);
+    public KazoScreensState GetState() => Control().GetState(_appInstanceId);
 
     /// <inheritdoc />
     public ValueTask<IAsyncDisposable> WatchAsync(Func<ValueTask> onChanged, CancellationToken cancellationToken = default)
@@ -50,7 +50,7 @@ internal sealed class AppScreensGateway : IAppScreensGateway
     }
 
     /// <inheritdoc />
-    public async ValueTask<HackScreenOpenStatus> OpenScreenAsync(CancellationToken cancellationToken = default) =>
+    public async ValueTask<KazoScreenOpenStatus> OpenScreenAsync(CancellationToken cancellationToken = default) =>
         await Control().OpenScreenAsync(cancellationToken).ConfigureAwait(false);
 
     /// <inheritdoc />
@@ -73,7 +73,7 @@ internal sealed class AppScreensGateway : IAppScreensGateway
         await Control().ToggleFullScreenAsync(_appInstanceId).ConfigureAwait(false);
 
     /// <inheritdoc />
-    public async ValueTask<HackScreenPermission> RequestPermissionAsync(CancellationToken cancellationToken = default) =>
+    public async ValueTask<KazoScreenPermission> RequestPermissionAsync(CancellationToken cancellationToken = default) =>
         await Control().RequestPermissionAsync().ConfigureAwait(false);
 
     private IScreenControl Control()

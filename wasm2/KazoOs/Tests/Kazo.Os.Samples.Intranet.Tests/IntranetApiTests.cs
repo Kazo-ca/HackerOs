@@ -9,7 +9,7 @@ public sealed class IntranetApiTests
     [Fact]
     public async Task Health_reports_the_counters_of_the_site_process()
     {
-        HackWebResponseData health = await new IntranetClient().GetAsync("/health");
+        KazoWebResponseData health = await new IntranetClient().GetAsync("/health");
 
         Assert.Equal(200, health.StatusCode);
         Assert.StartsWith("application/json", health.ContentType);
@@ -61,29 +61,29 @@ public sealed class IntranetApiTests
             Assert.Equal("VPN maintenance", Assert.Single(search.RootElement.EnumerateArray()).GetProperty("title").GetString());
         }
 
-        HackWebResponseData missing = await client.GetAsync("/api/notes/42");
+        KazoWebResponseData missing = await client.GetAsync("/api/notes/42");
         Assert.Equal(404, missing.StatusCode);
         Assert.StartsWith("application/problem+json", missing.ContentType);
 
-        HackWebResponseData invalid = await client.SendJsonAsync("POST", "/api/notes", """{"title":"x"}""");
+        KazoWebResponseData invalid = await client.SendJsonAsync("POST", "/api/notes", """{"title":"x"}""");
         Assert.Equal(400, invalid.StatusCode);
         Assert.Contains("\"Title\"", invalid.ReadAsString());
 
-        HackWebResponseData created = await client.SendJsonAsync("POST", "/api/notes", """{"title":"From the API","body":"curl -d"}""");
+        KazoWebResponseData created = await client.SendJsonAsync("POST", "/api/notes", """{"title":"From the API","body":"curl -d"}""");
         Assert.Equal(201, created.StatusCode);
         Assert.Equal("http://intranet.hack/api/notes/4", IntranetClient.Location(created));
         Assert.Contains("\"author\":\"anonymous\"", created.ReadAsString());
 
-        HackWebResponseData replaced = await client.SendJsonAsync("PUT", "/api/notes/4", """{"title":"Replaced","body":"","pinned":false,"author":"api"}""");
+        KazoWebResponseData replaced = await client.SendJsonAsync("PUT", "/api/notes/4", """{"title":"Replaced","body":"","pinned":false,"author":"api"}""");
         Assert.Equal(200, replaced.StatusCode);
         Assert.Contains("\"title\":\"Replaced\"", replaced.ReadAsString());
 
-        HackWebResponseData pinned = await client.SendJsonAsync("PATCH", "/api/notes/4", """{"pinned":true}""");
+        KazoWebResponseData pinned = await client.SendJsonAsync("PATCH", "/api/notes/4", """{"pinned":true}""");
         Assert.Equal(200, pinned.StatusCode);
         Assert.Contains("\"pinned\":true", pinned.ReadAsString());
         Assert.Contains("\"title\":\"Replaced\"", pinned.ReadAsString());
 
-        HackWebResponseData badPatch = await client.SendJsonAsync("PATCH", "/api/notes/4", """{"title":"no"}""");
+        KazoWebResponseData badPatch = await client.SendJsonAsync("PATCH", "/api/notes/4", """{"title":"no"}""");
         Assert.Equal(400, badPatch.StatusCode);
         Assert.Contains("\"Title\"", badPatch.ReadAsString());
 
@@ -108,16 +108,16 @@ public sealed class IntranetApiTests
     {
         IntranetClient client = new();
 
-        HackWebResponseData wrongColumn = await client.SendJsonAsync("POST", "/api/tasks", """{"title":"Audit","column":"later"}""");
+        KazoWebResponseData wrongColumn = await client.SendJsonAsync("POST", "/api/tasks", """{"title":"Audit","column":"later"}""");
         Assert.Equal(400, wrongColumn.StatusCode);
         Assert.Contains("\"Column\"", wrongColumn.ReadAsString());
 
-        HackWebResponseData created = await client.SendJsonAsync("POST", "/api/tasks", """{"title":"Audit the firewall","assignee":"trinity"}""");
+        KazoWebResponseData created = await client.SendJsonAsync("POST", "/api/tasks", """{"title":"Audit the firewall","assignee":"trinity"}""");
         Assert.Equal(201, created.StatusCode);
         Assert.Equal("http://intranet.hack/api/tasks/5", IntranetClient.Location(created));
         Assert.Contains("\"column\":\"todo\"", created.ReadAsString());
 
-        HackWebResponseData moved = await client.SendJsonAsync("PUT", "/api/tasks/5", """{"title":"Audit the firewall","assignee":"trinity","column":"doing"}""");
+        KazoWebResponseData moved = await client.SendJsonAsync("PUT", "/api/tasks/5", """{"title":"Audit the firewall","assignee":"trinity","column":"doing"}""");
         Assert.Contains("\"column\":\"doing\"", moved.ReadAsString());
 
         using (JsonDocument all = JsonDocument.Parse((await client.GetAsync("/api/tasks")).ReadAsString()))

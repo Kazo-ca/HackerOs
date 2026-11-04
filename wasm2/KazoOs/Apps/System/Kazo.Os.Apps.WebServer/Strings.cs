@@ -18,9 +18,9 @@ internal sealed class Strings
 
     /// <summary>
     /// The texts in the language of the process running the current code
-    /// (<see cref="Kazo.Os.AppSdk.HackExecutionContext"/>), English outside any app.
+    /// (<see cref="Kazo.Os.AppSdk.KazoExecutionContext"/>), English outside any app.
     /// </summary>
-    internal static IStringLocalizer<Strings> Ambient { get; } = HackLocalization.GetLocalizer<Strings>();
+    internal static IStringLocalizer<Strings> Ambient { get; } = KazoLocalization.GetLocalizer<Strings>();
 
     /// <summary>
     /// Picks <c>&lt;key&gt;.One</c> or <c>&lt;key&gt;.Other</c> for <paramref name="count"/> and formats it:
@@ -31,7 +31,7 @@ internal sealed class Strings
     /// <param name="count">The number counted, passed as <c>{0}</c>.</param>
     internal static string Count(IStringLocalizer<Strings> text, string key, int count)
     {
-        bool french = text is HackStringLocalizer { Culture.TwoLetterISOLanguageName: "fr" };
+        bool french = text is KazoStringLocalizer { Culture.TwoLetterISOLanguageName: "fr" };
         bool one = french ? count is 0 or 1 : count == 1;
         return text[key + (one ? ".One" : ".Other"), count];
     }

@@ -17,7 +17,7 @@ using Kazo.Os.Simulation.Abstractions.Sessions;
 namespace Kazo.Os.Platform.Core.Tests.Execution;
 
 /// <summary>
-/// Installing apps from their GitHub repository through <c>HackAppPackages</c>' gateway (ADR 0182
+/// Installing apps from their GitHub repository through <c>KazoAppPackages</c>' gateway (ADR 0182
 /// §3 to §5), for the session user or for the system, with ADR 0189's two-step approval.
 /// </summary>
 public sealed partial class AppPackageGatewayTests
@@ -37,19 +37,19 @@ public sealed partial class AppPackageGatewayTests
         CountingAgent agent = new(succeed: true);
         FakeApproval approval = new(AppInstallApprovalOutcome.Approved);
 
-        HackPackageInstallReport report = await (await harness.CreateGatewayAsync(agent, approval: approval)).InstallPackageAsync(Trusted);
+        KazoPackageInstallReport report = await (await harness.CreateGatewayAsync(agent, approval: approval)).InstallPackageAsync(Trusted);
 
         Assert.Equal(0, agent.Calls);
         Assert.Empty(approval.Requests);
         Assert.False(report.SystemWide);
-        Assert.Equal(HackPackageTrust.Trusted, report.Trust);
+        Assert.Equal(KazoPackageTrust.Trusted, report.Trust);
         Assert.Equal("hello", await harness.Settings.ReadAsync($"{PersonalFolder}/1.0.0/wwwroot/data/x.txt"));
         Assert.Contains(
             "org.kazo.sample=github:Kazo-ca/Os-App-Sample@1.0.0",
             await harness.Settings.ReadAsync(PersonalConfig),
             StringComparison.Ordinal);
         Assert.Null(await harness.Settings.StatAsync(Folder));
-        HackInstalledPackage installed = Assert.Single(await (await harness.CreateGatewayAsync(agent)).GetInstalledPackagesAsync());
+        KazoInstalledPackage installed = Assert.Single(await (await harness.CreateGatewayAsync(agent)).GetInstalledPackagesAsync());
         Assert.False(installed.SystemWide);
         Assert.False(installed.Loaded);
     }
@@ -63,7 +63,7 @@ public sealed partial class AppPackageGatewayTests
         FakeApproval approval = new(AppInstallApprovalOutcome.Approved);
         AppManagementGateway gateway = await harness.CreateGatewayAsync(agent, approval: approval, isRootElevated: true);
 
-        HackPackageInstallReport report = await gateway.InstallPackageAsync(Trusted, HackPackageScope.System);
+        KazoPackageInstallReport report = await gateway.InstallPackageAsync(Trusted, KazoPackageScope.System);
 
         Assert.Equal(1, agent.Calls);
         Assert.False(agent.LastRequest!.IsRootElevated);
@@ -90,10 +90,10 @@ public sealed partial class AppPackageGatewayTests
         CountingAgent agent = new(succeed: true);
         FakeApproval approval = new(AppInstallApprovalOutcome.Approved);
 
-        HackPackageInstallReport forSystem = await (await harness.CreateGatewayAsync(agent, approval: approval)).InstallPackageAsync(Untrusted);
+        KazoPackageInstallReport forSystem = await (await harness.CreateGatewayAsync(agent, approval: approval)).InstallPackageAsync(Untrusted);
 
         Assert.True(forSystem.SystemWide);
-        Assert.Equal(HackPackageTrust.Untrusted, forSystem.Trust);
+        Assert.Equal(KazoPackageTrust.Untrusted, forSystem.Trust);
         Assert.False(forSystem.Trusted);
         Assert.Contains("untrusted", agent.LastRequest!.Operation, StringComparison.Ordinal);
         Assert.Equal(AppSourceTrust.Untrusted, Assert.Single(approval.Requests).Trust);
@@ -107,8 +107,8 @@ public sealed partial class AppPackageGatewayTests
         CountingAgent agent = new(succeed: true);
         FakeApproval approval = new(AppInstallApprovalOutcome.Approved);
 
-        HackPackageInstallReport report = await (await harness.CreateGatewayAsync(agent, approval: approval))
-            .InstallPackageAsync(Untrusted, HackPackageScope.User);
+        KazoPackageInstallReport report = await (await harness.CreateGatewayAsync(agent, approval: approval))
+            .InstallPackageAsync(Untrusted, KazoPackageScope.User);
 
         Assert.False(report.SystemWide);
         Assert.Equal(1, agent.Calls);
@@ -127,9 +127,9 @@ public sealed partial class AppPackageGatewayTests
         harness.Publish(Trusted, "1.0.0");
         FakeApproval approval = new(outcome);
 
-        await Assert.ThrowsAsync<HackUnauthorizedAccessException>(
+        await Assert.ThrowsAsync<KazoUnauthorizedAccessException>(
             async () => await (await harness.CreateGatewayAsync(new CountingAgent(signsIn), approval: approval))
-                .InstallPackageAsync(Trusted, HackPackageScope.System));
+                .InstallPackageAsync(Trusted, KazoPackageScope.System));
 
         Assert.Equal(signsIn ? 1 : 0, approval.Requests.Count);
         Assert.Null(await harness.Settings.StatAsync(Folder));
@@ -142,9 +142,9 @@ public sealed partial class AppPackageGatewayTests
         Harness harness = await Harness.CreateAsync();
         harness.Publish(Trusted, "1.0.0");
 
-        await Assert.ThrowsAsync<HackUnauthorizedAccessException>(
+        await Assert.ThrowsAsync<KazoUnauthorizedAccessException>(
             async () => await (await harness.CreateGatewayAsync(new CountingAgent(succeed: true), approval: null))
-                .InstallPackageAsync(Trusted, HackPackageScope.System));
+                .InstallPackageAsync(Trusted, KazoPackageScope.System));
 
         Assert.Null(await harness.Settings.StatAsync(Folder));
     }
@@ -159,9 +159,9 @@ public sealed partial class AppPackageGatewayTests
         FakeApproval approval = new(AppInstallApprovalOutcome.Approved);
         AppManagementGateway gateway = await harness.CreateGatewayAsync(new CountingAgent(succeed: true), approval: approval);
 
-        HackPackageException refused = await Assert.ThrowsAsync<HackPackageException>(
-            () => gateway.InstallPackageAsync(Trusted, HackPackageScope.User).AsTask());
-        HackPackageInstallReport report = await gateway.InstallPackageAsync(Trusted);
+        KazoPackageException refused = await Assert.ThrowsAsync<KazoPackageException>(
+            () => gateway.InstallPackageAsync(Trusted, KazoPackageScope.User).AsTask());
+        KazoPackageInstallReport report = await gateway.InstallPackageAsync(Trusted);
 
         Assert.Equal("apps.package.blocked", refused.Code);
         Assert.True(report.SystemWide);
@@ -178,14 +178,14 @@ public sealed partial class AppPackageGatewayTests
             new CountingAgent(succeed: true), approval: new FakeApproval(AppInstallApprovalOutcome.Approved));
         await gateway.InstallPackageAsync(Trusted);
 
-        HackPackageInstallReport report = await gateway.InstallPackageAsync(Trusted, HackPackageScope.System);
+        KazoPackageInstallReport report = await gateway.InstallPackageAsync(Trusted, KazoPackageScope.System);
 
         Assert.Equal(1, report.ReplacedPersonalCopies);
         Assert.Null(await harness.Settings.StatAsync(PersonalFolder));
         Assert.DoesNotContain("org.kazo.sample=", await harness.Settings.ReadAsync(PersonalConfig), StringComparison.Ordinal);
         Assert.Equal(
             "apps.package.installed-for-system",
-            (await Assert.ThrowsAsync<HackPackageException>(() => gateway.InstallPackageAsync(Trusted, HackPackageScope.User).AsTask())).Code);
+            (await Assert.ThrowsAsync<KazoPackageException>(() => gateway.InstallPackageAsync(Trusted, KazoPackageScope.User).AsTask())).Code);
         Assert.True(Assert.Single(await gateway.GetInstalledPackagesAsync()).SystemWide);
     }
 
@@ -196,11 +196,11 @@ public sealed partial class AppPackageGatewayTests
         harness.Publish(Trusted, "1.0.0");
         AppManagementGateway gateway = await harness.CreateGatewayAsync(
             new CountingAgent(succeed: true), approval: new FakeApproval(AppInstallApprovalOutcome.Approved));
-        await gateway.InstallPackageAsync(Trusted, HackPackageScope.System);
+        await gateway.InstallPackageAsync(Trusted, KazoPackageScope.System);
         harness.Publish(Trusted, "1.1.0", "1.0.0");
 
-        HackPackageInfo info = await gateway.GetPackageInfoAsync(Trusted);
-        HackPackageInstallReport report = await gateway.InstallPackageAsync($"{Trusted}@{info.Latest}", HackPackageScope.System);
+        KazoPackageInfo info = await gateway.GetPackageInfoAsync(Trusted);
+        KazoPackageInstallReport report = await gateway.InstallPackageAsync($"{Trusted}@{info.Latest}", KazoPackageScope.System);
 
         Assert.Equal(["1.1.0", "1.0.0"], info.Versions);
         Assert.Equal("1.0.0", info.InstalledVersion);
@@ -213,7 +213,7 @@ public sealed partial class AppPackageGatewayTests
         Assert.Null(await harness.Settings.StatAsync($"{Folder}/1.1.0{AppPackageInstaller.PartialSuffix}"));
         Assert.Equal(
             "apps.package.already-installed",
-            (await Assert.ThrowsAsync<HackPackageException>(() => gateway.InstallPackageAsync(Trusted, HackPackageScope.System).AsTask())).Code);
+            (await Assert.ThrowsAsync<KazoPackageException>(() => gateway.InstallPackageAsync(Trusted, KazoPackageScope.System).AsTask())).Code);
     }
 
     [Fact]
@@ -225,7 +225,7 @@ public sealed partial class AppPackageGatewayTests
         AppManagementGateway gateway = await harness.CreateGatewayAsync(agent);
         await gateway.InstallPackageAsync(Trusted);
 
-        HackInstalledPackage removed = await gateway.RemovePackageAsync("org.kazo.sample");
+        KazoInstalledPackage removed = await gateway.RemovePackageAsync("org.kazo.sample");
 
         Assert.False(removed.SystemWide);
         Assert.Equal(0, agent.Calls);
@@ -240,9 +240,9 @@ public sealed partial class AppPackageGatewayTests
         harness.Publish(Trusted, "1.0.0");
         FakeApproval approval = new(AppInstallApprovalOutcome.Approved);
         AppManagementGateway gateway = await harness.CreateGatewayAsync(new CountingAgent(succeed: true), approval: approval);
-        await gateway.InstallPackageAsync(Trusted, HackPackageScope.System);
+        await gateway.InstallPackageAsync(Trusted, KazoPackageScope.System);
 
-        HackInstalledPackage removed = await gateway.RemovePackageAsync("org.kazo.sample");
+        KazoInstalledPackage removed = await gateway.RemovePackageAsync("org.kazo.sample");
 
         Assert.True(removed.SystemWide);
         Assert.Equal(AppInstallApprovalOperation.Remove, approval.Requests[^1].Operation);
@@ -250,7 +250,7 @@ public sealed partial class AppPackageGatewayTests
         Assert.DoesNotContain("org.kazo.sample=", await harness.Settings.ReadAsync("/etc/hackeros/apps.config"), StringComparison.Ordinal);
         Assert.Equal(
             "apps.package.not-installed",
-            (await Assert.ThrowsAsync<HackPackageException>(() => gateway.RemovePackageAsync("org.kazo.sample").AsTask())).Code);
+            (await Assert.ThrowsAsync<KazoPackageException>(() => gateway.RemovePackageAsync("org.kazo.sample").AsTask())).Code);
     }
 
     [Theory]
@@ -269,8 +269,8 @@ public sealed partial class AppPackageGatewayTests
         CountingAgent agent = new(succeed: true);
         AppManagementGateway gateway = await harness.CreateGatewayAsync(agent, approval: new FakeApproval(AppInstallApprovalOutcome.Approved));
 
-        HackPackageException refused = await Assert.ThrowsAsync<HackPackageException>(
-            () => gateway.InstallPackageAsync(Trusted, HackPackageScope.System).AsTask());
+        KazoPackageException refused = await Assert.ThrowsAsync<KazoPackageException>(
+            () => gateway.InstallPackageAsync(Trusted, KazoPackageScope.System).AsTask());
 
         Assert.Equal(code, refused.Code);
         Assert.Equal(0, agent.Calls);
@@ -281,13 +281,13 @@ public sealed partial class AppPackageGatewayTests
     {
         Harness harness = await Harness.CreateAsync();
 
-        HackPackageSources sources = await (await harness.CreateGatewayAsync(new CountingAgent(succeed: false))).GetPackageSourcesAsync();
+        KazoPackageSources sources = await (await harness.CreateGatewayAsync(new CountingAgent(succeed: false))).GetPackageSourcesAsync();
 
         Assert.Equal("raw.githubusercontent.com", sources.GitHubHost);
         Assert.Equal(["catalog:official", "github.com/Kazo-ca"], sources.TrustedSources);
         Assert.Equal(sources.TrustedSources, sources.BuiltInSources);
-        HackPackageCatalog official = Assert.Single(sources.Catalogs);
-        Assert.Equal(("official", HackPackageTrust.Verified, true), (official.Name, official.Trust, official.BuiltIn));
+        KazoPackageCatalog official = Assert.Single(sources.Catalogs);
+        Assert.Equal(("official", KazoPackageTrust.Verified, true), (official.Name, official.Trust, official.BuiltIn));
         Assert.Equal(AppPackageDefaults.DefaultUpdateIntervalHours, sources.UpdateIntervalHours);
     }
 
@@ -300,8 +300,8 @@ public sealed partial class AppPackageGatewayTests
         FakeApproval approval = new(AppInstallApprovalOutcome.Approved);
         AppManagementGateway gateway = await harness.CreateGatewayAsync(agent, approval: approval);
 
-        HackPackageSources added = await gateway.AddPackageSourceAsync("github:someone", trusted: true);
-        HackPackageInstallReport report = await gateway.InstallPackageAsync(Untrusted);
+        KazoPackageSources added = await gateway.AddPackageSourceAsync("github:someone", trusted: true);
+        KazoPackageInstallReport report = await gateway.InstallPackageAsync(Untrusted);
 
         Assert.Equal(1, agent.Calls);
         Assert.Equal("apps.sources.add", agent.LastRequest!.Action);
@@ -309,14 +309,14 @@ public sealed partial class AppPackageGatewayTests
         Assert.False(report.SystemWide);
         Assert.Empty(approval.Requests);
 
-        HackPackageSources removed = await gateway.RemovePackageSourceAsync("github:someone");
+        KazoPackageSources removed = await gateway.RemovePackageSourceAsync("github:someone");
         Assert.DoesNotContain("github.com/someone", removed.TrustedSources);
         Assert.Equal(
             "apps.source.not-found",
-            (await Assert.ThrowsAsync<HackPackageException>(() => gateway.RemovePackageSourceAsync("github:someone").AsTask())).Code);
+            (await Assert.ThrowsAsync<KazoPackageException>(() => gateway.RemovePackageSourceAsync("github:someone").AsTask())).Code);
         Assert.Equal(
             "apps.source.invalid",
-            (await Assert.ThrowsAsync<HackPackageException>(() => gateway.AddPackageSourceAsync("not a source", trusted: false).AsTask())).Code);
+            (await Assert.ThrowsAsync<KazoPackageException>(() => gateway.AddPackageSourceAsync("not a source", trusted: false).AsTask())).Code);
     }
 
     [Fact]
@@ -325,7 +325,7 @@ public sealed partial class AppPackageGatewayTests
         Harness harness = await Harness.CreateAsync();
         AppManagementGateway gateway = await harness.CreateGatewayAsync(new CountingAgent(succeed: true));
 
-        HackPackageSources sources = await gateway.AddPackageSourceAsync("someone/sample", trusted: false);
+        KazoPackageSources sources = await gateway.AddPackageSourceAsync("someone/sample", trusted: false);
 
         Assert.Contains("github.com/someone/sample", sources.UntrustedSources);
         Assert.DoesNotContain("github.com/someone/sample", sources.TrustedSources);
@@ -339,16 +339,16 @@ public sealed partial class AppPackageGatewayTests
         AppManagementGateway gateway = await harness.CreateGatewayAsync(agent);
 
         Assert.Empty((await gateway.GetPackagePolicyAsync()).BlockedApps);
-        HackPackagePolicy blocked = await gateway.SetPackagePolicyAsync(HackPackageBlockKind.Category, "social", blocked: true);
-        HackPackagePolicy unblocked = await gateway.SetPackagePolicyAsync(HackPackageBlockKind.Category, "social", blocked: false);
+        KazoPackagePolicy blocked = await gateway.SetPackagePolicyAsync(KazoPackageBlockKind.Category, "social", blocked: true);
+        KazoPackagePolicy unblocked = await gateway.SetPackagePolicyAsync(KazoPackageBlockKind.Category, "social", blocked: false);
 
         Assert.Equal(["social"], blocked.BlockedCategories);
         Assert.Empty(unblocked.BlockedCategories);
         Assert.Equal(2, agent.Calls);
         Assert.Equal(
             "apps.policy.invalid",
-            (await Assert.ThrowsAsync<HackPackageException>(
-                () => gateway.SetPackagePolicyAsync(HackPackageBlockKind.App, "a b", blocked: true).AsTask())).Code);
+            (await Assert.ThrowsAsync<KazoPackageException>(
+                () => gateway.SetPackagePolicyAsync(KazoPackageBlockKind.App, "a b", blocked: true).AsTask())).Code);
     }
 
     [Fact]
@@ -361,7 +361,7 @@ public sealed partial class AppPackageGatewayTests
         await Assert.ThrowsAsync<AppGatewayAccessDeniedException>(() => gateway.InstallPackageAsync(Trusted).AsTask());
         await Assert.ThrowsAsync<AppGatewayAccessDeniedException>(() => gateway.AddPackageSourceAsync(Trusted, trusted: true).AsTask());
         await Assert.ThrowsAsync<AppGatewayAccessDeniedException>(
-            () => gateway.SetPackagePolicyAsync(HackPackageBlockKind.App, "x", blocked: true).AsTask());
+            () => gateway.SetPackagePolicyAsync(KazoPackageBlockKind.App, "x", blocked: true).AsTask());
     }
 
     /// <summary>The approval window of step 2: records what it showed and ends with a fixed outcome.</summary>
@@ -400,7 +400,7 @@ public sealed partial class AppPackageGatewayTests
         Harness harness = await Harness.CreateAsync();
         harness.PublishCatalogAt(AppPackageDefaults.OfficialCatalogAddress, signed: false, "1.0.0");
 
-        HackPackageException refused = await Assert.ThrowsAsync<HackPackageException>(async () =>
+        KazoPackageException refused = await Assert.ThrowsAsync<KazoPackageException>(async () =>
             await (await harness.CreateGatewayAsync(new CountingAgent(succeed: true))).InstallPackageAsync(AppPackageTests.AppId));
 
         Assert.Contains("is not signed", refused.Message, StringComparison.Ordinal);
@@ -412,12 +412,12 @@ public sealed partial class AppPackageGatewayTests
         Harness harness = await Harness.CreateAsync();
         harness.PublishCatalog("1.1.0", "1.0.0");
 
-        HackPackageInstallReport report = await (await harness.CreateGatewayAsync(new CountingAgent(succeed: true)))
+        KazoPackageInstallReport report = await (await harness.CreateGatewayAsync(new CountingAgent(succeed: true)))
             .InstallPackageAsync(AppPackageTests.AppId);
 
         Assert.Equal("1.1.0", report.Version);
         Assert.False(report.SystemWide);
-        Assert.Equal(HackPackageTrust.Verified, report.Trust);
+        Assert.Equal(KazoPackageTrust.Verified, report.Trust);
         Assert.Contains(
             "org.kazo.sample=catalog:official/org.kazo.sample@1.1.0",
             await harness.Settings.ReadAsync(PersonalConfig),
@@ -430,7 +430,7 @@ public sealed partial class AppPackageGatewayTests
         Harness harness = await Harness.CreateAsync();
         harness.PublishCatalog("1.1.0", "1.0.0");
 
-        HackPackageInstallReport report = await (await harness.CreateGatewayAsync(new CountingAgent(succeed: true)))
+        KazoPackageInstallReport report = await (await harness.CreateGatewayAsync(new CountingAgent(succeed: true)))
             .InstallPackageAsync(AppPackageTests.AppId + "@1.0.0");
 
         Assert.Equal("1.0.0", report.Version);
@@ -442,7 +442,7 @@ public sealed partial class AppPackageGatewayTests
         Harness harness = await Harness.CreateAsync();
         harness.PublishCatalog("1.0.0");
 
-        HackPackageException error = await Assert.ThrowsAsync<HackPackageException>(
+        KazoPackageException error = await Assert.ThrowsAsync<KazoPackageException>(
             async () => await (await harness.CreateGatewayAsync(new CountingAgent(succeed: true))).InstallPackageAsync("org.kazo.missing"));
 
         Assert.Equal("apps.package.not-in-catalog", error.Code);
@@ -461,7 +461,7 @@ public sealed partial class AppPackageGatewayTests
                 "[catalogs]\n", $"[catalogs]\nmirror={MirrorCatalog}\n", StringComparison.Ordinal));
         AppManagementGateway gateway = await harness.CreateGatewayAsync(new CountingAgent(succeed: true));
 
-        HackPackageException error = await Assert.ThrowsAsync<HackPackageException>(
+        KazoPackageException error = await Assert.ThrowsAsync<KazoPackageException>(
             async () => await gateway.InstallPackageAsync(AppPackageTests.AppId));
 
         Assert.Equal("apps.package.ambiguous", error.Code);
@@ -475,12 +475,12 @@ public sealed partial class AppPackageGatewayTests
         Harness harness = await Harness.CreateAsync();
         harness.PublishCatalog("1.1.0", "1.0.0");
 
-        HackAppCatalog official = Assert.Single(await (await harness.CreateGatewayAsync(new CountingAgent(succeed: true))).GetPackageCatalogsAsync());
+        KazoAppCatalog official = Assert.Single(await (await harness.CreateGatewayAsync(new CountingAgent(succeed: true))).GetPackageCatalogsAsync());
 
         Assert.Null(official.Error);
-        Assert.Equal(HackPackageTrust.Verified, official.Trust);
+        Assert.Equal(KazoPackageTrust.Verified, official.Trust);
         Assert.Equal("Utilitaires", Assert.Single(official.Categories).GetLabel(System.Globalization.CultureInfo.GetCultureInfo("fr")));
-        HackCatalogApp app = Assert.Single(official.Apps);
+        KazoCatalogApp app = Assert.Single(official.Apps);
         Assert.Equal("catalog:official/org.kazo.sample", app.Source);
         Assert.Equal("1.1.0", app.Latest.Version);
         Assert.StartsWith("https://raw.githubusercontent.com/Kazo-ca/Os-AppMarketPlace/packages/packages/org.kazo.sample/1.1.0/", app.Latest.IconUri, StringComparison.Ordinal);
@@ -492,7 +492,7 @@ public sealed partial class AppPackageGatewayTests
     {
         Harness harness = await Harness.CreateAsync();
 
-        HackAppCatalog official = Assert.Single(await (await harness.CreateGatewayAsync(new CountingAgent(succeed: true))).GetPackageCatalogsAsync());
+        KazoAppCatalog official = Assert.Single(await (await harness.CreateGatewayAsync(new CountingAgent(succeed: true))).GetPackageCatalogsAsync());
 
         Assert.NotNull(official.Error);
         Assert.Empty(official.Apps);
@@ -521,7 +521,7 @@ public sealed partial class AppPackageGatewayTests
         harness.Now += AppPackageInstaller.CatalogCacheLifetime;
         AppUpdateMonitor monitor = new(harness.Installer, () => harness.Settings.CreateRootGateway(), () => harness.Settings.Session.CurrentPrincipal);
 
-        HackPackageUpdate update = Assert.Single(await (await harness.CreateGatewayAsync(agent, monitor: monitor)).GetPackageUpdatesAsync());
+        KazoPackageUpdate update = Assert.Single(await (await harness.CreateGatewayAsync(agent, monitor: monitor)).GetPackageUpdatesAsync());
 
         Assert.Equal(("1.0.0", "1.1.0", false), (update.InstalledVersion, update.AvailableVersion, update.SystemWide));
         Assert.Equal("catalog:official/org.kazo.sample", update.Source);
@@ -567,7 +567,7 @@ public sealed partial class AppPackageGatewayTests
         int restarts = 0;
         Func<Task> restart = () => { restarts++; return Task.CompletedTask; };
 
-        HackPackageException nothing = await Assert.ThrowsAsync<HackPackageException>(
+        KazoPackageException nothing = await Assert.ThrowsAsync<KazoPackageException>(
             async () => await (await harness.CreateGatewayAsync(agent, restart: restart)).RestartForPackagesAsync());
         await (await harness.CreateGatewayAsync(agent)).InstallPackageAsync(AppPackageTests.AppId);
         await (await harness.CreateGatewayAsync(agent, restart: restart)).RestartForPackagesAsync();
@@ -768,7 +768,7 @@ public sealed partial class AppPackageGatewayTests
             Description = name,
             Kind = AppKind.Window,
             EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", $"{id}.EntryPoint"),
-            SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+            SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
             Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
             Resources = AppResourceProfileManifest.None
         };

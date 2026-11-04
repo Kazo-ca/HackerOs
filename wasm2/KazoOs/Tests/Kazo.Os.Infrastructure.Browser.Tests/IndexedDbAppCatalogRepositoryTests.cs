@@ -45,7 +45,7 @@ public sealed class IndexedDbAppCatalogRepositoryTests
             .Last();
         Assert.Equal(["put", "put"], finalReconciliation.Operations.Select(operation => operation.Kind));
         Assert.All(finalReconciliation.Operations, operation =>
-            Assert.Equal(HackerOsIndexedDbSchema.CatalogStoreName, operation.ObjectStoreName));
+            Assert.Equal(KazoOsIndexedDbSchema.CatalogStoreName, operation.ObjectStoreName));
     }
 
     [Fact]
@@ -155,7 +155,7 @@ public sealed class IndexedDbAppCatalogRepositoryTests
 
         private JsonElement Execute(IndexedDbOperation operation)
         {
-            Assert.Equal(HackerOsIndexedDbSchema.CatalogStoreName, operation.ObjectStoreName);
+            Assert.Equal(KazoOsIndexedDbSchema.CatalogStoreName, operation.ObjectStoreName);
             if (operation.Kind == "getAll")
             {
                 return JsonSerializer.SerializeToElement(_records.Values);

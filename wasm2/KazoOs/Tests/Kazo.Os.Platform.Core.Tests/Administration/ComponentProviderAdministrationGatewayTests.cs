@@ -14,7 +14,7 @@ using Kazo.Os.Simulation.Abstractions.Sessions;
 
 namespace Kazo.Os.Platform.Core.Tests.Administration;
 
-/// <summary>ADR 0156 §3: <c>HackComponentProviders</c> behind Settings &gt; OS components.</summary>
+/// <summary>ADR 0156 §3: <c>KazoComponentProviders</c> behind Settings &gt; OS components.</summary>
 public sealed class ComponentProviderAdministrationGatewayTests
 {
     private const string ExplorerId = "org.hackeros.file-explorer";
@@ -40,7 +40,7 @@ public sealed class ComponentProviderAdministrationGatewayTests
         CountingAgent agent = new(succeed: true);
         AppComponentProviderAdministrationGateway gateway = harness.CreateGateway(agent, AppCapabilities.AppsManage);
 
-        HackUnauthorizedAccessException denied = await Assert.ThrowsAsync<HackUnauthorizedAccessException>(
+        KazoUnauthorizedAccessException denied = await Assert.ThrowsAsync<KazoUnauthorizedAccessException>(
             () => gateway.SetProviderAsync([AppComponentContracts.FileView, AppComponentContracts.FileDialogs], FilesId).AsTask());
 
         Assert.Equal(1, harness.Prompt.Calls);
@@ -61,7 +61,7 @@ public sealed class ComponentProviderAdministrationGatewayTests
 
         Assert.Equal(0, harness.Prompt.Calls);
         Assert.Equal(ComponentProviderService.AuditAction, agent.LastRequest!.Action);
-        HackComponentContractInfo view = (await gateway.GetOverviewAsync())[0];
+        KazoComponentContractInfo view = (await gateway.GetOverviewAsync())[0];
         Assert.Null(view.SelectedAppId);
         Assert.Equal(ExplorerId, view.DefaultAppId);
         Assert.Equal([ExplorerId, FilesId], view.Providers.Select(provider => provider.AppId));
@@ -74,7 +74,7 @@ public sealed class ComponentProviderAdministrationGatewayTests
         CountingAgent agent = new(succeed: false);
         AppComponentProviderAdministrationGateway gateway = harness.CreateGateway(agent, AppCapabilities.AppsManage);
 
-        await Assert.ThrowsAsync<HackUnauthorizedAccessException>(
+        await Assert.ThrowsAsync<KazoUnauthorizedAccessException>(
             () => gateway.SetProviderAsync([AppComponentContracts.FileView], ExplorerId).AsTask());
 
         Assert.Equal(1, agent.Calls);
@@ -106,7 +106,7 @@ public sealed class ComponentProviderAdministrationGatewayTests
         Description = "Component provider fixture.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Apps.Sample", "Kazo.Os.Apps.Sample.SampleApp"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         Capabilities = capabilities,

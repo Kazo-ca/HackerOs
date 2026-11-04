@@ -39,7 +39,7 @@ public sealed class FileDialogWindowAdapter : IDisposable
         _fileCoordinator = fileCoordinator ?? throw new ArgumentNullException(nameof(fileCoordinator));
         _windows = windows ?? throw new ArgumentNullException(nameof(windows));
         _basicCoordinator = basicCoordinator;
-        _text = Strings.For(() => locale?.Culture ?? HackLocale.DefaultLanguage);
+        _text = Strings.For(() => locale?.Culture ?? KazoLocale.DefaultLanguage);
 
         _fileCoordinator.Changed += Synchronize;
         if (_basicCoordinator is not null)
@@ -189,9 +189,9 @@ public sealed class FileDialogWindowAdapter : IDisposable
             TextInputPresentation => (480, 240),
             CredentialPromptPresentation => (420, 300),
             AppChooserPresentation => (460, 380),
-            ProvidedFileDialogPresentation { Dialog: HackFileDialogs.OpenWith } => (480, 460),
-            ProvidedFileDialogPresentation { Dialog: HackFileDialogs.Properties } => (480, 380),
-            ProvidedFileDialogPresentation { Dialog: HackFileDialogs.Conflict } => (520, 300),
+            ProvidedFileDialogPresentation { Dialog: KazoFileDialogs.OpenWith } => (480, 460),
+            ProvidedFileDialogPresentation { Dialog: KazoFileDialogs.Properties } => (480, 380),
+            ProvidedFileDialogPresentation { Dialog: KazoFileDialogs.Conflict } => (520, 300),
             _ => (480, 240)
         };
 
@@ -320,9 +320,9 @@ public sealed class FileDialogWindowAdapter : IDisposable
         TextInputPresentation input => !string.IsNullOrWhiteSpace(input.Request.Title) ? input.Request.Title : _text["Dialog.Input"],
         CredentialPromptPresentation credential => !string.IsNullOrWhiteSpace(credential.Request.Title) ? credential.Request.Title : _text["Dialog.AuthorizationRequired"],
         AppChooserPresentation chooser => !string.IsNullOrWhiteSpace(chooser.Request.Title) ? chooser.Request.Title : _text["Dialog.OpenWith"],
-        ProvidedFileDialogPresentation { Dialog: HackFileDialogs.OpenWith } => _text["Dialog.OpenWith"],
-        ProvidedFileDialogPresentation { Dialog: HackFileDialogs.Properties } => _text["Dialog.Properties"],
-        ProvidedFileDialogPresentation { Dialog: HackFileDialogs.Conflict } => _text["Dialog.FileConflict"],
+        ProvidedFileDialogPresentation { Dialog: KazoFileDialogs.OpenWith } => _text["Dialog.OpenWith"],
+        ProvidedFileDialogPresentation { Dialog: KazoFileDialogs.Properties } => _text["Dialog.Properties"],
+        ProvidedFileDialogPresentation { Dialog: KazoFileDialogs.Conflict } => _text["Dialog.FileConflict"],
         _ => _text["Dialog.Title"],
     };
 }

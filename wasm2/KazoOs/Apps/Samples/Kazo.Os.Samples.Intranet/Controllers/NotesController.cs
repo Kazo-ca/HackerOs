@@ -13,7 +13,7 @@ namespace Kazo.Os.Samples.Intranet.Controllers;
 /// database (<see cref="NoteStore"/>, ADR 0088), and each change is written to the site's debug log
 /// (<c>/var/log/hackweb/org.hackeros.samples.intranet.log</c>) through <see cref="ILogger{TCategoryName}"/>.
 /// </summary>
-public sealed class NotesController(NoteStore store, ILogger<NotesController> logger) : HackController
+public sealed class NotesController(NoteStore store, ILogger<NotesController> logger) : KazoController
 {
     /// <summary><c>GET /Notes</c>: the list.</summary>
     /// <param name="cancellationToken">Aborted with the request.</param>

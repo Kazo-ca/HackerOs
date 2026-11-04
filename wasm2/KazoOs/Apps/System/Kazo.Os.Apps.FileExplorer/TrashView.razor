@@ -1,25 +1,25 @@
 @using Kazo.Os.AppSdk.IO
 @using Kazo.Os.AppSdk.Icons
-@inherits Kazo.Os.AppSdk.Blazor.HackComponentBase
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
 
 @*
-    Trash view of the file explorer (ADR 0052, section 5). It lists HackTrash.GetItemsAsync — never the
+    Trash view of the file explorer (ADR 0052, section 5). It lists KazoTrash.GetItemsAsync — never the
     raw ~/.local/share/Trash folders — and offers Restore, Delete permanently and Empty trash.
 *@
 <div class="trash-view">
     <div class="trash-toolbar">
         <span class="trash-title">
-            <HackerIcon Library="IconLibrary.Lucide" Name="trash-2" Size="16" /> @L["Trash.Title"]
+            <KazoIcon Library="IconLibrary.Lucide" Name="trash-2" Size="16" /> @L["Trash.Title"]
         </span>
         <span class="trash-spacer"></span>
         <button class="trash-btn" disabled="@(_selected.Count == 0 || _busy)" @onclick="RestoreSelectedAsync" title="@L["Trash.Restore"]">
-            <HackerIcon Library="IconLibrary.Lucide" Name="archive-restore" Size="16" /> <span>@L["Trash.Restore"]</span>
+            <KazoIcon Library="IconLibrary.Lucide" Name="archive-restore" Size="16" /> <span>@L["Trash.Restore"]</span>
         </button>
         <button class="trash-btn danger" disabled="@(_selected.Count == 0 || _busy)" @onclick="DeleteSelectedAsync" title="@L["Trash.DeletePermanently"]">
-            <HackerIcon Library="IconLibrary.Lucide" Name="octagon-x" Size="16" /> <span>@L["Trash.DeletePermanently"]</span>
+            <KazoIcon Library="IconLibrary.Lucide" Name="octagon-x" Size="16" /> <span>@L["Trash.DeletePermanently"]</span>
         </button>
         <button class="trash-btn danger" disabled="@(_items.Count == 0 || _busy)" @onclick="EmptyAsync" title="@L["Trash.Empty"]">
-            <HackerIcon Library="IconLibrary.Lucide" Name="trash" Size="16" /> <span>@L["Trash.Empty"]</span>
+            <KazoIcon Library="IconLibrary.Lucide" Name="trash" Size="16" /> <span>@L["Trash.Empty"]</span>
         </button>
     </div>
 
@@ -45,7 +45,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (HackTrashItem item in _items)
+                @foreach (KazoTrashItem item in _items)
                 {
                     <tr class="@(_selected.Contains(item.Name) ? "selected" : null)"
                         tabindex="0"
@@ -54,7 +54,7 @@
                         @ondblclick="() => RestoreAsync([item])"
                         @onkeydown="args => OnRowKeyDownAsync(item, args)">
                         <td class="name">
-                            <HackerIcon Library="IconLibrary.Lucide" Name="@(item.IsDirectory ? "folder" : "file")" Size="14" />
+                            <KazoIcon Library="IconLibrary.Lucide" Name="@(item.IsDirectory ? "folder" : "file")" Size="14" />
                             @DisplayName(item)
                         </td>
                         <td class="origin">@(OriginalLocation(item) ?? L["Trash.UnknownOrigin"])</td>

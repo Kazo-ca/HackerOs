@@ -138,7 +138,7 @@ internal sealed class ZipArchiveBrowser
         }
 
         // Reading the table of contents of a large archive is CPU work on the window's thread (ADR 0069).
-        await HackProcess.CheckpointAsync(cancellationToken);
+        await KazoProcess.CheckpointAsync(cancellationToken);
         if (ZipArchiveIndex.TryRead(content) is not { } index)
         {
             return FileSystemResult<OpenedZipArchive>.Failure(new FileSystemError(operation, FileSystemErrorCode.InvalidContent, archive));
@@ -182,7 +182,7 @@ internal sealed class ZipArchiveBrowser
 
     private async Task<FileSystemError?> ExtractNodeAsync(ZipArchiveIndex index, ZipArchiveNode node, VirtualPath destination, CancellationToken cancellationToken)
     {
-        await HackProcess.CheckpointAsync(cancellationToken);
+        await KazoProcess.CheckpointAsync(cancellationToken);
         if (node.IsDirectory)
         {
             FileSystemMutationResult folder = await _fileSystem.CreateAsync(

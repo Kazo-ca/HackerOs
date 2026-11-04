@@ -296,16 +296,16 @@ public sealed class ScreenServiceTests
         await harness.Service.StartAsync();
         Assert.True(control.IsAvailable);
         Guid caller = Guid.NewGuid();
-        Assert.Equal(HackScreenOpenStatus.Opened, await control.OpenScreenAsync(CancellationToken.None));
+        Assert.Equal(KazoScreenOpenStatus.Opened, await control.OpenScreenAsync(CancellationToken.None));
         WindowId window = CreateWindow(harness.Runtime, caller);
         harness.Runtime.Apply(new MoveWindowToDisplayCommand(window, DisplayId.FromNumber(2)));
 
-        HackScreensState state = control.GetState(caller);
+        KazoScreensState state = control.GetState(caller);
 
         Assert.Equal(
-            [new HackScreenInfo(1, null, 1280, 720, false), new HackScreenInfo(2, "DELL U2720Q", 1900, 1000, false)],
+            [new KazoScreenInfo(1, null, 1280, 720, false), new KazoScreenInfo(2, "DELL U2720Q", 1900, 1000, false)],
             state.Screens);
-        Assert.Equal(HackScreenPermission.Granted, state.Permission);
+        Assert.Equal(KazoScreenPermission.Granted, state.Permission);
         Assert.True(state.CanOpenScreen);
         Assert.Empty(state.RestorableScreens);
         Assert.Equal(2, state.CallerScreen);
@@ -373,15 +373,15 @@ public sealed class ScreenServiceTests
         using ScreenControl control = new(harness.Service, harness.Runtime);
         await harness.Service.StartAsync();
 
-        Assert.Equal(HackScreenPermission.Denied, await control.RequestPermissionAsync());
+        Assert.Equal(KazoScreenPermission.Denied, await control.RequestPermissionAsync());
         Assert.Equal(ScreenPermission.Denied, harness.Service.Permission);
     }
 
     [Fact]
     public void The_sdk_enums_match_the_service_enums_value_for_value()
     {
-        Assert.Equal(Enum.GetNames<ScreenPermission>(), Enum.GetNames<HackScreenPermission>());
-        Assert.Equal(Enum.GetNames<ScreenOpenStatus>(), Enum.GetNames<HackScreenOpenStatus>());
+        Assert.Equal(Enum.GetNames<ScreenPermission>(), Enum.GetNames<KazoScreenPermission>());
+        Assert.Equal(Enum.GetNames<ScreenOpenStatus>(), Enum.GetNames<KazoScreenOpenStatus>());
     }
 
     private static WindowId CreateWindow(WindowRuntime runtime, Guid owner)

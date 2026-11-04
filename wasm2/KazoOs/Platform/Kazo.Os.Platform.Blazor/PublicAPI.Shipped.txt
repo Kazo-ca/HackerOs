@@ -1,17 +1,17 @@
 #nullable enable
-Kazo.Os.Platform.Blazor.Components.HackComponentHost
-Kazo.Os.Platform.Blazor.Components.HackComponentHost.GetProviders(string! contract) -> System.Collections.Generic.IReadOnlyList<(string! AppId, Kazo.Os.App.Abstractions.AppComponentManifest! Component)>!
-Kazo.Os.Platform.Blazor.Components.HackComponentHost.HackComponentHost(Kazo.Os.Platform.Core.AppCatalog! catalog, Kazo.Os.Platform.Core.Lifecycle.IAppEnablementRegistry! enablement, System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<(Kazo.Os.Platform.Core.Discovery.AppDescriptor? Descriptor, string? Error)>!>! descriptors) -> void
-Kazo.Os.Platform.Blazor.Components.HackComponentHost.HackComponentHost(Kazo.Os.Platform.Core.AppCatalog! catalog, Kazo.Os.Platform.Core.Lifecycle.IAppEnablementRegistry! enablement, System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<(Kazo.Os.Platform.Core.Discovery.AppDescriptor? Descriptor, string? Error)>!>! descriptors, System.Collections.Generic.IEnumerable<Kazo.Os.Platform.Blazor.Components.HackPlatformComponent!>? platformComponents, System.Action<string!>? reportError) -> void
-Kazo.Os.Platform.Blazor.Components.HackComponentHost.ReportWarning.get -> System.Action<string!>?
-Kazo.Os.Platform.Blazor.Components.HackComponentHost.ReportWarning.init -> void
-Kazo.Os.Platform.Blazor.Components.HackComponentHost.ResolveAsync(string! contract, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Blazor.Components.HackComponentResolution!>!
-Kazo.Os.Platform.Blazor.Components.HackComponentHost.Selection.get -> Kazo.Os.Platform.Core.ComponentProviders.IComponentProviderSelection?
-Kazo.Os.Platform.Blazor.Components.HackComponentHost.Selection.init -> void
-Kazo.Os.Platform.Blazor.Components.HackPlatformComponent
-Kazo.Os.Platform.Blazor.Components.HackPlatformComponent.ComponentType.get -> System.Type!
-Kazo.Os.Platform.Blazor.Components.HackPlatformComponent.Contract.get -> string!
-Kazo.Os.Platform.Blazor.Components.HackPlatformComponent.HackPlatformComponent(string! contract, System.Type! componentType) -> void
+Kazo.Os.Platform.Blazor.Components.KazoComponentHost
+Kazo.Os.Platform.Blazor.Components.KazoComponentHost.GetProviders(string! contract) -> System.Collections.Generic.IReadOnlyList<(string! AppId, Kazo.Os.App.Abstractions.AppComponentManifest! Component)>!
+Kazo.Os.Platform.Blazor.Components.KazoComponentHost.KazoComponentHost(Kazo.Os.Platform.Core.AppCatalog! catalog, Kazo.Os.Platform.Core.Lifecycle.IAppEnablementRegistry! enablement, System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<(Kazo.Os.Platform.Core.Discovery.AppDescriptor? Descriptor, string? Error)>!>! descriptors) -> void
+Kazo.Os.Platform.Blazor.Components.KazoComponentHost.KazoComponentHost(Kazo.Os.Platform.Core.AppCatalog! catalog, Kazo.Os.Platform.Core.Lifecycle.IAppEnablementRegistry! enablement, System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<(Kazo.Os.Platform.Core.Discovery.AppDescriptor? Descriptor, string? Error)>!>! descriptors, System.Collections.Generic.IEnumerable<Kazo.Os.Platform.Blazor.Components.KazoPlatformComponent!>? platformComponents, System.Action<string!>? reportError) -> void
+Kazo.Os.Platform.Blazor.Components.KazoComponentHost.ReportWarning.get -> System.Action<string!>?
+Kazo.Os.Platform.Blazor.Components.KazoComponentHost.ReportWarning.init -> void
+Kazo.Os.Platform.Blazor.Components.KazoComponentHost.ResolveAsync(string! contract, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Blazor.Components.KazoComponentResolution!>!
+Kazo.Os.Platform.Blazor.Components.KazoComponentHost.Selection.get -> Kazo.Os.Platform.Core.ComponentProviders.IComponentProviderSelection?
+Kazo.Os.Platform.Blazor.Components.KazoComponentHost.Selection.init -> void
+Kazo.Os.Platform.Blazor.Components.KazoPlatformComponent
+Kazo.Os.Platform.Blazor.Components.KazoPlatformComponent.ComponentType.get -> System.Type!
+Kazo.Os.Platform.Blazor.Components.KazoPlatformComponent.Contract.get -> string!
+Kazo.Os.Platform.Blazor.Components.KazoPlatformComponent.KazoPlatformComponent(string! contract, System.Type! componentType) -> void
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLayout
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel.<Clone>$() -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel!
@@ -27,7 +27,7 @@ Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigation.None = 0 -> Kazo.Os.P
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigator
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigator.Active.get -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigator.OpenLevel!
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigator.Back() -> void
-Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigator.Chosen.get -> Kazo.Os.AppSdk.Blazor.ContextMenus.HackMenuItemDefinition?
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigator.Chosen.get -> Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItemDefinition?
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigator.Click(int level, int row) -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigation
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigator.ContextMenuNavigator(Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel! root, bool highlightFirst) -> void
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigator.HandleKey(string! key) -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigation
@@ -58,12 +58,12 @@ Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuPresentation.Popup = 0 -> Kazo.O
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuPresentation.Sheet = 1 -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuPresentation
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.<Clone>$() -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow!
-Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.ContextMenuRow(Kazo.Os.AppSdk.Blazor.ContextMenus.HackMenuItemDefinition? Item, Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel? Submenu) -> void
-Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.Deconstruct(out Kazo.Os.AppSdk.Blazor.ContextMenus.HackMenuItemDefinition? Item, out Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel? Submenu) -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.ContextMenuRow(Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItemDefinition? Item, Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel? Submenu) -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.Deconstruct(out Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItemDefinition? Item, out Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel? Submenu) -> void
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.Equals(Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow? other) -> bool
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.IsSelectable.get -> bool
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.IsSeparator.get -> bool
-Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.Item.get -> Kazo.Os.AppSdk.Blazor.ContextMenus.HackMenuItemDefinition?
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.Item.get -> Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItemDefinition?
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.Item.init -> void
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.Submenu.get -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel?
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.Submenu.init -> void
@@ -75,14 +75,14 @@ Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuScope.Dispose() -> void
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuScope.Id.get -> string!
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuScope.IsDisposed.get -> bool
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuScope.OpenAsync(string! name, object? item, double clientX, double clientY) -> System.Threading.Tasks.Task<bool>!
-Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuScope.Register(Kazo.Os.AppSdk.Blazor.ContextMenus.HackMenuRegistration! registration) -> System.IDisposable!
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuScope.Register(Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuRegistration! registration) -> System.IDisposable!
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuService
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuService.Changed -> System.Action?
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuService.Close() -> void
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuService.ContextMenuService(Microsoft.Extensions.Logging.ILogger<Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuService!>? logger = null, Kazo.Os.Platform.Blazor.ContextMenus.IFileMenuEntrySource? fileMenuEntries = null) -> void
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuService.CreateScope(Kazo.Os.AppSdk.IAppExecutionContext? context) -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuScope!
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuService.Current.get -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession?
-Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuService.InvokeAsync(Kazo.Os.AppSdk.Blazor.ContextMenus.HackMenuItemDefinition! item) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuService.InvokeAsync(Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItemDefinition! item) -> System.Threading.Tasks.Task!
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuService.OpenAsync(Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuScope! scope, string! name, object? item, double clientX, double clientY, Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuOrigin origin) -> System.Threading.Tasks.Task<bool>!
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuService.OpenFromTokenAsync(string! token, double clientX, double clientY, Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuOrigin origin) -> System.Threading.Tasks.Task<bool>!
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuService.Release(System.Collections.Generic.IEnumerable<string!>! tokens) -> void
@@ -109,7 +109,7 @@ Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.Root.init -> void
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.Scope.get -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuScope!
 Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.Scope.init -> void
 Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntries
-Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntries.ApplyAsync(Kazo.Os.AppSdk.Blazor.ContextMenus.HackMenuDefinition! menu, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntries.ApplyAsync(Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuDefinition! menu, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntries.FileMenuEntries(Kazo.Os.Platform.Core.AppCatalog! catalog, Kazo.Os.Platform.Core.ContextMenus.FileContextMenuRegistry! registry, Kazo.Os.Platform.Core.ContextMenus.FileContextMenuLauncher! launcher, System.Func<System.Threading.CancellationToken, System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlySet<string!>!>>! hidden, System.Func<System.Globalization.CultureInfo!>! culture, System.Func<string!, Kazo.Os.App.Abstractions.AppContextMenuEntryManifest!, string!, System.Collections.Generic.IReadOnlyList<string!>!, System.Threading.Tasks.Task!>! launch) -> void
 Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntries.OpenScreens.get -> System.Func<System.Collections.Generic.IReadOnlySet<int>!>!
 Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntries.OpenScreens.init -> void
@@ -118,17 +118,17 @@ Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate
 Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.<Clone>$() -> Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate!
 Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.AppId.get -> string!
 Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.AppId.init -> void
-Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.Candidate(string! AppId, Kazo.Os.App.Abstractions.AppContextMenuEntryManifest! Entry, Kazo.Os.AppSdk.Blazor.ContextMenus.HackMenuItemDefinition! Item) -> void
-Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.Deconstruct(out string! AppId, out Kazo.Os.App.Abstractions.AppContextMenuEntryManifest! Entry, out Kazo.Os.AppSdk.Blazor.ContextMenus.HackMenuItemDefinition! Item) -> void
+Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.Candidate(string! AppId, Kazo.Os.App.Abstractions.AppContextMenuEntryManifest! Entry, Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItemDefinition! Item) -> void
+Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.Deconstruct(out string! AppId, out Kazo.Os.App.Abstractions.AppContextMenuEntryManifest! Entry, out Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItemDefinition! Item) -> void
 Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.Entry.get -> Kazo.Os.App.Abstractions.AppContextMenuEntryManifest!
 Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.Entry.init -> void
 Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.Equals(Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate? other) -> bool
-Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.Item.get -> Kazo.Os.AppSdk.Blazor.ContextMenus.HackMenuItemDefinition!
+Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.Item.get -> Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItemDefinition!
 Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.Item.init -> void
 Kazo.Os.Platform.Blazor.ContextMenus.IFileMenuEntrySource
-Kazo.Os.Platform.Blazor.ContextMenus.IFileMenuEntrySource.ApplyAsync(Kazo.Os.AppSdk.Blazor.ContextMenus.HackMenuDefinition! menu, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.ContextMenus.IFileMenuEntrySource.ApplyAsync(Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuDefinition! menu, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 Kazo.Os.Platform.Blazor.ContextMenus.PlatformContextMenu
-Kazo.Os.Platform.Blazor.ContextMenus.PlatformContextMenu.Build.get -> System.Func<Kazo.Os.AppSdk.Blazor.ContextMenus.HackMenuDefinition!>?
+Kazo.Os.Platform.Blazor.ContextMenus.PlatformContextMenu.Build.get -> System.Func<Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuDefinition!>?
 Kazo.Os.Platform.Blazor.ContextMenus.PlatformContextMenu.Build.set -> void
 Kazo.Os.Platform.Blazor.ContextMenus.PlatformContextMenu.Close() -> void
 Kazo.Os.Platform.Blazor.ContextMenus.PlatformContextMenu.Dispose() -> void
@@ -137,7 +137,7 @@ Kazo.Os.Platform.Blazor.ContextMenus.PlatformContextMenu.Label.set -> void
 Kazo.Os.Platform.Blazor.ContextMenus.PlatformContextMenu.Name.get -> string!
 Kazo.Os.Platform.Blazor.ContextMenus.PlatformContextMenu.Name.set -> void
 Kazo.Os.Platform.Blazor.ContextMenus.PlatformContextMenu.OpenAsync(object? item, double clientX, double clientY) -> System.Threading.Tasks.Task<bool>!
-Kazo.Os.Platform.Blazor.ContextMenus.PlatformContextMenu.Opening.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.AppSdk.Blazor.ContextMenus.HackMenuOpeningEventArgs!>
+Kazo.Os.Platform.Blazor.ContextMenus.PlatformContextMenu.Opening.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuOpeningEventArgs!>
 Kazo.Os.Platform.Blazor.ContextMenus.PlatformContextMenu.Opening.set -> void
 Kazo.Os.Platform.Blazor.ContextMenus.PlatformContextMenu.PlatformContextMenu() -> void
 Kazo.Os.Platform.Blazor.Controls.PlatformComplexControlsProof
@@ -215,7 +215,7 @@ Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.Context.set -> void
 Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.DirectoryChanged.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.App.Abstractions.VirtualPath>
 Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.DirectoryChanged.set -> void
 Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.Dispose() -> void
-Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.Features.get -> Kazo.Os.AppSdk.Blazor.Files.HackFileViewFeatures
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.Features.get -> Kazo.Os.AppSdk.Blazor.Files.KazoFileViewFeatures
 Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.Features.set -> void
 Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.FileActivated.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.App.Abstractions.VirtualPath>
 Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.FileActivated.set -> void
@@ -382,11 +382,11 @@ Kazo.Os.Platform.Blazor.Display.ScreenControl
 Kazo.Os.Platform.Blazor.Display.ScreenControl.Changed -> System.Action?
 Kazo.Os.Platform.Blazor.Display.ScreenControl.CloseScreenAsync(int number) -> System.Threading.Tasks.Task!
 Kazo.Os.Platform.Blazor.Display.ScreenControl.Dispose() -> void
-Kazo.Os.Platform.Blazor.Display.ScreenControl.GetState(System.Guid appInstanceId) -> Kazo.Os.AppSdk.Administration.HackScreensState!
+Kazo.Os.Platform.Blazor.Display.ScreenControl.GetState(System.Guid appInstanceId) -> Kazo.Os.AppSdk.Administration.KazoScreensState!
 Kazo.Os.Platform.Blazor.Display.ScreenControl.IdentifyAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task!
 Kazo.Os.Platform.Blazor.Display.ScreenControl.IsAvailable.get -> bool
-Kazo.Os.Platform.Blazor.Display.ScreenControl.OpenScreenAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Administration.HackScreenOpenStatus>!
-Kazo.Os.Platform.Blazor.Display.ScreenControl.RequestPermissionAsync() -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Administration.HackScreenPermission>!
+Kazo.Os.Platform.Blazor.Display.ScreenControl.OpenScreenAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Administration.KazoScreenOpenStatus>!
+Kazo.Os.Platform.Blazor.Display.ScreenControl.RequestPermissionAsync() -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Administration.KazoScreenPermission>!
 Kazo.Os.Platform.Blazor.Display.ScreenControl.RestoreScreensAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<int>!
 Kazo.Os.Platform.Blazor.Display.ScreenControl.ScreenControl(Kazo.Os.Platform.Blazor.Display.ScreenService! screens, Kazo.Os.Windowing.Core.WindowRuntime! runtime) -> void
 Kazo.Os.Platform.Blazor.Display.ScreenControl.ToggleFullScreenAsync(System.Guid appInstanceId) -> System.Threading.Tasks.Task<bool>!
@@ -826,11 +826,11 @@ Kazo.Os.Platform.Blazor.Shell.UpdateReadyNotification.Dispose() -> void
 Kazo.Os.Platform.Blazor.Shell.UpdateReadyNotification.Show(Kazo.Os.Simulation.Abstractions.Sessions.LocalUserId user, string! title, string! message, string! restartLabel) -> bool
 Kazo.Os.Platform.Blazor.Shell.UpdateReadyNotification.ShowDownloadFailed(Kazo.Os.Simulation.Abstractions.Sessions.LocalUserId user, string! title, string! message, string! restartLabel) -> void
 Kazo.Os.Platform.Blazor.Shell.UpdateReadyNotification.UpdateReadyNotification(Kazo.Os.Simulation.Abstractions.Notifications.INotificationQueue! queue, Kazo.Os.Simulation.Abstractions.Time.ISimulationClock! clock, Kazo.Os.Platform.Blazor.Shell.ShellNotificationActions? actions, System.Func<System.Threading.Tasks.Task!>! restart) -> void
-Kazo.Os.Platform.Blazor.Sites.HackWebSiteHost
-Kazo.Os.Platform.Blazor.Sites.HackWebSiteHost.FindSite(System.Uri! pageUrl) -> Kazo.Os.App.Abstractions.AppManifest?
-Kazo.Os.Platform.Blazor.Sites.HackWebSiteHost.HackWebSiteHost(Kazo.Os.Platform.Core.AppCatalog! catalog, Kazo.Os.Platform.Core.Lifecycle.IAppEnablementRegistry! enablement, Kazo.Os.Simulation.Abstractions.Sessions.ISessionService! sessions, System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<(Kazo.Os.Platform.Core.Discovery.AppDescriptor? Descriptor, string? Error)>!>! descriptors, Kazo.Os.Platform.Blazor.Sites.HackWebSiteHost.StartRenderer! start, System.Func<Kazo.Os.Simulation.Abstractions.Processes.ProcessId, Kazo.Os.Simulation.Abstractions.Processes.ProcessExitReason, System.Threading.Tasks.Task<bool>!>! stop) -> void
-Kazo.Os.Platform.Blazor.Sites.HackWebSiteHost.StartAsync(Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStartRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Web.Blazor.Sites.HackWebSiteStart!>!
-Kazo.Os.Platform.Blazor.Sites.HackWebSiteHost.StartRenderer
+Kazo.Os.Platform.Blazor.Sites.KazoWebSiteHost
+Kazo.Os.Platform.Blazor.Sites.KazoWebSiteHost.FindSite(System.Uri! pageUrl) -> Kazo.Os.App.Abstractions.AppManifest?
+Kazo.Os.Platform.Blazor.Sites.KazoWebSiteHost.KazoWebSiteHost(Kazo.Os.Platform.Core.AppCatalog! catalog, Kazo.Os.Platform.Core.Lifecycle.IAppEnablementRegistry! enablement, Kazo.Os.Simulation.Abstractions.Sessions.ISessionService! sessions, System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<(Kazo.Os.Platform.Core.Discovery.AppDescriptor? Descriptor, string? Error)>!>! descriptors, Kazo.Os.Platform.Blazor.Sites.KazoWebSiteHost.StartRenderer! start, System.Func<Kazo.Os.Simulation.Abstractions.Processes.ProcessId, Kazo.Os.Simulation.Abstractions.Processes.ProcessExitReason, System.Threading.Tasks.Task<bool>!>! stop) -> void
+Kazo.Os.Platform.Blazor.Sites.KazoWebSiteHost.StartAsync(Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStartRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStart!>!
+Kazo.Os.Platform.Blazor.Sites.KazoWebSiteHost.StartRenderer
 Kazo.Os.Platform.Blazor.Sounds.BrowserSoundOutput
 Kazo.Os.Platform.Blazor.Sounds.BrowserSoundOutput.BrowserSoundOutput(Microsoft.JSInterop.IJSRuntime! jsRuntime) -> void
 Kazo.Os.Platform.Blazor.Sounds.BrowserSoundOutput.DisposeAsync() -> System.Threading.Tasks.ValueTask
@@ -853,11 +853,11 @@ Kazo.Os.Platform.Blazor.Windows.AppWindowGatewayFactory.Create(Kazo.Os.Windowing
 Kazo.Os.Platform.Blazor.Windows.BrowserWindowClientAreaProbe
 Kazo.Os.Platform.Blazor.Windows.BrowserWindowClientAreaProbe.BrowserWindowClientAreaProbe(Microsoft.JSInterop.IJSRuntime! jsRuntime) -> void
 Kazo.Os.Platform.Blazor.Windows.BrowserWindowClientAreaProbe.DisposeAsync() -> System.Threading.Tasks.ValueTask
-Kazo.Os.Platform.Blazor.Windows.BrowserWindowClientAreaProbe.MeasureAsync(Kazo.Os.Windowing.Abstractions.WindowId windowId) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.HackWindowSize?>
+Kazo.Os.Platform.Blazor.Windows.BrowserWindowClientAreaProbe.MeasureAsync(Kazo.Os.Windowing.Abstractions.WindowId windowId) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.KazoWindowSize?>
 Kazo.Os.Platform.Blazor.Windows.IRemoteWindowRendering
 Kazo.Os.Platform.Blazor.Windows.IRemoteWindowRendering.GetHostComponent(Kazo.Os.Platform.Core.Discovery.AppDescriptor! descriptor) -> System.Type?
 Kazo.Os.Platform.Blazor.Windows.IWindowClientAreaProbe
-Kazo.Os.Platform.Blazor.Windows.IWindowClientAreaProbe.MeasureAsync(Kazo.Os.Windowing.Abstractions.WindowId windowId) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.HackWindowSize?>
+Kazo.Os.Platform.Blazor.Windows.IWindowClientAreaProbe.MeasureAsync(Kazo.Os.Windowing.Abstractions.WindowId windowId) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.KazoWindowSize?>
 Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry
 Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry.<Clone>$() -> Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry!
 Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry.Deconstruct(out double Width, out double Height, out bool IsMaximized) -> void
@@ -1075,7 +1075,7 @@ const Kazo.Os.Platform.Blazor.Display.DisplaySurfaceService.NotificationSource =
 const Kazo.Os.Platform.Blazor.Shell.DesktopSurfaceHost.DesktopAppId = "org.hackeros.desktop" -> string!
 const Kazo.Os.Platform.Blazor.Shell.UpdateReadyNotification.RestartActionId = "hackeros.update.restart" -> string!
 const Kazo.Os.Platform.Blazor.Shell.UpdateReadyNotification.SourceAppId = "org.hackeros.update" -> string!
-const Kazo.Os.Platform.Blazor.Sites.HackWebSiteHost.RendererArgument = "--type=renderer" -> string!
+const Kazo.Os.Platform.Blazor.Sites.KazoWebSiteHost.RendererArgument = "--type=renderer" -> string!
 const Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.FineKeyboardStep = 1 -> double
 const Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.KeyboardStep = 10 -> double
 const Kazo.Os.Platform.Blazor.Windows.WindowLaunchCoordinator.CascadeStep = 28 -> double
@@ -1194,7 +1194,7 @@ override sealed Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialogPresentation.E
 override sealed Kazo.Os.Platform.Blazor.Dialogs.SaveFileDialogPresentation.Equals(Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation? other) -> bool
 override sealed Kazo.Os.Platform.Blazor.Dialogs.SelectFolderDialogPresentation.Equals(Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation? other) -> bool
 override sealed Kazo.Os.Platform.Blazor.Dialogs.TextInputPresentation.Equals(Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation? other) -> bool
-static Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLayout.Arrange(System.Collections.Generic.IEnumerable<Kazo.Os.AppSdk.Blazor.ContextMenus.HackMenuGroupDefinition!>! groups) -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel?
+static Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLayout.Arrange(System.Collections.Generic.IEnumerable<Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuGroupDefinition!>! groups) -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel?
 static Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLayout.FindByLetter(Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel! level, int from, char letter) -> int
 static Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLayout.NextSelectable(Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel! level, int from, int direction) -> int
 static Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel.operator !=(Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel? left, Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel? right) -> bool
@@ -1203,12 +1203,12 @@ static Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.operator !=(Kazo.Os.P
 static Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.operator ==(Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow? left, Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow? right) -> bool
 static Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.operator !=(Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession? left, Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession? right) -> bool
 static Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.operator ==(Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession? left, Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession? right) -> bool
-static Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntries.IconOf(string? assembly, Kazo.Os.App.Abstractions.AppContextMenuIconManifest? icon) -> Kazo.Os.AppSdk.Icons.HackIcon?
+static Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntries.IconOf(string? assembly, Kazo.Os.App.Abstractions.AppContextMenuIconManifest? icon) -> Kazo.Os.AppSdk.Icons.KazoIcon?
 static Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntries.IdOf(string! appId, string! name) -> string!
 static Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntries.ScopeName(Kazo.Os.AppSdk.Files.FileMenuScope scope) -> string!
 static Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.operator !=(Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate? left, Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate? right) -> bool
 static Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.operator ==(Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate? left, Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate? right) -> bool
-static Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Place(Kazo.Os.AppSdk.Blazor.ContextMenus.HackMenuDefinition! menu, System.Collections.Generic.IReadOnlyList<Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate!>! candidates) -> void
+static Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Place(Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuDefinition! menu, System.Collections.Generic.IReadOnlyList<Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate!>! candidates) -> void
 static Kazo.Os.Platform.Blazor.Dialogs.AppChooserPresentation.operator !=(Kazo.Os.Platform.Blazor.Dialogs.AppChooserPresentation? left, Kazo.Os.Platform.Blazor.Dialogs.AppChooserPresentation? right) -> bool
 static Kazo.Os.Platform.Blazor.Dialogs.AppChooserPresentation.operator ==(Kazo.Os.Platform.Blazor.Dialogs.AppChooserPresentation? left, Kazo.Os.Platform.Blazor.Dialogs.AppChooserPresentation? right) -> bool
 static Kazo.Os.Platform.Blazor.Dialogs.CredentialPromptPresentation.operator !=(Kazo.Os.Platform.Blazor.Dialogs.CredentialPromptPresentation? left, Kazo.Os.Platform.Blazor.Dialogs.CredentialPromptPresentation? right) -> bool
@@ -1256,7 +1256,7 @@ static Kazo.Os.Platform.Blazor.Shell.MobileRecentProjection.BuildItems(System.Co
 static Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry.operator !=(Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry? left, Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry? right) -> bool
 static Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry.operator ==(Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry? left, Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry? right) -> bool
 static Kazo.Os.Platform.Blazor.Windows.UnresponsiveWindowOverlay.ForWindow.get -> Microsoft.AspNetCore.Components.RenderFragment<Kazo.Os.Windowing.Abstractions.WindowRuntimeState!>!
-static Kazo.Os.Platform.Blazor.Windows.WindowAppEventDispatcher.EstimateClientSize(Kazo.Os.Windowing.Abstractions.WindowBounds bounds) -> Kazo.Os.AppSdk.Blazor.HackWindowSize
+static Kazo.Os.Platform.Blazor.Windows.WindowAppEventDispatcher.EstimateClientSize(Kazo.Os.Windowing.Abstractions.WindowBounds bounds) -> Kazo.Os.AppSdk.Blazor.KazoWindowSize
 static Kazo.Os.Platform.Blazor.Windows.WindowAppRenderValidator.Validate(Kazo.Os.Windowing.Abstractions.WindowRuntimeState! window, Kazo.Os.Platform.Core.Discovery.AppDescriptor! descriptor, Kazo.Os.AppSdk.IAppExecutionContext! appContext) -> void
 static Kazo.Os.Platform.Blazor.Windows.WindowGeometrySettings.GetFile(string! appId) -> Kazo.Os.Platform.Core.Settings.OsSettingsFile!
 static Kazo.Os.Platform.Blazor.Windows.WindowGeometrySettings.Parse(string? content) -> Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry?
@@ -1284,7 +1284,7 @@ virtual Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation.PrintMembers(System.T
 virtual Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation.EqualityContract.get -> System.Type!
 virtual Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation.Equals(Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation? other) -> bool
 virtual Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation.PrintMembers(System.Text.StringBuilder! builder) -> bool
-virtual Kazo.Os.Platform.Blazor.Sites.HackWebSiteHost.StartRenderer.Invoke(string! appId, Kazo.Os.Simulation.Abstractions.Sessions.AuthenticatedPrincipal! principal, Kazo.Os.Simulation.Abstractions.Processes.ProcessId parentPid, System.Collections.Generic.IReadOnlyList<string!>! arguments, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Kazo.Os.Platform.Core.Lifecycle.AppLaunchResult!>!
+virtual Kazo.Os.Platform.Blazor.Sites.KazoWebSiteHost.StartRenderer.Invoke(string! appId, Kazo.Os.Simulation.Abstractions.Sessions.AuthenticatedPrincipal! principal, Kazo.Os.Simulation.Abstractions.Processes.ProcessId parentPid, System.Collections.Generic.IReadOnlyList<string!>! arguments, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Kazo.Os.Platform.Core.Lifecycle.AppLaunchResult!>!
 ~override Kazo.Os.Platform.Blazor.Controls.PlatformComplexControlsProof.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override Kazo.Os.Platform.Blazor.Dialogs.AppChooserDialog.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override Kazo.Os.Platform.Blazor.Dialogs.CredentialPromptDialog.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

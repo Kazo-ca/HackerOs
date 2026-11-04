@@ -21,35 +21,35 @@ namespace Kazo.Os.Apps.Diagnostic;
 /// <remarks>
 /// Uses only the public SDK (ADR 0055, ADR 0056 section 11):
 /// <list type="bullet">
-/// <item><see cref="HackStorageDiagnostics"/> (capability <c>system.storage.inspect</c>, dangerous:
+/// <item><see cref="KazoStorageDiagnostics"/> (capability <c>system.storage.inspect</c>, dangerous:
 /// the snapshot bypasses file permissions, so an administrator approves this app at its first
 /// launch);</item>
-/// <item>the save dialog and <see cref="HackFile"/> to save the JSON inside Kazo OS;</item>
-/// <item><see cref="HackClipboard"/> (capability <c>clipboard.write</c>) to copy the JSON: the OS
+/// <item>the save dialog and <see cref="KazoFile"/> to save the JSON inside Kazo OS;</item>
+/// <item><see cref="KazoClipboard"/> (capability <c>clipboard.write</c>) to copy the JSON: the OS
 /// clipboard mirrors its text to the real machine's clipboard (ADR 0065), so it can be pasted outside
 /// Kazo OS;</item>
 /// <item><see cref="BrowserFileDownloader"/> of the SDK to download the JSON to the real browser
 /// (ADR 0060);</item>
-/// <item><see cref="HackCrossOriginIsolation"/> (no capability) for the page's cross-origin
+/// <item><see cref="KazoCrossOriginIsolation"/> (no capability) for the page's cross-origin
 /// isolation (ADR 0131, section 5; ADR 0146).</item>
 /// </list>
 /// </remarks>
 public partial class DiagnosticWindow : IAsyncDisposable
 {
     private BrowserFileDownloader? _downloader;
-    private HackStorageSnapshot? _snapshot;
+    private KazoStorageSnapshot? _snapshot;
     private string _selectedStoreName = string.Empty;
     private string _searchFilter = string.Empty;
     private bool _isLoading = true;
     private bool _showRawJson;
     private string? _toastMessage;
     private string? _loadError;
-    private IReadOnlyList<HackWebSiteDatabaseInfo> _sites = [];
+    private IReadOnlyList<KazoWebSiteDatabaseInfo> _sites = [];
     private string? _sitesError;
     private string? _selectedSiteName;
     private bool _confirmDelete;
     private IStringLocalizer<Strings>? _localizer;
-    private HackCrossOriginIsolationStatus? _isolation;
+    private KazoCrossOriginIsolationStatus? _isolation;
 
     /// <summary>The inspector's texts in the language of its own process (ADR 0104).</summary>
     private IStringLocalizer<Strings> L => _localizer ??= AppContext.GetLocalizer<Strings>();
@@ -57,10 +57,10 @@ public partial class DiagnosticWindow : IAsyncDisposable
     /// <summary>The culture of the numbers shown (the process's locale).</summary>
     private CultureInfo Formats => AppContext.FormatCulture;
 
-    private HackWebSiteDatabaseInfo? SelectedSite =>
+    private KazoWebSiteDatabaseInfo? SelectedSite =>
         _selectedSiteName is null ? null : _sites.FirstOrDefault(site => site.Name == _selectedSiteName);
 
-    private HackStorageStoreSnapshot? SelectedStore =>
+    private KazoStorageStoreSnapshot? SelectedStore =>
         _snapshot?.Stores.FirstOrDefault(store => store.Name == _selectedStoreName);
 
     /// <inheritdoc />
@@ -87,11 +87,11 @@ public partial class DiagnosticWindow : IAsyncDisposable
 
         try
         {
-            _snapshot = await HackStorageDiagnostics.GetSnapshotAsync(AppContext, AppContext.CancellationToken);
+            _snapshot = await KazoStorageDiagnostics.GetSnapshotAsync(AppContext, AppContext.CancellationToken);
             if (SelectedStore is null)
             {
                 // Start on the inode table, the store the path column explains.
-                _selectedStoreName = (_snapshot.Stores.FirstOrDefault(store => store.Kind == HackStorageStoreKind.FileEntries)
+                _selectedStoreName = (_snapshot.Stores.FirstOrDefault(store => store.Kind == KazoStorageStoreKind.FileEntries)
                     ?? _snapshot.Stores.FirstOrDefault())?.Name ?? string.Empty;
             }
         }
@@ -116,7 +116,7 @@ public partial class DiagnosticWindow : IAsyncDisposable
         _sitesError = null;
         try
         {
-            _sites = await HackStorageDiagnostics.GetWebSiteDatabasesAsync(AppContext.CancellationToken);
+            _sites = await KazoStorageDiagnostics.GetWebSiteDatabasesAsync(AppContext.CancellationToken);
         }
         catch (Exception exception) when (exception is UnauthorizedAccessException or NotSupportedException or InvalidOperationException or Microsoft.JSInterop.JSException)
         {
@@ -133,7 +133,7 @@ public partial class DiagnosticWindow : IAsyncDisposable
     {
         try
         {
-            _isolation = await HackCrossOriginIsolation.GetStatusAsync(AppContext.CancellationToken);
+            _isolation = await KazoCrossOriginIsolation.GetStatusAsync(AppContext.CancellationToken);
         }
         catch (NotSupportedException)
         {
@@ -142,18 +142,18 @@ public partial class DiagnosticWindow : IAsyncDisposable
     }
 
     /// <summary>The reason in the inspector's language.</summary>
-    private string IsolationReason(HackCrossOriginIsolationReason reason) => reason switch
+    private string IsolationReason(KazoCrossOriginIsolationReason reason) => reason switch
     {
-        HackCrossOriginIsolationReason.Setting => L["Isolation.Reason.Setting"],
-        HackCrossOriginIsolationReason.MissingHeaders => L["Isolation.Reason.MissingHeaders"],
-        HackCrossOriginIsolationReason.InsecureContext => L["Isolation.Reason.InsecureContext"],
-        HackCrossOriginIsolationReason.Browser => L["Isolation.Reason.Browser"],
-        HackCrossOriginIsolationReason.NotBrowser => L["Isolation.Reason.NotBrowser"],
+        KazoCrossOriginIsolationReason.Setting => L["Isolation.Reason.Setting"],
+        KazoCrossOriginIsolationReason.MissingHeaders => L["Isolation.Reason.MissingHeaders"],
+        KazoCrossOriginIsolationReason.InsecureContext => L["Isolation.Reason.InsecureContext"],
+        KazoCrossOriginIsolationReason.Browser => L["Isolation.Reason.Browser"],
+        KazoCrossOriginIsolationReason.NotBrowser => L["Isolation.Reason.NotBrowser"],
         _ => IsolationStatus.Format(reason)
     };
 
     /// <summary>The tooltip: every line of the status, as <c>cat /proc/hackeros/workers</c> prints it.</summary>
-    private static string IsolationDetails(HackCrossOriginIsolationStatus isolation) => IsolationStatus.Describe(isolation);
+    private static string IsolationDetails(KazoCrossOriginIsolationStatus isolation) => IsolationStatus.Describe(isolation);
 
     private void SelectStore(string storeName)
     {
@@ -179,7 +179,7 @@ public partial class DiagnosticWindow : IAsyncDisposable
         _confirmDelete = false;
         try
         {
-            await HackStorageDiagnostics.DeleteWebSiteDatabaseAsync(site.Name, AppContext.CancellationToken);
+            await KazoStorageDiagnostics.DeleteWebSiteDatabaseAsync(site.Name, AppContext.CancellationToken);
             ShowToast(L["Toast.Deleted", site.Name]);
             _selectedSiteName = null;
         }
@@ -211,7 +211,7 @@ public partial class DiagnosticWindow : IAsyncDisposable
 
         try
         {
-            await HackClipboard.SetTextAsync(_snapshot.ToExportJson(), AppContext.CancellationToken);
+            await KazoClipboard.SetTextAsync(_snapshot.ToExportJson(), AppContext.CancellationToken);
             ShowToast(L["Toast.Copied"]);
         }
         catch (UnauthorizedAccessException exception)
@@ -242,7 +242,7 @@ public partial class DiagnosticWindow : IAsyncDisposable
         SaveFileDialogResult result = await SaveFileAsync(new SaveFileDialogRequest
         {
             Title = L["Dialog.ExportTitle"],
-            InitialDirectory = Kazo.Os.App.Abstractions.VirtualPath.Parse(HackEnvironment.GetFolderPath(HackSpecialFolder.UserProfile)),
+            InitialDirectory = Kazo.Os.App.Abstractions.VirtualPath.Parse(KazoEnvironment.GetFolderPath(KazoSpecialFolder.UserProfile)),
             SuggestedFileName = DumpFileName(),
             DefaultExtension = ".json",
             Filters = [new FileDialogFilter(L["Dialog.JsonFilter"], [".json"], ["application/json"])],
@@ -256,7 +256,7 @@ public partial class DiagnosticWindow : IAsyncDisposable
 
         try
         {
-            await HackFile.WriteAllTextAsync(result.Resource.Path.Value, _snapshot.ToExportJson(), AppContext.CancellationToken);
+            await KazoFile.WriteAllTextAsync(result.Resource.Path.Value, _snapshot.ToExportJson(), AppContext.CancellationToken);
             ShowToast(L["Toast.Exported", result.Resource.Path.Value]);
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
@@ -278,7 +278,7 @@ public partial class DiagnosticWindow : IAsyncDisposable
         }, TaskScheduler.Default);
     }
 
-    private IEnumerable<(string Id, string Path, string Kind, string OwnerId, string? ContentHash)> FilteredFsEntries(HackStorageStoreSnapshot store)
+    private IEnumerable<(string Id, string Path, string Kind, string OwnerId, string? ContentHash)> FilteredFsEntries(KazoStorageStoreSnapshot store)
     {
         if (store.Records.ValueKind != JsonValueKind.Array)
         {
@@ -303,7 +303,7 @@ public partial class DiagnosticWindow : IAsyncDisposable
         }
     }
 
-    private IEnumerable<(string ParentId, string Name, string EntryId)> FilteredFsLinks(HackStorageStoreSnapshot store)
+    private IEnumerable<(string ParentId, string Name, string EntryId)> FilteredFsLinks(KazoStorageStoreSnapshot store)
     {
         if (store.Records.ValueKind != JsonValueKind.Array)
         {
@@ -327,7 +327,7 @@ public partial class DiagnosticWindow : IAsyncDisposable
     }
 
     /// <summary>Other stores are shown as JSON; with a filter, only the records whose JSON contains it.</summary>
-    private string FilteredJson(HackStorageStoreSnapshot store)
+    private string FilteredJson(KazoStorageStoreSnapshot store)
     {
         if (string.IsNullOrWhiteSpace(_searchFilter) || store.Records.ValueKind != JsonValueKind.Array)
         {

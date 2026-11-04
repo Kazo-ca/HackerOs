@@ -5,7 +5,7 @@
     imports this file; Directory.Build.props makes every other project non-packable, so
     build/pack-local.sh packs the whole solution and only gets these.
 
-    The version is not set here: every project carries $(HackerOsVersion) from build/Versions.props
+    The version is not set here: every project carries $(KazoOsVersion) from build/Versions.props
     (ADR 0098 §1). build/pack-local.sh produces them into artifacts/local-nupkg, consumed from that
     folder by another repository (nuget.config sample: build/nuget.config.sample); the Release
     workflow pushes each new version to nuget.org (ADR 0173). PackageTags below are a default; a
@@ -36,7 +36,7 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <!-- ADR 0186 §7: build/pack-local.sh writes the release notes of the version into this file. -->
-    <PackageReleaseNotes Condition="'$(HackerOsPackageReleaseNotesFile)' != '' and Exists('$(HackerOsPackageReleaseNotesFile)')">$([System.IO.File]::ReadAllText('$(HackerOsPackageReleaseNotesFile)'))</PackageReleaseNotes>
+    <PackageReleaseNotes Condition="'$(KazoOsPackageReleaseNotesFile)' != '' and Exists('$(KazoOsPackageReleaseNotesFile)')">$([System.IO.File]::ReadAllText('$(KazoOsPackageReleaseNotesFile)'))</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

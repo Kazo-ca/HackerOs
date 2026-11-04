@@ -196,17 +196,17 @@ public static class DefaultSimulatedHostCatalog
     ];
 
     /// <summary>
-    /// Returns the website controllers that serve the default hosts: HackerSearch (the Browser's
-    /// home page and search engine), HackMail, CryptoBank, the darknet market and the hacker forum.
+    /// Returns the website controllers that serve the default hosts: KazoSearch (the Browser's
+    /// home page and search engine), KazoMail, CryptoBank, the darknet market and the hacker forum.
     /// A new instance per call, so every network composed from it has its own sessions.
     /// </summary>
     public static IReadOnlyList<ISimulatedWebsiteController> BuildWebsites() =>
     [
-        new HackerSearchController(),
-        new HackMailController(),
+        new KazoSearchController(),
+        new KazoMailController(),
         new CryptoBankController(),
         new DarknetMarketController(),
-        new HackerForumController(),
+        new KazoForumController(),
     ];
 
     // ── Port factory helpers ───────────────────────────────────────────────

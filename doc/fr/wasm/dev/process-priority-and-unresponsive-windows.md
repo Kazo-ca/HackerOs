@@ -2,7 +2,7 @@
 
 # Priorité `nice` et fenêtres qui ne répondent pas
 
-Ce document couvre la mise en œuvre de la priorité `nice` et de la détection des fenêtres qui ne répondent pas. Ce qu'une app voit et doit faire (API `HackProcess.Nice`, règles de la priorité, boîte « Ne répond pas », limites d'une boucle sur le fil principal) est dans [`../framework/app-responsiveness-api.md`](../framework/app-responsiveness-api.md).
+Ce document couvre la mise en œuvre de la priorité `nice` et de la détection des fenêtres qui ne répondent pas. Ce qu'une app voit et doit faire (API `KazoProcess.Nice`, règles de la priorité, boîte « Ne répond pas », limites d'une boucle sur le fil principal) est dans [`../framework/app-responsiveness-api.md`](../framework/app-responsiveness-api.md).
 
 Mise en œuvre de l'[ADR 0127](adr/0127-priority-and-not-responding-dialog.md),
 chantier `exec/4-not-responding-ui` de la série « suites de l'étape 5 »
@@ -63,7 +63,7 @@ Les règles de la priorité (plage, héritage, droits, effet sur la file des wor
 | `nice`, `renice` | `Apps/Commands/Kazo.Os.Commands` | Commandes (thread principal : elles ont besoin du shell ou de la table des processus). |
 | `ps`, `top`, `htop` | idem | Colonnes `NI` et `PRI`/`PR`. |
 | `ProcFileSystemProvider` | Core | Champs 18 et 19 de `/proc/<pid>/stat`. |
-| `HackProcess.Nice`, `HackProcess.BasePriority`, `HackProcess.ParseStatNice` | `Shared/Kazo.Os.AppSdk` | Lus depuis `/proc/<pid>/stat`. |
+| `KazoProcess.Nice`, `KazoProcess.BasePriority`, `KazoProcess.ParseStatNice` | `Shared/Kazo.Os.AppSdk` | Lus depuis `/proc/<pid>/stat`. |
 | `WorkerRunQueue` | `Platform/Kazo.Os.Platform.WorkerHost` | File des commandes en attente d'un worker, ordonnée par gentillesse puis arrivée. |
 | `ProcessTable.ShowPriority`, `ProcessColumn.Priority` | `Apps/System/Kazo.Os.Apps.SystemMonitor` | Colonne Priorité masquée par défaut. |
 
@@ -170,7 +170,7 @@ la rendra dans sa propre surface avec le même calque.
 | `Kazo.Os.Platform.Core.Tests` (`InMemoryProcessManagerTests.Nice`, `ProcFileSystemProviderTests`) | Valeur 0, héritage, valeur explicite, bornes, processus terminé, règles root/propriétaire/capacités de la passerelle, champs 18 et 19 de `stat`. |
 | `Kazo.Os.Platform.WorkerHost.Tests` (`WorkerRunQueueTests`, `CommandParityTests`) | Ordre de la file (gentillesse puis arrivée, bornes), worker toujours prêt, parité de `nice`, `renice` et `ps -o` dans un worker. |
 | `Kazo.Os.Commands.Wave5.Tests` (`PsCommandTests`) | `ps -l` (`PRI` 85 pour `nice` 5), `ps -o pid,ni,comm`, champ inconnu. |
-| `Kazo.Os.AppSdk.Tests` (`HackProcessNiceTests`) | Lecture du champ 19, nom avec parenthèses, ligne courte ou invalide, bornes. |
+| `Kazo.Os.AppSdk.Tests` (`KazoProcessNiceTests`) | Lecture du champ 19, nom avec parenthèses, ligne courte ou invalide, bornes. |
 | `Kazo.Os.Apps.SystemMonitor.Tests` (`ProcessTableTests`) | Colonne Priorité masquée par défaut, tri, retour au tri CPU quand on la masque. |
 | `Kazo.Os.Windowing.Core.Tests` (`WindowRespondingTests`) | Drapeau, événement unique, titre inchangé, persistance jusqu'à l'effacement. |
 | `Kazo.Os.Platform.Blazor.Tests` (`WindowResponsivenessMonitorTests`) | Les trois cas avec horloge factice, vieux drapeau ignoré, attente imputée à un autre processus, fin par entrée rapide, tranche courte ou inactivité, Attendre puis retour, croix, Terminer (2 s, `Terminated`), sans mesure, fenêtre sans processus. |
@@ -182,7 +182,7 @@ la rendra dans sa propre surface avec le même calque.
 - [x] Passerelle des processus : contrôles root, propriétaire et capacités.
 - [x] `nice` et `renice` (en/fr), `IShellSession.RunNicedAsync`.
 - [x] `ps -l`, `ps -o`, `top`, `htop` : `NI` et `PRI`/`PR`.
-- [x] `/proc/<pid>/stat` champs 18 et 19 ; `HackProcess.Nice`/`BasePriority`.
+- [x] `/proc/<pid>/stat` champs 18 et 19 ; `KazoProcess.Nice`/`BasePriority`.
 - [x] File des workers ordonnée par gentillesse (`WorkerRunQueue`), worker toujours prêt laissé aux commandes interactives.
 - [x] Colonne Priorité masquée par défaut dans le gestionnaire de tâches.
 - [x] État `IsResponding` de la fenêtre, commande et événement.

@@ -74,9 +74,9 @@ public sealed class AppInstallationServiceTests
     {
         Harness harness = await Harness.CreateAsync();
         await harness.LoginAsync(harness.Settings.Alice);
-        HackWebDbSchemaDefinition schema = new(1, [new HackWebDbMigrationStep(1, [new HackWebDbStoreDefinition("notes", null, true, [])], [], [], [])]);
-        await harness.WebDatabases.OpenAsync(HackWebDbNames.ForApp(Site), schema);
-        await harness.WebDatabases.OpenAsync(HackWebDbNames.ForApp("org.test.other-site"), schema);
+        KazoWebDbSchemaDefinition schema = new(1, [new KazoWebDbMigrationStep(1, [new KazoWebDbStoreDefinition("notes", null, true, [])], [], [], [])]);
+        await harness.WebDatabases.OpenAsync(KazoWebDbNames.ForApp(Site), schema);
+        await harness.WebDatabases.OpenAsync(KazoWebDbNames.ForApp("org.test.other-site"), schema);
 
         AppInstallationResult calc = await harness.Installation.UninstallAsync(Calc, AppInstallationScope.User);
         Assert.Equal(2, (await harness.WebDatabases.ListAsync()).Count);
@@ -84,7 +84,7 @@ public sealed class AppInstallationServiceTests
 
         Assert.True(calc.Success);
         Assert.True(site.Success);
-        Kazo.Os.AppSdk.Administration.HackWebSiteDatabaseInfo left = Assert.Single(await harness.WebDatabases.ListAsync());
+        Kazo.Os.AppSdk.Administration.KazoWebSiteDatabaseInfo left = Assert.Single(await harness.WebDatabases.ListAsync());
         Assert.Equal("hackweb.org.test.other-site", left.Name);
         Assert.Contains(harness.Log.Lines, line => line == $"apps: {Site} browser database hackweb.{Site} deleted");
     }
@@ -157,7 +157,7 @@ public sealed class AppInstallationServiceTests
         Harness harness = await Harness.CreateAsync();
         await harness.LoginAsync(harness.Settings.Alice);
 
-        await Assert.ThrowsAsync<HackUnauthorizedAccessException>(
+        await Assert.ThrowsAsync<KazoUnauthorizedAccessException>(
             () => harness.Installation.UninstallAsync(Calc, AppInstallationScope.Machine).AsTask());
         Assert.True(harness.Enablement.IsEnabled(Calc));
 
@@ -294,7 +294,7 @@ public sealed class AppInstallationServiceTests
         Description = name,
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", $"{id}.EntryPoint"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         Dependencies = dependencies

@@ -11,7 +11,7 @@ namespace Kazo.Os.Samples.Intranet.Controllers.Api;
 /// the script of the notes list (<c>wwwroot/js/notes.js</c>) calls <c>PATCH</c> to pin a note.
 /// </summary>
 [Route("api/notes")]
-public sealed class NotesApiController(NoteStore store) : HackApiController
+public sealed class NotesApiController(NoteStore store) : KazoApiController
 {
     /// <summary>
     /// <c>GET /api/notes?q=&amp;author=</c>: every note, those of one author (read through the

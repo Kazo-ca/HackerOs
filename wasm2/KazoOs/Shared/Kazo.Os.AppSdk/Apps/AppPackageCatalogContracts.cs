@@ -5,18 +5,18 @@ namespace Kazo.Os.AppSdk.Apps;
 /// <summary>A category of a catalog (ADR 0188 §4), with its label per language.</summary>
 /// <param name="Id">Category ID, such as <c>productivity</c>.</param>
 /// <param name="Labels">Label per language code (<c>en</c>, <c>fr</c>, …).</param>
-public sealed record HackCatalogCategory(string Id, IReadOnlyDictionary<string, string> Labels)
+public sealed record KazoCatalogCategory(string Id, IReadOnlyDictionary<string, string> Labels)
 {
     /// <summary>Gets the label in <paramref name="culture"/>'s language, else English, else the ID.</summary>
     /// <param name="culture">The language wanted.</param>
-    public string GetLabel(CultureInfo culture) => HackCatalogText.Pick(Labels, culture) ?? Id;
+    public string GetLabel(CultureInfo culture) => KazoCatalogText.Pick(Labels, culture) ?? Id;
 }
 
 /// <summary>One published version of an app of a catalog (ADR 0188 §6).</summary>
 /// <param name="Version">The version.</param>
 /// <param name="SizeBytes">Size of its package.</param>
 /// <param name="Capabilities">Capabilities it declares; dangerous ones are asked at its first launch (ADR 0049).</param>
-public sealed record HackCatalogAppVersion(string Version, long SizeBytes, IReadOnlyList<string> Capabilities)
+public sealed record KazoCatalogAppVersion(string Version, long SizeBytes, IReadOnlyList<string> Capabilities)
 {
     /// <summary>Gets when the catalog published it, if it says.</summary>
     public DateTimeOffset? PublishedAt { get; init; }
@@ -30,7 +30,7 @@ public sealed record HackCatalogAppVersion(string Version, long SizeBytes, IRead
     /// <summary>Gets the addresses of its screenshots.</summary>
     public IReadOnlyList<string> ScreenshotUris { get; init; } = [];
 
-    /// <summary>Gets the languages its long description is written in (read it with <see cref="HackAppPackages.GetCatalogDescriptionAsync"/>).</summary>
+    /// <summary>Gets the languages its long description is written in (read it with <see cref="KazoAppPackages.GetCatalogDescriptionAsync"/>).</summary>
     public IReadOnlyList<string> DescriptionLanguages { get; init; } = [];
 }
 
@@ -46,7 +46,7 @@ public sealed record HackCatalogAppVersion(string Version, long SizeBytes, IRead
 /// <param name="LatestVersion">The version installed by default.</param>
 /// <param name="Versions">Published versions, newest first.</param>
 /// <param name="Trust">Trust level of its catalog (ADR 0189 §2).</param>
-public sealed record HackCatalogApp(
+public sealed record KazoCatalogApp(
     string Catalog,
     string AppId,
     string Name,
@@ -56,33 +56,33 @@ public sealed record HackCatalogApp(
     string License,
     string Repository,
     string LatestVersion,
-    IReadOnlyList<HackCatalogAppVersion> Versions,
-    HackPackageTrust Trust)
+    IReadOnlyList<KazoCatalogAppVersion> Versions,
+    KazoPackageTrust Trust)
 {
     /// <summary>Gets what it installs: an app, or a theme pack whose <see cref="AppId"/> is the pack id (ADR 0213 §2).</summary>
-    public HackCatalogItemKind Kind { get; init; }
+    public KazoCatalogItemKind Kind { get; init; }
 
     /// <summary>
-    /// Gets the source to pass to <see cref="HackAppPackages.InstallAsync"/> (an app) or
-    /// <see cref="HackAppPackages.InstallThemePackAsync"/> (a theme pack): <c>catalog:&lt;catalog&gt;/&lt;appId&gt;</c>.
+    /// Gets the source to pass to <see cref="KazoAppPackages.InstallAsync"/> (an app) or
+    /// <see cref="KazoAppPackages.InstallThemePackAsync"/> (a theme pack): <c>catalog:&lt;catalog&gt;/&lt;appId&gt;</c>.
     /// </summary>
     public string Source => $"catalog:{Catalog}/{AppId}";
 
     /// <summary>Gets the version <see cref="LatestVersion"/> names.</summary>
-    public HackCatalogAppVersion Latest => Versions.FirstOrDefault(version => version.Version == LatestVersion) ?? Versions[0];
+    public KazoCatalogAppVersion Latest => Versions.FirstOrDefault(version => version.Version == LatestVersion) ?? Versions[0];
 
     /// <summary>Gets the short description in <paramref name="culture"/>'s language, else English.</summary>
     /// <param name="culture">The language wanted.</param>
-    public string GetShortDescription(CultureInfo culture) => HackCatalogText.Pick(ShortDescriptions, culture) ?? string.Empty;
+    public string GetShortDescription(CultureInfo culture) => KazoCatalogText.Pick(ShortDescriptions, culture) ?? string.Empty;
 }
 
 /// <summary>A catalog of <c>[catalogs]</c> and what it lists (ADR 0188).</summary>
 /// <param name="Name">Catalog name.</param>
-/// <param name="Trust">Its trust level: <see cref="HackPackageTrust.Verified"/> for the official catalog.</param>
+/// <param name="Trust">Its trust level: <see cref="KazoPackageTrust.Verified"/> for the official catalog.</param>
 /// <param name="Categories">Its categories.</param>
 /// <param name="Apps">Its apps, in app ID order.</param>
-public sealed record HackAppCatalog(
-    string Name, HackPackageTrust Trust, IReadOnlyList<HackCatalogCategory> Categories, IReadOnlyList<HackCatalogApp> Apps)
+public sealed record KazoAppCatalog(
+    string Name, KazoPackageTrust Trust, IReadOnlyList<KazoCatalogCategory> Categories, IReadOnlyList<KazoCatalogApp> Apps)
 {
     /// <summary>Gets why it could not be read (offline, invalid file), or <see langword="null"/>; it then lists nothing.</summary>
     public string? Error { get; init; }
@@ -94,10 +94,10 @@ public sealed record HackAppCatalog(
 /// <param name="InstalledVersion">The installed version.</param>
 /// <param name="AvailableVersion">The newer version.</param>
 /// <param name="SystemWide">Whether the installed copy is for every user (its update then asks an administrator).</param>
-public sealed record HackPackageUpdate(string AppId, string Source, string InstalledVersion, string AvailableVersion, bool SystemWide);
+public sealed record KazoPackageUpdate(string AppId, string Source, string InstalledVersion, string AvailableVersion, bool SystemWide);
 
 /// <summary>Picks a text in a language map: the exact culture, its language, then English.</summary>
-internal static class HackCatalogText
+internal static class KazoCatalogText
 {
     internal static string? Pick(IReadOnlyDictionary<string, string> texts, CultureInfo culture)
     {

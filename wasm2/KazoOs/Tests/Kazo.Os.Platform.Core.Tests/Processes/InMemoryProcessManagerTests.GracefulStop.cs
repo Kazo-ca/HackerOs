@@ -71,7 +71,7 @@ public sealed partial class InMemoryProcessManagerTests
         Assert.Equal(ProcessExitReason.Timeout, stopped.ExitReason);
         Assert.True(control.IsKilled);
         Assert.True(control.Killed.IsCompleted);
-        Assert.Throws<Kazo.Os.AppSdk.Diagnostics.HackProcessKilledException>(control.ThrowIfKilled);
+        Assert.Throws<Kazo.Os.AppSdk.Diagnostics.KazoProcessKilledException>(control.ThrowIfKilled);
     }
 
     [Fact]

@@ -80,14 +80,14 @@ public sealed class ContextMenuService
     /// Gets the entry under the pointer or the keyboard focus in the open menu, or
     /// <see langword="null"/> (ADR 0179 §6: the screen identification veil follows it).
     /// </summary>
-    internal HackMenuItemDefinition? Highlighted { get; private set; }
+    internal KazoMenuItemDefinition? Highlighted { get; private set; }
 
     /// <summary>Raised when <see cref="Highlighted"/> changed.</summary>
     internal event Action? HighlightChanged;
 
     /// <summary>Records the entry the overlay shows under the pointer or the keyboard focus.</summary>
     /// <param name="item">The entry, or <see langword="null"/> when the pointer or focus left it.</param>
-    internal void SetHighlighted(HackMenuItemDefinition? item)
+    internal void SetHighlighted(KazoMenuItemDefinition? item)
     {
         if (Current is null)
         {
@@ -152,13 +152,13 @@ public sealed class ContextMenuService
     {
         ArgumentNullException.ThrowIfNull(scope);
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
-        if (scope.IsDisposed || !scope.TryGetRegistration(name, out HackMenuRegistration? registration))
+        if (scope.IsDisposed || !scope.TryGetRegistration(name, out KazoMenuRegistration? registration))
         {
             _logger?.LogWarning("context-menu: no menu named '{Name}' is registered in its window.", name);
             return false;
         }
 
-        HackMenuDefinition menu;
+        KazoMenuDefinition menu;
         try
         {
             // A fresh copy for each opening: Opening changes last for this opening only.
@@ -166,7 +166,7 @@ public sealed class ContextMenuService
             menu.Validate();
             if (registration.Opening.HasDelegate)
             {
-                HackMenuOpeningEventArgs args = new(menu, item);
+                KazoMenuOpeningEventArgs args = new(menu, item);
                 using (scope.EnterAmbient())
                 {
                     await registration.Opening.InvokeAsync(args);
@@ -209,7 +209,7 @@ public sealed class ContextMenuService
     /// Adds the registered file menu entries; a failure is written to the system log and the menu
     /// opens with the provider's entries only, so one broken registration never hides a file menu.
     /// </summary>
-    private async Task AddFileMenuEntriesAsync(HackMenuDefinition menu, string name)
+    private async Task AddFileMenuEntriesAsync(KazoMenuDefinition menu, string name)
     {
         try
         {
@@ -239,7 +239,7 @@ public sealed class ContextMenuService
     /// context. An action that throws is written to the system log.
     /// </summary>
     /// <param name="item">The chosen entry.</param>
-    public async Task InvokeAsync(HackMenuItemDefinition item)
+    public async Task InvokeAsync(KazoMenuItemDefinition item)
     {
         ArgumentNullException.ThrowIfNull(item);
         if (Current is not { } session || item.IsDisabled || item.Children.Count > 0)
@@ -330,7 +330,7 @@ public sealed class ContextMenuScope : IHackMenuHost, IDisposable
 {
     private readonly ContextMenuService _service;
     private readonly IAppExecutionContext? _context;
-    private readonly Dictionary<string, HackMenuRegistration> _menus = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, KazoMenuRegistration> _menus = new(StringComparer.Ordinal);
     private readonly Dictionary<string, (string Name, object? Item)> _byToken = new(StringComparer.Ordinal);
     private readonly Dictionary<AttachKey, string> _byItem = [];
     private int _nextToken;
@@ -365,13 +365,13 @@ public sealed class ContextMenuScope : IHackMenuHost, IDisposable
 
         return new Dictionary<string, object>(StringComparer.Ordinal)
         {
-            [HackMenuAttributes.Menu] = name,
-            [HackMenuAttributes.Token] = token,
+            [KazoMenuAttributes.Menu] = name,
+            [KazoMenuAttributes.Token] = token,
         };
     }
 
     /// <inheritdoc />
-    public IDisposable Register(HackMenuRegistration registration)
+    public IDisposable Register(KazoMenuRegistration registration)
     {
         ArgumentNullException.ThrowIfNull(registration);
         ArgumentException.ThrowIfNullOrWhiteSpace(registration.Name);
@@ -413,7 +413,7 @@ public sealed class ContextMenuScope : IHackMenuHost, IDisposable
         _service.Remove(this);
     }
 
-    internal bool TryGetRegistration(string name, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out HackMenuRegistration? registration) =>
+    internal bool TryGetRegistration(string name, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out KazoMenuRegistration? registration) =>
         _menus.TryGetValue(name, out registration);
 
     internal bool TryResolve(string token, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out string? name, out object? item)
@@ -438,11 +438,11 @@ public sealed class ContextMenuScope : IHackMenuHost, IDisposable
     }
 
     /// <summary>Runs the app's code (its builder, Opening handler, action) in the app's ambient scope.</summary>
-    internal IDisposable? EnterAmbient() => _context is null ? null : HackExecutionContext.Enter(_context);
+    internal IDisposable? EnterAmbient() => _context is null ? null : KazoExecutionContext.Enter(_context);
 
-    private void Unregister(HackMenuRegistration registration)
+    private void Unregister(KazoMenuRegistration registration)
     {
-        if (_menus.TryGetValue(registration.Name, out HackMenuRegistration? current) && ReferenceEquals(current, registration))
+        if (_menus.TryGetValue(registration.Name, out KazoMenuRegistration? current) && ReferenceEquals(current, registration))
         {
             _menus.Remove(registration.Name);
         }
@@ -467,7 +467,7 @@ public sealed class ContextMenuScope : IHackMenuHost, IDisposable
             : RuntimeHelpers.GetHashCode(Item));
     }
 
-    private sealed class Registration(ContextMenuScope scope, HackMenuRegistration registration) : IDisposable
+    private sealed class Registration(ContextMenuScope scope, KazoMenuRegistration registration) : IDisposable
     {
         private bool _disposed;
 

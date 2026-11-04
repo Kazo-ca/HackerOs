@@ -42,11 +42,11 @@ public sealed class IndexedDbDiagnosticRepository : IPersistentDiagnosticReposit
             [
                 new IndexedDbOperation(
                     "add",
-                    HackerOsIndexedDbSchema.DiagnosticsStoreName,
+                    KazoOsIndexedDbSchema.DiagnosticsStoreName,
                     Value: record),
                 new IndexedDbOperation(
                     "trimOldest",
-                    HackerOsIndexedDbSchema.DiagnosticsStoreName,
+                    KazoOsIndexedDbSchema.DiagnosticsStoreName,
                     IndexName: "timestampUtcMs",
                     Count: _capacity)
             ],
@@ -63,7 +63,7 @@ public sealed class IndexedDbDiagnosticRepository : IPersistentDiagnosticReposit
             IndexedDbTransactionMode.ReadOnly,
             [new IndexedDbOperation(
                 "getAll",
-                HackerOsIndexedDbSchema.DiagnosticsStoreName,
+                KazoOsIndexedDbSchema.DiagnosticsStoreName,
                 IndexName: "timestampUtcMs")],
             cancellationToken).ConfigureAwait(false);
 

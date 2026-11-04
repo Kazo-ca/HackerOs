@@ -80,11 +80,11 @@ public sealed partial class ShellInterpreterTests
         Assert.Contains("0644 (-rw-r--r--) to 0755 (-rwxr-xr-x)", chmod.Stdout);
         Assert.Equal("ran 2\n", after.Stdout);
         Assert.Equal("exec\n", symbolic.Stdout);
-        using (Kazo.Os.AppSdk.HackExecutionContext.Enter(fixture.Host))
+        using (Kazo.Os.AppSdk.KazoExecutionContext.Enter(fixture.Host))
         {
             Assert.Equal(
                 UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute | UnixFileMode.GroupExecute | UnixFileMode.OtherExecute,
-                await HackFile.GetUnixFileModeAsync("/home/alice/run.sh"));
+                await KazoFile.GetUnixFileModeAsync("/home/alice/run.sh"));
         }
     }
 
@@ -100,9 +100,9 @@ public sealed partial class ShellInterpreterTests
         Assert.Equal("linked content", symbolic.Stdout);
         Assert.Equal(1, hard.ExitCode);
         Assert.Contains("Operation not supported", hard.Stderr);
-        using (Kazo.Os.AppSdk.HackExecutionContext.Enter(fixture.Host))
+        using (Kazo.Os.AppSdk.KazoExecutionContext.Enter(fixture.Host))
         {
-            HackFileInfo link = await HackFileInfo.GetAsync("/home/alice/link.txt");
+            KazoFileInfo link = await KazoFileInfo.GetAsync("/home/alice/link.txt");
             Assert.True(link.IsSymbolicLink);
             Assert.Equal("target.txt", link.LinkTarget);
         }
@@ -125,9 +125,9 @@ public sealed partial class ShellInterpreterTests
         Assert.Equal(0, zip.ExitCode);
         Assert.Contains("project/src/run.sh", list.Stdout);
         Assert.Equal("hello zip", unzip.Stdout);
-        using (Kazo.Os.AppSdk.HackExecutionContext.Enter(fixture.Host))
+        using (Kazo.Os.AppSdk.KazoExecutionContext.Enter(fixture.Host))
         {
-            Assert.True((await HackFile.GetUnixFileModeAsync("/home/alice/restored/project/src/run.sh")).HasFlag(UnixFileMode.UserExecute));
+            Assert.True((await KazoFile.GetUnixFileModeAsync("/home/alice/restored/project/src/run.sh")).HasFlag(UnixFileMode.UserExecute));
         }
     }
 

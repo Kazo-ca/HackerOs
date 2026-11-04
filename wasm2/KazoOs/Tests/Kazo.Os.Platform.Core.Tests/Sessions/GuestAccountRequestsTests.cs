@@ -12,7 +12,7 @@ namespace Kazo.Os.Platform.Core.Tests.Sessions;
 
 /// <summary>
 /// ADR 0187 section 5: Settings ▸ Users asks the host for its "Create my account" form through
-/// <see cref="HackUserAccounts.RequestGuestAccountCreationAsync(CancellationToken)"/>; only the
+/// <see cref="KazoUserAccounts.RequestGuestAccountCreationAsync(CancellationToken)"/>; only the
 /// guest's own session may ask, and the account list marks the guest.
 /// </summary>
 public sealed class GuestAccountRequestsTests
@@ -81,7 +81,7 @@ public sealed class GuestAccountRequestsTests
             Description = "Guest fixture.",
             Kind = AppKind.Window,
             EntryPoint = new AppEntryPointManifest("Kazo.Os.Apps.Sample", "Kazo.Os.Apps.Sample.SampleApp"),
-            SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+            SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
             Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
             Resources = AppResourceProfileManifest.None,
             Capabilities = []

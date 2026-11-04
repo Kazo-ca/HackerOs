@@ -45,7 +45,7 @@
                         }
                         else
                         {
-                            <HackerIcon Library="IconLibrary.Lucide" Name="app-window" Size="18" Title="" />
+                            <KazoIcon Library="IconLibrary.Lucide" Name="app-window" Size="18" Title="" />
                         }
                     </span>
                     <span class="item-title">@window.Title</span>
@@ -73,7 +73,7 @@
                     }
                     else
                     {
-                        <HackerIcon Library="IconLibrary.Lucide" Name="app-window" Size="14" Title="" />
+                        <KazoIcon Library="IconLibrary.Lucide" Name="app-window" Size="14" Title="" />
                     }
                 </span>
                 <span class="taskbar-preview-title">@preview.Title</span>
@@ -81,7 +81,7 @@
                         class="taskbar-preview-close"
                         aria-label="@L["Taskbar.Preview.Close", preview.Title]"
                         @onclick="() => HandlePreviewClose(preview)">
-                    <HackerIcon Library="IconLibrary.Lucide" Name="x" Size="14" Title="" />
+                    <KazoIcon Library="IconLibrary.Lucide" Name="x" Size="14" Title="" />
                 </button>
             </div>
             <div class="taskbar-preview-thumbnail" @onclick="() => HandlePreviewClick(preview)">
@@ -92,7 +92,7 @@
                     }
                     else
                     {
-                        <HackerIcon Library="IconLibrary.Lucide" Name="app-window" Size="40" Title="" />
+                        <KazoIcon Library="IconLibrary.Lucide" Name="app-window" Size="40" Title="" />
                     }
                     <span class="taskbar-preview-fallback-title">@preview.Title</span>
                 </span>
@@ -119,7 +119,7 @@
                         aria-expanded="@((ClockPanelSource?.IsOpen ?? false).ToString().ToLowerInvariant())"
                         @onclick="HandleClockPanelToggleClick">
                     <span class="clock-icon" aria-hidden="true">
-                        <HackerIcon Library="IconLibrary.Lucide" Name="clock" Size="17" Title="" />
+                        <KazoIcon Library="IconLibrary.Lucide" Name="clock" Size="17" Title="" />
                     </span>
                     <span class="clock-text">@FormattedTime</span>
                     @if (UnreadCount > 0)
@@ -143,7 +143,7 @@
                     aria-label="@L["Taskbar.Session"]"
                     @onclick="() => SessionCommands.RequestLogout()">
                 <span class="logout-icon" aria-hidden="true">
-                    <HackerIcon Library="IconLibrary.Lucide" Name="power" Size="17" Title="" />
+                    <KazoIcon Library="IconLibrary.Lucide" Name="power" Size="17" Title="" />
                 </span>
             </button>
         }

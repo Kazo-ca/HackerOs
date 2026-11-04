@@ -290,15 +290,15 @@ public sealed class AppExecutionContextTests
         IAppExecutionContext context = await fixture.CreateContextAsync([]);
         IAppExecutionContext? seenByClock = null;
         IAppExecutionContext? seenByEvent = null;
-        context.Clock.Schedule(TimeSpan.FromSeconds(1), () => seenByClock = HackExecutionContext.CurrentOrNull);
-        using IDisposable subscription = context.Events.Subscribe<AmbientProbeEvent>(_ => seenByEvent = HackExecutionContext.CurrentOrNull);
+        context.Clock.Schedule(TimeSpan.FromSeconds(1), () => seenByClock = KazoExecutionContext.CurrentOrNull);
+        using IDisposable subscription = context.Events.Subscribe<AmbientProbeEvent>(_ => seenByEvent = KazoExecutionContext.CurrentOrNull);
 
         fixture.Clock.Advance();
         fixture.EventBus.Publish(new AmbientProbeEvent());
 
         Assert.Same(context, seenByClock);
         Assert.Same(context, seenByEvent);
-        Assert.Null(HackExecutionContext.CurrentOrNull);
+        Assert.Null(KazoExecutionContext.CurrentOrNull);
     }
 
     private sealed record AmbientProbeEvent;
@@ -359,7 +359,7 @@ public sealed class AppExecutionContextTests
                 Description = "Execution context test application.",
                 Kind = AppKind.Terminal,
                 EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", "TestApp"),
-                SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+                SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
                 Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
                 Resources = AppResourceProfileManifest.None
             };

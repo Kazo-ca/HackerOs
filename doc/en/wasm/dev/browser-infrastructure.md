@@ -20,7 +20,7 @@ implementations, in the host's composition.
 
 | Folder | Content |
 |---|---|
-| `Schema/` | `HackerOsIndexedDbSchema` (database name, version, stores and indexes), schema model, content storage policy (`FileContentStoragePolicy`). |
+| `Schema/` | `KazoOsIndexedDbSchema` (database name, version, stores and indexes), schema model, content storage policy (`FileContentStoragePolicy`). |
 | `FileSystem/` | File system provider (`IndexedDbFileSystemProvider`), reader and writer, mutation planner, seeding, maintenance, chunked content. |
 | `Sessions/`, `Policy/`, `Catalog/`, `Settings/`, `ServerConnection/`, `Sync/`, `WebData/` | One IndexedDB repository per domain (users, groups, grants, app catalog, legacy settings, server connection, sync cursors and states, ASP.Hack site databases). |
 | `Diagnostics/` | Persisted diagnostic and audit log, storage inspector. |
@@ -35,7 +35,7 @@ implementations, in the host's composition.
 
 ## IndexedDB database
 
-- Name: `hackeros`. Current version: **4** (`HackerOsIndexedDbSchema.CurrentVersion`).
+- Name: `hackeros`. Current version: **4** (`KazoOsIndexedDbSchema.CurrentVersion`).
   Changing the version is the only way to add, remove or modify a
   store or an index; each upgrade has its migration step.
 - Main stores: `users`, `groups`, `sessions`, `settings`, `fsEntries`

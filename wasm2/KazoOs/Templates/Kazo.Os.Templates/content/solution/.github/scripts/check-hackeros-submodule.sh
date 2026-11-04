@@ -11,7 +11,7 @@ if [[ ! -f "$versions" ]]; then
   exit 1
 fi
 
-version="$(sed -n 's:.*<HackerOsVersion>\(.*\)</HackerOsVersion>.*:\1:p' "$versions")"
+version="$(sed -n 's:.*<KazoOsVersion>\(.*\)</KazoOsVersion>.*:\1:p' "$versions")"
 if [[ -n "$(git -C "$submodule" status --porcelain)" ]]; then
   echo "::error::$submodule has local changes. The OS is not modified from an app repository."
   git -C "$submodule" status --short

@@ -15,7 +15,7 @@ public interface IWindowClientAreaProbe
     /// it cannot (no browser, window not on screen). Waits for the next layout first.
     /// </summary>
     /// <param name="windowId">Window to measure.</param>
-    ValueTask<HackWindowSize?> MeasureAsync(WindowId windowId);
+    ValueTask<KazoWindowSize?> MeasureAsync(WindowId windowId);
 }
 
 /// <summary>
@@ -80,7 +80,7 @@ public sealed class WindowAppEventDispatcher : IDisposable
         if (registration.State != WindowVisualState.Normal)
         {
             WindowVisualState state = registration.State;
-            registration.Enqueue(() => target.NotifyStateChangedAsync(HackWindowState.Normal, ToSdk(state)));
+            registration.Enqueue(() => target.NotifyStateChangedAsync(KazoWindowState.Normal, ToSdk(state)));
         }
 
         if (window?.IsFocused == true)
@@ -94,7 +94,7 @@ public sealed class WindowAppEventDispatcher : IDisposable
 
     /// <summary>Gets the client size estimated from outer window bounds and the default chrome.</summary>
     /// <param name="bounds">Outer window bounds.</param>
-    public static HackWindowSize EstimateClientSize(WindowBounds bounds) => new(
+    public static KazoWindowSize EstimateClientSize(WindowBounds bounds) => new(
         Math.Max(0, bounds.Width - (2 * EstimatedFrameThickness)),
         Math.Max(0, bounds.Height - EstimatedTitleBarHeight - (3 * EstimatedFrameThickness)));
 
@@ -198,12 +198,12 @@ public sealed class WindowAppEventDispatcher : IDisposable
         WindowId windowId = registration.WindowId;
         registration.Enqueue(async () =>
         {
-            HackWindowSize size = await MeasureAsync(windowId, bounds);
+            KazoWindowSize size = await MeasureAsync(windowId, bounds);
             await registration.Target.NotifyResizedAsync(size);
         });
     }
 
-    private async Task<HackWindowSize> MeasureAsync(WindowId windowId, WindowBounds bounds)
+    private async Task<KazoWindowSize> MeasureAsync(WindowId windowId, WindowBounds bounds)
     {
         if (_probe is not null)
         {
@@ -223,11 +223,11 @@ public sealed class WindowAppEventDispatcher : IDisposable
         return EstimateClientSize(bounds);
     }
 
-    private static HackWindowState ToSdk(WindowVisualState state) => state switch
+    private static KazoWindowState ToSdk(WindowVisualState state) => state switch
     {
-        WindowVisualState.Minimized => HackWindowState.Minimized,
-        WindowVisualState.Maximized => HackWindowState.Maximized,
-        _ => HackWindowState.Normal,
+        WindowVisualState.Minimized => KazoWindowState.Minimized,
+        WindowVisualState.Maximized => KazoWindowState.Maximized,
+        _ => KazoWindowState.Normal,
     };
 
     /// <summary>One connected app and the ordered queue of its notifications.</summary>

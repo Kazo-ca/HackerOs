@@ -452,7 +452,7 @@ public sealed class AppManifestValidatorTests
         Description = "Edits text files in the Kazo OS virtual filesystem.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Apps.TextEditor", "Kazo.Os.Apps.TextEditor.TextEditorApp"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("editors", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         Capabilities = [AppCapabilities.FileSystemUserSelectedRead, AppCapabilities.FileSystemUserSelectedWrite]

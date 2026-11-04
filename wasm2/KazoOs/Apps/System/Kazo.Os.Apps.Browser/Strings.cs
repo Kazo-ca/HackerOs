@@ -22,6 +22,6 @@ internal sealed class Strings
     /// <param name="culture">The language of the process the text is shown to.</param>
     internal static IStringLocalizer<Strings> For(CultureInfo? culture) =>
         culture is null
-            ? new HackStringLocalizer<Strings>(static () => HackLocale.DefaultLanguage)
-            : new HackStringLocalizer<Strings>(() => culture);
+            ? new KazoStringLocalizer<Strings>(static () => KazoLocale.DefaultLanguage)
+            : new KazoStringLocalizer<Strings>(() => culture);
 }

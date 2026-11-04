@@ -108,7 +108,7 @@ public sealed class AppDataGuardTests
         Description = "Sample",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Sample", "Kazo.Sample.SampleWindow"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("utilities", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None
     };

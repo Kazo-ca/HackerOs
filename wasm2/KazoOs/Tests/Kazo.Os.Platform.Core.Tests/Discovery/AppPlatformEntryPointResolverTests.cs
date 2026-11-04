@@ -69,7 +69,7 @@ public sealed class AppPlatformEntryPointResolverTests
         Description = "Resolver test application.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Samples.PlatformApp.dll", "Kazo.Os.Samples.PlatformApp.PlatformDemoWindow"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("utilities", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None
     };

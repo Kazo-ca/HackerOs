@@ -34,7 +34,7 @@ public sealed class IndexedDbAuditRepositoryTests
         {
             IndexedDbOperation operation = Assert.Single(operations);
             Assert.Equal("add", operation.Kind);
-            Assert.Equal(HackerOsIndexedDbSchema.AuditStoreName, operation.ObjectStoreName);
+            Assert.Equal(KazoOsIndexedDbSchema.AuditStoreName, operation.ObjectStoreName);
         });
     }
 

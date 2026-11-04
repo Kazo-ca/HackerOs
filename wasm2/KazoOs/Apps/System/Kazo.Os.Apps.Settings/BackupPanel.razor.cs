@@ -12,7 +12,7 @@ namespace Kazo.Os.Apps.Settings;
 /// computer, or restore one picked there, merging or replacing.
 /// </summary>
 /// <remarks>
-/// Uses only the public SDK (ADR 0055): <see cref="HackSystemBackup"/> (capability
+/// Uses only the public SDK (ADR 0055): <see cref="KazoSystemBackup"/> (capability
 /// <c>system.backup</c>). The OS asks an administrator in its own window, opens the host's file
 /// picker and restarts after a restore; this panel never sees a password or the archive. The
 /// restore call starts from the button's click so the browser accepts to open its file picker.
@@ -27,8 +27,8 @@ public partial class BackupPanel
     }
 
     private Operation _operation;
-    private HackBackupRestoreMode _mode = HackBackupRestoreMode.Merge;
-    private HackBackupInfo? _lastBackup;
+    private KazoBackupRestoreMode _mode = KazoBackupRestoreMode.Merge;
+    private KazoBackupInfo? _lastBackup;
     private string? _error;
 
     private bool IsBusy => _operation != Operation.None;
@@ -44,7 +44,7 @@ public partial class BackupPanel
     /// <summary>The culture of the numbers shown (the process's locale, ADR 0104).</summary>
     private CultureInfo Formats => AppContext?.FormatCulture ?? CultureInfo.InvariantCulture;
 
-    private string ModeClass(HackBackupRestoreMode mode) =>
+    private string ModeClass(KazoBackupRestoreMode mode) =>
         mode == _mode ? "restore-mode is-selected" : "restore-mode";
 
     private async Task CreateAsync()
@@ -58,7 +58,7 @@ public partial class BackupPanel
         _error = null;
         try
         {
-            _lastBackup = await HackSystemBackup.CreateAsync(Context, Context.CancellationToken);
+            _lastBackup = await KazoSystemBackup.CreateAsync(Context, Context.CancellationToken);
         }
         catch (Exception exception) when (exception is UnauthorizedAccessException or NotSupportedException or IOException or InvalidOperationException)
         {
@@ -82,9 +82,9 @@ public partial class BackupPanel
         try
         {
             // Returns null when the picker was closed; otherwise the machine restarts.
-            await HackSystemBackup.RestoreAsync(Context, _mode, Context.CancellationToken);
+            await KazoSystemBackup.RestoreAsync(Context, _mode, Context.CancellationToken);
         }
-        catch (HackBackupInvalidException exception)
+        catch (KazoBackupInvalidException exception)
         {
             _error = L["Backup.Error.Invalid", exception.Message];
         }

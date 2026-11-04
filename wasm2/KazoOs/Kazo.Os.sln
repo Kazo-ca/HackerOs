@@ -101,7 +101,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kazo.Os.Network.Tests", "Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kazo.Os.Apps.Calculator", "Apps\System\Kazo.Os.Apps.Calculator\Kazo.Os.Apps.Calculator.csproj", "{DAC08501-FF2C-472D-B56A-373EB1F7DA04}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kazo.Os.Apps.HackPaint", "Apps\System\Kazo.Os.Apps.HackPaint\Kazo.Os.Apps.HackPaint.csproj", "{F351C9D0-C833-41D4-A39B-586F017C5FBF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kazo.Os.Apps.KazoPaint", "Apps\System\Kazo.Os.Apps.KazoPaint\Kazo.Os.Apps.KazoPaint.csproj", "{F351C9D0-C833-41D4-A39B-586F017C5FBF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kazo.Os.Commands.Wave5.Tests", "Tests\Kazo.Os.Commands.Wave5.Tests\Kazo.Os.Commands.Wave5.Tests.csproj", "{16773A79-5A7A-411F-A7B5-24CC747C6ED9}"
 EndProject
@@ -223,7 +223,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kazo.Os.Templates.E2E.Tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kazo.Os.Apps.ThemeEditor", "Apps\System\Kazo.Os.Apps.ThemeEditor\Kazo.Os.Apps.ThemeEditor.csproj", "{03C27791-BA76-46F0-995E-39367BF41005}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kazo.Os.Apps.HackPaint.Tests", "Tests\Kazo.Os.Apps.HackPaint.Tests\Kazo.Os.Apps.HackPaint.Tests.csproj", "{8114676C-2E9B-44CA-8ABF-EDF1823BC9A3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kazo.Os.Apps.KazoPaint.Tests", "Tests\Kazo.Os.Apps.KazoPaint.Tests\Kazo.Os.Apps.KazoPaint.Tests.csproj", "{8114676C-2E9B-44CA-8ABF-EDF1823BC9A3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kazo.Os.Apps.ThemeEditor.Tests", "Tests\Kazo.Os.Apps.ThemeEditor.Tests\Kazo.Os.Apps.ThemeEditor.Tests.csproj", "{7EC94304-4A44-4DA5-8E22-E47B461CDE27}"
 EndProject

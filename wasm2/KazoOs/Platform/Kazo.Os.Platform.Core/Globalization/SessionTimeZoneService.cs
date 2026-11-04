@@ -24,7 +24,7 @@ public sealed class SessionTimeZoneService : IDisposable
     /// <summary>Creates the service.</summary>
     /// <param name="settings">OS settings service.</param>
     public SessionTimeZoneService(IOsSettingsService settings)
-        : this(settings, HackTimeZone.Device)
+        : this(settings, KazoTimeZone.Device)
     {
     }
 
@@ -40,7 +40,7 @@ public sealed class SessionTimeZoneService : IDisposable
     }
 
     /// <summary>Gets the <c>timeZone</c> value of the files: <c>auto</c> or an IANA identifier.</summary>
-    public string Setting { get; private set; } = HackTimeZone.Automatic;
+    public string Setting { get; private set; } = KazoTimeZone.Automatic;
 
     /// <summary>Gets the effective zone: the one <see cref="Setting"/> names, or the device's zone.</summary>
     public TimeZoneInfo TimeZone { get; private set; }
@@ -115,8 +115,8 @@ public sealed class SessionTimeZoneService : IDisposable
 
     private void Apply(string? setting, bool raiseEvent)
     {
-        string value = string.IsNullOrWhiteSpace(setting) ? HackTimeZone.Automatic : setting.Trim();
-        TimeZoneInfo zone = HackTimeZone.Resolve(value, _device);
+        string value = string.IsNullOrWhiteSpace(setting) ? KazoTimeZone.Automatic : setting.Trim();
+        TimeZoneInfo zone = KazoTimeZone.Resolve(value, _device);
         bool changed = !zone.Equals(TimeZone);
         Setting = value;
         TimeZone = zone;

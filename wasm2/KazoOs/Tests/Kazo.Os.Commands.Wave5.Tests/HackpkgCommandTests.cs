@@ -10,7 +10,7 @@ using Xunit;
 
 namespace Kazo.Os.Commands.Wave5.Tests;
 
-/// <summary><c>hackpkg</c> (ADR 0182 §4, ADR 0189 §6): arguments and the <see cref="HackAppPackages"/> calls.</summary>
+/// <summary><c>hackpkg</c> (ADR 0182 §4, ADR 0189 §6): arguments and the <see cref="KazoAppPackages"/> calls.</summary>
 public sealed class HackpkgCommandTests
 {
     [Theory]
@@ -59,7 +59,7 @@ public sealed class HackpkgCommandTests
     [Fact]
     public async Task A_refused_package_prints_its_reason_and_exits_1()
     {
-        FakePackages packages = new() { Refusal = new HackPackageException("apps.package.blocked", "org.kazo.webamp is blocked") };
+        FakePackages packages = new() { Refusal = new KazoPackageException("apps.package.blocked", "org.kazo.webamp is blocked") };
 
         (int exit, _, string stderr) = await RunAsync(packages, "install", "someone/app", "--user");
 
@@ -210,7 +210,7 @@ public sealed class HackpkgCommandTests
             standardError: stderr,
             workingDirectory: "/root",
             environment: ImmutableDictionary<string, string>.Empty);
-        using IDisposable scope = HackExecutionContext.Enter(app);
+        using IDisposable scope = KazoExecutionContext.Enter(app);
         int exit = await new HackpkgCommand(manifest).ExecuteAsync(context, CancellationToken.None);
         return (exit, stdout.ToString(), stderr.ToString());
     }
@@ -219,42 +219,42 @@ public sealed class HackpkgCommandTests
     {
         public bool Supported { get; init; } = true;
 
-        public HackPackageException? Refusal { get; init; }
+        public KazoPackageException? Refusal { get; init; }
 
         public bool Immediate { get; init; }
 
         public List<string> Calls { get; } = [];
 
-        public ValueTask<IReadOnlyList<HackAppInstallInfo>> GetAllAsync(CancellationToken cancellationToken = default) =>
+        public ValueTask<IReadOnlyList<KazoAppInstallInfo>> GetAllAsync(CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
-        public ValueTask<IReadOnlyList<string>> UninstallAsync(string appId, HackInstallScope scope, CancellationToken cancellationToken = default) =>
+        public ValueTask<IReadOnlyList<string>> UninstallAsync(string appId, KazoInstallScope scope, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
-        public ValueTask<IReadOnlyList<string>> ReinstallAsync(string appId, HackInstallScope scope, CancellationToken cancellationToken = default) =>
+        public ValueTask<IReadOnlyList<string>> ReinstallAsync(string appId, KazoInstallScope scope, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
-        public ValueTask<HackPackageSources> GetPackageSourcesAsync(CancellationToken cancellationToken = default) =>
+        public ValueTask<KazoPackageSources> GetPackageSourcesAsync(CancellationToken cancellationToken = default) =>
             Supported ? ValueTask.FromResult(Sources()) : throw new NotSupportedException();
 
-        public ValueTask<IReadOnlyList<HackInstalledPackage>> GetInstalledPackagesAsync(CancellationToken cancellationToken = default) =>
-            ValueTask.FromResult<IReadOnlyList<HackInstalledPackage>>(
+        public ValueTask<IReadOnlyList<KazoInstalledPackage>> GetInstalledPackagesAsync(CancellationToken cancellationToken = default) =>
+            ValueTask.FromResult<IReadOnlyList<KazoInstalledPackage>>(
             [
                 new("org.kazo.webamp", "github:Kazo-ca/Os-App-Webamp", "1.0.0", Loaded: true),
                 new("org.kazo.irc", "github:Kazo-ca/Os-App-IRC", "0.2.0", Loaded: false) { SystemWide = false }
             ]);
 
-        public ValueTask<HackPackageInfo> GetPackageInfoAsync(string source, CancellationToken cancellationToken = default)
+        public ValueTask<KazoPackageInfo> GetPackageInfoAsync(string source, CancellationToken cancellationToken = default)
         {
             Calls.Add($"info {source}");
             bool webamp = source.Contains("Webamp", StringComparison.Ordinal);
             return ValueTask.FromResult(webamp
-                ? new HackPackageInfo(source, "org.kazo.webamp", ["1.1.0", "1.0.0"], "1.1.0", true, "1.0.0")
-                : new HackPackageInfo(source, "org.kazo.irc", ["0.2.0"], "0.2.0", true, "0.2.0"));
+                ? new KazoPackageInfo(source, "org.kazo.webamp", ["1.1.0", "1.0.0"], "1.1.0", true, "1.0.0")
+                : new KazoPackageInfo(source, "org.kazo.irc", ["0.2.0"], "0.2.0", true, "0.2.0"));
         }
 
-        public ValueTask<HackPackageInstallReport> InstallPackageAsync(
-            string source, HackPackageScope scope = HackPackageScope.Auto, CancellationToken cancellationToken = default)
+        public ValueTask<KazoPackageInstallReport> InstallPackageAsync(
+            string source, KazoPackageScope scope = KazoPackageScope.Auto, CancellationToken cancellationToken = default)
         {
             Calls.Add($"install {source} scope={scope}");
             if (Refusal is not null)
@@ -263,21 +263,21 @@ public sealed class HackpkgCommandTests
             }
 
             string version = source.EndsWith("@1.1.0", StringComparison.Ordinal) ? "1.1.0" : "1.0.0";
-            return ValueTask.FromResult(new HackPackageInstallReport(
+            return ValueTask.FromResult(new KazoPackageInstallReport(
                 "org.kazo.webamp", "Webamp", version, $"github:Kazo-ca/Os-App-Webamp@{version}",
                 version == "1.0.0" ? null : "1.0.0", [AppCapabilities.NetworkRealAccess], Trusted: true)
             {
-                SystemWide = scope == HackPackageScope.System,
+                SystemWide = scope == KazoPackageScope.System,
                 RestartRequired = !Immediate,
                 Signed = Immediate,
             });
         }
 
-        public ValueTask<HackPackageInstallReport> RollbackPackageAsync(
-            string appId, HackPackageScope scope = HackPackageScope.Auto, CancellationToken cancellationToken = default)
+        public ValueTask<KazoPackageInstallReport> RollbackPackageAsync(
+            string appId, KazoPackageScope scope = KazoPackageScope.Auto, CancellationToken cancellationToken = default)
         {
             Calls.Add($"rollback {appId} scope={scope}");
-            return ValueTask.FromResult(new HackPackageInstallReport(
+            return ValueTask.FromResult(new KazoPackageInstallReport(
                 appId, "Webamp", "1.0.0", "github:Kazo-ca/Os-App-Webamp@1.0.0", "1.1.0", [], Trusted: true) { RestartRequired = false });
         }
 
@@ -287,38 +287,38 @@ public sealed class HackpkgCommandTests
             return ValueTask.FromResult<IReadOnlyList<string>>(system ? ["org.kazo.irc: install of 0.3.0 undone, 0.2.0 stays installed"] : []);
         }
 
-        public ValueTask<HackInstalledPackage> RemovePackageAsync(
-            string appId, HackPackageScope scope = HackPackageScope.Auto, CancellationToken cancellationToken = default)
+        public ValueTask<KazoInstalledPackage> RemovePackageAsync(
+            string appId, KazoPackageScope scope = KazoPackageScope.Auto, CancellationToken cancellationToken = default)
         {
             Calls.Add($"remove {appId} scope={scope}");
-            return ValueTask.FromResult(new HackInstalledPackage(appId, "github:Kazo-ca/Os-App-IRC", "0.2.0", Loaded: true));
+            return ValueTask.FromResult(new KazoInstalledPackage(appId, "github:Kazo-ca/Os-App-IRC", "0.2.0", Loaded: true));
         }
 
-        public ValueTask<HackPackageSources> AddPackageSourceAsync(string source, bool trusted, CancellationToken cancellationToken = default)
+        public ValueTask<KazoPackageSources> AddPackageSourceAsync(string source, bool trusted, CancellationToken cancellationToken = default)
         {
             Calls.Add($"sources add {source} trusted={trusted}");
             return ValueTask.FromResult(Sources());
         }
 
-        public ValueTask<HackPackageSources> RemovePackageSourceAsync(string source, CancellationToken cancellationToken = default)
+        public ValueTask<KazoPackageSources> RemovePackageSourceAsync(string source, CancellationToken cancellationToken = default)
         {
             Calls.Add($"sources remove {source}");
             return ValueTask.FromResult(Sources());
         }
 
-        public ValueTask<HackPackagePolicy> GetPackagePolicyAsync(CancellationToken cancellationToken = default) =>
-            ValueTask.FromResult(new HackPackagePolicy([], ["social"], [], []));
+        public ValueTask<KazoPackagePolicy> GetPackagePolicyAsync(CancellationToken cancellationToken = default) =>
+            ValueTask.FromResult(new KazoPackagePolicy([], ["social"], [], []));
 
-        public ValueTask<HackPackagePolicy> SetPackagePolicyAsync(
-            HackPackageBlockKind kind, string value, bool blocked, CancellationToken cancellationToken = default)
+        public ValueTask<KazoPackagePolicy> SetPackagePolicyAsync(
+            KazoPackageBlockKind kind, string value, bool blocked, CancellationToken cancellationToken = default)
         {
             Calls.Add($"policy {kind} {value} {blocked}");
-            return ValueTask.FromResult(new HackPackagePolicy([], [], [], []));
+            return ValueTask.FromResult(new KazoPackagePolicy([], [], [], []));
         }
 
-        private static HackPackageSources Sources() => new("raw.githubusercontent.com", ["catalog:official", "github.com/Kazo-ca"], [])
+        private static KazoPackageSources Sources() => new("raw.githubusercontent.com", ["catalog:official", "github.com/Kazo-ca"], [])
         {
-            Catalogs = [new HackPackageCatalog("official", "https://example.org/catalog.json", HackPackageTrust.Verified, BuiltIn: true)],
+            Catalogs = [new KazoPackageCatalog("official", "https://example.org/catalog.json", KazoPackageTrust.Verified, BuiltIn: true)],
             BuiltInSources = ["catalog:official", "github.com/Kazo-ca"],
             UntrustedSources = ["github.com/someone"],
             UpdateIntervalHours = 6,

@@ -159,8 +159,8 @@ public sealed class PasswdCommandTests
 
         public (string Login, string? New)? Reset { get; private set; }
 
-        public ValueTask<IReadOnlyList<HackUserAccount>> ListAsync(CancellationToken cancellationToken = default) =>
-            ValueTask.FromResult<IReadOnlyList<HackUserAccount>>(
+        public ValueTask<IReadOnlyList<KazoUserAccount>> ListAsync(CancellationToken cancellationToken = default) =>
+            ValueTask.FromResult<IReadOnlyList<KazoUserAccount>>(
             [
                 new("alice", "Alice", AppAuthority.User, true, true, new DateTimeOffset(2026, 10, 17, 9, 0, 0, TimeSpan.Zero), true),
                 new("bob", "Bob", AppAuthority.User, true, false, DateTimeOffset.UnixEpoch, false)

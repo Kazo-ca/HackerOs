@@ -26,7 +26,7 @@ case "$RID" in
   *) echo "publish-server.sh: --rid must be win-x64, win-arm64, linux-x64, linux-arm64, osx-x64 or osx-arm64" >&2; exit 1 ;;
 esac
 if [[ -z "$VERSION" ]]; then
-  VERSION="$(sed -n 's:.*<HackerOsVersion>\(.*\)</HackerOsVersion>.*:\1:p' "$ROOT/build/Versions.props")"
+  VERSION="$(sed -n 's:.*<KazoOsVersion>\(.*\)</KazoOsVersion>.*:\1:p' "$ROOT/build/Versions.props")"
 fi
 mkdir -p "$OUTPUT"
 OUTPUT="$(cd "$OUTPUT" && pwd)"

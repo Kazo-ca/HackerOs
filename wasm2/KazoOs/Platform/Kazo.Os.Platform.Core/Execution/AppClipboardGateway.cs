@@ -71,7 +71,7 @@ internal sealed class AppClipboardGateway : IAppClipboardGateway
     public ValueTask<string?> GetTextAsync(CancellationToken cancellationToken = default)
     {
         // ADR 0067: time spent in the gateway is the caller's stime (kernel sub-frame).
-        using Kazo.Os.AppSdk.HackExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.HackExecutionContext.EnterKernel();
+        using Kazo.Os.AppSdk.KazoExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.KazoExecutionContext.EnterKernel();
         cancellationToken.ThrowIfCancellationRequested();
         _capabilities.Require(AppCapabilities.ClipboardRead);
         return ValueTask.FromResult(_clipboard.Get(_session, SystemClipboard.TextMediaType));
@@ -81,7 +81,7 @@ internal sealed class AppClipboardGateway : IAppClipboardGateway
     public ValueTask SetTextAsync(string text, CancellationToken cancellationToken = default)
     {
         // ADR 0067: time spent in the gateway is the caller's stime (kernel sub-frame).
-        using Kazo.Os.AppSdk.HackExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.HackExecutionContext.EnterKernel();
+        using Kazo.Os.AppSdk.KazoExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.KazoExecutionContext.EnterKernel();
         ArgumentNullException.ThrowIfNull(text);
         cancellationToken.ThrowIfCancellationRequested();
         _capabilities.Require(AppCapabilities.ClipboardWrite);
@@ -90,21 +90,21 @@ internal sealed class AppClipboardGateway : IAppClipboardGateway
     }
 
     /// <inheritdoc />
-    public ValueTask<HackClipboardFileList?> GetFileDropListAsync(CancellationToken cancellationToken = default)
+    public ValueTask<KazoClipboardFileList?> GetFileDropListAsync(CancellationToken cancellationToken = default)
     {
         // ADR 0067: time spent in the gateway is the caller's stime (kernel sub-frame).
-        using Kazo.Os.AppSdk.HackExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.HackExecutionContext.EnterKernel();
+        using Kazo.Os.AppSdk.KazoExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.KazoExecutionContext.EnterKernel();
         cancellationToken.ThrowIfCancellationRequested();
         _capabilities.Require(AppCapabilities.ClipboardRead);
-        return ValueTask.FromResult(HackClipboardFileList.TryParseGnomeCopiedFiles(
-            _clipboard.Get(_session, HackClipboardFileList.GnomeCopiedFilesMediaType)));
+        return ValueTask.FromResult(KazoClipboardFileList.TryParseGnomeCopiedFiles(
+            _clipboard.Get(_session, KazoClipboardFileList.GnomeCopiedFilesMediaType)));
     }
 
     /// <inheritdoc />
-    public ValueTask SetFileDropListAsync(HackClipboardFileList files, CancellationToken cancellationToken = default)
+    public ValueTask SetFileDropListAsync(KazoClipboardFileList files, CancellationToken cancellationToken = default)
     {
         // ADR 0067: time spent in the gateway is the caller's stime (kernel sub-frame).
-        using Kazo.Os.AppSdk.HackExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.HackExecutionContext.EnterKernel();
+        using Kazo.Os.AppSdk.KazoExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.KazoExecutionContext.EnterKernel();
         ArgumentNullException.ThrowIfNull(files);
         cancellationToken.ThrowIfCancellationRequested();
         _capabilities.Require(AppCapabilities.ClipboardWrite);
@@ -122,7 +122,7 @@ internal sealed class AppClipboardGateway : IAppClipboardGateway
     public ValueTask ClearAsync(CancellationToken cancellationToken = default)
     {
         // ADR 0067: time spent in the gateway is the caller's stime (kernel sub-frame).
-        using Kazo.Os.AppSdk.HackExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.HackExecutionContext.EnterKernel();
+        using Kazo.Os.AppSdk.KazoExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.KazoExecutionContext.EnterKernel();
         cancellationToken.ThrowIfCancellationRequested();
         _capabilities.Require(AppCapabilities.ClipboardWrite);
         _clipboard.Clear(_session);

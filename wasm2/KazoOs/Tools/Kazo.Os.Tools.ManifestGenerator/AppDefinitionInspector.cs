@@ -159,7 +159,7 @@ public static class AppDefinitionInspector
                 && File.Exists(path)
                 && AssemblyMetadataReader.TryReadInformationalVersion(path, out string? informational, out Version? version))
             {
-                return HackerOsSdk.NormalizeVersion(informational, version);
+                return KazoOsSdk.NormalizeVersion(informational, version);
             }
         }
 
@@ -172,7 +172,7 @@ public static class AppDefinitionInspector
     public static string SdkMinimumVersionOf(Assembly assembly)
     {
         ArgumentNullException.ThrowIfNull(assembly);
-        return HackerOsSdk.ReadVersion(typeof(AppDefinition).Assembly);
+        return KazoOsSdk.ReadVersion(typeof(AppDefinition).Assembly);
     }
 
     private static GeneratedManifest? InspectType(
@@ -339,7 +339,7 @@ public static class AppDefinitionInspector
         AppCatalogBuildResult catalogResult = AppCatalog.Build(
             [manifest with { Dependencies = [] }],
             [],
-            SemanticVersion.TryParse(manifest.SdkCompatibility.MinimumVersion, out SemanticVersion minimum) ? minimum : HackerOsSdk.SemanticVersion);
+            SemanticVersion.TryParse(manifest.SdkCompatibility.MinimumVersion, out SemanticVersion minimum) ? minimum : KazoOsSdk.SemanticVersion);
         if (catalogResult.Catalog is not AppCatalog catalog)
         {
             foreach (AppCatalogError error in catalogResult.Errors)

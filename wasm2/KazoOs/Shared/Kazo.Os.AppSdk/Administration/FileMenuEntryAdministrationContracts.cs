@@ -8,7 +8,7 @@ namespace Kazo.Os.AppSdk.Administration;
 /// <param name="Parent">The entry whose submenu holds it, or <see langword="null"/> at the top of the menu.</param>
 /// <param name="Scopes">Where it shows: <c>file</c>, <c>directory</c>, <c>background</c>, <c>desktop</c>.</param>
 /// <param name="IsHidden">Whether the session user hid it (a hidden parent hides its submenu too).</param>
-public sealed record HackFileMenuEntryInfo(
+public sealed record KazoFileMenuEntryInfo(
     string AppId,
     string AppName,
     string Name,
@@ -18,14 +18,14 @@ public sealed record HackFileMenuEntryInfo(
     bool IsHidden);
 
 /// <summary>
-/// Trusted OS gateway behind <see cref="HackFileMenuEntries"/> (ADR 0159 §8). Every member requires
+/// Trusted OS gateway behind <see cref="KazoFileMenuEntries"/> (ADR 0159 §8). Every member requires
 /// the capability <c>apps.manage</c>.
 /// </summary>
 public interface IAppFileMenuEntryAdministrationGateway
 {
     /// <summary>Lists the entries every installed app registered, in installation rank then declaration order.</summary>
     /// <param name="cancellationToken">Cancels the read of the user's preferences.</param>
-    ValueTask<IReadOnlyList<HackFileMenuEntryInfo>> GetEntriesAsync(CancellationToken cancellationToken = default);
+    ValueTask<IReadOnlyList<KazoFileMenuEntryInfo>> GetEntriesAsync(CancellationToken cancellationToken = default);
 
     /// <summary>Hides or shows one entry in the session user's file menus.</summary>
     /// <param name="appId">The app that registered it.</param>

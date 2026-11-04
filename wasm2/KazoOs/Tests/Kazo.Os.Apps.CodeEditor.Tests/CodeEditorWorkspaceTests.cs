@@ -119,15 +119,15 @@ public sealed class CodeEditorWorkspaceTests
     [Fact]
     public async Task The_background_search_finds_what_the_inline_search_finds()
     {
-        // ADR 0140: the Search view runs the search as a HackBackground task; without the OS (a unit
+        // ADR 0140: the Search view runs the search as a KazoBackground task; without the OS (a unit
         // test) the task runs inline, with the same JSON crossing of its input and result.
         FakeAppFileSystemGateway fileSystem = Project();
         CodeEditorWorkspaceSearch search = new(new CodeEditorWorkspace(Root, fileSystem));
         VirtualPath readme = VirtualPath.Parse("/home/user/project/README.md");
         Func<VirtualPath, string?> open = path => path == readme ? "todo typed but unsaved" : null;
-        using IDisposable scope = Kazo.Os.AppSdk.HackExecutionContext.Enter(new MinimalAppExecutionContext(
+        using IDisposable scope = Kazo.Os.AppSdk.KazoExecutionContext.Enter(new MinimalAppExecutionContext(
             AppDefinitionMapper.ToManifest(new CodeEditorApp()), fileSystem: fileSystem));
-        List<Kazo.Os.AppSdk.Threading.HackBackgroundProgress> reports = [];
+        List<Kazo.Os.AppSdk.Threading.KazoBackgroundProgress> reports = [];
 
         CodeEditorSearchResult inline = await search.SearchAsync(new CodeEditorSearchQuery("todo"), open);
         CodeEditorSearchResult background = await search.SearchInBackgroundAsync(
@@ -145,9 +145,9 @@ public sealed class CodeEditorWorkspaceTests
         Assert.NotNull(invalid.Error);
     }
 
-    private sealed class Collect(List<Kazo.Os.AppSdk.Threading.HackBackgroundProgress> reports) : IProgress<Kazo.Os.AppSdk.Threading.HackBackgroundProgress>
+    private sealed class Collect(List<Kazo.Os.AppSdk.Threading.KazoBackgroundProgress> reports) : IProgress<Kazo.Os.AppSdk.Threading.KazoBackgroundProgress>
     {
-        public void Report(Kazo.Os.AppSdk.Threading.HackBackgroundProgress value) => reports.Add(value);
+        public void Report(Kazo.Os.AppSdk.Threading.KazoBackgroundProgress value) => reports.Add(value);
     }
 
     [Fact]

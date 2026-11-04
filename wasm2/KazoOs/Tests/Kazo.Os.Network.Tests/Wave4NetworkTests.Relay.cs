@@ -12,20 +12,20 @@ namespace Kazo.Os.Network.Tests;
 
 /// <summary>
 /// ADR 0102 on the OS side: request bodies relayed to the real network, and the TCP/UDP sockets
-/// of <see cref="HackTcpClient.ConnectAsync"/> and <see cref="HackUdpClient"/> over the relay.
+/// of <see cref="KazoTcpClient.ConnectAsync"/> and <see cref="KazoUdpClient"/> over the relay.
 /// </summary>
 public sealed partial class Wave4NetworkTests
 {
     [Fact]
-    public async Task HackHttpClient_post_to_a_real_host_carries_its_body_through_the_relay()
+    public async Task KazoHttpClient_post_to_a_real_host_carries_its_body_through_the_relay()
     {
         RecordingStreamProxyClient relay = new();
         UseServer(new ConnectedServerConnectionService(), relay);
         EnterApp(new GrantAllCapabilityChecker());
-        using HackHttpClient client = new();
+        using KazoHttpClient client = new();
 
-        HackHttpResponse response = await client.PostAsync(
-            "https://real-external-site.example/api", new HackStringContent("{\"q\":1}", "application/json"));
+        KazoHttpResponse response = await client.PostAsync(
+            "https://real-external-site.example/api", new KazoStringContent("{\"q\":1}", "application/json"));
 
         ProxyHttpRequest sent = Assert.Single(relay.HttpRequests);
         Assert.Equal(200, response.StatusCode);
@@ -38,13 +38,13 @@ public sealed partial class Wave4NetworkTests
     }
 
     [Fact]
-    public async Task HackTcpClient_connect_round_trips_bytes_through_the_relay()
+    public async Task KazoTcpClient_connect_round_trips_bytes_through_the_relay()
     {
         RecordingStreamProxyClient relay = new();
         UseServer(new ConnectedServerConnectionService(), relay);
         EnterApp(new GrantAllCapabilityChecker());
 
-        await using HackNetworkStream stream = await HackTcpClient.ConnectAsync("real-external-site.example", 443);
+        await using KazoNetworkStream stream = await KazoTcpClient.ConnectAsync("real-external-site.example", 443);
         await stream.WriteAsync(Encoding.ASCII.GetBytes("hello"));
         byte[] buffer = new byte[16];
         int read = await stream.ReadAsync(buffer);
@@ -55,13 +55,13 @@ public sealed partial class Wave4NetworkTests
     }
 
     [Fact]
-    public async Task HackNetworkStream_reads_zero_once_the_peer_closed()
+    public async Task KazoNetworkStream_reads_zero_once_the_peer_closed()
     {
         RecordingStreamProxyClient relay = new();
         UseServer(new ConnectedServerConnectionService(), relay);
         EnterApp(new GrantAllCapabilityChecker());
 
-        await using HackNetworkStream stream = await HackTcpClient.ConnectAsync("real-external-site.example", 443);
+        await using KazoNetworkStream stream = await KazoTcpClient.ConnectAsync("real-external-site.example", 443);
         relay.LastChannel!.CloseFromRemote();
 
         Assert.Equal(0, await stream.ReadAsync(new byte[4]));
@@ -69,45 +69,45 @@ public sealed partial class Wave4NetworkTests
     }
 
     [Fact]
-    public async Task HackTcpClient_connect_to_a_simulated_host_is_refused()
+    public async Task KazoTcpClient_connect_to_a_simulated_host_is_refused()
     {
         UseServer(new ConnectedServerConnectionService(), new RecordingStreamProxyClient());
         EnterApp(new GrantAllCapabilityChecker());
 
-        SocketException refused = await Assert.ThrowsAsync<SocketException>(() => HackTcpClient.ConnectAsync("hackersearch.net", 80));
+        SocketException refused = await Assert.ThrowsAsync<SocketException>(() => KazoTcpClient.ConnectAsync("hackersearch.net", 80));
 
         Assert.Equal(SocketError.ConnectionRefused, refused.SocketErrorCode);
     }
 
     [Fact]
-    public async Task HackTcpClient_connect_without_a_server_finds_no_host()
+    public async Task KazoTcpClient_connect_without_a_server_finds_no_host()
     {
         EnterApp(new GrantAllCapabilityChecker());
 
-        SocketException unknown = await Assert.ThrowsAsync<SocketException>(() => HackTcpClient.ConnectAsync("real-external-site.example", 443));
+        SocketException unknown = await Assert.ThrowsAsync<SocketException>(() => KazoTcpClient.ConnectAsync("real-external-site.example", 443));
 
         Assert.Equal(SocketError.HostNotFound, unknown.SocketErrorCode);
     }
 
     [Fact]
-    public async Task HackTcpClient_connect_without_network_real_access_never_reaches_the_relay()
+    public async Task KazoTcpClient_connect_without_network_real_access_never_reaches_the_relay()
     {
         RecordingStreamProxyClient relay = new();
         UseServer(new ConnectedServerConnectionService(), relay);
         EnterApp(new GrantAllCapabilityChecker(AppCapabilities.NetworkRealAccess));
 
-        SocketException unknown = await Assert.ThrowsAsync<SocketException>(() => HackTcpClient.ConnectAsync("real-external-site.example", 443));
+        SocketException unknown = await Assert.ThrowsAsync<SocketException>(() => KazoTcpClient.ConnectAsync("real-external-site.example", 443));
 
         Assert.Equal(SocketError.HostNotFound, unknown.SocketErrorCode);
         Assert.Empty(relay.Streams);
     }
 
     [Fact]
-    public async Task HackTcpClient_connect_needs_network_simulated_write()
+    public async Task KazoTcpClient_connect_needs_network_simulated_write()
     {
         EnterApp(new GrantAllCapabilityChecker(AppCapabilities.NetworkSimulatedWrite));
 
-        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => HackTcpClient.ConnectAsync("real-external-site.example", 443));
+        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => KazoTcpClient.ConnectAsync("real-external-site.example", 443));
     }
 
     [Theory]
@@ -116,26 +116,26 @@ public sealed partial class Wave4NetworkTests
     [InlineData(ProxyErrorCode.HostUnreachable, SocketError.HostUnreachable)]
     [InlineData(ProxyErrorCode.GrantMissing, SocketError.HostNotFound)]
     [InlineData(ProxyErrorCode.RelayDisabled, SocketError.HostNotFound)]
-    public async Task HackTcpClient_maps_a_relay_refusal_to_the_socket_error_of_a_real_stack(string errorCode, SocketError expected)
+    public async Task KazoTcpClient_maps_a_relay_refusal_to_the_socket_error_of_a_real_stack(string errorCode, SocketError expected)
     {
         UseServer(new ConnectedServerConnectionService(), new RecordingStreamProxyClient { Refusal = errorCode });
         EnterApp(new GrantAllCapabilityChecker());
 
-        SocketException failure = await Assert.ThrowsAsync<SocketException>(() => HackTcpClient.ConnectAsync("real-external-site.example", 8443));
+        SocketException failure = await Assert.ThrowsAsync<SocketException>(() => KazoTcpClient.ConnectAsync("real-external-site.example", 8443));
 
         Assert.Equal(expected, failure.SocketErrorCode);
     }
 
     [Fact]
-    public async Task HackUdpClient_sends_and_receives_one_datagram_through_the_relay()
+    public async Task KazoUdpClient_sends_and_receives_one_datagram_through_the_relay()
     {
         RecordingStreamProxyClient relay = new();
         UseServer(new ConnectedServerConnectionService(), relay);
         EnterApp(new GrantAllCapabilityChecker());
 
-        await using HackUdpClient udp = await HackUdpClient.ConnectAsync("ntp.real-external-site.example", 123);
+        await using KazoUdpClient udp = await KazoUdpClient.ConnectAsync("ntp.real-external-site.example", 123);
         int sent = await udp.SendAsync(new byte[48]);
-        HackUdpReceiveResult reply = await udp.ReceiveAsync();
+        KazoUdpReceiveResult reply = await udp.ReceiveAsync();
 
         Assert.Equal(48, sent);
         Assert.Equal(48, reply.Buffer.Length);

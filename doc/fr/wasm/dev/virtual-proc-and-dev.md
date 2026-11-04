@@ -92,7 +92,7 @@ MemSource:	simulated
 ```
 
 `Name` est le dernier segment de l'`appId`, tronqué à 15 caractères. Pour une
-tâche `HackBackground` (ADR 0128, ADR 0140, [`background-jobs.md`](../framework/background-jobs.md)),
+tâche `KazoBackground` (ADR 0128, ADR 0140, [`background-jobs.md`](../framework/background-jobs.md)),
 `Name` est le nom de la tâche (`code-editor:sea`, tronqué de même) et deux
 lignes suivent `Session` : `Job:` (le nom entier, `code-editor:search`) et
 `Host:` (`MainThread` ou `Worker`). `Cpu` est
@@ -106,7 +106,7 @@ processus simulé sans code) ; voir
 Quand la mémoire d'un processus est mesurée (ADR 0068,
 [`memory-accounting.md`](memory-accounting.md)), cinq lignes suivent `VmRSS`,
 dans l'ordre de Linux : `RssAnon`, `RssFile`, `VmData` (part noyau), `VmExe`
-en kB, puis `HackAllocBytes` (octets alloués depuis le démarrage du processus,
+en kB, puis `KazoAllocBytes` (octets alloués depuis le démarrage du processus,
 sans unité). `VmRSS = RssAnon + RssFile + VmData`. Un processus simulé n'a
 aucune de ces lignes : le format est exactement celui d'avant la phase 5.
 
@@ -230,7 +230,7 @@ pour agir.
   en phase 3. Elle est faite dès la phase 1, comme le demande la section 5.4 du
   plan, parce qu'elle ne dépend que de `/proc`. La refonte des commandes de la
   phase 3 la conserve. Le gestionnaire de tâches est passé à `/proc` en
-  phase 4 ([`task-manager.md`](task-manager.md), `HackProcess`).
+  phase 4 ([`task-manager.md`](task-manager.md), `KazoProcess`).
 - **Pas d'événements de changement** : le marqueur `IVirtualFileSystemProvider`
   est vérifié au seul endroit qui publie, `FileSystemService`.
 - **Mutations refusées par le fournisseur lui-même**, en plus des bits de mode :

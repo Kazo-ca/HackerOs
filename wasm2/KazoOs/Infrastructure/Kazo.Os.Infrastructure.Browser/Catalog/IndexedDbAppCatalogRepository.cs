@@ -53,7 +53,7 @@ public sealed class IndexedDbAppCatalogRepository : IPersistentAppCatalogReposit
             {
                 operations.Add(new IndexedDbOperation(
                     "put",
-                    HackerOsIndexedDbSchema.CatalogStoreName,
+                    KazoOsIndexedDbSchema.CatalogStoreName,
                     Value: retained with { EnabledFlag = 0 }));
             }
         }
@@ -68,7 +68,7 @@ public sealed class IndexedDbAppCatalogRepository : IPersistentAppCatalogReposit
             {
                 operations.Add(new IndexedDbOperation(
                     "put",
-                    HackerOsIndexedDbSchema.CatalogStoreName,
+                    KazoOsIndexedDbSchema.CatalogStoreName,
                     Value: selectedRecord));
             }
         }
@@ -98,7 +98,7 @@ public sealed class IndexedDbAppCatalogRepository : IPersistentAppCatalogReposit
         IReadOnlyList<JsonElement> read = await _adapter.ExecuteAsync(
             TransactionBoundary,
             IndexedDbTransactionMode.ReadOnly,
-            [new IndexedDbOperation("get", HackerOsIndexedDbSchema.CatalogStoreName, Key: appId)],
+            [new IndexedDbOperation("get", KazoOsIndexedDbSchema.CatalogStoreName, Key: appId)],
             cancellationToken).ConfigureAwait(false);
         if (read.Single().ValueKind is JsonValueKind.Null or JsonValueKind.Undefined)
         {
@@ -111,7 +111,7 @@ public sealed class IndexedDbAppCatalogRepository : IPersistentAppCatalogReposit
             IndexedDbTransactionMode.ReadWrite,
             [new IndexedDbOperation(
                 "put",
-                HackerOsIndexedDbSchema.CatalogStoreName,
+                KazoOsIndexedDbSchema.CatalogStoreName,
                 Value: record with { EnabledFlag = enabled ? 1 : 0 })],
             cancellationToken).ConfigureAwait(false);
         return true;
@@ -137,7 +137,7 @@ public sealed class IndexedDbAppCatalogRepository : IPersistentAppCatalogReposit
         IReadOnlyList<JsonElement> results = await _adapter.ExecuteAsync(
             TransactionBoundary,
             IndexedDbTransactionMode.ReadOnly,
-            [new IndexedDbOperation("getAll", HackerOsIndexedDbSchema.CatalogStoreName)],
+            [new IndexedDbOperation("getAll", KazoOsIndexedDbSchema.CatalogStoreName)],
             cancellationToken).ConfigureAwait(false);
         JsonElement records = results.Single();
         if (records.ValueKind != JsonValueKind.Array)

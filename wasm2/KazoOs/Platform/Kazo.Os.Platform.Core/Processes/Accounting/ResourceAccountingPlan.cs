@@ -2,7 +2,7 @@ namespace Kazo.Os.Platform.Core.Processes.Accounting;
 
 /// <summary>
 /// Which measurements are compiled into the running host (ADR 0066, section 2): the MSBuild
-/// properties <c>HackerOsCpuAccounting</c> and <c>HackerOsMemoryAccounting</c>, as seen at run time
+/// properties <c>KazoOsCpuAccounting</c> and <c>KazoOsMemoryAccounting</c>, as seen at run time
 /// through their <c>RuntimeHostConfigurationOption</c>.
 /// </summary>
 /// <param name="Cpu">Whether the CPU measurement code ships in this host.</param>
@@ -98,8 +98,8 @@ public sealed class ResourceAccountingPlan
         ArgumentNullException.ThrowIfNull(settings);
 
         List<string> notices = [.. settings.Warnings];
-        bool cpu = Decide("cpu", "HackerOsCpuAccounting", "Cpu", build.Cpu, settings.CpuEnabled, notices);
-        bool memory = Decide("memory", "HackerOsMemoryAccounting", "Memory", build.Memory, settings.MemoryEnabled, notices);
+        bool cpu = Decide("cpu", "KazoOsCpuAccounting", "Cpu", build.Cpu, settings.CpuEnabled, notices);
+        bool memory = Decide("memory", "KazoOsMemoryAccounting", "Memory", build.Memory, settings.MemoryEnabled, notices);
         notices.Add($"resource accounting: cpu {Describe(build.Cpu, cpu)}, memory {Describe(build.Memory, memory)}");
         return new ResourceAccountingPlan(build, settings, cpu, memory, notices);
     }

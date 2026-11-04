@@ -2,7 +2,7 @@
 
 # Trash
 
-The `HackTrash` API and the `.trashinfo` format intended for apps are in [`trash-api.md`](../framework/trash-api.md).
+The `KazoTrash` API and the `.trashinfo` format intended for apps are in [`trash-api.md`](../framework/trash-api.md).
 
 Phase 3 of the rebuild plan ([`ecosystem-rebuild-plan.md`](plans/ecosystem-rebuild-plan.md),
 section 7.4), decided by [ADR 0052](adr/0052-trash.md). Work item
@@ -24,7 +24,7 @@ works and the permissions are those of the files.
   (ADR 0101 §1, [`synchronization.md`](synchronization.md)): its `.trashinfo`
   carries the extension keys `X-HackerOS-Origin=deleted-on-another-device` and
   `X-HackerOS-Device=<appareil>`, which other implementations ignore.
-  `HackTrashItem.DeletedOnAnotherDevice` tells apps. Moving to the trash is a
+  `KazoTrashItem.DeletedOnAnotherDevice` tells apps. Moving to the trash is a
   synchronized rename; emptying the trash sends the deletions to the other
   devices. Items moved to the trash by the sync stay on this device.
 
@@ -38,7 +38,7 @@ file. No `directorysizes` cache.
 ## `.trashinfo` format code
 
 The `.trashinfo` format (tolerant reading, writing, `nom.N.ext` names) is in
-`HackTrashInfo.cs` (internal to the SDK).
+`KazoTrashInfo.cs` (internal to the SDK).
 
 ## Commands
 
@@ -88,21 +88,21 @@ With no argument, `trash` prints help on the error output and returns 1.
   - "Delete" (toolbar, menu, Delete key) moves the selection to the trash,
     without confirmation;
   - Shift+Delete and "Delete permanently" ask for confirmation (Yes/No), then
-    delete with `HackFile`/`HackDirectory.DeleteAsync`;
+    delete with `KazoFile`/`KazoDirectory.DeleteAsync`;
   - errors (permissions, `/proc`) are displayed in the error strip.
 - A "Places" side panel offers **Home** and **Trash**. "Trash" displays
   `TrashView` (`Apps/System/Kazo.Os.Apps.FileExplorer/TrashView.razor`) in
   place of the list; FileView stays mounted (hidden) and finds its folder again
   on return.
-- **TrashView** (derives from `HackComponentBase`, hence in the explorer's
-  ambient context) reads `HackTrash.GetItemsAsync`, never the raw folder, and
+- **TrashView** (derives from `KazoComponentBase`, hence in the explorer's
+  ambient context) reads `KazoTrash.GetItemsAsync`, never the raw folder, and
   displays name, original location, deletion date and size. Actions:
   "Restore" (or double click, Enter), "Delete permanently" (or Delete key) and
   "Empty trash", the last two after confirmation. Ctrl+click for multiple
   selection. After a restore, the explorer refreshes FileView.
 - **Drop on the trash** (phase 4, `rebuild/4-file-explorer`): dragging items
   onto the "Trash" entry of the Places panel or onto the Trash view sends them
-  to the trash (`FileTransfer.MoveToTrashAsync`, today `HackFileOperations.MoveToTrashAsync`). See
+  to the trash (`FileTransfer.MoveToTrashAsync`, today `KazoFileOperations.MoveToTrashAsync`). See
   [`file-explorer.md`](file-explorer.md).
 
 Fix along the way: `Shared/Kazo.Os.AppSdk.FileView/_Imports.razor` now imports
@@ -115,7 +115,7 @@ of the plan).
 
 ## Tests
 
-- `Tests/Kazo.Os.AppSdk.Tests/IO/HackTrashTests.cs`: `.trashinfo` format,
+- `Tests/Kazo.Os.AppSdk.Tests/IO/KazoTrashTests.cs`: `.trashinfo` format,
   `0700`/`0600` permissions, colliding names, whole folders and size, refusals
   (root, home folder, trash), item already in the trash, virtual mount without
   residual `.trashinfo`, `sudo` to `/root`, listing (orphans, unknown origin,
@@ -133,7 +133,7 @@ of the plan).
 
 ## Task list
 
-- [x] `HackTrash`, `HackTrashItem` and the `.trashinfo` format (`HackTrashInfo`).
+- [x] `KazoTrash`, `KazoTrashItem` and the `.trashinfo` format (`KazoTrashInfo`).
 - [x] `IAppExecutionContext.IsRootElevated` for the effective user's trash.
 - [x] `rm` to the trash, `rm --permanent`, `-r` required for a folder, grouped options.
 - [x] `trash` command (put, list, restore, rm, empty).

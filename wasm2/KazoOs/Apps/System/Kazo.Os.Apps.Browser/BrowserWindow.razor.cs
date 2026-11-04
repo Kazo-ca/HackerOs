@@ -28,8 +28,8 @@ namespace Kazo.Os.Apps.Browser;
 /// </summary>
 /// <remarks>
 /// <para>
-/// Every request goes through the SDK (ADR 0056 §6): <see cref="HackHttpClient"/> for
-/// <c>http(s)</c>, <c>HackFile</c> for <c>file://</c> (ADR 0075 §4). The response is shown by type
+/// Every request goes through the SDK (ADR 0056 §6): <see cref="KazoHttpClient"/> for
+/// <c>http(s)</c>, <c>KazoFile</c> for <c>file://</c> (ADR 0075 §4). The response is shown by type
 /// (ADR 0075 §5): a historical site's structured page with <see cref="SimulatedPageRenderer"/>,
 /// HTML in the isolated frame of <see cref="BrowserPageView"/> after <see cref="HtmlPageComposer"/>
 /// inlined its sub-resources, other bodies with <see cref="ResponseBodyViewer"/>, and anything the
@@ -43,13 +43,13 @@ namespace Kazo.Os.Apps.Browser;
 /// <para>
 /// The page can move to a detached window of the host browser (ADR 0078 §3): the same tab, drawn
 /// in a display surface through <see cref="DisplaySurfaceContent"/>, still navigated and served by
-/// this window. Launched with <c>--detached</c> (see <c>HackBrowser.OpenDetachedAsync</c>), the
+/// this window. Launched with <c>--detached</c> (see <c>KazoBrowser.OpenDetachedAsync</c>), the
 /// window detaches before its first navigation.
 /// </para>
 /// <para>
 /// A Blazor site (ADR 0084) is recognised by its host page: the browser reads its
 /// <c>blazor.boot.json</c>, asks the OS for a renderer process (<see cref="IHackWebSiteHost"/>) and
-/// draws the site's root component in the page area with <see cref="HackWebSiteView"/>. Links
+/// draws the site's root component in the page area with <see cref="KazoWebSiteView"/>. Links
 /// within the site change the address without a request; back and forward between two addresses
 /// of the site stay in the site; the address bar and Reload make a real request.
 /// </para>
@@ -63,8 +63,8 @@ public sealed partial class BrowserWindow : WindowAppBase, IAsyncDisposable
     /// <summary>Default bookmarks shown on the new-tab page.</summary>
     internal static readonly IReadOnlyList<(string Label, string Url)> DefaultBookmarks =
     [
-        ("HackerSearch",   "https://hackersearch.net"),
-        ("HackMail",       "https://hackmail.com"),
+        ("KazoSearch",   "https://hackersearch.net"),
+        ("KazoMail",       "https://hackmail.com"),
         ("CryptoBank",     "https://cryptobank.com"),
         ("DarkNet Market", "https://darknet.market"),
         ("Hacker Forum",   "https://hackerz.forum"),
@@ -100,7 +100,7 @@ public sealed partial class BrowserWindow : WindowAppBase, IAsyncDisposable
     // ── Blazor site (ADR 0084) ───────────────────────────────────────────
     private IHackWebSiteProcess? _site;
     private Uri? _siteUrl;
-    private HackWebSiteView? _siteView;
+    private KazoWebSiteView? _siteView;
 
     // ── Detached window (ADR 0078 §3) ────────────────────────────────────
     private IDisplaySurfaceService? _surfaces;
@@ -110,7 +110,7 @@ public sealed partial class BrowserWindow : WindowAppBase, IAsyncDisposable
     private bool _detaching;
 
     // ── Per-window session state, sent and filled by the OS on each request ──
-    private readonly HackCookieContainer _cookies = new();
+    private readonly KazoCookieContainer _cookies = new();
     private readonly DevToolsLog _devTools = new();
     private BrowserResourceLoader _loader = default!;
     private HtmlPageComposer _composer = default!;
@@ -179,14 +179,14 @@ public sealed partial class BrowserWindow : WindowAppBase, IAsyncDisposable
 
         try
         {
-            _homeDirectory = HackUser.Current.HomeDirectory;
-            _storage = new PageStorage(new HackBrowserStorageFiles(), PageStorage.GetRoot(_homeDirectory),
+            _homeDirectory = KazoUser.Current.HomeDirectory;
+            _storage = new PageStorage(new KazoBrowserStorageFiles(), PageStorage.GetRoot(_homeDirectory),
                 message => _devTools.Add(new ConsoleLogEntry(ConsoleLevel.Warning, message, "browser")));
             // ADR 0088 §6: what the user types in forms, offered back by field name.
-            _formHistory = new FormHistory(new HackBrowserStorageFiles(), FormHistory.GetPath(_homeDirectory),
+            _formHistory = new FormHistory(new KazoBrowserStorageFiles(), FormHistory.GetPath(_homeDirectory),
                 onError: message => _devTools.Add(new ConsoleLogEntry(ConsoleLevel.Warning, message, "browser")));
         }
-        catch (Exception exception) when (exception is InvalidOperationException or HackExecutionContextMissingException)
+        catch (Exception exception) when (exception is InvalidOperationException or KazoExecutionContextMissingException)
         {
             // No user (a test host): pages get an in-memory storage only, and no form history.
             _storage = null;
@@ -200,9 +200,9 @@ public sealed partial class BrowserWindow : WindowAppBase, IAsyncDisposable
         RaiseNavigationAvailabilityChanged();
         if (firstRender)
         {
-            // Asked to open detached (HackBrowser.OpenDetachedAsync): the window opens first, while
+            // Asked to open detached (KazoBrowser.OpenDetachedAsync): the window opens first, while
             // the gesture that launched the app still lets the host browser open one.
-            if (LaunchArguments.Contains(HackBrowser.DetachedArgument, StringComparer.Ordinal))
+            if (LaunchArguments.Contains(KazoBrowser.DetachedArgument, StringComparer.Ordinal))
             {
                 await DetachAsync();
             }
@@ -374,7 +374,7 @@ public sealed partial class BrowserWindow : WindowAppBase, IAsyncDisposable
         if (_currentBody.Kind == ResponseBodyKind.Html)
         {
             // The host page of a Blazor site loads blazor.hack.js: the site is drawn, not the page (ADR 0084 §3).
-            if (HackBlazorSiteEndpoints.IsHostPage(_currentBody.Text) && await TryStartSiteAsync(response.Url, cancellationToken))
+            if (KazoBlazorSiteEndpoints.IsHostPage(_currentBody.Text) && await TryStartSiteAsync(response.Url, cancellationToken))
             {
                 return;
             }
@@ -392,15 +392,15 @@ public sealed partial class BrowserWindow : WindowAppBase, IAsyncDisposable
     /// </summary>
     private async Task<bool> TryStartSiteAsync(Uri pageUrl, CancellationToken cancellationToken)
     {
-        Uri bootUrl = new(new Uri(pageUrl.GetLeftPart(UriPartial.Authority) + "/"), HackBlazorBootManifest.BootPath);
+        Uri bootUrl = new(new Uri(pageUrl.GetLeftPart(UriPartial.Authority) + "/"), KazoBlazorBootManifest.BootPath);
         BrowserFetchResult fetched = await _loader.SendAsync(
             new BrowserRequest("GET", bootUrl, [new("Accept", "application/json")]), NetworkRequestKind.Other, cancellationToken);
-        HackBlazorBootManifest? boot = null;
+        KazoBlazorBootManifest? boot = null;
         if (fetched.Response is { IsSuccessStatusCode: true } bootResponse)
         {
             try
             {
-                boot = JsonSerializer.Deserialize(bootResponse.Body, HackBlazorBootJsonContext.Default.HackBlazorBootManifest);
+                boot = JsonSerializer.Deserialize(bootResponse.Body, KazoBlazorBootJsonContext.Default.KazoBlazorBootManifest);
             }
             catch (JsonException exception)
             {
@@ -415,7 +415,7 @@ public sealed partial class BrowserWindow : WindowAppBase, IAsyncDisposable
             return false;
         }
 
-        HackWebSiteStart start = await SiteHost.StartAsync(new HackWebSiteStartRequest(pageUrl, boot, AppContext), cancellationToken);
+        KazoWebSiteStart start = await SiteHost.StartAsync(new KazoWebSiteStartRequest(pageUrl, boot, AppContext), cancellationToken);
         cancellationToken.ThrowIfCancellationRequested();
         if (start.Process is not { } process)
         {
@@ -480,7 +480,7 @@ public sealed partial class BrowserWindow : WindowAppBase, IAsyncDisposable
     /// <summary>The OS ended the renderer (task manager, <c>kill</c>): same page as a crash. Arrives outside any Blazor event.</summary>
     private void OnSiteExited() => _ = InvokeAsync(() =>
     {
-        using IDisposable scope = HackExecutionContext.Enter(AppContext);
+        using IDisposable scope = KazoExecutionContext.Enter(AppContext);
         if (_site is not { HasExited: true } site)
         {
             return;
@@ -716,7 +716,7 @@ public sealed partial class BrowserWindow : WindowAppBase, IAsyncDisposable
 
         _ = InvokeAsync(async () =>
         {
-            using IDisposable scope = HackExecutionContext.Enter(AppContext);
+            using IDisposable scope = KazoExecutionContext.Enter(AppContext);
             if (!ReferenceEquals(surface, _surface))
             {
                 return;

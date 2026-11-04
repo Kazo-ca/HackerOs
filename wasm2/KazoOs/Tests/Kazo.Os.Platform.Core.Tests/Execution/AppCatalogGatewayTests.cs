@@ -16,7 +16,7 @@ using Kazo.Os.Simulation.Abstractions.Sessions;
 
 namespace Kazo.Os.Platform.Core.Tests.Execution;
 
-/// <summary>Contract tests of <c>HackApps</c> and <c>HackAppManagement</c>'s gateways (ADR 0056, sections 2 and 3).</summary>
+/// <summary>Contract tests of <c>KazoApps</c> and <c>KazoAppManagement</c>'s gateways (ADR 0056, sections 2 and 3).</summary>
 public sealed class AppCatalogGatewayTests
 {
     private const string Calc = "org.test.calc";
@@ -33,13 +33,13 @@ public sealed class AppCatalogGatewayTests
         int changes = 0;
         catalog.Changed += (_, _) => changes++;
 
-        IReadOnlyList<HackAppInfo> before = await catalog.GetInstalledAsync();
+        IReadOnlyList<KazoAppInfo> before = await catalog.GetInstalledAsync();
         Assert.Equal(["Calc", "Lib", "Term", "Viewer"], before.Select(app => app.Name));
         Assert.True(before.Single(app => app.Id == Term).IsSystemApp);
 
-        await harness.CreateManagementGateway(alice, AppCapabilities.AppsManage).UninstallAsync(Lib, HackInstallScope.User);
+        await harness.CreateManagementGateway(alice, AppCapabilities.AppsManage).UninstallAsync(Lib, KazoInstallScope.User);
 
-        IReadOnlyList<HackAppInfo> after = await catalog.GetInstalledAsync();
+        IReadOnlyList<KazoAppInfo> after = await catalog.GetInstalledAsync();
         Assert.Equal(["Calc", "Term"], after.Select(app => app.Name));
         Assert.True(changes > 0);
     }
@@ -50,7 +50,7 @@ public sealed class AppCatalogGatewayTests
         Harness harness = await Harness.CreateAsync();
         await harness.LoginAsync();
 
-        IReadOnlyList<HackAppInfo> handlers = await harness.CreateCatalogGateway()
+        IReadOnlyList<KazoAppInfo> handlers = await harness.CreateCatalogGateway()
             .GetHandlersAsync(VirtualPath.Parse("/home/alice/notes.txt"));
 
         Assert.Equal([Calc, Viewer], handlers.Select(app => app.Id));
@@ -79,12 +79,12 @@ public sealed class AppCatalogGatewayTests
         AppCatalogGateway gateway = harness.CreateCatalogGateway(
             alice, AppCapabilities.FileAssociationsRead, AppCapabilities.FileSystemUserHomeWrite);
 
-        Assert.Equal(HackDefaultHandlerStatus.Changed, await gateway.SetUserDefaultHandlerAsync(".TXT", "open", Viewer));
-        Assert.Equal(HackDefaultHandlerStatus.AppCannotHandle, await gateway.SetUserDefaultHandlerAsync(".txt", "open", Lib));
+        Assert.Equal(KazoDefaultHandlerStatus.Changed, await gateway.SetUserDefaultHandlerAsync(".TXT", "open", Viewer));
+        Assert.Equal(KazoDefaultHandlerStatus.AppCannotHandle, await gateway.SetUserDefaultHandlerAsync(".txt", "open", Lib));
 
-        HackFileAssociation first = (await gateway.GetDefaultHandlersAsync())[0];
-        Assert.Equal(new HackFileAssociation(".txt", "open", Viewer, HackFileAssociationLayer.User), first);
-        IReadOnlyList<HackAppInfo> handlers = await gateway.GetHandlersAsync(VirtualPath.Parse("/home/alice/notes.txt"));
+        KazoFileAssociation first = (await gateway.GetDefaultHandlersAsync())[0];
+        Assert.Equal(new KazoFileAssociation(".txt", "open", Viewer, KazoFileAssociationLayer.User), first);
+        IReadOnlyList<KazoAppInfo> handlers = await gateway.GetHandlersAsync(VirtualPath.Parse("/home/alice/notes.txt"));
         Assert.Equal([Viewer, Calc], handlers.Select(app => app.Id));
     }
 
@@ -96,7 +96,7 @@ public sealed class AppCatalogGatewayTests
         AppManagementGateway gateway = harness.CreateManagementGateway(alice);
 
         await Assert.ThrowsAsync<AppGatewayAccessDeniedException>(() => gateway.GetAllAsync().AsTask());
-        await Assert.ThrowsAsync<AppGatewayAccessDeniedException>(() => gateway.UninstallAsync(Calc, HackInstallScope.User).AsTask());
+        await Assert.ThrowsAsync<AppGatewayAccessDeniedException>(() => gateway.UninstallAsync(Calc, KazoInstallScope.User).AsTask());
         Assert.True(harness.Enablement.IsEnabled(Calc));
     }
 
@@ -107,10 +107,10 @@ public sealed class AppCatalogGatewayTests
         AuthenticatedPrincipal alice = await harness.LoginAsync();
         AppManagementGateway gateway = harness.CreateManagementGateway(alice, AppCapabilities.AppsManage);
 
-        await gateway.UninstallAsync(Calc, HackInstallScope.User);
-        IReadOnlyList<HackAppInstallInfo> all = await gateway.GetAllAsync();
+        await gateway.UninstallAsync(Calc, KazoInstallScope.User);
+        IReadOnlyList<KazoAppInstallInfo> all = await gateway.GetAllAsync();
 
-        Assert.Equal(HackAppInstallState.UninstalledForUser, all.Single(entry => entry.App.Id == Calc).State);
+        Assert.Equal(KazoAppInstallState.UninstalledForUser, all.Single(entry => entry.App.Id == Calc).State);
         Assert.Equal([Viewer, Lib], all.Single(entry => entry.App.Id == Lib).UninstallClosure);
     }
 
@@ -122,8 +122,8 @@ public sealed class AppCatalogGatewayTests
         CountingAgent agent = new(succeed: true);
         AppManagementGateway gateway = harness.CreateManagementGateway(alice, agent, AppCapabilities.AppsManage);
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => gateway.UninstallAsync(Term, HackInstallScope.Machine).AsTask());
-        await Assert.ThrowsAsync<InvalidOperationException>(() => gateway.UninstallAsync(Term, HackInstallScope.User).AsTask());
+        await Assert.ThrowsAsync<InvalidOperationException>(() => gateway.UninstallAsync(Term, KazoInstallScope.Machine).AsTask());
+        await Assert.ThrowsAsync<InvalidOperationException>(() => gateway.UninstallAsync(Term, KazoInstallScope.User).AsTask());
         Assert.Equal(0, agent.Calls);
     }
 
@@ -135,7 +135,7 @@ public sealed class AppCatalogGatewayTests
         CountingAgent agent = new(succeed: false);
         AppManagementGateway gateway = harness.CreateManagementGateway(alice, agent, AppCapabilities.AppsManage);
 
-        await Assert.ThrowsAsync<HackUnauthorizedAccessException>(() => gateway.UninstallAsync(Calc, HackInstallScope.Machine).AsTask());
+        await Assert.ThrowsAsync<KazoUnauthorizedAccessException>(() => gateway.UninstallAsync(Calc, KazoInstallScope.Machine).AsTask());
 
         Assert.Equal(1, agent.Calls);
         Assert.Equal("apps.uninstall.machine", agent.LastRequest!.Action);
@@ -151,13 +151,13 @@ public sealed class AppCatalogGatewayTests
         AuthenticatedPrincipal alice = await harness.LoginAsync();
         AppManagementGateway gateway = harness.CreateManagementGateway(alice, new CountingAgent(succeed: true), AppCapabilities.AppsManage);
 
-        IReadOnlyList<string> written = await gateway.UninstallAsync(Calc, HackInstallScope.Machine);
+        IReadOnlyList<string> written = await gateway.UninstallAsync(Calc, KazoInstallScope.Machine);
 
         Assert.Equal([Calc], written);
         Assert.Contains($"{Calc}=true", await harness.Settings.ReadAsync("/etc/hackeros/apps.config"));
-        Assert.Equal(HackAppInstallState.UninstalledForMachine, (await gateway.GetAllAsync()).Single(entry => entry.App.Id == Calc).State);
+        Assert.Equal(KazoAppInstallState.UninstalledForMachine, (await gateway.GetAllAsync()).Single(entry => entry.App.Id == Calc).State);
 
-        Assert.Equal([Calc], await gateway.ReinstallAsync(Calc, HackInstallScope.Machine));
+        Assert.Equal([Calc], await gateway.ReinstallAsync(Calc, KazoInstallScope.Machine));
         Assert.True(harness.Enablement.IsEnabled(Calc));
     }
 
@@ -170,7 +170,7 @@ public sealed class AppCatalogGatewayTests
         AppManagementGateway gateway = harness.CreateManagementGateway(alice, AppCapabilities.AppsManage);
 
         InvalidOperationException error = await Assert.ThrowsAsync<InvalidOperationException>(
-            () => gateway.ReinstallAsync(Calc, HackInstallScope.User).AsTask());
+            () => gateway.ReinstallAsync(Calc, KazoInstallScope.User).AsTask());
         Assert.Contains("administrator", error.Message, StringComparison.Ordinal);
     }
 
@@ -182,7 +182,7 @@ public sealed class AppCatalogGatewayTests
         AdministratorAuthenticationAgent agent = new(new RefusingVerifier(), new BoundedAuditLog(maxEntries: 10));
         AppManagementGateway gateway = harness.CreateManagementGateway(alice, agent, AppCapabilities.AppsManage, isRootElevated: true);
 
-        await gateway.UninstallAsync(Calc, HackInstallScope.Machine);
+        await gateway.UninstallAsync(Calc, KazoInstallScope.Machine);
 
         Assert.False(harness.Enablement.IsEnabled(Calc));
     }
@@ -196,7 +196,7 @@ public sealed class AppCatalogGatewayTests
         Description = name,
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", $"{id}.EntryPoint"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         Dependencies = dependencies,

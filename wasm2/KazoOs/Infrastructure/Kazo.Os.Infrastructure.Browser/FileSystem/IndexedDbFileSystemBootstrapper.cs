@@ -40,7 +40,7 @@ public sealed class IndexedDbFileSystemBootstrapper : IAsyncDisposable
             IndexedDbTransactionMode.ReadWrite,
             [new IndexedDbOperation(
                 "addIfAbsent",
-                HackerOsIndexedDbSchema.FileSystemEntryStoreName,
+                KazoOsIndexedDbSchema.FileSystemEntryStoreName,
                 Key: RootEntryId.ToString(),
                 Value: IndexedDbFileSystemEntryRecord.FromMetadata(root))],
             cancellationToken).ConfigureAwait(false);

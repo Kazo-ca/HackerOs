@@ -10,8 +10,8 @@
 *@
 <CascadingValue TValue="IAppExecutionContext" Value="Presentation.Context" IsFixed="true">
     <section class="provided-file-dialog" aria-label="@Presentation.Dialog">
-        <HackEmbeddedComponent TController="object"
-                               Contract="@HackComponentContracts.FileDialogs"
+        <KazoEmbeddedComponent TController="object"
+                               Contract="@KazoComponentContracts.FileDialogs"
                                Parameters="_parameters">
             <Unavailable Context="reason">
                 <div class="provided-file-dialog-unavailable" role="alert">
@@ -20,7 +20,7 @@
                     <button type="button" @onclick="Close">@L["Common.Close"]</button>
                 </div>
             </Unavailable>
-        </HackEmbeddedComponent>
+        </KazoEmbeddedComponent>
     </section>
 </CascadingValue>
 

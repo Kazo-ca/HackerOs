@@ -10,7 +10,7 @@
     </p>
     @if (Model.DisplayName is null)
     {
-        <p>@Html.ActionLink("Choose a display name", "Profile", "Home", htmlAttributes: HackRoute.Values(new { @class = "button", id = "choose-name" }))</p>
+        <p>@Html.ActionLink("Choose a display name", "Profile", "Home", htmlAttributes: KazoRoute.Values(new { @class = "button", id = "choose-name" }))</p>
     }
 </section>
 

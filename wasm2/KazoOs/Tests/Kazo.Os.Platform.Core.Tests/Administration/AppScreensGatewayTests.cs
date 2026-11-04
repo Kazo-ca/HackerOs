@@ -9,7 +9,7 @@ using Kazo.Os.Tests.Support;
 
 namespace Kazo.Os.Platform.Core.Tests.Administration;
 
-/// <summary>ADR 0184: <see cref="HackScreens"/> over the trusted screens gateway.</summary>
+/// <summary>ADR 0184: <see cref="KazoScreens"/> over the trusted screens gateway.</summary>
 public sealed class AppScreensGatewayTests
 {
     private static readonly Guid Caller = Guid.NewGuid();
@@ -23,7 +23,7 @@ public sealed class AppScreensGatewayTests
         Description = "Screens gateway test application.",
         Kind = AppKind.Terminal,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", "ScreensApp"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("screens", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
     };
@@ -61,12 +61,12 @@ public sealed class AppScreensGatewayTests
         AppScreensGateway gateway = new(() => control, new FixedCapabilities(AppCapabilities.ScreensManage), Caller);
 
         Assert.Equal(2, gateway.GetState().CallerScreen);
-        Assert.Equal(HackScreenOpenStatus.LimitReached, await gateway.OpenScreenAsync());
+        Assert.Equal(KazoScreenOpenStatus.LimitReached, await gateway.OpenScreenAsync());
         Assert.Equal(2, await gateway.RestoreScreensAsync());
         await gateway.CloseScreenAsync(3);
         await gateway.IdentifyAsync();
         Assert.True(await gateway.ToggleFullScreenAsync());
-        Assert.Equal(HackScreenPermission.Granted, await gateway.RequestPermissionAsync());
+        Assert.Equal(KazoScreenPermission.Granted, await gateway.RequestPermissionAsync());
         await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => gateway.CloseScreenAsync(1).AsTask());
 
         Assert.Equal(["state", "open", "restore", "close 3", "identify", "fullscreen", "permission"], control.Calls);
@@ -99,11 +99,11 @@ public sealed class AppScreensGatewayTests
         MinimalAppExecutionContext denied = Context(new AppScreensGateway(() => control, new FixedCapabilities(), Caller));
         MinimalAppExecutionContext granted = Context(new AppScreensGateway(() => control, new FixedCapabilities(AppCapabilities.ScreensManage), Caller));
 
-        Assert.True(HackScreens.IsSupportedFor(denied));
-        Assert.Throws<HackUnauthorizedAccessException>(() => HackScreens.GetState(denied));
-        await Assert.ThrowsAsync<HackUnauthorizedAccessException>(() => HackScreens.OpenScreenAsync(denied));
-        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => HackScreens.CloseScreenAsync(granted, 10));
-        await HackScreens.CloseScreenAsync(granted, 9);
+        Assert.True(KazoScreens.IsSupportedFor(denied));
+        Assert.Throws<KazoUnauthorizedAccessException>(() => KazoScreens.GetState(denied));
+        await Assert.ThrowsAsync<KazoUnauthorizedAccessException>(() => KazoScreens.OpenScreenAsync(denied));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => KazoScreens.CloseScreenAsync(granted, 10));
+        await KazoScreens.CloseScreenAsync(granted, 9);
 
         Assert.Equal(["close 9"], control.Calls);
     }
@@ -113,8 +113,8 @@ public sealed class AppScreensGatewayTests
     {
         MinimalAppExecutionContext context = new(Manifest);
 
-        Assert.False(HackScreens.IsSupportedFor(context));
-        Assert.Throws<NotSupportedException>(() => HackScreens.GetState(context));
+        Assert.False(KazoScreens.IsSupportedFor(context));
+        Assert.Throws<NotSupportedException>(() => KazoScreens.GetState(context));
     }
 
     private static MinimalAppExecutionContext Context(IAppScreensGateway screens) =>
@@ -130,17 +130,17 @@ public sealed class AppScreensGatewayTests
 
         public List<Guid> Instances { get; } = [];
 
-        public HackScreensState GetState(Guid appInstanceId)
+        public KazoScreensState GetState(Guid appInstanceId)
         {
             Calls.Add("state");
             Instances.Add(appInstanceId);
-            return new([new HackScreenInfo(1, null, 1920, 1080, false)], HackScreenPermission.Granted, false, [], 2);
+            return new([new KazoScreenInfo(1, null, 1920, 1080, false)], KazoScreenPermission.Granted, false, [], 2);
         }
 
-        public Task<HackScreenOpenStatus> OpenScreenAsync(CancellationToken cancellationToken)
+        public Task<KazoScreenOpenStatus> OpenScreenAsync(CancellationToken cancellationToken)
         {
             Calls.Add("open");
-            return Task.FromResult(HackScreenOpenStatus.LimitReached);
+            return Task.FromResult(KazoScreenOpenStatus.LimitReached);
         }
 
         public Task<int> RestoreScreensAsync(CancellationToken cancellationToken)
@@ -168,10 +168,10 @@ public sealed class AppScreensGatewayTests
             return Task.FromResult(true);
         }
 
-        public Task<HackScreenPermission> RequestPermissionAsync()
+        public Task<KazoScreenPermission> RequestPermissionAsync()
         {
             Calls.Add("permission");
-            return Task.FromResult(HackScreenPermission.Granted);
+            return Task.FromResult(KazoScreenPermission.Granted);
         }
 
         public void Raise() => Changed?.Invoke();

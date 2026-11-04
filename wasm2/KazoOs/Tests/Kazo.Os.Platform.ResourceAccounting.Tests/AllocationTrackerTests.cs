@@ -81,7 +81,7 @@ public sealed class AllocationTrackerTests
         AllocationTracker tracker = new(GcManagedHeapProbe.Instance);
         using (ContextSwitchHook.Install(tracker))
         {
-            using (HackExecutionContext.Enter(TestContexts.Process(77)))
+            using (KazoExecutionContext.Enter(TestContexts.Process(77)))
             {
                 GC.KeepAlive(new byte[200_000]);
             }

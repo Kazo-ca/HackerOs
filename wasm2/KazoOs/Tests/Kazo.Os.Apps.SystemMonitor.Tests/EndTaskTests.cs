@@ -21,7 +21,7 @@ public sealed class EndTaskTests
         FakeAppProcessGateway processes = new FakeAppProcessGateway()
             .WithProcess(ProcessRecordFactory.Running(42, "org.hackeros.text-editor", Session, Now, Now));
         using IDisposable scope = Enter(processes);
-        HackProcess editor = await HackProcess.GetProcessByIdAsync(42);
+        KazoProcess editor = await KazoProcess.GetProcessByIdAsync(42);
 
         await EndTaskRunner.End(editor, EndTaskMode.Terminate);
         await EndTaskRunner.End(editor, EndTaskMode.ForceKill);
@@ -59,7 +59,7 @@ public sealed class EndTaskTests
         FakeAppFileSystemGateway fileSystem = new FakeAppFileSystemGateway()
             .WithDirectory("/proc/42")
             .WithFile("/proc/42/status", "Name:\ttext-editor\nAppId:\torg.hackeros.text-editor\nState:\tR (running)\nPPid:\t0\n");
-        return HackExecutionContext.Enter(new MinimalAppExecutionContext(
+        return KazoExecutionContext.Enter(new MinimalAppExecutionContext(
             AppDefinitionMapper.ToManifest(new SystemMonitorApp()), fileSystem: fileSystem, processes: processes));
     }
 

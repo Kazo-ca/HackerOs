@@ -17,7 +17,7 @@
 
 @*
     Reusable terminal emulator any WindowAppBase-hosted app can embed. It hosts an hsh shell
-    through the public SDK only (HackShell, capability shell.host, ADR 0056 section 7): the shell
+    through the public SDK only (KazoShell, capability shell.host, ADR 0056 section 7): the shell
     is a child process of the host app (ADR 0050), each panel has its own, and every command is a
     child of that shell. Parsing, expansion, pipes, redirections and completion are the shell's;
     credentials typed here are verified by the OS.
@@ -113,10 +113,10 @@
     public bool IsBusy => _activeCts is not null;
 
     /// <inheritdoc />
-    public event EventHandler<HackTerminalOutputEventArgs>? OutputReceived;
+    public event EventHandler<KazoTerminalOutputEventArgs>? OutputReceived;
 
     /// <inheritdoc />
-    public event EventHandler<HackTerminalCommandResult>? CommandCompleted;
+    public event EventHandler<KazoTerminalCommandResult>? CommandCompleted;
 
     /// <inheritdoc />
     public event EventHandler? StateChanged;
@@ -127,7 +127,7 @@
     /// <summary>Most characters of shown text kept for <see cref="ReadOutput"/>.</summary>
     private const int MaxTranscript = 256 * 1024;
 
-    /// <summary>Most characters of one command's output kept for its <see cref="HackTerminalCommandResult"/>.</summary>
+    /// <summary>Most characters of one command's output kept for its <see cref="KazoTerminalCommandResult"/>.</summary>
     private const int MaxCommandOutput = 1 << 20;
 
     /// <summary>Most bytes kept for the terminal while it is not mounted (no JS, headless tests).</summary>
@@ -186,13 +186,13 @@
         _credentialPrompt = new TerminalCredentialPrompt(Dialogs, AppContext, WriteApprovalLineAsync);
         try
         {
-            _shell = await HackShell.StartAsync(AppContext, new HackShellOptions
+            _shell = await KazoShell.StartAsync(AppContext, new KazoShellOptions
             {
                 WorkingDirectory = InitialCwd,
                 CredentialPrompt = _credentialPrompt
             }, AppContext.CancellationToken);
         }
-        catch (Exception exception) when (exception is HackUnauthorizedAccessException or NotSupportedException or InvalidOperationException)
+        catch (Exception exception) when (exception is KazoUnauthorizedAccessException or NotSupportedException or InvalidOperationException)
         {
             // The host lacks shell.host, or runs without a platform: show why, as a terminal whose
             // shell failed to exec prints the error and stays open.
@@ -275,7 +275,7 @@
 
         try
         {
-            Kazo.Os.AppSdk.Accessibility.HackAccessibilityPreferences accessibility =
+            Kazo.Os.AppSdk.Accessibility.KazoAccessibilityPreferences accessibility =
                 await AppContext.Accessibility.GetPreferencesAsync(AppContext.CancellationToken);
             _dotNetReference = DotNetObjectReference.Create(this);
             _module = await JavaScript.InvokeAsync<IJSObjectReference>(
@@ -725,7 +725,7 @@
     /// Ctrl+C (a host's <see cref="RunCommandAsync"/>). Returns the command's result, or
     /// <see langword="null"/> when nothing ran (empty line, shell gone).
     /// </summary>
-    private async Task<HackTerminalCommandResult?> ExecuteInputAsync(CancellationToken external = default, bool allowContinuation = true)
+    private async Task<KazoTerminalCommandResult?> ExecuteInputAsync(CancellationToken external = default, bool allowContinuation = true)
     {
         (_, int promptWidth) = TerminalAnsi.FormatPrompt(Prompt);
         string typed = _editor.Text;
@@ -777,7 +777,7 @@
             // The bytes reach the terminal unchanged but for ONLCR: colours and clear just work.
             status = await _shell.ExecuteAsync(
                 rawLine,
-                new HackShellExecution
+                new KazoShellExecution
                 {
                     StandardOutput = new TerminalOutputWriter(WriteCommandOutput),
                     StandardError = new TerminalOutputWriter(WriteCommandOutput),
@@ -815,7 +815,7 @@
             _activeCts = null;
         }
 
-        var result = new HackTerminalCommandResult(
+        var result = new KazoTerminalCommandResult(
             rawLine, status, TerminalAnsi.StripControlSequences(_commandOutput.ToString()));
         _commandOutput = null;
         await UpdateTitleAsync(null);
@@ -864,11 +864,11 @@
             _transcript.Remove(0, _transcript.Length - MaxTranscript);
         }
 
-        OutputReceived?.Invoke(this, new HackTerminalOutputEventArgs(plain));
+        OutputReceived?.Invoke(this, new KazoTerminalOutputEventArgs(plain));
     }
 
     /// <inheritdoc />
-    public Task<HackTerminalCommandResult> RunCommandAsync(string commandLine, CancellationToken cancellationToken = default)
+    public Task<KazoTerminalCommandResult> RunCommandAsync(string commandLine, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(commandLine);
         if (commandLine.Contains('\n') || commandLine.Contains('\r'))
@@ -889,7 +889,7 @@
     }
 
     /// <inheritdoc />
-    public Task<HackTerminalCommandResult> SetWorkingDirectoryAsync(string path, CancellationToken cancellationToken = default)
+    public Task<KazoTerminalCommandResult> SetWorkingDirectoryAsync(string path, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(path);
         return RunCommandAsync("cd " + QuoteArgument(path), cancellationToken);
@@ -952,8 +952,8 @@
         RedrawLine();
         try
         {
-            HackTerminalCommandResult? result = await ExecuteInputAsync(command.CancellationToken, allowContinuation: false);
-            command.Completion.TrySetResult(result ?? new HackTerminalCommandResult(command.Line, 1, string.Empty));
+            KazoTerminalCommandResult? result = await ExecuteInputAsync(command.CancellationToken, allowContinuation: false);
+            command.Completion.TrySetResult(result ?? new KazoTerminalCommandResult(command.Line, 1, string.Empty));
         }
         catch (Exception exception)
         {
@@ -1000,7 +1000,7 @@
 
         public CancellationToken CancellationToken { get; } = cancellationToken;
 
-        public TaskCompletionSource<HackTerminalCommandResult> Completion { get; } =
+        public TaskCompletionSource<KazoTerminalCommandResult> Completion { get; } =
             new(TaskCreationOptions.RunContinuationsAsynchronously);
     }
 
@@ -1118,12 +1118,12 @@
     }
 
     /// <summary>Prints one line the OS writes through the credential prompt (approval banner, "Sorry, try again.").</summary>
-    private Task WriteApprovalLineAsync(string text, HackPromptLineKind kind)
+    private Task WriteApprovalLineAsync(string text, KazoPromptLineKind kind)
     {
         WriteLine(text, kind switch
         {
-            HackPromptLineKind.Warning => TerminalAnsi.Notice,
-            HackPromptLineKind.Error => TerminalAnsi.Error,
+            KazoPromptLineKind.Warning => TerminalAnsi.Notice,
+            KazoPromptLineKind.Error => TerminalAnsi.Error,
             _ => TerminalAnsi.Reset
         });
         return Task.CompletedTask;
@@ -1152,7 +1152,7 @@
 
         string line = _editor.Text;
         int cursor = _editor.Cursor;
-        HackShellCompletion completion;
+        KazoShellCompletion completion;
         try
         {
             completion = await _shell.CompleteAsync(line, cursor);
@@ -1222,7 +1222,7 @@
 
         try
         {
-            Kazo.Os.AppSdk.Accessibility.HackAccessibilityPreferences preferences =
+            Kazo.Os.AppSdk.Accessibility.KazoAccessibilityPreferences preferences =
                 await AppContext.Accessibility.GetPreferencesAsync(CancellationToken.None);
             await terminal.InvokeVoidAsync("applyAccessibility", new
             {

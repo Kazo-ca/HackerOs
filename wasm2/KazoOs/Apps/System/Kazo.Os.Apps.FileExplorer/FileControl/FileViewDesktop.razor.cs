@@ -16,7 +16,7 @@ namespace Kazo.Os.Apps.FileExplorer.FileControl;
 
 /// <summary>
 /// Code-behind of the desktop mode (ADR 0152 §2-3, ADR 0160 §3): places the items of the folder and the
-/// Home and Trash icons on a grid with <see cref="HackDesktopLayout"/>, moves them on a drag, and sends
+/// Home and Trash icons on a grid with <see cref="KazoDesktopLayout"/>, moves them on a drag, and sends
 /// the positions to save to the provider's <see cref="FileViewDesktopBinding"/>.
 /// </summary>
 /// <remarks>
@@ -31,9 +31,9 @@ public partial class FileViewDesktop : IAsyncDisposable
 
     private readonly Dictionary<FileViewItem, string> _renameBuffers = [];
     private readonly HashSet<string> _systemSelection = new(StringComparer.Ordinal);
-    private readonly Dictionary<string, (HackDesktopCell Cell, DateTimeOffset At)> _pendingPlacements = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, (KazoDesktopCell Cell, DateTimeOffset At)> _pendingPlacements = new(StringComparer.Ordinal);
     private List<DesktopTile> _tiles = [];
-    private HackDesktopArrangement? _arrangement;
+    private KazoDesktopArrangement? _arrangement;
     private IJSObjectReference? _module;
     private DotNetObjectReference<ResizeCallback>? _resizeCallback;
     private ElementReference _gridElement;
@@ -70,19 +70,19 @@ public partial class FileViewDesktop : IAsyncDisposable
 
     private static readonly FileViewDesktopBinding EmptyBinding = new();
 
-    private HackDesktopOptions Options => Binding.Options;
+    private KazoDesktopOptions Options => Binding.Options;
 
     private string SizeClass => Options.IconSize switch
     {
-        HackDesktopIconSize.Small => "size-small",
-        HackDesktopIconSize.Large => "size-large",
+        KazoDesktopIconSize.Small => "size-small",
+        KazoDesktopIconSize.Large => "size-large",
         _ => "size-medium"
     };
 
     private int IconPixels => Options.IconSize switch
     {
-        HackDesktopIconSize.Small => 32,
-        HackDesktopIconSize.Large => 64,
+        KazoDesktopIconSize.Small => 32,
+        KazoDesktopIconSize.Large => 64,
         _ => 48
     };
 
@@ -91,7 +91,7 @@ public partial class FileViewDesktop : IAsyncDisposable
     {
         get
         {
-            (int width, int height) = HackDesktopLayout.CellSize(Options.IconSize);
+            (int width, int height) = KazoDesktopLayout.CellSize(Options.IconSize);
             return new Dictionary<string, object>
             {
                 ["style"] = FormattableString.Invariant(
@@ -156,16 +156,16 @@ public partial class FileViewDesktop : IAsyncDisposable
             return;
         }
 
-        HackDesktopOptions options = Options;
-        (_columns, _rows) = HackDesktopLayout.GridSize(_width, _height, options.IconSize);
+        KazoDesktopOptions options = Options;
+        (_columns, _rows) = KazoDesktopLayout.GridSize(_width, _height, options.IconSize);
         Dictionary<string, FileViewItem> items = new(StringComparer.Ordinal);
         foreach (FileViewItem item in Owner.Items)
         {
             items.TryAdd(item.FileName, item);
         }
 
-        IReadOnlyList<string> keys = HackDesktopLayout.Order(
-            items.Values.Select(static item => new HackDesktopSortItem(
+        IReadOnlyList<string> keys = KazoDesktopLayout.Order(
+            items.Values.Select(static item => new KazoDesktopSortItem(
                 item.FileName,
                 item.IsDirectory,
                 item.Metadata is FileMetadata file ? file.Length : 0,
@@ -174,7 +174,7 @@ public partial class FileViewDesktop : IAsyncDisposable
             options.ShowHome,
             options.ShowTrash);
 
-        _arrangement = HackDesktopLayout.Arrange(
+        _arrangement = KazoDesktopLayout.Arrange(
             keys, WithPendingPlacements(keys), _columns, _rows, options.AutoArrange, options.AlignToGrid);
 
         HashSet<string> shown = new(keys, StringComparer.Ordinal);
@@ -182,14 +182,14 @@ public partial class FileViewDesktop : IAsyncDisposable
         List<DesktopTile> tiles = [];
         foreach (string key in keys)
         {
-            HackDesktopCell cell = _arrangement.Displayed[key];
+            KazoDesktopCell cell = _arrangement.Displayed[key];
             if (items.TryGetValue(key, out FileViewItem? item))
             {
                 tiles.Add(new DesktopTile(key, item, item.Label, cell, item.IsDirectory));
             }
             else
             {
-                string label = key == HackDesktopItems.Home ? Binding.HomeLabel : Binding.TrashLabel;
+                string label = key == KazoDesktopItems.Home ? Binding.HomeLabel : Binding.TrashLabel;
                 tiles.Add(new DesktopTile(key, null, label, cell, AcceptsDrop: true));
             }
         }
@@ -202,9 +202,9 @@ public partial class FileViewDesktop : IAsyncDisposable
     /// a rename that keeps its place). A cell asked for is only taken when it is free, so a new item
     /// never pushes an existing one away.
     /// </summary>
-    private IReadOnlyDictionary<string, HackDesktopCell> WithPendingPlacements(IReadOnlyList<string> keys)
+    private IReadOnlyDictionary<string, KazoDesktopCell> WithPendingPlacements(IReadOnlyList<string> keys)
     {
-        IReadOnlyDictionary<string, HackDesktopCell> saved = Binding.Positions;
+        IReadOnlyDictionary<string, KazoDesktopCell> saved = Binding.Positions;
         DateTimeOffset now = DateTimeOffset.UtcNow;
         foreach (string expired in _pendingPlacements.Where(pair => now - pair.Value.At > PendingPlacementLifetime).Select(static pair => pair.Key).ToList())
         {
@@ -216,10 +216,10 @@ public partial class FileViewDesktop : IAsyncDisposable
             return saved;
         }
 
-        Dictionary<string, HackDesktopCell> merged = new(saved, StringComparer.Ordinal);
+        Dictionary<string, KazoDesktopCell> merged = new(saved, StringComparer.Ordinal);
         HashSet<string> present = new(keys, StringComparer.Ordinal);
-        HashSet<HackDesktopCell> taken = [.. saved.Where(pair => present.Contains(pair.Key) && !_pendingPlacements.ContainsKey(pair.Key)).Select(static pair => pair.Value)];
-        foreach ((string key, (HackDesktopCell cell, _)) in _pendingPlacements)
+        HashSet<KazoDesktopCell> taken = [.. saved.Where(pair => present.Contains(pair.Key) && !_pendingPlacements.ContainsKey(pair.Key)).Select(static pair => pair.Value)];
+        foreach ((string key, (KazoDesktopCell cell, _)) in _pendingPlacements)
         {
             if (!present.Contains(key))
             {
@@ -266,7 +266,7 @@ public partial class FileViewDesktop : IAsyncDisposable
         await SavePositionsAsync(_arrangement.Positions);
     }
 
-    private async Task SavePositionsAsync(IReadOnlyDictionary<string, HackDesktopCell> positions)
+    private async Task SavePositionsAsync(IReadOnlyDictionary<string, KazoDesktopCell> positions)
     {
         string signature = Signature(positions);
         if (signature == _lastSavedSignature)
@@ -278,7 +278,7 @@ public partial class FileViewDesktop : IAsyncDisposable
         await Binding.SavePositions(positions);
     }
 
-    private static string Signature(IReadOnlyDictionary<string, HackDesktopCell> positions) =>
+    private static string Signature(IReadOnlyDictionary<string, KazoDesktopCell> positions) =>
         string.Join('\n', positions.OrderBy(static pair => pair.Key, StringComparer.Ordinal).Select(static pair => pair.Key + "=" + pair.Value));
 
     private bool IsSelected(DesktopTile tile) => tile.Item?.IsSelected ?? _systemSelection.Contains(tile.Key);
@@ -312,7 +312,7 @@ public partial class FileViewDesktop : IAsyncDisposable
     {
         if (tile.Item is not { } item)
         {
-            return tile.Key == HackDesktopItems.Home
+            return tile.Key == KazoDesktopItems.Home
                 ? ShellIconDescriptor.Vector(IconLibrary.Lucide, "house")
                 : ShellIconDescriptor.Vector(IconLibrary.Lucide, Binding.IsTrashFull ? "trash-2" : "trash");
         }
@@ -586,7 +586,7 @@ public partial class FileViewDesktop : IAsyncDisposable
         }
 
         string proposed = value.Trim();
-        if (_arrangement?.Displayed.TryGetValue(item.FileName, out HackDesktopCell cell) == true
+        if (_arrangement?.Displayed.TryGetValue(item.FileName, out KazoDesktopCell cell) == true
             && proposed.Length > 0
             && proposed != item.FileName)
         {
@@ -636,17 +636,17 @@ public partial class FileViewDesktop : IAsyncDisposable
         }
 
         ContainerRect origin = await _module.InvokeAsync<ContainerRect>("getOrigin", _gridElement);
-        HackDesktopCell target = HackDesktopLayout.CellAtPoint(
+        KazoDesktopCell target = KazoDesktopLayout.CellAtPoint(
             args.ClientX - origin.Left, args.ClientY - origin.Top, Options.IconSize, _columns, _rows);
 
         if (_drag is { } drag)
         {
             _drag = null;
-            IReadOnlyDictionary<string, HackDesktopCell> positions = HackDesktopLayout.Move(
+            IReadOnlyDictionary<string, KazoDesktopCell> positions = KazoDesktopLayout.Move(
                 _arrangement, drag.Keys, drag.Anchor, target, _columns, _rows, Options.AutoArrange);
             // Shown at once; the saved copy comes back through the host's parameters.
             _arrangement = _arrangement with { Displayed = Merge(_arrangement.Displayed, positions) };
-            _tiles = [.. _tiles.Select(tile => _arrangement.Displayed.TryGetValue(tile.Key, out HackDesktopCell cell) ? tile with { Cell = cell } : tile)];
+            _tiles = [.. _tiles.Select(tile => _arrangement.Displayed.TryGetValue(tile.Key, out KazoDesktopCell cell) ? tile with { Cell = cell } : tile)];
             StateHasChanged();
             await SavePositionsAsync(positions);
             return;
@@ -658,13 +658,13 @@ public partial class FileViewDesktop : IAsyncDisposable
             return;
         }
 
-        IEnumerable<string> names = drop.Entries.Select(static entry => HackFileOperations.GetName(entry.Path.Value))
+        IEnumerable<string> names = drop.Entries.Select(static entry => KazoFileOperations.GetName(entry.Path.Value))
             .Concat(drop.HostFiles.Select(static file => file.Name));
         int offset = 0;
         foreach (string name in names.Distinct(StringComparer.Ordinal))
         {
             // The dropped items go down the column from the pointer, as a group.
-            _pendingPlacements[name] = (new HackDesktopCell(target.Column + ((target.Row + offset) / _rows), (target.Row + offset) % _rows), DateTimeOffset.UtcNow);
+            _pendingPlacements[name] = (new KazoDesktopCell(target.Column + ((target.Row + offset) / _rows), (target.Row + offset) % _rows), DateTimeOffset.UtcNow);
             offset++;
         }
 
@@ -702,10 +702,10 @@ public partial class FileViewDesktop : IAsyncDisposable
         }
     }
 
-    private static Dictionary<string, HackDesktopCell> Merge(IReadOnlyDictionary<string, HackDesktopCell> displayed, IReadOnlyDictionary<string, HackDesktopCell> moved)
+    private static Dictionary<string, KazoDesktopCell> Merge(IReadOnlyDictionary<string, KazoDesktopCell> displayed, IReadOnlyDictionary<string, KazoDesktopCell> moved)
     {
-        Dictionary<string, HackDesktopCell> merged = new(displayed, StringComparer.Ordinal);
-        foreach ((string key, HackDesktopCell cell) in moved)
+        Dictionary<string, KazoDesktopCell> merged = new(displayed, StringComparer.Ordinal);
+        foreach ((string key, KazoDesktopCell cell) in moved)
         {
             if (merged.ContainsKey(key))
             {
@@ -738,7 +738,7 @@ public partial class FileViewDesktop : IAsyncDisposable
     }
 
     /// <summary>One icon on the grid: a file of the folder, or a system icon (<see cref="Item"/> is <see langword="null"/>).</summary>
-    private sealed record DesktopTile(string Key, FileViewItem? Item, string Label, HackDesktopCell Cell, bool AcceptsDrop);
+    private sealed record DesktopTile(string Key, FileViewItem? Item, string Label, KazoDesktopCell Cell, bool AcceptsDrop);
 
     /// <summary>The icons dragged on their own desktop, and the one under the pointer.</summary>
     private sealed record DesktopDrag(IReadOnlyList<string> Keys, string Anchor);

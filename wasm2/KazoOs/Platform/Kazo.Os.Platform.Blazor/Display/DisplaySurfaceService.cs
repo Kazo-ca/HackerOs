@@ -59,7 +59,7 @@ public sealed class DisplaySurfaceService : IDisplaySurfaceService, IAsyncDispos
         _notifications = notifications;
         _session = session;
         _clock = clock;
-        _text = Strings.For(() => locale?.Culture ?? HackLocale.DefaultLanguage);
+        _text = Strings.For(() => locale?.Culture ?? KazoLocale.DefaultLanguage);
     }
 
     /// <inheritdoc />

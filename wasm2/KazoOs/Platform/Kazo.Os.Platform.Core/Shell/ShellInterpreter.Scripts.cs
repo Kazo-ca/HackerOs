@@ -37,16 +37,16 @@ public sealed partial class ShellInterpreter
         string content;
         try
         {
-            using (HackExecutionContext.Enter(session.Host, session.CurrentDirectory))
+            using (KazoExecutionContext.Enter(session.Host, session.CurrentDirectory))
             {
-                if (await HackDirectory.ExistsAsync(path, exec.Token).ConfigureAwait(false))
+                if (await KazoDirectory.ExistsAsync(path, exec.Token).ConfigureAwait(false))
                 {
                     await exec.Err.WriteLineAsync(prefix + exec.Text["Shell.Error", path, exec.Text["Errno.IsDirectory"]]).ConfigureAwait(false);
                     exec.Line.LastFailure = ShellFailure.Fault;
                     return NotExecutableExitCode;
                 }
 
-                HackFileInfo file = await HackFileInfo.GetAsync(path, exec.Token).ConfigureAwait(false);
+                KazoFileInfo file = await KazoFileInfo.GetAsync(path, exec.Token).ConfigureAwait(false);
                 if (!file.Exists)
                 {
                     await exec.Err.WriteLineAsync(prefix + exec.Text["Shell.Error", path, exec.Text["Errno.NoSuchFile"]]).ConfigureAwait(false);
@@ -65,7 +65,7 @@ public sealed partial class ShellInterpreter
                     return NotExecutableExitCode;
                 }
 
-                content = await HackFile.ReadAllTextAsync(path, exec.Token).ConfigureAwait(false);
+                content = await KazoFile.ReadAllTextAsync(path, exec.Token).ConfigureAwait(false);
             }
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException)
@@ -86,7 +86,7 @@ public sealed partial class ShellInterpreter
         if (ReadShebang(content) is { } shebang)
         {
             (string interpreter, string? interpreterArgument) = shebang;
-            string interpreterName = HackPath.GetFileName(interpreter) ?? interpreter;
+            string interpreterName = KazoPath.GetFileName(interpreter) ?? interpreter;
             if (interpreterName == "env" && interpreterArgument is not null)
             {
                 // #!/usr/bin/env bash: env looks the interpreter up on PATH.
@@ -131,7 +131,7 @@ public sealed partial class ShellInterpreter
     /// Gets whether the current user may execute <paramref name="file"/>: the owner's <c>x</c> bit
     /// for the owner, the group's or others' bit otherwise; root needs any <c>x</c> bit.
     /// </summary>
-    private static bool IsExecutableBy(HackFileInfo file, ShellSession session)
+    private static bool IsExecutableBy(KazoFileInfo file, ShellSession session)
     {
         UnixFileMode mode = file.UnixFileMode;
         const UnixFileMode anyExecute = UnixFileMode.UserExecute | UnixFileMode.GroupExecute | UnixFileMode.OtherExecute;
@@ -264,15 +264,15 @@ public sealed partial class ShellInterpreter
 
         try
         {
-            using (HackExecutionContext.Enter(session.Host, session.CurrentDirectory))
+            using (KazoExecutionContext.Enter(session.Host, session.CurrentDirectory))
             {
-                if (await HackDirectory.ExistsAsync(path, exec.Token).ConfigureAwait(false))
+                if (await KazoDirectory.ExistsAsync(path, exec.Token).ConfigureAwait(false))
                 {
                     await exec.Err.WriteLineAsync($"{name}: " + exec.Text["Shell.Error", path, exec.Text["Errno.IsDirectory"]]).ConfigureAwait(false);
                     return null;
                 }
 
-                return await HackFile.ReadAllTextAsync(path, exec.Token).ConfigureAwait(false);
+                return await KazoFile.ReadAllTextAsync(path, exec.Token).ConfigureAwait(false);
             }
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException)
@@ -369,7 +369,7 @@ public sealed partial class ShellInterpreter
         int status = 1;
         try
         {
-            using (HackExecutionContext.Enter(context))
+            using (KazoExecutionContext.Enter(context))
             {
                 status = source switch
                 {

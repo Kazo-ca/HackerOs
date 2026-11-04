@@ -5,7 +5,7 @@ namespace Kazo.Os.Platform.Blazor.ContextMenus;
 /// <summary>One drawn row of a menu level: a visible entry, or a separator between two groups.</summary>
 /// <param name="Item">The entry, or <see langword="null"/> for a separator.</param>
 /// <param name="Submenu">The entry's arranged submenu, when it opens one.</param>
-public sealed record ContextMenuRow(HackMenuItemDefinition? Item, ContextMenuLevel? Submenu)
+public sealed record ContextMenuRow(KazoMenuItemDefinition? Item, ContextMenuLevel? Submenu)
 {
     /// <summary>The separator row.</summary>
     public static readonly ContextMenuRow Separator = new(null, null);
@@ -31,14 +31,14 @@ public static class ContextMenuLayout
     /// <summary>Arranges a menu level.</summary>
     /// <param name="groups">The level's groups, in order.</param>
     /// <returns>The level, or <see langword="null"/> when nothing in it is visible.</returns>
-    public static ContextMenuLevel? Arrange(IEnumerable<HackMenuGroupDefinition> groups)
+    public static ContextMenuLevel? Arrange(IEnumerable<KazoMenuGroupDefinition> groups)
     {
         ArgumentNullException.ThrowIfNull(groups);
         List<ContextMenuRow> rows = [];
-        foreach (HackMenuGroupDefinition group in groups)
+        foreach (KazoMenuGroupDefinition group in groups)
         {
             List<ContextMenuRow> visible = [];
-            foreach (HackMenuItemDefinition item in group.Items)
+            foreach (KazoMenuItemDefinition item in group.Items)
             {
                 if (!item.IsVisible)
                 {

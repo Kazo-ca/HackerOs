@@ -108,8 +108,8 @@ public sealed class AppDefinitionInspectorTests
     {
         string abstractions = typeof(AppDefinition).Assembly.Location;
 
-        Assert.Equal(HackerOsSdk.Version, AppDefinitionInspector.SdkMinimumVersionOf(Fixtures, ["/missing/Kazo.Os.App.Abstractions.dll", abstractions]));
-        Assert.Matches(@"^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?$", HackerOsSdk.Version);
+        Assert.Equal(KazoOsSdk.Version, AppDefinitionInspector.SdkMinimumVersionOf(Fixtures, ["/missing/Kazo.Os.App.Abstractions.dll", abstractions]));
+        Assert.Matches(@"^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?$", KazoOsSdk.Version);
     }
 
     [Fact]
@@ -121,7 +121,7 @@ public sealed class AppDefinitionInspectorTests
             Directory.CreateDirectory(Path.Combine(root, "data"));
             File.WriteAllText(Path.Combine(root, "data", "table.json"), "[1,2,3]");
 
-            InspectionResult result = AppDefinitionInspector.Inspect(Fixtures, [typeof(AssetApp)], HackerOsSdk.Version, root);
+            InspectionResult result = AppDefinitionInspector.Inspect(Fixtures, [typeof(AssetApp)], KazoOsSdk.Version, root);
 
             Assert.True(result.IsSuccess, string.Join("; ", result.Diagnostics));
             AssetManifest asset = Assert.Single(Assert.Single(result.Manifests).Manifest.Assets);
@@ -137,14 +137,14 @@ public sealed class AppDefinitionInspectorTests
     [Fact]
     public void A_declared_asset_without_a_file_fails_with_HOSAPP0023()
     {
-        InspectionResult result = AppDefinitionInspector.Inspect(Fixtures, [typeof(AssetApp)], HackerOsSdk.Version, Path.Combine(Path.GetTempPath(), "no-such-wwwroot"));
+        InspectionResult result = AppDefinitionInspector.Inspect(Fixtures, [typeof(AssetApp)], KazoOsSdk.Version, Path.Combine(Path.GetTempPath(), "no-such-wwwroot"));
 
         Assert.Contains(result.Diagnostics, diagnostic => diagnostic.Code == GeneratorCodes.AssetMissing);
     }
 
     [Fact]
     public void Sdk_minimum_version_falls_back_to_the_tool_version() =>
-        Assert.Equal(HackerOsSdk.Version, AppDefinitionInspector.SdkMinimumVersionOf(Fixtures, []));
+        Assert.Equal(KazoOsSdk.Version, AppDefinitionInspector.SdkMinimumVersionOf(Fixtures, []));
 
     [Fact]
     public void Diagnostic_uses_msbuild_canonical_error_format() =>

@@ -35,7 +35,7 @@ public sealed class IndexedDbAuditRepository : IPersistentAuditRepository, IAsyn
             IndexedDbTransactionMode.ReadWrite,
             [new IndexedDbOperation(
                 "add",
-                HackerOsIndexedDbSchema.AuditStoreName,
+                KazoOsIndexedDbSchema.AuditStoreName,
                 Value: record)],
             cancellationToken).ConfigureAwait(false);
     }
@@ -50,7 +50,7 @@ public sealed class IndexedDbAuditRepository : IPersistentAuditRepository, IAsyn
             IndexedDbTransactionMode.ReadOnly,
             [new IndexedDbOperation(
                 "getAll",
-                HackerOsIndexedDbSchema.AuditStoreName,
+                KazoOsIndexedDbSchema.AuditStoreName,
                 IndexName: "timestampUtcMs")],
             cancellationToken).ConfigureAwait(false);
 

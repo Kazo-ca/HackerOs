@@ -57,17 +57,17 @@ public sealed class UsersPanelTests
         Assert.Contains("users.manage", html, StringComparison.Ordinal);
     }
 
-    private static HackUserAccount Account(string login, string name, bool isGuest, bool isCurrent) =>
+    private static KazoUserAccount Account(string login, string name, bool isGuest, bool isCurrent) =>
         new(login, name, AppAuthority.Administrator, true, !isGuest, DateTimeOffset.UnixEpoch, isCurrent) { IsGuest = isGuest };
 
-    private sealed class FakeUserAccounts(params HackUserAccount[] accounts) : IAppUserAccountsGateway
+    private sealed class FakeUserAccounts(params KazoUserAccount[] accounts) : IAppUserAccountsGateway
     {
         public int GuestRequests { get; private set; }
 
         public bool AcceptGuestRequest { get; init; } = true;
 
-        public ValueTask<IReadOnlyList<HackUserAccount>> ListAsync(CancellationToken cancellationToken = default) =>
-            ValueTask.FromResult<IReadOnlyList<HackUserAccount>>(accounts);
+        public ValueTask<IReadOnlyList<KazoUserAccount>> ListAsync(CancellationToken cancellationToken = default) =>
+            ValueTask.FromResult<IReadOnlyList<KazoUserAccount>>(accounts);
 
         public ValueTask ChangePasswordAsync(string currentPassword, string newPassword, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
@@ -122,7 +122,7 @@ public sealed class UsersPanelTests
         {
             await _renderer.Dispatcher.InvokeAsync(async () =>
             {
-                using (HackExecutionContext.Enter(_context))
+                using (KazoExecutionContext.Enter(_context))
                 {
                     await action(Panel);
                 }

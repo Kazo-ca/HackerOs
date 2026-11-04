@@ -24,7 +24,7 @@
 @badge("new")
 @Html.Raw("<hr class=\"raw\" />")
 <p class="counter">@(Counter.Instance > 0 ? "ok" : "ko")</p>
-<p class="component">@(await Component.InvokeAsync<HackLink>(new Dictionary<string, object?> { ["Action"] = "Edit", ["ChildContent"] = (Microsoft.AspNetCore.Components.RenderFragment)(b => b.AddContent(0, "Edit")) }))</p>
+<p class="component">@(await Component.InvokeAsync<KazoLink>(new Dictionary<string, object?> { ["Action"] = "Edit", ["ChildContent"] = (Microsoft.AspNetCore.Components.RenderFragment)(b => b.AddContent(0, "Edit")) }))</p>
 <p class="json">@Json.Serialize(Model.All[0])</p>
 @if (IsDone(Model.All[1]))
 {

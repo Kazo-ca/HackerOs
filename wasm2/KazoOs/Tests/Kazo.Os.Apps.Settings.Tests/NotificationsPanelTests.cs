@@ -156,7 +156,7 @@ public sealed class NotificationsPanelTests
             harness._root = await harness._renderer.Dispatcher.InvokeAsync(() =>
             {
                 // The panel reads the ambient app, as in the Settings window.
-                using (HackExecutionContext.Enter(context))
+                using (KazoExecutionContext.Enter(context))
                 {
                     return harness._renderer.RenderComponentAsync<PanelHost>(
                         ParameterView.FromDictionary(new Dictionary<string, object?>
@@ -174,7 +174,7 @@ public sealed class NotificationsPanelTests
         public Task RunAsync(Func<NotificationsPanel, Task> action) =>
             _renderer.Dispatcher.InvokeAsync(async () =>
             {
-                using (HackExecutionContext.Enter(_context))
+                using (KazoExecutionContext.Enter(_context))
                 {
                     await action(Panel);
                 }

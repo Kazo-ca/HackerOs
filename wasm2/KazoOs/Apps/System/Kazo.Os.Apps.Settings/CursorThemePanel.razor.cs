@@ -14,7 +14,7 @@ namespace Kazo.Os.Apps.Settings;
 /// chosen id to the <c>theme</c> key of <c>~/.config/hackeros/cursors.config</c>.
 /// </summary>
 /// <remarks>
-/// The panel reads the folders itself with <see cref="HackDirectory"/> and <see cref="HackFile"/>
+/// The panel reads the folders itself with <see cref="KazoDirectory"/> and <see cref="KazoFile"/>
 /// (public SDK only, ADR 0055), so a theme copied into a folder shows the next time the page opens.
 /// The shell re-reads <c>cursors.config</c> and draws the theme at once. The machine's default
 /// (<c>/etc/hackeros/cursors.config</c>, also used by the sign-in screen) is an administrator's
@@ -30,7 +30,7 @@ public sealed partial class CursorThemePanel
 
     private const int MaxDiagnosticsShown = 5;
 
-    private HackSettingsDocument? _document;
+    private KazoSettingsDocument? _document;
     private CursorThemeLibraryResult _library = CursorThemeLibraryResult.Empty;
     private string _selectedId = CursorThemeCatalog.SystemId;
     private string? _message;
@@ -68,7 +68,7 @@ public sealed partial class CursorThemePanel
     {
         try
         {
-            _document = await HackSettings.OpenSystemAsync(Context, DocumentId, Context.CancellationToken);
+            _document = await KazoSettings.OpenSystemAsync(Context, DocumentId, Context.CancellationToken);
             _document.Changed += OnDocumentChanged;
             _selectedId = _document.Get<string>(ThemeKey);
         }
@@ -78,10 +78,10 @@ public sealed partial class CursorThemePanel
         }
 
         _library = await CursorThemeLibrary.LoadAsync(
-            async (directory, token) => await HackDirectory.GetDirectoriesAsync(directory, cancellationToken: token),
-            (path, token) => HackFile.ReadAllTextAsync(path, token),
-            (path, token) => HackFile.ReadAllBytesAsync(path, token),
-            HackUser.Describe(Context).HomeDirectory,
+            async (directory, token) => await KazoDirectory.GetDirectoriesAsync(directory, cancellationToken: token),
+            (path, token) => KazoFile.ReadAllTextAsync(path, token),
+            (path, token) => KazoFile.ReadAllBytesAsync(path, token),
+            KazoUser.Describe(Context).HomeDirectory,
             Context.CancellationToken);
         _loaded = true;
     }
@@ -103,7 +103,7 @@ public sealed partial class CursorThemePanel
             _selectedId = _document.Get<string>(ThemeKey);
             ShowMessage(L["Cursors.Saved"], isError: false);
         }
-        catch (HackSettingLockedException exception)
+        catch (KazoSettingLockedException exception)
         {
             ShowMessage(exception.Message, isError: true);
         }
@@ -130,7 +130,7 @@ public sealed partial class CursorThemePanel
     }
 
     /// <summary>An external edit (<c>nano ~/.config/hackeros/cursors.config</c>) changed the file.</summary>
-    private void OnDocumentChanged(object? sender, HackSettingsChangedEventArgs args) =>
+    private void OnDocumentChanged(object? sender, KazoSettingsChangedEventArgs args) =>
         _ = InvokeAsync(() =>
         {
             if (!_isBusy && _document is not null)

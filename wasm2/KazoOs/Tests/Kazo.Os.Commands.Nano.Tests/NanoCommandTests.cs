@@ -247,7 +247,7 @@ public sealed class NanoCommandTests
         public IAppProcessGateway Processes => throw new NotSupportedException();
 
         /// <summary>The language of the process; English unless a test sets it (ADR 0104).</summary>
-        public System.Globalization.CultureInfo Culture { get; init; } = Kazo.Os.AppSdk.Globalization.HackLocale.DefaultLanguage;
+        public System.Globalization.CultureInfo Culture { get; init; } = Kazo.Os.AppSdk.Globalization.KazoLocale.DefaultLanguage;
     }
 
     private sealed class TestFullScreenTerminal(params TerminalKeyEvent[] keys) : IFullScreenTerminalSession

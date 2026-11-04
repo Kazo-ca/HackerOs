@@ -30,16 +30,16 @@ public static class ShellErrorText
         ArgumentNullException.ThrowIfNull(exception);
         string? key = exception switch
         {
-            HackUnauthorizedAccessException { ErrorCode: FileSystemErrorCode.NotFile } => "Errno.IsDirectory",
+            KazoUnauthorizedAccessException { ErrorCode: FileSystemErrorCode.NotFile } => "Errno.IsDirectory",
             UnauthorizedAccessException => "Errno.PermissionDenied",
-            HackFileNotFoundException or HackDirectoryNotFoundException => "Errno.NoSuchFile",
-            HackIOException { ErrorCode: FileSystemErrorCode.NotDirectory } => "Errno.NotDirectory",
-            HackIOException { ErrorCode: FileSystemErrorCode.NoSpace } => "Errno.NoSpace",
-            HackIOException { ErrorCode: FileSystemErrorCode.FileTooLarge } => "Errno.FileTooLarge",
-            HackIOException { ErrorCode: FileSystemErrorCode.TooManyOpenFiles } => "Errno.TooManyOpenFiles",
+            KazoFileNotFoundException or KazoDirectoryNotFoundException => "Errno.NoSuchFile",
+            KazoIOException { ErrorCode: FileSystemErrorCode.NotDirectory } => "Errno.NotDirectory",
+            KazoIOException { ErrorCode: FileSystemErrorCode.NoSpace } => "Errno.NoSpace",
+            KazoIOException { ErrorCode: FileSystemErrorCode.FileTooLarge } => "Errno.FileTooLarge",
+            KazoIOException { ErrorCode: FileSystemErrorCode.TooManyOpenFiles } => "Errno.TooManyOpenFiles",
             ArgumentException => "Errno.InvalidPath",
             _ => null
         };
-        return key is null ? exception.Message : HackLocalization.GetLocalizer<Strings>(context)[key].Value;
+        return key is null ? exception.Message : KazoLocalization.GetLocalizer<Strings>(context)[key].Value;
     }
 }

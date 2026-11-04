@@ -11,7 +11,7 @@ public sealed partial class BoardLayout
     private readonly BoardSession _session = new();
 
     [CascadingParameter]
-    private HackWebSite? Site { get; set; }
+    private KazoWebSite? Site { get; set; }
 
     private string? Visitor => _session.DisplayName;
 

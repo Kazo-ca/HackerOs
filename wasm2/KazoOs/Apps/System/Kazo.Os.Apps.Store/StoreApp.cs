@@ -10,8 +10,8 @@ namespace Kazo.Os.Apps.Store;
 /// </summary>
 /// <remarks>
 /// A system app (the host references it with <c>IsSystemApp="true"</c>), so it cannot be
-/// uninstalled, like Settings. It uses only the public SDK: <c>HackAppPackages</c> (<c>apps.manage</c>,
-/// dangerous, granted to system apps without a prompt) and <c>HackApps.LaunchAsync</c>
+/// uninstalled, like Settings. It uses only the public SDK: <c>KazoAppPackages</c> (<c>apps.manage</c>,
+/// dangerous, granted to system apps without a prompt) and <c>KazoApps.LaunchAsync</c>
 /// (<c>apps.launch</c>) for « Open ».
 /// </remarks>
 [AppManifest]

@@ -85,7 +85,7 @@ public sealed class ScreenLayerTests
         Description = "Veil fixture.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Scanner", "Scanner.ScannerWindow"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         Capabilities = [AppCapabilities.NetworkRealAccess],

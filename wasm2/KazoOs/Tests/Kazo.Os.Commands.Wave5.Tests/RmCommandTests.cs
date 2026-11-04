@@ -178,7 +178,7 @@ public sealed class RmCommandTests
         TerminalExecutionContext context = new(
             app, arguments, new StringReader(string.Empty), output, error, Home, new Dictionary<string, string>());
 
-        using IDisposable scope = HackExecutionContext.Enter(app, Home);
+        using IDisposable scope = KazoExecutionContext.Enter(app, Home);
         int exitCode = await command.ExecuteAsync(context, CancellationToken.None);
         return (exitCode, output.ToString(), error.ToString());
     }

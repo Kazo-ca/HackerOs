@@ -255,7 +255,7 @@ public sealed class ProcFileSystemProviderTests
             "RssFile:\t1200 kB\n" +
             "VmData:\t512 kB\n" +
             "VmExe:\t40 kB\n" +
-            "HackAllocBytes:\t123456789\n" +
+            "KazoAllocBytes:\t123456789\n" +
             "Cpu:\t",
             status,
             StringComparison.Ordinal);
@@ -272,7 +272,7 @@ public sealed class ProcFileSystemProviderTests
         string status = await fixture.ReadTextAsync("/proc/42/status", fixture.AppContext(42, Read));
 
         Assert.DoesNotContain("RssAnon", status, StringComparison.Ordinal);
-        Assert.DoesNotContain("HackAllocBytes", status, StringComparison.Ordinal);
+        Assert.DoesNotContain("KazoAllocBytes", status, StringComparison.Ordinal);
         Assert.Contains("MemSource:\tsimulated\n", status, StringComparison.Ordinal);
     }
 

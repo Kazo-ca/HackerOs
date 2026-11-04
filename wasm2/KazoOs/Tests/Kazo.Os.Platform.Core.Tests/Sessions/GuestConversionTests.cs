@@ -32,7 +32,7 @@ public sealed class GuestConversionTests
     {
         LocalUser guest = await StartGuestWithFilesAsync();
 
-        LocalUser alice = await _guests.MigrateAsync(new HackNewUserAccount(" alice ", " Alice ", AppAuthority.User, NewPassword));
+        LocalUser alice = await _guests.MigrateAsync(new KazoNewUserAccount(" alice ", " Alice ", AppAuthority.User, NewPassword));
 
         Assert.Equal(guest.Id, alice.Id);
         Assert.False(alice.IsGuest);
@@ -64,7 +64,7 @@ public sealed class GuestConversionTests
     {
         LocalUser guest = await StartGuestWithFilesAsync();
 
-        LocalUser bob = await _guests.ReplaceAsync(new HackNewUserAccount("bob", "Bob", AppAuthority.User, NewPassword));
+        LocalUser bob = await _guests.ReplaceAsync(new KazoNewUserAccount("bob", "Bob", AppAuthority.User, NewPassword));
 
         Assert.NotEqual(guest.Id, bob.Id);
         Assert.Equal(AppAuthority.Administrator, bob.Authority);
@@ -84,7 +84,7 @@ public sealed class GuestConversionTests
     public async Task The_guest_can_never_come_back_after_a_conversion()
     {
         await StartGuestWithFilesAsync();
-        await _guests.ReplaceAsync(new HackNewUserAccount("bob", "Bob", AppAuthority.Administrator, NewPassword));
+        await _guests.ReplaceAsync(new KazoNewUserAccount("bob", "Bob", AppAuthority.Administrator, NewPassword));
 
         Assert.False(await _guests.CanCreateAsync());
         await Assert.ThrowsAsync<InvalidOperationException>(() => _guests.CreateAsync("Guest").AsTask());
@@ -97,7 +97,7 @@ public sealed class GuestConversionTests
         await _harness.Session.LoginAsync(guest.LoginName, password: null);
 
         await Assert.ThrowsAsync<InvalidOperationException>(
-            () => _guests.MigrateAsync(new HackNewUserAccount("alice", "Alice", AppAuthority.Administrator, NewPassword)).AsTask());
+            () => _guests.MigrateAsync(new KazoNewUserAccount("alice", "Alice", AppAuthority.Administrator, NewPassword)).AsTask());
         Assert.True((await _harness.Users.FindByIdAsync(guest.Id))!.IsGuest);
         Assert.Contains(_harness.Audit.Entries, entry => entry.Action == "users.guest-migrate" && entry.Outcome == AuditOutcome.Denied);
     }
@@ -111,7 +111,7 @@ public sealed class GuestConversionTests
         LocalUser guest = await StartGuestWithFilesAsync();
 
         await Assert.ThrowsAsync<ArgumentException>(
-            () => _guests.MigrateAsync(new HackNewUserAccount(login, "Someone", AppAuthority.Administrator, NewPassword)).AsTask());
+            () => _guests.MigrateAsync(new KazoNewUserAccount(login, "Someone", AppAuthority.Administrator, NewPassword)).AsTask());
 
         Assert.True((await _harness.Users.FindByIdAsync(guest.Id))!.IsGuest);
         Assert.NotNull(await _harness.StatAsync("/home/guest"));
@@ -123,7 +123,7 @@ public sealed class GuestConversionTests
         await StartGuestWithFilesAsync();
 
         await Assert.ThrowsAsync<ArgumentException>(
-            () => _guests.ReplaceAsync(new HackNewUserAccount("bob", "Bob", AppAuthority.Administrator, "short")).AsTask());
+            () => _guests.ReplaceAsync(new KazoNewUserAccount("bob", "Bob", AppAuthority.Administrator, "short")).AsTask());
         Assert.NotNull(await _guests.FindLoneGuestAsync());
     }
 
@@ -131,7 +131,7 @@ public sealed class GuestConversionTests
     public async Task Nothing_to_convert_without_a_guest()
     {
         await Assert.ThrowsAsync<InvalidOperationException>(
-            () => _guests.MigrateAsync(new HackNewUserAccount("alice", "Alice", AppAuthority.Administrator, NewPassword)).AsTask());
+            () => _guests.MigrateAsync(new KazoNewUserAccount("alice", "Alice", AppAuthority.Administrator, NewPassword)).AsTask());
     }
 
     /// <summary>Creates the guest, signs it in to write a document and a setting, then signs it out.</summary>

@@ -17,7 +17,7 @@ public sealed class CodeEditorLocalizationTests
     [Fact]
     public void Services_InAFrenchProcess_AnswerInFrench()
     {
-        using IDisposable scope = HackExecutionContext.Enter(Process("fr_FR.UTF-8"));
+        using IDisposable scope = KazoExecutionContext.Enter(Process("fr_FR.UTF-8"));
 
         Assert.Equal("Sans titre-3", CodeEditorDocument.CreateNew(3).Title);
         Assert.Equal("Un nom de fichier ou de dossier est requis.", CodeEditorWorkspace.ValidateName(" "));
@@ -29,7 +29,7 @@ public sealed class CodeEditorLocalizationTests
     {
         Assert.Equal("Untitled-1", CodeEditorDocument.CreateNew(1).Title);
 
-        using IDisposable scope = HackExecutionContext.Enter(Process("en_US.UTF-8"));
+        using IDisposable scope = KazoExecutionContext.Enter(Process("en_US.UTF-8"));
         Assert.Equal("A file or folder name must be provided.", CodeEditorWorkspace.ValidateName(""));
     }
 

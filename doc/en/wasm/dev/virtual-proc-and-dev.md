@@ -91,7 +91,7 @@ MemSource:	simulated
 ```
 
 `Name` is the last segment of the `appId`, truncated to 15 characters. For a
-`HackBackground` task (ADR 0128, ADR 0140, [`background-jobs.md`](../framework/background-jobs.md)),
+`KazoBackground` task (ADR 0128, ADR 0140, [`background-jobs.md`](../framework/background-jobs.md)),
 `Name` is the task's name (`code-editor:sea`, truncated the same way) and two
 lines follow `Session`: `Job:` (the full name, `code-editor:search`) and
 `Host:` (`MainThread` or `Worker`). `Cpu` is a percentage of one core
@@ -104,7 +104,7 @@ code); see [`resource-accounting.md`](resource-accounting.md).
 When a process's memory is measured (ADR 0068,
 [`memory-accounting.md`](memory-accounting.md)), five lines follow `VmRSS`, in
 Linux order: `RssAnon`, `RssFile`, `VmData` (kernel share), `VmExe` in kB, then
-`HackAllocBytes` (bytes allocated since the process started, without a unit).
+`KazoAllocBytes` (bytes allocated since the process started, without a unit).
 `VmRSS = RssAnon + RssFile + VmData`. A simulated process has none of these
 lines: the format is exactly that of before phase 5.
 
@@ -228,7 +228,7 @@ column displays the Linux letter (`R`, `S`...). `kill` keeps
   in phase 3. It is done as early as phase 1, as section 5.4 of the plan asks,
   because it depends only on `/proc`. The phase 3 commands rework keeps it. The
   task manager moved to `/proc` in phase 4 ([`task-manager.md`](task-manager.md),
-  `HackProcess`).
+  `KazoProcess`).
 - **No change events**: the `IVirtualFileSystemProvider` marker is checked at
   the only place that publishes, `FileSystemService`.
 - **Mutations refused by the provider itself**, in addition to the mode bits:

@@ -130,7 +130,7 @@ public sealed class MountCommandTests
             app, arguments, new StringReader(string.Empty), stdout, stderr,
             "/home/alice", new Dictionary<string, string> { ["HOME"] = "/home/alice" });
 
-        using IDisposable scope = HackExecutionContext.Enter(app);
+        using IDisposable scope = KazoExecutionContext.Enter(app);
         int exitCode = await command(manifest).ExecuteAsync(context, CancellationToken.None);
         return new Run(exitCode, stdout.ToString(), stderr.ToString());
     }

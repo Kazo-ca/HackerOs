@@ -80,7 +80,7 @@ public sealed class WhatsNewService
         _logger = logger;
         _notifications = notifications;
         _currentUser = currentUser ?? (static () => null);
-        _language = language ?? (static () => Kazo.Os.AppSdk.Globalization.HackLocale.DefaultLanguage);
+        _language = language ?? (static () => Kazo.Os.AppSdk.Globalization.KazoLocale.DefaultLanguage);
         _time = time ?? TimeProvider.System;
     }
 
@@ -123,16 +123,16 @@ public sealed class WhatsNewService
     /// <summary>Gets the change list of the session user in <paramref name="culture"/>'s language, with its new entries.</summary>
     /// <param name="culture">The language of the texts.</param>
     /// <param name="cancellationToken">Cancels the read.</param>
-    public async ValueTask<HackChangeList> GetAsync(CultureInfo culture, CancellationToken cancellationToken = default)
+    public async ValueTask<KazoChangeList> GetAsync(CultureInfo culture, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(culture);
         WhatsNewCatalog catalog = await GetCatalogAsync(cancellationToken).ConfigureAwait(false);
         IReadOnlySet<string> seen = await GetSeenAsync(catalog, cancellationToken).ConfigureAwait(false);
-        List<HackChangeGroup> groups = [];
+        List<KazoChangeGroup> groups = [];
         int newCount = 0;
         foreach (WhatsNewCatalogGroup group in catalog.Groups)
         {
-            List<HackChangeEntry> entries = [];
+            List<KazoChangeEntry> entries = [];
             foreach (WhatsNewCatalogEntry entry in group.Entries)
             {
                 bool isNew = !seen.Contains(entry.Id);
@@ -140,10 +140,10 @@ public sealed class WhatsNewService
                 entries.Add(entry.Localize(culture, isNew));
             }
 
-            groups.Add(new HackChangeGroup(group.Version, group.Since, group.Date, entries));
+            groups.Add(new KazoChangeGroup(group.Version, group.Since, group.Date, entries));
         }
 
-        return new HackChangeList(groups, newCount);
+        return new KazoChangeList(groups, newCount);
     }
 
     /// <summary>Gets the number of entries the session user has not seen (the Start menu dot, the sign-in notification).</summary>

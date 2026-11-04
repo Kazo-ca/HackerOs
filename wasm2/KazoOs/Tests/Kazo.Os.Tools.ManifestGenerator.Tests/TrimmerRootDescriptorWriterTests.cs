@@ -11,12 +11,12 @@ public sealed class TrimmerRootDescriptorWriterTests : IDisposable
     public void Dispose() => Directory.Delete(_directory, recursive: true);
 
     private AppManifest Manifest(Type definition) => Assert.Single(
-        AppDefinitionInspector.Inspect(typeof(ValidCommandApp).Assembly, [definition], HackerOsSdk.Version).Manifests).Manifest;
+        AppDefinitionInspector.Inspect(typeof(ValidCommandApp).Assembly, [definition], KazoOsSdk.Version).Manifests).Manifest;
 
     private string WriteManifest(Type definition, string fileName)
     {
         GeneratedManifest generated = Assert.Single(
-            AppDefinitionInspector.Inspect(typeof(ValidCommandApp).Assembly, [definition], HackerOsSdk.Version).Manifests);
+            AppDefinitionInspector.Inspect(typeof(ValidCommandApp).Assembly, [definition], KazoOsSdk.Version).Manifests);
         string path = Path.Combine(_directory, fileName);
         File.WriteAllText(path, generated.CanonicalJson);
         return path;

@@ -284,7 +284,7 @@ public sealed class ChangeEntriesTests
     private static Version CurrentVersion()
     {
         string text = XDocument.Load(Path.Combine(Root, "build", "Versions.props"))
-            .Descendants("HackerOsVersion")
+            .Descendants("KazoOsVersion")
             .Single()
             .Value;
         return Version.Parse(text.Split('-')[0]);

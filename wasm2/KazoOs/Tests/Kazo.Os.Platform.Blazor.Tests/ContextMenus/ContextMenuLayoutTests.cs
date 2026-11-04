@@ -10,7 +10,7 @@ public sealed class ContextMenuLayoutTests
     public void A_separator_is_drawn_only_between_two_visible_groups()
     {
         // The plan's file menu: "Open with" alone in its group; hidden, its separator goes too.
-        HackMenuDefinition menu = Menu(
+        KazoMenuDefinition menu = Menu(
             ["open"],
             ["open-with:hidden"],
             ["rename", "copy"],
@@ -26,7 +26,7 @@ public sealed class ContextMenuLayoutTests
     [Fact]
     public void The_menu_never_starts_or_ends_with_a_separator()
     {
-        HackMenuDefinition menu = Menu(["first:hidden"], ["middle"], ["last:hidden"]);
+        KazoMenuDefinition menu = Menu(["first:hidden"], ["middle"], ["last:hidden"]);
 
         Assert.Equal(["middle"], Describe(ContextMenuLayout.Arrange(menu.Groups)!));
     }
@@ -40,16 +40,16 @@ public sealed class ContextMenuLayoutTests
     [Fact]
     public void A_submenu_with_no_visible_entry_hides_its_parent_and_the_rule_applies_inside()
     {
-        HackMenuDefinition menu = new("files");
-        HackMenuGroupDefinition group = menu.AddGroup();
-        HackMenuItemDefinition empty = group.Add("empty", "Empty");
-        empty.Children.Add(new HackMenuGroupDefinition());
+        KazoMenuDefinition menu = new("files");
+        KazoMenuGroupDefinition group = menu.AddGroup();
+        KazoMenuItemDefinition empty = group.Add("empty", "Empty");
+        empty.Children.Add(new KazoMenuGroupDefinition());
         empty.Children[0].Add("gone", "Gone").IsVisible = false;
-        HackMenuItemDefinition send = group.Add("send", "Send to");
-        send.Children.Add(new HackMenuGroupDefinition());
+        KazoMenuItemDefinition send = group.Add("send", "Send to");
+        send.Children.Add(new KazoMenuGroupDefinition());
         send.Children[0].Add("desktop", "Desktop");
-        send.Children.Add(new HackMenuGroupDefinition());
-        send.Children.Add(new HackMenuGroupDefinition());
+        send.Children.Add(new KazoMenuGroupDefinition());
+        send.Children.Add(new KazoMenuGroupDefinition());
         send.Children[2].Add("mail", "Mail");
 
         ContextMenuLevel level = ContextMenuLayout.Arrange(menu.Groups)!;
@@ -62,7 +62,7 @@ public sealed class ContextMenuLayoutTests
     [Fact]
     public void Keys_skip_separators_and_disabled_entries_and_wrap_around()
     {
-        HackMenuDefinition menu = Menu(["open", "preview:disabled"], ["copy"]);
+        KazoMenuDefinition menu = Menu(["open", "preview:disabled"], ["copy"]);
         ContextMenuNavigator navigator = new(ContextMenuLayout.Arrange(menu.Groups)!, highlightFirst: true);
 
         Assert.Equal(0, navigator.Active.Highlight);
@@ -81,9 +81,9 @@ public sealed class ContextMenuLayoutTests
     [Fact]
     public void Right_opens_a_submenu_left_and_escape_close_it_and_enter_chooses()
     {
-        HackMenuDefinition menu = new("files");
-        HackMenuItemDefinition export = menu.AddGroup().Add("export", "Export");
-        export.Children.Add(new HackMenuGroupDefinition());
+        KazoMenuDefinition menu = new("files");
+        KazoMenuItemDefinition export = menu.AddGroup().Add("export", "Export");
+        export.Children.Add(new KazoMenuGroupDefinition());
         export.Children[0].Add("csv", "CSV");
         export.Children[0].Add("json", "JSON");
         ContextMenuNavigator navigator = new(ContextMenuLayout.Arrange(menu.Groups)!, highlightFirst: true);
@@ -109,10 +109,10 @@ public sealed class ContextMenuLayoutTests
     [Fact]
     public void Hovering_a_parent_keeps_its_open_submenu_and_another_row_closes_it()
     {
-        HackMenuDefinition menu = new("files");
-        HackMenuGroupDefinition group = menu.AddGroup();
-        HackMenuItemDefinition export = group.Add("export", "Export");
-        export.Children.Add(new HackMenuGroupDefinition());
+        KazoMenuDefinition menu = new("files");
+        KazoMenuGroupDefinition group = menu.AddGroup();
+        KazoMenuItemDefinition export = group.Add("export", "Export");
+        export.Children.Add(new KazoMenuGroupDefinition());
         export.Children[0].Add("csv", "CSV");
         group.Add("rename", "Rename");
         ContextMenuNavigator navigator = new(ContextMenuLayout.Arrange(menu.Groups)!, highlightFirst: false);
@@ -131,16 +131,16 @@ public sealed class ContextMenuLayoutTests
     }
 
     /// <summary>Builds a menu from groups of ids; ":hidden" and ":disabled" suffixes set the flags.</summary>
-    private static HackMenuDefinition Menu(params string[][] groups)
+    private static KazoMenuDefinition Menu(params string[][] groups)
     {
-        HackMenuDefinition menu = new("test");
+        KazoMenuDefinition menu = new("test");
         foreach (string[] ids in groups)
         {
-            HackMenuGroupDefinition group = menu.AddGroup();
+            KazoMenuGroupDefinition group = menu.AddGroup();
             foreach (string spec in ids)
             {
                 string[] parts = spec.Split(':');
-                HackMenuItemDefinition item = group.Add(parts[0], char.ToUpperInvariant(parts[0][0]) + parts[0][1..]);
+                KazoMenuItemDefinition item = group.Add(parts[0], char.ToUpperInvariant(parts[0][0]) + parts[0][1..]);
                 item.IsVisible = !parts.Contains("hidden");
                 item.IsDisabled = parts.Contains("disabled");
             }

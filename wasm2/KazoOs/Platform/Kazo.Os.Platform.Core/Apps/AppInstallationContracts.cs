@@ -102,7 +102,7 @@ public interface IAppInstallationService
     /// user scope, always written as the session user.
     /// </param>
     /// <param name="cancellationToken">Cancels the write.</param>
-    /// <exception cref="UnauthorizedAccessException">The file's permissions deny the write (a <c>HackUnauthorizedAccessException</c>).</exception>
+    /// <exception cref="UnauthorizedAccessException">The file's permissions deny the write (a <c>KazoUnauthorizedAccessException</c>).</exception>
     ValueTask<AppInstallationResult> UninstallAsync(
         string appId,
         AppInstallationScope scope,
@@ -117,7 +117,7 @@ public interface IAppInstallationService
     /// <param name="scope">File to write.</param>
     /// <param name="writer">See <see cref="UninstallAsync"/>.</param>
     /// <param name="cancellationToken">Cancels the write.</param>
-    /// <exception cref="UnauthorizedAccessException">The file's permissions deny the write (a <c>HackUnauthorizedAccessException</c>).</exception>
+    /// <exception cref="UnauthorizedAccessException">The file's permissions deny the write (a <c>KazoUnauthorizedAccessException</c>).</exception>
     ValueTask<AppInstallationResult> ReinstallAsync(
         string appId,
         AppInstallationScope scope,

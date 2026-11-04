@@ -15,7 +15,7 @@ namespace Kazo.Os.Platform.Core.Tests.ContextMenus;
 /// <summary>
 /// ADR 0151 and ADR 0159: the OS side of the file menu entries apps register — the folder
 /// <c>/etc/hackeros/context-menus.d</c>, the filters, the launches, the user's hidden entries and
-/// <c>HackFileMenuEntries</c>.
+/// <c>KazoFileMenuEntries</c>.
 /// </summary>
 public sealed class FileContextMenuTests
 {
@@ -215,8 +215,8 @@ public sealed class FileContextMenuTests
         Assert.Equal(FileContextMenuLauncher.ShellAppId, declared.Intent.SenderAppId);
         // ADR 0218 §3: the entry's name rides along, so one intent can serve several entries.
         Assert.Equal("""{"paths":["/a.zip","/b.zip"],"scope":"File","entry":"extract"}""", declared.Intent.PayloadJson);
-        Assert.Equal("extract", Kazo.Os.AppSdk.Files.HackFileMenuIntent.ReadEntry(declared.Intent.PayloadJson));
-        Assert.Null(Kazo.Os.AppSdk.Files.HackFileMenuIntent.ReadEntry(FileContextMenuLauncher.PayloadOf(["/a.zip"], "File")));
+        Assert.Equal("extract", Kazo.Os.AppSdk.Files.KazoFileMenuIntent.ReadEntry(declared.Intent.PayloadJson));
+        Assert.Null(Kazo.Os.AppSdk.Files.KazoFileMenuIntent.ReadEntry(FileContextMenuLauncher.PayloadOf(["/a.zip"], "File")));
 
         AppContextMenuEntryManifest undeclared = Extract with { Intent = "com.example.zipper.other.v1", Selection = "each" };
         IReadOnlyList<AppLaunchRequest> each = launcher.BuildLaunches(ZipperId, undeclared, "File", ["/a.zip", "/b.zip"], harness.Principal);
@@ -237,7 +237,7 @@ public sealed class FileContextMenuTests
         Assert.False(launcher.IsAvailable("com.example.missing", Extract));
     }
 
-    // ---- HackFileMenuEntries -----------------------------------------------------------------------
+    // ---- KazoFileMenuEntries -----------------------------------------------------------------------
 
     [Fact]
     public async Task Gateway_requires_apps_manage()
@@ -257,10 +257,10 @@ public sealed class FileContextMenuTests
         AppFileMenuEntryAdministrationGateway gateway = harness.CreateGateway(AppCapabilities.AppsManage);
 
         await gateway.SetHiddenAsync(ZipperId, "extract", hidden: true);
-        IReadOnlyList<HackFileMenuEntryInfo> entries = await gateway.GetEntriesAsync();
+        IReadOnlyList<KazoFileMenuEntryInfo> entries = await gateway.GetEntriesAsync();
 
         Assert.Equal(["view", "extract"], entries.Select(static entry => entry.Name));
-        HackFileMenuEntryInfo extract = entries[1];
+        KazoFileMenuEntryInfo extract = entries[1];
         Assert.Equal("Extraire ici", extract.Title);
         Assert.Equal("Zipper", extract.AppName);
         Assert.True(extract.IsHidden);
@@ -288,7 +288,7 @@ public sealed class FileContextMenuTests
         Description = "File menu fixture.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Apps.Sample", "Kazo.Os.Apps.Sample.SampleApp"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         Capabilities = menus is null ? [AppCapabilities.AppsManage] : [AppCapabilities.ShellContextMenu],

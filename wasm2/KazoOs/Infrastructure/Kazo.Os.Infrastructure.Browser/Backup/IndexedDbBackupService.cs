@@ -38,7 +38,7 @@ public sealed class IndexedDbBackupService : IAsyncDisposable
     public async ValueTask<string> ExportAsync(CancellationToken cancellationToken = default)
     {
         await _adapter.OpenAsync(IndexedDbMigrationPlan.CreateCurrent(), cancellationToken).ConfigureAwait(false);
-        IndexedDbOperation[] operations = HackerOsIndexedDbSchema.ObjectStores
+        IndexedDbOperation[] operations = KazoOsIndexedDbSchema.ObjectStores
             .Select(store => new IndexedDbOperation("getAll", store.Name))
             .ToArray();
         IReadOnlyList<JsonElement> results = await _adapter.ExecuteAsync(
@@ -49,7 +49,7 @@ public sealed class IndexedDbBackupService : IAsyncDisposable
 
         JsonObject payload = BuildPayload(
             _timeProvider.GetUtcNow(),
-            HackerOsIndexedDbSchema.ObjectStores.Select((store, index) => (store.Name, results[index])));
+            KazoOsIndexedDbSchema.ObjectStores.Select((store, index) => (store.Name, results[index])));
         JsonObject envelope = JsonNode.Parse(payload.ToJsonString())!.AsObject();
         envelope["sha256"] = ComputeHash(payload);
         return envelope.ToJsonString();
@@ -109,7 +109,7 @@ public sealed class IndexedDbBackupService : IAsyncDisposable
         ValidatedBackup backup = Validate(backupJson);
         return new IndexedDbBackupSummary(
             backup.CreatedAtUtc,
-            HackerOsIndexedDbSchema.CurrentVersion,
+            KazoOsIndexedDbSchema.CurrentVersion,
             backup.RecordCount,
             backup.Stores.ToDictionary(store => store.Name, store => store.Records.GetArrayLength(), StringComparer.Ordinal));
     }
@@ -129,7 +129,7 @@ public sealed class IndexedDbBackupService : IAsyncDisposable
         List<IndexedDbOperation> operations = [];
         if (mode == IndexedDbRestoreMode.Replace)
         {
-            operations.AddRange(HackerOsIndexedDbSchema.ObjectStores
+            operations.AddRange(KazoOsIndexedDbSchema.ObjectStores
                 .Select(store => new IndexedDbOperation("clear", store.Name)));
         }
 
@@ -178,15 +178,15 @@ public sealed class IndexedDbBackupService : IAsyncDisposable
         int schemaVersion = RequiredInt(envelope, "databaseSchemaVersion");
         string createdAt = RequiredString(envelope, "createdAtUtc");
         string expectedHash = RequiredString(envelope, "sha256");
-        if (schemaVersion != HackerOsIndexedDbSchema.CurrentVersion)
+        if (schemaVersion != KazoOsIndexedDbSchema.CurrentVersion)
         {
             // ADR 0099 section 1: a backup of another schema version is refused with a clear message.
             throw new IndexedDbBackupValidationException(
-                $"This backup uses database schema version {schemaVersion}; this Kazo OS uses version {HackerOsIndexedDbSchema.CurrentVersion}. It cannot be restored here.");
+                $"This backup uses database schema version {schemaVersion}; this Kazo OS uses version {KazoOsIndexedDbSchema.CurrentVersion}. It cannot be restored here.");
         }
 
         if (formatVersion != FormatVersion
-            || databaseName != HackerOsIndexedDbSchema.DatabaseName
+            || databaseName != KazoOsIndexedDbSchema.DatabaseName
             || !DateTimeOffset.TryParse(createdAt, out DateTimeOffset createdAtUtc)
             || expectedHash.Length != 64)
         {
@@ -195,14 +195,14 @@ public sealed class IndexedDbBackupService : IAsyncDisposable
 
         JsonObject storesNode = envelope["stores"] as JsonObject
             ?? throw new IndexedDbBackupValidationException("Backup stores object is missing.");
-        string[] expectedStores = HackerOsIndexedDbSchema.ObjectStores.Select(store => store.Name).ToArray();
+        string[] expectedStores = KazoOsIndexedDbSchema.ObjectStores.Select(store => store.Name).ToArray();
         if (!storesNode.Select(item => item.Key).Order().SequenceEqual(expectedStores.Order(), StringComparer.Ordinal))
         {
             throw new IndexedDbBackupValidationException("Backup store set does not match the current schema.");
         }
 
         List<(string Name, JsonElement Records)> stores = [];
-        foreach (IndexedDbObjectStoreDefinition definition in HackerOsIndexedDbSchema.ObjectStores)
+        foreach (IndexedDbObjectStoreDefinition definition in KazoOsIndexedDbSchema.ObjectStores)
         {
             JsonArray recordsNode = storesNode[definition.Name] as JsonArray
                 ?? throw new IndexedDbBackupValidationException($"Store '{definition.Name}' must be an array.");
@@ -249,7 +249,7 @@ public sealed class IndexedDbBackupService : IAsyncDisposable
                 throw new IndexedDbBackupValidationException($"Store '{definition.Name}' contains duplicate identities.");
             }
 
-            if (definition.Name == HackerOsIndexedDbSchema.CatalogStoreName
+            if (definition.Name == KazoOsIndexedDbSchema.CatalogStoreName
                 && (!record.TryGetProperty("enabledFlag", out JsonElement enabledFlag)
                     || enabledFlag.ValueKind != JsonValueKind.Number
                     || enabledFlag.GetInt32() is not (0 or 1)))
@@ -272,8 +272,8 @@ public sealed class IndexedDbBackupService : IAsyncDisposable
         return new JsonObject
         {
             ["formatVersion"] = FormatVersion,
-            ["databaseName"] = HackerOsIndexedDbSchema.DatabaseName,
-            ["databaseSchemaVersion"] = HackerOsIndexedDbSchema.CurrentVersion,
+            ["databaseName"] = KazoOsIndexedDbSchema.DatabaseName,
+            ["databaseSchemaVersion"] = KazoOsIndexedDbSchema.CurrentVersion,
             ["createdAtUtc"] = createdAtUtc.ToUniversalTime().ToString("O"),
             ["stores"] = storesNode
         };

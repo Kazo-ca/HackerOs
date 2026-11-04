@@ -17,7 +17,7 @@ public sealed class XdgMimeCommandTests
     public async Task Query_default_prints_the_users_choice_before_the_systems()
     {
         FakeAppCatalogGateway catalog = Catalog().WithSystemDefault("text/plain", Notepad);
-        catalog.UserDefaults.Add(new HackFileAssociation("text/plain", "open", Editor, HackFileAssociationLayer.User));
+        catalog.UserDefaults.Add(new KazoFileAssociation("text/plain", "open", Editor, KazoFileAssociationLayer.User));
 
         Run run = await RunAsync(catalog, "query", "default", "text/plain");
 
@@ -43,8 +43,8 @@ public sealed class XdgMimeCommandTests
 
         Assert.Equal(0, run.ExitCode);
         Assert.Equal(
-            [new HackFileAssociation("text/plain", "open", Editor, HackFileAssociationLayer.User),
-             new HackFileAssociation(".txt", "open", Editor, HackFileAssociationLayer.User)],
+            [new KazoFileAssociation("text/plain", "open", Editor, KazoFileAssociationLayer.User),
+             new KazoFileAssociation(".txt", "open", Editor, KazoFileAssociationLayer.User)],
             catalog.UserDefaults);
     }
 
@@ -67,7 +67,7 @@ public sealed class XdgMimeCommandTests
     public async Task An_invalid_user_file_is_reported_and_kept()
     {
         FakeAppCatalogGateway catalog = Catalog();
-        catalog.NextSetResult = HackDefaultHandlerStatus.FileInvalid;
+        catalog.NextSetResult = KazoDefaultHandlerStatus.FileInvalid;
 
         Run run = await RunAsync(catalog, "default", Notepad, "text/plain");
 
@@ -112,8 +112,8 @@ public sealed class XdgMimeCommandTests
     }
 
     private static FakeAppCatalogGateway Catalog() => new FakeAppCatalogGateway()
-        .WithApp(FakeAppCatalogGateway.Window(Notepad, "Notepad", new HackAppFileHandler("text/plain", [".txt"], ["open", "edit"])))
-        .WithApp(FakeAppCatalogGateway.Window(Editor, "Text Editor", new HackAppFileHandler("text/plain", [".txt", ".log"], ["open", "edit"])));
+        .WithApp(FakeAppCatalogGateway.Window(Notepad, "Notepad", new KazoAppFileHandler("text/plain", [".txt"], ["open", "edit"])))
+        .WithApp(FakeAppCatalogGateway.Window(Editor, "Text Editor", new KazoAppFileHandler("text/plain", [".txt", ".log"], ["open", "edit"])));
 
     private static async Task<Run> RunAsync(FakeAppCatalogGateway catalog, params string[] arguments)
     {
@@ -132,7 +132,7 @@ public sealed class XdgMimeCommandTests
             app, arguments, new StringReader(string.Empty), stdout, stderr,
             "/home/alice", new Dictionary<string, string> { ["HOME"] = "/home/alice" });
 
-        using IDisposable scope = HackExecutionContext.Enter(app);
+        using IDisposable scope = KazoExecutionContext.Enter(app);
         int exitCode = await new XdgMimeCommand(manifest).ExecuteAsync(context, CancellationToken.None);
         return new Run(exitCode, stdout.ToString(), stderr.ToString());
     }

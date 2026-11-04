@@ -2,7 +2,7 @@
 @using Kazo.Os.AppSdk.Blazor.Components
 @using Kazo.Os.AppSdk.Blazor.Files
 @using Kazo.Os.Simulation.Abstractions.FileSystem
-@inherits HackEmbeddableComponent
+@inherits KazoEmbeddableComponent
 
 @*
     The file dialogs of the OS (hackeros.file-dialogs, ADR 0148 §6, ADR 0155 §5), as the File Explorer
@@ -13,7 +13,7 @@
 *@
 @switch (Dialog)
 {
-    case HackFileDialogs.OpenWith when Request is OpenWithDialogRequest openWith:
+    case KazoFileDialogs.OpenWith when Request is OpenWithDialogRequest openWith:
         <div class="explorer-file-dialog open-with" role="group" aria-labelledby="@_headingId">
             <p id="@_headingId" class="dialog-prompt">@OpenWithPrompt.Before<strong>@openWith.Path</strong>@OpenWithPrompt.After</p>
             @if (_apps is null)
@@ -27,7 +27,7 @@
             else
             {
                 <div class="app-list" role="radiogroup" aria-label="@L["Dialog.OpenWith.Title"]" @onkeydown="OnAppListKeyDown">
-                    @foreach (HackAppInfo app in _apps)
+                    @foreach (KazoAppInfo app in _apps)
                     {
                         <button type="button"
                                 role="radio"
@@ -57,7 +57,7 @@
         </div>
         break;
 
-    case HackFileDialogs.Properties when Request is FilePropertiesDialogRequest properties:
+    case KazoFileDialogs.Properties when Request is FilePropertiesDialogRequest properties:
         <div class="explorer-file-dialog properties" role="group" aria-labelledby="@_headingId">
             <h2 id="@_headingId" class="dialog-heading">@NameOf(properties.Path)</h2>
             @if (_statError is not null)
@@ -93,7 +93,7 @@
         </div>
         break;
 
-    case HackFileDialogs.Conflict when Request is FileConflictDialogRequest conflict:
+    case KazoFileDialogs.Conflict when Request is FileConflictDialogRequest conflict:
         <div class="explorer-file-dialog conflict" role="group" aria-labelledby="@_headingId">
             <p id="@_headingId" class="dialog-prompt">
                 @ExistsText(conflict).Before<strong>@NameOf(conflict.DestinationPath)</strong>@ExistsText(conflict).After

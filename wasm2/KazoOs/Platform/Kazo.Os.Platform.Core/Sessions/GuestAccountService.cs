@@ -150,10 +150,10 @@ public sealed partial class GuestAccountService
     /// <returns>The registered account.</returns>
     /// <exception cref="ArgumentException">A field breaks the rules, or the login name is taken or reserved.</exception>
     /// <exception cref="InvalidOperationException">No guest account, or its session is still open.</exception>
-    public async ValueTask<LocalUser> MigrateAsync(HackNewUserAccount account, CancellationToken cancellationToken = default)
+    public async ValueTask<LocalUser> MigrateAsync(KazoNewUserAccount account, CancellationToken cancellationToken = default)
     {
         const string Operation = "users.guest-migrate";
-        (LocalUser guest, LocalLoginName loginName, HackNewUserAccount checkedAccount) =
+        (LocalUser guest, LocalLoginName loginName, KazoNewUserAccount checkedAccount) =
             await PrepareConversionAsync(Operation, account, cancellationToken).ConfigureAwait(false);
         string newHome = $"/home/{loginName.Value}";
         SyncFileOperations? files = _fileSystem is null ? null : new SyncFileOperations(_fileSystem, SystemContext());
@@ -232,10 +232,10 @@ public sealed partial class GuestAccountService
     /// <returns>The registered account.</returns>
     /// <exception cref="ArgumentException">A field breaks the rules, or the login name is taken or reserved.</exception>
     /// <exception cref="InvalidOperationException">No guest account, or its session is still open.</exception>
-    public async ValueTask<LocalUser> ReplaceAsync(HackNewUserAccount account, CancellationToken cancellationToken = default)
+    public async ValueTask<LocalUser> ReplaceAsync(KazoNewUserAccount account, CancellationToken cancellationToken = default)
     {
         const string Operation = "users.guest-delete";
-        (LocalUser guest, LocalLoginName loginName, HackNewUserAccount checkedAccount) =
+        (LocalUser guest, LocalLoginName loginName, KazoNewUserAccount checkedAccount) =
             await PrepareConversionAsync(Operation, account, cancellationToken).ConfigureAwait(false);
         LocalPasswordCredential credential = await LocalPasswordHasher
             .CreateAsync(checkedAccount.Password, _iterations, _asyncHasher, cancellationToken)
@@ -274,15 +274,15 @@ public sealed partial class GuestAccountService
     }
 
     /// <summary>Checks everything a conversion needs before anything changes.</summary>
-    private async ValueTask<(LocalUser Guest, LocalLoginName LoginName, HackNewUserAccount Account)> PrepareConversionAsync(
-        string operation, HackNewUserAccount account, CancellationToken cancellationToken)
+    private async ValueTask<(LocalUser Guest, LocalLoginName LoginName, KazoNewUserAccount Account)> PrepareConversionAsync(
+        string operation, KazoNewUserAccount account, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(account);
         string requested = account.LoginName?.Trim() ?? string.Empty;
 
         // The first registered account is always an administrator (ADR 0187 section 4).
-        HackNewUserAccount administrator = account with { Authority = AppAuthority.Administrator };
-        if (HackUserAccounts.ValidateNewAccount(administrator) is { } reason)
+        KazoNewUserAccount administrator = account with { Authority = AppAuthority.Administrator };
+        if (KazoUserAccounts.ValidateNewAccount(administrator) is { } reason)
         {
             Record(operation, AuditOutcome.Denied, requested);
             throw new ArgumentException($"useradd: {reason}", nameof(account));

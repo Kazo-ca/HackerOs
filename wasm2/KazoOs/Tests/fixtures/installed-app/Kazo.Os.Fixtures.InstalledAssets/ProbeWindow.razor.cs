@@ -9,7 +9,7 @@ namespace Kazo.Os.Fixtures.InstalledAssets;
 /// <summary>
 /// Imports <c>probe.js</c> from the app's own <c>_content/</c> address, which starts a Web Worker
 /// that loads <c>engine.js</c> next to it; shows what the worker answered (ADR 0206). Also imports
-/// its collocated <c>ProbeWindow.razor.js</c>, which only <c>HackerOsPack</c> puts in the package
+/// its collocated <c>ProbeWindow.razor.js</c>, which only <c>KazoOsPack</c> puts in the package
 /// (ADR 0221). Shows its French greeting, read from the satellite assembly
 /// <c>lib/fr/Kazo.Os.Fixtures.InstalledAssets.resources.dll</c> of the package (ADR 0222).
 /// </summary>

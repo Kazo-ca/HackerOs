@@ -72,7 +72,7 @@ inconnue.
 
 ### 3. API `HackTrash` dans le SDK
 
-`Shared/Kazo.Os.AppSdk/IO/HackTrash.cs`, statique, asynchrone, contexte
+`Shared/Kazo.Os.AppSdk/IO/KazoTrash.cs`, statique, asynchrone, contexte
 ambiant de l'ADR 0043, mêmes exceptions `Hack*` :
 
 ```csharp
@@ -169,4 +169,4 @@ Ordre : `3-commands-merge` et `3-process-environment` en parallèle ; puis
 - [`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), sections 7.4 et 11.
 - `Apps/System/Kazo.Os.Apps.FileExplorer/FileExplorerWindow.razor`,
   `Apps/Commands/Kazo.Os.Commands.Rm/RmCommand.cs`,
-  `Shared/Kazo.Os.AppSdk/IO/HackFile.cs`.
+  `Shared/Kazo.Os.AppSdk/IO/KazoFile.cs`.

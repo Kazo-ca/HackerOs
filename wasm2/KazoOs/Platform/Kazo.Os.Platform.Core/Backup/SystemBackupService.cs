@@ -30,14 +30,14 @@ public interface ISystemBackupDevice
 
     /// <summary>Validates an archive completely without touching the database.</summary>
     /// <param name="archive">Archive bytes (gzip, or the plain JSON).</param>
-    /// <exception cref="HackBackupInvalidException">Not a backup this OS can restore.</exception>
+    /// <exception cref="KazoBackupInvalidException">Not a backup this OS can restore.</exception>
     SystemBackupSummary Inspect(byte[] archive);
 
     /// <summary>Restores a validated archive in one database transaction.</summary>
     /// <param name="archive">Archive bytes.</param>
     /// <param name="mode">Merge or replace.</param>
     /// <param name="cancellationToken">Cancels before the transaction started.</param>
-    Task RestoreAsync(byte[] archive, HackBackupRestoreMode mode, CancellationToken cancellationToken = default);
+    Task RestoreAsync(byte[] archive, KazoBackupRestoreMode mode, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Keeps the record of a restore outside the database, where the restore cannot overwrite it,
@@ -73,7 +73,7 @@ public sealed record SystemBackupSummary(DateTimeOffset CreatedAtUtc, int Record
 public sealed record SystemBackupCandidate(SystemBackupFile File, SystemBackupSummary Summary)
 {
     /// <summary>Describes the candidate for the SDK.</summary>
-    public HackBackupInfo ToInfo() =>
+    public KazoBackupInfo ToInfo() =>
         new(File.Name, File.Bytes.LongLength, Summary.RecordCount, Summary.CreatedAtUtc);
 }
 
@@ -91,7 +91,7 @@ public sealed record SystemRestoreRecord(
     string Administrator,
     string RequestedBy,
     string RequestedById,
-    HackBackupRestoreMode Mode,
+    KazoBackupRestoreMode Mode,
     string FileName,
     int RecordCount,
     string Outcome);
@@ -157,7 +157,7 @@ public sealed class SystemBackupService
     /// <param name="administratorLogin">Administrator who authorized it.</param>
     /// <param name="requestedBy">Session user who asked.</param>
     /// <param name="cancellationToken">Cancels the export.</param>
-    public async Task<HackBackupInfo> CreateAsync(
+    public async Task<KazoBackupInfo> CreateAsync(
         string administratorLogin, AuthenticatedPrincipal? requestedBy, CancellationToken cancellationToken = default)
     {
         SystemBackupArchive archive = await _device.ExportAsync(cancellationToken).ConfigureAwait(false);
@@ -171,13 +171,13 @@ public sealed class SystemBackupService
             ["bytes"] = archive.Bytes.LongLength.ToString(CultureInfo.InvariantCulture),
             ["records"] = archive.Summary.RecordCount.ToString(CultureInfo.InvariantCulture)
         });
-        return new HackBackupInfo(fileName, archive.Bytes.LongLength, archive.Summary.RecordCount, archive.Summary.CreatedAtUtc);
+        return new KazoBackupInfo(fileName, archive.Bytes.LongLength, archive.Summary.RecordCount, archive.Summary.CreatedAtUtc);
     }
 
     /// <summary>Lets the user pick an archive on the host and validates it; nothing is changed.</summary>
     /// <param name="cancellationToken">Cancels the picker.</param>
     /// <returns><see langword="null"/> when the user closed the picker.</returns>
-    /// <exception cref="HackBackupInvalidException">Not a backup this OS can restore.</exception>
+    /// <exception cref="KazoBackupInvalidException">Not a backup this OS can restore.</exception>
     public async Task<SystemBackupCandidate?> PickAsync(CancellationToken cancellationToken = default)
     {
         SystemBackupFile? file = await _device.PickFromHostAsync(cancellationToken).ConfigureAwait(false);
@@ -191,7 +191,7 @@ public sealed class SystemBackupService
     /// <param name="requestedBy">Session user who asked.</param>
     public async Task RestoreAsync(
         SystemBackupCandidate candidate,
-        HackBackupRestoreMode mode,
+        KazoBackupRestoreMode mode,
         string administratorLogin,
         AuthenticatedPrincipal? requestedBy)
     {
@@ -245,7 +245,7 @@ public sealed class SystemBackupService
         {
             ["admin"] = record.Administrator,
             ["requestedBy"] = record.RequestedBy,
-            ["mode"] = record.Mode == HackBackupRestoreMode.Replace ? "replace" : "merge",
+            ["mode"] = record.Mode == KazoBackupRestoreMode.Replace ? "replace" : "merge",
             ["file"] = record.FileName,
             ["records"] = record.RecordCount.ToString(CultureInfo.InvariantCulture),
             ["outcome"] = record.Outcome

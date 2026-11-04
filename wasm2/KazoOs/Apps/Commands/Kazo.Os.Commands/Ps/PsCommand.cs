@@ -82,7 +82,7 @@ public sealed class PsCommand : TerminalAppBase
             if (status is not null)
             {
                 string? stat = needsStat ? await ReadTextAsync(context, pid, "stat", cancellationToken) : null;
-                int nice = stat is null ? 0 : Kazo.Os.AppSdk.Diagnostics.HackProcess.ParseStatNice(stat);
+                int nice = stat is null ? 0 : Kazo.Os.AppSdk.Diagnostics.KazoProcess.ParseStatNice(stat);
                 processes.Add(new ProcEntry(pid, item.Metadata.Timestamps.CreatedAtUtc, status, nice));
             }
         }

@@ -57,17 +57,17 @@ internal sealed class BrowserSystemBackupDevice(IJSRuntime runtime) : ISystemBac
         }
         catch (IndexedDbBackupValidationException exception)
         {
-            throw new HackBackupInvalidException(exception.Message, exception);
+            throw new KazoBackupInvalidException(exception.Message, exception);
         }
     }
 
     /// <inheritdoc />
-    public async Task RestoreAsync(byte[] archive, HackBackupRestoreMode mode, CancellationToken cancellationToken = default)
+    public async Task RestoreAsync(byte[] archive, KazoBackupRestoreMode mode, CancellationToken cancellationToken = default)
     {
         await using IndexedDbBackupService backup = new(runtime);
         await backup.RestoreAsync(
             IndexedDbBackupService.ReadArchive(archive),
-            mode == HackBackupRestoreMode.Replace ? IndexedDbRestoreMode.Replace : IndexedDbRestoreMode.Merge,
+            mode == KazoBackupRestoreMode.Replace ? IndexedDbRestoreMode.Replace : IndexedDbRestoreMode.Merge,
             cancellationToken).ConfigureAwait(false);
     }
 

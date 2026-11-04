@@ -74,8 +74,8 @@ public interface IRemoteProcessHost
 public sealed record RemoteBackgroundJobLaunch(
     IAppExecutionContext Context,
     ProcessControlBlock? Control,
-    Kazo.Os.AppSdk.Threading.HackBackgroundJobRequest Request,
-    Action<Kazo.Os.AppSdk.Threading.HackBackgroundProgress>? Progress);
+    Kazo.Os.AppSdk.Threading.KazoBackgroundJobRequest Request,
+    Action<Kazo.Os.AppSdk.Threading.KazoBackgroundProgress>? Progress);
 
 /// <summary>One process the OS hands to a worker.</summary>
 /// <param name="Descriptor">The app's resolved entry point (its assembly and type are loaded again in the worker).</param>
@@ -101,7 +101,7 @@ public sealed record RemoteProcessExit(RemoteProcessExitStatus Status, int ExitC
     public string? JobResult { get; init; }
 
     /// <summary>Gets what escaped a background task (ADR 0128, section 4), or <see langword="null"/>.</summary>
-    public Kazo.Os.AppSdk.Threading.HackBackgroundJobException? JobFault { get; init; }
+    public Kazo.Os.AppSdk.Threading.KazoBackgroundJobException? JobFault { get; init; }
 
     /// <summary>
     /// Gets whether the worker refused the background task before running it (a target or an input it

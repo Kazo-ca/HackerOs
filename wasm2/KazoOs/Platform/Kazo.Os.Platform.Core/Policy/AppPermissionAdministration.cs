@@ -133,7 +133,7 @@ public sealed class AppPermissionAdministration
 
     /// <summary>
     /// Records a machine decision once an administrator already authenticated through the OS
-    /// authentication agent (ADR 0055 section 5, <c>HackPermissionAdministration</c>): writes
+    /// authentication agent (ADR 0055 section 5, <c>KazoPermissionAdministration</c>): writes
     /// <c>/etc/hackeros/app-permissions.config</c> as an audited system operation and logs the
     /// change to <c>/var/log/auth.log</c>. The caller is responsible for the authentication.
     /// </summary>

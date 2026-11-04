@@ -24,8 +24,8 @@ namespace Kazo.Os.Platform.Core.Tests.Administration;
 
 /// <summary>
 /// Contract tests of the system-administration gateways (ADR 0056, sections 8 to 11; chantier
-/// 4-sdk-system-admin): <c>HackSettings.OpenSystemAsync</c>, <c>HackPermissionAdministration</c>,
-/// <c>HackServerConnection</c>, <c>HackSystem</c> and <c>HackStorageDiagnostics</c>.
+/// 4-sdk-system-admin): <c>KazoSettings.OpenSystemAsync</c>, <c>KazoPermissionAdministration</c>,
+/// <c>KazoServerConnection</c>, <c>KazoSystem</c> and <c>KazoStorageDiagnostics</c>.
 /// </summary>
 public sealed class SystemAdministrationGatewayTests
 {
@@ -37,7 +37,7 @@ public sealed class SystemAdministrationGatewayTests
     private const string MachinePermissionsFile = "/etc/hackeros/app-permissions.config";
     private const string SecurityFile = "/etc/hackeros/security.config";
 
-    // ---- HackSettings.OpenSystemAsync (section 8) ----
+    // ---- KazoSettings.OpenSystemAsync (section 8) ----
 
     [Fact]
     public async Task An_os_document_reads_both_layers_and_writes_the_users_own_layer_without_any_capability()
@@ -48,7 +48,7 @@ public sealed class SystemAdministrationGatewayTests
         await files.WriteAsRootAsync(AppearanceSystemFile, "accent=cyan\n");
         SettingsContext app = new(files, alice);
 
-        await using HackSettingsDocument document = await HackSettings.OpenSystemAsync(app, "appearance");
+        await using KazoSettingsDocument document = await KazoSettings.OpenSystemAsync(app, "appearance");
         Assert.Equal("cyan", document.Get<string>("accent"));
         Assert.Equal(SettingLayer.System, document.GetSource("accent"));
 
@@ -66,13 +66,13 @@ public sealed class SystemAdministrationGatewayTests
         await files.BootAsync();
         AuthenticatedPrincipal alice = await files.LoginAsync(files.Alice);
 
-        await using HackSettingsDocument plain = await HackSettings.OpenSystemAsync(new SettingsContext(files, alice), "appearance");
+        await using KazoSettingsDocument plain = await KazoSettings.OpenSystemAsync(new SettingsContext(files, alice), "appearance");
         await Assert.ThrowsAnyAsync<UnauthorizedAccessException>(
             () => plain.SetAsync("accent", "cyan", SettingLayer.System).AsTask());
         Assert.DoesNotContain("accent=cyan", await files.ReadAsync(AppearanceSystemFile) ?? string.Empty);
 
         // The same app run under sudo (root's file rights) writes /etc in one edit.
-        await using HackSettingsDocument root = await HackSettings.OpenSystemAsync(
+        await using KazoSettingsDocument root = await KazoSettings.OpenSystemAsync(
             new SettingsContext(files, alice, files.CreateRootGateway()), "appearance");
         await root.SetManyAsync(
             new Dictionary<string, object> { ["accent"] = "cyan", ["animationsEnabled"] = false },
@@ -91,10 +91,10 @@ public sealed class SystemAdministrationGatewayTests
         AuthenticatedPrincipal alice = await files.LoginAsync(files.Alice);
 
         await Assert.ThrowsAsync<ArgumentException>(
-            () => HackSettings.OpenSystemAsync(new SettingsContext(files, alice), "passwords").AsTask());
+            () => KazoSettings.OpenSystemAsync(new SettingsContext(files, alice), "passwords").AsTask());
     }
 
-    // ---- HackPermissionAdministration (section 9) ----
+    // ---- KazoPermissionAdministration (section 9) ----
 
     [Fact]
     public async Task Permission_administration_requires_permissions_manage()
@@ -104,7 +104,7 @@ public sealed class SystemAdministrationGatewayTests
 
         await Assert.ThrowsAsync<AppGatewayAccessDeniedException>(() => gateway.GetOverviewAsync().AsTask());
         await Assert.ThrowsAsync<AppGatewayAccessDeniedException>(
-            () => gateway.SetPolicyAsync(HackDangerousCapabilityPolicy.Block).AsTask());
+            () => gateway.SetPolicyAsync(KazoDangerousCapabilityPolicy.Block).AsTask());
     }
 
     [Fact]
@@ -114,15 +114,15 @@ public sealed class SystemAdministrationGatewayTests
         CountingAgent agent = new(succeed: false);
         AppPermissionAdministrationGateway gateway = harness.CreatePermissionGateway(agent, AppCapabilities.PermissionsManage);
 
-        await Assert.ThrowsAsync<HackUnauthorizedAccessException>(() => gateway.SetMachineDecisionAsync(
-            ScannerId, AppCapabilities.NetworkRealAccess, HackPermissionDecision.Allow).AsTask());
-        await Assert.ThrowsAsync<HackUnauthorizedAccessException>(
-            () => gateway.SetPolicyAsync(HackDangerousCapabilityPolicy.Block).AsTask());
+        await Assert.ThrowsAsync<KazoUnauthorizedAccessException>(() => gateway.SetMachineDecisionAsync(
+            ScannerId, AppCapabilities.NetworkRealAccess, KazoPermissionDecision.Allow).AsTask());
+        await Assert.ThrowsAsync<KazoUnauthorizedAccessException>(
+            () => gateway.SetPolicyAsync(KazoDangerousCapabilityPolicy.Block).AsTask());
 
         Assert.Equal(2, agent.Calls);
         Assert.Equal("permissions.policy", agent.LastRequest!.Action);
         Assert.DoesNotContain(ScannerId, await harness.Files.ReadAsync(MachinePermissionsFile) ?? string.Empty);
-        Assert.Equal(HackDangerousCapabilityPolicy.Prompt, await gateway.GetPolicyAsync());
+        Assert.Equal(KazoDangerousCapabilityPolicy.Prompt, await gateway.GetPolicyAsync());
     }
 
     [Fact]
@@ -132,20 +132,20 @@ public sealed class SystemAdministrationGatewayTests
         CountingAgent agent = new(succeed: true);
         AppPermissionAdministrationGateway gateway = harness.CreatePermissionGateway(agent, AppCapabilities.PermissionsManage);
 
-        await gateway.SetMachineDecisionAsync(ScannerId, AppCapabilities.NetworkRealAccess, HackPermissionDecision.Deny);
+        await gateway.SetMachineDecisionAsync(ScannerId, AppCapabilities.NetworkRealAccess, KazoPermissionDecision.Deny);
 
         Assert.Equal("permissions.machine-decision", agent.LastRequest!.Action);
         Assert.Contains($"{ScannerId}:{AppCapabilities.NetworkRealAccess}=deny", await harness.Files.ReadAsync(MachinePermissionsFile));
-        HackAppPermissionInfo scanner = Assert.Single(await gateway.GetOverviewAsync(), app => app.AppId == ScannerId);
+        KazoAppPermissionInfo scanner = Assert.Single(await gateway.GetOverviewAsync(), app => app.AppId == ScannerId);
         Assert.Equal(
-            HackPermissionState.DeniedByAdministrator,
+            KazoPermissionState.DeniedByAdministrator,
             scanner.Capabilities.Single(capability => capability.Capability == AppCapabilities.NetworkRealAccess).State);
 
-        await gateway.SetPolicyAsync(HackDangerousCapabilityPolicy.Block);
+        await gateway.SetPolicyAsync(KazoDangerousCapabilityPolicy.Block);
 
         Assert.Equal("permissions.policy", agent.LastRequest!.Action);
         Assert.Contains("block", await harness.Files.ReadAsync(SecurityFile));
-        Assert.Equal(HackDangerousCapabilityPolicy.Block, await gateway.GetPolicyAsync());
+        Assert.Equal(KazoDangerousCapabilityPolicy.Block, await gateway.GetPolicyAsync());
         AuditEntry revoke = Assert.Single(harness.Audit.Entries, entry => entry.Action == "capability.revoke");
         Assert.Equal("admin", revoke.Properties["admin"]);
         Assert.Single(harness.Audit.Entries, entry => entry.Action == "capability.policy");
@@ -159,24 +159,24 @@ public sealed class SystemAdministrationGatewayTests
         AppPermissionAdministrationGateway gateway = harness.CreatePermissionGateway(agent, AppCapabilities.PermissionsManage);
 
         await Assert.ThrowsAnyAsync<Exception>(() => gateway.SetMachineDecisionAsync(
-            SystemToolId, AppCapabilities.ProcessManage, HackPermissionDecision.Deny).AsTask());
+            SystemToolId, AppCapabilities.ProcessManage, KazoPermissionDecision.Deny).AsTask());
         await Assert.ThrowsAnyAsync<Exception>(() => gateway.SetMachineDecisionAsync(
-            ScannerId, AppCapabilities.SystemPower, HackPermissionDecision.Allow).AsTask());
+            ScannerId, AppCapabilities.SystemPower, KazoPermissionDecision.Allow).AsTask());
 
         Assert.Equal(0, agent.Calls);
     }
 
-    // ---- HackServerConnection (section 10) ----
+    // ---- KazoServerConnection (section 10) ----
 
     [Fact]
     public async Task Without_server_support_the_connection_is_absent_and_sync_is_a_no_op()
     {
         AppServerConnectionGateway gateway = new(services: null, new FixedCapabilities(AppCapabilities.ServerConnectionManage));
 
-        Assert.Equal(HackServerConnectionState.NotConnected, await gateway.GetStateAsync());
-        await gateway.SyncAsync(HackSyncDomain.FileSystem, HackSyncDirection.Push);
+        Assert.Equal(KazoServerConnectionState.NotConnected, await gateway.GetStateAsync());
+        await gateway.SyncAsync(KazoSyncDomain.FileSystem, KazoSyncDirection.Push);
         Assert.Empty(await gateway.GetConflictsAsync());
-        await Assert.ThrowsAsync<HackServerConnectionException>(
+        await Assert.ThrowsAsync<KazoServerConnectionException>(
             () => gateway.ConnectAsync(new Uri("https://example.test"), "alice", "pw").AsTask());
     }
 
@@ -188,10 +188,10 @@ public sealed class SystemAdministrationGatewayTests
 
         await Assert.ThrowsAsync<AppGatewayAccessDeniedException>(() => denied.GetStateAsync().AsTask());
         await Assert.ThrowsAsync<ArgumentException>(
-            () => granted.SyncAsync(HackSyncDomain.Grants, HackSyncDirection.Push).AsTask());
+            () => granted.SyncAsync(KazoSyncDomain.Grants, KazoSyncDirection.Push).AsTask());
     }
 
-    // ---- HackSystem and HackStorageDiagnostics (section 11) ----
+    // ---- KazoSystem and KazoStorageDiagnostics (section 11) ----
 
     [Fact]
     public async Task Reboot_requires_system_power_and_an_administrator()
@@ -202,7 +202,7 @@ public sealed class SystemAdministrationGatewayTests
 
         await Assert.ThrowsAsync<AppGatewayAccessDeniedException>(
             () => harness.CreatePowerGateway(device, new CountingAgent(succeed: true)).RebootAsync().AsTask());
-        await Assert.ThrowsAsync<HackUnauthorizedAccessException>(
+        await Assert.ThrowsAsync<KazoUnauthorizedAccessException>(
             () => harness.CreatePowerGateway(device, refusing, AppCapabilities.SystemPower).RebootAsync().AsTask());
 
         Assert.Equal("system.reboot", refusing.LastRequest!.Action);
@@ -267,7 +267,7 @@ public sealed class SystemAdministrationGatewayTests
     [Fact]
     public async Task Storage_inspection_requires_its_capability()
     {
-        HackStorageSnapshot snapshot = new(DateTimeOffset.UnixEpoch, "hackeros", 3, [], new Dictionary<string, string>(), 0);
+        KazoStorageSnapshot snapshot = new(DateTimeOffset.UnixEpoch, "hackeros", 3, [], new Dictionary<string, string>(), 0);
         AppStorageDiagnosticsGateway denied = new(() => new FixedInspector(snapshot), new FixedCapabilities());
         AppStorageDiagnosticsGateway granted = new(() => new FixedInspector(snapshot), new FixedCapabilities(AppCapabilities.SystemStorageInspect));
         AppStorageDiagnosticsGateway absent = new(null, new FixedCapabilities(AppCapabilities.SystemStorageInspect));
@@ -277,7 +277,7 @@ public sealed class SystemAdministrationGatewayTests
         await Assert.ThrowsAsync<NotSupportedException>(() => absent.GetSnapshotAsync().AsTask());
     }
 
-    // ---- HackSystemBackup (ADR 0099, section 1) ----
+    // ---- KazoSystemBackup (ADR 0099, section 1) ----
 
     [Fact]
     public async Task Backup_requires_its_capability_and_a_supporting_host()
@@ -300,7 +300,7 @@ public sealed class SystemAdministrationGatewayTests
         BackupDevice device = new();
         CountingAgent agent = new(succeed: true);
 
-        HackBackupInfo info = await harness.CreateBackupGateway(device, agent, AppCapabilities.SystemBackup).CreateAsync();
+        KazoBackupInfo info = await harness.CreateBackupGateway(device, agent, AppCapabilities.SystemBackup).CreateAsync();
 
         Assert.Equal(SystemBackupService.CreateAction, agent.LastRequest!.Action);
         Assert.Equal("hackeros-20261017-071200Z.hosbak", info.FileName);
@@ -317,7 +317,7 @@ public sealed class SystemAdministrationGatewayTests
         AdminHarness harness = await AdminHarness.CreateAsync();
         BackupDevice device = new();
 
-        await Assert.ThrowsAsync<HackUnauthorizedAccessException>(
+        await Assert.ThrowsAsync<KazoUnauthorizedAccessException>(
             () => harness.CreateBackupGateway(device, new CountingAgent(succeed: false), AppCapabilities.SystemBackup).CreateAsync().AsTask());
 
         Assert.Empty(device.Calls);
@@ -332,9 +332,9 @@ public sealed class SystemAdministrationGatewayTests
         BackupDevice closed = new() { Picked = null };
         BackupDevice invalid = new() { Invalid = true };
 
-        Assert.Null(await harness.CreateBackupGateway(closed, agent, AppCapabilities.SystemBackup).RestoreAsync(HackBackupRestoreMode.Replace));
-        await Assert.ThrowsAsync<HackBackupInvalidException>(
-            () => harness.CreateBackupGateway(invalid, agent, AppCapabilities.SystemBackup).RestoreAsync(HackBackupRestoreMode.Merge).AsTask());
+        Assert.Null(await harness.CreateBackupGateway(closed, agent, AppCapabilities.SystemBackup).RestoreAsync(KazoBackupRestoreMode.Replace));
+        await Assert.ThrowsAsync<KazoBackupInvalidException>(
+            () => harness.CreateBackupGateway(invalid, agent, AppCapabilities.SystemBackup).RestoreAsync(KazoBackupRestoreMode.Merge).AsTask());
 
         Assert.Equal(0, agent.Calls);
         Assert.Equal(["pick"], closed.Calls);
@@ -349,8 +349,8 @@ public sealed class SystemAdministrationGatewayTests
         BackupDevice device = new();
         CountingAgent agent = new(succeed: true);
 
-        HackBackupInfo? info = await harness.CreateBackupGateway(device, agent, AppCapabilities.SystemBackup)
-            .RestoreAsync(HackBackupRestoreMode.Replace);
+        KazoBackupInfo? info = await harness.CreateBackupGateway(device, agent, AppCapabilities.SystemBackup)
+            .RestoreAsync(KazoBackupRestoreMode.Replace);
 
         Assert.Equal("old.hosbak", info!.FileName);
         Assert.Equal(SystemBackupService.RestoreAction, agent.LastRequest!.Action);
@@ -367,7 +367,7 @@ public sealed class SystemAdministrationGatewayTests
         SystemBackupService service = harness.CreateBackupService(device);
         SystemBackupCandidate candidate = (await service.PickAsync())!;
 
-        await service.RestoreAsync(candidate, HackBackupRestoreMode.Merge, "admin", harness.Principal);
+        await service.RestoreAsync(candidate, KazoBackupRestoreMode.Merge, "admin", harness.Principal);
         await service.WritePendingRestoreRecordAsync();
         await service.WritePendingRestoreRecordAsync();
 
@@ -388,7 +388,7 @@ public sealed class SystemAdministrationGatewayTests
         Description = "System-administration fixture.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Apps.Sample", "Kazo.Os.Apps.Sample.SampleApp"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         Capabilities = capabilities
@@ -518,9 +518,9 @@ public sealed class SystemAdministrationGatewayTests
         }
 
         public SystemBackupSummary Inspect(byte[] archive) =>
-            Invalid ? throw new HackBackupInvalidException("not a backup") : new SystemBackupSummary(Exported, 3);
+            Invalid ? throw new KazoBackupInvalidException("not a backup") : new SystemBackupSummary(Exported, 3);
 
-        public Task RestoreAsync(byte[] archive, HackBackupRestoreMode mode, CancellationToken cancellationToken = default)
+        public Task RestoreAsync(byte[] archive, KazoBackupRestoreMode mode, CancellationToken cancellationToken = default)
         {
             Calls.Add($"restore:{mode}");
             return FailRestore ? Task.FromException(new IOException("disk on fire")) : Task.CompletedTask;
@@ -555,9 +555,9 @@ public sealed class SystemAdministrationGatewayTests
         public Task EraseStorageAsync(CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
-    private sealed class FixedInspector(HackStorageSnapshot snapshot) : IStorageInspector
+    private sealed class FixedInspector(KazoStorageSnapshot snapshot) : IStorageInspector
     {
-        public Task<HackStorageSnapshot> CaptureAsync(CancellationToken cancellationToken = default) => Task.FromResult(snapshot);
+        public Task<KazoStorageSnapshot> CaptureAsync(CancellationToken cancellationToken = default) => Task.FromResult(snapshot);
     }
 
     /// <summary>Grants exactly the listed capabilities (the gateways only call <see cref="Require"/>).</summary>

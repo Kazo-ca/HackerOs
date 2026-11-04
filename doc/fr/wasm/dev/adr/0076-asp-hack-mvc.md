@@ -100,7 +100,7 @@ Une vue est un composant Razor compilé au build avec un paramètre `Model` :
 @inherits HackView<HomeModel>
 @layout MainLayout
 <h1>@Model.Title</h1>
-<HackForm Action="Contact" Controller="Home"> ... </HackForm>
+<HackForm Action="Contact" Controller="Home"> ... </KazoForm>
 ```
 
 Elle est rendue en HTML statique par `HtmlRenderer` (.NET, comme les

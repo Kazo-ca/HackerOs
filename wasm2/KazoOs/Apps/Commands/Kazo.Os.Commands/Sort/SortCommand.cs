@@ -163,7 +163,7 @@ public sealed class SortCommand : TerminalAppBase
             string resolved = CommandIO.ResolvePath(context.WorkingDirectory, output);
             try
             {
-                await AppSdk.IO.HackFile.WriteAllLinesAsync(resolved, sorted, cancellationToken);
+                await AppSdk.IO.KazoFile.WriteAllLinesAsync(resolved, sorted, cancellationToken);
             }
             catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException)
             {

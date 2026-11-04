@@ -130,7 +130,7 @@ public static class EcosystemServiceCollectionExtensions
             provider.GetRequiredService<ISimulationClock>()));
         // Every dependency is a singleton, so the host's root ILoggerFactory can build this provider
         // before any Blazor scope exists. ILogger<T> entries land in /var/log/syslog.
-        services.AddSingleton<ILoggerProvider>(provider => new HackerOsDiagnosticLoggerProvider(
+        services.AddSingleton<ILoggerProvider>(provider => new KazoOsDiagnosticLoggerProvider(
             provider.GetRequiredService<IDiagnosticSink>(),
             provider.GetRequiredService<LogFileWriter>(),
             provider.GetRequiredService<ISimulationClock>(),
@@ -140,8 +140,8 @@ public static class EcosystemServiceCollectionExtensions
         // ILoggerProvider, and its framework-internal chatter isn't a Kazo OS diagnostic event.
         services.AddLogging(builder =>
         {
-            builder.AddFilter<HackerOsDiagnosticLoggerProvider>("Microsoft", LogLevel.None);
-            builder.AddFilter<HackerOsDiagnosticLoggerProvider>("System", LogLevel.None);
+            builder.AddFilter<KazoOsDiagnosticLoggerProvider>("Microsoft", LogLevel.None);
+            builder.AddFilter<KazoOsDiagnosticLoggerProvider>("System", LogLevel.None);
         });
 
         services.AddScoped<HostExceptionReporter>();
@@ -462,7 +462,7 @@ public static class EcosystemServiceCollectionExtensions
             provider.GetRequiredService<IAdminElevationVerifier>(),
             provider.GetRequiredService<IAuditLog>()));
         // Reboot and factory reset (ADR 0056 section 11): the browser reloads the page and deletes
-        // the OS database; HackSystem reaches them only after the authentication agent agreed.
+        // the OS database; KazoSystem reaches them only after the authentication agent agreed.
         services.AddScoped<ISystemPowerDevice>(provider =>
             new BrowserSystemPowerDevice(provider.GetRequiredService<Microsoft.JSInterop.IJSRuntime>()));
         services.AddScoped<SystemPowerService>(provider => new SystemPowerService(
@@ -475,10 +475,10 @@ public static class EcosystemServiceCollectionExtensions
         services.AddScoped<Kazo.Os.Platform.Core.WebData.IWebSiteDatabaseStore>(provider =>
             new Kazo.Os.Ecosystem.WebData.IndexedDbWebSiteDatabaseStore(
                 provider.GetRequiredService<Kazo.Os.Infrastructure.Browser.WebData.WebSiteDatabaseInterop>()));
-        // Raw storage snapshot behind HackStorageDiagnostics (ADR 0056 section 11).
+        // Raw storage snapshot behind KazoStorageDiagnostics (ADR 0056 section 11).
         services.AddScoped<IStorageInspector>(provider =>
             new IndexedDbStorageInspector(provider.GetRequiredService<Microsoft.JSInterop.IJSRuntime>()));
-        // Whole-machine backup and restore behind HackSystemBackup (ADR 0099 section 1): IndexedDB
+        // Whole-machine backup and restore behind KazoSystemBackup (ADR 0099 section 1): IndexedDB
         // export/import, download to the host and the host's file picker. Every host runs the OS in
         // the browser since ADR 0130; a host without a browser leaves the gateway unsupported and
         // Settings hides the page.
@@ -755,11 +755,11 @@ public static class EcosystemServiceCollectionExtensions
         services.AddScoped<IHostedSiteNameSource>(provider => new HostedSiteNameSource(
             provider.GetRequiredService<IFileSystemService>(),
             provider.GetRequiredService<ISimulationClock>()));
-        services.AddScoped<HackDnsResolver>(provider =>
+        services.AddScoped<KazoDnsResolver>(provider =>
         {
             AppCatalog appCatalog = provider.GetRequiredService<AppCatalog>();
             IAppEnablementRegistry enablement = provider.GetRequiredService<IAppEnablementRegistry>();
-            return new HackDnsResolver(
+            return new KazoDnsResolver(
                 provider.GetRequiredService<ISimulatedNetworkService>(),
                 provider.GetRequiredService<IFileSystemService>(),
                 provider.GetRequiredService<ISimulationClock>(),
@@ -769,7 +769,7 @@ public static class EcosystemServiceCollectionExtensions
         });
         services.AddScoped<LocalNetworkServices>(provider => new LocalNetworkServices(
             provider.GetRequiredService<ListeningPortTable>(),
-            provider.GetRequiredService<HackDnsResolver>(),
+            provider.GetRequiredService<KazoDnsResolver>(),
             // Lazy: the orchestrator depends on the context factory, which carries these services.
             new WebAppActivator(
                 () => provider.GetRequiredService<AppLifecycleOrchestrator>(),
@@ -793,7 +793,7 @@ public static class EcosystemServiceCollectionExtensions
             network: provider.GetRequiredService<ISimulatedNetworkService>(),
             serverConnection: provider.GetRequiredService<IServerConnectionService>(),
             proxy: provider.GetRequiredService<IProxyClient>(),
-            // HackApps / HackAppManagement (ADR 0056 sections 2 and 3). Lazy for the same reason:
+            // KazoApps / KazoAppManagement (ADR 0056 sections 2 and 3). Lazy for the same reason:
             // the installation service depends on the orchestrator, which depends on this factory.
             appCatalog: new AppCatalogGatewayServices(
                 provider.GetRequiredService<AppCatalog>(),
@@ -815,7 +815,7 @@ public static class EcosystemServiceCollectionExtensions
             },
             // Lazy for the same reason: ShellInterpreter depends on the orchestrator (ADR 0056 section 7).
             shellHostProvider: () => provider.GetRequiredService<ShellHostService>(),
-            // ADR 0057: traffic counters for /proc/net/dev and /proc/<pid>/io, and HackDriveInfo.
+            // ADR 0057: traffic counters for /proc/net/dev and /proc/<pid>/io, and KazoDriveInfo.
             metrics: new SystemMetricsServices(
                 provider.GetRequiredService<INetworkInterfaceStatistics>(),
                 provider.GetRequiredService<IProcessIoAccounting>(),
@@ -824,26 +824,26 @@ public static class EcosystemServiceCollectionExtensions
                     provider.GetRequiredService<VirtualHardwareProfile>(),
                     provider.GetRequiredService<IStorageUsageProvider>())
                 {
-                    // ADR 0181: HackDriveInfo.MountHostFolderAsync, ReconnectAsync and UnmountAsync.
+                    // ADR 0181: KazoDriveInfo.MountHostFolderAsync, ReconnectAsync and UnmountAsync.
                     // Resolved now, with the execution factory, so it sees the first login event.
                     NetworkDrives = NetworkDrivesOf(provider)
                 },
                 // ADR 0068: write-stream buffers and sockets in flight, charged to each app's process.
                 provider.GetRequiredService<IKernelMemoryLedger>())
             {
-                // ADR 0146: HackCrossOriginIsolation reads the status the boot probe recorded.
+                // ADR 0146: KazoCrossOriginIsolation reads the status the boot probe recorded.
                 CrossOriginIsolation = new AppCrossOriginIsolationGateway(() => provider.GetService<CrossOriginIsolationState>()?.Status)
             },
-            // HackClipboard (ADR 0056 section 12): one OS clipboard shared by every app of the session.
+            // KazoClipboard (ADR 0056 section 12): one OS clipboard shared by every app of the session.
             clipboard: provider.GetRequiredService<Kazo.Os.Platform.Core.Clipboard.SystemClipboard>(),
-            // HackSettings.OpenSystemAsync, HackPermissionAdministration, HackServerConnection,
-            // HackSystem and HackStorageDiagnostics (ADR 0056 sections 8 to 11), all lazy.
+            // KazoSettings.OpenSystemAsync, KazoPermissionAdministration, KazoServerConnection,
+            // KazoSystem and KazoStorageDiagnostics (ADR 0056 sections 8 to 11), all lazy.
             localNetwork: provider.GetRequiredService<LocalNetworkServices>(),
-            // HackWebDb (ADR 0088): hackweb.<app id> for web apps, and their listing in Diagnostic.
+            // KazoWebDb (ADR 0088): hackweb.<app id> for web apps, and their listing in Diagnostic.
             webDatabases: provider.GetRequiredService<Kazo.Os.Platform.Core.WebData.IWebSiteDatabaseStore>(),
-            // HackKeyring (ADR 0100 section 2): the session user's keyring, per app.
+            // KazoKeyring (ADR 0100 section 2): the session user's keyring, per app.
             keyring: provider.GetRequiredService<UserKeyringService>(),
-            // HackAccessibility (ADR 0105 section 3): the session's effective accessibility preferences.
+            // KazoAccessibility (ADR 0105 section 3): the session's effective accessibility preferences.
             accessibility: provider.GetRequiredService<Kazo.Os.Platform.Core.Appearance.AccessibilityPreferenceService>(),
             administration: new SystemAdministrationGatewayServices(
                 () => provider.GetRequiredService<IOsSettingsService>(),
@@ -867,23 +867,23 @@ public static class EcosystemServiceCollectionExtensions
                 OperatingSystem.IsBrowser() ? () => provider.GetRequiredService<SystemBackupService>() : null)
             {
                 Passwords = () => provider.GetRequiredService<LocalPasswordService>(),
-                // HackUserAccounts (ADR 0168, 0169): passkeys of the session user, adding and deleting accounts.
+                // KazoUserAccounts (ADR 0168, 0169): passkeys of the session user, adding and deleting accounts.
                 Accounts = () => provider.GetRequiredService<LocalAccountService>(),
                 Passkeys = () => provider.GetRequiredService<PasskeyService>(),
                 // ADR 0187: the guest's "Create my account", shown by the host.
                 GuestRequests = () => provider.GetRequiredService<GuestAccountRequests>(),
-                // HackComponentProviders (ADR 0156): a third-party provider goes through the approval window.
+                // KazoComponentProviders (ADR 0156): a third-party provider goes through the approval window.
                 ComponentProviders = () => provider.GetRequiredService<Kazo.Os.Platform.Core.ComponentProviders.ComponentProviderService>(),
                 ApprovalPrompt = () => provider.GetRequiredService<IDangerousCapabilityApprovalPrompt>(),
-                // HackFileMenuEntries (ADR 0159 §8): Settings lists and hides the registered entries.
+                // KazoFileMenuEntries (ADR 0159 §8): Settings lists and hides the registered entries.
                 FileMenuEntries = () => provider.GetRequiredService<Kazo.Os.Platform.Core.ContextMenus.FileContextMenuAdministration>(),
-                // HackScreens (ADR 0184): Settings > Screens drives the secondary screens of the browser host.
+                // KazoScreens (ADR 0184): Settings > Screens drives the secondary screens of the browser host.
                 Screens = OperatingSystem.IsBrowser() ? () => provider.GetRequiredService<ScreenControl>() : null,
-                // HackWhatsNew (ADR 0186): the served change list, on a host that registers its source.
+                // KazoWhatsNew (ADR 0186): the served change list, on a host that registers its source.
                 WhatsNew = provider.GetService<Kazo.Os.Platform.Core.WhatsNew.IWhatsNewSource>() is null ? null : () => provider.GetRequiredService<Kazo.Os.Platform.Core.WhatsNew.WhatsNewService>(),
             })
         {
-            // HackBackground (ADR 0128): each task a child process, in a worker when the host has some.
+            // KazoBackground (ADR 0128): each task a child process, in a worker when the host has some.
             BackgroundJobs = () => provider.GetRequiredService<BackgroundJobService>(),
             // ADR 0193: IAppExecutionContext.TimeZone follows Settings > Date and time.
             TimeZones = provider.GetRequiredService<Kazo.Os.Platform.Core.Globalization.SessionTimeZoneService>(),
@@ -1003,7 +1003,7 @@ public static class EcosystemServiceCollectionExtensions
             provider.GetRequiredService<AppCatalog>(),
             provider.GetRequiredService<IAppEnablementRegistry>(),
             provider.GetRequiredService<IKernelMemoryLedger>()));
-        // Shells hosted by terminal emulators through HackShell (ADR 0056 section 7, shell.host).
+        // Shells hosted by terminal emulators through KazoShell (ADR 0056 section 7, shell.host).
         services.AddScoped<ShellHostService>(provider => new ShellHostService(
             provider.GetRequiredService<ShellInterpreter>(),
             provider.GetRequiredService<IProcessManager>(),
@@ -1051,7 +1051,7 @@ public static class EcosystemServiceCollectionExtensions
             provider.GetRequiredService<IOsSettingsService>(),
             provider.GetService<ILogger<ScreenService>>(),
             provider.GetRequiredService<Kazo.Os.Platform.Core.Globalization.SessionLocaleService>()));
-        // ADR 0184: HackScreens over the screen service and the window manager.
+        // ADR 0184: KazoScreens over the screen service and the window manager.
         // ADR 0186: what changed since the user's last visit, over the host's IWhatsNewSource.
         services.AddScoped(provider => new Kazo.Os.Platform.Core.WhatsNew.WhatsNewService(
             provider.GetRequiredService<Kazo.Os.Platform.Core.WhatsNew.IWhatsNewSource>(),
@@ -1125,8 +1125,8 @@ public static class EcosystemServiceCollectionExtensions
                     provider.GetRequiredService<ScreenService>().Screens.Select(static screen => screen.Id.Number)) { 1 }
             };
         });
-        services.AddSingleton(new HackPlatformComponent(
-            Kazo.Os.AppSdk.Components.HackComponentContracts.ContextMenu,
+        services.AddSingleton(new KazoPlatformComponent(
+            Kazo.Os.AppSdk.Components.KazoComponentContracts.ContextMenu,
             typeof(Kazo.Os.Platform.Blazor.ContextMenus.PlatformContextMenu)));
         // ADR 0156: /etc/hackeros/components.config, the administrator's choice of the app that
         // provides the file view and the file dialogs, behind Settings > OS components.
@@ -1148,11 +1148,11 @@ public static class EcosystemServiceCollectionExtensions
         {
             AppLifecycleOrchestrator orchestrator = provider.GetRequiredService<AppLifecycleOrchestrator>();
             LogFileWriter? log = provider.GetService<LogFileWriter>();
-            return new HackComponentHost(
+            return new KazoComponentHost(
                 provider.GetRequiredService<AppCatalog>(),
                 provider.GetRequiredService<IAppEnablementRegistry>(),
                 orchestrator.EnsureDescriptorAsync,
-                platformComponents: provider.GetServices<HackPlatformComponent>(),
+                platformComponents: provider.GetServices<KazoPlatformComponent>(),
                 reportError: log is null
                     ? null
                     : message => log.Write(LogFileTarget.Syslog, DiagnosticSeverity.Error, "components", message))
@@ -1167,7 +1167,7 @@ public static class EcosystemServiceCollectionExtensions
         services.AddScoped<IHackWebSiteHost>(provider =>
         {
             AppLifecycleOrchestrator orchestrator = provider.GetRequiredService<AppLifecycleOrchestrator>();
-            return new HackWebSiteHost(
+            return new KazoWebSiteHost(
                 provider.GetRequiredService<AppCatalog>(),
                 provider.GetRequiredService<IAppEnablementRegistry>(),
                 provider.GetRequiredService<ISessionService>(),

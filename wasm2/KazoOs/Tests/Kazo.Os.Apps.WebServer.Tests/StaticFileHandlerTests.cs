@@ -10,8 +10,8 @@ public sealed class StaticFileHandlerTests
     private static ServedSite Site(string binding = "http://docs.hack:8080/", string root = "/home/alice/www")
     {
         Assert.True(WebAppUrls.TryParse(binding, allowWildcardHost: true, out WebBinding parsed, out _));
-        HackWebSite site = new() { Name = "docs", Root = root, Bindings = [binding] };
-        return new ServedSite(new HackWebSiteDeclaration("/home/alice/.config/hackweb/sites/docs.site", HackWebSiteScope.User, "alice", site, []), parsed);
+        KazoWebSite site = new() { Name = "docs", Root = root, Bindings = [binding] };
+        return new ServedSite(new KazoWebSiteDeclaration("/home/alice/.config/hackweb/sites/docs.site", KazoWebSiteScope.User, "alice", site, []), parsed);
     }
 
     [Theory]
@@ -66,7 +66,7 @@ public sealed class StaticFileHandlerTests
     public void A_system_site_is_served_as_www_data_and_a_user_site_as_its_owner()
     {
         ServedSite user = Site();
-        ServedSite system = user with { Declaration = user.Declaration with { Scope = HackWebSiteScope.System, Owner = null } };
+        ServedSite system = user with { Declaration = user.Declaration with { Scope = KazoWebSiteScope.System, Owner = null } };
 
         Assert.False(user.ServesAsWwwData);
         Assert.True(system.ServesAsWwwData);

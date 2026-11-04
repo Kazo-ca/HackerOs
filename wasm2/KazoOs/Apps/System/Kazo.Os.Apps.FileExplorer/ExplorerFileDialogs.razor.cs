@@ -24,7 +24,7 @@ public sealed partial class ExplorerFileDialogs
     private bool _completed;
 
     // "Open with"
-    private IReadOnlyList<HackAppInfo>? _apps;
+    private IReadOnlyList<KazoAppInfo>? _apps;
     private string? _selectedAppId;
     private string? _extension;
     private bool _alwaysUse;
@@ -38,7 +38,7 @@ public sealed partial class ExplorerFileDialogs
     // Conflict
     private bool _applyToAll;
 
-    /// <summary>Gets or sets which dialog to show (<see cref="HackFileDialogs"/>).</summary>
+    /// <summary>Gets or sets which dialog to show (<see cref="KazoFileDialogs"/>).</summary>
     [Parameter]
     public string? Dialog { get; set; }
 
@@ -92,7 +92,7 @@ public sealed partial class ExplorerFileDialogs
     private async Task LoadAppsAsync(OpenWithDialogRequest request)
     {
         _extension = ExplorerFileView.ExtensionOf(request.Path);
-        IReadOnlyList<HackAppInfo> installed;
+        IReadOnlyList<KazoAppInfo> installed;
         try
         {
             installed = await HostContext.Catalog.GetInstalledAsync(HostContext.CancellationToken);
@@ -103,7 +103,7 @@ public sealed partial class ExplorerFileDialogs
         }
 
         _apps = request.CandidateAppIds is { } candidates
-            ? [.. candidates.Select(id => installed.FirstOrDefault(app => app.Id == id)).OfType<HackAppInfo>()]
+            ? [.. candidates.Select(id => installed.FirstOrDefault(app => app.Id == id)).OfType<KazoAppInfo>()]
             : [.. installed.Where(app => app.Kind == AppKind.Window && !app.IsHidden).OrderBy(app => app.Name, StringComparer.CurrentCultureIgnoreCase)];
         _selectedAppId = _apps.FirstOrDefault()?.Id;
     }

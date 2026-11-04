@@ -1,12 +1,12 @@
 @namespace Kazo.Os.Samples.Intranet.Board.Pages
 @page "/board"
-@inherits HackComponentBase
+@inherits KazoComponentBase
 @*
     The task board: three columns of cards loaded from GET /api/tasks. Adding, moving and deleting
     a card call POST, PUT and DELETE through Site.Http (the renderer process, with the tab's cookies)
     and redraw without any page load.
 *@
-<HackPageTitle Title="Board - Intranet" />
+<KazoPageTitle Title="Board - Intranet" />
 <div class="board-toolbar">
     <h1>Task board</h1>
     <form class="board-add" @onsubmit="AddAsync" @onsubmit:preventDefault>

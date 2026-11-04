@@ -6,13 +6,13 @@ namespace Kazo.Os.UI.E2E.Tests;
 
 /// <summary>
 /// The Browser's home page in a real Chromium, outside test-demo mode: opening the Browser lands
-/// on HackerSearch (<c>https://hackersearch.net</c>), a host of the simulated network, and its
+/// on KazoSearch (<c>https://hackersearch.net</c>), a host of the simulated network, and its
 /// search form returns results — never the <c>ERR_NAME_NOT_RESOLVED</c> error page.
 /// </summary>
 public sealed class BrowserHomePageTests(ITestOutputHelper output)
 {
     [Fact]
-    public async Task Browser_opens_on_the_HackerSearch_home_page_and_searches()
+    public async Task Browser_opens_on_the_KazoSearch_home_page_and_searches()
     {
         string solutionDirectory = E2ESupport.FindSolutionDirectory();
         int port = E2ESupport.ReservePort();
@@ -33,16 +33,16 @@ public sealed class BrowserHomePageTests(ITestOutputHelper output)
             await E2ESupport.OpenAppAsync(page, "Browser", output);
 
             // --- The home page loads at once, with no address typed ---
-            await Assertions.Expect(page.Locator(".sim-page-title")).ToHaveTextAsync("HackerSearch", new() { Timeout = 20000 });
+            await Assertions.Expect(page.Locator(".sim-page-title")).ToHaveTextAsync("KazoSearch", new() { Timeout = 20000 });
             await Assertions.Expect(page.Locator(".browser-error-page")).ToHaveCountAsync(0);
             await Assertions.Expect(page.Locator("#browser-address-input")).ToHaveValueAsync("https://hackersearch.net/");
-            output.WriteLine("[test] HackerSearch home page rendered.");
+            output.WriteLine("[test] KazoSearch home page rendered.");
 
-            // --- A search typed in the address bar goes to HackerSearch and shows its results ---
+            // --- A search typed in the address bar goes to KazoSearch and shows its results ---
             ILocator addressInput = page.Locator("#browser-address-input");
             await addressInput.FillAsync("exploit");
             await addressInput.PressAsync("Enter");
-            await Assertions.Expect(page.Locator(".sim-page-title")).ToHaveTextAsync("exploit - HackerSearch", new() { Timeout = 20000 });
+            await Assertions.Expect(page.Locator(".sim-page-title")).ToHaveTextAsync("exploit - KazoSearch", new() { Timeout = 20000 });
             await Assertions.Expect(page.Locator(".browser-error-page")).ToHaveCountAsync(0);
         }
         finally

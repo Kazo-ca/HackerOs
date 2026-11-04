@@ -32,7 +32,7 @@ public sealed partial class ExplorerFileView
     private readonly Dictionary<string, long> _pendingShortcuts = new(StringComparer.Ordinal);
     private FileViewDesktopBinding? _desktop;
     private IDisposable? _systemMenu;
-    private IReadOnlyDictionary<string, HackAppInfo>? _apps;
+    private IReadOnlyDictionary<string, KazoAppInfo>? _apps;
     private bool _loadingShortcuts;
     private bool _trashWatched;
     private CancellationTokenSource? _trashWatchCts;
@@ -40,17 +40,17 @@ public sealed partial class ExplorerFileView
 
     /// <summary>Gets or sets the <c>[view]</c> options of the desktop mode.</summary>
     [Parameter]
-    public HackDesktopOptions? DesktopOptions { get; set; }
+    public KazoDesktopOptions? DesktopOptions { get; set; }
 
     /// <summary>Gets or sets the saved cell of each desktop icon.</summary>
     [Parameter]
-    public IReadOnlyDictionary<string, HackDesktopCell>? DesktopPositions { get; set; }
+    public IReadOnlyDictionary<string, KazoDesktopCell>? DesktopPositions { get; set; }
 
     /// <summary>Gets or sets the callback receiving the positions to save.</summary>
     [Parameter]
-    public EventCallback<IReadOnlyDictionary<string, HackDesktopCell>> DesktopPositionsChanged { get; set; }
+    public EventCallback<IReadOnlyDictionary<string, KazoDesktopCell>> DesktopPositionsChanged { get; set; }
 
-    private bool IsDesktop => Mode == HackFileViewMode.Desktop;
+    private bool IsDesktop => Mode == KazoFileViewMode.Desktop;
 
     /// <summary>Wires the shortcut decoration and, on a desktop, the binding of the grid (on each parameter change).</summary>
     private void ConfigureDesktop()
@@ -74,8 +74,8 @@ public sealed partial class ExplorerFileView
             _systemMenu = Menus.Define(_systemMenuName, static _ => { }, OnSystemMenuOpeningAsync);
         }
 
-        _desktop.Options = DesktopOptions ?? HackDesktopOptions.Default;
-        _desktop.Positions = DesktopPositions ?? new Dictionary<string, HackDesktopCell>();
+        _desktop.Options = DesktopOptions ?? KazoDesktopOptions.Default;
+        _desktop.Positions = DesktopPositions ?? new Dictionary<string, KazoDesktopCell>();
         _desktop.HomeLabel = L["Desktop.Home"];
         _desktop.TrashLabel = L["Desktop.Trash"];
         _desktop.GridLabel = L["Desktop.Grid"];
@@ -91,11 +91,11 @@ public sealed partial class ExplorerFileView
         }
 
         _trashWatched = true;
-        using IDisposable scope = HackExecutionContext.Enter(HostContext);
+        using IDisposable scope = KazoExecutionContext.Enter(HostContext);
         await RefreshTrashStateAsync();
         try
         {
-            string files = HackTrash.TrashDirectory + "/files";
+            string files = KazoTrash.TrashDirectory + "/files";
             _trashWatch = await HostContext.Watch.WatchAsync(VirtualPath.Parse(files), FileSystemWatchScope.ImmediateChildren, HostContext.CancellationToken);
             _trashWatchCts = new CancellationTokenSource();
             _ = WatchTrashAsync(_trashWatch, _trashWatchCts.Token);
@@ -115,7 +115,7 @@ public sealed partial class ExplorerFileView
             {
                 await InvokeAsync(async () =>
                 {
-                    using IDisposable scope = HackExecutionContext.Enter(HostContext);
+                    using IDisposable scope = KazoExecutionContext.Enter(HostContext);
                     await RefreshTrashStateAsync();
                 });
             }
@@ -150,7 +150,7 @@ public sealed partial class ExplorerFileView
         bool full;
         try
         {
-            full = (await HackTrash.GetItemsAsync(HostContext.CancellationToken)).Count > 0;
+            full = (await KazoTrash.GetItemsAsync(HostContext.CancellationToken)).Count > 0;
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or AppGatewayAccessDeniedException or NotSupportedException)
         {
@@ -164,7 +164,7 @@ public sealed partial class ExplorerFileView
         }
     }
 
-    private string HomeDirectory => Kazo.Os.AppSdk.HackUser.Describe(HostContext).HomeDirectory;
+    private string HomeDirectory => Kazo.Os.AppSdk.KazoUser.Describe(HostContext).HomeDirectory;
 
     // ---- Home and Trash ------------------------------------------------------------------------------
 
@@ -173,11 +173,11 @@ public sealed partial class ExplorerFileView
     {
         try
         {
-            if (key == HackDesktopItems.Home)
+            if (key == KazoDesktopItems.Home)
             {
                 await HostContext.Intents.OpenFileAsync(VirtualPath.Parse(HomeDirectory), "inode/directory", HostContext.CancellationToken);
             }
-            else if (key == HackDesktopItems.Trash)
+            else if (key == KazoDesktopItems.Trash)
             {
                 await HostContext.Intents.LaunchAsync(FileExplorerAppId, [FileExplorerWindow.TrashArgument], HostContext.CancellationToken);
             }
@@ -191,13 +191,13 @@ public sealed partial class ExplorerFileView
     /// <summary>A drop on Home moves (or copies) into the home folder; a drop on the Trash trashes the entries.</summary>
     private async Task DropOnSystemItemAsync(string key, FileViewDropRequestedEventArgs drop)
     {
-        if (key == HackDesktopItems.Home)
+        if (key == KazoDesktopItems.Home)
         {
             await TransferDropAsync(drop, VirtualPath.Parse(HomeDirectory));
             return;
         }
 
-        if (key != HackDesktopItems.Trash || drop.Entries.Count == 0 || !Has(HackFileViewFeatures.Delete))
+        if (key != KazoDesktopItems.Trash || drop.Entries.Count == 0 || !Has(KazoFileViewFeatures.Delete))
         {
             return;
         }
@@ -209,7 +209,7 @@ public sealed partial class ExplorerFileView
             {
                 try
                 {
-                    await HackTrash.MoveToTrashAsync(entry.Path.Value, HostContext.CancellationToken);
+                    await KazoTrash.MoveToTrashAsync(entry.Path.Value, HostContext.CancellationToken);
                 }
                 catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
                 {
@@ -229,39 +229,39 @@ public sealed partial class ExplorerFileView
     }
 
     /// <summary>The menu of the Home or Trash icon (ADR 0160 §5): no file entries, no app entries.</summary>
-    private async Task OnSystemMenuOpeningAsync(HackMenuOpeningEventArgs args)
+    private async Task OnSystemMenuOpeningAsync(KazoMenuOpeningEventArgs args)
     {
-        if (args.Item is not string key || !HackDesktopItems.IsSystemItem(key))
+        if (args.Item is not string key || !KazoDesktopItems.IsSystemItem(key))
         {
             args.Cancel = true;
             return;
         }
 
-        if (key == HackDesktopItems.Trash)
+        if (key == KazoDesktopItems.Trash)
         {
             await RefreshTrashStateAsync();
         }
 
         args.Menu.Groups.Clear();
-        HackMenuGroupDefinition main = args.Menu.AddGroup();
-        SystemEntry(main, HackFileMenuItems.Open, L["Menu.Open"], "folder-open", () => OpenSystemItemAsync(key));
-        if (key == HackDesktopItems.Trash)
+        KazoMenuGroupDefinition main = args.Menu.AddGroup();
+        SystemEntry(main, KazoFileMenuItems.Open, L["Menu.Open"], "folder-open", () => OpenSystemItemAsync(key));
+        if (key == KazoDesktopItems.Trash)
         {
-            HackMenuItemDefinition empty = SystemEntry(main, HackFileMenuItems.EmptyTrash, L["Menu.EmptyTrash"], "trash-2", EmptyTrashAsync);
+            KazoMenuItemDefinition empty = SystemEntry(main, KazoFileMenuItems.EmptyTrash, L["Menu.EmptyTrash"], "trash-2", EmptyTrashAsync);
             empty.IsDisabled = _desktop is not { IsTrashFull: true };
         }
 
-        if (Has(HackFileViewFeatures.Properties))
+        if (Has(KazoFileViewFeatures.Properties))
         {
-            SystemEntry(args.Menu.AddGroup(), HackFileMenuItems.Properties, L["Menu.Properties"], "info",
-                () => ShowPropertiesAsync(key == HackDesktopItems.Home ? HomeDirectory : HackTrash.TrashDirectory));
+            SystemEntry(args.Menu.AddGroup(), KazoFileMenuItems.Properties, L["Menu.Properties"], "info",
+                () => ShowPropertiesAsync(key == KazoDesktopItems.Home ? HomeDirectory : KazoTrash.TrashDirectory));
         }
     }
 
-    private HackMenuItemDefinition SystemEntry(HackMenuGroupDefinition group, string id, string title, string icon, Func<Task> run)
+    private KazoMenuItemDefinition SystemEntry(KazoMenuGroupDefinition group, string id, string title, string icon, Func<Task> run)
     {
-        HackMenuItemDefinition entry = group.Add(id, title);
-        entry.Icon = HackIcons.Vector(IconLibrary.Lucide, icon);
+        KazoMenuItemDefinition entry = group.Add(id, title);
+        entry.Icon = KazoIcons.Vector(IconLibrary.Lucide, icon);
         entry.OnClick = EventCallback.Factory.Create<object?>(this, _ => run());
         return entry;
     }
@@ -286,7 +286,7 @@ public sealed partial class ExplorerFileView
 
         try
         {
-            await TrackOperation(HackTrash.EmptyAsync(HostContext.CancellationToken));
+            await TrackOperation(KazoTrash.EmptyAsync(HostContext.CancellationToken));
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
         {
@@ -305,7 +305,7 @@ public sealed partial class ExplorerFileView
     /// </summary>
     private void DecorateShortcut(FileViewItem item)
     {
-        if (item.IsDirectory || !HackDesktopEntry.IsDesktopFile(item.FileName))
+        if (item.IsDirectory || !KazoDesktopEntry.IsDesktopFile(item.FileName))
         {
             return;
         }
@@ -315,7 +315,7 @@ public sealed partial class ExplorerFileView
         {
             if (state.Entry is { } entry)
             {
-                HackAppInfo? app = _apps?.GetValueOrDefault(entry.AppId);
+                KazoAppInfo? app = _apps?.GetValueOrDefault(entry.AppId);
                 item.DisplayName = entry.Name;
                 item.IconOverride = AppShortcutIcon(entry.AppId, app?.Category);
                 item.IsDimmed = app is null;
@@ -332,7 +332,7 @@ public sealed partial class ExplorerFileView
         }
 
         long size = item.Metadata is FileMetadata file ? file.Length : 0;
-        if (size > HackDesktopEntry.MaxFileSize)
+        if (size > KazoDesktopEntry.MaxFileSize)
         {
             _shortcuts[path] = new ShortcutState(item.Metadata.Revision, null);
             return;
@@ -345,7 +345,7 @@ public sealed partial class ExplorerFileView
             _ = InvokeAsync(async () =>
             {
                 // Runs outside any event of the host: its rights are made ambient for the reads.
-                using IDisposable scope = HackExecutionContext.Enter(HostContext);
+                using IDisposable scope = KazoExecutionContext.Enter(HostContext);
                 await LoadShortcutsAsync();
             });
         }
@@ -374,16 +374,16 @@ public sealed partial class ExplorerFileView
         _view?.RefreshFilter();
     }
 
-    private async Task<IReadOnlyDictionary<string, HackAppInfo>> ReadInstalledAppsAsync()
+    private async Task<IReadOnlyDictionary<string, KazoAppInfo>> ReadInstalledAppsAsync()
     {
         try
         {
-            IReadOnlyList<HackAppInfo> apps = await HostContext.Catalog.GetInstalledAsync(HostContext.CancellationToken);
+            IReadOnlyList<KazoAppInfo> apps = await HostContext.Catalog.GetInstalledAsync(HostContext.CancellationToken);
             return apps.GroupBy(static app => app.Id, StringComparer.Ordinal).ToDictionary(static group => group.Key, static group => group.First(), StringComparer.Ordinal);
         }
         catch (Exception exception) when (exception is AppGatewayAccessDeniedException or NotSupportedException)
         {
-            return new Dictionary<string, HackAppInfo>(StringComparer.Ordinal);
+            return new Dictionary<string, KazoAppInfo>(StringComparer.Ordinal);
         }
     }
 
@@ -393,19 +393,19 @@ public sealed partial class ExplorerFileView
         string content;
         try
         {
-            content = await HackFile.ReadAllTextAsync(path, HostContext.CancellationToken);
+            content = await KazoFile.ReadAllTextAsync(path, HostContext.CancellationToken);
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
         {
             return new ShortcutState(revision, null);
         }
 
-        if (HackDesktopEntry.TryParse(content, out HackDesktopEntry? entry))
+        if (KazoDesktopEntry.TryParse(content, out KazoDesktopEntry? entry))
         {
             return new ShortcutState(revision, entry);
         }
 
-        if (HackDesktopLink.TryParse(content, out HackDesktopLink? link))
+        if (KazoDesktopLink.TryParse(content, out KazoDesktopLink? link))
         {
             return new ShortcutState(revision, null, link, await IsFolderAsync(link.Target));
         }
@@ -418,12 +418,12 @@ public sealed partial class ExplorerFileView
     {
         try
         {
-            if (await HackDirectory.ExistsAsync(path, HostContext.CancellationToken))
+            if (await KazoDirectory.ExistsAsync(path, HostContext.CancellationToken))
             {
                 return true;
             }
 
-            return await HackFile.ExistsAsync(path, HostContext.CancellationToken) ? false : null;
+            return await KazoFile.ExistsAsync(path, HostContext.CancellationToken) ? false : null;
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException)
         {
@@ -438,7 +438,7 @@ public sealed partial class ExplorerFileView
     /// </summary>
     private async Task<bool> TryLaunchShortcutAsync(FileViewItem item)
     {
-        if (item.IsDirectory || !HackDesktopEntry.IsDesktopFile(item.FileName))
+        if (item.IsDirectory || !KazoDesktopEntry.IsDesktopFile(item.FileName))
         {
             return false;
         }
@@ -486,7 +486,7 @@ public sealed partial class ExplorerFileView
     /// Opens the target of a link shortcut: a folder is entered (in a new explorer window on a desktop),
     /// a file opens with its app. The target is checked again: it may have moved since the listing.
     /// </summary>
-    private async Task OpenLinkAsync(HackDesktopLink link)
+    private async Task OpenLinkAsync(KazoDesktopLink link)
     {
         bool? folder = await IsFolderAsync(link.Target);
         if (folder is null)
@@ -535,10 +535,10 @@ public sealed partial class ExplorerFileView
         _apps = await ReadInstalledAppsAsync();
         foreach (string appId in appIds)
         {
-            string name = _apps.TryGetValue(appId, out HackAppInfo? app) ? app.Name : appId;
+            string name = _apps.TryGetValue(appId, out KazoAppInfo? app) ? app.Name : appId;
             try
             {
-                await HackDesktopEntry.CreateShortcutAsync(destination.Value, appId, name, cancellationToken: HostContext.CancellationToken);
+                await KazoDesktopEntry.CreateShortcutAsync(destination.Value, appId, name, cancellationToken: HostContext.CancellationToken);
             }
             catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException)
             {
@@ -552,5 +552,5 @@ public sealed partial class ExplorerFileView
     /// (<see cref="Link"/>, with <see cref="LinkToFolder"/> <see langword="null"/> when its target is gone),
     /// or neither for a file that is not a shortcut.
     /// </summary>
-    private sealed record ShortcutState(long Revision, HackDesktopEntry? Entry, HackDesktopLink? Link = null, bool? LinkToFolder = null);
+    private sealed record ShortcutState(long Revision, KazoDesktopEntry? Entry, KazoDesktopLink? Link = null, bool? LinkToFolder = null);
 }

@@ -69,9 +69,9 @@ public static class BrowserDownloads
     public static async Task<string> SaveAsync(string homeDirectory, string fileName, byte[] bytes, CancellationToken cancellationToken = default)
     {
         string folder = GetFolder(homeDirectory);
-        await HackDirectory.CreateDirectoryAsync(folder, cancellationToken).ConfigureAwait(false);
-        string path = await GetUniquePathAsync(folder, fileName, candidate => HackFile.ExistsAsync(candidate, cancellationToken)).ConfigureAwait(false);
-        await HackFile.WriteAllBytesAsync(path, bytes, cancellationToken).ConfigureAwait(false);
+        await KazoDirectory.CreateDirectoryAsync(folder, cancellationToken).ConfigureAwait(false);
+        string path = await GetUniquePathAsync(folder, fileName, candidate => KazoFile.ExistsAsync(candidate, cancellationToken)).ConfigureAwait(false);
+        await KazoFile.WriteAllBytesAsync(path, bytes, cancellationToken).ConfigureAwait(false);
         return path;
     }
 }

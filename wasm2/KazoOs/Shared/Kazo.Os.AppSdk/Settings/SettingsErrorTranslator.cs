@@ -7,9 +7,9 @@ namespace Kazo.Os.AppSdk.Settings;
 /// <c>System.IO</c> (ADR 0043 section 5).
 /// </summary>
 /// <remarks>
-/// Phase 1 interim: <c>HackSettings</c> and the <c>Hack*</c> file API (ADR 0043) are built in
+/// Phase 1 interim: <c>KazoSettings</c> and the <c>Hack*</c> file API (ADR 0043) are built in
 /// parallel. Once <c>Kazo.Os.AppSdk.IO</c> lands, this translator delegates to its
-/// <c>HackUnauthorizedAccessException</c>/<c>HackIOException</c> family, which derive from the same
+/// <c>KazoUnauthorizedAccessException</c>/<c>KazoIOException</c> family, which derive from the same
 /// BCL types thrown here, so a caller's <c>catch (UnauthorizedAccessException)</c> keeps working.
 /// </remarks>
 internal static class SettingsErrorTranslator

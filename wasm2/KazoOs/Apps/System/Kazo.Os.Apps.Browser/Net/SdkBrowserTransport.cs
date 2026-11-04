@@ -6,11 +6,11 @@ using Kazo.Os.Simulation.Abstractions.Network;
 namespace Kazo.Os.Apps.Browser.Net;
 
 /// <summary>
-/// The browser's real transport: <c>http(s)</c> through <see cref="HackHttpClient"/> (the OS picks
-/// the network, ADR 0056 §6), <c>file://</c> through <see cref="HackFile"/> with the user's rights
-/// (ADR 0075 §4). Every request shares the tab's <see cref="HackCookieContainer"/>.
+/// The browser's real transport: <c>http(s)</c> through <see cref="KazoHttpClient"/> (the OS picks
+/// the network, ADR 0056 §6), <c>file://</c> through <see cref="KazoFile"/> with the user's rights
+/// (ADR 0075 §4). Every request shares the tab's <see cref="KazoCookieContainer"/>.
 /// </summary>
-public sealed class SdkBrowserTransport(HackCookieContainer cookies) : IBrowserTransport
+public sealed class SdkBrowserTransport(KazoCookieContainer cookies) : IBrowserTransport
 {
     // Headers the client or the OS owns: a page cannot forge them, as with fetch's forbidden headers.
     private static readonly HashSet<string> ForbiddenRequestHeaders = new(StringComparer.OrdinalIgnoreCase)
@@ -18,7 +18,7 @@ public sealed class SdkBrowserTransport(HackCookieContainer cookies) : IBrowserT
         "Content-Type", "Content-Length", "Cookie", "Host", "Connection", "Transfer-Encoding",
     };
 
-    private readonly HackCookieContainer _cookies = cookies ?? throw new ArgumentNullException(nameof(cookies));
+    private readonly KazoCookieContainer _cookies = cookies ?? throw new ArgumentNullException(nameof(cookies));
 
     /// <inheritdoc />
     public async Task<BrowserFetchResult> SendAsync(BrowserRequest request, CancellationToken cancellationToken = default)
@@ -36,7 +36,7 @@ public sealed class SdkBrowserTransport(HackCookieContainer cookies) : IBrowserT
     {
         try
         {
-            using HackHttpClient client = new(request.WithCredentials ? _cookies : new HackCookieContainer());
+            using KazoHttpClient client = new(request.WithCredentials ? _cookies : new KazoCookieContainer());
             foreach ((string name, string value) in request.Headers)
             {
                 if (!ForbiddenRequestHeaders.Contains(name))
@@ -45,10 +45,10 @@ public sealed class SdkBrowserTransport(HackCookieContainer cookies) : IBrowserT
                 }
             }
 
-            HackHttpContent? content = request.Body is null
+            KazoHttpContent? content = request.Body is null
                 ? null
-                : new HackByteArrayContent(request.Body, request.ContentType ?? SimulatedMediaTypes.OctetStream);
-            HackHttpResponse response = await client
+                : new KazoByteArrayContent(request.Body, request.ContentType ?? SimulatedMediaTypes.OctetStream);
+            KazoHttpResponse response = await client
                 .SendAsync(new HttpMethod(request.Method), request.Url.AbsoluteUri, content, cancellationToken)
                 .ConfigureAwait(false);
 
@@ -62,12 +62,12 @@ public sealed class SdkBrowserTransport(HackCookieContainer cookies) : IBrowserT
                 response.RedirectCount,
                 response.Source switch
                 {
-                    HackHttpResponseSource.LocalSite => BrowserResponseSource.LocalSite,
-                    HackHttpResponseSource.RealNetwork => BrowserResponseSource.RealNetwork,
+                    KazoHttpResponseSource.LocalSite => BrowserResponseSource.LocalSite,
+                    KazoHttpResponseSource.RealNetwork => BrowserResponseSource.RealNetwork,
                     _ => BrowserResponseSource.Simulated,
                 }));
         }
-        catch (HackHttpRequestException exception)
+        catch (KazoHttpRequestException exception)
         {
             return BrowserFetchResult.Fail(exception.ErrorCode);
         }
@@ -92,13 +92,13 @@ public sealed class SdkBrowserTransport(HackCookieContainer cookies) : IBrowserT
         string path = BrowserUrl.ToLocalPath(request.Url);
         try
         {
-            HackDirectoryInfo directory = await HackDirectoryInfo.GetAsync(path, cancellationToken).ConfigureAwait(false);
+            KazoDirectoryInfo directory = await KazoDirectoryInfo.GetAsync(path, cancellationToken).ConfigureAwait(false);
             if (directory.Exists)
             {
                 return BrowserFetchResult.Ok(await ListDirectoryAsync(request.Url, directory, cancellationToken).ConfigureAwait(false));
             }
 
-            byte[] bytes = await HackFile.ReadAllBytesAsync(path, cancellationToken).ConfigureAwait(false);
+            byte[] bytes = await KazoFile.ReadAllBytesAsync(path, cancellationToken).ConfigureAwait(false);
             return BrowserFetchResult.Ok(new BrowserResponse(
                 200,
                 "OK",
@@ -107,7 +107,7 @@ public sealed class SdkBrowserTransport(HackCookieContainer cookies) : IBrowserT
                 request.Method == "HEAD" ? [] : bytes,
                 Source: BrowserResponseSource.File));
         }
-        catch (Exception exception) when (exception is HackFileNotFoundException or HackDirectoryNotFoundException or FileNotFoundException or DirectoryNotFoundException)
+        catch (Exception exception) when (exception is KazoFileNotFoundException or KazoDirectoryNotFoundException or FileNotFoundException or DirectoryNotFoundException)
         {
             return BrowserFetchResult.Fail(BrowserErrorCodes.FileNotFound);
         }
@@ -121,17 +121,17 @@ public sealed class SdkBrowserTransport(HackCookieContainer cookies) : IBrowserT
         }
     }
 
-    private static async Task<BrowserResponse> ListDirectoryAsync(Uri url, HackDirectoryInfo directory, CancellationToken cancellationToken)
+    private static async Task<BrowserResponse> ListDirectoryAsync(Uri url, KazoDirectoryInfo directory, CancellationToken cancellationToken)
     {
-        // The listing speaks the language of the browser's process (ADR 0104), ambient like HackFile's rights.
-        IAppExecutionContext? process = HackExecutionContext.CurrentOrNull;
-        HackFileSystemInfo[] entries = await directory.GetFileSystemInfosAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+        // The listing speaks the language of the browser's process (ADR 0104), ambient like KazoFile's rights.
+        IAppExecutionContext? process = KazoExecutionContext.CurrentOrNull;
+        KazoFileSystemInfo[] entries = await directory.GetFileSystemInfosAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
         string html = DirectoryListingPage.Build(
             directory.FullName,
             entries.Select(entry => new DirectoryListingEntry(
                 entry.Name,
-                entry is HackDirectoryInfo,
-                entry is HackFileInfo file ? file.Length : null,
+                entry is KazoDirectoryInfo,
+                entry is KazoFileInfo file ? file.Length : null,
                 entry.LastWriteTimeUtc)),
             process?.Culture,
             process?.FormatCulture);

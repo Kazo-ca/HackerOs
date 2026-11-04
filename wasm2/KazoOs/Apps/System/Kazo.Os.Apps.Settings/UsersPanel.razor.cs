@@ -13,13 +13,13 @@ namespace Kazo.Os.Apps.Settings;
 /// <see cref="PasskeysPanel"/> (ADR 0168).
 /// </summary>
 /// <remarks>
-/// Uses only the public SDK (ADR 0055): <see cref="HackUserAccounts"/>. Changing one's own password
+/// Uses only the public SDK (ADR 0055): <see cref="KazoUserAccounts"/>. Changing one's own password
 /// needs no capability (the current one is checked); a reset needs <c>users.manage</c>, and the OS
 /// asks an administrator in its own window. Password fields are cleared after every attempt.
 /// </remarks>
 public partial class UsersPanel
 {
-    private IReadOnlyList<HackUserAccount> _accounts = [];
+    private IReadOnlyList<KazoUserAccount> _accounts = [];
 
     private string? _deleteLogin;
     private bool _deleteHome;
@@ -57,7 +57,7 @@ public partial class UsersPanel
     /// <summary>The panel's texts in the language of the Settings process (ADR 0104).</summary>
     private IStringLocalizer<Strings> L => _localizer ??= AppContext.GetLocalizer<Strings>();
 
-    private HackUserAccount? CurrentAccount => _accounts.FirstOrDefault(account => account.IsCurrentUser);
+    private KazoUserAccount? CurrentAccount => _accounts.FirstOrDefault(account => account.IsCurrentUser);
 
     /// <summary>An account created without a password changes it without giving a current one.</summary>
     private bool CurrentHasPassword => CurrentAccount?.HasPassword ?? true;
@@ -67,7 +67,7 @@ public partial class UsersPanel
     /// <summary>ADR 0187 section 4: no account is added beside the guest; it creates its own first.</summary>
     private bool GuestExists => _accounts.Any(account => account.IsGuest);
 
-    private IReadOnlyList<HackUserAccount> OtherAccounts => _accounts.Where(account => !account.IsCurrentUser).ToArray();
+    private IReadOnlyList<KazoUserAccount> OtherAccounts => _accounts.Where(account => !account.IsCurrentUser).ToArray();
 
     /// <inheritdoc />
     protected override Task OnInitializedAsync() => LoadAsync();
@@ -82,7 +82,7 @@ public partial class UsersPanel
 
         try
         {
-            _accounts = await HackUserAccounts.ListAsync(Context, Context.CancellationToken);
+            _accounts = await KazoUserAccounts.ListAsync(Context, Context.CancellationToken);
             _loadError = null;
             if (_resetLogin is null || OtherAccounts.All(account => account.LoginName != _resetLogin))
             {
@@ -111,7 +111,7 @@ public partial class UsersPanel
         _busy = true;
         try
         {
-            await HackUserAccounts.ChangePasswordAsync(Context, CurrentHasPassword ? _current : string.Empty, _ownNew, Context.CancellationToken);
+            await KazoUserAccounts.ChangePasswordAsync(Context, CurrentHasPassword ? _current : string.Empty, _ownNew, Context.CancellationToken);
             (_ownMessage, _ownFailed) = (L["Users.Own.Done"], false);
             await LoadAsync();
         }
@@ -156,12 +156,12 @@ public partial class UsersPanel
         {
             if (newPassword is null)
             {
-                await HackUserAccounts.RemovePasswordAsync(Context, login, Context.CancellationToken);
+                await KazoUserAccounts.RemovePasswordAsync(Context, login, Context.CancellationToken);
                 (_resetMessage, _resetFailed) = (L["Users.Reset.Removed", login], false);
             }
             else
             {
-                await HackUserAccounts.ResetPasswordAsync(Context, login, newPassword, Context.CancellationToken);
+                await KazoUserAccounts.ResetPasswordAsync(Context, login, newPassword, Context.CancellationToken);
                 (_resetMessage, _resetFailed) = (L["Users.Reset.Done", login], false);
             }
 
@@ -194,7 +194,7 @@ public partial class UsersPanel
         _busy = true;
         try
         {
-            await HackUserAccounts.DeleteAsync(Context, login, _deleteHome, Context.CancellationToken);
+            await KazoUserAccounts.DeleteAsync(Context, login, _deleteHome, Context.CancellationToken);
             (_listMessage, _listFailed) = (L[_deleteHome ? "Users.Delete.DoneWithHome" : "Users.Delete.Done", login], false);
             _deleteLogin = null;
             await LoadAsync();
@@ -218,7 +218,7 @@ public partial class UsersPanel
         _guestMessage = null;
         try
         {
-            if (!await HackUserAccounts.RequestGuestAccountCreationAsync(Context, Context.CancellationToken))
+            if (!await KazoUserAccounts.RequestGuestAccountCreationAsync(Context, Context.CancellationToken))
             {
                 _guestMessage = L["Users.Guest.Unavailable"];
             }
@@ -239,7 +239,7 @@ public partial class UsersPanel
             return;
         }
 
-        HackNewUserAccount account = new(
+        KazoNewUserAccount account = new(
             _newLogin.Trim().ToLowerInvariant(),
             _newDisplayName.Trim(),
             _newIsAdministrator ? AppAuthority.Administrator : AppAuthority.User,
@@ -250,7 +250,7 @@ public partial class UsersPanel
             return;
         }
 
-        if (HackUserAccounts.ValidateNewAccount(account) is { } reason)
+        if (KazoUserAccounts.ValidateNewAccount(account) is { } reason)
         {
             (_addMessage, _addFailed) = (L["Users.Error.Failed", reason], true);
             return;
@@ -259,7 +259,7 @@ public partial class UsersPanel
         _busy = true;
         try
         {
-            HackUserAccount created = await HackUserAccounts.CreateAsync(Context, account, Context.CancellationToken);
+            KazoUserAccount created = await KazoUserAccounts.CreateAsync(Context, account, Context.CancellationToken);
             (_addMessage, _addFailed) = (L["Users.Add.Done", created.LoginName], false);
             (_newLogin, _newDisplayName, _newIsAdministrator) = (string.Empty, string.Empty, false);
             await LoadAsync();
@@ -278,12 +278,12 @@ public partial class UsersPanel
     /// <summary>The rules of ADR 0120 and the confirmation, checked before anything is sent.</summary>
     private string? Check(string newPassword, string confirmation)
     {
-        if (newPassword.Length < HackUserAccounts.MinimumPasswordLength)
+        if (newPassword.Length < KazoUserAccounts.MinimumPasswordLength)
         {
-            return L["Users.Error.TooShort", HackUserAccounts.MinimumPasswordLength];
+            return L["Users.Error.TooShort", KazoUserAccounts.MinimumPasswordLength];
         }
 
-        if (HackUserAccounts.ValidateNewPassword(newPassword) is { } reason)
+        if (KazoUserAccounts.ValidateNewPassword(newPassword) is { } reason)
         {
             return L["Users.Error.Failed", reason];
         }
@@ -291,11 +291,11 @@ public partial class UsersPanel
         return string.Equals(newPassword, confirmation, StringComparison.Ordinal) ? null : L["Users.Error.Mismatch"].Value;
     }
 
-    private static string StateCode(HackUserAccount account) => !account.IsEnabled ? "L" : account.HasPassword ? "P" : "NP";
+    private static string StateCode(KazoUserAccount account) => !account.IsEnabled ? "L" : account.HasPassword ? "P" : "NP";
 
-    private string StateTitle(HackUserAccount account) =>
+    private string StateTitle(KazoUserAccount account) =>
         L[!account.IsEnabled ? "Users.State.Locked" : account.HasPassword ? "Users.State.Password" : "Users.State.NoPassword"];
 
-    private static string StateClass(HackUserAccount account) =>
+    private static string StateClass(KazoUserAccount account) =>
         !account.IsEnabled || !account.HasPassword ? "badge badge-warning" : "badge badge-ok";
 }

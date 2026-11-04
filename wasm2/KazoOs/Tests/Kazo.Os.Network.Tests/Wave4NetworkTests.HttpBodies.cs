@@ -70,9 +70,9 @@ public sealed partial class Wave4NetworkTests
     public async Task Put_with_json_reaches_the_site_with_its_type_and_bytes_and_comes_back_typed()
     {
         EnterApp(new GrantAllCapabilityChecker());
-        using HackHttpClient client = new();
+        using KazoHttpClient client = new();
 
-        HackHttpResponse response = await client.PutAsync($"{EchoBase}/echo", HackJsonContent.FromJson("{\"name\":\"neo\"}"));
+        KazoHttpResponse response = await client.PutAsync($"{EchoBase}/echo", KazoJsonContent.FromJson("{\"name\":\"neo\"}"));
 
         Assert.Equal(200, response.StatusCode);
         Assert.Equal("PUT", response.GetHeader("X-Echo-Method"));
@@ -87,10 +87,10 @@ public sealed partial class Wave4NetworkTests
     public async Task Form_content_is_parsed_for_the_site_whatever_the_method()
     {
         EnterApp(new GrantAllCapabilityChecker());
-        using HackHttpClient client = new();
+        using KazoHttpClient client = new();
 
-        HackHttpResponse response = await client.PatchAsync(
-            $"{EchoBase}/echo", new HackFormUrlEncodedContent([new("user", "neo anderson"), new("role", "a&b")]));
+        KazoHttpResponse response = await client.PatchAsync(
+            $"{EchoBase}/echo", new KazoFormUrlEncodedContent([new("user", "neo anderson"), new("role", "a&b")]));
 
         Assert.Equal("user=neo+anderson&role=a%26b", response.Content);
         Assert.Equal("role=a&b;user=neo anderson", response.GetHeader("X-Echo-Form"));
@@ -101,9 +101,9 @@ public sealed partial class Wave4NetworkTests
     public async Task Delete_answered_204_has_no_body_and_no_content_type()
     {
         EnterApp(new GrantAllCapabilityChecker());
-        using HackHttpClient client = new();
+        using KazoHttpClient client = new();
 
-        HackHttpResponse response = await client.DeleteAsync($"{EchoBase}/items/42");
+        KazoHttpResponse response = await client.DeleteAsync($"{EchoBase}/items/42");
 
         Assert.Equal(204, response.StatusCode);
         Assert.Equal("No Content", response.ReasonPhrase);
@@ -116,10 +116,10 @@ public sealed partial class Wave4NetworkTests
     public async Task Redirect_307_keeps_method_and_body_while_303_continues_as_a_bodyless_get()
     {
         EnterApp(new GrantAllCapabilityChecker());
-        using HackHttpClient client = new();
+        using KazoHttpClient client = new();
 
-        HackHttpResponse kept = await client.PutAsync($"{EchoBase}/moved-307", new HackStringContent("payload"));
-        HackHttpResponse switched = await client.PutAsync($"{EchoBase}/moved-303", new HackStringContent("payload"));
+        KazoHttpResponse kept = await client.PutAsync($"{EchoBase}/moved-307", new KazoStringContent("payload"));
+        KazoHttpResponse switched = await client.PutAsync($"{EchoBase}/moved-303", new KazoStringContent("payload"));
 
         Assert.Equal(1, kept.RedirectCount);
         Assert.Equal("PUT", kept.GetHeader("X-Echo-Method"));
@@ -144,11 +144,11 @@ public sealed partial class Wave4NetworkTests
     public async Task Known_path_with_unknown_method_answers_405_with_allow_and_options_lists_it()
     {
         EnterApp(new GrantAllCapabilityChecker());
-        using HackHttpClient client = new();
+        using KazoHttpClient client = new();
 
-        HackHttpResponse notAllowed = await client.DeleteAsync($"{EchoBase}/echo-get");
-        HackHttpResponse options = await client.SendAsync(System.Net.Http.HttpMethod.Options, $"{EchoBase}/echo-get");
-        HackHttpResponse unknown = await client.DeleteAsync($"{EchoBase}/nowhere");
+        KazoHttpResponse notAllowed = await client.DeleteAsync($"{EchoBase}/echo-get");
+        KazoHttpResponse options = await client.SendAsync(System.Net.Http.HttpMethod.Options, $"{EchoBase}/echo-get");
+        KazoHttpResponse unknown = await client.DeleteAsync($"{EchoBase}/nowhere");
 
         Assert.Equal(405, notAllowed.StatusCode);
         Assert.Equal("GET, HEAD, OPTIONS", notAllowed.GetHeader("Allow"));
@@ -161,9 +161,9 @@ public sealed partial class Wave4NetworkTests
     public async Task Head_is_served_by_the_get_route_announcing_the_length_without_the_body()
     {
         EnterApp(new GrantAllCapabilityChecker());
-        using HackHttpClient client = new();
+        using KazoHttpClient client = new();
 
-        HackHttpResponse head = await client.SendAsync(System.Net.Http.HttpMethod.Head, $"{EchoBase}/image.png");
+        KazoHttpResponse head = await client.SendAsync(System.Net.Http.HttpMethod.Head, $"{EchoBase}/image.png");
 
         Assert.Equal(200, head.StatusCode);
         Assert.Empty(head.ContentBytes);
@@ -175,10 +175,10 @@ public sealed partial class Wave4NetworkTests
     public async Task Binary_bodies_round_trip_and_text_is_decoded_with_its_charset()
     {
         EnterApp(new GrantAllCapabilityChecker());
-        using HackHttpClient client = new();
+        using KazoHttpClient client = new();
 
         byte[] png = await client.GetByteArrayAsync($"{EchoBase}/image.png");
-        HackHttpResponse latin1 = await client.GetAsync($"{EchoBase}/latin1");
+        KazoHttpResponse latin1 = await client.GetAsync($"{EchoBase}/latin1");
 
         Assert.Equal(BodyEchoController.Png, png);
         Assert.Equal(4, latin1.ContentBytes.Length);
@@ -189,24 +189,24 @@ public sealed partial class Wave4NetworkTests
     public async Task Historical_pages_still_travel_as_text_with_the_structured_page_attached()
     {
         EnterApp(new GrantAllCapabilityChecker());
-        using HackHttpClient client = new();
+        using KazoHttpClient client = new();
 
-        HackHttpResponse page = await client.GetAsync("https://hackersearch.net/");
+        KazoHttpResponse page = await client.GetAsync("https://hackersearch.net/");
 
         Assert.Equal("text/plain; charset=utf-8", page.ContentType);
-        Assert.Equal("HackerSearch", page.Page?.Title);
-        Assert.Contains("Title: HackerSearch", page.Content);
+        Assert.Equal("KazoSearch", page.Page?.Title);
+        Assert.Contains("Title: KazoSearch", page.Content);
     }
 
     [Fact]
-    public async Task HackerSearch_serves_a_json_api_robots_txt_and_redirects_its_form_post()
+    public async Task KazoSearch_serves_a_json_api_robots_txt_and_redirects_its_form_post()
     {
         EnterApp(new GrantAllCapabilityChecker());
-        using HackHttpClient client = new();
+        using KazoHttpClient client = new();
 
-        HackHttpResponse api = await client.GetAsync("https://hackersearch.net/api/search?q=zero%20day");
-        HackHttpResponse robots = await client.GetAsync("https://hackersearch.net/robots.txt");
-        HackHttpResponse search = await client.PostAsync("https://hackersearch.net/search", [new("q", "exploit")]);
+        KazoHttpResponse api = await client.GetAsync("https://hackersearch.net/api/search?q=zero%20day");
+        KazoHttpResponse robots = await client.GetAsync("https://hackersearch.net/robots.txt");
+        KazoHttpResponse search = await client.PostAsync("https://hackersearch.net/search", [new("q", "exploit")]);
 
         Assert.Equal("application/json", api.MediaType);
         using (System.Text.Json.JsonDocument json = System.Text.Json.JsonDocument.Parse(api.Content))
@@ -218,18 +218,18 @@ public sealed partial class Wave4NetworkTests
         Assert.Equal("text/plain", robots.MediaType);
         Assert.StartsWith("User-agent: *", robots.Content);
         Assert.Equal(1, search.RedirectCount);
-        Assert.Equal("exploit - HackerSearch", search.Page?.Title);
+        Assert.Equal("exploit - KazoSearch", search.Page?.Title);
     }
 
     [Fact]
     public async Task Put_needs_network_simulated_write_but_options_only_read()
     {
         EnterApp(new GrantAllCapabilityChecker(AppCapabilities.NetworkSimulatedWrite));
-        using HackHttpClient client = new();
+        using KazoHttpClient client = new();
 
         await Assert.ThrowsAsync<UnauthorizedAccessException>(
-            () => client.PutAsync($"{EchoBase}/echo", new HackStringContent("x")));
-        HackHttpResponse options = await client.SendAsync(System.Net.Http.HttpMethod.Options, $"{EchoBase}/echo");
+            () => client.PutAsync($"{EchoBase}/echo", new KazoStringContent("x")));
+        KazoHttpResponse options = await client.SendAsync(System.Net.Http.HttpMethod.Options, $"{EchoBase}/echo");
 
         Assert.Equal(204, options.StatusCode);
     }

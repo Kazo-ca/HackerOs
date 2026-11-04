@@ -10,7 +10,7 @@
 
   <!--
     ADR 0077 / ADR 0080: the hosted static sites. Two apps in one assembly, like nginx and its
-    control tools in one package: the hackwebd service (HackWebdApp) and the Web Server Manager window
+    control tools in one package: the hackwebd service (KazoWebdApp) and the Web Server Manager window
     (WebServerManagerApp). Being in the same assembly makes hackwebd a companion service of the
     Manager, which may start and stop it without services.manage (IAppServiceControlGateway rule).
   -->

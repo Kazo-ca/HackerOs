@@ -42,7 +42,7 @@ Chantier `exec/8-server-wasm` (série `exec`), ADR
 | État et reprise | `Platform/Kazo.Os.Platform.Core/ServerConnection/ServerPresenceService.cs` |
 | Icône et panneau | `Platform/Kazo.Os.Platform.Blazor/Shell/ServerStatusIndicator.razor` (`.razor.cs`, `.razor.css`) |
 | Zone de notification | `Platform/Kazo.Os.Taskbar.Blazor/Taskbar.razor` (`NotificationAreaContent`) |
-| Composition | `OS/Kazo.Os.Ecosystem.Host/EcosystemServiceCollectionExtensions.cs`, `HackerOsBrowserHostExtensions.cs` |
+| Composition | `OS/Kazo.Os.Ecosystem.Host/EcosystemServiceCollectionExtensions.cs`, `KazoOsBrowserHostExtensions.cs` |
 
 ## Démarrer le serveur
 

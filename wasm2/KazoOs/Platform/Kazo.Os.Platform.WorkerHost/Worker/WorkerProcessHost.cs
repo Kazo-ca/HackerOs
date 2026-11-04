@@ -137,7 +137,7 @@ public sealed class WorkerProcessHost
                     break;
                 case WorkerMessageType.BackgroundJobProgress:
                     Find(root)?.Context.BackgroundJobs.Deliver(
-                        root.GetInt32("j"), new HackBackgroundProgress(root.GetDouble("f"), root.GetOptionalString("m")));
+                        root.GetInt32("j"), new KazoBackgroundProgress(root.GetDouble("f"), root.GetOptionalString("m")));
                     break;
                 case WorkerMessageType.UiInput:
                     Find(root)?.Window?.Deliver(root.GetProperty("d").Clone());
@@ -166,10 +166,10 @@ public sealed class WorkerProcessHost
         _initialized = true;
         _workerId = root.GetInt32("w");
         _heartbeatPeriod = TimeSpan.FromMilliseconds(Math.Max(10, root.GetInt32("hb")));
-        if (_canMeterCpu && root.GetFlag("cpu") && !HackExecutionContext.IsContextSwitchHookInstalled)
+        if (_canMeterCpu && root.GetFlag("cpu") && !KazoExecutionContext.IsContextSwitchHookInstalled)
         {
             _meter = new WorkerCpuMeter();
-            HackExecutionContext.InstallContextSwitchHook(_meter);
+            KazoExecutionContext.InstallContextSwitchHook(_meter);
         }
 
         if (root.TryGetProperty("known", out _))
@@ -307,7 +307,7 @@ public sealed class WorkerProcessHost
         {
             // ADR 0128: a background task, named by its target, with its input as JSON.
             JsonElement target = root.GetProperty("jt");
-            _ = RunJobAsync(process, new HackBackgroundJobTarget(
+            _ = RunJobAsync(process, new KazoBackgroundJobTarget(
                 target.GetString("asm"), target.GetString("ty"), target.GetOptionalString("me"), target.GetString("it")),
                 root.GetString("ji"));
             return;
@@ -408,14 +408,14 @@ public sealed class WorkerProcessHost
     /// input, runs it on the process's scheduler, and reports its result, its fault or its refusal in
     /// the <c>exit</c> message. Progress reports travel as <c>bg.progress</c> notes.
     /// </summary>
-    private async Task RunJobAsync(WorkerProcess process, HackBackgroundJobTarget target, string inputJson)
+    private async Task RunJobAsync(WorkerProcess process, KazoBackgroundJobTarget target, string inputJson)
     {
         RemoteProcessExit exit;
         try
         {
             EnsureKnownAssembly(target.AssemblyName + ".dll");
             Type type = await _loader.LoadEntryTypeAsync(target.AssemblyName + ".dll", target.TypeName).ConfigureAwait(true);
-            HackBackgroundJobRunner.PreparedJob job = HackBackgroundJobRunner.Prepare(type.Assembly, target, inputJson);
+            KazoBackgroundJobRunner.PreparedJob job = KazoBackgroundJobRunner.Prepare(type.Assembly, target, inputJson);
             exit = await process.RunJobAsync(job).ConfigureAwait(true);
         }
         catch (Exception exception) when (exception is ArgumentException or TypeLoadException)
@@ -424,7 +424,7 @@ public sealed class WorkerProcessHost
             exit = new RemoteProcessExit(RemoteProcessExitStatus.Faulted, LaunchFailedExitCode, exception.Message)
             {
                 JobRejected = true,
-                JobFault = new HackBackgroundJobException(exception.GetType().FullName!, exception.Message, exception.StackTrace)
+                JobFault = new KazoBackgroundJobException(exception.GetType().FullName!, exception.Message, exception.StackTrace)
             };
         }
 
@@ -530,7 +530,7 @@ public sealed class WorkerProcessHost
         }
 
         process?.Kill();
-        _rpc.FailProcess(pid, new HackProcessKilledException(pid));
+        _rpc.FailProcess(pid, new KazoProcessKilledException(pid));
         _post(WorkerMessage.Create(WorkerMessageType.KillAck, writer => writer.WriteNumber("p", pid)));
     }
 
@@ -632,7 +632,7 @@ internal sealed class WorkerProcess
             start.WorkingDirectory, start.Environment);
         try
         {
-            using IDisposable ambient = HackExecutionContext.Enter(Context);
+            using IDisposable ambient = KazoExecutionContext.Enter(Context);
             int code = await Control.RunAsync(() =>
             {
                 MarkEntered();
@@ -640,7 +640,7 @@ internal sealed class WorkerProcess
             }).ConfigureAwait(true);
             return RemoteProcessExit.Exited(code);
         }
-        catch (HackProcessKilledException)
+        catch (KazoProcessKilledException)
         {
             return new RemoteProcessExit(RemoteProcessExitStatus.Killed);
         }
@@ -659,9 +659,9 @@ internal sealed class WorkerProcess
     /// token is the process token (cancelled by the caller's <c>int</c> or a stop request), its reports
     /// go to the OS as <c>bg.progress</c> notes.
     /// </summary>
-    public async Task<RemoteProcessExit> RunJobAsync(HackBackgroundJobRunner.PreparedJob job)
+    public async Task<RemoteProcessExit> RunJobAsync(KazoBackgroundJobRunner.PreparedJob job)
     {
-        HackBackgroundContext context = new(Pid, _token.Token, progress => Channel.Notify(RemoteOps.BackgroundProgress, writer =>
+        KazoBackgroundContext context = new(Pid, _token.Token, progress => Channel.Notify(RemoteOps.BackgroundProgress, writer =>
         {
             writer.WriteNumber("f", progress.Fraction);
             if (progress.Message is { } message)
@@ -671,15 +671,15 @@ internal sealed class WorkerProcess
         }));
         try
         {
-            using IDisposable ambient = HackExecutionContext.Enter(Context);
+            using IDisposable ambient = KazoExecutionContext.Enter(Context);
             string? result = await Control.RunAsync(() =>
             {
                 MarkEntered();
-                return HackBackgroundFaults.RunAsync(job, context);
+                return KazoBackgroundFaults.RunAsync(job, context);
             }).ConfigureAwait(true);
             return new RemoteProcessExit(RemoteProcessExitStatus.Exited) { JobResult = result };
         }
-        catch (HackProcessKilledException)
+        catch (KazoProcessKilledException)
         {
             return new RemoteProcessExit(RemoteProcessExitStatus.Killed);
         }
@@ -687,7 +687,7 @@ internal sealed class WorkerProcess
         {
             return new RemoteProcessExit(RemoteProcessExitStatus.Cancelled);
         }
-        catch (HackBackgroundJobException fault)
+        catch (KazoBackgroundJobException fault)
         {
             return new RemoteProcessExit(RemoteProcessExitStatus.Faulted, 1, fault.Message) { JobFault = fault };
         }
@@ -709,7 +709,7 @@ internal sealed class WorkerProcess
         Window = new WorkerWindowRun(Pid, Context, entryType, _host.Post);
         try
         {
-            using IDisposable ambient = HackExecutionContext.Enter(Context);
+            using IDisposable ambient = KazoExecutionContext.Enter(Context);
             int code = await Control.RunAsync(() =>
             {
                 MarkEntered();
@@ -717,7 +717,7 @@ internal sealed class WorkerProcess
             }).ConfigureAwait(true);
             return RemoteProcessExit.Exited(code);
         }
-        catch (HackProcessKilledException)
+        catch (KazoProcessKilledException)
         {
             return new RemoteProcessExit(RemoteProcessExitStatus.Killed);
         }
@@ -741,7 +741,7 @@ internal sealed class WorkerProcess
             }).ConfigureAwait(true);
             return RemoteProcessExit.Exited(0);
         }
-        catch (HackProcessKilledException)
+        catch (KazoProcessKilledException)
         {
             return new RemoteProcessExit(RemoteProcessExitStatus.Killed);
         }
@@ -790,7 +790,7 @@ internal sealed class WorkerProcess
         Interrupt();
     }
 
-    private async Task ReportStopWorkAsync(HackStopRequestedEventArgs request)
+    private async Task ReportStopWorkAsync(KazoStopRequestedEventArgs request)
     {
         try
         {

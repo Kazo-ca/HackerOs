@@ -33,7 +33,7 @@ associations and grants travel between their devices:
 | Record states and cursors (IndexedDB, schema v4) | `Infrastructure/Kazo.Os.Infrastructure.Browser/Sync/IndexedDbSyncRecordStateRepository.cs`, `IndexedDbSyncCursorRepository.cs` |
 | OS conflict dialog | `Platform/Kazo.Os.Platform.Blazor/Sync/SyncConflictOverlay.razor` (in `DesktopShell` and `MobileShell`) |
 | Synchronization tab | `Apps/System/Kazo.Os.Apps.Settings/SettingsWindow.razor` |
-| SDK | `Shared/Kazo.Os.AppSdk/Administration/HackServerConnection.cs`, `ServerConnectionContracts.cs` |
+| SDK | `Shared/Kazo.Os.AppSdk/Administration/KazoServerConnection.cs`, `ServerConnectionContracts.cs` |
 | Automatic connection to the server that serves the OS, status icon ([`server-hosting.md`](server-hosting.md)) | `ServerConnection/ServerPresenceService.cs`, `HostInfoClient.cs`, `Platform/Kazo.Os.Platform.Blazor/Shell/ServerStatusIndicator.razor` |
 | Tombstone purge (server) | `Server/Kazo.Os.Server/Services/SyncService.cs` (`PurgeExpiredTombstonesAsync`), `SyncTombstonePurgeService.cs` |
 
@@ -156,13 +156,13 @@ paused = true
 
 ## Usage / API
 
-SDK (`HackServerConnection`, dangerous capability `server.connection.manage`):
+SDK (`KazoServerConnection`, dangerous capability `server.connection.manage`):
 
 | Method | Effect |
 | --- | --- |
-| `GetConflictsAsync()` | Pending conflicts (`HackSyncConflict(Domain, Path, DetectedAt)`). |
+| `GetConflictsAsync()` | Pending conflicts (`KazoSyncConflict(Domain, Path, DetectedAt)`). |
 | `ShowConflictsAsync()` | Opens the OS conflict dialog. |
-| `GetSyncStatusAsync()` | `HackSyncStatus`: active, suspended, online, last pass, sent, received, last error, interval. |
+| `GetSyncStatusAsync()` | `KazoSyncStatus`: active, suspended, online, last pass, sent, received, last error, interval. |
 | `SetSyncPausedAsync(bool)` | Writes `paused` in the user layer; a resume launches a pass. |
 | `SyncNowAsync()` | One full pass right away. |
 | `SyncAsync(domaine, sens)` | Unchanged: one domain in one direction. |
@@ -173,7 +173,7 @@ Platform (`IFileSystemSyncService`): `PushAsync` and `PullAsync` return a
 `ConflictsChanged` event, `ListSynchronizedDirectoriesAsync`.
 
 Command: `trash list` adds "(deleted on another device)" to the items trashed
-by the sync; `HackTrashItem.DeletedOnAnotherDevice` tells apps.
+by the sync; `KazoTrashItem.DeletedOnAnotherDevice` tells apps.
 
 ## Implementation decisions
 
@@ -211,7 +211,7 @@ by the sync; `HackTrashItem.DeletedOnAnotherDevice` tells apps.
   tombstone that restores the defaults).
 - `Tests/Kazo.Os.Server.Tests/SyncServiceTests.cs`: purge after 90 days, row
   with the highest sequence kept.
-- `Tests/Kazo.Os.AppSdk.Tests/IO/HackTrashTests.cs`: origin read from the
+- `Tests/Kazo.Os.AppSdk.Tests/IO/KazoTrashTests.cs`: origin read from the
   `.trashinfo`.
 
 ## Task list

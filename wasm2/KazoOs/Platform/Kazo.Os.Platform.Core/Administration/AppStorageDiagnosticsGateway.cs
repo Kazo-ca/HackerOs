@@ -5,7 +5,7 @@ using Kazo.Os.Simulation.Abstractions.Gateways;
 namespace Kazo.Os.Platform.Core.Administration;
 
 /// <summary>
-/// Reads the raw storage of the machine for <c>HackStorageDiagnostics</c> (ADR 0056, section 11).
+/// Reads the raw storage of the machine for <c>KazoStorageDiagnostics</c> (ADR 0056, section 11).
 /// The browser host implements it over IndexedDB (<c>IndexedDbInspectorService</c> of
 /// <c>Infrastructure.Browser</c>); Platform Core never touches the database itself.
 /// </summary>
@@ -13,7 +13,7 @@ public interface IStorageInspector
 {
     /// <summary>Reads every object store in one transaction and resolves each file's virtual path.</summary>
     /// <param name="cancellationToken">Cancels the read.</param>
-    Task<HackStorageSnapshot> CaptureAsync(CancellationToken cancellationToken = default);
+    Task<KazoStorageSnapshot> CaptureAsync(CancellationToken cancellationToken = default);
 }
 
 /// <summary>Trusted <see cref="IAppStorageDiagnosticsGateway"/>: checks <c>system.storage.inspect</c>, then reads the snapshot.</summary>
@@ -35,7 +35,7 @@ internal sealed class AppStorageDiagnosticsGateway : IAppStorageDiagnosticsGatew
     }
 
     /// <inheritdoc />
-    public async ValueTask<IReadOnlyList<HackWebSiteDatabaseInfo>> GetWebSiteDatabasesAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<IReadOnlyList<KazoWebSiteDatabaseInfo>> GetWebSiteDatabasesAsync(CancellationToken cancellationToken = default)
     {
         _capabilities.Require(AppCapabilities.SystemStorageInspect);
         return _webSites is null ? [] : await _webSites.ListAsync(cancellationToken).ConfigureAwait(false);
@@ -53,7 +53,7 @@ internal sealed class AppStorageDiagnosticsGateway : IAppStorageDiagnosticsGatew
     }
 
     /// <inheritdoc />
-    public async ValueTask<HackStorageSnapshot> GetSnapshotAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<KazoStorageSnapshot> GetSnapshotAsync(CancellationToken cancellationToken = default)
     {
         _capabilities.Require(AppCapabilities.SystemStorageInspect);
         IStorageInspector inspector = _inspector?.Invoke()

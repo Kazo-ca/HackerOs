@@ -12,7 +12,7 @@ using Kazo.Os.Simulation.Abstractions.Sessions;
 
 namespace Kazo.Os.Platform.Core.Tests.Execution;
 
-/// <summary>ADR 0057 section 7: <see cref="HackDriveInfo"/> over the OS's <see cref="AppDriveGateway"/>.</summary>
+/// <summary>ADR 0057 section 7: <see cref="KazoDriveInfo"/> over the OS's <see cref="AppDriveGateway"/>.</summary>
 public sealed class AppDriveGatewayTests
 {
     private const long GiB = 1024L * 1024 * 1024;
@@ -24,9 +24,9 @@ public sealed class AppDriveGatewayTests
         AppDriveGateway gateway = new(
             () => fixture.Router, VirtualHardwareProfile.Default, new FixedUsage(new StorageUsage(3 * GiB, null)));
 
-        HackDriveSnapshot drive = Assert.Single(await gateway.GetDrivesAsync());
+        KazoDriveSnapshot drive = Assert.Single(await gateway.GetDrivesAsync());
 
-        Assert.Equal(new HackDriveSnapshot("/", "idbfs", "hda", 8 * GiB, 5 * GiB), drive);
+        Assert.Equal(new KazoDriveSnapshot("/", "idbfs", "hda", 8 * GiB, 5 * GiB), drive);
         Assert.Equal(8 * GiB, VirtualHardwareProfile.DefaultStorageCapacityBytes);
     }
 
@@ -37,28 +37,28 @@ public sealed class AppDriveGatewayTests
         AppDriveGateway gateway = new(
             () => fixture.Router, VirtualHardwareProfile.Default, new FixedUsage(new StorageUsage(3 * GiB, 2 * GiB)));
 
-        HackDriveSnapshot drive = Assert.Single(await gateway.GetDrivesAsync());
+        KazoDriveSnapshot drive = Assert.Single(await gateway.GetDrivesAsync());
 
         Assert.Equal(2 * GiB, drive.TotalSize);
         Assert.Equal(0, drive.AvailableFreeSpace);
     }
 
     [Fact]
-    public async Task HackDriveInfo_reads_the_ambient_apps_drives_like_DriveInfo()
+    public async Task KazoDriveInfo_reads_the_ambient_apps_drives_like_DriveInfo()
     {
         VirtualFileSystemFixture fixture = new();
         AppDriveGateway gateway = new(
             () => fixture.Router,
             new VirtualHardwareProfile("small", 1, 1, 1, 1, storageCapacityBytes: 1000),
             new FixedUsage(new StorageUsage(250, null)));
-        using IDisposable scope = HackExecutionContext.Enter(new DriveOnlyContext(gateway));
+        using IDisposable scope = KazoExecutionContext.Enter(new DriveOnlyContext(gateway));
 
-        HackDriveInfo drive = Assert.Single(await HackDriveInfo.GetDrivesAsync());
+        KazoDriveInfo drive = Assert.Single(await KazoDriveInfo.GetDrivesAsync());
 
         Assert.Equal("/", drive.Name);
         Assert.Equal("idbfs", drive.DriveFormat);
         Assert.Equal("hda", drive.VolumeLabel);
-        Assert.Equal(HackDriveType.Fixed, drive.DriveType);
+        Assert.Equal(KazoDriveType.Fixed, drive.DriveType);
         Assert.True(drive.IsReady);
         Assert.Equal(1000, drive.TotalSize);
         Assert.Equal(750, drive.AvailableFreeSpace);
@@ -67,7 +67,7 @@ public sealed class AppDriveGatewayTests
     }
 
     [Fact]
-    public async Task A_network_drive_is_listed_with_no_size_and_mounted_through_HackDriveInfo()
+    public async Task A_network_drive_is_listed_with_no_size_and_mounted_through_KazoDriveInfo()
     {
         VirtualFileSystemFixture fixture = await VirtualFileSystemFixture.CreateSeededAsync();
         FakeHostFolderAccess access = new() { NextPick = new FakeHostFolder("Projects") };
@@ -78,21 +78,21 @@ public sealed class AppDriveGatewayTests
         {
             NetworkDrives = () => drives
         };
-        using IDisposable scope = HackExecutionContext.Enter(new DriveOnlyContext(gateway));
+        using IDisposable scope = KazoExecutionContext.Enter(new DriveOnlyContext(gateway));
 
-        Assert.True(await HackDriveInfo.IsHostFolderSupportedAsync());
-        HackDriveInfo? mounted = await HackDriveInfo.MountHostFolderAsync();
-        HackDriveInfo[] all = await HackDriveInfo.GetDrivesAsync();
+        Assert.True(await KazoDriveInfo.IsHostFolderSupportedAsync());
+        KazoDriveInfo? mounted = await KazoDriveInfo.MountHostFolderAsync();
+        KazoDriveInfo[] all = await KazoDriveInfo.GetDrivesAsync();
 
         Assert.NotNull(mounted);
         Assert.Equal("/mnt/Projects", mounted.Name);
-        Assert.Equal(HackDriveType.Network, mounted.DriveType);
+        Assert.Equal(KazoDriveType.Network, mounted.DriveType);
         Assert.Equal("hostfs", mounted.DriveFormat);
         Assert.Equal("Projects", mounted.VolumeLabel);
         Assert.Equal(["/", "/mnt/Projects"], all.Select(static drive => drive.Name));
-        await HackDriveInfo.UnmountAsync("/mnt/Projects");
-        Assert.Single(await HackDriveInfo.GetDrivesAsync());
-        await Assert.ThrowsAsync<IOException>(() => HackDriveInfo.UnmountAsync("/mnt/Projects"));
+        await KazoDriveInfo.UnmountAsync("/mnt/Projects");
+        Assert.Single(await KazoDriveInfo.GetDrivesAsync());
+        await Assert.ThrowsAsync<IOException>(() => KazoDriveInfo.UnmountAsync("/mnt/Projects"));
     }
 
     [Fact]
@@ -119,10 +119,10 @@ public sealed class AppDriveGatewayTests
             Name = "Drives",
             Version = "1.0.0",
             PublisherId = "org.tests",
-            Description = "HackDriveInfo test application.",
+            Description = "KazoDriveInfo test application.",
             Kind = AppKind.Terminal,
             EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", "DrivesApp"),
-            SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+            SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
             Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
             Resources = AppResourceProfileManifest.None
         };

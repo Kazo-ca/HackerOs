@@ -1,11 +1,11 @@
 @namespace Kazo.Os.Samples.Intranet.Board.Pages
 @page "/board/tasks/{Id:int}"
-@inherits HackComponentBase
+@inherits KazoComponentBase
 @*
     One card: a page with a route parameter, reached from the board without a reload. Saving calls
     PUT /api/tasks/{id}; the link back is a navigation within the site.
 *@
-<HackPageTitle Title="@($"Card {Id} - Intranet")" />
+<KazoPageTitle Title="@($"Card {Id} - Intranet")" />
 <p class="task-crumbs"><a href="/board" id="task-back">← Board</a></p>
 @if (_error is not null)
 {

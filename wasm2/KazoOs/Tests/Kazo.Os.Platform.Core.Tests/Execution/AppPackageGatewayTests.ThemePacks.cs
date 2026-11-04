@@ -9,7 +9,7 @@ using Kazo.Os.Platform.Core.Tests.Apps.ThemePacks;
 namespace Kazo.Os.Platform.Core.Tests.Execution;
 
 /// <summary>
-/// Theme packs of the Hack Store through <c>HackAppPackages</c>' gateway (ADR 0213): unpacked as
+/// Theme packs of the Hack Store through <c>KazoAppPackages</c>' gateway (ADR 0213): unpacked as
 /// they are in <c>theme-packs/&lt;id&gt;/</c>, for the session user without an administrator or
 /// for every user with ADR 0189's two-step approval.
 /// </summary>
@@ -28,20 +28,20 @@ public sealed partial class AppPackageGatewayTests
         FakeApproval approval = new(AppInstallApprovalOutcome.Approved);
         AppManagementGateway gateway = await harness.CreateGatewayAsync(agent, approval: approval);
 
-        HackThemePackInstallReport report = await gateway.InstallThemePackAsync(Pack);
+        KazoThemePackInstallReport report = await gateway.InstallThemePackAsync(Pack);
 
         Assert.Equal(0, agent.Calls);
         Assert.Empty(approval.Requests);
         Assert.False(report.SystemWide);
         Assert.False(report.RestartRequired);
-        Assert.Equal(HackPackageTrust.Verified, report.Trust);
+        Assert.Equal(KazoPackageTrust.Verified, report.Trust);
         Assert.Equal($"catalog:official/{Pack}@1.0.0", report.Source);
-        Assert.Equal(HackThemePackParts.Themes | HackThemePackParts.Wallpapers | HackThemePackParts.Icons | HackThemePackParts.Sounds | HackThemePackParts.Cursors, report.Parts);
+        Assert.Equal(KazoThemePackParts.Themes | KazoThemePackParts.Wallpapers | KazoThemePackParts.Icons | KazoThemePackParts.Sounds | KazoThemePackParts.Cursors, report.Parts);
         Assert.Contains("--hos-accent", await harness.Settings.ReadAsync($"{PersonalPack}/themes/neon-night.theme"), StringComparison.Ordinal);
         Assert.Contains("version=1.0.0", await harness.Settings.ReadAsync($"{PersonalPack}/{AppPackageInstaller.InstallRecordFileName}"), StringComparison.Ordinal);
         Assert.Null(await harness.Settings.StatAsync(SystemPack));
-        HackInstalledThemePack installed = Assert.Single(await gateway.GetInstalledThemePacksAsync());
-        Assert.Equal(new HackInstalledThemePack(Pack, "Neon", "1.0.0", $"catalog:official/{Pack}@1.0.0", false, report.Parts), installed);
+        KazoInstalledThemePack installed = Assert.Single(await gateway.GetInstalledThemePacksAsync());
+        Assert.Equal(new KazoInstalledThemePack(Pack, "Neon", "1.0.0", $"catalog:official/{Pack}@1.0.0", false, report.Parts), installed);
     }
 
     [Fact]
@@ -50,10 +50,10 @@ public sealed partial class AppPackageGatewayTests
         Harness harness = await Harness.CreateAsync();
         harness.PublishThemePackCatalog("1.0.0");
 
-        HackAppCatalog official = Assert.Single(await (await harness.CreateGatewayAsync(new CountingAgent(succeed: true))).GetPackageCatalogsAsync());
+        KazoAppCatalog official = Assert.Single(await (await harness.CreateGatewayAsync(new CountingAgent(succeed: true))).GetPackageCatalogsAsync());
 
-        HackCatalogApp pack = Assert.Single(official.Apps);
-        Assert.Equal(HackCatalogItemKind.ThemePack, pack.Kind);
+        KazoCatalogApp pack = Assert.Single(official.Apps);
+        Assert.Equal(KazoCatalogItemKind.ThemePack, pack.Kind);
         Assert.Equal($"catalog:official/{Pack}", pack.Source);
     }
 
@@ -64,8 +64,8 @@ public sealed partial class AppPackageGatewayTests
         harness.PublishThemePackCatalog("1.0.0");
         AppManagementGateway gateway = await harness.CreateGatewayAsync(new CountingAgent(succeed: true));
 
-        HackPackageException asApp = await Assert.ThrowsAsync<HackPackageException>(() => gateway.InstallPackageAsync(Pack).AsTask());
-        HackPackageException unknown = await Assert.ThrowsAsync<HackPackageException>(() => gateway.InstallThemePackAsync("org.example.missing").AsTask());
+        KazoPackageException asApp = await Assert.ThrowsAsync<KazoPackageException>(() => gateway.InstallPackageAsync(Pack).AsTask());
+        KazoPackageException unknown = await Assert.ThrowsAsync<KazoPackageException>(() => gateway.InstallThemePackAsync("org.example.missing").AsTask());
 
         Assert.Equal("apps.package.not-in-catalog", asApp.Code);
         Assert.Equal("themes.pack.not-in-catalog", unknown.Code);
@@ -79,9 +79,9 @@ public sealed partial class AppPackageGatewayTests
         CountingAgent agent = new(succeed: true);
         FakeApproval approval = new(AppInstallApprovalOutcome.Approved);
         AppManagementGateway gateway = await harness.CreateGatewayAsync(agent, approval: approval);
-        await gateway.InstallThemePackAsync(Pack, HackPackageScope.User);
+        await gateway.InstallThemePackAsync(Pack, KazoPackageScope.User);
 
-        HackThemePackInstallReport report = await gateway.InstallThemePackAsync(Pack, HackPackageScope.System);
+        KazoThemePackInstallReport report = await gateway.InstallThemePackAsync(Pack, KazoPackageScope.System);
 
         Assert.True(report.SystemWide);
         Assert.Equal(1, agent.Calls);
@@ -102,7 +102,7 @@ public sealed partial class AppPackageGatewayTests
         await gateway.InstallThemePackAsync(Pack + "@1.0.0");
         Assert.NotNull(await harness.Settings.StatAsync($"{PersonalPack}/wallpapers/grid.png"));
 
-        HackThemePackInstallReport report = await gateway.InstallThemePackAsync(Pack);
+        KazoThemePackInstallReport report = await gateway.InstallThemePackAsync(Pack);
 
         Assert.Equal("1.1.0", report.Version);
         Assert.Equal("1.0.0", report.PreviousVersion);
@@ -121,9 +121,9 @@ public sealed partial class AppPackageGatewayTests
         FakeApproval approval = new(AppInstallApprovalOutcome.Approved);
         AppManagementGateway gateway = await harness.CreateGatewayAsync(new CountingAgent(succeed: true), approval: approval);
 
-        HackPackageException refused = await Assert.ThrowsAsync<HackPackageException>(
-            () => gateway.InstallThemePackAsync(Pack, HackPackageScope.User).AsTask());
-        HackThemePackInstallReport report = await gateway.InstallThemePackAsync(Pack);
+        KazoPackageException refused = await Assert.ThrowsAsync<KazoPackageException>(
+            () => gateway.InstallThemePackAsync(Pack, KazoPackageScope.User).AsTask());
+        KazoThemePackInstallReport report = await gateway.InstallThemePackAsync(Pack);
 
         Assert.Equal("apps.package.blocked", refused.Code);
         Assert.True(report.SystemWide);
@@ -138,8 +138,8 @@ public sealed partial class AppPackageGatewayTests
         CountingAgent agent = new(succeed: true);
         AppManagementGateway gateway = await harness.CreateGatewayAsync(agent, approval: new FakeApproval(AppInstallApprovalOutcome.Approved));
 
-        HackPackageException error = await Assert.ThrowsAsync<HackPackageException>(
-            () => gateway.InstallThemePackAsync(Pack, HackPackageScope.System).AsTask());
+        KazoPackageException error = await Assert.ThrowsAsync<KazoPackageException>(
+            () => gateway.InstallThemePackAsync(Pack, KazoPackageScope.System).AsTask());
 
         Assert.Equal("apps.package.hash-mismatch", error.Code);
         Assert.Equal(0, agent.Calls);
@@ -156,14 +156,14 @@ public sealed partial class AppPackageGatewayTests
         AppManagementGateway gateway = await harness.CreateGatewayAsync(agent, approval: approval);
         await gateway.InstallThemePackAsync(Pack);
 
-        HackInstalledThemePack personal = await gateway.RemoveThemePackAsync(Pack);
+        KazoInstalledThemePack personal = await gateway.RemoveThemePackAsync(Pack);
 
         Assert.False(personal.SystemWide);
         Assert.Equal(0, agent.Calls);
         Assert.Null(await harness.Settings.StatAsync(PersonalPack));
 
-        await gateway.InstallThemePackAsync(Pack, HackPackageScope.System);
-        HackInstalledThemePack system = await gateway.RemoveThemePackAsync(Pack);
+        await gateway.InstallThemePackAsync(Pack, KazoPackageScope.System);
+        KazoInstalledThemePack system = await gateway.RemoveThemePackAsync(Pack);
 
         Assert.True(system.SystemWide);
         Assert.Equal(AppInstallApprovalOperation.Remove, approval.Requests[^1].Operation);

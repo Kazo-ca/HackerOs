@@ -73,7 +73,7 @@ jobs:
           $allowedScriptLines = @{
             './Apps/Samples/Kazo.Os.Samples.Intranet/Views/Notes/Index.razor' = '<script src="@Url.Content("~/js/notes.js")"></script>'
             './Tests/Kazo.Os.AppSdk.Web.Tests/Views/Pages/Index.razor' = '<script src="@Url.Content("~/js/notes.js")"></script>'
-            './Tests/Kazo.Os.AppSdk.Web.Tests/Views/Cshtml/FromRazor.razor' = '<HackSection Name="Scripts"><script src="/js/from-razor.js"></script></HackSection>'
+            './Tests/Kazo.Os.AppSdk.Web.Tests/Views/Cshtml/FromRazor.razor' = '<KazoSection Name="Scripts"><script src="/js/from-razor.js"></script></KazoSection>'
           }
           $violations = @($sourceMatches | Where-Object {
             $sourceMatch = [regex]::Match($_, '^(?<path>.*?\.razor):\d+:(?<markup>.*)$')

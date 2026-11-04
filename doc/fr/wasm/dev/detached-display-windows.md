@@ -2,7 +2,7 @@
 
 # Fenêtres détachées
 
-Le contrat des surfaces pour les apps (`IDisplaySurfaceService`, `DisplaySurfaceContent`, événements, `HackBrowser.OpenDetachedAsync`) est dans [`display-surface-api.md`](../framework/display-surface-api.md).
+Le contrat des surfaces pour les apps (`IDisplaySurfaceService`, `DisplaySurfaceContent`, événements, `KazoBrowser.OpenDetachedAsync`) est dans [`display-surface-api.md`](../framework/display-surface-api.md).
 
 **Phase web, chantier `web/10-detached-window`** ([`asp-hack-plan.md`](plans/asp-hack-plan.md),
 section 5). Décision : [ADR 0078](adr/0078-detached-display-windows.md),
@@ -115,7 +115,7 @@ Ce qui fait marcher Blazor dans un autre document (ADR 0081 §2) :
 - `Tests/Kazo.Os.Platform.Blazor.Tests/Display/DisplaySurfaceServiceTests.cs` :
   ouverture, fenêtre bloquée et notification, hôte sans JavaScript, événements
   et fermeture par l'utilisateur, fermeture par l'OS, titre, montage et focus.
-- `Tests/Kazo.Os.AppSdk.Tests/Apps/HackBrowserTests.cs` : arguments du
+- `Tests/Kazo.Os.AppSdk.Tests/Apps/KazoBrowserTests.cs` : arguments du
   lancement, adresse vide, navigateur absent.
 - `Tests/Kazo.Os.UI.E2E.Tests/BrowserDetachedWindowTests.cs` (Chromium réel,
   hôte `test/test`) : détacher une page, vérifier son script, son `fetch`, la
@@ -133,7 +133,7 @@ Ce qui fait marcher Blazor dans un autre document (ADR 0081 §2) :
 - [x] Relais des messages du pont des pages isolées.
 - [x] Navigateur : `⧉`, placeholder, barre de la fenêtre détachée, rattacher,
   réécriture de la page, titre suivi, `--detached`.
-- [x] `HackBrowser.OpenAsync` et `OpenDetachedAsync`.
+- [x] `KazoBrowser.OpenAsync` et `OpenDetachedAsync`.
 - [x] Notification et bandeau quand la fenêtre est bloquée.
 - [x] Tests unitaires et E2E.
 - [x] ADR 0081, ce document, index, plan, références du SDK.

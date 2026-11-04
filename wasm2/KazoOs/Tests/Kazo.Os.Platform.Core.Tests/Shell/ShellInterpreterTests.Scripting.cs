@@ -243,9 +243,9 @@ public sealed partial class ShellInterpreterTests
         Assert.Equal(fixture.Host.ProcessId, window.ParentPid);
         Assert.True(fixture.Orchestrator.TryGetRunningInstance(window.Pid, out _, out IAppExecutionContext? context));
         Assert.Equal(["terminal", "--profile", "dark"], context!.Environment.GetCommandLineArgs());
-        using (HackExecutionContext.Enter(context))
+        using (KazoExecutionContext.Enter(context))
         {
-            HackConsole.WriteLine("hello from the window");
+            KazoConsole.WriteLine("hello from the window");
         }
 
         Assert.False(running.IsCompleted);
@@ -303,7 +303,7 @@ public sealed partial class ShellInterpreterTests
     {
         Fixture fixture = await Fixture.CreateAsync();
         fixture.Grant(AppCapabilities.ShellHost);
-        await using Kazo.Os.AppSdk.Shell.IHackShell shell = await Kazo.Os.AppSdk.Shell.HackShell.StartAsync(fixture.Host);
+        await using Kazo.Os.AppSdk.Shell.IHackShell shell = await Kazo.Os.AppSdk.Shell.KazoShell.StartAsync(fixture.Host);
 
         Assert.Equal(unfinished, shell.NeedsMoreInput(text));
     }

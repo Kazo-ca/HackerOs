@@ -7,7 +7,7 @@ namespace Kazo.Os.Platform.Core.Administration;
 
 /// <summary>
 /// Asks the OS authentication agent (ADR 0055, section 5) for one administrator operation on
-/// behalf of one app instance, and turns a refusal into <see cref="HackUnauthorizedAccessException"/>.
+/// behalf of one app instance, and turns a refusal into <see cref="KazoUnauthorizedAccessException"/>.
 /// Shared by the administration gateways of ADR 0056 (sections 9 and 11).
 /// </summary>
 internal sealed class AdministratorGate
@@ -39,7 +39,7 @@ internal sealed class AdministratorGate
         _caller = caller ?? throw new ArgumentNullException(nameof(caller));
         _principal = principal ?? throw new ArgumentNullException(nameof(principal));
         _isRootElevated = isRootElevated;
-        _language = language ?? (static () => Kazo.Os.AppSdk.Globalization.HackLocale.DefaultLanguage);
+        _language = language ?? (static () => Kazo.Os.AppSdk.Globalization.KazoLocale.DefaultLanguage);
     }
 
     /// <summary>Gets the session user running the app.</summary>
@@ -56,16 +56,16 @@ internal sealed class AdministratorGate
     /// <param name="action">Stable operation id written to <c>/var/log/auth.log</c>.</param>
     /// <param name="subject">Path or resource named in the denial.</param>
     /// <param name="cancellationToken">Cancels the prompt.</param>
-    /// <exception cref="HackUnauthorizedAccessException">No agent, or no administrator authenticated.</exception>
+    /// <exception cref="KazoUnauthorizedAccessException">No agent, or no administrator authenticated.</exception>
     public async Task<string> AuthenticateAsync(string operation, string action, string subject, CancellationToken cancellationToken)
     {
         IAdministratorAuthenticationAgent agent = _agent?.Invoke()
-            ?? throw new HackUnauthorizedAccessException("No administrator authentication agent is available on this host.", path: subject);
+            ?? throw new KazoUnauthorizedAccessException("No administrator authentication agent is available on this host.", path: subject);
         AdministratorAuthenticationResult result = await agent.AuthenticateAsync(
             new AdministratorAuthenticationRequest(_caller, operation, action, _principal, _isRootElevated),
             cancellationToken).ConfigureAwait(false);
         return result.Succeeded
             ? result.AdministratorLogin ?? "root"
-            : throw new HackUnauthorizedAccessException($"Administrator authentication failed ({result.FailureReason}).", path: subject);
+            : throw new KazoUnauthorizedAccessException($"Administrator authentication failed ({result.FailureReason}).", path: subject);
     }
 }

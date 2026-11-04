@@ -30,14 +30,14 @@ public sealed partial class ExplorerFileView
     /// <summary>The commands that would change the archive, hidden from its menus and refused (§9).</summary>
     private static readonly HashSet<string> ArchiveWriteCommands = new(StringComparer.Ordinal)
     {
-        HackFileMenuItems.Cut,
-        HackFileMenuItems.Paste,
-        HackFileMenuItems.PasteInto,
-        HackFileMenuItems.Rename,
-        HackFileMenuItems.Delete,
-        HackFileMenuItems.DeletePermanently,
-        HackFileMenuItems.NewFolder,
-        HackFileMenuItems.Properties
+        KazoFileMenuItems.Cut,
+        KazoFileMenuItems.Paste,
+        KazoFileMenuItems.PasteInto,
+        KazoFileMenuItems.Rename,
+        KazoFileMenuItems.Delete,
+        KazoFileMenuItems.DeletePermanently,
+        KazoFileMenuItems.NewFolder,
+        KazoFileMenuItems.Properties
     };
 
     private IAppFileSystemWatchGateway? _watch;
@@ -213,7 +213,7 @@ public sealed partial class ExplorerFileView
     }
 
     /// <summary>Hides the entries that would change the archive from a menu opened inside one (§9).</summary>
-    private static void HideArchiveWriteCommands(HackMenuDefinition menu)
+    private static void HideArchiveWriteCommands(KazoMenuDefinition menu)
     {
         foreach (string command in ArchiveWriteCommands)
         {
@@ -232,19 +232,19 @@ public sealed partial class ExplorerFileView
     /// <param name="sources">The dragged or pasted paths.</param>
     /// <param name="destination">The folder they go to, outside any archive.</param>
     /// <returns>The sources that are not in an archive, and the result of the extractions.</returns>
-    private async Task<(IReadOnlyList<string> Others, HackFileTransferResult Extracted)> ExtractFromArchivesAsync(
+    private async Task<(IReadOnlyList<string> Others, KazoFileTransferResult Extracted)> ExtractFromArchivesAsync(
         IReadOnlyList<string> sources, VirtualPath destination)
     {
         List<string> others = [];
-        List<HackFileTransferItemResult> completed = [];
+        List<KazoFileTransferItemResult> completed = [];
         List<string> skipped = [];
-        List<HackFileTransferFailure> failures = [];
+        List<KazoFileTransferFailure> failures = [];
         if (Archives is not { } archives)
         {
-            return (sources, new HackFileTransferResult(completed, skipped, failures));
+            return (sources, new KazoFileTransferResult(completed, skipped, failures));
         }
 
-        HackFileConflictResolution? always = null;
+        KazoFileConflictResolution? always = null;
         foreach (string source in sources)
         {
             VirtualPath path = VirtualPath.Parse(source);
@@ -254,7 +254,7 @@ public sealed partial class ExplorerFileView
                 continue;
             }
 
-            string name = HackFileOperations.GetName(source);
+            string name = KazoFileOperations.GetName(source);
             VirtualPath target = Child(destination, name);
             FileSystemResult<FileSystemEntrySnapshot> existing = await archives.FileSystem.StatAsync(new FileSystemStatRequest(target), HostContext.CancellationToken);
             if (existing.Succeeded)
@@ -262,23 +262,23 @@ public sealed partial class ExplorerFileView
                 FileSystemResult<FileSystemEntrySnapshot> entry = await FileSystem.StatAsync(new FileSystemStatRequest(path), HostContext.CancellationToken);
                 bool sourceIsDirectory = entry.Value?.Metadata.Kind == FileSystemEntryKind.Directory;
                 bool targetIsDirectory = existing.Value!.Metadata.Kind == FileSystemEntryKind.Directory;
-                HackFileConflictResolution resolution = always ?? await AskConflictAsync(
-                    new HackFileTransferConflict(source, target.Value, sourceIsDirectory, targetIsDirectory));
+                KazoFileConflictResolution resolution = always ?? await AskConflictAsync(
+                    new KazoFileTransferConflict(source, target.Value, sourceIsDirectory, targetIsDirectory));
                 if (resolution.ApplyToAll)
                 {
                     always = resolution;
                 }
 
-                if (resolution.Choice == HackFileConflictChoice.Skip)
+                if (resolution.Choice == KazoFileConflictChoice.Skip)
                 {
                     skipped.Add(source);
                     continue;
                 }
 
-                if (resolution.Choice == HackFileConflictChoice.KeepBoth)
+                if (resolution.Choice == KazoFileConflictChoice.KeepBoth)
                 {
                     HashSet<string> taken = await NamesInAsync(destination);
-                    target = Child(destination, HackFileOperations.GetCopyName(name, sourceIsDirectory, taken.Contains));
+                    target = Child(destination, KazoFileOperations.GetCopyName(name, sourceIsDirectory, taken.Contains));
                 }
                 else
                 {
@@ -286,16 +286,16 @@ public sealed partial class ExplorerFileView
                     {
                         if (targetIsDirectory)
                         {
-                            await HackDirectory.DeleteAsync(target.Value, recursive: true, HostContext.CancellationToken);
+                            await KazoDirectory.DeleteAsync(target.Value, recursive: true, HostContext.CancellationToken);
                         }
                         else
                         {
-                            await HackFile.DeleteAsync(target.Value, HostContext.CancellationToken);
+                            await KazoFile.DeleteAsync(target.Value, HostContext.CancellationToken);
                         }
                     }
                     catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
                     {
-                        failures.Add(new HackFileTransferFailure(source, exception.Message));
+                        failures.Add(new KazoFileTransferFailure(source, exception.Message));
                         continue;
                     }
                 }
@@ -303,15 +303,15 @@ public sealed partial class ExplorerFileView
 
             if (await archives.ExtractAsync(location, target, HostContext.CancellationToken) is { } error)
             {
-                failures.Add(new HackFileTransferFailure(source, error.Code.ToString()));
+                failures.Add(new KazoFileTransferFailure(source, error.Code.ToString()));
             }
             else
             {
-                completed.Add(new HackFileTransferItemResult(source, target.Value));
+                completed.Add(new KazoFileTransferItemResult(source, target.Value));
             }
         }
 
-        return (others, new HackFileTransferResult(completed, skipped, failures));
+        return (others, new KazoFileTransferResult(completed, skipped, failures));
     }
 
     private async Task<HashSet<string>> NamesInAsync(VirtualPath folder)
@@ -326,6 +326,6 @@ public sealed partial class ExplorerFileView
         VirtualPath.Parse(folder.Value == "/" ? $"/{name}" : $"{folder.Value}/{name}");
 
     /// <summary>Joins two transfer results into the one summary of a drop or a paste.</summary>
-    private static HackFileTransferResult Merge(HackFileTransferResult first, HackFileTransferResult second) =>
+    private static KazoFileTransferResult Merge(KazoFileTransferResult first, KazoFileTransferResult second) =>
         new([.. first.Completed, .. second.Completed], [.. first.Skipped, .. second.Skipped], [.. first.Failures, .. second.Failures], first.Cancelled || second.Cancelled);
 }

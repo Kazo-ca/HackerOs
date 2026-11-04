@@ -2,7 +2,7 @@
 
 # Corbeille
 
-L'API `HackTrash` et le format `.trashinfo` destinés aux apps sont dans [`trash-api.md`](../framework/trash-api.md).
+L'API `KazoTrash` et le format `.trashinfo` destinés aux apps sont dans [`trash-api.md`](../framework/trash-api.md).
 
 Phase 3 du plan de refonte ([`ecosystem-rebuild-plan.md`](plans/ecosystem-rebuild-plan.md),
 section 7.4), décidée par l'[ADR 0052](adr/0052-trash.md). Chantier
@@ -24,7 +24,7 @@ bureaux Linux : ce sont de simples fichiers du dossier personnel, donc
   (ADR 0101 §1, [`synchronization.md`](synchronization.md)) : son `.trashinfo`
   porte les clés d'extension `X-HackerOS-Origin=deleted-on-another-device` et
   `X-HackerOS-Device=<appareil>`, que les autres implémentations ignorent.
-  `HackTrashItem.DeletedOnAnotherDevice` le dit aux apps. Mettre à la corbeille
+  `KazoTrashItem.DeletedOnAnotherDevice` le dit aux apps. Mettre à la corbeille
   est un renommage synchronisé ; vider la corbeille envoie les suppressions aux
   autres appareils. Les éléments mis à la corbeille par la synchro restent sur
   cet appareil.
@@ -39,7 +39,7 @@ l'espace disque comme n'importe quel fichier. Pas de cache `directorysizes`.
 ## Code du format `.trashinfo`
 
 Le format `.trashinfo` (lecture tolérante, écriture, noms `nom.N.ext`) est dans
-`HackTrashInfo.cs` (interne au SDK).
+`KazoTrashInfo.cs` (interne au SDK).
 
 ## Commandes
 
@@ -89,20 +89,20 @@ Sans argument, `trash` affiche l'aide sur la sortie d'erreur et renvoie 1.
   - « Delete » (barre d'outils, menu, Suppr) met la sélection à la corbeille,
     sans confirmation ;
   - Maj+Suppr et « Delete permanently » demandent une confirmation (Yes/No),
-    puis suppriment avec `HackFile`/`HackDirectory.DeleteAsync` ;
+    puis suppriment avec `KazoFile`/`KazoDirectory.DeleteAsync` ;
   - les erreurs (droits, `/proc`) s'affichent dans la bande d'erreur.
 - Un panneau latéral « Places » propose **Home** et **Trash**. « Trash » affiche
   `TrashView` (`Apps/System/Kazo.Os.Apps.FileExplorer/TrashView.razor`) à la place
   de la liste ; FileView reste monté (caché) et retrouve son dossier au retour.
-- **TrashView** (dérive de `HackComponentBase`, donc dans le contexte ambiant de
-  l'explorateur) lit `HackTrash.GetItemsAsync` — jamais le dossier brut — et
+- **TrashView** (dérive de `KazoComponentBase`, donc dans le contexte ambiant de
+  l'explorateur) lit `KazoTrash.GetItemsAsync` — jamais le dossier brut — et
   affiche nom, emplacement d'origine, date de suppression et taille. Actions :
   « Restore » (ou double-clic, Entrée), « Delete permanently » (ou Suppr) et
   « Empty trash », ces deux dernières après confirmation. Ctrl+clic pour une
   sélection multiple. Après une restauration, l'explorateur rafraîchit FileView.
 - **Dépôt sur la corbeille** (phase 4, `rebuild/4-file-explorer`) : glisser des
   éléments sur l'entrée « Trash » du panneau Places ou sur la vue Corbeille les
-  envoie à la corbeille (`FileTransfer.MoveToTrashAsync`, aujourd'hui `HackFileOperations.MoveToTrashAsync`). Voir
+  envoie à la corbeille (`FileTransfer.MoveToTrashAsync`, aujourd'hui `KazoFileOperations.MoveToTrashAsync`). Voir
   [`file-explorer.md`](file-explorer.md).
 
 Correctif au passage : `Shared/Kazo.Os.AppSdk.FileView/_Imports.razor` importe
@@ -116,7 +116,7 @@ Couper, copier, coller et glisser-déposer vers la corbeille restent en phase 4
 
 ## Tests
 
-- `Tests/Kazo.Os.AppSdk.Tests/IO/HackTrashTests.cs` : format `.trashinfo`, droits
+- `Tests/Kazo.Os.AppSdk.Tests/IO/KazoTrashTests.cs` : format `.trashinfo`, droits
   `0700`/`0600`, noms en collision, dossiers entiers et taille, refus (racine,
   dossier personnel, corbeille), élément déjà dans la corbeille, montage virtuel
   sans `.trashinfo` résiduel, `sudo` vers `/root`, listage (orphelins, origine
@@ -134,7 +134,7 @@ Couper, copier, coller et glisser-déposer vers la corbeille restent en phase 4
 
 ## Liste des tâches
 
-- [x] `HackTrash`, `HackTrashItem` et le format `.trashinfo` (`HackTrashInfo`).
+- [x] `KazoTrash`, `KazoTrashItem` et le format `.trashinfo` (`KazoTrashInfo`).
 - [x] `IAppExecutionContext.IsRootElevated` pour la corbeille de l'utilisateur effectif.
 - [x] `rm` vers la corbeille, `rm --permanent`, `-r` obligatoire pour un dossier, options groupées.
 - [x] Commande `trash` (put, list, restore, rm, empty).

@@ -90,10 +90,10 @@ internal sealed class AppCatalogGateway : IAppCatalogGateway
     internal void BindAmbientContext(Kazo.Os.AppSdk.IAppExecutionContext context) => _ambient.Bind(context);
 
     /// <inheritdoc />
-    public ValueTask<IReadOnlyList<HackAppInfo>> GetInstalledAsync(CancellationToken cancellationToken = default)
+    public ValueTask<IReadOnlyList<KazoAppInfo>> GetInstalledAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        IReadOnlyList<HackAppInfo> installed = [.. _catalog.Manifests.Values
+        IReadOnlyList<KazoAppInfo> installed = [.. _catalog.Manifests.Values
             .Where(manifest => _enablement.IsEnabled(manifest.Id))
             .Select(Describe)
             .OrderBy(info => info.Name, StringComparer.OrdinalIgnoreCase)
@@ -102,7 +102,7 @@ internal sealed class AppCatalogGateway : IAppCatalogGateway
     }
 
     /// <inheritdoc />
-    public async ValueTask<IReadOnlyList<HackAppInfo>> GetHandlersAsync(
+    public async ValueTask<IReadOnlyList<KazoAppInfo>> GetHandlersAsync(
         VirtualPath path, string? mediaType = null, CancellationToken cancellationToken = default)
     {
         if (_resolver is null)
@@ -113,7 +113,7 @@ internal sealed class AppCatalogGateway : IAppCatalogGateway
         FileHandlerCandidates candidates = await _resolver().GetHandlerAppIdsAsync(path, _user, mediaType, cancellationToken).ConfigureAwait(false);
 
         // The default (if any) stays first; the others are sorted by name, as a user reads them.
-        IEnumerable<HackAppInfo> others = candidates.AppIds
+        IEnumerable<KazoAppInfo> others = candidates.AppIds
             .Where(id => !string.Equals(id, candidates.DefaultAppId, StringComparison.Ordinal))
             .Select(id => Describe(_catalog.Manifests[id]))
             .OrderBy(info => info.Name, StringComparer.OrdinalIgnoreCase);
@@ -123,26 +123,26 @@ internal sealed class AppCatalogGateway : IAppCatalogGateway
     }
 
     /// <inheritdoc />
-    public async ValueTask<IReadOnlyList<HackFileAssociation>> GetDefaultHandlersAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<IReadOnlyList<KazoFileAssociation>> GetDefaultHandlersAsync(CancellationToken cancellationToken = default)
     {
         FileAssociationResolver resolver = RequireAssociations(AppCapabilities.FileAssociationsRead);
         IReadOnlyList<ConfiguredFileAssociation> rows = await resolver.GetConfiguredDefaultsAsync(_user, cancellationToken).ConfigureAwait(false);
-        return [.. rows.Select(static row => new HackFileAssociation(
+        return [.. rows.Select(static row => new KazoFileAssociation(
             row.Target,
             row.Action,
             row.AppId,
-            row.Layer == FileAssociationLayer.User ? HackFileAssociationLayer.User : HackFileAssociationLayer.System))];
+            row.Layer == FileAssociationLayer.User ? KazoFileAssociationLayer.User : KazoFileAssociationLayer.System))];
     }
 
     /// <inheritdoc />
-    public async ValueTask<HackDefaultHandlerStatus> SetUserDefaultHandlerAsync(
+    public async ValueTask<KazoDefaultHandlerStatus> SetUserDefaultHandlerAsync(
         string target, string action, string? appId, CancellationToken cancellationToken = default)
     {
         FileAssociationResolver resolver = RequireAssociations(AppCapabilities.FileAssociationsRead);
         _capabilities!.Require(AppCapabilities.FileSystemUserHomeWrite);
         if (_user is null)
         {
-            return HackDefaultHandlerStatus.WriteFailed;
+            return KazoDefaultHandlerStatus.WriteFailed;
         }
 
         UserDefaultHandlerChangeStatus status = await resolver
@@ -150,13 +150,13 @@ internal sealed class AppCatalogGateway : IAppCatalogGateway
             .ConfigureAwait(false);
         return status switch
         {
-            UserDefaultHandlerChangeStatus.Changed => HackDefaultHandlerStatus.Changed,
-            UserDefaultHandlerChangeStatus.InvalidTarget => HackDefaultHandlerStatus.InvalidTarget,
-            UserDefaultHandlerChangeStatus.InvalidAction => HackDefaultHandlerStatus.InvalidAction,
-            UserDefaultHandlerChangeStatus.AppNotFound => HackDefaultHandlerStatus.AppNotFound,
-            UserDefaultHandlerChangeStatus.AppCannotHandle => HackDefaultHandlerStatus.AppCannotHandle,
-            UserDefaultHandlerChangeStatus.FileInvalid => HackDefaultHandlerStatus.FileInvalid,
-            _ => HackDefaultHandlerStatus.WriteFailed
+            UserDefaultHandlerChangeStatus.Changed => KazoDefaultHandlerStatus.Changed,
+            UserDefaultHandlerChangeStatus.InvalidTarget => KazoDefaultHandlerStatus.InvalidTarget,
+            UserDefaultHandlerChangeStatus.InvalidAction => KazoDefaultHandlerStatus.InvalidAction,
+            UserDefaultHandlerChangeStatus.AppNotFound => KazoDefaultHandlerStatus.AppNotFound,
+            UserDefaultHandlerChangeStatus.AppCannotHandle => KazoDefaultHandlerStatus.AppCannotHandle,
+            UserDefaultHandlerChangeStatus.FileInvalid => KazoDefaultHandlerStatus.FileInvalid,
+            _ => KazoDefaultHandlerStatus.WriteFailed
         };
     }
 
@@ -176,8 +176,8 @@ internal sealed class AppCatalogGateway : IAppCatalogGateway
     /// Describes an app in the calling process's language (ADR 0104 section 4): <c>LANG=fr_CA.UTF-8</c>
     /// lists "Calculatrice", <c>LANG=en_US.UTF-8</c> "Calculator".
     /// </summary>
-    private HackAppInfo Describe(AppManifest manifest) => HackAppInfo.FromManifest(
-        _catalog.Localize(manifest, _ambient.Context?.Culture ?? Kazo.Os.AppSdk.Globalization.HackLocale.DefaultLanguage),
+    private KazoAppInfo Describe(AppManifest manifest) => KazoAppInfo.FromManifest(
+        _catalog.Localize(manifest, _ambient.Context?.Culture ?? Kazo.Os.AppSdk.Globalization.KazoLocale.DefaultLanguage),
         _catalog.IsSystemApp(manifest.Id));
 
     private void OnInstallationChanged(object? sender, EventArgs e)

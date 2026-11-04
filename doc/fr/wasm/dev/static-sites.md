@@ -2,7 +2,7 @@
 
 # Sites statiques : fichiers `.site`, `hackwebd` et Web Server Manager
 
-Le format des fichiers `.site` et l'API `HackWebSiteFile` destinés aux apps et aux outils sont dans [`static-site-files.md`](../framework/static-site-files.md).
+Le format des fichiers `.site` et l'API `KazoWebSiteFile` destinés aux apps et aux outils sont dans [`static-site-files.md`](../framework/static-site-files.md).
 
 Chantier `web/5-static-sites` de la phase web (ASP.Hack). Décisions :
 [ADR 0077](adr/0077-hosted-static-sites.md) et ses ajustements,
@@ -30,12 +30,12 @@ Publier un dossier comme site web, comme avec IIS, Apache ou nginx :
 ```text
  Web Server Manager ─┬─ écrit ───────────► /etc/hackweb/sites/*.site      (admin, tous ports, servi en www-data)
  (fenêtre)           │                     ~/.config/hackweb/sites/*.site (utilisateur, ports ≥ 1024)
-                     ├─ HackServiceController (start/stop/restart hackwebd)
-                     └─ HackIPGlobalProperties (sockets de hackwebd → état des sites)
+                     ├─ KazoServiceController (start/stop/restart hackwebd)
+                     └─ KazoIPGlobalProperties (sockets de hackwebd → état des sites)
 
  hackwebd (service, worker dédié, AutoStart)
-   ├─ HackFileSystemWatcher "*.site" sur les deux dossiers ─► rechargement à chaud
-   ├─ HackHttpListener par préfixe normalisé ─► StaticFileHandler
+   ├─ KazoFileSystemWatcher "*.site" sur les deux dossiers ─► rechargement à chaud
+   ├─ KazoHttpListener par préfixe normalisé ─► StaticFileHandler
    │      └─ WwwDataAccess (droits « other » pour un site système)
    └─ context.Logging.AppendToLogFile ─► /var/log/hackweb/<site>.access.log, error.log
 
@@ -44,8 +44,8 @@ Publier un dossier comme site web, comme avec IIS, Apache ou nginx :
 
 | Élément | Projet | Rôle |
 |---|---|---|
-| `HackWebdApp`, `HackWebdService` | `Apps/System/Kazo.Os.Apps.WebServer` | Le service : réconciliation des écoutes, boucle d'acceptation, journaux. |
-| `StaticFileHandler`, `WwwDataAccess`, `HackWebdLog` | idem, `Daemon/` | Traitement d'une requête, droits de `www-data`, formats des journaux. |
+| `KazoWebdApp`, `KazoWebdService` | `Apps/System/Kazo.Os.Apps.WebServer` | Le service : réconciliation des écoutes, boucle d'acceptation, journaux. |
+| `StaticFileHandler`, `WwwDataAccess`, `KazoWebdLog` | idem, `Daemon/` | Traitement d'une requête, droits de `www-data`, formats des journaux. |
 | `WebServerManagerApp`, `WebServerManagerWindow`, `WebSiteStore` | idem, `Manager/` | L'app à fenêtre et sa logique sans interface. |
 | `WebServerManagerApp.RegisterFileContextMenu`, `PublishSiteIntent` | `Apps/System/Kazo.Os.Apps.WebServer` | Entrée « Publish as a web site… » des menus de dossiers, inscrite par Web Server Manager (ADR 0151 §8, ADR 0159) : portée `Directory`, un seul dossier, intent `org.hackeros.web-server-manager.publish-site.v1` reçu au lancement ou par `IntentReceived`. Était `PublishSiteContextMenuProvider`, puis `FileExplorerMenuEntries.PublishSite`. |
 | `HostedSiteNameSource` | `Platform/Kazo.Os.Platform.Core/Network/Local` | Source 4 du résolveur (`IHostedSiteNameSource`, asynchrone). |
@@ -64,7 +64,7 @@ services d'une même app. Les deux sont des apps système (`IsSystemApp` sur la
   arrêtable par `systemctl stop hackwebd` (les ports se libèrent :
   `curl` répond alors `Failed to connect`, code 7).
 - À chaque changement d'un `.site` (ou au démarrage), il **réconcilie** : un
-  `HackHttpListener` par préfixe normalisé ; un préfixe déjà pris (par un autre
+  `KazoHttpListener` par préfixe normalisé ; un préfixe déjà pris (par un autre
   site ou un autre programme) est journalisé en `[emerg]` et le site reste
   « partial » ou « down ».
 - Requête : `GET`, `HEAD`, `OPTIONS` (sinon `405` + `Allow`) ; chemin décodé,
@@ -168,17 +168,17 @@ puis Save dans le Manager et **Open in browser**.
 - `Tests/Kazo.Os.Apps.WebServer.Tests` : correspondance URL → fichier
   (traversées refusées), états des sites, suggestion d'un site depuis un
   dossier, formats des journaux.
-- `Tests/Kazo.Os.AppSdk.Tests/Net/HackWebSiteFileTests.cs` : lecture,
+- `Tests/Kazo.Os.AppSdk.Tests/Net/KazoWebSiteFileTests.cs` : lecture,
   validation et écriture des `.site`.
 - `Tests/Kazo.Os.Platform.Core.Tests/Diagnostics/DaemonLogFileTests.cs` :
   `LogFileTarget.ForDaemon` et la règle « apps système seulement ».
 
 ## Liste des tâches
 
-- [x] Format `.site` dans le SDK (`HackWebSite`, `HackWebSiteFile`), validation façon `nginx -t`.
+- [x] Format `.site` dans le SDK (`KazoWebSite`, `KazoWebSiteFile`), validation façon `nginx -t`.
 - [x] `/etc/hackweb/sites` créé par `FileSystemSeeder` ; `~/.config/hackweb/sites` créé par `hackwebd`.
 - [x] Journaux des démons système (`AppendToLogFile`, `LogFileTarget.ForDaemon`, opération `log.file` des workers).
-- [x] `HostedSiteNameSource` et `IHostedSiteNameSource` asynchrone ; `HackAppInfo.Urls` (sites externes).
+- [x] `HostedSiteNameSource` et `IHostedSiteNameSource` asynchrone ; `KazoAppInfo.Urls` (sites externes).
 - [x] `hackwebd` : réconciliation à chaud, fichiers, documents par défaut, liste, MIME, `301`/`304`/`403`/`404`/`405`, `www-data`.
 - [x] Web Server Manager : groupes, états, formulaire, portée, Browse, Save/Start/Stop/Delete, navigateur, journaux, contrôle du service.
 - [x] Explorateur : « Publish as a web site… » sur un dossier.

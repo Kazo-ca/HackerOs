@@ -211,7 +211,7 @@ public enum FileViewClipboardAction
 
 /// <summary>
 /// Hands a cut, copy or paste initiated through <see cref="FileView"/>'s own UI to the host, which
-/// owns the clipboard (<c>HackClipboard</c>) and runs the transfer. Supplied only when the host set
+/// owns the clipboard (<c>KazoClipboard</c>) and runs the transfer. Supplied only when the host set
 /// <see cref="FileView.ClipboardRequested"/>.
 /// </summary>
 /// <param name="action">Cut, copy or paste.</param>
@@ -248,7 +248,7 @@ public sealed record FileViewDraggedEntry(VirtualPath Path, bool IsDirectory);
 public sealed class FileViewDropRequestedEventArgs(
     VirtualPath? destination,
     IReadOnlyList<FileViewDraggedEntry> entries,
-    IReadOnlyList<Kazo.Os.AppSdk.IO.HackHostFile> hostFiles,
+    IReadOnlyList<Kazo.Os.AppSdk.IO.KazoHostFile> hostFiles,
     bool copy) : EventArgs
 {
     /// <summary>Gets the target directory, or <see langword="null"/> for a drop zone without one.</summary>
@@ -258,7 +258,7 @@ public sealed class FileViewDropRequestedEventArgs(
     public IReadOnlyList<FileViewDraggedEntry> Entries { get; } = entries;
 
     /// <summary>Gets the files dropped from the host system.</summary>
-    public IReadOnlyList<Kazo.Os.AppSdk.IO.HackHostFile> HostFiles { get; } = hostFiles;
+    public IReadOnlyList<Kazo.Os.AppSdk.IO.KazoHostFile> HostFiles { get; } = hostFiles;
 
     /// <summary>Gets whether Ctrl was held: copy instead of move.</summary>
     public bool Copy { get; } = copy;

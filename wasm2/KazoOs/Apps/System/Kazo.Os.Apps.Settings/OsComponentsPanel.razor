@@ -1,4 +1,4 @@
-@inherits Kazo.Os.AppSdk.Blazor.HackComponentBase
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
 @using Kazo.Os.AppSdk.Administration
 
 @*
@@ -21,7 +21,7 @@
             <div class="@(_messageIsError ? "components-message error" : "components-message")" role="status">@_message</div>
         }
 
-        @foreach (HackComponentContractInfo contract in _overview)
+        @foreach (KazoComponentContractInfo contract in _overview)
         {
             <section key="@contract.Contract" class="setting-group components-contract">
                 <header class="components-contract-header">
@@ -31,7 +31,7 @@
                 <p class="setting-desc">@ContractDescription(contract.Contract)</p>
 
                 <div class="components-providers" role="radiogroup" aria-label="@ContractTitle(contract.Contract)">
-                    @foreach (HackComponentProviderInfo provider in contract.Providers)
+                    @foreach (KazoComponentProviderInfo provider in contract.Providers)
                     {
                         bool active = IsActive(contract, provider);
                         <button type="button" role="radio" key="@provider.AppId"

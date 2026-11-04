@@ -82,7 +82,7 @@ public sealed class CodeEditorWorkspace
         while (pending.TryDequeue(out VirtualPath directory))
         {
             // ADR 0069: one checkpoint per folder of the walk.
-            await HackProcess.CheckpointAsync(cancellationToken);
+            await KazoProcess.CheckpointAsync(cancellationToken);
             FileSystemResult<FileSystemDirectorySnapshot> listing = await _fileSystem.EnumerateAsync(
                 new FileSystemEnumerateRequest(directory, FileSystemLinkBehavior.NoFollow), cancellationToken);
             if (!listing.Succeeded || listing.Value is null)

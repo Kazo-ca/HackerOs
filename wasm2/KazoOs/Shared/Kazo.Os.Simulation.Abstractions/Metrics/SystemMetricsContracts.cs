@@ -223,7 +223,7 @@ public interface ICpuTimeAccounting
 public readonly record struct StorageUsage(long UsedBytes, long? QuotaBytes);
 
 /// <summary>
-/// Measures the space the persistent filesystem occupies, behind <c>HackDriveInfo</c>. Implemented
+/// Measures the space the persistent filesystem occupies, behind <c>KazoDriveInfo</c>. Implemented
 /// by the browser persistence; the browser quota comes from <c>navigator.storage.estimate()</c>,
 /// called by infrastructure code only (ADR 0055).
 /// </summary>

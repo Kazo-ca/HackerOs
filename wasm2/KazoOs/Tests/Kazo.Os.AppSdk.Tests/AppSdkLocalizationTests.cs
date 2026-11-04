@@ -18,7 +18,7 @@ public sealed class AppSdkLocalizationTests
     [Fact]
     public void Errno_reasons_follow_the_language_of_the_app()
     {
-        HackFileNotFoundException missing = new("/tmp/x");
+        KazoFileNotFoundException missing = new("/tmp/x");
 
         Assert.Equal("No such file or directory", ShellErrorText.Describe(missing));
         Assert.Equal("No such file or directory", ShellErrorText.Describe(missing, Context("en_US.UTF-8")));
@@ -29,32 +29,32 @@ public sealed class AppSdkLocalizationTests
     [Fact]
     public void Site_validation_speaks_the_language_of_the_app()
     {
-        HackWebSite site = new() { Name = "docs", Root = "/home/alice/www", Bindings = [] };
-        HackWebSite https = site with { Bindings = ["https://docs.hack/"] };
-        HackWebSite malformed = site with { Bindings = ["ftp://docs.hack/"] };
+        KazoWebSite site = new() { Name = "docs", Root = "/home/alice/www", Bindings = [] };
+        KazoWebSite https = site with { Bindings = ["https://docs.hack/"] };
+        KazoWebSite malformed = site with { Bindings = ["ftp://docs.hack/"] };
 
         Assert.Equal(
             "a site needs at least one binding, such as 'http://localhost:8080/'",
-            Assert.Single(HackWebSiteFile.Validate(site, HackWebSiteScope.User)));
+            Assert.Single(KazoWebSiteFile.Validate(site, KazoWebSiteScope.User)));
         Assert.Equal(
             "un site a besoin d'au moins une liaison, comme « http://localhost:8080/ »",
-            Assert.Single(HackWebSiteFile.Validate(site, HackWebSiteScope.User, Context("fr_FR.UTF-8"))));
+            Assert.Single(KazoWebSiteFile.Validate(site, KazoWebSiteScope.User, Context("fr_FR.UTF-8"))));
         Assert.Equal(
             "« https://docs.hack/ » : une liaison https a besoin d'un certificat de serveur, que hackwebd n'a pas encore",
-            Assert.Single(HackWebSiteFile.Validate(https, HackWebSiteScope.User, Context("fr_FR.UTF-8"))));
+            Assert.Single(KazoWebSiteFile.Validate(https, KazoWebSiteScope.User, Context("fr_FR.UTF-8"))));
         Assert.Equal(
-            HackWebSiteFile.Validate(https, HackWebSiteScope.User),
-            HackWebSiteFile.Validate(https, HackWebSiteScope.User, Context("en_US.UTF-8")));
+            KazoWebSiteFile.Validate(https, KazoWebSiteScope.User),
+            KazoWebSiteFile.Validate(https, KazoWebSiteScope.User, Context("en_US.UTF-8")));
         Assert.StartsWith(
             "« ftp://docs.hack/ » n'est pas une liaison valable : ",
-            Assert.Single(HackWebSiteFile.Validate(malformed, HackWebSiteScope.User, Context("fr_FR.UTF-8"))),
+            Assert.Single(KazoWebSiteFile.Validate(malformed, KazoWebSiteScope.User, Context("fr_FR.UTF-8"))),
             StringComparison.Ordinal);
     }
 
     [Fact]
     public void Every_sdk_text_exists_in_english_and_in_french()
     {
-        ResourceManager resources = HackLocalization.GetResourceManager(typeof(Strings));
+        ResourceManager resources = KazoLocalization.GetResourceManager(typeof(Strings));
 
         HashSet<string> english = Keys(resources.GetResourceSet(CultureInfo.InvariantCulture, createIfNotExists: true, tryParents: false));
         HashSet<string> french = Keys(resources.GetResourceSet(CultureInfo.GetCultureInfo("fr"), createIfNotExists: true, tryParents: false));

@@ -1,6 +1,6 @@
 # Kazo.Os.AppSdk.Icons
 
-Offline icon contracts, searchable embedded catalogs, and the native Blazor `HackerIcon`
+Offline icon contracts, searchable embedded catalogs, and the native Blazor `KazoIcon`
 renderer used by Kazo OS apps and reusable shell components. The package embeds its Bootstrap,
 Font Awesome Free, Lucide, and Simple Icons metadata; consumers do not need a CDN, web font, or
 server connection.
@@ -11,7 +11,7 @@ already resolved descriptor:
 ```razor
 @using Kazo.Os.AppSdk.Icons
 
-<HackerIcon Library="IconLibrary.Lucide" Name="settings" Size="20" Title="Settings" />
+<KazoIcon Library="IconLibrary.Lucide" Name="settings" Size="20" Title="Settings" />
 ```
 
 ```csharp
@@ -20,4 +20,4 @@ IconDescriptor settings = catalog.Search("settings", IconLibrary.Lucide, maxResu
 ```
 
 `Kazo.Os.Taskbar.Blazor` consumes this package transitively. Applications may reference it
-directly when they use `HackerIcon`, `IIconCatalog`, or the catalog contracts themselves.
+directly when they use `KazoIcon`, `IIconCatalog`, or the catalog contracts themselves.

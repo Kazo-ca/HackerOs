@@ -125,7 +125,7 @@ public sealed class IndexedDbDiagnosticRepositoryTests
 
         private JsonElement Execute(IndexedDbOperation operation)
         {
-            Assert.Equal(HackerOsIndexedDbSchema.DiagnosticsStoreName, operation.ObjectStoreName);
+            Assert.Equal(KazoOsIndexedDbSchema.DiagnosticsStoreName, operation.ObjectStoreName);
             if (operation.Kind == "add")
             {
                 JsonElement record = JsonSerializer.SerializeToElement(

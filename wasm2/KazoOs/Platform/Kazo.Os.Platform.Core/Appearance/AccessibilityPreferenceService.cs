@@ -9,7 +9,7 @@ namespace Kazo.Os.Platform.Core.Appearance;
 /// <c>accessibility.config</c> (the session user's <c>~/.config/hackeros/</c> over the machine's
 /// <c>/etc/hackeros/</c>), resolved against the host's own settings and against
 /// <c>animationsEnabled</c> of <c>appearance.config</c>. The theme reads <see cref="Effective"/>,
-/// apps read it through <see cref="HackAccessibility"/>.
+/// apps read it through <see cref="KazoAccessibility"/>.
 /// </summary>
 /// <remarks>
 /// Before a sign-in no user layer exists, so the sign-in screens follow <c>/etc</c> alone, as the
@@ -44,7 +44,7 @@ public sealed class AccessibilityPreferenceService : IDisposable
     public LayeredConfigSnapshot? Snapshot { get; private set; }
 
     /// <summary>Gets the effective preferences: <see cref="Settings"/> with every <c>auto</c> resolved.</summary>
-    public HackAccessibilityPreferences Effective { get; private set; } = HackAccessibilityPreferences.Default;
+    public KazoAccessibilityPreferences Effective { get; private set; } = KazoAccessibilityPreferences.Default;
 
     /// <summary>Raised after <see cref="Effective"/> changed.</summary>
     public event Action? Changed;
@@ -117,7 +117,7 @@ public sealed class AccessibilityPreferenceService : IDisposable
 
     private void Apply(AccessibilitySettings settings, LayeredConfigSnapshot? snapshot, bool raiseEvent)
     {
-        HackAccessibilityPreferences effective = AccessibilitySettingsDocuments.Resolve(
+        KazoAccessibilityPreferences effective = AccessibilitySettingsDocuments.Resolve(
             settings, _host.Current, _appearance.Current.AnimationsEnabled);
         bool changed = effective != Effective;
         Settings = settings;

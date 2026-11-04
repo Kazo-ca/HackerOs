@@ -1,7 +1,7 @@
 namespace Kazo.Os.AppSdk.Administration;
 
 /// <summary>State of the host's <c>window-management</c> permission (ADR 0178 §4, ADR 0184).</summary>
-public enum HackScreenPermission
+public enum KazoScreenPermission
 {
     /// <summary>Not read yet.</summary>
     Unknown,
@@ -19,8 +19,8 @@ public enum HackScreenPermission
     Denied,
 }
 
-/// <summary>How <see cref="HackScreens.OpenScreenAsync(CancellationToken)"/> ended.</summary>
-public enum HackScreenOpenStatus
+/// <summary>How <see cref="KazoScreens.OpenScreenAsync(CancellationToken)"/> ended.</summary>
+public enum KazoScreenOpenStatus
 {
     /// <summary>The screen is open.</summary>
     Opened,
@@ -41,7 +41,7 @@ public enum HackScreenOpenStatus
 /// <param name="Width">Width of its work area, in CSS pixels.</param>
 /// <param name="Height">Height of its work area, in CSS pixels.</param>
 /// <param name="IsFullScreen">Whether its browser window is in full screen.</param>
-public sealed record HackScreenInfo(int Number, string? MonitorName, int Width, int Height, bool IsFullScreen);
+public sealed record KazoScreenInfo(int Number, string? MonitorName, int Width, int Height, bool IsFullScreen);
 
 /// <summary>The screens of the session as one app sees them (ADR 0184).</summary>
 /// <param name="Screens">Every open screen, screen 1 first.</param>
@@ -49,15 +49,15 @@ public sealed record HackScreenInfo(int Number, string? MonitorName, int Width, 
 /// <param name="CanOpenScreen">Whether a screen number is still free.</param>
 /// <param name="RestorableScreens">Screens of the last session that « Restore screens » would reopen.</param>
 /// <param name="CallerScreen">The screen of the calling app's window: its focused one, else its first one, else 1.</param>
-public sealed record HackScreensState(
-    IReadOnlyList<HackScreenInfo> Screens,
-    HackScreenPermission Permission,
+public sealed record KazoScreensState(
+    IReadOnlyList<KazoScreenInfo> Screens,
+    KazoScreenPermission Permission,
     bool CanOpenScreen,
     IReadOnlyList<int> RestorableScreens,
     int CallerScreen);
 
 /// <summary>
-/// Trusted OS gateway behind <see cref="HackScreens"/> (ADR 0184). Every member but
+/// Trusted OS gateway behind <see cref="KazoScreens"/> (ADR 0184). Every member but
 /// <see cref="IsSupported"/> requires the capability <c>screens.manage</c>.
 /// </summary>
 public interface IAppScreensGateway
@@ -66,7 +66,7 @@ public interface IAppScreensGateway
     bool IsSupported { get; }
 
     /// <summary>Reads the screens of the session.</summary>
-    HackScreensState GetState();
+    KazoScreensState GetState();
 
     /// <summary>Calls <paramref name="onChanged"/> each time the state changes, until the subscription is disposed.</summary>
     /// <param name="onChanged">The callback, entered in the app's ambient scope.</param>
@@ -75,7 +75,7 @@ public interface IAppScreensGateway
 
     /// <summary>Opens a secondary screen with the smallest free number, during the user's click.</summary>
     /// <param name="cancellationToken">Cancels the request.</param>
-    ValueTask<HackScreenOpenStatus> OpenScreenAsync(CancellationToken cancellationToken = default);
+    ValueTask<KazoScreenOpenStatus> OpenScreenAsync(CancellationToken cancellationToken = default);
 
     /// <summary>Reopens the screens of the last session, during the user's click.</summary>
     /// <param name="cancellationToken">Cancels the request.</param>
@@ -99,5 +99,5 @@ public interface IAppScreensGateway
     /// <summary>Asks the browser for the <c>window-management</c> permission, during the user's click.</summary>
     /// <param name="cancellationToken">Cancels the request.</param>
     /// <returns>The permission after the user answered.</returns>
-    ValueTask<HackScreenPermission> RequestPermissionAsync(CancellationToken cancellationToken = default);
+    ValueTask<KazoScreenPermission> RequestPermissionAsync(CancellationToken cancellationToken = default);
 }

@@ -8,7 +8,7 @@ using Kazo.Os.Simulation.Abstractions.Processes;
 namespace Kazo.Os.Platform.Core.Execution;
 
 /// <summary>
-/// Trusted <see cref="IAppDriveGateway"/> behind <see cref="HackDriveInfo"/> (ADR 0057, section 7):
+/// Trusted <see cref="IAppDriveGateway"/> behind <see cref="KazoDriveInfo"/> (ADR 0057, section 7):
 /// the OS's <c>statfs</c> for every mount that has a size.
 /// </summary>
 /// <remarks>
@@ -57,10 +57,10 @@ public sealed class AppDriveGateway : IAppDriveGateway
     public Func<NetworkDriveService?>? NetworkDrives { get; init; }
 
     /// <inheritdoc />
-    public async ValueTask<IReadOnlyList<HackDriveSnapshot>> GetDrivesAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<IReadOnlyList<KazoDriveSnapshot>> GetDrivesAsync(CancellationToken cancellationToken = default)
     {
         // ADR 0067: time spent in the gateway is the caller's stime (kernel sub-frame).
-        using Kazo.Os.AppSdk.HackExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.HackExecutionContext.EnterKernel();
+        using Kazo.Os.AppSdk.KazoExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.KazoExecutionContext.EnterKernel();
         cancellationToken.ThrowIfCancellationRequested();
         IReadOnlyList<FileSystemMount> mounts = _mounts().Mounts;
         FileSystemMount[] sized =
@@ -68,7 +68,7 @@ public sealed class AppDriveGateway : IAppDriveGateway
             .. mounts.Where(static mount => mount.Provider is not (IVirtualFileSystemProvider or HostFolderFileSystemProvider))
         ];
         // ADR 0181: only the caller's own network drives (every drive for an administrator).
-        HackDriveSnapshot[] network = NetworkDrives?.Invoke() is { } drives
+        KazoDriveSnapshot[] network = NetworkDrives?.Invoke() is { } drives
             ? [.. drives.GetDrives().Select(static drive => Describe(drive))]
             : [];
         if (sized.Length == 0)
@@ -86,7 +86,7 @@ public sealed class AppDriveGateway : IAppDriveGateway
 
         return
         [
-            .. sized.Select(mount => new HackDriveSnapshot(
+            .. sized.Select(mount => new KazoDriveSnapshot(
                 mount.Path.Value,
                 MountDescription.From(mount).Type,
                 _deviceName,
@@ -101,7 +101,7 @@ public sealed class AppDriveGateway : IAppDriveGateway
         NetworkDrives?.Invoke() is { } drives && await drives.IsSupportedAsync(cancellationToken).ConfigureAwait(false);
 
     /// <inheritdoc />
-    public async ValueTask<HackDriveSnapshot?> MountHostFolderAsync(string? mountPoint, CancellationToken cancellationToken = default)
+    public async ValueTask<KazoDriveSnapshot?> MountHostFolderAsync(string? mountPoint, CancellationToken cancellationToken = default)
     {
         NetworkDriveService drives = RequireNetworkDrives();
         try
@@ -141,10 +141,10 @@ public sealed class AppDriveGateway : IAppDriveGateway
         }
     }
 
-    private static HackDriveSnapshot Describe(NetworkDrive drive) =>
+    private static KazoDriveSnapshot Describe(NetworkDrive drive) =>
         new(drive.MountPoint.Value, HostFolderFileSystemProvider.FileSystemType, drive.Name, 0, 0)
         {
-            DriveType = HackDriveType.Network,
+            DriveType = KazoDriveType.Network,
             IsReady = drive.IsConnected
         };
 

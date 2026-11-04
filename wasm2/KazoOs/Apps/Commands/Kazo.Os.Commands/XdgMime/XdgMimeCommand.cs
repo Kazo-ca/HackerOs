@@ -53,7 +53,7 @@ public sealed class XdgMimeCommand : TerminalAppBase
                 _ => Usage(context)
             };
         }
-        catch (HackUnauthorizedAccessException exception)
+        catch (KazoUnauthorizedAccessException exception)
         {
             return Fail(context, 4, exception.Message);
         }
@@ -63,10 +63,10 @@ public sealed class XdgMimeCommand : TerminalAppBase
     private static async Task<int> QueryDefaultAsync(TerminalExecutionContext context, string type, CancellationToken cancellationToken)
     {
         string target = type.Trim().ToLowerInvariant();
-        IReadOnlyList<HackFileAssociation> defaults = await HackApps.GetDefaultHandlersAsync(cancellationToken);
+        IReadOnlyList<KazoFileAssociation> defaults = await KazoApps.GetDefaultHandlersAsync(cancellationToken);
 
         // The user's rows come first: the first match is the one the OS uses.
-        HackFileAssociation? match = defaults.FirstOrDefault(row =>
+        KazoFileAssociation? match = defaults.FirstOrDefault(row =>
             string.Equals(row.Target, target, StringComparison.Ordinal) && string.Equals(row.Action, "open", StringComparison.Ordinal));
         if (match is not null)
         {
@@ -87,20 +87,20 @@ public sealed class XdgMimeCommand : TerminalAppBase
         string path;
         try
         {
-            path = HackPath.GetFullPath(file);
+            path = KazoPath.GetFullPath(file);
         }
         catch (Exception exception) when (exception is ArgumentException or FormatException)
         {
             return Fail(context, 1, text["InvalidPath", file]);
         }
 
-        if (await HackDirectory.ExistsAsync(path, cancellationToken))
+        if (await KazoDirectory.ExistsAsync(path, cancellationToken))
         {
             context.StandardOutput.WriteLine(DirectoryMediaType);
             return 0;
         }
 
-        if (!await HackFile.ExistsAsync(path, cancellationToken))
+        if (!await KazoFile.ExistsAsync(path, cancellationToken))
         {
             return Fail(context, 2, text["FileMissing", file]);
         }
@@ -112,7 +112,7 @@ public sealed class XdgMimeCommand : TerminalAppBase
             return 0;
         }
 
-        IReadOnlyList<HackAppInfo> apps = await HackApps.GetInstalledAsync(cancellationToken);
+        IReadOnlyList<KazoAppInfo> apps = await KazoApps.GetInstalledAsync(cancellationToken);
         string? mediaType = apps
             .SelectMany(static app => app.FileHandlers)
             .Where(handler => handler.MediaType is not null
@@ -132,14 +132,14 @@ public sealed class XdgMimeCommand : TerminalAppBase
         string appId = app.EndsWith(".desktop", StringComparison.OrdinalIgnoreCase) ? app[..^".desktop".Length] : app;
         foreach (string type in types)
         {
-            HackDefaultHandlerStatus status = await HackApps.SetDefaultHandlerAsync(type, appId, "open", cancellationToken);
+            KazoDefaultHandlerStatus status = await KazoApps.SetDefaultHandlerAsync(type, appId, "open", cancellationToken);
             int exitCode = status switch
             {
-                HackDefaultHandlerStatus.Changed => 0,
-                HackDefaultHandlerStatus.InvalidTarget => Fail(context, 1, text["InvalidType", type]),
-                HackDefaultHandlerStatus.AppNotFound => Fail(context, 4, text["AppNotFound", appId]),
-                HackDefaultHandlerStatus.AppCannotHandle => Fail(context, 4, text["AppCannotHandle", appId, type]),
-                HackDefaultHandlerStatus.FileInvalid => Fail(context, 4, text["FileInvalid"]),
+                KazoDefaultHandlerStatus.Changed => 0,
+                KazoDefaultHandlerStatus.InvalidTarget => Fail(context, 1, text["InvalidType", type]),
+                KazoDefaultHandlerStatus.AppNotFound => Fail(context, 4, text["AppNotFound", appId]),
+                KazoDefaultHandlerStatus.AppCannotHandle => Fail(context, 4, text["AppCannotHandle", appId, type]),
+                KazoDefaultHandlerStatus.FileInvalid => Fail(context, 4, text["FileInvalid"]),
                 _ => Fail(context, 4, text["WriteFailed"])
             };
             if (exitCode != 0)

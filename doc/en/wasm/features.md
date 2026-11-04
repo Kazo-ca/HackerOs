@@ -41,8 +41,8 @@ The ecosystem is made of:
 
 ## Why build for or with Kazo OS
 
-- **A familiar API.** The file API looks like `System.IO` (`HackFile`,
-  `HackDirectory`, `HackPath`…) and an application is described by a plain C#
+- **A familiar API.** The file API looks like `System.IO` (`KazoFile`,
+  `KazoDirectory`, `KazoPath`…) and an application is described by a plain C#
   class (`[AppManifest]`). A .NET developer feels at home right away.
 - **Everything is already provided.** Windows, context menus, file dialogs,
   clipboard, notifications, themes, English and French translation,
@@ -173,7 +173,7 @@ This section lists what is released in the `main` branch and online.
   system. ([`settings-app.md`](dev/settings-app.md))
 - **Task manager** and system monitor (processes, memory, CPU).
   ([`task-manager.md`](dev/task-manager.md))
-- **HackPaint** (drawing), **Calculator**, **Theme Editor**, **Icon Viewer**,
+- **KazoPaint** (drawing), **Calculator**, **Theme Editor**, **Icon Viewer**,
   **Error Log Viewer**, **Diagnostic** and **Web Server Manager**.
   ([`hack-paint.md`](dev/hack-paint.md), [`theme-editor.md`](dev/theme-editor.md))
 
@@ -282,8 +282,8 @@ This section lists what is released in the `main` branch and online.
   service, a site, a complete host or a whole application repository, shown
   in Visual Studio and Rider.
   ([`sdk-developer-guide.md`](framework/sdk-developer-guide.md))
-- **Package signing by an application's author**: `HackerOsKeyGen` creates the
-  key, `HackerOsPack` and the template's `publish-packages.yml` workflow sign and
+- **Package signing by an application's author**: `KazoOsKeyGen` creates the
+  key, `KazoOsPack` and the template's `publish-packages.yml` workflow sign and
   publish the `hackeros-packages` branch.
   ([ADR 0219](dev/adr/0219-app-authors-signing-tool.md),
   [`app-repository.md`](framework/app-repository.md))

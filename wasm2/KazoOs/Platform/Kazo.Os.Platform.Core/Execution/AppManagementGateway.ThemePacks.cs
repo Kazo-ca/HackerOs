@@ -9,7 +9,7 @@ using Kazo.Os.Theming.Abstractions;
 namespace Kazo.Os.Platform.Core.Execution;
 
 /// <summary>
-/// Theme packs of the Hack Store behind <see cref="HackAppPackages"/> (ADR 0190, ADR 0213): the OS
+/// Theme packs of the Hack Store behind <see cref="KazoAppPackages"/> (ADR 0190, ADR 0213): the OS
 /// downloads the <c>.hacktheme</c> of a catalog itself, verifies it, and unpacks it for the session
 /// user (written as that user, without an administrator, from a trusted catalog) or for every user
 /// (two-step approval of ADR 0189 §4, then written as the system). A pack holds no code, so it
@@ -18,7 +18,7 @@ namespace Kazo.Os.Platform.Core.Execution;
 internal sealed partial class AppManagementGateway
 {
     /// <inheritdoc />
-    public async ValueTask<IReadOnlyList<HackInstalledThemePack>> GetInstalledThemePacksAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<IReadOnlyList<KazoInstalledThemePack>> GetInstalledThemePacksAsync(CancellationToken cancellationToken = default)
     {
         AppPackageInstaller packages = RequirePackages();
         (IReadOnlyList<InstalledThemePack> system, IReadOnlyList<InstalledThemePack> personal) =
@@ -29,8 +29,8 @@ internal sealed partial class AppManagementGateway
     }
 
     /// <inheritdoc />
-    public async ValueTask<HackThemePackInstallReport> InstallThemePackAsync(
-        string source, HackPackageScope scope = HackPackageScope.Auto, CancellationToken cancellationToken = default)
+    public async ValueTask<KazoThemePackInstallReport> InstallThemePackAsync(
+        string source, KazoPackageScope scope = KazoPackageScope.Auto, CancellationToken cancellationToken = default)
     {
         AppPackageInstaller packages = RequirePackages();
         IAppFileSystemGateway system = CreateSystemWriter();
@@ -91,26 +91,26 @@ internal sealed partial class AppManagementGateway
         await packages
             .CommitThemePackAsync(plan.SystemWide ? system : CreateUserWriter(), plan, by, cancellationToken, personalCopies)
             .ConfigureAwait(false);
-        return new HackThemePackInstallReport(
+        return new KazoThemePackInstallReport(
             pack.Id,
             pack.Name,
             pack.Version.ToString(),
             plan.Source.ToString(),
             plan.PreviousVersion?.ToString(),
             plan.SystemWide,
-            (HackThemePackParts)pack.Parts,
+            (KazoThemePackParts)pack.Parts,
             ToPublic(plan.Trust));
     }
 
     /// <inheritdoc />
-    public async ValueTask<HackInstalledThemePack> RemoveThemePackAsync(
-        string packId, HackPackageScope scope = HackPackageScope.Auto, CancellationToken cancellationToken = default)
+    public async ValueTask<KazoInstalledThemePack> RemoveThemePackAsync(
+        string packId, KazoPackageScope scope = KazoPackageScope.Auto, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(packId);
         AppPackageInstaller packages = RequirePackages();
         (IReadOnlyList<InstalledThemePack> systemInstalled, IReadOnlyList<InstalledThemePack> personalInstalled) =
             await ReadThemePacksAsync(packages, cancellationToken).ConfigureAwait(false);
-        bool forUser = scope == HackPackageScope.User || (scope == HackPackageScope.Auto && personalInstalled.Any(pack => pack.Id == packId));
+        bool forUser = scope == KazoPackageScope.User || (scope == KazoPackageScope.Auto && personalInstalled.Any(pack => pack.Id == packId));
         if (forUser)
         {
             InstalledThemePack removedForUser = await Translate(
@@ -120,7 +120,7 @@ internal sealed partial class AppManagementGateway
         }
 
         InstalledThemePack installed = systemInstalled.FirstOrDefault(pack => pack.Id == packId)
-            ?? throw new HackPackageException("themes.pack.not-installed", $"The theme pack {packId} is not installed.");
+            ?? throw new KazoPackageException("themes.pack.not-installed", $"The theme pack {packId} is not installed.");
         IAppFileSystemGateway system = CreateSystemWriter();
         AppSourcesConfig sources = await packages.ReadSourcesAsync(system, cancellationToken).ConfigureAwait(false);
         AppSourceTrust trust = AppPackageSource.TryParse(installed.Source, out AppPackageSource? source)
@@ -174,12 +174,12 @@ internal sealed partial class AppManagementGateway
 
         if (!ThemePack.IsValidId(text))
         {
-            throw new HackPackageException("themes.pack.bad-source", $"'{source}' is not a theme pack: use a pack id or catalog:name/pack.id, optionally followed by @version.");
+            throw new KazoPackageException("themes.pack.bad-source", $"'{source}' is not a theme pack: use a pack id or catalog:name/pack.id, optionally followed by @version.");
         }
 
         return await Translate(() => packages.FindThemePackInCatalogsAsync(text, version, sources, cancellationToken)).ConfigureAwait(false);
     }
 
-    private static HackInstalledThemePack ToPublic(InstalledThemePack pack) =>
-        new(pack.Id, pack.Name, pack.Version.ToString(), pack.Source, pack.SystemWide, (HackThemePackParts)pack.Parts);
+    private static KazoInstalledThemePack ToPublic(InstalledThemePack pack) =>
+        new(pack.Id, pack.Name, pack.Version.ToString(), pack.Source, pack.SystemWide, (KazoThemePackParts)pack.Parts);
 }

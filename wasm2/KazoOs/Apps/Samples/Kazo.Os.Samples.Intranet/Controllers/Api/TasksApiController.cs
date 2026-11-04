@@ -9,7 +9,7 @@ namespace Kazo.Os.Samples.Intranet.Controllers.Api;
 /// site (ADR 0084), call these routes through <c>Site.Http</c> with the tab's cookies.
 /// </summary>
 [Route("api/tasks")]
-public sealed class TasksApiController(TaskBoard board) : HackApiController
+public sealed class TasksApiController(TaskBoard board) : KazoApiController
 {
     /// <summary><c>GET /api/tasks</c>: every card.</summary>
     [HttpGet]

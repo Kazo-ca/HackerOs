@@ -1,7 +1,7 @@
 namespace Kazo.Os.AppSdk.Components;
 
 /// <summary>
-/// Controls an embedded terminal (contract <see cref="HackComponentContracts.Terminal"/>, ADR 0063):
+/// Controls an embedded terminal (contract <see cref="KazoComponentContracts.Terminal"/>, ADR 0063):
 /// the host app drives it as a person at the keyboard would, while the terminal keeps its own shell
 /// process, prompt, history and screen.
 /// </summary>
@@ -34,10 +34,10 @@ public interface IHackTerminal
     /// Raised for every piece of text the terminal shows (command output, prompt, echo), without
     /// its colour and cursor control sequences.
     /// </summary>
-    event EventHandler<HackTerminalOutputEventArgs>? OutputReceived;
+    event EventHandler<KazoTerminalOutputEventArgs>? OutputReceived;
 
     /// <summary>Raised when a command line finished, whether it was typed or sent by the host.</summary>
-    event EventHandler<HackTerminalCommandResult>? CommandCompleted;
+    event EventHandler<KazoTerminalCommandResult>? CommandCompleted;
 
     /// <summary>Raised when <see cref="Title"/> or <see cref="WorkingDirectory"/> changed.</summary>
     event EventHandler? StateChanged;
@@ -54,7 +54,7 @@ public interface IHackTerminal
     /// <returns>The result of <c>cd</c>: exit status 0 when the directory changed.</returns>
     /// <exception cref="ArgumentException">The path is empty or spans several lines.</exception>
     /// <exception cref="InvalidOperationException">The shell is not running.</exception>
-    Task<HackTerminalCommandResult> SetWorkingDirectoryAsync(string path, CancellationToken cancellationToken = default);
+    Task<KazoTerminalCommandResult> SetWorkingDirectoryAsync(string path, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Runs one command line in the terminal, shown at the prompt as if typed, and waits until it
@@ -65,7 +65,7 @@ public interface IHackTerminal
     /// <returns>The command's exit status and the text it printed.</returns>
     /// <exception cref="ArgumentException">The line is empty or spans several lines.</exception>
     /// <exception cref="InvalidOperationException">The shell is not running.</exception>
-    Task<HackTerminalCommandResult> RunCommandAsync(string commandLine, CancellationToken cancellationToken = default);
+    Task<KazoTerminalCommandResult> RunCommandAsync(string commandLine, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Sends keyboard input, as typed or pasted: printable text goes to the line being edited (or to
@@ -87,7 +87,7 @@ public interface IHackTerminal
 }
 
 /// <summary>Options a host passes to an embedded terminal when it creates it.</summary>
-public sealed record HackTerminalOptions
+public sealed record KazoTerminalOptions
 {
     /// <summary>Gets the directory the shell starts in; the host's directory when <see langword="null"/>.</summary>
     public string? WorkingDirectory { get; init; }
@@ -101,7 +101,7 @@ public sealed record HackTerminalOptions
 
 /// <summary>Text shown by an embedded terminal (see <see cref="IHackTerminal.OutputReceived"/>).</summary>
 /// <param name="text">The text, without colour and cursor control sequences.</param>
-public sealed class HackTerminalOutputEventArgs(string text) : EventArgs
+public sealed class KazoTerminalOutputEventArgs(string text) : EventArgs
 {
     /// <summary>Gets the text, without colour and cursor control sequences.</summary>
     public string Text { get; } = text;
@@ -111,4 +111,4 @@ public sealed class HackTerminalOutputEventArgs(string text) : EventArgs
 /// <param name="CommandLine">The line as the shell ran it.</param>
 /// <param name="ExitStatus">Its exit status (<c>$?</c>): 0 for success, 130 when interrupted.</param>
 /// <param name="Output">What it printed on standard output and error, without control sequences.</param>
-public sealed record HackTerminalCommandResult(string CommandLine, int ExitStatus, string Output);
+public sealed record KazoTerminalCommandResult(string CommandLine, int ExitStatus, string Output);

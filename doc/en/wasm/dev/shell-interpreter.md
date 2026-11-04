@@ -47,7 +47,7 @@ Terminal side (`Shared/Kazo.Os.AppSdk.Terminal/`):
 
 | Type | Role |
 |---|---|
-| `TerminalPanel` | Line discipline and display in an xterm.js terminal ([`terminal-emulator.md`](terminal-emulator.md), ADR 0061). Starts its shell with `HackShell.StartAsync`; each line goes through `IHackShell.ExecuteAsync`. |
+| `TerminalPanel` | Line discipline and display in an xterm.js terminal ([`terminal-emulator.md`](terminal-emulator.md), ADR 0061). Starts its shell with `KazoShell.StartAsync`; each line goes through `IHackShell.ExecuteAsync`. |
 | `TerminalInputReader` | Standard input of the current line (ADR 0064 §6): tty in canonical mode, Ctrl+D = end of input, unread input handed back to the prompt. |
 | `TerminalOutputWriter` | `TextWriter` that pushes each written chunk to the terminal. |
 
@@ -130,7 +130,7 @@ function) saves and restores a variable.
   `! p` inverts the code; `set -e` stops the shell on an untested failure.
 - **Pipes**: all steps start at the same time in copies of the shell
   (subshells), connected by `ShellPipe`s. When a step ends, its input closes:
-  the next writer receives `HackIOException("Broken pipe")`, and a command that
+  the next writer receives `KazoIOException("Broken pipe")`, and a command that
   lets it through exits with `141`.
 - **Streams**: input of the first step = the shell's standard input (the
   terminal's, ADR 0064 §6); output of the last to the terminal; errors of all
@@ -142,7 +142,7 @@ function) saves and restores a variable.
   `>f 2>&1`, here-document = input; `/dev/null`, `/dev/stdin`, `/dev/stdout`,
   `/dev/stderr`, `/dev/tty` are the shell's streams. Failure:
   `hsh: <cible>: <raison>`, command not launched, code `1`. Files are
-  published at the end of the command (`HackFileStream`).
+  published at the end of the command (`KazoFileStream`).
 - **Command lookup**: special built-in, then function, then path (name
   containing `/`), then catalog command (`[` = `test`), then `sh`, `bash`,
   `hsh`, then windowed app by its short name, otherwise `127`.
@@ -222,7 +222,7 @@ whose identifier's last segment (without the namespace) is that name:
 `text-editor notes.txt`, `browser`, `terminal`, `calculator`. The app is
 launched as a child of the shell, in its folder, with its arguments
 (`WindowAppBase.LaunchArguments`) and the shell's streams: what it writes
-through `HackConsole.WriteLine` appears in the terminal. Like a graphical
+through `KazoConsole.WriteLine` appears in the terminal. Like a graphical
 program launched from bash, **the shell waits for the window to close**;
 `text-editor notes.txt &` returns the prompt immediately; Ctrl+C closes the
 window (code 130). A single-instance app that is already open is brought to the
@@ -284,7 +284,7 @@ and `ErrorCode` = the error's code).
   `${x%motif}`, `if`/`for`/`while`/`until`/`case`, `break 2`, functions and
   `local`, `2>&1`, here-documents, `/dev/null`, paths, scripts with and without
   `+x`, `#!`, `set -e`, script syntax error, `sh -c`, `| bash`, `.`, jobs,
-  apps by name and `HackConsole`, Ctrl+C on an app).
+  apps by name and `KazoConsole`, Ctrl+C on an app).
 - `ShellInterpreterTests.Commands.cs`: the commands of
   [`linux-commands.md`](linux-commands.md) in the real shell.
 - `Tests/Kazo.Os.Platform.Core.Tests/Shell/ShellCommandResolverTests.cs`.
@@ -308,6 +308,6 @@ and `ErrorCode` = the error's code).
 - [x] ADR 0064: special built-ins (`break`, `return`, `set`, `local`, `eval`, `source`, `wait`, `fg`, `trap`...).
 - [x] ADR 0064: scripts (`+x` and `chmod +x` message, `#!`, `hsh` process), `sh`/`bash`.
 - [x] ADR 0064: jobs (`&`, `$!`, `jobs`, `kill %n`, `wait`, `fg`).
-- [x] ADR 0064: windowed apps by their short name, `HackConsole`, waiting for the window to close.
+- [x] ADR 0064: windowed apps by their short name, `KazoConsole`, waiting for the window to close.
 - [x] ADR 0064: terminal standard input (`TerminalInputReader`).
 - [x] ADR 0064: continuation prompt `>` for an unfinished command (`IHackShell.NeedsMoreInput`).

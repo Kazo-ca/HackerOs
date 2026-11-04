@@ -19,7 +19,7 @@ public static class TimeZoneSettingsDocuments
         schemaVersion: 1,
         fields:
         [
-            new SettingFieldDeclaration(TimeZoneKey, SettingValueType.String, HackTimeZone.Automatic, SettingSensitivity.Public)
+            new SettingFieldDeclaration(TimeZoneKey, SettingValueType.String, KazoTimeZone.Automatic, SettingSensitivity.Public)
         ]);
 
     /// <summary>Gets the layered document.</summary>
@@ -32,6 +32,6 @@ public static class TimeZoneSettingsDocuments
         ArgumentNullException.ThrowIfNull(snapshot);
         return snapshot.Values.TryGetValue(TimeZoneKey, out string? value) && !string.IsNullOrWhiteSpace(value)
             ? value.Trim()
-            : HackTimeZone.Automatic;
+            : KazoTimeZone.Automatic;
     }
 }

@@ -73,9 +73,9 @@ jobs:
         env:
           REPUBLISH: ${{ github.event.inputs.republish || 'false' }}
         run: |
-          version="$(sed -n 's:.*<HackerOsVersion>\(.*\)</HackerOsVersion>.*:\1:p' "$HACKEROS_SOLUTION_DIR/build/Versions.props")"
+          version="$(sed -n 's:.*<KazoOsVersion>\(.*\)</KazoOsVersion>.*:\1:p' "$HACKEROS_SOLUTION_DIR/build/Versions.props")"
           if ! [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
-            echo "::error title=Version::build/Versions.props has no valid HackerOsVersion ('$version')."
+            echo "::error title=Version::build/Versions.props has no valid KazoOsVersion ('$version')."
             exit 1
           fi
           tag="v$version"

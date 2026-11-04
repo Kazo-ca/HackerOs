@@ -25,7 +25,7 @@ exclusion from its section 9. The decisions are in ADRs 0066 to 0071.
 - `/proc/<pid>/status` (`VmRSS`, `Cpu`) and `/proc/stat` display values
   drawn from the app's `ResourceProfile` (ADR 0012, 0057). Disk and network
   are already really counted.
-- `HackExecutionContext` knows at every moment which process is running code
+- `KazoExecutionContext` knows at every moment which process is running code
   (`AsyncLocal`, ADR 0043): this is the basis of the measurement.
 - `StopAsync` already does `SIGTERM` then `SIGKILL`; "End task" does a
   `kill -9`.
@@ -74,9 +74,9 @@ Each branch starts from `rebuild/base` and its PR targets `rebuild/base`.
 | Branch | Content | Depends on |
 |---|---|---|
 | `rebuild/5-accounting-switches` | ADR 0066: MSBuild properties, `build/Kazo.Os.ResourceAccounting.targets`, `RuntimeHostConfigurationOption`, project `Kazo.Os.Platform.ResourceAccounting` (empty of measurement, with the **context-switch hook** common to both measurements), null contracts in Simulation Abstractions, hosts' `wwwroot/appsettings.json`, `CpuSource`/`MemSource`, "estimated" label. | n/a |
-| `rebuild/5-cpu-accounting` | ADR 0067: `utime`/`stime` counting, compositor, `/proc/<pid>/stat`, real `/proc/stat`, `HackProcess.*ProcessorTime`, long tasks, "Not responding" and `Responding:`, overhead test (< 5%). | `5-accounting-switches` |
+| `rebuild/5-cpu-accounting` | ADR 0067: `utime`/`stime` counting, compositor, `/proc/<pid>/stat`, real `/proc/stat`, `KazoProcess.*ProcessorTime`, long tasks, "Not responding" and `Responding:`, overhead test (< 5%). | `5-accounting-switches` |
 | `rebuild/5-memory-accounting` | ADR 0068: four layers, fields of `/proc/<pid>/status`, `/proc/meminfo`, `PrivateMemorySize64`. | `5-accounting-switches` |
-| `rebuild/5-graceful-stop` | ADR 0069: `StopRequested`, `CheckpointAsync`, `TerminateAsync`, `Terminated`, per-process scheduler and `HackProcessKilledException`, polite "End task" and "Force kill", `CheckpointAsync` in long commands. | n/a |
+| `rebuild/5-graceful-stop` | ADR 0069: `StopRequested`, `CheckpointAsync`, `TerminateAsync`, `Terminated`, per-process scheduler and `KazoProcessKilledException`, polite "End task" and "Force kill", `CheckpointAsync` in long commands. | n/a |
 | `rebuild/5-worker-processes` | ADR 0070 and 0071: always-ready worker after boot, overflow and cap, `/proc/hackeros/workers`, `AppExecutionHost` in the manifest, `Kazo.Os.Platform.WorkerHost`, remote gateways and parity tests, pool and reserve, heartbeat, step 4 escalation, first for `Kazo.Os.Commands`. | the other four |
 | `rebuild/5-host-smoke` | Section 5.2: `build/verify-hosts.sh`, Playwright startup test of the three hosts with fallback to the container's Chromium, combinations of measurements; also fixes the launching of existing E2E suites in a container. | n/a |
 | `rebuild/5-final` | End-to-end verification, `system-metrics.md`, `task-manager.md`, `app-sdk.md`, `sdk-reference.md`, index, this list up to date. | all |
@@ -85,7 +85,7 @@ Each branch starts from `rebuild/base` and its PR targets `rebuild/base`.
 
 | Work item | Migration of existing apps |
 |---|---|
-| `5-accounting-switches` | Check that all app code goes through an ambient frame (`WindowAppBase`, `HackComponentBase`, `TerminalAppBase`, `ServiceAppBase`); add a test that fails if an app in `Apps/` runs code outside a frame, otherwise its time would go to the compositor. |
+| `5-accounting-switches` | Check that all app code goes through an ambient frame (`WindowAppBase`, `KazoComponentBase`, `TerminalAppBase`, `ServiceAppBase`); add a test that fails if an app in `Apps/` runs code outside a frame, otherwise its time would go to the compositor. |
 | `5-cpu-accounting`, `5-memory-accounting` | No app code change; the manifest generator provides the assembly size (image layer) for **all** apps; tests of `/proc/<pid>/stat` and `status` on a sample of each family (window, command, service). |
 | `5-graceful-stop` | Each window app and each service that holds state (editors, explorer during a copy, Settings, services) reacts to `StopRequested`: finishes or cancels its current operation cleanly, with no silent loss (an editor with unsaved changes keeps a recovery draft). Every long loop in `Apps/` (commands, recursive copy in the explorer, CodeEditor search, zip) calls `CheckpointAsync`. |
 | `5-worker-processes` | Each command of `Kazo.Os.Commands` and each service declares its `AppExecutionHost` (or gets the right default); the parity tests run **all** built-in commands in both modes; an app that cannot run in a worker stays on `MainThread`, with the reason in a comment. |
@@ -104,7 +104,7 @@ launched by a single command (`build/verify-hosts.sh`):
   the terminal, runs `ps` and `cat /proc/self/status`, opens the task
   manager, then closes everything;
 - redoes the Ecosystem run with measurements turned off at build
-  (`-p:HackerOsCpuAccounting=false -p:HackerOsMemoryAccounting=false`) and through
+  (`-p:KazoOsCpuAccounting=false -p:KazoOsMemoryAccounting=false`) and through
   `appsettings.json`.
 
 As long as this test is not merged, each work item does the same verification by
@@ -137,7 +137,7 @@ Done by `rebuild/5-accounting-switches` ([`resource-accounting.md`](../resource-
 ### CPU (ADR 0067)
 Done by `rebuild/5-cpu-accounting` ([`cpu-accounting.md`](../cpu-accounting.md)).
 - [x] `utime`/`stime`/compositor counting on the context-switch hook (hook delivered by `5-accounting-switches`).
-- [x] `/proc/<pid>/stat`, real `/proc/stat`, `HackProcess.*ProcessorTime`.
+- [x] `/proc/<pid>/stat`, real `/proc/stat`, `KazoProcess.*ProcessorTime`.
 - [x] Long tasks, "Not responding", `Responding:` and task manager column.
 - [x] Overhead test.
 
@@ -149,7 +149,7 @@ Done by `rebuild/5-memory-accounting` ([`memory-accounting.md`](../memory-accoun
 ### Clean stop (ADR 0069)
 - [x] `StopRequested`, `TerminateAsync`, `ProcessExitReason.Terminated`.
 - [x] `CheckpointAsync` and its use in long commands.
-- [x] Per-process scheduler, discarded continuations, `HackProcessKilledException`.
+- [x] Per-process scheduler, discarded continuations, `KazoProcessKilledException`.
 - [x] "End task" as `SIGTERM`, "Force kill" added.
 
 Implementation details (`rebuild/5-graceful-stop`, detail in
@@ -163,7 +163,7 @@ Implementation details (`rebuild/5-graceful-stop`, detail in
 - The per-process scheduler is installed for commands and services
   (entry point launched by the orchestrator), as a synchronization context and
   as a `TaskScheduler`; window apps stay on the render dispatcher.
-- `HackStopRequestedEventArgs.Defer(Task)` lets an app finish some work
+- `KazoStopRequestedEventArgs.Defer(Task)` lets an app finish some work
   before the default action; the default action of `SIGTERM` for a window
   app is to close its window, the process then ends with the reason of
   the request (`Terminated`) instead of waiting for the delay.
@@ -171,7 +171,7 @@ Implementation details (`rebuild/5-graceful-stop`, detail in
   `StopRequested` (`Logout`, `Shutdown`); a window that the user
   closes does not receive it (`IWindowCloseGuard` has already asked the question).
 - The slice of `CheckpointAsync` is a per-thread timestamp
-  (`HackProcessSlice`), restarted by the scheduler at each continuation;
+  (`KazoProcessSlice`), restarted by the scheduler at each continuation;
   ADR 0067 may replace it with the measurement.
 
 ### Web Workers (ADR 0070)

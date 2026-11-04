@@ -33,7 +33,7 @@ public partial class DesktopSurface : IAsyncDisposable
     private const string SettingsAppId = "org.hackeros.settings";
 
     private string? _desktopDirectory;
-    private HackDesktopSettingsDocument _settings = new(HackDesktopOptions.Default, new Dictionary<string, HackDesktopCell>());
+    private KazoDesktopSettingsDocument _settings = new(KazoDesktopOptions.Default, new Dictionary<string, KazoDesktopCell>());
     private IStringLocalizer<Strings>? _localizer;
     private Task _writes = Task.CompletedTask;
     private ITopicChannelSubscription<FileSystemChangeEvent>? _settingsWatch;
@@ -42,7 +42,7 @@ public partial class DesktopSurface : IAsyncDisposable
     private IStringLocalizer<Strings> L => _localizer ??= AppContext.GetLocalizer<Strings>();
 
     // Dot directories hold desktop metadata, including the mobile layout, rather than visible icons.
-    private static bool IsVisibleDesktopItem(HackFileViewItem item) => !item.Name.StartsWith('.');
+    private static bool IsVisibleDesktopItem(KazoFileViewItem item) => !item.Name.StartsWith('.');
 
     /// <inheritdoc />
     /// <remarks>
@@ -51,13 +51,13 @@ public partial class DesktopSurface : IAsyncDisposable
     /// </remarks>
     protected override async Task OnAppInitializedAsync()
     {
-        string home = HackUser.Describe(AppContext).HomeDirectory;
+        string home = KazoUser.Describe(AppContext).HomeDirectory;
         string desktop = home.TrimEnd('/') + "/Desktop";
         try
         {
-            if (!await HackDirectory.ExistsAsync(desktop, AppContext.CancellationToken))
+            if (!await KazoDirectory.ExistsAsync(desktop, AppContext.CancellationToken))
             {
-                await HackDirectory.CreateDirectoryAsync(desktop, AppContext.CancellationToken);
+                await KazoDirectory.CreateDirectoryAsync(desktop, AppContext.CancellationToken);
             }
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
@@ -66,7 +66,7 @@ public partial class DesktopSurface : IAsyncDisposable
             return;
         }
 
-        _settings = await HackDesktopSettings.ReadAsync(AppContext.CancellationToken);
+        _settings = await KazoDesktopSettings.ReadAsync(AppContext.CancellationToken);
         _desktopDirectory = desktop;
         await WatchSettingsAsync(home);
     }
@@ -74,13 +74,13 @@ public partial class DesktopSurface : IAsyncDisposable
     /// <summary>Follows <c>~/.config/hackeros</c>: a change of <c>desktop.config</c> is read again.</summary>
     private async Task WatchSettingsAsync(string home)
     {
-        string path = HackDesktopSettings.GetPath(home);
+        string path = KazoDesktopSettings.GetPath(home);
         string directory = path[..path.LastIndexOf('/')];
         try
         {
-            if (!await HackDirectory.ExistsAsync(directory, AppContext.CancellationToken))
+            if (!await KazoDirectory.ExistsAsync(directory, AppContext.CancellationToken))
             {
-                await HackDirectory.CreateDirectoryAsync(directory, AppContext.CancellationToken);
+                await KazoDirectory.CreateDirectoryAsync(directory, AppContext.CancellationToken);
             }
 
             _settingsWatch = await AppContext.Watch.WatchAsync(VirtualPath.Parse(directory), FileSystemWatchScope.ImmediateChildren, AppContext.CancellationToken);
@@ -101,8 +101,8 @@ public partial class DesktopSurface : IAsyncDisposable
             {
                 await InvokeAsync(async () =>
                 {
-                    using IDisposable scope = HackExecutionContext.Enter(AppContext);
-                    HackDesktopSettingsDocument read = await HackDesktopSettings.ReadAsync(cancellationToken);
+                    using IDisposable scope = KazoExecutionContext.Enter(AppContext);
+                    KazoDesktopSettingsDocument read = await KazoDesktopSettings.ReadAsync(cancellationToken);
                     if (!SameSettings(read, _settings))
                     {
                         _settings = read;
@@ -117,31 +117,31 @@ public partial class DesktopSurface : IAsyncDisposable
         }
     }
 
-    private static bool SameSettings(HackDesktopSettingsDocument left, HackDesktopSettingsDocument right) =>
+    private static bool SameSettings(KazoDesktopSettingsDocument left, KazoDesktopSettingsDocument right) =>
         left.Options == right.Options
         && left.Positions.Count == right.Positions.Count
-        && left.Positions.All(pair => right.Positions.TryGetValue(pair.Key, out HackDesktopCell cell) && cell == pair.Value);
+        && left.Positions.All(pair => right.Positions.TryGetValue(pair.Key, out KazoDesktopCell cell) && cell == pair.Value);
 
     // ---- Positions and view ----------------------------------------------------------------------------
 
     /// <summary>The control placed or moved icons: shown at once, written after the writes before it.</summary>
-    private Task SavePositionsAsync(IReadOnlyDictionary<string, HackDesktopCell> positions)
+    private Task SavePositionsAsync(IReadOnlyDictionary<string, KazoDesktopCell> positions)
     {
         _settings = _settings with { Positions = positions };
-        return EnqueueWrite(() => HackDesktopSettings.SavePositionsAsync(positions, AppContext.CancellationToken));
+        return EnqueueWrite(() => KazoDesktopSettings.SavePositionsAsync(positions, AppContext.CancellationToken));
     }
 
-    private Task SaveOptionsAsync(HackDesktopOptions options, bool clearPositions = false)
+    private Task SaveOptionsAsync(KazoDesktopOptions options, bool clearPositions = false)
     {
-        IReadOnlyDictionary<string, HackDesktopCell> positions = clearPositions ? new Dictionary<string, HackDesktopCell>() : _settings.Positions;
-        _settings = new HackDesktopSettingsDocument(options, positions);
+        IReadOnlyDictionary<string, KazoDesktopCell> positions = clearPositions ? new Dictionary<string, KazoDesktopCell>() : _settings.Positions;
+        _settings = new KazoDesktopSettingsDocument(options, positions);
         StateHasChanged();
         return EnqueueWrite(async () =>
         {
-            await HackDesktopSettings.SaveOptionsAsync(options, AppContext.CancellationToken);
+            await KazoDesktopSettings.SaveOptionsAsync(options, AppContext.CancellationToken);
             if (clearPositions)
             {
-                await HackDesktopSettings.SavePositionsAsync(positions, AppContext.CancellationToken);
+                await KazoDesktopSettings.SavePositionsAsync(positions, AppContext.CancellationToken);
             }
         });
     }
@@ -180,68 +180,68 @@ public partial class DesktopSurface : IAsyncDisposable
     /// The desktop's background menu (ADR 0160 §7): "View ▸" and "Sort by ▸" first, as on Windows, then
     /// the control's entries, then "Change background…".
     /// </summary>
-    private void OnContextMenuOpening(HackFileMenuOpeningEventArgs args)
+    private void OnContextMenuOpening(KazoFileMenuOpeningEventArgs args)
     {
         if (args.Scope != FileMenuScope.Desktop)
         {
             return;
         }
 
-        HackDesktopOptions options = _settings.Options;
-        HackMenuGroupDefinition arrange = new();
+        KazoDesktopOptions options = _settings.Options;
+        KazoMenuGroupDefinition arrange = new();
 
-        HackMenuItemDefinition view = arrange.Add(HackFileMenuItems.View, L["Menu.View"]);
+        KazoMenuItemDefinition view = arrange.Add(KazoFileMenuItems.View, L["Menu.View"]);
         view.Icon = Icon("layout-grid");
-        HackMenuGroupDefinition sizes = new();
-        SizeEntry(sizes, HackDesktopIconSize.Large, "Menu.View.Large");
-        SizeEntry(sizes, HackDesktopIconSize.Medium, "Menu.View.Medium");
-        SizeEntry(sizes, HackDesktopIconSize.Small, "Menu.View.Small");
-        HackMenuGroupDefinition layout = new();
+        KazoMenuGroupDefinition sizes = new();
+        SizeEntry(sizes, KazoDesktopIconSize.Large, "Menu.View.Large");
+        SizeEntry(sizes, KazoDesktopIconSize.Medium, "Menu.View.Medium");
+        SizeEntry(sizes, KazoDesktopIconSize.Small, "Menu.View.Small");
+        KazoMenuGroupDefinition layout = new();
         Toggle(layout, "auto-arrange", "Menu.View.AutoArrange", options.AutoArrange, value => options with { AutoArrange = value });
         Toggle(layout, "align-to-grid", "Menu.View.AlignToGrid", options.AlignToGrid, value => options with { AlignToGrid = value });
-        HackMenuGroupDefinition shown = new();
+        KazoMenuGroupDefinition shown = new();
         Toggle(shown, "show-home", "Menu.View.ShowHome", options.ShowHome, value => options with { ShowHome = value });
         Toggle(shown, "show-trash", "Menu.View.ShowTrash", options.ShowTrash, value => options with { ShowTrash = value });
         view.Children.Add(sizes);
         view.Children.Add(layout);
         view.Children.Add(shown);
 
-        HackMenuItemDefinition sort = arrange.Add(HackFileMenuItems.Sort, L["Menu.Sort"]);
+        KazoMenuItemDefinition sort = arrange.Add(KazoFileMenuItems.Sort, L["Menu.Sort"]);
         sort.Icon = Icon("arrow-down-wide-narrow");
-        HackMenuGroupDefinition sorts = new();
-        SortEntry(sorts, HackDesktopSort.Name, "Menu.Sort.Name");
-        SortEntry(sorts, HackDesktopSort.Size, "Menu.Sort.Size");
-        SortEntry(sorts, HackDesktopSort.Type, "Menu.Sort.Type");
-        SortEntry(sorts, HackDesktopSort.Date, "Menu.Sort.Date");
+        KazoMenuGroupDefinition sorts = new();
+        SortEntry(sorts, KazoDesktopSort.Name, "Menu.Sort.Name");
+        SortEntry(sorts, KazoDesktopSort.Size, "Menu.Sort.Size");
+        SortEntry(sorts, KazoDesktopSort.Type, "Menu.Sort.Type");
+        SortEntry(sorts, KazoDesktopSort.Date, "Menu.Sort.Date");
         sort.Children.Add(sorts);
         args.Menu.Groups.Insert(0, arrange);
 
-        HackMenuGroupDefinition personalize = args.Menu.AddGroup();
-        HackMenuItemDefinition background = personalize.Add(HackFileMenuItems.Background, L["Menu.Background"]);
+        KazoMenuGroupDefinition personalize = args.Menu.AddGroup();
+        KazoMenuItemDefinition background = personalize.Add(KazoFileMenuItems.Background, L["Menu.Background"]);
         background.Icon = Icon("image");
         background.OnClick = Click(() => OpenSettingsAsync("appearance"));
-        HackMenuItemDefinition settings = personalize.Add("desktop-settings", L["Menu.DesktopSettings"]);
+        KazoMenuItemDefinition settings = personalize.Add("desktop-settings", L["Menu.DesktopSettings"]);
         settings.Icon = Icon("monitor-cog");
         settings.OnClick = Click(() => OpenSettingsAsync("desktop"));
 
-        void SizeEntry(HackMenuGroupDefinition group, HackDesktopIconSize size, string text)
+        void SizeEntry(KazoMenuGroupDefinition group, KazoDesktopIconSize size, string text)
         {
-            HackMenuItemDefinition entry = group.Add("icon-size-" + size.ToString().ToLowerInvariant(), L[text]);
+            KazoMenuItemDefinition entry = group.Add("icon-size-" + size.ToString().ToLowerInvariant(), L[text]);
             entry.Icon = options.IconSize == size ? Icon("check") : null;
             entry.OnClick = Click(() => SaveOptionsAsync(options with { IconSize = size }));
         }
 
-        void SortEntry(HackMenuGroupDefinition group, HackDesktopSort value, string text)
+        void SortEntry(KazoMenuGroupDefinition group, KazoDesktopSort value, string text)
         {
-            HackMenuItemDefinition entry = group.Add("sort-" + value.ToString().ToLowerInvariant(), L[text]);
+            KazoMenuItemDefinition entry = group.Add("sort-" + value.ToString().ToLowerInvariant(), L[text]);
             entry.Icon = options.Sort == value ? Icon("check") : null;
             // ADR 0152 §3: "Sort by" arranges once; the saved positions go, the icons follow the order.
             entry.OnClick = Click(() => SaveOptionsAsync(options with { Sort = value }, clearPositions: true));
         }
 
-        void Toggle(HackMenuGroupDefinition group, string id, string text, bool current, Func<bool, HackDesktopOptions> change)
+        void Toggle(KazoMenuGroupDefinition group, string id, string text, bool current, Func<bool, KazoDesktopOptions> change)
         {
-            HackMenuItemDefinition entry = group.Add(id, L[text]);
+            KazoMenuItemDefinition entry = group.Add(id, L[text]);
             entry.Icon = current ? Icon("check") : null;
             entry.OnClick = Click(() => SaveOptionsAsync(change(!current)));
         }
@@ -249,7 +249,7 @@ public partial class DesktopSurface : IAsyncDisposable
 
     private EventCallback<object?> Click(Func<Task> run) => EventCallback.Factory.Create<object?>(this, _ => run());
 
-    private static HackIcon Icon(string name) => HackIcons.Vector(IconLibrary.Lucide, name);
+    private static KazoIcon Icon(string name) => KazoIcons.Vector(IconLibrary.Lucide, name);
 
     private async Task OpenSettingsAsync(string page)
     {
@@ -269,7 +269,7 @@ public partial class DesktopSurface : IAsyncDisposable
     /// <remarks>"Send to ▸ Desktop" from the Start menu: a shortcut to the app in <c>~/Desktop</c> (ADR 0160 §6).</remarks>
     protected override async Task OnIntentReceivedAsync(AppIntentDelivery intent)
     {
-        if (intent.IntentId != HackDesktopItems.CreateShortcutIntent || _desktopDirectory is null || ReadAppId(intent.PayloadJson) is not { } appId)
+        if (intent.IntentId != KazoDesktopItems.CreateShortcutIntent || _desktopDirectory is null || ReadAppId(intent.PayloadJson) is not { } appId)
         {
             return;
         }
@@ -277,7 +277,7 @@ public partial class DesktopSurface : IAsyncDisposable
         string name = appId;
         try
         {
-            IReadOnlyList<HackAppInfo> apps = await AppContext.Catalog.GetInstalledAsync(AppContext.CancellationToken);
+            IReadOnlyList<KazoAppInfo> apps = await AppContext.Catalog.GetInstalledAsync(AppContext.CancellationToken);
             name = apps.FirstOrDefault(app => app.Id == appId)?.Name ?? appId;
         }
         catch (Exception exception) when (exception is AppGatewayAccessDeniedException or NotSupportedException)
@@ -287,7 +287,7 @@ public partial class DesktopSurface : IAsyncDisposable
 
         try
         {
-            await HackDesktopEntry.CreateShortcutAsync(_desktopDirectory, appId, name, cancellationToken: AppContext.CancellationToken);
+            await KazoDesktopEntry.CreateShortcutAsync(_desktopDirectory, appId, name, cancellationToken: AppContext.CancellationToken);
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException)
         {
@@ -309,7 +309,7 @@ public partial class DesktopSurface : IAsyncDisposable
             return document.RootElement.ValueKind == JsonValueKind.Object
                 && document.RootElement.TryGetProperty("appId", out JsonElement id)
                 && id.ValueKind == JsonValueKind.String
-                && HackDesktopEntry.IsAppId(id.GetString())
+                && KazoDesktopEntry.IsAppId(id.GetString())
                 ? id.GetString()
                 : null;
         }

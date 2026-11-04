@@ -252,7 +252,7 @@ public sealed partial class ShellInterpreter
     /// <summary>
     /// Starts a window app named by the last segment of its id (<c>text-editor notes.txt</c>,
     /// ADR 0064) as a child of the shell, with the arguments and the shell's streams: what it
-    /// writes with <see cref="HackConsole"/> appears in the terminal. Like a GUI program started
+    /// writes with <see cref="KazoConsole"/> appears in the terminal. Like a GUI program started
     /// from bash, the shell waits until the window closes (use <c>&amp;</c> to keep the prompt);
     /// Ctrl+C closes it. An already running single-instance app is only focused.
     /// </summary>
@@ -371,7 +371,7 @@ public sealed partial class ShellInterpreter
 
         // Only the command is elevated: a redirection was already opened by the unelevated shell,
         // so `sudo echo x > /etc/f` fails as on Linux.
-        ProcessId? parent = HackExecutionContext.CurrentOrNull?.ProcessId ?? session.ProcessId;
+        ProcessId? parent = KazoExecutionContext.CurrentOrNull?.ProcessId ?? session.ProcessId;
         StageOutcome outcome = isNice
             // ADR 0136: nice runs as the user and hands the root ticket to the command it execs, which
             // is what runs as root (and may get a lower niceness). The ticket stays single-use.
@@ -422,7 +422,7 @@ public sealed partial class ShellInterpreter
             return CommandNotFoundExitCode;
         }
 
-        IAppExecutionContext? caller = HackExecutionContext.CurrentOrNull;
+        IAppExecutionContext? caller = KazoExecutionContext.CurrentOrNull;
         int current = caller is null ? ProcessNice.Default : caller.Processes.GetNice(caller.ProcessId);
         int nice = ProcessNice.Clamp(current + adjustment);
         if (nice < current && caller?.IsRootElevated != true && elevation is null)
@@ -558,15 +558,15 @@ public sealed partial class ShellInterpreter
         string content;
         try
         {
-            using (HackExecutionContext.Enter(session.Host))
+            using (KazoExecutionContext.Enter(session.Host))
             {
                 string path = $"{session.HomeDirectory.TrimEnd('/')}/{AliasFileRelativePath}";
-                if (!await HackFile.ExistsAsync(path, cancellationToken).ConfigureAwait(false))
+                if (!await KazoFile.ExistsAsync(path, cancellationToken).ConfigureAwait(false))
                 {
                     return null;
                 }
 
-                content = await HackFile.ReadAllTextAsync(path, cancellationToken).ConfigureAwait(false);
+                content = await KazoFile.ReadAllTextAsync(path, cancellationToken).ConfigureAwait(false);
             }
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException)

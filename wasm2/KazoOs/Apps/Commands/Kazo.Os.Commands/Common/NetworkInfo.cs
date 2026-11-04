@@ -45,7 +45,7 @@ internal static class NetworkInfo
         Dictionary<string, long[]> counters = new(StringComparer.Ordinal);
         try
         {
-            foreach (string line in await HackFile.ReadAllLinesAsync("/proc/net/dev", cancellationToken))
+            foreach (string line in await KazoFile.ReadAllLinesAsync("/proc/net/dev", cancellationToken))
             {
                 int colon = line.IndexOf(':');
                 if (colon <= 0 || line.Contains('|'))
@@ -79,7 +79,7 @@ internal static class NetworkInfo
     /// <summary>A stable, locally administered MAC address (<c>02:…</c>) derived from the host name.</summary>
     public static string MacAddress()
     {
-        string host = HackExecutionContext.CurrentOrNull is null ? "hackeros" : HackEnvironment.MachineName;
+        string host = KazoExecutionContext.CurrentOrNull is null ? "hackeros" : KazoEnvironment.MachineName;
         uint hash = 2166136261;
         foreach (char ch in host)
         {

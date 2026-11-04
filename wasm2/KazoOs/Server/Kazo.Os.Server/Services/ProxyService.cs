@@ -85,7 +85,7 @@ public sealed class ProxyService : IProxyService
 
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IAuditService _audit;
-    private readonly HackerOsServerDbContext _db;
+    private readonly KazoOsServerDbContext _db;
     private readonly IProxyAddressResolver _addressResolver;
     private readonly IProxyConnectionPinAccessor _connectionPin;
     private readonly IProxyTcpConnector _tcpConnector;
@@ -112,7 +112,7 @@ public sealed class ProxyService : IProxyService
     public ProxyService(
         IHttpClientFactory httpClientFactory,
         IAuditService audit,
-        HackerOsServerDbContext db,
+        KazoOsServerDbContext db,
         IProxyAddressResolver addressResolver,
         IProxyConnectionPinAccessor connectionPin,
         IProxyTcpConnector tcpConnector,

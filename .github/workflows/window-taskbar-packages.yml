@@ -66,7 +66,7 @@ jobs:
       - name: Read the Kazo OS version
         shell: bash
         run: >-
-          echo "HACKEROS_VERSION=$(sed -n 's:.*<HackerOsVersion>\(.*\)</HackerOsVersion>.*:\1:p' build/Versions.props)" >> "$GITHUB_ENV"
+          echo "HACKEROS_VERSION=$(sed -n 's:.*<KazoOsVersion>\(.*\)</KazoOsVersion>.*:\1:p' build/Versions.props)" >> "$GITHUB_ENV"
 
       - name: Pack theme contracts
         run: >-

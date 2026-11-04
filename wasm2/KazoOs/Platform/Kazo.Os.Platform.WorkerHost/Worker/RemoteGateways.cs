@@ -55,7 +55,7 @@ internal sealed class RemoteProcessChannel
     {
         _control.ThrowIfKilled();
         _output.Flush();
-        using (HackExecutionContext.EnterKernel())
+        using (KazoExecutionContext.EnterKernel())
         {
             return await _rpc.CallAsync(Pid, operation, arguments, cancellationToken).ConfigureAwait(false);
         }
@@ -72,7 +72,7 @@ internal sealed class RemoteProcessChannel
     {
         _control.ThrowIfKilled();
         _output.Flush();
-        using (HackExecutionContext.EnterKernel())
+        using (KazoExecutionContext.EnterKernel())
         {
             return _rpc.CallSync(Pid, operation, arguments);
         }
@@ -318,7 +318,7 @@ internal sealed class WorkerClock
 /// cross-origin isolation the synchronous members cannot wait for it from a worker's single thread:
 /// <see cref="Kill"/> of the process itself sends the <c>SIGKILL</c> and returns the expected record,
 /// <see cref="ListProcesses"/> and <see cref="Kill"/> of another process are refused (use
-/// <c>HackProcess.GetProcessesAsync</c> and <c>HackProcess.KillAsync</c>). On an isolated page
+/// <c>KazoProcess.GetProcessesAsync</c> and <c>KazoProcess.KillAsync</c>). On an isolated page
 /// (ADR 0131, section 4) both wait for the OS with <c>Atomics.wait</c>, like local calls.
 /// <see cref="StartChild"/> is not offered.
 /// </summary>
@@ -332,7 +332,7 @@ internal sealed class RemoteProcessGateway(RemoteProcessChannel channel, Process
     public IReadOnlyList<ProcessRecord> ListProcesses() =>
         channel.CanCallSynchronously
             ? WireCodec.ReadProcesses(channel.CallSync(RemoteOps.ProcessList, null), "ps")
-            : throw RemoteUnsupported.Member("IAppProcessGateway.ListProcesses (synchronous; read /proc or use HackProcess.GetProcessesAsync)");
+            : throw RemoteUnsupported.Member("IAppProcessGateway.ListProcesses (synchronous; read /proc or use KazoProcess.GetProcessesAsync)");
 
     public async Task<ProcessRecord> StopAsync(
         ProcessId pid, TimeSpan timeout, ProcessExitReason reason = ProcessExitReason.CloseRequested, CancellationToken cancellationToken = default)
@@ -363,7 +363,7 @@ internal sealed class RemoteProcessGateway(RemoteProcessChannel channel, Process
             writer.WriteNumber("pid", pid.Value);
             writer.WriteNumber("r", (int)reason);
         });
-        return ownProcess.Pid == pid ? ownProcess : throw RemoteUnsupported.Member("IAppProcessGateway.Kill of another process (synchronous; use HackProcess.KillAsync)");
+        return ownProcess.Pid == pid ? ownProcess : throw RemoteUnsupported.Member("IAppProcessGateway.Kill of another process (synchronous; use KazoProcess.KillAsync)");
     }
 
     public async Task<ProcessRecord> KillAsync(ProcessId pid, ProcessExitReason reason, CancellationToken cancellationToken)
@@ -393,26 +393,26 @@ internal sealed class RemoteProcessGateway(RemoteProcessChannel channel, Process
 /// <summary><see cref="IAppNetworkGateway"/> in a worker: the OS's network stack, with its real-network fallback.</summary>
 internal sealed class RemoteNetworkGateway(RemoteProcessChannel channel) : IAppNetworkGateway
 {
-    public async ValueTask<HackNetworkResult<HackHostEntry>> ResolveAsync(string hostName, CancellationToken cancellationToken = default) =>
+    public async ValueTask<KazoNetworkResult<KazoHostEntry>> ResolveAsync(string hostName, CancellationToken cancellationToken = default) =>
         WireCodec.ReadNetwork(await channel.CallAsync(RemoteOps.NetResolve, writer => writer.WriteString("h", hostName), cancellationToken).ConfigureAwait(false),
             WireCodec.ReadHostEntry);
 
-    public async ValueTask<HackNetworkResult<HackHostEntry>> ReverseLookupAsync(IPAddress address, CancellationToken cancellationToken = default) =>
+    public async ValueTask<KazoNetworkResult<KazoHostEntry>> ReverseLookupAsync(IPAddress address, CancellationToken cancellationToken = default) =>
         WireCodec.ReadNetwork(await channel.CallAsync(RemoteOps.NetReverse, writer => writer.WriteString("ad", address.ToString()), cancellationToken).ConfigureAwait(false),
             WireCodec.ReadHostEntry);
 
-    public async ValueTask<HackNetworkResult<HackPingReply>> PingAsync(string hostNameOrAddress, TimeSpan timeout, CancellationToken cancellationToken = default) =>
+    public async ValueTask<KazoNetworkResult<KazoPingReply>> PingAsync(string hostNameOrAddress, TimeSpan timeout, CancellationToken cancellationToken = default) =>
         WireCodec.ReadNetwork(await channel.CallAsync(RemoteOps.NetPing, writer =>
         {
             writer.WriteString("h", hostNameOrAddress);
             writer.WriteNumber("to", timeout.Ticks);
         }, cancellationToken).ConfigureAwait(false), WireCodec.ReadPingReply);
 
-    public async ValueTask<HackNetworkResult<HackHttpResponse>> SendAsync(HackHttpRequest request, CancellationToken cancellationToken = default) =>
+    public async ValueTask<KazoNetworkResult<KazoHttpResponse>> SendAsync(KazoHttpRequest request, CancellationToken cancellationToken = default) =>
         WireCodec.ReadNetwork(await channel.CallAsync(RemoteOps.NetHttp, writer => WireCodec.WriteHttpRequest(writer, request), cancellationToken).ConfigureAwait(false),
             WireCodec.ReadHttpResponse);
 
-    public async ValueTask<HackNetworkResult<IReadOnlyList<HackPortProbeResult>>> ProbeTcpAsync(
+    public async ValueTask<KazoNetworkResult<IReadOnlyList<KazoPortProbeResult>>> ProbeTcpAsync(
         string hostNameOrAddress, int firstPort, int lastPort, CancellationToken cancellationToken = default) =>
         WireCodec.ReadNetwork(await channel.CallAsync(RemoteOps.NetTcp, writer =>
         {
@@ -421,7 +421,7 @@ internal sealed class RemoteNetworkGateway(RemoteProcessChannel channel) : IAppN
             writer.WriteNumber("l", lastPort);
         }, cancellationToken).ConfigureAwait(false), WireCodec.ReadPortProbes);
 
-    public async ValueTask<HackNetworkResult<HackOsFingerprint?>> DetectOperatingSystemAsync(
+    public async ValueTask<KazoNetworkResult<KazoOsFingerprint?>> DetectOperatingSystemAsync(
         string hostNameOrAddress, CancellationToken cancellationToken = default) =>
         WireCodec.ReadNetwork(await channel.CallAsync(RemoteOps.NetOs, writer => writer.WriteString("h", hostNameOrAddress), cancellationToken).ConfigureAwait(false),
             WireCodec.ReadFingerprint);
@@ -430,24 +430,24 @@ internal sealed class RemoteNetworkGateway(RemoteProcessChannel channel) : IAppN
     /// Opens the socket in the OS (its table of listening ports), then receives its requests as
     /// <c>hreq</c> messages (ADR 0074, section 2): the site runs in the worker, the port lives in the OS.
     /// </summary>
-    public async ValueTask<HackNetworkResult<IHackHttpListenerSocket>> ListenHttpAsync(
+    public async ValueTask<KazoNetworkResult<IHackHttpListenerSocket>> ListenHttpAsync(
         IReadOnlyList<string> prefixes, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(prefixes);
         JsonElement answer = await channel.CallAsync(
             RemoteOps.NetListen, writer => WireCodec.WriteStrings(writer, "px", prefixes), cancellationToken).ConfigureAwait(false);
-        HackNetworkError error = (HackNetworkError)answer.GetInt32("ne");
-        if (error != HackNetworkError.None)
+        KazoNetworkError error = (KazoNetworkError)answer.GetInt32("ne");
+        if (error != KazoNetworkError.None)
         {
-            return HackNetworkResult<IHackHttpListenerSocket>.Failure(error, answer.GetOptionalString("nm"));
+            return KazoNetworkResult<IHackHttpListenerSocket>.Failure(error, answer.GetOptionalString("nm"));
         }
 
         RemoteHttpListenerSocket socket = new(channel, answer.GetInt32("sk"), WireCodec.ReadStrings(answer, "px"));
         channel.Listeners.Add(socket);
-        return HackNetworkResult<IHackHttpListenerSocket>.Success(socket);
+        return KazoNetworkResult<IHackHttpListenerSocket>.Success(socket);
     }
 
-    public async ValueTask<IReadOnlyList<HackTcpListenerInfo>> GetTcpListenersAsync(CancellationToken cancellationToken = default) =>
+    public async ValueTask<IReadOnlyList<KazoTcpListenerInfo>> GetTcpListenersAsync(CancellationToken cancellationToken = default) =>
         WireCodec.ReadListeners(await channel.CallAsync(RemoteOps.NetListeners, null, cancellationToken).ConfigureAwait(false));
 }
 
@@ -460,28 +460,28 @@ internal sealed class RemoteListenerTable
 {
     private readonly Lock _gate = new();
     private readonly Dictionary<int, RemoteHttpListenerSocket> _sockets = [];
-    private readonly Dictionary<int, List<HackHttpListenerExchange>> _early = [];
+    private readonly Dictionary<int, List<KazoHttpListenerExchange>> _early = [];
     private readonly HashSet<int> _closed = [];
     private bool _allClosed;
 
     /// <summary>Registers a socket the OS just opened and hands it the requests that came first.</summary>
     public void Add(RemoteHttpListenerSocket socket)
     {
-        List<HackHttpListenerExchange>? early;
+        List<KazoHttpListenerExchange>? early;
         lock (_gate)
         {
             _sockets[socket.Id] = socket;
             _early.Remove(socket.Id, out early);
         }
 
-        foreach (HackHttpListenerExchange exchange in early ?? [])
+        foreach (KazoHttpListenerExchange exchange in early ?? [])
         {
             socket.Enqueue(exchange);
         }
     }
 
     /// <summary>Hands one request to its socket.</summary>
-    public void Deliver(int id, HackHttpListenerExchange exchange)
+    public void Deliver(int id, KazoHttpListenerExchange exchange)
     {
         RemoteHttpListenerSocket? socket;
         lock (_gate)
@@ -493,7 +493,7 @@ internal sealed class RemoteListenerTable
 
             if (!_sockets.TryGetValue(id, out socket))
             {
-                if (!_early.TryGetValue(id, out List<HackHttpListenerExchange>? waiting))
+                if (!_early.TryGetValue(id, out List<KazoHttpListenerExchange>? waiting))
                 {
                     waiting = [];
                     _early[id] = waiting;
@@ -540,8 +540,8 @@ internal sealed class RemoteListenerTable
 /// <summary>A listening socket seen from a worker: requests arrive as messages, replies leave as <c>hres</c>.</summary>
 internal sealed class RemoteHttpListenerSocket(RemoteProcessChannel channel, int id, IReadOnlyList<string> prefixes) : IHackHttpListenerSocket
 {
-    private readonly System.Threading.Channels.Channel<HackHttpListenerExchange> _queue =
-        System.Threading.Channels.Channel.CreateUnbounded<HackHttpListenerExchange>();
+    private readonly System.Threading.Channels.Channel<KazoHttpListenerExchange> _queue =
+        System.Threading.Channels.Channel.CreateUnbounded<KazoHttpListenerExchange>();
     private int _disposed;
 
     /// <summary>Gets the id the OS gave the socket.</summary>
@@ -549,11 +549,11 @@ internal sealed class RemoteHttpListenerSocket(RemoteProcessChannel channel, int
 
     public IReadOnlyList<string> Prefixes { get; } = prefixes;
 
-    public async ValueTask<HackHttpListenerExchange?> AcceptAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<KazoHttpListenerExchange?> AcceptAsync(CancellationToken cancellationToken = default)
     {
         while (await _queue.Reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false))
         {
-            if (_queue.Reader.TryRead(out HackHttpListenerExchange? exchange))
+            if (_queue.Reader.TryRead(out KazoHttpListenerExchange? exchange))
             {
                 return exchange;
             }
@@ -562,7 +562,7 @@ internal sealed class RemoteHttpListenerSocket(RemoteProcessChannel channel, int
         return null;
     }
 
-    public void Respond(long exchangeId, HackHttpListenerReply reply)
+    public void Respond(long exchangeId, KazoHttpListenerReply reply)
     {
         ArgumentNullException.ThrowIfNull(reply);
         channel.Post(WorkerMessage.Create(WorkerMessageType.HttpResponse, writer =>
@@ -584,7 +584,7 @@ internal sealed class RemoteHttpListenerSocket(RemoteProcessChannel channel, int
             {
                 channel.Notify(RemoteOps.NetUnlisten, writer => writer.WriteNumber("sk", Id));
             }
-            catch (Exception exception) when (exception is Kazo.Os.AppSdk.Diagnostics.HackProcessKilledException or InvalidOperationException)
+            catch (Exception exception) when (exception is Kazo.Os.AppSdk.Diagnostics.KazoProcessKilledException or InvalidOperationException)
             {
                 // The process is going away: the OS closes its sockets itself.
             }
@@ -594,7 +594,7 @@ internal sealed class RemoteHttpListenerSocket(RemoteProcessChannel channel, int
     }
 
     /// <summary>Queues a request for <see cref="AcceptAsync"/>.</summary>
-    public void Enqueue(HackHttpListenerExchange exchange) => _queue.Writer.TryWrite(exchange);
+    public void Enqueue(KazoHttpListenerExchange exchange) => _queue.Writer.TryWrite(exchange);
 
     /// <summary>Ends the queue: <see cref="AcceptAsync"/> returns <see langword="null"/>.</summary>
     public void Complete() => _queue.Writer.TryComplete();
@@ -609,10 +609,10 @@ internal sealed class RemoteCatalogGateway(RemoteProcessChannel channel) : IAppC
         remove { }
     }
 
-    public async ValueTask<IReadOnlyList<HackAppInfo>> GetInstalledAsync(CancellationToken cancellationToken = default) =>
+    public async ValueTask<IReadOnlyList<KazoAppInfo>> GetInstalledAsync(CancellationToken cancellationToken = default) =>
         WireCodec.ReadApps(await channel.CallAsync(RemoteOps.CatalogInstalled, null, cancellationToken).ConfigureAwait(false));
 
-    public async ValueTask<IReadOnlyList<HackAppInfo>> GetHandlersAsync(
+    public async ValueTask<IReadOnlyList<KazoAppInfo>> GetHandlersAsync(
         VirtualPath path, string? mediaType = null, CancellationToken cancellationToken = default) =>
         WireCodec.ReadApps(await channel.CallAsync(RemoteOps.CatalogHandlers, writer =>
         {
@@ -623,12 +623,12 @@ internal sealed class RemoteCatalogGateway(RemoteProcessChannel channel) : IAppC
             }
         }, cancellationToken).ConfigureAwait(false));
 
-    public async ValueTask<IReadOnlyList<HackFileAssociation>> GetDefaultHandlersAsync(CancellationToken cancellationToken = default) =>
+    public async ValueTask<IReadOnlyList<KazoFileAssociation>> GetDefaultHandlersAsync(CancellationToken cancellationToken = default) =>
         WireCodec.ReadAssociations(await channel.CallAsync(RemoteOps.CatalogDefaults, null, cancellationToken).ConfigureAwait(false));
 
-    public async ValueTask<HackDefaultHandlerStatus> SetUserDefaultHandlerAsync(
+    public async ValueTask<KazoDefaultHandlerStatus> SetUserDefaultHandlerAsync(
         string target, string action, string? appId, CancellationToken cancellationToken = default) =>
-        (HackDefaultHandlerStatus)(await channel.CallAsync(RemoteOps.CatalogSetDefault, writer =>
+        (KazoDefaultHandlerStatus)(await channel.CallAsync(RemoteOps.CatalogSetDefault, writer =>
         {
             writer.WriteString("t", target);
             writer.WriteString("a", action);
@@ -683,14 +683,14 @@ internal sealed class RemoteServiceNotifyGateway(RemoteProcessChannel channel) :
 /// <summary><see cref="IAppDriveGateway"/> in a worker (<c>df</c>).</summary>
 internal sealed class RemoteDriveGateway(RemoteProcessChannel channel) : IAppDriveGateway
 {
-    public async ValueTask<IReadOnlyList<HackDriveSnapshot>> GetDrivesAsync(CancellationToken cancellationToken = default) =>
+    public async ValueTask<IReadOnlyList<KazoDriveSnapshot>> GetDrivesAsync(CancellationToken cancellationToken = default) =>
         WireCodec.ReadDrives(await channel.CallAsync(RemoteOps.Drives, null, cancellationToken).ConfigureAwait(false));
 
     public async ValueTask<bool> IsHostFolderSupportedAsync(CancellationToken cancellationToken = default) =>
         (await channel.CallAsync(RemoteOps.DriveHostSupported, null, cancellationToken).ConfigureAwait(false)).GetProperty("s").GetBoolean();
 
     // ADR 0181: the browser's folder dialog opens on the page; the user gesture that led here is the page's.
-    public async ValueTask<HackDriveSnapshot?> MountHostFolderAsync(string? mountPoint, CancellationToken cancellationToken = default) =>
+    public async ValueTask<KazoDriveSnapshot?> MountHostFolderAsync(string? mountPoint, CancellationToken cancellationToken = default) =>
         WireCodec.ReadDrive(await channel.CallAsync(RemoteOps.DriveMount, writer =>
         {
             if (mountPoint is not null)
@@ -710,7 +710,7 @@ internal sealed class RemoteDriveGateway(RemoteProcessChannel channel) : IAppDri
 /// <summary><see cref="IAppCrossOriginIsolationGateway"/> in a worker (ADR 0146): the OS answers with the page's status.</summary>
 internal sealed class RemoteCrossOriginIsolationGateway(RemoteProcessChannel channel) : IAppCrossOriginIsolationGateway
 {
-    public async ValueTask<HackCrossOriginIsolationStatus> GetStatusAsync(CancellationToken cancellationToken = default) =>
+    public async ValueTask<KazoCrossOriginIsolationStatus> GetStatusAsync(CancellationToken cancellationToken = default) =>
         WireCodec.ReadCrossOriginIsolation(await channel.CallAsync(RemoteOps.CrossOriginIsolation, null, cancellationToken).ConfigureAwait(false));
 }
 
@@ -790,21 +790,21 @@ internal sealed class RemoteIntentGateway(RemoteProcessChannel channel) : IAppIn
 /// </summary>
 internal sealed class RemoteWebDatabaseGateway(RemoteProcessChannel channel, string appId) : Kazo.Os.AppSdk.WebData.IAppWebDatabaseGateway
 {
-    public string DatabaseName { get; } = Kazo.Os.AppSdk.WebData.HackWebDbNames.ForApp(appId);
+    public string DatabaseName { get; } = Kazo.Os.AppSdk.WebData.KazoWebDbNames.ForApp(appId);
 
-    public async ValueTask OpenAsync(Kazo.Os.AppSdk.WebData.HackWebDbSchemaDefinition schema, CancellationToken cancellationToken = default)
+    public async ValueTask OpenAsync(Kazo.Os.AppSdk.WebData.KazoWebDbSchemaDefinition schema, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(schema);
-        string json = JsonSerializer.Serialize(schema, Kazo.Os.AppSdk.WebData.HackWebDbJsonContext.Default.HackWebDbSchemaDefinition);
+        string json = JsonSerializer.Serialize(schema, Kazo.Os.AppSdk.WebData.KazoWebDbJsonContext.Default.KazoWebDbSchemaDefinition);
         await channel.CallAsync(RemoteOps.WebDbOpen, writer => writer.WriteString("j", json), cancellationToken).ConfigureAwait(false);
     }
 
-    public async ValueTask<IReadOnlyList<string?>> ExecuteAsync(Kazo.Os.AppSdk.WebData.HackWebDbRequest request, CancellationToken cancellationToken = default)
+    public async ValueTask<IReadOnlyList<string?>> ExecuteAsync(Kazo.Os.AppSdk.WebData.KazoWebDbRequest request, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
-        string json = JsonSerializer.Serialize(request, Kazo.Os.AppSdk.WebData.HackWebDbJsonContext.Default.HackWebDbRequest);
+        string json = JsonSerializer.Serialize(request, Kazo.Os.AppSdk.WebData.KazoWebDbJsonContext.Default.KazoWebDbRequest);
         JsonElement result = await channel.CallAsync(RemoteOps.WebDbExecute, writer => writer.WriteString("j", json), cancellationToken).ConfigureAwait(false);
-        return JsonSerializer.Deserialize(result.GetString("r"), Kazo.Os.AppSdk.WebData.HackWebDbJsonContext.Default.ListString) ?? [];
+        return JsonSerializer.Deserialize(result.GetString("r"), Kazo.Os.AppSdk.WebData.KazoWebDbJsonContext.Default.ListString) ?? [];
     }
 }
 
@@ -823,10 +823,10 @@ internal sealed class RemoteClipboardGateway(RemoteProcessChannel channel) : IAp
     public async ValueTask SetTextAsync(string text, CancellationToken cancellationToken = default) =>
         await channel.CallAsync(RemoteOps.ClipboardSetText, writer => writer.WriteString("tx", text), cancellationToken).ConfigureAwait(false);
 
-    public async ValueTask<HackClipboardFileList?> GetFileDropListAsync(CancellationToken cancellationToken = default) =>
+    public async ValueTask<KazoClipboardFileList?> GetFileDropListAsync(CancellationToken cancellationToken = default) =>
         WireCodec.ReadClipboardFiles(await channel.CallAsync(RemoteOps.ClipboardGetFiles, null, cancellationToken).ConfigureAwait(false));
 
-    public async ValueTask SetFileDropListAsync(HackClipboardFileList files, CancellationToken cancellationToken = default) =>
+    public async ValueTask SetFileDropListAsync(KazoClipboardFileList files, CancellationToken cancellationToken = default) =>
         await channel.CallAsync(RemoteOps.ClipboardSetFiles, writer => WireCodec.WriteClipboardFiles(writer, files), cancellationToken).ConfigureAwait(false);
 
     public async ValueTask ClearAsync(CancellationToken cancellationToken = default) =>

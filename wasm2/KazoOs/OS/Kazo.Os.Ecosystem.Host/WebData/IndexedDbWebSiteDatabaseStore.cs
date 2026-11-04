@@ -19,11 +19,11 @@ internal sealed class IndexedDbWebSiteDatabaseStore(WebSiteDatabaseInterop inter
     private readonly Dictionary<string, string> _schemas = new(StringComparer.Ordinal);
 
     /// <inheritdoc />
-    public async ValueTask OpenAsync(string databaseName, HackWebDbSchemaDefinition schema, CancellationToken cancellationToken = default)
+    public async ValueTask OpenAsync(string databaseName, KazoWebDbSchemaDefinition schema, CancellationToken cancellationToken = default)
     {
         WebSiteDatabaseNames.Require(databaseName);
         ArgumentNullException.ThrowIfNull(schema);
-        string json = JsonSerializer.Serialize(schema, HackWebDbJsonContext.Default.HackWebDbSchemaDefinition);
+        string json = JsonSerializer.Serialize(schema, KazoWebDbJsonContext.Default.KazoWebDbSchemaDefinition);
         await Translate(() => interop.OpenAsync(databaseName, json, cancellationToken)).ConfigureAwait(false);
         lock (_gate)
         {
@@ -32,11 +32,11 @@ internal sealed class IndexedDbWebSiteDatabaseStore(WebSiteDatabaseInterop inter
     }
 
     /// <inheritdoc />
-    public async ValueTask<IReadOnlyList<string?>> ExecuteAsync(string databaseName, HackWebDbRequest request, CancellationToken cancellationToken = default)
+    public async ValueTask<IReadOnlyList<string?>> ExecuteAsync(string databaseName, KazoWebDbRequest request, CancellationToken cancellationToken = default)
     {
         WebSiteDatabaseNames.Require(databaseName);
         ArgumentNullException.ThrowIfNull(request);
-        string json = JsonSerializer.Serialize(request, HackWebDbJsonContext.Default.HackWebDbRequest);
+        string json = JsonSerializer.Serialize(request, KazoWebDbJsonContext.Default.KazoWebDbRequest);
         string results;
         try
         {
@@ -50,14 +50,14 @@ internal sealed class IndexedDbWebSiteDatabaseStore(WebSiteDatabaseInterop inter
         }
         catch (JSException exception)
         {
-            throw HackWebDbException.FromMessage(exception.Message);
+            throw KazoWebDbException.FromMessage(exception.Message);
         }
 
-        return JsonSerializer.Deserialize(results, HackWebDbJsonContext.Default.ListString) ?? [];
+        return JsonSerializer.Deserialize(results, KazoWebDbJsonContext.Default.ListString) ?? [];
     }
 
     /// <inheritdoc />
-    public async ValueTask<IReadOnlyList<HackWebSiteDatabaseInfo>> ListAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<IReadOnlyList<KazoWebSiteDatabaseInfo>> ListAsync(CancellationToken cancellationToken = default)
     {
         string[] known;
         lock (_gate)
@@ -67,11 +67,11 @@ internal sealed class IndexedDbWebSiteDatabaseStore(WebSiteDatabaseInterop inter
 
         string json = await interop.ListAsync(JsonSerializer.Serialize(known, WebSiteDatabaseListJsonContext.Default.StringArray), cancellationToken).ConfigureAwait(false);
         List<WebSiteDatabaseListEntry> entries = JsonSerializer.Deserialize(json, WebSiteDatabaseListJsonContext.Default.ListWebSiteDatabaseListEntry) ?? [];
-        return [.. entries.Select(entry => new HackWebSiteDatabaseInfo(
+        return [.. entries.Select(entry => new KazoWebSiteDatabaseInfo(
             entry.Name,
-            HackWebDbNames.AppIdOf(entry.Name) ?? entry.Name,
+            KazoWebDbNames.AppIdOf(entry.Name) ?? entry.Name,
             entry.Version,
-            [.. entry.Stores.Select(store => new HackWebSiteDatabaseStoreInfo(store.Name, store.RecordCount))],
+            [.. entry.Stores.Select(store => new KazoWebSiteDatabaseStoreInfo(store.Name, store.RecordCount))],
             entry.SizeBytes))];
     }
 
@@ -98,7 +98,7 @@ internal sealed class IndexedDbWebSiteDatabaseStore(WebSiteDatabaseInterop inter
         }
         catch (JSException exception)
         {
-            throw HackWebDbException.FromMessage(exception.Message);
+            throw KazoWebDbException.FromMessage(exception.Message);
         }
     }
 
@@ -110,7 +110,7 @@ internal sealed class IndexedDbWebSiteDatabaseStore(WebSiteDatabaseInterop inter
         }
         catch (JSException exception)
         {
-            throw HackWebDbException.FromMessage(exception.Message);
+            throw KazoWebDbException.FromMessage(exception.Message);
         }
     }
 }

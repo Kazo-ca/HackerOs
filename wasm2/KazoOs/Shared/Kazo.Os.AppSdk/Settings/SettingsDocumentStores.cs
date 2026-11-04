@@ -8,7 +8,7 @@ using Kazo.Os.Simulation.Abstractions.Settings;
 namespace Kazo.Os.AppSdk.Settings;
 
 /// <summary>
-/// Where a <see cref="HackSettingsDocument"/> reads and writes its two layers: an app's own files
+/// Where a <see cref="KazoSettingsDocument"/> reads and writes its two layers: an app's own files
 /// through its filesystem gateway (ADR 0044), or an OS document through
 /// <see cref="IAppSystemSettingsGateway"/> (ADR 0056, section 8). The document keeps the typed API,
 /// the lock rule and the change notifications; the store only moves text.

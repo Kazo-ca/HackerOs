@@ -57,7 +57,7 @@ Deux façons, même résultat :
 
 `external/HackerOs/wasm2/KazoOs/build/Versions.props` est la version du
 dépôt : `Directory.Build.props` l'importe, et chaque référence `Kazo.Os.*`
-utilise `$(HackerOsVersion)`. Changer de version, c'est placer le sous-module
+utilise `$(KazoOsVersion)`. Changer de version, c'est placer le sous-module
 sur un autre tag de release et valider ce changement. On ne modifie jamais le
 sous-module : la CI refuse un sous-module modifié ou hors de son tag
 (`.github/scripts/check-hackeros-submodule.sh`).
@@ -66,11 +66,11 @@ sous-module : la CI refuse un sous-module modifié ou hors de son tag
 
 | Profil | Kazo OS vient de | Sortie de restauration |
 | --- | --- | --- |
-| `Debug` (`HackerOsUseSource=true`) | les projets du sous-module : on entre dans le SDK et l'OS, points d'arrêt partout | `obj/source/` |
-| `Release` (`HackerOsUseSource=false`) | les paquets `Kazo.Os.*` de nuget.org, à la version du sous-module | `obj/` |
+| `Debug` (`KazoOsUseSource=true`) | les projets du sous-module : on entre dans le SDK et l'OS, points d'arrêt partout | `obj/source/` |
+| `Release` (`KazoOsUseSource=false`) | les paquets `Kazo.Os.*` de nuget.org, à la version du sous-module | `obj/` |
 
-`-p:HackerOsUseSource=true` ou `false` force l'un ou l'autre ;
-`-p:HackerOsSourceRoot=<dossier>` pointe vers une autre copie de Kazo OS
+`-p:KazoOsUseSource=true` ou `false` force l'un ou l'autre ;
+`-p:KazoOsSourceRoot=<dossier>` pointe vers une autre copie de Kazo OS
 (dossier de `Kazo.Os.sln`). Le premier build `Debug` compile tout l'OS.
 
 ### Comment marche le profil `Debug`
@@ -85,14 +85,14 @@ depuis le sous-module. Il :
    `ProjectReference`, en gardant `IsSystemApp` pour les apps de base de
    l'hôte ;
 3. retire `Kazo.Os.App.Build` et importe `Kazo.Os.Apps.targets` pour les
-   projets qui déclarent `HackerOsAppProject` ou `HackerOsAppHost` : même
+   projets qui déclarent `KazoOsAppProject` ou `KazoOsAppHost` : même
    générateur de manifeste, mêmes analyseurs, même agrégation dans l'hôte que
-   dans le dépôt Kazo OS (`HackerOsExternalSource=true`).
+   dans le dépôt Kazo OS (`KazoOsExternalSource=true`).
 
 La frontière du SDK (`HOSAPP0030`) vérifie les références qui entrent dans le
 sous-module ; un projet de votre dépôt peut en référencer un autre. Une app
 ajoutée avec `dotnet new hackeros-window` (ou `-command`, `-service`, `-site`)
-déclare déjà `HackerOsAppProject=true` ; ajoutez-la à l'hôte par
+déclare déjà `KazoOsAppProject=true` ; ajoutez-la à l'hôte par
 `dotnet add src/<Nom>.Os reference …`.
 
 ## Publier dans le Hack Store
@@ -102,16 +102,16 @@ déclare déjà `HackerOsAppProject=true` ; ajoutez-la à l'hôte par
    descriptions, et dans `store.json` la catégorie (liste fermée du
    catalogue), les étiquettes et la licence. `repository` vient de
    `--repository` ; `project` nomme le `.csproj` de l'app, que le catalogue
-   compile (à la racine, `HackerOsPack` tournerait aussi sur le projet de tests,
+   compile (à la racine, `KazoOsPack` tournerait aussi sur le projet de tests,
    qui n'a pas cette cible).
 2. Changer `Version` dans la classe `[AppManifest]`, valider, poser le tag
    `v<version>` et le pousser.
 3. Le workflow **Publish to the Hack Store** vérifie le sous-module, compile
-   l'app en `Release`, la met en paquet (`HackerOsPack`), refuse un tag qui
+   l'app en `Release`, la met en paquet (`KazoOsPack`), refuse un tag qui
    n'est pas la version du manifeste et produit `apps/<appId>_<version>/`
    (contenu de `store/`, `manifest.json` **du paquet**, `store.json` avec le
    commit du tag), laissé en artefact du workflow. Le manifeste du paquet est le
-   manifeste généré plus toutes les ressources statiques que `HackerOsPack` y a
+   manifeste généré plus toutes les ressources statiques que `KazoOsPack` y a
    ajoutées ([ADR 0221](../dev/adr/0221-pack-all-static-web-assets-of-an-app.md)) :
    c'est celui que le catalogue compare au paquet que sa CI construit. Le paquet
    contient aussi les assemblages satellites de l'app (ses `.resx` par culture,
@@ -169,14 +169,14 @@ gh secret set HACK_STORE_TOKEN --repo <propriétaire>/<dépôt>
 [ADR 0219](../dev/adr/0219-app-authors-signing-tool.md). Le même tag `v*` lance
 **Publish the Kazo OS packages** (`publish-packages.yml`, seul workflow avec
 `contents: write`) : il récupère la branche `hackeros-packages` (orpheline la
-première fois), y fait le paquet (`HackerOsPack`, `HackerOsPackageOutput`), garde
+première fois), y fait le paquet (`KazoOsPack`, `KazoOsPackageOutput`), garde
 les versions déjà publiées et leurs signatures, puis pousse la branche.
 `hackpkg install <owner>/<repo>` installe alors l'app sans le Store.
 
 Pour signer :
 
 1. Une fois, hors du dépôt :
-   `dotnet build src/<Nom> -t:HackerOsKeyGen -p:HackerOsSigningKeyFile=$HOME/hackeros-signing-key.pem`.
+   `dotnet build src/<Nom> -t:KazoOsKeyGen -p:KazoOsSigningKeyFile=$HOME/hackeros-signing-key.pem`.
    La clé privée (PKCS#8, droits `0600`) va dans ce nouveau fichier, jamais
    remplacé ; la clé publique et la ligne `github.com/<owner>=…` sont affichées.
    `*.pem` est dans le `.gitignore` du modèle.
@@ -188,7 +188,7 @@ Pour signer :
 
 Sans le secret, le paquet part non signé (SHA-256 seulement) avec un
 avertissement. En local : variable `HACKEROS_APP_SIGNING_KEY` ou
-`-p:HackerOsSigningKeyFile=<fichier.pem>` sur `HackerOsPack`. Il faut une
+`-p:KazoOsSigningKeyFile=<fichier.pem>` sur `KazoOsPack`. Il faut une
 version de Kazo OS qui contient l'ADR 0219 (2.2.1 ou plus récente).
 
 ## Le dépôt template GitHub

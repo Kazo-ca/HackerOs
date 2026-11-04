@@ -106,12 +106,12 @@ public sealed class SystemClipboard : IDisposable
     /// <param name="session">Owning session.</param>
     /// <param name="files">Files cut or copied.</param>
     /// <param name="owner">The process that copied, charged with the content's memory (ADR 0068).</param>
-    public void SetFileDropList(SessionId session, HackClipboardFileList files, ProcessId? owner = null)
+    public void SetFileDropList(SessionId session, KazoClipboardFileList files, ProcessId? owner = null)
     {
         ArgumentNullException.ThrowIfNull(files);
         SetTargets(session, new Dictionary<string, string>(StringComparer.Ordinal)
         {
-            [HackClipboardFileList.GnomeCopiedFilesMediaType] = files.ToGnomeCopiedFiles(),
+            [KazoClipboardFileList.GnomeCopiedFilesMediaType] = files.ToGnomeCopiedFiles(),
             [TextMediaType] = files.ToText()
         }, SystemClipboardOrigin.Guest, owner);
     }
@@ -228,7 +228,7 @@ public sealed record SystemClipboardEntry(IReadOnlyDictionary<string, string> Ta
 /// <summary>Who put the current content on the OS clipboard (ADR 0065).</summary>
 public enum SystemClipboardOrigin
 {
-    /// <summary>An app, through <c>HackClipboard</c>: the bridge mirrors its text to the host.</summary>
+    /// <summary>An app, through <c>KazoClipboard</c>: the bridge mirrors its text to the host.</summary>
     Guest,
 
     /// <summary>

@@ -9,25 +9,25 @@ using Kazo.Os.AppSdk.Web.Views;
 namespace Kazo.Os.AppSdk.Web.Tests.Views;
 
 /// <summary>
-/// .cshtml views of <see cref="TestSite"/> compiled by the SDK's Razor compiler against HackRazorPage
+/// .cshtml views of <see cref="TestSite"/> compiled by the SDK's Razor compiler against KazoRazorPage
 /// (web/8, ADR 0086): table, @model, @inject, sections, _Layout, _ViewStart, helpers, mixing with .razor.
 /// </summary>
 public sealed partial class CshtmlViewTests : IAsyncLifetime
 {
     private const string Site = "http://intranet.hack";
-    private HackWebApplication _app = null!;
+    private KazoWebApplication _app = null!;
 
     public Task InitializeAsync()
     {
-        _app = HackWebHost.CreateApplication(new TestSite(), HackWebGeneratedRoutes.Table, views: HackWebGeneratedRoutes.Views);
+        _app = KazoWebHost.CreateApplication(new TestSite(), KazoWebGeneratedRoutes.Table, views: KazoWebGeneratedRoutes.Views);
         return Task.CompletedTask;
     }
 
     public async Task DisposeAsync() => await _app.DisposeAsync();
 
-    private async Task<(int Status, string Html, HackWebResponseData Response)> Get(string path, params KeyValuePair<string, string>[] headers)
+    private async Task<(int Status, string Html, KazoWebResponseData Response)> Get(string path, params KeyValuePair<string, string>[] headers)
     {
-        HackWebResponseData response = await _app.ProcessAsync(HackWebRequestData.Create("GET", Site + path, headers));
+        KazoWebResponseData response = await _app.ProcessAsync(KazoWebRequestData.Create("GET", Site + path, headers));
         return (response.StatusCode, response.ReadAsString(), response);
     }
 
@@ -39,22 +39,22 @@ public sealed partial class CshtmlViewTests : IAsyncLifetime
     [Fact]
     public void Generator_lists_cshtml_views_with_the_compiler_class_names()
     {
-        HackViewTable views = HackWebGeneratedRoutes.Views;
+        KazoViewTable views = KazoWebGeneratedRoutes.Views;
 
-        HackViewDescriptor index = views.Find("Cshtml/Index")!;
-        Assert.Equal(HackViewKind.RazorPage, index.Kind);
+        KazoViewDescriptor index = views.Find("Cshtml/Index")!;
+        Assert.Equal(KazoViewKind.RazorPage, index.Kind);
         Assert.Equal("AspNetCoreGeneratedDocument.Views_Cshtml_Index", index.ViewType.FullName);
         Assert.Equal("/Views/Cshtml/Index.cshtml", index.ToString());
-        Assert.Equal(HackViewKind.RazorPage, views.Find("_ViewStart")!.Kind);
-        Assert.Equal(HackViewKind.Component, views.Find("Cshtml/FromRazor")!.Kind);
+        Assert.Equal(KazoViewKind.RazorPage, views.Find("_ViewStart")!.Kind);
+        Assert.Equal(KazoViewKind.Component, views.Find("Cshtml/FromRazor")!.Kind);
         Assert.DoesNotContain(views.Views, view => view.Path.EndsWith("_ViewImports", StringComparison.OrdinalIgnoreCase));
-        Assert.True(typeof(HackRazorPage<NoteStore>).IsAssignableFrom(index.ViewType));
+        Assert.True(typeof(KazoRazorPage<NoteStore>).IsAssignableFrom(index.ViewType));
     }
 
     [Fact]
     public async Task View_runs_view_starts_layout_model_inject_and_section()
     {
-        (int status, string html, HackWebResponseData response) = await Get("/Cshtml");
+        (int status, string html, KazoWebResponseData response) = await Get("/Cshtml");
         string flat = Flat(html);
 
         Assert.True(status == 200, html);
@@ -135,7 +135,7 @@ public sealed partial class CshtmlViewTests : IAsyncLifetime
     [Fact]
     public async Task Form_helpers_bind_the_model_and_show_errors_after_a_failed_post()
     {
-        (int status, string form, HackWebResponseData response) = await Get("/Cshtml/Edit");
+        (int status, string form, KazoWebResponseData response) = await Get("/Cshtml/Edit");
         Assert.True(status == 200, form);
         Assert.Contains("""<form action="/Cshtml/Edit" method="post" class="edit">""", form);
         Assert.Contains("""<label for="Name">Name</label>""", form);
@@ -147,8 +147,8 @@ public sealed partial class CshtmlViewTests : IAsyncLifetime
         Assert.True(form.IndexOf("__RequestVerificationToken", StringComparison.Ordinal) < form.IndexOf("</form>", StringComparison.Ordinal));
 
         string token = TokenField().Match(form).Groups[1].Value;
-        string cookie = response.Headers.First(header => header.Key == "Set-Cookie" && header.Value.StartsWith(".HackAntiforgery=", StringComparison.Ordinal)).Value.Split(';')[0];
-        HackWebResponseData posted = await _app.ProcessAsync(HackWebRequestData.Create(
+        string cookie = response.Headers.First(header => header.Key == "Set-Cookie" && header.Value.StartsWith(".KazoAntiforgery=", StringComparison.Ordinal)).Value.Split(';')[0];
+        KazoWebResponseData posted = await _app.ProcessAsync(KazoWebRequestData.Create(
             "POST", Site + "/Cshtml/Edit", "application/x-www-form-urlencoded",
             $"Name=&Age=7&__RequestVerificationToken={WebUtility.UrlEncode(token)}",
             [new("Cookie", cookie)]));
@@ -159,7 +159,7 @@ public sealed partial class CshtmlViewTests : IAsyncLifetime
         Assert.Contains("""<span class="field-validation-error" data-valmsg-for="Name">""", errors);
         Assert.Contains("""name="Age" id="Age" value="7" class="input-validation-error" """.TrimEnd(), errors);
 
-        HackWebResponseData valid = await _app.ProcessAsync(HackWebRequestData.Create(
+        KazoWebResponseData valid = await _app.ProcessAsync(KazoWebRequestData.Create(
             "POST", Site + "/Cshtml/Edit", "application/x-www-form-urlencoded",
             $"Name=Grace&Age=40&__RequestVerificationToken={WebUtility.UrlEncode(token)}",
             [new("Cookie", cookie)]));

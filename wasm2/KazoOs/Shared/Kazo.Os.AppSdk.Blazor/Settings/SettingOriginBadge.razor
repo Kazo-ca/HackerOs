@@ -23,7 +23,7 @@
 
     private Microsoft.Extensions.Localization.IStringLocalizer<Kazo.Os.AppSdk.Blazor.Strings> L => AppContext is { } context
         ? context.GetLocalizer<Kazo.Os.AppSdk.Blazor.Strings>()
-        : HackLocalization.GetLocalizer<Kazo.Os.AppSdk.Blazor.Strings>();
+        : KazoLocalization.GetLocalizer<Kazo.Os.AppSdk.Blazor.Strings>();
 
     private string Label => IsLocked
         ? L["SettingOrigin.Locked"]

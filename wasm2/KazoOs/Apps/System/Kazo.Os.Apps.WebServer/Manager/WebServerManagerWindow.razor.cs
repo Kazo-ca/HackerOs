@@ -51,8 +51,8 @@ public partial class WebServerManagerWindow
         get
         {
             IReadOnlyList<WebSiteRow> rows = _snapshot?.Rows ?? [];
-            yield return (L["Group.System"], "/etc/hackweb/sites", [.. rows.Where(static row => row.Declaration?.Scope == HackWebSiteScope.System)]);
-            yield return (L["Group.User"], "~/.config/hackweb/sites", [.. rows.Where(static row => row.Declaration?.Scope == HackWebSiteScope.User)]);
+            yield return (L["Group.System"], "/etc/hackweb/sites", [.. rows.Where(static row => row.Declaration?.Scope == KazoWebSiteScope.System)]);
+            yield return (L["Group.User"], "~/.config/hackweb/sites", [.. rows.Where(static row => row.Declaration?.Scope == KazoWebSiteScope.User)]);
             yield return (L["Group.External"], L["Group.External.Hint"], [.. rows.Where(static row => row.State == WebSiteState.External)]);
         }
     }
@@ -114,7 +114,7 @@ public partial class WebServerManagerWindow
     /// <summary>The folder of a "Publish as a web site" intent (ADR 0151 §8), or <see langword="null"/>.</summary>
     internal static string? PublishedFolder(AppIntentDelivery? intent) =>
         intent is { IntentId: WebServerManagerApp.PublishSiteIntent }
-            ? HackFileMenuIntent.ReadPaths(intent.PayloadJson).FirstOrDefault()
+            ? KazoFileMenuIntent.ReadPaths(intent.PayloadJson).FirstOrDefault()
             : null;
 
     /// <summary>Reads everything again, keeping the selection.</summary>
@@ -146,12 +146,12 @@ public partial class WebServerManagerWindow
         await ValidateAsync();
     }
 
-    private Task NewSiteAsync() => StartNewAsync(HackUser.Current.HomeDirectory + "/www");
+    private Task NewSiteAsync() => StartNewAsync(KazoUser.Current.HomeDirectory + "/www");
 
     private async Task StartNewAsync(string folder)
     {
         _snapshot ??= await WebSiteStore.LoadAsync(_lifetime.Token);
-        HackWebSite suggested = WebSiteStore.Suggest(folder, _snapshot);
+        KazoWebSite suggested = WebSiteStore.Suggest(folder, _snapshot);
         _selected = null;
         _tab = DetailTab.Settings;
         _editor = SiteEditor.FromNew(suggested);
@@ -165,7 +165,7 @@ public partial class WebServerManagerWindow
         _message = null;
     }
 
-    private async Task SetScopeAsync(HackWebSiteScope scope)
+    private async Task SetScopeAsync(KazoWebSiteScope scope)
     {
         if (_editor is null)
         {
@@ -184,13 +184,13 @@ public partial class WebServerManagerWindow
             return;
         }
 
-        _errors = [.. HackWebSiteFile.Validate(_editor.ToSite(), _editor.Scope, AppContext)];
+        _errors = [.. KazoWebSiteFile.Validate(_editor.ToSite(), _editor.Scope, AppContext)];
     }
 
     private async Task ValidateAsync()
     {
         Validate();
-        _warning = _editor is { Scope: HackWebSiteScope.System } editor
+        _warning = _editor is { Scope: KazoWebSiteScope.System } editor
             ? await WebSiteStore.CheckWwwDataAsync(editor.Root, _lifetime.Token)
             : null;
     }
@@ -238,7 +238,7 @@ public partial class WebServerManagerWindow
         }
         catch (UnauthorizedAccessException)
         {
-            ShowMessage(editor.Scope == HackWebSiteScope.System
+            ShowMessage(editor.Scope == KazoWebSiteScope.System
                 ? L["Message.SaveNeedsAdmin"]
                 : L["Message.SaveDenied"], error: true);
         }
@@ -302,9 +302,9 @@ public partial class WebServerManagerWindow
 
         try
         {
-            await HackApps.LaunchAsync("org.hackeros.browser", [url], _lifetime.Token);
+            await KazoApps.LaunchAsync("org.hackeros.browser", [url], _lifetime.Token);
         }
-        catch (Exception exception) when (exception is HackAppLaunchException or UnauthorizedAccessException)
+        catch (Exception exception) when (exception is KazoAppLaunchException or UnauthorizedAccessException)
         {
             ShowMessage(L["Message.BrowserFailed", exception.Message], error: true);
         }
@@ -331,7 +331,7 @@ public partial class WebServerManagerWindow
         await service.StartAsync(token);
     }, "Message.Daemon.Restarted");
 
-    private async Task ControlDaemonAsync(Func<AppSdk.ServiceProcess.HackServiceController, CancellationToken, Task> action, string doneKey)
+    private async Task ControlDaemonAsync(Func<AppSdk.ServiceProcess.KazoServiceController, CancellationToken, Task> action, string doneKey)
     {
         if (_snapshot?.Daemon is not { } daemon)
         {
@@ -374,7 +374,7 @@ public partial class WebServerManagerWindow
     {
         try
         {
-            return string.IsNullOrWhiteSpace(path) ? null : VirtualPath.Parse(HackPath.GetDirectoryName(path) ?? "/");
+            return string.IsNullOrWhiteSpace(path) ? null : VirtualPath.Parse(KazoPath.GetDirectoryName(path) ?? "/");
         }
         catch (FormatException)
         {
@@ -390,7 +390,7 @@ public partial class WebServerManagerWindow
         GC.SuppressFinalize(this);
     }
 
-    /// <summary>The form's fields, as text, before they become a <see cref="HackWebSite"/>.</summary>
+    /// <summary>The form's fields, as text, before they become a <see cref="KazoWebSite"/>.</summary>
     private sealed class SiteEditor
     {
         public string Name { get; set; } = string.Empty;
@@ -407,15 +407,15 @@ public partial class WebServerManagerWindow
 
         public bool WasEnabled { get; private init; }
 
-        public HackWebSiteScope Scope { get; set; } = HackWebSiteScope.User;
+        public KazoWebSiteScope Scope { get; set; } = KazoWebSiteScope.User;
 
         public string? OriginalPath { get; private init; }
 
         public string? OriginalName { get; private init; }
 
-        public static SiteEditor From(HackWebSiteDeclaration declaration)
+        public static SiteEditor From(KazoWebSiteDeclaration declaration)
         {
-            HackWebSite site = declaration.Site ?? new HackWebSite { Name = declaration.Name };
+            KazoWebSite site = declaration.Site ?? new KazoWebSite { Name = declaration.Name };
             return new SiteEditor
             {
                 Name = site.Name,
@@ -431,7 +431,7 @@ public partial class WebServerManagerWindow
             };
         }
 
-        public static SiteEditor FromNew(HackWebSite site) => new()
+        public static SiteEditor FromNew(KazoWebSite site) => new()
         {
             Name = site.Name,
             Root = site.Root,
@@ -439,10 +439,10 @@ public partial class WebServerManagerWindow
             DefaultDocuments = string.Join(", ", site.DefaultDocuments),
             DirectoryBrowsing = site.DirectoryBrowsing,
             Enabled = true,
-            Scope = HackWebSiteScope.User
+            Scope = KazoWebSiteScope.User
         };
 
-        public HackWebSite ToSite() => new()
+        public KazoWebSite ToSite() => new()
         {
             Name = Name.Trim(),
             Root = Root.Trim(),

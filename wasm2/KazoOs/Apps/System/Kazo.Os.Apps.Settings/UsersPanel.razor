@@ -1,4 +1,4 @@
-@inherits Kazo.Os.AppSdk.Blazor.HackComponentBase
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
 @using Kazo.Os.AppSdk.Administration
 
 @if (CurrentAccount is { IsGuest: true })
@@ -30,7 +30,7 @@
     else
     {
         <ul class="account-list" aria-label="@L["Users.List.Title"]">
-            @foreach (HackUserAccount account in _accounts)
+            @foreach (KazoUserAccount account in _accounts)
             {
                 <li class="@(account.IsCurrentUser ? "account is-current" : "account")">
                     <span class="account-login">@account.LoginName</span>
@@ -161,7 +161,7 @@
             <label class="field">
                 <span>@L["Users.Field.Account"]</span>
                 <select class="text-input" @bind="_resetLogin" disabled="@_busy">
-                    @foreach (HackUserAccount account in OtherAccounts)
+                    @foreach (KazoUserAccount account in OtherAccounts)
                     {
                         <option value="@account.LoginName">@account.LoginName (@account.DisplayName)</option>
                     }

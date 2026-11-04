@@ -50,7 +50,7 @@
                             class="toolbar-button new-folder"
                             title="@L["FileDialog.NewFolder"]"
                             aria-label="@L["FileDialog.NewFolder"]"
-                            disabled="@(!_controller.CanExecute(HackFileMenuItems.NewFolder))"
+                            disabled="@(!_controller.CanExecute(KazoFileMenuItems.NewFolder))"
                             @onclick="CreateFolderAsync">
                         <MudIcon Icon="@Icons.Material.Filled.CreateNewFolder" Size="Size.Small" />
                         <span class="toolbar-label">@L["FileDialog.NewFolder"]</span>
@@ -61,16 +61,16 @@
                             class="toolbar-button"
                             title="@L["FileDialog.ViewDetails"]"
                             aria-label="@L["FileDialog.ViewDetails"]"
-                            aria-pressed="@(_mode == HackFileViewMode.Details ? "true" : "false")"
-                            @onclick="() => SetMode(HackFileViewMode.Details)">
+                            aria-pressed="@(_mode == KazoFileViewMode.Details ? "true" : "false")"
+                            @onclick="() => SetMode(KazoFileViewMode.Details)">
                         <MudIcon Icon="@Icons.Material.Filled.ViewList" Size="Size.Small" />
                     </button>
                     <button type="button"
                             class="toolbar-button"
                             title="@L["FileDialog.ViewIcons"]"
                             aria-label="@L["FileDialog.ViewIcons"]"
-                            aria-pressed="@(_mode == HackFileViewMode.Icons ? "true" : "false")"
-                            @onclick="() => SetMode(HackFileViewMode.Icons)">
+                            aria-pressed="@(_mode == KazoFileViewMode.Icons ? "true" : "false")"
+                            @onclick="() => SetMode(KazoFileViewMode.Icons)">
                         <MudIcon Icon="@Icons.Material.Filled.GridView" Size="Size.Small" />
                     </button>
                 </div>
@@ -104,7 +104,7 @@
 
 @code {
     /// <summary>The OS file control, with the platform's browser in its place when no app provides it.</summary>
-    private RenderFragment FileView => @<HackFileView InitialDirectory="@InitialDirectory.Value"
+    private RenderFragment FileView => @<KazoFileView InitialDirectory="@InitialDirectory.Value"
                                                        Mode="_mode"
                                                        ModeChanged="_modeChanged"
                                                        Features="Features"
@@ -117,7 +117,7 @@
                                                        ErrorOccurred="_errorOccurred"
                                                        ControllerChanged="_controllerChanged">
         <Unavailable Context="reason">@Fallback</Unavailable>
-    </HackFileView>;
+    </KazoFileView>;
 
     /// <summary>The platform's own browser: the dialogs' view when the contract has no provider.</summary>
     private RenderFragment Fallback => @<VirtualFolderBrowser @ref="_fallback"

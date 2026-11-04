@@ -172,7 +172,7 @@ public sealed partial class DialogCoordinatorTests
             Description = "Test app",
             Kind = AppKind.Window,
             EntryPoint = new AppEntryPointManifest("Test", "Test"),
-            SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+            SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
             Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
             Resources = AppResourceProfileManifest.None
         };

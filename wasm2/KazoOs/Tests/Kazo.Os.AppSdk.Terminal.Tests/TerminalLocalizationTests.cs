@@ -12,7 +12,7 @@ public sealed class TerminalLocalizationTests
     [Fact]
     public void Every_terminal_text_exists_in_english_and_in_french()
     {
-        ResourceManager resources = HackLocalization.GetResourceManager(typeof(Strings));
+        ResourceManager resources = KazoLocalization.GetResourceManager(typeof(Strings));
         CultureInfo french = CultureInfo.GetCultureInfo("fr");
 
         HashSet<string> englishKeys = Keys(resources.GetResourceSet(CultureInfo.InvariantCulture, createIfNotExists: true, tryParents: false));

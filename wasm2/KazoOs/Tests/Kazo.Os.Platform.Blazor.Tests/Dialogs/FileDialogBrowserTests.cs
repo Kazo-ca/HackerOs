@@ -25,9 +25,9 @@ namespace Kazo.Os.Platform.Blazor.Tests.Dialogs;
 /// </summary>
 public sealed class FileDialogBrowserTests
 {
-    private static readonly HackFileViewItem Notes = new("/home/user/notes.txt", "notes.txt", false, 12, "text/plain", DateTimeOffset.UnixEpoch);
-    private static readonly HackFileViewItem Readme = new("/home/user/readme.md", "readme.md", false, 12, "text/markdown", DateTimeOffset.UnixEpoch);
-    private static readonly HackFileViewItem Projects = new("/home/user/projects", "projects", true, 0, "inode/directory", DateTimeOffset.UnixEpoch);
+    private static readonly KazoFileViewItem Notes = new("/home/user/notes.txt", "notes.txt", false, 12, "text/plain", DateTimeOffset.UnixEpoch);
+    private static readonly KazoFileViewItem Readme = new("/home/user/readme.md", "readme.md", false, 12, "text/markdown", DateTimeOffset.UnixEpoch);
+    private static readonly KazoFileViewItem Projects = new("/home/user/projects", "projects", true, 0, "inode/directory", DateTimeOffset.UnixEpoch);
 
     [Fact]
     public async Task The_dialog_asks_for_the_file_control_and_runs_it_with_the_requesting_app_context()
@@ -39,16 +39,16 @@ public sealed class FileDialogBrowserTests
             [nameof(FileDialogBrowser.FileSystem)] = context.FileSystem,
             [nameof(FileDialogBrowser.InitialDirectory)] = VirtualPath.Parse("/home/user/docs"),
             [nameof(FileDialogBrowser.AllowMultipleSelection)] = true,
-            [nameof(FileDialogBrowser.Features)] = HackFileViewFeatures.CreateFolder | HackFileViewFeatures.Rename,
+            [nameof(FileDialogBrowser.Features)] = KazoFileViewFeatures.CreateFolder | KazoFileViewFeatures.Rename,
             [nameof(FileDialogBrowser.FileFilter)] = (Func<string, string?, bool>)((name, _) => name.EndsWith(".txt", StringComparison.Ordinal)),
         });
 
         FakeFileView view = harness.View!;
-        Assert.Equal(HackComponentContracts.FileView, harness.Host.Contract);
+        Assert.Equal(KazoComponentContracts.FileView, harness.Host.Contract);
         Assert.Same(context, view.Context);
         Assert.Equal("/home/user/docs", view.InitialDirectory);
         Assert.True(view.AllowMultiSelect);
-        Assert.Equal(HackFileViewFeatures.CreateFolder | HackFileViewFeatures.Rename, view.Features);
+        Assert.Equal(KazoFileViewFeatures.CreateFolder | KazoFileViewFeatures.Rename, view.Features);
 
         // The dialog's file type filters regular files only: folders stay, to be browsed into.
         Assert.True(view.Filter!(Notes));
@@ -90,13 +90,13 @@ public sealed class FileDialogBrowserTests
             [nameof(FileDialogBrowser.FileActivated)] = EventCallback.Factory.Create<VirtualPath>(new object(), activated.Add),
         });
 
-        HackFileViewOpeningEventArgs file = new(Notes);
+        KazoFileViewOpeningEventArgs file = new(Notes);
         await harness.InvokeAsync(() => harness.View!.Opening.InvokeAsync(file));
         Assert.True(file.Handled);
         Assert.Equal([VirtualPath.Parse("/home/user/notes.txt")], activated);
 
         // A folder is left to the control, which enters it.
-        HackFileViewOpeningEventArgs folder = new(Projects);
+        KazoFileViewOpeningEventArgs folder = new(Projects);
         await harness.InvokeAsync(() => harness.View!.Opening.InvokeAsync(folder));
         Assert.False(folder.Handled);
         Assert.Single(activated);
@@ -153,7 +153,7 @@ public sealed class FileDialogBrowserTests
         {
             [nameof(FileDialogBrowser.Context)] = context,
             [nameof(FileDialogBrowser.FileSystem)] = context.FileSystem,
-            [nameof(FileDialogBrowser.Features)] = HackFileViewFeatures.CreateFolder | HackFileViewFeatures.Rename,
+            [nameof(FileDialogBrowser.Features)] = KazoFileViewFeatures.CreateFolder | KazoFileViewFeatures.Rename,
             [nameof(FileDialogBrowser.FileControlChanged)] = EventCallback.Factory.Create<bool>(new object(), fileControl.Add),
         });
 
@@ -226,7 +226,7 @@ public sealed class FileDialogBrowserTests
         Description = "File dialog test.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Writer", "Writer.WriterWindow"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None
     };
@@ -289,39 +289,39 @@ public sealed class FileDialogBrowserTests
 
         public FakeFileView? View { get; set; }
 
-        public Task<HackComponentResolution> ResolveAsync(string contract, CancellationToken cancellationToken = default)
+        public Task<KazoComponentResolution> ResolveAsync(string contract, CancellationToken cancellationToken = default)
         {
             Contract = contract;
             return Task.FromResult(provided
-                ? HackComponentResolution.Resolved(contract, typeof(FakeFileView), "org.hackeros.file-explorer")
-                : HackComponentResolution.Unavailable(contract, $"No installed app provides '{contract}'."));
+                ? KazoComponentResolution.Resolved(contract, typeof(FakeFileView), "org.hackeros.file-explorer")
+                : KazoComponentResolution.Unavailable(contract, $"No installed app provides '{contract}'."));
         }
     }
 
     /// <summary>A provider of the file control that remembers what the dialog handed it.</summary>
-    public sealed class FakeFileView : HackEmbeddableComponent, IHackFileView
+    public sealed class FakeFileView : KazoEmbeddableComponent, IHackFileView
     {
         [Inject]
         private IHackComponentHost Host { get; set; } = default!;
 
         [Parameter] public string InitialDirectory { get; set; } = "/";
-        [Parameter] public HackFileViewMode Mode { get; set; }
-        [Parameter] public EventCallback<HackFileViewMode> ModeChanged { get; set; }
-        [Parameter] public HackFileViewFeatures Features { get; set; }
+        [Parameter] public KazoFileViewMode Mode { get; set; }
+        [Parameter] public EventCallback<KazoFileViewMode> ModeChanged { get; set; }
+        [Parameter] public KazoFileViewFeatures Features { get; set; }
         [Parameter] public bool AllowMultiSelect { get; set; }
         [Parameter] public bool OpenOnTap { get; set; }
-        [Parameter] public Func<HackFileViewItem, bool>? Filter { get; set; }
-        [Parameter] public EventCallback<HackFileViewOpeningEventArgs> Opening { get; set; }
+        [Parameter] public Func<KazoFileViewItem, bool>? Filter { get; set; }
+        [Parameter] public EventCallback<KazoFileViewOpeningEventArgs> Opening { get; set; }
         [Parameter] public EventCallback<string> Navigated { get; set; }
-        [Parameter] public EventCallback<IReadOnlyList<HackFileViewItem>> SelectionChanged { get; set; }
+        [Parameter] public EventCallback<IReadOnlyList<KazoFileViewItem>> SelectionChanged { get; set; }
         [Parameter] public EventCallback<string> ErrorOccurred { get; set; }
 
         /// <summary>The context the control runs in: the requesting app's.</summary>
         public IAppExecutionContext Context => HostContext;
 
         public string CurrentDirectory => InitialDirectory;
-        public IReadOnlyList<HackFileViewItem> Items => [];
-        public IReadOnlyList<HackFileViewItem> SelectedItems => [];
+        public IReadOnlyList<KazoFileViewItem> Items => [];
+        public IReadOnlyList<KazoFileViewItem> SelectedItems => [];
         public bool CanPaste => false;
         public bool IsBusy => false;
         public event EventHandler? StateChanged { add { } remove { } }
@@ -332,7 +332,7 @@ public sealed class FileDialogBrowserTests
         public void ClearSelection() { }
         public void RefreshFilter() { }
         public bool CanExecute(string command) =>
-            command == HackFileMenuItems.NewFolder && (Features & HackFileViewFeatures.CreateFolder) != 0;
+            command == KazoFileMenuItems.NewFolder && (Features & KazoFileViewFeatures.CreateFolder) != 0;
 
         public Task ExecuteAsync(string command) => Task.CompletedTask;
         public Task WhenIdleAsync() => Task.CompletedTask;

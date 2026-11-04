@@ -19,7 +19,7 @@ namespace Kazo.Os.Platform.Core.Processes;
 /// thread pool: the process gains no thread, it only goes through a gate.
 /// </para>
 /// <para>
-/// Each continuation it runs starts a new time slice for <see cref="HackProcess.CheckpointAsync"/>:
+/// Each continuation it runs starts a new time slice for <see cref="KazoProcess.CheckpointAsync"/>:
 /// it is the moment the process gets the thread back, a context switch.
 /// </para>
 /// <para>
@@ -63,7 +63,7 @@ public sealed class ProcessTaskScheduler : TaskScheduler
         try
         {
             SynchronizationContext.SetSynchronizationContext(_context);
-            HackProcessSlice.Begin(ProcessId);
+            KazoProcessSlice.Begin(ProcessId);
             start.RunSynchronously(this);
         }
         finally
@@ -163,7 +163,7 @@ public sealed class ProcessTaskScheduler : TaskScheduler
         try
         {
             SynchronizationContext.SetSynchronizationContext(_context);
-            HackProcessSlice.Begin(ProcessId);
+            KazoProcessSlice.Begin(ProcessId);
             callback(state);
         }
         finally

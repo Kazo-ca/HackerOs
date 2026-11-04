@@ -9,8 +9,8 @@
     "fr": "Le modèle hackeros-solution indique son projet d'app au Hack Store"
   },
   "description": {
-    "en": "store/store.json of a new app repository has a project field, so the catalog builds the app's project instead of the whole solution, whose tests project has no HackerOsPack target.",
-    "fr": "store/store.json d'un nouveau dépôt d'app a un champ project : le catalogue compile le projet de l'app et non toute la solution, dont le projet de tests n'a pas de cible HackerOsPack."
+    "en": "store/store.json of a new app repository has a project field, so the catalog builds the app's project instead of the whole solution, whose tests project has no KazoOsPack target.",
+    "fr": "store/store.json d'un nouveau dépôt d'app a un champ project : le catalogue compile le projet de l'app et non toute la solution, dont le projet de tests n'a pas de cible KazoOsPack."
   },
   "links": [
     "doc/en/wasm/framework/app-repository.md"

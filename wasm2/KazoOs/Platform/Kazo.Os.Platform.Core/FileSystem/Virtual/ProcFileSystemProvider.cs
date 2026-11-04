@@ -44,7 +44,7 @@ public sealed class ProcFileSystemProvider : VirtualFileSystemProvider
     private const string NetDirectory = "net";
 
     /// <summary>Kazo OS's own entries (ADR 0071, section 5), like the <c>/proc/sys</c> of a vendor kernel.</summary>
-    private const string HackerOsDirectory = "hackeros";
+    private const string KazoOsDirectory = "hackeros";
 
     private const string WorkersFile = "workers";
 
@@ -155,7 +155,7 @@ public sealed class ProcFileSystemProvider : VirtualFileSystemProvider
         {
             [string name] => RenderSystemFile(name),
             [NetDirectory, string name] => RenderNetFile(name),
-            [HackerOsDirectory, WorkersFile] => RenderWorkers(context),
+            [KazoOsDirectory, WorkersFile] => RenderWorkers(context),
             _ => RenderProcessFile(FindVisible(ParsePid(segments[0])!.Value, context)!, segments[1])
         };
         return ValueTask.FromResult(TextHandle(request.Path, metadata, text));
@@ -184,7 +184,7 @@ public sealed class ProcFileSystemProvider : VirtualFileSystemProvider
         {
             [] => RootNames(context),
             [NetDirectory] => NetFiles,
-            [HackerOsDirectory] => [WorkersFile],
+            [KazoOsDirectory] => [WorkersFile],
             [string pid, FdDirectory] => ParsePid(pid) is { } value && FindVisible(value, context) is { } process
                 ? DescriptorsOf(process).Select(static open => open.Number.ToString(CultureInfo.InvariantCulture))
                 : [],
@@ -230,9 +230,9 @@ public sealed class ProcFileSystemProvider : VirtualFileSystemProvider
             [NetDirectory, string name] => NetFiles.Contains(name, StringComparer.Ordinal)
                 ? File(path, SystemPrincipal, SystemPrincipal, PublicFileMode, BootTimeUtc)
                 : null,
-            [HackerOsDirectory] when WorkerPool() is not null =>
+            [KazoOsDirectory] when WorkerPool() is not null =>
                 Directory(path, SystemPrincipal, SystemPrincipal, DirectoryMode, BootTimeUtc),
-            [HackerOsDirectory, WorkersFile] when WorkerPool() is not null =>
+            [KazoOsDirectory, WorkersFile] when WorkerPool() is not null =>
                 File(path, SystemPrincipal, SystemPrincipal, PublicFileMode, BootTimeUtc),
             [string pid] => ParsePid(pid) is { } value && FindVisible(value, context) is { } process
                 ? Directory(path, Owner(process), Owner(process), DirectoryMode, StartTime(process))
@@ -322,7 +322,7 @@ public sealed class ProcFileSystemProvider : VirtualFileSystemProvider
 
         if (WorkerPool() is not null)
         {
-            yield return HackerOsDirectory;
+            yield return KazoOsDirectory;
         }
 
         if (SelfLink(Child(MountPath, "self"), context) is not null)
@@ -575,7 +575,7 @@ public sealed class ProcFileSystemProvider : VirtualFileSystemProvider
     /// <summary>
     /// Appends the layer fields of a measured process after <c>VmRSS</c>, in Linux's order (ADR 0068):
     /// <c>RssAnon</c>, <c>RssFile</c>, <c>VmData</c> (the kernel part), <c>VmExe</c>, then the exact
-    /// allocation counter <c>HackAllocBytes</c>. A simulated process gets none of them, exactly as
+    /// allocation counter <c>KazoAllocBytes</c>. A simulated process gets none of them, exactly as
     /// before phase 5.
     /// </summary>
     private static void AppendMeasuredMemory(StringBuilder builder, ProcessMemoryUsage? usage)
@@ -589,7 +589,7 @@ public sealed class ProcFileSystemProvider : VirtualFileSystemProvider
         AppendField(builder, "RssFile", Kilobytes(measured.FileBytes));
         AppendField(builder, "VmData", Kilobytes(measured.KernelBytes));
         AppendField(builder, "VmExe", Kilobytes(measured.ImageBytes));
-        AppendField(builder, "HackAllocBytes", measured.AllocatedBytes.ToString(CultureInfo.InvariantCulture));
+        AppendField(builder, "KazoAllocBytes", measured.AllocatedBytes.ToString(CultureInfo.InvariantCulture));
 
         static string Kilobytes(long bytes) =>
             $"{Math.Round(bytes / 1024d, MidpointRounding.AwayFromZero).ToString(CultureInfo.InvariantCulture)} kB";

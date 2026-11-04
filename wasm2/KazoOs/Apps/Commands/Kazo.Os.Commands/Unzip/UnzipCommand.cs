@@ -71,7 +71,7 @@ public sealed class UnzipCommand(AppManifest manifest) : TerminalAppBase(manifes
         }
 
         string archive = operands[0];
-        if (!await HackFile.ExistsAsync(archive, cancellationToken) && await HackFile.ExistsAsync(archive + ".zip", cancellationToken))
+        if (!await KazoFile.ExistsAsync(archive, cancellationToken) && await KazoFile.ExistsAsync(archive + ".zip", cancellationToken))
         {
             archive += ".zip";
         }
@@ -79,7 +79,7 @@ public sealed class UnzipCommand(AppManifest manifest) : TerminalAppBase(manifes
         byte[] bytes;
         try
         {
-            bytes = await HackFile.ReadAllBytesAsync(archive, cancellationToken);
+            bytes = await KazoFile.ReadAllBytesAsync(archive, cancellationToken);
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException)
         {
@@ -107,7 +107,7 @@ public sealed class UnzipCommand(AppManifest manifest) : TerminalAppBase(manifes
             {
                 foreach (ZipArchiveEntry entry in entries)
                 {
-                    await HackProcess.CheckpointAsync(cancellationToken);
+                    await KazoProcess.CheckpointAsync(cancellationToken);
                     await using Stream content = entry.Open();
                     await content.CopyToAsync(Stream.Null, cancellationToken);
                     if (!quiet)
@@ -120,19 +120,19 @@ public sealed class UnzipCommand(AppManifest manifest) : TerminalAppBase(manifes
                 return 0;
             }
 
-            string root = HackPath.GetFullPath(destination ?? ".");
+            string root = KazoPath.GetFullPath(destination ?? ".");
             if (destination is not null && !pipe)
             {
-                await HackDirectory.CreateDirectoryAsync(root, cancellationToken);
+                await KazoDirectory.CreateDirectoryAsync(root, cancellationToken);
             }
 
             int status = 0;
             foreach (ZipArchiveEntry entry in entries)
             {
                 // ADR 0069: extracting is long work; give the thread back between entries.
-                await HackProcess.CheckpointAsync(cancellationToken);
+                await KazoProcess.CheckpointAsync(cancellationToken);
                 bool isDirectory = entry.FullName.EndsWith('/');
-                string relative = junk ? HackPath.GetFileName(entry.FullName.TrimEnd('/')) ?? entry.FullName : entry.FullName.TrimEnd('/');
+                string relative = junk ? KazoPath.GetFileName(entry.FullName.TrimEnd('/')) ?? entry.FullName : entry.FullName.TrimEnd('/');
                 if (pipe)
                 {
                     if (!isDirectory)
@@ -149,7 +149,7 @@ public sealed class UnzipCommand(AppManifest manifest) : TerminalAppBase(manifes
                     continue;
                 }
 
-                string target = HackPath.GetFullPath(relative, root);
+                string target = KazoPath.GetFullPath(relative, root);
                 if (!target.StartsWith(root.TrimEnd('/') + "/", StringComparison.Ordinal))
                 {
                     await context.StandardError.WriteLineAsync(text["PathEscapes", entry.FullName]);
@@ -159,7 +159,7 @@ public sealed class UnzipCommand(AppManifest manifest) : TerminalAppBase(manifes
 
                 if (isDirectory)
                 {
-                    await HackDirectory.CreateDirectoryAsync(target, cancellationToken);
+                    await KazoDirectory.CreateDirectoryAsync(target, cancellationToken);
                     if (!quiet)
                     {
                         await context.StandardOutput.WriteLineAsync($"   creating: {Display(target)}/");
@@ -168,12 +168,12 @@ public sealed class UnzipCommand(AppManifest manifest) : TerminalAppBase(manifes
                     continue;
                 }
 
-                if (HackPath.GetDirectoryName(target) is { } parent)
+                if (KazoPath.GetDirectoryName(target) is { } parent)
                 {
-                    await HackDirectory.CreateDirectoryAsync(parent, cancellationToken);
+                    await KazoDirectory.CreateDirectoryAsync(parent, cancellationToken);
                 }
 
-                if (await HackFile.ExistsAsync(target, cancellationToken) && !overwrite)
+                if (await KazoFile.ExistsAsync(target, cancellationToken) && !overwrite)
                 {
                     if (!quiet || never)
                     {
@@ -189,11 +189,11 @@ public sealed class UnzipCommand(AppManifest manifest) : TerminalAppBase(manifes
                     await input.CopyToAsync(content, cancellationToken);
                 }
 
-                await HackFile.WriteAllBytesAsync(target, content.ToArray(), cancellationToken);
+                await KazoFile.WriteAllBytesAsync(target, content.ToArray(), cancellationToken);
                 int mode = (entry.ExternalAttributes >> 16) & 0x1FF;
                 if (mode != 0)
                 {
-                    await HackFile.SetUnixFileModeAsync(target, (UnixFileMode)mode, cancellationToken);
+                    await KazoFile.SetUnixFileModeAsync(target, (UnixFileMode)mode, cancellationToken);
                 }
 
                 if (!quiet)
@@ -219,7 +219,7 @@ public sealed class UnzipCommand(AppManifest manifest) : TerminalAppBase(manifes
 
         string Display(string path)
         {
-            string cwd = HackEnvironment.CurrentDirectory.TrimEnd('/') + "/";
+            string cwd = KazoEnvironment.CurrentDirectory.TrimEnd('/') + "/";
             return path.StartsWith(cwd, StringComparison.Ordinal) ? path[cwd.Length..] : path;
         }
     }

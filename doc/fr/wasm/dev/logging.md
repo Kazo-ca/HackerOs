@@ -22,7 +22,7 @@ Error Log Viewer les lisent avec les droits de fichier ordinaires.
 ## Architecture
 
 ```text
-ILogger<T> ──► HackerOsDiagnosticLoggerProvider ─┐
+ILogger<T> ──► KazoOsDiagnosticLoggerProvider ─┐
 IAppLoggingGateway ──► AppLoggingGateway ────────┼─► LogFileWriter ─► IFileSystemService ─► /var/log/…
 IAuditLog ──► FileAuditLog ──────────────────────┘        │ (canal borné, vidage groupé, rotation)
 HostExceptionReporter ───────────────────────────┘        ▼
@@ -91,7 +91,7 @@ HostExceptionReporter ───────────────────�
   utilisateur ordinaire c'est refusé, la fenêtre propose l'approbation
   administrateur (ADR 0042), puis un second clic réussit.
 - **Écart temporaire avec l'ADR 0045 §6 :** le lecteur passe par
-  `IAppFileSystemGateway` et non par `HackFile`/`HackFileSystemWatcher`, qui
+  `IAppFileSystemGateway` et non par `KazoFile`/`KazoFileSystemWatcher`, qui
   arrivent avec la branche `rebuild/1-file-api` (ADR 0043). Le passage à `Hack*`
   se fera une fois cette API mergée ; le comportement ne change pas.
 
@@ -121,4 +121,4 @@ HostExceptionReporter ───────────────────�
 - [x] Error Log Viewer lit les fichiers.
 - [x] Tests de contrat.
 - [x] Lignes perdues faute de place, comptées puis signalées (`v3/7`, ADR 0099 §2).
-- [ ] Passer Error Log Viewer sur `HackFile` après le merge de l'ADR 0043.
+- [ ] Passer Error Log Viewer sur `KazoFile` après le merge de l'ADR 0043.

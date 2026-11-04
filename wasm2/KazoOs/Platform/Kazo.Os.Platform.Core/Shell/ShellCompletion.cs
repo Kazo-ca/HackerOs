@@ -10,7 +10,7 @@ namespace Kazo.Os.Platform.Core.Shell;
 /// terminal emulator: command names in command position, paths everywhere else.
 /// </summary>
 /// <remarks>
-/// Paths are listed through the public file API (<see cref="HackDirectoryInfo"/>), so the caller
+/// Paths are listed through the public file API (<see cref="KazoDirectoryInfo"/>), so the caller
 /// must have entered the shell's execution context: a relative word is resolved from the shell's
 /// directory and a directory the shell cannot read proposes nothing, exactly as a <c>ls</c> it
 /// would run.
@@ -37,7 +37,7 @@ internal static class ShellCompletion
     /// <param name="homeDirectory">The shell's <c>HOME</c>, for a word starting with <c>~</c>.</param>
     /// <param name="cancellationToken">Cancels the directory listing.</param>
     /// <returns>The completion, empty when nothing matches.</returns>
-    public static async Task<HackShellCompletion> CompleteAsync(
+    public static async Task<KazoShellCompletion> CompleteAsync(
         string commandLine,
         int cursor,
         IReadOnlyList<ShellCommandInfo> commands,
@@ -49,7 +49,7 @@ internal static class ShellCompletion
         if (rawWord.Length > 0 && rawWord[0] is '"' or '\'')
         {
             // Quoted words are left alone: the completion would have to close the quote.
-            return HackShellCompletion.None(cursor);
+            return KazoShellCompletion.None(cursor);
         }
 
         string word = Unescape(rawWord);
@@ -57,11 +57,11 @@ internal static class ShellCompletion
         // A command word with a slash (`./build.sh`, `/usr/bin/x`) is a path, as in bash.
         if (IsCommandPosition(commandLine, wordStart) && !word.Contains('/'))
         {
-            return new HackShellCompletion(wordStart, rawWord.Length, CompleteCommand(word, commands));
+            return new KazoShellCompletion(wordStart, rawWord.Length, CompleteCommand(word, commands));
         }
 
         IReadOnlyList<string> candidates = await CompletePathAsync(rawWord, word, homeDirectory, cancellationToken).ConfigureAwait(false);
-        return new HackShellCompletion(wordStart, rawWord.Length, candidates);
+        return new KazoShellCompletion(wordStart, rawWord.Length, candidates);
     }
 
     /// <summary>Names of the installed commands and aliases starting with <paramref name="word"/>.</summary>
@@ -93,10 +93,10 @@ internal static class ShellCompletion
         string prefix = Unescape(rawSlash < 0 ? rawWord : rawWord[(rawSlash + 1)..]);
 
         string directory = head.Length == 0 ? "." : ExpandTilde(head, homeDirectory);
-        HackFileSystemInfo[] entries;
+        KazoFileSystemInfo[] entries;
         try
         {
-            HackDirectoryInfo info = await HackDirectoryInfo.GetAsync(directory, cancellationToken).ConfigureAwait(false);
+            KazoDirectoryInfo info = await KazoDirectoryInfo.GetAsync(directory, cancellationToken).ConfigureAwait(false);
             if (!info.Exists)
             {
                 return [];
@@ -116,7 +116,7 @@ internal static class ShellCompletion
             .Where(entry => entry.Name.StartsWith(prefix, StringComparison.Ordinal))
             .Where(entry => showHidden || !entry.Name.StartsWith('.'))
             .Where(static entry => entry.Name is not ("." or ".."))
-            .Select(entry => rawHead + Escape(entry.Name) + (entry is HackDirectoryInfo ? "/" : string.Empty))
+            .Select(entry => rawHead + Escape(entry.Name) + (entry is KazoDirectoryInfo ? "/" : string.Empty))
             .Distinct(StringComparer.Ordinal)
             .Order(StringComparer.Ordinal)];
     }

@@ -16,7 +16,7 @@ public static class IntranetSession
 
     /// <summary>Returns the display name of the request's session, or <see langword="null"/> when none was chosen.</summary>
     /// <param name="context">The request.</param>
-    public static string? DisplayName(HackHttpContext context)
+    public static string? DisplayName(KazoHttpContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
         return context.HasSession ? context.Session.GetString(DisplayNameKey) : null;

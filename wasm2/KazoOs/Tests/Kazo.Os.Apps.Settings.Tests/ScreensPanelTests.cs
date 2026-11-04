@@ -145,9 +145,9 @@ public sealed class ScreensPanelTests
     {
         FakeScreens screens = new()
         {
-            State = new HackScreensState(
-                [new HackScreenInfo(1, null, 1920, 1080, false), new HackScreenInfo(2, "DELL U2720Q", 2560, 1440, true)],
-                HackScreenPermission.Granted, true, [], 2),
+            State = new KazoScreensState(
+                [new KazoScreenInfo(1, null, 1920, 1080, false), new KazoScreenInfo(2, "DELL U2720Q", 2560, 1440, true)],
+                KazoScreenPermission.Granted, true, [], 2),
         };
         await using PanelHarness harness = await PanelHarness.RenderAsync(new FakeSystemSettings(), screens: screens);
 
@@ -170,7 +170,7 @@ public sealed class ScreensPanelTests
     {
         FakeScreens screens = new()
         {
-            State = new HackScreensState([new HackScreenInfo(1, null, 1920, 1080, false)], HackScreenPermission.Prompt, true, [3], 1),
+            State = new KazoScreensState([new KazoScreenInfo(1, null, 1920, 1080, false)], KazoScreenPermission.Prompt, true, [3], 1),
         };
         await using PanelHarness harness = await PanelHarness.RenderAsync(new FakeSystemSettings(), screens: screens);
         Assert.Contains("Restore screens (1)", harness.Html(), StringComparison.Ordinal);
@@ -178,7 +178,7 @@ public sealed class ScreensPanelTests
 
         screens.OnOpen = () => screens.State = screens.State with
         {
-            Screens = [.. screens.State.Screens, new HackScreenInfo(2, null, 1280, 1024, false)],
+            Screens = [.. screens.State.Screens, new KazoScreenInfo(2, null, 1280, 1024, false)],
         };
         await harness.RunAsync(panel => panel.OpenScreenAsync());
         await harness.RunAsync(panel => panel.IdentifyAsync());
@@ -197,8 +197,8 @@ public sealed class ScreensPanelTests
     {
         FakeScreens screens = new()
         {
-            State = new HackScreensState([new HackScreenInfo(1, null, 1920, 1080, false)], HackScreenPermission.Denied, true, [], 1),
-            OpenStatus = HackScreenOpenStatus.Blocked,
+            State = new KazoScreensState([new KazoScreenInfo(1, null, 1920, 1080, false)], KazoScreenPermission.Denied, true, [], 1),
+            OpenStatus = KazoScreenOpenStatus.Blocked,
             FullScreenResult = false,
         };
         await using PanelHarness harness = await PanelHarness.RenderAsync(new FakeSystemSettings(), screens: screens);
@@ -216,12 +216,12 @@ public sealed class ScreensPanelTests
     {
         FakeScreens screens = new()
         {
-            State = new HackScreensState([new HackScreenInfo(1, null, 1920, 1080, false)], HackScreenPermission.Granted, true, [], 1),
+            State = new KazoScreensState([new KazoScreenInfo(1, null, 1920, 1080, false)], KazoScreenPermission.Granted, true, [], 1),
         };
         await using PanelHarness harness = await PanelHarness.RenderAsync(new FakeSystemSettings(), screens: screens);
         Assert.DoesNotContain("Close screen 2", harness.Html(), StringComparison.Ordinal);
 
-        screens.State = screens.State with { Screens = [.. screens.State.Screens, new HackScreenInfo(2, null, 800, 600, false)] };
+        screens.State = screens.State with { Screens = [.. screens.State.Screens, new KazoScreenInfo(2, null, 800, 600, false)] };
         await harness.RunOnDispatcherAsync(screens.RaiseAsync);
 
         Assert.Contains("Close screen 2", harness.Html(), StringComparison.Ordinal);
@@ -232,7 +232,7 @@ public sealed class ScreensPanelTests
     {
         FakeScreens screens = new()
         {
-            State = new HackScreensState([], HackScreenPermission.Unknown, false, [], 1),
+            State = new KazoScreensState([], KazoScreenPermission.Unknown, false, [], 1),
             Denied = true,
         };
         await using PanelHarness harness = await PanelHarness.RenderAsync(new FakeSystemSettings(), screens: screens);
@@ -246,7 +246,7 @@ public sealed class ScreensPanelTests
     {
         FakeScreens screens = new()
         {
-            State = new HackScreensState([new HackScreenInfo(1, null, 1920, 1080, false)], HackScreenPermission.Prompt, true, [], 1),
+            State = new KazoScreensState([new KazoScreenInfo(1, null, 1920, 1080, false)], KazoScreenPermission.Prompt, true, [], 1),
         };
         await using PanelHarness harness = await PanelHarness.RenderAsync(new FakeSystemSettings(), lang: "fr_CA.UTF-8", screens: screens);
 
@@ -332,9 +332,9 @@ public sealed class ScreensPanelTests
     {
         private readonly List<Func<ValueTask>> _watchers = [];
 
-        public HackScreensState State { get; set; } = new([], HackScreenPermission.Unknown, false, [], 1);
+        public KazoScreensState State { get; set; } = new([], KazoScreenPermission.Unknown, false, [], 1);
 
-        public HackScreenOpenStatus OpenStatus { get; init; } = HackScreenOpenStatus.Opened;
+        public KazoScreenOpenStatus OpenStatus { get; init; } = KazoScreenOpenStatus.Opened;
 
         public bool FullScreenResult { get; init; } = true;
 
@@ -346,7 +346,7 @@ public sealed class ScreensPanelTests
 
         public bool IsSupported => true;
 
-        public HackScreensState GetState() =>
+        public KazoScreensState GetState() =>
             Denied ? throw new AppGatewayAccessDeniedException(AppCapabilities.ScreensManage, CapabilityPolicyEvaluation.DenyMissing(1)) : State;
 
         public ValueTask<IAsyncDisposable> WatchAsync(Func<ValueTask> onChanged, CancellationToken cancellationToken = default)
@@ -355,7 +355,7 @@ public sealed class ScreensPanelTests
             return ValueTask.FromResult<IAsyncDisposable>(new NoWatch());
         }
 
-        public ValueTask<HackScreenOpenStatus> OpenScreenAsync(CancellationToken cancellationToken = default)
+        public ValueTask<KazoScreenOpenStatus> OpenScreenAsync(CancellationToken cancellationToken = default)
         {
             Calls.Add("open");
             OnOpen?.Invoke();
@@ -386,10 +386,10 @@ public sealed class ScreensPanelTests
             return ValueTask.FromResult(FullScreenResult);
         }
 
-        public ValueTask<HackScreenPermission> RequestPermissionAsync(CancellationToken cancellationToken = default)
+        public ValueTask<KazoScreenPermission> RequestPermissionAsync(CancellationToken cancellationToken = default)
         {
             Calls.Add("permission");
-            return ValueTask.FromResult(HackScreenPermission.Granted);
+            return ValueTask.FromResult(KazoScreenPermission.Granted);
         }
 
         public async Task RaiseAsync()
@@ -450,7 +450,7 @@ public sealed class ScreensPanelTests
         public Task RunAsync(Func<ScreensPanel, Task> action) =>
             _renderer.Dispatcher.InvokeAsync(async () =>
             {
-                using (HackExecutionContext.Enter(_context))
+                using (KazoExecutionContext.Enter(_context))
                 {
                     await action(Panel);
                 }

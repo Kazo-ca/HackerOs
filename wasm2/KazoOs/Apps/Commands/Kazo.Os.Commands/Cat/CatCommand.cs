@@ -13,13 +13,13 @@ namespace Kazo.Os.Commands.Cat;
 /// Implements the <c>cat</c> terminal command (`P2-CMD-004`). An argument starting with
 /// <c>http://</c> or <c>https://</c> is read as a URL instead of a virtual-filesystem path
 /// (ADR 0023 named `cat` as a network command alongside <c>ping</c>/<c>curl</c>): it is fetched with
-/// <see cref="HackHttpClient"/> (ADR 0056, section 6) and its body printed, exactly as <c>curl</c>
+/// <see cref="KazoHttpClient"/> (ADR 0056, section 6) and its body printed, exactly as <c>curl</c>
 /// prints it. Whether the URL is served by the simulated network or, through the optional server,
 /// by the real one is the OS's decision. Every other argument keeps its VFS-only behavior.
 /// </summary>
 public sealed class CatCommand : TerminalAppBase
 {
-    private readonly HackCookieContainer _cookies = new();
+    private readonly KazoCookieContainer _cookies = new();
 
     /// <summary>Initializes the command with its manifest.</summary>
     public CatCommand(AppManifest manifest) : base(manifest)
@@ -86,15 +86,15 @@ public sealed class CatCommand : TerminalAppBase
     private async ValueTask<int> CatUrlAsync(TerminalExecutionContext context, string url, CancellationToken cancellationToken)
     {
         IStringLocalizer<Strings> text = context.App.GetLocalizer<Strings>();
-        HackHttpResponse response;
+        KazoHttpResponse response;
         try
         {
-            using HackHttpClient client = new(_cookies);
+            using KazoHttpClient client = new(_cookies);
             response = await client.GetAsync(url, cancellationToken).ConfigureAwait(false);
         }
-        catch (HackHttpRequestException exception)
+        catch (KazoHttpRequestException exception)
         {
-            context.StandardError.WriteLine(exception.NetworkError == HackNetworkError.HostNotFound
+            context.StandardError.WriteLine(exception.NetworkError == KazoNetworkError.HostNotFound
                 ? text["ResolveFailed", url]
                 : $"cat: {url}: {exception.Message}");
             return 1;

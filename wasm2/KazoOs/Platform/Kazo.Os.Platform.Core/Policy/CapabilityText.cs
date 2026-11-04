@@ -31,7 +31,7 @@ public static class CapabilityText
     public static CapabilityDescription Localize(CapabilityDescription description, CultureInfo? language)
     {
         ArgumentNullException.ThrowIfNull(description);
-        IStringLocalizer text = Strings.For(language ?? Kazo.Os.AppSdk.Globalization.HackLocale.DefaultLanguage);
+        IStringLocalizer text = Strings.For(language ?? Kazo.Os.AppSdk.Globalization.KazoLocale.DefaultLanguage);
         LocalizedString title = text[$"Capability.{description.Capability}.Title"];
         LocalizedString risk = text[$"Capability.{description.Capability}.Risk"];
         return description with

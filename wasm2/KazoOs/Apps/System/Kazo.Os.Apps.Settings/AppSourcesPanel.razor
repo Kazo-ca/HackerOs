@@ -1,4 +1,4 @@
-@inherits Kazo.Os.AppSdk.Blazor.HackComponentBase
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
 @using Kazo.Os.AppSdk.Apps
 
 <div class="setting-group">
@@ -15,7 +15,7 @@
     {
         <h5 class="sources-subtitle">@L["Sources.Catalogs"]</h5>
         <div class="sources-list" role="list">
-            @foreach (HackPackageCatalog catalog in _sources.Catalogs)
+            @foreach (KazoPackageCatalog catalog in _sources.Catalogs)
             {
                 <div class="source-row @TrustClass(catalog.Trust)" role="listitem">
                     <div class="source-identity">
@@ -35,12 +35,12 @@
         <div class="sources-list" role="list">
             @foreach (string source in Repositories(_sources.TrustedSources))
             {
-                @SourceRow(source, HackPackageTrust.Trusted)
+                @SourceRow(source, KazoPackageTrust.Trusted)
             }
 
             @foreach (string source in Repositories(_sources.UntrustedSources))
             {
-                @SourceRow(source, HackPackageTrust.Untrusted)
+                @SourceRow(source, KazoPackageTrust.Untrusted)
             }
         </div>
 
@@ -71,7 +71,7 @@
 
     @if (_policy is not null)
     {
-        @foreach ((HackPackageBlockKind kind, IReadOnlyList<string> values) in BlockGroups)
+        @foreach ((KazoPackageBlockKind kind, IReadOnlyList<string> values) in BlockGroups)
         {
             <h5 class="sources-subtitle">@KindText(kind)</h5>
             @if (values.Count == 0)
@@ -97,9 +97,9 @@
             <label class="sources-field sources-field-narrow">
                 <span>@L["Policy.Kind"]</span>
                 <select class="sources-input" @bind="_newBlockKind" disabled="@_isBusy">
-                    <option value="@HackPackageBlockKind.App">@L["Policy.Kind.App"]</option>
-                    <option value="@HackPackageBlockKind.Category">@L["Policy.Kind.Category"]</option>
-                    <option value="@HackPackageBlockKind.Capability">@L["Policy.Kind.Capability"]</option>
+                    <option value="@KazoPackageBlockKind.App">@L["Policy.Kind.App"]</option>
+                    <option value="@KazoPackageBlockKind.Category">@L["Policy.Kind.Category"]</option>
+                    <option value="@KazoPackageBlockKind.Capability">@L["Policy.Kind.Capability"]</option>
                 </select>
             </label>
             <label class="sources-field">
@@ -119,7 +119,7 @@
 
 @code {
     /// <summary>One repository source line with its trust badge and a Remove button.</summary>
-    private RenderFragment SourceRow(string source, HackPackageTrust trust) => __builder =>
+    private RenderFragment SourceRow(string source, KazoPackageTrust trust) => __builder =>
     {
         bool builtIn = _sources?.BuiltInSources.Contains(source, StringComparer.OrdinalIgnoreCase) == true;
         <div class="source-row @TrustClass(trust)" role="listitem">
@@ -133,7 +133,7 @@
     };
 
     /// <summary>The trust badge, and "built in" for a source the OS was compiled with.</summary>
-    private RenderFragment Badges(HackPackageTrust trust, bool builtIn) => __builder =>
+    private RenderFragment Badges(KazoPackageTrust trust, bool builtIn) => __builder =>
     {
         <span class="source-badge @TrustClass(trust)">@TrustText(trust)</span>
         @if (builtIn)

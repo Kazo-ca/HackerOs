@@ -104,7 +104,7 @@ internal sealed class RemoteEventTable
                 writer.WriteNumber("n", 1);
             });
         }
-        catch (Exception exception) when (exception is Kazo.Os.AppSdk.Diagnostics.HackProcessKilledException or InvalidOperationException)
+        catch (Exception exception) when (exception is Kazo.Os.AppSdk.Diagnostics.KazoProcessKilledException or InvalidOperationException)
         {
             // The process is going away: the OS drops its subscriptions itself.
         }
@@ -132,7 +132,7 @@ internal sealed class RemoteEventTable
         {
             _channel.Notify(RemoteOps.EventUnsubscribe, writer => writer.WriteNumber("s", id));
         }
-        catch (Exception exception) when (exception is Kazo.Os.AppSdk.Diagnostics.HackProcessKilledException or InvalidOperationException)
+        catch (Exception exception) when (exception is Kazo.Os.AppSdk.Diagnostics.KazoProcessKilledException or InvalidOperationException)
         {
             // Same as above.
         }

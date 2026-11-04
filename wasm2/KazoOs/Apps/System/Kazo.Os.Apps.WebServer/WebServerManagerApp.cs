@@ -92,7 +92,7 @@ public sealed class WebServerManagerApp : AppDefinition
             title: "Menu.PublishSite",
             name: "publish-site",
             intent: PublishSiteIntent,
-            icon: HackIcons.Vector(IconLibrary.Lucide, "globe"),
+            icon: KazoIcons.Vector(IconLibrary.Lucide, "globe"),
             scope: FileMenuScope.Directory,
             selection: MenuSelection.Single);
     }

@@ -3,7 +3,7 @@
   <Import Project="$(MSBuildThisFileDirectory)build/Versions.props" />
 
   <PropertyGroup>
-    <Version>$(HackerOsVersion)</Version>
+    <Version>$(KazoOsVersion)</Version>
     <!--
       Nothing is packed unless it imports Platform/Packaging.props (ADR 0098 §2), so
       build/pack-local.sh can pack the whole solution and only get the published libraries.

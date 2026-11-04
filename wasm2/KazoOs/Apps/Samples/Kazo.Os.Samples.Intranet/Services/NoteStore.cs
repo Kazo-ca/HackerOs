@@ -5,7 +5,7 @@ namespace Kazo.Os.Samples.Intranet.Services;
 
 /// <summary>
 /// The notes of the site, kept in the site's browser database <c>hackweb.org.hackeros.samples.intranet</c>
-/// (<see cref="HackWebDb"/>, ADR 0088): an IndexedDB database of the host browser, outside the OS files.
+/// (<see cref="KazoWebDb"/>, ADR 0088): an IndexedDB database of the host browser, outside the OS files.
 /// </summary>
 /// <remarks>
 /// A site has no <c>filesystem.*</c> capability (ADR 0073 §3). Its notes survive the OS stopping the
@@ -14,7 +14,7 @@ namespace Kazo.Os.Samples.Intranet.Services;
 /// keyed by <c>id</c> with a key generator and a <c>byAuthor</c> index, and a <c>meta</c> store that
 /// remembers the welcome notes were written once.
 /// </remarks>
-public sealed class NoteStore(HackWebDb database, TimeProvider time)
+public sealed class NoteStore(KazoWebDb database, TimeProvider time)
 {
     /// <summary>The object store of the notes.</summary>
     public const string StoreName = "notes";
@@ -28,11 +28,11 @@ public sealed class NoteStore(HackWebDb database, TimeProvider time)
     private readonly SemaphoreSlim _seedGate = new(1, 1);
     private bool _seeded;
 
-    private HackWebDbStore<Note> Notes => database.Store<Note>(StoreName);
+    private KazoWebDbStore<Note> Notes => database.Store<Note>(StoreName);
 
     /// <summary>Declares the database versions, in the site's <c>Configure</c>.</summary>
     /// <param name="schema">The schema builder of <c>AddHackWebDb</c>.</param>
-    public static void Configure(HackWebDbSchemaBuilder schema)
+    public static void Configure(KazoWebDbSchemaBuilder schema)
     {
         ArgumentNullException.ThrowIfNull(schema);
         schema.Version(1, version => version
@@ -142,8 +142,8 @@ public sealed class NoteStore(HackWebDb database, TimeProvider time)
             if (await database.Store<string>(MetaStore).GetAsync(SeededKey, cancellationToken).ConfigureAwait(false) is null)
             {
                 DateTimeOffset now = time.GetUtcNow();
-                HackWebDbTransaction seed = database.BeginTransaction(StoreName, MetaStore);
-                HackWebDbTransactionStore<Note> notes = seed.Store<Note>(StoreName);
+                KazoWebDbTransaction seed = database.BeginTransaction(StoreName, MetaStore);
+                KazoWebDbTransactionStore<Note> notes = seed.Store<Note>(StoreName);
                 notes.Add(new Note { Title = "Welcome to the intranet", Body = "Notes are kept in the site's browser database (hackweb.org.hackeros.samples.intranet): they survive restarts.", Pinned = true, Author = "it-ops", UpdatedAt = now });
                 notes.Add(new Note { Title = "VPN maintenance", Body = "The gateway at 10.0.0.1 reboots Friday at 22:00.", Author = "it-ops", UpdatedAt = now });
                 notes.Add(new Note { Title = "Coffee machine", Body = "Second floor machine fixed. Do not feed it tea bags.", Author = "facilities", UpdatedAt = now });

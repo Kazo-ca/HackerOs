@@ -123,7 +123,7 @@ public sealed class XdgOpenCommandTests
             app, arguments, new StringReader(string.Empty), new StringWriter(), stderr,
             "/home/alice", new Dictionary<string, string> { ["HOME"] = "/home/alice" });
 
-        using IDisposable scope = HackExecutionContext.Enter(app);
+        using IDisposable scope = KazoExecutionContext.Enter(app);
         int exitCode = await new XdgOpenCommand(manifest).ExecuteAsync(context, CancellationToken.None);
         return new Run(exitCode, stderr.ToString(), intents);
     }

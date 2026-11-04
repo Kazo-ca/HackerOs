@@ -1,10 +1,10 @@
 @namespace Kazo.Os.Samples.Intranet.Board
-@inherits HackComponentBase
+@inherits KazoComponentBase
 @*
     The root component of the Blazor part of the site (WebAppDefinition.BlazorRoot, ADR 0084). The
     browser draws it when /board answers the host page; its router only knows the /board pages.
 *@
-<HackSiteRouter AppAssembly="typeof(BoardApp).Assembly" DefaultLayout="typeof(BoardLayout)">
+<KazoSiteRouter AppAssembly="typeof(BoardApp).Assembly" DefaultLayout="typeof(BoardLayout)">
     <NotFound>
         <section class="board-empty" role="alert">
             <h1>404</h1>
@@ -12,4 +12,4 @@
             <a href="/board">Back to the board</a>
         </section>
     </NotFound>
-</HackSiteRouter>
+</KazoSiteRouter>

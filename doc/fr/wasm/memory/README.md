@@ -41,7 +41,7 @@ jour à la fin de chaque série ou quand une convention change.
 | Phase web | ASP.Hack (MVC, vues `.razor`/`.cshtml`), sites Blazor, sites statiques, rendu HTML du navigateur, fenêtres détachées | [`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md) |
 | V3 (`v3/1` à `v3/16`) | Fin de la migration wasm v3, SDK 1.0 gelé, publication trimmée | [`wasm-v3-final-status.md`](../dev/plans/wasm-v3-final-status.md) |
 | V3.1 | Géométrie et titre des fenêtres, SDK 1.1 | [`v3-1-series-plan.md`](../dev/plans/v3-1-series-plan.md) |
-| EXEC (`exec/*`) | Limites de processus, OOM killer, passerelles distantes, boîte « ne répond pas », `HackBackground`, OS servi par `Kazo.Os.Server`, isolation cross-origin, SDK 1.2 | [`execution-followups-plan.md`](../dev/plans/execution-followups-plan.md) |
+| EXEC (`exec/*`) | Limites de processus, OOM killer, passerelles distantes, boîte « ne répond pas », `KazoBackground`, OS servi par `Kazo.Os.Server`, isolation cross-origin, SDK 1.2 | [`execution-followups-plan.md`](../dev/plans/execution-followups-plan.md) |
 | DESK (`desk/0` à `desk/6`) | Contrôle de fichiers fourni par l'OS, menu contextuel central, entrées de menu des apps, bureau, SDK 2.0 | [`desktop-and-context-menu-plan.md`](../dev/plans/desktop-and-context-menu-plan.md) |
 | Multi-moniteur (`multi-monitor/0` à `multi-monitor/9`) | Bureau étendu : un écran par surface d'affichage, `DisplayId` et zone de travail par écran, fenêtres déplacées par portail, service d'écrans (Chrome/Edge, repli ailleurs), une barre des tâches par écran, menus « Autre écran » et voile d'identification, Paramètres ▸ Écrans, glisser entre écrans ; aucun changement du SDK des apps | [`multi-monitor-plan.md`](../dev/plans/multi-monitor-plan.md) |
 | File Explorer (`explorer/1` à `explorer/9`) | Barre latérale redimensionnable, état vide dans la liste, glisser vers l'ordinateur, raccourcis, lecteurs réseau suivis, erreurs en `MessageBox` ; le `.zip` ouvert comme dossier est fait dans `todo/base` (`todo/10-zip-as-folder`, issue #241) | [ADR 0185](../dev/adr/0185-file-explorer-improvements.md), [`file-explorer.md`](../dev/file-explorer.md) |
@@ -59,7 +59,7 @@ jour à la fin de chaque série ou quand une convention change.
   (prochaine mineure).
 - **Explorateur mobile** (octobre 2026, PR #212 vers `main`) : point d'entrée
   mobile des apps honoré, explorateur de fichiers mobile, dialogues en plein
-  écran sur mobile, un toucher ouvre (`HackFileView.OpenOnTap`) (ADR 0171).
+  écran sur mobile, un toucher ouvre (`KazoFileView.OpenOnTap`) (ADR 0171).
 - **Depuis le multi-moniteur** (sur `main`, 28 au 30 octobre 2026) : dossier de
   l'ordinateur monté comme lecteur réseau (ADR 0181), `hackpkg install` depuis
   GitHub (ADR 0182), présentation des fonctionnalités `features.md` (ADR 0192),
@@ -125,7 +125,7 @@ jour à la fin de chaque série ou quand une convention change.
 - **Hack Store, étapes suivantes** (ADR 0214, issue `TODO` #251, série
   `todo/base`, branche `todo/19-hackstore-later`) : ajout sans redémarrage
   (catalogue vivant `AppCatalog.Changed`), signatures ECDSA P-256
-  (`[signing-keys]`, `HackerOsAppSigningKeys`), journal `.transaction`,
+  (`[signing-keys]`, `KazoOsAppSigningKeys`), journal `.transaction`,
   `hackpkg rollback`/`repair`, `AppDataGuard`. Cinq questions posées à Benoit,
   réponse A à chacune. La clé du catalogue officiel a été créée par Benoit le
   2026-11-01 (`keygen`, secret `HACK_STORE_SIGNING_KEY` du catalogue) ; sa clé
@@ -205,7 +205,7 @@ section **IV** de [`AGENTS.md`](../../../../AGENTS.md), que Claude Code lit par
 - **SDK** : l'API publique est suivie par `PublicAPI.Shipped.txt` /
   `PublicAPI.Unshipped.txt` ; un ajout passe par `Unshipped` jusqu'à la
   publication suivante (`build/tools/ship-public-api.sh`).
-- **Publier** : changer `HackerOsVersion` dans `build/Versions.props` et
+- **Publier** : changer `KazoOsVersion` dans `build/Versions.props` et
   fusionner dans `main` ; le workflow `Release Kazo OS` crée le tag, la
   Release GitHub et pousse sur nuget.org ([`releases.md`](../dev/releases.md),
   ADR 0173).

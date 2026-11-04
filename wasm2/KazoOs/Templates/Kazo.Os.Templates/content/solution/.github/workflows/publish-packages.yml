@@ -5,8 +5,8 @@
 #   1. checks the Kazo OS submodule and that the tag is the manifest version;
 #   2. checks out the hackeros-packages branch (an orphan branch the first time), so the versions
 #      already published stay listed in index.json with their signatures;
-#   3. packs the app there (HackerOsPack); with the HACKEROS_APP_SIGNING_KEY secret (the private key
-#      made by "dotnet build -t:HackerOsKeyGen"), each package gets its ECDSA signature; without it,
+#   3. packs the app there (KazoOsPack); with the HACKEROS_APP_SIGNING_KEY secret (the private key
+#      made by "dotnet build -t:KazoOsKeyGen"), each package gets its ECDSA signature; without it,
 #      the package is published unsigned and the run shows a warning;
 #   4. commits and pushes the branch.
 # This is the only workflow of the repository allowed to write to it.
@@ -59,7 +59,7 @@ jobs:
           if [[ -z "$HACKEROS_APP_SIGNING_KEY" ]]; then
             echo "::warning::No HACKEROS_APP_SIGNING_KEY secret: the package is published unsigned (SHA-256 only)."
           fi
-          dotnet build "$APP_DIRECTORY" -c Release -t:HackerOsPack -p:HackerOsPackageOutput="$GITHUB_WORKSPACE/packages"
+          dotnet build "$APP_DIRECTORY" -c Release -t:KazoOsPack -p:KazoOsPackageOutput="$GITHUB_WORKSPACE/packages"
 
       - name: Check the tag
         run: |

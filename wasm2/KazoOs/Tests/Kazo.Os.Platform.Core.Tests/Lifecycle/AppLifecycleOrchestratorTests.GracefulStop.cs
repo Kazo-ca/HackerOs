@@ -9,7 +9,7 @@ namespace Kazo.Os.Platform.Core.Tests.Lifecycle;
 
 /// <summary>
 /// ADR 0069 end to end on a real kernel: a command receives <c>StopRequested</c> before its token,
-/// <see cref="HackProcess.CheckpointAsync"/> stops a busy loop, and a process that ignores its token
+/// <see cref="KazoProcess.CheckpointAsync"/> stops a busy loop, and a process that ignores its token
 /// is killed at the deadline with its continuations, timers and gateways cut off.
 /// </summary>
 public sealed partial class AppLifecycleOrchestratorTests
@@ -27,7 +27,7 @@ public sealed partial class AppLifecycleOrchestratorTests
         ProcessRecord stopped = await fixture.Manager.StopAsync(StopProbe.Pid, TimeSpan.FromSeconds(5), ProcessExitReason.Terminated);
         AppLaunchResult result = await launch.WaitAsync(TimeSpan.FromSeconds(10));
 
-        HackStopRequestedEventArgs request = Assert.IsType<HackStopRequestedEventArgs>(StopProbe.Request);
+        KazoStopRequestedEventArgs request = Assert.IsType<KazoStopRequestedEventArgs>(StopProbe.Request);
         Assert.Equal(ProcessExitReason.Terminated, request.Reason);
         Assert.Equal(requestedAt, request.RequestedAt);
         Assert.Equal(requestedAt.AddSeconds(5), request.Deadline);
@@ -88,8 +88,8 @@ public sealed partial class AppLifecycleOrchestratorTests
         Assert.NotNull(StopProbe.Request);
         Assert.False(StopProbe.Resumed);
         Assert.False(StopProbe.TimerFired);
-        Assert.Throws<HackProcessKilledException>(() => result.Context!.FileSystem);
-        Assert.Throws<HackProcessKilledException>(() => result.Context!.Clock);
+        Assert.Throws<KazoProcessKilledException>(() => result.Context!.FileSystem);
+        Assert.Throws<KazoProcessKilledException>(() => result.Context!.Clock);
         Assert.Equal(StopProbe.Pid, result.Context!.ProcessId);
     }
 
@@ -129,7 +129,7 @@ public sealed partial class AppLifecycleOrchestratorTests
 
         await fixture.Orchestrator.StopAllAsync(ProcessExitReason.Logout);
 
-        HackStopRequestedEventArgs request = Assert.IsType<HackStopRequestedEventArgs>(StopProbe.Request);
+        KazoStopRequestedEventArgs request = Assert.IsType<KazoStopRequestedEventArgs>(StopProbe.Request);
         Assert.Equal(ProcessExitReason.Logout, request.Reason);
         Assert.Equal(now.AddSeconds(5), request.Deadline);
         Assert.False(StopProbe.TokenCancelledAtRequest);
@@ -192,7 +192,7 @@ public sealed partial class AppLifecycleOrchestratorTests
         ProcessRecord stopped = await stop.WaitAsync(TimeSpan.FromSeconds(10));
 
         Assert.Equal(ProcessExitReason.Timeout, stopped.ExitReason);
-        Assert.Throws<HackProcessKilledException>(() => window.Context.FileSystem);
+        Assert.Throws<KazoProcessKilledException>(() => window.Context.FileSystem);
     }
 
     [Fact]
@@ -239,7 +239,7 @@ public sealed partial class AppLifecycleOrchestratorTests
         public static ProcessId Pid;
         public static TaskCompletionSource Started = new();
         public static TaskCompletionSource Release = new();
-        public static HackStopRequestedEventArgs? Request;
+        public static KazoStopRequestedEventArgs? Request;
         public static bool TokenCancelledAtRequest;
         public static bool HandlerRanAsTheProcess;
         public static bool Resumed;
@@ -267,13 +267,13 @@ public sealed partial class AppLifecycleOrchestratorTests
 
         public static void Listen()
         {
-            HackCurrentProcess current = HackProcess.Current;
+            KazoCurrentProcess current = KazoProcess.Current;
             Pid = ProcessId.FromInt64(current.Id);
             current.StopRequested += (_, e) =>
             {
                 Request = e;
                 TokenCancelledAtRequest = current.StopToken.IsCancellationRequested;
-                HandlerRanAsTheProcess = HackExecutionContext.CurrentOrNull?.ProcessId == Pid;
+                HandlerRanAsTheProcess = KazoExecutionContext.CurrentOrNull?.ProcessId == Pid;
             };
         }
     }
@@ -298,7 +298,7 @@ public sealed partial class AppLifecycleOrchestratorTests
         }
     }
 
-    /// <summary>Spins forever, calling only <see cref="HackProcess.CheckpointAsync"/>.</summary>
+    /// <summary>Spins forever, calling only <see cref="KazoProcess.CheckpointAsync"/>.</summary>
     private sealed class CheckpointingTerminalApp(AppManifest manifest) : TerminalAppBase(manifest)
     {
         public override async ValueTask<int> ExecuteAsync(TerminalExecutionContext context, CancellationToken cancellationToken)
@@ -307,7 +307,7 @@ public sealed partial class AppLifecycleOrchestratorTests
             StopProbe.Started.TrySetResult();
             while (true)
             {
-                ValueTask checkpoint = HackProcess.CheckpointAsync(CancellationToken.None);
+                ValueTask checkpoint = KazoProcess.CheckpointAsync(CancellationToken.None);
                 if (!checkpoint.IsCompleted)
                 {
                     Interlocked.Increment(ref StopProbe.Yields);

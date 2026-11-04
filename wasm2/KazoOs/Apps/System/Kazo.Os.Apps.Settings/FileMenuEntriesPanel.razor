@@ -1,4 +1,4 @@
-@inherits Kazo.Os.AppSdk.Blazor.HackComponentBase
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
 @using Kazo.Os.AppSdk.Administration
 
 @*
@@ -26,7 +26,7 @@
             <p class="file-menus-empty">@L["FileMenus.Empty"]</p>
         }
 
-        @foreach (IGrouping<string, HackFileMenuEntryInfo> app in _entries.GroupBy(static entry => entry.AppId))
+        @foreach (IGrouping<string, KazoFileMenuEntryInfo> app in _entries.GroupBy(static entry => entry.AppId))
         {
             <section key="@app.Key" class="setting-group file-menus-app">
                 <header class="file-menus-app-header">
@@ -34,7 +34,7 @@
                     <code>@app.Key</code>
                 </header>
                 <ul class="file-menus-entries">
-                    @foreach (HackFileMenuEntryInfo entry in Ordered(app))
+                    @foreach (KazoFileMenuEntryInfo entry in Ordered(app))
                     {
                         bool inherited = IsHiddenByParent(entry);
                         <li key="@entry.Name" class="@EntryClass(entry)">

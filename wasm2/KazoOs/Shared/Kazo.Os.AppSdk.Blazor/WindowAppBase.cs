@@ -36,7 +36,7 @@ public abstract partial class WindowAppBase : ComponentBase, IHandleEvent, IHand
     /// Gets the SDK's own texts (the dialogs this base class opens) in the language of the app's
     /// process (ADR 0104); the app's own texts come from its own <c>Strings</c>.
     /// </summary>
-    private Microsoft.Extensions.Localization.IStringLocalizer<Strings> SdkText => Kazo.Os.AppSdk.Globalization.HackLocalization.GetLocalizer<Strings>(AppContext);
+    private Microsoft.Extensions.Localization.IStringLocalizer<Strings> SdkText => Kazo.Os.AppSdk.Globalization.KazoLocalization.GetLocalizer<Strings>(AppContext);
 
     /// <summary>Gets or sets the ecosystem-owned file dialog service.</summary>
     [Inject]
@@ -99,7 +99,7 @@ public abstract partial class WindowAppBase : ComponentBase, IHandleEvent, IHand
     /// <summary>
     /// Prevents apps from replacing parameter assignment and bypassing lifecycle validation. The
     /// synchronous lifecycle (and the continuations of the asynchronous one) runs inside the app's
-    /// <see cref="HackExecutionContext"/> scope (ADR 0043).
+    /// <see cref="KazoExecutionContext"/> scope (ADR 0043).
     /// </summary>
     public sealed override Task SetParametersAsync(ParameterView parameters)
     {
@@ -357,16 +357,16 @@ public abstract partial class WindowAppBase : ComponentBase, IHandleEvent, IHand
     /// the user cancelled the chooser.
     /// </returns>
     /// <exception cref="ArgumentException">The identifier or payload is refused.</exception>
-    /// <exception cref="Kazo.Os.AppSdk.Apps.HackAppLaunchException">The handler failed to start.</exception>
-    /// <exception cref="Kazo.Os.AppSdk.IO.HackUnauthorizedAccessException">This app lacks <c>apps.launch</c>.</exception>
+    /// <exception cref="Kazo.Os.AppSdk.Apps.KazoAppLaunchException">The handler failed to start.</exception>
+    /// <exception cref="Kazo.Os.AppSdk.IO.KazoUnauthorizedAccessException">This app lacks <c>apps.launch</c>.</exception>
     protected async Task<bool> SendIntentAsync(string intentId, string? payloadJson = null, CancellationToken cancellationToken = default)
     {
         using IDisposable? scope = AmbientComponentDispatch.Enter(AppContext);
-        Kazo.Os.AppSdk.Apps.HackIntentResult result =
-            await Kazo.Os.AppSdk.Apps.HackApps.SendIntentAsync(intentId, payloadJson, cancellationToken: cancellationToken);
-        if (result.Status != Kazo.Os.AppSdk.Apps.HackIntentStatus.ChooserRequired)
+        Kazo.Os.AppSdk.Apps.KazoIntentResult result =
+            await Kazo.Os.AppSdk.Apps.KazoApps.SendIntentAsync(intentId, payloadJson, cancellationToken: cancellationToken);
+        if (result.Status != Kazo.Os.AppSdk.Apps.KazoIntentStatus.ChooserRequired)
         {
-            return result.Status == Kazo.Os.AppSdk.Apps.HackIntentStatus.Delivered;
+            return result.Status == Kazo.Os.AppSdk.Apps.KazoIntentStatus.Delivered;
         }
 
         AppChooserDialogResult choice = await ChooseAppAsync(
@@ -376,23 +376,23 @@ public abstract partial class WindowAppBase : ComponentBase, IHandleEvent, IHand
             return false;
         }
 
-        Kazo.Os.AppSdk.Apps.HackIntentResult sent = await Kazo.Os.AppSdk.Apps.HackApps.SendIntentAsync(
+        Kazo.Os.AppSdk.Apps.KazoIntentResult sent = await Kazo.Os.AppSdk.Apps.KazoApps.SendIntentAsync(
             intentId, payloadJson, choice.AppId, choice.AlwaysUse, cancellationToken);
-        return sent.Status == Kazo.Os.AppSdk.Apps.HackIntentStatus.Delivered;
+        return sent.Status == Kazo.Os.AppSdk.Apps.KazoIntentStatus.Delivered;
     }
 
     /// <summary>
     /// Shows the OS's "Open with" chooser over <paramref name="appIds"/> (ADR 0096, section 5), with
     /// each app's installed name and description.
     /// </summary>
-    /// <param name="appIds">The candidate apps, e.g. <see cref="Kazo.Os.AppSdk.Apps.HackIntentResult.CandidateAppIds"/>.</param>
+    /// <param name="appIds">The candidate apps, e.g. <see cref="Kazo.Os.AppSdk.Apps.KazoIntentResult.CandidateAppIds"/>.</param>
     /// <param name="content">Sentence above the list.</param>
     /// <param name="cancellationToken">Cancels the dialog.</param>
     protected async Task<AppChooserDialogResult> ChooseAppAsync(
         IReadOnlyList<string> appIds, string content, CancellationToken cancellationToken = default)
     {
         EnsureBasicDialogService();
-        IReadOnlyList<Kazo.Os.AppSdk.Apps.HackAppInfo> installed = await AppContext.Catalog.GetInstalledAsync(cancellationToken);
+        IReadOnlyList<Kazo.Os.AppSdk.Apps.KazoAppInfo> installed = await AppContext.Catalog.GetInstalledAsync(cancellationToken);
         List<AppChooserOption> options = [.. appIds.Select(id =>
             installed.FirstOrDefault(app => app.Id == id) is { } app
                 ? new AppChooserOption(app.Id, app.Name, app.Description)
@@ -406,20 +406,20 @@ public abstract partial class WindowAppBase : ComponentBase, IHandleEvent, IHand
     /// <summary>
     /// Runs when the OS asks the app's process to stop (ADR 0069): <c>kill</c>, "End task", logout,
     /// shutdown. The window closes once the returned task completes, or at
-    /// <see cref="HackStopRequestedEventArgs.Deadline"/> at the latest, when the OS kills the process.
+    /// <see cref="KazoStopRequestedEventArgs.Deadline"/> at the latest, when the OS kills the process.
     /// An app that holds state finishes or cancels its current operation here, and keeps a recovery
     /// draft of unsaved work instead of losing it silently. It is not called when the user closes the
     /// window: <see cref="IWindowCloseGuard"/> asks the user then.
     /// </summary>
     /// <param name="e">Reason and deadline of the request.</param>
     /// <returns>The work the OS waits for before closing the window.</returns>
-    protected virtual Task OnAppStopRequestedAsync(HackStopRequestedEventArgs e) => Task.CompletedTask;
+    protected virtual Task OnAppStopRequestedAsync(KazoStopRequestedEventArgs e) => Task.CompletedTask;
 
     /// <summary>
     /// Hands the stop request to the app on the renderer's dispatcher (component state is touched)
     /// and asks the OS to wait for it.
     /// </summary>
-    private void HandleStopRequested(object? sender, HackStopRequestedEventArgs e)
+    private void HandleStopRequested(object? sender, KazoStopRequestedEventArgs e)
     {
         Task work;
         try

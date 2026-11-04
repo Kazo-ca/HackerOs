@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <PackageId>Kazo.Os.App.Abstractions</PackageId>
-    <Description>HackerOs App SDK contracts: AppDefinition and [AppManifest], the schema-v1 app manifest and its validator, capabilities, SemanticVersion and HackerOsSdk.Version.</Description>
+    <Description>HackerOs App SDK contracts: AppDefinition and [AppManifest], the schema-v1 app manifest and its validator, capabilities, SemanticVersion and KazoOsSdk.Version.</Description>
     <PackageTags>hackeros;app-sdk;contracts;manifest</PackageTags>
   </PropertyGroup>
 

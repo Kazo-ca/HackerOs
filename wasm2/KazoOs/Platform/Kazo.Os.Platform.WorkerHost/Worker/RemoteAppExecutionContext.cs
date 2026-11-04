@@ -31,7 +31,7 @@ internal sealed class RemoteAppExecutionContext : IAppExecutionContext
     private readonly RemotePermissionErrorGateway _permissionErrors = new();
     private readonly CancellationToken _cancellationToken;
     private readonly string? _timeZoneId;
-    private EventHandler<HackStopRequestedEventArgs>? _stopRequested;
+    private EventHandler<KazoStopRequestedEventArgs>? _stopRequested;
 
     public RemoteAppExecutionContext(
         RemoteProcessSnapshot snapshot,
@@ -77,7 +77,7 @@ internal sealed class RemoteAppExecutionContext : IAppExecutionContext
         // ADR 0124: events and directory watches go through the OS's bus, by message.
         EventTable = new RemoteEventTable(channel);
         EventTable.Bind(
-            () => HackExecutionContext.Enter(this),
+            () => KazoExecutionContext.Enter(this),
             message => Logging.Log(Kazo.Os.Simulation.Abstractions.Diagnostics.DiagnosticSeverity.Error, message));
         Events = new RemoteEventGateway(channel, EventTable);
         Watch = new RemoteWatchGateway(channel, EventTable);
@@ -112,7 +112,7 @@ internal sealed class RemoteAppExecutionContext : IAppExecutionContext
             return;
         }
 
-        using IDisposable scope = HackExecutionContext.Enter(this);
+        using IDisposable scope = KazoExecutionContext.Enter(this);
         foreach (EventHandler<AppIntentDelivery> handler in handlers.GetInvocationList().Cast<EventHandler<AppIntentDelivery>>())
         {
             try
@@ -152,13 +152,13 @@ internal sealed class RemoteAppExecutionContext : IAppExecutionContext
 
     public CancellationToken CancellationToken => _cancellationToken;
 
-    public event EventHandler<HackStopRequestedEventArgs>? StopRequested
+    public event EventHandler<KazoStopRequestedEventArgs>? StopRequested
     {
         add => _stopRequested += value;
         remove => _stopRequested -= value;
     }
 
-    public HackStopRequestedEventArgs? StopRequest { get; private set; }
+    public KazoStopRequestedEventArgs? StopRequest { get; private set; }
 
     public ICapabilityChecker Capabilities { get; }
 
@@ -189,10 +189,10 @@ internal sealed class RemoteAppExecutionContext : IAppExecutionContext
     /// <inheritdoc />
     /// <remarks>The process's own <c>TZ</c> wins, then the session's zone at start (ADR 0193 section 4).</remarks>
     public TimeZoneInfo TimeZone =>
-        Kazo.Os.AppSdk.Globalization.HackTimeZone.TryFind(
-            Environment.GetVariable(Kazo.Os.AppSdk.Globalization.HackTimeZone.Variable), out TimeZoneInfo? zone)
+        Kazo.Os.AppSdk.Globalization.KazoTimeZone.TryFind(
+            Environment.GetVariable(Kazo.Os.AppSdk.Globalization.KazoTimeZone.Variable), out TimeZoneInfo? zone)
             ? zone
-            : Kazo.Os.AppSdk.Globalization.HackTimeZone.Resolve(_timeZoneId);
+            : Kazo.Os.AppSdk.Globalization.KazoTimeZone.Resolve(_timeZoneId);
 
     public IAppNetworkGateway Network { get; }
 
@@ -213,18 +213,18 @@ internal sealed class RemoteAppExecutionContext : IAppExecutionContext
     /// <see cref="StopRequested"/>. The caller cancels the process token afterwards.
     /// </summary>
     /// <returns>The event data, whose deferred work the worker reports back to the OS.</returns>
-    public HackStopRequestedEventArgs? DeliverStopRequest(ProcessExitReason reason, DateTimeOffset requestedAt, DateTimeOffset deadline)
+    public KazoStopRequestedEventArgs? DeliverStopRequest(ProcessExitReason reason, DateTimeOffset requestedAt, DateTimeOffset deadline)
     {
         if (StopRequest is not null)
         {
             return null;
         }
 
-        HackStopRequestedEventArgs request = new(reason, requestedAt, deadline);
+        KazoStopRequestedEventArgs request = new(reason, requestedAt, deadline);
         StopRequest = request;
         if (_stopRequested is { } handlers)
         {
-            foreach (EventHandler<HackStopRequestedEventArgs> handler in handlers.GetInvocationList().Cast<EventHandler<HackStopRequestedEventArgs>>())
+            foreach (EventHandler<KazoStopRequestedEventArgs> handler in handlers.GetInvocationList().Cast<EventHandler<KazoStopRequestedEventArgs>>())
             {
                 try
                 {

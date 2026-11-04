@@ -65,7 +65,7 @@ public sealed class HackbackupCommandTests
         (int exit, _, string stderr) = await RunAsync(root: true, backup, "restore");
 
         Assert.Equal(1, exit);
-        Assert.Equal(HackBackupRestoreMode.Merge, backup.LastMode);
+        Assert.Equal(KazoBackupRestoreMode.Merge, backup.LastMode);
         Assert.Contains("no file chosen", stderr, StringComparison.Ordinal);
     }
 
@@ -77,7 +77,7 @@ public sealed class HackbackupCommandTests
         (int exit, _, string stderr) = await RunAsync(root: true, backup, "restore", "--replace");
 
         Assert.Equal(1, exit);
-        Assert.Equal(HackBackupRestoreMode.Replace, backup.LastMode);
+        Assert.Equal(KazoBackupRestoreMode.Replace, backup.LastMode);
         Assert.Contains("not a usable backup", stderr, StringComparison.Ordinal);
     }
 
@@ -117,24 +117,24 @@ public sealed class HackbackupCommandTests
 
         public int Calls { get; private set; }
 
-        public HackBackupRestoreMode? LastMode { get; private set; }
+        public KazoBackupRestoreMode? LastMode { get; private set; }
 
         public bool IsSupported => Supported;
 
-        public ValueTask<HackBackupInfo> CreateAsync(CancellationToken cancellationToken = default)
+        public ValueTask<KazoBackupInfo> CreateAsync(CancellationToken cancellationToken = default)
         {
             Calls++;
-            return ValueTask.FromResult(new HackBackupInfo(
+            return ValueTask.FromResult(new KazoBackupInfo(
                 "hackeros-20261017-071200Z.hosbak", 4096, 12, new DateTimeOffset(2026, 10, 17, 7, 12, 0, TimeSpan.Zero)));
         }
 
-        public ValueTask<HackBackupInfo?> RestoreAsync(HackBackupRestoreMode mode, CancellationToken cancellationToken = default)
+        public ValueTask<KazoBackupInfo?> RestoreAsync(KazoBackupRestoreMode mode, CancellationToken cancellationToken = default)
         {
             Calls++;
             LastMode = mode;
             return Invalid
-                ? throw new HackBackupInvalidException("not a backup")
-                : ValueTask.FromResult<HackBackupInfo?>(PickNothing ? null : new HackBackupInfo("old.hosbak", 10, 1, DateTimeOffset.UnixEpoch));
+                ? throw new KazoBackupInvalidException("not a backup")
+                : ValueTask.FromResult<KazoBackupInfo?>(PickNothing ? null : new KazoBackupInfo("old.hosbak", 10, 1, DateTimeOffset.UnixEpoch));
         }
     }
 

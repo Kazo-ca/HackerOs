@@ -1,4 +1,4 @@
-@inherits HackView<Note>
+@inherits KazoView<Note>
 <li class="note@(Model.Done ? " done" : "")">
-    <HackLink Action="Details" RouteValues="@HackRoute.Values(new { id = Model.Id })">@Model.Title</HackLink>
+    <KazoLink Action="Details" RouteValues="@KazoRoute.Values(new { id = Model.Id })">@Model.Title</KazoLink>
 </li>

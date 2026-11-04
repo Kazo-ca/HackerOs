@@ -14,7 +14,7 @@ public sealed class LogProducersTests
         LogTestFileSystem fs = await LogTestFileSystem.CreateAsync();
         BoundedDiagnosticSink memory = new(10);
         LogFileWriter writer = new(fs.Clock, memory);
-        using HackerOsDiagnosticLoggerProvider provider = new(memory, writer, fs.Clock);
+        using KazoOsDiagnosticLoggerProvider provider = new(memory, writer, fs.Clock);
         ILogger logger = provider.CreateLogger("Kazo.Os.Platform.Core.Boot");
 
         logger.LogError(new InvalidOperationException("boom"), "Mount failed\nretrying");

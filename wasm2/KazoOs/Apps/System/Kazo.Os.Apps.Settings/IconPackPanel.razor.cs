@@ -20,7 +20,7 @@ public sealed partial class IconPackPanel : IAsyncDisposable
     /// <summary>How many images of a pack its button shows.</summary>
     internal const int PreviewSize = 4;
 
-    private HackSettingsDocument? _document;
+    private KazoSettingsDocument? _document;
     private IReadOnlyList<IconPack> _packs = [];
     private string _selectedId = IconPackLibrary.BuiltInId;
     private int _warningCount;
@@ -48,7 +48,7 @@ public sealed partial class IconPackPanel : IAsyncDisposable
     {
         try
         {
-            _document = await HackSettings.OpenSystemAsync(Context, IconPackLibrary.SettingsDocumentId, Context.CancellationToken);
+            _document = await KazoSettings.OpenSystemAsync(Context, IconPackLibrary.SettingsDocumentId, Context.CancellationToken);
             _document.Changed += OnDocumentChanged;
             _selectedId = _document.Get<string>(IconPackLibrary.PackIdKey);
         }
@@ -66,12 +66,12 @@ public sealed partial class IconPackPanel : IAsyncDisposable
     {
         try
         {
-            using IDisposable scope = HackExecutionContext.Enter(Context);
+            using IDisposable scope = KazoExecutionContext.Enter(Context);
             IconPackFileAccess files = new(
-                async (directory, token) => await HackDirectory.GetDirectoriesAsync(directory, cancellationToken: token),
-                async (directory, token) => await HackDirectory.GetFilesAsync(directory, cancellationToken: token),
-                HackFile.ReadAllBytesAsync);
-            IconPackListResult list = await IconPackLibrary.ListAsync(files, HackUser.Describe(Context).HomeDirectory, Context.CancellationToken);
+                async (directory, token) => await KazoDirectory.GetDirectoriesAsync(directory, cancellationToken: token),
+                async (directory, token) => await KazoDirectory.GetFilesAsync(directory, cancellationToken: token),
+                KazoFile.ReadAllBytesAsync);
+            IconPackListResult list = await IconPackLibrary.ListAsync(files, KazoUser.Describe(Context).HomeDirectory, Context.CancellationToken);
             List<IconPack> packs = [];
             int warnings = list.Diagnostics.Count;
             foreach (IconPackInfo info in list.Packs)
@@ -126,7 +126,7 @@ public sealed partial class IconPackPanel : IAsyncDisposable
             await _document.SetAsync(IconPackLibrary.PackIdKey, packId, TargetLayer, CancellationToken.None);
             _message = L["IconPack.Saved"];
         }
-        catch (HackSettingLockedException exception)
+        catch (KazoSettingLockedException exception)
         {
             _selectedId = previous;
             _message = exception.Message;
@@ -162,7 +162,7 @@ public sealed partial class IconPackPanel : IAsyncDisposable
     private string OptionClass(string packId) => IsSelected(packId) ? "icon-pack-option is-selected" : "icon-pack-option";
 
     /// <summary>An edit of <c>icons.config</c> from elsewhere (<c>nano</c>, another window).</summary>
-    private void OnDocumentChanged(object? sender, HackSettingsChangedEventArgs args) =>
+    private void OnDocumentChanged(object? sender, KazoSettingsChangedEventArgs args) =>
         _ = InvokeAsync(() =>
         {
             if (_document is not null && !_isSaving)

@@ -2,14 +2,14 @@ namespace Kazo.Os.AppSdk.Clipboard;
 
 /// <summary>
 /// The session's clipboard as one app instance sees it (ADR 0056, section 12), behind
-/// <see cref="HackClipboard"/>. There is one clipboard per session, shared by every app of that
+/// <see cref="KazoClipboard"/>. There is one clipboard per session, shared by every app of that
 /// session, like the X11 <c>CLIPBOARD</c> selection: what one window copies, another pastes.
 /// </summary>
 /// <remarks>
 /// Reading requires <c>clipboard.read</c>, writing requires <c>clipboard.write</c> (both normal
 /// capabilities). A missing one raises
 /// <see cref="Kazo.Os.Simulation.Abstractions.Gateways.AppGatewayAccessDeniedException"/>; the
-/// <see cref="HackClipboard"/> facade turns it into <c>HackUnauthorizedAccessException</c>.
+/// <see cref="KazoClipboard"/> facade turns it into <c>KazoUnauthorizedAccessException</c>.
 /// </remarks>
 public interface IAppClipboardGateway
 {
@@ -37,7 +37,7 @@ public interface IAppClipboardGateway
     /// files. Requires <c>clipboard.read</c>.
     /// </summary>
     /// <param name="cancellationToken">Cancels the request.</param>
-    ValueTask<HackClipboardFileList?> GetFileDropListAsync(CancellationToken cancellationToken = default);
+    ValueTask<KazoClipboardFileList?> GetFileDropListAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Replaces the clipboard with a file list to cut or copy, stored in the GNOME
@@ -45,7 +45,7 @@ public interface IAppClipboardGateway
     /// </summary>
     /// <param name="files">Operation and absolute paths.</param>
     /// <param name="cancellationToken">Cancels the request.</param>
-    ValueTask SetFileDropListAsync(HackClipboardFileList files, CancellationToken cancellationToken = default);
+    ValueTask SetFileDropListAsync(KazoClipboardFileList files, CancellationToken cancellationToken = default);
 
     /// <summary>Empties the clipboard. Requires <c>clipboard.write</c>.</summary>
     /// <param name="cancellationToken">Cancels the request.</param>

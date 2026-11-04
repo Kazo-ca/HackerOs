@@ -122,7 +122,7 @@ default (ADR 0066) until an ADR specific to this host.
 ## References
 
 - [`execution-isolation-plan.md`](../plans/execution-isolation-plan.md)
-- `Shared/Kazo.Os.AppSdk/HackExecutionContext.cs`,
+- `Shared/Kazo.Os.AppSdk/KazoExecutionContext.cs`,
   `Shared/Kazo.Os.AppSdk.Blazor/AmbientComponentDispatch.cs`,
   `Platform/Kazo.Os.Platform.Core/FileSystem/Virtual/ProcFileSystemProvider.cs`.
 - `proc(5)`: `/proc/<pid>/stat`, `/proc/stat`.

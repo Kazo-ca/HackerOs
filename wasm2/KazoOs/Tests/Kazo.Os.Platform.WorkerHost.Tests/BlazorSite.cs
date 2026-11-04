@@ -18,10 +18,10 @@ public sealed partial class BlazorSite : WebAppDefinition
 
     public override Type? BlazorRoot => typeof(BlazorSite);
 
-    public override void Configure(HackWebApplicationBuilder builder)
+    public override void Configure(KazoWebApplicationBuilder builder)
     {
-        HackWebApplication app = builder.Build();
+        KazoWebApplication app = builder.Build();
         // No MapControllers: the generated route table is the test assembly's, MvcSite's controllers included.
-        app.MapGet("/api/time", () => HackResults.Text("now"));
+        app.MapGet("/api/time", () => KazoResults.Text("now"));
     }
 }

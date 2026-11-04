@@ -11,7 +11,7 @@ using Kazo.Os.Simulation.Abstractions.Gateways;
 using Kazo.Os.Simulation.Abstractions.Workers;
 
 // ADR 0124, section 2: the payloads of the test apps cross between a worker and the OS as JSON.
-[assembly: HackWireContext(typeof(RemoteEventsJsonContext))]
+[assembly: KazoWireContext(typeof(RemoteEventsJsonContext))]
 
 namespace Kazo.Os.Platform.WorkerHost.Tests;
 
@@ -26,7 +26,7 @@ public sealed record UndeclaredPayload(int N);
 internal sealed partial class RemoteEventsJsonContext : JsonSerializerContext;
 
 /// <summary>
-/// ADR 0124: <c>HackEvents</c> (topic messages, channels, typed events, shared channels) and
+/// ADR 0124: <c>KazoEvents</c> (topic messages, channels, typed events, shared channels) and
 /// <c>Watch</c> reach a process in a worker by message. Each scenario runs in-process and in loopback
 /// Web Workers with the same result, except where the ADR says a worker differs (an undeclared payload).
 /// </summary>
@@ -116,7 +116,7 @@ public sealed class RemoteEventsTests
         ShellRun inWorker = await worker.RunAsync("ev-undeclared").WaitAsync(TimeSpan.FromSeconds(20));
 
         Assert.Equal("subscribed\n", inProcess.Stdout);
-        Assert.Equal("not supported: names HackWireContext\n", inWorker.Stdout);
+        Assert.Equal("not supported: names KazoWireContext\n", inWorker.Stdout);
     }
 
     [Fact]
@@ -378,10 +378,10 @@ internal static class RemoteEventCommands
         public override async ValueTask<int> ExecuteAsync(TerminalExecutionContext context, CancellationToken cancellationToken)
         {
             const string directory = "/home/alice/watched";
-            await Kazo.Os.AppSdk.IO.HackDirectory.CreateDirectoryAsync(directory, cancellationToken);
+            await Kazo.Os.AppSdk.IO.KazoDirectory.CreateDirectoryAsync(directory, cancellationToken);
             await using ITopicChannelSubscription<FileSystemChangeEvent> watch = await context.App.Watch.WatchAsync(
                 VirtualPath.Parse(directory), FileSystemWatchScope.ImmediateChildren, cancellationToken);
-            await Kazo.Os.AppSdk.IO.HackFile.WriteAllTextAsync(directory + "/a.txt", "x", cancellationToken);
+            await Kazo.Os.AppSdk.IO.KazoFile.WriteAllTextAsync(directory + "/a.txt", "x", cancellationToken);
             using CancellationTokenSource timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             timeout.CancelAfter(Patience);
             while (true)
@@ -434,7 +434,7 @@ internal static class RemoteEventCommands
             catch (NotSupportedException exception)
             {
                 await context.StandardOutput.WriteLineAsync(
-                    $"not supported: {(exception.Message.Contains("HackWireContext", StringComparison.Ordinal) ? "names HackWireContext" : exception.Message)}");
+                    $"not supported: {(exception.Message.Contains("KazoWireContext", StringComparison.Ordinal) ? "names KazoWireContext" : exception.Message)}");
             }
 
             return 0;

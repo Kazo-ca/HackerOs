@@ -19,7 +19,7 @@ public sealed partial class TaskPage
     public int Id { get; set; }
 
     [CascadingParameter]
-    private HackWebSite? Site { get; set; }
+    private KazoWebSite? Site { get; set; }
 
     /// <inheritdoc />
     protected override async Task OnParametersSetAsync()
@@ -33,7 +33,7 @@ public sealed partial class TaskPage
         _task = null;
         _error = null;
         _saved = false;
-        HackHttpResponse response = await Site.Http.GetAsync($"api/tasks/{Id}");
+        KazoHttpResponse response = await Site.Http.GetAsync($"api/tasks/{Id}");
         if (response.StatusCode == 404)
         {
             _error = $"There is no card {Id}.";
@@ -62,7 +62,7 @@ public sealed partial class TaskPage
         _error = null;
         try
         {
-            HackHttpResponse response = await Site.Http.PutAsync($"api/tasks/{_task.Id}", HackJsonContent.Create(_task, IntranetJsonContext.Default.BoardTask));
+            KazoHttpResponse response = await Site.Http.PutAsync($"api/tasks/{_task.Id}", KazoJsonContent.Create(_task, IntranetJsonContext.Default.BoardTask));
             if (response.StatusCode == 400)
             {
                 _error = "The server refused the card: the title needs 3 to 80 characters.";

@@ -7,7 +7,7 @@
     <!-- Development uses source projects. CI sets this property to true to prove that the same
          host restores, builds, and publishes from the isolated local NuGet feed only. -->
     <UseLocalHackerOsPackages Condition="'$(UseLocalHackerOsPackages)' == ''">false</UseLocalHackerOsPackages>
-    <HackerOsLocalPackageVersion Condition="'$(HackerOsLocalPackageVersion)' == ''">$(HackerOsVersion)</HackerOsLocalPackageVersion>
+    <KazoOsLocalPackageVersion Condition="'$(KazoOsLocalPackageVersion)' == ''">$(KazoOsVersion)</KazoOsLocalPackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -34,13 +34,13 @@
   <ItemGroup Condition="'$(UseLocalHackerOsPackages)' == 'true'">
     <!-- Keep every directly consumed package explicit. This catches missing packages and incorrect
          transitive versions instead of allowing a ProjectReference to hide packaging defects. -->
-    <PackageReference Include="Kazo.Os.Theming.Abstractions" Version="$(HackerOsLocalPackageVersion)" />
-    <PackageReference Include="Kazo.Os.Theming.Blazor" Version="$(HackerOsLocalPackageVersion)" />
-    <PackageReference Include="Kazo.Os.Windowing.Abstractions" Version="$(HackerOsLocalPackageVersion)" />
-    <PackageReference Include="Kazo.Os.Windowing.Core" Version="$(HackerOsLocalPackageVersion)" />
-    <PackageReference Include="Kazo.Os.Windowing.Blazor" Version="$(HackerOsLocalPackageVersion)" />
-    <PackageReference Include="Kazo.Os.AppSdk.Icons" Version="$(HackerOsLocalPackageVersion)" />
-    <PackageReference Include="Kazo.Os.Taskbar.Blazor" Version="$(HackerOsLocalPackageVersion)" />
+    <PackageReference Include="Kazo.Os.Theming.Abstractions" Version="$(KazoOsLocalPackageVersion)" />
+    <PackageReference Include="Kazo.Os.Theming.Blazor" Version="$(KazoOsLocalPackageVersion)" />
+    <PackageReference Include="Kazo.Os.Windowing.Abstractions" Version="$(KazoOsLocalPackageVersion)" />
+    <PackageReference Include="Kazo.Os.Windowing.Core" Version="$(KazoOsLocalPackageVersion)" />
+    <PackageReference Include="Kazo.Os.Windowing.Blazor" Version="$(KazoOsLocalPackageVersion)" />
+    <PackageReference Include="Kazo.Os.AppSdk.Icons" Version="$(KazoOsLocalPackageVersion)" />
+    <PackageReference Include="Kazo.Os.Taskbar.Blazor" Version="$(KazoOsLocalPackageVersion)" />
   </ItemGroup>
 
 </Project>

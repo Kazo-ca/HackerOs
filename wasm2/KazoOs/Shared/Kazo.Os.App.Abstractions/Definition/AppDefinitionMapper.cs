@@ -9,12 +9,12 @@ public static class AppDefinitionMapper
 {
     /// <summary>
     /// Maps <paramref name="definition"/> using the App SDK version of the current process
-    /// (<see cref="HackerOsSdk.Version"/>) as <c>sdkCompatibility.minimumVersion</c>.
+    /// (<see cref="KazoOsSdk.Version"/>) as <c>sdkCompatibility.minimumVersion</c>.
     /// </summary>
     /// <param name="definition">Definition to map.</param>
     /// <returns>The equivalent manifest. Not validated: call <see cref="AppManifestValidator.Validate"/>.</returns>
     public static AppManifest ToManifest(AppDefinition definition) =>
-        ToManifest(definition, HackerOsSdk.Version);
+        ToManifest(definition, KazoOsSdk.Version);
 
     /// <summary>
     /// Maps <paramref name="definition"/> with an explicit SDK minimum version. The manifest generator

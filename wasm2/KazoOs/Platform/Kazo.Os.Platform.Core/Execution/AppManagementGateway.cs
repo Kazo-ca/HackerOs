@@ -17,13 +17,13 @@ namespace Kazo.Os.Platform.Core.Execution;
 /// </summary>
 /// <remarks>
 /// <para>
-/// Every call requires <c>apps.manage</c>. A <see cref="HackInstallScope.Machine"/> change then asks
+/// Every call requires <c>apps.manage</c>. A <see cref="KazoInstallScope.Machine"/> change then asks
 /// the OS authentication agent (ADR 0055, section 5); once an administrator authenticated, the OS
 /// writes <c>/etc/hackeros/apps.config</c> itself in an audited system context, as
 /// <c>pkexec</c> runs the helper as root. The app's own filesystem rights are never widened.
 /// </para>
 /// <para>
-/// A <see cref="HackInstallScope.User"/> change is written as the session user, in their own
+/// A <see cref="KazoInstallScope.User"/> change is written as the session user, in their own
 /// <c>~/.config/hackeros/apps.config</c>.
 /// </para>
 /// </remarks>
@@ -91,11 +91,11 @@ internal sealed partial class AppManagementGateway : IAppManagementGateway
         _isRootElevated = isRootElevated;
         _fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
         _clock = clock ?? throw new ArgumentNullException(nameof(clock));
-        _language = language ?? (static () => Kazo.Os.AppSdk.Globalization.HackLocale.DefaultLanguage);
+        _language = language ?? (static () => Kazo.Os.AppSdk.Globalization.KazoLocale.DefaultLanguage);
     }
 
     /// <inheritdoc />
-    public ValueTask<IReadOnlyList<HackAppInstallInfo>> GetAllAsync(CancellationToken cancellationToken = default)
+    public ValueTask<IReadOnlyList<KazoAppInstallInfo>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         _capabilities.Require(AppCapabilities.AppsManage);
         cancellationToken.ThrowIfCancellationRequested();
@@ -103,12 +103,12 @@ internal sealed partial class AppManagementGateway : IAppManagementGateway
         AppAssetStore? assets = _assets?.Invoke();
         Apps.Packages.InstalledPackageCatalog? packages = _installedPackages?.Invoke();
         // ADR 0189 §3: another user's personal apps are not listed for this session.
-        IEnumerable<HackAppInstallInfo> loaded = _catalog.Manifests.Values
+        IEnumerable<KazoAppInstallInfo> loaded = _catalog.Manifests.Values
             .Where(manifest => packages?.IsVisibleTo(manifest.Id, _principal.HomePath) != false)
-            .Select(manifest => new HackAppInstallInfo(
-                HackAppInfo.FromManifest(manifest, _catalog.IsSystemApp(manifest.Id)),
+            .Select(manifest => new KazoAppInstallInfo(
+                KazoAppInfo.FromManifest(manifest, _catalog.IsSystemApp(manifest.Id)),
                 assets is not null && assets.IsDamaged(manifest.Id)
-                    ? HackAppInstallState.Damaged
+                    ? KazoAppInstallState.Damaged
                     : ToPublic(installation.GetState(manifest.Id)),
                 installation.GetUninstallClosure(manifest.Id))
             {
@@ -117,14 +117,14 @@ internal sealed partial class AppManagementGateway : IAppManagementGateway
                     : null
             });
         // ADR 0098 §3: apps the OS refused to load are listed too, as incompatible, with the reason.
-        IEnumerable<HackAppInstallInfo> refused = _catalog.Rejected.Select(rejection => new HackAppInstallInfo(
-            HackAppInfo.FromManifest(rejection.Manifest, _catalog.IsSystemApp(rejection.AppId)),
-            HackAppInstallState.Incompatible,
+        IEnumerable<KazoAppInstallInfo> refused = _catalog.Rejected.Select(rejection => new KazoAppInstallInfo(
+            KazoAppInfo.FromManifest(rejection.Manifest, _catalog.IsSystemApp(rejection.AppId)),
+            KazoAppInstallState.Incompatible,
             [])
         {
             Problem = rejection.Message
         });
-        IReadOnlyList<HackAppInstallInfo> all = [.. loaded.Concat(refused)
+        IReadOnlyList<KazoAppInstallInfo> all = [.. loaded.Concat(refused)
             .OrderBy(entry => entry.App.Name, StringComparer.OrdinalIgnoreCase)
             .ThenBy(entry => entry.App.Id, StringComparer.Ordinal)];
         return ValueTask.FromResult(all);
@@ -132,7 +132,7 @@ internal sealed partial class AppManagementGateway : IAppManagementGateway
 
     /// <inheritdoc />
     public async ValueTask<IReadOnlyList<string>> UninstallAsync(
-        string appId, HackInstallScope scope, CancellationToken cancellationToken = default)
+        string appId, KazoInstallScope scope, CancellationToken cancellationToken = default)
     {
         AppManifest target = RequireApp(appId);
         IAppFileSystemGateway? writer = await AuthorizeAsync(target, scope, uninstall: true, cancellationToken).ConfigureAwait(false);
@@ -143,31 +143,31 @@ internal sealed partial class AppManagementGateway : IAppManagementGateway
     }
 
     /// <inheritdoc />
-    public async ValueTask<HackUninstallPlan> PlanUninstallAsync(string appId, CancellationToken cancellationToken = default)
+    public async ValueTask<KazoUninstallPlan> PlanUninstallAsync(string appId, CancellationToken cancellationToken = default)
     {
         RequireApp(appId);
         AppUninstallPlan plan = await _installation().PlanUninstallAsync(appId, cancellationToken).ConfigureAwait(false);
-        return new HackUninstallPlan(plan.AppIds, [.. plan.RunningProcesses.Select(ToPublic)]);
+        return new KazoUninstallPlan(plan.AppIds, [.. plan.RunningProcesses.Select(ToPublic)]);
     }
 
     /// <inheritdoc />
-    public async ValueTask<HackUninstallReport> UninstallWithReportAsync(
-        string appId, HackInstallScope scope, CancellationToken cancellationToken = default)
+    public async ValueTask<KazoUninstallReport> UninstallWithReportAsync(
+        string appId, KazoInstallScope scope, CancellationToken cancellationToken = default)
     {
         AppManifest target = RequireApp(appId);
         IAppFileSystemGateway? writer = await AuthorizeAsync(target, scope, uninstall: true, cancellationToken).ConfigureAwait(false);
         AppInstallationResult result = await _installation()
             .UninstallAsync(appId, ToInternal(scope), writer, cancellationToken)
             .ConfigureAwait(false);
-        return new HackUninstallReport(Unwrap(result), [.. (result.StoppedProcesses ?? []).Select(ToPublic)]);
+        return new KazoUninstallReport(Unwrap(result), [.. (result.StoppedProcesses ?? []).Select(ToPublic)]);
     }
 
-    private static HackRunningProcessInfo ToPublic(Lifecycle.AppProcessInfo process) =>
+    private static KazoRunningProcessInfo ToPublic(Lifecycle.AppProcessInfo process) =>
         new(process.Pid, process.AppId, process.Name, process.UserName, process.Forced);
 
     /// <inheritdoc />
     public async ValueTask<IReadOnlyList<string>> ReinstallAsync(
-        string appId, HackInstallScope scope, CancellationToken cancellationToken = default)
+        string appId, KazoInstallScope scope, CancellationToken cancellationToken = default)
     {
         AppManifest target = RequireApp(appId);
         IAppFileSystemGateway? writer = await AuthorizeAsync(target, scope, uninstall: false, cancellationToken).ConfigureAwait(false);
@@ -191,9 +191,9 @@ internal sealed partial class AppManagementGateway : IAppManagementGateway
     /// then uses; for the user scope, returns <see langword="null"/> (the session user writes).
     /// </summary>
     private async ValueTask<IAppFileSystemGateway?> AuthorizeAsync(
-        AppManifest target, HackInstallScope scope, bool uninstall, CancellationToken cancellationToken)
+        AppManifest target, KazoInstallScope scope, bool uninstall, CancellationToken cancellationToken)
     {
-        if (scope != HackInstallScope.Machine)
+        if (scope != KazoInstallScope.Machine)
         {
             return null;
         }
@@ -205,7 +205,7 @@ internal sealed partial class AppManagementGateway : IAppManagementGateway
         }
 
         IAdministratorAuthenticationAgent agent = _agent?.Invoke()
-            ?? throw new HackUnauthorizedAccessException(
+            ?? throw new KazoUnauthorizedAccessException(
                 "No administrator authentication agent is available on this host.", path: AppsConfigDocument.MachinePath.Value);
         System.Globalization.CultureInfo language = _language();
         AdministratorAuthenticationResult authentication = await agent.AuthenticateAsync(
@@ -218,7 +218,7 @@ internal sealed partial class AppManagementGateway : IAppManagementGateway
             cancellationToken).ConfigureAwait(false);
         if (!authentication.Succeeded)
         {
-            throw new HackUnauthorizedAccessException(
+            throw new KazoUnauthorizedAccessException(
                 $"Administrator authentication failed ({authentication.FailureReason}).",
                 path: AppsConfigDocument.MachinePath.Value);
         }
@@ -249,13 +249,13 @@ internal sealed partial class AppManagementGateway : IAppManagementGateway
         };
     }
 
-    private static AppInstallationScope ToInternal(HackInstallScope scope) =>
-        scope == HackInstallScope.Machine ? AppInstallationScope.Machine : AppInstallationScope.User;
+    private static AppInstallationScope ToInternal(KazoInstallScope scope) =>
+        scope == KazoInstallScope.Machine ? AppInstallationScope.Machine : AppInstallationScope.User;
 
-    private static HackAppInstallState ToPublic(AppInstallationState state) => state switch
+    private static KazoAppInstallState ToPublic(AppInstallationState state) => state switch
     {
-        AppInstallationState.UninstalledForUser => HackAppInstallState.UninstalledForUser,
-        AppInstallationState.UninstalledForMachine => HackAppInstallState.UninstalledForMachine,
-        _ => HackAppInstallState.Installed
+        AppInstallationState.UninstalledForUser => KazoAppInstallState.UninstalledForUser,
+        AppInstallationState.UninstalledForMachine => KazoAppInstallState.UninstalledForMachine,
+        _ => KazoAppInstallState.Installed
     };
 }

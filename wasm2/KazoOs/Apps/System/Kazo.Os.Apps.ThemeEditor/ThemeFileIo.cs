@@ -70,7 +70,7 @@ public static class ThemeFileIo
     }
 
     /// <summary>The texts in the language of the running process, read at each call.</summary>
-    private static IStringLocalizer<Strings> Text => HackLocalization.GetLocalizer<Strings>();
+    private static IStringLocalizer<Strings> Text => KazoLocalization.GetLocalizer<Strings>();
 
     private static string Describe(FileSystemErrorCode? code) => code switch
     {

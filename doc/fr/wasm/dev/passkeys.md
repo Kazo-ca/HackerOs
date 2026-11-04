@@ -24,12 +24,12 @@ La clé d'accès s'ajoute au mot de passe : le compte garde son mot de passe
 | Trousseau | `Platform.Core/Keyring/UserKeyringService.cs`, `KeyringFileFormat.cs` | Format 2 à emplacements ([`sensitive-settings.md`](sensitive-settings.md#2-trousseau-de-connexion)). |
 | Administrateur | `AdminElevationVerifier.VerifyWithPasskeyAsync`, `AdministratorAuthenticationAgent.PasskeyVerifier` | Confirmation administrateur par clé d'accès ([`admin-authentication-agent.md`](admin-authentication-agent.md)). |
 | Interface | `App.razor` (écran de connexion), `AdministratorAuthenticationOverlay`, Paramètres ▸ Utilisateurs (`PasskeysPanel`) | Boutons « Utiliser une clé d'accès » et gestion des clés. |
-| SDK | `HackUserAccounts.ListPasskeysAsync`, `AddPasskeyAsync`, `RemovePasskeyAsync` | Les clés de la session, sans capacité ([`../framework/system-administration.md`](../framework/system-administration.md)). |
+| SDK | `KazoUserAccounts.ListPasskeysAsync`, `AddPasskeyAsync`, `RemovePasskeyAsync` | Les clés de la session, sans capacité ([`../framework/system-administration.md`](../framework/system-administration.md)). |
 
 ## Enregistrer une clé
 
 1. Paramètres ▸ Utilisateurs ▸ « Mes clés d'accès » : l'utilisateur donne un
-   nom (« Téléphone », « YubiKey »), puis `HackUserAccounts.AddPasskeyAsync`.
+   nom (« Téléphone », « YubiKey »), puis `KazoUserAccounts.AddPasskeyAsync`.
 2. `PasskeyService.RegisterAsync` tire un défi et un sel PRF de 32 octets, puis
    demande au navigateur une création : relying party = nom d'hôte de la page,
    identifiant d'utilisateur = GUID du compte, `attestation: "none"`,
@@ -46,7 +46,7 @@ La clé d'accès s'ajoute au mot de passe : le compte garde son mot de passe
 ## Se connecter
 
 1. Écran de connexion : le bouton « Utiliser une clé d'accès » apparaît quand
-   le compte choisi en a une (`HackUserAccount.PasskeyCount`).
+   le compte choisi en a une (`KazoUserAccount.PasskeyCount`).
 2. `LoginWithPasskeyAsync` → `PasskeyService.AuthenticateAsync` : nouveau défi,
    `allowCredentials` = les clés du compte, PRF `evalByCredential` avec le sel
    de chaque clé.

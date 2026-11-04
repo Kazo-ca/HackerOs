@@ -28,7 +28,7 @@ public sealed class IndexedDbSyncCursorRepository : ISyncCursorRepository, IAsyn
         IReadOnlyList<JsonElement> results = await _adapter.ExecuteAsync(
             TransactionBoundary,
             IndexedDbTransactionMode.ReadOnly,
-            [new IndexedDbOperation("get", HackerOsIndexedDbSchema.SyncCursorStoreName, Key: domain)],
+            [new IndexedDbOperation("get", KazoOsIndexedDbSchema.SyncCursorStoreName, Key: domain)],
             cancellationToken).ConfigureAwait(false);
 
         JsonElement result = results.Single();
@@ -45,7 +45,7 @@ public sealed class IndexedDbSyncCursorRepository : ISyncCursorRepository, IAsyn
         await _adapter.ExecuteAsync(
             TransactionBoundary,
             IndexedDbTransactionMode.ReadWrite,
-            [new IndexedDbOperation("put", HackerOsIndexedDbSchema.SyncCursorStoreName, Value: new SyncCursorRecord(domain, cursor))],
+            [new IndexedDbOperation("put", KazoOsIndexedDbSchema.SyncCursorStoreName, Value: new SyncCursorRecord(domain, cursor))],
             cancellationToken).ConfigureAwait(false);
     }
 

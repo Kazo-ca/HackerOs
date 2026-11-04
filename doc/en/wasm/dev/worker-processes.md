@@ -47,7 +47,7 @@ the browser's file picker, which requires the user's gesture; `nano`, `top`, `ht
 through the calling shell (`RunNicedAsync`) and `renice` changes a priority,
 which no worker gateway offers, ADR 0127); the first 16 reasons were
 reviewed by `exec/1-remote-gateways` and still hold (ADR 0138 §9). The sample
-service and `hackwebd` run in a dedicated worker since `HackEvents`
+service and `hackwebd` run in a dedicated worker since `KazoEvents`
 and `Watch` cross the boundary (ADR 0124).
 
 All three hosts have workers: `test/test` runs the Ecosystem's `Program.cs` on
@@ -120,7 +120,7 @@ JSON messages with a `t` field:
 | `note` | Call without an answer (log, environment), kept in order. |
 | `cancel` | Cancel a `call` in progress. |
 | `out` | Standard or error output of a process. |
-| `exit` | End of a process: status, code, error message; for a `HackBackground` task, `jr` (JSON result), `jf` (original exception) and `jx` (task rejected). |
+| `exit` | End of a process: status, code, error message; for a `KazoBackground` task, `jr` (JSON result), `jf` (original exception) and `jx` (task rejected). |
 | `killed` | Acknowledgment of a `kill`. |
 | `stopdone`, `sstopped` | End of processing of a `stop` / `sstop`. |
 | `log` | Diagnostic line from the worker. |
@@ -128,7 +128,7 @@ JSON messages with a `t` field:
 | `ui` | ADR 0133 trial: output of window `p` to its host on the page (`d`: batch of DOM operations `b`, dialog request `dlg`). |
 
 `start` carries `k`: 0 or absent for a command, 1 for a service, 2 for a
-`HackBackground` task (ADR 0140), 3 for a window of the ADR 0133 trial (fields
+`KazoBackground` task (ADR 0140), 3 for a window of the ADR 0133 trial (fields
 `ra`/`rt`: the platform runner that renders it).
 
 ### Events and file watching (ADR 0124, ADR 0138)
@@ -154,14 +154,14 @@ publication from a worker is materialized as an object only once per type for
 the main-thread subscribers.
 
 Each `call` is served on the main thread by `RemoteProcessSession` **under the
-process's execution context** (`HackExecutionContext.Enter` then
+process's execution context** (`KazoExecutionContext.Enter` then
 `EnterKernel`): the same capability checks and the same accounting as locally.
 Output has a credit of 64 KiB in flight; a regular file of at most 16 MiB is
 read in one go, beyond that in blocks.
 
-### `HackBackground` tasks (ADR 0128, ADR 0140)
+### `KazoBackground` tasks (ADR 0128, ADR 0140)
 
-A task launched by `HackBackground.RunAsync` is a child process of the app that
+A task launched by `KazoBackground.RunAsync` is a child process of the app that
 the OS creates on the main thread (`BackgroundJobService`), then places in a
 pool worker through `WorkerRemoteProcessHost.RunBackgroundJobAsync`: a `start`
 message with `k = 2`, the target `jt` (`asm`, `ty`, `me`, `it`) and the input
@@ -175,7 +175,7 @@ the same serialization ([`background-jobs.md`](../framework/background-jobs.md))
 | `bg.progress` | `note` | A progress report from the task (`f`, `m`), already limited to 10 per second. |
 | `bg.run` | `call` | A process already in a worker launches a task (`jt`, `ji`, `n`, `ni`, number `j`); the OS places it like any other and sends back its progress through `bgp` messages, then the result `{r}`. |
 
-Remote errors: `bgfault` (`ty`, `st`) carries a `HackBackgroundJobException`
+Remote errors: `bgfault` (`ty`, `st`) carries a `KazoBackgroundJobException`
 with the original type and stack; `killed` carries the reason `rs`.
 
 ### Pool, ready worker, overflow (ADR 0070 §2-3, ADR 0071)
@@ -411,7 +411,7 @@ its descriptor is returned as soon as this answer arrives (ADR 0139 §3).
 
 - [x] "Wire" bus on the OS side (`IWireTopicMessageBus`, `IWireEventBus`), same authorization rules.
 - [x] Operations `ev.*`, `watch.open` and `ev` message; credit of 256 messages.
-- [x] Built-in codecs and `HackWireContextAttribute` (SDK 1.2; moved to `PublicAPI.Shipped.txt` by `exec/10-final`, ADR 0132 §2).
+- [x] Built-in codecs and `KazoWireContextAttribute` (SDK 1.2; moved to `PublicAPI.Shipped.txt` by `exec/10-final`, ADR 0132 §2).
 - [x] Unsubscribe at the end, at `kill` and at the worker's death.
 - [x] Sample service and `hackwebd` in a dedicated worker; review of the 16 `mainThread` commands.
 - [x] `KnownAssemblies`, refusal with code 127; `sample-cmd` in the Ecosystem and the hosts test.
@@ -440,7 +440,7 @@ its descriptor is returned as soon as this answer arrives (ADR 0139 §3).
 - [x] Synchronous calls `ListProcesses`/`Kill`, operation `proc.list`, `sample-cmd --processes` and `--kill`.
 - [x] Per-worker memory measured by the browser (`IWebWorkerMemoryMeter`).
 - [x] Isolation lines of `/proc/hackeros/workers`, Diagnostic badge.
-- [x] Follow-up (ADR 0146, Benoit's choice C): `HackCrossOriginIsolation` in the SDK, without a capability, operation `coi.get`; Diagnostic no longer declares `filesystem.system.read`; `sample-cmd --isolation`.
+- [x] Follow-up (ADR 0146, Benoit's choice C): `KazoCrossOriginIsolation` in the SDK, without a capability, operation `coi.get`; Diagnostic no longer declares `filesystem.system.read`; `sample-cmd --isolation`.
 - [x] Audit in Chromium, `AuditPassed = true`.
 - [x] Tests: probe and setting, synchronous calls in loopback, rings under Node, `HostSmoke` and `ecosystem-isolated`/`ecosystem-isolation-off` journeys.
 

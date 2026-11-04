@@ -44,7 +44,7 @@ public static class CursorThemeLibrary
 
     /// <summary>
     /// Reads every theme folder of both places through the caller's own file access (an app passes
-    /// <c>HackDirectory</c>/<c>HackFile</c>, the shell its gateways). A missing place is normal; an
+    /// <c>KazoDirectory</c>/<c>KazoFile</c>, the shell its gateways). A missing place is normal; an
     /// unreadable index or image is skipped with a warning.
     /// </summary>
     /// <param name="listDirectories">Lists the sub-folders of a folder (absolute paths); may throw when it is missing.</param>

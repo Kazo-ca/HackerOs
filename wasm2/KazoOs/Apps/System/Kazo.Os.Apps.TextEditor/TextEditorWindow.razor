@@ -224,10 +224,10 @@
     /// kept as a recovery draft instead of being lost with the window; the next plain start offers it
     /// back. A window the user closes asks about unsaved changes instead and never gets here.
     /// </summary>
-    protected override Task OnAppStopRequestedAsync(HackStopRequestedEventArgs e) =>
+    protected override Task OnAppStopRequestedAsync(KazoStopRequestedEventArgs e) =>
         _doc.IsDirty
             // Not the process token: it is cancelled right after this request, and the draft must land.
-            ? HackRecoveryDraft.Open().SaveAsync(_doc.Content, _doc.Path?.Value, CancellationToken.None)
+            ? KazoRecoveryDraft.Open().SaveAsync(_doc.Content, _doc.Path?.Value, CancellationToken.None)
             : Task.CompletedTask;
 
     /// <summary>Restores the draft a stopped editor left, as a new unsaved buffer, and removes it.</summary>
@@ -235,7 +235,7 @@
     {
         try
         {
-            if (await HackRecoveryDraft.Open().TakeAsync(AppContext.CancellationToken) is { } draft)
+            if (await KazoRecoveryDraft.Open().TakeAsync(AppContext.CancellationToken) is { } draft)
             {
                 _doc.RestoreDraft(draft.Content, draft.OriginalPath);
                 _recoveryNotice = draft.OriginalPath is null
@@ -243,7 +243,7 @@
                     : L["Recovery.File", draft.OriginalPath];
             }
         }
-        catch (Exception exception) when (exception is HackIOException or HackUnauthorizedAccessException)
+        catch (Exception exception) when (exception is KazoIOException or KazoUnauthorizedAccessException)
         {
             // No readable draft: start empty, as before.
         }
@@ -336,7 +336,7 @@
             }
         }
 
-        return HackUser.Describe(AppContext).HomeDirectory;
+        return KazoUser.Describe(AppContext).HomeDirectory;
     }
 
     /// <summary>
@@ -419,8 +419,8 @@
 
             // A file is just bytes, as on Linux: the stored descriptor only records how it was
             // last written (an empty file made by "New File", or one copied with WriteAllBytes, is
-            // tagged binary). Like gedit, decide from the content itself (HackTextContent, P2-TEXT-002).
-            string? content = await Kazo.Os.AppSdk.IO.HackTextContent.TryReadAsync(handle.Content, AppContext.CancellationToken);
+            // tagged binary). Like gedit, decide from the content itself (KazoTextContent, P2-TEXT-002).
+            string? content = await Kazo.Os.AppSdk.IO.KazoTextContent.TryReadAsync(handle.Content, AppContext.CancellationToken);
             if (content is null)
             {
                 _doc.FailLoading(L["Error.Binary"]);

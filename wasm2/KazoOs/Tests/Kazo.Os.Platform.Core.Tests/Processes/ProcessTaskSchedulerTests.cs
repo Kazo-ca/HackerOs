@@ -45,13 +45,13 @@ public sealed class ProcessTaskSchedulerTests
         control.MarkKilled();
         release.SetResult();
 
-        HackProcessKilledException killed = await Assert.ThrowsAsync<HackProcessKilledException>(() => run);
+        KazoProcessKilledException killed = await Assert.ThrowsAsync<KazoProcessKilledException>(() => run);
         await Task.Delay(50);
         Assert.Equal(13, killed.ProcessId);
         Assert.False(resumed);
         Assert.Equal(1, control.DroppedContinuations);
         // A dead PID runs nothing new: the refusal is synchronous, like exec on a reaped process.
-        Assert.Throws<HackProcessKilledException>(() => { _ = control.RunAsync(() => Task.FromResult(0)); });
+        Assert.Throws<KazoProcessKilledException>(() => { _ = control.RunAsync(() => Task.FromResult(0)); });
     }
 
     [Fact]

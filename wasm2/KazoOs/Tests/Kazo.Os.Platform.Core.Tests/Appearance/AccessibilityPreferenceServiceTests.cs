@@ -18,7 +18,7 @@ public sealed class AccessibilityPreferenceServiceTests
     public void High_contrast_auto_follows_prefers_contrast_or_forced_colors(
         AccessibilityMode mode, bool moreContrast, bool forcedColors, bool expected)
     {
-        HackAccessibilityPreferences effective = AccessibilitySettingsDocuments.Resolve(
+        KazoAccessibilityPreferences effective = AccessibilitySettingsDocuments.Resolve(
             AccessibilitySettings.Default with { HighContrast = mode },
             new HostAccessibilitySignals(moreContrast, forcedColors, PrefersReducedMotion: false),
             animationsEnabled: true);
@@ -37,7 +37,7 @@ public sealed class AccessibilityPreferenceServiceTests
     public void Reduced_motion_follows_the_host_and_animations_enabled(
         AccessibilityMode mode, bool hostReduces, bool animationsEnabled, bool expected)
     {
-        HackAccessibilityPreferences effective = AccessibilitySettingsDocuments.Resolve(
+        KazoAccessibilityPreferences effective = AccessibilitySettingsDocuments.Resolve(
             AccessibilitySettings.Default with { ReducedMotion = mode },
             new HostAccessibilitySignals(false, false, hostReduces),
             animationsEnabled);
@@ -80,7 +80,7 @@ public sealed class AccessibilityPreferenceServiceTests
         await service.InitializeAsync();
 
         Assert.Equal(AccessibilitySettings.Default, service.Settings);
-        Assert.Equal(new HackAccessibilityPreferences(HighContrast: true, TextScale: 1.0, ReducedMotion: true), service.Effective);
+        Assert.Equal(new KazoAccessibilityPreferences(HighContrast: true, TextScale: 1.0, ReducedMotion: true), service.Effective);
     }
 
     [Fact]
@@ -100,7 +100,7 @@ public sealed class AccessibilityPreferenceServiceTests
         await harness.WriteAsRootAsync("/home/alice/.config/hackeros/accessibility.config", "highContrast=on\ntextScale=2.0\n");
         await service.RefreshAsync();
 
-        Assert.Equal(new HackAccessibilityPreferences(HighContrast: true, TextScale: 2.0, ReducedMotion: false), service.Effective);
+        Assert.Equal(new KazoAccessibilityPreferences(HighContrast: true, TextScale: 2.0, ReducedMotion: false), service.Effective);
         Assert.Equal(SettingLayer.User, service.Snapshot!.Sources[AccessibilitySettingsDocuments.TextScaleKey]);
         Assert.True(notifications >= 1);
     }

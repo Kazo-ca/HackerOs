@@ -20,7 +20,7 @@ internal sealed class AppWhatsNewGateway : IAppWhatsNewGateway
 
     internal void BindAmbientContext(Kazo.Os.AppSdk.IAppExecutionContext context) => _ambient.Bind(context);
 
-    public ValueTask<HackChangeList> GetAsync(CultureInfo culture, CancellationToken cancellationToken = default) =>
+    public ValueTask<KazoChangeList> GetAsync(CultureInfo culture, CancellationToken cancellationToken = default) =>
         _service().GetAsync(culture, cancellationToken);
 
     public ValueTask MarkSeenAsync(IReadOnlyCollection<string> ids, CancellationToken cancellationToken = default) =>

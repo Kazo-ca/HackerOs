@@ -93,15 +93,15 @@ public sealed class SetWallpaperService : ServiceAppBase
     /// <returns>What happened.</returns>
     internal static async Task<Outcome> ApplyAsync(IAppExecutionContext context, AppIntentDelivery intent, CancellationToken cancellationToken)
     {
-        string? path = HackFileMenuIntent.ReadPaths(intent.PayloadJson).FirstOrDefault();
+        string? path = KazoFileMenuIntent.ReadPaths(intent.PayloadJson).FirstOrDefault();
         if (path is null)
         {
             return Outcome.NoPath;
         }
 
-        int screen = ScreenOf(HackFileMenuIntent.ReadEntry(intent.PayloadJson));
+        int screen = ScreenOf(KazoFileMenuIntent.ReadEntry(intent.PayloadJson));
         IStringLocalizer<Strings> l = context.GetLocalizer<Strings>();
-        string name = HackPath.GetFileName(path);
+        string name = KazoPath.GetFileName(path);
         (Outcome outcome, string? error) = await WriteAsync(context, path, screen, l, cancellationToken);
         if (outcome == Outcome.Changed)
         {
@@ -124,12 +124,12 @@ public sealed class SetWallpaperService : ServiceAppBase
         IStringLocalizer<Strings> l,
         CancellationToken cancellationToken)
     {
-        using IDisposable scope = HackExecutionContext.Enter(context);
-        string name = HackPath.GetFileName(path);
+        using IDisposable scope = KazoExecutionContext.Enter(context);
+        string name = KazoPath.GetFileName(path);
         try
         {
             // The same rules as the shell (ADR 0202 §3): the type is read from the bytes, never the name.
-            byte[] content = await HackFile.ReadAllBytesAsync(path, cancellationToken);
+            byte[] content = await KazoFile.ReadAllBytesAsync(path, cancellationToken);
             if (content.LongLength > WallpaperCatalog.MaxImageBytes || !WallpaperCatalog.TryDetectMediaType(content, out _))
             {
                 return (Outcome.NotImage, l["SetWallpaper.Error.NotImage", name]);
@@ -142,11 +142,11 @@ public sealed class SetWallpaperService : ServiceAppBase
 
         try
         {
-            await using HackSettingsDocument appearance = await HackSettings.OpenSystemAsync(context, SettingsWindow.AppearanceDocumentId, cancellationToken);
+            await using KazoSettingsDocument appearance = await KazoSettings.OpenSystemAsync(context, SettingsWindow.AppearanceDocumentId, cancellationToken);
             await appearance.SetAsync(KeyOf(screen), path, SettingLayer.User, cancellationToken);
             return (Outcome.Changed, null);
         }
-        catch (HackSettingLockedException exception)
+        catch (KazoSettingLockedException exception)
         {
             return (Outcome.NotSaved, exception.Message);
         }

@@ -13,30 +13,30 @@ namespace Kazo.Os.AppSdk.Web.Tests.Mvc;
 public sealed class MvcPipelineTests : IAsyncLifetime
 {
     private const string Site = "http://intranet.hack";
-    private HackWebApplication _app = null!;
+    private KazoWebApplication _app = null!;
 
     public Task InitializeAsync()
     {
-        _app = HackWebHost.CreateApplication(new TestSite(), HackWebGeneratedRoutes.Table);
+        _app = KazoWebHost.CreateApplication(new TestSite(), KazoWebGeneratedRoutes.Table);
         return Task.CompletedTask;
     }
 
     public async Task DisposeAsync() => await _app.DisposeAsync();
 
-    private Task<HackWebResponseData> Send(string method, string path, params KeyValuePair<string, string>[] headers) =>
-        _app.ProcessAsync(HackWebRequestData.Create(method, Site + path, headers));
+    private Task<KazoWebResponseData> Send(string method, string path, params KeyValuePair<string, string>[] headers) =>
+        _app.ProcessAsync(KazoWebRequestData.Create(method, Site + path, headers));
 
-    private Task<HackWebResponseData> Send(string method, string path, string contentType, string body, params KeyValuePair<string, string>[] headers) =>
-        _app.ProcessAsync(HackWebRequestData.Create(method, Site + path, contentType, body, headers));
+    private Task<KazoWebResponseData> Send(string method, string path, string contentType, string body, params KeyValuePair<string, string>[] headers) =>
+        _app.ProcessAsync(KazoWebRequestData.Create(method, Site + path, contentType, body, headers));
 
     private static KeyValuePair<string, string> Header(string name, string value) => new(name, value);
 
-    private static JsonElement Json(HackWebResponseData response) => JsonDocument.Parse(response.Body).RootElement;
+    private static JsonElement Json(KazoWebResponseData response) => JsonDocument.Parse(response.Body).RootElement;
 
     [Fact]
     public async Task Minimal_route_and_middleware_run()
     {
-        HackWebResponseData response = await Send("GET", "/health");
+        KazoWebResponseData response = await Send("GET", "/health");
 
         Assert.Equal(200, response.StatusCode);
         Assert.Equal("up", response.ReadAsString());
@@ -46,7 +46,7 @@ public sealed class MvcPipelineTests : IAsyncLifetime
     [Fact]
     public async Task Api_lists_notes_as_camel_case_json()
     {
-        HackWebResponseData response = await Send("GET", "/api/notes");
+        KazoWebResponseData response = await Send("GET", "/api/notes");
 
         Assert.True(response.StatusCode == 200, response.ReadAsString());
         Assert.StartsWith("application/json", response.ContentType);
@@ -67,8 +67,8 @@ public sealed class MvcPipelineTests : IAsyncLifetime
     [Fact]
     public async Task Get_by_id_and_not_found_as_problem_details()
     {
-        HackWebResponseData found = await Send("GET", "/api/notes/2");
-        HackWebResponseData missing = await Send("GET", "/api/notes/99");
+        KazoWebResponseData found = await Send("GET", "/api/notes/2");
+        KazoWebResponseData missing = await Send("GET", "/api/notes/99");
 
         Assert.Equal("Second", Json(found).GetProperty("title").GetString());
         Assert.Equal(404, missing.StatusCode);
@@ -88,7 +88,7 @@ public sealed class MvcPipelineTests : IAsyncLifetime
     [Fact]
     public async Task Post_creates_a_note_with_location_of_get()
     {
-        HackWebResponseData response = await Send("POST", "/api/notes", "application/json", """{"title":"Third"}""");
+        KazoWebResponseData response = await Send("POST", "/api/notes", "application/json", """{"title":"Third"}""");
 
         Assert.Equal(201, response.StatusCode);
         Assert.Equal($"{Site}/api/Notes/3", response.GetHeader("Location"));
@@ -99,7 +99,7 @@ public sealed class MvcPipelineTests : IAsyncLifetime
     [Fact]
     public async Task Invalid_body_gets_an_automatic_validation_problem()
     {
-        HackWebResponseData response = await Send("POST", "/api/notes", "application/json", """{"title":"x"}""");
+        KazoWebResponseData response = await Send("POST", "/api/notes", "application/json", """{"title":"x"}""");
 
         Assert.Equal(400, response.StatusCode);
         Assert.StartsWith("application/problem+json", response.ContentType);
@@ -111,7 +111,7 @@ public sealed class MvcPipelineTests : IAsyncLifetime
     [Fact]
     public async Task Malformed_json_is_a_validation_problem()
     {
-        HackWebResponseData response = await Send("POST", "/api/notes", "application/json", "{not json");
+        KazoWebResponseData response = await Send("POST", "/api/notes", "application/json", "{not json");
 
         Assert.Equal(400, response.StatusCode);
     }
@@ -119,7 +119,7 @@ public sealed class MvcPipelineTests : IAsyncLifetime
     [Fact]
     public async Task Non_json_body_is_415()
     {
-        HackWebResponseData response = await Send("POST", "/api/notes", "text/plain", "title=Third");
+        KazoWebResponseData response = await Send("POST", "/api/notes", "text/plain", "title=Third");
 
         Assert.Equal(415, response.StatusCode);
     }
@@ -127,7 +127,7 @@ public sealed class MvcPipelineTests : IAsyncLifetime
     [Fact]
     public async Task Patch_runs_an_async_action()
     {
-        HackWebResponseData response = await Send("PATCH", "/api/notes/1", "application/json", """{"done":true}""");
+        KazoWebResponseData response = await Send("PATCH", "/api/notes/1", "application/json", """{"done":true}""");
 
         Assert.Equal(200, response.StatusCode);
         Assert.True(Json(response).GetProperty("done").GetBoolean());
@@ -144,7 +144,7 @@ public sealed class MvcPipelineTests : IAsyncLifetime
     [Fact]
     public async Task Action_filter_short_circuits_the_action()
     {
-        HackWebResponseData response = await Send("DELETE", "/api/notes/1?deny=1");
+        KazoWebResponseData response = await Send("DELETE", "/api/notes/1?deny=1");
 
         Assert.Equal(403, response.StatusCode);
         Assert.Equal("denied", response.ReadAsString());
@@ -154,7 +154,7 @@ public sealed class MvcPipelineTests : IAsyncLifetime
     [Fact]
     public async Task Filters_run_global_then_controller_then_action()
     {
-        HackWebResponseData response = await Send("GET", "/api/notes/1");
+        KazoWebResponseData response = await Send("GET", "/api/notes/1");
 
         Assert.Equal("global>controller>action><action<controller<global", response.GetHeader("X-Trace"));
     }
@@ -162,7 +162,7 @@ public sealed class MvcPipelineTests : IAsyncLifetime
     [Fact]
     public async Task Method_not_allowed_lists_allowed_methods()
     {
-        HackWebResponseData response = await Send("PUT", "/api/notes/1");
+        KazoWebResponseData response = await Send("PUT", "/api/notes/1");
 
         Assert.Equal(405, response.StatusCode);
         Assert.Equal("DELETE, GET, HEAD, OPTIONS, PATCH", response.GetHeader("Allow"));
@@ -171,7 +171,7 @@ public sealed class MvcPipelineTests : IAsyncLifetime
     [Fact]
     public async Task Options_answers_204_with_allow()
     {
-        HackWebResponseData response = await Send("OPTIONS", "/api/notes");
+        KazoWebResponseData response = await Send("OPTIONS", "/api/notes");
 
         Assert.Equal(204, response.StatusCode);
         Assert.Contains("POST", response.GetHeader("Allow"));
@@ -180,7 +180,7 @@ public sealed class MvcPipelineTests : IAsyncLifetime
     [Fact]
     public async Task Head_runs_get_without_body()
     {
-        HackWebResponseData response = await Send("HEAD", "/api/notes");
+        KazoWebResponseData response = await Send("HEAD", "/api/notes");
 
         Assert.Equal(200, response.StatusCode);
         Assert.Empty(response.Body);
@@ -189,8 +189,8 @@ public sealed class MvcPipelineTests : IAsyncLifetime
     [Fact]
     public async Task Binds_route_query_header_enum_default_and_arrays()
     {
-        HackWebResponseData response = await Send("GET", "/api/notes/search?term=hack&page=2&priority=high&ids=1&ids=3", Header("X-Client", "curl"));
-        HackWebResponseData defaults = await Send("GET", "/api/notes/search?term=hack&page=1");
+        KazoWebResponseData response = await Send("GET", "/api/notes/search?term=hack&page=2&priority=high&ids=1&ids=3", Header("X-Client", "curl"));
+        KazoWebResponseData defaults = await Send("GET", "/api/notes/search?term=hack&page=1");
 
         Assert.Equal("term=hack page=2 client=curl priority=High ids=1,3", response.ReadAsString());
         Assert.Equal("term=hack page=1 client=- priority=Normal ids=", defaults.ReadAsString());
@@ -199,9 +199,9 @@ public sealed class MvcPipelineTests : IAsyncLifetime
     [Fact]
     public async Task Invalid_simple_values_give_validation_problems()
     {
-        HackWebResponseData outOfRange = await Send("GET", "/api/notes/search?term=hack&page=11");
-        HackWebResponseData notANumber = await Send("GET", "/api/notes/search?term=hack&page=two");
-        HackWebResponseData missingRequired = await Send("GET", "/api/notes/search?page=1");
+        KazoWebResponseData outOfRange = await Send("GET", "/api/notes/search?term=hack&page=11");
+        KazoWebResponseData notANumber = await Send("GET", "/api/notes/search?term=hack&page=two");
+        KazoWebResponseData missingRequired = await Send("GET", "/api/notes/search?page=1");
 
         Assert.Equal(400, outOfRange.StatusCode);
         Assert.True(Json(outOfRange).GetProperty("errors").TryGetProperty("page", out _));
@@ -233,8 +233,8 @@ public sealed class MvcPipelineTests : IAsyncLifetime
     [Fact]
     public async Task Exception_page_shows_the_error()
     {
-        HackWebResponseData html = await Send("GET", "/api/notes/throw", Header("Accept", "text/html"));
-        HackWebResponseData text = await Send("GET", "/boom");
+        KazoWebResponseData html = await Send("GET", "/api/notes/throw", Header("Accept", "text/html"));
+        KazoWebResponseData text = await Send("GET", "/boom");
 
         Assert.Equal(500, html.StatusCode);
         Assert.StartsWith("text/html", html.ContentType);
@@ -246,11 +246,11 @@ public sealed class MvcPipelineTests : IAsyncLifetime
     [Fact]
     public async Task Without_exception_page_a_failure_is_a_bare_500()
     {
-        await using HackWebApplication app = HackWebHost.CreateApplication(new BareSite(), HackWebGeneratedRoutes.Table);
+        await using KazoWebApplication app = KazoWebHost.CreateApplication(new BareSite(), KazoWebGeneratedRoutes.Table);
         List<Exception> logged = [];
         app.UnhandledException += (_, exception) => logged.Add(exception);
 
-        HackWebResponseData response = await app.ProcessAsync(HackWebRequestData.Create("GET", "http://bare.hack/fail"));
+        KazoWebResponseData response = await app.ProcessAsync(KazoWebRequestData.Create("GET", "http://bare.hack/fail"));
 
         Assert.Equal(500, response.StatusCode);
         Assert.Equal("500 Internal Server Error", response.ReadAsString());
@@ -264,7 +264,7 @@ public sealed class MvcPipelineTests : IAsyncLifetime
     [InlineData("/home/contact", "contact form")]
     public async Task Conventional_route_reaches_page_actions(string path, string expected)
     {
-        HackWebResponseData response = await Send("GET", path);
+        KazoWebResponseData response = await Send("GET", path);
 
         Assert.Equal(200, response.StatusCode);
         Assert.Equal(expected, response.ReadAsString());
@@ -274,7 +274,7 @@ public sealed class MvcPipelineTests : IAsyncLifetime
     [Fact]
     public async Task Conventional_route_binds_the_id_segment()
     {
-        HackWebResponseData response = await Send("GET", "/home/details/12");
+        KazoWebResponseData response = await Send("GET", "/home/details/12");
 
         Assert.Equal("<h1>Note 12</h1>", response.ReadAsString());
         Assert.StartsWith("text/html", response.ContentType);
@@ -283,20 +283,20 @@ public sealed class MvcPipelineTests : IAsyncLifetime
     [Fact]
     public async Task Form_post_binds_the_model_and_redirects()
     {
-        HackWebResponseData response = await Send(
+        KazoWebResponseData response = await Send(
             "POST", "/home/contact", "application/x-www-form-urlencoded", "Name=Neo&Age=30&Subscribe=on&Tags=a&Tags=b");
 
         Assert.Equal(302, response.StatusCode);
         string location = response.GetHeader("Location")!;
         Assert.Equal("/Home/Thanks?name=Neo&tags=2&subscribe=true", location);
-        HackWebResponseData thanks = await Send("GET", location);
+        KazoWebResponseData thanks = await Send("GET", location);
         Assert.Equal("thanks Neo (2 tags, subscribe=True)", thanks.ReadAsString());
     }
 
     [Fact]
     public async Task Invalid_form_fills_model_state()
     {
-        HackWebResponseData response = await Send("POST", "/home/contact", "application/x-www-form-urlencoded", "Age=12");
+        KazoWebResponseData response = await Send("POST", "/home/contact", "application/x-www-form-urlencoded", "Age=12");
 
         Assert.Equal(400, response.StatusCode);
         JsonElement errors = Json(response);
@@ -320,7 +320,7 @@ public sealed class MvcPipelineTests : IAsyncLifetime
     [Fact]
     public async Task File_result_sets_content_disposition()
     {
-        HackWebResponseData response = await Send("GET", "/home/download");
+        KazoWebResponseData response = await Send("GET", "/home/download");
         Assert.True(response.StatusCode == 200, response.ReadAsString());
 
         Assert.Equal("hello", response.ReadAsString());
@@ -331,7 +331,7 @@ public sealed class MvcPipelineTests : IAsyncLifetime
     [Fact]
     public async Task Local_redirect_refuses_an_external_url()
     {
-        HackWebResponseData response = await Send("GET", "/home/away");
+        KazoWebResponseData response = await Send("GET", "/home/away");
 
         Assert.Equal(500, response.StatusCode);
         Assert.Null(response.GetHeader("Location"));
@@ -340,14 +340,14 @@ public sealed class MvcPipelineTests : IAsyncLifetime
     [Fact]
     public async Task Session_survives_across_requests_with_its_cookie()
     {
-        HackWebResponseData first = await Send("GET", "/home/visits");
+        KazoWebResponseData first = await Send("GET", "/home/visits");
         string setCookie = first.GetHeader("Set-Cookie")!;
         string cookie = setCookie.Split(';')[0];
-        HackWebResponseData second = await Send("GET", "/home/visits", Header("Cookie", cookie));
-        HackWebResponseData stranger = await Send("GET", "/home/visits");
+        KazoWebResponseData second = await Send("GET", "/home/visits", Header("Cookie", cookie));
+        KazoWebResponseData stranger = await Send("GET", "/home/visits");
 
         Assert.Equal("visits=1", first.ReadAsString());
-        Assert.StartsWith(".HackSession=", setCookie);
+        Assert.StartsWith(".KazoSession=", setCookie);
         Assert.Contains("httponly", setCookie, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("samesite=lax", setCookie, StringComparison.OrdinalIgnoreCase);
         Assert.Equal("visits=2", second.ReadAsString());
@@ -363,7 +363,7 @@ public sealed class MvcPipelineTests : IAsyncLifetime
     [Fact]
     public async Task Raw_handler_reads_the_body()
     {
-        HackWebResponseData response = await Send("POST", "/echo", "text/plain", "ping");
+        KazoWebResponseData response = await Send("POST", "/echo", "text/plain", "ping");
 
         Assert.Equal("text/plain|ping", response.ReadAsString());
     }

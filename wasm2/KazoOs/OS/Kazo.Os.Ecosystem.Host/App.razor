@@ -572,7 +572,7 @@
             // French satellite assemblies are loaded once, before any app renders; the sign-in
             // screens then speak the system language (/etc/locale.conf).
             await Kazo.Os.Infrastructure.Browser.Globalization.BrowserSatelliteAssemblies.LoadAsync(
-                Kazo.Os.AppSdk.Globalization.HackLocale.SupportedLanguages.Select(static culture => culture.Name));
+                Kazo.Os.AppSdk.Globalization.KazoLocale.SupportedLanguages.Select(static culture => culture.Name));
             await SessionLocale.UseSystemLocaleAsync();
             await PlatformPreference.InitializeAsync();
             await ThemePreference.InitializeAsync();
@@ -778,7 +778,7 @@
         IsSubmitting = true;
         try
         {
-            Kazo.Os.AppSdk.Administration.HackNewUserAccount account = new(
+            Kazo.Os.AppSdk.Administration.KazoNewUserAccount account = new(
                 SetupLogin.Trim(), SetupDisplayName, AppAuthority.Administrator, SetupPassword);
             LocalUser created = KeepGuestFiles
                 ? await GuestAccounts.MigrateAsync(account)

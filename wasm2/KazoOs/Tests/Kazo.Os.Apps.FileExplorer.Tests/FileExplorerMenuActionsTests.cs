@@ -6,7 +6,7 @@ namespace Kazo.Os.Apps.FileExplorer.Tests;
 /// <summary>The names the window's file menu entries use (ADR 0185 §10-13).</summary>
 public sealed class FileExplorerMenuActionsTests
 {
-    private static HackFileViewItem Item(string name, bool folder = false) =>
+    private static KazoFileViewItem Item(string name, bool folder = false) =>
         new("/home/alice/" + name, name, folder, 0, folder ? "inode/directory" : "text/plain", DateTimeOffset.UnixEpoch);
 
     [Fact]

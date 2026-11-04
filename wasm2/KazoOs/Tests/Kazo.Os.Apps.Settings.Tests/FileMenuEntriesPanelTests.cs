@@ -9,7 +9,7 @@ public sealed class FileMenuEntriesPanelTests
     [Fact]
     public void Entries_are_listed_depth_first_in_declaration_order()
     {
-        HackFileMenuEntryInfo[] entries =
+        KazoFileMenuEntryInfo[] entries =
         [
             Entry("convert"),
             Entry("hash"),
@@ -24,6 +24,6 @@ public sealed class FileMenuEntriesPanelTests
             FileMenuEntriesPanel.Ordered(entries).Select(static entry => entry.Name));
     }
 
-    private static HackFileMenuEntryInfo Entry(string name, string? parent = null) =>
+    private static KazoFileMenuEntryInfo Entry(string name, string? parent = null) =>
         new("com.example.tools", "Tools", name, name, parent, ["file"], IsHidden: false);
 }

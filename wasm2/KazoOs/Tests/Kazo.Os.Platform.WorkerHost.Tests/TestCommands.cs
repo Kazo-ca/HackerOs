@@ -56,7 +56,7 @@ internal static class TestCommands
         Description = $"Test command {name}.",
         Kind = AppKind.Terminal,
         EntryPoint = new AppEntryPointManifest(AssemblyFile, typeof(TCommand).FullName!),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Hidden, []),
         Resources = AppResourceProfileManifest.None,
         Terminal = new TerminalCommandManifest(name, [], $"{name} [args]"),
@@ -72,7 +72,7 @@ internal static class TestCommands
         Description = "Test service.",
         Kind = AppKind.Service,
         EntryPoint = new AppEntryPointManifest(AssemblyFile, typeof(TService).FullName!),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Hidden, []),
         Resources = AppResourceProfileManifest.None,
         Execution = AppExecutionHost.Dedicated
@@ -87,7 +87,7 @@ internal static class TestCommands
         Description = "Test web app.",
         Kind = AppKind.Web,
         EntryPoint = new AppEntryPointManifest(AssemblyFile, typeof(TSite).FullName!),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Hidden, []),
         Resources = AppResourceProfileManifest.None,
         Web = new WebAppManifest([url])
@@ -134,7 +134,7 @@ internal static class TestCommands
         public override ValueTask<int> ExecuteAsync(TerminalExecutionContext context, CancellationToken cancellationToken)
         {
             string where = context.App.GetType().Name == "RemoteAppExecutionContext" ? "worker" : "main";
-            context.StandardOutput.WriteLine($"{where} pid={context.App.ProcessId.Value} cwd={HackEnvironment.CurrentDirectory} user={context.App.UserLoginName}");
+            context.StandardOutput.WriteLine($"{where} pid={context.App.ProcessId.Value} cwd={KazoEnvironment.CurrentDirectory} user={context.App.UserLoginName}");
             return ValueTask.FromResult(where == "worker" ? 0 : 1);
         }
     }
@@ -157,14 +157,14 @@ internal static class TestCommands
     }
 
     /// <summary>
-    /// <c>listen &lt;prefix&gt;...</c>: opens a <see cref="HackHttpListener"/> on the prefixes, prints the
+    /// <c>listen &lt;prefix&gt;...</c>: opens a <see cref="KazoHttpListener"/> on the prefixes, prints the
     /// outcome and closes it (ADR 0074: <c>EADDRINUSE</c>, privileged ports).
     /// </summary>
     public sealed class ListenCommand(AppManifest manifest) : TerminalAppBase(manifest)
     {
         public override async ValueTask<int> ExecuteAsync(TerminalExecutionContext context, CancellationToken cancellationToken)
         {
-            await using HackHttpListener listener = new();
+            await using KazoHttpListener listener = new();
             foreach (string prefix in context.Arguments)
             {
                 listener.Prefixes.Add(prefix);
@@ -174,9 +174,9 @@ internal static class TestCommands
             {
                 await listener.StartAsync(cancellationToken);
             }
-            catch (HackHttpListenerException exception)
+            catch (KazoHttpListenerException exception)
             {
-                await context.StandardError.WriteLineAsync($"listen: {HackNetworkErrorCodes.ToCode(exception.NetworkError)} ({exception.ErrorCode})");
+                await context.StandardError.WriteLineAsync($"listen: {KazoNetworkErrorCodes.ToCode(exception.NetworkError)} ({exception.ErrorCode})");
                 return 1;
             }
             catch (UnauthorizedAccessException exception)
@@ -197,9 +197,9 @@ internal static class TestCommands
     /// </summary>
     public sealed class EchoSite(AppManifest manifest) : WebServerAppBase(manifest)
     {
-        protected override Task ProcessRequestAsync(HackHttpListenerContext context, CancellationToken cancellationToken)
+        protected override Task ProcessRequestAsync(KazoHttpListenerContext context, CancellationToken cancellationToken)
         {
-            HackHttpListenerRequest request = context.Request;
+            KazoHttpListenerRequest request = context.Request;
             if (request.Url.AbsolutePath == "/login")
             {
                 context.Response.SetCookie("session", "agent");
@@ -213,7 +213,7 @@ internal static class TestCommands
                 return Task.CompletedTask;
             }
 
-            string where = HackExecutionContext.Current.GetType().Name == "RemoteAppExecutionContext" ? "worker" : "main";
+            string where = KazoExecutionContext.Current.GetType().Name == "RemoteAppExecutionContext" ? "worker" : "main";
             request.Cookies.TryGetValue("session", out string? session);
             context.Response.ContentType = "text/plain; charset=utf-8";
             context.Response.Write(
@@ -231,13 +231,13 @@ internal static class TestCommands
             while (!sessionCancellationToken.IsCancellationRequested)
             {
                 await context.Clock.DelayAsync(TimeSpan.FromSeconds(1), sessionCancellationToken);
-                await HackProcess.CheckpointAsync(sessionCancellationToken);
+                await KazoProcess.CheckpointAsync(sessionCancellationToken);
             }
         }
 
         protected override ValueTask OnStoppingAsync(ServiceStopReason reason, CancellationToken cancellationToken)
         {
-            HackExecutionContext.Current.Logging.Log(DiagnosticSeverity.Information, $"ticker stopping: {reason}");
+            KazoExecutionContext.Current.Logging.Log(DiagnosticSeverity.Information, $"ticker stopping: {reason}");
             return ValueTask.CompletedTask;
         }
     }

@@ -45,7 +45,7 @@ public sealed class SampleTickerServiceMemoryTests
         Assert.True(service.TickCount > 0);
         Assert.True(accountant.TryGetProcessMemory(process, [process], out ProcessMemoryUsage usage));
         // Every tick builds a status string, an event and a log entry: all charged to the service.
-        Assert.True(usage.AllocatedBytes > 0, "HackAllocBytes");
+        Assert.True(usage.AllocatedBytes > 0, "KazoAllocBytes");
         Assert.True(usage.AnonymousBytes > 0, "RssAnon");
         Assert.Equal(0, usage.KernelBytes); // a service has no window
         Assert.Equal(usage.AnonymousBytes, usage.ResidentBytes); // no image known for a sample outside the host

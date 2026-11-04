@@ -5,7 +5,7 @@
 > **Statut : essai terminé, verdict « on s'arrête »** ([ADR 0133](adr/0133-window-rendering-in-worker-verdict.md)).
 > Le code reste dans le dépôt, coupé par défaut. Aucune app ne doit en
 > dépendre ; les fenêtres tournent sur le fil principal (ADR 0070 §1) et une
-> charge lourde passe par `HackBackground` ([`background-jobs.md`](../framework/background-jobs.md)).
+> charge lourde passe par `KazoBackground` ([`background-jobs.md`](../framework/background-jobs.md)).
 
 ## Rôle
 

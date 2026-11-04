@@ -98,14 +98,14 @@ Paquet `Kazo.Os.Theming.Abstractions` :
   (vérifie un PNG sans le décoder), `ToDataUrl`, limites `MaxImageBytes` et
   `MaxImageSize`.
 - `CursorThemeLibrary.LoadAsync` : lit les dossiers de `/etc` et `~` avec vos
-  propres fonctions de lecture (`HackDirectory`/`HackFile` dans une app).
+  propres fonctions de lecture (`KazoDirectory`/`KazoFile` dans une app).
 - `CursorThemeCatalog` : les thèmes intégrés ; `CursorTheme.Resolve` et
   `ResolveAll` appliquent les replis.
 
 Paquet `Kazo.Os.Theming.Blazor` : `CursorThemeSurface`, composant sans rendu
 qu'un hôte place une fois dans sa racine (`Theme="…"`).
 
-Réglage : document `cursors` (`HackSettings.OpenSystemAsync(context, "cursors")`),
+Réglage : document `cursors` (`KazoSettings.OpenSystemAsync(context, "cursors")`),
 clé `theme`.
 
 ## Thèmes intégrés

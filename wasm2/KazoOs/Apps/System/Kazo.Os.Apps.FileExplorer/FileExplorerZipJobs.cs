@@ -5,7 +5,7 @@ using Kazo.Os.AppSdk.Threading;
 using Kazo.Os.Apps.FileExplorer;
 
 // ADR 0128 section 2: the archive tasks' inputs and results cross as JSON, through this context.
-[assembly: HackWireContext(typeof(FileExplorerJobsJsonContext))]
+[assembly: KazoWireContext(typeof(FileExplorerJobsJsonContext))]
 
 namespace Kazo.Os.Apps.FileExplorer;
 
@@ -34,12 +34,12 @@ internal sealed partial class FileExplorerJobsJsonContext : JsonSerializerContex
 internal static class FileExplorerZipJobs
 {
     /// <summary>Compresses the selection into a new archive.</summary>
-    public static Task<ZipFailure?> Compress(ZipCompressJobInput input, HackBackgroundContext context) =>
+    public static Task<ZipFailure?> Compress(ZipCompressJobInput input, KazoBackgroundContext context) =>
         FileExplorerZipService.CompressCoreAsync(
-            HackExecutionContext.Current.FileSystem, input.Sources, VirtualPath.Parse(input.Destination), context.CancellationToken);
+            KazoExecutionContext.Current.FileSystem, input.Sources, VirtualPath.Parse(input.Destination), context.CancellationToken);
 
     /// <summary>Extracts an archive into a new folder.</summary>
-    public static Task<ZipFailure?> Extract(ZipExtractJobInput input, HackBackgroundContext context) =>
+    public static Task<ZipFailure?> Extract(ZipExtractJobInput input, KazoBackgroundContext context) =>
         FileExplorerZipService.ExtractCoreAsync(
-            HackExecutionContext.Current.FileSystem, VirtualPath.Parse(input.ZipPath), VirtualPath.Parse(input.DestinationDirectory), context.CancellationToken);
+            KazoExecutionContext.Current.FileSystem, VirtualPath.Parse(input.ZipPath), VirtualPath.Parse(input.DestinationDirectory), context.CancellationToken);
 }

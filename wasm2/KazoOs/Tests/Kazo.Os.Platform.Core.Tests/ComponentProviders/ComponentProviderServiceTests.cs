@@ -219,7 +219,7 @@ public sealed class ComponentProviderServiceTests
         Description = "Component provider fixture.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Apps.Sample", "Kazo.Os.Apps.Sample.SampleApp"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         Components = [.. contracts.Select(contract => new AppComponentManifest(contract, "Kazo.Os.Apps.Sample", "Kazo.Os.Apps.Sample.Embed"))]

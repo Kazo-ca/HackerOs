@@ -1,5 +1,5 @@
 @namespace Kazo.Os.Apps.SystemMonitor.Tabs
-@inherits HackComponentBase
+@inherits KazoComponentBase
 
 <div class="svc">
     <div class="svc-toolbar">
@@ -28,11 +28,11 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (HackServiceController service in _services)
+                @foreach (KazoServiceController service in _services)
                 {
-                    HackServiceController current = service;
-                    HackServiceActiveState state = LiveState(current);
-                    <tr class="@(state == HackServiceActiveState.Failed ? "svc-row-failed" : null)">
+                    KazoServiceController current = service;
+                    KazoServiceActiveState state = LiveState(current);
+                    <tr class="@(state == KazoServiceActiveState.Failed ? "svc-row-failed" : null)">
                         <td>
                             <span class="svc-name">@current.DisplayName</span>
                             <span class="svc-id">@current.ServiceName</span>
@@ -42,7 +42,7 @@
                             <span class="svc-status svc-@state" title="@StateTitle(current, state)">@StateText(current, state)</span>
                         </td>
                         <td>
-                            @if (state is HackServiceActiveState.Active or HackServiceActiveState.Activating or HackServiceActiveState.Deactivating || current.StatusText is not null)
+                            @if (state is KazoServiceActiveState.Active or KazoServiceActiveState.Activating or KazoServiceActiveState.Deactivating || current.StatusText is not null)
                             {
                                 <span class="svc-health svc-health-@current.Health">@HealthText(current.Health)</span>
                                 @if (current.StatusText is { Length: > 0 } text)
@@ -72,13 +72,13 @@
                             }
                         </td>
                         <td class="svc-actions">
-                            @if (state is HackServiceActiveState.Active or HackServiceActiveState.Activating)
+                            @if (state is KazoServiceActiveState.Active or KazoServiceActiveState.Activating)
                             {
                                 <button class="sysmon-btn btn-danger" disabled="@_busy" @onclick='() => RunAsync(current, current.StopAsync, "Services.Error.Stop")'>@L["Services.Stop"]</button>
                             }
                             else
                             {
-                                @if (state == HackServiceActiveState.Failed)
+                                @if (state == KazoServiceActiveState.Failed)
                                 {
                                     <button class="sysmon-btn sysmon-btn-ghost" disabled="@_busy" title="@L["Services.Reset.Title"]"
                                             @onclick='() => RunAsync(current, current.ResetFailedAsync, "Services.Error.Reset")'>@L["Services.Reset"]</button>

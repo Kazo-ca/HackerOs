@@ -30,7 +30,7 @@
 
   <!-- ADR 0173: the published pages show build/Versions.props; the test reads the same number. -->
   <ItemGroup>
-    <AssemblyMetadata Include="HackerOsVersion" Value="$(HackerOsVersion)" />
+    <AssemblyMetadata Include="KazoOsVersion" Value="$(KazoOsVersion)" />
   </ItemGroup>
 
   <ItemGroup>

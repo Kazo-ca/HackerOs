@@ -91,9 +91,9 @@ Décisions prises avec Benoit pendant la discussion du 2026-10-10.
 |---|---|---|
 | D1 | Objectif | Simplicité pour le développeur et qualité pour l'utilisateur, à égalité. |
 | D2 | Moteur de fichiers | On le garde et on ajoute une façade simple dans le SDK. |
-| D3 | API fichier | API de type `System.IO`, avec le préfixe `Hack` sur chaque type : `HackFile`, `HackDirectory`, `HackPath`, `HackFileInfo`, `HackDirectoryInfo`, `HackFileStream`… |
+| D3 | API fichier | API de type `System.IO`, avec le préfixe `Hack` sur chaque type : `KazoFile`, `KazoDirectory`, `KazoPath`, `KazoFileInfo`, `KazoDirectoryInfo`, `KazoFileStream`… |
 | D4 | Forme de l'API | Statique, comme `System.IO`. L'app appelante est identifiée par un contexte d'exécution ambiant, invisible pour le développeur. Méthodes asynchrones seulement (IndexedDB est asynchrone et le navigateur n'a qu'un thread). |
-| D5 | Erreurs fichier | Des exceptions, comme `System.IO` : `HackFileNotFoundException`, `HackDirectoryNotFoundException`, `HackUnauthorizedAccessException`, `HackIOException`… |
+| D5 | Erreurs fichier | Des exceptions, comme `System.IO` : `KazoFileNotFoundException`, `KazoDirectoryNotFoundException`, `KazoUnauthorizedAccessException`, `KazoIOException`… |
 | D6 | Manifeste | Une classe C# marquée `[AppManifest]`, séparée de la fenêtre, qui hérite d'une base abstraite. Propriétés essentielles `abstract` (obligatoires), les autres `virtual` avec une valeur par défaut. |
 | D7 | Découverte | À la compilation. Un générateur produit le `manifest.json` dans le dossier de l'app. L'hôte agrège les apps référencées dans `BuiltInApplications.json`, que l'OS lit au démarrage. Le JSON n'est jamais écrit à la main. Il servira aussi au futur magasin d'apps. |
 | D8 | Installation | Une `ProjectReference` dans l'hôte suffit. Aucune autre ligne à ajouter. |
@@ -129,12 +129,12 @@ dépendance à Blazor, utilisable par les apps fenêtre, terminal et service.
 
 | Type | Équivalent .NET | Exemples de membres |
 |---|---|---|
-| `HackFile` | `File` | `ReadAllTextAsync`, `WriteAllTextAsync`, `AppendAllTextAsync`, `ReadAllBytesAsync`, `WriteAllBytesAsync`, `ReadAllLinesAsync`, `ExistsAsync`, `CopyAsync`, `MoveAsync`, `DeleteAsync`, `OpenReadAsync`, `OpenWriteAsync` |
-| `HackDirectory` | `Directory` | `CreateDirectoryAsync`, `ExistsAsync`, `GetFilesAsync`, `GetDirectoriesAsync`, `EnumerateFileSystemEntriesAsync`, `MoveAsync`, `DeleteAsync(recursive)` |
-| `HackPath` | `Path` | `Combine`, `GetFileName`, `GetExtension`, `GetDirectoryName`, `GetFullPath` (avec `~` et répertoire courant) |
-| `HackFileInfo` / `HackDirectoryInfo` | `FileInfo` / `DirectoryInfo` | `Length`, `LastWriteTimeUtc`, `Exists`, `Permissions`, `Owner`, `RefreshAsync` |
-| `HackFileStream` | `FileStream` | Flux lecture/écriture qui publie le contenu au `DisposeAsync` |
-| `HackFileSystemWatcher` | `FileSystemWatcher` | Événements créé, modifié, supprimé, renommé (au-dessus de la surveillance existante) |
+| `KazoFile` | `File` | `ReadAllTextAsync`, `WriteAllTextAsync`, `AppendAllTextAsync`, `ReadAllBytesAsync`, `WriteAllBytesAsync`, `ReadAllLinesAsync`, `ExistsAsync`, `CopyAsync`, `MoveAsync`, `DeleteAsync`, `OpenReadAsync`, `OpenWriteAsync` |
+| `KazoDirectory` | `Directory` | `CreateDirectoryAsync`, `ExistsAsync`, `GetFilesAsync`, `GetDirectoriesAsync`, `EnumerateFileSystemEntriesAsync`, `MoveAsync`, `DeleteAsync(recursive)` |
+| `KazoPath` | `Path` | `Combine`, `GetFileName`, `GetExtension`, `GetDirectoryName`, `GetFullPath` (avec `~` et répertoire courant) |
+| `KazoFileInfo` / `KazoDirectoryInfo` | `FileInfo` / `DirectoryInfo` | `Length`, `LastWriteTimeUtc`, `Exists`, `Permissions`, `Owner`, `RefreshAsync` |
+| `KazoFileStream` | `FileStream` | Flux lecture/écriture qui publie le contenu au `DisposeAsync` |
+| `KazoFileSystemWatcher` | `FileSystemWatcher` | Événements créé, modifié, supprimé, renommé (au-dessus de la surveillance existante) |
 
 **Fonctionnement interne :**
 - Chaque appel passe par la passerelle existante `IAppFileSystemGateway`,
@@ -175,7 +175,7 @@ Mise en œuvre : [`settings-files.md`](../../framework/settings-files.md).
   les clés invalides, garde ses valeurs par défaut et écrit un avertissement
   dans `/var/log/apps/<app>.log`.
 - **API typée :** l'app lit et écrit des valeurs typées par une petite API du
-  SDK (nom proposé : `HackSettings`) qui fait la fusion des couches et
+  SDK (nom proposé : `KazoSettings`) qui fait la fusion des couches et
   surveille les fichiers pour signaler les changements. L'app de Paramètres et
   `nano /etc/...` voient et modifient les mêmes fichiers.
 
@@ -305,7 +305,7 @@ public sealed class TextEditorApp : AppDefinition
 - Chaque processus a un répertoire courant et un dictionnaire d'environnement,
   copiés depuis le parent à la création.
 - Visible dans `/proc/<pid>/environ` et `/proc/<pid>/cwd`.
-- Accessible dans le SDK (nom proposé : `HackEnvironment`, calqué sur
+- Accessible dans le SDK (nom proposé : `KazoEnvironment`, calqué sur
   `System.Environment`).
 
 ### 7.3 Commandes
@@ -327,7 +327,7 @@ public sealed class TextEditorApp : AppDefinition
   pour l'origine et la date de suppression.
 - L'explorateur et `rm` envoient à la corbeille. L'explorateur propose
   restaurer, supprimer définitivement et vider la corbeille.
-- API SDK pour les apps (nom proposé : `HackTrash`).
+- API SDK pour les apps (nom proposé : `KazoTrash`).
 
 ## 8. Phase 4 — SDK complet et apps de base
 
@@ -401,10 +401,10 @@ pas modifié.
 | [0052](../adr/0052-trash.md) Corbeille | — | D15, section 7.4 |
 | [0055](../adr/0055-base-apps-on-public-sdk-only.md) Apps de base sur le SDK public uniquement | complète 0019 | D21, section 8.1 : références et injections permises, vérification au build, agent d'authentification |
 | [0056](../adr/0056-sdk-apis-for-system-apps.md) API du SDK qui remplacent les services internes | complète 0044, 0048, 0049 | section 8.1 : une API et une capacité par besoin des apps système |
-| [0057](../adr/0057-proc-metrics-for-task-manager.md) Mesures système dans `/proc` et `HackDriveInfo` | complète 0046 | section 8.2, gestionnaire de tâches |
+| [0057](../adr/0057-proc-metrics-for-task-manager.md) Mesures système dans `/proc` et `KazoDriveInfo` | complète 0046 | section 8.2, gestionnaire de tâches |
 | [0058](../adr/0058-base-app-features.md) Fonctionnalités des apps de base | — | D22, section 8.2, chantiers `rebuild/4-*` |
 | [0059](../adr/0059-sdk-boundary-diagnostic-codes.md) Codes des diagnostics de la frontière du SDK | 0055 (numéros des codes) | `HOSAPP0030` et `HOSAPP0031`, les numéros de l'ADR 0055 étant déjà pris |
-| [0060](../adr/0060-system-administration-sdk-adjustments.md) Ajustements de l'API d'administration du système | 0056 (sections 8, 9 et 11, en partie) | section 8.1 : `SystemPower`, `HackPermissionDecision`, écriture des documents de l'OS, presse-papiers de l'hôte pour Diagnostic |
+| [0060](../adr/0060-system-administration-sdk-adjustments.md) Ajustements de l'API d'administration du système | 0056 (sections 8, 9 et 11, en partie) | section 8.1 : `SystemPower`, `KazoPermissionDecision`, écriture des documents de l'OS, presse-papiers de l'hôte pour Diagnostic |
 
 ## 11. Points de détail à fixer dans les ADR
 
@@ -432,7 +432,7 @@ l'ADR correspondant, avec la valeur proposée ci-dessous par défaut.
   - [x] Phase 4 : ADR 0055 à 0058 (2026-10-10), avec leurs chantiers `rebuild/4-*` (tableau dans l'ADR 0058).
 
 ### Phase 1 — Fichiers
-- [x] Créer les types `HackFile`, `HackDirectory`, `HackPath`, `HackFileInfo`, `HackDirectoryInfo`, `HackFileStream`, `HackFileSystemWatcher`.
+- [x] Créer les types `KazoFile`, `KazoDirectory`, `KazoPath`, `KazoFileInfo`, `KazoDirectoryInfo`, `KazoFileStream`, `KazoFileSystemWatcher`.
 - [x] Créer les exceptions `Hack*` et la traduction depuis `FileSystemErrorCode`.
 - [x] Mettre en place le contexte d'exécution ambiant positionné par l'OS. Voir [`hack-file-api.md`](../../framework/hack-file-api.md).
 - [x] Remplacer le magasin de paramètres séparé par des fichiers, avec migration des valeurs existantes ([`settings-files.md`](../../framework/settings-files.md)).
@@ -460,18 +460,18 @@ l'ADR correspondant, avec la valeur proposée ci-dessous par défaut.
 - [x] Fusionner les 28 projets de commandes et rendre `cd`, `pwd`, `clear`, `help` normales.
   - [x] Fusion des 28 projets dans `Kazo.Os.Commands`, une seule `ProjectReference` dans l'hôte (`rebuild/3-commands-merge`, ADR 0051 §1, [`app-model.md`](../../framework/app-model.md#commandes-intégrées--un-seul-projet-adr-0051)).
   - [x] `cd`, `pwd`, `clear`, `help`, `sudo`, `export`, `unset`, `env` du catalogue, `IShellSession` et `shell.control`, plus aucun nom codé en dur dans le terminal (`rebuild/3-shell-commands`, ADR 0051 §2-5, [`shell-commands.md`](../shell-commands.md)).
-- [x] Implémenter la corbeille et l'API `HackTrash` (`rebuild/3-trash`, ADR 0052, [`trash.md`](../trash.md)).
+- [x] Implémenter la corbeille et l'API `KazoTrash` (`rebuild/3-trash`, ADR 0052, [`trash.md`](../trash.md)).
 
 ### Phase 4 — SDK complet et apps de base
 - [x] Inventorier les services internes injectés par les apps système et ajouter leurs équivalents au SDK.
-  - [x] `HackUser`, `HackEnvironment.GetFolderPath`, `HackApps`, `HackAppManagement` et l'agent d'authentification de l'OS ; FileExplorer, TextEditor et CodeEditor sortent de la liste d'exemptions (`rebuild/4-sdk-user-and-apps`, ADR 0055 §5 et 0056 §1-3, [`app-sdk.md`](../../framework/app-sdk.md), [`admin-authentication-agent.md`](../admin-authentication-agent.md)).
-  - [x] `HackSettings.OpenSystemAsync`, `HackPermissionAdministration`, `HackServerConnection`, `HackSystem`, `HackStorageDiagnostics` ; Paramètres et Diagnostic sortent de la liste d'exemptions, qui est vide (`rebuild/4-sdk-system-admin`, ADR 0056 §8-11 et 0060, [`system-administration.md`](../../framework/system-administration.md)).
+  - [x] `KazoUser`, `KazoEnvironment.GetFolderPath`, `KazoApps`, `KazoAppManagement` et l'agent d'authentification de l'OS ; FileExplorer, TextEditor et CodeEditor sortent de la liste d'exemptions (`rebuild/4-sdk-user-and-apps`, ADR 0055 §5 et 0056 §1-3, [`app-sdk.md`](../../framework/app-sdk.md), [`admin-authentication-agent.md`](../admin-authentication-agent.md)).
+  - [x] `KazoSettings.OpenSystemAsync`, `KazoPermissionAdministration`, `KazoServerConnection`, `KazoSystem`, `KazoStorageDiagnostics` ; Paramètres et Diagnostic sortent de la liste d'exemptions, qui est vide (`rebuild/4-sdk-system-admin`, ADR 0056 §8-11 et 0060, [`system-administration.md`](../../framework/system-administration.md)).
 - [x] Ajouter le test d'architecture qui interdit les références internes depuis `Apps/`.
   - [x] Vérification au build des références et des injections, test `IJSRuntime`, liste d'exemptions temporaire (`rebuild/4-sdk-boundary`, ADR 0055 et 0059, [`app-sdk.md`](../../framework/app-sdk.md)).
-  - [x] Hôte de shell : `HackShell`, capacité `shell.host`, `TerminalPanel` sans `Platform.Core`, CodeEditor système (`rebuild/4-sdk-shell-host`, ADR 0056 §7, [`shell-host.md`](../../framework/shell-host.md)).
+  - [x] Hôte de shell : `KazoShell`, capacité `shell.host`, `TerminalPanel` sans `Platform.Core`, CodeEditor système (`rebuild/4-sdk-shell-host`, ADR 0056 §7, [`shell-host.md`](../../framework/shell-host.md)).
   - [x] Mécanisme d'exemption supprimé : toute violation de la frontière est une erreur, aucun projet ne peut s'y soustraire, toute la solution compile sans diagnostic de frontière (`rebuild/4-sdk-boundary-final`, ADR 0055 §6, [`app-sdk.md`](../../framework/app-sdk.md#fin-des-exemptions-temporaires-adr-0055-6)).
 - [x] Explorateur : couper, copier, coller, corbeille, glisser-déposer (`rebuild/4-file-explorer`, ADR 0056 §12 et 0058 §1, [`file-explorer.md`](../file-explorer.md)).
-  - [x] Presse-papiers de l'OS partagé avec l'hôte (texte, fichiers collés, réglage `clipboard.config`), Diagnostic sur `HackClipboard` (`rebuild/4-file-explorer`, ADR 0065, [`clipboard.md`](../clipboard.md)).
+  - [x] Presse-papiers de l'OS partagé avec l'hôte (texte, fichiers collés, réglage `clipboard.config`), Diagnostic sur `KazoClipboard` (`rebuild/4-file-explorer`, ADR 0065, [`clipboard.md`](../clipboard.md)).
 - [x] Gestionnaire de tâches : performance, disque, réseau, détail, filtre, sélection multiple, via `/proc` (`rebuild/4-proc-metrics` et `rebuild/4-task-manager`, ADR 0057 et 0058 §2, [`system-metrics.md`](../system-metrics.md), [`task-manager.md`](../task-manager.md)).
 - [x] Éditeur : remplacer et tout remplacer (`rebuild/4-text-editor`, ADR 0058 §3, [`text-editor.md`](../text-editor.md)).
 - [x] Console : complétion par Tab et onglets (`rebuild/4-terminal`, ADR 0058 §4, [`terminal-console.md`](../terminal-console.md)).

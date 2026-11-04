@@ -32,7 +32,7 @@ public sealed class IndexedDbFileSystemMaintenanceTests
         Assert.All(operations, operation =>
         {
             Assert.Equal("deleteAllByIndexIfUnreferenced", operation.Kind);
-            Assert.Equal(HackerOsIndexedDbSchema.FileSystemEntryStoreName, operation.ReferenceObjectStoreName);
+            Assert.Equal(KazoOsIndexedDbSchema.FileSystemEntryStoreName, operation.ReferenceObjectStoreName);
             Assert.Equal("contentHash", operation.ReferenceIndexName);
         });
     }

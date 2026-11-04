@@ -5,9 +5,9 @@ using Kazo.Os.AppSdk.IO;
 namespace Kazo.Os.Apps.SystemMonitor.Metrics;
 
 /// <summary>What one refresh of the task manager read: the processes and the system files.</summary>
-/// <param name="Processes">Every visible process (<see cref="HackProcess.GetProcessesAsync"/>).</param>
+/// <param name="Processes">Every visible process (<see cref="KazoProcess.GetProcessesAsync"/>).</param>
 /// <param name="Metrics">The system files, for <see cref="SystemMetrics.Apply"/>.</param>
-public sealed record ProcRefresh(IReadOnlyList<HackProcess> Processes, MetricsReading Metrics);
+public sealed record ProcRefresh(IReadOnlyList<KazoProcess> Processes, MetricsReading Metrics);
 
 /// <summary>
 /// Reads <c>/proc</c> through the app's own SDK, exactly what <c>ps</c>, <c>top</c> or any
@@ -20,12 +20,12 @@ public static class ProcReader
     /// <param name="cancellationToken">Cancels the reads.</param>
     public static async Task<ProcRefresh> ReadAsync(CancellationToken cancellationToken = default)
     {
-        HackProcess[] processes;
+        KazoProcess[] processes;
         try
         {
-            processes = await HackProcess.GetProcessesAsync(cancellationToken);
+            processes = await KazoProcess.GetProcessesAsync(cancellationToken);
         }
-        catch (Exception exception) when (exception is HackIOException or HackUnauthorizedAccessException)
+        catch (Exception exception) when (exception is KazoIOException or KazoUnauthorizedAccessException)
         {
             processes = [];
         }
@@ -40,7 +40,7 @@ public static class ProcReader
         string? workers = await TryReadAsync("/proc/hackeros/workers", cancellationToken);
 
         Dictionary<long, ProcessIoSample> io = [];
-        foreach (HackProcess process in processes)
+        foreach (KazoProcess process in processes)
         {
             if (process.IoCounters is { } counters)
             {
@@ -68,11 +68,11 @@ public static class ProcReader
 
     /// <summary>Reads the drives (<c>statfs</c>); none when the gateway is unavailable.</summary>
     /// <param name="cancellationToken">Cancels the read.</param>
-    public static async Task<IReadOnlyList<HackDriveInfo>> ReadDrivesAsync(CancellationToken cancellationToken = default)
+    public static async Task<IReadOnlyList<KazoDriveInfo>> ReadDrivesAsync(CancellationToken cancellationToken = default)
     {
         try
         {
-            return await HackDriveInfo.GetDrivesAsync(cancellationToken);
+            return await KazoDriveInfo.GetDrivesAsync(cancellationToken);
         }
         catch (NotSupportedException)
         {
@@ -85,9 +85,9 @@ public static class ProcReader
     {
         try
         {
-            return await HackFile.ReadAllTextAsync(path, cancellationToken);
+            return await KazoFile.ReadAllTextAsync(path, cancellationToken);
         }
-        catch (Exception exception) when (exception is HackIOException or HackUnauthorizedAccessException)
+        catch (Exception exception) when (exception is KazoIOException or KazoUnauthorizedAccessException)
         {
             return null;
         }

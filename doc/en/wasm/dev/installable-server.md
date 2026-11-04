@@ -144,7 +144,7 @@ A code:
 The API: `POST /api/auth/pair` with `PairDeviceRequest(Code, DeviceName,
 DeviceFingerprint)` answers the same `LoginResponse` as a password login, or
 `401 INVALID_PAIRING_CODE`, or `429`. In the SDK:
-`HackServerConnection.PairAsync` and `HackServerConnection.TestAsync`
+`KazoServerConnection.PairAsync` and `KazoServerConnection.TestAsync`
 (capability `server.connection.manage`, [`sdk-reference.md`](../framework/sdk-reference.md)).
 
 ## HTTPS on the local network
@@ -276,7 +276,7 @@ Windows service, the server uses the program folder as its content root
 - [x] Install and uninstall scripts (Windows, Linux, macOS), `README.txt`.
 - [x] `Dockerfile` and `build/publish-server.sh`.
 - [x] `server` and `server-image` jobs in `release.yml`.
-- [x] SDK: `HackServerConnection.PairAsync` and `TestAsync`.
+- [x] SDK: `KazoServerConnection.PairAsync` and `TestAsync`.
 - [x] Settings > Local server.
 - [x] `index.html` served by the published server (see [`pitfalls.md`](pitfalls.md)).
 - [ ] Real run on Windows, macOS and Docker.

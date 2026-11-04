@@ -2,7 +2,7 @@
 
 # Detached windows
 
-The surface contract for apps (`IDisplaySurfaceService`, `DisplaySurfaceContent`, events, `HackBrowser.OpenDetachedAsync`) is in [`display-surface-api.md`](../framework/display-surface-api.md).
+The surface contract for apps (`IDisplaySurfaceService`, `DisplaySurfaceContent`, events, `KazoBrowser.OpenDetachedAsync`) is in [`display-surface-api.md`](../framework/display-surface-api.md).
 
 **Web phase, work item `web/10-detached-window`** ([`asp-hack-plan.md`](plans/asp-hack-plan.md),
 section 5). Decision: [ADR 0078](adr/0078-detached-display-windows.md),
@@ -113,7 +113,7 @@ What makes Blazor work in another document (ADR 0081 §2):
 - `Tests/Kazo.Os.Platform.Blazor.Tests/Display/DisplaySurfaceServiceTests.cs`:
   opening, blocked window and notification, host without JavaScript, events
   and closing by the user, closing by the OS, title, mounting and focus.
-- `Tests/Kazo.Os.AppSdk.Tests/Apps/HackBrowserTests.cs`: launch arguments,
+- `Tests/Kazo.Os.AppSdk.Tests/Apps/KazoBrowserTests.cs`: launch arguments,
   empty address, missing browser.
 - `Tests/Kazo.Os.UI.E2E.Tests/BrowserDetachedWindowTests.cs` (real Chromium,
   `test/test` host): detach a page, check its script, its `fetch`, the style
@@ -131,7 +131,7 @@ What makes Blazor work in another document (ADR 0081 §2):
 - [x] Relay of isolated page bridge messages.
 - [x] Browser: `⧉`, placeholder, detached window bar, reattach,
   page rewrite, tracked title, `--detached`.
-- [x] `HackBrowser.OpenAsync` and `OpenDetachedAsync`.
+- [x] `KazoBrowser.OpenAsync` and `OpenDetachedAsync`.
 - [x] Notification and banner when the window is blocked.
 - [x] Unit and E2E tests.
 - [x] ADR 0081, this document, index, plan, SDK references.

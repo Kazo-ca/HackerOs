@@ -28,7 +28,7 @@ public sealed class SensitiveSettingsTests
     public async Task Private_keys_are_written_to_a_0600_private_file_and_public_keys_stay_public()
     {
         (SettingsFilesHarness harness, TestAppContext app) = await CreateAsync();
-        await using HackSettingsDocument document = await HackSettings.OpenAsync(app);
+        await using KazoSettingsDocument document = await KazoSettings.OpenAsync(app);
 
         await document.SetAsync("server", "imap.example.org");
         await document.SetAsync("signature", "Alice, sent from Kazo OS");
@@ -47,14 +47,14 @@ public sealed class SensitiveSettingsTests
         (SettingsFilesHarness harness, TestAppContext app) = await CreateAsync();
         await WritePrivateAsRootAsync(harness, SystemPrivateFile, "signature=Corporate footer\nlicense-key=ABCD-1234\n");
 
-        await using HackSettingsDocument document = await HackSettings.OpenAsync(app);
+        await using KazoSettingsDocument document = await KazoSettings.OpenAsync(app);
 
-        HackSettingValue signature = document.GetValue("signature");
+        KazoSettingValue signature = document.GetValue("signature");
         Assert.True(signature.IsMasked);
         Assert.Null(signature.Value);
-        Assert.Equal(HackSettingValue.MaskText, signature.DisplayText);
+        Assert.Equal(KazoSettingValue.MaskText, signature.DisplayText);
         Assert.Equal(SettingLayer.System, signature.Source);
-        HackSettingMaskedException masked = Assert.Throws<HackSettingMaskedException>(() => document.Get<string>("signature"));
+        KazoSettingMaskedException masked = Assert.Throws<KazoSettingMaskedException>(() => document.Get<string>("signature"));
         Assert.Equal(SystemPrivateFile, masked.PrivatePath);
         Assert.True(document.IsMasked("license-key"));
         // Public keys are unaffected, and the file itself is refused like /etc/shadow.
@@ -68,7 +68,7 @@ public sealed class SensitiveSettingsTests
     {
         (SettingsFilesHarness harness, TestAppContext app) = await CreateAsync();
         await WritePrivateAsRootAsync(harness, SystemPrivateFile, "signature=Corporate footer\n");
-        await using HackSettingsDocument document = await HackSettings.OpenAsync(app);
+        await using KazoSettingsDocument document = await KazoSettings.OpenAsync(app);
 
         await document.SetAsync("signature", "Mine");
 
@@ -82,7 +82,7 @@ public sealed class SensitiveSettingsTests
     {
         (SettingsFilesHarness harness, TestAppContext app) = await CreateAsync();
         await harness.WriteAsUserAsync(UserFile, "server=mail.local\nsignature=Leaked\n");
-        await using HackSettingsDocument document = await HackSettings.OpenAsync(app);
+        await using KazoSettingsDocument document = await KazoSettings.OpenAsync(app);
 
         Assert.Equal(string.Empty, document.Get<string>("signature"));
         Assert.Contains(
@@ -100,7 +100,7 @@ public sealed class SensitiveSettingsTests
     public async Task A_restricted_key_is_never_written_to_the_user_layer()
     {
         (_, TestAppContext app) = await CreateAsync();
-        await using HackSettingsDocument document = await HackSettings.OpenAsync(app);
+        await using KazoSettingsDocument document = await KazoSettings.OpenAsync(app);
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => document.SetAsync("license-key", "X").AsTask());
     }
@@ -109,7 +109,7 @@ public sealed class SensitiveSettingsTests
     public async Task A_secret_reference_stores_the_secret_in_the_keyring_and_only_its_id_in_the_file()
     {
         (SettingsFilesHarness harness, TestAppContext app) = await CreateAsync();
-        await using HackSettingsDocument document = await HackSettings.OpenAsync(app);
+        await using KazoSettingsDocument document = await KazoSettings.OpenAsync(app);
 
         await document.SetSecretAsync("password", "correct horse battery staple");
 
@@ -118,7 +118,7 @@ public sealed class SensitiveSettingsTests
         Assert.DoesNotContain("horse", privateText, StringComparison.Ordinal);
         Assert.Equal("correct horse battery staple", app.FakeKeyring.Secrets["settings:settings:password"]);
         Assert.Equal("correct horse battery staple", await document.GetSecretAsync("password"));
-        Assert.Equal(HackSettingValue.MaskText, document.GetValue("password").DisplayText);
+        Assert.Equal(KazoSettingValue.MaskText, document.GetValue("password").DisplayText);
 
         await document.SetSecretAsync("password", null);
 
@@ -236,7 +236,7 @@ public sealed class SensitiveSettingsTests
         public ValueTask<bool> DeleteAsync(string id, CancellationToken cancellationToken = default) =>
             ValueTask.FromResult(Secrets.Remove(id));
 
-        public ValueTask<IReadOnlyList<HackKeyringEntry>> ListAsync(bool allApps, CancellationToken cancellationToken = default) =>
+        public ValueTask<IReadOnlyList<KazoKeyringEntry>> ListAsync(bool allApps, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
     }
 

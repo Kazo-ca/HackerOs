@@ -55,8 +55,8 @@ public sealed partial class WindowManagerOverlays : ComponentBase
         Commands.Changed += OnCommandsChanged;
         Commands.ToggleFullScreen ??= ToggleFullScreenAsync;
         _menuScope = ContextMenus.CreateScope(null);
-        _registrations.Add(_menuScope.Register(new HackMenuRegistration(WindowMenuName, () => BuildMenu(WindowMenuKind.Window), default)));
-        _registrations.Add(_menuScope.Register(new HackMenuRegistration(MaximizeMenuName, () => BuildMenu(WindowMenuKind.MaximizeButton), default)));
+        _registrations.Add(_menuScope.Register(new KazoMenuRegistration(WindowMenuName, () => BuildMenu(WindowMenuKind.Window), default)));
+        _registrations.Add(_menuScope.Register(new KazoMenuRegistration(MaximizeMenuName, () => BuildMenu(WindowMenuKind.MaximizeButton), default)));
         ContextMenus.Changed += OnContextMenuChanged;
     }
 
@@ -231,9 +231,9 @@ public sealed partial class WindowManagerOverlays : ComponentBase
     }
 
     /// <summary>Builds the open window menu (ADR 0179 §3-5): its commands, then « Autre écran ▸ ».</summary>
-    private HackMenuDefinition BuildMenu(WindowMenuKind kind)
+    private KazoMenuDefinition BuildMenu(WindowMenuKind kind)
     {
-        HackMenuDefinition definition = new(kind == WindowMenuKind.MaximizeButton ? MaximizeMenuName : WindowMenuName)
+        KazoMenuDefinition definition = new(kind == WindowMenuKind.MaximizeButton ? MaximizeMenuName : WindowMenuName)
         {
             Label = L["WindowMenu.Label"],
         };

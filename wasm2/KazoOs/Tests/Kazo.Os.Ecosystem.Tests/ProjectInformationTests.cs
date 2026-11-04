@@ -37,7 +37,7 @@ public sealed class ProjectInformationTests
         });
         Assert.Equal(visible, html.Contains("https://hackos.kazo.ca/legacy/", StringComparison.Ordinal));
         Assert.Contains("https://github.com/Kazo-ca/Os", html);
-        Assert.Contains($"Kazo OS {HackerOsSdk.Version}", html);
+        Assert.Contains($"Kazo OS {KazoOsSdk.Version}", html);
     }
 
     [Theory]
@@ -77,7 +77,7 @@ public sealed class ProjectInformationTests
     private sealed record TestCulture(CultureInfo Value);
 
     private sealed class TestCultureLocalizer<TResource>(TestCulture culture)
-        : HackStringLocalizer(HackLocalization.GetResourceManager(typeof(TResource)), () => culture.Value), IStringLocalizer<TResource>;
+        : KazoStringLocalizer(KazoLocalization.GetResourceManager(typeof(TResource)), () => culture.Value), IStringLocalizer<TResource>;
 
     private sealed class TestNavigation : NavigationManager
     {

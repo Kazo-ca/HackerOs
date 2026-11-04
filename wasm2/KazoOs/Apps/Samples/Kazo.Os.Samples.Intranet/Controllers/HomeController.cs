@@ -10,7 +10,7 @@ namespace Kazo.Os.Samples.Intranet.Controllers;
 /// (<c>{controller=Home}/{action=Index}/{id?}</c>). Its views are <c>.cshtml</c> files
 /// (<c>Views/Home/</c>, ADR 0086) in the <c>.razor</c> layout of the site.
 /// </summary>
-public sealed class HomeController(AnnouncementFeed feed, NoteStore notes, TaskBoard board) : HackController
+public sealed class HomeController(AnnouncementFeed feed, NoteStore notes, TaskBoard board) : KazoController
 {
     /// <summary><c>GET /</c>: news, counters and the visitor's name.</summary>
     /// <param name="cancellationToken">Aborted with the request.</param>

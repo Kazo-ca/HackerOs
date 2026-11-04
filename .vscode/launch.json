@@ -3,7 +3,7 @@
   "configurations": [
     
     {     
-       "name": "Debug HackerGame (Chrome)",
+       "name": "Debug KazoGame (Chrome)",
       "type": "chrome",
       "request": "launch",
       "sourceMaps": true,

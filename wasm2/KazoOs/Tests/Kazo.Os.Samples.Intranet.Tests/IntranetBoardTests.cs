@@ -18,10 +18,10 @@ public sealed class IntranetBoardTests
     [InlineData("/board/tasks/2")]
     public async Task Board_addresses_answer_the_blazor_host_page(string path)
     {
-        HackWebResponseData page = await new IntranetClient().GetAsync(path);
+        KazoWebResponseData page = await new IntranetClient().GetAsync(path);
 
         Assert.Equal(200, page.StatusCode);
-        Assert.True(HackBlazorSiteEndpoints.IsHostPage(page.ReadAsString()));
+        Assert.True(KazoBlazorSiteEndpoints.IsHostPage(page.ReadAsString()));
     }
 
     [Theory]
@@ -30,16 +30,16 @@ public sealed class IntranetBoardTests
     [InlineData("/People")]
     public async Task Mvc_pages_come_before_the_blazor_fallback(string path)
     {
-        HackWebResponseData page = await new IntranetClient().GetAsync(path);
+        KazoWebResponseData page = await new IntranetClient().GetAsync(path);
 
         Assert.Equal(200, page.StatusCode);
-        Assert.False(HackBlazorSiteEndpoints.IsHostPage(page.ReadAsString()));
+        Assert.False(KazoBlazorSiteEndpoints.IsHostPage(page.ReadAsString()));
     }
 
     [Fact]
     public async Task The_boot_manifest_names_the_board_root()
     {
-        HackWebResponseData boot = await new IntranetClient().GetAsync("/_framework/blazor.boot.json");
+        KazoWebResponseData boot = await new IntranetClient().GetAsync("/_framework/blazor.boot.json");
 
         Assert.Equal(200, boot.StatusCode);
         using JsonDocument json = JsonDocument.Parse(boot.ReadAsString());

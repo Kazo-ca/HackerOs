@@ -1,7 +1,7 @@
 namespace Kazo.Os.AppSdk.Apps;
 
 /// <summary>For whom an app is installed or removed (ADR 0189 §3, §4).</summary>
-public enum HackPackageScope
+public enum KazoPackageScope
 {
     /// <summary>
     /// For the session user when allowed (a trusted source, not blocked, not already installed for
@@ -17,7 +17,7 @@ public enum HackPackageScope
 }
 
 /// <summary>Trust level of a source (ADR 0189 §2).</summary>
-public enum HackPackageTrust
+public enum KazoPackageTrust
 {
     /// <summary>An app of the official catalog, reviewed and compiled by the Kazo OS team.</summary>
     Verified = 0,
@@ -30,7 +30,7 @@ public enum HackPackageTrust
 }
 
 /// <summary>Kind of block-list rule of <c>/etc/hackeros/app-policy.config</c> (ADR 0189 §5).</summary>
-public enum HackPackageBlockKind
+public enum KazoPackageBlockKind
 {
     /// <summary>One app, by its ID (<c>[blocked-apps]</c>).</summary>
     App = 0,
@@ -47,7 +47,7 @@ public enum HackPackageBlockKind
 /// <param name="Address">Address of its <c>catalog.json</c>.</param>
 /// <param name="Trust">Its trust level.</param>
 /// <param name="BuiltIn">Whether the OS was built with it (it is then trusted without an administrator's change).</param>
-public sealed record HackPackageCatalog(string Name, string Address, HackPackageTrust Trust, bool BuiltIn);
+public sealed record KazoPackageCatalog(string Name, string Address, KazoPackageTrust Trust, bool BuiltIn);
 
 /// <summary>Where the OS downloads app packages from, and which sources it trusts (ADR 0182 §3, ADR 0189 §1).</summary>
 /// <param name="GitHubHost">Host the OS reads GitHub repositories from (<c>raw.githubusercontent.com</c>).</param>
@@ -56,10 +56,10 @@ public sealed record HackPackageCatalog(string Name, string Address, HackPackage
 /// <c>github.com/&lt;owner&gt;/&lt;repo&gt;</c>.
 /// </param>
 /// <param name="Warnings">Lines of <c>/etc/hackeros/app-sources.config</c> that were ignored.</param>
-public sealed record HackPackageSources(string GitHubHost, IReadOnlyList<string> TrustedSources, IReadOnlyList<string> Warnings)
+public sealed record KazoPackageSources(string GitHubHost, IReadOnlyList<string> TrustedSources, IReadOnlyList<string> Warnings)
 {
     /// <summary>Gets the catalogs, in name order.</summary>
-    public IReadOnlyList<HackPackageCatalog> Catalogs { get; init; } = [];
+    public IReadOnlyList<KazoPackageCatalog> Catalogs { get; init; } = [];
 
     /// <summary>Gets the sources an administrator added without trusting them.</summary>
     public IReadOnlyList<string> UntrustedSources { get; init; } = [];
@@ -76,7 +76,7 @@ public sealed record HackPackageSources(string GitHubHost, IReadOnlyList<string>
 /// <param name="BlockedCategories">Blocked categories.</param>
 /// <param name="BlockedCapabilities">Blocked capabilities.</param>
 /// <param name="Warnings">Lines of the file that were ignored.</param>
-public sealed record HackPackagePolicy(
+public sealed record KazoPackagePolicy(
     IReadOnlyList<string> BlockedApps,
     IReadOnlyList<string> BlockedCategories,
     IReadOnlyList<string> BlockedCapabilities,
@@ -92,13 +92,13 @@ public sealed record HackPackagePolicy(
 /// page (ADR 0214 §1). After a removal, <see langword="true"/> means the removed app stays loaded
 /// until the next restart.
 /// </param>
-public sealed record HackInstalledPackage(string AppId, string Source, string Version, bool Loaded)
+public sealed record KazoInstalledPackage(string AppId, string Source, string Version, bool Loaded)
 {
     /// <summary>Gets whether it is installed for every user (otherwise for the session user only).</summary>
     public bool SystemWide { get; init; } = true;
 
     /// <summary>
-    /// Gets the version its last update kept on disk, which <see cref="HackAppPackages.RollbackAsync"/>
+    /// Gets the version its last update kept on disk, which <see cref="KazoAppPackages.RollbackAsync"/>
     /// puts back (ADR 0214 §4.1), or <see langword="null"/> when none is kept.
     /// </summary>
     public string? PreviousVersion { get; init; }
@@ -111,11 +111,11 @@ public sealed record HackInstalledPackage(string AppId, string Source, string Ve
 /// <param name="Latest">Version installed by default (newest stable one), or <see langword="null"/>.</param>
 /// <param name="Trusted">Whether its source is trusted.</param>
 /// <param name="InstalledVersion">Version installed from it, for the system or for the session user, or <see langword="null"/>.</param>
-public sealed record HackPackageInfo(
+public sealed record KazoPackageInfo(
     string Source, string AppId, IReadOnlyList<string> Versions, string? Latest, bool Trusted, string? InstalledVersion)
 {
     /// <summary>Gets the trust level of its source (ADR 0189 §2).</summary>
-    public HackPackageTrust Trust { get; init; } = Trusted ? HackPackageTrust.Trusted : HackPackageTrust.Untrusted;
+    public KazoPackageTrust Trust { get; init; } = Trusted ? KazoPackageTrust.Trusted : KazoPackageTrust.Untrusted;
 
     /// <summary>Gets whether the installed copy is for every user; <see langword="null"/> when not installed.</summary>
     public bool? InstalledSystemWide { get; init; }
@@ -135,7 +135,7 @@ public sealed record HackPackageInfo(
 /// <param name="PreviousVersion">The version it replaced, or <see langword="null"/>.</param>
 /// <param name="Capabilities">Capabilities the app declares; dangerous ones are asked at its first launch (ADR 0049).</param>
 /// <param name="Trusted">Whether its source is trusted.</param>
-public sealed record HackPackageInstallReport(
+public sealed record KazoPackageInstallReport(
     string AppId,
     string Name,
     string Version,
@@ -152,7 +152,7 @@ public sealed record HackPackageInstallReport(
     public bool RestartRequired { get; init; } = true;
 
     /// <summary>Gets the trust level of its source (ADR 0189 §2).</summary>
-    public HackPackageTrust Trust { get; init; } = Trusted ? HackPackageTrust.Trusted : HackPackageTrust.Untrusted;
+    public KazoPackageTrust Trust { get; init; } = Trusted ? KazoPackageTrust.Trusted : KazoPackageTrust.Untrusted;
 
     /// <summary>Gets whether it was installed for every user (otherwise for the session user only).</summary>
     public bool SystemWide { get; init; } = true;
@@ -171,12 +171,12 @@ public sealed record HackPackageInstallReport(
 }
 
 /// <summary>A package refused or a source that could not be read (ADR 0182 §5).</summary>
-public sealed class HackPackageException : Exception
+public sealed class KazoPackageException : Exception
 {
     /// <summary>Creates the exception.</summary>
     /// <param name="code">Stable code, such as <c>apps.package.blocked</c> or <c>apps.package.missing-api</c>.</param>
     /// <param name="message">Explanation in English.</param>
-    public HackPackageException(string code, string message)
+    public KazoPackageException(string code, string message)
         : base(message)
     {
         Code = code;

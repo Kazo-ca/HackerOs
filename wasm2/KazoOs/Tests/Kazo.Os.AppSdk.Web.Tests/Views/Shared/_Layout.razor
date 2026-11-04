@@ -1,4 +1,4 @@
-@inherits HackLayout
+@inherits KazoLayout
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,9 +7,9 @@
     <link rel="stylesheet" href="@Url.Content("~/css/site.css")" />
 </head>
 <body>
-    <nav><HackLink Action="Index" Controller="Pages" class="brand">Home</HackLink></nav>
+    <nav><KazoLink Action="Index" Controller="Pages" class="brand">Home</KazoLink></nav>
     <main>@Body</main>
     <footer>@Request.Path</footer>
-    <HackRenderSection Name="Scripts" Required="false" />
+    <KazoRenderSection Name="Scripts" Required="false" />
 </body>
 </html>

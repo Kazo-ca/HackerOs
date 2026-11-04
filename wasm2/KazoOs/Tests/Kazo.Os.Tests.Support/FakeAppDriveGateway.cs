@@ -8,7 +8,7 @@ namespace Kazo.Os.Tests.Support;
 /// </summary>
 public sealed class FakeAppDriveGateway : IAppDriveGateway
 {
-    private readonly List<HackDriveSnapshot> _drives = [new("/", "idbfs", "hda", 1000, 400)];
+    private readonly List<KazoDriveSnapshot> _drives = [new("/", "idbfs", "hda", 1000, 400)];
 
     /// <summary>Gets or sets whether the browser has a folder dialog.</summary>
     public bool Supported { get; set; } = true;
@@ -23,7 +23,7 @@ public sealed class FakeAppDriveGateway : IAppDriveGateway
     public bool GrantOnReconnect { get; set; } = true;
 
     /// <summary>Gets the mounted drives.</summary>
-    public IReadOnlyList<HackDriveSnapshot> Drives => _drives;
+    public IReadOnlyList<KazoDriveSnapshot> Drives => _drives;
 
     /// <summary>Adds a network drive, connected or not.</summary>
     public FakeAppDriveGateway WithNetworkDrive(string mountPoint, string name, bool ready = true)
@@ -32,12 +32,12 @@ public sealed class FakeAppDriveGateway : IAppDriveGateway
         return this;
     }
 
-    public ValueTask<IReadOnlyList<HackDriveSnapshot>> GetDrivesAsync(CancellationToken cancellationToken = default) =>
-        ValueTask.FromResult<IReadOnlyList<HackDriveSnapshot>>([.. _drives]);
+    public ValueTask<IReadOnlyList<KazoDriveSnapshot>> GetDrivesAsync(CancellationToken cancellationToken = default) =>
+        ValueTask.FromResult<IReadOnlyList<KazoDriveSnapshot>>([.. _drives]);
 
     public ValueTask<bool> IsHostFolderSupportedAsync(CancellationToken cancellationToken = default) => ValueTask.FromResult(Supported);
 
-    public ValueTask<HackDriveSnapshot?> MountHostFolderAsync(string? mountPoint, CancellationToken cancellationToken = default)
+    public ValueTask<KazoDriveSnapshot?> MountHostFolderAsync(string? mountPoint, CancellationToken cancellationToken = default)
     {
         ThrowPending();
         if (!Supported)
@@ -47,12 +47,12 @@ public sealed class FakeAppDriveGateway : IAppDriveGateway
 
         if (NextPick is not { } name)
         {
-            return ValueTask.FromResult<HackDriveSnapshot?>(null);
+            return ValueTask.FromResult<KazoDriveSnapshot?>(null);
         }
 
-        HackDriveSnapshot drive = Network(mountPoint ?? $"/mnt/{name}", name, ready: true);
+        KazoDriveSnapshot drive = Network(mountPoint ?? $"/mnt/{name}", name, ready: true);
         _drives.Add(drive);
-        return ValueTask.FromResult<HackDriveSnapshot?>(drive);
+        return ValueTask.FromResult<KazoDriveSnapshot?>(drive);
     }
 
     public ValueTask<bool> ReconnectAsync(string mountPoint, CancellationToken cancellationToken = default)
@@ -72,7 +72,7 @@ public sealed class FakeAppDriveGateway : IAppDriveGateway
 
     private int IndexOf(string mountPoint)
     {
-        int index = _drives.FindIndex(drive => drive.Name == mountPoint && drive.DriveType == HackDriveType.Network);
+        int index = _drives.FindIndex(drive => drive.Name == mountPoint && drive.DriveType == KazoDriveType.Network);
         return index >= 0 ? index : throw new IOException($"{mountPoint}: not mounted");
     }
 
@@ -85,6 +85,6 @@ public sealed class FakeAppDriveGateway : IAppDriveGateway
         }
     }
 
-    private static HackDriveSnapshot Network(string mountPoint, string name, bool ready) =>
-        new(mountPoint, "hostfs", name, 0, 0) { DriveType = HackDriveType.Network, IsReady = ready };
+    private static KazoDriveSnapshot Network(string mountPoint, string name, bool ready) =>
+        new(mountPoint, "hostfs", name, 0, 0) { DriveType = KazoDriveType.Network, IsReady = ready };
 }

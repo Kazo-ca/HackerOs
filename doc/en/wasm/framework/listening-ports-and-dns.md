@@ -10,12 +10,12 @@ Plan: [`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md).
 
 An app can now **serve** HTTP, and not only consume it:
 
-- `HackHttpListener` (SDK) opens a port, like `System.Net.HttpListener`;
+- `KazoHttpListener` (SDK) opens a port, like `System.Net.HttpListener`;
 - the OS keeps a **table of listening ports** (`ListeningPortTable`), with
   `EADDRINUSE` and the privileged port rule;
 - a new kind of app, **`web`**, declares its URLs in its manifest
   (`web.urls`); the OS starts it **on demand**, at first access;
-- a local resolver, **`hackdns`** (`HackDnsResolver`), reads `/etc/hosts`,
+- a local resolver, **`hackdns`** (`KazoDnsResolver`), reads `/etc/hosts`,
   the loopback, the web apps' URLs and the hosted sites before the simulated
   network;
 - local traffic goes through `lo` (`/proc/net/dev` counters);
@@ -26,20 +26,20 @@ An app can now **serve** HTTP, and not only consume it:
 Page rendering in the browser (`web/4`) and the ASP.Hack framework
 (`web/6` and following, see [`asp-hack-mvc.md`](asp-hack-mvc.md)) are not part
 of this work item. An ASP.Hack site is a web app like any other: its
-process (`HackWebHost`) derives from `WebServerAppBase`.
+process (`KazoWebHost`) derives from `WebServerAppBase`.
 
 ## Architecture
 
 ```text
-client (curl, navigateur, HackHttpClient)
+client (curl, navigateur, KazoHttpClient)
   └─ AppNetworkGateway.SendAsync              (Platform.Core/Network)
-       ├─ HackDnsResolver.ResolveAsync        hosts → loopback → web.urls → sites hébergés → réseau simulé
+       ├─ KazoDnsResolver.ResolveAsync        hosts → loopback → web.urls → sites hébergés → réseau simulé
        │     └─ réponse locale ?
        │          ├─ ListeningPortTable.Route(host, port, path)       socket qui écoute
        │          ├─ sinon WebAppActivator.ActivateAsync(app)         démarrage à la demande
        │          ├─ sinon port ouvert : 400 Bad Request - Invalid Hostname
        │          └─ sinon ConnectionRefused
-       │     └─ OsHttpListenerSocket.ExchangeAsync  ─►  HackHttpListener.GetContextAsync (app)
+       │     └─ OsHttpListenerSocket.ExchangeAsync  ─►  KazoHttpListener.GetContextAsync (app)
        │                    (worker web : message hreq ; réponse hres)
        └─ sinon : réseau simulé, puis repli réel (jamais pour .hack)
 ```
@@ -47,12 +47,12 @@ client (curl, navigateur, HackHttpClient)
 | Type | Project | Role |
 |---|---|---|
 | `AppKind.Web`, `AppExecutionHost.Web`, `WebAppManifest`, `WebAppUrls`, `WebBinding` | `Kazo.Os.App.Abstractions` | `web` kind, `web.urls` field, parsing and normalization of URLs and prefixes. |
-| `HackHttpListener`, `HackHttpListenerContext/Request/Response` | `Kazo.Os.AppSdk` (`Net/`) | HTTP listening modeled on `System.Net.HttpListener`. |
+| `KazoHttpListener`, `KazoHttpListenerContext/Request/Response` | `Kazo.Os.AppSdk` (`Net/`) | HTTP listening modeled on `System.Net.HttpListener`. |
 | `WebServerAppBase` | `Kazo.Os.AppSdk` | Base of a web app: listens on its `Urls`, calls `ProcessRequestAsync` for each request. |
-| `HackIPGlobalProperties` | `Kazo.Os.AppSdk` (`Net/`) | `GetActiveTcpListenersAsync`, `GetActiveTcpListenerEndPointsAsync` (what `netstat` reads). |
-| `IAppNetworkGateway.ListenHttpAsync`, `GetTcpListenersAsync`, `IHackHttpListenerSocket`, `HackTcpListenerInfo` | `Kazo.Os.AppSdk` (`Net/`) | Gateway contract. |
+| `KazoIPGlobalProperties` | `Kazo.Os.AppSdk` (`Net/`) | `GetActiveTcpListenersAsync`, `GetActiveTcpListenerEndPointsAsync` (what `netstat` reads). |
+| `IAppNetworkGateway.ListenHttpAsync`, `GetTcpListenersAsync`, `IHackHttpListenerSocket`, `KazoTcpListenerInfo` | `Kazo.Os.AppSdk` (`Net/`) | Gateway contract. |
 | `ListeningPortTable`, `OsHttpListenerSocket` | `Platform.Core` (`Network/Local/`) | Socket table: binding, conflicts, routing, inodes, cleanup of dead processes. |
-| `HackDnsResolver` | `Platform.Core` (`Network/Local/`) | Local resolver with cache (30 simulated seconds). |
+| `KazoDnsResolver` | `Platform.Core` (`Network/Local/`) | Local resolver with cache (30 simulated seconds). |
 | `WebAppActivator` | `Platform.Core` (`Network/Local/`) | On-demand activation, like systemd's socket activation. |
 | `LocalNetworkServices`, `LocalNetworkCaller` | `Platform.Core` (`Network/Local/`) | What `AppExecutionContextFactory` passes to each gateway: table, resolver, activator, caller (manifest, principal, elevation). |
 | `RemoteListenerTable`, `RemoteHttpListenerSocket` | `Platform.WorkerHost` (`Worker/`) | Worker side: a listener opened in a Web Worker. |
@@ -63,16 +63,16 @@ and to `/proc` (`ProcMetricsSources.Listeners`).
 
 ## Usage
 
-### Listening (`HackHttpListener`)
+### Listening (`KazoHttpListener`)
 
 ```csharp
-await using HackHttpListener listener = new();
+await using KazoHttpListener listener = new();
 listener.Prefixes.Add("http://localhost:8080/");
 await listener.StartAsync();                          // HttpListenerException(98) si le port est pris
 
 while (true)
 {
-    HackHttpListenerContext context = await listener.GetContextAsync(cancellationToken);
+    KazoHttpListenerContext context = await listener.GetContextAsync(cancellationToken);
     context.Response.ContentType = "text/plain";
     await context.Response.OutputStream.WriteAsync("bonjour"u8.ToArray(), cancellationToken);
     context.Response.Close();
@@ -97,9 +97,9 @@ while (true)
 | Listen on a URL from its own manifest (`web.urls`) | none |
 | Listen on another prefix, port 1024 or above | `network.listen` (normal) |
 | Listen on another prefix, port below 1024 | `network.listen` and `network.listen.privileged` (**dangerous**, like `CAP_NET_BIND_SERVICE`) |
-| List listening ports (`HackIPGlobalProperties`) | none; the PID and program are only visible to root or the same user, like `netstat -p` |
+| List listening ports (`KazoIPGlobalProperties`) | none; the PID and program are only visible to root or the same user, like `netstat -p` |
 
-A port already in use gives `HackNetworkError.AddressInUse`, raised as
+A port already in use gives `KazoNetworkError.AddressInUse`, raised as
 `HttpListenerException` code 98 (`EADDRINUSE`) with "0.0.0.0:8080: address
 already in use". The simulated `localhost` daemons (ssh 22, mysql 3306)
 occupy their port.
@@ -117,7 +117,7 @@ public sealed class IntranetApp : AppDefinition
 
 public sealed class IntranetSite(AppManifest manifest) : WebServerAppBase(manifest)
 {
-    protected override Task ProcessRequestAsync(HackHttpListenerContext context, CancellationToken ct) { … }
+    protected override Task ProcessRequestAsync(KazoHttpListenerContext context, CancellationToken ct) { … }
 }
 ```
 
@@ -164,7 +164,7 @@ Order, from first to last:
 Responses are kept for 30 simulated seconds. A `.hack` name is **never**
 relayed to the real network. A line of `/etc/hosts` pointing to a simulated host sends the
 request to that host with its real name (`Host` header rewritten), like an alias.
-`HackDns.GetHostEntryAsync` returns the source (`HackDnsSource`: `HostsFile`,
+`KazoDns.GetHostEntryAsync` returns the source (`KazoDnsSource`: `HostsFile`,
 `Loopback`, `WebApp`, `HostedSite`, `SimulatedNetwork`).
 
 ### Commands
@@ -186,7 +186,7 @@ Name:	intranet.hack
 Address: 127.0.0.1
 ```
 
-- `netstat` reads `HackIPGlobalProperties`; with `-p`, a hidden owner
+- `netstat` reads `KazoIPGlobalProperties`; with `-p`, a hidden owner
   gives the net-tools note "(Not all processes could be identified…".
 - `/proc/net/tcp` follows `proc(5)`: little-endian hexadecimal address,
   state `0A` (LISTEN), `uid` 0 for root and daemons, socket inode.
@@ -211,7 +211,7 @@ OS detection) on `lo` instead of `eth0`. A local ping answers in ~0.04 ms.
 |---|---|---|
 | `call net.listen` | worker → OS | prefixes; response: socket number and normalized prefixes |
 | `note net.unlisten` | worker → OS | close the socket |
-| `call net.listeners` | worker → OS | read the table (`HackIPGlobalProperties`) |
+| `call net.listeners` | worker → OS | read the table (`KazoIPGlobalProperties`) |
 | `hreq` | OS → worker | request: process, socket, exchange, method, URL, headers, body, endpoints |
 | `hres` | worker → OS | response: status, reason, headers, type, body |
 
@@ -251,9 +251,9 @@ OS detection) on `lo` instead of `eth0`. A local ping answers in ~0.04 ms.
 
 - [x] `web` kind, `web` host, `web.urls` (abstractions, validator, schema, serializer, mapper, generator `HOSAPP0050`, catalog conflict).
 - [x] Capabilities `network.listen` (normal) and `network.listen.privileged` (dangerous).
-- [x] `HackHttpListener`, `WebServerAppBase`, `HackIPGlobalProperties`, gateway contract.
+- [x] `KazoHttpListener`, `WebServerAppBase`, `KazoIPGlobalProperties`, gateway contract.
 - [x] `ListeningPortTable`: binding, `EADDRINUSE`, `http.sys` routing, `localhost` daemons, cleanup.
-- [x] `HackDnsResolver`: `/etc/hosts` (seeded), loopback, web app URLs, hosted sites, cache, `.hack` never relayed.
+- [x] `KazoDnsResolver`: `/etc/hosts` (seeded), loopback, web app URLs, hosted sites, cache, `.hack` never relayed.
 - [x] `WebAppActivator`: on-demand activation under the caller's identity.
 - [x] Gateway: local sending, cookies, redirects, 400 Invalid Hostname, traffic on `lo`, local probe and ping.
 - [x] Shared `web` worker, `net.listen`/`net.unlisten`/`net.listeners`, `hreq`/`hres`.

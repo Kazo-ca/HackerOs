@@ -1,4 +1,4 @@
-@inherits Kazo.Os.AppSdk.Blazor.HackComponentBase
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
 @using Kazo.Os.AppSdk.Administration
 @using Kazo.Os.App.Abstractions
 
@@ -15,7 +15,7 @@
         <summary>@L["LocalServer.Download"]</summary>
         <p class="setting-desc">@L["LocalServer.DownloadHelp"]</p>
         <ul class="local-server-files">
-            @foreach (ServerDownload download in Downloads(HackerOsSdk.Version))
+            @foreach (ServerDownload download in Downloads(KazoOsSdk.Version))
             {
                 <li>
                     <span class="local-server-system">@L[download.SystemKey]</span>

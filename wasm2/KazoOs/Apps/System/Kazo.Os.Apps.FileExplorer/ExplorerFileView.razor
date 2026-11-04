@@ -1,7 +1,7 @@
 @using Kazo.Os.AppSdk.Blazor.Components
 @using Kazo.Os.AppSdk.Blazor.Files
 @using Kazo.Os.Apps.FileExplorer.FileControl
-@inherits HackEmbeddableComponent
+@inherits KazoEmbeddableComponent
 @implements IAsyncDisposable
 
 @*
@@ -19,7 +19,7 @@
               Mode="ViewMode"
               ModeChanged="_modeChanged"
               AllowMultiSelect="AllowMultiSelect"
-              AllowDragDrop="Has(HackFileViewFeatures.DragDrop)"
+              AllowDragDrop="Has(KazoFileViewFeatures.DragDrop)"
               Filter="_filter"
               FolderActivation="FileViewFolderActivationMode.Custom"
               OnCustomFolderActivate="_activateFolder"

@@ -149,7 +149,7 @@ public sealed class FileViewDetailsTests
     private static Task<TestableFileViewDetails> RenderDetailsAsync(TestComponentRenderer renderer, FileView owner) =>
         renderer.RenderAsync(new TestableFileViewDetails { Owner = owner });
 
-    /// <summary>Suppresses the real markup (ShellIcon/HackerIcon) so tests can attach a real RenderHandle and exercise the C# backing directly.</summary>
+    /// <summary>Suppresses the real markup (ShellIcon/KazoIcon) so tests can attach a real RenderHandle and exercise the C# backing directly.</summary>
     private sealed class TestableFileViewDetails : FileViewDetails
     {
         protected override void BuildRenderTree(RenderTreeBuilder builder)

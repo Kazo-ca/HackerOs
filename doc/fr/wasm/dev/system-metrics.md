@@ -24,7 +24,7 @@ Le gestionnaire de tâches ([`task-manager.md`](task-manager.md), chantier
 | `/proc/diskstats` | requêtes, secteurs et temps du disque `hda` | **compté** : transactions IndexedDB du système de fichiers |
 | `/proc/net/dev` | octets et paquets de `lo` et `eth0` | **compté** : passerelle réseau des apps |
 | `/proc/mounts` | table des montages | routeur de montages |
-| `HackDriveInfo` | taille et espace libre de `/` | profil matériel, contenu stocké, quota du navigateur |
+| `KazoDriveInfo` | taille et espace libre de `/` | profil matériel, contenu stocké, quota du navigateur |
 | `/proc/hackeros/workers` | isolation cross-origin de la page (ADR 0131, 0143), puis Web Workers de l'OS : rôle, état, cœur, mémoire du runtime, âge du battement de cœur, temps occupé, processus (ADR 0070) | **mesuré** : battement de cœur de chaque worker, toutes les 250 ms ; page isolée, mémoire de chaque worker mesurée par le navigateur (`performance.measureUserAgentSpecificMemory()`, toutes les 20 s, `memory-measure: browser`) ([`worker-processes.md`](worker-processes.md)) ; absent quand l'hôte n'a pas de workers |
 
 Un `cat` d'un gros fichier fait monter `rchar` du processus et les secteurs lus
@@ -37,14 +37,14 @@ mémoire est mesurée de même (ADR 0068, section « Mémoire mesurée » ci-des
 
 | Source | Quand | Indicateur |
 | --- | --- | --- |
-| **simulée** : `IResourceSimulator`, profil `ResourceProfile` de l'app | mesure coupée au build (`HackerOsCpuAccounting`, `HackerOsMemoryAccounting`) ou dans `appsettings.json` (`HackerOs:ResourceAccounting`), mesure pas encore implémentée, processus simulé sans code | `CpuSource: simulated`, `MemSource: simulated` ; mention « estimated » dans le gestionnaire de tâches |
+| **simulée** : `IResourceSimulator`, profil `ResourceProfile` de l'app | mesure coupée au build (`KazoOsCpuAccounting`, `KazoOsMemoryAccounting`) ou dans `appsettings.json` (`HackerOs:ResourceAccounting`), mesure pas encore implémentée, processus simulé sans code | `CpuSource: simulated`, `MemSource: simulated` ; mention « estimated » dans le gestionnaire de tâches |
 | **mesurée** : `ICpuTimeAccountant`, `IMemoryAccountant` alimentés par le crochet de changement de contexte | mesure livrée et activée, et le comptable répond pour ce processus | `CpuSource: measured`, `MemSource: measured` |
 
 Le fournisseur `/proc` reçoit les deux comptables par `ProcMetricsSources`
 (`CpuAccountant`, `MemoryAccountant`) et retombe sur le simulateur dès qu'un
 comptable ne répond pas. Depuis la série `exec`, `ProcMetricsSources` porte
 aussi les tables des limites (`ResourceLimits`) et des descripteurs
-(`FileDescriptors`), les tâches `HackBackground` (`BackgroundJobs`), la table
+(`FileDescriptors`), les tâches `KazoBackground` (`BackgroundJobs`), la table
 `oom_score_adj` (`OomScores`), le compteur `OomKills` et l'état de l'isolation
 (`CrossOriginIsolation`). Le chantier `5-accounting-switches` livre les
 interrupteurs, le crochet et les comptables nuls ; le chantier
@@ -62,7 +62,7 @@ est reconstituée en quatre couches ([`memory-accounting.md`](memory-accounting.
 | --- | --- | --- | --- |
 | Image | `VmExe`, `RssFile` | taille des assemblies, mesurée par le build de l'hôte (`BuiltInApplications.json`) | exacte |
 | Ressources de l'OS | `VmData` | tampons de flux, presse-papiers, tubes, sockets en vol, coût fixe par fenêtre | exacte |
-| Allocations | `HackAllocBytes` | `GC.GetAllocatedBytesForCurrentThread()` à chaque changement de contexte | exacte |
+| Allocations | `KazoAllocBytes` | `GC.GetAllocatedBytesForCurrentThread()` à chaque changement de contexte | exacte |
 | Résidente | `RssAnon` | tas réel réparti après chaque GC au prorata des allocations récentes | **estimation** |
 
 `VmRSS = RssAnon + RssFile + VmData`. `/proc/meminfo` garde `MemTotal` du
@@ -124,7 +124,7 @@ persistés.
 | `FileSystemService` | `Platform.Core/FileSystem` | compte les lectures et écritures de chaque processus |
 | `AppNetworkGateway` + `NetworkTrafficMeter` | `Platform.Core/Network` | compte le trafic de chaque app |
 | `ProcFileSystemProvider` + `ProcMetricsSources` | `Platform.Core/FileSystem/Virtual` | rend les fichiers |
-| `AppDriveGateway` | `Platform.Core/Execution` | `statfs` de l'OS derrière `HackDriveInfo` |
+| `AppDriveGateway` | `Platform.Core/Execution` | `statfs` de l'OS derrière `KazoDriveInfo` |
 | `IndexedDbInteropAdapter` | `Infrastructure.Browser/Interop` | chronomètre chaque transaction et la signale à `hda` |
 | `IndexedDbStorageUsageProvider` | `Infrastructure.Browser/FileSystem` | espace occupé et quota réels du navigateur (`navigator.storage.estimate()`, ADR 0099 §2) ; sans quota connu, contenu dédupliqué |
 
@@ -250,9 +250,9 @@ non sur `eth0` ([`listening-ports-and-dns.md`](../framework/listening-ports-and-
 `/dev/hda <point> idbfs rw`. Le fournisseur `/proc` lit le routeur à la demande,
 parce que le routeur le contient.
 
-### Espace disque (`HackDriveInfo`)
+### Espace disque (`KazoDriveInfo`)
 
-`AppDriveGateway` rend un `HackDriveSnapshot` par montage non virtuel
+`AppDriveGateway` rend un `KazoDriveSnapshot` par montage non virtuel
 (aujourd'hui `/`) :
 
 - **taille** : `StorageCapacityBytes`, ramenée au quota du navigateur quand il
@@ -270,11 +270,11 @@ Aucune capacité n'est demandée, comme `df`.
 
 ```csharp
 // Usage CPU entre deux lectures, comme top.
-string before = await HackFile.ReadAllTextAsync("/proc/stat");
+string before = await KazoFile.ReadAllTextAsync("/proc/stat");
 await Task.Delay(1000);
-string after = await HackFile.ReadAllTextAsync("/proc/stat");
+string after = await KazoFile.ReadAllTextAsync("/proc/stat");
 
-foreach (HackDriveInfo drive in await HackDriveInfo.GetDrivesAsync())
+foreach (KazoDriveInfo drive in await KazoDriveInfo.GetDrivesAsync())
 {
     Console.WriteLine($"{drive.Name} {drive.DriveFormat} {drive.AvailableFreeSpace}/{drive.TotalSize}");
 }
@@ -287,7 +287,7 @@ seuls le propriétaire et l'autorité `System` le lisent.
 
 - **Comptage des fichiers dans `FileSystemService`.** L'ADR parle de « la
   passerelle fichier » : c'est le service derrière toutes les passerelles
-  (`AppFileSystemGateway`, commandes, `HackFile`). Lui seul sait si un chemin
+  (`AppFileSystemGateway`, commandes, `KazoFile`). Lui seul sait si un chemin
   touche le stockage ou un montage virtuel.
 - **`ResourceSamplingService` est nouveau.** L'ADR suppose que le simulateur
   avance à chaque tick ; aucun code ne l'appelait. L'échantillonnage se fait
@@ -302,7 +302,7 @@ seuls le propriétaire et l'autorité `System` le lisent.
   TCP, UDP et ICMP standard autour des données réellement échangées.
 - **Temps du disque en temps réel.** Les millisecondes de `diskstats` sont
   mesurées sur l'horloge réelle : c'est le vrai temps passé par IndexedDB.
-- **`HackDriveInfo` lit ses valeurs une fois.** Le navigateur ne répond qu'en
+- **`KazoDriveInfo` lit ses valeurs une fois.** Le navigateur ne répond qu'en
   asynchrone ; `GetDrivesAsync` rend des instances figées, à redemander pour des
   valeurs fraîches.
 - **Chiffres réels du navigateur (ADR 0099 §2).** `df` montre l'utilisé et
@@ -320,7 +320,7 @@ seuls le propriétaire et l'autorité `System` le lisent.
   service de fichiers, sans octets de stockage pour `/proc` ; `io` privé ;
   temps occupé pondéré par la file.
 - `Tests/Kazo.Os.Platform.Core.Tests/Execution/AppDriveGatewayTests.cs` :
-  taille, quota, espace libre jamais négatif, `HackDriveInfo` dans le contexte
+  taille, quota, espace libre jamais négatif, `KazoDriveInfo` dans le contexte
   ambiant.
 - `Tests/Kazo.Os.Network.Tests/Wave4NetworkTests.ProcMetrics.cs` : DNS, ping,
   HTTP et refus de capacité comptés (ou non) sur `eth0` et dans `rchar`/`wchar`.
@@ -336,7 +336,7 @@ seuls le propriétaire et l'autorité `System` le lisent.
 - [x] Comptage du trafic dans `AppNetworkGateway` (`NetworkTrafficMeter`).
 - [x] Comptage des transactions IndexedDB du système de fichiers pour `hda`.
 - [x] `/proc/stat`, `/proc/<pid>/io`, `/proc/diskstats`, `/proc/net/dev`, `/proc/mounts`.
-- [x] `HackDriveInfo`, `IAppDriveGateway`, `IAppExecutionContext.Drives`, `AppDriveGateway`, `IndexedDbStorageUsageProvider`.
+- [x] `KazoDriveInfo`, `IAppDriveGateway`, `IAppExecutionContext.Drives`, `AppDriveGateway`, `IndexedDbStorageUsageProvider`.
 - [x] Câblage dans l'hôte Ecosystem.
 - [x] Tests.
 - [x] Documentation : ce document, `virtual-proc-and-dev.md`, `app-sdk.md`, `sdk-network.md`, index.

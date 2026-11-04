@@ -14,7 +14,7 @@ public sealed class SettingsLocalizationTests
     [Fact]
     public void English_and_French_texts_have_exactly_the_same_keys()
     {
-        ResourceManager resources = HackLocalization.GetResourceManager(typeof(Strings));
+        ResourceManager resources = KazoLocalization.GetResourceManager(typeof(Strings));
         SortedSet<string> english = Keys(resources, CultureInfo.InvariantCulture);
         SortedSet<string> french = Keys(resources, CultureInfo.GetCultureInfo("fr"));
 

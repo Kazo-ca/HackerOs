@@ -5,14 +5,14 @@ namespace Kazo.Os.Platform.ResourceAccounting.Memory;
 
 /// <summary>
 /// The measured memory of ADR 0068: four layers per process, read by <c>/proc/&lt;pid&gt;/status</c>,
-/// <c>/proc/meminfo</c> and <c>HackProcess</c>. It only measures: no limit, no OOM killer.
+/// <c>/proc/meminfo</c> and <c>KazoProcess</c>. It only measures: no limit, no OOM killer.
 /// </summary>
 /// <remarks>
 /// <list type="table">
 /// <listheader><term>Layer</term><description>Source</description></listheader>
 /// <item><term>Image (<c>VmExe</c>, <c>RssFile</c>)</term><description>The app's assembly sizes from the host's catalog; exact.</description></item>
 /// <item><term>OS resources (<c>VmData</c>)</term><description>The <see cref="KernelMemoryLedger"/>, plus <see cref="MemoryAccountingConstants.WindowBytes"/> for a window app; exact.</description></item>
-/// <item><term>Allocations (<c>HackAllocBytes</c>)</term><description>The <see cref="AllocationTracker"/>, at every context switch; exact.</description></item>
+/// <item><term>Allocations (<c>KazoAllocBytes</c>)</term><description>The <see cref="AllocationTracker"/>, at every context switch; exact.</description></item>
 /// <item><term>Resident (<c>RssAnon</c>)</term><description>The real heap, split after each collection by decayed recent allocations; an estimate.</description></item>
 /// </list>
 /// <para>

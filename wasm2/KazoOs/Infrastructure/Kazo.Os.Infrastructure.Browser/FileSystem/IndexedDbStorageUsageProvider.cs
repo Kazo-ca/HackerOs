@@ -5,7 +5,7 @@ using Microsoft.JSInterop;
 namespace Kazo.Os.Infrastructure.Browser.FileSystem;
 
 /// <summary>
-/// Browser <see cref="IStorageUsageProvider"/> behind <c>HackDriveInfo</c> and <c>df</c>. Since
+/// Browser <see cref="IStorageUsageProvider"/> behind <c>KazoDriveInfo</c> and <c>df</c>. Since
 /// ADR 0099 (section 2) both figures are the browser's real ones from
 /// <c>navigator.storage.estimate()</c> through <see cref="BrowserStorageManager"/>: the origin's
 /// usage and its quota, so <c>df</c> agrees with the low-space warning and the root reserve. A

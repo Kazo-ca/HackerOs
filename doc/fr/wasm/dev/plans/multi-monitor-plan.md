@@ -121,5 +121,5 @@ Les réponses seront reportées ici et dans les ADR.
 - **Docs** : index général et index des dossiers, mémoire du projet
   ([`../../memory/README.md`](../../memory/README.md), prochain ADR libre 0185).
 - **Chantier 7b** (PR #236, après cette vérification) : API système des écrans
-  `HackScreens` pour les boutons de Paramètres ▸ Écrans
+  `KazoScreens` pour les boutons de Paramètres ▸ Écrans
   ([ADR 0184](../adr/0184-screens-administration-sdk.md)).

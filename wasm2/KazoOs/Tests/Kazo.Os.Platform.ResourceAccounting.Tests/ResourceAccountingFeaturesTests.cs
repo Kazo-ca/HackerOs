@@ -1,6 +1,6 @@
 namespace Kazo.Os.Platform.ResourceAccounting.Tests;
 
-/// <summary>The runtime view of HackerOsCpuAccounting / HackerOsMemoryAccounting (ADR 0066, section 2).</summary>
+/// <summary>The runtime view of KazoOsCpuAccounting / KazoOsMemoryAccounting (ADR 0066, section 2).</summary>
 public sealed class ResourceAccountingFeaturesTests
 {
     [Fact]

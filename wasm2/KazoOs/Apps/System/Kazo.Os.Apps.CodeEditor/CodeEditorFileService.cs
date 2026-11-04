@@ -90,7 +90,7 @@ public sealed class CodeEditorFileService
 
         // Text or binary is decided from the bytes, not from the descriptor of the last write: an
         // empty file made by "New File" is tagged binary but is an empty source file.
-        string? content = await Kazo.Os.AppSdk.IO.HackTextContent.TryReadAsync(handle.Content, cancellationToken);
+        string? content = await Kazo.Os.AppSdk.IO.KazoTextContent.TryReadAsync(handle.Content, cancellationToken);
         if (content is null)
         {
             return new CodeEditorLoadResult(

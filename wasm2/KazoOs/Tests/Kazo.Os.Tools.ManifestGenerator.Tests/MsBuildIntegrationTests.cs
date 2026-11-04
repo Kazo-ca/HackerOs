@@ -97,7 +97,7 @@ public sealed class MsBuildIntegrationTests
     }
 
     [Fact]
-    public async Task HackerOsPack_signs_the_package_with_the_author_key_of_the_environment()
+    public async Task KazoOsPack_signs_the_package_with_the_author_key_of_the_environment()
     {
         string output = Directory.CreateTempSubdirectory("hackeros-pack-").FullName;
         (string privateKey, string publicKey) = PackageSigner.CreateKeyPair();
@@ -106,8 +106,8 @@ public sealed class MsBuildIntegrationTests
             (int exitCode, string log) = await BuildFixtureAsync(
                 "SingleApp",
                 new Dictionary<string, string> { [PackageSigner.KeyVariable] = privateKey },
-                "-t:HackerOsPack",
-                $"-p:HackerOsPackageOutput={output}");
+                "-t:KazoOsPack",
+                $"-p:KazoOsPackageOutput={output}");
 
             Assert.True(exitCode == 0, log);
             Assert.DoesNotContain(GeneratorCodes.UnsignedPackage, log, StringComparison.Ordinal);
@@ -125,9 +125,9 @@ public sealed class MsBuildIntegrationTests
     }
 
     [Fact]
-    public async Task HackerOsKeyGen_requires_the_key_file_property()
+    public async Task KazoOsKeyGen_requires_the_key_file_property()
     {
-        (int exitCode, string output) = await BuildFixtureAsync("SingleApp", null, "-t:HackerOsKeyGen");
+        (int exitCode, string output) = await BuildFixtureAsync("SingleApp", null, "-t:KazoOsKeyGen");
 
         Assert.NotEqual(0, exitCode);
         Assert.Contains("error HOSAPP0061", output, StringComparison.Ordinal);

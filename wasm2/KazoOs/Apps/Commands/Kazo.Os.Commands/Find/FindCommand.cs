@@ -9,7 +9,7 @@ namespace Kazo.Os.Commands.Find;
 /// <summary>
 /// Implements the <c>find</c> terminal command (`P4-W5-CMD-003`).
 /// Recursively searches for files/directories matching name pattern or type. Each visited entry
-/// is a <see cref="HackProcess.CheckpointAsync"/> (ADR 0069).
+/// is a <see cref="KazoProcess.CheckpointAsync"/> (ADR 0069).
 /// </summary>
 public sealed class FindCommand : TerminalAppBase
 {
@@ -50,7 +50,7 @@ public sealed class FindCommand : TerminalAppBase
         CancellationToken cancellationToken)
     {
         // ADR 0069: a deep tree is long work; give the thread back and honor a stop request.
-        await HackProcess.CheckpointAsync(cancellationToken);
+        await KazoProcess.CheckpointAsync(cancellationToken);
 
         var statReq = new FileSystemStatRequest(VirtualPath.Parse(currentPath));
         var statRes = await context.App.FileSystem.StatAsync(statReq, cancellationToken);

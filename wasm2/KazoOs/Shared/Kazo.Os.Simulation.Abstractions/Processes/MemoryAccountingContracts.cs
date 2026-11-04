@@ -22,7 +22,7 @@ namespace Kazo.Os.Simulation.Abstractions.Processes;
 /// clipboard content, pipe buffers, sockets in flight, and a fixed cost per open window.
 /// </param>
 /// <param name="AllocatedBytes">
-/// <c>HackAllocBytes</c>: every managed byte the process allocated since it started, exact, read at
+/// <c>KazoAllocBytes</c>: every managed byte the process allocated since it started, exact, read at
 /// each context switch.
 /// </param>
 public readonly record struct ProcessMemoryUsage(
@@ -35,7 +35,7 @@ public readonly record struct ProcessMemoryUsage(
     /// <summary>Gets <c>VmRSS</c> = <c>RssAnon</c> + <c>RssFile</c> + kernel part (ADR 0068, section 1).</summary>
     public long ResidentBytes => AnonymousBytes + FileBytes + KernelBytes;
 
-    /// <summary>Gets the private memory (<c>RssAnon</c>), read by <c>HackProcess.PrivateMemorySize64</c>.</summary>
+    /// <summary>Gets the private memory (<c>RssAnon</c>), read by <c>KazoProcess.PrivateMemorySize64</c>.</summary>
     public long PrivateBytes => AnonymousBytes;
 }
 
@@ -60,7 +60,7 @@ public readonly record struct SystemMemoryUsage(
 /// <summary>What kind of object the OS holds memory for on behalf of a process (ADR 0068, section 1).</summary>
 public enum KernelMemoryKind
 {
-    /// <summary>The in-memory buffer of a <c>HackFileStream</c> opened for writing.</summary>
+    /// <summary>The in-memory buffer of a <c>KazoFileStream</c> opened for writing.</summary>
     StreamBuffer,
 
     /// <summary>Content a process put on the clipboard, held until replaced.</summary>

@@ -36,11 +36,11 @@ internal sealed class AppFileMenuEntryAdministrationGateway : IAppFileMenuEntryA
     }
 
     /// <inheritdoc />
-    public async ValueTask<IReadOnlyList<HackFileMenuEntryInfo>> GetEntriesAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<IReadOnlyList<KazoFileMenuEntryInfo>> GetEntriesAsync(CancellationToken cancellationToken = default)
     {
         _capabilities.Require(AppCapabilities.AppsManage);
         IReadOnlyList<FileMenuEntryOverview> overview = await Service().GetOverviewAsync(_language(), cancellationToken).ConfigureAwait(false);
-        return [.. overview.Select(item => new HackFileMenuEntryInfo(
+        return [.. overview.Select(item => new KazoFileMenuEntryInfo(
             item.AppId, item.AppName, item.Entry.Name, item.Title, item.Entry.Parent, item.Entry.Scopes, item.IsHidden))];
     }
 

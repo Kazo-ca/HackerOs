@@ -45,7 +45,7 @@ public sealed class ContextMenuNavigator
     public OpenLevel Active => _levels[^1];
 
     /// <summary>Gets the entry to run after <see cref="ContextMenuNavigation.Invoke"/>.</summary>
-    public HackMenuItemDefinition? Chosen { get; private set; }
+    public KazoMenuItemDefinition? Chosen { get; private set; }
 
     /// <summary>Handles a key of the browser's <c>KeyboardEvent.key</c>.</summary>
     /// <param name="key">The key.</param>

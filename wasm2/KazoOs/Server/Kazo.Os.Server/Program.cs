@@ -61,7 +61,7 @@ builder.Configuration.AddEnvironmentVariables(prefix: "HACKEROS_");
 // ── Database ──────────────────────────────────────────────────────────────────
 var connectionString = builder.Configuration.GetConnectionString("HackerOsDb")
     ?? "Data Source=hackeros.db";
-builder.Services.AddDbContext<HackerOsServerDbContext>(options =>
+builder.Services.AddDbContext<KazoOsServerDbContext>(options =>
     options.UseSqlite(connectionString));
 
 // ── Core server services ──────────────────────────────────────────────────────
@@ -129,8 +129,8 @@ builder.Services.AddHttpClient("proxy", client =>
 // ── Authentication — Bearer token ─────────────────────────────────────────────
 // Token validation uses the server's own token store, not a JWT public key.
 // This avoids shipping a signing secret to the client.
-builder.Services.AddAuthentication("HackerOsBearer")
-    .AddScheme<HackerOsBearerOptions, HackerOsBearerHandler>("HackerOsBearer", _ => { });
+builder.Services.AddAuthentication("KazoOsBearer")
+    .AddScheme<KazoOsBearerOptions, KazoOsBearerHandler>("KazoOsBearer", _ => { });
 builder.Services.AddAuthorization();
 
 // ── CORS — allow the PWA origin ───────────────────────────────────────────────
@@ -208,7 +208,7 @@ app.MapStaticAssets();
 // ── Database migration on startup ─────────────────────────────────────────────
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<HackerOsServerDbContext>();
+    var db = scope.ServiceProvider.GetRequiredService<KazoOsServerDbContext>();
     // The server currently ships its model without generated EF migrations.
     // MigrateAsync is a no-op in that state, so a fresh SQLite file would look
     // connectable while containing no application tables. Use EnsureCreated for

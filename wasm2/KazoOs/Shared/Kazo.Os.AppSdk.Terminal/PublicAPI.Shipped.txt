@@ -3,7 +3,7 @@ Kazo.Os.AppSdk.Terminal.TerminalControlSequenceDecoder
 Kazo.Os.AppSdk.Terminal.TerminalControlSequenceDecoder.Decode(string! chunk) -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Terminal.TerminalOutputAction!>!
 Kazo.Os.AppSdk.Terminal.TerminalControlSequenceDecoder.TerminalControlSequenceDecoder() -> void
 Kazo.Os.AppSdk.Terminal.TerminalCredentialPrompt
-Kazo.Os.AppSdk.Terminal.TerminalCredentialPrompt.TerminalCredentialPrompt(Kazo.Os.AppSdk.Blazor.IDialogService! dialogs, Kazo.Os.AppSdk.IAppExecutionContext! context, System.Func<string!, Kazo.Os.AppSdk.Shell.HackPromptLineKind, System.Threading.Tasks.Task!>! writeLine) -> void
+Kazo.Os.AppSdk.Terminal.TerminalCredentialPrompt.TerminalCredentialPrompt(Kazo.Os.AppSdk.Blazor.IDialogService! dialogs, Kazo.Os.AppSdk.IAppExecutionContext! context, System.Func<string!, Kazo.Os.AppSdk.Shell.KazoPromptLineKind, System.Threading.Tasks.Task!>! writeLine) -> void
 Kazo.Os.AppSdk.Terminal.TerminalFullScreenSession
 Kazo.Os.AppSdk.Terminal.TerminalFullScreenSession.DisposeAsync() -> System.Threading.Tasks.ValueTask
 Kazo.Os.AppSdk.Terminal.TerminalFullScreenSession.EnterAlternateScreenAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
@@ -45,7 +45,7 @@ Kazo.Os.AppSdk.Terminal.TerminalPanel.AppContext.set -> void
 Kazo.Os.AppSdk.Terminal.TerminalPanel.CallerAppId.get -> string!
 Kazo.Os.AppSdk.Terminal.TerminalPanel.CallerAppId.set -> void
 Kazo.Os.AppSdk.Terminal.TerminalPanel.ClearAsync() -> System.Threading.Tasks.Task!
-Kazo.Os.AppSdk.Terminal.TerminalPanel.CommandCompleted -> System.EventHandler<Kazo.Os.AppSdk.Components.HackTerminalCommandResult!>?
+Kazo.Os.AppSdk.Terminal.TerminalPanel.CommandCompleted -> System.EventHandler<Kazo.Os.AppSdk.Components.KazoTerminalCommandResult!>?
 Kazo.Os.AppSdk.Terminal.TerminalPanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
 Kazo.Os.AppSdk.Terminal.TerminalPanel.Exited -> System.EventHandler?
 Kazo.Os.AppSdk.Terminal.TerminalPanel.FocusAsync() -> System.Threading.Tasks.Task!
@@ -62,12 +62,12 @@ Kazo.Os.AppSdk.Terminal.TerminalPanel.OnExitRequested.set -> void
 Kazo.Os.AppSdk.Terminal.TerminalPanel.OnTerminalData(string! data) -> System.Threading.Tasks.Task!
 Kazo.Os.AppSdk.Terminal.TerminalPanel.OnTitleChanged.get -> Microsoft.AspNetCore.Components.EventCallback<string!>
 Kazo.Os.AppSdk.Terminal.TerminalPanel.OnTitleChanged.set -> void
-Kazo.Os.AppSdk.Terminal.TerminalPanel.OutputReceived -> System.EventHandler<Kazo.Os.AppSdk.Components.HackTerminalOutputEventArgs!>?
+Kazo.Os.AppSdk.Terminal.TerminalPanel.OutputReceived -> System.EventHandler<Kazo.Os.AppSdk.Components.KazoTerminalOutputEventArgs!>?
 Kazo.Os.AppSdk.Terminal.TerminalPanel.PushVirtualKey(Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent! evt) -> System.Threading.Tasks.Task!
 Kazo.Os.AppSdk.Terminal.TerminalPanel.ReadOutput(int maxCharacters = 65536) -> string!
-Kazo.Os.AppSdk.Terminal.TerminalPanel.RunCommandAsync(string! commandLine, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Components.HackTerminalCommandResult!>!
+Kazo.Os.AppSdk.Terminal.TerminalPanel.RunCommandAsync(string! commandLine, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Components.KazoTerminalCommandResult!>!
 Kazo.Os.AppSdk.Terminal.TerminalPanel.SendInputAsync(string! text) -> System.Threading.Tasks.Task!
-Kazo.Os.AppSdk.Terminal.TerminalPanel.SetWorkingDirectoryAsync(string! path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Components.HackTerminalCommandResult!>!
+Kazo.Os.AppSdk.Terminal.TerminalPanel.SetWorkingDirectoryAsync(string! path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Components.KazoTerminalCommandResult!>!
 Kazo.Os.AppSdk.Terminal.TerminalPanel.ShowBanner.get -> bool
 Kazo.Os.AppSdk.Terminal.TerminalPanel.ShowBanner.set -> void
 Kazo.Os.AppSdk.Terminal.TerminalPanel.StateChanged -> System.EventHandler?
@@ -119,9 +119,9 @@ Kazo.Os.AppSdk.Terminal.TerminalTabs.TerminalTabs() -> void
 Kazo.Os.AppSdk.Terminal._Imports
 Kazo.Os.AppSdk.Terminal._Imports.Execute() -> void
 Kazo.Os.AppSdk.Terminal._Imports._Imports() -> void
-override Kazo.Os.AppSdk.Terminal.TerminalCredentialPrompt.ConfirmAsync(Kazo.Os.AppSdk.Shell.HackConfirmationRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Shell.HackConfirmation>!
-override Kazo.Os.AppSdk.Terminal.TerminalCredentialPrompt.ReadCredentialAsync(Kazo.Os.AppSdk.Shell.HackCredentialRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Shell.HackCredential?>!
-override Kazo.Os.AppSdk.Terminal.TerminalCredentialPrompt.WriteLineAsync(string! text, Kazo.Os.AppSdk.Shell.HackPromptLineKind kind, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+override Kazo.Os.AppSdk.Terminal.TerminalCredentialPrompt.ConfirmAsync(Kazo.Os.AppSdk.Shell.KazoConfirmationRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Shell.KazoConfirmation>!
+override Kazo.Os.AppSdk.Terminal.TerminalCredentialPrompt.ReadCredentialAsync(Kazo.Os.AppSdk.Shell.KazoCredentialRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Shell.KazoCredential?>!
+override Kazo.Os.AppSdk.Terminal.TerminalCredentialPrompt.WriteLineAsync(string! text, Kazo.Os.AppSdk.Shell.KazoPromptLineKind kind, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 override Kazo.Os.AppSdk.Terminal.TerminalInputReader.Peek() -> int
 override Kazo.Os.AppSdk.Terminal.TerminalInputReader.Read() -> int
 override Kazo.Os.AppSdk.Terminal.TerminalInputReader.Read(System.Span<char> buffer) -> int

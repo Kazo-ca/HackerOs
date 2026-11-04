@@ -9,7 +9,7 @@ namespace Kazo.Os.Samples.Intranet.Controllers.Api;
 /// it with <c>fetch</c> on every key stroke, through the browser's bridge and the simulated network.
 /// </summary>
 [Route("api/people")]
-public sealed class PeopleApiController(StaffDirectory directory) : HackApiController
+public sealed class PeopleApiController(StaffDirectory directory) : KazoApiController
 {
     /// <summary><c>GET /api/people?q=</c>: the matching people, sorted by name.</summary>
     /// <param name="q">The search text.</param>

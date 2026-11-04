@@ -11,7 +11,7 @@ namespace Kazo.Os.Commands.Wget;
 
 /// <summary>
 /// <c>wget [-O FILE] [-P DIR] [-q] [-S] [--spider] URL...</c> (ADR 0064): downloads each URL with
-/// <see cref="HackHttpClient"/> (the simulated network, or the real one through the OS relay with
+/// <see cref="KazoHttpClient"/> (the simulated network, or the real one through the OS relay with
 /// <c>network.real.access</c>) into a file named after the URL (<c>index.html</c> for a
 /// directory), never overwriting: <c>file.1</c>, <c>file.2</c>… like GNU wget. <c>-O -</c>
 /// writes to standard output. Progress goes to standard error, as wget does.
@@ -67,7 +67,7 @@ public sealed class WgetCommand(AppManifest manifest) : TerminalAppBase(manifest
 
         TextWriter log = quiet ? TextWriter.Null : context.StandardError;
         int status = 0;
-        using HackHttpClient client = new();
+        using KazoHttpClient client = new();
         client.DefaultRequestHeaders["User-Agent"] = "Wget/1.21.4";
         foreach (string text in urls)
         {
@@ -82,16 +82,16 @@ public sealed class WgetCommand(AppManifest manifest) : TerminalAppBase(manifest
             DateTimeOffset started = context.App.Clock.UtcNow;
             await log.WriteLineAsync($"--{started:yyyy-MM-dd HH:mm:ss}--  {uri.AbsoluteUri}");
             await log.WriteLineAsync(messages["Resolving", uri.Host]);
-            HackHttpResponse response;
+            KazoHttpResponse response;
             try
             {
                 response = spider
                     ? await client.SendAsync(HttpMethod.Head, uri.AbsoluteUri, null, cancellationToken)
                     : await client.GetAsync(uri.AbsoluteUri, cancellationToken);
             }
-            catch (HackHttpRequestException exception)
+            catch (KazoHttpRequestException exception)
             {
-                await log.WriteLineAsync(exception.NetworkError == HackNetworkError.HostNotFound
+                await log.WriteLineAsync(exception.NetworkError == KazoNetworkError.HostNotFound
                     ? messages["CannotResolve", uri.Host]
                     : messages["ConnectFailed", uri.Host, uri.Port, exception.Message]);
                 status = 4;
@@ -143,14 +143,14 @@ public sealed class WgetCommand(AppManifest manifest) : TerminalAppBase(manifest
                 string target = output ?? await FreeNameAsync(prefix, FileName(response.RequestUri), cancellationToken);
                 if (prefix is not null && output is null)
                 {
-                    await HackDirectory.CreateDirectoryAsync(prefix, cancellationToken);
+                    await KazoDirectory.CreateDirectoryAsync(prefix, cancellationToken);
                 }
 
                 await log.WriteLineAsync(messages["SavingTo", target]);
                 await log.WriteLineAsync();
-                await HackFile.WriteAllBytesAsync(target, response.ContentBytes, cancellationToken);
+                await KazoFile.WriteAllBytesAsync(target, response.ContentBytes, cancellationToken);
                 string bar = new('=', 38);
-                await log.WriteLineAsync($"{HackPath.GetFileName(target),-20} 100%[{bar}>] {CommandIO.HumanSize(response.ContentBytes.Length),7}  --.-KB/s    in 0s");
+                await log.WriteLineAsync($"{KazoPath.GetFileName(target),-20} 100%[{bar}>] {CommandIO.HumanSize(response.ContentBytes.Length),7}  --.-KB/s    in 0s");
                 await log.WriteLineAsync();
                 await log.WriteLineAsync(messages["Saved",
                     context.App.Clock.UtcNow.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture),
@@ -177,9 +177,9 @@ public sealed class WgetCommand(AppManifest manifest) : TerminalAppBase(manifest
     /// <summary>wget never overwrites: <c>name</c>, else <c>name.1</c>, <c>name.2</c>…</summary>
     private static async Task<string> FreeNameAsync(string? prefix, string name, CancellationToken cancellationToken)
     {
-        string basePath = prefix is null ? name : HackPath.Combine(prefix, name);
+        string basePath = prefix is null ? name : KazoPath.Combine(prefix, name);
         string candidate = basePath;
-        for (int suffix = 1; await HackFile.ExistsAsync(candidate, cancellationToken); suffix++)
+        for (int suffix = 1; await KazoFile.ExistsAsync(candidate, cancellationToken); suffix++)
         {
             candidate = $"{basePath}.{suffix}";
         }

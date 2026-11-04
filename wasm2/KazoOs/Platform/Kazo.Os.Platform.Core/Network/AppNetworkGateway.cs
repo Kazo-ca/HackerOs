@@ -17,8 +17,8 @@ namespace Kazo.Os.Platform.Core.Network;
 
 /// <summary>
 /// Trusted <see cref="IAppNetworkGateway"/> of one app instance (ADR 0056, section 6): the OS
-/// network stack an app reaches through <c>HackDns</c>, <c>HackPing</c>, <c>HackHttpClient</c> and
-/// <c>HackTcpClient</c>.
+/// network stack an app reaches through <c>KazoDns</c>, <c>KazoPing</c>, <c>KazoHttpClient</c> and
+/// <c>KazoTcpClient</c>.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -121,74 +121,74 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
     }
 
     /// <inheritdoc />
-    public async ValueTask<HackNetworkResult<HackHostEntry>> ResolveAsync(string hostName, CancellationToken cancellationToken = default)
+    public async ValueTask<KazoNetworkResult<KazoHostEntry>> ResolveAsync(string hostName, CancellationToken cancellationToken = default)
     {
         // ADR 0067: time spent in the gateway is the caller's stime (kernel sub-frame).
-        using Kazo.Os.AppSdk.HackExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.HackExecutionContext.EnterKernel();
+        using Kazo.Os.AppSdk.KazoExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.KazoExecutionContext.EnterKernel();
         using KernelMemoryCharge socket = OpenSocket();
-        HackNetworkResult<HackHostEntry> result = await ResolveCoreAsync(hostName, cancellationToken).ConfigureAwait(false);
+        KazoNetworkResult<KazoHostEntry> result = await ResolveCoreAsync(hostName, cancellationToken).ConfigureAwait(false);
         // A name answered on this machine never leaves it: the stub resolver is reached on lo.
         _meter.Dns(hostName, result.Value?.AddressList.Count ?? 0, result.Succeeded, local: IsAnsweredLocally(result.Value));
         return result;
     }
 
     /// <inheritdoc />
-    public async ValueTask<HackNetworkResult<HackHostEntry>> ReverseLookupAsync(IPAddress address, CancellationToken cancellationToken = default)
+    public async ValueTask<KazoNetworkResult<KazoHostEntry>> ReverseLookupAsync(IPAddress address, CancellationToken cancellationToken = default)
     {
         // ADR 0067: time spent in the gateway is the caller's stime (kernel sub-frame).
-        using Kazo.Os.AppSdk.HackExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.HackExecutionContext.EnterKernel();
+        using Kazo.Os.AppSdk.KazoExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.KazoExecutionContext.EnterKernel();
         using KernelMemoryCharge socket = OpenSocket();
-        HackNetworkResult<HackHostEntry> result = await ReverseLookupCoreAsync(address, cancellationToken).ConfigureAwait(false);
+        KazoNetworkResult<KazoHostEntry> result = await ReverseLookupCoreAsync(address, cancellationToken).ConfigureAwait(false);
         // A PTR query asks for "<octets>.in-addr.arpa".
         _meter.Dns($"{address}.in-addr.arpa", result.Succeeded ? 1 : 0, result.Succeeded);
         return result;
     }
 
     /// <inheritdoc />
-    public async ValueTask<HackNetworkResult<HackPingReply>> PingAsync(
+    public async ValueTask<KazoNetworkResult<KazoPingReply>> PingAsync(
         string hostNameOrAddress, TimeSpan timeout, CancellationToken cancellationToken = default)
     {
         // ADR 0067: time spent in the gateway is the caller's stime (kernel sub-frame).
-        using Kazo.Os.AppSdk.HackExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.HackExecutionContext.EnterKernel();
+        using Kazo.Os.AppSdk.KazoExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.KazoExecutionContext.EnterKernel();
         using KernelMemoryCharge socket = OpenSocket();
-        (HackNetworkResult<HackPingReply> result, bool local) = await PingCoreAsync(hostNameOrAddress, timeout, cancellationToken).ConfigureAwait(false);
-        _meter.Echo(result.Succeeded && result.Value!.Status == HackIPStatus.Success, local);
+        (KazoNetworkResult<KazoPingReply> result, bool local) = await PingCoreAsync(hostNameOrAddress, timeout, cancellationToken).ConfigureAwait(false);
+        _meter.Echo(result.Succeeded && result.Value!.Status == KazoIPStatus.Success, local);
         return result;
     }
 
     /// <inheritdoc />
-    public async ValueTask<HackNetworkResult<HackHttpResponse>> SendAsync(
-        HackHttpRequest request, CancellationToken cancellationToken = default)
+    public async ValueTask<KazoNetworkResult<KazoHttpResponse>> SendAsync(
+        KazoHttpRequest request, CancellationToken cancellationToken = default)
     {
         // ADR 0067: time spent in the gateway is the caller's stime (kernel sub-frame).
-        using Kazo.Os.AppSdk.HackExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.HackExecutionContext.EnterKernel();
+        using Kazo.Os.AppSdk.KazoExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.KazoExecutionContext.EnterKernel();
         using KernelMemoryCharge socket = OpenSocket();
-        (HackNetworkResult<HackHttpResponse> result, bool local) = await SendCoreAsync(request, cancellationToken).ConfigureAwait(false);
+        (KazoNetworkResult<KazoHttpResponse> result, bool local) = await SendCoreAsync(request, cancellationToken).ConfigureAwait(false);
         _meter.Http(request, result, local);
         return result;
     }
 
     /// <inheritdoc />
-    public async ValueTask<HackNetworkResult<IReadOnlyList<HackPortProbeResult>>> ProbeTcpAsync(
+    public async ValueTask<KazoNetworkResult<IReadOnlyList<KazoPortProbeResult>>> ProbeTcpAsync(
         string hostNameOrAddress, int firstPort, int lastPort, CancellationToken cancellationToken = default)
     {
         // ADR 0067: time spent in the gateway is the caller's stime (kernel sub-frame).
-        using Kazo.Os.AppSdk.HackExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.HackExecutionContext.EnterKernel();
+        using Kazo.Os.AppSdk.KazoExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.KazoExecutionContext.EnterKernel();
         using KernelMemoryCharge socket = OpenSocket();
-        (HackNetworkResult<IReadOnlyList<HackPortProbeResult>> result, bool local) =
+        (KazoNetworkResult<IReadOnlyList<KazoPortProbeResult>> result, bool local) =
             await ProbeTcpCoreAsync(hostNameOrAddress, firstPort, lastPort, cancellationToken).ConfigureAwait(false);
         _meter.Probe(result, Math.Max(1, lastPort - firstPort + 1), local);
         return result;
     }
 
     /// <inheritdoc />
-    public async ValueTask<HackNetworkResult<HackOsFingerprint?>> DetectOperatingSystemAsync(
+    public async ValueTask<KazoNetworkResult<KazoOsFingerprint?>> DetectOperatingSystemAsync(
         string hostNameOrAddress, CancellationToken cancellationToken = default)
     {
         // ADR 0067: time spent in the gateway is the caller's stime (kernel sub-frame).
-        using Kazo.Os.AppSdk.HackExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.HackExecutionContext.EnterKernel();
+        using Kazo.Os.AppSdk.KazoExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.KazoExecutionContext.EnterKernel();
         using KernelMemoryCharge socket = OpenSocket();
-        (HackNetworkResult<HackOsFingerprint?> result, bool local) =
+        (KazoNetworkResult<KazoOsFingerprint?> result, bool local) =
             await DetectOperatingSystemCoreAsync(hostNameOrAddress, cancellationToken).ConfigureAwait(false);
         _meter.Fingerprint(result.Succeeded, local);
         return result;
@@ -197,12 +197,12 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
     /// <inheritdoc />
     /// <exception cref="NotSupportedException">The gateway has no local network stack.</exception>
     /// <exception cref="ArgumentException">A prefix is not a valid listener prefix.</exception>
-    public ValueTask<HackNetworkResult<IHackHttpListenerSocket>> ListenHttpAsync(
+    public ValueTask<KazoNetworkResult<IHackHttpListenerSocket>> ListenHttpAsync(
         IReadOnlyList<string> prefixes, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(prefixes);
         cancellationToken.ThrowIfCancellationRequested();
-        using Kazo.Os.AppSdk.HackExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.HackExecutionContext.EnterKernel();
+        using Kazo.Os.AppSdk.KazoExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.KazoExecutionContext.EnterKernel();
         if (_local is not { } local || _pid is not { } pid)
         {
             throw new NotSupportedException("This network gateway has no local network stack to listen on.");
@@ -246,28 +246,28 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
             pid, _appId, ProgramName(_appId), local.Principal.UserId.ToString(), local.Principal.LoginName.Value);
         IHackHttpListenerSocket? socket = local.Services.Ports.TryOpen(owner, bindings, out string? conflict);
         return ValueTask.FromResult(socket is null
-            ? HackNetworkResult<IHackHttpListenerSocket>.Failure(HackNetworkError.AddressInUse, $"{conflict}: address already in use")
-            : HackNetworkResult<IHackHttpListenerSocket>.Success(socket));
+            ? KazoNetworkResult<IHackHttpListenerSocket>.Failure(KazoNetworkError.AddressInUse, $"{conflict}: address already in use")
+            : KazoNetworkResult<IHackHttpListenerSocket>.Success(socket));
     }
 
     /// <inheritdoc />
-    public ValueTask<IReadOnlyList<HackTcpListenerInfo>> GetTcpListenersAsync(CancellationToken cancellationToken = default)
+    public ValueTask<IReadOnlyList<KazoTcpListenerInfo>> GetTcpListenersAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
         if (_local is not { } local)
         {
-            return ValueTask.FromResult<IReadOnlyList<HackTcpListenerInfo>>([]);
+            return ValueTask.FromResult<IReadOnlyList<KazoTcpListenerInfo>>([]);
         }
 
         // As /proc/net/tcp: every socket is listed, but its process only for its owner or root
         // (netstat -p prints "-" for the others).
-        IReadOnlyList<HackTcpListenerInfo> listeners =
+        IReadOnlyList<KazoTcpListenerInfo> listeners =
         [
             .. local.Services.Ports.Snapshot().Select(row =>
             {
                 bool visible = row.Owner is { } owner
                     && (local.IsRoot || string.Equals(owner.UserId, local.Principal.UserId.ToString(), StringComparison.Ordinal));
-                return new HackTcpListenerInfo(
+                return new KazoTcpListenerInfo(
                     row.Address,
                     row.Port,
                     visible ? row.Owner!.Pid.Value : null,
@@ -280,12 +280,12 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
     }
 
     /// <inheritdoc />
-    public ValueTask<HackNetworkResult<IHackSocket>> ConnectTcpAsync(
+    public ValueTask<KazoNetworkResult<IHackSocket>> ConnectTcpAsync(
         string hostNameOrAddress, int port, CancellationToken cancellationToken = default) =>
         ConnectAsync(ProxyProtocol.Tcp, hostNameOrAddress, port, cancellationToken);
 
     /// <inheritdoc />
-    public ValueTask<HackNetworkResult<IHackSocket>> ConnectUdpAsync(
+    public ValueTask<KazoNetworkResult<IHackSocket>> ConnectUdpAsync(
         string hostNameOrAddress, int port, CancellationToken cancellationToken = default) =>
         ConnectAsync(ProxyProtocol.Udp, hostNameOrAddress, port, cancellationToken);
 
@@ -294,7 +294,7 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
     /// sockets, so a target it knows (or this machine) refuses; an unknown target goes to the
     /// optional relay, which only exists for an app holding <c>network.real.access</c>.
     /// </summary>
-    private async ValueTask<HackNetworkResult<IHackSocket>> ConnectAsync(
+    private async ValueTask<KazoNetworkResult<IHackSocket>> ConnectAsync(
         ProxyProtocol protocol, string hostNameOrAddress, int port, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(hostNameOrAddress);
@@ -303,7 +303,7 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
         cancellationToken.ThrowIfCancellationRequested();
 
         // ADR 0067: time spent in the gateway is the caller's stime (kernel sub-frame).
-        using Kazo.Os.AppSdk.HackExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.HackExecutionContext.EnterKernel();
+        using Kazo.Os.AppSdk.KazoExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.KazoExecutionContext.EnterKernel();
         // A socket carries arbitrary bytes both ways: it is a write, like an HTTP POST.
         _capabilities.Require(AppCapabilities.NetworkSimulatedWrite);
 
@@ -312,14 +312,14 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
         if (route.IsLocal || route.Host is not null)
         {
             _meter.ConnectFailed(udp);
-            return HackNetworkResult<IHackSocket>.Failure(
-                HackNetworkError.ConnectionRefused,
+            return KazoNetworkResult<IHackSocket>.Failure(
+                KazoNetworkError.ConnectionRefused,
                 $"{hostNameOrAddress}:{port}: connection refused (the simulated network carries no raw {(udp ? "UDP" : "TCP")} sockets)");
         }
 
         if (!CanRelay(hostNameOrAddress) || await TryOpenRealRouteAsync(cancellationToken).ConfigureAwait(false) is not { } real)
         {
-            return HackNetworkResult<IHackSocket>.Failure(HackNetworkError.HostNotFound);
+            return KazoNetworkResult<IHackSocket>.Failure(KazoNetworkError.HostNotFound);
         }
 
         // The socket's buffers are charged to the process for as long as it stays open.
@@ -336,19 +336,19 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
                 _meter.Segment(0, outbound: false, udp: false);
             }
 
-            return HackNetworkResult<IHackSocket>.Success(new RelayedSocket(channel, _meter, buffers));
+            return KazoNetworkResult<IHackSocket>.Success(new RelayedSocket(channel, _meter, buffers));
         }
         catch (ProxyStreamException refused)
         {
             buffers.Dispose();
             _meter.ConnectFailed(udp);
-            return HackNetworkResult<IHackSocket>.Failure(ToNetworkError(refused.ErrorCode), refused.Message);
+            return KazoNetworkResult<IHackSocket>.Failure(ToNetworkError(refused.ErrorCode), refused.Message);
         }
         catch (Exception exception) when (exception is ServerConnectionException or HttpRequestException or System.Net.WebSockets.WebSocketException)
         {
             buffers.Dispose();
             _meter.ConnectFailed(udp);
-            return HackNetworkResult<IHackSocket>.Failure(HackNetworkError.ConnectionFailed, exception.Message);
+            return KazoNetworkResult<IHackSocket>.Failure(KazoNetworkError.ConnectionFailed, exception.Message);
         }
     }
 
@@ -356,12 +356,12 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
     /// What an app sees of a relay refusal: a policy refusal (port, address range) is a firewall
     /// REJECT, a missing server grant or a disabled relay is no route at all.
     /// </summary>
-    private static HackNetworkError ToNetworkError(string errorCode) => errorCode switch
+    private static KazoNetworkError ToNetworkError(string errorCode) => errorCode switch
     {
-        ProxyErrorCode.ConnectionRefused or ProxyErrorCode.BlockedPort or ProxyErrorCode.BlockedAddress => HackNetworkError.ConnectionRefused,
-        ProxyErrorCode.HostUnreachable => HackNetworkError.HostUnreachable,
-        ProxyErrorCode.GrantMissing or ProxyErrorCode.RelayDisabled or ProxyErrorCode.SimulatedDomainBlocked => HackNetworkError.HostNotFound,
-        _ => HackNetworkError.ConnectionFailed
+        ProxyErrorCode.ConnectionRefused or ProxyErrorCode.BlockedPort or ProxyErrorCode.BlockedAddress => KazoNetworkError.ConnectionRefused,
+        ProxyErrorCode.HostUnreachable => KazoNetworkError.HostUnreachable,
+        ProxyErrorCode.GrantMissing or ProxyErrorCode.RelayDisabled or ProxyErrorCode.SimulatedDomainBlocked => KazoNetworkError.HostNotFound,
+        _ => KazoNetworkError.ConnectionFailed
     };
 
     /// <summary>Gets the short program name of an app (its last dotted segment, 15 characters), as <c>comm</c>.</summary>
@@ -384,8 +384,8 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
         && string.Equals(url.Host, binding.Host, StringComparison.OrdinalIgnoreCase)
         && binding.Path.StartsWith(url.Path, StringComparison.Ordinal);
 
-    private static bool IsAnsweredLocally(HackHostEntry? entry) =>
-        entry is not null && entry.Source is HackDnsSource.HostsFile or HackDnsSource.Loopback or HackDnsSource.WebApp or HackDnsSource.HostedSite;
+    private static bool IsAnsweredLocally(KazoHostEntry? entry) =>
+        entry is not null && entry.Source is KazoDnsSource.HostsFile or KazoDnsSource.Loopback or KazoDnsSource.WebApp or KazoDnsSource.HostedSite;
 
     /// <summary>Charges the socket buffers of one operation to the app's process while it is in flight.</summary>
     private KernelMemoryCharge OpenSocket() =>
@@ -395,7 +395,7 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
 
     // ── Simulated network ─────────────────────────────────────────────────
 
-    private async ValueTask<HackNetworkResult<HackHostEntry>> ResolveCoreAsync(string hostName, CancellationToken cancellationToken)
+    private async ValueTask<KazoNetworkResult<KazoHostEntry>> ResolveCoreAsync(string hostName, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(hostName);
         cancellationToken.ThrowIfCancellationRequested();
@@ -405,8 +405,8 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
         {
             DnsAnswer? answer = await local.Services.Resolver.ResolveAsync(hostName, cancellationToken).ConfigureAwait(false);
             return answer is null
-                ? HackNetworkResult<HackHostEntry>.Failure(HackNetworkError.HostNotFound)
-                : HackNetworkResult<HackHostEntry>.Success(new HackHostEntry(answer.CanonicalName, answer.Addresses, answer.Aliases)
+                ? KazoNetworkResult<KazoHostEntry>.Failure(KazoNetworkError.HostNotFound)
+                : KazoNetworkResult<KazoHostEntry>.Success(new KazoHostEntry(answer.CanonicalName, answer.Addresses, answer.Aliases)
                 {
                     Source = answer.Source,
                     SourceDetail = answer.Detail
@@ -415,14 +415,14 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
 
         string? ip = _network.Dns.Resolve(hostName);
         return ip is null
-            ? HackNetworkResult<HackHostEntry>.Failure(HackNetworkError.HostNotFound)
-            : HackNetworkResult<HackHostEntry>.Success(BuildEntry(_network.Dns.ReverseLookup(ip) ?? hostName, ip) with
+            ? KazoNetworkResult<KazoHostEntry>.Failure(KazoNetworkError.HostNotFound)
+            : KazoNetworkResult<KazoHostEntry>.Success(BuildEntry(_network.Dns.ReverseLookup(ip) ?? hostName, ip) with
             {
-                Source = HackDnsSource.SimulatedNetwork
+                Source = KazoDnsSource.SimulatedNetwork
             });
     }
 
-    private async ValueTask<HackNetworkResult<HackHostEntry>> ReverseLookupCoreAsync(IPAddress address, CancellationToken cancellationToken)
+    private async ValueTask<KazoNetworkResult<KazoHostEntry>> ReverseLookupCoreAsync(IPAddress address, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(address);
         cancellationToken.ThrowIfCancellationRequested();
@@ -433,11 +433,11 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
             ? await local.Services.Resolver.ReverseLookupAsync(address, cancellationToken).ConfigureAwait(false)
             : _network.Dns.ReverseLookup(ip);
         return hostName is null
-            ? HackNetworkResult<HackHostEntry>.Failure(HackNetworkError.HostNotFound)
-            : HackNetworkResult<HackHostEntry>.Success(BuildEntry(hostName, ip));
+            ? KazoNetworkResult<KazoHostEntry>.Failure(KazoNetworkError.HostNotFound)
+            : KazoNetworkResult<KazoHostEntry>.Success(BuildEntry(hostName, ip));
     }
 
-    private async ValueTask<(HackNetworkResult<HackPingReply> Result, bool Local)> PingCoreAsync(
+    private async ValueTask<(KazoNetworkResult<KazoPingReply> Result, bool Local)> PingCoreAsync(
         string hostNameOrAddress, TimeSpan timeout, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(hostNameOrAddress);
@@ -450,8 +450,8 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
             // The loopback answers at once: a few tens of microseconds, as on a real machine.
             int localSequence = Interlocked.Increment(ref _echoSequence);
             TimeSpan loopbackTrip = TimeSpan.FromMilliseconds(0.040 + (0.005 * (localSequence % 3)));
-            return (HackNetworkResult<HackPingReply>.Success(
-                new HackPingReply(route.Answer!.Addresses[0], HackIPStatus.Success, loopbackTrip)), true);
+            return (KazoNetworkResult<KazoPingReply>.Success(
+                new KazoPingReply(route.Answer!.Addresses[0], KazoIPStatus.Success, loopbackTrip)), true);
         }
 
         SimulatedHost? host = route.Host;
@@ -459,14 +459,14 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
         {
             return (CanRelay(hostNameOrAddress)
                 ? await PingRealHostAsync(hostNameOrAddress, cancellationToken).ConfigureAwait(false)
-                : HackNetworkResult<HackPingReply>.Failure(HackNetworkError.HostNotFound), false);
+                : KazoNetworkResult<KazoPingReply>.Failure(KazoNetworkError.HostNotFound), false);
         }
 
         IPAddress address = IPAddress.Parse(host.Ip);
         if (!host.IsUp)
         {
-            return (HackNetworkResult<HackPingReply>.Success(
-                new HackPingReply(address, HackIPStatus.DestinationHostUnreachable, TimeSpan.Zero)), false);
+            return (KazoNetworkResult<KazoPingReply>.Success(
+                new KazoPingReply(address, KazoIPStatus.DestinationHostUnreachable, TimeSpan.Zero)), false);
         }
 
         // Deterministic jitter of ±5% around the host's latency, cycling with each echo of this
@@ -474,13 +474,13 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
         int sequence = Interlocked.Increment(ref _echoSequence);
         double milliseconds = Math.Round(host.LatencyMs + (host.LatencyMs * 0.05 * ((sequence % 3) - 1)), 3);
         TimeSpan roundTrip = TimeSpan.FromMilliseconds(milliseconds);
-        return (HackNetworkResult<HackPingReply>.Success(roundTrip > timeout
-            ? new HackPingReply(address, HackIPStatus.TimedOut, TimeSpan.Zero)
-            : new HackPingReply(address, HackIPStatus.Success, roundTrip)), false);
+        return (KazoNetworkResult<KazoPingReply>.Success(roundTrip > timeout
+            ? new KazoPingReply(address, KazoIPStatus.TimedOut, TimeSpan.Zero)
+            : new KazoPingReply(address, KazoIPStatus.Success, roundTrip)), false);
     }
 
-    private async ValueTask<(HackNetworkResult<HackHttpResponse> Result, bool Local)> SendCoreAsync(
-        HackHttpRequest request, CancellationToken cancellationToken)
+    private async ValueTask<(KazoNetworkResult<KazoHttpResponse> Result, bool Local)> SendCoreAsync(
+        KazoHttpRequest request, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
         cancellationToken.ThrowIfCancellationRequested();
@@ -492,7 +492,7 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
 
         Route first = await RouteAsync(request.RequestUri.Host, cancellationToken).ConfigureAwait(false);
         Dictionary<string, Dictionary<string, string>> jar = ToJar(request.Cookies);
-        HashSet<HackCookie> before = [.. FromJar(jar)];
+        HashSet<KazoCookie> before = [.. FromJar(jar)];
         Uri currentUri = request.RequestUri;
 
         // ADR 0089: a Cookie header the app wrote itself (`curl -H 'Cookie: …'`) is sent with the
@@ -521,16 +521,16 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
             IReadOnlyList<KeyValuePair<string, string>> hopCookies =
                 string.Equals(currentUri.Host, requestedHost, StringComparison.OrdinalIgnoreCase) ? explicitCookies : [];
             SimulatedHttpResponse response;
-            HackHttpResponseSource source;
+            KazoHttpResponseSource source;
             bool untyped = false;
             if (route.IsLocal)
             {
-                source = HackHttpResponseSource.LocalSite;
-                (SimulatedHttpResponse? local, HackNetworkError? error) = await SendLocalAsync(
+                source = KazoHttpResponseSource.LocalSite;
+                (SimulatedHttpResponse? local, KazoNetworkError? error) = await SendLocalAsync(
                     method, currentUri, headers, body, jar, hopCookies, cancellationToken).ConfigureAwait(false);
                 if (error is { } localError)
                 {
-                    return (HackNetworkResult<HackHttpResponse>.Failure(localError), first.IsLocal);
+                    return (KazoNetworkResult<KazoHttpResponse>.Failure(localError), first.IsLocal);
                 }
 
                 response = local!;
@@ -543,51 +543,51 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
                 if (!CanRelay(currentUri.Host)
                     || (realRoute ??= await TryOpenRealRouteAsync(cancellationToken).ConfigureAwait(false)) is not { } real)
                 {
-                    return (HackNetworkResult<HackHttpResponse>.Failure(HackNetworkError.HostNotFound), first.IsLocal);
+                    return (KazoNetworkResult<KazoHttpResponse>.Failure(KazoNetworkError.HostNotFound), first.IsLocal);
                 }
 
-                (SimulatedHttpResponse? relayed, HackNetworkError? relayError, string? relayMessage, untyped) = await SendRealHopAsync(
+                (SimulatedHttpResponse? relayed, KazoNetworkError? relayError, string? relayMessage, untyped) = await SendRealHopAsync(
                     real, method, currentUri, headers, body, jar, hopCookies, includeBody, cancellationToken).ConfigureAwait(false);
                 if (relayError is { } failure)
                 {
-                    return (HackNetworkResult<HackHttpResponse>.Failure(failure, relayMessage), first.IsLocal);
+                    return (KazoNetworkResult<KazoHttpResponse>.Failure(failure, relayMessage), first.IsLocal);
                 }
 
                 response = relayed!;
-                source = HackHttpResponseSource.RealNetwork;
+                source = KazoHttpResponseSource.RealNetwork;
             }
             else if (!host.IsUp)
             {
-                return (HackNetworkResult<HackHttpResponse>.Failure(HackNetworkError.HostUnreachable), first.IsLocal);
+                return (KazoNetworkResult<KazoHttpResponse>.Failure(KazoNetworkError.HostUnreachable), first.IsLocal);
             }
             else
             {
                 // A name /etc/hosts points at a simulated machine reaches it under its own name.
-                Uri target = route.Answer is { Source: HackDnsSource.HostsFile }
+                Uri target = route.Answer is { Source: KazoDnsSource.HostsFile }
                     ? new UriBuilder(currentUri) { Host = host.Hostname }.Uri
                     : currentUri;
                 SimulatedExchangeResult exchange = SendSimulated(method, target, headers, body, jar, hopCookies);
                 if (exchange.NetworkError is not null)
                 {
-                    return (HackNetworkResult<HackHttpResponse>.Failure(MapSimulatedError(exchange.NetworkError)), first.IsLocal);
+                    return (KazoNetworkResult<KazoHttpResponse>.Failure(MapSimulatedError(exchange.NetworkError)), first.IsLocal);
                 }
 
                 response = exchange.Response!;
-                source = HackHttpResponseSource.Simulated;
+                source = KazoHttpResponseSource.Simulated;
             }
 
             if (!response.IsRedirect)
             {
-                HackHttpResponse built = BuildResponse(response, currentUri, redirectCount, includeBody, jar, before) with { Source = source };
+                KazoHttpResponse built = BuildResponse(response, currentUri, redirectCount, includeBody, jar, before) with { Source = source };
                 // A real site that sent no Content-Type keeps none: the app sniffs the bytes, as curl does.
-                return (HackNetworkResult<HackHttpResponse>.Success(untyped
+                return (KazoNetworkResult<KazoHttpResponse>.Success(untyped
                     ? built with { Headers = [.. built.Headers.Where(static header => !header.Key.Equals("Content-Type", StringComparison.OrdinalIgnoreCase))] }
                     : built), first.IsLocal);
             }
 
             if (redirectCount == MaxRedirects)
             {
-                return (HackNetworkResult<HackHttpResponse>.Failure(HackNetworkError.TooManyRedirects), first.IsLocal);
+                return (KazoNetworkResult<KazoHttpResponse>.Failure(KazoNetworkError.TooManyRedirects), first.IsLocal);
             }
 
             redirectCount++;
@@ -619,7 +619,7 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
         _ => false
     };
 
-    private async ValueTask<(HackNetworkResult<IReadOnlyList<HackPortProbeResult>> Result, bool Local)> ProbeTcpCoreAsync(
+    private async ValueTask<(KazoNetworkResult<IReadOnlyList<KazoPortProbeResult>> Result, bool Local)> ProbeTcpCoreAsync(
         string hostNameOrAddress, int firstPort, int lastPort, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(hostNameOrAddress);
@@ -629,7 +629,7 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
         Route route = await RouteAsync(hostNameOrAddress, cancellationToken).ConfigureAwait(false);
         if (route.IsLocal)
         {
-            return (HackNetworkResult<IReadOnlyList<HackPortProbeResult>>.Success(ProbeLocalPorts(firstPort, lastPort)), true);
+            return (KazoNetworkResult<IReadOnlyList<KazoPortProbeResult>>.Success(ProbeLocalPorts(firstPort, lastPort)), true);
         }
 
         SimulatedHost? host = route.Host;
@@ -638,34 +638,34 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
             // ADR 0035: only one explicit port is ever relayed to a real host, never a range.
             return (firstPort == lastPort && CanRelay(hostNameOrAddress)
                 ? await ProbeRealPortAsync(hostNameOrAddress, firstPort, cancellationToken).ConfigureAwait(false)
-                : HackNetworkResult<IReadOnlyList<HackPortProbeResult>>.Failure(HackNetworkError.HostNotFound), false);
+                : KazoNetworkResult<IReadOnlyList<KazoPortProbeResult>>.Failure(KazoNetworkError.HostNotFound), false);
         }
 
         if (!host.IsUp)
         {
-            return (HackNetworkResult<IReadOnlyList<HackPortProbeResult>>.Failure(HackNetworkError.HostUnreachable), false);
+            return (KazoNetworkResult<IReadOnlyList<KazoPortProbeResult>>.Failure(KazoNetworkError.HostUnreachable), false);
         }
 
-        IReadOnlyList<HackPortProbeResult> ports =
+        IReadOnlyList<KazoPortProbeResult> ports =
         [
-            .. host.ScanPorts(firstPort, lastPort).Select(port => new HackPortProbeResult(
+            .. host.ScanPorts(firstPort, lastPort).Select(port => new KazoPortProbeResult(
                 port.PortNumber, ToPortState(port.State), port.Service?.Name, port.Service?.Version))
         ];
-        return (HackNetworkResult<IReadOnlyList<HackPortProbeResult>>.Success(ports), false);
+        return (KazoNetworkResult<IReadOnlyList<KazoPortProbeResult>>.Success(ports), false);
     }
 
     /// <summary>
     /// Probes this machine: a port where a process listens is open (<c>http</c>, served by that
     /// program); the simulated system daemons of <c>localhost</c> keep their own state.
     /// </summary>
-    private IReadOnlyList<HackPortProbeResult> ProbeLocalPorts(int firstPort, int lastPort)
+    private IReadOnlyList<KazoPortProbeResult> ProbeLocalPorts(int firstPort, int lastPort)
     {
-        Dictionary<int, HackPortProbeResult> ports = [];
+        Dictionary<int, KazoPortProbeResult> ports = [];
         if (_network.GetHost(IPAddress.Loopback.ToString()) is { } daemons)
         {
             foreach (SimulatedPort port in daemons.ScanPorts(firstPort, lastPort))
             {
-                ports[port.PortNumber] = new HackPortProbeResult(port.PortNumber, ToPortState(port.State), port.Service?.Name, port.Service?.Version);
+                ports[port.PortNumber] = new KazoPortProbeResult(port.PortNumber, ToPortState(port.State), port.Service?.Name, port.Service?.Version);
             }
         }
 
@@ -673,14 +673,14 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
         {
             if (row.Owner is { } owner && row.Port >= firstPort && row.Port <= lastPort)
             {
-                ports[row.Port] = new HackPortProbeResult(row.Port, HackPortState.Open, "http", owner.ProgramName);
+                ports[row.Port] = new KazoPortProbeResult(row.Port, KazoPortState.Open, "http", owner.ProgramName);
             }
         }
 
         return [.. ports.Values.OrderBy(static port => port.Port)];
     }
 
-    private async ValueTask<(HackNetworkResult<HackOsFingerprint?> Result, bool Local)> DetectOperatingSystemCoreAsync(
+    private async ValueTask<(KazoNetworkResult<KazoOsFingerprint?> Result, bool Local)> DetectOperatingSystemCoreAsync(
         string hostNameOrAddress, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(hostNameOrAddress);
@@ -690,13 +690,13 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
         Route route = await RouteAsync(hostNameOrAddress, cancellationToken).ConfigureAwait(false);
         // This machine answers with the fingerprint of the simulated localhost, when there is one.
         SimulatedHost? host = route.IsLocal ? _network.GetHost(IPAddress.Loopback.ToString()) : route.Host;
-        HackNetworkResult<HackOsFingerprint?> result = host switch
+        KazoNetworkResult<KazoOsFingerprint?> result = host switch
         {
-            null when route.IsLocal => HackNetworkResult<HackOsFingerprint?>.Success(null),
-            null => HackNetworkResult<HackOsFingerprint?>.Failure(HackNetworkError.HostNotFound),
-            { IsUp: false } => HackNetworkResult<HackOsFingerprint?>.Failure(HackNetworkError.HostUnreachable),
-            { OsFingerprint: { } os } => HackNetworkResult<HackOsFingerprint?>.Success(new HackOsFingerprint(os.Name, os.Version, os.Accuracy)),
-            _ => HackNetworkResult<HackOsFingerprint?>.Success(null)
+            null when route.IsLocal => KazoNetworkResult<KazoOsFingerprint?>.Success(null),
+            null => KazoNetworkResult<KazoOsFingerprint?>.Failure(KazoNetworkError.HostNotFound),
+            { IsUp: false } => KazoNetworkResult<KazoOsFingerprint?>.Failure(KazoNetworkError.HostUnreachable),
+            { OsFingerprint: { } os } => KazoNetworkResult<KazoOsFingerprint?>.Success(new KazoOsFingerprint(os.Name, os.Version, os.Accuracy)),
+            _ => KazoNetworkResult<KazoOsFingerprint?>.Success(null)
         };
         return (result, route.IsLocal);
     }
@@ -852,7 +852,7 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
     /// redirect loop treats both worlds alike; its cookies land in <paramref name="jar"/>. The
     /// <c>Cookie</c> header carries the jar's cookies of the host merged with <paramref name="explicitCookies"/>.
     /// </summary>
-    private async ValueTask<(SimulatedHttpResponse? Response, HackNetworkError? Error)> SendLocalAsync(
+    private async ValueTask<(SimulatedHttpResponse? Response, KazoNetworkError? Error)> SendLocalAsync(
         string method,
         Uri uri,
         IReadOnlyList<KeyValuePair<string, string>> headers,
@@ -883,7 +883,7 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
             }
 
             // Nothing bound to that port: the kernel answers the SYN with a RST.
-            return (null, HackNetworkError.ConnectionRefused);
+            return (null, KazoNetworkError.ConnectionRefused);
         }
 
         List<KeyValuePair<string, string>> wire =
@@ -910,14 +910,14 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
 
         IPEndPoint remote = new(IPAddress.Loopback, local.Services.Ports.NextEphemeralPort());
         IPEndPoint localEndPoint = new(IPAddress.Loopback, port);
-        HackHttpListenerReply? reply = await socket.ExchangeAsync(
-            id => new HackHttpListenerExchange(id, method, uri, wire, body?.ContentType, bytes, remote, localEndPoint),
+        KazoHttpListenerReply? reply = await socket.ExchangeAsync(
+            id => new KazoHttpListenerExchange(id, method, uri, wire, body?.ContentType, bytes, remote, localEndPoint),
             local.Services.Ports.ResponseTimeout,
             cancellationToken).ConfigureAwait(false);
         if (reply is null)
         {
             // The process closed the socket, died or never answered: "empty reply from server".
-            return (null, HackNetworkError.ConnectionFailed);
+            return (null, KazoNetworkError.ConnectionFailed);
         }
 
         return (ToSimulatedResponse(reply, host, jar), null);
@@ -925,7 +925,7 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
 
     /// <summary>Turns a listener's reply into a simulated response, storing its <c>Set-Cookie</c> headers in the jar.</summary>
     private static SimulatedHttpResponse ToSimulatedResponse(
-        HackHttpListenerReply reply, string host, Dictionary<string, Dictionary<string, string>> jar)
+        KazoHttpListenerReply reply, string host, Dictionary<string, Dictionary<string, string>> jar)
     {
         ImmutableDictionary<string, string>.Builder headers = ImmutableDictionary.CreateBuilder<string, string>(StringComparer.OrdinalIgnoreCase);
         string? location = null;
@@ -1011,11 +1011,11 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
         return accessToken is null ? null : (new Uri(state.ServerBaseUrl), accessToken);
     }
 
-    private async ValueTask<HackNetworkResult<HackPingReply>> PingRealHostAsync(string target, CancellationToken cancellationToken)
+    private async ValueTask<KazoNetworkResult<KazoPingReply>> PingRealHostAsync(string target, CancellationToken cancellationToken)
     {
         if (await TryOpenRealRouteAsync(cancellationToken).ConfigureAwait(false) is not { } route)
         {
-            return HackNetworkResult<HackPingReply>.Failure(HackNetworkError.HostNotFound);
+            return KazoNetworkResult<KazoPingReply>.Failure(KazoNetworkError.HostNotFound);
         }
 
         string url = target.Contains("://", StringComparison.Ordinal) ? target : $"https://{target}";
@@ -1026,12 +1026,12 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
                 route.AccessToken,
                 new ProxyHttpRequest(Guid.NewGuid(), ProxyProtocol.Http, url, SimulatedHttpMethods.Head, [], null, 0, PingTimeoutSeconds, _appId),
                 cancellationToken).ConfigureAwait(false);
-            return HackNetworkResult<HackPingReply>.Success(
-                new HackPingReply(null, HackIPStatus.Success, TimeSpan.FromMilliseconds(response.DurationMs)));
+            return KazoNetworkResult<KazoPingReply>.Success(
+                new KazoPingReply(null, KazoIPStatus.Success, TimeSpan.FromMilliseconds(response.DurationMs)));
         }
         catch (Exception exception) when (exception is ServerConnectionException or HttpRequestException)
         {
-            return HackNetworkResult<HackPingReply>.Success(new HackPingReply(null, HackIPStatus.TimedOut, TimeSpan.Zero));
+            return KazoNetworkResult<KazoPingReply>.Success(new KazoPingReply(null, KazoIPStatus.TimedOut, TimeSpan.Zero));
         }
     }
 
@@ -1042,7 +1042,7 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
     /// land in the jar. The answer comes back as a simulated response so the redirect loop treats
     /// every world alike.
     /// </summary>
-    private async ValueTask<(SimulatedHttpResponse? Response, HackNetworkError? Error, string? Message, bool Untyped)> SendRealHopAsync(
+    private async ValueTask<(SimulatedHttpResponse? Response, KazoNetworkError? Error, string? Message, bool Untyped)> SendRealHopAsync(
         (Uri ServerBaseUrl, string AccessToken) route,
         string method,
         Uri uri,
@@ -1090,7 +1090,7 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
         }
         catch (HttpRequestException exception)
         {
-            return (null, HackNetworkError.ConnectionFailed, exception.Message, false);
+            return (null, KazoNetworkError.ConnectionFailed, exception.Message, false);
         }
 
         ImmutableDictionary<string, string>.Builder responseHeaders = ImmutableDictionary.CreateBuilder<string, string>(StringComparer.OrdinalIgnoreCase);
@@ -1135,16 +1135,16 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
     /// the server's operator is "blocked by the administrator", a slow site is a timeout; the
     /// operator's address and token never reach the app.
     /// </summary>
-    internal static HackNetworkError MapRelayError(string? proxyErrorCode) => proxyErrorCode switch
+    internal static KazoNetworkError MapRelayError(string? proxyErrorCode) => proxyErrorCode switch
     {
         ProxyErrorCode.BlockedAddress or ProxyErrorCode.BlockedPort or ProxyErrorCode.DnsRebindingBlocked
             or ProxyErrorCode.GrantMissing or ProxyErrorCode.RelayDisabled or ProxyErrorCode.CapabilityDenied
-            or ProxyErrorCode.SimulatedDomainBlocked => HackNetworkError.BlockedByAdministrator,
-        ProxyErrorCode.Timeout => HackNetworkError.TimedOut,
-        ProxyErrorCode.TooManyRedirects => HackNetworkError.TooManyRedirects,
-        ProxyErrorCode.ConnectionRefused => HackNetworkError.ConnectionRefused,
-        ProxyErrorCode.HostUnreachable => HackNetworkError.HostUnreachable,
-        _ => HackNetworkError.ConnectionFailed
+            or ProxyErrorCode.SimulatedDomainBlocked => KazoNetworkError.BlockedByAdministrator,
+        ProxyErrorCode.Timeout => KazoNetworkError.TimedOut,
+        ProxyErrorCode.TooManyRedirects => KazoNetworkError.TooManyRedirects,
+        ProxyErrorCode.ConnectionRefused => KazoNetworkError.ConnectionRefused,
+        ProxyErrorCode.HostUnreachable => KazoNetworkError.HostUnreachable,
+        _ => KazoNetworkError.ConnectionFailed
     };
 
     /// <summary>
@@ -1157,7 +1157,7 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
         Dictionary<string, string> cookies = new(StringComparer.Ordinal);
         foreach ((string key, Dictionary<string, string> domainCookies) in jar)
         {
-            if (HackCookieContainer.DomainMatches(host, key))
+            if (KazoCookieContainer.DomainMatches(host, key))
             {
                 foreach (KeyValuePair<string, string> cookie in domainCookies)
                 {
@@ -1205,7 +1205,7 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
             if (attributeName.Equals("Domain", StringComparison.OrdinalIgnoreCase) && attributeValue.Length > 0)
             {
                 string domain = attributeValue.TrimStart('.').ToLowerInvariant();
-                if (!domain.Contains('.', StringComparison.Ordinal) || !HackCookieContainer.DomainMatches(host, "." + domain))
+                if (!domain.Contains('.', StringComparison.Ordinal) || !KazoCookieContainer.DomainMatches(host, "." + domain))
                 {
                     return;
                 }
@@ -1241,12 +1241,12 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
         }
     }
 
-    private async ValueTask<HackNetworkResult<IReadOnlyList<HackPortProbeResult>>> ProbeRealPortAsync(
+    private async ValueTask<KazoNetworkResult<IReadOnlyList<KazoPortProbeResult>>> ProbeRealPortAsync(
         string target, int port, CancellationToken cancellationToken)
     {
         if (await TryOpenRealRouteAsync(cancellationToken).ConfigureAwait(false) is not { } route)
         {
-            return HackNetworkResult<IReadOnlyList<HackPortProbeResult>>.Failure(HackNetworkError.HostNotFound);
+            return KazoNetworkResult<IReadOnlyList<KazoPortProbeResult>>.Failure(KazoNetworkError.HostNotFound);
         }
 
         try
@@ -1256,23 +1256,23 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
                 route.AccessToken,
                 new ProxyTcpProbeRequest(Guid.NewGuid(), target, port, ProbeTimeoutSeconds, _appId),
                 cancellationToken).ConfigureAwait(false);
-            HackPortState state = response.State switch
+            KazoPortState state = response.State switch
             {
-                ProxyTcpProbeState.Open => HackPortState.Open,
-                ProxyTcpProbeState.Closed => HackPortState.Closed,
-                _ => HackPortState.Filtered
+                ProxyTcpProbeState.Open => KazoPortState.Open,
+                ProxyTcpProbeState.Closed => KazoPortState.Closed,
+                _ => KazoPortState.Filtered
             };
-            return HackNetworkResult<IReadOnlyList<HackPortProbeResult>>.Success([new HackPortProbeResult(port, state)]);
+            return KazoNetworkResult<IReadOnlyList<KazoPortProbeResult>>.Success([new KazoPortProbeResult(port, state)]);
         }
         catch (Exception exception) when (exception is ServerConnectionException or HttpRequestException)
         {
-            return HackNetworkResult<IReadOnlyList<HackPortProbeResult>>.Failure(HackNetworkError.ConnectionFailed, exception.Message);
+            return KazoNetworkResult<IReadOnlyList<KazoPortProbeResult>>.Failure(KazoNetworkError.ConnectionFailed, exception.Message);
         }
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────
 
-    private HackHostEntry BuildEntry(string hostName, string ip)
+    private KazoHostEntry BuildEntry(string hostName, string ip)
     {
         string[] aliases =
         [
@@ -1280,7 +1280,7 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
                 .Where(record => record.Ip == ip && !string.Equals(record.Hostname, hostName, StringComparison.OrdinalIgnoreCase))
                 .Select(record => record.Hostname)
         ];
-        return new HackHostEntry(hostName, [IPAddress.Parse(ip)], aliases);
+        return new KazoHostEntry(hostName, [IPAddress.Parse(ip)], aliases);
     }
 
     /// <summary>
@@ -1289,13 +1289,13 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
     /// travels as its text rendering, <c>text/plain</c>, with the page itself attached for the
     /// browser. A response with neither has no <c>Content-Type</c>, like a real 204 or 302.
     /// </summary>
-    private static HackHttpResponse BuildResponse(
+    private static KazoHttpResponse BuildResponse(
         SimulatedHttpResponse response,
         Uri finalUri,
         int redirectCount,
         bool includeBody,
         Dictionary<string, Dictionary<string, string>> jar,
-        HashSet<HackCookie> before)
+        HashSet<KazoCookie> before)
     {
         // A HEAD answer announces the length of the body a GET would have returned, without it.
         byte[] body = [];
@@ -1313,7 +1313,7 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
             contentType = "text/plain; charset=utf-8";
         }
 
-        HackCookie[] setCookies = [.. FromJar(jar).Where(cookie => !before.Contains(cookie))];
+        KazoCookie[] setCookies = [.. FromJar(jar).Where(cookie => !before.Contains(cookie))];
         List<KeyValuePair<string, string>> headers =
         [
             .. response.Headers.Where(static header =>
@@ -1328,9 +1328,9 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
         headers.Add(new("Content-Length", body.Length.ToString(System.Globalization.CultureInfo.InvariantCulture)));
         headers.AddRange(setCookies.Select(cookie => new KeyValuePair<string, string>("Set-Cookie", $"{cookie.Name}={cookie.Value}; Path=/")));
 
-        return new HackHttpResponse(
+        return new KazoHttpResponse(
             response.StatusCode,
-            HackHttpResponse.GetReasonPhrase(response.StatusCode),
+            KazoHttpResponse.GetReasonPhrase(response.StatusCode),
             finalUri,
             headers,
             includeBody ? body : [],
@@ -1339,10 +1339,10 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
             setCookies);
     }
 
-    private static Dictionary<string, Dictionary<string, string>> ToJar(IReadOnlyList<HackCookie> cookies)
+    private static Dictionary<string, Dictionary<string, string>> ToJar(IReadOnlyList<KazoCookie> cookies)
     {
         Dictionary<string, Dictionary<string, string>> jar = new(StringComparer.OrdinalIgnoreCase);
-        foreach (HackCookie cookie in cookies)
+        foreach (KazoCookie cookie in cookies)
         {
             if (!jar.TryGetValue(cookie.Domain, out Dictionary<string, string>? hostCookies))
             {
@@ -1356,24 +1356,24 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
         return jar;
     }
 
-    private static IEnumerable<HackCookie> FromJar(Dictionary<string, Dictionary<string, string>> jar) =>
-        jar.SelectMany(host => host.Value.Select(cookie => new HackCookie(host.Key.ToLowerInvariant(), cookie.Key, cookie.Value)));
+    private static IEnumerable<KazoCookie> FromJar(Dictionary<string, Dictionary<string, string>> jar) =>
+        jar.SelectMany(host => host.Value.Select(cookie => new KazoCookie(host.Key.ToLowerInvariant(), cookie.Key, cookie.Value)));
 
     private static string ResolveLocation(Uri requestUri, string location) =>
         Uri.TryCreate(requestUri, location, out Uri? resolved) ? resolved.AbsoluteUri : location;
 
-    private static HackNetworkError MapSimulatedError(string error) => error switch
+    private static KazoNetworkError MapSimulatedError(string error) => error switch
     {
-        SimulatedNetworkErrors.UnknownHost => HackNetworkError.HostNotFound,
-        SimulatedNetworkErrors.ConnectionRefused => HackNetworkError.ConnectionRefused,
-        SimulatedNetworkErrors.TooManyRedirects => HackNetworkError.TooManyRedirects,
-        _ => HackNetworkError.HostUnreachable
+        SimulatedNetworkErrors.UnknownHost => KazoNetworkError.HostNotFound,
+        SimulatedNetworkErrors.ConnectionRefused => KazoNetworkError.ConnectionRefused,
+        SimulatedNetworkErrors.TooManyRedirects => KazoNetworkError.TooManyRedirects,
+        _ => KazoNetworkError.HostUnreachable
     };
 
-    private static HackPortState ToPortState(SimulatedPortState state) => state switch
+    private static KazoPortState ToPortState(SimulatedPortState state) => state switch
     {
-        SimulatedPortState.Open => HackPortState.Open,
-        SimulatedPortState.Closed => HackPortState.Closed,
-        _ => HackPortState.Filtered
+        SimulatedPortState.Open => KazoPortState.Open,
+        SimulatedPortState.Closed => KazoPortState.Closed,
+        _ => KazoPortState.Filtered
     };
 }

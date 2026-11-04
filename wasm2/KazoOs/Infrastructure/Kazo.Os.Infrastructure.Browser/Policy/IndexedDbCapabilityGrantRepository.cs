@@ -229,7 +229,7 @@ public sealed class IndexedDbCapabilityGrantRepository :
             IndexedDbTransactionMode.ReadWrite,
             [new IndexedDbOperation(
                 "addIfAbsent",
-                HackerOsIndexedDbSchema.LocalBookkeepingStoreName,
+                KazoOsIndexedDbSchema.LocalBookkeepingStoreName,
                 Key: PolicyRevisionKey,
                 Value: new RevisionRecord(PolicyRevisionKey, 0))],
             cancellationToken).ConfigureAwait(false);
@@ -242,7 +242,7 @@ public sealed class IndexedDbCapabilityGrantRepository :
             IndexedDbTransactionMode.ReadOnly,
             [new IndexedDbOperation(
                 "get",
-                HackerOsIndexedDbSchema.LocalBookkeepingStoreName,
+                KazoOsIndexedDbSchema.LocalBookkeepingStoreName,
                 Key: PolicyRevisionKey)],
             cancellationToken).ConfigureAwait(false);
         return ReadRevision(results.Single());
@@ -258,11 +258,11 @@ public sealed class IndexedDbCapabilityGrantRepository :
             [
                 new IndexedDbOperation(
                     "get",
-                    HackerOsIndexedDbSchema.LocalBookkeepingStoreName,
+                    KazoOsIndexedDbSchema.LocalBookkeepingStoreName,
                     Key: PolicyRevisionKey),
                 new IndexedDbOperation(
                     "get",
-                    HackerOsIndexedDbSchema.GrantStoreName,
+                    KazoOsIndexedDbSchema.GrantStoreName,
                     Key: grantId.ToString())
             ],
             cancellationToken).ConfigureAwait(false);
@@ -285,7 +285,7 @@ public sealed class IndexedDbCapabilityGrantRepository :
             IndexedDbTransactionMode.ReadOnly,
             [new IndexedDbOperation(
                 "getAll",
-                HackerOsIndexedDbSchema.GrantStoreName,
+                KazoOsIndexedDbSchema.GrantStoreName,
                 IndexName: "appUserCapability",
                 Query: new object[] { appId, userId, capability })],
             cancellationToken).ConfigureAwait(false);
@@ -312,22 +312,22 @@ public sealed class IndexedDbCapabilityGrantRepository :
                 [
                     new IndexedDbOperation(
                         "assertPropertyEquals",
-                        HackerOsIndexedDbSchema.LocalBookkeepingStoreName,
+                        KazoOsIndexedDbSchema.LocalBookkeepingStoreName,
                         Key: PolicyRevisionKey,
                         CompareProperty: "value",
                         ExpectedValue: expectedRevision,
                         FailureCode: "policy.revision-conflict"),
                     new IndexedDbOperation(
                         "put",
-                        HackerOsIndexedDbSchema.GrantStoreName,
+                        KazoOsIndexedDbSchema.GrantStoreName,
                         Value: grant),
                     new IndexedDbOperation(
                         "add",
-                        HackerOsIndexedDbSchema.AuditStoreName,
+                        KazoOsIndexedDbSchema.AuditStoreName,
                         Value: audit),
                     new IndexedDbOperation(
                         "put",
-                        HackerOsIndexedDbSchema.LocalBookkeepingStoreName,
+                        KazoOsIndexedDbSchema.LocalBookkeepingStoreName,
                         Value: new RevisionRecord(PolicyRevisionKey, expectedRevision + 1))
                 ],
                 cancellationToken).ConfigureAwait(false);

@@ -13,7 +13,7 @@ namespace Kazo.Os.Apps.Settings;
 /// printed, without a password.
 /// </summary>
 /// <remarks>
-/// Uses only <see cref="HackServerConnection"/> (capability <c>server.connection.manage</c>).
+/// Uses only <see cref="KazoServerConnection"/> (capability <c>server.connection.manage</c>).
 /// The address is called only when the user presses Test or Pair: the OS never probes
 /// <c>localhost</c> by itself, which would show Chrome's "Local Network Access" prompt to every
 /// visitor of the GitHub Pages OS (ADR 0191 §3).
@@ -29,7 +29,7 @@ public sealed partial class LocalServerPanel
     /// <summary>The server image (ADR 0191 §4).</summary>
     internal const string DockerImage = "ghcr.io/kazo-ca/hackeros-server";
 
-    private HackServerProbe? _probe;
+    private KazoServerProbe? _probe;
     private string? _pairError;
     private bool _isTesting;
     private bool _isPairing;
@@ -37,7 +37,7 @@ public sealed partial class LocalServerPanel
 
     /// <summary>Raised with the new connection once this device is paired.</summary>
     [Parameter]
-    public EventCallback<HackServerConnectionState> OnPaired { get; set; }
+    public EventCallback<KazoServerConnectionState> OnPaired { get; set; }
 
     /// <summary>The server address typed by the user.</summary>
     internal string Address { get; set; } = DefaultAddress;
@@ -46,7 +46,7 @@ public sealed partial class LocalServerPanel
     internal string Code { get; set; } = string.Empty;
 
     /// <summary>The last test result, or <see langword="null"/> before the first test.</summary>
-    internal HackServerProbe? Probe => _probe;
+    internal KazoServerProbe? Probe => _probe;
 
     /// <summary>Why the last pairing failed, or <see langword="null"/>.</summary>
     internal string? PairError => _pairError;
@@ -91,11 +91,11 @@ public sealed partial class LocalServerPanel
         StateHasChanged();
         try
         {
-            _probe = await HackServerConnection.TestAsync(Context, address, Context.CancellationToken);
+            _probe = await KazoServerConnection.TestAsync(Context, address, Context.CancellationToken);
         }
         catch (Exception exception) when (exception is NotSupportedException or UnauthorizedAccessException)
         {
-            _probe = new HackServerProbe(false, null, null, exception.Message);
+            _probe = new KazoServerProbe(false, null, null, exception.Message);
         }
         finally
         {
@@ -115,13 +115,13 @@ public sealed partial class LocalServerPanel
         _isPairing = true;
         _pairError = null;
         StateHasChanged();
-        HackServerConnectionState? state = null;
+        KazoServerConnectionState? state = null;
         try
         {
-            state = await HackServerConnection.PairAsync(Context, address, Code, Context.CancellationToken);
+            state = await KazoServerConnection.PairAsync(Context, address, Code, Context.CancellationToken);
             Code = string.Empty;
         }
-        catch (Exception exception) when (exception is HackServerConnectionException or NotSupportedException or UnauthorizedAccessException)
+        catch (Exception exception) when (exception is KazoServerConnectionException or NotSupportedException or UnauthorizedAccessException)
         {
             _pairError = L["LocalServer.PairFailed", exception.Message];
         }

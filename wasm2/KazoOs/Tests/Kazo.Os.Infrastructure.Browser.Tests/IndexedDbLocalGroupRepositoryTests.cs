@@ -23,9 +23,9 @@ public sealed class IndexedDbLocalGroupRepositoryTests
         Assert.Equal(2, module.TransactionInvocations.Count);
         Assert.All(module.TransactionInvocations, invocation =>
         {
-            Assert.Equal([HackerOsIndexedDbSchema.GroupStoreName], invocation.StoreNames);
+            Assert.Equal([KazoOsIndexedDbSchema.GroupStoreName], invocation.StoreNames);
             Assert.All(invocation.Operations, operation =>
-                Assert.Equal(HackerOsIndexedDbSchema.GroupStoreName, operation.ObjectStoreName));
+                Assert.Equal(KazoOsIndexedDbSchema.GroupStoreName, operation.ObjectStoreName));
         });
     }
 

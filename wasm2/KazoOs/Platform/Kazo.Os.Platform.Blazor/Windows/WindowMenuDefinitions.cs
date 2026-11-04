@@ -21,29 +21,29 @@ internal static class WindowMenuDefinitions
     /// <param name="kind">The window menu, or the Maximize button's.</param>
     /// <param name="receiver">The object the entries' callbacks are created on.</param>
     public static void AddWindowEntries(
-        HackMenuDefinition definition,
+        KazoMenuDefinition definition,
         WindowKeyboardCommands commands,
         IStringLocalizer text,
         WindowId windowId,
         WindowMenuKind kind,
         object receiver)
     {
-        HackMenuGroupDefinition group = definition.AddGroup();
+        KazoMenuGroupDefinition group = definition.AddGroup();
         foreach (WindowMenuItem item in commands.GetMenuItems(windowId, kind))
         {
             WindowKeyboardAction action = item.Action;
-            HackMenuItemDefinition entry = group.Add("window." + WindowKeyBindingsSettingsDocuments.KeyOf(action), item.Label);
+            KazoMenuItemDefinition entry = group.Add("window." + WindowKeyBindingsSettingsDocuments.KeyOf(action), item.Label);
             entry.Shortcut = item.Shortcut;
             entry.IsDisabled = !item.IsEnabled;
             entry.OnClick = EventCallback.Factory.Create<object?>(receiver, () => commands.ExecuteForWindowAsync(action, windowId));
         }
 
-        HackMenuItemDefinition otherScreen = definition.AddGroup().Add(WindowManagerOverlays.OtherScreenItemId, text["WindowMenu.OtherScreen"]);
-        HackMenuGroupDefinition screens = new();
+        KazoMenuItemDefinition otherScreen = definition.AddGroup().Add(WindowManagerOverlays.OtherScreenItemId, text["WindowMenu.OtherScreen"]);
+        KazoMenuGroupDefinition screens = new();
         foreach (WindowScreenMenuItem screen in commands.GetScreenMenuItems(windowId))
         {
             DisplayId display = screen.Display;
-            HackMenuItemDefinition entry = screens.Add(
+            KazoMenuItemDefinition entry = screens.Add(
                 WindowManagerOverlays.ScreenItemIdPrefix + display.Number.ToString(System.Globalization.CultureInfo.InvariantCulture),
                 screen.Label);
             entry.IsDisabled = !screen.IsEnabled;
@@ -51,8 +51,8 @@ internal static class WindowMenuDefinitions
         }
 
         otherScreen.Children.Add(screens);
-        HackMenuGroupDefinition create = new();
-        HackMenuItemDefinition newScreen = create.Add(WindowManagerOverlays.NewScreenItemId, text["WindowMenu.NewScreen"]);
+        KazoMenuGroupDefinition create = new();
+        KazoMenuItemDefinition newScreen = create.Add(WindowManagerOverlays.NewScreenItemId, text["WindowMenu.NewScreen"]);
         newScreen.IsDisabled = !commands.CanOpenScreen;
         newScreen.OnClick = EventCallback.Factory.Create<object?>(receiver, () => commands.MoveToNewScreenAsync(windowId));
         otherScreen.Children.Add(create);

@@ -4,7 +4,7 @@ namespace Kazo.Os.AppSdk.Administration;
 
 /// <summary>
 /// Whole-machine backup and restore for one app instance (ADR 0099, section 1), behind
-/// <see cref="HackSystemBackup"/>. Every operation requires the dangerous capability
+/// <see cref="KazoSystemBackup"/>. Every operation requires the dangerous capability
 /// <c>system.backup</c> and an administrator through the OS authentication agent.
 /// </summary>
 /// <remarks>
@@ -19,7 +19,7 @@ public interface IAppSystemBackupGateway
     /// <summary>Exports the whole machine and downloads the <c>.hosbak</c> archive to the host computer.</summary>
     /// <param name="cancellationToken">Cancels the authentication or the export.</param>
     /// <returns>What was downloaded.</returns>
-    ValueTask<HackBackupInfo> CreateAsync(CancellationToken cancellationToken = default);
+    ValueTask<KazoBackupInfo> CreateAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Opens the host's file picker, validates the chosen archive, asks an administrator, then ends
@@ -28,11 +28,11 @@ public interface IAppSystemBackupGateway
     /// <param name="mode">Merge into or replace the current machine.</param>
     /// <param name="cancellationToken">Cancels the picker or the authentication; once the restore started it cannot be cancelled.</param>
     /// <returns><see langword="null"/> when the user closed the picker without choosing a file; otherwise the machine restarts and the task may never complete.</returns>
-    ValueTask<HackBackupInfo?> RestoreAsync(HackBackupRestoreMode mode, CancellationToken cancellationToken = default);
+    ValueTask<KazoBackupInfo?> RestoreAsync(KazoBackupRestoreMode mode, CancellationToken cancellationToken = default);
 }
 
 /// <summary>How a restore treats the current machine (ADR 0099, section 1).</summary>
-public enum HackBackupRestoreMode
+public enum KazoBackupRestoreMode
 {
     /// <summary>The archive's records overwrite the records with the same key; every other record is kept.</summary>
     Merge = 1,
@@ -46,18 +46,18 @@ public enum HackBackupRestoreMode
 /// <param name="SizeBytes">Size of the archive, compressed.</param>
 /// <param name="RecordCount">Database records it holds.</param>
 /// <param name="CreatedAtUtc">When it was exported.</param>
-public sealed record HackBackupInfo(string FileName, long SizeBytes, int RecordCount, DateTimeOffset CreatedAtUtc);
+public sealed record KazoBackupInfo(string FileName, long SizeBytes, int RecordCount, DateTimeOffset CreatedAtUtc);
 
 /// <summary>
 /// The chosen file is not a backup this Kazo OS can restore: not an archive, damaged (its SHA-256
 /// does not match), or made by another database schema version. Nothing was changed.
 /// </summary>
-public sealed class HackBackupInvalidException : HackIOException
+public sealed class KazoBackupInvalidException : KazoIOException
 {
     /// <summary>Initializes the exception.</summary>
     /// <param name="message">Why the archive was refused.</param>
     /// <param name="innerException">Underlying failure, when there is one.</param>
-    public HackBackupInvalidException(string message, Exception? innerException = null)
+    public KazoBackupInvalidException(string message, Exception? innerException = null)
         : base(message, innerException: innerException)
     {
     }

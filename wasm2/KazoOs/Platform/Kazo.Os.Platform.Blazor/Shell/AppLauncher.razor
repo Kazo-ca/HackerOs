@@ -8,13 +8,13 @@
              @onkeydown="HandleDialogKeyDownAsync">
         <header class="launcher-header">
             <div class="launcher-brand" aria-hidden="true">
-                <HackerIcon Library="IconLibrary.Lucide" Name="blocks" Size="22" Title="" />
+                <KazoIcon Library="IconLibrary.Lucide" Name="blocks" Size="22" Title="" />
                 <span>Kazo OS</span>
             </div>
 
             <div class="user-identity">
                 <span class="user-avatar" aria-hidden="true">
-                    <HackerIcon Library="IconLibrary.Lucide" Name="user-round" Size="28" Title="" />
+                    <KazoIcon Library="IconLibrary.Lucide" Name="user-round" Size="28" Title="" />
                 </span>
                 <span class="user-copy">
                     <strong>@PrincipalDisplayName</strong>
@@ -30,7 +30,7 @@
                         aria-label="@L["Launcher.Close"]"
                         title="@L["Common.Close"]"
                         @onclick="CloseAsync">
-                    <HackerIcon Library="IconLibrary.Lucide" Name="x" Size="17" Title="" />
+                    <KazoIcon Library="IconLibrary.Lucide" Name="x" Size="17" Title="" />
                 </button>
             </div>
         </header>
@@ -71,7 +71,7 @@
                                                     aria-label="@L["Launcher.MoveAppUp", app.Name]"
                                                     title="@L["Launcher.MoveUp"]"
                                                     @onclick="() => MovePinnedAsync(app.Id, -1)">
-                                                <HackerIcon Library="IconLibrary.Lucide" Name="chevron-up" Size="15" Title="" />
+                                                <KazoIcon Library="IconLibrary.Lucide" Name="chevron-up" Size="15" Title="" />
                                             </button>
                                             <button type="button"
                                                     class="icon-action"
@@ -79,7 +79,7 @@
                                                     aria-label="@L["Launcher.MoveAppDown", app.Name]"
                                                     title="@L["Launcher.MoveDown"]"
                                                     @onclick="() => MovePinnedAsync(app.Id, 1)">
-                                                <HackerIcon Library="IconLibrary.Lucide" Name="chevron-down" Size="15" Title="" />
+                                                <KazoIcon Library="IconLibrary.Lucide" Name="chevron-down" Size="15" Title="" />
                                             </button>
                                             <button type="button"
                                                     class="icon-action is-pinned"
@@ -88,7 +88,7 @@
                                                     aria-pressed="true"
                                                     title="@L["Launcher.Unpin"]"
                                                     @onclick="() => TogglePinAsync(app.Id)">
-                                                <HackerIcon Library="IconLibrary.Lucide" Name="pin-off" Size="15" Title="" />
+                                                <KazoIcon Library="IconLibrary.Lucide" Name="pin-off" Size="15" Title="" />
                                             </button>
                                         </div>
                                     </li>
@@ -133,7 +133,7 @@
                             {
                                 <div class="empty-state" role="row">
                                     <div class="empty-state-content" role="gridcell">
-                                        <HackerIcon Library="IconLibrary.Lucide" Name="search-x" Size="28" Title="" />
+                                        <KazoIcon Library="IconLibrary.Lucide" Name="search-x" Size="28" Title="" />
                                         <span role="status">@L["Launcher.NoMatch"]</span>
                                     </div>
                                 </div>
@@ -174,7 +174,7 @@
                                                     aria-pressed="@(isPinned ? "true" : "false")"
                                                     title="@(isPinned ? L["Launcher.Unpin"] : L["Launcher.Pin"])"
                                                     @onclick="() => TogglePinAsync(app.Id)">
-                                                <HackerIcon Library="IconLibrary.Lucide" Name="@(isPinned ? "pin-off" : "pin")" Size="16" Title="" />
+                                                <KazoIcon Library="IconLibrary.Lucide" Name="@(isPinned ? "pin-off" : "pin")" Size="16" Title="" />
                                             </button>
                                         </div>
                                     </div>
@@ -187,7 +187,7 @@
                 <footer class="search-footer">
                     <div class="search-box">
                         <span class="search-icon" aria-hidden="true">
-                            <HackerIcon Library="IconLibrary.Lucide" Name="search" Size="17" Title="" />
+                            <KazoIcon Library="IconLibrary.Lucide" Name="search" Size="17" Title="" />
                         </span>
                         <input id="launcher-search"
                                @ref="_searchInputRef"
@@ -214,7 +214,7 @@
                                     aria-label="@L["Launcher.ClearSearch"]"
                                     title="@L["Launcher.ClearSearchTitle"]"
                                     @onclick="ClearSearch">
-                                <HackerIcon Library="IconLibrary.Lucide" Name="x" Size="15" Title="" />
+                                <KazoIcon Library="IconLibrary.Lucide" Name="x" Size="15" Title="" />
                             </button>
                         }
                     </div>
@@ -230,7 +230,7 @@
                         aria-label="@L["Launcher.OpenFileExplorer"]"
                         @onclick="() => LaunchQuickAppAsync(FileExplorerAppId)">
                     <span class="quick-icon" aria-hidden="true">
-                        <HackerIcon Library="IconLibrary.Lucide" Name="folder" Size="22" Title="" />
+                        <KazoIcon Library="IconLibrary.Lucide" Name="folder" Size="22" Title="" />
                     </span>
                     <span>
                         <strong>@L["Launcher.FileExplorer"]</strong>
@@ -243,7 +243,7 @@
                         aria-label="@L["Launcher.OpenSettings"]"
                         @onclick="() => LaunchQuickAppAsync(SettingsAppId)">
                     <span class="quick-icon" aria-hidden="true">
-                        <HackerIcon Library="IconLibrary.Lucide" Name="settings" Size="22" Title="" />
+                        <KazoIcon Library="IconLibrary.Lucide" Name="settings" Size="22" Title="" />
                     </span>
                     <span>
                         <strong>@L["Launcher.Settings"]</strong>
@@ -253,7 +253,7 @@
 
                 <div class="quick-panel-spacer"></div>
                 <div class="session-summary">
-                    <HackerIcon Library="IconLibrary.Lucide" Name="shield-check" Size="17" Title="" />
+                    <KazoIcon Library="IconLibrary.Lucide" Name="shield-check" Size="17" Title="" />
                     <span>@L["Launcher.LocalSession"]</span>
                 </div>
 
@@ -268,7 +268,7 @@
                                 @if (OnSignOut.HasDelegate)
                                 {
                                     <button type="button" class="power-item" role="menuitem" @ref="_signOutItemRef" @onclick="SignOutAsync">
-                                        <HackerIcon Library="IconLibrary.Lucide" Name="log-out" Size="17" Title="" />
+                                        <KazoIcon Library="IconLibrary.Lucide" Name="log-out" Size="17" Title="" />
                                         <span>@L["Launcher.Power.SignOut"]</span>
                                     </button>
                                 }
@@ -278,7 +278,7 @@
                                         disabled
                                         aria-disabled="true"
                                         title="@SwitchUserHint">
-                                    <HackerIcon Library="IconLibrary.Lucide" Name="users" Size="17" Title="" />
+                                    <KazoIcon Library="IconLibrary.Lucide" Name="users" Size="17" Title="" />
                                     <span>
                                         @L["Launcher.Power.SwitchUser"]
                                         <small>@SwitchUserHint</small>
@@ -287,7 +287,7 @@
                                 @if (OnRestart.HasDelegate)
                                 {
                                     <button type="button" class="power-item" role="menuitem" @ref="_restartItemRef" @onclick="RestartAsync">
-                                        <HackerIcon Library="IconLibrary.Lucide" Name="rotate-ccw" Size="17" Title="" />
+                                        <KazoIcon Library="IconLibrary.Lucide" Name="rotate-ccw" Size="17" Title="" />
                                         <span>@L["Launcher.Power.Restart"]</span>
                                     </button>
                                 }
@@ -300,7 +300,7 @@
                                 aria-controls="launcher-power-menu"
                                 @ref="_powerTriggerRef"
                                 @onclick="TogglePowerMenu">
-                            <HackerIcon Library="IconLibrary.Lucide" Name="power" Size="17" Title="" />
+                            <KazoIcon Library="IconLibrary.Lucide" Name="power" Size="17" Title="" />
                             <span>@L["Launcher.Power"]</span>
                         </button>
                     </div>

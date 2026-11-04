@@ -18,7 +18,7 @@ jetons vérifiés.
 
 ## Contexte
 
-- Hack Paint (`Apps/System/Kazo.Os.Apps.HackPaint`) déclare les capacités de
+- Hack Paint (`Apps/System/Kazo.Os.Apps.KazoPaint`) déclare les capacités de
   lecture et d'écriture du dossier personnel et des dialogues de fichiers, mais
   n'a ni Ouvrir, ni Enregistrer, ni Exporter : son JS dessine des pixels RGBA sur
   un canvas.

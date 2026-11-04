@@ -141,10 +141,10 @@ internal sealed class AppExecutionContext : IAppExecutionContext
     /// <inheritdoc />
     /// <remarks>The process's own <c>TZ</c> wins, then the session's zone, so a change in Settings applies at once.</remarks>
     public TimeZoneInfo TimeZone =>
-        Kazo.Os.AppSdk.Globalization.HackTimeZone.TryFind(
-            Environment.GetVariable(Kazo.Os.AppSdk.Globalization.HackTimeZone.Variable), out TimeZoneInfo? zone)
+        Kazo.Os.AppSdk.Globalization.KazoTimeZone.TryFind(
+            Environment.GetVariable(Kazo.Os.AppSdk.Globalization.KazoTimeZone.Variable), out TimeZoneInfo? zone)
             ? zone
-            : SessionTimeZone?.Invoke() ?? Kazo.Os.AppSdk.Globalization.HackTimeZone.Device;
+            : SessionTimeZone?.Invoke() ?? Kazo.Os.AppSdk.Globalization.KazoTimeZone.Device;
 
     /// <inheritdoc />
     public IAppSystemBackupGateway SystemBackup { get => Guarded(field); internal set; } = UnsupportedAdministrationGateways.SystemBackup;
@@ -297,10 +297,10 @@ internal sealed class AppExecutionContext : IAppExecutionContext
     internal bool IsKilled => Control.IsKilled;
 
     /// <inheritdoc />
-    public event EventHandler<HackStopRequestedEventArgs>? StopRequested;
+    public event EventHandler<KazoStopRequestedEventArgs>? StopRequested;
 
     /// <inheritdoc />
-    public HackStopRequestedEventArgs? StopRequest { get; private set; }
+    public KazoStopRequestedEventArgs? StopRequest { get; private set; }
 
     /// <inheritdoc />
     /// <remarks>Set by <c>AppLifecycleOrchestrator</c> from the launch request (ADR 0096, section 5).</remarks>
@@ -326,7 +326,7 @@ internal sealed class AppExecutionContext : IAppExecutionContext
             return;
         }
 
-        using IDisposable scope = HackExecutionContext.Enter(this);
+        using IDisposable scope = KazoExecutionContext.Enter(this);
         foreach (EventHandler<AppIntentDelivery> handler in handlers.GetInvocationList().Cast<EventHandler<AppIntentDelivery>>())
         {
             try
@@ -360,15 +360,15 @@ internal sealed class AppExecutionContext : IAppExecutionContext
     /// </summary>
     private void OnStopRequested(ProcessStopRequest request)
     {
-        HackStopRequestedEventArgs args = new(request.Reason, request.RequestedAtUtc, request.Deadline);
+        KazoStopRequestedEventArgs args = new(request.Reason, request.RequestedAtUtc, request.Deadline);
         StopRequest = args;
         if (StopRequested is not { } handlers)
         {
             return;
         }
 
-        using IDisposable scope = HackExecutionContext.Enter(this);
-        foreach (EventHandler<HackStopRequestedEventArgs> handler in handlers.GetInvocationList().Cast<EventHandler<HackStopRequestedEventArgs>>())
+        using IDisposable scope = KazoExecutionContext.Enter(this);
+        foreach (EventHandler<KazoStopRequestedEventArgs> handler in handlers.GetInvocationList().Cast<EventHandler<KazoStopRequestedEventArgs>>())
         {
             try
             {
@@ -388,7 +388,7 @@ internal sealed class AppExecutionContext : IAppExecutionContext
     {
         public static readonly UnsupportedShellHostGateway Instance = new();
 
-        public Task<IHackShell> StartAsync(HackShellOptions options, CancellationToken cancellationToken = default) =>
+        public Task<IHackShell> StartAsync(KazoShellOptions options, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException("This execution context factory was not configured with a shell host service.");
     }
 
@@ -397,7 +397,7 @@ internal sealed class AppExecutionContext : IAppExecutionContext
     {
         public static readonly UnsupportedDriveGateway Instance = new();
 
-        public ValueTask<IReadOnlyList<HackDriveSnapshot>> GetDrivesAsync(CancellationToken cancellationToken = default) =>
+        public ValueTask<IReadOnlyList<KazoDriveSnapshot>> GetDrivesAsync(CancellationToken cancellationToken = default) =>
             throw new NotSupportedException("This execution context has no drive information.");
     }
 
@@ -406,7 +406,7 @@ internal sealed class AppExecutionContext : IAppExecutionContext
     {
         public static readonly UnsupportedCrossOriginIsolationGateway Instance = new();
 
-        public ValueTask<Kazo.Os.AppSdk.Diagnostics.HackCrossOriginIsolationStatus> GetStatusAsync(CancellationToken cancellationToken = default) =>
+        public ValueTask<Kazo.Os.AppSdk.Diagnostics.KazoCrossOriginIsolationStatus> GetStatusAsync(CancellationToken cancellationToken = default) =>
             throw new NotSupportedException("This execution context has no cross-origin isolation information.");
     }
 
@@ -417,26 +417,26 @@ internal sealed class AppExecutionContext : IAppExecutionContext
 
         private const string Reason = "This execution context factory was not configured with a network.";
 
-        public ValueTask<HackNetworkResult<HackHostEntry>> ResolveAsync(string hostName, CancellationToken cancellationToken = default) =>
+        public ValueTask<KazoNetworkResult<KazoHostEntry>> ResolveAsync(string hostName, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Reason);
 
-        public ValueTask<HackNetworkResult<HackHostEntry>> ReverseLookupAsync(
+        public ValueTask<KazoNetworkResult<KazoHostEntry>> ReverseLookupAsync(
             System.Net.IPAddress address, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Reason);
 
-        public ValueTask<HackNetworkResult<HackPingReply>> PingAsync(
+        public ValueTask<KazoNetworkResult<KazoPingReply>> PingAsync(
             string hostNameOrAddress, TimeSpan timeout, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Reason);
 
-        public ValueTask<HackNetworkResult<HackHttpResponse>> SendAsync(
-            HackHttpRequest request, CancellationToken cancellationToken = default) =>
+        public ValueTask<KazoNetworkResult<KazoHttpResponse>> SendAsync(
+            KazoHttpRequest request, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Reason);
 
-        public ValueTask<HackNetworkResult<IReadOnlyList<HackPortProbeResult>>> ProbeTcpAsync(
+        public ValueTask<KazoNetworkResult<IReadOnlyList<KazoPortProbeResult>>> ProbeTcpAsync(
             string hostNameOrAddress, int firstPort, int lastPort, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Reason);
 
-        public ValueTask<HackNetworkResult<HackOsFingerprint?>> DetectOperatingSystemAsync(
+        public ValueTask<KazoNetworkResult<KazoOsFingerprint?>> DetectOperatingSystemAsync(
             string hostNameOrAddress, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Reason);
     }
@@ -461,25 +461,25 @@ internal static class UnsupportedAppGateways
             remove { }
         }
 
-        public ValueTask<IReadOnlyList<HackAppInfo>> GetInstalledAsync(CancellationToken cancellationToken = default) =>
+        public ValueTask<IReadOnlyList<KazoAppInfo>> GetInstalledAsync(CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Message);
 
-        public ValueTask<IReadOnlyList<HackAppInfo>> GetHandlersAsync(
+        public ValueTask<IReadOnlyList<KazoAppInfo>> GetHandlersAsync(
             VirtualPath path, string? mediaType = null, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Message);
     }
 
     private sealed class UnsupportedManagement : IAppManagementGateway
     {
-        public ValueTask<IReadOnlyList<HackAppInstallInfo>> GetAllAsync(CancellationToken cancellationToken = default) =>
+        public ValueTask<IReadOnlyList<KazoAppInstallInfo>> GetAllAsync(CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Message);
 
         public ValueTask<IReadOnlyList<string>> UninstallAsync(
-            string appId, HackInstallScope scope, CancellationToken cancellationToken = default) =>
+            string appId, KazoInstallScope scope, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Message);
 
         public ValueTask<IReadOnlyList<string>> ReinstallAsync(
-            string appId, HackInstallScope scope, CancellationToken cancellationToken = default) =>
+            string appId, KazoInstallScope scope, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Message);
     }
 }

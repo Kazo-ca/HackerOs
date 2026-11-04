@@ -45,10 +45,10 @@ un sous-module modifié ou hors de son tag.
 
 | Profil | Kazo OS vient de | Usage |
 | --- | --- | --- |
-| `Debug` | les projets du sous-module (`HackerOsUseSource=true`) | entrer dans le SDK et l'OS, points d'arrêt partout |
+| `Debug` | les projets du sous-module (`KazoOsUseSource=true`) | entrer dans le SDK et l'OS, points d'arrêt partout |
 | `Release` | les paquets `Kazo.Os.*` de nuget.org, à la version du sous-module | CI, `dotnet publish`, le Hack Store |
 
-Forcez l'un ou l'autre avec `-p:HackerOsUseSource=true` ou `false`.
+Forcez l'un ou l'autre avec `-p:KazoOsUseSource=true` ou `false`.
 
 ## Publier dans le Hack Store
 
@@ -81,7 +81,7 @@ utilisateurs de Kazo OS l'installent alors avec `hackpkg install <owner>/<repo>`
 Signez vos paquets pour que personne d'autre ne puisse publier en votre nom :
 
 1. Une fois, sur votre machine, hors du dépôt :
-   `dotnet build src/Kazo.Os.Template.Solution -t:HackerOsKeyGen -p:HackerOsSigningKeyFile=$HOME/hackeros-signing-key.pem`.
+   `dotnet build src/Kazo.Os.Template.Solution -t:KazoOsKeyGen -p:KazoOsSigningKeyFile=$HOME/hackeros-signing-key.pem`.
    La clé privée va dans ce nouveau fichier (`*.pem` est ignoré par git) ; la clé publique est affichée.
 2. Mettez le contenu du fichier dans le secret `HACKEROS_APP_SIGNING_KEY` de ce dépôt
    (Settings ▸ Secrets and variables ▸ Actions), puis gardez le fichier hors ligne.
@@ -92,6 +92,6 @@ Signez vos paquets pour que personne d'autre ne puisse publier en votre nom :
 
 Sans le secret, le paquet est publié non signé (SHA-256 seulement) et le run affiche un
 avertissement. Pour signer en local, définissez `HACKEROS_APP_SIGNING_KEY` ou passez
-`-p:HackerOsSigningKeyFile=<fichier.pem>` à `HackerOsPack`. Pour changer de clé sans coupure, faites
+`-p:KazoOsSigningKeyFile=<fichier.pem>` à `KazoOsPack`. Pour changer de clé sans coupure, faites
 ajouter la nouvelle clé après l'ancienne (séparées par une virgule), changez le secret, puis faites
 retirer l'ancienne.

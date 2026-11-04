@@ -46,7 +46,7 @@ public sealed class UserKeyringServiceTests
         await harness.Session.LogoutAsync();
 
         Assert.Null(keyring.UnlockedUserId);
-        await Assert.ThrowsAsync<HackKeyringLockedException>(
+        await Assert.ThrowsAsync<KazoKeyringLockedException>(
             () => keyring.GetAsync(harness.Alice.Id, "org.example.mail", "imap", CancellationToken.None).AsTask());
 
         await harness.LoginAsync(harness.Alice);
@@ -129,7 +129,7 @@ public sealed class UserKeyringServiceTests
         await Assert.ThrowsAnyAsync<UnauthorizedAccessException>(() => other.ListAsync(allApps: true).AsTask());
         Assert.Empty(await other.ListAsync(allApps: false));
         Assert.Equal("mail-secret", await manager.GetAsync("org.example.mail", "imap"));
-        HackKeyringEntry entry = Assert.Single(await manager.ListAsync(allApps: true));
+        KazoKeyringEntry entry = Assert.Single(await manager.ListAsync(allApps: true));
         Assert.Equal(("org.example.mail", "imap", "IMAP"), (entry.AppId, entry.Id, entry.Label));
     }
 
@@ -141,7 +141,7 @@ public sealed class UserKeyringServiceTests
         AppKeyringGateway bobsApp = new(harness.Keyring!, harness.Bob.Id, "org.example.mail", new FixedCapabilities(AppCapabilities.KeyringReadAll));
 
         Assert.False(bobsApp.IsUnlocked);
-        await Assert.ThrowsAsync<HackKeyringLockedException>(() => bobsApp.GetAsync(null, "imap").AsTask());
+        await Assert.ThrowsAsync<KazoKeyringLockedException>(() => bobsApp.GetAsync(null, "imap").AsTask());
     }
 
     [Fact]

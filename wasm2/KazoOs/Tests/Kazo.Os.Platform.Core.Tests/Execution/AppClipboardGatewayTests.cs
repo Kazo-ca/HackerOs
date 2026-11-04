@@ -12,7 +12,7 @@ using Kazo.Os.Tests.Support;
 
 namespace Kazo.Os.Platform.Core.Tests.Execution;
 
-/// <summary>Contract tests of the session clipboard behind <c>HackClipboard</c> (ADR 0056, section 12).</summary>
+/// <summary>Contract tests of the session clipboard behind <c>KazoClipboard</c> (ADR 0056, section 12).</summary>
 public sealed class AppClipboardGatewayTests
 {
     private static readonly SessionId Session = SessionId.FromGuid(Guid.Parse("11111111-1111-1111-1111-111111111111"));
@@ -25,17 +25,17 @@ public sealed class AppClipboardGatewayTests
         AppClipboardGateway explorer = Gateway(clipboard, Session, AppCapabilities.ClipboardRead, AppCapabilities.ClipboardWrite);
         AppClipboardGateway other = Gateway(clipboard, Session, AppCapabilities.ClipboardRead);
 
-        await explorer.SetFileDropListAsync(new HackClipboardFileList(HackClipboardFileOperation.Cut, ["/home/alice/a b.txt", "/home/alice/dir"]));
+        await explorer.SetFileDropListAsync(new KazoClipboardFileList(KazoClipboardFileOperation.Cut, ["/home/alice/a b.txt", "/home/alice/dir"]));
 
-        HackClipboardFileList? read = await other.GetFileDropListAsync();
+        KazoClipboardFileList? read = await other.GetFileDropListAsync();
         Assert.NotNull(read);
-        Assert.Equal(HackClipboardFileOperation.Cut, read.Operation);
+        Assert.Equal(KazoClipboardFileOperation.Cut, read.Operation);
         Assert.Equal(["/home/alice/a b.txt", "/home/alice/dir"], read.Paths);
         // GNOME offers the paths as text/plain too.
         Assert.Equal("/home/alice/a b.txt\n/home/alice/dir", await other.GetTextAsync());
         Assert.Equal(
             "cut\nfile:///home/alice/a%20b.txt\nfile:///home/alice/dir",
-            clipboard.Get(Session, HackClipboardFileList.GnomeCopiedFilesMediaType));
+            clipboard.Get(Session, KazoClipboardFileList.GnomeCopiedFilesMediaType));
     }
 
     [Fact]
@@ -52,7 +52,7 @@ public sealed class AppClipboardGatewayTests
     {
         SystemClipboard clipboard = new();
         AppClipboardGateway gateway = Gateway(clipboard, Session, AppCapabilities.ClipboardRead, AppCapabilities.ClipboardWrite);
-        await gateway.SetFileDropListAsync(new HackClipboardFileList(HackClipboardFileOperation.Copy, ["/etc/hostname"]));
+        await gateway.SetFileDropListAsync(new KazoClipboardFileList(KazoClipboardFileOperation.Copy, ["/etc/hostname"]));
 
         await gateway.SetTextAsync("hello");
 
@@ -106,7 +106,7 @@ public sealed class AppClipboardGatewayTests
     }
 
     [Fact]
-    public async Task HackClipboard_resolves_relative_paths_and_maps_denials()
+    public async Task KazoClipboard_resolves_relative_paths_and_maps_denials()
     {
         SystemClipboard clipboard = new();
         AppManifest manifest = Manifest(AppCapabilities.ClipboardRead, AppCapabilities.ClipboardWrite);
@@ -115,31 +115,31 @@ public sealed class AppClipboardGatewayTests
             homeDirectory: "/home/alice",
             clipboard: Gateway(clipboard, Session, AppCapabilities.ClipboardRead, AppCapabilities.ClipboardWrite));
 
-        using (HackExecutionContext.Enter(context, "/home/alice/Documents"))
+        using (KazoExecutionContext.Enter(context, "/home/alice/Documents"))
         {
-            await HackClipboard.SetFileDropListAsync(["report.txt", "~/notes.md"], HackClipboardFileOperation.Copy);
-            HackClipboardFileList? list = await HackClipboard.GetFileDropListAsync();
+            await KazoClipboard.SetFileDropListAsync(["report.txt", "~/notes.md"], KazoClipboardFileOperation.Copy);
+            KazoClipboardFileList? list = await KazoClipboard.GetFileDropListAsync();
 
             Assert.Equal(["/home/alice/Documents/report.txt", "/home/alice/notes.md"], list!.Paths);
-            Assert.True(await HackClipboard.ContainsFileDropListAsync());
-            await HackClipboard.ClearAsync();
-            Assert.False(await HackClipboard.ContainsFileDropListAsync());
+            Assert.True(await KazoClipboard.ContainsFileDropListAsync());
+            await KazoClipboard.ClearAsync();
+            Assert.False(await KazoClipboard.ContainsFileDropListAsync());
         }
 
         MinimalAppExecutionContext denied = new(manifest, homeDirectory: "/home/alice", clipboard: Gateway(clipboard, Session));
-        using (HackExecutionContext.Enter(denied))
+        using (KazoExecutionContext.Enter(denied))
         {
-            HackUnauthorizedAccessException error = await Assert.ThrowsAsync<HackUnauthorizedAccessException>(() => HackClipboard.GetTextAsync());
+            KazoUnauthorizedAccessException error = await Assert.ThrowsAsync<KazoUnauthorizedAccessException>(() => KazoClipboard.GetTextAsync());
             Assert.Equal(AppCapabilities.ClipboardRead, error.RequiredCapability);
         }
     }
 
     [Theory]
-    [InlineData("copy\nfile:///tmp/x", HackClipboardFileOperation.Copy, "/tmp/x")]
-    [InlineData("cut\r\nfile:///home/a%20b", HackClipboardFileOperation.Cut, "/home/a b")]
-    public void Gnome_copied_files_parse(string content, HackClipboardFileOperation operation, string path)
+    [InlineData("copy\nfile:///tmp/x", KazoClipboardFileOperation.Copy, "/tmp/x")]
+    [InlineData("cut\r\nfile:///home/a%20b", KazoClipboardFileOperation.Cut, "/home/a b")]
+    public void Gnome_copied_files_parse(string content, KazoClipboardFileOperation operation, string path)
     {
-        HackClipboardFileList? list = HackClipboardFileList.TryParseGnomeCopiedFiles(content);
+        KazoClipboardFileList? list = KazoClipboardFileList.TryParseGnomeCopiedFiles(content);
 
         Assert.Equal(operation, list!.Operation);
         Assert.Equal([path], list.Paths);
@@ -150,7 +150,7 @@ public sealed class AppClipboardGatewayTests
     [InlineData("move\nfile:///tmp/x")]
     [InlineData("copy\n/tmp/x")]
     public void Malformed_gnome_copied_files_are_rejected(string content) =>
-        Assert.Null(HackClipboardFileList.TryParseGnomeCopiedFiles(content));
+        Assert.Null(KazoClipboardFileList.TryParseGnomeCopiedFiles(content));
 
     private static AppClipboardGateway Gateway(SystemClipboard clipboard, SessionId session, params string[] granted) =>
         new(clipboard, new FixedCapabilities(granted), session);
@@ -164,7 +164,7 @@ public sealed class AppClipboardGatewayTests
         Description = "Clipboard contract test application.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Test", "Test.Window"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         Capabilities = capabilities

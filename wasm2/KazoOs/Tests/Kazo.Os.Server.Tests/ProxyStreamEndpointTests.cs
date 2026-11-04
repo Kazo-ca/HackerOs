@@ -36,7 +36,7 @@ public sealed class ProxyStreamEndpointTests : IAsyncLifetime
         _factory = new RelayApplicationFactory(_tcpEcho.Port, _udpEcho.Port);
 
         await using AsyncServiceScope scope = _factory.Services.CreateAsyncScope();
-        HackerOsServerDbContext db = scope.ServiceProvider.GetRequiredService<HackerOsServerDbContext>();
+        KazoOsServerDbContext db = scope.ServiceProvider.GetRequiredService<KazoOsServerDbContext>();
         Guid accountId = Guid.NewGuid();
         Guid deviceId = Guid.NewGuid();
         db.Accounts.Add(new AccountEntity { AccountId = accountId, Username = "relay-owner", PasswordHash = "h", Salt = "s", CreatedUtc = DateTimeOffset.UtcNow });

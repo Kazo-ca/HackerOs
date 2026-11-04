@@ -114,9 +114,9 @@ public sealed class WallpaperPanelTests
     public async Task With_several_screens_a_choice_can_be_for_one_screen_only()
     {
         FakeAppearance settings = new();
-        FakeScreens screens = new(new HackScreensState(
-            [new HackScreenInfo(1, null, 1920, 1080, false), new HackScreenInfo(2, null, 1280, 1024, false)],
-            HackScreenPermission.Granted, true, [], 1));
+        FakeScreens screens = new(new KazoScreensState(
+            [new KazoScreenInfo(1, null, 1920, 1080, false), new KazoScreenInfo(2, null, 1280, 1024, false)],
+            KazoScreenPermission.Granted, true, [], 1));
         await using PanelHarness harness = await PanelHarness.RenderAsync(settings, new FakeAppFileSystemGateway(), screens);
 
         Assert.Equal([1, 2], harness.Panel.Screens);
@@ -226,16 +226,16 @@ public sealed class WallpaperPanelTests
     }
 
     /// <summary>The screens gateway of a host with screens, answering from a fixed state.</summary>
-    private sealed class FakeScreens(HackScreensState state) : IAppScreensGateway
+    private sealed class FakeScreens(KazoScreensState state) : IAppScreensGateway
     {
         public bool IsSupported => true;
 
-        public HackScreensState GetState() => state;
+        public KazoScreensState GetState() => state;
 
         public ValueTask<IAsyncDisposable> WatchAsync(Func<ValueTask> onChanged, CancellationToken cancellationToken = default) =>
             ValueTask.FromResult<IAsyncDisposable>(new NoWatch());
 
-        public ValueTask<HackScreenOpenStatus> OpenScreenAsync(CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public ValueTask<KazoScreenOpenStatus> OpenScreenAsync(CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public ValueTask<int> RestoreScreensAsync(CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
@@ -245,7 +245,7 @@ public sealed class WallpaperPanelTests
 
         public ValueTask<bool> ToggleFullScreenAsync(CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
-        public ValueTask<HackScreenPermission> RequestPermissionAsync(CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public ValueTask<KazoScreenPermission> RequestPermissionAsync(CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
     private sealed class NoWatch : IAsyncDisposable
@@ -312,7 +312,7 @@ public sealed class WallpaperPanelTests
         public Task RunAsync(Func<WallpaperPanel, Task> action) =>
             _renderer.Dispatcher.InvokeAsync(async () =>
             {
-                using (HackExecutionContext.Enter(_context))
+                using (KazoExecutionContext.Enter(_context))
                 {
                     await action(Panel);
                 }

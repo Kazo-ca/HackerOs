@@ -11,7 +11,7 @@
   <!--
     ADR 0066: the measuring half of the optional resource accounting. It depends on Platform Core,
     never the reverse. A host references it only through build/Kazo.Os.ResourceAccounting.targets,
-    and only when HackerOsCpuAccounting or HackerOsMemoryAccounting is true: with both false, none
+    and only when KazoOsCpuAccounting or KazoOsMemoryAccounting is true: with both false, none
     of this code is in the binary.
   -->
 

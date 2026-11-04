@@ -88,11 +88,11 @@ public sealed class TextEditorApp : AppDefinition
   referenced by the app (for example `2.0.0`, see
   [`sdk-packages.md`](sdk-packages.md)) and passes it to
   `ToManifest(definition, sdkMinimumVersion)`; `ToManifest(definition)` takes
-  `HackerOsSdk.Version`, the version of the loaded SDK. An app that wants a range
+  `KazoOsSdk.Version`, the version of the loaded SDK. An app that wants a range
   overrides `AppDefinition.SdkCompatibility` (minimum and optional maximum).
   At load time, `AppCatalog` refuses an app whose range does not accept the host's
   SDK (`catalog.sdk.incompatible`): same major version as the minimum,
-  minimum ≤ SDK ≤ maximum (`HackerOsSdk.IsCompatible`).
+  minimum ≤ SDK ≤ maximum (`KazoOsSdk.IsCompatible`).
 - `osCompatibility` and `update` are not exposed by `AppDefinition`: they
   remain absent from the generated manifest.
 - `[AppManifest(Execution = …)]` becomes `execution`, always written, resolved
@@ -225,7 +225,7 @@ overwritten at the next build.
 
 | Element | Role |
 | --- | --- |
-| `$(HackerOsAppProject)` | `true` by default under `Apps/`; a project elsewhere sets it itself. There is no exception: a project under `Apps/` without an `[AppManifest]` class fails with `HOSAPP0001`. |
+| `$(KazoOsAppProject)` | `true` by default under `Apps/`; a project elsewhere sets it itself. There is no exception: a project under `Apps/` without an `[AppManifest]` class fails with `HOSAPP0001`. |
 | `ProjectReference` to the generator | Added automatically to app projects for build ordering (`ReferenceOutputAssembly=false`, `PrivateAssets=all`: the tool never enters the graph of a WebAssembly host). |
 | Target `GenerateHackerOsAppManifests` | After `CopyFilesToOutputDirectory`. Incremental: inputs = compiled assembly, tool, dependency list, existing manifests; output = stamp file. |
 | Target `GetHackerOsAppManifests` | Query target for the host: the project's manifests, with the metadata `AssemblyName`, `AssemblyFileName` and `AppProject`. Empty for a project that is not an app. |
@@ -352,7 +352,7 @@ not declared as assets. Error: `HOSAPP0040`. See
 
 ### Declaring a host
 
-A host project declares `<HackerOsAppHost>true</HackerOsAppHost>`. In this repository,
+A host project declares `<KazoOsAppHost>true</KazoOsAppHost>`. In this repository,
 only `OS/Kazo.Os.Ecosystem` does so. `test/test` reuses the compiled
 catalog of the Ecosystem (`BuildKnownLazyApps.Catalog`) and does not aggregate
 itself; the server serves the Ecosystem's published files as they are, apps
@@ -392,12 +392,12 @@ resource preparation and before the Blazor targets):
 Apps installed as a **package** (ADR 0098 §2) follow the same path: each
 app package contains its manifests under `hackeros/manifests/` (their translations
 under `hackeros/localization/`) and a file
-`buildTransitive/<PackageId>.targets` that declares them as `HackerOsPackagedApp`
+`buildTransitive/<PackageId>.targets` that declares them as `KazoOsPackagedApp`
 items (metadata `PackageId`, `AssemblyFileName`,
-`AssemblyPath`). The target `_HackerOsCollectPackagedAppManifests` adds them to
+`AssemblyPath`). The target `_KazoOsCollectPackagedAppManifests` adds them to
 the list; `IsSystemApp` comes from the host's `PackageReference` on that package
 (an app package that arrives as a dependency is never system). The target
-`_HackerOsPackageAppManifests` produces these files when an app project is
+`_KazoOsPackageAppManifests` produces these files when an app project is
 packaged.
 
 The anchoring after `ResolveProjectReferences` is checked by a
@@ -446,7 +446,7 @@ JSON is read: the app DLLs stay loaded at first launch and the
 It is the only source: `Kazo.Os.Ecosystem.csproj` no longer embeds a hand-written
 manifest (`Kazo.Os.Ecosystem.Manifests.*`) and no longer has a
 `BlazorWebAssemblyLazyLoad` list, and the transition target
-`_HackerOsMarkLegacySystemManifests` disappeared with them: `IsSystemApp` comes
+`_KazoOsMarkLegacySystemManifests` disappeared with them: `IsSystemApp` comes
 only from `BuiltInApplications.json`. A missing resource is a startup error.
 
 ### Installing an app
@@ -477,7 +477,7 @@ system. Nothing else.
   `catalog.dependency.unavailable` for an app that depends on one of them as required) instead of
   failing: the OS starts without them, startup writes it to
   `/var/log/syslog` (category `catalog`) and Settings lists them as
-  incompatible with the reason (`HackAppInstallState.Incompatible`, `Problem`).
+  incompatible with the reason (`KazoAppInstallState.Incompatible`, `Problem`).
 - **Duplicate commands**: refused at build time (`HOSAPP0022`). At load time, if two
   apps nevertheless declare the same name, a system app wins, otherwise the
   first enabled one; the other loses that name (`AppCatalog.FindCommandOwner`,
@@ -491,7 +491,7 @@ system. Nothing else.
   `StaticWebAssetAppAssetSource`, `_content/<assembly>/<path>`) and checks its
   fingerprint on its **first** read of the session, like `dpkg --verify`. A
   tampered resource is refused (`AppAssetIntegrityException`), the app is marked
-  damaged (`HackAppInstallState.Damaged` in Settings) and the event
+  damaged (`KazoAppInstallState.Damaged` in Settings) and the event
   `catalog.asset.damaged` goes to `/var/log/syslog`. Assemblies remain
   covered by the integrity of Blazor's boot manifest.
 
@@ -528,7 +528,7 @@ hosts (`Program.cs`); OS services therefore read
 
 | System | Non-system (uninstallable) |
 |---|---|
-| Terminal, File Explorer, Settings, Text Editor, Code Editor (since `rebuild/4-sdk-shell-host`: its terminal hosts a shell, ADR 0056 §7), System Monitor, Error Log Viewer, Theme Editor (reads `/etc/hackeros/themes`, ADR 0103), and the 70 commands (project `Kazo.Os.Commands`, `xdg-open` included since `v3/4`, `xdg-mime` since `v3/4b`, `passwd` since `v3/8`) | Browser, Calculator, Diagnostics, HackPaint, Icon Viewer |
+| Terminal, File Explorer, Settings, Text Editor, Code Editor (since `rebuild/4-sdk-shell-host`: its terminal hosts a shell, ADR 0056 §7), System Monitor, Error Log Viewer, Theme Editor (reads `/etc/hackeros/themes`, ADR 0103), and the 70 commands (project `Kazo.Os.Commands`, `xdg-open` included since `v3/4`, `xdg-mime` since `v3/4b`, `passwd` since `v3/8`) | Browser, Calculator, Diagnostics, KazoPaint, Icon Viewer |
 
 Effects of the status: a system app is not uninstallable (see
 [`app-installation.md`](../dev/app-installation.md), ADR 0048 §2-6); its dangerous
@@ -553,7 +553,7 @@ capabilities granted by default arrive with ADR 0049.
   (`Tests/Kazo.Os.App.Abstractions.Tests/Definition`).
 - [x] `rebuild/2-manifest-generator`: `Tools/Kazo.Os.Tools.ManifestGenerator` (`generate`, `validate`), `build/Kazo.Os.Apps.targets`, targets `GenerateHackerOsAppManifests` and `GetHackerOsAppManifests`, `HOSAPP*` errors, test projects, Calculator migrated as an example.
 - [x] `rebuild/2-builtin-applications`: target `CollectHackerOsBuiltInApplications`, embedded `BuiltInApplications.json`, automatic lazy load, `BuildKnownLazyApps` reads the new file, `IsSystemApp` carried over.
-- [x] `rebuild/2-system-apps` (ADR 0048): `AppCatalog.SystemAppIds` and `IsSystemApp`, `AppCatalog.Build(manifests, systemAppIds)` and `BuildFromBuiltInApplications`, `IsSystemApp="true"` set on the Ecosystem's `ProjectReference`s, transition bridge `_HackerOsMarkLegacySystemManifests`, tests.
+- [x] `rebuild/2-system-apps` (ADR 0048): `AppCatalog.SystemAppIds` and `IsSystemApp`, `AppCatalog.Build(manifests, systemAppIds)` and `BuildFromBuiltInApplications`, `IsSystemApp="true"` set on the Ecosystem's `ProjectReference`s, transition bridge `_KazoOsMarkLegacySystemManifests`, tests.
 - [x] `rebuild/2-app-uninstall` (ADR 0048 §2-6): uninstall through `apps.config`, see [`app-installation.md`](../dev/app-installation.md).
 - [x] `rebuild/5-worker-processes` (ADR 0070): `AppManifestAttribute.Execution`, `AppExecutionHost`, `execution` field (schema, whitelist, validator, canonical fixture), defaults by kind in the mapper, each command and service declares its host or gets the default.
 - [x] `v3/6-sdk-versioning` (ADR 0098): SDK version written by the generator and checked at load time, `HOSAPP0022`/`HOSAPP0023`, single owner of a command, resource fingerprints and `AppAssetStore`, aggregation of packaged apps, `HostAppCatalog`.
@@ -561,4 +561,4 @@ capabilities granted by default arrive with ADR 0049.
 - [x] `v3/4b` (ADR 0121): per-user file and scheme associations, `xdg-mime` command.
 - [x] `v3/12-localization` (ADR 0104): `AppManifest.<culture>.resx` → `localization/`, `HOSAPP0040`, `localized` property of `BuiltInApplications.json`, `AppCatalog.Localize`.
 - [x] `exec/3-oom-killer` (ADR 0126, ADR 0142): `AppDefinition.OomScoreAdjust` (SDK 1.2), `oomScoreAdj` field, `HOSAPP0024`.
-- [x] `rebuild/2-app-migration`: `[AppManifest]` classes for the other 43 apps, equality test with the old JSON files, removal of the `app.manifest.json` files, `StaticManifest`, the host's manual lists and the target `_HackerOsMarkLegacySystemManifests`, the `Content Update` rule of `Directory.Build.targets` and the "transition" exceptions.
+- [x] `rebuild/2-app-migration`: `[AppManifest]` classes for the other 43 apps, equality test with the old JSON files, removal of the `app.manifest.json` files, `StaticManifest`, the host's manual lists and the target `_KazoOsMarkLegacySystemManifests`, the `Content Update` rule of `Directory.Build.targets` and the "transition" exceptions.

@@ -56,7 +56,7 @@ public sealed class AppProcessGateway : IAppProcessGateway
             return all;
         }
 
-        // Its own process and its children (ADR 0140: its HackBackground tasks).
+        // Its own process and its children (ADR 0140: its KazoBackground tasks).
         return [.. all.Where(p => p.Pid == OwnPid || IsDescendant(p.Pid))];
     }
 
@@ -154,7 +154,7 @@ public sealed class AppProcessGateway : IAppProcessGateway
     }
 
     /// <summary>
-    /// ADR 0140: an app may stop or kill its own children (its HackBackground tasks), as a Unix
+    /// ADR 0140: an app may stop or kill its own children (its KazoBackground tasks), as a Unix
     /// parent signals the processes it started, without <see cref="AppCapabilities.ProcessManage"/>.
     /// </summary>
     private bool IsDescendant(ProcessId pid)

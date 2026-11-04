@@ -87,7 +87,7 @@ public sealed class WatchCommand(AppManifest manifest) : TerminalAppBase(manifes
                 else
                 {
                     string header = messages["Header", interval, commandLine];
-                    string clock = $"{HackEnvironment.MachineName}: {context.App.Clock.UtcNow:ddd MMM d HH:mm:ss yyyy}";
+                    string clock = $"{KazoEnvironment.MachineName}: {context.App.Clock.UtcNow:ddd MMM d HH:mm:ss yyyy}";
                     int columns = screen.Viewport.Columns;
                     List<string> lines = noTitle
                         ? []

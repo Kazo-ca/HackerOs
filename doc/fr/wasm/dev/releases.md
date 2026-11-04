@@ -10,12 +10,12 @@ nuget.org ([ADR 0173](adr/0173-automatic-releases-from-the-version-file.md)).
 ## Le fichier de version
 
 ```xml
-<HackerOsVersion>2.2.2</HackerOsVersion>
+<KazoOsVersion>2.2.2</KazoOsVersion>
 ```
 
 `Directory.Build.props` l'importe : chaque assembly, chacun des 42 paquets
 `Kazo.Os.*`, les modèles `dotnet new`, les manifestes générés
-(`sdkCompatibility.minimumVersion`) et `HackerOsSdk.Version` (affichée dans
+(`sdkCompatibility.minimumVersion`) et `KazoOsSdk.Version` (affichée dans
 Paramètres ▸ À propos et sur l'écran d'accueil) en découlent. Aucun code ni
 test ne répète le numéro.
 
@@ -34,7 +34,7 @@ Choisir le numéro selon SemVer
 1. Créer une branche depuis `main`.
 2. Pour une mineure ou une majeure, verser l'API publique :
    `build/tools/ship-public-api.sh` (`--check` pour voir sans rien changer).
-3. Changer `HackerOsVersion` dans `build/Versions.props`.
+3. Changer `KazoOsVersion` dans `build/Versions.props`.
    Dans la même PR, regrouper les entrées de `changes/unreleased/` dans
    `changes/<version>.json` ([`change-list.md`](change-list.md), ADR 0186).
 4. (Conseillé) compiler une fois (`dotnet build Kazo.Os.sln -c Release`) et
@@ -49,7 +49,7 @@ Choisir le numéro selon SemVer
 Fichier : `.github/workflows/release.yml`. Il démarre quand *Verify Kazo OS
 WASM* se termine **avec succès** après un push sur `main`, puis :
 
-1. lit `HackerOsVersion` du commit vérifié ; si le tag `v<version>` existe
+1. lit `KazoOsVersion` du commit vérifié ; si le tag `v<version>` existe
    déjà, il s'arrête (rien à publier) ;
 2. empaquette avec `build/pack-local.sh --ci` ;
 3. garde uniquement les `Kazo.Os.*.<version>.nupkg` et `.snupkg` ;

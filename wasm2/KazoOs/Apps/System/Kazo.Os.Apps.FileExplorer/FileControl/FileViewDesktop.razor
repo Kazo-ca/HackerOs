@@ -2,11 +2,11 @@
 @using Kazo.Os.AppSdk.Files
 @using Microsoft.AspNetCore.Components.Web
 @implements IAsyncDisposable
-@inherits Kazo.Os.AppSdk.Blazor.HackComponentBase
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
 
 @*
     The desktop grid (ADR 0152 §2, ADR 0160): every icon on a cell of its own, placed by
-    HackDesktopLayout from the positions of desktop.config, with the Home and Trash system icons.
+    KazoDesktopLayout from the positions of desktop.config, with the Home and Trash system icons.
     Click, Ctrl+click, Shift+click and the lasso select; a drag moves the icons to the cell under the
     pointer (snapped), or drops them on a folder, on Home or on the Trash; F2 renames in place.
     Behavior lives in FileViewDesktop.razor.cs; FileViewDesktop.razor.js measures the grid.

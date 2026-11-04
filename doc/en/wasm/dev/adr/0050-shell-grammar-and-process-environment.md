@@ -215,7 +215,7 @@ link to the real current directory.
 
 ### 6. `HackEnvironment` in the SDK
 
-`Shared/Kazo.Os.AppSdk/HackEnvironment.cs`, static, modeled on
+`Shared/Kazo.Os.AppSdk/KazoEnvironment.cs`, static, modeled on
 `System.Environment`, and read from the ambient context of ADR 0043:
 
 ```csharp

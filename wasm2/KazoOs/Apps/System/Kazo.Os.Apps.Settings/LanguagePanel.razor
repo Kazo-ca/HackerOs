@@ -1,4 +1,4 @@
-@inherits Kazo.Os.AppSdk.Blazor.HackComponentBase
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
 
 @*
     Settings > Language (ADR 0104): the language of this session as the process sees it, the user's
@@ -46,7 +46,7 @@
                     <span class="locale-code">@L["Language.FollowSystem.Detail", Describe(SystemLocaleOrDefault)]</span>
                 </span>
             </button>
-            @foreach (string locale in HackLocale.AvailableLocales)
+            @foreach (string locale in KazoLocale.AvailableLocales)
             {
                 <button type="button" role="radio" class="@OptionClass(locale)"
                         aria-checked="@(IsChosen(locale) ? "true" : "false")"
@@ -86,9 +86,9 @@
     <h4>@L["Language.System.Title"]</h4>
     <dl class="language-readout">
         <dt>LANG</dt>
-        <dd><code>@(_systemLocale ?? L["Language.System.Unset", HackLocale.DefaultLocale].Value)</code></dd>
+        <dd><code>@(_systemLocale ?? L["Language.System.Unset", KazoLocale.DefaultLocale].Value)</code></dd>
         <dt>@L["Language.Session.Language"]</dt>
-        <dd>@LanguageName(HackLocale.ToLanguage(SystemLocaleOrDefault))</dd>
+        <dd>@LanguageName(KazoLocale.ToLanguage(SystemLocaleOrDefault))</dd>
     </dl>
     <p class="setting-desc">
         @LocalizedMarkup.Format(L["Language.System.Description"], LocalizedMarkup.Code(SystemLocaleFilePath), LocalizedMarkup.Code("sudo localectl set-locale LANG=fr_CA.UTF-8"))

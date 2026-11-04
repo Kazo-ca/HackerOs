@@ -13,11 +13,11 @@ namespace Kazo.Os.Tools.WebRouteGenerator;
 /// <summary>
 /// Writes the route table of an ASP.Hack site at build time (ADR 0076 §3, ADR 0082):
 /// <list type="bullet">
-/// <item><c>Kazo.Os.AppSdk.Web.Generated.HackWebGeneratedRoutes.Table</c>: one
-/// <c>HackControllerActionDescriptor</c> per action of every public controller of the assembly, with
+/// <item><c>Kazo.Os.AppSdk.Web.Generated.KazoWebGeneratedRoutes.Table</c>: one
+/// <c>KazoControllerActionDescriptor</c> per action of every public controller of the assembly, with
 /// its routes (attribute routes combined with the controller's prefix and checked), the code that
 /// creates the controller from the request's services, binds each argument and calls the method;</item>
-/// <item><c>HackWebGeneratedRoutes.Views</c>: one <c>HackViewDescriptor</c> per <c>.razor</c> or <c>.cshtml</c>
+/// <item><c>KazoWebGeneratedRoutes.Views</c>: one <c>KazoViewDescriptor</c> per <c>.razor</c> or <c>.cshtml</c>
 /// file under <c>Views/</c>, so <c>View()</c> finds a view by name without reflection (ADR 0083, ADR 0086);</item>
 /// <item>for each <c>partial</c> <c>WebAppDefinition</c> without its own entry point, a
 /// <c>&lt;Name&gt;WebHost</c> process class and the <c>EntryPoint</c> override that names it.</item>
@@ -30,7 +30,7 @@ public sealed class WebRouteGenerator : IIncrementalGenerator
 {
     internal const string MvcNamespace = "Kazo.Os.AppSdk.Web.Mvc";
     internal const string GeneratedNamespace = "Kazo.Os.AppSdk.Web.Generated";
-    internal const string GeneratedClass = "HackWebGeneratedRoutes";
+    internal const string GeneratedClass = "KazoWebGeneratedRoutes";
 
     /// <inheritdoc />
     public void Initialize(IncrementalGeneratorInitializationContext context)
@@ -134,8 +134,8 @@ internal sealed class SiteAnalyzer
     {
         _compilation = compilation;
         _cancellationToken = cancellationToken;
-        _controllerBase = compilation.GetTypeByMetadataName($"{WebRouteGenerator.MvcNamespace}.HackControllerBase");
-        _apiController = compilation.GetTypeByMetadataName($"{WebRouteGenerator.MvcNamespace}.HackApiController");
+        _controllerBase = compilation.GetTypeByMetadataName($"{WebRouteGenerator.MvcNamespace}.KazoControllerBase");
+        _apiController = compilation.GetTypeByMetadataName($"{WebRouteGenerator.MvcNamespace}.KazoApiController");
         _webAppDefinition = compilation.GetTypeByMetadataName("Kazo.Os.AppSdk.Web.Hosting.WebAppDefinition");
         _filterMetadata = compilation.GetTypeByMetadataName($"{WebRouteGenerator.MvcNamespace}.IHackFilterMetadata");
         _httpMethodAttribute = compilation.GetTypeByMetadataName($"{WebRouteGenerator.MvcNamespace}.HttpMethodAttribute");
@@ -466,7 +466,7 @@ internal sealed class SiteAnalyzer
 
             try
             {
-                Kazo.Os.AppSdk.Web.Routing.HackRouteTemplate parsed = Kazo.Os.AppSdk.Web.Routing.HackRouteTemplate.Parse(replaced);
+                Kazo.Os.AppSdk.Web.Routing.KazoRouteTemplate parsed = Kazo.Os.AppSdk.Web.Routing.KazoRouteTemplate.Parse(replaced);
                 checkedRoutes.Add(route with { Template = parsed.Text, ConflictKey = parsed.GetConflictKey() });
             }
             catch (FormatException exception)
@@ -744,7 +744,7 @@ internal sealed class SiteAnalyzer
     {
         StringBuilder body = new();
         string name = $"Bind{id}";
-        body.AppendLine($"        private static object?[] {name}(global::{WebRouteGenerator.MvcNamespace}.HackModelBinder binder)");
+        body.AppendLine($"        private static object?[] {name}(global::{WebRouteGenerator.MvcNamespace}.KazoModelBinder binder)");
         body.AppendLine("        {");
         body.AppendLine($"            object?[] arguments = new object?[{method.Parameters.Length}];");
         bool valid = true;
@@ -760,7 +760,7 @@ internal sealed class SiteAnalyzer
                     bodyParameters++;
                 }
 
-                descriptors.Add($"new global::{WebRouteGenerator.MvcNamespace}.HackActionParameterDescriptor({Literal(parameter.Name)}, typeof({Fq(TypeForTypeof(parameter.Type))}), global::{WebRouteGenerator.MvcNamespace}.HackBindingSource.{source})");
+                descriptors.Add($"new global::{WebRouteGenerator.MvcNamespace}.KazoActionParameterDescriptor({Literal(parameter.Name)}, typeof({Fq(TypeForTypeof(parameter.Type))}), global::{WebRouteGenerator.MvcNamespace}.KazoBindingSource.{source})");
                 body.AppendLine($"            arguments[{index}] = {local};");
             }
             else
@@ -849,9 +849,9 @@ internal sealed class SiteAnalyzer
             "FromQueryAttribute" => "Query",
             "FromFormAttribute" => "Form",
             "FromHeaderAttribute" => "Header",
-            _ => isApi ? "Route | global::Kazo.Os.AppSdk.Web.Mvc.HackValueSources.Query" : "Default"
+            _ => isApi ? "Route | global::Kazo.Os.AppSdk.Web.Mvc.KazoValueSources.Query" : "Default"
         };
-        string sourcesExpression = $"global::{WebRouteGenerator.MvcNamespace}.HackValueSources.{sources}";
+        string sourcesExpression = $"global::{WebRouteGenerator.MvcNamespace}.KazoValueSources.{sources}";
         source = fromName switch
         {
             "FromRouteAttribute" => "Route",
@@ -903,10 +903,10 @@ internal sealed class SiteAnalyzer
         string name = type.ToDisplayString();
         return name switch
         {
-            "Kazo.Os.AppSdk.Web.Http.HackHttpContext" => "binder.HttpContext",
-            "Kazo.Os.AppSdk.Web.Http.HackHttpRequest" => "binder.HttpContext.Request",
-            "Kazo.Os.AppSdk.Web.Http.HackHttpResponse" => "binder.HttpContext.Response",
-            "Kazo.Os.AppSdk.Web.Mvc.HackModelStateDictionary" => "binder.ModelState",
+            "Kazo.Os.AppSdk.Web.Http.KazoHttpContext" => "binder.HttpContext",
+            "Kazo.Os.AppSdk.Web.Http.KazoHttpRequest" => "binder.HttpContext.Request",
+            "Kazo.Os.AppSdk.Web.Http.KazoHttpResponse" => "binder.HttpContext.Response",
+            "Kazo.Os.AppSdk.Web.Mvc.KazoModelStateDictionary" => "binder.ModelState",
             _ => null
         };
     }
@@ -966,7 +966,7 @@ internal sealed class SiteAnalyzer
         StringBuilder body = new();
         string typeName = Fq(type.WithNullableAnnotation(NullableAnnotation.NotAnnotated));
         body.AppendLine();
-        body.AppendLine($"        private static {typeName} {name}(global::{WebRouteGenerator.MvcNamespace}.HackModelBinder binder, global::{WebRouteGenerator.MvcNamespace}.HackValueSources sources)");
+        body.AppendLine($"        private static {typeName} {name}(global::{WebRouteGenerator.MvcNamespace}.KazoModelBinder binder, global::{WebRouteGenerator.MvcNamespace}.KazoValueSources sources)");
         body.AppendLine("        {");
         HashSet<string> covered = new(StringComparer.OrdinalIgnoreCase);
         List<string> constructorArguments = [];
@@ -1067,8 +1067,8 @@ internal sealed class SiteAnalyzer
         ITypeSymbol returnType = method.ReturnType;
         StringBuilder body = new();
         body.AppendLine();
-        string signature = $"global::System.Threading.Tasks.ValueTask<object?> {name}(global::{WebRouteGenerator.MvcNamespace}.HackControllerBase controller, object?[] arguments)";
-        string empty = $"global::{WebRouteGenerator.MvcNamespace}.HackEmptyResult.Instance";
+        string signature = $"global::System.Threading.Tasks.ValueTask<object?> {name}(global::{WebRouteGenerator.MvcNamespace}.KazoControllerBase controller, object?[] arguments)";
+        string empty = $"global::{WebRouteGenerator.MvcNamespace}.KazoEmptyResult.Instance";
         if (method.ReturnsVoid)
         {
             body.AppendLine($"        private static {signature}");
@@ -1116,7 +1116,7 @@ internal sealed class SiteAnalyzer
 
     private bool IsSimple(ITypeSymbol type, out string parser)
     {
-        const string parsers = "global::" + WebRouteGenerator.MvcNamespace + ".HackValueParsers";
+        const string parsers = "global::" + WebRouteGenerator.MvcNamespace + ".KazoValueParsers";
         if (type.SpecialType == SpecialType.System_String)
         {
             parser = $"{parsers}.String";
@@ -1183,25 +1183,25 @@ internal sealed class SiteAnalyzer
         code.AppendLine("#pragma warning disable CS0612, CS0618, CS1591, CS8600, CS8601, CS8602, CS8603, CS8604, CS8619, CS8625");
         code.AppendLine($"namespace {WebRouteGenerator.GeneratedNamespace}");
         code.AppendLine("{");
-        code.AppendLine("    /// <summary>The controller actions of this assembly, for <c>HackWebApplication.MapControllers</c>.</summary>");
+        code.AppendLine("    /// <summary>The controller actions of this assembly, for <c>KazoWebApplication.MapControllers</c>.</summary>");
         code.AppendLine("    [global::System.CodeDom.Compiler.GeneratedCode(\"Kazo.Os.Tools.WebRouteGenerator\", \"1.0.0\")]");
         code.AppendLine($"    internal static class {WebRouteGenerator.GeneratedClass}");
         code.AppendLine("    {");
         code.AppendLine("        /// <summary>Gets the route table.</summary>");
-        code.AppendLine($"        public static global::{WebRouteGenerator.MvcNamespace}.HackControllerRouteTable Table {{ get; }} = new(new global::{WebRouteGenerator.MvcNamespace}.HackControllerActionDescriptor[]");
+        code.AppendLine($"        public static global::{WebRouteGenerator.MvcNamespace}.KazoControllerRouteTable Table {{ get; }} = new(new global::{WebRouteGenerator.MvcNamespace}.KazoControllerActionDescriptor[]");
         code.AppendLine("        {");
         foreach (ActionModel action in actions)
         {
-            code.AppendLine($"            new global::{WebRouteGenerator.MvcNamespace}.HackControllerActionDescriptor");
+            code.AppendLine($"            new global::{WebRouteGenerator.MvcNamespace}.KazoControllerActionDescriptor");
             code.AppendLine("            {");
             code.AppendLine($"                ControllerType = typeof({Fq(action.Controller)}),");
             code.AppendLine($"                ControllerName = {Literal(action.ControllerName)},");
             code.AppendLine($"                ActionName = {Literal(action.ActionName)},");
             code.AppendLine($"                MethodName = {Literal(action.MethodName)},");
             code.AppendLine($"                IsApiController = {Bool(action.IsApi)},");
-            code.AppendLine($"                AttributeRoutes = new global::{WebRouteGenerator.MvcNamespace}.HackAttributeRouteInfo[] {{ {string.Join(", ", action.Routes.Select(route => $"new({Literal(route.Template)}, {Strings(route.Methods!)}, {route.Order}, {(route.Name is null ? "null" : Literal(route.Name))})"))} }},");
+            code.AppendLine($"                AttributeRoutes = new global::{WebRouteGenerator.MvcNamespace}.KazoAttributeRouteInfo[] {{ {string.Join(", ", action.Routes.Select(route => $"new({Literal(route.Template)}, {Strings(route.Methods!)}, {route.Order}, {(route.Name is null ? "null" : Literal(route.Name))})"))} }},");
             code.AppendLine($"                HttpMethods = {Strings(action.TemplateLessMethods)},");
-            code.AppendLine($"                Parameters = new global::{WebRouteGenerator.MvcNamespace}.HackActionParameterDescriptor[] {{ {string.Join(", ", action.Parameters)} }},");
+            code.AppendLine($"                Parameters = new global::{WebRouteGenerator.MvcNamespace}.KazoActionParameterDescriptor[] {{ {string.Join(", ", action.Parameters)} }},");
             code.AppendLine($"                Filters = new global::{WebRouteGenerator.MvcNamespace}.IHackFilterMetadata[] {{ {string.Join(", ", action.Filters)} }},");
             code.AppendLine($"                CreateController = {action.Factory},");
             code.AppendLine($"                BindArguments = {action.Binder},");
@@ -1213,7 +1213,7 @@ internal sealed class SiteAnalyzer
         code.AppendLine("        });");
         code.AppendLine();
         code.AppendLine("        /// <summary>Gets the views: the Razor components and pages under <c>Views/</c>, by path without extension (ADR 0083, ADR 0086).</summary>");
-        code.AppendLine("        public static global::Kazo.Os.AppSdk.Web.Views.HackViewTable Views { get; } = new(new global::Kazo.Os.AppSdk.Web.Views.HackViewDescriptor[]");
+        code.AppendLine("        public static global::Kazo.Os.AppSdk.Web.Views.KazoViewTable Views { get; } = new(new global::Kazo.Os.AppSdk.Web.Views.KazoViewDescriptor[]");
         code.AppendLine("        {");
         foreach (ViewModel view in views)
         {
@@ -1266,7 +1266,7 @@ internal sealed class SiteAnalyzer
         code.AppendLine();
         code.AppendLine($"{indent}/// <summary>The process of the site <see cref=\"{EscapeIdentifier(definition.Name)}\"/>: listens on its URLs and serves its controllers.</summary>");
         code.AppendLine($"{indent}[global::System.CodeDom.Compiler.GeneratedCode(\"Kazo.Os.Tools.WebRouteGenerator\", \"1.0.0\")]");
-        code.AppendLine($"{indent}{accessibility} sealed class {hostName} : global::Kazo.Os.AppSdk.Web.Hosting.HackWebHost");
+        code.AppendLine($"{indent}{accessibility} sealed class {hostName} : global::Kazo.Os.AppSdk.Web.Hosting.KazoWebHost");
         code.AppendLine($"{indent}{{");
         code.AppendLine($"{indent}    /// <summary>Initializes the site process with its manifest.</summary>");
         code.AppendLine($"{indent}    public {hostName}(global::Kazo.Os.App.Abstractions.AppManifest manifest)");

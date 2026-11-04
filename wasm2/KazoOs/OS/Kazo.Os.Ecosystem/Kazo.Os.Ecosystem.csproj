@@ -21,7 +21,7 @@
       ADR 0048: IsSystemApp="true" on a ProjectReference makes every app of that project a system
       app (not uninstallable, dangerous capabilities granted). An app cannot declare it itself.
     -->
-    <HackerOsAppHost>true</HackerOsAppHost>
+    <KazoOsAppHost>true</KazoOsAppHost>
   </PropertyGroup>
 
   <ItemGroup>
@@ -44,7 +44,7 @@
     <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.ErrorLogViewer\Kazo.Os.Apps.ErrorLogViewer.csproj" IsSystemApp="true" />
     <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.FileExplorer\Kazo.Os.Apps.FileExplorer.csproj" IsSystemApp="true" />
     <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.Desktop\Kazo.Os.Apps.Desktop.csproj" IsSystemApp="true" />
-    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.HackPaint\Kazo.Os.Apps.HackPaint.csproj" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.KazoPaint\Kazo.Os.Apps.KazoPaint.csproj" />
     <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.IconViewer\Kazo.Os.Apps.IconViewer.csproj" />
     <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.Settings\Kazo.Os.Apps.Settings.csproj" IsSystemApp="true" />
     <!-- ADR 0188/0212: the Hack Store (system app, cannot be uninstalled). -->
@@ -81,15 +81,15 @@
   -->
   <Target Name="WriteHackerOsVersionFile" BeforeTargets="ResolveProjectStaticWebAssets">
     <PropertyGroup>
-      <_HackerOsVersionFile>$(IntermediateOutputPath)hackeros-version/version.json</_HackerOsVersionFile>
+      <_KazoOsVersionFile>$(IntermediateOutputPath)hackeros-version/version.json</_KazoOsVersionFile>
     </PropertyGroup>
-    <WriteLinesToFile File="$(_HackerOsVersionFile)"
-                      Lines="{ &quot;product&quot;: &quot;Kazo OS&quot;, &quot;version&quot;: &quot;$(HackerOsVersion)&quot; }"
+    <WriteLinesToFile File="$(_KazoOsVersionFile)"
+                      Lines="{ &quot;product&quot;: &quot;Kazo OS&quot;, &quot;version&quot;: &quot;$(KazoOsVersion)&quot; }"
                       Overwrite="true"
                       WriteOnlyWhenDifferent="true" />
     <ItemGroup>
-      <Content Include="$(_HackerOsVersionFile)" Link="wwwroot/version.json" />
-      <FileWrites Include="$(_HackerOsVersionFile)" />
+      <Content Include="$(_KazoOsVersionFile)" Link="wwwroot/version.json" />
+      <FileWrites Include="$(_KazoOsVersionFile)" />
     </ItemGroup>
   </Target>
 
@@ -106,42 +106,42 @@
                       PrivateAssets="all"
                       SkipGetTargetFrameworkProperties="true"
                       GlobalPropertiesToRemove="TargetFramework;RuntimeIdentifier;SelfContained" />
-    <_HackerOsChangeFile Include="..\..\changes\**\*.json" />
+    <_KazoOsChangeFile Include="..\..\changes\**\*.json" />
   </ItemGroup>
 
-  <Target Name="_HackerOsResolveChangeListTool">
+  <Target Name="_KazoOsResolveChangeListTool">
     <PropertyGroup>
-      <_HackerOsWhatsNewFile>$(IntermediateOutputPath)hackeros-whats-new/whats-new.json</_HackerOsWhatsNewFile>
+      <_KazoOsWhatsNewFile>$(IntermediateOutputPath)hackeros-whats-new/whats-new.json</_KazoOsWhatsNewFile>
     </PropertyGroup>
     <MSBuild Projects="..\..\Tools\Kazo.Os.Tools.ChangeList\Kazo.Os.Tools.ChangeList.csproj"
              Targets="GetTargetPath"
              Properties="Configuration=$(Configuration)"
              RemoveProperties="TargetFramework;RuntimeIdentifier;SelfContained">
-      <Output TaskParameter="TargetOutputs" PropertyName="_HackerOsChangeListTool" />
+      <Output TaskParameter="TargetOutputs" PropertyName="_KazoOsChangeListTool" />
     </MSBuild>
   </Target>
 
-  <Target Name="_HackerOsGenerateWhatsNewFile"
-          DependsOnTargets="_HackerOsResolveChangeListTool"
-          Inputs="@(_HackerOsChangeFile);$(MSBuildThisFileDirectory)..\..\build\Versions.props;$(_HackerOsChangeListTool)"
-          Outputs="$(_HackerOsWhatsNewFile)">
+  <Target Name="_KazoOsGenerateWhatsNewFile"
+          DependsOnTargets="_KazoOsResolveChangeListTool"
+          Inputs="@(_KazoOsChangeFile);$(MSBuildThisFileDirectory)..\..\build\Versions.props;$(_KazoOsChangeListTool)"
+          Outputs="$(_KazoOsWhatsNewFile)">
     <PropertyGroup>
-      <_HackerOsDotnet>$(DOTNET_HOST_PATH)</_HackerOsDotnet>
-      <_HackerOsDotnet Condition="'$(_HackerOsDotnet)' == ''">dotnet</_HackerOsDotnet>
+      <_KazoOsDotnet>$(DOTNET_HOST_PATH)</_KazoOsDotnet>
+      <_KazoOsDotnet Condition="'$(_KazoOsDotnet)' == ''">dotnet</_KazoOsDotnet>
     </PropertyGroup>
-    <Exec Command="&quot;$(_HackerOsDotnet)&quot; &quot;$(_HackerOsChangeListTool)&quot; site --changes &quot;$(MSBuildThisFileDirectory)..\..\changes&quot; --version $(HackerOsVersion) --output &quot;$(_HackerOsWhatsNewFile)&quot;" />
+    <Exec Command="&quot;$(_KazoOsDotnet)&quot; &quot;$(_KazoOsChangeListTool)&quot; site --changes &quot;$(MSBuildThisFileDirectory)..\..\changes&quot; --version $(KazoOsVersion) --output &quot;$(_KazoOsWhatsNewFile)&quot;" />
     <!-- The tool skips an unchanged file; touch it so the target stays up to date. -->
-    <Touch Files="$(_HackerOsWhatsNewFile)" />
+    <Touch Files="$(_KazoOsWhatsNewFile)" />
   </Target>
 
-  <Target Name="WriteHackerOsWhatsNewFile" BeforeTargets="ResolveProjectStaticWebAssets" DependsOnTargets="_HackerOsGenerateWhatsNewFile">
+  <Target Name="WriteHackerOsWhatsNewFile" BeforeTargets="ResolveProjectStaticWebAssets" DependsOnTargets="_KazoOsGenerateWhatsNewFile">
     <ItemGroup>
-      <Content Include="$(_HackerOsWhatsNewFile)" Link="wwwroot/whats-new.json" />
-      <FileWrites Include="$(_HackerOsWhatsNewFile)" />
+      <Content Include="$(_KazoOsWhatsNewFile)" Link="wwwroot/whats-new.json" />
+      <FileWrites Include="$(_KazoOsWhatsNewFile)" />
     </ItemGroup>
   </Target>
 
-  <!-- ADR 0066: optional CPU/memory accounting (HackerOsCpuAccounting, HackerOsMemoryAccounting). -->
+  <!-- ADR 0066: optional CPU/memory accounting (KazoOsCpuAccounting, KazoOsMemoryAccounting). -->
   <Import Project="..\..\build\Kazo.Os.ResourceAccounting.targets" />
 
 </Project>

@@ -32,14 +32,14 @@ public sealed partial class TemplateSite : WebAppDefinition
 
     /// <summary>Services, then the middleware pipeline, then the endpoints.</summary>
     /// <param name="builder">The site's builder.</param>
-    public override void Configure(HackWebApplicationBuilder builder)
+    public override void Configure(KazoWebApplicationBuilder builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
-        HackWebApplication app = builder.Build();
+        KazoWebApplication app = builder.Build();
 
         app.UseExceptionPage();
         app.UseStaticFiles();
-        app.MapGet("/", () => HackResults.Text(
+        app.MapGet("/", () => KazoResults.Text(
             """
             <!DOCTYPE html>
             <html>
@@ -48,6 +48,6 @@ public sealed partial class TemplateSite : WebAppDefinition
             </html>
             """,
             "text/html"));
-        app.MapGet("/api/time", () => HackResults.Text(TimeProvider.System.GetUtcNow().ToString("o")));
+        app.MapGet("/api/time", () => KazoResults.Text(TimeProvider.System.GetUtcNow().ToString("o")));
     }
 }

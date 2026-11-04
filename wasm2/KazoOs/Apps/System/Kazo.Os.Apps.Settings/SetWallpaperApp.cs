@@ -93,7 +93,7 @@ public sealed class SetWallpaperApp : AppDefinition
     public static void RegisterFileContextMenu(RegisterFileContextMenuContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
-        HackIcon icon = HackIcons.Vector(IconLibrary.Lucide, "image");
+        KazoIcon icon = KazoIcons.Vector(IconLibrary.Lucide, "image");
         context.Register(
             title: "Menu.SetWallpaper",
             name: SingleEntry,
@@ -101,7 +101,7 @@ public sealed class SetWallpaperApp : AppDefinition
             icon: icon,
             types: ImageTypes,
             selection: MenuSelection.Single,
-            after: HackFileMenuItems.OpenWith);
+            after: KazoFileMenuItems.OpenWith);
         context.RestrictToScreens(SingleEntry, MenuScreens.Single);
 
         context.Register(
@@ -110,7 +110,7 @@ public sealed class SetWallpaperApp : AppDefinition
             icon: icon,
             types: ImageTypes,
             selection: MenuSelection.Single,
-            after: HackFileMenuItems.OpenWith);
+            after: KazoFileMenuItems.OpenWith);
         context.RestrictToScreens(SubmenuEntry, MenuScreens.Multiple);
 
         context.Register(title: "Menu.AllScreens", name: AllScreensEntry, intent: SetWallpaperIntent, parent: SubmenuEntry);

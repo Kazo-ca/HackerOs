@@ -43,8 +43,8 @@ L'écosystème se compose de :
 
 ## Pourquoi développer pour ou avec Kazo OS
 
-- **Une API familière.** L'API fichier ressemble à `System.IO` (`HackFile`,
-  `HackDirectory`, `HackPath`…) et une application se décrit par une simple
+- **Une API familière.** L'API fichier ressemble à `System.IO` (`KazoFile`,
+  `KazoDirectory`, `KazoPath`…) et une application se décrit par une simple
   classe C# (`[AppManifest]`). Un développeur .NET est à l'aise tout de suite.
 - **Tout est déjà fourni.** Fenêtres, menus contextuels, dialogues de
   fichiers, presse-papiers, notifications, thèmes, traduction anglais et
@@ -177,7 +177,7 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   ([`settings-app.md`](dev/settings-app.md))
 - **Gestionnaire des tâches** et moniteur système (processus, mémoire,
   processeur). ([`task-manager.md`](dev/task-manager.md))
-- **HackPaint** (dessin), **Calculatrice**, **Éditeur de thèmes**,
+- **KazoPaint** (dessin), **Calculatrice**, **Éditeur de thèmes**,
   **Visionneuse d'icônes**, **Journal des erreurs**, **Diagnostic** et
   **Gestionnaire de serveur web**. ([`hack-paint.md`](dev/hack-paint.md),
   [`theme-editor.md`](dev/theme-editor.md))
@@ -289,8 +289,8 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   service, un site, un hôte complet ou un dépôt d'application entier, visibles
   dans Visual Studio et Rider.
   ([`sdk-developer-guide.md`](framework/sdk-developer-guide.md))
-- **Signature des paquets par l'auteur d'une application** : `HackerOsKeyGen`
-  crée la clé, `HackerOsPack` et le workflow `publish-packages.yml` du modèle
+- **Signature des paquets par l'auteur d'une application** : `KazoOsKeyGen`
+  crée la clé, `KazoOsPack` et le workflow `publish-packages.yml` du modèle
   signent et publient la branche `hackeros-packages`.
   ([ADR 0219](dev/adr/0219-app-authors-signing-tool.md),
   [`app-repository.md`](framework/app-repository.md))

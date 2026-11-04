@@ -346,8 +346,8 @@ internal sealed class OsHttpListenerSocket : IHackHttpListenerSocket
     /// Queues a request and waits for the owner's reply; <see langword="null"/> when the socket closed
     /// before answering (the connection was reset) or the owner did not answer in time.
     /// </summary>
-    public async Task<HackHttpListenerReply?> ExchangeAsync(
-        Func<long, HackHttpListenerExchange> build, TimeSpan timeout, CancellationToken cancellationToken)
+    public async Task<KazoHttpListenerReply?> ExchangeAsync(
+        Func<long, KazoHttpListenerExchange> build, TimeSpan timeout, CancellationToken cancellationToken)
     {
         Pending pending;
         lock (_gate)
@@ -384,7 +384,7 @@ internal sealed class OsHttpListenerSocket : IHackHttpListenerSocket
         }
     }
 
-    public async ValueTask<HackHttpListenerExchange?> AcceptAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<KazoHttpListenerExchange?> AcceptAsync(CancellationToken cancellationToken = default)
     {
         while (await _queue.Reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false))
         {
@@ -397,7 +397,7 @@ internal sealed class OsHttpListenerSocket : IHackHttpListenerSocket
         return null;
     }
 
-    public void Respond(long exchangeId, HackHttpListenerReply reply)
+    public void Respond(long exchangeId, KazoHttpListenerReply reply)
     {
         ArgumentNullException.ThrowIfNull(reply);
         Pending? pending;
@@ -438,10 +438,10 @@ internal sealed class OsHttpListenerSocket : IHackHttpListenerSocket
         }
     }
 
-    private sealed class Pending(HackHttpListenerExchange exchange)
+    private sealed class Pending(KazoHttpListenerExchange exchange)
     {
-        public HackHttpListenerExchange Exchange { get; } = exchange;
+        public KazoHttpListenerExchange Exchange { get; } = exchange;
 
-        public TaskCompletionSource<HackHttpListenerReply?> Reply { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        public TaskCompletionSource<KazoHttpListenerReply?> Reply { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
     }
 }

@@ -10,7 +10,7 @@ namespace Kazo.Os.Apps.SystemMonitor.Tabs;
 /// <summary>
 /// Detail of one process (ADR 0058, section 2): the whole <c>status</c>, the command line, the
 /// working directory, the environment when readable, the <c>io</c> counters, the parent and the
-/// children. Everything comes from <see cref="HackProcess"/>, that is from <c>/proc/&lt;pid&gt;</c>.
+/// children. Everything comes from <see cref="KazoProcess"/>, that is from <c>/proc/&lt;pid&gt;</c>.
 /// </summary>
 public partial class ProcessDetailPanel
 {
@@ -37,11 +37,11 @@ public partial class ProcessDetailPanel
 
     /// <summary>Gets or sets the process shown (refreshed every second by the window).</summary>
     [Parameter, EditorRequired]
-    public HackProcess Process { get; set; } = default!;
+    public KazoProcess Process { get; set; } = default!;
 
     /// <summary>Gets or sets every visible process, to find the parent and the children.</summary>
     [Parameter, EditorRequired]
-    public IEnumerable<HackProcess> AllProcesses { get; set; } = [];
+    public IEnumerable<KazoProcess> AllProcesses { get; set; } = [];
 
     /// <summary>Gets or sets the handler that closes the panel.</summary>
     [Parameter]
@@ -51,11 +51,11 @@ public partial class ProcessDetailPanel
     [Parameter]
     public EventCallback<long> OnSelectProcess { get; set; }
 
-    private HackProcess? Parent => Process.ParentId is { } parentId
+    private KazoProcess? Parent => Process.ParentId is { } parentId
         ? AllProcesses.FirstOrDefault(process => process.Id == parentId)
         : null;
 
-    private IReadOnlyList<HackProcess> Children => Process.GetChildren(AllProcesses);
+    private IReadOnlyList<KazoProcess> Children => Process.GetChildren(AllProcesses);
 
     /// <inheritdoc />
     protected override async Task OnParametersSetAsync()

@@ -25,7 +25,7 @@ public enum AppComponentProviderScope
 
 /// <summary>
 /// The component contracts the manifest validator and the OS registry know by name (ADR 0148), with
-/// who may provide them. The SDK repeats these names in <c>HackComponentContracts</c>, next to the
+/// who may provide them. The SDK repeats these names in <c>KazoComponentContracts</c>, next to the
 /// contracts' controllers.
 /// </summary>
 public static class AppComponentContracts

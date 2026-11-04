@@ -8,7 +8,7 @@ using Microsoft.Extensions.Localization;
 namespace Kazo.Os.Apps.SystemMonitor.Tabs;
 
 /// <summary>
-/// The Disk tab (ADR 0058, section 2): used and free space of each <see cref="HackDriveInfo"/>, and
+/// The Disk tab (ADR 0058, section 2): used and free space of each <see cref="KazoDriveInfo"/>, and
 /// the read and write throughput of each disk of <c>/proc/diskstats</c>, by difference between two
 /// readings. The bytes are real: IndexedDB transactions counted by the OS (ADR 0057).
 /// </summary>
@@ -20,7 +20,7 @@ public partial class DiskTab
 
     /// <summary>Gets or sets the drives of the last refresh.</summary>
     [Parameter]
-    public IReadOnlyList<HackDriveInfo> Drives { get; set; } = [];
+    public IReadOnlyList<KazoDriveInfo> Drives { get; set; } = [];
 
     private IStringLocalizer<Strings>? _localizer;
 

@@ -17,7 +17,7 @@ internal static class TestContexts
             Description = "Resource accounting test process.",
             Kind = AppKind.Terminal,
             EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.ResourceAccounting.Tests", "Test"),
-            SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+            SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
             Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
             Resources = AppResourceProfileManifest.None
         },

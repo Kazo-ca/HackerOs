@@ -12,7 +12,7 @@ namespace Kazo.Os.Platform.WorkerHost.Protocol;
 /// exception of the same family (ADR 0070, section 4): the SDK facades in the worker catch exactly
 /// what they would catch in-process (<see cref="AppGatewayAccessDeniedException"/>,
 /// <see cref="KeyNotFoundException"/>, <see cref="InvalidOperationException"/>,
-/// <see cref="HackProcessKilledException"/>…).
+/// <see cref="KazoProcessKilledException"/>…).
 /// </summary>
 internal static class RemoteErrors
 {
@@ -23,7 +23,7 @@ internal static class RemoteErrors
         writer.WriteString("em", exception.Message);
         switch (exception)
         {
-            case Kazo.Os.AppSdk.WebData.HackWebDbException database:
+            case Kazo.Os.AppSdk.WebData.KazoWebDbException database:
                 writer.WriteString("et", "webdb");
                 writer.WriteString("dn", database.Name);
                 break;
@@ -32,12 +32,12 @@ internal static class RemoteErrors
                 writer.WriteString("cap", denied.Capability);
                 writer.WriteNumber("rev", denied.Evaluation.PolicyRevision);
                 break;
-            case HackProcessKilledException killed:
+            case KazoProcessKilledException killed:
                 writer.WriteString("et", "killed");
                 writer.WriteNumber("pid", killed.ProcessId);
                 writer.WriteNumber("rs", (int)killed.Reason);
                 break;
-            case Kazo.Os.AppSdk.Threading.HackBackgroundJobException fault:
+            case Kazo.Os.AppSdk.Threading.KazoBackgroundJobException fault:
                 // ADR 0128 section 4: the type, message and stack of what escaped the task.
                 writer.WriteString("et", "bgfault");
                 writer.WriteString("ty", fault.OriginalTypeName);
@@ -67,7 +67,7 @@ internal static class RemoteErrors
             case FormatException:
                 writer.WriteString("et", "format");
                 break;
-            case HackUnauthorizedAccessException unauthorized:
+            case KazoUnauthorizedAccessException unauthorized:
                 writer.WriteString("et", "unauth");
                 WriteFileDetails(writer, unauthorized.ErrorCode, unauthorized.Path);
                 if (unauthorized.RequiredCapability is { } capability)
@@ -79,7 +79,7 @@ internal static class RemoteErrors
             case UnauthorizedAccessException:
                 writer.WriteString("et", "unauth");
                 break;
-            case HackIOException io:
+            case KazoIOException io:
                 writer.WriteString("et", "io");
                 WriteFileDetails(writer, io.ErrorCode, io.Path);
                 break;
@@ -107,26 +107,26 @@ internal static class RemoteErrors
             "denied" => new AppGatewayAccessDeniedException(
                 error.GetString("cap"),
                 CapabilityPolicyEvaluation.DenyMissing(Math.Max(1, error.GetOptional("rev")?.GetInt64() ?? 1))),
-            "killed" => new HackProcessKilledException(
+            "killed" => new KazoProcessKilledException(
                 error.GetInt64("pid"),
                 error.GetOptional("rs") is { } reason ? (Kazo.Os.Simulation.Abstractions.Processes.ProcessExitReason)reason.GetInt32() : Kazo.Os.Simulation.Abstractions.Processes.ProcessExitReason.Killed),
-            "bgfault" => new Kazo.Os.AppSdk.Threading.HackBackgroundJobException(
+            "bgfault" => new Kazo.Os.AppSdk.Threading.KazoBackgroundJobException(
                 error.GetOptionalString("ty") ?? "System.Exception", message, error.GetOptionalString("st")),
-            "webdb" => new Kazo.Os.AppSdk.WebData.HackWebDbException(error.GetOptionalString("dn") ?? Kazo.Os.AppSdk.WebData.HackWebDbException.InvalidStateError, StripName(message, error.GetOptionalString("dn"))),
+            "webdb" => new Kazo.Os.AppSdk.WebData.KazoWebDbException(error.GetOptionalString("dn") ?? Kazo.Os.AppSdk.WebData.KazoWebDbException.InvalidStateError, StripName(message, error.GetOptionalString("dn"))),
             "cancel" => new OperationCanceledException(message),
             "arg" => new ArgumentException(message, error.GetOptionalString("pn")),
             "notsup" => new NotSupportedException(message),
             "notfound" => new KeyNotFoundException(message),
             "format" => new FormatException(message),
-            "unauth" => new HackUnauthorizedAccessException(
+            "unauth" => new KazoUnauthorizedAccessException(
                 message, ReadCode(error), error.GetOptionalString("path"), error.GetOptionalString("cap")),
-            "io" => new HackIOException(message, ReadCode(error), error.GetOptionalString("path")),
+            "io" => new KazoIOException(message, ReadCode(error), error.GetOptionalString("path")),
             "inval" => new InvalidOperationException(message),
             _ => new WorkerRemoteException(error.GetOptionalString("ty") ?? "Exception", message)
         };
     }
 
-    // HackWebDbException's message starts with its name; the rebuilt exception adds it again.
+    // KazoWebDbException's message starts with its name; the rebuilt exception adds it again.
     private static string StripName(string message, string? name) =>
         name is not null && message.StartsWith(name + ": ", StringComparison.Ordinal) ? message[(name.Length + 2)..] : message;
 

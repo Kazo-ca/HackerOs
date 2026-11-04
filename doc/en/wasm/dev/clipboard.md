@@ -2,7 +2,7 @@
 
 # OS clipboard and sharing with the host
 
-The clipboard API for apps (`HackClipboard`, file lists, GNOME format) is in [`clipboard-api.md`](../framework/clipboard-api.md).
+The clipboard API for apps (`KazoClipboard`, file lists, GNOME format) is in [`clipboard-api.md`](../framework/clipboard-api.md).
 
 ## Purpose
 
@@ -16,7 +16,7 @@ conflicts) is described in [`file-explorer.md`](file-explorer.md).
 ## Architecture
 
 ```text
-App ──► HackClipboard ──► IAppClipboardGateway ──► AppClipboardGateway ──► SystemClipboard (one entry per session)
+App ──► KazoClipboard ──► IAppClipboardGateway ──► AppClipboardGateway ──► SystemClipboard (one entry per session)
                                                        clipboard.read / .write          │ Changed, sequence, origin
                                                                                           ▼
               /etc/hackeros/clipboard.config ──► HostClipboardBridge (Platform Core)
@@ -121,5 +121,5 @@ convention.
 - [x] `BrowserHostClipboardChannel` and `hostClipboard.js` in Infrastructure.Browser.
 - [x] Registration in `AddHackerOsEcosystem`, startup in `App.razor`.
 - [x] `FileView`: Ctrl+V through `paste`, pasted host files imported like a drop.
-- [x] Copy diagnostic through `HackClipboard` (`clipboard.write`); `BrowserClipboard` `[Obsolete]`, then removed in 1.0 (ADR 0114).
+- [x] Copy diagnostic through `KazoClipboard` (`clipboard.write`); `BrowserClipboard` `[Obsolete]`, then removed in 1.0 (ADR 0114).
 - [x] Tests and documentation.

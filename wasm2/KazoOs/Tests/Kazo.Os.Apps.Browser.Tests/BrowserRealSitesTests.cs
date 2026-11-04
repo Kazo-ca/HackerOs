@@ -79,7 +79,7 @@ public sealed class BrowserRealSitesTests
         FakeBrowserTransport transport = new FakeBrowserTransport().Serve("https://example.com/api", "application/json", "{}");
         DevToolsLog log = new();
         BrowserResourceLoader loader = new(transport, log);
-        PageBridgeHandler handler = new(loader, new HackCookieContainer());
+        PageBridgeHandler handler = new(loader, new KazoCookieContainer());
         PageSession session = new(new Uri("https://example.com/"), "t", loader, CancellationToken.None);
 
         BridgeFetchReply reply = await handler.FetchAsync(session, new BridgeFetchRequest("GET", "https://example.com/api", [], null, "fetch", "same-origin", "cors"));
@@ -91,9 +91,9 @@ public sealed class BrowserRealSitesTests
     [Fact]
     public void Domain_cookies_of_a_real_site_are_readable_by_its_subdomains_only()
     {
-        HackCookieContainer cookies = new();
-        cookies.Add(new HackCookie(".example.com", "sid", "1"));
-        cookies.Add(new HackCookie("www.example.com", "own", "2"));
+        KazoCookieContainer cookies = new();
+        cookies.Add(new KazoCookie(".example.com", "sid", "1"));
+        cookies.Add(new KazoCookie("www.example.com", "own", "2"));
 
         Assert.Equal(2, cookies.GetCookies(new Uri("https://www.example.com/")).Count);
         Assert.Single(cookies.GetCookies(new Uri("https://example.com/")));

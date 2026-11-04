@@ -43,7 +43,7 @@ browser and type `intranet.hack`.
 | `/` | Announcements, counters, site status | `.cshtml` view in a `.razor` layout; `health.js` calls `/health` through `fetch` |
 | `/Home/Profile` | Choosing a name | `Html.BeginForm`, `TextBoxFor`, validation, anti-forgery token, name kept in session |
 | `/People` | Directory | search done by the server (`?q=`), then filtered by `people.js` on `/api/people` at each keystroke |
-| `/Notes` | Team wiki | `.razor` views, `_NoteCard` partial, creation/editing/deletion through forms (post/redirect/get), star that pins through `PATCH /api/notes/{id}`; notes kept in the site database (`HackWebDb`), which survive the site stopping and restarting |
+| `/Notes` | Team wiki | `.razor` views, `_NoteCard` partial, creation/editing/deletion through forms (post/redirect/get), star that pins through `PATCH /api/notes/{id}`; notes kept in the site database (`KazoWebDb`), which survive the site stopping and restarting |
 | `/board` | Task board | Blazor site drawn by the browser: add, move, delete a card without reloading, link to `/board/tasks/{id}` |
 | `/api/notes`, `/api/people`, `/api/tasks`, `/api/me`, `/health` | JSON | full REST API (`GET`, `POST`, `PUT`, `PATCH`, `DELETE`, RFC 9457 problems) |
 
@@ -134,7 +134,7 @@ public sealed partial class IntranetSite : WebAppDefinition   // partial : le bu
     public override IReadOnlyList<string> Capabilities =>
         [AppCapabilities.NetworkListen, AppCapabilities.NetworkSimulatedRead, AppCapabilities.NetworkSimulatedWrite];
 
-    public override void Configure(HackWebApplicationBuilder builder) { ... }
+    public override void Configure(KazoWebApplicationBuilder builder) { ... }
 }
 ```
 
@@ -154,20 +154,20 @@ public sealed partial class IntranetSite : WebAppDefinition   // partial : le bu
 `web` worker when the host has one. The order is that of ASP.NET Core:
 
 ```csharp
-public override void Configure(HackWebApplicationBuilder builder)
+public override void Configure(KazoWebApplicationBuilder builder)
 {
     builder.Services.AddSingleton<NoteStore>();                 // un par processus du site
     builder.Services.AddSingleton<TaskBoard>();
     builder.Json.SerializerOptions.TypeInfoResolverChain.Insert(0, IntranetJsonContext.Default);
 
-    HackWebApplication app = builder.Build();
+    KazoWebApplication app = builder.Build();
     app.UseExceptionPage();          // une exception devient une page d'erreur au style console
     app.UseStaticFiles();            // wwwroot/ embarqué, avant le routage des contrôleurs
-    app.UseCookieSession();          // HttpContext.Session, cookie .HackSession
+    app.UseCookieSession();          // HttpContext.Session, cookie .KazoSession
     app.Use(async (context, next) => { context.Response.Headers["X-Powered-By"] = "ASP.Hack"; await next(); });
 
-    app.MapGet("/health", context => HackResults.Json(..., IntranetJsonContext.Default.SiteStatus));
-    app.MapGet("/api/me", context => HackResults.Json(new Visitor(IntranetSession.DisplayName(context)), ...));
+    app.MapGet("/health", context => KazoResults.Json(..., IntranetJsonContext.Default.SiteStatus));
+    app.MapGet("/api/me", context => KazoResults.Json(new Visitor(IntranetSession.DisplayName(context)), ...));
     app.MapControllers();            // routes d'attribut + {controller=Home}/{action=Index}/{id?}
     // Avec BlazorRoot, la page hôte Blazor est ajoutée après Configure, en dernier recours.
 }
@@ -181,12 +181,12 @@ public override void Configure(HackWebApplicationBuilder builder)
 
 ## 4. Page controllers
 
-`HackController` (ASP.NET's `Controller`): `View()`, `PartialView()`,
+`KazoController` (ASP.NET's `Controller`): `View()`, `PartialView()`,
 `ViewData`, `RedirectToAction`, binding of complex types from the
 form.
 
 ```csharp
-public sealed class NotesController(NoteStore store, ILogger<NotesController> logger) : HackController
+public sealed class NotesController(NoteStore store, ILogger<NotesController> logger) : KazoController
 {
     public async Task<IHackActionResult> Index(CancellationToken cancellationToken) =>
         View(await store.AllAsync(cancellationToken));                       // Views/Notes/Index.razor
@@ -223,14 +223,14 @@ public sealed class NotesController(NoteStore store, ILogger<NotesController> lo
 
 ## 5. REST API
 
-`HackApiController` (ASP.NET's `[ApiController]`): JSON body by default,
+`KazoApiController` (ASP.NET's `[ApiController]`): JSON body by default,
 automatic `400` with an RFC 9457 problem if `ModelState` is invalid, and
 error statuses without a body turned into problems. An API action must have
 an attribute route (`HOSWEB0007`).
 
 ```csharp
 [Route("api/notes")]
-public sealed class NotesApiController(NoteStore store) : HackApiController
+public sealed class NotesApiController(NoteStore store) : KazoApiController
 {
     [HttpGet] public IReadOnlyList<Note> List([FromQuery] string? q = null) => ...;
     [HttpGet("{id:int}", Name = "GetNote")]
@@ -259,16 +259,16 @@ The two kinds of views mix; choose by taste, the engine is the same.
 
 | | `.cshtml` (ADR 0086) | `.razor` (ADR 0083) |
 |---|---|---|
-| Model | `@model HomeViewModel` | `@inherits HackView<Note>` |
+| Model | `@model HomeViewModel` | `@inherits KazoView<Note>` |
 | Layout | `_ViewStart.cshtml` (`Layout = "_Layout"`) or `Layout = "..."` | `@layout _Layout` |
-| Link | `@Html.ActionLink("Notes", "Index", "Notes")` | `<HackLink Action="Index" Controller="Notes">` |
-| Form | `@using (Html.BeginForm("Profile", "Home")) { ... }` | `<HackForm Action="Edit" RouteValues="...">` |
-| Bound field | `@Html.TextBoxFor(m => m.Name)`, `ValidationMessageFor` | `<input name="Title" value="@Model.Title" />`, `<HackValidationMessage For="Title" />` |
-| Section | `@section Scripts { ... }` | `<HackSection Name="Scripts">` |
-| Partial | `@await Html.PartialAsync("_Card", x)` | `<HackPartial Name="_NoteCard" Model="note" />` |
+| Link | `@Html.ActionLink("Notes", "Index", "Notes")` | `<KazoLink Action="Index" Controller="Notes">` |
+| Form | `@using (Html.BeginForm("Profile", "Home")) { ... }` | `<KazoForm Action="Edit" RouteValues="...">` |
+| Bound field | `@Html.TextBoxFor(m => m.Name)`, `ValidationMessageFor` | `<input name="Title" value="@Model.Title" />`, `<KazoValidationMessage For="Title" />` |
+| Section | `@section Scripts { ... }` | `<KazoSection Name="Scripts">` |
+| Partial | `@await Html.PartialAsync("_Card", x)` | `<KazoPartial Name="_NoteCard" Model="note" />` |
 
 In the example, the layout is a `.razor` component (`Views/Shared/_Layout.razor`,
-class `HackLayout`, code in `_Layout.razor.cs`); `.cshtml` views find it
+class `KazoLayout`, code in `_Layout.razor.cs`); `.cshtml` views find it
 through `_ViewStart.cshtml`, `.razor` views through `@layout _Layout`. It
 renders the title (`ViewData.Title`), the navigation (active link based on
 `Request.RouteValues["controller"]`), the session name and the view's
@@ -319,27 +319,27 @@ the component in the page area, without an iframe (ADR 0084).
 
 ```razor
 @* Board/BoardApp.razor *@
-@inherits HackComponentBase
-<HackSiteRouter AppAssembly="typeof(BoardApp).Assembly" DefaultLayout="typeof(BoardLayout)">
+@inherits KazoComponentBase
+<KazoSiteRouter AppAssembly="typeof(BoardApp).Assembly" DefaultLayout="typeof(BoardLayout)">
     <NotFound>...</NotFound>
-</HackSiteRouter>
+</KazoSiteRouter>
 
 @* Board/Pages/BoardPage.razor *@
 @page "/board"
-@inherits HackComponentBase
-<HackPageTitle Title="Board - Intranet" />
+@inherits KazoComponentBase
+<KazoPageTitle Title="Board - Intranet" />
 ...
 ```
 
 ```csharp
 // BoardPage.razor.cs
-[CascadingParameter] private HackWebSite? Site { get; set; }
+[CascadingParameter] private KazoWebSite? Site { get; set; }
 
 IReadOnlyList<BoardTask>? tasks = await Site.Http.GetFromJsonAsync("api/tasks", IntranetJsonContext.Default.IReadOnlyListBoardTask);
-HackHttpResponse created = await Site.Http.PostAsync("api/tasks", HackJsonContent.Create(draft, IntranetJsonContext.Default.BoardTask));
+KazoHttpResponse created = await Site.Http.PostAsync("api/tasks", KazoJsonContent.Create(draft, IntranetJsonContext.Default.BoardTask));
 ```
 
-- Each component carries `@inherits HackComponentBase` (or `HackSiteLayoutBase`
+- Each component carries `@inherits KazoComponentBase` (or `KazoSiteLayoutBase`
   for a layout): its events run under the identity of the renderer
   process. The rule is checked per file (`AmbientFrameSourceTests`).
 - Pages have no access to the site's services: they call its API through
@@ -364,12 +364,12 @@ Three levels, all in the example:
    requests.
 
    ```csharp
-   HackWebApplication app = HackWebHost.CreateApplication(
-       new IntranetSite(), HackWebGeneratedRoutes.Table, views: HackWebGeneratedRoutes.Views);
-   HackWebResponseData home = await app.ProcessAsync(HackWebRequestData.Create("GET", "http://intranet.hack/"));
+   KazoWebApplication app = KazoWebHost.CreateApplication(
+       new IntranetSite(), KazoWebGeneratedRoutes.Table, views: KazoWebGeneratedRoutes.Views);
+   KazoWebResponseData home = await app.ProcessAsync(KazoWebRequestData.Create("GET", "http://intranet.hack/"));
    ```
 
-   `HackWebGeneratedRoutes` is internal to the site's assembly:
+   `KazoWebGeneratedRoutes` is internal to the site's assembly:
    `<InternalsVisibleTo Include="Kazo.Os.Samples.Intranet.Tests" />`.
    `IntranetClient` keeps cookies there like a tab and finds the
    anti-forgery field of a form.
@@ -382,7 +382,7 @@ Three levels, all in the example:
    the site's IndexedDB database, autofill, the debug log
    and Diagnostics.
 
-In memory, `HackWebDb` is an in-memory database specific to the application: tests
+In memory, `KazoWebDb` is an in-memory database specific to the application: tests
 have nothing to configure ([`asp-hack-site-data.md`](asp-hack-site-data.md#outside-hackeros-and-in-tests)).
 
 ## 10. Installing the site in the OS
@@ -407,11 +407,11 @@ manifests and the lazy assemblies (`BuildKnownLazyAppsTests`,
 | Site traces | `builder.Logging.EnableDebugLog()`, then `tail /var/log/hackweb/<id>.log`: requests, `ILogger<T>`, exceptions |
 | Contents of the site database | app "IndexedDB Diagnostic", *Website databases* section (stores, record count, size; clearing) |
 | Blazor page that crashes | the browser's "Aw, Snap!"; the renderer process ends in fault, the OS carries on |
-| Restarting the site | `kill` the process: the next request restarts it (in-memory sessions and data lost, `HackWebDb` database kept) |
+| Restarting the site | `kill` the process: the next request restarts it (in-memory sessions and data lost, `KazoWebDb` database kept) |
 
 ## Known limits
 
-- **Data.** The example's notes are in its `HackWebDb` database (ADR 0088);
+- **Data.** The example's notes are in its `KazoWebDb` database (ADR 0088);
   the board cards, announcements and directory stay in the memory of the
   site's process and return to their initial state when it stops.
 - Forms of a Blazor site do not have the browser's autofill
@@ -421,7 +421,7 @@ manifests and the lazy assemblies (`BuildKnownLazyAppsTests`,
 - The `Site.Http` requests of Blazor pages do not appear in the Network
   tab.
 - Each `curl` has its own cookie jar. To replay a session, pass the
-  cookie by hand: `curl -H 'Cookie: .HackSession=…'` is sent to the site,
+  cookie by hand: `curl -H 'Cookie: .KazoSession=…'` is sent to the site,
   merged with the jar (what is typed wins), to the requested host only,
   and never stored (ADR 0089).
 - Compiling a site **inside the OS** remains out of scope (ADR 0076 §8).
@@ -435,5 +435,5 @@ manifests and the lazy assemblies (`BuildKnownLazyAppsTests`,
 - [x] `TryValidateModel` on controllers (ADR 0087 §3).
 - [x] Example installed in the Ecosystem and `test/test`, Ecosystem tests updated.
 - [x] In-memory tests (`Kazo.Os.Samples.Intranet.Tests`) and Chromium E2E (`BrowserIntranetTests`).
-- [x] `web/12`: example notes in `HackWebDb`, debug log, `GET /api/notes?author=` filter through the `byAuthor` index ([`asp-hack-site-data.md`](asp-hack-site-data.md)).
+- [x] `web/12`: example notes in `KazoWebDb`, debug log, `GET /api/notes?author=` filter through the `byAuthor` index ([`asp-hack-site-data.md`](asp-hack-site-data.md)).
 - [x] This guide, `sdk-reference.md`, ADR 0087, plan, index and phase documents updated.

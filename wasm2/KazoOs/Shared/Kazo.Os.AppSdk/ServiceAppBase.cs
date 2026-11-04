@@ -61,7 +61,7 @@ public abstract class ServiceAppBase : AppBase
     /// <param name="sessionCancellationToken">Signals logout, disable, or OS shutdown.</param>
     /// <returns>A task representing the active service session.</returns>
     /// <remarks>
-    /// The service runs inside a <see cref="HackExecutionContext"/> scope for <paramref name="context"/>
+    /// The service runs inside a <see cref="KazoExecutionContext"/> scope for <paramref name="context"/>
     /// (working directory: the user's home), so the <c>Hack*</c> file API works without passing the
     /// context around (ADR 0043).
     /// </remarks>
@@ -109,7 +109,7 @@ public abstract class ServiceAppBase : AppBase
         _ => ServiceStopReason.Terminated
     };
 
-    private void OnStopRequested(object? sender, Diagnostics.HackStopRequestedEventArgs e)
+    private void OnStopRequested(object? sender, Diagnostics.KazoStopRequestedEventArgs e)
     {
         // The grace period is simulated time; the cleanup budget follows it in real time.
         CancellationTokenSource budget = new(e.GracePeriod > TimeSpan.Zero ? e.GracePeriod : TimeSpan.FromSeconds(1));
@@ -128,13 +128,13 @@ public abstract class ServiceAppBase : AppBase
 
     private async Task RunStoppingAsync(ServiceStopReason reason, CancellationToken cancellationToken)
     {
-        using IDisposable? scope = _context is null ? null : HackExecutionContext.Enter(_context);
+        using IDisposable? scope = _context is null ? null : KazoExecutionContext.Enter(_context);
         await OnStoppingAsync(reason, cancellationToken);
     }
 
     private async Task RunInScopeAsync(IAppExecutionContext context, CancellationToken sessionCancellationToken)
     {
-        using IDisposable scope = HackExecutionContext.Enter(context);
+        using IDisposable scope = KazoExecutionContext.Enter(context);
         try
         {
             // ADR 0097: "activating" until the start code returns, "active" from then on (READY=1).
@@ -171,7 +171,7 @@ public abstract class ServiceAppBase : AppBase
     /// <summary>
     /// Prepares the service before its loop (ADR 0097, section 1): the service reads as
     /// <c>activating</c> until this returns, then <c>active</c> with health
-    /// <see cref="HackServiceHealth.Healthy"/>. A start longer than the OS's start timeout (30 s) is
+    /// <see cref="KazoServiceHealth.Healthy"/>. A start longer than the OS's start timeout (30 s) is
     /// killed and the service reads as <c>failed (Result: timeout)</c>; an exception here fails it
     /// with <c>exception</c>. The default does nothing, so the service is active at once.
     /// </summary>
@@ -184,14 +184,14 @@ public abstract class ServiceAppBase : AppBase
     /// <summary>
     /// Reports the service's own health without stopping it (ADR 0097, section 2), like
     /// <c>sd_notify("STATUS=…")</c>: a site that can no longer reach its database reports
-    /// <see cref="HackServiceHealth.Degraded"/> with a short reason. <c>systemctl status</c> and the
+    /// <see cref="KazoServiceHealth.Degraded"/> with a short reason. <c>systemctl status</c> and the
     /// task manager show both.
     /// </summary>
     /// <param name="health">The current health.</param>
     /// <param name="status">A short human-readable status, or <see langword="null"/> to clear it.</param>
     /// <remarks>Does nothing before <see cref="RunAsync"/> or when the OS does not track this process as a service.</remarks>
-    protected void ReportHealth(HackServiceHealth health, string? status = null) =>
-        _context?.ServiceNotify.Notify(new ServiceNotification(Health: HackServiceStates.ToInternal(health), StatusText: status ?? string.Empty));
+    protected void ReportHealth(KazoServiceHealth health, string? status = null) =>
+        _context?.ServiceNotify.Notify(new ServiceNotification(Health: KazoServiceStates.ToInternal(health), StatusText: status ?? string.Empty));
 
     /// <summary>Implements the active service loop.</summary>
     /// <param name="context">Scoped application execution context.</param>

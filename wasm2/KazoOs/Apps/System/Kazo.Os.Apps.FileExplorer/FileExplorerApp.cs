@@ -54,18 +54,18 @@ public sealed class FileExplorerApp : AppDefinition
 
     /// <summary>
     /// The OS file control and its dialogs (ADR 0148, ADR 0155): every app shows the explorer's
-    /// <c>HackFileView</c> and opens its "Open with", properties and conflict dialogs; the explorer
+    /// <c>KazoFileView</c> and opens its "Open with", properties and conflict dialogs; the explorer
     /// shows them itself.
     /// </summary>
     public override IReadOnlyList<AppComponent> Components =>
     [
-        new(HackComponentContracts.FileView, typeof(ExplorerFileView)),
-        new(HackComponentContracts.FileDialogs, typeof(ExplorerFileDialogs))
+        new(KazoComponentContracts.FileView, typeof(ExplorerFileView)),
+        new(KazoComponentContracts.FileDialogs, typeof(ExplorerFileDialogs))
     ];
 
     /// <summary>
     /// Registers "Extract here" on <c>.zip</c> files, right after "Open", in the file menus of every
-    /// host: the explorer, the desktop, the file dialogs and any app showing <c>HackFileView</c>
+    /// host: the explorer, the desktop, the file dialogs and any app showing <c>KazoFileView</c>
     /// (ADR 0151 §8). Run by the manifest generator at build, never at run time.
     /// </summary>
     /// <param name="context">Records the entries.</param>
@@ -77,9 +77,9 @@ public sealed class FileExplorerApp : AppDefinition
             title: FileExplorerMenuEntries.ExtractHereTitle,
             name: FileExplorerMenuEntries.ExtractHere,
             intent: FileExplorerMenuEntries.ExtractHereIntent,
-            icon: HackIcons.Vector(IconLibrary.Lucide, "package-open"),
+            icon: KazoIcons.Vector(IconLibrary.Lucide, "package-open"),
             types: [".zip", "application/zip"],
-            after: HackFileMenuItems.Open);
+            after: KazoFileMenuItems.Open);
     }
 
     /// <inheritdoc />

@@ -7,7 +7,7 @@ namespace Kazo.Os.Commands.Common;
 /// <summary>
 /// One reading of the machine for <c>top</c> and <c>htop</c> (ADR 0064), taken from <c>/proc</c>
 /// as procps does: <c>uptime</c>, <c>loadavg</c>, <c>meminfo</c>, <c>cpuinfo</c>, <c>stat</c>
-/// and every process through <see cref="HackProcess"/>. A file the command cannot read leaves
+/// and every process through <see cref="KazoProcess"/>. A file the command cannot read leaves
 /// its fields at zero.
 /// </summary>
 internal sealed record SystemSnapshot(
@@ -19,7 +19,7 @@ internal sealed record SystemSnapshot(
     int Cores,
     IReadOnlyList<long> CpuTicks,
     IReadOnlyList<IReadOnlyList<long>> CoreTicks,
-    IReadOnlyList<HackProcess> Processes)
+    IReadOnlyList<KazoProcess> Processes)
 {
     /// <summary>Reads everything once.</summary>
     public static async Task<SystemSnapshot> ReadAsync(CancellationToken cancellationToken)
@@ -29,10 +29,10 @@ internal sealed record SystemSnapshot(
         string meminfo = await TryReadAsync("/proc/meminfo", cancellationToken);
         string cpuinfo = await TryReadAsync("/proc/cpuinfo", cancellationToken);
         string stat = await TryReadAsync("/proc/stat", cancellationToken);
-        HackProcess[] processes;
+        KazoProcess[] processes;
         try
         {
-            processes = await HackProcess.GetProcessesAsync(cancellationToken);
+            processes = await KazoProcess.GetProcessesAsync(cancellationToken);
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException)
         {
@@ -97,7 +97,7 @@ internal sealed record SystemSnapshot(
         : $"{uptime.Minutes} min";
 
     /// <summary>CPU time of a process as <c>top</c>'s <c>TIME+</c> column (<c>m:ss.hh</c>), estimated from its age and current usage.</summary>
-    public static string FormatCpuTime(HackProcess process, DateTimeOffset now)
+    public static string FormatCpuTime(KazoProcess process, DateTimeOffset now)
     {
         double seconds = Math.Max(0, (now - process.StartTime).TotalSeconds) * process.CpuUsage / 100.0;
         TimeSpan time = TimeSpan.FromSeconds(seconds);
@@ -129,7 +129,7 @@ internal sealed record SystemSnapshot(
     {
         try
         {
-            return await HackFile.ReadAllTextAsync(path, cancellationToken);
+            return await KazoFile.ReadAllTextAsync(path, cancellationToken);
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
         {

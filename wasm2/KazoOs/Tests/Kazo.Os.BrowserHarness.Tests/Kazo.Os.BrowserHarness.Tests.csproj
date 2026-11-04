@@ -22,7 +22,7 @@
     <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.Terminal\Kazo.Os.Apps.Terminal.csproj" />
     <ProjectReference Include="..\..\Shared\Kazo.Os.AppSdk.VirtualKeyboard\Kazo.Os.AppSdk.VirtualKeyboard.csproj" />
     <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.CodeEditor\Kazo.Os.Apps.CodeEditor.csproj" />
-    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.HackPaint\Kazo.Os.Apps.HackPaint.csproj" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.KazoPaint\Kazo.Os.Apps.KazoPaint.csproj" />
   </ItemGroup>
 
 </Project>

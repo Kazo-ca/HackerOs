@@ -13,10 +13,10 @@ public sealed class SampleJobsTests
     public async Task CountPrimes_counts_and_reports_its_pid()
     {
         MinimalAppExecutionContext context = new(AppDefinitionMapper.ToManifest(new WindowSampleApp()), processId: Kazo.Os.Simulation.Abstractions.Processes.ProcessId.FromInt64(9));
-        using IDisposable scope = HackExecutionContext.Enter(context);
-        List<HackBackgroundProgress> reports = [];
+        using IDisposable scope = KazoExecutionContext.Enter(context);
+        List<KazoBackgroundProgress> reports = [];
 
-        PrimeCountResult result = await HackBackground.RunAsync<PrimeCountInput, PrimeCountResult>(
+        PrimeCountResult result = await KazoBackground.RunAsync<PrimeCountInput, PrimeCountResult>(
             SampleJobs.CountPrimes, new PrimeCountInput(100_000), new Collect(reports));
 
         Assert.Equal(new PrimeCountResult(9592, 99991), result);
@@ -24,8 +24,8 @@ public sealed class SampleJobsTests
         Assert.Equal(1d, reports[^1].Fraction);
     }
 
-    private sealed class Collect(List<HackBackgroundProgress> reports) : IProgress<HackBackgroundProgress>
+    private sealed class Collect(List<KazoBackgroundProgress> reports) : IProgress<KazoBackgroundProgress>
     {
-        public void Report(HackBackgroundProgress value) => reports.Add(value);
+        public void Report(KazoBackgroundProgress value) => reports.Add(value);
     }
 }

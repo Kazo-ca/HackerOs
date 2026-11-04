@@ -41,7 +41,7 @@ public static class AdminEndpoints
     {
         // Try to reach the database as a basic health check.
         using var scope = services.CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<HackerOsServerDbContext>();
+        var db = scope.ServiceProvider.GetRequiredService<KazoOsServerDbContext>();
         bool dbOk;
         try { dbOk = db.Database.CanConnect(); }
         catch { dbOk = false; }
@@ -60,7 +60,7 @@ public static class AdminEndpoints
     }
 
     private static async Task<IResult> DataSummaryAsync(
-        HackerOsServerDbContext db, ClaimsPrincipal user, CancellationToken ct)
+        KazoOsServerDbContext db, ClaimsPrincipal user, CancellationToken ct)
     {
         var accountId = GetAccountId(user);
         var account = await db.Accounts.FirstOrDefaultAsync(a => a.AccountId == accountId, ct);

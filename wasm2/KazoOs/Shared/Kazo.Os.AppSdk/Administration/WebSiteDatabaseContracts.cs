@@ -6,11 +6,11 @@ namespace Kazo.Os.AppSdk.Administration;
 /// <param name="Version">The stored version.</param>
 /// <param name="Stores">The object stores and their record counts, by name.</param>
 /// <param name="SizeBytes">UTF-8 size of the records' JSON (keys and values): an estimate, as a browser shows per origin.</param>
-public sealed record HackWebSiteDatabaseInfo(
+public sealed record KazoWebSiteDatabaseInfo(
     string Name,
     string AppId,
     int Version,
-    IReadOnlyList<HackWebSiteDatabaseStoreInfo> Stores,
+    IReadOnlyList<KazoWebSiteDatabaseStoreInfo> Stores,
     long SizeBytes)
 {
     /// <summary>Gets the number of records of every store.</summary>
@@ -20,4 +20,4 @@ public sealed record HackWebSiteDatabaseInfo(
 /// <summary>An object store of a site database.</summary>
 /// <param name="Name">Store name.</param>
 /// <param name="RecordCount">Number of records.</param>
-public sealed record HackWebSiteDatabaseStoreInfo(string Name, int RecordCount);
+public sealed record KazoWebSiteDatabaseStoreInfo(string Name, int RecordCount);

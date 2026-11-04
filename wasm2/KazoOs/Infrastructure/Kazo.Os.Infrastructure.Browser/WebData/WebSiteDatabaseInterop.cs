@@ -22,12 +22,12 @@ public sealed class WebSiteDatabaseInterop : IAsyncDisposable
         _runtime = runtime ?? throw new ArgumentNullException(nameof(runtime));
     }
 
-    /// <summary>Opens <paramref name="databaseName"/> with a schema (JSON of <c>HackWebDbSchemaDefinition</c>).</summary>
+    /// <summary>Opens <paramref name="databaseName"/> with a schema (JSON of <c>KazoWebDbSchemaDefinition</c>).</summary>
     public async ValueTask OpenAsync(string databaseName, string schemaJson, CancellationToken cancellationToken = default) =>
         await (await ModuleAsync(cancellationToken).ConfigureAwait(false))
             .InvokeVoidAsync("open", cancellationToken, databaseName, schemaJson).ConfigureAwait(false);
 
-    /// <summary>Runs a batch (JSON of <c>HackWebDbRequest</c>) and returns the JSON array of its results.</summary>
+    /// <summary>Runs a batch (JSON of <c>KazoWebDbRequest</c>) and returns the JSON array of its results.</summary>
     public async ValueTask<string> ExecuteAsync(string databaseName, string requestJson, CancellationToken cancellationToken = default) =>
         await (await ModuleAsync(cancellationToken).ConfigureAwait(false))
             .InvokeAsync<string>("execute", cancellationToken, databaseName, requestJson).ConfigureAwait(false);

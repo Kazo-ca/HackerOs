@@ -75,7 +75,7 @@ public sealed class StorageSpaceMonitor : IStorageSpaceGuard, IAsyncDisposable
         Func<CultureInfo>? language = null)
     {
         _probe = probe ?? throw new ArgumentNullException(nameof(probe));
-        _language = language ?? (static () => Kazo.Os.AppSdk.Globalization.HackLocale.DefaultLanguage);
+        _language = language ?? (static () => Kazo.Os.AppSdk.Globalization.KazoLocale.DefaultLanguage);
         _notifications = notifications;
         _currentUser = currentUser ?? (static () => null);
         _time = time ?? TimeProvider.System;

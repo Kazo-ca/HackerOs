@@ -1,4 +1,4 @@
-@inherits Kazo.Os.AppSdk.Blazor.HackComponentBase
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
 @using Kazo.Os.AppSdk.Administration
 
 <div class="setting-group backup-panel">
@@ -33,22 +33,22 @@
             LocalizedMarkup.Code("--replace"))
     </p>
     <div class="restore-modes" role="radiogroup" aria-label="@L["Backup.Mode.AriaLabel"]">
-        <button type="button" role="radio" class="@ModeClass(HackBackupRestoreMode.Merge)"
-                aria-checked="@(_mode == HackBackupRestoreMode.Merge ? "true" : "false")"
+        <button type="button" role="radio" class="@ModeClass(KazoBackupRestoreMode.Merge)"
+                aria-checked="@(_mode == KazoBackupRestoreMode.Merge ? "true" : "false")"
                 disabled="@IsBusy"
-                @onclick="() => _mode = HackBackupRestoreMode.Merge">
+                @onclick="() => _mode = KazoBackupRestoreMode.Merge">
             <span class="restore-mode-title">@L["Backup.Mode.Merge"]</span>
             <span class="restore-mode-desc">@L["Backup.Mode.Merge.Description"]</span>
         </button>
-        <button type="button" role="radio" class="@ModeClass(HackBackupRestoreMode.Replace)"
-                aria-checked="@(_mode == HackBackupRestoreMode.Replace ? "true" : "false")"
+        <button type="button" role="radio" class="@ModeClass(KazoBackupRestoreMode.Replace)"
+                aria-checked="@(_mode == KazoBackupRestoreMode.Replace ? "true" : "false")"
                 disabled="@IsBusy"
-                @onclick="() => _mode = HackBackupRestoreMode.Replace">
+                @onclick="() => _mode = KazoBackupRestoreMode.Replace">
             <span class="restore-mode-title">@L["Backup.Mode.Replace"]</span>
             <span class="restore-mode-desc">@L["Backup.Mode.Replace.Description"]</span>
         </button>
     </div>
-    <button type="button" class="@(_mode == HackBackupRestoreMode.Replace ? "btn-danger" : "btn-secondary")"
+    <button type="button" class="@(_mode == KazoBackupRestoreMode.Replace ? "btn-danger" : "btn-secondary")"
             disabled="@IsBusy" @onclick="RestoreAsync">
         @(_operation == Operation.Restore ? L["Backup.Restoring"] : L["Backup.Restore"])
     </button>

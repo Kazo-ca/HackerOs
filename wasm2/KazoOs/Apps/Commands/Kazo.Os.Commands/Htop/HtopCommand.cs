@@ -258,14 +258,14 @@ public sealed class HtopCommand(AppManifest manifest) : TerminalAppBase(manifest
         lines.Add(C(state, Header) + "    PID USER      PRI  NI  VIRT   RES   SHR S CPU% MEM%   TIME+  Command".PadRight(columns) + C(state, Reset));
 
         DateTimeOffset now = context.App.Clock.UtcNow;
-        List<(HackProcess Process, int Depth)> ordered = Order(state, snapshot.Processes, now);
+        List<(KazoProcess Process, int Depth)> ordered = Order(state, snapshot.Processes, now);
         int listRows = Math.Max(1, rows - lines.Count - (state.Message is null ? 1 : 2));
         state.Selection = Math.Clamp(state.Selection, 0, Math.Max(0, ordered.Count - 1));
         int top = Math.Max(0, state.Selection - listRows + 1);
         state.SelectedProcess = ordered.Count > 0 ? ordered[state.Selection].Process : null;
         for (int index = top; index < Math.Min(ordered.Count, top + listRows); index++)
         {
-            (HackProcess process, int depth) = ordered[index];
+            (KazoProcess process, int depth) = ordered[index];
             long resKb = process.WorkingSet64 / 1024;
             double memPercent = snapshot.MemoryTotalKb == 0 ? 0 : 100.0 * resKb / snapshot.MemoryTotalKb;
             string command = (state.Tree && depth > 0 ? new string(' ', (depth - 1) * 3) + "`- " : string.Empty)
@@ -305,12 +305,12 @@ public sealed class HtopCommand(AppManifest manifest) : TerminalAppBase(manifest
     }
 
     /// <summary>Sorted list, or a parent-first tree with depths when the tree view is on.</summary>
-    private static List<(HackProcess Process, int Depth)> Order(State state, IReadOnlyList<HackProcess> processes, DateTimeOffset now)
+    private static List<(KazoProcess Process, int Depth)> Order(State state, IReadOnlyList<KazoProcess> processes, DateTimeOffset now)
     {
-        IEnumerable<HackProcess> visible = processes.Where(p =>
+        IEnumerable<KazoProcess> visible = processes.Where(p =>
             (state.User is null || p.UserName == state.User || p.UserId == state.User)
             && (state.Filter is null || p.CommandLine.Contains(state.Filter, StringComparison.OrdinalIgnoreCase) || p.AppId.Contains(state.Filter, StringComparison.OrdinalIgnoreCase)));
-        Func<IEnumerable<HackProcess>, IEnumerable<HackProcess>> sort = state.Sort switch
+        Func<IEnumerable<KazoProcess>, IEnumerable<KazoProcess>> sort = state.Sort switch
         {
             "mem" => items => items.OrderByDescending(p => p.WorkingSet64),
             "time" => items => items.OrderByDescending(p => (now - p.StartTime).TotalSeconds * p.CpuUsage),
@@ -318,18 +318,18 @@ public sealed class HtopCommand(AppManifest manifest) : TerminalAppBase(manifest
             _ => items => items.OrderByDescending(p => p.CpuUsage).ThenBy(p => p.Id)
         };
 
-        List<HackProcess> list = [.. visible];
+        List<KazoProcess> list = [.. visible];
         if (!state.Tree)
         {
             return [.. sort(list).Select(p => (p, 0))];
         }
 
         HashSet<long> ids = [.. list.Select(p => p.Id)];
-        ILookup<long?, HackProcess> children = list.ToLookup(p => p.ParentId is { } parent && ids.Contains(parent) ? (long?)parent : null);
-        List<(HackProcess, int)> ordered = [];
+        ILookup<long?, KazoProcess> children = list.ToLookup(p => p.ParentId is { } parent && ids.Contains(parent) ? (long?)parent : null);
+        List<(KazoProcess, int)> ordered = [];
         void Walk(long? parent, int depth)
         {
-            foreach (HackProcess process in children[parent].OrderBy(p => p.Id))
+            foreach (KazoProcess process in children[parent].OrderBy(p => p.Id))
             {
                 ordered.Add((process, depth));
                 if (depth < 32)
@@ -402,6 +402,6 @@ public sealed class HtopCommand(AppManifest manifest) : TerminalAppBase(manifest
 
         public bool Refresh { get; set; }
 
-        public HackProcess? SelectedProcess { get; set; }
+        public KazoProcess? SelectedProcess { get; set; }
     }
 }

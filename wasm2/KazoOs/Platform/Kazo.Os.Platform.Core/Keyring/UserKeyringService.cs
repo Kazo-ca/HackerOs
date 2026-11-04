@@ -296,7 +296,7 @@ public sealed class UserKeyringService : ISessionKeyring
     /// <param name="credentialId">Base64url id of the passkey.</param>
     /// <param name="prfOutput">The PRF output of that passkey with its salt.</param>
     /// <param name="cancellationToken">Cancels the write.</param>
-    /// <exception cref="Kazo.Os.AppSdk.Keyring.HackKeyringLockedException">That user's keyring is not unlocked.</exception>
+    /// <exception cref="Kazo.Os.AppSdk.Keyring.KazoKeyringLockedException">That user's keyring is not unlocked.</exception>
     public async ValueTask AddPasskeySlotAsync(LocalUserId userId, string credentialId, byte[] prfOutput, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrEmpty(credentialId);
@@ -508,7 +508,7 @@ public sealed class UserKeyringService : ISessionKeyring
     private UnlockedKeyring RequireUnlocked(LocalUserId userId) =>
         _unlocked is { } unlocked && unlocked.Principal.UserId == userId
             ? unlocked
-            : throw new Kazo.Os.AppSdk.Keyring.HackKeyringLockedException("The keyring of this user is locked.");
+            : throw new Kazo.Os.AppSdk.Keyring.KazoKeyringLockedException("The keyring of this user is locked.");
 
     private async ValueTask<UnlockedKeyring?> TryOpenWithPasswordAsync(
         AuthenticatedPrincipal principal, string text, string password, CancellationToken cancellationToken)

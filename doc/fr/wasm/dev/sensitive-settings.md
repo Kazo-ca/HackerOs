@@ -73,18 +73,18 @@ clé l'efface des deux fichiers. Le fichier privé est écrit en premier (créé
 ### API du SDK
 
 ```csharp
-await using HackSettingsDocument mail = await HackSettings.OpenAsync(AppContext);
-HackSettingValue server = mail.GetValue("Account.server");   // IsMasked, Source, IsLocked, Sensitivity
+await using KazoSettingsDocument mail = await KazoSettings.OpenAsync(AppContext);
+KazoSettingValue server = mail.GetValue("Account.server");   // IsMasked, Source, IsLocked, Sensitivity
 string shown = server.DisplayText;                            // "••••••••" si masquée ou secrète
 bool masked = mail.IsMasked("Account.server");
-string host = mail.Get<string>("Account.server");             // HackSettingMaskedException si masquée
+string host = mail.Get<string>("Account.server");             // KazoSettingMaskedException si masquée
 
 await mail.SetSecretAsync("Account.password", "s3cr3t");      // trousseau + référence dans le fichier privé
 string? password = await mail.GetSecretAsync("Account.password");
 await mail.SetSecretAsync("Account.password", null);          // efface l'entrée et la référence
 ```
 
-- `HackSettingMaskedException` dérive de `UnauthorizedAccessException` et donne
+- `KazoSettingMaskedException` dérive de `UnauthorizedAccessException` et donne
   `QualifiedKey` et `PrivatePath`.
 - La référence d'un secret est `settings:<document>:<groupe.clé>`.
 - `GetSecretAsync`/`SetSecretAsync` exigent une clé `SecretReference` et ne
@@ -138,25 +138,25 @@ réservée à root, garde tout.
   l'administrateur), `keyring.rekey` et `keyring.upgrade` (passage au format 2),
   sans aucun secret.
 
-### API du SDK (`HackKeyring`)
+### API du SDK (`KazoKeyring`)
 
 ```csharp
-if (HackKeyring.IsUnlocked(AppContext))
+if (KazoKeyring.IsUnlocked(AppContext))
 {
-    await HackKeyring.SetAsync(AppContext, "imap", "s3cr3t", label: "Compte IMAP");
-    string? secret = await HackKeyring.GetAsync(AppContext, "imap");
-    IReadOnlyList<HackKeyringEntry> mine = await HackKeyring.ListAsync(AppContext);
-    await HackKeyring.DeleteAsync(AppContext, "imap");
+    await KazoKeyring.SetAsync(AppContext, "imap", "s3cr3t", label: "Compte IMAP");
+    string? secret = await KazoKeyring.GetAsync(AppContext, "imap");
+    IReadOnlyList<KazoKeyringEntry> mine = await KazoKeyring.ListAsync(AppContext);
+    await KazoKeyring.DeleteAsync(AppContext, "imap");
 }
 
 // Gestionnaire de mots de passe seulement (capacité dangereuse keyring.read-all) :
-IReadOnlyList<HackKeyringEntry> all = await HackKeyring.ListAllAsync(AppContext);
-string? other = await HackKeyring.GetAsync(AppContext, "org.example.mail", "imap");
+IReadOnlyList<KazoKeyringEntry> all = await KazoKeyring.ListAllAsync(AppContext);
+string? other = await KazoKeyring.GetAsync(AppContext, "org.example.mail", "imap");
 ```
 
 - Une app ne voit que ses propres entrées. Lire celles d'une autre app ou tout
   lister demande `keyring.read-all` ; sans elle, `UnauthorizedAccessException`.
-- Un trousseau verrouillé lève `HackKeyringLockedException`.
+- Un trousseau verrouillé lève `KazoKeyringLockedException`.
 - Un identifiant fait au plus 256 caractères, sans caractère de contrôle.
 - Chaque méthode existe aussi sans contexte (contexte ambiant de l'ADR 0043).
 - `IAppExecutionContext.Keyring` (`IAppKeyringGateway`) est la passerelle ; elle
@@ -225,7 +225,7 @@ Décision : [ADR 0120](adr/0120-passwd-and-administrator-password-reset.md).
   de la session, il est re-chiffré (réinitialisation) ou mis de côté puis
   verrouillé (retrait). Retirer le mot de passe du dernier administrateur
   actif qui en a un est refusé.
-- **SDK** : `HackUserAccounts` (`ListAsync`, `ChangePasswordAsync`,
+- **SDK** : `KazoUserAccounts` (`ListAsync`, `ChangePasswordAsync`,
   `ResetPasswordAsync`, `RemovePasswordAsync`, `ValidateNewPassword`) sur
   `IAppExecutionContext.UserAccounts`, branché par
   `SystemAdministrationGatewayServices.Passwords`.
@@ -245,7 +245,7 @@ Décision : [ADR 0120](adr/0120-passwd-and-administrator-password-reset.md).
 - Les documents de l'OS (`OsSettingsDocument`) n'acceptent que des clés
   publiques : un schéma avec une clé non publique lève `ArgumentException`.
 - L'app Paramètres n'a pas encore d'écran pour les réglages des apps ; une UI
-  qui en affiche utilise `HackSettingValue.DisplayText` pour le masque.
+  qui en affiche utilise `KazoSettingValue.DisplayText` pour le masque.
 - Un fichier créé par une approbation ou `sudo` appartient à l'utilisateur
   humain (comportement existant de l'ADR 0042), y compris un fichier privé de
   `/etc` créé ainsi ; son mode reste `0600`.
@@ -281,12 +281,12 @@ Décision : [ADR 0120](adr/0120-passwd-and-administrator-password-reset.md).
 
 - [x] Fichier compagnon `<doc>.private.config` (`0600`) et rangement des clés à l'écriture
 - [x] Lecture des quatre fichiers, avertissements des clés mal placées, masquage
-- [x] `HackSettingValue`, `HackSettingMaskedException`, `GetSecretAsync`/`SetSecretAsync`
+- [x] `KazoSettingValue`, `KazoSettingMaskedException`, `GetSecretAsync`/`SetSecretAsync`
 - [x] Trousseau `login.keyring` chiffré AES-GCM (Web Crypto) sous une clé PBKDF2
 - [x] Déverrouillage à la connexion, verrouillage à la déconnexion, mise à l'écart `.old`
-- [x] `HackKeyring` et capacité dangereuse `keyring.read-all`
+- [x] `KazoKeyring` et capacité dangereuse `keyring.read-all`
 - [x] Masquage des fichiers privés et du trousseau dans les instantanés de diagnostic
 - [x] Journal `/var/log/audit.log` écrit par le système de fichiers
 - [x] Commande `ausearch` et lecture du journal d'audit par l'Error Log Viewer
 - [x] Tests
-- [x] Commande `passwd` et réinitialisation par un administrateur (ADR 0120 : `LocalPasswordService`, `HackUserAccounts`, onglet « Utilisateurs »)
+- [x] Commande `passwd` et réinitialisation par un administrateur (ADR 0120 : `LocalPasswordService`, `KazoUserAccounts`, onglet « Utilisateurs »)

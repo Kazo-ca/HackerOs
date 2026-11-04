@@ -15,9 +15,9 @@ public sealed class RegisterFileContextMenuTests
         RegisterFileContextMenuContext context = new();
 
         context.Register("Menu.Extract", "extract", intent: "com.example.zipper.extract.v1",
-            icon: HackIcons.Vector(IconLibrary.Lucide, "package-open"), types: [" .ZIP ", "application/zip"],
-            selection: MenuSelection.Each, after: HackFileMenuItems.Open);
-        context.Register("Menu.Convert", "convert", scope: FileMenuScope.File | FileMenuScope.Directory, afterGroup: HackFileMenuItems.Copy);
+            icon: KazoIcons.Vector(IconLibrary.Lucide, "package-open"), types: [" .ZIP ", "application/zip"],
+            selection: MenuSelection.Each, after: KazoFileMenuItems.Open);
+        context.Register("Menu.Convert", "convert", scope: FileMenuScope.File | FileMenuScope.Directory, afterGroup: KazoFileMenuItems.Copy);
         context.Register("Menu.ToPng", "to-png", intent: "com.example.zipper.to-png.v1", parent: "convert");
         context.Register("Menu.Here", "here", target: "org.hackeros.terminal", intent: "org.hackeros.terminal.open-here.v1",
             scope: FileMenuScope.Background | FileMenuScope.Desktop, selection: MenuSelection.Single, first: true);
@@ -63,10 +63,10 @@ public sealed class RegisterFileContextMenuTests
     [Fact]
     public void The_payload_gives_the_entry_name_when_the_OS_sends_it()
     {
-        Assert.Equal("wall-2", HackFileMenuIntent.ReadEntry("""{"paths":["/a.png"],"scope":"File","entry":"wall-2"}"""));
-        Assert.Null(HackFileMenuIntent.ReadEntry("""{"paths":["/a.png"],"scope":"File"}"""));
-        Assert.Null(HackFileMenuIntent.ReadEntry("""{"entry":3}"""));
-        Assert.Null(HackFileMenuIntent.ReadEntry(null));
+        Assert.Equal("wall-2", KazoFileMenuIntent.ReadEntry("""{"paths":["/a.png"],"scope":"File","entry":"wall-2"}"""));
+        Assert.Null(KazoFileMenuIntent.ReadEntry("""{"paths":["/a.png"],"scope":"File"}"""));
+        Assert.Null(KazoFileMenuIntent.ReadEntry("""{"entry":3}"""));
+        Assert.Null(KazoFileMenuIntent.ReadEntry(null));
     }
 
     [Fact]
@@ -74,20 +74,20 @@ public sealed class RegisterFileContextMenuTests
     {
         const string payload = """{"paths":["/home/alice/a.zip","relative.zip",3,"/b"],"scope":"Directory"}""";
 
-        Assert.Equal(["/home/alice/a.zip", "/b"], HackFileMenuIntent.ReadPaths(payload));
-        Assert.Equal(FileMenuScope.Directory, HackFileMenuIntent.ReadScope(payload));
-        Assert.Empty(HackFileMenuIntent.ReadPaths("{ not json"));
-        Assert.Empty(HackFileMenuIntent.ReadPaths(null));
-        Assert.Equal(FileMenuScope.None, HackFileMenuIntent.ReadScope("""{"scope":"Elsewhere"}"""));
+        Assert.Equal(["/home/alice/a.zip", "/b"], KazoFileMenuIntent.ReadPaths(payload));
+        Assert.Equal(FileMenuScope.Directory, KazoFileMenuIntent.ReadScope(payload));
+        Assert.Empty(KazoFileMenuIntent.ReadPaths("{ not json"));
+        Assert.Empty(KazoFileMenuIntent.ReadPaths(null));
+        Assert.Equal(FileMenuScope.None, KazoFileMenuIntent.ReadScope("""{"scope":"Elsewhere"}"""));
     }
 
     [Fact]
     public void The_manifest_knows_every_default_entry_of_the_file_menus()
     {
         // The validator (App Abstractions) cannot reference the SDK: both lists must stay the same.
-        string[] sdk = [.. typeof(HackFileMenuItems)
+        string[] sdk = [.. typeof(KazoFileMenuItems)
             .GetFields(BindingFlags.Public | BindingFlags.Static)
-            .Where(static field => field.IsLiteral && field.Name != nameof(HackFileMenuItems.OpenWithAppPrefix))
+            .Where(static field => field.IsLiteral && field.Name != nameof(KazoFileMenuItems.OpenWithAppPrefix))
             .Select(static field => (string)field.GetRawConstantValue()!)
             .Order(StringComparer.Ordinal)];
 

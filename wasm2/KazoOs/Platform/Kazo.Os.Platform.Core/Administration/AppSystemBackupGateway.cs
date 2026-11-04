@@ -36,7 +36,7 @@ internal sealed class AppSystemBackupGateway : IAppSystemBackupGateway
     public bool IsSupported => _backup is not null;
 
     /// <inheritdoc />
-    public async ValueTask<HackBackupInfo> CreateAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<KazoBackupInfo> CreateAsync(CancellationToken cancellationToken = default)
     {
         SystemBackupService backup = Require();
         string admin = await _gate.AuthenticateAsync(
@@ -48,7 +48,7 @@ internal sealed class AppSystemBackupGateway : IAppSystemBackupGateway
     }
 
     /// <inheritdoc />
-    public async ValueTask<HackBackupInfo?> RestoreAsync(HackBackupRestoreMode mode, CancellationToken cancellationToken = default)
+    public async ValueTask<KazoBackupInfo?> RestoreAsync(KazoBackupRestoreMode mode, CancellationToken cancellationToken = default)
     {
         if (!Enum.IsDefined(mode))
         {
@@ -62,7 +62,7 @@ internal sealed class AppSystemBackupGateway : IAppSystemBackupGateway
             return null;
         }
 
-        string what = mode == HackBackupRestoreMode.Replace
+        string what = mode == KazoBackupRestoreMode.Replace
             ? _gate.Text["Admin.RestoreReplace", candidate.File.Name]
             : _gate.Text["Admin.RestoreMerge", candidate.File.Name];
         string admin = await _gate.AuthenticateAsync(what, SystemBackupService.RestoreAction, "machine", cancellationToken)

@@ -35,7 +35,7 @@ public static class LoginEnvironment
     public const string DefaultShell = "/bin/hsh";
 
     /// <summary>Default locale recorded in <c>LANG</c>.</summary>
-    public const string DefaultLanguage = HackLocale.DefaultLocale;
+    public const string DefaultLanguage = KazoLocale.DefaultLocale;
 
     /// <summary>System locale file (systemd's <c>locale.conf</c>, written by <c>localectl</c>), <c>0644</c>, owned by root.</summary>
     public static readonly VirtualPath SystemLocaleFilePath = VirtualPath.Parse("/etc/locale.conf");
@@ -46,7 +46,7 @@ public static class LoginEnvironment
     /// <summary>Content written to a freshly seeded <c>/etc/locale.conf</c>.</summary>
     public const string DefaultSystemLocaleFileContent =
         "# /etc/locale.conf: system locale (ADR 0104), changed with 'localectl set-locale'.\n" +
-        "LANG=" + HackLocale.DefaultLocale + "\n";
+        "LANG=" + KazoLocale.DefaultLocale + "\n";
 
     /// <summary>Content written to a freshly seeded <c>/etc/environment</c>.</summary>
     public const string DefaultEnvironmentFileContent =
@@ -107,7 +107,7 @@ public static class LoginEnvironment
         Dictionary<string, string> variables, string? content, string path, ICollection<string>? warnings)
     {
         List<(int Line, string Message)> problems = [];
-        foreach (KeyValuePair<string, string> variable in HackLocale.ParseLocaleConf(content, problems))
+        foreach (KeyValuePair<string, string> variable in KazoLocale.ParseLocaleConf(content, problems))
         {
             variables[variable.Key] = variable.Value;
         }

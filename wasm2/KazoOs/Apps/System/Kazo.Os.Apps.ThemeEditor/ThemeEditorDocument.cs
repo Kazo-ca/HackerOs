@@ -27,7 +27,7 @@ public sealed class ThemeEditorDocument
     /// </param>
     public ThemeEditorDocument(IStringLocalizer? text = null)
     {
-        _text = text ?? HackLocalization.GetLocalizer<Strings>();
+        _text = text ?? KazoLocalization.GetLocalizer<Strings>();
         Reset(WellKnownThemeIds.HackerOs);
         _savedSnapshot = Snapshot();
     }

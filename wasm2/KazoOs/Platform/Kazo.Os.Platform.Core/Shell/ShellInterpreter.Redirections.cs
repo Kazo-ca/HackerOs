@@ -160,9 +160,9 @@ public sealed partial class ShellInterpreter
 
         try
         {
-            using (HackExecutionContext.Enter(session.Host, session.CurrentDirectory))
+            using (KazoExecutionContext.Enter(session.Host, session.CurrentDirectory))
             {
-                HackFileStream stream = await HackFile.OpenReadAsync(target, exec.Token).ConfigureAwait(false);
+                KazoFileStream stream = await KazoFile.OpenReadAsync(target, exec.Token).ConfigureAwait(false);
                 return new StreamReader(stream, FileEncoding);
             }
         }
@@ -187,21 +187,21 @@ public sealed partial class ShellInterpreter
             return null;
         }
 
-        HackFileStream? stream = null;
+        KazoFileStream? stream = null;
         try
         {
-            using (HackExecutionContext.Enter(session.Host, session.CurrentDirectory))
+            using (KazoExecutionContext.Enter(session.Host, session.CurrentDirectory))
             {
                 if (append)
                 {
                     // The engine has no append mode to check at open: an empty append creates the
                     // file or proves it writable, so a permission problem stops the stage first.
-                    await HackFile.AppendAllTextAsync(target, string.Empty, exec.Token).ConfigureAwait(false);
-                    stream = await HackFile.OpenAppendAsync(target, exec.Token).ConfigureAwait(false);
+                    await KazoFile.AppendAllTextAsync(target, string.Empty, exec.Token).ConfigureAwait(false);
+                    stream = await KazoFile.OpenAppendAsync(target, exec.Token).ConfigureAwait(false);
                 }
                 else
                 {
-                    stream = await HackFile.OpenWriteAsync(target, exec.Token).ConfigureAwait(false);
+                    stream = await KazoFile.OpenWriteAsync(target, exec.Token).ConfigureAwait(false);
                 }
             }
 

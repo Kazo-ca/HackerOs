@@ -50,7 +50,7 @@ internal sealed class ShellSessionAccess(
 
     /// <inheritdoc />
     public IReadOnlyList<ShellCommandInfo> GetCommands() =>
-        interpreter.GetInstalledCommands(Kazo.Os.AppSdk.Globalization.HackLocale.ResolveLanguage(session.GetVariable));
+        interpreter.GetInstalledCommands(Kazo.Os.AppSdk.Globalization.KazoLocale.ResolveLanguage(session.GetVariable));
 
     public IReadOnlyList<ShellCommandInfo> GetCommands(System.Globalization.CultureInfo culture) =>
         interpreter.GetInstalledCommands(culture);

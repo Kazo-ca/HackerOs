@@ -85,14 +85,14 @@ internal sealed class TaskbarContextMenus : IDisposable
         _canOpenNewWindow = canOpenNewWindow ?? throw new ArgumentNullException(nameof(canOpenNewWindow));
         _launch = launch ?? throw new ArgumentNullException(nameof(launch));
         _scope = contextMenus.CreateScope(null);
-        _registrations.Add(_scope.Register(new HackMenuRegistration(
+        _registrations.Add(_scope.Register(new KazoMenuRegistration(
             WindowMenuName,
-            () => new HackMenuDefinition(WindowMenuName) { Label = _text["WindowMenu.Label"] },
-            EventCallback.Factory.Create<HackMenuOpeningEventArgs>(this, FillWindowMenu))));
-        _registrations.Add(_scope.Register(new HackMenuRegistration(
+            () => new KazoMenuDefinition(WindowMenuName) { Label = _text["WindowMenu.Label"] },
+            EventCallback.Factory.Create<KazoMenuOpeningEventArgs>(this, FillWindowMenu))));
+        _registrations.Add(_scope.Register(new KazoMenuRegistration(
             TaskbarMenuName,
-            () => new HackMenuDefinition(TaskbarMenuName) { Label = _text["TaskbarMenu.Label"] },
-            EventCallback.Factory.Create<HackMenuOpeningEventArgs>(this, FillTaskbarMenu))));
+            () => new KazoMenuDefinition(TaskbarMenuName) { Label = _text["TaskbarMenu.Label"] },
+            EventCallback.Factory.Create<KazoMenuOpeningEventArgs>(this, FillTaskbarMenu))));
     }
 
     /// <summary>Gets the menus of the taskbar of one screen.</summary>
@@ -121,7 +121,7 @@ internal sealed class TaskbarContextMenus : IDisposable
     }
 
     /// <summary>« Nouvelle fenêtre », then the window menu and « Autre écran ▸ » (ADR 0194 §3).</summary>
-    private void FillWindowMenu(HackMenuOpeningEventArgs args)
+    private void FillWindowMenu(KazoMenuOpeningEventArgs args)
     {
         if (args.Item is not TaskbarWindowTarget target
             || _runtime.Windows.FirstOrDefault(window => window.Id == target.Window) is not { } window)
@@ -132,14 +132,14 @@ internal sealed class TaskbarContextMenus : IDisposable
 
         string appId = window.AppId;
         DisplayId display = target.Display;
-        HackMenuItemDefinition newWindow = args.Menu.AddGroup().Add(NewWindowItemId, _text["TaskbarMenu.NewWindow"]);
+        KazoMenuItemDefinition newWindow = args.Menu.AddGroup().Add(NewWindowItemId, _text["TaskbarMenu.NewWindow"]);
         newWindow.IsDisabled = !_canOpenNewWindow(appId);
         newWindow.OnClick = EventCallback.Factory.Create<object?>(this, () => _launch(appId, [], display));
         WindowMenuDefinitions.AddWindowEntries(args.Menu, _commands, _text, window.Id, WindowMenuKind.Window, this);
     }
 
     /// <summary>The taskbar menu of one screen (ADR 0194 §4).</summary>
-    private void FillTaskbarMenu(HackMenuOpeningEventArgs args)
+    private void FillTaskbarMenu(KazoMenuOpeningEventArgs args)
     {
         if (args.Item is not DisplayId display)
         {
@@ -148,23 +148,23 @@ internal sealed class TaskbarContextMenus : IDisposable
         }
 
         bool hasWindows = WindowArrangement.ArrangeableWindows(_runtime, display).Count > 0;
-        HackMenuItemDefinition taskManager = args.Menu.AddGroup().Add(TaskManagerItemId, _text["TaskbarMenu.TaskManager"]);
+        KazoMenuItemDefinition taskManager = args.Menu.AddGroup().Add(TaskManagerItemId, _text["TaskbarMenu.TaskManager"]);
         taskManager.IsDisabled = !_canLaunch(TaskManagerAppId);
         taskManager.OnClick = EventCallback.Factory.Create<object?>(this, () => _launch(TaskManagerAppId, [], display));
 
-        HackMenuGroupDefinition windows = args.Menu.AddGroup();
+        KazoMenuGroupDefinition windows = args.Menu.AddGroup();
         AddArrangement(windows, ShowDesktopItemId, "TaskbarMenu.ShowDesktop", hasWindows, () => WindowArrangement.ShowDesktop(_runtime, display));
         AddArrangement(windows, CascadeItemId, "TaskbarMenu.Cascade", hasWindows, () => WindowArrangement.Cascade(_runtime, display));
         AddArrangement(windows, TileItemId, "TaskbarMenu.Tile", hasWindows, () => WindowArrangement.Tile(_runtime, display));
 
-        HackMenuItemDefinition settings = args.Menu.AddGroup().Add(SettingsItemId, _text["TaskbarMenu.Settings"]);
+        KazoMenuItemDefinition settings = args.Menu.AddGroup().Add(SettingsItemId, _text["TaskbarMenu.Settings"]);
         settings.IsDisabled = !_canLaunch(SettingsAppId);
         settings.OnClick = EventCallback.Factory.Create<object?>(this, () => _launch(SettingsAppId, [SettingsPageArgument], display));
     }
 
-    private void AddArrangement(HackMenuGroupDefinition group, string id, string textKey, bool isEnabled, Func<int> arrange)
+    private void AddArrangement(KazoMenuGroupDefinition group, string id, string textKey, bool isEnabled, Func<int> arrange)
     {
-        HackMenuItemDefinition entry = group.Add(id, _text[textKey]);
+        KazoMenuItemDefinition entry = group.Add(id, _text[textKey]);
         entry.IsDisabled = !isEnabled;
         entry.OnClick = EventCallback.Factory.Create<object?>(this, () => arrange());
     }

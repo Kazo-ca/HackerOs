@@ -11,7 +11,7 @@ using Kazo.Os.Simulation.Abstractions.Processes;
 namespace Kazo.Os.Platform.Core.Tests.Shell;
 
 /// <summary>
-/// Shells hosted through the SDK (ADR 0056, section 7): <c>HackShell</c>, capability
+/// Shells hosted through the SDK (ADR 0056, section 7): <c>KazoShell</c>, capability
 /// <c>shell.host</c>, one <c>hsh</c> process per shell, credentials read by the terminal and
 /// verified by the OS.
 /// </summary>
@@ -22,8 +22,8 @@ public sealed partial class ShellInterpreterTests
     {
         Fixture fixture = await Fixture.CreateAsync();
 
-        HackUnauthorizedAccessException denied = await Assert.ThrowsAsync<HackUnauthorizedAccessException>(
-            () => HackShell.StartAsync(fixture.Host));
+        KazoUnauthorizedAccessException denied = await Assert.ThrowsAsync<KazoUnauthorizedAccessException>(
+            () => KazoShell.StartAsync(fixture.Host));
 
         Assert.Equal(AppCapabilities.ShellHost, denied.RequiredCapability);
         Assert.DoesNotContain(fixture.Manager.GetActiveProcesses(), p => p.AppId == ShellHostService.ShellAppId);
@@ -35,7 +35,7 @@ public sealed partial class ShellInterpreterTests
         Fixture fixture = await Fixture.CreateAsync();
         fixture.Grant(AppCapabilities.ShellHost);
 
-        await using IHackShell shell = await HackShell.StartAsync(fixture.Host);
+        await using IHackShell shell = await KazoShell.StartAsync(fixture.Host);
         (int status, string stdout, _) = await RunHostedAsync(shell, "echo hi | upper");
 
         Assert.Equal(0, status);
@@ -55,9 +55,9 @@ public sealed partial class ShellInterpreterTests
         fixture.Grant(AppCapabilities.ShellHost);
         await fixture.MakeDirectoryAsync("/home/alice/docs");
 
-        await using IHackShell first = await HackShell.StartAsync(fixture.Host);
-        await using IHackShell second = await HackShell.StartAsync(fixture.Host, new HackShellOptions { WorkingDirectory = "docs" });
-        await using IHackShell fallback = await HackShell.StartAsync(fixture.Host, new HackShellOptions { WorkingDirectory = "/missing" });
+        await using IHackShell first = await KazoShell.StartAsync(fixture.Host);
+        await using IHackShell second = await KazoShell.StartAsync(fixture.Host, new KazoShellOptions { WorkingDirectory = "docs" });
+        await using IHackShell fallback = await KazoShell.StartAsync(fixture.Host, new KazoShellOptions { WorkingDirectory = "/missing" });
         await RunHostedAsync(first, "cd /home");
         await RunHostedAsync(second, "exitwith 4");
         (_, string where, _) = await RunHostedAsync(second, "where");
@@ -76,7 +76,7 @@ public sealed partial class ShellInterpreterTests
     {
         Fixture fixture = await Fixture.CreateAsync();
         fixture.Grant(AppCapabilities.ShellHost);
-        IHackShell shell = await HackShell.StartAsync(fixture.Host);
+        IHackShell shell = await KazoShell.StartAsync(fixture.Host);
         await RunHostedAsync(shell, "exitwith 3");
 
         Task<(int, string, string)> running = RunHostedAsync(shell, "hang");
@@ -98,11 +98,11 @@ public sealed partial class ShellInterpreterTests
     {
         Fixture fixture = await Fixture.CreateAsync();
         fixture.Grant(AppCapabilities.ShellHost);
-        RecordingPrompt prompt = new() { Credential = new HackCredential("admin", "wrong") };
-        await using IHackShell shell = await HackShell.StartAsync(fixture.Host, new HackShellOptions { CredentialPrompt = prompt });
+        RecordingPrompt prompt = new() { Credential = new KazoCredential("admin", "wrong") };
+        await using IHackShell shell = await KazoShell.StartAsync(fixture.Host, new KazoShellOptions { CredentialPrompt = prompt });
 
         (int refused, _, string refusedError) = await RunHostedAsync(shell, "sudo amroot");
-        prompt.Credential = new HackCredential("admin", FakeElevationService.Password);
+        prompt.Credential = new KazoCredential("admin", FakeElevationService.Password);
         (int accepted, string acceptedOutput, _) = await RunHostedAsync(shell, "sudo amroot");
 
         Assert.Equal(1, refused);
@@ -118,7 +118,7 @@ public sealed partial class ShellInterpreterTests
     {
         Fixture fixture = await Fixture.CreateAsync();
         fixture.Grant(AppCapabilities.ShellHost);
-        await using IHackShell shell = await HackShell.StartAsync(fixture.Host);
+        await using IHackShell shell = await KazoShell.StartAsync(fixture.Host);
 
         (int status, _, string stderr) = await RunHostedAsync(shell, "sudo amroot");
 
@@ -131,7 +131,7 @@ public sealed partial class ShellInterpreterTests
     {
         Fixture fixture = await Fixture.CreateAsync();
         fixture.Grant(AppCapabilities.ShellHost);
-        await using IHackShell shell = await HackShell.StartAsync(fixture.Host);
+        await using IHackShell shell = await KazoShell.StartAsync(fixture.Host);
         StringWriter stdout = new() { NewLine = "\n" };
 
         int status = await shell.ExecuteAsync("upper", new StringReader("from the keyboard\n"), stdout, TextWriter.Null);
@@ -158,9 +158,9 @@ public sealed partial class ShellInterpreterTests
     {
         Fixture fixture = await Fixture.CreateAsync();
         fixture.Grant(AppCapabilities.ShellHost);
-        await using IHackShell shell = await HackShell.StartAsync(fixture.Host);
+        await using IHackShell shell = await KazoShell.StartAsync(fixture.Host);
 
-        HackShellCompletion completion = await shell.CompleteAsync(line, line.Length);
+        KazoShellCompletion completion = await shell.CompleteAsync(line, line.Length);
 
         Assert.Equal(candidates, completion.Candidates);
         if (candidates.Length > 0)
@@ -178,9 +178,9 @@ public sealed partial class ShellInterpreterTests
     {
         Fixture fixture = await Fixture.CreateAsync();
         fixture.Grant(AppCapabilities.ShellHost);
-        await using IHackShell shell = await HackShell.StartAsync(fixture.Host);
+        await using IHackShell shell = await KazoShell.StartAsync(fixture.Host);
 
-        HackShellCompletion completion = await shell.CompleteAsync("ma", 2);
+        KazoShellCompletion completion = await shell.CompleteAsync("ma", 2);
 
         Assert.Equal(["man"], completion.Candidates);
     }
@@ -212,9 +212,9 @@ public sealed partial class ShellInterpreterTests
         await fixture.WriteFileAsync("/home/alice/notes.txt", "n");
         await fixture.WriteFileAsync("/home/alice/My Notes.txt", "m");
         await fixture.WriteFileAsync("/home/alice/.hidden", "h");
-        await using IHackShell shell = await HackShell.StartAsync(fixture.Host);
+        await using IHackShell shell = await KazoShell.StartAsync(fixture.Host);
 
-        HackShellCompletion completion = await shell.CompleteAsync(line, line.Length);
+        KazoShellCompletion completion = await shell.CompleteAsync(line, line.Length);
 
         Assert.Equal(candidates, completion.Candidates);
         Assert.Equal(completed, completion.ApplyTo(line, out _));
@@ -228,11 +228,11 @@ public sealed partial class ShellInterpreterTests
         await fixture.MakeDirectoryAsync("/home/alice/docs");
         await fixture.WriteFileAsync("/home/alice/docs/report.md", "r");
         await fixture.WriteFileAsync("/home/alice/docs/.draft", "d");
-        await using IHackShell shell = await HackShell.StartAsync(fixture.Host);
+        await using IHackShell shell = await KazoShell.StartAsync(fixture.Host);
         await RunHostedAsync(shell, "cd docs");
 
-        HackShellCompletion all = await shell.CompleteAsync("cat ", 4);
-        HackShellCompletion hidden = await shell.CompleteAsync("cat .", 5);
+        KazoShellCompletion all = await shell.CompleteAsync("cat ", 4);
+        KazoShellCompletion hidden = await shell.CompleteAsync("cat .", 5);
 
         Assert.Equal(["report.md"], all.Candidates);
         Assert.Equal([".draft"], hidden.Candidates);
@@ -243,7 +243,7 @@ public sealed partial class ShellInterpreterTests
     [Fact]
     public void Display_candidates_list_the_last_segment_as_bash()
     {
-        HackShellCompletion completion = new(4, 7, ["~/docs/My\\ Notes.txt", "~/docs/sub/", "echo"]);
+        KazoShellCompletion completion = new(4, 7, ["~/docs/My\\ Notes.txt", "~/docs/sub/", "echo"]);
 
         Assert.Equal(["My Notes.txt", "sub/", "echo"], completion.DisplayCandidates);
     }
@@ -255,14 +255,14 @@ public sealed partial class ShellInterpreterTests
         fixture.Grant(AppCapabilities.ShellHost);
         await fixture.MakeDirectoryAsync("/home/alice/locked");
         await fixture.WriteFileAsync("/home/alice/locked/secret.txt", "s");
-        using (HackExecutionContext.Enter(fixture.Host))
+        using (KazoExecutionContext.Enter(fixture.Host))
         {
             // Mode 0000: alice can no longer list it, as `ls locked` would fail.
-            await HackFile.SetUnixFileModeAsync("/home/alice/locked", UnixFileMode.None);
+            await KazoFile.SetUnixFileModeAsync("/home/alice/locked", UnixFileMode.None);
         }
 
-        await using IHackShell shell = await HackShell.StartAsync(fixture.Host);
-        HackShellCompletion completion = await shell.CompleteAsync("cat locked/", 11);
+        await using IHackShell shell = await KazoShell.StartAsync(fixture.Host);
+        KazoShellCompletion completion = await shell.CompleteAsync("cat locked/", 11);
 
         Assert.Empty(completion.Candidates);
     }
@@ -277,7 +277,7 @@ public sealed partial class ShellInterpreterTests
     {
         Fixture fixture = await Fixture.CreateAsync();
         fixture.Grant(AppCapabilities.ShellHost);
-        IHackShell shell = await HackShell.StartAsync(fixture.Host);
+        IHackShell shell = await KazoShell.StartAsync(fixture.Host);
         ProcessId pid = ProcessId.FromInt64(shell.ProcessId);
 
         (int status, _, _) = await RunHostedAsync(shell, line);
@@ -295,7 +295,7 @@ public sealed partial class ShellInterpreterTests
     {
         Fixture fixture = await Fixture.CreateAsync();
         fixture.Grant(AppCapabilities.ShellHost);
-        IHackShell shell = await HackShell.StartAsync(fixture.Host);
+        IHackShell shell = await KazoShell.StartAsync(fixture.Host);
 
         (int status, string stdout, _) = await RunHostedAsync(shell, "exit 0 && echo late");
 
@@ -309,7 +309,7 @@ public sealed partial class ShellInterpreterTests
     {
         Fixture fixture = await Fixture.CreateAsync();
         fixture.Grant(AppCapabilities.ShellHost);
-        IHackShell shell = await HackShell.StartAsync(fixture.Host);
+        IHackShell shell = await KazoShell.StartAsync(fixture.Host);
         ProcessId pid = ProcessId.FromInt64(shell.ProcessId);
 
         await RunHostedAsync(shell, "exitwith 3");
@@ -324,7 +324,7 @@ public sealed partial class ShellInterpreterTests
     {
         Fixture fixture = await Fixture.CreateAsync();
         fixture.Grant(AppCapabilities.ShellHost);
-        await using IHackShell shell = await HackShell.StartAsync(fixture.Host);
+        await using IHackShell shell = await KazoShell.StartAsync(fixture.Host);
 
         await RunHostedAsync(shell, "exit 4 | upper");
         (int tooMany, _, string stderr) = await RunHostedAsync(shell, "exit 1 2");
@@ -353,21 +353,21 @@ public sealed partial class ShellInterpreterTests
     }
 
     /// <summary>A terminal's credential prompt that answers with a preset credential and records what it was asked.</summary>
-    private sealed class RecordingPrompt : HackCredentialPrompt
+    private sealed class RecordingPrompt : KazoCredentialPrompt
     {
-        public HackCredential? Credential { get; set; }
+        public KazoCredential? Credential { get; set; }
 
-        public List<HackCredentialRequest> Requests { get; } = [];
+        public List<KazoCredentialRequest> Requests { get; } = [];
 
         public List<string> Lines { get; } = [];
 
-        public override Task<HackCredential?> ReadCredentialAsync(HackCredentialRequest request, CancellationToken cancellationToken = default)
+        public override Task<KazoCredential?> ReadCredentialAsync(KazoCredentialRequest request, CancellationToken cancellationToken = default)
         {
             Requests.Add(request);
             return Task.FromResult(Credential);
         }
 
-        public override Task WriteLineAsync(string text, HackPromptLineKind kind, CancellationToken cancellationToken = default)
+        public override Task WriteLineAsync(string text, KazoPromptLineKind kind, CancellationToken cancellationToken = default)
         {
             Lines.Add(text);
             return Task.CompletedTask;

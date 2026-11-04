@@ -12,18 +12,18 @@ namespace Kazo.Os.Apps.Settings;
 /// of <c>/etc/hackeros/app-policy.config</c>; an administrator adds or removes entries here.
 /// </summary>
 /// <remarks>
-/// Uses only the public SDK, <see cref="HackAppPackages"/> (capability <c>apps.manage</c>). Each
+/// Uses only the public SDK, <see cref="KazoAppPackages"/> (capability <c>apps.manage</c>). Each
 /// change makes the OS ask an administrator to authenticate in its own window (or nothing under a
 /// root process); this panel never sees a password. The same files can be edited with
 /// <c>sudo nano</c> or <c>hackpkg sources</c> / <c>hackpkg policy</c>.
 /// </remarks>
 public partial class AppSourcesPanel
 {
-    private HackPackageSources? _sources;
-    private HackPackagePolicy? _policy;
+    private KazoPackageSources? _sources;
+    private KazoPackagePolicy? _policy;
     private string? _newSource;
     private bool _newSourceTrusted;
-    private HackPackageBlockKind _newBlockKind = HackPackageBlockKind.App;
+    private KazoPackageBlockKind _newBlockKind = KazoPackageBlockKind.App;
     private string? _newBlockValue;
     private bool _isBusy;
     private string? _message;
@@ -33,14 +33,14 @@ public partial class AppSourcesPanel
     private IStringLocalizer<Strings> L => _localizer ??= AppContext.GetLocalizer<Strings>();
 
     /// <summary>The three kinds of rule, in the order of the file.</summary>
-    private IEnumerable<(HackPackageBlockKind Kind, IReadOnlyList<string> Values)> BlockGroups =>
+    private IEnumerable<(KazoPackageBlockKind Kind, IReadOnlyList<string> Values)> BlockGroups =>
         _policy is null
             ? []
             :
             [
-                (HackPackageBlockKind.App, _policy.BlockedApps),
-                (HackPackageBlockKind.Category, _policy.BlockedCategories),
-                (HackPackageBlockKind.Capability, _policy.BlockedCapabilities)
+                (KazoPackageBlockKind.App, _policy.BlockedApps),
+                (KazoPackageBlockKind.Category, _policy.BlockedCategories),
+                (KazoPackageBlockKind.Capability, _policy.BlockedCapabilities)
             ];
 
     /// <inheritdoc />
@@ -48,8 +48,8 @@ public partial class AppSourcesPanel
     {
         try
         {
-            _sources = await HackAppPackages.GetSourcesAsync();
-            _policy = await HackAppPackages.GetPolicyAsync();
+            _sources = await KazoAppPackages.GetSourcesAsync();
+            _policy = await KazoAppPackages.GetPolicyAsync();
         }
         catch (NotSupportedException)
         {
@@ -69,24 +69,24 @@ public partial class AppSourcesPanel
 
     private static string CatalogKey(string name) => CatalogPrefix + name;
 
-    private static string TrustClass(HackPackageTrust trust) => trust switch
+    private static string TrustClass(KazoPackageTrust trust) => trust switch
     {
-        HackPackageTrust.Verified => "is-verified",
-        HackPackageTrust.Trusted => "is-trusted",
+        KazoPackageTrust.Verified => "is-verified",
+        KazoPackageTrust.Trusted => "is-trusted",
         _ => "is-untrusted"
     };
 
-    private string TrustText(HackPackageTrust trust) => trust switch
+    private string TrustText(KazoPackageTrust trust) => trust switch
     {
-        HackPackageTrust.Verified => L["Sources.Trust.Verified"],
-        HackPackageTrust.Trusted => L["Sources.Trust.Trusted"],
+        KazoPackageTrust.Verified => L["Sources.Trust.Verified"],
+        KazoPackageTrust.Trusted => L["Sources.Trust.Trusted"],
         _ => L["Sources.Trust.Untrusted"]
     };
 
-    private string KindText(HackPackageBlockKind kind) => kind switch
+    private string KindText(KazoPackageBlockKind kind) => kind switch
     {
-        HackPackageBlockKind.App => L["Policy.Apps"],
-        HackPackageBlockKind.Category => L["Policy.Categories"],
+        KazoPackageBlockKind.App => L["Policy.Apps"],
+        KazoPackageBlockKind.Category => L["Policy.Categories"],
         _ => L["Policy.Capabilities"]
     };
 
@@ -96,27 +96,27 @@ public partial class AppSourcesPanel
         bool trusted = _newSourceTrusted;
         return RunAsync(async () =>
         {
-            _sources = await HackAppPackages.AddSourceAsync(source, trusted);
+            _sources = await KazoAppPackages.AddSourceAsync(source, trusted);
             _newSource = null;
             _newSourceTrusted = false;
         });
     }
 
     private Task RemoveSourceAsync(string source) =>
-        RunAsync(async () => _sources = await HackAppPackages.RemoveSourceAsync(source));
+        RunAsync(async () => _sources = await KazoAppPackages.RemoveSourceAsync(source));
 
     private Task BlockAsync()
     {
         string value = (_newBlockValue ?? string.Empty).Trim();
         return RunAsync(async () =>
         {
-            _policy = await HackAppPackages.SetPolicyAsync(_newBlockKind, value, blocked: true);
+            _policy = await KazoAppPackages.SetPolicyAsync(_newBlockKind, value, blocked: true);
             _newBlockValue = null;
         });
     }
 
-    private Task SetBlockedAsync(HackPackageBlockKind kind, string value, bool blocked) =>
-        RunAsync(async () => _policy = await HackAppPackages.SetPolicyAsync(kind, value, blocked));
+    private Task SetBlockedAsync(KazoPackageBlockKind kind, string value, bool blocked) =>
+        RunAsync(async () => _policy = await KazoAppPackages.SetPolicyAsync(kind, value, blocked));
 
     /// <summary>Runs one change and turns its failure into a message.</summary>
     private async Task RunAsync(Func<Task> change)
@@ -133,7 +133,7 @@ public partial class AppSourcesPanel
         {
             await change();
         }
-        catch (HackPackageException exception)
+        catch (KazoPackageException exception)
         {
             _message = exception.Message;
         }

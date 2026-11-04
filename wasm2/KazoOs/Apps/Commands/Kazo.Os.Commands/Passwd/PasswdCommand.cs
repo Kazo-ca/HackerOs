@@ -88,7 +88,7 @@ public sealed class PasswdCommand : TerminalAppBase
 
             if (delete)
             {
-                await HackUserAccounts.RemovePasswordAsync(context.App, target, cancellationToken);
+                await KazoUserAccounts.RemovePasswordAsync(context.App, target, cancellationToken);
                 await context.StandardOutput.WriteLineAsync(text["Deleted", target]);
                 return 0;
             }
@@ -97,13 +97,13 @@ public sealed class PasswdCommand : TerminalAppBase
             string? current = null;
             if (!root)
             {
-                IReadOnlyList<HackUserAccount> accounts = await HackUserAccounts.ListAsync(context.App, cancellationToken);
+                IReadOnlyList<KazoUserAccount> accounts = await KazoUserAccounts.ListAsync(context.App, cancellationToken);
                 bool hasPassword = accounts.FirstOrDefault(account => account.IsCurrentUser)?.HasPassword ?? true;
                 current = hasPassword ? await context.ReadSecretLineAsync(text["CurrentPrompt"], cancellationToken) ?? string.Empty : string.Empty;
             }
 
             string? first = await context.ReadSecretLineAsync(text["NewPrompt"], cancellationToken);
-            if (HackUserAccounts.ValidateNewPassword(first) is { } reason)
+            if (KazoUserAccounts.ValidateNewPassword(first) is { } reason)
             {
                 await context.StandardError.WriteLineAsync(text["BadPassword", reason]);
                 await context.StandardError.WriteLineAsync(text["Unchanged"]);
@@ -120,11 +120,11 @@ public sealed class PasswdCommand : TerminalAppBase
 
             if (root)
             {
-                await HackUserAccounts.ResetPasswordAsync(context.App, target, first!, cancellationToken);
+                await KazoUserAccounts.ResetPasswordAsync(context.App, target, first!, cancellationToken);
             }
             else
             {
-                await HackUserAccounts.ChangePasswordAsync(context.App, current!, first!, cancellationToken);
+                await KazoUserAccounts.ChangePasswordAsync(context.App, current!, first!, cancellationToken);
             }
 
             await context.StandardOutput.WriteLineAsync(text["Updated"]);
@@ -152,8 +152,8 @@ public sealed class PasswdCommand : TerminalAppBase
         string target,
         CancellationToken cancellationToken)
     {
-        IReadOnlyList<HackUserAccount> accounts = await HackUserAccounts.ListAsync(context.App, cancellationToken);
-        HackUserAccount? account = accounts.FirstOrDefault(
+        IReadOnlyList<KazoUserAccount> accounts = await KazoUserAccounts.ListAsync(context.App, cancellationToken);
+        KazoUserAccount? account = accounts.FirstOrDefault(
             candidate => string.Equals(candidate.LoginName, target, StringComparison.OrdinalIgnoreCase));
         if (account is null)
         {

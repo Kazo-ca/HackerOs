@@ -17,7 +17,7 @@ namespace Kazo.Os.Apps.Settings;
 /// every screen or for one secondary screen, or of the mobile home screen, and how it covers the
 /// screen. Writes the <c>wallpaper</c>, <c>wallpaperScreen&lt;n&gt;</c>, <c>wallpaperFit</c>,
 /// <c>mobileWallpaper</c> and <c>mobileWallpaperFit</c> keys of <c>appearance.config</c> through
-/// <see cref="HackSettings.OpenSystemAsync(IAppExecutionContext, string, CancellationToken)"/>; the
+/// <see cref="KazoSettings.OpenSystemAsync(IAppExecutionContext, string, CancellationToken)"/>; the
 /// shell follows the file and shows the image at once.
 /// </summary>
 /// <remarks>
@@ -51,7 +51,7 @@ public sealed partial class WallpaperPanel : IAsyncDisposable
 
     private readonly Dictionary<string, ElementReference> _thumbnails = new(StringComparer.Ordinal);
     private readonly HashSet<string> _drawnThumbnails = new(StringComparer.Ordinal);
-    private HackSettingsDocument? _document;
+    private KazoSettingsDocument? _document;
     private IReadOnlyList<LibraryImage> _library = [];
     private IReadOnlyList<int> _screens = [1];
     private int _screen = 1;
@@ -122,7 +122,7 @@ public sealed partial class WallpaperPanel : IAsyncDisposable
     {
         try
         {
-            _document = await HackSettings.OpenSystemAsync(Context, SettingsWindow.AppearanceDocumentId, Context.CancellationToken);
+            _document = await KazoSettings.OpenSystemAsync(Context, SettingsWindow.AppearanceDocumentId, Context.CancellationToken);
             _document.Changed += OnDocumentChanged;
             _fit = _document.Get<string>(FitKey);
         }
@@ -251,7 +251,7 @@ public sealed partial class WallpaperPanel : IAsyncDisposable
 
             ShowMessage(TargetLayer == SettingLayer.System ? L["Appearance.SavedAsSystemDefault"] : L["Wallpaper.Saved"], isError: false);
         }
-        catch (HackSettingLockedException exception)
+        catch (KazoSettingLockedException exception)
         {
             ShowMessage(exception.Message, isError: true);
         }
@@ -272,7 +272,7 @@ public sealed partial class WallpaperPanel : IAsyncDisposable
     }
 
     /// <summary>An external edit or another window changed the file.</summary>
-    private void OnDocumentChanged(object? sender, HackSettingsChangedEventArgs args) =>
+    private void OnDocumentChanged(object? sender, KazoSettingsChangedEventArgs args) =>
         _ = InvokeAsync(() =>
         {
             if (_document is not null && !_isBusy)
@@ -297,9 +297,9 @@ public sealed partial class WallpaperPanel : IAsyncDisposable
 
         try
         {
-            if (HackScreens.IsSupportedFor(Context))
+            if (KazoScreens.IsSupportedFor(Context))
             {
-                foreach (HackScreenInfo screen in HackScreens.GetState(Context).Screens.Where(static screen => screen.Number <= MaxScreenNumber))
+                foreach (KazoScreenInfo screen in KazoScreens.GetState(Context).Screens.Where(static screen => screen.Number <= MaxScreenNumber))
                 {
                     numbers.Add(screen.Number);
                 }
@@ -319,8 +319,8 @@ public sealed partial class WallpaperPanel : IAsyncDisposable
     /// </summary>
     private async Task LoadLibraryAsync()
     {
-        using IDisposable scope = HackExecutionContext.Enter(Context);
-        string home = HackUser.Describe(Context).HomeDirectory;
+        using IDisposable scope = KazoExecutionContext.Enter(Context);
+        string home = KazoUser.Describe(Context).HomeDirectory;
         List<(string Path, string Origin)> candidates = [];
         await AddFilesAsync(candidates, WallpaperCatalog.SystemDirectory, "system");
         await AddFilesAsync(candidates, WallpaperCatalog.GetUserDirectory(home), "user");
@@ -368,8 +368,8 @@ public sealed partial class WallpaperPanel : IAsyncDisposable
         try
         {
             return files
-                ? await HackDirectory.GetFilesAsync(directory)
-                : await HackDirectory.GetDirectoriesAsync(directory);
+                ? await KazoDirectory.GetFilesAsync(directory)
+                : await KazoDirectory.GetDirectoriesAsync(directory);
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException)
         {
@@ -382,9 +382,9 @@ public sealed partial class WallpaperPanel : IAsyncDisposable
     {
         try
         {
-            byte[] content = await HackFile.ReadAllBytesAsync(path);
+            byte[] content = await KazoFile.ReadAllBytesAsync(path);
             return content.LongLength <= WallpaperCatalog.MaxImageBytes && WallpaperCatalog.TryDetectMediaType(content, out string mediaType)
-                ? new LibraryImage(path, HackPath.GetFileName(path), origin, content, mediaType)
+                ? new LibraryImage(path, KazoPath.GetFileName(path), origin, content, mediaType)
                 : null;
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException)

@@ -43,7 +43,7 @@ public partial class ThemeEditorWindow : WindowAppBase, IWindowCloseGuard
     /// <summary>The theme's name, or "Untitled" in the app's language while it has none.</summary>
     private string DisplayName => string.IsNullOrWhiteSpace(_document.Name) ? L["Title.Untitled"] : _document.Name;
 
-    private string HomeDirectory => HackUser.Describe(AppContext).HomeDirectory;
+    private string HomeDirectory => KazoUser.Describe(AppContext).HomeDirectory;
 
     private string SavePathHint => ThemeFile.IsValidId(_document.Id)
         ? L["Sidebar.SavesTo", UserThemeLibrary.GetUserThemePath(HomeDirectory, _document.Id)]
@@ -169,7 +169,7 @@ public partial class ThemeEditorWindow : WindowAppBase, IWindowCloseGuard
         await RunAsync(async () =>
         {
             string directory = UserThemeLibrary.GetUserDirectory(HomeDirectory);
-            await HackDirectory.CreateDirectoryAsync(directory, AppContext.CancellationToken);
+            await KazoDirectory.CreateDirectoryAsync(directory, AppContext.CancellationToken);
             string path = UserThemeLibrary.GetUserThemePath(HomeDirectory, theme.Id);
             string? error = await ThemeFileIo.WriteAsync(AppContext.FileSystem, VirtualPath.Parse(path), ThemeFile.Serialize(theme), AppContext.CancellationToken);
             if (error is not null)
@@ -229,7 +229,7 @@ public partial class ThemeEditorWindow : WindowAppBase, IWindowCloseGuard
 
         await RunAsync(async () =>
         {
-            await using HackSettingsDocument appearance = await HackSettings.OpenSystemAsync(AppContext, "appearance", AppContext.CancellationToken);
+            await using KazoSettingsDocument appearance = await KazoSettings.OpenSystemAsync(AppContext, "appearance", AppContext.CancellationToken);
             string key = platform == ThemePlatform.Mobile ? "mobileThemeId" : "desktopThemeId";
             await appearance.SetAsync(key, _document.Id, SettingLayer.User, AppContext.CancellationToken);
             Show(L[platform == ThemePlatform.Mobile ? "Message.NowMobile" : "Message.NowDesktop", _document.Name], isError: false);
@@ -271,13 +271,13 @@ public partial class ThemeEditorWindow : WindowAppBase, IWindowCloseGuard
         try
         {
             _library = await UserThemeLibrary.LoadAsync(
-                async (directory, token) => await HackDirectory.GetFilesAsync(directory, "*" + ThemeFile.Extension, cancellationToken: token),
-                async (directory, token) => await HackDirectory.GetDirectoriesAsync(directory, cancellationToken: token),
-                (path, token) => HackFile.ReadAllTextAsync(path, token),
+                async (directory, token) => await KazoDirectory.GetFilesAsync(directory, "*" + ThemeFile.Extension, cancellationToken: token),
+                async (directory, token) => await KazoDirectory.GetDirectoriesAsync(directory, cancellationToken: token),
+                (path, token) => KazoFile.ReadAllTextAsync(path, token),
                 HomeDirectory,
                 AppContext.CancellationToken);
         }
-        catch (Exception exception) when (exception is HackIOException or HackUnauthorizedAccessException)
+        catch (Exception exception) when (exception is KazoIOException or KazoUnauthorizedAccessException)
         {
             _library = UserThemeLibraryResult.Empty;
         }
@@ -314,7 +314,7 @@ public partial class ThemeEditorWindow : WindowAppBase, IWindowCloseGuard
         {
             await action();
         }
-        catch (Exception exception) when (exception is HackIOException or HackUnauthorizedAccessException or UnauthorizedAccessException or IOException)
+        catch (Exception exception) when (exception is KazoIOException or KazoUnauthorizedAccessException or UnauthorizedAccessException or IOException)
         {
             Show(exception.Message, isError: true);
         }

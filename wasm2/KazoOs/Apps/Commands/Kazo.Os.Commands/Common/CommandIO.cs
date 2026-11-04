@@ -67,13 +67,13 @@ internal static class CommandIO
 
         try
         {
-            if (await HackDirectory.ExistsAsync(file, cancellationToken))
+            if (await KazoDirectory.ExistsAsync(file, cancellationToken))
             {
                 await context.StandardError.WriteLineAsync(CommandText.FileError(context, command, file, CommandText.Reason(context, Errno.IsDirectory)));
                 return null;
             }
 
-            HackFileStream stream = await HackFile.OpenReadAsync(file, cancellationToken);
+            KazoFileStream stream = await KazoFile.OpenReadAsync(file, cancellationToken);
             return new StreamReader(stream);
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException)

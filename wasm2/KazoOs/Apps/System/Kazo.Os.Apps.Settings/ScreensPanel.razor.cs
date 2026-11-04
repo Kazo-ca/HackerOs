@@ -16,14 +16,14 @@ namespace Kazo.Os.Apps.Settings;
 /// </summary>
 /// <remarks>
 /// <para>
-/// ADR 0184: on a host with screens, <see cref="HackScreens"/> lists the open screens and opens,
+/// ADR 0184: on a host with screens, <see cref="KazoScreens"/> lists the open screens and opens,
 /// restores, closes, identifies them, puts the screen of this window in full screen and asks for the
 /// <c>window-management</c> permission (capability <c>screens.manage</c>). The browser accepts a new
 /// window, a full screen or its prompt only during the click, so each button calls it straight away.
 /// </para>
 /// <para>
 /// Both choices go to the user layer, <c>~/.config/hackeros/screens.config</c>, through
-/// <see cref="HackSettings.OpenSystemAsync(IAppExecutionContext, string, CancellationToken)"/>: the
+/// <see cref="KazoSettings.OpenSystemAsync(IAppExecutionContext, string, CancellationToken)"/>: the
 /// screen service follows <c>primary-taskbar</c> at once. The panel uses the public SDK only; moving a
 /// window to another screen stays in the window menus.
 /// </para>
@@ -57,8 +57,8 @@ public sealed partial class ScreensPanel
 
     private static readonly string[] TaskbarModes = [PrimaryTaskbarAll, PrimaryTaskbarOwn];
 
-    private HackSettingsDocument? _document;
-    private HackScreensState? _live;
+    private KazoSettingsDocument? _document;
+    private KazoScreensState? _live;
     private IAsyncDisposable? _liveWatch;
     private string _primaryTaskbar = PrimaryTaskbarAll;
     private IReadOnlyList<RememberedScreen> _screens = [];
@@ -81,7 +81,7 @@ public sealed partial class ScreensPanel
     internal IReadOnlyList<RememberedScreen> Screens => _screens;
 
     /// <summary>Gets the open screens, or <see langword="null"/> on a host without screens.</summary>
-    internal HackScreensState? Live => _live;
+    internal KazoScreensState? Live => _live;
 
     /// <summary>Gets the text of the last outcome, or <see langword="null"/>.</summary>
     internal string? Message => _message;
@@ -97,7 +97,7 @@ public sealed partial class ScreensPanel
     {
         try
         {
-            _document = await HackSettings.OpenSystemAsync(Context, DocumentId, Context.CancellationToken);
+            _document = await KazoSettings.OpenSystemAsync(Context, DocumentId, Context.CancellationToken);
             _document.Changed += OnDocumentChanged;
             ReadDocument();
             _loaded = true;
@@ -113,16 +113,16 @@ public sealed partial class ScreensPanel
     /// <summary>Opens a secondary screen. Called by the button's click: the browser needs that gesture.</summary>
     internal async Task OpenScreenAsync()
     {
-        HackScreenOpenStatus status = await RunAsync(() => HackScreens.OpenScreenAsync(Context, CancellationToken.None), HackScreenOpenStatus.Unavailable);
+        KazoScreenOpenStatus status = await RunAsync(() => KazoScreens.OpenScreenAsync(Context, CancellationToken.None), KazoScreenOpenStatus.Unavailable);
         switch (status)
         {
-            case HackScreenOpenStatus.Blocked:
+            case KazoScreenOpenStatus.Blocked:
                 ShowError(L["Screens.Open.Blocked"]);
                 break;
-            case HackScreenOpenStatus.LimitReached:
+            case KazoScreenOpenStatus.LimitReached:
                 ShowError(L["Screens.Open.LimitReached"]);
                 break;
-            case HackScreenOpenStatus.Unavailable:
+            case KazoScreenOpenStatus.Unavailable:
                 ShowError(L["Screens.Open.Unavailable"]);
                 break;
         }
@@ -131,7 +131,7 @@ public sealed partial class ScreensPanel
     /// <summary>Reopens the screens of the last session. Called by the button's click.</summary>
     internal async Task RestoreScreensAsync()
     {
-        int opened = await RunAsync(() => HackScreens.RestoreScreensAsync(Context, CancellationToken.None), 0);
+        int opened = await RunAsync(() => KazoScreens.RestoreScreensAsync(Context, CancellationToken.None), 0);
         if (opened == 0 && _message is null)
         {
             ShowError(L["Screens.Open.Blocked"]);
@@ -143,7 +143,7 @@ public sealed partial class ScreensPanel
     internal Task CloseScreenAsync(int number) =>
         RunAsync(async () =>
         {
-            await HackScreens.CloseScreenAsync(Context, number, CancellationToken.None);
+            await KazoScreens.CloseScreenAsync(Context, number, CancellationToken.None);
             return true;
         }, false);
 
@@ -151,14 +151,14 @@ public sealed partial class ScreensPanel
     internal Task IdentifyAsync() =>
         RunAsync(async () =>
         {
-            await HackScreens.IdentifyAsync(Context, CancellationToken.None);
+            await KazoScreens.IdentifyAsync(Context, CancellationToken.None);
             return true;
         }, false);
 
     /// <summary>Puts the screen of this window in full screen, or takes it out. Called by the button's click.</summary>
     internal async Task ToggleFullScreenAsync()
     {
-        if (!await RunAsync(() => HackScreens.ToggleFullScreenAsync(Context, CancellationToken.None), true))
+        if (!await RunAsync(() => KazoScreens.ToggleFullScreenAsync(Context, CancellationToken.None), true))
         {
             ShowError(L["Screens.Open.FullScreenRefused"]);
         }
@@ -166,22 +166,22 @@ public sealed partial class ScreensPanel
 
     /// <summary>Asks the browser for the window management permission. Called by the button's click.</summary>
     internal Task RequestPermissionAsync() =>
-        RunAsync(() => HackScreens.RequestPermissionAsync(Context, CancellationToken.None), HackScreenPermission.Unknown);
+        RunAsync(() => KazoScreens.RequestPermissionAsync(Context, CancellationToken.None), KazoScreenPermission.Unknown);
 
     /// <summary>Reads the open screens and follows them, on a host that has some.</summary>
     private async Task StartLiveAsync()
     {
-        if (!HackScreens.IsSupportedFor(Context))
+        if (!KazoScreens.IsSupportedFor(Context))
         {
             return;
         }
 
         try
         {
-            _live = HackScreens.GetState(Context);
-            _liveWatch = await HackScreens.WatchAsync(Context, OnLiveChangedAsync, Context.CancellationToken);
+            _live = KazoScreens.GetState(Context);
+            _liveWatch = await KazoScreens.WatchAsync(Context, OnLiveChangedAsync, Context.CancellationToken);
         }
-        catch (Exception exception) when (exception is HackUnauthorizedAccessException or NotSupportedException)
+        catch (Exception exception) when (exception is KazoUnauthorizedAccessException or NotSupportedException)
         {
             // Without screens.manage, or once the screens went away, the page keeps the file part.
             _live = null;
@@ -203,7 +203,7 @@ public sealed partial class ScreensPanel
         {
             result = await request();
         }
-        catch (Exception exception) when (exception is HackUnauthorizedAccessException or NotSupportedException or InvalidOperationException)
+        catch (Exception exception) when (exception is KazoUnauthorizedAccessException or NotSupportedException or InvalidOperationException)
         {
             ShowError(L["Screens.Error.Request", exception.Message]);
         }
@@ -228,9 +228,9 @@ public sealed partial class ScreensPanel
     {
         try
         {
-            _live = _live is null ? null : HackScreens.GetState(Context);
+            _live = _live is null ? null : KazoScreens.GetState(Context);
         }
-        catch (Exception exception) when (exception is HackUnauthorizedAccessException or NotSupportedException)
+        catch (Exception exception) when (exception is KazoUnauthorizedAccessException or NotSupportedException)
         {
             _live = null;
         }
@@ -303,7 +303,7 @@ public sealed partial class ScreensPanel
         }
     }
 
-    private async Task EditAsync(Func<HackSettingsDocument, ValueTask> edit)
+    private async Task EditAsync(Func<KazoSettingsDocument, ValueTask> edit)
     {
         if (_isBusy || _document is null)
         {
@@ -318,7 +318,7 @@ public sealed partial class ScreensPanel
             ReadDocument();
             ShowSaved(L["Screens.Saved"]);
         }
-        catch (HackSettingLockedException exception)
+        catch (KazoSettingLockedException exception)
         {
             ShowError(exception.Message);
         }
@@ -343,12 +343,12 @@ public sealed partial class ScreensPanel
 
         string mode = _document.Get<string>(PrimaryTaskbarKey)?.Trim() ?? string.Empty;
         _primaryTaskbar = string.Equals(mode, PrimaryTaskbarOwn, StringComparison.OrdinalIgnoreCase) ? PrimaryTaskbarOwn : PrimaryTaskbarAll;
-        HackSettingsDocument document = _document;
+        KazoSettingsDocument document = _document;
         _screens = ReadScreens(document.Get<string>(OpenKey), number => document.Get<string>(GeometryKey(number)));
     }
 
     /// <summary>The screen service, another Settings window or an editor changed the file.</summary>
-    private void OnDocumentChanged(object? sender, HackSettingsChangedEventArgs args) =>
+    private void OnDocumentChanged(object? sender, KazoSettingsChangedEventArgs args) =>
         _ = InvokeAsync(() =>
         {
             if (!_isBusy)
@@ -369,19 +369,19 @@ public sealed partial class ScreensPanel
         ? L["Screens.List.Place", place.Width, place.Height, place.Left, place.Top]
         : L["Screens.List.NoPlace"];
 
-    private string MonitorText(HackScreenInfo screen) => screen.Number == 1
+    private string MonitorText(KazoScreenInfo screen) => screen.Number == 1
         ? L["Screens.List.Primary"]
         : screen.MonitorName ?? L["Screens.Open.NoMonitorName"];
 
-    private static bool CallerIsFullScreen(HackScreensState live) =>
+    private static bool CallerIsFullScreen(KazoScreensState live) =>
         live.Screens.FirstOrDefault(screen => screen.Number == live.CallerScreen)?.IsFullScreen == true;
 
-    private string PermissionText(HackScreenPermission permission) => permission switch
+    private string PermissionText(KazoScreenPermission permission) => permission switch
     {
-        HackScreenPermission.Granted => L["Screens.Permission.Granted"],
-        HackScreenPermission.Denied => L["Screens.Permission.Denied"],
-        HackScreenPermission.Prompt => L["Screens.Permission.Prompt"],
-        HackScreenPermission.Unsupported => L["Screens.Permission.Unsupported"],
+        KazoScreenPermission.Granted => L["Screens.Permission.Granted"],
+        KazoScreenPermission.Denied => L["Screens.Permission.Denied"],
+        KazoScreenPermission.Prompt => L["Screens.Permission.Prompt"],
+        KazoScreenPermission.Unsupported => L["Screens.Permission.Unsupported"],
         _ => L["Screens.Permission.Unknown"],
     };
 

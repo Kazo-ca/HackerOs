@@ -43,14 +43,14 @@ public static class WwwDataAccess
         {
             foreach (string ancestor in Ancestors(path))
             {
-                HackDirectoryInfo directory = await HackDirectoryInfo.GetAsync(ancestor, cancellationToken).ConfigureAwait(false);
+                KazoDirectoryInfo directory = await KazoDirectoryInfo.GetAsync(ancestor, cancellationToken).ConfigureAwait(false);
                 if (!directory.Exists || (directory.UnixFileMode & UnixFileMode.OtherExecute) == 0)
                 {
                     return false;
                 }
             }
 
-            UnixFileMode mode = await HackFile.GetUnixFileModeAsync(path, cancellationToken).ConfigureAwait(false);
+            UnixFileMode mode = await KazoFile.GetUnixFileModeAsync(path, cancellationToken).ConfigureAwait(false);
             return (mode & required) == required;
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)

@@ -21,17 +21,17 @@ namespace Kazo.Os.Apps.Settings.Tests;
 /// </summary>
 public sealed class WhatsNewPanelTests
 {
-    private static readonly HackChangeList List = new(
+    private static readonly KazoChangeList List = new(
         [
-            new HackChangeGroup(null, "2.1.0", null,
+            new KazoChangeGroup(null, "2.1.0", null,
             [
-                new HackChangeEntry("a", HackChangeCategory.New, "Drag files out", "Drag them to download.",
+                new KazoChangeEntry("a", KazoChangeCategory.New, "Drag files out", "Drag them to download.",
                     new Uri("https://github.com/Kazo-ca/Os/pull/275"), [new Uri("https://example.com/adr")], IsNew: true),
             ]),
-            new HackChangeGroup("2.1.0", null, new DateOnly(2026, 10, 26),
+            new KazoChangeGroup("2.1.0", null, new DateOnly(2026, 10, 26),
             [
-                new HackChangeEntry("b", HackChangeCategory.Improved, "Settings side menu", null, null, [], IsNew: true),
-                new HackChangeEntry("c", HackChangeCategory.Fixed, "Old fix", null, null, [], IsNew: false),
+                new KazoChangeEntry("b", KazoChangeCategory.Improved, "Settings side menu", null, null, [], IsNew: true),
+                new KazoChangeEntry("c", KazoChangeCategory.Fixed, "Old fix", null, null, [], IsNew: false),
             ]),
         ],
         NewCount: 2);
@@ -91,7 +91,7 @@ public sealed class WhatsNewPanelTests
     [Fact]
     public async Task An_empty_list_says_so_and_marks_nothing()
     {
-        FakeWhatsNew gateway = new(HackChangeList.Empty);
+        FakeWhatsNew gateway = new(KazoChangeList.Empty);
         PanelHarness harness = await PanelHarness.RenderAsync(gateway);
 
         Assert.Contains("No changes to show.", harness.Html(), StringComparison.Ordinal);
@@ -111,7 +111,7 @@ public sealed class WhatsNewPanelTests
     private static int CountOf(string text, string value) =>
         (text.Length - text.Replace(value, string.Empty, StringComparison.Ordinal).Length) / value.Length;
 
-    private sealed class FakeWhatsNew(HackChangeList list) : IAppWhatsNewGateway
+    private sealed class FakeWhatsNew(KazoChangeList list) : IAppWhatsNewGateway
     {
         public List<IReadOnlyCollection<string>> Marked { get; } = [];
 
@@ -119,7 +119,7 @@ public sealed class WhatsNewPanelTests
 
         public bool IsSupported => true;
 
-        public ValueTask<HackChangeList> GetAsync(CultureInfo culture, CancellationToken cancellationToken = default)
+        public ValueTask<KazoChangeList> GetAsync(CultureInfo culture, CancellationToken cancellationToken = default)
         {
             Culture = culture;
             return ValueTask.FromResult(list);

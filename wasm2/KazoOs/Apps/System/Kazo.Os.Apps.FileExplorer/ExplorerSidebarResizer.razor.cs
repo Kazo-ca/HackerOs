@@ -67,7 +67,7 @@ public sealed partial class ExplorerSidebarResizer
     public async Task OnResized(int width)
     {
         // Called from JavaScript, outside any frame: enter the app's frame first (ADR 0161 §1).
-        using IDisposable? scope = AppContext is { } context ? HackExecutionContext.Enter(context) : null;
+        using IDisposable? scope = AppContext is { } context ? KazoExecutionContext.Enter(context) : null;
         _appliedWidth = FileExplorerSettings.ClampSidebarWidth(width);
         await CommitAsync(width);
     }

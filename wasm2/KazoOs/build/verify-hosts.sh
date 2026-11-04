@@ -12,7 +12,7 @@
 #
 # Runs (names usable with --only):
 #   ecosystem               published PWA, default build and settings (measurements on)
-#   ecosystem-build-off     published with -p:HackerOsCpuAccounting=false -p:HackerOsMemoryAccounting=false
+#   ecosystem-build-off     published with -p:KazoOsCpuAccounting=false -p:KazoOsMemoryAccounting=false
 #   ecosystem-settings-off  default publish, wwwroot/appsettings.json switching both measurements off
 #   ecosystem-limits-off    default publish, wwwroot/appsettings.json switching the process limits off (ADR 0125)
 #   ecosystem-oom           default publish, wwwroot/appsettings.json lowering the simulated MemTotal to
@@ -277,7 +277,7 @@ fi
 if wanted ecosystem-build-off && [[ $HAS_SWITCHES -eq 1 ]]; then
     build_step "publish ecosystem-build-off" "$LOGS/publish-ecosystem-build-off.log" \
         dotnet publish OS/Kazo.Os.Ecosystem -c Release -o "$OUT/publish/ecosystem-build-off" \
-            -p:HackerOsCpuAccounting=false -p:HackerOsMemoryAccounting=false || true
+            -p:KazoOsCpuAccounting=false -p:KazoOsMemoryAccounting=false || true
 fi
 
 if [[ $FAILED -ne 0 ]]; then

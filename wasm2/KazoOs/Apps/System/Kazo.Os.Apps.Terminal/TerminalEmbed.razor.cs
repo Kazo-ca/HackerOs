@@ -4,7 +4,7 @@ using Kazo.Os.AppSdk.Terminal;
 namespace Kazo.Os.Apps.Terminal;
 
 /// <summary>
-/// Embeddable terminal of the Terminal app (contract <see cref="HackComponentContracts.Terminal"/>,
+/// Embeddable terminal of the Terminal app (contract <see cref="KazoComponentContracts.Terminal"/>,
 /// ADR 0063). It shows the same <see cref="TerminalPanel"/> as the Terminal window and hands it to
 /// the host as its <see cref="IHackTerminal"/> once mounted.
 /// </summary>
@@ -14,7 +14,7 @@ public partial class TerminalEmbed
     private bool _handedOver;
 
     /// <summary>Gets the host's options, or the defaults when it passed none.</summary>
-    private HackTerminalOptions TerminalOptions => Options as HackTerminalOptions ?? new HackTerminalOptions();
+    private KazoTerminalOptions TerminalOptions => Options as KazoTerminalOptions ?? new KazoTerminalOptions();
 
     /// <inheritdoc />
     protected override async Task OnAfterRenderAsync(bool firstRender)

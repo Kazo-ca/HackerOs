@@ -26,7 +26,7 @@ in [`terminal-emulator.md`](terminal-emulator.md) (ADR 0061).
 
 Computed by `ShellCompletion` (Platform Core) in the shell's execution context:
 a relative path starts from the **shell's** directory, and reading the folder
-goes through the public `HackDirectoryInfo` API with the shell's permissions,
+goes through the public `KazoDirectoryInfo` API with the shell's permissions,
 like an `ls` it would launch.
 
 | Word under the cursor | Candidates |
@@ -50,7 +50,7 @@ Path rules:
 - a missing or unreadable folder (permissions, capability) offers nothing,
   without an error.
 
-`HackShellCompletion.DisplayCandidates` gives what the terminal lists on the
+`KazoShellCompletion.DisplayCandidates` gives what the terminal lists on the
 second Tab: the last segment, without its escapes (`My Notes.txt`, `sub/`),
 like `bash`.
 
@@ -155,7 +155,7 @@ up to `TerminalTabs`.
 ## Task list for work item `rebuild/4-terminal`
 
 - [x] Path completion in `ShellCompletion`, with the shell's permissions and directory.
-- [x] `HackShellCompletion.DisplayCandidates`, short list on the second Tab.
+- [x] `KazoShellCompletion.DisplayCandidates`, short list on the second Tab.
 - [x] `IShellSession.Exit`, `ShellSession.RequestExit`, stop of the line, end of the `hsh` process.
 - [x] `exit [n]` command in `Kazo.Os.Commands`.
 - [x] `TerminalTabs`, `TerminalTabSet`, shortcuts, tab titles; Terminal window on `TerminalTabs`, closed with the last tab.

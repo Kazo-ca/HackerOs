@@ -49,7 +49,7 @@ public sealed record LogFileContent(
 /// </summary>
 /// <remarks>
 /// This deliberately goes through <see cref="IAppFileSystemGateway"/>, like any other app: the viewer
-/// gets no special path into the logs. It moves to the <c>HackFile</c> API of ADR 0043 once that API
+/// gets no special path into the logs. It moves to the <c>KazoFile</c> API of ADR 0043 once that API
 /// lands on the rebuild branch.
 /// </remarks>
 public sealed class LogFileReader

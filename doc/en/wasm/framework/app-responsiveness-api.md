@@ -10,11 +10,11 @@ The niceness (`nice`) of a process ranges from `-20` to `19`, is `0` by default 
 
 ### API
 
-- `HackProcess.Nice` (`int`, read-only): niceness of the process, read from `/proc/<pid>/stat` (field 19).
-- `HackProcess.BasePriority` (`int`, read-only): priority of the process, `20 + nice` (field 18 of `/proc/<pid>/stat`).
-- `HackProcess.ParseStatNice(string)`: extracts the niceness from a `/proc/<pid>/stat` line.
+- `KazoProcess.Nice` (`int`, read-only): niceness of the process, read from `/proc/<pid>/stat` (field 19).
+- `KazoProcess.BasePriority` (`int`, read-only): priority of the process, `20 + nice` (field 18 of `/proc/<pid>/stat`).
+- `KazoProcess.ParseStatNice(string)`: extracts the niceness from a `/proc/<pid>/stat` line.
 - `IAppProcessGateway.GetNice` / `SetNice` (`Simulation.Abstractions`, through `IAppExecutionContext.Processes`): read or change the niceness of a process. Raising the value is done on one's own process; lowering it, or changing another user's process, requires root. Changing a process that is neither one's own nor one of its children requires `process.manage` (ADR 0140).
-- `HackBackgroundOptions.Nice`: niceness of a task launched by `HackBackground.RunAsync`, `0` by default. A negative value is brought back to `0` for a user who is not an administrator.
+- `KazoBackgroundOptions.Nice`: niceness of a task launched by `KazoBackground.RunAsync`, `0` by default. A negative value is brought back to `0` for a user who is not an administrator.
 
 ### Rules
 
@@ -25,7 +25,7 @@ The niceness (`nice`) of a process ranges from `-20` to `19`, is `0` by default 
 | Lowering | Only root (`sudo`, ADR 0042) lowers a value (`EACCES` otherwise: "Permission denied"). |
 | Other user | Only root changes the value of another user's process (`EPERM`: "Operation not permitted"). |
 | Capabilities | Reading another process requires `process.list`; changing a process that is neither one's own nor one of its children requires `process.manage`, like `kill` (ADR 0140). |
-| Effect | Order of the workers' queue (ADR 0071), commands and `HackBackground.RunAsync` background tasks (ADR 0128, value `HackBackgroundOptions.Nice`, 0 by default): lowest value first, then arrival order. |
+| Effect | Order of the workers' queue (ADR 0071), commands and `KazoBackground.RunAsync` background tasks (ADR 0128, value `KazoBackgroundOptions.Nice`, 0 by default): lowest value first, then arrival order. |
 | Always-ready worker | A command with a **positive** value does not take the always-ready worker while another worker is starting: it stays for the next interactive command. |
 | Main thread | **No effect.** A main thread process (windows, `MainThread` commands) runs when it is called; there is no scheduler to weight. |
 
@@ -56,7 +56,7 @@ The niceness (`nice`) of a process ranges from `-20` to `19`, is `0` by default 
 A loop that **never yields** on the main thread freezes the whole
 OS: neither the dialog nor anything else can be displayed, and it is the browser
 that ends up offering its own "Page unresponsive" dialog. Long work
-must go to a worker (`HackBackground.RunAsync`, ADR 0128, upcoming) or
-yield regularly with `HackProcess.CheckpointAsync` (ADR 0069);
+must go to a worker (`KazoBackground.RunAsync`, ADR 0128, upcoming) or
+yield regularly with `KazoProcess.CheckpointAsync` (ADR 0069);
 see [`cpu-accounting.md`](../dev/cpu-accounting.md) and
 [`sdk-developer-guide.md`](sdk-developer-guide.md).

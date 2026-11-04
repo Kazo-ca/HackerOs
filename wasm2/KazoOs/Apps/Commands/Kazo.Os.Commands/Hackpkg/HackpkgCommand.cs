@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Hackpkg;
 
 /// <summary>
 /// <c>hackpkg install | remove | update | rollback | repair | list | info | sources | policy</c> (ADR 0182 §4,
-/// ADR 0189 §6, ADR 0214): installs apps from their GitHub repository through <see cref="HackAppPackages"/>.
+/// ADR 0189 §6, ADR 0214): installs apps from their GitHub repository through <see cref="KazoAppPackages"/>.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -73,9 +73,9 @@ public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manif
             return 2;
         }
 
-        HackPackageScope scope = options.Contains(UserOption) ? HackPackageScope.User
-            : options.Contains(SystemOption) ? HackPackageScope.System
-            : HackPackageScope.Auto;
+        KazoPackageScope scope = options.Contains(UserOption) ? KazoPackageScope.User
+            : options.Contains(SystemOption) ? KazoPackageScope.System
+            : KazoPackageScope.Auto;
         try
         {
             return verb switch
@@ -91,7 +91,7 @@ public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manif
                 _ => await PolicyAsync(context, operands, cancellationToken)
             };
         }
-        catch (HackPackageException exception)
+        catch (KazoPackageException exception)
         {
             await context.StandardError.WriteLineAsync($"hackpkg: {exception.Message}");
             return 1;
@@ -128,32 +128,32 @@ public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manif
             || (operands.Count == 3 && operands[0] is "block" or "unblock" && TryParseKind(operands[1], out _))
     };
 
-    private static bool TryParseKind(string value, out HackPackageBlockKind kind)
+    private static bool TryParseKind(string value, out KazoPackageBlockKind kind)
     {
         (bool known, kind) = value switch
         {
-            "app" => (true, HackPackageBlockKind.App),
-            "category" => (true, HackPackageBlockKind.Category),
-            "capability" => (true, HackPackageBlockKind.Capability),
-            _ => (false, HackPackageBlockKind.App)
+            "app" => (true, KazoPackageBlockKind.App),
+            "category" => (true, KazoPackageBlockKind.Category),
+            "capability" => (true, KazoPackageBlockKind.Capability),
+            _ => (false, KazoPackageBlockKind.App)
         };
         return known;
     }
 
     private static async Task<int> InstallAsync(
-        TerminalExecutionContext context, string source, HackPackageScope scope, CancellationToken cancellationToken)
+        TerminalExecutionContext context, string source, KazoPackageScope scope, CancellationToken cancellationToken)
     {
         IStringLocalizer<Strings> text = context.App.GetLocalizer<Strings>();
         await context.StandardOutput.WriteLineAsync(text["Downloading", source]);
-        HackPackageInstallReport report = await HackAppPackages.InstallAsync(source, scope, cancellationToken);
+        KazoPackageInstallReport report = await KazoAppPackages.InstallAsync(source, scope, cancellationToken);
         await WriteReportAsync(context, report);
         return 0;
     }
 
-    private static async Task WriteReportAsync(TerminalExecutionContext context, HackPackageInstallReport report)
+    private static async Task WriteReportAsync(TerminalExecutionContext context, KazoPackageInstallReport report)
     {
         IStringLocalizer<Strings> text = context.App.GetLocalizer<Strings>();
-        if (report.Trust == HackPackageTrust.Untrusted)
+        if (report.Trust == KazoPackageTrust.Untrusted)
         {
             await context.StandardError.WriteLineAsync(text["Untrusted", report.Source]);
         }
@@ -192,20 +192,20 @@ public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manif
     }
 
     private static async Task<int> RemoveAsync(
-        TerminalExecutionContext context, string appId, HackPackageScope scope, CancellationToken cancellationToken)
+        TerminalExecutionContext context, string appId, KazoPackageScope scope, CancellationToken cancellationToken)
     {
         IStringLocalizer<Strings> text = context.App.GetLocalizer<Strings>();
-        HackInstalledPackage removed = await HackAppPackages.RemoveAsync(appId, scope, cancellationToken);
+        KazoInstalledPackage removed = await KazoAppPackages.RemoveAsync(appId, scope, cancellationToken);
         // Loaded: the removed app stays in the page until the next restart (ADR 0214 §1).
         await context.StandardOutput.WriteLineAsync(text[removed.Loaded ? "RemovedRestart" : "Removed", removed.AppId, removed.Version]);
         return 0;
     }
 
     private static async Task<int> RollbackAsync(
-        TerminalExecutionContext context, string appId, HackPackageScope scope, CancellationToken cancellationToken)
+        TerminalExecutionContext context, string appId, KazoPackageScope scope, CancellationToken cancellationToken)
     {
         IStringLocalizer<Strings> text = context.App.GetLocalizer<Strings>();
-        HackPackageInstallReport report = await HackAppPackages.RollbackAsync(appId, scope, cancellationToken);
+        KazoPackageInstallReport report = await KazoAppPackages.RollbackAsync(appId, scope, cancellationToken);
         await context.StandardOutput.WriteLineAsync(text["RolledBack", report.Name, report.PreviousVersion ?? "-", report.Version]);
         await context.StandardOutput.WriteLineAsync(report.RestartRequired ? text["RestartRequired"] : text["AvailableNow"]);
         return 0;
@@ -214,7 +214,7 @@ public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manif
     private static async Task<int> RepairAsync(TerminalExecutionContext context, bool system, CancellationToken cancellationToken)
     {
         IStringLocalizer<Strings> text = context.App.GetLocalizer<Strings>();
-        IReadOnlyList<string> repaired = await HackAppPackages.RepairAsync(system, cancellationToken);
+        IReadOnlyList<string> repaired = await KazoAppPackages.RepairAsync(system, cancellationToken);
         if (repaired.Count == 0)
         {
             await context.StandardOutput.WriteLineAsync(text["NothingToRepair"]);
@@ -232,8 +232,8 @@ public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manif
     private static async Task<int> UpdateAsync(TerminalExecutionContext context, string? appId, CancellationToken cancellationToken)
     {
         IStringLocalizer<Strings> text = context.App.GetLocalizer<Strings>();
-        IReadOnlyList<HackInstalledPackage> installed = await HackAppPackages.GetInstalledAsync(cancellationToken);
-        IReadOnlyList<HackInstalledPackage> targets = appId is null
+        IReadOnlyList<KazoInstalledPackage> installed = await KazoAppPackages.GetInstalledAsync(cancellationToken);
+        IReadOnlyList<KazoInstalledPackage> targets = appId is null
             ? installed
             : [.. installed.Where(package => package.AppId == appId)];
         if (appId is not null && targets.Count == 0)
@@ -248,9 +248,9 @@ public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manif
             return 0;
         }
 
-        foreach (HackInstalledPackage package in targets)
+        foreach (KazoInstalledPackage package in targets)
         {
-            HackPackageInfo info = await HackAppPackages.GetInfoAsync(package.Source, cancellationToken);
+            KazoPackageInfo info = await KazoAppPackages.GetInfoAsync(package.Source, cancellationToken);
             if (info.Latest is null || !IsNewer(info.Latest, package.Version))
             {
                 await context.StandardOutput.WriteLineAsync(text["UpToDate", package.AppId, package.Version]);
@@ -259,9 +259,9 @@ public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manif
 
             await context.StandardOutput.WriteLineAsync(text["Downloading", $"{package.Source}@{info.Latest}"]);
             // An update keeps the copy where it is; a source no longer trusted asks an administrator again.
-            HackPackageInstallReport report = await HackAppPackages.InstallAsync(
+            KazoPackageInstallReport report = await KazoAppPackages.InstallAsync(
                 $"{package.Source}@{info.Latest}",
-                package.SystemWide ? HackPackageScope.System : HackPackageScope.User,
+                package.SystemWide ? KazoPackageScope.System : KazoPackageScope.User,
                 cancellationToken);
             await WriteReportAsync(context, report);
         }
@@ -276,7 +276,7 @@ public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manif
     private static async Task<int> ListAsync(TerminalExecutionContext context, CancellationToken cancellationToken)
     {
         IStringLocalizer<Strings> text = context.App.GetLocalizer<Strings>();
-        IReadOnlyList<HackInstalledPackage> installed = await HackAppPackages.GetInstalledAsync(cancellationToken);
+        IReadOnlyList<KazoInstalledPackage> installed = await KazoAppPackages.GetInstalledAsync(cancellationToken);
         if (installed.Count == 0)
         {
             await context.StandardOutput.WriteLineAsync(text["NothingInstalled"]);
@@ -285,7 +285,7 @@ public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manif
 
         int idWidth = installed.Max(static package => package.AppId.Length);
         int versionWidth = installed.Max(static package => package.Version.Length);
-        foreach (HackInstalledPackage package in installed)
+        foreach (KazoInstalledPackage package in installed)
         {
             string pending = package.Loaded ? string.Empty : $" {text["PendingRestart"]}";
             pending += package.PreviousVersion is null ? string.Empty : $" {text["PreviousKept", package.PreviousVersion]}";
@@ -300,7 +300,7 @@ public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manif
     private static async Task<int> InfoAsync(TerminalExecutionContext context, string source, CancellationToken cancellationToken)
     {
         IStringLocalizer<Strings> text = context.App.GetLocalizer<Strings>();
-        HackPackageInfo info = await HackAppPackages.GetInfoAsync(source, cancellationToken);
+        KazoPackageInfo info = await KazoAppPackages.GetInfoAsync(source, cancellationToken);
         await context.StandardOutput.WriteLineAsync(text["InfoSource", info.Source]);
         await context.StandardOutput.WriteLineAsync(text["InfoApp", info.AppId]);
         await context.StandardOutput.WriteLineAsync(text["InfoTrusted", TrustText(text, info.Trust)]);
@@ -314,10 +314,10 @@ public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manif
         return 0;
     }
 
-    private static string TrustText(IStringLocalizer<Strings> text, HackPackageTrust trust) => trust switch
+    private static string TrustText(IStringLocalizer<Strings> text, KazoPackageTrust trust) => trust switch
     {
-        HackPackageTrust.Verified => text["TrustVerified"],
-        HackPackageTrust.Trusted => text["TrustTrusted"],
+        KazoPackageTrust.Verified => text["TrustVerified"],
+        KazoPackageTrust.Trusted => text["TrustTrusted"],
         _ => text["TrustUntrusted"]
     };
 
@@ -325,11 +325,11 @@ public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manif
         TerminalExecutionContext context, IReadOnlyList<string> operands, bool trusted, CancellationToken cancellationToken)
     {
         IStringLocalizer<Strings> text = context.App.GetLocalizer<Strings>();
-        HackPackageSources sources = operands.Count == 0
-            ? await HackAppPackages.GetSourcesAsync(cancellationToken)
+        KazoPackageSources sources = operands.Count == 0
+            ? await KazoAppPackages.GetSourcesAsync(cancellationToken)
             : operands[0] == "add"
-                ? await HackAppPackages.AddSourceAsync(operands[1], trusted, cancellationToken)
-                : await HackAppPackages.RemoveSourceAsync(operands[1], cancellationToken);
+                ? await KazoAppPackages.AddSourceAsync(operands[1], trusted, cancellationToken)
+                : await KazoAppPackages.RemoveSourceAsync(operands[1], cancellationToken);
         if (operands.Count > 0)
         {
             await context.StandardOutput.WriteLineAsync(operands[0] == "add"
@@ -339,7 +339,7 @@ public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manif
         }
 
         await context.StandardOutput.WriteLineAsync(text["SourcesHost", sources.GitHubHost]);
-        foreach (HackPackageCatalog catalog in sources.Catalogs)
+        foreach (KazoPackageCatalog catalog in sources.Catalogs)
         {
             string builtIn = catalog.BuiltIn ? $" {text["BuiltIn"]}" : string.Empty;
             await context.StandardOutput.WriteLineAsync(text[
@@ -367,14 +367,14 @@ public sealed class HackpkgCommand(AppManifest manifest) : TerminalAppBase(manif
         IStringLocalizer<Strings> text = context.App.GetLocalizer<Strings>();
         if (operands.Count > 0)
         {
-            _ = TryParseKind(operands[1], out HackPackageBlockKind kind);
+            _ = TryParseKind(operands[1], out KazoPackageBlockKind kind);
             bool blocked = operands[0] == "block";
-            await HackAppPackages.SetPolicyAsync(kind, operands[2], blocked, cancellationToken);
+            await KazoAppPackages.SetPolicyAsync(kind, operands[2], blocked, cancellationToken);
             await context.StandardOutput.WriteLineAsync(text[blocked ? "PolicyBlocked" : "PolicyUnblocked", operands[1], operands[2]]);
             return 0;
         }
 
-        HackPackagePolicy policy = await HackAppPackages.GetPolicyAsync(cancellationToken);
+        KazoPackagePolicy policy = await KazoAppPackages.GetPolicyAsync(cancellationToken);
         await context.StandardOutput.WriteLineAsync(text["PolicyApps", Join(policy.BlockedApps)]);
         await context.StandardOutput.WriteLineAsync(text["PolicyCategories", Join(policy.BlockedCategories)]);
         await context.StandardOutput.WriteLineAsync(text["PolicyCapabilities", Join(policy.BlockedCapabilities)]);

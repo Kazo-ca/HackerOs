@@ -14,7 +14,7 @@ Implementation of work item `rebuild/5-accounting-switches` of phase 5
   and **at startup** (`appsettings.json`) whether it is wired in.
 - Install, when at least one measurement is active, the **context-switch
   hook**: the callback of the ambient `AsyncLocal` of
-  `HackExecutionContext`, which sees each process enter and leave the
+  `KazoExecutionContext`, which sees each process enter and leave the
   thread, including in async continuations.
 - Turned off (or not yet implemented), return **exactly** to the current
   simulator, with an indicator: `CpuSource:` / `MemSource:` in
@@ -36,7 +36,7 @@ accountant.
 | `IExecutionModeSwitchObserver` | same | mode changes (entering or leaving an OS gateway) without a process change; optional (ADR 0067, [`cpu-accounting.md`](cpu-accounting.md)) |
 | `NullCpuTimeAccountant`, `NullMemoryAccountant` | `Platform/Kazo.Os.Platform.Core` (`Processes/Accounting/`) | null implementations; Platform Core never depends on the measurement project |
 | `ResourceAccountingPlan`, `ResourceAccountingSettings`, `ResourceAccountingBuildSupport` | same | decision made once: build × setting → active measurements, required hook, lines for syslog |
-| `HackExecutionContext` (`InstallContextSwitchHook`, internal) | `Shared/Kazo.Os.AppSdk` | replaces the ambient frame with an `AsyncLocal<T>(valueChangedHandler)`; visible only to the measurement project (`InternalsVisibleTo`) |
+| `KazoExecutionContext` (`InstallContextSwitchHook`, internal) | `Shared/Kazo.Os.AppSdk` | replaces the ambient frame with an `AsyncLocal<T>(valueChangedHandler)`; visible only to the measurement project (`InternalsVisibleTo`) |
 | `ContextSwitchHook`, `ContextSwitchDispatcher`, `ResourceAccountingFeatures` | `Platform/Kazo.Os.Platform.ResourceAccounting` (new) | hook installation, broadcast to the measurements (process changes, and mode changes to observers that want them), `[FeatureSwitchDefinition]` switches |
 | `MeasuredCpuTimeAccountant` | same | CPU measurement (ADR 0067), registered on the broadcaster when `plan.CpuActive` |
 | `ResourceAccountingServiceCollectionExtensions` | `OS/Kazo.Os.Ecosystem.Host` | reading of `HackerOs:ResourceAccounting`, composition, `#if HACKEROS_RESOURCE_ACCOUNTING` |
@@ -45,7 +45,7 @@ accountant.
 ### The hook
 
 ```
-HackExecutionContext.Enter(P) ──┐
+KazoExecutionContext.Enter(P) ──┐
 continuation restaurée (await) ─┼─► AsyncLocal<frame>(OnFrameChanged)
 fin de continuation, minuterie ─┘         │ processus différent ?
                                           ▼
@@ -73,9 +73,9 @@ fin de continuation, minuterie ─┘         │ processus différent ?
 ### At build
 
 ```xml
-<!-- Directory.Build.props, ou en ligne de commande : -p:HackerOsCpuAccounting=false -->
-<HackerOsCpuAccounting>false</HackerOsCpuAccounting>
-<HackerOsMemoryAccounting>false</HackerOsMemoryAccounting>
+<!-- Directory.Build.props, ou en ligne de commande : -p:KazoOsCpuAccounting=false -->
+<KazoOsCpuAccounting>false</KazoOsCpuAccounting>
+<KazoOsMemoryAccounting>false</KazoOsMemoryAccounting>
 ```
 
 Both default to `true`. The three hosts import
@@ -164,7 +164,7 @@ them replaces them. Memory already does this (`AddMeasuredMemory`, under
   ([`memory-accounting.md`](memory-accounting.md)).
 - Task manager: the header of the CPU and Memory columns carries an `estimated`
   label (small, dotted, monospace) as long as at least one row
-  is simulated. The app reads `HackProcess.Status`: the SDK does not change.
+  is simulated. The app reads `KazoProcess.Status`: the SDK does not change.
 
 ## Existing apps
 
@@ -176,16 +176,16 @@ its process.
 |---|---|
 | Command (`TerminalAppBase.ExecuteAsync`), service (`ServiceAppBase`) | the OS, around the call; the frame follows continuations, timers and `Task.Run` |
 | Window (`WindowAppBase`) | parameters, lifecycle, events, after-render |
-| Child component | `HackComponentBase` (or `HackEmbeddableComponent`), context received as a cascade from `WindowAppRenderer` |
+| Child component | `KazoComponentBase` (or `KazoEmbeddableComponent`), context received as a cascade from `WindowAppRenderer` |
 | MudBlazor dialog (rendered outside the window) | the dialog component receives the window's context as a parameter (the old `FileExplorerDialogBase` and its `OwnerAppContext`); since `desk/3` (ADR 0155), the explorer's dialogs are provided dialogs rendered by the platform in a modal window that gives the calling app's context as a cascade (`ProvidedFileDialog`) |
-| `[JSInvokable]` method | the method itself, as its first statement: `using IDisposable scope = HackExecutionContext.Enter(AppContext);` |
+| `[JSInvokable]` method | the method itself, as its first statement: `using IDisposable scope = KazoExecutionContext.Enter(AppContext);` |
 
 Markup rendering and component disposal stay outside a frame: it is
 the compositor's work (ADR 0067 §2).
 
 Migration done in this work item:
 
-- to `HackComponentBase`: `NetworkTab`, `PerformanceTab`, `DiskTab`
+- to `KazoComponentBase`: `NetworkTab`, `PerformanceTab`, `DiskTab`
   (System Monitor), `CodeEditorSearchView`, `CodeEditorExplorer`,
   `CodeEditorQuickOpenPalette`, `CodeEditorCursorStatus`,
   `SimulatedPageRenderer` (Browser), `AppPermissionsPanel` and
@@ -199,7 +199,7 @@ Migration done in this work item:
 
 `AmbientFrameSourceTests` (`Kazo.Os.Ecosystem.Tests`) reads all the sources of
 `Apps/` and fails if a component does not derive (directly or through a base of
-the app) from `WindowAppBase`, `HackComponentBase` or `HackEmbeddableComponent`, if
+the app) from `WindowAppBase`, `KazoComponentBase` or `KazoEmbeddableComponent`, if
 a `[JSInvokable]` method does not enter the frame first, or if code
 uses `ExecutionContext.SuppressFlow`, `UnsafeQueueUserWorkItem`,
 `UnsafeRegister` or `new Thread(`. Before the migration, it reported the thirteen
@@ -207,7 +207,7 @@ components and the five callbacks above.
 
 ## Decisions
 
-- **Hook in `HackExecutionContext`, reserved installation.** The frame is
+- **Hook in `KazoExecutionContext`, reserved installation.** The frame is
   private to the SDK; only `Kazo.Os.Platform.ResourceAccounting` sees the internal
   members that swap it. An app can neither install nor observe the
   hook.
@@ -243,11 +243,11 @@ its `runtimeconfig.json` carries both options at `false`.
 
 - [x] Contracts `ICpuTimeAccountant`, `IMemoryAccountant`, `ResourceMeasurementSource`, `IExecutionContextSwitchObserver` (Simulation Abstractions).
 - [x] Null implementations and `ResourceAccountingPlan` (Platform Core).
-- [x] `AsyncLocal<T>(valueChangedHandler)` hook installable in `HackExecutionContext`, refused if a scope is open.
+- [x] `AsyncLocal<T>(valueChangedHandler)` hook installable in `KazoExecutionContext`, refused if a scope is open.
 - [x] Project `Kazo.Os.Platform.ResourceAccounting`: switches, broadcaster, installation.
 - [x] `build/Kazo.Os.ResourceAccounting.targets`, import in the three hosts, conditional reference, `RuntimeHostConfigurationOption`.
 - [x] `appsettings.json` of the three hosts (created for the Ecosystem, turned off for the server), reading at composition, syslog lines.
 - [x] `CpuSource` / `MemSource` in `/proc/<pid>/status`, "estimated" label in the task manager.
 - [x] Tests of the combinations, no hook when everything is off, hook test observer.
 - [x] Documentation and index.
-- [x] Existing apps (plan §5.1): `Apps/` components on `HackComponentBase`, explorer dialogs on `FileExplorerDialogBase`, `[JSInvokable]` callbacks in the frame, test `AmbientFrameSourceTests`.
+- [x] Existing apps (plan §5.1): `Apps/` components on `KazoComponentBase`, explorer dialogs on `FileExplorerDialogBase`, `[JSInvokable]` callbacks in the frame, test `AmbientFrameSourceTests`.

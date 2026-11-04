@@ -34,7 +34,7 @@ public sealed class RealCommandMemoryTests
         int exitCode;
         using (ContextSwitchHook.Install(allocations))
         {
-            using (HackExecutionContext.Enter(app, "/home/user"))
+            using (KazoExecutionContext.Enter(app, "/home/user"))
             {
                 TerminalExecutionContext terminal = new(
                     app, ["-l"], TextReader.Null, stdout, TextWriter.Null, "/home/user", new Dictionary<string, string>());
@@ -48,7 +48,7 @@ public sealed class RealCommandMemoryTests
         Assert.True(accountant.TryGetProcessMemory(process, [process], out ProcessMemoryUsage usage));
         Assert.Equal(470_000, usage.ImageBytes);
         Assert.Equal(870_000, usage.FileBytes);
-        Assert.True(usage.AllocatedBytes > 0, "HackAllocBytes");
+        Assert.True(usage.AllocatedBytes > 0, "KazoAllocBytes");
         Assert.Equal(0, usage.KernelBytes); // a command has no window
     }
 }

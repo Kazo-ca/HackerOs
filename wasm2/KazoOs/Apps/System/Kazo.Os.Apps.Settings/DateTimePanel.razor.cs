@@ -13,9 +13,9 @@ namespace Kazo.Os.Apps.Settings;
 /// <remarks>
 /// <para>
 /// The choice is the <c>timeZone</c> key of <c>~/.config/hackeros/datetime.config</c>, written through
-/// <see cref="HackSettings.OpenSystemAsync(IAppExecutionContext, string, CancellationToken)"/>:
+/// <see cref="KazoSettings.OpenSystemAsync(IAppExecutionContext, string, CancellationToken)"/>:
 /// <c>auto</c> (the device's zone, as the browser reports it) or an IANA identifier from
-/// <see cref="HackTimeZone.Available"/>. The shell re-reads the file and the taskbar clock follows
+/// <see cref="KazoTimeZone.Available"/>. The shell re-reads the file and the taskbar clock follows
 /// at once. The machine's default is <c>/etc/hackeros/datetime.config</c>, an administrator's file.
 /// </para>
 /// <para>
@@ -33,9 +33,9 @@ public sealed partial class DateTimePanel
 
     private const string DocumentFileName = DocumentId + ".config";
 
-    private HackSettingsDocument? _document;
+    private KazoSettingsDocument? _document;
     private IDisposable? _tick;
-    private string _setting = HackTimeZone.Automatic;
+    private string _setting = KazoTimeZone.Automatic;
     private string _filter = string.Empty;
     private bool _listOpen;
     private string? _message;
@@ -60,12 +60,12 @@ public sealed partial class DateTimePanel
     internal bool MessageIsError => _messageIsError;
 
     /// <summary>Gets the zone the setting resolves to (the device's zone for <c>auto</c> or an unknown name).</summary>
-    internal TimeZoneInfo EffectiveZone => HackTimeZone.Resolve(_setting);
+    internal TimeZoneInfo EffectiveZone => KazoTimeZone.Resolve(_setting);
 
     /// <summary>Gets the zones of the list that match the search text (identifier or display name).</summary>
-    internal IEnumerable<TimeZoneInfo> FilteredZones => HackTimeZone.Available.Where(Matches);
+    internal IEnumerable<TimeZoneInfo> FilteredZones => KazoTimeZone.Available.Where(Matches);
 
-    private bool IsAutomatic => !HackTimeZone.TryFind(_setting, out _);
+    private bool IsAutomatic => !KazoTimeZone.TryFind(_setting, out _);
 
     private DateTimeOffset LocalNow => TimeZoneInfo.ConvertTime(Context.Clock.UtcNow, EffectiveZone);
 
@@ -85,7 +85,7 @@ public sealed partial class DateTimePanel
     {
         try
         {
-            _document = await HackSettings.OpenSystemAsync(Context, DocumentId, Context.CancellationToken);
+            _document = await KazoSettings.OpenSystemAsync(Context, DocumentId, Context.CancellationToken);
             _document.Changed += OnDocumentChanged;
             ReadDocument();
             _loaded = true;
@@ -97,7 +97,7 @@ public sealed partial class DateTimePanel
     }
 
     /// <summary>Writes the time zone to the user layer and reports the outcome.</summary>
-    /// <param name="value"><c>auto</c> or an IANA identifier of <see cref="HackTimeZone.Available"/>.</param>
+    /// <param name="value"><c>auto</c> or an IANA identifier of <see cref="KazoTimeZone.Available"/>.</param>
     internal async Task SetAsync(string value)
     {
         if (_isBusy || _document is null)
@@ -105,7 +105,7 @@ public sealed partial class DateTimePanel
             return;
         }
 
-        if (value != HackTimeZone.Automatic && !HackTimeZone.TryFind(value, out _))
+        if (value != KazoTimeZone.Automatic && !KazoTimeZone.TryFind(value, out _))
         {
             ShowError(L["DateTime.Error.Unknown", value]);
             StateHasChanged();
@@ -119,11 +119,11 @@ public sealed partial class DateTimePanel
             await _document.SetAsync(TimeZoneKey, value, SettingLayer.User, CancellationToken.None);
             ReadDocument();
             _listOpen = false;
-            ShowSaved(value == HackTimeZone.Automatic
-                ? L["DateTime.Saved.Automatic", Describe(HackTimeZone.Device)]
+            ShowSaved(value == KazoTimeZone.Automatic
+                ? L["DateTime.Saved.Automatic", Describe(KazoTimeZone.Device)]
                 : L["DateTime.Saved.Zone", Describe(EffectiveZone)]);
         }
-        catch (HackSettingLockedException exception)
+        catch (KazoSettingLockedException exception)
         {
             ShowError(exception.Message);
         }
@@ -174,7 +174,7 @@ public sealed partial class DateTimePanel
             return true;
         }
 
-        string id = HackTimeZone.GetId(zone);
+        string id = KazoTimeZone.GetId(zone);
         return id.Contains(_filter, StringComparison.OrdinalIgnoreCase)
             || id.Replace('_', ' ').Contains(_filter, StringComparison.OrdinalIgnoreCase)
             || zone.DisplayName.Contains(_filter, StringComparison.OrdinalIgnoreCase);
@@ -188,7 +188,7 @@ public sealed partial class DateTimePanel
         }
 
         string value = _document.Get<string>(TimeZoneKey);
-        _setting = string.IsNullOrWhiteSpace(value) ? HackTimeZone.Automatic : value.Trim();
+        _setting = string.IsNullOrWhiteSpace(value) ? KazoTimeZone.Automatic : value.Trim();
     }
 
     // The readout's clock: one render per second, from the OS clock (never a browser timer).
@@ -204,7 +204,7 @@ public sealed partial class DateTimePanel
     }
 
     /// <summary>An external edit (<c>nano ~/.config/hackeros/datetime.config</c>) changed the file.</summary>
-    private void OnDocumentChanged(object? sender, HackSettingsChangedEventArgs args) =>
+    private void OnDocumentChanged(object? sender, KazoSettingsChangedEventArgs args) =>
         _ = InvokeAsync(() =>
         {
             if (!_isBusy)
@@ -217,7 +217,7 @@ public sealed partial class DateTimePanel
 
     /// <summary>A zone as one line: "America/Toronto (UTC-04:00)".</summary>
     internal string Describe(TimeZoneInfo zone) =>
-        $"{HackTimeZone.GetId(zone)} ({HackTimeZone.FormatOffset(zone, Context.Clock.UtcNow)})";
+        $"{KazoTimeZone.GetId(zone)} ({KazoTimeZone.FormatOffset(zone, Context.Clock.UtcNow)})";
 
     private static string OptionClass(bool selected) => selected ? "datetime-option is-selected" : "datetime-option";
 

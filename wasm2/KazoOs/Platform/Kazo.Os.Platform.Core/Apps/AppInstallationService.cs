@@ -227,7 +227,7 @@ public sealed class AppInstallationService : IAppInstallationService, IAsyncDisp
                 continue;
             }
 
-            string name = AppSdk.WebData.HackWebDbNames.ForApp(appId);
+            string name = AppSdk.WebData.KazoWebDbNames.ForApp(appId);
             try
             {
                 await _webDatabases.DeleteAsync(name, cancellationToken).ConfigureAwait(false);
@@ -438,10 +438,10 @@ public sealed class AppInstallationService : IAppInstallationService, IAsyncDisp
             FileSystemErrorCode.PermissionDenied
                 or FileSystemErrorCode.CapabilityDenied
                 or FileSystemErrorCode.AuthorityDenied
-                or FileSystemErrorCode.ProtectedEntry => new HackUnauthorizedAccessException(
+                or FileSystemErrorCode.ProtectedEntry => new KazoUnauthorizedAccessException(
                     $"Access to the path '{path.Value}' is denied ({error.Code}).", error.Code, path.Value, error.RequiredCapability),
             FileSystemErrorCode.Cancelled => new OperationCanceledException(),
-            _ => new HackIOException($"The operation on '{path.Value}' failed ({error.Code}).", error.Code, path.Value)
+            _ => new KazoIOException($"The operation on '{path.Value}' failed ({error.Code}).", error.Code, path.Value)
         };
     }
 

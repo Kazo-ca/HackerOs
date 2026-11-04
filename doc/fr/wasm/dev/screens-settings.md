@@ -5,7 +5,7 @@
 Chantier `multi-monitor/7-screen-settings` du [plan multi-moniteur](plans/multi-monitor-plan.md),
 mise en œuvre de l'[ADR 0179 §7](adr/0179-per-screen-taskbars-and-other-screen-menus.md), puis de
 l'[ADR 0184](adr/0184-screens-administration-sdk.md) (chantier `multi-monitor/7b-screens-sdk`). La
-page lit et écrit `screens.config` et pilote les écrans ouverts par `HackScreens` ; elle s'appuie sur le service d'écrans
+page lit et écrit `screens.config` et pilote les écrans ouverts par `KazoScreens` ; elle s'appuie sur le service d'écrans
 ([`screen-service.md`](screen-service.md)) et sur les barres des tâches par écran
 ([`per-screen-taskbars.md`](per-screen-taskbars.md)), qui suivent le fichier.
 
@@ -13,7 +13,7 @@ page lit et écrit `screens.config` et pilote les écrans ouverts par `HackScree
 
 | Bloc | Contenu | Écrit |
 | --- | --- | --- |
-| Écrans ouverts (ADR 0184) | Chaque écran ouvert : numéro, nom du moniteur (avec la permission), taille, « Plein écran », « Cette fenêtre » pour l'écran de la fenêtre de Paramètres, bouton **Fermer** sur les écrans 2 à 9. Boutons **Identifier**, **Nouvel écran**, **Restaurer les écrans (N)** s'il en reste à rouvrir, **Plein écran** / **Quitter le plein écran**. État de la permission `window-management`, avec **Autoriser maintenant** tant qu'elle n'est pas demandée. Bloc caché sur un hôte sans écrans (mobile, tests). | — (appelle `HackScreens`) |
+| Écrans ouverts (ADR 0184) | Chaque écran ouvert : numéro, nom du moniteur (avec la permission), taille, « Plein écran », « Cette fenêtre » pour l'écran de la fenêtre de Paramètres, bouton **Fermer** sur les écrans 2 à 9. Boutons **Identifier**, **Nouvel écran**, **Restaurer les écrans (N)** s'il en reste à rouvrir, **Plein écran** / **Quitter le plein écran**. État de la permission `window-management`, avec **Autoriser maintenant** tant qu'elle n'est pas demandée. Bloc caché sur un hôte sans écrans (mobile, tests). | — (appelle `KazoScreens`) |
 | Barre des tâches de l'écran 1 | Choix `all` (toutes les fenêtres de tous les écrans) ou `own` (celles de l'écran 1), avec l'origine de la valeur (défaut, système, utilisateur) et le verrou de l'administrateur. | `[taskbar] primary-taskbar` de la couche utilisateur |
 | Écrans retenus | L'écran 1 (cet onglet du navigateur), puis chaque écran 2 à 9 listé dans `open` ou ayant une place valide : état « ouvert, ou proposé à la prochaine connexion » ou « fermé », place `largeur × hauteur à (gauche, haut)`. Bouton **Oublier** sur un écran fermé qui a une place. | Retire la ligne numérotée de la couche utilisateur |
 | Ouvrir et déplacer les écrans | Les autres commandes : Autre écran ▸ Nouvel écran (clic droit sur l'icône ou sur Agrandir), raccourcis `Super+Shift+←/→`, carte **Restaurer les écrans**, bouton `⤢`. | — |
@@ -21,11 +21,11 @@ page lit et écrit `screens.config` et pilote les écrans ouverts par `HackScree
 Le fichier est `~/.config/hackeros/screens.config` ; `/etc/hackeros/screens.config` donne les
 valeurs par défaut du système (un administrateur l'écrit, par exemple avec `sudo nano`).
 
-## 2. Les boutons d'écran : `HackScreens`
+## 2. Les boutons d'écran : `KazoScreens`
 
 Paramètres est une app de base : elle passe seulement par le SDK public. Le fichier passe par
-`HackSettings.OpenSystemAsync(AppContext, "screens")` (document listé dans
-`OsSettingsDocumentRegistry`) ; les écrans ouverts passent par la façade système `HackScreens`
+`KazoSettings.OpenSystemAsync(AppContext, "screens")` (document listé dans
+`OsSettingsDocumentRegistry`) ; les écrans ouverts passent par la façade système `KazoScreens`
 (ADR 0184, espace `Kazo.Os.AppSdk.Administration`), qui demande la capacité normale
 `screens.manage` déclarée par Paramètres.
 
@@ -40,7 +40,7 @@ Paramètres est une app de base : elle passe seulement par le SDK public. Le fic
 | `RequestPermissionAsync` | Demande la permission `window-management` pendant le clic. |
 
 Le navigateur n'accepte une nouvelle fenêtre, le plein écran ou sa demande de permission que pendant
-un clic : chaque bouton appelle `HackScreens` tout de suite, sans attente avant.
+un clic : chaque bouton appelle `KazoScreens` tout de suite, sans attente avant.
 
 ## 3. Qui écrit quoi
 
@@ -54,7 +54,7 @@ La page ne change pas `open` : le service garde sa liste en mémoire pendant la 
 à chaque ouverture ou fermeture d'un écran. C'est pourquoi seul un écran fermé peut être oublié. Un
 écran oublié rouvre à la place par défaut (1280 × 800, ou un moniteur libre avec la permission).
 
-La page suit le fichier (`HackSettingsDocument.Changed`) : un écran ouvert ou déplacé, ou une
+La page suit le fichier (`KazoSettingsDocument.Changed`) : un écran ouvert ou déplacé, ou une
 modification au terminal, s'affiche sans recharger la page.
 
 ## 4. Fichiers
@@ -64,7 +64,7 @@ modification au terminal, s'affiche sans recharger la page.
 | `Apps/System/Kazo.Os.Apps.Settings/ScreensPanel.razor(.cs, .css)` | La page, `RememberedScreen`, `RememberedPlace`. |
 | `Apps/System/Kazo.Os.Apps.Settings/SettingsWindow.Navigation.cs` | Entrée `screens` dans le groupe Personnalisation (`--page=screens`). |
 | `Platform/Kazo.Os.Platform.Core/Settings/OsSettingsDocumentRegistry.cs` | Document `screens` ouvert aux apps. |
-| `Shared/Kazo.Os.AppSdk/Administration/HackScreens.cs`, `ScreensAdministrationContracts.cs` | Façade et contrats du SDK (ADR 0184). |
+| `Shared/Kazo.Os.AppSdk/Administration/KazoScreens.cs`, `ScreensAdministrationContracts.cs` | Façade et contrats du SDK (ADR 0184). |
 | `Platform/Kazo.Os.Platform.Core/Administration/AppScreensGateway.cs`, `IScreenControl.cs` | Passerelle de confiance : `screens.manage`, instance appelante. |
 | `Platform/Kazo.Os.Platform.Blazor/Display/ScreenControl.cs` | `IScreenControl` sur `ScreenService` et `WindowRuntime` (écran de la fenêtre appelante). |
 | `Tests/Kazo.Os.Apps.Settings.Tests/ScreensPanelTests.cs` | Clés identiques au schéma de l'OS, choix `own` écrit, liste et places, Oublier, changement extérieur, écrans ouverts et boutons, refus, français. |

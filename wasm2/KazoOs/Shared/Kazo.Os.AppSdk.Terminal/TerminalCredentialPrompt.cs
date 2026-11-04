@@ -14,11 +14,11 @@ namespace Kazo.Os.AppSdk.Terminal;
 /// tickets, <c>/etc/hackeros/app-permissions.config</c> and <c>/var/log/auth.log</c> belong to
 /// the OS.
 /// </remarks>
-public sealed class TerminalCredentialPrompt : HackCredentialPrompt
+public sealed class TerminalCredentialPrompt : KazoCredentialPrompt
 {
     private readonly IDialogService _dialogs;
     private readonly IAppExecutionContext _context;
-    private readonly Func<string, HackPromptLineKind, Task> _writeLine;
+    private readonly Func<string, KazoPromptLineKind, Task> _writeLine;
 
     /// <summary>Creates the prompt for one terminal.</summary>
     /// <param name="dialogs">Dialog service used for the masked credential input and the choice.</param>
@@ -27,7 +27,7 @@ public sealed class TerminalCredentialPrompt : HackCredentialPrompt
     public TerminalCredentialPrompt(
         IDialogService dialogs,
         IAppExecutionContext context,
-        Func<string, HackPromptLineKind, Task> writeLine)
+        Func<string, KazoPromptLineKind, Task> writeLine)
     {
         _dialogs = dialogs ?? throw new ArgumentNullException(nameof(dialogs));
         _context = context ?? throw new ArgumentNullException(nameof(context));
@@ -35,8 +35,8 @@ public sealed class TerminalCredentialPrompt : HackCredentialPrompt
     }
 
     /// <inheritdoc />
-    public override async Task<HackCredential?> ReadCredentialAsync(
-        HackCredentialRequest request, CancellationToken cancellationToken = default)
+    public override async Task<KazoCredential?> ReadCredentialAsync(
+        KazoCredentialRequest request, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
         CredentialPromptDialogResult result = await _dialogs.CredentialPromptAsync(_context, new CredentialPromptDialogRequest
@@ -46,13 +46,13 @@ public sealed class TerminalCredentialPrompt : HackCredentialPrompt
         }, cancellationToken);
 
         return result.Status == CredentialPromptStatus.Submitted
-            ? new HackCredential(result.LoginName ?? string.Empty, result.Password ?? string.Empty)
+            ? new KazoCredential(result.LoginName ?? string.Empty, result.Password ?? string.Empty)
             : null;
     }
 
     /// <inheritdoc />
-    public override async Task<HackConfirmation> ConfirmAsync(
-        HackConfirmationRequest request, CancellationToken cancellationToken = default)
+    public override async Task<KazoConfirmation> ConfirmAsync(
+        KazoConfirmationRequest request, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
         MessageBoxDialogResult choice = await _dialogs.MessageBoxAsync(_context, new MessageBoxDialogRequest
@@ -64,13 +64,13 @@ public sealed class TerminalCredentialPrompt : HackCredentialPrompt
 
         return choice.Result switch
         {
-            MessageBoxResult.Yes => HackConfirmation.Yes,
-            MessageBoxResult.No => HackConfirmation.No,
-            _ => HackConfirmation.Cancel
+            MessageBoxResult.Yes => KazoConfirmation.Yes,
+            MessageBoxResult.No => KazoConfirmation.No,
+            _ => KazoConfirmation.Cancel
         };
     }
 
     /// <inheritdoc />
-    public override Task WriteLineAsync(string text, HackPromptLineKind kind, CancellationToken cancellationToken = default) =>
+    public override Task WriteLineAsync(string text, KazoPromptLineKind kind, CancellationToken cancellationToken = default) =>
         _writeLine(text, kind);
 }

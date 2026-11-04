@@ -54,7 +54,7 @@ public partial class ProcessesTab
 
     /// <summary>Gets or sets the processes of the last refresh, by PID, for the detail panel.</summary>
     [Parameter, EditorRequired]
-    public IReadOnlyDictionary<long, HackProcess> Processes { get; set; } = new Dictionary<long, HackProcess>();
+    public IReadOnlyDictionary<long, KazoProcess> Processes { get; set; } = new Dictionary<long, KazoProcess>();
 
     /// <summary>Gets or sets the outcome of the last "End task", or <see langword="null"/>.</summary>
     [Parameter]
@@ -72,8 +72,8 @@ public partial class ProcessesTab
     [Parameter]
     public EventCallback OnDismissReport { get; set; }
 
-    private HackProcess? DetailProcess =>
-        Table.DetailPid is { } pid && Processes.TryGetValue(pid, out HackProcess? process) ? process : null;
+    private KazoProcess? DetailProcess =>
+        Table.DetailPid is { } pid && Processes.TryGetValue(pid, out KazoProcess? process) ? process : null;
 
     private void OnFilterInput(ChangeEventArgs e) => Table.Filter = e.Value?.ToString() ?? string.Empty;
 
@@ -164,7 +164,7 @@ public partial class ProcessesTab
     /// <summary>A process state (<c>Running</c>, <c>Sleeping</c>…) in the process's language; an unknown one as is.</summary>
     private string StateLabel(string state) => ProcessStateLabel(L, state);
 
-    /// <summary>Translates a <see cref="HackProcessState"/> name, shared with the detail panel.</summary>
+    /// <summary>Translates a <see cref="KazoProcessState"/> name, shared with the detail panel.</summary>
     internal static string ProcessStateLabel(IStringLocalizer<Strings> text, string state)
     {
         LocalizedString label = text[$"ProcessState.{state}"];

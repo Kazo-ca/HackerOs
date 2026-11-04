@@ -47,7 +47,7 @@
     }
     else if (IsHackPaintScenario)
     {
-        <HackPaintBrowserScenario />
+        <KazoPaintBrowserScenario />
     }
     else if (IsTaskbarScenario)
     {
@@ -329,7 +329,7 @@
             await module.InvokeAsync<object[]>(
                 "executeTransaction",
                 DatabaseName,
-                HackerOsIndexedDbSchema.CurrentVersion,
+                KazoOsIndexedDbSchema.CurrentVersion,
                 new[] { "fsContent" },
                 "readwrite",
                 new[]

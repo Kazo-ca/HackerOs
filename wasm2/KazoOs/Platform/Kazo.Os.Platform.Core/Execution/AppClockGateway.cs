@@ -22,7 +22,7 @@ public sealed class AppClockGateway : IAppClockGateway
     public long CurrentTick => _clock.CurrentTick;
 
     /// <inheritdoc />
-    /// <remarks>The callback runs inside this app's <see cref="Kazo.Os.AppSdk.HackExecutionContext"/> scope (ADR 0043).</remarks>
+    /// <remarks>The callback runs inside this app's <see cref="Kazo.Os.AppSdk.KazoExecutionContext"/> scope (ADR 0043).</remarks>
     public IDisposable Schedule(TimeSpan delay, Action callback) => _clock.Schedule(delay, _ambient.Wrap(callback));
 
     /// <summary>Binds the app context scheduled callbacks run under; called once by the factory.</summary>

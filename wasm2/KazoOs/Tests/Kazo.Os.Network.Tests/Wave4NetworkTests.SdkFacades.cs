@@ -11,8 +11,8 @@ using Xunit;
 namespace Kazo.Os.Network.Tests;
 
 /// <summary>
-/// ADR 0056 section 6: the SDK network facades (<see cref="HackDns"/>, <see cref="HackPing"/>,
-/// <see cref="HackHttpClient"/>, <see cref="HackTcpClient"/>) over the OS-owned
+/// ADR 0056 section 6: the SDK network facades (<see cref="KazoDns"/>, <see cref="KazoPing"/>,
+/// <see cref="KazoHttpClient"/>, <see cref="KazoTcpClient"/>) over the OS-owned
 /// <see cref="AppNetworkGateway"/>, including the capability checks and the real-network fallback
 /// decision the apps no longer make themselves.
 /// </summary>
@@ -22,19 +22,19 @@ public sealed partial class Wave4NetworkTests
     private void EnterApp(ICapabilityChecker capabilities)
     {
         AppManifest manifest = AppDefinitionMapper.ToManifest(new PingApp());
-        HackExecutionContext.Enter(new StubAppExecutionContext(
+        KazoExecutionContext.Enter(new StubAppExecutionContext(
             manifest, new AppNetworkGateway(_network, capabilities, manifest.Id, _serverConnection, _proxy)));
     }
 
     [Fact]
-    public async Task HackDns_resolves_simulated_names_and_rejects_unknown_ones_like_getaddrinfo()
+    public async Task KazoDns_resolves_simulated_names_and_rejects_unknown_ones_like_getaddrinfo()
     {
         EnterApp(new GrantAllCapabilityChecker());
 
-        IPAddress[] addresses = await HackDns.GetHostAddressesAsync("hackersearch.net");
-        HackHostEntry reverse = await HackDns.GetHostEntryAsync(IPAddress.Parse("192.168.1.90"));
+        IPAddress[] addresses = await KazoDns.GetHostAddressesAsync("hackersearch.net");
+        KazoHostEntry reverse = await KazoDns.GetHostEntryAsync(IPAddress.Parse("192.168.1.90"));
         SocketException unknown = await Assert.ThrowsAsync<SocketException>(
-            () => HackDns.GetHostAddressesAsync("unknown-host-12345.com"));
+            () => KazoDns.GetHostAddressesAsync("unknown-host-12345.com"));
 
         Assert.Equal([IPAddress.Parse("192.168.1.90")], addresses);
         Assert.Equal("hackersearch.net", reverse.HostName);
@@ -42,59 +42,59 @@ public sealed partial class Wave4NetworkTests
     }
 
     [Fact]
-    public async Task HackPing_reports_a_down_host_as_unreachable_and_an_unknown_one_as_an_exception()
+    public async Task KazoPing_reports_a_down_host_as_unreachable_and_an_unknown_one_as_an_exception()
     {
         EnterApp(new GrantAllCapabilityChecker());
 
-        HackPingReply down = await HackPing.SendAsync("hackerz-search.net");
-        HackPingException unknown = await Assert.ThrowsAsync<HackPingException>(() => HackPing.SendAsync("unknown-host-12345.com"));
+        KazoPingReply down = await KazoPing.SendAsync("hackerz-search.net");
+        KazoPingException unknown = await Assert.ThrowsAsync<KazoPingException>(() => KazoPing.SendAsync("unknown-host-12345.com"));
 
-        Assert.Equal(HackIPStatus.DestinationHostUnreachable, down.Status);
+        Assert.Equal(KazoIPStatus.DestinationHostUnreachable, down.Status);
         Assert.IsType<SocketException>(unknown.InnerException);
     }
 
     [Fact]
-    public async Task HackHttpClient_post_follows_the_login_redirect_and_keeps_the_session_cookie()
+    public async Task KazoHttpClient_post_follows_the_login_redirect_and_keeps_the_session_cookie()
     {
         EnterApp(new GrantAllCapabilityChecker());
-        using HackHttpClient client = new();
+        using KazoHttpClient client = new();
 
-        HackHttpResponse login = await client.PostAsync(
+        KazoHttpResponse login = await client.PostAsync(
             "https://hackmail.com/login",
             [new("username", "agent"), new("password", "secret123")]);
-        HackHttpResponse inbox = await client.GetAsync("https://hackmail.com/inbox");
+        KazoHttpResponse inbox = await client.GetAsync("https://hackmail.com/inbox");
 
         Assert.Equal(1, login.RedirectCount);
         Assert.Contains(client.Cookies.GetAllCookies(), cookie => cookie is { Domain: "hackmail.com", Name: "hackmail_session", Value: "user=agent" });
-        Assert.Equal("HackMail — Inbox", inbox.Page?.Title);
-        Assert.Contains("Title: HackMail — Inbox", inbox.ReadAsString());
+        Assert.Equal("KazoMail — Inbox", inbox.Page?.Title);
+        Assert.Contains("Title: KazoMail — Inbox", inbox.ReadAsString());
     }
 
     [Fact]
-    public async Task HackHttpClient_sends_an_explicit_cookie_header_to_a_simulated_site_without_storing_it()
+    public async Task KazoHttpClient_sends_an_explicit_cookie_header_to_a_simulated_site_without_storing_it()
     {
         EnterApp(new GrantAllCapabilityChecker());
-        using HackHttpClient client = new();
+        using KazoHttpClient client = new();
         client.DefaultRequestHeaders["Cookie"] = "hackmail_session=user=agent";
 
-        HackHttpResponse inbox = await client.GetAsync("https://hackmail.com/inbox");
+        KazoHttpResponse inbox = await client.GetAsync("https://hackmail.com/inbox");
 
         // The value keeps its own '=': only the first one splits name from value.
-        Assert.Equal("HackMail — Inbox", inbox.Page?.Title);
+        Assert.Equal("KazoMail — Inbox", inbox.Page?.Title);
         Assert.Equal(0, inbox.RedirectCount);
         Assert.Empty(inbox.SetCookies);
         Assert.Empty(client.Cookies.GetAllCookies());
     }
 
     [Fact]
-    public async Task HackHttpClient_resolves_relative_uris_against_its_base_address()
+    public async Task KazoHttpClient_resolves_relative_uris_against_its_base_address()
     {
         EnterApp(new GrantAllCapabilityChecker());
-        using HackHttpClient client = new() { BaseAddress = new Uri("https://hackmail.com/") };
+        using KazoHttpClient client = new() { BaseAddress = new Uri("https://hackmail.com/") };
 
-        HackHttpResponse relative = await client.GetAsync("login");
-        HackHttpResponse absolute = await client.GetAsync("https://hackmail.com/login");
-        ArgumentException missingBase = await Assert.ThrowsAsync<ArgumentException>(() => new HackHttpClient().GetAsync("login"));
+        KazoHttpResponse relative = await client.GetAsync("login");
+        KazoHttpResponse absolute = await client.GetAsync("https://hackmail.com/login");
+        ArgumentException missingBase = await Assert.ThrowsAsync<ArgumentException>(() => new KazoHttpClient().GetAsync("login"));
 
         Assert.Equal(new Uri("https://hackmail.com/login"), relative.RequestUri);
         Assert.Equal(absolute.StatusCode, relative.StatusCode);
@@ -103,12 +103,12 @@ public sealed partial class Wave4NetworkTests
     }
 
     [Fact]
-    public async Task HackHttpClient_unknown_host_throws_name_resolution_error_with_browser_code()
+    public async Task KazoHttpClient_unknown_host_throws_name_resolution_error_with_browser_code()
     {
         EnterApp(new GrantAllCapabilityChecker());
-        using HackHttpClient client = new();
+        using KazoHttpClient client = new();
 
-        HackHttpRequestException exception = await Assert.ThrowsAsync<HackHttpRequestException>(
+        KazoHttpRequestException exception = await Assert.ThrowsAsync<KazoHttpRequestException>(
             () => client.GetAsync("https://unknown-host-12345.com/"));
 
         Assert.Equal(System.Net.Http.HttpRequestError.NameResolutionError, exception.HttpRequestError);
@@ -119,7 +119,7 @@ public sealed partial class Wave4NetworkTests
     public async Task Post_needs_network_simulated_write()
     {
         EnterApp(new GrantAllCapabilityChecker(AppCapabilities.NetworkSimulatedWrite));
-        using HackHttpClient client = new();
+        using KazoHttpClient client = new();
 
         UnauthorizedAccessException denied = await Assert.ThrowsAsync<UnauthorizedAccessException>(
             () => client.PostAsync("https://hackmail.com/login", [new("username", "agent")]));
@@ -135,14 +135,14 @@ public sealed partial class Wave4NetworkTests
         // OS refused the real route on the missing capability, not on the server state.
         UseServer(new ConnectedServerConnectionService(), new UnusedProxyClient());
         EnterApp(new GrantAllCapabilityChecker(AppCapabilities.NetworkRealAccess));
-        using HackHttpClient client = new();
+        using KazoHttpClient client = new();
 
-        HackHttpRequestException exception = await Assert.ThrowsAsync<HackHttpRequestException>(
+        KazoHttpRequestException exception = await Assert.ThrowsAsync<KazoHttpRequestException>(
             () => client.GetAsync("https://real-external-site.example/"));
         SocketException probe = await Assert.ThrowsAsync<SocketException>(
-            () => HackTcpClient.ProbeAsync("real-external-site.example", 443, 443));
+            () => KazoTcpClient.ProbeAsync("real-external-site.example", 443, 443));
 
-        Assert.Equal(HackNetworkError.HostNotFound, exception.NetworkError);
+        Assert.Equal(KazoNetworkError.HostNotFound, exception.NetworkError);
         Assert.Equal(SocketError.HostNotFound, probe.SocketErrorCode);
     }
 
@@ -151,7 +151,7 @@ public sealed partial class Wave4NetworkTests
     {
         UseServer(new ConnectedServerConnectionService(), new SuccessBodyProxyClient(200, "hello from the real internet"));
         EnterApp(new GrantAllCapabilityChecker());
-        using HackHttpClient client = new();
+        using KazoHttpClient client = new();
 
         string body = await client.GetStringAsync("https://real-external-site.example/");
 
@@ -159,14 +159,14 @@ public sealed partial class Wave4NetworkTests
     }
 
     [Fact]
-    public async Task HackTcpClient_scans_a_simulated_host_and_detects_its_os()
+    public async Task KazoTcpClient_scans_a_simulated_host_and_detects_its_os()
     {
         EnterApp(new GrantAllCapabilityChecker());
 
-        IReadOnlyList<HackPortProbeResult> ports = await HackTcpClient.ProbeAsync("localhost", 20, 100);
-        HackOsFingerprint? os = await HackTcpClient.DetectOperatingSystemAsync("localhost");
+        IReadOnlyList<KazoPortProbeResult> ports = await KazoTcpClient.ProbeAsync("localhost", 20, 100);
+        KazoOsFingerprint? os = await KazoTcpClient.DetectOperatingSystemAsync("localhost");
 
-        Assert.Contains(ports, port => port is { Port: 22, State: HackPortState.Open, ServiceName: "ssh" });
+        Assert.Contains(ports, port => port is { Port: 22, State: KazoPortState.Open, ServiceName: "ssh" });
         Assert.DoesNotContain(ports, port => port.Port == 3306);
         Assert.Equal(_network.GetHost("localhost")!.OsFingerprint?.Name, os?.Name);
     }
@@ -174,6 +174,6 @@ public sealed partial class Wave4NetworkTests
     [Fact]
     public async Task Facades_outside_any_app_scope_fail_instead_of_borrowing_an_identity()
     {
-        await Assert.ThrowsAsync<HackExecutionContextMissingException>(() => HackDns.GetHostAddressesAsync("hackersearch.net"));
+        await Assert.ThrowsAsync<KazoExecutionContextMissingException>(() => KazoDns.GetHostAddressesAsync("hackersearch.net"));
     }
 }

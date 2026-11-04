@@ -5,7 +5,7 @@ namespace Kazo.Os.Infrastructure.Browser.Tests;
 
 /// <summary>
 /// Enforces the ADR 0099 section 4 rule without a browser: every released schema version older
-/// than <see cref="HackerOsIndexedDbSchema.CurrentVersion"/> has a database dump under
+/// than <see cref="KazoOsIndexedDbSchema.CurrentVersion"/> has a database dump under
 /// <c>Tests/fixtures/indexeddb/</c>, and each dump is consistent with the schema it claims.
 /// </summary>
 /// <remarks>
@@ -27,13 +27,13 @@ public sealed class IndexedDbUpgradeFixtureCatalogTests
     public void Every_previous_released_schema_version_has_a_fixture()
     {
         string directory = FixtureDirectory();
-        for (int version = FirstReleasedVersion; version < HackerOsIndexedDbSchema.CurrentVersion; version++)
+        for (int version = FirstReleasedVersion; version < KazoOsIndexedDbSchema.CurrentVersion; version++)
         {
             string path = Path.Combine(directory, $"hackeros-v{version}.json");
             Assert.True(
                 File.Exists(path),
                 $"Missing IndexedDB fixture for schema v{version} ({path}). A chantier that raises " +
-                "HackerOsIndexedDbSchema.CurrentVersion adds the dump of the previous version " +
+                "KazoOsIndexedDbSchema.CurrentVersion adds the dump of the previous version " +
                 "(procedure in doc/en/wasm/dev/building-and-testing.md).");
         }
     }
@@ -48,7 +48,7 @@ public sealed class IndexedDbUpgradeFixtureCatalogTests
             File.ReadAllText(Path.Combine(FixtureDirectory(), $"hackeros-v{version}.json")));
         JsonElement root = document.RootElement;
 
-        Assert.Equal(HackerOsIndexedDbSchema.DatabaseName, root.GetProperty("databaseName").GetString());
+        Assert.Equal(KazoOsIndexedDbSchema.DatabaseName, root.GetProperty("databaseName").GetString());
         Assert.Equal(version, root.GetProperty("version").GetInt32());
         Assert.True(root.GetProperty("producedFrom").GetProperty("commit").GetString() is { Length: > 0 });
 
@@ -56,7 +56,7 @@ public sealed class IndexedDbUpgradeFixtureCatalogTests
         Assert.True(expectations.GetProperty("admin").GetProperty("password").GetString() is { Length: >= 8 });
         Assert.StartsWith("/", expectations.GetProperty("file").GetProperty("path").GetString());
 
-        Dictionary<string, IndexedDbObjectStoreDefinition> current = HackerOsIndexedDbSchema.ObjectStores
+        Dictionary<string, IndexedDbObjectStoreDefinition> current = KazoOsIndexedDbSchema.ObjectStores
             .ToDictionary(store => store.Name, StringComparer.Ordinal);
         foreach (JsonElement store in root.GetProperty("objectStores").EnumerateArray())
         {
@@ -71,7 +71,7 @@ public sealed class IndexedDbUpgradeFixtureCatalogTests
 
         // The users store must hold the fixture's administrator: the E2E test signs in with it.
         JsonElement users = root.GetProperty("objectStores").EnumerateArray()
-            .Single(store => store.GetProperty("name").GetString() == HackerOsIndexedDbSchema.UserStoreName);
+            .Single(store => store.GetProperty("name").GetString() == KazoOsIndexedDbSchema.UserStoreName);
         string loginName = expectations.GetProperty("admin").GetProperty("loginName").GetString()!;
         Assert.Contains(users.GetProperty("records").EnumerateArray(), user => user.GetProperty("loginName").GetString() == loginName);
     }
@@ -80,7 +80,7 @@ public sealed class IndexedDbUpgradeFixtureCatalogTests
     public static TheoryData<int> FixtureVersions()
     {
         TheoryData<int> data = [];
-        for (int version = FirstReleasedVersion; version < HackerOsIndexedDbSchema.CurrentVersion; version++)
+        for (int version = FirstReleasedVersion; version < KazoOsIndexedDbSchema.CurrentVersion; version++)
         {
             data.Add(version);
         }

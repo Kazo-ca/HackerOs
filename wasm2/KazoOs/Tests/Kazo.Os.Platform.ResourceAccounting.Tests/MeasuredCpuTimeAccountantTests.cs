@@ -22,7 +22,7 @@ public sealed class MeasuredCpuTimeAccountantTests
         MeasuredCpuTimeAccountant accountant = clock.Accountant(Threshold);
         using (ContextSwitchHook.Install(accountant))
         {
-            using (HackExecutionContext.Enter(TestContexts.Process(10)))
+            using (KazoExecutionContext.Enter(TestContexts.Process(10)))
             {
                 clock.Advance(30);
             }
@@ -44,7 +44,7 @@ public sealed class MeasuredCpuTimeAccountantTests
         AppDriveGateway gateway = new(() => new NoMounts(), VirtualHardwareProfile.Default);
         using (ContextSwitchHook.Install(accountant))
         {
-            using (HackExecutionContext.Enter(TestContexts.Process(11)))
+            using (KazoExecutionContext.Enter(TestContexts.Process(11)))
             {
                 Assert.True(gateway.GetDrivesAsync().IsCompletedSuccessfully);
             }
@@ -67,7 +67,7 @@ public sealed class MeasuredCpuTimeAccountantTests
         using (dispatcher.Register(new RecordingObserver()))
         using (dispatcher.Register(accountant))
         using (ContextSwitchHook.Install(dispatcher))
-        using (HackExecutionContext.Enter(TestContexts.Process(13)))
+        using (KazoExecutionContext.Enter(TestContexts.Process(13)))
         {
             Assert.True(gateway.GetDrivesAsync().IsCompletedSuccessfully);
         }
@@ -82,10 +82,10 @@ public sealed class MeasuredCpuTimeAccountantTests
         MeasuredCpuTimeAccountant accountant = clock.Accountant(Threshold);
         using (ContextSwitchHook.Install(accountant))
         {
-            using (HackExecutionContext.Enter(TestContexts.Process(20)))
+            using (KazoExecutionContext.Enter(TestContexts.Process(20)))
             {
                 clock.Advance(5);
-                using (HackExecutionContext.Enter(TestContexts.Process(21)))
+                using (KazoExecutionContext.Enter(TestContexts.Process(21)))
                 {
                     clock.Advance(7);
                 }
@@ -237,7 +237,7 @@ public sealed class MeasuredCpuTimeAccountantTests
         MeasuredCpuTimeAccountant accountant = new(Threshold);
         using (ContextSwitchHook.Install(accountant))
         {
-            using (HackExecutionContext.Enter(TestContexts.Process(80)))
+            using (KazoExecutionContext.Enter(TestContexts.Process(80)))
             {
                 await Task.Yield();
                 SpinFor(TimeSpan.FromMilliseconds(20));
@@ -249,7 +249,7 @@ public sealed class MeasuredCpuTimeAccountantTests
 
     private static void RunSlice(ManualClock clock, long pid, long milliseconds)
     {
-        using (HackExecutionContext.Enter(TestContexts.Process(pid)))
+        using (KazoExecutionContext.Enter(TestContexts.Process(pid)))
         {
             clock.Advance(milliseconds);
         }

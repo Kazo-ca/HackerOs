@@ -263,7 +263,7 @@ public sealed partial class AppLifecycleOrchestratorTests
     {
         protected override Task RunCoreAsync(IAppExecutionContext context, CancellationToken sessionCancellationToken)
         {
-            ReportHealth(HackServiceHealth.Degraded, "cache cold");
+            ReportHealth(KazoServiceHealth.Degraded, "cache cold");
             return Task.Delay(Timeout.InfiniteTimeSpan, sessionCancellationToken);
         }
     }

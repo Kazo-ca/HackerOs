@@ -65,7 +65,7 @@ public sealed partial class XdgOpenCommand : TerminalAppBase
         VirtualPath path;
         try
         {
-            path = VirtualPath.Parse(HackPath.GetFullPath(target));
+            path = VirtualPath.Parse(KazoPath.GetFullPath(target));
         }
         catch (Exception exception) when (exception is ArgumentException or FormatException)
         {
@@ -73,8 +73,8 @@ public sealed partial class XdgOpenCommand : TerminalAppBase
             return 1;
         }
 
-        bool isDirectory = await HackDirectory.ExistsAsync(path.Value, cancellationToken);
-        if (!isDirectory && !await HackFile.ExistsAsync(path.Value, cancellationToken))
+        bool isDirectory = await KazoDirectory.ExistsAsync(path.Value, cancellationToken);
+        if (!isDirectory && !await KazoFile.ExistsAsync(path.Value, cancellationToken))
         {
             context.StandardError.WriteLine(text["Error", text["FileMissing", target]]);
             return 4;

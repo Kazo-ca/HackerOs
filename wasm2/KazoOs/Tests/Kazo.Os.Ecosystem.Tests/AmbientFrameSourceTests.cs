@@ -5,17 +5,17 @@ namespace Kazo.Os.Ecosystem.Tests;
 /// <summary>
 /// Phase 5, section 5.1 of <c>execution-isolation-plan.md</c> for <c>5-accounting-switches</c>: every
 /// piece of app code under <c>Apps/</c> runs inside an ambient frame
-/// (<c>HackExecutionContext</c>), because the context-switch hook (ADR 0066, 0067) charges code that
+/// (<c>KazoExecutionContext</c>), because the context-switch hook (ADR 0066, 0067) charges code that
 /// runs outside any frame to the compositor, not to the app.
 /// </summary>
 /// <remarks>
 /// <para>The entry points where Blazor or JavaScript call app code, and the rule for each:</para>
 /// <list type="bullet">
 /// <item>every component (<c>.razor</c>, or a class deriving from a component base) derives, directly
-/// or through an app-local base, from <c>WindowAppBase</c>, <c>HackComponentBase</c> or
-/// <c>HackEmbeddableComponent</c>: these open the frame for parameters, lifecycle, events and
+/// or through an app-local base, from <c>WindowAppBase</c>, <c>KazoComponentBase</c> or
+/// <c>KazoEmbeddableComponent</c>: these open the frame for parameters, lifecycle, events and
 /// after-render work. A plain <c>ComponentBase</c> runs its <c>@onclick</c> handlers outside it;</item>
-/// <item>every <c>[JSInvokable]</c> method opens <c>HackExecutionContext.Enter</c> as its first statement;</item>
+/// <item>every <c>[JSInvokable]</c> method opens <c>KazoExecutionContext.Enter</c> as its first statement;</item>
 /// <item>no app code suppresses execution-context flow or starts a raw thread (both lose the frame).</item>
 /// </list>
 /// <para>
@@ -31,14 +31,14 @@ public sealed partial class AmbientFrameSourceTests
     private static readonly HashSet<string> AmbientBases = new(StringComparer.Ordinal)
     {
         "WindowAppBase",
-        "HackComponentBase",
-        "HackEmbeddableComponent",
-        // The layout base of a Blazor site (ADR 0084) derives from HackComponentBase in the SDK.
-        "HackSiteLayoutBase",
+        "KazoComponentBase",
+        "KazoEmbeddableComponent",
+        // The layout base of a Blazor site (ADR 0084) derives from KazoComponentBase in the SDK.
+        "KazoSiteLayoutBase",
         // ASP.Hack views (ADR 0083): rendered once to static HTML while the site serves a request, so
         // they run in the frame of the site process and have no event handler.
-        "HackView",
-        "HackLayout"
+        "KazoView",
+        "KazoLayout"
     };
 
     private static readonly HashSet<string> PlainComponentBases = new(StringComparer.Ordinal)
@@ -99,7 +99,7 @@ public sealed partial class AmbientFrameSourceTests
         }
 
         Assert.True(violations.Count == 0,
-            "App components must derive from WindowAppBase, HackComponentBase or HackEmbeddableComponent " +
+            "App components must derive from WindowAppBase, KazoComponentBase or KazoEmbeddableComponent " +
             "(or an app base deriving from one), so their handlers run in the app's frame:"
             + Environment.NewLine + string.Join(Environment.NewLine, violations));
     }
@@ -120,7 +120,7 @@ public sealed partial class AmbientFrameSourceTests
 
         Assert.True(violations.Count == 0,
             "A [JSInvokable] method is called from JavaScript, outside any frame: its first statement must be " +
-            "'using IDisposable scope = HackExecutionContext.Enter(AppContext);'"
+            "'using IDisposable scope = KazoExecutionContext.Enter(AppContext);'"
             + Environment.NewLine + string.Join(Environment.NewLine, violations));
     }
 
@@ -148,12 +148,12 @@ public sealed partial class AmbientFrameSourceTests
     public void The_scanners_detect_plain_components_and_unscoped_callbacks()
     {
         Dictionary<string, string> bases = CollectClassBasesFromText(
-            ["public abstract class MyDialogBase : HackComponentBase { }", "public class Legacy : ComponentBase { }"]);
+            ["public abstract class MyDialogBase : KazoComponentBase { }", "public class Legacy : ComponentBase { }"]);
 
         Assert.False(ResolvesToAmbientBase(RazorComponentBase("<div @onclick=\"Go\"></div>", null), bases));
         Assert.False(ResolvesToAmbientBase(RazorComponentBase("<p />", "public partial class Panel : ComponentBase, IDisposable {"), bases));
         Assert.True(ResolvesToAmbientBase(RazorComponentBase("@inherits MyDialogBase\n<p />", null), bases));
-        Assert.True(ResolvesToAmbientBase(RazorComponentBase("@inherits Kazo.Os.AppSdk.Blazor.HackComponentBase\n", null), bases));
+        Assert.True(ResolvesToAmbientBase(RazorComponentBase("@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase\n", null), bases));
         Assert.False(ResolvesToAmbientBase(RazorComponentBase("<p />", "public partial class Panel : IDisposable {"), bases));
 
         Assert.Equal(["OnTick"], JsInvokableMethodsNotEnteringFrame("""
@@ -169,7 +169,7 @@ public sealed partial class AmbientFrameSourceTests
             public async Task OnTick(int value)
             {
                 // comment
-                using IDisposable scope = HackExecutionContext.Enter(AppContext);
+                using IDisposable scope = KazoExecutionContext.Enter(AppContext);
                 await Task.Yield();
             }
             """));
@@ -261,7 +261,7 @@ public sealed partial class AmbientFrameSourceTests
                 .SkipWhile(static line => line.Length == 0 || line.StartsWith("//", StringComparison.Ordinal))
                 .Take(1));
             if (!(firstStatement.StartsWith("using ", StringComparison.Ordinal)
-                && firstStatement.Contains("HackExecutionContext.Enter(", StringComparison.Ordinal)))
+                && firstStatement.Contains("KazoExecutionContext.Enter(", StringComparison.Ordinal)))
             {
                 offenders.Add(signature.Groups["name"].Value);
             }

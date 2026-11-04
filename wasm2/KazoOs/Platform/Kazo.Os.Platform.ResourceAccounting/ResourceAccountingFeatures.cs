@@ -4,7 +4,7 @@ namespace Kazo.Os.Platform.ResourceAccounting;
 
 /// <summary>
 /// The build-time switches of ADR 0066, section 2, as seen at run time. Each MSBuild property
-/// (<c>HackerOsCpuAccounting</c>, <c>HackerOsMemoryAccounting</c>) becomes a
+/// (<c>KazoOsCpuAccounting</c>, <c>KazoOsMemoryAccounting</c>) becomes a
 /// <c>RuntimeHostConfigurationOption</c> through <c>build/Kazo.Os.ResourceAccounting.targets</c>.
 /// </summary>
 /// <remarks>

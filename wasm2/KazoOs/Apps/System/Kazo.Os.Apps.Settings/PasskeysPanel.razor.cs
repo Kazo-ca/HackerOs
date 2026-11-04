@@ -13,13 +13,13 @@ namespace Kazo.Os.Apps.Settings;
 /// (fingerprint, face, PIN or security key); the OS verifies the answer.
 /// </summary>
 /// <remarks>
-/// Uses only the public SDK (ADR 0055): <see cref="HackUserAccounts"/>. Managing one's own passkeys
+/// Uses only the public SDK (ADR 0055): <see cref="KazoUserAccounts"/>. Managing one's own passkeys
 /// needs no capability. A browser without WebAuthn (or a page that is not a secure context) shows a
 /// note instead of the form.
 /// </remarks>
 public partial class PasskeysPanel
 {
-    private IReadOnlyList<HackPasskey> _passkeys = [];
+    private IReadOnlyList<KazoPasskey> _passkeys = [];
     private string _name = string.Empty;
     private string? _message;
     private bool _failed;
@@ -45,7 +45,7 @@ public partial class PasskeysPanel
     {
         try
         {
-            _passkeys = await HackUserAccounts.ListPasskeysAsync(Context, Context.CancellationToken);
+            _passkeys = await KazoUserAccounts.ListPasskeysAsync(Context, Context.CancellationToken);
         }
         catch (NotSupportedException)
         {
@@ -74,7 +74,7 @@ public partial class PasskeysPanel
         _busy = true;
         try
         {
-            HackPasskey added = await HackUserAccounts.AddPasskeyAsync(Context, name, Context.CancellationToken);
+            KazoPasskey added = await KazoUserAccounts.AddPasskeyAsync(Context, name, Context.CancellationToken);
             (_message, _failed) = (L[added.UnlocksKeyring ? "Passkeys.Added" : "Passkeys.AddedNoKeyring", added.Name], false);
             _name = string.Empty;
             await LoadAsync();
@@ -98,7 +98,7 @@ public partial class PasskeysPanel
         }
     }
 
-    private async Task RemoveAsync(HackPasskey passkey)
+    private async Task RemoveAsync(KazoPasskey passkey)
     {
         if (_busy)
         {
@@ -108,7 +108,7 @@ public partial class PasskeysPanel
         _busy = true;
         try
         {
-            bool removed = await HackUserAccounts.RemovePasskeyAsync(Context, passkey.Id, Context.CancellationToken);
+            bool removed = await KazoUserAccounts.RemovePasskeyAsync(Context, passkey.Id, Context.CancellationToken);
             (_message, _failed) = removed
                 ? (L["Passkeys.Removed", passkey.Name].Value, false)
                 : (L["Passkeys.Error.NotFound", passkey.Name].Value, true);

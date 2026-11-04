@@ -62,7 +62,7 @@ public sealed partial class IntranetSite : WebAppDefinition
     /// fallback behind every route declared here.
     /// </summary>
     /// <param name="builder">The site's builder.</param>
-    public override void Configure(HackWebApplicationBuilder builder)
+    public override void Configure(KazoWebApplicationBuilder builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
 
@@ -78,7 +78,7 @@ public sealed partial class IntranetSite : WebAppDefinition
         // Debug log /var/log/hackweb/org.hackeros.samples.intranet.log: requests, ILogger<T> lines, errors.
         builder.Logging.EnableDebugLog();
 
-        HackWebApplication app = builder.Build();
+        KazoWebApplication app = builder.Build();
 
         // Pipeline: errors as a page, files of wwwroot before routing, then the session cookie.
         app.UseExceptionPage();
@@ -97,11 +97,11 @@ public sealed partial class IntranetSite : WebAppDefinition
             NoteStore notes = context.RequestServices.GetRequiredService<NoteStore>();
             TaskBoard board = context.RequestServices.GetRequiredService<TaskBoard>();
             int noteCount = await notes.CountAsync(context.RequestAborted);
-            return HackResults.Json(new SiteStatus("up", noteCount, board.Count, startedAt), IntranetJsonContext.Default.SiteStatus);
+            return KazoResults.Json(new SiteStatus("up", noteCount, board.Count, startedAt), IntranetJsonContext.Default.SiteStatus);
         });
         // The board's pages call it with the tab's cookies: the same session as the MVC pages.
         app.MapGet("/api/me", context =>
-            HackResults.Json(new Visitor(IntranetSession.DisplayName(context)), IntranetJsonContext.Default.Visitor));
+            KazoResults.Json(new Visitor(IntranetSession.DisplayName(context)), IntranetJsonContext.Default.Visitor));
         app.MapControllers();
     }
 }

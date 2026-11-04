@@ -14,21 +14,21 @@ namespace Kazo.Os.AppSdk.Web.Tests.Views;
 public sealed partial class RazorViewTests : IAsyncLifetime
 {
     private const string Site = "http://intranet.hack";
-    private HackWebApplication _app = null!;
+    private KazoWebApplication _app = null!;
 
     public Task InitializeAsync()
     {
-        _app = HackWebHost.CreateApplication(new TestSite(), HackWebGeneratedRoutes.Table, views: HackWebGeneratedRoutes.Views);
+        _app = KazoWebHost.CreateApplication(new TestSite(), KazoWebGeneratedRoutes.Table, views: KazoWebGeneratedRoutes.Views);
         return Task.CompletedTask;
     }
 
     public async Task DisposeAsync() => await _app.DisposeAsync();
 
-    private Task<HackWebResponseData> Get(string path, params KeyValuePair<string, string>[] headers) =>
-        _app.ProcessAsync(HackWebRequestData.Create("GET", Site + path, headers));
+    private Task<KazoWebResponseData> Get(string path, params KeyValuePair<string, string>[] headers) =>
+        _app.ProcessAsync(KazoWebRequestData.Create("GET", Site + path, headers));
 
-    private Task<HackWebResponseData> PostForm(string path, string body, params KeyValuePair<string, string>[] headers) =>
-        _app.ProcessAsync(HackWebRequestData.Create("POST", Site + path, "application/x-www-form-urlencoded", body, headers));
+    private Task<KazoWebResponseData> PostForm(string path, string body, params KeyValuePair<string, string>[] headers) =>
+        _app.ProcessAsync(KazoWebRequestData.Create("POST", Site + path, "application/x-www-form-urlencoded", body, headers));
 
     private static KeyValuePair<string, string> Header(string name, string value) => new(name, value);
 
@@ -38,19 +38,19 @@ public sealed partial class RazorViewTests : IAsyncLifetime
     [Fact]
     public void Generator_lists_the_views_under_Views()
     {
-        string[] paths = [.. HackWebGeneratedRoutes.Views.Views.Select(view => view.Path).Order()];
+        string[] paths = [.. KazoWebGeneratedRoutes.Views.Views.Select(view => view.Path).Order()];
 
         Assert.Contains("Pages/Index", paths);
         Assert.Contains("Pages/_NoteCard", paths);
         Assert.Contains("Shared/_Layout", paths);
         Assert.DoesNotContain("_Imports", paths);
-        Assert.Equal(typeof(Tests.Views.Pages.Index), HackWebGeneratedRoutes.Views.Find("pages/index")!.ViewType);
+        Assert.Equal(typeof(Tests.Views.Pages.Index), KazoWebGeneratedRoutes.Views.Find("pages/index")!.ViewType);
     }
 
     [Fact]
     public async Task View_renders_model_layout_title_partials_and_section()
     {
-        HackWebResponseData response = await Get("/Pages");
+        KazoWebResponseData response = await Get("/Pages");
         string html = response.ReadAsString();
 
         Assert.True(response.StatusCode == 200, html);
@@ -80,7 +80,7 @@ public sealed partial class RazorViewTests : IAsyncLifetime
     [Fact]
     public async Task Form_helper_writes_action_antiforgery_and_validation_markup()
     {
-        HackWebResponseData response = await Get("/Pages/Edit");
+        KazoWebResponseData response = await Get("/Pages/Edit");
         string html = response.ReadAsString();
 
         Assert.Contains("""<form method="post" action="/Pages/Edit" class="edit">""", html);
@@ -90,7 +90,7 @@ public sealed partial class RazorViewTests : IAsyncLifetime
         Assert.DoesNotContain("validation-summary-errors", html);
         Assert.Contains("""<form method="get" action="/search">""", html);
         Assert.Single(TokenField().Matches(html));
-        string? cookie = response.Headers.FirstOrDefault(header => header.Key == "Set-Cookie" && header.Value.StartsWith(".HackAntiforgery=", StringComparison.Ordinal)).Value;
+        string? cookie = response.Headers.FirstOrDefault(header => header.Key == "Set-Cookie" && header.Value.StartsWith(".KazoAntiforgery=", StringComparison.Ordinal)).Value;
         Assert.NotNull(cookie);
         Assert.Contains("HttpOnly", cookie);
         Assert.Contains("SameSite=Strict", cookie);
@@ -101,11 +101,11 @@ public sealed partial class RazorViewTests : IAsyncLifetime
     {
         (string cookie, string token) = await GetTokens();
 
-        HackWebResponseData ok = await PostForm("/Pages/Edit", $"Name=Ada&Age=40&__RequestVerificationToken={Uri.EscapeDataString(token)}", Header("Cookie", cookie));
+        KazoWebResponseData ok = await PostForm("/Pages/Edit", $"Name=Ada&Age=40&__RequestVerificationToken={Uri.EscapeDataString(token)}", Header("Cookie", cookie));
         Assert.Equal(302, ok.StatusCode);
         Assert.Equal("/Pages", ok.GetHeader("Location"));
 
-        HackWebResponseData invalid = await PostForm("/Pages/Edit", $"Name=&Age=7&__RequestVerificationToken={Uri.EscapeDataString(token)}", Header("Cookie", cookie));
+        KazoWebResponseData invalid = await PostForm("/Pages/Edit", $"Name=&Age=7&__RequestVerificationToken={Uri.EscapeDataString(token)}", Header("Cookie", cookie));
         string html = invalid.ReadAsString();
         Assert.Equal(200, invalid.StatusCode);
         Assert.Contains("""<div class="validation-summary-errors"><ul><li>Please fix the errors below.</li></ul></div>""", html);
@@ -118,7 +118,7 @@ public sealed partial class RazorViewTests : IAsyncLifetime
     {
         (string cookie, string token) = await GetTokens();
 
-        HackWebResponseData response = await PostForm("/Pages/Edit", "Name=Ada&Age=40", Header("Cookie", cookie), Header("RequestVerificationToken", token));
+        KazoWebResponseData response = await PostForm("/Pages/Edit", "Name=Ada&Age=40", Header("Cookie", cookie), Header("RequestVerificationToken", token));
 
         Assert.Equal(302, response.StatusCode);
     }
@@ -126,17 +126,17 @@ public sealed partial class RazorViewTests : IAsyncLifetime
     [Fact]
     public async Task Post_without_or_with_a_foreign_token_is_refused()
     {
-        HackWebResponseData none = await PostForm("/Pages/Edit", "Name=Ada&Age=40");
+        KazoWebResponseData none = await PostForm("/Pages/Edit", "Name=Ada&Age=40");
         Assert.Equal(400, none.StatusCode);
-        Assert.Contains(".HackAntiforgery", none.ReadAsString());
+        Assert.Contains(".KazoAntiforgery", none.ReadAsString());
 
         (string cookie, _) = await GetTokens();
-        HackWebResponseData noField = await PostForm("/Pages/Edit", "Name=Ada&Age=40", Header("Cookie", cookie));
+        KazoWebResponseData noField = await PostForm("/Pages/Edit", "Name=Ada&Age=40", Header("Cookie", cookie));
         Assert.Equal(400, noField.StatusCode);
         Assert.Contains("__RequestVerificationToken", noField.ReadAsString());
 
         (_, string otherToken) = await GetTokens();
-        HackWebResponseData foreign = await PostForm("/Pages/Edit", $"Name=Ada&Age=40&__RequestVerificationToken={Uri.EscapeDataString(otherToken)}", Header("Cookie", cookie));
+        KazoWebResponseData foreign = await PostForm("/Pages/Edit", $"Name=Ada&Age=40&__RequestVerificationToken={Uri.EscapeDataString(otherToken)}", Header("Cookie", cookie));
         Assert.Equal(400, foreign.StatusCode);
         Assert.Contains("could not be validated", foreign.ReadAsString());
     }
@@ -144,7 +144,7 @@ public sealed partial class RazorViewTests : IAsyncLifetime
     [Fact]
     public async Task Ignore_attribute_skips_the_check()
     {
-        HackWebResponseData response = await PostForm("/Pages/Open", string.Empty);
+        KazoWebResponseData response = await PostForm("/Pages/Open", string.Empty);
 
         Assert.Equal(200, response.StatusCode);
         Assert.Equal("open", response.ReadAsString());
@@ -156,7 +156,7 @@ public sealed partial class RazorViewTests : IAsyncLifetime
         Assert.Equal("<p>plain null</p>", (await Get("/Pages/Plain")).ReadAsString().Trim());
         Assert.Equal("<p>plain model</p>", (await Get("/Pages/PlainModel")).ReadAsString().Trim());
 
-        HackWebResponseData teapot = await Get("/Pages/Status");
+        KazoWebResponseData teapot = await Get("/Pages/Status");
         Assert.Equal(418, teapot.StatusCode);
         Assert.Contains("plain", teapot.ReadAsString());
     }
@@ -189,7 +189,7 @@ public sealed partial class RazorViewTests : IAsyncLifetime
     [Fact]
     public async Task Missing_view_lists_the_searched_locations()
     {
-        HackWebResponseData response = await Get("/Pages/Missing");
+        KazoWebResponseData response = await Get("/Pages/Missing");
         string html = response.ReadAsString();
 
         Assert.Equal(500, response.StatusCode);
@@ -215,30 +215,30 @@ public sealed partial class RazorViewTests : IAsyncLifetime
     [Fact]
     public async Task Static_files_are_served_from_the_embedded_wwwroot()
     {
-        HackWebResponseData css = await Get("/css/site.css");
+        KazoWebResponseData css = await Get("/css/site.css");
         Assert.Equal(200, css.StatusCode);
         Assert.Equal("text/css; charset=utf-8", css.ContentType);
         Assert.Contains("color: #0f0", css.ReadAsString());
         Assert.Equal("public, max-age=3600", css.GetHeader("Cache-Control"));
         string etag = css.GetHeader("ETag")!;
 
-        HackWebResponseData cached = await Get("/css/site.css", Header("If-None-Match", etag));
+        KazoWebResponseData cached = await Get("/css/site.css", Header("If-None-Match", etag));
         Assert.Equal(304, cached.StatusCode);
         Assert.Empty(cached.Body);
 
-        HackWebResponseData png = await Get("/logo.png");
+        KazoWebResponseData png = await Get("/logo.png");
         Assert.Equal("image/png", png.ContentType);
         Assert.Equal(8, png.Body.Length);
 
-        HackWebResponseData index = await Get("/docs/");
+        KazoWebResponseData index = await Get("/docs/");
         Assert.Equal(200, index.StatusCode);
         Assert.Contains("<h1>docs</h1>", index.ReadAsString());
 
-        HackWebResponseData head = await _app.ProcessAsync(HackWebRequestData.Create("HEAD", Site + "/css/site.css"));
+        KazoWebResponseData head = await _app.ProcessAsync(KazoWebRequestData.Create("HEAD", Site + "/css/site.css"));
         Assert.Equal(200, head.StatusCode);
         Assert.Empty(head.Body);
 
-        HackWebResponseData post = await PostForm("/css/site.css", string.Empty);
+        KazoWebResponseData post = await PostForm("/css/site.css", string.Empty);
         Assert.Equal(405, post.StatusCode);
     }
 
@@ -253,17 +253,17 @@ public sealed partial class RazorViewTests : IAsyncLifetime
     [Fact]
     public void Model_type_check_accepts_null_for_reference_types_only()
     {
-        HackViewEngine.EnsureModelType(typeof(Tests.Views.Pages.Details), new Note());
-        HackViewEngine.EnsureModelType(typeof(Tests.Views.Pages.Details), null);
-        HackViewEngine.EnsureModelType(typeof(Tests.Views.Pages.Loose), "anything");
+        KazoViewEngine.EnsureModelType(typeof(Tests.Views.Pages.Details), new Note());
+        KazoViewEngine.EnsureModelType(typeof(Tests.Views.Pages.Details), null);
+        KazoViewEngine.EnsureModelType(typeof(Tests.Views.Pages.Loose), "anything");
 
-        Assert.Throws<InvalidOperationException>(() => HackViewEngine.EnsureModelType(typeof(Tests.Views.Pages.Details), 42));
+        Assert.Throws<InvalidOperationException>(() => KazoViewEngine.EnsureModelType(typeof(Tests.Views.Pages.Details), 42));
     }
 
     private async Task<(string Cookie, string Token)> GetTokens()
     {
-        HackWebResponseData page = await Get("/Pages/Edit");
-        string setCookie = page.Headers.First(header => header.Key == "Set-Cookie" && header.Value.StartsWith(".HackAntiforgery=", StringComparison.Ordinal)).Value;
+        KazoWebResponseData page = await Get("/Pages/Edit");
+        string setCookie = page.Headers.First(header => header.Key == "Set-Cookie" && header.Value.StartsWith(".KazoAntiforgery=", StringComparison.Ordinal)).Value;
         string cookie = setCookie[..setCookie.IndexOf(';')];
         string token = TokenField().Match(page.ReadAsString()).Groups[1].Value;
         return (cookie, token);

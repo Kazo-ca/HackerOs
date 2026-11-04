@@ -93,7 +93,7 @@ public sealed class DesktopShellTests
             Description = "Test application description",
             Kind = kind,
             EntryPoint = new AppEntryPointManifest("TestAssembly.dll", "TestAssembly.TestComponent"),
-            SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+            SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
             Presentation = new PresentationManifest("utilities", AppLaunchVisibility.Visible, []),
             Resources = AppResourceProfileManifest.None
         };

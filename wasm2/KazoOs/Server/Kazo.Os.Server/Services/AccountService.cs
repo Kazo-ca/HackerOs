@@ -33,7 +33,7 @@ public interface IAccountService
 /// <inheritdoc />
 public sealed class AccountService : IAccountService
 {
-    private readonly HackerOsServerDbContext _db;
+    private readonly KazoOsServerDbContext _db;
     private readonly IPasswordHashService _passwordHashService;
     private readonly ITokenService _tokenService;
     private readonly IAuditService _audit;
@@ -43,7 +43,7 @@ public sealed class AccountService : IAccountService
 
     /// <inheritdoc />
     public AccountService(
-        HackerOsServerDbContext db,
+        KazoOsServerDbContext db,
         IPasswordHashService passwordHashService,
         ITokenService tokenService,
         IAuditService audit)

@@ -309,9 +309,9 @@ public sealed class ShellSession
     /// </summary>
     /// <param name="path">Absolute, relative (to the shell's directory) or <c>~</c>-prefixed directory.</param>
     /// <param name="cancellationToken">Cancels the existence check.</param>
-    /// <exception cref="Kazo.Os.AppSdk.IO.HackDirectoryNotFoundException">The path does not exist.</exception>
-    /// <exception cref="Kazo.Os.AppSdk.IO.HackIOException">The path is not a directory.</exception>
-    /// <exception cref="Kazo.Os.AppSdk.IO.HackUnauthorizedAccessException">The path cannot be looked up.</exception>
+    /// <exception cref="Kazo.Os.AppSdk.IO.KazoDirectoryNotFoundException">The path does not exist.</exception>
+    /// <exception cref="Kazo.Os.AppSdk.IO.KazoIOException">The path is not a directory.</exception>
+    /// <exception cref="Kazo.Os.AppSdk.IO.KazoUnauthorizedAccessException">The path cannot be looked up.</exception>
     /// <exception cref="NotSupportedException">The shell is detached.</exception>
     public async Task ChangeDirectoryAsync(string path, CancellationToken cancellationToken = default)
     {
@@ -321,7 +321,7 @@ public sealed class ShellSession
         }
 
         string previous = CurrentDirectory;
-        IAppExecutionContext identity = HackExecutionContext.CurrentOrNull ?? Host;
+        IAppExecutionContext identity = KazoExecutionContext.CurrentOrNull ?? Host;
         bool sameProcess = ReferenceEquals(identity.Environment, _environment);
         string identityDirectory = identity.Environment.CurrentDirectory;
         string target;
@@ -329,9 +329,9 @@ public sealed class ShellSession
         // The check is a real chdir of the checking process, resolved from the shell's directory
         // (pinned for the scope): like the `cd` built-in, a relative path is the shell's, not the
         // command's. The resulting canonical path is then adopted by the shell.
-        using (HackExecutionContext.Enter(identity, previous))
+        using (KazoExecutionContext.Enter(identity, previous))
         {
-            await HackEnvironment.SetCurrentDirectoryAsync(path, cancellationToken).ConfigureAwait(false);
+            await KazoEnvironment.SetCurrentDirectoryAsync(path, cancellationToken).ConfigureAwait(false);
             target = identity.Environment.CurrentDirectory;
         }
 

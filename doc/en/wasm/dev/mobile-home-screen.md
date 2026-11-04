@@ -43,7 +43,7 @@ its persistence format with a text file under the desktop.
 | `MobileAppIcon` | Declared image of the app, shared between pages, dock and drawer; Lucide fallback. |
 | `MobileHomeLayout` | Bounded internal model, reading with `ConfigDocumentFormat`, deterministic text writing and legacy JSON reading for migration only. |
 | `MobileHomeLayoutStore` | Hidden VFS file through `IOsSettingsService`, serialized edits and projection published after success. |
-| `MobileSettingsDocuments` | Schema of the `mobile` OS document, accessible to Settings through `HackSettings.OpenSystemAsync`. |
+| `MobileSettingsDocuments` | Schema of the `mobile` OS document, accessible to Settings through `KazoSettings.OpenSystemAsync`. |
 | `WindowProcessObserver` | Process/window bridge shared with the desktop for indirect launches and stops. |
 | `wwwroot/mobileGestures.js` | Browser primitives: capture, long press, stray click, size; C# decides the direction and the thresholds. |
 
@@ -118,7 +118,7 @@ app's window, then its modal dialogs. `SingleSurfaceArea` draws the whole stack
 maximized to the screen; only the last window takes input, the owner stays
 mounted underneath (`inert`) and is no longer minimized. The system Back button
 closes the top dialog. In the file dialogs, one tap enters a folder or takes a
-file (`HackFileView.OpenOnTap`); there is no double click on mobile. Mobile
+file (`KazoFileView.OpenOnTap`); there is no double click on mobile. Mobile
 dialogs have no title bar: they have their Cancel button and the system Back.
 
 An app can also declare a phone-specific window with

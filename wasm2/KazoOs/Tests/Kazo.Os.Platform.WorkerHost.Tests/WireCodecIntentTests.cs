@@ -57,13 +57,13 @@ public sealed class WireCodecIntentTests
     public void Default_handlers_keep_target_action_app_and_layer()
     {
         // ADR 0121: cat.defaults carries both layers to xdg-mime in a worker.
-        Kazo.Os.AppSdk.Apps.HackFileAssociation[] rows =
+        Kazo.Os.AppSdk.Apps.KazoFileAssociation[] rows =
         [
-            new(".md", "open", "org.hackeros.code-editor", Kazo.Os.AppSdk.Apps.HackFileAssociationLayer.User),
-            new("x-scheme-handler/https", "open", "org.hackeros.browser", Kazo.Os.AppSdk.Apps.HackFileAssociationLayer.System)
+            new(".md", "open", "org.hackeros.code-editor", Kazo.Os.AppSdk.Apps.KazoFileAssociationLayer.User),
+            new("x-scheme-handler/https", "open", "org.hackeros.browser", Kazo.Os.AppSdk.Apps.KazoFileAssociationLayer.System)
         ];
 
-        IReadOnlyList<Kazo.Os.AppSdk.Apps.HackFileAssociation> copy = RoundTrip(
+        IReadOnlyList<Kazo.Os.AppSdk.Apps.KazoFileAssociation> copy = RoundTrip(
             writer => WireCodec.WriteAssociations(writer, rows), WireCodec.ReadAssociations);
 
         Assert.Equal(rows, copy);

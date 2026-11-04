@@ -341,7 +341,7 @@ internal sealed class ShellExpander
         List<string> candidates = [absolute ? "/" : string.Empty];
         try
         {
-            using (HackExecutionContext.Enter(_session.Host, _session.CurrentDirectory))
+            using (KazoExecutionContext.Enter(_session.Host, _session.CurrentDirectory))
             {
                 for (int index = 0; index < components.Length; index++)
                 {
@@ -354,7 +354,7 @@ internal sealed class ShellExpander
                         if (!ShellPattern.HasWildcards(component))
                         {
                             string candidate = Join(prefix, ShellPattern.Unescape(component));
-                            if (last || await HackDirectory.ExistsAsync(Resolve(candidate), _cancellationToken).ConfigureAwait(false))
+                            if (last || await KazoDirectory.ExistsAsync(Resolve(candidate), _cancellationToken).ConfigureAwait(false))
                             {
                                 next.Add(candidate);
                             }
@@ -363,18 +363,18 @@ internal sealed class ShellExpander
                         }
 
                         string directory = Resolve(prefix.Length == 0 ? "." : prefix);
-                        if (!await HackDirectory.ExistsAsync(directory, _cancellationToken).ConfigureAwait(false))
+                        if (!await KazoDirectory.ExistsAsync(directory, _cancellationToken).ConfigureAwait(false))
                         {
                             continue;
                         }
 
                         bool matchHidden = component.StartsWith('.') || component.StartsWith("\\.", StringComparison.Ordinal);
                         string[] entries = last
-                            ? await HackDirectory.GetFileSystemEntriesAsync(directory, cancellationToken: _cancellationToken).ConfigureAwait(false)
-                            : await HackDirectory.GetDirectoriesAsync(directory, cancellationToken: _cancellationToken).ConfigureAwait(false);
+                            ? await KazoDirectory.GetFileSystemEntriesAsync(directory, cancellationToken: _cancellationToken).ConfigureAwait(false)
+                            : await KazoDirectory.GetDirectoriesAsync(directory, cancellationToken: _cancellationToken).ConfigureAwait(false);
                         foreach (string entry in entries.Order(StringComparer.Ordinal))
                         {
-                            string name = HackPath.GetFileName(entry) ?? string.Empty;
+                            string name = KazoPath.GetFileName(entry) ?? string.Empty;
                             if (name.Length == 0 || (name.StartsWith('.') && !matchHidden))
                             {
                                 continue;
@@ -412,7 +412,7 @@ internal sealed class ShellExpander
     private static string Join(string prefix, string name) =>
         prefix.Length == 0 ? name : prefix.EndsWith('/') ? prefix + name : prefix + "/" + name;
 
-    private string Resolve(string path) => HackPath.GetFullPath(path, _session.CurrentDirectory);
+    private string Resolve(string path) => KazoPath.GetFullPath(path, _session.CurrentDirectory);
 
     /// <summary>One field being built: its text, and the same text as a pattern (quoted characters escaped).</summary>
     private sealed class Field

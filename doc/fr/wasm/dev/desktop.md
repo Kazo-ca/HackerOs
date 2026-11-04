@@ -2,7 +2,7 @@
 
 # Bureau : icônes, raccourcis et `desktop.config`
 
-Les types `HackDesktop*`, le fichier `desktop.config`, les raccourcis `.desktop` et l'intent de création de raccourci destinés aux apps sont dans [`desktop-api.md`](../framework/desktop-api.md).
+Les types `KazoDesktop*`, le fichier `desktop.config`, les raccourcis `.desktop` et l'intent de création de raccourci destinés aux apps sont dans [`desktop-api.md`](../framework/desktop-api.md).
 
 Chantier `desk/5-desktop` du plan
 [`desktop-and-context-menu-plan.md`](plans/desktop-and-context-menu-plan.md) (§5).
@@ -42,7 +42,7 @@ Sur mobile, il n'y a pas d'icônes de bureau (ADR 0152 §7).
 DesktopShell ──► DesktopArea.BackgroundContent (BackgroundInteractive)
                    └─ DesktopSurfaceHost ── lance org.hackeros.desktop (processus réel)
                         └─ DesktopSurface (app Bureau, droits de son manifeste)
-                             └─ HackFileView Mode=Desktop ──► registre ──► ExplorerFileView
+                             └─ KazoFileView Mode=Desktop ──► registre ──► ExplorerFileView
                                                                 └─ FileView ─► FileViewDesktop (grille)
 ```
 
@@ -104,7 +104,7 @@ Paramètres s'ouvre directement sur une page avec `--page=appearance` ou
 
 ## Tests
 
-- `Kazo.Os.AppSdk.Tests/Files/HackDesktopTests.cs` : ordre, placement,
+- `Kazo.Os.AppSdk.Tests/Files/KazoDesktopTests.cs` : ordre, placement,
   collisions, hors écran, réorganisation automatique, déplacements, raccourcis
   (lecture, écriture, rejet, noms numérotés), `desktop.config` (lecture,
   écriture, clés encodées, création du dossier).
@@ -119,9 +119,9 @@ Paramètres s'ouvre directement sur une page avec `--page=appearance` ou
 ## Tâches (chantier `desk/5-desktop`)
 
 - [x] ADR 0160 (ajustements de l'ADR 0152).
-- [x] Contrat SDK : `HackDesktop*`, `HackDesktopEntry`, `HackDesktopSettings`,
-  `HackAppIcons`, `HackFileMenuItems.EmptyTrash`.
-- [x] `HackFileView` : `HackFileViewMode.Desktop`, `DesktopOptions`,
+- [x] Contrat SDK : `KazoDesktop*`, `KazoDesktopEntry`, `KazoDesktopSettings`,
+  `KazoAppIcons`, `KazoFileMenuItems.EmptyTrash`.
+- [x] `KazoFileView` : `KazoFileViewMode.Desktop`, `DesktopOptions`,
   `DesktopPositions`, `DesktopPositionsChanged`.
 - [x] `FileViewDesktop` : grille, sélection, lasso, clavier, renommage,
   glisser-déposer, icônes système.

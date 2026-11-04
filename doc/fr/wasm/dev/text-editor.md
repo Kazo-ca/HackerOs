@@ -88,7 +88,7 @@ sous-chaîne, sans tenir compte de la casse.
   n'arrivait jamais (`LaunchFilePath` n'était posé par personne) : l'éditeur
   s'ouvrait vide et Enregistrer se comportait comme Enregistrer sous. Le
   CodeEditor suit la même règle.
-- **Texte ou binaire** se décide sur le contenu (`HackTextContent.TryDecode`,
+- **Texte ou binaire** se décide sur le contenu (`KazoTextContent.TryDecode`,
   SDK) : UTF-8 strict sans octet de contrôle autre que tabulation, fins de ligne,
   saut de page, retour arrière et échappement. Un fichier vide créé par
   « New File » (étiqueté binaire par le système de fichiers) s'ouvre donc.
@@ -104,7 +104,7 @@ sous-chaîne, sans tenir compte de la casse.
 
 Quand l'OS demande à l'éditeur de s'arrêter (déconnexion, `kill`, « End
 task ») alors que le document est modifié, `OnAppStopRequestedAsync` écrit le
-texte dans un brouillon `HackRecoveryDraft`
+texte dans un brouillon `KazoRecoveryDraft`
 (`~/.local/state/org.hackeros.text-editor/recovery/draft.json`, dossier
 `0700`) avec le chemin du fichier d'origine ; l'OS attend cette écriture avant
 de fermer la fenêtre. Au lancement suivant sans fichier, le brouillon est
@@ -147,6 +147,6 @@ français).
 ## Liste des tâches (retours après `rebuild/4-text-editor`, livrés avec `rebuild/4-file-explorer`)
 
 - [x] Lire le fichier de lancement depuis les arguments du processus (TextEditor, CodeEditor).
-- [x] Décider texte/binaire sur le contenu (`HackTextContent`).
+- [x] Décider texte/binaire sur le contenu (`KazoTextContent`).
 - [x] Enregistrer sous vers un nouveau fichier.
 - [x] Dialogues Ouvrir/Enregistrer : double-clic, mise en page dans la fenêtre.

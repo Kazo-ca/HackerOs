@@ -21,9 +21,9 @@ public sealed class WebSiteDatabaseTests
 {
     private const string SiteId = "org.example.wiki";
 
-    private static readonly HackWebDbSchemaDefinition Schema = new(1,
+    private static readonly KazoWebDbSchemaDefinition Schema = new(1,
     [
-        new HackWebDbMigrationStep(1, [new HackWebDbStoreDefinition("notes", "id", true, [])], [], [], [])
+        new KazoWebDbMigrationStep(1, [new KazoWebDbStoreDefinition("notes", "id", true, [])], [], [], [])
     ]);
 
     private static AppManifest Manifest(string id, AppKind kind) => new()
@@ -35,13 +35,13 @@ public sealed class WebSiteDatabaseTests
         Description = id,
         Kind = kind,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", $"{id}.EntryPoint"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None
     };
 
-    private static HackWebDbRequest Add(string json) =>
-        new(1, ["notes"], true, [new HackWebDbOperation(HackWebDbOperationKinds.Add, "notes", null, null, null, null, json)]);
+    private static KazoWebDbRequest Add(string json) =>
+        new(1, ["notes"], true, [new KazoWebDbOperation(KazoWebDbOperationKinds.Add, "notes", null, null, null, null, json)]);
 
     [Fact]
     public async Task A_web_app_gets_the_database_named_after_its_id_and_nothing_else()
@@ -54,7 +54,7 @@ public sealed class WebSiteDatabaseTests
 
         Assert.Equal("hackweb.org.example.wiki", gateway.DatabaseName);
         Assert.Equal("1", keys[0]);
-        HackWebSiteDatabaseInfo info = Assert.Single(await store.ListAsync());
+        KazoWebSiteDatabaseInfo info = Assert.Single(await store.ListAsync());
         Assert.Equal("hackweb.org.example.wiki", info.Name);
         Assert.Equal(SiteId, info.AppId);
         Assert.Equal(1, info.Version);

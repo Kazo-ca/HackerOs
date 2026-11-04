@@ -111,7 +111,7 @@ public sealed class WindowKeyboardCommands : IDisposable
         _runtime = runtime ?? throw new ArgumentNullException(nameof(runtime));
         _settings = settings;
         _logger = (ILogger?)logger ?? NullLogger.Instance;
-        _text = Strings.For(() => locale?.Culture ?? HackLocale.DefaultLanguage);
+        _text = Strings.For(() => locale?.Culture ?? KazoLocale.DefaultLanguage);
     }
 
     /// <summary>Raised when the mode, the switcher, the menu or the active bindings changed.</summary>

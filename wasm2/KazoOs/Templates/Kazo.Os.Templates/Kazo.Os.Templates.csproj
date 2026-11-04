@@ -11,13 +11,13 @@
       hackeros-host      Blazor WebAssembly host running Kazo.Os.Ecosystem.Host with the base apps
       hackeros-solution  a whole app repository (ADR 0176, ADR 0207): app, host, tests, Kazo OS
                          submodule (sources in Debug, packages in Release), CI and the Hack Store
-                         publishing workflow. Its projects take $(HackerOsVersion) from the submodule.
+                         publishing workflow. Its projects take $(KazoOsVersion) from the submodule.
 
     Each template has .template.config/ide.host.json (icon, parameter labels) for Visual Studio and
     Rider (ADR 0176 §7).
 
-    Each template project declares <HackerOsVersion>0.0.0-dev</HackerOsVersion>; packing stages
-    content/ under obj/ and writes this repository's $(HackerOsVersion) there, so a generated
+    Each template project declares <KazoOsVersion>0.0.0-dev</KazoOsVersion>; packing stages
+    content/ under obj/ and writes this repository's $(KazoOsVersion) there, so a generated
     project references exactly the packages packed with it. The content is never compiled here.
     Tests/Kazo.Os.Templates.E2E.Tests runs dotnet new and dotnet build for each one against the
     local feed.
@@ -40,27 +40,27 @@
     <EnableTrimAnalyzer>false</EnableTrimAnalyzer>
     <!-- No assembly, so nothing for the public API analyzer to track. -->
     <NoWarn>$(NoWarn);NU5128;NU5100;RS0016;RS0017;RS0037</NoWarn>
-    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_HackerOsPackTemplates</TargetsForTfmSpecificContentInPackage>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_KazoOsPackTemplates</TargetsForTfmSpecificContentInPackage>
   </PropertyGroup>
 
   <ItemGroup>
-    <_HackerOsTemplateSource Include="content/**" Exclude="content/**/bin/**;content/**/obj/**" />
-    <None Include="@(_HackerOsTemplateSource)" />
+    <_KazoOsTemplateSource Include="content/**" Exclude="content/**/bin/**;content/**/obj/**" />
+    <None Include="@(_KazoOsTemplateSource)" />
   </ItemGroup>
 
-  <Target Name="_HackerOsPackTemplates">
+  <Target Name="_KazoOsPackTemplates">
     <PropertyGroup>
-      <_HackerOsTemplateStage>$([MSBuild]::NormalizeDirectory('$(MSBuildProjectDirectory)', '$(IntermediateOutputPath)', 'template-content'))</_HackerOsTemplateStage>
+      <_KazoOsTemplateStage>$([MSBuild]::NormalizeDirectory('$(MSBuildProjectDirectory)', '$(IntermediateOutputPath)', 'template-content'))</_KazoOsTemplateStage>
     </PropertyGroup>
-    <RemoveDir Directories="$(_HackerOsTemplateStage)" />
-    <Copy SourceFiles="@(_HackerOsTemplateSource)" DestinationFiles="@(_HackerOsTemplateSource->'$(_HackerOsTemplateStage)%(RecursiveDir)%(Filename)%(Extension)')" />
+    <RemoveDir Directories="$(_KazoOsTemplateStage)" />
+    <Copy SourceFiles="@(_KazoOsTemplateSource)" DestinationFiles="@(_KazoOsTemplateSource->'$(_KazoOsTemplateStage)%(RecursiveDir)%(Filename)%(Extension)')" />
     <ItemGroup>
-      <_HackerOsStagedProject Include="$(_HackerOsTemplateStage)**/*.csproj" />
+      <_KazoOsStagedProject Include="$(_KazoOsTemplateStage)**/*.csproj" />
     </ItemGroup>
-    <XmlPoke XmlInputPath="%(_HackerOsStagedProject.Identity)" Query="/Project/PropertyGroup/HackerOsVersion" Value="$(HackerOsVersion)" />
+    <XmlPoke XmlInputPath="%(_KazoOsStagedProject.Identity)" Query="/Project/PropertyGroup/KazoOsVersion" Value="$(KazoOsVersion)" />
     <ItemGroup>
-      <_HackerOsStagedFile Include="$(_HackerOsTemplateStage)**" />
-      <TfmSpecificPackageFile Include="@(_HackerOsStagedFile)" PackagePath="content/%(RecursiveDir)%(Filename)%(Extension)" />
+      <_KazoOsStagedFile Include="$(_KazoOsTemplateStage)**" />
+      <TfmSpecificPackageFile Include="@(_KazoOsStagedFile)" PackagePath="content/%(RecursiveDir)%(Filename)%(Extension)" />
     </ItemGroup>
   </Target>
 

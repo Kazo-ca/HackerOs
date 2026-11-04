@@ -65,7 +65,7 @@ public sealed class WindowAppBaseTests
         app.InvokeInitialized();
         TaskCompletionSource draft = new(TaskCreationOptions.RunContinuationsAsynchronously);
         app.StopWork = draft.Task;
-        Kazo.Os.AppSdk.Diagnostics.HackStopRequestedEventArgs request = new(
+        Kazo.Os.AppSdk.Diagnostics.KazoStopRequestedEventArgs request = new(
             ProcessExitReason.Terminated, DateTimeOffset.UnixEpoch, DateTimeOffset.UnixEpoch.AddSeconds(5));
 
         context.RaiseStopRequested(request);
@@ -239,7 +239,7 @@ public sealed class WindowAppBaseTests
         Description = "Window App SDK test component.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.AppSdk.Blazor.Tests", "TestWindowApp"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None
     };
@@ -271,7 +271,7 @@ public sealed class WindowAppBaseTests
             Description = "Window App SDK test component.",
             Kind = kind,
             EntryPoint = new AppEntryPointManifest("Kazo.Os.AppSdk.Blazor.Tests", "TestWindowApp"),
-            SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+            SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
             Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
             Resources = AppResourceProfileManifest.None
         };
@@ -330,9 +330,9 @@ public sealed class WindowAppBaseTests
 
         public Task StopWork { get; set; } = Task.CompletedTask;
 
-        public Kazo.Os.AppSdk.Diagnostics.HackStopRequestedEventArgs? HeardRequest { get; private set; }
+        public Kazo.Os.AppSdk.Diagnostics.KazoStopRequestedEventArgs? HeardRequest { get; private set; }
 
-        protected override Task OnAppStopRequestedAsync(Kazo.Os.AppSdk.Diagnostics.HackStopRequestedEventArgs e)
+        protected override Task OnAppStopRequestedAsync(Kazo.Os.AppSdk.Diagnostics.KazoStopRequestedEventArgs e)
         {
             HeardRequest = e;
             return StopWork;
@@ -434,17 +434,17 @@ public sealed class WindowAppBaseTests
 
     private sealed class TestExecutionContext(AppManifest manifest) : IAppExecutionContext
     {
-        private EventHandler<Kazo.Os.AppSdk.Diagnostics.HackStopRequestedEventArgs>? _stopRequested;
+        private EventHandler<Kazo.Os.AppSdk.Diagnostics.KazoStopRequestedEventArgs>? _stopRequested;
 
         public FakePermissionErrorGateway PermissionErrorsGateway { get; } = new();
 
-        public event EventHandler<Kazo.Os.AppSdk.Diagnostics.HackStopRequestedEventArgs>? StopRequested
+        public event EventHandler<Kazo.Os.AppSdk.Diagnostics.KazoStopRequestedEventArgs>? StopRequested
         {
             add => _stopRequested += value;
             remove => _stopRequested -= value;
         }
 
-        public void RaiseStopRequested(Kazo.Os.AppSdk.Diagnostics.HackStopRequestedEventArgs request) =>
+        public void RaiseStopRequested(Kazo.Os.AppSdk.Diagnostics.KazoStopRequestedEventArgs request) =>
             _stopRequested?.Invoke(this, request);
 
         public AppManifest Manifest { get; } = manifest;

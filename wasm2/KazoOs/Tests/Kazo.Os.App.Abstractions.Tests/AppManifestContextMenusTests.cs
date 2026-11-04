@@ -156,7 +156,7 @@ public sealed class AppManifestContextMenusTests
         Description = "Zips files.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Example.Zipper", "Example.Zipper.ZipperApp"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("tools", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         Capabilities = [AppCapabilities.ShellContextMenu],

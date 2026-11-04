@@ -551,7 +551,7 @@ Kazo.Os.App.Abstractions.FileHandlerManifest.Priority.init -> void
 Kazo.Os.App.Abstractions.FileIntentAction
 Kazo.Os.App.Abstractions.FileIntentAction.Edit = 1 -> Kazo.Os.App.Abstractions.FileIntentAction
 Kazo.Os.App.Abstractions.FileIntentAction.Open = 0 -> Kazo.Os.App.Abstractions.FileIntentAction
-Kazo.Os.App.Abstractions.HackerOsSdk
+Kazo.Os.App.Abstractions.KazoOsSdk
 Kazo.Os.App.Abstractions.IAppIntent
 Kazo.Os.App.Abstractions.IAppIntent.IntentId.get -> string!
 Kazo.Os.App.Abstractions.IAppPlatformCapabilityRegistry
@@ -1390,12 +1390,12 @@ static Kazo.Os.App.Abstractions.FileHandler.operator !=(Kazo.Os.App.Abstractions
 static Kazo.Os.App.Abstractions.FileHandler.operator ==(Kazo.Os.App.Abstractions.FileHandler? left, Kazo.Os.App.Abstractions.FileHandler? right) -> bool
 static Kazo.Os.App.Abstractions.FileHandlerManifest.operator !=(Kazo.Os.App.Abstractions.FileHandlerManifest? left, Kazo.Os.App.Abstractions.FileHandlerManifest? right) -> bool
 static Kazo.Os.App.Abstractions.FileHandlerManifest.operator ==(Kazo.Os.App.Abstractions.FileHandlerManifest? left, Kazo.Os.App.Abstractions.FileHandlerManifest? right) -> bool
-static Kazo.Os.App.Abstractions.HackerOsSdk.IsCompatible(Kazo.Os.App.Abstractions.AppSdkCompatibilityManifest! range) -> bool
-static Kazo.Os.App.Abstractions.HackerOsSdk.IsCompatible(Kazo.Os.App.Abstractions.AppSdkCompatibilityManifest! range, Kazo.Os.App.Abstractions.SemanticVersion sdkVersion) -> bool
-static Kazo.Os.App.Abstractions.HackerOsSdk.NormalizeVersion(string? informationalVersion, System.Version? fallback) -> string!
-static Kazo.Os.App.Abstractions.HackerOsSdk.ReadVersion(System.Reflection.Assembly! assembly) -> string!
-static Kazo.Os.App.Abstractions.HackerOsSdk.SemanticVersion.get -> Kazo.Os.App.Abstractions.SemanticVersion
-static Kazo.Os.App.Abstractions.HackerOsSdk.Version.get -> string!
+static Kazo.Os.App.Abstractions.KazoOsSdk.IsCompatible(Kazo.Os.App.Abstractions.AppSdkCompatibilityManifest! range) -> bool
+static Kazo.Os.App.Abstractions.KazoOsSdk.IsCompatible(Kazo.Os.App.Abstractions.AppSdkCompatibilityManifest! range, Kazo.Os.App.Abstractions.SemanticVersion sdkVersion) -> bool
+static Kazo.Os.App.Abstractions.KazoOsSdk.NormalizeVersion(string? informationalVersion, System.Version? fallback) -> string!
+static Kazo.Os.App.Abstractions.KazoOsSdk.ReadVersion(System.Reflection.Assembly! assembly) -> string!
+static Kazo.Os.App.Abstractions.KazoOsSdk.SemanticVersion.get -> Kazo.Os.App.Abstractions.SemanticVersion
+static Kazo.Os.App.Abstractions.KazoOsSdk.Version.get -> string!
 static Kazo.Os.App.Abstractions.LaunchAppIntent.operator !=(Kazo.Os.App.Abstractions.LaunchAppIntent? left, Kazo.Os.App.Abstractions.LaunchAppIntent? right) -> bool
 static Kazo.Os.App.Abstractions.LaunchAppIntent.operator ==(Kazo.Os.App.Abstractions.LaunchAppIntent? left, Kazo.Os.App.Abstractions.LaunchAppIntent? right) -> bool
 static Kazo.Os.App.Abstractions.LocalizationManifest.operator !=(Kazo.Os.App.Abstractions.LocalizationManifest? left, Kazo.Os.App.Abstractions.LocalizationManifest? right) -> bool

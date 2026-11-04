@@ -11,7 +11,7 @@ Comme `polkit` sous Linux, l'app ne voit jamais le mot de passe (ADR 0055,
 section 5) :
 
 1. l'app appelle une API du SDK, sans identifiants (par exemple
-   `HackAppManagement.UninstallAsync(id, HackInstallScope.Machine)`) ;
+   `KazoAppManagement.UninstallAsync(id, KazoInstallScope.Machine)`) ;
 2. la passerelle vérifie la capacité (`apps.manage`), puis demande à l'agent de
    confirmer un administrateur ;
 3. l'agent affiche sa propre fenêtre, dessinée par la plateforme au-dessus de
@@ -21,7 +21,7 @@ section 5) :
    (ADR 0042), et l'issue est écrite dans `/var/log/auth.log` ;
 5. si un administrateur s'est authentifié, l'OS fait l'opération lui-même, dans
    un contexte système audité ; sinon la passerelle lève
-   `HackUnauthorizedAccessException`.
+   `KazoUnauthorizedAccessException`.
 
 Un processus lancé par `sudo` (`IsRootElevated`) agit déjà en root : l'agent ne
 demande rien et le journal porte `via=sudo`.
@@ -92,7 +92,7 @@ AdministratorAuthenticationResult auth = await agent.AuthenticateAsync(
     cancellationToken);
 if (!auth.Succeeded)
 {
-    throw new HackUnauthorizedAccessException($"Administrator authentication failed ({auth.FailureReason}).");
+    throw new KazoUnauthorizedAccessException($"Administrator authentication failed ({auth.FailureReason}).");
 }
 // L'OS agit ensuite lui-même, en contexte système.
 ```
@@ -115,7 +115,7 @@ par `AdministratorGate` (`Platform/Kazo.Os.Platform.Core/Administration`) :
 - **Mode texte du terminal non couvert ici.** L'ADR 0055 demande une saisie en
   mode texte quand l'opération part d'un terminal. Le terminal ne dispose pas
   encore d'une invite d'identifiants fournie par l'appelant : elle arrive avec
-  `HackCredentialPrompt` (chantier `4-sdk-shell-host`). D'ici là, une commande
+  `KazoCredentialPrompt` (chantier `4-sdk-shell-host`). D'ici là, une commande
   qui demande un administrateur voit la fenêtre du bureau, et `sudo` reste le
   moyen texte d'agir en root.
 
@@ -136,6 +136,6 @@ par `AdministratorGate` (`Platform/Kazo.Os.Platform.Core/Administration`) :
 - [x] Contrats et implémentation de l'agent dans Platform Core.
 - [x] Courtier et fenêtre dans Platform Blazor, rendus par les deux shells.
 - [x] Enregistrement dans l'hôte Ecosystem et passage à la fabrique de contextes.
-- [x] Utilisation par `HackAppManagement` pour la portée machine.
+- [x] Utilisation par `KazoAppManagement` pour la portée machine.
 - [x] Tests et documentation.
-- [ ] Mode texte dans le terminal (avec `HackCredentialPrompt`, `4-sdk-shell-host`).
+- [ ] Mode texte dans le terminal (avec `KazoCredentialPrompt`, `4-sdk-shell-host`).

@@ -140,7 +140,7 @@ public sealed class TopCommand(AppManifest manifest) : TerminalAppBase(manifest)
         TerminalExecutionContext context, SystemSnapshot snapshot, SystemSnapshot? previous, string? user, string sort, int rows, int columns)
     {
         DateTimeOffset now = context.App.Clock.UtcNow;
-        IReadOnlyList<HackProcess> processes = snapshot.Processes;
+        IReadOnlyList<KazoProcess> processes = snapshot.Processes;
         int running = processes.Count(p => p.StateCode == 'R');
         int stopped = processes.Count(p => p.StateCode == 'T');
         int zombie = processes.Count(p => p.StateCode == 'Z');
@@ -164,7 +164,7 @@ public sealed class TopCommand(AppManifest manifest) : TerminalAppBase(manifest)
             "    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND"
         ];
 
-        IEnumerable<HackProcess> shown = processes.Where(p => user is null || p.UserName == user || p.UserId == user);
+        IEnumerable<KazoProcess> shown = processes.Where(p => user is null || p.UserName == user || p.UserId == user);
         shown = sort switch
         {
             "mem" or "res" => shown.OrderByDescending(p => p.WorkingSet64),
@@ -173,7 +173,7 @@ public sealed class TopCommand(AppManifest manifest) : TerminalAppBase(manifest)
             _ => shown.OrderByDescending(p => p.CpuUsage).ThenBy(p => p.Id)
         };
 
-        foreach (HackProcess process in shown)
+        foreach (KazoProcess process in shown)
         {
             if (lines.Count >= rows)
             {

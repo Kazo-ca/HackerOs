@@ -16,7 +16,7 @@ namespace Kazo.Os.UI.E2E.Tests;
 /// real OS of an old commit (procedure: <c>doc/en/wasm/dev/building-and-testing.md</c>). The test recreates
 /// that database with raw <c>indexedDB.open(name, oldVersion)</c> from a page of the harness
 /// origin that does not boot Blazor, so the old database exists, at its old version, before the
-/// current OS opens it with <c>HackerOsIndexedDbSchema.CurrentVersion</c> and runs its
+/// current OS opens it with <c>KazoOsIndexedDbSchema.CurrentVersion</c> and runs its
 /// migration plan, exactly as on a returning player's browser.
 /// </para>
 /// <para>

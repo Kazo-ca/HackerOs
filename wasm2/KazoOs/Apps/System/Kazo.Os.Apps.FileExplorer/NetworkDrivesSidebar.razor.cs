@@ -7,13 +7,13 @@ using Microsoft.Extensions.Localization;
 namespace Kazo.Os.Apps.FileExplorer;
 
 /// <summary>
-/// Lists the network drives through <see cref="HackDriveInfo"/> and mounts, reconnects and unmounts
+/// Lists the network drives through <see cref="KazoDriveInfo"/> and mounts, reconnects and unmounts
 /// them (ADR 0181, section 11). The browser opens its folder dialog only after a user gesture, so
 /// every action runs straight from the click.
 /// </summary>
 public partial class NetworkDrivesSidebar
 {
-    private IReadOnlyList<HackDriveInfo> _drives = [];
+    private IReadOnlyList<KazoDriveInfo> _drives = [];
     private bool _supported;
     private bool _busy;
 
@@ -37,7 +37,7 @@ public partial class NetworkDrivesSidebar
     {
         try
         {
-            _supported = await HackDriveInfo.IsHostFolderSupportedAsync();
+            _supported = await KazoDriveInfo.IsHostFolderSupportedAsync();
         }
         catch (NotSupportedException)
         {
@@ -55,7 +55,7 @@ public partial class NetworkDrivesSidebar
     {
         try
         {
-            _drives = [.. (await HackDriveInfo.GetDrivesAsync()).Where(static drive => drive.DriveType == HackDriveType.Network)];
+            _drives = [.. (await KazoDriveInfo.GetDrivesAsync()).Where(static drive => drive.DriveType == KazoDriveType.Network)];
         }
         catch (NotSupportedException)
         {
@@ -63,21 +63,21 @@ public partial class NetworkDrivesSidebar
         }
     }
 
-    private bool IsCurrent(HackDriveInfo drive) =>
+    private bool IsCurrent(KazoDriveInfo drive) =>
         CurrentPath is { } path && (path == drive.Name || path.StartsWith(drive.Name + "/", StringComparison.Ordinal));
 
     private Task MountAsync() => RunAsync(async () =>
     {
-        if (await HackDriveInfo.MountHostFolderAsync() is { } drive)
+        if (await KazoDriveInfo.MountHostFolderAsync() is { } drive)
         {
             await ReloadAsync();
             await Navigate.InvokeAsync(drive.Name);
         }
     });
 
-    private Task OpenAsync(HackDriveInfo drive) => RunAsync(async () =>
+    private Task OpenAsync(KazoDriveInfo drive) => RunAsync(async () =>
     {
-        if (!drive.IsReady && !await HackDriveInfo.ReconnectAsync(drive.Name))
+        if (!drive.IsReady && !await KazoDriveInfo.ReconnectAsync(drive.Name))
         {
             await Failed.InvokeAsync(L["Network.PermissionRefused", drive.VolumeLabel]);
             return;
@@ -87,14 +87,14 @@ public partial class NetworkDrivesSidebar
         await Navigate.InvokeAsync(drive.Name);
     });
 
-    private Task UnmountAsync(HackDriveInfo drive) => RunAsync(async () =>
+    private Task UnmountAsync(KazoDriveInfo drive) => RunAsync(async () =>
     {
         bool inside = IsCurrent(drive);
-        await HackDriveInfo.UnmountAsync(drive.Name);
+        await KazoDriveInfo.UnmountAsync(drive.Name);
         await ReloadAsync();
         if (inside)
         {
-            await Navigate.InvokeAsync(HackUser.Describe(AppContext!).HomeDirectory);
+            await Navigate.InvokeAsync(KazoUser.Describe(AppContext!).HomeDirectory);
         }
     });
 

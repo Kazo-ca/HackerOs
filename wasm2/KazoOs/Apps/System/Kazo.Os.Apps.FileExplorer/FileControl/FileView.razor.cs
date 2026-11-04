@@ -63,14 +63,14 @@ public partial class FileView : IAsyncDisposable
     [Parameter]
     public IAppFileSystemWatchGateway? Watch { get; set; }
 
-    // The app this view belongs to is HackComponentBase.AppContext, cascaded by the window host: its
+    // The app this view belongs to is KazoComponentBase.AppContext, cascaded by the window host: its
     // process's language is the language of the view's texts (ADR 0104), and the view's handlers run
     // in its frame (ADR 0161 §1). Without one, the ambient app's language applies.
 
     /// <summary>Gets the library's texts in the owning app's language, shared by the mode renderers.</summary>
     internal Microsoft.Extensions.Localization.IStringLocalizer<Strings> L => AppContext is { } context
-        ? Kazo.Os.AppSdk.Globalization.HackLocalization.GetLocalizer<Strings>(context)
-        : Kazo.Os.AppSdk.Globalization.HackLocalization.GetLocalizer<Strings>();
+        ? Kazo.Os.AppSdk.Globalization.KazoLocalization.GetLocalizer<Strings>(context)
+        : Kazo.Os.AppSdk.Globalization.KazoLocalization.GetLocalizer<Strings>();
 
     /// <summary>Optional scoped intent access, required only when <see cref="FolderActivation"/> is <see cref="FileViewFolderActivationMode.NewWindow"/>.</summary>
     [Parameter]
@@ -182,7 +182,7 @@ public partial class FileView : IAsyncDisposable
 
     /// <summary>
     /// Paths currently cut to the clipboard: their items are shown dimmed until the paste (a cut
-    /// removes nothing by itself). Set by the host from <c>HackClipboard</c>.
+    /// removes nothing by itself). Set by the host from <c>KazoClipboard</c>.
     /// </summary>
     [Parameter]
     public IReadOnlyCollection<string>? CutPaths { get; set; }
@@ -205,7 +205,7 @@ public partial class FileView : IAsyncDisposable
 
     /// <summary>
     /// Gets or sets whether a tap (a single click) opens the item, as in a phone's file manager: set from
-    /// <c>HackFileView.OpenOnTap</c> (ADR 0171 §2). Off by default: a click selects, a double click opens.
+    /// <c>KazoFileView.OpenOnTap</c> (ADR 0171 §2). Off by default: a click selects, a double click opens.
     /// </summary>
     internal bool TapOpens { get; set; }
 
@@ -1010,7 +1010,7 @@ public partial class FileView : IAsyncDisposable
                 FileSystemResult<FileSystemEntrySnapshot> stat = await FileSystem.StatAsync(new FileSystemStatRequest(entry.Path));
                 if (stat.Succeeded)
                 {
-                    resolved.Add(new FileViewItem(entry.Path, HackFileOperations.GetName(entry.Path.Value), entry.IsDirectory, stat.Value!.Metadata) { Owner = this });
+                    resolved.Add(new FileViewItem(entry.Path, KazoFileOperations.GetName(entry.Path.Value), entry.IsDirectory, stat.Value!.Metadata) { Owner = this });
                 }
             }
 
@@ -1089,7 +1089,7 @@ public partial class FileView : IAsyncDisposable
         }
 
         IReadOnlyList<string> appIds = appDrag ? ReadAppIds(await module.InvokeAsync<string?>("getDragData", AppDragMimeType)) : [];
-        (IReadOnlyList<HackHostFile> files, int token) = hostFiles ? await TakeHostFilesAsync(module) : ([], 0);
+        (IReadOnlyList<KazoHostFile> files, int token) = hostFiles ? await TakeHostFilesAsync(module) : ([], 0);
         FileViewDropRequestedEventArgs drop = new(destination, entries, files, args.CtrlKey) { HostFileToken = token, AppIds = appIds };
         if (drop.IsEmpty)
         {
@@ -1140,15 +1140,15 @@ public partial class FileView : IAsyncDisposable
     /// Takes the host files stashed by <c>FileView.razor.js</c> (by the last drop or paste), whose content
     /// is only read when imported.
     /// </summary>
-    private async Task<(IReadOnlyList<HackHostFile> Files, int Token)> TakeHostFilesAsync(IJSObjectReference module)
+    private async Task<(IReadOnlyList<KazoHostFile> Files, int Token)> TakeHostFilesAsync(IJSObjectReference module)
     {
         DroppedHostFiles dropped = await module.InvokeAsync<DroppedHostFiles>("takeDroppedFiles");
-        List<HackHostFile> files = [];
+        List<KazoHostFile> files = [];
         for (int index = 0; index < dropped.Files.Count; index++)
         {
             DroppedHostFile meta = dropped.Files[index];
             int fileIndex = index;
-            files.Add(new HackHostFile(
+            files.Add(new KazoHostFile(
                 meta.Name,
                 meta.Size,
                 string.IsNullOrEmpty(meta.Type) ? null : meta.Type,
@@ -1169,7 +1169,7 @@ public partial class FileView : IAsyncDisposable
     public async Task OnPasteShortcutAsync(bool hostFiles)
     {
         // Called from JavaScript, outside any frame: enter the app's frame first (ADR 0161 §1).
-        using IDisposable? scope = AppContext is { } context ? HackExecutionContext.Enter(context) : null;
+        using IDisposable? scope = AppContext is { } context ? KazoExecutionContext.Enter(context) : null;
         if (!hostFiles)
         {
             await RequestClipboardAsync(FileViewClipboardAction.Paste, CurrentDirectory);
@@ -1177,7 +1177,7 @@ public partial class FileView : IAsyncDisposable
         }
 
         IJSObjectReference module = await EnsureJsModuleAsync();
-        (IReadOnlyList<HackHostFile> files, int token) = await TakeHostFilesAsync(module);
+        (IReadOnlyList<KazoHostFile> files, int token) = await TakeHostFilesAsync(module);
         FileViewDropRequestedEventArgs paste = new(CurrentDirectory, [], files, copy: true) { HostFileToken = token };
         try
         {
@@ -1345,7 +1345,7 @@ public partial class FileView : IAsyncDisposable
     public async Task<string[]?> GetItemTooltipAsync(string path)
     {
         // Called from JavaScript, outside any frame: enter the app's frame first (ADR 0161 §1).
-        using IDisposable? scope = AppContext is { } context ? HackExecutionContext.Enter(context) : null;
+        using IDisposable? scope = AppContext is { } context ? KazoExecutionContext.Enter(context) : null;
         FileViewItem? item = Items.FirstOrDefault(candidate => candidate.FullPath.Value == path);
         if (item is null || item.IsRenaming)
         {

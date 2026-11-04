@@ -59,9 +59,9 @@ public sealed class HostedSiteNameSource : IHostedSiteNameSource
         await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
-            IAppFileSystemGateway root = new AppFileSystemGateway(_fileSystem, _clock, HackDnsResolver.RootOperation(), ["system"]);
-            List<(string Directory, HackWebSiteScope Scope, string? Owner, FileSystemDirectorySnapshot Listing)> directories = [];
-            await AddListingAsync(root, HackWebSiteFile.SystemSitesDirectory, HackWebSiteScope.System, null, directories, cancellationToken).ConfigureAwait(false);
+            IAppFileSystemGateway root = new AppFileSystemGateway(_fileSystem, _clock, KazoDnsResolver.RootOperation(), ["system"]);
+            List<(string Directory, KazoWebSiteScope Scope, string? Owner, FileSystemDirectorySnapshot Listing)> directories = [];
+            await AddListingAsync(root, KazoWebSiteFile.SystemSitesDirectory, KazoWebSiteScope.System, null, directories, cancellationToken).ConfigureAwait(false);
             FileSystemResult<FileSystemDirectorySnapshot> homes = await root
                 .EnumerateAsync(new FileSystemEnumerateRequest(VirtualPath.Parse("/home")), cancellationToken)
                 .ConfigureAwait(false);
@@ -69,8 +69,8 @@ public sealed class HostedSiteNameSource : IHostedSiteNameSource
             {
                 foreach (FileSystemDirectoryItem home in homes.Value!.Entries.Where(static item => item.Metadata.Kind == FileSystemEntryKind.Directory))
                 {
-                    string directory = HackWebSiteFile.GetUserSitesDirectory($"/home/{home.Name.Value}");
-                    await AddListingAsync(root, directory, HackWebSiteScope.User, home.Name.Value, directories, cancellationToken).ConfigureAwait(false);
+                    string directory = KazoWebSiteFile.GetUserSitesDirectory($"/home/{home.Name.Value}");
+                    await AddListingAsync(root, directory, KazoWebSiteScope.User, home.Name.Value, directories, cancellationToken).ConfigureAwait(false);
                 }
             }
 
@@ -82,11 +82,11 @@ public sealed class HostedSiteNameSource : IHostedSiteNameSource
             }
 
             Dictionary<string, string> names = new(StringComparer.OrdinalIgnoreCase);
-            foreach ((string directory, HackWebSiteScope scope, string? owner, FileSystemDirectorySnapshot listing) in directories)
+            foreach ((string directory, KazoWebSiteScope scope, string? owner, FileSystemDirectorySnapshot listing) in directories)
             {
                 foreach (FileSystemDirectoryItem item in listing.Entries)
                 {
-                    if (item.Metadata.Kind != FileSystemEntryKind.File || !item.Name.Value.EndsWith(HackWebSiteFile.Extension, StringComparison.Ordinal))
+                    if (item.Metadata.Kind != FileSystemEntryKind.File || !item.Name.Value.EndsWith(KazoWebSiteFile.Extension, StringComparison.Ordinal))
                     {
                         continue;
                     }
@@ -98,7 +98,7 @@ public sealed class HostedSiteNameSource : IHostedSiteNameSource
                         continue;
                     }
 
-                    HackWebSiteDeclaration declaration = HackWebSiteFile.Parse(path, read.Content, scope, owner);
+                    KazoWebSiteDeclaration declaration = KazoWebSiteFile.Parse(path, read.Content, scope, owner);
                     if (!declaration.IsServable)
                     {
                         continue;
@@ -106,7 +106,7 @@ public sealed class HostedSiteNameSource : IHostedSiteNameSource
 
                     foreach (string binding in declaration.Site!.Bindings)
                     {
-                        if (HackWebSiteFile.TryParseBinding(binding, out WebBinding parsed, out _)
+                        if (KazoWebSiteFile.TryParseBinding(binding, out WebBinding parsed, out _)
                             && !parsed.IsWildcard
                             && !parsed.IsLoopbackHost
                             && !System.Net.IPAddress.TryParse(parsed.Host, out _))
@@ -130,9 +130,9 @@ public sealed class HostedSiteNameSource : IHostedSiteNameSource
     private static async Task AddListingAsync(
         IAppFileSystemGateway root,
         string directory,
-        HackWebSiteScope scope,
+        KazoWebSiteScope scope,
         string? owner,
-        List<(string, HackWebSiteScope, string?, FileSystemDirectorySnapshot)> listings,
+        List<(string, KazoWebSiteScope, string?, FileSystemDirectorySnapshot)> listings,
         CancellationToken cancellationToken)
     {
         FileSystemResult<FileSystemDirectorySnapshot> listing = await root

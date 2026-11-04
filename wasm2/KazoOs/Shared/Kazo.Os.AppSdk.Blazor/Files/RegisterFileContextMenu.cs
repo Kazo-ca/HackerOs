@@ -17,7 +17,7 @@ namespace Kazo.Os.AppSdk.Blazor.Files;
 /// public static void RegisterFileContextMenu(RegisterFileContextMenuContext context)
 /// {
 ///     context.Register(title: "Menu.Extract", name: "extract", intent: "com.example.zip.extract.v1",
-///         types: [".zip"], selection: MenuSelection.Each, afterGroup: HackFileMenuItems.Copy);
+///         types: [".zip"], selection: MenuSelection.Each, afterGroup: KazoFileMenuItems.Copy);
 /// }
 /// </code>
 /// </example>
@@ -59,12 +59,12 @@ public sealed class RegisterFileContextMenuContext
     /// target does not declare it, the launch arguments <c>["&lt;intent&gt;", "&lt;path&gt;", …]</c>.
     /// Leave it out on an entry that opens a submenu.
     /// </param>
-    /// <param name="icon">The icon: <c>HackIcons.Vector(…)</c>, or <c>HackIcons.FromImage(…)</c> with an asset of the app.</param>
+    /// <param name="icon">The icon: <c>KazoIcons.Vector(…)</c>, or <c>KazoIcons.FromImage(…)</c> with an asset of the app.</param>
     /// <param name="scope">The menus the entry appears in; <see cref="FileMenuScope.File"/> by default, the parent's for a child entry.</param>
     /// <param name="types">Extensions (<c>.zip</c>), media types (<c>application/zip</c>), families (<c>image/*</c>) or <c>*</c>; every type when left out.</param>
     /// <param name="selection">How a selection of several items is handled.</param>
     /// <param name="first">Puts the entry in the shared group at the top of the menu.</param>
-    /// <param name="after">Puts the entry right after this id, in its group (<see cref="HackFileMenuItems"/> or an entry of the app).</param>
+    /// <param name="after">Puts the entry right after this id, in its group (<see cref="KazoFileMenuItems"/> or an entry of the app).</param>
     /// <param name="afterGroup">Puts the entry in a new group right after the group of this id.</param>
     /// <param name="parent">Puts the entry in the submenu of this entry of the app (three levels at most).</param>
     public void Register(
@@ -72,7 +72,7 @@ public sealed class RegisterFileContextMenuContext
         string name,
         string target = AppContextMenus.SelfTarget,
         string? intent = null,
-        HackIcon? icon = null,
+        KazoIcon? icon = null,
         FileMenuScope scope = FileMenuScope.None,
         IReadOnlyList<string>? types = null,
         MenuSelection selection = MenuSelection.All,
@@ -193,7 +193,7 @@ public sealed class RegisterFileContextMenuContext
             : entry.Scopes;
     }
 
-    private static AppContextMenuIconManifest ToManifest(HackIcon icon) => icon.Kind == HackIconKind.Vector
+    private static AppContextMenuIconManifest ToManifest(KazoIcon icon) => icon.Kind == KazoIconKind.Vector
         ? new AppContextMenuIconManifest(AppContextMenus.VectorIcon, icon.Source, icon.Library.ToString().ToLowerInvariant())
         : new AppContextMenuIconManifest(AppContextMenus.ImageIcon, icon.Source);
 }

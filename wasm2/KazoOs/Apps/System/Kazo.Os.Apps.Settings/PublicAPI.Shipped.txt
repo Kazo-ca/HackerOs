@@ -38,7 +38,7 @@ Kazo.Os.Apps.Settings.LanguagePanel
 Kazo.Os.Apps.Settings.LanguagePanel.LanguagePanel() -> void
 Kazo.Os.Apps.Settings.LocalServerPanel
 Kazo.Os.Apps.Settings.LocalServerPanel.LocalServerPanel() -> void
-Kazo.Os.Apps.Settings.LocalServerPanel.OnPaired.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.AppSdk.Administration.HackServerConnectionState!>
+Kazo.Os.Apps.Settings.LocalServerPanel.OnPaired.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.AppSdk.Administration.KazoServerConnectionState!>
 Kazo.Os.Apps.Settings.LocalServerPanel.OnPaired.set -> void
 Kazo.Os.Apps.Settings.MemoryPanel
 Kazo.Os.Apps.Settings.MemoryPanel.DisposeAsync() -> System.Threading.Tasks.ValueTask
@@ -125,7 +125,7 @@ override Kazo.Os.Apps.Settings.SettingsApp.Resources.get -> Kazo.Os.App.Abstract
 override Kazo.Os.Apps.Settings.SettingsApp.SingleInstancePerUser.get -> bool
 override Kazo.Os.Apps.Settings.SettingsWindow.OnAppAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
 override Kazo.Os.Apps.Settings.SettingsWindow.OnAppInitializedAsync() -> System.Threading.Tasks.Task!
-override Kazo.Os.Apps.Settings.SettingsWindow.OnAppStopRequestedAsync(Kazo.Os.AppSdk.Diagnostics.HackStopRequestedEventArgs! e) -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.Settings.SettingsWindow.OnAppStopRequestedAsync(Kazo.Os.AppSdk.Diagnostics.KazoStopRequestedEventArgs! e) -> System.Threading.Tasks.Task!
 override Kazo.Os.Apps.Settings.SettingsWindow.OnIntentReceivedAsync(Kazo.Os.App.Abstractions.AppIntentDelivery! intent) -> System.Threading.Tasks.Task!
 override Kazo.Os.Apps.Settings.SettingsWindow.OnWindowActivatedAsync() -> System.Threading.Tasks.Task!
 override Kazo.Os.Apps.Settings.UsersPanel.OnInitializedAsync() -> System.Threading.Tasks.Task!

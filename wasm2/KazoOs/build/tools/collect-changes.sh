@@ -20,7 +20,7 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-version="$(sed -n 's:.*<HackerOsVersion>\(.*\)</HackerOsVersion>.*:\1:p' "$root/build/Versions.props")"
+version="$(sed -n 's:.*<KazoOsVersion>\(.*\)</KazoOsVersion>.*:\1:p' "$root/build/Versions.props")"
 tool=(dotnet run --project "$root/Tools/Kazo.Os.Tools.ChangeList/Kazo.Os.Tools.ChangeList.csproj" -c Release --)
 
 if $collect; then

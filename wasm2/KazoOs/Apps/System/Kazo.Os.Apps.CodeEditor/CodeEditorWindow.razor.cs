@@ -92,7 +92,7 @@ public partial class CodeEditorWindow
         _recoveryStore = new CodeEditorRecoveryStore(
             AppContext.FileSystem,
             AppContext.UserId,
-            HackUser.Describe(AppContext).HomeDirectory);
+            KazoUser.Describe(AppContext).HomeDirectory);
         _editorSyncRequired = true;
     }
 
@@ -137,7 +137,7 @@ public partial class CodeEditorWindow
             {
                 // ADR 0105: Monaco draws its own text, so it takes the session's accessibility
                 // preferences (high-contrast theme, text size, steady cursor) itself.
-                HackAccessibilityPreferences accessibility = await AppContext.Accessibility.GetPreferencesAsync(AppContext.CancellationToken);
+                KazoAccessibilityPreferences accessibility = await AppContext.Accessibility.GetPreferencesAsync(AppContext.CancellationToken);
                 _dotNetReference = DotNetObjectReference.Create(this);
                 _module = await JavaScript.InvokeAsync<IJSObjectReference>(
                     "import", "./_content/Kazo.Os.Apps.CodeEditor/CodeEditorWindow.razor.js");
@@ -214,7 +214,7 @@ public partial class CodeEditorWindow
     public async Task OnEditorChanged(string documentId, string content)
     {
         // A JavaScript callback runs outside the app's ambient frame (ADR 0043, 0067): enter it first.
-        using IDisposable scope = HackExecutionContext.Enter(AppContext);
+        using IDisposable scope = KazoExecutionContext.Enter(AppContext);
         CodeEditorDocument? document = FindDocument(documentId);
         if (document is null)
         {
@@ -240,7 +240,7 @@ public partial class CodeEditorWindow
     public Task OnDirtyChanged(string documentId, bool dirty)
     {
         // A JavaScript callback runs outside the app's ambient frame (ADR 0043, 0067): enter it first.
-        using IDisposable scope = HackExecutionContext.Enter(AppContext);
+        using IDisposable scope = KazoExecutionContext.Enter(AppContext);
         if (FindDocument(documentId) is { } document)
         {
             _dirtyReports[document.Id] = dirty;
@@ -256,7 +256,7 @@ public partial class CodeEditorWindow
     public Task OnCursorChanged(int line, int column, int selectedLength)
     {
         // A JavaScript callback runs outside the app's ambient frame (ADR 0043, 0067): enter it first.
-        using IDisposable scope = HackExecutionContext.Enter(AppContext);
+        using IDisposable scope = KazoExecutionContext.Enter(AppContext);
         _cursorStatus?.Update(line, column, selectedLength);
         return Task.CompletedTask;
     }
@@ -266,7 +266,7 @@ public partial class CodeEditorWindow
     public async Task OnShortcut(string name)
     {
         // A JavaScript callback runs outside the app's ambient frame (ADR 0043, 0067): enter it first.
-        using IDisposable scope = HackExecutionContext.Enter(AppContext);
+        using IDisposable scope = KazoExecutionContext.Enter(AppContext);
         switch (name)
         {
             case "save": await SaveActiveAsync(); break;
@@ -608,7 +608,7 @@ public partial class CodeEditorWindow
     private async Task OpenFolderAsync()
     {
         VirtualPath initialDirectory = _workspace?.Root ?? VirtualPath.Parse(
-            HackUser.Describe(AppContext).HomeDirectory);
+            KazoUser.Describe(AppContext).HomeDirectory);
         SelectFolderDialogResult result = await base.SelectFolderAsync(new SelectFolderDialogRequest
         {
             Title = L["Dialog.OpenFolder"],
@@ -796,7 +796,7 @@ public partial class CodeEditorWindow
     private TerminalTab AddTerminalTab(string? directory = null)
     {
         _terminalTabCounter++;
-        var tab = new TerminalTab($"terminal-{_terminalTabCounter}", _terminalTabCounter, new HackTerminalOptions
+        var tab = new TerminalTab($"terminal-{_terminalTabCounter}", _terminalTabCounter, new KazoTerminalOptions
         {
             WorkingDirectory = directory ?? TerminalInitialCwd(),
             ShowBanner = false
@@ -871,7 +871,7 @@ public partial class CodeEditorWindow
     {
         try
         {
-            HackTerminalCommandResult result = await terminal.SetWorkingDirectoryAsync(directory);
+            KazoTerminalCommandResult result = await terminal.SetWorkingDirectoryAsync(directory);
             if (result.ExitStatus != 0)
             {
                 SetStatus(L["Status.TerminalCd", directory], isError: true);
@@ -896,12 +896,12 @@ public partial class CodeEditorWindow
 
     /// <summary>New terminals start in the open folder, as VS Code's integrated terminal does.</summary>
     private string TerminalInitialCwd() =>
-        _workspace?.Root.Value ?? HackUser.Describe(AppContext).HomeDirectory;
+        _workspace?.Root.Value ?? KazoUser.Describe(AppContext).HomeDirectory;
 
     private void ClearStatusLog() => _statusLog.Clear();
 
     /// <summary>A terminal tab of the dock and the controller its embedded component handed over.</summary>
-    private sealed class TerminalTab(string id, int number, HackTerminalOptions options)
+    private sealed class TerminalTab(string id, int number, KazoTerminalOptions options)
     {
         private Action? _onChanged;
         private Action? _onExited;
@@ -911,7 +911,7 @@ public partial class CodeEditorWindow
         public int Number { get; } = number;
 
         /// <summary>Gets the options, created once so the embedded terminal is not re-created.</summary>
-        public HackTerminalOptions Options { get; } = options;
+        public KazoTerminalOptions Options { get; } = options;
 
         public IHackTerminal? Terminal { get; private set; }
 
@@ -990,7 +990,7 @@ public partial class CodeEditorWindow
     /// debounced snapshot is written at once, so the last edits survive in the recovery file the next
     /// start restores, instead of being lost with the window. Nothing is written when no tab is dirty.
     /// </summary>
-    protected override async Task OnAppStopRequestedAsync(Kazo.Os.AppSdk.Diagnostics.HackStopRequestedEventArgs e)
+    protected override async Task OnAppStopRequestedAsync(Kazo.Os.AppSdk.Diagnostics.KazoStopRequestedEventArgs e)
     {
         _recoveryDebounce?.Cancel();
         if (_recoveryClearedOnClose || !_session.Documents.Any(document => document.IsDirty))
@@ -1230,7 +1230,7 @@ public partial class CodeEditorWindow
 
         try
         {
-            HackAccessibilityPreferences preferences = await AppContext.Accessibility.GetPreferencesAsync(CancellationToken.None);
+            KazoAccessibilityPreferences preferences = await AppContext.Accessibility.GetPreferencesAsync(CancellationToken.None);
             await editor.InvokeVoidAsync("setAccessibility", new
             {
                 highContrast = preferences.HighContrast,

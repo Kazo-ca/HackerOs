@@ -7,14 +7,14 @@ namespace Kazo.Os.Apps.Settings.Tests;
 /// <summary>Settings &gt; Default applications builds its rows from the apps and both layers (ADR 0121, section 4).</summary>
 public sealed class FileAssociationsPanelTests
 {
-    private static readonly HackAppInfo Notepad = Window("org.hackeros.notepad", "Notepad",
-        new HackAppFileHandler("text/plain", [".txt"], ["open", "edit"]));
+    private static readonly KazoAppInfo Notepad = Window("org.hackeros.notepad", "Notepad",
+        new KazoAppFileHandler("text/plain", [".txt"], ["open", "edit"]));
 
-    private static readonly HackAppInfo Editor = Window("org.hackeros.text-editor", "Text Editor",
-        new HackAppFileHandler("text/plain", [".TXT", ".log"], ["open"]));
+    private static readonly KazoAppInfo Editor = Window("org.hackeros.text-editor", "Text Editor",
+        new KazoAppFileHandler("text/plain", [".TXT", ".log"], ["open"]));
 
-    private static readonly HackAppInfo Browser = Window("org.hackeros.browser", "Browser",
-        new HackAppFileHandler("x-scheme-handler/https", [], ["open"]));
+    private static readonly KazoAppInfo Browser = Window("org.hackeros.browser", "Browser",
+        new KazoAppFileHandler("x-scheme-handler/https", [], ["open"]));
 
     [Fact]
     public void Rows_list_extensions_then_media_types_then_schemes_with_their_candidates_by_name()
@@ -34,8 +34,8 @@ public sealed class FileAssociationsPanelTests
         IReadOnlyList<FileAssociationRow> rows = FileAssociationsPanel.BuildRows(
             [Notepad, Editor],
             [
-                new HackFileAssociation(".txt", "open", Editor.Id, HackFileAssociationLayer.User),
-                new HackFileAssociation(".txt", "open", Notepad.Id, HackFileAssociationLayer.System)
+                new KazoFileAssociation(".txt", "open", Editor.Id, KazoFileAssociationLayer.User),
+                new KazoFileAssociation(".txt", "open", Notepad.Id, KazoFileAssociationLayer.System)
             ]);
 
         FileAssociationRow txt = rows.Single(row => row.Key == ".txt|open");
@@ -49,7 +49,7 @@ public sealed class FileAssociationsPanelTests
     {
         IReadOnlyList<FileAssociationRow> rows = FileAssociationsPanel.BuildRows(
             [Notepad, Editor],
-            [new HackFileAssociation(".log", "open", "org.example.uninstalled", HackFileAssociationLayer.User)]);
+            [new KazoFileAssociation(".log", "open", "org.example.uninstalled", KazoFileAssociationLayer.User)]);
 
         FileAssociationRow log = rows.Single(row => row.Key == ".log|open");
         Assert.Null(log.UserAppId);
@@ -60,11 +60,11 @@ public sealed class FileAssociationsPanelTests
     [Fact]
     public void Apps_that_are_not_windows_are_not_candidates()
     {
-        HackAppInfo command = Notepad with { Id = "org.hackeros.commands.cat", Name = "cat", Kind = AppKind.Terminal };
+        KazoAppInfo command = Notepad with { Id = "org.hackeros.commands.cat", Name = "cat", Kind = AppKind.Terminal };
 
         Assert.Empty(FileAssociationsPanel.BuildRows([command], []));
     }
 
-    private static HackAppInfo Window(string id, string name, params HackAppFileHandler[] handlers) =>
+    private static KazoAppInfo Window(string id, string name, params KazoAppFileHandler[] handlers) =>
         new(id, name, name, AppKind.Window, "test", null, "1.0.0", "pub.test", false, false, handlers);
 }

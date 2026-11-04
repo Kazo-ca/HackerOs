@@ -60,7 +60,7 @@ cible `_HackerOsAspHackRazorViews` de `build/Kazo.Os.Apps.targets` ajoute :
 - un `_ViewImports.cshtml` **racine** (fichier du SDK, `build/asp-hack/_ViewImports.cshtml`,
   lié au projet sous ce nom) : `@inherits HackRazorPage<TModel>` et les cinq
   `@inject` implicites remplacés par les helpers d'ASP.Hack ;
-- un fichier C# (`build/asp-hack/HackRazorCompat.cs`) de types **internes au
+- un fichier C# (`build/asp-hack/KazoRazorCompat.cs`) de types **internes au
   site**, aux noms qu'attend le C# généré : les attributs ci-dessus, la classe
   `HelperResult` (dérivée de `HackHelperResult`), un type vide dans chacun des
   trois espaces de noms des `using`, et les deux attributs d'assemblage que le

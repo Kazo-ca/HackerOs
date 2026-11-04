@@ -251,7 +251,7 @@ public sealed class AppEntryPointDiscoveryTests
         Description = "Discovery test application.",
         Kind = kind,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", entryTypeName),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None
     };

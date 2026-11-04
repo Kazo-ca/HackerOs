@@ -114,7 +114,7 @@ public sealed class GuestAccountServiceTests
         LocalAccountService accounts = new(_harness.Users, _harness.Groups, _harness.Audit, _harness.FileSystem, iterations: 10);
 
         await Assert.ThrowsAsync<ArgumentException>(() => accounts.CreateAsync(
-            "guest", new Kazo.Os.AppSdk.Administration.HackNewUserAccount("carol", "Carol", AppAuthority.User, NewPassword)).AsTask());
+            "guest", new Kazo.Os.AppSdk.Administration.KazoNewUserAccount("carol", "Carol", AppAuthority.User, NewPassword)).AsTask());
     }
 
     private const string NewPassword = "correct horse 42";

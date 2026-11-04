@@ -101,16 +101,16 @@ public sealed class IdentityContractTests
 
 public sealed class AccountServiceTests : IDisposable
 {
-    private readonly HackerOsServerDbContext _db;
+    private readonly KazoOsServerDbContext _db;
     private readonly AccountService _svc;
     private readonly TokenService _tokens;
 
     public AccountServiceTests()
     {
-        var options = new DbContextOptionsBuilder<HackerOsServerDbContext>()
+        var options = new DbContextOptionsBuilder<KazoOsServerDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString())
             .Options;
-        _db = new HackerOsServerDbContext(options);
+        _db = new KazoOsServerDbContext(options);
         _tokens = new TokenService();
         var passwords = new Pbkdf2PasswordHashService();
         var audit = new AuditService(_db);

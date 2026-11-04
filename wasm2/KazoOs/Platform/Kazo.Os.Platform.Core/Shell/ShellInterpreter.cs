@@ -92,7 +92,7 @@ public sealed partial class ShellInterpreter
     /// </param>
     public IReadOnlyList<ShellCommandInfo> GetInstalledCommands(System.Globalization.CultureInfo? culture = null)
     {
-        culture ??= Kazo.Os.AppSdk.Globalization.HackLocale.DefaultLanguage;
+        culture ??= Kazo.Os.AppSdk.Globalization.KazoLocale.DefaultLanguage;
         return [.. Resolver.GetTerminalCommands()
             .Where(manifest => _enablement.IsEnabled(manifest.Id))
             .Select(manifest => _catalog.Localize(manifest, culture))
@@ -109,7 +109,7 @@ public sealed partial class ShellInterpreter
     /// <param name="culture">Language of the descriptions; English when <see langword="null"/>.</param>
     public IReadOnlyList<ShellCommandInfo> GetLaunchableApplications(System.Globalization.CultureInfo? culture = null)
     {
-        culture ??= Kazo.Os.AppSdk.Globalization.HackLocale.DefaultLanguage;
+        culture ??= Kazo.Os.AppSdk.Globalization.KazoLocale.DefaultLanguage;
         HashSet<string> commands = new(GetInstalledCommands(culture).SelectMany(command => command.Aliases.Prepend(command.Name)), StringComparer.OrdinalIgnoreCase);
         return [.. Resolver.GetApplications()
             .Where(manifest => _enablement.IsEnabled(manifest.Id))

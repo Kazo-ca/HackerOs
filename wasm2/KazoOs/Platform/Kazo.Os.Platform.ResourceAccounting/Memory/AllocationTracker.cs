@@ -86,7 +86,7 @@ public sealed class AllocationTracker : IExecutionContextSwitchObserver
         }
     }
 
-    /// <summary>Gets the bytes <paramref name="pid"/> allocated since it started (<c>HackAllocBytes</c>).</summary>
+    /// <summary>Gets the bytes <paramref name="pid"/> allocated since it started (<c>KazoAllocBytes</c>).</summary>
     /// <param name="pid">The process.</param>
     public long GetAllocatedBytes(ProcessId pid) =>
         _counters.TryGetValue(pid.Value, out Counter? counter) ? Interlocked.Read(ref counter.Bytes) : 0;

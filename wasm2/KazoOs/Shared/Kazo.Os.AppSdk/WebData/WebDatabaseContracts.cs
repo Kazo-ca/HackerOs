@@ -4,12 +4,12 @@ namespace Kazo.Os.AppSdk.WebData;
 
 /// <summary>
 /// The browser database of a web site (ADR 0073 §3, ADR 0088 §1): one IndexedDB database of the host
-/// browser, named <c>hackweb.&lt;app id&gt;</c> by the OS. Behind <c>HackWebDb</c> of the web SDK; only an
+/// browser, named <c>hackweb.&lt;app id&gt;</c> by the OS. Behind <c>KazoWebDb</c> of the web SDK; only an
 /// app of kind <c>Web</c> receives a working one.
 /// </summary>
 /// <remarks>
 /// Values and keys cross this gateway as JSON text, so the same calls work in-process and from the
-/// shared web worker (ADR 0070 §4). A transaction is a batch (<see cref="HackWebDbRequest"/>): its
+/// shared web worker (ADR 0070 §4). A transaction is a batch (<see cref="KazoWebDbRequest"/>): its
 /// operations run in one IndexedDB transaction, in order, and succeed or fail together (ADR 0088 §2).
 /// </remarks>
 public interface IAppWebDatabaseGateway
@@ -23,8 +23,8 @@ public interface IAppWebDatabaseGateway
     /// </summary>
     /// <param name="schema">The versions and migration steps the site declares.</param>
     /// <param name="cancellationToken">Cancels the call.</param>
-    /// <exception cref="HackWebDbException"><c>VersionError</c>: the stored database is newer than <paramref name="schema"/>.</exception>
-    ValueTask OpenAsync(HackWebDbSchemaDefinition schema, CancellationToken cancellationToken = default);
+    /// <exception cref="KazoWebDbException"><c>VersionError</c>: the stored database is newer than <paramref name="schema"/>.</exception>
+    ValueTask OpenAsync(KazoWebDbSchemaDefinition schema, CancellationToken cancellationToken = default);
 
     /// <summary>Runs a batch of operations in one transaction and returns one JSON result per operation.</summary>
     /// <param name="request">The batch.</param>
@@ -33,12 +33,12 @@ public interface IAppWebDatabaseGateway
     /// Per operation: the value (<c>get</c>), an array (<c>getAll</c>, <c>getAllKeys</c>), a number
     /// (<c>count</c>), the record's key (<c>add</c>, <c>put</c>), or <see langword="null"/>.
     /// </returns>
-    /// <exception cref="HackWebDbException">The transaction failed and nothing of it was written.</exception>
-    ValueTask<IReadOnlyList<string?>> ExecuteAsync(HackWebDbRequest request, CancellationToken cancellationToken = default);
+    /// <exception cref="KazoWebDbException">The transaction failed and nothing of it was written.</exception>
+    ValueTask<IReadOnlyList<string?>> ExecuteAsync(KazoWebDbRequest request, CancellationToken cancellationToken = default);
 }
 
 /// <summary>Names of the browser databases of sites.</summary>
-public static class HackWebDbNames
+public static class KazoWebDbNames
 {
     /// <summary>The prefix every site database has; the OS opens no other name for a site.</summary>
     public const string Prefix = "hackweb.";
@@ -57,8 +57,8 @@ public static class HackWebDbNames
         databaseName is { Length: > 8 } && databaseName.StartsWith(Prefix, StringComparison.Ordinal) ? databaseName[Prefix.Length..] : null;
 }
 
-/// <summary>Names of the operations of a <see cref="HackWebDbOperation"/>, as IndexedDB's methods.</summary>
-public static class HackWebDbOperationKinds
+/// <summary>Names of the operations of a <see cref="KazoWebDbOperation"/>, as IndexedDB's methods.</summary>
+public static class KazoWebDbOperationKinds
 {
     /// <summary><c>IDBObjectStore.get</c> / <c>IDBIndex.get</c>: the first value matching a key or range.</summary>
     public const string Get = "get";
@@ -94,7 +94,7 @@ public static class HackWebDbOperationKinds
 /// <summary>Every version a site database went through, as IndexedDB upgrade steps.</summary>
 /// <param name="Version">The version to open; the highest step's target.</param>
 /// <param name="Steps">One step per version from 1, in order.</param>
-public sealed record HackWebDbSchemaDefinition(int Version, IReadOnlyList<HackWebDbMigrationStep> Steps);
+public sealed record KazoWebDbSchemaDefinition(int Version, IReadOnlyList<KazoWebDbMigrationStep> Steps);
 
 /// <summary>What <c>onupgradeneeded</c> does to reach one version.</summary>
 /// <param name="TargetVersion">The version this step reaches.</param>
@@ -102,53 +102,53 @@ public sealed record HackWebDbSchemaDefinition(int Version, IReadOnlyList<HackWe
 /// <param name="DeleteStores">Object stores to delete.</param>
 /// <param name="CreateIndexes">Indexes to add to existing stores.</param>
 /// <param name="DeleteIndexes">Indexes to remove (only the index name is read).</param>
-public sealed record HackWebDbMigrationStep(
+public sealed record KazoWebDbMigrationStep(
     int TargetVersion,
-    IReadOnlyList<HackWebDbStoreDefinition> CreateStores,
+    IReadOnlyList<KazoWebDbStoreDefinition> CreateStores,
     IReadOnlyList<string> DeleteStores,
-    IReadOnlyList<HackWebDbIndexChange> CreateIndexes,
-    IReadOnlyList<HackWebDbIndexChange> DeleteIndexes);
+    IReadOnlyList<KazoWebDbIndexChange> CreateIndexes,
+    IReadOnlyList<KazoWebDbIndexChange> DeleteIndexes);
 
 /// <summary>An object store (<c>createObjectStore</c>).</summary>
 /// <param name="Name">Store name.</param>
 /// <param name="KeyPath">A property path (<c>id</c>, <c>author.name</c>), or <see langword="null"/> for out-of-line keys.</param>
 /// <param name="AutoIncrement">Whether the store generates numeric keys.</param>
 /// <param name="Indexes">Indexes created with the store.</param>
-public sealed record HackWebDbStoreDefinition(string Name, string? KeyPath, bool AutoIncrement, IReadOnlyList<HackWebDbIndexDefinition> Indexes);
+public sealed record KazoWebDbStoreDefinition(string Name, string? KeyPath, bool AutoIncrement, IReadOnlyList<KazoWebDbIndexDefinition> Indexes);
 
 /// <summary>An index (<c>createIndex</c>).</summary>
 /// <param name="Name">Index name.</param>
 /// <param name="KeyPath">The property path the index reads.</param>
 /// <param name="Unique">Whether two records may not share an index key (<c>ConstraintError</c>).</param>
 /// <param name="MultiEntry">Whether an array value adds one index entry per element.</param>
-public sealed record HackWebDbIndexDefinition(string Name, string KeyPath, bool Unique = false, bool MultiEntry = false);
+public sealed record KazoWebDbIndexDefinition(string Name, string KeyPath, bool Unique = false, bool MultiEntry = false);
 
 /// <summary>An index added to, or removed from, an existing store.</summary>
 /// <param name="Store">Store name.</param>
 /// <param name="Index">The index.</param>
-public sealed record HackWebDbIndexChange(string Store, HackWebDbIndexDefinition Index);
+public sealed record KazoWebDbIndexChange(string Store, KazoWebDbIndexDefinition Index);
 
 /// <summary>A transaction: its scope, its mode and its operations in order.</summary>
 /// <param name="Version">The version the site opened (a transaction on another version is refused).</param>
 /// <param name="Stores">The object stores in the transaction's scope.</param>
 /// <param name="ReadWrite">A <c>readwrite</c> transaction; otherwise <c>readonly</c>.</param>
 /// <param name="Operations">The operations.</param>
-public sealed record HackWebDbRequest(int Version, IReadOnlyList<string> Stores, bool ReadWrite, IReadOnlyList<HackWebDbOperation> Operations);
+public sealed record KazoWebDbRequest(int Version, IReadOnlyList<string> Stores, bool ReadWrite, IReadOnlyList<KazoWebDbOperation> Operations);
 
-/// <summary>One operation of a <see cref="HackWebDbRequest"/>.</summary>
-/// <param name="Kind">One of <see cref="HackWebDbOperationKinds"/>.</param>
+/// <summary>One operation of a <see cref="KazoWebDbRequest"/>.</summary>
+/// <param name="Kind">One of <see cref="KazoWebDbOperationKinds"/>.</param>
 /// <param name="Store">The object store.</param>
 /// <param name="Index">An index of the store, for reads through it.</param>
 /// <param name="Key">A key as JSON (number, string or array), for <c>get</c>, <c>delete</c> or an out-of-line <c>add</c>/<c>put</c>.</param>
 /// <param name="Range">A key range, for reads, <c>count</c> and <c>delete</c>.</param>
 /// <param name="Count">The most records <c>getAll</c>/<c>getAllKeys</c> return.</param>
 /// <param name="Value">The record as JSON, for <c>add</c>/<c>put</c>.</param>
-public sealed record HackWebDbOperation(
+public sealed record KazoWebDbOperation(
     string Kind,
     string Store,
     string? Index = null,
     string? Key = null,
-    HackWebDbRange? Range = null,
+    KazoWebDbRange? Range = null,
     int? Count = null,
     string? Value = null);
 
@@ -157,14 +157,14 @@ public sealed record HackWebDbOperation(
 /// <param name="Upper">Upper bound, or <see langword="null"/>.</param>
 /// <param name="LowerOpen">Whether the lower bound itself is excluded.</param>
 /// <param name="UpperOpen">Whether the upper bound itself is excluded.</param>
-public sealed record HackWebDbRange(string? Lower, string? Upper, bool LowerOpen = false, bool UpperOpen = false);
+public sealed record KazoWebDbRange(string? Lower, string? Upper, bool LowerOpen = false, bool UpperOpen = false);
 
 /// <summary>
 /// A failed site database call, named as IndexedDB's <c>DOMException</c>: <c>ConstraintError</c>,
 /// <c>NotFoundError</c>, <c>DataError</c>, <c>VersionError</c>, <c>InvalidStateError</c>,
 /// <c>QuotaExceededError</c>.
 /// </summary>
-public sealed class HackWebDbException : Exception
+public sealed class KazoWebDbException : Exception
 {
     /// <summary>A key or unique index already holds the record.</summary>
     public const string ConstraintError = "ConstraintError";
@@ -187,7 +187,7 @@ public sealed class HackWebDbException : Exception
     /// <summary>Initializes the exception.</summary>
     /// <param name="name">The IndexedDB error name.</param>
     /// <param name="message">What went wrong.</param>
-    public HackWebDbException(string name, string message)
+    public KazoWebDbException(string name, string message)
         : base($"{name}: {message}")
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
@@ -200,7 +200,7 @@ public sealed class HackWebDbException : Exception
     /// <summary>Rebuilds the exception from a message <c>"Name: text"</c>, as a browser or the worker reports it.</summary>
     /// <param name="message">The message.</param>
     /// <returns>The exception, named <see cref="InvalidStateError"/> when the message carries no known name.</returns>
-    public static HackWebDbException FromMessage(string message)
+    public static KazoWebDbException FromMessage(string message)
     {
         ArgumentNullException.ThrowIfNull(message);
         foreach (string name in (string[])[ConstraintError, NotFoundError, DataError, VersionError, InvalidStateError, QuotaExceededError])
@@ -208,17 +208,17 @@ public sealed class HackWebDbException : Exception
             int at = message.IndexOf(name + ": ", StringComparison.Ordinal);
             if (at >= 0)
             {
-                return new HackWebDbException(name, message[(at + name.Length + 2)..]);
+                return new KazoWebDbException(name, message[(at + name.Length + 2)..]);
             }
         }
 
-        return new HackWebDbException(InvalidStateError, message);
+        return new KazoWebDbException(InvalidStateError, message);
     }
 }
 
 /// <summary>Source-generated JSON of the gateway's messages (the worker protocol and the browser module).</summary>
 [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull)]
-[JsonSerializable(typeof(HackWebDbSchemaDefinition))]
-[JsonSerializable(typeof(HackWebDbRequest))]
+[JsonSerializable(typeof(KazoWebDbSchemaDefinition))]
+[JsonSerializable(typeof(KazoWebDbRequest))]
 [JsonSerializable(typeof(List<string?>))]
-public sealed partial class HackWebDbJsonContext : JsonSerializerContext;
+public sealed partial class KazoWebDbJsonContext : JsonSerializerContext;

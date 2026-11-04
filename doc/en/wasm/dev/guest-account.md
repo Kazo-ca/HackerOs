@@ -46,7 +46,7 @@ then create your own account, keeping the guest's work or not. Decision:
 | `GuestAccountService` | `Platform.Core/Sessions` | `CanCreateAsync` (no account), `CreateAsync` (`guest` account, `guest` + `administrators` groups, no password), `FindLoneGuestAsync`, `MigrateAsync`, `ReplaceAsync`. |
 | `AdminElevationVerifier` | `Platform.Core/Elevation` | Accepts an empty password only for the lone, password-less, enabled guest; `CanConfirmWithoutPasswordAsync` makes the agent windows show **Confirm**. |
 | `GuestAccountRequests` | `Platform.Core/Sessions` | An app asks the host for the form (`CreateAccountRequested`); the host owns the form, the app never sees the password. |
-| `HackUserAccounts.RequestGuestAccountCreationAsync` | SDK | Used by Settings ▸ Users; accepted only for the guest's own session. `HackUserAccount.IsGuest` marks the guest in the list. |
+| `KazoUserAccounts.RequestGuestAccountCreationAsync` | SDK | Used by Settings ▸ Users; accepted only for the guest's own session. `KazoUserAccount.IsGuest` marks the guest in the list. |
 | `App.razor` | `Ecosystem.Host` | Guest buttons, "Create my account" form, closing the guest session when Settings asks. |
 | `AppLauncher` | `Platform.Blazor/Shell` | Reminder in the user tile (`OnCreateAccount`), which opens `--page=users`. |
 
@@ -55,7 +55,7 @@ then create your own account, keeping the guest's work or not. Decision:
 `MigrateAsync` does the equivalent of `usermod -l NEW -d /home/NEW -m`,
 `groupmod -n NEW guest` then `passwd NEW`:
 
-1. checks the form (`HackUserAccounts.ValidateNewAccount`), a reserved or
+1. checks the form (`KazoUserAccounts.ValidateNewAccount`), a reserved or
    taken name, and refuses while the guest's session is open;
 2. **copies** `/home/guest` to `/home/<login>` as the new login, keeping each
    entry's mode. The `/home/guest` paths of the text files of `~/.config` and

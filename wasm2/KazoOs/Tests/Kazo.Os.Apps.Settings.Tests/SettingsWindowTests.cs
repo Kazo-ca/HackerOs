@@ -131,7 +131,7 @@ public sealed class SettingsNavigationTests
     [Fact]
     public void Every_label_and_group_of_the_menu_is_translated()
     {
-        System.Resources.ResourceManager resources = Kazo.Os.AppSdk.Globalization.HackLocalization.GetResourceManager(typeof(Strings));
+        System.Resources.ResourceManager resources = Kazo.Os.AppSdk.Globalization.KazoLocalization.GetResourceManager(typeof(Strings));
         foreach (string key in SettingsWindow.AllPages.SelectMany(static page => new[] { page.LabelKey, page.GroupKey })
                      .Concat(["Nav.AriaLabel", "Nav.Collapse", "Nav.Expand"]))
         {
@@ -145,7 +145,7 @@ public sealed class SettingsNavigationTests
     [InlineData("fr", "Auteur :", "Projet GitHub :")]
     public void About_credit_labels_follow_the_session_language(string culture, string author, string project)
     {
-        System.Resources.ResourceManager resources = Kazo.Os.AppSdk.Globalization.HackLocalization.GetResourceManager(typeof(Strings));
+        System.Resources.ResourceManager resources = Kazo.Os.AppSdk.Globalization.KazoLocalization.GetResourceManager(typeof(Strings));
         System.Globalization.CultureInfo info = System.Globalization.CultureInfo.GetCultureInfo(culture);
         Assert.Equal(author, resources.GetString("About.Author", info));
         Assert.Equal(project, resources.GetString("About.Repository", info));

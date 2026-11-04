@@ -28,7 +28,7 @@ public interface ISyncService
 /// <inheritdoc />
 public sealed class SyncService : ISyncService
 {
-    private readonly HackerOsServerDbContext _db;
+    private readonly KazoOsServerDbContext _db;
     private readonly IAuditService _audit;
 
     // Idempotency cache: maps idempotency key → PushResponse (in-memory, evicted after 5 minutes).
@@ -36,7 +36,7 @@ public sealed class SyncService : ISyncService
         _idempotencyCache = new();
 
     /// <inheritdoc />
-    public SyncService(HackerOsServerDbContext db, IAuditService audit)
+    public SyncService(KazoOsServerDbContext db, IAuditService audit)
     {
         _db = db;
         _audit = audit;

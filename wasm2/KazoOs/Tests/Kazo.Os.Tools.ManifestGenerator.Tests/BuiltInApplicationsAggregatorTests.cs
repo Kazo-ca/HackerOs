@@ -12,7 +12,7 @@ public sealed class BuiltInApplicationsAggregatorTests : IDisposable
     private string WriteManifest(Type definition, string fileName)
     {
         GeneratedManifest generated = Assert.Single(
-            AppDefinitionInspector.Inspect(typeof(ValidCommandApp).Assembly, [definition], HackerOsSdk.Version).Manifests);
+            AppDefinitionInspector.Inspect(typeof(ValidCommandApp).Assembly, [definition], KazoOsSdk.Version).Manifests);
         string path = Path.Combine(_directory, fileName);
         File.WriteAllText(path, generated.CanonicalJson);
         return path;
@@ -95,7 +95,7 @@ public sealed class BuiltInApplicationsAggregatorTests : IDisposable
             Description = "Registers the file view.",
             Kind = AppKind.Window,
             EntryPoint = new AppEntryPointManifest("Example.Files", "Example.Files.Window"),
-            SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+            SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
             Presentation = new PresentationManifest("files", AppLaunchVisibility.Visible, []),
             Resources = AppResourceProfileManifest.None,
             Components =

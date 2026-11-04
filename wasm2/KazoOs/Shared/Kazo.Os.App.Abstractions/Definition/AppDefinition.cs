@@ -65,7 +65,7 @@ public abstract class AppDefinition
     /// <summary>
     /// Gets the components this window app registers with the OS for other apps to embed (ADR 0063),
     /// e.g. the Terminal app's terminal for <c>hackeros.terminal</c>. Each type must live in the
-    /// definition's assembly and derive from <c>HackEmbeddableComponent</c>.
+    /// definition's assembly and derive from <c>KazoEmbeddableComponent</c>.
     /// </summary>
     public virtual IReadOnlyList<AppComponent> Components => [];
 

@@ -26,14 +26,14 @@ public sealed class FileMenuEntriesTests
     [Fact]
     public void First_after_afterGroup_and_unpositioned_entries_land_where_ADR_0151_says()
     {
-        HackMenuDefinition menu = DefaultMenu();
+        KazoMenuDefinition menu = DefaultMenu();
         FileMenuEntryPlacement.Place(menu,
         [
             Candidate(ZipperId, Entry("top") with { First = true }),
-            Candidate(ZipperId, Entry("extract") with { After = HackFileMenuItems.Open }),
-            Candidate(ToolsId, Entry("hash") with { After = HackFileMenuItems.Open }),
-            Candidate(ZipperId, Entry("pack") with { AfterGroup = HackFileMenuItems.Copy }),
-            Candidate(ToolsId, Entry("send") with { AfterGroup = HackFileMenuItems.Copy }),
+            Candidate(ZipperId, Entry("extract") with { After = KazoFileMenuItems.Open }),
+            Candidate(ToolsId, Entry("hash") with { After = KazoFileMenuItems.Open }),
+            Candidate(ZipperId, Entry("pack") with { AfterGroup = KazoFileMenuItems.Copy }),
+            Candidate(ToolsId, Entry("send") with { AfterGroup = KazoFileMenuItems.Copy }),
             Candidate(ToolsId, Entry("plain")),
             Candidate(ToolsId, Entry("lost") with { After = "not-in-this-menu" })
         ]);
@@ -53,8 +53,8 @@ public sealed class FileMenuEntriesTests
     [Fact]
     public void An_entry_anchored_to_a_later_entry_of_its_app_follows_it_and_the_common_group_ends_a_menu_without_properties()
     {
-        HackMenuDefinition menu = new("files");
-        menu.AddGroup().Add(HackFileMenuItems.Open, "Open");
+        KazoMenuDefinition menu = new("files");
+        menu.AddGroup().Add(KazoFileMenuItems.Open, "Open");
         FileMenuEntryPlacement.Place(menu,
         [
             Candidate(ZipperId, Entry("second") with { After = "first" }),
@@ -73,7 +73,7 @@ public sealed class FileMenuEntriesTests
     public async Task Apply_shows_matching_entries_hides_the_users_and_drops_an_empty_submenu()
     {
         Fixture fixture = await Fixture.CreateAsync(hidden: ["com.example.tools.hash"]);
-        HackMenuDefinition menu = FileMenu(FileMenuScope.File, Item("/home/alice/a.zip", "application/zip"));
+        KazoMenuDefinition menu = FileMenu(FileMenuScope.File, Item("/home/alice/a.zip", "application/zip"));
 
         await fixture.Source.ApplyAsync(menu);
 
@@ -92,12 +92,12 @@ public sealed class FileMenuEntriesTests
     public async Task Apply_builds_a_submenu_and_a_click_hands_the_paths()
     {
         Fixture fixture = await Fixture.CreateAsync();
-        HackMenuDefinition menu = FileMenu(FileMenuScope.File, Item("/a.png", "image/png"), Item("/b.png", "image/png"));
+        KazoMenuDefinition menu = FileMenu(FileMenuScope.File, Item("/a.png", "image/png"), Item("/b.png", "image/png"));
 
         await fixture.Source.ApplyAsync(menu);
 
-        HackMenuItemDefinition convert = menu.Find("app:com.example.tools/convert")!;
-        HackMenuItemDefinition jpeg = Assert.Single(Assert.Single(convert.Children).Items);
+        KazoMenuItemDefinition convert = menu.Find("app:com.example.tools/convert")!;
+        KazoMenuItemDefinition jpeg = Assert.Single(Assert.Single(convert.Children).Items);
         Assert.Equal("app:com.example.tools/to-jpeg", jpeg.Id);
         Assert.Null(menu.Find("app:com.example.zipper/extract"));
 
@@ -114,8 +114,8 @@ public sealed class FileMenuEntriesTests
     public async Task The_empty_space_hands_the_folder_shown()
     {
         Fixture fixture = await Fixture.CreateAsync();
-        HackMenuDefinition menu = new("files") { FileMenu = new HackFileMenuContext(FileMenuScope.Desktop, [], "/home/alice/Desktop") };
-        menu.AddGroup().Add(HackFileMenuItems.Paste, "Paste");
+        KazoMenuDefinition menu = new("files") { FileMenu = new KazoFileMenuContext(FileMenuScope.Desktop, [], "/home/alice/Desktop") };
+        menu.AddGroup().Add(KazoFileMenuItems.Paste, "Paste");
 
         await fixture.Source.ApplyAsync(menu);
         await menu.Find("app:com.example.tools/terminal-here")!.OnClick.InvokeAsync(null);
@@ -147,15 +147,15 @@ public sealed class FileMenuEntriesTests
             Entry("wall-3") with { Parent = "wall-on", Screen = 3 }
         ];
 
-        HackMenuDefinition single = FileMenu(FileMenuScope.File, Item("/a.png", "image/png"));
+        KazoMenuDefinition single = FileMenu(FileMenuScope.File, Item("/a.png", "image/png"));
         await (await ScreenSourceAsync(wallpaper, 1)).ApplyAsync(single);
         Assert.NotNull(single.Find("app:com.example.tools/wall"));
         Assert.Null(single.Find("app:com.example.tools/wall-on"));
 
-        HackMenuDefinition several = FileMenu(FileMenuScope.File, Item("/a.png", "image/png"));
+        KazoMenuDefinition several = FileMenu(FileMenuScope.File, Item("/a.png", "image/png"));
         await (await ScreenSourceAsync(wallpaper, 1, 3)).ApplyAsync(several);
         Assert.Null(several.Find("app:com.example.tools/wall"));
-        HackMenuItemDefinition submenu = several.Find("app:com.example.tools/wall-on")!;
+        KazoMenuItemDefinition submenu = several.Find("app:com.example.tools/wall-on")!;
         Assert.Equal(
             ["app:com.example.tools/wall-all", "app:com.example.tools/wall-3"],
             Assert.Single(submenu.Children).Items.Select(static item => item.Id));
@@ -209,15 +209,15 @@ public sealed class FileMenuEntriesTests
         RecordingSource source = new();
         ContextMenuService service = new(fileMenuEntries: source);
         using ContextMenuScope scope = service.CreateScope(context: null);
-        scope.Register(new HackMenuRegistration(
+        scope.Register(new KazoMenuRegistration(
             "files",
             () => DefaultMenu(),
-            new EventCallback<HackMenuOpeningEventArgs>(null, (Func<HackMenuOpeningEventArgs, Task>)(args =>
+            new EventCallback<KazoMenuOpeningEventArgs>(null, (Func<KazoMenuOpeningEventArgs, Task>)(args =>
             {
-                args.Menu.FileMenu = new HackFileMenuContext(FileMenuScope.File, [Item("/a.zip", "application/zip")], "/");
+                args.Menu.FileMenu = new KazoFileMenuContext(FileMenuScope.File, [Item("/a.zip", "application/zip")], "/");
                 return Task.CompletedTask;
             }))));
-        scope.Register(new HackMenuRegistration("plain", () => DefaultMenu(), default));
+        scope.Register(new KazoMenuRegistration("plain", () => DefaultMenu(), default));
 
         Assert.True(await scope.OpenAsync("files", null, 0, 0));
         Assert.Equal(1, source.Calls);
@@ -231,30 +231,30 @@ public sealed class FileMenuEntriesTests
         Assert.Null(service.Current!.Root.Rows.FirstOrDefault(row => row.Item?.Id == "added"));
     }
 
-    private static HackMenuDefinition DefaultMenu()
+    private static KazoMenuDefinition DefaultMenu()
     {
-        HackMenuDefinition menu = new("files");
-        HackMenuGroupDefinition open = menu.AddGroup();
-        open.Add(HackFileMenuItems.Open, "Open");
-        open.Add(HackFileMenuItems.OpenWith, "Open with");
-        HackMenuGroupDefinition clipboard = menu.AddGroup();
-        clipboard.Add(HackFileMenuItems.Cut, "Cut");
-        clipboard.Add(HackFileMenuItems.Copy, "Copy");
-        menu.AddGroup().Add(HackFileMenuItems.Properties, "Properties");
+        KazoMenuDefinition menu = new("files");
+        KazoMenuGroupDefinition open = menu.AddGroup();
+        open.Add(KazoFileMenuItems.Open, "Open");
+        open.Add(KazoFileMenuItems.OpenWith, "Open with");
+        KazoMenuGroupDefinition clipboard = menu.AddGroup();
+        clipboard.Add(KazoFileMenuItems.Cut, "Cut");
+        clipboard.Add(KazoFileMenuItems.Copy, "Copy");
+        menu.AddGroup().Add(KazoFileMenuItems.Properties, "Properties");
         return menu;
     }
 
-    private static HackMenuDefinition FileMenu(FileMenuScope scope, params HackFileViewItem[] items)
+    private static KazoMenuDefinition FileMenu(FileMenuScope scope, params KazoFileViewItem[] items)
     {
-        HackMenuDefinition menu = DefaultMenu();
-        menu.FileMenu = new HackFileMenuContext(scope, items, "/home/alice");
+        KazoMenuDefinition menu = DefaultMenu();
+        menu.FileMenu = new KazoFileMenuContext(scope, items, "/home/alice");
         return menu;
     }
 
-    private static HackFileViewItem Item(string path, string mediaType) =>
+    private static KazoFileViewItem Item(string path, string mediaType) =>
         new(path, path[(path.LastIndexOf('/') + 1)..], false, 10, mediaType, DateTimeOffset.UnixEpoch);
 
-    private static string[][] Rows(HackMenuDefinition menu) =>
+    private static string[][] Rows(KazoMenuDefinition menu) =>
         [.. menu.Groups.Select(static group => group.Items.Select(static item => item.Id).ToArray())];
 
     private static AppContextMenuEntryManifest Entry(string name) => new()
@@ -266,7 +266,7 @@ public sealed class FileMenuEntriesTests
     };
 
     private static FileMenuEntryPlacement.Candidate Candidate(string appId, AppContextMenuEntryManifest entry) =>
-        new(appId, entry, new HackMenuItemDefinition(FileMenuEntries.IdOf(appId, entry.Name), entry.Title));
+        new(appId, entry, new KazoMenuItemDefinition(FileMenuEntries.IdOf(appId, entry.Name), entry.Title));
 
     private static AppManifest Manifest(string id, IReadOnlyList<AppContextMenuEntryManifest> menus) => new()
     {
@@ -277,7 +277,7 @@ public sealed class FileMenuEntriesTests
         Description = "File menu fixture.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Apps.Sample", "Kazo.Os.Apps.Sample.SampleApp"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         Capabilities = [AppCapabilities.ShellContextMenu],
@@ -298,7 +298,7 @@ public sealed class FileMenuEntriesTests
                 Entry("extract") with
                 {
                     Types = [".zip"],
-                    After = HackFileMenuItems.Open,
+                    After = KazoFileMenuItems.Open,
                     Titles = [new("en", "Extract here"), new("fr", "Extraire ici")]
                 }
             ];
@@ -347,7 +347,7 @@ public sealed class FileMenuEntriesTests
 
         public bool Throw { get; set; }
 
-        public Task ApplyAsync(HackMenuDefinition menu, CancellationToken cancellationToken = default)
+        public Task ApplyAsync(KazoMenuDefinition menu, CancellationToken cancellationToken = default)
         {
             Calls++;
             if (Throw)

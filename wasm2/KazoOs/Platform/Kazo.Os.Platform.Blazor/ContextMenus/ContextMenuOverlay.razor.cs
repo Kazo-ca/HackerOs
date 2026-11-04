@@ -25,7 +25,7 @@ public sealed partial class ContextMenuOverlay : ComponentBase
 {
     private const string ModulePath = "./_content/Kazo.Os.Platform.Blazor/ContextMenus/ContextMenuOverlay.razor.js";
 
-    private readonly ElementReference[] _panels = new ElementReference[HackMenuDefinition.MaxDepth];
+    private readonly ElementReference[] _panels = new ElementReference[KazoMenuDefinition.MaxDepth];
     private readonly string _idPrefix = $"hcm{Guid.NewGuid():N}"[..11];
     private ElementReference _layer;
     private IJSObjectReference? _module;

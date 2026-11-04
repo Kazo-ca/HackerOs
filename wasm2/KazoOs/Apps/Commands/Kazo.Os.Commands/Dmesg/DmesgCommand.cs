@@ -90,13 +90,13 @@ public sealed class DmesgCommand : TerminalAppBase
         DateTimeOffset bootTime = default;
         try
         {
-            records = await HackFile.ReadAllTextAsync(DevicePath, cancellationToken);
+            records = await KazoFile.ReadAllTextAsync(DevicePath, cancellationToken);
             if (wallClock)
             {
                 bootTime = context.App.Clock.UtcNow - await ReadUptimeAsync(cancellationToken);
             }
         }
-        catch (Exception exception) when (exception is HackIOException or HackUnauthorizedAccessException or IOException or UnauthorizedAccessException)
+        catch (Exception exception) when (exception is KazoIOException or KazoUnauthorizedAccessException or IOException or UnauthorizedAccessException)
         {
             await context.StandardError.WriteLineAsync(text["ReadFailed", DevicePath, exception.Message]);
             return 1;
@@ -184,7 +184,7 @@ public sealed class DmesgCommand : TerminalAppBase
 
     private static async Task<TimeSpan> ReadUptimeAsync(CancellationToken cancellationToken)
     {
-        string uptime = await HackFile.ReadAllTextAsync("/proc/uptime", cancellationToken);
+        string uptime = await KazoFile.ReadAllTextAsync("/proc/uptime", cancellationToken);
         string first = uptime.Split(' ', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault() ?? "0";
         return double.TryParse(first, NumberStyles.Float, CultureInfo.InvariantCulture, out double seconds)
             ? TimeSpan.FromSeconds(seconds)

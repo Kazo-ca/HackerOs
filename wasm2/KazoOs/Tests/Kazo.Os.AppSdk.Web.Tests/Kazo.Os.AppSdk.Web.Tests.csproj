@@ -25,7 +25,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\Kazo.Os.AppSdk.Web\Kazo.Os.AppSdk.Web.csproj" />
     <!-- The test site in Site/ is compiled with the generator (analyzer); GeneratorTests also call it directly,
-         through the "generator" alias: its linked copy of HackRouteTemplate would clash with the library's. -->
+         through the "generator" alias: its linked copy of KazoRouteTemplate would clash with the library's. -->
     <ProjectReference Include="..\..\Tools\Kazo.Os.Tools.WebRouteGenerator\Kazo.Os.Tools.WebRouteGenerator.csproj"
                       OutputItemType="Analyzer"
                       ReferenceOutputAssembly="true"

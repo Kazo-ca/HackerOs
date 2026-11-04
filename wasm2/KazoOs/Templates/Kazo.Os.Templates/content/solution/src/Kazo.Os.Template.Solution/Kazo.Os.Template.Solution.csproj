@@ -10,19 +10,19 @@
     -->
     <IsTrimmable>true</IsTrimmable>
     <!-- A Kazo OS app: its manifest.json is generated after the build, in both profiles. -->
-    <HackerOsAppProject>true</HackerOsAppProject>
+    <KazoOsAppProject>true</KazoOsAppProject>
   </PropertyGroup>
 
   <!--
-    $(HackerOsVersion) comes from the submodule (Directory.Build.props). In Debug these references
+    $(KazoOsVersion) comes from the submodule (Directory.Build.props). In Debug these references
     become the submodule's projects (ADR 0176 §4).
   -->
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.13" />
-    <PackageReference Include="Kazo.Os.AppSdk" Version="$(HackerOsVersion)" />
-    <PackageReference Include="Kazo.Os.AppSdk.Blazor" Version="$(HackerOsVersion)" />
+    <PackageReference Include="Kazo.Os.AppSdk" Version="$(KazoOsVersion)" />
+    <PackageReference Include="Kazo.Os.AppSdk.Blazor" Version="$(KazoOsVersion)" />
     <!-- Generates manifest.json after the build and checks the SDK boundary (HOSAPP0030). -->
-    <PackageReference Include="Kazo.Os.App.Build" Version="$(HackerOsVersion)" PrivateAssets="all" />
+    <PackageReference Include="Kazo.Os.App.Build" Version="$(KazoOsVersion)" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>

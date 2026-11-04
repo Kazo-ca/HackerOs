@@ -380,7 +380,7 @@ internal sealed class WorkerConnection
                         string killed = WorkerMessage.Create(WorkerMessageType.Result, writer =>
                         {
                             writer.WriteNumber("i", root.GetInt32("i"));
-                            RemoteErrors.Write(writer, new Kazo.Os.AppSdk.Diagnostics.HackProcessKilledException(root.GetInt64("p")));
+                            RemoteErrors.Write(writer, new Kazo.Os.AppSdk.Diagnostics.KazoProcessKilledException(root.GetInt64("p")));
                         });
                         if (synchronous)
                         {
@@ -497,7 +497,7 @@ internal sealed class WorkerConnection
             // ADR 0128: the result, fault or refusal of a background task.
             JobResult = root.GetOptionalString("jr"),
             JobFault = root.GetOptional("jf") is { } fault
-                ? new Kazo.Os.AppSdk.Threading.HackBackgroundJobException(
+                ? new Kazo.Os.AppSdk.Threading.KazoBackgroundJobException(
                     fault.GetOptionalString("ty") ?? "System.Exception", fault.GetOptionalString("m") ?? string.Empty, fault.GetOptionalString("st"))
                 : null,
             JobRejected = root.GetFlag("jx")

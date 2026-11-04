@@ -1,5 +1,5 @@
 @namespace Kazo.Os.Apps.SystemMonitor.Tabs
-@inherits HackComponentBase
+@inherits KazoComponentBase
 
 <aside class="detail" aria-label="@L["Detail.AriaLabel"]">
     <header class="detail-header">
@@ -54,7 +54,7 @@
                     {
                         <span>@L["Detail.None"]</span>
                     }
-                    @foreach (HackProcess child in Children)
+                    @foreach (KazoProcess child in Children)
                     {
                         long childId = child.Id;
                         <button class="link-btn" @onclick="() => OnSelectProcess.InvokeAsync(childId)">@child.ProcessName (@child.Id)</button>

@@ -9,9 +9,9 @@ namespace Kazo.Os.Platform.Core.Administration;
 
 /// <summary>
 /// Platform services behind the administration gateways of ADR 0056, sections 8 to 11
-/// (<c>HackSettings.OpenSystemAsync</c>, <c>HackPermissionAdministration</c>,
-/// <c>HackServerConnection</c>, <c>HackSystem</c>, <c>HackStorageDiagnostics</c>), and the
-/// <c>HackSystemBackup</c> of ADR 0099. Every service is
+/// (<c>KazoSettings.OpenSystemAsync</c>, <c>KazoPermissionAdministration</c>,
+/// <c>KazoServerConnection</c>, <c>KazoSystem</c>, <c>KazoStorageDiagnostics</c>), and the
+/// <c>KazoSystemBackup</c> of ADR 0099. Every service is
 /// resolved lazily, on the app's first call: several depend, through the lifecycle orchestrator or
 /// the session, on the very factory that receives this bundle. A <see langword="null"/> member
 /// leaves its gateway unsupported (or, for the server, "not connected").
@@ -33,50 +33,50 @@ public sealed record SystemAdministrationGatewayServices(
     Func<SystemBackupService>? Backup = null)
 {
     /// <summary>
-    /// Gets the password service behind <c>HackUserAccounts</c> (ADR 0120); <see langword="null"/> on a
+    /// Gets the password service behind <c>KazoUserAccounts</c> (ADR 0120); <see langword="null"/> on a
     /// host without local accounts. An <c>init</c> property rather than a parameter keeps the record's
     /// constructor of SDK 1.0 unchanged.
     /// </summary>
     public Func<LocalPasswordService>? Passwords { get; init; }
 
     /// <summary>
-    /// Gets the service that adds and deletes accounts behind <c>HackUserAccounts</c> (ADR 0169);
+    /// Gets the service that adds and deletes accounts behind <c>KazoUserAccounts</c> (ADR 0169);
     /// <see langword="null"/> leaves those calls unsupported.
     /// </summary>
     public Func<LocalAccountService>? Accounts { get; init; }
 
     /// <summary>
-    /// Gets the passkey service behind <c>HackUserAccounts</c> (ADR 0168); <see langword="null"/> on a
+    /// Gets the passkey service behind <c>KazoUserAccounts</c> (ADR 0168); <see langword="null"/> on a
     /// host without WebAuthn, where the session user has no passkey to manage.
     /// </summary>
     public Func<PasskeyService>? Passkeys { get; init; }
 
     /// <summary>
-    /// Gets the "Create my account" requests behind <c>HackUserAccounts</c> (ADR 0187); <see langword="null"/>
+    /// Gets the "Create my account" requests behind <c>KazoUserAccounts</c> (ADR 0187); <see langword="null"/>
     /// on a host without a guest account.
     /// </summary>
     public Func<GuestAccountRequests>? GuestRequests { get; init; }
 
     /// <summary>
-    /// Gets the service behind <c>HackComponentProviders</c> (ADR 0156); <see langword="null"/> leaves
+    /// Gets the service behind <c>KazoComponentProviders</c> (ADR 0156); <see langword="null"/> leaves
     /// the gateway unsupported.
     /// </summary>
     public Func<ComponentProviders.ComponentProviderService>? ComponentProviders { get; init; }
 
     /// <summary>
-    /// Gets the service behind <c>HackFileMenuEntries</c> (ADR 0159 §8); <see langword="null"/> leaves
+    /// Gets the service behind <c>KazoFileMenuEntries</c> (ADR 0159 §8); <see langword="null"/> leaves
     /// the gateway unsupported.
     /// </summary>
     public Func<ContextMenus.FileContextMenuAdministration>? FileMenuEntries { get; init; }
 
     /// <summary>
-    /// Gets the secondary screens behind <c>HackScreens</c> (ADR 0184); <see langword="null"/> on a
+    /// Gets the secondary screens behind <c>KazoScreens</c> (ADR 0184); <see langword="null"/> on a
     /// host without screens leaves the gateway unsupported.
     /// </summary>
     public Func<IScreenControl>? Screens { get; init; }
 
     /// <summary>
-    /// Gets the change list behind <c>HackWhatsNew</c> (ADR 0186); <see langword="null"/> on a host
+    /// Gets the change list behind <c>KazoWhatsNew</c> (ADR 0186); <see langword="null"/> on a host
     /// that serves none leaves the gateway with an empty list.
     /// </summary>
     public Func<WhatsNew.WhatsNewService>? WhatsNew { get; init; }

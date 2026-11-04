@@ -11,12 +11,12 @@ namespace Kazo.Os.Platform.Core.Globalization;
 /// the session language (<see cref="SessionLocaleService.Culture"/>), read again at every lookup.
 /// </summary>
 /// <typeparam name="TResource">The type naming the resources (<c>Resources/&lt;Type&gt;.resx</c>).</typeparam>
-public sealed class SessionStringLocalizer<TResource> : HackStringLocalizer, IStringLocalizer<TResource>
+public sealed class SessionStringLocalizer<TResource> : KazoStringLocalizer, IStringLocalizer<TResource>
 {
     /// <summary>Creates the localizer.</summary>
     /// <param name="locale">The session language.</param>
     public SessionStringLocalizer(SessionLocaleService locale)
-        : base(HackLocalization.GetResourceManager(typeof(TResource)), () => locale.Culture)
+        : base(KazoLocalization.GetResourceManager(typeof(TResource)), () => locale.Culture)
     {
         ArgumentNullException.ThrowIfNull(locale);
     }

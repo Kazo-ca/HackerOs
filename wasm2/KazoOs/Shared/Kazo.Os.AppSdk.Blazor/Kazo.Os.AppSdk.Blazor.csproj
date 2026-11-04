@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <PackageId>Kazo.Os.AppSdk.Blazor</PackageId>
-    <Description>Kazo OS App SDK for window apps: HackComponentBase, window base classes, dialogs and Blazor helpers.</Description>
+    <Description>Kazo OS App SDK for window apps: KazoComponentBase, window base classes, dialogs and Blazor helpers.</Description>
     <PackageTags>hackeros;app-sdk;blazor</PackageTags>
   </PropertyGroup>
 

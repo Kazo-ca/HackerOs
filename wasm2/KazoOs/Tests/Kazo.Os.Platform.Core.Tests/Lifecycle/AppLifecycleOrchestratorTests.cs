@@ -65,7 +65,7 @@ public sealed partial class AppLifecycleOrchestratorTests
     [Fact]
     public async Task A_terminal_app_runs_inside_its_ambient_context_in_the_shells_working_directory()
     {
-        // ADR 0043: the orchestrator opens the HackExecutionContext scope around ExecuteAsync.
+        // ADR 0043: the orchestrator opens the KazoExecutionContext scope around ExecuteAsync.
         Fixture fixture = new(EchoManifest() with
         {
             EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", typeof(AmbientProbeTerminalApp).FullName!)
@@ -77,7 +77,7 @@ public sealed partial class AppLifecycleOrchestratorTests
 
         Assert.Equal(0, result.ExitCode);
         Assert.Equal($"True /tmp/notes.txt {principal.HomePath}/x{Environment.NewLine}", result.StandardOutput);
-        Assert.Null(Kazo.Os.AppSdk.HackExecutionContext.CurrentOrNull);
+        Assert.Null(Kazo.Os.AppSdk.KazoExecutionContext.CurrentOrNull);
     }
 
     [Fact]
@@ -504,7 +504,7 @@ public sealed partial class AppLifecycleOrchestratorTests
         Description = "Stats /etc, which requires a capability this manifest never declares.",
         Kind = AppKind.Terminal,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", typeof(RootProbeTerminalApp).FullName!),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         Terminal = new TerminalCommandManifest("root-probe", [], "root-probe")
@@ -544,7 +544,7 @@ public sealed partial class AppLifecycleOrchestratorTests
         Description = "Requires an injected service beyond the manifest.",
         Kind = AppKind.Terminal,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", typeof(InjectingTerminalApp).FullName!),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         Terminal = new TerminalCommandManifest("injecting", [], "injecting")
@@ -578,7 +578,7 @@ public sealed partial class AppLifecycleOrchestratorTests
         Description = "Echoes its arguments.",
         Kind = AppKind.Terminal,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", typeof(EchoTerminalApp).FullName!),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         Terminal = new TerminalCommandManifest("echo", [], "echo [text]")
@@ -593,7 +593,7 @@ public sealed partial class AppLifecycleOrchestratorTests
         Description = "Always throws.",
         Kind = AppKind.Terminal,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", typeof(FaultingTerminalApp).FullName!),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         Terminal = new TerminalCommandManifest("faulty", [], "faulty")
@@ -633,7 +633,7 @@ public sealed partial class AppLifecycleOrchestratorTests
         Description = "Waits for cancellation.",
         Kind = AppKind.Service,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", typeof(WaitingServiceApp).FullName!),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None
     };
@@ -647,7 +647,7 @@ public sealed partial class AppLifecycleOrchestratorTests
         Description = "A singleton notes window.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", "org.hackeros.notes.EntryPoint"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         SingleInstancePerUser = true
@@ -657,34 +657,34 @@ public sealed partial class AppLifecycleOrchestratorTests
     {
         public override async ValueTask<int> ExecuteAsync(TerminalExecutionContext context, CancellationToken cancellationToken)
         {
-            bool sameApp = ReferenceEquals(Kazo.Os.AppSdk.HackExecutionContext.CurrentOrNull, context.App);
-            string relative = Kazo.Os.AppSdk.IO.HackPath.GetFullPath("notes.txt");
-            string home = Kazo.Os.AppSdk.IO.HackPath.GetFullPath("~/x");
+            bool sameApp = ReferenceEquals(Kazo.Os.AppSdk.KazoExecutionContext.CurrentOrNull, context.App);
+            string relative = Kazo.Os.AppSdk.IO.KazoPath.GetFullPath("notes.txt");
+            string home = Kazo.Os.AppSdk.IO.KazoPath.GetFullPath("~/x");
             await context.StandardOutput.WriteLineAsync($"{sameApp} {relative} {home}".AsMemory(), cancellationToken);
             return 0;
         }
     }
 
-    /// <summary>Reports its process environment, then changes its own (ADR 0050). The change of directory is covered by HackEnvironmentTests.</summary>
+    /// <summary>Reports its process environment, then changes its own (ADR 0050). The change of directory is covered by KazoEnvironmentTests.</summary>
     private sealed class EnvironmentProbeTerminalApp(AppManifest manifest) : TerminalAppBase(manifest)
     {
         public override async ValueTask<int> ExecuteAsync(TerminalExecutionContext context, CancellationToken cancellationToken)
         {
             string line = string.Join(';',
-                string.Join('|', HackEnvironment.GetCommandLineArgs()),
-                HackEnvironment.CurrentDirectory,
-                HackEnvironment.GetEnvironmentVariable("EDITOR") ?? "-",
-                HackEnvironment.GetEnvironmentVariable("HOME") ?? "-",
-                HackEnvironment.GetEnvironmentVariable("PWD") ?? "-",
-                HackEnvironment.GetEnvironmentVariable("FOO") ?? "-",
+                string.Join('|', KazoEnvironment.GetCommandLineArgs()),
+                KazoEnvironment.CurrentDirectory,
+                KazoEnvironment.GetEnvironmentVariable("EDITOR") ?? "-",
+                KazoEnvironment.GetEnvironmentVariable("HOME") ?? "-",
+                KazoEnvironment.GetEnvironmentVariable("PWD") ?? "-",
+                KazoEnvironment.GetEnvironmentVariable("FOO") ?? "-",
                 context.WorkingDirectory,
                 context.Environment.TryGetValue("USER", out string? user) ? user : "-",
-                HackEnvironment.MachineName);
+                KazoEnvironment.MachineName);
             await context.StandardOutput.WriteLineAsync(line.AsMemory(), cancellationToken);
 
             // Relative paths resolve against the process's own directory.
-            await context.StandardOutput.WriteLineAsync(Kazo.Os.AppSdk.IO.HackPath.GetFullPath("x").AsMemory(), cancellationToken);
-            HackEnvironment.SetEnvironmentVariable("LEAK", "1");
+            await context.StandardOutput.WriteLineAsync(Kazo.Os.AppSdk.IO.KazoPath.GetFullPath("x").AsMemory(), cancellationToken);
+            KazoEnvironment.SetEnvironmentVariable("LEAK", "1");
             return 0;
         }
     }

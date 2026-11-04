@@ -138,17 +138,17 @@ public sealed partial class ExplorerFileView
             return;
         }
 
-        HackDefaultHandlerStatus status;
+        KazoDefaultHandlerStatus status;
         try
         {
             status = await HostContext.Catalog.SetUserDefaultHandlerAsync(extension, "open", appId, HostContext.CancellationToken);
         }
         catch (Exception exception) when (exception is AppGatewayAccessDeniedException or NotSupportedException)
         {
-            status = HackDefaultHandlerStatus.WriteFailed;
+            status = KazoDefaultHandlerStatus.WriteFailed;
         }
 
-        if (status != HackDefaultHandlerStatus.Changed)
+        if (status != KazoDefaultHandlerStatus.Changed)
         {
             await ReportErrorAsync(L["Error.RememberFailed", extension]);
         }
@@ -196,17 +196,17 @@ public sealed partial class ExplorerFileView
     /// <summary>Whether one of <paramref name="items"/> is on a network drive (a folder of the computer, ADR 0181).</summary>
     private async Task<bool> AnyOnNetworkDriveAsync(IReadOnlyList<FileViewItem> items)
     {
-        HackDriveInfo[] drives;
+        KazoDriveInfo[] drives;
         try
         {
-            drives = await HackDriveInfo.GetDrivesAsync(HostContext.CancellationToken);
+            drives = await KazoDriveInfo.GetDrivesAsync(HostContext.CancellationToken);
         }
         catch (NotSupportedException)
         {
             return false;
         }
 
-        return items.Any(item => drives.Any(drive => drive.DriveType == HackDriveType.Network
+        return items.Any(item => drives.Any(drive => drive.DriveType == KazoDriveType.Network
             && item.FullPath.Value.StartsWith(drive.Name + "/", StringComparison.Ordinal)));
     }
 
@@ -217,7 +217,7 @@ public sealed partial class ExplorerFileView
     /// </summary>
     private async Task DeleteItemsAsync(IReadOnlyList<FileViewItem> items, bool permanent)
     {
-        if (_view is null || items.Count == 0 || !Has(HackFileViewFeatures.Delete))
+        if (_view is null || items.Count == 0 || !Has(KazoFileViewFeatures.Delete))
         {
             return;
         }
@@ -262,15 +262,15 @@ public sealed partial class ExplorerFileView
                 {
                     if (!permanent)
                     {
-                        await HackTrash.MoveToTrashAsync(item.FullPath.Value, HostContext.CancellationToken);
+                        await KazoTrash.MoveToTrashAsync(item.FullPath.Value, HostContext.CancellationToken);
                     }
                     else if (item.Metadata.Kind == FileSystemEntryKind.Directory)
                     {
-                        await HackDirectory.DeleteAsync(item.FullPath.Value, recursive: true, HostContext.CancellationToken);
+                        await KazoDirectory.DeleteAsync(item.FullPath.Value, recursive: true, HostContext.CancellationToken);
                     }
                     else
                     {
-                        await HackFile.DeleteAsync(item.FullPath.Value, HostContext.CancellationToken);
+                        await KazoFile.DeleteAsync(item.FullPath.Value, HostContext.CancellationToken);
                     }
 
                     removed.Add(item.FullPath.Value);
@@ -298,7 +298,7 @@ public sealed partial class ExplorerFileView
         await RefreshTrashStateAsync();
         if (removed.Count > 0 && Deleted.HasDelegate)
         {
-            await Deleted.InvokeAsync(new HackFileViewDeletedEventArgs(removed, permanent));
+            await Deleted.InvokeAsync(new KazoFileViewDeletedEventArgs(removed, permanent));
         }
     }
 
@@ -307,28 +307,28 @@ public sealed partial class ExplorerFileView
     /// <summary>The view's Ctrl+X/C/V and pasted host files.</summary>
     private Task OnClipboardRequestedAsync(FileViewClipboardRequestedEventArgs e) => e.Action switch
     {
-        FileViewClipboardAction.Cut => PutOnClipboardAsync(e.Items, HackClipboardFileOperation.Cut),
-        FileViewClipboardAction.Copy => PutOnClipboardAsync(e.Items, HackClipboardFileOperation.Copy),
+        FileViewClipboardAction.Cut => PutOnClipboardAsync(e.Items, KazoClipboardFileOperation.Cut),
+        FileViewClipboardAction.Copy => PutOnClipboardAsync(e.Items, KazoClipboardFileOperation.Copy),
         _ => PasteIntoAsync(e.Destination)
     };
 
     /// <summary>Cut or copy: writes the paths to the session clipboard. Nothing moves before the paste.</summary>
-    private async Task PutOnClipboardAsync(IReadOnlyList<FileViewItem> items, HackClipboardFileOperation operation)
+    private async Task PutOnClipboardAsync(IReadOnlyList<FileViewItem> items, KazoClipboardFileOperation operation)
     {
-        if (items.Count == 0 || !Has(HackFileViewFeatures.Clipboard))
+        if (items.Count == 0 || !Has(KazoFileViewFeatures.Clipboard))
         {
             return;
         }
 
         // A cut would remove the items from the archive at the paste: an archive is only copied from (ADR 0185 §9).
-        if (operation == HackClipboardFileOperation.Cut && await RefuseArchiveEntriesAsync(items))
+        if (operation == KazoClipboardFileOperation.Cut && await RefuseArchiveEntriesAsync(items))
         {
             return;
         }
 
         try
         {
-            await HackClipboard.SetFileDropListAsync(items.Select(item => item.FullPath.Value), operation, HostContext.CancellationToken);
+            await KazoClipboard.SetFileDropListAsync(items.Select(item => item.FullPath.Value), operation, HostContext.CancellationToken);
         }
         catch (Exception exception) when (exception is UnauthorizedAccessException or NotSupportedException)
         {
@@ -342,15 +342,15 @@ public sealed partial class ExplorerFileView
     /// </summary>
     private async Task PasteIntoAsync(VirtualPath destination)
     {
-        if (!Has(HackFileViewFeatures.Clipboard) || await RefuseInArchiveAsync(destination))
+        if (!Has(KazoFileViewFeatures.Clipboard) || await RefuseInArchiveAsync(destination))
         {
             return;
         }
 
-        HackClipboardFileList? list;
+        KazoClipboardFileList? list;
         try
         {
-            list = await HackClipboard.GetFileDropListAsync(HostContext.CancellationToken);
+            list = await KazoClipboard.GetFileDropListAsync(HostContext.CancellationToken);
         }
         catch (Exception exception) when (exception is UnauthorizedAccessException or NotSupportedException)
         {
@@ -363,21 +363,21 @@ public sealed partial class ExplorerFileView
             return;
         }
 
-        bool cut = list.Operation == HackClipboardFileOperation.Cut;
+        bool cut = list.Operation == KazoClipboardFileOperation.Cut;
         // Files copied from an archive are extracted (ADR 0185 §9); the others are copied or moved.
-        (IReadOnlyList<string> others, HackFileTransferResult extracted) = await TrackOperation(ExtractFromArchivesAsync(list.Paths, destination));
+        (IReadOnlyList<string> others, KazoFileTransferResult extracted) = await TrackOperation(ExtractFromArchivesAsync(list.Paths, destination));
         // Copies stay on the window's thread (ADR 0140): each item is an awaited OS call with a
         // checkpoint between two, and a name conflict asks the user between two items.
-        HackFileTransferResult result = others.Count == 0 ? extracted : Merge(extracted, await TrackOperation(HackFileOperations.TransferAsync(
+        KazoFileTransferResult result = others.Count == 0 ? extracted : Merge(extracted, await TrackOperation(KazoFileOperations.TransferAsync(
             others,
             destination.Value,
-            cut ? HackFileTransferMode.Move : HackFileTransferMode.Copy,
+            cut ? KazoFileTransferMode.Move : KazoFileTransferMode.Copy,
             AskConflictAsync,
             HostContext.CancellationToken)));
 
         if (cut && result.Succeeded)
         {
-            await HackClipboard.ClearAsync(HostContext.CancellationToken);
+            await KazoClipboard.ClearAsync(HostContext.CancellationToken);
         }
 
         await ReportTransferAsync(result, cut ? TransferVerb.Move : TransferVerb.Copy);
@@ -397,9 +397,9 @@ public sealed partial class ExplorerFileView
     {
         try
         {
-            HackClipboardFileList? list = await HostContext.Clipboard.GetFileDropListAsync(HostContext.CancellationToken);
+            KazoClipboardFileList? list = await HostContext.Clipboard.GetFileDropListAsync(HostContext.CancellationToken);
             _canPaste = list is { Paths.Count: > 0 };
-            _cutPaths = list is { Operation: HackClipboardFileOperation.Cut }
+            _cutPaths = list is { Operation: KazoClipboardFileOperation.Cut }
                 ? new HashSet<string>(list.Paths, StringComparer.Ordinal)
                 : [];
         }
@@ -423,7 +423,7 @@ public sealed partial class ExplorerFileView
     /// </summary>
     private async Task TransferDropAsync(FileViewDropRequestedEventArgs e, VirtualPath destination)
     {
-        if (!Has(HackFileViewFeatures.DragDrop) && e.Entries.Count > 0)
+        if (!Has(KazoFileViewFeatures.DragDrop) && e.Entries.Count > 0)
         {
             return;
         }
@@ -436,12 +436,12 @@ public sealed partial class ExplorerFileView
 
         await CreateShortcutsAsync(e.AppIds, destination);
 
-        List<HackFileTransferItemResult> completed = [];
+        List<KazoFileTransferItemResult> completed = [];
         List<string> skipped = [];
-        List<HackFileTransferFailure> failures = [];
+        List<KazoFileTransferFailure> failures = [];
 
         // Items dragged out of an archive are extracted, never moved out of it (ADR 0185 §9).
-        (IReadOnlyList<string> others, HackFileTransferResult extracted) = await TrackOperation(
+        (IReadOnlyList<string> others, KazoFileTransferResult extracted) = await TrackOperation(
             ExtractFromArchivesAsync([.. e.Entries.Select(entry => entry.Path.Value)], destination));
         completed.AddRange(extracted.Completed);
         skipped.AddRange(extracted.Skipped);
@@ -449,10 +449,10 @@ public sealed partial class ExplorerFileView
 
         if (others.Count > 0)
         {
-            HackFileTransferResult moved = await TrackOperation(HackFileOperations.TransferAsync(
+            KazoFileTransferResult moved = await TrackOperation(KazoFileOperations.TransferAsync(
                 others,
                 destination.Value,
-                e.Copy ? HackFileTransferMode.Copy : HackFileTransferMode.Move,
+                e.Copy ? KazoFileTransferMode.Copy : KazoFileTransferMode.Move,
                 AskConflictAsync,
                 HostContext.CancellationToken));
             completed.AddRange(moved.Completed);
@@ -462,36 +462,36 @@ public sealed partial class ExplorerFileView
 
         if (e.HostFiles.Count > 0)
         {
-            HackFileTransferResult imported = await TrackOperation(HackFileOperations.ImportAsync(e.HostFiles, destination.Value, HostContext.CancellationToken));
+            KazoFileTransferResult imported = await TrackOperation(KazoFileOperations.ImportAsync(e.HostFiles, destination.Value, HostContext.CancellationToken));
             completed.AddRange(imported.Completed);
             failures.AddRange(imported.Failures);
         }
 
         await ReportTransferAsync(
-            new HackFileTransferResult(completed, skipped, failures),
+            new KazoFileTransferResult(completed, skipped, failures),
             e.Copy || e.Entries.Count == 0 ? TransferVerb.Copy : TransferVerb.Move);
         await RefreshAfterChangeAsync();
     }
 
     /// <summary>The provided "Replace / Keep both / Skip" dialog; closing it skips the item.</summary>
-    private async Task<HackFileConflictResolution> AskConflictAsync(HackFileTransferConflict conflict)
+    private async Task<KazoFileConflictResolution> AskConflictAsync(KazoFileTransferConflict conflict)
     {
         if (Dialogs is not { } dialogs)
         {
-            return new HackFileConflictResolution(HackFileConflictChoice.Skip);
+            return new KazoFileConflictResolution(KazoFileConflictChoice.Skip);
         }
 
         FileConflictDialogResult answer = await dialogs.ResolveFileConflictAsync(
             HostContext,
             new FileConflictDialogRequest(conflict.SourcePath, conflict.DestinationPath, conflict.SourceIsDirectory, conflict.DestinationIsDirectory),
             HostContext.CancellationToken);
-        HackFileConflictChoice choice = answer.Choice switch
+        KazoFileConflictChoice choice = answer.Choice switch
         {
-            FileConflictDialogChoice.Replace => HackFileConflictChoice.Replace,
-            FileConflictDialogChoice.KeepBoth => HackFileConflictChoice.KeepBoth,
-            _ => HackFileConflictChoice.Skip
+            FileConflictDialogChoice.Replace => KazoFileConflictChoice.Replace,
+            FileConflictDialogChoice.KeepBoth => KazoFileConflictChoice.KeepBoth,
+            _ => KazoFileConflictChoice.Skip
         };
-        return new HackFileConflictResolution(choice, answer.ApplyToAll);
+        return new KazoFileConflictResolution(choice, answer.ApplyToAll);
     }
 
     // ---- Shared ----------------------------------------------------------------------------------------
@@ -522,7 +522,7 @@ public sealed partial class ExplorerFileView
     }
 
     /// <summary>The end-of-operation summary: the failures (with their reason) to the host; nothing when all went through.</summary>
-    private async Task ReportTransferAsync(HackFileTransferResult result, TransferVerb verb)
+    private async Task ReportTransferAsync(KazoFileTransferResult result, TransferVerb verb)
     {
         if (ExplorerTransferReport.DescribeFailures(L, result, verb) is { } summary)
         {
@@ -546,7 +546,7 @@ public sealed partial class ExplorerFileView
             // The folder shown was moved away or deleted: show the home folder instead.
             try
             {
-                await _view.NavigateAsync(VirtualPath.Parse(Kazo.Os.AppSdk.HackUser.Describe(HostContext).HomeDirectory));
+                await _view.NavigateAsync(VirtualPath.Parse(Kazo.Os.AppSdk.KazoUser.Describe(HostContext).HomeDirectory));
             }
             catch (InvalidOperationException exception)
             {

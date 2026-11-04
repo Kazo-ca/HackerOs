@@ -32,13 +32,13 @@ public sealed class ContextMenuServiceTests
         using ContextMenuScope scope = service.CreateScope(context: null);
         object row = new();
 
-        string token = (string)scope.Attach("rows", row)[HackMenuAttributes.Token];
-        Assert.Equal(token, scope.Attach("rows", row)[HackMenuAttributes.Token]);
-        Assert.NotEqual(token, scope.Attach("rows", new object())[HackMenuAttributes.Token]);
-        Assert.NotEqual(token, scope.Attach("other", row)[HackMenuAttributes.Token]);
+        string token = (string)scope.Attach("rows", row)[KazoMenuAttributes.Token];
+        Assert.Equal(token, scope.Attach("rows", row)[KazoMenuAttributes.Token]);
+        Assert.NotEqual(token, scope.Attach("rows", new object())[KazoMenuAttributes.Token]);
+        Assert.NotEqual(token, scope.Attach("other", row)[KazoMenuAttributes.Token]);
         // A value type is boxed anew at each render: it is matched by value.
-        Assert.Equal(scope.Attach("rows", 7)[HackMenuAttributes.Token], scope.Attach("rows", 7)[HackMenuAttributes.Token]);
-        Assert.Equal("rows", scope.Attach("rows", row)[HackMenuAttributes.Menu]);
+        Assert.Equal(scope.Attach("rows", 7)[KazoMenuAttributes.Token], scope.Attach("rows", 7)[KazoMenuAttributes.Token]);
+        Assert.Equal("rows", scope.Attach("rows", row)[KazoMenuAttributes.Menu]);
         Assert.Equal(4, scope.AttachedCount);
 
         service.Release([token]);
@@ -65,22 +65,22 @@ public sealed class ContextMenuServiceTests
     {
         ContextMenuService service = new();
         using ContextMenuScope scope = service.CreateScope(context: null);
-        HackMenuDefinition source = new("rows");
-        HackMenuGroupDefinition group = source.AddGroup();
+        KazoMenuDefinition source = new("rows");
+        KazoMenuGroupDefinition group = source.AddGroup();
         group.Add("open", "Open");
         group.Add("delete", "Delete");
         object? seen = null;
-        scope.Register(new HackMenuRegistration(
+        scope.Register(new KazoMenuRegistration(
             "rows",
             () => source,
-            new EventCallback<HackMenuOpeningEventArgs>(null, (Func<HackMenuOpeningEventArgs, Task>)(args =>
+            new EventCallback<KazoMenuOpeningEventArgs>(null, (Func<KazoMenuOpeningEventArgs, Task>)(args =>
             {
                 seen = args.Item;
                 args.Menu.Hide("delete");
                 args.Menu.AddGroup().Add("added", "Added");
                 return Task.CompletedTask;
             }))));
-        string token = (string)scope.Attach("rows", "row 3")[HackMenuAttributes.Token];
+        string token = (string)scope.Attach("rows", "row 3")[KazoMenuAttributes.Token];
 
         Assert.True(await service.OpenFromTokenAsync(token, 40, 50, ContextMenuOrigin.Pointer));
 
@@ -99,10 +99,10 @@ public sealed class ContextMenuServiceTests
     {
         ContextMenuService service = new();
         using ContextMenuScope scope = service.CreateScope(context: null);
-        scope.Register(new HackMenuRegistration(
+        scope.Register(new KazoMenuRegistration(
             "cancelled",
             () => Build("cancelled", menu => menu.AddGroup().Add("open", "Open")),
-            new EventCallback<HackMenuOpeningEventArgs>(null, (Func<HackMenuOpeningEventArgs, Task>)(args =>
+            new EventCallback<KazoMenuOpeningEventArgs>(null, (Func<KazoMenuOpeningEventArgs, Task>)(args =>
             {
                 args.Cancel = true;
                 return Task.CompletedTask;
@@ -113,7 +113,7 @@ public sealed class ContextMenuServiceTests
             menu.AddGroup().Add("same", "A");
             menu.AddGroup().Add("same", "B");
         }));
-        scope.Register(new HackMenuRegistration("throws", () => throw new InvalidOperationException("broken"), default));
+        scope.Register(new KazoMenuRegistration("throws", () => throw new InvalidOperationException("broken"), default));
 
         Assert.False(await scope.OpenAsync("cancelled", null, 0, 0));
         Assert.False(await scope.OpenAsync("unknown", null, 0, 0));
@@ -160,11 +160,11 @@ public sealed class ContextMenuServiceTests
         bool openDuringAction = true;
         scope.Register(Registration("rows", menu =>
         {
-            HackMenuItemDefinition open = menu.AddGroup().Add("open", "Open");
+            KazoMenuItemDefinition open = menu.AddGroup().Add("open", "Open");
             open.OnClick = new EventCallback<object?>(null, (Func<object?, Task>)(item =>
             {
                 received = item;
-                ambient = HackExecutionContext.CurrentOrNull;
+                ambient = KazoExecutionContext.CurrentOrNull;
                 openDuringAction = service.Current is not null;
                 return Task.CompletedTask;
             }));
@@ -192,11 +192,11 @@ public sealed class ContextMenuServiceTests
         ContextMenuService service = new();
         using ContextMenuScope scope = service.CreateScope(context);
         AppCatalog catalog = Assert.IsType<AppCatalog>(AppCatalog.Build([], []).Catalog);
-        HackComponentHost host = new(
+        KazoComponentHost host = new(
             catalog,
             new AppEnablementRegistry(catalog),
             (_, _) => Task.FromResult<(AppDescriptor?, string?)>((null, "none")),
-            [new HackPlatformComponent(HackComponentContracts.ContextMenu, typeof(PlatformContextMenu))],
+            [new KazoPlatformComponent(KazoComponentContracts.ContextMenu, typeof(PlatformContextMenu))],
             reportError: null);
         using MenuRenderer renderer = new(host);
 
@@ -216,17 +216,17 @@ public sealed class ContextMenuServiceTests
         Assert.Same(context, window.ContextInCallback);
 
         // The window's own attachment resolves to the same menu.
-        Assert.True(service.TryResolve((string)window.Attached![HackMenuAttributes.Token], out ContextMenuScope? found, out string? name, out object? item));
+        Assert.True(service.TryResolve((string)window.Attached![KazoMenuAttributes.Token], out ContextMenuScope? found, out string? name, out object? item));
         Assert.Same(scope, found);
         Assert.Equal(("rows", "row 1"), (name, item));
     }
 
-    private static HackMenuRegistration Registration(string name, Action<HackMenuDefinition> fill) =>
+    private static KazoMenuRegistration Registration(string name, Action<KazoMenuDefinition> fill) =>
         new(name, () => Build(name, fill), default);
 
-    private static HackMenuDefinition Build(string name, Action<HackMenuDefinition> fill)
+    private static KazoMenuDefinition Build(string name, Action<KazoMenuDefinition> fill)
     {
-        HackMenuDefinition menu = new(name);
+        KazoMenuDefinition menu = new(name);
         fill(menu);
         return menu;
     }
@@ -240,18 +240,18 @@ public sealed class ContextMenuServiceTests
         Description = "Context menu test.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Blazor.Tests", "MenuWindow"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None
     };
 
     /// <summary>An app window declaring a menu in markup.</summary>
-    private sealed class MenuWindow : HackComponentBase
+    private sealed class MenuWindow : KazoComponentBase
     {
         [Parameter]
         public IAppExecutionContext Context { get; set; } = null!;
 
-        public HackContextMenu? Menu { get; private set; }
+        public KazoContextMenu? Menu { get; private set; }
         public IReadOnlyDictionary<string, object>? Attached { get; private set; }
         public object? Opened { get; private set; }
         public IAppExecutionContext? ContextInCallback { get; private set; }
@@ -261,37 +261,37 @@ public sealed class ContextMenuServiceTests
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             Attached = Menus.Attach("rows", "row 1");
-            builder.OpenComponent<HackContextMenu>(0);
-            builder.AddComponentParameter(1, nameof(HackContextMenu.Name), "rows");
-            builder.AddComponentParameter(2, nameof(HackContextMenu.ChildContent), (RenderFragment)(menu =>
+            builder.OpenComponent<KazoContextMenu>(0);
+            builder.AddComponentParameter(1, nameof(KazoContextMenu.Name), "rows");
+            builder.AddComponentParameter(2, nameof(KazoContextMenu.ChildContent), (RenderFragment)(menu =>
             {
-                menu.OpenComponent<HackMenuItem>(0);
-                menu.AddComponentParameter(1, nameof(HackMenuItem.Id), "open");
-                menu.AddComponentParameter(2, nameof(HackMenuItem.Title), "Open");
-                menu.AddComponentParameter(3, nameof(HackMenuItem.OnClick), EventCallback.Factory.Create<object?>(this, item =>
+                menu.OpenComponent<KazoMenuItem>(0);
+                menu.AddComponentParameter(1, nameof(KazoMenuItem.Id), "open");
+                menu.AddComponentParameter(2, nameof(KazoMenuItem.Title), "Open");
+                menu.AddComponentParameter(3, nameof(KazoMenuItem.OnClick), EventCallback.Factory.Create<object?>(this, item =>
                 {
                     Opened = item;
-                    ContextInCallback = HackExecutionContext.CurrentOrNull;
+                    ContextInCallback = KazoExecutionContext.CurrentOrNull;
                 }));
                 menu.CloseComponent();
-                menu.OpenComponent<HackMenuGroup>(4);
-                menu.AddComponentParameter(5, nameof(HackMenuGroup.ChildContent), (RenderFragment)(group =>
+                menu.OpenComponent<KazoMenuGroup>(4);
+                menu.AddComponentParameter(5, nameof(KazoMenuGroup.ChildContent), (RenderFragment)(group =>
                 {
-                    group.OpenComponent<HackMenuItem>(0);
-                    group.AddComponentParameter(1, nameof(HackMenuItem.Id), "export");
-                    group.AddComponentParameter(2, nameof(HackMenuItem.Title), "Export");
-                    group.AddComponentParameter(3, nameof(HackMenuItem.ChildContent), (RenderFragment)(export =>
+                    group.OpenComponent<KazoMenuItem>(0);
+                    group.AddComponentParameter(1, nameof(KazoMenuItem.Id), "export");
+                    group.AddComponentParameter(2, nameof(KazoMenuItem.Title), "Export");
+                    group.AddComponentParameter(3, nameof(KazoMenuItem.ChildContent), (RenderFragment)(export =>
                     {
-                        export.OpenComponent<HackMenuItem>(0);
-                        export.AddComponentParameter(1, nameof(HackMenuItem.Id), "csv");
-                        export.AddComponentParameter(2, nameof(HackMenuItem.Title), "CSV");
+                        export.OpenComponent<KazoMenuItem>(0);
+                        export.AddComponentParameter(1, nameof(KazoMenuItem.Id), "csv");
+                        export.AddComponentParameter(2, nameof(KazoMenuItem.Title), "CSV");
                         export.CloseComponent();
                     }));
                     group.CloseComponent();
                 }));
                 menu.CloseComponent();
             }));
-            builder.AddComponentReferenceCapture(3, component => Menu = (HackContextMenu)component);
+            builder.AddComponentReferenceCapture(3, component => Menu = (KazoContextMenu)component);
             builder.CloseComponent();
         }
     }

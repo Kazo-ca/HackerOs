@@ -34,11 +34,11 @@ public sealed partial class Wave4NetworkTests
         SimulatedHost[] hosts = [.. DefaultSimulatedHostCatalog.Build(), BodyEchoController.Host];
 
         var registry = new InMemorySimulatedWebsiteRegistry();
-        registry.Register(new HackerSearchController());
-        registry.Register(new HackMailController());
+        registry.Register(new KazoSearchController());
+        registry.Register(new KazoMailController());
         registry.Register(new CryptoBankController());
         registry.Register(new DarknetMarketController());
-        registry.Register(new HackerForumController());
+        registry.Register(new KazoForumController());
         registry.Register(new BodyEchoController());
 
         _network = new InMemorySimulatedNetworkService(hosts, registry);
@@ -88,7 +88,7 @@ public sealed partial class Wave4NetworkTests
     // ── P4-W4-003 / P4-W4-005: Website Controllers & Navigation ────────────
 
     [Fact]
-    public void Navigate_HackerSearch_ReturnsRenderablePage()
+    public void Navigate_KazoSearch_ReturnsRenderablePage()
     {
         var cookies = new Dictionary<string, Dictionary<string, string>>();
         var result = _network.Navigate("https://hackersearch.net", cookies);
@@ -96,11 +96,11 @@ public sealed partial class Wave4NetworkTests
         Assert.True(result.IsSuccess);
         Assert.Equal(200, result.StatusCode);
         Assert.NotNull(result.Page);
-        Assert.Equal("HackerSearch", result.Page.Title);
+        Assert.Equal("KazoSearch", result.Page.Title);
     }
 
     [Fact]
-    public void Navigate_HackMail_RedirectsToLogin_WhenNotAuthenticated()
+    public void Navigate_KazoMail_RedirectsToLogin_WhenNotAuthenticated()
     {
         var cookies = new Dictionary<string, Dictionary<string, string>>();
         var result = _network.Navigate("https://hackmail.com/inbox", cookies);
@@ -108,12 +108,12 @@ public sealed partial class Wave4NetworkTests
         Assert.True(result.IsSuccess);
         Assert.Equal(200, result.StatusCode);
         Assert.Equal("https://hackmail.com/login", result.FinalUrl);
-        Assert.Equal("HackMail — Login", result.Page?.Title);
+        Assert.Equal("KazoMail — Login", result.Page?.Title);
         Assert.Equal(1, result.RedirectCount);
     }
 
     [Fact]
-    public void HackMail_PostLogin_SetsSessionCookie_And_RedirectsToInbox()
+    public void KazoMail_PostLogin_SetsSessionCookie_And_RedirectsToInbox()
     {
         var cookies = new Dictionary<string, Dictionary<string, string>>();
 
@@ -131,7 +131,7 @@ public sealed partial class Wave4NetworkTests
         // Now navigate to /inbox using the updated cookies
         var navResult = _network.Navigate("https://hackmail.com/inbox", cookies);
         Assert.True(navResult.IsSuccess);
-        Assert.Equal("HackMail — Inbox", navResult.Page?.Title);
+        Assert.Equal("KazoMail — Inbox", navResult.Page?.Title);
     }
 
     [Fact]
@@ -273,8 +273,8 @@ public sealed partial class Wave4NetworkTests
 
         Assert.Equal(0, exitCode);
         var output = stdoutWriter.ToString();
-        Assert.Contains("Title: HackerSearch", output);
-        Assert.Contains("=== HackerSearch ===", output);
+        Assert.Contains("Title: KazoSearch", output);
+        Assert.Contains("=== KazoSearch ===", output);
         Assert.Contains("Search the dark corners of the web", output);
     }
 
@@ -393,7 +393,7 @@ public sealed partial class Wave4NetworkTests
         Description = "Concatenate files and print on the standard output",
         Kind = AppKind.Terminal,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Commands.dll", "Kazo.Os.Commands.Cat.CatCommand"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("utilities", AppLaunchVisibility.Hidden, []),
         Resources = AppResourceProfileManifest.None,
         Terminal = new TerminalCommandManifest("cat", [], "cat [file ...]")
@@ -412,7 +412,7 @@ public sealed partial class Wave4NetworkTests
         int exitCode = await cmd.ExecuteAsync(context, CancellationToken.None);
 
         Assert.Equal(0, exitCode);
-        Assert.Contains("Title: HackerSearch", stdoutWriter.ToString());
+        Assert.Contains("Title: KazoSearch", stdoutWriter.ToString());
     }
 
     [Fact]
@@ -513,7 +513,7 @@ public sealed partial class Wave4NetworkTests
         var app = new StubAppExecutionContext(
             manifest,
             new AppNetworkGateway(_network, new GrantAllCapabilityChecker(), manifest.Id, _serverConnection, _proxy));
-        HackExecutionContext.Enter(app);
+        KazoExecutionContext.Enter(app);
 
         return new TerminalExecutionContext(
             app: app,

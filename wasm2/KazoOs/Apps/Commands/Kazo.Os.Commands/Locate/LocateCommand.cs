@@ -69,7 +69,7 @@ public sealed class LocateCommand(AppManifest manifest) : TerminalAppBase(manife
         while (directories.Count > 0 && found < limit)
         {
             // ADR 0069: locate walks the whole disk; give the thread back between directories.
-            await HackProcess.CheckpointAsync(cancellationToken);
+            await KazoProcess.CheckpointAsync(cancellationToken);
             string directory = directories.Pop();
             if (!visited.Add(directory) || Pruned.Contains(directory))
             {
@@ -80,8 +80,8 @@ public sealed class LocateCommand(AppManifest manifest) : TerminalAppBase(manife
             string[] subdirectories;
             try
             {
-                entries = await HackDirectory.GetFileSystemEntriesAsync(directory, cancellationToken: cancellationToken);
-                subdirectories = await HackDirectory.GetDirectoriesAsync(directory, cancellationToken: cancellationToken);
+                entries = await KazoDirectory.GetFileSystemEntriesAsync(directory, cancellationToken: cancellationToken);
+                subdirectories = await KazoDirectory.GetDirectoriesAsync(directory, cancellationToken: cancellationToken);
             }
             catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException)
             {
@@ -127,10 +127,10 @@ public sealed class LocateCommand(AppManifest manifest) : TerminalAppBase(manife
         StringComparison comparison = ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
         if (!Wildcard.HasWildcards(pattern))
         {
-            return path => (baseName ? HackPath.GetFileName(path) ?? path : path).Contains(pattern, comparison);
+            return path => (baseName ? KazoPath.GetFileName(path) ?? path : path).Contains(pattern, comparison);
         }
 
         Regex regex = Wildcard.ToRegex(pattern, ignoreCase);
-        return path => regex.IsMatch(baseName || !pattern.Contains('/') ? HackPath.GetFileName(path) ?? path : path);
+        return path => regex.IsMatch(baseName || !pattern.Contains('/') ? KazoPath.GetFileName(path) ?? path : path);
     }
 }

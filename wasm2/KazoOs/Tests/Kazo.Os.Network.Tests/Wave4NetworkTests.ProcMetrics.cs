@@ -65,8 +65,8 @@ public sealed partial class Wave4NetworkTests
         NetworkInterfaceStatistics statistics = new();
         ProcessIoAccounting io = new();
 
-        HackNetworkResult<HackHttpResponse> response = await MeteredGateway(statistics, io).SendAsync(
-            new HackHttpRequest("GET", new Uri("https://hackersearch.net/"), [], null, []));
+        KazoNetworkResult<KazoHttpResponse> response = await MeteredGateway(statistics, io).SendAsync(
+            new KazoHttpRequest("GET", new Uri("https://hackersearch.net/"), [], null, []));
 
         Assert.True(response.Succeeded);
         NetworkInterfaceCounters eth0 = statistics.GetInterfaces()[1];

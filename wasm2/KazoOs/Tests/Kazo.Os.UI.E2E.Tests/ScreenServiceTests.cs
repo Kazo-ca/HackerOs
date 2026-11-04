@@ -399,7 +399,7 @@ public sealed class ScreenServiceTests(ITestOutputHelper output)
             await E2ESupport.OpenAppAsync(page, "Settings", output);
             await page.Locator("#settings-nav-screens").ClickAsync();
 
-            // ADR 0184: HackScreens lists screen 1, the screen of this window.
+            // ADR 0184: KazoScreens lists screen 1, the screen of this window.
             ILocator open = page.Locator(".scr-panel", new() { Has = page.Locator("#scr-open-title") });
             await Assertions.Expect(open.Locator(".scr-item[data-screen='1']")).ToContainTextAsync("This window", new() { Timeout = 15000 });
             await Assertions.Expect(open.Locator(".scr-item")).ToHaveCountAsync(1);

@@ -29,7 +29,7 @@ solid and stays in place (D2). What is missing is a facade familiar to a
 - Project: `Shared/Kazo.Os.AppSdk` (no Blazor dependency, usable by
   window, terminal and service apps).
 - Folder `Shared/Kazo.Os.AppSdk/IO/`, public namespace **`Kazo.Os.AppSdk.IO`**.
-- The ambient context lives in `Shared/Kazo.Os.AppSdk/HackExecutionContext.cs`,
+- The ambient context lives in `Shared/Kazo.Os.AppSdk/KazoExecutionContext.cs`,
   namespace **`Kazo.Os.AppSdk`**.
 - The facade calls **only** `IAppFileSystemGateway` and
   `IAppFileSystemWatchGateway` of the current context. It references neither

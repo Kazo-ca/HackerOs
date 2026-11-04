@@ -7,7 +7,7 @@ using Kazo.Os.AppSdk.Web.Http;
 namespace Kazo.Os.Samples.Intranet.Tests;
 
 /// <summary>
-/// A browser-like client of the Intranet site run in process (<see cref="HackWebHost.CreateApplication"/>,
+/// A browser-like client of the Intranet site run in process (<see cref="KazoWebHost.CreateApplication"/>,
 /// the site's generated route and view tables): it keeps the cookies the site sets, like the tab of the
 /// Kazo OS browser, and finds the anti-forgery field of a form.
 /// </summary>
@@ -17,24 +17,24 @@ internal sealed partial class IntranetClient
 
     public IntranetClient()
     {
-        Application = HackWebHost.CreateApplication(new IntranetSite(), HackWebGeneratedRoutes.Table, views: HackWebGeneratedRoutes.Views);
+        Application = KazoWebHost.CreateApplication(new IntranetSite(), KazoWebGeneratedRoutes.Table, views: KazoWebGeneratedRoutes.Views);
     }
 
-    public HackWebApplication Application { get; }
+    public KazoWebApplication Application { get; }
 
     public IReadOnlyDictionary<string, string> Cookies => _cookies;
 
-    public Task<HackWebResponseData> GetAsync(string path) => SendAsync(new HackWebRequestData("GET", Url(path), CookieHeader(), null, ReadOnlyMemory<byte>.Empty));
+    public Task<KazoWebResponseData> GetAsync(string path) => SendAsync(new KazoWebRequestData("GET", Url(path), CookieHeader(), null, ReadOnlyMemory<byte>.Empty));
 
-    public Task<HackWebResponseData> SendAsync(string method, string path, string contentType, string body) =>
-        SendAsync(new HackWebRequestData(method, Url(path), CookieHeader(), contentType, Encoding.UTF8.GetBytes(body)));
+    public Task<KazoWebResponseData> SendAsync(string method, string path, string contentType, string body) =>
+        SendAsync(new KazoWebRequestData(method, Url(path), CookieHeader(), contentType, Encoding.UTF8.GetBytes(body)));
 
-    public Task<HackWebResponseData> SendJsonAsync(string method, string path, string json) => SendAsync(method, path, "application/json", json);
+    public Task<KazoWebResponseData> SendJsonAsync(string method, string path, string json) => SendAsync(method, path, "application/json", json);
 
-    public Task<HackWebResponseData> DeleteAsync(string path) => SendAsync(new HackWebRequestData("DELETE", Url(path), CookieHeader(), null, ReadOnlyMemory<byte>.Empty));
+    public Task<KazoWebResponseData> DeleteAsync(string path) => SendAsync(new KazoWebRequestData("DELETE", Url(path), CookieHeader(), null, ReadOnlyMemory<byte>.Empty));
 
     /// <summary>Posts an HTML form, with the anti-forgery token of <paramref name="formPage"/> unless <paramref name="formPage"/> is null.</summary>
-    public Task<HackWebResponseData> PostFormAsync(string path, string? formPage, params (string Name, string Value)[] fields)
+    public Task<KazoWebResponseData> PostFormAsync(string path, string? formPage, params (string Name, string Value)[] fields)
     {
         List<(string Name, string Value)> all = [.. fields];
         if (formPage is not null)
@@ -53,15 +53,15 @@ internal sealed partial class IntranetClient
         return System.Net.WebUtility.HtmlDecode(match.Groups[1].Value);
     }
 
-    public static string? Location(HackWebResponseData response) =>
+    public static string? Location(KazoWebResponseData response) =>
         response.Headers.FirstOrDefault(header => string.Equals(header.Key, "Location", StringComparison.OrdinalIgnoreCase)).Value;
 
-    public static string? Header(HackWebResponseData response, string name) =>
+    public static string? Header(KazoWebResponseData response, string name) =>
         response.Headers.FirstOrDefault(header => string.Equals(header.Key, name, StringComparison.OrdinalIgnoreCase)).Value;
 
-    private async Task<HackWebResponseData> SendAsync(HackWebRequestData request)
+    private async Task<KazoWebResponseData> SendAsync(KazoWebRequestData request)
     {
-        HackWebResponseData response = await Application.ProcessAsync(request);
+        KazoWebResponseData response = await Application.ProcessAsync(request);
         foreach (KeyValuePair<string, string> header in response.Headers.Where(header => string.Equals(header.Key, "Set-Cookie", StringComparison.OrdinalIgnoreCase)))
         {
             string pair = header.Value.Split(';')[0];

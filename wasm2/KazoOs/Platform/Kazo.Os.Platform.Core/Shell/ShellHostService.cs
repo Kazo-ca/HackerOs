@@ -45,7 +45,7 @@ public sealed class ShellHostService
         PublisherId = "pub.hackeros",
         Description = "Kazo OS shell",
         Kind = AppKind.Terminal,
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("system", AppLaunchVisibility.Hidden, []),
         Resources = new AppResourceProfileManifest(0, 0.01, 0.01, 0.01, 0, 0, 0, 0),
         Terminal = new TerminalCommandManifest("hsh", [], "hsh")
@@ -69,7 +69,7 @@ public sealed class ShellHostService
         IAppExecutionContext caller,
         AuthenticatedPrincipal principal,
         Func<ProcessRecord, IAppExecutionContext> createShellContext,
-        HackShellOptions options,
+        KazoShellOptions options,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(caller);
@@ -122,7 +122,7 @@ public sealed class ShellHostService
     {
         try
         {
-            using (HackExecutionContext.Enter(shellContext))
+            using (KazoExecutionContext.Enter(shellContext))
             {
                 await session.ChangeDirectoryAsync(path, cancellationToken).ConfigureAwait(false);
             }
@@ -175,11 +175,11 @@ public sealed class ShellHostService
         public string? NavigateHistory(int delta) => _session.NavigateHistory(delta);
 
         public IReadOnlyList<ShellCommandInfo> GetInstalledCommands() =>
-            _interpreter.GetInstalledCommands(Kazo.Os.AppSdk.Globalization.HackLocale.ResolveLanguage(_session.GetVariable));
+            _interpreter.GetInstalledCommands(Kazo.Os.AppSdk.Globalization.KazoLocale.ResolveLanguage(_session.GetVariable));
 
         public bool NeedsMoreInput(string text) => ShellParser.Parse(text ?? string.Empty).IsIncomplete;
 
-        public async Task<int> ExecuteAsync(string commandLine, HackShellExecution execution, CancellationToken cancellationToken = default)
+        public async Task<int> ExecuteAsync(string commandLine, KazoShellExecution execution, CancellationToken cancellationToken = default)
         {
             ArgumentNullException.ThrowIfNull(commandLine);
             ArgumentNullException.ThrowIfNull(execution);
@@ -192,7 +192,7 @@ public sealed class ShellHostService
                 // Killing the shell (its tab closed, its terminal gone) stops the line too.
                 using CancellationTokenSource line = CancellationTokenSource.CreateLinkedTokenSource(
                     cancellationToken, _context.CancellationToken);
-                using (HackExecutionContext.Enter(_context))
+                using (KazoExecutionContext.Enter(_context))
                 {
                     ShellExecutionResult result = await _interpreter.ExecuteAsync(
                         _session,
@@ -224,23 +224,23 @@ public sealed class ShellHostService
             }
         }
 
-        public Task<HackShellCompletion> CompleteAsync(string commandLine, int cursor, CancellationToken cancellationToken = default)
+        public Task<KazoShellCompletion> CompleteAsync(string commandLine, int cursor, CancellationToken cancellationToken = default)
         {
             ArgumentNullException.ThrowIfNull(commandLine);
             ArgumentOutOfRangeException.ThrowIfNegative(cursor);
             ArgumentOutOfRangeException.ThrowIfGreaterThan(cursor, commandLine.Length);
             if (HasExited)
             {
-                return Task.FromResult(HackShellCompletion.None(cursor));
+                return Task.FromResult(KazoShellCompletion.None(cursor));
             }
 
             return CompleteCoreAsync(commandLine, cursor, cancellationToken);
         }
 
         /// <summary>Looks paths up with the shell's own rights and directory, as bash's readline does.</summary>
-        private async Task<HackShellCompletion> CompleteCoreAsync(string commandLine, int cursor, CancellationToken cancellationToken)
+        private async Task<KazoShellCompletion> CompleteCoreAsync(string commandLine, int cursor, CancellationToken cancellationToken)
         {
-            using (HackExecutionContext.Enter(_context))
+            using (KazoExecutionContext.Enter(_context))
             {
                 return await ShellCompletion.CompleteAsync(
                     commandLine, cursor, [.. _interpreter.GetInstalledCommands(), .. _interpreter.GetLaunchableApplications()], _session.HomeDirectory, cancellationToken).ConfigureAwait(false);

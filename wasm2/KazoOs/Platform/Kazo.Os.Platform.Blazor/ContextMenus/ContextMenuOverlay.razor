@@ -34,7 +34,7 @@
                          aria-disabled="false"
                          @onclick="Back">
                         <span class="hack-context-menu-icon" aria-hidden="true">
-                            <HackerIcon Library="IconLibrary.Lucide" Name="chevron-left" Size="16" />
+                            <KazoIcon Library="IconLibrary.Lucide" Name="chevron-left" Size="16" />
                         </span>
                         <span class="hack-context-menu-title">@L["ContextMenu.Back"]</span>
                     </div>
@@ -98,11 +98,11 @@
                  @onpointerleave="() => Unhover(level, row)"
                  @onclick="() => ClickAsync(level, row)">
                 <span class="hack-context-menu-icon" aria-hidden="true">
-                    @if (item.Icon is { Kind: HackIconKind.Vector } vector)
+                    @if (item.Icon is { Kind: KazoIconKind.Vector } vector)
                     {
-                        <HackerIcon Library="vector.Library" Name="@vector.Source" Size="16" />
+                        <KazoIcon Library="vector.Library" Name="@vector.Source" Size="16" />
                     }
-                    else if (item.Icon is { Kind: HackIconKind.Image } image)
+                    else if (item.Icon is { Kind: KazoIconKind.Image } image)
                     {
                         <img src="@image.Source" alt="" />
                     }
@@ -115,7 +115,7 @@
                 @if (menuRow.Submenu is not null)
                 {
                     <span class="hack-context-menu-chevron" aria-hidden="true">
-                        <HackerIcon Library="IconLibrary.Lucide" Name="chevron-right" Size="14" />
+                        <KazoIcon Library="IconLibrary.Lucide" Name="chevron-right" Size="14" />
                     </span>
                 }
             </div>

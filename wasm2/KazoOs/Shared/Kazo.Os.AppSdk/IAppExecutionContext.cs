@@ -34,8 +34,8 @@ public interface IAppExecutionContext
 
     /// <summary>
     /// Gets the acting user's canonical home directory (<c>/home/{login}</c>), used by
-    /// <see cref="HackExecutionContext"/> as the default working directory and by
-    /// <see cref="IO.HackPath.GetFullPath(string)"/> to expand <c>~</c>, and as the root of the user settings layer
+    /// <see cref="KazoExecutionContext"/> as the default working directory and by
+    /// <see cref="IO.KazoPath.GetFullPath(string)"/> to expand <c>~</c>, and as the root of the user settings layer
     /// (<c>~/.config/&lt;appId&gt;/</c>, ADR 0044). Defaults to
     /// <c>/home/{UserId}</c> so existing implementations keep compiling; the trusted platform
     /// factory overrides it with the principal's real home path (ADR 0043).
@@ -52,14 +52,14 @@ public interface IAppExecutionContext
     bool IsRootElevated => false;
 
     /// <summary>
-    /// Gets the session user's login name, read by <see cref="HackUser"/> (ADR 0056, section 1).
+    /// Gets the session user's login name, read by <see cref="KazoUser"/> (ADR 0056, section 1).
     /// Defaults to the process environment's user name so existing implementations keep compiling;
     /// the trusted platform factory sets it from the authenticated principal.
     /// </summary>
     string UserLoginName => Environment.UserName;
 
     /// <summary>
-    /// Gets the session user's display name, read by <see cref="HackUser"/> (ADR 0056, section 1).
+    /// Gets the session user's display name, read by <see cref="KazoUser"/> (ADR 0056, section 1).
     /// Defaults to <see cref="UserLoginName"/>; the trusted platform factory sets it from the
     /// authenticated principal.
     /// </summary>
@@ -88,9 +88,9 @@ public interface IAppExecutionContext
     /// it moved to <c>Stopping</c> and before <see cref="CancellationToken"/> is cancelled. The data
     /// carries the reason and the simulated deadline at which the OS kills the process. Defaults to
     /// an event that is never raised so existing implementations keep compiling; the trusted platform
-    /// factory overrides it. Apps read it through <c>HackProcess.Current.StopRequested</c>.
+    /// factory overrides it. Apps read it through <c>KazoProcess.Current.StopRequested</c>.
     /// </summary>
-    event EventHandler<Diagnostics.HackStopRequestedEventArgs>? StopRequested
+    event EventHandler<Diagnostics.KazoStopRequestedEventArgs>? StopRequested
     {
         add { }
         remove { }
@@ -101,7 +101,7 @@ public interface IAppExecutionContext
     /// code that subscribes to <see cref="StopRequested"/> after the fact. Defaults to
     /// <see langword="null"/>; the trusted platform factory overrides it.
     /// </summary>
-    Diagnostics.HackStopRequestedEventArgs? StopRequest => null;
+    Diagnostics.KazoStopRequestedEventArgs? StopRequest => null;
 
     /// <summary>Gets a capability checker scoped to this app/user, exposing no other app's grants.</summary>
     ICapabilityChecker Capabilities { get; }
@@ -197,7 +197,7 @@ public interface IAppExecutionContext
 
     /// <summary>
     /// Gets this instance's own process environment: arguments, working directory, environment
-    /// variables, user and machine names (ADR 0050, section 6), read by <c>HackEnvironment</c>.
+    /// variables, user and machine names (ADR 0050, section 6), read by <c>KazoEnvironment</c>.
     /// Defaults to a detached, read-only view (home directory, <c>HOME</c> only) so existing
     /// <see cref="IAppExecutionContext"/> implementations that predate this member keep compiling;
     /// the trusted platform factory overrides it with the live process entry.
@@ -208,11 +208,11 @@ public interface IAppExecutionContext
     /// Gets the language of this instance's texts (ADR 0104, the "language gateway"): <c>en</c> or
     /// <c>fr</c>, read from its own process environment (<c>LC_ALL</c>, <c>LC_MESSAGES</c>, then
     /// <c>LANG</c>) at every access, never from the browser tab's shared thread culture.
-    /// <see cref="Globalization.HackLocalization.GetLocalizer{TResource}(IAppExecutionContext?)"/>
+    /// <see cref="Globalization.KazoLocalization.GetLocalizer{TResource}(IAppExecutionContext?)"/>
     /// looks texts up in this culture.
     /// </summary>
     System.Globalization.CultureInfo Culture =>
-        Globalization.HackLocale.ResolveLanguage(Environment.GetVariable);
+        Globalization.KazoLocale.ResolveLanguage(Environment.GetVariable);
 
     /// <summary>
     /// Gets the culture of this instance's dates and numbers (ADR 0104, section 1): the full locale
@@ -220,35 +220,35 @@ public interface IAppExecutionContext
     /// from <see cref="Culture"/>'s language.
     /// </summary>
     System.Globalization.CultureInfo FormatCulture =>
-        Globalization.HackLocale.ResolveFormatCulture(Environment.GetVariable);
+        Globalization.KazoLocale.ResolveFormatCulture(Environment.GetVariable);
 
     /// <summary>
     /// Gets the time zone this instance shows its dates in (ADR 0193): the zone named by its own
     /// <c>TZ</c> variable when set, otherwise the session's zone (Settings &gt; Date and time). This
     /// default, for hosts without a session zone, falls back to the device's zone.
-    /// <see cref="Globalization.HackTimeZone"/> converts the OS's UTC time with it.
+    /// <see cref="Globalization.KazoTimeZone"/> converts the OS's UTC time with it.
     /// </summary>
     TimeZoneInfo TimeZone =>
-        Globalization.HackTimeZone.Resolve(Environment.GetVariable(Globalization.HackTimeZone.Variable));
+        Globalization.KazoTimeZone.Resolve(Environment.GetVariable(Globalization.KazoTimeZone.Variable));
 
     /// <summary>
     /// Gets this instance's network stack: resolution, ping, HTTP and TCP probes, with the OS's
-    /// real-network fallback (ADR 0056, section 6), read by <c>HackDns</c>, <c>HackPing</c>,
-    /// <c>HackHttpClient</c> and <c>HackTcpClient</c>. Defaults to an unsupported gateway so existing
+    /// real-network fallback (ADR 0056, section 6), read by <c>KazoDns</c>, <c>KazoPing</c>,
+    /// <c>KazoHttpClient</c> and <c>KazoTcpClient</c>. Defaults to an unsupported gateway so existing
     /// <see cref="IAppExecutionContext"/> implementations that predate this member keep compiling;
     /// the trusted platform factory overrides it with a real implementation.
     /// </summary>
     Net.IAppNetworkGateway Network => new Net.UnsupportedAppNetworkGateway();
 
     /// <summary>
-    /// Gets this instance's read access to the app catalog, behind <see cref="HackApps"/> (ADR 0056,
+    /// Gets this instance's read access to the app catalog, behind <see cref="KazoApps"/> (ADR 0056,
     /// section 2). Defaults to an unsupported gateway so existing implementations keep compiling; the
     /// trusted platform factory overrides it with a real implementation.
     /// </summary>
     IAppCatalogGateway Catalog => new UnsupportedAppCatalogGateway();
 
     /// <summary>
-    /// Gets this instance's uninstall/reinstall gateway, behind <see cref="HackAppManagement"/>
+    /// Gets this instance's uninstall/reinstall gateway, behind <see cref="KazoAppManagement"/>
     /// (ADR 0056, section 3; capability <c>apps.manage</c>). Defaults to an unsupported gateway so
     /// existing implementations keep compiling; the trusted platform factory overrides it.
     /// </summary>
@@ -256,7 +256,7 @@ public interface IAppExecutionContext
 
     /// <summary>
     /// Gets this instance's access to the OS's own settings documents, behind
-    /// <see cref="HackSettings.OpenSystemAsync(string, CancellationToken)"/> (ADR 0056, section 8; no
+    /// <see cref="KazoSettings.OpenSystemAsync(string, CancellationToken)"/> (ADR 0056, section 8; no
     /// capability, file permissions decide). Defaults to an unsupported gateway so existing
     /// implementations keep compiling; the trusted platform factory overrides it.
     /// </summary>
@@ -264,7 +264,7 @@ public interface IAppExecutionContext
 
     /// <summary>
     /// Gets this instance's dangerous-capability administration gateway, behind
-    /// <see cref="HackPermissionAdministration"/> (ADR 0056, section 9; capability
+    /// <see cref="KazoPermissionAdministration"/> (ADR 0056, section 9; capability
     /// <c>permissions.manage</c>). Defaults to an unsupported gateway; the trusted platform factory
     /// overrides it.
     /// </summary>
@@ -272,14 +272,14 @@ public interface IAppExecutionContext
 
     /// <summary>
     /// Gets this instance's optional-server connection gateway, behind
-    /// <see cref="HackServerConnection"/> (ADR 0056, section 10; capability
+    /// <see cref="KazoServerConnection"/> (ADR 0056, section 10; capability
     /// <c>server.connection.manage</c>). Defaults to an unsupported gateway; the trusted platform
     /// factory overrides it.
     /// </summary>
     IAppServerConnectionGateway ServerConnection => UnsupportedAdministrationGateways.ServerConnection;
 
     /// <summary>
-    /// Gets this instance's reboot and factory-reset gateway, behind <see cref="HackSystem"/>
+    /// Gets this instance's reboot and factory-reset gateway, behind <see cref="KazoSystem"/>
     /// (ADR 0056, section 11; capability <c>system.power</c> plus an administrator). Named
     /// <c>SystemPower</c> rather than <c>System</c> so it never hides the <c>System</c> namespace in
     /// implementing classes. Defaults to an unsupported gateway; the trusted platform factory
@@ -289,21 +289,21 @@ public interface IAppExecutionContext
 
     /// <summary>
     /// Gets this instance's raw storage inspection gateway, behind
-    /// <see cref="HackStorageDiagnostics"/> (ADR 0056, section 11; capability
+    /// <see cref="KazoStorageDiagnostics"/> (ADR 0056, section 11; capability
     /// <c>system.storage.inspect</c>). Defaults to an unsupported gateway; the trusted platform
     /// factory overrides it.
     /// </summary>
     IAppStorageDiagnosticsGateway StorageDiagnostics => UnsupportedAdministrationGateways.StorageDiagnostics;
 
     /// <summary>
-    /// Gets this instance's whole-machine backup gateway, behind <see cref="HackSystemBackup"/>
+    /// Gets this instance's whole-machine backup gateway, behind <see cref="KazoSystemBackup"/>
     /// (ADR 0099, section 1; capability <c>system.backup</c> plus an administrator). Defaults to an
     /// unsupported gateway; the trusted platform factory overrides it.
     /// </summary>
     IAppSystemBackupGateway SystemBackup => UnsupportedAdministrationGateways.SystemBackup;
 
     /// <summary>
-    /// Gets this instance's local accounts gateway, behind <see cref="HackUserAccounts"/> (ADR 0120;
+    /// Gets this instance's local accounts gateway, behind <see cref="KazoUserAccounts"/> (ADR 0120;
     /// own password without capability, another account's with <c>users.manage</c> plus an
     /// administrator). Defaults to an unsupported gateway; the trusted platform factory overrides it.
     /// </summary>
@@ -311,56 +311,56 @@ public interface IAppExecutionContext
 
     /// <summary>
     /// Gets this instance's gateway choosing which app provides the OS's file view and file dialogs,
-    /// behind <see cref="HackComponentProviders"/> (ADR 0156; capability <c>apps.manage</c> plus an
+    /// behind <see cref="KazoComponentProviders"/> (ADR 0156; capability <c>apps.manage</c> plus an
     /// administrator). Defaults to an unsupported gateway; the trusted platform factory overrides it.
     /// </summary>
     IAppComponentProviderAdministrationGateway ComponentProviderAdministration => UnsupportedAdministrationGateways.ComponentProviders;
 
     /// <summary>
     /// Gets this instance's gateway listing and hiding the entries apps added to the file menus, behind
-    /// <see cref="HackFileMenuEntries"/> (ADR 0159 §8; capability <c>apps.manage</c>). Defaults to an
+    /// <see cref="KazoFileMenuEntries"/> (ADR 0159 §8; capability <c>apps.manage</c>). Defaults to an
     /// unsupported gateway; the trusted platform factory overrides it.
     /// </summary>
     IAppFileMenuEntryAdministrationGateway FileMenuEntryAdministration => UnsupportedAdministrationGateways.FileMenuEntries;
 
     /// <summary>
     /// Gets this instance's gateway to the secondary screens of the session, behind
-    /// <see cref="HackScreens"/> (ADR 0184; capability <c>screens.manage</c>). Defaults to an
+    /// <see cref="KazoScreens"/> (ADR 0184; capability <c>screens.manage</c>). Defaults to an
     /// unsupported gateway; the trusted platform factory overrides it on a host with screens.
     /// </summary>
     IAppScreensGateway Screens => UnsupportedAdministrationGateways.Screens;
 
     /// <summary>
     /// Gets this instance's gateway to the change list of the session user, behind
-    /// <see cref="WhatsNew.HackWhatsNew"/> (ADR 0186; no capability). Defaults to a gateway with an
+    /// <see cref="WhatsNew.KazoWhatsNew"/> (ADR 0186; no capability). Defaults to a gateway with an
     /// empty list; the trusted platform factory overrides it on a host that serves one.
     /// </summary>
     WhatsNew.IAppWhatsNewGateway WhatsNew => UnsupportedAdministrationGateways.WhatsNew;
 
     /// <summary>
     /// Gets this instance's ability to host interactive shells (<c>shell.host</c>, ADR 0056
-    /// section 7), read by <see cref="Shell.HackShell"/>. Defaults to an unsupported gateway so
+    /// section 7), read by <see cref="Shell.KazoShell"/>. Defaults to an unsupported gateway so
     /// existing <see cref="IAppExecutionContext"/> implementations that predate this member keep
     /// compiling; the trusted platform factory overrides it with a real implementation.
     /// </summary>
     Shell.IAppShellHostGateway ShellHost => new UnsupportedAppShellHostGateway();
 
     /// <summary>
-    /// Gets this instance's view of the mounted disks' space, behind <see cref="IO.HackDriveInfo"/>
+    /// Gets this instance's view of the mounted disks' space, behind <see cref="IO.KazoDriveInfo"/>
     /// (ADR 0057, section 7; no capability). Defaults to an unsupported gateway so existing
     /// implementations keep compiling; the trusted platform factory overrides it.
     /// </summary>
     IO.IAppDriveGateway Drives => new UnsupportedAppDriveGateway();
 
     /// <summary>
-    /// Gets the OS's cross-origin isolation, behind <see cref="Diagnostics.HackCrossOriginIsolation"/>
+    /// Gets the OS's cross-origin isolation, behind <see cref="Diagnostics.KazoCrossOriginIsolation"/>
     /// (ADR 0146; no capability). Defaults to an unsupported gateway so existing implementations keep
     /// compiling; the trusted platform factory overrides it.
     /// </summary>
     Diagnostics.IAppCrossOriginIsolationGateway CrossOriginIsolation => new UnsupportedAppCrossOriginIsolationGateway();
 
     /// <summary>
-    /// Gets this instance's view of the session clipboard, behind <see cref="HackClipboard"/> (ADR 0056,
+    /// Gets this instance's view of the session clipboard, behind <see cref="KazoClipboard"/> (ADR 0056,
     /// section 12; capabilities <c>clipboard.read</c> and <c>clipboard.write</c>). Defaults to an
     /// unsupported gateway so existing implementations keep compiling; the trusted platform factory
     /// overrides it.
@@ -368,7 +368,7 @@ public interface IAppExecutionContext
     IAppClipboardGateway Clipboard => new UnsupportedAppClipboardGateway();
 
     /// <summary>
-    /// Gets this instance's browser database, behind <c>HackWebDb</c> of the web SDK (ADR 0073 section 3,
+    /// Gets this instance's browser database, behind <c>KazoWebDb</c> of the web SDK (ADR 0073 section 3,
     /// ADR 0088): the IndexedDB database <c>hackweb.&lt;app id&gt;</c> of the host browser. Only an app of
     /// kind <c>Web</c> gets a working one. Defaults to an unsupported gateway so existing implementations
     /// keep compiling; the trusted platform factory overrides it.
@@ -376,7 +376,7 @@ public interface IAppExecutionContext
     WebData.IAppWebDatabaseGateway WebDatabase => UnsupportedAppWebDatabaseGateway.Instance;
 
     /// <summary>
-    /// Gets the instance's standard streams (ADR 0064), behind <see cref="HackConsole"/>: the
+    /// Gets the instance's standard streams (ADR 0064), behind <see cref="KazoConsole"/>: the
     /// terminal, pipe or file of the shell that started it, or <c>/dev/null</c> when it was
     /// started from the desktop. Defaults to a detached console so existing implementations keep
     /// compiling.
@@ -384,7 +384,7 @@ public interface IAppExecutionContext
     IAppConsoleGateway Console => DetachedAppConsoleGateway.Instance;
 
     /// <summary>
-    /// Gets the session user's keyring as this app sees it, behind <see cref="Keyring.HackKeyring"/>
+    /// Gets the session user's keyring as this app sees it, behind <see cref="Keyring.KazoKeyring"/>
     /// (ADR 0100 section 2; own entries without capability, every app's with <c>keyring.read-all</c>).
     /// Defaults to a locked gateway so existing implementations keep compiling; the trusted platform
     /// factory overrides it.
@@ -393,14 +393,14 @@ public interface IAppExecutionContext
 
     /// <summary>
     /// Gets the session's effective accessibility preferences, behind
-    /// <see cref="Accessibility.HackAccessibility"/> (ADR 0105 section 3; no capability). Defaults to a
+    /// <see cref="Accessibility.KazoAccessibility"/> (ADR 0105 section 3; no capability). Defaults to a
     /// gateway answering the defaults so existing implementations keep compiling; the trusted platform
     /// factory overrides it.
     /// </summary>
     Kazo.Os.AppSdk.Accessibility.IAppAccessibilityGateway Accessibility => Kazo.Os.AppSdk.Accessibility.DefaultAppAccessibilityGateway.Instance;
 
     /// <summary>
-    /// Gets the app's background tasks, behind <see cref="Threading.HackBackground"/> (ADR 0128). The
+    /// Gets the app's background tasks, behind <see cref="Threading.KazoBackground"/> (ADR 0128). The
     /// trusted platform factory runs each one as a child process (in a Web Worker when the host has
     /// some); this default runs it at once on the calling thread, with the same serialization, so an
     /// app's unit tests exercise the same contract.
@@ -453,8 +453,8 @@ public static class UnsupportedAdministrationGateways
     {
         public bool IsSupported => false;
 
-        public ValueTask<WhatsNew.HackChangeList> GetAsync(System.Globalization.CultureInfo culture, CancellationToken cancellationToken = default) =>
-            ValueTask.FromResult(Kazo.Os.AppSdk.WhatsNew.HackChangeList.Empty);
+        public ValueTask<WhatsNew.KazoChangeList> GetAsync(System.Globalization.CultureInfo culture, CancellationToken cancellationToken = default) =>
+            ValueTask.FromResult(Kazo.Os.AppSdk.WhatsNew.KazoChangeList.Empty);
 
         public ValueTask MarkSeenAsync(IReadOnlyCollection<string> ids, CancellationToken cancellationToken = default) =>
             ValueTask.CompletedTask;
@@ -474,12 +474,12 @@ public static class UnsupportedAdministrationGateways
     {
         public bool IsSupported => false;
 
-        public HackScreensState GetState() => throw new NotSupportedException(Message);
+        public KazoScreensState GetState() => throw new NotSupportedException(Message);
 
         public ValueTask<IAsyncDisposable> WatchAsync(Func<ValueTask> onChanged, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Message);
 
-        public ValueTask<HackScreenOpenStatus> OpenScreenAsync(CancellationToken cancellationToken = default) =>
+        public ValueTask<KazoScreenOpenStatus> OpenScreenAsync(CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Message);
 
         public ValueTask<int> RestoreScreensAsync(CancellationToken cancellationToken = default) =>
@@ -494,13 +494,13 @@ public static class UnsupportedAdministrationGateways
         public ValueTask<bool> ToggleFullScreenAsync(CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Message);
 
-        public ValueTask<HackScreenPermission> RequestPermissionAsync(CancellationToken cancellationToken = default) =>
+        public ValueTask<KazoScreenPermission> RequestPermissionAsync(CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Message);
     }
 
     private sealed class UnsupportedFileMenuEntries : IAppFileMenuEntryAdministrationGateway
     {
-        public ValueTask<IReadOnlyList<HackFileMenuEntryInfo>> GetEntriesAsync(CancellationToken cancellationToken = default) =>
+        public ValueTask<IReadOnlyList<KazoFileMenuEntryInfo>> GetEntriesAsync(CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Message);
 
         public ValueTask SetHiddenAsync(string appId, string name, bool hidden, CancellationToken cancellationToken = default) =>
@@ -509,7 +509,7 @@ public static class UnsupportedAdministrationGateways
 
     private sealed class UnsupportedComponentProviders : IAppComponentProviderAdministrationGateway
     {
-        public ValueTask<IReadOnlyList<HackComponentContractInfo>> GetOverviewAsync(CancellationToken cancellationToken = default) =>
+        public ValueTask<IReadOnlyList<KazoComponentContractInfo>> GetOverviewAsync(CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Message);
 
         public ValueTask SetProviderAsync(IReadOnlyList<string> contracts, string? appId, CancellationToken cancellationToken = default) =>
@@ -518,7 +518,7 @@ public static class UnsupportedAdministrationGateways
 
     private sealed class UnsupportedUserAccounts : IAppUserAccountsGateway
     {
-        public ValueTask<IReadOnlyList<HackUserAccount>> ListAsync(CancellationToken cancellationToken = default) =>
+        public ValueTask<IReadOnlyList<KazoUserAccount>> ListAsync(CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Message);
 
         public ValueTask ChangePasswordAsync(string currentPassword, string newPassword, CancellationToken cancellationToken = default) =>
@@ -554,17 +554,17 @@ public static class UnsupportedAdministrationGateways
 
     private sealed class UnsupportedPermissions : IAppPermissionAdministrationGateway
     {
-        public ValueTask<HackDangerousCapabilityPolicy> GetPolicyAsync(CancellationToken cancellationToken = default) =>
+        public ValueTask<KazoDangerousCapabilityPolicy> GetPolicyAsync(CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Message);
 
-        public ValueTask<IReadOnlyList<HackAppPermissionInfo>> GetOverviewAsync(CancellationToken cancellationToken = default) =>
+        public ValueTask<IReadOnlyList<KazoAppPermissionInfo>> GetOverviewAsync(CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Message);
 
-        public ValueTask SetPolicyAsync(HackDangerousCapabilityPolicy policy, CancellationToken cancellationToken = default) =>
+        public ValueTask SetPolicyAsync(KazoDangerousCapabilityPolicy policy, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Message);
 
         public ValueTask SetMachineDecisionAsync(
-            string appId, string capability, HackPermissionDecision decision, CancellationToken cancellationToken = default) =>
+            string appId, string capability, KazoPermissionDecision decision, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Message);
 
         public ValueTask RemoveOwnDenialAsync(string appId, string capability, CancellationToken cancellationToken = default) =>
@@ -573,34 +573,34 @@ public static class UnsupportedAdministrationGateways
 
     private sealed class UnsupportedServerConnection : IAppServerConnectionGateway
     {
-        public ValueTask<HackServerConnectionState> GetStateAsync(CancellationToken cancellationToken = default) =>
+        public ValueTask<KazoServerConnectionState> GetStateAsync(CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Message);
 
-        public ValueTask<HackServerConnectionState> ConnectAsync(
+        public ValueTask<KazoServerConnectionState> ConnectAsync(
             Uri serverUrl, string login, string password, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Message);
 
-        public ValueTask<HackServerConnectionState> CreateAccountAsync(
+        public ValueTask<KazoServerConnectionState> CreateAccountAsync(
             Uri serverUrl, string login, string password, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Message);
 
         public ValueTask DisconnectAsync(CancellationToken cancellationToken = default) => throw new NotSupportedException(Message);
 
-        public ValueTask SyncAsync(HackSyncDomain domain, HackSyncDirection direction, CancellationToken cancellationToken = default) =>
+        public ValueTask SyncAsync(KazoSyncDomain domain, KazoSyncDirection direction, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Message);
 
-        public ValueTask<IReadOnlyList<HackSyncConflict>> GetConflictsAsync(CancellationToken cancellationToken = default) =>
+        public ValueTask<IReadOnlyList<KazoSyncConflict>> GetConflictsAsync(CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Message);
 
         public ValueTask ShowConflictsAsync(CancellationToken cancellationToken = default) => throw new NotSupportedException(Message);
 
-        public ValueTask<HackSyncStatus> GetSyncStatusAsync(CancellationToken cancellationToken = default) =>
+        public ValueTask<KazoSyncStatus> GetSyncStatusAsync(CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Message);
 
         public ValueTask SetSyncPausedAsync(bool paused, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Message);
 
-        public ValueTask<HackSyncStatus> SyncNowAsync(CancellationToken cancellationToken = default) =>
+        public ValueTask<KazoSyncStatus> SyncNowAsync(CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Message);
     }
 
@@ -615,16 +615,16 @@ public static class UnsupportedAdministrationGateways
     {
         public bool IsSupported => false;
 
-        public ValueTask<HackBackupInfo> CreateAsync(CancellationToken cancellationToken = default) =>
+        public ValueTask<KazoBackupInfo> CreateAsync(CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Message);
 
-        public ValueTask<HackBackupInfo?> RestoreAsync(HackBackupRestoreMode mode, CancellationToken cancellationToken = default) =>
+        public ValueTask<KazoBackupInfo?> RestoreAsync(KazoBackupRestoreMode mode, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Message);
     }
 
     private sealed class UnsupportedStorageDiagnostics : IAppStorageDiagnosticsGateway
     {
-        public ValueTask<HackStorageSnapshot> GetSnapshotAsync(CancellationToken cancellationToken = default) =>
+        public ValueTask<KazoStorageSnapshot> GetSnapshotAsync(CancellationToken cancellationToken = default) =>
             throw new NotSupportedException(Message);
     }
 }
@@ -636,9 +636,9 @@ file sealed class UnsupportedAppWebDatabaseGateway : WebData.IAppWebDatabaseGate
 
     public string DatabaseName => throw Unsupported();
 
-    public ValueTask OpenAsync(WebData.HackWebDbSchemaDefinition schema, CancellationToken cancellationToken = default) => throw Unsupported();
+    public ValueTask OpenAsync(WebData.KazoWebDbSchemaDefinition schema, CancellationToken cancellationToken = default) => throw Unsupported();
 
-    public ValueTask<IReadOnlyList<string?>> ExecuteAsync(WebData.HackWebDbRequest request, CancellationToken cancellationToken = default) => throw Unsupported();
+    public ValueTask<IReadOnlyList<string?>> ExecuteAsync(WebData.KazoWebDbRequest request, CancellationToken cancellationToken = default) => throw Unsupported();
 
     private static NotSupportedException Unsupported() =>
         new("This IAppExecutionContext implementation does not provide a browser database (only web apps have one).");
@@ -657,9 +657,9 @@ file sealed class UnsupportedAppClipboardGateway : IAppClipboardGateway
 
     public ValueTask SetTextAsync(string text, CancellationToken cancellationToken = default) => throw Unsupported();
 
-    public ValueTask<HackClipboardFileList?> GetFileDropListAsync(CancellationToken cancellationToken = default) => throw Unsupported();
+    public ValueTask<KazoClipboardFileList?> GetFileDropListAsync(CancellationToken cancellationToken = default) => throw Unsupported();
 
-    public ValueTask SetFileDropListAsync(HackClipboardFileList files, CancellationToken cancellationToken = default) => throw Unsupported();
+    public ValueTask SetFileDropListAsync(KazoClipboardFileList files, CancellationToken cancellationToken = default) => throw Unsupported();
 
     public ValueTask ClearAsync(CancellationToken cancellationToken = default) => throw Unsupported();
 
@@ -669,14 +669,14 @@ file sealed class UnsupportedAppClipboardGateway : IAppClipboardGateway
 /// <summary>Default <see cref="IAppExecutionContext.Drives"/> for contexts that don't wire one up.</summary>
 file sealed class UnsupportedAppDriveGateway : IO.IAppDriveGateway
 {
-    public ValueTask<IReadOnlyList<IO.HackDriveSnapshot>> GetDrivesAsync(CancellationToken cancellationToken = default) =>
+    public ValueTask<IReadOnlyList<IO.KazoDriveSnapshot>> GetDrivesAsync(CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This IAppExecutionContext implementation does not provide a Drives gateway.");
 }
 
 /// <summary>Default <see cref="IAppExecutionContext.CrossOriginIsolation"/> for contexts that don't wire one up.</summary>
 file sealed class UnsupportedAppCrossOriginIsolationGateway : Diagnostics.IAppCrossOriginIsolationGateway
 {
-    public ValueTask<Diagnostics.HackCrossOriginIsolationStatus> GetStatusAsync(CancellationToken cancellationToken = default) =>
+    public ValueTask<Diagnostics.KazoCrossOriginIsolationStatus> GetStatusAsync(CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This IAppExecutionContext implementation does not provide a CrossOriginIsolation gateway.");
 }
 
@@ -689,10 +689,10 @@ file sealed class UnsupportedAppCatalogGateway : IAppCatalogGateway
         remove { }
     }
 
-    public ValueTask<IReadOnlyList<HackAppInfo>> GetInstalledAsync(CancellationToken cancellationToken = default) =>
+    public ValueTask<IReadOnlyList<KazoAppInfo>> GetInstalledAsync(CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This IAppExecutionContext implementation does not provide a Catalog gateway.");
 
-    public ValueTask<IReadOnlyList<HackAppInfo>> GetHandlersAsync(
+    public ValueTask<IReadOnlyList<KazoAppInfo>> GetHandlersAsync(
         VirtualPath path, string? mediaType = null, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This IAppExecutionContext implementation does not provide a Catalog gateway.");
 }
@@ -700,22 +700,22 @@ file sealed class UnsupportedAppCatalogGateway : IAppCatalogGateway
 /// <summary>Default <see cref="IAppExecutionContext.AppManagement"/> for contexts that don't wire one up.</summary>
 file sealed class UnsupportedAppManagementGateway : IAppManagementGateway
 {
-    public ValueTask<IReadOnlyList<HackAppInstallInfo>> GetAllAsync(CancellationToken cancellationToken = default) =>
+    public ValueTask<IReadOnlyList<KazoAppInstallInfo>> GetAllAsync(CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This IAppExecutionContext implementation does not provide an AppManagement gateway.");
 
     public ValueTask<IReadOnlyList<string>> UninstallAsync(
-        string appId, HackInstallScope scope, CancellationToken cancellationToken = default) =>
+        string appId, KazoInstallScope scope, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This IAppExecutionContext implementation does not provide an AppManagement gateway.");
 
     public ValueTask<IReadOnlyList<string>> ReinstallAsync(
-        string appId, HackInstallScope scope, CancellationToken cancellationToken = default) =>
+        string appId, KazoInstallScope scope, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This IAppExecutionContext implementation does not provide an AppManagement gateway.");
 }
 
 /// <summary>Default <see cref="IAppExecutionContext.ShellHost"/> for contexts that don't wire one up.</summary>
 file sealed class UnsupportedAppShellHostGateway : Shell.IAppShellHostGateway
 {
-    public Task<Shell.IHackShell> StartAsync(Shell.HackShellOptions options, CancellationToken cancellationToken = default) =>
+    public Task<Shell.IHackShell> StartAsync(Shell.KazoShellOptions options, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This IAppExecutionContext implementation does not provide a ShellHost gateway.");
 }
 

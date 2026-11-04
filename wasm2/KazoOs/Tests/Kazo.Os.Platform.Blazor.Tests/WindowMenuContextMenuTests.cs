@@ -58,7 +58,7 @@ public sealed class WindowMenuContextMenuTests
     {
         await using Harness harness = await Harness.StartAsync(screens: 2);
         ContextMenuSession session = await harness.OpenAsync(WindowMenuKind.Window);
-        HackMenuItemDefinition screen2 = session.Root.Rows[^1].Submenu!.Rows[1].Item!;
+        KazoMenuItemDefinition screen2 = session.Root.Rows[^1].Submenu!.Rows[1].Item!;
 
         await harness.Dispatch(() => harness.ContextMenus.InvokeAsync(screen2));
 
@@ -87,7 +87,7 @@ public sealed class WindowMenuContextMenuTests
     {
         await using Harness harness = await Harness.StartAsync(screens: 2);
         ContextMenuSession session = await harness.OpenAsync(WindowMenuKind.Window);
-        HackMenuItemDefinition screen2 = session.Root.Rows[^1].Submenu!.Rows[1].Item!;
+        KazoMenuItemDefinition screen2 = session.Root.Rows[^1].Submenu!.Rows[1].Item!;
 
         Assert.DoesNotContain("screen-identify-veil", await harness.RenderVeilAsync(1), StringComparison.Ordinal);
 

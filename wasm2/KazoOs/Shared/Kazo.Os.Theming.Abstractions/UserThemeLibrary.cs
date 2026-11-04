@@ -94,7 +94,7 @@ public static class UserThemeLibrary
 
     /// <summary>
     /// Reads every <c>.theme</c> file of both folders through the caller's own file access (an app
-    /// passes <c>HackDirectory</c>/<c>HackFile</c>, the shell its gateways), then calls <see cref="Build"/>.
+    /// passes <c>KazoDirectory</c>/<c>KazoFile</c>, the shell its gateways), then calls <see cref="Build"/>.
     /// A missing or unreadable folder or file is skipped with a warning.
     /// </summary>
     /// <param name="listFiles">Lists the files of a folder (absolute paths); may throw when the folder is missing.</param>

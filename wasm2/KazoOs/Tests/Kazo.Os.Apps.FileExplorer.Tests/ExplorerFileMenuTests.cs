@@ -15,23 +15,23 @@ namespace Kazo.Os.Apps.FileExplorer.Tests;
 /// </summary>
 public sealed class ExplorerFileMenuTests
 {
-    private static readonly HackFileViewItem Notes = new("/home/user/notes.md", "notes.md", false, 12, "text/markdown", DateTimeOffset.UnixEpoch);
-    private static readonly HackFileViewItem Photo = new("/home/user/photo.png", "photo.png", false, 99, "image/png", DateTimeOffset.UnixEpoch);
-    private static readonly HackFileViewItem Projects = new("/home/user/projects", "projects", true, 0, "inode/directory", DateTimeOffset.UnixEpoch);
-    private static readonly HackFileViewItem Music = new("/home/user/music", "music", true, 0, "inode/directory", DateTimeOffset.UnixEpoch);
+    private static readonly KazoFileViewItem Notes = new("/home/user/notes.md", "notes.md", false, 12, "text/markdown", DateTimeOffset.UnixEpoch);
+    private static readonly KazoFileViewItem Photo = new("/home/user/photo.png", "photo.png", false, 99, "image/png", DateTimeOffset.UnixEpoch);
+    private static readonly KazoFileViewItem Projects = new("/home/user/projects", "projects", true, 0, "inode/directory", DateTimeOffset.UnixEpoch);
+    private static readonly KazoFileViewItem Music = new("/home/user/music", "music", true, 0, "inode/directory", DateTimeOffset.UnixEpoch);
 
     [Fact]
     public void One_file_gets_open_open_with_edit_and_properties_groups_in_order()
     {
-        HackMenuDefinition menu = Build([Notes], handlers: [App("org.hackeros.text-editor", "Text Editor"), App("org.hackeros.code-editor", "Code Editor")]);
+        KazoMenuDefinition menu = Build([Notes], handlers: [App("org.hackeros.text-editor", "Text Editor"), App("org.hackeros.code-editor", "Code Editor")]);
 
         Assert.Equal(
             [
-                [HackFileMenuItems.Open],
-                [HackFileMenuItems.OpenWith],
-                [HackFileMenuItems.Cut, HackFileMenuItems.Copy, HackFileMenuItems.Rename, HackFileMenuItems.Delete, HackFileMenuItems.DeletePermanently],
+                [KazoFileMenuItems.Open],
+                [KazoFileMenuItems.OpenWith],
+                [KazoFileMenuItems.Cut, KazoFileMenuItems.Copy, KazoFileMenuItems.Rename, KazoFileMenuItems.Delete, KazoFileMenuItems.DeletePermanently],
                 [],
-                [HackFileMenuItems.Properties]
+                [KazoFileMenuItems.Properties]
             ],
             Ids(menu));
     }
@@ -39,13 +39,13 @@ public sealed class ExplorerFileMenuTests
     [Fact]
     public void Open_with_lists_the_handlers_default_first_then_choose_another_app()
     {
-        HackMenuDefinition menu = Build([Notes], handlers: [App("org.hackeros.text-editor", "Text Editor"), App("org.hackeros.code-editor", "Code Editor")]);
+        KazoMenuDefinition menu = Build([Notes], handlers: [App("org.hackeros.text-editor", "Text Editor"), App("org.hackeros.code-editor", "Code Editor")]);
 
-        HackMenuItemDefinition openWith = menu.Find(HackFileMenuItems.OpenWith)!;
+        KazoMenuItemDefinition openWith = menu.Find(KazoFileMenuItems.OpenWith)!;
         Assert.Equal(
             [
                 ["open-with:org.hackeros.text-editor", "open-with:org.hackeros.code-editor"],
-                [HackFileMenuItems.OpenWithOther]
+                [KazoFileMenuItems.OpenWithOther]
             ],
             openWith.Children.Select(group => group.Items.Select(item => item.Id).ToArray()).ToArray());
         Assert.Equal("Text Editor", openWith.Children[0].Items[0].Title);
@@ -55,82 +55,82 @@ public sealed class ExplorerFileMenuTests
     [Fact]
     public void Open_with_without_a_handler_offers_only_choose_another_app()
     {
-        HackMenuDefinition menu = Build([Notes]);
+        KazoMenuDefinition menu = Build([Notes]);
 
-        HackMenuItemDefinition openWith = menu.Find(HackFileMenuItems.OpenWith)!;
-        Assert.Equal(HackFileMenuItems.OpenWithOther, Assert.Single(Assert.Single(openWith.Children).Items).Id);
+        KazoMenuItemDefinition openWith = menu.Find(KazoFileMenuItems.OpenWith)!;
+        Assert.Equal(KazoFileMenuItems.OpenWithOther, Assert.Single(Assert.Single(openWith.Children).Items).Id);
     }
 
     [Fact]
     public void One_folder_gets_paste_into_and_no_open_with()
     {
-        HackMenuDefinition menu = Build([Projects], canPaste: true);
+        KazoMenuDefinition menu = Build([Projects], canPaste: true);
 
-        Assert.Null(menu.Find(HackFileMenuItems.OpenWith));
-        HackMenuItemDefinition pasteInto = menu.Find(HackFileMenuItems.PasteInto)!;
+        Assert.Null(menu.Find(KazoFileMenuItems.OpenWith));
+        KazoMenuItemDefinition pasteInto = menu.Find(KazoFileMenuItems.PasteInto)!;
         Assert.False(pasteInto.IsDisabled);
     }
 
     [Fact]
     public void Paste_into_is_disabled_when_the_clipboard_is_empty()
     {
-        HackMenuDefinition menu = Build([Projects], canPaste: false);
+        KazoMenuDefinition menu = Build([Projects], canPaste: false);
 
-        Assert.True(menu.Find(HackFileMenuItems.PasteInto)!.IsDisabled);
+        Assert.True(menu.Find(KazoFileMenuItems.PasteInto)!.IsDisabled);
     }
 
     [Fact]
     public void Several_items_lose_rename_and_open_with_and_disable_properties()
     {
-        HackMenuDefinition menu = Build([Notes, Photo]);
+        KazoMenuDefinition menu = Build([Notes, Photo]);
 
-        Assert.Null(menu.Find(HackFileMenuItems.Rename));
-        Assert.Null(menu.Find(HackFileMenuItems.OpenWith));
-        Assert.True(menu.Find(HackFileMenuItems.Properties)!.IsDisabled);
-        Assert.False(menu.Find(HackFileMenuItems.Open)!.IsDisabled);
+        Assert.Null(menu.Find(KazoFileMenuItems.Rename));
+        Assert.Null(menu.Find(KazoFileMenuItems.OpenWith));
+        Assert.True(menu.Find(KazoFileMenuItems.Properties)!.IsDisabled);
+        Assert.False(menu.Find(KazoFileMenuItems.Open)!.IsDisabled);
     }
 
     [Fact]
     public void Open_is_disabled_for_several_folders()
     {
-        HackMenuDefinition menu = Build([Projects, Music]);
+        KazoMenuDefinition menu = Build([Projects, Music]);
 
-        Assert.True(menu.Find(HackFileMenuItems.Open)!.IsDisabled);
+        Assert.True(menu.Find(KazoFileMenuItems.Open)!.IsDisabled);
     }
 
     [Fact]
     public void The_background_gets_new_folder_paste_refresh_and_properties()
     {
-        HackMenuDefinition menu = Build([], canPaste: false);
+        KazoMenuDefinition menu = Build([], canPaste: false);
 
         Assert.Equal(
             [
-                [HackFileMenuItems.NewFolder, HackFileMenuItems.Paste, HackFileMenuItems.Refresh],
-                [HackFileMenuItems.Properties]
+                [KazoFileMenuItems.NewFolder, KazoFileMenuItems.Paste, KazoFileMenuItems.Refresh],
+                [KazoFileMenuItems.Properties]
             ],
             Ids(menu));
-        Assert.True(menu.Find(HackFileMenuItems.Paste)!.IsDisabled);
+        Assert.True(menu.Find(KazoFileMenuItems.Paste)!.IsDisabled);
     }
 
     [Fact]
     public void Features_the_host_forbids_are_left_out()
     {
-        HackMenuDefinition item = Build([Notes], features: HackFileViewFeatures.None);
-        HackMenuDefinition background = Build([], features: HackFileViewFeatures.None);
+        KazoMenuDefinition item = Build([Notes], features: KazoFileViewFeatures.None);
+        KazoMenuDefinition background = Build([], features: KazoFileViewFeatures.None);
 
         // Open stays; the empty edit group and the apps' group collapse when drawn.
-        Assert.Equal([[HackFileMenuItems.Open], [], []], Ids(item));
-        Assert.Equal([[HackFileMenuItems.Refresh]], Ids(background));
+        Assert.Equal([[KazoFileMenuItems.Open], [], []], Ids(item));
+        Assert.Equal([[KazoFileMenuItems.Refresh]], Ids(background));
     }
 
     [Fact]
     public void Each_entry_runs_its_own_id()
     {
         List<string> clicked = [];
-        HackMenuDefinition menu = new("files");
+        KazoMenuDefinition menu = new("files");
         ExplorerFileMenu.Build(
             menu,
-            new ExplorerFileMenuState([Notes], HackFileViewFeatures.All, false, [App("org.hackeros.text-editor", "Text Editor")]),
+            new ExplorerFileMenuState([Notes], KazoFileViewFeatures.All, false, [App("org.hackeros.text-editor", "Text Editor")]),
             id => new EventCallback<object?>(null, (Func<object?, Task>)(_ =>
             {
                 clicked.Add(id);
@@ -138,10 +138,10 @@ public sealed class ExplorerFileMenuTests
             })),
             key => key);
 
-        menu.Find(HackFileMenuItems.Delete)!.OnClick.InvokeAsync(null);
-        menu.Find(HackFileMenuItems.OpenWith)!.Children[0].Items[0].OnClick.InvokeAsync(null);
+        menu.Find(KazoFileMenuItems.Delete)!.OnClick.InvokeAsync(null);
+        menu.Find(KazoFileMenuItems.OpenWith)!.Children[0].Items[0].OnClick.InvokeAsync(null);
 
-        Assert.Equal([HackFileMenuItems.Delete, "open-with:org.hackeros.text-editor"], clicked);
+        Assert.Equal([KazoFileMenuItems.Delete, "open-with:org.hackeros.text-editor"], clicked);
     }
 
     [Theory]
@@ -151,7 +151,7 @@ public sealed class ExplorerFileMenuTests
     [InlineData(3, FileMenuScope.File)]
     public void The_scope_is_a_folder_only_when_every_target_is_one(int set, FileMenuScope expected)
     {
-        HackFileViewItem[] targets = set switch
+        KazoFileViewItem[] targets = set switch
         {
             0 => [],
             1 => [Notes],
@@ -167,17 +167,17 @@ public sealed class ExplorerFileMenuTests
     {
         IReadOnlyList<AppComponent> components = new FileExplorerApp().Components;
 
-        Assert.Equal(typeof(ExplorerFileView), Assert.Single(components, c => c.Contract == HackComponentContracts.FileView).Type);
-        Assert.Equal(typeof(ExplorerFileDialogs), Assert.Single(components, c => c.Contract == HackComponentContracts.FileDialogs).Type);
+        Assert.Equal(typeof(ExplorerFileView), Assert.Single(components, c => c.Contract == KazoComponentContracts.FileView).Type);
+        Assert.Equal(typeof(ExplorerFileDialogs), Assert.Single(components, c => c.Contract == KazoComponentContracts.FileDialogs).Type);
     }
 
-    private static HackMenuDefinition Build(
-        HackFileViewItem[] targets,
+    private static KazoMenuDefinition Build(
+        KazoFileViewItem[] targets,
         bool canPaste = false,
-        HackFileViewFeatures features = HackFileViewFeatures.All,
-        HackAppInfo[]? handlers = null)
+        KazoFileViewFeatures features = KazoFileViewFeatures.All,
+        KazoAppInfo[]? handlers = null)
     {
-        HackMenuDefinition menu = new("files");
+        KazoMenuDefinition menu = new("files");
         ExplorerFileMenu.Build(
             menu,
             new ExplorerFileMenuState(targets, features, canPaste, handlers ?? []),
@@ -186,9 +186,9 @@ public sealed class ExplorerFileMenuTests
         return menu;
     }
 
-    private static string[][] Ids(HackMenuDefinition menu) =>
+    private static string[][] Ids(KazoMenuDefinition menu) =>
         [.. menu.Groups.Select(group => group.Items.Select(item => item.Id).ToArray())];
 
-    private static HackAppInfo App(string id, string name) =>
+    private static KazoAppInfo App(string id, string name) =>
         new(id, name, string.Empty, AppKind.Window, "utilities", null, "1.0.0", "pub.hackeros", false, false, []);
 }

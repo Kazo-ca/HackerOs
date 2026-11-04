@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <PackageId>Kazo.Os.AppSdk.Terminal</PackageId>
-    <Description>Kazo OS App SDK for terminal commands and the embeddable terminal contract (IHackTerminal, HackConsole).</Description>
+    <Description>Kazo OS App SDK for terminal commands and the embeddable terminal contract (IHackTerminal, KazoConsole).</Description>
     <PackageTags>hackeros;app-sdk;terminal</PackageTags>
   </PropertyGroup>
 

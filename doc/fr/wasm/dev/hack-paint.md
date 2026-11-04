@@ -2,7 +2,7 @@
 
 # Hack Paint
 
-App de dessin `org.hackeros.hack-paint` (`Apps/System/Kazo.Os.Apps.HackPaint`,
+App de dessin `org.hackeros.hack-paint` (`Apps/System/Kazo.Os.Apps.KazoPaint`,
 désinstallable). Chantier `v3/11-apps`,
 [ADR 0103](adr/0103-hack-paint-image-files-and-theme-editor.md) §1 : les images
 vivent dans les fichiers de l'OS.
@@ -54,19 +54,19 @@ images du système de fichiers simulé.
 | `ImageFileFormat` | formats, limites, lecture de l'en-tête (PNG IHDR, GIF, BMP, WebP VP8/VP8L/VP8X, JPEG SOF), format d'enregistrement d'après le nom |
 | `PaintFileStore` | lecture (`ReadAsync`, `Inspect`) et écriture (`WriteAsync`) par la passerelle de fichiers de l'app |
 | `PaintCanvasState` | pixels RGBA, historique, `IsDirty`/`MarkSaved` |
-| `HackPaintWindow.razor(.cs)` | fenêtre, dialogues du SDK (`OpenFileAsync`, `SaveFileAsync`), garde de fermeture |
-| `HackPaintWindow.razor.js` | dessin sur le canvas ; `decodeImage` (`createImageBitmap` → RGBA, erreurs rendues comme codes `decode-failed` / `too-large` que le C# traduit) et `encodeImage` (`toBlob`) ; jamais d'accès aux fichiers |
+| `KazoPaintWindow.razor(.cs)` | fenêtre, dialogues du SDK (`OpenFileAsync`, `SaveFileAsync`), garde de fermeture |
+| `KazoPaintWindow.razor.js` | dessin sur le canvas ; `decodeImage` (`createImageBitmap` → RGBA, erreurs rendues comme codes `decode-failed` / `too-large` que le C# traduit) et `encodeImage` (`toBlob`) ; jamais d'accès aux fichiers |
 
 Les octets sont lus et écrits en C# par `IAppFileSystemGateway`, comme
 l'éditeur de texte : un fichier choisi dans un dialogue hors du dossier
-personnel n'est accessible que par le jeton remis par le dialogue, que `HackFile`
+personnel n'est accessible que par le jeton remis par le dialogue, que `KazoFile`
 ne sait pas porter. Le JS ne reçoit que des octets et rend des pixels.
 
 ### Calculs hors de la fenêtre (ADR 0140)
 
 Hack Paint n'a pas de filtre d'image. Ses opérations sur toute l'image
 (rotation, recadrage) restent dans la fenêtre plutôt que dans une tâche
-`HackBackground` ([`background-jobs.md`](../framework/background-jobs.md)) : ce sont des
+`KazoBackground` ([`background-jobs.md`](../framework/background-jobs.md)) : ce sont des
 passes de copies sur le tampon, qui peut faire 64 Mio (4096 × 4096 en RGBA),
 quatre fois ce qu'une entrée de tâche peut porter en JSON (16 Mio), et le
 retour coûterait plus que la passe. Un futur filtre passera par une tâche et un
@@ -77,7 +77,7 @@ fichier temporaire.
 Barre d'outils, barre d'état, dialogues et erreurs viennent de
 `Resources/Strings.resx` / `Strings.fr.resx`. `PaintFileStore` écrit ses
 messages dans la langue du processus qui l'appelle
-(`HackLocalization.GetLocalizer<Strings>()`) ; le module JavaScript ne renvoie
+(`KazoLocalization.GetLocalizer<Strings>()`) ; le module JavaScript ne renvoie
 que des codes d'erreur. Le titre garde le nom de produit « Hack Paint » ; seul
 « Untitled » devient « Sans titre ».
 
@@ -88,8 +88,8 @@ que des codes d'erreur. Le titre garde le nom de produit « Hack Paint » ; seul
 - [x] Enregistrer, Enregistrer sous, PNG et JPEG avec qualité.
 - [x] Titre avec `*`, confirmation à la fermeture.
 - [x] Titre posé dans la fenêtre par le SDK 1.1 (chantier `v3.1/3-window-title`, E2E
-  `HackPaintWindowTitleTests`).
+  `KazoPaintWindowTitleTests`).
 - [x] `FileHandlers` et association par défaut `edit` des images.
-- [x] Tests (`Kazo.Os.Apps.HackPaint.Tests`) : en-têtes des cinq formats,
+- [x] Tests (`Kazo.Os.Apps.KazoPaint.Tests`) : en-têtes des cinq formats,
   fichiers tronqués, limites, format d'enregistrement, suivi des changements, titre.
 - [ ] Scans axe : chantier `v3/13`.

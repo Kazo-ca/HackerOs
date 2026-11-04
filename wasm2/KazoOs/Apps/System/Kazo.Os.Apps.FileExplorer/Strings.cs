@@ -24,7 +24,7 @@ internal sealed class Strings
     /// <param name="count">The number counted.</param>
     internal static string Plural(IStringLocalizer text, string key, int count)
     {
-        CultureInfo culture = text is HackStringLocalizer hack ? hack.Culture : HackLocale.DefaultLanguage;
+        CultureInfo culture = text is KazoStringLocalizer hack ? hack.Culture : KazoLocale.DefaultLanguage;
         bool one = culture.TwoLetterISOLanguageName == "fr" ? count is 0 or 1 : count == 1;
         return text[one ? key + ".One" : key + ".Many", count];
     }

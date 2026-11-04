@@ -32,21 +32,21 @@ public sealed partial class IntranetApp : WebAppDefinition   // partial : le bui
     public override string Name => "Intranet";
     public override IReadOnlyList<string> Urls => ["http://intranet.hack/"];
 
-    public override void Configure(HackWebApplicationBuilder builder)
+    public override void Configure(KazoWebApplicationBuilder builder)
     {
         builder.Services.AddSingleton<NoteStore>();
         builder.Json.SerializerOptions.TypeInfoResolverChain.Insert(0, IntranetJsonContext.Default);
-        HackWebApplication app = builder.Build();
+        KazoWebApplication app = builder.Build();
         app.UseExceptionPage();
         app.UseCookieSession();
         app.Use(async (context, next) => { context.Response.Headers["X-Powered-By"] = "ASP.Hack"; await next(); });
-        app.MapGet("/health", () => HackResults.Ok("up"));
+        app.MapGet("/health", () => KazoResults.Ok("up"));
         app.MapControllers();          // routes d'attribut + {controller=Home}/{action=Index}/{id?}
     }
 }
 
 [Route("api/[controller]")]
-public sealed class NotesController(NoteStore store) : HackApiController
+public sealed class NotesController(NoteStore store) : KazoApiController
 {
     [HttpGet] public IReadOnlyList<Note> List([FromQuery] bool? done = null) => ...;
     [HttpGet("{id:int}", Name = "GetNote")]
@@ -54,7 +54,7 @@ public sealed class NotesController(NoteStore store) : HackApiController
     [HttpPost] public IHackActionResult Create(Note note) => CreatedAtAction(nameof(Get), new { id = store.Add(note).Id }, note);
 }
 
-public sealed class HomeController : HackController
+public sealed class HomeController : KazoController
 {
     public string Index() => "home";
     [HttpPost, ActionName("Contact")]
@@ -69,31 +69,31 @@ requête par le socket local, comme pour tout site (`web/3`).
 ## Architecture
 
 ```text
-HackHttpListener (worker web)                                  web/3
-  └─ HackWebHost.ProcessRequestAsync            Hosting/       requête du listener → HackWebRequestData
-       └─ HackWebApplication.ProcessAsync                       une portée DI par requête, HackHttpContext
-            ├─ routage : HackEndpointRouter.Match               Routing/  404, 405 + Allow, OPTIONS 204, HEAD → GET
+KazoHttpListener (worker web)                                  web/3
+  └─ KazoWebHost.ProcessRequestAsync            Hosting/       requête du listener → KazoWebRequestData
+       └─ KazoWebApplication.ProcessAsync                       une portée DI par requête, KazoHttpContext
+            ├─ routage : KazoEndpointRouter.Match               Routing/  404, 405 + Allow, OPTIONS 204, HEAD → GET
             ├─ middlewares (Use, UseMiddleware<T>, UseCookieSession, UseStatusCodePages)
             └─ endpoint
-                 ├─ route minimale (MapGet/MapPost/... ou HackRequestDelegate)
-                 └─ action : HackActionInvoker.InvokeAsync      Mvc/
+                 ├─ route minimale (MapGet/MapPost/... ou KazoRequestDelegate)
+                 └─ action : KazoActionInvoker.InvokeAsync      Mvc/
                       ├─ CreateController (généré)              services de la portée
-                      ├─ BindArguments (généré) → HackModelBinder, ModelState
+                      ├─ BindArguments (généré) → KazoModelBinder, ModelState
                       ├─ 415, puis 400 automatique d'une API
                       ├─ filtres : contrôleur, globaux, contrôleur (attribut), action
                       ├─ Invoke (généré)
-                      └─ IHackActionResult.ExecuteResultAsync → HackHttpResponse
+                      └─ IHackActionResult.ExecuteResultAsync → KazoHttpResponse
 UseExceptionPage : toute exception du pipeline → page d'erreur (sinon « 500 Internal Server Error » nu)
 ```
 
 | Dossier | Contenu |
 |---|---|
-| `Hosting/` | `WebAppDefinition`, `HackWebApplicationBuilder`, `HackWebApplication`, `HackWebHost`, `HackWebJsonOptions`. |
-| `Http/` | `HackHttpContext`, `HackHttpRequest`, `HackHttpResponse`, `HackHeaderDictionary`, `HackValueCollection` (requête, formulaire), cookies, `HackWebRequestData` / `HackWebResponseData` (échange indépendant du transport). |
-| `Routing/` | `HackRouteTemplate` (analyseur partagé avec le générateur), `HackRoutePattern` (correspondance, génération d'URL), `HackEndpoint`, `HackEndpointRouter`, `HackEndpointDataSource`, `HackLinkGenerator`, `HackRouteValueDictionary`. |
-| `Mvc/` | Attributs, `HackControllerBase` / `HackController` / `HackApiController`, `HackModelBinder`, `HackModelStateDictionary`, filtres, résultats, `HackUrlHelper`, `HackActionInvoker`, `HackResults`, contrat `HackControllerActionDescriptor`. |
-| `Sessions/` | `HackSession`, `HackSessionOptions`, `HackSessionStore`. |
-| `Diagnostics/` | `HackExceptionPage` (page d'erreur au style console). |
+| `Hosting/` | `WebAppDefinition`, `KazoWebApplicationBuilder`, `KazoWebApplication`, `KazoWebHost`, `KazoWebJsonOptions`. |
+| `Http/` | `KazoHttpContext`, `KazoHttpRequest`, `KazoHttpResponse`, `KazoHeaderDictionary`, `KazoValueCollection` (requête, formulaire), cookies, `KazoWebRequestData` / `KazoWebResponseData` (échange indépendant du transport). |
+| `Routing/` | `KazoRouteTemplate` (analyseur partagé avec le générateur), `KazoRoutePattern` (correspondance, génération d'URL), `KazoEndpoint`, `KazoEndpointRouter`, `KazoEndpointDataSource`, `KazoLinkGenerator`, `KazoRouteValueDictionary`. |
+| `Mvc/` | Attributs, `KazoControllerBase` / `KazoController` / `KazoApiController`, `KazoModelBinder`, `KazoModelStateDictionary`, filtres, résultats, `KazoUrlHelper`, `KazoActionInvoker`, `KazoResults`, contrat `KazoControllerActionDescriptor`. |
+| `Sessions/` | `KazoSession`, `KazoSessionOptions`, `KazoSessionStore`. |
+| `Diagnostics/` | `KazoExceptionPage` (page d'erreur au style console). |
 | `Tools/Kazo.Os.Tools.WebRouteGenerator` | Générateur de sources Roslyn (ADR 0082) : table de routes et `<Nom>WebHost`, erreurs `HOSWEB0001` à `HOSWEB0007` (`HOSWEB0008` : vue `.razor` et `.cshtml` au même chemin, ADR 0086). |
 
 ## Démarrage
@@ -102,22 +102,22 @@ UseExceptionPage : toute exception du pipeline → page d'erreur (sinon « 500 I
   `LaunchVisibility` `Hidden`, `Urls` à fournir. `Configure(builder)` tourne dans
   le processus du site à chaque démarrage ; par défaut il appelle
   `builder.Build().MapControllers()`.
-- `HackWebApplicationBuilder` : `Services` (`IServiceCollection`), `Json`
-  (`HackWebJsonOptions.SerializerOptions`, défauts web : camelCase), `Mvc`
-  (`HackMvcOptions.Filters`, filtres globaux), `Build()`. Le fournisseur est
+- `KazoWebApplicationBuilder` : `Services` (`IServiceCollection`), `Json`
+  (`KazoWebJsonOptions.SerializerOptions`, défauts web : camelCase), `Mvc`
+  (`KazoMvcOptions.Filters`, filtres globaux), `Build()`. Le fournisseur est
   construit avec `ValidateScopes` et `ValidateOnBuild`.
-- `HackWebApplication` : `Use(...)` (deux formes, comme ASP.NET Core),
+- `KazoWebApplication` : `Use(...)` (deux formes, comme ASP.NET Core),
   `UseMiddleware<T>` (`IHackMiddleware`), `UseExceptionPage`,
   `UseStatusCodePages`, `UseCookieSession(options)`, `Map`, `MapMethods`,
   `MapGet`/`MapPost`/`MapPut`/`MapPatch`/`MapDelete`, `MapControllers`,
   `MapControllerRoute(name, pattern[, defaults])`, `MapDefaultControllerRoute`,
-  `ProcessAsync(HackWebRequestData)`, événement `UnhandledException`.
+  `ProcessAsync(KazoWebRequestData)`, événement `UnhandledException`.
 - `MapControllers()` ajoute la route conventionnelle par défaut
   `{controller=Home}/{action=Index}/{id?}` si aucun `MapControllerRoute` n'est
   appelé, au gel du pipeline (première requête).
-- `HackWebHost.CreateApplication(definition, routes)` construit l'application
+- `KazoWebHost.CreateApplication(definition, routes)` construit l'application
   sans OS ni listener : c'est ainsi que les tests appellent un site
-  (`ProcessAsync(HackWebRequestData.Create("GET", "http://intranet.hack/"))`),
+  (`ProcessAsync(KazoWebRequestData.Create("GET", "http://intranet.hack/"))`),
   comme `TestServer` d'ASP.NET Core.
 
 ## Routage
@@ -136,7 +136,7 @@ Choix de l'endpoint, comme le routage par endpoints d'ASP.NET Core :
    contraint, paramètre, facultatif, attrape-tout ;
 3. puis un endpoint limité à des méthodes avant un endpoint « toutes méthodes » ;
 4. puis l'ordre d'enregistrement. Deux candidats indiscernables :
-   `HackAmbiguousRouteException` (500).
+   `KazoAmbiguousRouteException` (500).
 
 Le chemin connu mais la méthode refusée donne `405` avec `Allow` ; `OPTIONS`
 sans endpoint donne `204` avec `Allow` ; `HEAD` utilise l'endpoint `GET` et
@@ -147,7 +147,7 @@ Routes d'attribut : `[Route]` sur le contrôleur (préfixe) et sur l'action,
 `[area]`, gabarit absolu `/...` ou `~/...` qui ignore le préfixe. Une action
 sans route d'attribut d'un contrôleur à vues suit les routes conventionnelles
 (`controller` et `action` en valeurs requises). Une action d'un
-`HackApiController` doit avoir une route d'attribut (`HOSWEB0007`).
+`KazoApiController` doit avoir une route d'attribut (`HOSWEB0007`).
 
 Génération d'URL : `Url.Action(action, controller, values)`,
 `Url.RouteUrl(name, values)`, `Url.Content("~/...")`, `Url.IsLocalUrl` ; les
@@ -157,18 +157,18 @@ la requête (`/Home/Details/7?sort=asc`).
 ## Contrôleurs
 
 - Un contrôleur est une classe publique, non abstraite, non générique, dérivée
-  de `HackControllerBase`, sans `[NonController]`. Son nom perd le suffixe
+  de `KazoControllerBase`, sans `[NonController]`. Son nom perd le suffixe
   `Controller`. Ses actions : méthodes publiques d'instance, non génériques,
   sans `[NonAction]`, hors membres du framework et `Dispose`.
   `[ActionName]` renomme une action.
-- `HackController` (pages) : `Json(...)`, `OnActionExecuting` /
+- `KazoController` (pages) : `Json(...)`, `OnActionExecuting` /
   `OnActionExecuted` (le contrôleur est le premier filtre).
-- `HackApiController` : corps JSON par défaut pour les types complexes, `400`
+- `KazoApiController` : corps JSON par défaut pour les types complexes, `400`
   automatique (`application/problem+json`, `errors`) si `ModelState` est
   invalide, et tout statut d'erreur client sans corps (`NotFound()`,
-  `BadRequest()`...) devient un `HackProblemDetails` (RFC 9457 : `type`,
+  `BadRequest()`...) devient un `KazoProblemDetails` (RFC 9457 : `type`,
   `title`, `status`, `traceId`).
-- Membres de `HackControllerBase` : `HttpContext`, `Request`, `Response`,
+- Membres de `KazoControllerBase` : `HttpContext`, `Request`, `Response`,
   `RouteValues`, `ModelState`, `Url`, et les aides `Ok`, `NoContent`,
   `StatusCode`, `Content`, `File`, `Redirect`, `RedirectPermanent`,
   `LocalRedirect` (refuse une URL externe), `RedirectToAction`, `Created`,
@@ -189,7 +189,7 @@ la requête (`/Home/Details/7?sort=asc`).
 | Type complexe d'une API, ou `[FromBody]` | corps JSON (`415` si le corps n'est pas JSON) |
 | Type complexe d'un contrôleur à vues | propriétés du formulaire (`Name=...&Tags=a&Tags=b`, case à cocher `on`) |
 | `[FromServices]` | portée DI de la requête |
-| `CancellationToken`, `HackHttpContext` | valeurs spéciales |
+| `CancellationToken`, `KazoHttpContext` | valeurs spéciales |
 
 Un paramètre non nullable sans valeur par défaut est requis. Les attributs
 `DataAnnotations` du paramètre et des propriétés du modèle sont vérifiés ; les
@@ -198,14 +198,14 @@ erreurs vont dans `ModelState` (clé : nom du paramètre ou de la propriété).
 ## Filtres
 
 `IHackActionFilter` (`OnActionExecuting`, `OnActionExecuted`) et
-`IHackAsyncActionFilter`, en attribut (`HackActionFilterAttribute`, `Order`) ou
+`IHackAsyncActionFilter`, en attribut (`KazoActionFilterAttribute`, `Order`) ou
 global (`builder.Mvc.Filters`). Ordre : le contrôleur lui-même, puis globaux,
 attributs du contrôleur, attributs de l'action ; le retour se fait dans l'ordre
 inverse. Un filtre qui pose `context.Result` court-circuite l'action.
 
 ## Session
 
-`app.UseCookieSession()` : cookie `.HackSession` (`HttpOnly`, `SameSite=Lax`,
+`app.UseCookieSession()` : cookie `.KazoSession` (`HttpOnly`, `SameSite=Lax`,
 `Path=/`), identifiant de 32 octets aléatoires en base64url, valeurs en mémoire
 du processus du site, expiration après 20 minutes d'inactivité. Le cookie n'est
 posé que si la session est écrite. `HttpContext.Session` : `GetString`,
@@ -218,27 +218,27 @@ session en mémoire d'ASP.NET Core).
 `web/7` a réalisé sa part de ce contrat ([`asp-hack-razor-views.md`](asp-hack-razor-views.md)) ;
 le contrat reste la référence de `web/9`.
 
-- **Résultats.** Une vue est un `IHackActionResult` : `ExecuteResultAsync(HackActionContext)`
+- **Résultats.** Une vue est un `IHackActionResult` : `ExecuteResultAsync(KazoActionContext)`
   reçoit `HttpContext`, `RouteValues`, `ActionDescriptor` et `ModelState`, et
   écrit dans `HttpContext.Response`. `View()` et `PartialView()` seront ajoutés à
-  `HackController` (le contrôleur à vues), pas à `HackApiController`.
-- **Recherche de vue.** `HackControllerActionDescriptor.ControllerName` et
+  `KazoController` (le contrôleur à vues), pas à `KazoApiController`.
+- **Recherche de vue.** `KazoControllerActionDescriptor.ControllerName` et
   `ActionName` donnent `Views/<Contrôleur>/<Action>` ; le générateur de routes
-  écrit aussi la table des vues (`HackWebGeneratedRoutes.Views`, ADR 0083 §2).
+  écrit aussi la table des vues (`KazoWebGeneratedRoutes.Views`, ADR 0083 §2).
 - **URL.** `IHackUrlHelper` (`Url` du contrôleur) est la base des helpers de
-  vue (`HackLink`, `HackForm`) ; `HackLinkGenerator` est dans les services.
+  vue (`KazoLink`, `KazoForm`) ; `KazoLinkGenerator` est dans les services.
 - **Middlewares.** `UseStaticFiles()` sera un middleware ordinaire
   (`Use(next => ...)`) qui répond avant le routage des contrôleurs ; un endpoint
   est choisi avant les middlewares (`HttpContext.Endpoint`), comme
   `UseRouting` d'ASP.NET Core au début du pipeline.
 - **Services.** Toute la partie `web/7` (moteur de vues, anti-falsification)
   s'enregistre dans `builder.Services` ; le builder enregistre déjà
-  `HackWebJsonOptions`, `HackMvcOptions`, `HackLinkGenerator` et le magasin de
+  `KazoWebJsonOptions`, `KazoMvcOptions`, `KazoLinkGenerator` et le magasin de
   sessions.
 - **Blazor (`web/9`, [`blazor-sites.md`](blazor-sites.md)).** Un site Blazor
-  déclare son composant racine par `BlazorRoot` ; `HackWebHost` sert alors la
+  déclare son composant racine par `BlazorRoot` ; `KazoWebHost` sert alors la
   page hôte et `blazor.boot.json` en repli après les routes de l'app, qui garde
-  `HackWebApplication` pour ses routes de données (`MapGet`, contrôleurs d'API).
+  `KazoWebApplication` pour ses routes de données (`MapGet`, contrôleurs d'API).
 
 ## Tests
 
@@ -273,6 +273,6 @@ le contrat reste la référence de `web/9`.
 - [x] Liaison de modèle, `DataAnnotations`, `ModelState`, `400` automatique, `415`.
 - [x] Résultats JSON, Content, File, Redirect (dont `LocalRedirect`, `RedirectToAction`), `Created*`, problèmes RFC 9457.
 - [x] DI par requête, session par cookie, page d'erreur.
-- [x] `WebAppDefinition`, `HackWebHost` et entrée générée ; manifeste produit par le générateur de manifestes.
+- [x] `WebAppDefinition`, `KazoWebHost` et entrée générée ; manifeste produit par le générateur de manifestes.
 - [x] Tests unitaires, du générateur et de bout en bout (`curl`, deux modes).
 - [x] ADR 0082, ce document, index, plan.

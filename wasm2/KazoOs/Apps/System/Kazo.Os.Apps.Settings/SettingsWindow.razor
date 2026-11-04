@@ -440,7 +440,7 @@
                         {
                             <p class="setting-desc">@L["Sync.Conflicts.Description"]</p>
                             <ul class="sync-conflict-list">
-                                @foreach (Kazo.Os.AppSdk.Administration.HackSyncConflict conflict in _conflicts)
+                                @foreach (Kazo.Os.AppSdk.Administration.KazoSyncConflict conflict in _conflicts)
                                 {
                                     <li @key="conflict.Path">
                                         <code>~/@conflict.Path</code>
@@ -495,7 +495,7 @@
                 <div class="settings-page">
                     <div class="system-info-box">
                         <div class="info-line">
-                            <span>@L["About.OsVersion"]</span> <strong>Kazo OS @HackerOsSdk.Version</strong>
+                            <span>@L["About.OsVersion"]</span> <strong>Kazo OS @KazoOsSdk.Version</strong>
                             <button type="button" class="btn-secondary about-whats-new" @onclick="() => SelectPage(WhatsNewPageId)">@L["About.WhatsNew"]</button>
                         </div>
                         <div class="info-line"><span>@L["About.Author"]</span> <a class="about-author" href="https://kazo.ca" target="_blank" rel="noopener noreferrer">Benoit Robin</a></div>

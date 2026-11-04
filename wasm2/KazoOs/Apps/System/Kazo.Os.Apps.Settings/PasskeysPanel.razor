@@ -1,4 +1,4 @@
-@inherits Kazo.Os.AppSdk.Blazor.HackComponentBase
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
 @using Kazo.Os.AppSdk.Administration
 
 <div class="setting-group users-panel">
@@ -11,7 +11,7 @@
     else
     {
         <ul class="account-list" aria-label="@L["Passkeys.Title"]">
-            @foreach (HackPasskey passkey in _passkeys)
+            @foreach (KazoPasskey passkey in _passkeys)
             {
                 <li class="account passkey">
                     <span class="account-login">@passkey.Name</span>

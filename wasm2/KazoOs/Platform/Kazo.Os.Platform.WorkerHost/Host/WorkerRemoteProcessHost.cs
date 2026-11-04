@@ -107,7 +107,7 @@ public sealed class WorkerRemoteProcessHost : IRemoteProcessHost
             session.Attach();
             IAppExecutionContext context = launch.Context;
             IAppEnvironmentGateway processEnvironment = context.Environment;
-            Kazo.Os.AppSdk.Threading.HackBackgroundJobTarget target = launch.Request.Target;
+            Kazo.Os.AppSdk.Threading.KazoBackgroundJobTarget target = launch.Request.Target;
             worker.Post(WorkerMessage.Create(WorkerMessageType.Start, writer =>
             {
                 writer.WriteNumber("p", session.Pid);
@@ -211,7 +211,7 @@ public sealed class WorkerRemoteProcessHost : IRemoteProcessHost
         writer.WriteString("s", context.SessionId.Value.ToString("N"));
         WireCodec.WriteProcess(writer, "pr", context.Processes.OwnProcess);
         // ADR 0193: the session's time zone at start; the worker's own TZ still wins.
-        writer.WriteString("tz", Kazo.Os.AppSdk.Globalization.HackTimeZone.GetId(context.TimeZone));
+        writer.WriteString("tz", Kazo.Os.AppSdk.Globalization.KazoTimeZone.GetId(context.TimeZone));
         if (context.Intent is { } intent)
         {
             WireCodec.WriteIntentDelivery(writer, "it", intent);
@@ -274,7 +274,7 @@ public sealed class WorkerRemoteProcessHost : IRemoteProcessHost
                 case RemoteProcessExitStatus.Cancelled:
                     throw new OperationCanceledException("The service honored its stop request.");
                 case RemoteProcessExitStatus.Killed:
-                    throw new HackProcessKilledException(context.ProcessId.Value);
+                    throw new KazoProcessKilledException(context.ProcessId.Value);
                 default:
                     throw new RemoteProcessFaultException(exit.FaultMessage ?? "The service faulted in its worker.");
             }

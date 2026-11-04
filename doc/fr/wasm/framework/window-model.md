@@ -27,10 +27,10 @@ mise en œuvre de l'[ADR 0095](../dev/adr/0095-window-events-sizes-and-keyboard.
 | --- | --- |
 | `OnWindowActivated[Async]()` | La fenêtre reçoit le focus. |
 | `OnWindowDeactivated[Async]()` | La fenêtre perd le focus (autre fenêtre, réduction, plus aucune fenêtre au premier plan). |
-| `OnWindowStateChanged[Async](previous, current)` | `HackWindowState` : `Normal`, `Minimized`, `Maximized`. |
-| `OnWindowResized[Async](HackWindowSize size)` | Taille de la zone client (sans la barre de titre), en pixels CSS, **une seule fois à la fin** d'un redimensionnement (geste à la souris, clavier, agrandissement, restauration, changement de la zone de travail). |
+| `OnWindowStateChanged[Async](previous, current)` | `KazoWindowState` : `Normal`, `Minimized`, `Maximized`. |
+| `OnWindowResized[Async](KazoWindowSize size)` | Taille de la zone client (sans la barre de titre), en pixels CSS, **une seule fois à la fin** d'un redimensionnement (geste à la souris, clavier, agrandissement, restauration, changement de la zone de travail). |
 | `IsWindowActive`, `WindowState`, `WindowSize` | Dernier état connu, à lire dans le rendu. |
-| `TrackDisplaySurface(IDisplaySurface)` | Fait suivre une fenêtre détachée (ADR 0078/0081) : son focus, sa perte de focus et sa taille déclenchent les mêmes crochets. `HackWindowSize.DisplaySurfaceId` indique alors la surface. Le résultat se libère quand la surface est rattachée. |
+| `TrackDisplaySurface(IDisplaySurface)` | Fait suivre une fenêtre détachée (ADR 0078/0081) : son focus, sa perte de focus et sa taille déclenchent les mêmes crochets. `KazoWindowSize.DisplaySurfaceId` indique alors la surface. Le résultat se libère quand la surface est rattachée. |
 
 Ordre garanti :
 
@@ -53,7 +53,7 @@ déjà eu lieu et continue.
 
 @code {
     protected override Task OnWindowDeactivatedAsync() => PauseAnimationAsync();
-    protected override void OnWindowResized(HackWindowSize size) => _columns = (int)(size.Width / 120);
+    protected override void OnWindowResized(KazoWindowSize size) => _columns = (int)(size.Width / 120);
 }
 ```
 
@@ -310,7 +310,7 @@ les récents du bureau mobile et le nom accessible du cadre (`aria-labelledby`).
 
 - **Plein écran ajouté** (`toggle-fullscreen`, `Alt+F11`, entrée du menu) : le verrouillage du
   clavier n'existe qu'en plein écran, il fallait un moyen d'y entrer.
-- **`HackWindowSize.DisplaySurfaceId`** : distingue le redimensionnement d'une fenêtre détachée de
+- **`KazoWindowSize.DisplaySurfaceId`** : distingue le redimensionnement d'une fenêtre détachée de
   celui de la fenêtre du bureau.
 - **Taille mesurée** dans le navigateur, estimée seulement en repli (tests, rendu serveur).
 - **`/etc/hackeros/keybindings.config` livré en commentaires** : les valeurs actives viennent du
@@ -349,7 +349,7 @@ les récents du bureau mobile et le nom accessible du cadre (`aria-labelledby`).
 - `WindowAppBaseWindowTitleTests` (SDK Blazor), `WindowTitleTests` (Windowing.Core),
   `AppWindowGatewayFactoryTests` (Platform.Blazor) : titre posé avant le premier rendu, même titre
   ignoré, nettoyage, retour au nom de l'app, une seule fenêtre visée, fenêtre fermée, surfaces.
-- E2E `HackPaintWindowTitleTests` (UI.E2E) : `Untitled — Hack Paint`, `*` après un trait, nom du
+- E2E `KazoPaintWindowTitleTests` (UI.E2E) : `Untitled — Hack Paint`, `*` après un trait, nom du
   fichier après « Enregistrer sous » dans la barre de titre et la barre des tâches.
 - E2E `WindowKeyboardCommandsTests` (UI.E2E) : `` Alt+` `` change de fenêtre et `Alt+Q` ferme la
   fenêtre active dans un onglet Chromium.
@@ -359,7 +359,7 @@ les récents du bureau mobile et le nom accessible du cadre (`aria-labelledby`).
 - [x] Corriger le double déplacement au relâchement et la transition avant/après projection.
 - [x] Couvrir les images intermédiaires dans Chromium et dans le scénario OS de restauration.
 
-- [x] Crochets de fenêtre dans `WindowAppBase` et contrats du SDK (`HackWindowState`, `HackWindowSize`).
+- [x] Crochets de fenêtre dans `WindowAppBase` et contrats du SDK (`KazoWindowState`, `KazoWindowSize`).
 - [x] Faits du runtime : lot publié, fin de redimensionnement, correction de la réduction en arrière-plan.
 - [x] Répartiteur `WindowAppEventDispatcher` et mesure de la zone client.
 - [x] Fenêtres détachées suivies (`TrackDisplaySurface`, navigateur).

@@ -20,7 +20,7 @@ navigateur, dans la composition de l'hôte.
 
 | Dossier | Contenu |
 |---|---|
-| `Schema/` | `HackerOsIndexedDbSchema` (nom de la base, version, magasins et index), modèle de schéma, politique de stockage des contenus (`FileContentStoragePolicy`). |
+| `Schema/` | `KazoOsIndexedDbSchema` (nom de la base, version, magasins et index), modèle de schéma, politique de stockage des contenus (`FileContentStoragePolicy`). |
 | `FileSystem/` | Fournisseur du système de fichiers (`IndexedDbFileSystemProvider`), lecteur et écrivain, planificateur de mutations, amorçage, maintenance, contenu en blocs. |
 | `Sessions/`, `Policy/`, `Catalog/`, `Settings/`, `ServerConnection/`, `Sync/`, `WebData/` | Un dépôt IndexedDB par domaine (utilisateurs, groupes, grants, catalogue des apps, réglages hérités, connexion serveur, curseurs et états de synchro, bases des sites ASP.Hack). |
 | `Diagnostics/` | Journal de diagnostic et d'audit persistés, inspecteur du stockage. |
@@ -35,7 +35,7 @@ navigateur, dans la composition de l'hôte.
 
 ## Base IndexedDB
 
-- Nom : `hackeros`. Version courante : **4** (`HackerOsIndexedDbSchema.CurrentVersion`).
+- Nom : `hackeros`. Version courante : **4** (`KazoOsIndexedDbSchema.CurrentVersion`).
   Changer la version est le seul moyen d'ajouter, retirer ou modifier un
   magasin ou un index ; chaque montée a son étape de migration.
 - Magasins principaux : `users`, `groups`, `sessions`, `settings`, `fsEntries`

@@ -175,7 +175,7 @@ Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.MaxChunkSizeBytes
 Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.MaxFileSizeBytes.get -> long
 Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.OrphanRetention.get -> System.TimeSpan
 Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.RequiresChunking(long fileSizeBytes) -> bool
-Kazo.Os.Infrastructure.Browser.Schema.HackerOsIndexedDbSchema
+Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema
 Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition
 Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.<Clone>$() -> Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition!
 Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.Equals(Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition? other) -> bool
@@ -290,23 +290,23 @@ const Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.DefaultCont
 const Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.DefaultDeduplicateChunks = true -> bool
 const Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.DefaultMaxChunkSizeBytes = 262144 -> long
 const Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.DefaultMaxFileSizeBytes = 16777216 -> long
-const Kazo.Os.Infrastructure.Browser.Schema.HackerOsIndexedDbSchema.AuditStoreName = "audit" -> string!
-const Kazo.Os.Infrastructure.Browser.Schema.HackerOsIndexedDbSchema.CatalogStoreName = "catalog" -> string!
-const Kazo.Os.Infrastructure.Browser.Schema.HackerOsIndexedDbSchema.CurrentVersion = 4 -> int
-const Kazo.Os.Infrastructure.Browser.Schema.HackerOsIndexedDbSchema.DatabaseName = "hackeros" -> string!
-const Kazo.Os.Infrastructure.Browser.Schema.HackerOsIndexedDbSchema.DiagnosticsStoreName = "diagnostics" -> string!
-const Kazo.Os.Infrastructure.Browser.Schema.HackerOsIndexedDbSchema.FileContentStoreName = "fsContent" -> string!
-const Kazo.Os.Infrastructure.Browser.Schema.HackerOsIndexedDbSchema.FileSystemEntryStoreName = "fsEntries" -> string!
-const Kazo.Os.Infrastructure.Browser.Schema.HackerOsIndexedDbSchema.FileSystemLinkStoreName = "fsLinks" -> string!
-const Kazo.Os.Infrastructure.Browser.Schema.HackerOsIndexedDbSchema.GrantStoreName = "grants" -> string!
-const Kazo.Os.Infrastructure.Browser.Schema.HackerOsIndexedDbSchema.GroupStoreName = "groups" -> string!
-const Kazo.Os.Infrastructure.Browser.Schema.HackerOsIndexedDbSchema.LocalBookkeepingStoreName = "syncMetadata" -> string!
-const Kazo.Os.Infrastructure.Browser.Schema.HackerOsIndexedDbSchema.ServerConnectionStoreName = "serverConnection" -> string!
-const Kazo.Os.Infrastructure.Browser.Schema.HackerOsIndexedDbSchema.SessionStoreName = "sessions" -> string!
-const Kazo.Os.Infrastructure.Browser.Schema.HackerOsIndexedDbSchema.SettingsStoreName = "settings" -> string!
-const Kazo.Os.Infrastructure.Browser.Schema.HackerOsIndexedDbSchema.SyncCursorStoreName = "syncCursors" -> string!
-const Kazo.Os.Infrastructure.Browser.Schema.HackerOsIndexedDbSchema.SyncRecordStateStoreName = "syncRecordState" -> string!
-const Kazo.Os.Infrastructure.Browser.Schema.HackerOsIndexedDbSchema.UserStoreName = "users" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.AuditStoreName = "audit" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.CatalogStoreName = "catalog" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.CurrentVersion = 4 -> int
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.DatabaseName = "hackeros" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.DiagnosticsStoreName = "diagnostics" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.FileContentStoreName = "fsContent" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.FileSystemEntryStoreName = "fsEntries" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.FileSystemLinkStoreName = "fsLinks" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.GrantStoreName = "grants" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.GroupStoreName = "groups" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.LocalBookkeepingStoreName = "syncMetadata" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.ServerConnectionStoreName = "serverConnection" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.SessionStoreName = "sessions" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.SettingsStoreName = "settings" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.SyncCursorStoreName = "syncCursors" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.SyncRecordStateStoreName = "syncRecordState" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.UserStoreName = "users" -> string!
 const Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageManager.LowSpaceByteThreshold = 67108864 -> long
 const Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageManager.LowSpaceRatioThreshold = 0.1 -> double
 override Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupSummary.Equals(object? obj) -> bool
@@ -363,8 +363,8 @@ static Kazo.Os.Infrastructure.Browser.Recovery.BrowserStorageRecoveryClassifier.
 static Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.Default.get -> Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy!
 static Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.operator !=(Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy? left, Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy? right) -> bool
 static Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.operator ==(Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy? left, Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy? right) -> bool
-static Kazo.Os.Infrastructure.Browser.Schema.HackerOsIndexedDbSchema.ObjectStores.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition!>!
-static Kazo.Os.Infrastructure.Browser.Schema.HackerOsIndexedDbSchema.TransactionBoundaries.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary!>!
+static Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.ObjectStores.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition!>!
+static Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.TransactionBoundaries.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary!>!
 static Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.operator !=(Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition? left, Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition? right) -> bool
 static Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.operator ==(Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition? left, Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition? right) -> bool
 static Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition.operator !=(Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition? left, Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition? right) -> bool

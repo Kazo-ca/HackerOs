@@ -9,8 +9,8 @@
 <div class="desktop-surface">
     @if (_desktopDirectory is not null)
     {
-        <HackFileView InitialDirectory="@_desktopDirectory"
-                      Mode="HackFileViewMode.Desktop"
+        <KazoFileView InitialDirectory="@_desktopDirectory"
+                      Mode="KazoFileViewMode.Desktop"
                       Filter="IsVisibleDesktopItem"
                       DesktopOptions="_settings.Options"
                       DesktopPositions="_settings.Positions"

@@ -22,7 +22,7 @@
 @inject IJSRuntime JSRuntime
 
 @*
-    The File Explorer's window: the OS file control (HackFileView, contract hackeros.file-view) that this
+    The File Explorer's window: the OS file control (KazoFileView, contract hackeros.file-view) that this
     same app provides to every app (ExplorerFileView, ADR 0148, ADR 0155), framed by the chrome the
     control deliberately doesn't own: toolbar, address bar, search box, view-mode toggle, the "Places"
     sidebar with the Trash view (TrashView, ADR 0052) and the status bar.
@@ -39,19 +39,19 @@
     <div class="explorer-toolbar">
         <div class="nav-buttons">
             <button class="nav-btn" disabled="@(!_state.CanNavigateBack)" @onclick="NavigateBackAsync" title="@L["Nav.Back"]">
-                <HackerIcon Library="IconLibrary.Lucide" Name="arrow-left" Size="16" />
+                <KazoIcon Library="IconLibrary.Lucide" Name="arrow-left" Size="16" />
             </button>
             <button class="nav-btn" disabled="@(!_state.CanNavigateForward)" @onclick="NavigateForwardAsync" title="@L["Nav.Forward"]">
-                <HackerIcon Library="IconLibrary.Lucide" Name="arrow-right" Size="16" />
+                <KazoIcon Library="IconLibrary.Lucide" Name="arrow-right" Size="16" />
             </button>
             <button class="nav-btn" disabled="@(!_state.CanNavigateUp)" @onclick="NavigateUpAsync" title="@L["Nav.Up"]">
-                <HackerIcon Library="IconLibrary.Lucide" Name="arrow-up" Size="16" />
+                <KazoIcon Library="IconLibrary.Lucide" Name="arrow-up" Size="16" />
             </button>
             <button class="nav-btn" @onclick="RefreshAsync" title="@L["Nav.Refresh"]">
-                <HackerIcon Library="IconLibrary.Lucide" Name="refresh-cw" Size="16" />
+                <KazoIcon Library="IconLibrary.Lucide" Name="refresh-cw" Size="16" />
             </button>
             <button class="nav-btn" @onclick="NavigateHomeAsync" title="@L["Nav.Home"]">
-                <HackerIcon Library="IconLibrary.Lucide" Name="house" Size="16" />
+                <KazoIcon Library="IconLibrary.Lucide" Name="house" Size="16" />
             </button>
         </div>
 
@@ -67,16 +67,16 @@
             <button type="button" class="view-btn @(_showHiddenFilesAndFolders ? "active" : "")"
                     aria-label="@L["View.ShowHidden"]" title="@L["View.ShowHidden"]"
                     aria-pressed="@(_showHiddenFilesAndFolders ? "true" : "false")" @onclick="ToggleHiddenFiles">
-                <HackerIcon Library="IconLibrary.Lucide" Name="eye" Size="16" />
+                <KazoIcon Library="IconLibrary.Lucide" Name="eye" Size="16" />
             </button>
             <button class="view-btn @(_state.ViewMode == FileViewMode.Details ? "active" : "")" @onclick="() => SetViewMode(FileViewMode.Details)" title="@L["View.Details"]">
-                <HackerIcon Library="IconLibrary.Lucide" Name="list" Size="16" />
+                <KazoIcon Library="IconLibrary.Lucide" Name="list" Size="16" />
             </button>
             <button class="view-btn @(_state.ViewMode == FileViewMode.Icons ? "active" : "")" @onclick="() => SetViewMode(FileViewMode.Icons)" title="@L["View.Icons"]">
-                <HackerIcon Library="IconLibrary.Lucide" Name="layout-grid" Size="16" />
+                <KazoIcon Library="IconLibrary.Lucide" Name="layout-grid" Size="16" />
             </button>
             <button class="view-btn @(_state.ViewMode == FileViewMode.Tree ? "active" : "")" @onclick="() => SetViewMode(FileViewMode.Tree)" title="@L["View.Tree"]">
-                <HackerIcon Library="IconLibrary.Lucide" Name="list-tree" Size="16" />
+                <KazoIcon Library="IconLibrary.Lucide" Name="list-tree" Size="16" />
             </button>
         </div>
     </div>
@@ -89,12 +89,12 @@
         {
             <FileViewDropZone Owner="_fileView" Destination="_homeDirectory">
                 <button class="sidebar-entry @(!_showTrash && _state.CurrentPath == GetHomePath() ? "active" : "")" @onclick="NavigateHomeAsync" title="@L["Places.Home"]">
-                    <HackerIcon Library="IconLibrary.Lucide" Name="house" Size="16" /> <span>@L["Places.Home"]</span>
+                    <KazoIcon Library="IconLibrary.Lucide" Name="house" Size="16" /> <span>@L["Places.Home"]</span>
                 </button>
             </FileViewDropZone>
             <FileViewDropZone Owner="_fileView" Dropped="OnTrashDropAsync">
                 <button class="sidebar-entry @(_showTrash ? "active" : "")" @onclick="ShowTrashAsync" title="@L["Places.TrashTooltip"]">
-                    <HackerIcon Library="IconLibrary.Lucide" Name="trash-2" Size="16" /> <span>@L["Places.Trash"]</span>
+                    <KazoIcon Library="IconLibrary.Lucide" Name="trash-2" Size="16" /> <span>@L["Places.Trash"]</span>
                 </button>
             </FileViewDropZone>
         }
@@ -121,52 +121,52 @@
     <!-- Actions Toolbar -->
     <div class="actions-toolbar">
         <button class="action-btn" @onclick="CreateFolderAsync" title="@L["Toolbar.NewFolder"]">
-            <HackerIcon Library="IconLibrary.Lucide" Name="folder-plus" Size="16" /> <span>@L["Toolbar.NewFolder"]</span>
+            <KazoIcon Library="IconLibrary.Lucide" Name="folder-plus" Size="16" /> <span>@L["Toolbar.NewFolder"]</span>
         </button>
         <button class="action-btn" @onclick="CreateFileAsync" title="@L["Toolbar.NewFile"]">
-            <HackerIcon Library="IconLibrary.Lucide" Name="file-plus" Size="16" /> <span>@L["Toolbar.NewFile"]</span>
+            <KazoIcon Library="IconLibrary.Lucide" Name="file-plus" Size="16" /> <span>@L["Toolbar.NewFile"]</span>
         </button>
-        <button class="action-btn" disabled="@(!CanRun(HackFileMenuItems.Rename))" @onclick="() => RunAsync(HackFileMenuItems.Rename)" title="@L["Toolbar.Rename"]">
-            <HackerIcon Library="IconLibrary.Lucide" Name="pencil" Size="16" /> <span>@L["Toolbar.Rename"]</span>
+        <button class="action-btn" disabled="@(!CanRun(KazoFileMenuItems.Rename))" @onclick="() => RunAsync(KazoFileMenuItems.Rename)" title="@L["Toolbar.Rename"]">
+            <KazoIcon Library="IconLibrary.Lucide" Name="pencil" Size="16" /> <span>@L["Toolbar.Rename"]</span>
         </button>
-        <button class="action-btn danger" disabled="@(!CanRun(HackFileMenuItems.Delete))" @onclick="() => RunAsync(HackFileMenuItems.Delete)" title="@L["Toolbar.DeleteTooltip"]">
-            <HackerIcon Library="IconLibrary.Lucide" Name="trash-2" Size="16" /> <span>@L["Toolbar.Delete"]</span>
+        <button class="action-btn danger" disabled="@(!CanRun(KazoFileMenuItems.Delete))" @onclick="() => RunAsync(KazoFileMenuItems.Delete)" title="@L["Toolbar.DeleteTooltip"]">
+            <KazoIcon Library="IconLibrary.Lucide" Name="trash-2" Size="16" /> <span>@L["Toolbar.Delete"]</span>
         </button>
         <span class="toolbar-divider"></span>
 
-        <button class="action-btn" disabled="@(!CanRun(HackFileMenuItems.Cut))" @onclick="() => RunAsync(HackFileMenuItems.Cut)" title="@L["Toolbar.CutTooltip"]">
-            <HackerIcon Library="IconLibrary.Lucide" Name="scissors" Size="16" /> <span>@L["Toolbar.Cut"]</span>
+        <button class="action-btn" disabled="@(!CanRun(KazoFileMenuItems.Cut))" @onclick="() => RunAsync(KazoFileMenuItems.Cut)" title="@L["Toolbar.CutTooltip"]">
+            <KazoIcon Library="IconLibrary.Lucide" Name="scissors" Size="16" /> <span>@L["Toolbar.Cut"]</span>
         </button>
-        <button class="action-btn" disabled="@(!CanRun(HackFileMenuItems.Copy))" @onclick="() => RunAsync(HackFileMenuItems.Copy)" title="@L["Toolbar.CopyTooltip"]">
-            <HackerIcon Library="IconLibrary.Lucide" Name="copy" Size="16" /> <span>@L["Toolbar.Copy"]</span>
+        <button class="action-btn" disabled="@(!CanRun(KazoFileMenuItems.Copy))" @onclick="() => RunAsync(KazoFileMenuItems.Copy)" title="@L["Toolbar.CopyTooltip"]">
+            <KazoIcon Library="IconLibrary.Lucide" Name="copy" Size="16" /> <span>@L["Toolbar.Copy"]</span>
         </button>
-        <button class="action-btn" disabled="@(!CanRun(HackFileMenuItems.Paste))" @onclick="() => RunAsync(HackFileMenuItems.Paste)" title="@L["Toolbar.PasteTooltip"]">
-            <HackerIcon Library="IconLibrary.Lucide" Name="clipboard-paste" Size="16" /> <span>@L["Toolbar.Paste"]</span>
+        <button class="action-btn" disabled="@(!CanRun(KazoFileMenuItems.Paste))" @onclick="() => RunAsync(KazoFileMenuItems.Paste)" title="@L["Toolbar.PasteTooltip"]">
+            <KazoIcon Library="IconLibrary.Lucide" Name="clipboard-paste" Size="16" /> <span>@L["Toolbar.Paste"]</span>
         </button>
 
         <span class="toolbar-divider"></span>
 
-        <button class="action-btn" disabled="@(SelectedCount != 1)" @onclick="() => RunAsync(HackFileMenuItems.Properties)" title="@L["Toolbar.Properties"]">
-            <HackerIcon Library="IconLibrary.Lucide" Name="info" Size="16" /> <span>@L["Toolbar.Properties"]</span>
+        <button class="action-btn" disabled="@(SelectedCount != 1)" @onclick="() => RunAsync(KazoFileMenuItems.Properties)" title="@L["Toolbar.Properties"]">
+            <KazoIcon Library="IconLibrary.Lucide" Name="info" Size="16" /> <span>@L["Toolbar.Properties"]</span>
         </button>
-        <button class="action-btn" disabled="@(!CanRun(HackFileMenuItems.OpenWithOther))" @onclick="() => RunAsync(HackFileMenuItems.OpenWithOther)" title="@L["Toolbar.OpenWith"]">
-            <HackerIcon Library="IconLibrary.Lucide" Name="external-link" Size="16" /> <span>@L["Toolbar.OpenWith"]</span>
+        <button class="action-btn" disabled="@(!CanRun(KazoFileMenuItems.OpenWithOther))" @onclick="() => RunAsync(KazoFileMenuItems.OpenWithOther)" title="@L["Toolbar.OpenWith"]">
+            <KazoIcon Library="IconLibrary.Lucide" Name="external-link" Size="16" /> <span>@L["Toolbar.OpenWith"]</span>
         </button>
 
         <span class="toolbar-divider"></span>
 
         <InputFile id="fileInput" OnChange="UploadFilesAsync" multiple hidden />
         <label for="fileInput" class="action-btn" title="@L["Toolbar.Upload"]">
-            <HackerIcon Library="IconLibrary.Lucide" Name="upload" Size="16" /> <span>@L["Toolbar.Upload"]</span>
+            <KazoIcon Library="IconLibrary.Lucide" Name="upload" Size="16" /> <span>@L["Toolbar.Upload"]</span>
         </label>
         <button class="action-btn" disabled="@(SelectedCount == 0)" @onclick="DownloadSelectedAsync" title="@L["Toolbar.Download"]">
-            <HackerIcon Library="IconLibrary.Lucide" Name="download" Size="16" /> <span>@L["Toolbar.Download"]</span>
+            <KazoIcon Library="IconLibrary.Lucide" Name="download" Size="16" /> <span>@L["Toolbar.Download"]</span>
         </button>
         <button class="action-btn" disabled="@(SelectedCount == 0)" @onclick="CompressSelectedAsync" title="@L["Toolbar.CompressTooltip"]">
-            <HackerIcon Library="IconLibrary.Lucide" Name="archive" Size="16" /> <span>@L["Toolbar.Compress"]</span>
+            <KazoIcon Library="IconLibrary.Lucide" Name="archive" Size="16" /> <span>@L["Toolbar.Compress"]</span>
         </button>
         <button class="action-btn" disabled="@(!CanExtractSelection)" @onclick="ExtractSelectedAsync" title="@L["Toolbar.ExtractTooltip"]">
-            <HackerIcon Library="IconLibrary.Lucide" Name="package-open" Size="16" /> <span>@L["Toolbar.Extract"]</span>
+            <KazoIcon Library="IconLibrary.Lucide" Name="package-open" Size="16" /> <span>@L["Toolbar.Extract"]</span>
         </button>
     </div>
 
@@ -174,7 +174,7 @@
     <div class="explorer-content">
         @* The explorer's own windows see inside the .zip files (ADR 0185 §6-9). *@
         <CascadingValue Name="@ExplorerFileView.ArchiveBrowsingName" Value="true" IsFixed="true">
-            <HackFileView InitialDirectory="@_initialDirectory.Value"
+            <KazoFileView InitialDirectory="@_initialDirectory.Value"
                           Mode="ToContractMode(_state.ViewMode)"
                           ModeChanged="OnModeChanged"
                           Filter="_searchFilter"
@@ -209,7 +209,7 @@
     private string? _shownError;
     private protected IDisposable? _eventSub;
     private protected BrowserFileDownloader? _downloader;
-    private protected Func<HackFileViewItem, bool> _searchFilter = default!;
+    private protected Func<KazoFileViewItem, bool> _searchFilter = default!;
     private protected bool _showTrash;
     private protected bool _showHiddenFilesAndFolders;
     private protected TrashView? _trashView;
@@ -260,14 +260,14 @@
         _files?.SelectedItems is [{ IsDirectory: false } item]
         && item.Name.EndsWith(".zip", StringComparison.OrdinalIgnoreCase);
 
-    private protected string GetHomePath() => HackUser.Describe(AppContext).HomeDirectory;
+    private protected string GetHomePath() => KazoUser.Describe(AppContext).HomeDirectory;
 
     /// <summary>Uploads, trash drops and archive tasks in flight (ADR 0069); the control tracks its own.</summary>
     private protected readonly HashSet<Task> _operations = [];
 
     /// <summary>
     /// Records a file operation so a stop request can wait for it: each item moves atomically and
-    /// <see cref="HackFileOperations"/> stops between two when the process is asked to stop, so the window
+    /// <see cref="KazoFileOperations"/> stops between two when the process is asked to stop, so the window
     /// closes after the current item, with nothing half-copied and the rest reported as not done.
     /// </summary>
     private protected async Task<T> TrackOperation<T>(Task<T> operation)
@@ -285,7 +285,7 @@
 
     /// <inheritdoc />
     /// <remarks>The window waits for its own operations and for the control's (pastes, drops, deletions).</remarks>
-    protected override Task OnAppStopRequestedAsync(HackStopRequestedEventArgs e) =>
+    protected override Task OnAppStopRequestedAsync(KazoStopRequestedEventArgs e) =>
         Task.WhenAll([.. _operations, _files?.WhenIdleAsync() ?? Task.CompletedTask]);
 
     protected override void OnAppInitialized()
@@ -302,7 +302,7 @@
         // "Extract here" from a file menu (ADR 0151 §8): open the first archive's folder, extract once ready.
         if (LaunchIntent is { IntentId: FileExplorerMenuEntries.ExtractHereIntent } intent)
         {
-            _pendingExtracts = [.. HackFileMenuIntent.ReadPaths(intent.PayloadJson)
+            _pendingExtracts = [.. KazoFileMenuIntent.ReadPaths(intent.PayloadJson)
                 .Where(static path => path.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))];
             if (_pendingExtracts.Count > 0)
             {
@@ -495,9 +495,9 @@
         }
     }
 
-    private protected void OnSelectionChanged(IReadOnlyList<HackFileViewItem> selection) => StateHasChanged();
+    private protected void OnSelectionChanged(IReadOnlyList<KazoFileViewItem> selection) => StateHasChanged();
 
-    private protected bool MatchesSearchQuery(HackFileViewItem item) =>
+    private protected bool MatchesSearchQuery(KazoFileViewItem item) =>
         (_showHiddenFilesAndFolders || !item.Name.StartsWith('.')) &&
         (string.IsNullOrWhiteSpace(_state.SearchQuery) ||
         item.Name.Contains(_state.SearchQuery, StringComparison.OrdinalIgnoreCase));
@@ -623,18 +623,18 @@
         StateHasChanged();
     }
 
-    private protected void OnModeChanged(HackFileViewMode mode) => _state.ViewMode = mode switch
+    private protected void OnModeChanged(KazoFileViewMode mode) => _state.ViewMode = mode switch
     {
-        HackFileViewMode.Icons => FileViewMode.Icons,
-        HackFileViewMode.Tree => FileViewMode.Tree,
+        KazoFileViewMode.Icons => FileViewMode.Icons,
+        KazoFileViewMode.Tree => FileViewMode.Tree,
         _ => FileViewMode.Details
     };
 
-    private protected static HackFileViewMode ToContractMode(FileViewMode mode) => mode switch
+    private protected static KazoFileViewMode ToContractMode(FileViewMode mode) => mode switch
     {
-        FileViewMode.Icons => HackFileViewMode.Icons,
-        FileViewMode.Tree => HackFileViewMode.Tree,
-        _ => HackFileViewMode.Details
+        FileViewMode.Icons => KazoFileViewMode.Icons,
+        FileViewMode.Tree => KazoFileViewMode.Tree,
+        _ => KazoFileViewMode.Details
     };
 
     // ---- Toolbar: the control's commands (ADR 0155 §2) ----------------------------------------------
@@ -716,7 +716,7 @@
     {
         if (e.Entries.Count == 0 || RefuseInArchive(e.Entries.Select(static entry => entry.Path))) return;
 
-        HackFileTransferResult result = await TrackOperation(HackFileOperations.MoveToTrashAsync(
+        KazoFileTransferResult result = await TrackOperation(KazoFileOperations.MoveToTrashAsync(
             e.Entries.Select(entry => entry.Path.Value).ToList(), AppContext.CancellationToken));
         ReportTransfer(result, TransferVerb.Trash);
         await RefreshAfterTransferAsync();
@@ -730,7 +730,7 @@
     /// Shows the end-of-operation summary: the failures (with their reason) in the error banner and as a
     /// desktop notification; nothing when everything went through.
     /// </summary>
-    private protected void ReportTransfer(HackFileTransferResult result, TransferVerb verb)
+    private protected void ReportTransfer(KazoFileTransferResult result, TransferVerb verb)
     {
         string? summary = ExplorerTransferReport.DescribeFailures(L, result, verb);
         if (summary is not null)
@@ -785,27 +785,27 @@
     {
         if (_files is null || RefuseInArchive()) return;
 
-        IReadOnlyList<HackHostFile> files = e.GetMultipleFiles(maximumFileCount: 100)
-            .Select(file => new HackHostFile(
+        IReadOnlyList<KazoHostFile> files = e.GetMultipleFiles(maximumFileCount: 100)
+            .Select(file => new KazoHostFile(
                 file.Name,
                 file.Size,
                 file.ContentType,
                 (maxBytes, cancellationToken) => Task.FromResult(file.OpenReadStream(maxBytes, cancellationToken))))
             .ToList();
-        HackFileTransferResult result = await TrackOperation(HackFileOperations.ImportAsync(files, _files.CurrentDirectory, AppContext.CancellationToken));
+        KazoFileTransferResult result = await TrackOperation(KazoFileOperations.ImportAsync(files, _files.CurrentDirectory, AppContext.CancellationToken));
         ReportTransfer(result, TransferVerb.Upload);
         await _files.RefreshAsync();
     }
 
     /// <remarks>
-    /// The download archive is built here, not in a HackBackground task (ADR 0140): the bytes must end
+    /// The download archive is built here, not in a KazoBackground task (ADR 0140): the bytes must end
     /// in this window for the browser's download, and a large selection would exceed the 16 MiB a
     /// task's result may carry (ADR 0128 section 4). Compress (to a file) uses the task.
     /// </remarks>
     private protected Task DownloadSelectedAsync() => _files is null ? Task.CompletedTask : DownloadAsync(_files.SelectedItems);
 
     /// <summary>Downloads one file as it is, or else a <c>.zip</c> of the items (the toolbar, the menu, "Send to ▸ My computer").</summary>
-    private protected async Task DownloadAsync(IReadOnlyList<HackFileViewItem> selected)
+    private protected async Task DownloadAsync(IReadOnlyList<KazoFileViewItem> selected)
     {
         if (_downloader is null) return;
 
@@ -814,7 +814,7 @@
 
         if (selected.Count == 1)
         {
-            HackFileViewItem item = selected[0];
+            KazoFileViewItem item = selected[0];
             if (!item.IsDirectory)
             {
                 FileSystemResult<FileSystemContentReadHandle> result = await fileSystem.ReadAsync(
@@ -841,7 +841,7 @@
             using MemoryStream ms = new();
             using (ZipArchive archive = new(ms, ZipArchiveMode.Create, true))
             {
-                foreach (HackFileViewItem item in selected)
+                foreach (KazoFileViewItem item in selected)
                 {
                     if (!item.IsDirectory)
                     {
@@ -864,7 +864,7 @@
     /// Compresses the items into a <c>.zip</c> of the folder shown, named by the user (the toolbar, the
     /// menu's "Compress to .zip…"), or by <see cref="CompressToDefaultNameAsync"/> ("Send to ▸ Compressed folder").
     /// </summary>
-    private protected async Task CompressAsync(IReadOnlyList<HackFileViewItem> selected)
+    private protected async Task CompressAsync(IReadOnlyList<KazoFileViewItem> selected)
     {
         if (_files is null || selected.Count == 0 || RefuseInArchive()) return;
 
@@ -895,7 +895,7 @@
     }
 
     /// <summary>Compresses the items into <paramref name="destPath"/> in a child process, then shows the folder again.</summary>
-    private protected async Task CompressToAsync(IReadOnlyList<HackFileViewItem> selected, VirtualPath destPath)
+    private protected async Task CompressToAsync(IReadOnlyList<KazoFileViewItem> selected, VirtualPath destPath)
     {
         if (_files is null) return;
 

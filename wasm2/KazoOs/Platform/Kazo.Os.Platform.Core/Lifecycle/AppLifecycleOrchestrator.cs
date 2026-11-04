@@ -522,7 +522,7 @@ public sealed class AppLifecycleOrchestrator
             && (request.StandardInput is not null || request.StandardOutput is not null || request.StandardError is not null))
         {
             // ADR 0064: a window or service started by a shell writes into that shell's terminal
-            // (HackConsole). The window outlives the command line, so a closed pipe or terminal
+            // (KazoConsole). The window outlives the command line, so a closed pipe or terminal
             // must never fault it: its writes are then dropped, like output to a hung-up tty.
             concrete.Console = new AttachedAppConsole(
                 request.StandardInput ?? TextReader.Null,
@@ -1047,7 +1047,7 @@ public sealed class AppLifecycleOrchestrator
         _processManager.MarkRunning(process.Pid);
 
         // ADR 0050 section 6: the context keeps the process's state at command start, for
-        // compatibility; the live values are read through HackEnvironment.
+        // compatibility; the live values are read through KazoEnvironment.
         IAppEnvironmentGateway processEnvironment = context.Environment;
 
         // ADR 0070: a command hosted in a worker is instantiated there, not here.
@@ -1074,7 +1074,7 @@ public sealed class AppLifecycleOrchestrator
 
         if (context is AppExecutionContext concreteContext)
         {
-            // HackConsole in a command is its terminal context's streams.
+            // KazoConsole in a command is its terminal context's streams.
             concreteContext.Console = new AttachedAppConsole(
                 terminalContext.StandardInput, terminalContext.StandardOutput, terminalContext.StandardError);
         }
@@ -1089,15 +1089,15 @@ public sealed class AppLifecycleOrchestrator
         {
             // ADR 0043/0050: the command runs as this app, in its process's working directory (the
             // shell's, copied at creation), so the Hack* file API resolves relative paths exactly
-            // like the shell does, and follows the command's own HackEnvironment changes.
-            using IDisposable ambient = HackExecutionContext.Enter(context);
+            // like the shell does, and follows the command's own KazoEnvironment changes.
+            using IDisposable ambient = KazoExecutionContext.Enter(context);
             // ADR 0069: the command runs on its process's scheduler, so a kill drops its leftovers.
             exitCode = app is null
                 // ADR 0070: the command runs in a worker; the OS keeps its process, context and streams.
                 ? await RunAsProcessAsync(context, () => remoteRun = RunRemoteTerminalAsync(descriptor, context, terminalContext, executionCancellation.Token))
                 : await RunAsProcessAsync(context, () => app.ExecuteAsync(terminalContext, executionCancellation.Token).AsTask());
         }
-        catch (HackProcessKilledException)
+        catch (KazoProcessKilledException)
         {
             // SIGKILL (kill -9, or a SIGTERM whose grace period ran out): 128 + 9, like a shell reports it.
             exitCode = 137;
@@ -1105,7 +1105,7 @@ public sealed class AppLifecycleOrchestrator
         }
         catch (OperationCanceledException) when (executionCancellation.IsCancellationRequested || context.StopRequest is not null)
         {
-            // Also when HackProcess.CheckpointAsync saw the stop request just before the token was cancelled (ADR 0069).
+            // Also when KazoProcess.CheckpointAsync saw the stop request just before the token was cancelled (ADR 0069).
             // ADR 0125 section 2: ended by the SIGXCPU of its CPU limit, 128 + 24.
             exitCode = StoppedExitCode(context);
         }
@@ -1129,7 +1129,7 @@ public sealed class AppLifecycleOrchestrator
 
     /// <summary>
     /// Runs a command in a worker (ADR 0070) and maps how it ended to what the same command would
-    /// have given in-process: its exit code, <see cref="HackProcessKilledException"/> for a kill
+    /// have given in-process: its exit code, <see cref="KazoProcessKilledException"/> for a kill
     /// (137), 130 for an interruption, 141 for a broken pipe, and an exception for a fault.
     /// </summary>
     private async Task<int> RunRemoteTerminalAsync(
@@ -1145,7 +1145,7 @@ public sealed class AppLifecycleOrchestrator
         return exit.Status switch
         {
             RemoteProcessExitStatus.Exited => exit.ExitCode,
-            RemoteProcessExitStatus.Killed => throw new HackProcessKilledException(context.ProcessId.Value),
+            RemoteProcessExitStatus.Killed => throw new KazoProcessKilledException(context.ProcessId.Value),
             RemoteProcessExitStatus.Cancelled => StoppedExitCode(context),
             RemoteProcessExitStatus.BrokenPipe => 141,
             _ => throw new RemoteProcessFaultException(exit.FaultMessage ?? "The command faulted in its worker.")
@@ -1569,7 +1569,7 @@ public sealed class AppLifecycleOrchestrator
     /// <summary>
     /// Runs the entry point of a headless process on its own scheduler (ADR 0069, section 3), when the
     /// context comes from the trusted factory: a killed process's pending continuations are dropped
-    /// and the wait ends at once with <see cref="HackProcessKilledException"/>. Other contexts
+    /// and the wait ends at once with <see cref="KazoProcessKilledException"/>. Other contexts
     /// (tests) run the entry point directly.
     /// </summary>
     private static Task<T> RunAsProcessAsync<T>(IAppExecutionContext context, Func<Task<T>> entryPoint) =>
@@ -1613,7 +1613,7 @@ public sealed class AppLifecycleOrchestrator
             await WaitForStopWorkAsync(context, context.Clock.DelayAsync(remaining > TimeSpan.Zero ? remaining : TimeSpan.Zero)).ConfigureAwait(false);
             await StopAsync(pid, request.Reason).ConfigureAwait(false);
         }
-        catch (Exception exception) when (exception is HackProcessKilledException or KeyNotFoundException or InvalidOperationException)
+        catch (Exception exception) when (exception is KazoProcessKilledException or KeyNotFoundException or InvalidOperationException)
         {
             // Killed at the deadline, or ended meanwhile: nothing left to close.
         }

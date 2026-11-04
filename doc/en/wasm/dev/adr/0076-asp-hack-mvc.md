@@ -100,7 +100,7 @@ A view is a Razor component compiled at build time with a `Model` parameter:
 @inherits HackView<HomeModel>
 @layout MainLayout
 <h1>@Model.Title</h1>
-<HackForm Action="Contact" Controller="Home"> ... </HackForm>
+<HackForm Action="Contact" Controller="Home"> ... </KazoForm>
 ```
 
 It is rendered as static HTML by `HtmlRenderer` (.NET, like ASP.NET 8's

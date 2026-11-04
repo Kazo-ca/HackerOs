@@ -33,8 +33,8 @@ Le navigateur gagne aussi :
 
 ```
 BrowserWindow ── NavigateAsync ──► BrowserResourceLoader ──► SdkBrowserTransport
-     │                                  │  (journal Network/Console)   ├─ http(s) : HackHttpClient + cookies de l'onglet
-     │                                  ▼                              └─ file:   : HackFile / HackDirectoryInfo
+     │                                  │  (journal Network/Console)   ├─ http(s) : KazoHttpClient + cookies de l'onglet
+     │                                  ▼                              └─ file:   : KazoFile / KazoDirectoryInfo
      │                            DevToolsLog ◄── DevToolsPanel
      ▼
 HtmlPageComposer (AngleSharp) ── SubresourceFetcher + CssResourceRewriter
@@ -53,8 +53,8 @@ Tous les fichiers sont sous `Apps/System/Kazo.Os.Apps.Browser/` :
 | Dossier / fichier | Rôle |
 |---|---|
 | `Net/BrowserTransport.cs` | `BrowserRequest`, `BrowserResponse`, `BrowserFetchResult`, `IBrowserTransport`, codes `BrowserErrorCodes`. |
-| `Net/SdkBrowserTransport.cs` | Transport réel : `HackHttpClient` (cookies de l'onglet ou conteneur vide selon les credentials, en-têtes interdits filtrés) et `file:` (fichier ou listing). |
-| `Net/BrowserUrl.cs` | Barre d'adresse (`view-source:`, `about:blank`, chemins `/…` et `~/…`, recherche HackerSearch), résolution relative, origine, clé de stockage par site. |
+| `Net/SdkBrowserTransport.cs` | Transport réel : `KazoHttpClient` (cookies de l'onglet ou conteneur vide selon les credentials, en-têtes interdits filtrés) et `file:` (fichier ou listing). |
+| `Net/BrowserUrl.cs` | Barre d'adresse (`view-source:`, `about:blank`, chemins `/…` et `~/…`, recherche KazoSearch), résolution relative, origine, clé de stockage par site. |
 | `Net/DirectoryListingPage.cs` | Page « Index of » d'un dossier local. |
 | `Net/BrowserResourceLoader.cs` | Point de passage unique : chaque requête produit une ligne Network et, en échec, un message Console « Failed to load resource ». |
 | `Rendering/HtmlPageComposer.cs` | Analyse le HTML (AngleSharp), inline les sous-ressources, retire `<base>` et les cadres, ajoute charset, `<base href>`, CSP et le script du pont. |
@@ -70,7 +70,7 @@ Tous les fichiers sont sous `Apps/System/Kazo.Os.Apps.Browser/` :
 
 `SimulatedFileTypes` (`Shared/Kazo.Os.Simulation.Abstractions/Network/`)
 donne le type MIME d'un fichier local d'après son extension.
-`HackCookieContainer.Remove` (SDK) supprime un cookie expiré par la page.
+`KazoCookieContainer.Remove` (SDK) supprime un cookie expiré par la page.
 
 ## Fonctionnement
 
@@ -170,7 +170,7 @@ page y est recréée et son pont continue de parler à ce navigateur.
   `F5` : recharger ; `Alt+←`/`Alt+→` : historique. Ces raccourcis marchent
   aussi quand le focus est dans la page.
 - Un site qui veut être appelé depuis une autre origine renvoie
-  `Access-Control-Allow-Origin` (HackerSearch le fait sur `/api/search`).
+  `Access-Control-Allow-Origin` (KazoSearch le fait sur `/api/search`).
 
 ## Décisions clés
 
@@ -208,7 +208,7 @@ page y est recréée et son pont continue de parler à ce navigateur.
   `Tests/Kazo.Os.UI.E2E.Tests/BrowserSiteDataTests.cs` : historique de
   formulaires (fichier, limites, `<datalist>` dans Chromium).
 - `Tests/Kazo.Os.UI.E2E.Tests/BrowserHomePageTests.cs` : hors mode démo, le
-  navigateur s'ouvre sur HackerSearch et une recherche tapée dans la barre
+  navigateur s'ouvre sur KazoSearch et une recherche tapée dans la barre
   d'adresse affiche ses résultats (ADR 0085 : le catalogue réseau par défaut
   est branché dans l'OS).
 - Pages de test : `example.hackeros` (`/page.html`, `/form.html`, `/echo`,

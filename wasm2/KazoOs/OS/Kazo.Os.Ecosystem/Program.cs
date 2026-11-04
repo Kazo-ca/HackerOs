@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.AddHackerOsBrowserHost(BuildKnownLazyApps.Host);
 
-// AddHackerOsEcosystem's ILoggerProvider (HackerOsDiagnosticLoggerProvider) depends only on
+// AddHackerOsEcosystem's ILoggerProvider (KazoOsDiagnosticLoggerProvider) depends only on
 // singletons since ADR 0045, so this host keeps it: ILogger<T> entries land in /var/log/syslog.
 
 // ADR 0182: apps installed from packages (hackpkg) join the catalog before the OS starts.

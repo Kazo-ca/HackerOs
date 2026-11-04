@@ -89,15 +89,15 @@ public sealed partial class ShellInterpreterTests
     {
         Fixture fixture = await Fixture.CreateAsync();
         fixture.Grant(AppCapabilities.ShellHost);
-        RecordingPrompt prompt = new() { Credential = new HackCredential("admin", "wrong") };
-        await using IHackShell shell = await HackShell.StartAsync(fixture.Host, new HackShellOptions { CredentialPrompt = prompt });
+        RecordingPrompt prompt = new() { Credential = new KazoCredential("admin", "wrong") };
+        await using IHackShell shell = await KazoShell.StartAsync(fixture.Host, new KazoShellOptions { CredentialPrompt = prompt });
 
         await RunHostedAsync(shell, "LANG=fr_FR.UTF-8");
         (int status, _, string error) = await RunHostedAsync(shell, "sudo amroot");
 
         Assert.Equal(1, status);
         Assert.Equal("sudo: échec de l'authentification\n", error);
-        HackCredentialRequest request = Assert.Single(prompt.Requests);
+        KazoCredentialRequest request = Assert.Single(prompt.Requests);
         Assert.Equal("Autorisation administrateur requise", request.Title);
         Assert.Equal("Exécuter en tant que root : amroot", request.Description);
         Assert.Equal(["Désolé, veuillez réessayer."], prompt.Lines);
@@ -107,7 +107,7 @@ public sealed partial class ShellInterpreterTests
     public void Every_catalog_capability_is_described_in_english_and_in_french()
     {
         CultureInfo french = CultureInfo.GetCultureInfo("fr");
-        LocalizerProbe probe = new(Strings.For(HackLocale.DefaultLanguage));
+        LocalizerProbe probe = new(Strings.For(KazoLocale.DefaultLanguage));
 
         foreach (string capability in AppCapabilities.All)
         {
@@ -132,7 +132,7 @@ public sealed partial class ShellInterpreterTests
     [Fact]
     public void Every_core_text_exists_in_english_and_in_french()
     {
-        ResourceManager resources = HackLocalization.GetResourceManager(typeof(Strings));
+        ResourceManager resources = KazoLocalization.GetResourceManager(typeof(Strings));
         HashSet<string> english = Keys(resources.GetResourceSet(CultureInfo.InvariantCulture, createIfNotExists: true, tryParents: false));
         HashSet<string> french = Keys(resources.GetResourceSet(CultureInfo.GetCultureInfo("fr"), createIfNotExists: true, tryParents: false));
 
@@ -140,7 +140,7 @@ public sealed partial class ShellInterpreterTests
         Assert.Empty(english.Except(french));
         Assert.Empty(french.Except(english));
         Assert.Equal("{0} : commande introuvable", Strings.For(CultureInfo.GetCultureInfo("fr"))["Shell.CommandNotFound"].Value);
-        Assert.Equal("{0}: command not found", Strings.For(HackLocale.DefaultLanguage)["Shell.CommandNotFound"].Value);
+        Assert.Equal("{0}: command not found", Strings.For(KazoLocale.DefaultLanguage)["Shell.CommandNotFound"].Value);
 
         static HashSet<string> Keys(ResourceSet? set) =>
             set is null ? [] : [.. set.Cast<DictionaryEntry>().Select(entry => (string)entry.Key)];

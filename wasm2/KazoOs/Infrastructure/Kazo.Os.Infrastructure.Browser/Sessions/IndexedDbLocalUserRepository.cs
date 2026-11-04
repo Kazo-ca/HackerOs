@@ -135,7 +135,7 @@ public sealed partial class IndexedDbLocalUserRepository : ILocalUserRepository,
         IReadOnlyList<JsonElement> results = await _adapter.ExecuteAsync(
             TransactionBoundary,
             IndexedDbTransactionMode.ReadOnly,
-            [new IndexedDbOperation("getAll", HackerOsIndexedDbSchema.UserStoreName)],
+            [new IndexedDbOperation("getAll", KazoOsIndexedDbSchema.UserStoreName)],
             cancellationToken).ConfigureAwait(false);
 
         return results.Single().EnumerateArray()
@@ -202,7 +202,7 @@ public sealed partial class IndexedDbLocalUserRepository : ILocalUserRepository,
         await _adapter.ExecuteAsync(
             TransactionBoundary,
             IndexedDbTransactionMode.ReadWrite,
-            [new IndexedDbOperation("delete", HackerOsIndexedDbSchema.UserStoreName, Key: current.Id.ToString())],
+            [new IndexedDbOperation("delete", KazoOsIndexedDbSchema.UserStoreName, Key: current.Id.ToString())],
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -223,7 +223,7 @@ public sealed partial class IndexedDbLocalUserRepository : ILocalUserRepository,
         IReadOnlyList<JsonElement> results = await _adapter.ExecuteAsync(
             TransactionBoundary,
             IndexedDbTransactionMode.ReadOnly,
-            [new IndexedDbOperation("get", HackerOsIndexedDbSchema.UserStoreName, Key: key, IndexName: indexName)],
+            [new IndexedDbOperation("get", KazoOsIndexedDbSchema.UserStoreName, Key: key, IndexName: indexName)],
             cancellationToken).ConfigureAwait(false);
 
         JsonElement result = results.Single();
@@ -260,7 +260,7 @@ public sealed partial class IndexedDbLocalUserRepository : ILocalUserRepository,
             IndexedDbTransactionMode.ReadWrite,
             [new IndexedDbOperation(
                 "compareAndPut",
-                HackerOsIndexedDbSchema.UserStoreName,
+                KazoOsIndexedDbSchema.UserStoreName,
                 Key: current.Id.ToString(),
                 Value: updated,
                 CompareProperty: "revision",
@@ -284,7 +284,7 @@ public sealed partial class IndexedDbLocalUserRepository : ILocalUserRepository,
             await _adapter.ExecuteAsync(
                 TransactionBoundary,
                 IndexedDbTransactionMode.ReadWrite,
-                [new IndexedDbOperation("add", HackerOsIndexedDbSchema.UserStoreName, Value: LocalUserRecord.FromDomain(user))],
+                [new IndexedDbOperation("add", KazoOsIndexedDbSchema.UserStoreName, Value: LocalUserRecord.FromDomain(user))],
                 cancellationToken).ConfigureAwait(false);
         }
         catch (JSException exception) when (exception.Message.Contains("ConstraintError", StringComparison.Ordinal))

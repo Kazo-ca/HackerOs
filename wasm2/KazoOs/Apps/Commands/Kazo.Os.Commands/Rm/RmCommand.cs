@@ -12,7 +12,7 @@ namespace Kazo.Os.Commands.Rm;
 /// Implements the <c>rm</c> terminal command (`P4-W5-CMD-001`, ADR 0052 section 4).
 /// </summary>
 /// <remarks>
-/// By default every operand goes to the effective user's trash (<see cref="HackTrash"/>), so a
+/// By default every operand goes to the effective user's trash (<see cref="KazoTrash"/>), so a
 /// deletion can be undone with <c>trash restore</c>. <c>--permanent</c> deletes for good, as
 /// <c>rm</c> always did before. A directory needs <c>-r</c> and then goes to the trash whole.
 /// <c>-f</c> ignores missing operands. Output is silent on success, like GNU <c>rm</c>.
@@ -102,10 +102,10 @@ public sealed class RmCommand : TerminalAppBase
         IStringLocalizer<Strings> text = context.App.GetLocalizer<Strings>();
         try
         {
-            await HackTrash.MoveToTrashAsync(resolved, cancellationToken);
+            await KazoTrash.MoveToTrashAsync(resolved, cancellationToken);
             return true;
         }
-        catch (HackFileNotFoundException)
+        catch (KazoFileNotFoundException)
         {
             // Vanished between our stat and the move: same outcome as a missing operand.
             context.StandardError.WriteLine(text["CannotRemove", target, CommandText.Reason(context, Errno.NotFound)]);

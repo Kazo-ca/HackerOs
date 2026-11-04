@@ -114,10 +114,10 @@ public sealed class LocalPasswordServiceTests
     {
         Harness harness = await Harness.CreateAsync();
 
-        IReadOnlyList<HackUserAccount> accounts = await harness.Gateway(new CountingAgent(true)).ListAsync();
+        IReadOnlyList<KazoUserAccount> accounts = await harness.Gateway(new CountingAgent(true)).ListAsync();
 
         Assert.Equal(["admin", "alice", "bob"], accounts.Select(account => account.LoginName));
-        HackUserAccount alice = accounts.Single(account => account.IsCurrentUser);
+        KazoUserAccount alice = accounts.Single(account => account.IsCurrentUser);
         Assert.Equal("alice", alice.LoginName);
         Assert.True(alice.HasPassword);
         Assert.True(accounts.Single(account => account.LoginName == "admin").IsAdministrator);
@@ -143,7 +143,7 @@ public sealed class LocalPasswordServiceTests
 
         await Assert.ThrowsAsync<AppGatewayAccessDeniedException>(
             () => harness.Gateway(agreeing).ResetPasswordAsync("bob", NewPassword).AsTask());
-        await Assert.ThrowsAsync<HackUnauthorizedAccessException>(
+        await Assert.ThrowsAsync<KazoUnauthorizedAccessException>(
             () => harness.Gateway(refusing, AppCapabilities.UsersManage).ResetPasswordAsync("bob", NewPassword).AsTask());
         Assert.Equal("users.password-reset", refusing.LastRequest!.Action);
         Assert.Contains("bob", refusing.LastRequest.Operation, StringComparison.Ordinal);
@@ -173,14 +173,14 @@ public sealed class LocalPasswordServiceTests
         Harness harness = await Harness.CreateAsync();
         CountingAgent refusing = new(false);
         CountingAgent agreeing = new(true);
-        HackNewUserAccount carol = new("carol", "Carol", AppAuthority.User, NewPassword);
+        KazoNewUserAccount carol = new("carol", "Carol", AppAuthority.User, NewPassword);
 
         await Assert.ThrowsAsync<AppGatewayAccessDeniedException>(() => harness.Gateway(agreeing).CreateAsync(carol).AsTask());
-        await Assert.ThrowsAsync<HackUnauthorizedAccessException>(
+        await Assert.ThrowsAsync<KazoUnauthorizedAccessException>(
             () => harness.Gateway(refusing, AppCapabilities.UsersManage).CreateAsync(carol).AsTask());
         Assert.Equal("users.add", refusing.LastRequest!.Action);
 
-        HackUserAccount created = await harness.Gateway(agreeing, AppCapabilities.UsersManage).CreateAsync(carol);
+        KazoUserAccount created = await harness.Gateway(agreeing, AppCapabilities.UsersManage).CreateAsync(carol);
         Assert.Equal("carol", created.LoginName);
         Assert.False(created.IsAdministrator);
 
@@ -198,7 +198,7 @@ public sealed class LocalPasswordServiceTests
         CountingAgent agent = new(true);
         AppUserAccountsGateway gateway = harness.Gateway(agent);
 
-        HackPasskey added = await gateway.AddPasskeyAsync("Phone");
+        KazoPasskey added = await gateway.AddPasskeyAsync("Phone");
 
         Assert.True(added.UnlocksKeyring);
         Assert.Equal(added.Id, Assert.Single(await gateway.ListPasskeysAsync()).Id);
@@ -251,7 +251,7 @@ public sealed class LocalPasswordServiceTests
                 Description = "Password fixture.",
                 Kind = AppKind.Window,
                 EntryPoint = new AppEntryPointManifest("Kazo.Os.Apps.Sample", "Kazo.Os.Apps.Sample.SampleApp"),
-                SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+                SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
                 Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
                 Resources = AppResourceProfileManifest.None,
                 Capabilities = capabilities

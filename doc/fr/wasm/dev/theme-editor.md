@@ -59,7 +59,7 @@ système) pour lister `/etc/hackeros/themes`. Fenêtre 1180 × 760, minimum
   `~/.config/hackeros/themes/<id>.theme`, dossier créé au besoin), *Export…*
   (n'importe où par le dialogue), *Use on desktop* / *Use on mobile* (écrit
   l'id dans la couche utilisateur de `appearance` par
-  `HackSettings.OpenSystemAsync`).
+  `KazoSettings.OpenSystemAsync`).
 - **Colonne de gauche** : nom, id (suit le nom tant qu'il n'est pas modifié à
   la main), thème de base, formes proposées, chemin ; liste des thèmes
   installés et avertissements de leurs fichiers.
@@ -94,7 +94,7 @@ L'API de lecture du paquet `Kazo.Os.Theming.Abstractions` (messages localisés, 
 - Les fichiers sont lus et écrits par la passerelle de fichiers de l'app
   (`IAppFileSystemGateway`), comme l'éditeur de texte : un fichier choisi dans
   un dialogue hors du dossier personnel n'est accessible que par le jeton que
-  le dialogue a remis, ce que `HackFile` ne sait pas porter. C'est du C# ; le
+  le dialogue a remis, ce que `KazoFile` ne sait pas porter. C'est du C# ; le
   JS ne touche jamais aux fichiers (ADR 0103 §1 et §2).
 - La lecture des dossiers est partagée par délégués (`UserThemeLibrary.LoadAsync`)
   pour que le shell (passerelles de l'OS) et les apps (SDK) utilisent les mêmes

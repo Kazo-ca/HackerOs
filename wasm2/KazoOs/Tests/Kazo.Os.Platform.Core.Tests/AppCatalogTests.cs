@@ -271,7 +271,7 @@ public sealed class AppCatalogTests
         Description = $"Test manifest for {appId}.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.TestApps", $"TestApps.{appId.Replace('.', '_')}"),
-        SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
+        SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         Dependencies = dependencies ?? []

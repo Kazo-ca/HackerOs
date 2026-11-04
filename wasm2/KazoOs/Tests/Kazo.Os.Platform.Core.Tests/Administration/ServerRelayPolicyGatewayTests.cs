@@ -36,7 +36,7 @@ public sealed class ServerRelayPolicyGatewayTests
         AppServerConnectionGateway denied = new(services, new Capabilities());
         AppServerConnectionGateway granted = new(services, new Capabilities(AppCapabilities.ServerConnectionManage));
 
-        HackServerRelayPolicy? policy = await granted.GetRelayPolicyAsync();
+        KazoServerRelayPolicy? policy = await granted.GetRelayPolicyAsync();
 
         await Assert.ThrowsAsync<AppGatewayAccessDeniedException>(() => denied.GetRelayPolicyAsync().AsTask());
         Assert.NotNull(policy);

@@ -122,7 +122,7 @@ défaut (ADR 0066) jusqu'à un ADR propre à cet hôte.
 ## Références
 
 - [`execution-isolation-plan.md`](../plans/execution-isolation-plan.md)
-- `Shared/Kazo.Os.AppSdk/HackExecutionContext.cs`,
+- `Shared/Kazo.Os.AppSdk/KazoExecutionContext.cs`,
   `Shared/Kazo.Os.AppSdk.Blazor/AmbientComponentDispatch.cs`,
   `Platform/Kazo.Os.Platform.Core/FileSystem/Virtual/ProcFileSystemProvider.cs`.
 - `proc(5)` : `/proc/<pid>/stat`, `/proc/stat`.

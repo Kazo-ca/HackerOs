@@ -41,7 +41,7 @@ internal static class FileExplorerZipService
             foreach (FileSystemDirectoryItem item in result.Value.Entries)
             {
                 // ADR 0069: compressing a tree is long work on the UI thread.
-                await HackProcess.CheckpointAsync(cancellationToken);
+                await KazoProcess.CheckpointAsync(cancellationToken);
                 VirtualPath childPath = VirtualPath.Parse(dirPath.Value.TrimEnd('/') + "/" + item.Name.Value);
                 string zipEntryPath = currentZipPath + "/" + item.Name.Value;
 
@@ -75,10 +75,10 @@ internal static class FileExplorerZipService
     public static async Task<string?> ExtractInBackgroundAsync(
         VirtualPath zipPath, VirtualPath destinationDirectory, IStringLocalizer text, CancellationToken cancellationToken)
     {
-        ZipFailure? failure = await HackBackground.RunAsync<ZipExtractJobInput, ZipFailure?>(
+        ZipFailure? failure = await KazoBackground.RunAsync<ZipExtractJobInput, ZipFailure?>(
             FileExplorerZipJobs.Extract,
             new ZipExtractJobInput(zipPath.Value, destinationDirectory.Value),
-            options: new HackBackgroundOptions { Name = "extract" },
+            options: new KazoBackgroundOptions { Name = "extract" },
             cancellationToken: cancellationToken);
         return Localize(failure, text);
     }
@@ -91,10 +91,10 @@ internal static class FileExplorerZipService
     public static async Task<string?> CompressInBackgroundAsync(
         IReadOnlyList<ZipSource> sources, VirtualPath destination, IStringLocalizer text, CancellationToken cancellationToken)
     {
-        ZipFailure? failure = await HackBackground.RunAsync<ZipCompressJobInput, ZipFailure?>(
+        ZipFailure? failure = await KazoBackground.RunAsync<ZipCompressJobInput, ZipFailure?>(
             FileExplorerZipJobs.Compress,
             new ZipCompressJobInput([.. sources], destination.Value),
-            options: new HackBackgroundOptions { Name = "compress" },
+            options: new KazoBackgroundOptions { Name = "compress" },
             cancellationToken: cancellationToken);
         return Localize(failure, text);
     }
@@ -177,7 +177,7 @@ internal static class FileExplorerZipService
             using ZipArchive archive = new(ms, ZipArchiveMode.Read);
             foreach (ZipArchiveEntry entry in archive.Entries)
             {
-                await HackProcess.CheckpointAsync(cancellationToken);
+                await KazoProcess.CheckpointAsync(cancellationToken);
                 string entryName = entry.FullName.Replace('\\', '/').TrimStart('/');
                 if (string.IsNullOrEmpty(entryName))
                 {

@@ -62,14 +62,14 @@ public sealed class ZipCommand(AppManifest manifest) : TerminalAppBase(manifest)
             return 12;
         }
 
-        string archive = HackPath.HasExtension(operands[0]) ? operands[0] : operands[0] + ".zip";
+        string archive = KazoPath.HasExtension(operands[0]) ? operands[0] : operands[0] + ".zip";
         using MemoryStream buffer = new();
-        bool existed = await HackFile.ExistsAsync(archive, cancellationToken);
+        bool existed = await KazoFile.ExistsAsync(archive, cancellationToken);
         try
         {
             if (existed)
             {
-                byte[] previous = await HackFile.ReadAllBytesAsync(archive, cancellationToken);
+                byte[] previous = await KazoFile.ReadAllBytesAsync(archive, cancellationToken);
                 await buffer.WriteAsync(previous, cancellationToken);
                 buffer.Position = 0;
             }
@@ -90,7 +90,7 @@ public sealed class ZipCommand(AppManifest manifest) : TerminalAppBase(manifest)
 
                         foreach (ZipArchiveEntry entry in matches)
                         {
-                            await HackProcess.CheckpointAsync(cancellationToken);
+                            await KazoProcess.CheckpointAsync(cancellationToken);
                             if (!quiet)
                             {
                                 await context.StandardOutput.WriteLineAsync($"deleting: {entry.FullName}");
@@ -109,7 +109,7 @@ public sealed class ZipCommand(AppManifest manifest) : TerminalAppBase(manifest)
                 }
             }
 
-            await HackFile.WriteAllBytesAsync(archive, buffer.ToArray(), cancellationToken);
+            await KazoFile.WriteAllBytesAsync(archive, buffer.ToArray(), cancellationToken);
             return status;
         }
         catch (InvalidDataException)
@@ -129,14 +129,14 @@ public sealed class ZipCommand(AppManifest manifest) : TerminalAppBase(manifest)
         CompressionLevel level, CancellationToken cancellationToken)
     {
         string entryName = EntryName(source, junkPaths);
-        if (await HackDirectory.ExistsAsync(source, cancellationToken))
+        if (await KazoDirectory.ExistsAsync(source, cancellationToken))
         {
             if (!junkPaths)
             {
                 Replace(zip, entryName + "/");
                 ZipArchiveEntry directory = zip.CreateEntry(entryName + "/");
-                StampModified(directory, (await HackDirectoryInfo.GetAsync(source, cancellationToken)).LastWriteTimeUtc);
-                directory.ExternalAttributes = UnixAttributes(await HackFile.GetUnixFileModeAsync(source, cancellationToken), isDirectory: true);
+                StampModified(directory, (await KazoDirectoryInfo.GetAsync(source, cancellationToken)).LastWriteTimeUtc);
+                directory.ExternalAttributes = UnixAttributes(await KazoFile.GetUnixFileModeAsync(source, cancellationToken), isDirectory: true);
                 if (!quiet)
                 {
                     await context.StandardOutput.WriteLineAsync($"  adding: {entryName}/ (stored 0%)");
@@ -149,28 +149,28 @@ public sealed class ZipCommand(AppManifest manifest) : TerminalAppBase(manifest)
             }
 
             int status = 0;
-            foreach (string child in (await HackDirectory.GetFileSystemEntriesAsync(source, cancellationToken: cancellationToken)).Order(StringComparer.Ordinal))
+            foreach (string child in (await KazoDirectory.GetFileSystemEntriesAsync(source, cancellationToken: cancellationToken)).Order(StringComparer.Ordinal))
             {
                 // ADR 0069: compressing a tree is long work; give the thread back between entries.
-                await HackProcess.CheckpointAsync(cancellationToken);
-                string childPath = source.TrimEnd('/') + "/" + HackPath.GetFileName(child);
+                await KazoProcess.CheckpointAsync(cancellationToken);
+                string childPath = source.TrimEnd('/') + "/" + KazoPath.GetFileName(child);
                 status |= await AddAsync(context, zip, childPath, recursive, junkPaths, quiet, level, cancellationToken);
             }
 
             return status;
         }
 
-        if (!await HackFile.ExistsAsync(source, cancellationToken))
+        if (!await KazoFile.ExistsAsync(source, cancellationToken))
         {
             await context.StandardError.WriteLineAsync(context.App.GetLocalizer<Strings>()["NotMatched", source]);
             return 12;
         }
 
-        byte[] content = await HackFile.ReadAllBytesAsync(source, cancellationToken);
+        byte[] content = await KazoFile.ReadAllBytesAsync(source, cancellationToken);
         bool updating = Replace(zip, entryName);
         ZipArchiveEntry entry = zip.CreateEntry(entryName, level);
-        StampModified(entry, (await HackFileInfo.GetAsync(source, cancellationToken)).LastWriteTimeUtc);
-        entry.ExternalAttributes = UnixAttributes(await HackFile.GetUnixFileModeAsync(source, cancellationToken), isDirectory: false);
+        StampModified(entry, (await KazoFileInfo.GetAsync(source, cancellationToken)).LastWriteTimeUtc);
+        entry.ExternalAttributes = UnixAttributes(await KazoFile.GetUnixFileModeAsync(source, cancellationToken), isDirectory: false);
         await using (Stream stream = entry.Open())
         {
             await stream.WriteAsync(content, cancellationToken);
@@ -213,7 +213,7 @@ public sealed class ZipCommand(AppManifest manifest) : TerminalAppBase(manifest)
         string trimmed = path.TrimEnd('/');
         if (junkPaths)
         {
-            return HackPath.GetFileName(trimmed) ?? trimmed;
+            return KazoPath.GetFileName(trimmed) ?? trimmed;
         }
 
         while (trimmed.StartsWith("./", StringComparison.Ordinal))

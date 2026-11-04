@@ -9,7 +9,7 @@ namespace Kazo.Os.AppSdk.WebData;
 /// An IndexedDB database kept in memory, with IndexedDB's rules (ADR 0088 §2): versions upgraded step by
 /// step, key paths, key generators, unique and multi-entry indexes, key ordering
 /// (numbers &lt; strings &lt; arrays) and all-or-nothing transactions. The OS uses it where the host has
-/// no IndexedDB (headless hosts, tests); a site's tests use it through <see cref="HackWebDbInMemoryBackend"/>.
+/// no IndexedDB (headless hosts, tests); a site's tests use it through <see cref="KazoWebDbInMemoryBackend"/>.
 /// </summary>
 /// <remarks>Thread-safe: every call runs under one lock, as IndexedDB serializes overlapping read-write transactions.</remarks>
 public sealed class InMemoryWebDatabase
@@ -44,8 +44,8 @@ public sealed class InMemoryWebDatabase
 
     /// <summary>Opens the database at the schema's version, applying the steps above the stored version.</summary>
     /// <param name="schema">The schema.</param>
-    /// <exception cref="HackWebDbException"><c>VersionError</c> for an older schema; <c>InvalidStateError</c> for a step that cannot apply.</exception>
-    public void Open(HackWebDbSchemaDefinition schema)
+    /// <exception cref="KazoWebDbException"><c>VersionError</c> for an older schema; <c>InvalidStateError</c> for a step that cannot apply.</exception>
+    public void Open(KazoWebDbSchemaDefinition schema)
     {
         ArgumentNullException.ThrowIfNull(schema);
         lock (_gate)
@@ -53,12 +53,12 @@ public sealed class InMemoryWebDatabase
             int current = Version;
             if (schema.Version < 1)
             {
-                throw new HackWebDbException(HackWebDbException.DataError, "The version must be a positive integer.");
+                throw new KazoWebDbException(KazoWebDbException.DataError, "The version must be a positive integer.");
             }
 
             if (schema.Version < current)
             {
-                throw new HackWebDbException(HackWebDbException.VersionError,
+                throw new KazoWebDbException(KazoWebDbException.VersionError,
                     $"The requested version ({schema.Version}) is less than the existing version ({current}).");
             }
 
@@ -71,8 +71,8 @@ public sealed class InMemoryWebDatabase
             Dictionary<string, StoreState> upgraded = _stores.ToDictionary(pair => pair.Key, pair => pair.Value.Clone(), StringComparer.Ordinal);
             for (int version = current + 1; version <= schema.Version; version++)
             {
-                HackWebDbMigrationStep step = schema.Steps.SingleOrDefault(candidate => candidate.TargetVersion == version)
-                    ?? throw new HackWebDbException(HackWebDbException.InvalidStateError, $"No migration step reaches version {version}.");
+                KazoWebDbMigrationStep step = schema.Steps.SingleOrDefault(candidate => candidate.TargetVersion == version)
+                    ?? throw new KazoWebDbException(KazoWebDbException.InvalidStateError, $"No migration step reaches version {version}.");
                 Apply(upgraded, step);
             }
 
@@ -84,21 +84,21 @@ public sealed class InMemoryWebDatabase
     /// <summary>Runs a batch in one transaction; on any failure nothing of it is kept.</summary>
     /// <param name="request">The batch.</param>
     /// <returns>One JSON result per operation (see <see cref="IAppWebDatabaseGateway.ExecuteAsync"/>).</returns>
-    /// <exception cref="HackWebDbException">An operation failed.</exception>
-    public IReadOnlyList<string?> Execute(HackWebDbRequest request)
+    /// <exception cref="KazoWebDbException">An operation failed.</exception>
+    public IReadOnlyList<string?> Execute(KazoWebDbRequest request)
     {
         ArgumentNullException.ThrowIfNull(request);
         lock (_gate)
         {
             if (Version == 0 || request.Version != Version)
             {
-                throw new HackWebDbException(HackWebDbException.InvalidStateError,
+                throw new KazoWebDbException(KazoWebDbException.InvalidStateError,
                     $"The database '{Name}' is not open at version {request.Version}.");
             }
 
             if (request.Stores.Count == 0)
             {
-                throw new HackWebDbException(HackWebDbException.InvalidStateError, "A transaction needs at least one object store.");
+                throw new KazoWebDbException(KazoWebDbException.InvalidStateError, "A transaction needs at least one object store.");
             }
 
             Dictionary<string, StoreState> scope = new(StringComparer.Ordinal);
@@ -106,7 +106,7 @@ public sealed class InMemoryWebDatabase
             {
                 if (!_stores.TryGetValue(name, out StoreState? store))
                 {
-                    throw new HackWebDbException(HackWebDbException.NotFoundError, $"The object store '{name}' does not exist.");
+                    throw new KazoWebDbException(KazoWebDbException.NotFoundError, $"The object store '{name}' does not exist.");
                 }
 
                 // Copy-on-write: a failed transaction drops the copies.
@@ -114,17 +114,17 @@ public sealed class InMemoryWebDatabase
             }
 
             List<string?> results = new(request.Operations.Count);
-            foreach (HackWebDbOperation operation in request.Operations)
+            foreach (KazoWebDbOperation operation in request.Operations)
             {
                 if (!scope.TryGetValue(operation.Store, out StoreState? store))
                 {
-                    throw new HackWebDbException(HackWebDbException.NotFoundError,
+                    throw new KazoWebDbException(KazoWebDbException.NotFoundError,
                         $"The object store '{operation.Store}' is not in the transaction's scope.");
                 }
 
-                if (HackWebDbOperationKinds.IsWrite(operation.Kind) && !request.ReadWrite)
+                if (KazoWebDbOperationKinds.IsWrite(operation.Kind) && !request.ReadWrite)
                 {
-                    throw new HackWebDbException("ReadOnlyError", "The transaction is read-only.");
+                    throw new KazoWebDbException("ReadOnlyError", "The transaction is read-only.");
                 }
 
                 results.Add(Run(store, operation));
@@ -163,31 +163,31 @@ public sealed class InMemoryWebDatabase
         }
     }
 
-    private static void Apply(Dictionary<string, StoreState> stores, HackWebDbMigrationStep step)
+    private static void Apply(Dictionary<string, StoreState> stores, KazoWebDbMigrationStep step)
     {
         foreach (string name in step.DeleteStores ?? [])
         {
             if (!stores.Remove(name))
             {
-                throw new HackWebDbException(HackWebDbException.NotFoundError, $"The object store '{name}' does not exist.");
+                throw new KazoWebDbException(KazoWebDbException.NotFoundError, $"The object store '{name}' does not exist.");
             }
         }
 
-        foreach (HackWebDbStoreDefinition definition in step.CreateStores ?? [])
+        foreach (KazoWebDbStoreDefinition definition in step.CreateStores ?? [])
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(definition.Name);
             if (stores.ContainsKey(definition.Name))
             {
-                throw new HackWebDbException(HackWebDbException.ConstraintError, $"The object store '{definition.Name}' already exists.");
+                throw new KazoWebDbException(KazoWebDbException.ConstraintError, $"The object store '{definition.Name}' already exists.");
             }
 
             if (definition.AutoIncrement && definition.KeyPath is { Length: 0 })
             {
-                throw new HackWebDbException("InvalidAccessError", "An auto-increment store cannot have an empty key path.");
+                throw new KazoWebDbException("InvalidAccessError", "An auto-increment store cannot have an empty key path.");
             }
 
             StoreState store = new(definition.KeyPath, definition.AutoIncrement);
-            foreach (HackWebDbIndexDefinition index in definition.Indexes ?? [])
+            foreach (KazoWebDbIndexDefinition index in definition.Indexes ?? [])
             {
                 store.AddIndex(index);
             }
@@ -195,68 +195,68 @@ public sealed class InMemoryWebDatabase
             stores[definition.Name] = store;
         }
 
-        foreach (HackWebDbIndexChange change in step.DeleteIndexes ?? [])
+        foreach (KazoWebDbIndexChange change in step.DeleteIndexes ?? [])
         {
             if (!stores.TryGetValue(change.Store, out StoreState? store) || !store.Indexes.Remove(change.Index.Name))
             {
-                throw new HackWebDbException(HackWebDbException.NotFoundError, $"The index '{change.Index.Name}' of '{change.Store}' does not exist.");
+                throw new KazoWebDbException(KazoWebDbException.NotFoundError, $"The index '{change.Index.Name}' of '{change.Store}' does not exist.");
             }
         }
 
-        foreach (HackWebDbIndexChange change in step.CreateIndexes ?? [])
+        foreach (KazoWebDbIndexChange change in step.CreateIndexes ?? [])
         {
             if (!stores.TryGetValue(change.Store, out StoreState? store))
             {
-                throw new HackWebDbException(HackWebDbException.NotFoundError, $"The object store '{change.Store}' does not exist.");
+                throw new KazoWebDbException(KazoWebDbException.NotFoundError, $"The object store '{change.Store}' does not exist.");
             }
 
             store.AddIndex(change.Index);
         }
     }
 
-    private static string? Run(StoreState store, HackWebDbOperation operation)
+    private static string? Run(StoreState store, KazoWebDbOperation operation)
     {
         WebDbRange? range = operation.Range is { } r ? WebDbRange.From(r) : null;
         WebDbKey? key = operation.Key is { } k ? WebDbKey.Parse(k) : null;
-        if (key is not null && range is null && operation.Kind is not (HackWebDbOperationKinds.Add or HackWebDbOperationKinds.Put))
+        if (key is not null && range is null && operation.Kind is not (KazoWebDbOperationKinds.Add or KazoWebDbOperationKinds.Put))
         {
             range = WebDbRange.Only(key);
         }
 
-        HackWebDbIndexDefinition? index = null;
+        KazoWebDbIndexDefinition? index = null;
         if (operation.Index is { } indexName && !store.Indexes.TryGetValue(indexName, out index))
         {
-            throw new HackWebDbException(HackWebDbException.NotFoundError, $"The index '{indexName}' does not exist.");
+            throw new KazoWebDbException(KazoWebDbException.NotFoundError, $"The index '{indexName}' does not exist.");
         }
 
         switch (operation.Kind)
         {
-            case HackWebDbOperationKinds.Get:
+            case KazoWebDbOperationKinds.Get:
                 if (range is null)
                 {
-                    throw new HackWebDbException(HackWebDbException.DataError, "get needs a key or a key range.");
+                    throw new KazoWebDbException(KazoWebDbException.DataError, "get needs a key or a key range.");
                 }
 
                 return Entries(store, index, range).Select(entry => entry.Value).FirstOrDefault();
-            case HackWebDbOperationKinds.GetAll:
+            case KazoWebDbOperationKinds.GetAll:
                 return JsonArray(Entries(store, index, range).Take(Limit(operation.Count)).Select(entry => entry.Value));
-            case HackWebDbOperationKinds.GetAllKeys:
+            case KazoWebDbOperationKinds.GetAllKeys:
                 return JsonArray(Entries(store, index, range).Take(Limit(operation.Count)).Select(entry => entry.Primary.Json));
-            case HackWebDbOperationKinds.Count:
+            case KazoWebDbOperationKinds.Count:
                 return Entries(store, index, range).Count().ToString(CultureInfo.InvariantCulture);
-            case HackWebDbOperationKinds.Add:
-            case HackWebDbOperationKinds.Put:
+            case KazoWebDbOperationKinds.Add:
+            case KazoWebDbOperationKinds.Put:
                 if (index is not null)
                 {
-                    throw new HackWebDbException(HackWebDbException.InvalidStateError, $"{operation.Kind} is not an index method.");
+                    throw new KazoWebDbException(KazoWebDbException.InvalidStateError, $"{operation.Kind} is not an index method.");
                 }
 
-                return store.Store(operation.Value ?? throw new HackWebDbException(HackWebDbException.DataError, "No value to store."),
-                    key, overwrite: operation.Kind == HackWebDbOperationKinds.Put).Json;
-            case HackWebDbOperationKinds.Delete:
+                return store.Store(operation.Value ?? throw new KazoWebDbException(KazoWebDbException.DataError, "No value to store."),
+                    key, overwrite: operation.Kind == KazoWebDbOperationKinds.Put).Json;
+            case KazoWebDbOperationKinds.Delete:
                 if (range is null)
                 {
-                    throw new HackWebDbException(HackWebDbException.DataError, "delete needs a key or a key range.");
+                    throw new KazoWebDbException(KazoWebDbException.DataError, "delete needs a key or a key range.");
                 }
 
                 foreach (WebDbKey deleted in store.Records.Keys.Where(range.Contains).ToList())
@@ -265,11 +265,11 @@ public sealed class InMemoryWebDatabase
                 }
 
                 return null;
-            case HackWebDbOperationKinds.Clear:
+            case KazoWebDbOperationKinds.Clear:
                 store.Records.Clear();
                 return null;
             default:
-                throw new HackWebDbException(HackWebDbException.InvalidStateError, $"Unknown operation '{operation.Kind}'.");
+                throw new KazoWebDbException(KazoWebDbException.InvalidStateError, $"Unknown operation '{operation.Kind}'.");
         }
     }
 
@@ -278,7 +278,7 @@ public sealed class InMemoryWebDatabase
     private static string JsonArray(IEnumerable<string> items) => "[" + string.Join(",", items) + "]";
 
     /// <summary>Records in the order a cursor would visit them: by primary key, or by index key then primary key.</summary>
-    private static IEnumerable<(WebDbKey Primary, string Value)> Entries(StoreState store, HackWebDbIndexDefinition? index, WebDbRange? range)
+    private static IEnumerable<(WebDbKey Primary, string Value)> Entries(StoreState store, KazoWebDbIndexDefinition? index, WebDbRange? range)
     {
         if (index is null)
         {
@@ -314,22 +314,22 @@ public sealed class InMemoryWebDatabase
 
         public SortedDictionary<WebDbKey, string> Records { get; private init; } = new(WebDbKey.Comparer);
 
-        public Dictionary<string, HackWebDbIndexDefinition> Indexes { get; private init; } = new(StringComparer.Ordinal);
+        public Dictionary<string, KazoWebDbIndexDefinition> Indexes { get; private init; } = new(StringComparer.Ordinal);
 
         public StoreState Clone() => new(KeyPath, AutoIncrement)
         {
             NextKey = NextKey,
             Records = new SortedDictionary<WebDbKey, string>(Records, WebDbKey.Comparer),
-            Indexes = new Dictionary<string, HackWebDbIndexDefinition>(Indexes, StringComparer.Ordinal),
+            Indexes = new Dictionary<string, KazoWebDbIndexDefinition>(Indexes, StringComparer.Ordinal),
         };
 
-        public void AddIndex(HackWebDbIndexDefinition index)
+        public void AddIndex(KazoWebDbIndexDefinition index)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(index.Name);
             ArgumentException.ThrowIfNullOrWhiteSpace(index.KeyPath);
             if (Indexes.ContainsKey(index.Name))
             {
-                throw new HackWebDbException(HackWebDbException.ConstraintError, $"The index '{index.Name}' already exists.");
+                throw new KazoWebDbException(KazoWebDbException.ConstraintError, $"The index '{index.Name}' already exists.");
             }
 
             // createIndex on a store holding records that break a unique index aborts the upgrade.
@@ -342,7 +342,7 @@ public sealed class InMemoryWebDatabase
         }
 
         /// <summary>The keys a record adds to an index: none when the path has no valid key.</summary>
-        public static IEnumerable<WebDbKey> IndexKeys(HackWebDbIndexDefinition index, string value)
+        public static IEnumerable<WebDbKey> IndexKeys(KazoWebDbIndexDefinition index, string value)
         {
             using JsonDocument document = JsonDocument.Parse(value);
             if (!TryEvaluate(document.RootElement, index.KeyPath, out JsonElement found))
@@ -378,7 +378,7 @@ public sealed class InMemoryWebDatabase
             }
             catch (JsonException exception)
             {
-                throw new HackWebDbException(HackWebDbException.DataError, $"The value is not JSON: {exception.Message}");
+                throw new KazoWebDbException(KazoWebDbException.DataError, $"The value is not JSON: {exception.Message}");
             }
 
             WebDbKey key;
@@ -386,14 +386,14 @@ public sealed class InMemoryWebDatabase
             {
                 if (explicitKey is not null)
                 {
-                    throw new HackWebDbException(HackWebDbException.DataError, "The store uses in-line keys and the key parameter was provided.");
+                    throw new KazoWebDbException(KazoWebDbException.DataError, "The store uses in-line keys and the key parameter was provided.");
                 }
 
                 using JsonDocument document = JsonDocument.Parse(json);
                 if (TryEvaluate(document.RootElement, KeyPath, out JsonElement found))
                 {
                     key = WebDbKey.TryFrom(found, out WebDbKey? inline) ? inline!
-                        : throw new HackWebDbException(HackWebDbException.DataError, $"The value at key path '{KeyPath}' is not a valid key.");
+                        : throw new KazoWebDbException(KazoWebDbException.DataError, $"The value at key path '{KeyPath}' is not a valid key.");
                 }
                 else if (AutoIncrement)
                 {
@@ -403,7 +403,7 @@ public sealed class InMemoryWebDatabase
                 }
                 else
                 {
-                    throw new HackWebDbException(HackWebDbException.DataError, $"The value has no key at key path '{KeyPath}'.");
+                    throw new KazoWebDbException(KazoWebDbException.DataError, $"The value has no key at key path '{KeyPath}'.");
                 }
             }
             else if (explicitKey is not null)
@@ -416,15 +416,15 @@ public sealed class InMemoryWebDatabase
             }
             else
             {
-                throw new HackWebDbException(HackWebDbException.DataError, "The store uses out-of-line keys and has no key generator, and no key was provided.");
+                throw new KazoWebDbException(KazoWebDbException.DataError, "The store uses out-of-line keys and has no key generator, and no key was provided.");
             }
 
             if (!overwrite && Records.ContainsKey(key))
             {
-                throw new HackWebDbException(HackWebDbException.ConstraintError, "Key already exists in the object store.");
+                throw new KazoWebDbException(KazoWebDbException.ConstraintError, "Key already exists in the object store.");
             }
 
-            foreach (HackWebDbIndexDefinition index in Indexes.Values.Where(index => index.Unique))
+            foreach (KazoWebDbIndexDefinition index in Indexes.Values.Where(index => index.Unique))
             {
                 CheckUnique(index, Records.Where(pair => WebDbKey.Comparer.Compare(pair.Key, key) != 0)
                     .Select(pair => (pair.Key, pair.Value)).Append((key, json)));
@@ -440,7 +440,7 @@ public sealed class InMemoryWebDatabase
             return key;
         }
 
-        private static void CheckUnique(HackWebDbIndexDefinition index, IEnumerable<(WebDbKey Primary, string Value)> records)
+        private static void CheckUnique(KazoWebDbIndexDefinition index, IEnumerable<(WebDbKey Primary, string Value)> records)
         {
             List<WebDbKey> seen = [];
             foreach ((WebDbKey _, string value) in records)
@@ -449,7 +449,7 @@ public sealed class InMemoryWebDatabase
                 {
                     if (seen.Any(existing => WebDbKey.Comparer.Compare(existing, indexKey) == 0))
                     {
-                        throw new HackWebDbException(HackWebDbException.ConstraintError,
+                        throw new KazoWebDbException(KazoWebDbException.ConstraintError,
                             $"Unable to add key to index '{index.Name}': at least one key does not satisfy the uniqueness requirements.");
                     }
 
@@ -462,7 +462,7 @@ public sealed class InMemoryWebDatabase
         {
             if (node is not JsonObject root)
             {
-                throw new HackWebDbException(HackWebDbException.DataError, "A generated key can only be injected into an object.");
+                throw new KazoWebDbException(KazoWebDbException.DataError, "A generated key can only be injected into an object.");
             }
 
             string[] parts = keyPath.Split('.');
@@ -481,7 +481,7 @@ public sealed class InMemoryWebDatabase
                 }
                 else
                 {
-                    throw new HackWebDbException(HackWebDbException.DataError, $"The key path '{keyPath}' cannot be set on this value.");
+                    throw new KazoWebDbException(KazoWebDbException.DataError, $"The key path '{keyPath}' cannot be set on this value.");
                 }
             }
 
@@ -547,13 +547,13 @@ internal sealed class WebDbKey
     public string Json { get; }
 
     public static WebDbKey FromNumber(double number) =>
-        new(WebDbKeyKind.Number, number, null, null, JsonSerializer.Serialize(number, HackWebDbKeyJsonContext.Default.Double));
+        new(WebDbKeyKind.Number, number, null, null, JsonSerializer.Serialize(number, KazoWebDbKeyJsonContext.Default.Double));
 
     public static WebDbKey Parse(string json)
     {
         using JsonDocument document = ParseDocument(json);
         return TryFrom(document.RootElement, out WebDbKey? key) ? key!
-            : throw new HackWebDbException(HackWebDbException.DataError, $"'{json}' is not a valid key.");
+            : throw new KazoWebDbException(KazoWebDbException.DataError, $"'{json}' is not a valid key.");
     }
 
     public static bool TryFrom(JsonElement element, out WebDbKey? key)
@@ -565,7 +565,7 @@ internal sealed class WebDbKey
                 return true;
             case JsonValueKind.String:
                 string text = element.GetString()!;
-                key = new WebDbKey(WebDbKeyKind.String, 0, text, null, JsonSerializer.Serialize(text, HackWebDbKeyJsonContext.Default.String));
+                key = new WebDbKey(WebDbKeyKind.String, 0, text, null, JsonSerializer.Serialize(text, KazoWebDbKeyJsonContext.Default.String));
                 return true;
             case JsonValueKind.Array:
                 List<WebDbKey> items = [];
@@ -596,7 +596,7 @@ internal sealed class WebDbKey
         }
         catch (JsonException)
         {
-            throw new HackWebDbException(HackWebDbException.DataError, $"'{json}' is not a valid key.");
+            throw new KazoWebDbException(KazoWebDbException.DataError, $"'{json}' is not a valid key.");
         }
     }
 
@@ -644,13 +644,13 @@ internal sealed class WebDbRange(WebDbKey? lower, WebDbKey? upper, bool lowerOpe
 {
     public static WebDbRange Only(WebDbKey key) => new(key, key, false, false);
 
-    public static WebDbRange From(HackWebDbRange range)
+    public static WebDbRange From(KazoWebDbRange range)
     {
         WebDbKey? lower = range.Lower is { } l ? WebDbKey.Parse(l) : null;
         WebDbKey? upper = range.Upper is { } u ? WebDbKey.Parse(u) : null;
         if (lower is null && upper is null)
         {
-            throw new HackWebDbException(HackWebDbException.DataError, "A key range needs at least one bound.");
+            throw new KazoWebDbException(KazoWebDbException.DataError, "A key range needs at least one bound.");
         }
 
         if (lower is not null && upper is not null)
@@ -658,7 +658,7 @@ internal sealed class WebDbRange(WebDbKey? lower, WebDbKey? upper, bool lowerOpe
             int compared = WebDbKey.Comparer.Compare(lower, upper);
             if (compared > 0 || (compared == 0 && (range.LowerOpen || range.UpperOpen)))
             {
-                throw new HackWebDbException(HackWebDbException.DataError, "The lower bound is greater than the upper bound.");
+                throw new KazoWebDbException(KazoWebDbException.DataError, "The lower bound is greater than the upper bound.");
             }
         }
 
@@ -692,18 +692,18 @@ internal sealed class WebDbRange(WebDbKey? lower, WebDbKey? upper, bool lowerOpe
 /// <summary>JSON of keys (numbers written as JavaScript writes them).</summary>
 [System.Text.Json.Serialization.JsonSerializable(typeof(double))]
 [System.Text.Json.Serialization.JsonSerializable(typeof(string))]
-internal sealed partial class HackWebDbKeyJsonContext : System.Text.Json.Serialization.JsonSerializerContext;
+internal sealed partial class KazoWebDbKeyJsonContext : System.Text.Json.Serialization.JsonSerializerContext;
 
 /// <summary>
 /// A site database kept in memory, as a stand-in for <see cref="IAppWebDatabaseGateway"/>: a site's tests
-/// register it in the site's services (<c>builder.Services.AddSingleton&lt;IAppWebDatabaseGateway&gt;(new HackWebDbInMemoryBackend("hackweb.test"))</c>)
-/// so <c>HackWebDb</c> runs without the OS.
+/// register it in the site's services (<c>builder.Services.AddSingleton&lt;IAppWebDatabaseGateway&gt;(new KazoWebDbInMemoryBackend("hackweb.test"))</c>)
+/// so <c>KazoWebDb</c> runs without the OS.
 /// </summary>
-public sealed class HackWebDbInMemoryBackend : IAppWebDatabaseGateway
+public sealed class KazoWebDbInMemoryBackend : IAppWebDatabaseGateway
 {
     /// <summary>Initializes an empty database.</summary>
     /// <param name="databaseName">The database name, <c>hackweb.&lt;app id&gt;</c>.</param>
-    public HackWebDbInMemoryBackend(string databaseName)
+    public KazoWebDbInMemoryBackend(string databaseName)
     {
         Database = new InMemoryWebDatabase(databaseName);
     }
@@ -715,7 +715,7 @@ public sealed class HackWebDbInMemoryBackend : IAppWebDatabaseGateway
     public string DatabaseName => Database.Name;
 
     /// <inheritdoc />
-    public ValueTask OpenAsync(HackWebDbSchemaDefinition schema, CancellationToken cancellationToken = default)
+    public ValueTask OpenAsync(KazoWebDbSchemaDefinition schema, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
         Database.Open(schema);
@@ -723,7 +723,7 @@ public sealed class HackWebDbInMemoryBackend : IAppWebDatabaseGateway
     }
 
     /// <inheritdoc />
-    public ValueTask<IReadOnlyList<string?>> ExecuteAsync(HackWebDbRequest request, CancellationToken cancellationToken = default)
+    public ValueTask<IReadOnlyList<string?>> ExecuteAsync(KazoWebDbRequest request, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
         return ValueTask.FromResult(Database.Execute(request));

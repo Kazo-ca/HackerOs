@@ -20,7 +20,7 @@
                  aria-labelledby="aaa-title"
                  aria-describedby="aaa-operation">
             <header class="aaa-banner">
-                <HackerIcon Library="IconLibrary.Lucide" Name="key-round" Size="28" Title="" class="aaa-key" />
+                <KazoIcon Library="IconLibrary.Lucide" Name="key-round" Size="28" Title="" class="aaa-key" />
                 <div>
                     <h2 id="aaa-title">@L["Auth.Title"]</h2>
                     <p>@L["Auth.Subtitle"]</p>
@@ -74,7 +74,7 @@
                         @if (request.AuthenticateWithPasskeyAsync is not null && !_confirmOnly)
                         {
                             <button type="button" class="aaa-passkey" disabled="@(!CanUsePasskey)" @onclick="AuthenticateWithPasskeyAsync">
-                                <HackerIcon Library="IconLibrary.Lucide" Name="fingerprint" Size="16" Title="" />
+                                <KazoIcon Library="IconLibrary.Lucide" Name="fingerprint" Size="16" Title="" />
                                 @L["Auth.UsePasskey"]
                             </button>
                         }

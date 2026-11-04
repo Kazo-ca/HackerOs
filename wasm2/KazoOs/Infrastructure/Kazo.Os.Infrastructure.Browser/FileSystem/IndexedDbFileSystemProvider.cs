@@ -55,7 +55,7 @@ public sealed class IndexedDbFileSystemProvider : IFileSystemProvider, IFileSyst
 
     /// <summary>
     /// Measures the bytes the deduplicated content store keeps for live files, the "used" space of
-    /// <c>HackDriveInfo</c> (ADR 0057 section 7).
+    /// <c>KazoDriveInfo</c> (ADR 0057 section 7).
     /// </summary>
     public ValueTask<long> MeasureStoredContentBytesAsync(CancellationToken cancellationToken = default) =>
         _reader.MeasureStoredContentBytesAsync(cancellationToken);

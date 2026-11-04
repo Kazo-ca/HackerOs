@@ -54,7 +54,7 @@ internal sealed class AppUserAccountsGateway : IAppUserAccountsGateway
     }
 
     /// <inheritdoc />
-    public async ValueTask<IReadOnlyList<HackUserAccount>> ListAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<IReadOnlyList<KazoUserAccount>> ListAsync(CancellationToken cancellationToken = default)
     {
         IReadOnlyList<LocalUser> users = await Service().ListAsync(cancellationToken).ConfigureAwait(false);
         return users
@@ -64,7 +64,7 @@ internal sealed class AppUserAccountsGateway : IAppUserAccountsGateway
     }
 
     /// <inheritdoc />
-    public async ValueTask<HackUserAccount> CreateAsync(HackNewUserAccount account, CancellationToken cancellationToken = default)
+    public async ValueTask<KazoUserAccount> CreateAsync(KazoNewUserAccount account, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(account);
         LocalAccountService service = Accounts?.Invoke() ?? throw new NotSupportedException("This Kazo OS host cannot add accounts.");
@@ -90,7 +90,7 @@ internal sealed class AppUserAccountsGateway : IAppUserAccountsGateway
     }
 
     /// <inheritdoc />
-    public async ValueTask<IReadOnlyList<HackPasskey>> ListPasskeysAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<IReadOnlyList<KazoPasskey>> ListPasskeysAsync(CancellationToken cancellationToken = default)
     {
         PasskeyService service = Passkeys?.Invoke() ?? throw new NotSupportedException("This Kazo OS host has no passkeys.");
         IReadOnlyList<LocalPasskeyCredential> passkeys = await service.ListAsync(_gate.Principal.UserId, cancellationToken).ConfigureAwait(false);
@@ -99,7 +99,7 @@ internal sealed class AppUserAccountsGateway : IAppUserAccountsGateway
     }
 
     /// <inheritdoc />
-    public async ValueTask<HackPasskey> AddPasskeyAsync(string name, CancellationToken cancellationToken = default)
+    public async ValueTask<KazoPasskey> AddPasskeyAsync(string name, CancellationToken cancellationToken = default)
     {
         PasskeyService service = Passkeys?.Invoke() ?? throw new NotSupportedException("This Kazo OS host has no passkeys.");
         LocalPasskeyCredential passkey = await service.RegisterAsync(_gate.Principal, name, cancellationToken).ConfigureAwait(false);
@@ -114,7 +114,7 @@ internal sealed class AppUserAccountsGateway : IAppUserAccountsGateway
         return service.RemoveAsync(_gate.Principal, passkeyId, cancellationToken);
     }
 
-    private HackUserAccount ToAccount(LocalUser user) => new(
+    private KazoUserAccount ToAccount(LocalUser user) => new(
         user.LoginName.Value,
         user.DisplayName,
         user.Authority,
@@ -127,7 +127,7 @@ internal sealed class AppUserAccountsGateway : IAppUserAccountsGateway
         IsGuest = user.IsGuest
     };
 
-    private static HackPasskey ToPasskey(LocalPasskeyCredential passkey, IReadOnlySet<string> unlocking) =>
+    private static KazoPasskey ToPasskey(LocalPasskeyCredential passkey, IReadOnlySet<string> unlocking) =>
         new(passkey.Id, passkey.Name, passkey.CreatedAtUtc, passkey.LastUsedAtUtc, unlocking.Contains(passkey.Id));
 
     /// <inheritdoc />

@@ -98,7 +98,7 @@ public sealed class RealAppsMeasurementTests
         TerminalExecutionContext terminal = new(
             context, arguments, new StringReader(stdin), stdout, stderr, "/", new Dictionary<string, string>());
         int exitCode;
-        using (HackExecutionContext.Enter(context))
+        using (KazoExecutionContext.Enter(context))
         {
             exitCode = await command.ExecuteAsync(terminal, CancellationToken.None);
         }

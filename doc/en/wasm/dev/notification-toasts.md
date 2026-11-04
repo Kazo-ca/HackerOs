@@ -75,7 +75,7 @@ and `prefers-reduced-motion: no-preference`.
 | `OsSoundService.DoNotDisturb` | Plays no notification sound while the mode is on; the other sounds remain. |
 | `ClockPanel` | `role="switch"` switch next to the Notifications heading. |
 | `DoNotDisturbIndicator` (public) | The moon of the notification area, placed by `DesktopShell`; `OnClick` opens the panel. `MobileShell` shows the moon on the shade handle and adds it to its name. |
-| `NotificationsPanel` (Settings) | Page `--page=notifications`, through the public SDK (`HackSettings.OpenSystemAsync`). |
+| `NotificationsPanel` (Settings) | Page `--page=notifications`, through the public SDK (`KazoSettings.OpenSystemAsync`). |
 
 Tests: `DoNotDisturbServiceTests`, `OsSoundServiceTests.Do_not_disturb_mutes_the_notification_sounds_only`,
 `NotificationsPanelTests`, `DoNotDisturbTests` (UI.E2E: switch, moon, reload).

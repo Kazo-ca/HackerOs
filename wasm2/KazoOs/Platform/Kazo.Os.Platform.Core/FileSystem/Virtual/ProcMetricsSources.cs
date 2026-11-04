@@ -23,7 +23,7 @@ namespace Kazo.Os.Platform.Core.FileSystem.Virtual;
 /// </param>
 /// <param name="MemoryAccountant">
 /// Measured memory per process (ADR 0066, 0068), behind <c>VmRSS</c>, the layer fields
-/// (<c>RssAnon</c>, <c>RssFile</c>, <c>VmData</c>, <c>VmExe</c>, <c>HackAllocBytes</c>) and
+/// (<c>RssAnon</c>, <c>RssFile</c>, <c>VmData</c>, <c>VmExe</c>, <c>KazoAllocBytes</c>) and
 /// <c>MemSource</c> of <c>/proc/&lt;pid&gt;/status</c>, and the measured lines of
 /// <c>/proc/meminfo</c>; missing or not measuring, the simulated value applies.
 /// </param>

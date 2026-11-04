@@ -156,9 +156,9 @@ public sealed class LocalServerIntegrationTests : IAsyncLifetime
     private static readonly string[] Variables =
     [
         "HACKEROS_ConnectionStrings__HackerOsDb",
-        "HACKEROS_HackerOs__Pairing__Root",
+        "HACKEROS_KazoOs__Pairing__Root",
         "HACKEROS_AllowedHosts",
-        "HACKEROS_HackerOs__LocalServer__CaCertificatePath",
+        "HACKEROS_KazoOs__LocalServer__CaCertificatePath",
     ];
 
     private readonly string _folder = Path.Combine(Path.GetTempPath(), $"hackeros-local-server-{Guid.NewGuid():N}");

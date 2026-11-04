@@ -18,7 +18,7 @@ verified tokens.
 
 ## Context
 
-- Hack Paint (`Apps/System/Kazo.Os.Apps.HackPaint`) declares the capabilities to
+- Hack Paint (`Apps/System/Kazo.Os.Apps.KazoPaint`) declares the capabilities to
   read and write the home folder and file dialogs, but
   has no Open, no Save, no Export: its JS draws RGBA pixels on a
   canvas.

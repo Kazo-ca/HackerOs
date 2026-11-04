@@ -74,7 +74,7 @@ public sealed partial class TrimmedPublishTests
                 null, new PageWaitForFunctionOptions { Timeout = StepTimeoutMs });
             Log("the image loaded.");
 
-            // --- ADR 0221: undeclared files packed by HackerOsPack, and the scoped CSS linked ---
+            // --- ADR 0221: undeclared files packed by KazoOsPack, and the scoped CSS linked ---
             await Assertions.Expect(page.Locator("[data-probe-collocated]")).ToHaveTextAsync("collocated ready", new() { Timeout = StepTimeoutMs });
             Log("the collocated ProbeWindow.razor.js module loaded.");
             await page.WaitForFunctionAsync(

@@ -55,7 +55,7 @@ public sealed class NotificationQueueOomNotifier : IOomNotifier
         _clock = clock ?? throw new ArgumentNullException(nameof(clock));
         _catalog = catalog ?? (static () => null);
         _currentUser = currentUser ?? (static () => null);
-        _language = language ?? (static () => Kazo.Os.AppSdk.Globalization.HackLocale.DefaultLanguage);
+        _language = language ?? (static () => Kazo.Os.AppSdk.Globalization.KazoLocale.DefaultLanguage);
     }
 
     /// <inheritdoc />

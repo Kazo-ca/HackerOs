@@ -8,7 +8,7 @@ namespace Kazo.Os.Apps.Settings;
 /// <summary>
 /// Settings &gt; Desktop (ADR 0160 §8): icon size, auto-arrange, alignment, sort and the Home and Trash
 /// icons, written to the <c>[view]</c> group of <c>~/.config/hackeros/desktop.config</c> through
-/// <see cref="HackDesktopSettings"/>.
+/// <see cref="KazoDesktopSettings"/>.
 /// </summary>
 /// <remarks>
 /// The desktop app watches the file: a choice made here shows on the desktop at once. Choosing a sort
@@ -18,12 +18,12 @@ namespace Kazo.Os.Apps.Settings;
 public sealed partial class DesktopPanel
 {
     /// <summary>The icon sizes, in the order shown.</summary>
-    internal static readonly HackDesktopIconSize[] IconSizes = [HackDesktopIconSize.Small, HackDesktopIconSize.Medium, HackDesktopIconSize.Large];
+    internal static readonly KazoDesktopIconSize[] IconSizes = [KazoDesktopIconSize.Small, KazoDesktopIconSize.Medium, KazoDesktopIconSize.Large];
 
     /// <summary>The sorts, in the order shown.</summary>
-    internal static readonly HackDesktopSort[] Sorts = [HackDesktopSort.Name, HackDesktopSort.Size, HackDesktopSort.Type, HackDesktopSort.Date];
+    internal static readonly KazoDesktopSort[] Sorts = [KazoDesktopSort.Name, KazoDesktopSort.Size, KazoDesktopSort.Type, KazoDesktopSort.Date];
 
-    private HackDesktopOptions _options = HackDesktopOptions.Default;
+    private KazoDesktopOptions _options = KazoDesktopOptions.Default;
     private bool _loaded;
     private bool _isBusy;
     private string? _message;
@@ -37,41 +37,41 @@ public sealed partial class DesktopPanel
     private IStringLocalizer<Strings> L => _localizer ??= Context.GetLocalizer<Strings>();
 
     /// <summary>Gets the options read from the file.</summary>
-    internal HackDesktopOptions Options => _options;
+    internal KazoDesktopOptions Options => _options;
 
     /// <inheritdoc />
     protected override async Task OnInitializedAsync()
     {
-        using IDisposable scope = HackExecutionContext.Enter(Context);
-        _options = (await HackDesktopSettings.ReadAsync(Context.CancellationToken)).Options;
+        using IDisposable scope = KazoExecutionContext.Enter(Context);
+        _options = (await KazoDesktopSettings.ReadAsync(Context.CancellationToken)).Options;
         _loaded = true;
     }
 
     /// <summary>Writes <paramref name="options"/> to <c>[view]</c>.</summary>
-    internal Task SaveAsync(HackDesktopOptions options) => RunAsync(() => HackDesktopSettings.SaveOptionsAsync(options, Context.CancellationToken), options);
+    internal Task SaveAsync(KazoDesktopOptions options) => RunAsync(() => KazoDesktopSettings.SaveOptionsAsync(options, Context.CancellationToken), options);
 
     /// <summary>A new sort arranges the icons once in that order: the positions are cleared with it.</summary>
-    internal Task SortAsync(HackDesktopSort sort)
+    internal Task SortAsync(KazoDesktopSort sort)
     {
-        HackDesktopOptions options = _options with { Sort = sort };
+        KazoDesktopOptions options = _options with { Sort = sort };
         return RunAsync(async () =>
         {
-            await HackDesktopSettings.SaveOptionsAsync(options, Context.CancellationToken);
-            await HackDesktopSettings.SavePositionsAsync(new Dictionary<string, HackDesktopCell>(), Context.CancellationToken);
+            await KazoDesktopSettings.SaveOptionsAsync(options, Context.CancellationToken);
+            await KazoDesktopSettings.SavePositionsAsync(new Dictionary<string, KazoDesktopCell>(), Context.CancellationToken);
         }, options);
     }
 
     /// <summary>Clears <c>[positions]</c>: the desktop places every icon again in the sort order.</summary>
     internal Task ResetPositionsAsync() =>
-        RunAsync(() => HackDesktopSettings.SavePositionsAsync(new Dictionary<string, HackDesktopCell>(), Context.CancellationToken), _options);
+        RunAsync(() => KazoDesktopSettings.SavePositionsAsync(new Dictionary<string, KazoDesktopCell>(), Context.CancellationToken), _options);
 
-    private async Task RunAsync(Func<Task> write, HackDesktopOptions options)
+    private async Task RunAsync(Func<Task> write, KazoDesktopOptions options)
     {
         _isBusy = true;
         _message = null;
         try
         {
-            using IDisposable scope = HackExecutionContext.Enter(Context);
+            using IDisposable scope = KazoExecutionContext.Enter(Context);
             await write();
             _options = options;
             _message = L["Desktop.Saved"];

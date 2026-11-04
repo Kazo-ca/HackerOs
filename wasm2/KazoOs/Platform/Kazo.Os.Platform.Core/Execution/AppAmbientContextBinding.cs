@@ -3,7 +3,7 @@ using Kazo.Os.AppSdk;
 namespace Kazo.Os.Platform.Core.Execution;
 
 /// <summary>
-/// Re-enters one app instance's <see cref="HackExecutionContext"/> around callbacks a gateway invokes
+/// Re-enters one app instance's <see cref="KazoExecutionContext"/> around callbacks a gateway invokes
 /// on the app's behalf (ADR 0043, section 2). A clock tick or an event publication runs on the
 /// publisher's flow, not the subscriber's, so without this the handler would see no — or the wrong —
 /// ambient app.
@@ -61,5 +61,5 @@ internal sealed class AppAmbientContextBinding
     /// </summary>
     private bool IsKilled => _context is AppExecutionContext { IsKilled: true };
 
-    private IDisposable? Enter() => _context is { } context ? HackExecutionContext.Enter(context) : null;
+    private IDisposable? Enter() => _context is { } context ? KazoExecutionContext.Enter(context) : null;
 }

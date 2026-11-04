@@ -7,7 +7,7 @@ namespace Kazo.Os.Platform.Core.Apps.Packages;
 
 /// <summary>
 /// Writes a <c>.hackapp</c> package and its <c>index.json</c> entry (ADR 0182 §1, §2): the other half
-/// of <see cref="AppPackage.Read"/>, run by the <c>HackerOsPack</c> target of an app project.
+/// of <see cref="AppPackage.Read"/>, run by the <c>KazoOsPack</c> target of an app project.
 /// </summary>
 public static class AppPackageWriter
 {

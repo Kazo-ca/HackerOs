@@ -94,7 +94,7 @@ public static class AppCapabilities
     public const string NetworkSimulatedWrite = "network.simulated.write";
 
     /// <summary>
-    /// Listen on a TCP port of this machine with <c>HackHttpListener</c> (ADR 0074, section 2), from
+    /// Listen on a TCP port of this machine with <c>KazoHttpListener</c> (ADR 0074, section 2), from
     /// 1024 up. A web app may always listen on the URLs of its own manifest without it (ADR 0073).
     /// </summary>
     public const string NetworkListen = "network.listen";
@@ -121,32 +121,32 @@ public static class AppCapabilities
 
     /// <summary>
     /// Change the dangerous-capability policy and the machine decisions of other apps through
-    /// <c>HackPermissionAdministration</c> (ADR 0056, section 9). Dangerous; machine changes also
+    /// <c>KazoPermissionAdministration</c> (ADR 0056, section 9). Dangerous; machine changes also
     /// need an administrator through the OS authentication agent.
     /// </summary>
     public const string PermissionsManage = "permissions.manage";
 
     /// <summary>
     /// Connect this device to the optional server and synchronize it through
-    /// <c>HackServerConnection</c> (ADR 0056, section 10). Dangerous.
+    /// <c>KazoServerConnection</c> (ADR 0056, section 10). Dangerous.
     /// </summary>
     public const string ServerConnectionManage = "server.connection.manage";
 
     /// <summary>
-    /// Reboot or factory-reset the machine through <c>HackSystem</c> (ADR 0056, section 11).
+    /// Reboot or factory-reset the machine through <c>KazoSystem</c> (ADR 0056, section 11).
     /// Dangerous; every call also needs an administrator.
     /// </summary>
     public const string SystemPower = "system.power";
 
     /// <summary>
-    /// Read the raw storage snapshot through <c>HackStorageDiagnostics</c> (ADR 0056, section 11),
+    /// Read the raw storage snapshot through <c>KazoStorageDiagnostics</c> (ADR 0056, section 11),
     /// bypassing file permissions. Dangerous.
     /// </summary>
     public const string SystemStorageInspect = "system.storage.inspect";
 
     /// <summary>
     /// Back up the whole machine to the host computer, or restore it from a backup, through
-    /// <c>HackSystemBackup</c> (ADR 0099, section 1). Dangerous: an archive holds every user's
+    /// <c>KazoSystemBackup</c> (ADR 0099, section 1). Dangerous: an archive holds every user's
     /// files, the accounts and their password hashes, and a restore overwrites them; every call
     /// also needs an administrator.
     /// </summary>
@@ -161,14 +161,14 @@ public static class AppCapabilities
     public const string ShellHost = "shell.host";
 
     /// <summary>
-    /// Read every app's entries of the session user's keyring through <c>HackKeyring</c>
+    /// Read every app's entries of the session user's keyring through <c>KazoKeyring</c>
     /// (ADR 0100, section 2), as a password manager does. Dangerous; an app always reaches its own
     /// entries without any capability.
     /// </summary>
     public const string KeyringReadAll = "keyring.read-all";
 
     /// <summary>
-    /// Reset or remove another account's password through <c>HackUserAccounts</c> (ADR 0120), as
+    /// Reset or remove another account's password through <c>KazoUserAccounts</c> (ADR 0120), as
     /// <c>sudo passwd NAME</c> does. Dangerous: whoever resets a password can log in as that user,
     /// and the user's keyring is set aside; every call also needs an administrator.
     /// </summary>
@@ -183,7 +183,7 @@ public static class AppCapabilities
 
     /// <summary>
     /// List, open, restore, close and identify the secondary screens, and ask for the host's window
-    /// management permission, through <c>HackScreens</c> (ADR 0184), as Settings &gt; Screens does.
+    /// management permission, through <c>KazoScreens</c> (ADR 0184), as Settings &gt; Screens does.
     /// Normal: each call runs during the user's own click, and the windows of a closed screen come
     /// back to screen 1.
     /// </summary>

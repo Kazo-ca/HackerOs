@@ -9,7 +9,7 @@ namespace Kazo.Os.Commands.Systemctl;
 /// <summary>
 /// <c>systemctl [list-units|status|start|stop|restart|enable|disable|mask|is-active|is-enabled|is-failed|reset-failed] [UNIT...]</c>
 /// (ADR 0064, ADR 0097): the Kazo OS services (the catalog's <c>Service</c> apps, through
-/// <see cref="HackServiceController"/>) shown and driven as systemd units. A unit is named by its
+/// <see cref="KazoServiceController"/>) shown and driven as systemd units. A unit is named by its
 /// app id or short name, with or without <c>.service</c> (<c>sync</c>, <c>sync.service</c>,
 /// <c>org.hackeros.sync</c>). Start types map to systemd states: automatic = <c>enabled</c>,
 /// manual = <c>disabled</c>, disabled = <c>masked</c>. Changing another app's service needs
@@ -35,10 +35,10 @@ public sealed class SystemctlCommand(AppManifest manifest) : TerminalAppBase(man
 
         string verb = args.Count == 0 ? "list-units" : args[0];
         List<string> units = [.. args.Skip(1)];
-        HackServiceController[] services;
+        KazoServiceController[] services;
         try
         {
-            services = await HackServiceController.GetServicesAsync(cancellationToken);
+            services = await KazoServiceController.GetServicesAsync(cancellationToken);
         }
         catch (Exception exception) when (exception is UnauthorizedAccessException or NotSupportedException or IOException)
         {
@@ -54,7 +54,7 @@ public sealed class SystemctlCommand(AppManifest manifest) : TerminalAppBase(man
         if (units.Count == 0 && verb == "reset-failed")
         {
             // Without a unit, systemd resets every failed unit.
-            units = [.. services.Where(static s => s.ActiveState == HackServiceActiveState.Failed).Select(static s => s.ServiceName)];
+            units = [.. services.Where(static s => s.ActiveState == KazoServiceActiveState.Failed).Select(static s => s.ServiceName)];
             if (units.Count == 0)
             {
                 return 0;
@@ -70,7 +70,7 @@ public sealed class SystemctlCommand(AppManifest manifest) : TerminalAppBase(man
         int status = 0;
         foreach (string unit in units)
         {
-            HackServiceController? service = Find(services, unit);
+            KazoServiceController? service = Find(services, unit);
             if (service is null)
             {
                 if (verb is "is-active" or "is-failed")
@@ -108,7 +108,7 @@ public sealed class SystemctlCommand(AppManifest manifest) : TerminalAppBase(man
         return status;
     }
 
-    private static async Task<int> RunAsync(TerminalExecutionContext context, IStringLocalizer<Strings> text, string verb, HackServiceController service, CancellationToken cancellationToken)
+    private static async Task<int> RunAsync(TerminalExecutionContext context, IStringLocalizer<Strings> text, string verb, KazoServiceController service, CancellationToken cancellationToken)
     {
         switch (verb)
         {
@@ -141,10 +141,10 @@ public sealed class SystemctlCommand(AppManifest manifest) : TerminalAppBase(man
             case "is-active":
                 // systemd prints the ActiveState and exits 0 only for active (3 for failed too).
                 await context.StandardOutput.WriteLineAsync(Active(service).Active);
-                return service.ActiveState == HackServiceActiveState.Active ? 0 : 3;
+                return service.ActiveState == KazoServiceActiveState.Active ? 0 : 3;
             case "is-failed":
                 await context.StandardOutput.WriteLineAsync(Active(service).Active);
-                return service.ActiveState == HackServiceActiveState.Failed ? 0 : 1;
+                return service.ActiveState == KazoServiceActiveState.Failed ? 0 : 1;
             case "reset-failed":
                 await service.ResetFailedAsync(cancellationToken);
                 return 0;
@@ -153,7 +153,7 @@ public sealed class SystemctlCommand(AppManifest manifest) : TerminalAppBase(man
                 return service.StartType == ServiceStartMode.Automatic ? 0 : 1;
             case "status":
                 await WriteStatusAsync(context, service);
-                return service.ActiveState == HackServiceActiveState.Active ? 0 : 3;
+                return service.ActiveState == KazoServiceActiveState.Active ? 0 : 3;
             default:
                 await context.StandardError.WriteLineAsync(text["UnknownVerb", verb]);
                 return 1;
@@ -165,20 +165,20 @@ public sealed class SystemctlCommand(AppManifest manifest) : TerminalAppBase(man
     /// red × failed, ○ otherwise), the active state with its sub-state or result and since when,
     /// the main PID, and the service's own status line and health when it reported them.
     /// </summary>
-    private static async Task WriteStatusAsync(TerminalExecutionContext context, HackServiceController service)
+    private static async Task WriteStatusAsync(TerminalExecutionContext context, KazoServiceController service)
     {
         TextWriter output = context.StandardOutput;
         (string active, string sub) = Active(service);
         string dot = service.ActiveState switch
         {
-            HackServiceActiveState.Active => "\u001b[32m●\u001b[0m",
-            HackServiceActiveState.Failed => "\u001b[31m×\u001b[0m",
-            HackServiceActiveState.Activating or HackServiceActiveState.Deactivating => "\u001b[1m●\u001b[0m",
+            KazoServiceActiveState.Active => "\u001b[32m●\u001b[0m",
+            KazoServiceActiveState.Failed => "\u001b[31m×\u001b[0m",
+            KazoServiceActiveState.Activating or KazoServiceActiveState.Deactivating => "\u001b[1m●\u001b[0m",
             _ => "○"
         };
-        string activeText = service.ActiveState == HackServiceActiveState.Failed
+        string activeText = service.ActiveState == KazoServiceActiveState.Failed
             ? $"\u001b[31m{active}\u001b[0m ({sub})"
-            : service.ActiveState == HackServiceActiveState.Active ? $"\u001b[32m{active} ({sub})\u001b[0m" : $"{active} ({sub})";
+            : service.ActiveState == KazoServiceActiveState.Active ? $"\u001b[32m{active} ({sub})\u001b[0m" : $"{active} ({sub})";
         if (service.ActiveStateChangedAt is { } since)
         {
             activeText += $" since {since:ddd yyyy-MM-dd HH:mm:ss} UTC; {Ago(context.App.Clock.UtcNow - since)} ago";
@@ -191,7 +191,7 @@ public sealed class SystemctlCommand(AppManifest manifest) : TerminalAppBase(man
         {
             await output.WriteLineAsync($"   Main PID: {pid} ({ShortName(service.ServiceName)})");
         }
-        else if (service.ActiveState == HackServiceActiveState.Failed && service.ExitCode is { } exitCode)
+        else if (service.ActiveState == KazoServiceActiveState.Failed && service.ExitCode is { } exitCode)
         {
             await output.WriteLineAsync($"    Process: (code=exited, status={exitCode})");
         }
@@ -201,7 +201,7 @@ public sealed class SystemctlCommand(AppManifest manifest) : TerminalAppBase(man
             await output.WriteLineAsync($"     Status: \"{text}\"");
         }
 
-        if (service.Health is HackServiceHealth.Degraded or HackServiceHealth.Unhealthy)
+        if (service.Health is KazoServiceHealth.Degraded or KazoServiceHealth.Unhealthy)
         {
             await output.WriteLineAsync($"     Health: {service.Health.ToString().ToLowerInvariant()}");
         }
@@ -223,12 +223,12 @@ public sealed class SystemctlCommand(AppManifest manifest) : TerminalAppBase(man
             : $"{(int)elapsed.TotalDays} days";
     }
 
-    private static async Task<int> ListAsync(TerminalExecutionContext context, IStringLocalizer<Strings> text, HackServiceController[] services, bool files)
+    private static async Task<int> ListAsync(TerminalExecutionContext context, IStringLocalizer<Strings> text, KazoServiceController[] services, bool files)
     {
         if (files)
         {
             await context.StandardOutput.WriteLineAsync($"{"UNIT FILE",-40} {"STATE",-9} PRESET");
-            foreach (HackServiceController service in services)
+            foreach (KazoServiceController service in services)
             {
                 await context.StandardOutput.WriteLineAsync($"{UnitName(service),-40} {Enabled(service),-9} enabled");
             }
@@ -239,11 +239,11 @@ public sealed class SystemctlCommand(AppManifest manifest) : TerminalAppBase(man
         }
 
         await context.StandardOutput.WriteLineAsync($"  {"UNIT",-40} {"LOAD",-6} {"ACTIVE",-8} {"SUB",-8} DESCRIPTION");
-        foreach (HackServiceController service in services)
+        foreach (KazoServiceController service in services)
         {
             (string active, string sub) = Active(service);
-            string marker = service.ActiveState == HackServiceActiveState.Failed ? "●" : " ";
-            sub = service.ActiveState == HackServiceActiveState.Failed ? "failed" : sub;
+            string marker = service.ActiveState == KazoServiceActiveState.Failed ? "●" : " ";
+            sub = service.ActiveState == KazoServiceActiveState.Failed ? "failed" : sub;
             await context.StandardOutput.WriteLineAsync($"{marker} {UnitName(service),-40} {"loaded",-6} {active,-8} {sub,-8} {service.DisplayName}");
         }
 
@@ -256,16 +256,16 @@ public sealed class SystemctlCommand(AppManifest manifest) : TerminalAppBase(man
     }
 
     /// <summary>The ACTIVE and SUB columns; for a failed unit, SUB is <c>Result: …</c> in <c>status</c> and <c>failed</c> in lists.</summary>
-    private static (string Active, string Sub) Active(HackServiceController service) => service.ActiveState switch
+    private static (string Active, string Sub) Active(KazoServiceController service) => service.ActiveState switch
     {
-        HackServiceActiveState.Active => ("active", "running"),
-        HackServiceActiveState.Activating => ("activating", "start"),
-        HackServiceActiveState.Deactivating => ("deactivating", "stop-sigterm"),
-        HackServiceActiveState.Failed => ("failed", $"Result: {HackServiceStates.ToSystemdName(service.Result)}"),
+        KazoServiceActiveState.Active => ("active", "running"),
+        KazoServiceActiveState.Activating => ("activating", "start"),
+        KazoServiceActiveState.Deactivating => ("deactivating", "stop-sigterm"),
+        KazoServiceActiveState.Failed => ("failed", $"Result: {KazoServiceStates.ToSystemdName(service.Result)}"),
         _ => ("inactive", "dead")
     };
 
-    private static string Enabled(HackServiceController service) => service.StartType switch
+    private static string Enabled(KazoServiceController service) => service.StartType switch
     {
         ServiceStartMode.Automatic => "enabled",
         ServiceStartMode.Manual => "disabled",
@@ -273,7 +273,7 @@ public sealed class SystemctlCommand(AppManifest manifest) : TerminalAppBase(man
         _ => "static"
     };
 
-    private static HackServiceController? Find(HackServiceController[] services, string unit)
+    private static KazoServiceController? Find(KazoServiceController[] services, string unit)
     {
         string name = unit.EndsWith(".service", StringComparison.Ordinal) ? unit[..^8] : unit;
         return services.FirstOrDefault(s => string.Equals(s.ServiceName, name, StringComparison.OrdinalIgnoreCase))
@@ -282,7 +282,7 @@ public sealed class SystemctlCommand(AppManifest manifest) : TerminalAppBase(man
 
     private static string ShortName(string appId) => appId[(appId.LastIndexOf('.') + 1)..];
 
-    private static string UnitName(HackServiceController service) => ShortName(service.ServiceName) + ".service";
+    private static string UnitName(KazoServiceController service) => ShortName(service.ServiceName) + ".service";
 
     private static string UnitName(string unit) => unit.EndsWith(".service", StringComparison.Ordinal) ? unit : unit + ".service";
 }

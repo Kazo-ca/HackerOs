@@ -29,7 +29,7 @@ public sealed class IndexedDbSyncRecordStateRepository : ISyncRecordStateReposit
         IReadOnlyList<JsonElement> results = await _adapter.ExecuteAsync(
             TransactionBoundary,
             IndexedDbTransactionMode.ReadOnly,
-            [new IndexedDbOperation("get", HackerOsIndexedDbSchema.SyncRecordStateStoreName, Key: FormatKey(domain, recordId))],
+            [new IndexedDbOperation("get", KazoOsIndexedDbSchema.SyncRecordStateStoreName, Key: FormatKey(domain, recordId))],
             cancellationToken).ConfigureAwait(false);
 
         JsonElement result = results.Single();
@@ -51,7 +51,7 @@ public sealed class IndexedDbSyncRecordStateRepository : ISyncRecordStateReposit
             IndexedDbTransactionMode.ReadWrite,
             [new IndexedDbOperation(
                 "put",
-                HackerOsIndexedDbSchema.SyncRecordStateStoreName,
+                KazoOsIndexedDbSchema.SyncRecordStateStoreName,
                 Value: new SyncRecordStateRecord(
                     FormatKey(domain, recordId),
                     domain,
@@ -73,7 +73,7 @@ public sealed class IndexedDbSyncRecordStateRepository : ISyncRecordStateReposit
         IReadOnlyList<JsonElement> results = await _adapter.ExecuteAsync(
             TransactionBoundary,
             IndexedDbTransactionMode.ReadOnly,
-            [new IndexedDbOperation("getAll", HackerOsIndexedDbSchema.SyncRecordStateStoreName, IndexName: "domain", Query: domain)],
+            [new IndexedDbOperation("getAll", KazoOsIndexedDbSchema.SyncRecordStateStoreName, IndexName: "domain", Query: domain)],
             cancellationToken).ConfigureAwait(false);
 
         JsonElement rows = results.Single();
@@ -99,7 +99,7 @@ public sealed class IndexedDbSyncRecordStateRepository : ISyncRecordStateReposit
         await _adapter.ExecuteAsync(
             TransactionBoundary,
             IndexedDbTransactionMode.ReadWrite,
-            [new IndexedDbOperation("delete", HackerOsIndexedDbSchema.SyncRecordStateStoreName, Key: FormatKey(domain, recordId))],
+            [new IndexedDbOperation("delete", KazoOsIndexedDbSchema.SyncRecordStateStoreName, Key: FormatKey(domain, recordId))],
             cancellationToken).ConfigureAwait(false);
     }
 

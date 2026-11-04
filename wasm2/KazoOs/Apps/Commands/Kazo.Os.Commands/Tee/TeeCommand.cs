@@ -42,9 +42,9 @@ public sealed class TeeCommand(AppManifest manifest) : TerminalAppBase(manifest)
         {
             try
             {
-                HackFileStream stream = append
-                    ? await HackFile.OpenAppendAsync(file, cancellationToken)
-                    : await HackFile.OpenWriteAsync(file, cancellationToken);
+                KazoFileStream stream = append
+                    ? await KazoFile.OpenAppendAsync(file, cancellationToken)
+                    : await KazoFile.OpenWriteAsync(file, cancellationToken);
                 outputs.Add((file, new StreamWriter(stream, new UTF8Encoding(false)) { NewLine = "\n" }));
             }
             catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException)

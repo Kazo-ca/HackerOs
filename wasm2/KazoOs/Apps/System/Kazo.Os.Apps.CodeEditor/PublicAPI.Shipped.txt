@@ -395,7 +395,7 @@ override Kazo.Os.Apps.CodeEditor.CodeEditorSessionRecovery.ToString() -> string!
 override Kazo.Os.Apps.CodeEditor.CodeEditorWindow.OnAppAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
 override Kazo.Os.Apps.CodeEditor.CodeEditorWindow.OnAppInitialized() -> void
 override Kazo.Os.Apps.CodeEditor.CodeEditorWindow.OnAppInitializedAsync() -> System.Threading.Tasks.Task!
-override Kazo.Os.Apps.CodeEditor.CodeEditorWindow.OnAppStopRequestedAsync(Kazo.Os.AppSdk.Diagnostics.HackStopRequestedEventArgs! e) -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.CodeEditor.CodeEditorWindow.OnAppStopRequestedAsync(Kazo.Os.AppSdk.Diagnostics.KazoStopRequestedEventArgs! e) -> System.Threading.Tasks.Task!
 override Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile.Equals(object? obj) -> bool
 override Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile.GetHashCode() -> int
 override Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile.ToString() -> string!

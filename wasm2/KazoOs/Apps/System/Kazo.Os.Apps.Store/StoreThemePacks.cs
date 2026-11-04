@@ -20,7 +20,7 @@ internal enum StoreThemePackState
 /// <summary>One theme pack of the « Themes » tab (ADR 0213 §5): its catalog entry and its installed copy.</summary>
 /// <param name="Pack">Its entry in a catalog, or <see langword="null"/> for an installed pack no catalog lists any more.</param>
 /// <param name="Installed">The installed copy, or <see langword="null"/>.</param>
-internal sealed record StoreThemePackEntry(HackCatalogApp? Pack, HackInstalledThemePack? Installed)
+internal sealed record StoreThemePackEntry(KazoCatalogApp? Pack, KazoInstalledThemePack? Installed)
 {
     /// <summary>Gets the pack id.</summary>
     public string PackId => Pack?.AppId ?? Installed!.PackId;
@@ -58,17 +58,17 @@ internal sealed class StoreThemePacks
     /// <summary>Builds the tab.</summary>
     /// <param name="catalogs">The catalogs, in the OS's order.</param>
     /// <param name="installed">The packs installed for the system and for the user.</param>
-    public StoreThemePacks(IReadOnlyList<HackAppCatalog> catalogs, IReadOnlyList<HackInstalledThemePack> installed)
+    public StoreThemePacks(IReadOnlyList<KazoAppCatalog> catalogs, IReadOnlyList<KazoInstalledThemePack> installed)
     {
         ArgumentNullException.ThrowIfNull(catalogs);
         ArgumentNullException.ThrowIfNull(installed);
-        Dictionary<string, HackInstalledThemePack> byId = installed
+        Dictionary<string, KazoInstalledThemePack> byId = installed
             .GroupBy(static pack => pack.PackId, StringComparer.Ordinal)
             .ToDictionary(static group => group.Key, static group => group.OrderByDescending(static pack => pack.SystemWide).First(), StringComparer.Ordinal);
         Dictionary<string, StoreThemePackEntry> entries = new(StringComparer.Ordinal);
-        foreach (HackCatalogApp pack in catalogs.SelectMany(static catalog => catalog.Apps).Where(static item => item.Kind == HackCatalogItemKind.ThemePack))
+        foreach (KazoCatalogApp pack in catalogs.SelectMany(static catalog => catalog.Apps).Where(static item => item.Kind == KazoCatalogItemKind.ThemePack))
         {
-            byId.TryGetValue(pack.AppId, out HackInstalledThemePack? copy);
+            byId.TryGetValue(pack.AppId, out KazoInstalledThemePack? copy);
             bool installedFromHere = copy is not null && copy.Source.StartsWith(pack.Source + "@", StringComparison.OrdinalIgnoreCase);
             if (!entries.ContainsKey(pack.AppId) || installedFromHere)
             {
@@ -76,7 +76,7 @@ internal sealed class StoreThemePacks
             }
         }
 
-        foreach (HackInstalledThemePack copy in byId.Values.Where(copy => !entries.ContainsKey(copy.PackId)))
+        foreach (KazoInstalledThemePack copy in byId.Values.Where(copy => !entries.ContainsKey(copy.PackId)))
         {
             entries[copy.PackId] = new StoreThemePackEntry(null, copy);
         }

@@ -3,7 +3,7 @@ using Kazo.Os.Simulation.Abstractions.Settings;
 
 namespace Kazo.Os.AppSdk.Settings;
 
-/// <summary>Converts between serialized setting values and the C# types <see cref="HackSettingsDocument"/> exposes.</summary>
+/// <summary>Converts between serialized setting values and the C# types <see cref="KazoSettingsDocument"/> exposes.</summary>
 internal static class SettingValueConverter
 {
     /// <summary>Converts a valid serialized value to <typeparamref name="T"/>.</summary>

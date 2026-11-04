@@ -28,7 +28,7 @@ This design intent is already documented and partially seeded in the code:
   `ISimulatedNetworkService`; its own docstring states "Makes zero real
   network or HTTP calls." No gateway abstraction for a *real* proxy call
   exists yet, only the documented intent to add one.
-- `Infrastructure/Kazo.Os.Infrastructure.Browser/Schema/HackerOsIndexedDbSchema.cs`
+- `Infrastructure/Kazo.Os.Infrastructure.Browser/Schema/KazoOsIndexedDbSchema.cs`
   already reserves a `syncMetadata` object store, but its own doc comment
   scopes it to "local revision/consistency bookkeeping only — it is not
   multi-device network sync, which remains excluded."

@@ -6,24 +6,24 @@ namespace Kazo.Os.AppSdk.Administration;
 /// <param name="AccountId">Server account identifier, or <see langword="null"/> when not connected.</param>
 /// <param name="DeviceId">Device identifier on that server, or <see langword="null"/> when not connected.</param>
 /// <remarks>The refresh and access tokens stay inside the OS: no app ever sees them (ADR 0056, section 6).</remarks>
-public sealed record HackServerConnectionState(bool IsConnected, Uri? ServerUrl, Guid? AccountId, Guid? DeviceId)
+public sealed record KazoServerConnectionState(bool IsConnected, Uri? ServerUrl, Guid? AccountId, Guid? DeviceId)
 {
     /// <summary>The state of a device that is not connected, the normal case without a server.</summary>
-    public static HackServerConnectionState NotConnected { get; } = new(false, null, null, null);
+    public static KazoServerConnectionState NotConnected { get; } = new(false, null, null, null);
 }
 
 /// <summary>
-/// What an address answered to <see cref="HackServerConnection.TestAsync(Uri, CancellationToken)"/>
+/// What an address answered to <see cref="KazoServerConnection.TestAsync(Uri, CancellationToken)"/>
 /// (ADR 0191 §6): whether a Kazo OS server is there, before linking this device to it.
 /// </summary>
 /// <param name="IsServer">Whether a Kazo OS server answered.</param>
 /// <param name="ServerVersion">The server's version, when it answered.</param>
 /// <param name="ApiVersion">The server's API version, when it answered.</param>
 /// <param name="Error">Why the test failed (unreachable, not a Kazo OS server), in English; <see langword="null"/> on success.</param>
-public sealed record HackServerProbe(bool IsServer, string? ServerVersion, string? ApiVersion, string? Error);
+public sealed record KazoServerProbe(bool IsServer, string? ServerVersion, string? ApiVersion, string? Error);
 
 /// <summary>What a synchronization moves (ADR 0029 to 0033).</summary>
-public enum HackSyncDomain
+public enum KazoSyncDomain
 {
     /// <summary>The user's home directory, user settings included (ADR 0030, ADR 0044 section 10).</summary>
     FileSystem = 0,
@@ -36,7 +36,7 @@ public enum HackSyncDomain
 }
 
 /// <summary>Direction of one synchronization pass.</summary>
-public enum HackSyncDirection
+public enum KazoSyncDirection
 {
     /// <summary>Send local changes to the server.</summary>
     Push = 0,
@@ -53,7 +53,7 @@ public enum HackSyncDirection
 /// <param name="Domain">Domain of the record.</param>
 /// <param name="Path">Path of the conflicting file, relative to the home directory.</param>
 /// <param name="DetectedAt">When the conflict was found, when known.</param>
-public sealed record HackSyncConflict(HackSyncDomain Domain, string Path, DateTimeOffset? DetectedAt = null);
+public sealed record KazoSyncConflict(KazoSyncDomain Domain, string Path, DateTimeOffset? DetectedAt = null);
 
 /// <summary>State of the periodic synchronization of the session user (ADR 0101 section 4).</summary>
 /// <param name="IsActive">The background synchronization runs (a session is open on a host that supports it).</param>
@@ -64,7 +64,7 @@ public sealed record HackSyncConflict(HackSyncDomain Domain, string Path, DateTi
 /// <param name="LastReceived">Records the last pass applied locally.</param>
 /// <param name="LastError">Why the last pass failed, or <see langword="null"/>.</param>
 /// <param name="Interval">Interval between two periodic passes, set in <c>/etc/hackeros/sync.config</c>.</param>
-public sealed record HackSyncStatus(
+public sealed record KazoSyncStatus(
     bool IsActive,
     bool IsPaused,
     bool IsOnline,
@@ -75,7 +75,7 @@ public sealed record HackSyncStatus(
     TimeSpan Interval)
 {
     /// <summary>The status of a host without background synchronization.</summary>
-    public static HackSyncStatus Inactive { get; } = new(false, false, false, null, 0, 0, null, TimeSpan.FromMinutes(5));
+    public static KazoSyncStatus Inactive { get; } = new(false, false, false, null, 0, 0, null, TimeSpan.FromMinutes(5));
 }
 
 /// <summary>
@@ -97,7 +97,7 @@ public sealed record HackSyncStatus(
 /// <param name="StreamIdleTimeout">How long a socket may stay silent before the server closes it.</param>
 /// <param name="GrantedApps">Apps the server lets use the relay on its own (ADR 0102 §4).</param>
 /// <param name="Warnings">The settings that weaken the server's defaults, one sentence each.</param>
-public sealed record HackServerRelayPolicy(
+public sealed record KazoServerRelayPolicy(
     bool Enabled,
     IReadOnlyList<int> HttpPorts,
     IReadOnlyList<int> TcpPorts,
@@ -118,12 +118,12 @@ public sealed record HackServerRelayPolicy(
 /// The server refused a request or could not be reached while the user asked for it (connect,
 /// create an account, synchronize). Never raised merely because no server is configured.
 /// </summary>
-public sealed class HackServerConnectionException : IOException
+public sealed class KazoServerConnectionException : IOException
 {
     /// <summary>Creates the exception.</summary>
     /// <param name="message">Human-readable reason.</param>
     /// <param name="innerException">The transport or server error.</param>
-    public HackServerConnectionException(string message, Exception? innerException = null)
+    public KazoServerConnectionException(string message, Exception? innerException = null)
         : base(message, innerException)
     {
     }
@@ -131,21 +131,21 @@ public sealed class HackServerConnectionException : IOException
 
 /// <summary>
 /// Optional server connection and synchronization for one app instance (ADR 0056, section 10),
-/// behind <see cref="HackServerConnection"/>. Every member requires the dangerous capability
+/// behind <see cref="KazoServerConnection"/>. Every member requires the dangerous capability
 /// <c>server.connection.manage</c>.
 /// </summary>
 public interface IAppServerConnectionGateway
 {
-    /// <summary>Gets the current connection; <see cref="HackServerConnectionState.NotConnected"/> without a server.</summary>
+    /// <summary>Gets the current connection; <see cref="KazoServerConnectionState.NotConnected"/> without a server.</summary>
     /// <param name="cancellationToken">Cancels the read.</param>
-    ValueTask<HackServerConnectionState> GetStateAsync(CancellationToken cancellationToken = default);
+    ValueTask<KazoServerConnectionState> GetStateAsync(CancellationToken cancellationToken = default);
 
     /// <summary>Links this device to an existing server account.</summary>
     /// <param name="serverUrl">Absolute server base URL.</param>
     /// <param name="login">Server account name.</param>
     /// <param name="password">Server account password (a credential of the remote service, not a local password).</param>
     /// <param name="cancellationToken">Cancels the request.</param>
-    ValueTask<HackServerConnectionState> ConnectAsync(
+    ValueTask<KazoServerConnectionState> ConnectAsync(
         Uri serverUrl, string login, string password, CancellationToken cancellationToken = default);
 
     /// <summary>Creates a server account and links this device to it.</summary>
@@ -153,7 +153,7 @@ public interface IAppServerConnectionGateway
     /// <param name="login">New account name.</param>
     /// <param name="password">New account password.</param>
     /// <param name="cancellationToken">Cancels the request.</param>
-    ValueTask<HackServerConnectionState> CreateAccountAsync(
+    ValueTask<KazoServerConnectionState> CreateAccountAsync(
         Uri serverUrl, string login, string password, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -163,8 +163,8 @@ public interface IAppServerConnectionGateway
     /// <param name="serverUrl">Absolute server base URL.</param>
     /// <param name="code">The pairing code.</param>
     /// <param name="cancellationToken">Cancels the request.</param>
-    /// <exception cref="HackServerConnectionException">The server refused the code or could not be reached.</exception>
-    ValueTask<HackServerConnectionState> PairAsync(Uri serverUrl, string code, CancellationToken cancellationToken = default) =>
+    /// <exception cref="KazoServerConnectionException">The server refused the code or could not be reached.</exception>
+    ValueTask<KazoServerConnectionState> PairAsync(Uri serverUrl, string code, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This server connection gateway cannot pair a device.");
 
     /// <summary>
@@ -173,7 +173,7 @@ public interface IAppServerConnectionGateway
     /// </summary>
     /// <param name="serverUrl">Absolute server base URL.</param>
     /// <param name="cancellationToken">Cancels the request.</param>
-    ValueTask<HackServerProbe> TestAsync(Uri serverUrl, CancellationToken cancellationToken = default) =>
+    ValueTask<KazoServerProbe> TestAsync(Uri serverUrl, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This server connection gateway cannot test an address.");
 
     /// <summary>Unlinks this device; local data stays the source of truth.</summary>
@@ -184,19 +184,19 @@ public interface IAppServerConnectionGateway
     /// <param name="domain">What to synchronize.</param>
     /// <param name="direction">Push or pull.</param>
     /// <param name="cancellationToken">Cancels the pass.</param>
-    ValueTask SyncAsync(HackSyncDomain domain, HackSyncDirection direction, CancellationToken cancellationToken = default);
+    ValueTask SyncAsync(KazoSyncDomain domain, KazoSyncDirection direction, CancellationToken cancellationToken = default);
 
     /// <summary>Gets the pending synchronization conflicts of the session user, oldest first.</summary>
     /// <param name="cancellationToken">Cancels the read.</param>
-    ValueTask<IReadOnlyList<HackSyncConflict>> GetConflictsAsync(CancellationToken cancellationToken = default);
+    ValueTask<IReadOnlyList<KazoSyncConflict>> GetConflictsAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets the network relay policy of the connected server (ADR 0102 §5);
     /// <see langword="null"/> when the device is not connected.
     /// </summary>
     /// <param name="cancellationToken">Cancels the request.</param>
-    /// <exception cref="HackServerConnectionException">The server could not be reached.</exception>
-    ValueTask<HackServerRelayPolicy?> GetRelayPolicyAsync(CancellationToken cancellationToken = default) =>
+    /// <exception cref="KazoServerConnectionException">The server could not be reached.</exception>
+    ValueTask<KazoServerRelayPolicy?> GetRelayPolicyAsync(CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This server connection gateway cannot read the relay policy.");
 
     /// <summary>
@@ -208,7 +208,7 @@ public interface IAppServerConnectionGateway
 
     /// <summary>Gets the state of the periodic synchronization (ADR 0101 section 4).</summary>
     /// <param name="cancellationToken">Cancels the read.</param>
-    ValueTask<HackSyncStatus> GetSyncStatusAsync(CancellationToken cancellationToken = default);
+    ValueTask<KazoSyncStatus> GetSyncStatusAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Pauses or resumes the periodic synchronization of the session user, written as
@@ -224,5 +224,5 @@ public interface IAppServerConnectionGateway
     /// </summary>
     /// <param name="cancellationToken">Cancels the pass.</param>
     /// <returns>The status after the pass.</returns>
-    ValueTask<HackSyncStatus> SyncNowAsync(CancellationToken cancellationToken = default);
+    ValueTask<KazoSyncStatus> SyncNowAsync(CancellationToken cancellationToken = default);
 }

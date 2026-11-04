@@ -5,16 +5,16 @@ namespace Kazo.Os.AppSdk.Net;
 /// <summary>
 /// The network stack of the OS as one app instance sees it (ADR 0056, section 6): name
 /// resolution, echo requests, HTTP exchanges and TCP port probes. Reached through
-/// <see cref="IAppExecutionContext.Network"/>; apps normally use the <see cref="HackDns"/>,
-/// <see cref="HackPing"/>, <see cref="HackHttpClient"/>, <see cref="HackTcpClient"/> and
-/// <see cref="HackUdpClient"/> facades.
+/// <see cref="IAppExecutionContext.Network"/>; apps normally use the <see cref="KazoDns"/>,
+/// <see cref="KazoPing"/>, <see cref="KazoHttpClient"/>, <see cref="KazoTcpClient"/> and
+/// <see cref="KazoUdpClient"/> facades.
 /// </summary>
 /// <remarks>
 /// <para>
 /// The OS tries the simulated network first. When the target is not part of it, the app holds
 /// <c>network.real.access</c> and the optional server is connected, the OS relays the call through
 /// the server proxy, managing the access token itself. The app sees neither the token nor the
-/// state of the server: without a server the outcome is <see cref="HackNetworkError.HostNotFound"/>.
+/// state of the server: without a server the outcome is <see cref="KazoNetworkError.HostNotFound"/>.
 /// </para>
 /// <para>
 /// Capabilities: <c>network.simulated.read</c> for resolution, ping, GET, HEAD and probes;
@@ -25,28 +25,28 @@ namespace Kazo.Os.AppSdk.Net;
 public interface IAppNetworkGateway
 {
     /// <summary>Resolves a host name to its entry (forward lookup).</summary>
-    ValueTask<HackNetworkResult<HackHostEntry>> ResolveAsync(string hostName, CancellationToken cancellationToken = default);
+    ValueTask<KazoNetworkResult<KazoHostEntry>> ResolveAsync(string hostName, CancellationToken cancellationToken = default);
 
     /// <summary>Finds the host name of an address (reverse lookup).</summary>
-    ValueTask<HackNetworkResult<HackHostEntry>> ReverseLookupAsync(IPAddress address, CancellationToken cancellationToken = default);
+    ValueTask<KazoNetworkResult<KazoHostEntry>> ReverseLookupAsync(IPAddress address, CancellationToken cancellationToken = default);
 
     /// <summary>Sends one echo request to a host name or address.</summary>
-    ValueTask<HackNetworkResult<HackPingReply>> PingAsync(
+    ValueTask<KazoNetworkResult<KazoPingReply>> PingAsync(
         string hostNameOrAddress, TimeSpan timeout, CancellationToken cancellationToken = default);
 
     /// <summary>Performs one HTTP exchange, following redirects (at most 10, like a browser).</summary>
-    ValueTask<HackNetworkResult<HackHttpResponse>> SendAsync(
-        HackHttpRequest request, CancellationToken cancellationToken = default);
+    ValueTask<KazoNetworkResult<KazoHttpResponse>> SendAsync(
+        KazoHttpRequest request, CancellationToken cancellationToken = default);
 
     /// <summary>Probes the TCP ports <paramref name="firstPort"/> to <paramref name="lastPort"/> of a host.</summary>
-    ValueTask<HackNetworkResult<IReadOnlyList<HackPortProbeResult>>> ProbeTcpAsync(
+    ValueTask<KazoNetworkResult<IReadOnlyList<KazoPortProbeResult>>> ProbeTcpAsync(
         string hostNameOrAddress, int firstPort, int lastPort, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Guesses the operating system of a host from its TCP/IP stack, as <c>nmap -O</c> does;
     /// a <see langword="null"/> value means the stack matched nothing known.
     /// </summary>
-    ValueTask<HackNetworkResult<HackOsFingerprint?>> DetectOperatingSystemAsync(
+    ValueTask<KazoNetworkResult<KazoOsFingerprint?>> DetectOperatingSystemAsync(
         string hostNameOrAddress, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -58,11 +58,11 @@ public interface IAppNetworkGateway
     /// <remarks>
     /// Needs <c>network.listen</c>, plus <c>network.listen.privileged</c> for a port below 1024;
     /// a web app may listen on the URLs of its own manifest without either (ADR 0073). Another
-    /// process already listening on the same host and port yields <see cref="HackNetworkError.AddressInUse"/>.
+    /// process already listening on the same host and port yields <see cref="KazoNetworkError.AddressInUse"/>.
     /// </remarks>
     /// <param name="prefixes">Listener prefixes, each ending with <c>/</c>; <c>+</c> and <c>*</c> stand for any host.</param>
     /// <param name="cancellationToken">Cancels the call.</param>
-    ValueTask<HackNetworkResult<IHackHttpListenerSocket>> ListenHttpAsync(
+    ValueTask<KazoNetworkResult<IHackHttpListenerSocket>> ListenHttpAsync(
         IReadOnlyList<string> prefixes, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This network gateway cannot listen on ports.");
 
@@ -72,38 +72,38 @@ public interface IAppNetworkGateway
     /// of a socket is only named when the caller may see that process, as on Linux.
     /// </summary>
     /// <param name="cancellationToken">Cancels the call.</param>
-    ValueTask<IReadOnlyList<HackTcpListenerInfo>> GetTcpListenersAsync(CancellationToken cancellationToken = default) =>
+    ValueTask<IReadOnlyList<KazoTcpListenerInfo>> GetTcpListenersAsync(CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This network gateway cannot list listening ports.");
 
     /// <summary>
     /// Opens a TCP connection to <paramref name="hostNameOrAddress"/>:<paramref name="port"/>, as
     /// <c>TcpClient.ConnectAsync</c> does (ADR 0102 §2). Apps use it through
-    /// <see cref="HackTcpClient.ConnectAsync"/>.
+    /// <see cref="KazoTcpClient.ConnectAsync"/>.
     /// </summary>
     /// <remarks>
     /// Needs <c>network.simulated.write</c> (a stream carries arbitrary bytes both ways). The
     /// simulated network has no raw byte streams: a simulated or local target answers
-    /// <see cref="HackNetworkError.ConnectionRefused"/>. A target outside it is reached through the
+    /// <see cref="KazoNetworkError.ConnectionRefused"/>. A target outside it is reached through the
     /// optional server's relay when the app holds <c>network.real.access</c>; otherwise it is
-    /// <see cref="HackNetworkError.HostNotFound"/>.
+    /// <see cref="KazoNetworkError.HostNotFound"/>.
     /// </remarks>
     /// <param name="hostNameOrAddress">Target host name or IP literal.</param>
     /// <param name="port">Target port, 1–65535.</param>
     /// <param name="cancellationToken">Cancels the connect.</param>
-    ValueTask<HackNetworkResult<IHackSocket>> ConnectTcpAsync(
+    ValueTask<KazoNetworkResult<IHackSocket>> ConnectTcpAsync(
         string hostNameOrAddress, int port, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This network gateway cannot open TCP connections.");
 
     /// <summary>
     /// Opens a "connected" UDP socket to one destination, as <c>UdpClient.Connect</c> does
     /// (ADR 0102 §3): each send is one datagram, no broadcast or multicast. Apps use it through
-    /// <see cref="HackUdpClient"/>.
+    /// <see cref="KazoUdpClient"/>.
     /// </summary>
     /// <remarks>Same capabilities and routes as <see cref="ConnectTcpAsync"/>.</remarks>
     /// <param name="hostNameOrAddress">Target host name or IP literal.</param>
     /// <param name="port">Target port, 1–65535.</param>
     /// <param name="cancellationToken">Cancels the call.</param>
-    ValueTask<HackNetworkResult<IHackSocket>> ConnectUdpAsync(
+    ValueTask<KazoNetworkResult<IHackSocket>> ConnectUdpAsync(
         string hostNameOrAddress, int port, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This network gateway cannot open UDP sockets.");
 }
@@ -134,7 +134,7 @@ public interface IHackSocket : IAsyncDisposable
 
 /// <summary>
 /// An HTTP listening socket of the OS (ADR 0074, section 2), opened by
-/// <see cref="IAppNetworkGateway.ListenHttpAsync"/>. Apps use it through <see cref="HackHttpListener"/>.
+/// <see cref="IAppNetworkGateway.ListenHttpAsync"/>. Apps use it through <see cref="KazoHttpListener"/>.
 /// </summary>
 public interface IHackHttpListenerSocket : IAsyncDisposable
 {
@@ -146,15 +146,15 @@ public interface IHackHttpListenerSocket : IAsyncDisposable
     /// the socket is closed.
     /// </summary>
     /// <param name="cancellationToken">Cancels the wait (the socket stays open).</param>
-    ValueTask<HackHttpListenerExchange?> AcceptAsync(CancellationToken cancellationToken = default);
+    ValueTask<KazoHttpListenerExchange?> AcceptAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Sends the reply of an accepted request. Never blocks: the OS takes the bytes and the client
     /// receives them. A second reply to the same request is ignored, as a closed connection would.
     /// </summary>
-    /// <param name="exchangeId">The <see cref="HackHttpListenerExchange.Id"/> answered.</param>
+    /// <param name="exchangeId">The <see cref="KazoHttpListenerExchange.Id"/> answered.</param>
     /// <param name="reply">The status, headers and body.</param>
-    void Respond(long exchangeId, HackHttpListenerReply reply);
+    void Respond(long exchangeId, KazoHttpListenerReply reply);
 }
 
 /// <summary>One request received by an <see cref="IHackHttpListenerSocket"/>, as it arrived on the wire.</summary>
@@ -166,7 +166,7 @@ public interface IHackHttpListenerSocket : IAsyncDisposable
 /// <param name="Body">Body bytes, empty when there is none.</param>
 /// <param name="RemoteEndPoint">Client address and ephemeral port.</param>
 /// <param name="LocalEndPoint">Address and port the request arrived on.</param>
-public sealed record HackHttpListenerExchange(
+public sealed record KazoHttpListenerExchange(
     long Id,
     string Method,
     Uri Url,
@@ -176,13 +176,13 @@ public sealed record HackHttpListenerExchange(
     IPEndPoint RemoteEndPoint,
     IPEndPoint LocalEndPoint);
 
-/// <summary>The reply of a listening process to one <see cref="HackHttpListenerExchange"/>.</summary>
+/// <summary>The reply of a listening process to one <see cref="KazoHttpListenerExchange"/>.</summary>
 /// <param name="StatusCode">Status code, e.g. 200.</param>
 /// <param name="ReasonPhrase">Reason phrase, or <see langword="null"/> for the standard one.</param>
 /// <param name="Headers">Response headers (<c>Set-Cookie</c>, <c>Location</c>…), without <c>Content-Type</c> and <c>Content-Length</c>.</param>
 /// <param name="ContentType">The body's <c>Content-Type</c>, or <see langword="null"/> when there is no body.</param>
 /// <param name="Body">Body bytes, possibly empty.</param>
-public sealed record HackHttpListenerReply(
+public sealed record KazoHttpListenerReply(
     int StatusCode,
     string? ReasonPhrase,
     IReadOnlyList<KeyValuePair<string, string>> Headers,
@@ -196,7 +196,7 @@ public sealed record HackHttpListenerReply(
 /// <param name="ProgramName">Program name of the owner (its command name or app name), or <see langword="null"/>.</param>
 /// <param name="Owner">Login name of the owner, or <see langword="null"/>.</param>
 /// <param name="Prefixes">HTTP prefixes served on the socket; empty for a non-HTTP daemon.</param>
-public sealed record HackTcpListenerInfo(
+public sealed record KazoTcpListenerInfo(
     IPAddress Address,
     int Port,
     long? ProcessId,
@@ -205,7 +205,7 @@ public sealed record HackTcpListenerInfo(
     IReadOnlyList<string> Prefixes);
 
 /// <summary>Why a network call failed, independent of the transport that carried it.</summary>
-public enum HackNetworkError
+public enum KazoNetworkError
 {
     /// <summary>The call succeeded.</summary>
     None,
@@ -238,11 +238,11 @@ public enum HackNetworkError
     BlockedByAdministrator
 }
 
-/// <summary>Outcome of one <see cref="IAppNetworkGateway"/> call: a value or a <see cref="HackNetworkError"/>.</summary>
+/// <summary>Outcome of one <see cref="IAppNetworkGateway"/> call: a value or a <see cref="KazoNetworkError"/>.</summary>
 /// <typeparam name="T">Type of the value on success.</typeparam>
-public sealed record HackNetworkResult<T>
+public sealed record KazoNetworkResult<T>
 {
-    private HackNetworkResult(T? value, HackNetworkError error, string? message)
+    private KazoNetworkResult(T? value, KazoNetworkError error, string? message)
     {
         Value = value;
         Error = error;
@@ -252,40 +252,40 @@ public sealed record HackNetworkResult<T>
     /// <summary>Gets the value; meaningful only when <see cref="Succeeded"/> is <see langword="true"/>.</summary>
     public T? Value { get; }
 
-    /// <summary>Gets the failure, <see cref="HackNetworkError.None"/> on success.</summary>
-    public HackNetworkError Error { get; }
+    /// <summary>Gets the failure, <see cref="KazoNetworkError.None"/> on success.</summary>
+    public KazoNetworkError Error { get; }
 
     /// <summary>Gets an optional human-readable detail of the failure.</summary>
     public string? Message { get; }
 
     /// <summary>Gets whether the call succeeded.</summary>
-    public bool Succeeded => Error == HackNetworkError.None;
+    public bool Succeeded => Error == KazoNetworkError.None;
 
     /// <summary>Creates a successful result.</summary>
-    public static HackNetworkResult<T> Success(T value) => new(value, HackNetworkError.None, null);
+    public static KazoNetworkResult<T> Success(T value) => new(value, KazoNetworkError.None, null);
 
     /// <summary>Creates a failed result.</summary>
-    /// <exception cref="ArgumentException"><paramref name="error"/> is <see cref="HackNetworkError.None"/>.</exception>
-    public static HackNetworkResult<T> Failure(HackNetworkError error, string? message = null) =>
-        error == HackNetworkError.None
+    /// <exception cref="ArgumentException"><paramref name="error"/> is <see cref="KazoNetworkError.None"/>.</exception>
+    public static KazoNetworkResult<T> Failure(KazoNetworkError error, string? message = null) =>
+        error == KazoNetworkError.None
             ? throw new ArgumentException("A failure needs an error.", nameof(error))
             : new(default, error, message);
 }
 
-/// <summary>Stable codes of <see cref="HackNetworkError"/>, as a browser prints them.</summary>
-public static class HackNetworkErrorCodes
+/// <summary>Stable codes of <see cref="KazoNetworkError"/>, as a browser prints them.</summary>
+public static class KazoNetworkErrorCodes
 {
-    /// <summary>Gets the <c>ERR_*</c> code of <paramref name="error"/>, or an empty string for <see cref="HackNetworkError.None"/>.</summary>
-    public static string ToCode(HackNetworkError error) => error switch
+    /// <summary>Gets the <c>ERR_*</c> code of <paramref name="error"/>, or an empty string for <see cref="KazoNetworkError.None"/>.</summary>
+    public static string ToCode(KazoNetworkError error) => error switch
     {
-        HackNetworkError.HostNotFound => "ERR_NAME_NOT_RESOLVED",
-        HackNetworkError.HostUnreachable => "ERR_HOST_UNREACHABLE",
-        HackNetworkError.ConnectionRefused => "ERR_CONNECTION_REFUSED",
-        HackNetworkError.TooManyRedirects => "ERR_TOO_MANY_REDIRECTS",
-        HackNetworkError.ConnectionFailed => "ERR_CONNECTION_FAILED",
-        HackNetworkError.AddressInUse => "ERR_ADDRESS_IN_USE",
-        HackNetworkError.TimedOut => "ERR_TIMED_OUT",
-        HackNetworkError.BlockedByAdministrator => "ERR_BLOCKED_BY_ADMINISTRATOR",
+        KazoNetworkError.HostNotFound => "ERR_NAME_NOT_RESOLVED",
+        KazoNetworkError.HostUnreachable => "ERR_HOST_UNREACHABLE",
+        KazoNetworkError.ConnectionRefused => "ERR_CONNECTION_REFUSED",
+        KazoNetworkError.TooManyRedirects => "ERR_TOO_MANY_REDIRECTS",
+        KazoNetworkError.ConnectionFailed => "ERR_CONNECTION_FAILED",
+        KazoNetworkError.AddressInUse => "ERR_ADDRESS_IN_USE",
+        KazoNetworkError.TimedOut => "ERR_TIMED_OUT",
+        KazoNetworkError.BlockedByAdministrator => "ERR_BLOCKED_BY_ADMINISTRATOR",
         _ => string.Empty
     };
 }
@@ -295,33 +295,33 @@ internal sealed class UnsupportedAppNetworkGateway : IAppNetworkGateway
 {
     private const string Reason = "This IAppExecutionContext implementation does not provide a Network gateway.";
 
-    public ValueTask<HackNetworkResult<HackHostEntry>> ResolveAsync(string hostName, CancellationToken cancellationToken = default) =>
+    public ValueTask<KazoNetworkResult<KazoHostEntry>> ResolveAsync(string hostName, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException(Reason);
 
-    public ValueTask<HackNetworkResult<HackHostEntry>> ReverseLookupAsync(IPAddress address, CancellationToken cancellationToken = default) =>
+    public ValueTask<KazoNetworkResult<KazoHostEntry>> ReverseLookupAsync(IPAddress address, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException(Reason);
 
-    public ValueTask<HackNetworkResult<HackPingReply>> PingAsync(
+    public ValueTask<KazoNetworkResult<KazoPingReply>> PingAsync(
         string hostNameOrAddress, TimeSpan timeout, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException(Reason);
 
-    public ValueTask<HackNetworkResult<HackHttpResponse>> SendAsync(
-        HackHttpRequest request, CancellationToken cancellationToken = default) =>
+    public ValueTask<KazoNetworkResult<KazoHttpResponse>> SendAsync(
+        KazoHttpRequest request, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException(Reason);
 
-    public ValueTask<HackNetworkResult<IReadOnlyList<HackPortProbeResult>>> ProbeTcpAsync(
+    public ValueTask<KazoNetworkResult<IReadOnlyList<KazoPortProbeResult>>> ProbeTcpAsync(
         string hostNameOrAddress, int firstPort, int lastPort, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException(Reason);
 
-    public ValueTask<HackNetworkResult<HackOsFingerprint?>> DetectOperatingSystemAsync(
+    public ValueTask<KazoNetworkResult<KazoOsFingerprint?>> DetectOperatingSystemAsync(
         string hostNameOrAddress, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException(Reason);
 
-    public ValueTask<HackNetworkResult<IHackSocket>> ConnectTcpAsync(
+    public ValueTask<KazoNetworkResult<IHackSocket>> ConnectTcpAsync(
         string hostNameOrAddress, int port, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException(Reason);
 
-    public ValueTask<HackNetworkResult<IHackSocket>> ConnectUdpAsync(
+    public ValueTask<KazoNetworkResult<IHackSocket>> ConnectUdpAsync(
         string hostNameOrAddress, int port, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException(Reason);
 }

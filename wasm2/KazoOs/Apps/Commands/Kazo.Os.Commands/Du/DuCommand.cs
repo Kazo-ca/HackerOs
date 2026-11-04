@@ -107,12 +107,12 @@ public sealed class DuCommand(AppManifest manifest) : TerminalAppBase(manifest)
         public async Task<long> MeasureAsync(string path, string display, int depth)
         {
             // ADR 0069: one checkpoint per directory level, and per child below.
-            await HackProcess.CheckpointAsync(cancellationToken);
+            await KazoProcess.CheckpointAsync(cancellationToken);
             try
             {
-                if (!await HackDirectory.ExistsAsync(path, cancellationToken))
+                if (!await KazoDirectory.ExistsAsync(path, cancellationToken))
                 {
-                    HackFileInfo file = await HackFileInfo.GetAsync(path, cancellationToken);
+                    KazoFileInfo file = await KazoFileInfo.GetAsync(path, cancellationToken);
                     if (!file.Exists)
                     {
                         await context.StandardError.WriteLineAsync(context.App.GetLocalizer<Strings>()["CannotAccess", display, CommandText.Reason(context, Errno.NotFound)]);
@@ -130,10 +130,10 @@ public sealed class DuCommand(AppManifest manifest) : TerminalAppBase(manifest)
                 }
 
                 long sum = bytes ? 0 : BlockSize;
-                HackDirectoryInfo directory = await HackDirectoryInfo.GetAsync(path, cancellationToken);
-                foreach (HackFileSystemInfo child in (await directory.GetFileSystemInfosAsync(cancellationToken: cancellationToken)).OrderBy(c => c.Name, StringComparer.Ordinal))
+                KazoDirectoryInfo directory = await KazoDirectoryInfo.GetAsync(path, cancellationToken);
+                foreach (KazoFileSystemInfo child in (await directory.GetFileSystemInfosAsync(cancellationToken: cancellationToken)).OrderBy(c => c.Name, StringComparer.Ordinal))
                 {
-                    await HackProcess.CheckpointAsync(cancellationToken);
+                    await KazoProcess.CheckpointAsync(cancellationToken);
                     string childDisplay = display.TrimEnd('/') + "/" + child.Name;
                     if (child.IsSymbolicLink)
                     {
@@ -141,11 +141,11 @@ public sealed class DuCommand(AppManifest manifest) : TerminalAppBase(manifest)
                         continue;
                     }
 
-                    if (child is HackDirectoryInfo)
+                    if (child is KazoDirectoryInfo)
                     {
                         sum += await MeasureAsync(child.FullName, childDisplay, depth + 1);
                     }
-                    else if (child is HackFileInfo file)
+                    else if (child is KazoFileInfo file)
                     {
                         long size = Allocated(file.Length);
                         sum += size;

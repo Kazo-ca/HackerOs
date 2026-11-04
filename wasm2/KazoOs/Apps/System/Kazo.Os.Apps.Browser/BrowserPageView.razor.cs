@@ -66,7 +66,7 @@ public sealed partial class BrowserPageView : IAsyncDisposable
     [JSInvokable]
     public async Task<string> OnBridgeRequest(string operation, string payload)
     {
-        using IDisposable scope = HackExecutionContext.Enter(RequireAppContext());
+        using IDisposable scope = KazoExecutionContext.Enter(RequireAppContext());
         return await OnRequest(operation, payload);
     }
 
@@ -74,7 +74,7 @@ public sealed partial class BrowserPageView : IAsyncDisposable
     [JSInvokable]
     public async Task OnBridgeEvent(string type, string payload)
     {
-        using IDisposable scope = HackExecutionContext.Enter(RequireAppContext());
+        using IDisposable scope = KazoExecutionContext.Enter(RequireAppContext());
         await OnEvent(type, payload);
     }
 
@@ -82,7 +82,7 @@ public sealed partial class BrowserPageView : IAsyncDisposable
     [JSInvokable]
     public async Task OnFrameEscaped()
     {
-        using IDisposable scope = HackExecutionContext.Enter(RequireAppContext());
+        using IDisposable scope = KazoExecutionContext.Enter(RequireAppContext());
         if (OnEscaped is not null)
         {
             await OnEscaped();

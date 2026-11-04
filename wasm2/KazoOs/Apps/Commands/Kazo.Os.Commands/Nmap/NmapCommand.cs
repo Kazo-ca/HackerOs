@@ -10,8 +10,8 @@ namespace Kazo.Os.Commands.Nmap;
 
 /// <summary>
 /// Simulated <c>nmap</c> port-scanner terminal command (P4-W4-006) on the SDK network API
-/// (ADR 0056, section 6): <see cref="HackDns"/> for the address, <see cref="HackPing"/> for host
-/// discovery, <see cref="HackTcpClient"/> for the scan and <c>-O</c>. For a host outside the
+/// (ADR 0056, section 6): <see cref="KazoDns"/> for the address, <see cref="KazoPing"/> for host
+/// discovery, <see cref="KazoTcpClient"/> for the scan and <c>-O</c>. For a host outside the
 /// simulated network the OS relays a single-port probe (<c>-p &lt;port&gt;</c>) through the
 /// optional server when it can (ADR 0035); a range against such a host is never relayed and the
 /// host "seems down".
@@ -78,11 +78,11 @@ public sealed class NmapCommand : TerminalAppBase
         string reportName = address is null || address.ToString() == target ? target : $"{target} ({address})";
 
         // Host discovery: a known host is pinged first, as nmap does without -Pn.
-        HackPingReply? discovery = null;
+        KazoPingReply? discovery = null;
         if (address is not null)
         {
-            discovery = await HackPing.SendAsync(target, cancellationToken: cancellationToken).ConfigureAwait(false);
-            if (discovery.Status != HackIPStatus.Success)
+            discovery = await KazoPing.SendAsync(target, cancellationToken: cancellationToken).ConfigureAwait(false);
+            if (discovery.Status != KazoIPStatus.Success)
             {
                 context.StandardOutput.WriteLine(text["ScanReport", reportName]);
                 context.StandardOutput.WriteLine(text["HostUnreachable"]);
@@ -91,10 +91,10 @@ public sealed class NmapCommand : TerminalAppBase
             }
         }
 
-        IReadOnlyList<HackPortProbeResult> ports;
+        IReadOnlyList<KazoPortProbeResult> ports;
         try
         {
-            ports = await HackTcpClient.ProbeAsync(target, firstPort, lastPort, cancellationToken).ConfigureAwait(false);
+            ports = await KazoTcpClient.ProbeAsync(target, firstPort, lastPort, cancellationToken).ConfigureAwait(false);
         }
         catch (SocketException exception)
         {
@@ -123,7 +123,7 @@ public sealed class NmapCommand : TerminalAppBase
                 ? "PORT      STATE     SERVICE          VERSION"
                 : "PORT      STATE     SERVICE");
 
-            foreach (HackPortProbeResult port in ports)
+            foreach (KazoPortProbeResult port in ports)
             {
                 if (cancellationToken.IsCancellationRequested) break;
 
@@ -138,7 +138,7 @@ public sealed class NmapCommand : TerminalAppBase
         }
 
         if (showOs && address is not null
-            && await HackTcpClient.DetectOperatingSystemAsync(target, cancellationToken).ConfigureAwait(false) is { } os)
+            && await KazoTcpClient.DetectOperatingSystemAsync(target, cancellationToken).ConfigureAwait(false) is { } os)
         {
             context.StandardOutput.WriteLine();
             context.StandardOutput.WriteLine(text["OsDetection"]);
@@ -159,7 +159,7 @@ public sealed class NmapCommand : TerminalAppBase
             // An address literal is only "known" when the simulated network has a host there.
             try
             {
-                await HackDns.GetHostEntryAsync(literal, cancellationToken).ConfigureAwait(false);
+                await KazoDns.GetHostEntryAsync(literal, cancellationToken).ConfigureAwait(false);
                 return literal;
             }
             catch (SocketException)
@@ -170,7 +170,7 @@ public sealed class NmapCommand : TerminalAppBase
 
         try
         {
-            IPAddress[] addresses = await HackDns.GetHostAddressesAsync(target, cancellationToken).ConfigureAwait(false);
+            IPAddress[] addresses = await KazoDns.GetHostAddressesAsync(target, cancellationToken).ConfigureAwait(false);
             return addresses.Length > 0 ? addresses[0] : null;
         }
         catch (SocketException)

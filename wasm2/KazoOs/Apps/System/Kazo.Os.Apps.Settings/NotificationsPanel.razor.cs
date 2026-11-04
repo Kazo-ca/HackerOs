@@ -13,7 +13,7 @@ namespace Kazo.Os.Apps.Settings;
 /// </summary>
 /// <remarks>
 /// The switch is the <c>doNotDisturb</c> key of <c>~/.config/hackeros/notifications.config</c>,
-/// written through <see cref="HackSettings.OpenSystemAsync(IAppExecutionContext, string, CancellationToken)"/>.
+/// written through <see cref="KazoSettings.OpenSystemAsync(IAppExecutionContext, string, CancellationToken)"/>.
 /// The shell's <c>DoNotDisturbService</c> watches the file, so the change applies at once, and the
 /// clock panel's switch shows it. Uses only the public SDK.
 /// </remarks>
@@ -27,7 +27,7 @@ public sealed partial class NotificationsPanel
 
     private const string DocumentFileName = DocumentId + ".config";
 
-    private HackSettingsDocument? _document;
+    private KazoSettingsDocument? _document;
     private bool _doNotDisturb;
     private string? _message;
     private bool _messageIsError;
@@ -58,7 +58,7 @@ public sealed partial class NotificationsPanel
     {
         try
         {
-            _document = await HackSettings.OpenSystemAsync(Context, DocumentId, Context.CancellationToken);
+            _document = await KazoSettings.OpenSystemAsync(Context, DocumentId, Context.CancellationToken);
             _document.Changed += OnDocumentChanged;
             ReadDocument();
             _loaded = true;
@@ -87,7 +87,7 @@ public sealed partial class NotificationsPanel
             _message = enabled ? L["Notifications.Saved.On"] : L["Notifications.Saved.Off"];
             _messageIsError = false;
         }
-        catch (HackSettingLockedException exception)
+        catch (KazoSettingLockedException exception)
         {
             ShowError(exception.Message);
         }
@@ -126,7 +126,7 @@ public sealed partial class NotificationsPanel
     }
 
     /// <summary>The clock panel's switch or an external edit (<c>nano</c>) changed the file.</summary>
-    private void OnDocumentChanged(object? sender, HackSettingsChangedEventArgs args) =>
+    private void OnDocumentChanged(object? sender, KazoSettingsChangedEventArgs args) =>
         _ = InvokeAsync(() =>
         {
             if (!_isBusy)

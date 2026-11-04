@@ -23,8 +23,8 @@ alice@hackeros:~$ watch -n 1 'ps | wc -l'
 
 - **Mimer le métal** : messages, options et codes de sortie de coreutils,
   procps, iproute2, net-tools, Info-ZIP et systemd ; chaque valeur affichée
-  vient d'une vraie source de l'OS (`/proc`, `HackDriveInfo`,
-  `HackServiceController`, réseau simulé) ou est documentée comme simulée.
+  vient d'une vraie source de l'OS (`/proc`, `KazoDriveInfo`,
+  `KazoServiceController`, réseau simulé) ou est documentée comme simulée.
 - Les fichiers passent par l'API `Hack*` (ou la passerelle de fichiers pour
   les commandes plus anciennes) : chemins relatifs au répertoire de la
   commande, permissions et capacités de la commande.
@@ -69,11 +69,11 @@ alice@hackeros:~$ watch -n 1 'ps | wc -l'
 |---|---|---|
 | `mkdir` | `-p`/`--parents`, `-v`/`--verbose`, `--` | Comme coreutils : sans `-p`, le parent doit exister et un dossier existant donne « File exists » ; avec `-p`, chaque composant manquant est créé (un `mkdir(2)` par composant, avec la révision du parent), un dossier existant n'est pas une erreur et un fichier sur le chemin donne « Not a directory ». `-v` affiche `mkdir: created directory '…'` pour chaque dossier créé. Mode `0755`. |
 | `chmod` | `MODE` octal ou symbolique (`+x`, `u+x`, `go-w`, `a=r`, `u=rwx,g=rx,o=`, `g+u`, `X`), `-R`, `-v`, `-c`, `-f` | Sans lettre de classe, le masque `022` s'applique (`+w` = propriétaire seul) ; les bits spéciaux (4ᵉ chiffre) sont ignorés. |
-| `ln` | `-s`, `-f`, `-n`, `-v`, `CIBLE [LIEN]`, `CIBLE… DOSSIER` | Liens symboliques par `HackFile.CreateSymbolicLinkAsync` ; le texte de la cible est gardé tel quel. Sans `-s` : `Operation not supported` (pas de liens physiques dans le système de fichiers Kazo OS) et le conseil d'utiliser `-s`. |
+| `ln` | `-s`, `-f`, `-n`, `-v`, `CIBLE [LIEN]`, `CIBLE… DOSSIER` | Liens symboliques par `KazoFile.CreateSymbolicLinkAsync` ; le texte de la cible est gardé tel quel. Sans `-s` : `Operation not supported` (pas de liens physiques dans le système de fichiers Kazo OS) et le conseil d'utiliser `-s`. |
 | `locate` | `-i -b -c -e`, `-l N` | Pas de base `updatedb` : parcours en direct avec les droits de l'utilisateur, `/proc`, `/dev`, `/sys`, `/run` exclus ; un motif sans joker est cherché partout dans le chemin. Code 1 sans résultat. |
 | `du` | `-a -s -h -c -b`, `-d N` | Blocs de 4 Kio comme ext4 (un par dossier) ; affichage en Kio. |
 | `grep` | `-i -n -v`, `-r`/`-R` (récursif, dossier courant sans fichier), options combinables (`-rn`) | Préfixe le nom du fichier quand il y en a plusieurs ou avec `-r` ; les liens symboliques rencontrés ne sont pas suivis. |
-| `df` | `-h -T -a` | Disques de `HackDriveInfo` (`/dev/hda` sur `/`) : utilisé et quota réels du navigateur depuis l'ADR 0099 §2 ; `-a` ajoute les pseudo-systèmes de `/proc/mounts`. |
+| `df` | `-h -T -a` | Disques de `KazoDriveInfo` (`/dev/hda` sur `/`) : utilisé et quota réels du navigateur depuis l'ADR 0099 §2 ; `-a` ajoute les pseudo-systèmes de `/proc/mounts`. |
 | `zip` | `-r -q -j -d -0…-9` | Vraie archive deflate lisible par tout outil zip ; met à jour une archive existante ; les modes Unix sont stockés dans les attributs externes. |
 | `unzip` | `-l -t -p -o -n -q -j`, `-d DOSSIER`, `[MOTIFS]` | Restaure les modes (`+x`) ; refuse une entrée qui sortirait du dossier (`../`, « zip slip ») ; ne remplace pas un fichier sans `-o`. |
 | `xdg-open` | `FICHIER`, `DOSSIER` ou `URI` (un seul argument) | Comme freedesktop (ADR 0096 §3) : un chemin s'ouvre avec son association (un dossier dans le gestionnaire de fichiers, `inode/directory`), une URI avec le gestionnaire de son schéma (`x-scheme-handler/<schéma>`, le navigateur pour `http`/`https`, le fichier pour `file://`). Rend la main dès l'envoi. Codes de `xdg-open` : 0 envoyé, 1 ligne de commande, 3 aucune app, 4 fichier absent ou échec ; plusieurs apps sans défaut donnent 4 et la liste des candidates (un terminal n'a pas de sélecteur et l'OS ne devine pas). `apps.launch`. |
@@ -83,7 +83,7 @@ alice@hackeros:~$ watch -n 1 'ps | wc -l'
 
 | Commande | Options | Notes |
 |---|---|---|
-| `top` | `-b`, `-n N`, `-d SECONDES`, `-u USER`, `-o CHAMP` | Plein écran rafraîchi toutes les 3 s ; touches `q`, `M`, `P`, `N`, `T`. CPU depuis deux lectures de `/proc/stat`, mémoire depuis `/proc/meminfo`, processus par `HackProcess`. |
+| `top` | `-b`, `-n N`, `-d SECONDES`, `-u USER`, `-o CHAMP` | Plein écran rafraîchi toutes les 3 s ; touches `q`, `M`, `P`, `N`, `T`. CPU depuis deux lectures de `/proc/stat`, mémoire depuis `/proc/meminfo`, processus par `KazoProcess`. |
 | `htop` | `-d DIXIÈMES`, `-u USER`, `-t`, `-C` | Barres par cœur, mémoire et swap en couleur, liste défilante avec sélection, arbre (`t`), tri (`P`/`M`/`T`/`N`), recherche (`/`), utilisateur (`u`), `k` tue le processus choisi (`process.manage`), `q` quitte. |
 | `nice` | `-n N`, `-N`, `--adjustment=N` | Sans commande : affiche la priorité du shell. Sinon lance la commande avec `nice + N` (10 par défaut, borné à -20..19). Baisser la valeur demande root : `sudo nice -n -5 cmd` lance la commande en root (ADR 0136), `sudo renice` change un processus déjà lancé. Les commandes qui pilotent le shell marchent aussi (`nice -n 5 nice` affiche 5). Voir [`process-priority-and-unresponsive-windows.md`](process-priority-and-unresponsive-windows.md). |
 | `renice` | `[-n] N`, `-p PID…` | Change la priorité de processus existants ; monter est permis sur ses processus, baisser ou toucher ceux d'un autre utilisateur demande root (`Permission denied` / `Operation not permitted`). `-g` et `-u` sont refusés. `process.manage` pour un processus qui n'est ni le sien ni un de ses enfants (ADR 0140). |
@@ -125,7 +125,7 @@ Plus de place : une écriture refusée affiche `No space left on device`
 | `curl` | `-I -i -v -L -s -f`, `-o FICHIER`, `-O`, `-H "Nom: valeur"`, `-A`, `-X`, `-d`/`--data-raw`/`--data-binary` (`@fichier`), `--data-urlencode`, `--json` | `-o`, `-O`, `-H`, `-A`, `-s` ajoutés par l'ADR 0064 ; corps bruts, `-i`, `--json`, `--data-*` et `-f` facultatif depuis `web/2-http-bodies` (ADR 0074 §1) : sans `-f`, une erreur HTTP affiche le corps et sort avec 0, comme le vrai `curl` ([`http-bodies.md`](../framework/http-bodies.md)). |
 | `wget` | `-O FICHIER` (`-O -` = sortie), `-P DOSSIER`, `-q`, `-S`, `--spider` | Ne remplace jamais : `fichier.1`, `fichier.2`… ; progression sur la sortie d'erreur. |
 | `ip` (`ifconfig`) | `addr`, `link`, `route`, `neigh`, `-br`, `-s`, `dev NOM` | `lo` 127.0.0.1/8 et `eth0` 192.168.1.100/24 derrière le routeur 192.168.1.1 du réseau simulé, MAC stable dérivée du nom de la machine ; compteurs réels de `/proc/net/dev`. |
-| `netstat` (`ss`) | `-t -u -l -n -a -p`, `-i`, `-r`, `-s` | Les ports à l'écoute viennent de la table des ports de l'OS (`HackIPGlobalProperties`, depuis `web/3`) : démons simulés de `localhost` et sockets des apps ; `-p` montre `PID/programme` pour root ou le même utilisateur, sinon `-` et la note de net-tools ; `-i` et `-s` lisent `/proc/net/dev`. |
+| `netstat` (`ss`) | `-t -u -l -n -a -p`, `-i`, `-r`, `-s` | Les ports à l'écoute viennent de la table des ports de l'OS (`KazoIPGlobalProperties`, depuis `web/3`) : démons simulés de `localhost` et sockets des apps ; `-p` montre `PID/programme` pour root ou le même utilisateur, sinon `-` et la note de net-tools ; `-i` et `-s` lisent `/proc/net/dev`. |
 | `nslookup` | `<nom>` ou `<adresse>` | Interroge `hackdns` (`web/3`) : indique la source (`/etc/hosts`, loopback, app web, site hébergé ou réseau simulé) ; `NXDOMAIN` et code 1 si le nom est inconnu ([`listening-ports-and-dns.md`](../framework/listening-ports-and-dns.md)). |
 
 ## Scripts
@@ -156,7 +156,7 @@ Plus de place : une écriture refusée affiche `No space left on device`
 - [x] `sort`, `head`, `tail` (`-f`), `kill` (`%job`, signaux), `curl` (`-o`, `-O`, `-H`) revus.
 - [x] `chmod` symbolique et récursif (`chmod +x`).
 - [x] `cut`, `tee`, `uniq`, `printf`, `seq`, `basename`, `dirname`.
-- [x] `ln -s` et `HackFile.CreateSymbolicLinkAsync`.
+- [x] `ln -s` et `KazoFile.CreateSymbolicLinkAsync`.
 - [x] `locate`, `du`, `df`, `zip`, `unzip`.
 - [x] `top`, `htop` (couleurs dans les cadres plein écran), `watch`, `jobs`, `sleep`, `whoami`, `which`.
 - [x] `mkdir -p` et `-v` (`rebuild/5-ui-a11y-mkdir`, 2026-10-16).
@@ -168,7 +168,7 @@ Plus de place : une écriture refusée affiche `No space left on device`
 - [x] `xdg-open` (`v3/4-intents`, ADR 0096).
 - [x] `xdg-mime` (`v3/4b`, ADR 0121).
 - [x] Tests et documentation.
-- [x] ADR 0069 (`rebuild/5-graceful-stop`) : `find`, `grep` (et `grep -r`), `du`, `zip`, `unzip`, `locate` appellent `HackProcess.CheckpointAsync` dans leurs boucles ; `kill` envoie `Terminated`.
+- [x] ADR 0069 (`rebuild/5-graceful-stop`) : `find`, `grep` (et `grep -r`), `du`, `zip`, `unzip`, `locate` appellent `KazoProcess.CheckpointAsync` dans leurs boucles ; `kill` envoie `Terminated`.
 - [x] `hackbackup` et messages `ENOSPC`/`EFBIG` (`v3/7-storage-backup`, ADR 0099).
 - [x] `hackpkg` : installer des apps depuis leur dépôt GitHub (ADR 0182).
 - [x] `hackpkg` : `--user`, `--system`, `sources add/remove`, `policy`, retrait de `--allow-untrusted` (ADR 0189, ADR 0208).

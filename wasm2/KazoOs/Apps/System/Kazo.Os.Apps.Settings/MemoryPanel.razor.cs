@@ -19,7 +19,7 @@ namespace Kazo.Os.Apps.Settings;
 /// like <c>sudo nano /etc/hackeros/memory.config</c>. The OS re-reads the file at once.
 /// </para>
 /// <para>
-/// The readout comes from <c>/proc/meminfo</c> and <c>/proc/vmstat</c> through <see cref="HackFile"/>,
+/// The readout comes from <c>/proc/meminfo</c> and <c>/proc/vmstat</c> through <see cref="KazoFile"/>,
 /// the same files <c>free</c> and <c>vmstat</c> read: the panel uses the public SDK only. Memory counts as
 /// measured when <c>/proc/meminfo</c> carries the measured lines (<c>AnonPages</c>, ADR 0068); the OOM
 /// killer never acts on simulated figures.
@@ -50,7 +50,7 @@ public sealed partial class MemoryPanel
     /// <summary>The thresholds offered; another value set by hand in the file is shown as well.</summary>
     internal static readonly int[] StandardThresholds = [1, 2, 5, 10, 15, 20];
 
-    private HackSettingsDocument? _document;
+    private KazoSettingsDocument? _document;
     private MemoryReadout _readout = MemoryReadout.Empty;
     private bool _enabled;
     private int _minFreePercent = 5;
@@ -94,7 +94,7 @@ public sealed partial class MemoryPanel
     {
         try
         {
-            _document = await HackSettings.OpenSystemAsync(Context, DocumentId, Context.CancellationToken);
+            _document = await KazoSettings.OpenSystemAsync(Context, DocumentId, Context.CancellationToken);
             _document.Changed += OnDocumentChanged;
             ReadDocument();
             _loaded = true;
@@ -136,7 +136,7 @@ public sealed partial class MemoryPanel
             ReadDocument();
             ShowSaved(L["Memory.Saved"]);
         }
-        catch (HackSettingLockedException exception)
+        catch (KazoSettingLockedException exception)
         {
             ShowError(exception.Message);
         }
@@ -179,7 +179,7 @@ public sealed partial class MemoryPanel
     {
         try
         {
-            return await HackFile.ReadAllTextAsync(path, Context.CancellationToken);
+            return await KazoFile.ReadAllTextAsync(path, Context.CancellationToken);
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or NotSupportedException)
         {
@@ -199,7 +199,7 @@ public sealed partial class MemoryPanel
     }
 
     /// <summary>An external edit (<c>sudo nano /etc/hackeros/memory.config</c>) changed the file.</summary>
-    private void OnDocumentChanged(object? sender, HackSettingsChangedEventArgs args) =>
+    private void OnDocumentChanged(object? sender, KazoSettingsChangedEventArgs args) =>
         _ = InvokeAsync(async () =>
         {
             if (!_isBusy)

@@ -10,14 +10,14 @@ using Microsoft.Extensions.Localization;
 namespace Kazo.Os.Apps.FileExplorer;
 
 /// <summary>
-/// Lists the user's trash through <see cref="HackTrash"/> and restores or permanently deletes its
+/// Lists the user's trash through <see cref="KazoTrash"/> and restores or permanently deletes its
 /// elements (ADR 0052, section 5). Runs in the explorer's ambient app scope (it derives from
-/// <see cref="HackComponentBase"/>), so every action is checked like any other file operation of the app.
+/// <see cref="KazoComponentBase"/>), so every action is checked like any other file operation of the app.
 /// </summary>
 public partial class TrashView
 {
     private readonly HashSet<string> _selected = new(StringComparer.Ordinal);
-    private IReadOnlyList<HackTrashItem> _items = [];
+    private IReadOnlyList<KazoTrashItem> _items = [];
     private string? _error;
     private bool _busy;
 
@@ -25,7 +25,7 @@ public partial class TrashView
     private IStringLocalizer<Strings> L => AppContext.GetLocalizer<Strings>();
 
     /// <summary>The culture of the dates and sizes shown, from the explorer's locale.</summary>
-    private CultureInfo FormatCulture => AppContext?.FormatCulture ?? HackLocale.DefaultFormatCulture;
+    private CultureInfo FormatCulture => AppContext?.FormatCulture ?? KazoLocale.DefaultFormatCulture;
 
     /// <summary>Gets or sets the ecosystem dialog service used for the confirmations.</summary>
     [Inject]
@@ -43,7 +43,7 @@ public partial class TrashView
     {
         try
         {
-            _items = await HackTrash.GetItemsAsync();
+            _items = await KazoTrash.GetItemsAsync();
             _selected.IntersectWith(_items.Select(item => item.Name));
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
@@ -55,7 +55,7 @@ public partial class TrashView
         StateHasChanged();
     }
 
-    private void Select(HackTrashItem item, MouseEventArgs args)
+    private void Select(KazoTrashItem item, MouseEventArgs args)
     {
         if (!args.CtrlKey && !args.MetaKey)
         {
@@ -68,7 +68,7 @@ public partial class TrashView
         }
     }
 
-    private Task OnRowKeyDownAsync(HackTrashItem item, KeyboardEventArgs args)
+    private Task OnRowKeyDownAsync(KazoTrashItem item, KeyboardEventArgs args)
     {
         switch (args.Key)
         {
@@ -85,20 +85,20 @@ public partial class TrashView
         return Task.CompletedTask;
     }
 
-    private IReadOnlyList<HackTrashItem> SelectedItems() => [.. _items.Where(item => _selected.Contains(item.Name))];
+    private IReadOnlyList<KazoTrashItem> SelectedItems() => [.. _items.Where(item => _selected.Contains(item.Name))];
 
     private Task RestoreSelectedAsync() => RestoreAsync(SelectedItems());
 
-    private async Task RestoreAsync(IReadOnlyList<HackTrashItem> items)
+    private async Task RestoreAsync(IReadOnlyList<KazoTrashItem> items)
     {
         List<string> restored = [];
         await RunAsync(async () =>
         {
-            foreach (HackTrashItem item in items)
+            foreach (KazoTrashItem item in items)
             {
                 // ADR 0069: each item is restored atomically; a stop request ends the loop between two.
-                await HackProcess.CheckpointAsync();
-                restored.Add(await HackTrash.RestoreAsync(item));
+                await KazoProcess.CheckpointAsync();
+                restored.Add(await KazoTrash.RestoreAsync(item));
             }
         });
 
@@ -110,7 +110,7 @@ public partial class TrashView
 
     private async Task DeleteSelectedAsync()
     {
-        IReadOnlyList<HackTrashItem> items = SelectedItems();
+        IReadOnlyList<KazoTrashItem> items = SelectedItems();
         if (items.Count == 0 || !await ConfirmAsync(
                 L["Dialog.DeletePermanently.Title"],
                 items.Count == 1
@@ -122,10 +122,10 @@ public partial class TrashView
 
         await RunAsync(async () =>
         {
-            foreach (HackTrashItem item in items)
+            foreach (KazoTrashItem item in items)
             {
-                await HackProcess.CheckpointAsync();
-                await HackTrash.DeleteAsync(item);
+                await KazoProcess.CheckpointAsync();
+                await KazoTrash.DeleteAsync(item);
             }
         });
     }
@@ -137,7 +137,7 @@ public partial class TrashView
             return;
         }
 
-        await RunAsync(() => HackTrash.EmptyAsync());
+        await RunAsync(() => KazoTrash.EmptyAsync());
     }
 
     /// <summary>Runs one action, shows its error if any, then re-reads the trash.</summary>
@@ -179,12 +179,12 @@ public partial class TrashView
     }
 
     /// <summary>Displays the original file name; falls back to the trash name when the origin is unknown.</summary>
-    internal static string DisplayName(HackTrashItem item) =>
-        item.OriginalPath is { } path ? HackPath.GetFileName(path) ?? item.Name : item.Name;
+    internal static string DisplayName(KazoTrashItem item) =>
+        item.OriginalPath is { } path ? KazoPath.GetFileName(path) ?? item.Name : item.Name;
 
     /// <summary>The folder the element was deleted from, or <see langword="null"/> when the origin is unknown.</summary>
-    internal static string? OriginalLocation(HackTrashItem item) =>
-        item.OriginalPath is { } path ? HackPath.GetDirectoryName(path) ?? "/" : null;
+    internal static string? OriginalLocation(KazoTrashItem item) =>
+        item.OriginalPath is { } path ? KazoPath.GetDirectoryName(path) ?? "/" : null;
 
     /// <summary>The deletion date as a short date and time of <paramref name="culture"/>.</summary>
     internal static string FormatDate(DateTimeOffset? deletedAt, CultureInfo culture) =>

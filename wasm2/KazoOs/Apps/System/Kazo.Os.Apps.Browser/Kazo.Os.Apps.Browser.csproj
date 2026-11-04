@@ -30,7 +30,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Shared\Kazo.Os.App.Abstractions\Kazo.Os.App.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Shared\Kazo.Os.AppSdk.Blazor\Kazo.Os.AppSdk.Blazor.csproj" />
-    <!-- ADR 0084: Blazor sites drawn in the page area (HackWebSiteView, IHackWebSiteHost). -->
+    <!-- ADR 0084: Blazor sites drawn in the page area (KazoWebSiteView, IHackWebSiteHost). -->
     <ProjectReference Include="..\..\..\Shared\Kazo.Os.AppSdk.Web.Blazor\Kazo.Os.AppSdk.Web.Blazor.csproj" />
   </ItemGroup>
 

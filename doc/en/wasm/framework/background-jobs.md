@@ -1,6 +1,6 @@
 > [Version française](../../../fr/wasm/framework/background-jobs.md)
 
-# Background tasks (`HackBackground`)
+# Background tasks (`KazoBackground`)
 
 Work item `exec/5-background-jobs`, [ADR 0128](../dev/adr/0128-background-jobs-hack-background.md),
 [ADR 0140](../dev/adr/0140-background-jobs-implementation-adjustments.md) and
@@ -11,7 +11,7 @@ SDK 1.2, released at the end of the `exec` series (ADR 0132).
 
 A windowed app runs on the browser's main thread, the one that also draws
 the desktop. An image filter, a project search or a compression freezes everything
-there. `HackBackground.RunAsync` does the opposite of WinForms'
+there. `KazoBackground.RunAsync` does the opposite of WinForms'
 `Control.Invoke`: the window hands the heavy load to another
 "thread", here a **child process** of the app, placed in a pool Web Worker
 when the host has one, and waits for its result without blocking.
@@ -35,7 +35,7 @@ using System.Text.Json.Serialization;
 using Kazo.Os.AppSdk;
 using Kazo.Os.AppSdk.Threading;
 
-[assembly: HackWireContext(typeof(PaintJsonContext))]
+[assembly: KazoWireContext(typeof(PaintJsonContext))]
 
 public sealed record BlurInput(byte[] Pixels, int Width, int Height, int Radius);
 
@@ -45,7 +45,7 @@ internal sealed partial class PaintJsonContext : JsonSerializerContext;
 
 public static class ImageJobs
 {
-    public static async Task<byte[]> Blur(BlurInput input, HackBackgroundContext context)
+    public static async Task<byte[]> Blur(BlurInput input, KazoBackgroundContext context)
     {
         for (int row = 0; row < input.Height; row++)
         {
@@ -59,27 +59,27 @@ public static class ImageJobs
 }
 
 // Dans la fenêtre :
-byte[] blurred = await HackBackground.RunAsync<BlurInput, byte[]>(
+byte[] blurred = await KazoBackground.RunAsync<BlurInput, byte[]>(
     ImageJobs.Blur, new BlurInput(pixels, width, height, 3),
-    new Progress<HackBackgroundProgress>(report => { _progress = report; StateHasChanged(); }),
-    new HackBackgroundOptions { Name = "blur" },
+    new Progress<KazoBackgroundProgress>(report => { _progress = report; StateHasChanged(); }),
+    new KazoBackgroundOptions { Name = "blur" },
     cancellationToken);
 ```
 
-Accepted forms (`Kazo.Os.AppSdk.Threading.HackBackground`):
+Accepted forms (`Kazo.Os.AppSdk.Threading.KazoBackground`):
 
 | Form | Task |
 |---|---|
-| `RunAsync<TInput, TResult>(job, input, …)` | `Func<TInput, HackBackgroundContext, Task<TResult>>` or `Func<…, TResult>` |
-| `RunAsync<TInput>(job, input, …)` | `Func<TInput, HackBackgroundContext, Task>` or `Action<TInput, HackBackgroundContext>` |
-| `RunAsync<TJob, TInput, TResult>(input, …)` | a class `TJob : HackBackgroundJob<TInput, TResult>, new()` |
+| `RunAsync<TInput, TResult>(job, input, …)` | `Func<TInput, KazoBackgroundContext, Task<TResult>>` or `Func<…, TResult>` |
+| `RunAsync<TInput>(job, input, …)` | `Func<TInput, KazoBackgroundContext, Task>` or `Action<TInput, KazoBackgroundContext>` |
+| `RunAsync<TJob, TInput, TResult>(input, …)` | a class `TJob : KazoBackgroundJob<TInput, TResult>, new()` |
 
-Each form takes `IProgress<HackBackgroundProgress>? progress`,
-`HackBackgroundOptions? options` (`Name`, `Nice`) and `CancellationToken`.
+Each form takes `IProgress<KazoBackgroundProgress>? progress`,
+`KazoBackgroundOptions? options` (`Name`, `Nice`) and `CancellationToken`.
 
 ### The task context
 
-`HackBackgroundContext`:
+`KazoBackgroundContext`:
 
 | Member | Role |
 |---|---|
@@ -88,8 +88,8 @@ Each form takes `IProgress<HackBackgroundProgress>? progress`,
 | `Report(fraction, message)` | Progress from `0` to `1` (clamped); at most 10 reports per second, the latest wins, the one before the end is always delivered. `NaN` throws `ArgumentOutOfRangeException`. |
 | `CheckpointAsync()` | Voluntary checkpoint (ADR 0069): throws if the task is cancelled and yields the thread beyond 8 ms. Essential on the main thread, useful in a worker. |
 
-Inside the task, the rest of the SDK (`HackFile`, `HackDirectory`, `HackProcess`,
-`HackEnvironment`…) works through the ambient context of the task's process:
+Inside the task, the rest of the SDK (`KazoFile`, `KazoDirectory`, `KazoProcess`,
+`KazoEnvironment`…) works through the ambient context of the task's process:
 same user, same session, same capabilities granted as the app.
 
 ### Result and errors
@@ -97,12 +97,12 @@ same user, same session, same capabilities granted as the app.
 | Case | What the caller sees | Exit code |
 |---|---|---|
 | Success | The deserialized result | `0` |
-| Task exception | `HackBackgroundJobException` (`OriginalTypeName`, `Message`, `OriginalStackTrace`): the object does not cross | `1` |
+| Task exception | `KazoBackgroundJobException` (`OriginalTypeName`, `Message`, `OriginalStackTrace`): the object does not cross | `1` |
 | Cancellation | `OperationCanceledException` | `130` |
-| Killed (`kill -9`, task manager, OOM) | `HackProcessKilledException` with `Reason` | `137` |
+| Killed (`kill -9`, task manager, OOM) | `KazoProcessKilledException` with `Reason` | `137` |
 | Refused (method not found, undeclared type, other assembly, more than 16 MiB) | `ArgumentException` | `127` |
 
-`HackProcessKilledException` derives from `OperationCanceledException`: put
+`KazoProcessKilledException` derives from `OperationCanceledException`: put
 its `catch` **before** the cancellation one.
 
 ### Showing and killing a task from the window
@@ -117,7 +117,7 @@ await AppContext.Processes.KillAsync(ProcessId.FromInt64(pid));
 The task can give its PID in its progress (`$"pid {context.ProcessId} · …"`),
 as the sample window does.
 
-### Testing an app that uses `HackBackground`
+### Testing an app that uses `KazoBackground`
 
 Without the OS (test context such as `MinimalAppExecutionContext`), the default
 gateway runs the task **inline**, in the test's process, with the
@@ -125,8 +125,8 @@ same serialization of the input and the result and the same errors. A test that
 passes this way passes identically in a worker.
 
 ```csharp
-using IDisposable scope = HackExecutionContext.Enter(new MinimalAppExecutionContext(manifest));
-PrimeCountResult result = await HackBackground.RunAsync<PrimeCountInput, PrimeCountResult>(
+using IDisposable scope = KazoExecutionContext.Enter(new MinimalAppExecutionContext(manifest));
+PrimeCountResult result = await KazoBackground.RunAsync<PrimeCountInput, PrimeCountResult>(
     SampleJobs.CountPrimes, new PrimeCountInput(100_000));
 ```
 
@@ -139,7 +139,7 @@ The `Kazo.Os.Tools.BackgroundAnalyzer` analyzer is shipped in the
 | Code | Refusal |
 |---|---|
 | `HOSBG0001` | The task is not a static method group: lambda (even `static`), anonymous method, instance method, non-`static` local function, delegate passed through a variable. |
-| `HOSBG0002` | The input or result type is not reached from a `[JsonSerializable]` of a context declared by `[assembly: HackWireContext(...)]`. A type reached through an array, a generic argument or a public property of a root is accepted, as `GetTypeInfo` finds it. |
+| `HOSBG0002` | The input or result type is not reached from a `[JsonSerializable]` of a context declared by `[assembly: KazoWireContext(...)]`. A type reached through an array, a generic argument or a public property of a root is accepted, as `GetTypeInfo` finds it. |
 | `HOSBG0003` | The task method or class is in an assembly other than the app's. |
 | `HOSBG0004` | The method is generic, or belongs to a generic type. |
 
@@ -150,9 +150,9 @@ the analyzer) and throws `ArgumentException`.
 
 ```
 Fenêtre (fil principal)                       OS (fil principal)                         Web Worker du pool
-HackBackground.RunAsync ──► IAppExecutionContext.Background
+KazoBackground.RunAsync ──► IAppExecutionContext.Background
    sérialise l'entrée          AppBackgroundGateway ──► BackgroundJobService
-   (HackWireContext)                                    vérifie, crée le processus enfant,
+   (KazoWireContext)                                    vérifie, crée le processus enfant,
                                                         attend une place (par utilisateur et app)
                                                         ├─ pas de worker : la tâche sur le fil principal,
                                                         │  dans son processus (son planificateur)
@@ -162,10 +162,10 @@ HackBackground.RunAsync ──► IAppExecutionContext.Background
    ◄── résultat désérialisé, progression postée dans le contexte de la fenêtre
 ```
 
-- **SDK** (`Shared/Kazo.Os.AppSdk/Threading`): `HackBackground`,
-  `HackBackgroundContext`, `HackBackgroundJob<,>`, `IAppBackgroundGateway`,
-  `HackBackgroundWire` (`HackWireContext` contexts, 16 MiB at most),
-  `HackBackgroundJobRunner` (binding of a named target), default inline
+- **SDK** (`Shared/Kazo.Os.AppSdk/Threading`): `KazoBackground`,
+  `KazoBackgroundContext`, `KazoBackgroundJob<,>`, `IAppBackgroundGateway`,
+  `KazoBackgroundWire` (`KazoWireContext` contexts, 16 MiB at most),
+  `KazoBackgroundJobRunner` (binding of a named target), default inline
   gateway.
 - **OS** (`Platform/Kazo.Os.Platform.Core/Execution/BackgroundJobService.cs`):
   child process (kind `Terminal`, `argv[0]` = name), trust context
@@ -213,10 +213,10 @@ the window stays open and shows `killed`).
 
 ## Tests
 
-- `Tests/Kazo.Os.AppSdk.Tests/Threading/HackBackgroundTests.cs`: inline gateway,
+- `Tests/Kazo.Os.AppSdk.Tests/Threading/KazoBackgroundTests.cs`: inline gateway,
   lambda refused, undeclared type, fault, cancellation, progress
   throttling.
-- `Tests/Kazo.Os.AppSdk.Tests/Threading/HackBackgroundAnalyzerTests.cs`: the
+- `Tests/Kazo.Os.AppSdk.Tests/Threading/KazoBackgroundAnalyzerTests.cs`: the
   four `HOSBG` rules.
 - `Tests/Kazo.Os.Platform.WorkerHost.Tests/BackgroundJobTests.cs`: each case
   on the main thread **and** in a worker (result, child process,
@@ -229,7 +229,7 @@ the window stays open and shows `killed`).
 
 ## Task list of work item `exec/5-background-jobs`
 
-- [x] SDK API (`HackBackground`, context, task class, options, exception), default inline gateway.
+- [x] SDK API (`KazoBackground`, context, task class, options, exception), default inline gateway.
 - [x] `BackgroundJobService`: child process, trust context, queue per user and app, exit codes.
 - [x] Workers: `start` `k = 2`, `bg.progress`, `bg.run`, `bgp`, `bgfault` errors and `rs` reason.
 - [x] `/proc/<pid>/status` (`Name`, `Job`, `Host`) and `ps`.

@@ -7,7 +7,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <HackerOsAppProject>true</HackerOsAppProject>
+    <KazoOsAppProject>true</KazoOsAppProject>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\Kazo.Os.App.Abstractions\Kazo.Os.App.Abstractions.csproj" />

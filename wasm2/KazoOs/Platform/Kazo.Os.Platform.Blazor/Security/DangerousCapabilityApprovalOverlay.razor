@@ -20,7 +20,7 @@
                  aria-labelledby="dca-title"
                  aria-describedby="dca-subtitle">
             <header class="dca-banner">
-                <HackerIcon Library="IconLibrary.Lucide" Name="shield-alert" Size="28" Title="" class="dca-shield" />
+                <KazoIcon Library="IconLibrary.Lucide" Name="shield-alert" Size="28" Title="" class="dca-shield" />
                 <div>
                     <h2 id="dca-title">@L["Approval.Title"]</h2>
                     <p id="dca-subtitle">@L["Approval.Subtitle"]</p>
@@ -30,7 +30,7 @@
             <div class="dca-body">
                 <div class="dca-app">
                     <div class="dca-app-icon" aria-hidden="true">
-                        <HackerIcon Library="IconLibrary.Lucide" Name="app-window" Size="32" Title="" />
+                        <KazoIcon Library="IconLibrary.Lucide" Name="app-window" Size="32" Title="" />
                     </div>
                     <dl class="dca-app-facts">
                         <dt class="dca-app-name">@request.Manifest.Name</dt>
@@ -43,7 +43,7 @@
 
                 <h3 class="dca-section-title">@L["Approval.Capabilities"]</h3>
                 <ul class="dca-capabilities">
-                    @foreach (CapabilityDescription capability in request.Capabilities.Select(c => Kazo.Os.Platform.Core.Policy.CapabilityText.Localize(c, (L as Kazo.Os.AppSdk.Globalization.HackStringLocalizer)?.Culture)))
+                    @foreach (CapabilityDescription capability in request.Capabilities.Select(c => Kazo.Os.Platform.Core.Policy.CapabilityText.Localize(c, (L as Kazo.Os.AppSdk.Globalization.KazoStringLocalizer)?.Culture)))
                     {
                         <li key="@capability.Capability" class="dca-capability">
                             <span class="dca-capability-title">@capability.Title</span>
