@@ -1,5 +1,14 @@
 > [English version](readme.md)
 
+[![Release Kazo OS](https://github.com/Kazo-ca/Os/actions/workflows/release.yml/badge.svg)](https://github.com/Kazo-ca/Os/actions/workflows/release.yml)
+[![Verify WASM](https://github.com/Kazo-ca/Os/actions/workflows/deploy-wasm.yml/badge.svg?branch=main)](https://github.com/Kazo-ca/Os/actions/workflows/deploy-wasm.yml)
+[![Latest release](https://img.shields.io/github/v/release/Kazo-ca/Os?label=release)](https://github.com/Kazo-ca/Os/releases/latest)
+[![NuGet SDK](https://img.shields.io/nuget/v/HackerOs.AppSdk?label=NuGet%20SDK)](https://www.nuget.org/packages/HackerOs.AppSdk)
+[![NuGet SDK downloads](https://img.shields.io/nuget/dt/HackerOs.AppSdk?label=SDK%20downloads)](https://www.nuget.org/packages/HackerOs.AppSdk)
+[![NuGet templates downloads](https://img.shields.io/nuget/dt/HackerOs.Templates?label=templates%20downloads)](https://www.nuget.org/packages/HackerOs.Templates)
+[![Last commit](https://img.shields.io/github/last-commit/Kazo-ca/Os)](https://github.com/Kazo-ca/Os/commits/main)
+[![License: CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE.md)
+
 # HackerOS
 
 HackerOS est un **système d'exploitation simulé qui tourne dans le navigateur**,
@@ -89,6 +98,10 @@ changement, index des dossiers de la doc, travail avec le mainteneur :
 questions, issues `TODO`, branches, fusions). Claude Code les lit par
 [`CLAUDE.md`](CLAUDE.md) ; l'état et la mémoire du projet sont dans
 [`doc/fr/wasm/memory/`](doc/fr/wasm/memory/README.md).
+
+## Activité du dépôt
+
+![Activité du dépôt](https://repobeats.axiom.co/api/embed/b0f0139bc9926c01d0d3e1df65a930041bba0d8c.svg "Repobeats analytics image")
 
 ## Licence
 
