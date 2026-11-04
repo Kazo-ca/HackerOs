@@ -10,7 +10,7 @@ namespace Kazo.Os.Samples.PlatformApp;
 public sealed class PlatformSampleApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.samples.platform-app";
+    public override string Id => "org.kazoos.samples.platform-app";
 
     /// <inheritdoc />
     public override string Name => "Platform Demo";
@@ -28,7 +28,7 @@ public sealed class PlatformSampleApp : AppDefinition
     public override Type? MobileEntryPoint => typeof(PlatformDemoWindow);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description =>

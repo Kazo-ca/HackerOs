@@ -7,7 +7,7 @@ using Kazo.Os.Simulation.Abstractions.Settings;
 namespace Kazo.Os.Platform.Core.Apps.Packages;
 
 /// <summary>
-/// <c>/etc/hackeros/app-sources.config</c> (ADR 0182 §3, ADR 0189 §1): the hosts the OS itself
+/// <c>/etc/kazoos/app-sources.config</c> (ADR 0182 §3, ADR 0189 §1): the hosts the OS itself
 /// contacts to download app packages, the catalogs it reads, the trusted sources and how often it
 /// looks for updates.
 /// </summary>
@@ -64,14 +64,14 @@ public static class AppSourcesConfigDocument
     /// <summary>Prefix of a catalog's key in <see cref="TrustedSection"/>, e.g. <c>catalog:official</c>.</summary>
     public const string CatalogTrustPrefix = "catalog:";
 
-    /// <summary>File name under <c>/etc/hackeros</c>.</summary>
+    /// <summary>File name under <c>/etc/kazoos</c>.</summary>
     public const string FileName = "app-sources.config";
 
     /// <summary>Longest update interval accepted: 30 days.</summary>
     internal const int MaximumIntervalHours = 24 * 30;
 
     /// <summary>Machine file, <c>system:system 0644</c>.</summary>
-    public static VirtualPath MachinePath { get; } = VirtualPath.Parse($"/etc/hackeros/{FileName}");
+    public static VirtualPath MachinePath { get; } = VirtualPath.Parse($"/etc/kazoos/{FileName}");
 
     /// <summary>Content written when the file does not exist yet, with the standard defaults.</summary>
     public static string DefaultContent { get; } = BuildDefaultContent(AppPackageDefaults.Standard);
@@ -83,7 +83,7 @@ public static class AppSourcesConfigDocument
         ArgumentNullException.ThrowIfNull(defaults);
         StringBuilder text = new();
         text.Append("# Where the OS downloads app packages, and which sources it trusts (ADR 0182, ADR 0189).\n")
-            .Append("# hackpkg contacts only the hosts below, itself, never through an app.\n")
+            .Append("# kazopkg contacts only the hosts below, itself, never through an app.\n")
             .Append('[').Append(HostsSection).Append("]\n")
             .Append(GitHubHostKey).Append('=').Append(DefaultGitHubHost).Append('\n')
             .Append('\n')
@@ -238,7 +238,7 @@ public static class AppSourcesConfigDocument
     }
 
     /// <summary>
-    /// Adds a source (ADR 0189 §1, <c>hackpkg sources add</c>), keeping every other line exactly.
+    /// Adds a source (ADR 0189 §1, <c>kazopkg sources add</c>), keeping every other line exactly.
     /// A catalog goes to <c>[catalogs]</c>; every source gets its line in <c>[trusted]</c>, set to
     /// <see langword="false"/> unless the administrator chose otherwise (Q25 answer A).
     /// </summary>
@@ -340,7 +340,7 @@ public static class AppSourcesConfigDocument
         && value.Contains('.', StringComparison.Ordinal);
 }
 
-/// <summary>Trust level of a source as the Store and <c>hackpkg</c> show it (ADR 0189 §2).</summary>
+/// <summary>Trust level of a source as the Store and <c>kazopkg</c> show it (ADR 0189 §2).</summary>
 public enum AppSourceTrust
 {
     /// <summary>An app of the official catalog, reviewed and compiled by the Kazo OS team.</summary>

@@ -7,7 +7,7 @@ namespace Kazo.Os.Platform.Core.Appearance;
 /// <summary>
 /// Maintains the shell's live view of the layered appearance settings
 /// (<see cref="AppearanceSettingsDocuments.Document"/>): the session user's
-/// <c>~/.config/hackeros/appearance.config</c> over the machine's <c>/etc/hackeros/appearance.config</c>.
+/// <c>~/.config/kazoos/appearance.config</c> over the machine's <c>/etc/kazoos/appearance.config</c>.
 /// Writes go through <see cref="SetAsync"/>, so the file's permissions decide who may change what.
 /// </summary>
 public sealed class ThemePreferenceService : IDisposable

@@ -36,7 +36,7 @@ public interface IWebWorkerRuntime
 }
 
 /// <summary>What a new worker loads (ADR 0070, section 4).</summary>
-/// <param name="Name">Display name of the worker (browser developer tools), e.g. <c>hackeros-worker-2</c>.</param>
+/// <param name="Name">Display name of the worker (browser developer tools), e.g. <c>kazoos-worker-2</c>.</param>
 /// <param name="EntryAssembly">Assembly whose exported entry point receives the worker's messages.</param>
 /// <param name="PreloadAssemblies">
 /// Lazy-loaded assemblies to load while warming up (the built-in commands), so the first process

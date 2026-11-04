@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Kazo.Os.Platform.Core.Apps.Packages;
 
 /// <summary>
-/// A source as an administrator names it to <c>hackpkg sources add | remove</c> or in Settings ▸
+/// A source as an administrator names it to <c>kazopkg sources add | remove</c> or in Settings ▸
 /// Sources (ADR 0189 §1): a catalog, a GitHub owner, or one GitHub repository.
 /// </summary>
 /// <remarks>

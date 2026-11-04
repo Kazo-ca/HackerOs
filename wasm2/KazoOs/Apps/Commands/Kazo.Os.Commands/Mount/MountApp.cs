@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Mount;
 public sealed class MountApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.mount";
+    public override string Id => "org.kazoos.commands.mount";
 
     /// <inheritdoc />
     public override string Name => "mount";
@@ -22,7 +22,7 @@ public sealed class MountApp : AppDefinition
     public override Type EntryPoint => typeof(MountCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Mount a folder of the computer as a network drive";

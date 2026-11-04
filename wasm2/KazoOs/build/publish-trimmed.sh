@@ -11,7 +11,7 @@
 # with a static file server and runs Tests/Kazo.Os.TrimmedPublish.E2E.Tests against it: sign-in,
 # every window app of the Start menu, a pipeline in the worker pool, the Intranet and the sample
 # Blazor site in the Browser, a reload with no network once the service worker has cached the
-# release, and a test package installed by hackpkg whose wwwroot/ files and worker scripts load.
+# release, and a test package installed by kazopkg whose wwwroot/ files and worker scripts load.
 # Exit code 0 only when the publish and every test (EXPECTED_TESTS) passed.
 #
 #   --skip-build      reuse the existing publish and test build
@@ -33,9 +33,9 @@ LOGS="$OUT/logs"
 HOST_PROJECT="$ROOT/OS/Kazo.Os.Ecosystem/Kazo.Os.Ecosystem.csproj"
 TEST_PROJECT="$ROOT/Tests/Kazo.Os.TrimmedPublish.E2E.Tests/Kazo.Os.TrimmedPublish.E2E.Tests.csproj"
 CATALOG="$ROOT/OS/Kazo.Os.Ecosystem/obj/Release/net10.0/BuiltInApplications.json"
-# ADR 0206: the test package hackpkg installs (Tests/fixtures/installed-app), packed by KazoOsPack.
+# ADR 0206: the test package kazopkg installs (Tests/fixtures/installed-app), packed by KazoOsPack.
 PACKAGE_PROJECT="$ROOT/Tests/fixtures/installed-app/Kazo.Os.Fixtures.InstalledAssets/Kazo.Os.Fixtures.InstalledAssets.csproj"
-PACKAGES="$OUT/hackeros-packages"
+PACKAGES="$OUT/kazoos-packages"
 
 SKIP_BUILD=0
 COMPARE=0
@@ -190,11 +190,11 @@ else
 fi
 log "serving on http://127.0.0.1:$PORT${PWA_URL:+ and $PWA_URL}"
 
-HACKEROS_TRIMMED_URL="http://127.0.0.1:$PORT" \
-HACKEROS_TRIMMED_PWA_URL="$PWA_URL" \
-HACKEROS_TRIMMED_CATALOG="$CATALOG" \
-HACKEROS_TRIMMED_ARTIFACTS="$OUT/screenshots" \
-HACKEROS_TRIMMED_PACKAGES="$PACKAGES" \
+KAZOOS_TRIMMED_URL="http://127.0.0.1:$PORT" \
+KAZOOS_TRIMMED_PWA_URL="$PWA_URL" \
+KAZOOS_TRIMMED_CATALOG="$CATALOG" \
+KAZOOS_TRIMMED_ARTIFACTS="$OUT/screenshots" \
+KAZOOS_TRIMMED_PACKAGES="$PACKAGES" \
     dotnet test "$TEST_PROJECT" --no-build -c Debug --logger "console;verbosity=detailed" >"$LOGS/tests.log" 2>&1
 code=$?
 stop_servers

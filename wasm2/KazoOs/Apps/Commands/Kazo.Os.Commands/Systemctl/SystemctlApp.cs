@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Systemctl;
 public sealed class SystemctlApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.systemctl";
+    public override string Id => "org.kazoos.commands.systemctl";
 
     /// <inheritdoc />
     public override string Name => "systemctl";
@@ -22,7 +22,7 @@ public sealed class SystemctlApp : AppDefinition
     public override Type EntryPoint => typeof(SystemctlCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Query and control the system services";

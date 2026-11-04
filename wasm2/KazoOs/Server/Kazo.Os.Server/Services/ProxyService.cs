@@ -13,11 +13,11 @@ namespace Kazo.Os.Server.Services;
 ///   - All policy is validated SERVER-SIDE. Client claims are never trusted; the app must hold
 ///     network.real.access on the server (<see cref="IProxyGrantAuthority"/>, ADR 0102 §4).
 ///   - Always blocked: loopback, link-local and cloud metadata, unspecified, multicast; private
-///     ranges unless HackerOs:Proxy:AllowPrivateNetworks.
-///   - Ports: per-protocol allow-lists from HackerOs:Proxy (HTTP 80/443, TCP 80/443, UDP 53/123)
+///     ranges unless KazoOs:Proxy:AllowPrivateNetworks.
+///   - Ports: per-protocol allow-lists from KazoOs:Proxy (HTTP 80/443, TCP 80/443, UDP 53/123)
 ///     unless AllowAllPorts.
 ///   - Max redirects: 5 (server follows; client sees final URL).
-///   - Simulated domain suffixes (.hackeros.local, .sim, .hackeros) → always refused.
+///   - Simulated domain suffixes (.kazoos.local, .sim, .kazoos) → always refused.
 ///   - DNS rebinding: validate every DNS answer and pin the selected address for the socket connect.
 /// </summary>
 public interface IProxyService
@@ -49,7 +49,7 @@ public interface IProxyService
 public sealed class ProxyService : IProxyService
 {
     // Simulated-domain suffixes that must never reach this proxy (P5-PROXY-006).
-    private static readonly string[] SimulatedSuffixes = [".hackeros.local", ".sim", ".hackeros"];
+    private static readonly string[] SimulatedSuffixes = [".kazoos.local", ".sim", ".kazoos"];
 
     // Ranges no setting opens: the server itself, link-local and cloud metadata endpoints,
     // unspecified, documentation/benchmark and multicast addresses.
@@ -515,7 +515,7 @@ public sealed class ProxyService : IProxyService
     {
         if (!_policy.Enabled)
             throw new ProxyRequestException(ProxyErrorCode.RelayDisabled,
-                "The operator turned the network relay off (HackerOs:Proxy:Enabled).");
+                "The operator turned the network relay off (KazoOs:Proxy:Enabled).");
     }
 
     private static void ValidateAppId(string? appId)

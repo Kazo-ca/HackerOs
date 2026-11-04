@@ -62,10 +62,10 @@ public sealed class AppPlatformEntryPointResolverTests
 
     private static AppManifest CreateManifest() => new()
     {
-        Id = "org.hackeros.samples.platform-app",
+        Id = "org.kazoos.samples.platform-app",
         Name = "Platform Demo",
         Version = "1.0.0",
-        PublisherId = "pub.hackeros",
+        PublisherId = "pub.kazoos",
         Description = "Resolver test application.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Samples.PlatformApp.dll", "Kazo.Os.Samples.PlatformApp.PlatformDemoWindow"),

@@ -10,7 +10,7 @@ public sealed class IconViewerWindowTests
     {
         AppManifest manifest = AppDefinitionMapper.ToManifest(new IconViewerApp());
         Assert.Equal(AppKind.Window, manifest.Kind);
-        Assert.Equal("org.hackeros.icon-viewer", manifest.Id);
+        Assert.Equal("org.kazoos.icon-viewer", manifest.Id);
         Assert.Empty(manifest.Capabilities);
     }
 

@@ -28,7 +28,7 @@ namespace Kazo.Os.Platform.Core.FileSystem.Virtual;
 /// <c>/proc/meminfo</c>; missing or not measuring, the simulated value applies.
 /// </param>
 /// <param name="Workers">
-/// Lazily resolves the Web Worker pool (ADR 0070, 0071) behind <c>/proc/hackeros/workers</c>; the
+/// Lazily resolves the Web Worker pool (ADR 0070, 0071) behind <c>/proc/kazoos/workers</c>; the
 /// directory does not exist when it is missing or returns <see langword="null"/> (a host without
 /// workers, such as the server).
 /// </param>
@@ -78,7 +78,7 @@ public sealed record ProcMetricsSources(
 
     /// <summary>
     /// Gets the page's cross-origin isolation (ADR 0131, section 5), the first lines of
-    /// <c>/proc/hackeros/workers</c>; missing, they read <c>no</c> with the reason <c>not-browser</c>.
+    /// <c>/proc/kazoos/workers</c>; missing, they read <c>no</c> with the reason <c>not-browser</c>.
     /// </summary>
     public Func<Kazo.Os.Platform.Core.Isolation.CrossOriginIsolationStatus?>? CrossOriginIsolation { get; init; }
 }

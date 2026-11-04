@@ -19,7 +19,7 @@ public sealed class KazoBrowserTests
         }
 
         (string appId, IReadOnlyList<string> arguments) = Assert.Single(intents.Requests);
-        Assert.Equal("org.hackeros.browser", appId);
+        Assert.Equal("org.kazoos.browser", appId);
         Assert.Equal(["https://site.hack/"], arguments);
     }
 

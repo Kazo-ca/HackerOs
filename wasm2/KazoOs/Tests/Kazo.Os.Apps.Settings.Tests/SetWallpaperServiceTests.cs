@@ -171,7 +171,7 @@ public sealed class SetWallpaperServiceTests
 
         public AppSystemSettingsDocumentInfo Describe(string documentId) =>
             documentId == AppearanceSettingsDocuments.Document.DocumentId
-                ? new(documentId, AppearanceSettingsDocuments.Schema, "/etc/hackeros/appearance.config", "/home/alice/.config/hackeros/appearance.config", false)
+                ? new(documentId, AppearanceSettingsDocuments.Schema, "/etc/kazoos/appearance.config", "/home/alice/.config/kazoos/appearance.config", false)
                 : throw new ArgumentException($"Unknown document '{documentId}'.", nameof(documentId));
 
         public ValueTask<LayeredConfigSnapshot> ReadAsync(string documentId, CancellationToken cancellationToken = default)

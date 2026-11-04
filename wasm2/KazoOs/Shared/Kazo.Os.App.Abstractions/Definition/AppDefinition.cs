@@ -19,7 +19,7 @@ namespace Kazo.Os.App.Abstractions;
 /// </remarks>
 public abstract class AppDefinition
 {
-    /// <summary>Gets the immutable reverse-domain application identifier, e.g. <c>org.hackeros.text-editor</c>.</summary>
+    /// <summary>Gets the immutable reverse-domain application identifier, e.g. <c>org.kazoos.text-editor</c>.</summary>
     public abstract string Id { get; }
 
     /// <summary>Gets the fallback display name.</summary>
@@ -64,7 +64,7 @@ public abstract class AppDefinition
 
     /// <summary>
     /// Gets the components this window app registers with the OS for other apps to embed (ADR 0063),
-    /// e.g. the Terminal app's terminal for <c>hackeros.terminal</c>. Each type must live in the
+    /// e.g. the Terminal app's terminal for <c>kazoos.terminal</c>. Each type must live in the
     /// definition's assembly and derive from <c>KazoEmbeddableComponent</c>.
     /// </summary>
     public virtual IReadOnlyList<AppComponent> Components => [];
@@ -170,7 +170,7 @@ public sealed record FileHandler(
 /// <summary>
 /// Short form of <see cref="AppComponentManifest"/> used by <see cref="AppDefinition.Components"/>.
 /// </summary>
-/// <param name="Contract">Contract name, e.g. <c>hackeros.terminal</c>.</param>
+/// <param name="Contract">Contract name, e.g. <c>kazoos.terminal</c>.</param>
 /// <param name="Type">The component type, in the definition's assembly.</param>
 public sealed record AppComponent(string Contract, Type Type);
 

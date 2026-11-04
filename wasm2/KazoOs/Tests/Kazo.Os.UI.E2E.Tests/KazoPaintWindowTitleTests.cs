@@ -5,7 +5,7 @@ using Xunit.Abstractions;
 namespace Kazo.Os.UI.E2E.Tests;
 
 /// <summary>
-/// ADR 0117 §4: Hack Paint writes its whole window title through the SDK
+/// ADR 0117 §4: Kazo Paint writes its whole window title through the SDK
 /// (<c>WindowAppBase.SetWindowTitleAsync</c>), and the window manager shows it in the title bar
 /// and the taskbar, with <c>*</c> while the image has unsaved changes.
 /// </summary>
@@ -14,7 +14,7 @@ public sealed class KazoPaintWindowTitleTests(ITestOutputHelper output)
     private const string ImageFileName = "e2e-title.png";
 
     [Fact]
-    public async Task Hack_paint_shows_its_document_and_unsaved_state_in_the_window_title_and_taskbar()
+    public async Task Kazo_paint_shows_its_document_and_unsaved_state_in_the_window_title_and_taskbar()
     {
         string solutionDirectory = E2ESupport.FindSolutionDirectory();
         int port = E2ESupport.ReservePort();
@@ -33,21 +33,21 @@ public sealed class KazoPaintWindowTitleTests(ITestOutputHelper output)
 
             await E2ESupport.NavigateWhenReadyAsync(page, address, output);
             await E2ESupport.CreateLocalProfileAndReachDesktopAsync(page, output);
-            await E2ESupport.OpenAppAsync(page, "Hack Paint", output);
+            await E2ESupport.OpenAppAsync(page, "Kazo Paint", output);
 
-            ILocator windowTitle = page.Locator("header.window-chrome h2", new() { HasText = "Hack Paint" });
-            ILocator taskbarTitle = page.Locator(".taskbar-item .item-title", new() { HasText = "Hack Paint" });
+            ILocator windowTitle = page.Locator("header.window-chrome h2", new() { HasText = "Kazo Paint" });
+            ILocator taskbarTitle = page.Locator(".taskbar-item .item-title", new() { HasText = "Kazo Paint" });
 
             // A new image: named by the app before anything is drawn.
-            await Assertions.Expect(windowTitle).ToHaveTextAsync("Untitled — Hack Paint", new() { Timeout = 15000 });
-            await Assertions.Expect(taskbarTitle).ToHaveTextAsync("Untitled — Hack Paint");
-            output.WriteLine("[test] new image titled 'Untitled — Hack Paint'.");
+            await Assertions.Expect(windowTitle).ToHaveTextAsync("Untitled — Kazo Paint", new() { Timeout = 15000 });
+            await Assertions.Expect(taskbarTitle).ToHaveTextAsync("Untitled — Kazo Paint");
+            output.WriteLine("[test] new image titled 'Untitled — Kazo Paint'.");
 
             // A stroke marks the image as modified.
             await DrawStrokeAsync(page);
-            await Assertions.Expect(windowTitle).ToHaveTextAsync("*Untitled — Hack Paint", new() { Timeout = 15000 });
-            await Assertions.Expect(taskbarTitle).ToHaveTextAsync("*Untitled — Hack Paint");
-            output.WriteLine("[test] modified image titled '*Untitled — Hack Paint'.");
+            await Assertions.Expect(windowTitle).ToHaveTextAsync("*Untitled — Kazo Paint", new() { Timeout = 15000 });
+            await Assertions.Expect(taskbarTitle).ToHaveTextAsync("*Untitled — Kazo Paint");
+            output.WriteLine("[test] modified image titled '*Untitled — Kazo Paint'.");
 
             // Saving gives the window the file's name and clears the marker.
             await page.Locator("#paint-btn-save-as").ClickAsync();
@@ -57,19 +57,19 @@ public sealed class KazoPaintWindowTitleTests(ITestOutputHelper output)
             await saveDialog.GetByRole(AriaRole.Button, new() { Name = "Save" }).ClickAsync();
             await saveDialog.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Hidden, Timeout = 15000 });
 
-            await Assertions.Expect(windowTitle).ToHaveTextAsync($"{ImageFileName} — Hack Paint", new() { Timeout = 15000 });
-            await Assertions.Expect(taskbarTitle).ToHaveTextAsync($"{ImageFileName} — Hack Paint");
-            output.WriteLine($"[test] saved image titled '{ImageFileName} — Hack Paint'.");
+            await Assertions.Expect(windowTitle).ToHaveTextAsync($"{ImageFileName} — Kazo Paint", new() { Timeout = 15000 });
+            await Assertions.Expect(taskbarTitle).ToHaveTextAsync($"{ImageFileName} — Kazo Paint");
+            output.WriteLine($"[test] saved image titled '{ImageFileName} — Kazo Paint'.");
 
             // Another stroke: the saved file is modified again.
             await DrawStrokeAsync(page);
-            await Assertions.Expect(windowTitle).ToHaveTextAsync($"*{ImageFileName} — Hack Paint", new() { Timeout = 15000 });
+            await Assertions.Expect(windowTitle).ToHaveTextAsync($"*{ImageFileName} — Kazo Paint", new() { Timeout = 15000 });
 
             // The window's accessible name follows the title (ADR 0117 §3).
             ILocator window = page.Locator("article[role=dialog]", new() { Has = windowTitle });
             string? labelledBy = await window.GetAttributeAsync("aria-labelledby");
             Assert.False(string.IsNullOrEmpty(labelledBy));
-            Assert.Equal($"*{ImageFileName} — Hack Paint", await page.Locator($"[id='{labelledBy}']").InnerTextAsync());
+            Assert.Equal($"*{ImageFileName} — Kazo Paint", await page.Locator($"[id='{labelledBy}']").InnerTextAsync());
 
             // The file name left the app's own toolbar: only the window manager shows it.
             Assert.Equal(0, await page.Locator("#paint-title").CountAsync());

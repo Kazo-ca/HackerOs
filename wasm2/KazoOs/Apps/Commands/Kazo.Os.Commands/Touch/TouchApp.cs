@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Touch;
 public sealed class TouchApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.touch";
+    public override string Id => "org.kazoos.commands.touch";
 
     /// <inheritdoc />
     public override string Name => "touch";
@@ -22,7 +22,7 @@ public sealed class TouchApp : AppDefinition
     public override Type EntryPoint => typeof(TouchCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Change file timestamps or create empty files";

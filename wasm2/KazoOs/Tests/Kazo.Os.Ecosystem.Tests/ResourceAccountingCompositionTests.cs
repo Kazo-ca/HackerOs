@@ -73,8 +73,8 @@ public sealed class ResourceAccountingCompositionTests
         ServiceCollection services = new();
         IConfiguration configuration = Configuration(new()
         {
-            ["HackerOs:ResourceAccounting:Cpu:Enabled"] = "false",
-            ["HackerOs:ResourceAccounting:Memory:Enabled"] = "false"
+            ["KazoOs:ResourceAccounting:Cpu:Enabled"] = "false",
+            ["KazoOs:ResourceAccounting:Memory:Enabled"] = "false"
         });
 
         ResourceAccountingPlan plan = services.AddKazoOsResourceAccounting(configuration);
@@ -157,9 +157,9 @@ public sealed class ResourceAccountingCompositionTests
     {
         ResourceAccountingSettings settings = ResourceAccountingServiceCollectionExtensions.ReadSettings(Configuration(new()
         {
-            ["HackerOs:ResourceAccounting:Cpu:Enabled"] = "false",
-            ["HackerOs:ResourceAccounting:Cpu:UnresponsiveThresholdMs"] = "1500",
-            ["HackerOs:ResourceAccounting:Memory:Enabled"] = "True"
+            ["KazoOs:ResourceAccounting:Cpu:Enabled"] = "false",
+            ["KazoOs:ResourceAccounting:Cpu:UnresponsiveThresholdMs"] = "1500",
+            ["KazoOs:ResourceAccounting:Memory:Enabled"] = "True"
         }));
 
         Assert.False(settings.CpuEnabled);
@@ -172,8 +172,8 @@ public sealed class ResourceAccountingCompositionTests
     {
         ResourceAccountingSettings settings = ResourceAccountingServiceCollectionExtensions.ReadSettings(Configuration(new()
         {
-            ["HackerOs:ResourceAccounting:Cpu:Enabled"] = "maybe",
-            ["HackerOs:ResourceAccounting:Cpu:UnresponsiveThresholdMs"] = "-4"
+            ["KazoOs:ResourceAccounting:Cpu:Enabled"] = "maybe",
+            ["KazoOs:ResourceAccounting:Cpu:UnresponsiveThresholdMs"] = "-4"
         }));
 
         Assert.True(settings.CpuEnabled);

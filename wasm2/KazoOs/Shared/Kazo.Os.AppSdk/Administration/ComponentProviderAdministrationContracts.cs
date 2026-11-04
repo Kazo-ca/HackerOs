@@ -7,9 +7,9 @@ namespace Kazo.Os.AppSdk.Administration;
 /// <param name="IsInstalled">Whether it is installed for the session user.</param>
 public sealed record KazoComponentProviderInfo(string AppId, string Name, bool IsSystemApp, bool IsInstalled);
 
-/// <summary>A contract an administrator chooses the provider of, such as <c>hackeros.file-view</c> (ADR 0156).</summary>
+/// <summary>A contract an administrator chooses the provider of, such as <c>kazoos.file-view</c> (ADR 0156).</summary>
 /// <param name="Contract">The contract name.</param>
-/// <param name="SelectedAppId">The app chosen in <c>/etc/hackeros/components.config</c>, or <see langword="null"/> for the default.</param>
+/// <param name="SelectedAppId">The app chosen in <c>/etc/kazoos/components.config</c>, or <see langword="null"/> for the default.</param>
 /// <param name="DefaultAppId">The app used without a choice (the File Explorer), or <see langword="null"/> when none is installed.</param>
 /// <param name="Providers">Every app registering the contract, system apps first, then by id.</param>
 public sealed record KazoComponentContractInfo(

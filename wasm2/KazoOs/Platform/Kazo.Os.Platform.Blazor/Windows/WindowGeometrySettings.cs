@@ -8,7 +8,7 @@ namespace Kazo.Os.Platform.Blazor.Windows;
 
 /// <summary>
 /// Locates the window geometry state file of one app:
-/// <c>~/.local/state/hackeros/windows/&lt;appId&gt;.config</c>. Geometry is device-local state, not a
+/// <c>~/.local/state/kazoos/windows/&lt;appId&gt;.config</c>. Geometry is device-local state, not a
 /// preference, so it lives outside <c>~/.config</c> and is never synchronized (ADR 0044 section 10).
 /// </summary>
 public static class WindowGeometrySettings

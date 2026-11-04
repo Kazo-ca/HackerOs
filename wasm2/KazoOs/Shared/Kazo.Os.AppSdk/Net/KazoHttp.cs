@@ -130,7 +130,7 @@ public sealed record KazoHttpResponse(
 /// <summary>Where a <see cref="KazoHttpResponse"/> came from (ADR 0210 §4).</summary>
 public enum KazoHttpResponseSource
 {
-    /// <summary>A machine of the simulated network (<c>hackdns</c>, simulated sites).</summary>
+    /// <summary>A machine of the simulated network (<c>kazodns</c>, simulated sites).</summary>
     Simulated,
 
     /// <summary>A site served by a process of this machine (a <c>.hack</c> site, <c>localhost</c>, ADR 0074).</summary>

@@ -22,7 +22,7 @@ namespace Kazo.Os.AppSdk.Settings;
 /// <para>
 /// Each method exists in two forms: one taking the app's <see cref="IAppExecutionContext"/>
 /// explicitly, and one using the ambient context of ADR 0043 (<see cref="KazoExecutionContext.Current"/>),
-/// like the <c>Hack*</c> file API.
+/// like the <c>Kazo*</c> file API.
 /// </para>
 /// </remarks>
 public static partial class KazoSettings
@@ -109,8 +109,8 @@ public static partial class KazoSettings
 
     /// <summary>
     /// Opens one of the OS's own settings documents (ADR 0056, section 8):
-    /// <c>/etc/hackeros/&lt;document&gt;.config</c> (system layer) and
-    /// <c>~/.config/hackeros/&lt;document&gt;.config</c> (user layer), with the schema the OS declares.
+    /// <c>/etc/kazoos/&lt;document&gt;.config</c> (system layer) and
+    /// <c>~/.config/kazoos/&lt;document&gt;.config</c> (user layer), with the schema the OS declares.
     /// </summary>
     /// <remarks>
     /// No capability is required: the files' permissions decide (decision D16). Everybody reads;

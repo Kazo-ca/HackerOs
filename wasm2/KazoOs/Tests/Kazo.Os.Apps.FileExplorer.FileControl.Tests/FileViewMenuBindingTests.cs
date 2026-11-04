@@ -33,15 +33,15 @@ public sealed class FileViewMenuBindingTests
             Attach = item =>
             {
                 attached.Add(item);
-                return new Dictionary<string, object> { ["data-hack-menu"] = "files", ["data-hack-menu-token"] = item?.FileName ?? "background" };
+                return new Dictionary<string, object> { ["data-kazo-menu"] = "files", ["data-kazo-menu-token"] = item?.FileName ?? "background" };
             }
         };
         (_, TestableFileView view) = await RenderAsync(binding);
         FileViewItem a = view.Items.Single(i => i.FileName == "a.txt");
 
         Assert.False(view.UsesOwnMenu);
-        Assert.Equal("a.txt", view.MenuAttributesFor(a)!["data-hack-menu-token"]);
-        Assert.Equal("background", view.MenuAttributesFor(null)!["data-hack-menu-token"]);
+        Assert.Equal("a.txt", view.MenuAttributesFor(a)!["data-kazo-menu-token"]);
+        Assert.Equal("background", view.MenuAttributesFor(null)!["data-kazo-menu-token"]);
         Assert.Equal([a, null], attached);
     }
 

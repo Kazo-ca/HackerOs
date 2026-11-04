@@ -79,7 +79,7 @@ public static class KazoTcpClient
         ArgumentOutOfRangeException.ThrowIfLessThan(port, 1);
         ArgumentOutOfRangeException.ThrowIfGreaterThan(port, 65535);
 
-        KazoNetworkResult<IHackSocket> result = await KazoNetworkErrorTranslator
+        KazoNetworkResult<IKazoSocket> result = await KazoNetworkErrorTranslator
             .CallAsync(gateway => gateway.ConnectTcpAsync(hostNameOrAddress, port, cancellationToken))
             .ConfigureAwait(false);
         return new KazoNetworkStream(KazoNetworkErrorTranslator.UnwrapSocket(result));

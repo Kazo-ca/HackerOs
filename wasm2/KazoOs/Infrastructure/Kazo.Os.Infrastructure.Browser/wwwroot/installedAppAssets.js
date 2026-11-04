@@ -1,4 +1,4 @@
-// The wwwroot/ files of apps installed by hackpkg (ADR 0206), the page half of
+// The wwwroot/ files of apps installed by kazopkg (ADR 0206), the page half of
 // Apps/BrowserInstalledAppAssets.cs, imported by that class (never by a host, AGENTS.md).
 //
 // The OS copies each verified file into the Cache Storage cache below, under the address a
@@ -7,7 +7,7 @@
 // <script src>, an import(), a CSS url(), a new Worker(...) and the importScripts of that worker
 // then all find the file, with no change to the app.
 
-const cacheName = 'hackeros-installed-apps';
+const cacheName = 'kazoos-installed-apps';
 // index.html registers no service worker on these hosts (development); the OS then registers one
 // that only serves installed apps (no release cache), recognised by this query.
 const installedAppsOnlyQuery = 'mode=installed-apps';
@@ -87,14 +87,14 @@ function askToClaim(worker, version, timeoutMs) {
         channel.port1.onmessage = event => {
             clearTimeout(timer);
             const answer = event.data || { claimed: false };
-            if (!answer.claimed && window.hackerOsClaimForInstalledApps === 'pending') {
-                window.hackerOsClaimForInstalledApps = undefined;
+            if (!answer.claimed && window.kazoOsClaimForInstalledApps === 'pending') {
+                window.kazoOsClaimForInstalledApps = undefined;
             }
             resolve(answer);
         };
         // index.html reloads a page whose controller changes; this change is expected (same release).
-        window.hackerOsClaimForInstalledApps = 'pending';
-        worker.postMessage({ type: 'HACKEROS_CLAIM_FOR_INSTALLED_APPS', version }, [channel.port2]);
+        window.kazoOsClaimForInstalledApps = 'pending';
+        worker.postMessage({ type: 'KAZOOS_CLAIM_FOR_INSTALLED_APPS', version }, [channel.port2]);
     });
 }
 
@@ -134,7 +134,7 @@ export async function remove(url) {
  */
 export function linkStyleSheet(url) {
     const href = absolute(url);
-    const linked = [...document.head.querySelectorAll('link[data-hackeros-installed-app]')];
+    const linked = [...document.head.querySelectorAll('link[data-kazoos-installed-app]')];
     if (linked.some(link => link.href === href)) {
         return false;
     }
@@ -142,7 +142,7 @@ export function linkStyleSheet(url) {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
     link.href = href;
-    link.dataset.hackerosInstalledApp = '';
+    link.dataset.kazoosInstalledApp = '';
     document.head.appendChild(link);
     return true;
 }

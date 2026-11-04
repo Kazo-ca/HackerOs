@@ -5,7 +5,7 @@ namespace Kazo.Os.Tools.ManifestGenerator.Tests;
 /// <summary>File layout and write-only-when-changed behavior of <see cref="ManifestWriter"/>.</summary>
 public sealed class ManifestWriterTests : IDisposable
 {
-    private readonly string _directory = Directory.CreateTempSubdirectory("hackeros-manifest-writer-").FullName;
+    private readonly string _directory = Directory.CreateTempSubdirectory("kazoos-manifest-writer-").FullName;
 
     public void Dispose() => Directory.Delete(_directory, recursive: true);
 
@@ -20,7 +20,7 @@ public sealed class ManifestWriterTests : IDisposable
         string path = Assert.Single(files);
         Assert.Equal(Path.Combine(_directory, "manifest.json"), path);
         AppManifest roundTrip = AppManifestJsonSerializer.DeserializeStrict(File.ReadAllText(path));
-        Assert.Equal("org.hackeros.tests.valid", roundTrip.Id);
+        Assert.Equal("org.kazoos.tests.valid", roundTrip.Id);
     }
 
     [Fact]
@@ -31,7 +31,7 @@ public sealed class ManifestWriterTests : IDisposable
         IReadOnlyList<string> files = ManifestWriter.Write(_directory, Generate(typeof(ValidCommandApp), typeof(SecondCommandApp)));
 
         Assert.Equal(
-            [Path.Combine(_directory, "manifests", "org.hackeros.tests.second.json"), Path.Combine(_directory, "manifests", "org.hackeros.tests.valid.json")],
+            [Path.Combine(_directory, "manifests", "org.kazoos.tests.second.json"), Path.Combine(_directory, "manifests", "org.kazoos.tests.valid.json")],
             files);
         Assert.False(File.Exists(Path.Combine(_directory, "manifest.json")));
     }

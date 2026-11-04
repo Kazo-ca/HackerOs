@@ -27,7 +27,7 @@ public enum FileMenuScope
 /// The ids of the entries the file control puts in its menus (plan §7, ADR 0151 §1). They are short
 /// and stable: an app places its own entries against them (<c>after: KazoFileMenuItems.Copy</c>), hides
 /// or disables them in <c>ContextMenuOpening</c>, and runs the same commands from its toolbar through
-/// <c>IHackFileView.ExecuteAsync</c>. They belong to the SDK's SemVer promise (ADR 0114 §2).
+/// <c>IKazoFileView.ExecuteAsync</c>. They belong to the SDK's SemVer promise (ADR 0114 §2).
 /// </summary>
 public static class KazoFileMenuItems
 {

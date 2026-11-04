@@ -31,7 +31,7 @@ public enum KazoSyncDomain
     /// <summary>Capability grants issued by the server; pull only (ADR 0031).</summary>
     Grants = 1,
 
-    /// <summary><c>/etc/hackeros/file-associations.json</c> (ADR 0033).</summary>
+    /// <summary><c>/etc/kazoos/file-associations.json</c> (ADR 0033).</summary>
     FileAssociations = 2
 }
 
@@ -57,13 +57,13 @@ public sealed record KazoSyncConflict(KazoSyncDomain Domain, string Path, DateTi
 
 /// <summary>State of the periodic synchronization of the session user (ADR 0101 section 4).</summary>
 /// <param name="IsActive">The background synchronization runs (a session is open on a host that supports it).</param>
-/// <param name="IsPaused">The user paused it in <c>~/.config/hackeros/sync.config</c>.</param>
+/// <param name="IsPaused">The user paused it in <c>~/.config/kazoos/sync.config</c>.</param>
 /// <param name="IsOnline">The last pass reached the server.</param>
 /// <param name="LastSyncAt">End of the last completed pass, or <see langword="null"/>.</param>
 /// <param name="LastSent">Records the last pass sent.</param>
 /// <param name="LastReceived">Records the last pass applied locally.</param>
 /// <param name="LastError">Why the last pass failed, or <see langword="null"/>.</param>
-/// <param name="Interval">Interval between two periodic passes, set in <c>/etc/hackeros/sync.config</c>.</param>
+/// <param name="Interval">Interval between two periodic passes, set in <c>/etc/kazoos/sync.config</c>.</param>
 public sealed record KazoSyncStatus(
     bool IsActive,
     bool IsPaused,
@@ -212,7 +212,7 @@ public interface IAppServerConnectionGateway
 
     /// <summary>
     /// Pauses or resumes the periodic synchronization of the session user, written as
-    /// <c>paused</c> in <c>~/.config/hackeros/sync.config</c>. A manual pass still runs while paused.
+    /// <c>paused</c> in <c>~/.config/kazoos/sync.config</c>. A manual pass still runs while paused.
     /// </summary>
     /// <param name="paused">Whether to pause.</param>
     /// <param name="cancellationToken">Cancels the write.</param>

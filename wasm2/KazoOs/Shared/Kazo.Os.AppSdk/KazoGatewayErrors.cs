@@ -4,7 +4,7 @@ using Kazo.Os.Simulation.Abstractions.Gateways;
 namespace Kazo.Os.AppSdk;
 
 /// <summary>
-/// Turns gateway-level errors into the <c>System.IO</c>-style exceptions the <c>Hack*</c> facades
+/// Turns gateway-level errors into the <c>System.IO</c>-style exceptions the <c>Kazo*</c> facades
 /// document (ADR 0043, section 4), so app code catches one family of exceptions.
 /// </summary>
 internal static class KazoGatewayErrors

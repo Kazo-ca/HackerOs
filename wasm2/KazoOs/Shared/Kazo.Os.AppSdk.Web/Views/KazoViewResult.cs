@@ -10,7 +10,7 @@ namespace Kazo.Os.AppSdk.Web.Views;
 /// <c>text/html; charset=utf-8</c>, status 200 unless set. The view is named (<see cref="ViewName"/>,
 /// looked up by the engine) or typed (<see cref="ViewType"/>, <c>View&lt;NoteListView&gt;(model)</c>).
 /// </summary>
-public sealed class KazoViewResult : IHackActionResult
+public sealed class KazoViewResult : IKazoActionResult
 {
     /// <summary>Gets or sets the view name or path; the action name when <see langword="null"/> and <see cref="ViewType"/> is not set.</summary>
     public string? ViewName { get; init; }

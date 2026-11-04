@@ -165,10 +165,10 @@ public sealed partial class DialogCoordinatorTests
     {
         public AppManifest Manifest { get; } = new()
         {
-            Id = "org.hackeros.test-app",
+            Id = "org.kazoos.test-app",
             Name = "Test App",
             Version = "1.0.0",
-            PublisherId = "org.hackeros",
+            PublisherId = "org.kazoos",
             Description = "Test app",
             Kind = AppKind.Window,
             EntryPoint = new AppEntryPointManifest("Test", "Test"),

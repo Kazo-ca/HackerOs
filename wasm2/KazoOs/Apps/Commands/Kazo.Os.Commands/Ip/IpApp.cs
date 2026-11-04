@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Ip;
 public sealed class IpApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.ip";
+    public override string Id => "org.kazoos.commands.ip";
 
     /// <inheritdoc />
     public override string Name => "ip";
@@ -22,7 +22,7 @@ public sealed class IpApp : AppDefinition
     public override Type EntryPoint => typeof(IpCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Show network interfaces, addresses and routes";

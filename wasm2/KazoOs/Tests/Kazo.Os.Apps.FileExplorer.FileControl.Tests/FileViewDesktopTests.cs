@@ -6,7 +6,7 @@ public sealed class FileViewDesktopTests
     [Fact]
     public void An_app_drag_names_one_app_or_several()
     {
-        Assert.Equal(["org.hackeros.calculator"], FileView.ReadAppIds("""{"appId":"org.hackeros.calculator"}"""));
+        Assert.Equal(["org.kazoos.calculator"], FileView.ReadAppIds("""{"appId":"org.kazoos.calculator"}"""));
         Assert.Equal(["org.a", "org.b"], FileView.ReadAppIds("""{"appIds":["org.a","org.b"]}"""));
     }
 

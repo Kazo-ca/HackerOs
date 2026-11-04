@@ -27,7 +27,7 @@ public sealed class KazoWebDebugLogTests
     {
         KazoWebApplicationBuilder builder = new("com.example.debuglog", "Debug log", [Site + "/"], KazoWebGeneratedRoutes.Table);
         KazoWebDebugLogMemorySink sink = new();
-        builder.Services.AddSingleton<IHackWebDebugLogSink>(sink);
+        builder.Services.AddSingleton<IKazoWebDebugLogSink>(sink);
         builder.Services.AddSingleton<TimeProvider>(new FixedTime());
         logging(builder.Logging);
         await using KazoWebApplication app = builder.Build();
@@ -37,7 +37,7 @@ public sealed class KazoWebDebugLogTests
             context.RequestServices.GetRequiredService<ILogger<Marker>>().LogDebug("details");
             return KazoResults.Ok("hi");
         });
-        app.MapGet("/boom", IHackActionResult () => throw new InvalidOperationException("kaboom"));
+        app.MapGet("/boom", IKazoActionResult () => throw new InvalidOperationException("kaboom"));
 
         await app.ProcessAsync(KazoWebRequestData.Create("GET", Site + "/hello"));
         KazoWebResponseData failed = await app.ProcessAsync(KazoWebRequestData.Create("GET", Site + "/boom"));

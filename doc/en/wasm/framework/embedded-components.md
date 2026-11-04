@@ -43,7 +43,7 @@ window.
 ## Embedding a component (host app)
 
 ```razor
-<KazoEmbeddedComponent TController="IHackTerminal"
+<KazoEmbeddedComponent TController="IKazoTerminal"
                        Contract="@KazoComponentContracts.Terminal"
                        Options="_options"
                        ControllerChanged="terminal => _terminal = terminal">
@@ -63,7 +63,7 @@ like any Blazor component. It derives from
 (reduced form; the real `KazoFileView` is described further down):
 
 ```csharp
-public sealed class KazoFileView : KazoContractComponent<IHackFileView>
+public sealed class KazoFileView : KazoContractComponent<IKazoFileView>
 {
     [Parameter] public string? Path { get; set; }
     [Parameter] public EventCallback<string> Opened { get; set; }
@@ -101,8 +101,8 @@ by displaying another app's control.
   identifier. `KazoComponentHost` skips uninstalled apps and loads
   the provider's assembly on first use.
 - **Administrator's choice** (ADR 0156, ADR 0158). For
-  `hackeros.file-view` and `hackeros.file-dialogs`, `KazoComponentHost` reads
-  `/etc/hackeros/components.config` (`IComponentProviderSelection`, reread on
+  `kazoos.file-view` and `kazoos.file-dialogs`, `KazoComponentHost` reads
+  `/etc/kazoos/components.config` (`IComponentProviderSelection`, reread on
   each resolution) and tries the chosen app first; the others remain
   fallbacks, the explorer first. If the chosen app is disabled for the
   user or fails to load, the next one takes over and
@@ -112,8 +112,8 @@ by displaying another app's control.
 
   ```ini
   [providers]
-  hackeros.file-view=com.example.files
-  hackeros.file-dialogs=com.example.files
+  kazoos.file-view=com.example.files
+  kazoos.file-dialogs=com.example.files
   ```
 
   The choice is made in Settings ▸ OS components
@@ -132,9 +132,9 @@ by displaying another app's control.
 
 | Contract | Provider allowed | Refusal |
 | --- | --- | --- |
-| `hackeros.terminal` | any windowed app | none |
-| `hackeros.file-view`, `hackeros.file-dialogs` | any windowed app (`AdministratorSelected`); the administrator chooses the one in service, the explorer by default (ADR 0156) | none (`HOSAPP0025` is removed, ADR 0158 §1) |
-| `hackeros.context-menu` | platform | `manifest.component.contract.platform` (`HOSAPP0009` at the app's build) |
+| `kazoos.terminal` | any windowed app | none |
+| `kazoos.file-view`, `kazoos.file-dialogs` | any windowed app (`AdministratorSelected`); the administrator chooses the one in service, the explorer by default (ADR 0156) | none (`HOSAPP0025` is removed, ADR 0158 §1) |
+| `kazoos.context-menu` | platform | `manifest.component.contract.platform` (`HOSAPP0009` at the app's build) |
 
 - **Unavailable.** An OS contract (files or menu) with no
   provider that loads is an OS error: `component.unavailable` is written in `/var/log/syslog`
@@ -145,12 +145,12 @@ by displaying another app's control.
 
 | Contract | Controller | Options | Provider |
 | --- | --- | --- | --- |
-| `hackeros.terminal` (`KazoComponentContracts.Terminal`) | `IHackTerminal` | `KazoTerminalOptions` (`WorkingDirectory`, `ShowBanner`, `FocusOnStart`) | Terminal (`TerminalEmbed`) |
-| `hackeros.file-view` (`KazoComponentContracts.FileView`) | `IHackFileView`, component `KazoFileView` (ADR 0155) | `KazoFileView` parameters | File Explorer (`ExplorerFileView`) |
-| `hackeros.file-dialogs` (`KazoComponentContracts.FileDialogs`) | none: opened through `IDialogService.OpenWithAsync`, `ShowFilePropertiesAsync`, `ResolveFileConflictAsync` (`KazoFileDialogs`, ADR 0155 §5) | `Dialog`, `Request`, `Completed` parameters | File Explorer (`ExplorerFileDialogs`) |
-| `hackeros.context-menu` (`KazoComponentContracts.ContextMenu`) | `IHackContextMenu`, component `KazoContextMenu` ([`context-menu.md`](context-menu.md)) | none | Platform (`PlatformContextMenu`, which registers the menu; `ContextMenuOverlay` draws it, ADR 0154) |
+| `kazoos.terminal` (`KazoComponentContracts.Terminal`) | `IKazoTerminal` | `KazoTerminalOptions` (`WorkingDirectory`, `ShowBanner`, `FocusOnStart`) | Terminal (`TerminalEmbed`) |
+| `kazoos.file-view` (`KazoComponentContracts.FileView`) | `IKazoFileView`, component `KazoFileView` (ADR 0155) | `KazoFileView` parameters | File Explorer (`ExplorerFileView`) |
+| `kazoos.file-dialogs` (`KazoComponentContracts.FileDialogs`) | none: opened through `IDialogService.OpenWithAsync`, `ShowFilePropertiesAsync`, `ResolveFileConflictAsync` (`KazoFileDialogs`, ADR 0155 §5) | `Dialog`, `Request`, `Completed` parameters | File Explorer (`ExplorerFileDialogs`) |
+| `kazoos.context-menu` (`KazoComponentContracts.ContextMenu`) | `IKazoContextMenu`, component `KazoContextMenu` ([`context-menu.md`](context-menu.md)) | none | Platform (`PlatformContextMenu`, which registers the menu; `ContextMenuOverlay` draws it, ADR 0154) |
 
-### `KazoFileView` and `IHackFileView`
+### `KazoFileView` and `IKazoFileView`
 
 ```razor
 <KazoFileView InitialDirectory="@home"
@@ -172,7 +172,7 @@ by displaying another app's control.
 | `DesktopOptions`, `DesktopPositions`, `DesktopPositionsChanged` | `Desktop` mode only (ADR 0160 §2): `[view]` options, cell of each item (`::home`, `::trash` for system icons), positions to save after a move or a new item. The host keeps `desktop.config`, the provider places with `KazoDesktopLayout`. See [`desktop.md`](../dev/desktop.md). |
 | `ContextMenuOpening` | After the plan §7 menu is built: `Scope`, `Items`, `Directory`, `Menu` (find, hide, disable, add a group), `Cancel`. Entries registered by apps are added **afterwards** by the OS (ADR 0159 §4). |
 
-`IHackFileView`: `CurrentDirectory`, `Items`, `SelectedItems`, `CanPaste`,
+`IKazoFileView`: `CurrentDirectory`, `Items`, `SelectedItems`, `CanPaste`,
 `IsBusy`, `StateChanged`, `NavigateAsync`, `RefreshAsync`, `RevealAsync`,
 `ClearSelection`, `RefreshFilter`, `WhenIdleAsync`, and
 `CanExecute`/`ExecuteAsync(command)` whose commands are the
@@ -191,7 +191,7 @@ scope, items, displayed folder) on each file menu it opens:
 this is what allows the OS to add app entries to it (ADR 0159 §4, see
 [`context-menu.md`](context-menu.md#app-entries-in-the-file-menus-work-item-4)).
 
-### `IHackTerminal`
+### `IKazoTerminal`
 
 | Member | Role |
 | --- | --- |
@@ -211,25 +211,25 @@ The shell is a child of the host's process: the host must request
 | Item | Project | Role |
 | --- | --- | --- |
 | `AppComponent`, `AppComponentManifest`, `AppManifest.Components` | `Kazo.Os.App.Abstractions` | Declaration and manifest (`components`, omitted if empty). |
-| `KazoComponentContracts`, `IHackTerminal`, `KazoTerminalOptions`, `KazoTerminalCommandResult` | `Kazo.Os.AppSdk` (`.Components`) | Contracts. |
+| `KazoComponentContracts`, `IKazoTerminal`, `KazoTerminalOptions`, `KazoTerminalCommandResult` | `Kazo.Os.AppSdk` (`.Components`) | Contracts. |
 | `AppComponentContracts`, `AppComponentProviderScope` | `Kazo.Os.App.Abstractions` | Contracts known to the OS and who can provide them (ADR 0148 §3.3, ADR 0156). |
-| `IHackComponentHost`, `KazoComponentResolution`, `KazoEmbeddableComponent`, `KazoEmbeddedComponent<T>`, `KazoContractComponent<T>` | `Kazo.Os.AppSdk.Blazor` (`.Components`) | Blazor side of the SDK. |
+| `IKazoComponentHost`, `KazoComponentResolution`, `KazoEmbeddableComponent`, `KazoEmbeddedComponent<T>`, `KazoContractComponent<T>` | `Kazo.Os.AppSdk.Blazor` (`.Components`) | Blazor side of the SDK. |
 | `AppCatalog.ComponentProviders`, `AppComponentProvider` | `Kazo.Os.Platform.Core` | Provider registry read at startup. |
 | `KazoComponentHost`, `KazoPlatformComponent` | `Kazo.Os.Platform.Blazor` (`.Components`) | Platform providers first, then the administrator's choice (`Selection`), then the first installed provider that loads (`AppLifecycleOrchestrator.EnsureDescriptorAsync`); checks the type, writes `component.fallback` (`ReportWarning`) and `component.unavailable`. |
-| `ComponentProviderService`, `ComponentProvidersDocument`, `IComponentProviderSelection` | `Kazo.Os.Platform.Core` (`.ComponentProviders`) | `/etc/hackeros/components.config`: reading, approval, writing, audit, removal on uninstall (ADR 0156, ADR 0158). |
+| `ComponentProviderService`, `ComponentProvidersDocument`, `IComponentProviderSelection` | `Kazo.Os.Platform.Core` (`.ComponentProviders`) | `/etc/kazoos/components.config`: reading, approval, writing, audit, removal on uninstall (ADR 0156, ADR 0158). |
 | `KazoComponentProviders`, `IAppComponentProviderAdministrationGateway`, `KazoComponentContractInfo`, `KazoComponentProviderInfo` | `Kazo.Os.AppSdk` (`.Administration`) | Provider choice for Settings (`apps.manage`). |
 | `OsComponentsPanel` | `Kazo.Os.Apps.Settings` | "OS components" tab. |
-| `TerminalEmbed` | `Kazo.Os.Apps.Terminal` | Provider of `hackeros.terminal`. |
+| `TerminalEmbed` | `Kazo.Os.Apps.Terminal` | Provider of `kazoos.terminal`. |
 
 ## Tasks
 
 - [x] `Components` in `AppDefinition`, the mapper, `AppManifest`, the schema,
   the serializer, the test canonical form and the validator.
-- [x] `IHackTerminal` and `KazoTerminalOptions` contracts.
+- [x] `IKazoTerminal` and `KazoTerminalOptions` contracts.
 - [x] `KazoEmbeddableComponent`, `KazoEmbeddedComponent<T>`,
-  `IHackComponentHost`.
+  `IKazoComponentHost`.
 - [x] `KazoComponentHost` and `EnsureDescriptorAsync` (lazy loading).
-- [x] `TerminalPanel` implements `IHackTerminal` (input queue, transcript,
+- [x] `TerminalPanel` implements `IKazoTerminal` (input queue, transcript,
   command result); `TerminalEmbed` registered by the Terminal app.
 - [x] The editor embeds the terminal through the contract in its dock.
 - [x] Tests: manifest, validator, mapper, registry, sequence
@@ -242,12 +242,12 @@ The shell is a child of the host's process: the host must request
   validator, the catalog, aggregation, the registry and the typed component.
 - [x] Work item 3c of the desktop plan (ADR 0156, ADR 0158): file
   contracts open to any windowed app (`HOSAPP0025` removed),
-  `/etc/hackeros/components.config`, administrator's choice tried
+  `/etc/kazoos/components.config`, administrator's choice tried
   first, `component.fallback` fallback, `KazoComponentProviders` and the
   "OS components" tab with the approval window, `component.provider`
   in `auth.log`, line removed on uninstall for the machine; tests
   of the service, the gateway, the registry, the catalog, the validator and
   aggregation.
-- [x] Work item 3 of the desktop plan (ADR 0155): `KazoFileView`, `IHackFileView`
+- [x] Work item 3 of the desktop plan (ADR 0155): `KazoFileView`, `IKazoFileView`
   and the provided dialogs, `ExplorerFileView` and `ExplorerFileDialogs`
   registered by the explorer; test of the passing of all parameters.

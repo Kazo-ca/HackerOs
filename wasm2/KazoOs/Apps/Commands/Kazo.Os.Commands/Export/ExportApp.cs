@@ -11,7 +11,7 @@ namespace Kazo.Os.Commands.Export;
 public sealed class ExportApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.export";
+    public override string Id => "org.kazoos.commands.export";
 
     /// <inheritdoc />
     public override string Name => "export";
@@ -23,7 +23,7 @@ public sealed class ExportApp : AppDefinition
     public override Type EntryPoint => typeof(ExportCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Set environment variables of the shell";

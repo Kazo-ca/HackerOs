@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Ping;
 public sealed class PingApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.ping";
+    public override string Id => "org.kazoos.commands.ping";
 
     /// <inheritdoc />
     public override string Name => "ping";
@@ -22,7 +22,7 @@ public sealed class PingApp : AppDefinition
     public override Type EntryPoint => typeof(PingCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description =>

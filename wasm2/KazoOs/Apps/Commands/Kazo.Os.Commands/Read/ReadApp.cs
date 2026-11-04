@@ -11,7 +11,7 @@ namespace Kazo.Os.Commands.Read;
 public sealed class ReadApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.read";
+    public override string Id => "org.kazoos.commands.read";
 
     /// <inheritdoc />
     public override string Name => "read";
@@ -23,7 +23,7 @@ public sealed class ReadApp : AppDefinition
     public override Type EntryPoint => typeof(ReadCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Read a line from standard input into shell variables";

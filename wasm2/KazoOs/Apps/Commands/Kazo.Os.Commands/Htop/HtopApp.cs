@@ -11,7 +11,7 @@ namespace Kazo.Os.Commands.Htop;
 public sealed class HtopApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.htop";
+    public override string Id => "org.kazoos.commands.htop";
 
     /// <inheritdoc />
     public override string Name => "htop";
@@ -23,7 +23,7 @@ public sealed class HtopApp : AppDefinition
     public override Type EntryPoint => typeof(HtopCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Interactive process viewer with meters, sorting and kill";

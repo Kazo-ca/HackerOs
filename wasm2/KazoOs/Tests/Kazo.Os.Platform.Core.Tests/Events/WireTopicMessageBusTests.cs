@@ -11,8 +11,8 @@ namespace Kazo.Os.Platform.Core.Tests.Events;
 /// </summary>
 public sealed class WireTopicMessageBusTests
 {
-    private const string OwnerAppId = "org.hackeros.owner-app";
-    private const string OtherAppId = "org.hackeros.other-app";
+    private const string OwnerAppId = "org.kazoos.owner-app";
+    private const string OtherAppId = "org.kazoos.other-app";
 
     private static PublisherIdentity Identity(string appId) => new(appId, "user-1", "1");
 
@@ -84,11 +84,11 @@ public sealed class WireTopicMessageBusTests
         List<object> received = [];
 
         IDisposable subscription = wire.SubscribeWire(name, (type, @event) => received.Add(@event));
-        bus.Publish(new AppDisabledEvent("org.hackeros.gone"));
+        bus.Publish(new AppDisabledEvent("org.kazoos.gone"));
         subscription.Dispose();
-        bus.Publish(new AppDisabledEvent("org.hackeros.later"));
+        bus.Publish(new AppDisabledEvent("org.kazoos.later"));
 
-        Assert.Equal([new AppDisabledEvent("org.hackeros.gone")], received);
+        Assert.Equal([new AppDisabledEvent("org.kazoos.gone")], received);
         Assert.Equal(0, wire.CountWireSubscriptions(name));
     }
 }

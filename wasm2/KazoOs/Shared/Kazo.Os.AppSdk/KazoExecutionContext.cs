@@ -301,7 +301,7 @@ public static class KazoExecutionContext
 }
 
 /// <summary>
-/// Thrown when code that needs the ambient app context (the <c>Hack*</c> file API, for instance)
+/// Thrown when code that needs the ambient app context (the <c>Kazo*</c> file API, for instance)
 /// runs outside any <see cref="KazoExecutionContext.Enter"/> scope.
 /// </summary>
 public sealed class KazoExecutionContextMissingException : InvalidOperationException

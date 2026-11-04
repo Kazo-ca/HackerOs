@@ -11,7 +11,7 @@ namespace Kazo.Os.Commands.Passwd;
 public sealed class PasswdApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.passwd";
+    public override string Id => "org.kazoos.commands.passwd";
 
     /// <inheritdoc />
     public override string Name => "passwd";
@@ -23,7 +23,7 @@ public sealed class PasswdApp : AppDefinition
     public override Type EntryPoint => typeof(PasswdCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Change user password";

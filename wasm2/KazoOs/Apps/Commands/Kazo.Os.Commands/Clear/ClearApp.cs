@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Clear;
 public sealed class ClearApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.clear";
+    public override string Id => "org.kazoos.commands.clear";
 
     /// <inheritdoc />
     public override string Name => "clear";
@@ -22,7 +22,7 @@ public sealed class ClearApp : AppDefinition
     public override Type EntryPoint => typeof(ClearCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Clear the terminal screen";

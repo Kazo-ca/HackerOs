@@ -5,8 +5,8 @@
     "developer"
   ],
   "title": {
-    "en": "The Hack Store workflow of the hackeros-solution template opens its pull request again",
-    "fr": "Le workflow Hack Store du modèle hackeros-solution ouvre de nouveau sa pull request"
+    "en": "The Kazo OS Store workflow of the kazoos-solution template opens its pull request again",
+    "fr": "Le workflow Kazo OS Store du modèle kazoos-solution ouvre de nouveau sa pull request"
   },
   "description": {
     "en": "The workflow no longer passes --remote to gh repo fork, which current gh versions refuse, and retries the clone of the fork while GitHub creates it.",

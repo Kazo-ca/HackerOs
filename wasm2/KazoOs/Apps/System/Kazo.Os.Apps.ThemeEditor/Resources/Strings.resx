@@ -52,7 +52,7 @@
     <value>&lt;code&gt;id&lt;/code&gt;: lowercase letters, digits and dashes; it cannot reuse a built-in theme or a theme of &lt;code&gt;/etc&lt;/code&gt;.</value>
   </data>
   <data name="Docs.Files.Intro" xml:space="preserve">
-    <value>A theme is a text file ending in &lt;code&gt;.theme&lt;/code&gt;. Save it in &lt;code&gt;~/.config/hackeros/themes/&lt;/code&gt; for yourself; an administrator can copy it to &lt;code&gt;/etc/hackeros/themes/&lt;/code&gt; for every user. The file is also the export: copy it, send it, open it here.</value>
+    <value>A theme is a text file ending in &lt;code&gt;.theme&lt;/code&gt;. Save it in &lt;code&gt;~/.config/kazoos/themes/&lt;/code&gt; for yourself; an administrator can copy it to &lt;code&gt;/etc/kazoos/themes/&lt;/code&gt; for every user. The file is also the export: copy it, send it, open it here.</value>
   </data>
   <data name="Docs.Files.Platforms" xml:space="preserve">
     <value>&lt;code&gt;platforms&lt;/code&gt;: &lt;code&gt;desktop&lt;/code&gt;, &lt;code&gt;mobile&lt;/code&gt; or both. On a form factor the base theme does not style, the tokens apply over that form factor's default theme.</value>
@@ -289,7 +289,7 @@
     <value>Installed themes</value>
   </data>
   <data name="Sidebar.NoThemes" xml:space="preserve">
-    <value>No theme in ~/.config/hackeros/themes or /etc/hackeros/themes yet.</value>
+    <value>No theme in ~/.config/kazoos/themes or /etc/kazoos/themes yet.</value>
   </data>
   <data name="Sidebar.NotSaved" xml:space="preserve">
     <value>Not saved</value>

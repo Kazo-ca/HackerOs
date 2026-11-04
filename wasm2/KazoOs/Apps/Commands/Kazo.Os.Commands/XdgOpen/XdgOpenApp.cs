@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.XdgOpen;
 public sealed class XdgOpenApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.xdg-open";
+    public override string Id => "org.kazoos.commands.xdg-open";
 
     /// <inheritdoc />
     public override string Name => "xdg-open";
@@ -22,7 +22,7 @@ public sealed class XdgOpenApp : AppDefinition
     public override Type EntryPoint => typeof(XdgOpenCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Open a file, folder or URI in the user's preferred application";

@@ -6,7 +6,7 @@ namespace Kazo.Os.Ecosystem;
 
 /// <summary>
 /// The deployment switch of the sign-in screen's « Forgot password? » (ADR 0226):
-/// <c>HackerOs:SignIn:FactoryReset:Enabled</c> in <c>wwwroot/appsettings.json</c>.
+/// <c>KazoOs:SignIn:FactoryReset:Enabled</c> in <c>wwwroot/appsettings.json</c>.
 /// </summary>
 /// <param name="Enabled">
 /// Whether the sign-in screen offers to erase the machine when its password is forgotten.
@@ -15,12 +15,12 @@ namespace Kazo.Os.Ecosystem;
 public sealed record SignInFactoryResetSettings(bool Enabled)
 {
     /// <summary>Configuration section read by <see cref="Read"/>.</summary>
-    public const string SectionName = "HackerOs:SignIn:FactoryReset";
+    public const string SectionName = "KazoOs:SignIn:FactoryReset";
 
     /// <summary>On, the default of every host (ADR 0226, question 2).</summary>
     public static SignInFactoryResetSettings Default { get; } = new(true);
 
-    /// <summary>Reads <c>HackerOs:SignIn:FactoryReset:Enabled</c>; absent or unreadable reads as <see langword="true"/>.</summary>
+    /// <summary>Reads <c>KazoOs:SignIn:FactoryReset:Enabled</c>; absent or unreadable reads as <see langword="true"/>.</summary>
     /// <param name="configuration">The host configuration; <see langword="null"/> reads as an absent section.</param>
     /// <returns>The settings.</returns>
     public static SignInFactoryResetSettings Read(IConfiguration? configuration)

@@ -6,7 +6,7 @@
   "groupIdentity": "Kazo.Os.Templates.Command",
   "name": "Kazo OS terminal command",
   "description": "A Kazo OS terminal command (TerminalAppBase), built with Kazo.Os.App.Build.",
-  "shortName": "hackeros-command",
+  "shortName": "kazoos-command",
   "sourceName": "Kazo.Os.Template.Command",
   "preferNameDirectory": true,
   "tags": { "language": "C#", "type": "project" },

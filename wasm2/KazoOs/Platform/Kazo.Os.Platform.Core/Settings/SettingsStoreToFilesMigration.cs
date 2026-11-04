@@ -33,23 +33,23 @@ public interface IUserProfileInitializer
 /// <remarks>
 /// <list type="number">
 /// <item><see cref="MigrateSystemAsync"/>, at boot before any login, with an audited system context:
-/// every <c>OsAdmin</c> record goes to its <c>/etc/hackeros</c> file (flat JSON converted to
+/// every <c>OsAdmin</c> record goes to its <c>/etc/kazoos</c> file (flat JSON converted to
 /// <c>.config</c>). Then the installation defaults are written where no file exists yet, so an
-/// administrator always edits a real file. Marker: <c>/var/lib/hackeros/migrations/settings-to-files</c>.</item>
+/// administrator always edits a real file. Marker: <c>/var/lib/kazoos/migrations/settings-to-files</c>.</item>
 /// <item><see cref="InitializeAsync"/>, at each user's login after <see cref="FileSystemSeeder"/>:
 /// that user's app documents, start-menu profile and window geometry, and the move of
 /// <c>~/.config/apps/&lt;appId&gt;/</c> to <c>~/.config/&lt;appId&gt;/</c>. Marker:
-/// <c>~/.local/state/hackeros/migrations/settings-to-files</c>.</item>
+/// <c>~/.local/state/kazoos/migrations/settings-to-files</c>.</item>
 /// </list>
 /// An existing target file is never overwritten.
 /// </remarks>
 public sealed class SettingsStoreToFilesMigration : IUserProfileInitializer
 {
     /// <summary>System migration marker.</summary>
-    public const string SystemMarkerPath = "/var/lib/hackeros/migrations/settings-to-files";
+    public const string SystemMarkerPath = "/var/lib/kazoos/migrations/settings-to-files";
 
     /// <summary>Per-user marker, relative to the home directory.</summary>
-    public const string UserMarkerRelativePath = ".local/state/hackeros/migrations/settings-to-files";
+    public const string UserMarkerRelativePath = ".local/state/kazoos/migrations/settings-to-files";
 
     private readonly IFileSystemService _fileSystem;
     private readonly ISimulationClock _clock;
@@ -109,7 +109,7 @@ public sealed class SettingsStoreToFilesMigration : IUserProfileInitializer
                      Shell.WindowManagerSettingsDocuments.Document,
                      // ADR 0193 §2: the machine's time zone, "auto" (the device's zone).
                      Globalization.TimeZoneSettingsDocuments.Document,
-                     // ADR 0204 §3: event sounds on, theme "hackeros", volume 60.
+                     // ADR 0204 §3: event sounds on, theme "kazoos", volume 60.
                      Sounds.SoundSettingsDocuments.Document,
                      // ADR 0216 §3: "Do not disturb" off.
                      Notifications.NotificationSettingsDocuments.Document,
@@ -196,7 +196,7 @@ public sealed class SettingsStoreToFilesMigration : IUserProfileInitializer
                 && string.Equals(record.UserId, userId, StringComparison.OrdinalIgnoreCase))
             {
                 (VirtualPath Path, string Content) target = record.DocumentId == "window-geometry"
-                    ? (VirtualPath.Parse($"{home}/.local/state/hackeros/windows/{appId}.config"), ConvertWindowGeometry(record.Content))
+                    ? (VirtualPath.Parse($"{home}/.local/state/kazoos/windows/{appId}.config"), ConvertWindowGeometry(record.Content))
                     : (VirtualPath.Parse($"{home}/.config/{appId}/{record.DocumentId}.config"), record.Content);
                 await WriteIfAbsentAsync(gateway, target.Path, target.Content, cancellationToken).ConfigureAwait(false);
             }
@@ -297,7 +297,7 @@ public sealed class SettingsStoreToFilesMigration : IUserProfileInitializer
         + ConfigDocumentFormat.Serialize(schema, values);
 
     private static string DefaultConfig(OsSettingsDocument document) =>
-        $"# Kazo OS default for every user. Users override keys in ~/.config/hackeros/{document.DocumentId}.config.\n"
+        $"# Kazo OS default for every user. Users override keys in ~/.config/kazoos/{document.DocumentId}.config.\n"
         + "# List a key under [locked] with the value true to stop users from overriding it.\n"
         + ConfigDocumentFormat.Serialize(document.Schema, new Dictionary<string, string>(StringComparer.Ordinal));
 

@@ -105,10 +105,10 @@ public sealed class WindowAppBaseWindowTitleTests
 
     private static AppManifest Manifest() => new()
     {
-        Id = "org.hackeros.test-title",
+        Id = "org.kazoos.test-title",
         Name = "Title App",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "Window title test app.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.AppSdk.Blazor.Tests", "TitleApp"),

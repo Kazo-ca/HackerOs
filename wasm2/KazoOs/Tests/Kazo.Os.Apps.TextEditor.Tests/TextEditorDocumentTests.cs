@@ -99,7 +99,7 @@ public sealed class TextEditorDocumentTests
     public void FailLoading_SetsErrorState()
     {
         TextEditorDocument doc = new();
-        VirtualPath path = VirtualPath.Parse("/etc/hackeros/secret.conf");
+        VirtualPath path = VirtualPath.Parse("/etc/kazoos/secret.conf");
         const string errorMessage = "Permission denied.";
 
         doc.BeginLoading(path);

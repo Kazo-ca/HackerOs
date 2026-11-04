@@ -22,7 +22,7 @@ navigateur, dans la composition de l'hôte.
 |---|---|
 | `Schema/` | `KazoOsIndexedDbSchema` (nom de la base, version, magasins et index), modèle de schéma, politique de stockage des contenus (`FileContentStoragePolicy`). |
 | `FileSystem/` | Fournisseur du système de fichiers (`IndexedDbFileSystemProvider`), lecteur et écrivain, planificateur de mutations, amorçage, maintenance, contenu en blocs. |
-| `Sessions/`, `Policy/`, `Catalog/`, `Settings/`, `ServerConnection/`, `Sync/`, `WebData/` | Un dépôt IndexedDB par domaine (utilisateurs, groupes, grants, catalogue des apps, réglages hérités, connexion serveur, curseurs et états de synchro, bases des sites ASP.Hack). |
+| `Sessions/`, `Policy/`, `Catalog/`, `Settings/`, `ServerConnection/`, `Sync/`, `WebData/` | Un dépôt IndexedDB par domaine (utilisateurs, groupes, grants, catalogue des apps, réglages hérités, connexion serveur, curseurs et états de synchro, bases des sites ASP.Kazo). |
 | `Diagnostics/` | Journal de diagnostic et d'audit persistés, inspecteur du stockage. |
 | `Backup/` | Sauvegarde et restauration du stockage (`IndexedDbBackupService`). |
 | `Recovery/` | `BrowserStorageRecoveryClassifier` : traduit une erreur du navigateur en état de récupération (ADR 0018, `StorageRecoveryState`). |
@@ -35,13 +35,13 @@ navigateur, dans la composition de l'hôte.
 
 ## Base IndexedDB
 
-- Nom : `hackeros`. Version courante : **4** (`KazoOsIndexedDbSchema.CurrentVersion`).
+- Nom : `kazoos`. Version courante : **4** (`KazoOsIndexedDbSchema.CurrentVersion`).
   Changer la version est le seul moyen d'ajouter, retirer ou modifier un
   magasin ou un index ; chaque montée a son étape de migration.
 - Magasins principaux : `users`, `groups`, `sessions`, `settings`, `fsEntries`
   (métadonnées : fichiers, dossiers, liens), `fsLinks`, `fsContent` (blocs),
   `catalog`, `grants`, `audit`, `diagnostics`, `syncMetadata`, `serverConnection`,
-  `syncCursors`, `syncRecordState`, et une base par site ASP.Hack (`hackweb.<appId>`).
+  `syncCursors`, `syncRecordState`, et une base par site ASP.Kazo (`kazoweb.<appId>`).
 - Contenu de fichier : découpé en blocs adressés par SHA-256, de 256 Kio au plus
   par défaut (`FileContentStoragePolicy.DefaultMaxChunkSizeBytes`) ; un bloc identique
   n'est stocké qu'une fois.
@@ -77,5 +77,5 @@ dans [`system-backup.md`](system-backup.md).
 ## Liens
 
 - Décisions : [ADR 0015](adr/0015-browser-storage-and-indexeddb-adapter.md), [ADR 0018](adr/0018-indexeddb-failure-and-recovery-policy.md), [ADR 0099](adr/0099-os-backup-and-low-storage.md), [ADR 0131](adr/0131-cross-origin-isolation.md).
-- Système de fichiers : [`virtual-proc-and-dev.md`](virtual-proc-and-dev.md), [`../framework/hack-file-api.md`](../framework/hack-file-api.md).
+- Système de fichiers : [`virtual-proc-and-dev.md`](virtual-proc-and-dev.md), [`../framework/kazo-file-api.md`](../framework/kazo-file-api.md).
 - Hôte et construction : [`building-and-testing.md`](building-and-testing.md).

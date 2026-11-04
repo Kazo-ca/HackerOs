@@ -79,7 +79,7 @@ public sealed class AppExecutionContextFactory
     /// when omitted, the one of an <see cref="Processes.InMemoryProcessManager"/> is used, otherwise
     /// contexts get a detached read-only view.
     /// </param>
-    /// <param name="machineName">Reads the machine name (<c>/etc/hostname</c>); defaults to <c>hackeros</c>.</param>
+    /// <param name="machineName">Reads the machine name (<c>/etc/hostname</c>); defaults to <c>kazoos</c>.</param>
     /// <param name="appCatalog">
     /// Services behind the <see cref="IAppExecutionContext.Catalog"/> and
     /// <see cref="IAppExecutionContext.AppManagement"/> gateways (ADR 0056, sections 2 and 3);
@@ -115,7 +115,7 @@ public sealed class AppExecutionContextFactory
     /// (ADR 0099); <see langword="null"/> leaves them unsupported.
     /// </param>
     /// <param name="localNetwork">
-    /// The local network stack (ADR 0074): listening ports, <c>hackdns</c> and web app activation, used by
+    /// The local network stack (ADR 0074): listening ports, <c>kazodns</c> and web app activation, used by
     /// the network gateway to reach services on this machine; <see langword="null"/> leaves it out.
     /// </param>
     /// <param name="webDatabases">
@@ -364,7 +364,7 @@ public sealed class AppExecutionContextFactory
             administration.StorageDiagnostics,
             // ADR 0069: the process manager's block carries the stop request and the kill to the context.
             (_processManager as Processes.InMemoryProcessManager)?.GetControlBlock(process.Pid),
-            // ADR 0088: hackweb.<app id>, for web apps only.
+            // ADR 0088: kazoweb.<app id>, for web apps only.
             new WebData.AppWebDatabaseGateway(_webDatabases, manifest),
             // ADR 0100 section 2: the session user's keyring, confined to this app's entries.
             _keyring is null ? null : new Keyring.AppKeyringGateway(_keyring, principal.UserId, manifest.Id, capabilities),
@@ -572,7 +572,7 @@ public sealed record AppCatalogGatewayServices(
     /// <summary>Gets the installed apps of the running catalog, with who sees them (ADR 0189 §3).</summary>
     public Func<Apps.Packages.InstalledPackageCatalog?>? InstalledPackages { get; init; }
 
-    /// <summary>Gets the update check whose count the Hack Store's icon shows (ADR 0212 §5).</summary>
+    /// <summary>Gets the update check whose count the Kazo OS Store's icon shows (ADR 0212 §5).</summary>
     public Func<Apps.Packages.AppUpdateMonitor?>? UpdateMonitor { get; init; }
 
     /// <summary>

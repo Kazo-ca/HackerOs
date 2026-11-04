@@ -292,8 +292,8 @@ public sealed record KeyChord(bool Control, bool Alt, bool Shift, bool Super, st
 public sealed record WindowKeyBinding(WindowKeyboardAction Action, WindowKeyBindingSet Set, KeyChord Chord);
 
 /// <summary>
-/// The window manager's shortcuts file (ADR 0095 §3, ADR 0044): <c>/etc/hackeros/keybindings.config</c>
-/// is the machine default and <c>~/.config/hackeros/keybindings.config</c> the user's choice, each with a
+/// The window manager's shortcuts file (ADR 0095 §3, ADR 0044): <c>/etc/kazoos/keybindings.config</c>
+/// is the machine default and <c>~/.config/kazoos/keybindings.config</c> the user's choice, each with a
 /// <c>[linux]</c> and a <c>[fallback]</c> section holding one line per action, for example
 /// <c>close = Alt+F4</c>. A value may list several chords separated by commas; an empty value removes
 /// the shortcut.
@@ -347,7 +347,7 @@ public static class WindowKeyBindingsSettingsDocuments
     public static string KeyOf(WindowKeyboardAction action) => Defaults.First(entry => entry.Action == action).Key;
 
     /// <summary>
-    /// Gets the system-layer file the OS ships (<c>/etc/hackeros/keybindings.config</c>): every line
+    /// Gets the system-layer file the OS ships (<c>/etc/kazoos/keybindings.config</c>): every line
     /// commented out, documenting the defaults without pinning them, as Linux distributions ship
     /// their configuration files.
     /// </summary>
@@ -357,7 +357,7 @@ public static class WindowKeyBindingsSettingsDocuments
         {
             StringBuilder builder = new();
             builder.Append("# Kazo OS window manager shortcuts (ADR 0095).\n");
-            builder.Append("# Machine default; each user may override a line in ~/.config/hackeros/keybindings.config.\n");
+            builder.Append("# Machine default; each user may override a line in ~/.config/kazoos/keybindings.config.\n");
             builder.Append("# Uncomment a line to change it. Several chords: separate them with commas. Empty: no shortcut.\n");
             builder.Append("# Modifiers: Ctrl, Alt, Shift, Super. Backquote is the key above Tab.\n");
             builder.Append("\n# Active only in full screen, once Kazo OS holds the keyboard lock.\n[linux]\n");

@@ -19,10 +19,10 @@ it therefore writes this size itself, for all apps.
 ## State file
 
 One file per app and per user, specific to the device, never synchronized:
-`~/.local/state/hackeros/windows/<appId>.config`.
+`~/.local/state/kazoos/windows/<appId>.config`.
 
 ```ini
-# Window size of org.hackeros.text-editor (ADR 0116, ADR 0122)
+# Window size of org.kazoos.text-editor (ADR 0116, ADR 0122)
 width=900
 height=640
 maximized=false
@@ -36,7 +36,7 @@ maximized=false
   declared size.
 - A file written before ADR 0122 (with `x=` and `y=`) keeps its size; its
   position is ignored, and the next write rewrites it without these keys.
-- To forget an app's size: `rm ~/.local/state/hackeros/windows/<appId>.config`.
+- To forget an app's size: `rm ~/.local/state/kazoos/windows/<appId>.config`.
 
 ## Architecture
 

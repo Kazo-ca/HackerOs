@@ -29,7 +29,7 @@ public sealed class SignInFactoryResetTests
     public void The_deployment_switch_is_read_from_the_sign_in_section(string value, bool expected) =>
         Assert.Equal(expected, SignInFactoryResetSettings.Read(Configuration(new()
         {
-            ["HackerOs:SignIn:FactoryReset:Enabled"] = value
+            ["KazoOs:SignIn:FactoryReset:Enabled"] = value
         })).Enabled);
 
     [Fact]
@@ -38,7 +38,7 @@ public sealed class SignInFactoryResetTests
         string file = Path.Combine(SolutionDirectory(), "OS", "Kazo.Os.Ecosystem", "wwwroot", "appsettings.json");
         IConfiguration configuration = new ConfigurationBuilder().AddJsonFile(file).Build();
 
-        Assert.Equal("True", configuration["HackerOs:SignIn:FactoryReset:Enabled"], ignoreCase: true);
+        Assert.Equal("True", configuration["KazoOs:SignIn:FactoryReset:Enabled"], ignoreCase: true);
     }
 
     [Theory]

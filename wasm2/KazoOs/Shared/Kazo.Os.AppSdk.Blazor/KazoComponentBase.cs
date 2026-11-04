@@ -8,7 +8,7 @@ namespace Kazo.Os.AppSdk.Blazor;
 /// Base class for a child component of a Kazo OS window app. It receives the window's
 /// <see cref="IAppExecutionContext"/> through a cascading value (set by the window host) and runs its
 /// lifecycle methods, event handlers and after-render work inside that app's
-/// <see cref="KazoExecutionContext"/> scope, so it can call the <c>Hack*</c> file API directly
+/// <see cref="KazoExecutionContext"/> scope, so it can call the <c>Kazo*</c> file API directly
 /// (ADR 0043, section 2).
 /// </summary>
 /// <remarks>
@@ -28,7 +28,7 @@ public abstract class KazoComponentBase : ComponentBase, IHandleEvent, IHandleAf
 
     /// <summary>Gets or sets the window's context menus, cascaded by the OS (ADR 0150 §4).</summary>
     [CascadingParameter]
-    private IHackMenuHost? MenuHost { get; set; }
+    private IKazoMenuHost? MenuHost { get; set; }
 
     /// <summary>
     /// Gets the window's context menus (ADR 0150 §4): <c>@attributes="Menus.Attach(name, item)"</c>

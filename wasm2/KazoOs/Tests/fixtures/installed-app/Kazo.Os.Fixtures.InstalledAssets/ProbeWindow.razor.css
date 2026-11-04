@@ -3,7 +3,7 @@
     gap: 1rem;
     align-items: center;
     padding: 1rem;
-    color: var(--hackeros-text, #c8f7c5);
-    background: var(--hackeros-surface, #0b0f0b);
+    color: var(--kazoos-text, #c8f7c5);
+    background: var(--kazoos-surface, #0b0f0b);
     font-family: monospace;
 }

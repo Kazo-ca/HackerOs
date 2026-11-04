@@ -47,7 +47,7 @@ public sealed class KazoPlatformComponent
 /// platform's own. It loads an app provider's assembly the way a launch does and checks the type
 /// before a window renders it. Like KDE's KParts trader, the host asks for a contract, never for an app.
 /// </summary>
-public sealed class KazoComponentHost : IHackComponentHost
+public sealed class KazoComponentHost : IKazoComponentHost
 {
     private readonly AppCatalog _catalog;
     private readonly IAppEnablementRegistry _enablement;
@@ -98,7 +98,7 @@ public sealed class KazoComponentHost : IHackComponentHost
     }
 
     /// <summary>
-    /// Gets the administrator's choice of provider (<c>/etc/hackeros/components.config</c>,
+    /// Gets the administrator's choice of provider (<c>/etc/kazoos/components.config</c>,
     /// ADR 0156 §2), tried first for the contracts an administrator chooses; <see langword="null"/>
     /// keeps the catalog order (the File Explorer first).
     /// </summary>

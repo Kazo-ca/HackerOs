@@ -1,14 +1,14 @@
-// The wwwroot/ files of apps installed by hackpkg (ADR 0206), the service worker half of
+// The wwwroot/ files of apps installed by kazopkg (ADR 0206), the service worker half of
 // installedAppAssets.js. A classic script, loaded with importScripts by both service-worker files of
 // the host (service-worker.js in development, service-worker.published.js once published).
 //
-// The page copies each verified file into the 'hackeros-installed-apps' cache under the address a
+// The page copies each verified file into the 'kazoos-installed-apps' cache under the address a
 // built-in app uses (_content/<assembly>/<path>). This script answers those addresses from it, and
 // lets every other request through. The query of a request is ignored (a worker script carries
-// ?hackeros-worker=N, ADR 0131 §4).
+// ?kazoos-worker=N, ADR 0131 §4).
 
-self.hackerOsInstalledAppAssets = (() => {
-    const cacheName = 'hackeros-installed-apps';
+self.kazoOsInstalledAppAssets = (() => {
+    const cacheName = 'kazoos-installed-apps';
     // Registered by the OS on a development host, where index.html registers no worker: then only
     // installed apps are served, the release cache is never filled (installedAppAssets.js).
     const installedAppsOnly = new URL(self.location.href).searchParams.get('mode') === 'installed-apps';
@@ -89,7 +89,7 @@ self.hackerOsInstalledAppAssets = (() => {
 
     // ADR 0225: the OS asks for control before it copies an installed app's files (installedAppAssets.js).
     self.addEventListener('message', event => {
-        if (!event.data || event.data.type !== 'HACKEROS_CLAIM_FOR_INSTALLED_APPS') {
+        if (!event.data || event.data.type !== 'KAZOOS_CLAIM_FOR_INSTALLED_APPS') {
             return;
         }
 

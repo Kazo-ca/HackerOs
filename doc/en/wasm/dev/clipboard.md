@@ -19,7 +19,7 @@ conflicts) is described in [`file-explorer.md`](file-explorer.md).
 App ──► KazoClipboard ──► IAppClipboardGateway ──► AppClipboardGateway ──► SystemClipboard (one entry per session)
                                                        clipboard.read / .write          │ Changed, sequence, origin
                                                                                           ▼
-              /etc/hackeros/clipboard.config ──► HostClipboardBridge (Platform Core)
+              /etc/kazoos/clipboard.config ──► HostClipboardBridge (Platform Core)
                                                        │ IHostClipboardChannel / IHostClipboardSink
                                                        ▼
                                    BrowserHostClipboardChannel ──► hostClipboard.js ──► navigator.clipboard.writeText
@@ -56,7 +56,7 @@ SystemClipboardEntry? entry = clipboard.GetEntry(session);
 
 ### Setting
 
-`/etc/hackeros/clipboard.config` (installed commented out at first startup):
+`/etc/kazoos/clipboard.config` (installed commented out at first startup):
 
 ```ini
 sharing=bidirectional
@@ -69,7 +69,7 @@ sharing=bidirectional
 | `host-to-guest` | no | yes |
 | `disabled` | no | no |
 
-A user overrides it in `~/.config/hackeros/clipboard.config`, unless the
+A user overrides it in `~/.config/kazoos/clipboard.config`, unless the
 administrator locks it:
 
 ```ini
@@ -85,7 +85,7 @@ sharing=true
 | An app copies text or files | The entry becomes current; its `text/plain` (the paths for files) goes to the host if `sharing` allows it. Other formats never leave. |
 | Paste with text new to the OS | The text becomes the current entry (origin `Host`), with no echo to the host. |
 | Paste of text the OS itself wrote | Nothing changes; the native paste proceeds. |
-| Paste of host files in the explorer | Names noted under `application/x-hackeros-host-files`; the `FileView` imports them into the current folder (copy names if taken, 256 MiB per file). A new Ctrl+V reimports them as long as the clipboard has not changed on the OS side. |
+| Paste of host files in the explorer | Names noted under `application/x-kazoos-host-files`; the `FileView` imports them into the current folder (copy names if taken, 256 MiB per file). A new Ctrl+V reimports them as long as the clipboard has not changed on the OS side. |
 | Host → guest refused, or stale host text, paste into a field | The field receives the OS text (or nothing), never the host's; the terminal too. |
 | Native copy (text field, terminal) | Becomes the current entry (origin `GuestNative`). If guest → host is refused, the host is not modified. |
 | Browser that refuses `writeText` | Log `clipboard: host clipboard call failed` (Debug); the OS keeps its entry. |

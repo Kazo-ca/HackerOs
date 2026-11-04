@@ -21,7 +21,7 @@ templates, with no VSIX extension. Complements [ADR 0098](0098-sdk-versions-pack
   `-command`, `-service`, `-site`, `-host`). They go to nuget.org with every
   release, along with the 41 other packages, their symbols (`.snupkg`) and
   Source Link.
-- A third-party repository follows [`building-on-hackeros.md`](../../framework/building-on-hackeros.md):
+- A third-party repository follows [`building-on-kazoos.md`](../../framework/building-on-kazoos.md):
   it assembles its own solution. That guide still says the packages are never
   published to nuget.org, which is wrong since 2.1.0.
 - `build/Kazo.Os.Apps.targets` has two modes: the repository (project
@@ -97,7 +97,7 @@ templates, with no VSIX extension. Complements [ADR 0098](0098-sdk-versions-pack
 Implemented by [ADR 0207](0207-solution-template-implementation.md) (work item `todo/1-hackstore-solution-template`).
 
 
-- [x] Fix `building-on-hackeros.md` (fr and en): packages and templates on nuget.org.
+- [x] Fix `building-on-kazoos.md` (fr and en): packages and templates on nuget.org.
 - [x] `ide.host.json` for the five existing templates.
 - [x] External source mode in `Kazo.Os.Apps.targets` (`HackerOsUseSource`, `HackerOsSourceRoot`).
 - [x] `hackeros-solution` template (submodule, `Versions.props` import, profiles, CI).

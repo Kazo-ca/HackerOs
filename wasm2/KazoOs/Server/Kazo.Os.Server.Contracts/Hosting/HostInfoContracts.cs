@@ -23,13 +23,13 @@ public sealed record HostInfoResponse(
 public static class HostInfoRoutes
 {
     /// <summary>The API route a client may call on a known server.</summary>
-    public const string ApiPath = "/api/hackeros/host-info";
+    public const string ApiPath = "/api/kazoos/host-info";
 
     /// <summary>
     /// The file the OS reads next to its <c>index.html</c>: a static file on a static host, an
     /// endpoint of the server on <c>Kazo.Os.Server</c>. Relative, so it follows the base path.
     /// </summary>
-    public const string DiscoveryFile = "hackeros-host.json";
+    public const string DiscoveryFile = "kazoos-host.json";
 
     /// <summary><see cref="HostInfoResponse.Product"/> of <c>Kazo.Os.Server</c>.</summary>
     public const string ServerProduct = "Kazo OS Server";

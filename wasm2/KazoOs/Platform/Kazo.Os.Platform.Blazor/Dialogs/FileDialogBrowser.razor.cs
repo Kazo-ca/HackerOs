@@ -13,7 +13,7 @@ namespace Kazo.Os.Platform.Blazor.Dialogs;
 
 /// <summary>
 /// The file view shared by the Open, Save and Choose folder dialogs (ADR 0157): the OS file control
-/// (<c>hackeros.file-view</c>, ADR 0148 §2) of whichever app provides it, shown with the requesting
+/// (<c>kazoos.file-view</c>, ADR 0148 §2) of whichever app provides it, shown with the requesting
 /// app's rights (ADR 0148 §4), or <see cref="VirtualFolderBrowser"/> when no app provides it.
 /// </summary>
 /// <remarks>
@@ -32,7 +32,7 @@ namespace Kazo.Os.Platform.Blazor.Dialogs;
 public sealed partial class FileDialogBrowser
 {
     private VirtualFolderBrowser? _fallback;
-    private IHackFileView? _controller;
+    private IKazoFileView? _controller;
     private ContextMenuScope? _menus;
     private VirtualPath _currentDirectory = VirtualPath.Parse("/");
     private KazoFileViewMode _mode = KazoFileViewMode.Details;
@@ -47,7 +47,7 @@ public sealed partial class FileDialogBrowser
     private EventCallback<string> _navigated;
     private EventCallback<IReadOnlyList<KazoFileViewItem>> _selectionChanged;
     private EventCallback<string> _errorOccurred;
-    private EventCallback<IHackFileView?> _controllerChanged;
+    private EventCallback<IKazoFileView?> _controllerChanged;
     private Func<FileSystemDirectoryItem, bool> _fallbackFilter = default!;
     private EventCallback<FileSystemDirectorySnapshot> _fallbackDirectoryChanged;
     private EventCallback<FileSystemDirectoryItem> _fallbackFileActivated;
@@ -171,7 +171,7 @@ public sealed partial class FileDialogBrowser
         _navigated = EventCallback.Factory.Create<string>(this, OnNavigatedAsync);
         _selectionChanged = EventCallback.Factory.Create<IReadOnlyList<KazoFileViewItem>>(this, OnSelectionChangedAsync);
         _errorOccurred = EventCallback.Factory.Create<string>(this, message => _error = message);
-        _controllerChanged = EventCallback.Factory.Create<IHackFileView?>(this, OnControllerChanged);
+        _controllerChanged = EventCallback.Factory.Create<IKazoFileView?>(this, OnControllerChanged);
         _fallbackFilter = entry => FileFilter?.Invoke(entry.Name.Value, (entry.Metadata as FileMetadata)?.MediaType) != false;
         _fallbackDirectoryChanged = EventCallback.Factory.Create<FileSystemDirectorySnapshot>(this, OnFallbackNavigatedAsync);
         _fallbackFileActivated = EventCallback.Factory.Create<FileSystemDirectoryItem>(
@@ -207,7 +207,7 @@ public sealed partial class FileDialogBrowser
         _menus = null;
     }
 
-    private Task OnControllerChanged(IHackFileView? controller)
+    private Task OnControllerChanged(IKazoFileView? controller)
     {
         _controller = controller;
         if (controller is not null && !string.IsNullOrEmpty(controller.CurrentDirectory))

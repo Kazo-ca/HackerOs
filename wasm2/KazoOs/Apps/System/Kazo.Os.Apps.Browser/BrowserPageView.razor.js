@@ -73,7 +73,7 @@ class PageFrame {
             return;
         }
 
-        if (data.hackBridge === "event") {
+        if (data.kazoBridge === "event") {
             if (data.type === "ready") {
                 this.readies++;
             }
@@ -81,7 +81,7 @@ class PageFrame {
             return;
         }
 
-        if (data.hackBridge === "request") {
+        if (data.kazoBridge === "request") {
             const token = this.token;
             const source = event.source;
             this.dotnet.invokeMethodAsync("OnBridgeRequest", data.type, JSON.stringify(data.payload || {}))
@@ -90,7 +90,7 @@ class PageFrame {
                 .then((payload) => {
                     // The tab may have moved on: a reply never reaches another document.
                     if (this.frame && this.frame.contentWindow === source && this.token === token) {
-                        this.postToPage(source, { hackBridge: "response", token, id: data.id, payload });
+                        this.postToPage(source, { kazoBridge: "response", token, id: data.id, payload });
                     }
                 });
         }
@@ -102,7 +102,7 @@ class PageFrame {
     // are handed to this window by the surface.
     postToPage(source, message) {
         const parent = this.frame ? this.frame.ownerDocument.defaultView : null;
-        const relay = parent && parent !== window ? parent.hackerosSurfaceRelay : null;
+        const relay = parent && parent !== window ? parent.kazoosSurfaceRelay : null;
         if (relay) {
             relay.post(source, message);
         } else {

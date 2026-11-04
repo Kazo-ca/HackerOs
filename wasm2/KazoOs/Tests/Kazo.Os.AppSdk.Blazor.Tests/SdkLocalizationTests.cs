@@ -70,10 +70,10 @@ public sealed class SdkLocalizationTests
 
     private static AppManifest Manifest() => new()
     {
-        Id = "org.hackeros.test-localization",
+        Id = "org.kazoos.test-localization",
         Name = "Localization Probe",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "SDK localization test.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.AppSdk.Blazor.Tests", "BadgeHost"),

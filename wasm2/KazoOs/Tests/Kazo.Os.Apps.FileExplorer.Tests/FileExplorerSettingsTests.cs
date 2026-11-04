@@ -2,7 +2,7 @@ using Xunit;
 
 namespace Kazo.Os.Apps.FileExplorer.Tests;
 
-/// <summary>The Places panel's width, saved in <c>~/.config/hackeros/file-explorer.json</c> (ADR 0185 §1).</summary>
+/// <summary>The Places panel's width, saved in <c>~/.config/kazoos/file-explorer.json</c> (ADR 0185 §1).</summary>
 public sealed class FileExplorerSettingsTests
 {
     [Theory]
@@ -28,8 +28,8 @@ public sealed class FileExplorerSettingsTests
     }
 
     [Fact]
-    public void GetPath_is_in_the_users_hackeros_config_folder() =>
-        Assert.Equal("/home/ada/.config/hackeros/file-explorer.json", FileExplorerSettings.GetPath("/home/ada/"));
+    public void GetPath_is_in_the_users_kazoos_config_folder() =>
+        Assert.Equal("/home/ada/.config/kazoos/file-explorer.json", FileExplorerSettings.GetPath("/home/ada/"));
 
     [Theory]
     [InlineData(200, "ArrowLeft", 184)]

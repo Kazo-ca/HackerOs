@@ -26,7 +26,7 @@ The Kazo OS ecosystem lets a developer **write an application once, in C#,
 and run it wherever Kazo OS runs**: online, offline, on their own server or
 embedded in another product. The OS provides the complete environment
 (desktop, mobile, files, terminal, network, accounts), and the application is
-then distributed through the **Hack Store**, the Kazo OS app store.
+then distributed through the **Kazo OS Store**, the Kazo OS app store.
 
 The ecosystem is made of:
 
@@ -36,7 +36,7 @@ The ecosystem is made of:
 - **the template repository** [Os-AppTemplate](https://github.com/Kazo-ca/Os-AppTemplate),
   the starting point of a new application;
 - **the catalog** [Os-AppMarketPlace](https://github.com/Kazo-ca/Os-AppMarketPlace),
-  the reviewed list of applications offered by the Hack Store (in development);
+  the reviewed list of applications offered by the Kazo OS Store (in development);
 - **the applications** themselves, each in its own repository.
 
 ## Why build for or with Kazo OS
@@ -63,18 +63,18 @@ The ecosystem is made of:
 - **Complete development tools.** `dotnet new` templates, template repository,
   debugging in Visual Studio, unit and end-to-end tests, automatic releases.
 - **Built-in distribution.** An application installs from its GitHub
-  repository with one command, or with one click from the Hack Store.
+  repository with one command, or with one click from the Kazo OS Store.
 
 ## Ways to use and deploy Kazo OS
 
 | Use | For whom | Description |
 | --- | --- | --- |
 | **Online** | Everyone | Open <https://hackos.kazo.ca/>. Kazo OS installs like an app (PWA) and then works offline. |
-| **Self-hosted static site** | Organizations, teachers | Each version publishes a `hackeros-wasm-<version>.zip` archive in the [GitHub Releases](https://github.com/Kazo-ca/Os/releases). It can be dropped on any static hosting (GitHub Pages, web server). See [`github-pages-deployment.md`](dev/github-pages-deployment.md). |
+| **Self-hosted static site** | Organizations, teachers | Each version publishes a `kazoos-wasm-<version>.zip` archive in the [GitHub Releases](https://github.com/Kazo-ca/Os/releases). It can be dropped on any static hosting (GitHub Pages, web server). See [`github-pages-deployment.md`](dev/github-pages-deployment.md). |
 | **With the Kazo OS server** | Organizations, advanced users | The optional ASP.NET Core server serves the OS and adds accounts synchronized across devices and a relay to the real network. See [`server-hosting.md`](dev/server-hosting.md). |
-| **Embedded in your own product** | Developers, companies | The NuGet packages and the `dotnet new hackeros-host` template let you compose your own host with your own applications. See [`building-on-hackeros.md`](framework/building-on-hackeros.md). |
-| **Developing applications** | Developers | SDK NuGet packages, `dotnet new` templates, template repository, then installation from the terminal with `hackpkg`. See [`sdk-developer-guide.md`](framework/sdk-developer-guide.md). |
-| **Installable local server** | Advanced users | Every version publishes the Kazo OS server for Windows, Linux and macOS (`hackeros-server-<version>-<system>`) and the Docker image `ghcr.io/kazo-ca/hackeros-server`. It installs as a service on your computer or on a machine of your local network, without being exposed to the internet, and the online OS links to it with a pairing code (Settings > Server connection > Local server). See [`installable-server.md`](dev/installable-server.md). |
+| **Embedded in your own product** | Developers, companies | The NuGet packages and the `dotnet new kazoos-host` template let you compose your own host with your own applications. See [`building-on-kazoos.md`](framework/building-on-kazoos.md). |
+| **Developing applications** | Developers | SDK NuGet packages, `dotnet new` templates, template repository, then installation from the terminal with `kazopkg`. See [`sdk-developer-guide.md`](framework/sdk-developer-guide.md). |
+| **Installable local server** | Advanced users | Every version publishes the Kazo OS server for Windows, Linux and macOS (`kazoos-server-<version>-<system>`) and the Docker image `ghcr.io/kazo-ca/kazoos-server`. It installs as a service on your computer or on a machine of your local network, without being exposed to the internet, and the online OS links to it with a pairing code (Settings > Server connection > Local server). See [`installable-server.md`](dev/installable-server.md). |
 
 ## Available features
 
@@ -96,7 +96,7 @@ This section lists what is released in the `main` branch and online.
   window alone ("peek"). ([`taskbar-window-previews.md`](dev/taskbar-window-previews.md))
 - **Mouse Back and Forward buttons**: the Back button, Alt+← and the phone's
   Back (Android button or gesture, iOS swipe) go back inside the active app
-  (File Explorer, browser, Settings, Hack Store) instead of moving the tab back
+  (File Explorer, browser, Settings, Kazo OS Store) instead of moving the tab back
   and leaving Kazo OS; the Forward button and Alt+→ go forward.
   ([ADR 0220](dev/adr/0220-mouse-back-forward-buttons.md))
   The Start menu shows the signed-in user and their Power button: sign out or
@@ -175,16 +175,16 @@ This section lists what is released in the `main` branch and online.
   ([`task-manager.md`](dev/task-manager.md))
 - **KazoPaint** (drawing), **Calculator**, **Theme Editor**, **Icon Viewer**,
   **Error Log Viewer**, **Diagnostic** and **Web Server Manager**.
-  ([`hack-paint.md`](dev/hack-paint.md), [`theme-editor.md`](dev/theme-editor.md))
+  ([`kazo-paint.md`](dev/kazo-paint.md), [`theme-editor.md`](dev/theme-editor.md))
 
 ### Network and web
 
 - **Simulated network** with domain names, ports, `ping` and HTTP.
   ([`sdk-network.md`](framework/sdk-network.md))
 - **Internal web sites** under `.hack`, served from the OS: static sites,
-  ASP.Hack sites (controllers, Razor views) and Blazor sites.
+  ASP.Kazo sites (controllers, Razor views) and Blazor sites.
   ([`static-sites.md`](dev/static-sites.md),
-  [`asp-hack-developer-guide.md`](framework/asp-hack-developer-guide.md),
+  [`asp-kazo-developer-guide.md`](framework/asp-kazo-developer-guide.md),
   [`blazor-sites.md`](framework/blazor-sites.md))
 - **Access to the real network** through the optional server, for allowed
   applications. ([`server-network-relay.md`](dev/server-network-relay.md))
@@ -284,10 +284,10 @@ This section lists what is released in the `main` branch and online.
   ([`sdk-developer-guide.md`](framework/sdk-developer-guide.md))
 - **Package signing by an application's author**: `KazoOsKeyGen` creates the
   key, `KazoOsPack` and the template's `publish-packages.yml` workflow sign and
-  publish the `hackeros-packages` branch.
+  publish the `kazoos-packages` branch.
   ([ADR 0219](dev/adr/0219-app-authors-signing-tool.md),
   [`app-repository.md`](framework/app-repository.md))
-- **Install an application from its GitHub repository** with the `hackpkg`
+- **Install an application from its GitHub repository** with the `kazopkg`
   command. ([ADR 0182](dev/adr/0182-install-apps-from-github.md),
   [`app-installation.md`](dev/app-installation.md)) Its images, scripts and
   Web Workers are served at the same address as for an application built into
@@ -306,18 +306,18 @@ This section lists what is released in the `main` branch and online.
   source, an application of the block list or an install for everyone go
   through a two-step approval (an administrator signs in, then a window shows
   the application, its source and its capabilities). Sources and block list in
-  Settings ▸ Sources and block list and `hackpkg sources` / `hackpkg policy`.
-  Applications of the official Hack Store are signed by the catalog and checked
+  Settings ▸ Sources and block list and `kazopkg sources` / `kazopkg policy`.
+  Applications of the official Kazo OS Store are signed by the catalog and checked
   by the OS: an unsigned or changed package is refused.
   ([ADR 0189](dev/adr/0189-app-sources-trust-and-per-user-install.md),
   [ADR 0208](dev/adr/0208-hack-store-sources-trust-build.md),
   [ADR 0214](dev/adr/0214-hack-store-hot-add-signing-transactions.md))
-- **Hack Store**: the Kazo OS app store, pinned by default in the Start menu,
+- **Kazo OS Store**: the Kazo OS app store, pinned by default in the Start menu,
   on desktop and mobile. Home by categories, search, app page (screenshots,
   description, size, license, capabilities, trust), install for oneself or for
   everyone, open, update, uninstall, Installed tab and "Restart to finish". It
   checks for updates at sign-in then every 6 hours and says so in a
-  notification; `hackpkg install <appId>` reads the same catalogs and asks
+  notification; `kazopkg install <appId>` reads the same catalogs and asks
   the user to choose when several list the app.
   ([ADR 0188](dev/adr/0188-hack-store-and-app-catalog.md),
   [ADR 0212](dev/adr/0212-hack-store-app-build.md),
@@ -325,19 +325,19 @@ This section lists what is released in the `main` branch and online.
 - **Installs without a restart, and safe**: an application installed or
   updated opens at once if it was not already loaded. The packages of a source
   that has a key are signed and verified, the install is transactional
-  (nothing broken after a power cut, `hackpkg repair`), the previous version
-  is kept for "Go back to" (`hackpkg rollback`) and the application's data is
+  (nothing broken after a power cut, `kazopkg repair`), the previous version
+  is kept for "Go back to" (`kazopkg rollback`) and the application's data is
   backed up before its first start in a new version. ([ADR 0214](dev/adr/0214-hack-store-hot-add-signing-transactions.md))
-- **Theme packs**: the Hack Store Themes tab installs `.hacktheme` packs
+- **Theme packs**: the Kazo OS Store Themes tab installs `.kazotheme` packs
   (themes, wallpapers, icons, sounds and cursors), for oneself without an
   administrator or for everyone with the two-step approval. A pack holds no
   code (no SVG, no remote address, limited sizes) and its parts show up in
   Settings ▸ Appearance.
   ([ADR 0190](dev/adr/0190-theme-packs.md),
   [ADR 0213](dev/adr/0213-theme-packs-build.md))
-- **`hackeros-solution` application repository template**: application, host
+- **`kazoos-solution` application repository template**: application, host
   and tests ready to run, the OS as a submodule to debug in its sources, NuGet
-  packages in production, CI and submission to the Hack Store catalog with a
+  packages in production, CI and submission to the Kazo OS Store catalog with a
   tag. ([ADR 0176](dev/adr/0176-app-repository-template.md),
   [ADR 0207](dev/adr/0207-solution-template-implementation.md),
   [`app-repository.md`](framework/app-repository.md))
@@ -359,7 +359,7 @@ points to its PR.
 | --- | --- | --- | --- |
 | Switch user | Open another session without closing the first one. Stays greyed out in the Power menu by Benoit's choice: one session at a time, Sign out to change account. | [0195](dev/adr/0195-start-menu-power-button.md), [0201](dev/adr/0201-switch-user-stays-greyed.md) | [#290](https://github.com/Kazo-ca/Os/issues/290) |
 
-### Hack Store
+### Kazo OS Store
 
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
@@ -386,7 +386,7 @@ points to its PR.
 
 Well-known open source applications adapted to Kazo OS, each in its own
 repository. They are not part of the OS: they will be installed separately,
-with `hackpkg` and then from the Hack Store.
+with `kazopkg` and then from the Kazo OS Store.
 
 | Application | Description | Repository | Issue |
 | --- | --- | --- | --- |

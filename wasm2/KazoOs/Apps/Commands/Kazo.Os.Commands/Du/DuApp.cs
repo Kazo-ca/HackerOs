@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Du;
 public sealed class DuApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.du";
+    public override string Id => "org.kazoos.commands.du";
 
     /// <inheritdoc />
     public override string Name => "du";
@@ -22,7 +22,7 @@ public sealed class DuApp : AppDefinition
     public override Type EntryPoint => typeof(DuCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Estimate file space usage";

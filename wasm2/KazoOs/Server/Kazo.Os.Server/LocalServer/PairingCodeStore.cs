@@ -26,7 +26,7 @@ namespace Kazo.Os.Server.LocalServer;
 public sealed class PairingCodeStore
 {
     /// <summary>Configuration key of the folder that holds the codes (default <c>pairing</c>).</summary>
-    public const string RootSettingKey = "HackerOs:Pairing:Root";
+    public const string RootSettingKey = "KazoOs:Pairing:Root";
 
     /// <summary>How long a code stays valid.</summary>
     public static readonly TimeSpan Lifetime = TimeSpan.FromMinutes(10);

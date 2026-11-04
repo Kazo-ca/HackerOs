@@ -32,7 +32,7 @@ public sealed class WindowAppIconTests(ITestOutputHelper output)
             await WaitForImageAsync(icon);
             await WaitForImageAsync(taskbarIcon);
 
-            foreach (string theme in new[] { "hackeros", "windows-98", "windows-xp", "windows-7", "windows-10", "ubuntu", "macos" })
+            foreach (string theme in new[] { "kazoos", "windows-98", "windows-xp", "windows-7", "windows-10", "ubuntu", "macos" })
             {
                 await window.EvaluateAsync("(element, theme) => element.closest('[data-theme]').setAttribute('data-theme', theme)", theme);
                 if (theme == "macos") await Assertions.Expect(icon).ToBeHiddenAsync();
@@ -42,7 +42,7 @@ public sealed class WindowAppIconTests(ITestOutputHelper output)
             }
 
             // The second app must use its own package icon rather than a shared generic glyph.
-            await window.EvaluateAsync("element => element.closest('[data-theme]').setAttribute('data-theme', 'hackeros')");
+            await window.EvaluateAsync("element => element.closest('[data-theme]').setAttribute('data-theme', 'kazoos')");
             await E2ESupport.OpenAppAsync(page, "File Explorer", output);
             const string explorerIcon = "_content/Kazo.Os.Apps.FileExplorer/icons/app.svg";
             await Assertions.Expect(icon).ToHaveAttributeAsync("src", explorerIcon);

@@ -5,7 +5,7 @@ namespace Kazo.Os.AppSdk.Administration;
 
 /// <summary>
 /// Chooses which app provides the OS's file view and file dialogs for the whole machine (ADR 0156),
-/// as Settings &gt; OS components does. The choice lives in <c>/etc/hackeros/components.config</c>.
+/// as Settings &gt; OS components does. The choice lives in <c>/etc/kazoos/components.config</c>.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -25,7 +25,7 @@ namespace Kazo.Os.AppSdk.Administration;
 /// <example>
 /// <code>
 /// IReadOnlyList&lt;KazoComponentContractInfo&gt; contracts = await KazoComponentProviders.GetOverviewAsync();
-/// await KazoComponentProviders.SetProviderAsync(["hackeros.file-view", "hackeros.file-dialogs"], "com.example.files");
+/// await KazoComponentProviders.SetProviderAsync(["kazoos.file-view", "kazoos.file-dialogs"], "com.example.files");
 /// </code>
 /// </example>
 public static class KazoComponentProviders

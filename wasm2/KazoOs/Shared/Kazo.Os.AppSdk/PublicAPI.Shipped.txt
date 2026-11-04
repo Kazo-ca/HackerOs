@@ -961,21 +961,21 @@ Kazo.Os.AppSdk.Components.KazoTerminalOptions.WorkingDirectory.init -> void
 Kazo.Os.AppSdk.Components.KazoTerminalOutputEventArgs
 Kazo.Os.AppSdk.Components.KazoTerminalOutputEventArgs.KazoTerminalOutputEventArgs(string! text) -> void
 Kazo.Os.AppSdk.Components.KazoTerminalOutputEventArgs.Text.get -> string!
-Kazo.Os.AppSdk.Components.IHackTerminal
-Kazo.Os.AppSdk.Components.IHackTerminal.ClearAsync() -> System.Threading.Tasks.Task!
-Kazo.Os.AppSdk.Components.IHackTerminal.CommandCompleted -> System.EventHandler<Kazo.Os.AppSdk.Components.KazoTerminalCommandResult!>?
-Kazo.Os.AppSdk.Components.IHackTerminal.Exited -> System.EventHandler?
-Kazo.Os.AppSdk.Components.IHackTerminal.FocusAsync() -> System.Threading.Tasks.Task!
-Kazo.Os.AppSdk.Components.IHackTerminal.IsBusy.get -> bool
-Kazo.Os.AppSdk.Components.IHackTerminal.IsRunning.get -> bool
-Kazo.Os.AppSdk.Components.IHackTerminal.OutputReceived -> System.EventHandler<Kazo.Os.AppSdk.Components.KazoTerminalOutputEventArgs!>?
-Kazo.Os.AppSdk.Components.IHackTerminal.ReadOutput(int maxCharacters = 65536) -> string!
-Kazo.Os.AppSdk.Components.IHackTerminal.RunCommandAsync(string! commandLine, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Components.KazoTerminalCommandResult!>!
-Kazo.Os.AppSdk.Components.IHackTerminal.SendInputAsync(string! text) -> System.Threading.Tasks.Task!
-Kazo.Os.AppSdk.Components.IHackTerminal.SetWorkingDirectoryAsync(string! path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Components.KazoTerminalCommandResult!>!
-Kazo.Os.AppSdk.Components.IHackTerminal.StateChanged -> System.EventHandler?
-Kazo.Os.AppSdk.Components.IHackTerminal.Title.get -> string!
-Kazo.Os.AppSdk.Components.IHackTerminal.WorkingDirectory.get -> string?
+Kazo.Os.AppSdk.Components.IKazoTerminal
+Kazo.Os.AppSdk.Components.IKazoTerminal.ClearAsync() -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Components.IKazoTerminal.CommandCompleted -> System.EventHandler<Kazo.Os.AppSdk.Components.KazoTerminalCommandResult!>?
+Kazo.Os.AppSdk.Components.IKazoTerminal.Exited -> System.EventHandler?
+Kazo.Os.AppSdk.Components.IKazoTerminal.FocusAsync() -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Components.IKazoTerminal.IsBusy.get -> bool
+Kazo.Os.AppSdk.Components.IKazoTerminal.IsRunning.get -> bool
+Kazo.Os.AppSdk.Components.IKazoTerminal.OutputReceived -> System.EventHandler<Kazo.Os.AppSdk.Components.KazoTerminalOutputEventArgs!>?
+Kazo.Os.AppSdk.Components.IKazoTerminal.ReadOutput(int maxCharacters = 65536) -> string!
+Kazo.Os.AppSdk.Components.IKazoTerminal.RunCommandAsync(string! commandLine, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Components.KazoTerminalCommandResult!>!
+Kazo.Os.AppSdk.Components.IKazoTerminal.SendInputAsync(string! text) -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Components.IKazoTerminal.SetWorkingDirectoryAsync(string! path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Components.KazoTerminalCommandResult!>!
+Kazo.Os.AppSdk.Components.IKazoTerminal.StateChanged -> System.EventHandler?
+Kazo.Os.AppSdk.Components.IKazoTerminal.Title.get -> string!
+Kazo.Os.AppSdk.Components.IKazoTerminal.WorkingDirectory.get -> string?
 Kazo.Os.AppSdk.DetachedAppConsoleGateway
 Kazo.Os.AppSdk.DetachedAppConsoleGateway.DetachedAppConsoleGateway() -> void
 Kazo.Os.AppSdk.DetachedAppConsoleGateway.Error.get -> System.IO.TextWriter!
@@ -2073,24 +2073,24 @@ Kazo.Os.AppSdk.Net.Hosting.KazoWebSiteScope
 Kazo.Os.AppSdk.Net.Hosting.KazoWebSiteScope.System = 0 -> Kazo.Os.AppSdk.Net.Hosting.KazoWebSiteScope
 Kazo.Os.AppSdk.Net.Hosting.KazoWebSiteScope.User = 1 -> Kazo.Os.AppSdk.Net.Hosting.KazoWebSiteScope
 Kazo.Os.AppSdk.Net.IAppNetworkGateway
-Kazo.Os.AppSdk.Net.IAppNetworkGateway.ConnectTcpAsync(string! hostNameOrAddress, int port, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<Kazo.Os.AppSdk.Net.IHackSocket!>!>
-Kazo.Os.AppSdk.Net.IAppNetworkGateway.ConnectUdpAsync(string! hostNameOrAddress, int port, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<Kazo.Os.AppSdk.Net.IHackSocket!>!>
+Kazo.Os.AppSdk.Net.IAppNetworkGateway.ConnectTcpAsync(string! hostNameOrAddress, int port, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<Kazo.Os.AppSdk.Net.IKazoSocket!>!>
+Kazo.Os.AppSdk.Net.IAppNetworkGateway.ConnectUdpAsync(string! hostNameOrAddress, int port, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<Kazo.Os.AppSdk.Net.IKazoSocket!>!>
 Kazo.Os.AppSdk.Net.IAppNetworkGateway.DetectOperatingSystemAsync(string! hostNameOrAddress, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<Kazo.Os.AppSdk.Net.KazoOsFingerprint?>!>
 Kazo.Os.AppSdk.Net.IAppNetworkGateway.GetTcpListenersAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Net.KazoTcpListenerInfo!>!>
-Kazo.Os.AppSdk.Net.IAppNetworkGateway.ListenHttpAsync(System.Collections.Generic.IReadOnlyList<string!>! prefixes, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<Kazo.Os.AppSdk.Net.IHackHttpListenerSocket!>!>
+Kazo.Os.AppSdk.Net.IAppNetworkGateway.ListenHttpAsync(System.Collections.Generic.IReadOnlyList<string!>! prefixes, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<Kazo.Os.AppSdk.Net.IKazoHttpListenerSocket!>!>
 Kazo.Os.AppSdk.Net.IAppNetworkGateway.PingAsync(string! hostNameOrAddress, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<Kazo.Os.AppSdk.Net.KazoPingReply!>!>
 Kazo.Os.AppSdk.Net.IAppNetworkGateway.ProbeTcpAsync(string! hostNameOrAddress, int firstPort, int lastPort, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Net.KazoPortProbeResult!>!>!>
 Kazo.Os.AppSdk.Net.IAppNetworkGateway.ResolveAsync(string! hostName, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<Kazo.Os.AppSdk.Net.KazoHostEntry!>!>
 Kazo.Os.AppSdk.Net.IAppNetworkGateway.ReverseLookupAsync(System.Net.IPAddress! address, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<Kazo.Os.AppSdk.Net.KazoHostEntry!>!>
 Kazo.Os.AppSdk.Net.IAppNetworkGateway.SendAsync(Kazo.Os.AppSdk.Net.KazoHttpRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<Kazo.Os.AppSdk.Net.KazoHttpResponse!>!>
-Kazo.Os.AppSdk.Net.IHackHttpListenerSocket
-Kazo.Os.AppSdk.Net.IHackHttpListenerSocket.AcceptAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoHttpListenerExchange?>
-Kazo.Os.AppSdk.Net.IHackHttpListenerSocket.Prefixes.get -> System.Collections.Generic.IReadOnlyList<string!>!
-Kazo.Os.AppSdk.Net.IHackHttpListenerSocket.Respond(long exchangeId, Kazo.Os.AppSdk.Net.KazoHttpListenerReply! reply) -> void
-Kazo.Os.AppSdk.Net.IHackSocket
-Kazo.Os.AppSdk.Net.IHackSocket.ReceiveAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<byte[]?>
-Kazo.Os.AppSdk.Net.IHackSocket.RemoteEndPoint.get -> System.Net.IPEndPoint!
-Kazo.Os.AppSdk.Net.IHackSocket.SendAsync(System.ReadOnlyMemory<byte> data, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+Kazo.Os.AppSdk.Net.IKazoHttpListenerSocket
+Kazo.Os.AppSdk.Net.IKazoHttpListenerSocket.AcceptAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoHttpListenerExchange?>
+Kazo.Os.AppSdk.Net.IKazoHttpListenerSocket.Prefixes.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.AppSdk.Net.IKazoHttpListenerSocket.Respond(long exchangeId, Kazo.Os.AppSdk.Net.KazoHttpListenerReply! reply) -> void
+Kazo.Os.AppSdk.Net.IKazoSocket
+Kazo.Os.AppSdk.Net.IKazoSocket.ReceiveAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<byte[]?>
+Kazo.Os.AppSdk.Net.IKazoSocket.RemoteEndPoint.get -> System.Net.IPEndPoint!
+Kazo.Os.AppSdk.Net.IKazoSocket.SendAsync(System.ReadOnlyMemory<byte> data, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
 Kazo.Os.AppSdk.ServiceAppBase
 Kazo.Os.AppSdk.ServiceAppBase.ReportHealth(Kazo.Os.AppSdk.ServiceProcess.KazoServiceHealth health, string? status = null) -> void
 Kazo.Os.AppSdk.ServiceAppBase.RunAsync(Kazo.Os.AppSdk.IAppExecutionContext! context, System.Threading.CancellationToken sessionCancellationToken) -> System.Threading.Tasks.Task!
@@ -2286,21 +2286,21 @@ Kazo.Os.AppSdk.Shell.KazoShellOptions.KazoShellOptions() -> void
 Kazo.Os.AppSdk.Shell.KazoShellOptions.WorkingDirectory.get -> string?
 Kazo.Os.AppSdk.Shell.KazoShellOptions.WorkingDirectory.init -> void
 Kazo.Os.AppSdk.Shell.IAppShellHostGateway
-Kazo.Os.AppSdk.Shell.IAppShellHostGateway.StartAsync(Kazo.Os.AppSdk.Shell.KazoShellOptions! options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Shell.IHackShell!>!
-Kazo.Os.AppSdk.Shell.IHackShell
-Kazo.Os.AppSdk.Shell.IHackShell.AddHistory(string! commandLine) -> void
-Kazo.Os.AppSdk.Shell.IHackShell.CompleteAsync(string! commandLine, int cursor, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Shell.KazoShellCompletion!>!
-Kazo.Os.AppSdk.Shell.IHackShell.ExecuteAsync(string! commandLine, Kazo.Os.AppSdk.Shell.KazoShellExecution! execution, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<int>!
-Kazo.Os.AppSdk.Shell.IHackShell.ExecuteAsync(string! commandLine, System.IO.TextReader? standardInput, System.IO.TextWriter! standardOutput, System.IO.TextWriter! standardError, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<int>!
-Kazo.Os.AppSdk.Shell.IHackShell.ExitStatus.get -> int
-Kazo.Os.AppSdk.Shell.IHackShell.GetInstalledCommands() -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.ShellCommandInfo!>!
-Kazo.Os.AppSdk.Shell.IHackShell.HasExited.get -> bool
-Kazo.Os.AppSdk.Shell.IHackShell.History.get -> System.Collections.Generic.IReadOnlyList<string!>!
-Kazo.Os.AppSdk.Shell.IHackShell.NavigateHistory(int delta) -> string?
-Kazo.Os.AppSdk.Shell.IHackShell.NeedsMoreInput(string! text) -> bool
-Kazo.Os.AppSdk.Shell.IHackShell.ProcessId.get -> int
-Kazo.Os.AppSdk.Shell.IHackShell.Prompt.get -> string!
-Kazo.Os.AppSdk.Shell.IHackShell.WorkingDirectory.get -> string!
+Kazo.Os.AppSdk.Shell.IAppShellHostGateway.StartAsync(Kazo.Os.AppSdk.Shell.KazoShellOptions! options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Shell.IKazoShell!>!
+Kazo.Os.AppSdk.Shell.IKazoShell
+Kazo.Os.AppSdk.Shell.IKazoShell.AddHistory(string! commandLine) -> void
+Kazo.Os.AppSdk.Shell.IKazoShell.CompleteAsync(string! commandLine, int cursor, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Shell.KazoShellCompletion!>!
+Kazo.Os.AppSdk.Shell.IKazoShell.ExecuteAsync(string! commandLine, Kazo.Os.AppSdk.Shell.KazoShellExecution! execution, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<int>!
+Kazo.Os.AppSdk.Shell.IKazoShell.ExecuteAsync(string! commandLine, System.IO.TextReader? standardInput, System.IO.TextWriter! standardOutput, System.IO.TextWriter! standardError, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<int>!
+Kazo.Os.AppSdk.Shell.IKazoShell.ExitStatus.get -> int
+Kazo.Os.AppSdk.Shell.IKazoShell.GetInstalledCommands() -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.ShellCommandInfo!>!
+Kazo.Os.AppSdk.Shell.IKazoShell.HasExited.get -> bool
+Kazo.Os.AppSdk.Shell.IKazoShell.History.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.AppSdk.Shell.IKazoShell.NavigateHistory(int delta) -> string?
+Kazo.Os.AppSdk.Shell.IKazoShell.NeedsMoreInput(string! text) -> bool
+Kazo.Os.AppSdk.Shell.IKazoShell.ProcessId.get -> int
+Kazo.Os.AppSdk.Shell.IKazoShell.Prompt.get -> string!
+Kazo.Os.AppSdk.Shell.IKazoShell.WorkingDirectory.get -> string!
 Kazo.Os.AppSdk.ShellCommandInfo
 Kazo.Os.AppSdk.ShellCommandInfo.<Clone>$() -> Kazo.Os.AppSdk.ShellCommandInfo!
 Kazo.Os.AppSdk.ShellCommandInfo.Aliases.get -> System.Collections.Generic.IReadOnlyList<string!>!
@@ -2664,17 +2664,17 @@ abstract Kazo.Os.AppSdk.WebServerAppBase.ProcessRequestAsync(Kazo.Os.AppSdk.Net.
 const Kazo.Os.AppSdk.Administration.KazoUserAccounts.MaximumDisplayNameLength = 128 -> int
 const Kazo.Os.AppSdk.Administration.KazoUserAccounts.MaximumPasswordLength = 256 -> int
 const Kazo.Os.AppSdk.Administration.KazoUserAccounts.MinimumPasswordLength = 8 -> int
-const Kazo.Os.AppSdk.Apps.KazoBrowser.AppId = "org.hackeros.browser" -> string!
+const Kazo.Os.AppSdk.Apps.KazoBrowser.AppId = "org.kazoos.browser" -> string!
 const Kazo.Os.AppSdk.Apps.KazoBrowser.DetachedArgument = "--detached" -> string!
 const Kazo.Os.AppSdk.Clipboard.KazoClipboardFileList.GnomeCopiedFilesMediaType = "x-special/gnome-copied-files" -> string!
-const Kazo.Os.AppSdk.Components.KazoComponentContracts.ContextMenu = "hackeros.context-menu" -> string!
-const Kazo.Os.AppSdk.Components.KazoComponentContracts.FileDialogs = "hackeros.file-dialogs" -> string!
-const Kazo.Os.AppSdk.Components.KazoComponentContracts.FileView = "hackeros.file-view" -> string!
-const Kazo.Os.AppSdk.Components.KazoComponentContracts.Terminal = "hackeros.terminal" -> string!
+const Kazo.Os.AppSdk.Components.KazoComponentContracts.ContextMenu = "kazoos.context-menu" -> string!
+const Kazo.Os.AppSdk.Components.KazoComponentContracts.FileDialogs = "kazoos.file-dialogs" -> string!
+const Kazo.Os.AppSdk.Components.KazoComponentContracts.FileView = "kazoos.file-view" -> string!
+const Kazo.Os.AppSdk.Components.KazoComponentContracts.Terminal = "kazoos.terminal" -> string!
 const Kazo.Os.AppSdk.Files.KazoDesktopEntry.Extension = ".desktop" -> string!
 const Kazo.Os.AppSdk.Files.KazoDesktopEntry.Group = "Desktop Entry" -> string!
 const Kazo.Os.AppSdk.Files.KazoDesktopEntry.MaxFileSize = 16384 -> int
-const Kazo.Os.AppSdk.Files.KazoDesktopItems.CreateShortcutIntent = "org.hackeros.desktop.create-shortcut.v1" -> string!
+const Kazo.Os.AppSdk.Files.KazoDesktopItems.CreateShortcutIntent = "org.kazoos.desktop.create-shortcut.v1" -> string!
 const Kazo.Os.AppSdk.Files.KazoDesktopItems.Home = "::home" -> string!
 const Kazo.Os.AppSdk.Files.KazoDesktopItems.Trash = "::trash" -> string!
 const Kazo.Os.AppSdk.Files.KazoDesktopSettings.PositionsGroup = "positions" -> string!
@@ -2713,10 +2713,10 @@ const Kazo.Os.AppSdk.IO.KazoPath.DirectorySeparatorChar = '/' -> char
 const Kazo.Os.AppSdk.IO.KazoPath.PathSeparator = ':' -> char
 const Kazo.Os.AppSdk.IO.KazoTrash.InfoExtension = ".trashinfo" -> string!
 const Kazo.Os.AppSdk.Net.Hosting.KazoBlazorBootManifest.BootPath = "_framework/blazor.boot.json" -> string!
-const Kazo.Os.AppSdk.Net.Hosting.KazoBlazorBootManifest.ScriptPath = "_framework/blazor.hack.js" -> string!
+const Kazo.Os.AppSdk.Net.Hosting.KazoBlazorBootManifest.ScriptPath = "_framework/blazor.kazo.js" -> string!
 const Kazo.Os.AppSdk.Net.Hosting.KazoWebSiteFile.Extension = ".site" -> string!
 const Kazo.Os.AppSdk.Net.Hosting.KazoWebSiteFile.MaxNameLength = 64 -> int
-const Kazo.Os.AppSdk.Net.Hosting.KazoWebSiteFile.SystemSitesDirectory = "/etc/hackweb/sites" -> string!
+const Kazo.Os.AppSdk.Net.Hosting.KazoWebSiteFile.SystemSitesDirectory = "/etc/kazoweb/sites" -> string!
 const Kazo.Os.AppSdk.Settings.KazoSettingValue.MaskText = "••••••••" -> string!
 const Kazo.Os.AppSdk.Settings.KazoSettings.DefaultDocumentId = "settings" -> string!
 const Kazo.Os.AppSdk.WebData.KazoWebDbException.ConstraintError = "ConstraintError" -> string!
@@ -2725,7 +2725,7 @@ const Kazo.Os.AppSdk.WebData.KazoWebDbException.InvalidStateError = "InvalidStat
 const Kazo.Os.AppSdk.WebData.KazoWebDbException.NotFoundError = "NotFoundError" -> string!
 const Kazo.Os.AppSdk.WebData.KazoWebDbException.QuotaExceededError = "QuotaExceededError" -> string!
 const Kazo.Os.AppSdk.WebData.KazoWebDbException.VersionError = "VersionError" -> string!
-const Kazo.Os.AppSdk.WebData.KazoWebDbNames.Prefix = "hackweb." -> string!
+const Kazo.Os.AppSdk.WebData.KazoWebDbNames.Prefix = "kazoweb." -> string!
 const Kazo.Os.AppSdk.WebData.KazoWebDbOperationKinds.Add = "add" -> string!
 const Kazo.Os.AppSdk.WebData.KazoWebDbOperationKinds.Clear = "clear" -> string!
 const Kazo.Os.AppSdk.WebData.KazoWebDbOperationKinds.Count = "count" -> string!
@@ -3685,8 +3685,8 @@ static Kazo.Os.AppSdk.Shell.KazoCredential.operator !=(Kazo.Os.AppSdk.Shell.Kazo
 static Kazo.Os.AppSdk.Shell.KazoCredential.operator ==(Kazo.Os.AppSdk.Shell.KazoCredential? left, Kazo.Os.AppSdk.Shell.KazoCredential? right) -> bool
 static Kazo.Os.AppSdk.Shell.KazoCredentialRequest.operator !=(Kazo.Os.AppSdk.Shell.KazoCredentialRequest? left, Kazo.Os.AppSdk.Shell.KazoCredentialRequest? right) -> bool
 static Kazo.Os.AppSdk.Shell.KazoCredentialRequest.operator ==(Kazo.Os.AppSdk.Shell.KazoCredentialRequest? left, Kazo.Os.AppSdk.Shell.KazoCredentialRequest? right) -> bool
-static Kazo.Os.AppSdk.Shell.KazoShell.StartAsync(Kazo.Os.AppSdk.IAppExecutionContext! context, Kazo.Os.AppSdk.Shell.KazoShellOptions? options = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Shell.IHackShell!>!
-static Kazo.Os.AppSdk.Shell.KazoShell.StartAsync(Kazo.Os.AppSdk.Shell.KazoShellOptions? options = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Shell.IHackShell!>!
+static Kazo.Os.AppSdk.Shell.KazoShell.StartAsync(Kazo.Os.AppSdk.IAppExecutionContext! context, Kazo.Os.AppSdk.Shell.KazoShellOptions? options = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Shell.IKazoShell!>!
+static Kazo.Os.AppSdk.Shell.KazoShell.StartAsync(Kazo.Os.AppSdk.Shell.KazoShellOptions? options = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Shell.IKazoShell!>!
 static Kazo.Os.AppSdk.Shell.KazoShellCompletion.None(int cursor) -> Kazo.Os.AppSdk.Shell.KazoShellCompletion!
 static Kazo.Os.AppSdk.Shell.KazoShellCompletion.operator !=(Kazo.Os.AppSdk.Shell.KazoShellCompletion? left, Kazo.Os.AppSdk.Shell.KazoShellCompletion? right) -> bool
 static Kazo.Os.AppSdk.Shell.KazoShellCompletion.operator ==(Kazo.Os.AppSdk.Shell.KazoShellCompletion? left, Kazo.Os.AppSdk.Shell.KazoShellCompletion? right) -> bool

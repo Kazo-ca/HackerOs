@@ -46,8 +46,8 @@ tests are described in
 | Discover what Kazo OS offers and what is coming | [`features.md`](doc/en/wasm/features.md) |
 | Understand the OS code | [`project-overview.md`](doc/en/wasm/dev/project-overview.md), then [`doc/en/wasm/dev/`](doc/en/wasm/dev/README.md) |
 | Write an app, a command or a service | [`sdk-developer-guide.md`](doc/en/wasm/framework/sdk-developer-guide.md) and [`sdk-reference.md`](doc/en/wasm/framework/sdk-reference.md) |
-| Build on Kazo OS from another repository | [`building-on-hackeros.md`](doc/en/wasm/framework/building-on-hackeros.md) |
-| Create an internal web site (ASP.Hack, Blazor) | [`asp-hack-developer-guide.md`](doc/en/wasm/framework/asp-hack-developer-guide.md) |
+| Build on Kazo OS from another repository | [`building-on-kazoos.md`](doc/en/wasm/framework/building-on-kazoos.md) |
+| Create an internal web site (ASP.Kazo, Blazor) | [`asp-kazo-developer-guide.md`](doc/en/wasm/framework/asp-kazo-developer-guide.md) |
 | Avoid problems already met | [`pitfalls.md`](doc/en/wasm/dev/pitfalls.md) |
 | Know the project state and its conventions | [`doc/en/wasm/memory/`](doc/en/wasm/memory/README.md) |
 | Architecture decisions | [`doc/en/wasm/dev/adr/`](doc/en/wasm/dev/adr/README.md) |

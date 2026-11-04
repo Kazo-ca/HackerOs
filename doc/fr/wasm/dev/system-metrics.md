@@ -25,7 +25,7 @@ Le gestionnaire de tâches ([`task-manager.md`](task-manager.md), chantier
 | `/proc/net/dev` | octets et paquets de `lo` et `eth0` | **compté** : passerelle réseau des apps |
 | `/proc/mounts` | table des montages | routeur de montages |
 | `KazoDriveInfo` | taille et espace libre de `/` | profil matériel, contenu stocké, quota du navigateur |
-| `/proc/hackeros/workers` | isolation cross-origin de la page (ADR 0131, 0143), puis Web Workers de l'OS : rôle, état, cœur, mémoire du runtime, âge du battement de cœur, temps occupé, processus (ADR 0070) | **mesuré** : battement de cœur de chaque worker, toutes les 250 ms ; page isolée, mémoire de chaque worker mesurée par le navigateur (`performance.measureUserAgentSpecificMemory()`, toutes les 20 s, `memory-measure: browser`) ([`worker-processes.md`](worker-processes.md)) ; absent quand l'hôte n'a pas de workers |
+| `/proc/kazoos/workers` | isolation cross-origin de la page (ADR 0131, 0143), puis Web Workers de l'OS : rôle, état, cœur, mémoire du runtime, âge du battement de cœur, temps occupé, processus (ADR 0070) | **mesuré** : battement de cœur de chaque worker, toutes les 250 ms ; page isolée, mémoire de chaque worker mesurée par le navigateur (`performance.measureUserAgentSpecificMemory()`, toutes les 20 s, `memory-measure: browser`) ([`worker-processes.md`](worker-processes.md)) ; absent quand l'hôte n'a pas de workers |
 
 Un `cat` d'un gros fichier fait monter `rchar` du processus et les secteurs lus
 de `hda` ; une page chargée par le navigateur fait monter `eth0`. Le navigateur
@@ -37,7 +37,7 @@ mémoire est mesurée de même (ADR 0068, section « Mémoire mesurée » ci-des
 
 | Source | Quand | Indicateur |
 | --- | --- | --- |
-| **simulée** : `IResourceSimulator`, profil `ResourceProfile` de l'app | mesure coupée au build (`KazoOsCpuAccounting`, `KazoOsMemoryAccounting`) ou dans `appsettings.json` (`HackerOs:ResourceAccounting`), mesure pas encore implémentée, processus simulé sans code | `CpuSource: simulated`, `MemSource: simulated` ; mention « estimated » dans le gestionnaire de tâches |
+| **simulée** : `IResourceSimulator`, profil `ResourceProfile` de l'app | mesure coupée au build (`KazoOsCpuAccounting`, `KazoOsMemoryAccounting`) ou dans `appsettings.json` (`KazoOs:ResourceAccounting`), mesure pas encore implémentée, processus simulé sans code | `CpuSource: simulated`, `MemSource: simulated` ; mention « estimated » dans le gestionnaire de tâches |
 | **mesurée** : `ICpuTimeAccountant`, `IMemoryAccountant` alimentés par le crochet de changement de contexte | mesure livrée et activée, et le comptable répond pour ce processus | `CpuSource: measured`, `MemSource: measured` |
 
 Le fournisseur `/proc` reçoit les deux comptables par `ProcMetricsSources`
@@ -71,7 +71,7 @@ fois) et `Slab` (part noyau des processus et part du tas allouée par l'OS
 lui-même). Ces chiffres mesurés sont aussi ceux qu'appliquent la limite `rss`
 d'un processus (`ulimit -m`, ADR 0125, [`process-limits.md`](process-limits.md))
 et l'OOM killer, **désactivé par défaut** et activé dans
-`/etc/hackeros/memory.config` (ADR 0126, 0142, [`oom-killer.md`](oom-killer.md)) :
+`/etc/kazoos/memory.config` (ADR 0126, 0142, [`oom-killer.md`](oom-killer.md)) :
 ni l'un ni l'autre n'agit sur une mémoire simulée.
 
 Dans une page isolée (ADR 0131, ADR 0143 §6), la mémoire du runtime de chaque
@@ -240,7 +240,7 @@ Un paquet est une requête ou une réponse (ADR 0057). Un hôte introuvable,
 injoignable, un délai dépassé ou une connexion refusée comptent la requête et
 une erreur de réception (`errs`). Un appel refusé faute de capacité ne sort
 pas : rien n'est compté. Depuis `web/3-listener-dns`, un échange avec un
-port local (cible résolue en loopback par `hackdns`) est compté sur `lo` et
+port local (cible résolue en loopback par `kazodns`) est compté sur `lo` et
 non sur `eth0` ([`listening-ports-and-dns.md`](../framework/listening-ports-and-dns.md)).
 
 ### Montages (`/proc/mounts`)

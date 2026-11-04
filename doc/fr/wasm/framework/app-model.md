@@ -36,7 +36,7 @@ Valeurs par défaut des membres facultatifs :
 | `Icons`, `Capabilities`, `FileHandlers`, `Dependencies`, `Intents`, `DeclaredTopicPermissions`, `Localizations`, `Assets` | liste vide |
 | `Terminal`, `MobileEntryPoint`, `Settings` | `null` |
 | `[RegisterFileContextMenu]` | aucune méthode ; `contextMenus` est alors omis du manifeste. Une méthode statique de la classe elle-même, exécutée deux fois au build, inscrit les entrées de l'app dans les menus des fichiers (ADR 0151, ADR 0159, [`context-menu.md`](context-menu.md#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4)) ; titres dans `Resources/AppManifest.resx` |
-| `Components` | liste vide ; `components` est alors omis du manifeste (ADR 0063, [`embedded-components.md`](embedded-components.md)) ; `hackeros.context-menu` est refusé (plateforme) ; `hackeros.file-view` et `hackeros.file-dialogs` sont ouverts à toute app fenêtrée, un administrateur choisit celle en service (ADR 0156, ADR 0158) |
+| `Components` | liste vide ; `components` est alors omis du manifeste (ADR 0063, [`embedded-components.md`](embedded-components.md)) ; `kazoos.context-menu` est refusé (plateforme) ; `kazoos.file-view` et `kazoos.file-dialogs` sont ouverts à toute app fenêtrée, un administrateur choisit celle en service (ADR 0156, ADR 0158) |
 | `SingleInstancePerUser`, `AutoStart`, `SupportsBack` | `false` |
 | `ServiceStartup` | `null` (= `Login`) ; `serviceStartup` est alors omis du manifeste. `Boot` ne vaut que pour une app système de genre `Service` (ADR 0097 §4, ADR 0107) |
 | `OomScoreAdjust` | `null` (hérite ; `-500` pour un service système) ; `oomScoreAdj` est alors omis du manifeste. Négatif seulement pour une app système (`HOSAPP0024`, ADR 0126 §4, ADR 0142, [`oom-killer.md`](../dev/oom-killer.md)) |
@@ -56,12 +56,12 @@ Exemple :
 [AppManifest]
 public sealed class TextEditorApp : AppDefinition
 {
-    public override string Id => "org.hackeros.text-editor";
+    public override string Id => "org.kazoos.text-editor";
     public override string Name => "Text Editor";
     public override AppKind Kind => AppKind.Window;
     public override Type EntryPoint => typeof(TextEditorWindow);
     public override Type? MobileEntryPoint => typeof(TextEditorWindow);
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
     public override IReadOnlyList<string> Capabilities =>
         [AppCapabilities.FileSystemUserHomeRead, AppCapabilities.FileSystemUserHomeWrite];
     public override IReadOnlyList<FileHandler> FileHandlers =>
@@ -105,7 +105,7 @@ public sealed class TextEditorApp : AppDefinition
   formé (`domaine.inversé.nom.vN`, `AppIntentIds.IsWellFormed`) ; le
   répartiteur route vers les apps installées et activées qui le déclarent, au
   lieu de répondre `intent.unknown`. Déclarer
-  `org.hackeros.intent.show-app-settings.v1` signifie « j'ai ma propre page de
+  `org.kazoos.intent.show-app-settings.v1` signifie « j'ai ma propre page de
   réglages » : l'app est lancée avec `--show-settings`.
 - Un schéma d'URI est un type de média `x-scheme-handler/<schéma>` dans
   `FileHandlers`, comme sous freedesktop :
@@ -146,9 +146,9 @@ public sealed class CdApp : AppDefinition { … }
   `MainThread`, **avec la raison en commentaire** au-dessus de l'attribut. Dans
   `Kazo.Os.Commands` : les built-ins du shell (`cd`, `exit`, `export`,
   `unset`, `jobs`, `read`, `help`, `which`, `kill`, `sudo`, `watch`), `passwd`,
-  `hackbackup`, `nice` et `renice` (ADR 0127), et les commandes plein écran
+  `kazobackup`, `nice` et `renice` (ADR 0127), et les commandes plein écran
   (`nano`, `top`, `htop`). Le service d'exemple et
-  `hackwebd` sont en worker dédié depuis l'ADR 0124. Les autres commandes vont
+  `kazowebd` sont en worker dédié depuis l'ADR 0124. Les autres commandes vont
   dans le pool (liste à jour dans [`worker-processes.md`](../dev/worker-processes.md)).
 - Le validateur refuse `pool` et `dedicated` pour une app web
   (`manifest.execution.web`) et `web` pour toute autre app
@@ -204,7 +204,7 @@ Fonctionnement de `generate` :
    compare le JSON canonique ;
 3. si **aucune** erreur, `ManifestWriter` écrit les fichiers (sinon rien n'est
    écrit) ; un fichier n'est réécrit que si ses octets changent ;
-4. le fichier témoin `obj/<config>/<tfm>/hackeros-app-manifests.txt` liste les
+4. le fichier témoin `obj/<config>/<tfm>/kazoos-app-manifests.txt` liste les
    manifestes produits.
 
 ### Fichiers produits
@@ -253,7 +253,7 @@ avec le nom complet de la classe en cause : `App.csproj : error HOSAPP0005: [Ns.
 | `HOSAPP0022` | Agrégation : nom de commande ou alias déclaré par deux apps de l'hôte (comparaison sans casse), ou nom que le shell exécute lui-même (`ShellInterpreter.ReservedNames`) (ADR 0098 §4). |
 | `HOSAPP0023` | Génération : ressource déclarée dans `Assets` absente de `wwwroot/` du projet ; son SHA-256 ne peut pas être calculé (ADR 0098 §5). |
 | `HOSAPP0024` | Agrégation : app non système qui déclare `OomScoreAdjust` négatif (ADR 0126 §4, ADR 0142 §6, [`oom-killer.md`](../dev/oom-killer.md)). |
-| `HOSAPP0025` | Retiré, jamais réutilisé : refusait à une app non système `hackeros.file-view` et `hackeros.file-dialogs` (ADR 0153 §4), que l'ADR 0156 ouvre à toute app fenêtrée (ADR 0158 §1). |
+| `HOSAPP0025` | Retiré, jamais réutilisé : refusait à une app non système `kazoos.file-view` et `kazoos.file-dialogs` (ADR 0153 §4), que l'ADR 0156 ouvre à toute app fenêtrée (ADR 0158 §1). |
 | `HOSAPP0030` | Frontière du SDK : `ProjectReference` interdite dans un projet d'app (ADR 0055 §2, numéro fixé par l'ADR 0059). Émis par la cible `ValidateKazoOsSdkBoundary`. Voir [`app-sdk.md`](app-sdk.md). |
 | `HOSAPP0031` | Frontière du SDK : service injecté qui n'est ni un type du SDK, ni MudBlazor, ni `IJSRuntime` (ADR 0055 §3, ADR 0059). Voir [`app-sdk.md`](app-sdk.md). |
 | `HOSAPP0040` | Traductions du manifeste (ADR 0104 §4) : `Resources/AppManifest.<culture>.resx` illisible, nom de culture invalide, clé autre que `Name`, `Description`, `Terminal.Usage` (préfixées de l'id dans un projet à plusieurs apps), `Terminal.Usage` pour une app qui n'est pas une commande, ou fichier `localization/` référencé illisible à l'agrégation. Voir [`localization.md`](localization.md). |
@@ -305,8 +305,8 @@ dans un seul projet, `Apps/Commands/Kazo.Os.Commands/Kazo.Os.Commands.csproj` :
   son espace de noms (`Kazo.Os.Commands.Cat`) et sa classe `[AppManifest]` ;
 - le générateur écrit `manifests/<appId>.json` (forme « plusieurs classes ») ;
   seul `entryPoint.assembly` change, il vaut `Kazo.Os.Commands.dll` ;
-- **les identifiants d'app ne changent pas** (`org.hackeros.cmd.cat`,
-  `org.hackeros.commands.curl`…) : `apps.config`, `app-permissions.config` et
+- **les identifiants d'app ne changent pas** (`org.kazoos.cmd.cat`,
+  `org.kazoos.commands.curl`…) : `apps.config`, `app-permissions.config` et
   les alias existants restent valides ;
 - l'hôte n'a qu'une `ProjectReference ... IsSystemApp="true"` pour toutes les
   commandes ; l'assembly est chargée à la demande en un seul bloc
@@ -338,7 +338,7 @@ déclarent la capacité `shell.control`. Une commande tierce reste un projet à 
 Après l'inspection, `generate` lit `Resources/AppManifest.<culture>.resx`
 (`ManifestLocalizationGenerator`) : clés `Name`, `Description`,
 `Terminal.Usage`, préfixées de l'id de l'app dans un projet à plusieurs apps
-(`org.hackeros.commands.ls.Description`). Une clé absente garde le texte
+(`org.kazoos.commands.ls.Description`). Une clé absente garde le texte
 anglais. Il écrit `localization/<culture>.json` (une app) ou
 `localization/<appId>/<culture>.json` (plusieurs apps), au format
 `{"name","description","terminalUsage"?}`, ajoute l'entrée
@@ -357,7 +357,7 @@ seul `OS/Kazo.Os.Ecosystem` le fait. `test/test` réutilise le catalogue
 compilé de l'Ecosystem (`BuildKnownLazyApps.Catalog`) et ne s'agrège pas
 lui-même ; le serveur sert les fichiers publiés de l'Ecosystem tels quels, apps
 comprises (ADR 0130). Hors du dépôt, un hôte référence le paquet
-`Kazo.Os.App.Build` et déclare la même propriété (modèle `hackeros-host`, voir
+`Kazo.Os.App.Build` et déclare la même propriété (modèle `kazoos-host`, voir
 [`sdk-packages.md`](sdk-packages.md)).
 
 ### Cible `CollectKazoOsBuiltInApplications`
@@ -390,8 +390,8 @@ la préparation des ressources et avant les cibles Blazor) :
    ADR 0113, [`trimmed-publish.md`](../dev/trimmed-publish.md)).
 
 Les apps installées en **paquet** (ADR 0098 §2) suivent le même chemin : chaque
-paquet d'app contient ses manifestes sous `hackeros/manifests/` (leurs traductions
-sous `hackeros/localization/`) et un fichier
+paquet d'app contient ses manifestes sous `kazoos/manifests/` (leurs traductions
+sous `kazoos/localization/`) et un fichier
 `buildTransitive/<PackageId>.targets` qui les déclare en éléments
 `KazoOsPackagedApp` (métadonnées `PackageId`, `AssemblyFileName`,
 `AssemblyPath`). La cible `_KazoOsCollectPackagedAppManifests` les ajoute à
@@ -408,7 +408,7 @@ générateur n'apparaît pas dans `_framework`.
 ### Format
 
 ```json
-{"schemaVersion":1,"applications":[{"isSystemApp":false,"manifest":{"schemaVersion":1,"id":"org.hackeros.calculator", "...": "..."},"image":{"assemblies":[{"name":"Kazo.Os.Apps.Calculator.dll","bytes":17408,"shared":false},{"name":"Kazo.Os.AppSdk.dll","bytes":400896,"shared":true}]}}]}
+{"schemaVersion":1,"applications":[{"isSystemApp":false,"manifest":{"schemaVersion":1,"id":"org.kazoos.calculator", "...": "..."},"image":{"assemblies":[{"name":"Kazo.Os.Apps.Calculator.dll","bytes":17408,"shared":false},{"name":"Kazo.Os.AppSdk.dll","bytes":400896,"shared":true}]}}]}
 ```
 
 `image` (facultatif, ADR 0068) liste les assemblies que l'app mappe, triées par
@@ -528,7 +528,7 @@ hôtes (`Program.cs`) ; les services de l'OS lisent donc
 
 | Système | Non système (désinstallables) |
 |---|---|
-| Terminal, File Explorer, Settings, Text Editor, Code Editor (depuis `rebuild/4-sdk-shell-host` : son terminal héberge un shell, ADR 0056 §7), System Monitor, Error Log Viewer, Theme Editor (lit `/etc/hackeros/themes`, ADR 0103), et les 70 commandes (projet `Kazo.Os.Commands`, `xdg-open` comprise depuis `v3/4`, `xdg-mime` depuis `v3/4b`, `passwd` depuis `v3/8`) | Browser, Calculator, Diagnostic, KazoPaint, Icon Viewer |
+| Terminal, File Explorer, Settings, Text Editor, Code Editor (depuis `rebuild/4-sdk-shell-host` : son terminal héberge un shell, ADR 0056 §7), System Monitor, Error Log Viewer, Theme Editor (lit `/etc/kazoos/themes`, ADR 0103), et les 70 commandes (projet `Kazo.Os.Commands`, `xdg-open` comprise depuis `v3/4`, `xdg-mime` depuis `v3/4b`, `passwd` depuis `v3/8`) | Browser, Calculator, Diagnostic, KazoPaint, Icon Viewer |
 
 Effets du statut : une app système n'est pas désinstallable (voir
 [`app-installation.md`](../dev/app-installation.md), ADR 0048 §2-6) ; ses capacités

@@ -7,7 +7,7 @@
 Accepté le 2026-10-29 par Benoit, après deux séries de questions dans le fil
 « Planifier le Hack Store » (réponses en fin de document). Aucun code n'est
 écrit par cette ADR : elle fixe la cible, et les chantiers sont listés dans
-[`../plans/hackeros-store.md`](../plans/hackeros-store.md). Complète
+[`../plans/kazoos-store.md`](../plans/kazoos-store.md). Complète
 l'[ADR 0182](0182-install-apps-from-github.md) (paquets `.hackapp`, `hackpkg`)
 et l'[ADR 0176](0176-app-repository-template.md) (dépôt template d'apps). La
 confiance et les droits d'installation sont dans

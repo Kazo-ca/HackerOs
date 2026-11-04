@@ -14,7 +14,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: "verify-hackeros-browser-${{ github.ref }}"
+  group: "verify-kazoos-browser-${{ github.ref }}"
   cancel-in-progress: true
 
 env:
@@ -94,7 +94,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: hackeros-browser-tests-${{ github.run_attempt }}
+          name: kazoos-browser-tests-${{ github.run_attempt }}
           path: |
             wasm2/KazoOs/artifacts/test-results/Browser
             wasm2/KazoOs/artifacts/playwright
@@ -125,7 +125,7 @@ jobs:
             body="Les tests navigateur (Playwright) échouent sur \`main\` au commit $HEAD_SHA.
 
           Lancement : $RUN_URL
-          Les résultats (\`.trx\`) et les traces sont dans l'artefact \`hackeros-browser-tests-*\` du lancement. Voir doc/fr/wasm/dev/ci-workflows.md."
+          Les résultats (\`.trx\`) et les traces sont dans l'artefact \`kazoos-browser-tests-*\` du lancement. Voir doc/fr/wasm/dev/ci-workflows.md."
             if [ -n "$issue" ]; then
               gh issue comment "$issue" --body "$body"
               echo "Failure added to issue #$issue." >> "$GITHUB_STEP_SUMMARY"

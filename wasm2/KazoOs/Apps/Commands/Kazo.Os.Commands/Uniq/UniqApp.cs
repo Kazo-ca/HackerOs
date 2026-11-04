@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Uniq;
 public sealed class UniqApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.uniq";
+    public override string Id => "org.kazoos.commands.uniq";
 
     /// <inheritdoc />
     public override string Name => "uniq";
@@ -22,7 +22,7 @@ public sealed class UniqApp : AppDefinition
     public override Type EntryPoint => typeof(UniqCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Report or omit repeated lines";

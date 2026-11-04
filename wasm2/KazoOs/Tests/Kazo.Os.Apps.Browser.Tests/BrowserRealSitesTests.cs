@@ -59,7 +59,7 @@ public sealed class BrowserRealSitesTests
 
         Assert.Equal("ERR_BLOCKED_BY_ADMINISTRATOR", view.Code);
         Assert.Equal("Votre administrateur a bloqué example.com.", view.Message);
-        Assert.Contains(view.Hints, hint => hint.Contains("HackerOs:Proxy", StringComparison.Ordinal));
+        Assert.Contains(view.Hints, hint => hint.Contains("KazoOs:Proxy", StringComparison.Ordinal));
     }
 
     [Fact]

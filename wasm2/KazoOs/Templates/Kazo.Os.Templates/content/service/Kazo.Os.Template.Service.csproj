@@ -9,7 +9,7 @@
       reports here, at build, any reflection the trimmer could not follow.
     -->
     <IsTrimmable>true</IsTrimmable>
-    <!-- A Kazo OS app; also read by the Debug profile of a hackeros-solution repository (ADR 0207). -->
+    <!-- A Kazo OS app; also read by the Debug profile of a kazoos-solution repository (ADR 0207). -->
     <KazoOsAppProject>true</KazoOsAppProject>
     <!-- One version for every Kazo OS package (ADR 0098 §1). -->
     <KazoOsVersion>0.0.0-dev</KazoOsVersion>

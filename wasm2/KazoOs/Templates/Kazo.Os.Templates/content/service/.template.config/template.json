@@ -6,7 +6,7 @@
   "groupIdentity": "Kazo.Os.Templates.Service",
   "name": "Kazo OS service",
   "description": "A Kazo OS background service (ServiceAppBase), started at login, built with Kazo.Os.App.Build.",
-  "shortName": "hackeros-service",
+  "shortName": "kazoos-service",
   "sourceName": "Kazo.Os.Template.Service",
   "preferNameDirectory": true,
   "tags": { "language": "C#", "type": "project" },

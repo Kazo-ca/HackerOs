@@ -96,7 +96,7 @@ public sealed class MobileNavigationHistoryTests
     private static WindowRuntimeState CreateState(int seed) =>
         new(
             WindowId.FromGuid(Guid.Parse($"70000000-0000-0000-0000-{seed:D12}")),
-            $"org.hackeros.test{seed}",
+            $"org.kazoos.test{seed}",
             WindowOwnerId.FromGuid(Guid.Parse($"80000000-0000-0000-0000-{seed:D12}")),
             $"Test {seed}",
             null,

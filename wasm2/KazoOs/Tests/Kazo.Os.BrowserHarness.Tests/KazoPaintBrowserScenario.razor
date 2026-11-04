@@ -3,17 +3,17 @@
 @implements IAsyncDisposable
 @inject IJSRuntime JavaScript
 
-<section class="hack-paint-proof" aria-label="Hack Paint browser contract">
-    <h1>Hack Paint canvas contract</h1>
-    <div role="toolbar" aria-label="Hack Paint proof actions">
+<section class="kazo-paint-proof" aria-label="Kazo Paint browser contract">
+    <h1>Kazo Paint canvas contract</h1>
+    <div role="toolbar" aria-label="Kazo Paint proof actions">
         <button @onclick="DrawAsync">Draw pixel</button>
         <button @onclick="UndoAsync">Undo</button>
         <button @onclick="RedoAsync">Redo</button>
         <button @onclick="CropAsync">Crop</button>
         <button @onclick="PanAsync">Pan</button>
     </div>
-    <canvas id="hack-paint-canvas" @ref="_canvas" width="@_state.Width" height="@_state.Height" aria-label="Hack Paint canvas"></canvas>
-    <output id="hack-paint-result" data-status="@_status" data-size="@($"{_state.Width}x{_state.Height}")" data-pan="@($"{_state.PanX},{_state.PanY}")">@_status</output>
+    <canvas id="kazo-paint-canvas" @ref="_canvas" width="@_state.Width" height="@_state.Height" aria-label="Kazo Paint canvas"></canvas>
+    <output id="kazo-paint-result" data-status="@_status" data-size="@($"{_state.Width}x{_state.Height}")" data-pan="@($"{_state.PanX},{_state.PanY}")">@_status</output>
 </section>
 
 @code {

@@ -31,7 +31,7 @@ Analyse du 2026-10-29. Le proxy du serveur Kazo OS est construit
 `todo/base`) : droit du Navigateur, cookies, redirections, icône de source,
 « Non sécurisé », erreurs. Décisions encore à construire :
 
-- Ordre des sources : réseau simulé → proxy du serveur HackerOs (fait) → proxy
+- Ordre des sources : réseau simulé → proxy du serveur Kazo OS (fait) → proxy
   public tiers (désactivable) → Wayback Machine automatiquement en dernier
   recours. Une icône de source par nouvelle source (proxy public, archive).
 - Pas d'iframe directe vers le vrai site : tout passe par le `srcdoc` isolé.
@@ -45,9 +45,9 @@ Décidé le 2026-10-28 :
 - Chaque projet open source enveloppé vit dans son propre dépôt
   (`Os-App-Webamp`, `Os-App-IRC` avec KiwiIRC,
   `Os-App-BoxedWine`, et d'autres), créé à partir de
-  `Os-AppTemplate` (ADR 0176, modèle `hackeros-solution` de l'ADR 0207 ;
+  `Os-AppTemplate` (ADR 0176, modèle `kazoos-solution` de l'ADR 0207 ;
   le dépôt template est régénéré à la release qui contient ce modèle) et listé dans `Os-AppMarketPlace`
-  (catalogue du Hack Store, ADR 0188).
+  (catalogue du Kazo OS Store, ADR 0188).
 - La licence de chaque dépôt suit celle du projet enveloppé (GPL-2.0 pour
   BoxedWine, par exemple), pas MIT par défaut.
 - Ordre de difficulté évalué : Webamp (le plus simple : MIT, `renderInto(div)`,

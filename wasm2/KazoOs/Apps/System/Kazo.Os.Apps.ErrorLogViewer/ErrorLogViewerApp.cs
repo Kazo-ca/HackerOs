@@ -16,7 +16,7 @@ public sealed class ErrorLogViewerApp : AppDefinition
     public override IReadOnlyList<AssetManifest> Assets =>
         [new("icons/app.svg", AssetKind.Image, new string('0', 64), "app-icon")];
     /// <inheritdoc />
-    public override string Id => "org.hackeros.error-log-viewer";
+    public override string Id => "org.kazoos.error-log-viewer";
 
     /// <inheritdoc />
     public override string Name => "Error Log Viewer";
@@ -31,7 +31,7 @@ public sealed class ErrorLogViewerApp : AppDefinition
     public override Type? MobileEntryPoint => typeof(ErrorLogViewerWindow);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description =>

@@ -12,19 +12,19 @@ namespace Kazo.Os.Apps.WebServer.Manager;
 /// <summary>What Web Server Manager shows for a site.</summary>
 public enum WebSiteState
 {
-    /// <summary><c>hackwebd</c> listens on every binding of the site.</summary>
+    /// <summary><c>kazowebd</c> listens on every binding of the site.</summary>
     Running,
 
-    /// <summary><c>hackwebd</c> listens on some bindings only (the others failed: see the error log).</summary>
+    /// <summary><c>kazowebd</c> listens on some bindings only (the others failed: see the error log).</summary>
     Partial,
 
-    /// <summary>The site is valid and enabled but nothing listens: <c>hackwebd</c> is stopped, or every bind failed.</summary>
+    /// <summary>The site is valid and enabled but nothing listens: <c>kazowebd</c> is stopped, or every bind failed.</summary>
     Down,
 
     /// <summary>The site is disabled (<c>"enabled": false</c>).</summary>
     Stopped,
 
-    /// <summary>The <c>.site</c> file is invalid; <c>hackwebd</c> ignores it.</summary>
+    /// <summary>The <c>.site</c> file is invalid; <c>kazowebd</c> ignores it.</summary>
     Invalid,
 
     /// <summary>A web app (ADR 0073) served by its own process: read-only here, started on demand.</summary>
@@ -48,7 +48,7 @@ public sealed record WebSiteRow(string Name, KazoWebSiteDeclaration? Declaration
 }
 
 /// <summary>Everything Web Server Manager shows at one moment.</summary>
-/// <param name="Daemon">The <c>hackwebd</c> service, or <see langword="null"/> when it is not installed.</param>
+/// <param name="Daemon">The <c>kazowebd</c> service, or <see langword="null"/> when it is not installed.</param>
 /// <param name="Rows">System sites, then the user's, then external sites.</param>
 /// <param name="Listeners">Every listening socket of the machine.</param>
 public sealed record WebServerSnapshot(KazoServiceController? Daemon, IReadOnlyList<WebSiteRow> Rows, IReadOnlyList<KazoTcpListenerInfo> Listeners);
@@ -56,7 +56,7 @@ public sealed record WebServerSnapshot(KazoServiceController? Daemon, IReadOnlyL
 /// <summary>
 /// The logic of Web Server Manager, without UI (ADR 0077, section 3): it only drives the OS through the
 /// public SDK, like IIS Manager editing <c>applicationHost.config</c>. Sites are <c>.site</c> files;
-/// their live state is read from the listening sockets of <c>hackwebd</c>
+/// their live state is read from the listening sockets of <c>kazowebd</c>
 /// (<see cref="KazoIPGlobalProperties"/>, what <c>netstat -tlnp</c> prints).
 /// </summary>
 public static class WebSiteStore
@@ -95,9 +95,9 @@ public static class WebSiteStore
         return new WebServerSnapshot(daemon, rows, listeners);
     }
 
-    /// <summary>Computes the state of a declared site from the prefixes <c>hackwebd</c> listens on.</summary>
+    /// <summary>Computes the state of a declared site from the prefixes <c>kazowebd</c> listens on.</summary>
     /// <param name="declaration">The site file.</param>
-    /// <param name="servedPrefixes">Normalized prefixes of the sockets owned by <c>hackwebd</c>.</param>
+    /// <param name="servedPrefixes">Normalized prefixes of the sockets owned by <c>kazowebd</c>.</param>
     public static WebSiteState StateOf(KazoWebSiteDeclaration declaration, IReadOnlySet<string> servedPrefixes)
     {
         ArgumentNullException.ThrowIfNull(declaration);
@@ -181,7 +181,7 @@ public static class WebSiteStore
 
     /// <summary>
     /// Writes a site file. Renaming a site writes the new file, then deletes the old one. Writing in
-    /// <c>/etc/hackweb/sites</c> needs an administrator: the write is refused with
+    /// <c>/etc/kazoweb/sites</c> needs an administrator: the write is refused with
     /// <see cref="UnauthorizedAccessException"/> until one approves it (the window offers the prompt).
     /// </summary>
     /// <param name="site">The site.</param>
@@ -216,7 +216,7 @@ public static class WebSiteStore
         return path;
     }
 
-    /// <summary>Deletes a site file; <c>hackwebd</c> closes its sockets at once.</summary>
+    /// <summary>Deletes a site file; <c>kazowebd</c> closes its sockets at once.</summary>
     /// <param name="declaration">The site.</param>
     /// <param name="cancellationToken">Cancels the delete.</param>
     public static Task DeleteAsync(KazoWebSiteDeclaration declaration, CancellationToken cancellationToken = default)

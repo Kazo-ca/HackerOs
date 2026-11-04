@@ -64,7 +64,7 @@ d'exécution » de sa section 9. Les décisions sont dans les ADR 0066 à 0071.
 | 4 | Mémoire en quatre couches : image, ressources de l'OS, allocations par tranche, tas réel réparti après chaque GC ; pas de limite. Le comptage du marshaling est écarté. | 0068 |
 | 5 | `StopRequested` (raison, échéance), `CheckpointAsync`, `TerminateAsync`, `ProcessExitReason.Terminated` ; escalade en quatre étapes ; « End task » devient `SIGTERM`, « Force kill » est ajouté. | 0069 |
 | 6 | Modèle hybride : apps à fenêtre sur le thread principal, commandes dans un pool d'un worker par cœur virtuel, services dans un worker dédié avec une réserve ; passerelles distantes ; battement de cœur ; seul un worker muet est terminé. | 0070 |
-| 7 | Une fois le système démarré, toujours au moins un worker prêt ; il sert aux processus dédiés et au débordement du pool quand aucun worker n'est libre ; plafond `navigator.hardwareConcurrency` ; `/proc/hackeros/workers`. | 0071 |
+| 7 | Une fois le système démarré, toujours au moins un worker prêt ; il sert aux processus dédiés et au débordement du pool quand aucun worker n'est libre ; plafond `navigator.hardwareConcurrency` ; `/proc/kazoos/workers`. | 0071 |
 | 8 | `Kazo.Os.Server` : mesures coupées par défaut, pas de worker, jusqu'à un ADR propre à cet hôte. | 0066, 0067, 0070 |
 
 ## 5. Chantiers
@@ -77,7 +77,7 @@ Chaque branche part de `rebuild/base` et sa PR vise `rebuild/base`.
 | `rebuild/5-cpu-accounting` | ADR 0067 : comptage `utime`/`stime`, compositeur, `/proc/<pid>/stat`, `/proc/stat` réel, `KazoProcess.*ProcessorTime`, long tasks, « Not responding » et `Responding:`, test de surcoût (< 5 %). | `5-accounting-switches` |
 | `rebuild/5-memory-accounting` | ADR 0068 : quatre couches, champs de `/proc/<pid>/status`, `/proc/meminfo`, `PrivateMemorySize64`. | `5-accounting-switches` |
 | `rebuild/5-graceful-stop` | ADR 0069 : `StopRequested`, `CheckpointAsync`, `TerminateAsync`, `Terminated`, ordonnanceur par processus et `KazoProcessKilledException`, « End task » poli et « Force kill », `CheckpointAsync` dans les commandes longues. | — |
-| `rebuild/5-worker-processes` | ADR 0070 et 0071 : worker toujours prêt après le boot, débordement et plafond, `/proc/hackeros/workers`, `AppExecutionHost` dans le manifeste, `Kazo.Os.Platform.WorkerHost`, passerelles distantes et tests de parité, pool et réserve, battement de cœur, escalade étape 4, d'abord pour `Kazo.Os.Commands`. | les quatre autres |
+| `rebuild/5-worker-processes` | ADR 0070 et 0071 : worker toujours prêt après le boot, débordement et plafond, `/proc/kazoos/workers`, `AppExecutionHost` dans le manifeste, `Kazo.Os.Platform.WorkerHost`, passerelles distantes et tests de parité, pool et réserve, battement de cœur, escalade étape 4, d'abord pour `Kazo.Os.Commands`. | les quatre autres |
 | `rebuild/5-host-smoke` | Section 5.2 : `build/verify-hosts.sh`, test Playwright de démarrage des trois hôtes avec repli sur le Chromium du conteneur, combinaisons des mesures ; corrige aussi le lancement des suites E2E existantes dans un conteneur. | — |
 | `rebuild/5-final` | Vérification de bout en bout, `system-metrics.md`, `task-manager.md`, `app-sdk.md`, `sdk-reference.md`, index, cette liste à jour. | tous |
 
@@ -179,7 +179,7 @@ Précisions de mise en œuvre (`rebuild/5-graceful-stop`, détail dans
 - [x] Hôte de processus dans un worker et passerelles distantes, tests de parité. (`5-worker-processes`, [`worker-processes.md`](../worker-processes.md))
 - [x] Pool (un worker par cœur virtuel), réserve dédiée, placement des pipelines. (`5-worker-processes`, [`worker-processes.md`](../worker-processes.md))
 - [x] Battement de cœur, « Not responding » pendant le blocage, terminaison du worker. (`5-worker-processes`, [`worker-processes.md`](../worker-processes.md))
-- [x] Worker toujours prêt après le boot, débordement du pool, plafond, `/proc/hackeros/workers` (ADR 0071). (`5-worker-processes`, [`worker-processes.md`](../worker-processes.md))
+- [x] Worker toujours prêt après le boot, débordement du pool, plafond, `/proc/kazoos/workers` (ADR 0071). (`5-worker-processes`, [`worker-processes.md`](../worker-processes.md))
 
 ### Apps existantes (section 5.1)
 - [x] Toutes les apps de `Apps/` exécutent leur code dans un frame ambiant (test `AmbientFrameSourceTests`, `5-accounting-switches`).

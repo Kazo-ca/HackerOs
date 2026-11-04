@@ -17,12 +17,12 @@ public abstract class KazoViewHelper : ComponentBase
     public KazoViewContext ViewContext
     {
         get => _viewContext ?? throw new InvalidOperationException(
-            $"<{GetType().Name}> works only inside an ASP.Hack view rendered by View() or PartialView().");
+            $"<{GetType().Name}> works only inside an ASP.Kazo view rendered by View() or PartialView().");
         set => _viewContext = value;
     }
 
     /// <summary>Gets the URL helper.</summary>
-    protected IHackUrlHelper Url => ViewContext.Url;
+    protected IKazoUrlHelper Url => ViewContext.Url;
 
     /// <summary>Gets the HTML attributes written as they were given (<c>class</c>, <c>id</c>, <c>data-*</c>...).</summary>
     [Parameter(CaptureUnmatchedValues = true)]

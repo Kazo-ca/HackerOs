@@ -55,10 +55,10 @@ public sealed class AmbientContextComponentTests
 
     private static AppManifest WindowManifest() => new()
     {
-        Id = "org.hackeros.test-ambient",
+        Id = "org.kazoos.test-ambient",
         Name = "Ambient Window",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "Ambient context component test.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.AppSdk.Blazor.Tests", "ProbeWindowApp"),

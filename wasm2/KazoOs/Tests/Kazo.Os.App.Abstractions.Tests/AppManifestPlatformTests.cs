@@ -186,10 +186,10 @@ public sealed class AppManifestPlatformTests
 
     private static AppManifest CreateBaseManifest() => new()
     {
-        Id = "org.hackeros.samples.platform-app",
+        Id = "org.kazoos.samples.platform-app",
         Name = "Platform Demo",
         Version = "1.0.0",
-        PublisherId = "pub.hackeros",
+        PublisherId = "pub.kazoos",
         Description = "Demonstrates a manifest with multiple platform entry points.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Samples.PlatformApp.dll", "Kazo.Os.Samples.PlatformApp.PlatformDemoWindow"),

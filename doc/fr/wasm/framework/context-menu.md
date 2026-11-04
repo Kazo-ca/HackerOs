@@ -1,6 +1,6 @@
 > [English version](../../../en/wasm/framework/context-menu.md)
 
-# Menu contextuel de l'OS (`hackeros.context-menu`)
+# Menu contextuel de l'OS (`kazoos.context-menu`)
 
 ## Objet
 
@@ -20,7 +20,7 @@ Depuis le chantier 3 (ADR 0155), les menus du contrôle de fichiers
 définit un menu par contrôle, le remplit à chaque ouverture (plan §7) et le
 passe à `ContextMenuOpening` de l'hôte ; le `MudMenu` de `FileView` n'est plus
 dessiné quand la vue est liée au menu de l'OS. Voir
-[`embedded-components.md`](embedded-components.md#hackfileview-et-ihackfileview).
+[`embedded-components.md`](embedded-components.md#kazofileview-et-ikazofileview).
 
 Depuis le chantier 4 (ADR 0159), l'OS ajoute à ces menus les entrées que les
 apps inscrivent : voir [Entrées des apps](#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4).
@@ -68,8 +68,8 @@ apps inscrivent : voir [Entrées des apps](#entrées-des-apps-dans-les-menus-des
 - `KazoContextMenu` ne dessine **rien** là où il est écrit : il décrit le menu
   à l'OS. Le nom (`Name`) est unique dans la fenêtre.
 - `Menus` existe sur `WindowAppBase` et sur `KazoComponentBase`.
-  `Menus.Attach(nom, objet)` renvoie deux attributs (`data-hack-menu`,
-  `data-hack-menu-token`) ; l'objet reste en C#, sous un jeton opaque. Le même
+  `Menus.Attach(nom, objet)` renvoie deux attributs (`data-kazo-menu`,
+  `data-kazo-menu-token`) ; l'objet reste en C#, sous un jeton opaque. Le même
   objet attaché à nouveau garde son jeton (par référence pour un objet, par
   valeur pour une chaîne ou un type valeur).
 - L'élément le plus proche qui porte un jeton gagne : une ligne dans une liste
@@ -111,7 +111,7 @@ protected override void OnAppInitialized()
 <button @onclick="@(args => Menus.OpenAsync("rows-area", null, args.ClientX, args.ClientY))">⋯</button>
 ```
 
-`KazoContextMenu.Controller` (`IHackContextMenu`) donne aussi `OpenAsync(objet, x, y)`
+`KazoContextMenu.Controller` (`IKazoContextMenu`) donne aussi `OpenAsync(objet, x, y)`
 et `Close()`.
 
 L'exemple complet est dans l'app d'exemple `Kazo.Os.Samples.WindowApp`
@@ -128,8 +128,8 @@ L'exemple complet est dans l'app d'exemple `Kazo.Os.Samples.WindowApp`
 | `KazoMenuOpeningEventArgs` | `Menu` (copie de cette ouverture), `Item`, `Cancel` |
 | `KazoIcons.Vector(bibliothèque, nom)`, `KazoIcons.FromImage(chemin)` | Icône décrite (`KazoSurfaceIcon`), dessinée par l'OS (`Kazo.Os.AppSdk.Icons`) |
 | `KazoMenus` | `Menus` d'un composant : `Attach`, `Define`, `OpenAsync`, `Close`, `IsAvailable` |
-| `IHackMenuHost` | Côté OS des menus d'une fenêtre (mis en œuvre par la plateforme, donné en cascade) |
-| `IHackContextMenu` | Contrôleur du contrat : `Name`, `OpenAsync`, `Close` |
+| `IKazoMenuHost` | Côté OS des menus d'une fenêtre (mis en œuvre par la plateforme, donné en cascade) |
+| `IKazoContextMenu` | Contrôleur du contrat : `Name`, `OpenAsync`, `Close` |
 
 Règles vérifiées à chaque ouverture (`Validate`) : identifiants présents et
 uniques dans tout le menu, trois niveaux au plus, pas d'action sur une entrée
@@ -152,7 +152,7 @@ App (SDK)                                         Plateforme (Platform.Blazor)
 <KazoContextMenu Name="rows">  ── contrat ──►     PlatformContextMenu (KazoPlatformComponent)
    KazoMenuItem / KazoMenuGroup                       │ inscrit le menu dans la fenêtre
 <tr @attributes="Menus.Attach("rows", row)">          ▼
-        │ data-hack-menu-token              ContextMenuScope (une par fenêtre, IHackMenuHost)
+        │ data-kazo-menu-token              ContextMenuScope (une par fenêtre, IKazoMenuHost)
         ▼                                             │
 ContextMenuOverlay.razor.js ── jeton, x, y ──► ContextMenuService (un menu ouvert dans tout l'OS)
   (clic droit, appui long, Touche Menu,               │ Build → copie → Opening → Validate → Arrange
@@ -161,13 +161,13 @@ ContextMenuOverlay.razor.js ── jeton, x, y ──► ContextMenuService (un 
 ```
 
 - **Contrat.** `KazoContextMenu` est un composant typé
-  (`KazoContractComponent<IHackContextMenu>`, ADR 0153) ; la plateforme fournit
-  `hackeros.context-menu` par `KazoPlatformComponent` (`PlatformContextMenu`),
+  (`KazoContractComponent<IKazoContextMenu>`, ADR 0153) ; la plateforme fournit
+  `kazoos.context-menu` par `KazoPlatformComponent` (`PlatformContextMenu`),
   sans manifeste ni chargement d'app. `PlatformContextMenu` ne dessine rien : il
   inscrit le menu dans la fenêtre et rend le contrôleur.
 - **Fenêtre.** `WindowAppRenderer` crée une `ContextMenuScope` par fenêtre
   (`ContextMenuService.CreateScope(AppContext)`) et la donne en cascade
-  (`IHackMenuHost`) ; elle est détruite avec la fenêtre (menus, objets attachés,
+  (`IKazoMenuHost`) ; elle est détruite avec la fenêtre (menus, objets attachés,
   menu ouvert). Une zone de l'OS (bureau, barre des tâches) crée la sienne avec
   `CreateScope(null)`.
 - **Service.** `ContextMenuService` (scoped, comme `WindowRuntime`) garde le
@@ -208,7 +208,7 @@ ContextMenuOverlay.razor.js ── jeton, x, y ──► ContextMenuService (un 
 
 Un champ de texte dans un élément attaché garde le menu du navigateur
 (copier, coller), sauf s'il est lui-même attaché. Un élément sans jeton dans une
-zone `data-hack-menu-suppress` (une zone de l'OS qui a son propre menu) n'ouvre
+zone `data-kazo-menu-suppress` (une zone de l'OS qui a son propre menu) n'ouvre
 pas non plus le menu du navigateur. Un `contextmenu` déjà annulé par l'app
 (`@oncontextmenu:preventDefault`) est laissé à l'app.
 
@@ -237,7 +237,7 @@ ouvre garde donc son focus). Mouvement réduit : pas d'animation.
 Le fond du bureau a la portée `Desktop` ; l'app Bureau y ajoute
 « Affichage ▸ », « Trier par ▸ », « Arrière-plan… » et « Paramètres du
 bureau… ». Le menu Démarrer porte un menu de la coquille,
-`hackeros.start-menu.app`, sur chaque app : Ouvrir, Épingler / Désépingler,
+`kazoos.start-menu.app`, sur chaque app : Ouvrir, Épingler / Désépingler,
 « Envoyer vers ▸ Bureau (créer un raccourci) ». Détails :
 [`desktop.md`](../dev/desktop.md#menus).
 
@@ -346,7 +346,7 @@ affiché.
 
 1. Au démarrage et à chaque changement des apps installées,
    `FileContextMenuRegistry` (Platform Core) copie les entrées des manifestes
-   dans `/etc/hackeros/context-menus.d/<appId>.json` (rang d'installation,
+   dans `/etc/kazoos/context-menus.d/<appId>.json` (rang d'installation,
    empreinte, version de l'app), retire les fichiers des apps désinstallées
    pour la machine, puis relit le dossier. Un fichier invalide est ignoré et
    signalé dans `/var/log/syslog`.
@@ -359,17 +359,17 @@ affiché.
    l'utilisateur, puis placement (`FileMenuEntryPlacement`). Les entrées ont
    l'id `app:<appId>/<name>`.
 4. Au clic, `FileContextMenuLauncher` revérifie la cible et lance l'app par
-   `AppLifecycleOrchestrator`, l'OS (`org.hackeros.shell`) comme expéditeur.
+   `AppLifecycleOrchestrator`, l'OS (`org.kazoos.shell`) comme expéditeur.
 
 ### Masquer une entrée
 
 Paramètres ▸ **Menus des fichiers** liste les entrées de toutes les apps
 (sous-menus sous leur parent) avec une case par entrée. Le choix est écrit
-dans `~/.config/hackeros/context-menus.config` :
+dans `~/.config/kazoos/context-menus.config` :
 
 ```ini
 [hidden]
-org.hackeros.file-explorer.extract-here=true
+org.kazoos.file-explorer.extract-here=true
 ```
 
 Masquer un parent masque son sous-menu ; le fichier est relu à chaque
@@ -381,8 +381,8 @@ app système le fait par l'API publique `KazoFileMenuEntries`
 
 | App | Entrée | Portée et types | Intent |
 |---|---|---|---|
-| Explorateur | « Extraire ici » (`extract-here`), après « Ouvrir » | fichiers `.zip`, `application/zip` | `org.hackeros.file-explorer.extract-here.v1` |
-| Web Server Manager | « Publier comme site web… » (`publish-site`) | dossiers, un seul | `org.hackeros.web-server-manager.publish-site.v1` |
+| Explorateur | « Extraire ici » (`extract-here`), après « Ouvrir » | fichiers `.zip`, `application/zip` | `org.kazoos.file-explorer.extract-here.v1` |
+| Web Server Manager | « Publier comme site web… » (`publish-site`) | dossiers, un seul | `org.kazoos.web-server-manager.publish-site.v1` |
 
 ### Tests
 
@@ -433,7 +433,7 @@ app système le fait par l'API publique `KazoFileMenuEntries`
 
 - [x] Modèle du SDK (`KazoMenuDefinition`, groupes, entrées, trois niveaux, validation, copie).
 - [x] Construction en C# (`KazoMenuBuilder`, `Menus.Define`).
-- [x] Markup (`KazoContextMenu`, `KazoMenuItem`, `KazoMenuGroup`) sur le contrat `hackeros.context-menu`.
+- [x] Markup (`KazoContextMenu`, `KazoMenuItem`, `KazoMenuGroup`) sur le contrat `kazoos.context-menu`.
 - [x] `Menus.Attach` et jetons ; `Menus` sur `WindowAppBase` et `KazoComponentBase`.
 - [x] `KazoIcons` (vectorielle ou image).
 - [x] Fournisseur de la plateforme (`PlatformContextMenu`), une portée par fenêtre (`WindowAppRenderer`).

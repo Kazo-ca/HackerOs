@@ -5,7 +5,7 @@ namespace Kazo.Os.Tools.ManifestGenerator.Tests;
 /// <summary>Aggregation rules of ADR 0047 §3, on manifests written to a temporary directory.</summary>
 public sealed class BuiltInApplicationsAggregatorTests : IDisposable
 {
-    private readonly string _directory = Directory.CreateTempSubdirectory("hackeros-aggregate-").FullName;
+    private readonly string _directory = Directory.CreateTempSubdirectory("kazoos-aggregate-").FullName;
 
     public void Dispose() => Directory.Delete(_directory, recursive: true);
 
@@ -30,7 +30,7 @@ public sealed class BuiltInApplicationsAggregatorTests : IDisposable
         Assert.Empty(result.Diagnostics);
         IReadOnlyList<BuiltInApplication> applications = BuiltInApplicationsJsonSerializer.DeserializeStrict(result.Json!);
         Assert.Equal(
-            [("org.hackeros.tests.second", false), ("org.hackeros.tests.valid", true)],
+            [("org.kazoos.tests.second", false), ("org.kazoos.tests.valid", true)],
             applications.Select(item => (item.Manifest.Id, item.IsSystemApp)));
     }
 
@@ -61,8 +61,8 @@ public sealed class BuiltInApplicationsAggregatorTests : IDisposable
         Assert.Null(result.Json);
         GeneratorDiagnostic diagnostic = Assert.Single(result.Diagnostics);
         Assert.Equal(GeneratorCodes.DuplicateCommand, diagnostic.Code);
-        Assert.Equal("org.hackeros.tests.valid", diagnostic.Subject);
-        Assert.Contains("org.hackeros.tests.same-command", diagnostic.Message, StringComparison.Ordinal);
+        Assert.Equal("org.kazoos.tests.valid", diagnostic.Subject);
+        Assert.Contains("org.kazoos.tests.same-command", diagnostic.Message, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -73,7 +73,7 @@ public sealed class BuiltInApplicationsAggregatorTests : IDisposable
         AggregationResult refused = BuiltInApplicationsAggregator.Aggregate([new(manifest, IsSystemApp: false)]);
         GeneratorDiagnostic diagnostic = Assert.Single(refused.Diagnostics);
         Assert.Equal("HOSAPP0024", diagnostic.Code);
-        Assert.Equal("org.hackeros.tests.shielded", diagnostic.Subject);
+        Assert.Equal("org.kazoos.tests.shielded", diagnostic.Subject);
         Assert.Contains("oomScoreAdj -300", diagnostic.Message, StringComparison.Ordinal);
         Assert.Null(refused.Json);
 

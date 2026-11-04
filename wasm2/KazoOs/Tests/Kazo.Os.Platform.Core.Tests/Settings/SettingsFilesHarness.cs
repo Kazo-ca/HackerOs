@@ -160,7 +160,7 @@ internal sealed class SettingsFilesHarness
     {
         AuthenticatedPrincipal principal = Session.CurrentPrincipal ?? throw new InvalidOperationException("No session.");
         IAppFileSystemGateway nano = CreateAppGateway(
-            principal, "org.hackeros.nano", AppCapabilities.FileSystemUserHomeRead, AppCapabilities.FileSystemUserHomeWrite);
+            principal, "org.kazoos.nano", AppCapabilities.FileSystemUserHomeRead, AppCapabilities.FileSystemUserHomeWrite);
         FileSystemError? error = await SettingsTextFile.EditAsync(nano, VirtualPath.Parse(path), _ => content, createIfMissing: true);
         Assert.Null(error);
     }

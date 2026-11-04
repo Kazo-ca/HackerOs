@@ -15,8 +15,8 @@ namespace Kazo.Os.Platform.Blazor.Tests;
 /// </summary>
 public sealed class WindowGeometryRestoreTests
 {
-    private const string AppId = "org.hackeros.test-window";
-    private const string StateFile = "windows/org.hackeros.test-window.config";
+    private const string AppId = "org.kazoos.test-window";
+    private const string StateFile = "windows/org.kazoos.test-window.config";
     private static readonly WindowBounds Screen = new(0, 0, 1280, 720);
 
     [Fact]
@@ -30,7 +30,7 @@ public sealed class WindowGeometryRestoreTests
         await desktop.CloseAsync(first);
 
         Assert.Equal(
-            "# Window size of org.hackeros.test-window (ADR 0116, ADR 0122)\nwidth=640\nheight=420\nmaximized=false\n",
+            "# Window size of org.kazoos.test-window (ADR 0116, ADR 0122)\nwidth=640\nheight=420\nmaximized=false\n",
             desktop.Settings.Files[StateFile]);
 
         // ADR 0122: only the size comes back; the position is the cascade slot, as under GNOME.
@@ -228,7 +228,7 @@ public sealed class WindowGeometryRestoreTests
         Desktop desktop = new();
         WindowRuntimeState dialog = new(
             WindowId.FromGuid(Guid.NewGuid()),
-            "org.hackeros.file-dialog",
+            "org.kazoos.file-dialog",
             WindowOwnerId.FromGuid(Guid.NewGuid()),
             "Open",
             null,
@@ -251,7 +251,7 @@ public sealed class WindowGeometryRestoreTests
         Id = AppId,
         Name = "Test Window",
         Version = "1.0.0",
-        PublisherId = "pub.hackeros",
+        PublisherId = "pub.kazoos",
         Description = "Window geometry test app.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Test.dll", "Test.Window"),

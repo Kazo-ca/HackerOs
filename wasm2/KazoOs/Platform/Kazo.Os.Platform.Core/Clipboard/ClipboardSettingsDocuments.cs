@@ -37,8 +37,8 @@ public static class ClipboardSharingModeExtensions
 }
 
 /// <summary>
-/// Defines the layered clipboard document (ADR 0065, ADR 0044): <c>/etc/hackeros/clipboard.config</c>
-/// holds the machine default, each user may override it in <c>~/.config/hackeros/clipboard.config</c>,
+/// Defines the layered clipboard document (ADR 0065, ADR 0044): <c>/etc/kazoos/clipboard.config</c>
+/// holds the machine default, each user may override it in <c>~/.config/kazoos/clipboard.config</c>,
 /// and an administrator forces it by putting the key under <c>[locked]</c> in the system file.
 /// </summary>
 public static class ClipboardSettingsDocuments

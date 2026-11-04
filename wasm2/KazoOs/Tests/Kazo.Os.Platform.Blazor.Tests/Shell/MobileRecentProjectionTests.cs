@@ -46,7 +46,7 @@ public sealed class MobileRecentProjectionTests
         bool isFocused = false) =>
         new(
             WindowId.FromGuid(Guid.Parse($"90000000-0000-0000-0000-{seed:D12}")),
-            $"org.hackeros.test{seed}",
+            $"org.kazoos.test{seed}",
             WindowOwnerId.FromGuid(Guid.Parse($"a0000000-0000-0000-0000-{seed:D12}")),
             title ?? $"Test {seed}",
             iconAssetPath,

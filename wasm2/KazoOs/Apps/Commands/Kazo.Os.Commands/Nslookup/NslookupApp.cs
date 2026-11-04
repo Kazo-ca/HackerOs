@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Nslookup;
 public sealed class NslookupApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.nslookup";
+    public override string Id => "org.kazoos.commands.nslookup";
 
     /// <inheritdoc />
     public override string Name => "nslookup";
@@ -22,10 +22,10 @@ public sealed class NslookupApp : AppDefinition
     public override Type EntryPoint => typeof(NslookupCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
-    public override string Description => "Query the resolver hackdns for a host name or an address, and show which source answered";
+    public override string Description => "Query the resolver kazodns for a host name or an address, and show which source answered";
 
     /// <inheritdoc />
     public override string Category => "network";

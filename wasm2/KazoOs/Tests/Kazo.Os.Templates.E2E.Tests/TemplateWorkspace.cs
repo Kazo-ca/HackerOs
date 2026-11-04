@@ -16,7 +16,7 @@ public sealed class TemplateWorkspace : IAsyncLifetime
     public string RepositoryRoot { get; } = FindRepositoryRoot();
 
     /// <summary>Gets the workspace folder the projects are generated in.</summary>
-    public string Root { get; } = Path.Combine(Path.GetTempPath(), "hackeros-templates-" + Guid.NewGuid().ToString("N")[..8]);
+    public string Root { get; } = Path.Combine(Path.GetTempPath(), "kazoos-templates-" + Guid.NewGuid().ToString("N")[..8]);
 
     /// <summary>Gets the version every Kazo OS package carries (<c>build/Versions.props</c>).</summary>
     public string Version { get; private set; } = string.Empty;
@@ -37,7 +37,7 @@ public sealed class TemplateWorkspace : IAsyncLifetime
         Version = XDocument.Load(Path.Combine(RepositoryRoot, "build", "Versions.props"))
             .Descendants("KazoOsVersion").Single().Value.Trim();
 
-        Feed = Environment.GetEnvironmentVariable("HACKEROS_LOCAL_FEED") is { Length: > 0 } feed
+        Feed = Environment.GetEnvironmentVariable("KAZOOS_LOCAL_FEED") is { Length: > 0 } feed
             ? Path.GetFullPath(feed)
             : await PackAsync();
 
@@ -47,13 +47,13 @@ public sealed class TemplateWorkspace : IAsyncLifetime
               <config><add key="globalPackagesFolder" value="{Path.Combine(Root, "packages")}" /></config>
               <packageSources>
                 <clear />
-                <add key="hackeros-local" value="{Feed}" />
-                <add key="hackeros-sdk-fixtures" value="{FixtureFeed}" />
+                <add key="kazoos-local" value="{Feed}" />
+                <add key="kazoos-sdk-fixtures" value="{FixtureFeed}" />
                 <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
               </packageSources>
               <packageSourceMapping>
-                <packageSource key="hackeros-local"><package pattern="Kazo.Os.*" /></packageSource>
-                <packageSource key="hackeros-sdk-fixtures"><package pattern="Contoso.*" /></packageSource>
+                <packageSource key="kazoos-local"><package pattern="Kazo.Os.*" /></packageSource>
+                <packageSource key="kazoos-sdk-fixtures"><package pattern="Contoso.*" /></packageSource>
                 <packageSource key="nuget.org"><package pattern="*" /></packageSource>
               </packageSourceMapping>
             </configuration>

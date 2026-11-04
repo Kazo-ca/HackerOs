@@ -1,10 +1,10 @@
 > [Version française](../../../fr/wasm/framework/listening-ports-and-dns.md)
 
-# Listening ports, `hackdns` and local websites
+# Listening ports, `kazodns` and local websites
 
-Work item `web/3-listener-dns` of the web phase (ASP.Hack). Decisions: ADR 0073
+Work item `web/3-listener-dns` of the web phase (ASP.Kazo). Decisions: ADR 0073
 (web app, shared web worker), ADR 0074 (listening ports, name resolution).
-Plan: [`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md).
+Plan: [`asp-kazo-plan.md`](../dev/plans/asp-kazo-plan.md).
 
 ## Purpose
 
@@ -15,7 +15,7 @@ An app can now **serve** HTTP, and not only consume it:
   `EADDRINUSE` and the privileged port rule;
 - a new kind of app, **`web`**, declares its URLs in its manifest
   (`web.urls`); the OS starts it **on demand**, at first access;
-- a local resolver, **`hackdns`** (`KazoDnsResolver`), reads `/etc/hosts`,
+- a local resolver, **`kazodns`** (`KazoDnsResolver`), reads `/etc/hosts`,
   the loopback, the web apps' URLs and the hosted sites before the simulated
   network;
 - local traffic goes through `lo` (`/proc/net/dev` counters);
@@ -23,9 +23,9 @@ An app can now **serve** HTTP, and not only consume it:
 - the server code of **all** sites runs in **a single** Web Worker,
   the `web` worker (Benoit's decision, plan §4.1, answer 3).
 
-Page rendering in the browser (`web/4`) and the ASP.Hack framework
-(`web/6` and following, see [`asp-hack-mvc.md`](asp-hack-mvc.md)) are not part
-of this work item. An ASP.Hack site is a web app like any other: its
+Page rendering in the browser (`web/4`) and the ASP.Kazo framework
+(`web/6` and following, see [`asp-kazo-mvc.md`](asp-kazo-mvc.md)) are not part
+of this work item. An ASP.Kazo site is a web app like any other: its
 process (`KazoWebHost`) derives from `WebServerAppBase`.
 
 ## Architecture
@@ -50,7 +50,7 @@ client (curl, navigateur, KazoHttpClient)
 | `KazoHttpListener`, `KazoHttpListenerContext/Request/Response` | `Kazo.Os.AppSdk` (`Net/`) | HTTP listening modeled on `System.Net.HttpListener`. |
 | `WebServerAppBase` | `Kazo.Os.AppSdk` | Base of a web app: listens on its `Urls`, calls `ProcessRequestAsync` for each request. |
 | `KazoIPGlobalProperties` | `Kazo.Os.AppSdk` (`Net/`) | `GetActiveTcpListenersAsync`, `GetActiveTcpListenerEndPointsAsync` (what `netstat` reads). |
-| `IAppNetworkGateway.ListenHttpAsync`, `GetTcpListenersAsync`, `IHackHttpListenerSocket`, `KazoTcpListenerInfo` | `Kazo.Os.AppSdk` (`Net/`) | Gateway contract. |
+| `IAppNetworkGateway.ListenHttpAsync`, `GetTcpListenersAsync`, `IKazoHttpListenerSocket`, `KazoTcpListenerInfo` | `Kazo.Os.AppSdk` (`Net/`) | Gateway contract. |
 | `ListeningPortTable`, `OsHttpListenerSocket` | `Platform.Core` (`Network/Local/`) | Socket table: binding, conflicts, routing, inodes, cleanup of dead processes. |
 | `KazoDnsResolver` | `Platform.Core` (`Network/Local/`) | Local resolver with cache (30 simulated seconds). |
 | `WebAppActivator` | `Platform.Core` (`Network/Local/`) | On-demand activation, like systemd's socket activation. |
@@ -147,11 +147,11 @@ included), then passes it the request. Simultaneous requests share the same
 startup. Once stopped (task manager, `kill`), it restarts on the
 next request.
 
-### Name resolution (`hackdns`)
+### Name resolution (`kazodns`)
 
 Order, from first to last:
 
-1. `/etc/hosts` (seeded `0644` root: `localhost`, `hackeros`), reread as soon as it
+1. `/etc/hosts` (seeded `0644` root: `localhost`, `kazoos`), reread as soon as it
    changes;
 2. the loopback (`localhost`, `*.localhost`, 127.0.0.0/8);
 3. the URLs of installed and enabled web apps;
@@ -159,7 +159,7 @@ Order, from first to last:
    `HostedSiteNameSource` since `web/5`: hosts of valid and enabled `.site` files,
    [`static-sites.md`](../dev/static-sites.md), ADR 0080 §4);
 5. the simulated network: the default catalog (`hackersearch.net`, `hackmail.com`...)
-   and the `.hackeros` test hosts (ADR 0085).
+   and the `.kazoos` test hosts (ADR 0085).
 
 Responses are kept for 30 simulated seconds. A `.hack` name is **never**
 relayed to the real network. A line of `/etc/hosts` pointing to a simulated host sends the
@@ -181,7 +181,7 @@ $ nslookup intranet.hack
 Server:		127.0.0.53
 Address:	127.0.0.53#53
 
-;; source: web app org.hackeros.intranet (web.urls, this machine)
+;; source: web app org.kazoos.intranet (web.urls, this machine)
 Name:	intranet.hack
 Address: 127.0.0.1
 ```
@@ -204,7 +204,7 @@ OS detection) on `lo` instead of `eth0`. A local ping answers in ~0.04 ms.
 - `WorkerRole.Web`: a single `web` worker for all sites
   (`WorkerPool.AcquireWebAsync`). The first site takes the ready worker (which is
   replaced); the following ones reuse it; it is terminated when its last
-  site stops. It appears as `web` in `/proc/hackeros/workers`.
+  site stops. It appears as `web` in `/proc/kazoos/workers`.
 - Protocol (in addition to [`worker-processes.md`](../dev/worker-processes.md)):
 
 | Message | Direction | Content |

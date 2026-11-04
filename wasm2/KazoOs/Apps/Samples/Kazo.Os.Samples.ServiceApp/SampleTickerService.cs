@@ -19,7 +19,7 @@ namespace Kazo.Os.Samples.ServiceApp;
 public class SampleTickerService : ServiceAppBase
 {
     /// <summary>This app's manifest ID, also the owning namespace for <see cref="SampleTickerTopics"/>.</summary>
-    public const string AppId = "org.hackeros.samples.service-app";
+    public const string AppId = "org.kazoos.samples.service-app";
 
     private long _tickCount;
     private bool _isStopping;

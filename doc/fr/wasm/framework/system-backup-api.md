@@ -16,7 +16,7 @@ refusée **avant** toute écriture, avec un message qui nomme les deux versions 
 This backup uses database schema version 3; this Kazo OS uses version 4. It cannot be restored here.
 ```
 
-Nom : `hackeros-AAAAMMJJ-HHMMSSZ.hosbak` (heure UTC de l'export).
+Nom : `kazoos-AAAAMMJJ-HHMMSSZ.hosbak` (heure UTC de l'export).
 
 ## API du SDK
 

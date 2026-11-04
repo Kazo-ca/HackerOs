@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Dmesg;
 public sealed class DmesgApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.dmesg";
+    public override string Id => "org.kazoos.commands.dmesg";
 
     /// <inheritdoc />
     public override string Name => "dmesg";
@@ -22,7 +22,7 @@ public sealed class DmesgApp : AppDefinition
     public override Type EntryPoint => typeof(DmesgCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Print the kernel ring buffer";

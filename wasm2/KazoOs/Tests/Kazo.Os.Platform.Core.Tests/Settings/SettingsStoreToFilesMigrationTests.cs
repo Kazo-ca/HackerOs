@@ -19,12 +19,12 @@ public sealed class SettingsStoreToFilesMigrationTests
 
         await harness.BootAsync();
 
-        string? appearance = await harness.ReadAsync("/etc/hackeros/appearance.config");
+        string? appearance = await harness.ReadAsync("/etc/kazoos/appearance.config");
         Assert.NotNull(appearance);
         Assert.StartsWith("# Kazo OS default for every user.", appearance);
-        Assert.Equal(FileAssociationSettingsDocuments.DefaultContent, await harness.ReadAsync("/etc/hackeros/file-associations.json"));
+        Assert.Equal(FileAssociationSettingsDocuments.DefaultContent, await harness.ReadAsync("/etc/kazoos/file-associations.json"));
         Assert.NotNull(await harness.StatAsync(SettingsStoreToFilesMigration.SystemMarkerPath));
-        Assert.Equal(0x01A4, (await harness.StatAsync("/etc/hackeros/policy.config"))!.Permissions.Mode);
+        Assert.Equal(0x01A4, (await harness.StatAsync("/etc/kazoos/policy.config"))!.Permissions.Mode);
     }
 
     [Fact]
@@ -41,14 +41,14 @@ public sealed class SettingsStoreToFilesMigrationTests
 
         LayeredConfigSnapshot appearance = await harness.Settings.ReadAsync(AppearanceSettingsDocuments.Document);
         Assert.Equal(legacy, AppearanceSettingsDocuments.ToPreferences(appearance));
-        Assert.Equal("capabilityGrantsLocked=true\n", await harness.ReadAsync("/etc/hackeros/policy.config"));
+        Assert.Equal("capabilityGrantsLocked=true\n", await harness.ReadAsync("/etc/kazoos/policy.config"));
         // An invalid legacy document is not copied: the installation default is written instead.
-        Assert.Equal(FileAssociationSettingsDocuments.DefaultContent, await harness.ReadAsync("/etc/hackeros/file-associations.json"));
+        Assert.Equal(FileAssociationSettingsDocuments.DefaultContent, await harness.ReadAsync("/etc/kazoos/file-associations.json"));
 
-        await harness.WriteAsRootAsync("/etc/hackeros/policy.config", "capabilityGrantsLocked=false\n");
+        await harness.WriteAsRootAsync("/etc/kazoos/policy.config", "capabilityGrantsLocked=false\n");
         await harness.BootAsync();
 
-        Assert.Equal("capabilityGrantsLocked=false\n", await harness.ReadAsync("/etc/hackeros/policy.config"));
+        Assert.Equal("capabilityGrantsLocked=false\n", await harness.ReadAsync("/etc/kazoos/policy.config"));
         Assert.Equal(1, store.Reads);
     }
 
@@ -60,8 +60,8 @@ public sealed class SettingsStoreToFilesMigrationTests
         string aliceId = harness.Alice.Id.ToString();
         string bobId = harness.Bob.Id.ToString();
         string startMenu = "{\"schemaVersion\":1,\"profiles\":{"
-            + $"\"{aliceId}\":{{\"pinnedAppIds\":[\"org.hackeros.files\"]}},"
-            + $"\"{bobId}\":{{\"pinnedAppIds\":[\"org.hackeros.terminal\"]}}"
+            + $"\"{aliceId}\":{{\"pinnedAppIds\":[\"org.kazoos.files\"]}},"
+            + $"\"{bobId}\":{{\"pinnedAppIds\":[\"org.kazoos.terminal\"]}}"
             + "}}";
         store.Records =
         [
@@ -75,11 +75,11 @@ public sealed class SettingsStoreToFilesMigrationTests
         await harness.LoginAsync(harness.Alice);
 
         Assert.Equal("theme=light\n", await harness.ReadAsync($"/home/alice/.config/{EditorAppId}/settings.config"));
-        Assert.Equal("x=10\ny=20\nwidth=640.5\nheight=480\n", await harness.ReadAsync($"/home/alice/.local/state/hackeros/windows/{EditorAppId}.config"));
-        string? pins = await harness.ReadAsync("/home/alice/.config/hackeros/start-menu.json");
+        Assert.Equal("x=10\ny=20\nwidth=640.5\nheight=480\n", await harness.ReadAsync($"/home/alice/.local/state/kazoos/windows/{EditorAppId}.config"));
+        string? pins = await harness.ReadAsync("/home/alice/.config/kazoos/start-menu.json");
         Assert.NotNull(pins);
-        Assert.Contains("org.hackeros.files", pins);
-        Assert.DoesNotContain("org.hackeros.terminal", pins);
+        Assert.Contains("org.kazoos.files", pins);
+        Assert.DoesNotContain("org.kazoos.terminal", pins);
         Assert.Null(await harness.StatAsync($"/home/bob/.config/{EditorAppId}/settings.config"));
         // Owned by alice (the filesystem records the owner by user id), so her own mode bits apply.
         Assert.Contains(
@@ -112,7 +112,7 @@ public sealed class SettingsStoreToFilesMigrationTests
         AuthenticatedPrincipal alice = await harness.LoginAsync(harness.Alice);
 
         Assert.Equal(harness.Alice.Id, alice.UserId);
-        Assert.NotNull(await harness.ReadAsync("/etc/hackeros/appearance.config"));
+        Assert.NotNull(await harness.ReadAsync("/etc/kazoos/appearance.config"));
     }
 
     private sealed class FakeLegacyStore(params LegacySettingsRecord[] records) : ILegacySettingsStore

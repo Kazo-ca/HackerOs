@@ -28,7 +28,7 @@ public sealed class UnresponsiveScenarioState
     {
         Runtime = new WindowRuntime(new WindowBounds(0, 0, 960, 640));
         Process = new ProcessRecord(
-            ProcessId.FromInt64(42), parentPid: null, "org.hackeros.calculator", Instance, AppKind.Window,
+            ProcessId.FromInt64(42), parentPid: null, "org.kazoos.calculator", Instance, AppKind.Window,
             LocalUserId.FromGuid(Guid.NewGuid()), SessionId.FromGuid(Guid.NewGuid()), ProcessState.Running,
             ResourceProfile.None, serviceHealth: null, DateTimeOffset.UtcNow, DateTimeOffset.UtcNow,
             stoppedAtUtc: null, exitCode: null, exitReason: null);
@@ -37,7 +37,7 @@ public sealed class UnresponsiveScenarioState
         Monitor = new WindowResponsivenessMonitor(Runtime, Processes, Accountant, Threshold, TimeProvider.System, settings: null, logger: null);
         Runtime.Apply(new CreateWindowCommand(new WindowRuntimeState(
             WindowId,
-            "org.hackeros.calculator",
+            "org.kazoos.calculator",
             WindowOwnerId.FromGuid(Instance.Value),
             "Calculatrice",
             null,

@@ -11,7 +11,7 @@ public static class CursorThemeCatalog
     public const string SystemId = "system";
 
     /// <summary>Green neon outline on black, matching the Kazo OS theme.</summary>
-    public const string NeonId = "hackeros-neon";
+    public const string NeonId = "kazoos-neon";
 
     /// <summary>Crimson outline on black with bone details, for the gothic themes.</summary>
     public const string CrimsonId = "gothic-crimson";

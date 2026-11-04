@@ -27,7 +27,7 @@ namespace Kazo.Os.Platform.Blazor.Display;
 public sealed class DisplaySurfaceService : IDisplaySurfaceService, IAsyncDisposable
 {
     /// <summary>Source app ID of the notifications this service posts.</summary>
-    public const string NotificationSource = "org.hackeros.display";
+    public const string NotificationSource = "org.kazoos.display";
 
     private const string ModulePath = "./_content/Kazo.Os.Platform.Blazor/displaySurfaces.js";
 

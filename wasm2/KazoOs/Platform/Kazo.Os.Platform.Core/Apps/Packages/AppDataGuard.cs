@@ -11,25 +11,31 @@ namespace Kazo.Os.Platform.Core.Apps.Packages;
 /// Protects a user's data when an installed app changes version (ADR 0214 §4.2, Q5 A), the way
 /// Android keeps an app's data across <c>onUpgrade</c>: before the first launch of a new version,
 /// the OS copies the app's <c>~/.config/&lt;appId&gt;/</c> and <c>~/.local/share/&lt;appId&gt;/</c>
-/// to <c>~/.local/share/hackeros/app-backups/&lt;appId&gt;/&lt;old version&gt;/</c>. An update then
+/// to <c>~/.local/share/kazoos/app-backups/&lt;appId&gt;/&lt;old version&gt;/</c>. An update then
 /// hands <see cref="PreviousVersionVariable"/> to the process, which migrates its own data; a
 /// rollback puts back the backup of the version it returns to.
 /// </summary>
 /// <remarks>
 /// Everything runs with the user's own rights, in their home: no other user's data is read. The
-/// version that used the data last is in <c>~/.config/hackeros/app-data-versions.config</c>,
+/// version that used the data last is in <c>~/.config/kazoos/app-data-versions.config</c>,
 /// section <c>[versions]</c>. A failed backup is logged and does not stop the launch.
 /// </remarks>
 public sealed class AppDataGuard
 {
     /// <summary>Variable handed to the first process of a new version: the version whose data it finds.</summary>
-    public const string PreviousVersionVariable = "HACKEROS_PREVIOUS_VERSION";
+    public const string PreviousVersionVariable = "KAZOOS_PREVIOUS_VERSION";
+
+    /// <summary>
+    /// The same variable under its name before the rename (ADR 0228 §2), also handed to the process
+    /// so an app written for SDK 2.x that reads it still migrates its data.
+    /// </summary>
+    public const string LegacyPreviousVersionVariable = "HACKEROS_PREVIOUS_VERSION";
 
     /// <summary>File of the versions that used each app's data last, under the home.</summary>
-    public const string VersionsConfigUnderHome = ".config/hackeros/app-data-versions.config";
+    public const string VersionsConfigUnderHome = ".config/kazoos/app-data-versions.config";
 
     /// <summary>Folder of the data backups, under the home.</summary>
-    public const string BackupsUnderHome = ".local/share/hackeros/app-backups";
+    public const string BackupsUnderHome = ".local/share/kazoos/app-backups";
 
     /// <summary>Section of <see cref="VersionsConfigUnderHome"/>.</summary>
     public const string VersionsSection = "versions";
@@ -115,7 +121,10 @@ public sealed class AppDataGuard
                 }
                 else
                 {
-                    environment = new Dictionary<string, string>(StringComparer.Ordinal) { [PreviousVersionVariable] = previous.ToString() };
+                    environment = new Dictionary<string, string>(StringComparer.Ordinal) {
+                        [PreviousVersionVariable] = previous.ToString(),
+                        [LegacyPreviousVersionVariable] = previous.ToString(),
+                    };
                     _logger.LogInformation(
                         "apps: data of {AppId} for {Home} backed up before {Version} migrates it from {Previous}", manifest.Id, home, version, previous);
                 }

@@ -34,7 +34,7 @@ public sealed record KazoCatalogAppVersion(string Version, long SizeBytes, IRead
     public IReadOnlyList<string> DescriptionLanguages { get; init; } = [];
 }
 
-/// <summary>An app of a catalog, as the Hack Store shows it (ADR 0188 §2).</summary>
+/// <summary>An app of a catalog, as the Kazo OS Store shows it (ADR 0188 §2).</summary>
 /// <param name="Catalog">Name of its catalog in <c>[catalogs]</c>.</param>
 /// <param name="AppId">App identifier.</param>
 /// <param name="Name">Its name.</param>

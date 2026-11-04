@@ -6,15 +6,15 @@ namespace Kazo.Os.Platform.Core.ServerConnection;
 
 /// <summary>
 /// The periodic synchronization settings (ADR 0101 section 4), a layered OS document (ADR 0044):
-/// <c>/etc/hackeros/sync.config</c> holds the interval an administrator chose, and each user may
-/// pause their own synchronization in <c>~/.config/hackeros/sync.config</c>.
+/// <c>/etc/kazoos/sync.config</c> holds the interval an administrator chose, and each user may
+/// pause their own synchronization in <c>~/.config/kazoos/sync.config</c>.
 /// </summary>
 /// <remarks>
 /// <code>
-/// # /etc/hackeros/sync.config
+/// # /etc/kazoos/sync.config
 /// intervalMinutes = 5
 ///
-/// # ~/.config/hackeros/sync.config
+/// # ~/.config/kazoos/sync.config
 /// paused = true
 /// </code>
 /// The interval is read from the system file only: a value in a user file is ignored, like a user
@@ -49,7 +49,7 @@ public static class SyncSettingsDocuments
     public static OsSettingsFile SystemFile { get; } = new(OsSettingsLocation.System, "sync.config");
 
     /// <summary>Reads the interval of the system file, bounded to one minute .. one day.</summary>
-    /// <param name="systemContent">Content of <c>/etc/hackeros/sync.config</c>, or <see langword="null"/> when absent.</param>
+    /// <param name="systemContent">Content of <c>/etc/kazoos/sync.config</c>, or <see langword="null"/> when absent.</param>
     public static TimeSpan ReadInterval(string? systemContent)
     {
         LayeredConfigSnapshot snapshot = LayeredConfigResolver.Resolve(

@@ -5,7 +5,7 @@ namespace Kazo.Os.Simulation.Abstractions.Network;
 /// <summary>
 /// Maps a file name to the <c>Content-Type</c> a web server or a browser gives it, like the
 /// <c>mime.types</c> table of a Linux system or ASP.NET Core's <c>FileExtensionContentTypeProvider</c>
-/// (ADR 0075 §4 for <c>file://</c> pages; ADR 0077 for the static sites of <c>hackwebd</c>).
+/// (ADR 0075 §4 for <c>file://</c> pages; ADR 0077 for the static sites of <c>kazowebd</c>).
 /// </summary>
 public static class SimulatedFileTypes
 {

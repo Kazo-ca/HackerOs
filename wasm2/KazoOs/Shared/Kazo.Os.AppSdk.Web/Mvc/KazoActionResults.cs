@@ -12,7 +12,7 @@ namespace Kazo.Os.AppSdk.Web.Mvc;
 /// What an action (or a minimal route) answers (ASP.NET's <c>IActionResult</c>, ADR 0076 §5): it
 /// writes the status, headers and body of the response.
 /// </summary>
-public interface IHackActionResult
+public interface IKazoActionResult
 {
     /// <summary>Writes the response.</summary>
     /// <param name="context">The action context.</param>
@@ -23,14 +23,14 @@ public interface IHackActionResult
 /// A result that is only a client error status: an API controller (<see cref="KazoApiController"/>)
 /// turns it into <c>application/problem+json</c>, like ASP.NET's <c>IClientErrorActionResult</c>.
 /// </summary>
-public interface IHackClientErrorResult : IHackActionResult
+public interface IKazoClientErrorResult : IKazoActionResult
 {
     /// <summary>Gets the status code.</summary>
     int StatusCode { get; }
 }
 
 /// <summary>Answers a status code with no body (<c>NoContent</c>, <c>NotFound()</c>, <c>StatusCode(418)</c>...).</summary>
-public class KazoStatusCodeResult(int statusCode) : IHackClientErrorResult
+public class KazoStatusCodeResult(int statusCode) : IKazoClientErrorResult
 {
     /// <inheritdoc />
     public int StatusCode { get; } = statusCode;
@@ -45,7 +45,7 @@ public class KazoStatusCodeResult(int statusCode) : IHackClientErrorResult
 }
 
 /// <summary>Writes nothing and keeps the response as it is (a <c>void</c> action, or one that wrote the response itself).</summary>
-public sealed class KazoEmptyResult : IHackActionResult
+public sealed class KazoEmptyResult : IKazoActionResult
 {
     /// <summary>The shared instance.</summary>
     public static KazoEmptyResult Instance { get; } = new();
@@ -55,7 +55,7 @@ public sealed class KazoEmptyResult : IHackActionResult
 }
 
 /// <summary>Answers text with a content type (<c>Content("...", "text/html")</c>).</summary>
-public sealed class KazoContentResult : IHackActionResult
+public sealed class KazoContentResult : IKazoActionResult
 {
     /// <summary>Gets or sets the text.</summary>
     public string? Content { get; init; }
@@ -82,7 +82,7 @@ public sealed class KazoContentResult : IHackActionResult
 /// <see cref="string"/>, <c>204 No Content</c> for <see langword="null"/>, as ASP.NET's <c>ObjectResult</c>
 /// with its default formatters. An action returning a plain object gets one of these.
 /// </summary>
-public class KazoObjectResult(object? value, int? statusCode = null) : IHackActionResult
+public class KazoObjectResult(object? value, int? statusCode = null) : IKazoActionResult
 {
     /// <summary>Gets the value.</summary>
     public object? Value { get; } = value;
@@ -127,7 +127,7 @@ public class KazoObjectResult(object? value, int? statusCode = null) : IHackActi
 }
 
 /// <summary>Answers JSON, always (even for a string or <see langword="null"/>), like ASP.NET's <c>JsonResult</c>.</summary>
-public sealed class KazoJsonResult : IHackActionResult
+public sealed class KazoJsonResult : IKazoActionResult
 {
     private readonly JsonTypeInfo? _typeInfo;
 
@@ -171,7 +171,7 @@ public sealed class KazoJsonResult : IHackActionResult
 }
 
 /// <summary>Answers bytes, optionally as a download (<c>Content-Disposition: attachment</c>).</summary>
-public sealed class KazoFileResult : IHackActionResult
+public sealed class KazoFileResult : IKazoActionResult
 {
     /// <summary>Initializes a file result.</summary>
     /// <param name="contents">The bytes.</param>
@@ -213,7 +213,7 @@ public sealed class KazoFileResult : IHackActionResult
 }
 
 /// <summary>Redirects to a URL: <c>302</c>, <c>301</c> when permanent, <c>307</c>/<c>308</c> when the method is kept.</summary>
-public class KazoRedirectResult : IHackActionResult
+public class KazoRedirectResult : IKazoActionResult
 {
     /// <summary>Initializes a redirection.</summary>
     /// <param name="url">Target URL; <c>~/</c> means the site root.</param>
@@ -391,7 +391,7 @@ public sealed class KazoValidationProblemDetails : KazoProblemDetails
 }
 
 /// <summary>Answers a <see cref="KazoProblemDetails"/> as <c>application/problem+json</c>, with <c>traceId</c>.</summary>
-public sealed class KazoProblemResult(KazoProblemDetails problem) : IHackActionResult
+public sealed class KazoProblemResult(KazoProblemDetails problem) : IKazoActionResult
 {
     /// <summary>Gets the problem.</summary>
     public KazoProblemDetails Problem { get; } = problem ?? throw new ArgumentNullException(nameof(problem));

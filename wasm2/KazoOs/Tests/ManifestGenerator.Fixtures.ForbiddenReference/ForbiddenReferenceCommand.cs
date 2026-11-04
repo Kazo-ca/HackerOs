@@ -15,7 +15,7 @@ public sealed class ForbiddenReferenceCommand(AppManifest manifest) : TerminalAp
 [AppManifest]
 public sealed class ForbiddenReferenceApp : AppDefinition
 {
-    public override string Id => "org.hackeros.fixtures.forbidden-reference";
+    public override string Id => "org.kazoos.fixtures.forbidden-reference";
     public override string Name => "forbidden-reference";
     public override AppKind Kind => AppKind.Terminal;
     public override Type EntryPoint => typeof(ForbiddenReferenceCommand);

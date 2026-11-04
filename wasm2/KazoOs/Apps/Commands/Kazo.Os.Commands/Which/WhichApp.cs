@@ -11,7 +11,7 @@ namespace Kazo.Os.Commands.Which;
 public sealed class WhichApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.which";
+    public override string Id => "org.kazoos.commands.which";
 
     /// <inheritdoc />
     public override string Name => "which";
@@ -23,7 +23,7 @@ public sealed class WhichApp : AppDefinition
     public override Type EntryPoint => typeof(WhichCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Locate a command";

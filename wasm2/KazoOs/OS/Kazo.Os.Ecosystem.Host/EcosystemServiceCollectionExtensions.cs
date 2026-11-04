@@ -190,7 +190,7 @@ public static class EcosystemServiceCollectionExtensions
         // Optional measured CPU and memory (ADR 0066): AddKazoOsResourceAccounting, called by the
         // host before this method, may already have registered them. Otherwise both measurements are
         // off and every per-process figure stays simulated, exactly as before phase 5.
-        // The simulated machine (ADR 0057): HackerOs:Hardware, registered by the host's
+        // The simulated machine (ADR 0057): KazoOs:Hardware, registered by the host's
         // AddKazoOsHardware; a host that does not gets the default profile.
         services.TryAddSingleton(VirtualHardwareProfile.Default);
         services.TryAddSingleton(ResourceAccountingPlan.Disabled);
@@ -246,7 +246,7 @@ public static class EcosystemServiceCollectionExtensions
                         () => provider.GetRequiredService<IFileSystemMountRouter>(),
                         CpuAccountant(provider),
                         MemoryAccountant(provider),
-                        // ADR 0071, section 5: /proc/hackeros/workers, on the hosts that have workers.
+                        // ADR 0071, section 5: /proc/kazoos/workers, on the hosts that have workers.
                         () => provider.GetService<IWorkerPoolStatus>(),
                         // ADR 0074, section 2: /proc/net/tcp lists the listening ports.
                         () => provider.GetService<ListeningPortTable>())
@@ -259,7 +259,7 @@ public static class EcosystemServiceCollectionExtensions
                         // ADR 0126: /proc/<pid>/oom_score(_adj) and oom_kill of /proc/vmstat.
                         OomScores = () => provider.GetService<InMemoryProcessOomScoreTable>(),
                         OomKills = () => provider.GetService<OomKiller>()?.KillCount ?? 0,
-                        // ADR 0131, section 5: the first lines of /proc/hackeros/workers.
+                        // ADR 0131, section 5: the first lines of /proc/kazoos/workers.
                         CrossOriginIsolation = () => provider.GetService<CrossOriginIsolationState>()?.Status
                     })),
                 // ADR 0126: /dev/kmsg is the kernel ring buffer that dmesg reads.
@@ -378,7 +378,7 @@ public static class EcosystemServiceCollectionExtensions
             provider.GetRequiredService<ISyncClient>(),
             provider.GetRequiredService<ISyncCursorRepository>()));
 
-        // FileAssociations domain sync (ADR 0033): /etc/hackeros/file-associations.json under its own
+        // FileAssociations domain sync (ADR 0033): /etc/kazoos/file-associations.json under its own
         // domain string. The AppCatalog domain is retired by ADR 0048: uninstalls are apps.config
         // files, and the user layer travels with /home through the FileSystem domain.
         services.AddScoped<IFileAssociationsSyncService>(provider => new FileAssociationsSyncService(
@@ -470,7 +470,7 @@ public static class EcosystemServiceCollectionExtensions
             provider.GetRequiredService<ISessionService>(),
             provider.GetRequiredService<LogFileWriter>(),
             provider.GetRequiredService<IAuditLog>()));
-        // Browser databases of web sites, hackweb.<app id> (ADR 0088): IndexedDB of the host browser.
+        // Browser databases of web sites, kazoweb.<app id> (ADR 0088): IndexedDB of the host browser.
         services.AddScoped<Kazo.Os.Infrastructure.Browser.WebData.WebSiteDatabaseInterop>();
         services.AddScoped<Kazo.Os.Platform.Core.WebData.IWebSiteDatabaseStore>(provider =>
             new Kazo.Os.Ecosystem.WebData.IndexedDbWebSiteDatabaseStore(
@@ -582,7 +582,7 @@ public static class EcosystemServiceCollectionExtensions
         services.AddScoped<IProcessEnvironmentTable>(provider =>
             provider.GetRequiredService<InMemoryProcessEnvironmentTable>());
         // Per-process resource limits and open descriptors (ADR 0125), filled and emptied by the
-        // process manager like the environment table; HackerOs:ResourceLimits:Enabled=false turns
+        // process manager like the environment table; KazoOs:ResourceLimits:Enabled=false turns
         // every limit off.
         services.TryAddSingleton(ResourceLimitsSettings.Default);
         services.AddScoped<InMemoryProcessResourceLimitTable>(provider =>
@@ -605,7 +605,7 @@ public static class EcosystemServiceCollectionExtensions
             CpuAccountant(provider),
             MemoryAccountant(provider)));
         // The OOM killer (ADR 0126): oom_score_adj per process, the kernel ring buffer behind
-        // /dev/kmsg and kern.log, and the killer itself, configured from /etc/hackeros/memory.config
+        // /dev/kmsg and kern.log, and the killer itself, configured from /etc/kazoos/memory.config
         // and started by EcosystemBootCoordinator once settings exist. Off by default; on, it acts
         // only where memory is measured, plus the guard against the browser's real memory limit.
         services.AddScoped<InMemoryProcessOomScoreTable>();
@@ -719,7 +719,7 @@ public static class EcosystemServiceCollectionExtensions
             signatures: provider.GetService<IAppPackageSignatureVerifier>()));
         // ADR 0189 §3: the installed apps of the catalog and who sees them; a browser host fills it at boot.
         services.TryAddSingleton<InstalledPackageCatalog>();
-        // ADR 0212 §5: the Hack Store's update check (sign-in, then every [updates] interval-hours).
+        // ADR 0212 §5: the Kazo OS Store's update check (sign-in, then every [updates] interval-hours).
         // Scoped like the session it watches; it reads the machine's sources as the system.
         services.TryAddScoped(static provider => new AppUpdateMonitor(
             provider.GetRequiredService<AppPackageInstaller>(),
@@ -751,7 +751,7 @@ public static class EcosystemServiceCollectionExtensions
             () => provider.GetRequiredService<ISimulatedNetworkService>().GetHost("127.0.0.1") is { } localhost
                 ? localhost.Ports.Where(static port => port.State == SimulatedPortState.Open).Select(static port => port.PortNumber)
                 : []));
-        // ADR 0080, section 4: hackdns publishes the names bound by the hosted static sites (.site files).
+        // ADR 0080, section 4: kazodns publishes the names bound by the hosted static sites (.site files).
         services.AddScoped<IHostedSiteNameSource>(provider => new HostedSiteNameSource(
             provider.GetRequiredService<IFileSystemService>(),
             provider.GetRequiredService<ISimulationClock>()));
@@ -839,7 +839,7 @@ public static class EcosystemServiceCollectionExtensions
             // KazoSettings.OpenSystemAsync, KazoPermissionAdministration, KazoServerConnection,
             // KazoSystem and KazoStorageDiagnostics (ADR 0056 sections 8 to 11), all lazy.
             localNetwork: provider.GetRequiredService<LocalNetworkServices>(),
-            // KazoWebDb (ADR 0088): hackweb.<app id> for web apps, and their listing in Diagnostic.
+            // KazoWebDb (ADR 0088): kazoweb.<app id> for web apps, and their listing in Diagnostic.
             webDatabases: provider.GetRequiredService<Kazo.Os.Platform.Core.WebData.IWebSiteDatabaseStore>(),
             // KazoKeyring (ADR 0100 section 2): the session user's keyring, per app.
             keyring: provider.GetRequiredService<UserKeyringService>(),
@@ -908,7 +908,7 @@ public static class EcosystemServiceCollectionExtensions
             provider.GetRequiredService<IFileSystemService>()));
 
         // Simulated network (ADR 0085, replacing ADR 0034's smoke-test-only seed): the default
-        // hosts and sites (hackersearch.net is the Browser's home page) plus the .hackeros
+        // hosts and sites (hackersearch.net is the Browser's home page) plus the .kazoos
         // smoke-test fixtures, which the E2E tests and the docs still use.
         services.AddSingleton<ISimulatedWebsiteRegistry>(_ =>
         {
@@ -951,7 +951,7 @@ public static class EcosystemServiceCollectionExtensions
             DataGuard = new AppDataGuard(
                 () => provider.GetService<InstalledPackageCatalog>(), provider.GetService<ILogger<AppDataGuard>>()),
         });
-        // Uninstall/reinstall through /etc/hackeros/apps.config + ~/.config/hackeros/apps.config
+        // Uninstall/reinstall through /etc/kazoos/apps.config + ~/.config/kazoos/apps.config
         // (ADR 0048). Started by EcosystemBootCoordinator once storage is ready; feeds the
         // AppEnablementRegistry every launch path consults.
         services.AddScoped<AppEnablementToFilesMigration>(provider => new AppEnablementToFilesMigration(
@@ -1066,13 +1066,13 @@ public static class EcosystemServiceCollectionExtensions
         services.AddScoped(provider => new ScreenControl(
             provider.GetRequiredService<ScreenService>(),
             provider.GetRequiredService<WindowRuntime>()));
-        // ADR 0150: the OS context menu. The platform provides the contract hackeros.context-menu
+        // ADR 0150: the OS context menu. The platform provides the contract kazoos.context-menu
         // itself; the service holds each window's menus and the one menu open in the OS.
         services.AddScoped(provider => new Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuService(
             provider.GetService<ILogger<Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuService>>(),
             provider.GetRequiredService<Kazo.Os.Platform.Blazor.ContextMenus.IFileMenuEntrySource>()));
         // ADR 0151, ADR 0159: the file menu entries apps register. The registry copies the manifests'
-        // entries to /etc/hackeros/context-menus.d at boot and after each install change, and reads the
+        // entries to /etc/kazoos/context-menus.d at boot and after each install change, and reads the
         // folder; the source adds them to every file menu, whichever app provides the file control.
         services.AddScoped(provider => new Kazo.Os.Platform.Core.ContextMenus.FileContextMenuRegistry(
             provider.GetRequiredService<AppCatalog>(),
@@ -1128,7 +1128,7 @@ public static class EcosystemServiceCollectionExtensions
         services.AddSingleton(new KazoPlatformComponent(
             Kazo.Os.AppSdk.Components.KazoComponentContracts.ContextMenu,
             typeof(Kazo.Os.Platform.Blazor.ContextMenus.PlatformContextMenu)));
-        // ADR 0156: /etc/hackeros/components.config, the administrator's choice of the app that
+        // ADR 0156: /etc/kazoos/components.config, the administrator's choice of the app that
         // provides the file view and the file dialogs, behind Settings > OS components.
         services.AddScoped(provider =>
         {
@@ -1144,7 +1144,7 @@ public static class EcosystemServiceCollectionExtensions
         // Embeddable components registered in manifests (ADR 0063): a window embeds another app's
         // component by contract; the provider's assembly is loaded as a launch would load it. The
         // administrator's choice is tried first for the file view and the file dialogs (ADR 0156).
-        services.AddScoped<IHackComponentHost>(provider =>
+        services.AddScoped<IKazoComponentHost>(provider =>
         {
             AppLifecycleOrchestrator orchestrator = provider.GetRequiredService<AppLifecycleOrchestrator>();
             LogFileWriter? log = provider.GetService<LogFileWriter>();
@@ -1164,7 +1164,7 @@ public static class EcosystemServiceCollectionExtensions
             };
         });
         // Blazor sites (ADR 0084): the browser asks the OS to start a site's renderer process.
-        services.AddScoped<IHackWebSiteHost>(provider =>
+        services.AddScoped<IKazoWebSiteHost>(provider =>
         {
             AppLifecycleOrchestrator orchestrator = provider.GetRequiredService<AppLifecycleOrchestrator>();
             return new KazoWebSiteHost(
@@ -1263,7 +1263,7 @@ public static class EcosystemServiceCollectionExtensions
             {
                 DoNotDisturb = provider.GetRequiredService<Kazo.Os.Platform.Core.Notifications.DoNotDisturbService>(),
             });
-        // ADR 0103: user themes of /etc/hackeros/themes and ~/.config/hackeros/themes.
+        // ADR 0103: user themes of /etc/kazoos/themes and ~/.config/kazoos/themes.
         services.AddScoped<Kazo.Os.Platform.Core.Appearance.UserThemeCatalogService>(provider =>
             new Kazo.Os.Platform.Core.Appearance.UserThemeCatalogService(
                 provider.GetRequiredService<IFileSystemService>(),
@@ -1303,7 +1303,7 @@ public static class EcosystemServiceCollectionExtensions
     }
 
     /// <summary>
-    /// ADR 0156 §4: removes from <c>/etc/hackeros/components.config</c> the choice of every app now
+    /// ADR 0156 §4: removes from <c>/etc/kazoos/components.config</c> the choice of every app now
     /// uninstalled for the machine. Runs after each change of the installed state; a failure is
     /// written to the system log and never blocks the uninstall.
     /// </summary>
@@ -1326,7 +1326,7 @@ public static class EcosystemServiceCollectionExtensions
     }
 
     /// <summary>
-    /// ADR 0151 §3.5: brings <c>/etc/hackeros/context-menus.d</c> in line with the installed apps after
+    /// ADR 0151 §3.5: brings <c>/etc/kazoos/context-menus.d</c> in line with the installed apps after
     /// each change of the installed state; a failure is written to the system log and never blocks it.
     /// </summary>
     private static async Task SyncFileContextMenusAsync(IServiceProvider provider)

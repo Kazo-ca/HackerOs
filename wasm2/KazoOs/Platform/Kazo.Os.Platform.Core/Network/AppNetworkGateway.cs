@@ -47,7 +47,7 @@ namespace Kazo.Os.Platform.Core.Network;
 /// </para>
 /// <para>
 /// With the session's local stack (<see cref="LocalNetworkCaller"/>, ADR 0074), names are resolved
-/// by <c>hackdns</c> (<c>/etc/hosts</c>, <c>localhost</c>, web app URLs, hosted sites, then the
+/// by <c>kazodns</c> (<c>/etc/hosts</c>, <c>localhost</c>, web app URLs, hosted sites, then the
 /// simulated network), and a target on this machine (127.0.0.0/8) is served by the process that
 /// listens on its port, through the <see cref="ListeningPortTable"/>: an HTTP request is handed
 /// to that process, a web app that does not run yet is started on demand, and nothing listening
@@ -94,7 +94,7 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
     /// <param name="kernelMemory">Optional ledger charged with the buffers of each operation in flight (ADR 0068).</param>
     /// <param name="local">
     /// The session's local stack and who calls it (ADR 0074); <see langword="null"/> keeps the
-    /// simulated network only, without <c>hackdns</c>, listening or local delivery.
+    /// simulated network only, without <c>kazodns</c>, listening or local delivery.
     /// </param>
     public AppNetworkGateway(
         ISimulatedNetworkService network,
@@ -197,7 +197,7 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
     /// <inheritdoc />
     /// <exception cref="NotSupportedException">The gateway has no local network stack.</exception>
     /// <exception cref="ArgumentException">A prefix is not a valid listener prefix.</exception>
-    public ValueTask<KazoNetworkResult<IHackHttpListenerSocket>> ListenHttpAsync(
+    public ValueTask<KazoNetworkResult<IKazoHttpListenerSocket>> ListenHttpAsync(
         IReadOnlyList<string> prefixes, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(prefixes);
@@ -244,10 +244,10 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
 
         ListeningSocketOwner owner = new(
             pid, _appId, ProgramName(_appId), local.Principal.UserId.ToString(), local.Principal.LoginName.Value);
-        IHackHttpListenerSocket? socket = local.Services.Ports.TryOpen(owner, bindings, out string? conflict);
+        IKazoHttpListenerSocket? socket = local.Services.Ports.TryOpen(owner, bindings, out string? conflict);
         return ValueTask.FromResult(socket is null
-            ? KazoNetworkResult<IHackHttpListenerSocket>.Failure(KazoNetworkError.AddressInUse, $"{conflict}: address already in use")
-            : KazoNetworkResult<IHackHttpListenerSocket>.Success(socket));
+            ? KazoNetworkResult<IKazoHttpListenerSocket>.Failure(KazoNetworkError.AddressInUse, $"{conflict}: address already in use")
+            : KazoNetworkResult<IKazoHttpListenerSocket>.Success(socket));
     }
 
     /// <inheritdoc />
@@ -280,12 +280,12 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
     }
 
     /// <inheritdoc />
-    public ValueTask<KazoNetworkResult<IHackSocket>> ConnectTcpAsync(
+    public ValueTask<KazoNetworkResult<IKazoSocket>> ConnectTcpAsync(
         string hostNameOrAddress, int port, CancellationToken cancellationToken = default) =>
         ConnectAsync(ProxyProtocol.Tcp, hostNameOrAddress, port, cancellationToken);
 
     /// <inheritdoc />
-    public ValueTask<KazoNetworkResult<IHackSocket>> ConnectUdpAsync(
+    public ValueTask<KazoNetworkResult<IKazoSocket>> ConnectUdpAsync(
         string hostNameOrAddress, int port, CancellationToken cancellationToken = default) =>
         ConnectAsync(ProxyProtocol.Udp, hostNameOrAddress, port, cancellationToken);
 
@@ -294,7 +294,7 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
     /// sockets, so a target it knows (or this machine) refuses; an unknown target goes to the
     /// optional relay, which only exists for an app holding <c>network.real.access</c>.
     /// </summary>
-    private async ValueTask<KazoNetworkResult<IHackSocket>> ConnectAsync(
+    private async ValueTask<KazoNetworkResult<IKazoSocket>> ConnectAsync(
         ProxyProtocol protocol, string hostNameOrAddress, int port, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(hostNameOrAddress);
@@ -312,14 +312,14 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
         if (route.IsLocal || route.Host is not null)
         {
             _meter.ConnectFailed(udp);
-            return KazoNetworkResult<IHackSocket>.Failure(
+            return KazoNetworkResult<IKazoSocket>.Failure(
                 KazoNetworkError.ConnectionRefused,
                 $"{hostNameOrAddress}:{port}: connection refused (the simulated network carries no raw {(udp ? "UDP" : "TCP")} sockets)");
         }
 
         if (!CanRelay(hostNameOrAddress) || await TryOpenRealRouteAsync(cancellationToken).ConfigureAwait(false) is not { } real)
         {
-            return KazoNetworkResult<IHackSocket>.Failure(KazoNetworkError.HostNotFound);
+            return KazoNetworkResult<IKazoSocket>.Failure(KazoNetworkError.HostNotFound);
         }
 
         // The socket's buffers are charged to the process for as long as it stays open.
@@ -336,19 +336,19 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
                 _meter.Segment(0, outbound: false, udp: false);
             }
 
-            return KazoNetworkResult<IHackSocket>.Success(new RelayedSocket(channel, _meter, buffers));
+            return KazoNetworkResult<IKazoSocket>.Success(new RelayedSocket(channel, _meter, buffers));
         }
         catch (ProxyStreamException refused)
         {
             buffers.Dispose();
             _meter.ConnectFailed(udp);
-            return KazoNetworkResult<IHackSocket>.Failure(ToNetworkError(refused.ErrorCode), refused.Message);
+            return KazoNetworkResult<IKazoSocket>.Failure(ToNetworkError(refused.ErrorCode), refused.Message);
         }
         catch (Exception exception) when (exception is ServerConnectionException or HttpRequestException or System.Net.WebSockets.WebSocketException)
         {
             buffers.Dispose();
             _meter.ConnectFailed(udp);
-            return KazoNetworkResult<IHackSocket>.Failure(KazoNetworkError.ConnectionFailed, exception.Message);
+            return KazoNetworkResult<IKazoSocket>.Failure(KazoNetworkError.ConnectionFailed, exception.Message);
         }
     }
 
@@ -537,7 +537,7 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
             }
             else if (route.Host is not { } host)
             {
-                // Unknown to every source of hackdns: only the optional relay may still know it
+                // Unknown to every source of kazodns: only the optional relay may still know it
                 // (ADR 0102). Each real hop is one relay call that does not follow redirects, so the
                 // cookies of every hop land in the jar and go back on the next (ADR 0210 §3).
                 if (!CanRelay(currentUri.Host)
@@ -709,7 +709,7 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
     /// <param name="Answer">The resolver's answer, when the gateway has the local stack.</param>
     private readonly record struct Route(bool IsLocal, SimulatedHost? Host, DnsAnswer? Answer);
 
-    /// <summary>Resolves a target through <c>hackdns</c> (or the simulated zone alone, without the local stack).</summary>
+    /// <summary>Resolves a target through <c>kazodns</c> (or the simulated zone alone, without the local stack).</summary>
     private async ValueTask<Route> RouteAsync(string target, CancellationToken cancellationToken)
     {
         if (_local is not { } local)

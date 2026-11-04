@@ -15,14 +15,14 @@ permissions:
   contents: read
 
 concurrency:
-  group: "verify-hackeros-wasm-${{ github.ref }}"
+  group: "verify-kazoos-wasm-${{ github.ref }}"
   cancel-in-progress: true
 
 env:
   DOTNET_NOLOGO: "true"
   DOTNET_CLI_TELEMETRY_OPTOUT: "true"
-  HACKEROS_SOLUTION_DIR: wasm2/KazoOs
-  HACKEROS_ARTIFACT_DIR: wasm2/KazoOs/artifacts
+  KAZOOS_SOLUTION_DIR: wasm2/KazoOs
+  KAZOOS_ARTIFACT_DIR: wasm2/KazoOs/artifacts
 
 jobs:
   verify:
@@ -39,7 +39,7 @@ jobs:
         run: dotnet workload install wasm-tools
 
       - name: Pack local Windowing/Taskbar feed
-        working-directory: ${{ env.HACKEROS_SOLUTION_DIR }}
+        working-directory: ${{ env.KAZOOS_SOLUTION_DIR }}
         run: >-
           dotnet pack Platform/Kazo.Os.Windowing.Core/Kazo.Os.Windowing.Core.csproj
           --configuration Release --output artifacts/local-nupkg &&
@@ -49,11 +49,11 @@ jobs:
           --configuration Release --output artifacts/local-nupkg
 
       - name: Restore solution
-        working-directory: ${{ env.HACKEROS_SOLUTION_DIR }}
+        working-directory: ${{ env.KAZOOS_SOLUTION_DIR }}
         run: dotnet restore Kazo.Os.sln
 
       - name: Build Release with warnings as errors
-        working-directory: ${{ env.HACKEROS_SOLUTION_DIR }}
+        working-directory: ${{ env.KAZOOS_SOLUTION_DIR }}
         run: dotnet build Kazo.Os.sln --configuration Release --no-restore
 
       - name: Install Razor source scan tool
@@ -62,10 +62,10 @@ jobs:
           sudo apt-get install --yes ripgrep
 
       - name: Verify production Razor assets
-        working-directory: ${{ env.HACKEROS_SOLUTION_DIR }}
+        working-directory: ${{ env.KAZOOS_SOLUTION_DIR }}
         shell: pwsh
         run: |
-          # Only the bootstrap host is exempt. Allow these exact existing ASP.Hack
+          # Only the bootstrap host is exempt. Allow these exact existing ASP.Kazo
           # script links, while still scanning every other line in those views.
           $sourceMatches = rg --pcre2 -n '<style|<script|\sstyle\s*=|(?<!@)\bon[a-z][a-z0-9_-]*\s*=' . -g '*.razor' -g '!Tests/RazorAssetValidation.Invalid/**' -g '!test/test/Components/App.razor'
           $scanExitCode = $LASTEXITCODE
@@ -88,19 +88,19 @@ jobs:
           exit 0
 
       - name: Check vulnerable dependencies
-        working-directory: ${{ env.HACKEROS_SOLUTION_DIR }}
+        working-directory: ${{ env.KAZOOS_SOLUTION_DIR }}
         run: dotnet list Kazo.Os.sln package --vulnerable --include-transitive --no-restore
 
       # Timing-sensitive tests (kill -9, CPU accounting) sometimes fail on shared
       # runners. Only the failed tests rerun, once; a test that passes on retry is
       # reported as a warning and in the job summary, a test that fails twice fails.
       - name: Test Release without browser suites
-        working-directory: ${{ env.HACKEROS_SOLUTION_DIR }}
+        working-directory: ${{ env.KAZOOS_SOLUTION_DIR }}
         shell: pwsh
         run: ./build/run-test-suite.ps1 -Suite NonBrowser -RetryFailedTests 1
 
       - name: Publish Kazo OS PWA
-        working-directory: ${{ env.HACKEROS_SOLUTION_DIR }}
+        working-directory: ${{ env.KAZOOS_SOLUTION_DIR }}
         run: >-
           dotnet publish OS/Kazo.Os.Ecosystem/Kazo.Os.Ecosystem.csproj
           --configuration Release
@@ -111,7 +111,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: hackeros-verification-${{ github.run_attempt }}
+          name: kazoos-verification-${{ github.run_attempt }}
           path: |
             wasm2/KazoOs/artifacts/test-results
             wasm2/KazoOs/artifacts/playwright
@@ -122,5 +122,5 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: actions/upload-artifact@v6
         with:
-          name: hackeros-wasm-publish-${{ github.run_attempt }}
+          name: kazoos-wasm-publish-${{ github.run_attempt }}
           path: wasm2/KazoOs/artifacts/publish/wwwroot

@@ -4,7 +4,7 @@ using Kazo.Os.AppSdk.Web.Mvc;
 namespace Kazo.Os.AppSdk.Web.Hosting;
 
 /// <summary>
-/// The manifest class of an ASP.Hack site (ADR 0073 §1): kind <see cref="AppKind.Web"/>, its
+/// The manifest class of an ASP.Kazo site (ADR 0073 §1): kind <see cref="AppKind.Web"/>, its
 /// <see cref="Urls"/> and the start-up code (<see cref="Configure"/>, ADR 0076 §2).
 /// </summary>
 /// <remarks>

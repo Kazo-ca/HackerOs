@@ -55,7 +55,7 @@ tâches, éditeur de texte). Les autres apps, le serveur et le mobile sont hors 
 | API fichier | Écrire une chaîne exige `CreateAsync` avec des bits de mode, puis `WriteAsync` avec la révision attendue, puis une classe `IFileSystemContentSource` maison. | `Apps/System/Kazo.Os.Apps.TextEditor/TextEditorWindow.razor` (≈ l. 364-460) |
 | Manifeste | Défini deux fois : `app.manifest.json` et une copie C# `StaticManifest` (32 apps). | `Apps/**/app.manifest.json` |
 | Ajout d'une app | Un projet, plus trois entrées dans `Kazo.Os.Ecosystem.csproj` (`ProjectReference`, `BlazorWebAssemblyLazyLoad`, `EmbeddedResource`). | `OS/Kazo.Os.Ecosystem/Kazo.Os.Ecosystem.csproj`, `BuildKnownLazyApps.cs` |
-| Paramètres | Le montage `/etc/hackeros` n'est jamais branché dans l'OS réel : le routeur est créé avec le seul fournisseur IndexedDB. `SettingsFileSystemProvider` n'existe que dans les tests. Les paramètres vivent dans un magasin à part, et la sécurité vient du service de paramètres, pas des droits du fichier. | `OS/Kazo.Os.Ecosystem/EcosystemServiceCollectionExtensions.cs` (≈ l. 157) |
+| Paramètres | Le montage `/etc/kazoos` n'est jamais branché dans l'OS réel : le routeur est créé avec le seul fournisseur IndexedDB. `SettingsFileSystemProvider` n'existe que dans les tests. Les paramètres vivent dans un magasin à part, et la sécurité vient du service de paramètres, pas des droits du fichier. | `OS/Kazo.Os.Ecosystem/EcosystemServiceCollectionExtensions.cs` (≈ l. 157) |
 | Journaux | `/var/log` est créé mais reste vide. Les logs vont dans un magasin IndexedDB lu uniquement par Error Log Viewer. | `Platform.Core/Diagnostics/` |
 | Shell | Pas de pipes, de redirections, de `&&` ni de variables d'environnement. Le legacy avait les pipes et `env`. | `Shared/Kazo.Os.AppSdk.Terminal/ShellParser.cs`, `adr/0014-shell-grammar-boundary.md` |
 | Commandes | 28 projets, un par commande. `cd`, `pwd`, `clear` et `help` sont codées en dur dans le terminal. | `Apps/Commands/`, commentaire dans `Kazo.Os.Ecosystem.csproj` |
@@ -91,7 +91,7 @@ Décisions prises avec Benoit pendant la discussion du 2026-10-10.
 |---|---|---|
 | D1 | Objectif | Simplicité pour le développeur et qualité pour l'utilisateur, à égalité. |
 | D2 | Moteur de fichiers | On le garde et on ajoute une façade simple dans le SDK. |
-| D3 | API fichier | API de type `System.IO`, avec le préfixe `Hack` sur chaque type : `KazoFile`, `KazoDirectory`, `KazoPath`, `KazoFileInfo`, `KazoDirectoryInfo`, `KazoFileStream`… |
+| D3 | API fichier | API de type `System.IO`, avec le préfixe `Kazo` sur chaque type : `KazoFile`, `KazoDirectory`, `KazoPath`, `KazoFileInfo`, `KazoDirectoryInfo`, `KazoFileStream`… |
 | D4 | Forme de l'API | Statique, comme `System.IO`. L'app appelante est identifiée par un contexte d'exécution ambiant, invisible pour le développeur. Méthodes asynchrones seulement (IndexedDB est asynchrone et le navigateur n'a qu'un thread). |
 | D5 | Erreurs fichier | Des exceptions, comme `System.IO` : `KazoFileNotFoundException`, `KazoDirectoryNotFoundException`, `KazoUnauthorizedAccessException`, `KazoIOException`… |
 | D6 | Manifeste | Une classe C# marquée `[AppManifest]`, séparée de la fenêtre, qui hérite d'une base abstraite. Propriétés essentielles `abstract` (obligatoires), les autres `virtual` avec une valeur par défaut. |
@@ -120,7 +120,7 @@ Décisions prises avec Benoit pendant la discussion du 2026-10-10.
 
 ## 5. Phase 1 — Fichiers
 
-### 5.1 API `Hack*` de type System.IO
+### 5.1 API `Kazo*` de type System.IO
 
 Nouveau namespace public dans le SDK (proposé : `Kazo.Os.AppSdk.IO`), sans
 dépendance à Blazor, utilisable par les apps fenêtre, terminal et service.
@@ -149,7 +149,7 @@ dépendance à Blazor, utilisable par les apps fenêtre, terminal et service.
   courante et réessaie une fois si elle a changé. Une API avancée reste
   disponible pour qui veut un contrôle strict des conflits (l'éditeur de
   texte, par exemple).
-- Les codes `FileSystemErrorCode` sont traduits en exceptions `Hack*`, dans
+- Les codes `FileSystemErrorCode` sont traduits en exceptions `Kazo*`, dans
   l'esprit des exceptions de `System.IO`.
 - Pas de méthodes synchrones : impossibles sans bloquer l'unique thread du
   navigateur.
@@ -162,7 +162,7 @@ Mise en œuvre : [`settings-files.md`](../../framework/settings-files.md).
   disparaît pour les paramètres d'app et de système. Une migration copie les
   valeurs existantes dans les fichiers au premier démarrage.
 - **Emplacements :**
-  - système : `/etc/<app>/<document>.config` (et `/etc/hackeros/` pour l'OS) ;
+  - système : `/etc/<app>/<document>.config` (et `/etc/kazoos/` pour l'OS) ;
   - utilisateur : `~/.config/<app>/<document>.config`.
 - **Couches :** valeur par défaut déclarée par l'app, puis `/etc`, puis
   `~/.config`. Une clé que l'administrateur verrouille dans `/etc` ne peut pas
@@ -212,7 +212,7 @@ Mise en œuvre : [`settings-files.md`](../../framework/settings-files.md).
 [AppManifest]
 public sealed class TextEditorApp : AppDefinition
 {
-    public override string Id => "org.hackeros.text-editor";
+    public override string Id => "org.kazoos.text-editor";
     public override string Name => "Text Editor";
     public override AppKind Kind => AppKind.Window;
     public override Type EntryPoint => typeof(TextEditorWindow);
@@ -262,8 +262,8 @@ public sealed class TextEditorApp : AppDefinition
   sont pas supprimées.
 - **Réinstaller** depuis Paramètres > Applications installées.
 - **Portée :**
-  - administrateur : pour toute la machine (état dans `/etc/hackeros/apps.config`) ;
-  - utilisateur : pour son profil (état dans `~/.config/hackeros/apps.config`).
+  - administrateur : pour toute la machine (état dans `/etc/kazoos/apps.config`) ;
+  - utilisateur : pour son profil (état dans `~/.config/kazoos/apps.config`).
 - Les apps système ne proposent pas de bouton de désinstallation.
 - Le mécanisme d'activation existant (ADR 0032) est réutilisé et étendu.
 
@@ -282,7 +282,7 @@ public sealed class TextEditorApp : AppDefinition
   ordinaires (bandeau d'avertissement, liste des permissions demandées et de
   leurs risques). Elle exige le mot de passe d'un administrateur, comme
   `sudo`. Chaque décision est écrite dans `/var/log/auth.log`.
-- **Politique :** réglage administrateur dans `/etc/hackeros/security.config`,
+- **Politique :** réglage administrateur dans `/etc/kazoos/security.config`,
   avec deux valeurs : « autoriser avec approbation » (par défaut) et « toujours
   bloquer ».
 
@@ -389,7 +389,7 @@ pas modifié.
 
 | Nouvel ADR | Remplace | Contenu |
 |---|---|---|
-| [0043](../adr/0043-hack-file-api-and-ambient-context.md) API fichier `Hack*` et contexte ambiant | — | D3, D4, D5, section 5.1 |
+| [0043](../adr/0043-hack-file-api-and-ambient-context.md) API fichier `Kazo*` et contexte ambiant | — | D3, D4, D5, section 5.1 |
 | [0044](../adr/0044-settings-as-files.md) Paramètres en fichiers | 0004, 0011 (partiellement), 0029 | D16 à D18, section 5.2, syntaxe du verrou |
 | [0045](../adr/0045-logs-as-files.md) Journaux en fichiers | — | D19, section 5.3, tailles de rotation |
 | [0046](../adr/0046-virtual-proc-and-dev-filesystems.md) Systèmes de fichiers virtuels `/proc` et `/dev` | complète 0008 | D20, section 5.4 |
@@ -433,8 +433,8 @@ l'ADR correspondant, avec la valeur proposée ci-dessous par défaut.
 
 ### Phase 1 — Fichiers
 - [x] Créer les types `KazoFile`, `KazoDirectory`, `KazoPath`, `KazoFileInfo`, `KazoDirectoryInfo`, `KazoFileStream`, `KazoFileSystemWatcher`.
-- [x] Créer les exceptions `Hack*` et la traduction depuis `FileSystemErrorCode`.
-- [x] Mettre en place le contexte d'exécution ambiant positionné par l'OS. Voir [`hack-file-api.md`](../../framework/hack-file-api.md).
+- [x] Créer les exceptions `Kazo*` et la traduction depuis `FileSystemErrorCode`.
+- [x] Mettre en place le contexte d'exécution ambiant positionné par l'OS. Voir [`kazo-file-api.md`](../../framework/kazo-file-api.md).
 - [x] Remplacer le magasin de paramètres séparé par des fichiers, avec migration des valeurs existantes ([`settings-files.md`](../../framework/settings-files.md)).
 - [x] Implémenter les couches `/etc` puis `~/.config`, le verrou administrateur et la tolérance aux fichiers invalides ([`settings-files.md`](../../framework/settings-files.md)).
 - [x] Créer l'API typée de paramètres et adapter l'app Paramètres ([`settings-files.md`](../../framework/settings-files.md)).
@@ -478,7 +478,7 @@ l'ADR correspondant, avec la valeur proposée ci-dessous par défaut.
 
 ### Après la phase 4 (hors plan initial, ADR 0061 à 0065)
 - [x] Terminal sur xterm.js, discipline de ligne en C#, écran alternatif (`rebuild/terminal-xterm`, PR #115, ADR 0061, [`terminal-emulator.md`](../terminal-emulator.md)).
-- [x] Éditeur de code en atelier à la VS Code (`rebuild/code-editor-workspace` et `rebuild/code-editor-dock`, PR #117 à #119, ADR 0062, [`code-editor.md`](../code-editor.md)) et composants d'app intégrables, terminal embarqué par `IHackTerminal` (ADR 0063, [`embedded-components.md`](../../framework/embedded-components.md)).
+- [x] Éditeur de code en atelier à la VS Code (`rebuild/code-editor-workspace` et `rebuild/code-editor-dock`, PR #117 à #119, ADR 0062, [`code-editor.md`](../code-editor.md)) et composants d'app intégrables, terminal embarqué par `IKazoTerminal` (ADR 0063, [`embedded-components.md`](../../framework/embedded-components.md)).
 - [x] Shell POSIX, scripts, jobs, apps lancées par leur nom, commandes Linux, `nano` (PR #120 et #121, ADR 0064, [`shell-interpreter.md`](../shell-interpreter.md), [`linux-commands.md`](../linux-commands.md)).
 - [x] Presse-papiers de l'OS partagé avec l'hôte (PR #122, ADR 0065, [`clipboard.md`](../clipboard.md)) — voir la phase 4 ci-dessus.
 

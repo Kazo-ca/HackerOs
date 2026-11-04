@@ -15,7 +15,7 @@ namespace Kazo.Os.Platform.Core.Tests.Execution;
 /// </summary>
 public sealed partial class AppPackageGatewayTests
 {
-    private const string SystemConfig = "/etc/hackeros/apps.config";
+    private const string SystemConfig = "/etc/kazoos/apps.config";
 
     [Fact]
     public async Task A_rollback_puts_back_the_kept_version_and_keeps_the_one_it_leaves()
@@ -221,7 +221,7 @@ public sealed partial class AppPackageGatewayTests
         /// <summary>Publishes one version, signed by <paramref name="key"/> when one is given.</summary>
         internal void PublishSigned(string repository, string version, ECDsa? key, string? minimumUpgradableVersion = null)
         {
-            string root = $"https://raw.githubusercontent.com/{repository}/hackeros-packages/";
+            string root = $"https://raw.githubusercontent.com/{repository}/kazoos-packages/";
             Dictionary<string, byte[]> files = AppPackageTests.SampleFiles(version);
             files["lib/Kazo.Sample.dll"] = File.ReadAllBytes(typeof(AppManifest).Assembly.Location);
             if (minimumUpgradableVersion is not null)
@@ -232,7 +232,7 @@ public sealed partial class AppPackageGatewayTests
             }
 
             byte[] package = AppPackageTests.Build(files, version: version);
-            string path = $"{version}/org.kazo.sample-{version}.hackapp";
+            string path = $"{version}/org.kazo.sample-{version}.kazoapp";
             _downloader.Files[new Uri(root + path)] = package;
             string signature = key is null
                 ? string.Empty

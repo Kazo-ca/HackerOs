@@ -16,7 +16,7 @@ namespace Kazo.Os.Apps.Diagnostic;
 /// <summary>
 /// IndexedDB Diagnostic: shows every object store of the OS database, resolves each filesystem
 /// entry's virtual path, and exports the whole snapshot as JSON. It also lists the browser databases
-/// of web sites (<c>hackweb.*</c>, ADR 0088) and can clear one.
+/// of web sites (<c>kazoweb.*</c>, ADR 0088) and can clear one.
 /// </summary>
 /// <remarks>
 /// Uses only the public SDK (ADR 0055, ADR 0056 section 11):
@@ -152,7 +152,7 @@ public partial class DiagnosticWindow : IAsyncDisposable
         _ => IsolationStatus.Format(reason)
     };
 
-    /// <summary>The tooltip: every line of the status, as <c>cat /proc/hackeros/workers</c> prints it.</summary>
+    /// <summary>The tooltip: every line of the status, as <c>cat /proc/kazoos/workers</c> prints it.</summary>
     private static string IsolationDetails(KazoCrossOriginIsolationStatus isolation) => IsolationStatus.Describe(isolation);
 
     private void SelectStore(string storeName)

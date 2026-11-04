@@ -173,7 +173,7 @@ public sealed class SingleSurfacePresentationPolicyTests
         WindowVisualState visualState = WindowVisualState.Normal) =>
         new(
             WindowId.FromGuid(Guid.Parse($"30000000-0000-0000-0000-{seed:D12}")),
-            $"org.hackeros.test{seed}",
+            $"org.kazoos.test{seed}",
             WindowOwnerId.FromGuid(Guid.Parse($"40000000-0000-0000-0000-{seed:D12}")),
             $"Test {seed}",
             null,

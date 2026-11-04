@@ -6,7 +6,7 @@
 
 Accepté le 2026-10-16, avec le chantier `web/10-detached-window`.
 
-- **Phase du plan :** phase web ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Phase du plan :** phase web ([`asp-kazo-plan.md`](../plans/asp-kazo-plan.md)).
 - **Complète :** ADR 0078 (fenêtres d'affichage détachées). Ne remplace aucune
   de ses décisions ; précise où vivent les contrats et tranche la preuve de son
   §4.

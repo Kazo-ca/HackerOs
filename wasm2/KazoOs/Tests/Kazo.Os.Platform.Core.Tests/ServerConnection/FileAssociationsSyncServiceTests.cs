@@ -14,7 +14,7 @@ namespace Kazo.Os.Platform.Core.Tests.ServerConnection;
 /// <summary>
 /// Exercises <see cref="FileAssociationsSyncService"/> (ADR 0033) against fakes for every
 /// dependency — covering the one administrator file
-/// (<c>/etc/hackeros/file-associations.json</c>, ADR 0044)
+/// (<c>/etc/kazoos/file-associations.json</c>, ADR 0044)
 /// this adapter handles and the distinct <see cref="SyncDomain.FileAssociations"/> domain string.
 /// </summary>
 public sealed class FileAssociationsSyncServiceTests
@@ -97,7 +97,7 @@ public sealed class FileAssociationsSyncServiceTests
                 new PullResponse(
                     SyncDomain.FileAssociations,
                     [new SyncRecordEnvelope(recordId, SyncDomain.FileAssociations, 1, Connected.AccountId, Connected.DeviceId,
-                        5, DateTimeOffset.UtcNow, DateTimeOffset.UtcNow, "hash", false, "{\"schemaVersion\":1,\"associations\":[{\"extension\":\".txt\",\"appId\":\"org.hackeros.texteditor\",\"actions\":[\"open\"]}]}")],
+                        5, DateTimeOffset.UtcNow, DateTimeOffset.UtcNow, "hash", false, "{\"schemaVersion\":1,\"associations\":[{\"extension\":\".txt\",\"appId\":\"org.kazoos.texteditor\",\"actions\":[\"open\"]}]}")],
                     NextCursor: null,
                     HasMore: false,
                     DateTimeOffset.UtcNow)
@@ -108,7 +108,7 @@ public sealed class FileAssociationsSyncServiceTests
 
         await service.PullAsync();
 
-        Assert.Equal("{\"schemaVersion\":1,\"associations\":[{\"extension\":\".txt\",\"appId\":\"org.hackeros.texteditor\",\"actions\":[\"open\"]}]}", settings.CurrentContent());
+        Assert.Equal("{\"schemaVersion\":1,\"associations\":[{\"extension\":\".txt\",\"appId\":\"org.kazoos.texteditor\",\"actions\":[\"open\"]}]}", settings.CurrentContent());
         Assert.Null(await cursorRepository.GetCursorAsync(SyncDomain.FileAssociations));
     }
 
@@ -291,7 +291,7 @@ public sealed class FileAssociationsSyncServiceTests
             FileSystemAuthorizationContext root = new(
                 new AppOperationContext
                 {
-                    AppId = "org.hackeros.shell",
+                    AppId = "org.kazoos.shell",
                     UserId = "system",
                     UserAuthority = AppAuthority.System,
                     GrantedCapabilities = new HashSet<string>(AppCapabilities.All, StringComparer.Ordinal),

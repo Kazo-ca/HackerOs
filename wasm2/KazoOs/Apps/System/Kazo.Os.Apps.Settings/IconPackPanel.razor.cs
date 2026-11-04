@@ -12,7 +12,7 @@ namespace Kazo.Os.Apps.Settings;
 /// <summary>
 /// Settings &gt; Appearance &gt; Icon pack (ADR 0203 §5): lists the installed icon packs with
 /// <see cref="IconPackLibrary"/> through the public file API, and writes the chosen id to the OS
-/// document <c>icons</c> (<c>~/.config/hackeros/icons.config</c>, or <c>/etc/hackeros/icons.config</c>
+/// document <c>icons</c> (<c>~/.config/kazoos/icons.config</c>, or <c>/etc/kazoos/icons.config</c>
 /// for the system default, which asks an administrator).
 /// </summary>
 public sealed partial class IconPackPanel : IAsyncDisposable
@@ -99,7 +99,7 @@ public sealed partial class IconPackPanel : IAsyncDisposable
         [
             pack.FindFile(isDirectory: true, null),
             pack.FindFile(isDirectory: false, ".txt"),
-            pack.FindApp("org.hackeros.settings", "system")
+            pack.FindApp("org.kazoos.settings", "system")
         ];
         IEnumerable<string> others = pack.Images
             .OrderBy(static pair => pair.Key, StringComparer.Ordinal)
@@ -122,7 +122,7 @@ public sealed partial class IconPackPanel : IAsyncDisposable
         _message = null;
         try
         {
-            // /etc/hackeros belongs to root: a system write raises the administrator approval (ADR 0042).
+            // /etc/kazoos belongs to root: a system write raises the administrator approval (ADR 0042).
             await _document.SetAsync(IconPackLibrary.PackIdKey, packId, TargetLayer, CancellationToken.None);
             _message = L["IconPack.Saved"];
         }

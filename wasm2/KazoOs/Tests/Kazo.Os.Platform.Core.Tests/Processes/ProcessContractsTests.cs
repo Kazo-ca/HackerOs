@@ -37,7 +37,7 @@ public sealed class ProcessRecordTests
     private static ProcessRecord CreateRunning(DateTimeOffset createdAtUtc, DateTimeOffset startedAtUtc) => new(
         ProcessId.FromInt64(1),
         parentPid: null,
-        "com.hackeros.terminal",
+        "com.kazoos.terminal",
         AppInstanceId.FromGuid(Guid.NewGuid()),
         AppKind.Terminal,
         LocalUserId.FromGuid(Guid.NewGuid()),
@@ -57,7 +57,7 @@ public sealed class ProcessRecordTests
         Assert.Throws<ArgumentException>(() => new ProcessRecord(
             ProcessId.FromInt64(1),
             parentPid: null,
-            "com.hackeros.terminal",
+            "com.kazoos.terminal",
             AppInstanceId.FromGuid(Guid.NewGuid()),
             AppKind.Terminal,
             LocalUserId.FromGuid(Guid.NewGuid()),
@@ -78,7 +78,7 @@ public sealed class ProcessRecordTests
         Assert.Throws<ArgumentException>(() => new ProcessRecord(
             ProcessId.FromInt64(1),
             parentPid: null,
-            "com.hackeros.terminal",
+            "com.kazoos.terminal",
             AppInstanceId.FromGuid(Guid.NewGuid()),
             AppKind.Terminal,
             LocalUserId.FromGuid(Guid.NewGuid()),
@@ -99,7 +99,7 @@ public sealed class ProcessRecordTests
         Assert.Throws<ArgumentException>(() => new ProcessRecord(
             ProcessId.FromInt64(1),
             parentPid: null,
-            "com.hackeros.terminal",
+            "com.kazoos.terminal",
             AppInstanceId.FromGuid(Guid.NewGuid()),
             AppKind.Terminal,
             LocalUserId.FromGuid(Guid.NewGuid()),
@@ -122,7 +122,7 @@ public sealed class ProcessRecordTests
         Assert.Throws<ArgumentException>(() => new ProcessRecord(
             pid,
             pid,
-            "com.hackeros.terminal",
+            "com.kazoos.terminal",
             AppInstanceId.FromGuid(Guid.NewGuid()),
             AppKind.Terminal,
             LocalUserId.FromGuid(Guid.NewGuid()),

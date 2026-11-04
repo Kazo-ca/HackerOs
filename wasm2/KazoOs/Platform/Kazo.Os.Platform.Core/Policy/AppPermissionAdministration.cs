@@ -26,7 +26,7 @@ public sealed record AppPermissionAdministrationResult(bool Succeeded, string? F
 /// declares a dangerous capability with its state, and carries out the changes.
 /// </summary>
 /// <remarks>
-/// A machine change (allow, deny or reset in <c>/etc/hackeros/app-permissions.config</c>, or the
+/// A machine change (allow, deny or reset in <c>/etc/kazoos/app-permissions.config</c>, or the
 /// <c>dangerousCapabilities</c> policy) first verifies an enabled administrator's credentials, as the
 /// approval prompt of ADR 0042 does, then writes as an audited system operation and logs to
 /// <c>/var/log/auth.log</c>. Withdrawing one's own <c>deny</c> needs no administrator. Every change
@@ -134,7 +134,7 @@ public sealed class AppPermissionAdministration
     /// <summary>
     /// Records a machine decision once an administrator already authenticated through the OS
     /// authentication agent (ADR 0055 section 5, <c>KazoPermissionAdministration</c>): writes
-    /// <c>/etc/hackeros/app-permissions.config</c> as an audited system operation and logs the
+    /// <c>/etc/kazoos/app-permissions.config</c> as an audited system operation and logs the
     /// change to <c>/var/log/auth.log</c>. The caller is responsible for the authentication.
     /// </summary>
     /// <param name="appId">Non-system app identifier.</param>
@@ -176,7 +176,7 @@ public sealed class AppPermissionAdministration
         return _permissions.RemoveUserDenialAsync(appId, capability, cancellationToken);
     }
 
-    /// <summary>Changes <c>dangerousCapabilities</c> in <c>/etc/hackeros/security.config</c> after verifying an administrator.</summary>
+    /// <summary>Changes <c>dangerousCapabilities</c> in <c>/etc/kazoos/security.config</c> after verifying an administrator.</summary>
     /// <param name="policy">New policy.</param>
     /// <param name="adminLogin">Administrator login.</param>
     /// <param name="password">Administrator password; never logged.</param>
@@ -205,7 +205,7 @@ public sealed class AppPermissionAdministration
 
     /// <summary>
     /// Changes the policy once an administrator already authenticated through the OS authentication
-    /// agent (ADR 0055 section 5): writes <c>/etc/hackeros/security.config</c> as an audited system
+    /// agent (ADR 0055 section 5): writes <c>/etc/kazoos/security.config</c> as an audited system
     /// operation and logs the change. The caller is responsible for the authentication.
     /// </summary>
     /// <param name="policy">New policy.</param>

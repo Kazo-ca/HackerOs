@@ -17,7 +17,7 @@ namespace Kazo.Os.Platform.Blazor.Sites;
 /// naming another app, lazy-loads the app's assembly as a launch would, checks the root component,
 /// then starts an auxiliary process under the tab's user as a child of the browser's process.
 /// </summary>
-public sealed class KazoWebSiteHost : IHackWebSiteHost
+public sealed class KazoWebSiteHost : IKazoWebSiteHost
 {
     /// <summary>Starts the auxiliary process (<c>AppLifecycleOrchestrator.StartAuxiliaryAsync</c>).</summary>
     public delegate Task<AppLaunchResult> StartRenderer(
@@ -155,7 +155,7 @@ public sealed class KazoWebSiteHost : IHackWebSiteHost
     }
 
     /// <summary>The renderer process handed to the browser: ends with the page, or when the OS stops it.</summary>
-    private sealed class RendererProcess : IHackWebSiteProcess
+    private sealed class RendererProcess : IKazoWebSiteProcess
     {
         private readonly Func<ProcessId, ProcessExitReason, Task<bool>> _stop;
         private readonly CancellationTokenRegistration _exit;

@@ -41,7 +41,7 @@ namespace Kazo.Os.AppSdk.Net;
 public sealed class KazoHttpListener : IDisposable, IAsyncDisposable
 {
     private readonly Lock _gate = new();
-    private IHackHttpListenerSocket? _socket;
+    private IKazoHttpListenerSocket? _socket;
     private bool _closed;
 
     /// <summary>Initializes a listener with no prefix.</summary>
@@ -87,7 +87,7 @@ public sealed class KazoHttpListener : IDisposable, IAsyncDisposable
             throw new InvalidOperationException("Add at least one prefix before starting the listener.");
         }
 
-        KazoNetworkResult<IHackHttpListenerSocket> result = await KazoNetworkErrorTranslator
+        KazoNetworkResult<IKazoHttpListenerSocket> result = await KazoNetworkErrorTranslator
             .CallAsync(gateway => gateway.ListenHttpAsync(prefixes, cancellationToken)).ConfigureAwait(false);
         if (!result.Succeeded)
         {
@@ -124,7 +124,7 @@ public sealed class KazoHttpListener : IDisposable, IAsyncDisposable
     /// <exception cref="KazoHttpListenerException">The listener was stopped while waiting.</exception>
     public async Task<KazoHttpListenerContext> GetContextAsync(CancellationToken cancellationToken)
     {
-        IHackHttpListenerSocket socket;
+        IKazoHttpListenerSocket socket;
         lock (_gate)
         {
             ObjectDisposedException.ThrowIf(_closed && _socket is null, this);
@@ -143,7 +143,7 @@ public sealed class KazoHttpListener : IDisposable, IAsyncDisposable
     /// <summary>Closes the socket and waits until the OS freed the port.</summary>
     public async ValueTask StopAsync()
     {
-        IHackHttpListenerSocket? socket;
+        IKazoHttpListenerSocket? socket;
         lock (_gate)
         {
             socket = _socket;
@@ -252,7 +252,7 @@ public sealed class KazoHttpListenerPrefixCollection : ICollection<string>
 /// <summary>One request received by a <see cref="KazoHttpListener"/> and the response to send back.</summary>
 public sealed class KazoHttpListenerContext
 {
-    internal KazoHttpListenerContext(IHackHttpListenerSocket socket, KazoHttpListenerExchange exchange)
+    internal KazoHttpListenerContext(IKazoHttpListenerSocket socket, KazoHttpListenerExchange exchange)
     {
         Request = new KazoHttpListenerRequest(exchange);
         Response = new KazoHttpListenerResponse(socket, exchange.Id);
@@ -385,12 +385,12 @@ public sealed class KazoHttpListenerRequest
 /// </summary>
 public sealed class KazoHttpListenerResponse : IDisposable
 {
-    private readonly IHackHttpListenerSocket _socket;
+    private readonly IKazoHttpListenerSocket _socket;
     private readonly long _exchangeId;
     private readonly MemoryStream _output = new();
     private bool _sent;
 
-    internal KazoHttpListenerResponse(IHackHttpListenerSocket socket, long exchangeId)
+    internal KazoHttpListenerResponse(IKazoHttpListenerSocket socket, long exchangeId)
     {
         _socket = socket;
         _exchangeId = exchangeId;

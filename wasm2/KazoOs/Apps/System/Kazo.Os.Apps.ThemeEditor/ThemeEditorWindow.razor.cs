@@ -15,7 +15,7 @@ namespace Kazo.Os.Apps.ThemeEditor;
 /// <summary>
 /// The Theme Editor window (ADR 0103 §2), ported from <c>src/apps/theme-editor.ts</c> onto the
 /// public SDK: token groups with typed inputs and help, live preview, generated documentation, and
-/// themes saved as <c>.theme</c> files in <c>~/.config/hackeros/themes/</c>. The free CSS of the
+/// themes saved as <c>.theme</c> files in <c>~/.config/kazoos/themes/</c>. The free CSS of the
 /// legacy editor is not ported (ADR 0103 §2.4).
 /// </summary>
 public partial class ThemeEditorWindow : WindowAppBase, IWindowCloseGuard
@@ -24,7 +24,7 @@ public partial class ThemeEditorWindow : WindowAppBase, IWindowCloseGuard
     private ThemeEditorDocument _document = new();
     private IStringLocalizer<Strings>? _localizer;
     private UserThemeLibraryResult _library = UserThemeLibraryResult.Empty;
-    private string _newBaseThemeId = WellKnownThemeIds.HackerOs;
+    private string _newBaseThemeId = WellKnownThemeIds.KazoOs;
     private ThemePlatform _previewPlatform = ThemePlatform.Desktop;
     private string? _message;
     private bool _messageIsError;
@@ -150,7 +150,7 @@ public partial class ThemeEditorWindow : WindowAppBase, IWindowCloseGuard
         await LoadAsync(VirtualPath.Parse(theme.SourcePath), AppContext.FileSystem);
     }
 
-    /// <summary>Saves to <c>~/.config/hackeros/themes/&lt;id&gt;.theme</c>, where the shell and Settings find it.</summary>
+    /// <summary>Saves to <c>~/.config/kazoos/themes/&lt;id&gt;.theme</c>, where the shell and Settings find it.</summary>
     private async Task SaveAsync()
     {
         if (!CanSave())
@@ -254,7 +254,7 @@ public partial class ThemeEditorWindow : WindowAppBase, IWindowCloseGuard
             return;
         }
 
-        // A file outside ~/.config/hackeros/themes (or in /etc) is edited as a new user theme:
+        // A file outside ~/.config/kazoos/themes (or in /etc) is edited as a new user theme:
         // Save writes the user's own copy, as a desktop does with a system theme.
         string userPath = UserThemeLibrary.GetUserThemePath(HomeDirectory, parsed.Theme.Id);
         _document.Load(parsed.Theme, path.Value == userPath ? path.Value : null);

@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 namespace Kazo.Os.AppSdk.Web.Hosting;
 
 /// <summary>A middleware class (ASP.NET's <c>IMiddleware</c>): runs code around the rest of the pipeline.</summary>
-public interface IHackMiddleware
+public interface IKazoMiddleware
 {
     /// <summary>Handles the request; call <paramref name="next"/> to continue the pipeline.</summary>
     /// <param name="context">The request.</param>
@@ -91,7 +91,7 @@ public sealed class KazoWebApplication : IAsyncDisposable
     /// <summary>Adds a middleware class, taken from the services or created with them (once, like ASP.NET's convention middleware).</summary>
     /// <typeparam name="T">The middleware class.</typeparam>
     public KazoWebApplication UseMiddleware<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>()
-        where T : IHackMiddleware
+        where T : IKazoMiddleware
     {
         T instance = ActivatorUtilities.GetServiceOrCreateInstance<T>(_services);
         return Use(next => context => instance.InvokeAsync(context, next));
@@ -214,37 +214,37 @@ public sealed class KazoWebApplication : IAsyncDisposable
     }
 
     /// <summary>Maps <c>GET</c> on <paramref name="pattern"/> (<c>app.MapGet("/health", () =&gt; KazoResults.Ok("up"))</c>).</summary>
-    public KazoEndpoint MapGet(string pattern, Func<IHackActionResult> handler) => MapMethods(pattern, ["GET"], Wrap(handler));
+    public KazoEndpoint MapGet(string pattern, Func<IKazoActionResult> handler) => MapMethods(pattern, ["GET"], Wrap(handler));
 
     /// <summary>Maps <c>GET</c> on <paramref name="pattern"/>.</summary>
-    public KazoEndpoint MapGet(string pattern, Func<KazoHttpContext, IHackActionResult> handler) => MapMethods(pattern, ["GET"], Wrap(handler));
+    public KazoEndpoint MapGet(string pattern, Func<KazoHttpContext, IKazoActionResult> handler) => MapMethods(pattern, ["GET"], Wrap(handler));
 
     /// <summary>Maps <c>GET</c> on <paramref name="pattern"/>.</summary>
-    public KazoEndpoint MapGet(string pattern, Func<KazoHttpContext, Task<IHackActionResult>> handler) => MapMethods(pattern, ["GET"], Wrap(handler));
+    public KazoEndpoint MapGet(string pattern, Func<KazoHttpContext, Task<IKazoActionResult>> handler) => MapMethods(pattern, ["GET"], Wrap(handler));
 
     /// <summary>Maps <c>GET</c> on <paramref name="pattern"/> to a handler that writes the response itself.</summary>
     public KazoEndpoint MapGet(string pattern, KazoRequestDelegate handler) => MapMethods(pattern, ["GET"], handler);
 
     /// <summary>Maps <c>POST</c> on <paramref name="pattern"/>.</summary>
-    public KazoEndpoint MapPost(string pattern, Func<KazoHttpContext, IHackActionResult> handler) => MapMethods(pattern, ["POST"], Wrap(handler));
+    public KazoEndpoint MapPost(string pattern, Func<KazoHttpContext, IKazoActionResult> handler) => MapMethods(pattern, ["POST"], Wrap(handler));
 
     /// <summary>Maps <c>POST</c> on <paramref name="pattern"/>.</summary>
-    public KazoEndpoint MapPost(string pattern, Func<KazoHttpContext, Task<IHackActionResult>> handler) => MapMethods(pattern, ["POST"], Wrap(handler));
+    public KazoEndpoint MapPost(string pattern, Func<KazoHttpContext, Task<IKazoActionResult>> handler) => MapMethods(pattern, ["POST"], Wrap(handler));
 
     /// <summary>Maps <c>POST</c> on <paramref name="pattern"/> to a handler that writes the response itself.</summary>
     public KazoEndpoint MapPost(string pattern, KazoRequestDelegate handler) => MapMethods(pattern, ["POST"], handler);
 
     /// <summary>Maps <c>PUT</c> on <paramref name="pattern"/>.</summary>
-    public KazoEndpoint MapPut(string pattern, Func<KazoHttpContext, Task<IHackActionResult>> handler) => MapMethods(pattern, ["PUT"], Wrap(handler));
+    public KazoEndpoint MapPut(string pattern, Func<KazoHttpContext, Task<IKazoActionResult>> handler) => MapMethods(pattern, ["PUT"], Wrap(handler));
 
     /// <summary>Maps <c>PATCH</c> on <paramref name="pattern"/>.</summary>
-    public KazoEndpoint MapPatch(string pattern, Func<KazoHttpContext, Task<IHackActionResult>> handler) => MapMethods(pattern, ["PATCH"], Wrap(handler));
+    public KazoEndpoint MapPatch(string pattern, Func<KazoHttpContext, Task<IKazoActionResult>> handler) => MapMethods(pattern, ["PATCH"], Wrap(handler));
 
     /// <summary>Maps <c>DELETE</c> on <paramref name="pattern"/>.</summary>
-    public KazoEndpoint MapDelete(string pattern, Func<KazoHttpContext, IHackActionResult> handler) => MapMethods(pattern, ["DELETE"], Wrap(handler));
+    public KazoEndpoint MapDelete(string pattern, Func<KazoHttpContext, IKazoActionResult> handler) => MapMethods(pattern, ["DELETE"], Wrap(handler));
 
     /// <summary>Maps <c>DELETE</c> on <paramref name="pattern"/>.</summary>
-    public KazoEndpoint MapDelete(string pattern, Func<KazoHttpContext, Task<IHackActionResult>> handler) => MapMethods(pattern, ["DELETE"], Wrap(handler));
+    public KazoEndpoint MapDelete(string pattern, Func<KazoHttpContext, Task<IKazoActionResult>> handler) => MapMethods(pattern, ["DELETE"], Wrap(handler));
 
     /// <summary>
     /// Maps the controllers of the site: every attribute route of the generated table and, unless
@@ -367,25 +367,25 @@ public sealed class KazoWebApplication : IAsyncDisposable
 
     internal const string DefaultConventionalTemplate = "{controller=Home}/{action=Index}/{id?}";
 
-    private static Func<KazoHttpContext, Task> Run(Func<KazoHttpContext, Task<IHackActionResult>> handler) => async context =>
+    private static Func<KazoHttpContext, Task> Run(Func<KazoHttpContext, Task<IKazoActionResult>> handler) => async context =>
     {
-        IHackActionResult result = await handler(context).ConfigureAwait(false);
+        IKazoActionResult result = await handler(context).ConfigureAwait(false);
         await result.ExecuteResultAsync(new KazoActionContext(context)).ConfigureAwait(false);
     };
 
-    private static KazoRequestDelegate Wrap(Func<IHackActionResult> handler)
+    private static KazoRequestDelegate Wrap(Func<IKazoActionResult> handler)
     {
         ArgumentNullException.ThrowIfNull(handler);
         return context => handler().ExecuteResultAsync(new KazoActionContext(context));
     }
 
-    private static KazoRequestDelegate Wrap(Func<KazoHttpContext, IHackActionResult> handler)
+    private static KazoRequestDelegate Wrap(Func<KazoHttpContext, IKazoActionResult> handler)
     {
         ArgumentNullException.ThrowIfNull(handler);
         return context => handler(context).ExecuteResultAsync(new KazoActionContext(context));
     }
 
-    private static KazoRequestDelegate Wrap(Func<KazoHttpContext, Task<IHackActionResult>> handler)
+    private static KazoRequestDelegate Wrap(Func<KazoHttpContext, Task<IKazoActionResult>> handler)
     {
         ArgumentNullException.ThrowIfNull(handler);
         Func<KazoHttpContext, Task> run = Run(handler);

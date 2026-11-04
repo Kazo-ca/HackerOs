@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Printf;
 public sealed class PrintfApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.printf";
+    public override string Id => "org.kazoos.commands.printf";
 
     /// <inheritdoc />
     public override string Name => "printf";
@@ -22,7 +22,7 @@ public sealed class PrintfApp : AppDefinition
     public override Type EntryPoint => typeof(PrintfCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Format and print data";

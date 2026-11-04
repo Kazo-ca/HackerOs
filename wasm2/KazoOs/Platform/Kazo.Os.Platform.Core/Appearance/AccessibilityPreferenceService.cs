@@ -6,8 +6,8 @@ namespace Kazo.Os.Platform.Core.Appearance;
 
 /// <summary>
 /// The shell's live view of the accessibility preferences (ADR 0105): the layered
-/// <c>accessibility.config</c> (the session user's <c>~/.config/hackeros/</c> over the machine's
-/// <c>/etc/hackeros/</c>), resolved against the host's own settings and against
+/// <c>accessibility.config</c> (the session user's <c>~/.config/kazoos/</c> over the machine's
+/// <c>/etc/kazoos/</c>), resolved against the host's own settings and against
 /// <c>animationsEnabled</c> of <c>appearance.config</c>. The theme reads <see cref="Effective"/>,
 /// apps read it through <see cref="KazoAccessibility"/>.
 /// </summary>

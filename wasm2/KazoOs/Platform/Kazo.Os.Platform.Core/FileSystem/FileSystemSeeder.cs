@@ -23,7 +23,7 @@ public sealed class FileSystemSeeder(
 {
     /// <summary>
     /// Gets the app sources and block list the host was built with (ADR 0189 §1, §5), written to
-    /// <c>/etc/hackeros/app-sources.config</c> and <c>app-policy.config</c> when they do not exist.
+    /// <c>/etc/kazoos/app-sources.config</c> and <c>app-policy.config</c> when they do not exist.
     /// </summary>
     public Apps.Packages.AppPackageDefaults PackageDefaults { get; init; } = Apps.Packages.AppPackageDefaults.Standard;
 
@@ -61,9 +61,9 @@ public sealed class FileSystemSeeder(
         await EnsureMountPointAsync("/mnt", 0x01ED, system, cancellationToken);
 
         // ADR 0044: OS settings (system layer) and OS state such as migration markers.
-        await EnsureDirectoryAsync("/etc/hackeros", 0x01ED, system, cancellationToken);
+        await EnsureDirectoryAsync("/etc/kazoos", 0x01ED, system, cancellationToken);
         await EnsureDirectoryAsync("/var/lib", 0x01ED, system, cancellationToken);
-        await EnsureDirectoryAsync("/var/lib/hackeros", 0x01ED, system, cancellationToken);
+        await EnsureDirectoryAsync("/var/lib/kazoos", 0x01ED, system, cancellationToken);
 
         // ADR 0050: kernel host name and pam_env-style system environment, root-owned 0644.
         await EnsureFileAsync(
@@ -73,7 +73,7 @@ public sealed class FileSystemSeeder(
         // ADR 0104: systemd-style system locale, root-owned 0644, changed with localectl.
         await EnsureFileAsync(
             LoginEnvironment.SystemLocaleFilePath.Value, LoginEnvironment.DefaultSystemLocaleFileContent, 0x01A4, system, cancellationToken);
-        // ADR 0074, section 4: the static host table read first by hackdns, root-owned 0644.
+        // ADR 0074, section 4: the static host table read first by kazodns, root-owned 0644.
         await EnsureFileAsync(
             Network.Local.KazoDnsResolver.HostsFilePath.Value, Network.Local.KazoDnsResolver.DefaultHostsFileContent, 0x01A4, system, cancellationToken);
         // ADR 0182 section 3, ADR 0189 section 1: hosts, catalogs and trusted sources of app packages,
@@ -98,9 +98,9 @@ public sealed class FileSystemSeeder(
         await EnsureFileAsync(
             ResourceLimitsConfiguration.LimitsFilePath.Value, ResourceLimitsConfiguration.DefaultLimitsFileContent, 0x01A4, system, cancellationToken);
 
-        // ADR 0077/0080: declarations of the hosted static sites (hackwebd), edited by an administrator.
-        await EnsureDirectoryAsync("/etc/hackweb", 0x01ED, system, cancellationToken);
-        await EnsureDirectoryAsync("/etc/hackweb/sites", 0x01ED, system, cancellationToken);
+        // ADR 0077/0080: declarations of the hosted static sites (kazowebd), edited by an administrator.
+        await EnsureDirectoryAsync("/etc/kazoweb", 0x01ED, system, cancellationToken);
+        await EnsureDirectoryAsync("/etc/kazoweb/sites", 0x01ED, system, cancellationToken);
 
         // The shared data in /usr/share (sound themes, icon packs) is installed after the sign-in,
         // in the background: InstallSoundThemesAsync and InstallIconPacksAsync.
@@ -115,10 +115,10 @@ public sealed class FileSystemSeeder(
         await EnsureDirectoryAsync($"{home}/.config", 0x01C0, userProvisioning, cancellationToken);
         // ADR 0044: settings directories are 0755 like on Linux; the 0700 home already keeps
         // other users out. ~/.config/<appId>/ is created by KazoSettings on first write.
-        await EnsureDirectoryAsync($"{home}/.config/hackeros", 0x01ED, userProvisioning, cancellationToken);
+        await EnsureDirectoryAsync($"{home}/.config/kazoos", 0x01ED, userProvisioning, cancellationToken);
         await EnsureDirectoryAsync($"{home}/.local", 0x01ED, userProvisioning, cancellationToken);
         await EnsureDirectoryAsync($"{home}/.local/state", 0x01ED, userProvisioning, cancellationToken);
-        await EnsureDirectoryAsync($"{home}/.local/state/hackeros", 0x01ED, userProvisioning, cancellationToken);
+        await EnsureDirectoryAsync($"{home}/.local/state/kazoos", 0x01ED, userProvisioning, cancellationToken);
         // ADR 0204: the user's own sound themes, one folder per theme.
         await EnsureDirectoryAsync($"{home}/.local/share", 0x01ED, userProvisioning, cancellationToken);
         await EnsureDirectoryAsync(
@@ -382,7 +382,7 @@ public sealed class FileSystemSeeder(
     // dpkg keeps the files of each installed package in /var/lib/dpkg/info/<package>.list; the
     // background installs keep theirs here, so a boot whose list matches the shipped files skips
     // the install instead of checking every file again in the browser store.
-    private const string InstalledListsDirectory = "/var/lib/hackeros/installed";
+    private const string InstalledListsDirectory = "/var/lib/kazoos/installed";
     private const string IconPacksListName = "icon-packs.list";
     private const string SoundThemesListName = "sound-themes.list";
 
@@ -430,7 +430,7 @@ public sealed class FileSystemSeeder(
         string name, string list, FileSystemAuthorizationContext context, CancellationToken cancellationToken)
     {
         await EnsureDirectoryAsync("/var/lib", 0x01ED, context, cancellationToken);
-        await EnsureDirectoryAsync("/var/lib/hackeros", 0x01ED, context, cancellationToken);
+        await EnsureDirectoryAsync("/var/lib/kazoos", 0x01ED, context, cancellationToken);
         await EnsureDirectoryAsync(InstalledListsDirectory, 0x01ED, context, cancellationToken);
         VirtualPath path = GetInstalledListPath(name);
         FileSystemMutationResult created = await _fileSystem.CreateAsync(
@@ -457,7 +457,7 @@ public sealed class FileSystemSeeder(
     {
         AppOperationContext operation = new()
         {
-            AppId = "org.hackeros.kernel",
+            AppId = "org.kazoos.kernel",
             UserId = userId,
             UserAuthority = AppAuthority.System,
             GrantedCapabilities = new HashSet<string>(AppCapabilities.All, StringComparer.Ordinal),

@@ -40,7 +40,7 @@ public sealed class AppSdkLocalizationTests
             "un site a besoin d'au moins une liaison, comme « http://localhost:8080/ »",
             Assert.Single(KazoWebSiteFile.Validate(site, KazoWebSiteScope.User, Context("fr_FR.UTF-8"))));
         Assert.Equal(
-            "« https://docs.hack/ » : une liaison https a besoin d'un certificat de serveur, que hackwebd n'a pas encore",
+            "« https://docs.hack/ » : une liaison https a besoin d'un certificat de serveur, que kazowebd n'a pas encore",
             Assert.Single(KazoWebSiteFile.Validate(https, KazoWebSiteScope.User, Context("fr_FR.UTF-8"))));
         Assert.Equal(
             KazoWebSiteFile.Validate(https, KazoWebSiteScope.User),
@@ -73,10 +73,10 @@ public sealed class AppSdkLocalizationTests
         environment.SetVariable("LANG", lang);
         return new MinimalAppExecutionContext(new AppManifest
         {
-            Id = "org.hackeros.test-sdk-localization",
+            Id = "org.kazoos.test-sdk-localization",
             Name = "SDK Localization",
             Version = "1.0.0",
-            PublisherId = "org.hackeros",
+            PublisherId = "org.kazoos",
             Description = "SDK localization test.",
             Kind = AppKind.Window,
             EntryPoint = new AppEntryPointManifest("Kazo.Os.AppSdk.Tests", "Probe"),

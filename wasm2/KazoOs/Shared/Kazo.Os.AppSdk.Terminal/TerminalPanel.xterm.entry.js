@@ -104,7 +104,7 @@ function themeFor(host, highContrast) {
  * Copies the terminal selection through a real `copy` event instead of navigator.clipboard, so the
  * OS clipboard bridge (hostClipboard.js, ADR 0065) sees it like any native copy: the text becomes the
  * Kazo OS clipboard entry (origin GuestNative) and reaches the host only when
- * /etc/hackeros/clipboard.config allows guest-to-host sharing. Writing navigator.clipboard directly
+ * /etc/kazoos/clipboard.config allows guest-to-host sharing. Writing navigator.clipboard directly
  * would skip both. The capture listener puts the text in the event, the bridge reads it in the bubble
  * phase on window.
  */

@@ -68,7 +68,7 @@ public sealed class ScreenServiceTests
         WindowId window = WindowId.FromGuid(Guid.NewGuid());
         harness.Runtime.Apply(new CreateWindowCommand(new WindowRuntimeState(
             window,
-            "org.hackeros.notes",
+            "org.kazoos.notes",
             WindowOwnerId.FromGuid(Guid.NewGuid()),
             "Notes",
             null,
@@ -389,7 +389,7 @@ public sealed class ScreenServiceTests
         WindowId window = WindowId.FromGuid(Guid.NewGuid());
         runtime.Apply(new CreateWindowCommand(new WindowRuntimeState(
             window,
-            "org.hackeros.settings",
+            "org.kazoos.settings",
             WindowOwnerId.FromGuid(owner),
             "Settings",
             null,

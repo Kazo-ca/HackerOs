@@ -12,7 +12,7 @@ namespace Kazo.Os.Platform.Core.Tests.ServerConnection;
 /// </summary>
 public sealed class HttpProxyClientQueueTests
 {
-    private static readonly Uri Server = new("https://server.hackeros.test/");
+    private static readonly Uri Server = new("https://server.kazoos.test/");
 
     [Fact]
     public async Task A_page_of_twenty_resources_never_has_more_than_six_relay_calls_in_flight()
@@ -67,7 +67,7 @@ public sealed class HttpProxyClientQueueTests
     }
 
     private static ProxyHttpRequest Request(string url) =>
-        ProxyHttpRequest.Create(Guid.NewGuid(), url, "GET", [], null, null, 30, "org.hackeros.browser", includeBody: true);
+        ProxyHttpRequest.Create(Guid.NewGuid(), url, "GET", [], null, null, 30, "org.kazoos.browser", includeBody: true);
 
     /// <summary>A relay endpoint that answers after a short delay and records how many calls overlap.</summary>
     private sealed class CountingRelayHandler : HttpMessageHandler

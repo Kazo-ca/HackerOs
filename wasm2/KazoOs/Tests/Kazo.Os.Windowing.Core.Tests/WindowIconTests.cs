@@ -40,7 +40,7 @@ public sealed class WindowIconTests
     private static WindowRuntimeState CreateState(string? icon) =>
         new(
             WindowId.FromGuid(Guid.NewGuid()),
-            "org.hackeros.test",
+            "org.kazoos.test",
             WindowOwnerId.FromGuid(Guid.NewGuid()),
             "Test",
             icon,

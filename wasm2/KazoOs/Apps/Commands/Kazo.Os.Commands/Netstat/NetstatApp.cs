@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Netstat;
 public sealed class NetstatApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.netstat";
+    public override string Id => "org.kazoos.commands.netstat";
 
     /// <inheritdoc />
     public override string Name => "netstat";
@@ -22,7 +22,7 @@ public sealed class NetstatApp : AppDefinition
     public override Type EntryPoint => typeof(NetstatCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Print network connections, routing tables and interface statistics";

@@ -35,12 +35,12 @@ public sealed class DesktopShellTests
     [Fact]
     public void AppCatalog_provides_validated_manifests_for_launcher()
     {
-        AppManifest app = CreateAppManifest("org.hackeros.testapp", "Test App", AppKind.Window);
+        AppManifest app = CreateAppManifest("org.kazoos.testapp", "Test App", AppKind.Window);
         AppCatalogBuildResult result = AppCatalog.Build([app]);
 
         Assert.True(result.IsSuccess);
         Assert.NotNull(result.Catalog);
-        Assert.True(result.Catalog.Manifests.ContainsKey("org.hackeros.testapp"));
+        Assert.True(result.Catalog.Manifests.ContainsKey("org.kazoos.testapp"));
     }
 
     [Fact]
@@ -53,7 +53,7 @@ public sealed class DesktopShellTests
         Notification record = new(
             NotificationId.FromGuid(Guid.NewGuid()),
             userId,
-            "org.hackeros.testapp",
+            "org.kazoos.testapp",
             NotificationSeverity.Information,
             "Test Notice",
             "Test notification message",
@@ -71,7 +71,7 @@ public sealed class DesktopShellTests
     private static WindowRuntimeState CreateState(int seed) =>
         new(
             WindowId.FromGuid(Guid.Parse($"10000000-0000-0000-0000-{seed:D12}")),
-            $"org.hackeros.test{seed}",
+            $"org.kazoos.test{seed}",
             WindowOwnerId.FromGuid(Guid.Parse($"20000000-0000-0000-0000-{seed:D12}")),
             $"Test App {seed}",
             null,
@@ -89,7 +89,7 @@ public sealed class DesktopShellTests
             Id = id,
             Name = name,
             Version = "1.0.0",
-            PublisherId = "pub.hackeros",
+            PublisherId = "pub.kazoos",
             Description = "Test application description",
             Kind = kind,
             EntryPoint = new AppEntryPointManifest("TestAssembly.dll", "TestAssembly.TestComponent"),

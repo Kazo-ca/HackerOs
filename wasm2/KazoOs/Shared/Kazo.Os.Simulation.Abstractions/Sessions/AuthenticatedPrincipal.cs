@@ -22,7 +22,7 @@ public sealed record AuthenticatedPrincipal
     /// <param name="authenticatedAtUtc">UTC simulation time authentication completed.</param>
     /// <param name="homePath">
     /// Home directory when it is not <c>/home/&lt;login&gt;</c>: a service account's, such as
-    /// <c>/var/lib/hackeros-svc</c> (ADR 0097, section 4). <see langword="null"/> for a login account.
+    /// <c>/var/lib/kazoos-svc</c> (ADR 0097, section 4). <see langword="null"/> for a login account.
     /// </param>
     /// <exception cref="ArgumentException">An invariant is violated.</exception>
     public AuthenticatedPrincipal(

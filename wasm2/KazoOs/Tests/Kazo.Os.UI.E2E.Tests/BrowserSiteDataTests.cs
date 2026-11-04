@@ -7,13 +7,13 @@ namespace Kazo.Os.UI.E2E.Tests;
 /// <summary>
 /// The site data of chantier <c>web/12</c> (ADR 0088) in a real Chromium, with the Intranet sample: a note
 /// saved through an MVC form lands in the host browser's IndexedDB database
-/// <c>hackweb.org.hackeros.samples.intranet</c>; the browser offers the typed title again on the next form
-/// (form history, an OS file); the site's debug log is a file under <c>/var/log/hackweb/</c> the terminal
+/// <c>kazoweb.org.kazoos.samples.intranet</c>; the browser offers the typed title again on the next form
+/// (form history, an OS file); the site's debug log is a file under <c>/var/log/kazoweb/</c> the terminal
 /// can read; the Diagnostic app lists the database and clears it.
 /// </summary>
 public sealed class BrowserSiteDataTests(ITestOutputHelper output)
 {
-    private const string Database = "hackweb.org.hackeros.samples.intranet";
+    private const string Database = "kazoweb.org.kazoos.samples.intranet";
 
     /// <summary>Counts the records of a store by opening the database from the page, as DevTools would.</summary>
     private const string CountNotes = """
@@ -73,7 +73,7 @@ public sealed class BrowserSiteDataTests(ITestOutputHelper output)
             ILocator title = frame.Locator("#Title");
             await title.ClickAsync(new() { Timeout = 30000 });
             await Assertions.Expect(frame.Locator("datalist option[value='Quarterly audit']")).ToHaveCountAsync(1, new() { Timeout = 20000 });
-            Assert.StartsWith("hackos-form-history-", await title.GetAttributeAsync("list"), StringComparison.Ordinal);
+            Assert.StartsWith("kazoos-form-history-", await title.GetAttributeAsync("list"), StringComparison.Ordinal);
             output.WriteLine("[test] the form history offered the title back.");
 
             // --- The debug log is an OS file the terminal can read ---
@@ -82,7 +82,7 @@ public sealed class BrowserSiteDataTests(ITestOutputHelper output)
             ILocator screen = page.Locator("[data-terminal-panel] .xterm-screen").First;
             await WaitForTextAsync(rows, text => text.Contains('$', StringComparison.Ordinal), "the shell prompt");
             await screen.ClickAsync();
-            await page.Keyboard.TypeAsync("grep created /var/log/hackweb/org.hackeros.samples.intranet.log");
+            await page.Keyboard.TypeAsync("grep created /var/log/kazoweb/org.kazoos.samples.intranet.log");
             await page.Keyboard.PressAsync("Enter");
             string log = await WaitForTextAsync(rows, text => text.Contains("Note 4 created by", StringComparison.Ordinal), "the site's debug log line");
             Assert.Contains("info: Kazo.Os.Samples.Intranet.Controllers.NotesController[0]", log, StringComparison.Ordinal);
@@ -90,7 +90,7 @@ public sealed class BrowserSiteDataTests(ITestOutputHelper output)
 
             // --- The Diagnostic app lists the database and clears it ---
             await E2ESupport.OpenAppAsync(page, "IndexedDB Diagnostic", output);
-            ILocator site = page.Locator(".diag-site-item", new() { HasText = "org.hackeros.samples.intranet" });
+            ILocator site = page.Locator(".diag-site-item", new() { HasText = "org.kazoos.samples.intranet" });
             // Not a system app: system.storage.inspect needs an administrator's approval (ADR 0050).
             await page.GetByLabel("Administrator name", new() { Exact = true }).FillAsync(E2ESupport.LoginName, new() { Timeout = 20000 });
             await page.GetByLabel("Password", new() { Exact = true }).FillAsync(E2ESupport.Password);

@@ -4,7 +4,7 @@ namespace Kazo.Os.AppSdk.Blazor.Files;
 
 /// <summary>
 /// Connects the copy and move rules of the SDK (<see cref="KazoFileOperations"/>, ADR 0161 §2) to the
-/// name conflict dialog of the <c>hackeros.file-dialogs</c> provider.
+/// name conflict dialog of the <c>kazoos.file-dialogs</c> provider.
 /// </summary>
 public static class KazoFileOperationDialogs
 {

@@ -5,7 +5,7 @@
   <PropertyGroup>
     <PackageId>Kazo.Os.Platform.WorkerHost</PackageId>
     <Description>Headless Kazo OS processes (commands, services) in Web Workers: worker pool, remote execution context and watchdog.</Description>
-    <PackageTags>hackeros;platform;web-workers</PackageTags>
+    <PackageTags>kazoos;platform;web-workers</PackageTags>
   </PropertyGroup>
 
   <!--

@@ -5,9 +5,9 @@ using Kazo.Os.Theming.Abstractions;
 namespace Kazo.Os.Platform.Core.Appearance;
 
 /// <summary>
-/// Defines the layered cursor document (ADR 0205 §3): <c>/etc/hackeros/cursors.config</c> holds the
+/// Defines the layered cursor document (ADR 0205 §3): <c>/etc/kazoos/cursors.config</c> holds the
 /// machine's cursor theme (also used by the sign-in screen), and each user overrides it in
-/// <c>~/.config/hackeros/cursors.config</c>, like <c>XCURSOR_THEME</c> or the <c>[Icon Theme]</c>
+/// <c>~/.config/kazoos/cursors.config</c>, like <c>XCURSOR_THEME</c> or the <c>[Icon Theme]</c>
 /// of <c>~/.icons/default/index.theme</c> on Linux.
 /// </summary>
 public static class CursorSettingsDocuments
@@ -16,8 +16,8 @@ public static class CursorSettingsDocuments
     public const string ThemeKey = "theme";
 
     /// <summary>
-    /// Gets the declared schema. The id is an open string: a theme of <c>/etc/hackeros/cursors/</c>
-    /// or <c>~/.config/hackeros/cursors/</c> may be chosen; an id that names no theme draws the
+    /// Gets the declared schema. The id is an open string: a theme of <c>/etc/kazoos/cursors/</c>
+    /// or <c>~/.config/kazoos/cursors/</c> may be chosen; an id that names no theme draws the
     /// host's cursors (<see cref="CursorThemeLibraryResult.Resolve"/>).
     /// </summary>
     public static SettingsSchema Schema { get; } = new(

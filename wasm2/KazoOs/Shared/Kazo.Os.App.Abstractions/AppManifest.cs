@@ -235,7 +235,7 @@ public sealed record TopicPermissionDeclarationManifest(string Id, string Descri
 /// <summary>
 /// Registers one embeddable component of an app for a contract (ADR 0063).
 /// </summary>
-/// <param name="Contract">Contract name, lower-case dotted (e.g. <c>hackeros.terminal</c>).</param>
+/// <param name="Contract">Contract name, lower-case dotted (e.g. <c>kazoos.terminal</c>).</param>
 /// <param name="Assembly">Assembly file name; the app's entry-point assembly, which lazy loading fetches.</param>
 /// <param name="Type">Full .NET type name of the component.</param>
 public sealed record AppComponentManifest(string Contract, string Assembly, string Type);

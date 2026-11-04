@@ -13,7 +13,7 @@ namespace Kazo.Os.Tools.ManifestGenerator;
 /// <para>
 /// Keys are <c>Name</c>, <c>Description</c> and <c>Terminal.Usage</c>. In a project declaring
 /// several apps (the commands project), each key is prefixed with the app id:
-/// <c>org.hackeros.commands.ls.Description</c>, and the files go to
+/// <c>org.kazoos.commands.ls.Description</c>, and the files go to
 /// <c>localization/&lt;appId&gt;/&lt;culture&gt;.json</c>.
 /// </para>
 /// <para>

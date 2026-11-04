@@ -7,13 +7,13 @@ namespace Kazo.Os.Apps.Settings.Tests;
 /// <summary>Settings &gt; Default applications builds its rows from the apps and both layers (ADR 0121, section 4).</summary>
 public sealed class FileAssociationsPanelTests
 {
-    private static readonly KazoAppInfo Notepad = Window("org.hackeros.notepad", "Notepad",
+    private static readonly KazoAppInfo Notepad = Window("org.kazoos.notepad", "Notepad",
         new KazoAppFileHandler("text/plain", [".txt"], ["open", "edit"]));
 
-    private static readonly KazoAppInfo Editor = Window("org.hackeros.text-editor", "Text Editor",
+    private static readonly KazoAppInfo Editor = Window("org.kazoos.text-editor", "Text Editor",
         new KazoAppFileHandler("text/plain", [".TXT", ".log"], ["open"]));
 
-    private static readonly KazoAppInfo Browser = Window("org.hackeros.browser", "Browser",
+    private static readonly KazoAppInfo Browser = Window("org.kazoos.browser", "Browser",
         new KazoAppFileHandler("x-scheme-handler/https", [], ["open"]));
 
     [Fact]
@@ -60,7 +60,7 @@ public sealed class FileAssociationsPanelTests
     [Fact]
     public void Apps_that_are_not_windows_are_not_candidates()
     {
-        KazoAppInfo command = Notepad with { Id = "org.hackeros.commands.cat", Name = "cat", Kind = AppKind.Terminal };
+        KazoAppInfo command = Notepad with { Id = "org.kazoos.commands.cat", Name = "cat", Kind = AppKind.Terminal };
 
         Assert.Empty(FileAssociationsPanel.BuildRows([command], []));
     }

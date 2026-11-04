@@ -13,7 +13,7 @@ using Microsoft.Extensions.Localization;
 namespace Kazo.Os.Apps.FileExplorer;
 
 /// <summary>
-/// The File Explorer's provider of <c>hackeros.file-dialogs</c> (ADR 0148 §6, ADR 0155 §5). The OS
+/// The File Explorer's provider of <c>kazoos.file-dialogs</c> (ADR 0148 §6, ADR 0155 §5). The OS
 /// hands it the dialog's name, its request record and a <see cref="Completed"/> callback, and shows it in
 /// a window modal to the requesting app's window; this component answers once with the result record.
 /// </summary>

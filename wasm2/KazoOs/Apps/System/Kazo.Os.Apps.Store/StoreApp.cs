@@ -3,8 +3,8 @@ using Kazo.Os.App.Abstractions;
 namespace Kazo.Os.Apps.Store;
 
 /// <summary>
-/// Manifest of the Hack Store (ADR 0188 §1): the system app that lists the apps of the catalogs of
-/// <c>/etc/hackeros/app-sources.config</c>, shows their page, and installs, updates and removes
+/// Manifest of the Kazo OS Store (ADR 0188 §1): the system app that lists the apps of the catalogs of
+/// <c>/etc/kazoos/app-sources.config</c>, shows their page, and installs, updates and removes
 /// them. The build generates <c>manifest.json</c> from this class; it is never instantiated at
 /// runtime.
 /// </summary>
@@ -18,7 +18,7 @@ namespace Kazo.Os.Apps.Store;
 public sealed class StoreApp : AppDefinition
 {
     /// <summary>The app ID, also the one the OS pins by default and draws the update count on.</summary>
-    public const string AppId = "org.hackeros.store";
+    public const string AppId = "org.kazoos.store";
 
     /// <inheritdoc />
     public override IReadOnlyList<string> Icons => ["icons/app.svg"];
@@ -31,7 +31,7 @@ public sealed class StoreApp : AppDefinition
     public override string Id => AppId;
 
     /// <inheritdoc />
-    public override string Name => "Hack Store";
+    public override string Name => "Kazo OS Store";
 
     /// <inheritdoc />
     public override AppKind Kind => AppKind.Window;
@@ -43,7 +43,7 @@ public sealed class StoreApp : AppDefinition
     public override Type? MobileEntryPoint => typeof(StoreWindow);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Find, install, update and remove apps from the reviewed Kazo OS catalogs";

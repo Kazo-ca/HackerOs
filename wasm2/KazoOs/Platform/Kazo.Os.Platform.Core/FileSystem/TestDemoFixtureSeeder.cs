@@ -73,7 +73,7 @@ public sealed class TestDemoFixtureSeeder(IFileSystemService fileSystem)
         "const visits = Number(localStorage.getItem(\"visits\") || \"0\") + 1;\n" +
         "localStorage.setItem(\"visits\", String(visits));\n" +
         "document.getElementById(\"storage-status\").textContent = \"visits=\" + visits;\n" +
-        "fetch(\"https://example.hackeros/api/ping\")\n" +
+        "fetch(\"https://example.kazoos/api/ping\")\n" +
         "    .then((response) => response.json())\n" +
         "    .then((body) => { document.getElementById(\"fetch-status\").textContent = body.pong ? \"pong\" : \"no pong\"; })\n" +
         "    .catch((error) => { document.getElementById(\"fetch-status\").textContent = \"fetch failed: \" + error; });";
@@ -205,7 +205,7 @@ public sealed class TestDemoFixtureSeeder(IFileSystemService fileSystem)
     {
         AppOperationContext operation = new()
         {
-            AppId = "org.hackeros.kernel",
+            AppId = "org.kazoos.kernel",
             UserId = userId,
             UserAuthority = AppAuthority.System,
             GrantedCapabilities = new HashSet<string>(AppCapabilities.All, StringComparer.Ordinal),

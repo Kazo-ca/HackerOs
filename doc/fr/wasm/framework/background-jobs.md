@@ -174,7 +174,7 @@ KazoBackground.RunAsync ──► IAppExecutionContext.Background
   `TryGetJob` pour `/proc` et le gestionnaire de tâches.
 - **Workers** (`Platform/Kazo.Os.Platform.WorkerHost`) : `start` avec `k = 2`,
   `bg.progress`, `bg.run` et `bgp` pour une tâche lancée depuis un worker
-  ([`worker-processes.md`](../dev/worker-processes.md#tâches-hackbackground-adr-0128-adr-0140)).
+  ([`worker-processes.md`](../dev/worker-processes.md#tâches-kazobackground-adr-0128-adr-0140)).
 - **`/proc/<pid>/status`** : `Name:` porte le nom de la tâche (15 caractères),
   puis `Job:` et `Host: MainThread|Worker`.
 
@@ -202,7 +202,7 @@ KazoBackground.RunAsync ──► IAppExecutionContext.Background
 | Recherche dans le dossier du CodeEditor | Tâche `code-editor:search` ([`code-editor.md`](../dev/code-editor.md)). |
 | Compresser, Extraire, « UnZip Here… » de l'explorateur | Tâches `file-explorer:compress` et `file-explorer:extract` ([`file-explorer.md`](../dev/file-explorer.md)). |
 | Copier, déplacer, coller ; téléchargement en `.zip` | Restent dans la fenêtre : appels à l'OS attendus avec des points d'arrêt, question de conflit dans la fenêtre ; octets du téléchargement destinés à la fenêtre (ADR 0140 §9). |
-| Hack Paint | Pas de filtre ; rotation et recadrage restent (tampon jusqu'à 64 Mio, au-delà de la limite de 16 Mio) ([`hack-paint.md`](../dev/hack-paint.md)). |
+| Kazo Paint | Pas de filtre ; rotation et recadrage restent (tampon jusqu'à 64 Mio, au-delà de la limite de 16 Mio) ([`kazo-paint.md`](../dev/kazo-paint.md)). |
 
 ## Exemple
 
@@ -235,7 +235,7 @@ tâche ; la fenêtre reste ouverte et affiche `killed`).
 - [x] `/proc/<pid>/status` (`Name`, `Job`, `Host`) et `ps`.
 - [x] Une app gère ses descendants sans `process.manage` (ADR 0140 §7).
 - [x] Analyseur `HOSBG0001` à `HOSBG0004`, livré dans le paquet du SDK et branché sur les apps du dépôt.
-- [x] Recherche du CodeEditor, compression et extraction de l'explorateur en tâches ; raison écrite pour les copies, le téléchargement et Hack Paint.
+- [x] Recherche du CodeEditor, compression et extraction de l'explorateur en tâches ; raison écrite pour les copies, le téléchargement et Kazo Paint.
 - [x] Exemple dans la fenêtre d'exemple.
 - [x] Tests SDK, analyseur, OS et worker, apps.
 - [x] Documentation, ADR 0140, index.

@@ -2,11 +2,11 @@
 
 # Terminal API for apps and commands
 
-This document describes what an app or a command sees of the terminal: the `TerminalPanel` component, the `IHackTerminal` interface, reading a password without echo and full-screen mode. The internal workings (xterm.js, line discipline, rendering, shortcuts) are in [`dev/terminal-emulator.md`](../dev/terminal-emulator.md).
+This document describes what an app or a command sees of the terminal: the `TerminalPanel` component, the `IKazoTerminal` interface, reading a password without echo and full-screen mode. The internal workings (xterm.js, line discipline, rendering, shortcuts) are in [`dev/terminal-emulator.md`](../dev/terminal-emulator.md).
 
 ## `TerminalPanel` component
 
-`TerminalPanel` implements `IHackTerminal`: a host can launch
+`TerminalPanel` implements `IKazoTerminal`: a host can launch
 commands in it (displayed at the prompt, after the keys already typed), change
 folder with a visible `cd` and read the displayed text without control
 sequences (`TerminalAnsi.StripControlSequences`).
@@ -33,9 +33,9 @@ passwords this way.
 
 A full-screen command uses the SDK's `IFullScreenTerminalSession` contract: `EnterAlternateScreenAsync` switches to the alternate screen, `RenderAsync` receives a `TerminalScreenFrame` (lines, cursor, accessible label) on each frame, and `ReadKeyAsync` waits for the next key or the next resize. A row can carry color or reverse video sequences (SGR); it ends with `ESC[0m`. Rendering on the terminal side is in [`dev/terminal-emulator.md`](../dev/terminal-emulator.md#full-screen-commands).
 
-## IHackTerminal
+## IKazoTerminal
 
-`IHackTerminal` (file `Shared/Kazo.Os.AppSdk/Components/IHackTerminal.cs`) has the members `RunCommandAsync(commandLine)`, `SetWorkingDirectoryAsync(path)`, `SendInputAsync(text)`, `ReadOutput(maxCharacters)` (65,536 characters by default), `ClearAsync()` and `FocusAsync()`.
+`IKazoTerminal` (file `Shared/Kazo.Os.AppSdk/Components/IKazoTerminal.cs`) has the members `RunCommandAsync(commandLine)`, `SetWorkingDirectoryAsync(path)`, `SendInputAsync(text)`, `ReadOutput(maxCharacters)` (65,536 characters by default), `ClearAsync()` and `FocusAsync()`.
 
-Commands sent by a host (`IHackTerminal.RunCommandAsync`) are
+Commands sent by a host (`IKazoTerminal.RunCommandAsync`) are
 never continued.

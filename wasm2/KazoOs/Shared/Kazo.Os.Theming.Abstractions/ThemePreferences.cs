@@ -13,7 +13,7 @@ public sealed record ThemePreferences(
 {
     /// <summary>Gets the clean-profile Kazo OS/Android/green preferences with animations enabled.</summary>
     public static ThemePreferences Default { get; } = new(
-        WellKnownThemeIds.HackerOs,
+        WellKnownThemeIds.KazoOs,
         WellKnownThemeIds.Android,
         WellKnownAccentIds.Green,
         AnimationsEnabled: true);

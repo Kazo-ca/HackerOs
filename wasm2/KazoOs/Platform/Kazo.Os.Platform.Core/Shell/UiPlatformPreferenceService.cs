@@ -39,8 +39,8 @@ public sealed record UiPlatformPreferenceState(
 /// </para>
 /// <para>
 /// The choice is a file (ADR 0044): the machine default in
-/// <c>/etc/hackeros/ui-platform-preference.config</c>, the session user's own choice in
-/// <c>~/.config/hackeros/ui-platform-preference.config</c>. The shell writes the user layer with the
+/// <c>/etc/kazoos/ui-platform-preference.config</c>, the session user's own choice in
+/// <c>~/.config/kazoos/ui-platform-preference.config</c>. The shell writes the user layer with the
 /// user's own rights through <see cref="IOsSettingsService"/>.
 /// </para>
 /// </remarks>

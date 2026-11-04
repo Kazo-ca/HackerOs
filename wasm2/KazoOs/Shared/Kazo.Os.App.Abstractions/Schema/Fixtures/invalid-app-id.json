@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "hackeros",
+  "id": "kazoos",
   "name": "Echo",
   "version": "1.0.0",
-  "publisherId": "org.hackeros",
+  "publisherId": "org.kazoos",
   "description": "Prints its arguments back to the terminal.",
   "kind": "terminal",
   "entryPoint": {

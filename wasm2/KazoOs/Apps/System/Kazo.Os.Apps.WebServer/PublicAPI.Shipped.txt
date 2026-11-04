@@ -73,16 +73,16 @@ Kazo.Os.Apps.WebServer.WebServerManagerApp.WebServerManagerApp() -> void
 Kazo.Os.Apps.WebServer._Imports
 Kazo.Os.Apps.WebServer._Imports.Execute() -> void
 Kazo.Os.Apps.WebServer._Imports._Imports() -> void
-const Kazo.Os.Apps.WebServer.Daemon.KazoWebdLog.Directory = "/var/log/hackweb" -> string!
-const Kazo.Os.Apps.WebServer.Daemon.KazoWebdLog.DirectoryName = "hackweb" -> string!
-const Kazo.Os.Apps.WebServer.Daemon.KazoWebdLog.ErrorLogPath = "/var/log/hackweb/error.log" -> string!
-const Kazo.Os.Apps.WebServer.Daemon.KazoWebdLog.ServerSignature = "hackwebd/1.0" -> string!
+const Kazo.Os.Apps.WebServer.Daemon.KazoWebdLog.Directory = "/var/log/kazoweb" -> string!
+const Kazo.Os.Apps.WebServer.Daemon.KazoWebdLog.DirectoryName = "kazoweb" -> string!
+const Kazo.Os.Apps.WebServer.Daemon.KazoWebdLog.ErrorLogPath = "/var/log/kazoweb/error.log" -> string!
+const Kazo.Os.Apps.WebServer.Daemon.KazoWebdLog.ServerSignature = "kazowebd/1.0" -> string!
 const Kazo.Os.Apps.WebServer.Daemon.StaticFileHandler.AllowedMethods = "GET, HEAD, OPTIONS" -> string!
 const Kazo.Os.Apps.WebServer.Daemon.WwwDataAccess.AccountName = "www-data" -> string!
-const Kazo.Os.Apps.WebServer.KazoWebdApp.AppId = "org.hackeros.hackwebd" -> string!
+const Kazo.Os.Apps.WebServer.KazoWebdApp.AppId = "org.kazoos.kazowebd" -> string!
 const Kazo.Os.Apps.WebServer.Manager.WebSiteStore.FirstSuggestedPort = 8080 -> int
-const Kazo.Os.Apps.WebServer.WebServerManagerApp.AppId = "org.hackeros.web-server-manager" -> string!
-const Kazo.Os.Apps.WebServer.WebServerManagerApp.PublishSiteIntent = "org.hackeros.web-server-manager.publish-site.v1" -> string!
+const Kazo.Os.Apps.WebServer.WebServerManagerApp.AppId = "org.kazoos.web-server-manager" -> string!
+const Kazo.Os.Apps.WebServer.WebServerManagerApp.PublishSiteIntent = "org.kazoos.web-server-manager.publish-site.v1" -> string!
 override Kazo.Os.Apps.WebServer.Daemon.ServedSite.Equals(object? obj) -> bool
 override Kazo.Os.Apps.WebServer.Daemon.ServedSite.GetHashCode() -> int
 override Kazo.Os.Apps.WebServer.Daemon.ServedSite.ToString() -> string!

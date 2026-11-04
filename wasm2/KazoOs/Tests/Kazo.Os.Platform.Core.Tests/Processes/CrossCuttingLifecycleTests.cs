@@ -27,8 +27,8 @@ public sealed class CrossCuttingLifecycleTests
         Fixture fixture = new();
         AuthenticatedPrincipal principal = await fixture.Session.LoginAsync(fixture.AliceLoginName, "hunter2");
 
-        ProcessRecord shell = fixture.Manager.Start(fixture.RequestFor(principal, "com.hackeros.shell"));
-        ProcessRecord child = fixture.Manager.Start(fixture.RequestFor(principal, "com.hackeros.editor", shell.Pid));
+        ProcessRecord shell = fixture.Manager.Start(fixture.RequestFor(principal, "com.kazoos.shell"));
+        ProcessRecord child = fixture.Manager.Start(fixture.RequestFor(principal, "com.kazoos.editor", shell.Pid));
         CancellationToken shellToken = fixture.Manager.GetCancellationToken(shell.Pid);
         CancellationToken childToken = fixture.Manager.GetCancellationToken(child.Pid);
 
@@ -46,9 +46,9 @@ public sealed class CrossCuttingLifecycleTests
         Fixture fixture = new();
         AuthenticatedPrincipal principal = await fixture.Session.LoginAsync(fixture.AliceLoginName, "hunter2");
 
-        ProcessRecord shell = fixture.Manager.Start(fixture.RequestFor(principal, "com.hackeros.shell"));
-        ProcessRecord child = fixture.Manager.Start(fixture.RequestFor(principal, "com.hackeros.editor", shell.Pid));
-        ProcessRecord unrelated = fixture.Manager.Start(fixture.RequestFor(principal, "com.hackeros.settings"));
+        ProcessRecord shell = fixture.Manager.Start(fixture.RequestFor(principal, "com.kazoos.shell"));
+        ProcessRecord child = fixture.Manager.Start(fixture.RequestFor(principal, "com.kazoos.editor", shell.Pid));
+        ProcessRecord unrelated = fixture.Manager.Start(fixture.RequestFor(principal, "com.kazoos.settings"));
         CancellationToken unrelatedToken = fixture.Manager.GetCancellationToken(unrelated.Pid);
 
         fixture.Manager.Kill(shell.Pid);
@@ -67,7 +67,7 @@ public sealed class CrossCuttingLifecycleTests
         AuthenticatedPrincipal principal = await fixture.Session.LoginAsync(fixture.AliceLoginName, "hunter2");
 
         ResourceProfile profile = new(0.5, 1.0, 0.5, 1.0, 0.5, 1.0, 0.5, 1.0);
-        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor(principal, "com.hackeros.worker", resourceProfile: profile));
+        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor(principal, "com.kazoos.worker", resourceProfile: profile));
         fixture.Manager.MarkRunning(process.Pid);
 
         IReadOnlyList<ProcessResourceSample> whileRunning = fixture.Simulator.Tick(fixture.Manager.GetActiveProcesses());
@@ -89,7 +89,7 @@ public sealed class CrossCuttingLifecycleTests
         using IDisposable s3 = fixture.EventBus.Subscribe<SessionLoggedOutEvent>(events.Add);
 
         AuthenticatedPrincipal principal = await fixture.Session.LoginAsync(fixture.AliceLoginName, "hunter2");
-        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor(principal, "com.hackeros.shell"));
+        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor(principal, "com.kazoos.shell"));
         fixture.Manager.MarkRunning(process.Pid);
         fixture.Manager.Complete(process.Pid, exitCode: 0);
         await fixture.Session.LogoutAsync();

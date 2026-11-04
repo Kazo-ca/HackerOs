@@ -14,7 +14,7 @@ namespace Kazo.Os.Infrastructure.Browser.Apps;
 [SupportedOSPlatform("browser")]
 public static partial class BrowserInstalledAppAssets
 {
-    private const string ModuleName = "hackeros-installed-app-assets";
+    private const string ModuleName = "kazoos-installed-app-assets";
     private const string ModulePath = "_content/Kazo.Os.Infrastructure.Browser/installedAppAssets.js";
     private static Task? _import;
 

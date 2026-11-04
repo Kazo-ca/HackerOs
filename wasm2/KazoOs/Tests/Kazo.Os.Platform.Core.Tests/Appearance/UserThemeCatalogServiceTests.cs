@@ -8,16 +8,16 @@ namespace Kazo.Os.Platform.Core.Tests.Appearance;
 public sealed class UserThemeCatalogServiceTests
 {
     private static string ThemeText(string id, string name, string accent) =>
-        $"[theme]\nid = {id}\nname = {name}\nbase = hackeros\n\n[tokens]\n--hos-accent = {accent}\n";
+        $"[theme]\nid = {id}\nname = {name}\nbase = kazoos\n\n[tokens]\n--hos-accent = {accent}\n";
 
     [Fact]
     public async Task Reads_etc_and_the_user_folder_and_survives_a_reload()
     {
         SettingsFilesHarness harness = new();
         await harness.BootAsync();
-        await harness.WriteAsRootAsync("/etc/hackeros/themes/corporate.theme", ThemeText("corporate", "Corporate", "#0055aa"));
+        await harness.WriteAsRootAsync("/etc/kazoos/themes/corporate.theme", ThemeText("corporate", "Corporate", "#0055aa"));
         await harness.LoginAsync(harness.Alice);
-        await harness.WriteAsUserAsync("/home/alice/.config/hackeros/themes/neon.theme", ThemeText("neon", "Neon", "#ff00ff"));
+        await harness.WriteAsUserAsync("/home/alice/.config/kazoos/themes/neon.theme", ThemeText("neon", "Neon", "#ff00ff"));
 
         await using (UserThemeCatalogService first = new(harness.FileSystem, harness.Session, harness.Clock, harness.Settings))
         {
@@ -45,7 +45,7 @@ public sealed class UserThemeCatalogServiceTests
         int notifications = 0;
         service.Changed += () => notifications++;
 
-        await harness.WriteAsUserAsync("/home/alice/.config/hackeros/themes/neon.theme", ThemeText("neon", "Neon", "#ff00ff"));
+        await harness.WriteAsUserAsync("/home/alice/.config/kazoos/themes/neon.theme", ThemeText("neon", "Neon", "#ff00ff"));
         await service.RefreshAsync();
 
         Assert.Equal("neon", Assert.Single(service.Current.Themes).Id);
@@ -58,7 +58,7 @@ public sealed class UserThemeCatalogServiceTests
         SettingsFilesHarness harness = new();
         await harness.BootAsync();
         await harness.LoginAsync(harness.Alice);
-        await harness.WriteAsUserAsync("/home/alice/.config/hackeros/themes/broken.theme", "[theme]\nid = broken\n");
+        await harness.WriteAsUserAsync("/home/alice/.config/kazoos/themes/broken.theme", "[theme]\nid = broken\n");
         await using UserThemeCatalogService service = new(harness.FileSystem, harness.Session, harness.Clock, harness.Settings);
         await service.InitializeAsync();
 

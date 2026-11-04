@@ -334,7 +334,7 @@ public sealed class FileSystemContractSuiteTests
         {
             AppOperationContext operation = new()
             {
-                AppId = "org.hackeros.test",
+                AppId = "org.kazoos.test",
                 UserId = userId,
                 UserAuthority = authority,
                 GrantedCapabilities = new HashSet<string>(AppCapabilities.All, StringComparer.Ordinal),

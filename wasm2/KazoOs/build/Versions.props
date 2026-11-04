@@ -19,10 +19,10 @@
     KazoFileView.OpenOnTap, ParentExitGracePeriod...) folded into PublicAPI.Shipped.txt. Since ADR
     0173, changing this number and merging into main is the whole release: the Release Kazo OS
     workflow tags the commit, creates the GitHub Release and pushes the packages to nuget.org.
-    2.2.0 (series todo/base, Hack Store ADR 0206 to 0208, 0212, 0213): hackeros-solution template
+    2.2.0 (series todo/base, Kazo OS Store ADR 0206 to 0208, 0212, 0213): kazoos-solution template
     and its external-source build (Kazo.Os.ExternalSource.targets), installed-app wwwroot served by
     the service worker, trusted sources, per-user installs and build-time source/block-list defaults,
-    the Hack Store app and catalog installs, theme packs, plus wallpaper images, icon packs, cursor
+    the Kazo OS Store app and catalog installs, theme packs, plus wallpaper images, icon packs, cursor
     themes, system sounds, notification toasts, window animations and taskbar previews, all folded
     into PublicAPI.Shipped.txt (ADR 0207 §11: the template's Release profile needs this version).
     2.2.1 (Benoit's choice of a patch number, 2026-11-01, although the public API grows): every
@@ -30,9 +30,9 @@
     satellite assemblies of installed apps (ADR 0222), the authors' signing tool (ADR 0219), mouse
     Back/Forward buttons (ADR 0220), restart onto the new version (ADR 0223), do not disturb,
     wallpaper menus and the mobile home wallpaper (ADR 0216 to 0218), all folded into
-    PublicAPI.Shipped.txt. Apps waiting for the Hack Store build their packages with it.
+    PublicAPI.Shipped.txt. Apps waiting for the Kazo OS Store build their packages with it.
     2.2.2 (2026-11-01): the official catalog's public key compiled into the OS
-    (AppPackageDefaults.OfficialCatalogSigningKey): every Hack Store package must carry the
+    (AppPackageDefaults.OfficialCatalogSigningKey): every Kazo OS Store package must carry the
     catalog's signature. No SDK change: only that Platform.Core constant moves in the API files.
     3.0.0 (series rename/base, ADR 0228, ADR 0229): HackerOS becomes Kazo OS. Every package moves
     from HackerOs.* to Kazo.Os.* and every SDK type from Hack* to Kazo* (HackFile -> KazoFile...);

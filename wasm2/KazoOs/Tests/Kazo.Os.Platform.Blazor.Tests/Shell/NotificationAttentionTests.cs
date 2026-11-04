@@ -91,7 +91,7 @@ public sealed class NotificationAttentionTests
     private NotificationId Post(LocalUserId user)
     {
         NotificationId id = NotificationId.FromGuid(Guid.NewGuid());
-        _queue.Enqueue(new Notification(id, user, "org.hackeros.test", NotificationSeverity.Information, "Title", "Message", [], _clock.UtcNow, expiresAtUtc: null));
+        _queue.Enqueue(new Notification(id, user, "org.kazoos.test", NotificationSeverity.Information, "Title", "Message", [], _clock.UtcNow, expiresAtUtc: null));
         return id;
     }
 }

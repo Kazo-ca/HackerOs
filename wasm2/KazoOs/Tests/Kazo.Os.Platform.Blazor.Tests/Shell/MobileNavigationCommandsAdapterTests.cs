@@ -185,7 +185,7 @@ public sealed class MobileNavigationCommandsAdapterTests
     private static WindowRuntimeState CreateState(int seed) =>
         new(
             WindowId.FromGuid(Guid.Parse($"50000000-0000-0000-0000-{seed:D12}")),
-            $"org.hackeros.test{seed}",
+            $"org.kazoos.test{seed}",
             WindowOwnerId.FromGuid(Guid.Parse($"60000000-0000-0000-0000-{seed:D12}")),
             $"Test {seed}",
             null,
@@ -201,7 +201,7 @@ public sealed class MobileNavigationCommandsAdapterTests
     private static WindowRuntimeState CreateModalState(int seed, WindowId ownerId, Func<Task> onRequestClose) =>
         new(
             WindowId.FromGuid(Guid.Parse($"50000000-0000-0000-0000-{seed:D12}")),
-            $"org.hackeros.test{seed}",
+            $"org.kazoos.test{seed}",
             WindowOwnerId.FromGuid(Guid.Parse($"60000000-0000-0000-0000-{seed:D12}")),
             $"Test {seed}",
             null,

@@ -16,19 +16,19 @@
     <value>Gestionnaire de serveur web</value>
   </data>
   <data name="Daemon.NotInstalled" xml:space="preserve">
-    <value>hackwebd non installé</value>
+    <value>kazowebd non installé</value>
   </data>
   <data name="Daemon.Running" xml:space="preserve">
-    <value>hackwebd en cours d'exécution · pid {0}</value>
+    <value>kazowebd en cours d'exécution · pid {0}</value>
   </data>
   <data name="Daemon.StartType" xml:space="preserve">
     <value>type de démarrage : {0}</value>
   </data>
   <data name="Daemon.Stopped" xml:space="preserve">
-    <value>hackwebd arrêté</value>
+    <value>kazowebd arrêté</value>
   </data>
   <data name="Dialog.Delete.Message" xml:space="preserve">
-    <value>Supprimer {0} ? hackwebd cesse immédiatement de servir « {1} ». Les fichiers du site sont conservés.</value>
+    <value>Supprimer {0} ? kazowebd cesse immédiatement de servir « {1} ». Les fichiers du site sont conservés.</value>
   </data>
   <data name="Dialog.Delete.Title" xml:space="preserve">
     <value>Supprimer le site</value>
@@ -37,7 +37,7 @@
     <value>Dossier racine du site</value>
   </data>
   <data name="External.After" xml:space="preserve">
-    <value>) servie par son propre processus, pas par hackwebd. Le système la démarre à la première requête vers l'une de ses adresses. Ses fichiers appartiennent à l'app : ils sont en lecture seule ici.</value>
+    <value>) servie par son propre processus, pas par kazowebd. Le système la démarre à la première requête vers l'une de ses adresses. Ses fichiers appartiennent à l'app : ils sont en lecture seule ici.</value>
   </data>
   <data name="External.Before" xml:space="preserve">
     <value>Une app web (</value>
@@ -73,7 +73,7 @@
     <value>Exploration de répertoire (« Index of » en l'absence de document par défaut)</value>
   </data>
   <data name="Form.Enabled" xml:space="preserve">
-    <value>Activé (hackwebd sert le site)</value>
+    <value>Activé (kazowebd sert le site)</value>
   </data>
   <data name="Form.File" xml:space="preserve">
     <value>fichier :</value>
@@ -139,16 +139,16 @@
     <value>Impossible d'ouvrir le navigateur : {0}</value>
   </data>
   <data name="Message.Daemon.Failed" xml:space="preserve">
-    <value>hackwebd : {0}</value>
+    <value>kazowebd : {0}</value>
   </data>
   <data name="Message.Daemon.Restarted" xml:space="preserve">
-    <value>hackwebd redémarré.</value>
+    <value>kazowebd redémarré.</value>
   </data>
   <data name="Message.Daemon.Started" xml:space="preserve">
-    <value>hackwebd démarré.</value>
+    <value>kazowebd démarré.</value>
   </data>
   <data name="Message.Daemon.Stopped" xml:space="preserve">
-    <value>hackwebd arrêté.</value>
+    <value>kazowebd arrêté.</value>
   </data>
   <data name="Message.DeleteFailed" xml:space="preserve">
     <value>Impossible de supprimer : {0}</value>
@@ -172,10 +172,10 @@
     <value>Impossible d'enregistrer : {0}</value>
   </data>
   <data name="Message.SaveNeedsAdmin" xml:space="preserve">
-    <value>Écrire dans /etc/hackweb/sites demande un administrateur. Une fois l'action approuvée, cliquez de nouveau sur Enregistrer.</value>
+    <value>Écrire dans /etc/kazoweb/sites demande un administrateur. Une fois l'action approuvée, cliquez de nouveau sur Enregistrer.</value>
   </data>
   <data name="Message.Saved" xml:space="preserve">
-    <value>{0} enregistré. hackwebd l'applique dès maintenant.</value>
+    <value>{0} enregistré. kazowebd l'applique dès maintenant.</value>
   </data>
   <data name="Placeholder.Pick" xml:space="preserve">
     <value>Choisissez un site, ou publiez un dossier avec</value>
@@ -259,7 +259,7 @@
     <value>Redémarrer</value>
   </data>
   <data name="Toolbar.StartDaemon" xml:space="preserve">
-    <value>Démarrer hackwebd</value>
+    <value>Démarrer kazowebd</value>
   </data>
   <data name="Toolbar.Stop" xml:space="preserve">
     <value>Arrêter</value>

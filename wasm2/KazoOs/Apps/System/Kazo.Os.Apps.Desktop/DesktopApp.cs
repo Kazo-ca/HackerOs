@@ -17,7 +17,7 @@ namespace Kazo.Os.Apps.Desktop;
 public sealed class DesktopApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.desktop";
+    public override string Id => "org.kazoos.desktop";
 
     /// <inheritdoc />
     public override string Name => "Desktop";
@@ -29,7 +29,7 @@ public sealed class DesktopApp : AppDefinition
     public override Type EntryPoint => typeof(DesktopSurface);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "The desktop: the icons of ~/Desktop, Home and Trash";

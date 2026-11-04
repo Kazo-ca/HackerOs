@@ -10,7 +10,7 @@ public sealed class AppCatalogDocumentTests
     private static readonly Uri Address = new("https://example.org/catalog/packages/catalog.json");
 
     private static string Version(string version, string sha = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", string package = "") =>
-        $$$"""{"version":"{{{version}}}","package":"{{{(package.Length > 0 ? package : $"packages/org.example.notes/{version}/org.example.notes-{version}.hackapp")}}}","sha256":"{{{sha}}}","size":10,"capabilities":["storage.app"],"publishedAt":"2026-10-30T12:00:00Z","icon":"packages/org.example.notes/{{{version}}}/icon.svg","screenshots":["../../etc/passwd","packages/org.example.notes/{{{version}}}/1.png"]}""";
+        $$$"""{"version":"{{{version}}}","package":"{{{(package.Length > 0 ? package : $"packages/org.example.notes/{version}/org.example.notes-{version}.kazoapp")}}}","sha256":"{{{sha}}}","size":10,"capabilities":["storage.app"],"publishedAt":"2026-10-30T12:00:00Z","icon":"packages/org.example.notes/{{{version}}}/icon.svg","screenshots":["../../etc/passwd","packages/org.example.notes/{{{version}}}/1.png"]}""";
 
     private static AppCatalogListing Parse(string apps, int schema = 1) =>
         AppCatalogDocument.Parse("official", Address, Encoding.UTF8.GetBytes(
@@ -57,7 +57,7 @@ public sealed class AppCatalogDocumentTests
 
     [Theory]
     [InlineData("short")]
-    [InlineData("../escape.hackapp")]
+    [InlineData("../escape.kazoapp")]
     public void A_version_with_a_bad_hash_or_path_is_skipped(string bad)
     {
         string version = bad == "short" ? Version("1.0.0", sha: "abc") : Version("1.0.0", package: bad);

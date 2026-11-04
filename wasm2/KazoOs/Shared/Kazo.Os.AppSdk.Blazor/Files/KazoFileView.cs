@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components;
 namespace Kazo.Os.AppSdk.Blazor.Files;
 
 /// <summary>
-/// The OS file control (contract <c>hackeros.file-view</c>, ADR 0148): a folder as a table, icons or
+/// The OS file control (contract <c>kazoos.file-view</c>, ADR 0148): a folder as a table, icons or
 /// a tree, with selection, rename in place, drag and drop, the clipboard, the trash, the transfers
 /// with their name conflicts, and the file menus of the OS. The File Explorer provides it at run time
 /// and shows it itself, so a fix of the control reaches every app without a rebuild; the app only
@@ -16,7 +16,7 @@ namespace Kazo.Os.AppSdk.Blazor.Files;
 /// <remarks>
 /// The control runs with the <b>host</b> app's rights (ADR 0148 §4): it lists, copies and deletes what
 /// the host may, and its menu commands run in the host's context. Its controller,
-/// <see cref="IHackFileView"/>, comes through <c>ControllerChanged</c>.
+/// <see cref="IKazoFileView"/>, comes through <c>ControllerChanged</c>.
 /// </remarks>
 /// <example>
 /// <code>
@@ -24,7 +24,7 @@ namespace Kazo.Os.AppSdk.Blazor.Files;
 ///               Opening="OnOpening" ControllerChanged="view =&gt; _view = view" /&gt;
 /// </code>
 /// </example>
-public sealed class KazoFileView : KazoContractComponent<IHackFileView>
+public sealed class KazoFileView : KazoContractComponent<IKazoFileView>
 {
     /// <summary>Gets or sets the absolute path of the folder shown first.</summary>
     [Parameter, EditorRequired]
@@ -56,7 +56,7 @@ public sealed class KazoFileView : KazoContractComponent<IHackFileView>
     public bool OpenOnTap { get; set; }
 
     /// <summary>
-    /// Gets or sets which items are shown (a search box); call <see cref="IHackFileView.RefreshFilter"/>
+    /// Gets or sets which items are shown (a search box); call <see cref="IKazoFileView.RefreshFilter"/>
     /// when what it returns changes.
     /// </summary>
     [Parameter]

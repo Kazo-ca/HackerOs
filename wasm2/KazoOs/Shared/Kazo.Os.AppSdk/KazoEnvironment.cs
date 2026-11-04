@@ -25,7 +25,7 @@ public static class KazoEnvironment
 {
     /// <summary>
     /// Gets the canonical absolute working directory of the current process, against which
-    /// <see cref="KazoPath"/> and every <c>Hack*</c> file API resolve relative paths.
+    /// <see cref="KazoPath"/> and every <c>Kazo*</c> file API resolve relative paths.
     /// </summary>
     /// <remarks>
     /// Read-only because changing it must check the filesystem, which is asynchronous here: use

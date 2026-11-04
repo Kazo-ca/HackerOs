@@ -4,7 +4,7 @@ namespace Kazo.Os.Apps.FileExplorer.FileControl;
 
 /// <summary>
 /// Binds a <see cref="FileView"/> to its provider, the File Explorer: the OS context menu (ADR 0150) instead of its own
-/// <c>MudMenu</c> (ADR 0155 §1), the decoration of shortcuts and the desktop mode (ADR 0160). The File Explorer, provider of <c>hackeros.file-view</c>, cascades
+/// <c>MudMenu</c> (ADR 0155 §1), the decoration of shortcuts and the desktop mode (ADR 0160). The File Explorer, provider of <c>kazoos.file-view</c>, cascades
 /// one around the view: every row, tile, tree node and the background then carry the attributes of
 /// <c>Menus.Attach</c>, and the OS script opens the explorer's menu on them.
 /// </summary>

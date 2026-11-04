@@ -5,7 +5,7 @@
   <PropertyGroup>
     <PackageId>Kazo.Os.Apps.Desktop</PackageId>
     <Description>The Kazo OS desktop: the icons of ~/Desktop, Home and Trash, drawn by the shell under the windows, to include in an OS host (ProjectReference or PackageReference, optionally IsSystemApp).</Description>
-    <PackageTags>hackeros;app</PackageTags>
+    <PackageTags>kazoos;app</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup>

@@ -20,7 +20,7 @@ débogage (« les deux selon le profil ») ; Visual Studio par les modèles
 - `Kazo.Os.Templates` contient cinq modèles de **projet** (`hackeros-window`,
   `-command`, `-service`, `-site`, `-host`). Ils partent sur nuget.org à chaque
   release, avec les 41 autres paquets, leurs symboles (`.snupkg`) et Source Link.
-- Un dépôt tiers suit [`building-on-hackeros.md`](../../framework/building-on-hackeros.md) :
+- Un dépôt tiers suit [`building-on-kazoos.md`](../../framework/building-on-kazoos.md) :
   il assemble lui-même sa solution. Ce guide dit encore que les paquets ne sont
   jamais publiés sur nuget.org, ce qui est faux depuis la 2.1.0.
 - `build/Kazo.Os.Apps.targets` a deux modes : le dépôt (références de projets,
@@ -98,7 +98,7 @@ débogage (« les deux selon le profil ») ; Visual Studio par les modèles
 Mises en œuvre par l'[ADR 0207](0207-solution-template-implementation.md) (chantier `todo/1-hackstore-solution-template`).
 
 
-- [x] Corriger `building-on-hackeros.md` (fr et en) : paquets et modèles sur nuget.org.
+- [x] Corriger `building-on-kazoos.md` (fr et en) : paquets et modèles sur nuget.org.
 - [x] `ide.host.json` pour les cinq modèles existants.
 - [x] Mode source externe dans `Kazo.Os.Apps.targets` (`HackerOsUseSource`, `HackerOsSourceRoot`).
 - [x] Modèle `hackeros-solution` (sous-module, import de `Versions.props`, profils, CI).

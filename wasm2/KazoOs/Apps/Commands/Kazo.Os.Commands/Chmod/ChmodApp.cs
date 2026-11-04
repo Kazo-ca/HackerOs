@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Chmod;
 public sealed class ChmodApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.chmod";
+    public override string Id => "org.kazoos.commands.chmod";
 
     /// <inheritdoc />
     public override string Name => "chmod";
@@ -22,7 +22,7 @@ public sealed class ChmodApp : AppDefinition
     public override Type EntryPoint => typeof(ChmodCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Change file permissions mode bits";

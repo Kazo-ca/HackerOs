@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Sleep;
 public sealed class SleepApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.sleep";
+    public override string Id => "org.kazoos.commands.sleep";
 
     /// <inheritdoc />
     public override string Name => "sleep";
@@ -22,7 +22,7 @@ public sealed class SleepApp : AppDefinition
     public override Type EntryPoint => typeof(SleepCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Delay for a specified amount of time";

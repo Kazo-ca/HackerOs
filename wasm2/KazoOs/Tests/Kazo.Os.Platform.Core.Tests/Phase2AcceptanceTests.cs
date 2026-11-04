@@ -34,10 +34,10 @@ public sealed class Phase2AcceptanceTests
     private static readonly AppManifest TerminalManifest = new()
     {
         SchemaVersion = 1,
-        Id = "org.hackeros.terminal",
+        Id = "org.kazoos.terminal",
         Name = "Terminal",
         Version = "1.0.0",
-        PublisherId = "pub.hackeros",
+        PublisherId = "pub.kazoos",
         Description = "Command line interface for Kazo OS",
         Kind = AppKind.Terminal,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", typeof(DummyTerminalApp).FullName!),
@@ -51,10 +51,10 @@ public sealed class Phase2AcceptanceTests
     private static readonly AppManifest SampleServiceManifest = new()
     {
         SchemaVersion = 1,
-        Id = "org.hackeros.samples.service-app",
+        Id = "org.kazoos.samples.service-app",
         Name = "Sample Ticker Service",
         Version = "1.0.0",
-        PublisherId = "pub.hackeros",
+        PublisherId = "pub.kazoos",
         Description = "Sample background session ticker service",
         Kind = AppKind.Service,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", typeof(DummyServiceApp).FullName!),
@@ -75,17 +75,17 @@ public sealed class Phase2AcceptanceTests
         await harness.Seeder.SeedAsync(userId, "users");
 
         // Grant shell capabilities to inspect root and user home
-        harness.Grants.Grant("org.hackeros.shell", userId, AppCapabilities.FileSystemSystemRead, CapabilityGrantSource.BuildProfile, AppAuthority.Administrator);
-        harness.Grants.Grant("org.hackeros.shell", userId, AppCapabilities.FileSystemUserHomeRead, CapabilityGrantSource.BuildProfile, AppAuthority.Administrator);
+        harness.Grants.Grant("org.kazoos.shell", userId, AppCapabilities.FileSystemSystemRead, CapabilityGrantSource.BuildProfile, AppAuthority.Administrator);
+        harness.Grants.Grant("org.kazoos.shell", userId, AppCapabilities.FileSystemUserHomeRead, CapabilityGrantSource.BuildProfile, AppAuthority.Administrator);
 
         VirtualPath rootPath = VirtualPath.Parse("/");
         FileSystemResult<FileSystemEntrySnapshot> rootStat = await harness.FileSystemService.StatAsync(
-            new FileSystemStatRequest(rootPath), harness.CreateAuthContext(principal, "org.hackeros.shell"));
+            new FileSystemStatRequest(rootPath), harness.CreateAuthContext(principal, "org.kazoos.shell"));
         Assert.True(rootStat.Succeeded, $"rootStat failed: {rootStat.Error?.Code}");
 
         VirtualPath homePath = VirtualPath.Parse($"/home/{userId}");
         FileSystemResult<FileSystemEntrySnapshot> homeStat = await harness.FileSystemService.StatAsync(
-            new FileSystemStatRequest(homePath), harness.CreateAuthContext(principal, "org.hackeros.shell"));
+            new FileSystemStatRequest(homePath), harness.CreateAuthContext(principal, "org.kazoos.shell"));
         Assert.True(homeStat.Succeeded);
     }
 
@@ -99,10 +99,10 @@ public sealed class Phase2AcceptanceTests
         string userId = principal.UserId.ToString();
 
         // Grant apps.launch capability
-        harness.Grants.Grant("org.hackeros.shell", userId, AppCapabilities.AppsLaunch, CapabilityGrantSource.BuildProfile, AppAuthority.Administrator);
+        harness.Grants.Grant("org.kazoos.shell", userId, AppCapabilities.AppsLaunch, CapabilityGrantSource.BuildProfile, AppAuthority.Administrator);
 
         // First launch of Terminal via typed intent
-        AppIntentRequest launch1 = new(Guid.NewGuid(), "org.hackeros.shell", userId, new LaunchAppIntent("org.hackeros.terminal", []));
+        AppIntentRequest launch1 = new(Guid.NewGuid(), "org.kazoos.shell", userId, new LaunchAppIntent("org.kazoos.terminal", []));
         AppIntentDispatchResult result1 = await harness.Dispatcher.DispatchAsync(launch1, principal);
         Assert.Equal(AppIntentDispatchStatus.Dispatched, result1.Status);
     }
@@ -115,7 +115,7 @@ public sealed class Phase2AcceptanceTests
         TestHarness harness = new(TerminalManifest, SampleServiceManifest);
         AuthenticatedPrincipal principal = await harness.Session.LoginAsync(harness.AliceLoginName, "hunter2");
 
-        AppLaunchResult launch = await harness.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.samples.service-app", principal, []));
+        AppLaunchResult launch = await harness.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.samples.service-app", principal, []));
         Assert.Equal(AppLaunchStatus.Launched, launch.Status);
         ProcessRecord proc = launch.Process!;
         Assert.True(harness.ProcessManager.TryGetActive(proc.Pid, out _));
@@ -136,7 +136,7 @@ public sealed class Phase2AcceptanceTests
         await harness.Seeder.SeedAsync(userId, "users");
 
         // App launched without capability grants
-        AppLaunchResult launch = await harness.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.terminal", principal, []));
+        AppLaunchResult launch = await harness.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.terminal", principal, []));
         IAppExecutionContext ctx = launch.Context!;
 
         VirtualPath userHomeFile = VirtualPath.Parse($"/home/{userId}/unauthorized.txt");
@@ -154,7 +154,7 @@ public sealed class Phase2AcceptanceTests
         TestHarness harness = new(TerminalManifest);
         AuthenticatedPrincipal userPrincipal = await harness.Session.LoginAsync(harness.AliceLoginName, "hunter2");
 
-        // Settings are files (ADR 0044): the installation writes /etc/hackeros as root.
+        // Settings are files (ADR 0044): the installation writes /etc/kazoos as root.
         await harness.SettingsService.WriteFileAsync(
             FileAssociationSettingsDocuments.File, FileAssociationSettingsDocuments.DefaultContent);
 
@@ -165,7 +165,7 @@ public sealed class Phase2AcceptanceTests
 
         // ...but an ordinary user's write is denied by the file's mode bits, even when the app
         // holds the system-write capability: permissions, not capabilities alone, decide.
-        AppOperationContext userContext = harness.CreateSettingsContext(userPrincipal, "org.hackeros.shell");
+        AppOperationContext userContext = harness.CreateSettingsContext(userPrincipal, "org.kazoos.shell");
         AppFileSystemGateway userGateway = new(
             harness.FileSystemService,
             harness.Clock,
@@ -195,15 +195,15 @@ public sealed class Phase2AcceptanceTests
         AuthenticatedPrincipal principal = await harness.Session.LoginAsync(harness.AliceLoginName, "hunter2");
 
         // AutoStart sample service
-        AppLaunchResult serviceLaunch = await harness.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.samples.service-app", principal, []));
+        AppLaunchResult serviceLaunch = await harness.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.samples.service-app", principal, []));
         Assert.Equal(AppLaunchStatus.Launched, serviceLaunch.Status);
 
         // Disable optional app
-        AppDisableResult disableResult = await harness.Orchestrator.DisableAsync("org.hackeros.terminal");
+        AppDisableResult disableResult = await harness.Orchestrator.DisableAsync("org.kazoos.terminal");
         Assert.True(disableResult.Success);
 
         // Attempt to launch disabled app -> denied
-        AppLaunchResult disabledLaunch = await harness.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.terminal", principal, []));
+        AppLaunchResult disabledLaunch = await harness.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.terminal", principal, []));
         Assert.Equal(AppLaunchStatus.Disabled, disabledLaunch.Status);
 
         // Shutdown cancels active service

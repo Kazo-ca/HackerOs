@@ -5,8 +5,8 @@ using Kazo.Os.Theming.Abstractions.IconPacks;
 namespace Kazo.Os.Platform.Core.Appearance;
 
 /// <summary>
-/// Defines the layered icon document (ADR 0203 §3): <c>/etc/hackeros/icons.config</c> holds the
-/// machine's pack, and each user overrides it in <c>~/.config/hackeros/icons.config</c>. It is a
+/// Defines the layered icon document (ADR 0203 §3): <c>/etc/kazoos/icons.config</c> holds the
+/// machine's pack, and each user overrides it in <c>~/.config/kazoos/icons.config</c>. It is a
 /// document of its own, apart from <c>appearance.config</c>, as the icon theme is apart from the GTK
 /// theme on a Linux desktop.
 /// </summary>

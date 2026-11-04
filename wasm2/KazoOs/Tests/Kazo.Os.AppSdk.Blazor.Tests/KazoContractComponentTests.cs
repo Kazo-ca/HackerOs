@@ -18,7 +18,7 @@ namespace Kazo.Os.AppSdk.Blazor.Tests;
 /// </summary>
 public sealed partial class KazoContractComponentTests
 {
-    private const string Contract = "hackeros.tests-view";
+    private const string Contract = "kazoos.tests-view";
 
     [Fact]
     public async Task The_provider_receives_the_host_parameters_and_hands_back_its_controller()
@@ -71,10 +71,10 @@ public sealed partial class KazoContractComponentTests
 
     private static AppManifest WindowManifest() => new()
     {
-        Id = "org.hackeros.test-contract-host",
+        Id = "org.kazoos.test-contract-host",
         Name = "Contract Host",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "Typed contract host test.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.AppSdk.Blazor.Tests", "HostWindow"),
@@ -170,16 +170,16 @@ public sealed partial class KazoContractComponentTests
     }
 
     /// <summary>Resolves the contract to <paramref name="provider"/>, or to nothing.</summary>
-    private sealed class StubComponentHost(Type? provider) : IHackComponentHost
+    private sealed class StubComponentHost(Type? provider) : IKazoComponentHost
     {
         public Task<KazoComponentResolution> ResolveAsync(string contract, CancellationToken cancellationToken = default) =>
             Task.FromResult(provider is null
                 ? KazoComponentResolution.Unavailable(contract, $"No installed app provides '{contract}'.")
-                : KazoComponentResolution.Resolved(contract, provider, "org.hackeros.provider"));
+                : KazoComponentResolution.Resolved(contract, provider, "org.kazoos.provider"));
     }
 
     /// <summary>Attaches components to a real render handle, discarding render batches (no bUnit in this solution).</summary>
-    private sealed class ContractRenderer(IHackComponentHost host) : Renderer(new Services(host), NullLoggerFactory.Instance)
+    private sealed class ContractRenderer(IKazoComponentHost host) : Renderer(new Services(host), NullLoggerFactory.Instance)
     {
         public override Dispatcher Dispatcher { get; } = Dispatcher.CreateDefault();
 
@@ -207,10 +207,10 @@ public sealed partial class KazoContractComponentTests
         protected override Task UpdateDisplayAsync(in RenderBatch renderBatch) => Task.CompletedTask;
     }
 
-    private sealed class Services(IHackComponentHost host) : IServiceProvider
+    private sealed class Services(IKazoComponentHost host) : IServiceProvider
     {
         public object? GetService(Type serviceType) =>
-            serviceType == typeof(IHackComponentHost) ? host
+            serviceType == typeof(IKazoComponentHost) ? host
             : serviceType == typeof(IServiceProvider) ? this
             : null;
     }

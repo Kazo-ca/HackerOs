@@ -20,7 +20,7 @@ l'explorateur (couper, copier, coller, conflits de noms) est décrit dans
 App ──► KazoClipboard ──► IAppClipboardGateway ──► AppClipboardGateway ──► SystemClipboard (une entrée par session)
                                                        clipboard.read / .write          │ Changed, séquence, origine
                                                                                           ▼
-              /etc/hackeros/clipboard.config ──► HostClipboardBridge (Platform Core)
+              /etc/kazoos/clipboard.config ──► HostClipboardBridge (Platform Core)
                                                        │ IHostClipboardChannel / IHostClipboardSink
                                                        ▼
                                    BrowserHostClipboardChannel ──► hostClipboard.js ──► navigator.clipboard.writeText
@@ -57,7 +57,7 @@ SystemClipboardEntry? entry = clipboard.GetEntry(session);
 
 ### Réglage
 
-`/etc/hackeros/clipboard.config` (installé commenté au premier démarrage) :
+`/etc/kazoos/clipboard.config` (installé commenté au premier démarrage) :
 
 ```ini
 sharing=bidirectional
@@ -70,7 +70,7 @@ sharing=bidirectional
 | `host-to-guest` | non | oui |
 | `disabled` | non | non |
 
-Un utilisateur surcharge dans `~/.config/hackeros/clipboard.config`, sauf si
+Un utilisateur surcharge dans `~/.config/kazoos/clipboard.config`, sauf si
 l'administrateur verrouille :
 
 ```ini
@@ -86,7 +86,7 @@ sharing=true
 | Une app copie du texte ou des fichiers | L'entrée devient courante ; son `text/plain` (les chemins pour des fichiers) part vers l'hôte si `sharing` le permet. Les autres formats ne sortent jamais. |
 | Collage avec un texte nouveau pour l'OS | Le texte devient l'entrée courante (origine `Host`), sans écho vers l'hôte. |
 | Collage du texte que l'OS a lui-même écrit | Rien ne change ; le collage natif suit son cours. |
-| Collage de fichiers de l'hôte dans l'explorateur | Noms notés sous `application/x-hackeros-host-files` ; la `FileView` les importe dans le dossier courant (noms de copie si pris, 256 Mio par fichier). Un nouveau Ctrl+V les réimporte tant que le presse-papiers n'a pas changé côté OS. |
+| Collage de fichiers de l'hôte dans l'explorateur | Noms notés sous `application/x-kazoos-host-files` ; la `FileView` les importe dans le dossier courant (noms de copie si pris, 256 Mio par fichier). Un nouveau Ctrl+V les réimporte tant que le presse-papiers n'a pas changé côté OS. |
 | Hôte → invité refusé, ou texte de l'hôte périmé, collage dans un champ | Le champ reçoit le texte de l'OS (ou rien), jamais celui de l'hôte ; le terminal aussi. |
 | Copie native (champ de texte, terminal) | Devient l'entrée courante (origine `GuestNative`). Si invité → hôte est refusé, l'hôte n'est pas modifié. |
 | Navigateur qui refuse `writeText` | Journal `clipboard: host clipboard call failed` (Debug) ; l'OS garde son entrée. |

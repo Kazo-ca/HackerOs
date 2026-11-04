@@ -88,7 +88,7 @@ manifest format. The rest of ADR 0114 does not change.
 - [`sdk-packages.md`](../../framework/sdk-packages.md) gains a "SDK 2.0" section with
   the list of breaking changes and this migration table;
   [`sdk-reference.md`](../../framework/sdk-reference.md) and
-  [`building-on-hackeros.md`](../../framework/building-on-hackeros.md) follow.
+  [`building-on-kazoos.md`](../../framework/building-on-kazoos.md) follow.
 
 ## Consequences
 

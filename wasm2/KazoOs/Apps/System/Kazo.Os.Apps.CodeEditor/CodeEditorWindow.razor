@@ -315,7 +315,7 @@
                     {
                         <div class="terminal-instance @(tab.Id == _activeTerminalTabId ? "is-active" : null)" @key="tab.Id">
                             @* The Terminal app's own terminal, embedded by contract (ADR 0063). *@
-                            <KazoEmbeddedComponent TController="IHackTerminal"
+                            <KazoEmbeddedComponent TController="IKazoTerminal"
                                                    Contract="@KazoComponentContracts.Terminal"
                                                    Options="tab.Options"
                                                    ControllerChanged="terminal => OnTerminalReady(tab, terminal)" />

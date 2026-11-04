@@ -5,7 +5,7 @@ using Kazo.Os.AppSdk.IO;
 namespace Kazo.Os.Apps.FileExplorer;
 
 /// <summary>
-/// The File Explorer's own settings, a real file of the user (<c>~/.config/hackeros/file-explorer.json</c>,
+/// The File Explorer's own settings, a real file of the user (<c>~/.config/kazoos/file-explorer.json</c>,
 /// like every setting of the OS): for now the width of the Places panel (ADR 0185 §1). Keys the explorer
 /// doesn't know are kept when it writes.
 /// </summary>
@@ -25,7 +25,7 @@ internal static class FileExplorerSettings
     private static readonly JsonSerializerOptions Indented = new() { WriteIndented = true };
 
     /// <summary>Gets the settings file of the user whose home is <paramref name="homeDirectory"/>.</summary>
-    internal static string GetPath(string homeDirectory) => homeDirectory.TrimEnd('/') + "/.config/hackeros/file-explorer.json";
+    internal static string GetPath(string homeDirectory) => homeDirectory.TrimEnd('/') + "/.config/kazoos/file-explorer.json";
 
     /// <summary>Keeps a width between <see cref="MinSidebarWidth"/> and <see cref="MaxSidebarWidth"/>.</summary>
     internal static int ClampSidebarWidth(int width) => Math.Clamp(width, MinSidebarWidth, MaxSidebarWidth);
@@ -78,7 +78,7 @@ internal static class FileExplorerSettings
             : DefaultSidebarWidth;
     }
 
-    /// <summary>Saves the panel's width, creating <c>~/.config/hackeros</c> when needed.</summary>
+    /// <summary>Saves the panel's width, creating <c>~/.config/kazoos</c> when needed.</summary>
     internal static async Task SaveSidebarWidthAsync(string homeDirectory, int width, CancellationToken cancellationToken)
     {
         string path = GetPath(homeDirectory);

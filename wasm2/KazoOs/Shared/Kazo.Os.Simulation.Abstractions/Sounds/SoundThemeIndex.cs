@@ -107,7 +107,7 @@ public sealed class SoundThemeIndex
     public string? GetComment(CultureInfo culture) => Localized(_comments, culture);
 
     /// <summary>Gets the folders searched for the sound files of the theme, under <paramref name="themeDirectory"/>.</summary>
-    /// <param name="themeDirectory">The theme folder (<c>/usr/share/sounds/hackeros</c>).</param>
+    /// <param name="themeDirectory">The theme folder (<c>/usr/share/sounds/kazoos</c>).</param>
     public IEnumerable<string> GetSearchDirectories(string themeDirectory)
     {
         string root = themeDirectory.TrimEnd('/');

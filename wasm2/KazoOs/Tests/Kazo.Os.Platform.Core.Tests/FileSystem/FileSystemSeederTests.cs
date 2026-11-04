@@ -20,8 +20,8 @@ public sealed class FileSystemSeederTests
             "/", "/bin", "/etc", "/home", "/mnt", "/tmp", "/var", "/var/log", "/var/log/apps",
             "/home/alice", "/home/alice/Desktop", "/home/alice/Documents",
             "/home/alice/Downloads", "/home/alice/.config",
-            "/home/alice/.config/hackeros", "/etc/hackeros", "/var/lib/hackeros",
-            "/home/alice/.local/state/hackeros"
+            "/home/alice/.config/kazoos", "/etc/kazoos", "/var/lib/kazoos",
+            "/home/alice/.local/state/kazoos"
         ];
         foreach (string path in paths)
         {
@@ -72,9 +72,9 @@ public sealed class FileSystemSeederTests
         await fixture.Seeder.InstallIconPacksAsync();
         await fixture.Seeder.InstallSoundThemesAsync();
 
-        FileSystemEntrySnapshot list = (await StatAsync(fixture, "/var/lib/hackeros/installed/icon-packs.list")).Value!;
+        FileSystemEntrySnapshot list = (await StatAsync(fixture, "/var/lib/kazoos/installed/icon-packs.list")).Value!;
         Assert.True(((FileMetadata)list.Metadata).Length > 0);
-        Assert.True((await StatAsync(fixture, "/var/lib/hackeros/installed/sound-themes.list")).Succeeded);
+        Assert.True((await StatAsync(fixture, "/var/lib/kazoos/installed/sound-themes.list")).Succeeded);
 
         // Like dpkg, a recorded package is not checked file by file again: a deleted file stays deleted.
         await DeleteAsync(fixture, "/usr/share/icons/neon/icon-pack.json");
@@ -90,7 +90,7 @@ public sealed class FileSystemSeederTests
         await fixture.Seeder.SeedAsync("alice", "users");
         await fixture.Seeder.InstallIconPacksAsync();
         // The reload came between creating the file and writing it, before the list was written.
-        await DeleteAsync(fixture, "/var/lib/hackeros/installed/icon-packs.list");
+        await DeleteAsync(fixture, "/var/lib/kazoos/installed/icon-packs.list");
         await DeleteAsync(fixture, "/usr/share/icons/neon/icon-pack.json");
         await fixture.Repository.CreateAsync(
             new FileSystemCreateRequest(
@@ -101,7 +101,7 @@ public sealed class FileSystemSeederTests
 
         FileSystemEntrySnapshot pack = (await StatAsync(fixture, "/usr/share/icons/neon/icon-pack.json")).Value!;
         Assert.True(((FileMetadata)pack.Metadata).Length > 0);
-        Assert.True((await StatAsync(fixture, "/var/lib/hackeros/installed/icon-packs.list")).Succeeded);
+        Assert.True((await StatAsync(fixture, "/var/lib/kazoos/installed/icon-packs.list")).Succeeded);
     }
 
     private static async Task DeleteAsync(Fixture fixture, string path)
@@ -239,7 +239,7 @@ public sealed class FileSystemSeederTests
         {
             AppOperationContext operation = new()
             {
-                AppId = "org.hackeros.kernel",
+                AppId = "org.kazoos.kernel",
                 UserId = "system",
                 UserAuthority = AppAuthority.System,
                 GrantedCapabilities = new HashSet<string>(AppCapabilities.All, StringComparer.Ordinal),

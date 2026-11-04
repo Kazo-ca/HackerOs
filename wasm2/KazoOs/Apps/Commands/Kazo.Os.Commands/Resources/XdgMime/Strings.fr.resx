@@ -25,7 +25,7 @@
     <value>xdg-mime : {0}</value>
   </data>
   <data name="FileInvalid" xml:space="preserve">
-    <value>~/.config/hackeros/file-associations.json n'est pas valide ; corrigez-le ou supprimez-le d'abord</value>
+    <value>~/.config/kazoos/file-associations.json n'est pas valide ; corrigez-le ou supprimez-le d'abord</value>
   </data>
   <data name="FileMissing" xml:space="preserve">
     <value>le fichier « {0} » n'existe pas</value>
@@ -41,6 +41,6 @@
               xdg-mime default &lt;id-app&gt; &lt;type&gt;...</value>
   </data>
   <data name="WriteFailed" xml:space="preserve">
-    <value>~/.config/hackeros/file-associations.json n'a pas pu être écrit</value>
+    <value>~/.config/kazoos/file-associations.json n'a pas pu être écrit</value>
   </data>
 </root>

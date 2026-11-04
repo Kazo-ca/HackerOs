@@ -22,7 +22,7 @@ namespace Kazo.Os.Apps.FileExplorer;
 public sealed partial class ExplorerFileView
 {
     /// <summary>The name of the cascading <see langword="bool"/> by which an explorer window lets its control browse archives.</summary>
-    internal const string ArchiveBrowsingName = "hackeros.file-explorer.archive-browsing";
+    internal const string ArchiveBrowsingName = "kazoos.file-explorer.archive-browsing";
 
     /// <summary>The folder of <c>/tmp</c> a file opened from an archive is extracted into (§7).</summary>
     internal const string TemporaryFolder = "/tmp";

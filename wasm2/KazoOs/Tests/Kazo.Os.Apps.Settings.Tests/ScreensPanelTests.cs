@@ -272,7 +272,7 @@ public sealed class ScreensPanelTests
 
         public AppSystemSettingsDocumentInfo Describe(string documentId) =>
             documentId == ScreensSettingsDocuments.DocumentId
-                ? new(documentId, ScreensSettingsDocuments.Schema, "/etc/hackeros/screens.config", "/home/alice/.config/hackeros/screens.config", false)
+                ? new(documentId, ScreensSettingsDocuments.Schema, "/etc/kazoos/screens.config", "/home/alice/.config/kazoos/screens.config", false)
                 : throw new ArgumentException($"Unknown document '{documentId}'.", nameof(documentId));
 
         public ValueTask<LayeredConfigSnapshot> ReadAsync(string documentId, CancellationToken cancellationToken = default)

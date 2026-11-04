@@ -6,8 +6,8 @@ namespace Kazo.Os.AppSdk.Settings;
 /// <summary>
 /// One open, layered settings document: typed reads over the merged view of
 /// <c>/etc/&lt;appId&gt;/&lt;document&gt;.config</c> and <c>~/.config/&lt;appId&gt;/&lt;document&gt;.config</c>
-/// (an app's own document, ADR 0044 section 7) or of <c>/etc/hackeros/&lt;document&gt;.config</c> and
-/// <c>~/.config/hackeros/&lt;document&gt;.config</c> (an OS document, ADR 0056 section 8), typed writes
+/// (an app's own document, ADR 0044 section 7) or of <c>/etc/kazoos/&lt;document&gt;.config</c> and
+/// <c>~/.config/kazoos/&lt;document&gt;.config</c> (an OS document, ADR 0056 section 8), typed writes
 /// to either layer, and change notifications.
 /// </summary>
 /// <remarks>
@@ -43,12 +43,12 @@ public sealed class KazoSettingsDocument : IAsyncDisposable
         _snapshot = LayeredConfigResolver.Resolve(schema, null, null, store.SystemPath, store.UserPath);
     }
 
-    /// <summary>Gets the system layer path, <c>/etc/&lt;appId&gt;/&lt;document&gt;.config</c> (<c>/etc/hackeros/…</c> for an OS document).</summary>
+    /// <summary>Gets the system layer path, <c>/etc/&lt;appId&gt;/&lt;document&gt;.config</c> (<c>/etc/kazoos/…</c> for an OS document).</summary>
     public string SystemPath => _store.SystemPath;
 
     /// <summary>
     /// Gets the user layer path, <c>/home/&lt;user&gt;/.config/&lt;appId&gt;/&lt;document&gt;.config</c>
-    /// (<c>~/.config/hackeros/…</c> for an OS document; empty for a system-only OS document).
+    /// (<c>~/.config/kazoos/…</c> for an OS document; empty for a system-only OS document).
     /// </summary>
     public string UserPath => _store.UserPath;
 

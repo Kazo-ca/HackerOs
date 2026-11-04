@@ -11,7 +11,7 @@ namespace Kazo.Os.Commands.Stress;
 public sealed class StressApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.stress";
+    public override string Id => "org.kazoos.commands.stress";
 
     /// <inheritdoc />
     public override string Name => "stress";
@@ -23,7 +23,7 @@ public sealed class StressApp : AppDefinition
     public override Type EntryPoint => typeof(StressCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Impose a CPU or memory load on the system";

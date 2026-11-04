@@ -9,8 +9,8 @@ Ce document décrit les fichiers de journal qu'une app, une commande ou un site 
 | Fichier | Contenu | Mode |
 |---|---|---|
 | `/var/log/apps/<appId>.log` | `IAppExecutionContext.Logging` de l'app | `system:system 0644` |
-| `/var/log/<démon>/<fichier>.log` | `IAppLoggingGateway.AppendToLogFile` d'une **app système** seulement, ligne écrite telle quelle (ADR 0080 §3) ; par exemple `/var/log/hackweb/error.log` de `hackwebd` ([`static-sites.md`](../dev/static-sites.md)) | `system:system 0644` |
-| `/var/log/hackweb/<appId>.log` | Journal de débogage d'un **site** (app `Web`) qui l'active par `builder.Logging.EnableDebugLog()` : `ILogger<T>`, requêtes, exceptions, par `IAppLoggingGateway.AppendToSiteDebugLog` (ADR 0088 §5, [`asp-hack-site-data.md`](asp-hack-site-data.md)) | `system:system 0644` |
+| `/var/log/<démon>/<fichier>.log` | `IAppLoggingGateway.AppendToLogFile` d'une **app système** seulement, ligne écrite telle quelle (ADR 0080 §3) ; par exemple `/var/log/kazoweb/error.log` de `kazowebd` ([`static-sites.md`](../dev/static-sites.md)) | `system:system 0644` |
+| `/var/log/kazoweb/<appId>.log` | Journal de débogage d'un **site** (app `Web`) qui l'active par `builder.Logging.EnableDebugLog()` : `ILogger<T>`, requêtes, exceptions, par `IAppLoggingGateway.AppendToSiteDebugLog` (ADR 0088 §5, [`asp-kazo-site-data.md`](asp-kazo-site-data.md)) | `system:system 0644` |
 
 ## Écrire dans un journal
 
@@ -20,7 +20,7 @@ Dans une app, `IAppExecutionContext.Logging` (type `IAppLoggingGateway`) écrit 
 
 - `LogLineFormat` (`Shared/Kazo.Os.Simulation.Abstractions/Diagnostics/`) :
   `Format`, `FormatAudit` et `TryParse`. Une entrée tient sur une ligne :
-  `2026-10-10T03:11:42.123Z WARN  org.hackeros.text-editor[42]: message {clé=valeur}`.
+  `2026-10-10T03:11:42.123Z WARN  org.kazoos.text-editor[42]: message {clé=valeur}`.
   Le message échappe `\`, `\n`, `\r`, `\t` et aussi `{` (en `\{`), pour qu'un
   message ne soit jamais relu comme un bloc de propriétés. Dans ce bloc, les
   clés et valeurs échappent en plus `,`, `=` et `}`. Les espaces d'une source

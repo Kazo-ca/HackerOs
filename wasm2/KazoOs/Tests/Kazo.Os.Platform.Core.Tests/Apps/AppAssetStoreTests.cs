@@ -16,10 +16,10 @@ public sealed class AppAssetStoreTests
         CountingSource source = new() { Bytes = Icon };
         AppAssetStore store = new(Catalog(Hash(Icon)), source);
 
-        Assert.Equal(Icon, await store.ReadAsync("org.hackeros.tests.icons", "icons/app.svg"));
-        Assert.Equal(Icon, await store.ReadAsync("org.hackeros.tests.icons", "icons/app.svg"));
+        Assert.Equal(Icon, await store.ReadAsync("org.kazoos.tests.icons", "icons/app.svg"));
+        Assert.Equal(Icon, await store.ReadAsync("org.kazoos.tests.icons", "icons/app.svg"));
 
-        Assert.False(store.IsDamaged("org.hackeros.tests.icons"));
+        Assert.False(store.IsDamaged("org.kazoos.tests.icons"));
         Assert.Equal(2, source.Reads);
     }
 
@@ -30,10 +30,10 @@ public sealed class AppAssetStoreTests
         int changes = 0;
         store.Changed += (_, _) => changes++;
 
-        AppAssetIntegrityException first = await Assert.ThrowsAsync<AppAssetIntegrityException>(() => store.ReadAsync("org.hackeros.tests.icons", "icons/app.svg").AsTask());
-        await Assert.ThrowsAsync<AppAssetIntegrityException>(() => store.ReadAsync("org.hackeros.tests.icons", "icons/app.svg").AsTask());
+        AppAssetIntegrityException first = await Assert.ThrowsAsync<AppAssetIntegrityException>(() => store.ReadAsync("org.kazoos.tests.icons", "icons/app.svg").AsTask());
+        await Assert.ThrowsAsync<AppAssetIntegrityException>(() => store.ReadAsync("org.kazoos.tests.icons", "icons/app.svg").AsTask());
 
-        Assert.True(store.IsDamaged("org.hackeros.tests.icons"));
+        Assert.True(store.IsDamaged("org.kazoos.tests.icons"));
         Assert.Equal("icons/app.svg", first.Problem.AssetPath);
         Assert.Contains(Hash(Icon), first.Problem.Reason);
         Assert.Equal(1, changes);
@@ -44,9 +44,9 @@ public sealed class AppAssetStoreTests
     {
         AppAssetStore store = new(Catalog(Hash(Icon)), NoAppAssetSource.Instance);
 
-        await Assert.ThrowsAsync<ArgumentException>(() => store.ReadAsync("org.hackeros.tests.icons", "icons/other.svg").AsTask());
-        await Assert.ThrowsAsync<FileNotFoundException>(() => store.ReadAsync("org.hackeros.tests.icons", "icons/app.svg").AsTask());
-        Assert.False(store.IsDamaged("org.hackeros.tests.icons"));
+        await Assert.ThrowsAsync<ArgumentException>(() => store.ReadAsync("org.kazoos.tests.icons", "icons/other.svg").AsTask());
+        await Assert.ThrowsAsync<FileNotFoundException>(() => store.ReadAsync("org.kazoos.tests.icons", "icons/app.svg").AsTask());
+        Assert.False(store.IsDamaged("org.kazoos.tests.icons"));
     }
 
     private static string Hash(byte[] bytes) => Convert.ToHexStringLower(SHA256.HashData(bytes));
@@ -55,7 +55,7 @@ public sealed class AppAssetStoreTests
     [
         new AppManifest
         {
-            Id = "org.hackeros.tests.icons",
+            Id = "org.kazoos.tests.icons",
             Name = "Icons",
             Version = "1.0.0",
             PublisherId = "pub.local",

@@ -16,9 +16,9 @@ namespace Kazo.Os.Platform.Core.Appearance;
 
 /// <summary>
 /// The shell's live cursor theme (ADR 0205 §3, §4): the id of the layered <c>cursors.config</c>
-/// (the session user's <c>~/.config/hackeros/</c> over the machine's <c>/etc/hackeros/</c>), resolved
-/// against the built-in themes and the theme folders of <c>/etc/hackeros/cursors/</c> (read as the
-/// system) and <c>~/.config/hackeros/cursors/</c> (read as the user, so mode bits decide).
+/// (the session user's <c>~/.config/kazoos/</c> over the machine's <c>/etc/kazoos/</c>), resolved
+/// against the built-in themes and the theme folders of <c>/etc/kazoos/cursors/</c> (read as the
+/// system) and <c>~/.config/kazoos/cursors/</c> (read as the user, so mode bits decide).
 /// </summary>
 /// <remarks>
 /// The folders are re-read when <c>cursors.config</c> changes and when the session changes, not on

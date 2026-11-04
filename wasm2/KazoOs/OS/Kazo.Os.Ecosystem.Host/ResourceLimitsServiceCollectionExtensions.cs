@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Kazo.Os.Ecosystem;
 
 /// <summary>
-/// The host switch of the process limits of ADR 0125 (<c>HackerOs:ResourceLimits</c> in
+/// The host switch of the process limits of ADR 0125 (<c>KazoOs:ResourceLimits</c> in
 /// <c>appsettings.json</c>).
 /// </summary>
 /// <param name="Enabled">
@@ -27,9 +27,9 @@ public sealed record ResourceLimitsSettings(bool Enabled)
 public static class ResourceLimitsServiceCollectionExtensions
 {
     /// <summary>Configuration section read by <see cref="ReadSettings"/>.</summary>
-    public const string SectionName = "HackerOs:ResourceLimits";
+    public const string SectionName = "KazoOs:ResourceLimits";
 
-    /// <summary>Reads <c>HackerOs:ResourceLimits:Enabled</c>; absent or unreadable reads as <see langword="true"/>.</summary>
+    /// <summary>Reads <c>KazoOs:ResourceLimits:Enabled</c>; absent or unreadable reads as <see langword="true"/>.</summary>
     /// <param name="configuration">The host configuration; <see langword="null"/> reads as an absent section.</param>
     /// <returns>The settings.</returns>
     public static ResourceLimitsSettings ReadSettings(IConfiguration? configuration)

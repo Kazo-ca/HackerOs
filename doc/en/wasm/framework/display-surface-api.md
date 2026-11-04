@@ -15,7 +15,7 @@ This document describes how an app opens a surface, draws its content in it, fol
 ## Opening a surface
 
 `IDisplaySurfaceService.OpenAsync(new DisplaySurfaceOptions(title, width, height))`
-calls `window.open("", "hackeros-surface-<n>", "popup=yes,…")`. The host
+calls `window.open("", "kazoos-surface-<n>", "popup=yes,…")`. The host
 browser only opens a window after a user gesture (about five seconds after a
 click or a key press): the call comes from a click handler, or just after the
 launch that a click triggered.

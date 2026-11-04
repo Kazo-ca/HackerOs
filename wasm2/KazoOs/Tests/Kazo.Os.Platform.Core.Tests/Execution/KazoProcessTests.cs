@@ -28,12 +28,12 @@ public sealed class KazoProcessTests
     public async Task GetProcessesAsync_reads_status_cmdline_cwd_io_and_the_start_time_from_proc()
     {
         VirtualFileSystemFixture fixture = await CreateSeededAsync();
-        ProcessRecord editor = Process(42, "org.hackeros.text-editor", parentPid: OwnPid);
-        fixture.Processes.Active.AddRange([Process(OwnPid, "org.hackeros.system-monitor"), editor]);
+        ProcessRecord editor = Process(42, "org.kazoos.text-editor", parentPid: OwnPid);
+        fixture.Processes.Active.AddRange([Process(OwnPid, "org.kazoos.system-monitor"), editor]);
         fixture.Resources.ProcessSamples[editor.Pid] = [new ProcessResourceSample(editor.Pid, 1, BootUtc, 0.25, 3 * 1024 * 1024, 0, 0)];
         fixture.Environments.Create(
             new ProcessStartRequest(
-                OwnProcessId, "org.hackeros.text-editor", AppInstanceId.FromGuid(Guid.NewGuid()), AppKind.Window,
+                OwnProcessId, "org.kazoos.text-editor", AppInstanceId.FromGuid(Guid.NewGuid()), AppKind.Window,
                 Alice, Session, ResourceProfile.None,
                 ["text-editor", "/home/alice/my notes.md"],
                 VirtualPath.Parse("/home/alice/Documents"),
@@ -48,7 +48,7 @@ public sealed class KazoProcessTests
         Assert.Equal([OwnPid, 42], processes.Select(static process => process.Id));
         KazoProcess process = processes[1];
         Assert.Equal("text-editor", process.ProcessName);
-        Assert.Equal("org.hackeros.text-editor", process.AppId);
+        Assert.Equal("org.kazoos.text-editor", process.AppId);
         Assert.Equal(OwnPid, process.ParentId);
         Assert.Equal(AppKind.Window, process.Kind);
         Assert.Equal(KazoProcessState.Running, process.State);
@@ -77,7 +77,7 @@ public sealed class KazoProcessTests
         // ADR 0067: utime/stime of /proc/<pid>/stat behind the Process-like properties.
         VirtualFileSystemFixture fixture = await CreateSeededAsync(new MeasuredTimes(
             new ProcessCpuTimes(TimeSpan.FromMilliseconds(1230), TimeSpan.FromMilliseconds(450), 2, TimeSpan.FromSeconds(7), false, 9)));
-        fixture.Processes.Active.AddRange([Process(OwnPid, "org.hackeros.system-monitor"), Process(42, "org.hackeros.text-editor")]);
+        fixture.Processes.Active.AddRange([Process(OwnPid, "org.kazoos.system-monitor"), Process(42, "org.kazoos.text-editor")]);
         using IDisposable scope = Enter(fixture, AppCapabilities.ProcessList);
 
         KazoProcess process = await KazoProcess.GetProcessByIdAsync(42);
@@ -93,8 +93,8 @@ public sealed class KazoProcessTests
     public async Task Simulated_processor_time_is_rebuilt_from_the_simulator_and_the_process_responds()
     {
         VirtualFileSystemFixture fixture = await CreateSeededAsync();
-        ProcessRecord editor = Process(42, "org.hackeros.text-editor");
-        fixture.Processes.Active.AddRange([Process(OwnPid, "org.hackeros.system-monitor"), editor]);
+        ProcessRecord editor = Process(42, "org.kazoos.text-editor");
+        fixture.Processes.Active.AddRange([Process(OwnPid, "org.kazoos.system-monitor"), editor]);
         fixture.Resources.ProcessSamples[editor.Pid] = [new ProcessResourceSample(editor.Pid, 1, BootUtc, 0.25, 0, 0, 0)];
         using IDisposable scope = Enter(fixture, AppCapabilities.ProcessList);
 
@@ -123,7 +123,7 @@ public sealed class KazoProcessTests
         // ADR 0068, section 2, modeled on System.Diagnostics.Process.
         VirtualFileSystemFixture fixture = await CreateSeededAsync(memoryAccountant: new LayeredMemoryAccountant(
             new ProcessMemoryUsage(ImageBytes: 40 * 1024, FileBytes: 800 * 1024, AnonymousBytes: 2048 * 1024, KernelBytes: 512 * 1024, AllocatedBytes: 10)));
-        fixture.Processes.Active.Add(Process(OwnPid, "org.hackeros.system-monitor"));
+        fixture.Processes.Active.Add(Process(OwnPid, "org.kazoos.system-monitor"));
         using IDisposable scope = Enter(fixture);
 
         KazoProcess own = await KazoProcess.GetCurrentProcessAsync();
@@ -154,7 +154,7 @@ public sealed class KazoProcessTests
     public async Task Without_process_list_only_the_own_process_is_visible_like_ps()
     {
         VirtualFileSystemFixture fixture = await CreateSeededAsync();
-        fixture.Processes.Active.AddRange([Process(OwnPid, "org.hackeros.system-monitor"), Process(42, "org.hackeros.text-editor")]);
+        fixture.Processes.Active.AddRange([Process(OwnPid, "org.kazoos.system-monitor"), Process(42, "org.kazoos.text-editor")]);
         using IDisposable scope = Enter(fixture);
 
         KazoProcess own = Assert.Single(await KazoProcess.GetProcessesAsync());
@@ -169,7 +169,7 @@ public sealed class KazoProcessTests
     public async Task Another_users_io_and_environment_are_private_and_read_as_null()
     {
         VirtualFileSystemFixture fixture = await CreateSeededAsync();
-        fixture.Processes.Active.AddRange([Process(OwnPid, "org.hackeros.system-monitor"), Process(77, "org.hackeros.sync", userId: Bob)]);
+        fixture.Processes.Active.AddRange([Process(OwnPid, "org.kazoos.system-monitor"), Process(77, "org.kazoos.sync", userId: Bob)]);
         using IDisposable scope = Enter(fixture, AppCapabilities.ProcessList);
 
         KazoProcess other = await KazoProcess.GetProcessByIdAsync(77);
@@ -185,8 +185,8 @@ public sealed class KazoProcessTests
     public async Task RefreshAsync_marks_an_exited_process()
     {
         VirtualFileSystemFixture fixture = await CreateSeededAsync();
-        ProcessRecord editor = Process(42, "org.hackeros.text-editor");
-        fixture.Processes.Active.AddRange([Process(OwnPid, "org.hackeros.system-monitor"), editor]);
+        ProcessRecord editor = Process(42, "org.kazoos.text-editor");
+        fixture.Processes.Active.AddRange([Process(OwnPid, "org.kazoos.system-monitor"), editor]);
         using IDisposable scope = Enter(fixture, AppCapabilities.ProcessList);
         KazoProcess process = await KazoProcess.GetProcessByIdAsync(42);
 
@@ -202,7 +202,7 @@ public sealed class KazoProcessTests
     {
         VirtualFileSystemFixture fixture = await CreateSeededAsync();
         fixture.Processes.Active.AddRange(
-            [Process(OwnPid, "org.hackeros.system-monitor"), Process(42, "org.hackeros.text-editor"), Process(43, "org.hackeros.calculator")]);
+            [Process(OwnPid, "org.kazoos.system-monitor"), Process(42, "org.kazoos.text-editor"), Process(43, "org.kazoos.calculator")]);
         RecordingProcessGateway gateway = new() { Denied = { 43 } };
         using IDisposable scope = Enter(fixture, gateway, AppCapabilities.ProcessList);
         KazoProcess[] processes = await KazoProcess.GetProcessesAsync();
@@ -221,7 +221,7 @@ public sealed class KazoProcessTests
     public async Task CloseMainWindowAsync_asks_politely_and_reports_whether_the_process_had_to_be_forced()
     {
         VirtualFileSystemFixture fixture = await CreateSeededAsync();
-        fixture.Processes.Active.AddRange([Process(OwnPid, "org.hackeros.system-monitor"), Process(42, "org.hackeros.text-editor")]);
+        fixture.Processes.Active.AddRange([Process(OwnPid, "org.kazoos.system-monitor"), Process(42, "org.kazoos.text-editor")]);
         RecordingProcessGateway gateway = new();
         using IDisposable scope = Enter(fixture, gateway, AppCapabilities.ProcessList);
         KazoProcess editor = await KazoProcess.GetProcessByIdAsync(42);
@@ -240,7 +240,7 @@ public sealed class KazoProcessTests
     {
         VirtualFileSystemFixture fixture = await CreateSeededAsync();
         fixture.Processes.Active.AddRange(
-            [Process(OwnPid, "org.hackeros.system-monitor"), Process(42, "org.hackeros.text-editor"), Process(43, "org.hackeros.calculator")]);
+            [Process(OwnPid, "org.kazoos.system-monitor"), Process(42, "org.kazoos.text-editor"), Process(43, "org.kazoos.calculator")]);
         RecordingProcessGateway gateway = new() { Denied = { 43 } };
         using IDisposable scope = Enter(fixture, gateway, AppCapabilities.ProcessList);
         KazoProcess editor = await KazoProcess.GetProcessByIdAsync(42);
@@ -264,17 +264,17 @@ public sealed class KazoProcessTests
     {
         VirtualFileSystemFixture fixture = await CreateSeededAsync();
         fixture.Processes.Active.AddRange(
-            [Process(OwnPid, "org.hackeros.system-monitor"), Process(60, "org.hackeros.sync", kind: AppKind.Service)]);
-        FakeServices services = new() { Modes = { ["org.hackeros.sync"] = ServiceStartMode.Automatic }, DeniedReads = { "org.hackeros.indexer" } };
+            [Process(OwnPid, "org.kazoos.system-monitor"), Process(60, "org.kazoos.sync", kind: AppKind.Service)]);
+        FakeServices services = new() { Modes = { ["org.kazoos.sync"] = ServiceStartMode.Automatic }, DeniedReads = { "org.kazoos.indexer" } };
         FakeCatalog catalog = new(
-            App("org.hackeros.sync", "Sync", AppKind.Service),
-            App("org.hackeros.indexer", "Indexer", AppKind.Service),
-            App("org.hackeros.text-editor", "Text Editor", AppKind.Window));
+            App("org.kazoos.sync", "Sync", AppKind.Service),
+            App("org.kazoos.indexer", "Indexer", AppKind.Service),
+            App("org.kazoos.text-editor", "Text Editor", AppKind.Window));
         using IDisposable scope = Enter(fixture, new RecordingProcessGateway(), catalog, services, AppCapabilities.ProcessList);
 
         KazoServiceController[] list = await KazoServiceController.GetServicesAsync();
 
-        Assert.Equal(["org.hackeros.indexer", "org.hackeros.sync"], list.Select(static service => service.ServiceName));
+        Assert.Equal(["org.kazoos.indexer", "org.kazoos.sync"], list.Select(static service => service.ServiceName));
         Assert.Equal(KazoServiceControllerStatus.Stopped, list[0].Status);
         Assert.Null(list[0].StartType);
         Assert.Equal(KazoServiceControllerStatus.Running, list[1].Status);
@@ -290,7 +290,7 @@ public sealed class KazoProcessTests
 
         services.DenyActions = true;
         await Assert.ThrowsAsync<KazoUnauthorizedAccessException>(() => list[1].StopAsync());
-        Assert.Equal(["set:org.hackeros.sync:Disabled", "start:org.hackeros.indexer", "stop:org.hackeros.sync"], services.Calls);
+        Assert.Equal(["set:org.kazoos.sync:Disabled", "start:org.kazoos.indexer", "stop:org.kazoos.sync"], services.Calls);
     }
 
     [Fact]
@@ -302,13 +302,13 @@ public sealed class KazoProcessTests
         {
             Statuses =
             {
-                ["org.hackeros.sync"] = new ServiceStatusSnapshot(
+                ["org.kazoos.sync"] = new ServiceStatusSnapshot(
                     ServiceActiveState.Failed, ServiceRunResult.Exception, ServiceHealth.Unknown, null, since, null, null),
-                ["org.hackeros.indexer"] = new ServiceStatusSnapshot(
+                ["org.kazoos.indexer"] = new ServiceStatusSnapshot(
                     ServiceActiveState.Active, ServiceRunResult.Success, ServiceHealth.Degraded, "cache cold", since, 61, null)
             }
         };
-        FakeCatalog catalog = new(App("org.hackeros.sync", "Sync", AppKind.Service), App("org.hackeros.indexer", "Indexer", AppKind.Service));
+        FakeCatalog catalog = new(App("org.kazoos.sync", "Sync", AppKind.Service), App("org.kazoos.indexer", "Indexer", AppKind.Service));
         using IDisposable scope = Enter(fixture, new RecordingProcessGateway(), catalog, services, AppCapabilities.ProcessList);
 
         KazoServiceController[] list = await KazoServiceController.GetServicesAsync();
@@ -328,7 +328,7 @@ public sealed class KazoProcessTests
 
         await sync.ResetFailedAsync();
         Assert.Equal(KazoServiceActiveState.Inactive, sync.ActiveState);
-        Assert.Contains("reset:org.hackeros.sync", services.Calls);
+        Assert.Contains("reset:org.kazoos.sync", services.Calls);
     }
 
     private static readonly ProcessId OwnProcessId = ProcessId.FromInt64(OwnPid);
@@ -349,7 +349,7 @@ public sealed class KazoProcessTests
         string[] granted = [AppCapabilities.FileSystemSystemRead, .. capabilities];
         AppOperationContext operation = new()
         {
-            AppId = "org.hackeros.system-monitor",
+            AppId = "org.kazoos.system-monitor",
             UserId = Alice.ToString(),
             UserName = "alice",
             UserAuthority = AppAuthority.User,
@@ -373,7 +373,7 @@ public sealed class KazoProcessTests
     {
         public AppManifest Manifest { get; } = new()
         {
-            Id = "org.hackeros.system-monitor",
+            Id = "org.kazoos.system-monitor",
             Name = "System Monitor",
             Version = "1.0.0",
             PublisherId = "org.tests",

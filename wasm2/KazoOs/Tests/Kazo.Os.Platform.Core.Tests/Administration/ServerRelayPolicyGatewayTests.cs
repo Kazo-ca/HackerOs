@@ -107,7 +107,7 @@ public sealed class ServerRelayPolicyGatewayTests
                 MaxStreamsPerDevice: 4,
                 CurrentStreams: 1,
                 StreamIdleTimeoutSeconds: 300,
-                GrantedApps: ["org.hackeros.commands.curl"]));
+                GrantedApps: ["org.kazoos.commands.curl"]));
         }
     }
 }

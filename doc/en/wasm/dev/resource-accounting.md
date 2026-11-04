@@ -39,7 +39,7 @@ accountant.
 | `KazoExecutionContext` (`InstallContextSwitchHook`, internal) | `Shared/Kazo.Os.AppSdk` | replaces the ambient frame with an `AsyncLocal<T>(valueChangedHandler)`; visible only to the measurement project (`InternalsVisibleTo`) |
 | `ContextSwitchHook`, `ContextSwitchDispatcher`, `ResourceAccountingFeatures` | `Platform/Kazo.Os.Platform.ResourceAccounting` (new) | hook installation, broadcast to the measurements (process changes, and mode changes to observers that want them), `[FeatureSwitchDefinition]` switches |
 | `MeasuredCpuTimeAccountant` | same | CPU measurement (ADR 0067), registered on the broadcaster when `plan.CpuActive` |
-| `ResourceAccountingServiceCollectionExtensions` | `OS/Kazo.Os.Ecosystem.Host` | reading of `HackerOs:ResourceAccounting`, composition, `#if HACKEROS_RESOURCE_ACCOUNTING` |
+| `ResourceAccountingServiceCollectionExtensions` | `OS/Kazo.Os.Ecosystem.Host` | reading of `KazoOs:ResourceAccounting`, composition, `#if KAZOOS_RESOURCE_ACCOUNTING` |
 | `build/Kazo.Os.ResourceAccounting.targets` | `build/` | MSBuild properties, `RuntimeHostConfigurationOption`, conditional reference |
 
 ### The hook
@@ -83,7 +83,7 @@ Both default to `true`. The three hosts import
 
 | Properties | Effect |
 |---|---|
-| at least one `true` | reference to `Kazo.Os.Platform.ResourceAccounting`, constant `HACKEROS_RESOURCE_ACCOUNTING`; each property becomes the runtime option `Kazo.Os.ResourceAccounting.{Cpu,Memory}.IsSupported` |
+| at least one `true` | reference to `Kazo.Os.Platform.ResourceAccounting`, constant `KAZOOS_RESOURCE_ACCOUNTING`; each property becomes the runtime option `Kazo.Os.ResourceAccounting.{Cpu,Memory}.IsSupported` |
 | both `false` | no reference: the measurement code is **not in the binary**; the composition compiles its `#else` branch |
 
 The composition lives in `Kazo.Os.Ecosystem.Host` (which also imports these targets),
@@ -100,7 +100,7 @@ syslog line) but the DLL still arrives through `Kazo.Os.Ecosystem.Host`.
 
 ```json
 {
-  "HackerOs": {
+  "KazoOs": {
     "ResourceAccounting": {
       "Cpu":    { "Enabled": true, "UnresponsiveThresholdMs": 5000 },
       "Memory": { "Enabled": true }

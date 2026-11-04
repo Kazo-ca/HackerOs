@@ -11,7 +11,7 @@ namespace Kazo.Os.Commands.Systemctl;
 /// (ADR 0064, ADR 0097): the Kazo OS services (the catalog's <c>Service</c> apps, through
 /// <see cref="KazoServiceController"/>) shown and driven as systemd units. A unit is named by its
 /// app id or short name, with or without <c>.service</c> (<c>sync</c>, <c>sync.service</c>,
-/// <c>org.hackeros.sync</c>). Start types map to systemd states: automatic = <c>enabled</c>,
+/// <c>org.kazoos.sync</c>). Start types map to systemd states: automatic = <c>enabled</c>,
 /// manual = <c>disabled</c>, disabled = <c>masked</c>. Changing another app's service needs
 /// <c>services.manage</c>. Also answers as <c>service NAME start</c>. The active state is the
 /// service manager's (ADR 0097): a service that crashed reads as <c>failed (Result: exit-code)</c>
@@ -277,7 +277,10 @@ public sealed class SystemctlCommand(AppManifest manifest) : TerminalAppBase(man
     {
         string name = unit.EndsWith(".service", StringComparison.Ordinal) ? unit[..^8] : unit;
         return services.FirstOrDefault(s => string.Equals(s.ServiceName, name, StringComparison.OrdinalIgnoreCase))
-            ?? services.FirstOrDefault(s => string.Equals(ShortName(s.ServiceName), name, StringComparison.OrdinalIgnoreCase));
+            ?? services.FirstOrDefault(s => string.Equals(ShortName(s.ServiceName), name, StringComparison.OrdinalIgnoreCase))
+            // ADR 0228 §2: a service renamed without changing its id (kazowebd, id org.kazoos.kazowebd)
+            // is also found by its name.
+            ?? services.FirstOrDefault(s => string.Equals(s.DisplayName, name, StringComparison.OrdinalIgnoreCase));
     }
 
     private static string ShortName(string appId) => appId[(appId.LastIndexOf('.') + 1)..];

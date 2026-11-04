@@ -1,6 +1,6 @@
 #nullable enable
 Kazo.Os.Ecosystem.InstalledAppsBoot.ReadInstalledOnDiskAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<Kazo.Os.Platform.Core.Apps.Packages.InstalledApp!>!>
-const Kazo.Os.Ecosystem.SignInFactoryResetSettings.SectionName = "HackerOs:SignIn:FactoryReset" -> string!
+const Kazo.Os.Ecosystem.SignInFactoryResetSettings.SectionName = "KazoOs:SignIn:FactoryReset" -> string!
 Kazo.Os.Ecosystem.SignInFactoryResetSettings
 Kazo.Os.Ecosystem.SignInFactoryResetSettings.<Clone>$() -> Kazo.Os.Ecosystem.SignInFactoryResetSettings!
 Kazo.Os.Ecosystem.SignInFactoryResetSettings.Deconstruct(out bool Enabled) -> void

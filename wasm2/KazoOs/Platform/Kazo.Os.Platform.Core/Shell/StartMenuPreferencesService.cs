@@ -6,7 +6,7 @@ namespace Kazo.Os.Platform.Core.Shell;
 
 /// <summary>
 /// Maintains and persists the session user's ordered quick-launch pins in
-/// <c>~/.config/hackeros/start-menu.json</c> (ADR 0044 section 8). The service deliberately knows
+/// <c>~/.config/kazoos/start-menu.json</c> (ADR 0044 section 8). The service deliberately knows
 /// nothing about the live app catalog: syntactically valid unavailable IDs are retained so
 /// temporarily disabled or unmounted applications regain their pins when available.
 /// </summary>

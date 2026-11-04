@@ -42,7 +42,7 @@ public sealed class TaskbarContextMenusTests
 
         await harness.ContextMenus.InvokeAsync(session.Root.Rows[0].Item!);
 
-        Assert.Equal([("org.hackeros.notes", "", Screen2)], harness.Launches);
+        Assert.Equal([("org.kazoos.notes", "", Screen2)], harness.Launches);
     }
 
     [Fact]
@@ -128,7 +128,7 @@ public sealed class TaskbarContextMenusTests
             Runtime.Apply(new AddDisplayCommand(Screen2, Area));
             Runtime.Apply(new CreateWindowCommand(new WindowRuntimeState(
                 Notes,
-                "org.hackeros.notes",
+                "org.kazoos.notes",
                 WindowOwnerId.FromGuid(Guid.Parse("d1000000-0000-0000-0000-000000000001")),
                 "Notes",
                 null,
@@ -137,7 +137,7 @@ public sealed class TaskbarContextMenusTests
                 0,
                 WindowVisualState.Normal,
                 new WindowConstraints(true, 320, 240))));
-            HashSet<string> apps = [.. catalog ?? [TaskbarContextMenus.TaskManagerAppId, TaskbarContextMenus.SettingsAppId, "org.hackeros.notes"]];
+            HashSet<string> apps = [.. catalog ?? [TaskbarContextMenus.TaskManagerAppId, TaskbarContextMenus.SettingsAppId, "org.kazoos.notes"]];
             Menus = new TaskbarContextMenus(
                 ContextMenus,
                 new WindowKeyboardCommands(Runtime),

@@ -51,7 +51,7 @@ Ecosystem.csproj            PublishTrimmed=true, TrimMode=partial
   de manifestes) : une ligne `<assembly fullname="…" preserve="all" />` par
   assembly que nomme un manifeste (point d'entrée, entrées par plateforme,
   composants, `web.blazor`). Il couvre les apps installées en paquets, même
-  quand leur nom ne commence pas par `HackerOs.`.
+  quand leur nom ne commence pas par `Kazo.Os.`.
 - **Suppressions d'avertissements.** Les attributs `UnconditionalSuppressMessage`
   restants (découverte des apps, workers, composants intégrables, routeur des
   sites Blazor, liaison de modèle MVC) citent la racine qui les rend sûrs.
@@ -72,18 +72,18 @@ alerte `IL…`, sert la publication sur `127.0.0.1` et `127.0.0.2`, puis lance
 
 | Test | Ce qu'il vérifie |
 |---|---|
-| `Trimmed_publish_runs_every_app_a_worker_command_and_both_sample_sites` | création du profil ; chaque app fenêtrée du menu Démarrer (lue dans `BuiltInApplications.json`, approbation administrateur comprise) ouvre sa fenêtre sans erreur ; `seq 30 \| grep 1 \| wc -l` et `/proc/hackeros/workers` dans le terminal ; l'Intranet (vue `.cshtml`, script, API REST, tableau Blazor) et le site Blazor d'exemple (compteur, lien, API) dans le navigateur |
+| `Trimmed_publish_runs_every_app_a_worker_command_and_both_sample_sites` | création du profil ; chaque app fenêtrée du menu Démarrer (lue dans `BuiltInApplications.json`, approbation administrateur comprise) ouvre sa fenêtre sans erreur ; `seq 30 \| grep 1 \| wc -l` et `/proc/kazoos/workers` dans le terminal ; l'Intranet (vue `.cshtml`, script, API REST, tableau Blazor) et le site Blazor d'exemple (compteur, lien, API) dans le navigateur |
 | `Trimmed_publish_boots_offline_after_the_first_load` | sur `127.0.0.2` (le service worker n'est pas enregistré sur `127.0.0.1`) : mise en cache de la version, rechargement sans réseau, connexion, lancement d'une app jamais chargée |
 | `The_calculator_rendered_in_a_worker_works_like_on_the_page` | essai de l'ADR 0133, réglage activé par une réécriture d'`appsettings.json` : la Calculatrice dans un worker calcule à la souris et au clavier, garde son CSS, `Tab`, axe, `Alt+F7`/`Alt+Q`, worker dédié libéré à la fermeture ([`remote-window-rendering.md`](remote-window-rendering.md)) |
 | `Measures_the_calculator_on_the_page_and_in_a_worker` | mesures de l'ADR 0133 (ouverture, latence, mémoire, lots), écrites dans `remote-window-measurements.json` du dossier des artefacts |
-| `An_installed_app_finds_its_wwwroot_files_and_its_worker_scripts` | ADR 0206 : le paquet de test `Tests/fixtures/installed-app` (emballé par le script avec `KazoOsPack`, servi par Playwright à la place de `raw.githubusercontent.com`) est installé par `sudo hackpkg install`, l'OS redémarre, l'app importe son module, lance son Web Worker (`importScripts` relatif) et affiche son image ; sur `127.0.0.1`, par le service worker du mode `installed-apps` |
-| `The_published_service_worker_serves_installed_app_files_to_a_worker` | ADR 0206 sur `127.0.0.2` : le service worker publié sert les fichiers du cache `hackeros-installed-apps` à un Web Worker sous isolation cross-origin |
+| `An_installed_app_finds_its_wwwroot_files_and_its_worker_scripts` | ADR 0206 : le paquet de test `Tests/fixtures/installed-app` (emballé par le script avec `KazoOsPack`, servi par Playwright à la place de `raw.githubusercontent.com`) est installé par `sudo kazopkg install`, l'OS redémarre, l'app importe son module, lance son Web Worker (`importScripts` relatif) et affiche son image ; sur `127.0.0.1`, par le service worker du mode `installed-apps` |
+| `The_published_service_worker_serves_installed_app_files_to_a_worker` | ADR 0206 sur `127.0.0.2` : le service worker publié sert les fichiers du cache `kazoos-installed-apps` à un Web Worker sous isolation cross-origin |
 | `Trimmed_publish_shows_a_new_notification_as_a_bubble_above_the_taskbar` | ADR 0197 : la notification des nouveautés postée à la connexion d'un nouveau compte apparaît en bulle au-dessus de la barre (source « Kazo OS », titre, bouton « Voir »), part seule après environ 6 s et reste dans le panneau de l'horloge ([`notification-toasts.md`](notification-toasts.md)) |
 | `Trimmed_publish_shows_unread_notifications_next_to_the_clock` | ADR 0196 : un nouveau compte reçoit la notification des nouveautés (`whats-new.json` servi) ; point et infobulle de l'horloge, aucun point sur Applications, panneau ouvert = lu, **Voir** ouvre Paramètres ▸ Nouveautés et ferme la notification ; captures `trimmed-clock-dot.png` et `trimmed-whats-new-page.png` |
 
 Le script exige que les huit tests passent (`EXPECTED_TESTS`).
 
-Aucune erreur de console n'est admise. Sans `HACKEROS_TRIMMED_URL`, la suite est
+Aucune erreur de console n'est admise. Sans `KAZOOS_TRIMMED_URL`, la suite est
 ignorée (un `dotnet test` de la solution ne la lance pas).
 
 Ce test fait partie de la porte de fusion locale de `v3/14` et des chantiers
@@ -92,7 +92,7 @@ Release : son test de démarrage porte donc lui aussi sur la publication trimmé
 
 ### Un hôte d'un autre dépôt
 
-Le gabarit `hackeros-host` publie trimmé de la même façon. Les cibles de
+Le gabarit `kazoos-host` publie trimmé de la même façon. Les cibles de
 `Kazo.Os.App.Build` génèrent les racines et gardent les paquets `Kazo.Os.*`
 entiers ; les gabarits d'apps partent avec `IsTrimmable=true`, et le paquet
 active l'analyse de trimming dans un projet d'app qui ne la règle pas.

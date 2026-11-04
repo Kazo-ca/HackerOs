@@ -3,7 +3,7 @@ using Kazo.Os.Simulation.Abstractions.FileSystem;
 namespace Kazo.Os.AppSdk.IO;
 
 /// <summary>
-/// Advanced options for a <c>Hack*</c> write (ADR 0043, section 3). The defaults (no options)
+/// Advanced options for a <c>Kazo*</c> write (ADR 0043, section 3). The defaults (no options)
 /// give the convenient behavior: create with the umask, retry once on a concurrent change.
 /// </summary>
 public sealed record KazoWriteOptions

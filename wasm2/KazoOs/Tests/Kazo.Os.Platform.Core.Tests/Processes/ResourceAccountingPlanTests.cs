@@ -44,7 +44,7 @@ public sealed class ResourceAccountingPlanTests
         Assert.Equal(
             [
                 "resource accounting: cpu measurement is not built into this host (KazoOsCpuAccounting=false); " +
-                "HackerOs:ResourceAccounting:Cpu:Enabled=true ignored, cpu stays simulated",
+                "KazoOs:ResourceAccounting:Cpu:Enabled=true ignored, cpu stays simulated",
                 "resource accounting: cpu off (not built), memory on"
             ],
             plan.Notices);

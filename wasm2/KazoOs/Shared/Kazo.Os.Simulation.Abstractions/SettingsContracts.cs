@@ -5,7 +5,7 @@ namespace Kazo.Os.Simulation.Abstractions;
 /// </summary>
 /// <remarks>
 /// Since ADR 0044 settings are ordinary files; this validator remains for the strict whole-file
-/// OS documents (JSON such as <c>/etc/hackeros/file-associations.json</c>) whose readers reject an
+/// OS documents (JSON such as <c>/etc/kazoos/file-associations.json</c>) whose readers reject an
 /// invalid document as a whole instead of parsing it tolerantly.
 /// </remarks>
 public interface ISettingsDocumentValidator

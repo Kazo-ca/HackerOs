@@ -13,7 +13,7 @@ namespace Kazo.Os.HostSmoke.Tests;
 /// <param name="ExpectedMemSource">Same as <paramref name="ExpectedCpuSource"/> for <c>MemSource:</c>.</param>
 /// <param name="ArtifactsDirectory">Where a failing run leaves its screenshot, or <see langword="null"/>.</param>
 /// <param name="LimitsEnabled">
-/// Whether the host applies the process limits of ADR 0125 (<c>HackerOs:ResourceLimits:Enabled</c>);
+/// Whether the host applies the process limits of ADR 0125 (<c>KazoOs:ResourceLimits:Enabled</c>);
 /// <see langword="false"/> for the run that switches them off.
 /// </param>
 /// <param name="ExpectsOomKill">
@@ -23,7 +23,7 @@ namespace Kazo.Os.HostSmoke.Tests;
 /// <param name="ExpectedIsolation">
 /// When set, whether the page must be cross-origin isolated (ADR 0131): <see langword="true"/> for a
 /// host that sends COOP/COEP (its service worker or its server), <see langword="false"/> for a run
-/// with <c>HackerOs:CrossOriginIsolation</c> off; <see langword="null"/> checks nothing.
+/// with <c>KazoOs:CrossOriginIsolation</c> off; <see langword="null"/> checks nothing.
 /// </param>
 public sealed record HostSmokeSettings(
     string Url,
@@ -36,28 +36,28 @@ public sealed record HostSmokeSettings(
     bool? ExpectedIsolation = null)
 {
     /// <summary>Base address of the host under test. Required.</summary>
-    public const string UrlVariable = "HACKEROS_SMOKE_URL";
+    public const string UrlVariable = "KAZOOS_SMOKE_URL";
 
     /// <summary>Label of the host under test.</summary>
-    public const string HostVariable = "HACKEROS_SMOKE_HOST";
+    public const string HostVariable = "KAZOOS_SMOKE_HOST";
 
     /// <summary>Expected <c>CpuSource:</c> value.</summary>
-    public const string CpuSourceVariable = "HACKEROS_SMOKE_EXPECT_CPU_SOURCE";
+    public const string CpuSourceVariable = "KAZOOS_SMOKE_EXPECT_CPU_SOURCE";
 
     /// <summary>Expected <c>MemSource:</c> value.</summary>
-    public const string MemSourceVariable = "HACKEROS_SMOKE_EXPECT_MEM_SOURCE";
+    public const string MemSourceVariable = "KAZOOS_SMOKE_EXPECT_MEM_SOURCE";
 
     /// <summary>Directory for failure screenshots.</summary>
-    public const string ArtifactsVariable = "HACKEROS_SMOKE_ARTIFACTS";
+    public const string ArtifactsVariable = "KAZOOS_SMOKE_ARTIFACTS";
 
     /// <summary><c>off</c> when the host switches the process limits off (ADR 0125).</summary>
-    public const string LimitsVariable = "HACKEROS_SMOKE_EXPECT_LIMITS";
+    public const string LimitsVariable = "KAZOOS_SMOKE_EXPECT_LIMITS";
 
     /// <summary><c>on</c> when the run checks the OOM killer (ADR 0126).</summary>
-    public const string OomVariable = "HACKEROS_SMOKE_EXPECT_OOM";
+    public const string OomVariable = "KAZOOS_SMOKE_EXPECT_OOM";
 
     /// <summary><c>yes</c> or <c>no</c>: the page's expected <c>crossOriginIsolated</c> (ADR 0131).</summary>
-    public const string IsolationVariable = "HACKEROS_SMOKE_EXPECT_ISOLATION";
+    public const string IsolationVariable = "KAZOOS_SMOKE_EXPECT_ISOLATION";
 
     /// <summary>Reads the settings, or returns <see langword="null"/> when no URL is set.</summary>
     /// <summary>

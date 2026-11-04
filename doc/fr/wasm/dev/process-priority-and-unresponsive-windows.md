@@ -38,7 +38,7 @@ $ renice -n 5 -p 42
 42 (process ID) old priority 0, new priority 5
 $ ps -l
 F S UID   PID  PPID  C PRI  NI     TIME CMD
-0 R alice   1     0  0  80   0 00:00:00 org.hackeros.terminal
+0 R alice   1     0  0  80   0 00:00:00 org.kazoos.terminal
 $ ps -o pid,ni,comm
 ```
 
@@ -106,7 +106,7 @@ Le suffixe « (Ne répond pas) », le contenu grisé, la boîte « Attendre | Te
 ### Réglage
 
 ```ini
-# /etc/hackeros/window-manager.config (et ~/.config/hackeros/window-manager.config)
+# /etc/kazoos/window-manager.config (et ~/.config/kazoos/window-manager.config)
 [unresponsive]
 dialog = true
 ```
@@ -115,7 +115,7 @@ dialog = true
 gris restent, et la croix ouvre encore la boîte. Le fichier système est créé
 au premier démarrage avec la valeur commentée ; un administrateur peut figer la
 clé avec `[locked]` (ADR 0044). Le seuil reste celui de la mesure CPU
-(`HackerOs:ResourceAccounting:Cpu:UnresponsiveThresholdMs`).
+(`KazoOs:ResourceAccounting:Cpu:UnresponsiveThresholdMs`).
 
 ### Architecture
 

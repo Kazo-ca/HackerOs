@@ -23,9 +23,9 @@ public sealed class FixtureService : ServiceAppBase
 /// <summary>A service registering two entries, one in a submenu.</summary>
 public class MenuApp : AppDefinition
 {
-    public const string ExtractIntent = "org.hackeros.tests.menu.extract.v1";
+    public const string ExtractIntent = "org.kazoos.tests.menu.extract.v1";
 
-    public override string Id => "org.hackeros.tests.menu";
+    public override string Id => "org.kazoos.tests.menu";
     public override string Name => "menu";
     public override AppKind Kind => AppKind.Service;
     public override Type EntryPoint => typeof(FixtureService);
@@ -45,7 +45,7 @@ public class MenuApp : AppDefinition
 /// <summary>The same entries without the capability (HOSAPP0027).</summary>
 public sealed class MenuWithoutCapabilityApp : MenuApp
 {
-    public override string Id => "org.hackeros.tests.menu-no-capability";
+    public override string Id => "org.kazoos.tests.menu-no-capability";
     public override IReadOnlyList<string> Capabilities => [];
 
     // The generator reads the method declared on the definition class itself, not an inherited one.
@@ -57,7 +57,7 @@ public sealed class MenuWithoutCapabilityApp : MenuApp
 /// <summary>A registration breaking a rule of ADR 0151 §5 (HOSAPP0026).</summary>
 public sealed class BrokenMenuApp : MenuApp
 {
-    public override string Id => "org.hackeros.tests.menu-broken";
+    public override string Id => "org.kazoos.tests.menu-broken";
 
     [RegisterFileContextMenu]
     public static void Register(RegisterFileContextMenuContext context) =>
@@ -67,7 +67,7 @@ public sealed class BrokenMenuApp : MenuApp
 /// <summary>A registration that throws (HOSAPP0026: nothing is registered).</summary>
 public sealed class ThrowingMenuApp : MenuApp
 {
-    public override string Id => "org.hackeros.tests.menu-throws";
+    public override string Id => "org.kazoos.tests.menu-throws";
 
     [RegisterFileContextMenu]
     public static void Register(RegisterFileContextMenuContext context)
@@ -82,7 +82,7 @@ public sealed class UnstableMenuApp : MenuApp
 {
     private static int s_runs;
 
-    public override string Id => "org.hackeros.tests.menu-unstable";
+    public override string Id => "org.kazoos.tests.menu-unstable";
 
     [RegisterFileContextMenu]
     public static void Register(RegisterFileContextMenuContext context) =>
@@ -92,7 +92,7 @@ public sealed class UnstableMenuApp : MenuApp
 /// <summary>A registration method with the wrong signature (HOSAPP0026).</summary>
 public sealed class WrongSignatureMenuApp : MenuApp
 {
-    public override string Id => "org.hackeros.tests.menu-signature";
+    public override string Id => "org.kazoos.tests.menu-signature";
 
     [RegisterFileContextMenu]
     public void Register(RegisterFileContextMenuContext context) =>

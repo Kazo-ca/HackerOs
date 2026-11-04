@@ -6,18 +6,18 @@ namespace Kazo.Os.AppSdk.Administration;
 /// <summary>
 /// Lists the entries apps added to the file menus (ADR 0151) and hides or shows them for the session
 /// user, as Settings &gt; File menus does (ADR 0159 §8). The choice lives in the user's
-/// <c>~/.config/hackeros/context-menus.config</c>.
+/// <c>~/.config/kazoos/context-menus.config</c>.
 /// </summary>
 /// <remarks>
 /// Every member requires the capability <c>apps.manage</c>; a missing one raises
 /// <see cref="KazoUnauthorizedAccessException"/>. Hiding an entry changes only the session user's
 /// menus, applies at the next menu opened, and never uninstalls anything: the app keeps its entries
-/// in <c>/etc/hackeros/context-menus.d</c>.
+/// in <c>/etc/kazoos/context-menus.d</c>.
 /// </remarks>
 /// <example>
 /// <code>
 /// IReadOnlyList&lt;KazoFileMenuEntryInfo&gt; entries = await KazoFileMenuEntries.GetEntriesAsync();
-/// await KazoFileMenuEntries.SetHiddenAsync("org.hackeros.file-explorer", "extract-here", hidden: true);
+/// await KazoFileMenuEntries.SetHiddenAsync("org.kazoos.file-explorer", "extract-here", hidden: true);
 /// </code>
 /// </example>
 public static class KazoFileMenuEntries

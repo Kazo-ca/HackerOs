@@ -46,7 +46,7 @@ public sealed class UiPlatformPreferenceServiceTests
         Assert.Equal(WellKnownAppPlatforms.Mobile, reloaded.Current.ExplicitPlatformId);
 
         // ...because it is a real user file (ADR 0044), editable with nano.
-        string? file = await harness.ReadAsync("/home/alice/.config/hackeros/ui-platform-preference.config");
+        string? file = await harness.ReadAsync("/home/alice/.config/kazoos/ui-platform-preference.config");
         Assert.NotNull(file);
         Assert.Contains("selectionSource=explicit", file);
         Assert.Contains($"explicitPlatformId={WellKnownAppPlatforms.Mobile.Value}", file);
@@ -58,14 +58,14 @@ public sealed class UiPlatformPreferenceServiceTests
         FakeProbe probe = new(WellKnownAppPlatforms.Desktop);
         SettingsFilesHarness harness = new();
         await harness.WriteAsRootAsync(
-            "/etc/hackeros/ui-platform-preference.config",
+            "/etc/kazoos/ui-platform-preference.config",
             $"selectionSource=explicit\nexplicitPlatformId={WellKnownAppPlatforms.Mobile.Value}\n[locked]\nselectionSource=true\nexplicitPlatformId=true\n");
         UiPlatformPreferenceService service = await CreateServiceAsync(probe, harness);
 
         await service.SetExplicitAsync(WellKnownAppPlatforms.Desktop);
 
         Assert.Equal(WellKnownAppPlatforms.Mobile, service.Current.ActivePlatform);
-        Assert.Null(await harness.ReadAsync("/home/alice/.config/hackeros/ui-platform-preference.config"));
+        Assert.Null(await harness.ReadAsync("/home/alice/.config/kazoos/ui-platform-preference.config"));
     }
 
     [Fact]

@@ -45,7 +45,7 @@
     {
         <CodeEditorBrowserScenario />
     }
-    else if (IsHackPaintScenario)
+    else if (IsKazoPaintScenario)
     {
         <KazoPaintBrowserScenario />
     }
@@ -66,7 +66,7 @@
 </main>
 
 @code {
-    private const string DatabaseName = "hackeros";
+    private const string DatabaseName = "kazoos";
     private string _status = "running";
     private string _message = "Running browser storage contracts.";
     private bool _started;
@@ -76,7 +76,7 @@
     private bool IsTerminalFullScreenScenario => new Uri(Navigation.Uri).Query.Contains("scenario=terminal-full-screen", StringComparison.Ordinal);
     private bool IsVirtualKeyboardTerminalScenario => new Uri(Navigation.Uri).Query.Contains("scenario=virtual-keyboard-terminal", StringComparison.Ordinal);
     private bool IsCodeEditorScenario => new Uri(Navigation.Uri).Query.Contains("scenario=code-editor", StringComparison.Ordinal);
-    private bool IsHackPaintScenario => new Uri(Navigation.Uri).Query.Contains("scenario=hack-paint", StringComparison.Ordinal);
+    private bool IsKazoPaintScenario => new Uri(Navigation.Uri).Query.Contains("scenario=kazo-paint", StringComparison.Ordinal);
     private bool IsTaskbarScenario => new Uri(Navigation.Uri).Query.Contains("scenario=taskbar", StringComparison.Ordinal);
     private bool IsUnresponsiveScenario => new Uri(Navigation.Uri).Query.Contains("scenario=unresponsive", StringComparison.Ordinal);
 
@@ -98,7 +98,7 @@
                 || query.Contains("scenario=terminal-full-screen", StringComparison.Ordinal)
                 || query.Contains("scenario=virtual-keyboard-terminal", StringComparison.Ordinal)
                 || query.Contains("scenario=code-editor", StringComparison.Ordinal)
-                || query.Contains("scenario=hack-paint", StringComparison.Ordinal)
+                || query.Contains("scenario=kazo-paint", StringComparison.Ordinal)
                 || query.Contains("scenario=taskbar", StringComparison.Ordinal)
                 || query.Contains("scenario=unresponsive", StringComparison.Ordinal))
             {
@@ -360,7 +360,7 @@
     {
         AppOperationContext operation = new()
         {
-            AppId = "org.hackeros.browser-harness",
+            AppId = "org.kazoos.browser-harness",
             UserId = "user",
             UserAuthority = AppAuthority.Administrator,
             GrantedCapabilities = new HashSet<string>(AppCapabilities.All, StringComparer.Ordinal),

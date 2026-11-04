@@ -65,7 +65,7 @@ Cells run from top to bottom, then from left to right.
 [Desktop Entry]
 Type=Application
 Name=Text Editor
-Exec=org.hackeros.text-editor "/home/alice/My notes.txt"
+Exec=org.kazoos.text-editor "/home/alice/My notes.txt"
 Icon=file-text
 ```
 
@@ -124,6 +124,6 @@ Settings opens directly on a tab with `--page=appearance` or
 `--page=desktop`.
 
 
-"Send to ▸ Desktop (create shortcut)" goes through the `org.hackeros.desktop.create-shortcut.v1` intent, and the file is written with the rights of the Desktop app.
+"Send to ▸ Desktop (create shortcut)" goes through the `org.kazoos.desktop.create-shortcut.v1` intent, and the file is written with the rights of the Desktop app.
 
 The `background` and `desktop` entries of apps (ADR 0159) are added to the background menu; see [`context-menu.md`](context-menu.md).

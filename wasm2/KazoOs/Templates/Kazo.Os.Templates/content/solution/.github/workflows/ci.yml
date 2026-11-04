@@ -1,5 +1,5 @@
 # Builds and tests the Release profile: the Kazo OS packages from nuget.org, at the version of the
-# submodule (ADR 0176 §4, §6). This is what the Hack Store compiles.
+# submodule (ADR 0176 §4, §6). This is what the Kazo OS Store compiles.
 name: CI
 
 on:
@@ -23,7 +23,7 @@ jobs:
           global-json-file: global.json
 
       - name: Check the Kazo OS submodule
-        run: bash .github/scripts/check-hackeros-submodule.sh
+        run: bash .github/scripts/check-kazoos-submodule.sh
 
       - name: Build (Release, packages)
         run: dotnet build -c Release

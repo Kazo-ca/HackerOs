@@ -7,7 +7,7 @@
 Accepté le 2026-10-16 (proposé le même jour, puis validé par Benoit avec le
 questionnaire de la section 4 du plan).
 
-- **Phase du plan :** phase web ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Phase du plan :** phase web ([`asp-kazo-plan.md`](../plans/asp-kazo-plan.md)).
 - **Complète :** ADR 0055 et 0056 §6 (réseau par le SDK), ADR 0057 (`/proc/net`).
 
 ## Contexte

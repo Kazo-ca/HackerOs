@@ -4,7 +4,7 @@ namespace Kazo.Os.Apps.WebServer.Daemon;
 
 /// <summary>
 /// The rights of the <c>www-data</c> service account (ADR 0077, section 2; ADR 0080, section 2), with
-/// which <c>hackwebd</c> serves an administrator's site: <c>www-data</c> owns no file and is in no
+/// which <c>kazowebd</c> serves an administrator's site: <c>www-data</c> owns no file and is in no
 /// group of the OS, so only the "other" permission bits apply to it, exactly as on Debian when
 /// Apache's worker reads <c>/var/www</c>.
 /// </summary>

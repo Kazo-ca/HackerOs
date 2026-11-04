@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Tail;
 public sealed class TailApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.tail";
+    public override string Id => "org.kazoos.commands.tail";
 
     /// <inheritdoc />
     public override string Name => "tail";
@@ -22,7 +22,7 @@ public sealed class TailApp : AppDefinition
     public override Type EntryPoint => typeof(TailCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Output the last part of files";

@@ -63,7 +63,7 @@ public sealed class SoundThemeIndexTests
         Assert.Equal(name, OsSoundEvents.GetSoundName(soundEvent));
 
     [Theory]
-    [InlineData("hackeros", true)]
+    [InlineData("kazoos", true)]
     [InlineData("my-theme_2.1", true)]
     [InlineData(".hidden", false)]
     [InlineData("Upper", false)]

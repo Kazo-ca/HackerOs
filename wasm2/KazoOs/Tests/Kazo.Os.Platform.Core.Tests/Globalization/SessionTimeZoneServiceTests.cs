@@ -14,7 +14,7 @@ public sealed class SessionTimeZoneServiceTests
     public void Datetime_config_is_an_os_document_apps_may_open()
     {
         Assert.True(OsSettingsDocumentRegistry.TryGet("datetime", out OsSettingsDocument document));
-        Assert.Equal("/etc/hackeros/datetime.config", document.SystemPath.Value);
+        Assert.Equal("/etc/kazoos/datetime.config", document.SystemPath.Value);
     }
 
     [Fact]
@@ -23,7 +23,7 @@ public sealed class SessionTimeZoneServiceTests
         SettingsFilesHarness harness = new();
         await harness.BootAsync();
 
-        string? system = await harness.ReadAsync("/etc/hackeros/datetime.config");
+        string? system = await harness.ReadAsync("/etc/kazoos/datetime.config");
         Assert.NotNull(system);
         Assert.Contains("timeZone", system, StringComparison.Ordinal);
 
@@ -39,7 +39,7 @@ public sealed class SessionTimeZoneServiceTests
     {
         SettingsFilesHarness harness = new();
         await harness.BootAsync();
-        await harness.WriteAsRootAsync("/etc/hackeros/datetime.config", "timeZone=Europe/Paris\n");
+        await harness.WriteAsRootAsync("/etc/kazoos/datetime.config", "timeZone=Europe/Paris\n");
         await harness.LoginAsync(harness.Alice);
         using SessionTimeZoneService service = new(harness.Settings, Device);
         await service.InitializeAsync();
@@ -47,7 +47,7 @@ public sealed class SessionTimeZoneServiceTests
 
         int notifications = 0;
         service.Changed += () => notifications++;
-        await harness.WriteAsRootAsync("/home/alice/.config/hackeros/datetime.config", "timeZone=America/Toronto\n");
+        await harness.WriteAsRootAsync("/home/alice/.config/kazoos/datetime.config", "timeZone=America/Toronto\n");
         await service.RefreshAsync();
 
         Assert.Equal("America/Toronto", service.Setting);

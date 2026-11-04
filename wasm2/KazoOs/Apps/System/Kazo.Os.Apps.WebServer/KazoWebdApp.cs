@@ -4,7 +4,7 @@ using Kazo.Os.Apps.WebServer.Daemon;
 namespace Kazo.Os.Apps.WebServer;
 
 /// <summary>
-/// Manifest of <c>hackwebd</c>, the web server of the hosted static sites (ADR 0077, section 2). The
+/// Manifest of <c>kazowebd</c>, the web server of the hosted static sites (ADR 0077, section 2). The
 /// build generates its manifest from this class; it is never instantiated at runtime.
 /// </summary>
 /// <remarks>
@@ -15,14 +15,14 @@ namespace Kazo.Os.Apps.WebServer;
 [AppManifest]
 public sealed class KazoWebdApp : AppDefinition
 {
-    /// <summary>The service name (<c>systemctl status hackwebd</c>).</summary>
-    public const string AppId = "org.hackeros.hackwebd";
+    /// <summary>The service name (<c>systemctl status kazowebd</c>).</summary>
+    public const string AppId = "org.kazoos.kazowebd";
 
     /// <inheritdoc />
     public override string Id => AppId;
 
     /// <inheritdoc />
-    public override string Name => "hackwebd";
+    public override string Name => "kazowebd";
 
     /// <inheritdoc />
     public override AppKind Kind => AppKind.Service;
@@ -31,10 +31,10 @@ public sealed class KazoWebdApp : AppDefinition
     public override Type EntryPoint => typeof(KazoWebdService);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
-    public override string Description => "Kazo OS web server: serves the static sites declared in /etc/hackweb/sites and ~/.config/hackweb/sites";
+    public override string Description => "Kazo OS web server: serves the static sites declared in /etc/kazoweb/sites and ~/.config/kazoweb/sites";
 
     /// <inheritdoc />
     public override string Category => "system";
@@ -45,9 +45,9 @@ public sealed class KazoWebdApp : AppDefinition
     /// <inheritdoc />
     /// <remarks>
     /// <c>network.listen.privileged</c> (dangerous, granted to a system app) binds port 80 for an
-    /// administrator's site; <c>filesystem.system.read</c> reads <c>/etc/hackweb</c> and site roots
+    /// administrator's site; <c>filesystem.system.read</c> reads <c>/etc/kazoweb</c> and site roots
     /// outside the home; the home capabilities read user site roots and create
-    /// <c>~/.config/hackweb/sites</c> on first start.
+    /// <c>~/.config/kazoweb/sites</c> on first start.
     /// </remarks>
     public override IReadOnlyList<string> Capabilities =>
     [

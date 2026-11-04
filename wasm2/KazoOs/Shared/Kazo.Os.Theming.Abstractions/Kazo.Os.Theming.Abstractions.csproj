@@ -8,7 +8,7 @@
     <Nullable>enable</Nullable>
     <PackageId>Kazo.Os.Theming.Abstractions</PackageId>
     <Description>Framework-neutral Kazo OS theme catalog, identifiers, form factors, and persisted appearance preferences.</Description>
-    <PackageTags>hackeros;theming;contracts;blazor</PackageTags>
+    <PackageTags>kazoos;theming;contracts;blazor</PackageTags>
   </PropertyGroup>
 
 </Project>

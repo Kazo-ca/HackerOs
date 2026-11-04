@@ -16,7 +16,7 @@ namespace Kazo.Os.Platform.Core.Shell;
 public sealed class ShellHostService
 {
     /// <summary>App id of a hosted shell's process: <c>ps</c> shows it as <c>hsh</c>.</summary>
-    public const string ShellAppId = "org.hackeros.hsh";
+    public const string ShellAppId = "org.kazoos.hsh";
 
     private readonly ShellInterpreter _interpreter;
     private readonly IProcessManager _processes;
@@ -42,7 +42,7 @@ public sealed class ShellHostService
         Id = ShellAppId,
         Name = "hsh",
         Version = "1.0.0",
-        PublisherId = "pub.hackeros",
+        PublisherId = "pub.kazoos",
         Description = "Kazo OS shell",
         Kind = AppKind.Terminal,
         SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
@@ -65,7 +65,7 @@ public sealed class ShellHostService
     /// <param name="options">Starting directory and credential prompt.</param>
     /// <param name="cancellationToken">Cancels the start.</param>
     /// <returns>The running shell.</returns>
-    public async Task<IHackShell> StartAsync(
+    public async Task<IKazoShell> StartAsync(
         IAppExecutionContext caller,
         AuthenticatedPrincipal principal,
         Func<ProcessRecord, IAppExecutionContext> createShellContext,
@@ -134,7 +134,7 @@ public sealed class ShellHostService
     }
 
     /// <summary>One running <c>hsh</c> process.</summary>
-    private sealed class HostedShell : IHackShell
+    private sealed class HostedShell : IKazoShell
     {
         private readonly ShellInterpreter _interpreter;
         private readonly IProcessManager _processes;

@@ -42,7 +42,7 @@ public sealed class FileMenuEntries : IFileMenuEntrySource
 
     /// <summary>Creates the source.</summary>
     /// <param name="catalog">The catalog, for the assembly of an image icon.</param>
-    /// <param name="registry">The registered entries, read from <c>/etc/hackeros/context-menus.d</c>.</param>
+    /// <param name="registry">The registered entries, read from <c>/etc/kazoos/context-menus.d</c>.</param>
     /// <param name="launcher">Decides which entries can run.</param>
     /// <param name="hidden">Reads the entries the session user hid (<c>&lt;appId&gt;.&lt;name&gt;</c> keys).</param>
     /// <param name="culture">The language of the titles.</param>

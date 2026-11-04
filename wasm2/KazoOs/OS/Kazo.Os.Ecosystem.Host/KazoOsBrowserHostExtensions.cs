@@ -54,7 +54,7 @@ public static partial class KazoOsBrowserHostExtensions
 {
     /// <summary>
     /// Registers the desktop root component, the lazy app loader over the host's catalog, resource
-    /// accounting (from <c>HackerOs:ResourceAccounting</c> in <c>appsettings.json</c>), every OS
+    /// accounting (from <c>KazoOs:ResourceAccounting</c> in <c>appsettings.json</c>), every OS
     /// service (<see cref="EcosystemServiceCollectionExtensions.AddKazoOsEcosystem"/>), app asset
     /// integrity checks over the page's <c>_content/</c> (ADR 0098 §5) and the Web Worker pool.
     /// </summary>
@@ -68,6 +68,11 @@ public static partial class KazoOsBrowserHostExtensions
         ArgumentNullException.ThrowIfNull(builder);
         ArgumentNullException.ThrowIfNull(apps);
         options ??= new KazoOsBrowserHostOptions();
+
+        // ADR 0228 §2: an appsettings.json written before the rename has a HackerOs section; its
+        // keys answer under KazoOs unless the KazoOs section already has them.
+        builder.Configuration.AddInMemoryCollection(
+            Kazo.Os.Server.Contracts.Hosting.KazoOsConfigurationNames.MapLegacySettings(builder.Configuration.AsEnumerable()));
 
         // The same bundle boots two ways: as a standalone page whose index.html has the root element,
         // and as the interactive WebAssembly island of a Blazor Web App host (test/test), which mounts
@@ -143,11 +148,11 @@ public static partial class KazoOsBrowserHostExtensions
         // ADR 0066: decided once from appsettings.json and what the build compiled in. Must precede
         // AddKazoOsEcosystem, and runs before any app code so the context-switch hook can be installed.
         builder.Services.AddKazoOsResourceAccounting(builder.Configuration, apps.Images);
-        // ADR 0125: process limits (ulimit, limits.conf), on unless HackerOs:ResourceLimits:Enabled is false.
+        // ADR 0125: process limits (ulimit, limits.conf), on unless KazoOs:ResourceLimits:Enabled is false.
         builder.Services.AddKazoOsResourceLimits(builder.Configuration);
         builder.Services.AddKazoOsHardware(builder.Configuration);
         // ADR 0226: « Forgot password? » on the sign-in screen, on unless
-        // HackerOs:SignIn:FactoryReset:Enabled is false in appsettings.json.
+        // KazoOs:SignIn:FactoryReset:Enabled is false in appsettings.json.
         builder.Services.AddSingleton(SignInFactoryResetSettings.Read(builder.Configuration));
         builder.Services.AddKazoOsEcosystem(
             apps.Catalog,
@@ -164,7 +169,7 @@ public static partial class KazoOsBrowserHostExtensions
             IReadOnlyList<string> preload = options.WorkerPreloadAssemblies
                 ?? (apps.LazyAssemblyNames.Contains("Kazo.Os.Commands.dll", StringComparer.Ordinal) ? ["Kazo.Os.Commands.dll"] : []);
             // ADR 0131: the page says at boot whether it is cross-origin isolated
-            // (HackerOs:CrossOriginIsolation: auto, on or off); the workers' JavaScript uses shared
+            // (KazoOs:CrossOriginIsolation: auto, on or off); the workers' JavaScript uses shared
             // rings and synchronous calls by itself when it is.
             CrossOriginIsolationMode isolationMode = CrossOriginIsolationPolicy.Parse(builder.Configuration[CrossOriginIsolationPolicy.SettingKey]);
             builder.Services.AddSingleton<CrossOriginIsolationState>();
@@ -181,14 +186,14 @@ public static partial class KazoOsBrowserHostExtensions
                 KnownAssemblies = [.. apps.LazyAssemblyNames]
             });
             // ADR 0129 trial, ADR 0133: window apps rendered in a worker, off unless
-            // HackerOs:RemoteWindowRendering:Enabled is true in appsettings.json.
+            // KazoOs:RemoteWindowRendering:Enabled is true in appsettings.json.
             builder.Services.AddKazoOsRemoteWindowRendering(ReadRemoteWindowRendering(builder.Configuration));
         }
 
         return builder;
     }
 
-    /// <summary>Reads <c>HackerOs:RemoteWindowRendering</c> (ADR 0133): <c>Enabled</c>, and optionally <c>Apps</c>.</summary>
+    /// <summary>Reads <c>KazoOs:RemoteWindowRendering</c> (ADR 0133): <c>Enabled</c>, and optionally <c>Apps</c>.</summary>
     private static RemoteWindowRenderingOptions ReadRemoteWindowRendering(IConfiguration configuration)
     {
         IConfigurationSection section = configuration.GetSection(RemoteWindowRenderingOptions.SectionName);

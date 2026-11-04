@@ -141,7 +141,7 @@ public sealed class AppCatalogGatewayTests
         Assert.Equal("apps.uninstall.machine", agent.LastRequest!.Action);
         Assert.Equal("Uninstall Calc for all users", agent.LastRequest.Operation);
         Assert.True(harness.Enablement.IsEnabled(Calc));
-        Assert.DoesNotContain(Calc, await harness.Settings.ReadAsync("/etc/hackeros/apps.config") ?? string.Empty);
+        Assert.DoesNotContain(Calc, await harness.Settings.ReadAsync("/etc/kazoos/apps.config") ?? string.Empty);
     }
 
     [Fact]
@@ -154,7 +154,7 @@ public sealed class AppCatalogGatewayTests
         IReadOnlyList<string> written = await gateway.UninstallAsync(Calc, KazoInstallScope.Machine);
 
         Assert.Equal([Calc], written);
-        Assert.Contains($"{Calc}=true", await harness.Settings.ReadAsync("/etc/hackeros/apps.config"));
+        Assert.Contains($"{Calc}=true", await harness.Settings.ReadAsync("/etc/kazoos/apps.config"));
         Assert.Equal(KazoAppInstallState.UninstalledForMachine, (await gateway.GetAllAsync()).Single(entry => entry.App.Id == Calc).State);
 
         Assert.Equal([Calc], await gateway.ReinstallAsync(Calc, KazoInstallScope.Machine));
@@ -165,7 +165,7 @@ public sealed class AppCatalogGatewayTests
     public async Task A_user_cannot_reinstall_for_themselves_what_the_administrator_uninstalled()
     {
         Harness harness = await Harness.CreateAsync();
-        await harness.Settings.WriteAsRootAsync("/etc/hackeros/apps.config", $"[uninstalled]\n{Calc}=true\n");
+        await harness.Settings.WriteAsRootAsync("/etc/kazoos/apps.config", $"[uninstalled]\n{Calc}=true\n");
         AuthenticatedPrincipal alice = await harness.LoginAsync();
         AppManagementGateway gateway = harness.CreateManagementGateway(alice, AppCapabilities.AppsManage);
 

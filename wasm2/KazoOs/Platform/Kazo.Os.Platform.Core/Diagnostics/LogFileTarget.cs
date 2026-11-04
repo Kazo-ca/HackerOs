@@ -62,7 +62,7 @@ public sealed record LogFileTarget
 
     /// <summary>
     /// Returns a daemon log of a system app, <c>/var/log/&lt;directory&gt;/&lt;file&gt;.log</c>, mode
-    /// <c>0644</c> (ADR 0080, section 3), for example <c>/var/log/hackweb/docs.access.log</c>.
+    /// <c>0644</c> (ADR 0080, section 3), for example <c>/var/log/kazoweb/docs.access.log</c>.
     /// </summary>
     /// <param name="relativePath"><c>&lt;directory&gt;/&lt;file&gt;.log</c>: two plain segments, the second ending in <c>.log</c>.</param>
     /// <exception cref="ArgumentException">

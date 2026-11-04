@@ -46,8 +46,8 @@ l'exécution des tests E2E sont décrits dans
 | Découvrir ce que Kazo OS offre et ce qui s'en vient | [`features.md`](doc/fr/wasm/features.md) |
 | Comprendre le code de l'OS | [`project-overview.md`](doc/fr/wasm/dev/project-overview.md), puis [`doc/fr/wasm/dev/`](doc/fr/wasm/dev/README.md) |
 | Écrire une app, une commande ou un service | [`sdk-developer-guide.md`](doc/fr/wasm/framework/sdk-developer-guide.md) et [`sdk-reference.md`](doc/fr/wasm/framework/sdk-reference.md) |
-| Construire sur Kazo OS depuis un autre dépôt | [`building-on-hackeros.md`](doc/fr/wasm/framework/building-on-hackeros.md) |
-| Créer un site web interne (ASP.Hack, Blazor) | [`asp-hack-developer-guide.md`](doc/fr/wasm/framework/asp-hack-developer-guide.md) |
+| Construire sur Kazo OS depuis un autre dépôt | [`building-on-kazoos.md`](doc/fr/wasm/framework/building-on-kazoos.md) |
+| Créer un site web interne (ASP.Kazo, Blazor) | [`asp-kazo-developer-guide.md`](doc/fr/wasm/framework/asp-kazo-developer-guide.md) |
 | Éviter les problèmes déjà rencontrés | [`pitfalls.md`](doc/fr/wasm/dev/pitfalls.md) |
 | Connaître l'état du projet et ses conventions | [`doc/fr/wasm/memory/`](doc/fr/wasm/memory/README.md) |
 | Les décisions d'architecture | [`doc/fr/wasm/dev/adr/`](doc/fr/wasm/dev/adr/README.md) |

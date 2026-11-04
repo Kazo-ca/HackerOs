@@ -76,7 +76,7 @@
     <value>Zoom -</value>
   </data>
   <data name="Canvas.AriaLabel" xml:space="preserve">
-    <value>Canevas de dessin de Hack Paint</value>
+    <value>Canevas de dessin de Kazo Paint</value>
   </data>
   <data name="Dialog.Open.Title" xml:space="preserve">
     <value>Ouvrir une image</value>
@@ -103,13 +103,13 @@
     <value>L'image encodée dépasse {0} Mio.</value>
   </data>
   <data name="Error.FileTooLarge" xml:space="preserve">
-    <value>Le fichier est trop volumineux ({0} Mio). Hack Paint ouvre les images jusqu'à {1} Mio.</value>
+    <value>Le fichier est trop volumineux ({0} Mio). Kazo Paint ouvre les images jusqu'à {1} Mio.</value>
   </data>
   <data name="Error.FileTooLargeUnknownSize" xml:space="preserve">
-    <value>Le fichier est trop volumineux. Hack Paint ouvre les images jusqu'à {0} Mio.</value>
+    <value>Le fichier est trop volumineux. Kazo Paint ouvre les images jusqu'à {0} Mio.</value>
   </data>
   <data name="Error.ImageTooLarge" xml:space="preserve">
-    <value>L'image mesure {0} × {1} pixels. Hack Paint modifie les images jusqu'à {2} × {2}.</value>
+    <value>L'image mesure {0} × {1} pixels. Kazo Paint modifie les images jusqu'à {2} × {2}.</value>
   </data>
   <data name="Error.NotAnImage" xml:space="preserve">
     <value>Ce n'est pas une image PNG, JPEG, BMP, GIF ou WebP, ou le fichier est endommagé.</value>
@@ -190,7 +190,7 @@
     <value>Déplacer</value>
   </data>
   <data name="Toolbar.AriaLabel" xml:space="preserve">
-    <value>Outils de Hack Paint</value>
+    <value>Outils de Kazo Paint</value>
   </data>
   <data name="Viewport.AriaLabel" xml:space="preserve">
     <value>Zone d'affichage du canevas</value>

@@ -10,7 +10,7 @@ public sealed partial class InMemoryProcessManagerTests
     public async Task StopAsync_moves_to_stopping_then_raises_the_request_then_cancels_the_token()
     {
         Fixture fixture = new();
-        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.hackeros.terminal"));
+        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.kazoos.terminal"));
         fixture.Manager.MarkRunning(process.Pid);
         ProcessControlBlock control = fixture.Manager.GetControlBlock(process.Pid);
         CancellationToken token = fixture.Manager.GetCancellationToken(process.Pid);
@@ -38,7 +38,7 @@ public sealed partial class InMemoryProcessManagerTests
     public async Task Overlapping_stops_raise_the_request_once_and_share_one_outcome()
     {
         Fixture fixture = new();
-        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.hackeros.terminal"));
+        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.kazoos.terminal"));
         fixture.Manager.MarkRunning(process.Pid);
         ProcessControlBlock control = fixture.Manager.GetControlBlock(process.Pid);
         List<ProcessStopRequest> requests = [];
@@ -57,7 +57,7 @@ public sealed partial class InMemoryProcessManagerTests
     public async Task A_stop_whose_deadline_passes_kills_the_process_for_good()
     {
         Fixture fixture = new();
-        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.hackeros.terminal"));
+        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.kazoos.terminal"));
         fixture.Manager.MarkRunning(process.Pid);
         ProcessControlBlock control = fixture.Manager.GetControlBlock(process.Pid);
 
@@ -78,8 +78,8 @@ public sealed partial class InMemoryProcessManagerTests
     public void Kill_is_a_sigkill_for_the_process_and_its_descendants_without_a_stop_request()
     {
         Fixture fixture = new();
-        ProcessRecord parent = fixture.Manager.Start(fixture.RequestFor("com.hackeros.terminal"));
-        ProcessRecord child = fixture.Manager.Start(fixture.RequestFor("com.hackeros.child", parent.Pid));
+        ProcessRecord parent = fixture.Manager.Start(fixture.RequestFor("com.kazoos.terminal"));
+        ProcessRecord child = fixture.Manager.Start(fixture.RequestFor("com.kazoos.child", parent.Pid));
         ProcessControlBlock parentControl = fixture.Manager.GetControlBlock(parent.Pid);
         ProcessControlBlock childControl = fixture.Manager.GetControlBlock(child.Pid);
         bool requested = false;
@@ -97,8 +97,8 @@ public sealed partial class InMemoryProcessManagerTests
     public void Ending_a_process_for_another_reason_keeps_it_reachable_for_its_own_cleanup()
     {
         Fixture fixture = new();
-        ProcessRecord window = fixture.Manager.Start(fixture.RequestFor("com.hackeros.notes"));
-        ProcessRecord child = fixture.Manager.Start(fixture.RequestFor("com.hackeros.child", window.Pid));
+        ProcessRecord window = fixture.Manager.Start(fixture.RequestFor("com.kazoos.notes"));
+        ProcessRecord child = fixture.Manager.Start(fixture.RequestFor("com.kazoos.child", window.Pid));
         ProcessControlBlock windowControl = fixture.Manager.GetControlBlock(window.Pid);
         ProcessControlBlock childControl = fixture.Manager.GetControlBlock(child.Pid);
 

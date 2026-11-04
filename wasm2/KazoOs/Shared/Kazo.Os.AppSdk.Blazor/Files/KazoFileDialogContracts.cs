@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 namespace Kazo.Os.AppSdk.Blazor.Files;
 
 /// <summary>
-/// The dialogs of the contract <c>hackeros.file-dialogs</c> (ADR 0148 §6, ADR 0155 §5), provided by
+/// The dialogs of the contract <c>kazoos.file-dialogs</c> (ADR 0148 §6, ADR 0155 §5), provided by
 /// the File Explorer. An app opens them through <see cref="IDialogService"/>; the OS shows the
 /// provider in a window modal to the app's window, with the app's rights.
 /// </summary>
@@ -45,7 +45,7 @@ public enum OpenWithDialogStatus
     /// <summary>The user closed the dialog.</summary>
     Cancelled,
 
-    /// <summary>No provider of <c>hackeros.file-dialogs</c> could be shown.</summary>
+    /// <summary>No provider of <c>kazoos.file-dialogs</c> could be shown.</summary>
     Unavailable
 }
 
@@ -68,7 +68,7 @@ public enum FilePropertiesDialogStatus
     /// <summary>The dialog was shown and closed.</summary>
     Closed,
 
-    /// <summary>No provider of <c>hackeros.file-dialogs</c> could be shown.</summary>
+    /// <summary>No provider of <c>kazoos.file-dialogs</c> could be shown.</summary>
     Unavailable
 }
 

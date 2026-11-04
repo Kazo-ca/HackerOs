@@ -5,7 +5,7 @@
   <PropertyGroup>
     <PackageId>Kazo.Os.Platform.Core</PackageId>
     <Description>Kazo OS platform core: app catalog, process manager, policy, shell, settings and logs as files, gateways behind the SDK. For composing an OS host.</Description>
-    <PackageTags>hackeros;platform</PackageTags>
+    <PackageTags>kazoos;platform</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

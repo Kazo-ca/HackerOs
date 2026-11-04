@@ -152,11 +152,11 @@ public sealed class KazoFileMenuOpeningEventArgs
 }
 
 /// <summary>
-/// The controller of the contract <c>hackeros.file-view</c> (ADR 0148 §2), handed by the OS once the
+/// The controller of the contract <c>kazoos.file-view</c> (ADR 0148 §2), handed by the OS once the
 /// explorer's file control is ready in a <see cref="KazoFileView"/>. Every command acts with the
 /// host's rights (ADR 0148 §4).
 /// </summary>
-public interface IHackFileView
+public interface IKazoFileView
 {
     /// <summary>Gets the folder shown.</summary>
     string CurrentDirectory { get; }

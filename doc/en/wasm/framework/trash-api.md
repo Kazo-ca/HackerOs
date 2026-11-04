@@ -32,7 +32,7 @@ DeletionDate=2026-10-10T14:03:27
 
 - When listing, a `.trashinfo` without an item is deleted; an item without a
   `.trashinfo` is listed with an unknown origin.
-- An item deleted on another device carries, in its `.trashinfo`, the extension keys `X-HackerOS-Origin=deleted-on-another-device` and `X-HackerOS-Device=<device>`, which other implementations ignore. `KazoTrashItem.DeletedOnAnotherDevice` reports it to apps.
+- An item deleted on another device carries, in its `.trashinfo`, the extension keys `X-KazoOS-Origin=deleted-on-another-device` and `X-KazoOS-Device=<device>`, which other implementations ignore. `KazoTrashItem.DeletedOnAnotherDevice` reports it to apps.
 
 ## Trash of the effective user
 
@@ -56,7 +56,7 @@ the user).
 ## `KazoTrash` API
 
 `Shared/Kazo.Os.AppSdk/IO/KazoTrash.cs`. Static class, ambient context of
-ADR 0043 (`KazoExecutionContext.Current`), `Hack*` exceptions. No
+ADR 0043 (`KazoExecutionContext.Current`), `Kazo*` exceptions. No
 new capability: the `filesystem.*` capabilities and the permissions decide, as
 for `KazoFile`.
 

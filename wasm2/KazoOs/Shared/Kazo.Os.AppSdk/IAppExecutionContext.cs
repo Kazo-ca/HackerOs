@@ -369,7 +369,7 @@ public interface IAppExecutionContext
 
     /// <summary>
     /// Gets this instance's browser database, behind <c>KazoWebDb</c> of the web SDK (ADR 0073 section 3,
-    /// ADR 0088): the IndexedDB database <c>hackweb.&lt;app id&gt;</c> of the host browser. Only an app of
+    /// ADR 0088): the IndexedDB database <c>kazoweb.&lt;app id&gt;</c> of the host browser. Only an app of
     /// kind <c>Web</c> gets a working one. Defaults to an unsupported gateway so existing implementations
     /// keep compiling; the trusted platform factory overrides it.
     /// </summary>
@@ -715,7 +715,7 @@ file sealed class UnsupportedAppManagementGateway : IAppManagementGateway
 /// <summary>Default <see cref="IAppExecutionContext.ShellHost"/> for contexts that don't wire one up.</summary>
 file sealed class UnsupportedAppShellHostGateway : Shell.IAppShellHostGateway
 {
-    public Task<Shell.IHackShell> StartAsync(Shell.KazoShellOptions options, CancellationToken cancellationToken = default) =>
+    public Task<Shell.IKazoShell> StartAsync(Shell.KazoShellOptions options, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This IAppExecutionContext implementation does not provide a ShellHost gateway.");
 }
 
@@ -726,7 +726,7 @@ file sealed class DetachedAppEnvironmentGateway(IAppExecutionContext context) : 
 
     public string UserName => context.UserId;
 
-    public string MachineName => "hackeros";
+    public string MachineName => "kazoos";
 
     public IReadOnlyList<string> GetCommandLineArgs() => [context.Manifest.Id];
 

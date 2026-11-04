@@ -101,7 +101,7 @@ public static class KazoStorageDiagnostics
         }
     }
 
-    /// <summary>Lists the browser databases of web sites (<c>hackweb.*</c>, ADR 0088).</summary>
+    /// <summary>Lists the browser databases of web sites (<c>kazoweb.*</c>, ADR 0088).</summary>
     /// <param name="cancellationToken">Cancels the read.</param>
     /// <exception cref="KazoUnauthorizedAccessException">This app lacks <c>system.storage.inspect</c>.</exception>
     /// <exception cref="KazoExecutionContextMissingException">No app context is active.</exception>
@@ -118,7 +118,7 @@ public static class KazoStorageDiagnostics
     }
 
     /// <summary>Deletes the browser database of a web site; it comes back empty on the site's next request.</summary>
-    /// <param name="databaseName">The <c>hackweb.*</c> name.</param>
+    /// <param name="databaseName">The <c>kazoweb.*</c> name.</param>
     /// <param name="cancellationToken">Cancels the deletion.</param>
     /// <exception cref="KazoUnauthorizedAccessException">This app lacks <c>system.storage.inspect</c>.</exception>
     public static async Task DeleteWebSiteDatabaseAsync(string databaseName, CancellationToken cancellationToken = default)

@@ -157,7 +157,7 @@ fenêtre d'exemple est déjà celle qui montre le SDK d'une app à fenêtre.
   [`worker-processes.md`](../worker-processes.md),
   [`sdk-developer-guide.md`](../../framework/sdk-developer-guide.md),
   [`sdk-reference.md`](../../framework/sdk-reference.md), [`code-editor.md`](../code-editor.md),
-  [`file-explorer.md`](../file-explorer.md), [`hack-paint.md`](../hack-paint.md).
+  [`file-explorer.md`](../file-explorer.md), [`kazo-paint.md`](../kazo-paint.md).
 - Ajouts publics dans `PublicAPI.Unshipped.txt` du SDK, de
   `Kazo.Os.Platform.Core` et de `Kazo.Os.Platform.WorkerHost` ; publiés avec
   le SDK 1.2 dans `exec/10` (ADR 0132).

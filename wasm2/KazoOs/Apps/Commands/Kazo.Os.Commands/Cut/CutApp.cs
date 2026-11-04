@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Cut;
 public sealed class CutApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.cut";
+    public override string Id => "org.kazoos.commands.cut";
 
     /// <inheritdoc />
     public override string Name => "cut";
@@ -22,7 +22,7 @@ public sealed class CutApp : AppDefinition
     public override Type EntryPoint => typeof(CutCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Remove sections from each line of files";

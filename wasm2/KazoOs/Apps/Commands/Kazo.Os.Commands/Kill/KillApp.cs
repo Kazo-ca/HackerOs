@@ -11,7 +11,7 @@ namespace Kazo.Os.Commands.Kill;
 public sealed class KillApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.kill";
+    public override string Id => "org.kazoos.commands.kill";
 
     /// <inheritdoc />
     public override string Name => "kill";
@@ -23,7 +23,7 @@ public sealed class KillApp : AppDefinition
     public override Type EntryPoint => typeof(KillCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Send a signal to a process or terminate it";

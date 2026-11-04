@@ -16,7 +16,7 @@ public sealed class SystemMonitorApp : AppDefinition
     public override IReadOnlyList<AssetManifest> Assets =>
         [new("icons/app.svg", AssetKind.Image, new string('0', 64), "app-icon")];
     /// <inheritdoc />
-    public override string Id => "org.hackeros.system-monitor";
+    public override string Id => "org.kazoos.system-monitor";
 
     /// <inheritdoc />
     public override string Name => "System Monitor";
@@ -31,7 +31,7 @@ public sealed class SystemMonitorApp : AppDefinition
     public override Type? MobileEntryPoint => typeof(SystemMonitorWindow);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description =>

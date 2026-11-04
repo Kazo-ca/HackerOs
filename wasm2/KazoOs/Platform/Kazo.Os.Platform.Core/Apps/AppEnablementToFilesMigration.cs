@@ -11,20 +11,20 @@ using Microsoft.Extensions.Logging.Abstractions;
 namespace Kazo.Os.Platform.Core.Apps;
 
 /// <summary>
-/// Installs <c>/etc/hackeros/apps.config</c> and copies the retired ADR 0032 enablement flags into
+/// Installs <c>/etc/kazoos/apps.config</c> and copies the retired ADR 0032 enablement flags into
 /// it, once (ADR 0048 section 6).
 /// </summary>
 /// <remarks>
 /// The ADR 0032 disable was machine-wide, so every <c>IsEnabled = false</c> record of a non-system
 /// app becomes a <c>[uninstalled]</c> line of the machine file. Runs at boot with an audited system
 /// context, before <see cref="AppInstallationService.StartAsync"/>. Marker:
-/// <c>/var/lib/hackeros/migrations/app-enablement-to-files</c>. The IndexedDB store and its schema
+/// <c>/var/lib/kazoos/migrations/app-enablement-to-files</c>. The IndexedDB store and its schema
 /// version are left untouched.
 /// </remarks>
 public sealed class AppEnablementToFilesMigration
 {
     /// <summary>Migration marker.</summary>
-    public const string MarkerPath = "/var/lib/hackeros/migrations/app-enablement-to-files";
+    public const string MarkerPath = "/var/lib/kazoos/migrations/app-enablement-to-files";
 
     private readonly IFileSystemService _fileSystem;
     private readonly ISimulationClock _clock;

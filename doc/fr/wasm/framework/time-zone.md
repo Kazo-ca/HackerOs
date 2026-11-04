@@ -9,8 +9,8 @@ et l'affiche dans le fuseau de l'utilisateur. Décision : [ADR 0193](../dev/adr/
 
 | Couche | Fichier | Clé |
 | --- | --- | --- |
-| Machine (aussi l'écran de connexion) | `/etc/hackeros/datetime.config` | `timeZone` |
-| Utilisateur (gagne) | `~/.config/hackeros/datetime.config` | `timeZone` |
+| Machine (aussi l'écran de connexion) | `/etc/kazoos/datetime.config` | `timeZone` |
+| Utilisateur (gagne) | `~/.config/kazoos/datetime.config` | `timeZone` |
 
 `timeZone` vaut `auto` (le fuseau de l'appareil, donné par le navigateur) ou un
 identifiant IANA (`America/Toronto`, `Europe/Paris`, `UTC`). Un nom inconnu compte

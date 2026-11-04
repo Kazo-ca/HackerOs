@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 namespace Kazo.Os.AppSdk.Web.Data;
 
 /// <summary>
-/// The database of a site (ADR 0073 §3, ADR 0088): the IndexedDB database <c>hackweb.&lt;app id&gt;</c> of the
+/// The database of a site (ADR 0073 §3, ADR 0088): the IndexedDB database <c>kazoweb.&lt;app id&gt;</c> of the
 /// host browser, which the OS opens for the site. Its data never lands in the OS files, survives the
 /// site's restarts and is deleted when the site is uninstalled. Registered by
 /// <see cref="KazoWebDbServiceCollectionExtensions.AddKazoWebDb"/>; a singleton of the site.
@@ -46,7 +46,7 @@ public sealed class KazoWebDb
         _json = json.SerializerOptions;
     }
 
-    /// <summary>Gets the database name, <c>hackweb.&lt;app id&gt;</c>.</summary>
+    /// <summary>Gets the database name, <c>kazoweb.&lt;app id&gt;</c>.</summary>
     public string Name => _gateway.DatabaseName;
 
     /// <summary>Gets the version the site declares (the highest of its schema).</summary>
@@ -398,10 +398,10 @@ public sealed class KazoWebDbTransactionStore<T>
 public static class KazoWebDbServiceCollectionExtensions
 {
     /// <summary>Name of the in-memory database a site gets when it runs outside Kazo OS.</summary>
-    public const string InMemoryName = "hackweb.in-memory";
+    public const string InMemoryName = "kazoweb.in-memory";
 
     /// <summary>
-    /// Registers <see cref="KazoWebDb"/>, the site's browser database <c>hackweb.&lt;app id&gt;</c>, with its
+    /// Registers <see cref="KazoWebDb"/>, the site's browser database <c>kazoweb.&lt;app id&gt;</c>, with its
     /// versions. It opens on first use. When the services hold an <see cref="IAppWebDatabaseGateway"/>
     /// (a test's <see cref="KazoWebDbInMemoryBackend"/>), it is used instead of the OS; a site built
     /// outside Kazo OS without one gets an in-memory database (<see cref="InMemoryName"/>).

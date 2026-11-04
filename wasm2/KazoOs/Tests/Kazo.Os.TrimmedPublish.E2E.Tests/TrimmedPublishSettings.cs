@@ -18,30 +18,30 @@ namespace Kazo.Os.TrimmedPublish.E2E.Tests;
 /// skips the offline check.
 /// </param>
 /// <param name="PackagesDirectory">
-/// The <c>hackeros-packages</c> folder of the test package of ADR 0206 (<c>index.json</c> and its
-/// <c>.hackapp</c>), served to the browser in place of GitHub; <see langword="null"/> skips that test.
+/// The <c>kazoos-packages</c> folder of the test package of ADR 0206 (<c>index.json</c> and its
+/// <c>.kazoapp</c>), served to the browser in place of GitHub; <see langword="null"/> skips that test.
 /// </param>
 public sealed record TrimmedPublishSettings(string Url, string? CatalogPath, string? ArtifactsDirectory, string? PwaUrl = null, string? PackagesDirectory = null)
 {
     /// <summary>Base address of the served publish. Required.</summary>
-    public const string UrlVariable = "HACKEROS_TRIMMED_URL";
+    public const string UrlVariable = "KAZOOS_TRIMMED_URL";
 
     /// <summary>Path of the host's <c>BuiltInApplications.json</c>.</summary>
-    public const string CatalogVariable = "HACKEROS_TRIMMED_CATALOG";
+    public const string CatalogVariable = "KAZOOS_TRIMMED_CATALOG";
 
     /// <summary>Directory for failure screenshots.</summary>
-    public const string ArtifactsVariable = "HACKEROS_TRIMMED_ARTIFACTS";
+    public const string ArtifactsVariable = "KAZOOS_TRIMMED_ARTIFACTS";
 
     /// <summary>Address of the same publish with the service worker active.</summary>
-    public const string PwaUrlVariable = "HACKEROS_TRIMMED_PWA_URL";
+    public const string PwaUrlVariable = "KAZOOS_TRIMMED_PWA_URL";
 
-    /// <summary>Folder of the test package installed by hackpkg (ADR 0206).</summary>
-    public const string PackagesVariable = "HACKEROS_TRIMMED_PACKAGES";
+    /// <summary>Folder of the test package installed by kazopkg (ADR 0206).</summary>
+    public const string PackagesVariable = "KAZOOS_TRIMMED_PACKAGES";
 
     /// <summary>The window apps of the Ecosystem host, when no catalog is given.</summary>
     public static readonly IReadOnlyList<string> FallbackWindowApps =
     [
-        "Browser", "Calculator", "Code Editor", "Error Log Viewer", "File Explorer", "Hack Paint",
+        "Browser", "Calculator", "Code Editor", "Error Log Viewer", "File Explorer", "Kazo Paint",
         "Icon Viewer", "IndexedDB Diagnostic", "Settings", "System Monitor", "Terminal", "Text Editor",
         "Theme Editor", "Web Server Manager",
     ];

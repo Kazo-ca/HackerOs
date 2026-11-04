@@ -24,7 +24,7 @@ public enum OomKillCause
 public sealed record OomKill(ProcessId Pid, OomKillCause Cause, long Score, string? RuntimeId);
 
 /// <summary>
-/// The OOM killer (ADR 0126): off by default, enabled in <c>/etc/hackeros/memory.config</c>, and only
+/// The OOM killer (ADR 0126): off by default, enabled in <c>/etc/kazoos/memory.config</c>, and only
 /// where memory is measured. Every simulated second it samples <c>MemAvailable</c>; two samples in a
 /// row under <c>min-free-percent</c> of <c>MemTotal</c> make it kill the process with the highest
 /// <c>oom_score</c>, as Linux's <c>out_of_memory()</c> does, and write the kill to the kernel log.
@@ -193,7 +193,7 @@ public sealed class OomKiller : IDisposable
     }
 
     /// <summary>
-    /// Reads <c>/etc/hackeros/memory.config</c> now, applies it, and follows its changes: an
+    /// Reads <c>/etc/kazoos/memory.config</c> now, applies it, and follows its changes: an
     /// administrator's <c>sudo nano</c> or Settings &gt; Memory takes effect at once, like a
     /// <c>sysctl -w</c>. A value out of range is logged to <c>syslog</c> and brought back into range.
     /// </summary>
@@ -435,7 +435,7 @@ public sealed class OomKiller : IDisposable
         string uid = victim.UserId.ToString();
         string constraint = cause == OomKillCause.SystemMemory
             ? "constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=/,mems_allowed=0,global_oom,task_memcg=/"
-            : $"constraint=CONSTRAINT_MEMCG,nodemask=(null),cpuset=/,mems_allowed=0,oom_memcg=/hackeros/{runtime!.Id},task_memcg=/hackeros/{runtime.Id}";
+            : $"constraint=CONSTRAINT_MEMCG,nodemask=(null),cpuset=/,mems_allowed=0,oom_memcg=/kazoos/{runtime!.Id},task_memcg=/kazoos/{runtime.Id}";
         _kernelLog.Write(KernelLogLevel.Info, string.Create(CultureInfo.InvariantCulture,
             $"oom-kill:{constraint},task={comm},pid={victim.Pid.Value},uid={uid}"));
 

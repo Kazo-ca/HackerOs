@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Grep;
 public sealed class GrepApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.grep";
+    public override string Id => "org.kazoos.commands.grep";
 
     /// <inheritdoc />
     public override string Name => "grep";
@@ -22,7 +22,7 @@ public sealed class GrepApp : AppDefinition
     public override Type EntryPoint => typeof(GrepCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Print lines matching a pattern in stdin or virtual files";

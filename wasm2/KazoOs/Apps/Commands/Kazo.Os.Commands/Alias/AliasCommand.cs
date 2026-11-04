@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Alias;
 /// <summary>
 /// Implements the <c>alias</c> / <c>addalias</c> / <c>rmalias</c> / <c>unalias</c> terminal
 /// command (`P4-W5-CMD-008`). Manages terminal command aliases, persisted per-user at
-/// <c>~/.hackeros/aliases</c> so they survive across terminal sessions.
+/// <c>~/.kazoos/aliases</c> so they survive across terminal sessions.
 /// </summary>
 /// <remarks>
 /// <c>rmalias</c> and <c>unalias</c> are static aliases declared by the manifest (ADR 0051,
@@ -46,7 +46,7 @@ public sealed class AliasCommand : TerminalAppBase
         }
 
         string home = context.Environment.TryGetValue("HOME", out string? envHome) ? envHome : "/home/user";
-        VirtualPath aliasFilePath = VirtualPath.Parse($"{home.TrimEnd('/')}/.hackeros/aliases");
+        VirtualPath aliasFilePath = VirtualPath.Parse($"{home.TrimEnd('/')}/.kazoos/aliases");
 
         (Dictionary<string, string> aliases, long? fileRevision) = await LoadAliasesAsync(
             context, aliasFilePath, cancellationToken);

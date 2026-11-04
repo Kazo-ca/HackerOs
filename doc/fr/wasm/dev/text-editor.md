@@ -2,7 +2,7 @@
 
 # Éditeur de texte
 
-App système `Kazo.Os.Apps.TextEditor` (`org.hackeros.text-editor`). Ce document
+App système `Kazo.Os.Apps.TextEditor` (`org.kazoos.text-editor`). Ce document
 décrit son fonctionnement actuel et la recherche avec remplacement ajoutée par le
 chantier `rebuild/4-text-editor` (phase 4, [ADR 0058](adr/0058-base-app-features.md) §3).
 
@@ -105,7 +105,7 @@ sous-chaîne, sans tenir compte de la casse.
 Quand l'OS demande à l'éditeur de s'arrêter (déconnexion, `kill`, « End
 task ») alors que le document est modifié, `OnAppStopRequestedAsync` écrit le
 texte dans un brouillon `KazoRecoveryDraft`
-(`~/.local/state/org.hackeros.text-editor/recovery/draft.json`, dossier
+(`~/.local/state/org.kazoos.text-editor/recovery/draft.json`, dossier
 `0700`) avec le chemin du fichier d'origine ; l'OS attend cette écriture avant
 de fermer la fenêtre. Au lancement suivant sans fichier, le brouillon est
 repris (`TakeAsync`) comme un **nouveau** tampon modifié, titré

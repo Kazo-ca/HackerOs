@@ -21,8 +21,8 @@ bureau et lues par les apps qui dessinent elles-mêmes :
 ## Réglages
 
 `accessibility.config`, en couches ([`settings-files.md`](../framework/settings-files.md)) :
-`/etc/hackeros/accessibility.config` (défaut de la machine, écrit au premier démarrage en
-commentaires, aussi lu par l'écran de connexion) puis `~/.config/hackeros/accessibility.config`.
+`/etc/kazoos/accessibility.config` (défaut de la machine, écrit au premier démarrage en
+commentaires, aussi lu par l'écran de connexion) puis `~/.config/kazoos/accessibility.config`.
 
 | Clé | Valeurs | Défaut | `auto` suit |
 |---|---|---|---|
@@ -35,8 +35,8 @@ invalide est ignorée (la couche suivante s'applique). Un administrateur peut ve
 (`[locked]`).
 
 ```sh
-nano ~/.config/hackeros/accessibility.config      # highContrast=on
-sudo nano /etc/hackeros/accessibility.config      # défaut de la machine
+nano ~/.config/kazoos/accessibility.config      # highContrast=on
+sudo nano /etc/kazoos/accessibility.config      # défaut de la machine
 ```
 
 **Paramètres > Accessibilité** montre l'état appliqué et écrit la couche utilisateur : trois
@@ -79,8 +79,8 @@ jetons `--hos-*`.
 | App | Contraste élevé | Taille du texte | Mouvement réduit |
 |---|---|---|---|
 | Terminal (xterm.js, [`terminal-emulator.md`](terminal-emulator.md)) | Palette ANSI à 7:1, fond noir, curseur et sélection jaunes | Police relue du panneau (en `rem`) | Curseur fixe |
-| Code Editor (Monaco) | Thème `hackeros-high-contrast` (base `hc-black`) | Police et hauteur de ligne × facteur | Curseur fixe, défilement sans animation |
-| Hack Paint | Cadre et grille visibles autour de l'image (l'image garde ses couleurs) | — (interface en `rem`) | Indicateur « occupé » immobile |
+| Code Editor (Monaco) | Thème `kazoos-high-contrast` (base `hc-black`) | Police et hauteur de ligne × facteur | Curseur fixe, défilement sans animation |
+| Kazo Paint | Cadre et grille visibles autour de l'image (l'image garde ses couleurs) | — (interface en `rem`) | Indicateur « occupé » immobile |
 
 Chacune lit `AppContext.Accessibility` à l'ouverture et suit `Changed`.
 
@@ -135,6 +135,6 @@ hors du fil principal.
 - [x] `ThemeScope` : `data-contrast`, `data-text-scale` ; mouvement réduit effectif.
 - [x] `themes.css` : couche de contraste élevé, police racine, règle de mouvement réduit ; tailles de texte en `rem`.
 - [x] Paramètres > Accessibilité (anglais et français) ; réglage Animations retiré d'Apparence.
-- [x] Terminal, Code Editor et Hack Paint suivent les préférences.
+- [x] Terminal, Code Editor et Kazo Paint suivent les préférences.
 - [x] Tests unitaires, scans axe avec et sans contraste élevé, parcours clavier, test à 200 %.
 - [x] Documentation, ADR 0112 et index.

@@ -22,8 +22,8 @@ bureaux Linux : ce sont de simples fichiers du dossier personnel, donc
   supprimé et l'erreur remonte.
 - Un élément supprimé sur un autre appareil arrive ici par la synchronisation
   (ADR 0101 §1, [`synchronization.md`](synchronization.md)) : son `.trashinfo`
-  porte les clés d'extension `X-HackerOS-Origin=deleted-on-another-device` et
-  `X-HackerOS-Device=<appareil>`, que les autres implémentations ignorent.
+  porte les clés d'extension `X-KazoOS-Origin=deleted-on-another-device` et
+  `X-KazoOS-Device=<appareil>`, que les autres implémentations ignorent.
   `KazoTrashItem.DeletedOnAnotherDevice` le dit aux apps. Mettre à la corbeille
   est un renommage synchronisé ; vider la corbeille envoie les suppressions aux
   autres appareils. Les éléments mis à la corbeille par la synchro restent sur
@@ -63,7 +63,7 @@ Dans `Apps/Commands/Kazo.Os.Commands` (ADR 0051).
 ### `trash`
 
 Nouvelle commande système (`Trash/TrashCommand.cs`, id
-`org.hackeros.commands.trash`), inspirée de `trash-cli` :
+`org.kazoos.commands.trash`), inspirée de `trash-cli` :
 
 | Sous-commande | Effet |
 | --- | --- |
@@ -141,4 +141,4 @@ Couper, copier, coller et glisser-déposer vers la corbeille restent en phase 4
 - [x] `FileView.DeleteRequested`, Maj+Suppr, entrée « Delete permanently ».
 - [x] Explorateur : corbeille par défaut, confirmation pour le définitif, panneau « Places », `TrashView`.
 - [x] Tests SDK, commandes, FileView et compteurs de l'écosystème.
-- [x] Documentation (ce fichier, index, plan, `hack-file-api.md`).
+- [x] Documentation (ce fichier, index, plan, `kazo-file-api.md`).

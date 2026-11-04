@@ -9,10 +9,10 @@ public enum AppInstallationState
     /// <summary>Installed: listed in neither <c>apps.config</c> file, nor depending on an uninstalled app.</summary>
     Installed = 1,
 
-    /// <summary>Uninstalled in the session user's own <c>~/.config/hackeros/apps.config</c> (or by its dependencies there).</summary>
+    /// <summary>Uninstalled in the session user's own <c>~/.config/kazoos/apps.config</c> (or by its dependencies there).</summary>
     UninstalledForUser = 2,
 
-    /// <summary>Uninstalled in <c>/etc/hackeros/apps.config</c> (or by its dependencies there): only an administrator reinstalls it.</summary>
+    /// <summary>Uninstalled in <c>/etc/kazoos/apps.config</c> (or by its dependencies there): only an administrator reinstalls it.</summary>
     UninstalledForMachine = 3,
 
     /// <summary>System app declared by the host (ADR 0048 section 1): never uninstallable.</summary>
@@ -22,10 +22,10 @@ public enum AppInstallationState
 /// <summary>Which <c>apps.config</c> file an uninstall or reinstall writes (ADR 0048 section 3).</summary>
 public enum AppInstallationScope
 {
-    /// <summary><c>~/.config/hackeros/apps.config</c>: the session user only.</summary>
+    /// <summary><c>~/.config/kazoos/apps.config</c>: the session user only.</summary>
     User = 1,
 
-    /// <summary><c>/etc/hackeros/apps.config</c>: every user of the machine; needs administrator rights on the file.</summary>
+    /// <summary><c>/etc/kazoos/apps.config</c>: every user of the machine; needs administrator rights on the file.</summary>
     Machine = 2
 }
 
@@ -90,7 +90,7 @@ public interface IAppInstallationService
 
     /// <summary>
     /// Uninstalls an app and its dependents in one scope, stopping their running instances. No data
-    /// is deleted, except the browser database (<c>hackweb.&lt;id&gt;</c>) of an uninstalled web app
+    /// is deleted, except the browser database (<c>kazoweb.&lt;id&gt;</c>) of an uninstalled web app
     /// (ADR 0088, section 4). A system app, or a closure containing one, is refused.
     /// </summary>
     /// <param name="appId">Exact catalog app ID.</param>

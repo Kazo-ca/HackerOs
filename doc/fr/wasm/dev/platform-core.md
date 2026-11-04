@@ -7,7 +7,7 @@
 `Platform/Kazo.Os.Platform.Core` contient les services de l'OS, sans interface
 graphique : ce qui fait le système simulé (fichiers, processus, shell, sessions,
 capacités, réseau simulé, journaux). Il implémente les passerelles que le SDK
-expose aux apps (`IAppExecutionContext`, `Hack*`) et ne doit jamais être
+expose aux apps (`IAppExecutionContext`, `Kazo*`) et ne doit jamais être
 référencé par une app (règle de la frontière, ADR 0055). Les contrats qu'il
 implémente sont dans `Shared/Kazo.Os.Simulation.Abstractions` et
 `Shared/Kazo.Os.App.Abstractions` ; l'interface graphique est dans
@@ -21,7 +21,7 @@ Environ 240 fichiers C# (51 000 lignes) ; le dossier se lit par sous-système.
 
 | Dossier | Rôle | Documents |
 |---|---|---|
-| `FileSystem/` | Service de fichiers, routeur de montages, autorisation, audit, fournisseurs `/proc` et `/dev`, amorçage de l'arbre | [`virtual-proc-and-dev.md`](virtual-proc-and-dev.md), [`hack-file-api.md`](../framework/hack-file-api.md) |
+| `FileSystem/` | Service de fichiers, routeur de montages, autorisation, audit, fournisseurs `/proc` et `/dev`, amorçage de l'arbre | [`virtual-proc-and-dev.md`](virtual-proc-and-dev.md), [`kazo-file-api.md`](../framework/kazo-file-api.md) |
 | `Execution/` | Passerelles par instance (`AppFileSystemGateway`, `AppProcessGateway`…), `AppExecutionContextFactory`, tâches de fond (`BackgroundJobService`) | [`app-sdk.md`](../framework/app-sdk.md), [`background-jobs.md`](../framework/background-jobs.md) |
 | `Processes/` | Processus en mémoire (`InMemoryProcessManager`, blocs de contrôle), environnement, limites (`ResourceLimitEnforcer`), tueur de mémoire (`OomKiller`), échantillonnage | [`process-environment.md`](process-environment.md), [`process-limits.md`](process-limits.md), [`oom-killer.md`](oom-killer.md) |
 | `Lifecycle/` | Cycle de vie des apps : lancement, arrêt, services `AutoStart`, activation des apps (`AppLifecycleOrchestrator`) | [`app-installation.md`](app-installation.md) |
@@ -39,7 +39,7 @@ Environ 240 fichiers C# (51 000 lignes) ; le dossier se lit par sous-système.
 | `Backup/`, `Storage/` | Sauvegarde et restauration de la machine, surveillance de l'espace | [`system-backup.md`](system-backup.md) |
 | `Administration/` | Passerelles d'administration du SDK (paramètres système, alimentation, sauvegarde, diagnostics du stockage, comptes) | [`sdk-reference.md`](../framework/sdk-reference.md) |
 | `Clipboard/`, `Notifications/`, `Time/`, `Power/`, `Isolation/`, `Globalization/`, `Events/` | Presse-papiers, notifications, horloge simulée, arrêt, isolation cross-origin, langue de session, bus d'événements | [`clipboard.md`](clipboard.md), [`worker-processes.md`](worker-processes.md#isolation-cross-origin-adr-0131-adr-0143) |
-| `WebData/` | Base de données des sites ASP.Hack (`WebSiteDatabaseStore`) | [`asp-hack-site-data.md`](../framework/asp-hack-site-data.md) |
+| `WebData/` | Base de données des sites ASP.Kazo (`WebSiteDatabaseStore`) | [`asp-kazo-site-data.md`](../framework/asp-kazo-site-data.md) |
 
 ## Services et composition
 

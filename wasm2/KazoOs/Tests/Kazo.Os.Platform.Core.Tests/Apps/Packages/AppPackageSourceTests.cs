@@ -61,11 +61,11 @@ public sealed class AppPackageSourceTests
         AppPackageSource source = new("Kazo-ca", "Os-App-Webamp");
 
         Assert.Equal(
-            "https://raw.githubusercontent.com/Kazo-ca/Os-App-Webamp/hackeros-packages/index.json",
+            "https://raw.githubusercontent.com/Kazo-ca/Os-App-Webamp/kazoos-packages/index.json",
             source.GetIndexUri("raw.githubusercontent.com").AbsoluteUri);
         Assert.Equal(
-            "https://raw.githubusercontent.com/Kazo-ca/Os-App-Webamp/hackeros-packages/1.0.0/org.kazo.webamp-1.0.0.hackapp",
-            source.GetFileUri("raw.githubusercontent.com", "1.0.0/org.kazo.webamp-1.0.0.hackapp").AbsoluteUri);
+            "https://raw.githubusercontent.com/Kazo-ca/Os-App-Webamp/kazoos-packages/1.0.0/org.kazo.webamp-1.0.0.kazoapp",
+            source.GetFileUri("raw.githubusercontent.com", "1.0.0/org.kazo.webamp-1.0.0.kazoapp").AbsoluteUri);
         Assert.Throws<ArgumentException>(() => source.GetFileUri("raw.githubusercontent.com", "../main/secret"));
         Assert.Throws<ArgumentException>(() => source.GetFileUri("raw.githubusercontent.com", "/etc/passwd"));
     }
@@ -109,11 +109,11 @@ public sealed class AppPackageSourceTests
         VirtualPath path = AppsConfigDocument.MachinePath;
         AppPackageSource source = new("Kazo-ca", "Os-App-Webamp", SemanticVersion.Parse("1.0.0"));
 
-        string written = AppsConfigDocument.SetInstalled("[uninstalled]\norg.hackeros.calculator=true\n", "org.kazo.webamp", source);
+        string written = AppsConfigDocument.SetInstalled("[uninstalled]\norg.kazoos.calculator=true\n", "org.kazo.webamp", source);
         InstalledAppsReadResult read = AppsConfigDocument.ReadInstalled(written, path);
 
         Assert.Equal(source, read.Sources["org.kazo.webamp"]);
-        Assert.Contains("org.hackeros.calculator=true", written, StringComparison.Ordinal);
+        Assert.Contains("org.kazoos.calculator=true", written, StringComparison.Ordinal);
         Assert.Contains("org.kazo.webamp=github:Kazo-ca/Os-App-Webamp@1.0.0", written, StringComparison.Ordinal);
         Assert.Empty(AppsConfigDocument.ReadInstalled(AppsConfigDocument.RemoveInstalled(written, "org.kazo.webamp"), path).Sources);
     }

@@ -64,11 +64,11 @@ de compatibilité pour les autres apps.
 version=1
 
 [dock]
-apps=org.hackeros.browser,org.hackeros.settings
+apps=org.kazoos.browser,org.kazoos.settings
 
 [pages]
-1=org.hackeros.text-editor
-2=org.hackeros.calculator
+1=org.kazoos.text-editor
+2=org.kazoos.calculator
 ```
 
 Les pages sont numérotées de 1 à N sans trou ; une valeur vide conserve une
@@ -90,7 +90,7 @@ Chaque édition remplace un seul fichier ; changer de page n’écrit rien. Aucu
 localStorage ni changement de schéma IndexedDB.
 
 Si le nouveau fichier n'existe pas, une ancienne disposition valide de
-`~/.config/hackeros/.mobile/layout.json` est convertie automatiquement au chargement.
+`~/.config/kazoos/.mobile/layout.json` est convertie automatiquement au chargement.
 L'ancien fichier reste intact ; aucune écriture JSON n'est effectuée. Un
 `layout.conf` existant est toujours prioritaire, même invalide, et n'est jamais
 écrasé par cette migration. Sans ancien fichier valide, la première édition
@@ -99,7 +99,7 @@ crée la configuration. Les écritures suivantes normalisent son texte.
 `OsSettingsLocation.UserHome` permet à `OsSettingsFile` de résoudre le chemin
 relatif `Desktop/.mobile/layout.conf` avec les droits de la session.
 
-`/etc/hackeros/mobile.config`, surchargé par `~/.config/hackeros/mobile.config` :
+`/etc/kazoos/mobile.config`, surchargé par `~/.config/kazoos/mobile.config` :
 
 ```ini
 mouseHelpers=true

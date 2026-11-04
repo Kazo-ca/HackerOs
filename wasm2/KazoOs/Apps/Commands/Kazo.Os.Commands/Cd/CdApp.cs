@@ -11,7 +11,7 @@ namespace Kazo.Os.Commands.Cd;
 public sealed class CdApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.cmd.cd";
+    public override string Id => "org.kazoos.cmd.cd";
 
     /// <inheritdoc />
     public override string Name => "cd";
@@ -23,7 +23,7 @@ public sealed class CdApp : AppDefinition
     public override Type EntryPoint => typeof(CdCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Change the working directory";

@@ -38,7 +38,7 @@ public sealed partial class AppLifecycleOrchestratorTests
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
 
         AppLaunchResult result = await fixture.Orchestrator.LaunchAsync(
-            new AppLaunchRequest("org.hackeros.echo", principal, ["hello", "world"]));
+            new AppLaunchRequest("org.kazoos.echo", principal, ["hello", "world"]));
 
         Assert.Equal(AppLaunchStatus.Launched, result.Status);
         Assert.Equal(0, result.ExitCode);
@@ -57,7 +57,7 @@ public sealed partial class AppLifecycleOrchestratorTests
         });
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
 
-        AppLaunchResult result = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.echo", principal, []));
+        AppLaunchResult result = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.echo", principal, []));
 
         Assert.Equal(new ResourceProfile(0.02, 0.1, 0.05, 0.1, 0, 0.2, 0, 0), result.Process!.ResourceProfile);
     }
@@ -73,7 +73,7 @@ public sealed partial class AppLifecycleOrchestratorTests
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
 
         AppLaunchResult result = await fixture.Orchestrator.LaunchAsync(
-            new AppLaunchRequest("org.hackeros.echo", principal, [], WorkingDirectory: VirtualPath.Parse("/tmp")));
+            new AppLaunchRequest("org.kazoos.echo", principal, [], WorkingDirectory: VirtualPath.Parse("/tmp")));
 
         Assert.Equal(0, result.ExitCode);
         Assert.Equal($"True /tmp/notes.txt {principal.HomePath}/x{Environment.NewLine}", result.StandardOutput);
@@ -90,12 +90,12 @@ public sealed partial class AppLifecycleOrchestratorTests
             "# comment\nEDITOR=\"nano\"\nHOME=/evil\nnot a pair\n");
 
         AppLaunchResult result = await fixture.Orchestrator.LaunchAsync(
-            new AppLaunchRequest("org.hackeros.envprobe", principal, ["-i", "two words"]));
+            new AppLaunchRequest("org.kazoos.envprobe", principal, ["-i", "two words"]));
         Assert.True(result.ExitCode == 0, $"{result.Status} {result.ErrorMessage} {result.StandardError}");
 
         string[] lines = result.StandardOutput!.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
         Assert.Equal(
-            $"envprobe|-i|two words;{principal.HomePath};nano;{principal.HomePath};{principal.HomePath};-;{principal.HomePath};alice;hackeros",
+            $"envprobe|-i|two words;{principal.HomePath};nano;{principal.HomePath};{principal.HomePath};-;{principal.HomePath};alice;kazoos",
             lines[0]);
         Assert.Equal($"{principal.HomePath}/x", lines[1]);
         // The ended process's entry is gone.
@@ -107,17 +107,17 @@ public sealed partial class AppLifecycleOrchestratorTests
     {
         Fixture fixture = new(WaiterManifest(), EnvironmentProbeManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        AppLaunchResult parent = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.waiter", principal, []));
+        AppLaunchResult parent = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.waiter", principal, []));
         ProcessId parentPid = parent.Process!.Pid;
         fixture.Manager.Environments.SetVariable(parentPid, "FOO", "from-parent");
         fixture.Manager.Environments.SetWorkingDirectory(parentPid, VirtualPath.Parse("/var"));
 
         AppLaunchResult child = await fixture.Orchestrator.LaunchAsync(
-            new AppLaunchRequest("org.hackeros.envprobe", principal, [], ParentPid: parentPid,
+            new AppLaunchRequest("org.kazoos.envprobe", principal, [], ParentPid: parentPid,
                 Environment: new Dictionary<string, string>(StringComparer.Ordinal) { ["EDITOR"] = "vi" }));
 
         string firstLine = child.StandardOutput!.Split(Environment.NewLine)[0];
-        Assert.Equal($"envprobe;/var;vi;{principal.HomePath};{principal.HomePath};from-parent;/var;alice;hackeros", firstLine);
+        Assert.Equal($"envprobe;/var;vi;{principal.HomePath};{principal.HomePath};from-parent;/var;alice;kazoos", firstLine);
 
         // The child's export and cd stayed in the child.
         ProcessEnvironmentSnapshot after = fixture.Manager.Environments.Get(parentPid);
@@ -135,10 +135,10 @@ public sealed partial class AppLifecycleOrchestratorTests
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
         await WriteSystemFileAsync(fixture.FileSystemService, "/etc/hostname", "black-ice\n");
 
-        await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.envprobe", principal, []));
+        await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.envprobe", principal, []));
         await WriteSystemFileAsync(fixture.FileSystemService, "/etc/environment", "EDITOR=emacs\n");
         await WriteSystemFileAsync(fixture.FileSystemService, "/etc/hostname", "other\n");
-        AppLaunchResult second = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.envprobe", principal, []));
+        AppLaunchResult second = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.envprobe", principal, []));
 
         // Like pam_env and the kernel host name: a change applies to the next session only.
         Assert.Equal("black-ice", fixture.LoginEnvironment.HostName);
@@ -153,7 +153,7 @@ public sealed partial class AppLifecycleOrchestratorTests
         Fixture fixture = new(WaiterManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
 
-        AppLaunchResult launch = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.waiter", principal, []));
+        AppLaunchResult launch = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.waiter", principal, []));
 
         Assert.Equal(AppLaunchStatus.Launched, launch.Status);
         Assert.True(fixture.Manager.TryGetActive(launch.Process!.Pid, out ProcessRecord active));
@@ -170,12 +170,12 @@ public sealed partial class AppLifecycleOrchestratorTests
     {
         Fixture fixture = new(WaiterManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        await SeedServiceStartModeAsync(fixture.FileSystemService, principal.LoginName.Value, "org.hackeros.waiter", ServiceStartMode.Disabled);
+        await SeedServiceStartModeAsync(fixture.FileSystemService, principal.LoginName.Value, "org.kazoos.waiter", ServiceStartMode.Disabled);
 
         IReadOnlyList<AppLaunchResult> results = await fixture.Orchestrator.StartAllServicesAsync(principal);
 
         Assert.Empty(results);
-        Assert.False(fixture.Manager.TryGetSingleton("org.hackeros.waiter", out _));
+        Assert.False(fixture.Manager.TryGetSingleton("org.kazoos.waiter", out _));
     }
 
     [Fact]
@@ -183,13 +183,13 @@ public sealed partial class AppLifecycleOrchestratorTests
     {
         Fixture fixture = new(WaiterManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        await SeedServiceStartModeAsync(fixture.FileSystemService, principal.LoginName.Value, "org.hackeros.waiter", ServiceStartMode.Manual);
+        await SeedServiceStartModeAsync(fixture.FileSystemService, principal.LoginName.Value, "org.kazoos.waiter", ServiceStartMode.Manual);
 
         IReadOnlyList<AppLaunchResult> autoStartResults = await fixture.Orchestrator.StartAllServicesAsync(principal);
         Assert.Empty(autoStartResults);
 
         AppLaunchResult directLaunch = await fixture.Orchestrator.LaunchAsync(
-            new AppLaunchRequest("org.hackeros.waiter", principal, []));
+            new AppLaunchRequest("org.kazoos.waiter", principal, []));
         Assert.Equal(AppLaunchStatus.Launched, directLaunch.Status);
     }
 
@@ -198,7 +198,7 @@ public sealed partial class AppLifecycleOrchestratorTests
     {
         Fixture fixture = new(WaiterManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        await SeedServiceStartModeAsync(fixture.FileSystemService, principal.LoginName.Value, "org.hackeros.waiter", ServiceStartMode.Automatic);
+        await SeedServiceStartModeAsync(fixture.FileSystemService, principal.LoginName.Value, "org.kazoos.waiter", ServiceStartMode.Automatic);
 
         IReadOnlyList<AppLaunchResult> results = await fixture.Orchestrator.StartAllServicesAsync(principal);
 
@@ -212,8 +212,8 @@ public sealed partial class AppLifecycleOrchestratorTests
         Fixture fixture = new(WaiterManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
 
-        AppLaunchResult first = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.waiter", principal, []));
-        AppLaunchResult second = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.waiter", principal, []));
+        AppLaunchResult first = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.waiter", principal, []));
+        AppLaunchResult second = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.waiter", principal, []));
 
         Assert.Equal(AppLaunchStatus.Launched, first.Status);
         Assert.Equal(AppLaunchStatus.FocusedExisting, second.Status);
@@ -226,8 +226,8 @@ public sealed partial class AppLifecycleOrchestratorTests
         Fixture fixture = new(SingletonWindowManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
 
-        AppLaunchResult first = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.notes", principal, []));
-        AppLaunchResult second = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.notes", principal, []));
+        AppLaunchResult first = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.notes", principal, []));
+        AppLaunchResult second = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.notes", principal, []));
 
         Assert.Equal(AppLaunchStatus.Launched, first.Status);
         Assert.Equal(AppLaunchStatus.FocusedExisting, second.Status);
@@ -240,7 +240,7 @@ public sealed partial class AppLifecycleOrchestratorTests
         Fixture fixture = new(SingletonWindowManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
         AppLaunchResult launch = await fixture.Orchestrator.LaunchAsync(
-            new AppLaunchRequest("org.hackeros.notes", principal, []));
+            new AppLaunchRequest("org.kazoos.notes", principal, []));
 
         bool stopped = await fixture.Orchestrator.StopAsync(launch.Process!.Pid);
 
@@ -258,7 +258,7 @@ public sealed partial class AppLifecycleOrchestratorTests
         Fixture fixture = new(EchoManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
 
-        AppLaunchResult result = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.missing", principal, []));
+        AppLaunchResult result = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.missing", principal, []));
 
         Assert.Equal(AppLaunchStatus.NotFound, result.Status);
     }
@@ -268,9 +268,9 @@ public sealed partial class AppLifecycleOrchestratorTests
     {
         Fixture fixture = new(EchoManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        await fixture.Orchestrator.DisableAsync("org.hackeros.echo");
+        await fixture.Orchestrator.DisableAsync("org.kazoos.echo");
 
-        AppLaunchResult result = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.echo", principal, []));
+        AppLaunchResult result = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.echo", principal, []));
 
         Assert.Equal(AppLaunchStatus.Disabled, result.Status);
     }
@@ -281,7 +281,7 @@ public sealed partial class AppLifecycleOrchestratorTests
         Fixture fixture = new(FaultingManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
 
-        AppLaunchResult result = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.faulty", principal, []));
+        AppLaunchResult result = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.faulty", principal, []));
 
         Assert.Equal(AppLaunchStatus.EntryPointFault, result.Status);
         Assert.NotNull(result.ErrorMessage);
@@ -294,7 +294,7 @@ public sealed partial class AppLifecycleOrchestratorTests
         AppManifest dependency = WaiterManifest();
         AppManifest dependent = WaiterManifest() with
         {
-            Id = "org.hackeros.dependent-waiter",
+            Id = "org.kazoos.dependent-waiter",
             EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", typeof(WaitingServiceApp).FullName!),
             Dependencies = [new AppDependencyManifest(dependency.Id, "1.0.0", null, Optional: false)]
         };
@@ -322,8 +322,8 @@ public sealed partial class AppLifecycleOrchestratorTests
         Fixture fixture = new(EchoManifest());
         await fixture.LoginAsync();
 
-        AppDisableResult disableResult = await fixture.Orchestrator.DisableAsync("org.hackeros.echo");
-        AppEnableResult enableResult = await fixture.Orchestrator.EnableAsync("org.hackeros.echo");
+        AppDisableResult disableResult = await fixture.Orchestrator.DisableAsync("org.kazoos.echo");
+        AppEnableResult enableResult = await fixture.Orchestrator.EnableAsync("org.kazoos.echo");
 
         Assert.True(disableResult.Success);
         Assert.True(enableResult.Success);
@@ -373,7 +373,7 @@ public sealed partial class AppLifecycleOrchestratorTests
         ElevationTicket ticket = tickets.Issue(ElevationScope.SudoRoot, "admin-id", "admin");
 
         AppLaunchResult result = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest(
-            "org.hackeros.root-probe", principal, [], ElevationToken: ticket.Token, ElevationScope: ElevationScope.SudoRoot));
+            "org.kazoos.root-probe", principal, [], ElevationToken: ticket.Token, ElevationScope: ElevationScope.SudoRoot));
 
         Assert.Equal(AppLaunchStatus.Launched, result.Status);
         Assert.Equal(0, result.ExitCode);
@@ -387,7 +387,7 @@ public sealed partial class AppLifecycleOrchestratorTests
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
 
         AppLaunchResult result = await fixture.Orchestrator.LaunchAsync(
-            new AppLaunchRequest("org.hackeros.root-probe", principal, []));
+            new AppLaunchRequest("org.kazoos.root-probe", principal, []));
 
         Assert.Equal(AppLaunchStatus.Launched, result.Status);
         Assert.Equal(1, result.ExitCode);
@@ -403,9 +403,9 @@ public sealed partial class AppLifecycleOrchestratorTests
         ElevationTicket ticket = tickets.Issue(ElevationScope.SudoRoot, "admin-id", "admin");
 
         AppLaunchResult first = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest(
-            "org.hackeros.root-probe", principal, [], ElevationToken: ticket.Token, ElevationScope: ElevationScope.SudoRoot));
+            "org.kazoos.root-probe", principal, [], ElevationToken: ticket.Token, ElevationScope: ElevationScope.SudoRoot));
         AppLaunchResult second = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest(
-            "org.hackeros.root-probe", principal, [], ElevationToken: ticket.Token, ElevationScope: ElevationScope.SudoRoot));
+            "org.kazoos.root-probe", principal, [], ElevationToken: ticket.Token, ElevationScope: ElevationScope.SudoRoot));
 
         Assert.Equal(AppLaunchStatus.Launched, first.Status);
         Assert.Equal(AppLaunchStatus.ElevationDenied, second.Status);
@@ -418,7 +418,7 @@ public sealed partial class AppLifecycleOrchestratorTests
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
 
         AppLaunchResult result = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest(
-            "org.hackeros.root-probe", principal, [], ElevationToken: Guid.NewGuid(), ElevationScope: ElevationScope.SudoRoot));
+            "org.kazoos.root-probe", principal, [], ElevationToken: Guid.NewGuid(), ElevationScope: ElevationScope.SudoRoot));
 
         Assert.Equal(AppLaunchStatus.ElevationDenied, result.Status);
         Assert.Null(result.Process);
@@ -434,7 +434,7 @@ public sealed partial class AppLifecycleOrchestratorTests
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
 
         AppLaunchResult result = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest(
-            "org.hackeros.root-probe", principal, [], ElevationToken: Guid.NewGuid(), ElevationScope: ElevationScope.SudoRoot));
+            "org.kazoos.root-probe", principal, [], ElevationToken: Guid.NewGuid(), ElevationScope: ElevationScope.SudoRoot));
 
         Assert.Equal(AppLaunchStatus.ElevationDenied, result.Status);
     }
@@ -450,7 +450,7 @@ public sealed partial class AppLifecycleOrchestratorTests
             AppCapabilities.FileSystemSystemRead, VirtualPath.Parse("/etc"));
 
         AppLaunchResult result = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest(
-            "org.hackeros.root-probe", principal, [],
+            "org.kazoos.root-probe", principal, [],
             ElevationToken: ticket.Token, ElevationScope: ElevationScope.CapabilityApproval));
 
         Assert.Equal(AppLaunchStatus.Launched, result.Status);
@@ -469,7 +469,7 @@ public sealed partial class AppLifecycleOrchestratorTests
             AppCapabilities.FileSystemSystemWrite, VirtualPath.Parse("/etc"));
 
         AppLaunchResult result = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest(
-            "org.hackeros.root-probe", principal, [],
+            "org.kazoos.root-probe", principal, [],
             ElevationToken: wrongCapability.Token, ElevationScope: ElevationScope.CapabilityApproval));
 
         Assert.Equal(AppLaunchStatus.Launched, result.Status);
@@ -497,10 +497,10 @@ public sealed partial class AppLifecycleOrchestratorTests
     /// <summary>A Terminal command that declares no capabilities at all, used to probe elevation bypass behavior.</summary>
     private static AppManifest RootProbeManifest() => new()
     {
-        Id = "org.hackeros.root-probe",
+        Id = "org.kazoos.root-probe",
         Name = "RootProbe",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "Stats /etc, which requires a capability this manifest never declares.",
         Kind = AppKind.Terminal,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", typeof(RootProbeTerminalApp).FullName!),
@@ -537,10 +537,10 @@ public sealed partial class AppLifecycleOrchestratorTests
 
     private static AppManifest InjectingManifest() => new()
     {
-        Id = "org.hackeros.injecting",
+        Id = "org.kazoos.injecting",
         Name = "Injecting",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "Requires an injected service beyond the manifest.",
         Kind = AppKind.Terminal,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", typeof(InjectingTerminalApp).FullName!),
@@ -556,7 +556,7 @@ public sealed partial class AppLifecycleOrchestratorTests
         AppManifest dependency = EchoManifest();
         AppManifest dependent = EchoManifest() with
         {
-            Id = "org.hackeros.dependent-echo",
+            Id = "org.kazoos.dependent-echo",
             Dependencies = [new AppDependencyManifest(dependency.Id, "1.0.0", null, Optional: false)]
         };
         Fixture fixture = new(dependency, dependent);
@@ -571,10 +571,10 @@ public sealed partial class AppLifecycleOrchestratorTests
 
     private static AppManifest EchoManifest() => new()
     {
-        Id = "org.hackeros.echo",
+        Id = "org.kazoos.echo",
         Name = "Echo",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "Echoes its arguments.",
         Kind = AppKind.Terminal,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", typeof(EchoTerminalApp).FullName!),
@@ -586,10 +586,10 @@ public sealed partial class AppLifecycleOrchestratorTests
 
     private static AppManifest FaultingManifest() => new()
     {
-        Id = "org.hackeros.faulty",
+        Id = "org.kazoos.faulty",
         Name = "Faulty",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "Always throws.",
         Kind = AppKind.Terminal,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", typeof(FaultingTerminalApp).FullName!),
@@ -601,7 +601,7 @@ public sealed partial class AppLifecycleOrchestratorTests
 
     private static AppManifest EnvironmentProbeManifest() => EchoManifest() with
     {
-        Id = "org.hackeros.envprobe",
+        Id = "org.kazoos.envprobe",
         Name = "Environment probe",
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", typeof(EnvironmentProbeTerminalApp).FullName!),
         Terminal = new TerminalCommandManifest("envprobe", [], "envprobe")
@@ -612,7 +612,7 @@ public sealed partial class AppLifecycleOrchestratorTests
     {
         AppOperationContext root = new()
         {
-            AppId = "org.hackeros.kernel",
+            AppId = "org.kazoos.kernel",
             UserId = "system",
             UserAuthority = AppAuthority.System,
             GrantedCapabilities = new HashSet<string>(AppCapabilities.All, StringComparer.Ordinal),
@@ -626,10 +626,10 @@ public sealed partial class AppLifecycleOrchestratorTests
 
     private static AppManifest WaiterManifest() => new()
     {
-        Id = "org.hackeros.waiter",
+        Id = "org.kazoos.waiter",
         Name = "Waiter",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "Waits for cancellation.",
         Kind = AppKind.Service,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", typeof(WaitingServiceApp).FullName!),
@@ -640,13 +640,13 @@ public sealed partial class AppLifecycleOrchestratorTests
 
     private static AppManifest SingletonWindowManifest() => new()
     {
-        Id = "org.hackeros.notes",
+        Id = "org.kazoos.notes",
         Name = "Notes",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "A singleton notes window.",
         Kind = AppKind.Window,
-        EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", "org.hackeros.notes.EntryPoint"),
+        EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", "org.kazoos.notes.EntryPoint"),
         SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,

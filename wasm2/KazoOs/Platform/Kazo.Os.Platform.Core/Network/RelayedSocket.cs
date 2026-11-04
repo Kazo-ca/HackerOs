@@ -11,7 +11,7 @@ namespace Kazo.Os.Platform.Core.Network;
 /// Its traffic is counted on <c>eth0</c> and charged to the app's process, segment by segment
 /// (ADR 0057), and its buffers stay charged until it is closed (ADR 0068).
 /// </summary>
-internal sealed class RelayedSocket : IHackSocket
+internal sealed class RelayedSocket : IKazoSocket
 {
     private readonly IProxyStreamChannel _channel;
     private readonly NetworkTrafficMeter _meter;

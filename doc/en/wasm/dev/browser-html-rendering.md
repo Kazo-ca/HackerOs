@@ -2,7 +2,7 @@
 
 # Browser HTML rendering
 
-**Web phase, work item `web/4-browser-html`** ([`asp-hack-plan.md`](plans/asp-hack-plan.md),
+**Web phase, work item `web/4-browser-html`** ([`asp-kazo-plan.md`](plans/asp-kazo-plan.md),
 section 5). Decision: [ADR 0075](adr/0075-browser-html-rendering.md), adjusted
 by [ADR 0079](adr/0079-browser-html-rendering-adjustments.md). Builds on
 the real HTTP bodies of [`http-bodies.md`](../framework/http-bodies.md).
@@ -45,7 +45,7 @@ BrowserPageView (.razor.js) ── iframe sandbox="allow-scripts allow-forms", s
      │            ▼
 PageBridgeHandler ◄── PageBridge.js (dans la page) : fetch, XHR, liens, formulaires,
      │                 cookies, localStorage, console, history, titre, raccourcis
-     └── PageStorage (~/.local/share/hackeros/browser/storage/<site>/local-storage.json)
+     └── PageStorage (~/.local/share/kazoos/browser/storage/<site>/local-storage.json)
 ```
 
 All files are under `Apps/System/Kazo.Os.Apps.Browser/`:
@@ -126,14 +126,14 @@ A response that arrives after the tab has changed page is discarded.
 |---|---|
 | `fetch`, `XMLHttpRequest`, `navigator.sendBeacon` | Sent to the browser. Same origin: full headers. Different origin: CORS checked (`Access-Control-Allow-Origin`, `-Allow-Credentials`, `-Expose-Headers`), `no-cors` gives an opaque response. `file:` always refused. |
 | `document.cookie` | Tab cookies for the page's URL (`Max-Age` and `Expires` handled). Empty on a `file:` page. |
-| `localStorage` | Persisted per site in `~/.local/share/hackeros/browser/storage/<key>/local-storage.json` (keys `https_host`, `http_host_port`, `file`). 5 MiB quota, `QuotaExceededError` beyond that. |
+| `localStorage` | Persisted per site in `~/.local/share/kazoos/browser/storage/<key>/local-storage.json` (keys `https_host`, `http_host_port`, `file`). 5 MiB quota, `QuotaExceededError` beyond that. |
 | `sessionStorage` | In memory, for the lifetime of the tab. |
 | Links and forms | Intercepted: `GET`, urlencoded `POST`, multipart, `text/plain`; local `#` fragment; `download` saves the file. |
 | `history.pushState`/`replaceState` | Updates the address bar and the history. |
 | `document.URL`, `document.referrer` | The page's real URL, not `about:srcdoc`. |
 | `console.*`, unhandled errors | Console tab of the developer tools. |
 | `alert` | Banner above the page; `confirm` returns `false`, `prompt` `null`. |
-| Autocomplete | When a form is submitted, named text fields (neither password, nor hidden, nor `autocomplete="off"`, nor card number) go into `~/.local/share/hackeros/browser/form-history.json`; on focus of a field, its past values are offered through a `<datalist>`; `Ctrl+Shift+Delete` clears the history (ADR 0088 §6, [`asp-hack-site-data.md`](../framework/asp-hack-site-data.md#autofill)). |
+| Autocomplete | When a form is submitted, named text fields (neither password, nor hidden, nor `autocomplete="off"`, nor card number) go into `~/.local/share/kazoos/browser/form-history.json`; on focus of a field, its past values are offered through a `<datalist>`; `Ctrl+Shift+Delete` clears the history (ADR 0088 §6, [`asp-kazo-site-data.md`](../framework/asp-kazo-site-data.md#autofill)). |
 | `WebSocket`, `EventSource`, `window.open`, geolocation | Refused. |
 | Elements added afterwards (`img.src = …`, `appendChild`) | Loaded by the browser on demand. |
 
@@ -164,7 +164,7 @@ is recreated there and its bridge keeps talking to this browser.
 
 ## Usage
 
-- Type `example.hackeros/page.html` or a path (`~/Documents/site/index.html`)
+- Type `example.kazoos/page.html` or a path (`~/Documents/site/index.html`)
   in the address bar.
 - `Ctrl+U` or the `</>` button: source view; `F12`: developer tools;
   `F5`: reload; `Alt+←`/`Alt+→`: history. These shortcuts also work
@@ -211,7 +211,7 @@ is recreated there and its bridge keeps talking to this browser.
   browser opens on KazoSearch and a search typed in the address bar
   displays its results (ADR 0085: the default network catalog
   is wired into the OS).
-- Test pages: `example.hackeros` (`/page.html`, `/form.html`, `/echo`,
+- Test pages: `example.kazoos` (`/page.html`, `/form.html`, `/echo`,
   `/api/ping`) in `SmokeTestNetworkSeed`, and the site
   `~/Documents/e2e-site` of the E2E demo mode.
 

@@ -24,10 +24,10 @@ public sealed class SampleTickerServiceTests
     private static readonly AppManifest ServiceManifest = new()
     {
         SchemaVersion = 1,
-        Id = "org.hackeros.samples.service-app",
+        Id = "org.kazoos.samples.service-app",
         Name = "Sample Ticker Service",
         Version = "1.0.0",
-        PublisherId = "pub.hackeros",
+        PublisherId = "pub.kazoos",
         Description = "Deterministic status and ticker background service for Kazo OS sessions",
         Kind = AppKind.Service,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Samples.ServiceApp.dll", "Kazo.Os.Samples.ServiceApp.SampleTickerService"),

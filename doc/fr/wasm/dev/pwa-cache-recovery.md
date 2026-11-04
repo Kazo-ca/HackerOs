@@ -35,7 +35,7 @@ fichiers de l'application est reconstruit.
 | Vérification d'intégrité | Blazor (`dotnet.js`, empreintes SHA-256 de la configuration de démarrage) | Chaque ressource de démarrage est chargée avec `integrity` : des octets abîmés font échouer le chargement (« SRI's integrity checks failed »), puis le démarrage (« Failed to start platform. Reason: … download '…' failed »). |
 | Garde de démarrage | `OS/Kazo.Os.Ecosystem/wwwroot/index.html` (script en ligne, frontière d'amorçage de l'hôte) | Lance Blazor (`autostart="false"`, puis `Blazor.start()`), détecte l'échec, décide de la réparation, affiche l'écran d'erreur. |
 | Réparation | `OS/Kazo.Os.Ecosystem/wwwroot/service-worker.published.js`, message `RESET_CACHE` | Vide le cache de la version et le reprend du serveur, ou le garde intact si le serveur est injoignable. |
-| Écran d'erreur | `index.html` (`#hackeros-boot-error`) et `OS/Kazo.Os.Ecosystem.Host/wwwroot/css/app.css` (servi sous `_content/Kazo.Os.Ecosystem.Host/css/app.css`) | Trois états (`data-state`) : `repairing`, `offline`, `failed`. Style console sombre ; l'anneau de chargement et la barre d'erreur de Blazor sont masqués (`html.hackeros-boot-failed`). |
+| Écran d'erreur | `index.html` (`#kazoos-boot-error`) et `OS/Kazo.Os.Ecosystem.Host/wwwroot/css/app.css` (servi sous `_content/Kazo.Os.Ecosystem.Host/css/app.css`) | Trois états (`data-state`) : `repairing`, `offline`, `failed`. Style console sombre ; l'anneau de chargement et la barre d'erreur de Blazor sont masqués (`html.kazoos-boot-failed`). |
 
 ### Déroulé
 
@@ -50,14 +50,14 @@ fichiers de l'application est reconstruit.
    La garde écoute aussi le rejet « download '…' for … failed » qui sort seul
    du chargeur.
 3. Si aucun service worker ne contrôle la page (première visite, Ctrl+F5), ou
-   si la garde `sessionStorage['hackeros.bootRecovery']` est déjà posée (la
+   si la garde `sessionStorage['kazoos.bootRecovery']` est déjà posée (la
    page a déjà réparé et rechargé dans cet onglet), l'erreur vient souvent du
    serveur et passe : GitHub Pages renvoie des `503` un moment après un
    déploiement, et leur corps échoue au contrôle d'intégrité
    ([ADR 0224](adr/0224-retry-the-boot-after-a-server-error.md)). L'écran
    `retrying` compte 5, 15 puis 30 secondes et recharge la page ; « Retry »
    réessaie tout de suite. Après trois essais
-   (`sessionStorage['hackeros.bootRetries']`), ou hors ligne, l'écran `failed`
+   (`sessionStorage['kazoos.bootRetries']`), ou hors ligne, l'écran `failed`
    (ou `offline` si un worker contrôle la page) s'affiche.
 4. Sinon l'écran `repairing` s'affiche et la page envoie `RESET_CACHE` au
    service worker sur un `MessageChannel` (délai maximal 120 s). Le service
@@ -66,7 +66,7 @@ fichiers de l'application est reconstruit.
      est injoignable, il répond `{ ok: false, reason: 'unreachable' }` sans rien
      effacer, et la page affiche l'état `offline` ;
    - sinon il retélécharge tous les fichiers du manifeste, avec leur
-     `integrity`, dans un cache de transit `hackeros-cache-<version>-repair`,
+     `integrity`, dans un cache de transit `kazoos-cache-<version>-repair`,
      vide le cache abîmé, y recopie le transit, puis supprime le transit ;
    - si le serveur ne peut pas fournir une copie vérifiée de cette version
      (fichier abîmé sur le serveur, version plus récente déployée), il vide
@@ -75,7 +75,7 @@ fichiers de l'application est reconstruit.
    efface la garde : une corruption ultérieure dans le même onglet sera de
    nouveau réparée.
 
-Le cache de transit commence par `hackeros-cache-` : s'il restait à moitié
+Le cache de transit commence par `kazoos-cache-` : s'il restait à moitié
 écrit, la prochaine activation d'une version le supprime comme tout cache
 périmé (ADR 0017).
 

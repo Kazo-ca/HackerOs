@@ -34,7 +34,7 @@ public sealed class KazoControllerActionDescriptor
     public IReadOnlyList<KazoActionParameterDescriptor> Parameters { get; init; } = [];
 
     /// <summary>Gets the filter attributes of the controller, then of the action.</summary>
-    public IReadOnlyList<IHackFilterMetadata> Filters { get; init; } = [];
+    public IReadOnlyList<IKazoFilterMetadata> Filters { get; init; } = [];
 
     /// <summary>Gets the generated factory: <c>new NotesController(services.GetRequiredService&lt;NotesStore&gt;())</c>.</summary>
     public required Func<IServiceProvider, KazoControllerBase> CreateController { get; init; }

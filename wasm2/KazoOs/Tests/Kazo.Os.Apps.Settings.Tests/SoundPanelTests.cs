@@ -42,11 +42,11 @@ public sealed class SoundPanelTests
     {
         await using PanelHarness harness = await PanelHarness.RenderAsync(new FakeSystemSettings(), Themes());
 
-        Assert.Equal(["hackeros", "soft", "retro"], harness.Panel.Themes.Select(static theme => theme.Id));
+        Assert.Equal(["kazoos", "soft", "retro"], harness.Panel.Themes.Select(static theme => theme.Id));
         Assert.Equal([false, false, true], harness.Panel.Themes.Select(static theme => theme.IsUserTheme));
         Assert.Equal("Soft", harness.Panel.Themes[1].Name);
         Assert.True(harness.Panel.Enabled);
-        Assert.Equal("hackeros", harness.Panel.Theme);
+        Assert.Equal("kazoos", harness.Panel.Theme);
         Assert.Equal(60, harness.Panel.Volume);
         string html = harness.Html();
         Assert.Contains("Play system sounds", html, StringComparison.Ordinal);
@@ -94,7 +94,7 @@ public sealed class SoundPanelTests
     }
 
     private static FakeAppFileSystemGateway Themes() => new FakeAppFileSystemGateway()
-        .WithFile("/usr/share/sounds/hackeros/index.theme", BuiltInSoundThemes.GetIndexContent(BuiltInSoundThemes.All[0]))
+        .WithFile("/usr/share/sounds/kazoos/index.theme", BuiltInSoundThemes.GetIndexContent(BuiltInSoundThemes.All[0]))
         .WithFile("/usr/share/sounds/soft/index.theme", BuiltInSoundThemes.GetIndexContent(BuiltInSoundThemes.All[1]))
         .WithFile("/usr/share/sounds/empty/readme.txt", "no index.theme here")
         .WithFile("/home/alice/.local/share/sounds/retro/index.theme", "[Sound Theme]\nName=Retro\n")
@@ -107,7 +107,7 @@ public sealed class SoundPanelTests
 
         public AppSystemSettingsDocumentInfo Describe(string documentId) =>
             documentId == SoundSettingsDocuments.DocumentId
-                ? new(documentId, SoundSettingsDocuments.Schema, "/etc/hackeros/sound.config", "/home/alice/.config/hackeros/sound.config", false)
+                ? new(documentId, SoundSettingsDocuments.Schema, "/etc/kazoos/sound.config", "/home/alice/.config/kazoos/sound.config", false)
                 : throw new ArgumentException($"Unknown document '{documentId}'.", nameof(documentId));
 
         public ValueTask<LayeredConfigSnapshot> ReadAsync(string documentId, CancellationToken cancellationToken = default)

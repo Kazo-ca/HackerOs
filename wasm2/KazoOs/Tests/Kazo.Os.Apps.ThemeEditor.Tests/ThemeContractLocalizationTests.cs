@@ -67,8 +67,8 @@ public sealed class ThemeContractLocalizationTests
     public void FileDiagnostics_ReadInTheReadersLanguage_AndLogInEnglish()
     {
         ThemeFileParseResult result = ThemeFile.Parse(
-            "[theme]\nid = neon\nname = Neon\nbase = hackeros\n\n[tokens]\n--hos-accent = url(evil)\n",
-            path: "/home/alice/.config/hackeros/themes/neon.theme");
+            "[theme]\nid = neon\nname = Neon\nbase = kazoos\n\n[tokens]\n--hos-accent = url(evil)\n",
+            path: "/home/alice/.config/kazoos/themes/neon.theme");
 
         ThemeFileDiagnostic diagnostic = Assert.Single(result.Diagnostics);
         Assert.Equal("Expected a color such as #39ff14, rgb(57 255 20) or a color name. Token '--hos-accent' ignored.", diagnostic.Message);
@@ -77,22 +77,22 @@ public sealed class ThemeContractLocalizationTests
             "Couleur attendue, par exemple #39ff14, rgb(57 255 20) ou un nom de couleur. Jeton « --hos-accent » ignoré.",
             diagnostic.GetMessage(French));
         Assert.Equal(
-            "/home/alice/.config/hackeros/themes/neon.theme:7: avertissement: Couleur attendue, par exemple #39ff14, rgb(57 255 20) ou un nom de couleur. Jeton « --hos-accent » ignoré.",
+            "/home/alice/.config/kazoos/themes/neon.theme:7: avertissement: Couleur attendue, par exemple #39ff14, rgb(57 255 20) ou un nom de couleur. Jeton « --hos-accent » ignoré.",
             diagnostic.ToString(French));
-        Assert.StartsWith("/home/alice/.config/hackeros/themes/neon.theme:7: warning: Expected a color", diagnostic.ToString(), StringComparison.Ordinal);
+        Assert.StartsWith("/home/alice/.config/kazoos/themes/neon.theme:7: warning: Expected a color", diagnostic.ToString(), StringComparison.Ordinal);
     }
 
     [Fact]
     public void RefusedFile_AndLibraryConflicts_AreTranslated()
     {
-        ThemeFileDiagnostic missingId = Assert.Single(ThemeFile.Parse("[theme]\nname = X\nbase = hackeros\n").Diagnostics);
+        ThemeFileDiagnostic missingId = Assert.Single(ThemeFile.Parse("[theme]\nname = X\nbase = kazoos\n").Diagnostics);
         Assert.Equal("Missing 'id' in [theme].", missingId.Message);
         Assert.Equal("« id » manquant dans [theme].", missingId.GetMessage(French));
         Assert.Equal("thème: erreur: « id » manquant dans [theme].", missingId.ToString(French));
 
         UserThemeLibraryResult library = UserThemeLibrary.Build(
         [
-            new ThemeFileSource("/etc/hackeros/themes/ubuntu.theme", ThemeOrigin.System, "[theme]\nid = ubuntu\nname = U\nbase = hackeros\n")
+            new ThemeFileSource("/etc/kazoos/themes/ubuntu.theme", ThemeOrigin.System, "[theme]\nid = ubuntu\nname = U\nbase = kazoos\n")
         ]);
         ThemeFileDiagnostic builtIn = Assert.Single(library.Diagnostics);
         Assert.Equal("The id 'ubuntu' is a built-in theme; this file is ignored.", builtIn.Message);

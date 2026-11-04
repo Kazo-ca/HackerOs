@@ -10,10 +10,10 @@ public sealed class TerminalAnsiTests
     [Fact]
     public void Prompt_is_coloured_like_bash_and_measured_without_its_sequences()
     {
-        (string text, int width) = TerminalAnsi.FormatPrompt("user@hackeros:~/src$");
+        (string text, int width) = TerminalAnsi.FormatPrompt("user@kazoos:~/src$");
 
-        Assert.Equal("\x1b[1;32muser@hackeros\x1b[0m:\x1b[1;34m~/src\x1b[0m$ ", text);
-        Assert.Equal("user@hackeros:~/src$ ".Length, width);
+        Assert.Equal("\x1b[1;32muser@kazoos\x1b[0m:\x1b[1;34m~/src\x1b[0m$ ", text);
+        Assert.Equal("user@kazoos:~/src$ ".Length, width);
     }
 
     [Fact]

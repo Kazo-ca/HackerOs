@@ -1,17 +1,17 @@
 namespace Kazo.Os.AppSdk.Web.Mvc;
 
 /// <summary>Marks a filter (ASP.NET's <c>IFilterMetadata</c>): an attribute on a controller or action, or a global filter.</summary>
-public interface IHackFilterMetadata;
+public interface IKazoFilterMetadata;
 
 /// <summary>A filter with an order: lower runs first (outside); filters without one have order 0.</summary>
-public interface IHackOrderedFilter : IHackFilterMetadata
+public interface IKazoOrderedFilter : IKazoFilterMetadata
 {
     /// <summary>Gets the order.</summary>
     int Order { get; }
 }
 
 /// <summary>A synchronous action filter (ASP.NET's <c>IActionFilter</c>, ADR 0076 §6): code before and after the action.</summary>
-public interface IHackActionFilter : IHackFilterMetadata
+public interface IKazoActionFilter : IKazoFilterMetadata
 {
     /// <summary>Runs before the action; setting <see cref="KazoActionExecutingContext.Result"/> skips it.</summary>
     /// <param name="context">The arguments, the controller and the model state.</param>
@@ -27,7 +27,7 @@ public interface IHackActionFilter : IHackFilterMetadata
 public delegate Task<KazoActionExecutedContext> KazoActionExecutionDelegate();
 
 /// <summary>An asynchronous action filter (ASP.NET's <c>IAsyncActionFilter</c>).</summary>
-public interface IHackAsyncActionFilter : IHackFilterMetadata
+public interface IKazoAsyncActionFilter : IKazoFilterMetadata
 {
     /// <summary>Runs around the action: call <paramref name="next"/> to run it, or set a result to skip it.</summary>
     /// <param name="context">The arguments, the controller and the model state.</param>
@@ -40,7 +40,7 @@ public interface IHackAsyncActionFilter : IHackFilterMetadata
 /// or the asynchronous methods. The build writes the attribute's construction into the route table.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
-public abstract class KazoActionFilterAttribute : Attribute, IHackActionFilter, IHackAsyncActionFilter, IHackOrderedFilter
+public abstract class KazoActionFilterAttribute : Attribute, IKazoActionFilter, IKazoAsyncActionFilter, IKazoOrderedFilter
 {
     /// <inheritdoc />
     public int Order { get; set; }
@@ -85,7 +85,7 @@ public sealed class KazoActionExecutingContext : KazoActionContext
     public IDictionary<string, object?> ActionArguments { get; }
 
     /// <summary>Gets or sets a result that skips the action (and the filters after this one).</summary>
-    public IHackActionResult? Result { get; set; }
+    public IKazoActionResult? Result { get; set; }
 }
 
 /// <summary>The context after an action ran (or threw, or was skipped).</summary>
@@ -98,7 +98,7 @@ public sealed class KazoActionExecutedContext : KazoActionContext
     public KazoControllerBase Controller { get; }
 
     /// <summary>Gets or sets the result that will be executed.</summary>
-    public IHackActionResult? Result { get; set; }
+    public IKazoActionResult? Result { get; set; }
 
     /// <summary>Gets whether a filter skipped the action by setting a result.</summary>
     public bool Canceled { get; internal set; }

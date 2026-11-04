@@ -165,10 +165,10 @@ public sealed class KazoContextMenuTests
 
     private static AppManifest WindowManifest() => new()
     {
-        Id = "org.hackeros.test-context-menu",
+        Id = "org.kazoos.test-context-menu",
         Name = "Context Menu Host",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "Context menu test.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.AppSdk.Blazor.Tests", "MarkupWindow"),
@@ -178,7 +178,7 @@ public sealed class KazoContextMenuTests
     };
 
     /// <summary>Stands for the platform's window menus.</summary>
-    private sealed class RecordingMenuHost : IHackMenuHost
+    private sealed class RecordingMenuHost : IKazoMenuHost
     {
         public List<KazoMenuRegistration> Registrations { get; } = [];
 
@@ -208,7 +208,7 @@ public sealed class KazoContextMenuTests
     }
 
     /// <summary>Stands for the platform's provider: keeps what the SDK component forwarded.</summary>
-    public sealed class RecordingProvider : KazoEmbeddableComponent, IHackContextMenu
+    public sealed class RecordingProvider : KazoEmbeddableComponent, IKazoContextMenu
     {
         [Parameter]
         public string Name { get; set; } = string.Empty;
@@ -304,7 +304,7 @@ public sealed class KazoContextMenuTests
         public IAppExecutionContext Context { get; set; } = null!;
 
         [Parameter]
-        public IHackMenuHost Menus { get; set; } = null!;
+        public IKazoMenuHost Menus { get; set; } = null!;
 
         public MarkupWindow? Window { get; private set; }
 
@@ -315,7 +315,7 @@ public sealed class KazoContextMenuTests
             builder.AddComponentParameter(2, "IsFixed", true);
             builder.AddComponentParameter(3, "ChildContent", (RenderFragment)(inner =>
             {
-                inner.OpenComponent<CascadingValue<IHackMenuHost>>(0);
+                inner.OpenComponent<CascadingValue<IKazoMenuHost>>(0);
                 inner.AddComponentParameter(1, "Value", Menus);
                 inner.AddComponentParameter(2, "IsFixed", true);
                 inner.AddComponentParameter(3, "ChildContent", (RenderFragment)(content =>
@@ -331,7 +331,7 @@ public sealed class KazoContextMenuTests
         }
     }
 
-    private sealed class StubComponentHost(Type? provider) : IHackComponentHost
+    private sealed class StubComponentHost(Type? provider) : IKazoComponentHost
     {
         public Task<KazoComponentResolution> ResolveAsync(string contract, CancellationToken cancellationToken = default) =>
             Task.FromResult(provider is null
@@ -340,13 +340,13 @@ public sealed class KazoContextMenuTests
     }
 
     /// <summary>Attaches components to a real render handle and keeps the texts it drew (no bUnit in this solution).</summary>
-    private sealed class MenuRenderer(IHackComponentHost host) : Renderer(new Services(host), NullLoggerFactory.Instance)
+    private sealed class MenuRenderer(IKazoComponentHost host) : Renderer(new Services(host), NullLoggerFactory.Instance)
     {
         public List<string> Texts { get; } = [];
 
         public override Dispatcher Dispatcher { get; } = Dispatcher.CreateDefault();
 
-        public async Task<MarkupWindow> RenderAsync(IAppExecutionContext context, IHackMenuHost menus)
+        public async Task<MarkupWindow> RenderAsync(IAppExecutionContext context, IKazoMenuHost menus)
         {
             WindowFrame frame = new();
             await Dispatcher.InvokeAsync(async () =>
@@ -388,10 +388,10 @@ public sealed class KazoContextMenuTests
         }
     }
 
-    private sealed class Services(IHackComponentHost host) : IServiceProvider
+    private sealed class Services(IKazoComponentHost host) : IServiceProvider
     {
         public object? GetService(Type serviceType) =>
-            serviceType == typeof(IHackComponentHost) ? host
+            serviceType == typeof(IKazoComponentHost) ? host
             : serviceType == typeof(IServiceProvider) ? this
             : null;
     }

@@ -66,11 +66,11 @@ checks for the other apps.
 version=1
 
 [dock]
-apps=org.hackeros.browser,org.hackeros.settings
+apps=org.kazoos.browser,org.kazoos.settings
 
 [pages]
-1=org.hackeros.text-editor
-2=org.hackeros.calculator
+1=org.kazoos.text-editor
+2=org.kazoos.calculator
 ```
 
 Pages are numbered from 1 to N with no gap; an empty value keeps an empty
@@ -90,7 +90,7 @@ file; changing page writes nothing. No localStorage and no IndexedDB schema
 change.
 
 If the new file does not exist, a valid legacy layout from
-`~/.config/hackeros/.mobile/layout.json` is converted automatically at load.
+`~/.config/kazoos/.mobile/layout.json` is converted automatically at load.
 The old file stays intact; no JSON write is performed. An existing
 `layout.conf` always takes priority, even if invalid, and is never overwritten
 by this migration. Without a valid old file, the first edit creates the
@@ -99,7 +99,7 @@ configuration. Subsequent writes normalize its text.
 `OsSettingsLocation.UserHome` lets `OsSettingsFile` resolve the relative path
 `Desktop/.mobile/layout.conf` with the session's rights.
 
-`/etc/hackeros/mobile.config`, overridden by `~/.config/hackeros/mobile.config`:
+`/etc/kazoos/mobile.config`, overridden by `~/.config/kazoos/mobile.config`:
 
 ```ini
 mouseHelpers=true

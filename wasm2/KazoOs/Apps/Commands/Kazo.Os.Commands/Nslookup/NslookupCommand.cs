@@ -9,7 +9,7 @@ using Microsoft.Extensions.Localization;
 namespace Kazo.Os.Commands.Nslookup;
 
 /// <summary>
-/// <c>nslookup &lt;name|address&gt;</c> (ADR 0074, section 4): asks <c>hackdns</c>, the OS
+/// <c>nslookup &lt;name|address&gt;</c> (ADR 0074, section 4): asks <c>kazodns</c>, the OS
 /// resolver, through <see cref="KazoDns"/>, and prints the answer the way BIND's
 /// <c>nslookup</c> does against the local stub resolver (<c>127.0.0.53</c>, as on a
 /// <c>systemd-resolved</c> machine). Unlike the real tool, it also says which source answered

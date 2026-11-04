@@ -85,7 +85,7 @@ comptable : `user + system + idle` vaut toujours le temps écoulé.
   `nonvoluntary_ctxt_switches` reste à `0` : rien n'est préempté.
 - Une tranche de plus de **50 ms** est une *long task* (`LongTasks:`).
 - Une tranche de plus de `UnresponsiveThresholdMs` (5 s par défaut,
-  `HackerOs:ResourceAccounting:Cpu:UnresponsiveThresholdMs`) met le processus
+  `KazoOs:ResourceAccounting:Cpu:UnresponsiveThresholdMs`) met le processus
   **Not responding** (`Responding: 0`) ; il redevient `1` dès qu'il termine une
   tranche sous le seuil, c'est-à-dire qu'il répond vite au prochain événement.
 - Sur le thread principal, l'état n'est visible qu'**après coup**, à la fin de
@@ -105,7 +105,7 @@ comptable : `user + system + idle` vaut toujours le temps écoulé.
 
 Résolution : dans le navigateur, `Stopwatch.GetTimestamp` lit
 `performance.now()`, arrondi à 100 µs, ou à 5 µs quand la page est isolée
-(ADR 0131 §4, ADR 0143 §7) ; `/proc/hackeros/workers` affiche la valeur
+(ADR 0131 §4, ADR 0143 §7) ; `/proc/kazoos/workers` affiche la valeur
 mesurée (`timer-resolution-us`).
 
 Le chemin chaud lit l'horloge (`Stopwatch.GetTimestamp`), quelques champs
@@ -126,7 +126,7 @@ La lecture de ces mesures par une app est décrite dans [`../framework/process-r
 ### Configurer
 
 Voir [`resource-accounting.md`](resource-accounting.md) : propriété MSBuild
-`KazoOsCpuAccounting`, section `HackerOs:ResourceAccounting:Cpu` des
+`KazoOsCpuAccounting`, section `KazoOs:ResourceAccounting:Cpu` des
 `appsettings.json` (`Enabled`, `UnresponsiveThresholdMs`). Coupée, la mesure
 n'installe rien (si la mémoire est coupée aussi, aucun crochet) et `/proc` rend
 exactement les fichiers d'avant la phase 5, plus le nouveau `stat` simulé.

@@ -6,7 +6,7 @@
 
 Accepted on 2026-10-17, with the `web/12-site-data` work item.
 
-- **Plan phase:** web phase ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)), after the closure
+- **Plan phase:** web phase ([`asp-kazo-plan.md`](../plans/asp-kazo-plan.md)), after the closure
   noted by ADR 0087 §4.
 - **Implements:** ADR 0073 §3 (`hackweb.<id>` database, `/var/log/hackweb/<id>.log` logs, browser
   autofill).
@@ -132,4 +132,4 @@ do not have this autofill.
 - An app id ending in `.access` or `.error` would share a file name with the
   `hackwebd` logs (ADR 0080 §3) for a hosted site of the same name; the catalog does not
   forbid it, the collision is just unlikely.
-- Guide: [`asp-hack-site-data.md`](../../framework/asp-hack-site-data.md).
+- Guide: [`asp-kazo-site-data.md`](../../framework/asp-kazo-site-data.md).

@@ -38,7 +38,7 @@ public sealed class WireCodecIntentTests
     [Fact]
     public void Intent_delivery_keeps_id_payload_sender_and_arguments()
     {
-        AppIntentDelivery delivery = new("org.test.intent.share.v1", "{\"text\":\"hi\"}", "org.hackeros.shell")
+        AppIntentDelivery delivery = new("org.test.intent.share.v1", "{\"text\":\"hi\"}", "org.kazoos.shell")
         {
             Arguments = ["/home/alice", "--select=/home/alice/notes.txt"]
         };
@@ -59,8 +59,8 @@ public sealed class WireCodecIntentTests
         // ADR 0121: cat.defaults carries both layers to xdg-mime in a worker.
         Kazo.Os.AppSdk.Apps.KazoFileAssociation[] rows =
         [
-            new(".md", "open", "org.hackeros.code-editor", Kazo.Os.AppSdk.Apps.KazoFileAssociationLayer.User),
-            new("x-scheme-handler/https", "open", "org.hackeros.browser", Kazo.Os.AppSdk.Apps.KazoFileAssociationLayer.System)
+            new(".md", "open", "org.kazoos.code-editor", Kazo.Os.AppSdk.Apps.KazoFileAssociationLayer.User),
+            new("x-scheme-handler/https", "open", "org.kazoos.browser", Kazo.Os.AppSdk.Apps.KazoFileAssociationLayer.System)
         ];
 
         IReadOnlyList<Kazo.Os.AppSdk.Apps.KazoFileAssociation> copy = RoundTrip(

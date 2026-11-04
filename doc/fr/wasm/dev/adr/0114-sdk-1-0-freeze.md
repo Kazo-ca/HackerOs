@@ -17,7 +17,7 @@ réponse recommandée en attendant.
   une version, `[Obsolete]`, puis sera retiré ») et par l'ADR 0056 §12
   (formes `Get/SetFileReferencesAsync`).
 - **Document :** [`sdk-packages.md`](../../framework/sdk-packages.md),
-  [`building-on-hackeros.md`](../../framework/building-on-hackeros.md).
+  [`building-on-kazoos.md`](../../framework/building-on-kazoos.md).
 
 ## Contexte
 
@@ -110,7 +110,7 @@ apps preview (contexte). La 1.0 ne contient aucune API `[Obsolete]`.
 
 ### 5. Guide du dépôt tiers
 
-[`building-on-hackeros.md`](../../framework/building-on-hackeros.md) décrit un dépôt qui
+[`building-on-kazoos.md`](../../framework/building-on-kazoos.md) décrit un dépôt qui
 construit des apps et un hôte sur HackerOS : flux local, `nuget.config`,
 version épinglée, modèles, apps et hôte, paquets d'apps, publication trimmée,
 tests, montée de version et ce que la promesse couvre.

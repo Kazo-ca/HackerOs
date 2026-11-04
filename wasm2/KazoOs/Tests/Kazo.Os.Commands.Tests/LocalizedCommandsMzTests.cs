@@ -93,7 +93,7 @@ public sealed class LocalizedCommandsMzTests
         }
 
         AppManifestText mkdir = AppManifestTextJsonSerializer.DeserializeStrict(
-            File.ReadAllText(Path.Combine(project, "localization", "org.hackeros.commands.mkdir", "fr.json")));
+            File.ReadAllText(Path.Combine(project, "localization", "org.kazoos.commands.mkdir", "fr.json")));
         Assert.Equal("mkdir [-pv] <dossier...>", mkdir.TerminalUsage);
     }
 

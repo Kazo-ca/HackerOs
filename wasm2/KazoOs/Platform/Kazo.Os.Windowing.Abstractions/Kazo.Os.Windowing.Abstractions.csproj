@@ -8,7 +8,7 @@
     <Nullable>enable</Nullable>
     <PackageId>Kazo.Os.Windowing.Abstractions</PackageId>
     <Description>Renderer- and host-independent window contracts: identity, geometry, constraints, visual state, modality, and the commands/events Kazo.Os.Windowing.Core's engine consumes and produces.</Description>
-    <PackageTags>hackeros;windowing;blazor;desktop-shell</PackageTags>
+    <PackageTags>kazoos;windowing;blazor;desktop-shell</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

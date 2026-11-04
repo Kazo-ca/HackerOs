@@ -6,14 +6,14 @@
 
 Accepté le 2026-10-16, avec le chantier `web/8-cshtml-views`.
 
-- **Phase du plan :** phase web ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Phase du plan :** phase web ([`asp-kazo-plan.md`](../plans/asp-kazo-plan.md)).
 - **Complète :** [ADR 0076](0076-asp-hack-mvc.md) §8 (la preuve de faisabilité a réussi :
   le moteur interprété de repli n'est pas construit) ; [ADR 0083](0083-asp-hack-razor-views.md)
   (même moteur de vues, même table générée, mêmes sections).
 - **Amende :** [ADR 0007](0007-enforce-collocated-razor-assets.md) : la vérification au build
   couvre aussi les `.cshtml` (§6) ; [ADR 0083](0083-asp-hack-razor-views.md) : une clé absente
   de `ViewData` se lit `null`, comme dans ASP.NET (§3).
-- **Documentation :** [`asp-hack-cshtml-views.md`](../../framework/asp-hack-cshtml-views.md).
+- **Documentation :** [`asp-kazo-cshtml-views.md`](../../framework/asp-kazo-cshtml-views.md).
 
 ## Contexte
 

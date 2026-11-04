@@ -197,7 +197,7 @@ public sealed class AppLifecycleOrchestrator
         return _serviceStates.ResetFailed(appId);
     }
 
-    /// <summary>Gets the systemd unit name of a service app: <c>org.hackeros.hackwebd</c> is <c>hackwebd.service</c>.</summary>
+    /// <summary>Gets the systemd unit name of a service app: <c>org.kazoos.kazowebd</c> is <c>kazowebd.service</c>.</summary>
     /// <param name="appId">Service app ID.</param>
     public static string UnitNameOf(string appId) => appId[(appId.LastIndexOf('.') + 1)..] + ".service";
 
@@ -470,7 +470,7 @@ public sealed class AppLifecycleOrchestrator
             await ResolveStartEnvironmentAsync(request, cancellationToken).ConfigureAwait(false);
         environment = await GuardInstalledAppDataAsync(descriptor.Manifest, request, environment, cancellationToken).ConfigureAwait(false);
         // ADR 0125 section 3: a session's root process gets the limits of limits.conf; a boot
-        // service (hackeros-svc, section 5) and every child get the kernel's or their parent's.
+        // service (kazoos-svc, section 5) and every child get the kernel's or their parent's.
         ProcessResourceLimits? sessionLimits = request.ParentPid is null && !request.SystemScope && LoginResourceLimits is { } pamLimits
             ? await pamLimits.GetAsync(request.Principal, cancellationToken).ConfigureAwait(false)
             : null;
@@ -663,7 +663,7 @@ public sealed class AppLifecycleOrchestrator
     /// <summary>
     /// Starts every enabled, automatic system service (<see cref="AppServiceStartup.Boot"/>, system
     /// apps only) in catalog activation order, once storage is mounted and before the login screen
-    /// (ADR 0097, section 4). They run as <paramref name="serviceAccount"/> (<c>hackeros-svc</c>), in
+    /// (ADR 0097, section 4). They run as <paramref name="serviceAccount"/> (<c>kazoos-svc</c>), in
     /// the system scope: a logout does not stop them, only a shutdown does. Their start mode is read
     /// from <c>/etc/&lt;appId&gt;/service.conf</c>.
     /// </summary>
@@ -1088,7 +1088,7 @@ public sealed class AppLifecycleOrchestrator
         try
         {
             // ADR 0043/0050: the command runs as this app, in its process's working directory (the
-            // shell's, copied at creation), so the Hack* file API resolves relative paths exactly
+            // shell's, copied at creation), so the Kazo* file API resolves relative paths exactly
             // like the shell does, and follows the command's own KazoEnvironment changes.
             using IDisposable ambient = KazoExecutionContext.Enter(context);
             // ADR 0069: the command runs on its process's scheduler, so a kill drops its leftovers.

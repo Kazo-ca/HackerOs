@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Kazo.Os.Ecosystem;
 
 /// <summary>
-/// The simulated hardware of a host (<c>HackerOs:Hardware</c> in <c>appsettings.json</c>): the
+/// The simulated hardware of a host (<c>KazoOs:Hardware</c> in <c>appsettings.json</c>): the
 /// machine <c>/proc/meminfo</c> reports and the OOM killer of ADR 0126 measures against.
 /// </summary>
 /// <remarks>
@@ -18,10 +18,10 @@ namespace Kazo.Os.Ecosystem;
 public static class HardwareServiceCollectionExtensions
 {
     /// <summary>Configuration section read by <see cref="ReadProfile"/>.</summary>
-    public const string SectionName = "HackerOs:Hardware";
+    public const string SectionName = "KazoOs:Hardware";
 
     /// <summary>
-    /// Reads <c>HackerOs:Hardware:MemoryMiB</c> (<c>MemTotal</c>, in MiB); absent, unreadable or not
+    /// Reads <c>KazoOs:Hardware:MemoryMiB</c> (<c>MemTotal</c>, in MiB); absent, unreadable or not
     /// positive keeps <see cref="VirtualHardwareProfile.Default"/>.
     /// </summary>
     /// <param name="configuration">The host configuration; <see langword="null"/> reads as an absent section.</param>

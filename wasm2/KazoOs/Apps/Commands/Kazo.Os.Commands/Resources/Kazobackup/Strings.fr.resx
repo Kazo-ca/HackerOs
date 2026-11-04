@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ChooseFile" xml:space="preserve">
+    <value>kazobackup : choisissez la sauvegarde dans la boîte de dialogue du navigateur ({0})...</value>
+  </data>
+  <data name="Downloaded" xml:space="preserve">
+    <value>kazobackup : {0} ({1}, {2} enregistrements) téléchargé sur l'ordinateur hôte</value>
+  </data>
+  <data name="Exporting" xml:space="preserve">
+    <value>kazobackup : exportation de toute la machine...</value>
+  </data>
+  <data name="InvalidBackup" xml:space="preserve">
+    <value>kazobackup : sauvegarde inutilisable : {0}</value>
+  </data>
+  <data name="InvalidOption" xml:space="preserve">
+    <value>kazobackup : option non valide « {0} »</value>
+  </data>
+  <data name="NoFileChosen" xml:space="preserve">
+    <value>kazobackup : aucun fichier choisi ; rien n'a été restauré</value>
+  </data>
+  <data name="Restored" xml:space="preserve">
+    <value>kazobackup : {0} restauré ({1}) ; redémarrage</value>
+  </data>
+  <data name="RootRequired" xml:space="preserve">
+    <value>kazobackup : doit être exécuté en tant que root (essayez : sudo kazobackup {0})</value>
+  </data>
+  <data name="UnknownCommand" xml:space="preserve">
+    <value>kazobackup : commande inconnue « {0} »</value>
+  </data>
+  <data name="Unsupported" xml:space="preserve">
+    <value>kazobackup : cet hôte Kazo OS ne peut pas sauvegarder la machine</value>
+  </data>
+  <data name="Usage" xml:space="preserve">
+    <value>utilisation : kazobackup create | restore [--merge|--replace]</value>
+  </data>
+  <data name="UseSettings" xml:space="preserve">
+    <value>kazobackup : utilisez plutôt Paramètres &gt; Sauvegarde &gt; Restaurer...</value>
+  </data>
+</root>

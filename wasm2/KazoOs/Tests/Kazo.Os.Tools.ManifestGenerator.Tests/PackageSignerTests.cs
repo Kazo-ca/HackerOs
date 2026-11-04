@@ -48,7 +48,7 @@ public sealed class PackageSignerTests
     [Fact]
     public void Keygen_writes_a_new_private_file_prints_the_signing_keys_line_and_never_replaces_a_key()
     {
-        string folder = Directory.CreateTempSubdirectory("hackeros-keygen-").FullName;
+        string folder = Directory.CreateTempSubdirectory("kazoos-keygen-").FullName;
         string path = Path.Combine(folder, "author.pem");
         try
         {
@@ -76,8 +76,8 @@ public sealed class PackageSignerTests
     [Fact]
     public void Sign_reads_the_key_from_a_file_or_the_environment_and_fails_without_one()
     {
-        string folder = Directory.CreateTempSubdirectory("hackeros-sign-").FullName;
-        string package = Path.Combine(folder, "app.hackapp");
+        string folder = Directory.CreateTempSubdirectory("kazoos-sign-").FullName;
+        string package = Path.Combine(folder, "app.kazoapp");
         string key = Path.Combine(folder, "author.pem");
         File.WriteAllBytes(package, Package);
         Run("keygen", "--private-key", key);

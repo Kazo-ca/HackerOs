@@ -12,11 +12,11 @@ namespace Kazo.Os.Tools.ManifestGenerator;
 /// <item><c>aggregate</c>: run by the <c>CollectKazoOsBuiltInApplications</c> MSBuild target of a
 /// host; writes its <c>BuiltInApplications.json</c>.</item>
 /// <item><c>pack</c>: run by the <c>KazoOsPack</c> MSBuild target of an app project; writes its
-/// <c>.hackapp</c> package and adds it to <c>index.json</c> (ADR 0182 §1, §2), signed when the author's
+/// <c>.kazoapp</c> package and adds it to <c>index.json</c> (ADR 0182 §1, §2), signed when the author's
 /// key is given (ADR 0219).</item>
 /// <item><c>keygen --private-key &lt;file.pem&gt;</c>: creates an author's key pair, writes the private key
 /// to a new file and prints the public key for <c>[signing-keys]</c> (ADR 0219 §1).</item>
-/// <item><c>sign --package &lt;file.hackapp&gt; [--private-key &lt;file.pem&gt;]</c>: prints the signature
+/// <item><c>sign --package &lt;file.kazoapp&gt; [--private-key &lt;file.pem&gt;]</c>: prints the signature
 /// of a package.</item>
 /// <item><c>validate &lt;file&gt;</c>: strict schema-v1 read and <c>AppManifestValidator</c> pass on
 /// one manifest file (absorbs the former <c>Kazo.Os.Tools.ManifestValidator</c>).</item>
@@ -160,8 +160,8 @@ public static class Program
     /// <summary>
     /// <c>pack --manifest &lt;manifest.json&gt; --bin &lt;output dir&gt; --webroot &lt;wwwroot&gt; --output &lt;packages dir&gt;
     /// [--web-assets &lt;staticwebassets.build.json&gt;] [--private-key &lt;file.pem&gt;]</c>:
-    /// writes <c>&lt;version&gt;/&lt;appId&gt;-&lt;version&gt;.hackapp</c> and updates <c>index.json</c>
-    /// in the packages folder, the content of the app repository's <c>hackeros-packages</c> branch.
+    /// writes <c>&lt;version&gt;/&lt;appId&gt;-&lt;version&gt;.kazoapp</c> and updates <c>index.json</c>
+    /// in the packages folder, the content of the app repository's <c>kazoos-packages</c> branch.
     /// With <c>--web-assets</c>, the package holds every static web resource of the project, not only
     /// the declared ones (ADR 0221 §1). The satellite assemblies of the declared assemblies, found in
     /// <c>--bin</c>, go to <c>lib/&lt;culture&gt;/</c> (ADR 0222 §1).
@@ -278,12 +278,12 @@ public static class Program
         (string privateKey, string publicKey) = PackageSigner.CreateKeyPair();
         PackageSigner.WriteNewKeyFile(path, privateKey);
         Console.WriteLine($"Private key written to {path}. Keep it out of the repository; store it as the {PackageSigner.KeyVariable} secret of the app repository.");
-        Console.WriteLine("Public key, for the administrators ([signing-keys] of /etc/hackeros/app-sources.config):");
+        Console.WriteLine("Public key, for the administrators ([signing-keys] of /etc/kazoos/app-sources.config):");
         Console.WriteLine($"github.com/<owner>={publicKey}");
         return 0;
     }
 
-    /// <summary><c>sign --package &lt;file.hackapp&gt; [--private-key &lt;file.pem&gt;]</c>: prints the base64 signature.</summary>
+    /// <summary><c>sign --package &lt;file.kazoapp&gt; [--private-key &lt;file.pem&gt;]</c>: prints the base64 signature.</summary>
     private static int Sign(IReadOnlyDictionary<string, string> options)
     {
         string packagePath = Path.GetFullPath(Required(options, "package"));
@@ -360,7 +360,7 @@ public static class Program
         Console.WriteLine("  aggregate --project <host.csproj> --apps <list file> --output <BuiltInApplications.json> [--trimmer-roots <roots.xml>]");
         Console.WriteLine("  pack --manifest <manifest.json> --bin <output dir> --webroot <wwwroot> --output <packages dir> [--web-assets <staticwebassets.build.json>] [--private-key <file.pem>]");
         Console.WriteLine("  keygen --private-key <file.pem>");
-        Console.WriteLine("  sign --package <file.hackapp> [--private-key <file.pem>]");
+        Console.WriteLine("  sign --package <file.kazoapp> [--private-key <file.pem>]");
         Console.WriteLine("  validate <manifest.json>");
     }
 }

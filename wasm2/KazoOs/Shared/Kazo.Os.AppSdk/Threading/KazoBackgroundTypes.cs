@@ -24,7 +24,7 @@ public sealed record KazoBackgroundOptions
 {
     /// <summary>
     /// Gets the task's name, shown after the app's command in <c>ps</c>, <c>top</c> and the task
-    /// manager (<c>hackpaint:blur</c>); the method or class name when <see langword="null"/>.
+    /// manager (<c>kazopaint:blur</c>); the method or class name when <see langword="null"/>.
     /// </summary>
     public string? Name { get; init; }
 
@@ -54,7 +54,7 @@ public sealed record KazoBackgroundOptions
 /// int words = await KazoBackground.RunAsync&lt;CountWordsJob, string, int&gt;(text);
 /// </code>
 /// </example>
-public abstract class KazoBackgroundJob<TInput, TResult> : IHackBackgroundJobInvoker
+public abstract class KazoBackgroundJob<TInput, TResult> : IKazoBackgroundJobInvoker
 {
     /// <summary>Runs the task.</summary>
     /// <param name="input">The data the caller handed over (a copy: it crossed as JSON).</param>
@@ -62,11 +62,11 @@ public abstract class KazoBackgroundJob<TInput, TResult> : IHackBackgroundJobInv
     /// <returns>The result, sent back to the caller as JSON.</returns>
     public abstract Task<TResult> RunAsync(TInput input, KazoBackgroundContext context);
 
-    Type IHackBackgroundJobInvoker.InputType => typeof(TInput);
+    Type IKazoBackgroundJobInvoker.InputType => typeof(TInput);
 
-    Type IHackBackgroundJobInvoker.ResultType => typeof(TResult);
+    Type IKazoBackgroundJobInvoker.ResultType => typeof(TResult);
 
-    async Task<object?> IHackBackgroundJobInvoker.RunAsync(object? input, KazoBackgroundContext context) =>
+    async Task<object?> IKazoBackgroundJobInvoker.RunAsync(object? input, KazoBackgroundContext context) =>
         await RunAsync((TInput)input!, context).ConfigureAwait(true);
 }
 
@@ -75,7 +75,7 @@ public abstract class KazoBackgroundJob<TInput, TResult> : IHackBackgroundJobInv
 /// only knows its class by name, so it calls it through this interface, without reflection on
 /// <see cref="Task{TResult}"/>.
 /// </summary>
-internal interface IHackBackgroundJobInvoker
+internal interface IKazoBackgroundJobInvoker
 {
     Type InputType { get; }
 

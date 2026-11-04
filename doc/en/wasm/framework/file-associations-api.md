@@ -8,14 +8,14 @@ This document describes what an app or a third party sees of file associations: 
 
 | Where | File | Who writes it |
 |---|---|---|
-| Machine | `/etc/hackeros/file-associations.json` | an administrator (`sudo nano`) |
-| User | `~/.config/hackeros/file-associations.json` | the user: Settings, "Open with", `xdg-mime default`, SDK, `nano` |
+| Machine | `/etc/kazoos/file-associations.json` | an administrator (`sudo nano`) |
+| User | `~/.config/kazoos/file-associations.json` | the user: Settings, "Open with", `xdg-mime default`, SDK, `nano` |
 
 Both files have the same schema:
 
 ```json
 {"schemaVersion":1,"associations":[
-  {"extension":".md","appId":"org.hackeros.code-editor","actions":["open"]},
+  {"extension":".md","appId":"org.kazoos.code-editor","actions":["open"]},
   {"mediaType":"x-scheme-handler/https","appId":"com.example.browser","actions":["open"]}
 ]}
 ```
@@ -47,7 +47,7 @@ to `OpenFile`, `EditFile`, `OpenUri`, `RevealFile` (`inode/directory`) and
 ADR 0121 throws `NotSupportedException`.
 
 ```csharp
-KazoDefaultHandlerStatus status = await KazoApps.SetDefaultHandlerAsync(".md", "org.hackeros.code-editor");
+KazoDefaultHandlerStatus status = await KazoApps.SetDefaultHandlerAsync(".md", "org.kazoos.code-editor");
 await KazoApps.SetDefaultHandlerAsync("x-scheme-handler/https", "com.example.browser");
 await KazoApps.ResetDefaultHandlerAsync(".md");
 ```

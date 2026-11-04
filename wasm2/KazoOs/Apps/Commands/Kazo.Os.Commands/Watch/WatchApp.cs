@@ -11,7 +11,7 @@ namespace Kazo.Os.Commands.Watch;
 public sealed class WatchApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.watch";
+    public override string Id => "org.kazoos.commands.watch";
 
     /// <inheritdoc />
     public override string Name => "watch";
@@ -23,7 +23,7 @@ public sealed class WatchApp : AppDefinition
     public override Type EntryPoint => typeof(WatchCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Run a command repeatedly, showing its output full screen";

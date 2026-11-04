@@ -6,7 +6,7 @@ namespace Kazo.Os.Apps.Terminal;
 /// <summary>
 /// Embeddable terminal of the Terminal app (contract <see cref="KazoComponentContracts.Terminal"/>,
 /// ADR 0063). It shows the same <see cref="TerminalPanel"/> as the Terminal window and hands it to
-/// the host as its <see cref="IHackTerminal"/> once mounted.
+/// the host as its <see cref="IKazoTerminal"/> once mounted.
 /// </summary>
 public partial class TerminalEmbed
 {

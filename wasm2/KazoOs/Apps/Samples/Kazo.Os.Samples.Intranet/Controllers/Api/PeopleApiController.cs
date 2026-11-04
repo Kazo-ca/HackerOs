@@ -19,5 +19,5 @@ public sealed class PeopleApiController(StaffDirectory directory) : KazoApiContr
     /// <summary><c>GET /api/people/{id}</c>.</summary>
     /// <param name="id">The identifier.</param>
     [HttpGet("{id:int}")]
-    public IHackActionResult Get(int id) => directory.Find(id) is Person person ? Ok(person) : NotFound();
+    public IKazoActionResult Get(int id) => directory.Find(id) is Person person ? Ok(person) : NotFound();
 }

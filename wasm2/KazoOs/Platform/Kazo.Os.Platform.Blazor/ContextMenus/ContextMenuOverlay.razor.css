@@ -1,13 +1,13 @@
 /* ADR 0150 §6: the OS context menu, in the hacker console look of the window menu (ADR 0095). */
 
-.hack-context-menu-layer {
+.kazo-context-menu-layer {
     display: contents;
 }
 
-.hack-context-menu-panel {
+.kazo-context-menu-panel {
     position: fixed;
-    top: var(--hack-menu-y, 0);
-    left: var(--hack-menu-x, 0);
+    top: var(--kazo-menu-y, 0);
+    left: var(--kazo-menu-x, 0);
     z-index: 9100;
     display: grid;
     min-width: 13rem;
@@ -30,23 +30,23 @@
     user-select: none;
 }
 
-.hack-context-menu-panel.is-placed {
+.kazo-context-menu-panel.is-placed {
     visibility: visible;
-    animation: hack-context-menu-in 90ms ease-out;
+    animation: kazo-context-menu-in 90ms ease-out;
 }
 
-.hack-context-menu-panel:focus-visible {
+.kazo-context-menu-panel:focus-visible {
     border-color: var(--hos-window-focused-border, #55d6a1);
 }
 
-@keyframes hack-context-menu-in {
+@keyframes kazo-context-menu-in {
     from {
         opacity: 0;
         transform: translateY(-3px);
     }
 }
 
-.hack-context-menu-item {
+.kazo-context-menu-item {
     display: grid;
     grid-template-columns: 1.25rem minmax(0, 1fr) auto auto;
     gap: 0.55rem;
@@ -57,20 +57,20 @@
     cursor: default;
 }
 
-.hack-context-menu-item.is-highlighted {
+.kazo-context-menu-item.is-highlighted {
     background: color-mix(in srgb, var(--hos-window-focused-border, #55d6a1) 18%, transparent);
     color: var(--hos-accent, #55d6a1);
 }
 
-.hack-context-menu-item[aria-expanded="true"] {
+.kazo-context-menu-item[aria-expanded="true"] {
     background: color-mix(in srgb, var(--hos-window-focused-border, #55d6a1) 10%, transparent);
 }
 
-.hack-context-menu-item.is-disabled {
+.kazo-context-menu-item.is-disabled {
     color: var(--hos-text-disabled, #5c6f6a);
 }
 
-.hack-context-menu-icon {
+.kazo-context-menu-icon {
     display: inline-grid;
     place-items: center;
     width: 1.25rem;
@@ -78,50 +78,50 @@
     color: var(--hos-accent, #55d6a1);
 }
 
-.hack-context-menu-item.is-disabled .hack-context-menu-icon {
+.kazo-context-menu-item.is-disabled .kazo-context-menu-icon {
     color: inherit;
     opacity: 0.6;
 }
 
-.hack-context-menu-icon img {
+.kazo-context-menu-icon img {
     width: 1rem;
     height: 1rem;
     object-fit: contain;
 }
 
-.hack-context-menu-title {
+.kazo-context-menu-title {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.hack-context-menu-shortcut {
+.kazo-context-menu-shortcut {
     color: var(--hos-text-secondary, #9fb7b0);
     font-family: var(--hos-font-mono, ui-monospace, monospace);
     font-size: 0.72rem;
 }
 
-.hack-context-menu-chevron {
+.kazo-context-menu-chevron {
     display: inline-grid;
     place-items: center;
     color: var(--hos-text-secondary, #9fb7b0);
 }
 
-.hack-context-menu-separator {
+.kazo-context-menu-separator {
     height: 1px;
     margin: 0.3rem 0.35rem;
     background: var(--hos-window-border-color, #315249);
 }
 
 /* Mobile (ADR 0150 §6): a sheet at the bottom; the backdrop closes it. */
-.hack-context-menu-backdrop {
+.kazo-context-menu-backdrop {
     position: fixed;
     inset: 0;
     z-index: 9090;
     background: color-mix(in srgb, var(--hos-bg-base, #070b0c) 55%, transparent);
 }
 
-.hack-context-menu-panel.hack-context-menu-sheet {
+.kazo-context-menu-panel.kazo-context-menu-sheet {
     top: auto;
     right: 0;
     bottom: 0;
@@ -134,22 +134,22 @@
     border-radius: var(--hos-radius-md, 0.45rem) var(--hos-radius-md, 0.45rem) 0 0;
     font-size: 1rem;
     visibility: visible;
-    animation: hack-context-menu-sheet-in 140ms ease-out;
+    animation: kazo-context-menu-sheet-in 140ms ease-out;
 }
 
-.hack-context-menu-sheet .hack-context-menu-item {
+.kazo-context-menu-sheet .kazo-context-menu-item {
     min-height: 2.9rem;
 }
 
-@keyframes hack-context-menu-sheet-in {
+@keyframes kazo-context-menu-sheet-in {
     from {
         transform: translateY(100%);
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .hack-context-menu-panel.is-placed,
-    .hack-context-menu-panel.hack-context-menu-sheet {
+    .kazo-context-menu-panel.is-placed,
+    .kazo-context-menu-panel.kazo-context-menu-sheet {
         animation: none;
     }
 }

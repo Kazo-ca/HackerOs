@@ -21,7 +21,7 @@ namespace Kazo.Os.Server.Services;
 // per request. The dictionary is populated on first access and evicted on expiry.
 // =============================================================================
 
-/// <summary>Options for the HackerOs bearer authentication scheme (no configuration fields).</summary>
+/// <summary>Options for the Kazo OS bearer authentication scheme (no configuration fields).</summary>
 public sealed class KazoOsBearerOptions : AuthenticationSchemeOptions { }
 
 /// <summary>

@@ -17,12 +17,12 @@
 #   ecosystem-limits-off    default publish, wwwroot/appsettings.json switching the process limits off (ADR 0125)
 #   ecosystem-oom           default publish, wwwroot/appsettings.json lowering the simulated MemTotal to
 #                           OOM_MEMORY_MIB (512 by default)
-#                           (HackerOs:Hardware:MemoryMiB); the smoke test turns the OOM killer on with sudo,
+#                           (KazoOs:Hardware:MemoryMiB); the smoke test turns the OOM killer on with sudo,
 #                           runs stress --vm and expects the kill in dmesg (ADR 0126)
 #   ecosystem-isolated      default publish served on 127.0.0.2: a secure context where index.html registers
 #                           the PWA service worker (it skips localhost and 127.0.0.1), which adds COOP/COEP; the
 #                           page must be cross-origin isolated, with shared pipes and synchronous calls (ADR 0131)
-#   ecosystem-isolation-off same on 127.0.0.2, appsettings.json setting HackerOs:CrossOriginIsolation to "off":
+#   ecosystem-isolation-off same on 127.0.0.2, appsettings.json setting KazoOs:CrossOriginIsolation to "off":
 #                           the service worker adds nothing and the page must not be isolated
 #   test-host               test/test (Blazor Web App, InteractiveWebAssembly; its middleware sends COOP/COEP)
 #   server                  Server/Kazo.Os.Server (serves the Ecosystem's OS in WebAssembly and its API, ADR 0130;
@@ -34,7 +34,7 @@
 # service-worker-assets.js, otherwise the service worker's install fails its integrity check.
 #
 # The two "-off" runs need the ADR 0066 switches (build/Kazo.Os.ResourceAccounting.targets and the
-# HackerOs:ResourceAccounting section of appsettings.json). On a tree without them they are reported
+# KazoOs:ResourceAccounting section of appsettings.json). On a tree without them they are reported
 # as SKIP, never as a failure.
 #
 # Logs, published output and failure screenshots go to wasm2/KazoOs/artifacts/verify-hosts/
@@ -149,10 +149,10 @@ run_smoke() {
     local name="$1" url="$2" cpu="${3:-}" mem="${4:-}" logfile="$LOGS/$1.smoke.log" limits=on oom=off
     [[ "$name" == *-limits-off ]] && limits=off
     [[ "$name" == *-oom ]] && oom=on
-    HACKEROS_SMOKE_URL="$url" HACKEROS_SMOKE_HOST="$name" HACKEROS_SMOKE_EXPECT_LIMITS="$limits" HACKEROS_SMOKE_EXPECT_OOM="$oom" \
-    HACKEROS_SMOKE_EXPECT_ISOLATION="$(expected_isolation "$name")" \
-    HACKEROS_SMOKE_EXPECT_CPU_SOURCE="$cpu" HACKEROS_SMOKE_EXPECT_MEM_SOURCE="$mem" \
-    HACKEROS_SMOKE_ARTIFACTS="$OUT/screenshots" \
+    KAZOOS_SMOKE_URL="$url" KAZOOS_SMOKE_HOST="$name" KAZOOS_SMOKE_EXPECT_LIMITS="$limits" KAZOOS_SMOKE_EXPECT_OOM="$oom" \
+    KAZOOS_SMOKE_EXPECT_ISOLATION="$(expected_isolation "$name")" \
+    KAZOOS_SMOKE_EXPECT_CPU_SOURCE="$cpu" KAZOOS_SMOKE_EXPECT_MEM_SOURCE="$mem" \
+    KAZOOS_SMOKE_ARTIFACTS="$OUT/screenshots" \
         dotnet test "$SMOKE_PROJECT" --no-build -c Debug --logger "console;verbosity=detailed" >"$logfile" 2>&1
     local code=$?
     grep -E '^\s*\[(smoke|chromium)\]' "$logfile" | sed "s/^ */    /"
@@ -309,7 +309,7 @@ else
     if wanted ecosystem-settings-off; then
         settings="$OUT/publish/ecosystem/wwwroot/appsettings.json"
         if [[ ! -f "$settings" ]] || ! grep -q '"ResourceAccounting"' "$settings"; then
-            record ecosystem-settings-off SKIP "no HackerOs:ResourceAccounting in appsettings.json (ADR 0066 not in this tree)"
+            record ecosystem-settings-off SKIP "no KazoOs:ResourceAccounting in appsettings.json (ADR 0066 not in this tree)"
         else
             off="$OUT/publish/ecosystem-settings-off"
             rm -rf "$off" && cp -r "$OUT/publish/ecosystem" "$off"
@@ -319,7 +319,7 @@ import json, sys
 path = sys.argv[1]
 with open(path, encoding="utf-8-sig") as f:
     data = json.load(f)
-accounting = data.setdefault("HackerOs", {}).setdefault("ResourceAccounting", {})
+accounting = data.setdefault("KazoOs", {}).setdefault("ResourceAccounting", {})
 for kind in ("Cpu", "Memory"):
     accounting.setdefault(kind, {})["Enabled"] = False
 with open(path, "w", encoding="utf-8") as f:
@@ -333,7 +333,7 @@ PY
     if wanted ecosystem-limits-off; then
         settings="$OUT/publish/ecosystem/wwwroot/appsettings.json"
         if [[ ! -f "$settings" ]] || ! grep -q '"ResourceLimits"' "$settings"; then
-            record ecosystem-limits-off SKIP "no HackerOs:ResourceLimits in appsettings.json (ADR 0125 not in this tree)"
+            record ecosystem-limits-off SKIP "no KazoOs:ResourceLimits in appsettings.json (ADR 0125 not in this tree)"
         else
             off="$OUT/publish/ecosystem-limits-off"
             rm -rf "$off" && cp -r "$OUT/publish/ecosystem" "$off"
@@ -343,7 +343,7 @@ import json, sys
 path = sys.argv[1]
 with open(path, encoding="utf-8-sig") as f:
     data = json.load(f)
-data.setdefault("HackerOs", {}).setdefault("ResourceLimits", {})["Enabled"] = False
+data.setdefault("KazoOs", {}).setdefault("ResourceLimits", {})["Enabled"] = False
 with open(path, "w", encoding="utf-8") as f:
     json.dump(data, f, indent=2)
 PY
@@ -356,7 +356,7 @@ PY
     if wanted ecosystem-oom; then
         settings="$OUT/publish/ecosystem/wwwroot/appsettings.json"
         if [[ ! -f "$settings" ]] || ! grep -q '"ResourceAccounting"' "$settings"; then
-            record ecosystem-oom SKIP "no HackerOs:ResourceAccounting in appsettings.json (memory is not measured)"
+            record ecosystem-oom SKIP "no KazoOs:ResourceAccounting in appsettings.json (memory is not measured)"
         else
             oom="$OUT/publish/ecosystem-oom"
             rm -rf "$oom" && cp -r "$OUT/publish/ecosystem" "$oom"
@@ -366,7 +366,7 @@ import json, sys
 path, mebibytes = sys.argv[1], int(sys.argv[2])
 with open(path, encoding="utf-8-sig") as f:
     data = json.load(f)
-data.setdefault("HackerOs", {}).setdefault("Hardware", {})["MemoryMiB"] = mebibytes
+data.setdefault("KazoOs", {}).setdefault("Hardware", {})["MemoryMiB"] = mebibytes
 with open(path, "w", encoding="utf-8") as f:
     json.dump(data, f, indent=2)
 PY
@@ -383,7 +383,7 @@ PY
     if wanted ecosystem-isolation-off; then
         settings="$OUT/publish/ecosystem/wwwroot/appsettings.json"
         if [[ ! -f "$settings" ]] || ! grep -q '"CrossOriginIsolation"' "$settings"; then
-            record ecosystem-isolation-off SKIP "no HackerOs:CrossOriginIsolation in appsettings.json (ADR 0131 not in this tree)"
+            record ecosystem-isolation-off SKIP "no KazoOs:CrossOriginIsolation in appsettings.json (ADR 0131 not in this tree)"
         else
             off="$OUT/publish/ecosystem-isolation-off"
             rm -rf "$off" && cp -r "$OUT/publish/ecosystem" "$off"
@@ -392,7 +392,7 @@ import json, sys
 path = sys.argv[1]
 with open(path, encoding="utf-8-sig") as f:
     data = json.load(f)
-data.setdefault("HackerOs", {})["CrossOriginIsolation"] = "off"
+data.setdefault("KazoOs", {})["CrossOriginIsolation"] = "off"
 with open(path, "w", encoding="utf-8") as f:
     json.dump(data, f, indent=2)
 PY
@@ -403,7 +403,7 @@ PY
 
     # The dotnet run hosts: Development environment (common-pitfalls.md §4), and the server's
     # database, blobs and backups redirected to a throwaway directory so the tracked
-    # Server/Kazo.Os.Server/hackeros.db is never touched.
+    # Server/Kazo.Os.Server/kazoos.db is never touched.
     if wanted test-host; then
         port="$(free_port)"
         verify_run test-host "http://127.0.0.1:$port" "$LOGS/test-host.host.log" "$DEFAULT_SOURCE" "$DEFAULT_SOURCE" \
@@ -416,7 +416,7 @@ PY
         data="$OUT/server-data"; rm -rf "$data"; mkdir -p "$data"
         verify_run server "http://127.0.0.1:$port" "$LOGS/server.host.log" "$DEFAULT_SOURCE" "$DEFAULT_SOURCE" \
             env ASPNETCORE_ENVIRONMENT=Development \
-                ConnectionStrings__HackerOsDb="Data Source=$data/hackeros.db" \
+                ConnectionStrings__KazoOsDb="Data Source=$data/kazoos.db" \
                 BlobStorage__Root="$data/blobs" ServerBackup__Root="$data/backups" \
             dotnet run --project Server/Kazo.Os.Server/Kazo.Os.Server.csproj -c Debug --no-build --no-launch-profile --urls "http://127.0.0.1:$port"
     fi

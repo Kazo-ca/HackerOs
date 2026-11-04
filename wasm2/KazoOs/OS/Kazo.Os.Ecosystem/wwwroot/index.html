@@ -35,8 +35,8 @@
         ADR 0099 §3: fatal boot-error screen. Hidden until the boot guard below shows it;
         data-state picks which message is visible (styles in css/app.css).
     -->
-    <section id="hackeros-boot-error" role="alert" aria-labelledby="hackeros-boot-error-title" hidden>
-        <h1 id="hackeros-boot-error-title">Kazo OS could not start</h1>
+    <section id="kazoos-boot-error" role="alert" aria-labelledby="kazoos-boot-error-title" hidden>
+        <h1 id="kazoos-boot-error-title">Kazo OS could not start</h1>
         <p class="boot-error-repairing">Damaged system files were found in the offline cache. Downloading a fresh copy&hellip;</p>
         <p class="boot-error-offline">The offline cache of Kazo OS is damaged and cannot be repaired without a network connection. Reconnect to the Internet once, then retry: the damaged files will be downloaded again. Your files and settings are not affected.</p>
         <p class="boot-error-retrying">The server did not deliver a system file (a new version may be being deployed). Retrying in <span class="boot-error-countdown"></span>&nbsp;s&hellip;</p>
@@ -63,8 +63,8 @@
         // reloads by itself after a growing delay (retryDelays), at most retryDelays.length times
         // per tab, before showing the "failed" screen (doc/en/wasm/dev/pwa-cache-recovery.md).
         (function () {
-            const guardKey = 'hackeros.bootRecovery';
-            const retryKey = 'hackeros.bootRetries';
+            const guardKey = 'kazoos.bootRecovery';
+            const retryKey = 'kazoos.bootRetries';
             const retryDelays = [5, 15, 30];
             const loadFailure = /integrity|SRI|download '|Failed to fetch|Failed to load|NetworkError|Load failed|ERR_/i;
             const guard = {
@@ -79,8 +79,8 @@
 
             // state: 'repairing' (no button), 'offline' or 'failed'.
             function showBootError(state, detail) {
-                const panel = document.getElementById('hackeros-boot-error');
-                document.documentElement.classList.add('hackeros-boot-failed');
+                const panel = document.getElementById('kazoos-boot-error');
+                document.documentElement.classList.add('kazoos-boot-failed');
                 panel.dataset.state = state;
                 panel.querySelector('.boot-error-detail').textContent = detail || '';
                 panel.querySelector('.boot-error-retry').onclick = () => {
@@ -110,7 +110,7 @@
                 retries.add();
                 let remaining = retryDelays[attempt];
                 showBootError('retrying', detail);
-                const countdown = document.querySelector('#hackeros-boot-error .boot-error-countdown');
+                const countdown = document.querySelector('#kazoos-boot-error .boot-error-countdown');
                 countdown.textContent = String(remaining);
                 const timer = setInterval(() => {
                     remaining -= 1;
@@ -179,7 +179,7 @@
                         if (installingWorker) {
                             installingWorker.onstatechange = () => {
                                 if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                    window.dispatchEvent(new CustomEvent('hackeros-pwa-update-available', {
+                                    window.dispatchEvent(new CustomEvent('kazoos-pwa-update-available', {
                                         detail: { registration }
                                     }));
                                 }
@@ -193,13 +193,13 @@
             navigator.serviceWorker.addEventListener('controllerchange', () => {
                 // ADR 0225: the OS asked the active worker to take this page loaded with Ctrl+F5, to
                 // serve an installed app's files. Same release, nothing to reload.
-                if (window.hackerOsClaimForInstalledApps === 'pending') {
-                    window.hackerOsClaimForInstalledApps = 'done';
+                if (window.kazoOsClaimForInstalledApps === 'pending') {
+                    window.kazoOsClaimForInstalledApps = 'done';
                     return;
                 }
                 // ADR 0223: once the OS runs, it restarts itself cleanly onto the new version
                 // (hostUpdate.js); this abrupt reload stays for a page the OS does not handle.
-                const handler = window.hackerOsControllerChangeHandler;
+                const handler = window.kazoOsControllerChangeHandler;
                 if (typeof handler === 'function' && handler()) {
                     return;
                 }

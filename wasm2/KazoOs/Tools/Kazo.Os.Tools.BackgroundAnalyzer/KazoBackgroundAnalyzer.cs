@@ -41,8 +41,8 @@ public sealed class KazoBackgroundAnalyzer : DiagnosticAnalyzer
         context.EnableConcurrentExecution();
         context.RegisterCompilationStartAction(start =>
         {
-            INamedTypeSymbol? hackBackground = start.Compilation.GetTypeByMetadataName(KazoBackgroundType);
-            if (hackBackground is null)
+            INamedTypeSymbol? kazoBackground = start.Compilation.GetTypeByMetadataName(KazoBackgroundType);
+            if (kazoBackground is null)
             {
                 // The app does not reference the SDK's threading API: nothing to check.
                 return;
@@ -51,16 +51,16 @@ public sealed class KazoBackgroundAnalyzer : DiagnosticAnalyzer
             // The serializable types are the same for every call of the compilation: computed once.
             WireTypes wire = new(start.Compilation);
             start.RegisterOperationAction(
-                operation => AnalyzeInvocation(operation, hackBackground, wire),
+                operation => AnalyzeInvocation(operation, kazoBackground, wire),
                 OperationKind.Invocation);
         });
     }
 
-    private static void AnalyzeInvocation(OperationAnalysisContext context, INamedTypeSymbol hackBackground, WireTypes wire)
+    private static void AnalyzeInvocation(OperationAnalysisContext context, INamedTypeSymbol kazoBackground, WireTypes wire)
     {
         IInvocationOperation invocation = (IInvocationOperation)context.Operation;
         IMethodSymbol method = invocation.TargetMethod;
-        if (method.Name != "RunAsync" || !SymbolEqualityComparer.Default.Equals(method.ContainingType, hackBackground))
+        if (method.Name != "RunAsync" || !SymbolEqualityComparer.Default.Equals(method.ContainingType, kazoBackground))
         {
             return;
         }

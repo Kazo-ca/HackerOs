@@ -6,7 +6,7 @@
 
 Accepté le 2026-10-16, avec le chantier `web/5-static-sites`.
 
-- **Phase du plan :** phase web ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Phase du plan :** phase web ([`asp-kazo-plan.md`](../plans/asp-kazo-plan.md)).
 - **Complète :** [ADR 0077](0077-hosted-static-sites.md). Les sections 1 et 2
   ci-dessous remplacent deux puces de l'ADR 0077 §2 et sa conséquence sur le
   compte `www-data` ; le reste de l'ADR 0077 (fichiers `.site`, deux

@@ -4,7 +4,7 @@ using Kazo.Os.Platform.Core.Apps.Packages;
 
 namespace Kazo.Os.Platform.Core.Tests.Apps.Packages;
 
-/// <summary>Writing a <c>.hackapp</c> package and its <c>index.json</c> entry (ADR 0182 §1, §2).</summary>
+/// <summary>Writing a <c>.kazoapp</c> package and its <c>index.json</c> entry (ADR 0182 §1, §2).</summary>
 public sealed class AppPackageWriterTests
 {
     [Fact]
@@ -19,7 +19,7 @@ public sealed class AppPackageWriterTests
         AppPackage read = AppPackage.Read(package);
 
         Assert.Equal((AppPackageTests.AppId, "1.0.0"), (read.AppId, read.Version.ToString()));
-        Assert.Equal(["hackeros-package.json", "lib/Kazo.Sample.dll", "manifest.json", "wwwroot/data/x.txt"], read.Files.Keys.Order(StringComparer.Ordinal));
+        Assert.Equal(["kazoos-package.json", "lib/Kazo.Sample.dll", "manifest.json", "wwwroot/data/x.txt"], read.Files.Keys.Order(StringComparer.Ordinal));
         // Same inputs, same bytes: the SHA-256 in index.json is reproducible.
         Assert.Equal(AppPackage.Sha256(package), AppPackage.Sha256(AppPackageWriter.Write(
             sample["manifest.json"], assembly => sample["lib/" + assembly], asset => sample["wwwroot/" + asset])));
@@ -72,7 +72,7 @@ public sealed class AppPackageWriterTests
     {
         string sha = new('a', 64);
         AppPackageIndexEntry first = new(SemanticVersion.Parse("1.0.0"), AppPackageWriter.GetPackagePath(AppPackageTests.AppId, SemanticVersion.Parse("1.0.0")), sha);
-        AppPackageIndexEntry second = new(SemanticVersion.Parse("1.1.0"), "1.1.0/org.kazo.sample-1.1.0.hackapp", sha);
+        AppPackageIndexEntry second = new(SemanticVersion.Parse("1.1.0"), "1.1.0/org.kazo.sample-1.1.0.kazoapp", sha);
         AppPackageIndexEntry republished = first with { Sha256 = new string('b', 64) };
 
         byte[] index = AppPackageWriter.AddToIndex(null, AppPackageTests.AppId, first);
@@ -80,7 +80,7 @@ public sealed class AppPackageWriterTests
         index = AppPackageWriter.AddToIndex(index, AppPackageTests.AppId, republished);
         AppPackageIndex parsed = AppPackageIndex.Parse(index);
 
-        Assert.Equal("1.0.0/org.kazo.sample-1.0.0.hackapp", first.Path);
+        Assert.Equal("1.0.0/org.kazo.sample-1.0.0.kazoapp", first.Path);
         Assert.Equal(["1.1.0", "1.0.0"], parsed.Versions.Select(static entry => entry.Version.ToString()));
         Assert.Equal(new string('b', 64), parsed.Find(SemanticVersion.Parse("1.0.0"))!.Sha256);
         Assert.Equal("apps.index.invalid", Assert.Throws<AppPackageException>(() => AppPackageWriter.AddToIndex(index, "org.other", first)).Code);
@@ -91,8 +91,8 @@ public sealed class AppPackageWriterTests
     {
         string sha = new('a', 64);
         byte[] firstSignature = [.. Enumerable.Repeat((byte)1, AppPackageSignature.SignatureLength)];
-        AppPackageIndexEntry first = new(SemanticVersion.Parse("1.0.0"), "1.0.0/org.kazo.sample-1.0.0.hackapp", sha) { Signature = firstSignature };
-        AppPackageIndexEntry second = new(SemanticVersion.Parse("1.1.0"), "1.1.0/org.kazo.sample-1.1.0.hackapp", sha);
+        AppPackageIndexEntry first = new(SemanticVersion.Parse("1.0.0"), "1.0.0/org.kazo.sample-1.0.0.kazoapp", sha) { Signature = firstSignature };
+        AppPackageIndexEntry second = new(SemanticVersion.Parse("1.1.0"), "1.1.0/org.kazo.sample-1.1.0.kazoapp", sha);
 
         byte[] index = AppPackageWriter.AddToIndex(null, AppPackageTests.AppId, first);
         index = AppPackageWriter.AddToIndex(index, AppPackageTests.AppId, second);

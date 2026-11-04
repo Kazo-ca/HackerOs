@@ -27,7 +27,7 @@ public sealed partial class LocalServerPanel
     internal const string ReleasesUrl = "https://github.com/Kazo-ca/Os/releases/latest";
 
     /// <summary>The server image (ADR 0191 §4).</summary>
-    internal const string DockerImage = "ghcr.io/kazo-ca/hackeros-server";
+    internal const string DockerImage = "ghcr.io/kazo-ca/kazoos-server";
 
     private KazoServerProbe? _probe;
     private string? _pairError;
@@ -65,17 +65,17 @@ public sealed partial class LocalServerPanel
 
     /// <summary>
     /// The server archives of <paramref name="version"/>, one per system, as release.yml names them:
-    /// <c>hackeros-server-&lt;version&gt;-&lt;rid&gt;.zip</c> (Windows) or <c>.tar.gz</c>.
+    /// <c>kazoos-server-&lt;version&gt;-&lt;rid&gt;.zip</c> (Windows) or <c>.tar.gz</c>.
     /// </summary>
     /// <param name="version">The OS version; the server of the same version matches it.</param>
     internal static IReadOnlyList<ServerDownload> Downloads(string version) =>
     [
-        new("LocalServer.System.WindowsX64", $"hackeros-server-{version}-win-x64.zip"),
-        new("LocalServer.System.WindowsArm64", $"hackeros-server-{version}-win-arm64.zip"),
-        new("LocalServer.System.MacArm64", $"hackeros-server-{version}-osx-arm64.tar.gz"),
-        new("LocalServer.System.MacX64", $"hackeros-server-{version}-osx-x64.tar.gz"),
-        new("LocalServer.System.LinuxX64", $"hackeros-server-{version}-linux-x64.tar.gz"),
-        new("LocalServer.System.LinuxArm64", $"hackeros-server-{version}-linux-arm64.tar.gz"),
+        new("LocalServer.System.WindowsX64", $"kazoos-server-{version}-win-x64.zip"),
+        new("LocalServer.System.WindowsArm64", $"kazoos-server-{version}-win-arm64.zip"),
+        new("LocalServer.System.MacArm64", $"kazoos-server-{version}-osx-arm64.tar.gz"),
+        new("LocalServer.System.MacX64", $"kazoos-server-{version}-osx-x64.tar.gz"),
+        new("LocalServer.System.LinuxX64", $"kazoos-server-{version}-linux-x64.tar.gz"),
+        new("LocalServer.System.LinuxArm64", $"kazoos-server-{version}-linux-arm64.tar.gz"),
     ];
 
     /// <summary>Asks the typed address whether it is a Kazo OS server.</summary>

@@ -17,7 +17,7 @@ public sealed class MsBuildIntegrationTests
         Assert.True(exitCode == 0, output);
         AppManifest manifest = AppManifestJsonSerializer.DeserializeStrict(
             await File.ReadAllTextAsync(Path.Combine(FixtureDirectory("SingleApp"), "manifest.json")));
-        Assert.Equal("org.hackeros.fixtures.hello", manifest.Id);
+        Assert.Equal("org.kazoos.fixtures.hello", manifest.Id);
         Assert.Equal("ManifestGenerator.Fixtures.SingleApp.dll", manifest.EntryPoint!.Assembly);
     }
 
@@ -29,7 +29,7 @@ public sealed class MsBuildIntegrationTests
         Assert.True(exitCode == 0, output);
         string directory = Path.Combine(FixtureDirectory("MultiApp"), "manifests");
         Assert.Equal(
-            ["org.hackeros.fixtures.alpha.json", "org.hackeros.fixtures.beta.json"],
+            ["org.kazoos.fixtures.alpha.json", "org.kazoos.fixtures.beta.json"],
             Directory.GetFiles(directory).Select(Path.GetFileName).Order(StringComparer.Ordinal));
         Assert.False(File.Exists(Path.Combine(FixtureDirectory("MultiApp"), "manifest.json")));
     }
@@ -87,7 +87,7 @@ public sealed class MsBuildIntegrationTests
             IReadOnlyList<BuiltInApplication> applications = BuiltInApplicationsJsonSerializer.DeserializeStrict(await reader.ReadToEndAsync());
 
             Assert.Equal(
-                [("org.hackeros.fixtures.alpha", false), ("org.hackeros.fixtures.beta", false), ("org.hackeros.fixtures.hello", true)],
+                [("org.kazoos.fixtures.alpha", false), ("org.kazoos.fixtures.beta", false), ("org.kazoos.fixtures.hello", true)],
                 applications.Select(item => (item.Manifest.Id, item.IsSystemApp)));
         }
         finally
@@ -99,7 +99,7 @@ public sealed class MsBuildIntegrationTests
     [Fact]
     public async Task KazoOsPack_signs_the_package_with_the_author_key_of_the_environment()
     {
-        string output = Directory.CreateTempSubdirectory("hackeros-pack-").FullName;
+        string output = Directory.CreateTempSubdirectory("kazoos-pack-").FullName;
         (string privateKey, string publicKey) = PackageSigner.CreateKeyPair();
         try
         {

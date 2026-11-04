@@ -8,7 +8,7 @@ Chantier `rebuild/4-terminal` de la phase 4 (ADR 0058, section 4). La console
 atteint la parité avec un terminal Linux :
 
 - **Tab complète aussi les chemins**, et c'est le shell qui le fait
-  (`IHackShell.CompleteAsync`), pas l'émulateur de terminal ;
+  (`IKazoShell.CompleteAsync`), pas l'émulateur de terminal ;
 - **`exit [n]`** est une commande du catalogue qui termine le shell ;
 - **plusieurs onglets**, chacun avec son propre shell `hsh`.
 
@@ -65,11 +65,11 @@ second Tab : le dernier segment, sans ses échappements (`My Notes.txt`,
 | `exit 1 2` | `exit: too many arguments`, code `1`, le shell reste. |
 | `exit 4 \| cat` | Dans un tube, la demande atteint une copie du shell et se perd, comme le sous-shell de `bash`. |
 
-La commande (`org.hackeros.commands.exit`, capacité `shell.control`) appelle
+La commande (`org.kazoos.commands.exit`, capacité `shell.control`) appelle
 `IShellSession.Exit(int?)`. `ShellSession.RequestExit` note le statut ;
 l'interpréteur n'exécute pas la suite de la ligne (`exit 0 && echo late`
 n'affiche rien), puis l'hôte du shell (`ShellHostService`) termine le
-processus `hsh` avec ce statut. `IHackShell.HasExited` devient vrai et
+processus `hsh` avec ce statut. `IKazoShell.HasExited` devient vrai et
 `ExecuteAsync` lève ensuite `ObjectDisposedException`.
 
 **Ctrl+D** sur une ligne vide, sans commande en cours, fait la même chose :
@@ -78,7 +78,7 @@ le terminal affiche `exit` et termine le shell avec `$?`.
 `TerminalPanel.OnExitRequested` est appelé quand le shell est sorti. Sans
 abonné, le panneau reste ouvert et affiche `[hsh exited with status n]`.
 Un hôte qui embarque le terminal par contrat (ADR 0063) reçoit aussi
-l'événement `IHackTerminal.Exited` : l'éditeur de code ferme l'onglet du
+l'événement `IKazoTerminal.Exited` : l'éditeur de code ferme l'onglet du
 terminal intégré, et masque le dock pour le dernier.
 
 ## Onglets
@@ -134,7 +134,7 @@ les raccourcis d'onglets ci-dessus jusqu'à `TerminalTabs`.
   arrêté.
 - **CodeEditor garde ses propres onglets** (ADR 0058) ; depuis l'ADR 0063,
   chacun embarque le terminal de l'app Terminal par contrat, et l'éditeur
-  réagit à `exit` par `IHackTerminal.Exited`.
+  réagit à `exit` par `IKazoTerminal.Exited`.
 - **`;` n'est pas reconnu par le parseur** : la complétion le traite comme un
   séparateur pour être prête, mais les exemples utilisent `&&`.
 

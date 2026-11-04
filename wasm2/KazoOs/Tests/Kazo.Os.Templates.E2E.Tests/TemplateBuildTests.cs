@@ -11,13 +11,13 @@ public sealed class TemplateBuildTests(TemplateWorkspace workspace)
 {
     /// <summary>An app template builds and its manifest names the app id and the SDK it was built against.</summary>
     [Theory]
-    [InlineData("hackeros-window", "window", "Contoso.WindowApp")]
-    [InlineData("hackeros-command", "terminal", "Contoso.CommandApp")]
-    [InlineData("hackeros-service", "service", "Contoso.ServiceApp")]
-    [InlineData("hackeros-site", "web", "Contoso.SiteApp")]
+    [InlineData("kazoos-window", "window", "Contoso.WindowApp")]
+    [InlineData("kazoos-command", "terminal", "Contoso.CommandApp")]
+    [InlineData("kazoos-service", "service", "Contoso.ServiceApp")]
+    [InlineData("kazoos-site", "web", "Contoso.SiteApp")]
     public async Task An_app_template_builds_against_the_local_feed(string template, string kind, string name)
     {
-        string appId = "com.contoso." + template["hackeros-".Length..];
+        string appId = "com.contoso." + template["kazoos-".Length..];
         string directory = Path.Combine(workspace.Root, name);
 
         await workspace.RunCheckedAsync(workspace.Root, "new", template, "-n", name, "-o", directory, "--appId", appId);
@@ -30,7 +30,7 @@ public sealed class TemplateBuildTests(TemplateWorkspace workspace)
     }
 
     /// <summary>
-    /// ADR 0176 §8, ADR 0207: a repository made with <c>hackeros-solution</c>, its Kazo OS submodule
+    /// ADR 0176 §8, ADR 0207: a repository made with <c>kazoos-solution</c>, its Kazo OS submodule
     /// replaced by this repository (<c>KazoOsSourceRoot</c>), builds and tests both profiles. Debug
     /// compiles Kazo OS from the sources (every Kazo OS reference is a project, the host aggregates
     /// the app with the base apps, system apps included); Release takes the packages of the local
@@ -41,15 +41,15 @@ public sealed class TemplateBuildTests(TemplateWorkspace workspace)
     {
         string directory = Path.Combine(workspace.Root, "Contoso.Board");
         string sourceRoot = "-p:KazoOsSourceRoot=" + workspace.RepositoryRoot + Path.DirectorySeparatorChar;
-        await workspace.RunCheckedAsync(workspace.Root, "new", "hackeros-solution", "-n", "Contoso.Board", "-o", directory,
+        await workspace.RunCheckedAsync(workspace.Root, "new", "kazoos-solution", "-n", "Contoso.Board", "-o", directory,
             "--appId", "com.contoso.board", "--repository", "contoso/Os-App-Board");
 
         Assert.True(File.Exists(Path.Combine(directory, "Contoso.Board.sln")));
-        Assert.Contains("external/HackerOs", File.ReadAllText(Path.Combine(directory, ".gitmodules")), StringComparison.Ordinal);
+        Assert.Contains("external/KazoOs", File.ReadAllText(Path.Combine(directory, ".gitmodules")), StringComparison.Ordinal);
         Assert.Contains("contoso/Os-App-Board", File.ReadAllText(Path.Combine(directory, "store", "store.json")), StringComparison.Ordinal);
         // The catalog builds this project, not the solution (whose tests project has no KazoOsPack target).
         Assert.Contains("\"project\": \"src/Contoso.Board/Contoso.Board.csproj\"", File.ReadAllText(Path.Combine(directory, "store", "store.json")), StringComparison.Ordinal);
-        Assert.Contains("src/Contoso.Board", File.ReadAllText(Path.Combine(directory, ".github", "workflows", "publish-to-hack-store.yml")), StringComparison.Ordinal);
+        Assert.Contains("src/Contoso.Board", File.ReadAllText(Path.Combine(directory, ".github", "workflows", "publish-to-kazoos-store.yml")), StringComparison.Ordinal);
         // ADR 0219 §3: the packages branch workflow is named for the app and private keys stay out of git.
         Assert.Contains("src/Contoso.Board", File.ReadAllText(Path.Combine(directory, ".github", "workflows", "publish-packages.yml")), StringComparison.Ordinal);
         Assert.Contains("*.pem", File.ReadAllText(Path.Combine(directory, ".gitignore")), StringComparison.Ordinal);
@@ -65,7 +65,7 @@ public sealed class TemplateBuildTests(TemplateWorkspace workspace)
         AssertKazoOsReferences(Path.Combine(host, "obj", "source", "project.assets.json"), "project");
         string debugCatalog = File.ReadAllText(Path.Combine(host, "obj", "source", "Debug", "net10.0", "BuiltInApplications.json"));
         Assert.Contains("\"com.contoso.board\"", debugCatalog, StringComparison.Ordinal);
-        Assert.Contains("\"org.hackeros.terminal\"", debugCatalog, StringComparison.Ordinal);
+        Assert.Contains("\"org.kazoos.terminal\"", debugCatalog, StringComparison.Ordinal);
         Assert.Contains("\"isSystemApp\":true", debugCatalog, StringComparison.Ordinal);
         using (JsonDocument manifest = JsonDocument.Parse(File.ReadAllText(Path.Combine(directory, "src", "Contoso.Board", "manifest.json"))))
         {
@@ -82,19 +82,19 @@ public sealed class TemplateBuildTests(TemplateWorkspace workspace)
 
         // The publishing workflow packs the app the same way (ADR 0188 §7, ADR 0182).
         await workspace.RunCheckedAsync(directory, "build", Path.Combine("src", "Contoso.Board"), "-c", "Release", "-t:KazoOsPack", sourceRoot);
-        Assert.True(File.Exists(Path.Combine(directory, "src", "Contoso.Board", "bin", "hackeros-packages", "index.json")));
+        Assert.True(File.Exists(Path.Combine(directory, "src", "Contoso.Board", "bin", "kazoos-packages", "index.json")));
     }
 
     /// <summary>Every Kazo OS library of a restore output has the expected type (<c>project</c> or <c>package</c>).</summary>
     private static void AssertKazoOsReferences(string assetsFile, string expectedType)
     {
         using JsonDocument assets = JsonDocument.Parse(File.ReadAllText(assetsFile));
-        JsonProperty[] hackerOs = assets.RootElement.GetProperty("libraries").EnumerateObject()
+        JsonProperty[] kazoOs = assets.RootElement.GetProperty("libraries").EnumerateObject()
             .Where(library => library.Name.StartsWith("Kazo.Os.", StringComparison.Ordinal))
             .ToArray();
-        Assert.Contains(hackerOs, library => library.Name.StartsWith("Kazo.Os.AppSdk/", StringComparison.Ordinal));
-        Assert.Contains(hackerOs, library => library.Name.StartsWith("Kazo.Os.Ecosystem.Host/", StringComparison.Ordinal));
-        Assert.All(hackerOs, library => Assert.Equal(expectedType, library.Value.GetProperty("type").GetString()));
+        Assert.Contains(kazoOs, library => library.Name.StartsWith("Kazo.Os.AppSdk/", StringComparison.Ordinal));
+        Assert.Contains(kazoOs, library => library.Name.StartsWith("Kazo.Os.Ecosystem.Host/", StringComparison.Ordinal));
+        Assert.All(kazoOs, library => Assert.Equal(expectedType, library.Value.GetProperty("type").GetString()));
     }
 
     /// <summary>
@@ -106,9 +106,9 @@ public sealed class TemplateBuildTests(TemplateWorkspace workspace)
     {
         string root = Path.Combine(workspace.Root, "host-scenario");
         Directory.CreateDirectory(root);
-        await workspace.RunCheckedAsync(root, "new", "hackeros-window", "-n", "Contoso.Notes", "-o", "Notes", "--appId", "com.contoso.notes");
-        await workspace.RunCheckedAsync(root, "new", "hackeros-command", "-n", "Contoso.Hello", "-o", "Hello", "--appId", "com.contoso.hello");
-        await workspace.RunCheckedAsync(root, "new", "hackeros-host", "-n", "Contoso.Os", "-o", "Host");
+        await workspace.RunCheckedAsync(root, "new", "kazoos-window", "-n", "Contoso.Notes", "-o", "Notes", "--appId", "com.contoso.notes");
+        await workspace.RunCheckedAsync(root, "new", "kazoos-command", "-n", "Contoso.Hello", "-o", "Hello", "--appId", "com.contoso.hello");
+        await workspace.RunCheckedAsync(root, "new", "kazoos-host", "-n", "Contoso.Os", "-o", "Host");
         string host = Path.Combine(root, "Host");
         await workspace.RunCheckedAsync(host, "add", "reference", "../Notes/Contoso.Notes.csproj", "../Hello/Contoso.Hello.csproj");
         await workspace.RunCheckedAsync(host, "build");
@@ -116,7 +116,7 @@ public sealed class TemplateBuildTests(TemplateWorkspace workspace)
         string aggregated = File.ReadAllText(Path.Combine(host, "obj", "Debug", "net10.0", "BuiltInApplications.json"));
         Assert.Contains("\"com.contoso.notes\"", aggregated, StringComparison.Ordinal);
         Assert.Contains("\"com.contoso.hello\"", aggregated, StringComparison.Ordinal);
-        Assert.Contains("\"org.hackeros.terminal\"", aggregated, StringComparison.Ordinal);
+        Assert.Contains("\"org.kazoos.terminal\"", aggregated, StringComparison.Ordinal);
 
         int port = FreePort();
         using System.Diagnostics.Process server = workspace.Start(host, "run", "--no-build", "--urls", $"http://127.0.0.1:{port}");
@@ -172,7 +172,7 @@ public sealed class TemplateBuildTests(TemplateWorkspace workspace)
     {
         string root = Path.Combine(workspace.Root, "sdk-compat-scenario");
         Directory.CreateDirectory(root);
-        await workspace.RunCheckedAsync(root, "new", "hackeros-host", "-n", "Contoso.Os", "-o", "Host");
+        await workspace.RunCheckedAsync(root, "new", "kazoos-host", "-n", "Contoso.Os", "-o", "Host");
         string host = Path.Combine(root, "Host");
 
         await workspace.RunCheckedAsync(host, "add", "package", "Contoso.Sdk1Compat", "--version", "1.0.0");

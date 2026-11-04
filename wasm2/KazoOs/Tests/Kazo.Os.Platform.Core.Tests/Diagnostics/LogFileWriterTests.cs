@@ -37,15 +37,15 @@ public sealed class LogFileWriterTests
         LogTestFileSystem fs = await LogTestFileSystem.CreateAsync();
         LogFileWriter writer = new(fs.Clock);
         writer.Write(LogFileTarget.AuthLog, DiagnosticSeverity.Information, "session.login", "actor=alice");
-        writer.Write(LogFileTarget.ForApp("org.hackeros.text-editor"), DiagnosticSeverity.Warning, "org.hackeros.text-editor", "w", 42);
+        writer.Write(LogFileTarget.ForApp("org.kazoos.text-editor"), DiagnosticSeverity.Warning, "org.kazoos.text-editor", "w", 42);
 
         await writer.AttachAsync(fs.Service);
 
         Assert.Equal(FileSystemPermissions.FromMode(0b110_000_000), (await fs.StatAsync("/var/log/auth.log"))!.Metadata.Permissions);
-        Assert.Equal(FileSystemPermissions.FromMode(0b110_100_100), (await fs.StatAsync("/var/log/apps/org.hackeros.text-editor.log"))!.Metadata.Permissions);
+        Assert.Equal(FileSystemPermissions.FromMode(0b110_100_100), (await fs.StatAsync("/var/log/apps/org.kazoos.text-editor.log"))!.Metadata.Permissions);
         Assert.Equal(
-            "2026-10-10T03:11:42.123Z WARN  org.hackeros.text-editor[42]: w",
-            Assert.Single(await fs.ReadLinesAsync("/var/log/apps/org.hackeros.text-editor.log")));
+            "2026-10-10T03:11:42.123Z WARN  org.kazoos.text-editor[42]: w",
+            Assert.Single(await fs.ReadLinesAsync("/var/log/apps/org.kazoos.text-editor.log")));
     }
 
     [Fact]

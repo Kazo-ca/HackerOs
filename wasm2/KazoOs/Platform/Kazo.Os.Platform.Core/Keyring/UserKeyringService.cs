@@ -79,7 +79,7 @@ public sealed class UserKeyringService : ISessionKeyring
     public const string LoginKeyringName = "login.keyring";
 
     /// <summary>Prefix hashed with a PRF output to make the key of a passkey slot (ADR 0168 section 3).</summary>
-    public const string PrfKeyPrefix = "hackeros-keyring-prf-v1";
+    public const string PrfKeyPrefix = "kazoos-keyring-prf-v1";
 
     private const int MasterKeyLength = 32;
     private const ushort DirectoryMode = 0b111_000_000;
@@ -690,7 +690,7 @@ public sealed class UserKeyringService : ISessionKeyring
         [.. principal.GroupIds.Select(static id => id.ToString())]);
 
     /// <summary>Operation identity of the keyring daemon in the audit log.</summary>
-    internal const string KeyringAppId = "org.hackeros.keyring";
+    internal const string KeyringAppId = "org.kazoos.keyring";
 
     private static readonly AppOperationContext SystemOperation = new()
     {

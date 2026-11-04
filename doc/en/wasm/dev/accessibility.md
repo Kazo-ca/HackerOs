@@ -21,8 +21,8 @@ desktop and read by apps that draw their own content:
 ## Settings
 
 `accessibility.config`, layered ([`settings-files.md`](../framework/settings-files.md)):
-`/etc/hackeros/accessibility.config` (machine default, written as comments on first boot, also
-read by the sign-in screen) then `~/.config/hackeros/accessibility.config`.
+`/etc/kazoos/accessibility.config` (machine default, written as comments on first boot, also
+read by the sign-in screen) then `~/.config/kazoos/accessibility.config`.
 
 | Key | Values | Default | `auto` follows |
 |---|---|---|---|
@@ -35,8 +35,8 @@ is ignored (the next layer applies). An administrator can lock a key
 (`[locked]`).
 
 ```sh
-nano ~/.config/hackeros/accessibility.config      # highContrast=on
-sudo nano /etc/hackeros/accessibility.config      # machine default
+nano ~/.config/kazoos/accessibility.config      # highContrast=on
+sudo nano /etc/kazoos/accessibility.config      # machine default
 ```
 
 **Settings > Accessibility** shows the applied state and writes the user layer: three
@@ -79,8 +79,8 @@ New stylesheet: write text sizes in `rem`, never in `px`, and colors with the
 | App | High contrast | Text size | Reduced motion |
 |---|---|---|---|
 | Terminal (xterm.js, [`terminal-emulator.md`](terminal-emulator.md)) | 7:1 ANSI palette, black background, yellow cursor and selection | Font re-read from the panel (in `rem`) | Steady cursor |
-| Code Editor (Monaco) | `hackeros-high-contrast` theme (base `hc-black`) | Font and line height × factor | Steady cursor, scrolling without animation |
-| Hack Paint | Visible frame and grid around the image (the image keeps its colors) | n/a (interface in `rem`) | Still "busy" indicator |
+| Code Editor (Monaco) | `kazoos-high-contrast` theme (base `hc-black`) | Font and line height × factor | Steady cursor, scrolling without animation |
+| Kazo Paint | Visible frame and grid around the image (the image keeps its colors) | n/a (interface in `rem`) | Still "busy" indicator |
 
 Each one reads `AppContext.Accessibility` on opening and follows `Changed`.
 
@@ -135,6 +135,6 @@ outside the main thread.
 - [x] `ThemeScope`: `data-contrast`, `data-text-scale`; effective reduced motion.
 - [x] `themes.css`: high contrast layer, root font, reduced motion rule; text sizes in `rem`.
 - [x] Settings > Accessibility (English and French); Animations setting removed from Appearance.
-- [x] Terminal, Code Editor and Hack Paint follow the preferences.
+- [x] Terminal, Code Editor and Kazo Paint follow the preferences.
 - [x] Unit tests, axe scans with and without high contrast, keyboard walkthrough, 200% test.
 - [x] Documentation, ADR 0112 and index.

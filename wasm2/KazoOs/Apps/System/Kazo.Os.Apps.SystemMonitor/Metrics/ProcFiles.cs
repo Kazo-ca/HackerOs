@@ -139,7 +139,7 @@ public sealed record ProcNetDevice(
     long TransmitErrors,
     long TransmitDropped);
 
-/// <summary>One Web Worker of <c>/proc/hackeros/workers</c> (ADR 0071, section 5).</summary>
+/// <summary>One Web Worker of <c>/proc/kazoos/workers</c> (ADR 0071, section 5).</summary>
 /// <param name="Id">Worker number.</param>
 /// <param name="Role"><c>pool</c>, <c>overflow</c>, <c>dedicated</c> or <c>ready</c>.</param>
 /// <param name="State"><c>starting</c>, <c>idle</c>, <c>running</c>, <c>not-responding</c> or <c>terminated</c>.</param>
@@ -162,7 +162,7 @@ public sealed record ProcWorker(
     public bool IsNotResponding => State == "not-responding";
 }
 
-/// <summary>The Web Workers of the machine, from <c>/proc/hackeros/workers</c> (ADR 0071, section 5).</summary>
+/// <summary>The Web Workers of the machine, from <c>/proc/kazoos/workers</c> (ADR 0071, section 5).</summary>
 /// <param name="Capacity">The ceiling (<c>navigator.hardwareConcurrency</c>, at least 2).</param>
 /// <param name="PoolSize">Workers of the pool: one per virtual core.</param>
 /// <param name="Workers">Every live worker.</param>
@@ -371,7 +371,7 @@ public static class ProcFiles
         index < fields.Length && double.TryParse(fields[index], NumberStyles.Float, CultureInfo.InvariantCulture, out double value) ? value : 0;
 
     /// <summary>
-    /// Parses <c>/proc/hackeros/workers</c>: <c>capacity N</c>, <c>pool_size N</c>, a header line, then
+    /// Parses <c>/proc/kazoos/workers</c>: <c>capacity N</c>, <c>pool_size N</c>, a header line, then
     /// one line per worker (<c>id role state core memory_kb heartbeat_ms busy_ms pids</c>, <c>-</c> for none).
     /// </summary>
     public static ProcWorkers ParseWorkers(string text)

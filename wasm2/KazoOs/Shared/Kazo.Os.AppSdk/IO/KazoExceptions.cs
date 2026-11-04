@@ -3,7 +3,7 @@ using Kazo.Os.Simulation.Abstractions.FileSystem;
 namespace Kazo.Os.AppSdk.IO;
 
 /// <summary>
-/// Base I/O failure of the <c>Hack*</c> file API. Derives from <see cref="IOException"/> so an
+/// Base I/O failure of the <c>Kazo*</c> file API. Derives from <see cref="IOException"/> so an
 /// ordinary <c>catch (IOException)</c> works exactly as with <c>System.IO</c> (ADR 0043, section 5).
 /// </summary>
 public class KazoIOException : IOException

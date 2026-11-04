@@ -13,7 +13,7 @@ namespace Kazo.Os.Platform.Core.ServerConnection;
 
 /// <summary>
 /// Pushes/pulls the single <see cref="FileAssociationSettingsDocuments"/> file
-/// (<c>/etc/hackeros/file-associations.json</c>) to/from the optional server's FileAssociations sync
+/// (<c>/etc/kazoos/file-associations.json</c>) to/from the optional server's FileAssociations sync
 /// domain (ADR 0033). Since ADR 0044 the document is an ordinary system file; this service reads and
 /// writes it as an audited system operation. A no-op when this device isn't connected. Deleting the
 /// file pushes a tombstone; a received tombstone restores the installation defaults (ADR 0101).

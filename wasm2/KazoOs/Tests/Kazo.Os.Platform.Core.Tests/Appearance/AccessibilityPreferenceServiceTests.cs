@@ -60,7 +60,7 @@ public sealed class AccessibilityPreferenceServiceTests
     public void Accessibility_config_is_an_os_document_apps_may_open()
     {
         Assert.True(OsSettingsDocumentRegistry.TryGet("accessibility", out OsSettingsDocument document));
-        Assert.Equal("/etc/hackeros/accessibility.config", document.SystemPath.Value);
+        Assert.Equal("/etc/kazoos/accessibility.config", document.SystemPath.Value);
     }
 
     [Fact]
@@ -69,7 +69,7 @@ public sealed class AccessibilityPreferenceServiceTests
         SettingsFilesHarness harness = new();
         await harness.BootAsync();
 
-        string? system = await harness.ReadAsync("/etc/hackeros/accessibility.config");
+        string? system = await harness.ReadAsync("/etc/kazoos/accessibility.config");
         Assert.NotNull(system);
         Assert.Contains("highContrast", system, StringComparison.Ordinal);
         Assert.Contains("textScale", system, StringComparison.Ordinal);
@@ -88,7 +88,7 @@ public sealed class AccessibilityPreferenceServiceTests
     {
         SettingsFilesHarness harness = new();
         await harness.BootAsync();
-        await harness.WriteAsRootAsync("/etc/hackeros/accessibility.config", "textScale=1.25\n");
+        await harness.WriteAsRootAsync("/etc/kazoos/accessibility.config", "textScale=1.25\n");
         await harness.LoginAsync(harness.Alice);
         using AccessibilityPreferenceService service = CreateService(harness, new FakeHostProbe(HostAccessibilitySignals.None), out _);
         await service.InitializeAsync();
@@ -97,7 +97,7 @@ public sealed class AccessibilityPreferenceServiceTests
 
         int notifications = 0;
         service.Changed += () => notifications++;
-        await harness.WriteAsRootAsync("/home/alice/.config/hackeros/accessibility.config", "highContrast=on\ntextScale=2.0\n");
+        await harness.WriteAsRootAsync("/home/alice/.config/kazoos/accessibility.config", "highContrast=on\ntextScale=2.0\n");
         await service.RefreshAsync();
 
         Assert.Equal(new KazoAccessibilityPreferences(HighContrast: true, TextScale: 2.0, ReducedMotion: false), service.Effective);
@@ -111,7 +111,7 @@ public sealed class AccessibilityPreferenceServiceTests
         SettingsFilesHarness harness = new();
         await harness.BootAsync();
         await harness.LoginAsync(harness.Alice);
-        await harness.WriteAsRootAsync("/home/alice/.config/hackeros/accessibility.config", "textScale=3.0\nhighContrast=maybe\n");
+        await harness.WriteAsRootAsync("/home/alice/.config/kazoos/accessibility.config", "textScale=3.0\nhighContrast=maybe\n");
         using AccessibilityPreferenceService service = CreateService(harness, new FakeHostProbe(HostAccessibilitySignals.None), out _);
         await service.InitializeAsync();
 

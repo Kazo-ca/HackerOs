@@ -56,16 +56,16 @@ public sealed class ThemeEditorDocumentTests
     [Fact]
     public void Dirty_tracking_follows_load_edit_and_save()
     {
-        UserTheme theme = ThemeFile.Parse("[theme]\nid = neon\nname = Neon\nbase = hackeros\n[tokens]\n--hos-accent = #ff00ff\n").Theme!;
+        UserTheme theme = ThemeFile.Parse("[theme]\nid = neon\nname = Neon\nbase = kazoos\n[tokens]\n--hos-accent = #ff00ff\n").Theme!;
         ThemeEditorDocument document = new();
-        document.Load(theme, "/home/alice/.config/hackeros/themes/neon.theme");
+        document.Load(theme, "/home/alice/.config/kazoos/themes/neon.theme");
         Assert.False(document.IsDirty);
 
         document.SetValue("--hos-accent", "#00ffff");
         Assert.True(document.IsDirty);
 
         UserTheme saved = document.ToUserTheme();
-        document.MarkSaved("/home/alice/.config/hackeros/themes/neon.theme");
+        document.MarkSaved("/home/alice/.config/kazoos/themes/neon.theme");
         Assert.False(document.IsDirty);
         Assert.Equal("#00ffff", saved.Tokens.Single().Value);
         Assert.Equal(theme.Tokens.Count, ThemeFile.Parse(ThemeFile.Serialize(saved)).Theme!.Tokens.Count);

@@ -6,7 +6,7 @@ using Kazo.Os.App.Abstractions;
 namespace Kazo.Os.Platform.Core.Apps.Packages;
 
 /// <summary>
-/// Writes a <c>.hackapp</c> package and its <c>index.json</c> entry (ADR 0182 §1, §2): the other half
+/// Writes a <c>.kazoapp</c> package and its <c>index.json</c> entry (ADR 0182 §1, §2): the other half
 /// of <see cref="AppPackage.Read"/>, run by the <c>KazoOsPack</c> target of an app project.
 /// </summary>
 public static class AppPackageWriter
@@ -97,7 +97,7 @@ public static class AppPackageWriter
         return package;
     }
 
-    /// <summary>Gets the path of a package inside the packages branch: <c>&lt;version&gt;/&lt;appId&gt;-&lt;version&gt;.hackapp</c>.</summary>
+    /// <summary>Gets the path of a package inside the packages branch: <c>&lt;version&gt;/&lt;appId&gt;-&lt;version&gt;.kazoapp</c>.</summary>
     /// <param name="appId">App identifier.</param>
     /// <param name="version">Package version.</param>
     public static string GetPackagePath(string appId, SemanticVersion version) =>

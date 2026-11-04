@@ -10,7 +10,7 @@
     <AnalysisMode>Recommended</AnalysisMode>
     <RootNamespace>Kazo.Os.Server</RootNamespace>
     <AssemblyName>Kazo.Os.Server</AssemblyName>
-    <Description>Optional ASP.NET Core server providing sync, identity, and network proxy services for HackerOs. The browser PWA operates fully offline when this server is absent.</Description>
+    <Description>Optional ASP.NET Core server providing sync, identity, and network proxy services for Kazo OS. The browser PWA operates fully offline when this server is absent.</Description>
     <!-- Publish as a self-contained single-file for easy operator deployment. -->
     <PublishSingleFile>true</PublishSingleFile>
     <SelfContained>false</SelfContained>

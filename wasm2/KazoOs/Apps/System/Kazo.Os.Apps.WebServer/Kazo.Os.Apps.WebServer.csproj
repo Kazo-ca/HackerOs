@@ -4,14 +4,14 @@
 
   <PropertyGroup>
     <PackageId>Kazo.Os.Apps.WebServer</PackageId>
-    <Description>The base Kazo OS hackwebd web server and Web Server Manager app, to include in an OS host (ProjectReference or PackageReference, optionally IsSystemApp).</Description>
-    <PackageTags>hackeros;app</PackageTags>
+    <Description>The base Kazo OS kazowebd web server and Web Server Manager app, to include in an OS host (ProjectReference or PackageReference, optionally IsSystemApp).</Description>
+    <PackageTags>kazoos;app</PackageTags>
   </PropertyGroup>
 
   <!--
     ADR 0077 / ADR 0080: the hosted static sites. Two apps in one assembly, like nginx and its
-    control tools in one package: the hackwebd service (KazoWebdApp) and the Web Server Manager window
-    (WebServerManagerApp). Being in the same assembly makes hackwebd a companion service of the
+    control tools in one package: the kazowebd service (KazoWebdApp) and the Web Server Manager window
+    (WebServerManagerApp). Being in the same assembly makes kazowebd a companion service of the
     Manager, which may start and stop it without services.manage (IAppServiceControlGateway rule).
   -->
   <PropertyGroup>

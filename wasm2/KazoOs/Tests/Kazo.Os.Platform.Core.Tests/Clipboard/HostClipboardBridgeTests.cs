@@ -107,9 +107,9 @@ public sealed class HostClipboardBridgeTests
     {
         SettingsFilesHarness harness = new();
         await harness.BootAsync();
-        await harness.WriteAsRootAsync("/etc/hackeros/clipboard.config", "sharing=disabled\n[locked]\nsharing=true\n");
+        await harness.WriteAsRootAsync("/etc/kazoos/clipboard.config", "sharing=disabled\n[locked]\nsharing=true\n");
         AuthenticatedPrincipal principal = await harness.LoginAsync(harness.Alice);
-        await harness.WriteAsRootAsync("/home/alice/.config/hackeros/clipboard.config", "sharing=bidirectional\n");
+        await harness.WriteAsRootAsync("/home/alice/.config/kazoos/clipboard.config", "sharing=bidirectional\n");
         using SystemClipboard clipboard = new(harness.EventBus);
         FakeChannel channel = new();
         await using HostClipboardBridge bridge = new(clipboard, harness.Session, harness.Settings, channel);
@@ -126,7 +126,7 @@ public sealed class HostClipboardBridgeTests
     {
         (SettingsFilesHarness harness, _, FakeChannel channel, HostClipboardBridge bridge, _) = await StartAsync();
 
-        await harness.WriteAsRootAsync("/etc/hackeros/clipboard.config", "sharing=host-to-guest\n");
+        await harness.WriteAsRootAsync("/etc/kazoos/clipboard.config", "sharing=host-to-guest\n");
 
         for (int attempt = 0; attempt < 200 && bridge.Mode != ClipboardSharingMode.HostToGuest; attempt++)
         {
@@ -190,7 +190,7 @@ public sealed class HostClipboardBridgeTests
         await harness.BootAsync();
         if (systemConfig is not null)
         {
-            await harness.WriteAsRootAsync("/etc/hackeros/clipboard.config", systemConfig);
+            await harness.WriteAsRootAsync("/etc/kazoos/clipboard.config", systemConfig);
         }
 
         AuthenticatedPrincipal principal = await harness.LoginAsync(harness.Alice);

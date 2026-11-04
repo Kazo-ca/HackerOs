@@ -37,7 +37,7 @@ public sealed class GrantsSyncServiceTests
         var grants = new FakeGrantRepository();
         Guid recordId = Guid.NewGuid();
         var payload = new GrantsSyncPayload(
-            "org.hackeros.browser", "user-1", AppCapabilities.FileSystemUserHomeRead,
+            "org.kazoos.browser", "user-1", AppCapabilities.FileSystemUserHomeRead,
             nameof(CapabilityGrantSource.AdministratorApproval), [], IsRevoked: false);
         var syncClient = new FakeSyncClient
         {
@@ -57,7 +57,7 @@ public sealed class GrantsSyncServiceTests
 
         var call = Assert.Single(grants.ImportCalls);
         Assert.Equal(recordId, call.Id.Value);
-        Assert.Equal("org.hackeros.browser", call.AppId);
+        Assert.Equal("org.kazoos.browser", call.AppId);
         Assert.Equal("user-1", call.UserId);
         Assert.Equal(AppCapabilities.FileSystemUserHomeRead, call.Capability);
         Assert.Equal(CapabilityGrantSource.AdministratorApproval, call.Source);
@@ -70,7 +70,7 @@ public sealed class GrantsSyncServiceTests
         var grants = new FakeGrantRepository();
         Guid recordId = Guid.NewGuid();
         var payload = new GrantsSyncPayload(
-            "org.hackeros.browser", "user-1", AppCapabilities.FileSystemUserHomeRead,
+            "org.kazoos.browser", "user-1", AppCapabilities.FileSystemUserHomeRead,
             nameof(CapabilityGrantSource.AdministratorApproval), [], IsRevoked: true);
         var syncClient = new FakeSyncClient
         {
@@ -114,7 +114,7 @@ public sealed class GrantsSyncServiceTests
         var grants = new FakeGrantRepository();
         Guid recordId = Guid.NewGuid();
         var payload = new GrantsSyncPayload(
-            "org.hackeros.browser", "user-1", AppCapabilities.FileSystemUserHomeRead,
+            "org.kazoos.browser", "user-1", AppCapabilities.FileSystemUserHomeRead,
             nameof(CapabilityGrantSource.AdministratorApproval),
             [
                 new GrantConstraintPayload(nameof(CapabilityConstraintKind.VirtualPath), "/home/user-1", true, null, null, null),

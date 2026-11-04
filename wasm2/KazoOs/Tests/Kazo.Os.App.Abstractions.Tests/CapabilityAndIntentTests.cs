@@ -52,16 +52,16 @@ public sealed class CapabilityAndIntentTests
             FileIntentAction.Edit,
             "text/plain");
 
-        Assert.Equal("org.hackeros.intent.open-file.v1", intent.IntentId);
+        Assert.Equal("org.kazoos.intent.open-file.v1", intent.IntentId);
         Assert.Equal("/home/user/notes.txt", intent.Path.Value);
     }
 
     private static AppManifest CreateValidManifest() => new()
     {
-        Id = "org.hackeros.test-app",
+        Id = "org.kazoos.test-app",
         Name = "Test App",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "Valid manifest used by capability tests.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.TestApp", "Kazo.Os.TestApp.TestApp"),

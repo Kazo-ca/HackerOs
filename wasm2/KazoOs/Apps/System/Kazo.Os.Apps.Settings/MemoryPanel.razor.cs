@@ -10,13 +10,13 @@ namespace Kazo.Os.Apps.Settings;
 
 /// <summary>
 /// Settings &gt; Memory (ADR 0126): turns the OOM killer on or off and sets the share of
-/// <c>MemTotal</c> it keeps free, in <c>/etc/hackeros/memory.config</c>.
+/// <c>MemTotal</c> it keeps free, in <c>/etc/kazoos/memory.config</c>.
 /// </summary>
 /// <remarks>
 /// <para>
 /// The document is system-only (<c>system:system</c>, mode <c>0644</c>): the write goes to the system
 /// layer with this app's own rights, so the OS asks an administrator to approve it (ADR 0042), exactly
-/// like <c>sudo nano /etc/hackeros/memory.config</c>. The OS re-reads the file at once.
+/// like <c>sudo nano /etc/kazoos/memory.config</c>. The OS re-reads the file at once.
 /// </para>
 /// <para>
 /// The readout comes from <c>/proc/meminfo</c> and <c>/proc/vmstat</c> through <see cref="KazoFile"/>,
@@ -124,7 +124,7 @@ public sealed partial class MemoryPanel
         _message = null;
         try
         {
-            // /etc/hackeros belongs to root: a denial raises the administrator approval of ADR 0042.
+            // /etc/kazoos belongs to root: a denial raises the administrator approval of ADR 0042.
             await _document.SetManyAsync(
                 new Dictionary<string, object>(StringComparer.Ordinal)
                 {
@@ -146,7 +146,7 @@ public sealed partial class MemoryPanel
         }
         catch (Exception exception) when (exception is IOException or InvalidOperationException or ArgumentException)
         {
-            ShowError(L["Memory.Error.CannotSave", "/etc/hackeros/" + DocumentFileName, exception.Message]);
+            ShowError(L["Memory.Error.CannotSave", "/etc/kazoos/" + DocumentFileName, exception.Message]);
         }
         finally
         {
@@ -198,7 +198,7 @@ public sealed partial class MemoryPanel
         _minFreePercent = _document.Get<int>(MinFreePercentKey);
     }
 
-    /// <summary>An external edit (<c>sudo nano /etc/hackeros/memory.config</c>) changed the file.</summary>
+    /// <summary>An external edit (<c>sudo nano /etc/kazoos/memory.config</c>) changed the file.</summary>
     private void OnDocumentChanged(object? sender, KazoSettingsChangedEventArgs args) =>
         _ = InvokeAsync(async () =>
         {

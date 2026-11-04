@@ -3,7 +3,7 @@ using System.Text.Json;
 namespace Kazo.Os.Platform.Core.Isolation;
 
 /// <summary>
-/// The <c>HackerOs:CrossOriginIsolation</c> setting of a host (ADR 0131, section 1).
+/// The <c>KazoOs:CrossOriginIsolation</c> setting of a host (ADR 0131, section 1).
 /// </summary>
 public enum CrossOriginIsolationMode
 {
@@ -18,7 +18,7 @@ public enum CrossOriginIsolationMode
 }
 
 /// <summary>
-/// Why the page is not cross-origin isolated, shown by <c>/proc/hackeros/workers</c> and Diagnostic
+/// Why the page is not cross-origin isolated, shown by <c>/proc/kazoos/workers</c> and Diagnostic
 /// (ADR 0131, section 5).
 /// </summary>
 public enum CrossOriginIsolationReason
@@ -50,7 +50,7 @@ public enum CrossOriginIsolationReason
 public static class CrossOriginIsolationPolicy
 {
     /// <summary>The configuration key of the setting (<c>auto</c>, <c>on</c> or <c>off</c>).</summary>
-    public const string SettingKey = "HackerOs:CrossOriginIsolation";
+    public const string SettingKey = "KazoOs:CrossOriginIsolation";
 
     /// <summary>
     /// Whether the audit of ADR 0131 section 3 passed for this version, which turns <c>auto</c> on.
@@ -115,7 +115,7 @@ public static class CrossOriginIsolationPolicy
         _ => "auto"
     };
 
-    /// <summary>The short text of a reason, as <c>/proc/hackeros/workers</c> prints it.</summary>
+    /// <summary>The short text of a reason, as <c>/proc/kazoos/workers</c> prints it.</summary>
     /// <param name="reason">The reason.</param>
     public static string Format(CrossOriginIsolationReason reason) => reason switch
     {
@@ -157,7 +157,7 @@ public sealed record CrossOriginIsolationStatus(
 
 /// <summary>
 /// The page's cross-origin isolation, decided once at start (ADR 0131): the browser host sets
-/// <see cref="Status"/> from what the page found; <c>/proc/hackeros/workers</c>, the worker pool
+/// <see cref="Status"/> from what the page found; <c>/proc/kazoos/workers</c>, the worker pool
 /// and the memory accountant read it. Until then, and outside a browser, it is
 /// <see cref="CrossOriginIsolationStatus.NotBrowser"/>.
 /// </summary>

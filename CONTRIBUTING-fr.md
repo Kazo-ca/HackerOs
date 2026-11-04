@@ -74,7 +74,7 @@ avant votre premier changement.
 
 Pour créer une app, une commande ou un site **en dehors** de ce dépôt, utilisez
 le [modèle d'app Kazo OS](https://github.com/Kazo-ca/Os-AppTemplate) et
-[`building-on-hackeros.md`](doc/fr/wasm/framework/building-on-hackeros.md).
+[`building-on-kazoos.md`](doc/fr/wasm/framework/building-on-kazoos.md).
 
 ## Où va le code
 

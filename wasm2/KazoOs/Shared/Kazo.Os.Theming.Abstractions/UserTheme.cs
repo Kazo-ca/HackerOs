@@ -3,10 +3,10 @@ namespace Kazo.Os.Theming.Abstractions;
 /// <summary>Where a user theme file was found (ADR 0103 §2.2), like the theme folders of a Linux desktop.</summary>
 public enum ThemeOrigin
 {
-    /// <summary><c>/etc/hackeros/themes/</c>: installed by an administrator for every user.</summary>
+    /// <summary><c>/etc/kazoos/themes/</c>: installed by an administrator for every user.</summary>
     System,
 
-    /// <summary><c>~/.config/hackeros/themes/</c>: the session user's own themes.</summary>
+    /// <summary><c>~/.config/kazoos/themes/</c>: the session user's own themes.</summary>
     User
 }
 

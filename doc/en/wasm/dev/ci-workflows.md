@@ -42,7 +42,7 @@ The workflows pass `-RetryFailedTests 1`:
 
 The results of the first pass stay in
 `artifacts/test-results/<suite>/<project>/`, those of the retry in `retry-1/`
-next to it; the `hackeros-verification-<attempt>` artifact contains them.
+next to it; the `kazoos-verification-<attempt>` artifact contains them.
 
 Without the parameter (the default locally), the script keeps its strict
 behavior: a failure is a failure. Known flaky tests are listed in
@@ -55,7 +55,7 @@ stabilized.
 1. Open the `verify` job and search for `Test projects failed:`: the message
    names the failing projects. The job summary also lists the failures and
    the flaky tests.
-2. Download the `hackeros-verification-<attempt>` artifact for the `.trx`
+2. Download the `kazoos-verification-<attempt>` artifact for the `.trx`
    files.
 3. Reproduce locally with the same command
    (`./build/run-test-suite.ps1 -Suite NonBrowser`) after a Release build.
@@ -79,7 +79,7 @@ PRs. The `verify-browser-tests.yml` workflow has three jobs:
 2. **`browser-tests`**: Release build, Playwright's Chromium, then
    `run-test-suite.ps1 -Suite Browser -RetryFailedTests 1` (a test that passes
    on the second attempt is reported as "Flaky test", see above). The
-   `hackeros-browser-tests-<attempt>` artifact keeps the `.trx` files and the
+   `kazoos-browser-tests-<attempt>` artifact keeps the `.trx` files and the
    traces for 14 days.
 3. **`report`** (only on `main`): a failure opens the issue "Les tests
    navigateur de la nuit échouent sur main", or adds a comment to it when it is

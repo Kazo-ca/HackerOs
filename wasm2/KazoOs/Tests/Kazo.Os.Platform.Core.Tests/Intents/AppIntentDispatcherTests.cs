@@ -35,7 +35,7 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(EchoManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        AppIntentRequest request = new(Guid.NewGuid(), "org.hackeros.shell", principal.UserId.ToString(), new LaunchAppIntent("org.hackeros.echo", []));
+        AppIntentRequest request = new(Guid.NewGuid(), "org.kazoos.shell", principal.UserId.ToString(), new LaunchAppIntent("org.kazoos.echo", []));
 
         AppIntentDispatchResult result = await fixture.Dispatcher.DispatchAsync(request, principal);
 
@@ -47,8 +47,8 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(EchoManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
-        AppIntentRequest request = new(Guid.NewGuid(), "org.hackeros.shell", principal.UserId.ToString(), new LaunchAppIntent("org.hackeros.echo", ["a"]));
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
+        AppIntentRequest request = new(Guid.NewGuid(), "org.kazoos.shell", principal.UserId.ToString(), new LaunchAppIntent("org.kazoos.echo", ["a"]));
 
         AppIntentDispatchResult result = await fixture.Dispatcher.DispatchAsync(request, principal);
 
@@ -65,10 +65,10 @@ public sealed class AppIntentDispatcherTests
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
 
         ServiceControlDispatchResult result = await fixture.Dispatcher.StartServiceAsync(
-            "org.hackeros.echo", principal.UserId.ToString(), "org.hackeros.waiter", principal);
+            "org.kazoos.echo", principal.UserId.ToString(), "org.kazoos.waiter", principal);
 
         Assert.Equal(ServiceControlDispatchStatus.Succeeded, result.Status);
-        Assert.True(fixture.Manager.TryGetSingleton("org.hackeros.waiter", out _));
+        Assert.True(fixture.Manager.TryGetSingleton("org.kazoos.waiter", out _));
     }
 
     [Fact]
@@ -80,10 +80,10 @@ public sealed class AppIntentDispatcherTests
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
 
         ServiceControlDispatchResult result = await fixture.Dispatcher.StartServiceAsync(
-            "org.hackeros.notepad", principal.UserId.ToString(), "org.hackeros.waiter", principal);
+            "org.kazoos.notepad", principal.UserId.ToString(), "org.kazoos.waiter", principal);
 
         Assert.Equal(ServiceControlDispatchStatus.CapabilityDenied, result.Status);
-        Assert.False(fixture.Manager.TryGetSingleton("org.hackeros.waiter", out _));
+        Assert.False(fixture.Manager.TryGetSingleton("org.kazoos.waiter", out _));
     }
 
     [Fact]
@@ -91,10 +91,10 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(NotepadManifest(), WaiterServiceManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.notepad", principal, AppCapabilities.ServicesManage);
+        fixture.Grant("org.kazoos.notepad", principal, AppCapabilities.ServicesManage);
 
         ServiceControlDispatchResult result = await fixture.Dispatcher.StartServiceAsync(
-            "org.hackeros.notepad", principal.UserId.ToString(), "org.hackeros.waiter", principal);
+            "org.kazoos.notepad", principal.UserId.ToString(), "org.kazoos.waiter", principal);
 
         Assert.Equal(ServiceControlDispatchStatus.Succeeded, result.Status);
     }
@@ -106,7 +106,7 @@ public sealed class AppIntentDispatcherTests
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
 
         ServiceControlDispatchResult result = await fixture.Dispatcher.StartServiceAsync(
-            "org.hackeros.echo", principal.UserId.ToString(), "org.hackeros.texteditor", principal);
+            "org.kazoos.echo", principal.UserId.ToString(), "org.kazoos.texteditor", principal);
 
         Assert.Equal(ServiceControlDispatchStatus.NotAService, result.Status);
     }
@@ -118,7 +118,7 @@ public sealed class AppIntentDispatcherTests
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
 
         ServiceControlDispatchResult result = await fixture.Dispatcher.StartServiceAsync(
-            "org.hackeros.echo", principal.UserId.ToString(), "org.hackeros.missing", principal);
+            "org.kazoos.echo", principal.UserId.ToString(), "org.kazoos.missing", principal);
 
         Assert.Equal(ServiceControlDispatchStatus.NotFound, result.Status);
     }
@@ -128,14 +128,14 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(EchoManifest(), WaiterServiceManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        await fixture.Dispatcher.StartServiceAsync("org.hackeros.echo", principal.UserId.ToString(), "org.hackeros.waiter", principal);
-        Assert.True(fixture.Manager.TryGetSingleton("org.hackeros.waiter", out _));
+        await fixture.Dispatcher.StartServiceAsync("org.kazoos.echo", principal.UserId.ToString(), "org.kazoos.waiter", principal);
+        Assert.True(fixture.Manager.TryGetSingleton("org.kazoos.waiter", out _));
 
         ServiceControlDispatchResult result = await fixture.Dispatcher.StopServiceAsync(
-            "org.hackeros.echo", principal.UserId.ToString(), "org.hackeros.waiter", principal);
+            "org.kazoos.echo", principal.UserId.ToString(), "org.kazoos.waiter", principal);
 
         Assert.Equal(ServiceControlDispatchStatus.Succeeded, result.Status);
-        Assert.False(fixture.Manager.TryGetSingleton("org.hackeros.waiter", out _));
+        Assert.False(fixture.Manager.TryGetSingleton("org.kazoos.waiter", out _));
     }
 
     [Fact]
@@ -145,9 +145,9 @@ public sealed class AppIntentDispatcherTests
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
 
         ServiceControlDispatchResult setResult = await fixture.Dispatcher.SetServiceStartModeAsync(
-            "org.hackeros.echo", principal.UserId.ToString(), "org.hackeros.waiter", principal, ServiceStartMode.Disabled);
+            "org.kazoos.echo", principal.UserId.ToString(), "org.kazoos.waiter", principal, ServiceStartMode.Disabled);
         (ServiceControlDispatchResult getResult, ServiceStartMode mode) = await fixture.Dispatcher.GetServiceStartModeAsync(
-            "org.hackeros.echo", principal.UserId.ToString(), "org.hackeros.waiter", principal);
+            "org.kazoos.echo", principal.UserId.ToString(), "org.kazoos.waiter", principal);
 
         Assert.Equal(ServiceControlDispatchStatus.Succeeded, setResult.Status);
         Assert.Equal(ServiceControlDispatchStatus.Succeeded, getResult.Status);
@@ -160,39 +160,39 @@ public sealed class AppIntentDispatcherTests
         Fixture fixture = new(EchoManifest(), WaiterServiceManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
         await fixture.Dispatcher.SetServiceStartModeAsync(
-            "org.hackeros.echo", principal.UserId.ToString(), "org.hackeros.waiter", principal, ServiceStartMode.Disabled);
+            "org.kazoos.echo", principal.UserId.ToString(), "org.kazoos.waiter", principal, ServiceStartMode.Disabled);
 
         ServiceControlDispatchResult result = await fixture.Dispatcher.StartServiceAsync(
-            "org.hackeros.echo", principal.UserId.ToString(), "org.hackeros.waiter", principal);
+            "org.kazoos.echo", principal.UserId.ToString(), "org.kazoos.waiter", principal);
 
         Assert.Equal(ServiceControlDispatchStatus.ServiceDisabled, result.Status);
-        Assert.False(fixture.Manager.TryGetSingleton("org.hackeros.waiter", out _));
+        Assert.False(fixture.Manager.TryGetSingleton("org.kazoos.waiter", out _));
     }
 
     [Fact]
     public async Task A_system_service_is_controlled_by_an_administrator_only_and_runs_as_the_service_account()
     {
         AppManifest boot = WaiterServiceManifest() with { ServiceStartup = AppServiceStartup.Boot };
-        Fixture user = new(["org.hackeros.waiter"], EchoManifest(), boot);
+        Fixture user = new(["org.kazoos.waiter"], EchoManifest(), boot);
         AuthenticatedPrincipal alice = await user.LoginAsync();
         ServiceControlDispatchResult refusedStart = await user.Dispatcher.StartServiceAsync(
-            "org.hackeros.echo", alice.UserId.ToString(), "org.hackeros.waiter", alice);
+            "org.kazoos.echo", alice.UserId.ToString(), "org.kazoos.waiter", alice);
         ServiceControlDispatchResult refusedMode = await user.Dispatcher.SetServiceStartModeAsync(
-            "org.hackeros.echo", alice.UserId.ToString(), "org.hackeros.waiter", alice, ServiceStartMode.Disabled);
+            "org.kazoos.echo", alice.UserId.ToString(), "org.kazoos.waiter", alice, ServiceStartMode.Disabled);
 
-        Fixture admin = new(["org.hackeros.waiter"], EchoManifest(), boot);
+        Fixture admin = new(["org.kazoos.waiter"], EchoManifest(), boot);
         AuthenticatedPrincipal root = await admin.LoginAsAdministratorAsync();
         ServiceControlDispatchResult started = await admin.Dispatcher.StartServiceAsync(
-            "org.hackeros.echo", root.UserId.ToString(), "org.hackeros.waiter", root);
+            "org.kazoos.echo", root.UserId.ToString(), "org.kazoos.waiter", root);
         ServiceControlDispatchResult setMode = await admin.Dispatcher.SetServiceStartModeAsync(
-            "org.hackeros.echo", root.UserId.ToString(), "org.hackeros.waiter", root, ServiceStartMode.Manual);
+            "org.kazoos.echo", root.UserId.ToString(), "org.kazoos.waiter", root, ServiceStartMode.Manual);
         (_, ServiceStartMode mode) = await admin.Dispatcher.GetServiceStartModeAsync(
-            "org.hackeros.echo", root.UserId.ToString(), "org.hackeros.waiter", root);
+            "org.kazoos.echo", root.UserId.ToString(), "org.kazoos.waiter", root);
 
         Assert.Equal("service.system.administrator-required", refusedStart.ErrorCode);
         Assert.Equal("service.system.administrator-required", refusedMode.ErrorCode);
         Assert.Equal(ServiceControlDispatchStatus.Succeeded, started.Status);
-        Assert.True(admin.Manager.TryGetSingleton("org.hackeros.waiter", out ProcessRecord process));
+        Assert.True(admin.Manager.TryGetSingleton("org.kazoos.waiter", out ProcessRecord process));
         Assert.Equal(Kazo.Os.Platform.Core.Sessions.ServiceAccount.UserId, process.UserId);
         Assert.Equal(ServiceControlDispatchStatus.Succeeded, setMode.Status);
         Assert.Equal(ServiceStartMode.Manual, mode);
@@ -203,8 +203,8 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(EchoManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
-        AppIntentRequest request = new(Guid.NewGuid(), "org.hackeros.shell", principal.UserId.ToString(), new ExecuteCommandIntent("echo hi there"));
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
+        AppIntentRequest request = new(Guid.NewGuid(), "org.kazoos.shell", principal.UserId.ToString(), new ExecuteCommandIntent("echo hi there"));
 
         AppIntentDispatchResult result = await fixture.Dispatcher.DispatchAsync(request, principal);
 
@@ -218,8 +218,8 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(EchoManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
-        AppIntentRequest request = new(Guid.NewGuid(), "org.hackeros.shell", principal.UserId.ToString(), new ExecuteCommandIntent("say hello"));
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
+        AppIntentRequest request = new(Guid.NewGuid(), "org.kazoos.shell", principal.UserId.ToString(), new ExecuteCommandIntent("say hello"));
 
         AppIntentDispatchResult result = await fixture.Dispatcher.DispatchAsync(request, principal);
 
@@ -232,10 +232,10 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(FullScreenManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
         TestFullScreenTerminal screen = new(new TerminalKeyEvent(TerminalKey.Character, "k"));
         AppIntentRequest request = new(
-            Guid.NewGuid(), "org.hackeros.shell", principal.UserId.ToString(),
+            Guid.NewGuid(), "org.kazoos.shell", principal.UserId.ToString(),
             new ExecuteCommandIntent("screen"));
 
         AppIntentDispatchResult result = await fixture.Dispatcher.DispatchAsync(
@@ -254,11 +254,11 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(FullScreenManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
         TestFullScreenTerminal screen = new();
         using CancellationTokenSource cancellation = new();
         AppIntentRequest request = new(
-            Guid.NewGuid(), "org.hackeros.shell", principal.UserId.ToString(),
+            Guid.NewGuid(), "org.kazoos.shell", principal.UserId.ToString(),
             new ExecuteCommandIntent("screen wait"));
 
         ValueTask<AppIntentDispatchResult> pending = fixture.Dispatcher.DispatchAsync(
@@ -277,8 +277,8 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(EchoManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
-        AppIntentRequest request = new(Guid.NewGuid(), "org.hackeros.shell", principal.UserId.ToString(), new ExecuteCommandIntent("nope"));
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
+        AppIntentRequest request = new(Guid.NewGuid(), "org.kazoos.shell", principal.UserId.ToString(), new ExecuteCommandIntent("nope"));
 
         AppIntentDispatchResult result = await fixture.Dispatcher.DispatchAsync(request, principal);
 
@@ -290,9 +290,9 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(NotepadManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
         AppIntentRequest request = new(
-            Guid.NewGuid(), "org.hackeros.shell", principal.UserId.ToString(),
+            Guid.NewGuid(), "org.kazoos.shell", principal.UserId.ToString(),
             new OpenFileIntent(VirtualPath.Parse("/home/alice/notes.txt"), FileIntentAction.Open));
 
         AppIntentDispatchResult result = await fixture.Dispatcher.DispatchAsync(request, principal);
@@ -306,9 +306,9 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(NotepadManifest(), TextEditorManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
         AppIntentRequest request = new(
-            Guid.NewGuid(), "org.hackeros.shell", principal.UserId.ToString(),
+            Guid.NewGuid(), "org.kazoos.shell", principal.UserId.ToString(),
             new OpenFileIntent(VirtualPath.Parse("/home/alice/notes.txt"), FileIntentAction.Open));
 
         AppIntentDispatchResult result = await fixture.Dispatcher.DispatchAsync(request, principal);
@@ -318,19 +318,19 @@ public sealed class AppIntentDispatcherTests
     }
 
     [Fact]
-    public async Task Open_file_intent_for_a_directory_resolves_org_hackeros_file_explorer_as_the_seeded_default_and_launches_it()
+    public async Task Open_file_intent_for_a_directory_resolves_org_kazoos_file_explorer_as_the_seeded_default_and_launches_it()
     {
         // Phase 5 (INT-006/INT-009): FileAssociationSettingsDocuments.EmptyDocumentContent seeds
-        // org.hackeros.file-explorer as the protected default handler for inode/directory, so with the
+        // org.kazoos.file-explorer as the protected default handler for inode/directory, so with the
         // real seeded association document (this fixture always uses CreateDefinition(), never a
         // synthetic one) an unpreferenced directory-open intent resolves as ConfiguredDefault — matching
         // the same end-to-end path FV-009's FileView.ActivateItemAsync(NewWindow) exercises when it calls
         // IAppIntentGateway.OpenFileAsync(path, mediaType: "inode/directory").
-        Fixture fixture = new(DirectoryHandlerManifest("org.hackeros.file-explorer"));
+        Fixture fixture = new(DirectoryHandlerManifest("org.kazoos.file-explorer"));
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
         AppIntentRequest request = new(
-            Guid.NewGuid(), "org.hackeros.shell", principal.UserId.ToString(),
+            Guid.NewGuid(), "org.kazoos.shell", principal.UserId.ToString(),
             new OpenFileIntent(VirtualPath.Parse("/home/alice/Documents"), FileIntentAction.Open, MediaType: "inode/directory"));
 
         AppIntentDispatchResult result = await fixture.Dispatcher.DispatchAsync(request, principal);
@@ -344,7 +344,7 @@ public sealed class AppIntentDispatcherTests
     [Fact]
     public async Task Reveal_file_requires_apps_launch()
     {
-        Fixture fixture = new(DirectoryHandlerManifest("org.hackeros.file-explorer"));
+        Fixture fixture = new(DirectoryHandlerManifest("org.kazoos.file-explorer"));
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
 
         AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new RevealFileIntent(VirtualPath.Parse("/home/alice/Documents")));
@@ -356,25 +356,25 @@ public sealed class AppIntentDispatcherTests
     [Fact]
     public async Task Reveal_file_opens_the_parent_folder_in_the_folder_handler_with_select()
     {
-        Fixture fixture = new(DirectoryHandlerManifest("org.hackeros.file-explorer"));
+        Fixture fixture = new(DirectoryHandlerManifest("org.kazoos.file-explorer"));
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
 
         AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new RevealFileIntent(VirtualPath.Parse("/home/alice/Documents")));
 
         Assert.Equal(AppIntentDispatchStatus.Dispatched, result.Status);
-        Assert.Equal("org.hackeros.file-explorer", result.Process!.AppId);
+        Assert.Equal("org.kazoos.file-explorer", result.Process!.AppId);
         Assert.Equal(["/home/alice", "--select=/home/alice/Documents"], Arguments(result));
         Assert.Equal(AppIntentIds.RevealFile, result.Context!.Intent!.IntentId);
-        Assert.Equal("org.hackeros.shell", result.Context.Intent.SenderAppId);
+        Assert.Equal("org.kazoos.shell", result.Context.Intent.SenderAppId);
     }
 
     [Fact]
     public async Task Reveal_file_of_a_missing_path_is_not_found()
     {
-        Fixture fixture = new(DirectoryHandlerManifest("org.hackeros.file-explorer"));
+        Fixture fixture = new(DirectoryHandlerManifest("org.kazoos.file-explorer"));
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
 
         AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new RevealFileIntent(VirtualPath.Parse("/home/alice/missing.txt")));
 
@@ -385,9 +385,9 @@ public sealed class AppIntentDispatcherTests
     [Fact]
     public async Task Reveal_file_in_a_folder_the_user_cannot_read_is_denied()
     {
-        Fixture fixture = new(DirectoryHandlerManifest("org.hackeros.file-explorer"));
+        Fixture fixture = new(DirectoryHandlerManifest("org.kazoos.file-explorer"));
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
         // Bob's home is 0700: Alice cannot traverse it, like on Linux.
         await fixture.SeedHomeAsync("bob");
 
@@ -402,7 +402,7 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(DirectoryHandlerManifest("org.test.files-a"), DirectoryHandlerManifest("org.test.files-b"));
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
 
         AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new RevealFileIntent(VirtualPath.Parse("/home/alice/Documents")));
 
@@ -416,7 +416,7 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(NotepadManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
 
         AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new RevealFileIntent(VirtualPath.Parse("/home/alice/Documents")));
 
@@ -442,13 +442,13 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(NotepadManifest(), ViewerManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
 
         AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new EditFileIntent(VirtualPath.Parse("/home/alice/notes.txt")));
 
         // The viewer only opens .txt: the only edit handler wins without a chooser.
         Assert.Equal(AppIntentDispatchStatus.Dispatched, result.Status);
-        Assert.Equal("org.hackeros.notepad", result.Process!.AppId);
+        Assert.Equal("org.kazoos.notepad", result.Process!.AppId);
         Assert.False(result.FellBackToOpen);
         Assert.Equal(["/home/alice/notes.txt"], Arguments(result));
         Assert.Equal(AppIntentIds.EditFile, result.Context!.Intent!.IntentId);
@@ -459,7 +459,7 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(ViewerManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
 
         AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new EditFileIntent(VirtualPath.Parse("/home/alice/notes.txt")));
 
@@ -473,7 +473,7 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(NotepadManifest(), TextEditorManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
 
         AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new EditFileIntent(VirtualPath.Parse("/home/alice/notes.txt")));
 
@@ -487,13 +487,13 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(NotepadManifest(), TextEditorManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
 
         AppIntentDispatchResult result = await fixture.DispatchAsync(
-            principal, new EditFileIntent(VirtualPath.Parse("/home/alice/notes.txt"), PreferredAppId: "org.hackeros.texteditor"));
+            principal, new EditFileIntent(VirtualPath.Parse("/home/alice/notes.txt"), PreferredAppId: "org.kazoos.texteditor"));
 
         Assert.Equal(AppIntentDispatchStatus.Dispatched, result.Status);
-        Assert.Equal("org.hackeros.texteditor", result.Process!.AppId);
+        Assert.Equal("org.kazoos.texteditor", result.Process!.AppId);
     }
 
     [Fact]
@@ -501,10 +501,10 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(NotepadManifest(), EchoManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
 
         AppIntentDispatchResult result = await fixture.DispatchAsync(
-            principal, new EditFileIntent(VirtualPath.Parse("/home/alice/notes.txt"), PreferredAppId: "org.hackeros.echo"));
+            principal, new EditFileIntent(VirtualPath.Parse("/home/alice/notes.txt"), PreferredAppId: "org.kazoos.echo"));
 
         Assert.Equal(AppIntentDispatchStatus.TargetInvalid, result.Status);
         Assert.Equal("intent.edit-file.target-invalid", result.ErrorCode);
@@ -515,7 +515,7 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(EchoManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
 
         AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new EditFileIntent(VirtualPath.Parse("/home/alice/notes.txt")));
 
@@ -531,7 +531,7 @@ public sealed class AppIntentDispatcherTests
         Fixture fixture = new(BrowserManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
 
-        AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new OpenUriIntent(new Uri("https://example.hackeros/")));
+        AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new OpenUriIntent(new Uri("https://example.kazoos/")));
 
         Assert.Equal(AppIntentDispatchStatus.CapabilityDenied, result.Status);
     }
@@ -542,31 +542,31 @@ public sealed class AppIntentDispatcherTests
         // The seeded file-associations.json names the browser for x-scheme-handler/http and https.
         Fixture fixture = new(BrowserManifest(), SchemeHandlerManifest("org.test.other-browser", "https"));
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
 
-        AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new OpenUriIntent(new Uri("https://example.hackeros/page?q=1")));
+        AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new OpenUriIntent(new Uri("https://example.kazoos/page?q=1")));
 
         Assert.Equal(AppIntentDispatchStatus.Dispatched, result.Status);
-        Assert.Equal("org.hackeros.browser", result.Process!.AppId);
-        Assert.Equal(["https://example.hackeros/page?q=1"], Arguments(result));
+        Assert.Equal("org.kazoos.browser", result.Process!.AppId);
+        Assert.Equal(["https://example.kazoos/page?q=1"], Arguments(result));
         Assert.Equal(AppIntentIds.OpenUri, result.Context!.Intent!.IntentId);
     }
 
     [Fact]
     public async Task Open_uri_and_open_file_use_the_acting_users_own_default()
     {
-        // ADR 0121: ~/.config/hackeros/file-associations.json comes before the machine's file.
+        // ADR 0121: ~/.config/kazoos/file-associations.json comes before the machine's file.
         Fixture fixture = new(BrowserManifest(), SchemeHandlerManifest("org.test.other-browser", "https"), NotepadManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
         Assert.Equal(UserDefaultHandlerChangeStatus.Changed,
             await fixture.Associations.SetUserDefaultAsync(principal, "x-scheme-handler/https", "open", "org.test.other-browser"));
 
-        AppIntentDispatchResult uri = await fixture.DispatchAsync(principal, new OpenUriIntent(new Uri("https://example.hackeros/")));
-        AppIntentDispatchResult http = await fixture.DispatchAsync(principal, new OpenUriIntent(new Uri("http://example.hackeros/")));
+        AppIntentDispatchResult uri = await fixture.DispatchAsync(principal, new OpenUriIntent(new Uri("https://example.kazoos/")));
+        AppIntentDispatchResult http = await fixture.DispatchAsync(principal, new OpenUriIntent(new Uri("http://example.kazoos/")));
 
         Assert.Equal("org.test.other-browser", uri.Process!.AppId);
-        Assert.Equal("org.hackeros.browser", http.Process!.AppId);
+        Assert.Equal("org.kazoos.browser", http.Process!.AppId);
     }
 
     [Fact]
@@ -574,10 +574,10 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(BrowserManifest(), SchemeHandlerManifest("org.test.other-browser", "https"));
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
 
         AppIntentDispatchResult result = await fixture.DispatchAsync(
-            principal, new OpenUriIntent(new Uri("https://example.hackeros/"), PreferredAppId: "org.test.other-browser"));
+            principal, new OpenUriIntent(new Uri("https://example.kazoos/"), PreferredAppId: "org.test.other-browser"));
 
         Assert.Equal(AppIntentDispatchStatus.Dispatched, result.Status);
         Assert.Equal("org.test.other-browser", result.Process!.AppId);
@@ -588,10 +588,10 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(BrowserManifest(), NotepadManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
 
         AppIntentDispatchResult result = await fixture.DispatchAsync(
-            principal, new OpenUriIntent(new Uri("https://example.hackeros/"), PreferredAppId: "org.hackeros.notepad"));
+            principal, new OpenUriIntent(new Uri("https://example.kazoos/"), PreferredAppId: "org.kazoos.notepad"));
 
         Assert.Equal(AppIntentDispatchStatus.TargetInvalid, result.Status);
         Assert.Equal("intent.open-uri.target-invalid", result.ErrorCode);
@@ -602,9 +602,9 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(SchemeHandlerManifest("org.test.gopher-a", "gopher"), SchemeHandlerManifest("org.test.gopher-b", "gopher"));
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
 
-        AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new OpenUriIntent(new Uri("gopher://hole.hackeros/")));
+        AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new OpenUriIntent(new Uri("gopher://hole.kazoos/")));
 
         Assert.Equal(AppIntentDispatchStatus.ChooserRequired, result.Status);
         Assert.Equal("intent.open-uri.chooser-required", result.ErrorCode);
@@ -616,7 +616,7 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(BrowserManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
 
         AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new OpenUriIntent(new Uri("nope://thing")));
 
@@ -629,7 +629,7 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(BrowserManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
 
         AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new OpenUriIntent(new Uri("docs/page.html", UriKind.Relative)));
 
@@ -642,12 +642,12 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(NotepadManifest(), BrowserManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
 
         AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new OpenUriIntent(new Uri("file:///home/alice/my%20notes.txt")));
 
         Assert.Equal(AppIntentDispatchStatus.Dispatched, result.Status);
-        Assert.Equal("org.hackeros.notepad", result.Process!.AppId);
+        Assert.Equal("org.kazoos.notepad", result.Process!.AppId);
         Assert.Equal(["/home/alice/my notes.txt"], Arguments(result));
     }
 
@@ -659,11 +659,11 @@ public sealed class AppIntentDispatcherTests
         Fixture fixture = new(NotepadManifest(), SettingsManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
 
-        AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new ShowAppSettingsIntent("org.hackeros.notepad"));
+        AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new ShowAppSettingsIntent("org.kazoos.notepad"));
 
         Assert.Equal(AppIntentDispatchStatus.Dispatched, result.Status);
         Assert.Equal(AppIntentDispatcher.SettingsAppId, result.Process!.AppId);
-        Assert.Equal(["--app=org.hackeros.notepad"], Arguments(result));
+        Assert.Equal(["--app=org.kazoos.notepad"], Arguments(result));
     }
 
     [Fact]
@@ -673,10 +673,10 @@ public sealed class AppIntentDispatcherTests
         Fixture fixture = new(notepad, SettingsManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
 
-        AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new ShowAppSettingsIntent("org.hackeros.notepad"));
+        AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new ShowAppSettingsIntent("org.kazoos.notepad"));
 
         Assert.Equal(AppIntentDispatchStatus.Dispatched, result.Status);
-        Assert.Equal("org.hackeros.notepad", result.Process!.AppId);
+        Assert.Equal("org.kazoos.notepad", result.Process!.AppId);
         Assert.Equal(["--show-settings"], Arguments(result));
     }
 
@@ -696,10 +696,10 @@ public sealed class AppIntentDispatcherTests
     public async Task Show_settings_of_a_disabled_app_is_refused()
     {
         Fixture fixture = new(NotepadManifest(), SettingsManifest());
-        fixture.Enablement.MarkDisabled(["org.hackeros.notepad"]);
+        fixture.Enablement.MarkDisabled(["org.kazoos.notepad"]);
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
 
-        AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new ShowAppSettingsIntent("org.hackeros.notepad"));
+        AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new ShowAppSettingsIntent("org.kazoos.notepad"));
 
         Assert.Equal(AppIntentDispatchStatus.Disabled, result.Status);
         Assert.Equal("intent.show-settings.disabled", result.ErrorCode);
@@ -711,7 +711,7 @@ public sealed class AppIntentDispatcherTests
         Fixture fixture = new(NotepadManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
 
-        AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new ShowAppSettingsIntent("org.hackeros.notepad"));
+        AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new ShowAppSettingsIntent("org.kazoos.notepad"));
 
         Assert.Equal(AppIntentDispatchStatus.NotFound, result.Status);
         Assert.Equal("intent.show-settings.no-settings-app", result.ErrorCode);
@@ -726,7 +726,7 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(ReceiverManifest("org.test.receiver-a"));
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
 
         AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new CustomIntent("Share"));
 
@@ -739,7 +739,7 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(ReceiverManifest("org.test.receiver-a"));
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
 
         AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new CustomIntent(AppIntentIds.OpenFile));
 
@@ -767,7 +767,7 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(ReceiverManifest("org.test.receiver-a"));
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
 
         AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new CustomIntent(ShareIntent, payload));
 
@@ -780,7 +780,7 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(ReceiverManifest("org.test.receiver-a"));
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
         string payload = "{\"text\":\"" + new string('x', AppIntentIds.MaxCustomPayloadBytes) + "\"}";
 
         AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new CustomIntent(ShareIntent, payload));
@@ -794,7 +794,7 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(ReceiverManifest("org.test.receiver-a"));
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
 
         AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new CustomIntent("org.test.intent.nobody.v1"));
 
@@ -807,7 +807,7 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(ReceiverManifest("org.test.receiver-a"));
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
 
         AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new CustomIntent(ShareIntent, "{\"text\":\"hi\"}"));
 
@@ -816,7 +816,7 @@ public sealed class AppIntentDispatcherTests
         AppIntentDelivery delivery = result.Context!.Intent!;
         Assert.Equal(ShareIntent, delivery.IntentId);
         Assert.Equal("{\"text\":\"hi\"}", delivery.PayloadJson);
-        Assert.Equal("org.hackeros.shell", delivery.SenderAppId);
+        Assert.Equal("org.kazoos.shell", delivery.SenderAppId);
     }
 
     [Fact]
@@ -825,7 +825,7 @@ public sealed class AppIntentDispatcherTests
         Fixture fixture = new(ReceiverManifest("org.test.receiver-a"));
         fixture.Enablement.MarkDisabled(["org.test.receiver-a"]);
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
 
         AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new CustomIntent(ShareIntent));
 
@@ -837,7 +837,7 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(ReceiverManifest("org.test.receiver-b"), ReceiverManifest("org.test.receiver-a"));
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
 
         AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new CustomIntent(ShareIntent));
 
@@ -851,9 +851,9 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(ReceiverManifest("org.test.receiver-a"), NotepadManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
 
-        AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new CustomIntent(ShareIntent, TargetAppId: "org.hackeros.notepad"));
+        AppIntentDispatchResult result = await fixture.DispatchAsync(principal, new CustomIntent(ShareIntent, TargetAppId: "org.kazoos.notepad"));
 
         Assert.Equal(AppIntentDispatchStatus.TargetInvalid, result.Status);
         Assert.Equal("intent.custom.target-invalid", result.ErrorCode);
@@ -864,7 +864,7 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(ReceiverManifest("org.test.receiver-a"), ReceiverManifest("org.test.receiver-b"));
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
 
         AppIntentDispatchResult chosen = await fixture.DispatchAsync(
             principal, new CustomIntent(ShareIntent, TargetAppId: "org.test.receiver-b", RememberChoice: true));
@@ -881,7 +881,7 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(ReceiverServiceManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
         AppIntentDispatchResult first = await fixture.DispatchAsync(principal, new CustomIntent(ShareIntent, "{\"n\":1}"));
         List<AppIntentDelivery> received = [];
         first.Context!.IntentReceived += (_, delivery) => received.Add(delivery);
@@ -900,17 +900,17 @@ public sealed class AppIntentDispatcherTests
     [Fact]
     public async Task The_gateway_maps_each_new_intent_outcome()
     {
-        Fixture fixture = new(DirectoryHandlerManifest("org.hackeros.file-explorer"), BrowserManifest(),
+        Fixture fixture = new(DirectoryHandlerManifest("org.kazoos.file-explorer"), BrowserManifest(),
             ReceiverManifest("org.test.receiver-a"), ReceiverManifest("org.test.receiver-b"));
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
         await fixture.SeedHomeAsync("bob");
         IAppIntentGateway gateway = fixture.Gateway(principal);
 
         Assert.Equal(AppIntentOutcome.Dispatched, (await gateway.RevealFileAsync(VirtualPath.Parse("/home/alice/Documents"))).Outcome);
         Assert.Equal(AppIntentOutcome.NotFound, (await gateway.RevealFileAsync(VirtualPath.Parse("/home/alice/nope"))).Outcome);
         Assert.Equal(AppIntentOutcome.AccessDenied, (await gateway.RevealFileAsync(VirtualPath.Parse("/home/bob/Documents"))).Outcome);
-        Assert.Equal(AppIntentOutcome.Dispatched, (await gateway.OpenUriAsync(new Uri("https://example.hackeros/"))).Outcome);
+        Assert.Equal(AppIntentOutcome.Dispatched, (await gateway.OpenUriAsync(new Uri("https://example.kazoos/"))).Outcome);
         Assert.Equal(AppIntentOutcome.NoHandler, (await gateway.OpenUriAsync(new Uri("nope://x"))).Outcome);
         Assert.Equal(AppIntentOutcome.NotFound, (await gateway.ShowAppSettingsAsync("org.nope.app")).Outcome);
         Assert.Equal(AppIntentOutcome.NoHandler, (await gateway.SendIntentAsync("org.test.intent.nobody.v1", null)).Outcome);
@@ -927,7 +927,7 @@ public sealed class AppIntentDispatcherTests
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
         IAppIntentGateway gateway = fixture.Gateway(principal);
 
-        await Assert.ThrowsAsync<AppGatewayAccessDeniedException>(() => gateway.OpenUriAsync(new Uri("https://example.hackeros/")).AsTask());
+        await Assert.ThrowsAsync<AppGatewayAccessDeniedException>(() => gateway.OpenUriAsync(new Uri("https://example.kazoos/")).AsTask());
         await Assert.ThrowsAsync<AppGatewayAccessDeniedException>(() => gateway.EditFileAsync(VirtualPath.Parse("/home/alice/notes.txt")).AsTask());
     }
 
@@ -936,7 +936,7 @@ public sealed class AppIntentDispatcherTests
     {
         Fixture fixture = new(ViewerManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.shell", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.shell", principal, AppCapabilities.AppsLaunch);
 
         AppIntentOpenFileResult result = await fixture.Gateway(principal).EditFileAsync(VirtualPath.Parse("/home/alice/notes.txt"));
 
@@ -952,7 +952,7 @@ public sealed class AppIntentDispatcherTests
         FileHandlers = [new FileHandlerManifest("text/plain", [".txt"], ["open"])]
     };
 
-    private static AppManifest BrowserManifest() => WindowManifest("org.hackeros.browser") with
+    private static AppManifest BrowserManifest() => WindowManifest("org.kazoos.browser") with
     {
         FileHandlers =
         [
@@ -983,7 +983,7 @@ public sealed class AppIntentDispatcherTests
         Id = appId,
         Name = appId,
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "A Window app for ADR 0096 tests.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", $"{appId}.EntryPoint"),
@@ -994,10 +994,10 @@ public sealed class AppIntentDispatcherTests
 
     private static AppManifest EchoManifest() => new()
     {
-        Id = "org.hackeros.echo",
+        Id = "org.kazoos.echo",
         Name = "Echo",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "Echoes its arguments.",
         Kind = AppKind.Terminal,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", typeof(EchoTerminalApp).FullName!),
@@ -1009,13 +1009,13 @@ public sealed class AppIntentDispatcherTests
 
     private static AppManifest NotepadManifest() => new()
     {
-        Id = "org.hackeros.notepad",
+        Id = "org.kazoos.notepad",
         Name = "Notepad",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "A simple text editor.",
         Kind = AppKind.Window,
-        EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", "org.hackeros.notepad.EntryPoint"),
+        EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", "org.kazoos.notepad.EntryPoint"),
         SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
@@ -1027,7 +1027,7 @@ public sealed class AppIntentDispatcherTests
         Id = appId,
         Name = appId,
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "A directory-capable Window app for Phase 5 tests.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", $"{appId}.EntryPoint"),
@@ -1039,10 +1039,10 @@ public sealed class AppIntentDispatcherTests
 
     private static AppManifest FullScreenManifest() => new()
     {
-        Id = "org.hackeros.screen",
+        Id = "org.kazoos.screen",
         Name = "Screen",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "Exercises full-screen command dispatch.",
         Kind = AppKind.Terminal,
         EntryPoint = new AppEntryPointManifest(
@@ -1055,13 +1055,13 @@ public sealed class AppIntentDispatcherTests
 
     private static AppManifest TextEditorManifest() => new()
     {
-        Id = "org.hackeros.texteditor",
+        Id = "org.kazoos.texteditor",
         Name = "Text Editor",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "An advanced text editor.",
         Kind = AppKind.Window,
-        EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", "org.hackeros.texteditor.EntryPoint"),
+        EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", "org.kazoos.texteditor.EntryPoint"),
         SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
@@ -1070,10 +1070,10 @@ public sealed class AppIntentDispatcherTests
 
     private static AppManifest WaiterServiceManifest() => new()
     {
-        Id = "org.hackeros.waiter",
+        Id = "org.kazoos.waiter",
         Name = "Waiter",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "Waits for cancellation.",
         Kind = AppKind.Service,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", typeof(WaiterServiceApp).FullName!),
@@ -1277,11 +1277,11 @@ public sealed class AppIntentDispatcherTests
 
         /// <summary>The intents gateway the shell's context would get.</summary>
         internal IAppIntentGateway Gateway(AuthenticatedPrincipal principal) =>
-            new AppIntentGateway(() => Dispatcher, "org.hackeros.shell", principal.UserId.ToString(), principal);
+            new AppIntentGateway(() => Dispatcher, "org.kazoos.shell", principal.UserId.ToString(), principal);
 
         /// <summary>Dispatches <paramref name="intent"/> on behalf of the shell for <paramref name="principal"/>.</summary>
         internal Task<AppIntentDispatchResult> DispatchAsync(AuthenticatedPrincipal principal, IAppIntent intent) =>
-            Dispatcher.DispatchAsync(new AppIntentRequest(Guid.NewGuid(), "org.hackeros.shell", principal.UserId.ToString(), intent), principal).AsTask();
+            Dispatcher.DispatchAsync(new AppIntentRequest(Guid.NewGuid(), "org.kazoos.shell", principal.UserId.ToString(), intent), principal).AsTask();
 
         internal void Grant(string appId, AuthenticatedPrincipal principal, string capability) =>
             Grants.Grant(appId, principal.UserId.ToString(), capability, CapabilityGrantSource.UserApproval, AppAuthority.Administrator);

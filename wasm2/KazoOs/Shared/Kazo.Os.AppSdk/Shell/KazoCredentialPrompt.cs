@@ -8,7 +8,7 @@ namespace Kazo.Os.AppSdk.Shell;
 /// <remarks>
 /// <para>
 /// The terminal only <b>reads</b>: it shows the question and returns what the user typed. The OS
-/// verifies the credentials, mints the ticket, writes <c>/etc/hackeros/app-permissions.config</c>
+/// verifies the credentials, mints the ticket, writes <c>/etc/kazoos/app-permissions.config</c>
 /// and <c>/var/log/auth.log</c>; the terminal never decides anything, as a real terminal does not
 /// check <c>sudo</c>'s password itself.
 /// </para>

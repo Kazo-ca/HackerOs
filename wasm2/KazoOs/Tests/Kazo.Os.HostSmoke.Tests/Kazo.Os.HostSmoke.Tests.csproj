@@ -3,7 +3,7 @@
   <!--
     Boot smoke test of the three hosts (execution-isolation-plan.md section 5.2). It does not
     start any host itself: build/verify-hosts.sh builds, publishes and launches each host, then
-    runs this suite once per host with HACKEROS_SMOKE_URL pointing at it. Without that variable
+    runs this suite once per host with KAZOOS_SMOKE_URL pointing at it. Without that variable
     every test reports as skipped, so a plain `dotnet test Kazo.Os.sln` stays unaffected.
   -->
   <PropertyGroup>

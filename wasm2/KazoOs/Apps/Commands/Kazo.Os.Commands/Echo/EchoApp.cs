@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Echo;
 public sealed class EchoApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.cmd.echo";
+    public override string Id => "org.kazoos.cmd.echo";
 
     /// <inheritdoc />
     public override string Name => "echo";
@@ -22,7 +22,7 @@ public sealed class EchoApp : AppDefinition
     public override Type EntryPoint => typeof(EchoCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Write arguments to standard output";

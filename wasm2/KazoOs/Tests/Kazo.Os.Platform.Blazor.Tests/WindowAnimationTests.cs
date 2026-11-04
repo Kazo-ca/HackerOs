@@ -123,7 +123,7 @@ public sealed class WindowAnimationTests
         WindowBounds? bounds = null,
         int zOrder = 1,
         bool snapped = false) => new(
-            Id, "org.hackeros.test", Owner, "Test window", null, bounds ?? new WindowBounds(48, 42, 640, 480), null, zOrder,
+            Id, "org.kazoos.test", Owner, "Test window", null, bounds ?? new WindowBounds(48, 42, 640, 480), null, zOrder,
             state, new WindowConstraints(true, 320, 240))
         {
             IsSnapped = snapped

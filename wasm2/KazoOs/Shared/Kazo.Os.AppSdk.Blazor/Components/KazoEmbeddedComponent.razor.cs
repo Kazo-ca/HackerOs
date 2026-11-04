@@ -8,7 +8,7 @@ namespace Kazo.Os.AppSdk.Blazor.Components;
 /// Shows the component an installed app registered for <see cref="Contract"/> (ADR 0063) and hands
 /// its controller, typed as <typeparamref name="TController"/>, to the host.
 /// </summary>
-/// <typeparam name="TController">The contract's interface, e.g. <c>IHackTerminal</c>.</typeparam>
+/// <typeparam name="TController">The contract's interface, e.g. <c>IKazoTerminal</c>.</typeparam>
 public partial class KazoEmbeddedComponent<TController> : IAsyncDisposable
     where TController : class
 {
@@ -83,7 +83,7 @@ public partial class KazoEmbeddedComponent<TController> : IAsyncDisposable
         _resolvedContract = Contract;
         _resolution = null;
         // Optional service: a host without the platform (a unit test) shows the fallback.
-        if (Services.GetService(typeof(IHackComponentHost)) is not IHackComponentHost host)
+        if (Services.GetService(typeof(IKazoComponentHost)) is not IKazoComponentHost host)
         {
             _resolution = KazoComponentResolution.Unavailable(Contract, L["Embedded.Unavailable"]);
             return;

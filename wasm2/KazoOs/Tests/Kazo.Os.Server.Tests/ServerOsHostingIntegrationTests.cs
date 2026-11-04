@@ -23,20 +23,20 @@ public sealed class ServerOsHostingIntegrationTests : IAsyncLifetime
 
     private readonly string _databasePath = Path.Combine(
         Path.GetTempPath(),
-        $"hackeros-server-os-integration-{Guid.NewGuid():N}.db");
+        $"kazoos-server-os-integration-{Guid.NewGuid():N}.db");
     private readonly string _backupRoot = Path.Combine(
         Path.GetTempPath(),
-        $"hackeros-server-os-backups-{Guid.NewGuid():N}");
+        $"kazoos-server-os-backups-{Guid.NewGuid():N}");
     private string? _previousConnectionString;
     private string? _previousBackupRoot;
     private ServerApplicationFactory? _factory;
 
     public Task InitializeAsync()
     {
-        _previousConnectionString = Environment.GetEnvironmentVariable("HACKEROS_ConnectionStrings__HackerOsDb");
-        _previousBackupRoot = Environment.GetEnvironmentVariable("HACKEROS_ServerBackup__Root");
-        Environment.SetEnvironmentVariable("HACKEROS_ConnectionStrings__HackerOsDb", $"Data Source={_databasePath}");
-        Environment.SetEnvironmentVariable("HACKEROS_ServerBackup__Root", _backupRoot);
+        _previousConnectionString = Environment.GetEnvironmentVariable("KAZOOS_ConnectionStrings__KazoOsDb");
+        _previousBackupRoot = Environment.GetEnvironmentVariable("KAZOOS_ServerBackup__Root");
+        Environment.SetEnvironmentVariable("KAZOOS_ConnectionStrings__KazoOsDb", $"Data Source={_databasePath}");
+        Environment.SetEnvironmentVariable("KAZOOS_ServerBackup__Root", _backupRoot);
         _factory = new ServerApplicationFactory();
         return Task.CompletedTask;
     }
@@ -48,8 +48,8 @@ public sealed class ServerOsHostingIntegrationTests : IAsyncLifetime
             await _factory.DisposeAsync();
         }
 
-        Environment.SetEnvironmentVariable("HACKEROS_ConnectionStrings__HackerOsDb", _previousConnectionString);
-        Environment.SetEnvironmentVariable("HACKEROS_ServerBackup__Root", _previousBackupRoot);
+        Environment.SetEnvironmentVariable("KAZOOS_ConnectionStrings__KazoOsDb", _previousConnectionString);
+        Environment.SetEnvironmentVariable("KAZOOS_ServerBackup__Root", _previousBackupRoot);
     }
 
     [Fact]
@@ -65,7 +65,7 @@ public sealed class ServerOsHostingIntegrationTests : IAsyncLifetime
             // The standalone PWA's page: the WebAssembly bootstrap, never the Interactive Server one.
             Assert.Contains("_framework/blazor.webassembly", body, StringComparison.Ordinal);
             Assert.DoesNotContain("blazor.web.js", body, StringComparison.Ordinal);
-            Assert.Contains("hackeros-boot-error", body, StringComparison.Ordinal);
+            Assert.Contains("kazoos-boot-error", body, StringComparison.Ordinal);
         }
 
         using HttpResponseMessage manifest = await client.GetAsync("/manifest.webmanifest");

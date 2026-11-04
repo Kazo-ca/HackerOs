@@ -106,7 +106,7 @@
     <value>Bases de données des sites web</value>
   </data>
   <data name="Sites.Heading.Title" xml:space="preserve">
-    <value>Bases de données du navigateur des sites web (hackweb.*), en dehors de la base du système et des fichiers</value>
+    <value>Bases de données du navigateur des sites web (kazoweb.*), en dehors de la base du système et des fichiers</value>
   </data>
   <data name="Size.Bytes" xml:space="preserve">
     <value>{0} o</value>

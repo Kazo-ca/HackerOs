@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Launch;
 public sealed class LaunchApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.launch";
+    public override string Id => "org.kazoos.commands.launch";
 
     /// <inheritdoc />
     public override string Name => "launch";
@@ -22,7 +22,7 @@ public sealed class LaunchApp : AppDefinition
     public override Type EntryPoint => typeof(LaunchCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Launch an application by ID";

@@ -20,18 +20,18 @@ done
 
 case "$(uname -s)" in
   Linux)
-    PREFIX="${PREFIX:-/opt/hackeros-server}"; DATA="${DATA:-/var/lib/hackeros-server}"
-    if [[ -f /etc/systemd/system/hackeros-server.service ]]; then
-      systemctl disable --now hackeros-server || true
-      rm -f /etc/systemd/system/hackeros-server.service
+    PREFIX="${PREFIX:-/opt/kazoos-server}"; DATA="${DATA:-/var/lib/kazoos-server}"
+    if [[ -f /etc/systemd/system/kazoos-server.service ]]; then
+      systemctl disable --now kazoos-server || true
+      rm -f /etc/systemd/system/kazoos-server.service
       systemctl daemon-reload
     fi
     ;;
   Darwin)
-    PREFIX="${PREFIX:-/usr/local/hackeros-server}"; DATA="${DATA:-/usr/local/var/hackeros-server}"
-    PLIST=/Library/LaunchDaemons/ca.kazo.hackeros-server.plist
+    PREFIX="${PREFIX:-/usr/local/kazoos-server}"; DATA="${DATA:-/usr/local/var/kazoos-server}"
+    PLIST=/Library/LaunchDaemons/ca.kazo.kazoos-server.plist
     if [[ -f "$PLIST" ]]; then
-      launchctl bootout system/ca.kazo.hackeros-server 2> /dev/null || true
+      launchctl bootout system/ca.kazo.kazoos-server 2> /dev/null || true
       rm -f "$PLIST"
     fi
     ;;
@@ -42,7 +42,7 @@ esac
 if [[ -f "$PREFIX/Kazo.Os.Server" ]]; then rm -rf "$PREFIX"; fi
 if [[ $PURGE -eq 1 ]]; then
   if [[ -d "$DATA" ]]; then rm -rf "$DATA"; fi
-  if [[ "$(uname -s)" == "Linux" ]] && id hackeros > /dev/null 2>&1; then userdel hackeros || true; fi
+  if [[ "$(uname -s)" == "Linux" ]] && id kazoos > /dev/null 2>&1; then userdel kazoos || true; fi
   echo "Kazo OS Server and its data were removed."
 else
   echo "Kazo OS Server was removed; its data stays in $DATA (--purge deletes it)."

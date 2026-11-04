@@ -2,7 +2,7 @@ namespace Kazo.Os.AppSdk.Accessibility;
 
 /// <summary>
 /// The session's accessibility preferences (ADR 0105): high contrast, text size and reduced motion,
-/// read from <c>/etc/hackeros/accessibility.config</c> and <c>~/.config/hackeros/accessibility.config</c>
+/// read from <c>/etc/kazoos/accessibility.config</c> and <c>~/.config/kazoos/accessibility.config</c>
 /// with every <c>auto</c> resolved against the host's settings.
 /// </summary>
 /// <remarks>

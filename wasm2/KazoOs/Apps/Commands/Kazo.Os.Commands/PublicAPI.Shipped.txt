@@ -91,14 +91,14 @@ Kazo.Os.Commands.Grep.GrepApp
 Kazo.Os.Commands.Grep.GrepApp.GrepApp() -> void
 Kazo.Os.Commands.Grep.GrepCommand
 Kazo.Os.Commands.Grep.GrepCommand.GrepCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
-Kazo.Os.Commands.Hackbackup.HackbackupApp
-Kazo.Os.Commands.Hackbackup.HackbackupApp.HackbackupApp() -> void
-Kazo.Os.Commands.Hackbackup.HackbackupCommand
-Kazo.Os.Commands.Hackbackup.HackbackupCommand.HackbackupCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
-Kazo.Os.Commands.Hackpkg.HackpkgApp
-Kazo.Os.Commands.Hackpkg.HackpkgApp.HackpkgApp() -> void
-Kazo.Os.Commands.Hackpkg.HackpkgCommand
-Kazo.Os.Commands.Hackpkg.HackpkgCommand.HackpkgCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Kazobackup.KazobackupApp
+Kazo.Os.Commands.Kazobackup.KazobackupApp.KazobackupApp() -> void
+Kazo.Os.Commands.Kazobackup.KazobackupCommand
+Kazo.Os.Commands.Kazobackup.KazobackupCommand.KazobackupCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Kazopkg.KazopkgApp
+Kazo.Os.Commands.Kazopkg.KazopkgApp.KazopkgApp() -> void
+Kazo.Os.Commands.Kazopkg.KazopkgCommand
+Kazo.Os.Commands.Kazopkg.KazopkgCommand.KazopkgCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
 Kazo.Os.Commands.Head.HeadApp
 Kazo.Os.Commands.Head.HeadApp.HeadApp() -> void
 Kazo.Os.Commands.Head.HeadCommand
@@ -564,28 +564,28 @@ override Kazo.Os.Commands.Grep.GrepApp.PublisherId.get -> string!
 override Kazo.Os.Commands.Grep.GrepApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
 override Kazo.Os.Commands.Grep.GrepApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
 override Kazo.Os.Commands.Grep.GrepCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
-override Kazo.Os.Commands.Hackbackup.HackbackupApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
-override Kazo.Os.Commands.Hackbackup.HackbackupApp.Description.get -> string!
-override Kazo.Os.Commands.Hackbackup.HackbackupApp.EntryPoint.get -> System.Type!
-override Kazo.Os.Commands.Hackbackup.HackbackupApp.Id.get -> string!
-override Kazo.Os.Commands.Hackbackup.HackbackupApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
-override Kazo.Os.Commands.Hackbackup.HackbackupApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
-override Kazo.Os.Commands.Hackbackup.HackbackupApp.Name.get -> string!
-override Kazo.Os.Commands.Hackbackup.HackbackupApp.PublisherId.get -> string!
-override Kazo.Os.Commands.Hackbackup.HackbackupApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
-override Kazo.Os.Commands.Hackbackup.HackbackupApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
-override Kazo.Os.Commands.Hackbackup.HackbackupCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
-override Kazo.Os.Commands.Hackpkg.HackpkgApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
-override Kazo.Os.Commands.Hackpkg.HackpkgApp.Description.get -> string!
-override Kazo.Os.Commands.Hackpkg.HackpkgApp.EntryPoint.get -> System.Type!
-override Kazo.Os.Commands.Hackpkg.HackpkgApp.Id.get -> string!
-override Kazo.Os.Commands.Hackpkg.HackpkgApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
-override Kazo.Os.Commands.Hackpkg.HackpkgApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
-override Kazo.Os.Commands.Hackpkg.HackpkgApp.Name.get -> string!
-override Kazo.Os.Commands.Hackpkg.HackpkgApp.PublisherId.get -> string!
-override Kazo.Os.Commands.Hackpkg.HackpkgApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
-override Kazo.Os.Commands.Hackpkg.HackpkgApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
-override Kazo.Os.Commands.Hackpkg.HackpkgCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Kazobackup.KazobackupApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Kazobackup.KazobackupApp.Description.get -> string!
+override Kazo.Os.Commands.Kazobackup.KazobackupApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Kazobackup.KazobackupApp.Id.get -> string!
+override Kazo.Os.Commands.Kazobackup.KazobackupApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Kazobackup.KazobackupApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Kazobackup.KazobackupApp.Name.get -> string!
+override Kazo.Os.Commands.Kazobackup.KazobackupApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Kazobackup.KazobackupApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Kazobackup.KazobackupApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Kazobackup.KazobackupCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Kazopkg.KazopkgApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Kazopkg.KazopkgApp.Description.get -> string!
+override Kazo.Os.Commands.Kazopkg.KazopkgApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Kazopkg.KazopkgApp.Id.get -> string!
+override Kazo.Os.Commands.Kazopkg.KazopkgApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Kazopkg.KazopkgApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Kazopkg.KazopkgApp.Name.get -> string!
+override Kazo.Os.Commands.Kazopkg.KazopkgApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Kazopkg.KazopkgApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Kazopkg.KazopkgApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Kazopkg.KazopkgCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
 override Kazo.Os.Commands.Head.HeadApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override Kazo.Os.Commands.Head.HeadApp.Description.get -> string!
 override Kazo.Os.Commands.Head.HeadApp.EntryPoint.get -> System.Type!

@@ -19,8 +19,8 @@ internal enum UserFileAssociationWriteStatus
 
 /// <summary>
 /// The user layer of the file associations (ADR 0121, section 1):
-/// <c>~/.config/hackeros/file-associations.json</c>, the same strict-JSON schema as
-/// <c>/etc/hackeros/file-associations.json</c>, like freedesktop's <c>~/.config/mimeapps.list</c>
+/// <c>~/.config/kazoos/file-associations.json</c>, the same strict-JSON schema as
+/// <c>/etc/kazoos/file-associations.json</c>, like freedesktop's <c>~/.config/mimeapps.list</c>
 /// over <c>/etc/xdg/mimeapps.list</c>. Read and written as the acting user.
 /// </summary>
 /// <remarks>
@@ -29,7 +29,7 @@ internal enum UserFileAssociationWriteStatus
 /// </remarks>
 internal static class UserFileAssociationStore
 {
-    /// <summary>File name inside <c>~/.config/hackeros</c>.</summary>
+    /// <summary>File name inside <c>~/.config/kazoos</c>.</summary>
     public const string FileName = "file-associations.json";
 
     private const string EmptyContent = "{\"schemaVersion\":1,\"associations\":[]}";
@@ -37,7 +37,7 @@ internal static class UserFileAssociationStore
     /// <summary>Gets the file of one user.</summary>
     /// <param name="loginName">Login name; the home is <c>/home/&lt;login&gt;</c>.</param>
     public static VirtualPath GetPath(string loginName) =>
-        VirtualPath.Parse($"/home/{loginName}/.config/hackeros/{FileName}");
+        VirtualPath.Parse($"/home/{loginName}/.config/kazoos/{FileName}");
 
     /// <summary>Reads the user's layer, or <see langword="null"/> when the file is absent, unreadable or invalid.</summary>
     /// <param name="fileSystem">OS filesystem.</param>

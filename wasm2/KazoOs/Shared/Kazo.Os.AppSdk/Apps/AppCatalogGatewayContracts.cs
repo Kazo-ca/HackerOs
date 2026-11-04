@@ -22,8 +22,8 @@ public interface IAppCatalogGateway
 
     /// <summary>
     /// Gets the installed window apps that declare they can open <paramref name="path"/> ("Open
-    /// with"): the default first (the user's own in <c>~/.config/hackeros/file-associations.json</c>,
-    /// else the one of <c>/etc/hackeros/file-associations.json</c>, ADR 0121), then the others by name.
+    /// with"): the default first (the user's own in <c>~/.config/kazoos/file-associations.json</c>,
+    /// else the one of <c>/etc/kazoos/file-associations.json</c>, ADR 0121), then the others by name.
     /// </summary>
     /// <param name="path">File to open.</param>
     /// <param name="mediaType">MIME type when known, matched besides the extension.</param>
@@ -33,8 +33,8 @@ public interface IAppCatalogGateway
 
     /// <summary>
     /// Gets every configured default handler of the user (ADR 0121, section 3): the entries of
-    /// <c>~/.config/hackeros/file-associations.json</c> first, then those of
-    /// <c>/etc/hackeros/file-associations.json</c>. A user entry hides the system entry with the
+    /// <c>~/.config/kazoos/file-associations.json</c> first, then those of
+    /// <c>/etc/kazoos/file-associations.json</c>. A user entry hides the system entry with the
     /// same target and action, so the first row of a pair is the one used. Needs
     /// <c>file-associations.read</c>.
     /// </summary>
@@ -46,7 +46,7 @@ public interface IAppCatalogGateway
 
     /// <summary>
     /// Sets or removes the user's own default handler of one file type or URI scheme (ADR 0121,
-    /// section 3), in <c>~/.config/hackeros/file-associations.json</c>; the machine-wide file is
+    /// section 3), in <c>~/.config/kazoos/file-associations.json</c>; the machine-wide file is
     /// never written here. Needs <c>file-associations.read</c> and <c>filesystem.user-home.write</c>.
     /// </summary>
     /// <param name="target">Extension with its dot (<c>.md</c>) or media type (<c>x-scheme-handler/https</c>).</param>
@@ -66,10 +66,10 @@ public enum KazoAppInstallState
     /// <summary>Installed, or a system app.</summary>
     Installed = 0,
 
-    /// <summary>Uninstalled in the user's own <c>~/.config/hackeros/apps.config</c>, or by a dependency there.</summary>
+    /// <summary>Uninstalled in the user's own <c>~/.config/kazoos/apps.config</c>, or by a dependency there.</summary>
     UninstalledForUser = 1,
 
-    /// <summary>Uninstalled in <c>/etc/hackeros/apps.config</c> for every user: only an administrator reinstalls it.</summary>
+    /// <summary>Uninstalled in <c>/etc/kazoos/apps.config</c> for every user: only an administrator reinstalls it.</summary>
     UninstalledForMachine = 2,
 
     /// <summary>
@@ -88,10 +88,10 @@ public enum KazoAppInstallState
 /// <summary>Which <c>apps.config</c> file an uninstall or reinstall writes (ADR 0048, section 3).</summary>
 public enum KazoInstallScope
 {
-    /// <summary><c>~/.config/hackeros/apps.config</c>: the session user only.</summary>
+    /// <summary><c>~/.config/kazoos/apps.config</c>: the session user only.</summary>
     User = 0,
 
-    /// <summary><c>/etc/hackeros/apps.config</c>: every user; an administrator must authenticate (ADR 0055, section 5).</summary>
+    /// <summary><c>/etc/kazoos/apps.config</c>: every user; an administrator must authenticate (ADR 0055, section 5).</summary>
     Machine = 1
 }
 
@@ -159,7 +159,7 @@ public interface IAppManagementGateway
         string appId, KazoInstallScope scope, CancellationToken cancellationToken = default) =>
         new(await UninstallAsync(appId, scope, cancellationToken).ConfigureAwait(false), []);
 
-    /// <summary>Reads <c>/etc/hackeros/app-sources.config</c> (ADR 0182 §3).</summary>
+    /// <summary>Reads <c>/etc/kazoos/app-sources.config</c> (ADR 0182 §3).</summary>
     /// <param name="cancellationToken">Cancels the read.</param>
     /// <exception cref="NotSupportedException">The gateway predates ADR 0182.</exception>
     ValueTask<KazoPackageSources> GetPackageSourcesAsync(CancellationToken cancellationToken = default) =>
@@ -218,7 +218,7 @@ public interface IAppManagementGateway
 
     /// <summary>
     /// Finishes or undoes the installs an interruption left, then deletes unfinished folders
-    /// (<c>hackpkg repair</c>, ADR 0214 §3.5): the session user's own apps, and the system's after
+    /// (<c>kazopkg repair</c>, ADR 0214 §3.5): the session user's own apps, and the system's after
     /// an administrator authenticated when <paramref name="system"/> is set.
     /// </summary>
     /// <param name="system">Also repairs the apps installed for the system.</param>
@@ -243,7 +243,7 @@ public interface IAppManagementGateway
     ValueTask<KazoPackageSources> RemovePackageSourceAsync(string source, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This app-management gateway cannot change the app sources.");
 
-    /// <summary>Reads the administrator's block list, <c>/etc/hackeros/app-policy.config</c> (ADR 0189 §5).</summary>
+    /// <summary>Reads the administrator's block list, <c>/etc/kazoos/app-policy.config</c> (ADR 0189 §5).</summary>
     /// <param name="cancellationToken">Cancels the read.</param>
     /// <exception cref="NotSupportedException">The gateway predates ADR 0189.</exception>
     ValueTask<KazoPackagePolicy> GetPackagePolicyAsync(CancellationToken cancellationToken = default) =>

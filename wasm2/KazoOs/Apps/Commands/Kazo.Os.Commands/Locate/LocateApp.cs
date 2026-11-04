@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Locate;
 public sealed class LocateApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.locate";
+    public override string Id => "org.kazoos.commands.locate";
 
     /// <inheritdoc />
     public override string Name => "locate";
@@ -22,7 +22,7 @@ public sealed class LocateApp : AppDefinition
     public override Type EntryPoint => typeof(LocateCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Find files by name anywhere in the filesystem";

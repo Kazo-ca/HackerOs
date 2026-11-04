@@ -17,7 +17,7 @@ public interface IAppPermissionStore
     ValueTask<AppPermissionDecisions> ReadAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Records machine decisions in <c>/etc/hackeros/app-permissions.config</c> as an audited
+    /// Records machine decisions in <c>/etc/kazoos/app-permissions.config</c> as an audited
     /// system operation (ADR 0002). Callers must have verified an administrator first: this is how
     /// the write succeeds even when the session user is not an administrator.
     /// </summary>
@@ -76,7 +76,7 @@ public sealed class AppPermissionStore : IAppPermissionStore
             machine,
             user,
             AppPermissionsDocument.MachineFile.Resolve(null).Value,
-            home is null ? "~/.config/hackeros/" + AppPermissionsDocument.FileName : AppPermissionsDocument.UserFile.Resolve(home).Value);
+            home is null ? "~/.config/kazoos/" + AppPermissionsDocument.FileName : AppPermissionsDocument.UserFile.Resolve(home).Value);
 
         foreach (string warning in decisions.Warnings)
         {

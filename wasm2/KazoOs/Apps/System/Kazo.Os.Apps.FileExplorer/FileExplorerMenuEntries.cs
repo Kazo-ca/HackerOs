@@ -12,7 +12,7 @@ internal static class FileExplorerMenuEntries
     internal const string ExtractHere = "extract-here";
 
     /// <summary>The intent the OS hands the explorer for "Extract here", with <c>{"paths":[…]}</c>.</summary>
-    internal const string ExtractHereIntent = "org.hackeros.file-explorer.extract-here.v1";
+    internal const string ExtractHereIntent = "org.kazoos.file-explorer.extract-here.v1";
 
     /// <summary>The resource key of the entry's title (<c>Resources/AppManifest*.resx</c>, ADR 0159 §3).</summary>
     internal const string ExtractHereTitle = "Menu.ExtractHere";

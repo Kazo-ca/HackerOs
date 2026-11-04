@@ -3,7 +3,7 @@
 // goes back to C# once (OnResized), which saves it.
 
 export function attach(handle, panelSelector, callbacks, min, max) {
-    if (!handle || handle.__hackerOsResize) {
+    if (!handle || handle.__kazoOsResize) {
         return;
     }
 
@@ -47,7 +47,7 @@ export function attach(handle, panelSelector, callbacks, min, max) {
     };
 
     handle.addEventListener('pointerdown', onPointerDown);
-    handle.__hackerOsResize = onPointerDown;
+    handle.__kazoOsResize = onPointerDown;
 }
 
 export function setWidth(handle, panelSelector, width) {
@@ -58,8 +58,8 @@ export function setWidth(handle, panelSelector, width) {
 }
 
 export function detach(handle) {
-    if (handle?.__hackerOsResize) {
-        handle.removeEventListener('pointerdown', handle.__hackerOsResize);
-        delete handle.__hackerOsResize;
+    if (handle?.__kazoOsResize) {
+        handle.removeEventListener('pointerdown', handle.__kazoOsResize);
+        delete handle.__kazoOsResize;
     }
 }

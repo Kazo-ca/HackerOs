@@ -13,10 +13,10 @@ namespace Kazo.Os.AppSdk.Components;
 public static class KazoComponentContracts
 {
     /// <summary>
-    /// A terminal emulator running its own <c>hsh</c>, controlled through <see cref="IHackTerminal"/>
+    /// A terminal emulator running its own <c>hsh</c>, controlled through <see cref="IKazoTerminal"/>
     /// and configured with <see cref="KazoTerminalOptions"/>. Provided by the Terminal app.
     /// </summary>
-    public const string Terminal = "hackeros.terminal";
+    public const string Terminal = "kazoos.terminal";
 
     /// <summary>
     /// The shared file view of the OS (ADR 0148). Reserved: only a system app (the File Explorer)

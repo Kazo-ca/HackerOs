@@ -210,7 +210,7 @@ public sealed partial class SyncConflictOverlay
             notifications.Enqueue(new Notification(
                 NotificationId.FromGuid(Guid.NewGuid()),
                 principal.UserId,
-                "org.hackeros.sync",
+                "org.kazoos.sync",
                 NotificationSeverity.Warning,
                 L["Sync.Pending.Title"],
                 count == 1 ? L["Sync.Pending.One"] : L["Sync.Pending.Many", count],

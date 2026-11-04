@@ -14,14 +14,14 @@ namespace Kazo.Os.Platform.Core.Tests.ContextMenus;
 
 /// <summary>
 /// ADR 0151 and ADR 0159: the OS side of the file menu entries apps register — the folder
-/// <c>/etc/hackeros/context-menus.d</c>, the filters, the launches, the user's hidden entries and
+/// <c>/etc/kazoos/context-menus.d</c>, the filters, the launches, the user's hidden entries and
 /// <c>KazoFileMenuEntries</c>.
 /// </summary>
 public sealed class FileContextMenuTests
 {
     private const string ZipperId = "com.example.zipper";
     private const string ViewerId = "com.example.viewer";
-    private const string SettingsId = "org.hackeros.settings";
+    private const string SettingsId = "org.kazoos.settings";
     private const string ExtractIntent = "com.example.zipper.extract.v1";
     private const string ViewIntent = "com.example.viewer.view.v1";
 
@@ -176,7 +176,7 @@ public sealed class FileContextMenuTests
     public void Preferences_edit_keeps_other_lines_and_the_last_line_wins()
     {
         string? text = FileContextMenuPreferences.Edit(null, "com.example.zipper.extract", hidden: true);
-        Assert.StartsWith("# ~/.config/hackeros/context-menus.config", text, StringComparison.Ordinal);
+        Assert.StartsWith("# ~/.config/kazoos/context-menus.config", text, StringComparison.Ordinal);
         text += "# mine\n";
         text = FileContextMenuPreferences.Edit(text, "com.example.viewer.view", hidden: true);
 
@@ -196,7 +196,7 @@ public sealed class FileContextMenuTests
 
         await harness.Preferences.SetHiddenAsync(ZipperId, "extract", hidden: true);
 
-        Assert.Contains("com.example.zipper.extract=true", await harness.Files.ReadAsync("/home/alice/.config/hackeros/context-menus.config"));
+        Assert.Contains("com.example.zipper.extract=true", await harness.Files.ReadAsync("/home/alice/.config/kazoos/context-menus.config"));
         Assert.Equal(["com.example.zipper.extract"], await harness.Preferences.GetHiddenAsync());
     }
 
@@ -284,7 +284,7 @@ public sealed class FileContextMenuTests
         Id = id,
         Name = name,
         Version = "1.0.0",
-        PublisherId = id.StartsWith("org.hackeros", StringComparison.Ordinal) ? "pub.hackeros" : "com.example",
+        PublisherId = id.StartsWith("org.kazoos", StringComparison.Ordinal) ? "pub.kazoos" : "com.example",
         Description = "File menu fixture.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Apps.Sample", "Kazo.Os.Apps.Sample.SampleApp"),

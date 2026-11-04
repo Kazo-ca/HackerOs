@@ -14,12 +14,12 @@ public sealed class WindowTitleTests
         List<WindowEvent> applied = [];
         runtime.EventsApplied += events => applied.AddRange(events);
 
-        IReadOnlyList<WindowEvent> events = runtime.SetTitle(window.Id, "photo.png — Hack Paint");
+        IReadOnlyList<WindowEvent> events = runtime.SetTitle(window.Id, "photo.png — Kazo Paint");
 
         WindowTitleChangedEvent changed = Assert.IsType<WindowTitleChangedEvent>(Assert.Single(events));
         Assert.Equal("Test 1", changed.PreviousTitle);
-        Assert.Equal("photo.png — Hack Paint", changed.Title);
-        Assert.Equal("photo.png — Hack Paint", Assert.Single(runtime.Windows).Title);
+        Assert.Equal("photo.png — Kazo Paint", changed.Title);
+        Assert.Equal("photo.png — Kazo Paint", Assert.Single(runtime.Windows).Title);
         Assert.Equal(events, applied);
     }
 
@@ -46,9 +46,9 @@ public sealed class WindowTitleTests
         runtime.Apply(new CreateWindowCommand(first));
         runtime.Apply(new CreateWindowCommand(second));
 
-        runtime.SetTitle(first.Id, "a.png — Hack Paint");
+        runtime.SetTitle(first.Id, "a.png — Kazo Paint");
 
-        Assert.Equal("a.png — Hack Paint", runtime.Windows.Single(window => window.Id == first.Id).Title);
+        Assert.Equal("a.png — Kazo Paint", runtime.Windows.Single(window => window.Id == first.Id).Title);
         Assert.Equal("Test 2", runtime.Windows.Single(window => window.Id == second.Id).Title);
     }
 
@@ -88,7 +88,7 @@ public sealed class WindowTitleTests
     [InlineData("   ", "")]
     [InlineData("  notes.txt — Text Editor  ", "notes.txt — Text Editor")]
     [InlineData("line one\nline two\t\u001b[31m", "line oneline two[31m")]
-    [InlineData("\u0007*photo.png — Hack Paint", "*photo.png — Hack Paint")]
+    [InlineData("\u0007*photo.png — Kazo Paint", "*photo.png — Kazo Paint")]
     public void Sanitize_removes_control_characters_and_trims(string? title, string expected) =>
         Assert.Equal(expected, WindowTitles.Sanitize(title));
 
@@ -126,7 +126,7 @@ public sealed class WindowTitleTests
     private static WindowRuntimeState CreateState(int seed) =>
         new(
             WindowId.FromGuid(Guid.Parse($"10000000-0000-0000-0000-{seed:D12}")),
-            $"org.hackeros.test{seed}",
+            $"org.kazoos.test{seed}",
             WindowOwnerId.FromGuid(Guid.Parse($"20000000-0000-0000-0000-{seed:D12}")),
             $"Test {seed}",
             null,

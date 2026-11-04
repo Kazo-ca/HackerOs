@@ -11,7 +11,7 @@ namespace Kazo.Os.AppSdk.Terminal;
 /// </summary>
 /// <remarks>
 /// This class only reads what the user types and hands it back to the shell: verification,
-/// tickets, <c>/etc/hackeros/app-permissions.config</c> and <c>/var/log/auth.log</c> belong to
+/// tickets, <c>/etc/kazoos/app-permissions.config</c> and <c>/var/log/auth.log</c> belong to
 /// the OS.
 /// </remarks>
 public sealed class TerminalCredentialPrompt : KazoCredentialPrompt

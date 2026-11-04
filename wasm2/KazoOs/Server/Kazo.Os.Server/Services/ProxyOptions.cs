@@ -1,7 +1,7 @@
 namespace Kazo.Os.Server.Services;
 
 /// <summary>
-/// The <c>HackerOs:Proxy</c> section of <c>appsettings.json</c> (ADR 0102 §5), as bound by
+/// The <c>KazoOs:Proxy</c> section of <c>appsettings.json</c> (ADR 0102 §5), as bound by
 /// <c>IOptions</c>. Every list is <see langword="null"/> when the file does not set it, and
 /// <see cref="ProxyRelayPolicy.From"/> fills the defaults: the configuration binder appends to a
 /// list initialized in code instead of replacing it, so defaults cannot live in the initializers.
@@ -9,7 +9,7 @@ namespace Kazo.Os.Server.Services;
 public sealed class ProxyOptions
 {
     /// <summary>The configuration section this class binds.</summary>
-    public const string SectionName = "HackerOs:Proxy";
+    public const string SectionName = "KazoOs:Proxy";
 
     /// <summary>Turns the whole relay off. Default <see langword="true"/>.</summary>
     public bool Enabled { get; set; } = true;
@@ -124,15 +124,15 @@ public sealed record ProxyRelayPolicy(
     /// </summary>
     public static readonly IReadOnlyList<string> DefaultGrantedApps =
     [
-        "org.hackeros.commands.curl",
-        "org.hackeros.commands.wget",
-        "org.hackeros.commands.ping",
-        "org.hackeros.cmd.cat",
-        "org.hackeros.commands.nmap",
-        "org.hackeros.browser"
+        "org.kazoos.commands.curl",
+        "org.kazoos.commands.wget",
+        "org.kazoos.commands.ping",
+        "org.kazoos.cmd.cat",
+        "org.kazoos.commands.nmap",
+        "org.kazoos.browser"
     ];
 
-    /// <summary>The default policy, as an absent <c>HackerOs:Proxy</c> section gives.</summary>
+    /// <summary>The default policy, as an absent <c>KazoOs:Proxy</c> section gives.</summary>
     public static ProxyRelayPolicy Default { get; } = From(new ProxyOptions());
 
     /// <summary>Gets the response size limit actually enforced.</summary>
@@ -198,17 +198,17 @@ public sealed record ProxyRelayPolicy(
 
         if (AllowAllPorts)
         {
-            warnings.Add("HackerOs:Proxy:AllowAllPorts is on: the relay reaches every TCP and UDP port.");
+            warnings.Add("KazoOs:Proxy:AllowAllPorts is on: the relay reaches every TCP and UDP port.");
         }
 
         if (AllowPrivateNetworks)
         {
-            warnings.Add("HackerOs:Proxy:AllowPrivateNetworks is on: the relay reaches the private networks of the server's machine (loopback and cloud metadata stay blocked).");
+            warnings.Add("KazoOs:Proxy:AllowPrivateNetworks is on: the relay reaches the private networks of the server's machine (loopback and cloud metadata stay blocked).");
         }
 
         if (!QuotasEnabled)
         {
-            warnings.Add("HackerOs:Proxy:Quotas:Enabled is off: no size, concurrency, stream or idle limit applies.");
+            warnings.Add("KazoOs:Proxy:Quotas:Enabled is off: no size, concurrency, stream or idle limit applies.");
         }
 
         return warnings;

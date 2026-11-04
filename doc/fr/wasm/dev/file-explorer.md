@@ -28,13 +28,13 @@ le legacy (`src/apps/file-explorer.ts`) et la dépasse :
   site ([`static-sites.md`](static-sites.md)). Depuis `desk/4` (ADR 0159),
   c'est une entrée **inscrite par Web Server Manager**, et « Extract here »
   une entrée inscrite par l'explorateur (`[RegisterFileContextMenu]` de
-  `FileExplorerApp`, intent `org.hackeros.file-explorer.extract-here.v1` :
+  `FileExplorerApp`, intent `org.kazoos.file-explorer.extract-here.v1` :
   l'explorateur s'ouvre sur le dossier de l'archive et l'extrait) ; la fenêtre
   n'ajoute plus rien par `ContextMenuOpening`. Voir
   [`context-menu.md`](../framework/context-menu.md#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4).
 - depuis `desk/3-file-control` (ADR 0155), **l'explorateur fournit le contrôle
-  de fichiers de l'OS** (`hackeros.file-view`) et ses dialogues
-  (`hackeros.file-dialogs`), et s'en sert lui-même : voir la section suivante.
+  de fichiers de l'OS** (`kazoos.file-view`) et ses dialogues
+  (`kazoos.file-dialogs`), et s'en sert lui-même : voir la section suivante.
 
 ## Fournisseur du contrôle de fichiers (ADR 0148, ADR 0155)
 
@@ -49,8 +49,8 @@ Le manifeste (`FileExplorerApp.Components`) inscrit deux composants :
 
 | Contrat | Composant | Rôle |
 |---|---|---|
-| `hackeros.file-view` | `ExplorerFileView` | `FileView` (implémentation interne, ADR 0155 §1) liée au menu de l'OS, avec la corbeille, le presse-papiers, les transferts et leurs conflits, l'ouverture et « Ouvrir avec ». Contrôleur `IHackFileView`. |
-| `hackeros.file-dialogs` | `ExplorerFileDialogs` | « Ouvrir avec » (« Toujours utiliser »), « Propriétés », conflit de noms, en markup natif. |
+| `kazoos.file-view` | `ExplorerFileView` | `FileView` (implémentation interne, ADR 0155 §1) liée au menu de l'OS, avec la corbeille, le presse-papiers, les transferts et leurs conflits, l'ouverture et « Ouvrir avec ». Contrôleur `IKazoFileView`. |
+| `kazoos.file-dialogs` | `ExplorerFileDialogs` | « Ouvrir avec » (« Toujours utiliser »), « Propriétés », conflit de noms, en markup natif. |
 
 ```text
 App hôte ──► KazoFileView (SDK) ──► registre ──► ExplorerFileView (explorateur)
@@ -122,11 +122,11 @@ ExplorerFileView ──► FileView (interne)    ── Ctrl+X/C/V, menus ──
 | `IAppClipboardGateway` | idem | Passerelle `IAppExecutionContext.Clipboard` : `clipboard.read` / `clipboard.write`, événement `Changed`. |
 | `SystemClipboard` | `Platform/Kazo.Os.Platform.Core/Clipboard/` | Presse-papiers de l'OS : une sélection par session, cibles MIME (`text/plain`, `x-special/gnome-copied-files`), vidée à la déconnexion. En mémoire, comme un vrai presse-papiers. Numéro de séquence, origine et partage du texte avec la vraie machine : [`clipboard.md`](clipboard.md) (ADR 0065). |
 | `AppClipboardGateway` | `Platform/Kazo.Os.Platform.Core/Execution/` | Passerelle de confiance par instance : vérifie la capacité à chaque appel, ne voit que sa session, rejoue `Changed` dans le contexte ambiant de l'app abonnée. |
-| `KazoFileOperations` et contrats (ex-`FileTransfer`) | `Shared/Kazo.Os.AppSdk/IO/KazoFileOperations*.cs` | Copie, déplacement, import de fichiers de l'hôte, envoi à la corbeille ; noms Nautilus, conflits, refus d'un dossier dans lui-même, résumé des échecs. Tourne sur l'API `Hack*`, donc avec les droits de l'app. Dans le SDK depuis la 2.0 (ADR 0161 §2) ; `IDialogService.AsFileConflictResolver` (`Kazo.Os.AppSdk.Blazor.Files`) pose la question de conflit par `hackeros.file-dialogs`. |
+| `KazoFileOperations` et contrats (ex-`FileTransfer`) | `Shared/Kazo.Os.AppSdk/IO/KazoFileOperations*.cs` | Copie, déplacement, import de fichiers de l'hôte, envoi à la corbeille ; noms Nautilus, conflits, refus d'un dossier dans lui-même, résumé des échecs. Tourne sur l'API `Kazo*`, donc avec les droits de l'app. Dans le SDK depuis la 2.0 (ADR 0161 §2) ; `IDialogService.AsFileConflictResolver` (`Kazo.Os.AppSdk.Blazor.Files`) pose la question de conflit par `kazoos.file-dialogs`. |
 | `FileView` (ajouts) | `Apps/System/Kazo.Os.Apps.FileExplorer/FileControl/` (dans `Shared/Kazo.Os.AppSdk.FileView` avant le SDK 2.0, ADR 0161 §1) | Dépôt sur le fond, `DropRequested`, `ClipboardRequested`, `CanPaste`, `CutPaths` (éléments atténués), Ctrl+A. |
 | `FileViewBreadcrumb`, `FileViewDropZone` | idem | Fil d'Ariane cliquable et déposable ; zone de dépôt générique pour le chrome de l'hôte. |
 | `FileView.razor.js` | idem | Écouteurs natifs `dragover` / `drop` : curseur déplacer/copier, surbrillance de la cible, capture du contenu et des `File` de l'hôte. Depuis l'ADR 0065, Ctrl+V suit l'événement `paste` (`attachPasteTarget`) : des fichiers copiés sur la vraie machine et collés dans la vue sont importés comme un dépôt. |
-| `ExplorerFileDialogs` | `Apps/System/Kazo.Os.Apps.FileExplorer/` | Fenêtre « Replace / Keep both / Skip » (et « Ouvrir avec », « Propriétés ») du contrat `hackeros.file-dialogs`, en markup natif depuis `desk/3` ; l'ancien `FileConflictDialog` MudBlazor est retiré. |
+| `ExplorerFileDialogs` | `Apps/System/Kazo.Os.Apps.FileExplorer/` | Fenêtre « Replace / Keep both / Skip » (et « Ouvrir avec », « Propriétés ») du contrat `kazoos.file-dialogs`, en markup natif depuis `desk/3` ; l'ancien `FileConflictDialog` MudBlazor est retiré. |
 
 ## Usage et API
 
@@ -216,7 +216,7 @@ l'app est traduit par `Resources/AppManifest.fr.resx`.
 - **`KazoFileOperations` dans le SDK** (ADR 0161 §2, ex-`FileTransfer` de
   `Kazo.Os.AppSdk.FileView`). Toute app, tout fournisseur du contrôle de
   fichiers et toute commande reprennent les mêmes règles ; le code n'utilise que
-  l'API `Hack*`, donc les capacités et les droits de l'app.
+  l'API `Kazo*`, donc les capacités et les droits de l'app.
 - **`KazoDirectory.CopyAsync`.** .NET n'a pas de `Directory.Copy` ; l'ADR 0058
   demande une copie récursive. Le moteur copie l'arbre en une transaction ; entre
   deux montages, la façade le recrée entrée par entrée (même repli que
@@ -260,7 +260,7 @@ l'app est traduit par `Resources/AppManifest.fr.resx`.
 - [x] `FileView` : dépôt sur le fond et les nœuds de l'arbre, `DropRequested`, `ClipboardRequested`, `CanPaste`, `CutPaths`, Ctrl+A, entrées de menu.
 - [x] `FileViewBreadcrumb` et `FileViewDropZone` ; écouteurs natifs et fichiers de l'hôte dans `FileView.razor.js`.
 - [x] Explorateur : barre d'outils Cut/Copy/Paste, fil d'Ariane, dépôts sur Home, Trash et la vue Corbeille, fenêtre de conflit, notification des échecs, envoi par `FileTransfer`.
-- [x] Tests, ce document, `app-sdk.md`, `hack-file-api.md`, `trash.md`, plan et index.
+- [x] Tests, ce document, `app-sdk.md`, `kazo-file-api.md`, `trash.md`, plan et index.
 
 ## Tâches du chantier `v3/4-intents`
 
@@ -272,7 +272,7 @@ l'app est traduit par `Resources/AppManifest.fr.resx`.
 
 - [x] « Ouvrir avec » propose « Toujours utiliser cette app pour les fichiers
   .ext » quand l'app choisie déclare l'extension ; le choix est écrit dans
-  `~/.config/hackeros/file-associations.json` par
+  `~/.config/kazoos/file-associations.json` par
   `AppContext.Catalog.SetUserDefaultHandlerAsync`
   ([`user-file-associations.md`](user-file-associations.md)).
 - [x] L'explorateur déclare `file-associations.read`.
@@ -285,7 +285,7 @@ l'app est traduit par `Resources/AppManifest.fr.resx`.
 
 ## Tâches du chantier `desk/3-file-control` (ADR 0155)
 
-- [x] Contrats du SDK : `KazoFileView`, `IHackFileView`, `KazoFileViewItem`, `KazoFileViewFeatures`, `KazoFileMenuOpeningEventArgs`, `FileMenuScope`, `KazoFileMenuItems`.
+- [x] Contrats du SDK : `KazoFileView`, `IKazoFileView`, `KazoFileViewItem`, `KazoFileViewFeatures`, `KazoFileMenuOpeningEventArgs`, `FileMenuScope`, `KazoFileMenuItems`.
 - [x] `ExplorerFileView` : `FileView` liée au menu de l'OS (`FileViewMenuBinding`), commandes, corbeille, presse-papiers, transferts, ouverture.
 - [x] Menus du plan §7 (`ExplorerFileMenu`), « Ouvrir avec » en sous-menu.
 - [x] Dialogues fournis (`ExplorerFileDialogs`) par `IDialogService` et le proxy de la plateforme ; dialogues MudBlazor retirés.
@@ -315,7 +315,7 @@ ensuite, voir la section suivante.
   (`ExplorerSidebarResizer`, rôle `separator`) : glisser la redimensionne entre 140 et 400 px, un
   double-clic remet la largeur par défaut (150 px), les flèches gauche et droite la changent de 16 px,
   Début et Fin vont aux bornes. La largeur est retenue par utilisateur dans
-  `~/.config/hackeros/file-explorer.json` (`sidebarWidth`, `FileExplorerSettings` garde les autres clés).
+  `~/.config/kazoos/file-explorer.json` (`sidebarWidth`, `FileExplorerSettings` garde les autres clés).
   Bureau seulement : la fenêtre mobile n'a pas de panneau. Tests : `FileExplorerSettingsTests`.
 - [x] `explorer/4-hover-tooltips` (§16) : une bulle au style de l'OS apparaît après 600 ms de souris
   immobile sur un élément : nom complet, type, taille (fichier), date de modification et nombre
@@ -327,7 +327,7 @@ ensuite, voir la section suivante.
 - [x] `explorer/5-recursive-size` (§5) : taille totale récursive dans le service de fichiers
   (`IAppFileSystemGateway.MeasureAsync`, `FileSystemTreeSize`, `FileSystemTreeMeasure`) et le SDK
   (`KazoDirectory.GetTotalSizeAsync`, `KazoDirectoryInfo.GetTotalSizeAsync`, `KazoDirectorySize`, voir
-  [`hack-file-api.md`](../framework/hack-file-api.md)), ajoutés aux `PublicAPI.Unshipped.txt`. Le
+  [`kazo-file-api.md`](../framework/kazo-file-api.md)), ajoutés aux `PublicAPI.Unshipped.txt`. Le
   dialogue Propriétés d'un dossier affiche « 1 234 octets (5 fichiers, 2 dossiers) ». Tests :
   `KazoDirectorySizeTests`.
 - [x] `explorer/6-file-menu-actions` (§10 à §13) : la fenêtre de l'explorateur (bureau et mobile)

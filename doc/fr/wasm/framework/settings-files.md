@@ -28,32 +28,32 @@ migration, en lecture seule.
 | Contenu | Couche système | Couche utilisateur |
 | --- | --- | --- |
 | Réglages d'une app | `/etc/<appId>/<document>.config` | `~/.config/<appId>/<document>.config` |
-| Réglages de l'OS (apparence, interface, menu Démarrer) | `/etc/hackeros/<document>.config` | `~/.config/hackeros/<document>.config` |
-| Politique (`policy.config`) | `/etc/hackeros/policy.config` | aucune (document `SystemOnly`) |
-| Politique des capacités dangereuses (`security.config`, ADR 0049) | `/etc/hackeros/security.config` | aucune (document `SystemOnly`) |
-| OOM killer (`[oom-killer]` : `enabled=false`, `min-free-percent=5`, ADR 0126, voir [`oom-killer.md`](../dev/oom-killer.md)) | `/etc/hackeros/memory.config` | aucune (couche système seulement) |
-| Fournisseur du contrôle de fichiers et des dialogues de fichiers (`[providers]`, clé = contrat, valeur = app ; absent = explorateur ; ADR 0156 et 0158, voir [`embedded-components.md`](embedded-components.md)) | `/etc/hackeros/components.config` (lu ligne par ligne, sans schéma) | aucune |
-| Entrées que les apps ajoutent aux menus des fichiers (un JSON par app, écrit par l'OS au démarrage et à chaque changement d'installation ; ADR 0151, 0159) | `/etc/hackeros/context-menus.d/<appId>.json` | aucune |
-| Entrées des menus des fichiers masquées par l'utilisateur (`[hidden]`, `<appId>.<name>=true` ; Paramètres ▸ Menus des fichiers ; ADR 0159 §8) | `~/.config/hackeros/context-menus.config` (lu ligne par ligne à chaque ouverture d'un menu) | aucune |
-| Décisions sur les capacités dangereuses (ADR 0049) | `/etc/hackeros/app-permissions.config` (`allow`/`deny`) | `~/.config/hackeros/app-permissions.config` (`deny` seulement) |
-| Accessibilité (`highContrast`, `textScale`, `reducedMotion`, ADR 0105, voir [`accessibility.md`](../dev/accessibility.md)) | `/etc/hackeros/accessibility.config` (aussi lu par l'écran de connexion) | `~/.config/hackeros/accessibility.config` |
-| Date et heure (`timeZone` : `auto` ou un fuseau IANA, ADR 0193, voir [`time-zone.md`](time-zone.md)) | `/etc/hackeros/datetime.config` (aussi lu par l'écran de connexion) | `~/.config/hackeros/datetime.config` |
-| Sons du système (`enabled`, `theme`, `volume`, ADR 0204, voir [`system-sounds.md`](../dev/system-sounds.md)) | `/etc/hackeros/sound.config` | `~/.config/hackeros/sound.config` |
-| Ne pas déranger (`doNotDisturb`, ADR 0216, voir [`notification-toasts.md`](../dev/notification-toasts.md)) | `/etc/hackeros/notifications.config` | `~/.config/hackeros/notifications.config` |
-| Associations de fichiers | `/etc/hackeros/file-associations.json` | `~/.config/hackeros/file-associations.json` (même schéma, lu avant le fichier de la machine, ADR 0121, [`user-file-associations.md`](../dev/user-file-associations.md)) |
-| Raccourcis du gestionnaire de fenêtres (`[linux]`, `[fallback]`, ADR 0095, voir [`window-model.md`](window-model.md)) | `/etc/hackeros/keybindings.config` | `~/.config/hackeros/keybindings.config` |
-| Boîte « ne répond pas » (`[unresponsive] dialog`, ADR 0127 §3, voir [`process-priority-and-unresponsive-windows.md`](../dev/process-priority-and-unresponsive-windows.md)) | `/etc/hackeros/window-manager.config` | `~/.config/hackeros/window-manager.config` |
-| Taille des fenêtres (`width`, `height`, `maximized`, ADR 0116 et 0122, voir [`window-geometry.md`](../dev/window-geometry.md)) | aucune | `~/.local/state/hackeros/windows/<appId>.config` |
-| Apps désinstallées (ADR 0048, voir [`app-installation.md`](../dev/app-installation.md)) | `/etc/hackeros/apps.config` | `~/.config/hackeros/apps.config` |
-| Partage du presse-papiers avec l'hôte (clé `sharing`, ADR 0065, voir [`clipboard.md`](../dev/clipboard.md)) | `/etc/hackeros/clipboard.config` | `~/.config/hackeros/clipboard.config` |
-| Synchro périodique (ADR 0101 §4, voir [`synchronization.md`](../dev/synchronization.md)) | `/etc/hackeros/sync.config` (`intervalMinutes`, lu seulement ici) | `~/.config/hackeros/sync.config` (`paused`) |
-| Conflits de synchro en attente (ADR 0101 §2) | aucune | `~/.local/state/hackeros/sync-conflicts.json` |
-| Bureau (`[view]` taille, réorganisation, tri, icônes système ; `[positions]` case de chaque icône ; lu et écrit par `KazoDesktopSettings`, sans schéma ; ADR 0152, 0160, voir [`desktop.md`](../dev/desktop.md)) | aucune | `~/.config/hackeros/desktop.config` |
+| Réglages de l'OS (apparence, interface, menu Démarrer) | `/etc/kazoos/<document>.config` | `~/.config/kazoos/<document>.config` |
+| Politique (`policy.config`) | `/etc/kazoos/policy.config` | aucune (document `SystemOnly`) |
+| Politique des capacités dangereuses (`security.config`, ADR 0049) | `/etc/kazoos/security.config` | aucune (document `SystemOnly`) |
+| OOM killer (`[oom-killer]` : `enabled=false`, `min-free-percent=5`, ADR 0126, voir [`oom-killer.md`](../dev/oom-killer.md)) | `/etc/kazoos/memory.config` | aucune (couche système seulement) |
+| Fournisseur du contrôle de fichiers et des dialogues de fichiers (`[providers]`, clé = contrat, valeur = app ; absent = explorateur ; ADR 0156 et 0158, voir [`embedded-components.md`](embedded-components.md)) | `/etc/kazoos/components.config` (lu ligne par ligne, sans schéma) | aucune |
+| Entrées que les apps ajoutent aux menus des fichiers (un JSON par app, écrit par l'OS au démarrage et à chaque changement d'installation ; ADR 0151, 0159) | `/etc/kazoos/context-menus.d/<appId>.json` | aucune |
+| Entrées des menus des fichiers masquées par l'utilisateur (`[hidden]`, `<appId>.<name>=true` ; Paramètres ▸ Menus des fichiers ; ADR 0159 §8) | `~/.config/kazoos/context-menus.config` (lu ligne par ligne à chaque ouverture d'un menu) | aucune |
+| Décisions sur les capacités dangereuses (ADR 0049) | `/etc/kazoos/app-permissions.config` (`allow`/`deny`) | `~/.config/kazoos/app-permissions.config` (`deny` seulement) |
+| Accessibilité (`highContrast`, `textScale`, `reducedMotion`, ADR 0105, voir [`accessibility.md`](../dev/accessibility.md)) | `/etc/kazoos/accessibility.config` (aussi lu par l'écran de connexion) | `~/.config/kazoos/accessibility.config` |
+| Date et heure (`timeZone` : `auto` ou un fuseau IANA, ADR 0193, voir [`time-zone.md`](time-zone.md)) | `/etc/kazoos/datetime.config` (aussi lu par l'écran de connexion) | `~/.config/kazoos/datetime.config` |
+| Sons du système (`enabled`, `theme`, `volume`, ADR 0204, voir [`system-sounds.md`](../dev/system-sounds.md)) | `/etc/kazoos/sound.config` | `~/.config/kazoos/sound.config` |
+| Ne pas déranger (`doNotDisturb`, ADR 0216, voir [`notification-toasts.md`](../dev/notification-toasts.md)) | `/etc/kazoos/notifications.config` | `~/.config/kazoos/notifications.config` |
+| Associations de fichiers | `/etc/kazoos/file-associations.json` | `~/.config/kazoos/file-associations.json` (même schéma, lu avant le fichier de la machine, ADR 0121, [`user-file-associations.md`](../dev/user-file-associations.md)) |
+| Raccourcis du gestionnaire de fenêtres (`[linux]`, `[fallback]`, ADR 0095, voir [`window-model.md`](window-model.md)) | `/etc/kazoos/keybindings.config` | `~/.config/kazoos/keybindings.config` |
+| Boîte « ne répond pas » (`[unresponsive] dialog`, ADR 0127 §3, voir [`process-priority-and-unresponsive-windows.md`](../dev/process-priority-and-unresponsive-windows.md)) | `/etc/kazoos/window-manager.config` | `~/.config/kazoos/window-manager.config` |
+| Taille des fenêtres (`width`, `height`, `maximized`, ADR 0116 et 0122, voir [`window-geometry.md`](../dev/window-geometry.md)) | aucune | `~/.local/state/kazoos/windows/<appId>.config` |
+| Apps désinstallées (ADR 0048, voir [`app-installation.md`](../dev/app-installation.md)) | `/etc/kazoos/apps.config` | `~/.config/kazoos/apps.config` |
+| Partage du presse-papiers avec l'hôte (clé `sharing`, ADR 0065, voir [`clipboard.md`](../dev/clipboard.md)) | `/etc/kazoos/clipboard.config` | `~/.config/kazoos/clipboard.config` |
+| Synchro périodique (ADR 0101 §4, voir [`synchronization.md`](../dev/synchronization.md)) | `/etc/kazoos/sync.config` (`intervalMinutes`, lu seulement ici) | `~/.config/kazoos/sync.config` (`paused`) |
+| Conflits de synchro en attente (ADR 0101 §2) | aucune | `~/.local/state/kazoos/sync-conflicts.json` |
+| Bureau (`[view]` taille, réorganisation, tri, icônes système ; `[positions]` case de chaque icône ; lu et écrit par `KazoDesktopSettings`, sans schéma ; ADR 0152, 0160, voir [`desktop.md`](../dev/desktop.md)) | aucune | `~/.config/kazoos/desktop.config` |
 
 `~/.local/state/` contient l'état propre à l'appareil : la synchronisation du
 système de fichiers l'ignore (`IFileSystemSyncService.IsDeviceLocal`).
 
-Au premier démarrage, `/etc/hackeros/` reçoit des fichiers par défaut
+Au premier démarrage, `/etc/kazoos/` reçoit des fichiers par défaut
 commentés (mode `0644`, propriétaire `root`). Comme ces fichiers listent toutes
 les clés, l'origine affichée d'une valeur de l'OS est « système » et non
 « intégrée » tant que personne n'a rien changé.
@@ -123,7 +123,7 @@ Une autre app n'a aucun accès au dossier privé `~/.config/<appId>/` d'une app.
 Le schéma vient de `AppManifest.Settings` (clés, types, valeurs par défaut,
 groupes). Chaque méthode existe avec le contexte de l'app en paramètre, et sans
 lui : elle utilise alors le contexte ambiant de l'ADR 0043
-(`KazoExecutionContext.Current`), comme l'API de fichiers `Hack*`.
+(`KazoExecutionContext.Current`), comme l'API de fichiers `Kazo*`.
 
 ```csharp
 await using KazoSettingsDocument settings = await KazoSettings.OpenAsync(AppContext);
@@ -154,8 +154,8 @@ avec `SetManyAsync(values, layer)` (une seule approbation pour `/etc`).
 ```csharp
 await using KazoSettingsDocument appearance = await KazoSettings.OpenSystemAsync(AppContext, "appearance");
 string accent = appearance.Get<string>("accent");
-await appearance.SetAsync("accent", "cyan");                       // ~/.config/hackeros/appearance.config
-await appearance.SetManyAsync(values, SettingLayer.System);        // /etc/hackeros : sudo ou approbation
+await appearance.SetAsync("accent", "cyan");                       // ~/.config/kazoos/appearance.config
+await appearance.SetManyAsync(values, SettingLayer.System);        // /etc/kazoos : sudo ou approbation
 ```
 
 - Documents ouverts : `appearance`, `accessibility` (ADR 0105), `ui-platform-preference`, `security`,
@@ -163,7 +163,7 @@ await appearance.SetManyAsync(values, SettingLayer.System);        // /etc/hacke
   `ArgumentException`.
 - Dans `appearance`, `desktopThemeId` et `mobileThemeId` sont des chaînes
   libres depuis `v3/11` (ADR 0103) : l'id d'un thème intégré ou d'un fichier
-  `.theme` de `/etc/hackeros/themes/` ou `~/.config/hackeros/themes/` ; un id
+  `.theme` de `/etc/kazoos/themes/` ou `~/.config/kazoos/themes/` ; un id
   inconnu donne le thème par défaut (voir [`theme-editor.md`](../dev/theme-editor.md)).
 - Dans `appearance`, `wallpaper`, `wallpaperFit` et `wallpaperScreen2` à
   `wallpaperScreen9` choisissent le fond d'écran du bureau, `mobileWallpaper`
@@ -202,7 +202,7 @@ lieu d'une erreur. L'apparence passe par `KazoSettings.OpenSystemAsync`
 fichiers, tire les permissions, pousse et tire les associations, puis relit
 l'apparence. L'onglet « Synchronization » (ADR 0101) montre l'état de la
 synchro périodique, la suspend pour l'utilisateur (`paused` dans
-`~/.config/hackeros/sync.config`), lance un passage et liste les conflits en
+`~/.config/kazoos/sync.config`), lance un passage et liste les conflits en
 attente avec un bouton qui ouvre le dialogue de conflit. L'onglet « Installed Apps » écrit les fichiers `apps.config`
 (voir [`app-installation.md`](../dev/app-installation.md)).
 
@@ -226,16 +226,16 @@ Tests : `Tests/Kazo.Os.Apps.Settings.Tests/LanguagePanelTests.cs`.
 `SettingsStoreToFilesMigration` lit l'ancien magasin une seule fois :
 
 - au démarrage, les documents de l'OS (`OsAdmin`) deviennent des fichiers de
-  `/etc/hackeros/`. Un document invalide est remplacé par la valeur par
-  défaut. Le marqueur `/var/lib/hackeros/migrations/settings-to-files` empêche
+  `/etc/kazoos/`. Un document invalide est remplacé par la valeur par
+  défaut. Le marqueur `/var/lib/kazoos/migrations/settings-to-files` empêche
   une seconde copie, donc les modifications de l'administrateur survivent aux
   redémarrages ;
 - à la connexion, seules les valeurs de l'utilisateur connecté sont copiées :
   réglages d'app vers `~/.config/<appId>/`, épingles du menu Démarrer vers
-  `~/.config/hackeros/start-menu.json`, géométrie vers `~/.local/state/`. Les
+  `~/.config/kazoos/start-menu.json`, géométrie vers `~/.local/state/`. Les
   anciens dossiers `~/.config/apps/<appId>` sont déplacés vers
   `~/.config/<appId>`. Le marqueur
-  `~/.local/state/hackeros/migrations/settings-to-files` évite d'écraser ce
+  `~/.local/state/kazoos/migrations/settings-to-files` évite d'écraser ce
   que l'utilisateur a changé depuis.
 
 Une erreur de lecture du magasin est journalisée et n'empêche ni le démarrage

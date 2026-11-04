@@ -2,11 +2,11 @@
 
 # API du terminal pour les apps et les commandes
 
-Ce document décrit ce qu'une app ou une commande voit du terminal : le composant `TerminalPanel`, l'interface `IHackTerminal`, la lecture d'un mot de passe sans écho et le mode plein écran. Le fonctionnement interne (xterm.js, discipline de ligne, rendu, raccourcis) est dans [`dev/terminal-emulator.md`](../dev/terminal-emulator.md).
+Ce document décrit ce qu'une app ou une commande voit du terminal : le composant `TerminalPanel`, l'interface `IKazoTerminal`, la lecture d'un mot de passe sans écho et le mode plein écran. Le fonctionnement interne (xterm.js, discipline de ligne, rendu, raccourcis) est dans [`dev/terminal-emulator.md`](../dev/terminal-emulator.md).
 
 ## Composant `TerminalPanel`
 
-`TerminalPanel` implémente `IHackTerminal` : un hôte peut y lancer des
+`TerminalPanel` implémente `IKazoTerminal` : un hôte peut y lancer des
 commandes (affichées à l'invite, après les touches déjà tapées), changer de
 dossier par un `cd` visible et lire le texte affiché sans séquences de
 contrôle (`TerminalAnsi.StripControlSequences`).
@@ -33,10 +33,10 @@ ainsi les mots de passe.
 
 Une commande plein écran utilise le contrat `IFullScreenTerminalSession` du SDK : `EnterAlternateScreenAsync` passe sur l'écran alternatif, `RenderAsync` reçoit un `TerminalScreenFrame` (lignes, curseur, libellé accessible) à chaque image, et `ReadKeyAsync` attend la prochaine touche ou le prochain redimensionnement. Une rangée peut porter des séquences de couleur ou de vidéo inverse (SGR) ; elle se termine par `ESC[0m`. Le rendu côté terminal est dans [`dev/terminal-emulator.md`](../dev/terminal-emulator.md#commandes-plein-écran).
 
-## IHackTerminal
+## IKazoTerminal
 
-`IHackTerminal` (fichier `Shared/Kazo.Os.AppSdk/Components/IHackTerminal.cs`) a pour membres `RunCommandAsync(commandLine)`, `SetWorkingDirectoryAsync(path)`, `SendInputAsync(text)`, `ReadOutput(maxCharacters)` (65 536 caractères par défaut), `ClearAsync()` et `FocusAsync()`.
+`IKazoTerminal` (fichier `Shared/Kazo.Os.AppSdk/Components/IKazoTerminal.cs`) a pour membres `RunCommandAsync(commandLine)`, `SetWorkingDirectoryAsync(path)`, `SendInputAsync(text)`, `ReadOutput(maxCharacters)` (65 536 caractères par défaut), `ClearAsync()` et `FocusAsync()`.
 
-Les commandes envoyées par un hôte (`IHackTerminal.RunCommandAsync`) ne sont
+Les commandes envoyées par un hôte (`IKazoTerminal.RunCommandAsync`) ne sont
 jamais continuées.
 

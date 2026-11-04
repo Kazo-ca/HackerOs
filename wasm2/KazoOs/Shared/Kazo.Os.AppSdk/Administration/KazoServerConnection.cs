@@ -22,7 +22,7 @@ namespace Kazo.Os.AppSdk.Administration;
 /// </remarks>
 /// <example>
 /// <code>
-/// await KazoServerConnection.ConnectAsync(new Uri("https://hackeros.example"), "benoit", password);
+/// await KazoServerConnection.ConnectAsync(new Uri("https://kazoos.example"), "benoit", password);
 /// await KazoServerConnection.SyncAsync(KazoSyncDomain.FileSystem, KazoSyncDirection.Push);
 /// </code>
 /// </example>
@@ -237,7 +237,7 @@ public static class KazoServerConnection
     public static Task<KazoSyncStatus> GetSyncStatusAsync(IAppExecutionContext context, CancellationToken cancellationToken = default) =>
         Call(context, gateway => gateway.GetSyncStatusAsync(cancellationToken));
 
-    /// <summary>Pauses or resumes the session user's periodic synchronization (<c>~/.config/hackeros/sync.config</c>).</summary>
+    /// <summary>Pauses or resumes the session user's periodic synchronization (<c>~/.config/kazoos/sync.config</c>).</summary>
     /// <param name="paused">Whether to pause.</param>
     /// <param name="cancellationToken">Cancels the write.</param>
     /// <exception cref="KazoUnauthorizedAccessException">This app lacks <c>server.connection.manage</c>.</exception>

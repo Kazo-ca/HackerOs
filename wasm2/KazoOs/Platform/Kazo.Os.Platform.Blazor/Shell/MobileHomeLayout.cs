@@ -17,8 +17,8 @@ internal sealed class MobileHomeLayout
     internal static MobileHomeLayout Default()
     {
         MobileHomeLayout layout = new();
-        layout.Pages.Add(["org.hackeros.file-explorer", "org.hackeros.text-editor", "org.hackeros.settings"]);
-        layout.Dock.AddRange(["org.hackeros.browser", "org.hackeros.terminal", "org.hackeros.file-explorer", "org.hackeros.settings"]);
+        layout.Pages.Add(["org.kazoos.file-explorer", "org.kazoos.text-editor", "org.kazoos.settings"]);
+        layout.Dock.AddRange(["org.kazoos.browser", "org.kazoos.terminal", "org.kazoos.file-explorer", "org.kazoos.settings"]);
         return layout;
     }
 

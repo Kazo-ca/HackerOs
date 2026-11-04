@@ -60,7 +60,7 @@ internal static class CommandText
 {
     /// <summary>
     /// The English reasons of <see cref="ShellErrorText.Describe(Exception)"/> (the SDK's one
-    /// mapping from a <c>Hack*</c> exception to an <c>errno</c> text), so they translate without
+    /// mapping from a <c>Kazo*</c> exception to an <c>errno</c> text), so they translate without
     /// a second copy of that mapping.
     /// </summary>
     private static readonly Dictionary<string, Errno> s_englishReasons = new(StringComparer.Ordinal)

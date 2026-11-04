@@ -4,13 +4,13 @@
     Kazo.Os.Templates (ADR 0098 §6): the dotnet new templates of Kazo OS, packed locally by
     build/pack-local.sh with every other package:
 
-      hackeros-window    window app (Blazor component over WindowAppBase)
-      hackeros-command   terminal command (TerminalAppBase)
-      hackeros-service   background service started at login (ServiceAppBase)
-      hackeros-site      ASP.Hack site (WebAppDefinition)
-      hackeros-host      Blazor WebAssembly host running Kazo.Os.Ecosystem.Host with the base apps
-      hackeros-solution  a whole app repository (ADR 0176, ADR 0207): app, host, tests, Kazo OS
-                         submodule (sources in Debug, packages in Release), CI and the Hack Store
+      kazoos-window    window app (Blazor component over WindowAppBase)
+      kazoos-command   terminal command (TerminalAppBase)
+      kazoos-service   background service started at login (ServiceAppBase)
+      kazoos-site      ASP.Kazo site (WebAppDefinition)
+      kazoos-host      Blazor WebAssembly host running Kazo.Os.Ecosystem.Host with the base apps
+      kazoos-solution  a whole app repository (ADR 0176, ADR 0207): app, host, tests, Kazo OS
+                         submodule (sources in Debug, packages in Release), CI and the Kazo OS Store
                          publishing workflow. Its projects take $(KazoOsVersion) from the submodule.
 
     Each template has .template.config/ide.host.json (icon, parameter labels) for Visual Studio and
@@ -28,8 +28,8 @@
     <TargetFramework>net10.0</TargetFramework>
     <PackageId>Kazo.Os.Templates</PackageId>
     <PackageType>Template</PackageType>
-    <Description>dotnet new templates for Kazo OS: window app, terminal command, service, ASP.Hack site, host and app repository solution.</Description>
-    <PackageTags>hackeros;dotnet-new;templates</PackageTags>
+    <Description>dotnet new templates for Kazo OS: window app, terminal command, service, ASP.Kazo site, host and app repository solution.</Description>
+    <PackageTags>kazoos;dotnet-new;templates</PackageTags>
     <EnableDefaultItems>false</EnableDefaultItems>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <IncludeSymbols>false</IncludeSymbols>

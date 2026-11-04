@@ -11,13 +11,13 @@ public sealed class WebSiteStoreTests
 {
     private static KazoWebSiteDeclaration Declaration(string name, bool enabled = true, params string[] bindings) =>
         KazoWebSiteFile.Parse(
-            $"/home/alice/.config/hackweb/sites/{name}.site",
+            $"/home/alice/.config/kazoweb/sites/{name}.site",
             KazoWebSiteFile.Serialize(new KazoWebSite { Name = name, Root = "/home/alice/" + name, Bindings = bindings, Enabled = enabled }),
             KazoWebSiteScope.User,
             "alice");
 
     [Fact]
-    public void State_follows_the_sockets_hackwebd_owns()
+    public void State_follows_the_sockets_kazowebd_owns()
     {
         KazoWebSiteDeclaration site = Declaration("docs", true, "http://docs.hack:8080/", "http://localhost:8081/");
         HashSet<string> none = [];
@@ -53,6 +53,6 @@ public sealed class WebSiteStoreTests
 
         Assert.Equal("2026/10/16 09:05:07 [error] 42#0: docs: open() failed", KazoWebdLog.FormatError("error", "docs", "open() failed", at, 42));
         Assert.Equal("2026/10/16 09:05:07 [notice] 42#0: exiting", KazoWebdLog.FormatError("notice", null, "exiting", at, 42));
-        Assert.Equal("/var/log/hackweb/docs.access.log", KazoWebdLog.AccessLogPath("docs"));
+        Assert.Equal("/var/log/kazoweb/docs.access.log", KazoWebdLog.AccessLogPath("docs"));
     }
 }

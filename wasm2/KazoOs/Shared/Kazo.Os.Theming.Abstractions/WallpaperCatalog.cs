@@ -48,10 +48,10 @@ public static class WallpaperCatalog
     public const string AssetDirectory = "_content/Kazo.Os.Theming.Blazor/wallpapers";
 
     /// <summary>Folder of the wallpapers an administrator installs for every user.</summary>
-    public const string SystemDirectory = "/usr/share/hackeros/wallpapers";
+    public const string SystemDirectory = "/usr/share/kazoos/wallpapers";
 
     /// <summary>Folder of the theme packs installed for every user (ADR 0190 §2).</summary>
-    public const string SystemThemePacksDirectory = "/usr/share/hackeros/theme-packs";
+    public const string SystemThemePacksDirectory = "/usr/share/kazoos/theme-packs";
 
     /// <summary>Sub-folder of a theme pack that holds its wallpapers (ADR 0190 §1).</summary>
     public const string PackWallpapersFolder = "wallpapers";
@@ -73,20 +73,20 @@ public static class WallpaperCatalog
     /// <summary>Gets every <c>wallpaperFit</c> value, in display order.</summary>
     public static IReadOnlyList<string> FitValues { get; } = [.. Enum.GetValues<WallpaperFit>().Select(FormatFit)];
 
-    /// <summary>Gets the folder of a user's own wallpaper library: <c>~/.local/share/hackeros/wallpapers</c>.</summary>
+    /// <summary>Gets the folder of a user's own wallpaper library: <c>~/.local/share/kazoos/wallpapers</c>.</summary>
     /// <param name="homeDirectory">The user's home, such as <c>/home/alice</c>.</param>
     public static string GetUserDirectory(string homeDirectory)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(homeDirectory);
-        return $"{homeDirectory.TrimEnd('/')}/.local/share/hackeros/wallpapers";
+        return $"{homeDirectory.TrimEnd('/')}/.local/share/kazoos/wallpapers";
     }
 
-    /// <summary>Gets the folder of a user's own theme packs: <c>~/.local/share/hackeros/theme-packs</c> (ADR 0190 §2).</summary>
+    /// <summary>Gets the folder of a user's own theme packs: <c>~/.local/share/kazoos/theme-packs</c> (ADR 0190 §2).</summary>
     /// <param name="homeDirectory">The user's home.</param>
     public static string GetUserThemePacksDirectory(string homeDirectory)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(homeDirectory);
-        return $"{homeDirectory.TrimEnd('/')}/.local/share/hackeros/theme-packs";
+        return $"{homeDirectory.TrimEnd('/')}/.local/share/kazoos/theme-packs";
     }
 
     /// <summary>Finds a built-in wallpaper from its <c>builtin:&lt;id&gt;</c> value.</summary>

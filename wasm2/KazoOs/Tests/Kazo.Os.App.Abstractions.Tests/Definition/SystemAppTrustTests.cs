@@ -11,7 +11,7 @@ namespace Kazo.Os.App.Abstractions.Tests.Definition;
 /// </summary>
 public sealed class SystemAppTrustTests
 {
-    private const string ManifestWithSystemClaim = """{"schemaVersion":1,"id":"org.hackeros.tests.a","name":"a","version":"1.0.0","publisherId":"pub.local","description":"a","kind":"window","entryPoint":{"assembly":"A.dll","type":"A.W"},"sdkCompatibility":{"minimumVersion":"1.0.0"},"presentation":{"category":"utilities","launchVisibility":"visible","iconAssetPaths":[]},"resources":{"baselineCpuWeight":0,"burstCpuWeight":0,"baselineMemoryWeight":0,"burstMemoryWeight":0,"baselineStorageIoWeight":0,"burstStorageIoWeight":0,"baselineNetworkIoWeight":0,"burstNetworkIoWeight":0},"isSystemApp":true}""";
+    private const string ManifestWithSystemClaim = """{"schemaVersion":1,"id":"org.kazoos.tests.a","name":"a","version":"1.0.0","publisherId":"pub.local","description":"a","kind":"window","entryPoint":{"assembly":"A.dll","type":"A.W"},"sdkCompatibility":{"minimumVersion":"1.0.0"},"presentation":{"category":"utilities","launchVisibility":"visible","iconAssetPaths":[]},"resources":{"baselineCpuWeight":0,"burstCpuWeight":0,"baselineMemoryWeight":0,"burstMemoryWeight":0,"baselineStorageIoWeight":0,"burstStorageIoWeight":0,"baselineNetworkIoWeight":0,"burstNetworkIoWeight":0},"isSystemApp":true}""";
 
     [Theory]
     [InlineData(typeof(AppDefinition))]

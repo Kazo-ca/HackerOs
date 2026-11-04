@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Dirname;
 public sealed class DirnameApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.dirname";
+    public override string Id => "org.kazoos.commands.dirname";
 
     /// <inheritdoc />
     public override string Name => "dirname";
@@ -22,7 +22,7 @@ public sealed class DirnameApp : AppDefinition
     public override Type EntryPoint => typeof(DirnameCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Strip the last component from file names";

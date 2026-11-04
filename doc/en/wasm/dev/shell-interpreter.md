@@ -17,9 +17,9 @@ compound commands, functions and all POSIX expansions, launches each command as
 a child process of the shell and displays the output as it is produced.
 
 ```text
-alice@hackeros:~$ for f in *.log; do n=$(grep -c ERROR "$f"); [ "$n" -gt 0 ] && echo "$f: $n"; done | sort -t: -k2 -n
-alice@hackeros:~$ ./deploy.sh web db || echo "échec : $?" >&2
-alice@hackeros:~$ text-editor notes.txt &
+alice@kazoos:~$ for f in *.log; do n=$(grep -c ERROR "$f"); [ "$n" -gt 0 ] && echo "$f: $n"; done | sort -t: -k2 -n
+alice@kazoos:~$ ./deploy.sh web db || echo "échec : $?" >&2
+alice@kazoos:~$ text-editor notes.txt &
 [1] 214
 ```
 
@@ -47,7 +47,7 @@ Terminal side (`Shared/Kazo.Os.AppSdk.Terminal/`):
 
 | Type | Role |
 |---|---|
-| `TerminalPanel` | Line discipline and display in an xterm.js terminal ([`terminal-emulator.md`](terminal-emulator.md), ADR 0061). Starts its shell with `KazoShell.StartAsync`; each line goes through `IHackShell.ExecuteAsync`. |
+| `TerminalPanel` | Line discipline and display in an xterm.js terminal ([`terminal-emulator.md`](terminal-emulator.md), ADR 0061). Starts its shell with `KazoShell.StartAsync`; each line goes through `IKazoShell.ExecuteAsync`. |
 | `TerminalInputReader` | Standard input of the current line (ADR 0064 §6): tty in canonical mode, Ctrl+D = end of input, unread input handed back to the prompt. |
 | `TerminalOutputWriter` | `TextWriter` that pushes each written chunk to the terminal. |
 
@@ -115,7 +115,7 @@ Just before launching each simple command, in POSIX order:
 
 **Aliases**: for a typed line (not in a script), if the first word is a simple
 unquoted word that is not a function, the shell looks for `nom=valeur` in
-`~/.hackeros/aliases`; the value must be a simple command.
+`~/.kazoos/aliases`; the value must be a simple command.
 
 ### Variables
 
@@ -310,4 +310,4 @@ and `ErrorCode` = the error's code).
 - [x] ADR 0064: jobs (`&`, `$!`, `jobs`, `kill %n`, `wait`, `fg`).
 - [x] ADR 0064: windowed apps by their short name, `KazoConsole`, waiting for the window to close.
 - [x] ADR 0064: terminal standard input (`TerminalInputReader`).
-- [x] ADR 0064: continuation prompt `>` for an unfinished command (`IHackShell.NeedsMoreInput`).
+- [x] ADR 0064: continuation prompt `>` for an unfinished command (`IKazoShell.NeedsMoreInput`).

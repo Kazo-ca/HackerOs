@@ -28,7 +28,7 @@ public sealed class ThemeEditorDocument
     public ThemeEditorDocument(IStringLocalizer? text = null)
     {
         _text = text ?? KazoLocalization.GetLocalizer<Strings>();
-        Reset(WellKnownThemeIds.HackerOs);
+        Reset(WellKnownThemeIds.KazoOs);
         _savedSnapshot = Snapshot();
     }
 
@@ -50,7 +50,7 @@ public sealed class ThemeEditorDocument
     public string Id { get; private set; } = string.Empty;
 
     /// <summary>Gets or sets the built-in base theme id.</summary>
-    public string BaseThemeId { get; set; } = WellKnownThemeIds.HackerOs;
+    public string BaseThemeId { get; set; } = WellKnownThemeIds.KazoOs;
 
     /// <summary>Gets or sets whether the theme is offered on the desktop.</summary>
     public bool ForDesktop { get; set; } = true;

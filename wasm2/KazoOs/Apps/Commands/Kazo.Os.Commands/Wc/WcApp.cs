@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Wc;
 public sealed class WcApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.wc";
+    public override string Id => "org.kazoos.commands.wc";
 
     /// <inheritdoc />
     public override string Name => "wc";
@@ -22,7 +22,7 @@ public sealed class WcApp : AppDefinition
     public override Type EntryPoint => typeof(WcCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Print newline, word, and byte counts for files";

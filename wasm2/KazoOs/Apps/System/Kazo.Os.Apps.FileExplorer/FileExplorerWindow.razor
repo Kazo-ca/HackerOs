@@ -22,14 +22,14 @@
 @inject IJSRuntime JSRuntime
 
 @*
-    The File Explorer's window: the OS file control (KazoFileView, contract hackeros.file-view) that this
+    The File Explorer's window: the OS file control (KazoFileView, contract kazoos.file-view) that this
     same app provides to every app (ExplorerFileView, ADR 0148, ADR 0155), framed by the chrome the
     control deliberately doesn't own: toolbar, address bar, search box, view-mode toggle, the "Places"
     sidebar with the Trash view (TrashView, ADR 0052) and the status bar.
     The control does by itself the listing, selection, rename in place, the trash and permanent deletion,
     the session clipboard, drag and drop with the "Replace / Keep both / Skip" dialog, opening with the
     default app or "Open with", and the file menus of the OS (plan §7); the toolbar runs its commands
-    (IHackFileView.ExecuteAsync), so a button and a menu entry do the same thing. The window keeps what
+    (IKazoFileView.ExecuteAsync), so a button and a menu entry do the same thing. The window keeps what
     only the explorer does: New Folder/New File by name, upload, download, compress and extract, the
     drop on the Trash place, and two entries of its own in the file menus ("UnZip Here…" on a .zip,
     "Publish as a web site…" on a folder) until apps register theirs (chantier 4, ADR 0151).
@@ -202,7 +202,7 @@
 
 @code {
     private protected FileExplorerState _state = default!;
-    private protected IHackFileView? _files;
+    private protected IKazoFileView? _files;
     private protected VirtualPath _initialDirectory;
     private protected string _addressInput = string.Empty;
     /// <summary>The error whose message box is open, so the same failure reported twice opens one box.</summary>
@@ -385,7 +385,7 @@
     /// The control is ready: the breadcrumb and the Places drop zones need its view, so render them now,
     /// and select the <c>--select=</c> item when the folder is already listed.
     /// </summary>
-    private protected async Task OnControllerChangedAsync(IHackFileView? files)
+    private protected async Task OnControllerChangedAsync(IKazoFileView? files)
     {
         if (_files is not null)
         {

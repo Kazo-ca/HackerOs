@@ -45,7 +45,7 @@ public sealed class HtmlPageComposerTests
         Assert.Equal(Page.AbsoluteUri, head[1].GetAttribute("href"));
         Assert.Equal("Content-Security-Policy", head[2].GetAttribute("http-equiv"));
         Assert.Contains("connect-src 'none'", head[2].GetAttribute("content"));
-        Assert.True(head[3].HasAttribute("data-hackeros-bridge"));
+        Assert.True(head[3].HasAttribute("data-kazoos-bridge"));
         Assert.Contains("\"token\":\"t0k3n\"", head[3].TextContent);
         Assert.Equal("Docs", page.Title);
         Assert.Equal("Hi", document.QuerySelector("p")!.TextContent);
@@ -145,7 +145,7 @@ public sealed class HtmlPageComposerTests
 
         var document = Parse(page.Html);
         Assert.Null(document.QuerySelector("meta[http-equiv=refresh]"));
-        Assert.Contains("\"refresh\":{\"seconds\":3,\"url\":\"https://intranet.hack/next\"}", document.QuerySelector("script[data-hackeros-bridge]")!.TextContent);
+        Assert.Contains("\"refresh\":{\"seconds\":3,\"url\":\"https://intranet.hack/next\"}", document.QuerySelector("script[data-kazoos-bridge]")!.TextContent);
     }
 
     [Fact]

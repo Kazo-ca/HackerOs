@@ -107,9 +107,9 @@ reserved to root, keeps everything.
 | --- | --- |
 | File | `~/.local/share/keyrings/login.keyring` (`0600`, folder `0700`) |
 | Encryption | AES-256-GCM, fresh 12-byte nonce at each write |
-| Key | Random 32-byte master key, wrapped (AES-256-GCM) in slots: one password slot (PBKDF2-SHA-256, 210,000 iterations, 16-byte salt) and one slot per passkey PRF (SHA-256 of `hackeros-keyring-prf-v1` and the PRF output, ADR 0168) |
+| Key | Random 32-byte master key, wrapped (AES-256-GCM) in slots: one password slot (PBKDF2-SHA-256, 210,000 iterations, 16-byte salt) and one slot per passkey PRF (SHA-256 of `kazoos-keyring-prf-v1` and the PRF output, ADR 0168) |
 | Engine | Web Crypto (`cryptoHasher.js`, `WebCryptoKeyringCipher`) in the host, `ManagedKeyringCipher` (.NET) in tests |
-| Format | JSON `hackeros-keyring` v2: `cipher`, `slots` (`kind` `password` with `kdf`, `iterations`, `salt`; or `passkey` with `credentialId`; then `nonce`, `wrappedKey`), `nonce`, `ciphertext` (base64). A v1 file (entries sealed directly under the password key) is read and rewritten as v2 at the next password login (`keyring.upgrade`) |
+| Format | JSON `kazoos-keyring` v2: `cipher`, `slots` (`kind` `password` with `kdf`, `iterations`, `salt`; or `passkey` with `credentialId`; then `nonce`, `wrappedKey`), `nonce`, `ciphertext` (base64). A v1 file (entries sealed directly under the password key) is read and rewritten as v2 at the next password login (`keyring.upgrade`) |
 
 ### Lifecycle (`UserKeyringService`)
 
@@ -176,7 +176,7 @@ a line is queued for the single log writer (ADR 0045) to
 `LogFileTarget.AuditLog`: `/var/log/audit.log`, `0600`, rotation 1 MiB × 5.
 
 ```
-type=PATH msg=audit(1792218000.123:42): op=write path="/etc/hosts" uid=0 auid=1000 pid=231 comm="nano" app="org.hackeros.commands.nano" res=success UID="root" AUID="alice"
+type=PATH msg=audit(1792218000.123:42): op=write path="/etc/hosts" uid=0 auid=1000 pid=231 comm="nano" app="org.kazoos.commands.nano" res=success UID="root" AUID="alice"
 ```
 
 - `uid`: the identity that writes (`root` for a system operation or one elevated by
@@ -192,7 +192,7 @@ type=PATH msg=audit(1792218000.123:42): op=write path="/etc/hosts" uid=0 auid=10
 
 ### Reading
 
-- **`ausearch`** (`org.hackeros.commands.ausearch`, with `sudo`): `-f path`
+- **`ausearch`** (`org.kazoos.commands.ausearch`, with `sudo`): `-f path`
   (the path, a file below it, or a file name), `-ua`, `-ui`, `-ul`
   (user, `uid`, `auid`), `-c comm`, `--success yes|no` (`-sv`),
   `-if file`, `-i` (accepted). Reads the `.5` to `.1` archives then the log;

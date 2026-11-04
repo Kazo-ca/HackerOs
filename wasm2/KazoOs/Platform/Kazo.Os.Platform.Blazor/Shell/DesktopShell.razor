@@ -192,7 +192,7 @@
             : Task.CompletedTask;
 
     /// <summary>The Settings app, opened from the server icon's panel.</summary>
-    private const string SettingsAppId = "org.hackeros.settings";
+    private const string SettingsAppId = "org.kazoos.settings";
 
     [Parameter]
     public EventCallback OnLoggedOut { get; set; }
@@ -581,7 +581,7 @@
 
         // ADR 0186 §4.5: the sign-in notification of unseen changes.
         _ = PostWhatsNewAsync();
-        // ADR 0212 §5: the Hack Store's update check; a notification shows what it finds.
+        // ADR 0212 §5: the Kazo OS Store's update check; a notification shows what it finds.
         _appUpdates = new AppUpdateAttention(Services);
         _appUpdates.Start();
         _taskbarMenus = new TaskbarContextMenus(

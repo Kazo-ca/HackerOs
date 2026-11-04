@@ -18,9 +18,9 @@ les expansions POSIX, lance chaque commande comme processus enfant du shell et
 affiche la sortie au fil de l'eau.
 
 ```text
-alice@hackeros:~$ for f in *.log; do n=$(grep -c ERROR "$f"); [ "$n" -gt 0 ] && echo "$f: $n"; done | sort -t: -k2 -n
-alice@hackeros:~$ ./deploy.sh web db || echo "échec : $?" >&2
-alice@hackeros:~$ text-editor notes.txt &
+alice@kazoos:~$ for f in *.log; do n=$(grep -c ERROR "$f"); [ "$n" -gt 0 ] && echo "$f: $n"; done | sort -t: -k2 -n
+alice@kazoos:~$ ./deploy.sh web db || echo "échec : $?" >&2
+alice@kazoos:~$ text-editor notes.txt &
 [1] 214
 ```
 
@@ -48,7 +48,7 @@ Côté terminal (`Shared/Kazo.Os.AppSdk.Terminal/`) :
 
 | Type | Rôle |
 |---|---|
-| `TerminalPanel` | Discipline de ligne et affichage dans un terminal xterm.js ([`terminal-emulator.md`](terminal-emulator.md), ADR 0061). Démarre son shell par `KazoShell.StartAsync` ; chaque ligne passe par `IHackShell.ExecuteAsync`. |
+| `TerminalPanel` | Discipline de ligne et affichage dans un terminal xterm.js ([`terminal-emulator.md`](terminal-emulator.md), ADR 0061). Démarre son shell par `KazoShell.StartAsync` ; chaque ligne passe par `IKazoShell.ExecuteAsync`. |
 | `TerminalInputReader` | Entrée standard de la ligne en cours (ADR 0064 §6) : tty en mode canonique, Ctrl+D = fin d'entrée, entrée non lue rendue à l'invite. |
 | `TerminalOutputWriter` | `TextWriter` qui pousse chaque morceau écrit vers le terminal. |
 
@@ -117,7 +117,7 @@ Juste avant de lancer chaque commande simple, dans l'ordre POSIX :
 
 **Alias** : pour une ligne tapée (pas dans un script), si le premier mot est un
 mot simple non quoté qui n'est pas une fonction, le shell cherche `nom=valeur`
-dans `~/.hackeros/aliases` ; la valeur doit être une commande simple.
+dans `~/.kazoos/aliases` ; la valeur doit être une commande simple.
 
 ### Variables
 
@@ -312,4 +312,4 @@ sinon `Dispatched` avec le code de sortie (une erreur de syntaxe donne
 - [x] ADR 0064 : jobs (`&`, `$!`, `jobs`, `kill %n`, `wait`, `fg`).
 - [x] ADR 0064 : apps fenêtrées par leur nom court, `KazoConsole`, attente de la fermeture.
 - [x] ADR 0064 : entrée standard du terminal (`TerminalInputReader`).
-- [x] ADR 0064 : invite de continuation `>` pour une commande inachevée (`IHackShell.NeedsMoreInput`).
+- [x] ADR 0064 : invite de continuation `>` pour une commande inachevée (`IKazoShell.NeedsMoreInput`).

@@ -20,7 +20,7 @@ namespace Kazo.Os.Platform.Blazor.Tests.Dialogs;
 
 /// <summary>
 /// ADR 0157: the Open / Save / Choose folder dialogs show the OS file control
-/// (<c>hackeros.file-view</c>) of whichever app provides it, with the requesting app's rights, and the
+/// (<c>kazoos.file-view</c>) of whichever app provides it, with the requesting app's rights, and the
 /// platform's own browser when no app provides it.
 /// </summary>
 public sealed class FileDialogBrowserTests
@@ -256,7 +256,7 @@ public sealed class FileDialogBrowserTests
             RecordingHost host = new(provided);
             ServiceCollection services = new();
             services.AddEnglishLocalizer();
-            services.AddSingleton<IHackComponentHost>(host);
+            services.AddSingleton<IKazoComponentHost>(host);
             services.AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance);
             services.AddSingleton(typeof(ILogger<>), typeof(NullLogger<>));
             ServiceProvider provider = services.BuildServiceProvider();
@@ -282,8 +282,8 @@ public sealed class FileDialogBrowserTests
         }
     }
 
-    /// <summary>Resolves <c>hackeros.file-view</c> to <see cref="FakeFileView"/>, or to nothing.</summary>
-    private sealed class RecordingHost(bool provided) : IHackComponentHost
+    /// <summary>Resolves <c>kazoos.file-view</c> to <see cref="FakeFileView"/>, or to nothing.</summary>
+    private sealed class RecordingHost(bool provided) : IKazoComponentHost
     {
         public string? Contract { get; private set; }
 
@@ -293,16 +293,16 @@ public sealed class FileDialogBrowserTests
         {
             Contract = contract;
             return Task.FromResult(provided
-                ? KazoComponentResolution.Resolved(contract, typeof(FakeFileView), "org.hackeros.file-explorer")
+                ? KazoComponentResolution.Resolved(contract, typeof(FakeFileView), "org.kazoos.file-explorer")
                 : KazoComponentResolution.Unavailable(contract, $"No installed app provides '{contract}'."));
         }
     }
 
     /// <summary>A provider of the file control that remembers what the dialog handed it.</summary>
-    public sealed class FakeFileView : KazoEmbeddableComponent, IHackFileView
+    public sealed class FakeFileView : KazoEmbeddableComponent, IKazoFileView
     {
         [Inject]
-        private IHackComponentHost Host { get; set; } = default!;
+        private IKazoComponentHost Host { get; set; } = default!;
 
         [Parameter] public string InitialDirectory { get; set; } = "/";
         [Parameter] public KazoFileViewMode Mode { get; set; }

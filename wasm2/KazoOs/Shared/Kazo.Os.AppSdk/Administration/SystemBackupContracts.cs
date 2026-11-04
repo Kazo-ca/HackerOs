@@ -42,7 +42,7 @@ public enum KazoBackupRestoreMode
 }
 
 /// <summary>One backup archive.</summary>
-/// <param name="FileName">Name of the archive on the host, such as <c>hackeros-2026-10-17T0712Z.hosbak</c>.</param>
+/// <param name="FileName">Name of the archive on the host, such as <c>kazoos-2026-10-17T0712Z.hosbak</c>.</param>
 /// <param name="SizeBytes">Size of the archive, compressed.</param>
 /// <param name="RecordCount">Database records it holds.</param>
 /// <param name="CreatedAtUtc">When it was exported.</param>

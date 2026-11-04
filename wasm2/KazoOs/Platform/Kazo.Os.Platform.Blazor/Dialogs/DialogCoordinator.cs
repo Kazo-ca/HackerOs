@@ -57,7 +57,7 @@ public sealed record AppChooserPresentation(
     : DialogPresentation(Id, AppId, AppInstanceId, ProcessId, UserId);
 
 /// <summary>
-/// Describes an active dialog of the file dialogs contract (<c>hackeros.file-dialogs</c>, ADR 0155 §5):
+/// Describes an active dialog of the file dialogs contract (<c>kazoos.file-dialogs</c>, ADR 0155 §5):
 /// the OS shows the provider's component, modal to the requesting window and with its context.
 /// </summary>
 /// <param name="Id">The request id.</param>

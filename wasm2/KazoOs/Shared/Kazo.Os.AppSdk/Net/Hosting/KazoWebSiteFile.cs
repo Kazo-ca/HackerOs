@@ -8,13 +8,13 @@ namespace Kazo.Os.AppSdk.Net.Hosting;
 
 /// <summary>
 /// The <c>.site</c> file format of hosted static sites (ADR 0077, section 1): where the files live,
-/// how they are read, written and validated. Shared by <c>hackwebd</c>, Web Server Manager and the
+/// how they are read, written and validated. Shared by <c>kazowebd</c>, Web Server Manager and the
 /// OS's resolver (which publishes the bound names), so they all agree on what a valid site is.
 /// </summary>
 public static class KazoWebSiteFile
 {
     /// <summary>Directory of the sites an administrator declares.</summary>
-    public const string SystemSitesDirectory = "/etc/hackweb/sites";
+    public const string SystemSitesDirectory = "/etc/kazoweb/sites";
 
     /// <summary>Extension of a site file.</summary>
     public const string Extension = ".site";
@@ -22,12 +22,12 @@ public static class KazoWebSiteFile
     /// <summary>Longest site name.</summary>
     public const int MaxNameLength = 64;
 
-    /// <summary>Gets the directory of the sites a user declares: <c>~/.config/hackweb/sites</c>.</summary>
+    /// <summary>Gets the directory of the sites a user declares: <c>~/.config/kazoweb/sites</c>.</summary>
     /// <param name="homeDirectory">The user's home, such as <c>/home/benoit</c>.</param>
     public static string GetUserSitesDirectory(string homeDirectory)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(homeDirectory);
-        return $"{homeDirectory.TrimEnd('/')}/.config/hackweb/sites";
+        return $"{homeDirectory.TrimEnd('/')}/.config/kazoweb/sites";
     }
 
     /// <summary>Gets the path of the file of site <paramref name="name"/> in <paramref name="directory"/>.</summary>

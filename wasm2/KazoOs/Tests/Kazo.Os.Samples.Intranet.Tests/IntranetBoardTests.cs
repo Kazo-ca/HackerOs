@@ -43,7 +43,7 @@ public sealed class IntranetBoardTests
 
         Assert.Equal(200, boot.StatusCode);
         using JsonDocument json = JsonDocument.Parse(boot.ReadAsString());
-        Assert.Equal("org.hackeros.samples.intranet", json.RootElement.GetProperty("appId").GetString());
+        Assert.Equal("org.kazoos.samples.intranet", json.RootElement.GetProperty("appId").GetString());
         Assert.Equal(typeof(BoardApp).FullName, json.RootElement.GetProperty("rootComponent").GetString());
     }
 

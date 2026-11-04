@@ -35,7 +35,7 @@ public sealed class OneShotElevationGrantSet
     /// <summary>
     /// Refuses every one-shot approval of <paramref name="capability"/> for this instance. Set at
     /// launch for the dangerous capabilities of a non-system app when
-    /// <c>/etc/hackeros/security.config</c> says <c>dangerousCapabilities=block</c> (ADR 0049
+    /// <c>/etc/kazoos/security.config</c> says <c>dangerousCapabilities=block</c> (ADR 0049
     /// section 3); <c>sudo</c> is not concerned.
     /// </summary>
     /// <param name="capability">Capability whose one-shot approval is refused.</param>

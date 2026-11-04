@@ -11,7 +11,7 @@ Work item `exec/8-server-wasm` (`exec` series), ADRs
 
 - `Kazo.Os.Server` serves **the same OS as the PWA**: the published files of
   `OS/Kazo.Os.Ecosystem`, as is. The OS runs in the browser in
-  WebAssembly, with its Web Workers, its metrics and `/proc/hackeros`. The
+  WebAssembly, with its Web Workers, its metrics and `/proc/kazoos`. The
   server keeps only its API (accounts, synchronization, network relay,
   administration).
 - An OS served by a server **connects to it on its own**, without asking, and an
@@ -24,9 +24,9 @@ Work item `exec/8-server-wasm` (`exec` series), ADRs
  Navigateur                                        Kazo.Os.Server
  ──────────                                        ───────────────
  index.html, _framework/, apps  ◄── MapStaticAssets ── fichiers publiés de l'Ecosystem
- GET hackeros-host.json         ◄── middleware ──────── {"isServer":true, ...}
+ GET kazoos-host.json         ◄── middleware ──────── {"isServer":true, ...}
  ServerPresenceService
-   GET /api/hackeros/host-info  ◄── VersionEndpoints ── version de l'API
+   GET /api/kazoos/host-info  ◄── VersionEndpoints ── version de l'API
    comptes, synchro, relais     ◄── API (HTTP, WebSocket)
  ServerStatusIndicator (barre des tâches, zone de notification)
 ```
@@ -35,9 +35,9 @@ Work item `exec/8-server-wasm` (`exec` series), ADRs
 |---|---|
 | Server pipeline | `Server/Kazo.Os.Server/Program.cs` |
 | Rewriting pages to `index.html` | `Server/Kazo.Os.Server/Endpoints/OsPageRewrite.cs` |
-| `host-info` and `hackeros-host.json` | `Server/Kazo.Os.Server/Endpoints/VersionEndpoints.cs` |
+| `host-info` and `kazoos-host.json` | `Server/Kazo.Os.Server/Endpoints/VersionEndpoints.cs` |
 | Contract | `Server/Kazo.Os.Server.Contracts/Hosting/HostInfoContracts.cs` |
-| PWA "no server" file | `OS/Kazo.Os.Ecosystem/wwwroot/hackeros-host.json` |
+| PWA "no server" file | `OS/Kazo.Os.Ecosystem/wwwroot/kazoos-host.json` |
 | Detection and verification | `Platform/Kazo.Os.Platform.Core/ServerConnection/HostInfoClient.cs` |
 | State and retry | `Platform/Kazo.Os.Platform.Core/ServerConnection/ServerPresenceService.cs` |
 | Icon and panel | `Platform/Kazo.Os.Platform.Blazor/Shell/ServerStatusIndicator.razor` (`.razor.cs`, `.razor.css`) |
@@ -53,7 +53,7 @@ dotnet run --project Server/Kazo.Os.Server   # http://localhost:5000 par défaut
 The browser opens the server's address and receives the OS. A middleware placed
 right after `builder.Build()` adds `Cross-Origin-Opener-Policy` and
 `Cross-Origin-Embedder-Policy: credentialless` to all responses, according to
-`HackerOs:CrossOriginIsolation` in the server's `appsettings.json` (`auto` by
+`KazoOs:CrossOriginIsolation` in the server's `appsettings.json` (`auto` by
 default; `off` adds nothing): the page is isolated (ADR 0131, 0143). In production,
 `dotnet publish Server/Kazo.Os.Server` copies the Ecosystem files into
 its `wwwroot`. Any page address (`/`, a deep link) receives
@@ -62,19 +62,19 @@ never rewritten.
 
 ## Automatic connection
 
-1. At desktop startup, the OS reads `/etc/hackeros/server.config`. If
+1. At desktop startup, the OS reads `/etc/kazoos/server.config`. If
    `auto-connect` is not `false` (or `no`, `off`, `0`), it reads
-   `hackeros-host.json` on its own origin: the PWA answers "no
+   `kazoos-host.json` on its own origin: the PWA answers "no
    server", `Kazo.Os.Server` answers "server".
 2. The chosen server is the one of the account linked to the device (Settings, ADR
    0028), otherwise the one that served the OS.
-3. The OS calls `GET /api/hackeros/host-info`: a response in API 1.x =
+3. The OS calls `GET /api/kazoos/host-info`: a response in API 1.x =
    connected; another version = **Error**; no response = **Offline**,
    retry after 5, 10, 20, 40 then 60 s. Once connected, it rechecks every
    30 s.
 
 ```ini
-# /etc/hackeros/server.config (facultatif, administrateur)
+# /etc/kazoos/server.config (facultatif, administrateur)
 [server]
 auto-connect=false
 ```
@@ -107,8 +107,8 @@ can no longer log in with a password.
 The server is also published as a self-contained program per system and as a
 Docker image, installed as a service (issue #267, ADR 0191):
 [`installable-server.md`](installable-server.md). It then reads
-`hackeros-server.json` (next to the program, after `appsettings.json`, before
-the `HACKEROS_` variables), links devices with a pairing code and, started as
+`kazoos-server.json` (next to the program, after `appsettings.json`, before
+the `KAZOOS_` variables), links devices with a pairing code and, started as
 a Windows service, uses the program folder as its content root. The published
 server serves `index.html` through a middleware (`UseOsPageFile`), because the
 published static assets manifest does not contain that page
@@ -141,7 +141,7 @@ published static assets manifest does not contain that page
 - [x] Serve the published Ecosystem files from `Kazo.Os.Server`.
 - [x] Remove Interactive Server, direct clients and references to apps.
 - [x] Rewrite OS pages to `index.html` in all environments.
-- [x] `host-info` and `hackeros-host.json` (server and PWA).
+- [x] `host-info` and `kazoos-host.json` (server and PWA).
 - [x] `ServerPresenceService`: detection, verification, retry, `auto-connect`.
 - [x] Icon and panel in the taskbar notification area.
 - [x] Stable client salt and device registered at login.

@@ -69,7 +69,7 @@ public sealed partial class KazoProcess
     /// <summary>Gets the short process name (<c>comm</c>): the last segment of the app id, 15 characters at most.</summary>
     public string ProcessName { get; private set; } = string.Empty;
 
-    /// <summary>Gets the id of the app the process runs (<c>org.hackeros.text-editor</c>).</summary>
+    /// <summary>Gets the id of the app the process runs (<c>org.kazoos.text-editor</c>).</summary>
     public string AppId { get; private set; } = string.Empty;
 
     /// <summary>Gets what kind of app the process runs: window, terminal command or service.</summary>

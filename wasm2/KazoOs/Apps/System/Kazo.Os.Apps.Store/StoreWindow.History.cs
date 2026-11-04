@@ -3,7 +3,7 @@ using Kazo.Os.AppSdk.Blazor;
 namespace Kazo.Os.Apps.Store;
 
 /// <summary>
-/// The mouse's Back button, Alt+← and the phone's Back in the Hack Store (ADR 0220 §4): an app's page goes back
+/// The mouse's Back button, Alt+← and the phone's Back in the Kazo OS Store (ADR 0220 §4): an app's page goes back
 /// to the list it was opened from, a category back to the whole catalog.
 /// </summary>
 public partial class StoreWindow : IAppBackHandler

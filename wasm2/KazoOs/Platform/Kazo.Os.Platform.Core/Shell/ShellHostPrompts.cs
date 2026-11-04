@@ -92,7 +92,7 @@ internal sealed class ShellHostPrompts : IDangerousCapabilityApprovalPrompt
     /// command: a warning banner and the capability list in the terminal, a yes / no / cancel
     /// choice, then an administrator's name and password, like <c>sudo</c>. The prompt decides
     /// nothing: credentials go to <see cref="DangerousCapabilityApprovalRequest.ApproveAsync"/>,
-    /// which verifies them, writes <c>/etc/hackeros/app-permissions.config</c> and logs to
+    /// which verifies them, writes <c>/etc/kazoos/app-permissions.config</c> and logs to
     /// <c>/var/log/auth.log</c>.
     /// </summary>
     public async Task<DangerousCapabilityApprovalOutcome> RequestAsync(

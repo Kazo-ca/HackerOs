@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Diff;
 public sealed class DiffApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.diff";
+    public override string Id => "org.kazoos.commands.diff";
 
     /// <inheritdoc />
     public override string Name => "diff";
@@ -22,7 +22,7 @@ public sealed class DiffApp : AppDefinition
     public override Type EntryPoint => typeof(DiffCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Compare files line by line";

@@ -1,9 +1,9 @@
-# Publishes the app on the hackeros-packages branch of this repository (ADR 0182 §2, ADR 0219 §3), so
-# that "hackpkg install <owner>/<repo>" installs it without the Hack Store.
+# Publishes the app on the kazoos-packages branch of this repository (ADR 0182 §2, ADR 0219 §3), so
+# that "kazopkg install <owner>/<repo>" installs it without the Kazo OS Store.
 #
 # On a tag v<version> (the app's Version in its [AppManifest] class), this workflow:
 #   1. checks the Kazo OS submodule and that the tag is the manifest version;
-#   2. checks out the hackeros-packages branch (an orphan branch the first time), so the versions
+#   2. checks out the kazoos-packages branch (an orphan branch the first time), so the versions
 #      already published stay listed in index.json with their signatures;
 #   3. packs the app there (KazoOsPack); with the HACKEROS_APP_SIGNING_KEY secret (the private key
 #      made by "dotnet build -t:KazoOsKeyGen"), each package gets its ECDSA signature; without it,
@@ -21,12 +21,12 @@ permissions:
   contents: write
 
 concurrency:
-  group: hackeros-packages
+  group: kazoos-packages
   cancel-in-progress: false
 
 env:
   APP_DIRECTORY: src/Kazo.Os.Template.Solution
-  PACKAGES_BRANCH: hackeros-packages
+  PACKAGES_BRANCH: kazoos-packages
 
 jobs:
   publish:
@@ -41,7 +41,7 @@ jobs:
           global-json-file: global.json
 
       - name: Check the Kazo OS submodule
-        run: bash .github/scripts/check-hackeros-submodule.sh
+        run: bash .github/scripts/check-kazoos-submodule.sh
 
       - name: Check out the packages branch
         run: |

@@ -8,7 +8,7 @@ namespace Kazo.Os.AppSdk.Blazor.ContextMenus;
 
 /// <summary>
 /// Declares a context menu in markup (ADR 0150 §4), drawn by the OS (contract
-/// <c>hackeros.context-menu</c>, provided by the platform). It shows nothing where it is written:
+/// <c>kazoos.context-menu</c>, provided by the platform). It shows nothing where it is written:
 /// any element opens it through <c>@attributes="Menus.Attach(Name, item)"</c>.
 /// </summary>
 /// <example>
@@ -23,7 +23,7 @@ namespace Kazo.Os.AppSdk.Blazor.ContextMenus;
 /// &lt;/KazoContextMenu&gt;
 /// </code>
 /// </example>
-public sealed class KazoContextMenu : KazoContractComponent<IHackContextMenu>
+public sealed class KazoContextMenu : KazoContractComponent<IKazoContextMenu>
 {
     private static readonly RenderFragment<string> NothingWhenUnavailable = _ => _ => { };
     private readonly KazoMenuNodeList _nodes = new(depth: 1, isGroup: false);
@@ -101,7 +101,7 @@ public sealed class KazoContextMenu : KazoContractComponent<IHackContextMenu>
 /// action. Prefer <see cref="IsVisible"/> to an <c>@if</c> around it: an entry added after the first
 /// render goes to the end of its level.
 /// </summary>
-public sealed class KazoMenuItem : ComponentBase, IHackMenuNode, IDisposable
+public sealed class KazoMenuItem : ComponentBase, IKazoMenuNode, IDisposable
 {
     private KazoMenuNodeList? _children;
 
@@ -204,7 +204,7 @@ public sealed class KazoMenuItem : ComponentBase, IHackMenuNode, IDisposable
 /// An explicit group of a <see cref="KazoContextMenu"/> (ADR 0150 §2): the OS draws a separator
 /// between two visible groups, never around an empty or hidden one.
 /// </summary>
-public sealed class KazoMenuGroup : ComponentBase, IHackMenuNode, IDisposable
+public sealed class KazoMenuGroup : ComponentBase, IKazoMenuNode, IDisposable
 {
     private KazoMenuNodeList? _items;
 
@@ -259,7 +259,7 @@ public sealed class KazoMenuGroup : ComponentBase, IHackMenuNode, IDisposable
 }
 
 /// <summary>An entry or a group registered with its parent level.</summary>
-internal interface IHackMenuNode;
+internal interface IKazoMenuNode;
 
 /// <summary>
 /// The entries and groups of one menu level, in the order their components first rendered; loose
@@ -267,7 +267,7 @@ internal interface IHackMenuNode;
 /// </summary>
 internal sealed class KazoMenuNodeList(int depth, bool isGroup)
 {
-    private readonly List<IHackMenuNode> _nodes = [];
+    private readonly List<IKazoMenuNode> _nodes = [];
 
     /// <summary>Gets the level: 1 for the menu, 2 for a submenu, 3 for a sub-submenu.</summary>
     public int Depth { get; } = depth;
@@ -278,15 +278,15 @@ internal sealed class KazoMenuNodeList(int depth, bool isGroup)
     /// <summary>Gets the entries of a group's list.</summary>
     public IEnumerable<KazoMenuItem> Items => _nodes.OfType<KazoMenuItem>();
 
-    public void Add(IHackMenuNode node) => _nodes.Add(node);
+    public void Add(IKazoMenuNode node) => _nodes.Add(node);
 
-    public void Remove(IHackMenuNode node) => _nodes.Remove(node);
+    public void Remove(IKazoMenuNode node) => _nodes.Remove(node);
 
     /// <summary>Appends this level's groups to <paramref name="groups"/>.</summary>
     public void AppendTo(IList<KazoMenuGroupDefinition> groups)
     {
         KazoMenuGroupDefinition? loose = null;
-        foreach (IHackMenuNode node in _nodes)
+        foreach (IKazoMenuNode node in _nodes)
         {
             switch (node)
             {

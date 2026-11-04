@@ -68,7 +68,7 @@ first change.
 
 To build an app, a command or a site **outside** this repository, use the
 [Kazo OS app template](https://github.com/Kazo-ca/Os-AppTemplate) and
-[`building-on-hackeros.md`](doc/en/wasm/framework/building-on-hackeros.md).
+[`building-on-kazoos.md`](doc/en/wasm/framework/building-on-kazoos.md).
 
 ## Where the code goes
 

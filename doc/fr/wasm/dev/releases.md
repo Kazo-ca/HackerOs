@@ -53,7 +53,7 @@ WASM* se termine **avec succès** après un push sur `main`, puis :
    déjà, il s'arrête (rien à publier) ;
 2. empaquette avec `build/pack-local.sh --ci` ;
 3. garde uniquement les `Kazo.Os.*.<version>.nupkg` et `.snupkg` ;
-4. publie la PWA (`dotnet publish`) et la zippe en `hackeros-wasm-<version>.zip` ;
+4. publie la PWA (`dotnet publish`) et la zippe en `kazoos-wasm-<version>.zip` ;
 5. pousse les paquets sur nuget.org si c'est configuré (voir plus bas) ;
 6. crée le tag et la GitHub Release : titre `Kazo OS <version>`, notes
    générées par GitHub depuis les PR fusionnées, paquets et zip joints.
@@ -91,12 +91,12 @@ renouveler).
 2. Menu du compte (en haut à droite) ▸ **Trusted Publishing** ▸ **Create**
    (ou *Add new trusted publishing policy*).
 3. Remplir :
-   - *Policy name* : `HackerOs release` ;
+   - *Policy name* : `Kazo OS release` ;
    - *Package owner* : votre compte (ou l'organisation nuget.org qui
      possédera les paquets) ;
    - *Publisher* : **GitHub Actions** ;
    - *Repository owner* : `Kazo-ca` ;
-   - *Repository* : `HackerOs` ;
+   - *Repository* : `Os` ;
    - *Workflow file* : `release.yml` (le nom seul, sans `.github/workflows/`) ;
    - *Environment* : laisser vide.
 4. Dans GitHub : dépôt `Kazo-ca/Os` ▸ **Settings** ▸ **Secrets and
@@ -110,7 +110,7 @@ contre une clé valable une heure.
 ### Option B : clé d'API
 
 1. nuget.org ▸ menu du compte ▸ **API Keys** ▸ **Create**.
-2. *Key name* : `HackerOs GitHub Actions` ; *Expires in* : 365 jours ;
+2. *Key name* : `Kazo OS GitHub Actions` ; *Expires in* : 365 jours ;
    *Select scopes* : **Push** ▸ *Push new packages and package versions* ;
    *Glob pattern* : `Kazo.Os.*`. Créer, puis **Copy**.
 3. GitHub ▸ **Settings** ▸ **Secrets and variables** ▸ **Actions** ▸ onglet
@@ -122,7 +122,7 @@ Si `NUGET_USER` existe, le workflow prend l'option A ; sinon `NUGET_API_KEY` ;
 sans les deux, il publie la Release GitHub seule avec l'avertissement « nuget.org
 publishing is not configured ».
 
-### Facultatif : réserver le préfixe `HackerOs.`
+### Facultatif : réserver le préfixe `Kazo.Os.`
 
 Une réservation de préfixe affiche le badge « vérifié » et empêche un tiers de
 publier un paquet `Kazo.Os.*`. Elle se demande par courriel à
@@ -132,7 +132,7 @@ NuGet), après la première publication.
 ## Vérifier une publication
 
 - **Releases** du dépôt : la Release `Kazo OS <version>`, ses `.nupkg`,
-  `.snupkg` et `hackeros-wasm-<version>.zip`.
+  `.snupkg` et `kazoos-wasm-<version>.zip`.
 - Résumé du job *Release Kazo OS* : la liste des paquets et la ligne
   « NuGet: packages pushed to nuget.org » (ou « not configured »).
 - nuget.org : un paquet récent est indexé en quelques minutes

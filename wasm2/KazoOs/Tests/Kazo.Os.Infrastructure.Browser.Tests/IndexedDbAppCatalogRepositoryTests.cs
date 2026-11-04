@@ -17,7 +17,7 @@ public sealed class IndexedDbAppCatalogRepositoryTests
         AppManifest selectedV1 = LoadCanonicalManifest();
         AppManifest removed = selectedV1 with
         {
-            Id = "org.hackeros.removed",
+            Id = "org.kazoos.removed",
             Name = "Removed App"
         };
         AppManifest selectedV2 = selectedV1 with { Version = "1.1.0", Description = "Updated build snapshot." };

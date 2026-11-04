@@ -13,10 +13,10 @@ namespace Kazo.Os.Apps.Settings;
 /// </summary>
 /// <remarks>
 /// <para>
-/// Each choice is one key of <c>~/.config/hackeros/accessibility.config</c>, written through
+/// Each choice is one key of <c>~/.config/kazoos/accessibility.config</c>, written through
 /// <see cref="KazoSettings.OpenSystemAsync(IAppExecutionContext, string, CancellationToken)"/>; the
 /// shell re-reads the file and applies the change at once, like it does for a theme. The machine's
-/// default (<c>/etc/hackeros/accessibility.config</c>, also used by the sign-in screen) is an
+/// default (<c>/etc/kazoos/accessibility.config</c>, also used by the sign-in screen) is an
 /// administrator's file, edited with <c>sudo nano</c>.
 /// </para>
 /// <para>
@@ -151,7 +151,7 @@ public sealed partial class AccessibilityPanel
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException)
         {
-            ShowError(L["Accessibility.Error.CannotSave", "~/.config/hackeros/" + DocumentFileName, exception.Message]);
+            ShowError(L["Accessibility.Error.CannotSave", "~/.config/kazoos/" + DocumentFileName, exception.Message]);
         }
         finally
         {
@@ -207,7 +207,7 @@ public sealed partial class AccessibilityPanel
         _reducedMotion = _document.Get<string>(ReducedMotionKey);
     }
 
-    /// <summary>An external edit (<c>nano ~/.config/hackeros/accessibility.config</c>) changed the file.</summary>
+    /// <summary>An external edit (<c>nano ~/.config/kazoos/accessibility.config</c>) changed the file.</summary>
     private void OnDocumentChanged(object? sender, KazoSettingsChangedEventArgs args) =>
         _ = InvokeAsync(() =>
         {

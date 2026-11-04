@@ -4,8 +4,8 @@
 
   <PropertyGroup>
     <PackageId>Kazo.Os.Apps.KazoPaint</PackageId>
-    <Description>The base Kazo OS Hack Paint image editor app, to include in an OS host (ProjectReference or PackageReference, optionally IsSystemApp).</Description>
-    <PackageTags>hackeros;app</PackageTags>
+    <Description>The base Kazo OS Kazo Paint image editor app, to include in an OS host (ProjectReference or PackageReference, optionally IsSystemApp).</Description>
+    <PackageTags>kazoos;app</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup>

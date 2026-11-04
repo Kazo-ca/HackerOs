@@ -28,8 +28,8 @@
     /// <inheritdoc />
     protected override void OnInitialized()
     {
-        CreateWindow("10000000-0000-0000-0000-000000000001", "org.hackeros.browser.primary", "Primary", 80, 70);
-        CreateWindow("10000000-0000-0000-0000-000000000002", "org.hackeros.browser.secondary", "Secondary", 520, 110);
+        CreateWindow("10000000-0000-0000-0000-000000000001", "org.kazoos.browser.primary", "Primary", 80, 70);
+        CreateWindow("10000000-0000-0000-0000-000000000002", "org.kazoos.browser.secondary", "Secondary", 520, 110);
     }
 
     private Task Focus(WindowId id) => Apply(new FocusWindowCommand(id));
@@ -49,7 +49,7 @@
 
         _runtime.Apply(new CreateWindowCommand(new WindowRuntimeState(
             ModalId,
-            "org.hackeros.browser.modal",
+            "org.kazoos.browser.modal",
             WindowOwnerId.FromGuid(Guid.Parse("30000000-0000-0000-0000-000000000003")),
             "Primary Modal",
             null,

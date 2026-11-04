@@ -94,7 +94,7 @@ HostExceptionReporter ───────────────────�
 - **Temporary deviation from ADR 0045 §6:** the reader goes through
   `IAppFileSystemGateway` and not `KazoFile`/`KazoFileSystemWatcher`, which
   arrive with the `rebuild/1-file-api` branch (ADR 0043). The switch to
-  `Hack*` will happen once that API is merged; the behavior does not change.
+  `Kazo*` will happen once that API is merged; the behavior does not change.
 
 ## Contract tests
 

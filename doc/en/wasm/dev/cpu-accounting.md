@@ -85,7 +85,7 @@ created: `user + system + idle` always equals the elapsed time.
   `nonvoluntary_ctxt_switches` stays at `0`: nothing is preempted.
 - A slice longer than **50 ms** is a *long task* (`LongTasks:`).
 - A slice longer than `UnresponsiveThresholdMs` (5 s by default,
-  `HackerOs:ResourceAccounting:Cpu:UnresponsiveThresholdMs`) puts the process
+  `KazoOs:ResourceAccounting:Cpu:UnresponsiveThresholdMs`) puts the process
   in **Not responding** (`Responding: 0`); it becomes `1` again as soon as it
   finishes a slice under the threshold, that is, it responds quickly to the
   next event.
@@ -106,7 +106,7 @@ created: `user + system + idle` always equals the elapsed time.
 
 Resolution: in the browser, `Stopwatch.GetTimestamp` reads
 `performance.now()`, rounded to 100 µs, or 5 µs when the page is isolated
-(ADR 0131 §4, ADR 0143 §7); `/proc/hackeros/workers` displays the measured
+(ADR 0131 §4, ADR 0143 §7); `/proc/kazoos/workers` displays the measured
 value (`timer-resolution-us`).
 
 The hot path reads the clock (`Stopwatch.GetTimestamp`), a few `[ThreadStatic]`
@@ -126,7 +126,7 @@ How an app reads these measurements is described in [`../framework/process-resou
 ### Configure
 
 See [`resource-accounting.md`](resource-accounting.md): MSBuild property
-`KazoOsCpuAccounting`, `HackerOs:ResourceAccounting:Cpu` section of the
+`KazoOsCpuAccounting`, `KazoOs:ResourceAccounting:Cpu` section of the
 `appsettings.json` files (`Enabled`, `UnresponsiveThresholdMs`). When off,
 the measurement installs nothing (if memory is off too, no hook) and `/proc`
 returns exactly the files from before phase 5, plus the new simulated `stat`.

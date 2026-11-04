@@ -22,13 +22,13 @@ public interface IOomNotifier
 
 /// <summary>
 /// Posts the OOM killer's notifications to the notification queue, in the session's language
-/// (ADR 0104): "“Hack Paint” was closed: out of memory", and the warning that the page nears the
+/// (ADR 0104): "“Kazo Paint” was closed: out of memory", and the warning that the page nears the
 /// browser's memory limit.
 /// </summary>
 public sealed class NotificationQueueOomNotifier : IOomNotifier
 {
     /// <summary>Source app id of the notifications, the kernel's.</summary>
-    public const string SourceAppId = "org.hackeros.kernel";
+    public const string SourceAppId = "org.kazoos.kernel";
 
     private const double Mebibyte = 1024 * 1024;
 

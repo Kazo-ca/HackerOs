@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 // project, aggregated into this assembly by the build (KazoOsAppHost).
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.AddKazoOsBrowserHost(HostAppCatalog.Load(typeof(Program).Assembly));
-// ADR 0182: apps installed from packages (hackpkg) join the catalog before the OS starts.
+// ADR 0182: apps installed from packages (kazopkg) join the catalog before the OS starts.
 WebAssemblyHost host = builder.Build();
 await host.LoadInstalledAppsAsync();
 await host.RunAsync();

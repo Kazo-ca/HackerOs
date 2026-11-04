@@ -10,8 +10,8 @@
 
 import * as screens from "./screens.js";
 
-const REGISTRY_KEY = Symbol.for("hackeros.displaySurfaces.documentListeners");
-const MIRRORED = "data-hackeros-mirrored";
+const REGISTRY_KEY = Symbol.for("kazoos.displaySurfaces.documentListeners");
+const MIRRORED = "data-kazoos-mirrored";
 const surfaces = new Map();
 const anchors = new WeakMap();
 let unloadHooked = false;
@@ -37,7 +37,7 @@ function mirrorStyles(surface) {
     doc.querySelectorAll(`[${MIRRORED}]`).forEach((node) => node.remove());
     const sources = document.querySelectorAll("link[rel~='stylesheet'], style");
     for (const source of sources) {
-        if (source.closest(".hackeros-surface-root")) {
+        if (source.closest(".kazoos-surface-root")) {
             continue;
         }
         const copy = doc.importNode(source, true);
@@ -87,12 +87,12 @@ function buildDocument(surface, title) {
     doc.head.appendChild(own);
     mirrorStyles(surface);
 
-    doc.body.className = "hackeros-surface";
+    doc.body.className = "kazoos-surface";
     doc.body.setAttribute("data-surface-id", surface.id);
     // Created by the desktop's document, like everything Blazor renders: the content's elements
     // stay objects of the main window, which Blazor's event code expects.
     const root = document.createElement("div");
-    root.className = "hackeros-surface-root";
+    root.className = "kazoos-surface-root";
     doc.body.appendChild(root);
     surface.root = root;
 }
@@ -201,7 +201,7 @@ export async function open(dotnet, id, title, width, height, placement) {
         : `popup=yes,width=${width},height=${height}`;
     let win = null;
     try {
-        win = window.open("", `hackeros-${id}`, features);
+        win = window.open("", `kazoos-${id}`, features);
     } catch {
         win = null;
     }

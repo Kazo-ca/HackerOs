@@ -232,10 +232,10 @@ public sealed class WindowAppBaseTests
 
     private static AppManifest TestManifest() => new()
     {
-        Id = "org.hackeros.test-window",
+        Id = "org.kazoos.test-window",
         Name = "Test Window",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "Window App SDK test component.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.AppSdk.Blazor.Tests", "TestWindowApp"),
@@ -245,9 +245,9 @@ public sealed class WindowAppBaseTests
     };
 
     [Theory]
-    [InlineData(new[] { "org.hackeros.test-window", "/home/user/notes.txt" }, "/home/user/notes.txt")]
-    [InlineData(new[] { "org.hackeros.test-window" }, null)]
-    [InlineData(new[] { "org.hackeros.test-window", "--new-window" }, null)]
+    [InlineData(new[] { "org.kazoos.test-window", "/home/user/notes.txt" }, "/home/user/notes.txt")]
+    [InlineData(new[] { "org.kazoos.test-window" }, null)]
+    [InlineData(new[] { "org.kazoos.test-window", "--new-window" }, null)]
     public void LaunchFile_is_the_first_absolute_argument_after_argv0(string[] argv, string? expected)
     {
         // An open-file intent (File Explorer double-click) launches the handler with argv
@@ -264,10 +264,10 @@ public sealed class WindowAppBaseTests
     private static AppManifest CreateManifest(AppKind kind = AppKind.Window) =>
         new()
         {
-            Id = "org.hackeros.test-window",
+            Id = "org.kazoos.test-window",
             Name = "Test Window",
             Version = "1.0.0",
-            PublisherId = "org.hackeros",
+            PublisherId = "org.kazoos",
             Description = "Window App SDK test component.",
             Kind = kind,
             EntryPoint = new AppEntryPointManifest("Kazo.Os.AppSdk.Blazor.Tests", "TestWindowApp"),

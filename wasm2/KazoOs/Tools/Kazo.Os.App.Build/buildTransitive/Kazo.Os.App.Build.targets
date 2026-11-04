@@ -9,5 +9,5 @@
     <KazoOsBuildFromPackage>true</KazoOsBuildFromPackage>
   </PropertyGroup>
 
-  <Import Project="$(MSBuildThisFileDirectory)../hackeros-build/Kazo.Os.Apps.targets" />
+  <Import Project="$(MSBuildThisFileDirectory)../kazoos-build/Kazo.Os.Apps.targets" />
 </Project>

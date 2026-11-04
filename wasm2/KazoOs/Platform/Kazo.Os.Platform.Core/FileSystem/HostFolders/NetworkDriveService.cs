@@ -52,7 +52,7 @@ public sealed class NetworkDriveException(NetworkDriveError error, string messag
 /// Mounts folders of the host computer as network drives (ADR 0181, sections 4 to 8): opens the
 /// browser's folder dialog, mounts a <see cref="HostFolderFileSystemProvider"/> at
 /// <c>/mnt/&lt;name&gt;</c>, and keeps the user's drives in
-/// <c>~/.local/state/hackeros/network-drives.json</c> (device-local, never synchronized, since the
+/// <c>~/.local/state/kazoos/network-drives.json</c> (device-local, never synchronized, since the
 /// browser's handles stay in this browser).
 /// </summary>
 /// <remarks>
@@ -66,7 +66,7 @@ public sealed class NetworkDriveService : IDisposable
     public static readonly VirtualPath MountRoot = VirtualPath.Parse("/mnt");
 
     /// <summary>The drive list, relative to the home folder.</summary>
-    public const string TableRelativePath = ".local/state/hackeros/network-drives.json";
+    public const string TableRelativePath = ".local/state/kazoos/network-drives.json";
 
     private const ushort MountPointMode = 0x1C0; // 0700
     private const ushort TableMode = 0x180; // 0600
@@ -673,7 +673,7 @@ public sealed class NetworkDriveService : IDisposable
     private FileSystemAuthorizationContext Context(string userId, string groupId) => new(
         new AppOperationContext
         {
-            AppId = "org.hackeros.kernel",
+            AppId = "org.kazoos.kernel",
             UserId = userId,
             UserAuthority = AppAuthority.System,
             GrantedCapabilities = new HashSet<string>(AppCapabilities.All, StringComparer.Ordinal),
@@ -705,7 +705,7 @@ public sealed class NetworkDriveService : IDisposable
 /// <param name="CreatedMountPoint">Whether mounting created the mount point, so unmounting removes it.</param>
 internal sealed record DriveRecord(string MountPoint, string Name, string Key, bool CreatedMountPoint);
 
-/// <summary>On-disk shape of <c>~/.local/state/hackeros/network-drives.json</c>.</summary>
+/// <summary>On-disk shape of <c>~/.local/state/kazoos/network-drives.json</c>.</summary>
 /// <param name="SchemaVersion">Format version, 1.</param>
 /// <param name="Drives">The user's drives, by mount point.</param>
 internal sealed record DriveTable(int SchemaVersion, IReadOnlyList<DriveRecord> Drives);

@@ -12,7 +12,7 @@ public sealed class PeopleController(StaffDirectory directory) : KazoController
 {
     /// <summary><c>GET /People?q=</c>.</summary>
     /// <param name="q">The search text.</param>
-    public IHackActionResult Index(string? q)
+    public IKazoActionResult Index(string? q)
     {
         ViewData["Query"] = q;
         return View(directory.Search(q));

@@ -22,7 +22,7 @@ public static partial class IconPackLibrary
     public const string SystemDirectory = "/usr/share/icons";
 
     /// <summary>Folder of the theme packs installed for every user (ADR 0190 §2); their <c>icons/</c> folder is a pack.</summary>
-    public const string SystemThemePackDirectory = "/usr/share/hackeros/theme-packs";
+    public const string SystemThemePackDirectory = "/usr/share/kazoos/theme-packs";
 
     /// <summary>Name of the file that makes a folder an icon pack.</summary>
     public const string ManifestFileName = "icon-pack.json";
@@ -36,7 +36,7 @@ public static partial class IconPackLibrary
     /// <summary>Id of the built-in icons, the default value of <see cref="PackIdKey"/>. No pack may take it.</summary>
     public const string BuiltInId = "builtin";
 
-    /// <summary>Id of the OS settings document that names the selected pack (<c>/etc/hackeros/icons.config</c>, <c>~/.config/hackeros/icons.config</c>).</summary>
+    /// <summary>Id of the OS settings document that names the selected pack (<c>/etc/kazoos/icons.config</c>, <c>~/.config/kazoos/icons.config</c>).</summary>
     public const string SettingsDocumentId = "icons";
 
     /// <summary>Key of the selected pack's id in <see cref="SettingsDocumentId"/>.</summary>
@@ -74,7 +74,7 @@ public static partial class IconPackLibrary
     public static string GetUserThemePackDirectory(string homeDirectory)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(homeDirectory);
-        return $"{homeDirectory.TrimEnd('/')}/.local/share/hackeros/theme-packs";
+        return $"{homeDirectory.TrimEnd('/')}/.local/share/kazoos/theme-packs";
     }
 
     /// <summary>Whether <paramref name="id"/> is a valid pack id: 1 to 64 lower case letters, digits, <c>.</c>, <c>-</c> or <c>_</c>, not <see cref="BuiltInId"/>.</summary>
@@ -84,7 +84,7 @@ public static partial class IconPackLibrary
 
     /// <summary>
     /// Finds every icon pack the caller can read: <c>/usr/share/icons/*</c>, then
-    /// <c>/usr/share/hackeros/theme-packs/*/icons</c>, then the same two folders of the user's home.
+    /// <c>/usr/share/kazoos/theme-packs/*/icons</c>, then the same two folders of the user's home.
     /// A missing folder, or a folder without <c>icon-pack.json</c>, is skipped without a warning.
     /// </summary>
     /// <param name="files">The caller's file access.</param>

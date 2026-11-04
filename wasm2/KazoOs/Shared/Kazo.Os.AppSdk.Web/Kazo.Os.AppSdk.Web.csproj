@@ -4,12 +4,12 @@
 
   <PropertyGroup>
     <PackageId>Kazo.Os.AppSdk.Web</PackageId>
-    <Description>ASP.Hack: MVC-like web sites hosted inside Kazo OS (controllers, routing, model binding, Razor views, cookie session).</Description>
-    <PackageTags>hackeros;app-sdk;asp-hack;web</PackageTags>
+    <Description>ASP.Kazo: MVC-like web sites hosted inside Kazo OS (controllers, routing, model binding, Razor views, cookie session).</Description>
+    <PackageTags>kazoos;app-sdk;asp-kazo;web</PackageTags>
   </PropertyGroup>
 
   <!--
-    ASP.Hack (ADR 0076): an ASP.NET MVC-like layer over the SDK's KazoHttpListener. A site is a web
+    ASP.Kazo (ADR 0076): an ASP.NET MVC-like layer over the SDK's KazoHttpListener. A site is a web
     app process (AppKind.Web) running in the shared web worker; this library gives it a middleware
     pipeline, routing, controllers, model binding, results, per-request DI and a cookie session.
     Views (.razor components rendered to HTML), anti-forgery tokens and the embedded wwwroot come
@@ -30,7 +30,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.14" />
-    <!-- ILogger<T> of a site and its debug log /var/log/hackweb/<id>.log (ADR 0088 §5). -->
+    <!-- ILogger<T> of a site and its debug log /var/log/kazoweb/<id>.log (ADR 0088 §5). -->
     <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.14" />
     <!-- Views (ADR 0076 §7, web/7): Razor components rendered to static HTML by HtmlRenderer. -->
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.14" />

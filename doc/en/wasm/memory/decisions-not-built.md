@@ -30,7 +30,7 @@ Analysis of 2026-10-29. The Kazo OS server proxy is built
 series): the Browser's right, cookies, redirects, source icon, "Not secure",
 errors. Decisions still to build:
 
-- Source order: simulated network → HackerOs server proxy (done) → public
+- Source order: simulated network → Kazo OS server proxy (done) → public
   third-party proxy (can be turned off) → Wayback Machine automatically as a
   last resort. One source icon per new source (public proxy, archive).
 - No direct iframe to the real site: everything goes through the isolated `srcdoc`.
@@ -44,8 +44,8 @@ Decided on 2026-10-28:
 - Each wrapped open-source project lives in its own repository
   (`Os-App-Webamp`, `Os-App-IRC` with KiwiIRC,
   `Os-App-BoxedWine`, and others), created from `Os-AppTemplate`
-  (ADR 0176, `hackeros-solution` template of ADR 0207; the template repository
-  is regenerated at the release that contains this template) and listed in `Os-AppMarketPlace` (Hack Store catalog,
+  (ADR 0176, `kazoos-solution` template of ADR 0207; the template repository
+  is regenerated at the release that contains this template) and listed in `Os-AppMarketPlace` (Kazo OS Store catalog,
   ADR 0188).
 - Each repository's licence follows the wrapped project's (GPL-2.0 for
   BoxedWine, for example), not MIT by default.

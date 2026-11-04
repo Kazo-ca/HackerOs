@@ -10,7 +10,7 @@ public sealed partial class InMemoryProcessManagerTests
     public void An_auxiliary_process_is_not_the_apps_singleton()
     {
         Fixture fixture = new();
-        ProcessRecord browser = fixture.Manager.Start(fixture.RequestFor("org.hackeros.browser"));
+        ProcessRecord browser = fixture.Manager.Start(fixture.RequestFor("org.kazoos.browser"));
         ProcessRecord renderer = fixture.Manager.Start(fixture.RequestFor("org.test.site", browser.Pid) with { Auxiliary = true });
 
         Assert.False(fixture.Manager.TryGetSingleton("org.test.site", out _));

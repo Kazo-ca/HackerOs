@@ -7,7 +7,7 @@ using Kazo.Os.Apps.WebServer.Manager;
 namespace Kazo.Os.Apps.WebServer;
 
 /// <summary>
-/// Manifest of "Web Server Manager", the IIS-like window that drives <c>hackwebd</c> through its
+/// Manifest of "Web Server Manager", the IIS-like window that drives <c>kazowebd</c> through its
 /// <c>.site</c> files and the service controller (ADR 0077, section 3). The build generates its
 /// manifest from this class; it is never instantiated at runtime.
 /// </summary>
@@ -21,14 +21,14 @@ public sealed class WebServerManagerApp : AppDefinition
     public override IReadOnlyList<AssetManifest> Assets =>
         [new("icons/app.svg", AssetKind.Image, new string('0', 64), "app-icon")];
     /// <summary>The app id.</summary>
-    public const string AppId = "org.hackeros.web-server-manager";
+    public const string AppId = "org.kazoos.web-server-manager";
 
     /// <summary>
     /// The intent the OS hands for "Publish as a web site" on a folder (ADR 0151 §8), with
     /// <c>{"paths":["/home/neo/www"],"scope":"Directory"}</c>. Launching the app with the folder as its
     /// first argument (ADR 0077 §3) still works.
     /// </summary>
-    public const string PublishSiteIntent = "org.hackeros.web-server-manager.publish-site.v1";
+    public const string PublishSiteIntent = "org.kazoos.web-server-manager.publish-site.v1";
 
     /// <inheritdoc />
     public override string Id => AppId;
@@ -46,21 +46,21 @@ public sealed class WebServerManagerApp : AppDefinition
     public override Type? MobileEntryPoint => typeof(WebServerManagerWindow);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
-    public override string Description => "Publish folders as web sites and manage the hackwebd web server";
+    public override string Description => "Publish folders as web sites and manage the kazowebd web server";
 
     /// <inheritdoc />
     public override string Category => "system";
 
     /// <inheritdoc />
     /// <remarks>
-    /// <c>filesystem.system.write</c> writes <c>/etc/hackweb/sites</c> (the files are
+    /// <c>filesystem.system.write</c> writes <c>/etc/kazoweb/sites</c> (the files are
     /// <c>system:system</c>, so each write still needs an administrator's approval);
-    /// <c>filesystem.system.read</c> reads the system sites and <c>/var/log/hackweb</c>;
+    /// <c>filesystem.system.read</c> reads the system sites and <c>/var/log/kazoweb</c>;
     /// <c>apps.launch</c> opens a site in the browser; <c>process.list</c> shows which sockets
-    /// <c>hackwebd</c> holds.
+    /// <c>kazowebd</c> holds.
     /// </remarks>
     public override IReadOnlyList<string> Capabilities =>
     [

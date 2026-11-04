@@ -10,14 +10,14 @@ namespace Kazo.Os.Apps.Settings;
 
 /// <summary>
 /// Settings &gt; Appearance &gt; Cursors (ADR 0205 §5): lists the built-in cursor themes and the theme
-/// folders of <c>/etc/hackeros/cursors/</c> and <c>~/.config/hackeros/cursors/</c>, and writes the
-/// chosen id to the <c>theme</c> key of <c>~/.config/hackeros/cursors.config</c>.
+/// folders of <c>/etc/kazoos/cursors/</c> and <c>~/.config/kazoos/cursors/</c>, and writes the
+/// chosen id to the <c>theme</c> key of <c>~/.config/kazoos/cursors.config</c>.
 /// </summary>
 /// <remarks>
 /// The panel reads the folders itself with <see cref="KazoDirectory"/> and <see cref="KazoFile"/>
 /// (public SDK only, ADR 0055), so a theme copied into a folder shows the next time the page opens.
 /// The shell re-reads <c>cursors.config</c> and draws the theme at once. The machine's default
-/// (<c>/etc/hackeros/cursors.config</c>, also used by the sign-in screen) is an administrator's
+/// (<c>/etc/kazoos/cursors.config</c>, also used by the sign-in screen) is an administrator's
 /// file, edited with <c>sudo nano</c>.
 /// </remarks>
 public sealed partial class CursorThemePanel
@@ -57,7 +57,7 @@ public sealed partial class CursorThemePanel
     /// <summary>Gets the text of the last outcome, or <see langword="null"/>.</summary>
     internal string? Message => _message;
 
-    /// <summary>An administrator locked the theme in <c>/etc/hackeros/cursors.config</c>.</summary>
+    /// <summary>An administrator locked the theme in <c>/etc/kazoos/cursors.config</c>.</summary>
     private bool IsLocked => _document?.IsLocked(ThemeKey) == true;
 
     /// <inheritdoc />
@@ -109,7 +109,7 @@ public sealed partial class CursorThemePanel
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException)
         {
-            ShowMessage(L["Cursors.Error.CannotSave", "~/.config/hackeros/cursors.config", exception.Message], isError: true);
+            ShowMessage(L["Cursors.Error.CannotSave", "~/.config/kazoos/cursors.config", exception.Message], isError: true);
         }
         finally
         {
@@ -129,7 +129,7 @@ public sealed partial class CursorThemePanel
         }
     }
 
-    /// <summary>An external edit (<c>nano ~/.config/hackeros/cursors.config</c>) changed the file.</summary>
+    /// <summary>An external edit (<c>nano ~/.config/kazoos/cursors.config</c>) changed the file.</summary>
     private void OnDocumentChanged(object? sender, KazoSettingsChangedEventArgs args) =>
         _ = InvokeAsync(() =>
         {

@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <PackageId>Kazo.Os.Server.Contracts</PackageId>
-    <PackageTags>hackeros;server;contracts</PackageTags>
+    <PackageTags>kazoos;server;contracts</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -16,7 +16,7 @@
     <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
     <RootNamespace>Kazo.Os.Server.Contracts</RootNamespace>
     <AssemblyName>Kazo.Os.Server.Contracts</AssemblyName>
-    <Description>Shared API versioning, sync record envelope, and proxy request/response contracts for the optional HackerOs server. Referenced by both the ASP.NET Core server and the browser client adapter.</Description>
+    <Description>Shared API versioning, sync record envelope, and proxy request/response contracts for the optional Kazo OS server. Referenced by both the ASP.NET Core server and the browser client adapter.</Description>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisMode>Recommended</AnalysisMode>
   </PropertyGroup>

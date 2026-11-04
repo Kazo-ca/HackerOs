@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "org.hackeros.intranet",
+  "id": "org.kazoos.intranet",
   "name": "Intranet",
   "version": "2.1.0",
-  "publisherId": "org.hackeros",
+  "publisherId": "org.kazoos",
   "description": "Internal web site of the agency.",
   "kind": "web",
   "entryPoint": {

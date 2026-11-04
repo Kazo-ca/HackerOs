@@ -37,7 +37,7 @@ public sealed class KazoMenuDefinition
 
     /// <summary>
     /// Gets or sets what a file menu is drawn for, or <see langword="null"/> for any other menu
-    /// (ADR 0159 §5). The provider of the file control (<c>hackeros.file-view</c>) sets it in its
+    /// (ADR 0159 §5). The provider of the file control (<c>kazoos.file-view</c>) sets it in its
     /// <c>Opening</c> handler; the OS then adds the entries apps registered (ADR 0151) to this
     /// opening, whichever app provides the control.
     /// </summary>

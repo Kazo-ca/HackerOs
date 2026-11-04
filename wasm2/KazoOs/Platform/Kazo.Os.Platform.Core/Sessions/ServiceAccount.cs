@@ -4,7 +4,7 @@ using Kazo.Os.Simulation.Abstractions.Sessions;
 namespace Kazo.Os.Platform.Core.Sessions;
 
 /// <summary>
-/// <c>hackeros-svc</c>, the account the system services run as (ADR 0097, section 4): like the
+/// <c>kazoos-svc</c>, the account the system services run as (ADR 0097, section 4): like the
 /// accounts a Linux package creates for its daemon (<c>systemd-resolve</c>, <c>www-data</c>), it owns
 /// a home under <c>/var/lib</c>, has no password and no shell (<c>/usr/sbin/nologin</c>), and never
 /// appears on the login screen. It is built into the OS: it is not stored in the user repository,
@@ -13,10 +13,10 @@ namespace Kazo.Os.Platform.Core.Sessions;
 public static class ServiceAccount
 {
     /// <summary>The login name of the service account.</summary>
-    public const string LoginName = "hackeros-svc";
+    public const string LoginName = "kazoos-svc";
 
     /// <summary>The service account's home directory.</summary>
-    public const string HomePath = "/var/lib/hackeros-svc";
+    public const string HomePath = "/var/lib/kazoos-svc";
 
     /// <summary>The shell of the service account: logging in is refused.</summary>
     public const string Shell = "/usr/sbin/nologin";

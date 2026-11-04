@@ -1,1 +1,3 @@
 #nullable enable
+const Kazo.Os.Theming.Abstractions.ThemePackLayout.LegacyExtension = ".hacktheme" -> string!
+const Kazo.Os.Theming.Abstractions.ThemePackLayout.LegacyManifestFileName = "hackeros-theme-pack.json" -> string!

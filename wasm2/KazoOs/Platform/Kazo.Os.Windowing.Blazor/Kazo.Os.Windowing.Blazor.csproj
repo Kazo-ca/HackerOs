@@ -8,7 +8,7 @@
     <Nullable>enable</Nullable>
     <PackageId>Kazo.Os.Windowing.Blazor</PackageId>
     <Description>Razor components (DesktopArea, WindowHost, WindowChrome) that render a Kazo.Os.Windowing.Core WindowRuntime. No MudBlazor dependency.</Description>
-    <PackageTags>hackeros;windowing;blazor;desktop-shell</PackageTags>
+    <PackageTags>kazoos;windowing;blazor;desktop-shell</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

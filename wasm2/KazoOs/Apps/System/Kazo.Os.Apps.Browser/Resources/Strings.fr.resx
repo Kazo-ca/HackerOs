@@ -373,7 +373,7 @@
     <value>Votre administrateur a bloqué {0}.</value>
   </data>
   <data name="Error.Blocked.Hint" xml:space="preserve">
-    <value>L'opérateur du serveur Kazo OS n'autorise pas cette adresse, ce port ou cette app (réglages HackerOs:Proxy).</value>
+    <value>L'opérateur du serveur Kazo OS n'autorise pas cette adresse, ce port ou cette app (réglages KazoOs:Proxy).</value>
   </data>
   <data name="Error.NameNotResolved.Hint.Server" xml:space="preserve">
     <value>Pour ouvrir un vrai site, connectez cette machine à un serveur Kazo OS (Paramètres ▸ Réseau ▸ Serveur facultatif).</value>

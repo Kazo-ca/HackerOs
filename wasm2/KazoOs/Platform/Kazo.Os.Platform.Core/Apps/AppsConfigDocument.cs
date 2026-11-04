@@ -10,9 +10,9 @@ namespace Kazo.Os.Platform.Core.Apps;
 /// </summary>
 /// <remarks>
 /// <code>
-/// # /etc/hackeros/apps.config
+/// # /etc/kazoos/apps.config
 /// [uninstalled]
-/// org.hackeros.hack-paint=true
+/// org.kazoos.kazo-paint=true
 /// </code>
 /// </remarks>
 public static class AppsConfigDocument
@@ -26,29 +26,29 @@ public static class AppsConfigDocument
     /// </summary>
     public const string InstalledSection = "installed";
 
-    /// <summary>File name under <c>/etc/hackeros</c> and <c>~/.config/hackeros</c>.</summary>
+    /// <summary>File name under <c>/etc/kazoos</c> and <c>~/.config/kazoos</c>.</summary>
     public const string FileName = "apps.config";
 
     /// <summary>Machine file, <c>system:system 0644</c>.</summary>
-    public static VirtualPath MachinePath { get; } = VirtualPath.Parse($"/etc/hackeros/{FileName}");
+    public static VirtualPath MachinePath { get; } = VirtualPath.Parse($"/etc/kazoos/{FileName}");
 
     /// <summary>Header of the machine file written at installation, so an administrator edits a real, documented file.</summary>
     public const string MachineDefaultContent =
         "# Apps uninstalled for every user of this machine (ADR 0048).\n"
         + "# One app ID per line under [uninstalled], set to true. Remove the line (or set it to false)\n"
         + "# to reinstall. System apps cannot be uninstalled: their lines are ignored. No data is deleted.\n"
-        + "# Users uninstall apps for themselves in ~/.config/hackeros/apps.config.\n"
+        + "# Users uninstall apps for themselves in ~/.config/kazoos/apps.config.\n"
         + "[uninstalled]\n";
 
     /// <summary>Header of a user file created by the first user-scope uninstall.</summary>
     public const string UserDefaultContent =
-        "# Apps you uninstalled for yourself (ADR 0048). Same format as /etc/hackeros/apps.config.\n"
+        "# Apps you uninstalled for yourself (ADR 0048). Same format as /etc/kazoos/apps.config.\n"
         + "[uninstalled]\n";
 
     /// <summary>Gets the user file of one home directory.</summary>
     /// <param name="homeDirectory">Absolute home directory, e.g. <c>/home/alice</c>.</param>
     public static VirtualPath GetUserPath(string homeDirectory) =>
-        VirtualPath.Parse($"{homeDirectory.TrimEnd('/')}/.config/hackeros/{FileName}");
+        VirtualPath.Parse($"{homeDirectory.TrimEnd('/')}/.config/kazoos/{FileName}");
 
     /// <summary>
     /// Reads the uninstalled app IDs of one file against a catalog. Never fails: a bad line is

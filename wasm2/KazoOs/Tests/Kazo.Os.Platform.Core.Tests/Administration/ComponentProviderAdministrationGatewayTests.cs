@@ -17,10 +17,10 @@ namespace Kazo.Os.Platform.Core.Tests.Administration;
 /// <summary>ADR 0156 §3: <c>KazoComponentProviders</c> behind Settings &gt; OS components.</summary>
 public sealed class ComponentProviderAdministrationGatewayTests
 {
-    private const string ExplorerId = "org.hackeros.file-explorer";
+    private const string ExplorerId = "org.kazoos.file-explorer";
     private const string FilesId = "com.example.files";
-    private const string SettingsId = "org.hackeros.settings";
-    private const string ConfigPath = "/etc/hackeros/components.config";
+    private const string SettingsId = "org.kazoos.settings";
+    private const string ConfigPath = "/etc/kazoos/components.config";
 
     [Fact]
     public async Task Every_call_requires_apps_manage()
@@ -53,7 +53,7 @@ public sealed class ComponentProviderAdministrationGatewayTests
     public async Task Going_back_to_the_explorer_only_asks_an_administrator()
     {
         Harness harness = await Harness.CreateAsync();
-        await harness.Files.WriteAsRootAsync(ConfigPath, "[providers]\nhackeros.file-view=com.example.files\n");
+        await harness.Files.WriteAsRootAsync(ConfigPath, "[providers]\nkazoos.file-view=com.example.files\n");
         CountingAgent agent = new(succeed: true);
         AppComponentProviderAdministrationGateway gateway = harness.CreateGateway(agent, AppCapabilities.AppsManage);
 
@@ -102,7 +102,7 @@ public sealed class ComponentProviderAdministrationGatewayTests
         Id = id,
         Name = id,
         Version = "1.0.0",
-        PublisherId = id.StartsWith("org.hackeros", StringComparison.Ordinal) ? "pub.hackeros" : "com.example",
+        PublisherId = id.StartsWith("org.kazoos", StringComparison.Ordinal) ? "pub.kazoos" : "com.example",
         Description = "Component provider fixture.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Apps.Sample", "Kazo.Os.Apps.Sample.SampleApp"),

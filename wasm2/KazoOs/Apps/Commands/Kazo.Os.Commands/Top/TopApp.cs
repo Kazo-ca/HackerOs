@@ -11,7 +11,7 @@ namespace Kazo.Os.Commands.Top;
 public sealed class TopApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.top";
+    public override string Id => "org.kazoos.commands.top";
 
     /// <inheritdoc />
     public override string Name => "top";
@@ -23,7 +23,7 @@ public sealed class TopApp : AppDefinition
     public override Type EntryPoint => typeof(TopCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Display the processes using the most CPU, refreshed live";

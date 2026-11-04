@@ -152,7 +152,7 @@ internal sealed class VirtualFileSystemFixture
         new(
             new AppOperationContext
             {
-                AppId = "org.hackeros.kernel",
+                AppId = "org.kazoos.kernel",
                 UserId = "system",
                 UserAuthority = AppAuthority.System,
                 GrantedCapabilities = new HashSet<string>(AppCapabilities.All, StringComparer.Ordinal),

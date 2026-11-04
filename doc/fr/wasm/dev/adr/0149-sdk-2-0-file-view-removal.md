@@ -88,7 +88,7 @@ du manifeste. Le reste de l'ADR 0114 ne change pas.
 - [`sdk-packages.md`](../../framework/sdk-packages.md) gagne une section « SDK 2.0 » avec
   la liste des ruptures et ce tableau de migration ;
   [`sdk-reference.md`](../../framework/sdk-reference.md) et
-  [`building-on-hackeros.md`](../../framework/building-on-hackeros.md) suivent.
+  [`building-on-kazoos.md`](../../framework/building-on-kazoos.md) suivent.
 
 ## Conséquences
 

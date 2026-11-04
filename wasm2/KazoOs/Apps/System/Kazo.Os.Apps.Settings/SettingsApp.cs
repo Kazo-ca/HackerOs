@@ -16,7 +16,7 @@ public sealed class SettingsApp : AppDefinition
     public override IReadOnlyList<AssetManifest> Assets =>
         [new("icons/app.svg", AssetKind.Image, new string('0', 64), "app-icon")];
     /// <inheritdoc />
-    public override string Id => "org.hackeros.settings";
+    public override string Id => "org.kazoos.settings";
 
     /// <inheritdoc />
     public override string Name => "Settings";
@@ -31,7 +31,7 @@ public sealed class SettingsApp : AppDefinition
     public override Type? MobileEntryPoint => typeof(SettingsWindow);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description =>

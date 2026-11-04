@@ -26,10 +26,10 @@
     <ProjectReference Include="..\..\Apps\Commands\Kazo.Os.Commands\Kazo.Os.Commands.csproj" />
     <ProjectReference Include="..\..\Apps\Samples\Kazo.Os.Samples.ServiceApp\Kazo.Os.Samples.ServiceApp.csproj" />
     <ProjectReference Include="..\..\Apps\Samples\Kazo.Os.Samples.TerminalApp\Kazo.Os.Samples.TerminalApp.csproj" />
-    <!-- ADR 0077/0080: hackwebd runs in the headless OS of these tests. -->
+    <!-- ADR 0077/0080: kazowebd runs in the headless OS of these tests. -->
     <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.WebServer\Kazo.Os.Apps.WebServer.csproj" />
     <ProjectReference Include="..\Kazo.Os.Tests.Support\Kazo.Os.Tests.Support.csproj" />
-    <!-- ADR 0076: an ASP.Hack MVC site (MvcSite.cs) served through the real web worker. -->
+    <!-- ADR 0076: an ASP.Kazo MVC site (MvcSite.cs) served through the real web worker. -->
     <ProjectReference Include="..\..\Shared\Kazo.Os.AppSdk.Web\Kazo.Os.AppSdk.Web.csproj" />
     <ProjectReference Include="..\..\Tools\Kazo.Os.Tools.WebRouteGenerator\Kazo.Os.Tools.WebRouteGenerator.csproj"
                       OutputItemType="Analyzer"

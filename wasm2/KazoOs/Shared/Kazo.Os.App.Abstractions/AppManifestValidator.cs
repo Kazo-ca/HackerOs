@@ -436,7 +436,7 @@ public static partial class AppManifestValidator
         {
             if (!ComponentContractPattern().IsMatch(component.Contract ?? string.Empty))
             {
-                AddError(errors, "manifest.component.contract.invalid", "components.contract", $"Component contract '{component.Contract}' must be lower-case dotted words, e.g. 'hackeros.terminal'.");
+                AddError(errors, "manifest.component.contract.invalid", "components.contract", $"Component contract '{component.Contract}' must be lower-case dotted words, e.g. 'kazoos.terminal'.");
             }
 
             // ADR 0148 §3.3: the platform renders its own context menu; no app may stand in for it.

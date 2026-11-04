@@ -27,7 +27,7 @@
     <Authors>Benoit Robin</Authors>
     <RepositoryUrl>https://github.com/Kazo-ca/Os</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>hackeros;blazor;webassembly;os-simulation</PackageTags>
+    <PackageTags>kazoos;blazor;webassembly;os-simulation</PackageTags>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageReadmeFile Condition="Exists('$(MSBuildProjectDirectory)/README.md')">README.md</PackageReadmeFile>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

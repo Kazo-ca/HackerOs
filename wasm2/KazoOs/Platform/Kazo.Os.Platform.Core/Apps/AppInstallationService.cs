@@ -18,7 +18,7 @@ namespace Kazo.Os.Platform.Core.Apps;
 
 /// <summary>
 /// Default <see cref="IAppInstallationService"/> (ADR 0048 section 4): reads
-/// <c>/etc/hackeros/apps.config</c> and the session user's <c>~/.config/hackeros/apps.config</c>,
+/// <c>/etc/kazoos/apps.config</c> and the session user's <c>~/.config/kazoos/apps.config</c>,
 /// watches both, and keeps <see cref="AppEnablementRegistry"/> equal to the effective state.
 /// </summary>
 /// <remarks>

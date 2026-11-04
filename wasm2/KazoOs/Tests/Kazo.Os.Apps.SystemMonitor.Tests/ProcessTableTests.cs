@@ -9,10 +9,10 @@ public sealed class ProcessTableTests
 {
     private static readonly ProcessRow[] Rows =
     [
-        Row(1, "kernel", "org.hackeros.kernel", cpu: 1, memory: 64),
-        Row(10, "terminal", "org.hackeros.terminal", cpu: 30, memory: 45),
-        Row(11, "text-editor", "org.hackeros.text-editor", cpu: 5, memory: 52),
-        Row(12, "calculator", "org.hackeros.calculator", cpu: 5, memory: 32)
+        Row(1, "kernel", "org.kazoos.kernel", cpu: 1, memory: 64),
+        Row(10, "terminal", "org.kazoos.terminal", cpu: 30, memory: 45),
+        Row(11, "text-editor", "org.kazoos.text-editor", cpu: 5, memory: 52),
+        Row(12, "calculator", "org.kazoos.calculator", cpu: 5, memory: 32)
     ];
 
     [Fact]
@@ -42,7 +42,7 @@ public sealed class ProcessTableTests
 
     [Theory]
     [InlineData("TEXT", new long[] { 11 })]
-    [InlineData("hackeros.ca", new long[] { 12 })]
+    [InlineData("kazoos.ca", new long[] { 12 })]
     [InlineData("1", new long[] { 10, 11, 12, 1 })]
     [InlineData("nothing", new long[0])]
     public void The_filter_matches_name_app_id_and_pid(string filter, long[] expected)

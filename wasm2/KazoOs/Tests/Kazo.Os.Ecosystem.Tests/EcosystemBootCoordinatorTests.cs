@@ -95,10 +95,10 @@ public sealed class EcosystemBootCoordinatorTests
 
         foreach (string path in new[]
                  {
-                     "/etc/hackeros/appearance.config",
-                     "/etc/hackeros/ui-platform-preference.config",
-                     "/etc/hackeros/policy.config",
-                     "/etc/hackeros/file-associations.json"
+                     "/etc/kazoos/appearance.config",
+                     "/etc/kazoos/ui-platform-preference.config",
+                     "/etc/kazoos/policy.config",
+                     "/etc/kazoos/file-associations.json"
                  })
         {
             FileSystemResult<FileSystemEntrySnapshot> stat = await _fileSystem.StatAsync(
@@ -106,7 +106,7 @@ public sealed class EcosystemBootCoordinatorTests
                 new FileSystemAuthorizationContext(
                     new AppOperationContext
                     {
-                        AppId = "org.hackeros.shell",
+                        AppId = "org.kazoos.shell",
                         UserId = "system",
                         UserAuthority = AppAuthority.System,
                         GrantedCapabilities = new HashSet<string>(AppCapabilities.All, StringComparer.Ordinal),
@@ -134,7 +134,7 @@ public sealed class EcosystemBootCoordinatorTests
         await bootCoordinator.BootAsync();
 
         Assert.Equal(99, _catalog.SelectedManifests.Count);
-        Assert.Contains(_catalog.SelectedManifests, manifest => manifest.Id == "org.hackeros.hack-paint");
+        Assert.Contains(_catalog.SelectedManifests, manifest => manifest.Id == "org.kazoos.kazo-paint");
     }
 
     [Fact]
@@ -142,8 +142,8 @@ public sealed class EcosystemBootCoordinatorTests
     {
         _catalog.ReconcileResult =
         [
-            new PersistedAppCatalogEntry(BuildKnownLazyApps.Catalog.Manifests["org.hackeros.hack-paint"], IsEnabled: false),
-            new PersistedAppCatalogEntry(BuildKnownLazyApps.Catalog.Manifests["org.hackeros.terminal"], IsEnabled: false)
+            new PersistedAppCatalogEntry(BuildKnownLazyApps.Catalog.Manifests["org.kazoos.kazo-paint"], IsEnabled: false),
+            new PersistedAppCatalogEntry(BuildKnownLazyApps.Catalog.Manifests["org.kazoos.terminal"], IsEnabled: false)
         ];
         EcosystemBootCoordinator bootCoordinator = new(
             _fsBootstrapper,
@@ -159,9 +159,9 @@ public sealed class EcosystemBootCoordinatorTests
 
         // ADR 0048 section 6: the machine-wide ADR 0032 disable becomes a machine uninstall; a
         // system app (the terminal) is never migrated.
-        string content = await ReadSystemFileAsync("/etc/hackeros/apps.config");
-        Assert.Contains("org.hackeros.hack-paint=true", content);
-        Assert.DoesNotContain("org.hackeros.terminal", content);
+        string content = await ReadSystemFileAsync("/etc/kazoos/apps.config");
+        Assert.Contains("org.kazoos.kazo-paint=true", content);
+        Assert.DoesNotContain("org.kazoos.terminal", content);
     }
 
     [Fact]
@@ -207,7 +207,7 @@ public sealed class EcosystemBootCoordinatorTests
             _clock,
             new AppOperationContext
             {
-                AppId = "org.hackeros.shell",
+                AppId = "org.kazoos.shell",
                 UserId = "system",
                 UserAuthority = AppAuthority.System,
                 GrantedCapabilities = new HashSet<string>(AppCapabilities.All, StringComparer.Ordinal),

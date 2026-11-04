@@ -9,7 +9,7 @@ namespace Kazo.Os.AppSdk.Blazor.Tests;
 
 /// <summary>
 /// ADR 0161 §2: the copy and move rules of the SDK ask a name conflict through the dialog of the
-/// <c>hackeros.file-dialogs</c> provider, modal to the app that runs the operation.
+/// <c>kazoos.file-dialogs</c> provider, modal to the app that runs the operation.
 /// </summary>
 public sealed class KazoFileOperationDialogsTests
 {
@@ -56,10 +56,10 @@ public sealed class KazoFileOperationDialogsTests
 
     private static AppManifest Manifest() => new()
     {
-        Id = "org.hackeros.test-file-operations",
+        Id = "org.kazoos.test-file-operations",
         Name = "File Operations App",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "File operations dialog test app.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.AppSdk.Blazor.Tests", "FileOperationsApp"),

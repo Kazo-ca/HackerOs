@@ -17,13 +17,13 @@ internal sealed class SyncFileOperations(IFileSystemService fileSystem, FileSyst
     public const string TrashRelativePath = ".local/share/Trash";
 
     /// <summary>Key added to a <c>.trashinfo</c> written for a deletion received from another device.</summary>
-    public const string OriginKey = "X-HackerOS-Origin";
+    public const string OriginKey = "X-KazoOS-Origin";
 
     /// <summary>Value of <see cref="OriginKey"/>: "deleted on another device".</summary>
     public const string OriginDeletedOnAnotherDevice = "deleted-on-another-device";
 
     /// <summary>Key recording which device the deletion came from.</summary>
-    public const string DeviceKey = "X-HackerOS-Device";
+    public const string DeviceKey = "X-KazoOS-Device";
 
     private static readonly FileSystemPermissions PrivateDirectoryMode = FileSystemPermissions.FromMode(0b111_000_000);
     private static readonly FileSystemPermissions PublicDirectoryMode = FileSystemPermissions.FromMode(0b111_101_101);

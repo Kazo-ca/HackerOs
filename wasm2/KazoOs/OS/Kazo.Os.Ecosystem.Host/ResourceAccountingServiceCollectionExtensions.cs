@@ -5,7 +5,7 @@ using Kazo.Os.Simulation.Abstractions.Processes;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-#if HACKEROS_RESOURCE_ACCOUNTING
+#if KAZOOS_RESOURCE_ACCOUNTING
 using Kazo.Os.Platform.ResourceAccounting;
 using Kazo.Os.Platform.ResourceAccounting.Memory;
 #endif
@@ -14,7 +14,7 @@ namespace Kazo.Os.Ecosystem;
 
 /// <summary>
 /// Composes the optional resource accounting of ADR 0066: reads the host's
-/// <c>HackerOs:ResourceAccounting</c> section once, combines it with what the build compiled in,
+/// <c>KazoOs:ResourceAccounting</c> section once, combines it with what the build compiled in,
 /// and installs the common context-switch hook only when at least one measurement is active.
 /// </summary>
 /// <remarks>
@@ -26,21 +26,21 @@ namespace Kazo.Os.Ecosystem;
 public static class ResourceAccountingServiceCollectionExtensions
 {
     /// <summary>Configuration section read by <see cref="ReadSettings"/>.</summary>
-    public const string SectionName = "HackerOs:ResourceAccounting";
+    public const string SectionName = "KazoOs:ResourceAccounting";
 
     /// <summary>
     /// Gets the measurements compiled into this host: none when the build left
     /// <c>Kazo.Os.Platform.ResourceAccounting</c> out, otherwise its runtime feature switches.
     /// </summary>
     public static ResourceAccountingBuildSupport CompiledSupport =>
-#if HACKEROS_RESOURCE_ACCOUNTING
+#if KAZOOS_RESOURCE_ACCOUNTING
         new(ResourceAccountingFeatures.IsCpuAccountingSupported, ResourceAccountingFeatures.IsMemoryAccountingSupported);
 #else
         ResourceAccountingBuildSupport.None;
 #endif
 
     /// <summary>
-    /// Reads <c>HackerOs:ResourceAccounting</c> from the host configuration and composes the
+    /// Reads <c>KazoOs:ResourceAccounting</c> from the host configuration and composes the
     /// accounting it asks for, within what the build allows.
     /// </summary>
     /// <param name="services">The host's service collection.</param>
@@ -87,7 +87,7 @@ public static class ResourceAccountingServiceCollectionExtensions
 
         if (plan.RequiresContextSwitchHook)
         {
-#if HACKEROS_RESOURCE_ACCOUNTING
+#if KAZOOS_RESOURCE_ACCOUNTING
             // Installed now, at composition: no app code has run, so no scope is open. The CPU and
             // memory measurements (ADR 0067, 0068) register themselves on this dispatcher.
             ContextSwitchDispatcher dispatcher = new();
@@ -122,7 +122,7 @@ public static class ResourceAccountingServiceCollectionExtensions
         return plan;
     }
 
-#if HACKEROS_RESOURCE_ACCOUNTING
+#if KAZOOS_RESOURCE_ACCOUNTING
     /// <summary>
     /// Composes the measured memory of ADR 0068: the allocation layer registered on the hook now, so
     /// it counts from the first switch, the kernel-memory ledger the OS services charge, and the
@@ -146,7 +146,7 @@ public static class ResourceAccountingServiceCollectionExtensions
 #endif
 
     /// <summary>
-    /// Reads the <c>HackerOs:ResourceAccounting</c> section. A missing value takes its default
+    /// Reads the <c>KazoOs:ResourceAccounting</c> section. A missing value takes its default
     /// (measurements on, five-second threshold); an unreadable one also does, with a warning line.
     /// </summary>
     /// <param name="configuration">The host configuration, or <see langword="null"/>.</param>

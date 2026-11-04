@@ -157,7 +157,7 @@ window is already the one that shows the SDK of a windowed app.
   [`worker-processes.md`](../worker-processes.md),
   [`sdk-developer-guide.md`](../../framework/sdk-developer-guide.md),
   [`sdk-reference.md`](../../framework/sdk-reference.md), [`code-editor.md`](../code-editor.md),
-  [`file-explorer.md`](../file-explorer.md), [`hack-paint.md`](../hack-paint.md).
+  [`file-explorer.md`](../file-explorer.md), [`kazo-paint.md`](../kazo-paint.md).
 - Public additions in `PublicAPI.Unshipped.txt` of the SDK, of
   `Kazo.Os.Platform.Core` and of `Kazo.Os.Platform.WorkerHost`; published with
   SDK 1.2 in `exec/10` (ADR 0132).

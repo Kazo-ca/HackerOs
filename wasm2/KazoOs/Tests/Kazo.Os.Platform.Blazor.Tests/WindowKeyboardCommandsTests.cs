@@ -225,7 +225,7 @@ public sealed class WindowKeyboardCommandsTests
     private static WindowRuntimeState CreateState(int seed, bool resizable = true) =>
         new(
             WindowId.FromGuid(Guid.Parse($"50000000-0000-0000-0000-{seed:D12}")),
-            $"org.hackeros.test{seed}",
+            $"org.kazoos.test{seed}",
             WindowOwnerId.FromGuid(Guid.Parse($"60000000-0000-0000-0000-{seed:D12}")),
             $"Test {seed}",
             null,

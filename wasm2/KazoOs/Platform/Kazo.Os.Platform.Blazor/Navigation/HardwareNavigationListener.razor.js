@@ -19,7 +19,7 @@
  * shell switch (desktop ↔ mobile) never pushes a second sentinel.
  */
 
-const SENTINEL_KEY = "hackerosHardwareBack";
+const SENTINEL_KEY = "kazoosHardwareBack";
 const BACK_BUTTON = 3;
 const FORWARD_BUTTON = 4;
 /** A history Back this soon after a mouse or keyboard Back is the same gesture (Firefox, Safari). */

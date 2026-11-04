@@ -6,7 +6,7 @@ namespace Kazo.Os.Apps.Browser.Tests;
 /// <summary>The browser's form history (ADR 0088 §6): an OS file, offered back per field name.</summary>
 public sealed class FormHistoryTests
 {
-    private const string Path = "/home/alice/.local/share/hackeros/browser/form-history.json";
+    private const string Path = "/home/alice/.local/share/kazoos/browser/form-history.json";
 
     private sealed class MemoryFiles : IBrowserStorageFiles
     {

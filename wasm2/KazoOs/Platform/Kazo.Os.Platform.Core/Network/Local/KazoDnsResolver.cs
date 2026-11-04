@@ -28,7 +28,7 @@ public sealed record DnsAnswer(
 }
 
 /// <summary>
-/// Names bound by hosted static sites (ADR 0077, <c>hackwebd</c>): a binding such as
+/// Names bound by hosted static sites (ADR 0077, <c>kazowebd</c>): a binding such as
 /// <c>http://docs.hack/</c> makes <c>docs.hack</c> resolve to this machine. Implemented by
 /// <see cref="HostedSiteNameSource"/>, which reads the <c>.site</c> files (ADR 0080, section 4); the
 /// resolver works without one.
@@ -42,7 +42,7 @@ public interface IHostedSiteNameSource
 }
 
 /// <summary>
-/// <c>hackdns</c>, the resolver of the OS (ADR 0074, section 4). It answers <c>KazoDns</c>, the
+/// <c>kazodns</c>, the resolver of the OS (ADR 0074, section 4). It answers <c>KazoDns</c>, the
 /// browser and every HTTP call of <see cref="AppNetworkGateway"/>, asking in this order:
 /// </summary>
 /// <remarks>
@@ -70,10 +70,10 @@ public sealed class KazoDnsResolver
 
     /// <summary>Content of a freshly seeded <c>/etc/hosts</c>.</summary>
     public const string DefaultHostsFileContent =
-        "# /etc/hosts: static table of host names, read first by hackdns (ADR 0074).\n" +
+        "# /etc/hosts: static table of host names, read first by kazodns (ADR 0074).\n" +
         "# <address> <canonical name> [aliases...]; edit as root, the change applies at once.\n" +
         "127.0.0.1\tlocalhost\n" +
-        "127.0.1.1\thackeros\n";
+        "127.0.1.1\tkazoos\n";
 
     private readonly ISimulatedNetworkService _network;
     private readonly IFileSystemService? _fileSystem;
@@ -93,7 +93,7 @@ public sealed class KazoDnsResolver
     /// <param name="fileSystem">The file system <c>/etc/hosts</c> is read from as root; <see langword="null"/> skips source 1.</param>
     /// <param name="clock">Simulated clock of the cache.</param>
     /// <param name="webApps">The installed, enabled apps (source 3 reads their <c>web.urls</c>).</param>
-    /// <param name="hostedSites">Names of hosted static sites (source 4), when <c>hackwebd</c> exists.</param>
+    /// <param name="hostedSites">Names of hosted static sites (source 4), when <c>kazowebd</c> exists.</param>
     public KazoDnsResolver(
         ISimulatedNetworkService network,
         IFileSystemService? fileSystem,
@@ -271,7 +271,7 @@ public sealed class KazoDnsResolver
     /// <summary>Reads as the resolver daemon, root, like <c>systemd-resolved</c> reading <c>/etc/hosts</c>.</summary>
     internal static AppOperationContext RootOperation() => new()
     {
-        AppId = "org.hackeros.kernel",
+        AppId = "org.kazoos.kernel",
         UserId = "system",
         UserAuthority = AppAuthority.System,
         GrantedCapabilities = new HashSet<string>(AppCapabilities.All, StringComparer.Ordinal),

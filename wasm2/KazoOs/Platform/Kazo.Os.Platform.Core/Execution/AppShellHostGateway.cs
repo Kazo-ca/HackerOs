@@ -20,7 +20,7 @@ internal sealed class AppShellHostGateway(
     Func<ProcessRecord, IAppExecutionContext> createShellContext) : IAppShellHostGateway
 {
     /// <inheritdoc />
-    public Task<IHackShell> StartAsync(KazoShellOptions options, CancellationToken cancellationToken = default)
+    public Task<IKazoShell> StartAsync(KazoShellOptions options, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(options);
         capabilities.Require(AppCapabilities.ShellHost);

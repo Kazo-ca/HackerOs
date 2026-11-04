@@ -222,7 +222,7 @@ via `dotnet sln add`, no ProjectReferences yet — schema is self-contained) plu
 `Schema/IndexedDbSchemaModel.cs` (validated `IndexedDbIndexDefinition`/
 `IndexedDbObjectStoreDefinition`/`IndexedDbTransactionBoundary` records, same
 explicit-constructor-with-validation pattern as `FileSystemEntryMetadata`) and
-`Schema/KazoOsIndexedDbSchema.cs` (static class: `DatabaseName="hackeros"`,
+`Schema/KazoOsIndexedDbSchema.cs` (static class: `DatabaseName="kazoos"`,
 `CurrentVersion=1`, 11 stores, 10 transaction boundaries). Solution is now 357
 tests (was 344; +13). Key facts for the next `P2-IDB-*` session:
 - Store name constants are on `KazoOsIndexedDbSchema` (e.g. `UserStoreName`,

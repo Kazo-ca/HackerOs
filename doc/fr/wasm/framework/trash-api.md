@@ -32,7 +32,7 @@ DeletionDate=2026-10-10T14:03:27
 
 - Au listage, un `.trashinfo` sans élément est supprimé ; un élément sans
   `.trashinfo` est listé avec une origine inconnue.
-- Un élément supprimé sur un autre appareil porte, dans son `.trashinfo`, les clés d'extension `X-HackerOS-Origin=deleted-on-another-device` et `X-HackerOS-Device=<appareil>`, que les autres implémentations ignorent. `KazoTrashItem.DeletedOnAnotherDevice` le signale aux apps.
+- Un élément supprimé sur un autre appareil porte, dans son `.trashinfo`, les clés d'extension `X-KazoOS-Origin=deleted-on-another-device` et `X-KazoOS-Device=<appareil>`, que les autres implémentations ignorent. `KazoTrashItem.DeletedOnAnotherDevice` le signale aux apps.
 
 ## Corbeille de l'utilisateur effectif
 
@@ -56,7 +56,7 @@ l'utilisateur).
 ## API `KazoTrash`
 
 `Shared/Kazo.Os.AppSdk/IO/KazoTrash.cs`. Classe statique, contexte ambiant de
-l'ADR 0043 (`KazoExecutionContext.Current`), exceptions `Hack*`. Aucune
+l'ADR 0043 (`KazoExecutionContext.Current`), exceptions `Kazo*`. Aucune
 nouvelle capacité : les capacités `filesystem.*` et les droits décident, comme
 pour `KazoFile`.
 

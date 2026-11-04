@@ -23,7 +23,7 @@ L'écran d'accueil mobile a sa propre image et son propre ajustement (choix
 
 ## Réglages
 
-Dans `appearance.config` (`/etc/hackeros/` puis `~/.config/hackeros/`) :
+Dans `appearance.config` (`/etc/kazoos/` puis `~/.config/kazoos/`) :
 
 ```ini
 wallpaper = /home/alice/Images/plage.webp
@@ -41,16 +41,16 @@ mobileWallpaperFit = fill
 | `mobileWallpaper` | même forme que `wallpaper`, pour l'écran d'accueil mobile ; vide = fond du thème mobile |
 | `mobileWallpaperFit` | ajustement sur mobile, mêmes valeurs que `wallpaperFit` |
 
-Un `nano ~/.config/hackeros/appearance.config` change le fond à l'enregistrement.
+Un `nano ~/.config/kazoos/appearance.config` change le fond à l'enregistrement.
 
 ## Sources des images
 
 | Source | Emplacement |
 | --- | --- |
 | Livrées avec l'OS | `builtin:hacker-grid`, `builtin:circuit`, `builtin:aurora`, `builtin:nebula` (fichiers statiques `_content/Kazo.Os.Theming.Blazor/wallpapers/*.webp`) |
-| Système | `/usr/share/hackeros/wallpapers/` |
-| Utilisateur | `~/.local/share/hackeros/wallpapers/` |
-| Packs installés | `/usr/share/hackeros/theme-packs/<pack>/wallpapers/`, `~/.local/share/hackeros/theme-packs/<pack>/wallpapers/` (ADR 0190) |
+| Système | `/usr/share/kazoos/wallpapers/` |
+| Utilisateur | `~/.local/share/kazoos/wallpapers/` |
+| Packs installés | `/usr/share/kazoos/theme-packs/<pack>/wallpapers/`, `~/.local/share/kazoos/theme-packs/<pack>/wallpapers/` (ADR 0190) |
 | Tout autre fichier | choisi avec « Parcourir… », chemin gardé tel quel |
 
 ## Architecture
@@ -75,7 +75,7 @@ fichiers) propose « Définir comme fond d'écran » juste après « Ouvrir avec
 - avec plusieurs écrans, un sous-menu « Écran 1 et les autres », puis
   « Écran 2 »… pour chaque écran secondaire ouvert (`wallpaperScreen<n>`).
 
-Les entrées appartiennent à `org.hackeros.settings.wallpaper`
+Les entrées appartiennent à `org.kazoos.settings.wallpaper`
 (`SetWallpaperApp`), un service caché déclaré par le projet Paramètres et
 exécuté sur le fil principal. `SetWallpaperService` lit le fichier en tant
 qu'utilisateur de la session, vérifie ses octets et sa taille comme le shell,

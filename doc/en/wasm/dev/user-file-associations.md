@@ -34,7 +34,7 @@ AppIntentDispatcher (passe le principal à chaque résolution)
 - **`UserFileAssociationStore`** (`Platform.Core/Intents`): reads the user's file
   (validated by `FileAssociationSettingsValidator`), writes it while keeping the
   other entries and the other actions of the same target. Creates
-  `~/.config/hackeros` as `0755` and the file as `0644`.
+  `~/.config/kazoos` as `0755` and the file as `0644`.
 - **`PrincipalTextFile`**: reading and writing a small text file in the home
   folder under the user's identity, shared with `IntentChoiceStore`
   (`intents.config`).
@@ -82,7 +82,7 @@ AppIntentDispatcher (passe le principal à chaque résolution)
 ## Task list
 
 - [x] ADR 0121.
-- [x] `~/.config/hackeros/file-associations.json` layer read under the user's identity.
+- [x] `~/.config/kazoos/file-associations.json` layer read under the user's identity.
 - [x] Index keyed by target and action.
 - [x] User order, then machine, in all resolutions.
 - [x] SDK API (`Unshipped`) and worker operations.

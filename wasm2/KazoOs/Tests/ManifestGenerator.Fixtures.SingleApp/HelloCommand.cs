@@ -15,7 +15,7 @@ public sealed class HelloCommand(AppManifest manifest) : TerminalAppBase(manifes
 [AppManifest]
 public sealed class HelloApp : AppDefinition
 {
-    public override string Id => "org.hackeros.fixtures.hello";
+    public override string Id => "org.kazoos.fixtures.hello";
     public override string Name => "hello";
     public override AppKind Kind => AppKind.Terminal;
     public override Type EntryPoint => typeof(HelloCommand);

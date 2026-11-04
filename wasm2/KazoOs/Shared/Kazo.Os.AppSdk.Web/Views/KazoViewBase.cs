@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 namespace Kazo.Os.AppSdk.Web.Views;
 
 /// <summary>
-/// Base of the views and layouts of an ASP.Hack site (ADR 0083 §3): a Razor component rendered once
+/// Base of the views and layouts of an ASP.Kazo site (ADR 0083 §3): a Razor component rendered once
 /// to HTML, which sees the request through the cascading <see cref="KazoViewContext"/>. Any component
 /// can be a view; deriving from this class adds the MVC shortcuts (<see cref="ViewData"/>,
 /// <see cref="Url"/>, <see cref="ModelState"/>, <see cref="Layout"/>).
@@ -20,7 +20,7 @@ public abstract class KazoViewBase : ComponentBase
     public KazoViewContext ViewContext
     {
         get => _viewContext ?? throw new InvalidOperationException(
-            $"{GetType().Name} is an ASP.Hack view: it is rendered by View() or PartialView(), which give it its KazoViewContext.");
+            $"{GetType().Name} is an ASP.Kazo view: it is rendered by View() or PartialView(), which give it its KazoViewContext.");
         set => _viewContext = value;
     }
 
@@ -40,7 +40,7 @@ public abstract class KazoViewBase : ComponentBase
     protected KazoModelStateDictionary ModelState => ViewContext.ModelState;
 
     /// <summary>Gets the URL helper (<c>Url.Action("Details", "Notes", new { id = 3 })</c>, <c>Url.Content("~/css/site.css")</c>).</summary>
-    protected IHackUrlHelper Url => ViewContext.Url;
+    protected IKazoUrlHelper Url => ViewContext.Url;
 
     /// <summary>
     /// Gets or sets the layout applied after this component rendered (its <c>@layout</c> by default);

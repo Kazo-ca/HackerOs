@@ -69,7 +69,7 @@ public static class KazoApps
 
     /// <summary>
     /// Makes <paramref name="appId"/> the user's default for a file type or URI scheme (ADR 0121),
-    /// like <c>xdg-mime default</c>: written to <c>~/.config/hackeros/file-associations.json</c>,
+    /// like <c>xdg-mime default</c>: written to <c>~/.config/kazoos/file-associations.json</c>,
     /// it comes before the machine's default for this user only.
     /// </summary>
     /// <param name="target">Extension with its dot (<c>.md</c>) or media type (<c>text/markdown</c>, <c>x-scheme-handler/https</c>).</param>
@@ -286,7 +286,7 @@ public static class KazoApps
     /// <param name="intentId">Identifier <c>domain.reversed.name.vN</c>, e.g. <c>com.example.notes.share.v1</c>.</param>
     /// <param name="payloadJson">Optional JSON object of at most 64 KiB.</param>
     /// <param name="targetAppId">The app to deliver to, after the user chose one.</param>
-    /// <param name="rememberChoice">With <paramref name="targetAppId"/>: always use it for this intent (<c>~/.config/hackeros/intents.config</c>).</param>
+    /// <param name="rememberChoice">With <paramref name="targetAppId"/>: always use it for this intent (<c>~/.config/kazoos/intents.config</c>).</param>
     /// <param name="cancellationToken">Cancels the request.</param>
     /// <exception cref="ArgumentException">The identifier is malformed or reserved, the payload is not a JSON object or is too large, or the target does not declare the intent.</exception>
     /// <exception cref="KazoAppLaunchException">The handler failed to start.</exception>

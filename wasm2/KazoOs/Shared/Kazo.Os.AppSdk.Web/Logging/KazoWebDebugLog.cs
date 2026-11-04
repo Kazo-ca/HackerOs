@@ -10,7 +10,7 @@ namespace Kazo.Os.AppSdk.Web.Logging;
 /// </summary>
 public sealed class KazoWebLoggingOptions
 {
-    /// <summary>Gets whether the site writes its debug log, <c>/var/log/hackweb/&lt;id&gt;.log</c>.</summary>
+    /// <summary>Gets whether the site writes its debug log, <c>/var/log/kazoweb/&lt;id&gt;.log</c>.</summary>
     public bool DebugLogEnabled { get; private set; }
 
     /// <summary>Gets the lowest level written (<see cref="LogLevel.Debug"/> by default).</summary>
@@ -24,7 +24,7 @@ public sealed class KazoWebLoggingOptions
 
     /// <summary>
     /// Turns on the debug log of the site: every <c>ILogger&lt;T&gt;</c> entry at <paramref name="minimumLevel"/>
-    /// or above, the requests and the unhandled exceptions go to <c>/var/log/hackweb/&lt;app id&gt;.log</c>,
+    /// or above, the requests and the unhandled exceptions go to <c>/var/log/kazoweb/&lt;app id&gt;.log</c>,
     /// written by the OS with the usual rotation (1 MiB, 5 archives).
     /// </summary>
     /// <param name="minimumLevel">The lowest level written.</param>
@@ -38,9 +38,9 @@ public sealed class KazoWebLoggingOptions
 
 /// <summary>
 /// Where the lines of a site's debug log go. The OS one (<see cref="KazoWebDebugLogGatewaySink"/>)
-/// appends to <c>/var/log/hackweb/&lt;app id&gt;.log</c>; a test registers its own in the site's services.
+/// appends to <c>/var/log/kazoweb/&lt;app id&gt;.log</c>; a test registers its own in the site's services.
 /// </summary>
-public interface IHackWebDebugLogSink
+public interface IKazoWebDebugLogSink
 {
     /// <summary>Appends one line.</summary>
     /// <param name="line">The formatted line.</param>
@@ -49,7 +49,7 @@ public interface IHackWebDebugLogSink
 
 /// <summary>The OS sink: the logging gateway of the site's process (<c>AppendToSiteDebugLog</c>).</summary>
 /// <param name="context">The site's execution context.</param>
-public sealed class KazoWebDebugLogGatewaySink(IAppExecutionContext context) : IHackWebDebugLogSink
+public sealed class KazoWebDebugLogGatewaySink(IAppExecutionContext context) : IKazoWebDebugLogSink
 {
     /// <inheritdoc />
     public void Write(string line)
@@ -66,7 +66,7 @@ public sealed class KazoWebDebugLogGatewaySink(IAppExecutionContext context) : I
 }
 
 /// <summary>A sink that keeps the lines in memory (tests, or a site run without the OS).</summary>
-public sealed class KazoWebDebugLogMemorySink : IHackWebDebugLogSink
+public sealed class KazoWebDebugLogMemorySink : IKazoWebDebugLogSink
 {
     private readonly Lock _gate = new();
     private readonly List<string> _lines = [];
@@ -98,7 +98,7 @@ public sealed class KazoWebDebugLogMemorySink : IHackWebDebugLogSink
 /// in single-line mode, with the time first: <c>2026-10-17T01:22:14.123Z info: Category[0] message</c>;
 /// an exception follows on the same line (the log writer escapes its line breaks).
 /// </summary>
-internal sealed class KazoWebDebugLogProvider(IHackWebDebugLogSink sink, TimeProvider time) : ILoggerProvider
+internal sealed class KazoWebDebugLogProvider(IKazoWebDebugLogSink sink, TimeProvider time) : ILoggerProvider
 {
     public ILogger CreateLogger(string categoryName) => new Logger(sink, time, categoryName);
 
@@ -118,7 +118,7 @@ internal sealed class KazoWebDebugLogProvider(IHackWebDebugLogSink sink, TimePro
         _ => "none",
     };
 
-    private sealed class Logger(IHackWebDebugLogSink sink, TimeProvider time, string category) : ILogger
+    private sealed class Logger(IKazoWebDebugLogSink sink, TimeProvider time, string category) : ILogger
     {
         public IDisposable? BeginScope<TState>(TState state)
             where TState : notnull => null;

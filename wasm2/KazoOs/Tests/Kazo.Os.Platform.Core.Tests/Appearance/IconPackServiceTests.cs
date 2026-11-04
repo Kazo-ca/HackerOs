@@ -21,7 +21,7 @@ public sealed class IconPackServiceTests
         string? manifest = await harness.ReadAsync("/usr/share/icons/neon/icon-pack.json");
         Assert.Contains("\"id\": \"neon\"", manifest, StringComparison.Ordinal);
         Assert.NotNull(await harness.StatAsync("/usr/share/icons/neon/files/folder.png"));
-        Assert.NotNull(await harness.StatAsync("/usr/share/icons/neon/apps/org.hackeros.terminal.png"));
+        Assert.NotNull(await harness.StatAsync("/usr/share/icons/neon/apps/org.kazoos.terminal.png"));
     }
 
     [Fact]
@@ -35,7 +35,7 @@ public sealed class IconPackServiceTests
         await service.InitializeAsync();
         Assert.Equal(IconPackLibrary.BuiltInId, service.SelectedId);
         Assert.Null(service.Current);
-        Assert.Null(service.FindAppImage("org.hackeros.terminal", "utilities", hasDeclaredImage: true));
+        Assert.Null(service.FindAppImage("org.kazoos.terminal", "utilities", hasDeclaredImage: true));
         int notifications = 0;
         service.Changed += () => notifications++;
 
@@ -44,7 +44,7 @@ public sealed class IconPackServiceTests
 
         Assert.Equal("neon", service.Current?.Info.Id);
         Assert.Equal(1, notifications);
-        Assert.StartsWith("data:image/png;base64,", service.FindAppImage("org.hackeros.terminal", "utilities", hasDeclaredImage: true), StringComparison.Ordinal);
+        Assert.StartsWith("data:image/png;base64,", service.FindAppImage("org.kazoos.terminal", "utilities", hasDeclaredImage: true), StringComparison.Ordinal);
         // A category image replaces only the generic icon of an app that declares none.
         Assert.Null(service.FindAppImage("org.example.unknown", "utilities", hasDeclaredImage: true));
         Assert.NotNull(service.FindAppImage("org.example.unknown", "utilities", hasDeclaredImage: false));

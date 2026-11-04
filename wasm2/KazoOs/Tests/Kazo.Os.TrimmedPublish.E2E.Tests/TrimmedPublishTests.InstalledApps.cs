@@ -4,7 +4,7 @@ using Microsoft.Playwright;
 namespace Kazo.Os.TrimmedPublish.E2E.Tests;
 
 /// <summary>
-/// ADR 0206: the <c>wwwroot/</c> files of an app installed by <c>hackpkg</c> are served at
+/// ADR 0206: the <c>wwwroot/</c> files of an app installed by <c>kazopkg</c> are served at
 /// <c>_content/&lt;assembly&gt;/</c> by the service worker, Web Worker scripts included. ADR 0221:
 /// the files it does not declare, its collocated <c>.razor.js</c> and its scoped CSS too.
 /// </summary>
@@ -19,7 +19,7 @@ public sealed partial class TrimmedPublishTests
 
     /// <summary>
     /// The test package (<c>Tests/fixtures/installed-app</c>), answered in place of GitHub, is
-    /// installed with <c>sudo hackpkg install</c> on the development address (no service worker from
+    /// installed with <c>sudo kazopkg install</c> on the development address (no service worker from
     /// index.html there); it opens at once (ADR 0214), then again after the OS restarts: its module, the Web Worker it starts,
     /// the script that worker loads by a relative <c>importScripts</c>, and its image all load; so do
     /// its collocated module and its scoped CSS, which it never declared (ADR 0221), and its French
@@ -43,16 +43,16 @@ public sealed partial class TrimmedPublishTests
             await NavigateWhenReadyAsync(page, settings.Url);
             await SignInAsync(page);
 
-            // --- Install: hackpkg downloads index.json and the package, an administrator confirms ---
+            // --- Install: kazopkg downloads index.json and the package, an administrator confirms ---
             await OpenAppAsync(page, "Terminal");
             ILocator rows = page.Locator("[data-terminal-panel] .xterm-rows").First;
             ILocator screen = page.Locator("[data-terminal-panel] .xterm-screen").First;
             await WaitForTerminalTextAsync(rows, text => PromptPattern().IsMatch(text), "the shell prompt");
-            await RunCommandAsync(page, screen, $"sudo hackpkg install {ProbeRepository}");
+            await RunCommandAsync(page, screen, $"sudo kazopkg install {ProbeRepository}");
             await ConfirmAsAdministratorAsync(page);
             await WaitForTerminalTextAsync(rows, text => text.Contains("available now", StringComparison.Ordinal), "the end of the installation");
             Log("the test package was installed.");
-            session.AssertNoErrors("hackpkg install");
+            session.AssertNoErrors("kazopkg install");
 
             // --- Without a restart (ADR 0214 §1): an app never loaded opens at once ---
             await OpenAppAsync(page, ProbeAppName);
@@ -162,7 +162,7 @@ public sealed partial class TrimmedPublishTests
     /// </summary>
     private async Task ServePackagesLocallyAsync(IBrowserContext context, string directory)
     {
-        string prefix = $"/{ProbeRepository}/hackeros-packages/";
+        string prefix = $"/{ProbeRepository}/kazoos-packages/";
         string root = Path.GetFullPath(directory) + Path.DirectorySeparatorChar;
         await context.RouteAsync(new Regex("^" + Regex.Escape("https://raw.githubusercontent.com" + prefix)), async route =>
         {

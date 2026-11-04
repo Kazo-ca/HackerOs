@@ -14,7 +14,7 @@ public sealed class CursorThemeTests(ITestOutputHelper output)
     private const string DocumentCursor = "() => getComputedStyle(document.documentElement).cursor";
 
     private const string ButtonsWithNeonPointer =
-        "() => [...document.querySelectorAll('button')].filter(b => getComputedStyle(b).cursor.includes('/cursors/hackeros-neon/pointer.png')).length";
+        "() => [...document.querySelectorAll('button')].filter(b => getComputedStyle(b).cursor.includes('/cursors/kazoos-neon/pointer.png')).length";
 
     [Fact]
     public async Task Choosing_a_cursor_theme_draws_it_everywhere_and_system_restores_the_host_cursors()
@@ -43,7 +43,7 @@ public sealed class CursorThemeTests(ITestOutputHelper output)
 
             await ChooseAsync(cursors, "Kazo OS Neon");
             await page.WaitForFunctionAsync(
-                "() => getComputedStyle(document.documentElement).cursor.includes('/cursors/hackeros-neon/default.png')",
+                "() => getComputedStyle(document.documentElement).cursor.includes('/cursors/kazoos-neon/default.png')",
                 null, new PageWaitForFunctionOptions { Timeout = 15000 });
             Assert.EndsWith("2 1, default", await page.EvaluateAsync<string>(DocumentCursor), StringComparison.Ordinal);
             int themedButtons = await page.EvaluateAsync<int>(ButtonsWithNeonPointer);

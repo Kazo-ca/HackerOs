@@ -21,7 +21,7 @@ BIG = SIZE * SCALE
 OUTPUT = Path(__file__).resolve().parents[2] / "Platform/Kazo.Os.Theming.Blazor/wwwroot/cursors"
 
 THEMES = {
-    "hackeros-neon": {"fill": (8, 14, 8, 255), "line": (57, 255, 20, 255), "mark": (57, 255, 20, 255)},
+    "kazoos-neon": {"fill": (8, 14, 8, 255), "line": (57, 255, 20, 255), "mark": (57, 255, 20, 255)},
     "gothic-crimson": {"fill": (18, 6, 8, 255), "line": (210, 31, 60, 255), "mark": (232, 220, 200, 255)},
 }
 

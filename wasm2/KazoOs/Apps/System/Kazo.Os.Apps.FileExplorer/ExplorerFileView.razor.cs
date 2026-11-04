@@ -18,7 +18,7 @@ using Microsoft.Extensions.Localization;
 namespace Kazo.Os.Apps.FileExplorer;
 
 /// <summary>
-/// The File Explorer's provider of <c>hackeros.file-view</c> (ADR 0148, ADR 0155): the explorer
+/// The File Explorer's provider of <c>kazoos.file-view</c> (ADR 0148, ADR 0155): the explorer
 /// registers it in its manifest, every app shows it through <c>KazoFileView</c>, and the explorer
 /// shows it itself, which makes it the one source of truth of the file control.
 /// </summary>
@@ -36,10 +36,10 @@ namespace Kazo.Os.Apps.FileExplorer;
 /// showing the explorer's control.
 /// </para>
 /// </remarks>
-public sealed partial class ExplorerFileView : IHackFileView
+public sealed partial class ExplorerFileView : IKazoFileView
 {
     private readonly FileViewMenuBinding _binding = new();
-    private readonly string _menuName = "hackeros.file-view." + Guid.NewGuid().ToString("N");
+    private readonly string _menuName = "kazoos.file-view." + Guid.NewGuid().ToString("N");
     private readonly ConditionalWeakTable<FileViewItem, KazoFileViewItem> _snapshots = new();
     private readonly ConditionalWeakTable<KazoFileViewItem, FileViewItem> _items = new();
 
@@ -176,7 +176,7 @@ public sealed partial class ExplorerFileView : IHackFileView
     private EventCallback<FileViewClipboardRequestedEventArgs> ClipboardCallback =>
         Has(KazoFileViewFeatures.Clipboard) ? _clipboardRequested : default;
 
-    // ---- IHackFileView -------------------------------------------------------------------------------
+    // ---- IKazoFileView -------------------------------------------------------------------------------
 
     /// <inheritdoc />
     public string CurrentDirectory => _view?.CurrentDirectory.Value ?? _initialDirectory.Value;

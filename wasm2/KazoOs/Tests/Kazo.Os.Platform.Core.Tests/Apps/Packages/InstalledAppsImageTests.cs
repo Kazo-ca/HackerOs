@@ -16,15 +16,15 @@ public sealed class InstalledAppsImageTests
     {
         InstalledAppsImage image = await InstalledAppsImage.LoadAsync(Reader(new()
         {
-            ["/etc/hackeros/apps.config"] = "[installed]\norg.kazo.sample=github:Kazo-ca/Sample@1.0.0\n",
-            ["/usr/lib/hackeros/apps/org.kazo.sample/1.0.0/manifest.json"] = AppPackageTests.ManifestJson(),
+            ["/etc/kazoos/apps.config"] = "[installed]\norg.kazo.sample=github:Kazo-ca/Sample@1.0.0\n",
+            ["/usr/lib/kazoos/apps/org.kazo.sample/1.0.0/manifest.json"] = AppPackageTests.ManifestJson(),
         }));
 
         InstalledApp app = Assert.Single(image.Apps);
         Assert.Empty(image.Warnings);
         Assert.Equal("org.kazo.sample", app.AppId);
-        Assert.Equal("/usr/lib/hackeros/apps/org.kazo.sample/1.0.0/lib/Kazo.Sample.dll", app.GetAssemblyPath("Kazo.Sample.dll").Value);
-        Assert.Equal("/usr/lib/hackeros/apps/org.kazo.sample/1.0.0/wwwroot/data/x.txt", app.GetAssetPath("data/x.txt").Value);
+        Assert.Equal("/usr/lib/kazoos/apps/org.kazo.sample/1.0.0/lib/Kazo.Sample.dll", app.GetAssemblyPath("Kazo.Sample.dll").Value);
+        Assert.Equal("/usr/lib/kazoos/apps/org.kazo.sample/1.0.0/wwwroot/data/x.txt", app.GetAssetPath("data/x.txt").Value);
         Assert.Equal(["Kazo.Sample.dll"], app.AssemblyNames);
     }
 
@@ -42,8 +42,8 @@ public sealed class InstalledAppsImageTests
     {
         InstalledAppsImage image = await InstalledAppsImage.LoadAsync(Reader(new()
         {
-            ["/etc/hackeros/apps.config"] = "[installed]\norg.kazo.sample=github:Kazo-ca/Sample@2.0.0\norg.kazo.gone=github:Kazo-ca/Gone@1.0.0\n",
-            ["/usr/lib/hackeros/apps/org.kazo.sample/2.0.0/manifest.json"] = AppPackageTests.ManifestJson(version: "1.0.0"),
+            ["/etc/kazoos/apps.config"] = "[installed]\norg.kazo.sample=github:Kazo-ca/Sample@2.0.0\norg.kazo.gone=github:Kazo-ca/Gone@1.0.0\n",
+            ["/usr/lib/kazoos/apps/org.kazo.sample/2.0.0/manifest.json"] = AppPackageTests.ManifestJson(version: "1.0.0"),
         }));
 
         Assert.Empty(image.Apps);
@@ -60,8 +60,8 @@ public sealed class InstalledAppsImageTests
         InstalledAppsImage image = await InstalledAppsImage.LoadAsync(
             Reader(new()
             {
-                ["/home/alice/.config/hackeros/installed-apps.config"] = "[installed]\norg.kazo.sample=github:Kazo-ca/Sample@1.0.0\n",
-                ["/home/alice/.local/share/hackeros/apps/org.kazo.sample/1.0.0/manifest.json"] = AppPackageTests.ManifestJson(),
+                ["/home/alice/.config/kazoos/installed-apps.config"] = "[installed]\norg.kazo.sample=github:Kazo-ca/Sample@1.0.0\n",
+                ["/home/alice/.local/share/kazoos/apps/org.kazo.sample/1.0.0/manifest.json"] = AppPackageTests.ManifestJson(),
             }),
             Homes("/home/alice", "/home/bob"));
 
@@ -69,14 +69,14 @@ public sealed class InstalledAppsImageTests
         Assert.Empty(image.Warnings);
         Assert.False(app.IsSystemWide);
         Assert.Equal(["/home/alice"], app.OwnerHomes);
-        Assert.Equal("/home/alice/.local/share/hackeros/apps/org.kazo.sample/1.0.0/lib/Kazo.Sample.dll", app.GetAssemblyPath("Kazo.Sample.dll").Value);
+        Assert.Equal("/home/alice/.local/share/kazoos/apps/org.kazo.sample/1.0.0/lib/Kazo.Sample.dll", app.GetAssemblyPath("Kazo.Sample.dll").Value);
 
         InstalledPackageCatalog catalog = new();
         catalog.Apply(image.Apps);
         Assert.True(catalog.IsVisibleTo("org.kazo.sample", "/home/alice/"));
         Assert.False(catalog.IsVisibleTo("org.kazo.sample", "/home/bob"));
         Assert.False(catalog.IsVisibleTo("org.kazo.sample", null));
-        Assert.True(catalog.IsVisibleTo("org.hackeros.calculator", "/home/bob"));
+        Assert.True(catalog.IsVisibleTo("org.kazoos.calculator", "/home/bob"));
         Assert.Equal(["org.kazo.sample"], catalog.GetHiddenFor("/home/bob"));
         Assert.Empty(catalog.GetHiddenFor("/home/alice"));
     }
@@ -87,9 +87,9 @@ public sealed class InstalledAppsImageTests
         InstalledAppsImage image = await InstalledAppsImage.LoadAsync(
             Reader(new()
             {
-                ["/etc/hackeros/apps.config"] = "[installed]\norg.kazo.sample=github:Kazo-ca/Sample@1.0.0\n",
-                ["/usr/lib/hackeros/apps/org.kazo.sample/1.0.0/manifest.json"] = AppPackageTests.ManifestJson(),
-                ["/home/alice/.config/hackeros/installed-apps.config"] = "[installed]\norg.kazo.sample=github:Kazo-ca/Sample@1.0.0\n",
+                ["/etc/kazoos/apps.config"] = "[installed]\norg.kazo.sample=github:Kazo-ca/Sample@1.0.0\n",
+                ["/usr/lib/kazoos/apps/org.kazo.sample/1.0.0/manifest.json"] = AppPackageTests.ManifestJson(),
+                ["/home/alice/.config/kazoos/installed-apps.config"] = "[installed]\norg.kazo.sample=github:Kazo-ca/Sample@1.0.0\n",
             }),
             Homes("/home/alice"));
 
@@ -103,9 +103,9 @@ public sealed class InstalledAppsImageTests
         InstalledAppsImage image = await InstalledAppsImage.LoadAsync(
             Reader(new()
             {
-                ["/home/alice/.config/hackeros/installed-apps.config"] = "[installed]\norg.kazo.sample=github:Kazo-ca/Sample@1.0.0\n",
-                ["/home/bob/.config/hackeros/installed-apps.config"] = "[installed]\norg.kazo.sample=github:Kazo-ca/Sample@1.1.0\n",
-                ["/home/bob/.local/share/hackeros/apps/org.kazo.sample/1.1.0/manifest.json"] = AppPackageTests.ManifestJson(version: "1.1.0"),
+                ["/home/alice/.config/kazoos/installed-apps.config"] = "[installed]\norg.kazo.sample=github:Kazo-ca/Sample@1.0.0\n",
+                ["/home/bob/.config/kazoos/installed-apps.config"] = "[installed]\norg.kazo.sample=github:Kazo-ca/Sample@1.1.0\n",
+                ["/home/bob/.local/share/kazoos/apps/org.kazo.sample/1.1.0/manifest.json"] = AppPackageTests.ManifestJson(version: "1.1.0"),
             }),
             Homes("/home/alice", "/home/bob"));
 

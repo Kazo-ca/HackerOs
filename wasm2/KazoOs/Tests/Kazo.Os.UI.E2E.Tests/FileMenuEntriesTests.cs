@@ -8,7 +8,7 @@ namespace Kazo.Os.UI.E2E.Tests;
 /// <summary>
 /// ADR 0151 and ADR 0159, end to end: the entries apps register (the explorer's "Extract here", the
 /// Web Server Manager's "Publish as a web site…") reach the file menus through
-/// <c>/etc/hackeros/context-menus.d</c>, and a click launches the owner with the paths. ADR 0218:
+/// <c>/etc/kazoos/context-menus.d</c>, and a click launches the owner with the paths. ADR 0218:
 /// Settings' « Set as wallpaper » on an image, with one screen.
 /// </summary>
 public sealed class FileMenuEntriesTests(ITestOutputHelper output)
@@ -51,7 +51,7 @@ public sealed class FileMenuEntriesTests(ITestOutputHelper output)
             await zipRow.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 15000 });
             await zipRow.ClickAsync(new() { Button = MouseButton.Right });
 
-            ILocator items = page.Locator(".hack-context-menu-panel [role=menuitem] .hack-context-menu-title");
+            ILocator items = page.Locator(".kazo-context-menu-panel [role=menuitem] .kazo-context-menu-title");
             await Assertions.Expect(items.Filter(new() { HasText = "Extract here" })).ToBeVisibleAsync(new() { Timeout = 10000 });
             IReadOnlyList<string> titles = await items.AllInnerTextsAsync();
             output.WriteLine($"[test] archive menu: {string.Join(" | ", titles)}");
@@ -118,7 +118,7 @@ public sealed class FileMenuEntriesTests(ITestOutputHelper output)
             int windows = await page.Locator("header.window-chrome").CountAsync();
             await imageRow.ClickAsync(new() { Button = MouseButton.Right });
 
-            ILocator items = page.Locator(".hack-context-menu-panel [role=menuitem] .hack-context-menu-title");
+            ILocator items = page.Locator(".kazo-context-menu-panel [role=menuitem] .kazo-context-menu-title");
             await Assertions.Expect(items.Filter(new() { HasText = "Set as wallpaper" })).ToBeVisibleAsync(new() { Timeout = 10000 });
             IReadOnlyList<string> titles = await items.AllInnerTextsAsync();
             output.WriteLine($"[test] image menu: {string.Join(" | ", titles)}");

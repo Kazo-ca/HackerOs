@@ -8,7 +8,7 @@ public static class ThemeCatalog
 {
     private static readonly ReadOnlyCollection<ThemeDefinition> DesktopThemeItems = Array.AsReadOnly<ThemeDefinition>(
     [
-        new(WellKnownThemeIds.HackerOs, "Kazo OS", ThemePlatform.Desktop, supportsAccentColor: true),
+        new(WellKnownThemeIds.KazoOs, "Kazo OS", ThemePlatform.Desktop, supportsAccentColor: true),
         new(WellKnownThemeIds.Windows98, "Windows 98", ThemePlatform.Desktop),
         new(WellKnownThemeIds.WindowsXp, "Windows XP", ThemePlatform.Desktop),
         new(WellKnownThemeIds.Windows7, "Windows 7", ThemePlatform.Desktop),

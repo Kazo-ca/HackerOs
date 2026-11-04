@@ -12,7 +12,7 @@ public sealed class CapabilityGrantRepositoryTests
         CapabilityGrantRepository repository = new();
 
         CapabilityGrantMutationResult deniedGrant = repository.Grant(
-            "org.hackeros.browser",
+            "org.kazoos.browser",
             "user-1",
             AppCapabilities.FileSystemUserHomeRead,
             CapabilityGrantSource.UserApproval,
@@ -22,7 +22,7 @@ public sealed class CapabilityGrantRepositoryTests
         Assert.Equal(0, repository.CurrentPolicyRevision);
 
         CapabilityGrantMutationResult granted = repository.Grant(
-            "org.hackeros.browser",
+            "org.kazoos.browser",
             "user-1",
             AppCapabilities.FileSystemUserHomeRead,
             CapabilityGrantSource.AdministratorApproval,
@@ -39,20 +39,20 @@ public sealed class CapabilityGrantRepositoryTests
     {
         CapabilityGrantRepository repository = new();
         repository.Grant(
-            "org.hackeros.browser",
+            "org.kazoos.browser",
             "user-1",
             AppCapabilities.FileSystemUserHomeRead,
             CapabilityGrantSource.AdministratorApproval,
             AppAuthority.Administrator);
 
         CapabilityPolicyEvaluation missingApp = repository.Evaluate(
-            "org.hackeros.other",
+            "org.kazoos.other",
             "user-1",
             AppCapabilities.FileSystemUserHomeRead,
             AppAuthority.User,
             AppAuthority.User);
         CapabilityPolicyEvaluation permitted = repository.Evaluate(
-            "org.hackeros.browser",
+            "org.kazoos.browser",
             "user-1",
             AppCapabilities.FileSystemUserHomeRead,
             AppAuthority.User,
@@ -68,7 +68,7 @@ public sealed class CapabilityGrantRepositoryTests
     {
         CapabilityGrantRepository repository = new();
         CapabilityGrantMutationResult granted = repository.Grant(
-            "org.hackeros.browser",
+            "org.kazoos.browser",
             "user-1",
             AppCapabilities.FileSystemUserHomeRead,
             CapabilityGrantSource.AdministratorApproval,
@@ -76,7 +76,7 @@ public sealed class CapabilityGrantRepositoryTests
         repository.Revoke(granted.Grant!.Id, AppAuthority.Administrator);
 
         CapabilityPolicyEvaluation evaluation = repository.Evaluate(
-            "org.hackeros.browser",
+            "org.kazoos.browser",
             "user-1",
             AppCapabilities.FileSystemUserHomeRead,
             AppAuthority.User,
@@ -91,7 +91,7 @@ public sealed class CapabilityGrantRepositoryTests
     {
         CapabilityGrantRepository repository = new();
         repository.Grant(
-            "org.hackeros.browser",
+            "org.kazoos.browser",
             "user-1",
             AppCapabilities.FileSystemUserHomeRead,
             CapabilityGrantSource.AdministratorApproval,
@@ -99,14 +99,14 @@ public sealed class CapabilityGrantRepositoryTests
             [new VirtualPathCapabilityConstraint(VirtualPath.Parse("/home/user-1/Downloads"), true)]);
 
         CapabilityPolicyEvaluation outsideConstraint = repository.Evaluate(
-            "org.hackeros.browser",
+            "org.kazoos.browser",
             "user-1",
             AppCapabilities.FileSystemUserHomeRead,
             AppAuthority.User,
             AppAuthority.User,
             new VirtualPathResourceCandidate(VirtualPath.Parse("/home/user-1/Documents/file.txt")));
         CapabilityPolicyEvaluation insideConstraint = repository.Evaluate(
-            "org.hackeros.browser",
+            "org.kazoos.browser",
             "user-1",
             AppCapabilities.FileSystemUserHomeRead,
             AppAuthority.User,
@@ -122,14 +122,14 @@ public sealed class CapabilityGrantRepositoryTests
     {
         CapabilityGrantRepository repository = new();
         repository.Grant(
-            "org.hackeros.settings",
+            "org.kazoos.settings",
             "user-1",
             AppCapabilities.FileSystemSystemWrite,
             CapabilityGrantSource.AdministratorApproval,
             AppAuthority.Administrator);
 
         CapabilityPolicyEvaluation evaluation = repository.Evaluate(
-            "org.hackeros.settings",
+            "org.kazoos.settings",
             "user-1",
             AppCapabilities.FileSystemSystemWrite,
             AppAuthority.User,
@@ -144,7 +144,7 @@ public sealed class CapabilityGrantRepositoryTests
     {
         CapabilityGrantRepository repository = new();
         repository.Grant(
-            "org.hackeros.browser",
+            "org.kazoos.browser",
             "user-1",
             AppCapabilities.FileSystemUserHomeRead,
             CapabilityGrantSource.AdministratorApproval,
@@ -152,7 +152,7 @@ public sealed class CapabilityGrantRepositoryTests
             [new VirtualPathCapabilityConstraint(VirtualPath.Parse("/home/user-1/Downloads"), false)]);
 
         CapabilityGrantMutationResult expanded = repository.Grant(
-            "org.hackeros.browser",
+            "org.kazoos.browser",
             "user-1",
             AppCapabilities.FileSystemUserHomeRead,
             CapabilityGrantSource.AdministratorApproval,
@@ -170,7 +170,7 @@ public sealed class CapabilityGrantRepositoryTests
     {
         CapabilityGrantRepository repository = new();
         repository.Grant(
-            "org.hackeros.browser",
+            "org.kazoos.browser",
             "user-1",
             AppCapabilities.FileSystemUserHomeRead,
             CapabilityGrantSource.AdministratorApproval,
@@ -178,7 +178,7 @@ public sealed class CapabilityGrantRepositoryTests
             [new VirtualPathCapabilityConstraint(VirtualPath.Parse("/home/user-1"), true)]);
 
         CapabilityGrantMutationResult narrower = repository.Grant(
-            "org.hackeros.browser",
+            "org.kazoos.browser",
             "user-1",
             AppCapabilities.FileSystemUserHomeRead,
             CapabilityGrantSource.AdministratorApproval,
@@ -193,7 +193,7 @@ public sealed class CapabilityGrantRepositoryTests
     {
         CapabilityGrantRepository repository = new();
         CapabilityGrantMutationResult granted = repository.Grant(
-            "org.hackeros.browser",
+            "org.kazoos.browser",
             "user-1",
             AppCapabilities.FileSystemUserHomeRead,
             CapabilityGrantSource.AdministratorApproval,

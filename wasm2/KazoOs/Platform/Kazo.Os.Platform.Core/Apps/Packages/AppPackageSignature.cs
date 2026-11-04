@@ -7,7 +7,7 @@ namespace Kazo.Os.Platform.Core.Apps.Packages;
 
 /// <summary>
 /// Checks the signature a source puts next to the SHA-256 of a package (ADR 0214 §2): ECDSA P-256 with
-/// SHA-256 over the bytes of the <c>.hackapp</c> file, signature in IEEE P1363 form (<c>r||s</c>).
+/// SHA-256 over the bytes of the <c>.kazoapp</c> file, signature in IEEE P1363 form (<c>r||s</c>).
 /// </summary>
 /// <remarks>
 /// .NET in WebAssembly has no ECDSA: the browser hosts verify with Web Crypto

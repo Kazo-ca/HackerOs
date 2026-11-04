@@ -8,7 +8,7 @@ namespace Kazo.Os.Apps.Settings;
 
 /// <summary>
 /// Settings &gt; OS components (ADR 0156 §3): for the file view and the file dialogs, the apps that
-/// provide them, the one in use, and the administrator's choice in <c>/etc/hackeros/components.config</c>.
+/// provide them, the one in use, and the administrator's choice in <c>/etc/kazoos/components.config</c>.
 /// </summary>
 /// <remarks>
 /// <para>

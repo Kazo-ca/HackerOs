@@ -139,8 +139,8 @@ public sealed class RealAppsMeasurementTests
         ManualSimulationClock clock = new(BootUtc, TimeSpan.FromMilliseconds(100));
         ProcessTable processes = new(
         [
-            ProcessRecordFactory.Running(WindowPid, "org.hackeros.calculator", Session, BootUtc, BootUtc, kind: AppKind.Window),
-            ProcessRecordFactory.Running(CommandPid, "org.hackeros.cmd.echo", Session, BootUtc, BootUtc, kind: AppKind.Terminal),
+            ProcessRecordFactory.Running(WindowPid, "org.kazoos.calculator", Session, BootUtc, BootUtc, kind: AppKind.Window),
+            ProcessRecordFactory.Running(CommandPid, "org.kazoos.cmd.echo", Session, BootUtc, BootUtc, kind: AppKind.Terminal),
             ProcessRecordFactory.Running(ServicePid, SampleTickerService.AppId, Session, BootUtc, BootUtc, kind: AppKind.Service)
         ]);
         return new ProcFileSystemProvider(
@@ -156,7 +156,7 @@ public sealed class RealAppsMeasurementTests
         FileSystemAuthorizationContext context = new(
             new AppOperationContext
             {
-                AppId = "org.hackeros.system-monitor",
+                AppId = "org.kazoos.system-monitor",
                 UserId = "user",
                 UserName = "user",
                 UserAuthority = AppAuthority.User,

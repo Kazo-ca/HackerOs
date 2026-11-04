@@ -22,7 +22,7 @@ public sealed partial class TemplateSite : WebAppDefinition
     public override string PublisherId => "pub.template";
 
     /// <inheritdoc />
-    public override string Description => "A web site served inside Kazo OS by ASP.Hack.";
+    public override string Description => "A web site served inside Kazo OS by ASP.Kazo.";
 
     /// <inheritdoc />
     public override IReadOnlyList<string> Urls => ["http://template-app.hack/"];
@@ -44,7 +44,7 @@ public sealed partial class TemplateSite : WebAppDefinition
             <!DOCTYPE html>
             <html>
             <head><title>Kazo.Os.Template.Site</title><link rel="stylesheet" href="/css/site.css" /></head>
-            <body><h1>Kazo.Os.Template.Site</h1><p>Served by ASP.Hack. Try <a href="/api/time">/api/time</a>.</p></body>
+            <body><h1>Kazo.Os.Template.Site</h1><p>Served by ASP.Kazo. Try <a href="/api/time">/api/time</a>.</p></body>
             </html>
             """,
             "text/html"));

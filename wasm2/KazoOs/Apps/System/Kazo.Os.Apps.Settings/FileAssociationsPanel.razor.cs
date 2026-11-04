@@ -34,10 +34,10 @@ internal sealed record FileAssociationRow(
 /// </summary>
 /// <remarks>
 /// A pick is written with <see cref="KazoApps.SetDefaultHandlerAsync"/> to the user's
-/// <c>~/.config/hackeros/file-associations.json</c>, like GNOME's "Default Applications" writing
+/// <c>~/.config/kazoos/file-associations.json</c>, like GNOME's "Default Applications" writing
 /// <c>~/.config/mimeapps.list</c>; the first entry, "system default", removes the user's choice with
 /// <see cref="KazoApps.ResetDefaultHandlerAsync"/>. The machine-wide file is shown, never written:
-/// it stays an administrator's job (<c>sudo nano /etc/hackeros/file-associations.json</c>).
+/// it stays an administrator's job (<c>sudo nano /etc/kazoos/file-associations.json</c>).
 /// </remarks>
 public sealed partial class FileAssociationsPanel
 {

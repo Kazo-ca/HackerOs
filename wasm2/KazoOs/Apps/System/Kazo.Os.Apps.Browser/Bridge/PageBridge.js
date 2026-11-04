@@ -25,7 +25,7 @@ function (boot) {
     // ── Messaging ─────────────────────────────────────────────────────────
 
     function post(kind, type, payload, id) {
-        host.postMessage({ hackBridge: kind, token, type, id, payload }, "*");
+        host.postMessage({ kazoBridge: kind, token, type, id, payload }, "*");
     }
 
     function emit(type, payload) {
@@ -43,7 +43,7 @@ function (boot) {
     // Registered before any page script, so the page's own "message" listeners never see replies.
     window.addEventListener("message", (event) => {
         const data = event.data;
-        if (event.source !== host || !data || data.hackBridge !== "response" || data.token !== token) {
+        if (event.source !== host || !data || data.kazoBridge !== "response" || data.token !== token) {
             return;
         }
 
@@ -642,14 +642,14 @@ function (boot) {
             return;
         }
         const own = input.getAttribute("list");
-        if (own && !own.startsWith("hackos-form-history-")) {
+        if (own && !own.startsWith("kazoos-form-history-")) {
             return; // The page has its own suggestions.
         }
 
         let list = suggestionLists.get(input.name);
         if (!list) {
             list = document.createElement("datalist");
-            list.id = "hackos-form-history-" + nextListId++;
+            list.id = "kazoos-form-history-" + nextListId++;
             (document.body || document.documentElement).appendChild(list);
             suggestionLists.set(input.name, list);
             const reply = await request("formhistory", { name: input.name });
@@ -842,9 +842,9 @@ function (boot) {
             return;
         }
         handledUrls.add(url);
-        nativeSetAttribute.call(element, "data-hack-" + attribute, url);
+        nativeSetAttribute.call(element, "data-kazo-" + attribute, url);
         request("resource", { url, kind: kindOf(element, attribute) }).then((reply) => {
-            if (element.getAttribute("data-hack-" + attribute) === url) {
+            if (element.getAttribute("data-kazo-" + attribute) === url) {
                 nativeSetAttribute.call(element, attribute, reply.dataUrl || "data:,");
             }
         });

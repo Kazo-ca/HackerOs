@@ -29,7 +29,7 @@ public sealed class MemoryAccountingImageTests
     [Fact]
     public void The_text_editor_window_maps_its_real_assembly_and_the_sdk_and_pays_for_its_window()
     {
-        AppImage image = BuildKnownLazyApps.Images["org.hackeros.text-editor"];
+        AppImage image = BuildKnownLazyApps.Images["org.kazoos.text-editor"];
         string own = Path.Combine(AppContext.BaseDirectory, "Kazo.Os.Apps.TextEditor.dll");
         Assert.Equal(new FileInfo(own).Length, image.OwnBytes);
         Assert.Contains(image.Assemblies, static assembly => assembly.Shared && assembly.Name == "Kazo.Os.AppSdk.dll");
@@ -37,9 +37,9 @@ public sealed class MemoryAccountingImageTests
         FakeProbe probe = new();
         AllocationTracker allocations = new(probe);
         MeasuredMemoryAccountant accountant = new(allocations, new KernelMemoryLedger(), BuildKnownLazyApps.Images, probe);
-        ProcessRecord editor = Record(31, "org.hackeros.text-editor", AppKind.Window);
-        ProcessRecord ls = Record(32, "org.hackeros.cmd.ls", AppKind.Terminal);
-        ProcessRecord cat = Record(33, "org.hackeros.cmd.cat", AppKind.Terminal);
+        ProcessRecord editor = Record(31, "org.kazoos.text-editor", AppKind.Window);
+        ProcessRecord ls = Record(32, "org.kazoos.cmd.ls", AppKind.Terminal);
+        ProcessRecord cat = Record(33, "org.kazoos.cmd.cat", AppKind.Terminal);
 
         Assert.True(accountant.TryGetProcessMemory(editor, [editor, ls, cat], out ProcessMemoryUsage usage));
         Assert.Equal(image.OwnBytes, usage.ImageBytes);

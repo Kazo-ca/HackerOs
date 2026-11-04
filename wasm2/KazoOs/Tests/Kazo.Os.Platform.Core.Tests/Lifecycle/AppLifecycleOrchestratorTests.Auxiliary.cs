@@ -25,7 +25,7 @@ public sealed partial class AppLifecycleOrchestratorTests
             fixture.Grants.Grant("org.test.blazor", principal.UserId.ToString(), capability, CapabilityGrantSource.UserApproval, AppAuthority.Administrator);
         }
 
-        AppLaunchResult browser = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.waiter", principal, []));
+        AppLaunchResult browser = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.waiter", principal, []));
         ProcessId browserPid = browser.Process!.Pid;
 
         AppLaunchResult renderer = await fixture.Orchestrator.StartAuxiliaryAsync(
@@ -59,9 +59,9 @@ public sealed partial class AppLifecycleOrchestratorTests
     {
         Fixture fixture = new(WaiterManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        AppLaunchResult browser = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.waiter", principal, []));
+        AppLaunchResult browser = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.waiter", principal, []));
 
-        AppLaunchResult notWeb = await fixture.Orchestrator.StartAuxiliaryAsync("org.hackeros.waiter", principal, browser.Process!.Pid, []);
+        AppLaunchResult notWeb = await fixture.Orchestrator.StartAuxiliaryAsync("org.kazoos.waiter", principal, browser.Process!.Pid, []);
         AppLaunchResult unknown = await fixture.Orchestrator.StartAuxiliaryAsync("org.test.missing", principal, browser.Process!.Pid, []);
 
         Assert.Equal(AppLaunchStatus.NotFound, notWeb.Status);

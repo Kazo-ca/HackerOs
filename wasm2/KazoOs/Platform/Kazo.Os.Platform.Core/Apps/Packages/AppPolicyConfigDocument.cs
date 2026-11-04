@@ -5,7 +5,7 @@ using Kazo.Os.Simulation.Abstractions.Settings;
 namespace Kazo.Os.Platform.Core.Apps.Packages;
 
 /// <summary>
-/// <c>/etc/hackeros/app-policy.config</c> (ADR 0189 §5): the administrator's block list. An app
+/// <c>/etc/kazoos/app-policy.config</c> (ADR 0189 §5): the administrator's block list. An app
 /// blocked by its ID, its category or a capability it asks for no longer installs for one user; it
 /// needs the two-step system install of ADR 0189 §4.
 /// </summary>
@@ -32,11 +32,11 @@ public static class AppPolicyConfigDocument
     /// <summary>Section of blocked capabilities (<see cref="AppManifest.Capabilities"/>).</summary>
     public const string CapabilitiesSection = "blocked-capabilities";
 
-    /// <summary>File name under <c>/etc/hackeros</c>.</summary>
+    /// <summary>File name under <c>/etc/kazoos</c>.</summary>
     public const string FileName = "app-policy.config";
 
     /// <summary>Machine file, <c>system:system 0644</c>.</summary>
-    public static VirtualPath MachinePath { get; } = VirtualPath.Parse($"/etc/hackeros/{FileName}");
+    public static VirtualPath MachinePath { get; } = VirtualPath.Parse($"/etc/kazoos/{FileName}");
 
     /// <summary>Content written when the file does not exist yet, with the standard defaults (nothing blocked).</summary>
     public static string DefaultContent { get; } = BuildDefaultContent(AppPackageDefaults.Standard);

@@ -11,7 +11,7 @@ namespace Kazo.Os.Tests.Support;
 public sealed class FakeAppEnvironmentGateway(
     string homeDirectory,
     string userName = "alice",
-    string machineName = "hackeros",
+    string machineName = "kazoos",
     IReadOnlyList<string>? arguments = null) : IAppEnvironmentGateway
 {
     private readonly Dictionary<string, string> _variables = new(StringComparer.Ordinal) { ["HOME"] = homeDirectory };

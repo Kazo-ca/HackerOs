@@ -13,10 +13,10 @@ namespace Kazo.Os.TrimmedPublish.E2E.Tests;
 /// </summary>
 public sealed partial class TrimmedPublishTests
 {
-    private const string CalculatorId = "org.hackeros.calculator";
+    private const string CalculatorId = "org.kazoos.calculator";
 
     /// <summary>
-    /// With <c>HackerOs:RemoteWindowRendering</c> on: the Calculator's window content comes from a
+    /// With <c>KazoOs:RemoteWindowRendering</c> on: the Calculator's window content comes from a
     /// worker, computes by mouse and keyboard, keeps its isolated CSS, moves the focus with Tab, has no
     /// serious axe finding, obeys the window manager's shortcuts, and frees its worker when closed.
     /// </summary>
@@ -88,8 +88,8 @@ public sealed partial class TrimmedPublishTests
             ILocator rows = page.Locator("[data-terminal-panel] .xterm-rows").First;
             ILocator screen = page.Locator("[data-terminal-panel] .xterm-screen").First;
             await WaitForTerminalTextAsync(rows, text => PromptPattern().IsMatch(text), "the shell prompt");
-            await RunCommandAsync(page, screen, "clear; cat /proc/hackeros/workers");
-            string workers = await WaitForTerminalTextAsync(rows, text => text.Contains("pool_size", StringComparison.Ordinal), "/proc/hackeros/workers");
+            await RunCommandAsync(page, screen, "clear; cat /proc/kazoos/workers");
+            string workers = await WaitForTerminalTextAsync(rows, text => text.Contains("pool_size", StringComparison.Ordinal), "/proc/kazoos/workers");
             Assert.DoesNotContain("dedicated", workers, StringComparison.Ordinal);
             session.AssertNoErrors("calculator in a worker");
             Log("the Calculator worked in a worker; its worker was freed on close.");
@@ -177,7 +177,7 @@ public sealed partial class TrimmedPublishTests
         {
             IAPIResponse response = await route.FetchAsync();
             JsonNode settings = JsonNode.Parse(await response.TextAsync())!;
-            settings["HackerOs"]!["RemoteWindowRendering"] = new JsonObject
+            settings["KazoOs"]!["RemoteWindowRendering"] = new JsonObject
             {
                 ["Enabled"] = enabled,
                 ["Apps"] = new JsonArray(CalculatorId)
@@ -278,7 +278,7 @@ public sealed partial class TrimmedPublishTests
 
     private const string BatchScript = """
         () => {
-            const s = document.querySelector('.remote-window-host')?.__hackerosRemoteWindow;
+            const s = document.querySelector('.remote-window-host')?.__kazoosRemoteWindow;
             return JSON.stringify(s ? { count: s.batches, bytes: s.bytes, firstBytes: s.firstBytes, averageBytes: Math.round(s.bytes / s.batches),
                 operations: s.operations, averageEncodeMicroseconds: Math.round(s.workerMicroseconds / s.batches), nodes: s.nodes }
                 : { count: 0 });

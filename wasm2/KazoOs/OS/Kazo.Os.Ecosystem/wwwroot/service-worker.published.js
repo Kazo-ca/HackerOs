@@ -7,7 +7,7 @@
 
 self.importScripts('./service-worker-assets.js');
 self.importScripts('./_content/Kazo.Os.Infrastructure.Browser/installedAppAssets.sw.js');
-const installedAppAssets = self.hackerOsInstalledAppAssets;
+const installedAppAssets = self.kazoOsInstalledAppAssets;
 
 self.addEventListener('install', event => event.waitUntil(onInstall(event)));
 self.addEventListener('activate', event => event.waitUntil(onActivate(event)));
@@ -28,16 +28,18 @@ self.addEventListener('fetch', event => {
 });
 self.addEventListener('message', event => onMessage(event));
 
-const cacheNamePrefix = 'hackeros-cache-';
+const cacheNamePrefix = 'kazoos-cache-';
+// ADR 0228 §2: caches written before the rename; onActivate deletes them like any stale version.
+const legacyCacheNamePrefix = 'hackeros-cache-';
 const cacheName = `${cacheNamePrefix}${self.assetsManifest.version}`;
 // Fonts (.ttf/.woff2) are listed so lazy-loaded apps keep their icons offline: the Code
 // Editor ships Monaco's codicon.ttf next to its bundle (v3/11, ADR 0103 §3).
 const offlineAssetsInclude = [ /\.dll$/, /\.pdb$/, /\.wasm/, /\.html/, /\.js$/, /\.json$/, /\.css$/, /\.woff2?$/, /\.ttf$/, /\.svg$/, /\.webp$/, /\.png$/, /\.jpe?g$/, /\.gif$/, /\.ico$/, /\.blat$/, /\.dat$/, /\.webmanifest$/ ];
-// hackeros-host.json is never cached (ADR 0137): Kazo.Os.Server answers that path itself
+// kazoos-host.json is never cached (ADR 0137): Kazo.Os.Server answers that path itself
 // ("a server delivered this OS"), so its bytes differ from the static file's integrity hash.
-const offlineAssetsExclude = [ /^service-worker\.js$/, /^hackeros-host\.json$/ ];
+const offlineAssetsExclude = [ /^service-worker\.js$/, /^kazoos-host\.json$/ ];
 // appsettings.json is cached without its integrity hash (ADR 0226 §4): whoever deploys the OS
-// edits it in the published files (HackerOs:SignIn:FactoryReset, CrossOriginIsolation…) without
+// edits it in the published files (KazoOs:SignIn:FactoryReset, CrossOriginIsolation…) without
 // rebuilding, and an edited file must not make the whole release cache fail to install.
 const offlineAssetsWithoutIntegrity = [ /^appsettings\.json$/ ];
 
@@ -48,14 +50,14 @@ const manifestUrlList = self.assetsManifest.assets.map(asset => new URL(asset.ur
 
 // ADR 0131 §2: the worker adds COOP/COEP to the same-origin responses it serves, navigation
 // included, so the PWA is cross-origin isolated offline and on a static host that cannot set
-// headers. HackerOs:CrossOriginIsolation in appsettings.json decides: "off" adds nothing, "on"
+// headers. KazoOs:CrossOriginIsolation in appsettings.json decides: "off" adds nothing, "on"
 // always adds them, "auto" adds them when the audit passed for this release. The audit result is
 // the constant CrossOriginIsolationPolicy.AuditPassed (Platform.Core); a unit test keeps both equal.
 const crossOriginIsolationAuditPassed = true;
 // The page asks once for require-corp when the browser ignored credentialless (COI_STRICT); the
 // choice is kept in this cache, under a synthetic key, across worker restarts.
-const isolationConfigCache = 'hackeros-isolation';
-const isolationConfigKey = new URL('__hackeros/isolation-config', baseUrl).href;
+const isolationConfigCache = 'kazoos-isolation';
+const isolationConfigKey = new URL('__kazoos/isolation-config', baseUrl).href;
 let isolationState = null;
 
 // Reads the setting from the cached appsettings.json (the network when it is not cached yet) and
@@ -67,7 +69,9 @@ async function loadIsolationState() {
         const response = await cache.match('appsettings.json') || await fetch('appsettings.json', { cache: 'no-store' });
         if (response && response.ok) {
             const settings = JSON.parse((await response.text()).replace(/^\uFEFF/, ''));
-            const value = settings && settings.HackerOs && settings.Kazo.Os.CrossOriginIsolation;
+            // KazoOs, or KazoOs in an appsettings.json written before the rename (ADR 0228 §2).
+            const read = section => settings && settings[section] && settings[section].CrossOriginIsolation;
+            const value = read('KazoOs') || read('HackerOs');
             if (typeof value === 'string' && /^(on|off|auto)$/i.test(value.trim())) {
                 mode = value.trim().toLowerCase();
             }
@@ -136,7 +140,7 @@ async function onActivate(event) {
     // Delete all stale/previous version caches atomically to avoid mixing old and new release assets (P2-PWA-005)
     const cacheKeys = await caches.keys();
     await Promise.all(cacheKeys
-        .filter(key => key.startsWith(cacheNamePrefix) && key !== cacheName)
+        .filter(key => (key.startsWith(cacheNamePrefix) && key !== cacheName) || key.startsWith(legacyCacheNamePrefix))
         .map(key => caches.delete(key)));
 
     await self.clients.claim();
@@ -169,9 +173,9 @@ async function fetchShellOrAsset(event) {
 
     const request = shouldServeIndexHtml ? 'index.html' : event.request;
     const cache = await caches.open(cacheName);
-    // A Web Worker's script carries its id in the query (?hackeros-worker=N, ADR 0131 §4, memory
+    // A Web Worker's script carries its id in the query (?kazoos-worker=N, ADR 0131 §4, memory
     // attribution): it is the same cached file.
-    const ignoreSearch = !shouldServeIndexHtml && new URL(event.request.url).searchParams.has('hackeros-worker');
+    const ignoreSearch = !shouldServeIndexHtml && new URL(event.request.url).searchParams.has('kazoos-worker');
     const cachedResponse = await cache.match(request, { ignoreSearch });
 
     if (cachedResponse) {
@@ -183,7 +187,7 @@ async function fetchShellOrAsset(event) {
         return networkResponse;
     } catch (error) {
         // Offline, the host discovery answers "no server reachable" instead of failing (ADR 0137).
-        if (new URL(event.request.url).pathname.endsWith('/hackeros-host.json')) {
+        if (new URL(event.request.url).pathname.endsWith('/kazoos-host.json')) {
             return new Response('{"product":"Kazo OS","isServer":false}',
                 { headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
         }

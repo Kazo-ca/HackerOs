@@ -8,7 +8,7 @@
             LocalizedMarkup.Strong(L["Backup.Create.Everything"]),
             LocalizedMarkup.Code("/etc"),
             LocalizedMarkup.Code(".hosbak"),
-            LocalizedMarkup.Code("sudo hackbackup create"))
+            LocalizedMarkup.Code("sudo kazobackup create"))
     </p>
     <button type="button" class="btn-secondary" disabled="@IsBusy" @onclick="CreateAsync">
         @(_operation == Operation.Create ? L["Backup.Creating"] : L["Backup.Create"])
@@ -29,7 +29,7 @@
     <p class="setting-desc">
         @LocalizedMarkup.Format(L["Backup.Restore.Description"],
             LocalizedMarkup.Code(".hosbak"),
-            LocalizedMarkup.Code("sudo hackbackup restore --merge"),
+            LocalizedMarkup.Code("sudo kazobackup restore --merge"),
             LocalizedMarkup.Code("--replace"))
     </p>
     <div class="restore-modes" role="radiogroup" aria-label="@L["Backup.Mode.AriaLabel"]">

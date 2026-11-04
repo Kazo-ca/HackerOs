@@ -35,7 +35,7 @@ modify them with `KazoEnvironment`, modeled on `System.Environment`.
 | `KazoEnvironment` | `Shared/Kazo.Os.AppSdk/KazoEnvironment.cs` | Static SDK facade. |
 | `KazoExecutionContext.WorkingDirectory` | `Shared/Kazo.Os.AppSdk/KazoExecutionContext.cs` | Reads the process directory, unless `Enter(context, dir)` set one and no `SetCurrentDirectoryAsync` has replaced it since. |
 | `ProcFileSystemProvider` | `FileSystem/Virtual/` | `cmdline`, `environ`, `cwd` read from the table on each read. |
-| `FileSystemSeeder` | `FileSystem/` | Creates `/etc/hostname` (`hackeros`) and `/etc/environment` (comment) if they are absent, `0644`, root. Never rewrites them. |
+| `FileSystemSeeder` | `FileSystem/` | Creates `/etc/hostname` (`kazoos`) and `/etc/environment` (comment) if they are absent, `0644`, root. Never rewrites them. |
 
 ### Starting state of a process
 
@@ -103,7 +103,7 @@ there; `NAME=value command` passes `NAME` only to that command
 compatibility: they give the process state at the start of the command
 (the whole environment, no longer just `HOME`).
 
-The terminal prompt displays the machine name (`alice@hackeros:~$`) read by
+The terminal prompt displays the machine name (`alice@kazoos:~$`) read by
 `IAppExecutionContext.Environment.MachineName`.
 
 ## Key decisions

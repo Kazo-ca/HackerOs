@@ -13,10 +13,10 @@ namespace Kazo.Os.Platform.Blazor.Shell;
 public sealed class UpdateReadyNotification : IDisposable
 {
     /// <summary>Source of the notification: the OS's update, which no app owns.</summary>
-    public const string SourceAppId = "org.hackeros.update";
+    public const string SourceAppId = "org.kazoos.update";
 
     /// <summary>Id of the « Redémarrer » action, which the shell runs through <see cref="ShellNotificationActions"/>.</summary>
-    public const string RestartActionId = "hackeros.update.restart";
+    public const string RestartActionId = "kazoos.update.restart";
 
     private readonly INotificationQueue _queue;
     private readonly ISimulationClock _clock;

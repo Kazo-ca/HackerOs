@@ -130,7 +130,7 @@ the others and after `v3/base` is merged into `v3.1/base` (see
   package is not rebuilt;
 - the "Breaks outside the SDK" section of [`sdk-packages.md`](../../framework/sdk-packages.md)
   lists the `*REMOVED*` lines of the series, and
-  [`building-on-hackeros.md`](../../framework/building-on-hackeros.md) says what 1.1
+  [`building-on-kazoos.md`](../../framework/building-on-kazoos.md) says what 1.1
   adds;
 - the work item redoes the full verification of `v3/16-final` (Debug and
   Release build, all suites, `build/publish-trimmed.sh`, `build/verify-hosts.sh`)
@@ -146,7 +146,7 @@ the others and after `v3/base` is merged into `v3.1/base` (see
   an image in Hack Paint, see its name in the title bar and the
   taskbar, modify it and see `*`.
 - `app-sdk.md`, `sdk-reference.md`, `sdk-developer-guide.md`, `window-model.md`
-  and `hack-paint.md` describe the API and the convention.
+  and `kazo-paint.md` describe the API and the convention.
 - The game repository (ADR 0092) can use the API by compiling against 1.1.0; its
   apps compiled at 1.0.0 keep running.
 

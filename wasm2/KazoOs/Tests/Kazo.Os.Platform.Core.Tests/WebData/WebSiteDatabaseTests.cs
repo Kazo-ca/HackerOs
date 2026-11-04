@@ -15,7 +15,7 @@ namespace Kazo.Os.Platform.Core.Tests.WebData;
 
 /// <summary>
 /// The OS side of ADR 0088: a site's browser database (name forced from the manifest, web apps only),
-/// the Diagnostic listing and clearing, and the site debug log <c>/var/log/hackweb/&lt;id&gt;.log</c>.
+/// the Diagnostic listing and clearing, and the site debug log <c>/var/log/kazoweb/&lt;id&gt;.log</c>.
 /// </summary>
 public sealed class WebSiteDatabaseTests
 {
@@ -52,10 +52,10 @@ public sealed class WebSiteDatabaseTests
         await gateway.OpenAsync(Schema);
         IReadOnlyList<string?> keys = await gateway.ExecuteAsync(Add("""{"title":"hello"}"""));
 
-        Assert.Equal("hackweb.org.example.wiki", gateway.DatabaseName);
+        Assert.Equal("kazoweb.org.example.wiki", gateway.DatabaseName);
         Assert.Equal("1", keys[0]);
         KazoWebSiteDatabaseInfo info = Assert.Single(await store.ListAsync());
-        Assert.Equal("hackweb.org.example.wiki", info.Name);
+        Assert.Equal("kazoweb.org.example.wiki", info.Name);
         Assert.Equal(SiteId, info.AppId);
         Assert.Equal(1, info.Version);
         Assert.Equal(1, info.RecordCount);
@@ -89,7 +89,7 @@ public sealed class WebSiteDatabaseTests
         await gateway.OpenAsync(Schema);
         await gateway.ExecuteAsync(Add("""{"title":"hello"}"""));
 
-        await store.DeleteAsync("hackweb.org.example.wiki");
+        await store.DeleteAsync("kazoweb.org.example.wiki");
         Assert.Empty(await store.ListAsync());
         // The running site keeps its schema: its next request finds an empty database, as after a browser "clear site data".
         IReadOnlyList<string?> keys = await gateway.ExecuteAsync(Add("""{"title":"again"}"""));
@@ -100,7 +100,7 @@ public sealed class WebSiteDatabaseTests
 
     [Theory]
     [InlineData("other-db")]
-    [InlineData("hackweb.")]
+    [InlineData("kazoweb.")]
     [InlineData("")]
     public async Task Only_site_databases_can_be_deleted(string name)
     {
@@ -116,9 +116,9 @@ public sealed class WebSiteDatabaseTests
         AppStorageDiagnosticsGateway granted = new(null, new Capabilities(AppCapabilities.SystemStorageInspect), store);
 
         await Assert.ThrowsAsync<AppGatewayAccessDeniedException>(() => denied.GetWebSiteDatabasesAsync().AsTask());
-        await Assert.ThrowsAsync<AppGatewayAccessDeniedException>(() => denied.DeleteWebSiteDatabaseAsync("hackweb.org.example.wiki").AsTask());
+        await Assert.ThrowsAsync<AppGatewayAccessDeniedException>(() => denied.DeleteWebSiteDatabaseAsync("kazoweb.org.example.wiki").AsTask());
         Assert.Single(await granted.GetWebSiteDatabasesAsync());
-        await granted.DeleteWebSiteDatabaseAsync("hackweb.org.example.wiki");
+        await granted.DeleteWebSiteDatabaseAsync("kazoweb.org.example.wiki");
         Assert.Empty(await granted.GetWebSiteDatabasesAsync());
     }
 
@@ -128,14 +128,14 @@ public sealed class WebSiteDatabaseTests
         BoundedDiagnosticSink memory = new(10);
         ManualSimulationClock clock = new(new DateTimeOffset(2026, 10, 17, 1, 0, 0, TimeSpan.Zero), TimeSpan.FromMilliseconds(1));
         AppLoggingGateway window = new(memory, clock, "org.example.notes");
-        AppLoggingGateway system = new(memory, clock, "org.hackeros.hackwebd", isSystemApp: true);
+        AppLoggingGateway system = new(memory, clock, "org.kazoos.kazowebd", isSystemApp: true);
 
         Assert.Throws<UnauthorizedAccessException>(() => window.AppendToSiteDebugLog("hello"));
         Assert.Throws<UnauthorizedAccessException>(() => system.AppendToSiteDebugLog("hello"));
     }
 
     [Fact]
-    public async Task A_site_debug_log_goes_to_var_log_hackweb_with_line_breaks_escaped()
+    public async Task A_site_debug_log_goes_to_var_log_kazoweb_with_line_breaks_escaped()
     {
         LogTestFileSystem fs = await LogTestFileSystem.CreateAsync();
         BoundedDiagnosticSink memory = new(10);
@@ -146,7 +146,7 @@ public sealed class WebSiteDatabaseTests
         gateway.AppendToSiteDebugLog("fail: boom\n   at Wiki.Run()");
         await writer.AttachAsync(fs.Service);
 
-        string[] lines = await fs.ReadLinesAsync($"/var/log/hackweb/{SiteId}.log");
+        string[] lines = await fs.ReadLinesAsync($"/var/log/kazoweb/{SiteId}.log");
         Assert.Equal(["2026-10-17T01:22:14.123Z info: Wiki[0] started", "fail: boom\\n   at Wiki.Run()"], lines);
     }
 

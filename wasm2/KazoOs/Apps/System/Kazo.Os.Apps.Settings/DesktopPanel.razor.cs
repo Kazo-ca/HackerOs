@@ -7,7 +7,7 @@ namespace Kazo.Os.Apps.Settings;
 
 /// <summary>
 /// Settings &gt; Desktop (ADR 0160 §8): icon size, auto-arrange, alignment, sort and the Home and Trash
-/// icons, written to the <c>[view]</c> group of <c>~/.config/hackeros/desktop.config</c> through
+/// icons, written to the <c>[view]</c> group of <c>~/.config/kazoos/desktop.config</c> through
 /// <see cref="KazoDesktopSettings"/>.
 /// </summary>
 /// <remarks>

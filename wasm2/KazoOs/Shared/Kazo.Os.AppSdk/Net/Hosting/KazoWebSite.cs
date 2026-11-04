@@ -10,13 +10,13 @@ namespace Kazo.Os.AppSdk.Net.Hosting;
 public enum KazoWebSiteScope
 {
     /// <summary>
-    /// <c>/etc/hackweb/sites/</c>: written by an administrator, any port, served as the
+    /// <c>/etc/kazoweb/sites/</c>: written by an administrator, any port, served as the
     /// <c>www-data</c> account (like Apache configured by root).
     /// </summary>
     System,
 
     /// <summary>
-    /// <c>~/.config/hackweb/sites/</c>: written by any user for themselves, ports 1024 and up only,
+    /// <c>~/.config/kazoweb/sites/</c>: written by any user for themselves, ports 1024 and up only,
     /// served with that user's rights (like <c>python -m http.server</c>).
     /// </summary>
     User
@@ -25,7 +25,7 @@ public enum KazoWebSiteScope
 /// <summary>
 /// One hosted static site: the content of a <c>.site</c> file (JSON), the Kazo OS counterpart of a
 /// site in IIS's <c>applicationHost.config</c> or of an nginx file in <c>sites-available</c>
-/// (ADR 0077, section 1). <c>hackwebd</c> serves it; Web Server Manager edits it.
+/// (ADR 0077, section 1). <c>kazowebd</c> serves it; Web Server Manager edits it.
 /// </summary>
 /// <example>
 /// <code>
@@ -54,7 +54,7 @@ public sealed record KazoWebSite
 
     /// <summary>
     /// Gets the listener prefixes, <c>http://host[:port]/path/</c>; the first one is the site's main
-    /// address. A host other than <c>localhost</c> is published by <c>hackdns</c> (ADR 0074, section 4).
+    /// address. A host other than <c>localhost</c> is published by <c>kazodns</c> (ADR 0074, section 4).
     /// </summary>
     [JsonPropertyName("bindings")]
     public IReadOnlyList<string> Bindings { get; init; } = [];
@@ -67,7 +67,7 @@ public sealed record KazoWebSite
     [JsonPropertyName("directoryBrowsing")]
     public bool DirectoryBrowsing { get; init; }
 
-    /// <summary>Gets whether <c>hackwebd</c> serves the site; a stopped site keeps its file.</summary>
+    /// <summary>Gets whether <c>kazowebd</c> serves the site; a stopped site keeps its file.</summary>
     /// <remarks>
     /// A settable property on purpose: the JSON source generator builds init-only properties through
     /// an object initializer and gives an absent one <c>default</c>, so an <c>init</c> here would turn a
@@ -93,7 +93,7 @@ public sealed record KazoWebSiteDeclaration(
     /// <summary>Gets whether the declaration is valid (it may still be disabled).</summary>
     public bool IsValid => Site is not null && Errors.Count == 0;
 
-    /// <summary>Gets whether <c>hackwebd</c> should serve it: valid and enabled.</summary>
+    /// <summary>Gets whether <c>kazowebd</c> should serve it: valid and enabled.</summary>
     public bool IsServable => IsValid && Site!.Enabled;
 
     /// <summary>Gets the site name, or the file name without <c>.site</c> when the JSON is unreadable.</summary>

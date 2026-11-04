@@ -32,7 +32,7 @@ public sealed class FakeAppCatalogGateway : IAppCatalogGateway
         return this;
     }
 
-    /// <summary>Adds a default of <c>/etc/hackeros/file-associations.json</c>.</summary>
+    /// <summary>Adds a default of <c>/etc/kazoos/file-associations.json</c>.</summary>
     public FakeAppCatalogGateway WithSystemDefault(string target, string appId, string action = "open")
     {
         _systemDefaults.Add(new KazoFileAssociation(target, action, appId, KazoFileAssociationLayer.System));

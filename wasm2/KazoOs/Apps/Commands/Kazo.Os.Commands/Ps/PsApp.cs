@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Ps;
 public sealed class PsApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.ps";
+    public override string Id => "org.kazoos.commands.ps";
 
     /// <inheritdoc />
     public override string Name => "ps";
@@ -22,7 +22,7 @@ public sealed class PsApp : AppDefinition
     public override Type EntryPoint => typeof(PsCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Report a snapshot of current processes";

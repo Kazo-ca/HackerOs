@@ -75,7 +75,7 @@ public sealed class FileSystemAuthorizationTests
     {
         FileSystemSelectedResourceHandle handle = new(
             Guid.Parse("d9428888-122b-11e1-b85c-61cd3cbb3210"),
-            "org.hackeros.editor",
+            "org.kazoos.editor",
             "user",
             VirtualPath.Parse("/home/user/Documents"),
             FileSystemHandleAccess.Read | FileSystemHandleAccess.Metadata,
@@ -254,7 +254,7 @@ public sealed class FileSystemAuthorizationTests
         AppAuthority authority,
         IEnumerable<string> capabilities) => new()
     {
-        AppId = "org.hackeros.editor",
+        AppId = "org.kazoos.editor",
         UserId = "user",
         UserAuthority = authority,
         GrantedCapabilities = new HashSet<string>(capabilities, StringComparer.Ordinal)

@@ -75,8 +75,8 @@ public enum PrimaryTaskbarMode
 }
 
 /// <summary>
-/// The screens file (ADR 0179 §7, ADR 0180): <c>/etc/hackeros/screens.config</c> and
-/// <c>~/.config/hackeros/screens.config</c>. This type declares the <c>[screens]</c> section the
+/// The screens file (ADR 0179 §7, ADR 0180): <c>/etc/kazoos/screens.config</c> and
+/// <c>~/.config/kazoos/screens.config</c>. This type declares the <c>[screens]</c> section the
 /// screen service writes: <c>open</c> lists the secondary screens open in the last session (for
 /// « Restaurer les écrans ») and each numbered line remembers where that screen's window was. The
 /// <c>[taskbar]</c> section holds <c>primary-taskbar</c> (ADR 0179 §1).

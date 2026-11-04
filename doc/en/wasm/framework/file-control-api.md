@@ -10,10 +10,10 @@ Every app displays it through the SDK's `KazoFileView` (`Kazo.Os.AppSdk.Blazor.F
 and so does the explorer: its window renders `<KazoFileView>` and keeps the chrome
 (bars, Locations, Trash, status bar). The Rename,
 Delete, Cut, Copy, Paste, Properties and Open with buttons call
-`IHackFileView.ExecuteAsync` with the identifier of the corresponding menu
+`IKazoFileView.ExecuteAsync` with the identifier of the corresponding menu
 entry, so they do the same thing as the menu. New folder/file
 by name, upload, download, compression, extraction and dropping onto the
-Trash stay in the window; they also go through `IHackFileView`
+Trash stay in the window; they also go through `IKazoFileView`
 (current folder, selection, `RefreshAsync`). Only the breadcrumb and
 drops on Home and Trash use the internal implementation (`FileView`): if
 an administrator chooses another provider (ADR 0156, code in a later work

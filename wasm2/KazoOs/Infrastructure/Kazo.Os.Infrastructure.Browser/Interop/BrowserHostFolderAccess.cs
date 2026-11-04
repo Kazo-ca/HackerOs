@@ -6,7 +6,7 @@ namespace Kazo.Os.Infrastructure.Browser.Interop;
 /// <summary>
 /// Browser half of the network drives (ADR 0181): imports <c>hostFolder.js</c> of this library,
 /// which opens <c>showDirectoryPicker</c>, keeps the chosen folders in the IndexedDB database
-/// <c>hackeros-host-folders</c>, and reads and writes their files.
+/// <c>kazoos-host-folders</c>, and reads and writes their files.
 /// </summary>
 /// <remarks>
 /// The module answers errors as <c>hostfolder:&lt;kind&gt;:&lt;message&gt;</c>; they become

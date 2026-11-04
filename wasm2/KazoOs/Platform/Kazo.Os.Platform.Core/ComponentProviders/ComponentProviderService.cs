@@ -13,7 +13,7 @@ namespace Kazo.Os.Platform.Core.ComponentProviders;
 public interface IComponentProviderSelection
 {
     /// <summary>
-    /// Reads the app chosen in <c>/etc/hackeros/components.config</c> for <paramref name="contract"/>,
+    /// Reads the app chosen in <c>/etc/kazoos/components.config</c> for <paramref name="contract"/>,
     /// or <see langword="null"/> when none is (the File Explorer then applies). The file is read at
     /// each call, so a change made with <c>sudo nano</c> applies at the next control shown.
     /// </summary>
@@ -57,7 +57,7 @@ public enum ComponentProviderChangeOutcome
 }
 
 /// <summary>
-/// Owns <c>/etc/hackeros/components.config</c> (ADR 0156): which app provides the OS's file view and
+/// Owns <c>/etc/kazoos/components.config</c> (ADR 0156): which app provides the OS's file view and
 /// file dialogs. It lists the candidates for Settings, carries out an administrator's choice and
 /// removes the choice of an app uninstalled for the machine.
 /// </summary>

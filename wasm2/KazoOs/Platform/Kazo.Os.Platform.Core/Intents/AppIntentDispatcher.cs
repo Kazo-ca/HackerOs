@@ -186,10 +186,10 @@ public sealed class AppIntentDispatcher
     }
 
     /// <summary>App id the OS records on the file operations it makes for an intent (audit, private-path rules).</summary>
-    internal const string OsAppId = "org.hackeros.intents";
+    internal const string OsAppId = "org.kazoos.intents";
 
     /// <summary>App id of the Settings app, which shows the page of an app with no settings of its own (ADR 0096, section 4).</summary>
-    public const string SettingsAppId = "org.hackeros.settings";
+    public const string SettingsAppId = "org.kazoos.settings";
 
     /// <summary>Launch argument asking an app for its own settings page (ADR 0096, section 4).</summary>
     public const string ShowSettingsArgument = "--show-settings";
@@ -511,7 +511,7 @@ public sealed class AppIntentDispatcher
     /// <summary>
     /// Routes an app-defined intent (ADR 0096, section 5) to the installed apps declaring its id: the
     /// caller's chosen target, the only declaring app, or the user's "always use" choice in
-    /// <c>~/.config/hackeros/intents.config</c>; otherwise the caller gets the candidates to show the
+    /// <c>~/.config/kazoos/intents.config</c>; otherwise the caller gets the candidates to show the
     /// "Open with" chooser. The handler receives the id and payload as its
     /// <see cref="IAppExecutionContext.Intent"/>, or through <see cref="IAppExecutionContext.IntentReceived"/>
     /// when it is a running single instance.
@@ -646,7 +646,7 @@ public sealed class AppIntentDispatcher
             return new ServiceControlDispatchResult(ServiceControlDispatchStatus.ServiceDisabled, ErrorCode: "service.start.disabled");
         }
 
-        // A system service runs as hackeros-svc in the system scope whoever starts it, like
+        // A system service runs as kazoos-svc in the system scope whoever starts it, like
         // `sudo systemctl start` of a system unit: the administrator's session does not own it.
         AppLaunchRequest request = system
             ? new AppLaunchRequest(
@@ -726,7 +726,7 @@ public sealed class AppIntentDispatcher
         return new ServiceControlDispatchResult(ServiceControlDispatchStatus.Succeeded);
     }
 
-    /// <summary>Gets whether a service is a system service, started at boot as <c>hackeros-svc</c> (ADR 0097, section 4).</summary>
+    /// <summary>Gets whether a service is a system service, started at boot as <c>kazoos-svc</c> (ADR 0097, section 4).</summary>
     private bool IsBootService(AppManifest target) =>
         _orchestrator.GetEffectiveStartup(target) == AppServiceStartup.Boot;
 

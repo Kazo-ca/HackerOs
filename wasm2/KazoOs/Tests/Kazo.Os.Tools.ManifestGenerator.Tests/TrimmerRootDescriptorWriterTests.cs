@@ -6,7 +6,7 @@ namespace Kazo.Os.Tools.ManifestGenerator.Tests;
 /// <summary>The trimmer roots a host's aggregation writes (ADR 0106 §2, ADR 0113).</summary>
 public sealed class TrimmerRootDescriptorWriterTests : IDisposable
 {
-    private readonly string _directory = Directory.CreateTempSubdirectory("hackeros-trimmer-roots-").FullName;
+    private readonly string _directory = Directory.CreateTempSubdirectory("kazoos-trimmer-roots-").FullName;
 
     public void Dispose() => Directory.Delete(_directory, recursive: true);
 

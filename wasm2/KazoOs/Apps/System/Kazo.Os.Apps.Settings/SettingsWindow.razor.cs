@@ -50,7 +50,7 @@ public partial class SettingsWindow : IAsyncDisposable
 
     private const string ResetConfirmPhrase = "RESET";
 
-    private const string ThemeEditorAppId = "org.hackeros.theme-editor";
+    private const string ThemeEditorAppId = "org.kazoos.theme-editor";
     private KazoSettingsDocument? _appearance;
     private UserThemeLibraryResult _userThemes = UserThemeLibraryResult.Empty;
     private ThemePreferences _appearanceSettings = ThemePreferences.Default;
@@ -163,7 +163,7 @@ public partial class SettingsWindow : IAsyncDisposable
     protected override Task OnWindowActivatedAsync() => RefreshUserThemesAsync();
 
     /// <summary>
-    /// Reads the user themes of <c>/etc/hackeros/themes</c>, <c>~/.config/hackeros/themes</c>
+    /// Reads the user themes of <c>/etc/kazoos/themes</c>, <c>~/.config/kazoos/themes</c>
     /// (ADR 0103 §2.2) and of the installed theme packs (ADR 0213 §3) with the SDK's file API; a
     /// missing folder simply means no theme.
     /// </summary>
@@ -245,7 +245,7 @@ public partial class SettingsWindow : IAsyncDisposable
         }
     }
 
-    /// <summary>An external edit (<c>nano /etc/hackeros/appearance.config</c>) or another window changed the file.</summary>
+    /// <summary>An external edit (<c>nano /etc/kazoos/appearance.config</c>) or another window changed the file.</summary>
     private void OnAppearanceChanged(object? sender, KazoSettingsChangedEventArgs args) =>
         _ = InvokeAsync(() =>
         {
@@ -336,7 +336,7 @@ public partial class SettingsWindow : IAsyncDisposable
         {
             if (_targetLayer == SettingLayer.System || key is null)
             {
-                // /etc/hackeros belongs to root: the write uses this app's own rights, so a denial
+                // /etc/kazoos belongs to root: the write uses this app's own rights, so a denial
                 // raises the administrator approval of ADR 0042.
                 await _appearance.SetManyAsync(
                     new Dictionary<string, object>(StringComparer.Ordinal)

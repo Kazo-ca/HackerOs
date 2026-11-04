@@ -201,7 +201,7 @@ public sealed class WhatsNewServiceTests
         NotificationAction action = Assert.Single(notification.Actions);
         Assert.Equal("View", action.Label);
         Assert.True(action.TryGetLaunchedApp(out string? appId));
-        Assert.Equal("org.hackeros.settings", appId);
+        Assert.Equal("org.kazoos.settings", appId);
         Assert.Equal(["--page=whats-new"], action.LaunchArguments);
     }
 
@@ -255,14 +255,14 @@ public sealed class WhatsNewServiceTests
     [Fact]
     public void A_launch_action_carries_its_arguments_and_an_old_one_has_none()
     {
-        NotificationAction withArguments = NotificationAction.LaunchApp("org.hackeros.settings", "View", ["--page=whats-new", "--x"]);
-        NotificationAction plain = NotificationAction.LaunchApp("org.hackeros.diagnostic", "Open");
+        NotificationAction withArguments = NotificationAction.LaunchApp("org.kazoos.settings", "View", ["--page=whats-new", "--x"]);
+        NotificationAction plain = NotificationAction.LaunchApp("org.kazoos.diagnostic", "Open");
 
         Assert.True(withArguments.TryGetLaunchedApp(out string? appId));
-        Assert.Equal("org.hackeros.settings", appId);
+        Assert.Equal("org.kazoos.settings", appId);
         Assert.Equal(["--page=whats-new", "--x"], withArguments.LaunchArguments);
         Assert.True(plain.TryGetLaunchedApp(out appId));
-        Assert.Equal("org.hackeros.diagnostic", appId);
+        Assert.Equal("org.kazoos.diagnostic", appId);
         Assert.Empty(plain.LaunchArguments);
         Assert.Empty(new NotificationAction("reply", "Reply").LaunchArguments);
         Assert.Throws<ArgumentException>(() => NotificationAction.LaunchApp("a", "b", ["x\u001Fy"]));

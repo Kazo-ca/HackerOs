@@ -36,12 +36,12 @@ internal static class PrincipalTextFile
     }
 
     /// <summary>
-    /// Replaces the file's content, creating <c>~/.config/hackeros</c> (0755) and the file (with
+    /// Replaces the file's content, creating <c>~/.config/kazoos</c> (0755) and the file (with
     /// <paramref name="mode"/>) first when they are missing.
     /// </summary>
     /// <param name="fileSystem">OS filesystem.</param>
-    /// <param name="principal">Acting user; the file lives under their <c>~/.config/hackeros</c>.</param>
-    /// <param name="fileName">File name inside <c>~/.config/hackeros</c>.</param>
+    /// <param name="principal">Acting user; the file lives under their <c>~/.config/kazoos</c>.</param>
+    /// <param name="fileName">File name inside <c>~/.config/kazoos</c>.</param>
     /// <param name="content">Complete new content.</param>
     /// <param name="mode">Permission bits of a newly created file (an existing file keeps its own).</param>
     /// <param name="cancellationToken">Cancels the write.</param>
@@ -58,7 +58,7 @@ internal static class PrincipalTextFile
         string login = principal.LoginName.Value;
         FileSystemMutationResult directory = await fileSystem.CreateAsync(
             new FileSystemCreateRequest(
-                VirtualPath.Parse($"/home/{login}/.config/hackeros"), FileSystemEntryKind.Directory, FileSystemPermissions.FromMode(0b111_101_101)),
+                VirtualPath.Parse($"/home/{login}/.config/kazoos"), FileSystemEntryKind.Directory, FileSystemPermissions.FromMode(0b111_101_101)),
             context,
             cancellationToken).ConfigureAwait(false);
         if (!directory.Succeeded && directory.Transaction.Error?.Code != FileSystemErrorCode.AlreadyExists)
@@ -66,7 +66,7 @@ internal static class PrincipalTextFile
             return false;
         }
 
-        VirtualPath path = VirtualPath.Parse($"/home/{login}/.config/hackeros/{fileName}");
+        VirtualPath path = VirtualPath.Parse($"/home/{login}/.config/kazoos/{fileName}");
         FileSystemMutationResult file = await fileSystem.CreateAsync(
             new FileSystemCreateRequest(path, FileSystemEntryKind.File, FileSystemPermissions.FromMode(mode)),
             context,

@@ -25,16 +25,16 @@ namespace Kazo.Os.Apps.FileExplorer.FileControl;
 public partial class FileView : IAsyncDisposable
 {
     /// <summary>The custom <c>DataTransfer</c> MIME type <c>FileView.razor.js</c> reads/writes drag payloads under.</summary>
-    internal const string DragMimeType = "application/vnd.hackeros.file-drag+json";
+    internal const string DragMimeType = "application/vnd.kazoos.file-drag+json";
 
     /// <summary>
     /// The <c>DataTransfer</c> type of an app dragged from the Start menu (ADR 0160 §6), <c>{"appId":"…"}</c>:
     /// dropped on a folder, it becomes a <c>.desktop</c> shortcut there.
     /// </summary>
-    internal const string AppDragMimeType = "application/vnd.hackeros.app+json";
+    internal const string AppDragMimeType = "application/vnd.kazoos.app+json";
 
     /// <summary>The MIME type of a drag of desktop icons on their own desktop (ADR 0160 §3): their position keys.</summary>
-    internal const string DesktopItemMimeType = "application/vnd.hackeros.desktop-item+json";
+    internal const string DesktopItemMimeType = "application/vnd.kazoos.desktop-item+json";
 
     private readonly List<FileViewItem> _items = [];
     private readonly HashSet<FileViewItem> _selection = [];

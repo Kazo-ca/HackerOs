@@ -6,7 +6,7 @@ using Kazo.Os.Platform.Core.Apps.Packages;
 
 namespace Kazo.Os.Platform.Core.Tests.Apps.Packages;
 
-/// <summary>Reading and verifying a <c>.hackapp</c> package and its index (ADR 0182 §1, §2, §5).</summary>
+/// <summary>Reading and verifying a <c>.kazoapp</c> package and its index (ADR 0182 §1, §2, §5).</summary>
 public sealed class AppPackageTests
 {
     internal const string AppId = "org.kazo.sample";
@@ -32,14 +32,19 @@ public sealed class AppPackageTests
         };
     }
 
-    internal static byte[] Build(Dictionary<string, byte[]> files, string appId = AppId, string version = "1.0.0", Dictionary<string, string>? listed = null)
+    internal static byte[] Build(
+        Dictionary<string, byte[]> files,
+        string appId = AppId,
+        string version = "1.0.0",
+        Dictionary<string, string>? listed = null,
+        string descriptionFileName = AppPackage.DescriptionFileName)
     {
         listed ??= files.ToDictionary(static pair => pair.Key, static pair => AppPackage.Sha256(pair.Value), StringComparer.Ordinal);
         string description = JsonSerializer.Serialize(new { appId, version, files = listed });
         using MemoryStream stream = new();
         using (ZipArchive zip = new(stream, ZipArchiveMode.Create, leaveOpen: true))
         {
-            foreach ((string path, byte[] bytes) in files.Append(new("hackeros-package.json", Encoding.UTF8.GetBytes(description))))
+            foreach ((string path, byte[] bytes) in files.Append(new(descriptionFileName, Encoding.UTF8.GetBytes(description))))
             {
                 using Stream entry = zip.CreateEntry(path).Open();
                 entry.Write(bytes);
@@ -166,21 +171,46 @@ public sealed class AppPackageTests
         string sha = new('a', 64);
         AppPackageIndex index = AppPackageIndex.Parse(Encoding.UTF8.GetBytes(
             "{\"appId\":\"org.kazo.sample\",\"versions\":["
-            + "{\"version\":\"1.0.0\",\"path\":\"1.0.0/s.hackapp\",\"sha256\":\"" + sha + "\"},"
-            + "{\"version\":\"2.0.0-beta\",\"path\":\"2.0.0-beta/s.hackapp\",\"sha256\":\"" + sha + "\"},"
-            + "{\"version\":\"1.1.0\",\"path\":\"1.1.0/s.hackapp\",\"sha256\":\"" + sha + "\"}]}"));
+            + "{\"version\":\"1.0.0\",\"path\":\"1.0.0/s.kazoapp\",\"sha256\":\"" + sha + "\"},"
+            + "{\"version\":\"2.0.0-beta\",\"path\":\"2.0.0-beta/s.kazoapp\",\"sha256\":\"" + sha + "\"},"
+            + "{\"version\":\"1.1.0\",\"path\":\"1.1.0/s.kazoapp\",\"sha256\":\"" + sha + "\"}]}"));
 
         Assert.Equal(["2.0.0-beta", "1.1.0", "1.0.0"], index.Versions.Select(static entry => entry.Version.ToString()));
         Assert.Equal("1.1.0", index.Latest!.Version.ToString());
-        Assert.Equal("1.0.0/s.hackapp", index.Find(SemanticVersion.Parse("1.0.0"))!.Path);
+        Assert.Equal("1.0.0/s.kazoapp", index.Find(SemanticVersion.Parse("1.0.0"))!.Path);
         Assert.Null(index.Find(SemanticVersion.Parse("9.0.0")));
+    }
+
+    [Fact]
+    public void A_package_made_before_the_rename_reads_with_its_kazoos_package_json()
+    {
+        // ADR 0228 §2: packages published before Kazo OS name their description hackeros-package.json.
+        AppPackage package = AppPackage.Read(Build(SampleFiles(), descriptionFileName: AppPackage.LegacyDescriptionFileName));
+
+        Assert.Equal(AppId, package.AppId);
+        Assert.Equal("hello", Encoding.UTF8.GetString(package.Files["wwwroot/data/x.txt"]));
+    }
+
+    [Fact]
+    public void The_index_still_accepts_packages_published_under_the_old_extension()
+    {
+        string sha = new('a', 64);
+        AppPackageIndex index = AppPackageIndex.Parse(Encoding.UTF8.GetBytes(
+            "{\"appId\":\"org.kazo.sample\",\"versions\":["
+            + "{\"version\":\"1.0.0\",\"path\":\"1.0.0/s.hackapp\",\"sha256\":\"" + sha + "\"},"
+            + "{\"version\":\"1.1.0\",\"path\":\"1.1.0/s.kazoapp\",\"sha256\":\"" + sha + "\"}]}"));
+
+        Assert.Equal("1.0.0/s.hackapp", index.Find(SemanticVersion.Parse("1.0.0"))!.Path);
+        Assert.True(AppPackage.HasPackageExtension("x.kazoapp"));
+        Assert.True(AppPackage.HasPackageExtension("x.hackapp"));
+        Assert.False(AppPackage.HasPackageExtension("x.zip"));
     }
 
     [Theory]
     [InlineData("{}")]
-    [InlineData("{\"appId\":\"x\",\"versions\":[{\"version\":\"1.0.0\",\"path\":\"../x.hackapp\",\"sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}]}")]
+    [InlineData("{\"appId\":\"x\",\"versions\":[{\"version\":\"1.0.0\",\"path\":\"../x.kazoapp\",\"sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}]}")]
     [InlineData("{\"appId\":\"x\",\"versions\":[{\"version\":\"1.0.0\",\"path\":\"x.zip\",\"sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}]}")]
-    [InlineData("{\"appId\":\"x\",\"versions\":[{\"version\":\"1.0.0\",\"path\":\"x.hackapp\",\"sha256\":\"short\"}]}")]
+    [InlineData("{\"appId\":\"x\",\"versions\":[{\"version\":\"1.0.0\",\"path\":\"x.kazoapp\",\"sha256\":\"short\"}]}")]
     [InlineData("not json")]
     public void An_invalid_index_is_refused(string json)
     {

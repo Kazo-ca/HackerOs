@@ -91,9 +91,9 @@ Kazo.Os.Apps.Settings._Imports
 Kazo.Os.Apps.Settings._Imports.Execute() -> void
 Kazo.Os.Apps.Settings._Imports._Imports() -> void
 const Kazo.Os.Apps.Settings.SetWallpaperApp.AllScreensEntry = "set-wallpaper-all" -> string!
-const Kazo.Os.Apps.Settings.SetWallpaperApp.AppId = "org.hackeros.settings.wallpaper" -> string!
+const Kazo.Os.Apps.Settings.SetWallpaperApp.AppId = "org.kazoos.settings.wallpaper" -> string!
 const Kazo.Os.Apps.Settings.SetWallpaperApp.ScreenEntryPrefix = "set-wallpaper-screen-" -> string!
-const Kazo.Os.Apps.Settings.SetWallpaperApp.SetWallpaperIntent = "org.hackeros.settings.set-wallpaper.v1" -> string!
+const Kazo.Os.Apps.Settings.SetWallpaperApp.SetWallpaperIntent = "org.kazoos.settings.set-wallpaper.v1" -> string!
 const Kazo.Os.Apps.Settings.SetWallpaperApp.SingleEntry = "set-wallpaper" -> string!
 const Kazo.Os.Apps.Settings.SetWallpaperApp.SubmenuEntry = "set-wallpaper-on" -> string!
 override Kazo.Os.Apps.Settings.AppSourcesPanel.OnInitializedAsync() -> System.Threading.Tasks.Task!

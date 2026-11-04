@@ -21,7 +21,7 @@ public sealed class IndexedDbCapabilityGrantRepositoryTests
             new GuidSequence());
 
         CapabilityGrantMutationResult granted = await repository.GrantAsync(
-            "org.hackeros.browser",
+            "org.kazoos.browser",
             "user-1",
             AppCapabilities.FileSystemUserHomeRead,
             CapabilityGrantSource.AdministratorApproval,
@@ -31,7 +31,7 @@ public sealed class IndexedDbCapabilityGrantRepositoryTests
             granted.Grant!.Id,
             AppAuthority.Administrator);
         CapabilityPolicyEvaluation evaluation = await repository.EvaluateAsync(
-            "org.hackeros.browser",
+            "org.kazoos.browser",
             "user-1",
             AppCapabilities.FileSystemUserHomeRead,
             AppAuthority.User,
@@ -80,7 +80,7 @@ public sealed class IndexedDbCapabilityGrantRepositoryTests
 
         CapabilityGrantMutationResult imported = await repository.ImportAsync(
             serverIssuedId,
-            "org.hackeros.browser",
+            "org.kazoos.browser",
             "user-1",
             AppCapabilities.FileSystemUserHomeRead,
             CapabilityGrantSource.AdministratorApproval,
@@ -108,7 +108,7 @@ public sealed class IndexedDbCapabilityGrantRepositoryTests
 
         CapabilityGrantMutationResult imported = await repository.ImportAsync(
             serverIssuedId,
-            "org.hackeros.browser",
+            "org.kazoos.browser",
             "user-1",
             AppCapabilities.FileSystemUserHomeRead,
             CapabilityGrantSource.AdministratorApproval,
@@ -133,13 +133,13 @@ public sealed class IndexedDbCapabilityGrantRepositoryTests
         CapabilityGrantId serverIssuedId = CapabilityGrantId.FromGuid(Guid.Parse("33333333-3333-3333-3333-333333333333"));
 
         await repository.ImportAsync(
-            serverIssuedId, "org.hackeros.browser", "user-1", AppCapabilities.FileSystemUserHomeRead,
+            serverIssuedId, "org.kazoos.browser", "user-1", AppCapabilities.FileSystemUserHomeRead,
             CapabilityGrantSource.AdministratorApproval, constraints: null, isRevoked: false, AppAuthority.Administrator);
 
         // A later re-import of the same server RecordId (e.g. the same grant, now revoked) must update
         // the existing row under the same id, not mint a second grant record.
         CapabilityGrantMutationResult second = await repository.ImportAsync(
-            serverIssuedId, "org.hackeros.browser", "user-1", AppCapabilities.FileSystemUserHomeRead,
+            serverIssuedId, "org.kazoos.browser", "user-1", AppCapabilities.FileSystemUserHomeRead,
             CapabilityGrantSource.AdministratorApproval, constraints: null, isRevoked: true, AppAuthority.Administrator);
 
         Assert.Equal(serverIssuedId, second.Grant!.Id);
@@ -161,7 +161,7 @@ public sealed class IndexedDbCapabilityGrantRepositoryTests
 
         await Assert.ThrowsAsync<CapabilityGrantConflictException>(async () =>
             await repository.GrantAsync(
-                "org.hackeros.browser",
+                "org.kazoos.browser",
                 "user-1",
                 AppCapabilities.FileSystemUserHomeRead,
                 CapabilityGrantSource.AdministratorApproval,

@@ -6,13 +6,13 @@
 
 Accepté le 2026-10-16, avec le chantier `web/6-mvc-core`.
 
-- **Phase du plan :** phase web ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Phase du plan :** phase web ([`asp-kazo-plan.md`](../plans/asp-kazo-plan.md)).
 - **Remplace :** la phrase de l'[ADR 0076](0076-asp-hack-mvc.md) §3 « la table de
   routes est générée au build *par le générateur de manifestes* ». Le reste de
   l'ADR 0076 §3 (table générée au build, pas de réflexion au démarrage, conflits
   en erreurs `HOSWEB0001`...) est conservé.
 - **Complète :** ADR 0076 §1, §3, §4 et §5 sur les points listés plus bas.
-- **Documentation :** [`asp-hack-mvc.md`](../../framework/asp-hack-mvc.md).
+- **Documentation :** [`asp-kazo-mvc.md`](../../framework/asp-kazo-mvc.md).
 
 ## Contexte
 

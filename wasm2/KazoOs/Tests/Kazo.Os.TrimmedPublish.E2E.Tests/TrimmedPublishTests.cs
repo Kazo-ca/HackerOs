@@ -24,7 +24,7 @@ public sealed partial class TrimmedPublishTests(ITestOutputHelper output)
 
     /// <summary>
     /// Sign-in, every window app of the Start menu, a pipeline and the worker pool in the terminal,
-    /// then the Intranet (ASP.Hack MVC, ADR 0073) and the sample Blazor site (ADR 0084) in the Browser.
+    /// then the Intranet (ASP.Kazo MVC, ADR 0073) and the sample Blazor site (ADR 0084) in the Browser.
     /// </summary>
     [TrimmedPublishFact]
     public async Task Trimmed_publish_runs_every_app_a_worker_command_and_both_sample_sites()
@@ -52,9 +52,9 @@ public sealed partial class TrimmedPublishTests(ITestOutputHelper output)
             await WaitForTerminalTextAsync(rows, text => PromptPattern().IsMatch(text), "the shell prompt");
             await RunCommandAsync(page, screen, "seq 30 | grep 1 | wc -l");
             await WaitForTerminalTextAsync(rows, text => Regex.IsMatch(text, @"^\s*12\s*$", RegexOptions.Multiline), "the pipeline's count");
-            await RunCommandAsync(page, screen, "clear; cat /proc/hackeros/workers");
+            await RunCommandAsync(page, screen, "clear; cat /proc/kazoos/workers");
             await WaitForTerminalTextAsync(
-                rows, text => Regex.IsMatch(text, @"^\d+\s+pool\s", RegexOptions.Multiline), "/proc/hackeros/workers with a pool worker");
+                rows, text => Regex.IsMatch(text, @"^\d+\s+pool\s", RegexOptions.Multiline), "/proc/kazoos/workers with a pool worker");
             Log("a pipeline ran in the worker pool.");
             session.AssertNoErrors("terminal");
             await CloseAllWindowsAsync(page);

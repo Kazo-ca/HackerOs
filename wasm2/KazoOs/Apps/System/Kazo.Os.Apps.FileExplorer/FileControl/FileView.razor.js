@@ -19,9 +19,9 @@ let nextToken = 1;
 let lastDrop = null;
 
 // An app dragged from the Start menu (ADR 0160 §6): dropped on a folder, it becomes a .desktop shortcut.
-const appMimeType = 'application/vnd.hackeros.app+json';
+const appMimeType = 'application/vnd.kazoos.app+json';
 // A desktop icon moved on its own desktop (ADR 0160 §3): the desktop places it, nothing is transferred.
-const desktopItemMimeType = 'application/vnd.hackeros.desktop-item+json';
+const desktopItemMimeType = 'application/vnd.kazoos.desktop-item+json';
 
 export function setDragData(mimeType, json, downloadKey, hint) {
     const event = window.event;
@@ -122,11 +122,11 @@ function showDragHint(event, text) {
 // Reports a press of the main mouse button on an item, with the items selected at that moment, so
 // FileView prepares what a drag would carry before the drag starts. Touch has no drag out of the page.
 export function attachExternalDrag(root, callbacks) {
-    if (!root || root.__hackerOsExternalDrag) {
+    if (!root || root.__kazoOsExternalDrag) {
         return false;
     }
 
-    root.__hackerOsExternalDrag = true;
+    root.__kazoOsExternalDrag = true;
     root.addEventListener('pointerdown', e => {
         if (e.pointerType !== 'mouse' || e.button !== 0) {
             return;
@@ -195,7 +195,7 @@ export function releaseDroppedFiles(token) {
 }
 
 export function attachDropZone(element, mimeType) {
-    if (!element || element.__hackerOsDropZone) {
+    if (!element || element.__kazoOsDropZone) {
         return false;
     }
 
@@ -262,14 +262,14 @@ export function attachDropZone(element, mimeType) {
         }
     });
     element.addEventListener('drop', onDrop, true);
-    element.__hackerOsDropZone = true;
+    element.__kazoOsDropZone = true;
     return true;
 }
 
 // Ctrl+V on the view (ADR 0065). The browser's `paste` event, not the keydown, drives the paste: it
 // fires after the host clipboard bridge (hostClipboard.js of Kazo.Os.Infrastructure.Browser, listening
 // on the document in the capture phase) updated the OS clipboard, and it carries the host files of a
-// paste from the real machine. The bridge marks the event with `hackerOsHostFiles` (whether those files
+// paste from the real machine. The bridge marks the event with `kazoOsHostFiles` (whether those files
 // are new host content allowed by clipboard.config); without the bridge, any pasted file counts.
 // Some browsers (Safari) fire no paste on a non-editable element: a Ctrl+V keydown not followed by a
 // paste within 250 ms still pastes the OS clipboard.
@@ -279,7 +279,7 @@ function isEditable(target) {
 }
 
 export function attachPasteTarget(element, callbacks) {
-    if (!element || element.__hackerOsPasteTarget) {
+    if (!element || element.__kazoOsPasteTarget) {
         return false;
     }
 
@@ -311,7 +311,7 @@ export function attachPasteTarget(element, callbacks) {
         cancelPending();
         e.preventDefault();
         const files = Array.from((e.clipboardData && e.clipboardData.files) || []);
-        const hostFiles = files.length > 0 && e.hackerOsHostFiles !== false;
+        const hostFiles = files.length > 0 && e.kazoOsHostFiles !== false;
         if (hostFiles) {
             lastDrop = { at: performance.now(), data: {}, files };
         }
@@ -319,7 +319,7 @@ export function attachPasteTarget(element, callbacks) {
         callbacks.invokeMethodAsync('OnPasteShortcutAsync', hostFiles);
     });
 
-    element.__hackerOsPasteTarget = true;
+    element.__kazoOsPasteTarget = true;
     return true;
 }
 
@@ -356,7 +356,7 @@ export function focusItem(containerEl, path) {
 // Mouse only: a touch never shows one (on a phone the long press opens the menu). Any click, key, wheel,
 // drag or leaving the item hides it.
 export function attachTooltips(root, callbacks, delay) {
-    if (!root || root.__hackerOsTooltips) {
+    if (!root || root.__kazoOsTooltips) {
         return false;
     }
 
@@ -447,7 +447,7 @@ export function attachTooltips(root, callbacks, delay) {
     root.addEventListener('wheel', hide, { passive: true });
     root.addEventListener('dragstart', hide, true);
     root.addEventListener('contextmenu', hide, true);
-    root.__hackerOsTooltips = true;
+    root.__kazoOsTooltips = true;
     return true;
 }
 
@@ -455,7 +455,7 @@ export function attachTooltips(root, callbacks, delay) {
 // read for the preview only when it can be seen. Tiles mark themselves with data-folder-preview; new
 // tiles (a navigation, a refresh, a mode change) are found by a mutation observer.
 export function attachFolderPreviews(root, callbacks) {
-    if (!root || root.__hackerOsFolderPreviews || typeof IntersectionObserver === 'undefined') {
+    if (!root || root.__kazoOsFolderPreviews || typeof IntersectionObserver === 'undefined') {
         return false;
     }
 
@@ -506,6 +506,6 @@ export function attachFolderPreviews(root, callbacks) {
     });
     changes.observe(root, { childList: true, subtree: true, attributes: true, attributeFilter: ['data-folder-preview'] });
     scan();
-    root.__hackerOsFolderPreviews = true;
+    root.__kazoOsFolderPreviews = true;
     return true;
 }

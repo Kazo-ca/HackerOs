@@ -18,13 +18,13 @@ namespace Kazo.Os.Apps.Settings;
 public sealed class SetWallpaperApp : AppDefinition
 {
     /// <summary>The app id.</summary>
-    public const string AppId = "org.hackeros.settings.wallpaper";
+    public const string AppId = "org.kazoos.settings.wallpaper";
 
     /// <summary>
     /// The intent the OS hands for every entry, with <c>{"paths":["/home/neo/a.png"],"scope":"File","entry":"set-wallpaper-screen-2"}</c>:
     /// the entry's name says which screen (ADR 0218 §3).
     /// </summary>
-    public const string SetWallpaperIntent = "org.hackeros.settings.set-wallpaper.v1";
+    public const string SetWallpaperIntent = "org.kazoos.settings.set-wallpaper.v1";
 
     /// <summary>The entry shown with one screen: the image becomes the wallpaper of every screen.</summary>
     public const string SingleEntry = "set-wallpaper";
@@ -54,7 +54,7 @@ public sealed class SetWallpaperApp : AppDefinition
     public override Type EntryPoint => typeof(SetWallpaperService);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Sets an image as the desktop wallpaper from the file menus";

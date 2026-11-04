@@ -14,9 +14,9 @@ public readonly record struct ResourceAccountingBuildSupport(bool Cpu, bool Memo
 }
 
 /// <summary>
-/// The host's <c>HackerOs:ResourceAccounting</c> section of <c>appsettings.json</c> (ADR 0066,
+/// The host's <c>KazoOs:ResourceAccounting</c> section of <c>appsettings.json</c> (ADR 0066,
 /// section 3). A host setting, not a setting of the simulated OS: it never lives under
-/// <c>/etc/hackeros</c>.
+/// <c>/etc/kazoos</c>.
 /// </summary>
 /// <param name="CpuEnabled"><c>Cpu:Enabled</c>; <see langword="true"/> when absent.</param>
 /// <param name="MemoryEnabled"><c>Memory:Enabled</c>; <see langword="true"/> when absent.</param>
@@ -34,7 +34,7 @@ public sealed record ResourceAccountingSettings(
     /// <summary>Default <see cref="UnresponsiveThreshold"/>: five seconds.</summary>
     public static readonly TimeSpan DefaultUnresponsiveThreshold = TimeSpan.FromMilliseconds(5000);
 
-    /// <summary>Gets the settings of a host with no <c>HackerOs:ResourceAccounting</c> section: both on.</summary>
+    /// <summary>Gets the settings of a host with no <c>KazoOs:ResourceAccounting</c> section: both on.</summary>
     public static ResourceAccountingSettings Default { get; } = new(true, true, DefaultUnresponsiveThreshold, []);
 }
 
@@ -109,7 +109,7 @@ public sealed class ResourceAccountingPlan
         if (!built && enabled)
         {
             notices.Add($"resource accounting: {name} measurement is not built into this host ({property}=false); " +
-                        $"HackerOs:ResourceAccounting:{section}:Enabled=true ignored, {name} stays simulated");
+                        $"KazoOs:ResourceAccounting:{section}:Enabled=true ignored, {name} stays simulated");
         }
 
         return built && enabled;

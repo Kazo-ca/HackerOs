@@ -32,7 +32,7 @@ public interface IAppStorageDiagnosticsGateway
     ValueTask<KazoStorageSnapshot> GetSnapshotAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Lists the browser databases of web sites, <c>hackweb.*</c> (ADR 0088, section 4): they are not in
+    /// Lists the browser databases of web sites, <c>kazoweb.*</c> (ADR 0088, section 4): they are not in
     /// the OS database nor in its files. Defaults to none so existing implementations keep compiling.
     /// </summary>
     /// <param name="cancellationToken">Cancels the read.</param>
@@ -43,7 +43,7 @@ public interface IAppStorageDiagnosticsGateway
     /// Deletes the browser database of a web site; the site recreates it empty, with its schema, on its
     /// next request (ADR 0088, section 4).
     /// </summary>
-    /// <param name="databaseName">A <c>hackweb.*</c> name from <see cref="GetWebSiteDatabasesAsync"/>.</param>
+    /// <param name="databaseName">A <c>kazoweb.*</c> name from <see cref="GetWebSiteDatabasesAsync"/>.</param>
     /// <param name="cancellationToken">Cancels the deletion.</param>
     /// <exception cref="ArgumentException">The name is not a site database name.</exception>
     ValueTask DeleteWebSiteDatabaseAsync(string databaseName, CancellationToken cancellationToken = default) =>

@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Curl;
 public sealed class CurlApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.curl";
+    public override string Id => "org.kazoos.commands.curl";
 
     /// <inheritdoc />
     public override string Name => "curl";
@@ -22,7 +22,7 @@ public sealed class CurlApp : AppDefinition
     public override Type EntryPoint => typeof(CurlCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description =>

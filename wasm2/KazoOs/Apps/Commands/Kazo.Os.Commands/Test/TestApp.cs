@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Test;
 public sealed class TestApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.test";
+    public override string Id => "org.kazoos.commands.test";
 
     /// <inheritdoc />
     public override string Name => "test";
@@ -22,7 +22,7 @@ public sealed class TestApp : AppDefinition
     public override Type EntryPoint => typeof(TestCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Evaluate a conditional expression (also [ … ])";

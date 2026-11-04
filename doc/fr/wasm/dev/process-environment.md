@@ -35,7 +35,7 @@ modifient avec `KazoEnvironment`, calqué sur `System.Environment`.
 | `KazoEnvironment` | `Shared/Kazo.Os.AppSdk/KazoEnvironment.cs` | Façade statique du SDK. |
 | `KazoExecutionContext.WorkingDirectory` | `Shared/Kazo.Os.AppSdk/KazoExecutionContext.cs` | Lit le répertoire du processus, sauf si `Enter(context, dir)` en a fixé un et qu'aucun `SetCurrentDirectoryAsync` ne l'a remplacé depuis. |
 | `ProcFileSystemProvider` | `FileSystem/Virtual/` | `cmdline`, `environ`, `cwd` lus dans la table à chaque lecture. |
-| `FileSystemSeeder` | `FileSystem/` | Crée `/etc/hostname` (`hackeros`) et `/etc/environment` (commentaire) s'ils sont absents, `0644`, root. Ne les réécrit jamais. |
+| `FileSystemSeeder` | `FileSystem/` | Crée `/etc/hostname` (`kazoos`) et `/etc/environment` (commentaire) s'ils sont absents, `0644`, root. Ne les réécrit jamais. |
 
 ### État de départ d'un processus
 
@@ -103,7 +103,7 @@ place ; `NOM=valeur commande` ne passe `NOM` qu'à cette commande
 compatibilité : ils donnent l'état du processus au démarrage de la commande
 (tout l'environnement, plus seulement `HOME`).
 
-L'invite du terminal affiche le nom de la machine (`alice@hackeros:~$`) lu par
+L'invite du terminal affiche le nom de la machine (`alice@kazoos:~$`) lu par
 `IAppExecutionContext.Environment.MachineName`.
 
 ## Décisions clés

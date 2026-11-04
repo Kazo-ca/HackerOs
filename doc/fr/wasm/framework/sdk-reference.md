@@ -12,12 +12,12 @@ SDK (références, injection, JavaScript) sont dans [`app-sdk.md`](app-sdk.md).
 
 Conventions de l'API :
 
-- Les façades `Hack*` sont statiques et lisent le **contexte ambiant**
+- Les façades `Kazo*` sont statiques et lisent le **contexte ambiant**
   (`KazoExecutionContext`) que l'OS ouvre autour du code de l'app. Plusieurs
   existent aussi avec un `IAppExecutionContext` explicite en premier
   paramètre, pour le code qui tourne hors de ce contexte.
 - Les noms et les comportements suivent `System.IO`, `System.Diagnostics`,
-  `System.Net` et `System.ServiceProcess`, avec le préfixe `Hack` et des
+  `System.Net` et `System.ServiceProcess`, avec le préfixe `Kazo` et des
   méthodes asynchrones.
 - Les chemins acceptent `~` et les chemins relatifs au répertoire courant du
   processus.
@@ -29,7 +29,7 @@ Conventions de l'API :
 
 Toutes sont publiées en paquets NuGet locaux du même nom, à la version de
 `build/Versions.props` (`2.2.2` aujourd'hui, publiée par le workflow `Release Kazo OS` à la fusion de sa PR ; `2.1.0` le 2026-10-26, première publication automatique, ADR 0173 ; la majeure 2 date de la fin de la série du bureau, ADR 0149 et 0161 ; `1.2.0` à la fin de la série `exec`, ADR 0132 §2 ; `1.1.0` pour la série v3.1, ADR 0117 §5 ; `1.0.0` au gel du SDK, ADR 0114) ; un autre
-dépôt les consomme comme le décrit [`building-on-hackeros.md`](building-on-hackeros.md).
+dépôt les consomme comme le décrit [`building-on-kazoos.md`](building-on-kazoos.md).
 La promesse de compatibilité SemVer couvre les bibliothèques de cette page et
 `Kazo.Os.Theming.Blazor`, pas la plateforme (ADR 0114 §2).
 
@@ -45,10 +45,10 @@ mineure ; ceux qui sont connus sont listés dans [`sdk-packages.md`](sdk-package
 |---|---|---|
 | `Shared/Kazo.Os.App.Abstractions` | `Kazo.Os.App.Abstractions` | Définir une app (`AppDefinition`, capacités, manifeste). |
 | `Shared/Kazo.Os.Simulation.Abstractions` | `Kazo.Os.Simulation.Abstractions.*` | Types de données du système simulé (chemins, passerelles, journaux, notifications, processus). |
-| `Shared/Kazo.Os.AppSdk` | `Kazo.Os.AppSdk`, `.IO`, `.Settings`, `.Keyring`, `.Apps`, `.Net`, `.Clipboard`, `.Diagnostics`, `.ServiceProcess`, `.Shell`, `.Administration`, `.Threading` (SDK 1.2) | Façades `Hack*`, contexte d'exécution, commandes et services. |
+| `Shared/Kazo.Os.AppSdk` | `Kazo.Os.AppSdk`, `.IO`, `.Settings`, `.Keyring`, `.Apps`, `.Net`, `.Clipboard`, `.Diagnostics`, `.ServiceProcess`, `.Shell`, `.Administration`, `.Threading` (SDK 1.2) | Façades `Kazo*`, contexte d'exécution, commandes et services. |
 | `Shared/Kazo.Os.AppSdk.Blazor` | `Kazo.Os.AppSdk.Blazor`, `.Charts`, `.Interop`, `.Settings`, `.Files`, `.ContextMenus`, `.Components` | Apps fenêtrées, dialogues, graphiques, contrôle de fichiers et menu contextuel de l'OS (SDK 2.0). |
 | `Shared/Kazo.Os.AppSdk.Terminal` | `Kazo.Os.AppSdk.Terminal` | Terminal xterm.js. |
-| `Shared/Kazo.Os.AppSdk.Web` | `Kazo.Os.AppSdk.Web.Hosting`, `.Http`, `.Routing`, `.Mvc`, `.Views`, `.Antiforgery`, `.Sessions`, `.Diagnostics`, `.Data`, `.Logging` | Sites internes ASP.Hack façon ASP.NET Core MVC ([guide ASP.Hack](asp-hack-developer-guide.md), [`asp-hack-mvc.md`](asp-hack-mvc.md)). |
+| `Shared/Kazo.Os.AppSdk.Web` | `Kazo.Os.AppSdk.Web.Hosting`, `.Http`, `.Routing`, `.Mvc`, `.Views`, `.Antiforgery`, `.Sessions`, `.Diagnostics`, `.Data`, `.Logging` | Sites internes ASP.Kazo façon ASP.NET Core MVC ([guide ASP.Kazo](asp-kazo-developer-guide.md), [`asp-kazo-mvc.md`](asp-kazo-mvc.md)). |
 | `Shared/Kazo.Os.AppSdk.Web.Blazor` | `Kazo.Os.AppSdk.Web.Blazor.Sites` | Sites Blazor interactifs dessinés dans le navigateur ([`blazor-sites.md`](blazor-sites.md)). |
 | `Shared/Kazo.Os.AppSdk.Icons` | `Kazo.Os.AppSdk.Icons` | Icônes. |
 | `Shared/Kazo.Os.AppSdk.VirtualKeyboard` | `Kazo.Os.AppSdk.VirtualKeyboard` | Clavier virtuel. |
@@ -142,7 +142,7 @@ paramètre de `RunCoreAsync` pour un service, `context.App` pour une commande).
 | `CrossOriginIsolation` | État de l'isolation cross-origin (`IAppCrossOriginIsolationGateway.GetStatusAsync`, ADR 0146, SDK 2.0) ; derrière `KazoCrossOriginIsolation`, aucune capacité. Membre par défaut : `NotSupportedException`. |
 | `Console` | Derrière `KazoConsole` (ADR 0064). |
 | `SystemSettings`, `PermissionAdministration`, `ServerConnection`, `SystemPower`, `StorageDiagnostics`, `SystemBackup` | Derrière les façades d'administration. |
-| `WebDatabase` | Base IndexedDB `hackweb.<appId>` d'une app `Web` (`IAppWebDatabaseGateway`, ADR 0088) ; derrière `KazoWebDb` du SDK web. Une autre app reçoit `UnauthorizedAccessException`. |
+| `WebDatabase` | Base IndexedDB `kazoweb.<appId>` d'une app `Web` (`IAppWebDatabaseGateway`, ADR 0088) ; derrière `KazoWebDb` du SDK web. Une autre app reçoit `UnauthorizedAccessException`. |
 | `Accessibility` | Préférences d'accessibilité effectives de la session (`IAppAccessibilityGateway` : `GetPreferencesAsync`, `Changed`, ADR 0105 §3) ; derrière `KazoAccessibility`. Sans service (tests, Web Worker) : `DefaultAppAccessibilityGateway`, qui répond les valeurs par défaut. |
 | `Keyring` | Trousseau de connexion de l'utilisateur (`IAppKeyringGateway`, ADR 0100 §2) ; derrière `KazoKeyring`. Toujours verrouillé hors d'une session avec mot de passe. |
 | `PermissionErrors` | Événement `PermissionDenied` à chaque refus de permission. |
@@ -152,7 +152,7 @@ paramètre de `RunCoreAsync` pour un service, `context.App` pour une commande).
 
 | API | Membres | Capacité | Document |
 |---|---|---|---|
-| `KazoExecutionContext` | `Current`, `CurrentOrNull`, `WorkingDirectory`, `Enter(context, workingDirectory)` ; `KazoExecutionContextMissingException` | — | [`hack-file-api.md`](hack-file-api.md) |
+| `KazoExecutionContext` | `Current`, `CurrentOrNull`, `WorkingDirectory`, `Enter(context, workingDirectory)` ; `KazoExecutionContextMissingException` | — | [`kazo-file-api.md`](kazo-file-api.md) |
 | `KazoEnvironment` | `CurrentDirectory`, `SetCurrentDirectoryAsync`, `GetEnvironmentVariable(s)`, `SetEnvironmentVariable`, `GetCommandLineArgs`, `GetFolderPath(KazoSpecialFolder)`, `UserName`, `MachineName`, `ProcessId`, `NewLine`, `Culture`, `FormatCulture` | — | [`process-environment.md`](../dev/process-environment.md) |
 | `KazoLocale`, `KazoLocalization`, `KazoStringLocalizer`, `EnglishStringLocalizer<T>` (`Kazo.Os.AppSdk.Globalization`) | Règles de locale (`ResolveLanguage`, `ResolveFormatCulture`, `ParseLocaleConf`, `FormatLocaleConf`, `AvailableLocales`) ; `GetLocalizer<T>()` lié au processus ; localiseur toujours anglais pour les tests | — | [`localization.md`](localization.md) |
 | `KazoTimeZone` (`Kazo.Os.AppSdk.Globalization`), `IAppExecutionContext.TimeZone` | Fuseau du processus (`TZ`, sinon celui de la session) : `Current`, `Now`, `ToLocal`, `TryFind`, `Resolve`, `GetId`, `FormatOffset`, `Available` | — | [`time-zone.md`](time-zone.md) |
@@ -164,21 +164,21 @@ paramètre de `RunCoreAsync` pour un service, `context.App` pour une commande).
 
 | API | Membres | Document |
 |---|---|---|
-| `KazoFile` | `ReadAllText/Lines/BytesAsync`, `WriteAllText/Lines/BytesAsync`, `AppendAllText/LinesAsync`, `ExistsAsync`, `CopyAsync`, `MoveAsync`, `DeleteAsync`, `OpenRead/Write/AppendAsync`, `Get/SetUnixFileModeAsync`, `CreateSymbolicLinkAsync` (ADR 0064, `ln -s`) | [`hack-file-api.md`](hack-file-api.md) |
-| `KazoDirectory` | `CreateDirectoryAsync`, `ExistsAsync`, `GetFiles/Directories/FileSystemEntriesAsync`, `EnumerateFileSystemEntriesAsync`, `MoveAsync`, `CopyAsync` (récursive), `DeleteAsync` | [`hack-file-api.md`](hack-file-api.md), [`file-explorer.md`](../dev/file-explorer.md) |
-| `KazoPath` | `Combine`, `Join`, `GetFileName[WithoutExtension]`, `GetExtension`, `HasExtension`, `ChangeExtension`, `GetDirectoryName`, `IsPathRooted`, `GetFullPath` | [`hack-file-api.md`](hack-file-api.md) |
-| `KazoFileInfo`, `KazoDirectoryInfo` (`KazoFileSystemInfo`) | `GetAsync`, `RefreshAsync`, `Exists`, `Length`, dates, `UnixFileMode`, `Owner`, `Group`, `Revision`, liens symboliques ; opérations d'instance | [`hack-file-api.md`](hack-file-api.md) |
-| `KazoFileStream` | Flux de lecture, ou d'écriture publié en une écriture atomique à la fermeture ; le tampon d'écriture compte dans `VmData` quand la mémoire est mesurée | [`hack-file-api.md`](hack-file-api.md) |
-| `KazoWriteOptions` | `ExpectedRevision` (concurrence optimiste), `CreateMode` | [`hack-file-api.md`](hack-file-api.md) |
-| `KazoFileSystemWatcher` | `Created`, `Changed`, `Deleted`, `Renamed`, `Error`, `Filter`, `IncludeSubdirectories`, `StartAsync` | [`hack-file-api.md`](hack-file-api.md) |
+| `KazoFile` | `ReadAllText/Lines/BytesAsync`, `WriteAllText/Lines/BytesAsync`, `AppendAllText/LinesAsync`, `ExistsAsync`, `CopyAsync`, `MoveAsync`, `DeleteAsync`, `OpenRead/Write/AppendAsync`, `Get/SetUnixFileModeAsync`, `CreateSymbolicLinkAsync` (ADR 0064, `ln -s`) | [`kazo-file-api.md`](kazo-file-api.md) |
+| `KazoDirectory` | `CreateDirectoryAsync`, `ExistsAsync`, `GetFiles/Directories/FileSystemEntriesAsync`, `EnumerateFileSystemEntriesAsync`, `MoveAsync`, `CopyAsync` (récursive), `DeleteAsync` | [`kazo-file-api.md`](kazo-file-api.md), [`file-explorer.md`](../dev/file-explorer.md) |
+| `KazoPath` | `Combine`, `Join`, `GetFileName[WithoutExtension]`, `GetExtension`, `HasExtension`, `ChangeExtension`, `GetDirectoryName`, `IsPathRooted`, `GetFullPath` | [`kazo-file-api.md`](kazo-file-api.md) |
+| `KazoFileInfo`, `KazoDirectoryInfo` (`KazoFileSystemInfo`) | `GetAsync`, `RefreshAsync`, `Exists`, `Length`, dates, `UnixFileMode`, `Owner`, `Group`, `Revision`, liens symboliques ; opérations d'instance | [`kazo-file-api.md`](kazo-file-api.md) |
+| `KazoFileStream` | Flux de lecture, ou d'écriture publié en une écriture atomique à la fermeture ; le tampon d'écriture compte dans `VmData` quand la mémoire est mesurée | [`kazo-file-api.md`](kazo-file-api.md) |
+| `KazoWriteOptions` | `ExpectedRevision` (concurrence optimiste), `CreateMode` | [`kazo-file-api.md`](kazo-file-api.md) |
+| `KazoFileSystemWatcher` | `Created`, `Changed`, `Deleted`, `Renamed`, `Error`, `Filter`, `IncludeSubdirectories`, `StartAsync` | [`kazo-file-api.md`](kazo-file-api.md) |
 | `KazoTrash` | `MoveToTrashAsync`, `GetItemsAsync`, `RestoreAsync`, `DeleteAsync`, `EmptyAsync`, `TrashDirectory` | [`trash.md`](../dev/trash.md), [`trash-api.md`](trash-api.md) |
 | `KazoFileOperations` | `CopyAsync`, `MoveAsync(…, resolveConflict)`, `TransferAsync`, `ImportAsync` (`KazoHostFile` : fichiers de l'hôte), `MoveToTrashAsync`, `GetCopyName`, `GetName` → `KazoFileTransferResult` (`Completed`, `Skipped`, `Failures`, `Cancelled`, `DescribeFailures`) ; règles de Nautilus (`nom (copy).ext`, « Remplacer / Garder les deux / Ignorer » par `KazoFileConflictResolver`), un dossier jamais copié en lui-même, une erreur n'arrête pas les autres ; avec les droits de l'app ; SDK 2.0 (ADR 0161 §2). Une fenêtre pose la question de conflit par `Dialogs.AsFileConflictResolver(AppContext)` | [`file-explorer.md`](../dev/file-explorer.md), [`file-operations-api.md`](file-operations-api.md) |
-| `KazoDesktopLayout`, `KazoDesktopCell`, `KazoDesktopOptions`, `KazoDesktopItems`, `KazoDesktopEntry`, `KazoDesktopSettings`, `KazoDesktopLink` (`.Files`) | Grille du bureau en fonctions pures (`Order`, `Arrange`, `Move`, `CellAtPoint`, `GridSize`), raccourcis `.desktop` (`TryParse`, `Format`, `CreateShortcutAsync` ; liens vers un fichier ou un dossier `KazoDesktopLink.CreateLinkAsync`, ADR 0185 §13), `~/.config/hackeros/desktop.config` (`ReadAsync`, `SaveOptionsAsync`, `SavePositionsAsync`) ; SDK 2.0 (ADR 0160) | [`desktop.md`](../dev/desktop.md), [`desktop-api.md`](desktop-api.md) |
+| `KazoDesktopLayout`, `KazoDesktopCell`, `KazoDesktopOptions`, `KazoDesktopItems`, `KazoDesktopEntry`, `KazoDesktopSettings`, `KazoDesktopLink` (`.Files`) | Grille du bureau en fonctions pures (`Order`, `Arrange`, `Move`, `CellAtPoint`, `GridSize`), raccourcis `.desktop` (`TryParse`, `Format`, `CreateShortcutAsync` ; liens vers un fichier ou un dossier `KazoDesktopLink.CreateLinkAsync`, ADR 0185 §13), `~/.config/kazoos/desktop.config` (`ReadAsync`, `SaveOptionsAsync`, `SavePositionsAsync`) ; SDK 2.0 (ADR 0160) | [`desktop.md`](../dev/desktop.md), [`desktop-api.md`](desktop-api.md) |
 | `KazoTextContent` | `TryDecode`, `TryReadAsync` (texte ou binaire, comme `file`) | [`text-editor.md`](../dev/text-editor.md) |
 | `KazoRecoveryDraft` | `Open(name)`, `SaveAsync`, `TryReadAsync`, `TakeAsync`, `DeleteAsync` : brouillon de travail non enregistré dans `~/.local/state/<appId>/recovery/` (ADR 0069) | [`app-sdk.md`](app-sdk.md#arrêt-propre-et-points-darrêt-adr-0069) |
 | `KazoDriveInfo` | `GetDrivesAsync` : taille et espace libre (comme `df`) | [`system-metrics.md`](../dev/system-metrics.md) |
 | `KazoCrossOriginIsolation` (`.Diagnostics`) | `GetStatusAsync` → `KazoCrossOriginIsolationStatus` (`IsIsolated`, `Reason`, `Setting`, `EmbedderPolicy`, `SharedPipes`, `SynchronousWorkerCalls`, `BrowserMemoryMeasurement`, `TimerResolution`) ; aucune capacité ; SDK 2.0 (ADR 0146) | [`worker-processes.md`](../dev/worker-processes.md#isolation-cross-origin-adr-0131-adr-0143) |
-| Exceptions | `KazoIOException`, `KazoFileNotFoundException`, `KazoDirectoryNotFoundException`, `KazoFileConflictException`, `KazoUnauthorizedAccessException` | [`hack-file-api.md`](hack-file-api.md) |
+| Exceptions | `KazoIOException`, `KazoFileNotFoundException`, `KazoDirectoryNotFoundException`, `KazoFileConflictException`, `KazoUnauthorizedAccessException` | [`kazo-file-api.md`](kazo-file-api.md) |
 
 Capacités : selon le chemin (`filesystem.private.*`, `.user-home.*`,
 `.system.*`), puis les bits de mode du fichier.
@@ -278,7 +278,7 @@ l'OS et exige `network.real.access` ; écouter hors de ses `Urls` exige
 `GetFileDropListAsync`, `SetFileDropListAsync` (copier ou couper des
 fichiers), `ContainsFileDropListAsync`, `ClearAsync`, `Changed`. Capacités
 `clipboard.read` et `clipboard.write`. Le texte est partagé avec la vraie
-machine selon `/etc/hackeros/clipboard.config`. Voir [`file-explorer.md`](../dev/file-explorer.md)
+machine selon `/etc/kazoos/clipboard.config`. Voir [`file-explorer.md`](../dev/file-explorer.md)
 et [`clipboard.md`](../dev/clipboard.md), [`clipboard-api.md`](clipboard-api.md).
 
 ### Accessibilité (`Kazo.Os.AppSdk.Accessibility`)
@@ -300,14 +300,14 @@ les lit ici. Voir [`accessibility.md`](../dev/accessibility.md).
 
 | Type | Rôle | Document |
 |---|---|---|
-| `KazoComponentContracts` | Noms des contrats : `Terminal` (`hackeros.terminal`) ; réservés à l'OS (ADR 0148 ; l'ADR 0156 ouvre les deux premiers à une app tierce choisie par un administrateur) : `FileView` (`hackeros.file-view`), `FileDialogs` (`hackeros.file-dialogs`), `ContextMenu` (`hackeros.context-menu`). | [`embedded-components.md`](embedded-components.md) |
-| `IHackTerminal`, `KazoTerminalOptions`, `KazoTerminalCommandResult`, `KazoTerminalOutputEventArgs` | Piloter un terminal embarqué : `RunCommandAsync`, `SetWorkingDirectoryAsync`, `SendInputAsync`, `ReadOutput`, `ClearAsync`, `FocusAsync`, `WorkingDirectory`, `Title`, `IsRunning`, `IsBusy`, `OutputReceived`, `CommandCompleted`, `StateChanged`, `Exited`. | [`embedded-components.md`](embedded-components.md) |
+| `KazoComponentContracts` | Noms des contrats : `Terminal` (`kazoos.terminal`) ; réservés à l'OS (ADR 0148 ; l'ADR 0156 ouvre les deux premiers à une app tierce choisie par un administrateur) : `FileView` (`kazoos.file-view`), `FileDialogs` (`kazoos.file-dialogs`), `ContextMenu` (`kazoos.context-menu`). | [`embedded-components.md`](embedded-components.md) |
+| `IKazoTerminal`, `KazoTerminalOptions`, `KazoTerminalCommandResult`, `KazoTerminalOutputEventArgs` | Piloter un terminal embarqué : `RunCommandAsync`, `SetWorkingDirectoryAsync`, `SendInputAsync`, `ReadOutput`, `ClearAsync`, `FocusAsync`, `WorkingDirectory`, `Title`, `IsRunning`, `IsBusy`, `OutputReceived`, `CommandCompleted`, `StateChanged`, `Exited`. | [`embedded-components.md`](embedded-components.md) |
 
 ### Shell (`Kazo.Os.AppSdk.Shell` et `Kazo.Os.AppSdk`)
 
 | API | Rôle | Capacité | Document |
 |---|---|---|---|
-| `KazoShell.StartAsync(options)` → `IHackShell` | Démarrer un `hsh` : `ExecuteAsync`, `CompleteAsync`, `WorkingDirectory`, `ExitStatus`, `Prompt`, `HasExited`, historique, `GetInstalledCommands`, `NeedsMoreInput` (ADR 0064, invite `>`) | `shell.host` | [`shell-host.md`](shell-host.md) |
+| `KazoShell.StartAsync(options)` → `IKazoShell` | Démarrer un `hsh` : `ExecuteAsync`, `CompleteAsync`, `WorkingDirectory`, `ExitStatus`, `Prompt`, `HasExited`, historique, `GetInstalledCommands`, `NeedsMoreInput` (ADR 0064, invite `>`) | `shell.host` | [`shell-host.md`](shell-host.md) |
 | `KazoShellOptions`, `KazoShellExecution`, `KazoShellCompletion`, `KazoCredentialPrompt` | Options, flux d'une exécution, complétion, saisie des mots de passe | — | [`shell-host.md`](shell-host.md), [`terminal-console.md`](../dev/terminal-console.md) |
 | `IShellSession` (`TerminalExecutionContext.Shell`) | Pour une commande : `WorkingDirectory`, `Environment`, `History`, `ChangeDirectoryAsync`, `SetVariable`, `UnsetVariable`, `GetCommands` (dans la langue du shell ; `GetCommands(culture)` dans une autre, ADR 0104), `Exit` ; ADR 0064 : `GetVariable`, `AssignVariable`, `RunAsync`, `Jobs` (`ShellJobInfo`), `KillJob` | `shell.control` | [`shell-commands.md`](../dev/shell-commands.md) |
 | `IFullScreenTerminalSession` (`TerminalExecutionContext.FullScreen`) | Écran alternatif : `Viewport`, `EnterAlternateScreenAsync`, `RenderAsync`, `ReadKeyAsync`, `LeaveAlternateScreenAsync` | — | [`terminal-emulator.md`](../dev/terminal-emulator.md), [`terminal-api.md`](terminal-api.md) |
@@ -319,10 +319,10 @@ les lit ici. Voir [`accessibility.md`](../dev/accessibility.md).
 |---|---|---|
 | `KazoPermissionAdministration` | `GetPolicyAsync`, `SetPolicyAsync`, `GetOverviewAsync`, `SetMachineDecisionAsync`, `RemoveOwnDenialAsync` | `permissions.manage` |
 | `KazoComponentProviders` | `GetOverviewAsync` (`KazoComponentContractInfo`, `KazoComponentProviderInfo`), `SetProviderAsync(contracts, appId)` : app qui fournit le contrôle de fichiers et ses dialogues pour toute la machine, `null` = explorateur ([`embedded-components.md`](embedded-components.md), ADR 0156) | `apps.manage` + administrateur (fenêtre d'approbation pour une app non système) |
-| `KazoFileMenuEntries` | `GetEntriesAsync` (`KazoFileMenuEntryInfo`), `SetHiddenAsync(appId, name, hidden)` : entrées que les apps ajoutent aux menus des fichiers, masquées pour l'utilisateur de la session dans `~/.config/hackeros/context-menus.config` ([`context-menu.md`](context-menu.md), ADR 0159) | `apps.manage` |
+| `KazoFileMenuEntries` | `GetEntriesAsync` (`KazoFileMenuEntryInfo`), `SetHiddenAsync(appId, name, hidden)` : entrées que les apps ajoutent aux menus des fichiers, masquées pour l'utilisateur de la session dans `~/.config/kazoos/context-menus.config` ([`context-menu.md`](context-menu.md), ADR 0159) | `apps.manage` |
 | `KazoServerConnection` | `GetStateAsync`, `ConnectAsync`, `CreateAccountAsync`, `PairAsync`, `TestAsync` (`KazoServerProbe`, ADR 0191), `DisconnectAsync`, `SyncAsync`, `GetConflictsAsync`, `GetRelayPolicyAsync`, `ShowConflictsAsync`, `GetSyncStatusAsync` (`KazoSyncStatus`), `SetSyncPausedAsync`, `SyncNowAsync` ([`synchronization.md`](../dev/synchronization.md)) | `server.connection.manage` |
 | `KazoSystem` | `RebootAsync`, `FactoryResetAsync` | `system.power` + administrateur |
-| `KazoStorageDiagnostics` | `GetSnapshotAsync`, `GetWebSiteDatabasesAsync`, `DeleteWebSiteDatabaseAsync` (bases `hackweb.*` des sites, ADR 0088 §4) | `system.storage.inspect` |
+| `KazoStorageDiagnostics` | `GetSnapshotAsync`, `GetWebSiteDatabasesAsync`, `DeleteWebSiteDatabaseAsync` (bases `kazoweb.*` des sites, ADR 0088 §4) | `system.storage.inspect` |
 | `KazoScreens` | `IsSupported`, `IsSupportedFor(context)`, `GetState` (`KazoScreensState`, `KazoScreenInfo`), `WatchAsync`, `OpenScreenAsync` → `KazoScreenOpenStatus`, `RestoreScreensAsync`, `CloseScreenAsync(number)`, `IdentifyAsync`, `ToggleFullScreenAsync`, `RequestPermissionAsync` → `KazoScreenPermission` ; ouvrir, plein écran et permission seulement pendant un clic (ADR 0184, [`screens-settings.md`](../dev/screens-settings.md)) | `screens.manage` |
 | `KazoSystemBackup` | `IsSupported`, `IsSupportedFor(context)`, `CreateAsync` → `KazoBackupInfo(FileName, SizeBytes, RecordCount, CreatedAtUtc)`, `RestoreAsync(KazoBackupRestoreMode.Merge \| Replace)` → `KazoBackupInfo?` (`null` : sélecteur fermé) ; `KazoBackupInvalidException` pour une archive refusée (ADR 0099 §1, [`system-backup-api.md`](system-backup-api.md) ; mise en œuvre : [`system-backup.md`](../dev/system-backup.md)) | `system.backup` + administrateur |
 
@@ -334,9 +334,9 @@ Détails : [`system-administration.md`](system-administration.md),
 | Classe | Projet | À surcharger | Document |
 |---|---|---|---|
 | `WindowAppBase` | `AppSdk.Blazor` | `OnAppInitialized[Async]`, `OnAppParametersSet[Async]`, `OnAppAfterRender[Async]`, `ShouldRenderApp`, `OnPermissionErrorRaised`, `OnAppStopRequestedAsync` (ADR 0069 : la fenêtre se ferme après la tâche renvoyée), crochets de fenêtre `OnWindowActivated[Async]`, `OnWindowDeactivated[Async]`, `OnWindowStateChanged[Async]`, `OnWindowResized[Async]`, état `IsWindowActive`, `WindowState`, `WindowSize`, `TrackDisplaySurface` (ADR 0095, [`window-model.md`](window-model.md)), titre `WindowTitle`, `SetWindowTitleAsync(title)`, `FormatWindowTitle(document, modified)` (SDK 1.1, ADR 0117/0123, [`window-model.md`](window-model.md) §4), `OnIntentReceivedAsync(AppIntentDelivery)` (ADR 0096 §5) ; fournit `AppContext`, `Manifest`, `LaunchArguments`, `LaunchIntent`, `LaunchFile`, `SendIntentAsync` (affiche le sélecteur si plusieurs apps répondent), `ChooseAppAsync`, `OpenFileAsync`, `SaveFileAsync`, `SelectFolderAsync`, `MessageBox`, `TextInput` | [guide §3](sdk-developer-guide.md#3-une-app-fenêtrée) |
-| `KazoComponentBase` | `AppSdk.Blazor` | Composant enfant d'une fenêtre qui appelle `Hack*` | [`hack-file-api.md`](hack-file-api.md) |
+| `KazoComponentBase` | `AppSdk.Blazor` | Composant enfant d'une fenêtre qui appelle `Kazo*` | [`kazo-file-api.md`](kazo-file-api.md) |
 | `TerminalAppBase` | `AppSdk` | `ExecuteAsync(TerminalExecutionContext, CancellationToken)` → code de sortie ; le contexte donne `Arguments`, `StandardInput/Output/Error`, `WorkingDirectory`, `Environment`, `App`, `Shell`, `FullScreen`, et `ReadSecretLineAsync(invite)` qui lit une ligne écho coupé comme `getpass(3)` quand l'entrée est un terminal (`ITerminalInputMode.EchoEnabled`, ADR 0120) | [guide §4](sdk-developer-guide.md#4-une-commande-du-shell) |
-| `WebAppDefinition` | `AppSdk.Web` | Classe `[AppManifest]` `partial` d'un site : `Urls`, `Configure(KazoWebApplicationBuilder)` (services, middlewares, `MapControllers`, `MapGet`...) ; le build génère l'`EntryPoint` (`<Nom>WebHost : KazoWebHost`) et la table de routes des contrôleurs (`KazoController`, `KazoApiController`) | [`asp-hack-mvc.md`](asp-hack-mvc.md) |
+| `WebAppDefinition` | `AppSdk.Web` | Classe `[AppManifest]` `partial` d'un site : `Urls`, `Configure(KazoWebApplicationBuilder)` (services, middlewares, `MapControllers`, `MapGet`...) ; le build génère l'`EntryPoint` (`<Nom>WebHost : KazoWebHost`) et la table de routes des contrôleurs (`KazoController`, `KazoApiController`) | [`asp-kazo-mvc.md`](asp-kazo-mvc.md) |
 | `ServiceAppBase` | `AppSdk` | `OnStartAsync(context, token)` (le service est `activating` jusqu'à son retour, puis `active`, ADR 0107), `RunCoreAsync(context, sessionCancellationToken)`, `ReportHealth(KazoServiceHealth, status)` (santé et texte de `systemctl status`, ADR 0097 §2), `OnStoppingAsync(ServiceStopReason, token)` (appelé une fois, dès `StopRequested` ; `ServiceStopReason.Terminated` pour `kill`, « End task », `systemctl stop`), `OnIntentReceivedAsync(AppIntentDelivery, token)` (ADR 0096 §5) | [guide §5](sdk-developer-guide.md#5-un-service) |
 
 Interfaces qu'un composant fenêtré peut implémenter :
@@ -347,21 +347,21 @@ Interfaces qu'un composant fenêtré peut implémenter :
 | `IAppBackHandler` | `CanNavigateBack`, `CanNavigateBackChanged`, `NavigateBackAsync` → `AppBackResult`. Reçoit le bouton ◁ mobile, le bouton Retour de la barre de titre (avec `SupportsBack => true`), et sans rien déclarer le bouton Précédent de la souris, Alt+← et le Retour du téléphone ([ADR 0220](../dev/adr/0220-mouse-back-forward-buttons.md)). `AppBackRequest.Source` : `SystemNavigationBar`, `DesktopChromeButton`, `KeyboardShortcut`, `MouseButton`, `SystemBack`. |
 | `IAppForwardHandler` | `CanNavigateForward`, `CanNavigateForwardChanged`, `NavigateForwardAsync(AppForwardRequest)` → `AppBackResult` : bouton Suivant de la souris, Alt+→, touche Browser Forward ([ADR 0220](../dev/adr/0220-mouse-back-forward-buttons.md)). |
 
-## Sites web (ASP.Hack)
+## Sites web (ASP.Kazo)
 
-Pour apprendre : [guide du développeur ASP.Hack](asp-hack-developer-guide.md),
+Pour apprendre : [guide du développeur ASP.Kazo](asp-kazo-developer-guide.md),
 qui suit l'exemple `Apps/Samples/Kazo.Os.Samples.Intranet`.
 
 ### Démarrage (`Kazo.Os.AppSdk.Web.Hosting`)
 
 | Type | Membres | Document |
 |---|---|---|
-| `WebAppDefinition` | `Urls`, `BlazorRoot`, `Capabilities` (jamais `filesystem.*`, `HOSAPP0050`), `Configure(builder)` ; `Kind` `Web`, `Category` `internet`, `LaunchVisibility` `Hidden` | [`asp-hack-mvc.md`](asp-hack-mvc.md) |
-| `KazoWebApplicationBuilder` | `Services`, `Json` (`SerializerOptions`, camelCase), `Mvc` (`Filters`), `Antiforgery`, `Logging` (`EnableDebugLog(level)`, `LogRequests`), `Build()` ; `ILogger<T>` injectable | [`asp-hack-mvc.md`](asp-hack-mvc.md), [`asp-hack-site-data.md`](asp-hack-site-data.md#journal-de-débogage) |
-| `KazoWebApplication` | `Use`, `UseMiddleware<T>`, `UseExceptionPage`, `UseStatusCodePages`, `UseCookieSession`, `UseStaticFiles(configure)`, `Map`, `MapMethods`, `MapGet`/`MapPost`/`MapPut`/`MapPatch`/`MapDelete`, `MapFallback`, `MapControllers`, `MapControllerRoute`, `MapDefaultControllerRoute`, `ProcessAsync(KazoWebRequestData)`, `UnhandledException` | [`asp-hack-mvc.md`](asp-hack-mvc.md) |
-| `KazoWebHost` | Classe d'entrée générée (`<Définition>WebHost`) ; `CreateApplication(definition, routes, urls, views)` construit le site sans OS (tests) | [guide §9](asp-hack-developer-guide.md#9-tester-un-site) |
-| `KazoStaticFileOptions` | `Assembly`, `ResourcePrefix`, `RequestPath`, `DefaultFileNames`, `CacheControl` du `wwwroot` embarqué | [`asp-hack-razor-views.md`](asp-hack-razor-views.md) |
-| `KazoBlazorSiteEndpoints` | Page hôte, `blazor.hack.js` et `blazor.boot.json` d'un site à `BlazorRoot` ; `IsHostPage(html)` | [`blazor-sites.md`](blazor-sites.md) |
+| `WebAppDefinition` | `Urls`, `BlazorRoot`, `Capabilities` (jamais `filesystem.*`, `HOSAPP0050`), `Configure(builder)` ; `Kind` `Web`, `Category` `internet`, `LaunchVisibility` `Hidden` | [`asp-kazo-mvc.md`](asp-kazo-mvc.md) |
+| `KazoWebApplicationBuilder` | `Services`, `Json` (`SerializerOptions`, camelCase), `Mvc` (`Filters`), `Antiforgery`, `Logging` (`EnableDebugLog(level)`, `LogRequests`), `Build()` ; `ILogger<T>` injectable | [`asp-kazo-mvc.md`](asp-kazo-mvc.md), [`asp-kazo-site-data.md`](asp-kazo-site-data.md#journal-de-débogage) |
+| `KazoWebApplication` | `Use`, `UseMiddleware<T>`, `UseExceptionPage`, `UseStatusCodePages`, `UseCookieSession`, `UseStaticFiles(configure)`, `Map`, `MapMethods`, `MapGet`/`MapPost`/`MapPut`/`MapPatch`/`MapDelete`, `MapFallback`, `MapControllers`, `MapControllerRoute`, `MapDefaultControllerRoute`, `ProcessAsync(KazoWebRequestData)`, `UnhandledException` | [`asp-kazo-mvc.md`](asp-kazo-mvc.md) |
+| `KazoWebHost` | Classe d'entrée générée (`<Définition>WebHost`) ; `CreateApplication(definition, routes, urls, views)` construit le site sans OS (tests) | [guide §9](asp-kazo-developer-guide.md#9-tester-un-site) |
+| `KazoStaticFileOptions` | `Assembly`, `ResourcePrefix`, `RequestPath`, `DefaultFileNames`, `CacheControl` du `wwwroot` embarqué | [`asp-kazo-razor-views.md`](asp-kazo-razor-views.md) |
+| `KazoBlazorSiteEndpoints` | Page hôte, `blazor.kazo.js` et `blazor.boot.json` d'un site à `BlazorRoot` ; `IsHostPage(html)` | [`blazor-sites.md`](blazor-sites.md) |
 
 ### Requête et réponse (`.Http`, `.Sessions`)
 
@@ -381,18 +381,18 @@ qui suit l'exemple `Apps/Samples/Kazo.Os.Samples.Intranet`.
 | `KazoController` | Pages : `View`, `PartialView`, `View<TView>`, `ViewData`, `Json`, `OnActionExecuting`/`OnActionExecuted` |
 | `KazoApiController` | API : corps JSON par défaut, `400` automatique, problèmes RFC 9457 ; route d'attribut obligatoire (`HOSWEB0007`) |
 | Attributs | `[Route]`, `[HttpGet]`/`[HttpPost]`/`[HttpPut]`/`[HttpPatch]`/`[HttpDelete]` (`Name`, `Order`), `[ActionName]`, `[NonAction]`, `[NonController]`, `[FromRoute]`, `[FromQuery]`, `[FromForm]`, `[FromHeader]`, `[FromBody]`, `[FromServices]` |
-| Filtres | `IHackActionFilter`, `IHackAsyncActionFilter`, `KazoActionFilterAttribute`, `KazoMvcOptions.Filters` |
+| Filtres | `IKazoActionFilter`, `IKazoAsyncActionFilter`, `KazoActionFilterAttribute`, `KazoMvcOptions.Filters` |
 | `KazoResults` | Résultats des routes minimales : `Ok`, `Text`, `Json` (avec `JsonTypeInfo`), `StatusCode`, `NoContent`, `NotFound`, `BadRequest`, `Created`, `Redirect`, `File`, `Problem` |
-| `IHackUrlHelper` | `Action`, `RouteUrl`, `Content("~/...")`, `IsLocalUrl` |
+| `IKazoUrlHelper` | `Action`, `RouteUrl`, `Content("~/...")`, `IsLocalUrl` |
 
 ### Vues et anti-falsification (`.Views`, `.Antiforgery`)
 
 | Type | Rôle | Document |
 |---|---|---|
-| `KazoView`, `KazoView<TModel>`, `KazoLayout` | Bases des vues `.razor` : `Model`, `ViewData` (`Title`), `ViewContext`, `HttpContext`, `Request`, `ModelState`, `Url`, `Layout` ; `Body` pour un layout | [`asp-hack-razor-views.md`](asp-hack-razor-views.md) |
-| `KazoLink`, `KazoForm`, `KazoAntiforgeryToken`, `KazoValidationMessage`, `KazoValidationSummary`, `KazoSection`, `KazoRenderSection`, `KazoPartial`, `KazoRoute.Values` | Helpers des vues `.razor` | [`asp-hack-razor-views.md`](asp-hack-razor-views.md) |
-| `KazoRazorPage<TModel>` | Base des vues `.cshtml` : `Model`, `ViewData`, `Context`, `Layout`, `RenderBody`, `RenderSection(Async)`, `IsSectionDefined` ; `Html` (`ActionLink`, `BeginForm`, `TextBoxFor`, `LabelFor`, `ValidationMessageFor`, `ValidationSummary`, `PartialAsync`, `Raw`...), `Json.Serialize`, `Component.InvokeAsync<T>`, `Url` | [`asp-hack-cshtml-views.md`](asp-hack-cshtml-views.md) |
-| `[ValidateAntiForgeryToken]`, `[IgnoreAntiforgeryToken]`, `KazoAntiforgery` | Jeton de formulaire (`__RequestVerificationToken` ou en-tête `RequestVerificationToken`) et cookie `.KazoAntiforgery` | [`asp-hack-razor-views.md`](asp-hack-razor-views.md) |
+| `KazoView`, `KazoView<TModel>`, `KazoLayout` | Bases des vues `.razor` : `Model`, `ViewData` (`Title`), `ViewContext`, `HttpContext`, `Request`, `ModelState`, `Url`, `Layout` ; `Body` pour un layout | [`asp-kazo-razor-views.md`](asp-kazo-razor-views.md) |
+| `KazoLink`, `KazoForm`, `KazoAntiforgeryToken`, `KazoValidationMessage`, `KazoValidationSummary`, `KazoSection`, `KazoRenderSection`, `KazoPartial`, `KazoRoute.Values` | Helpers des vues `.razor` | [`asp-kazo-razor-views.md`](asp-kazo-razor-views.md) |
+| `KazoRazorPage<TModel>` | Base des vues `.cshtml` : `Model`, `ViewData`, `Context`, `Layout`, `RenderBody`, `RenderSection(Async)`, `IsSectionDefined` ; `Html` (`ActionLink`, `BeginForm`, `TextBoxFor`, `LabelFor`, `ValidationMessageFor`, `ValidationSummary`, `PartialAsync`, `Raw`...), `Json.Serialize`, `Component.InvokeAsync<T>`, `Url` | [`asp-kazo-cshtml-views.md`](asp-kazo-cshtml-views.md) |
+| `[ValidateAntiForgeryToken]`, `[IgnoreAntiforgeryToken]`, `KazoAntiforgery` | Jeton de formulaire (`__RequestVerificationToken` ou en-tête `RequestVerificationToken`) et cookie `.KazoAntiforgery` | [`asp-kazo-razor-views.md`](asp-kazo-razor-views.md) |
 
 Une vue est rendue en HTML statique dans l'iframe du navigateur : pas de CSS
 scopé ni d'événement Blazor ; le CSS et le JavaScript viennent du `wwwroot`.
@@ -401,7 +401,7 @@ scopé ni d'événement Blazor ; le CSS et le JavaScript viennent du `wwwroot`.
 
 | Type | Rôle |
 |---|---|
-| `AddKazoWebDb(services, schema)` | Enregistre `KazoWebDb`, la base `hackweb.<appId>` du site, avec ses versions ; en mémoire (`hackweb.in-memory`) hors de l'OS |
+| `AddKazoWebDb(services, schema)` | Enregistre `KazoWebDb`, la base `kazoweb.<appId>` du site, avec ses versions ; en mémoire (`kazoweb.in-memory`) hors de l'OS |
 | `KazoWebDbSchemaBuilder`, `KazoWebDbVersionBuilder` | `Version(n, v => ...)` ; `CreateStore(name, keyPath, autoIncrement)`, `DeleteStore`, `CreateIndex(store, name, keyPath, unique, multiEntry)`, `DeleteIndex` |
 | `KazoWebDb` | `Name`, `Version`, `Store<T>(name)`, `BeginTransaction(stores)`, `OpenAsync` |
 | `KazoWebDbStore<T>`, `KazoWebDbIndex<T>` | `GetAsync`, `GetAllAsync`, `GetAllKeysAsync`, `CountAsync` ; magasin : `AddAsync`, `PutAsync`, `DeleteAsync`, `ClearAsync`, `Index(name)` |
@@ -409,9 +409,9 @@ scopé ni d'événement Blazor ; le CSS et le JavaScript viennent du `wwwroot`.
 | `KazoWebDbKey`, `KazoWebDbKeyRange` | Clés (nombre, chaîne, `Array(...)`) et plages (`Only`, `LowerBound`, `UpperBound`, `Bound`) |
 | `KazoWebDbException` (`Kazo.Os.AppSdk.WebData`) | `Name` d'une `DOMException` IndexedDB : `ConstraintError`, `NotFoundError`, `DataError`, `VersionError`… |
 | `KazoWebDbInMemoryBackend` (`Kazo.Os.AppSdk.WebData`) | Passerelle en mémoire pour les tests |
-| `KazoWebLoggingOptions`, `IHackWebDebugLogSink`, `KazoWebDebugLogMemorySink` | Journal de débogage `/var/log/hackweb/<appId>.log` ; récepteur de test |
+| `KazoWebLoggingOptions`, `IKazoWebDebugLogSink`, `KazoWebDebugLogMemorySink` | Journal de débogage `/var/log/kazoweb/<appId>.log` ; récepteur de test |
 
-Guide : [`asp-hack-site-data.md`](asp-hack-site-data.md).
+Guide : [`asp-kazo-site-data.md`](asp-kazo-site-data.md).
 
 ## Composants et services Blazor
 
@@ -425,8 +425,8 @@ Guide : [`asp-hack-site-data.md`](asp-hack-site-data.md).
 | `MessageBoxDialogRequest` → `MessageBoxDialogResult` | `Title`, `Content`, `DialogType` (`MessageBoxType`), `Icon` (`MessageBoxIcon` : `None`, `Information`, `Warning`, `Error`, `Question` ; prochaine version du SDK) ; résultat `MessageBoxResult` |
 | `TextInputDialogRequest` → `TextInputDialogResult` | `Title`, `Content`, `DefaultValue`, `Placeholder` ; résultat `Status` (`TextInputStatus`) et `Value` |
 | `AppChooserDialogRequest` → `AppChooserDialogResult` | Sélecteur « Ouvrir avec » (ADR 0096) : `Title`, `Content`, `Candidates` (`AppChooserOption(AppId, Name, Description)`), `OfferAlwaysUse` ; résultat `Status` (`AppChooserStatus`), `AppId`, `AlwaysUse` |
-| `OpenWithDialogRequest`, `FilePropertiesDialogRequest`, `FileConflictDialogRequest` (`.Files`) | Dialogues fournis par l'explorateur (`hackeros.file-dialogs`, ADR 0155 §5) : « Ouvrir avec » (`CandidateAppIds` ; résultat `Status`, `AppId`, `AlwaysUse`), propriétés (résultat `Closed`), conflit de noms (`OfferApplyToAll` ; résultat `Replace`/`KeepBoth`/`Skip` et `ApplyToAll`). Sans fournisseur : `Unavailable` (ou `Skip`). |
-| `IDialogService`, `IFileDialogService` | Services injectés dans `WindowAppBase` (`Dialogs`, `FileDialogs`) ; `CredentialPromptAsync`, `ChooseAppAsync`, `OpenWithAsync`, `ShowFilePropertiesAsync` et `ResolveFileConflictAsync` en plus. Les dialogues Ouvrir / Enregistrer / Choisir un dossier montrent le contrôle de fichiers de l'OS (`hackeros.file-view`) avec les droits de l'app, ou la liste de la plateforme sans fournisseur (ADR 0157) |
+| `OpenWithDialogRequest`, `FilePropertiesDialogRequest`, `FileConflictDialogRequest` (`.Files`) | Dialogues fournis par l'explorateur (`kazoos.file-dialogs`, ADR 0155 §5) : « Ouvrir avec » (`CandidateAppIds` ; résultat `Status`, `AppId`, `AlwaysUse`), propriétés (résultat `Closed`), conflit de noms (`OfferApplyToAll` ; résultat `Replace`/`KeepBoth`/`Skip` et `ApplyToAll`). Sans fournisseur : `Unavailable` (ou `Skip`). |
+| `IDialogService`, `IFileDialogService` | Services injectés dans `WindowAppBase` (`Dialogs`, `FileDialogs`) ; `CredentialPromptAsync`, `ChooseAppAsync`, `OpenWithAsync`, `ShowFilePropertiesAsync` et `ResolveFileConflictAsync` en plus. Les dialogues Ouvrir / Enregistrer / Choisir un dossier montrent le contrôle de fichiers de l'OS (`kazoos.file-view`) avec les droits de l'app, ou la liste de la plateforme sans fournisseur (ADR 0157) |
 
 `FileDialogStatus.Selected` indique un choix ; tout autre statut est une
 annulation.
@@ -441,7 +441,7 @@ annulation.
 | `BrowserFilePicker` (`.Interop`) | `PickAsync(accept)` → `BrowserPickedFile(Name, Content)` ou `null` : ouvrir un fichier du vrai disque ; seulement juste après un clic ou une touche (sinon `InvalidOperationException`) | [`system-backup.md`](../dev/system-backup.md) |
 | `IDisplaySurfaceService`, `IDisplaySurface`, `DisplaySurfaceContent` (`.Display`) | Fenêtres détachées du navigateur hôte (ADR 0078) : `OpenAsync(DisplaySurfaceOptions)` → `DisplaySurfaceOpenResult` (`Opened`, `Blocked`, `Unavailable`), `Surfaces`, `SurfacesChanged`, `CloseAllAsync` ; surface `Id`, `Title`, `Width`, `Height`, `HasFocus`, `State`, `Changed`, `SetTitleAsync`, `FocusAsync`, `CloseAsync` ; `<DisplaySurfaceContent Surface="…">` y dessine son contenu (`Surface` facultatif : sans surface ouverte, le contenu reste en place) | [`detached-display-windows.md`](../dev/detached-display-windows.md), [`display-surface-api.md`](display-surface-api.md) |
 | `IAppWindowGateway` | Fenêtre d'une app vue par le SDK (SDK 1.1, ADR 0123) : `Title`, `DefaultTitle`, `SetTitleAsync`. Implémentée par la plateforme et donnée à `WindowAppBase` par valeur en cascade ; une app passe par `SetWindowTitleAsync` | [`window-model.md`](window-model.md) |
-| `KazoContextMenu`, `KazoMenuItem`, `KazoMenuGroup`, `KazoMenus` (`Menus`), `KazoMenuBuilder`, `KazoMenuDefinition`, `KazoMenuOpeningEventArgs`, `IHackContextMenu`, `IHackMenuHost` (`.ContextMenus`) | Menu contextuel de l'OS (ADR 0150, ADR 0154) : déclaré dans le markup ou en C# (`Menus.Define`), attaché à n'importe quel élément (`@attributes="@(Menus.Attach(nom, objet))"`), ouvert depuis le code (`Menus.OpenAsync`) ; groupes, trois niveaux, `Opening` pour l'objet attaché ; dessiné par la plateforme. `Menus` existe sur `WindowAppBase` et `KazoComponentBase`. Icônes : `KazoIcons.Vector`/`FromImage` (`Kazo.Os.AppSdk.Icons`) | [`context-menu.md`](context-menu.md) |
+| `KazoContextMenu`, `KazoMenuItem`, `KazoMenuGroup`, `KazoMenus` (`Menus`), `KazoMenuBuilder`, `KazoMenuDefinition`, `KazoMenuOpeningEventArgs`, `IKazoContextMenu`, `IKazoMenuHost` (`.ContextMenus`) | Menu contextuel de l'OS (ADR 0150, ADR 0154) : déclaré dans le markup ou en C# (`Menus.Define`), attaché à n'importe quel élément (`@attributes="@(Menus.Attach(nom, objet))"`), ouvert depuis le code (`Menus.OpenAsync`) ; groupes, trois niveaux, `Opening` pour l'objet attaché ; dessiné par la plateforme. `Menus` existe sur `WindowAppBase` et `KazoComponentBase`. Icônes : `KazoIcons.Vector`/`FromImage` (`Kazo.Os.AppSdk.Icons`) | [`context-menu.md`](context-menu.md) |
 | `RegisterFileContextMenuAttribute`, `RegisterFileContextMenuContext` (`.Files`), `MenuSelection`, `KazoFileMenuIntent` (`Kazo.Os.AppSdk.Files`), `KazoFileMenuContext`, `KazoMenuDefinition.FileMenu` | Entrées d'une app dans les menus des fichiers (ADR 0151, ADR 0159) : méthode statique `[RegisterFileContextMenu]` de la classe `[AppManifest]` qui appelle `Register(title, name, target, intent, icon, scope, types, selection, first, after, afterGroup, parent)`, exécutée au build ; capacité `shell.context-menu` ; la cible lit les chemins de l'intent par `KazoFileMenuIntent.ReadPaths`. Un fournisseur du contrôle de fichiers pose `FileMenu` pour que l'OS ajoute ces entrées | [`context-menu.md`](context-menu.md#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4) |
 | `KazoEmbeddedComponent<TController>` (`.Components`) | Affiche le composant d'une autre app pour un contrat : `Contract`, `Options`, `Parameters`, `ControllerChanged`, `Unavailable` ; `KazoEmbeddableComponent` est la base du composant fourni (`Options`, `ControllerReady`, `HostContext`, `UnmatchedParameters`) ; `KazoContractComponent<TController>` est la base des composants typés (`AddProviderParameters`, `Controller`, `DefaultUnavailable`, ADR 0153, ADR 0154) | [`embedded-components.md`](embedded-components.md) |
 
@@ -454,7 +454,7 @@ annulation.
 | `KazoSiteLayoutBase`, `KazoNavLink`, `KazoPageTitle` | Mise en page (`Body`), lien marqué `active` (`Match`), titre de l'onglet. |
 | `KazoWebSite` (cascadé) | `Navigation` (`NavigationManager` de l'onglet : `NavigateTo`, `LocationChanged`, `IsWithinSite`), `Http` (`KazoHttpClient` avec `BaseAddress` et les cookies de l'onglet), `AppId`, `Name`, `Title`. |
 | Liens | Un `<a href>` du site navigue sans requête ; un lien dont `target` n'est pas `_self` (`target="_top"`) charge un nouveau document : c'est ainsi qu'une page Blazor rejoint les pages MVC du même site (ADR 0087 §1). |
-| `IHackWebSiteHost`, `IHackWebSiteProcess`, `KazoWebSiteView` | Côté navigateur : démarre le processus de rendu d'une page hôte et dessine le site dans la zone de page. |
+| `IKazoWebSiteHost`, `IKazoWebSiteProcess`, `KazoWebSiteView` | Côté navigateur : démarre le processus de rendu d'une page hôte et dessine le site dans la zone de page. |
 
 Détails : [`blazor-sites.md`](blazor-sites.md).
 
@@ -462,14 +462,14 @@ Détails : [`blazor-sites.md`](blazor-sites.md).
 
 | Type | Rôle |
 |---|---|
-| `KazoFileView` | Composant typé du contrat `hackeros.file-view`, fourni par l'explorateur. Voir [`file-control-api.md`](file-control-api.md). Paramètres : `InitialDirectory`, `Mode` (`KazoFileViewMode` : `Details`, `Icons`, `Tree`), `ModeChanged`, `Features` (`KazoFileViewFeatures`), `AllowMultiSelect`, `OpenOnTap` (un toucher ouvre, ADR 0171), `Filter`, `SelectedResource`, rappels `Opening` (`Handled`), `Navigated`, `SelectionChanged`, `Renamed`, `Deleted`, `ContextMenuOpening`, `ErrorOccurred`. |
-| `IHackFileView` | Contrôleur : `CurrentDirectory`, `Items`, `SelectedItems` (`KazoFileViewItem`), `CanPaste`, `IsBusy`, `StateChanged`, `NavigateAsync`, `RefreshAsync`, `RevealAsync`, `ClearSelection`, `RefreshFilter`, `CanExecute`/`ExecuteAsync(commande)`, `WhenIdleAsync`. |
+| `KazoFileView` | Composant typé du contrat `kazoos.file-view`, fourni par l'explorateur. Voir [`file-control-api.md`](file-control-api.md). Paramètres : `InitialDirectory`, `Mode` (`KazoFileViewMode` : `Details`, `Icons`, `Tree`), `ModeChanged`, `Features` (`KazoFileViewFeatures`), `AllowMultiSelect`, `OpenOnTap` (un toucher ouvre, ADR 0171), `Filter`, `SelectedResource`, rappels `Opening` (`Handled`), `Navigated`, `SelectionChanged`, `Renamed`, `Deleted`, `ContextMenuOpening`, `ErrorOccurred`. |
+| `IKazoFileView` | Contrôleur : `CurrentDirectory`, `Items`, `SelectedItems` (`KazoFileViewItem`), `CanPaste`, `IsBusy`, `StateChanged`, `NavigateAsync`, `RefreshAsync`, `RevealAsync`, `ClearSelection`, `RefreshFilter`, `CanExecute`/`ExecuteAsync(commande)`, `WhenIdleAsync`. |
 | `KazoFileMenuOpeningEventArgs` | `Scope`, `Items`, `Directory`, `Menu` (`KazoMenuDefinition`), `Cancel`. |
-| `KazoFileDialogs` (`.Files`) | Noms des dialogues du fournisseur `hackeros.file-dialogs` : `OpenWith` (« Ouvrir avec »), `Properties`, `Conflict` (types de requêtes : `OpenWithDialogRequest`, `FilePropertiesDialogRequest`, `FileConflictDialogRequest`). |
+| `KazoFileDialogs` (`.Files`) | Noms des dialogues du fournisseur `kazoos.file-dialogs` : `OpenWith` (« Ouvrir avec »), `Properties`, `Conflict` (types de requêtes : `OpenWithDialogRequest`, `FilePropertiesDialogRequest`, `FileConflictDialogRequest`). |
 | `KazoFileOperationDialogs.AsFileConflictResolver(IDialogService, IAppExecutionContext, CancellationToken)` (`.Files`) | Résolveur de conflit de `KazoFileOperations.MoveAsync` et `TransferAsync` : le dialogue « Remplacer / Garder les deux / Ignorer » modal à la fenêtre de l'app ; fermer le dialogue ou un hôte sans fournisseur ignore l'élément. |
 | `FileMenuScope`, `KazoFileMenuItems` (`Kazo.Os.AppSdk.Files`) | Portées (`File`, `Directory`, `Background`, `Desktop`) et identifiants des entrées (`open`, `open-with`, `open-with-other`, `open-with:<appId>`, `cut`, `copy`, `paste`, `paste-into`, `rename`, `delete`, `delete-permanently`, `new-folder`, `refresh`, `properties`…). |
 
-Détails : [`embedded-components.md`](embedded-components.md#hackfileview-et-ihackfileview).
+Détails : [`embedded-components.md`](embedded-components.md#kazofileview-et-ikazofileview).
 
 ### Vue de fichiers (`Kazo.Os.AppSdk.FileView`) : retirée
 
@@ -483,7 +483,7 @@ migration d'une app 1.x est dans [`sdk-packages.md`](sdk-packages.md#sdk-20).
 
 | Composant | Paramètres | Document |
 |---|---|---|
-| `TerminalPanel` | `CallerAppId`, `InitialUsername`, `InitialCwd`, `UseVirtualKeyboard`, `ShowBanner`, `FocusOnStart`, `OnExitRequested`, `OnTitleChanged` ; héberge un `hsh` (capacité `shell.host`) ; implémente `IHackTerminal` (`RunCommandAsync`, `SetWorkingDirectoryAsync`, `SendInputAsync`, `ReadOutput`, `ClearAsync`, événements) | [`terminal-emulator.md`](../dev/terminal-emulator.md), [`terminal-api.md`](terminal-api.md), [`shell-host.md`](shell-host.md) |
+| `TerminalPanel` | `CallerAppId`, `InitialUsername`, `InitialCwd`, `UseVirtualKeyboard`, `ShowBanner`, `FocusOnStart`, `OnExitRequested`, `OnTitleChanged` ; héberge un `hsh` (capacité `shell.host`) ; implémente `IKazoTerminal` (`RunCommandAsync`, `SetWorkingDirectoryAsync`, `SendInputAsync`, `ReadOutput`, `ClearAsync`, événements) | [`terminal-emulator.md`](../dev/terminal-emulator.md), [`terminal-api.md`](terminal-api.md), [`shell-host.md`](shell-host.md) |
 | `TerminalTabs` | `CallerAppId`, `InitialCwd`, `OnLastTabClosed` ; un `hsh` par onglet | [`terminal-console.md`](../dev/terminal-console.md) |
 
 ### Icônes et clavier virtuel
@@ -519,11 +519,11 @@ paramètre `Tokens` appliqué par-dessus le thème de base.
 - [x] Lister les bibliothèques du SDK et leurs espaces de noms.
 - [x] Types de définition d'une app et table complète des 37 capacités (`keyring.read-all` ajoutée par `v3/8`, `system.backup` par `v3/7`, `users.manage` par la suite de `v3/8`, ADR 0120).
 - [x] Membres de `IAppExecutionContext`.
-- [x] Chaque façade `Hack*` avec ses membres, sa capacité et son document.
+- [x] Chaque façade `Kazo*` avec ses membres, sa capacité et son document.
 - [x] Classes de base des points d'entrée et interfaces des fenêtres.
 - [x] Composants Blazor : dialogues, graphiques, vue de fichiers, terminal, icônes, clavier virtuel.
 - [x] Hôte d'exécution (`AppExecutionHost`, ADR 0070) et `IAppProcessGateway.KillAsync`.
-- [x] Sites web ASP.Hack : démarrage, requête, contrôleurs, vues, anti-falsification, liens des sites Blazor (`web/11`).
+- [x] Sites web ASP.Kazo : démarrage, requête, contrôleurs, vues, anti-falsification, liens des sites Blazor (`web/11`).
 - [x] Base `KazoWebDb`, journal de débogage d'un site, passerelle `WebDatabase`, bases des sites dans `KazoStorageDiagnostics` (`web/12`).
 - [x] Réglages sensibles, `KazoKeyring` et `keyring.read-all` (`v3/8-settings-security`, ADR 0100).
 - [x] `KazoUserAccounts`, `users.manage`, `ITerminalInputMode` et `ReadSecretLineAsync` (`passwd`, ADR 0120).

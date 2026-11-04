@@ -9,7 +9,7 @@ namespace Kazo.Os.UI.E2E.Tests;
 /// Expands automated accessibility/visual coverage (P2-GATE-003, doc/en/wasm/dev/accessibility.md
 /// "Required expanded automation") beyond Kazo.Os.E2E.Tests's seven isolated-harness
 /// scenarios: scans the real desktop shell/launcher/taskbar and File Explorer, Settings,
-/// Code Editor, and Hack Paint windows, at both desktop and mobile viewports, and persists
+/// Code Editor, and Kazo Paint windows, at both desktop and mobile viewports, and persists
 /// a screenshot per surface/viewport under artifacts/playwright/ (doc/en/wasm/dev/accessibility.md's
 /// prescribed location) instead of discarding it — the one existing screenshot in this repo
 /// (IndexedDbBrowserContractTests) was written to a temp file and deleted immediately after
@@ -78,7 +78,7 @@ public sealed class AccessibilityAndVisualCoverageTests(ITestOutputHelper output
             await ScanAndCaptureAsync(page, "desktop-app-launcher", screenshotDirectory, findings, output);
             await page.Keyboard.PressAsync("Escape");
 
-            foreach (string appName in new[] { "File Explorer", "Settings", "Code Editor", "Hack Paint" })
+            foreach (string appName in new[] { "File Explorer", "Settings", "Code Editor", "Kazo Paint" })
             {
                 await E2ESupport.OpenAppAsync(page, appName, output);
                 await page.WaitForTimeoutAsync(500); // let the window finish its mount animation/render
@@ -127,7 +127,7 @@ public sealed class AccessibilityAndVisualCoverageTests(ITestOutputHelper output
         await ScanAndCaptureAsync(page, "desktop-settings-windows-7", screenshotDirectory, findings, output);
 
         await page.GetByRole(AriaRole.Img, new() { Name = "Kazo OS theme preview" }).ClickAsync();
-        await page.Locator(".theme-scope[data-theme='hackeros'][data-form-factor='desktop']")
+        await page.Locator(".theme-scope[data-theme='kazoos'][data-form-factor='desktop']")
             .WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Attached, Timeout = 15000 });
     }
 

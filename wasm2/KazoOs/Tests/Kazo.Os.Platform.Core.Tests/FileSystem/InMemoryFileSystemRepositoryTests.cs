@@ -168,7 +168,7 @@ public sealed class InMemoryFileSystemRepositoryTests
         {
             AppOperationContext operationContext = new()
             {
-                AppId = "org.hackeros.test",
+                AppId = "org.kazoos.test",
                 UserId = "user",
                 UserAuthority = AppAuthority.Administrator,
                 GrantedCapabilities = new HashSet<string>(AppCapabilities.All, StringComparer.Ordinal),

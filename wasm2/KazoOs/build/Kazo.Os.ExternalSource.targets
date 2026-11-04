@@ -3,8 +3,8 @@
     External source mode (ADR 0176 §4-5, ADR 0207 §2-3): the third build mode of an app, next to the
     repository mode and the package mode of Kazo.Os.Apps.targets.
 
-    A repository made with the hackeros-solution template keeps this repository as a submodule
-    (external/HackerOs, on a release tag) and imports this file from its Directory.Build.targets when
+    A repository made with the kazoos-solution template keeps this repository as a submodule
+    (external/KazoOs, on a release tag) and imports this file from its Directory.Build.targets when
     $(KazoOsUseSource) is true (by default in Debug). It then turns every PackageReference to a
     Kazo OS package into a ProjectReference to the project of the same name in the submodule, so a
     debugger steps into the SDK and the OS, and imports Kazo.Os.Apps.targets in place of the

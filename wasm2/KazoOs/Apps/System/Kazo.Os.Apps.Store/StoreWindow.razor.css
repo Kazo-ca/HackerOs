@@ -1,4 +1,4 @@
-/* Hack Store window (ADR 0188 §1, ADR 0212): dark "hacker console" surface, accent from the
+/* Kazo OS Store window (ADR 0188 §1, ADR 0212): dark "hacker console" surface, accent from the
    theme tokens, and a container query so the same markup works in a narrow window and on mobile. */
 
 .store-root {

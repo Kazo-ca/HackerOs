@@ -6,7 +6,7 @@ using Kazo.Os.Simulation.Abstractions.Gateways;
 namespace Kazo.Os.Platform.Core.Execution;
 
 /// <summary>
-/// The catalogs of the Hack Store behind <see cref="KazoAppPackages"/> (ADR 0188, ADR 0212): the
+/// The catalogs of the Kazo OS Store behind <see cref="KazoAppPackages"/> (ADR 0188, ADR 0212): the
 /// OS downloads each <c>catalog.json</c> itself and hands the app its apps, with the catalog's trust
 /// level; the update check, and the restart that finishes an install.
 /// </summary>

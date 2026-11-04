@@ -18,12 +18,12 @@ public sealed class TasksApiController(TaskBoard board) : KazoApiController
     /// <summary><c>GET /api/tasks/{id}</c>.</summary>
     /// <param name="id">The identifier.</param>
     [HttpGet("{id:int}", Name = "GetTask")]
-    public IHackActionResult Get(int id) => board.Find(id) is BoardTask task ? Ok(task) : NotFound();
+    public IKazoActionResult Get(int id) => board.Find(id) is BoardTask task ? Ok(task) : NotFound();
 
     /// <summary><c>POST /api/tasks</c>: a new card, in <c>todo</c> unless the body names another column.</summary>
     /// <param name="task">The card (JSON body).</param>
     [HttpPost]
-    public IHackActionResult Create(BoardTask task)
+    public IKazoActionResult Create(BoardTask task)
     {
         if (!BoardColumns.IsKnown(task.Column))
         {
@@ -39,7 +39,7 @@ public sealed class TasksApiController(TaskBoard board) : KazoApiController
     /// <param name="id">The identifier.</param>
     /// <param name="task">The new content (JSON body).</param>
     [HttpPut("{id:int}")]
-    public IHackActionResult Replace(int id, BoardTask task)
+    public IKazoActionResult Replace(int id, BoardTask task)
     {
         if (!BoardColumns.IsKnown(task.Column))
         {
@@ -54,5 +54,5 @@ public sealed class TasksApiController(TaskBoard board) : KazoApiController
     /// <summary><c>DELETE /api/tasks/{id}</c>.</summary>
     /// <param name="id">The identifier.</param>
     [HttpDelete("{id:int}")]
-    public IHackActionResult Delete(int id) => board.Remove(id) ? NoContent() : NotFound();
+    public IKazoActionResult Delete(int id) => board.Remove(id) ? NoContent() : NotFound();
 }

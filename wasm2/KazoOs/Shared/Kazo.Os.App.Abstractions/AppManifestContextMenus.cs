@@ -6,7 +6,7 @@ namespace Kazo.Os.App.Abstractions;
 /// One entry an app adds to the file menus of the OS (ADR 0151, ADR 0159), as written to
 /// <c>manifest.json</c> (<c>contextMenus</c>) by the manifest generator from the app's
 /// <c>[RegisterFileContextMenu]</c> method. The OS copies it to
-/// <c>/etc/hackeros/context-menus.d/&lt;appId&gt;.json</c> and builds the menus from that file:
+/// <c>/etc/kazoos/context-menus.d/&lt;appId&gt;.json</c> and builds the menus from that file:
 /// no app code runs to draw a menu, like the verbs of the Windows registry.
 /// </summary>
 public sealed record AppContextMenuEntryManifest

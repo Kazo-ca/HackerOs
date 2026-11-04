@@ -10,7 +10,7 @@ namespace Kazo.Os.AppSdk.Blazor.Tests;
 
 /// <summary>
 /// ADR 0155 §2: <c>KazoFileView</c> holds only the contract. It asks the OS for
-/// <c>hackeros.file-view</c> and hands the provider every one of its parameters by name, so a
+/// <c>kazoos.file-view</c> and hands the provider every one of its parameters by name, so a
 /// parameter added to the SDK reaches the File Explorer's control without another change.
 /// </summary>
 public sealed partial class KazoContractComponentTests
@@ -78,14 +78,14 @@ public sealed partial class KazoContractComponentTests
     }
 
     /// <summary>Remembers which contract was asked for and resolves it to <see cref="CapturingFileViewProvider"/>.</summary>
-    private sealed class RecordingComponentHost : IHackComponentHost
+    private sealed class RecordingComponentHost : IKazoComponentHost
     {
         public string? Contract { get; private set; }
 
         public Task<KazoComponentResolution> ResolveAsync(string contract, CancellationToken cancellationToken = default)
         {
             Contract = contract;
-            return Task.FromResult(KazoComponentResolution.Resolved(contract, typeof(CapturingFileViewProvider), "org.hackeros.file-explorer"));
+            return Task.FromResult(KazoComponentResolution.Resolved(contract, typeof(CapturingFileViewProvider), "org.kazoos.file-explorer"));
         }
     }
 }

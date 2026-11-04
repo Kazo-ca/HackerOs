@@ -60,7 +60,7 @@ function Get-FailedTestNames([string] $ResultsDirectory) {
 
 function Invoke-TestProject($TestProject, [string] $ResultsDirectory, [string] $Filter) {
     $arguments = @($TestProject.FullName, '--configuration', $Configuration, '--no-build', '--no-restore',
-        '--logger', 'trx;LogFilePrefix=hackeros', '--results-directory', $ResultsDirectory)
+        '--logger', 'trx;LogFilePrefix=kazoos', '--results-directory', $ResultsDirectory)
     if ($Filter) { $arguments += @('--filter', $Filter) }
     # Out-Host keeps the test output out of this function's return value.
     & dotnet test @arguments | Out-Host

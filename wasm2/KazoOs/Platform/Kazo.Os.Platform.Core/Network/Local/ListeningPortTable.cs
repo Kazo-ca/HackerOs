@@ -70,7 +70,7 @@ public sealed class ListeningPortTable
     /// <param name="bindings">Parsed prefixes.</param>
     /// <param name="conflict">The prefix already served by another socket, when the call fails.</param>
     /// <returns>The socket, or <see langword="null"/> on <c>EADDRINUSE</c>.</returns>
-    public IHackHttpListenerSocket? TryOpen(ListeningSocketOwner owner, IReadOnlyList<WebBinding> bindings, out string? conflict)
+    public IKazoHttpListenerSocket? TryOpen(ListeningSocketOwner owner, IReadOnlyList<WebBinding> bindings, out string? conflict)
     {
         ArgumentNullException.ThrowIfNull(owner);
         ArgumentNullException.ThrowIfNull(bindings);
@@ -304,7 +304,7 @@ public sealed class ListeningPortTable
 /// The OS side of one listening socket: requests queue here until the owner accepts them, and each
 /// waits for its reply (ADR 0074, section 2).
 /// </summary>
-internal sealed class OsHttpListenerSocket : IHackHttpListenerSocket
+internal sealed class OsHttpListenerSocket : IKazoHttpListenerSocket
 {
     private readonly ListeningPortTable _table;
     private readonly Channel<Pending> _queue = Channel.CreateUnbounded<Pending>(new UnboundedChannelOptions { SingleReader = false });

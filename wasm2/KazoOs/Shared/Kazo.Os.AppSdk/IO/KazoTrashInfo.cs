@@ -11,7 +11,7 @@ namespace Kazo.Os.AppSdk.IO;
 /// <param name="DeletedAt">Deletion time in the local time zone, or <see langword="null"/> when missing or invalid.</param>
 /// <param name="DeletedOnAnotherDevice">
 /// The synchronization put the element here because it was deleted on another device (ADR 0101
-/// section 1): <c>X-HackerOS-Origin=deleted-on-another-device</c>, an extension key other
+/// section 1): <c>X-KazoOS-Origin=deleted-on-another-device</c>, an extension key other
 /// implementations ignore.
 /// </param>
 internal sealed record KazoTrashInfo(string? OriginalPath, DateTimeOffset? DeletedAt, bool DeletedOnAnotherDevice = false)
@@ -74,7 +74,8 @@ internal sealed record KazoTrashInfo(string? OriginalPath, DateTimeOffset? Delet
             {
                 deletedAt = ParseDate(value);
             }
-            else if (key == "X-HackerOS-Origin")
+            // ADR 0228 §2: trash entries written before the rename carry X-HackerOS-Origin.
+            else if (key is "X-KazoOS-Origin" or "X-HackerOS-Origin")
             {
                 deletedOnAnotherDevice = value == "deleted-on-another-device";
             }

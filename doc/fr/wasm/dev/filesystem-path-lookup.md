@@ -4,7 +4,7 @@
 
 ## But
 
-Trouver l'entrée d'un chemin (`/home/<user>/.config/hackeros/<doc>.config`)
+Trouver l'entrée d'un chemin (`/home/<user>/.config/kazoos/<doc>.config`)
 coûtait des dizaines d'allers-retours vers IndexedDB : écrire un réglage prenait
 environ 2 secondes sur un appareil lent. Ce document décrit comment un chemin est
 maintenant recherché en une requête, et comment le mesurer. Décision :
@@ -14,7 +14,7 @@ maintenant recherché en une requête, et comment le mesurer. Décision :
 
 Hôte Ecosystem publié en Release, servi en statique, Chromium sans tête,
 profil neuf, clic sur « Mobile » dans le panneau de l'horloge (le choix est écrit
-dans `~/.config/hackeros/ui-platform-preference.config`, création du fichier
+dans `~/.config/kazoos/ui-platform-preference.config`, création du fichier
 comprise), jusqu'à l'apparition du bouton « Back » du shell mobile. Trois essais,
 2026-10-17 :
 

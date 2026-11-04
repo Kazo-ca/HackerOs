@@ -11,13 +11,13 @@ public enum DangerousCapabilityState
     /// <summary>A machine <c>allow</c> exists, the policy is <c>prompt</c> and the user did not refuse it.</summary>
     Allowed = 1,
 
-    /// <summary>The session user refused it in <c>~/.config/hackeros/app-permissions.config</c>.</summary>
+    /// <summary>The session user refused it in <c>~/.config/kazoos/app-permissions.config</c>.</summary>
     DeniedByUser = 2,
 
-    /// <summary>An administrator refused it machine-wide in <c>/etc/hackeros/app-permissions.config</c>.</summary>
+    /// <summary>An administrator refused it machine-wide in <c>/etc/kazoos/app-permissions.config</c>.</summary>
     DeniedByAdministrator = 3,
 
-    /// <summary><c>dangerousCapabilities=block</c> in <c>/etc/hackeros/security.config</c>.</summary>
+    /// <summary><c>dangerousCapabilities=block</c> in <c>/etc/kazoos/security.config</c>.</summary>
     BlockedByPolicy = 4,
 
     /// <summary>No machine decision and no refusal by the user: the launch gate asks.</summary>

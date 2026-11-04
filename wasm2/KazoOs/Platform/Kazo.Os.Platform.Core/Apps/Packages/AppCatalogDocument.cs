@@ -7,10 +7,10 @@ namespace Kazo.Os.Platform.Core.Apps.Packages;
 /// <summary>What a catalog entry installs (<c>kind</c> of <c>catalog.json</c>).</summary>
 public enum AppCatalogEntryKind
 {
-    /// <summary><c>app</c>: a <c>.hackapp</c> package (ADR 0182).</summary>
+    /// <summary><c>app</c>: a <c>.kazoapp</c> package (ADR 0182).</summary>
     App = 0,
 
-    /// <summary><c>theme-pack</c>: a <c>.hacktheme</c> pack, data only (ADR 0190, ADR 0213).</summary>
+    /// <summary><c>theme-pack</c>: a <c>.kazotheme</c> pack, data only (ADR 0190, ADR 0213).</summary>
     ThemePack = 1
 }
 
@@ -22,7 +22,7 @@ public sealed record AppCatalogCategory(string Id, IReadOnlyDictionary<string, s
 /// <summary>One published version of an app of a catalog (ADR 0188 §6).</summary>
 /// <param name="Version">The version.</param>
 /// <param name="Commit">Commit of the app repository the catalog compiled.</param>
-/// <param name="Package">Path of the <c>.hackapp</c>, relative to the catalog root.</param>
+/// <param name="Package">Path of the <c>.kazoapp</c>, relative to the catalog root.</param>
 /// <param name="Sha256">Lower-case hexadecimal SHA-256 of the package.</param>
 /// <param name="Size">Size of the package in bytes.</param>
 /// <param name="Capabilities">Capabilities this version declares.</param>
@@ -56,7 +56,7 @@ public sealed record AppCatalogVersion(
     public IReadOnlyDictionary<string, string> Descriptions { get; init; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 }
 
-/// <summary>An app of a catalog, with what the Hack Store shows on its page (ADR 0188 §2, §6).</summary>
+/// <summary>An app of a catalog, with what the Kazo OS Store shows on its page (ADR 0188 §2, §6).</summary>
 /// <param name="AppId">App identifier.</param>
 /// <param name="Name">Name of its newest version.</param>
 /// <param name="Category">Category ID.</param>
@@ -117,7 +117,7 @@ public sealed record AppCatalogListing(
         Apps.FirstOrDefault(app => app.Kind == kind && string.Equals(app.AppId, id, StringComparison.Ordinal));
 
     /// <summary>Gets the address of a file of the catalog, next to <c>catalog.json</c>.</summary>
-    /// <param name="relativePath">A path of <c>catalog.json</c>, such as <c>packages/org.x.y/1.0.0/org.x.y-1.0.0.hackapp</c>.</param>
+    /// <param name="relativePath">A path of <c>catalog.json</c>, such as <c>packages/org.x.y/1.0.0/org.x.y-1.0.0.kazoapp</c>.</param>
     /// <exception cref="ArgumentException">The path leaves the catalog.</exception>
     public Uri Resolve(string relativePath)
     {
@@ -140,7 +140,7 @@ public sealed record AppCatalogListing(
 /// A file of a newer schema, or that is not JSON, is refused whole. One invalid app or version is
 /// skipped with a warning, so a single broken entry does not hide the rest of the catalog.
 /// <c>kind</c> is <c>app</c> (the default) or <c>theme-pack</c> (ADR 0213 §2), whose versions are
-/// <c>.hacktheme</c> files of at most 30 MiB; any other kind is skipped.
+/// <c>.kazotheme</c> files of at most 30 MiB; any other kind is skipped.
 /// </remarks>
 public static class AppCatalogDocument
 {
@@ -296,9 +296,10 @@ public static class AppCatalogDocument
 
     private static AppCatalogVersion? TryReadVersion(JsonElement item, AppCatalogEntryKind kind)
     {
-        (string extension, long maximumSize) = kind == AppCatalogEntryKind.ThemePack
-            ? (Theming.Abstractions.ThemePackLayout.Extension, ThemePacks.ThemePack.MaximumBytes)
-            : (AppPackage.Extension, AppPackage.MaximumArchiveBytes);
+        // ADR 0228 §2: a catalog may still list packages published under the old extensions.
+        (string extension, string legacyExtension, long maximumSize) = kind == AppCatalogEntryKind.ThemePack
+            ? (Theming.Abstractions.ThemePackLayout.Extension, Theming.Abstractions.ThemePackLayout.LegacyExtension, ThemePacks.ThemePack.MaximumBytes)
+            : (AppPackage.Extension, AppPackage.LegacyExtension, AppPackage.MaximumArchiveBytes);
         if (item.ValueKind != JsonValueKind.Object
             || !SemanticVersion.TryParse(ReadString(item, "version"), out SemanticVersion version))
         {
@@ -309,7 +310,7 @@ public static class AppCatalogDocument
         string sha256 = ReadString(item, "sha256").ToLowerInvariant();
         long size = item.TryGetProperty("size", out JsonElement sizeElement) && sizeElement.TryGetInt64(out long bytes) ? bytes : -1;
         if (!AppPackage.IsSafeRelativePath(package)
-            || !package.EndsWith(extension, StringComparison.Ordinal)
+            || !(package.EndsWith(extension, StringComparison.Ordinal) || package.EndsWith(legacyExtension, StringComparison.Ordinal))
             || sha256.Length != 64
             || !sha256.All(Uri.IsHexDigit)
             || size < 0

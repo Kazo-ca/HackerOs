@@ -1,13 +1,13 @@
 > [English version](../../../en/wasm/dev/static-sites.md)
 
-# Sites statiques : fichiers `.site`, `hackwebd` et Web Server Manager
+# Sites statiques : fichiers `.site`, `kazowebd` et Web Server Manager
 
 Le format des fichiers `.site` et l'API `KazoWebSiteFile` destinés aux apps et aux outils sont dans [`static-site-files.md`](../framework/static-site-files.md).
 
-Chantier `web/5-static-sites` de la phase web (ASP.Hack). Décisions :
+Chantier `web/5-static-sites` de la phase web (ASP.Kazo). Décisions :
 [ADR 0077](adr/0077-hosted-static-sites.md) et ses ajustements,
 [ADR 0080](adr/0080-hosted-static-sites-adjustments.md). Plan :
-[`asp-hack-plan.md`](plans/asp-hack-plan.md) §5. S'appuie sur `web/3`
+[`asp-kazo-plan.md`](plans/asp-kazo-plan.md) §5. S'appuie sur `web/3`
 ([`listening-ports-and-dns.md`](../framework/listening-ports-and-dns.md)) pour les ports et
 les noms, et sur `web/4` ([`browser-html-rendering.md`](browser-html-rendering.md))
 pour afficher les pages.
@@ -18,7 +18,7 @@ Publier un dossier comme site web, comme avec IIS, Apache ou nginx :
 
 - un site est un **fichier** `.site` (JSON), lisible par `cat` et modifiable à
   la main ;
-- le service **`hackwebd`** lit ces fichiers, ouvre un port par liaison et sert
+- le service **`kazowebd`** lit ces fichiers, ouvre un port par liaison et sert
   les fichiers : types MIME, documents par défaut, liste du dossier si permise,
   `301`, `304`, `403`, `404`, `405`, journaux à la manière de nginx ;
 - l'app **Web Server Manager** (façon gestionnaire IIS) ne fait qu'écrire ces
@@ -28,18 +28,18 @@ Publier un dossier comme site web, comme avec IIS, Apache ou nginx :
 ## Architecture
 
 ```text
- Web Server Manager ─┬─ écrit ───────────► /etc/hackweb/sites/*.site      (admin, tous ports, servi en www-data)
- (fenêtre)           │                     ~/.config/hackweb/sites/*.site (utilisateur, ports ≥ 1024)
-                     ├─ KazoServiceController (start/stop/restart hackwebd)
-                     └─ KazoIPGlobalProperties (sockets de hackwebd → état des sites)
+ Web Server Manager ─┬─ écrit ───────────► /etc/kazoweb/sites/*.site      (admin, tous ports, servi en www-data)
+ (fenêtre)           │                     ~/.config/kazoweb/sites/*.site (utilisateur, ports ≥ 1024)
+                     ├─ KazoServiceController (start/stop/restart kazowebd)
+                     └─ KazoIPGlobalProperties (sockets de kazowebd → état des sites)
 
- hackwebd (service, worker dédié, AutoStart)
+ kazowebd (service, worker dédié, AutoStart)
    ├─ KazoFileSystemWatcher "*.site" sur les deux dossiers ─► rechargement à chaud
    ├─ KazoHttpListener par préfixe normalisé ─► StaticFileHandler
    │      └─ WwwDataAccess (droits « other » pour un site système)
-   └─ context.Logging.AppendToLogFile ─► /var/log/hackweb/<site>.access.log, error.log
+   └─ context.Logging.AppendToLogFile ─► /var/log/kazoweb/<site>.access.log, error.log
 
- hackdns (OS) ── HostedSiteNameSource (lit les .site en root) ─► « docs.hack » → 127.0.0.1
+ kazodns (OS) ── HostedSiteNameSource (lit les .site en root) ─► « docs.hack » → 127.0.0.1
 ```
 
 | Élément | Projet | Rôle |
@@ -47,7 +47,7 @@ Publier un dossier comme site web, comme avec IIS, Apache ou nginx :
 | `KazoWebdApp`, `KazoWebdService` | `Apps/System/Kazo.Os.Apps.WebServer` | Le service : réconciliation des écoutes, boucle d'acceptation, journaux. |
 | `StaticFileHandler`, `WwwDataAccess`, `KazoWebdLog` | idem, `Daemon/` | Traitement d'une requête, droits de `www-data`, formats des journaux. |
 | `WebServerManagerApp`, `WebServerManagerWindow`, `WebSiteStore` | idem, `Manager/` | L'app à fenêtre et sa logique sans interface. |
-| `WebServerManagerApp.RegisterFileContextMenu`, `PublishSiteIntent` | `Apps/System/Kazo.Os.Apps.WebServer` | Entrée « Publish as a web site… » des menus de dossiers, inscrite par Web Server Manager (ADR 0151 §8, ADR 0159) : portée `Directory`, un seul dossier, intent `org.hackeros.web-server-manager.publish-site.v1` reçu au lancement ou par `IntentReceived`. Était `PublishSiteContextMenuProvider`, puis `FileExplorerMenuEntries.PublishSite`. |
+| `WebServerManagerApp.RegisterFileContextMenu`, `PublishSiteIntent` | `Apps/System/Kazo.Os.Apps.WebServer` | Entrée « Publish as a web site… » des menus de dossiers, inscrite par Web Server Manager (ADR 0151 §8, ADR 0159) : portée `Directory`, un seul dossier, intent `org.kazoos.web-server-manager.publish-site.v1` reçu au lancement ou par `IntentReceived`. Était `PublishSiteContextMenuProvider`, puis `FileExplorerMenuEntries.PublishSite`. |
 | `HostedSiteNameSource` | `Platform/Kazo.Os.Platform.Core/Network/Local` | Source 4 du résolveur (`IHostedSiteNameSource`, asynchrone). |
 | `IAppLoggingGateway.AppendToLogFile`, `LogFileTarget.ForDaemon` | `Simulation.Abstractions`, `Platform.Core` | Journaux des démons système (ADR 0080 §3). |
 
@@ -58,10 +58,10 @@ services d'une même app. Les deux sont des apps système (`IsSystemApp` sur la
 
 ## Fonctionnement
 
-### `hackwebd`
+### `kazowebd`
 
-- Démarré au boot (`AutoStart`), visible par `systemctl status hackwebd`,
-  arrêtable par `systemctl stop hackwebd` (les ports se libèrent :
+- Démarré au boot (`AutoStart`), visible par `systemctl status kazowebd`,
+  arrêtable par `systemctl stop kazowebd` (les ports se libèrent :
   `curl` répond alors `Failed to connect`, code 7).
 - À chaque changement d'un `.site` (ou au démarrage), il **réconcilie** : un
   `KazoHttpListener` par préfixe normalisé ; un préfixe déjà pris (par un autre
@@ -75,14 +75,14 @@ services d'une même app. Les deux sont des apps système (`IsSystemApp` sur la
 - Fichier : `Content-Type` par extension (`SimulatedFileTypes`), `ETag`
   (`"<révision>-<taille>"`), `Last-Modified`, `304` sur `If-None-Match` puis
   `If-Modified-Since` ; `HEAD` envoie `Content-Length` sans corps.
-- Pages d'erreur et en-tête `Server: hackwebd/1.0` à la manière de nginx.
+- Pages d'erreur et en-tête `Server: kazowebd/1.0` à la manière de nginx.
 
 ### Journaux
 
 | Fichier | Contenu |
 |---|---|
-| `/var/log/hackweb/<site>.access.log` | Format « combined » : `127.0.0.1 - - [16/Oct/2026:12:00:00 +0000] "GET / HTTP/1.1" 200 512 "-" "curl/8.5.0"` |
-| `/var/log/hackweb/error.log` | Format nginx : `2026/10/16 12:00:00 [error] 42#0: docs: open() "/…" failed (13: Permission denied for www-data)` ; démarrage, écoutes (`[notice]`), conflits (`[emerg]`), refus, `exiting`. |
+| `/var/log/kazoweb/<site>.access.log` | Format « combined » : `127.0.0.1 - - [16/Oct/2026:12:00:00 +0000] "GET / HTTP/1.1" 200 512 "-" "curl/8.5.0"` |
+| `/var/log/kazoweb/error.log` | Format nginx : `2026/10/16 12:00:00 [error] 42#0: docs: open() "/…" failed (13: Permission denied for www-data)` ; démarrage, écoutes (`[notice]`), conflits (`[emerg]`), refus, `exiting`. |
 
 Écrits par `LogFileWriter` (rotation 1 Mio × 5, `system:system 0644`).
 
@@ -92,25 +92,25 @@ services d'une même app. Les deux sont des apps système (`IsSystemApp` sur la
 de `root`, garde les sites valides et activés et publie leurs hôtes (ni
 `localhost`, ni IP, ni joker). `nslookup docs.hack` répond
 `;; source: hosted site docs (this machine)`. Le nom reste publié quand
-`hackwebd` est arrêté (le fichier existe toujours) : la connexion est alors
+`kazowebd` est arrêté (le fichier existe toujours) : la connexion est alors
 refusée, comme un serveur arrêté derrière un DNS valide.
 
 ### Web Server Manager
 
-- Trois groupes : **System** (`/etc/hackweb/sites`), **My sites**
-  (`~/.config/hackweb/sites`), **External** (apps `Web` de l'ADR 0073, en
+- Trois groupes : **System** (`/etc/kazoweb/sites`), **My sites**
+  (`~/.config/kazoweb/sites`), **External** (apps `Web` de l'ADR 0073, en
   lecture seule avec leurs URL).
 - État par site (pastille) : running, partial, down, stopped, invalid,
-  external, calculé d'après les sockets que possède `hackwebd`.
-- Barre du haut : Refresh, Start/Restart/Stop `hackwebd`, « + New site ».
+  external, calculé d'après les sockets que possède `kazowebd`.
+- Barre du haut : Refresh, Start/Restart/Stop `kazowebd`, « + New site ».
 - Formulaire : nom, portée (mes sites / système), racine (bouton
   « Browse… », sélecteur de dossier), liaisons (une par ligne), documents par
   défaut, liste du dossier, activé ; erreurs de `Validate` en direct ;
   avertissement si `www-data` ne pourra pas lire la racine d'un site système.
 - Save, Start/Stop site (bascule `enabled`), Open in browser
-  (`org.hackeros.browser`), Delete (confirmation), onglet **Logs** (journal
+  (`org.kazoos.browser`), Delete (confirmation), onglet **Logs** (journal
   d'accès du site, lignes d'`error.log` qui le concernent).
-- Écrire dans `/etc/hackweb` est une écriture système : l'approbation
+- Écrire dans `/etc/kazoweb` est une écriture système : l'approbation
   administrateur de la plateforme s'affiche, puis le Manager demande
   d'appuyer de nouveau sur Save.
 - Lancé avec un dossier en argument (menu de l'explorateur), il ouvre
@@ -121,14 +121,14 @@ refusée, comme un serveur arrêté derrière un DNS valide.
 
 ```sh
 mkdir -p ~/www && echo '<h1>Hello</h1>' > ~/www/index.html
-mkdir -p ~/.config/hackweb/sites
-cat > ~/.config/hackweb/sites/docs.site <<'EOF'
+mkdir -p ~/.config/kazoweb/sites
+cat > ~/.config/kazoweb/sites/docs.site <<'EOF'
 { "name": "docs", "root": "/home/benoit/www", "bindings": ["http://docs.hack:8080/"] }
 EOF
 curl http://docs.hack:8080/          # <h1>Hello</h1>
-netstat -tlnp                         # 0.0.0.0:8080 … LISTEN  <pid>/hackwebd
-tail /var/log/hackweb/docs.access.log
-systemctl restart hackwebd
+netstat -tlnp                         # 0.0.0.0:8080 … LISTEN  <pid>/kazowebd
+tail /var/log/kazoweb/docs.access.log
+systemctl restart kazowebd
 ```
 
 Ou, dans l'explorateur, clic droit sur un dossier → **Publish as a web site…**,
@@ -141,7 +141,7 @@ puis Save dans le Manager et **Open in browser**.
 - Un seul démon pour tous les sites statiques, un listener par préfixe : le
   routage par hôte et par chemin reste celui de `http.sys` (ADR 0074).
 - `www-data` simulé, journaux par `AppendToLogFile`, résolveur asynchrone :
-  [ADR 0080](adr/0080-hosted-static-sites-adjustments.md). `hackwebd` tourne
+  [ADR 0080](adr/0080-hosted-static-sites-adjustments.md). `kazowebd` tourne
   en worker dédié depuis que la surveillance de fichiers traverse la frontière
   du worker ([ADR 0124](adr/0124-remote-event-and-watch-gateways.md) §6,
   qui rend sans objet le fil principal de l'ADR 0080 §1).
@@ -153,7 +153,7 @@ puis Save dans le Manager et **Open in browser**.
 
 - Pas de `https://`, de requêtes partielles (`Range`), de compression, ni de
   réécriture d'URL.
-- L'Error Log Viewer ne liste pas `/var/log/hackweb` (lire par `cat`/`tail`
+- L'Error Log Viewer ne liste pas `/var/log/kazoweb` (lire par `cat`/`tail`
   ou l'onglet Logs du Manager).
 
 ## Tests
@@ -176,10 +176,10 @@ puis Save dans le Manager et **Open in browser**.
 ## Liste des tâches
 
 - [x] Format `.site` dans le SDK (`KazoWebSite`, `KazoWebSiteFile`), validation façon `nginx -t`.
-- [x] `/etc/hackweb/sites` créé par `FileSystemSeeder` ; `~/.config/hackweb/sites` créé par `hackwebd`.
+- [x] `/etc/kazoweb/sites` créé par `FileSystemSeeder` ; `~/.config/kazoweb/sites` créé par `kazowebd`.
 - [x] Journaux des démons système (`AppendToLogFile`, `LogFileTarget.ForDaemon`, opération `log.file` des workers).
 - [x] `HostedSiteNameSource` et `IHostedSiteNameSource` asynchrone ; `KazoAppInfo.Urls` (sites externes).
-- [x] `hackwebd` : réconciliation à chaud, fichiers, documents par défaut, liste, MIME, `301`/`304`/`403`/`404`/`405`, `www-data`.
+- [x] `kazowebd` : réconciliation à chaud, fichiers, documents par défaut, liste, MIME, `301`/`304`/`403`/`404`/`405`, `www-data`.
 - [x] Web Server Manager : groupes, états, formulaire, portée, Browse, Save/Start/Stop/Delete, navigateur, journaux, contrôle du service.
 - [x] Explorateur : « Publish as a web site… » sur un dossier.
 - [x] Hôtes (Ecosystem, test, Server) et solution.

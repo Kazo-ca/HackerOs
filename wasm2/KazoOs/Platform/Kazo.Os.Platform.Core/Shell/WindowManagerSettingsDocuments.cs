@@ -5,8 +5,8 @@ namespace Kazo.Os.Platform.Core.Shell;
 
 /// <summary>
 /// The window manager's behaviour settings (ADR 0127 §5), a layered OS document (ADR 0044):
-/// <c>/etc/hackeros/window-manager.config</c> holds the machine default chosen by an administrator,
-/// and a user may override it in <c>~/.config/hackeros/window-manager.config</c> unless the key is
+/// <c>/etc/kazoos/window-manager.config</c> holds the machine default chosen by an administrator,
+/// and a user may override it in <c>~/.config/kazoos/window-manager.config</c> unless the key is
 /// listed under <c>[locked]</c>.
 /// </summary>
 /// <remarks>

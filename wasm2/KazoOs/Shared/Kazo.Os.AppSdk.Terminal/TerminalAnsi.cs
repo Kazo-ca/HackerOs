@@ -100,7 +100,7 @@ internal static partial class TerminalAnsi
     /// <summary>
     /// Removes what a person would not read: CSI sequences (colours, cursor moves), OSC sequences
     /// (titles), other escapes, carriage returns and the remaining C0 controls but tab and newline.
-    /// Used for the text an embedded terminal reports to its host (<c>IHackTerminal</c>, ADR 0063).
+    /// Used for the text an embedded terminal reports to its host (<c>IKazoTerminal</c>, ADR 0063).
     /// </summary>
     public static string StripControlSequences(string text) =>
         string.IsNullOrEmpty(text) ? string.Empty : ControlSequences().Replace(text, string.Empty);

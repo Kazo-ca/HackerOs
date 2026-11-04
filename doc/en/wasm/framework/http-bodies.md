@@ -2,7 +2,7 @@
 
 # Real HTTP bodies in the simulated network
 
-**Web phase, work item `web/2-http-bodies`** ([`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md),
+**Web phase, work item `web/2-http-bodies`** ([`asp-kazo-plan.md`](../dev/plans/asp-kazo-plan.md),
 section 5). Decision: [ADR 0074](../dev/adr/0074-listening-ports-and-name-resolution.md)
 §1. Complements [`sdk-network.md`](sdk-network.md) (ADR 0056 §6).
 

@@ -39,7 +39,7 @@ public sealed class BlazorSiteEndpointsTests : IAsyncLifetime
         Assert.StartsWith("text/html", response.ContentType, StringComparison.Ordinal);
         string html = response.ReadAsString();
         Assert.Contains("<div id=\"app\">", html, StringComparison.Ordinal);
-        Assert.Contains("<script src=\"_framework/blazor.hack.js\">", html, StringComparison.Ordinal);
+        Assert.Contains("<script src=\"_framework/blazor.kazo.js\">", html, StringComparison.Ordinal);
         Assert.Contains("<title>Blazor test site</title>", html, StringComparison.Ordinal);
         Assert.True(KazoBlazorSiteEndpoints.IsHostPage(html));
     }
@@ -83,7 +83,7 @@ public sealed class BlazorSiteEndpointsTests : IAsyncLifetime
     [Fact]
     public async Task The_loader_script_is_served_as_javascript()
     {
-        KazoWebResponseData response = await Get("/_framework/blazor.hack.js");
+        KazoWebResponseData response = await Get("/_framework/blazor.kazo.js");
 
         Assert.Equal(200, response.StatusCode);
         Assert.StartsWith("text/javascript", response.ContentType, StringComparison.Ordinal);

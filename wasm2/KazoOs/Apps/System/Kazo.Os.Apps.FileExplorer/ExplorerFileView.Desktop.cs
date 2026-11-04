@@ -25,9 +25,9 @@ namespace Kazo.Os.Apps.FileExplorer;
 public sealed partial class ExplorerFileView
 {
     /// <summary>The explorer's own id: opening the Trash icon starts it on <c>trash:///</c>.</summary>
-    private const string FileExplorerAppId = "org.hackeros.file-explorer";
+    private const string FileExplorerAppId = "org.kazoos.file-explorer";
 
-    private readonly string _systemMenuName = "hackeros.file-view.desktop." + Guid.NewGuid().ToString("N");
+    private readonly string _systemMenuName = "kazoos.file-view.desktop." + Guid.NewGuid().ToString("N");
     private readonly Dictionary<string, ShortcutState> _shortcuts = new(StringComparer.Ordinal);
     private readonly Dictionary<string, long> _pendingShortcuts = new(StringComparer.Ordinal);
     private FileViewDesktopBinding? _desktop;

@@ -14,11 +14,11 @@ public delegate ValueTask<byte[]?> InstalledAppFileReader(VirtualPath path, Canc
 /// <param name="cancellationToken">Cancels the listing.</param>
 public delegate ValueTask<IReadOnlyList<string>> InstalledAppHomeLister(CancellationToken cancellationToken);
 
-/// <summary>Where installed packages live (ADR 0182 §5): <c>/usr/lib/hackeros/apps/&lt;appId&gt;/&lt;version&gt;/</c>.</summary>
+/// <summary>Where installed packages live (ADR 0182 §5): <c>/usr/lib/kazoos/apps/&lt;appId&gt;/&lt;version&gt;/</c>.</summary>
 public static class InstalledAppsLayout
 {
     /// <summary>Root of every installed package, <c>root:root 0755</c>.</summary>
-    public const string Root = "/usr/lib/hackeros/apps";
+    public const string Root = "/usr/lib/kazoos/apps";
 
     /// <summary>Gets the folder of one installed version.</summary>
     public static VirtualPath GetDirectory(string appId, SemanticVersion version) =>
@@ -31,18 +31,18 @@ public static class InstalledAppsLayout
     public const string HomesRoot = "/home";
 
     /// <summary>Path of the personal apps under a home (ADR 0189 §3).</summary>
-    public const string PersonalRootUnderHome = ".local/share/hackeros/apps";
+    public const string PersonalRootUnderHome = ".local/share/kazoos/apps";
 
     /// <summary>Path of the personal <c>[installed]</c> file under a home (ADR 0189 §3).</summary>
-    public const string PersonalConfigUnderHome = ".config/hackeros/installed-apps.config";
+    public const string PersonalConfigUnderHome = ".config/kazoos/installed-apps.config";
 
     /// <summary>Content of a new personal <c>installed-apps.config</c>.</summary>
     public const string PersonalConfigDefaultContent =
         "# Apps you installed for yourself (ADR 0189 section 3), read when your session opens.\n"
-        + "# Use hackpkg install --user | remove --user to change this list.\n"
+        + "# Use kazopkg install --user | remove --user to change this list.\n"
         + "[" + AppsConfigDocument.InstalledSection + "]\n";
 
-    /// <summary>Gets the root of one user's personal apps, <c>~/.local/share/hackeros/apps</c>.</summary>
+    /// <summary>Gets the root of one user's personal apps, <c>~/.local/share/kazoos/apps</c>.</summary>
     /// <param name="homeDirectory">The user's home.</param>
     public static VirtualPath GetPersonalRoot(string homeDirectory) => VirtualPath.Parse($"{Trim(homeDirectory)}/{PersonalRootUnderHome}");
 
@@ -54,7 +54,7 @@ public static class InstalledAppsLayout
     public static VirtualPath GetPersonalAppDirectory(string homeDirectory, string appId) =>
         VirtualPath.Parse($"{GetPersonalRoot(homeDirectory).Value}/{appId}");
 
-    /// <summary>Gets one user's <c>~/.config/hackeros/installed-apps.config</c>.</summary>
+    /// <summary>Gets one user's <c>~/.config/kazoos/installed-apps.config</c>.</summary>
     public static VirtualPath GetPersonalConfigPath(string homeDirectory) => VirtualPath.Parse($"{Trim(homeDirectory)}/{PersonalConfigUnderHome}");
 
     /// <summary>
@@ -165,7 +165,7 @@ public sealed record InstalledApp(AppPackageSource Source, AppManifest Manifest)
 
 /// <summary>
 /// The apps installed from packages, read at boot from <c>[installed]</c> of
-/// <c>/etc/hackeros/apps.config</c>, of each user's <c>~/.config/hackeros/installed-apps.config</c>
+/// <c>/etc/kazoos/apps.config</c>, of each user's <c>~/.config/kazoos/installed-apps.config</c>
 /// (ADR 0189 §3), and each app's <c>manifest.json</c> (ADR 0182 §5, Q5 answer C: they join the
 /// catalog when the OS starts). A broken entry is skipped with a warning, never fatal.
 /// </summary>

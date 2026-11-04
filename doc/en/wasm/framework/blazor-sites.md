@@ -2,11 +2,11 @@
 
 # Blazor sites: components drawn by the browser
 
-Work item `web/9-blazor-sites` of the web phase (ASP.Hack). Decision:
+Work item `web/9-blazor-sites` of the web phase (ASP.Kazo). Decision:
 [ADR 0084](../dev/adr/0084-blazor-sites.md) (completes ADR 0073 §4, ADR 0075 §5 and
-ADR 0081 §2). Plan: [`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md) §5. Builds on
+ADR 0081 §2). Plan: [`asp-kazo-plan.md`](../dev/plans/asp-kazo-plan.md) §5. Builds on
 `web/4` ([`browser-html-rendering.md`](../dev/browser-html-rendering.md)) for the
-browser, `web/6` ([`asp-hack-mvc.md`](asp-hack-mvc.md)) for the site and
+browser, `web/6` ([`asp-kazo-mvc.md`](asp-kazo-mvc.md)) for the site and
 `web/10` ([`detached-display-windows.md`](../dev/detached-display-windows.md)) for the
 detached window.
 
@@ -20,7 +20,7 @@ a Blazor WebAssembly site in a real browser.
   or minimal routes, and additionally declares a **root component**
   (`AppDefinition.BlazorRoot`).
 - The browser recognizes the site's **host page** (it loads
-  `_framework/blazor.hack.js`), reads `blazor.boot.json` and asks the OS to
+  `_framework/blazor.kazo.js`), reads `blazor.boot.json` and asks the OS to
   start a **renderer process** (`--type=renderer`, like Chrome) under the
   identity of the site and of the tab's user.
 - The site **navigates by the tab's URL**: its links change the address without a
@@ -41,9 +41,9 @@ that calls the site's API, page that crashes.
 ```text
  Navigateur (fenêtre, processus du navigateur)
  ├─ GET http://site.hack/page ───────────────► site (processus web, KazoWebHost)
- │   ◄── page hôte (<script src="_framework/blazor.hack.js">)      │ routes MVC/minimales d'abord,
+ │   ◄── page hôte (<script src="_framework/blazor.kazo.js">)      │ routes MVC/minimales d'abord,
  ├─ GET /_framework/blazor.boot.json ──────────────────────────────┘ puis page hôte, chargeur, boot.json
- ├─ IHackWebSiteHost.StartAsync(page, boot, contexte du navigateur)
+ ├─ IKazoWebSiteHost.StartAsync(page, boot, contexte du navigateur)
  │     └─ KazoWebSiteHost (Platform.Blazor) : app Web qui sert l'origine, racine chargée,
  │        AppLifecycleOrchestrator.StartAuxiliaryAsync → processus de rendu (enfant, auxiliaire)
  └─ <KazoWebSiteView Process Url Cookies …>            zone de page, sans iframe
@@ -57,11 +57,11 @@ that calls the site's API, page that crashes.
 | File | Role |
 |---|---|
 | `Shared/Kazo.Os.App.Abstractions/Definition/AppDefinition.cs` | `BlazorRoot` (`Type?`); the generator writes `web.blazor { assembly, type }` (schema, serializer, validator `manifest.web.blazor.assembly`). |
-| `Shared/Kazo.Os.AppSdk/Net/Hosting/KazoBlazorBoot.cs` | `KazoBlazorBootManifest` (`appId`, `appName`, `entryAssembly`, `rootComponent`), paths `_framework/blazor.hack.js` and `_framework/blazor.boot.json`. |
+| `Shared/Kazo.Os.AppSdk/Net/Hosting/KazoBlazorBoot.cs` | `KazoBlazorBootManifest` (`appId`, `appName`, `entryAssembly`, `rootComponent`), paths `_framework/blazor.kazo.js` and `_framework/blazor.boot.json`. |
 | `Shared/Kazo.Os.AppSdk/Net/KazoHttp.cs` | `KazoHttpClient.BaseAddress`: relative URIs resolved like `HttpClient.BaseAddress`. |
 | `Shared/Kazo.Os.AppSdk.Web/Hosting/KazoBlazorSiteEndpoints.cs` | The three responses of a site with a Blazor root, last (`MapFallback`, order `1 000 000`); `IsHostPage(html)`. |
 | `Shared/Kazo.Os.AppSdk.Web/Hosting/KazoWebApplication.cs`, `KazoWebHost.cs` | `MapFallback(pattern, handler)`; `CreateApplication` adds the Blazor endpoints after `Configure`. |
-| `Shared/Kazo.Os.AppSdk.Web.Blazor/Sites/` | Blazor SDK for sites: `IHackWebSiteHost`, `IHackWebSiteProcess`, `KazoWebSiteView`, `KazoWebSite`, `KazoSiteNavigationManager`, `KazoSiteRouter`, `KazoSiteLayoutBase`, `KazoNavLink`, `KazoPageTitle`, `KazoSiteErrorBoundary`. |
+| `Shared/Kazo.Os.AppSdk.Web.Blazor/Sites/` | Blazor SDK for sites: `IKazoWebSiteHost`, `IKazoWebSiteProcess`, `KazoWebSiteView`, `KazoWebSite`, `KazoSiteNavigationManager`, `KazoSiteRouter`, `KazoSiteLayoutBase`, `KazoNavLink`, `KazoPageTitle`, `KazoSiteErrorBoundary`. |
 | `Platform/Kazo.Os.Platform.Blazor/Sites/KazoWebSiteHost.cs` | Implementation: finds the app by `web.urls`, refuses a `boot.json` from another app, loads the assembly (lazily), checks the root, starts the renderer process; `RendererProcess` relays `Exited`. |
 | `Platform/Kazo.Os.Platform.Core/Lifecycle/AppLifecycleOrchestrator.cs` | `StartAuxiliaryAsync(appId, principal, parentPid, argv)`: `Auxiliary` process, the site's capabilities minus `network.listen*`, tracked like a window (`StopAsync`). |
 | `Platform/Kazo.Os.Platform.Core/Processes/InMemoryProcessManager.cs` | `ProcessStartRequest.Auxiliary`; `TryGetSingleton` ignores auxiliary processes. |
@@ -72,7 +72,7 @@ that calls the site's API, page that crashes.
 
 ### Renderer process lifecycle
 
-1. The browser receives a `text/html` that contains `_framework/blazor.hack.js`
+1. The browser receives a `text/html` that contains `_framework/blazor.kazo.js`
    and reads `blazor.boot.json` (visible in the Network tab).
 2. `KazoWebSiteHost` finds the installed `Web` app one of whose `web.urls` URLs
    has the page's scheme, host and port; it refuses if `boot.json` names another
@@ -85,7 +85,7 @@ that calls the site's API, page that crashes.
    the site's app identifier; `TryGetSingleton` ignores it, so the site's
    on-demand activation (ADR 0074 §3) is not affected.
 4. The process ends when the tab leaves the document, closes, or reloads
-   (`IHackWebSiteProcess.StopAsync`); an unhandled exception stops it in
+   (`IKazoWebSiteProcess.StopAsync`); an unhandled exception stops it in
    `Fault`; `kill` or the task manager cancel its token, the view
    receives `Exited` and the browser shows "Aw, Snap!" (`RESULT_CODE_KILLED`).
 
@@ -128,7 +128,7 @@ public sealed partial class Intranet : WebAppDefinition
         KazoWebApplication app = builder.Build();
         app.MapGet("/api/notes", () => KazoResults.Json(...));   // routes de données
         app.MapControllers();                                     // MVC éventuel
-        // la page hôte, blazor.hack.js et blazor.boot.json sont ajoutés après Configure
+        // la page hôte, blazor.kazo.js et blazor.boot.json sont ajoutés après Configure
     }
 }
 ```
@@ -170,7 +170,7 @@ The project references `Kazo.Os.AppSdk.Web` and `Kazo.Os.AppSdk.Web.Blazor`;
 | `KazoNavLink` | `Href`, `Match` (`Prefix`/`All`), `ActiveClass`, free attributes. |
 | `KazoPageTitle` | `Title` → tab title. |
 | `KazoWebSiteView` | The browser's view: `Process`, `Url`, `Cookies`, `OnLocationChanged`, `OnNavigate`, `OnTitleChanged`, `OnFaulted`. Apps do not need to use it. |
-| `IHackWebSiteHost`, `IHackWebSiteProcess` | Contract implemented by the platform, used by the browser. |
+| `IKazoWebSiteHost`, `IKazoWebSiteProcess` | Contract implemented by the platform, used by the browser. |
 
 The site's components derive from `KazoComponentBase`: their events and
 lifecycle run under the renderer process's identity, so
@@ -212,7 +212,7 @@ lifecycle run under the renderer process's identity, so
 - No `[SupplyParameterFromQuery]`: parameters come from the path.
 - A single Blazor site per tab; one tab per window (as before).
 - A Blazor site is recognized by its host page: a site that writes its own HTML
-  page with `_framework/blazor.hack.js` is treated as a Blazor site.
+  page with `_framework/blazor.kazo.js` is treated as a Blazor site.
 - Renderer processes run on the main thread (ADR 0073 §1).
 
 ## Tests
@@ -220,7 +220,7 @@ lifecycle run under the renderer process's identity, so
 | Suite | What is checked |
 |---|---|
 | `Tests/Kazo.Os.App.Abstractions.Tests` | `BlazorRoot` → `web.blazor` (mapper, serializer, schema `web-blazor.valid.json`, validator). |
-| `Tests/Kazo.Os.AppSdk.Web.Tests/Hosting/BlazorSiteEndpointsTests.cs` | Host page for paths without an extension, `404` with an extension, site routes first, `boot.json`, `blazor.hack.js`, site without a root. |
+| `Tests/Kazo.Os.AppSdk.Web.Tests/Hosting/BlazorSiteEndpointsTests.cs` | Host page for paths without an extension, `404` with an extension, site routes first, `boot.json`, `blazor.kazo.js`, site without a root. |
 | `Tests/Kazo.Os.AppSdk.Web.Blazor.Tests` | Router (templates, precedence, conversion), navigation (`NavigateTo`, `SetLocation`, `IsWithinSite`), `KazoWebSite` (title, client). |
 | `Tests/Kazo.Os.Platform.Core.Tests` | `TryGetSingleton` ignores auxiliaries; `StartAuxiliaryAsync` (parent, `argv`, capabilities, not the site's instance, stop in `Fault`). |
 | `Tests/Kazo.Os.Platform.Blazor.Tests/KazoWebSiteHostTests.cs` | App found by origin, `boot.json` of another app refused, root missing or not a component, stop and `Exited`. |

@@ -26,7 +26,7 @@ public static class LoginEnvironment
     public static readonly VirtualPath HostNameFilePath = VirtualPath.Parse("/etc/hostname");
 
     /// <summary>Host name used when <c>/etc/hostname</c> is missing, empty or unreadable.</summary>
-    public const string DefaultHostName = "hackeros";
+    public const string DefaultHostName = "kazoos";
 
     /// <summary>Informative search path: commands are resolved through the app catalog, not this list.</summary>
     public const string DefaultPath = "/bin:/usr/bin";
@@ -252,7 +252,7 @@ public sealed class LoginEnvironmentProvider
         _logger = (ILogger?)logger ?? NullLogger.Instance;
     }
 
-    /// <summary>Gets the machine name read at the last session start (<c>hackeros</c> before any).</summary>
+    /// <summary>Gets the machine name read at the last session start (<c>kazoos</c> before any).</summary>
     public string HostName => Volatile.Read(ref _hostName);
 
     /// <summary>
@@ -316,7 +316,7 @@ public sealed class LoginEnvironmentProvider
     /// <summary>Reads as the kernel, like <c>pam_env</c> running as root during login.</summary>
     private static AppOperationContext RootOperation() => new()
     {
-        AppId = "org.hackeros.kernel",
+        AppId = "org.kazoos.kernel",
         UserId = "system",
         UserAuthority = AppAuthority.System,
         GrantedCapabilities = new HashSet<string>(AppCapabilities.All, StringComparer.Ordinal),

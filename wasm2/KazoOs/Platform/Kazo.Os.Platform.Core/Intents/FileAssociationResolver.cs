@@ -14,8 +14,8 @@ public enum FileHandlerResolutionStatus
 
     /// <summary>
     /// A configured default will be used: the acting user's own choice in
-    /// <c>~/.config/hackeros/file-associations.json</c> (ADR 0121), else the administrator's in
-    /// <c>/etc/hackeros/file-associations.json</c>.
+    /// <c>~/.config/kazoos/file-associations.json</c> (ADR 0121), else the administrator's in
+    /// <c>/etc/kazoos/file-associations.json</c>.
     /// </summary>
     ConfiguredDefault,
 
@@ -49,10 +49,10 @@ public sealed record FileHandlerCandidates(IReadOnlyList<string> AppIds, string?
 /// <summary>Which file holds a configured default (ADR 0121, section 1).</summary>
 public enum FileAssociationLayer
 {
-    /// <summary><c>/etc/hackeros/file-associations.json</c> (or its built-in content), set by an administrator.</summary>
+    /// <summary><c>/etc/kazoos/file-associations.json</c> (or its built-in content), set by an administrator.</summary>
     System = 0,
 
-    /// <summary>The acting user's <c>~/.config/hackeros/file-associations.json</c>.</summary>
+    /// <summary>The acting user's <c>~/.config/kazoos/file-associations.json</c>.</summary>
     User = 1
 }
 
@@ -279,7 +279,7 @@ public sealed class FileAssociationResolver
     /// section 3). The app must be an installed window app whose manifest declares the target and
     /// action; removing a choice (<paramref name="appId"/> <see langword="null"/>) is always allowed.
     /// </summary>
-    /// <param name="user">User whose <c>~/.config/hackeros/file-associations.json</c> is written, as them.</param>
+    /// <param name="user">User whose <c>~/.config/kazoos/file-associations.json</c> is written, as them.</param>
     /// <param name="target">Extension with its dot (<c>.md</c>) or media type (<c>x-scheme-handler/https</c>).</param>
     /// <param name="action"><c>open</c> or <c>edit</c>.</param>
     /// <param name="appId">New default, or <see langword="null"/> to fall back to the system's.</param>
@@ -346,7 +346,7 @@ public sealed class FileAssociationResolver
             return userEntry.AppId;
         }
 
-        // /etc/hackeros/file-associations.json is world-readable (0644): resolving a handler is a
+        // /etc/kazoos/file-associations.json is world-readable (0644): resolving a handler is a
         // routine user operation, so the OS reads it as itself.
         FileAssociationIndex systemIndex = await ReadSystemLayerAsync(cancellationToken).ConfigureAwait(false);
         return systemIndex.TryGetDefault(extension, mediaType, action, out FileAssociationEntry entry) && IsUsable(entry.AppId)

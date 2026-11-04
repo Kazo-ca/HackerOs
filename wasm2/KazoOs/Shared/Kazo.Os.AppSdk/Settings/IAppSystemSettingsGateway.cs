@@ -5,8 +5,8 @@ namespace Kazo.Os.AppSdk.Settings;
 /// <summary>Where the two layers of an OS settings document live, and their schema.</summary>
 /// <param name="DocumentId">Document id, the file name without <c>.config</c>.</param>
 /// <param name="Schema">Keys, types and defaults declared by the OS.</param>
-/// <param name="SystemPath"><c>/etc/hackeros/&lt;document&gt;.config</c>.</param>
-/// <param name="UserPath"><c>~/.config/hackeros/&lt;document&gt;.config</c>, or an empty string for a system-only document.</param>
+/// <param name="SystemPath"><c>/etc/kazoos/&lt;document&gt;.config</c>.</param>
+/// <param name="UserPath"><c>~/.config/kazoos/&lt;document&gt;.config</c>, or an empty string for a system-only document.</param>
 /// <param name="IsSystemOnly">Whether the document has no user layer (an administrator policy).</param>
 public sealed record AppSystemSettingsDocumentInfo(
     string DocumentId,
@@ -21,7 +21,7 @@ public sealed record AppSystemSettingsDocumentInfo(
 /// </summary>
 /// <remarks>
 /// No capability is required: the files' permissions decide (decision D16). Everybody reads both
-/// layers; the session user writes their own <c>~/.config/hackeros</c> layer; the <c>/etc</c> layer
+/// layers; the session user writes their own <c>~/.config/kazoos</c> layer; the <c>/etc</c> layer
 /// belongs to root and is written with the calling app's own filesystem rights, so it needs
 /// <c>sudo</c> or the administrator approval of ADR 0042.
 /// </remarks>

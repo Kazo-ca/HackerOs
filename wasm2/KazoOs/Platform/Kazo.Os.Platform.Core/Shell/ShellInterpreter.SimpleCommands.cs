@@ -461,6 +461,12 @@ public sealed partial class ShellInterpreter
     {
         string name = resolution.CommandName;
         Microsoft.Extensions.Localization.IStringLocalizer texts = ShellText.For(session);
+        // ADR 0228 §2: an old command name (hackpkg) still runs the new command, after a warning.
+        if (DeprecatedCommandNames.TryGetReplacement(name, out string replacement))
+        {
+            await error.WriteLineAsync(texts["Shell.DeprecatedCommand", name, replacement]).ConfigureAwait(false);
+        }
+
         AppLaunchResult launch = await _orchestrator.LaunchAsync(
             new AppLaunchRequest(
                 resolution.AppId,
@@ -535,7 +541,7 @@ public sealed partial class ShellInterpreter
     }
 
     /// <summary>The <c>nice</c> command's app id: the one shell-control command <c>sudo</c> runs (ADR 0136).</summary>
-    private const string NiceCommandId = "org.hackeros.commands.nice";
+    private const string NiceCommandId = "org.kazoos.commands.nice";
 
     /// <summary>Whether a command asks for its calling shell (ADR 0051, section 3).</summary>
     private static bool DeclaresShellControl(AppManifest manifest) =>
@@ -547,7 +553,7 @@ public sealed partial class ShellInterpreter
             ? field
             : "'" + field.Replace("'", "'\\''", StringComparison.Ordinal) + "'";
 
-    /// <summary>Looks <paramref name="name"/> up in <c>~/.hackeros/aliases</c> (<c>name=value</c> lines), as the shell's user.</summary>
+    /// <summary>Looks <paramref name="name"/> up in <c>~/.kazoos/aliases</c> (<c>name=value</c> lines), as the shell's user.</summary>
     private static async Task<string?> TryReadAliasAsync(ShellSession session, string name, CancellationToken cancellationToken)
     {
         if (session.Host is null)

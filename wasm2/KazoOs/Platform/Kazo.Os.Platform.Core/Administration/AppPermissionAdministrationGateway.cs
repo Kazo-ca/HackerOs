@@ -13,7 +13,7 @@ namespace Kazo.Os.Platform.Core.Administration;
 /// Every call requires <c>permissions.manage</c>. A machine change is validated first (a system app
 /// or an undeclared capability is refused before any password is asked), then the OS
 /// authentication agent asks an administrator; once one authenticated, the OS writes the
-/// <c>/etc/hackeros</c> file itself as an audited system operation, as <c>pkexec</c> runs the helper
+/// <c>/etc/kazoos</c> file itself as an audited system operation, as <c>pkexec</c> runs the helper
 /// as root. The app never sees the password and its own rights are never widened.
 /// </remarks>
 internal sealed class AppPermissionAdministrationGateway : IAppPermissionAdministrationGateway

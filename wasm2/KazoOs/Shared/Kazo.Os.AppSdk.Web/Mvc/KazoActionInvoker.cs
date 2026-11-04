@@ -10,7 +10,7 @@ namespace Kazo.Os.AppSdk.Web.Mvc;
 public sealed class KazoMvcOptions
 {
     /// <summary>Gets the filters that run for every action, before the controller's and the action's.</summary>
-    public IList<IHackFilterMetadata> Filters { get; } = [];
+    public IList<IKazoFilterMetadata> Filters { get; } = [];
 }
 
 /// <summary>
@@ -100,7 +100,7 @@ internal static class KazoActionInvoker
         {
             KazoModelBinder binder = new(actionContext, json.SerializerOptions);
             object?[] arguments = action.BindArguments(binder);
-            IHackActionResult result;
+            IKazoActionResult result;
             if (binder.UnsupportedMediaType)
             {
                 result = new KazoStatusCodeResult(415);
@@ -115,7 +115,7 @@ internal static class KazoActionInvoker
                 result = await RunFiltersAsync(actionContext, controller, action, arguments, options).ConfigureAwait(false);
             }
 
-            if (action.IsApiController && result is IHackClientErrorResult { StatusCode: >= 400 } clientError)
+            if (action.IsApiController && result is IKazoClientErrorResult { StatusCode: >= 400 } clientError)
             {
                 result = new KazoProblemResult(KazoProblemDefaults.ForStatus(clientError.StatusCode));
             }
@@ -137,13 +137,13 @@ internal static class KazoActionInvoker
     }
 
     /// <summary>Converts what an action returned into a result.</summary>
-    internal static IHackActionResult ToResult(object? returned, Type? declaredType = null) => returned switch
+    internal static IKazoActionResult ToResult(object? returned, Type? declaredType = null) => returned switch
     {
-        IHackActionResult result => result,
+        IKazoActionResult result => result,
         _ => new KazoObjectResult(returned) { DeclaredType = declaredType }
     };
 
-    private static async Task<IHackActionResult> RunFiltersAsync(
+    private static async Task<IKazoActionResult> RunFiltersAsync(
         KazoActionContext actionContext,
         KazoControllerBase controller,
         KazoControllerActionDescriptor action,
@@ -151,13 +151,13 @@ internal static class KazoActionInvoker
         KazoMvcOptions options)
     {
         // Order: global, controller, action (stable within an order); the controller itself runs first, as in ASP.NET.
-        List<IHackFilterMetadata> filters = [.. options.Filters
+        List<IKazoFilterMetadata> filters = [.. options.Filters
             .Concat(action.Filters)
             .Select((filter, index) => (filter, index))
-            .OrderBy(item => item.filter is IHackOrderedFilter ordered ? ordered.Order : 0)
+            .OrderBy(item => item.filter is IKazoOrderedFilter ordered ? ordered.Order : 0)
             .ThenBy(item => item.index)
             .Select(item => item.filter)];
-        if (controller is IHackActionFilter controllerFilter)
+        if (controller is IKazoActionFilter controllerFilter)
         {
             filters.Insert(0, controllerFilter);
         }
@@ -198,7 +198,7 @@ internal static class KazoActionInvoker
 
             switch (filters[index])
             {
-                case IHackAsyncActionFilter asyncFilter:
+                case IKazoAsyncActionFilter asyncFilter:
                 {
                     KazoActionExecutedContext? inner = null;
                     await asyncFilter.OnActionExecutionAsync(executing, async () => inner = await RunFilterAsync(index + 1).ConfigureAwait(false))
@@ -206,7 +206,7 @@ internal static class KazoActionInvoker
                     return inner ?? Canceled();
                 }
 
-                case IHackActionFilter filter:
+                case IKazoActionFilter filter:
                 {
                     filter.OnActionExecuting(executing);
                     if (executing.Result is not null)

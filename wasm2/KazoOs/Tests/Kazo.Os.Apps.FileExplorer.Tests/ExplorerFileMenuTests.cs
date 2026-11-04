@@ -23,7 +23,7 @@ public sealed class ExplorerFileMenuTests
     [Fact]
     public void One_file_gets_open_open_with_edit_and_properties_groups_in_order()
     {
-        KazoMenuDefinition menu = Build([Notes], handlers: [App("org.hackeros.text-editor", "Text Editor"), App("org.hackeros.code-editor", "Code Editor")]);
+        KazoMenuDefinition menu = Build([Notes], handlers: [App("org.kazoos.text-editor", "Text Editor"), App("org.kazoos.code-editor", "Code Editor")]);
 
         Assert.Equal(
             [
@@ -39,12 +39,12 @@ public sealed class ExplorerFileMenuTests
     [Fact]
     public void Open_with_lists_the_handlers_default_first_then_choose_another_app()
     {
-        KazoMenuDefinition menu = Build([Notes], handlers: [App("org.hackeros.text-editor", "Text Editor"), App("org.hackeros.code-editor", "Code Editor")]);
+        KazoMenuDefinition menu = Build([Notes], handlers: [App("org.kazoos.text-editor", "Text Editor"), App("org.kazoos.code-editor", "Code Editor")]);
 
         KazoMenuItemDefinition openWith = menu.Find(KazoFileMenuItems.OpenWith)!;
         Assert.Equal(
             [
-                ["open-with:org.hackeros.text-editor", "open-with:org.hackeros.code-editor"],
+                ["open-with:org.kazoos.text-editor", "open-with:org.kazoos.code-editor"],
                 [KazoFileMenuItems.OpenWithOther]
             ],
             openWith.Children.Select(group => group.Items.Select(item => item.Id).ToArray()).ToArray());
@@ -130,7 +130,7 @@ public sealed class ExplorerFileMenuTests
         KazoMenuDefinition menu = new("files");
         ExplorerFileMenu.Build(
             menu,
-            new ExplorerFileMenuState([Notes], KazoFileViewFeatures.All, false, [App("org.hackeros.text-editor", "Text Editor")]),
+            new ExplorerFileMenuState([Notes], KazoFileViewFeatures.All, false, [App("org.kazoos.text-editor", "Text Editor")]),
             id => new EventCallback<object?>(null, (Func<object?, Task>)(_ =>
             {
                 clicked.Add(id);
@@ -141,7 +141,7 @@ public sealed class ExplorerFileMenuTests
         menu.Find(KazoFileMenuItems.Delete)!.OnClick.InvokeAsync(null);
         menu.Find(KazoFileMenuItems.OpenWith)!.Children[0].Items[0].OnClick.InvokeAsync(null);
 
-        Assert.Equal([KazoFileMenuItems.Delete, "open-with:org.hackeros.text-editor"], clicked);
+        Assert.Equal([KazoFileMenuItems.Delete, "open-with:org.kazoos.text-editor"], clicked);
     }
 
     [Theory]
@@ -190,5 +190,5 @@ public sealed class ExplorerFileMenuTests
         [.. menu.Groups.Select(group => group.Items.Select(item => item.Id).ToArray())];
 
     private static KazoAppInfo App(string id, string name) =>
-        new(id, name, string.Empty, AppKind.Window, "utilities", null, "1.0.0", "pub.hackeros", false, false, []);
+        new(id, name, string.Empty, AppKind.Window, "utilities", null, "1.0.0", "pub.kazoos", false, false, []);
 }

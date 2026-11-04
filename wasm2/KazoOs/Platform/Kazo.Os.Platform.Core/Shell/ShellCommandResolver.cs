@@ -60,7 +60,7 @@ public sealed class ShellCommandResolver
 
     /// <summary>
     /// Finds a window app by its short name (ADR 0064): the last segment of its id, without the
-    /// publisher namespace (<c>text-editor</c> for <c>org.hackeros.text-editor</c>), or its full
+    /// publisher namespace (<c>text-editor</c> for <c>org.kazoos.text-editor</c>), or its full
     /// id. Used by the shell when no command has the name, like a GUI program found on
     /// <c>PATH</c>.
     /// </summary>

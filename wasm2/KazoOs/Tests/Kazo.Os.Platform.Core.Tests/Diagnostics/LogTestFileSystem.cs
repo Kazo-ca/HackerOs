@@ -62,7 +62,7 @@ internal sealed class LogTestFileSystem
     public static FileSystemAuthorizationContext SystemContext(DateTimeOffset now) => new(
         new AppOperationContext
         {
-            AppId = "org.hackeros.kernel",
+            AppId = "org.kazoos.kernel",
             UserId = "system",
             UserAuthority = AppAuthority.System,
             GrantedCapabilities = new HashSet<string>(AppCapabilities.All, StringComparer.Ordinal),
@@ -75,7 +75,7 @@ internal sealed class LogTestFileSystem
     public static FileSystemAuthorizationContext UserContext(DateTimeOffset now, params string[] capabilities) => new(
         new AppOperationContext
         {
-            AppId = "org.hackeros.error-log-viewer",
+            AppId = "org.kazoos.error-log-viewer",
             UserId = "alice",
             UserName = "alice",
             UserAuthority = AppAuthority.User,

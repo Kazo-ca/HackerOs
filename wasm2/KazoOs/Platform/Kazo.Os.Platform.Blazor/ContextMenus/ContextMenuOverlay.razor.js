@@ -3,15 +3,15 @@
  *
  * C# decides everything about a menu: which one an element opens, what it contains, how keys move
  * in it. This module only does what C# cannot: catch the requests the browser raises (right click,
- * a finger's long press, the Menu key, Shift+F10) on an element carrying `data-hack-menu-token`,
+ * a finger's long press, the Menu key, Shift+F10) on an element carrying `data-kazo-menu-token`,
  * cancel the browser's own menu there, measure the viewport to keep the menu on screen, dismiss the
  * menu on an outside press, a scroll or the loss of focus, give focus back to the element the menu
  * was opened from, and report the tokens of elements that left the page so C# can forget the
  * objects attached to them. The attached object itself never reaches JavaScript: only its token.
  */
 
-const TOKEN = "data-hack-menu-token";
-const SUPPRESS = "data-hack-menu-suppress";
+const TOKEN = "data-kazo-menu-token";
+const SUPPRESS = "data-kazo-menu-suppress";
 const LONG_PRESS_MS = 500;
 const LONG_PRESS_SLOP = 10;
 const DUPLICATE_WINDOW_MS = 800;
@@ -394,8 +394,8 @@ export function placeMenu(layer, x, y) {
 
         left = Math.max(margin, Math.min(left, width - rect.width - margin));
         top = Math.max(margin, Math.min(top, height - rect.height - margin));
-        panel.style.setProperty("--hack-menu-x", `${Math.round(left)}px`);
-        panel.style.setProperty("--hack-menu-y", `${Math.round(top)}px`);
+        panel.style.setProperty("--kazo-menu-x", `${Math.round(left)}px`);
+        panel.style.setProperty("--kazo-menu-y", `${Math.round(top)}px`);
         panel.classList.add("is-placed");
     }
 }

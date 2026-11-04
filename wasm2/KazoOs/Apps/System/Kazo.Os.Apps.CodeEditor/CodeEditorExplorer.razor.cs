@@ -20,7 +20,7 @@ public partial class CodeEditorExplorer
     /// <summary>The Code Editor's texts in its own process's language (ADR 0104).</summary>
     private IStringLocalizer<Strings> L => _localizer ??= AppContext.GetLocalizer<Strings>();
 
-    private IHackFileView? _files;
+    private IKazoFileView? _files;
     private ElementReference _createInput;
     private CreationKind? _creating;
     private string _createName = string.Empty;
@@ -99,7 +99,7 @@ public partial class CodeEditorExplorer
         }
     }
 
-    private void OnControllerChanged(IHackFileView? files) => _files = files;
+    private void OnControllerChanged(IKazoFileView? files) => _files = files;
 
     /// <summary>VS Code previews a file on a single click; folders just expand.</summary>
     private Task OnSelectionChanged(IReadOnlyList<KazoFileViewItem> selection) =>

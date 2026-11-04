@@ -19,7 +19,7 @@ public sealed class ThemePreferenceServiceTests
         int notifications = 0;
         service.Changed += () => notifications++;
         await harness.WriteAsRootAsync(
-            "/home/alice/.config/hackeros/appearance.config",
+            "/home/alice/.config/kazoos/appearance.config",
             $"desktopThemeId={WellKnownThemeIds.Ubuntu}\nmobileThemeId={WellKnownThemeIds.Ios}\naccent={WellKnownAccentIds.Purple}\nanimationsEnabled=false\n");
 
         await service.RefreshAsync();
@@ -41,7 +41,7 @@ public sealed class ThemePreferenceServiceTests
 
         await service.SetAsync(ThemePreferences.Default with { AnimationsEnabled = false });
 
-        string? user = await harness.ReadAsync("/home/alice/.config/hackeros/appearance.config");
+        string? user = await harness.ReadAsync("/home/alice/.config/kazoos/appearance.config");
         Assert.Equal("animationsEnabled=false\n", user);
         Assert.Equal(SettingLayer.User, service.Snapshot!.Sources[AppearanceSettingsDocuments.AnimationsKey]);
         // The installation ships a real /etc file listing every default, so untouched keys come from it.
@@ -55,7 +55,7 @@ public sealed class ThemePreferenceServiceTests
         SettingsFilesHarness harness = new();
         await harness.BootAsync();
         await harness.WriteAsRootAsync(
-            "/etc/hackeros/appearance.config",
+            "/etc/kazoos/appearance.config",
             $"desktopThemeId={WellKnownThemeIds.Ubuntu}\n");
         await harness.LoginAsync(harness.Alice);
         using ThemePreferenceService service = new(harness.Settings);
@@ -70,10 +70,10 @@ public sealed class ThemePreferenceServiceTests
     {
         SettingsFilesHarness harness = new();
         await harness.WriteAsRootAsync(
-            "/etc/hackeros/appearance.config",
+            "/etc/kazoos/appearance.config",
             "animationsEnabled=false\n[locked]\nanimationsEnabled=true\n");
         await harness.LoginAsync(harness.Alice);
-        await harness.WriteAsRootAsync("/home/alice/.config/hackeros/appearance.config", "animationsEnabled=true\n");
+        await harness.WriteAsRootAsync("/home/alice/.config/kazoos/appearance.config", "animationsEnabled=true\n");
         using ThemePreferenceService service = new(harness.Settings);
         await service.InitializeAsync();
 
@@ -93,7 +93,7 @@ public sealed class ThemePreferenceServiceTests
         await service.InitializeAsync();
         var settingsApp = harness.CreateAppGateway(
             alice,
-            "org.hackeros.settings",
+            "org.kazoos.settings",
             Kazo.Os.App.Abstractions.AppCapabilities.FileSystemSystemRead,
             Kazo.Os.App.Abstractions.AppCapabilities.FileSystemSystemWrite);
 

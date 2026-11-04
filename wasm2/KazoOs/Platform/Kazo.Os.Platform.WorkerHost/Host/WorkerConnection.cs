@@ -194,7 +194,7 @@ internal sealed class WorkerConnection
         }
     }
 
-    /// <summary>Gets the life-cycle state shown in <c>/proc/hackeros/workers</c>.</summary>
+    /// <summary>Gets the life-cycle state shown in <c>/proc/kazoos/workers</c>.</summary>
     public WorkerState State =>
         IsTerminated ? WorkerState.Terminated
         : !IsReady ? WorkerState.Starting

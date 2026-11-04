@@ -45,7 +45,7 @@ internal sealed class RemoteProcessSession
     private readonly Lock _gate = new();
     private readonly Dictionary<int, CancellationTokenSource> _calls = [];
     private readonly Dictionary<int, FileSystemContentReadHandle> _reads = [];
-    private readonly Dictionary<int, Kazo.Os.AppSdk.Net.IHackHttpListenerSocket> _listeners = [];
+    private readonly Dictionary<int, Kazo.Os.AppSdk.Net.IKazoHttpListenerSocket> _listeners = [];
     private readonly Dictionary<int, IDisposable> _descriptors = [];
     private readonly CancellationTokenSource _listening = new();
     private readonly RemoteEventRouter _events;
@@ -257,7 +257,7 @@ internal sealed class RemoteProcessSession
     /// <summary>The process answered a request of one of its listening sockets (<c>hres</c>).</summary>
     public void OnHttpResponse(int socketId, long exchangeId, Kazo.Os.AppSdk.Net.KazoHttpListenerReply reply)
     {
-        Kazo.Os.AppSdk.Net.IHackHttpListenerSocket? socket;
+        Kazo.Os.AppSdk.Net.IKazoHttpListenerSocket? socket;
         lock (_gate)
         {
             _listeners.TryGetValue(socketId, out socket);
@@ -349,7 +349,7 @@ internal sealed class RemoteProcessSession
         _context.PermissionErrors.PermissionDenied -= OnPermissionDenied;
         List<FileSystemContentReadHandle> reads;
         List<CancellationTokenSource> calls;
-        List<Kazo.Os.AppSdk.Net.IHackHttpListenerSocket> listeners;
+        List<Kazo.Os.AppSdk.Net.IKazoHttpListenerSocket> listeners;
         List<IDisposable> descriptors;
         lock (_gate)
         {
@@ -368,7 +368,7 @@ internal sealed class RemoteProcessSession
         // subscriptions leave the bus too, without waiting for the worker (ADR 0124, section 1).
         _listening.Cancel();
         _events.CloseAll();
-        foreach (Kazo.Os.AppSdk.Net.IHackHttpListenerSocket listener in listeners)
+        foreach (Kazo.Os.AppSdk.Net.IKazoHttpListenerSocket listener in listeners)
         {
             _ = listener.DisposeAsync();
         }
@@ -528,7 +528,7 @@ internal sealed class RemoteProcessSession
             return writer => WireCodec.WriteNetwork(writer, result, static (_, _) => { });
         }
 
-        Kazo.Os.AppSdk.Net.IHackHttpListenerSocket socket = result.Value!;
+        Kazo.Os.AppSdk.Net.IKazoHttpListenerSocket socket = result.Value!;
         int id;
         lock (_gate)
         {
@@ -552,7 +552,7 @@ internal sealed class RemoteProcessSession
     }
 
     /// <summary>Hands each request of one socket to the worker until the socket closes.</summary>
-    private async Task PumpListenerAsync(int id, Kazo.Os.AppSdk.Net.IHackHttpListenerSocket socket)
+    private async Task PumpListenerAsync(int id, Kazo.Os.AppSdk.Net.IKazoHttpListenerSocket socket)
     {
         try
         {
@@ -748,7 +748,7 @@ internal sealed class RemoteProcessSession
                 return await ListenAsync(WireCodec.ReadStrings(a, "px"), cancellationToken).ConfigureAwait(false);
             case RemoteOps.NetUnlisten:
             {
-                Kazo.Os.AppSdk.Net.IHackHttpListenerSocket? socket;
+                Kazo.Os.AppSdk.Net.IKazoHttpListenerSocket? socket;
                 lock (_gate)
                 {
                     _listeners.Remove(a.GetInt32("sk"), out socket);

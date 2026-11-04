@@ -8,8 +8,8 @@ using Microsoft.Extensions.Logging.Abstractions;
 namespace Kazo.Os.Platform.Core.Apps.Packages;
 
 /// <summary>
-/// The update check of the Hack Store (ADR 0188 §3, ADR 0212 §5): at sign-in, then every
-/// <c>[updates] interval-hours</c> of <c>/etc/hackeros/app-sources.config</c>, the OS looks for a
+/// The update check of the Kazo OS Store (ADR 0188 §3, ADR 0212 §5): at sign-in, then every
+/// <c>[updates] interval-hours</c> of <c>/etc/kazoos/app-sources.config</c>, the OS looks for a
 /// newer version of every app installed for the system or for the session user. A notification
 /// opens the Store on its updates; no badge is drawn on any icon (ADR 0215 §1, Benoit: notification only).
 /// </summary>
@@ -28,8 +28,8 @@ namespace Kazo.Os.Platform.Core.Apps.Packages;
 /// </remarks>
 public sealed class AppUpdateMonitor : IDisposable
 {
-    /// <summary>The Hack Store (ADR 0188 §1), which the notification opens.</summary>
-    public const string StoreAppId = "org.hackeros.store";
+    /// <summary>The Kazo OS Store (ADR 0188 §1), which the notification opens.</summary>
+    public const string StoreAppId = "org.kazoos.store";
 
     /// <summary>Argument that opens the Store on its installed apps and their updates.</summary>
     public const string UpdatesPageArgument = "--page=installed";

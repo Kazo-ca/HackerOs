@@ -48,7 +48,7 @@ public sealed class KazoServiceController
     private KazoServiceController(KazoAppInfo app) =>
         (ServiceName, DisplayName, Description) = (app.Id, app.Name, app.Description);
 
-    /// <summary>Gets the service name: the app id (<c>org.hackeros.sync</c>).</summary>
+    /// <summary>Gets the service name: the app id (<c>org.kazoos.sync</c>).</summary>
     public string ServiceName { get; }
 
     /// <summary>Gets the display name.</summary>

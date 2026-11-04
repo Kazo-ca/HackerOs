@@ -6,7 +6,7 @@
 
 Accepted on 2026-10-17, with the `web/11-sample-final` work item.
 
-- **Plan phase:** web phase ([`asp-hack-plan.md`](../plans/asp-hack-plan.md), §5).
+- **Plan phase:** web phase ([`asp-kazo-plan.md`](../plans/asp-kazo-plan.md), §5).
 - **Completes:** ADR 0084 §5 (Blazor site navigation), ADR 0083 and 0086
   (view base classes), ADR 0076 §6 (retained subset of ASP.NET).
   Replaces no decision; also records what the phase did not deliver from
@@ -93,5 +93,5 @@ remain valid; they require a separate work item.
   §1 is Blazor's, so an ASP.NET developer knows it.
 - Any shipped app can have `.razor` and `.cshtml` views; a regression
   of §2 breaks the Ecosystem build.
-- The developer guide ([`asp-hack-developer-guide.md`](../../framework/asp-hack-developer-guide.md))
+- The developer guide ([`asp-kazo-developer-guide.md`](../../framework/asp-kazo-developer-guide.md))
   builds on the sample and flags §4 in its limits.

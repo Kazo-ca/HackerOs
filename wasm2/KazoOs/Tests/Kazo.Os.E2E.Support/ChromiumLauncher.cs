@@ -15,7 +15,7 @@ namespace Kazo.Os.E2E.Support;
 /// <c>playwright install</c>. Without a fallback every suite fails before the first page loads.
 /// </para>
 /// <para>
-/// Order: <c>HACKEROS_CHROMIUM_EXECUTABLE</c> when set (explicit choice, no retry); otherwise
+/// Order: <c>KAZOOS_CHROMIUM_EXECUTABLE</c> when set (explicit choice, no retry); otherwise
 /// the options as given; if that launch fails and a fallback executable exists
 /// (<c>$PLAYWRIGHT_BROWSERS_PATH/chromium</c>, then <c>/opt/pw-browsers/chromium</c>), the same
 /// options are retried with <see cref="BrowserTypeLaunchOptions.ExecutablePath"/> set to it and
@@ -26,7 +26,7 @@ namespace Kazo.Os.E2E.Support;
 public static class ChromiumLauncher
 {
     /// <summary>Environment variable that forces a Chromium executable for every suite.</summary>
-    public const string ExecutableVariable = "HACKEROS_CHROMIUM_EXECUTABLE";
+    public const string ExecutableVariable = "KAZOOS_CHROMIUM_EXECUTABLE";
 
     /// <summary>The cloud-container browser link used when nothing else is configured.</summary>
     public const string ContainerExecutable = "/opt/pw-browsers/chromium";

@@ -11,7 +11,7 @@ namespace Kazo.Os.Commands.XdgMime;
 /// Implements <c>xdg-mime</c> (ADR 0121, section 5), modelled on freedesktop's <c>xdg-mime</c>:
 /// <c>query default &lt;type&gt;</c> prints the app that opens a type for this user (their own
 /// choice, else the machine's), <c>default &lt;app&gt; &lt;type&gt;...</c> writes the user's choice to
-/// <c>~/.config/hackeros/file-associations.json</c>, and <c>query filetype &lt;file&gt;</c> prints the
+/// <c>~/.config/kazoos/file-associations.json</c>, and <c>query filetype &lt;file&gt;</c> prints the
 /// type the OS matches a file by.
 /// </summary>
 /// <remarks>

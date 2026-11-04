@@ -13,14 +13,14 @@ public sealed class LaunchCommandTests
     public async Task ExecuteAsync_DispatchesRealLaunchRequest_WithArguments()
     {
         FakeAppIntentGateway intents = new();
-        TerminalExecutionContext context = CreateContext(intents, "org.hackeros.calculator", "--fresh");
+        TerminalExecutionContext context = CreateContext(intents, "org.kazoos.calculator", "--fresh");
 
         int exitCode = await new LaunchCommand(AppDefinitionMapper.ToManifest(new LaunchApp()))
             .ExecuteAsync(context, CancellationToken.None);
 
         Assert.Equal(0, exitCode);
         (string appId, IReadOnlyList<string> arguments) = Assert.Single(intents.Requests);
-        Assert.Equal("org.hackeros.calculator", appId);
+        Assert.Equal("org.kazoos.calculator", appId);
         Assert.Equal(["--fresh"], arguments);
     }
 
@@ -28,8 +28,8 @@ public sealed class LaunchCommandTests
     public async Task ExecuteAsync_UnknownApp_ReportsNotFound()
     {
         FakeAppIntentGateway intents = new FakeAppIntentGateway()
-            .WithResult("org.hackeros.missing", new AppIntentLaunchResult(AppIntentLaunchOutcome.NotFound, "intent.not-found"));
-        TerminalExecutionContext context = CreateContext(intents, "org.hackeros.missing");
+            .WithResult("org.kazoos.missing", new AppIntentLaunchResult(AppIntentLaunchOutcome.NotFound, "intent.not-found"));
+        TerminalExecutionContext context = CreateContext(intents, "org.kazoos.missing");
 
         int exitCode = await new LaunchCommand(AppDefinitionMapper.ToManifest(new LaunchApp()))
             .ExecuteAsync(context, CancellationToken.None);
@@ -41,8 +41,8 @@ public sealed class LaunchCommandTests
     [Fact]
     public async Task ExecuteAsync_CapabilityDenied_ReportsRealMessage()
     {
-        FakeAppIntentGateway intents = new FakeAppIntentGateway().WithCapabilityDenied("org.hackeros.settings");
-        TerminalExecutionContext context = CreateContext(intents, "org.hackeros.settings");
+        FakeAppIntentGateway intents = new FakeAppIntentGateway().WithCapabilityDenied("org.kazoos.settings");
+        TerminalExecutionContext context = CreateContext(intents, "org.kazoos.settings");
 
         int exitCode = await new LaunchCommand(AppDefinitionMapper.ToManifest(new LaunchApp()))
             .ExecuteAsync(context, CancellationToken.None);

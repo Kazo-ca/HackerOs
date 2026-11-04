@@ -17,7 +17,7 @@ public sealed class ThemeEditorApp : AppDefinition
     public override IReadOnlyList<AssetManifest> Assets =>
         [new("icons/app.svg", AssetKind.Image, new string('0', 64), "app-icon")];
     /// <inheritdoc />
-    public override string Id => "org.hackeros.theme-editor";
+    public override string Id => "org.kazoos.theme-editor";
 
     /// <inheritdoc />
     public override string Name => "Theme Editor";
@@ -32,7 +32,7 @@ public sealed class ThemeEditorApp : AppDefinition
     public override Type? MobileEntryPoint => typeof(ThemeEditorWindow);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description =>
@@ -43,8 +43,8 @@ public sealed class ThemeEditorApp : AppDefinition
 
     /// <inheritdoc />
     /// <remarks>
-    /// Home read/write for <c>~/.config/hackeros/themes</c>; system read to list the themes an
-    /// administrator installed in <c>/etc/hackeros/themes</c>; dialogs to open and export files
+    /// Home read/write for <c>~/.config/kazoos/themes</c>; system read to list the themes an
+    /// administrator installed in <c>/etc/kazoos/themes</c>; dialogs to open and export files
     /// anywhere else.
     /// </remarks>
     public override IReadOnlyList<string> Capabilities =>

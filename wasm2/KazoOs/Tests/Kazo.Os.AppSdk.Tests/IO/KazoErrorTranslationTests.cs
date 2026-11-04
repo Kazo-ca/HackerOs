@@ -75,7 +75,7 @@ public sealed class KazoErrorTranslationTests
     }
 
     [Fact]
-    public async Task Hack_exceptions_are_caught_by_ordinary_System_IO_handlers()
+    public async Task Kazo_exceptions_are_caught_by_ordinary_System_IO_handlers()
     {
         using IDisposable scope = KazoTestHost.Enter(out _);
 

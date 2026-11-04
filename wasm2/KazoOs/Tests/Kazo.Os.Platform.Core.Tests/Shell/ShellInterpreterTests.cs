@@ -159,7 +159,7 @@ public sealed partial class ShellInterpreterTests
         Assert.Equal("/home/alice/projects /home/alice/projects /home/alice\n", output.Stdout);
         ProcessRecord child = fixture.Manager.GetHistory().Last(p => p.AppId == "org.test.where");
         Assert.Equal(fixture.Host.ProcessId, child.ParentPid);
-        Assert.Equal("alice@hackeros:~/projects$", fixture.Session.GetPrompt());
+        Assert.Equal("alice@kazoos:~/projects$", fixture.Session.GetPrompt());
     }
 
     [Fact]
@@ -301,7 +301,7 @@ public sealed partial class ShellInterpreterTests
         Assert.Equal(0, output.ExitCode);
         Assert.Equal("ROOT\nuser\n", output.Stdout);
         Assert.Equal(["Run as root: amroot"], prompts);
-        ProcessRecord sudo = fixture.Manager.GetHistory().Single(p => p.AppId == "org.hackeros.commands.sudo");
+        ProcessRecord sudo = fixture.Manager.GetHistory().Single(p => p.AppId == "org.kazoos.commands.sudo");
         ProcessRecord elevated = fixture.Manager.GetHistory().First(p => p.AppId == "org.test.amroot");
         Assert.Equal(sudo.Pid, elevated.ParentPid);
         Assert.Equal(fixture.Host.ProcessId, sudo.ParentPid);
@@ -329,7 +329,7 @@ public sealed partial class ShellInterpreterTests
         Assert.Equal("root -5\n", elevated.Stdout);
         Assert.Equal(string.Empty, elevated.Stderr);
         Assert.Equal(["Run as root: nice -n -5 rootnice"], prompts);
-        ProcessRecord nice = fixture.Manager.GetHistory().Last(p => p.AppId == "org.hackeros.commands.nice");
+        ProcessRecord nice = fixture.Manager.GetHistory().Last(p => p.AppId == "org.kazoos.commands.nice");
         ProcessRecord command = fixture.Manager.GetHistory().Last(p => p.AppId == "org.test.rootnice");
         Assert.Equal(nice.Pid, command.ParentPid);
     }
@@ -390,8 +390,8 @@ public sealed partial class ShellInterpreterTests
     public async Task Aliases_from_the_alias_file_replace_the_first_word()
     {
         Fixture fixture = await Fixture.CreateAsync();
-        await fixture.MakeDirectoryAsync("/home/alice/.hackeros");
-        await fixture.WriteFileAsync("/home/alice/.hackeros/aliases", "hi=echo hello\nloud=echo x | upper\n");
+        await fixture.MakeDirectoryAsync("/home/alice/.kazoos");
+        await fixture.WriteFileAsync("/home/alice/.kazoos/aliases", "hi=echo hello\nloud=echo x | upper\n");
 
         Output aliased = await fixture.RunAsync("hi world");
         Output quoted = await fixture.RunAsync("'hi' world");
@@ -436,6 +436,21 @@ public sealed partial class ShellInterpreterTests
         Assert.Contains("cannot open files", result.StandardError);
         ProcessRecord child = fixture.Manager.GetHistory().Last(p => p.AppId == "org.test.where");
         Assert.Null(child.ParentPid);
+    }
+
+    [Fact]
+    public async Task A_command_name_from_before_the_rename_warns_then_runs_the_new_command()
+    {
+        Fixture fixture = await Fixture.CreateAsync();
+
+        Output old = await fixture.RunAsync("hackpkg hello");
+        Output current = await fixture.RunAsync("kazopkg hello");
+
+        Assert.Equal(0, old.ExitCode);
+        Assert.Equal("hello\n", old.Stdout);
+        Assert.Equal("hackpkg: this name is deprecated, use kazopkg\n", old.Stderr);
+        Assert.Equal("hello\n", current.Stdout);
+        Assert.Equal(string.Empty, current.Stderr);
     }
 
     private sealed record Output(ShellExecutionResult Result, string Stdout, string Stderr)
@@ -588,7 +603,7 @@ public sealed partial class ShellInterpreterTests
 
     private sealed class Fixture
     {
-        public const string HostAppId = "org.hackeros.terminal";
+        public const string HostAppId = "org.kazoos.terminal";
 
         private static readonly string[] FileCapabilities =
         [
@@ -642,6 +657,8 @@ public sealed partial class ShellInterpreterTests
                 Command<HeadOneCommand>("head1"), Command<HangCommand>("hang"), Command<WhereCommand>("where"),
                 Command<CatOneCommand>("cat1"), Command<AmRootCommand>("amroot"), Command<RootNiceCommand>("rootnice"), Command<HasShellCommand>("hasshell"),
                 Command<PrintEnvCommand>("printenv1"),
+                // ADR 0228 §2: a renamed command keeps its old name as an alias.
+                Command<EchoCommand>("kazopkg", ["hackpkg"]),
                 .. CatalogCommands
             ];
             AppManifest host = HostManifest();
@@ -784,17 +801,17 @@ public sealed partial class ShellInterpreterTests
             Id = HostAppId,
             Name = "Terminal",
             Version = "1.0.0",
-            PublisherId = "org.hackeros",
+            PublisherId = "org.kazoos",
             Description = "Hosts the shell.",
             Kind = AppKind.Window,
-            EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", "org.hackeros.terminal.EntryPoint"),
+            EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", "org.kazoos.terminal.EntryPoint"),
             SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
             Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
             Resources = AppResourceProfileManifest.None,
             Capabilities = [.. FileCapabilities, AppCapabilities.AppsLaunch]
         };
 
-        private static AppManifest Command<TCommand>(string name) => new()
+        private static AppManifest Command<TCommand>(string name, IReadOnlyList<string>? aliases = null) => new()
         {
             Id = $"org.test.{name}",
             Name = name,
@@ -807,7 +824,7 @@ public sealed partial class ShellInterpreterTests
             Presentation = new PresentationManifest("test", AppLaunchVisibility.Hidden, []),
             Resources = AppResourceProfileManifest.None,
             Capabilities = FileCapabilities,
-            Terminal = new TerminalCommandManifest(name, [], $"{name} [args]")
+            Terminal = new TerminalCommandManifest(name, [.. aliases ?? []], $"{name} [args]")
         };
 
         private sealed class FixedTimeProvider(DateTimeOffset now) : TimeProvider

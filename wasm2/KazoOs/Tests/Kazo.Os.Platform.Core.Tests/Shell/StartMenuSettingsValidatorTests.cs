@@ -18,7 +18,7 @@ public sealed class StartMenuSettingsValidatorTests
     public void Validate_duplicate_pin_is_rejected()
     {
         string content =
-            """{"schemaVersion":1,"profiles":{"USER_ID":{"pinnedAppIds":["org.hackeros.browser","org.hackeros.browser"]}}}"""
+            """{"schemaVersion":1,"profiles":{"USER_ID":{"pinnedAppIds":["org.kazoos.browser","org.kazoos.browser"]}}}"""
                 .Replace("USER_ID", _userId.ToString(), StringComparison.Ordinal);
 
         Assert.Contains("start-menu.app-id-duplicate", _validator.Validate(content));

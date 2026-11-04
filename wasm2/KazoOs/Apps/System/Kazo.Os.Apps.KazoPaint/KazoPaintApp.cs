@@ -3,7 +3,7 @@ using Kazo.Os.App.Abstractions;
 namespace Kazo.Os.Apps.KazoPaint;
 
 /// <summary>
-/// Manifest of "Hack Paint" (ADR 0047). The build generates <c>manifest.json</c> from this
+/// Manifest of "Kazo Paint" (ADR 0047). The build generates <c>manifest.json</c> from this
 /// class; it is never instantiated at runtime.
 /// </summary>
 [AppManifest]
@@ -16,10 +16,10 @@ public sealed class KazoPaintApp : AppDefinition
     public override IReadOnlyList<AssetManifest> Assets =>
         [new("icons/app.svg", AssetKind.Image, new string('0', 64), "app-icon")];
     /// <inheritdoc />
-    public override string Id => "org.hackeros.hack-paint";
+    public override string Id => "org.kazoos.kazo-paint";
 
     /// <inheritdoc />
-    public override string Name => "Hack Paint";
+    public override string Name => "Kazo Paint";
 
     /// <inheritdoc />
     public override AppKind Kind => AppKind.Window;
@@ -31,7 +31,7 @@ public sealed class KazoPaintApp : AppDefinition
     public override Type? MobileEntryPoint => typeof(KazoPaintWindow);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description =>
@@ -46,8 +46,8 @@ public sealed class KazoPaintApp : AppDefinition
 
     /// <inheritdoc />
     /// <remarks>
-    /// ADR 0103 §1: Hack Paint opens and edits the image types the browser decodes; it is the
-    /// default handler of <c>edit</c> for them (<c>/etc/hackeros/file-associations.json</c>).
+    /// ADR 0103 §1: Kazo Paint opens and edits the image types the browser decodes; it is the
+    /// default handler of <c>edit</c> for them (<c>/etc/kazoos/file-associations.json</c>).
     /// </remarks>
     public override IReadOnlyList<FileHandler> FileHandlers =>
     [

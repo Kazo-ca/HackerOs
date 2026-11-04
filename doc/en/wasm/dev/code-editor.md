@@ -2,7 +2,7 @@
 
 # Code editor
 
-`Apps/System/Kazo.Os.Apps.CodeEditor` (`org.hackeros.code-editor`): a
+`Apps/System/Kazo.Os.Apps.CodeEditor` (`org.kazoos.code-editor`): a
 VS Code-style code editor, on Monaco 0.55 (ADR 0020) and laid out as a
 workbench (ADR 0062), with a bottom dock (ADR 0063). It opens files and
 folders of the virtual filesystem, searches across a whole folder, and embeds
@@ -23,7 +23,7 @@ is archived in [`old/code-editor.md`](old/code-editor.md).
 | Editing | All of Monaco: find/replace in the file (Ctrl+F, Ctrl+H), go to line (Ctrl+G), comment (Ctrl+/), format, Monaco command palette (F1), multicursor, minimap. View › Word Wrap (Alt+Z), Show/Hide Minimap. |
 | Saving | Ctrl+S, Ctrl+Shift+S (Save As), File › Save All. Files in the open folder go through the access granted to the folder. Unsaved content is saved for recovery and restored at the next launch. |
 | Bottom dock | Ctrl+J shows or hides it (it is hidden, not destroyed: the shells keep running). **Status** tabs (folder, file, language, open and unsaved tabs, terminals, then a timestamped, clearable message log), **Terminal** and **Problems** (empty for now). |
-| Terminal | Ctrl+` or the icon at the bottom of the activity bar: Terminal tab of the dock. It is the terminal of the Terminal app, embedded through the `hackeros.terminal` contract (ADR 0063): one `hsh` per tab ("+"), started in the open folder, title = running command or folder, clear, kill. "Open in Integrated Terminal" does a visible `cd` in the active terminal if it is idle, otherwise opens a new terminal. `exit` closes the tab; the last one hides the dock. Without the Terminal app installed, the tab says why. |
+| Terminal | Ctrl+` or the icon at the bottom of the activity bar: Terminal tab of the dock. It is the terminal of the Terminal app, embedded through the `kazoos.terminal` contract (ADR 0063): one `hsh` per tab ("+"), started in the open folder, title = running command or folder, clear, kill. "Open in Integrated Terminal" does a visible `cd` in the active terminal if it is idle, otherwise opens a new terminal. `exit` closes the tab; the last one hides the dock. Without the Terminal app installed, the tab says why. |
 | Layout | Sidebar (Ctrl+B) and dock resizable by dragging; the Monaco area always takes all the remaining space; status bar with the last message (a click opens Status), Ln/Col, selection, encoding, line ending and language (changeable). Errors also stay above the editor until dismissed. |
 
 Out of scope (ADR 0062): compilation, execution, "go to definition",
@@ -33,9 +33,9 @@ cross-file IntelliSense, source control, debugger, extensions.
 
 | Element | Role |
 | --- | --- |
-| `CodeEditorWindow.razor` / `.razor.cs` / `.razor.css` | Workbench: menus, activity bar, sidebar, tabs, breadcrumb, Monaco area, watermark, bottom dock (Status, Terminal through `KazoEmbeddedComponent<IHackTerminal>`, Problems), status bar. Owns the session, the workspace, recovery and the close guard. |
+| `CodeEditorWindow.razor` / `.razor.cs` / `.razor.css` | Workbench: menus, activity bar, sidebar, tabs, breadcrumb, Monaco area, watermark, bottom dock (Status, Terminal through `KazoEmbeddedComponent<IKazoTerminal>`, Problems), status bar. Owns the session, the workspace, recovery and the close guard. |
 | `CodeEditorWindow.razor.js` | Collocated module: `createEditor` (Monaco + accessible name), `attachWorkbench` (shortcuts captured before the browser and Monaco, then `OnShortcut(name)`; resize handles that set `--sidebar-width` and `--panel-height` on the root). |
-| `CodeEditor.monaco.entry.js` → `wwwroot/monaco/monaco.bundle.js` | `hackeros-dark` theme and `createCodeEditor`: one model per tab (`showDocument`, `closeDocument`), `setLanguage`, `reveal`, `runAction`, `getSelectedText`, `setOptions`, `flush`, `markSaved`, `layout`, `focus`, `destroy`; calls back `OnDirtyChanged(id, modified)` at each toggle, `OnEditorChanged(id, content)` after 400 ms without typing, and `OnCursorChanged(line, column, selection)` after 60 ms. |
+| `CodeEditor.monaco.entry.js` → `wwwroot/monaco/monaco.bundle.js` | `kazoos-dark` theme and `createCodeEditor`: one model per tab (`showDocument`, `closeDocument`), `setLanguage`, `reveal`, `runAction`, `getSelectedText`, `setOptions`, `flush`, `markSaved`, `layout`, `focus`, `destroy`; calls back `OnDirtyChanged(id, modified)` at each toggle, `OnEditorChanged(id, content)` after 400 ms without typing, and `OnCursorChanged(line, column, selection)` after 60 ms. |
 | `CodeEditorSession`, `CodeEditorDocument` | Tabs and content in C#; `RelocatePaths` follows a file or folder rename. |
 | `CodeEditorWorkspace` | Open folder: file list (exclusions `.git`, `.svn`, `.hg`, `node_modules`, `bin`, `obj`; at most 5,000), creation of files and folders, relative paths. |
 | `CodeEditorSearch.cs` | `CodeEditorTextSearch` (line by line, 1,000 occurrences per file, preview cut around the occurrence), `CodeEditorGlob`, `CodeEditorWorkspaceSearch` (5,000 occurrences in total, files over 1 MiB ignored), `CodeEditorQuickOpen` (fuzzy ranking). |
@@ -116,7 +116,7 @@ version `wwwroot/monaco/`. The .NET build does not run npm.
 - [x] Reproduce the defects (editing area reduced to one line, no creation in
   the tree, tabs that lose their state).
 - [x] Monaco: one model per tab, cursor, `reveal`, actions, options,
-  `hackeros-dark` theme.
+  `kazoos-dark` theme.
 - [x] `CodeEditorWorkspace`: file list, creation, relative paths.
 - [x] Folder search (case, whole word, regex, globs, unsaved content) and
   fuzzy quick open.

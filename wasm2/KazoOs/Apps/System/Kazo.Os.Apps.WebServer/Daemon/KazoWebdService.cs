@@ -9,7 +9,7 @@ using Kazo.Os.Simulation.Abstractions.Diagnostics;
 namespace Kazo.Os.Apps.WebServer.Daemon;
 
 /// <summary>
-/// <c>hackwebd</c>, the web server of the hosted static sites (ADR 0077, section 2; ADR 0080). It
+/// <c>kazowebd</c>, the web server of the hosted static sites (ADR 0077, section 2; ADR 0080). It
 /// only drives the OS through the public SDK: it reads the <c>.site</c> files, follows their
 /// directories with <see cref="KazoFileSystemWatcher"/>, opens one <see cref="KazoHttpListener"/> per
 /// binding and serves files with <see cref="StaticFileHandler"/>.
@@ -22,7 +22,7 @@ namespace Kazo.Os.Apps.WebServer.Daemon;
 /// </para>
 /// <para>
 /// A site that cannot bind (address already in use, a user site on a port under 1024, an invalid
-/// file) does not stop the others: the reason goes to <c>/var/log/hackweb/error.log</c>.
+/// file) does not stop the others: the reason goes to <c>/var/log/kazoweb/error.log</c>.
 /// </para>
 /// </remarks>
 public sealed class KazoWebdService : ServiceAppBase
@@ -34,13 +34,13 @@ public sealed class KazoWebdService : ServiceAppBase
     private IAppExecutionContext? _context;
 
     /// <summary>Initializes the service with its manifest.</summary>
-    /// <param name="manifest">The manifest of <c>hackwebd</c>.</param>
+    /// <param name="manifest">The manifest of <c>kazowebd</c>.</param>
     public KazoWebdService(AppManifest manifest)
         : base(manifest)
     {
     }
 
-    /// <summary>Gets the prefixes <c>hackwebd</c> listens on and the site each serves (for tests and diagnostics).</summary>
+    /// <summary>Gets the prefixes <c>kazowebd</c> listens on and the site each serves (for tests and diagnostics).</summary>
     public IReadOnlyDictionary<string, string> ServedPrefixes => _sites.ToDictionary(static pair => pair.Key, static pair => pair.Value.Site.Name, StringComparer.Ordinal);
 
     /// <inheritdoc />
@@ -93,7 +93,7 @@ public sealed class KazoWebdService : ServiceAppBase
             KazoWebdLog.WriteError(context, "notice", null, $"exiting ({reason})");
         }
 
-        // Close the sockets now, so a new hackwebd (systemctl restart) can bind them at once.
+        // Close the sockets now, so a new kazowebd (systemctl restart) can bind them at once.
         await CloseAllAsync().ConfigureAwait(false);
     }
 

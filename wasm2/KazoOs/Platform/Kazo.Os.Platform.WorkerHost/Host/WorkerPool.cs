@@ -763,7 +763,7 @@ public sealed class WorkerPool : IWorkerPoolStatus, Kazo.Os.Platform.Core.Proces
         try
         {
             started = await _runtime.StartAsync(
-                new WebWorkerStartOptions($"hackeros-worker-{worker.Id}", Options.EntryAssembly, Options.PreloadAssemblies),
+                new WebWorkerStartOptions($"kazoos-worker-{worker.Id}", Options.EntryAssembly, Options.PreloadAssemblies),
                 _lifetime.Token).ConfigureAwait(false);
         }
         catch (Exception exception) when (exception is not OutOfMemoryException)

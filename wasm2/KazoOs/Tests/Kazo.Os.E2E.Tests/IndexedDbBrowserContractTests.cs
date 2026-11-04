@@ -97,7 +97,7 @@ public sealed partial class IndexedDbBrowserContractTests
             };
             await NavigateWhenReadyAsync(page, $"{address}/?scenario=dialog");
             page.RequestFailed += (_, request) => failures.Add($"network: {request.Method} {request.Url}");
-            ILocator owner = page.Locator("[data-app-id='org.hackeros.browser.dialog-owner']").Locator("xpath=ancestor::article");
+            ILocator owner = page.Locator("[data-app-id='org.kazoos.browser.dialog-owner']").Locator("xpath=ancestor::article");
             await owner.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible });
             ILocator trigger = page.GetByRole(AriaRole.Button, new() { Name = "Open filtered files" });
 
@@ -155,13 +155,13 @@ public sealed partial class IndexedDbBrowserContractTests
                 new BrowserTypeLaunchOptions { Channel = "chrome", Headless = true });
             IPage page = await browser.NewPageAsync();
             await NavigateWhenReadyAsync(page, $"{address}/?scenario=window");
-            ILocator primary = page.Locator("[data-app-id='org.hackeros.browser.primary']").Locator("xpath=ancestor::article");
+            ILocator primary = page.Locator("[data-app-id='org.kazoos.browser.primary']").Locator("xpath=ancestor::article");
             await primary.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible });
 
             ILocator maximize = primary.GetByLabel("Maximize");
             await maximize.FocusAsync();
             await page.Keyboard.PressAsync("Enter");
-            await page.WaitForFunctionAsync("() => document.querySelector('[data-app-id=\"org.hackeros.browser.primary\"]')?.closest('article')?.dataset.windowWidth === '960'");
+            await page.WaitForFunctionAsync("() => document.querySelector('[data-app-id=\"org.kazoos.browser.primary\"]')?.closest('article')?.dataset.windowWidth === '960'");
             ILocator restore = primary.GetByLabel("Restore");
             await restore.FocusAsync();
             await page.Keyboard.PressAsync("Enter");
@@ -179,7 +179,7 @@ public sealed partial class IndexedDbBrowserContractTests
             ILocator openModal = page.GetByRole(AriaRole.Button, new() { Name = "Open Primary Modal" });
             await openModal.FocusAsync();
             await page.Keyboard.PressAsync("Enter");
-            ILocator modal = page.Locator("[data-app-id='org.hackeros.browser.modal']").Locator("xpath=ancestor::article");
+            ILocator modal = page.Locator("[data-app-id='org.kazoos.browser.modal']").Locator("xpath=ancestor::article");
             await modal.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible });
             Assert.Equal("true", await modal.GetAttributeAsync("aria-modal"));
             Assert.Equal("true", await primary.GetAttributeAsync("aria-hidden"));
@@ -195,7 +195,7 @@ public sealed partial class IndexedDbBrowserContractTests
             ILocator mobileViewport = page.GetByRole(AriaRole.Button, new() { Name = "Use Mobile Viewport" });
             await mobileViewport.FocusAsync();
             await page.Keyboard.PressAsync("Enter");
-            await page.WaitForFunctionAsync("() => Number(document.querySelector('[data-app-id=\"org.hackeros.browser.primary\"]')?.closest('article')?.dataset.windowWidth) <= 480");
+            await page.WaitForFunctionAsync("() => Number(document.querySelector('[data-app-id=\"org.kazoos.browser.primary\"]')?.closest('article')?.dataset.windowWidth) <= 480");
             Assert.True(double.Parse((await primary.GetAttributeAsync("data-window-width"))!, System.Globalization.CultureInfo.InvariantCulture) <= 480);
             Assert.True(double.Parse((await primary.GetAttributeAsync("data-window-height"))!, System.Globalization.CultureInfo.InvariantCulture) <= 320);
 
@@ -242,7 +242,7 @@ public sealed partial class IndexedDbBrowserContractTests
             foreach ((string edge, string x, string y, string width, string height) in cases)
             {
                 await NavigateWhenReadyAsync(page, $"{address}/?scenario=window");
-                ILocator primary = page.Locator("[data-app-id='org.hackeros.browser.primary']").Locator("xpath=ancestor::article");
+                ILocator primary = page.Locator("[data-app-id='org.kazoos.browser.primary']").Locator("xpath=ancestor::article");
                 await primary.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible });
                 await primary.Locator($"[data-resize-edge='{edge}']").EvaluateAsync(
                     """
@@ -253,7 +253,7 @@ public sealed partial class IndexedDbBrowserContractTests
                     }
                     """);
                 await page.WaitForFunctionAsync(
-                    "expected => { const data = document.querySelector('[data-app-id=\"org.hackeros.browser.primary\"]')?.closest('article')?.dataset; return data?.windowX === expected.x && data?.windowY === expected.y && data?.windowWidth === expected.width && data?.windowHeight === expected.height; }",
+                    "expected => { const data = document.querySelector('[data-app-id=\"org.kazoos.browser.primary\"]')?.closest('article')?.dataset; return data?.windowX === expected.x && data?.windowY === expected.y && data?.windowWidth === expected.width && data?.windowHeight === expected.height; }",
                     new { x, y, width, height });
 
                 Assert.Equal(x, await primary.GetAttributeAsync("data-window-x"));
@@ -296,8 +296,8 @@ public sealed partial class IndexedDbBrowserContractTests
             page.RequestFailed += (_, request) => failures.Add($"network: {request.Method} {request.Url}");
             ILocator scenario = page.Locator(".window-browser-scenario");
             await scenario.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible });
-            ILocator primary = page.Locator("[data-app-id='org.hackeros.browser.primary']").Locator("xpath=ancestor::article");
-            ILocator secondary = page.Locator("[data-app-id='org.hackeros.browser.secondary']").Locator("xpath=ancestor::article");
+            ILocator primary = page.Locator("[data-app-id='org.kazoos.browser.primary']").Locator("xpath=ancestor::article");
+            ILocator secondary = page.Locator("[data-app-id='org.kazoos.browser.secondary']").Locator("xpath=ancestor::article");
             await primary.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible });
 
             ILocator title = primary.Locator("[data-window-gesture='move']");
@@ -306,7 +306,7 @@ public sealed partial class IndexedDbBrowserContractTests
             await page.Mouse.DownAsync();
             await page.Mouse.MoveAsync(titleBox.X + 90, titleBox.Y + 60, new MouseMoveOptions { Steps = 4 });
             await page.Mouse.UpAsync();
-            await page.WaitForFunctionAsync("() => Number(document.querySelector('[data-app-id=\"org.hackeros.browser.primary\"]')?.closest('article')?.dataset.windowX) > 80");
+            await page.WaitForFunctionAsync("() => Number(document.querySelector('[data-app-id=\"org.kazoos.browser.primary\"]')?.closest('article')?.dataset.windowX) > 80");
 
             float renderedX = float.Parse((await primary.GetAttributeAsync("data-window-x"))!, System.Globalization.CultureInfo.InvariantCulture);
             float renderedY = float.Parse((await primary.GetAttributeAsync("data-window-y"))!, System.Globalization.CultureInfo.InvariantCulture);
@@ -325,7 +325,7 @@ public sealed partial class IndexedDbBrowserContractTests
                     element.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 41, pointerType: 'touch', clientX: 549, clientY: 190, button: 0 }));
                 }
                 """);
-            await page.WaitForFunctionAsync("() => document.querySelector('[data-app-id=\"org.hackeros.browser.primary\"]')?.closest('article')?.dataset.windowWidth === '410'");
+            await page.WaitForFunctionAsync("() => document.querySelector('[data-app-id=\"org.kazoos.browser.primary\"]')?.closest('article')?.dataset.windowWidth === '410'");
             Assert.Equal("410", await primary.GetAttributeAsync("data-window-width"));
             Assert.InRange((await primary.BoundingBoxAsync())!.Width, 409.5, 410.5);
 
@@ -420,7 +420,7 @@ public sealed partial class IndexedDbBrowserContractTests
                         }]
                     };
 
-                    const rollbackDatabase = `hackeros-rollback-${crypto.randomUUID()}`;
+                    const rollbackDatabase = `kazoos-rollback-${crypto.randomUUID()}`;
                     await module.openDatabase(rollbackDatabase, 1, createV1);
                     let transactionRejected = false;
                     try {
@@ -444,7 +444,7 @@ public sealed partial class IndexedDbBrowserContractTests
                         [{ kind: 'count', objectStoreName: 'records' }]))[0];
                     await module.deleteDatabase(rollbackDatabase);
 
-                    const migrationDatabase = `hackeros-migration-${crypto.randomUUID()}`;
+                    const migrationDatabase = `kazoos-migration-${crypto.randomUUID()}`;
                     await module.openDatabase(migrationDatabase, 1, createV1);
                     await module.executeTransaction(
                         migrationDatabase,
@@ -511,7 +511,7 @@ public sealed partial class IndexedDbBrowserContractTests
                 NavigateWhenReadyAsync(firstPage, $"{address}/?scenario=idle"),
                 NavigateWhenReadyAsync(secondPage, $"{address}/?scenario=idle"));
 
-            string databaseName = $"hackeros-tabs-{Guid.NewGuid():N}";
+            string databaseName = $"kazoos-tabs-{Guid.NewGuid():N}";
             const string setupScript = """
                 async ({ databaseName }) => {
                     const module = await import('/_content/Kazo.Os.Infrastructure.Browser/indexedDb.js');
@@ -690,7 +690,7 @@ public sealed partial class IndexedDbBrowserContractTests
 
             string screenshotPath = Path.Combine(
                 Path.GetTempPath(),
-                $"hackeros-platform-ui-{Guid.NewGuid():N}.png");
+                $"kazoos-platform-ui-{Guid.NewGuid():N}.png");
             await page.ScreenshotAsync(new PageScreenshotOptions
             {
                 Path = screenshotPath,
@@ -899,7 +899,7 @@ public sealed partial class IndexedDbBrowserContractTests
 
     /// <summary>Verifies the published browser harness renders one RGBA image model through draw, history, crop, and pan.</summary>
     [Fact]
-    public async Task Hack_paint_canvas_draws_undoes_redoes_crops_and_pans()
+    public async Task Kazo_paint_canvas_draws_undoes_redoes_crops_and_pans()
     {
         string solutionDirectory = FindSolutionDirectory();
         int port = ReservePort();
@@ -916,21 +916,21 @@ public sealed partial class IndexedDbBrowserContractTests
             page.Console += (_, message) => { if (message.Type == "error") failures.Add($"console: {message.Text}"); };
             page.PageError += (_, error) => failures.Add($"page: {error}");
 
-            await NavigateWhenReadyAsync(page, $"{address}/?scenario=hack-paint");
-            ILocator canvas = page.Locator("#hack-paint-canvas");
+            await NavigateWhenReadyAsync(page, $"{address}/?scenario=kazo-paint");
+            ILocator canvas = page.Locator("#kazo-paint-canvas");
             await canvas.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible });
-            await page.WaitForFunctionAsync("() => document.querySelector('#hack-paint-result')?.dataset.status === 'ready'");
+            await page.WaitForFunctionAsync("() => document.querySelector('#kazo-paint-result')?.dataset.status === 'ready'");
 
             await page.GetByRole(AriaRole.Button, new() { Name = "Draw pixel" }).ClickAsync();
-            await page.WaitForFunctionAsync("() => document.querySelector('#hack-paint-result')?.dataset.status === 'drawn'");
-            Assert.Equal(255, await page.EvaluateAsync<int>("() => document.querySelector('#hack-paint-canvas').getContext('2d').getImageData(2, 2, 1, 1).data[0]"));
+            await page.WaitForFunctionAsync("() => document.querySelector('#kazo-paint-result')?.dataset.status === 'drawn'");
+            Assert.Equal(255, await page.EvaluateAsync<int>("() => document.querySelector('#kazo-paint-canvas').getContext('2d').getImageData(2, 2, 1, 1).data[0]"));
             await page.GetByRole(AriaRole.Button, new() { Name = "Undo" }).ClickAsync();
             await page.GetByRole(AriaRole.Button, new() { Name = "Redo" }).ClickAsync();
-            await page.WaitForFunctionAsync("() => document.querySelector('#hack-paint-result')?.dataset.status === 'redone'");
+            await page.WaitForFunctionAsync("() => document.querySelector('#kazo-paint-result')?.dataset.status === 'redone'");
             await page.GetByRole(AriaRole.Button, new() { Name = "Crop" }).ClickAsync();
-            await page.WaitForFunctionAsync("() => document.querySelector('#hack-paint-result')?.dataset.size === '8x8'");
+            await page.WaitForFunctionAsync("() => document.querySelector('#kazo-paint-result')?.dataset.size === '8x8'");
             await page.GetByRole(AriaRole.Button, new() { Name = "Pan" }).ClickAsync();
-            await page.WaitForFunctionAsync("() => document.querySelector('#hack-paint-result')?.dataset.pan === '5,-3'");
+            await page.WaitForFunctionAsync("() => document.querySelector('#kazo-paint-result')?.dataset.pan === '5,-3'");
             Assert.Empty(failures);
         }
         finally
@@ -955,7 +955,7 @@ public sealed partial class IndexedDbBrowserContractTests
                 new BrowserTypeLaunchOptions { Channel = "chrome", Headless = true });
             IPage page = await browser.NewPageAsync();
 
-            foreach (string scenario in new[] { "idle", "window", "dialog", "terminal-full-screen", "code-editor", "hack-paint", "taskbar" })
+            foreach (string scenario in new[] { "idle", "window", "dialog", "terminal-full-screen", "code-editor", "kazo-paint", "taskbar" })
             {
                 await NavigateWhenReadyAsync(page, $"{address}/?scenario={scenario}");
                 var result = await page.RunAxe();

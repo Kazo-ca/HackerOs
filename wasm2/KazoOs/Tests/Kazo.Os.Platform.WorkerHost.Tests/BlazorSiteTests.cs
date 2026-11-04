@@ -18,7 +18,7 @@ public sealed class BlazorSiteTests
         ShellRun home = await os.RunAsync("curl -i http://blazor.hack/").WaitAsync(TimeSpan.FromSeconds(20));
         ShellRun page = await os.RunAsync("curl http://blazor.hack/notes/5").WaitAsync(TimeSpan.FromSeconds(20));
         ShellRun boot = await os.RunAsync("curl http://blazor.hack/_framework/blazor.boot.json").WaitAsync(TimeSpan.FromSeconds(20));
-        ShellRun script = await os.RunAsync("curl -i http://blazor.hack/_framework/blazor.hack.js").WaitAsync(TimeSpan.FromSeconds(20));
+        ShellRun script = await os.RunAsync("curl -i http://blazor.hack/_framework/blazor.kazo.js").WaitAsync(TimeSpan.FromSeconds(20));
         ShellRun api = await os.RunAsync("curl http://blazor.hack/api/time").WaitAsync(TimeSpan.FromSeconds(20));
         ShellRun missing = await os.RunAsync("curl -i http://blazor.hack/css/site.css").WaitAsync(TimeSpan.FromSeconds(20));
 
@@ -26,7 +26,7 @@ public sealed class BlazorSiteTests
         Assert.True(home.Stdout.StartsWith("HTTP/1.1 200", StringComparison.Ordinal), home.Stdout);
         Assert.True(home.Stdout.Contains("text/html", StringComparison.OrdinalIgnoreCase), home.Stdout);
         Assert.Contains("Content-Type: text/html", home.Stdout, StringComparison.OrdinalIgnoreCase);
-        Assert.Contains("_framework/blazor.hack.js", home.Stdout, StringComparison.Ordinal);
+        Assert.Contains("_framework/blazor.kazo.js", home.Stdout, StringComparison.Ordinal);
         Assert.Contains("<div id=\"app\">", page.Stdout, StringComparison.Ordinal);
         Assert.Contains("\"appId\": \"org.test.blazor\"", boot.Stdout, StringComparison.Ordinal);
         Assert.Contains(typeof(BlazorSite).FullName!, boot.Stdout, StringComparison.Ordinal);

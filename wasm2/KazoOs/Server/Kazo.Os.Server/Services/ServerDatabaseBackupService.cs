@@ -29,8 +29,8 @@ public sealed class ServerDatabaseBackupService : IServerDatabaseBackupService
     public ServerDatabaseBackupService(IConfiguration configuration)
     {
         ArgumentNullException.ThrowIfNull(configuration);
-        _connectionString = configuration.GetConnectionString("HackerOsDb")
-            ?? throw new InvalidOperationException("ConnectionStrings:HackerOsDb must be configured for database backup.");
+        _connectionString = configuration.GetConnectionString("KazoOsDb")
+            ?? throw new InvalidOperationException("ConnectionStrings:KazoOsDb must be configured for database backup.");
         _backupRoot = Path.GetFullPath(configuration["ServerBackup:Root"] ?? "backups");
     }
 

@@ -21,8 +21,8 @@
     <KazoOsMemoryAccounting Condition="'$(KazoOsMemoryAccounting)' == ''">true</KazoOsMemoryAccounting>
     <KazoOsResourceAccountingIncluded>false</KazoOsResourceAccountingIncluded>
     <KazoOsResourceAccountingIncluded Condition="'$(KazoOsCpuAccounting)' == 'true' or '$(KazoOsMemoryAccounting)' == 'true'">true</KazoOsResourceAccountingIncluded>
-    <!-- Lets the composition code (#if HACKEROS_RESOURCE_ACCOUNTING) compile without the project. -->
-    <DefineConstants Condition="'$(KazoOsResourceAccountingIncluded)' == 'true'">$(DefineConstants);HACKEROS_RESOURCE_ACCOUNTING</DefineConstants>
+    <!-- Lets the composition code (#if KAZOOS_RESOURCE_ACCOUNTING) compile without the project. -->
+    <DefineConstants Condition="'$(KazoOsResourceAccountingIncluded)' == 'true'">$(DefineConstants);KAZOOS_RESOURCE_ACCOUNTING</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

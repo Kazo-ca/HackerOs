@@ -116,10 +116,10 @@ public sealed class HeadlessKernelIntegrationTests
 
     private static AppManifest WaiterManifest() => new()
     {
-        Id = "org.hackeros.kernel-smoke.waiter",
+        Id = "org.kazoos.kernel-smoke.waiter",
         Name = "Waiter",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "Waits for cancellation or shutdown.",
         Kind = AppKind.Service,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", typeof(WaiterServiceApp).FullName!),
@@ -153,10 +153,10 @@ public sealed class HeadlessKernelIntegrationTests
 
         internal static AppManifest CreateManifest() => new()
         {
-            Id = "org.hackeros.kernel-smoke",
+            Id = "org.kazoos.kernel-smoke",
             Name = "Kernel Smoke",
             Version = "1.0.0",
-            PublisherId = "org.hackeros",
+            PublisherId = "org.kazoos",
             Description = "Exercises the filesystem gateway and settings files end to end.",
             Kind = AppKind.Terminal,
             EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", typeof(KernelSmokeApp).FullName!),

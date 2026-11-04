@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Df;
 public sealed class DfApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.df";
+    public override string Id => "org.kazoos.commands.df";
 
     /// <inheritdoc />
     public override string Name => "df";
@@ -22,7 +22,7 @@ public sealed class DfApp : AppDefinition
     public override Type EntryPoint => typeof(DfCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Report file system disk space usage";

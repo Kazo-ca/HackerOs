@@ -32,7 +32,7 @@ internal static class ShellText
     public static IStringLocalizer English => Strings.For(KazoLocale.DefaultLanguage);
 
     /// <summary>
-    /// Translates the reason of a <c>Hack*</c> file API failure (the <c>strerror</c> text a shell
+    /// Translates the reason of a <c>Kazo*</c> file API failure (the <c>strerror</c> text a shell
     /// prints after <c>hsh: &lt;path&gt;: </c>), as glibc translates <c>strerror</c> in the
     /// process's locale. Mirrors <see cref="Kazo.Os.AppSdk.ShellErrorText.Describe(System.Exception)"/>, whose
     /// English texts are the neutral resources.

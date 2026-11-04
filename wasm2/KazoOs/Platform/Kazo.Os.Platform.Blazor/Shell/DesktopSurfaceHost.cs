@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 namespace Kazo.Os.Platform.Blazor.Shell;
 
 /// <summary>
-/// Starts the desktop app (<c>org.hackeros.desktop</c>, ADR 0160 §1) for the signed-in user and renders
+/// Starts the desktop app (<c>org.kazoos.desktop</c>, ADR 0160 §1) for the signed-in user and renders
 /// it under the windows, in <see cref="Kazo.Os.Windowing.Blazor.DesktopArea.BackgroundContent"/>, like a file manager drawing the
 /// desktop of a real session (Nautilus's or Explorer's desktop window): a process of its own, with its
 /// own rights, that has no window.
@@ -37,7 +37,7 @@ namespace Kazo.Os.Platform.Blazor.Shell;
 public sealed class DesktopSurfaceHost : ComponentBase, IDisposable
 {
     /// <summary>The id of the desktop app.</summary>
-    public const string DesktopAppId = "org.hackeros.desktop";
+    public const string DesktopAppId = "org.kazoos.desktop";
 
     private IDisposable? _reservation;
     private IDisposable? _processSubscription;
@@ -125,7 +125,7 @@ public sealed class DesktopSurfaceHost : ComponentBase, IDisposable
     }
 
     /// <summary>The sender of the shell's intents.</summary>
-    private const string ShellSenderId = "org.hackeros.shell";
+    private const string ShellSenderId = "org.kazoos.shell";
 
     private void OnProcessStateChanged(ProcessStateChangedEvent e)
     {
@@ -179,10 +179,10 @@ public sealed class DesktopSurfaceHost : ComponentBase, IDisposable
             return;
         }
 
-        builder.OpenComponent<CascadingValue<IHackMenuHost>>(0);
-        builder.AddComponentParameter(1, nameof(CascadingValue<IHackMenuHost>.Value), _menus);
-        builder.AddComponentParameter(2, nameof(CascadingValue<IHackMenuHost>.IsFixed), true);
-        builder.AddComponentParameter(3, nameof(CascadingValue<IHackMenuHost>.ChildContent), (RenderFragment)RenderEntryPoint);
+        builder.OpenComponent<CascadingValue<IKazoMenuHost>>(0);
+        builder.AddComponentParameter(1, nameof(CascadingValue<IKazoMenuHost>.Value), _menus);
+        builder.AddComponentParameter(2, nameof(CascadingValue<IKazoMenuHost>.IsFixed), true);
+        builder.AddComponentParameter(3, nameof(CascadingValue<IKazoMenuHost>.ChildContent), (RenderFragment)RenderEntryPoint);
         builder.CloseComponent();
     }
 

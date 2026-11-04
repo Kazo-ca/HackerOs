@@ -54,7 +54,7 @@ public sealed class WindowKeyBindingsTests
         await harness.BootAsync();
         await harness.LoginAsync(harness.Alice);
 
-        string? content = await harness.ReadAsync("/etc/hackeros/keybindings.config");
+        string? content = await harness.ReadAsync("/etc/kazoos/keybindings.config");
         Assert.NotNull(content);
         Assert.Contains("#close = Alt+F4", content, StringComparison.Ordinal);
         Assert.Contains("[fallback]", content, StringComparison.Ordinal);
@@ -73,7 +73,7 @@ public sealed class WindowKeyBindingsTests
         await harness.BootAsync();
         await harness.LoginAsync(harness.Alice);
         await harness.WriteAsRootAsync(
-            "/home/alice/.config/hackeros/keybindings.config",
+            "/home/alice/.config/kazoos/keybindings.config",
             "[fallback]\nclose = Ctrl+Alt+W, Alt+Nope\nminimize =\n");
 
         IReadOnlyList<WindowKeyBinding> bindings = WindowKeyBindingsSettingsDocuments.ToBindings(

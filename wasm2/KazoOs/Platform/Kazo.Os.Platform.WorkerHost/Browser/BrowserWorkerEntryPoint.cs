@@ -33,15 +33,15 @@ public static partial class BrowserWorkerEntryPoint
     public static void Receive(string message) => s_host?.Receive(message);
 
     /// <summary><c>self.postMessage</c>, given by the bootstrap.</summary>
-    [JSImport("post", "hackeros-worker")]
+    [JSImport("post", "kazoos-worker")]
     private static partial void Post(string message);
 
     /// <summary>Whether the bootstrap has a shared call slot (the page is cross-origin isolated).</summary>
-    [JSImport("syncAvailable", "hackeros-worker")]
+    [JSImport("syncAvailable", "kazoos-worker")]
     private static partial bool SyncAvailable();
 
     /// <summary>Posts call <paramref name="id"/> and blocks in <c>Atomics.wait</c> for its answer; <see langword="null"/> after the timeout.</summary>
-    [JSImport("callSync", "hackeros-worker")]
+    [JSImport("callSync", "kazoos-worker")]
     private static partial string? CallSync(int id, string message, int timeoutMs);
 }
 

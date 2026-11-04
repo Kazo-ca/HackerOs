@@ -100,7 +100,7 @@ public sealed class PlatformShellSwitchCoordinatorTests
     {
         Fixture fixture = new();
         AppLaunchResult launch = await fixture.LaunchSharedAppAsync();
-        WindowId windowId = fixture.CreateWindowFor(launch, "org.hackeros.test-shared");
+        WindowId windowId = fixture.CreateWindowFor(launch, "org.kazoos.test-shared");
         // A rejecting guard proves the window was never even asked to confirm close.
         RejectingGuard guard = new();
         using IDisposable registration = fixture.CloseGuards.Register(windowId, guard);
@@ -121,9 +121,9 @@ public sealed class PlatformShellSwitchCoordinatorTests
     {
         Fixture fixture = new();
         AppLaunchResult desktopOnlyLaunch = await fixture.LaunchWindowAppAsync();
-        WindowId desktopOnlyWindowId = fixture.CreateWindowFor(desktopOnlyLaunch, "org.hackeros.test-window");
+        WindowId desktopOnlyWindowId = fixture.CreateWindowFor(desktopOnlyLaunch, "org.kazoos.test-window");
         AppLaunchResult sharedLaunch = await fixture.LaunchSharedAppAsync();
-        WindowId sharedWindowId = fixture.CreateWindowFor(sharedLaunch, "org.hackeros.test-shared");
+        WindowId sharedWindowId = fixture.CreateWindowFor(sharedLaunch, "org.kazoos.test-shared");
         AlwaysConfirmGuard confirmGuard = new();
         using IDisposable desktopOnlyRegistration = fixture.CloseGuards.Register(desktopOnlyWindowId, confirmGuard);
         await fixture.PlatformPreference.InitializeAsync();
@@ -251,17 +251,17 @@ public sealed class PlatformShellSwitchCoordinatorTests
         internal async Task<AppLaunchResult> LaunchWindowAppAsync()
         {
             AuthenticatedPrincipal principal = await Session.LoginAsync(_aliceLoginName, "hunter2");
-            return await Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.test-window", principal, []));
+            return await Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.test-window", principal, []));
         }
 
         internal async Task<AppLaunchResult> LaunchSharedAppAsync()
         {
             AuthenticatedPrincipal principal = Session.CurrentPrincipal as AuthenticatedPrincipal
                 ?? await Session.LoginAsync(_aliceLoginName, "hunter2");
-            return await Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.test-shared", principal, []));
+            return await Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.test-shared", principal, []));
         }
 
-        internal WindowId CreateWindowFor(AppLaunchResult launch, string appId = "org.hackeros.test-window")
+        internal WindowId CreateWindowFor(AppLaunchResult launch, string appId = "org.kazoos.test-window")
         {
             WindowId windowId = WindowId.FromGuid(Guid.NewGuid());
             WindowRuntimeState state = new(
@@ -281,10 +281,10 @@ public sealed class PlatformShellSwitchCoordinatorTests
 
         private static AppManifest CreateWindowManifest() => new()
         {
-            Id = "org.hackeros.test-window",
+            Id = "org.kazoos.test-window",
             Name = "Test Window",
             Version = "1.0.0",
-            PublisherId = "pub.hackeros",
+            PublisherId = "pub.kazoos",
             Description = "Platform switch coordinator test app.",
             Kind = AppKind.Window,
             EntryPoint = new AppEntryPointManifest("Test.dll", "Test.Window"),
@@ -295,10 +295,10 @@ public sealed class PlatformShellSwitchCoordinatorTests
 
         private static AppManifest CreateSharedEntryPointManifest() => new()
         {
-            Id = "org.hackeros.test-shared",
+            Id = "org.kazoos.test-shared",
             Name = "Test Shared Window",
             Version = "1.0.0",
-            PublisherId = "pub.hackeros",
+            PublisherId = "pub.kazoos",
             Description = "Platform switch coordinator test app declaring one shared entry point.",
             Kind = AppKind.Window,
             Platform = new AppManifestPlatform(

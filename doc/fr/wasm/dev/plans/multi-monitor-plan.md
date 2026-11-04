@@ -37,7 +37,7 @@ son propre bureau, sa barre des tâches et ses fenêtres. Une fenêtre passe d'u
 | --- | --- | --- |
 | Surfaces d'affichage | `IDisplaySurfaceService`, portail `DisplaySurfaceContent`, styles et thème recopiés, événements de taille et de focus, états de fin | ADR 0078, 0081, [`detached-display-windows.md`](../detached-display-windows.md) |
 | Gestionnaire de fenêtres | Une seule `WorkArea` (`ChangeViewportCommand`), agrandir et ancrer s'y rapportent | `Platform/Kazo.Os.Windowing.Core/WindowRuntime.cs` |
-| Bureau | Un seul `DesktopArea` dans `DesktopShell`, bureau (`org.hackeros.desktop`) en fond | `Platform/Kazo.Os.Platform.Blazor/Shell/` |
+| Bureau | Un seul `DesktopArea` dans `DesktopShell`, bureau (`org.kazoos.desktop`) en fond | `Platform/Kazo.Os.Platform.Blazor/Shell/` |
 | Barre des tâches | Un exemplaire, toutes les fenêtres | `Platform/Kazo.Os.Taskbar.Blazor` |
 | Menu de fenêtre | Liste à un niveau dans `WindowManagerOverlays` ; clic droit sur l'icône, `Alt+Space` | ADR 0095, 0164 |
 | Menu contextuel de l'OS | Multi-niveaux, clavier | ADR 0150 |

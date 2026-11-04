@@ -2,7 +2,7 @@
 
 # Émulateur du terminal (xterm.js)
 
-Le contrat côté apps et commandes (`TerminalPanel`, `IHackTerminal`, lecture d'un mot de passe sans écho, mode plein écran) est dans [`terminal-api.md`](../framework/terminal-api.md).
+Le contrat côté apps et commandes (`TerminalPanel`, `IKazoTerminal`, lecture d'un mot de passe sans écho, mode plein écran) est dans [`terminal-api.md`](../framework/terminal-api.md).
 
 ## Objet
 
@@ -13,7 +13,7 @@ utilise l'écran alternatif, et le rendu ressemble à un terminal Linux.
 
 La console (`Apps/System/Kazo.Os.Apps.Terminal`) utilise `TerminalTabs`.
 L'éditeur de code n'utilise plus `TerminalPanel` directement : il embarque le
-terminal que l'app Terminal enregistre pour le contrat `hackeros.terminal`
+terminal que l'app Terminal enregistre pour le contrat `kazoos.terminal`
 (`TerminalEmbed`, ADR 0063, [`embedded-components.md`](../framework/embedded-components.md)).
 
 ## Architecture
@@ -23,7 +23,7 @@ clavier ─▶ xterm.js ──onData("\x1b[A")──▶ TerminalPanel.OnTerminal
                                           └─ TerminalInputDecoder → TerminalKeyEvent
                                               ├─ commande plein écran active → TerminalFullScreenSession
                                               ├─ Ctrl+C pendant une commande → annulation, « ^C »
-                                              └─ file de frappe → TerminalLineEditor / IHackShell
+                                              └─ file de frappe → TerminalLineEditor / IKazoShell
 commande ─▶ TerminalOutputWriter ─▶ TerminalPanel.Write ("\n" → "\r\n") ─▶ xterm.js.write
 ```
 
@@ -70,7 +70,7 @@ mouvement réduit, le curseur ne clignote pas. `applyAccessibility` (objet renvo
 La copie lève un vrai événement `copy` (`document.execCommand("copy")`) au lieu
 d'écrire `navigator.clipboard` : le pont du presse-papiers de l'OS la reçoit
 comme une copie native (origine `GuestNative`) et ne l'envoie à la vraie machine
-que si `/etc/hackeros/clipboard.config` le permet ([`clipboard.md`](clipboard.md),
+que si `/etc/kazoos/clipboard.config` le permet ([`clipboard.md`](clipboard.md),
 ADR 0065).
 
 Chrome se réserve Ctrl+W, Ctrl+N et Ctrl+T (fermer l'onglet, nouvelle
@@ -88,7 +88,7 @@ pendant l'attente lance `ls` ensuite, comme sous Linux.
 
 Une commande inachevée (`for f in *; do` + Entrée, guillemet ouvert, `|`
 final, here-document) affiche l'invite de continuation `>` de bash (`PS2`) :
-le terminal le demande au shell par `IHackShell.NeedsMoreInput`, accumule les
+le terminal le demande au shell par `IKazoShell.NeedsMoreInput`, accumule les
 lignes, puis les exécute ensemble ; Ctrl+C abandonne. L'historique garde une
 seule ligne (`TerminalHistory.ToSingleLine` : `for f in *; do echo $f; done`).
 
@@ -109,7 +109,7 @@ chaque commande, et un redimensionnement envoie `TerminalKey.Resize`.
 
 - **xterm.js n'est qu'un écran et un clavier.** L'édition de ligne, la
   complétion et l'historique restent en C# : le shell et son contrat
-  (`IHackShell`) ne changent pas, et le comportement se teste sans navigateur.
+  (`IKazoShell`) ne changent pas, et le comportement se teste sans navigateur.
 - **Bundle versionné**, comme Monaco : pas de npm au build .NET.
   `package.json` et `package-lock.json` sont retirés du contenu publié (sinon
   ils entrent en collision avec ceux du CodeEditor dans la publication de

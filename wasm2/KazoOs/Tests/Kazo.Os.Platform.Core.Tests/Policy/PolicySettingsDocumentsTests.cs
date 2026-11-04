@@ -7,7 +7,7 @@ using Kazo.Os.Simulation.Abstractions.Settings;
 
 namespace Kazo.Os.Platform.Core.Tests.Policy;
 
-/// <summary>The administrator policy is the system-only file /etc/hackeros/policy.config (ADR 0044).</summary>
+/// <summary>The administrator policy is the system-only file /etc/kazoos/policy.config (ADR 0044).</summary>
 public sealed class PolicySettingsDocumentsTests
 {
     private const string RuntimeInstall = "allowRuntimePackageInstall";
@@ -19,7 +19,7 @@ public sealed class PolicySettingsDocumentsTests
         await harness.BootAsync();
         AuthenticatedPrincipal alice = await harness.LoginAsync(harness.Alice);
         IAppFileSystemGateway settingsApp = harness.CreateAppGateway(
-            alice, "org.hackeros.settings", AppCapabilities.FileSystemSystemRead, AppCapabilities.FileSystemSystemWrite);
+            alice, "org.kazoos.settings", AppCapabilities.FileSystemSystemRead, AppCapabilities.FileSystemSystemWrite);
 
         await Assert.ThrowsAsync<UnauthorizedAccessException>(() => harness.Settings
             .SetAsync(PolicySettingsDocuments.Document, RuntimeInstall, "true", SettingLayer.System, settingsApp)
@@ -42,7 +42,7 @@ public sealed class PolicySettingsDocumentsTests
     {
         SettingsFilesHarness harness = new();
         await harness.LoginAsync(harness.Alice);
-        await harness.WriteAsRootAsync("/home/alice/.config/hackeros/policy.config", "allowRuntimePackageInstall=true\n");
+        await harness.WriteAsRootAsync("/home/alice/.config/kazoos/policy.config", "allowRuntimePackageInstall=true\n");
 
         LayeredConfigSnapshot policy = await harness.Settings.ReadAsync(PolicySettingsDocuments.Document);
 
@@ -78,7 +78,7 @@ public sealed class PolicySettingsDocumentsTests
 
         Assert.Equal("false", policy.Values[RuntimeInstall]);
         LayeredConfigWarning warning = Assert.Single(policy.Warnings);
-        Assert.Equal("settings: /etc/hackeros/policy.config:1: invalid value for 'allowRuntimePackageInstall' (expected boolean), using default", warning.ToLogLine());
+        Assert.Equal("settings: /etc/kazoos/policy.config:1: invalid value for 'allowRuntimePackageInstall' (expected boolean), using default", warning.ToLogLine());
     }
 
     [Fact]

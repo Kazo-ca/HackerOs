@@ -14,11 +14,11 @@ dans **Paramètres ▸ Apparence ▸ Curseurs**. Trois thèmes sont intégrés :
 
 ## Créer un thème
 
-1. Créez un dossier dans `~/.config/hackeros/cursors/` (pour vous) ou, en
-   administrateur, dans `/etc/hackeros/cursors/` (pour tous) :
+1. Créez un dossier dans `~/.config/kazoos/cursors/` (pour vous) ou, en
+   administrateur, dans `/etc/kazoos/cursors/` (pour tous) :
 
    ```sh
-   mkdir -p ~/.config/hackeros/cursors/neon-crypt
+   mkdir -p ~/.config/kazoos/cursors/neon-crypt
    ```
 
 2. Copiez-y vos images PNG (au plus 128 × 128 pixels et 64 Kio chacune ;
@@ -41,13 +41,13 @@ dans **Paramètres ▸ Apparence ▸ Curseurs**. Trois thèmes sont intégrés :
    ```
 
 4. Ouvrez Paramètres ▸ Apparence : le thème apparaît sous **Curseurs** ;
-   choisissez-le. Le choix est écrit dans `~/.config/hackeros/cursors.config`
+   choisissez-le. Le choix est écrit dans `~/.config/kazoos/cursors.config`
    (`theme=neon-crypt`) et s'applique tout de suite.
 
-Un pack de thèmes du Hack Store apporte son thème de curseurs dans son dossier
+Un pack de thèmes du Kazo OS Store apporte son thème de curseurs dans son dossier
 `cursors/` ; il est lu là où le pack est installé
-(`/usr/share/hackeros/theme-packs/<pack>/cursors/` puis
-`~/.local/share/hackeros/theme-packs/<pack>/cursors/`,
+(`/usr/share/kazoos/theme-packs/<pack>/cursors/` puis
+`~/.local/share/kazoos/theme-packs/<pack>/cursors/`,
 [ADR 0213](../dev/adr/0213-theme-packs-build.md)), sans copie.
 
 Règles :

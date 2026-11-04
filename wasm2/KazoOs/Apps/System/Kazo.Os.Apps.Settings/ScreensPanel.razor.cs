@@ -22,7 +22,7 @@ namespace Kazo.Os.Apps.Settings;
 /// window, a full screen or its prompt only during the click, so each button calls it straight away.
 /// </para>
 /// <para>
-/// Both choices go to the user layer, <c>~/.config/hackeros/screens.config</c>, through
+/// Both choices go to the user layer, <c>~/.config/kazoos/screens.config</c>, through
 /// <see cref="KazoSettings.OpenSystemAsync(IAppExecutionContext, string, CancellationToken)"/>: the
 /// screen service follows <c>primary-taskbar</c> at once. The panel uses the public SDK only; moving a
 /// window to another screen stays in the window menus.
@@ -53,7 +53,7 @@ public sealed partial class ScreensPanel
     internal const int MaxScreenNumber = 9;
 
     /// <summary>Where the user layer lives, as shown to the user.</summary>
-    internal const string UserFilePath = "~/.config/hackeros/screens.config";
+    internal const string UserFilePath = "~/.config/kazoos/screens.config";
 
     private static readonly string[] TaskbarModes = [PrimaryTaskbarAll, PrimaryTaskbarOwn];
 

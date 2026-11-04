@@ -4,15 +4,15 @@
 
 @*
     Settings > Appearance > Cursors (ADR 0205): the built-in cursor themes and the theme folders of
-    /etc/hackeros/cursors/ and ~/.config/hackeros/cursors/, chosen in ~/.config/hackeros/cursors.config.
+    /etc/kazoos/cursors/ and ~/.config/kazoos/cursors/, chosen in ~/.config/kazoos/cursors.config.
     The shell draws the chosen theme on the whole surface as soon as the file changes.
 *@
 <div class="setting-group cursor-panel">
     <h4 id="cursor-theme-title">@L["Cursors.Title"] <SettingOriginBadge Source="@SourceOf()" IsLocked="@IsLocked" /></h4>
     <p class="setting-desc">
         @LocalizedMarkup.Format(L["Cursors.Description"],
-            LocalizedMarkup.Code("~/.config/hackeros/cursors/"),
-            LocalizedMarkup.Code("/etc/hackeros/cursors/"),
+            LocalizedMarkup.Code("~/.config/kazoos/cursors/"),
+            LocalizedMarkup.Code("/etc/kazoos/cursors/"),
             LocalizedMarkup.Code(CursorThemeFile.IndexFileName))
     </p>
     @if (!_loaded)

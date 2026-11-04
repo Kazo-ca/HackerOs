@@ -11,7 +11,7 @@ namespace Kazo.Os.Commands.Renice;
 public sealed class ReniceApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.renice";
+    public override string Id => "org.kazoos.commands.renice";
 
     /// <inheritdoc />
     public override string Name => "renice";
@@ -23,7 +23,7 @@ public sealed class ReniceApp : AppDefinition
     public override Type EntryPoint => typeof(ReniceCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Alter the priority of running processes";

@@ -66,7 +66,7 @@ public sealed class WebAppUrlsTests
     [InlineData("intranet.hack", true)]
     [InlineData("INTRANET.HACK", true)]
     [InlineData("hack.example.com", false)]
-    [InlineData("hackeros.net", false)]
+    [InlineData("kazoos.net", false)]
     public void IsInternalDomain_matches_the_hack_tld(string host, bool expected) =>
         Assert.Equal(expected, WebAppUrls.IsInternalDomain(host));
 }

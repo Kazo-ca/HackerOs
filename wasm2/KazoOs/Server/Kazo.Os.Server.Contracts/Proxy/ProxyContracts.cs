@@ -9,7 +9,7 @@ namespace Kazo.Os.Server.Contracts.Proxy;
 // "network.real.access" capability, and the server checks on its own that the app is granted
 // network.real.access (ADR 0102 §4): client capability decisions are NEVER trusted.
 //
-// Security rules enforced SERVER-SIDE, with their defaults (HackerOs:Proxy in appsettings.json):
+// Security rules enforced SERVER-SIDE, with their defaults (KazoOs:Proxy in appsettings.json):
 //   - Loopback (127.0.0.0/8, ::1), link-local and cloud metadata (169.254.0.0/16, fe80::/10)
 //     → always blocked
 //   - Private ranges (10/8, 172.16/12, 192.168/16, 100.64/10, fc00::/7) → blocked unless
@@ -19,7 +19,7 @@ namespace Kazo.Os.Server.Contracts.Proxy;
 //   - Maximum redirect hops: 5; request and response bodies: 10 MiB each
 //   - Maximum request duration: 30 seconds
 //   - Maximum concurrent requests per device: 8; open TCP/UDP streams per device: 4
-//   - Simulated-domain hostnames (.hackeros.local, .sim, .hackeros) → refused
+//   - Simulated-domain hostnames (.kazoos.local, .sim, .kazoos) → refused
 //     (prevents simulated-network traffic from accidentally reaching this proxy — P5-PROXY-006)
 // =============================================================================
 
@@ -243,7 +243,7 @@ public static class ProxyErrorCode
     /// </summary>
     public const string GrantMissing = "GRANT_MISSING";
 
-    /// <summary>The operator turned the relay off (<c>HackerOs:Proxy:Enabled</c> is <c>false</c>); <c>503</c>.</summary>
+    /// <summary>The operator turned the relay off (<c>KazoOs:Proxy:Enabled</c> is <c>false</c>); <c>503</c>.</summary>
     public const string RelayDisabled = "RELAY_DISABLED";
 
     /// <summary>The request body does not match its announced size or SHA-256 hash.</summary>
@@ -255,7 +255,7 @@ public static class ProxyErrorCode
     /// <summary>The target did not answer the connection attempt (unreachable or filtered).</summary>
     public const string HostUnreachable = "HOST_UNREACHABLE";
 
-    /// <summary>The target hostname ends in a simulated-domain suffix (.hackeros.local, .sim).</summary>
+    /// <summary>The target hostname ends in a simulated-domain suffix (.kazoos.local, .sim).</summary>
     public const string SimulatedDomainBlocked = "SIMULATED_DOMAIN_BLOCKED";
 
     /// <summary>DNS rebinding protection: the address resolved differently after TTL.</summary>
@@ -290,7 +290,7 @@ public sealed record ProxyErrorResponse(
 /// <param name="AllowedProtocols">List of enabled protocols for this device.</param>
 /// <param name="AuditRetentionDays">Number of days proxy audit entries are retained.</param>
 /// <param name="OperatorWeakeningWarnings">Non-empty when the operator has disabled default safety rules.</param>
-/// <param name="Enabled">Whether the relay is on (<c>HackerOs:Proxy:Enabled</c>).</param>
+/// <param name="Enabled">Whether the relay is on (<c>KazoOs:Proxy:Enabled</c>).</param>
 /// <param name="HttpPorts">Ports an HTTP request may target; empty when <paramref name="AllowAllPorts"/>.</param>
 /// <param name="TcpPorts">Ports a TCP stream may target; empty when <paramref name="AllowAllPorts"/>.</param>
 /// <param name="UdpPorts">Ports a UDP stream may target; empty when <paramref name="AllowAllPorts"/>.</param>

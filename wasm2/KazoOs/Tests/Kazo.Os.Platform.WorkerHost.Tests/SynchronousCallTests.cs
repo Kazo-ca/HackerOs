@@ -98,7 +98,7 @@ public sealed class SynchronousCallTests
         WorkerConnection measured = os.Pool!.Connections.First(static worker => worker.IsMemoryMeasuredByBrowser);
         Assert.Equal(MeteredRuntime.Bytes, measured.RuntimeMemoryBytes);
         Assert.True(metered!.Measurements > 0);
-        ShellRun run = await os.RunAsync("cat /proc/hackeros/workers").WaitAsync(TimeSpan.FromSeconds(10));
+        ShellRun run = await os.RunAsync("cat /proc/kazoos/workers").WaitAsync(TimeSpan.FromSeconds(10));
         Assert.Contains($" {MeteredRuntime.Bytes / 1024} ", run.Stdout, StringComparison.Ordinal);
     }
 

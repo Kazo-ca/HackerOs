@@ -12,13 +12,13 @@ namespace Kazo.Os.AppSdk.IO;
 /// is never copied or moved into itself; an error on one source never stops the others.
 /// </summary>
 /// <remarks>
-/// Every member runs as the ambient app through the public <c>Hack*</c> API (ADR 0043), so the app's
+/// Every member runs as the ambient app through the public <c>Kazo*</c> API (ADR 0043), so the app's
 /// capabilities and the file permissions apply to each step. Call it from an app event handler (a
 /// <c>KazoComponentBase</c> handler is in scope) or inside <see cref="KazoExecutionContext.Enter"/>.
 /// The failure reasons are written in the language of that ambient app's process (ADR 0104).
 /// A window app asks the user about a name conflict with
 /// <c>IDialogService.AsFileConflictResolver</c> (<c>Kazo.Os.AppSdk.Blazor</c>), which shows the
-/// dialog of the <c>hackeros.file-dialogs</c> provider; a command passes its own resolver or none.
+/// dialog of the <c>kazoos.file-dialogs</c> provider; a command passes its own resolver or none.
 /// </remarks>
 public static class KazoFileOperations
 {

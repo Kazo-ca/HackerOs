@@ -24,7 +24,7 @@ public sealed class ServiceSampleApp : AppDefinition
     public override Type EntryPoint => typeof(SampleTickerService);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description =>

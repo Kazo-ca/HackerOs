@@ -25,7 +25,7 @@ public static class WorkerProcessServiceCollectionExtensions
 
     /// <summary>
     /// Registers the worker pool, the <see cref="IRemoteProcessHost"/> the orchestrator uses, the
-    /// worker view of <c>/proc/hackeros/workers</c> and the measurement decorators. Requires an
+    /// worker view of <c>/proc/kazoos/workers</c> and the measurement decorators. Requires an
     /// <see cref="IWebWorkerRuntime"/>, <see cref="ISimulationClock"/>, <see cref="IProcessManager"/>
     /// and <see cref="LogFileWriter"/> in the container.
     /// </summary>

@@ -6,7 +6,7 @@
 
 Accepted on 2026-10-17, with the `web/14-cookie-header` work item.
 
-- **Plan phase:** web phase, continued ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Plan phase:** web phase, continued ([`asp-kazo-plan.md`](../plans/asp-kazo-plan.md)).
 - **Completes:** ADR 0074 §1 and §2 (HTTP exchanges of the network gateway,
   delivery to the listening process) and ADR 0056 §6 (`HackHttpClient` and its
   `HackCookieContainer`). Replaces no decision.
@@ -18,7 +18,7 @@ cookies of the client's container (`HackHttpRequest.Cookies`, the "cookie jar").
 A `Cookie` header that the app wrote itself, for example
 `curl -H 'Cookie: .HackSession=...'`, was removed before delivery to the local
 site and never reached the simulated network's controllers, which only read
-`SimulatedHttpRequest.Cookies`. Noted by `web/6` (`docs/asp-hack-mvc.md`),
+`SimulatedHttpRequest.Cookies`. Noted by `web/6` (`docs/asp-kazo-mvc.md`),
 the limitation prevented replaying a session or an anti-forgery token by
 hand from the terminal, which any real `curl` does.
 

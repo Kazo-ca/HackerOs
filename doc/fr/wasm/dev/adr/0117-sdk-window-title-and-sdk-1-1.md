@@ -130,7 +130,7 @@ les autres et après la fusion de `v3/base` dans `v3.1/base` (voir
   paquet n'est pas reconstruit ;
 - la section « Ruptures hors SDK » de [`sdk-packages.md`](../../framework/sdk-packages.md)
   liste les lignes `*REMOVED*` de la série, et
-  [`building-on-hackeros.md`](../../framework/building-on-hackeros.md) dit ce que la 1.1
+  [`building-on-kazoos.md`](../../framework/building-on-kazoos.md) dit ce que la 1.1
   ajoute ;
 - le chantier refait la vérification complète de `v3/16-final` (build Debug et
   Release, toutes les suites, `build/publish-trimmed.sh`, `build/verify-hosts.sh`)
@@ -146,7 +146,7 @@ les autres et après la fusion de `v3/base` dans `v3.1/base` (voir
   une image dans Hack Paint, voir son nom dans la barre de titre et la barre des
   tâches, la modifier et voir `*`.
 - `app-sdk.md`, `sdk-reference.md`, `sdk-developer-guide.md`, `window-model.md`
-  et `hack-paint.md` décrivent l'API et la convention.
+  et `kazo-paint.md` décrivent l'API et la convention.
 - Le dépôt du jeu (ADR 0092) peut utiliser l'API en compilant contre 1.1.0 ; ses
   apps compilées en 1.0.0 continuent de tourner.
 

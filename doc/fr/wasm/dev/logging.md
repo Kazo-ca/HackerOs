@@ -92,7 +92,7 @@ HostExceptionReporter ───────────────────�
   administrateur (ADR 0042), puis un second clic réussit.
 - **Écart temporaire avec l'ADR 0045 §6 :** le lecteur passe par
   `IAppFileSystemGateway` et non par `KazoFile`/`KazoFileSystemWatcher`, qui
-  arrivent avec la branche `rebuild/1-file-api` (ADR 0043). Le passage à `Hack*`
+  arrivent avec la branche `rebuild/1-file-api` (ADR 0043). Le passage à `Kazo*`
   se fera une fois cette API mergée ; le comportement ne change pas.
 
 ## Tests de contrat

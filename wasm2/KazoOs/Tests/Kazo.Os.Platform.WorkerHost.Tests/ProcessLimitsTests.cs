@@ -176,7 +176,7 @@ public sealed class ProcessLimitsTests
         Assert.Equal(ProcessExitReason.CpuLimitExceeded, os.Manager.GetHistory().Last(p => p.AppId == StressAppId).ExitReason);
     }
 
-    private const string StressAppId = "org.hackeros.commands.stress";
+    private const string StressAppId = "org.kazoos.commands.stress";
 
     private static async Task<OsFixture> StartAsync(bool workers) =>
         workers ? await WorkerPoolTests.StartedAsync() : await OsFixture.CreateAsync(workers: false);

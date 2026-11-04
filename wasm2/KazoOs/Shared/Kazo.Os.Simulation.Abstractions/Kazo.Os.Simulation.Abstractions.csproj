@@ -5,7 +5,7 @@
   <PropertyGroup>
     <PackageId>Kazo.Os.Simulation.Abstractions</PackageId>
     <Description>Contracts of the simulated machine (file system, processes, sessions, network, events) exposed by the Kazo OS SDK. Not referenced directly by apps.</Description>
-    <PackageTags>hackeros;simulation;contracts</PackageTags>
+    <PackageTags>kazoos;simulation;contracts</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

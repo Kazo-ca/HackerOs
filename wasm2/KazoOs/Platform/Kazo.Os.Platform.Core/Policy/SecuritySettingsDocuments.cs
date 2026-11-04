@@ -5,7 +5,7 @@ namespace Kazo.Os.Platform.Core.Policy;
 
 /// <summary>
 /// What the OS does when a non-system app declares a dangerous capability (ADR 0049 section 3,
-/// key <c>dangerousCapabilities</c> of <c>/etc/hackeros/security.config</c>).
+/// key <c>dangerousCapabilities</c> of <c>/etc/kazoos/security.config</c>).
 /// </summary>
 public enum DangerousCapabilityPolicy
 {
@@ -23,7 +23,7 @@ public enum DangerousCapabilityPolicy
 }
 
 /// <summary>
-/// Defines the administrator security document <c>/etc/hackeros/security.config</c> (ADR 0049
+/// Defines the administrator security document <c>/etc/kazoos/security.config</c> (ADR 0049
 /// section 3).
 /// </summary>
 /// <remarks>
@@ -67,7 +67,7 @@ public static class SecuritySettingsDocuments
     /// <see cref="SettingsStoreToFilesMigration.MigrateSystemAsync"/>).
     /// </summary>
     public static string DefaultContent { get; } =
-        "# /etc/hackeros/security.config\n"
+        "# /etc/kazoos/security.config\n"
         + "# prompt : une app non système qui demande une capacité dangereuse ouvre la\n"
         + "#          fenêtre d'approbation administrateur (défaut).\n"
         + "# block  : les capacités dangereuses ne sont jamais accordées aux apps non système.\n"

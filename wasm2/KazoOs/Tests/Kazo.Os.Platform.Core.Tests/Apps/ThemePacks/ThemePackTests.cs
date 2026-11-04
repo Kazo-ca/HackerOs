@@ -3,16 +3,17 @@ using System.Text;
 using Kazo.Os.Platform.Core.Apps.Packages;
 using Kazo.Os.Platform.Core.Apps.ThemePacks;
 using Kazo.Os.Platform.Core.Tests.Appearance;
+using Kazo.Os.Theming.Abstractions;
 
 namespace Kazo.Os.Platform.Core.Tests.Apps.ThemePacks;
 
-/// <summary>The <c>.hacktheme</c> format and its "data only" checks (ADR 0190 §1, §3; ADR 0213 §1).</summary>
+/// <summary>The <c>.kazotheme</c> format and its "data only" checks (ADR 0190 §1, §3; ADR 0213 §1).</summary>
 public sealed class ThemePackTests
 {
     internal const string PackId = "org.example.neon";
 
     internal static string ThemeText(string id = "neon-night") =>
-        $"[theme]\nid = {id}\nname = Neon Night\nbase = hackeros\n\n[tokens]\n--hos-accent = #ff00ff\n";
+        $"[theme]\nid = {id}\nname = Neon Night\nbase = kazoos\n\n[tokens]\n--hos-accent = #ff00ff\n";
 
     /// <summary>A pack with every part: one theme, one wallpaper, an icon pack, a sound theme and a cursor theme.</summary>
     internal static Dictionary<string, byte[]> FullPack(string themeId = "neon-night") => new(StringComparer.Ordinal)
@@ -21,21 +22,22 @@ public sealed class ThemePackTests
         [$"themes/{themeId}.theme"] = Encoding.UTF8.GetBytes(ThemeText(themeId)),
         ["wallpapers/grid.png"] = CursorThemeFileTests.Png(64, 64),
         ["icons/icon-pack.json"] = Encoding.UTF8.GetBytes("""{"id":"neon-icons","name":"Neon icons"}"""),
-        ["icons/apps/org.hackeros.terminal.png"] = CursorThemeFileTests.Png(32, 32),
+        ["icons/apps/org.kazoos.terminal.png"] = CursorThemeFileTests.Png(32, 32),
         ["sounds/index.theme"] = Encoding.UTF8.GetBytes("[Sound Theme]\nName=Neon\nDirectories=stereo\n"),
         ["sounds/stereo/message-new-instant.oga"] = [.. "OggS"u8, 0, 0, 0, 0],
         ["cursors/cursor.theme"] = Encoding.UTF8.GetBytes("[cursor-theme]\nid = neon-crypt\nname = Neon Crypt\n\n[cursors]\ndefault = arrow.png 2 1\n"),
         ["cursors/arrow.png"] = CursorThemeFileTests.Png(32, 32),
     };
 
-    /// <summary>Builds a <c>.hacktheme</c>: <c>hackeros-theme-pack.json</c> listing every file with its SHA-256.</summary>
+    /// <summary>Builds a <c>.kazotheme</c>: <c>kazoos-theme-pack.json</c> listing every file with its SHA-256.</summary>
     internal static byte[] Build(
         IReadOnlyDictionary<string, byte[]> files,
         string id = PackId,
         string version = "1.0.0",
         string name = "Neon",
         IReadOnlyDictionary<string, byte[]>? unlisted = null,
-        string? overrideHash = null)
+        string? overrideHash = null,
+        string manifestFileName = ThemePackLayout.ManifestFileName)
     {
         string listed = string.Join(',', files.Select(file => $"\"{file.Key}\":\"{overrideHash ?? AppPackage.Sha256(file.Value)}\""));
         byte[] manifest = Encoding.UTF8.GetBytes(
@@ -43,7 +45,7 @@ public sealed class ThemePackTests
         using MemoryStream archive = new();
         using (ZipArchive zip = new(archive, ZipArchiveMode.Create, leaveOpen: true))
         {
-            foreach ((string path, byte[] bytes) in files.Prepend(new("hackeros-theme-pack.json", manifest)).Concat(unlisted ?? new Dictionary<string, byte[]>()))
+            foreach ((string path, byte[] bytes) in files.Prepend(new(manifestFileName, manifest)).Concat(unlisted ?? new Dictionary<string, byte[]>()))
             {
                 using Stream stream = zip.CreateEntry(path).Open();
                 stream.Write(bytes);
@@ -65,6 +67,16 @@ public sealed class ThemePackTests
         Assert.Equal(
             ThemePackParts.Themes | ThemePackParts.Wallpapers | ThemePackParts.Icons | ThemePackParts.Sounds | ThemePackParts.Cursors,
             pack.Parts);
+        Assert.Contains("cursors/arrow.png", pack.Files.Keys);
+    }
+
+    [Fact]
+    public void A_pack_made_before_the_rename_reads_with_its_kazoos_theme_pack_json()
+    {
+        // ADR 0228 §2: packs published before Kazo OS name their description hackeros-theme-pack.json.
+        ThemePack pack = ThemePack.Read(Build(FullPack(), manifestFileName: ThemePackLayout.LegacyManifestFileName));
+
+        Assert.Equal(PackId, pack.Id);
         Assert.Contains("cursors/arrow.png", pack.Files.Keys);
     }
 

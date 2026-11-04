@@ -18,7 +18,7 @@ public sealed class AppManifestContextMenusTests
             },
             Entry("convert") with { Intent = null, Scopes = ["file", "directory"], AfterGroup = "copy" },
             Entry("to-png") with { Parent = "convert", Scopes = ["file"], Selection = AppContextMenus.SelectionEach },
-            Entry("terminal") with { Scopes = ["desktop", "background"], First = true, Target = "org.hackeros.terminal", Intent = "org.hackeros.terminal.open-here.v1" });
+            Entry("terminal") with { Scopes = ["desktop", "background"], First = true, Target = "org.kazoos.terminal", Intent = "org.kazoos.terminal.open-here.v1" });
 
         ManifestValidationResult result = AppManifestValidator.Validate(manifest);
         Assert.True(result.IsValid, string.Join(", ", result.Errors.Select(static error => error.Code)));
@@ -81,7 +81,7 @@ public sealed class AppManifestContextMenusTests
             "manifest.context-menu.title.english" => Entry("extract") with { Titles = [new("fr", "Extraire")] },
             "manifest.context-menu.target.invalid" => Entry("extract") with { Target = "not an app" },
             "manifest.context-menu.intent.required" => Entry("extract") with { Intent = null },
-            "manifest.context-menu.intent.invalid" => Entry("extract") with { Target = "org.hackeros.terminal", Intent = "open" },
+            "manifest.context-menu.intent.invalid" => Entry("extract") with { Target = "org.kazoos.terminal", Intent = "open" },
             "manifest.context-menu.scope.invalid" => Entry("extract") with { Scopes = ["everywhere"] },
             "manifest.context-menu.selection.invalid" => Entry("extract") with { Selection = "some" },
             "manifest.context-menu.type.invalid" => Entry("extract") with { Types = ["ZIP"] },

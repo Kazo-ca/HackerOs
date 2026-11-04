@@ -9,7 +9,7 @@ namespace Kazo.Os.UI.E2E.Tests;
 /// ADR 0116 as amended by ADR 0122: a window moved and resized with the pointer reopens with the
 /// same size, at its cascade slot (the position is not remembered, as under GNOME), after being
 /// closed, and again after the page is reloaded and the user signs back in, because the size lives
-/// in <c>~/.local/state/hackeros/windows/&lt;appId&gt;.config</c> on the virtual disk.
+/// in <c>~/.local/state/kazoos/windows/&lt;appId&gt;.config</c> on the virtual disk.
 /// </summary>
 public sealed class WindowGeometryRestoreTests(ITestOutputHelper output)
 {

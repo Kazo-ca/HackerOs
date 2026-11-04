@@ -86,7 +86,7 @@ to change culture:
   (Infrastructure.Browser);
 - in Web Workers, `BrowserWorkerAssemblyLoader.LoadLazyAsync`, once.
 
-An app installed by `hackpkg` or the Hack Store has its satellites in its
+An app installed by `kazopkg` or the Kazo OS Store has its satellites in its
 package (`lib/<culture>/<assembly>.resources.dll`, put there by `KazoOsPack`);
 the OS loads them before the app's first render, for each Kazo OS language
 (`InstalledAppSatellites`, [ADR 0222](../dev/adr/0222-installed-app-satellite-assemblies.md)).
@@ -104,7 +104,7 @@ The manifest generator reads `Resources/AppManifest.<culture>.resx`:
 | `Terminal.Usage` | `TerminalCommandManifest.Usage` |
 
 In a project with several apps (the commands), each key is prefixed with the
-id: `org.hackeros.commands.ls.Description`.
+id: `org.kazoos.commands.ls.Description`.
 
 The titles of file menu entries (ADR 0159 §3) also live in these
 files, but separately: English in the **neutral** file

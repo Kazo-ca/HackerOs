@@ -18,7 +18,7 @@ public sealed partial class InMemoryProcessManagerTests
     public void A_root_process_gets_the_kernel_defaults_and_a_child_inherits_its_parent_s_limits()
     {
         Fixture fixture = new();
-        ProcessRecord parent = fixture.Manager.Start(fixture.RequestFor("com.hackeros.terminal"));
+        ProcessRecord parent = fixture.Manager.Start(fixture.RequestFor("com.kazoos.terminal"));
         Assert.True(fixture.Manager.ResourceLimits.TryGet(parent.Pid, out ProcessResourceLimits defaults));
         Assert.Equal(ProcessResourceLimits.KernelDefaults, defaults);
         Assert.Equal(new ResourceLimit(1024, 524288), defaults.NoFile);
@@ -27,7 +27,7 @@ public sealed partial class InMemoryProcessManagerTests
 
         Assert.Equal(ResourceLimitChangeResult.Applied,
             fixture.Manager.ResourceLimits.TrySet(parent.Pid, ResourceLimitKind.NoFile, new ResourceLimit(64, 128), privileged: false));
-        ProcessRecord child = fixture.Manager.Start(fixture.RequestFor("com.hackeros.child", parent.Pid));
+        ProcessRecord child = fixture.Manager.Start(fixture.RequestFor("com.kazoos.child", parent.Pid));
 
         Assert.Equal(new ResourceLimit(64, 128), LimitsOf(fixture.Manager, child.Pid).NoFile);
         fixture.Manager.Kill(child.Pid);
@@ -38,7 +38,7 @@ public sealed partial class InMemoryProcessManagerTests
     public void Setrlimit_rules_apply_to_the_table()
     {
         Fixture fixture = new();
-        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.hackeros.terminal"));
+        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.kazoos.terminal"));
         IProcessResourceLimitTable limits = fixture.Manager.ResourceLimits;
 
         // Lowering is always allowed; the soft value goes back up to the hard one freely.
@@ -60,7 +60,7 @@ public sealed partial class InMemoryProcessManagerTests
         Fixture fixture = new();
         InMemoryProcessManager manager = new(
             fixture.Clock, fixture.Session, fixture.EventBus, 200, environments: null, new InMemoryProcessResourceLimitTable(enabled: false));
-        ProcessRecord process = manager.Start(fixture.RequestFor("com.hackeros.terminal"));
+        ProcessRecord process = manager.Start(fixture.RequestFor("com.kazoos.terminal"));
 
         Assert.False(manager.ResourceLimits.IsEnabled);
         Assert.Equal(ProcessResourceLimits.None, LimitsOf(manager, process.Pid));
@@ -72,18 +72,18 @@ public sealed partial class InMemoryProcessManagerTests
     public void Starting_beyond_the_nproc_limit_fails_with_eagain_unless_exempt()
     {
         Fixture fixture = new();
-        ProcessRecord shell = fixture.Manager.Start(fixture.RequestFor("com.hackeros.terminal"));
+        ProcessRecord shell = fixture.Manager.Start(fixture.RequestFor("com.kazoos.terminal"));
         fixture.Manager.ResourceLimits.TrySet(shell.Pid, ResourceLimitKind.NProc, new ResourceLimit(2, 2), privileged: false);
-        fixture.Manager.Start(fixture.RequestFor("com.hackeros.first", shell.Pid));
+        fixture.Manager.Start(fixture.RequestFor("com.kazoos.first", shell.Pid));
 
         ProcessLimitExceededException refused = Assert.Throws<ProcessLimitExceededException>(
-            () => fixture.Manager.Start(fixture.RequestFor("com.hackeros.second", shell.Pid)));
+            () => fixture.Manager.Start(fixture.RequestFor("com.kazoos.second", shell.Pid)));
         Assert.Equal("EAGAIN", refused.ErrorName);
         Assert.Equal(2, refused.Limit);
 
         // An elevated root (CAP_SYS_RESOURCE) and a system-scope service are not held.
-        Assert.NotNull(fixture.Manager.Start(fixture.RequestFor("com.hackeros.sudo", shell.Pid) with { ResourceLimitExempt = true }));
-        Assert.NotNull(fixture.Manager.Start(fixture.RequestFor("com.hackeros.svc", shell.Pid) with { SystemScope = true }));
+        Assert.NotNull(fixture.Manager.Start(fixture.RequestFor("com.kazoos.sudo", shell.Pid) with { ResourceLimitExempt = true }));
+        Assert.NotNull(fixture.Manager.Start(fixture.RequestFor("com.kazoos.svc", shell.Pid) with { SystemScope = true }));
     }
 
     [Fact]
@@ -92,7 +92,7 @@ public sealed partial class InMemoryProcessManagerTests
         Fixture fixture = new();
         ProcessResourceLimits session = ProcessResourceLimits.KernelDefaults.With(ResourceLimitKind.Cpu, new ResourceLimit(60, 120));
 
-        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.hackeros.terminal") with { ResourceLimits = session });
+        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.kazoos.terminal") with { ResourceLimits = session });
 
         Assert.Equal(new ResourceLimit(60, 120), LimitsOf(fixture.Manager, process.Pid).Cpu);
     }
@@ -101,7 +101,7 @@ public sealed partial class InMemoryProcessManagerTests
     public void Descriptors_take_the_lowest_free_number_and_stop_at_the_nofile_limit()
     {
         Fixture fixture = new();
-        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.hackeros.terminal"));
+        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.kazoos.terminal"));
         IProcessFileDescriptorTable descriptors = fixture.Manager.FileDescriptors;
         fixture.Manager.ResourceLimits.TrySet(process.Pid, ResourceLimitKind.NoFile, new ResourceLimit(5, 5), privileged: false);
 
@@ -126,7 +126,7 @@ public sealed partial class InMemoryProcessManagerTests
     public async Task A_read_holds_a_descriptor_until_its_handle_is_disposed()
     {
         Fixture fixture = new();
-        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.hackeros.terminal"));
+        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.kazoos.terminal"));
         fixture.Manager.ResourceLimits.TrySet(process.Pid, ResourceLimitKind.NoFile, new ResourceLimit(4, 4), privileged: false);
         AppFileSystemGateway gateway = new(fixture.FileSystem, fixture.Clock, RootContext(process.Pid), ["system"])
         {
@@ -180,7 +180,7 @@ public sealed partial class InMemoryProcessManagerTests
     public void The_enforcer_signals_at_the_soft_cpu_limit_once_and_kills_at_the_hard_one()
     {
         Fixture fixture = new();
-        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.hackeros.busy"));
+        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.kazoos.busy"));
         fixture.Manager.MarkRunning(process.Pid);
         fixture.Manager.ResourceLimits.TrySet(process.Pid, ResourceLimitKind.Cpu, new ResourceLimit(1, 3), privileged: false);
         FakeCpu cpu = new() { Seconds = 2 };
@@ -213,7 +213,7 @@ public sealed partial class InMemoryProcessManagerTests
     public void A_process_ended_by_sigxcpu_records_the_cpu_limit_as_its_reason()
     {
         Fixture fixture = new();
-        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.hackeros.busy"));
+        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.kazoos.busy"));
         fixture.Manager.MarkRunning(process.Pid);
         _ = fixture.Manager.StopAsync(process.Pid, TimeSpan.FromSeconds(5), ProcessExitReason.CpuLimitExceeded);
 
@@ -228,7 +228,7 @@ public sealed partial class InMemoryProcessManagerTests
 
     private static AppOperationContext RootContext(ProcessId? pid) => new()
     {
-        AppId = "org.hackeros.kernel",
+        AppId = "org.kazoos.kernel",
         UserId = "system",
         UserAuthority = AppAuthority.System,
         GrantedCapabilities = new HashSet<string>(AppCapabilities.All, StringComparer.Ordinal),

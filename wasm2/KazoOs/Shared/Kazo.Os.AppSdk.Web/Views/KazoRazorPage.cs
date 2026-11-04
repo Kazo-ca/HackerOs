@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Kazo.Os.AppSdk.Web.Views;
 
 /// <summary>
-/// Base of the <c>.cshtml</c> views, layouts and view starts of an ASP.Hack site (ADR 0086 §3), ASP.NET's
+/// Base of the <c>.cshtml</c> views, layouts and view starts of an ASP.Kazo site (ADR 0086 §3), ASP.NET's
 /// <c>RazorPage</c>. The Razor compiler of the SDK turns each <c>.cshtml</c> into a class deriving from
 /// it (the site's root <c>_ViewImports.cshtml</c>, added by the build, says
 /// <c>@inherits KazoRazorPage&lt;TModel&gt;</c>); its generated <see cref="ExecuteAsync"/> calls the
@@ -35,7 +35,7 @@ public abstract class KazoRazorPage
     public KazoViewContext ViewContext
     {
         get => _viewContext ?? throw new InvalidOperationException(
-            $"{GetType().Name} is an ASP.Hack .cshtml page: it is rendered by View() or PartialView(), which give it its KazoViewContext.");
+            $"{GetType().Name} is an ASP.Kazo .cshtml page: it is rendered by View() or PartialView(), which give it its KazoViewContext.");
         internal set => _viewContext = value;
     }
 
@@ -95,7 +95,7 @@ public abstract class KazoRazorPage
         }
     }
 
-    /// <summary>Writes an expression (<c>@Model.Title</c>): HTML-encoded, unless it is <see cref="IHackHtmlContent"/> (<c>Html.Raw</c>).</summary>
+    /// <summary>Writes an expression (<c>@Model.Title</c>): HTML-encoded, unless it is <see cref="IKazoHtmlContent"/> (<c>Html.Raw</c>).</summary>
     /// <param name="value">The value; <see langword="null"/> writes nothing.</param>
     public virtual void Write(object? value) => KazoHtml.Write(Output, value);
 
@@ -291,7 +291,7 @@ public abstract class KazoRazorPage
     /// </summary>
     /// <param name="type">The property type.</param>
     private protected virtual object? CreateHelper(Type type) =>
-        type == typeof(IHackUrlHelper) ? ViewContext.Url
+        type == typeof(IKazoUrlHelper) ? ViewContext.Url
         : type == typeof(KazoJsonHelper) ? new KazoJsonHelper(this)
         : type == typeof(KazoViewComponentHelper) ? new KazoViewComponentHelper(this)
         : null;
