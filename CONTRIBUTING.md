@@ -1,8 +1,8 @@
 > [Version française](CONTRIBUTING-fr.md)
 
-# Contributing to KazoOS
+# Contributing to Kazo OS
 
-Thank you for your interest in KazoOS, a simulated operating system that runs
+Thank you for your interest in Kazo OS, a simulated operating system that runs
 in the browser (C#, Blazor WebAssembly, .NET 10). This guide explains how to
 ask for a feature, report a bug and send a change.
 
@@ -45,7 +45,7 @@ app's repository.
 
 Open an issue with the
 [**Bug report** form](https://github.com/Kazo-ca/HackerOs/issues/new?template=bug_report.yml):
-steps to reproduce, what you expected, what happened, the KazoOS version
+steps to reproduce, what you expected, what happened, the Kazo OS version
 (Settings ▸ About, or the "What's new" window), the browser and the device.
 A screenshot or the browser console output helps a lot.
 
@@ -67,7 +67,7 @@ in the code, and read [`pitfalls.md`](doc/en/wasm/dev/pitfalls.md) before your
 first change.
 
 To build an app, a command or a site **outside** this repository, use the
-[KazoOS app template](https://github.com/Kazo-ca/HackerOs-AppTemplate) and
+[Kazo OS app template](https://github.com/Kazo-ca/HackerOs-AppTemplate) and
 [`building-on-hackeros.md`](doc/en/wasm/framework/building-on-hackeros.md).
 
 ## Where the code goes
@@ -160,4 +160,4 @@ GitHub Release and publishes the NuGet packages
 Open an issue with the `question` label, or read the
 [documentation index](doc/en/wasm/README.md).
 
-Thank you for contributing to KazoOS!
+Thank you for contributing to Kazo OS!

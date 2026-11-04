@@ -49,7 +49,7 @@ export async function prepare(timeoutMs) {
         try {
             registration = await container.register(`service-worker.js?${installedAppsOnlyQuery}`, { updateViaCache: 'none' });
         } catch (error) {
-            console.warn('KazoOS: the service worker of installed apps could not be registered', error);
+            console.warn('Kazo OS: the service worker of installed apps could not be registered', error);
             return false;
         }
     } else {
@@ -60,7 +60,7 @@ export async function prepare(timeoutMs) {
     if (registration && registration.active && !container.controller) {
         const answer = await askToClaim(registration.active, isDevelopmentHost() ? null : await serverReleaseVersion(), timeoutMs);
         if (!answer.claimed) {
-            console.warn('KazoOS: the service worker does not serve this page, installed apps keep their wwwroot/ files until the next restart', answer);
+            console.warn('Kazo OS: the service worker does not serve this page, installed apps keep their wwwroot/ files until the next restart', answer);
             return !!container.controller;
         }
     }

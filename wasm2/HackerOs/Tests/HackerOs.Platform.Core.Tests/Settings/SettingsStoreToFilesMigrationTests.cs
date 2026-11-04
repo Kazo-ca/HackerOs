@@ -21,7 +21,7 @@ public sealed class SettingsStoreToFilesMigrationTests
 
         string? appearance = await harness.ReadAsync("/etc/hackeros/appearance.config");
         Assert.NotNull(appearance);
-        Assert.StartsWith("# KazoOS default for every user.", appearance);
+        Assert.StartsWith("# Kazo OS default for every user.", appearance);
         Assert.Equal(FileAssociationSettingsDocuments.DefaultContent, await harness.ReadAsync("/etc/hackeros/file-associations.json"));
         Assert.NotNull(await harness.StatAsync(SettingsStoreToFilesMigration.SystemMarkerPath));
         Assert.Equal(0x01A4, (await harness.StatAsync("/etc/hackeros/policy.config"))!.Permissions.Mode);

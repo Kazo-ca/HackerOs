@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Publishes the installable KazoOS server for one runtime (ADR 0191 §4) and packs it with its
+# Publishes the installable Kazo OS server for one runtime (ADR 0191 §4) and packs it with its
 # install scripts: hackeros-server-<version>-<rid>.zip (Windows) or .tar.gz (Linux, macOS).
 #
 #   build/publish-server.sh --rid linux-x64 [--version 1.2.3] [--output artifacts/server]

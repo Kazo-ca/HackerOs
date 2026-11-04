@@ -76,7 +76,7 @@
     <value>Les métadonnées des fichiers sont stockées dans {0} (inodes), tandis que les liens de la hiérarchie des dossiers, qui associent {1} à {2}, se trouvent dans {3}. Le {4} absolu est résolu ci-dessous en parcourant l'arbre des liens des dossiers.</value>
   </data>
   <data name="Notice.Title" xml:space="preserve">
-    <value>Note d'architecture KazoOS :</value>
+    <value>Note d'architecture Kazo OS :</value>
   </data>
   <data name="Search.AriaLabel" xml:space="preserve">
     <value>Rechercher dans les enregistrements du magasin</value>
@@ -97,7 +97,7 @@
     <value>{0} (version {1})</value>
   </data>
   <data name="Site.Purpose" xml:space="preserve">
-    <value>Base de données du navigateur du site web {0} (ADR 0088) : IndexedDB du navigateur hôte, hors des fichiers de KazoOS. {1} enregistrements, environ {2}.</value>
+    <value>Base de données du navigateur du site web {0} (ADR 0088) : IndexedDB du navigateur hôte, hors des fichiers de Kazo OS. {1} enregistrements, environ {2}.</value>
   </data>
   <data name="Sites.Empty" xml:space="preserve">
     <value>Aucun site n'a encore de base de données.</value>

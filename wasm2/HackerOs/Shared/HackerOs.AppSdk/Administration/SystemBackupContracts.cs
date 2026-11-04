@@ -49,7 +49,7 @@ public enum HackBackupRestoreMode
 public sealed record HackBackupInfo(string FileName, long SizeBytes, int RecordCount, DateTimeOffset CreatedAtUtc);
 
 /// <summary>
-/// The chosen file is not a backup this KazoOS can restore: not an archive, damaged (its SHA-256
+/// The chosen file is not a backup this Kazo OS can restore: not an archive, damaged (its SHA-256
 /// does not match), or made by another database schema version. Nothing was changed.
 /// </summary>
 public sealed class HackBackupInvalidException : HackIOException

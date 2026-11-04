@@ -1,6 +1,6 @@
 namespace HackerOs.AppSdk.IO;
 
-/// <summary>Kind of a drive, the subset of <c>System.IO.DriveType</c> KazoOS produces.</summary>
+/// <summary>Kind of a drive, the subset of <c>System.IO.DriveType</c> Kazo OS produces.</summary>
 public enum HackDriveType
 {
     /// <summary>A fixed disk: the IndexedDB disk behind <c>/</c>.</summary>
@@ -114,7 +114,7 @@ public sealed class HackDriveInfo
     /// <summary>Gets the free space available to the app, in bytes; never negative.</summary>
     public long AvailableFreeSpace { get; }
 
-    /// <summary>Gets the total free space, in bytes; KazoOS reserves no blocks, so it equals <see cref="AvailableFreeSpace"/>.</summary>
+    /// <summary>Gets the total free space, in bytes; Kazo OS reserves no blocks, so it equals <see cref="AvailableFreeSpace"/>.</summary>
     public long TotalFreeSpace => AvailableFreeSpace;
 
     /// <summary>Gets the root directory of the drive.</summary>

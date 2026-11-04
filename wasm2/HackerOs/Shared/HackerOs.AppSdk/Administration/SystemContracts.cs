@@ -112,7 +112,7 @@ public sealed record HackStorageSnapshot(
             ["capturedAtUtc"] = CapturedAtUtc.ToString("o"),
             ["databaseName"] = DatabaseName,
             ["databaseVersion"] = DatabaseVersion,
-            ["architectureNote"] = "KazoOS uses inode-based storage (fsEntries stores attributes; fsLinks stores directory hierarchy). Resolved paths are computed below.",
+            ["architectureNote"] = "Kazo OS uses inode-based storage (fsEntries stores attributes; fsLinks stores directory hierarchy). Resolved paths are computed below.",
             ["totalResolvedFilePaths"] = ResolvedPaths.Count
         };
 

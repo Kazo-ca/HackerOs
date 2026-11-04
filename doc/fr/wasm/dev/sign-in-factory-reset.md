@@ -5,7 +5,7 @@
 ## Objet
 
 Quand plus personne ne connaît de mot de passe administrateur, l'écran de
-connexion propose d'effacer KazoOS dans ce navigateur et de recommencer à
+connexion propose d'effacer Kazo OS dans ce navigateur et de recommencer à
 la première configuration. Décision :
 [ADR 0226](adr/0226-forgot-password-factory-reset.md).
 
@@ -18,7 +18,7 @@ la première configuration. Décision :
    apps installées et leurs données, tous les réglages, thèmes et journaux.
 3. Taper `EFFACER` (`ERASE` en anglais) puis **Effacer et redémarrer**.
    **Annuler** ou Échap referme la boîte sans rien effacer.
-4. L'écran de démarrage s'affiche, la page se recharge et KazoOS repart sur
+4. L'écran de démarrage s'affiche, la page se recharge et Kazo OS repart sur
    la création du premier compte (ou **Démarrer en invité**).
 
 Le lien n'apparaît pas tant que l'invité est le seul compte : il n'a pas de
@@ -40,7 +40,7 @@ fichiers publiés, sans recompiler :
 }
 ```
 
-Le serveur KazoOS (`HackerOs.Server`) sert les fichiers publiés de l'OS tels
+Le serveur Kazo OS (`HackerOs.Server`) sert les fichiers publiés de l'OS tels
 quels : la même clé s'applique. Une valeur absente ou illisible vaut `true`.
 Un administrateur peut toujours effacer la machine depuis Paramètres ▸
 Système.

@@ -9,7 +9,7 @@ produced by a source generator). Plan:
 
 ## Purpose
 
-`Shared/HackerOs.AppSdk.Web` makes it possible to write an internal KazoOS site like
+`Shared/HackerOs.AppSdk.Web` makes it possible to write an internal Kazo OS site like
 an ASP.NET Core MVC site: a startup class, middlewares, controllers
 with `[HttpGet]`/`[HttpPost]`/`[HttpPut]`/`[HttpPatch]`/`[HttpDelete]`,
 model binding, `DataAnnotations` validation, JSON, text,

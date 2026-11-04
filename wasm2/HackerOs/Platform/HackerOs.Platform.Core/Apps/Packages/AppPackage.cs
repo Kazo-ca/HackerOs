@@ -20,7 +20,7 @@ public sealed class AppPackageException : Exception
 }
 
 /// <summary>
-/// A verified KazoOS app package (<c>.hackapp</c>, ADR 0182 §1): a zip archive holding
+/// A verified Kazo OS app package (<c>.hackapp</c>, ADR 0182 §1): a zip archive holding
 /// <c>hackeros-package.json</c>, <c>manifest.json</c>, <c>lib/*.dll</c>, the satellite assemblies
 /// <c>lib/&lt;culture&gt;/&lt;assembly&gt;.resources.dll</c> of those assemblies (ADR 0222) and
 /// <c>wwwroot/...</c>, where every file matches the SHA-256 the package lists.
@@ -194,7 +194,7 @@ public sealed class AppPackage
         Extract(archive, MaximumExtractedBytes, MaximumFiles, "package");
 
     /// <summary>
-    /// Unzips an archive into memory with the checks every KazoOS archive gets: safe relative
+    /// Unzips an archive into memory with the checks every Kazo OS archive gets: safe relative
     /// paths only, at most <paramref name="maximumFiles"/> files and <paramref name="maximumBytes"/>
     /// bytes once expanded, consistent sizes, no duplicate. Shared by <c>.hackapp</c> and
     /// <c>.hacktheme</c> (ADR 0213 §1).

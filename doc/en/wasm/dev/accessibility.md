@@ -9,7 +9,7 @@ manual checklist, dropped by Benoit).
 
 ## Purpose
 
-Three preferences, stored as files like every KazoOS setting, applied by the theme to the whole
+Three preferences, stored as files like every Kazo OS setting, applied by the theme to the whole
 desktop and read by apps that draw their own content:
 
 - **High contrast**: black surfaces, white text (21:1, and at least 7:1 for the palest text),

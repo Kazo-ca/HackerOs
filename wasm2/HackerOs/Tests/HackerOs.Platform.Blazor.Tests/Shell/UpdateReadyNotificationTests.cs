@@ -39,8 +39,8 @@ public sealed class UpdateReadyNotificationTests
         Assert.False(update.Show(_alice, "Ready", "Apps will close.", "Restart"));
         Assert.Empty(_queue.GetActive(_alice, _clock.UtcNow));
 
-        Assert.True(update.Show(_alice, "KazoOS 9.0 is available.", "Apps will close.", "Restart"));
-        Assert.Equal("KazoOS 9.0 is available.", Assert.Single(_queue.GetActive(_alice, _clock.UtcNow)).Title);
+        Assert.True(update.Show(_alice, "Kazo OS 9.0 is available.", "Apps will close.", "Restart"));
+        Assert.Equal("Kazo OS 9.0 is available.", Assert.Single(_queue.GetActive(_alice, _clock.UtcNow)).Title);
     }
 
     [Fact]

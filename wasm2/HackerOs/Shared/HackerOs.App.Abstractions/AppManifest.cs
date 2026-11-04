@@ -1,7 +1,7 @@
 namespace HackerOs.App.Abstractions;
 
 /// <summary>
-/// Describes one independently versioned KazoOS application package.
+/// Describes one independently versioned Kazo OS application package.
 /// </summary>
 public sealed record AppManifest
 {
@@ -46,7 +46,7 @@ public sealed record AppManifest
     /// <summary>Gets the supported App SDK version range.</summary>
     public required AppSdkCompatibilityManifest SdkCompatibility { get; init; }
 
-    /// <summary>Gets the optional compatible KazoOS operating system version bound.</summary>
+    /// <summary>Gets the optional compatible Kazo OS operating system version bound.</summary>
     public OsCompatibilityManifest? OsCompatibility { get; init; }
 
     /// <summary>Gets how the app presents itself in shell surfaces.</summary>

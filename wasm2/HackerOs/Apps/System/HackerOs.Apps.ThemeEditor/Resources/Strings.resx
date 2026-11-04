@@ -121,7 +121,7 @@
     <value>Use the base theme's value</value>
   </data>
   <data name="Filter.Themes" xml:space="preserve">
-    <value>KazoOS themes</value>
+    <value>Kazo OS themes</value>
   </data>
   <data name="Group.Animations.Intro" xml:space="preserve">
     <value>Transition durations. They are ignored when animations are turned off in Settings.</value>

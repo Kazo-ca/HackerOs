@@ -32,7 +32,7 @@ public sealed class PublishedPagesTests
         await PwaTestSupport.CreateLocalProfileAndReachDesktopAsync(page);
         await PwaTestSupport.OpenAppAsync(page, "Settings");
         await page.GetByRole(AriaRole.Tab, new() { Name = "About System", Exact = true }).ClickAsync();
-        await Assertions.Expect(page.Locator(".system-info-box")).ToContainTextAsync($"KazoOS {HackerOsVersion}");
+        await Assertions.Expect(page.Locator(".system-info-box")).ToContainTextAsync($"Kazo OS {HackerOsVersion}");
         await Assertions.Expect(page.Locator(".system-info-box a.about-repository")).ToHaveAttributeAsync("href", "https://github.com/Kazo-ca/HackerOs");
         await Assertions.Expect(page.Locator(".system-info-box a.about-author")).ToHaveAttributeAsync("href", "https://kazo.ca");
 

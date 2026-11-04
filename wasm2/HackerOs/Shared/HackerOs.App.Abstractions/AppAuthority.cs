@@ -19,7 +19,7 @@ public enum AppAuthority
 }
 
 /// <summary>
-/// Evaluates the ordered KazoOS authority hierarchy.
+/// Evaluates the ordered Kazo OS authority hierarchy.
 /// </summary>
 public static class AppAuthorityPolicy
 {

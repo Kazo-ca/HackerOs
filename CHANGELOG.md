@@ -2,7 +2,7 @@
 
 # Changelog
 
-The changes of KazoOS, by version. This file is generated from `wasm2/HackerOs/changes/` by
+The changes of Kazo OS, by version. This file is generated from `wasm2/HackerOs/changes/` by
 `wasm2/HackerOs/build/tools/collect-changes.sh` (ADR 0186): do not edit it by hand. Changes already
 deployed but not released yet are in the Settings ▸ What's new page of the OS.
 

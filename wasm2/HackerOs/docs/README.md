@@ -1,6 +1,6 @@
 # Documentation moved
 
-The KazoOS documentation now lives at the repository root, in English in
+The Kazo OS documentation now lives at the repository root, in English in
 [`doc/en/wasm/`](../../../doc/en/wasm/README.md) and in French in
 [`doc/fr/wasm/`](../../../doc/fr/wasm/README.md):
 

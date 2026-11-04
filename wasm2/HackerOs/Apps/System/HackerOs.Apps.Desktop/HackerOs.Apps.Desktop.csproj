@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <PackageId>HackerOs.Apps.Desktop</PackageId>
-    <Description>The KazoOS desktop: the icons of ~/Desktop, Home and Trash, drawn by the shell under the windows, to include in an OS host (ProjectReference or PackageReference, optionally IsSystemApp).</Description>
+    <Description>The Kazo OS desktop: the icons of ~/Desktop, Home and Trash, drawn by the shell under the windows, to include in an OS host (ProjectReference or PackageReference, optionally IsSystemApp).</Description>
     <PackageTags>hackeros;app</PackageTags>
   </PropertyGroup>
 

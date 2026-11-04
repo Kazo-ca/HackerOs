@@ -7,7 +7,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageId>HackerOs.Theming.Abstractions</PackageId>
-    <Description>Framework-neutral KazoOS theme catalog, identifiers, form factors, and persisted appearance preferences.</Description>
+    <Description>Framework-neutral Kazo OS theme catalog, identifiers, form factors, and persisted appearance preferences.</Description>
     <PackageTags>hackeros;theming;contracts;blazor</PackageTags>
   </PropertyGroup>
 

@@ -34,7 +34,7 @@ public static class HackEnvironment
     /// <exception cref="HackExecutionContextMissingException">No app context is active.</exception>
     public static string CurrentDirectory => HackExecutionContext.WorkingDirectory;
 
-    /// <summary>Gets the line terminator of KazoOS text files, <c>\n</c> as on Linux.</summary>
+    /// <summary>Gets the line terminator of Kazo OS text files, <c>\n</c> as on Linux.</summary>
     public static string NewLine => "\n";
 
     /// <summary>Gets the current process's PID.</summary>
@@ -139,7 +139,7 @@ public static class HackEnvironment
 }
 
 /// <summary>
-/// Well-known folders of a KazoOS user, modeled on <see cref="System.Environment.SpecialFolder"/>
+/// Well-known folders of a Kazo OS user, modeled on <see cref="System.Environment.SpecialFolder"/>
 /// and mapped to the Linux/XDG layout (ADR 0056, section 1).
 /// </summary>
 public enum HackSpecialFolder

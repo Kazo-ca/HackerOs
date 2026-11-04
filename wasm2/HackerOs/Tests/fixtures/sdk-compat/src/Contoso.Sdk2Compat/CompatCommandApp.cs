@@ -22,7 +22,7 @@ public sealed class CompatCommandApp : AppDefinition
     public override string PublisherId => "pub.contoso";
 
     /// <inheritdoc />
-    public override string Description => "A command compiled against KazoOS SDK 2.0.0.";
+    public override string Description => "A command compiled against Kazo OS SDK 2.0.0.";
 
     /// <inheritdoc />
     public override IReadOnlyList<string> Capabilities => [AppCapabilities.FileSystemUserHomeRead, AppCapabilities.FileSystemUserHomeWrite];

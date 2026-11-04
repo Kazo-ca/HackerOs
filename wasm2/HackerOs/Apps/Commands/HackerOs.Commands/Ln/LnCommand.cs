@@ -11,7 +11,7 @@ namespace HackerOs.Commands.Ln;
 /// <c>ln -s [-f] [-n] [-v] TARGET [LINK]</c>, <c>ln -s TARGET... DIRECTORY</c> (ADR 0064):
 /// creates symbolic links through <see cref="HackFile.CreateSymbolicLinkAsync"/>; the target text
 /// is stored as given and may dangle. Without <c>-s</c> coreutils makes a hard link, which the
-/// KazoOS filesystem does not support (one entry per inode, like FAT): <c>ln</c> then fails
+/// Kazo OS filesystem does not support (one entry per inode, like FAT): <c>ln</c> then fails
 /// with <c>Operation not supported</c> and suggests <c>-s</c>.
 /// </summary>
 public sealed class LnCommand(AppManifest manifest) : TerminalAppBase(manifest)

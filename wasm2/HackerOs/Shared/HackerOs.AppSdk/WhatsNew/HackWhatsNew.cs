@@ -3,7 +3,7 @@ using System.Globalization;
 namespace HackerOs.AppSdk.WhatsNew;
 
 /// <summary>
-/// What changed in KazoOS since the user's last visit (ADR 0186): the change list grouped by
+/// What changed in Kazo OS since the user's last visit (ADR 0186): the change list grouped by
 /// version, with the changes the session user has not seen yet. Settings ▸ What's new shows it.
 /// </summary>
 /// <example>

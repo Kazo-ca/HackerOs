@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components.Web;
 namespace HackerOs.Apps.FileExplorer.FileControl;
 
 /// <summary>
-/// Wraps host content to accept drops of KazoOS entries and host files (ADR 0058, section 1),
+/// Wraps host content to accept drops of Kazo OS entries and host files (ADR 0058, section 1),
 /// through the owner <see cref="FileView"/>'s drop pipeline (same payload, same checks).
 /// </summary>
 public partial class FileViewDropZone

@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 namespace HackerOs.Platform.Core.Diagnostics;
 
 /// <summary>
-/// Bridges the standard <see cref="Microsoft.Extensions.Logging"/> pipeline into KazoOS logging:
+/// Bridges the standard <see cref="Microsoft.Extensions.Logging"/> pipeline into Kazo OS logging:
 /// any class that takes an injected <c>ILogger&lt;T&gt;</c> writes one line per entry to
 /// <c>/var/log/syslog</c> through <see cref="LogFileWriter"/> (ADR 0045), and keeps recording into
 /// the in-memory <see cref="IDiagnosticSink"/> buffer of recent entries for live viewers.

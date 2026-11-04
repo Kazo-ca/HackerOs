@@ -93,7 +93,7 @@ public interface IAppUserAccountsGateway
     /// <exception cref="UnauthorizedAccessException">No <c>users.manage</c>, or no administrator confirmed.</exception>
     /// <exception cref="ArgumentException">A field breaks the rules, or the login name is taken or reserved.</exception>
     ValueTask<HackUserAccount> CreateAsync(HackNewUserAccount account, CancellationToken cancellationToken = default) =>
-        throw new NotSupportedException("This KazoOS host cannot add accounts.");
+        throw new NotSupportedException("This Kazo OS host cannot add accounts.");
 
     /// <summary>Deletes an account (ADR 0169); needs <c>users.manage</c> and an administrator.</summary>
     /// <param name="loginName">The account to delete.</param>
@@ -103,7 +103,7 @@ public interface IAppUserAccountsGateway
     /// <exception cref="ArgumentException">The account does not exist.</exception>
     /// <exception cref="InvalidOperationException">The caller's own account, or the last enabled administrator.</exception>
     ValueTask DeleteAsync(string loginName, bool removeHome, CancellationToken cancellationToken = default) =>
-        throw new NotSupportedException("This KazoOS host cannot delete accounts.");
+        throw new NotSupportedException("This Kazo OS host cannot delete accounts.");
 
     /// <summary>Lists the session user's passkeys (ADR 0168).</summary>
     /// <param name="cancellationToken">Cancels the read.</param>
@@ -118,14 +118,14 @@ public interface IAppUserAccountsGateway
     /// <exception cref="NotSupportedException">No WebAuthn in this page or process.</exception>
     /// <exception cref="OperationCanceledException">The user closed the browser's prompt.</exception>
     ValueTask<HackPasskey> AddPasskeyAsync(string name, CancellationToken cancellationToken = default) =>
-        throw new NotSupportedException("This KazoOS host has no passkeys.");
+        throw new NotSupportedException("This Kazo OS host has no passkeys.");
 
     /// <summary>Removes one of the session user's passkeys.</summary>
     /// <param name="passkeyId">Its base64url id.</param>
     /// <param name="cancellationToken">Cancels the change.</param>
     /// <returns><see langword="true"/> when a passkey was removed.</returns>
     ValueTask<bool> RemovePasskeyAsync(string passkeyId, CancellationToken cancellationToken = default) =>
-        throw new NotSupportedException("This KazoOS host has no passkeys.");
+        throw new NotSupportedException("This Kazo OS host has no passkeys.");
 
     /// <summary>
     /// Asks the system to show its "Create my account" form (ADR 0187): only the guest's session

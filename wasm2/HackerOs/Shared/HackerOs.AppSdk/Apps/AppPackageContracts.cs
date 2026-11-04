@@ -19,7 +19,7 @@ public enum HackPackageScope
 /// <summary>Trust level of a source (ADR 0189 §2).</summary>
 public enum HackPackageTrust
 {
-    /// <summary>An app of the official catalog, reviewed and compiled by the KazoOS team.</summary>
+    /// <summary>An app of the official catalog, reviewed and compiled by the Kazo OS team.</summary>
     Verified = 0,
 
     /// <summary>A source compiled into the OS, or marked trusted by an administrator.</summary>

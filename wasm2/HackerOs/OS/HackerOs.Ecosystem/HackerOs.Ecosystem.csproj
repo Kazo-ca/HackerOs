@@ -9,7 +9,7 @@
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
     <!--
       ADR 0106, ADR 0113: Release publish trims the framework and the other trimmable libraries
-      (TrimMode=partial leaves untrimmable packages whole). Every KazoOS assembly and every app is
+      (TrimMode=partial leaves untrimmable packages whole). Every Kazo OS assembly and every app is
       kept whole by build/HackerOs.Apps.targets; build/publish-trimmed.sh publishes and tests it.
     -->
     <PublishTrimmed>true</PublishTrimmed>
@@ -84,7 +84,7 @@
       <_HackerOsVersionFile>$(IntermediateOutputPath)hackeros-version/version.json</_HackerOsVersionFile>
     </PropertyGroup>
     <WriteLinesToFile File="$(_HackerOsVersionFile)"
-                      Lines="{ &quot;product&quot;: &quot;KazoOS&quot;, &quot;version&quot;: &quot;$(HackerOsVersion)&quot; }"
+                      Lines="{ &quot;product&quot;: &quot;Kazo OS&quot;, &quot;version&quot;: &quot;$(HackerOsVersion)&quot; }"
                       Overwrite="true"
                       WriteOnlyWhenDifferent="true" />
     <ItemGroup>

@@ -91,7 +91,7 @@ merged into `main` without Benoit.
 | `v3/12-localization` | `IStringLocalizer` in apps and the platform, `.resx` resources; user language in `~/.config/locale.conf`, system language in `/etc/locale.conf`, `LANG` variable in the process environment (ADR 0050); language gateway in `IAppExecutionContext`; manifest `Localizations` used (app name in the launcher); translation of base apps and the platform; fix of `docs/old/localization.md`, which describes a nonexistent state. | R10 | `3`, `4`, `5`, `7`, `11` |
 | `v3/13-accessibility` | Accessibility preferences as files (high contrast, text size, reduced motion) read by the theme and exposed by the SDK; axe scans added for Terminal, Browser, Calculator, System Monitor and the apps of work items 7 and 11; keyboard navigation tested in E2E. | R11 | `3`, `12` |
 | `v3/14-trimming` | `PublishTrimmed=True` in the Ecosystem, trimming warnings fixed in all shipped projects, trimmed Release publication tested in E2E (boot, apps, sites). AOT out of scope. | R12 | `2` to `13` |
-| `v3/15-sdk-freeze` | `PublicAPI.Shipped.txt` for all SDK libraries; SDK 1.0 freeze; test of an app compiled against an earlier SDK version; guide "build on KazoOS from another repository". | R21 | `14` |
+| `v3/15-sdk-freeze` | `PublicAPI.Shipped.txt` for all SDK libraries; SDK 1.0 freeze; test of an app compiled against an earlier SDK version; guide "build on Kazo OS from another repository". | R21 | `14` |
 | `v3/16-final` | Final verification (three hosts, all suites), status added to `doc/en/wasm/dev/plans/wasm-v3-migration-analyse.md`, update of `docs/old/implementation-status.md`, `project-overview.md`, `sdk-reference.md`. | n/a | all |
 
 ### Order and parallelism
@@ -201,6 +201,6 @@ Answers from Benoit of 2026-10-17 05:52Z.
 - [x] `v3/11-apps` ([`hack-paint.md`](../hack-paint.md), [`theme-editor.md`](../theme-editor.md))
 - [x] `v3/12-localization` (ADR 0104, ADR 0111, [`localization.md`](../../framework/localization.md))
 - [x] `v3/13-accessibility` ([`accessibility.md`](../accessibility.md), ADR 0112)
-- [x] `v3/14-trimming` ([`trimmed-publish.md`](../trimmed-publish.md), ADR 0113; KazoOS assemblies kept whole)
+- [x] `v3/14-trimming` ([`trimmed-publish.md`](../trimmed-publish.md), ADR 0113; Kazo OS assemblies kept whole)
 - [x] `v3/15-sdk-freeze` (ADR 0114, [`building-on-hackeros.md`](../../framework/building-on-hackeros.md))
 - [x] `v3/16-final` (status report: [`wasm-v3-final-status.md`](wasm-v3-final-status.md))

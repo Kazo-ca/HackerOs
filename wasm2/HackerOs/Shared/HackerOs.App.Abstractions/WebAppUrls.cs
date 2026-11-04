@@ -64,7 +64,7 @@ public static class WebAppUrls
     /// <summary>The first port an unprivileged process may bind, as on Linux (<c>CAP_NET_BIND_SERVICE</c>).</summary>
     public const int FirstUnprivilegedPort = 1024;
 
-    /// <summary>The internal top-level domain of KazoOS sites (ADR 0074, section 4): never relayed to the real Internet.</summary>
+    /// <summary>The internal top-level domain of Kazo OS sites (ADR 0074, section 4): never relayed to the real Internet.</summary>
     public const string InternalDomain = "hack";
 
     /// <summary>Gets the default port of <paramref name="scheme"/>: 443 for <c>https</c>, otherwise 80.</summary>

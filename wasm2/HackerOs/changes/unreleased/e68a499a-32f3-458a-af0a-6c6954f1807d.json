@@ -6,12 +6,12 @@
     "developer"
   ],
   "title": {
-    "en": "HackerOS is now called KazoOS",
-    "fr": "HackerOS s'appelle maintenant KazoOS"
+    "en": "HackerOS is now called Kazo OS",
+    "fr": "HackerOS s'appelle maintenant Kazo OS"
   },
   "description": {
-    "en": "The name HackerOS was already used by a Linux distribution. The OS now shows the name KazoOS everywhere: window title, installed app, sign-in screen, notifications and documentation.",
-    "fr": "Le nom HackerOS était déjà utilisé par une distribution Linux. L'OS affiche maintenant le nom KazoOS partout : titre de la fenêtre, app installée, écran de connexion, notifications et documentation."
+    "en": "The name HackerOS was already used by a Linux distribution. The OS now shows the name Kazo OS everywhere: window title, installed app, sign-in screen, notifications and documentation.",
+    "fr": "Le nom HackerOS était déjà utilisé par une distribution Linux. L'OS affiche maintenant le nom Kazo OS partout : titre de la fenêtre, app installée, écran de connexion, notifications et documentation."
   },
   "links": [
     "doc/en/wasm/dev/adr/0228-rename-to-kazoos.md"

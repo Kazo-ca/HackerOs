@@ -9,7 +9,7 @@
 //
 // Drops do not depend on that timing: attachDropZone installs native listeners on a FileView root,
 // breadcrumb or drop zone. Its capture-phase `drop` listener runs before Blazor's delegated handler and
-// stashes the KazoOS payload and the host File objects; the C# handler then reads the stash
+// stashes the Kazo OS payload and the host File objects; the C# handler then reads the stash
 // (getDragData / takeDroppedFiles). Host files pasted with Ctrl+V go through the same stash
 // (attachPasteTarget). Its `dragover` listener sets dropEffect so the cursor shows a move,
 // or a copy when Ctrl is held or the files come from the host, and highlights the folder under it.

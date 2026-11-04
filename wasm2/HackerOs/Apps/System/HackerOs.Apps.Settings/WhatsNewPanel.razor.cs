@@ -8,7 +8,7 @@ using Microsoft.Extensions.Localization;
 namespace HackerOs.Apps.Settings;
 
 /// <summary>
-/// Settings &gt; What's new (ADR 0186 §4): what changed in KazoOS, grouped by version, with a
+/// Settings &gt; What's new (ADR 0186 §4): what changed in Kazo OS, grouped by version, with a
 /// <b>New</b> badge on the changes the session user has not seen. The badges stay for the visit and
 /// the changes become seen when the page closes (another page chosen, or Settings closed), through
 /// <see cref="HackWhatsNew.MarkSeenAsync(IAppExecutionContext, IReadOnlyCollection{string}, CancellationToken)"/>.

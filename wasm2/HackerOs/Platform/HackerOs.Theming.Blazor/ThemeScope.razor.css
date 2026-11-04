@@ -3,9 +3,9 @@
 
     /*
        MudThemeProvider publishes its generated palette at :root. ThemeScope is deliberately
-       subtree-local, so bridge the Mud variables here instead of leaking a selected KazoOS
+       subtree-local, so bridge the Mud variables here instead of leaking a selected Kazo OS
        theme into an embedding host. These declarations also override MudBlazor's generated
-       derived states with the same semantic tokens used by native KazoOS components.
+       derived states with the same semantic tokens used by native Kazo OS components.
     */
     --mud-palette-black: var(--hos-bg-base, #101417);
     --mud-palette-background: var(--hos-bg-base, #101417);

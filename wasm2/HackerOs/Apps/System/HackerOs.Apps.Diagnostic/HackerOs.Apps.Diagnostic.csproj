@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <PackageId>HackerOs.Apps.Diagnostic</PackageId>
-    <Description>The base KazoOS diagnostic tool app, to include in an OS host (ProjectReference or PackageReference, optionally IsSystemApp).</Description>
+    <Description>The base Kazo OS diagnostic tool app, to include in an OS host (ProjectReference or PackageReference, optionally IsSystemApp).</Description>
     <PackageTags>hackeros;app</PackageTags>
   </PropertyGroup>
 

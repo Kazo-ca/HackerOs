@@ -4,7 +4,7 @@ using HackerOs.Simulation.Abstractions.Settings;
 namespace HackerOs.Platform.Core.Clipboard;
 
 /// <summary>
-/// Which way text crosses between the KazoOS clipboard and the real machine's clipboard (ADR 0065),
+/// Which way text crosses between the Kazo OS clipboard and the real machine's clipboard (ADR 0065),
 /// the "Shared Clipboard" setting of VirtualBox.
 /// </summary>
 public enum ClipboardSharingMode
@@ -12,25 +12,25 @@ public enum ClipboardSharingMode
     /// <summary>Both ways (default).</summary>
     Bidirectional,
 
-    /// <summary>Only from KazoOS to the host: what an app copies reaches the host, a host paste does not enter.</summary>
+    /// <summary>Only from Kazo OS to the host: what an app copies reaches the host, a host paste does not enter.</summary>
     GuestToHost,
 
-    /// <summary>Only from the host to KazoOS.</summary>
+    /// <summary>Only from the host to Kazo OS.</summary>
     HostToGuest,
 
-    /// <summary>Neither way: KazoOS keeps its own clipboard.</summary>
+    /// <summary>Neither way: Kazo OS keeps its own clipboard.</summary>
     Disabled
 }
 
 /// <summary>Direction tests of <see cref="ClipboardSharingMode"/>.</summary>
 public static class ClipboardSharingModeExtensions
 {
-    /// <summary>Whether text copied in KazoOS is written to the host's clipboard.</summary>
+    /// <summary>Whether text copied in Kazo OS is written to the host's clipboard.</summary>
     /// <param name="mode">Sharing mode.</param>
     public static bool AllowsGuestToHost(this ClipboardSharingMode mode) =>
         mode is ClipboardSharingMode.Bidirectional or ClipboardSharingMode.GuestToHost;
 
-    /// <summary>Whether a paste from the host replaces the KazoOS clipboard.</summary>
+    /// <summary>Whether a paste from the host replaces the Kazo OS clipboard.</summary>
     /// <param name="mode">Sharing mode.</param>
     public static bool AllowsHostToGuest(this ClipboardSharingMode mode) =>
         mode is ClipboardSharingMode.Bidirectional or ClipboardSharingMode.HostToGuest;

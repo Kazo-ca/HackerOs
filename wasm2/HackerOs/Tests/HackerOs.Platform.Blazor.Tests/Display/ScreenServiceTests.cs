@@ -38,7 +38,7 @@ public sealed class ScreenServiceTests
         Assert.Equal(new WindowBounds(0, 0, 1900, 1000), harness.Runtime.GetWorkArea(screen.Id));
 
         (string identifier, object?[] arguments) = Assert.Single(harness.Surfaces.Calls, call => call.Identifier == "open");
-        Assert.Equal("KazoOS — Screen 2", arguments[2]);
+        Assert.Equal("Kazo OS — Screen 2", arguments[2]);
         Assert.Equal(6, arguments.Length);
         Assert.Equal("open = 2", harness.Settings.Line("screens.open"));
         Assert.Equal(ScreenPermission.Granted, harness.Service.Permission);

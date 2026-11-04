@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <!--
-    HackerOs.Ecosystem.Host (ADR 0098 §2): everything a KazoOS host needs except its own
+    HackerOs.Ecosystem.Host (ADR 0098 §2): everything a Kazo OS host needs except its own
     composition root. The desktop shell (App.razor, login progress), the boot coordinator, the
     service composition (AddHackerOsEcosystem), optional resource accounting, the browser
     infrastructure adapters and the global design tokens (wwwroot/css/app.css, served at
@@ -23,7 +23,7 @@
     <!-- Required by the [JSImport] DOM-presence check of AddHackerOsBrowserHost (SYSLIB1074). -->
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PackageId>HackerOs.Ecosystem.Host</PackageId>
-    <Description>The KazoOS host: desktop shell, boot coordinator, service composition and browser adapters. A host project adds its index.html, a Program.cs calling AddHackerOsBrowserHost and its apps.</Description>
+    <Description>The Kazo OS host: desktop shell, boot coordinator, service composition and browser adapters. A host project adds its index.html, a Program.cs calling AddHackerOsBrowserHost and its apps.</Description>
     <PackageTags>hackeros;blazor;webassembly;os-simulation;host</PackageTags>
   </PropertyGroup>
 

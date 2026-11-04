@@ -8,7 +8,7 @@ namespace HackerOs.Apps.Settings;
 
 /// <summary>
 /// Settings &gt; Server Connection &gt; Local server (ADR 0191 §6, guide
-/// <c>doc/en/wasm/dev/installable-server.md</c>): where to download the installable KazoOS server
+/// <c>doc/en/wasm/dev/installable-server.md</c>): where to download the installable Kazo OS server
 /// for each system, a "Test" button for its address, and pairing with the one-time code the server
 /// printed, without a password.
 /// </summary>
@@ -78,7 +78,7 @@ public sealed partial class LocalServerPanel
         new("LocalServer.System.LinuxArm64", $"hackeros-server-{version}-linux-arm64.tar.gz"),
     ];
 
-    /// <summary>Asks the typed address whether it is a KazoOS server.</summary>
+    /// <summary>Asks the typed address whether it is a Kazo OS server.</summary>
     internal async Task TestAsync()
     {
         if (IsBusy || !TryGetAddress(out Uri? address))

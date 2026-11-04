@@ -23,7 +23,7 @@ public partial class ThemePreview : ComponentBase, IAsyncDisposable
     [Parameter]
     public string ThemeId { get; set; } = WellKnownThemeIds.HackerOs;
 
-    /// <summary>Gets or sets the validated accent identifier; only KazoOS consumes its color.</summary>
+    /// <summary>Gets or sets the validated accent identifier; only Kazo OS consumes its color.</summary>
     [Parameter]
     public string AccentId { get; set; } = WellKnownAccentIds.Green;
 

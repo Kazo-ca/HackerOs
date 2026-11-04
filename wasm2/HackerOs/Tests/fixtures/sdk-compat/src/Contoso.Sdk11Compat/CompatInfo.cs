@@ -6,7 +6,7 @@ namespace Contoso.Sdk11Compat;
 internal static class CompatInfo
 {
     /// <summary>
-    /// The KazoOS SDK version of the packages this assembly was compiled against, written at build
+    /// The Kazo OS SDK version of the packages this assembly was compiled against, written at build
     /// as assembly metadata (the csproj): <see cref="HackerOs.App.Abstractions.HackerOsSdk.Version"/>
     /// is the SDK of the running OS, which is the point of the comparison.
     /// </summary>

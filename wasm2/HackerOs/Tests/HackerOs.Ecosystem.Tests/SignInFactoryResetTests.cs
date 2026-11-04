@@ -118,7 +118,7 @@ public sealed class SignInFactoryResetTests
     [InlineData("registration.unregister()")]
     public void The_reset_module_erases_every_browser_storage(string call)
     {
-        // ADR 0227: nothing of KazoOS stays in the browser after a reset. Checked end to end in
+        // ADR 0227: nothing of Kazo OS stays in the browser after a reset. Checked end to end in
         // Chromium; this guards the module against losing one of its steps.
         string module = File.ReadAllText(Path.Combine(
             SolutionDirectory(), "OS", "HackerOs.Ecosystem.Host", "wwwroot", "hostFactoryReset.js"));

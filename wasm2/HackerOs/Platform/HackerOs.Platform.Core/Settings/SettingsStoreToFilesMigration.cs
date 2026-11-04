@@ -293,11 +293,11 @@ public sealed class SettingsStoreToFilesMigration : IUserProfileInitializer
 
     /// <summary>Serializes explicit values as a commented <c>.config</c> file (missing keys keep their default).</summary>
     internal static string ToConfig(SettingsSchema schema, IReadOnlyDictionary<string, string> values) =>
-        "# Migrated from the KazoOS settings store (ADR 0044).\n"
+        "# Migrated from the Kazo OS settings store (ADR 0044).\n"
         + ConfigDocumentFormat.Serialize(schema, values);
 
     private static string DefaultConfig(OsSettingsDocument document) =>
-        $"# KazoOS default for every user. Users override keys in ~/.config/hackeros/{document.DocumentId}.config.\n"
+        $"# Kazo OS default for every user. Users override keys in ~/.config/hackeros/{document.DocumentId}.config.\n"
         + "# List a key under [locked] with the value true to stop users from overriding it.\n"
         + ConfigDocumentFormat.Serialize(document.Schema, new Dictionary<string, string>(StringComparer.Ordinal));
 

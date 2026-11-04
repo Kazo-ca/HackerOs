@@ -1,4 +1,4 @@
-# KazoOS documentation
+# Kazo OS documentation
 
 | Language | Index |
 | --- | --- |

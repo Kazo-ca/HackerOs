@@ -1,4 +1,4 @@
-// Shared message rings between the page and a KazoOS Web Worker (ADR 0131, section 4), used by
+// Shared message rings between the page and a Kazo OS Web Worker (ADR 0131, section 4), used by
 // workerHost.js (page) and workerBootstrap.js (worker) when the page is cross-origin isolated.
 //
 // A ring is a SharedArrayBuffer holding a single-producer, single-consumer byte queue of framed

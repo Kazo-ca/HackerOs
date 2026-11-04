@@ -4,7 +4,7 @@
 
 ## Purpose
 
-Describes sign-in with a passkey in KazoOS: a real WebAuthn key
+Describes sign-in with a passkey in Kazo OS: a real WebAuthn key
 (fingerprint, face, device PIN, phone or USB security key),
 verified by the OS itself with the public key kept in the account, which
 can also unlock the keyring. Decision: [ADR 0168](adr/0168-passkey-sign-in.md).

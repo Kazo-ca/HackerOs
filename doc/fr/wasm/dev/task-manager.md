@@ -11,7 +11,7 @@ ADR 0057).
 ## Rôle
 
 L'app « System Monitor » (`org.hackeros.system-monitor`) est le gestionnaire de
-tâches de KazoOS. Comme `top`, elle relit `/proc` toutes les secondes ; tout
+tâches de Kazo OS. Comme `top`, elle relit `/proc` toutes les secondes ; tout
 ce qu'elle affiche, une app tierce ou `ps` peut le lire aussi.
 
 | Onglet | Contenu | Source |
@@ -258,7 +258,7 @@ await sync.SetStartTypeAsync(ServiceStartMode.Automatic);
 
 ## Décisions clés et précisions par rapport aux ADR 0056 et 0058
 
-- **`UserName`** : `/proc/<pid>/status` donne un `Uid` opaque et KazoOS n'a
+- **`UserName`** : `/proc/<pid>/status` donne un `Uid` opaque et Kazo OS n'a
   pas de `/etc/passwd`. Le SDK nomme l'utilisateur du processus appelant ;
   pour un autre, `UserName` vaut l'id, comme `ps` avec un uid inconnu.
   L'onglet raccourcit un id de 32 caractères en `uid:xxxxxxxx`.

@@ -15,7 +15,7 @@ and displayed raw HTML as text. Now, a `text/html` response
 becomes a **real web page**: its CSS applies, its JavaScript runs,
 its `fetch`, its `XMLHttpRequest`, its forms, its cookies and its
 `localStorage` work. The page remains a prisoner: it reaches neither
-KazoOS, nor the Internet, nor the user's files. Everything it
+Kazo OS, nor the Internet, nor the user's files. Everything it
 asks for goes through the browser, which decides in C#, as a real browser
 applies the same-origin policy and CORS.
 
@@ -94,7 +94,7 @@ the "next" history.
 
 ### Real sites and the address bar (ADR 0210)
 
-A host the simulated network does not know goes through the KazoOS server's
+A host the simulated network does not know goes through the Kazo OS server's
 proxy when a server is connected
 ([ADR 0210](adr/0210-browser-real-sites-through-the-proxy.md)): the Browser is a
 system app with `network.real.access`. The page follows the same path as the
@@ -112,7 +112,7 @@ of this machine, `◎` simulated network, nothing for a file. Then the lock for
 
 The iframe is in `srcdoc` with `sandbox="allow-scripts allow-forms"`, without
 `allow-same-origin`: the page has an opaque origin and can read neither the DOM
-of KazoOS nor its storage. A CSP meta forbids any connection
+of Kazo OS nor its storage. A CSP meta forbids any connection
 (`connect-src 'none'`, `img-src data: blob:`…): the page loads nothing
 itself, everything it needs has been inlined as `data:` URLs or goes through
 the bridge.

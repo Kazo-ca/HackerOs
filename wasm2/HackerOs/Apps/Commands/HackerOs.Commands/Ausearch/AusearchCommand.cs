@@ -18,7 +18,7 @@ namespace HackerOs.Commands.Ausearch;
 /// Filters (all must match): <c>-f path</c> (the path, a file below it, or a file of that name),
 /// <c>-ua user</c> (uid or auid), <c>-ui user</c> (uid), <c>-ul user</c> (auid, the human at the origin),
 /// <c>-c comm</c>, <c>--success yes|no</c> (<c>-sv</c>), <c>-if file</c> to read another file.
-/// <c>-i</c> is accepted: names are already interpreted in KazoOS's enriched records.
+/// <c>-i</c> is accepted: names are already interpreted in Kazo OS's enriched records.
 /// </remarks>
 public sealed class AusearchCommand(AppManifest manifest) : TerminalAppBase(manifest)
 {

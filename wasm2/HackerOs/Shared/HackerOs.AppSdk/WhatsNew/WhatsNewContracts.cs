@@ -50,7 +50,7 @@ public sealed record HackChangeGroup(
     public bool IsNextVersion => Version is null;
 }
 
-/// <summary>What changed in KazoOS, as the session user sees it (ADR 0186 §4).</summary>
+/// <summary>What changed in Kazo OS, as the session user sees it (ADR 0186 §4).</summary>
 /// <param name="Groups">One group per version, the most recent first.</param>
 /// <param name="NewCount">The number of changes the user has not seen yet.</param>
 public sealed record HackChangeList(IReadOnlyList<HackChangeGroup> Groups, int NewCount)

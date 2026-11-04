@@ -14,7 +14,7 @@ fusionner sur l'autorisation de Benoit seulement. ADR écrits :
 
 ## 1. Objet
 
-Donner à KazoOS un **bureau étendu sur plusieurs écrans**. Chaque écran de
+Donner à Kazo OS un **bureau étendu sur plusieurs écrans**. Chaque écran de
 plus est une surface d'affichage (`window.open` de la même instance) qui contient
 son propre bureau, sa barre des tâches et ses fenêtres. Une fenêtre passe d'un
 écran à l'autre sans perdre son état.

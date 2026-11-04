@@ -13,7 +13,7 @@ fenêtre détachée.
 ## Objet
 
 Un site interne peut être **interactif** : ses pages sont des composants Blazor
-dessinés par le navigateur de KazoOS directement dans la zone de page, comme
+dessinés par le navigateur de Kazo OS directement dans la zone de page, comme
 un site Blazor WebAssembly dans un vrai navigateur.
 
 - Le site reste une app `Web` ordinaire (ADR 0073) : il écoute, sert ses routes

@@ -9,7 +9,7 @@ namespace HackerOs.Theming.Abstractions;
 /// <c>Resources/Strings.fr.resx</c> (French).
 /// </summary>
 /// <remarks>
-/// This package stays free of any KazoOS or UI dependency, so the texts are read through a plain
+/// This package stays free of any Kazo OS or UI dependency, so the texts are read through a plain
 /// <see cref="ResourceManager"/> with the culture the caller passes (an app's
 /// <c>AppContext.Culture</c>, the platform's <c>SessionLocaleService.Culture</c>) instead of an
 /// <c>IStringLocalizer</c>. A <see langword="null"/> culture reads the English texts.

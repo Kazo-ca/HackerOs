@@ -1,10 +1,10 @@
 > [English version](../../../../en/wasm/dev/plans/wasm-v3-migration-analyse.md)
 
-# KazoOS WebAssembly v3 Migration Analysis
+# Kazo OS WebAssembly v3 Migration Analysis
 
 > **Mise à jour du 2026-10-17 :** le jeu n'est plus dans ce dépôt. La phase
 > « gameplay systems » (vague 6) est retirée : le jeu vivra dans un autre dépôt
-> qui utilise l'écosystème KazoOS ([ADR 0092](../adr/0092-game-in-a-separate-repository.md)).
+> qui utilise l'écosystème Kazo OS ([ADR 0092](../adr/0092-game-in-a-separate-repository.md)).
 > Ce qui reste à faire de cette analyse est planifié dans
 > [`wasm-v3-completion-plan.md`](wasm-v3-completion-plan.md).
 >
@@ -23,7 +23,7 @@
 
 ## 1. Purpose
 
-KazoOS v3 will migrate the working TypeScript browser simulation in `src/` to
+Kazo OS v3 will migrate the working TypeScript browser simulation in `src/` to
 a modular Blazor WebAssembly ecosystem. The result must be both:
 
 - a usable base operating system with first-party system applications; and
@@ -64,7 +64,7 @@ that must be passed before the migration expands.
 
 ### 3.1 Product goals
 
-1. Ship a functional offline-first KazoOS base with a desktop, windows,
+1. Ship a functional offline-first Kazo OS base with a desktop, windows,
    taskbar, launcher, terminal, virtual files, settings, and application
    lifecycle.
 2. Make every non-boot-critical app replaceable and independently versioned.
@@ -405,7 +405,7 @@ Required semantics:
 - no guarantee of execution after the PWA/tab closes; and
 - no correctness dependency on asynchronous unload cleanup.
 
-When the user shuts down KazoOS, the OS cancels all service tokens and waits up
+When the user shuts down Kazo OS, the OS cancels all service tokens and waits up
 to a configured deadline. In-memory state is discarded. Data already committed
 through settings or filesystem services remains persistent, but there is no job
 checkpoint/resume contract. Abrupt browser termination may prevent graceful
@@ -467,7 +467,7 @@ build, including explicit declaration of their dependencies. This phase reduces
 initial download size and proves delayed registration while preserving a known
 publish graph.
 
-This is not yet runtime installation from KazoOS storage. The assembly and its
+This is not yet runtime installation from Kazo OS storage. The assembly and its
 assets are still known when the PWA is published.
 
 The build profile marks app packages as eager or lazy, and build tooling
@@ -753,7 +753,7 @@ window modality. Cancellation returns a normal cancelled result rather than an
 exception. The dialog implementation is shared OS UI with scoped assets; apps do
 not reimplement file pickers.
 
-These dialogs select from the KazoOS virtual filesystem. Access to native
+These dialogs select from the Kazo OS virtual filesystem. Access to native
 browser/device files is a separate future capability and must not be implied by
 these helpers.
 
@@ -830,7 +830,7 @@ quotas, or disable audit logging. These are explicit operator choices with
 startup warnings; they are not default behavior.
 
 When offline or when the server edition is not configured, external proxy calls
-return a clear unavailable result. Simulated KazoOS networking continues to
+return a clear unavailable result. Simulated Kazo OS networking continues to
 work locally.
 
 ## 14. Build Profile and Runtime Policy

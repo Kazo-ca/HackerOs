@@ -1,6 +1,6 @@
 namespace HackerOs.Theming.Abstractions;
 
-/// <summary>Describes one selectable KazoOS visual theme without depending on a UI framework.</summary>
+/// <summary>Describes one selectable Kazo OS visual theme without depending on a UI framework.</summary>
 public sealed record ThemeDefinition
 {
     /// <summary>Creates a validated theme definition.</summary>

@@ -17,17 +17,17 @@ public interface IHostClipboardChannel : IAsyncDisposable
     ValueTask AttachAsync(IHostClipboardSink sink, CancellationToken cancellationToken = default);
 
     /// <summary>Tells the page which directions are allowed, so its listeners decide synchronously inside the event.</summary>
-    /// <param name="guestToHost">Whether KazoOS text may reach the host.</param>
-    /// <param name="hostToGuest">Whether host content may enter KazoOS.</param>
+    /// <param name="guestToHost">Whether Kazo OS text may reach the host.</param>
+    /// <param name="hostToGuest">Whether host content may enter Kazo OS.</param>
     /// <param name="cancellationToken">Cancels the request.</param>
     ValueTask SetDirectionsAsync(bool guestToHost, bool hostToGuest, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Tells the page the text the KazoOS clipboard now holds (<see langword="null"/> for none), and
+    /// Tells the page the text the Kazo OS clipboard now holds (<see langword="null"/> for none), and
     /// writes it to the host clipboard (<c>navigator.clipboard.writeText</c>) when
     /// <paramref name="writeToHost"/> is set.
     /// </summary>
-    /// <param name="text">Text of the KazoOS clipboard, or <see langword="null"/>.</param>
+    /// <param name="text">Text of the Kazo OS clipboard, or <see langword="null"/>.</param>
     /// <param name="writeToHost">Whether to copy it to the host too.</param>
     /// <param name="cancellationToken">Cancels the request.</param>
     ValueTask SyncGuestTextAsync(string? text, bool writeToHost, CancellationToken cancellationToken = default);
@@ -38,13 +38,13 @@ public interface IHostClipboardSink
 {
     /// <summary>
     /// A paste brought new content from the host clipboard (the page already filtered out the text
-    /// KazoOS itself last wrote there).
+    /// Kazo OS itself last wrote there).
     /// </summary>
     /// <param name="text">The pasted <c>text/plain</c>, or <see langword="null"/>.</param>
     /// <param name="fileNames">Names of the host files carried by the paste; empty when none.</param>
     void OnHostPaste(string? text, IReadOnlyList<string> fileNames);
 
-    /// <summary>A native copy or cut inside KazoOS (a text field, the terminal) selected this text.</summary>
+    /// <summary>A native copy or cut inside Kazo OS (a text field, the terminal) selected this text.</summary>
     /// <param name="text">Copied text.</param>
     void OnNativeCopy(string text);
 }

@@ -5,13 +5,13 @@ namespace HackerOs.Platform.Core.ServerConnection;
 
 /// <summary>
 /// Reads the host discovery of ADR 0134 and ADR 0137: which origin served the OS, and whether a
-/// KazoOS server answers at a given address.
+/// Kazo OS server answers at a given address.
 /// </summary>
 public interface IHostInfoClient
 {
     /// <summary>
     /// Reads <c>hackeros-host.json</c> next to the OS's own <c>index.html</c>. Returns the
-    /// address of the origin when a KazoOS server served the OS, and <see langword="null"/> on a
+    /// address of the origin when a Kazo OS server served the OS, and <see langword="null"/> on a
     /// static host, offline, on any error, or when the host has no own origin (tests, a server
     /// process). Never throws except on cancellation.
     /// </summary>
@@ -22,7 +22,7 @@ public interface IHostInfoClient
     /// <param name="serverBaseUrl">The server's base URL.</param>
     /// <param name="cancellationToken">Cancels the request.</param>
     /// <returns>What the server says about itself.</returns>
-    /// <exception cref="ServerConnectionException">The address answered, but not as a KazoOS server.</exception>
+    /// <exception cref="ServerConnectionException">The address answered, but not as a Kazo OS server.</exception>
     /// <exception cref="HttpRequestException">The server could not be reached.</exception>
     Task<HostInfoResponse> GetHostInfoAsync(Uri serverBaseUrl, CancellationToken cancellationToken = default);
 }
@@ -73,7 +73,7 @@ public sealed class HttpHostInfoClient(HttpClient httpClient, Uri? ownOrigin) : 
         if (!response.IsSuccessStatusCode)
         {
             throw new ServerConnectionException(
-                $"{serverBaseUrl} answered {(int)response.StatusCode} to {HostInfoRoutes.ApiPath}: not a KazoOS server.");
+                $"{serverBaseUrl} answered {(int)response.StatusCode} to {HostInfoRoutes.ApiPath}: not a Kazo OS server.");
         }
 
         HostInfoResponse? info;
@@ -84,11 +84,11 @@ public sealed class HttpHostInfoClient(HttpClient httpClient, Uri? ownOrigin) : 
         }
         catch (System.Text.Json.JsonException exception)
         {
-            throw new ServerConnectionException($"{serverBaseUrl} is not a KazoOS server: {exception.Message}");
+            throw new ServerConnectionException($"{serverBaseUrl} is not a Kazo OS server: {exception.Message}");
         }
 
         return info is { IsServer: true }
             ? info
-            : throw new ServerConnectionException($"{serverBaseUrl} is not a KazoOS server.");
+            : throw new ServerConnectionException($"{serverBaseUrl} is not a Kazo OS server.");
     }
 }

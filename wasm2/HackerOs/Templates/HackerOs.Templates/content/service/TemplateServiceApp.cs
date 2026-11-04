@@ -26,7 +26,7 @@ public sealed class TemplateServiceApp : AppDefinition
     public override string PublisherId => "pub.template";
 
     /// <inheritdoc />
-    public override string Description => "A KazoOS background service.";
+    public override string Description => "A Kazo OS background service.";
 
     /// <inheritdoc />
     public override AppLaunchVisibility LaunchVisibility => AppLaunchVisibility.Hidden;

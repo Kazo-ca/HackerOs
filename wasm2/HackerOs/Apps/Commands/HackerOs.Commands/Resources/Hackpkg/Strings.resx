@@ -61,7 +61,7 @@
     <value>hackpkg: {0} {1} removed; its users' settings are kept</value>
   </data>
   <data name="RestartRequired" xml:space="preserve">
-    <value>hackpkg: restart KazoOS to finish: this app was already loaded, its new version runs after the restart</value>
+    <value>hackpkg: restart Kazo OS to finish: this app was already loaded, its new version runs after the restart</value>
   </data>
   <data name="SourcesHost" xml:space="preserve">
     <value>host:    {0}</value>
@@ -73,7 +73,7 @@
     <value>hackpkg: unknown command '{0}'</value>
   </data>
   <data name="Unsupported" xml:space="preserve">
-    <value>hackpkg: this KazoOS host cannot install apps from a repository</value>
+    <value>hackpkg: this Kazo OS host cannot install apps from a repository</value>
   </data>
   <data name="Untrusted" xml:space="preserve">
     <value>hackpkg: warning: {0} is not a trusted source; its code runs with the same rights as the OS</value>
@@ -160,7 +160,7 @@
     <value>hackpkg: signature verified</value>
   </data>
   <data name="RemovedRestart" xml:space="preserve">
-    <value>hackpkg: {0} {1} removed; its users' settings are kept. It was loaded: restart KazoOS to finish</value>
+    <value>hackpkg: {0} {1} removed; its users' settings are kept. It was loaded: restart Kazo OS to finish</value>
   </data>
   <data name="RolledBack" xml:space="preserve">
     <value>hackpkg: {0} went back from {1} to {2}</value>

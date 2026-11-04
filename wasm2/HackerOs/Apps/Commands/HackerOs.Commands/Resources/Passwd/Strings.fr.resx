@@ -31,7 +31,7 @@
     <value>Nouveau mot de passe : </value>
   </data>
   <data name="NoRootAccount" xml:space="preserve">
-    <value>passwd : KazoOS n'a pas de mot de passe root ; nommez le compte : sudo passwd &lt;utilisateur&gt;</value>
+    <value>passwd : Kazo OS n'a pas de mot de passe root ; nommez le compte : sudo passwd &lt;utilisateur&gt;</value>
   </data>
   <data name="NotAllowed" xml:space="preserve">
     <value>passwd : Vous ne pouvez pas afficher ni modifier les informations du mot de passe de {0}.</value>

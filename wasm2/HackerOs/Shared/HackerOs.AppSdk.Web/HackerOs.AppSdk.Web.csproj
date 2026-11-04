@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <PackageId>HackerOs.AppSdk.Web</PackageId>
-    <Description>ASP.Hack: MVC-like web sites hosted inside KazoOS (controllers, routing, model binding, Razor views, cookie session).</Description>
+    <Description>ASP.Hack: MVC-like web sites hosted inside Kazo OS (controllers, routing, model binding, Razor views, cookie session).</Description>
     <PackageTags>hackeros;app-sdk;asp-hack;web</PackageTags>
   </PropertyGroup>
 

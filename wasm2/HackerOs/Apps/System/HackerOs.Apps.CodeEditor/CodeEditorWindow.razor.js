@@ -29,7 +29,7 @@ export function createEditor(host, dotNet, options) {
 
 // Workbench shortcuts, VS Code's (Ctrl+key, or Alt+Z for word wrap). Handled in the capture phase so they win over the browser
 // (Ctrl+S "save page", Ctrl+P "print", Ctrl+O "open file") and over Monaco, then forwarded to
-// C# by name. Chrome keeps Ctrl+N, Ctrl+W and Ctrl+T for itself unless KazoOS runs as an
+// C# by name. Chrome keeps Ctrl+N, Ctrl+W and Ctrl+T for itself unless Kazo OS runs as an
 // installed app, so each command also has a button or menu entry.
 const SHORTCUTS = [
   { ctrl: true, shift: false, key: "s", name: "save" },

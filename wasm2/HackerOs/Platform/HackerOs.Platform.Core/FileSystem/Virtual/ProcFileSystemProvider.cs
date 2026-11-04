@@ -43,7 +43,7 @@ public sealed class ProcFileSystemProvider : VirtualFileSystemProvider
 
     private const string NetDirectory = "net";
 
-    /// <summary>KazoOS's own entries (ADR 0071, section 5), like the <c>/proc/sys</c> of a vendor kernel.</summary>
+    /// <summary>Kazo OS's own entries (ADR 0071, section 5), like the <c>/proc/sys</c> of a vendor kernel.</summary>
     private const string HackerOsDirectory = "hackeros";
 
     private const string WorkersFile = "workers";
@@ -369,7 +369,7 @@ public sealed class ProcFileSystemProvider : VirtualFileSystemProvider
 
     /// <summary>
     /// Renders <c>/proc/&lt;pid&gt;/limits</c> (ADR 0125, section 4): the table of Linux for the four
-    /// limits KazoOS applies, then KazoOS's own comment lines on how they are enforced.
+    /// limits Kazo OS applies, then Kazo OS's own comment lines on how they are enforced.
     /// </summary>
     private string RenderLimits(ProcessRecord process)
     {
@@ -777,7 +777,7 @@ public sealed class ProcFileSystemProvider : VirtualFileSystemProvider
     /// Renders <c>/proc/net/tcp</c> (ADR 0074 section 2) in the kernel's layout: one line per socket
     /// in the <c>LISTEN</c> state (<c>0A</c>), the address as the little-endian hex of the IPv4
     /// address (<c>0100007F</c> is 127.0.0.1), the port in hex, the owner's uid (0 for root and the
-    /// system daemons, 1000 for a user: KazoOS has no numeric uids) and the socket inode, which
+    /// system daemons, 1000 for a user: Kazo OS has no numeric uids) and the socket inode, which
     /// <c>netstat -p</c> matches against <c>/proc/&lt;pid&gt;/fd</c> on Linux.
     /// </summary>
     private string RenderNetTcp()
@@ -942,8 +942,8 @@ public sealed class ProcFileSystemProvider : VirtualFileSystemProvider
         for (int core = 0; core < cores; core++)
         {
             builder.Append(CultureInfo.InvariantCulture, $"processor\t: {core}\n");
-            builder.Append("vendor_id\t: KazoOS\n");
-            builder.Append(CultureInfo.InvariantCulture, $"model name\t: KazoOS Virtual CPU ({_hardware.Name})\n");
+            builder.Append("vendor_id\t: Kazo OS\n");
+            builder.Append(CultureInfo.InvariantCulture, $"model name\t: Kazo OS Virtual CPU ({_hardware.Name})\n");
             builder.Append(CultureInfo.InvariantCulture, $"cpu cores\t: {cores}\n");
             builder.Append('\n');
         }

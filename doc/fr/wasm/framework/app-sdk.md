@@ -4,7 +4,7 @@
 
 ## Objet
 
-Une app KazoOS, système ou tierce, n'obtient les services de l'OS que par le
+Une app Kazo OS, système ou tierce, n'obtient les services de l'OS que par le
 SDK public (principe 3 du plan, ADR 0055). Ce document décrit :
 
 - ce qui forme le SDK et ce qu'une app a le droit de référencer et d'injecter ;

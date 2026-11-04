@@ -41,7 +41,7 @@ public sealed class LocalSessionService : ISessionService
     /// <param name="homeSeeder">Seeder that provisions a freshly authenticated user's home directory.</param>
     /// <param name="eventBus">Bus used to publish session lifecycle events.</param>
     /// <param name="auditLog">Audit log used to record login/logout/shutdown operations.</param>
-    /// <param name="installationId">Identifier of the KazoOS installation/profile hosting this session.</param>
+    /// <param name="installationId">Identifier of the Kazo OS installation/profile hosting this session.</param>
     /// <param name="deviceId">Identifier of the physical/browser device hosting this session.</param>
     /// <param name="clock">Clock used for event/audit timestamps; defaults to <see cref="DateTimeOffset.UtcNow"/>.</param>
     /// <param name="progressTracker">Optional tracker used to report login step progress.</param>

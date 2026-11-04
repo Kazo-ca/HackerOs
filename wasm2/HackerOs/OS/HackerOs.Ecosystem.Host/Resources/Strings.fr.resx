@@ -22,13 +22,13 @@
     <value>Corrélation : {0}</value>
   </data>
   <data name="Fatal.BoundaryTitle" xml:space="preserve">
-    <value>KazoOS a rencontré une erreur</value>
+    <value>Kazo OS a rencontré une erreur</value>
   </data>
   <data name="Fatal.Recorded" xml:space="preserve">
     <value>L'échec a été enregistré sans exposer de détails sensibles.</value>
   </data>
   <data name="Fatal.Title" xml:space="preserve">
-    <value>KazoOS n'a pas pu démarrer</value>
+    <value>Kazo OS n'a pas pu démarrer</value>
   </data>
   <data name="Login.Rejected" xml:space="preserve">
     <value>Les identifiants locaux n'ont pas été acceptés.</value>
@@ -79,7 +79,7 @@
     <value>Nom affiché</value>
   </data>
   <data name="Setup.Intro" xml:space="preserve">
-    <value>Initialisez ce profil KazoOS local.</value>
+    <value>Initialisez ce profil Kazo OS local.</value>
   </data>
   <data name="Setup.LoginName" xml:space="preserve">
     <value>Nom d'utilisateur</value>
@@ -100,13 +100,13 @@
     <value>Les apps ouvertes seront fermées.</value>
   </data>
   <data name="Update.Ready" xml:space="preserve">
-    <value>Une mise à jour de KazoOS est prête.</value>
+    <value>Une mise à jour de Kazo OS est prête.</value>
   </data>
   <data name="Update.VersionReady" xml:space="preserve">
-    <value>KazoOS {0} est disponible.</value>
+    <value>Kazo OS {0} est disponible.</value>
   </data>
   <data name="Update.DownloadFailed" xml:space="preserve">
-    <value>La nouvelle version n'a pas pu être téléchargée : KazoOS garde la version actuelle. Réessayez plus tard.</value>
+    <value>La nouvelle version n'a pas pu être téléchargée : Kazo OS garde la version actuelle. Réessayez plus tard.</value>
   </data>
   <data name="Update.Restart" xml:space="preserve">
     <value>Redémarrer pour mettre à jour</value>
@@ -184,7 +184,7 @@
     <value>Réinitialiser cette machine ?</value>
   </data>
   <data name="FactoryReset.Body" xml:space="preserve">
-    <value>Sans mot de passe, la seule façon de revenir est d'effacer KazoOS dans ce navigateur et de tout recommencer. Tout est supprimé :</value>
+    <value>Sans mot de passe, la seule façon de revenir est d'effacer Kazo OS dans ce navigateur et de tout recommencer. Tout est supprimé :</value>
   </data>
   <data name="FactoryReset.LossAccounts" xml:space="preserve">
     <value>tous les comptes, leur mot de passe et leurs clés d'accès</value>

@@ -6,10 +6,10 @@ Decision: [ADR 0205](../dev/adr/0205-cursor-themes.md).
 
 ## Purpose
 
-A cursor theme replaces the pointer of the whole KazoOS surface (desktop,
+A cursor theme replaces the pointer of the whole Kazo OS surface (desktop,
 taskbar, windows and apps) with PNG images. It is chosen in **Settings ▸
 Appearance ▸ Cursors**. Three themes are built in: **System** (the device's
-cursors, the default), **KazoOS Neon** and **Gothic Crimson**; anyone can add
+cursors, the default), **Kazo OS Neon** and **Gothic Crimson**; anyone can add
 their own.
 
 ## Creating a theme
@@ -110,7 +110,7 @@ key `theme`.
 
 ## Built-in themes
 
-The images of KazoOS Neon and Gothic Crimson are in
+The images of Kazo OS Neon and Gothic Crimson are in
 `wasm2/HackerOs/Platform/HackerOs.Theming.Blazor/wwwroot/cursors/<id>/` and are
 drawn by `wasm2/HackerOs/build/tools/generate-cursor-themes.py` (Pillow).
 Changing a drawing or a hot spot means changing the script and

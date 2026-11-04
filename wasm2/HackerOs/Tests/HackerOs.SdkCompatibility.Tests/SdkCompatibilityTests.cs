@@ -100,7 +100,7 @@ public sealed class SdkCompatibilityTests
     }
 
     /// <summary>
-    /// Every KazoOS type and member the app's metadata references still exists in the current SDK
+    /// Every Kazo OS type and member the app's metadata references still exists in the current SDK
     /// (a removed or renamed API is reported by name).
     /// </summary>
     [Theory]
@@ -135,7 +135,7 @@ public sealed class SdkCompatibilityTests
             ResolveHackerOsType(metadata, handle, missing);
         }
 
-        Assert.True(checkedReferences > 0, "The fixture references no KazoOS member: it tests nothing.");
+        Assert.True(checkedReferences > 0, "The fixture references no Kazo OS member: it tests nothing.");
         Assert.Empty(missing.Distinct());
     }
 
@@ -230,8 +230,8 @@ public sealed class SdkCompatibilityTests
     }
 
     /// <summary>
-    /// Resolves a type reference into a KazoOS assembly (the SDK), or <see langword="null"/> for a
-    /// reference into the framework or a third-party package. A KazoOS type that no longer exists is
+    /// Resolves a type reference into a Kazo OS assembly (the SDK), or <see langword="null"/> for a
+    /// reference into the framework or a third-party package. A Kazo OS type that no longer exists is
     /// added to <paramref name="missing"/>.
     /// </summary>
     private static Type? ResolveHackerOsType(MetadataReader metadata, TypeReferenceHandle handle, List<string> missing)

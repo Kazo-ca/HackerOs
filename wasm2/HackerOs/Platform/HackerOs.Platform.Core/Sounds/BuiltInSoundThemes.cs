@@ -4,7 +4,7 @@ using HackerOs.Simulation.Abstractions.Sounds;
 namespace HackerOs.Platform.Core.Sounds;
 
 /// <summary>
-/// The sound themes KazoOS ships (ADR 0204 section 4): <c>hackeros</c> (console bleeps, the
+/// The sound themes Kazo OS ships (ADR 0204 section 4): <c>hackeros</c> (console bleeps, the
 /// default) and <c>soft</c> (chimes). <see cref="FileSystem.FileSystemSeeder"/> installs them as real
 /// files in <c>/usr/share/sounds/&lt;id&gt;/</c>, like a distribution package would, so they can be
 /// listed, played and copied like any user theme.
@@ -22,7 +22,7 @@ public static class BuiltInSoundThemes
     /// <summary>Gets the built-in themes.</summary>
     public static IReadOnlyList<BuiltInSoundTheme> All { get; } =
     [
-        new(OsSoundEvents.DefaultThemeId, "KazoOS", "KazoOS", "Console bleeps", "Bips de console"),
+        new(OsSoundEvents.DefaultThemeId, "Kazo OS", "Kazo OS", "Console bleeps", "Bips de console"),
         new("soft", "Soft", "Doux", "Gentle chimes", "Carillons doux")
     ];
 
@@ -41,7 +41,7 @@ public static class BuiltInSoundThemes
     public static string GetIndexContent(BuiltInSoundTheme theme)
     {
         ArgumentNullException.ThrowIfNull(theme);
-        return "# Built-in KazoOS sound theme (ADR 0204). Each sound is named after a freedesktop.org\n"
+        return "# Built-in Kazo OS sound theme (ADR 0204). Each sound is named after a freedesktop.org\n"
             + "# sound name (dialog-error, message-new-instant...) and may be .oga, .ogg or .mp3.\n"
             + "[Sound Theme]\n"
             + $"Name={theme.Name}\n"

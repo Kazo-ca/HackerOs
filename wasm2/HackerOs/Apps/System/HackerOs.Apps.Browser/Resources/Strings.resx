@@ -46,10 +46,10 @@
     <value>OK</value>
   </data>
   <data name="Detach.Blocked" xml:space="preserve">
-    <value>The detached window was blocked by your browser. Allow pop-ups for KazoOS, then try again.</value>
+    <value>The detached window was blocked by your browser. Allow pop-ups for Kazo OS, then try again.</value>
   </data>
   <data name="Detach.Unsupported" xml:space="preserve">
-    <value>This KazoOS host cannot open detached windows.</value>
+    <value>This Kazo OS host cannot open detached windows.</value>
   </data>
   <data name="Detached.BringBack" xml:space="preserve">
     <value>Bring the page back here</value>
@@ -121,7 +121,7 @@
     <value>Check that a process is listening on that port (netstat -tlnp).</value>
   </data>
   <data name="Error.ConnectionRefused.Hint.Start" xml:space="preserve">
-    <value>If the site is hosted in KazoOS, start its app or service.</value>
+    <value>If the site is hosted in Kazo OS, start its app or service.</value>
   </data>
   <data name="Error.ConnectionRefused.Message" xml:space="preserve">
     <value>{0} refused to connect.</value>
@@ -157,7 +157,7 @@
     <value>Check the connection.</value>
   </data>
   <data name="Error.Hint.HostedInstalled" xml:space="preserve">
-    <value>If the site is hosted in KazoOS, check that its app or service is installed.</value>
+    <value>If the site is hosted in Kazo OS, check that its app or service is installed.</value>
   </data>
   <data name="Error.Hint.Reload" xml:space="preserve">
     <value>Reload the page.</value>
@@ -217,7 +217,7 @@
     <value>Use a link or a form for navigation.</value>
   </data>
   <data name="Error.ScriptNavigation.Message" xml:space="preserve">
-    <value>The page changed window.location, which KazoOS Browser does not support yet: links, forms and history.pushState work.</value>
+    <value>The page changed window.location, which Kazo OS Browser does not support yet: links, forms and history.pushState work.</value>
   </data>
   <data name="Error.ScriptNavigation.Title" xml:space="preserve">
     <value>This page navigated by script</value>
@@ -280,7 +280,7 @@
     <value>Type a URL or a path (file:///home/…) in the address bar to begin browsing.</value>
   </data>
   <data name="NewTab.Title" xml:space="preserve">
-    <value>KazoOS Browser</value>
+    <value>Kazo OS Browser</value>
   </data>
   <data name="Notice.FormHistoryCleared" xml:space="preserve">
     <value>Form history cleared: fields no longer suggest what you typed before.</value>
@@ -319,7 +319,7 @@
     <value>Reattach</value>
   </data>
   <data name="Surface.ReattachTitle" xml:space="preserve">
-    <value>Bring the page back into KazoOS</value>
+    <value>Bring the page back into Kazo OS</value>
   </data>
   <data name="Toolbar.AddressBar" xml:space="preserve">
     <value>URL address bar</value>
@@ -358,7 +358,7 @@
     <value>View page source (Ctrl+U)</value>
   </data>
   <data name="Source.RealNetwork" xml:space="preserve">
-    <value>Real site, through the KazoOS server's proxy</value>
+    <value>Real site, through the Kazo OS server's proxy</value>
   </data>
   <data name="Source.LocalSite" xml:space="preserve">
     <value>Site of this machine</value>
@@ -373,9 +373,9 @@
     <value>Your administrator has blocked {0}.</value>
   </data>
   <data name="Error.Blocked.Hint" xml:space="preserve">
-    <value>The KazoOS server's operator does not allow this address, this port or this app (HackerOs:Proxy settings).</value>
+    <value>The Kazo OS server's operator does not allow this address, this port or this app (HackerOs:Proxy settings).</value>
   </data>
   <data name="Error.NameNotResolved.Hint.Server" xml:space="preserve">
-    <value>To open a real site, connect this machine to a KazoOS server (Settings ▸ Network ▸ Optional Server).</value>
+    <value>To open a real site, connect this machine to a Kazo OS server (Settings ▸ Network ▸ Optional Server).</value>
   </data>
 </root>

@@ -1,1 +1,1 @@
-A KazoOS window app made with the hackeros-solution template.
+A Kazo OS window app made with the hackeros-solution template.

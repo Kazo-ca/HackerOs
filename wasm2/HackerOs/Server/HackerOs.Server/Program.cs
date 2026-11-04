@@ -44,7 +44,7 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
     Args = LocalServerCommand.HostArguments(args),
     ContentRootPath = isWindowsService ? AppContext.BaseDirectory : null
 });
-builder.Services.AddWindowsService(options => options.ServiceName = "KazoOS Server");
+builder.Services.AddWindowsService(options => options.ServiceName = "Kazo OS Server");
 builder.Services.AddSystemd();
 
 // ── Configuration ─────────────────────────────────────────────────────────────

@@ -195,7 +195,7 @@ public sealed class CoreCommandsTests
 
         int validCode = await command.ExecuteAsync(validContext, CancellationToken.None);
         Assert.Equal(0, validCode);
-        Assert.Equal("Hello KazoOS" + Environment.NewLine, stdout.ToString());
+        Assert.Equal("Hello Kazo OS" + Environment.NewLine, stdout.ToString());
 
         using StringWriter stdoutMissing = new();
         using StringWriter stderrMissing = new();
@@ -359,7 +359,7 @@ public sealed class CoreCommandsTests
 
         TestAppFileSystemGateway fileSystem = new(userId);
         fileSystem.AddDirectory("/home/user");
-        fileSystem.AddFile("/home/user/notes.txt", Encoding.UTF8.GetBytes("Hello KazoOS"));
+        fileSystem.AddFile("/home/user/notes.txt", Encoding.UTF8.GetBytes("Hello Kazo OS"));
         fileSystem.AddDirectory("/home/user/.config");
         seed?.Invoke(fileSystem);
 

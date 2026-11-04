@@ -2,7 +2,7 @@ using System.Net;
 
 namespace HackerOs.AppSdk.Net;
 
-/// <summary>Status of an echo request, the subset of <c>System.Net.NetworkInformation.IPStatus</c> KazoOS produces.</summary>
+/// <summary>Status of an echo request, the subset of <c>System.Net.NetworkInformation.IPStatus</c> Kazo OS produces.</summary>
 public enum HackIPStatus
 {
     /// <summary>An echo reply came back.</summary>

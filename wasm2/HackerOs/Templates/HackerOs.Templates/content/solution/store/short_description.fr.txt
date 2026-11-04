@@ -1,1 +1,1 @@
-Une app fenêtrée KazoOS créée avec le modèle hackeros-solution.
+Une app fenêtrée Kazo OS créée avec le modèle hackeros-solution.

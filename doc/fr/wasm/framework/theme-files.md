@@ -9,7 +9,7 @@ Ce document décrit le format du fichier `.theme`, la liste des jetons et l'API 
 Format des réglages (ADR 0044), deux sections :
 
 ```ini
-# KazoOS theme (ADR 0103).
+# Kazo OS theme (ADR 0103).
 [theme]
 id = neon-crypt
 name = Neon Crypt
@@ -89,7 +89,7 @@ compagnon `--hos-…-rgb` (« r, g, b ») calculé, utilisé par les styles qui
 
 `HackerOs.Theming.Abstractions` a ses propres `Resources/Strings.resx` /
 `Strings.fr.resx`, lus par un simple `ResourceManager` (le paquet reste sans
-dépendance KazoOS) avec la culture que l'appelant passe : une app donne
+dépendance Kazo OS) avec la culture que l'appelant passe : une app donne
 `AppContext.Culture` (l'éditeur la tire de son localiseur, `Strings.CultureOf(L)`),
 la plateforme `SessionLocaleService.Culture`, et `null` donne l'anglais.
 Les propriétés `Label`, `Description` et `Message` restent en anglais ; les
@@ -105,6 +105,6 @@ traductions passent par :
   forme écrite dans les journaux par `UserThemeCatalogService`.
 
 Ne sont jamais traduits : les noms des thèmes intégrés (`ThemeCatalog`,
-des noms propres : KazoOS, Windows 98, macOS…), les noms de jetons, les ids
+des noms propres : Kazo OS, Windows 98, macOS…), les noms de jetons, les ids
 et le contenu d'un fichier `.theme` (clés, valeurs, `platforms = desktop, mobile`,
 commentaires d'en-tête écrits par `Serialize`).

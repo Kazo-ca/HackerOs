@@ -7,7 +7,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageId>HackerOs.Theming.Blazor</PackageId>
-    <Description>Theme scope and token-driven previews shared by KazoOS shell surfaces and reusable window/taskbar projects.</Description>
+    <Description>Theme scope and token-driven previews shared by Kazo OS shell surfaces and reusable window/taskbar projects.</Description>
     <PackageTags>hackeros;theming;blazor;desktop-shell</PackageTags>
   </PropertyGroup>
 

@@ -34,7 +34,7 @@ public sealed class HackWebdApp : AppDefinition
     public override string PublisherId => "pub.hackeros";
 
     /// <inheritdoc />
-    public override string Description => "KazoOS web server: serves the static sites declared in /etc/hackweb/sites and ~/.config/hackweb/sites";
+    public override string Description => "Kazo OS web server: serves the static sites declared in /etc/hackweb/sites and ~/.config/hackweb/sites";
 
     /// <inheritdoc />
     public override string Category => "system";

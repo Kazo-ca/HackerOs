@@ -86,7 +86,7 @@ public sealed class ServerConnectionService(
         string deviceFingerprint = Guid.NewGuid().ToString("N");
         LoginResponse login = await accountClient.PairAsync(
             serverBaseUrl,
-            new PairDeviceRequest(code.Trim(), DeviceName: "KazoOS", deviceFingerprint),
+            new PairDeviceRequest(code.Trim(), DeviceName: "Kazo OS", deviceFingerprint),
             cancellationToken).ConfigureAwait(false);
         _cachedAccessToken = login.AccessToken;
         _cachedAccessTokenExpiresUtc = login.AccessTokenExpiresUtc;
@@ -187,7 +187,7 @@ public sealed class ServerConnectionService(
         {
             CreateAccountResponse created = await accountClient.CreateAccountAsync(
                 serverBaseUrl,
-                new CreateAccountRequest(username, passwordHashBase64, saltBase64, DeviceName: "KazoOS", deviceFingerprint),
+                new CreateAccountRequest(username, passwordHashBase64, saltBase64, DeviceName: "Kazo OS", deviceFingerprint),
                 cancellationToken).ConfigureAwait(false);
             LoginResponse login = await accountClient.LoginAsync(
                 serverBaseUrl,

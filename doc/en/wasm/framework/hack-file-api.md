@@ -184,7 +184,7 @@ ordinary `catch` works.
 - **`File.Move` of a folder** throws `HackFileNotFoundException`, like .NET;
   `HackDirectory.MoveAsync` moves a folder or a file.
 - **`HackDirectory.CopyAsync`** (phase 4, `rebuild/4-file-explorer`): recursive
-  copy of a folder to a destination that does not exist, a KazoOS addition (.NET has
+  copy of a folder to a destination that does not exist, a Kazo OS addition (.NET has
   no `Directory.Copy`); the engine copies the tree in one transaction, the facade
   recreates it entry by entry across two mounts. See
   [`file-explorer.md`](../dev/file-explorer.md).

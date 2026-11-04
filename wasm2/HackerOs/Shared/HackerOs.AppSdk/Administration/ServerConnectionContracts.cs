@@ -1,6 +1,6 @@
 namespace HackerOs.AppSdk.Administration;
 
-/// <summary>Connection of this device to the optional KazoOS server (ADR 0028), as an app sees it.</summary>
+/// <summary>Connection of this device to the optional Kazo OS server (ADR 0028), as an app sees it.</summary>
 /// <param name="IsConnected">Whether the device is linked to a server account.</param>
 /// <param name="ServerUrl">Server base URL, or <see langword="null"/> when not connected.</param>
 /// <param name="AccountId">Server account identifier, or <see langword="null"/> when not connected.</param>
@@ -14,12 +14,12 @@ public sealed record HackServerConnectionState(bool IsConnected, Uri? ServerUrl,
 
 /// <summary>
 /// What an address answered to <see cref="HackServerConnection.TestAsync(Uri, CancellationToken)"/>
-/// (ADR 0191 §6): whether a KazoOS server is there, before linking this device to it.
+/// (ADR 0191 §6): whether a Kazo OS server is there, before linking this device to it.
 /// </summary>
-/// <param name="IsServer">Whether a KazoOS server answered.</param>
+/// <param name="IsServer">Whether a Kazo OS server answered.</param>
 /// <param name="ServerVersion">The server's version, when it answered.</param>
 /// <param name="ApiVersion">The server's API version, when it answered.</param>
-/// <param name="Error">Why the test failed (unreachable, not a KazoOS server), in English; <see langword="null"/> on success.</param>
+/// <param name="Error">Why the test failed (unreachable, not a Kazo OS server), in English; <see langword="null"/> on success.</param>
 public sealed record HackServerProbe(bool IsServer, string? ServerVersion, string? ApiVersion, string? Error);
 
 /// <summary>What a synchronization moves (ADR 0029 to 0033).</summary>
@@ -168,7 +168,7 @@ public interface IAppServerConnectionGateway
         throw new NotSupportedException("This server connection gateway cannot pair a device.");
 
     /// <summary>
-    /// Asks <paramref name="serverUrl"/> whether it is a KazoOS server, without linking this device.
+    /// Asks <paramref name="serverUrl"/> whether it is a Kazo OS server, without linking this device.
     /// Only called when the user asks (ADR 0191 §3: the OS never probes an address by itself).
     /// </summary>
     /// <param name="serverUrl">Absolute server base URL.</param>

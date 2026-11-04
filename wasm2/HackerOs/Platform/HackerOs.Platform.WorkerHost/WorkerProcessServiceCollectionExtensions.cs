@@ -15,7 +15,7 @@ namespace HackerOs.Platform.WorkerHost;
 /// <summary>
 /// Composes headless processes in Web Workers (ADR 0070, 0071) for a host that has them: the
 /// WebAssembly hosts call this after registering an <see cref="IWebWorkerRuntime"/>; a host that does
-/// not runs every process in-process. Since ADR 0130 every KazoOS host, the server included, serves
+/// not runs every process in-process. Since ADR 0130 every Kazo OS host, the server included, serves
 /// the OS in WebAssembly and has workers.
 /// </summary>
 public static class WorkerProcessServiceCollectionExtensions

@@ -181,12 +181,12 @@ type=PATH msg=audit(1792218000.123:42): op=write path="/etc/hosts" uid=0 auid=10
 
 - `uid` : l'identité qui écrit (`root` pour une opération système ou élevée par
   `sudo`/approbation) ; `auid` : l'humain d'origine, `unset` pour l'OS.
-- KazoOS n'a pas d'identifiants numériques : `root` vaut `0`, un utilisateur
+- Kazo OS n'a pas d'identifiants numériques : `root` vaut `0`, un utilisateur
   `1000`, `unset` `4294967295` ; les champs `UID=` et `AUID=` donnent les noms,
   comme les champs enrichis d'`auditd`.
 - Un refus ajoute `err=<code>` (par exemple `err=PermissionDenied`). Le contenu
   n'est jamais écrit.
-- KazoOS n'a pas d'opération `chown` : il n'y a donc rien à auditer pour elle.
+- Kazo OS n'a pas d'opération `chown` : il n'y a donc rien à auditer pour elle.
 
 `AuditLineFormat` (Simulation.Abstractions) écrit et relit ces lignes.
 

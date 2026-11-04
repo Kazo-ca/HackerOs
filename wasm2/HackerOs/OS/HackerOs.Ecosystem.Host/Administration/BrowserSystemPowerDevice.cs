@@ -6,7 +6,7 @@ namespace HackerOs.Ecosystem.Administration;
 
 /// <summary>
 /// The browser as the machine's "hardware" for <see cref="SystemPowerService"/> (ADR 0056,
-/// section 11): a restart reloads the page, and erasing the storage leaves nothing of KazoOS in
+/// section 11): a restart reloads the page, and erasing the storage leaves nothing of Kazo OS in
 /// the browser (ADR 0227): every IndexedDB database, Cache Storage, localStorage, sessionStorage,
 /// the origin private file system, cookies and the service worker.
 /// </summary>
@@ -39,7 +39,7 @@ internal sealed class BrowserSystemPowerDevice(IJSRuntime runtime) : ISystemPowe
         string[] failed = await reset.InvokeAsync<string[]>("eraseEverything", cancellationToken).ConfigureAwait(false);
         foreach (string step in failed)
         {
-            Console.WriteLine($"KazoOS factory reset: could not erase {step}");
+            Console.WriteLine($"Kazo OS factory reset: could not erase {step}");
         }
     }
 }

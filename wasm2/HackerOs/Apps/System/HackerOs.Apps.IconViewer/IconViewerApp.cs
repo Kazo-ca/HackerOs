@@ -35,7 +35,7 @@ public sealed class IconViewerApp : AppDefinition
 
     /// <inheritdoc />
     public override string Description =>
-        "Browse, search, and copy usage snippets for every icon bundled with KazoOS: Bootstrap Icons, Font Awesome, Lucide, and Simple Icons";
+        "Browse, search, and copy usage snippets for every icon bundled with Kazo OS: Bootstrap Icons, Font Awesome, Lucide, and Simple Icons";
 
     /// <inheritdoc />
     public override AppResourceProfileManifest Resources => new(

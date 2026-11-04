@@ -11,7 +11,7 @@ namespace HackerOs.Tools.ChangeList;
 /// <remarks>
 /// <code>
 /// {
-///   "product": "KazoOS",
+///   "product": "Kazo OS",
 ///   "version": "2.1.0",
 ///   "groups": [
 ///     { "version": null, "since": "2.1.0", "entries": [ … ] },
@@ -66,7 +66,7 @@ internal static class WhatsNewDocument
             }
         }
 
-        return new JsonObject { ["product"] = "KazoOS", ["version"] = version, ["groups"] = groups };
+        return new JsonObject { ["product"] = "Kazo OS", ["version"] = version, ["groups"] = groups };
     }
 
     /// <summary>Writes the document to <paramref name="output"/>, only when its content changed (incremental builds).</summary>

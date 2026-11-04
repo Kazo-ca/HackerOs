@@ -22,7 +22,7 @@ public sealed class TestDemoFixtureSeeder(IFileSystemService fileSystem)
     public const string AlphaFileName = "alpha.txt";
 
     /// <summary>Content written to <see cref="AlphaFileName"/>.</summary>
-    public const string AlphaContent = "Alpha fixture file for KazoOS E2E tests.\n";
+    public const string AlphaContent = "Alpha fixture file for Kazo OS E2E tests.\n";
 
     /// <summary>Name of the fixture file the Text Editor E2E scenario opens and overwrites.</summary>
     public const string EditableFileName = "editable.txt";

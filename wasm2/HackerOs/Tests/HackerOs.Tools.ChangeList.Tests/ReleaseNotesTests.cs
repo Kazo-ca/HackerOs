@@ -62,7 +62,7 @@ public sealed class ReleaseNotesTests
 
         Assert.Equal(
             """
-            KazoOS 2.2.0, changes for app developers:
+            Kazo OS 2.2.0, changes for app developers:
             - Title both. Text both
             - Title sdk. Text sdk (#7)
             Release notes: https://github.com/o/r/releases/tag/v2.2.0
@@ -79,7 +79,7 @@ public sealed class ReleaseNotesTests
 
         string text = ReleaseNotes.Package(ChangeFolder.Load(folder.Path), "2.2.0");
 
-        Assert.StartsWith("KazoOS 2.2.0: no change for app developers.", text, StringComparison.Ordinal);
+        Assert.StartsWith("Kazo OS 2.2.0: no change for app developers.", text, StringComparison.Ordinal);
     }
 
     [Fact]

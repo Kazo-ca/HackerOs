@@ -56,11 +56,11 @@ public sealed class ProcFilesTests
     public void CpuInfo_has_one_entry_per_processor_block()
     {
         IReadOnlyList<ProcCpuInfoEntry> processors = ProcFiles.ParseCpuInfo(
-            "processor\t: 0\nvendor_id\t: KazoOS\nmodel name\t: KazoOS Virtual CPU (Default)\ncpu cores\t: 2\n\n" +
-            "processor\t: 1\nvendor_id\t: KazoOS\nmodel name\t: KazoOS Virtual CPU (Default)\ncpu cores\t: 2\n\n");
+            "processor\t: 0\nvendor_id\t: Kazo OS\nmodel name\t: Kazo OS Virtual CPU (Default)\ncpu cores\t: 2\n\n" +
+            "processor\t: 1\nvendor_id\t: Kazo OS\nmodel name\t: Kazo OS Virtual CPU (Default)\ncpu cores\t: 2\n\n");
 
         Assert.Equal(2, processors.Count);
-        Assert.Equal("KazoOS Virtual CPU (Default)", processors[1]["model name"]);
+        Assert.Equal("Kazo OS Virtual CPU (Default)", processors[1]["model name"]);
         Assert.Equal(string.Empty, processors[0]["missing"]);
     }
 

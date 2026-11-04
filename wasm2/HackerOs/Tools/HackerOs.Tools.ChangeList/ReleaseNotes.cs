@@ -66,8 +66,8 @@ internal static class ReleaseNotes
         List<JsonObject> entries = [.. EntriesOf(folder, version).Where(entry => ChangeFolder.HasAudience(entry, "developer"))];
         StringBuilder text = new();
         text.Append(entries.Count == 0
-            ? $"KazoOS {version}: no change for app developers.\n"
-            : $"KazoOS {version}, changes for app developers:\n");
+            ? $"Kazo OS {version}: no change for app developers.\n"
+            : $"Kazo OS {version}, changes for app developers:\n");
         foreach (JsonObject entry in entries)
         {
             text.Append("- ").Append(Sentence(ChangeFolder.Text(entry, "title", "en")));
@@ -102,10 +102,10 @@ internal static class ReleaseNotes
         text.Append(french ? $"> [English version]({EnglishChangelog})\n\n" : $"> [Version française]({FrenchChangelog})\n\n");
         text.Append(french ? "# Journal des changements\n\n" : "# Changelog\n\n");
         text.Append(french
-            ? "Les changements de KazoOS, par version. Ce fichier est généré à partir de `wasm2/HackerOs/changes/` par\n" +
+            ? "Les changements de Kazo OS, par version. Ce fichier est généré à partir de `wasm2/HackerOs/changes/` par\n" +
               "`wasm2/HackerOs/build/tools/collect-changes.sh` (ADR 0186) : ne pas le modifier à la main. Les changements\n" +
               "déjà déployés mais pas encore publiés sont dans la page Paramètres ▸ Nouveautés de l'OS.\n"
-            : "The changes of KazoOS, by version. This file is generated from `wasm2/HackerOs/changes/` by\n" +
+            : "The changes of Kazo OS, by version. This file is generated from `wasm2/HackerOs/changes/` by\n" +
               "`wasm2/HackerOs/build/tools/collect-changes.sh` (ADR 0186): do not edit it by hand. Changes already\n" +
               "deployed but not released yet are in the Settings ▸ What's new page of the OS.\n");
 

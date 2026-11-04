@@ -8,8 +8,8 @@ namespace HackerOs.Simulation.Abstractions.Sounds;
 /// <remarks>
 /// <code>
 /// [Sound Theme]
-/// Name=KazoOS
-/// Name[fr]=KazoOS
+/// Name=Kazo OS
+/// Name[fr]=Kazo OS
 /// Comment=Console bleeps
 /// Directories=stereo
 /// </code>

@@ -227,7 +227,7 @@ public static class HackApps
     /// <summary>
     /// Opens a URI with the app that handles its scheme (ADR 0096, section 3), like <c>xdg-open</c>:
     /// the default web browser for <c>http</c>/<c>https</c>, the handler of the file for <c>file://</c>.
-    /// Use <see cref="HackBrowser.OpenAsync"/> to open precisely the KazoOS browser.
+    /// Use <see cref="HackBrowser.OpenAsync"/> to open precisely the Kazo OS browser.
     /// </summary>
     /// <param name="uri">Absolute URI.</param>
     /// <param name="appId">The app to use, when the user already chose one in a chooser.</param>

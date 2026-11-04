@@ -7,10 +7,10 @@ namespace HackerOs.Server.Contracts.Hosting;
 /// PWA ships a static <see cref="HostInfoRoutes.DiscoveryFile"/> with <see cref="IsServer"/> set
 /// to <see langword="false"/>; <c>HackerOs.Server</c> answers the same path (and
 /// <see cref="HostInfoRoutes.ApiPath"/>) with <see langword="true"/>, so the OS learns at boot,
-/// without a failing request, whether a KazoOS server delivered it.
+/// without a failing request, whether a Kazo OS server delivered it.
 /// </summary>
 /// <param name="Product">Product name, <see cref="HostInfoRoutes.ServerProduct"/> on a server.</param>
-/// <param name="IsServer">Whether the origin is a KazoOS server with its API.</param>
+/// <param name="IsServer">Whether the origin is a Kazo OS server with its API.</param>
 /// <param name="ServerVersion">Server software version; <see langword="null"/> on a static host.</param>
 /// <param name="ApiVersion">Preferred API version; <see langword="null"/> on a static host.</param>
 public sealed record HostInfoResponse(
@@ -32,7 +32,7 @@ public static class HostInfoRoutes
     public const string DiscoveryFile = "hackeros-host.json";
 
     /// <summary><see cref="HostInfoResponse.Product"/> of <c>HackerOs.Server</c>.</summary>
-    public const string ServerProduct = "KazoOS Server";
+    public const string ServerProduct = "Kazo OS Server";
 }
 
 /// <summary>Source-generated JSON context of the host discovery contracts (trimming and AOT safe).</summary>

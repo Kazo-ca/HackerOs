@@ -22,6 +22,6 @@
     <value>date : opérande supplémentaire « {0} »</value>
   </data>
   <data name="CannotSet" xml:space="preserve">
-    <value>date : impossible de régler la date « {0} » : l'horloge de KazoOS est l'horloge de la simulation</value>
+    <value>date : impossible de régler la date « {0} » : l'horloge de Kazo OS est l'horloge de la simulation</value>
   </data>
 </root>

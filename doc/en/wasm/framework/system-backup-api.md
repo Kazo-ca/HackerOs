@@ -13,7 +13,7 @@ damaged, empty, tampered with (wrong hash) or from another schema version is
 refused **before** any write, with a message that names both versions:
 
 ```text
-This backup uses database schema version 3; this KazoOS uses version 4. It cannot be restored here.
+This backup uses database schema version 3; this Kazo OS uses version 4. It cannot be restored here.
 ```
 
 Name: `hackeros-AAAAMMJJ-HHMMSSZ.hosbak` (UTC time of the export).

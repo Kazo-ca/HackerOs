@@ -90,7 +90,7 @@ public sealed record ProcMetricsSources(
 /// <param name="Options">Mount options: <c>rw</c> or <c>ro</c>.</param>
 public sealed record MountDescription(string Source, string MountPoint, string Type, string Options)
 {
-    /// <summary>Type of the persistent IndexedDB filesystem, specific to KazoOS.</summary>
+    /// <summary>Type of the persistent IndexedDB filesystem, specific to Kazo OS.</summary>
     public const string IndexedDbType = "idbfs";
 
     /// <summary>

@@ -1,4 +1,4 @@
-// KazoOS Progressive Web App Service Worker (Published / Production Mode)
+// Kazo OS Progressive Web App Service Worker (Published / Production Mode)
 // Implements Cache-First offline shell strategy, atomic cache versioning,
 // asset integrity checking, and safe update activation (P2-PWA-002 through P2-PWA-005),
 // plus the corrupted-cache recovery of ADR 0099 §3 (RESET_CACHE message, see onMessage)
@@ -73,7 +73,7 @@ async function loadIsolationState() {
             }
         }
     } catch (error) {
-        console.warn('KazoOS Service Worker: appsettings.json unreadable, cross-origin isolation stays "auto"', error);
+        console.warn('Kazo OS Service Worker: appsettings.json unreadable, cross-origin isolation stays "auto"', error);
     }
 
     let embedderPolicy = 'credentialless';
@@ -114,7 +114,7 @@ async function onInstall(event) {
         return;
     }
 
-    console.info('KazoOS Service Worker: Installing release asset cache', cacheName);
+    console.info('Kazo OS Service Worker: Installing release asset cache', cacheName);
 
     const cache = await caches.open(cacheName);
     await cache.addAll(buildAssetRequests());
@@ -131,7 +131,7 @@ function buildAssetRequests() {
 }
 
 async function onActivate(event) {
-    console.info('KazoOS Service Worker: Activating cache version', cacheName);
+    console.info('Kazo OS Service Worker: Activating cache version', cacheName);
 
     // Delete all stale/previous version caches atomically to avoid mixing old and new release assets (P2-PWA-005)
     const cacheKeys = await caches.keys();
@@ -184,7 +184,7 @@ async function fetchShellOrAsset(event) {
     } catch (error) {
         // Offline, the host discovery answers "no server reachable" instead of failing (ADR 0137).
         if (new URL(event.request.url).pathname.endsWith('/hackeros-host.json')) {
-            return new Response('{"product":"KazoOS","isServer":false}',
+            return new Response('{"product":"Kazo OS","isServer":false}',
                 { headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
         }
         // When network is unavailable and request is navigation, serve cached shell
@@ -212,7 +212,7 @@ function onMessage(event) {
             .then(loadIsolationState)
             .then(state => port && port.postMessage(state)));
     } else if (event.data && event.data.type === 'SKIP_WAITING') {
-        console.info('KazoOS Service Worker: Received SKIP_WAITING signal');
+        console.info('Kazo OS Service Worker: Received SKIP_WAITING signal');
         self.skipWaiting();
     } else if (event.data && event.data.type === 'RESET_CACHE') {
         // ADR 0099 §3: the page's boot failed on an integrity or load error. Reply on the
@@ -232,7 +232,7 @@ function onMessage(event) {
 //   (e.g. a newer release is deployed), the damaged cache is emptied anyway: resources then
 //   come straight from the server, and the page's one-reload guard prevents any loop.
 async function resetCache() {
-    console.warn('KazoOS Service Worker: Rebuilding damaged cache', cacheName);
+    console.warn('Kazo OS Service Worker: Rebuilding damaged cache', cacheName);
     try {
         await fetch(new Request('service-worker-assets.js', { cache: 'no-store' }));
     } catch {
@@ -247,7 +247,7 @@ async function resetCache() {
     try {
         await staging.addAll(buildAssetRequests());
     } catch (error) {
-        console.warn('KazoOS Service Worker: Could not download a verified copy of this release', error);
+        console.warn('Kazo OS Service Worker: Could not download a verified copy of this release', error);
         refilled = false;
     }
 

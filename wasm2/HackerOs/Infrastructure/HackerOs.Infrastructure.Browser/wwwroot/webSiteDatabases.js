@@ -1,4 +1,4 @@
-// Browser databases of KazoOS web sites (ADR 0088).
+// Browser databases of Kazo OS web sites (ADR 0088).
 //
 // One IndexedDB database per site, "hackweb.<app id>", opened by the OS for the site: C# passes
 // the schema and each transaction as JSON, this module runs them with the real IndexedDB and

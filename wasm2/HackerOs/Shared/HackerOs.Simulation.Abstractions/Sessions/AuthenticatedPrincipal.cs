@@ -17,7 +17,7 @@ public sealed record AuthenticatedPrincipal
     /// <param name="authority">Authority granted to the session; never <see cref="AppAuthority.System"/>.</param>
     /// <param name="primaryGroupId">The user's primary group at authentication time.</param>
     /// <param name="groupIds">All group memberships at authentication time, including the primary group.</param>
-    /// <param name="installationId">Identifier of the KazoOS installation/profile hosting the session.</param>
+    /// <param name="installationId">Identifier of the Kazo OS installation/profile hosting the session.</param>
     /// <param name="deviceId">Identifier of the physical/browser device hosting the session.</param>
     /// <param name="authenticatedAtUtc">UTC simulation time authentication completed.</param>
     /// <param name="homePath">
@@ -91,7 +91,7 @@ public sealed record AuthenticatedPrincipal
     /// <summary>Gets all group memberships at authentication time, including the primary group.</summary>
     public IReadOnlyCollection<LocalGroupId> GroupIds { get; }
 
-    /// <summary>Gets the identifier of the KazoOS installation/profile hosting the session.</summary>
+    /// <summary>Gets the identifier of the Kazo OS installation/profile hosting the session.</summary>
     public InstallationId InstallationId { get; }
 
     /// <summary>Gets the identifier of the physical/browser device hosting the session.</summary>

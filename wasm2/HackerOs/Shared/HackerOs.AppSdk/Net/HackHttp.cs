@@ -26,7 +26,7 @@ public sealed record HackHttpRequest(
     IReadOnlyList<HackCookie> Cookies);
 
 /// <summary>
-/// An HTTP response, the parts of <see cref="HttpResponseMessage"/> KazoOS apps use, plus the
+/// An HTTP response, the parts of <see cref="HttpResponseMessage"/> Kazo OS apps use, plus the
 /// structured page a historical simulated site returns.
 /// </summary>
 /// <remarks>
@@ -136,7 +136,7 @@ public enum HackHttpResponseSource
     /// <summary>A site served by a process of this machine (a <c>.hack</c> site, <c>localhost</c>, ADR 0074).</summary>
     LocalSite,
 
-    /// <summary>The real Internet, relayed by the optional KazoOS server (ADR 0102, ADR 0210).</summary>
+    /// <summary>The real Internet, relayed by the optional Kazo OS server (ADR 0102, ADR 0210).</summary>
     RealNetwork
 }
 
@@ -305,7 +305,7 @@ public sealed class HackHttpClient : IDisposable
 
     /// <summary>Gets the headers added to every request.</summary>
     public IDictionary<string, string> DefaultRequestHeaders { get; } =
-        new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase) { ["User-Agent"] = "KazoOS/1.0" };
+        new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase) { ["User-Agent"] = "Kazo OS/1.0" };
 
     /// <summary>Sends a <c>GET</c> request.</summary>
     /// <exception cref="HackHttpRequestException">No response came back.</exception>

@@ -195,7 +195,7 @@ Fonctionnement de `generate` :
 
 1. charge l'assembly compilée dans un `AssemblyLoadContext` isolé et collectable
    (`AppAssemblyLoadContext`). Les assemblies du framework partagé et les
-   contrats KazoOS de l'outil viennent du contexte par défaut (une seule
+   contrats Kazo OS de l'outil viennent du contexte par défaut (une seule
    identité pour `AppDefinition`) ; les autres viennent de la liste
    `@(ReferenceCopyLocalPaths)` + `@(ReferencePath)` puis du dossier de sortie
    de l'app. Les assemblies de référence (`[ReferenceAssembly]`) sont ignorées ;

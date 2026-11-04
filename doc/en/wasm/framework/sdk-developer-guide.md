@@ -1,10 +1,10 @@
 > [Version française](../../../fr/wasm/framework/sdk-developer-guide.md)
 
-# KazoOS app developer guide
+# Kazo OS app developer guide
 
 ## Purpose
 
-This guide explains how to write an app for KazoOS with the public SDK:
+This guide explains how to write an app for Kazo OS with the public SDK:
 a window, a shell command or a service. It starts from zero and goes
 through to installation and testing. The complete list of APIs is in the
 [SDK reference](sdk-reference.md); the rules of the SDK boundary are
@@ -76,7 +76,7 @@ them in `artifacts/local-nupkg`, a `nuget.config` (template
 project:
 
 ```bash
-dotnet new install <KazoOS>/artifacts/local-nupkg/HackerOs.Templates.2.2.2.nupkg
+dotnet new install <Kazo OS>/artifacts/local-nupkg/HackerOs.Templates.2.2.2.nupkg
 dotnet new hackeros-window -n Contoso.Notes --appId com.contoso.notes
 dotnet new hackeros-host -n Contoso.Os          # un hôte qui lance tout l'OS
 ```
@@ -735,7 +735,7 @@ The test project references the app's project and `HackerOs.Tests.Support`
 
 ## 8 bis. Translating your app
 
-KazoOS speaks English (default) and French; each process follows its
+Kazo OS speaks English (default) and French; each process follows its
 own `LANG` (ADR 0104). To translate an app:
 
 1. Add a marker class `internal sealed class Strings` in the root

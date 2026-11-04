@@ -2,7 +2,7 @@
 
 # Redirection Cloudflare de hackos.kazo.ca vers os.kazo.ca
 
-Le script du Worker est dans [`wasm2/HackerOs/build/cloudflare/hackos-redirect-worker.mjs`](../../../../wasm2/HackerOs/build/cloudflare/hackos-redirect-worker.mjs). Vérification locale : `node wasm2/HackerOs/build/cloudflare/test-redirect-worker.mjs`. Contexte : [ADR 0228](adr/0228-rename-to-kazoos.md) (KazoOS).
+Le script du Worker est dans [`wasm2/HackerOs/build/cloudflare/hackos-redirect-worker.mjs`](../../../../wasm2/HackerOs/build/cloudflare/hackos-redirect-worker.mjs). Vérification locale : `node wasm2/HackerOs/build/cloudflare/test-redirect-worker.mjs`. Contexte : [ADR 0228](adr/0228-rename-to-kazoos.md) (Kazo OS).
 
 ## Ce que fait le Worker
 

@@ -7,8 +7,8 @@ namespace HackerOs.UI.E2E.Tests;
 
 public sealed class TextEditorFileTests(ITestOutputHelper output)
 {
-    private const string NewContent = "Rewritten by the KazoOS E2E Text Editor test.\n";
-    private const string BrandNewDocumentContent = "Created from scratch by the KazoOS E2E Text Editor test.\n";
+    private const string NewContent = "Rewritten by the Kazo OS E2E Text Editor test.\n";
+    private const string BrandNewDocumentContent = "Created from scratch by the Kazo OS E2E Text Editor test.\n";
     private const string BrandNewDocumentFileName = "new-note.txt";
 
     /// <summary>

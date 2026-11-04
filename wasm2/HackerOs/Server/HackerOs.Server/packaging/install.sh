@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# KazoOS Server installer for Linux (systemd) and macOS (launchd). ADR 0191.
+# Kazo OS Server installer for Linux (systemd) and macOS (launchd). ADR 0191.
 # Guide: https://github.com/Kazo-ca/HackerOs/blob/main/doc/en/wasm/dev/installable-server.md
 #
 #   sudo ./install.sh                         this computer only: http://localhost:5888
@@ -86,7 +86,7 @@ stop_service() {
 }
 
 # ── Files ─────────────────────────────────────────────────────────────────────
-echo "Installing KazoOS Server into $PREFIX (data: $DATA)"
+echo "Installing Kazo OS Server into $PREFIX (data: $DATA)"
 stop_service
 mkdir -p "$PREFIX" "$DATA/blobs" "$DATA/backups" "$DATA/pairing" "$DATA/logs"
 if [[ "$SOURCE" != "$(cd "$PREFIX" && pwd)" ]]; then
@@ -122,7 +122,7 @@ if [[ -n "$LAN" ]]; then
   echo "Generating the local certificate authority and the HTTPS certificate in $CERTS"
   openssl req -x509 -newkey rsa:3072 -sha256 -days 3650 -nodes \
     -keyout "$CERTS/ca.key" -out "$CERTS/hackeros-local-ca.crt" \
-    -subj "/CN=KazoOS Local CA ($(hostname))" \
+    -subj "/CN=Kazo OS Local CA ($(hostname))" \
     -addext "basicConstraints=critical,CA:TRUE,pathlen:0" \
     -addext "keyUsage=critical,keyCertSign,cRLSign" 2> /dev/null
   openssl req -newkey rsa:2048 -sha256 -nodes \
@@ -193,7 +193,7 @@ if [[ $SERVICE -eq 1 ]]; then
   if [[ "$SYSTEM" == "Linux" ]]; then
     cat > "/etc/systemd/system/$SERVICE_NAME.service" <<EOF
 [Unit]
-Description=KazoOS Server (network relay, accounts and sync for KazoOS)
+Description=Kazo OS Server (network relay, accounts and sync for Kazo OS)
 Documentation=https://github.com/Kazo-ca/HackerOs/blob/main/doc/en/wasm/dev/installable-server.md
 After=network-online.target
 Wants=network-online.target
@@ -240,7 +240,7 @@ fi
 
 # ── Summary ──────────────────────────────────────────────────────────────────
 echo
-echo "KazoOS Server is installed."
+echo "Kazo OS Server is installed."
 echo "  On this computer:   http://localhost:$PORT"
 for name in ${LAN_NAMES[@]+"${LAN_NAMES[@]}"}; do
   [[ "$name" == *:* ]] && host="[$name]" || host="$name"

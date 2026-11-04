@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ADR 0098 §2: packs every library KazoOS publishes (each project importing
+# ADR 0098 §2: packs every library Kazo OS publishes (each project importing
 # Platform/Packaging.props, plus the templates) into artifacts/local-nupkg.
 # Another repository consumes the folder through a nuget.config (sample:
 # build/nuget.config.sample). The Release workflow (ADR 0173) runs the same script with

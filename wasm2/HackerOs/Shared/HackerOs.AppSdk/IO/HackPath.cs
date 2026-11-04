@@ -5,7 +5,7 @@ using HackerOs.App.Abstractions;
 namespace HackerOs.AppSdk.IO;
 
 /// <summary>
-/// Path helpers for the KazoOS virtual filesystem, shaped like <see cref="System.IO.Path"/>
+/// Path helpers for the Kazo OS virtual filesystem, shaped like <see cref="System.IO.Path"/>
 /// but always Linux-style (<c>/</c> separator, case-sensitive, no drive letters) whatever the
 /// host OS running the WebAssembly runtime (ADR 0043).
 /// </summary>
