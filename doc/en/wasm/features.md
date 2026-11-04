@@ -376,6 +376,12 @@ points to its PR.
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
 
+### Project name
+
+| Feature | Description | ADR | Issue |
+| --- | --- | --- | --- |
+| HackerOS becomes KazoOS | The name HackerOS is already taken by a Linux distribution. Everything is renamed: displayed name, `Kazo.Os.*` namespaces and packages (SDK 3.0.0), `Kazo` prefix instead of `Hack`, commands, extensions and paths; user data is migrated on the first boot. | [0228 (PR)](https://github.com/Kazo-ca/HackerOs/pull/PRNUM) | Series `rename/base` |
+
 ### Optional ported applications
 
 Well-known open source applications adapted to HackerOS, each in its own
