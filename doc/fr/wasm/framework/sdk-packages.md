@@ -453,7 +453,7 @@ sur le disque »). Kazo OS **écrit seulement les nouveaux noms**. Il **lit
 encore** les anciens noms qui viennent de l'extérieur de la machine (paquets,
 configuration, commandes tapées par habitude) ; les données déjà enregistrées
 dans le navigateur sous les anciens noms sont réécrites par la migration du
-chantier 6.
+chantier 6 ([`rename-migration.md`](../dev/rename-migration.md), ADR 0230).
 
 | Avant | Après | Ancien nom encore lu |
 |---|---|---|
@@ -463,13 +463,13 @@ chantier 6.
 | dossier `hackeros/manifests/` (et `hackeros/localization/`) des paquets NuGet d'apps | `kazoos/manifests/`, `kazoos/localization/` | oui : un paquet 2.x garde ses propres `buildTransitive/*.targets`, qui visent son dossier |
 | section de configuration `HackerOs` (`HackerOs:Proxy`...) | `KazoOs` | oui : une clé `HackerOs:*` répond sous `KazoOs:*` quand la nouvelle section ne l'a pas (`KazoOsConfigurationNames.MapLegacySettings`, serveur, PWA et service worker) |
 | variables d'environnement `HACKEROS_*` du serveur | `KAZOOS_*` | oui : les deux préfixes sont lus, le nouveau gagne |
-| chaîne de connexion `HackerOsDb`, fichier `hackeros-server.json`, base par défaut `hackeros.db` | `KazoOsDb`, `kazoos-server.json`, `kazoos.db` | oui pour la chaîne de connexion et le fichier (un serveur installé garde la base que nomme sa configuration) |
+| chaîne de connexion `HackerOsDb`, fichier `hackeros-server.json`, base par défaut `hackeros.db` | `KazoOsDb`, `kazoos-server.json`, `kazoos.db` | oui pour la chaîne de connexion et le fichier ; `hackeros.db` est renommé `kazoos.db` au démarrage quand le `kazoos.db` configuré n'existe pas encore (ADR 0230) |
 | clé `X-HackerOS-Origin` des fichiers `.trashinfo` | `X-KazoOS-Origin` | oui |
 | variable `HACKEROS_PREVIOUS_VERSION` donnée à une app mise à jour | `KAZOOS_PREVIOUS_VERSION` | oui : les deux sont données |
 | caches `hackeros-cache-*` du service worker | `kazoos-cache-*` | supprimés à l'activation |
-| identifiants d'apps `org.hackeros.*`, éditeur `pub.hackeros`, capacités, contrats et intentions `hackeros.*` (`hackeros.file-view`...) | `org.kazoos.*`, `pub.kazoos`, `kazoos.*` | non : chantier 6 |
-| bases IndexedDB `hackeros*`, `hackweb.*`, clés `localStorage` / `sessionStorage`, identifiants de thèmes (`hackeros`, `hackeros-neon`...), jeu de sons `hackeros` | `kazoos*`, `kazoweb.*`, `kazoos...` | non : chantier 6 |
-| chemins `/etc/hackeros`, `~/.config/hackeros`, `~/.local/share/hackeros`, `~/.local/state/hackeros`, `/usr/share/hackeros`, `/usr/lib/hackeros`, `/var/lib/hackeros`, `/proc/hackeros`, `/etc/hackweb`, `/var/log/hackweb`, `~/.config/hackweb`, `~/.hackeros/aliases` | `/etc/kazoos`, `~/.config/kazoos`... `/proc/kazoos`, `/etc/kazoweb`, `/var/log/kazoweb`, `~/.config/kazoweb`, `~/.kazoos/aliases` | non : le chantier 6 déplace les fichiers existants |
+| identifiants d'apps `org.hackeros.*`, éditeur `pub.hackeros`, capacités, contrats et intentions `hackeros.*` (`hackeros.file-view`...) | `org.kazoos.*`, `pub.kazoos`, `kazoos.*` | non : ceux enregistrés sont réécrits au démarrage et à la restauration (chantier 6, ADR 0230) |
+| bases IndexedDB `hackeros*`, `hackweb.*`, clés `localStorage` / `sessionStorage`, identifiants de thèmes (`hackeros`, `hackeros-neon`...), jeu de sons `hackeros` | `kazoos*`, `kazoweb.*`, `kazoos...` | non : les bases sont copiées sous les nouveaux noms, les clés renommées, au démarrage (chantier 6, ADR 0230) |
+| chemins `/etc/hackeros`, `~/.config/hackeros`, `~/.local/share/hackeros`, `~/.local/state/hackeros`, `/usr/share/hackeros`, `/usr/lib/hackeros`, `/var/lib/hackeros`, `/proc/hackeros`, `/etc/hackweb`, `/var/log/hackweb`, `~/.config/hackweb`, `~/.hackeros/aliases` | `/etc/kazoos`, `~/.config/kazoos`... `/proc/kazoos`, `/etc/kazoweb`, `/var/log/kazoweb`, `~/.config/kazoweb`, `~/.kazoos/aliases` | non : le chantier 6 déplace les fichiers existants au démarrage (ADR 0230) |
 | service `hackwebd`, résolveur `hackdns`, nom d'hôte par défaut `hackeros`, compte de service `hackeros-svc` | `kazowebd`, `kazodns`, `kazoos`, `kazoos-svc` | non (un `/etc/hostname` déjà écrit est gardé) |
 | variables CSS `--hackeros-*`, attributs `data-hack-menu*`, script `_framework/blazor.hack.js` des sites, noms C# `IHack*` / `Hack*` / `Hacker*` laissés par le chantier 3 | `--kazoos-*`, `data-kazo-menu*`, `_framework/blazor.kazo.js`, `IKazo*` / `Kazo*` | non |
 | ASP.Hack, Hack Store, Hack Paint | ASP.Kazo (dossier `build/asp-kazo/`, en-tête `X-Powered-By: ASP.Kazo`), Kazo OS Store, Kazo Paint | — |

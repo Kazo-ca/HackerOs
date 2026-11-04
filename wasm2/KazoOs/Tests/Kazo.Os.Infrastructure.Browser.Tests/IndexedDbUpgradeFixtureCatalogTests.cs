@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Kazo.Os.Infrastructure.Browser.Rename;
 using Kazo.Os.Infrastructure.Browser.Schema;
 
 namespace Kazo.Os.Infrastructure.Browser.Tests;
@@ -22,13 +23,6 @@ public sealed class IndexedDbUpgradeFixtureCatalogTests
     /// </summary>
     private const int FirstReleasedVersion = 2;
 
-    /// <summary>
-    /// TODO work item 6 (rename/6, migration): the dumps were recorded before the rename (ADR 0228), under
-    /// the database name <c>hackeros</c>. Work item 6 migrates that database to
-    /// <see cref="KazoOsIndexedDbSchema.DatabaseName"/>; until then a dump may name either one.
-    /// </summary>
-    private const string DatabaseNameBeforeRename = "hackeros";
-
     /// <summary>Every released version below the current one has its dump.</summary>
     [Fact]
     public void Every_previous_released_schema_version_has_a_fixture()
@@ -45,7 +39,12 @@ public sealed class IndexedDbUpgradeFixtureCatalogTests
         }
     }
 
-    /// <summary>Each dump names the canonical database, its own version and only known stores.</summary>
+    /// <summary>
+    /// Each dump names the OS database as the build that wrote it named it, its own version and only
+    /// known stores. Every dump was recorded before the rename (ADR 0228), under
+    /// <see cref="RenamedNames.LegacyOsDatabaseName"/>; the rename migration (ADR 0230) moves that
+    /// database to <see cref="KazoOsIndexedDbSchema.DatabaseName"/> before the OS opens it.
+    /// </summary>
     /// <param name="version">The dumped schema version.</param>
     [Theory]
     [MemberData(nameof(FixtureVersions))]
@@ -55,7 +54,9 @@ public sealed class IndexedDbUpgradeFixtureCatalogTests
             File.ReadAllText(Path.Combine(FixtureDirectory(), $"hackeros-v{version}.json")));
         JsonElement root = document.RootElement;
 
-        Assert.Contains(root.GetProperty("databaseName").GetString(), new[] { KazoOsIndexedDbSchema.DatabaseName, DatabaseNameBeforeRename });
+        string databaseName = root.GetProperty("databaseName").GetString()!;
+        Assert.True(RenamedNames.IsLegacyDatabaseName(databaseName), $"v{version} names '{databaseName}', not the database of a build before 3.0.0.");
+        Assert.Equal(KazoOsIndexedDbSchema.DatabaseName, RenamedNames.Rewrite(databaseName));
         Assert.Equal(version, root.GetProperty("version").GetInt32());
         Assert.True(root.GetProperty("producedFrom").GetProperty("commit").GetString() is { Length: > 0 });
 

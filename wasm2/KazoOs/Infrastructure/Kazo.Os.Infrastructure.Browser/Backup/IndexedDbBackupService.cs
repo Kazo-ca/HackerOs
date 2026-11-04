@@ -3,7 +3,9 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Kazo.Os.App.Abstractions;
 using Kazo.Os.Infrastructure.Browser.Interop;
+using Kazo.Os.Infrastructure.Browser.Rename;
 using Kazo.Os.Infrastructure.Browser.Schema;
 using Microsoft.JSInterop;
 
@@ -12,9 +14,14 @@ namespace Kazo.Os.Infrastructure.Browser.Backup;
 /// <summary>Exports and atomically restores validated Kazo OS IndexedDB backups.</summary>
 /// <remarks>
 /// The backup is the whole OS database as one JSON document (<c>formatVersion: 1</c>, schema
-/// version, every store, SHA-256 of the payload). ADR 0099 section 1 ships it as a gzip archive
+/// version, the Kazo OS version that made it, every store, SHA-256 of the payload). ADR 0099 section 1 ships it as a gzip archive
 /// with the <see cref="ArchiveExtension"/> extension (<see cref="ExportArchiveAsync"/>,
 /// <see cref="ReadArchive"/>); restoring accepts the plain JSON too.
+/// <para>
+/// ADR 0230 §5: a backup made before 3.0.0 (database <c>hackeros</c>, no <c>osVersion</c> or an
+/// older one) is migrated to the Kazo OS names by <see cref="RenamedOsDatabaseRewriter"/> while it
+/// is validated, so <see cref="Inspect"/> and <see cref="RestoreAsync"/> only ever see the new names.
+/// </para>
 /// </remarks>
 public sealed class IndexedDbBackupService : IAsyncDisposable
 {
@@ -49,7 +56,9 @@ public sealed class IndexedDbBackupService : IAsyncDisposable
 
         JsonObject payload = BuildPayload(
             _timeProvider.GetUtcNow(),
-            KazoOsIndexedDbSchema.ObjectStores.Select((store, index) => (store.Name, results[index])));
+            KazoOsIndexedDbSchema.ObjectStores.Select((store, index) => (store.Name, results[index])),
+            KazoOsIndexedDbSchema.DatabaseName,
+            KazoOsSdk.Version);
         JsonObject envelope = JsonNode.Parse(payload.ToJsonString())!.AsObject();
         envelope["sha256"] = ComputeHash(payload);
         return envelope.ToJsonString();
@@ -113,6 +122,11 @@ public sealed class IndexedDbBackupService : IAsyncDisposable
             backup.RecordCount,
             backup.Stores.ToDictionary(store => store.Name, store => store.Records.GetArrayLength(), StringComparer.Ordinal));
     }
+
+    /// <summary>Validates a backup and returns the records it restores, per store (after the ADR 0230 migration).</summary>
+    /// <param name="backupJson">The backup JSON.</param>
+    internal static IReadOnlyDictionary<string, JsonElement> ReadStores(string backupJson) =>
+        Validate(backupJson).Stores.ToDictionary(store => store.Name, store => store.Records, StringComparer.Ordinal);
 
     /// <summary>Validates a backup completely, then restores it using the explicitly selected mode.</summary>
     public async ValueTask<IndexedDbRestoreResult> RestoreAsync(
@@ -178,6 +192,7 @@ public sealed class IndexedDbBackupService : IAsyncDisposable
         int schemaVersion = RequiredInt(envelope, "databaseSchemaVersion");
         string createdAt = RequiredString(envelope, "createdAtUtc");
         string expectedHash = RequiredString(envelope, "sha256");
+        string? osVersion = envelope["osVersion"]?.GetValue<string>();
         if (schemaVersion != KazoOsIndexedDbSchema.CurrentVersion)
         {
             // ADR 0099 section 1: a backup of another schema version is refused with a clear message.
@@ -186,7 +201,7 @@ public sealed class IndexedDbBackupService : IAsyncDisposable
         }
 
         if (formatVersion != FormatVersion
-            || databaseName != KazoOsIndexedDbSchema.DatabaseName
+            || databaseName is not (KazoOsIndexedDbSchema.DatabaseName or RenamedNames.LegacyOsDatabaseName)
             || !DateTimeOffset.TryParse(createdAt, out DateTimeOffset createdAtUtc)
             || expectedHash.Length != 64)
         {
@@ -211,7 +226,7 @@ public sealed class IndexedDbBackupService : IAsyncDisposable
             stores.Add((definition.Name, records));
         }
 
-        JsonObject payload = BuildPayload(createdAtUtc, stores.Select(store => (store.Name, store.Records)));
+        JsonObject payload = BuildPayload(createdAtUtc, stores.Select(store => (store.Name, store.Records)), databaseName, osVersion);
         string actualHash = ComputeHash(payload);
         if (!CryptographicOperations.FixedTimeEquals(
             Encoding.ASCII.GetBytes(expectedHash.ToLowerInvariant()),
@@ -220,7 +235,28 @@ public sealed class IndexedDbBackupService : IAsyncDisposable
             throw new IndexedDbBackupValidationException("Backup SHA-256 integrity validation failed.");
         }
 
+        if (databaseName == RenamedNames.LegacyOsDatabaseName || RenamedNames.PredatesRename(osVersion))
+        {
+            stores = MigrateRenamedNames(stores);
+        }
+
         return new ValidatedBackup(stores, stores.Sum(store => store.Records.GetArrayLength()), createdAtUtc);
+    }
+
+    /// <summary>ADR 0230 §5: rewrites a backup made before 3.0.0 to the Kazo OS names before it is restored.</summary>
+    private static List<(string Name, JsonElement Records)> MigrateRenamedNames(List<(string Name, JsonElement Records)> stores)
+    {
+        Dictionary<string, IReadOnlyList<JsonObject>> records = stores.ToDictionary(
+            store => store.Name,
+            store => (IReadOnlyList<JsonObject>)[.. store.Records.EnumerateArray().Select(record => JsonNode.Parse(record.GetRawText())!.AsObject())],
+            StringComparer.Ordinal);
+        RenamedOsDatabase migrated = RenamedOsDatabaseRewriter.Rewrite(records);
+        return [.. stores.Select(store =>
+        {
+            JsonArray array = [.. migrated.Stores[store.Name].Select(record => (JsonNode)record.DeepClone())];
+            using JsonDocument document = JsonDocument.Parse(array.ToJsonString());
+            return (store.Name, document.RootElement.Clone());
+        })];
     }
 
     private static void ValidateRecordIdentities(IndexedDbObjectStoreDefinition definition, JsonElement records)
@@ -261,7 +297,9 @@ public sealed class IndexedDbBackupService : IAsyncDisposable
 
     private static JsonObject BuildPayload(
         DateTimeOffset createdAtUtc,
-        IEnumerable<(string Name, JsonElement Records)> stores)
+        IEnumerable<(string Name, JsonElement Records)> stores,
+        string databaseName,
+        string? osVersion)
     {
         JsonObject storesNode = [];
         foreach ((string name, JsonElement records) in stores)
@@ -269,14 +307,21 @@ public sealed class IndexedDbBackupService : IAsyncDisposable
             storesNode[name] = JsonNode.Parse(records.GetRawText());
         }
 
-        return new JsonObject
+        JsonObject payload = new()
         {
             ["formatVersion"] = FormatVersion,
-            ["databaseName"] = KazoOsIndexedDbSchema.DatabaseName,
+            ["databaseName"] = databaseName,
             ["databaseSchemaVersion"] = KazoOsIndexedDbSchema.CurrentVersion,
             ["createdAtUtc"] = createdAtUtc.ToUniversalTime().ToString("O"),
-            ["stores"] = storesNode
         };
+        // ADR 0230 §2: the version that made the backup; the backups before 3.0.0 have none.
+        if (osVersion is not null)
+        {
+            payload["osVersion"] = osVersion;
+        }
+
+        payload["stores"] = storesNode;
+        return payload;
     }
 
     private static string ComputeHash(JsonObject payload) =>

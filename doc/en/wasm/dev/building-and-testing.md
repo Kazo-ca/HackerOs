@@ -371,8 +371,11 @@ intents, environment, shell). Example: see the
 
 ### IndexedDB version upgrade fixtures
 
-ADR 0099 §4. `Tests/fixtures/indexeddb/` contains a dump of the `kazoos`
-database for each schema version already published.
+ADR 0099 §4. `Tests/fixtures/indexeddb/` contains a dump of the OS database
+for each schema version already published. They were recorded before the
+rename, under the name `hackeros`, and do not change: the OS first moves that
+database to `kazoos` with the Kazo OS names
+([`rename-migration.md`](rename-migration.md), ADR 0230).
 `IndexedDbUpgradeFixtureTests` (`Kazo.Os.UI.E2E.Tests`) recreates each
 database at its old version with `indexedDB.open(name, oldVersion)`, from a
 page of the same origin that does not start the OS (served by Playwright
@@ -385,13 +388,15 @@ would create a fresh v4 database), then starts the current OS and verifies:
 - `cat /etc/kazoos/appearance.config` contains `accent=cyan`: the setting
   stored in the old `settings` store was picked up by the migration to files
   (ADR 0044);
-- the database is at version 4 with `serverConnection`, `syncCursors` and
-  `syncRecordState`.
+- the database is `kazoos`, at version 4 with `serverConnection`,
+  `syncCursors` and `syncRecordState`;
+- the `hackeros` database is gone and no `kazoos` record holds an old name
+  (ADR 0230).
 
 `IndexedDbUpgradeFixtureCatalogTests` (`Kazo.Os.Infrastructure.Browser.Tests`,
 no browser, hence in every ordinary run) verifies that a dump exists for each
 version from 2 to `CurrentVersion - 1` and that it matches the schema
-(database name, version, known stores, key path, auto-increment,
+(name of a pre-3.0.0 database that the migration moves to `kazoos`, version, known stores, key path, auto-increment,
 administrator present).
 
 | File | Version | Commit started | Production |

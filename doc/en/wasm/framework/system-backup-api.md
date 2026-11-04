@@ -18,6 +18,12 @@ This backup uses database schema version 3; this Kazo OS uses version 4. It cann
 
 Name: `kazoos-AAAAMMJJ-HHMMSSZ.hosbak` (UTC time of the export).
 
+Since 3.0.0 the JSON also names the Kazo OS version that made it (`osVersion`,
+covered by the SHA-256). A backup made before 3.0.0 (database `hackeros`, no
+`osVersion`) is still accepted: its content is migrated to the Kazo OS names
+before it is restored ([ADR 0230](../dev/adr/0230-rename-migration-by-previous-version.md),
+[`rename-migration.md`](../dev/rename-migration.md)).
+
 ## SDK API
 
 ```csharp

@@ -69,6 +69,12 @@ builder.Configuration.AddInMemoryCollection(KazoOsConfigurationNames.MapLegacySe
 // ── Database ──────────────────────────────────────────────────────────────────
 var connectionString = builder.Configuration.GetConnectionString(KazoOsConfigurationNames.ConnectionStringName)
     ?? "Data Source=kazoos.db";
+// ADR 0230: a Docker volume or data folder of a server older than 3.0.0 holds hackeros.db.
+if (Kazo.Os.Server.Data.LegacyDatabaseFile.MoveIfNeeded(connectionString, Directory.GetCurrentDirectory()) is { } movedDatabase)
+{
+    Console.WriteLine($"rename: {Kazo.Os.Server.Data.LegacyDatabaseFile.LegacyFileName} renamed to {movedDatabase} (ADR 0230).");
+}
+
 builder.Services.AddDbContext<KazoOsServerDbContext>(options =>
     options.UseSqlite(connectionString));
 

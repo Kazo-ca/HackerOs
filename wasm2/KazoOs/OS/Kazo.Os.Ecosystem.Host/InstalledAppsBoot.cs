@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Runtime.Loader;
 using Kazo.Os.App.Abstractions;
 using Kazo.Os.Infrastructure.Browser.FileSystem;
+using Kazo.Os.Infrastructure.Browser.Rename;
 using Kazo.Os.Platform.Blazor.LazyLoading;
 using Kazo.Os.Platform.Core;
 using Kazo.Os.Platform.Core.Apps;
@@ -10,6 +11,7 @@ using Kazo.Os.Platform.Core.Apps.Packages;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.JSInterop;
 
 namespace Kazo.Os.Ecosystem;
 
@@ -347,11 +349,17 @@ public static class InstalledAppsBootExtensions
     /// from IndexedDB, then joins those apps to the catalog. Call between <c>Build()</c> and
     /// <c>RunAsync()</c>; any failure leaves the built-in apps only.
     /// </summary>
+    /// <remarks>
+    /// It first moves the data a version before 3.0.0 left in the browser to the Kazo OS names
+    /// (<see cref="RenamedStorageMigration"/>, ADR 0230): this is the first point of every browser
+    /// host's boot where the page runs and nothing has opened the OS database yet.
+    /// </remarks>
     /// <param name="host">The built host.</param>
     /// <returns>A task that completes when the catalog is final.</returns>
     public static async Task LoadInstalledAppsAsync(this WebAssemblyHost host)
     {
         ArgumentNullException.ThrowIfNull(host);
+        await MigrateRenamedStorageAsync(host).ConfigureAwait(true);
         InstalledAppsBoot? boot = host.Services.GetService<InstalledAppsBoot>();
         if (boot is null || boot.IsLoaded)
         {
@@ -379,6 +387,39 @@ public static class InstalledAppsBootExtensions
         foreach (string warning in boot.Warnings)
         {
             logger?.LogWarning("{Warning}", warning);
+        }
+    }
+
+    /// <summary>
+    /// ADR 0230: migrates the browser data of a version before 3.0.0. A failure is logged and the
+    /// boot goes on; nothing is recorded, so the migration runs again at the next boot.
+    /// </summary>
+    private static async Task MigrateRenamedStorageAsync(WebAssemblyHost host)
+    {
+        if (!OperatingSystem.IsBrowser() || host.Services.GetService<IJSRuntime>() is not { } runtime)
+        {
+            return;
+        }
+
+        ILogger? logger = host.Services.GetService<ILoggerFactory>()?.CreateLogger(typeof(RenamedStorageMigration));
+        try
+        {
+            RenamedStorageMigrationResult result = await RenamedStorageMigration.RunAsync(runtime, KazoOsSdk.Version).ConfigureAwait(true);
+            if (result.Migrated)
+            {
+                logger?.LogInformation(
+                    "rename: data of a version before 3.0.0 moved to the Kazo OS names ({Databases} database(s), {Keys} key(s), {Records} record(s))",
+                    result.CopiedDatabases.Count, result.RenamedKeys, result.RewrittenRecords);
+            }
+
+            foreach (string kept in result.KeptDatabases)
+            {
+                logger?.LogWarning("rename: database {Database} kept, a database of its new name already exists", kept);
+            }
+        }
+        catch (Exception exception) when (exception is JSException or InvalidOperationException or TaskCanceledException or System.Text.Json.JsonException)
+        {
+            logger?.LogWarning(exception, "rename: the data of a version before 3.0.0 could not be migrated; it will be tried again at the next start");
         }
     }
 }

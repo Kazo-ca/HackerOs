@@ -56,7 +56,10 @@ The archive, the SDK API and the `system.backup` capability intended for apps ar
 
 **Restore**, like a system backup tool:
 
-1. host picker and full validation (nothing is stopped);
+1. host picker and full validation (nothing is stopped); a backup made before
+   3.0.0 (database `hackeros`, no `osVersion`) is migrated to the Kazo OS names
+   once its SHA-256 is checked ([`rename-migration.md`](rename-migration.md),
+   ADR 0230);
 2. administrator request (`system.backup.restore`);
 3. `SystemPowerService.RestartAfterAsync`: log flush, session close (each
    process is cancelled);
@@ -164,7 +167,8 @@ Dumps of versions 2 and 3 in `Tests/fixtures/indexeddb/` (version 1 was never co
 - `Tests/Kazo.Os.Infrastructure.Browser.Tests`: `IndexedDbBackupServiceTests`
   (export then atomic replace, forged archive rejected without writing, merge
   by `put` without `clear`, gzip and raw JSON round trip, damaged gzip, other
-  schema version); `IndexedDbFileSystemProviderTests` (`QuotaExceededError` →
+  schema version); `RenamedStorageMigrationTests` (pre-3.0.0 backup migrated,
+  tampered one refused); `IndexedDbFileSystemProviderTests` (`QuotaExceededError` →
   `NoSpace` without writing anything, more than 16 MiB → `FileTooLarge` before
   any write).
 - `Tests/Kazo.Os.Platform.Core.Tests`: `SystemAdministrationGatewayTests`
