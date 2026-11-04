@@ -163,8 +163,8 @@ at the end of each series or when a convention changes.
   0193 local time, 0194 taskbar menus, 0195 Start menu Power button, 0196 unread notifications dot;
   `todo/base` series: 0197 notification bubbles, 0201 "Switch user" stays greyed out, 0203 icon packs, 0207
   `hackeros-solution` template, 0208 Hack Store trusted sources, 0212 Hack Store app, 0213 theme packs, 0214 Hack Store without a restart, signing and transactions, 0215 Hack Store answers (no badge, ambiguous appId refused) (the other numbers up to 0211 are reserved by
-  its work items; 0216 to 0219 by lot 3: 0216 "Do not disturb" mode, 0217 mobile home wallpaper, 0218 "Set as wallpaper" in the menu of images, 0219 app authors' signing tool); 0220 mouse Back and Forward buttons, series `mouse-back/base`; 0221 every static resource of an app in its package and an installed app's scoped CSS (branch `app-assets/static-web-assets`); 0222 translations of installed apps, satellite assemblies (#337, branch `app-assets/satellite-assemblies`); 0223 restart onto the new version (`version-cache/base` series); 0224 retry the boot after a server error (branch `boot/retry-server-errors`); 0225 serve installed apps' files to every page (branch `installed-apps/serve-uncontrolled-page`); 0226 forgot password, reset from the sign-in screen (branch `login/forgot-password-factory-reset`); 0227 the factory reset erases the whole browser storage (branch `login/factory-reset-erase-everything`). **Next free number:
-  0228.** Before taking one, check `dev/adr/` on
+  its work items; 0216 to 0219 by lot 3: 0216 "Do not disturb" mode, 0217 mobile home wallpaper, 0218 "Set as wallpaper" in the menu of images, 0219 app authors' signing tool); 0220 mouse Back and Forward buttons, series `mouse-back/base`; 0221 every static resource of an app in its package and an installed app's scoped CSS (branch `app-assets/static-web-assets`); 0222 translations of installed apps, satellite assemblies (#337, branch `app-assets/satellite-assemblies`); 0223 restart onto the new version (`version-cache/base` series); 0224 retry the boot after a server error (branch `boot/retry-server-errors`); 0225 serve installed apps' files to every page (branch `installed-apps/serve-uncontrolled-page`); 0226 forgot password, reset from the sign-in screen (branch `login/forgot-password-factory-reset`); 0227 the factory reset erases the whole browser storage (branch `login/factory-reset-erase-everything`); 0228 HackerOS becomes KazoOS (series `rename/base`). **Next free number:
+  0229.** Before taking one, check `dev/adr/` on
   `main` and the open PRs.
 
 ## Working conventions
@@ -212,6 +212,7 @@ of [`AGENTS.md`](../../../../AGENTS.md), which Claude Code reads through
 | Note | Content |
 | --- | --- |
 | [`decisions-not-built.md`](decisions-not-built.md) | Decisions Benoit took in discussion that are not coded nor written anywhere else yet: windows and taskbar (remaining work items of #242), real sites in the browser (#266: public proxy and Wayback left), ported third-party apps, server-hosted apps, ideas taken from daedalOS, editors. |
+| Rename (2026-11-04) | HackerOS becomes KazoOS ([ADR 0228](../dev/adr/0228-rename-to-kazoos.md)): series `rename/base` in progress, work items 2 to 8 listed in the ADR. Benoit renames the repository to `Kazo-ca/Os` himself. The site moves to `os.kazo.ca`; `hackos.kazo.ca` stays open to recover data through a backup (work item 7). |
 | [`known-test-failures.md`](known-test-failures.md) | Known pre-existing test failures (to name in a PR, not to hide) and recent environment tips. |
 
 ## Environment and pitfalls
