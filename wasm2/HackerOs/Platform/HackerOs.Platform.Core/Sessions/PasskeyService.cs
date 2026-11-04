@@ -14,7 +14,7 @@ namespace HackerOs.Platform.Core.Sessions;
 public sealed class PasskeyService
 {
     /// <summary>Relying party name the browser shows.</summary>
-    public const string RelyingPartyName = "HackerOS";
+    public const string RelyingPartyName = "KazoOS";
 
     private const int ChallengeLength = 32;
     private const int PrfSaltLength = 32;

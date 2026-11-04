@@ -118,7 +118,7 @@
     <value>The pack is refused: {0}</value>
   </data>
   <data name="Error.Unsupported" xml:space="preserve">
-    <value>This HackerOS cannot manage packages.</value>
+    <value>This KazoOS cannot manage packages.</value>
   </data>
   <data name="Home.Empty" xml:space="preserve">
     <value>No app is available in the catalogs yet.</value>
@@ -187,7 +187,7 @@
     <value>Restart to finish</value>
   </data>
   <data name="Restart.Text" xml:space="preserve">
-    <value>Some changes take effect after HackerOS restarts.</value>
+    <value>Some changes take effect after KazoOS restarts.</value>
   </data>
   <data name="Scope.Everyone" xml:space="preserve">
     <value>for everyone</value>

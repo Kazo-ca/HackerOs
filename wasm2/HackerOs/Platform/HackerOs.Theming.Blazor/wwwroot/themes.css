@@ -1,5 +1,5 @@
 /*
- * HackerOS semantic theme tokens.
+ * KazoOS semantic theme tokens.
  *
  * This file is deliberately static: a theme selection only changes validated data attributes
  * on an ancestor. It performs no imports, fetches, or URL-based asset resolution, which keeps
@@ -266,7 +266,7 @@
     --hackeros-transition-fast: var(--hos-transition-fast);
 }
 
-/* HackerOS: dark terminal chrome with a user-selectable neon accent. */
+/* KazoOS: dark terminal chrome with a user-selectable neon accent. */
 :where([data-theme="hackeros"], [data-hos-theme="hackeros"]) {
     --hos-color-scheme: dark;
     --hos-font-ui: "Cascadia Mono", "SFMono-Regular", Consolas, monospace;

@@ -1,7 +1,7 @@
 # Submits a version of the app to the Hack Store catalog (ADR 0188 §4, §7).
 #
 # On a tag v<version> (the app's Version in its [AppManifest] class), this workflow:
-#   1. checks the HackerOS submodule and builds the app in Release, as CI does;
+#   1. checks the KazoOS submodule and builds the app in Release, as CI does;
 #   2. packs it (HackerOsPack, ADR 0182) and checks the manifest version equals the tag;
 #   3. makes the catalog folder apps/<appId>_<version>/ from store/ (icon, short descriptions,
 #      descriptions, screenshots, store.json + the tag's commit) and the package's manifest.json
@@ -37,7 +37,7 @@ jobs:
         with:
           global-json-file: global.json
 
-      - name: Check the HackerOS submodule
+      - name: Check the KazoOS submodule
         run: bash .github/scripts/check-hackeros-submodule.sh
 
       - name: Build and pack (Release)

@@ -4,12 +4,12 @@ using System.Runtime.Versioning;
 namespace HackerOs.Infrastructure.Browser.Globalization;
 
 /// <summary>
-/// Loads the satellite assemblies of HackerOS's languages into the browser's .NET runtime
+/// Loads the satellite assemblies of KazoOS's languages into the browser's .NET runtime
 /// (ADR 0104, section 3; doc/en/wasm/framework/localization.md).
 /// </summary>
 /// <remarks>
 /// <para>
-/// Blazor loads only the satellites of the tab's own culture, at start. HackerOS needs the French
+/// Blazor loads only the satellites of the tab's own culture, at start. KazoOS needs the French
 /// ones whatever the browser's language, because every process has its own <c>LANG</c>, and those of
 /// the lazily loaded apps too, before their main assembly is even fetched. The runtime's
 /// <c>loadSatelliteAssemblies</c> (the API behind Blazor's own culture loader) fetches every

@@ -63,7 +63,7 @@ public static class HackSystemBackup
     /// <param name="mode">Merge into or replace the current machine.</param>
     /// <param name="cancellationToken">Cancels the picker or the authentication.</param>
     /// <returns><see langword="null"/> when the user closed the picker; otherwise the machine restarts.</returns>
-    /// <exception cref="HackBackupInvalidException">The file is not a backup this HackerOS can restore; nothing changed.</exception>
+    /// <exception cref="HackBackupInvalidException">The file is not a backup this KazoOS can restore; nothing changed.</exception>
     /// <exception cref="InvalidOperationException">The browser refused to open its file picker (no recent click or key press).</exception>
     /// <exception cref="HackUnauthorizedAccessException">This app lacks <c>system.backup</c>, or no administrator authenticated.</exception>
     /// <exception cref="NotSupportedException">This host cannot restore the machine.</exception>

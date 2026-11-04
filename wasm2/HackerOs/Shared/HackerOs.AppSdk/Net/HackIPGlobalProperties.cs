@@ -4,7 +4,7 @@ namespace HackerOs.AppSdk.Net;
 
 /// <summary>
 /// What this machine's TCP/IP stack is doing, the part of
-/// <c>System.Net.NetworkInformation.IPGlobalProperties</c> HackerOS has (ADR 0074, section 2).
+/// <c>System.Net.NetworkInformation.IPGlobalProperties</c> KazoOS has (ADR 0074, section 2).
 /// Needs no capability: like <c>/proc/net/tcp</c>, the table of listening ports is world-readable;
 /// only the owners of other users' sockets are hidden.
 /// </summary>

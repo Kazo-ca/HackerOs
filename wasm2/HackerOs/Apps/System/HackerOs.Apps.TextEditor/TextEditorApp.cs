@@ -34,7 +34,7 @@ public sealed class TextEditorApp : AppDefinition
     public override string PublisherId => "pub.hackeros";
 
     /// <inheritdoc />
-    public override string Description => "Authorized virtual-filesystem text editor for HackerOS";
+    public override string Description => "Authorized virtual-filesystem text editor for KazoOS";
 
     /// <inheritdoc />
     public override IReadOnlyList<string> Capabilities =>

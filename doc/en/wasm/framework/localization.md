@@ -7,7 +7,7 @@ of the [wasm v3 plan](../dev/plans/wasm-v3-completion-plan.md).
 
 ## Goal
 
-HackerOS speaks **English** (default and fallback language) and **French**. The
+KazoOS speaks **English** (default and fallback language) and **French**. The
 language follows the locale, as on Linux:
 
 - each **process** has its own language, taken from **its** environment (`LANG`,
@@ -78,7 +78,7 @@ languages.
 The hosts declare `SatelliteResourceLanguages=en;fr` and the ICU data
 `icudt_EFIGS.dat` (`Directory.Build.props`). The `loadAllSatelliteResources`
 startup option is not enough for lazily loaded apps
-(`GetSatelliteAssembly` throws `FileNotFoundException`). HackerOS therefore calls the
+(`GetSatelliteAssembly` throws `FileNotFoundException`). KazoOS therefore calls the
 runtime function `INTERNAL.loadSatelliteAssemblies(["fr"])`, as Blazor does
 to change culture:
 
@@ -88,7 +88,7 @@ to change culture:
 
 An app installed by `hackpkg` or the Hack Store has its satellites in its
 package (`lib/<culture>/<assembly>.resources.dll`, put there by `HackerOsPack`);
-the OS loads them before the app's first render, for each HackerOS language
+the OS loads them before the app's first render, for each KazoOS language
 (`InstalledAppSatellites`, [ADR 0222](../dev/adr/0222-installed-app-satellite-assemblies.md)).
 Nothing to declare: a `Resources/Strings.fr.resx` is enough, as for an app
 compiled into the OS.

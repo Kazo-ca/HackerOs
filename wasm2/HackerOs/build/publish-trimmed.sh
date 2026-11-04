@@ -7,7 +7,7 @@
 #   wasm2/HackerOs/build/publish-trimmed.sh [--skip-build] [--compare]
 #
 # It publishes OS/HackerOs.Ecosystem in Release (PublishTrimmed=true, TrimMode=partial, every
-# HackerOS assembly kept whole), prints the size of the published .wasm files, serves the output
+# KazoOS assembly kept whole), prints the size of the published .wasm files, serves the output
 # with a static file server and runs Tests/HackerOs.TrimmedPublish.E2E.Tests against it: sign-in,
 # every window app of the Start menu, a pipeline in the worker pool, the Intranet and the sample
 # Blazor site in the Browser, a reload with no network once the service worker has cached the

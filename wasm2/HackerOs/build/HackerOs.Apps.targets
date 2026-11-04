@@ -1,6 +1,6 @@
 <Project>
   <!--
-    HackerOS app model build integration (ADR 0047).
+    KazoOS app model build integration (ADR 0047).
 
     App projects ($(HackerOsAppProject) == true):
       GenerateHackerOsAppManifests  runs ManifestGenerator after the build output is copied and
@@ -27,9 +27,9 @@
     _HackerOsPackageAppManifests puts an app's manifests and that file in its own package.
 
     External source (ADR 0176 §5, ADR 0207 §3): a repository made with the hackeros-solution template
-    imports this file from its HackerOS submodule through HackerOs.ExternalSource.targets
+    imports this file from its KazoOS submodule through HackerOs.ExternalSource.targets
     ($(HackerOsExternalSource) == true), in Debug. The repository rules then apply with the
-    submodule as the HackerOS root: the generator and analyzers are the submodule's projects, and
+    submodule as the KazoOS root: the generator and analyzers are the submodule's projects, and
     the SDK boundary checks the references that enter the submodule. A ProjectReference to another
     project of the app's own repository (outside the submodule) is that repository's business, as
     in package mode.
@@ -282,7 +282,7 @@
     <!-- Exit code 1 = HOSAPP diagnostics already printed in canonical format (and logged as errors). -->
     <Error Condition="'$(_HackerOsManifestGeneratorExitCode)' != '0' and '$(_HackerOsManifestGeneratorExitCode)' != '1'"
            Code="HOSAPP0099"
-           Text="The HackerOS manifest generator failed with exit code $(_HackerOsManifestGeneratorExitCode) without reporting a diagnostic." />
+           Text="The KazoOS manifest generator failed with exit code $(_HackerOsManifestGeneratorExitCode) without reporting a diagnostic." />
     <!-- The tool keeps the stamp's bytes stable; touch it so the next build sees it as up to date. -->
     <Touch Files="$(_HackerOsManifestStamp)" Condition="'$(_HackerOsManifestGeneratorExitCode)' == '0'" />
     <ItemGroup>
@@ -331,7 +331,7 @@
     <ReadLinesFromFile File="$(_HackerOsManifestStamp)" Condition="Exists('$(_HackerOsManifestStamp)')">
       <Output TaskParameter="Lines" ItemName="_HackerOsPackManifest" />
     </ReadLinesFromFile>
-    <Error Condition="'@(_HackerOsPackManifest)' == ''" Code="HOSAPP0060" Text="No HackerOS manifest was generated for $(MSBuildProjectName): nothing to pack." />
+    <Error Condition="'@(_HackerOsPackManifest)' == ''" Code="HOSAPP0060" Text="No KazoOS manifest was generated for $(MSBuildProjectName): nothing to pack." />
     <PropertyGroup>
       <_HackerOsPackBin>$(TargetDir.TrimEnd('/\'))</_HackerOsPackBin>
       <_HackerOsPackOutput>$(HackerOsPackageOutput.TrimEnd('/\'))</_HackerOsPackOutput>
@@ -356,7 +356,7 @@
            Text="HackerOsKeyGen needs the file of the new private key, outside the repository: dotnet build -t:HackerOsKeyGen -p:HackerOsSigningKeyFile=&lt;file.pem&gt; (ADR 0219)." />
   </Target>
 
-  <!-- Build first: it builds the generator in the HackerOS repository and in the Debug profile of an app repository. -->
+  <!-- Build first: it builds the generator in the KazoOS repository and in the Debug profile of an app repository. -->
   <Target Name="HackerOsKeyGen"
           DependsOnTargets="_HackerOsRequireSigningKeyFile;Build;_HackerOsResolveManifestGeneratorPath"
           Condition="'$(HackerOsAppProject)' == 'true'">
@@ -381,7 +381,7 @@
   <!--
     Repository mode only: the rule is written in paths under the HackerOs root. In package mode a
     project's own ProjectReference items are its repository's business; what crosses the boundary
-    there is a HackerOS package, checked by _ValidateHackerOsPackageBoundary below.
+    there is a KazoOS package, checked by _ValidateHackerOsPackageBoundary below.
   -->
   <Target Name="ValidateHackerOsSdkBoundary"
           BeforeTargets="ResolveProjectReferences"
@@ -406,7 +406,7 @@
       <_HackerOsBoundaryReference>
         <RelativePath>$([MSBuild]::MakeRelative('$(_HackerOsRepoRoot)', '%(Identity)').Replace('\', '/'))</RelativePath>
       </_HackerOsBoundaryReference>
-      <!-- External source (ADR 0207 §3): only the references that enter the HackerOS submodule are checked. -->
+      <!-- External source (ADR 0207 §3): only the references that enter the KazoOS submodule are checked. -->
       <_HackerOsBoundaryReference Remove="@(_HackerOsBoundaryReference)"
                                   Condition="'$(HackerOsExternalSource)' == 'true' and $([System.String]::Copy('%(RelativePath)').StartsWith('../'))" />
       <_HackerOsBoundaryViolation Include="@(_HackerOsBoundaryReference)"
@@ -422,7 +422,7 @@
   <!--
     ADR 0098 §2: the same rule for packages. Every compile reference that comes from a HackerOs.*
     package (direct or transitive, so a helper library cannot smuggle the platform in) must be one
-    an app (or an SDK library) may use. Other packages are not HackerOS's to judge.
+    an app (or an SDK library) may use. Other packages are not KazoOS's to judge.
   -->
   <PropertyGroup>
     <_HackerOsAppAllowedPackagePattern>(?i)^HackerOs\.((App|Simulation|Theming)\.Abstractions|AppSdk(\..+)?|Theming\.Blazor|App\.Build|Apps\..+|Commands)$</_HackerOsAppAllowedPackagePattern>
@@ -534,7 +534,7 @@
     </Exec>
     <Error Condition="'$(_HackerOsAggregateExitCode)' != '' and '$(_HackerOsAggregateExitCode)' != '0' and '$(_HackerOsAggregateExitCode)' != '1'"
            Code="HOSAPP0099"
-           Text="The HackerOS manifest generator failed with exit code $(_HackerOsAggregateExitCode) without reporting a diagnostic." />
+           Text="The KazoOS manifest generator failed with exit code $(_HackerOsAggregateExitCode) without reporting a diagnostic." />
 
     <ItemGroup>
       <EmbeddedResource Include="$(_HackerOsBuiltInApplicationsFile)"
@@ -555,7 +555,7 @@
   </Target>
 
   <!--
-    ADR 0113 (adjusts ADR 0106 §1-2): a trimmed publish of a host keeps every HackerOS assembly
+    ADR 0113 (adjusts ADR 0106 §1-2): a trimmed publish of a host keeps every KazoOS assembly
     whole (platform, SDK, browser infrastructure, apps from this repository or from packages) and
     trims the framework and the other trimmable libraries. Their code hands its own records to
     JavaScript interop and reflection-based JSON (IJSRuntime arguments are params object[], which
@@ -598,7 +598,7 @@
     </PropertyGroup>
     <ItemGroup>
       <_HackerOsPackageTargetsLine Include="&lt;Project&gt;" />
-      <_HackerOsPackageTargetsLine Include="  &lt;!-- Generated by HackerOS (ADR 0098 §2): the apps of package $(PackageId). --&gt;" />
+      <_HackerOsPackageTargetsLine Include="  &lt;!-- Generated by KazoOS (ADR 0098 §2): the apps of package $(PackageId). --&gt;" />
       <_HackerOsPackageTargetsLine Include="  &lt;ItemGroup&gt;" />
       <_HackerOsPackageTargetsLine Include="@(_HackerOsPackManifest->'    &lt;HackerOsPackagedApp Include=&quot;%24(MSBuildThisFileDirectory)../hackeros/manifests/%(Filename)%(Extension)&quot; PackageId=&quot;$(PackageId)&quot; AssemblyFileName=&quot;$(TargetFileName)&quot; AssemblyPath=&quot;%24(MSBuildThisFileDirectory)../lib/$(TargetFramework)/$(TargetFileName)&quot; /&gt;')" />
       <_HackerOsPackageTargetsLine Include="  &lt;/ItemGroup&gt;" />

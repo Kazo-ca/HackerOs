@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <PackageId>HackerOs.Apps.FileExplorer</PackageId>
-    <Description>The base HackerOS file explorer app, to include in an OS host (ProjectReference or PackageReference, optionally IsSystemApp).</Description>
+    <Description>The base KazoOS file explorer app, to include in an OS host (ProjectReference or PackageReference, optionally IsSystemApp).</Description>
     <PackageTags>hackeros;app</PackageTags>
   </PropertyGroup>
 

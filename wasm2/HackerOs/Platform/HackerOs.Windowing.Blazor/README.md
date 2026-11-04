@@ -51,7 +51,7 @@ With shared layers, a window dragged by its title bar and released over another 
 The package's texts (accessible labels, window buttons such as Minimize, Maximize, Restore, Close, Back) live in `Resources/Strings.resx`
 (English) and `Resources/Strings.fr.resx` (French), read through
 `HackerOs.Theming.Blazor.Localization.PackageStringLocalizer` (ADR 0104): a host that
-registers an `IStringLocalizer<T>` (HackerOS registers its session-language
+registers an `IStringLocalizer<T>` (KazoOS registers its session-language
 `SessionStringLocalizer<T>`) gets its language; a host without localization gets English.
 
 ## Single surface (phones)

@@ -1,10 +1,10 @@
 > [English version](../../../en/wasm/framework/sdk-developer-guide.md)
 
-# Guide du développeur d'apps HackerOS
+# Guide du développeur d'apps KazoOS
 
 ## Objet
 
-Ce guide explique comment écrire une app pour HackerOS avec le SDK public :
+Ce guide explique comment écrire une app pour KazoOS avec le SDK public :
 une fenêtre, une commande du shell ou un service. Il part de zéro et va
 jusqu'à l'installation et aux tests. La liste complète des API est dans la
 [référence du SDK](sdk-reference.md) ; les règles de la frontière du SDK sont
@@ -76,7 +76,7 @@ produit dans `artifacts/local-nupkg`, un `nuget.config` (modèle
 projet :
 
 ```bash
-dotnet new install <HackerOS>/artifacts/local-nupkg/HackerOs.Templates.2.2.2.nupkg
+dotnet new install <KazoOS>/artifacts/local-nupkg/HackerOs.Templates.2.2.2.nupkg
 dotnet new hackeros-window -n Contoso.Notes --appId com.contoso.notes
 dotnet new hackeros-host -n Contoso.Os          # un hôte qui lance tout l'OS
 ```
@@ -735,7 +735,7 @@ Le projet de tests référence le projet de l'app et `HackerOs.Tests.Support`
 
 ## 8 bis. Traduire son app
 
-HackerOS parle anglais (par défaut) et français ; chaque processus suit son
+KazoOS parle anglais (par défaut) et français ; chaque processus suit son
 propre `LANG` (ADR 0104). Pour traduire une app :
 
 1. Ajouter une classe marqueur `internal sealed class Strings` dans l'espace

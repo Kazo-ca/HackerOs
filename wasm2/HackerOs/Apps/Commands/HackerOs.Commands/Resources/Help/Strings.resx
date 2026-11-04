@@ -19,7 +19,7 @@
     <value>Type 'help &lt;command&gt;' for its usage.</value>
   </data>
   <data name="Header" xml:space="preserve">
-    <value>HackerOS shell (hsh). Installed commands:</value>
+    <value>KazoOS shell (hsh). Installed commands:</value>
   </data>
   <data name="NoMatch" xml:space="preserve">
     <value>help: no help topics match '{0}'</value>

@@ -16,7 +16,7 @@ namespace HackerOs.AppSdk.Threading;
 /// cannot travel there. The task is therefore a <b>static method</b> (or a
 /// <see cref="HackBackgroundJob{TInput, TResult}"/> class) of the app's assembly, and its input and
 /// result are <b>serializable</b> by a <c>JsonSerializerContext</c> the app declares with
-/// <see cref="HackWireContextAttribute"/>. The HackerOS analyzer refuses anything else at build time
+/// <see cref="HackWireContextAttribute"/>. The KazoOS analyzer refuses anything else at build time
 /// (<c>HOSBG0001</c> and following); the OS checks again at run time.
 /// </para>
 /// <para>

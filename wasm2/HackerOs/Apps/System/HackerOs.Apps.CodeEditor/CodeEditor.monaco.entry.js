@@ -68,7 +68,7 @@ function languageFor(mode) {
   return LANGUAGE_BY_MODE[mode] ?? "plaintext";
 }
 
-// HackerOS's own dark theme: the window's background and accent instead of vs-dark's grey, so
+// KazoOS's own dark theme: the window's background and accent instead of vs-dark's grey, so
 // the editor reads as part of the desktop. Token colours stay close to VS Code's Dark+.
 monaco.editor.defineTheme("hackeros-dark", {
   base: "vs-dark",
@@ -106,7 +106,7 @@ monaco.editor.defineTheme("hackeros-dark", {
   }
 });
 
-// ADR 0105: HackerOS's high-contrast editor theme, over Monaco's own hc-black (black background,
+// ADR 0105: KazoOS's high-contrast editor theme, over Monaco's own hc-black (black background,
 // white text, yellow focus and cursor), matching the shell's high-contrast layer.
 monaco.editor.defineTheme("hackeros-high-contrast", {
   base: "hc-black",

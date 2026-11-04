@@ -230,19 +230,19 @@ public sealed class FileViewClipboardRequestedEventArgs(
     public VirtualPath Destination { get; } = destination;
 }
 
-/// <summary>One HackerOS entry carried by a drag (from this view, another window, or another app's <see cref="FileView"/>).</summary>
+/// <summary>One KazoOS entry carried by a drag (from this view, another window, or another app's <see cref="FileView"/>).</summary>
 /// <param name="Path">Absolute path of the dragged entry.</param>
 /// <param name="IsDirectory">Whether the entry is a directory.</param>
 public sealed record FileViewDraggedEntry(VirtualPath Path, bool IsDirectory);
 
 /// <summary>
-/// Hands a drop to the host (ADR 0058, section 1): HackerOS entries dragged from any
+/// Hands a drop to the host (ADR 0058, section 1): KazoOS entries dragged from any
 /// <see cref="FileView"/>, and/or files dragged from the host system, dropped on a folder, on the
 /// background of the view, on a tree node, on a breadcrumb segment or on a <c>FileViewDropZone</c>; also
 /// raised, as a copy into the current directory, for files pasted (Ctrl+V) from the host clipboard (ADR 0065).
 /// </summary>
 /// <param name="destination">Target directory, or <see langword="null"/> for a drop zone with no directory (the Trash).</param>
-/// <param name="entries">Dragged HackerOS entries, already checked to exist; never the destination itself.</param>
+/// <param name="entries">Dragged KazoOS entries, already checked to exist; never the destination itself.</param>
 /// <param name="hostFiles">Files dropped from the host system; read only when the host imports them.</param>
 /// <param name="copy">Whether Ctrl was held (copy); otherwise a move.</param>
 public sealed class FileViewDropRequestedEventArgs(
@@ -254,7 +254,7 @@ public sealed class FileViewDropRequestedEventArgs(
     /// <summary>Gets the target directory, or <see langword="null"/> for a drop zone without one.</summary>
     public VirtualPath? Destination { get; } = destination;
 
-    /// <summary>Gets the dragged HackerOS entries.</summary>
+    /// <summary>Gets the dragged KazoOS entries.</summary>
     public IReadOnlyList<FileViewDraggedEntry> Entries { get; } = entries;
 
     /// <summary>Gets the files dropped from the host system.</summary>

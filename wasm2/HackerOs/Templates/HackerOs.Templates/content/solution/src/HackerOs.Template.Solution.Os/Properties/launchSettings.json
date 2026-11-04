@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/launchsettings.json",
   "profiles": {
-    "HackerOS": {
+    "KazoOS": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

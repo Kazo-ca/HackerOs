@@ -21,7 +21,7 @@ if (!document.querySelector(`link[href="${stylesheetHref}"]`)) {
 }
 
 // The 16-colour ANSI palette. Kept close to the legacy terminal's (src/apps/terminal.ts) so
-// coloured output looks the same, with HackerOS's accent green. Background, foreground and
+// coloured output looks the same, with KazoOS's accent green. Background, foreground and
 // cursor come from the design tokens of the host element (see themeFor).
 const ANSI_PALETTE = {
   black: "#1b2126",
@@ -103,7 +103,7 @@ function themeFor(host, highContrast) {
 /**
  * Copies the terminal selection through a real `copy` event instead of navigator.clipboard, so the
  * OS clipboard bridge (hostClipboard.js, ADR 0065) sees it like any native copy: the text becomes the
- * HackerOS clipboard entry (origin GuestNative) and reaches the host only when
+ * KazoOS clipboard entry (origin GuestNative) and reaches the host only when
  * /etc/hackeros/clipboard.config allows guest-to-host sharing. Writing navigator.clipboard directly
  * would skip both. The capture listener puts the text in the event, the bridge reads it in the bubble
  * phase on window.
@@ -170,7 +170,7 @@ export function createTerminal(host, dotNet, options) {
   if (textarea) {
     textarea.setAttribute("aria-label", options?.ariaLabel ?? "Terminal command input");
     if (options?.useVirtualKeyboard) {
-      // A touch focus must not open the platform keyboard: HackerOS's own keyboard types.
+      // A touch focus must not open the platform keyboard: KazoOS's own keyboard types.
       textarea.setAttribute("inputmode", "none");
     }
   }

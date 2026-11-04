@@ -6,7 +6,7 @@ namespace HackerOs.UI.E2E.Tests;
 
 /// <summary>
 /// ADR 0220, end to end: the mouse's Back and Forward buttons, Alt+←/→ and the tab's own Back go back and
-/// forward inside the File Explorer instead of moving the host tab, and HackerOS is never left.
+/// forward inside the File Explorer instead of moving the host tab, and KazoOS is never left.
 /// </summary>
 public sealed class HardwareNavigationTests(ITestOutputHelper output)
 {
@@ -65,20 +65,20 @@ public sealed class HardwareNavigationTests(ITestOutputHelper output)
             await Assertions.Expect(addressInput).ToHaveValueAsync(documents, new() { Timeout = 10000 });
             output.WriteLine("[test] Alt+arrows went back and forward.");
 
-            // The tab's own Back (what Android's Back button and the iOS swipe do) stays in HackerOS.
+            // The tab's own Back (what Android's Back button and the iOS swipe do) stays in KazoOS.
             int historyLength = await page.EvaluateAsync<int>("() => history.length");
             Assert.True(historyLength >= 2, $"the sentinel entry was not pushed (history.length = {historyLength})");
             await page.EvaluateAsync("() => history.back()");
             await Assertions.Expect(addressInput).ToHaveValueAsync(E2ESupport.HomePath, new() { Timeout = 10000 });
             output.WriteLine("[test] the tab's Back went back inside the explorer.");
 
-            // Nothing left to go back to: the gesture does nothing and HackerOS stays open.
+            // Nothing left to go back to: the gesture does nothing and KazoOS stays open.
             await page.WaitForTimeoutAsync(600);
             await page.EvaluateAsync("() => history.back()");
             await page.WaitForTimeoutAsync(1000);
             Assert.Equal(osUrl, page.Url);
             await Assertions.Expect(addressInput).ToHaveValueAsync(E2ESupport.HomePath);
-            output.WriteLine("[test] with nothing to go back to, HackerOS stayed open.");
+            output.WriteLine("[test] with nothing to go back to, KazoOS stayed open.");
 
             // Mobile shell: the tab's Back (Android's Back button, the iOS swipe) runs the ◁ sequence, which
             // asks the app first.
@@ -103,7 +103,7 @@ public sealed class HardwareNavigationTests(ITestOutputHelper output)
             await page.EvaluateAsync("() => history.back()");
             await home.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 10000 });
             Assert.Equal(osUrl, page.Url);
-            output.WriteLine("[test] then Back closed the explorer and showed Home, still in HackerOS.");
+            output.WriteLine("[test] then Back closed the explorer and showed Home, still in KazoOS.");
 
             Assert.Empty(consoleErrors);
         }

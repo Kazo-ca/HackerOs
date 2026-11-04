@@ -1,5 +1,5 @@
 name: "Rapport de bogue / Bug report"
-description: "Signaler un problème dans HackerOS. / Report a problem in HackerOS."
+description: "Signaler un problème dans KazoOS. / Report a problem in KazoOS."
 labels: ["bug"]
 body:
   - type: markdown
@@ -33,7 +33,7 @@ body:
   - type: input
     id: version
     attributes:
-      label: "Version de HackerOS / HackerOS version"
+      label: "Version de KazoOS / KazoOS version"
       description: "Paramètres ▸ À propos. / Settings ▸ About."
       placeholder: "2.2.2"
   - type: input

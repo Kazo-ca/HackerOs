@@ -91,7 +91,7 @@ internal sealed class MobileHomeLayout
 
     internal string Encode()
     {
-        StringBuilder content = new("# HackerOS mobile Home layout\nversion=1\n\n[dock]\napps=");
+        StringBuilder content = new("# KazoOS mobile Home layout\nversion=1\n\n[dock]\napps=");
         content.AppendJoin(',', Dock).Append("\n\n[pages]\n");
         for (int page = 0; page < Pages.Count; page++)
         {

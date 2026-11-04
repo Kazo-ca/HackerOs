@@ -2,14 +2,14 @@
 
 # HackerOs.Template.Solution
 
-Un dépôt d'app HackerOS, créé avec le modèle `hackeros-solution`.
+Un dépôt d'app KazoOS, créé avec le modèle `hackeros-solution`.
 
 | Dossier | Contenu |
 | --- | --- |
 | `src/HackerOs.Template.Solution` | L'app (app fenêtrée ; sa classe `[AppManifest]` génère `manifest.json`) |
-| `src/HackerOs.Template.Solution.Os` | Un hôte qui lance tout HackerOS avec les apps de base et cette app : le projet à démarrer |
+| `src/HackerOs.Template.Solution.Os` | Un hôte qui lance tout KazoOS avec les apps de base et cette app : le projet à démarrer |
 | `tests/HackerOs.Template.Solution.Tests` | Les tests de l'app |
-| `external/HackerOs` | Le dépôt HackerOS en sous-module git, sur un tag de release |
+| `external/HackerOs` | Le dépôt KazoOS en sous-module git, sur un tag de release |
 | `store/` | Ce que montre le Hack Store : icône (PNG 256×256), descriptions courtes, descriptions, `store.json` |
 
 ## Premiers pas
@@ -21,15 +21,15 @@ git clone --recurse-submodules <votre dépôt>
 # Un dossier créé par « dotnet new hackeros-solution » l'ajoute une fois :
 git init
 git submodule add --depth 1 https://github.com/Kazo-ca/HackerOs.git external/HackerOs
-git -C external/HackerOs checkout v<version de HackerOS>
+git -C external/HackerOs checkout v<version de KazoOS>
 ```
 
 Ouvrez ensuite le `.sln` dans Visual Studio ou Rider et démarrez `HackerOs.Template.Solution.Os`,
 ou lancez `dotnet run --project src/HackerOs.Template.Solution.Os`.
 
-## La version de HackerOS
+## La version de KazoOS
 
-`external/HackerOs/wasm2/HackerOs/build/Versions.props` est la version de HackerOS de ce dépôt.
+`external/HackerOs/wasm2/HackerOs/build/Versions.props` est la version de KazoOS de ce dépôt.
 Pour changer de version, placez le sous-module sur son tag et validez-le :
 
 ```bash
@@ -43,7 +43,7 @@ un sous-module modifié ou hors de son tag.
 
 ## Deux profils de build
 
-| Profil | HackerOS vient de | Usage |
+| Profil | KazoOS vient de | Usage |
 | --- | --- | --- |
 | `Debug` | les projets du sous-module (`HackerOsUseSource=true`) | entrer dans le SDK et l'OS, points d'arrêt partout |
 | `Release` | les paquets `HackerOs.*` de nuget.org, à la version du sous-module | CI, `dotnet publish`, le Hack Store |
@@ -59,7 +59,7 @@ Forcez l'un ou l'autre avec `-p:HackerOsUseSource=true` ou `false`.
    ouvrir des pull requests), il ouvre la pull request vers `Kazo-ca/HackerOs-AppMarketPlace` depuis
    votre fork ; sans lui, téléchargez l'artefact du workflow et ouvrez la pull request vous-même.
 
-`HACK_STORE_TOKEN` est un jeton d'accès personnel GitHub à vous, que HackerOS ne fournit pas :
+`HACK_STORE_TOKEN` est un jeton d'accès personnel GitHub à vous, que KazoOS ne fournit pas :
 
 1. GitHub ▸ **Settings** ▸ **Developer settings** ▸ **Personal access tokens** ▸ **Tokens (classic)** ▸
    **Generate new token (classic)**, avec une expiration courte et les scopes **`repo`** et
@@ -74,9 +74,9 @@ fusionnée, sa CI compile l'app au commit du tag.
 
 ## Publier sur la branche `hackeros-packages`, signé
 
-Le même tag `v*` lance aussi **Publish the HackerOS packages** : il fait le paquet de l'app et le
+Le même tag `v*` lance aussi **Publish the KazoOS packages** : il fait le paquet de l'app et le
 pousse sur la branche `hackeros-packages` de ce dépôt, en gardant les versions déjà publiées. Les
-utilisateurs de HackerOS l'installent alors avec `hackpkg install <owner>/<repo>`, sans le Hack Store.
+utilisateurs de KazoOS l'installent alors avec `hackpkg install <owner>/<repo>`, sans le Hack Store.
 
 Signez vos paquets pour que personne d'autre ne puisse publier en votre nom :
 

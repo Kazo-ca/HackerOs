@@ -1,10 +1,10 @@
 <#
 .SYNOPSIS
-    Installs HackerOS Server as a Windows service (ADR 0191).
+    Installs KazoOS Server as a Windows service (ADR 0191).
 
 .DESCRIPTION
     Copies the server into Program Files, writes hackeros-server.json, registers the
-    "HackerOS Server" service (virtual account NT AUTHORITY\LocalService), starts it and prints a
+    "KazoOS Server" service (virtual account NT AUTHORITY\LocalService), starts it and prints a
     one-time pairing code. By default the server only answers on this computer
     (http://localhost:5888). -Lan also opens it to the local network in HTTPS, with a local
     certificate authority to approve on each other device.
@@ -24,8 +24,8 @@ param(
     # Server account the first pairing code is for.
     [ValidatePattern('^[A-Za-z0-9._-]{1,64}$')]
     [string] $Account = 'admin',
-    [string] $InstallDir = (Join-Path $env:ProgramFiles 'HackerOS Server'),
-    [string] $DataDir = (Join-Path $env:ProgramData 'HackerOS Server'),
+    [string] $InstallDir = (Join-Path $env:ProgramFiles 'KazoOS Server'),
+    [string] $DataDir = (Join-Path $env:ProgramData 'KazoOS Server'),
     # Rewrite hackeros-server.json even if it exists (an upgrade keeps it otherwise).
     [switch] $Reconfigure
 )
@@ -45,7 +45,7 @@ if (-not (Test-Path (Join-Path $source 'HackerOs.Server.exe'))) {
 }
 
 # ── Files ─────────────────────────────────────────────────────────────────────
-Write-Host "Installing HackerOS Server into $InstallDir (data: $DataDir)"
+Write-Host "Installing KazoOS Server into $InstallDir (data: $DataDir)"
 $existing = Get-Service -Name $ServiceName -ErrorAction SilentlyContinue
 if ($existing -and $existing.Status -ne 'Stopped') {
     Stop-Service -Name $ServiceName -Force
@@ -82,7 +82,7 @@ if ($Lan.Count -gt 0) {
     }
 
     Write-Host 'Generating the local certificate authority and the HTTPS certificate'
-    $ca = New-SelfSignedCertificate -Subject "CN=HackerOS Local CA ($env:COMPUTERNAME)" `
+    $ca = New-SelfSignedCertificate -Subject "CN=KazoOS Local CA ($env:COMPUTERNAME)" `
         -KeyUsage CertSign, CRLSign -KeyAlgorithm RSA -KeyLength 3072 -HashAlgorithm SHA256 `
         -NotAfter (Get-Date).AddYears(10) -CertStoreLocation 'Cert:\LocalMachine\My' `
         -TextExtension @('2.5.29.19={critical}{text}ca=true&pathlength=0')
@@ -116,8 +116,8 @@ if ($Lan.Count -gt 0) {
     Import-Certificate -FilePath $caPath -CertStoreLocation 'Cert:\LocalMachine\Root' | Out-Null
 
     # Private profile only: the server stays off public networks (cafés, airports).
-    Get-NetFirewallRule -DisplayName 'HackerOS Server (local network)' -ErrorAction SilentlyContinue | Remove-NetFirewallRule
-    New-NetFirewallRule -DisplayName 'HackerOS Server (local network)' -Direction Inbound -Protocol TCP `
+    Get-NetFirewallRule -DisplayName 'KazoOS Server (local network)' -ErrorAction SilentlyContinue | Remove-NetFirewallRule
+    New-NetFirewallRule -DisplayName 'KazoOS Server (local network)' -Direction Inbound -Protocol TCP `
         -LocalPort $HttpsPort -Action Allow -Profile Private | Out-Null
     $Reconfigure = $true
 }
@@ -165,8 +165,8 @@ try {
 # ── Service ──────────────────────────────────────────────────────────────────
 $binary = '"' + (Join-Path $InstallDir 'HackerOs.Server.exe') + '"'
 if (-not (Get-Service -Name $ServiceName -ErrorAction SilentlyContinue)) {
-    New-Service -Name $ServiceName -BinaryPathName $binary -DisplayName 'HackerOS Server' `
-        -Description 'Network relay, accounts and synchronization for HackerOS (ADR 0191).' -StartupType Automatic | Out-Null
+    New-Service -Name $ServiceName -BinaryPathName $binary -DisplayName 'KazoOS Server' `
+        -Description 'Network relay, accounts and synchronization for KazoOS (ADR 0191).' -StartupType Automatic | Out-Null
 }
 & sc.exe config $ServiceName obj= 'NT AUTHORITY\LocalService' binPath= $binary | Out-Null
 & sc.exe failure $ServiceName reset= 86400 actions= restart/5000/restart/5000/restart/60000 | Out-Null
@@ -174,7 +174,7 @@ Start-Service -Name $ServiceName
 
 # ── Summary ──────────────────────────────────────────────────────────────────
 Write-Host ''
-Write-Host 'HackerOS Server is installed.'
+Write-Host 'KazoOS Server is installed.'
 Write-Host "  On this computer:   http://localhost:$Port"
 foreach ($name in $Lan) {
     if ($name.Contains(':')) { $display = "[$name]" } else { $display = $name }

@@ -121,7 +121,7 @@ public sealed class AccountService : IAccountService
             {
                 DeviceId = Guid.NewGuid(),
                 AccountId = account.AccountId,
-                DeviceName = "HackerOS",
+                DeviceName = "KazoOS",
                 DeviceFingerprint = request.DeviceFingerprint,
                 RegisteredUtc = DateTimeOffset.UtcNow
             };
@@ -272,7 +272,7 @@ public sealed class AccountService : IAccountService
         {
             DeviceId = Guid.NewGuid(),
             AccountId = account.AccountId,
-            DeviceName = string.IsNullOrWhiteSpace(request.DeviceName) ? "HackerOS" : request.DeviceName[..Math.Min(request.DeviceName.Length, 128)],
+            DeviceName = string.IsNullOrWhiteSpace(request.DeviceName) ? "KazoOS" : request.DeviceName[..Math.Min(request.DeviceName.Length, 128)],
             DeviceFingerprint = request.DeviceFingerprint,
             RegisteredUtc = now,
             LastSeenUtc = now

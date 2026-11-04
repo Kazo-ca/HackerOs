@@ -178,6 +178,6 @@ internal sealed class AppWebDatabaseGateway : IAppWebDatabaseGateway
             throw new UnauthorizedAccessException($"Only a web app has a browser database ('{_manifest.Id}' is a {_manifest.Kind} app).");
         }
 
-        return _store ?? throw new NotSupportedException("This HackerOS host has no browser databases for sites.");
+        return _store ?? throw new NotSupportedException("This KazoOS host has no browser databases for sites.");
     }
 }

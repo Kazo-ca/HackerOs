@@ -48,7 +48,7 @@ export function listen(reference) {
 
 // The site's registration, whether or not it controls this page. A page loaded with Ctrl+F5 is
 // not controlled, yet the next reload goes to the registration's active worker: when another
-// HackerOS tab or window keeps the previous worker active, the new one waits, and only
+// KazoOS tab or window keeps the previous worker active, the new one waits, and only
 // SKIP_WAITING lets the restart land on the new version (ADR 0223).
 async function registration() {
     if (!('serviceWorker' in navigator)) {

@@ -1,10 +1,10 @@
 > [English version](../../../en/wasm/dev/project-overview.md)
 
-# Vue d'ensemble du projet HackerOS
+# Vue d'ensemble du projet KazoOS
 
 ## Objet
 
-HackerOS simule un système d'exploitation de type Linux dans le navigateur,
+KazoOS simule un système d'exploitation de type Linux dans le navigateur,
 pour servir d'environnement où développer des applications. **Aucun jeu sur ce repository** ([ADR 0135](adr/0135-no-game-in-this-repository.md)). C'est
 le portage en C# et Blazor WebAssembly du simulateur JavaScript d'origine
 (`src/`, gardé en lecture seule comme référence de comportement).
@@ -245,7 +245,7 @@ Documents : [`hack-file-api.md`](../framework/hack-file-api.md),
   (limites, OOM killer, priorités, tâches de fond, hôte Server en WebAssembly,
   isolation cross-origin) dans
   [`execution-followups-plan.md`](plans/execution-followups-plan.md#11-vérification-finale). La version est **2.2.2** (`build/Versions.props`, publiée par le workflow
-  `Release HackerOS` à la fusion de sa PR dans `main` ; la 2.1.0 du 2026-10-26 était la première publication automatique, ADR 0173) ; un autre dépôt peut se construire sur le SDK 2.x
+  `Release KazoOS` à la fusion de sa PR dans `main` ; la 2.1.0 du 2026-10-26 était la première publication automatique, ADR 0173) ; un autre dépôt peut se construire sur le SDK 2.x
   ([`building-on-hackeros.md`](../framework/building-on-hackeros.md)).
 
 ## Tâches de ce document

@@ -40,7 +40,7 @@ public sealed record AuditRecord(
 /// <code>
 /// type=PATH msg=audit(1792218000.123:42): op=write path="/etc/x/settings.config" uid=0 auid=1000 pid=231 comm="settings" app="org.x.settings" res=success UID="root" AUID="benoit"
 /// </code>
-/// HackerOS has no numeric uids, so <c>uid</c>/<c>auid</c> carry 0 for root, 1000 for a user and
+/// KazoOS has no numeric uids, so <c>uid</c>/<c>auid</c> carry 0 for root, 1000 for a user and
 /// 4294967295 for "unset", as <c>/proc/net/tcp</c> does; the enriched <c>UID</c>/<c>AUID</c> fields
 /// name the account.
 /// </summary>

@@ -400,7 +400,7 @@
     <value>Settings</value>
   </data>
   <data name="Launcher.SettingsHint" xml:space="preserve">
-    <value>Personalize HackerOS</value>
+    <value>Personalize KazoOS</value>
   </data>
   <data name="Launcher.Title" xml:space="preserve">
     <value>Start menu</value>
@@ -421,10 +421,10 @@
     <value>Restart</value>
   </data>
   <data name="Logout.Restart.Body" xml:space="preserve">
-    <value>Restarting ends your session like a sign-out, then reloads HackerOS from the server.</value>
+    <value>Restarting ends your session like a sign-out, then reloads KazoOS from the server.</value>
   </data>
   <data name="Logout.Restart.Title" xml:space="preserve">
-    <value>Restart HackerOS</value>
+    <value>Restart KazoOS</value>
   </data>
   <data name="Logout.Restarting" xml:space="preserve">
     <value>Restarting...</value>
@@ -436,7 +436,7 @@
     <value>Signing out...</value>
   </data>
   <data name="Logout.Title" xml:space="preserve">
-    <value>Sign out of HackerOS</value>
+    <value>Sign out of KazoOS</value>
   </data>
   <data name="Mobile.Shade" xml:space="preserve">
     <value>Notifications, calendar, and platform mode</value>
@@ -496,7 +496,7 @@
     <value>Not identified</value>
   </data>
   <data name="Server.Panel" xml:space="preserve">
-    <value>HackerOS server</value>
+    <value>KazoOS server</value>
   </data>
   <data name="Server.Password" xml:space="preserve">
     <value>Password</value>
@@ -526,7 +526,7 @@
     <value>Offline (server unreachable)</value>
   </data>
   <data name="Server.Tooltip" xml:space="preserve">
-    <value>HackerOS server {0}: {1}</value>
+    <value>KazoOS server {0}: {1}</value>
   </data>
   <data name="Shell.LaunchFailed" xml:space="preserve">
     <value>The optional app could not be loaded.</value>
@@ -741,7 +741,7 @@
     <value>This browser cannot use a passkey here. Attempts left: {0}.</value>
   </data>
   <data name="Screens.WindowTitle" xml:space="preserve">
-    <value>HackerOS — Screen {0}</value>
+    <value>KazoOS — Screen {0}</value>
   </data>
   <data name="Screens.FullScreen" xml:space="preserve">
     <value>Full screen</value>
@@ -750,7 +750,7 @@
     <value>Leave full screen</value>
   </data>
   <data name="Screens.PrimaryHidden" xml:space="preserve">
-    <value>The main HackerOS tab is hidden: the browser slows the whole OS down. Keep it visible.</value>
+    <value>The main KazoOS tab is hidden: the browser slows the whole OS down. Keep it visible.</value>
   </data>
   <data name="Screens.Restore.Message" xml:space="preserve">
     <value>The screens of your last session are closed.</value>
@@ -891,7 +891,7 @@
     <value>Remove</value>
   </data>
   <data name="InstallApproval.Footer" xml:space="preserve">
-    <value>HackerOS asks for this approval each time (ADR 0189). An app cannot draw over this window.</value>
+    <value>KazoOS asks for this approval each time (ADR 0189). An app cannot draw over this window.</value>
   </data>
   <data name="InstallApproval.Bytes" xml:space="preserve">
     <value>{0} bytes</value>

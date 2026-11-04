@@ -9,7 +9,7 @@ namespace HackerOs.UI.E2E.Tests;
 /// Chromium: the sample site at <c>blazor-sample.hack</c> renders in the page area (no iframe), its
 /// links change the address without a reload (the counter survives), a page calls the site's API,
 /// back and forward stay in the site, and a crash of the site shows "Aw, Snap!" without touching
-/// HackerOS.
+/// KazoOS.
 /// </summary>
 public sealed class BrowserBlazorSiteTests(ITestOutputHelper output)
 {
@@ -57,11 +57,11 @@ public sealed class BrowserBlazorSiteTests(ITestOutputHelper output)
             await Assertions.Expect(addressInput).ToHaveValueAsync("http://blazor-sample.hack/hello/World");
             await Assertions.Expect(page.Locator(".browser-statusbar")).ToContainTextAsync("Hello World - Blazor Sample Site");
             // HackNavLink marks the active page: the home link (Match=All) is no longer active, the
-            // menu's Hello link (/hello/HackerOS) becomes active once followed with its own parameter.
+            // menu's Hello link (/hello/KazoOS) becomes active once followed with its own parameter.
             await Assertions.Expect(site.Locator("#nav-home")).Not.ToHaveClassAsync(new System.Text.RegularExpressions.Regex("active"));
             await site.Locator("#nav-hello").ClickAsync();
-            await Assertions.Expect(site.Locator("#greeting")).ToHaveTextAsync(new System.Text.RegularExpressions.Regex("^Hello, HackerOS!"), new() { Timeout = 30000 });
-            await Assertions.Expect(addressInput).ToHaveValueAsync("http://blazor-sample.hack/hello/HackerOS");
+            await Assertions.Expect(site.Locator("#greeting")).ToHaveTextAsync(new System.Text.RegularExpressions.Regex("^Hello, KazoOS!"), new() { Timeout = 30000 });
+            await Assertions.Expect(addressInput).ToHaveValueAsync("http://blazor-sample.hack/hello/KazoOS");
             await Assertions.Expect(site.Locator("#nav-hello")).ToHaveClassAsync(new System.Text.RegularExpressions.Regex("active"));
             output.WriteLine("[test] link navigation stayed in the site and the API answered.");
 

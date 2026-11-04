@@ -1,6 +1,6 @@
 > [Version française](../../../../fr/wasm/dev/plans/ecosystem-rebuild-plan.md)
 
-# HackerOS ecosystem rebuild plan
+# KazoOS ecosystem rebuild plan
 
 **Status:** plan approved with Benoit on 2026-10-10. The four phases are
 done and merged into `rebuild/base` (phase 4 finished on 2026-10-11 by

@@ -52,7 +52,7 @@ internal sealed class AppAssemblyLoadContext : AssemblyLoadContext
         if (name is null || _defaultContextNames.Contains(name))
         {
             // null defers to the default context: one shared copy of the framework and of the
-            // HackerOS contracts the tool itself is compiled against.
+            // KazoOS contracts the tool itself is compiled against.
             return null;
         }
 

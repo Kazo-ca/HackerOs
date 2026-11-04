@@ -1,13 +1,13 @@
 <Project>
   <!--
-    HackerOS app repository (hackeros-solution template, ADR 0176, ADR 0207).
+    KazoOS app repository (hackeros-solution template, ADR 0176, ADR 0207).
 
-    external/HackerOs is the HackerOS repository as a submodule, on a release tag v<version>. Its
+    external/HackerOs is the KazoOS repository as a submodule, on a release tag v<version>. Its
     build/Versions.props is THE version of this repository: every HackerOs.* package reference uses
-    $(HackerOsVersion). Changing the HackerOS version = moving the submodule to another tag.
+    $(HackerOsVersion). Changing the KazoOS version = moving the submodule to another tag.
 
     Two profiles (ADR 0176 §4):
-      Debug    HackerOsUseSource=true: the HackerOS packages become references to the projects of the
+      Debug    HackerOsUseSource=true: the KazoOS packages become references to the projects of the
                submodule, so you can step into the SDK and the OS. Never edit the submodule: CI
                refuses a modified one.
       Release  HackerOsUseSource=false: the packages from nuget.org, at the submodule's version.

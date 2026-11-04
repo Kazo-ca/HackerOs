@@ -6,7 +6,7 @@ namespace HackerOs.Template.Site;
 
 /// <summary>
 /// The site's manifest and start-up. The OS starts it on the first request to one of its
-/// <see cref="Urls"/>, opened in the HackerOS browser. The build generates <c>manifest.json</c> and
+/// <see cref="Urls"/>, opened in the KazoOS browser. The build generates <c>manifest.json</c> and
 /// <c>TemplateSiteWebHost</c>, the entry point that serves the site.
 /// </summary>
 [AppManifest]
@@ -22,7 +22,7 @@ public sealed partial class TemplateSite : WebAppDefinition
     public override string PublisherId => "pub.template";
 
     /// <inheritdoc />
-    public override string Description => "A web site served inside HackerOS by ASP.Hack.";
+    public override string Description => "A web site served inside KazoOS by ASP.Hack.";
 
     /// <inheritdoc />
     public override IReadOnlyList<string> Urls => ["http://template-app.hack/"];

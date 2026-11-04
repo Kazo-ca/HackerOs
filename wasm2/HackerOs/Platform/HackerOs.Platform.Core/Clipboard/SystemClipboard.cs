@@ -232,7 +232,7 @@ public enum SystemClipboardOrigin
     Guest,
 
     /// <summary>
-    /// A native copy or cut inside HackerOS (a text field, the terminal): the browser itself already
+    /// A native copy or cut inside KazoOS (a text field, the terminal): the browser itself already
     /// handled the host side, so the bridge does not write it again.
     /// </summary>
     GuestNative,

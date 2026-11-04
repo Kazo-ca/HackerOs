@@ -80,7 +80,7 @@ using MudBlazor.Services;
 
 namespace HackerOs.Ecosystem;
 
-/// <summary>Registers the process-wide HackerOS ecosystem service graph.</summary>
+/// <summary>Registers the process-wide KazoOS ecosystem service graph.</summary>
 public static class EcosystemServiceCollectionExtensions
 {
     /// <summary>
@@ -135,9 +135,9 @@ public static class EcosystemServiceCollectionExtensions
             provider.GetRequiredService<LogFileWriter>(),
             provider.GetRequiredService<ISimulationClock>(),
             provider.GetRequiredService<IDiagnosticRedactor>()));
-        // Keep this provider scoped to HackerOS's own log categories: the ASP.NET Core host
+        // Keep this provider scoped to KazoOS's own log categories: the ASP.NET Core host
         // (Kestrel, hosting lifetime, HTTPS redirection, etc.) also resolves every registered
-        // ILoggerProvider, and its framework-internal chatter isn't a HackerOS diagnostic event.
+        // ILoggerProvider, and its framework-internal chatter isn't a KazoOS diagnostic event.
         services.AddLogging(builder =>
         {
             builder.AddFilter<HackerOsDiagnosticLoggerProvider>("Microsoft", LogLevel.None);

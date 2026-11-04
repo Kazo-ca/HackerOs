@@ -3,12 +3,12 @@ using System.Globalization;
 namespace HackerOs.AppSdk.Globalization;
 
 /// <summary>
-/// The locale rules of HackerOS (ADR 0104): how a process's <c>LANG</c>/<c>LC_*</c> variables map to
+/// The locale rules of KazoOS (ADR 0104): how a process's <c>LANG</c>/<c>LC_*</c> variables map to
 /// the culture of its texts and to the culture of its formats, the way the GNU C library does it.
 /// </summary>
 /// <remarks>
 /// <para>
-/// HackerOS ships two languages: English (<c>en</c>, the neutral resources, default and fallback)
+/// KazoOS ships two languages: English (<c>en</c>, the neutral resources, default and fallback)
 /// and French (<c>fr</c>). Any <c>en_*</c> locale gives English texts, any <c>fr_*</c> locale gives
 /// French texts, and every other locale (or none) gives English, as a Linux program prints its
 /// untranslated messages when no catalog matches.
@@ -53,7 +53,7 @@ public static class HackLocale
     /// <summary>The culture of formats when no locale is set: <c>en-US</c>.</summary>
     public static CultureInfo DefaultFormatCulture { get; } = CultureInfo.GetCultureInfo("en-US");
 
-    /// <summary>The languages HackerOS has texts for, English first.</summary>
+    /// <summary>The languages KazoOS has texts for, English first.</summary>
     public static IReadOnlyList<CultureInfo> SupportedLanguages { get; } =
     [
         DefaultLanguage,
@@ -167,7 +167,7 @@ public static class HackLocale
     }
 
     /// <summary>
-    /// Formats a .NET culture as the POSIX locale HackerOS writes in <c>locale.conf</c>:
+    /// Formats a .NET culture as the POSIX locale KazoOS writes in <c>locale.conf</c>:
     /// <c>fr-CA</c> becomes <c>fr_CA.UTF-8</c>, the invariant culture <c>C.UTF-8</c>.
     /// </summary>
     /// <param name="culture">A specific or invariant culture.</param>
@@ -180,7 +180,7 @@ public static class HackLocale
     }
 
     /// <summary>
-    /// Returns whether <paramref name="locale"/> is a locale HackerOS knows: one of
+    /// Returns whether <paramref name="locale"/> is a locale KazoOS knows: one of
     /// <see cref="AvailableLocales"/>, compared without the charset (<c>fr_CA</c> and
     /// <c>fr_CA.utf8</c> both match <c>fr_CA.UTF-8</c>).
     /// </summary>

@@ -200,7 +200,7 @@ public sealed class ServerPresenceService : IAsyncDisposable
     /// <exception cref="HttpRequestException">The server could not be reached.</exception>
     public async Task IdentifyAsync(string login, string password, bool createAccount, CancellationToken cancellationToken = default)
     {
-        Uri server = Current.ServerUrl ?? throw new InvalidOperationException("No HackerOS server is known.");
+        Uri server = Current.ServerUrl ?? throw new InvalidOperationException("No KazoOS server is known.");
         if (createAccount)
         {
             await _connection.ConnectWithNewAccountAsync(server, login, password, cancellationToken).ConfigureAwait(false);
@@ -323,7 +323,7 @@ public sealed class ServerPresenceService : IAsyncDisposable
         _servingServerProbed = true;
         if (_servingServer is not null)
         {
-            _logger.LogInformation("server: this OS was served by the HackerOS server {Server}; connecting automatically", _servingServer);
+            _logger.LogInformation("server: this OS was served by the KazoOS server {Server}; connecting automatically", _servingServer);
         }
 
         return _servingServer;

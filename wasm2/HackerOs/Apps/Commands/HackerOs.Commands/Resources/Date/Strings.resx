@@ -22,6 +22,6 @@
     <value>date: extra operand '{0}'</value>
   </data>
   <data name="CannotSet" xml:space="preserve">
-    <value>date: cannot set the date '{0}': the clock of HackerOS is the simulation clock</value>
+    <value>date: cannot set the date '{0}': the clock of KazoOS is the simulation clock</value>
   </data>
 </root>

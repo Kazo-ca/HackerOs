@@ -1,7 +1,7 @@
 namespace HackerOs.AppSdk.Apps;
 
 /// <summary>
-/// Opens web pages in the HackerOS Browser (ASP.Hack phase, ADR 0078 §3), as
+/// Opens web pages in the KazoOS Browser (ASP.Hack phase, ADR 0078 §3), as
 /// <c>xdg-open</c> or <c>Process.Start(url)</c> hand a URL to the default browser.
 /// </summary>
 /// <remarks>
@@ -11,7 +11,7 @@ namespace HackerOs.AppSdk.Apps;
 /// </remarks>
 public static class HackBrowser
 {
-    /// <summary>App ID of the HackerOS Browser.</summary>
+    /// <summary>App ID of the KazoOS Browser.</summary>
     public const string AppId = "org.hackeros.browser";
 
     /// <summary>Launch argument that makes the Browser show its page in a detached window.</summary>

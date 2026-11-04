@@ -1,6 +1,6 @@
 > [English version](../../../en/wasm/dev/building-and-testing.md)
 
-# Compiler, lancer et tester HackerOS
+# Compiler, lancer et tester KazoOS
 
 ## Objet
 
@@ -157,7 +157,7 @@ Déroulé :
    échec et affiche une ligne par étape :
 
 ```text
-== HackerOS host verification (9d26a77) ==
+== KazoOS host verification (9d26a77) ==
 build HackerOs.Ecosystem         PASS
 build test                       PASS
 build HackerOs.Server            PASS
@@ -256,7 +256,7 @@ marche sans. `HackerOs:CrossOriginIsolation` (`auto`, `on`, `off`) dans
 
 `dotnet publish` de l'Ecosystem en Release est élagué par ILLink
 (`PublishTrimmed=true`, `TrimMode=partial`, ADR 0106 et 0113) : le framework est
-élagué, les assemblies HackerOS et les apps restent entières. Une commande
+élagué, les assemblies KazoOS et les apps restent entières. Une commande
 publie, mesure et teste cette publication ([`trimmed-publish.md`](trimmed-publish.md)) :
 
 ```bash
@@ -320,7 +320,7 @@ tests en échec et signale comme instable un test qui passe au nouvel essai ;
 sans ce paramètre, le script reste strict.
 
 Dans GitHub Actions, les suites Playwright se lancent via
-**Verify HackerOS browser tests** (`verify-browser-tests.yml`) : chaque nuit
+**Verify KazoOS browser tests** (`verify-browser-tests.yml`) : chaque nuit
 sur `main` si `main` a changé, ou à la main (`workflow_dispatch`) ; voir
 [`ci-workflows.md`](ci-workflows.md#tests-navigateur-chaque-nuit). Elles n'appartiennent pas au déploiement Pages.
 Les scénarios conditionnels des hôtes déjà lancés ou de la publication élaguée
@@ -480,7 +480,7 @@ dotnet test Tests/HackerOs.UI.E2E.Tests -c Release --no-build --filter "FullyQua
     `v3/7` sur `v3/3` avec `LowStorageSpaceTests` (quota de Chromium abaissé,
     [`system-backup.md`](system-backup.md)), 24/24 avec les trois tests
     d'accessibilité (`v3/13`, 2026-10-17, environ 16 min 30 s)
-    (2026-10-16 : contraste de `--hos-text-muted` du thème HackerOS, états
+    (2026-10-16 : contraste de `--hos-text-muted` du thème KazoOS, états
     ARIA écrits en `"true"`/`"false"`, voir
     [`old/common-pitfalls.md`](old/common-pitfalls.md) §8 ; le test du choix
     Mobile attend la bascule avant de recharger, car l'écriture du réglage

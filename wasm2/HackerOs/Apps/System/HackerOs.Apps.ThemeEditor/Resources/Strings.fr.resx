@@ -121,7 +121,7 @@
     <value>Utiliser la valeur du thème de base</value>
   </data>
   <data name="Filter.Themes" xml:space="preserve">
-    <value>Thèmes HackerOS</value>
+    <value>Thèmes KazoOS</value>
   </data>
   <data name="Group.Animations.Intro" xml:space="preserve">
     <value>Durées des transitions. Elles sont ignorées quand les animations sont désactivées dans Paramètres.</value>

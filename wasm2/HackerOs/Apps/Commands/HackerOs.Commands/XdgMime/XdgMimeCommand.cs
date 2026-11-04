@@ -15,7 +15,7 @@ namespace HackerOs.Commands.XdgMime;
 /// type the OS matches a file by.
 /// </summary>
 /// <remarks>
-/// A type is a media type (<c>text/markdown</c>, <c>x-scheme-handler/https</c>) or, in HackerOS, an
+/// A type is a media type (<c>text/markdown</c>, <c>x-scheme-handler/https</c>) or, in KazoOS, an
 /// extension with its dot (<c>.md</c>). An app is named by its ID; a trailing <c>.desktop</c>, as
 /// freedesktop writes it, is ignored. Exit codes follow <c>xdg-mime</c>: 0 done, 1 bad command
 /// line, 2 the file does not exist, 4 the action failed.
@@ -79,7 +79,7 @@ public sealed class XdgMimeCommand : TerminalAppBase
     /// <summary>
     /// Prints the type a file is matched by: <c>inode/directory</c> for a folder, else the media type
     /// an installed app declares for its extension, else the extension itself, else
-    /// <c>application/octet-stream</c>. HackerOS has no shared-mime-info database (ADR 0121, section 5).
+    /// <c>application/octet-stream</c>. KazoOS has no shared-mime-info database (ADR 0121, section 5).
     /// </summary>
     private static async Task<int> QueryFileTypeAsync(TerminalExecutionContext context, string file, CancellationToken cancellationToken)
     {

@@ -73,7 +73,7 @@
     <value>Enregistré. Le bureau l'applique maintenant.</value>
   </data>
   <data name="Accessibility.State.Description" xml:space="preserve">
-    <value>Vos choix sont enregistrés dans {0}, par-dessus les valeurs par défaut de la machine dans {1}. « Auto » suit les réglages de l'ordinateur sur lequel HackerOS tourne.</value>
+    <value>Vos choix sont enregistrés dans {0}, par-dessus les valeurs par défaut de la machine dans {1}. « Auto » suit les réglages de l'ordinateur sur lequel KazoOS tourne.</value>
   </data>
   <data name="Accessibility.State.Off" xml:space="preserve">
     <value>désactivé</value>
@@ -91,13 +91,13 @@
     <value>Taille du texte</value>
   </data>
   <data name="Appearance.Accent.AriaLabel" xml:space="preserve">
-    <value>Couleurs d'accent HackerOS</value>
+    <value>Couleurs d'accent KazoOS</value>
   </data>
   <data name="Appearance.Accent.Description" xml:space="preserve">
-    <value>Les couleurs d'accent ne sont proposées, volontairement, que pour le thème HackerOS.</value>
+    <value>Les couleurs d'accent ne sont proposées, volontairement, que pour le thème KazoOS.</value>
   </data>
   <data name="Appearance.Accent.Title" xml:space="preserve">
-    <value>Couleur d'accent HackerOS</value>
+    <value>Couleur d'accent KazoOS</value>
   </data>
   <data name="Appearance.DesktopTheme.AriaLabel" xml:space="preserve">
     <value>Thèmes du bureau</value>
@@ -256,7 +256,7 @@
     <value>Créer une sauvegarde</value>
   </data>
   <data name="Backup.Create.Description" xml:space="preserve">
-    <value>Une sauvegarde contient {0} : les fichiers de chaque utilisateur, {1}, les comptes et les empreintes de leurs mots de passe. Elle est téléchargée sur votre ordinateur sous la forme d'une seule archive {2}, jamais gardée dans HackerOS, comme une sauvegarde sur un disque externe. Un administrateur doit confirmer avec son mot de passe. Depuis un terminal : {3}.</value>
+    <value>Une sauvegarde contient {0} : les fichiers de chaque utilisateur, {1}, les comptes et les empreintes de leurs mots de passe. Elle est téléchargée sur votre ordinateur sous la forme d'une seule archive {2}, jamais gardée dans KazoOS, comme une sauvegarde sur un disque externe. Un administrateur doit confirmer avec son mot de passe. Depuis un terminal : {3}.</value>
   </data>
   <data name="Backup.Create.Everything" xml:space="preserve">
     <value>tout</value>
@@ -295,7 +295,7 @@
     <value>Restaurer…</value>
   </data>
   <data name="Backup.Restore.Description" xml:space="preserve">
-    <value>Choisissez une archive {0} sur votre ordinateur. HackerOS la vérifie d'abord : une archive d'une autre version de la base de données, ou endommagée, est refusée et rien ne change. Ensuite, un administrateur confirme, tous les processus s'arrêtent, la sauvegarde est écrite et HackerOS redémarre. Depuis un terminal : {1} ou {2}.</value>
+    <value>Choisissez une archive {0} sur votre ordinateur. KazoOS la vérifie d'abord : une archive d'une autre version de la base de données, ou endommagée, est refusée et rien ne change. Ensuite, un administrateur confirme, tous les processus s'arrêtent, la sauvegarde est écrite et KazoOS redémarre. Depuis un terminal : {1} ou {2}.</value>
   </data>
   <data name="Backup.Restore.Title" xml:space="preserve">
     <value>Restaurer une sauvegarde</value>
@@ -376,7 +376,7 @@
     <value>Chargement…</value>
   </data>
   <data name="Danger.Description" xml:space="preserve">
-    <value>Remet HackerOS dans son état d'usine. La base de données locale est définitivement effacée (comptes, fichiers, sessions et réglages) et votre compte retrouve sa configuration par défaut. Cette action est irréversible. Un administrateur doit confirmer avec son mot de passe.</value>
+    <value>Remet KazoOS dans son état d'usine. La base de données locale est définitivement effacée (comptes, fichiers, sessions et réglages) et votre compte retrouve sa configuration par défaut. Cette action est irréversible. Un administrateur doit confirmer avec son mot de passe.</value>
   </data>
   <data name="Danger.Title" xml:space="preserve">
     <value>Zone dangereuse</value>
@@ -490,7 +490,7 @@
     <value>Capacités accordées à l'application</value>
   </data>
   <data name="Header.Title" xml:space="preserve">
-    <value>Paramètres système de HackerOS</value>
+    <value>Paramètres système de KazoOS</value>
   </data>
   <data name="Language.Choice.AriaLabel" xml:space="preserve">
     <value>Langue de vos sessions</value>
@@ -535,7 +535,7 @@
     <value>Enregistré : {0}.</value>
   </data>
   <data name="Language.Session.Description" xml:space="preserve">
-    <value>HackerOS parle la langue de votre locale, comme Linux : la variable {0} dont chaque processus hérite à votre connexion. Votre choix ci-dessous est enregistré dans {1} et s'applique au bureau et à toutes les apps à votre prochaine connexion.</value>
+    <value>KazoOS parle la langue de votre locale, comme Linux : la variable {0} dont chaque processus hérite à votre connexion. Votre choix ci-dessous est enregistré dans {1} et s'applique au bureau et à toutes les apps à votre prochaine connexion.</value>
   </data>
   <data name="Language.Session.Formats" xml:space="preserve">
     <value>Formats</value>
@@ -697,10 +697,10 @@
     <value>Toutes les capacités accordées et l'historique d'audit</value>
   </data>
   <data name="Reset.Dialog.Intro" xml:space="preserve">
-    <value>Toute la base de données locale de HackerOS sera définitivement supprimée, dont :</value>
+    <value>Toute la base de données locale de KazoOS sera définitivement supprimée, dont :</value>
   </data>
   <data name="Reset.Dialog.Restart" xml:space="preserve">
-    <value>HackerOS redémarrera ensuite comme s'il venait d'être installé.</value>
+    <value>KazoOS redémarrera ensuite comme s'il venait d'être installé.</value>
   </data>
   <data name="Reset.Dialog.Settings" xml:space="preserve">
     <value>Tous les réglages des applications et des comptes (remis par défaut)</value>
@@ -715,10 +715,10 @@
     <value>Réinitialisation…</value>
   </data>
   <data name="Restart.Button" xml:space="preserve">
-    <value>Redémarrer HackerOS</value>
+    <value>Redémarrer KazoOS</value>
   </data>
   <data name="Restart.Description" xml:space="preserve">
-    <value>Écrit les journaux sur le disque, arrête tous les processus et redémarre HackerOS, comme {0}. Un administrateur doit confirmer avec son mot de passe.</value>
+    <value>Écrit les journaux sur le disque, arrête tous les processus et redémarre KazoOS, comme {0}. Un administrateur doit confirmer avec son mot de passe.</value>
   </data>
   <data name="Restart.Error.NotConfirmed" xml:space="preserve">
     <value>Aucun administrateur n'a confirmé le redémarrage : rien n'a été fait.</value>
@@ -745,7 +745,7 @@
     <value>Créer un compte</value>
   </data>
   <data name="Server.Description" xml:space="preserve">
-    <value>Connecter un appareil à un serveur HackerOS facultatif donne aux apps un vrai accès au réseau, comme {0}/{1} dans le Terminal, par le relais du serveur. Le stockage local reste la référence dans tous les cas : la connexion n'est jamais nécessaire pour un usage normal.</value>
+    <value>Connecter un appareil à un serveur KazoOS facultatif donne aux apps un vrai accès au réseau, comme {0}/{1} dans le Terminal, par le relais du serveur. Le stockage local reste la référence dans tous les cas : la connexion n'est jamais nécessaire pour un usage normal.</value>
   </data>
   <data name="Server.Disconnect" xml:space="preserve">
     <value>Se déconnecter</value>
@@ -1297,7 +1297,7 @@
     <value>Mes clés d'accès</value>
   </data>
   <data name="Passkeys.Description" xml:space="preserve">
-    <value>Une clé d'accès vous connecte avec votre empreinte, votre visage, un NIP ou une clé de sécurité, sans taper votre mot de passe. Le navigateur garde la clé ; HackerOS n'en conserve que la moitié publique. Une clé qui prend en charge l'extension PRF ouvre aussi votre trousseau.</value>
+    <value>Une clé d'accès vous connecte avec votre empreinte, votre visage, un NIP ou une clé de sécurité, sans taper votre mot de passe. Le navigateur garde la clé ; KazoOS n'en conserve que la moitié publique. Une clé qui prend en charge l'extension PRF ouvre aussi votre trousseau.</value>
   </data>
   <data name="Passkeys.Empty" xml:space="preserve">
     <value>Aucune clé d'accès pour l'instant.</value>
@@ -1372,7 +1372,7 @@
     <value>Écrans retenus</value>
   </data>
   <data name="Screens.List.Description" xml:space="preserve">
-    <value>Chaque écran secondaire s'ouvre dans sa propre fenêtre du navigateur. HackerOS retient sa place dans {0}, même après sa fermeture.</value>
+    <value>Chaque écran secondaire s'ouvre dans sa propre fenêtre du navigateur. KazoOS retient sa place dans {0}, même après sa fermeture.</value>
   </data>
   <data name="Screens.List.Screen" xml:space="preserve">
     <value>Écran {0}</value>
@@ -1417,7 +1417,7 @@
     <value>Plein écran : le bouton ⤢ en haut à droite de chaque écran secondaire ; Échap en sort.</value>
   </data>
   <data name="Screens.Help.Permission" xml:space="preserve">
-    <value>Dans Chrome et Edge, autorisez la gestion des fenêtres quand le navigateur le demande : chaque nouvel écran va alors sur un moniteur libre. Ailleurs, placez la fenêtre vous-même ; HackerOS retient sa place.</value>
+    <value>Dans Chrome et Edge, autorisez la gestion des fenêtres quand le navigateur le demande : chaque nouvel écran va alors sur un moniteur libre. Ailleurs, placez la fenêtre vous-même ; KazoOS retient sa place.</value>
   </data>
   <data name="Screens.Saved" xml:space="preserve">
     <value>Enregistré.</value>
@@ -1465,7 +1465,7 @@
     <value>Nom du moniteur indisponible</value>
   </data>
   <data name="Screens.Open.Blocked" xml:space="preserve">
-    <value>Le navigateur a bloqué la fenêtre. Autorisez les fenêtres surgissantes pour HackerOS, puis réessayez.</value>
+    <value>Le navigateur a bloqué la fenêtre. Autorisez les fenêtres surgissantes pour KazoOS, puis réessayez.</value>
   </data>
   <data name="Screens.Open.LimitReached" xml:space="preserve">
     <value>Les écrans 2 à 9 sont tous ouverts.</value>
@@ -1711,7 +1711,7 @@
     <value>Serveur local</value>
   </data>
   <data name="LocalServer.Description" xml:space="preserve">
-    <value>Installez le serveur HackerOS sur cet ordinateur ou sur une autre machine de votre réseau local, sans l'exposer à internet : les applications atteignent alors le vrai réseau par son relais. L'installeur affiche un code d'appairage à usage unique ; saisissez-le ici avec l'adresse du serveur.</value>
+    <value>Installez le serveur KazoOS sur cet ordinateur ou sur une autre machine de votre réseau local, sans l'exposer à internet : les applications atteignent alors le vrai réseau par son relais. L'installeur affiche un code d'appairage à usage unique ; saisissez-le ici avec l'adresse du serveur.</value>
   </data>
   <data name="LocalServer.Download" xml:space="preserve">
     <value>Télécharger le serveur</value>
@@ -1756,10 +1756,10 @@
     <value>Test en cours…</value>
   </data>
   <data name="LocalServer.Found" xml:space="preserve">
-    <value>Un serveur HackerOS répond (version {0}).</value>
+    <value>Un serveur KazoOS répond (version {0}).</value>
   </data>
   <data name="LocalServer.NotFound" xml:space="preserve">
-    <value>Aucun serveur HackerOS ici : {0}</value>
+    <value>Aucun serveur KazoOS ici : {0}</value>
   </data>
   <data name="LocalServer.Code" xml:space="preserve">
     <value>Code d'appairage</value>
@@ -1828,7 +1828,7 @@
     <value>Évènements</value>
   </data>
   <data name="Sound.Events.Description" xml:space="preserve">
-    <value>Le fichier que chaque évènement joue dans un jeu (noms de sons freedesktop.org). Un son absent d'un jeu joue celui du jeu HackerOS.</value>
+    <value>Le fichier que chaque évènement joue dans un jeu (noms de sons freedesktop.org). Un son absent d'un jeu joue celui du jeu KazoOS.</value>
   </data>
   <data name="Sound.Event.Notification" xml:space="preserve">
     <value>Notification</value>
@@ -1879,7 +1879,7 @@
     <value>Système</value>
   </data>
   <data name="Cursors.Theme.hackeros-neon" xml:space="preserve">
-    <value>HackerOS Néon</value>
+    <value>KazoOS Néon</value>
   </data>
   <data name="Cursors.Theme.gothic-crimson" xml:space="preserve">
     <value>Gothique Pourpre</value>
@@ -1921,7 +1921,7 @@
     <value>Intégrée</value>
   </data>
   <data name="Sources.BuiltIn.Title" xml:space="preserve">
-    <value>HackerOS a été compilé avec cette source</value>
+    <value>KazoOS a été compilé avec cette source</value>
   </data>
   <data name="Sources.Trust.Verified" xml:space="preserve">
     <value>Vérifiée</value>
@@ -1948,7 +1948,7 @@
     <value>Une source de confiance permet à chaque utilisateur d'installer ses apps sans administrateur. Laissez-la non fiable pour approuver chaque installation.</value>
   </data>
   <data name="Sources.Error.Unsupported" xml:space="preserve">
-    <value>Cet hôte HackerOS ne peut pas installer d'apps depuis un dépôt.</value>
+    <value>Cet hôte KazoOS ne peut pas installer d'apps depuis un dépôt.</value>
   </data>
   <data name="Policy.Title" xml:space="preserve">
     <value>Liste noire</value>

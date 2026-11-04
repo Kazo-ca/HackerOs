@@ -247,7 +247,7 @@ public static partial class ThemeFile
     {
         ArgumentNullException.ThrowIfNull(theme);
         StringBuilder builder = new();
-        builder.Append("# HackerOS theme (ADR 0103). Only the tokens listed in the Theme Editor's documentation are read.\n");
+        builder.Append("# KazoOS theme (ADR 0103). Only the tokens listed in the Theme Editor's documentation are read.\n");
         builder.Append("# Missing tokens keep the value of the base theme.\n\n");
         builder.Append('[').Append(ThemeSection).Append("]\n");
         builder.Append("id = ").Append(theme.Id).Append('\n');

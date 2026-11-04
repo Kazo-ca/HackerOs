@@ -1,6 +1,6 @@
 # HackerOs.Theming.Blazor
 
-Native Blazor theme composition for HackerOS and for the reusable window/taskbar packages. The
+Native Blazor theme composition for KazoOS and for the reusable window/taskbar packages. The
 Razor class library owns the offline static asset `_content/HackerOs.Theming.Blazor/themes.css`,
 the root `ThemeScope`, and the token-driven `ThemePreview` used by appearance selectors.
 
@@ -24,5 +24,5 @@ Render one `ThemeScope` around a shell root. All attribute values are validated 
 The package's texts (accessible labels, the theme preview's name) live in `Resources/Strings.resx`
 (English) and `Resources/Strings.fr.resx` (French), read through
 `HackerOs.Theming.Blazor.Localization.PackageStringLocalizer` (ADR 0104): a host that
-registers an `IStringLocalizer<T>` (HackerOS registers its session-language
+registers an `IStringLocalizer<T>` (KazoOS registers its session-language
 `SessionStringLocalizer<T>`) gets its language; a host without localization gets English.

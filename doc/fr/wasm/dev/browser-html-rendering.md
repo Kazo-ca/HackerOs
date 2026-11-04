@@ -15,7 +15,7 @@ structurés et affichait le HTML brut comme du texte. Désormais, une réponse
 devient une **vraie page web** : son CSS s'applique, son JavaScript s'exécute,
 ses `fetch`, ses `XMLHttpRequest`, ses formulaires, ses cookies et son
 `localStorage` fonctionnent. La page reste prisonnière : elle n'atteint ni
-HackerOS, ni Internet, ni les fichiers de l'utilisateur. Tout ce qu'elle
+KazoOS, ni Internet, ni les fichiers de l'utilisateur. Tout ce qu'elle
 demande passe par le navigateur, qui décide en C#, comme un vrai navigateur
 applique la politique de même origine et CORS.
 
@@ -94,7 +94,7 @@ l'historique « suivant ».
 
 ### Vrais sites et barre d'adresse (ADR 0210)
 
-Un hôte inconnu du réseau simulé passe par le proxy du serveur HackerOS quand un
+Un hôte inconnu du réseau simulé passe par le proxy du serveur KazoOS quand un
 serveur est connecté ([ADR 0210](adr/0210-browser-real-sites-through-the-proxy.md)) :
 le Navigateur est une app système avec `network.real.access`. La page suit le
 même chemin que les autres (récupération en C#, `srcdoc` isolé), ses
@@ -112,7 +112,7 @@ serveur.
 
 L'iframe est en `srcdoc` avec `sandbox="allow-scripts allow-forms"`, sans
 `allow-same-origin` : la page a une origine opaque et ne peut lire ni le DOM
-de HackerOS ni son stockage. Une meta CSP interdit toute connexion
+de KazoOS ni son stockage. Une meta CSP interdit toute connexion
 (`connect-src 'none'`, `img-src data: blob:`…) : la page ne charge rien
 elle-même, tout ce dont elle a besoin a été inliné en URL `data:` ou passe par
 le pont.

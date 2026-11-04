@@ -27,7 +27,7 @@ namespace HackerOs.Commands.Hackpkg;
 /// </para>
 /// <para>
 /// An installed app is available at once (ADR 0214 §1); only a change to an app already loaded in
-/// the page waits for a restart of HackerOS, which the command says. <c>rollback</c> goes back to the
+/// the page waits for a restart of KazoOS, which the command says. <c>rollback</c> goes back to the
 /// version the last update kept, <c>repair</c> finishes or undoes an interrupted install (§3, §4).
 /// </para>
 /// </remarks>

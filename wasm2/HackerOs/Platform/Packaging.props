@@ -1,6 +1,6 @@
 <Project>
   <!--
-    Shared NuGet packaging metadata of every library HackerOS publishes (ADR 0098 §2): the SDK, the
+    Shared NuGet packaging metadata of every library KazoOS publishes (ADR 0098 §2): the SDK, the
     platform, the base apps and commands, HackerOs.Ecosystem.Host. A project is published when it
     imports this file; Directory.Build.props makes every other project non-packable, so
     build/pack-local.sh packs the whole solution and only gets these.

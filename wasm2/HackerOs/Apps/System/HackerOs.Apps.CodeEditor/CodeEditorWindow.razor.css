@@ -1,5 +1,5 @@
 /*
- * VS Code's workbench, in HackerOS's dark "hacker console" palette. Every region is a flex item
+ * VS Code's workbench, in KazoOS's dark "hacker console" palette. Every region is a flex item
  * with min-width/min-height 0, so Monaco (the editor area) always gets the remaining space; the
  * side bar width and terminal height are CSS custom properties the splitters set on the root.
  */

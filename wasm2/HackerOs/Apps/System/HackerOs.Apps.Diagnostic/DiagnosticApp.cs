@@ -35,7 +35,7 @@ public sealed class DiagnosticApp : AppDefinition
 
     /// <inheritdoc />
     public override string Description =>
-        "System Diagnostic and IndexedDB Inspector for HackerOS storage inspection and file path resolution";
+        "System Diagnostic and IndexedDB Inspector for KazoOS storage inspection and file path resolution";
 
     /// <inheritdoc />
     public override string Category => "system";

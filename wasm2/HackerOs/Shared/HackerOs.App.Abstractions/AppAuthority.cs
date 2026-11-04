@@ -19,7 +19,7 @@ public enum AppAuthority
 }
 
 /// <summary>
-/// Evaluates the ordered HackerOS authority hierarchy.
+/// Evaluates the ordered KazoOS authority hierarchy.
 /// </summary>
 public static class AppAuthorityPolicy
 {

@@ -7,7 +7,7 @@ Implementation of section 5.4 of the [rebuild plan](plans/ecosystem-rebuild-plan
 
 ## Role
 
-HackerOS exposes system state like Linux: `/proc` describes processes, memory,
+KazoOS exposes system state like Linux: `/proc` describes processes, memory,
 CPU and load; `/dev` offers the `null`, `zero`, `random` and `urandom` devices,
 plus `kmsg` when the host provides the kernel log (ADR 0126). Both mounts are
 **computed on every read** and **never written to IndexedDB**.

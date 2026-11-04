@@ -17,7 +17,7 @@ public sealed partial class ShellInterpreter
     /// <param name="Option">The option letter.</param>
     /// <param name="Label">The label of <c>ulimit -a</c>, as bash prints it.</param>
     /// <param name="Unit">The unit of <c>ulimit -a</c>, empty for a count.</param>
-    /// <param name="Kind">The limit; <see langword="null"/> for the file size, which HackerOS does not limit.</param>
+    /// <param name="Kind">The limit; <see langword="null"/> for the file size, which KazoOS does not limit.</param>
     /// <param name="Scale">How many table units one <c>ulimit</c> unit is (1024 bytes per KiB for <c>-m</c>).</param>
     private sealed record UlimitResource(char Option, string Label, string Unit, ResourceLimitKind? Kind, long Scale);
 
@@ -165,7 +165,7 @@ public sealed partial class ShellInterpreter
 
         if (resource.Kind is not { } kind)
         {
-            // HackerOS has no file size limit: it is unlimited and stays so (ADR 0125, section 4).
+            // KazoOS has no file size limit: it is unlimited and stays so (ADR 0125, section 4).
             if (requested == ResourceLimit.Unlimited)
             {
                 return 0;

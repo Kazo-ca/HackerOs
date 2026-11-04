@@ -76,7 +76,7 @@
     <value>File metadata is stored in {0} (inodes) while directory hierarchy links mapping {1} to {2} reside in {3}. Absolute {4} is dynamically resolved below by traversing directory link trees.</value>
   </data>
   <data name="Notice.Title" xml:space="preserve">
-    <value>HackerOS Architecture Note:</value>
+    <value>KazoOS Architecture Note:</value>
   </data>
   <data name="Search.AriaLabel" xml:space="preserve">
     <value>Search store records</value>
@@ -97,7 +97,7 @@
     <value>{0} (version {1})</value>
   </data>
   <data name="Site.Purpose" xml:space="preserve">
-    <value>Browser database of the web site {0} (ADR 0088): IndexedDB of the host browser, not stored in the HackerOS files. {1} records, about {2}.</value>
+    <value>Browser database of the web site {0} (ADR 0088): IndexedDB of the host browser, not stored in the KazoOS files. {1} records, about {2}.</value>
   </data>
   <data name="Sites.Empty" xml:space="preserve">
     <value>No site has a database yet.</value>

@@ -1,10 +1,10 @@
 > [English version](../../../en/wasm/framework/building-on-hackeros.md)
 
-# Construire sur HackerOS depuis un autre dépôt
+# Construire sur KazoOS depuis un autre dépôt
 
 ## Objet
 
-Le guide d'un dépôt qui **utilise** HackerOS sans en copier le code : tout
+Le guide d'un dépôt qui **utilise** KazoOS sans en copier le code : tout
 projet qui veut ses propres apps et son propre hôte d'OS. **Aucun jeu sur ce repository** ([ADR 0135](../dev/adr/0135-no-game-in-this-repository.md)). Il part du SDK 1.0, gelé par le chantier `v3/15`
 ([ADR 0114](../dev/adr/0114-sdk-1-0-freeze.md)) ; la version courante est la **2.1.0**
 (série du bureau et du menu contextuel, [ADR 0149](../dev/adr/0149-sdk-2-0-file-view-removal.md)
@@ -22,7 +22,7 @@ Détails des paquets et du mode paquet de `HackerOs.App.Build` :
 Pour une app dans son propre dépôt, partez du modèle de solution
 ([ADR 0176](../dev/adr/0176-app-repository-template.md),
 [ADR 0207](../dev/adr/0207-solution-template-implementation.md)) : app, hôte,
-tests, sous-module HackerOS qui fixe la version, sources de l'OS en `Debug`,
+tests, sous-module KazoOS qui fixe la version, sources de l'OS en `Debug`,
 paquets en `Release`, CI et publication dans le Hack Store par un tag. Tout est
 dans [`app-repository.md`](app-repository.md). La suite de ce guide décrit
 l'assemblage à la main, utile pour un dépôt qui a plusieurs apps ou son propre
@@ -41,14 +41,14 @@ construite en `0.9.0-preview.*` doit être reconstruite contre la 1.0.
 
 ## 2. Récupérer les paquets
 
-Depuis la 2.1.0, chaque release publie tous les paquets HackerOS (SDK,
+Depuis la 2.1.0, chaque release publie tous les paquets KazoOS (SDK,
 plateforme, apps de base, `HackerOs.App.Build`, `HackerOs.Ecosystem.Host`,
 `HackerOs.Templates`) sur **nuget.org**, avec leurs symboles et Source Link
 ([ADR 0173](../dev/adr/0173-automatic-releases-from-the-version-file.md)) :
 une `PackageReference` à la version voulue suffit, sans `nuget.config`.
 
 Le flux **local** sert à essayer une version pas encore publiée. Dans un clone
-de HackerOS, sur la branche voulue :
+de KazoOS, sur la branche voulue :
 
 ```bash
 git -C ../HackerOs checkout <tag ou branche>
@@ -92,7 +92,7 @@ de là :
 </configuration>
 ```
 
-`Directory.Build.props` : une seule version pour tous les paquets HackerOS
+`Directory.Build.props` : une seule version pour tous les paquets KazoOS
 (ils sont publiés ensemble, ADR 0098 §1). Les modèles écrivent
 `<HackerOsVersion>` dans chaque projet ; retirez-la des projets pour ne garder
 que celle-ci :
@@ -156,7 +156,7 @@ de `HackerOs.Ecosystem.Host`, les apps sont ses références.
 `dotnet pack` d'un projet d'app produit un paquet qui embarque ses manifestes
 (`hackeros/manifests/`), leurs traductions et un `buildTransitive` qui les
 déclare à l'hôte : un hôte n'a jamais besoin de son code source. Donnez au
-paquet un `PackageId` hors de l'espace `HackerOs.*`, réservé au flux HackerOS
+paquet un `PackageId` hors de l'espace `HackerOs.*`, réservé au flux KazoOS
 par le `packageSourceMapping`.
 
 ## 7. Tester
@@ -170,7 +170,7 @@ par le `packageSourceMapping`.
   l'hôte, puis Playwright (création de l'administrateur, menu Applications,
   Terminal).
 - Pour vérifier qu'une montée de version ne casse pas vos apps déjà publiées,
-  gardez comme HackerOS un paquet d'app compilé contre l'ancienne version et
+  gardez comme KazoOS un paquet d'app compilé contre l'ancienne version et
   chargez-le dans l'hôte courant (`Tests/fixtures/sdk-compat`, ADR 0114 §4).
 
 ## 8. Publier l'hôte
@@ -180,7 +180,7 @@ dotnet publish src/Contoso.Os -c Release
 ```
 
 Le modèle d'hôte active `PublishTrimmed` en mode `partial` : le framework est
-élagué, les assemblies HackerOS et toutes les apps restent entières (racines
+élagué, les assemblies KazoOS et toutes les apps restent entières (racines
 ajoutées par `HackerOs.App.Build`, ADR 0113). La sortie `wwwroot` est un site
 statique ; le service worker ne s'enregistre que hors de `localhost`. Voir
 [`trimmed-publish.md`](../dev/trimmed-publish.md).
@@ -288,7 +288,7 @@ La liste exacte et les ruptures hors SDK d'un hôte (trois changements de
   reste pour une version pas encore publiée.
 - **Le modèle `hackeros-solution`** (ADR 0176, ADR 0207) est le départ
   conseillé pour une app dans son dépôt.
-- **Version épinglée une fois** dans le dépôt tiers : les paquets HackerOS
+- **Version épinglée une fois** dans le dépôt tiers : les paquets KazoOS
   vont ensemble, mélanger deux versions n'est pas pris en charge.
 
 ## Tâches

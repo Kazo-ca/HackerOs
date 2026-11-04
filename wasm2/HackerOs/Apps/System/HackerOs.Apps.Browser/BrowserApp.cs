@@ -35,7 +35,7 @@ public sealed class BrowserApp : AppDefinition
 
     /// <inheritdoc />
     public override string Description =>
-        "Web browser for the HackerOS virtual network and, through a connected server, the real Internet";
+        "Web browser for the KazoOS virtual network and, through a connected server, the real Internet";
 
     /// <inheritdoc />
     public override string Category => "internet";

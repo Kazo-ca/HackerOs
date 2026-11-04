@@ -195,7 +195,7 @@ How `generate` works:
 
 1. loads the compiled assembly into an isolated, collectible
    `AssemblyLoadContext` (`AppAssemblyLoadContext`). The shared framework assemblies
-   and the tool's HackerOS contracts come from the default context (a single
+   and the tool's KazoOS contracts come from the default context (a single
    identity for `AppDefinition`); the others come from the list
    `@(ReferenceCopyLocalPaths)` + `@(ReferencePath)` then from the app's output
    folder. Reference assemblies (`[ReferenceAssembly]`) are ignored;

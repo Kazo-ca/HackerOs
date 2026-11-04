@@ -9,7 +9,7 @@ This document describes the `.theme` file format, the token list and the theme-r
 Settings format (ADR 0044), two sections:
 
 ```ini
-# HackerOS theme (ADR 0103).
+# KazoOS theme (ADR 0103).
 [theme]
 id = neon-crypt
 name = Neon Crypt
@@ -89,7 +89,7 @@ write `rgba(var(--hos-accent-rgb), .2)`.
 
 `HackerOs.Theming.Abstractions` has its own `Resources/Strings.resx` /
 `Strings.fr.resx`, read by a plain `ResourceManager` (the package stays free of
-HackerOS dependencies) with the culture the caller passes: an app gives
+KazoOS dependencies) with the culture the caller passes: an app gives
 `AppContext.Culture` (the editor takes it from its localizer, `Strings.CultureOf(L)`),
 the platform `SessionLocaleService.Culture`, and `null` gives English.
 The `Label`, `Description` and `Message` properties stay in English; the
@@ -105,6 +105,6 @@ translations go through:
   form written to the logs by `UserThemeCatalogService`.
 
 Never translated: the names of the built-in themes (`ThemeCatalog`,
-proper names: HackerOS, Windows 98, macOS...), token names, ids
+proper names: KazoOS, Windows 98, macOS...), token names, ids
 and the content of a `.theme` file (keys, values, `platforms = desktop, mobile`,
 header comments written by `Serialize`).

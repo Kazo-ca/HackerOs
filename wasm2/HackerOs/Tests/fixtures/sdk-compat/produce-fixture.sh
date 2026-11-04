@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ADR 0098 §8, ADR 0114, ADR 0132 §1, ADR 0161 §3: builds one SDK compatibility fixture (a project
-# of src/) against the HackerOS packages of a local feed, the way another repository would, and
+# of src/) against the KazoOS packages of a local feed, the way another repository would, and
 # writes its package to packages/. Run once per published SDK version that gets a fixture (1.0.0:
 # Contoso.Sdk1Compat; 1.1.0: Contoso.Sdk11Compat, packed from the v3.1/base tip; 2.0.0:
 # Contoso.Sdk2Compat, packed from the desk/6-sdk-2 tip); the committed package is never rebuilt, so
@@ -10,7 +10,7 @@
 #   Tests/fixtures/sdk-compat/produce-fixture.sh [--project <name>] [--version <x.y.z>] [--feed <dir>]
 #     --project  a folder of src/ (default: Contoso.Sdk1Compat)
 #     --version  the SDK version of the feed's packages (default: HackerOsVersion of build/Versions.props)
-#     --feed     the folder of HackerOS packages (default: artifacts/local-nupkg)
+#     --feed     the folder of KazoOS packages (default: artifacts/local-nupkg)
 set -euo pipefail
 
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -31,7 +31,7 @@ done
 [[ -n "$version" ]] || version="$(sed -n 's:.*<HackerOsVersion>\(.*\)</HackerOsVersion>.*:\1:p' "$root/build/Versions.props")"
 [[ -f "$feed/HackerOs.AppSdk.$version.nupkg" ]] || { echo "No HackerOs.AppSdk.$version.nupkg in $feed: run build/pack-local.sh first." >&2; exit 1; }
 
-# Built outside the repository: no Directory.Build.* of HackerOS, an isolated NuGet cache.
+# Built outside the repository: no Directory.Build.* of KazoOS, an isolated NuGet cache.
 work="$(mktemp -d)"
 trap 'rm -rf "$work"' EXIT
 cp -r "$here/src/." "$work/"

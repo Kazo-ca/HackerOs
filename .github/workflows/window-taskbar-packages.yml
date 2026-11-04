@@ -63,7 +63,7 @@ jobs:
 
       # Project references become NuGet dependencies; dotnet pack does not automatically emit
       # those dependency packages. Keep this sequence in dependency-topological order.
-      - name: Read the HackerOS version
+      - name: Read the KazoOS version
         shell: bash
         run: >-
           echo "HACKEROS_VERSION=$(sed -n 's:.*<HackerOsVersion>\(.*\)</HackerOsVersion>.*:\1:p' build/Versions.props)" >> "$GITHUB_ENV"

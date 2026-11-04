@@ -1,5 +1,5 @@
 // ADR 0227: a factory reset (Settings ▸ System, or « Forgot password? » on the sign-in screen,
-// ADR 0226) leaves nothing of HackerOS in the browser. Called by BrowserSystemPowerDevice once the
+// ADR 0226) leaves nothing of KazoOS in the browser. Called by BrowserSystemPowerDevice once the
 // session has ended and the logs were flushed; the C# side reloads the page right after.
 
 const deleteWaitMs = 5000;

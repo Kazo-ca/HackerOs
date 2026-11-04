@@ -51,6 +51,6 @@ internal sealed class AppSystemPowerGateway : IAppSystemPowerGateway
     private SystemPowerService Require()
     {
         _capabilities.Require(AppCapabilities.SystemPower);
-        return _power?.Invoke() ?? throw new NotSupportedException("This HackerOS host cannot restart the machine.");
+        return _power?.Invoke() ?? throw new NotSupportedException("This KazoOS host cannot restart the machine.");
     }
 }

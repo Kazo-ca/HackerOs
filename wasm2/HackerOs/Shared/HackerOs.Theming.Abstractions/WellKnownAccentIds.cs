@@ -1,6 +1,6 @@
 namespace HackerOs.Theming.Abstractions;
 
-/// <summary>Provides the bounded set of accent identifiers supported by HackerOS themes.</summary>
+/// <summary>Provides the bounded set of accent identifiers supported by KazoOS themes.</summary>
 public static class WellKnownAccentIds
 {
     /// <summary>The default phosphor-green accent.</summary>

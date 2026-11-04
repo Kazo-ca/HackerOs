@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <!--
-    ADR 0149 §5, ADR 0161 §3: a third-party app compiled once against the HackerOS 2.0.0 packages,
+    ADR 0149 §5, ADR 0161 §3: a third-party app compiled once against the KazoOS 2.0.0 packages,
     which uses what SDK 2.0 added (the file control contract HackFileView, a file menu entry
     registered with [RegisterFileContextMenu], HackFileOperations). Its package, kept in
     ../../packages, is loaded by the current OS in the compatibility tests; it is never rebuilt
@@ -16,7 +16,7 @@
     <PackageId>Contoso.Sdk2Compat</PackageId>
     <Version>$(HackerOsVersion)</Version>
     <Authors>Contoso</Authors>
-    <Description>HackerOS SDK compatibility fixture: a window app and a command compiled against SDK $(HackerOsVersion), using the SDK 2.0 additions.</Description>
+    <Description>KazoOS SDK compatibility fixture: a window app and a command compiled against SDK $(HackerOsVersion), using the SDK 2.0 additions.</Description>
   </PropertyGroup>
 
   <ItemGroup>

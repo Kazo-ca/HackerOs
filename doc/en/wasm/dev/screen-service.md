@@ -92,7 +92,7 @@ The screen's place stays in its numbered line.
   [`secondary-screen-desktop.md`](secondary-screen-desktop.md)); without it, the screen's number
   on the desktop colour.
 - **Full screen**: `⤢` button at the top right, `⤡` to leave (or `Esc`).
-- **Banner**: "The main HackerOS tab is hidden…" while the main tab is hidden
+- **Banner**: "The main KazoOS tab is hidden…" while the main tab is hidden
   (`visibilitychange`).
 - **Work area**: the window's inner size on open, then the size of the screen's desktop,
   which measures it itself (work item 4); the service no longer changes it when the window

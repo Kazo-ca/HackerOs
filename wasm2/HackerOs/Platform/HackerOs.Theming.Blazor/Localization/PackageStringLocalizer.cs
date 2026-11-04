@@ -12,7 +12,7 @@ namespace HackerOs.Theming.Blazor.Localization;
 /// </summary>
 /// <remarks>
 /// <para>
-/// Inside HackerOS the host registers an <see cref="IStringLocalizer{T}"/> for every resource type
+/// Inside KazoOS the host registers an <see cref="IStringLocalizer{T}"/> for every resource type
 /// (the session-language <c>SessionStringLocalizer&lt;T&gt;</c>), so a package's components speak the
 /// language of the signed-in session like the rest of the platform.
 /// </para>
@@ -52,7 +52,7 @@ public static class PackageStringLocalizer
 
     /// <summary>
     /// The manifest resource name of <paramref name="type"/>'s texts, by the
-    /// <c>Microsoft.Extensions.Localization</c> convention used across HackerOS:
+    /// <c>Microsoft.Extensions.Localization</c> convention used across KazoOS:
     /// <c>&lt;assembly&gt;.Resources.&lt;type name relative to the assembly&gt;</c>.
     /// </summary>
     private static string GetResourceBaseName(Type type)

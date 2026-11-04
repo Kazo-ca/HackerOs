@@ -10,9 +10,9 @@ refined by [ADR 0081](adr/0081-detached-display-windows-adjustments.md).
 
 ## Purpose
 
-A web page can leave the HackerOS desktop and open in a **host browser
+A web page can leave the KazoOS desktop and open in a **host browser
 window**: the user keeps the OS in one tab and the page in another window,
-which can be placed on another monitor. This is not a second HackerOS: the
+which can be placed on another monitor. This is not a second KazoOS: the
 window starts neither .NET nor an OS. It is a **display surface** of the main
 instance, like a second screen plugged into the same machine: the main
 instance draws on it, receives its clicks and keys, and keeps serving the page

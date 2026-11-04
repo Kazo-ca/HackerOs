@@ -126,7 +126,7 @@ public sealed class AccessibilityAndVisualCoverageTests(ITestOutputHelper output
             .WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Attached, Timeout = 15000 });
         await ScanAndCaptureAsync(page, "desktop-settings-windows-7", screenshotDirectory, findings, output);
 
-        await page.GetByRole(AriaRole.Img, new() { Name = "HackerOS theme preview" }).ClickAsync();
+        await page.GetByRole(AriaRole.Img, new() { Name = "KazoOS theme preview" }).ClickAsync();
         await page.Locator(".theme-scope[data-theme='hackeros'][data-form-factor='desktop']")
             .WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Attached, Timeout = 15000 });
     }

@@ -1,4 +1,4 @@
-// Produces an IndexedDB upgrade fixture (ADR 0099 section 4) by driving an OLD HackerOS build
+// Produces an IndexedDB upgrade fixture (ADR 0099 section 4) by driving an OLD KazoOS build
 // through its real UI -- first-run administrator, one uploaded file, one appearance setting --
 // then dumping every object store of the "hackeros" database (key path, auto-increment, indexes,
 // records) to JSON. Tooling only: never shipped, never referenced by a host.
@@ -16,7 +16,7 @@ const admin = { loginName: 'admin', displayName: 'Fixture Admin', password: `Fix
 const file = {
   directory: '/home/admin/Documents',
   name: 'upgrade-note.txt',
-  content: `Written by HackerOS at IndexedDB schema v${version} (${commit}).`
+  content: `Written by KazoOS at IndexedDB schema v${version} (${commit}).`
 };
 const accent = 'cyan';
 
@@ -100,7 +100,7 @@ async function step(page, name, fn) {
   });
 
   const fixture = {
-    $comment: 'IndexedDB fixture produced by booting an old HackerOS build; see doc/en/wasm/dev/building-and-testing.md.',
+    $comment: 'IndexedDB fixture produced by booting an old KazoOS build; see doc/en/wasm/dev/building-and-testing.md.',
     databaseName: 'hackeros',
     version: dump.version,
     producedFrom: { commit, method: 'booted', host: 'test/test (Release)', producedOn: new Date().toISOString().slice(0, 10) },

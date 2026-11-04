@@ -1,6 +1,6 @@
 > [English version](../../../en/wasm/dev/releases.md)
 
-# Publier une version de HackerOS
+# Publier une version de KazoOS
 
 Une nouvelle version se publie en changeant **un seul fichier** :
 `wasm2/HackerOs/build/Versions.props`. Une fois la modification fusionnée dans
@@ -40,13 +40,13 @@ Choisir le numéro selon SemVer
 4. (Conseillé) compiler une fois (`dotnet build HackerOs.sln -c Release`) et
    committer les manifestes réécrits ; le build les régénère de toute façon.
 5. Ouvrir la PR vers `main`, attendre la vérification verte, fusionner.
-6. Suivre l'onglet **Actions** : *Verify HackerOS WASM* tourne sur `main`, puis
-   *Release HackerOS*. La Release apparaît sous **Releases** avec le tag
+6. Suivre l'onglet **Actions** : *Verify KazoOS WASM* tourne sur `main`, puis
+   *Release KazoOS*. La Release apparaît sous **Releases** avec le tag
    `v<version>`.
 
-## Ce que fait le workflow `Release HackerOS`
+## Ce que fait le workflow `Release KazoOS`
 
-Fichier : `.github/workflows/release.yml`. Il démarre quand *Verify HackerOS
+Fichier : `.github/workflows/release.yml`. Il démarre quand *Verify KazoOS
 WASM* se termine **avec succès** après un push sur `main`, puis :
 
 1. lit `HackerOsVersion` du commit vérifié ; si le tag `v<version>` existe
@@ -55,7 +55,7 @@ WASM* se termine **avec succès** après un push sur `main`, puis :
 3. garde uniquement les `HackerOs.*.<version>.nupkg` et `.snupkg` ;
 4. publie la PWA (`dotnet publish`) et la zippe en `hackeros-wasm-<version>.zip` ;
 5. pousse les paquets sur nuget.org si c'est configuré (voir plus bas) ;
-6. crée le tag et la GitHub Release : titre `HackerOS <version>`, notes
+6. crée le tag et la GitHub Release : titre `KazoOS <version>`, notes
    générées par GitHub depuis les PR fusionnées, paquets et zip joints.
 
 Le tag est créé en dernier : si une étape échoue, relancer le workflow
@@ -64,7 +64,7 @@ sont sautés (`--skip-duplicate`).
 
 ### Lancer à la main
 
-Onglet **Actions** ▸ *Release HackerOS* ▸ *Run workflow* (branche `main`) :
+Onglet **Actions** ▸ *Release KazoOS* ▸ *Run workflow* (branche `main`) :
 
 - sans option : publie la version de `main` si elle n'est pas encore taguée ;
 - avec **republish** : ré-empaquette la version déjà taguée et la pousse sur
@@ -73,10 +73,10 @@ Onglet **Actions** ▸ *Release HackerOS* ▸ *Run workflow* (branche `main`) :
 
 ## Annonce aux sessions ouvertes
 
-Le site publié contient `/version.json` (`{ "product": "HackerOS", "version": "2.1.0" }`),
+Le site publié contient `/version.json` (`{ "product": "KazoOS", "version": "2.1.0" }`),
 écrit par le build depuis `build/Versions.props`. Chaque session ouverte le relit
 toutes les 5 minutes ; quand le site sert une autre version, un bandeau dit
-« HackerOS <version> est disponible » avec « Redémarrer pour mettre à jour »
+« KazoOS <version> est disponible » avec « Redémarrer pour mettre à jour »
 ([ADR 0174](adr/0174-announce-a-new-version-to-open-sessions.md)).
 
 ## Configurer la publication sur nuget.org
@@ -131,9 +131,9 @@ NuGet), après la première publication.
 
 ## Vérifier une publication
 
-- **Releases** du dépôt : la Release `HackerOS <version>`, ses `.nupkg`,
+- **Releases** du dépôt : la Release `KazoOS <version>`, ses `.nupkg`,
   `.snupkg` et `hackeros-wasm-<version>.zip`.
-- Résumé du job *Release HackerOS* : la liste des paquets et la ligne
+- Résumé du job *Release KazoOS* : la liste des paquets et la ligne
   « NuGet: packages pushed to nuget.org » (ou « not configured »).
 - nuget.org : un paquet récent est indexé en quelques minutes
   (`https://www.nuget.org/packages/HackerOs.AppSdk`).
@@ -142,7 +142,7 @@ NuGet), après la première publication.
 
 | Symptôme | Cause et solution |
 | --- | --- |
-| *Release HackerOS* ne démarre pas | *Verify HackerOS WASM* a échoué ou a été annulé sur ce commit ; corriger, ou attendre le commit suivant de `main` (même version, pas encore taguée). |
+| *Release KazoOS* ne démarre pas | *Verify KazoOS WASM* a échoué ou a été annulé sur ce commit ; corriger, ou attendre le commit suivant de `main` (même version, pas encore taguée). |
 | « already released » dans le résumé | Le tag `v<version>` existe : changer la version. |
 | `403` à l'envoi NuGet | Clé expirée, mauvaise portée (glob), ou politique Trusted Publishing qui ne correspond pas au dépôt ou au fichier `release.yml`. |
 | `NuGet/login` échoue | `NUGET_USER` ne correspond pas au nom du profil nuget.org, ou la politique n'existe pas. |

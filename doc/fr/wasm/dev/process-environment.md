@@ -7,7 +7,7 @@ et 6, précisé par l'ADR 0053.
 
 ## Objectif
 
-Chaque processus HackerOS porte désormais, comme sous Linux :
+Chaque processus KazoOS porte désormais, comme sous Linux :
 
 - ses **arguments** (`argv`, nom de la commande compris) ;
 - son **répertoire courant**, chemin absolu canonique ;

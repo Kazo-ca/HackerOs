@@ -5,7 +5,7 @@ using HackerOs.Simulation.Abstractions.Processes;
 namespace HackerOs.AppSdk.Web.Blazor.Sites;
 
 /// <summary>
-/// Starts the renderer of a Blazor site for the HackerOS browser (ADR 0084, section 3). Implemented
+/// Starts the renderer of a Blazor site for the KazoOS browser (ADR 0084, section 3). Implemented
 /// by the platform, which finds the web app that serves the page's origin, loads its assembly, checks
 /// the root component and starts an auxiliary process under the tab's user; the browser renders the
 /// site with <see cref="HackWebSiteView"/>.

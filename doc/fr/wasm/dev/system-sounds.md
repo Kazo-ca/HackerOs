@@ -16,7 +16,7 @@ issue [#256](https://github.com/Kazo-ca/HackerOs/issues/256).
   est perdu.
 - Sur une installation neuve, le premier son d'ouverture de session joue
   quelques secondes après l'arrivée du bureau, une fois les jeux intégrés écrits.
-- Jeux intégrés : **HackerOS** (`hackeros`, bips de console, le défaut) et
+- Jeux intégrés : **KazoOS** (`hackeros`, bips de console, le défaut) et
   **Doux** (`soft`, carillons).
 
 ## Le réglage `sound.config`

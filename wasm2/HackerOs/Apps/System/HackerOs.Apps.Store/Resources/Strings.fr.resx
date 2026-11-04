@@ -118,7 +118,7 @@
     <value>Le pack est refusé : {0}</value>
   </data>
   <data name="Error.Unsupported" xml:space="preserve">
-    <value>Ce HackerOS ne peut pas gérer les paquets.</value>
+    <value>Ce KazoOS ne peut pas gérer les paquets.</value>
   </data>
   <data name="Home.Empty" xml:space="preserve">
     <value>Aucune app n'est encore disponible dans les catalogues.</value>
@@ -187,7 +187,7 @@
     <value>Redémarrer pour terminer</value>
   </data>
   <data name="Restart.Text" xml:space="preserve">
-    <value>Certains changements prennent effet après le redémarrage de HackerOS.</value>
+    <value>Certains changements prennent effet après le redémarrage de KazoOS.</value>
   </data>
   <data name="Scope.Everyone" xml:space="preserve">
     <value>pour tous</value>

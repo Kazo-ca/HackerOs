@@ -18,6 +18,6 @@
     </ItemGroup>
 
     <Error Condition="'@(_HackerOsRazorViolation)' != ''"
-           Text="HackerOS Razor components cannot contain inline CSS or JavaScript. Move assets to Component.razor.css or Component.razor.js (an ASP.Hack view: to the site's wwwroot). Files: @(_HackerOsRazorViolation, ', ')" />
+           Text="KazoOS Razor components cannot contain inline CSS or JavaScript. Move assets to Component.razor.css or Component.razor.js (an ASP.Hack view: to the site's wwwroot). Files: @(_HackerOsRazorViolation, ', ')" />
   </Target>
 </Project>

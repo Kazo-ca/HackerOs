@@ -4,7 +4,7 @@
  * handler of TerminalTabs, which opens, closes or switches tabs.
  *
  * A browser may reserve some of them for its own tabs (Chrome keeps Ctrl+Shift+W and
- * Ctrl+Shift+T unless HackerOS runs as an installed app); the "+" and "×" buttons always work.
+ * Ctrl+Shift+T unless KazoOS runs as an installed app); the "+" and "×" buttons always work.
  */
 export function trapTabShortcuts(element) {
     const onKeyDown = (event) => {

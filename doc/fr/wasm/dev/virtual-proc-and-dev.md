@@ -7,7 +7,7 @@ Mise en œuvre de la section 5.4 du [plan de refonte](plans/ecosystem-rebuild-pl
 
 ## Rôle
 
-HackerOS expose l'état du système comme Linux : `/proc` décrit les processus,
+KazoOS expose l'état du système comme Linux : `/proc` décrit les processus,
 la mémoire, le CPU et la charge ; `/dev` offre les périphériques `null`, `zero`,
 `random` et `urandom`, plus `kmsg` quand l'hôte fournit le journal du noyau
 (ADR 0126). Les deux montages sont **calculés à chaque lecture** et

@@ -66,7 +66,7 @@ public sealed class PasswdCommand : TerminalAppBase
         string self = context.App.UserLoginName;
         if (target is null && root)
         {
-            // HackerOS has no root account with a password of its own: name the account.
+            // KazoOS has no root account with a password of its own: name the account.
             await context.StandardError.WriteLineAsync(text["NoRootAccount"]);
             return 1;
         }

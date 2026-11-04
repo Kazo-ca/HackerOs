@@ -68,7 +68,7 @@ public sealed record HostSmokeSettings(
 
     /// <summary>
     /// Gets whether the OS must connect by itself to the host that served it (ADR 0134): only the
-    /// <c>server</c> run is a HackerOS server.
+    /// <c>server</c> run is a KazoOS server.
     /// </summary>
     public bool ExpectsServerConnection => string.Equals(HostName, "server", StringComparison.Ordinal);
 

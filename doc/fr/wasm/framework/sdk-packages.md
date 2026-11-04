@@ -4,7 +4,7 @@
 
 ## Objet
 
-Permettre à un autre dépôt de construire des apps HackerOS
+Permettre à un autre dépôt de construire des apps KazoOS
 **et** un hôte d'OS complet avec ses propres apps, sans copier ce dépôt
 ([ADR 0098](../dev/adr/0098-sdk-versions-packages-and-manifest-checks.md) §1, §2, §6).
 Tout ce qui est publié porte une seule version, sort en paquets NuGet dans un
@@ -167,7 +167,7 @@ Le paquet est produit avec les deux mesures de ressources compilées
 | `hackeros-service` | service démarré à la connexion (`ServiceAppBase`, horloge simulée) | idem |
 | `hackeros-site` | site ASP.Hack (`WebAppDefinition`, `wwwroot/` embarqué) | `HackerOs.AppSdk.Web`, `HackerOs.App.Build` |
 | `hackeros-host` | hôte Blazor WebAssembly : `Program.cs`, `index.html`, `appsettings.json`, les apps de base en paquets (système comme dans l'Ecosystem) | `HackerOs.Ecosystem.Host`, `HackerOs.App.Build`, `HackerOs.Apps.*`, `HackerOs.Commands` |
-| `hackeros-solution` | dépôt d'app entier : app, hôte, tests, sous-module HackerOS (sources en `Debug`, paquets en `Release`), CI, publication dans le Hack Store ([`app-repository.md`](app-repository.md), ADR 0207) | ceux de l'app et de l'hôte, à la version du sous-module |
+| `hackeros-solution` | dépôt d'app entier : app, hôte, tests, sous-module KazoOS (sources en `Debug`, paquets en `Release`), CI, publication dans le Hack Store ([`app-repository.md`](app-repository.md), ADR 0207) | ceux de l'app et de l'hôte, à la version du sous-module |
 
 Les modèles d'app partent avec `IsTrimmable=true` ; `hackeros-host` publie en
 Release trimmée (`PublishTrimmed=true`, `TrimMode=partial`) et
@@ -353,7 +353,7 @@ Tous les autres changements du SDK sont des ajouts :
 
 ### SDK 2.1
 
-Publiée le 2026-10-26, première version sortie par le workflow `Release HackerOS`
+Publiée le 2026-10-26, première version sortie par le workflow `Release KazoOS`
 ([ADR 0173](../dev/adr/0173-automatic-releases-from-the-version-file.md),
 [`releases.md`](../dev/releases.md)) : tag `v2.1.0`, GitHub Release et nuget.org.
 `build/tools/ship-public-api.sh` a versé 5880 lignes de `PublicAPI.Unshipped.txt`
@@ -372,7 +372,7 @@ le tableau ci-dessous) et les membres de records que l'analyseur d'API publique
 ### SDK 2.2
 
 Préparée le 2026-10-31 (branche `release/2.2.0`), publiée par le workflow
-`Release HackerOS` quand sa PR arrive dans `main` : tag `v2.2.0`, GitHub
+`Release KazoOS` quand sa PR arrive dans `main` : tag `v2.2.0`, GitHub
 Release et nuget.org. `build/tools/ship-public-api.sh` a versé 3020 lignes de
 `PublicAPI.Unshipped.txt` dans `PublicAPI.Shipped.txt` : les ajouts de la
 série `todo/base` et ceux arrivés sur `main` depuis la 2.1.0. Les seules lignes
@@ -397,7 +397,7 @@ pour son profil `Release` (ADR 0207 §11).
 ### SDK 2.2.1
 
 Préparée le 2026-11-01 (branche `release/2.2.1`), publiée par le workflow
-`Release HackerOS` quand sa PR arrive dans `main`. Benoit a choisi un numéro de
+`Release KazoOS` quand sa PR arrive dans `main`. Benoit a choisi un numéro de
 correctif bien que l'API publique grandisse : `build/tools/ship-public-api.sh`
 a replié 190 lignes de `PublicAPI.Unshipped.txt` dans `PublicAPI.Shipped.txt`.
 Les seules lignes `*REMOVED*` touchent `HackerOs.Apps.FileExplorer` (Précédent
@@ -418,7 +418,7 @@ assemblages satellites des apps installées (ADR 0222) et l'outil de signature
 ### SDK 2.2.2
 
 Préparée le 2026-11-01 (branche `release/2.2.2`), publiée par le workflow
-`Release HackerOS` quand sa PR arrive dans `main`. Un correctif : aucun
+`Release KazoOS` quand sa PR arrive dans `main`. Un correctif : aucun
 changement du SDK. Les seules lignes d'API sont la nouvelle valeur de
 `AppPackageDefaults.OfficialCatalogSigningKey` (`HackerOs.Platform.Core`, hors
 SDK) : la clé publique du catalogue officiel, pour que tout paquet du Hack Store
@@ -452,7 +452,7 @@ Tests/fixtures/sdk-compat/produce-fixture.sh --project Contoso.Sdk2Compat   # co
 |---|---|
 | `Tests/HackerOs.Templates.E2E.Tests` | empaquette tout (`pack-local`, ou le flux de `HACKEROS_LOCAL_FEED`), installe les modèles dans un `DOTNET_CLI_HOME` isolé, génère et compile chaque modèle d'app hors du dépôt avec un cache NuGet isolé (manifeste, genre, version minimale du SDK vérifiés) ; puis génère un hôte, y ajoute une app fenêtrée et une commande générées, le compile (catalogue agrégé vérifié), le lance, crée le profil dans Chromium, ouvre l'app (`Clicked 0 times` puis `1`) et exécute `hello Morpheus` dans le terminal (`Hello, Morpheus!`). |
 | `Tests/HackerOs.Templates.E2E.Tests` (`A_host_runs_SDK_2_app_packages_and_refuses_SDK_1_x_packages`) | un hôte généré avec `PackageReference` vers les apps de compatibilité 1.0.0 et 1.1.0 (source `hackeros-sdk-fixtures`) ne se construit pas (`HOSAPP0021` pour chacune des quatre apps) ; avec l'app 2.0.0 à la place, il démarre dans Chromium, la fenêtre 2.0 affiche le contrôle de fichiers de l'OS et `sdk2-compat still binds` s'exécute dans le terminal (ADR 0149 §5, ADR 0161 §3) |
-| `Tests/HackerOs.SdkCompatibility.Tests` | l'app de compatibilité 2.0.0 : admise par le catalogue courant, entrée de menu inscrite et `HackFileView` référencé, chaque type et membre HackerOS qu'elle référence existe, chaque méthode compile contre le SDK courant (JIT), la commande tourne ; les apps 1.0.0 et 1.1.0 : refusées (`catalog.sdk.incompatible`) (ADR 0149 §5, ADR 0161 §3) |
+| `Tests/HackerOs.SdkCompatibility.Tests` | l'app de compatibilité 2.0.0 : admise par le catalogue courant, entrée de menu inscrite et `HackFileView` référencé, chaque type et membre KazoOS qu'elle référence existe, chaque méthode compile contre le SDK courant (JIT), la commande tourne ; les apps 1.0.0 et 1.1.0 : refusées (`catalog.sdk.incompatible`) (ADR 0149 §5, ADR 0161 §3) |
 | `Tests/HackerOs.App.Abstractions.Tests` (`HackerOsSdkTests`) | lecture de la version, compatibilité des plages |
 | `Tests/HackerOs.Tools.ManifestGenerator.Tests` | version du SDK lue dans la référence, empreintes et `HOSAPP0023`, `HOSAPP0022`, app plus récente que le SDK de l'hôte (`HOSAPP0021`) |
 | `Tests/HackerOs.Platform.Core.Tests` | `AppCatalog` (refus, cascade des dépendances, propriétaire des commandes), `AppAssetStore`, `ShellCommandResolver` |

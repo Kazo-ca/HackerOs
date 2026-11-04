@@ -6,7 +6,7 @@
 
 La publication Release de l'hôte Ecosystem (`OS/HackerOs.Ecosystem`) est
 élaguée par ILLink (chantier `v3/14-trimming`, ADR 0106 et 0113) : le code du
-framework .NET que HackerOS n'utilise pas est retiré des fichiers
+framework .NET que KazoOS n'utilise pas est retiré des fichiers
 WebAssembly. Le premier chargement télécharge moins, et chaque Web Worker
 (ADR 0070) démarre un runtime plus petit.
 
@@ -33,7 +33,7 @@ Ecosystem.csproj            PublishTrimmed=true, TrimMode=partial
                                     │
                               ILLink (publish)
             framework et bibliothèques élaguables : élagués
-            assemblies HackerOS et apps : entières
+            assemblies KazoOS et apps : entières
             paquets non élaguables (MudBlazor…) : entiers (partial)
 ```
 
@@ -43,7 +43,7 @@ Ecosystem.csproj            PublishTrimmed=true, TrimMode=partial
   intégrables et la racine Blazor d'un site par les noms du manifeste
   (`Assembly.GetType`, `Activator.CreateInstance`, chargement par nom dans les
   workers). Sans racine, ILLink supprime ces assemblies.
-- **Pourquoi des assemblies entières.** Le code de HackerOS passe ses records à
+- **Pourquoi des assemblies entières.** Le code de KazoOS passe ses records à
   l'interop JavaScript, qui les sérialise par réflexion sans que l'analyse de
   trimming le voie. Un élagage membre par membre casse le démarrage (stockage
   « unavailable ») pour seulement 0,4 Mio de Brotli gagné (ADR 0113 §1).
@@ -78,7 +78,7 @@ alerte `IL…`, sert la publication sur `127.0.0.1` et `127.0.0.2`, puis lance
 | `Measures_the_calculator_on_the_page_and_in_a_worker` | mesures de l'ADR 0133 (ouverture, latence, mémoire, lots), écrites dans `remote-window-measurements.json` du dossier des artefacts |
 | `An_installed_app_finds_its_wwwroot_files_and_its_worker_scripts` | ADR 0206 : le paquet de test `Tests/fixtures/installed-app` (emballé par le script avec `HackerOsPack`, servi par Playwright à la place de `raw.githubusercontent.com`) est installé par `sudo hackpkg install`, l'OS redémarre, l'app importe son module, lance son Web Worker (`importScripts` relatif) et affiche son image ; sur `127.0.0.1`, par le service worker du mode `installed-apps` |
 | `The_published_service_worker_serves_installed_app_files_to_a_worker` | ADR 0206 sur `127.0.0.2` : le service worker publié sert les fichiers du cache `hackeros-installed-apps` à un Web Worker sous isolation cross-origin |
-| `Trimmed_publish_shows_a_new_notification_as_a_bubble_above_the_taskbar` | ADR 0197 : la notification des nouveautés postée à la connexion d'un nouveau compte apparaît en bulle au-dessus de la barre (source « HackerOS », titre, bouton « Voir »), part seule après environ 6 s et reste dans le panneau de l'horloge ([`notification-toasts.md`](notification-toasts.md)) |
+| `Trimmed_publish_shows_a_new_notification_as_a_bubble_above_the_taskbar` | ADR 0197 : la notification des nouveautés postée à la connexion d'un nouveau compte apparaît en bulle au-dessus de la barre (source « KazoOS », titre, bouton « Voir »), part seule après environ 6 s et reste dans le panneau de l'horloge ([`notification-toasts.md`](notification-toasts.md)) |
 | `Trimmed_publish_shows_unread_notifications_next_to_the_clock` | ADR 0196 : un nouveau compte reçoit la notification des nouveautés (`whats-new.json` servi) ; point et infobulle de l'horloge, aucun point sur Applications, panneau ouvert = lu, **Voir** ouvre Paramètres ▸ Nouveautés et ferme la notification ; captures `trimmed-clock-dot.png` et `trimmed-whats-new-page.png` |
 
 Le script exige que les huit tests passent (`EXPECTED_TESTS`).
@@ -109,7 +109,7 @@ Avant de comparer, supprimer `OS/HackerOs.Ecosystem/obj/Release/net10.0/linked`,
 
 - `TrimMode=partial` (ADR 0106 §1) : les paquets qui ne se déclarent pas
   élaguables restent entiers.
-- Assemblies HackerOS et apps gardées entières ; seul le framework est élagué
+- Assemblies KazoOS et apps gardées entières ; seul le framework est élagué
   (ADR 0113 §1-2).
 - Pas de table générée pour les pages `[Route]` d'un site Blazor : l'assembly du
   site est entière (ADR 0113 §3).

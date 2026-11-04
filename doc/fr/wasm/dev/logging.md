@@ -9,7 +9,7 @@ Mise en œuvre de l'[ADR 0045](adr/0045-logs-as-files.md) et de la section 5.3 d
 
 ## Rôle
 
-Les journaux de HackerOS sont de vrais fichiers texte. `cat`, `tail`, `grep` et
+Les journaux de KazoOS sont de vrais fichiers texte. `cat`, `tail`, `grep` et
 Error Log Viewer les lisent avec les droits de fichier ordinaires.
 
 | Fichier | Contenu | Mode |

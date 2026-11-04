@@ -3,7 +3,7 @@ using System.Text.Json;
 namespace HackerOs.Platform.Blazor.LazyLoading;
 
 /// <summary>
-/// Reads the version of HackerOS the origin serves now (ADR 0174): the <c>version.json</c> file the
+/// Reads the version of KazoOS the origin serves now (ADR 0174): the <c>version.json</c> file the
 /// build publishes next to the page. The browser host fetches it past every cache.
 /// </summary>
 public interface IHostReleaseProbe
@@ -14,7 +14,7 @@ public interface IHostReleaseProbe
 }
 
 /// <summary>
-/// Checks every few minutes whether the origin serves another version of HackerOS than the one
+/// Checks every few minutes whether the origin serves another version of KazoOS than the one
 /// running (ADR 0174), like an update notifier: it only says a newer release waits; the host shows
 /// it and offers the restart. Each check also asks <see cref="HostBuildUpdateMonitor"/> whether the
 /// build changed under the page with the same version (ADR 0162).
@@ -99,7 +99,7 @@ public sealed class HostReleaseMonitor : IAsyncDisposable
     /// Returns the <c>version</c> of a <c>version.json</c> document, or <see langword="null"/> when
     /// the document is missing, malformed or has no version.
     /// </summary>
-    /// <param name="document">The JSON text: <c>{ "product": "HackerOS", "version": "2.1.0" }</c>.</param>
+    /// <param name="document">The JSON text: <c>{ "product": "KazoOS", "version": "2.1.0" }</c>.</param>
     public static string? ParseVersion(string? document)
     {
         if (string.IsNullOrWhiteSpace(document))

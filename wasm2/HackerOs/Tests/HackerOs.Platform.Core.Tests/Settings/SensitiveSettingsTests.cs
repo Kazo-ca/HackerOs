@@ -31,13 +31,13 @@ public sealed class SensitiveSettingsTests
         await using HackSettingsDocument document = await HackSettings.OpenAsync(app);
 
         await document.SetAsync("server", "imap.example.org");
-        await document.SetAsync("signature", "Alice, sent from HackerOS");
+        await document.SetAsync("signature", "Alice, sent from KazoOS");
 
         Assert.Equal("server=imap.example.org\n", await harness.ReadAsync(UserFile));
-        Assert.Equal("signature=Alice, sent from HackerOS\n", await harness.ReadAsync(UserPrivateFile));
+        Assert.Equal("signature=Alice, sent from KazoOS\n", await harness.ReadAsync(UserPrivateFile));
         FileSystemEntryMetadata metadata = (await harness.StatAsync(UserPrivateFile))!;
         Assert.Equal(SettingsPrivateFiles.PrivateFileMode, metadata.Permissions.Mode);
-        Assert.Equal("Alice, sent from HackerOS", document.Get<string>("signature"));
+        Assert.Equal("Alice, sent from KazoOS", document.Get<string>("signature"));
         Assert.False(document.IsMasked("signature"));
     }
 

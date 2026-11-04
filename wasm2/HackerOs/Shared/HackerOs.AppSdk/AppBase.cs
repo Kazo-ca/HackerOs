@@ -3,7 +3,7 @@ using HackerOs.App.Abstractions;
 namespace HackerOs.AppSdk;
 
 /// <summary>
-/// Provides common manifest validation for all HackerOS application base types.
+/// Provides common manifest validation for all KazoOS application base types.
 /// </summary>
 public abstract class AppBase
 {

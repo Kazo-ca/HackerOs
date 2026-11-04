@@ -1,5 +1,5 @@
 /**
- * HackerOS host accessibility probe (ADR 0105). Reports the host's own accessibility settings as
+ * KazoOS host accessibility probe (ADR 0105). Reports the host's own accessibility settings as
  * raw media-query results only; what `auto` resolves to is decided in C#
  * (AccessibilitySettingsDocuments.Resolve), like platformEnvironmentProbe.js leaves its decision to C#.
  */

@@ -308,7 +308,7 @@ public sealed class HackExecutionContextMissingException : InvalidOperationExcep
 {
     /// <summary>Initializes the exception with the standard explanatory message.</summary>
     public HackExecutionContextMissingException()
-        : base("No HackerOS app context is active on this execution flow. App code normally runs inside a scope " +
+        : base("No KazoOS app context is active on this execution flow. App code normally runs inside a scope " +
                "opened by the OS; a [JSInvokable] callback or a thread started outside the app must call " +
                "HackExecutionContext.Enter(AppContext) itself.")
     {

@@ -3,7 +3,7 @@
 # ASP.Hack developer guide
 
 Work item `web/11-sample-final`, the last of the web phase ([`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md)).
-This guide shows how to write an **internal site** for HackerOS with ASP.Hack, by
+This guide shows how to write an **internal site** for KazoOS with ASP.Hack, by
 following the **Intranet** example (`Apps/Samples/HackerOs.Samples.Intranet`,
 `http://intranet.hack/`), which brings together all the building blocks of the phase. Decisions
 specific to this work item: [ADR 0087](../dev/adr/0087-asp-hack-intranet-sample-adjustments.md).

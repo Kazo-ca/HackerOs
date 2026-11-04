@@ -8,7 +8,7 @@ namespace HackerOs.SdkCompatibility.Tests;
 /// <summary>
 /// An app package of <c>Tests/fixtures/sdk-compat/packages</c> (ADR 0114): its generated manifests
 /// and its assembly, loaded the way the OS loads a lazy app assembly, into a load context of its own
-/// whose HackerOS references resolve to the SDK of this process (the current one).
+/// whose KazoOS references resolve to the SDK of this process (the current one).
 /// </summary>
 internal sealed class FixturePackage
 {

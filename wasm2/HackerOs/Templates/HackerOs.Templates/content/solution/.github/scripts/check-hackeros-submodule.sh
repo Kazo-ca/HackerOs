@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ADR 0176 §6: the HackerOS submodule is never modified in an app repository, and it sits exactly
+# ADR 0176 §6: the KazoOS submodule is never modified in an app repository, and it sits exactly
 # on the release tag of the version it declares (build/Versions.props). A local change of the OS
 # can therefore never reach a published build.
 set -euo pipefail
@@ -25,4 +25,4 @@ if [[ "$head" != "$tag" ]]; then
   echo "::error::$submodule is at $head, not on the tag v$version ($tag). Move it with: git -C $submodule checkout v$version"
   exit 1
 fi
-echo "HackerOS submodule: v$version ($head), clean."
+echo "KazoOS submodule: v$version ($head), clean."

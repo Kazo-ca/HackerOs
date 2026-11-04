@@ -4,7 +4,7 @@ using HackerOs.Simulation.Abstractions.Gateways;
 namespace HackerOs.AppSdk.Administration;
 
 /// <summary>
-/// Connects this device to the optional HackerOS server and synchronizes it (ADR 0056,
+/// Connects this device to the optional KazoOS server and synchronizes it (ADR 0056,
 /// section 10), as Settings &gt; Server Connection does. Replaces <c>IServerConnectionService</c>
 /// and the sync services, which apps may no longer inject (ADR 0055).
 /// </summary>
@@ -115,7 +115,7 @@ public static class HackServerConnection
     }
 
     /// <summary>
-    /// Asks an address whether it is a HackerOS server, without linking this device (the
+    /// Asks an address whether it is a KazoOS server, without linking this device (the
     /// "Test" button of Settings). Never throws for an unreachable address: the result says why.
     /// </summary>
     /// <param name="serverUrl">Absolute server base URL.</param>

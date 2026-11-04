@@ -9,7 +9,7 @@ public sealed record SampleAppDescriptor(string Id, string Title, RenderFragment
 
 /// <summary>
 /// The sample host's own tiny "app source" -- standing in for whatever a real consumer would use
-/// (a plugin registry, a fixed list, a remote catalog). Nothing here comes from HackerOS.
+/// (a plugin registry, a fixed list, a remote catalog). Nothing here comes from KazoOS.
 /// </summary>
 public static class SampleAppCatalog
 {

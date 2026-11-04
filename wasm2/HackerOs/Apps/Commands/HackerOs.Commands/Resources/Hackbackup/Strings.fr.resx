@@ -40,7 +40,7 @@
     <value>hackbackup : commande inconnue « {0} »</value>
   </data>
   <data name="Unsupported" xml:space="preserve">
-    <value>hackbackup : cet hôte HackerOS ne peut pas sauvegarder la machine</value>
+    <value>hackbackup : cet hôte KazoOS ne peut pas sauvegarder la machine</value>
   </data>
   <data name="Usage" xml:space="preserve">
     <value>utilisation : hackbackup create | restore [--merge|--replace]</value>

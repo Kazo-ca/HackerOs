@@ -6,17 +6,17 @@
     A repository made with the hackeros-solution template keeps this repository as a submodule
     (external/HackerOs, on a release tag) and imports this file from its Directory.Build.targets when
     $(HackerOsUseSource) is true (by default in Debug). It then turns every PackageReference to a
-    HackerOS package into a ProjectReference to the project of the same name in the submodule, so a
+    KazoOS package into a ProjectReference to the project of the same name in the submodule, so a
     debugger steps into the SDK and the OS, and imports HackerOs.Apps.targets in place of the
     HackerOs.App.Build package for the projects that are apps or hosts.
 
-    There is no list to keep in sync: every HackerOS package is the project of the same name, one
+    There is no list to keep in sync: every KazoOS package is the project of the same name, one
     folder below an area of this repository (Shared/, Platform/, OS/, Infrastructure/, Server/,
     Tools/) or two folders below Apps/ (Apps/System, Apps/Commands). The Release profile is the
     package mode, unchanged.
 
     Properties (set by the template's Directory.Build.props):
-      HackerOsSourceRoot   the HackerOS root in the submodule (folder of HackerOs.sln), trailing slash.
+      HackerOsSourceRoot   the KazoOS root in the submodule (folder of HackerOs.sln), trailing slash.
       HackerOsUseSource    true for this mode.
       HackerOsAppProject   true in an app project (the templates write it), HackerOsAppHost in a host.
   -->
@@ -33,7 +33,7 @@
     </_HackerOsSourceProjectFile>
     <_HackerOsSourceProject Include="@(_HackerOsSourceProjectFile->'%(Filename)')" />
 
-    <!-- The HackerOS packages this project references (an intersection by package id). -->
+    <!-- The KazoOS packages this project references (an intersection by package id). -->
     <_HackerOsSourceUnreferenced Include="@(_HackerOsSourceProject)" />
     <_HackerOsSourceUnreferenced Remove="@(PackageReference)" />
     <_HackerOsSourceReferenced Include="@(_HackerOsSourceProject)" />

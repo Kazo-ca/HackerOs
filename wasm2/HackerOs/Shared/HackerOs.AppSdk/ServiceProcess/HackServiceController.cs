@@ -305,7 +305,7 @@ public sealed class HackServiceController
 
 /// <summary>
 /// Status of a <see cref="HackServiceController"/>, with the values of
-/// <c>System.ServiceProcess.ServiceControllerStatus</c> that HackerOS produces.
+/// <c>System.ServiceProcess.ServiceControllerStatus</c> that KazoOS produces.
 /// </summary>
 public enum HackServiceControllerStatus
 {

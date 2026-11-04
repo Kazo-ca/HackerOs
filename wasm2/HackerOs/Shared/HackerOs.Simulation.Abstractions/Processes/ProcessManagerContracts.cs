@@ -197,7 +197,7 @@ public interface IProcessManager
 
 /// <summary>
 /// The niceness range of <c>nice(1)</c> and <c>setpriority(2)</c> (ADR 0127, section 1). In
-/// HackerOS niceness only orders the queue of the worker pool (ADR 0071): there is no quantum to
+/// KazoOS niceness only orders the queue of the worker pool (ADR 0071): there is no quantum to
 /// share, so a process on the main thread runs exactly as before whatever its niceness.
 /// </summary>
 public static class ProcessNice

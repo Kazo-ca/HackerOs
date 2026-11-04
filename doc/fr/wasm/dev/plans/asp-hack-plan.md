@@ -1,6 +1,6 @@
 > [English version](../../../../en/wasm/dev/plans/asp-hack-plan.md)
 
-# Phase web — ASP.Hack : sites web internes de HackerOS
+# Phase web — ASP.Hack : sites web internes de KazoOS
 
 **Statut :** plan validé par Benoit le 2026-10-16 (réponses au questionnaire de
 22 questions, section 4.1). Les décisions sont dans les ADR 0073 à 0078,
@@ -13,7 +13,7 @@ dans `main` sans Benoit.
 
 ## 1. Objet
 
-Donner à HackerOS des **sites web internes**, servis par l'OS et consultés avec
+Donner à KazoOS des **sites web internes**, servis par l'OS et consultés avec
 son navigateur :
 
 - des **projets ASP.Hack** écrits en C#, sur le modèle d'ASP.NET MVC
@@ -58,7 +58,7 @@ son navigateur :
    d'attributs (`[HttpGet]`, `[Route]`, `[FromBody]`), classes de base préfixées
    `Hack` (`HackController`, `HackHttpContext`) ; seulement le sous-ensemble
    utile (section 6 de l'ADR 0076).
-4. **Le JS d'un site est isolé.** Il ne touche jamais HackerOS ni Internet :
+4. **Le JS d'un site est isolé.** Il ne touche jamais KazoOS ni Internet :
    tout passe par le réseau simulé.
 5. **Aucun serveur requis.** Tout tourne dans l'hôte Ecosystem. Le serveur
    optionnel ne sert que de relais vers le réseau réel, quand il est là.

@@ -46,7 +46,7 @@ public static class ServiceAccount
         SystemSessionId,
         UserId,
         LocalLoginName.Parse(LoginName),
-        "HackerOS system services",
+        "KazoOS system services",
         AppAuthority.User,
         GroupId,
         [GroupId],

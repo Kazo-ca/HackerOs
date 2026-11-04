@@ -14,7 +14,7 @@ namespace HackerOs.AppSdk.Globalization;
 /// </summary>
 /// <remarks>
 /// <para>
-/// Every app of a browser tab shares one .NET thread culture, while every HackerOS process has its
+/// Every app of a browser tab shares one .NET thread culture, while every KazoOS process has its
 /// own <c>LANG</c>. The localizer an app receives therefore asks its own process for the culture on
 /// every lookup (<see cref="IAppExecutionContext.Culture"/>), so <c>LANG=en_US.UTF-8 ls</c> prints
 /// English even inside a French session.
@@ -133,7 +133,7 @@ public sealed class HackStringLocalizer<TResource> : HackStringLocalizer, IStrin
 }
 
 /// <summary>
-/// Entry points of HackerOS localization for apps (ADR 0104): a localizer bound to the app's own
+/// Entry points of KazoOS localization for apps (ADR 0104): a localizer bound to the app's own
 /// process, and the resource naming convention.
 /// </summary>
 public static class HackLocalization
@@ -219,7 +219,7 @@ public static class HackLocalization
 
 /// <summary>
 /// An <see cref="IStringLocalizer{T}"/> that always answers in English, for components rendered
-/// outside any HackerOS session (component tests, previews):
+/// outside any KazoOS session (component tests, previews):
 /// <c>services.AddSingleton(typeof(IStringLocalizer&lt;&gt;), typeof(EnglishStringLocalizer&lt;&gt;))</c>.
 /// </summary>
 /// <typeparam name="TResource">The type whose <c>Resources/&lt;Type&gt;.resx</c> holds the texts.</typeparam>

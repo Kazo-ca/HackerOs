@@ -1,31 +1,31 @@
-// Host clipboard bridge of HackerOS (ADR 0065), the page half of HostClipboardBridge (Platform Core),
+// Host clipboard bridge of KazoOS (ADR 0065), the page half of HostClipboardBridge (Platform Core),
 // imported by Interop/BrowserHostClipboardChannel.cs. Like the VirtualBox Guest Additions, it shares
-// plain text between the HackerOS clipboard ("guest") and the real machine's clipboard ("host"):
+// plain text between the KazoOS clipboard ("guest") and the real machine's clipboard ("host"):
 //
 // - guest to host: syncGuest(text, true) calls navigator.clipboard.writeText while the user gesture
 //   that copied (Ctrl+C, a click) is still active, so the browser asks for no permission;
 // - host to guest: a `paste` event (capture phase, on the document, before any app) whose text or
-//   files differ from what HackerOS itself last wrote is reported to .NET (OnHostPaste) and becomes the
+//   files differ from what KazoOS itself last wrote is reported to .NET (OnHostPaste) and becomes the
 //   current entry. navigator.clipboard.readText is never called: it would prompt for permission;
-// - native copies inside HackerOS (a text field, the terminal) are reported too (OnNativeCopy).
+// - native copies inside KazoOS (a text field, the terminal) are reported too (OnNativeCopy).
 //
 // The directions come from /etc/hackeros/clipboard.config (setDirections). They are decided here,
 // synchronously inside the event, because a paste or copy can only be changed while it is dispatched:
-// - host to guest refused, or the host text is stale: a paste into a HackerOS text field inserts the
-//   HackerOS clipboard text instead of the host's;
+// - host to guest refused, or the host text is stale: a paste into a KazoOS text field inserts the
+//   KazoOS clipboard text instead of the host's;
 // - guest to host refused: a native copy keeps the host clipboard untouched.
-// Only text is ever handed to the host; the other formats of the HackerOS clipboard never leave .NET.
+// Only text is ever handed to the host; the other formats of the KazoOS clipboard never leave .NET.
 
 let callbacks = null;
 let attached = false;
 let guestToHost = true;
 let hostToGuest = true;
-// Text of the HackerOS clipboard as last told by .NET or seen here, or null.
+// Text of the KazoOS clipboard as last told by .NET or seen here, or null.
 let guestText = null;
 // What the host clipboard is believed to hold: the last text written there or received from there.
 let lastHostText = null;
 let lastHostFilesKey = null;
-// Whether the HackerOS clipboard currently stands for host files (a later paste imports them again).
+// Whether the KazoOS clipboard currently stands for host files (a later paste imports them again).
 let hostFilesCurrent = false;
 
 function isEditable(target) {
@@ -75,8 +75,8 @@ function onPaste(e) {
     e.hackerOsHostFiles = hostToGuest && key !== null && hostFilesCurrent && key === lastHostFilesKey;
 
     if (isEditable(e.target) && text !== (guestText ?? '')) {
-        // The field would receive host text HackerOS does not hold (sharing refused, or stale host
-        // content): it receives the HackerOS clipboard instead. Stopping the event here also keeps a
+        // The field would receive host text KazoOS does not hold (sharing refused, or stale host
+        // content): it receives the KazoOS clipboard instead. Stopping the event here also keeps a
         // component's own paste handler (xterm.js) from reading the host text; insertText raises the
         // input event those components listen to.
         e.preventDefault();
@@ -138,7 +138,7 @@ export function setDirections(toHost, toGuest) {
     hostToGuest = !!toGuest;
 }
 
-// An app changed the HackerOS clipboard (or it was emptied): remember its text and, when allowed,
+// An app changed the KazoOS clipboard (or it was emptied): remember its text and, when allowed,
 // copy it to the host. Throws when the browser refuses the write (no focus, no user gesture).
 export async function syncGuest(text, writeToHost) {
     guestText = text;

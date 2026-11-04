@@ -9,7 +9,7 @@ Implementation of [ADR 0045](adr/0045-logs-as-files.md) and section 5.3 of the
 
 ## Role
 
-HackerOS logs are real text files. `cat`, `tail`, `grep` and Error Log Viewer
+KazoOS logs are real text files. `cat`, `tail`, `grep` and Error Log Viewer
 read them with ordinary file permissions.
 
 | File | Content | Mode |

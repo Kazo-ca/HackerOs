@@ -52,7 +52,7 @@
     <value>  ^S  Save the file without asking</value>
   </data>
   <data name="Help.Title" xml:space="preserve">
-    <value>  GNU nano (HackerOS) help</value>
+    <value>  GNU nano (KazoOS) help</value>
   </data>
   <data name="Help.WhereIs" xml:space="preserve">
     <value>  ^W  Where Is: search forward (^F too); Enter on an empty answer repeats</value>

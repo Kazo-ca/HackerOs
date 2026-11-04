@@ -10,7 +10,7 @@ ADR 0057).
 
 ## Role
 
-The "System Monitor" app (`org.hackeros.system-monitor`) is HackerOS's task
+The "System Monitor" app (`org.hackeros.system-monitor`) is KazoOS's task
 manager. Like `top`, it rereads `/proc` every second; everything it displays, a
 third-party app or `ps` can read as well.
 
@@ -254,7 +254,7 @@ await sync.SetStartTypeAsync(ServiceStartMode.Automatic);
 
 ## Key decisions and clarifications relative to ADR 0056 and 0058
 
-- **`UserName`**: `/proc/<pid>/status` gives an opaque `Uid` and HackerOS has no
+- **`UserName`**: `/proc/<pid>/status` gives an opaque `Uid` and KazoOS has no
   `/etc/passwd`. The SDK names the calling process's user; for another one,
   `UserName` is the id, like `ps` with an unknown uid. The tab shortens a
   32-character id to `uid:xxxxxxxx`.

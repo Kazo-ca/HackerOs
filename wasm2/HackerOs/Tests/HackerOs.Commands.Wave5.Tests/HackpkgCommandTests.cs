@@ -52,7 +52,7 @@ public sealed class HackpkgCommandTests
         Assert.Contains("Webamp 1.0.0 installed from github:Kazo-ca/HackerOs-App-Webamp@1.0.0", stdout, StringComparison.Ordinal);
         Assert.Contains(scope == "System" ? "installed for every user" : "installed for you only", stdout, StringComparison.Ordinal);
         Assert.Contains("network.real.access (!)", stdout, StringComparison.Ordinal);
-        Assert.Contains("restart HackerOS to finish", stdout, StringComparison.Ordinal);
+        Assert.Contains("restart KazoOS to finish", stdout, StringComparison.Ordinal);
         Assert.Empty(stderr);
     }
 
@@ -110,7 +110,7 @@ public sealed class HackpkgCommandTests
         Assert.Equal(0, exit);
         Assert.Contains("hackpkg: signature verified", stdout, StringComparison.Ordinal);
         Assert.Contains("hackpkg: available now", stdout, StringComparison.Ordinal);
-        Assert.DoesNotContain("restart HackerOS", stdout, StringComparison.Ordinal);
+        Assert.DoesNotContain("restart KazoOS", stdout, StringComparison.Ordinal);
     }
 
     [Fact]

@@ -3,7 +3,7 @@
 # Guide du développeur ASP.Hack
 
 Chantier `web/11-sample-final`, dernier de la phase web ([`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md)).
-Ce guide montre comment écrire un **site interne** de HackerOS avec ASP.Hack, en
+Ce guide montre comment écrire un **site interne** de KazoOS avec ASP.Hack, en
 suivant l'exemple **Intranet** (`Apps/Samples/HackerOs.Samples.Intranet`,
 `http://intranet.hack/`), qui réunit toutes les briques de la phase. Décisions
 propres à ce chantier : [ADR 0087](../dev/adr/0087-asp-hack-intranet-sample-adjustments.md).

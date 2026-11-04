@@ -115,7 +115,7 @@ internal sealed class AppServerConnectionGateway : IAppServerConnectionGateway
         _capabilities.Require(AppCapabilities.ServerConnectionManage);
         if (_services is null)
         {
-            throw new HackServerConnectionException("This HackerOS host has no optional-server support.");
+            throw new HackServerConnectionException("This KazoOS host has no optional-server support.");
         }
 
         try
@@ -140,7 +140,7 @@ internal sealed class AppServerConnectionGateway : IAppServerConnectionGateway
         ArgumentNullException.ThrowIfNull(serverUrl);
         if (_services?.HostInfo is not { } hostInfo)
         {
-            return new HackServerProbe(false, null, null, "This HackerOS host cannot test a server address.");
+            return new HackServerProbe(false, null, null, "This KazoOS host cannot test a server address.");
         }
 
         try
@@ -149,7 +149,7 @@ internal sealed class AppServerConnectionGateway : IAppServerConnectionGateway
                 await hostInfo().GetHostInfoAsync(serverUrl, cancellationToken).ConfigureAwait(false);
             return info.IsServer
                 ? new HackServerProbe(true, info.ServerVersion, info.ApiVersion, null)
-                : new HackServerProbe(false, null, null, $"{serverUrl} answered, but not as a HackerOS server.");
+                : new HackServerProbe(false, null, null, $"{serverUrl} answered, but not as a KazoOS server.");
         }
         catch (ServerConnectionException exception)
         {
@@ -302,7 +302,7 @@ internal sealed class AppServerConnectionGateway : IAppServerConnectionGateway
         _capabilities.Require(AppCapabilities.ServerConnectionManage);
         if (_services?.Settings is not { } settings)
         {
-            throw new HackServerConnectionException("This HackerOS host has no periodic synchronization.");
+            throw new HackServerConnectionException("This KazoOS host has no periodic synchronization.");
         }
 
         await settings().SetAsync(
@@ -362,7 +362,7 @@ internal sealed class AppServerConnectionGateway : IAppServerConnectionGateway
         _capabilities.Require(AppCapabilities.ServerConnectionManage);
         if (_services is null)
         {
-            throw new HackServerConnectionException("This HackerOS host has no optional-server support.");
+            throw new HackServerConnectionException("This KazoOS host has no optional-server support.");
         }
 
         try

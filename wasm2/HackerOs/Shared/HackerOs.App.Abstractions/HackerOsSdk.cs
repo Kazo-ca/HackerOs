@@ -3,12 +3,12 @@ using System.Reflection;
 namespace HackerOs.App.Abstractions;
 
 /// <summary>
-/// The version of the HackerOS App SDK this process runs (ADR 0098 §3), and the support policy
+/// The version of the KazoOS App SDK this process runs (ADR 0098 §3), and the support policy
 /// that decides whether an app compiled against another SDK version may load.
 /// </summary>
 /// <remarks>
 /// <para>
-/// The number is the one every published HackerOS library carries (<c>build/Versions.props</c>,
+/// The number is the one every published KazoOS library carries (<c>build/Versions.props</c>,
 /// ADR 0098 §1), read from this assembly's informational version, so it is the SDK the running
 /// OS was built with. The manifest generator writes the SDK version an app was <i>compiled</i>
 /// against as the app's <c>sdkCompatibility.minimumVersion</c>; <c>AppCatalog</c> then compares
@@ -73,7 +73,7 @@ public static class HackerOsSdk
     /// without build metadata, or <c>major.minor.patch</c> of its assembly version when it has none.
     /// The manifest generator uses it on the <c>HackerOs.App.Abstractions</c> an app was compiled against.
     /// </summary>
-    /// <param name="assembly">A HackerOS SDK assembly.</param>
+    /// <param name="assembly">A KazoOS SDK assembly.</param>
     /// <returns>The SemVer version text.</returns>
     public static string ReadVersion(Assembly assembly)
     {

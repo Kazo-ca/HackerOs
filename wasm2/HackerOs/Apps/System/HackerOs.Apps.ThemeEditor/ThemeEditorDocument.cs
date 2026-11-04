@@ -20,7 +20,7 @@ public sealed class ThemeEditorDocument
     // The editor's texts, for the default name and the problems that prevent saving (ADR 0104).
     private readonly IStringLocalizer _text;
 
-    /// <summary>Creates a new, empty theme over the HackerOS theme.</summary>
+    /// <summary>Creates a new, empty theme over the KazoOS theme.</summary>
     /// <param name="text">
     /// The editor's texts in the window's language; <see langword="null"/> reads them in the language of
     /// the process running the code (English outside any app, as in unit tests).

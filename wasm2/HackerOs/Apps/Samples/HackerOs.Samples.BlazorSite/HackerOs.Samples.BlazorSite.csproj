@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <!--
-    Sample Blazor site of ASP.Hack (ADR 0084): an interactive site drawn by the HackerOS browser
+    Sample Blazor site of ASP.Hack (ADR 0084): an interactive site drawn by the KazoOS browser
     at http://blazor-sample.hack/, with MVC routes next to its pages. The route generator
     (build/HackerOs.Apps.targets) compiles BlazorSampleSiteWebHost from BlazorSampleSite.
   -->

@@ -1,6 +1,6 @@
 > [Version française](../../../fr/wasm/dev/building-and-testing.md)
 
-# Build, run and test HackerOS
+# Build, run and test KazoOS
 
 ## Purpose
 
@@ -156,7 +156,7 @@ Sequence:
    failure and prints one line per step:
 
 ```text
-== HackerOS host verification (9d26a77) ==
+== KazoOS host verification (9d26a77) ==
 build HackerOs.Ecosystem         PASS
 build test                       PASS
 build HackerOs.Server            PASS
@@ -255,7 +255,7 @@ each host's `appsettings.json`; `auto` equals `on` since the `exec/9` audit.
 
 `dotnet publish` of the Ecosystem in Release is trimmed by ILLink
 (`PublishTrimmed=true`, `TrimMode=partial`, ADR 0106 and 0113): the framework
-is trimmed, the HackerOS assemblies and the apps stay whole. One command
+is trimmed, the KazoOS assemblies and the apps stay whole. One command
 publishes, measures and tests this publication ([`trimmed-publish.md`](trimmed-publish.md)):
 
 ```bash
@@ -319,7 +319,7 @@ once and reports as flaky a test that passes on retry; without this
 parameter, the script stays strict.
 
 In GitHub Actions, the Playwright suites are launched only through
-**Verify HackerOS browser tests** (`verify-browser-tests.yml`): every night
+**Verify KazoOS browser tests** (`verify-browser-tests.yml`): every night
 on `main` when `main` changed, or by hand (`workflow_dispatch`); see
 [`ci-workflows.md`](ci-workflows.md#browser-tests-every-night). They do not belong to the Pages deployment.
 The conditional scenarios for already-launched hosts or for the trimmed
@@ -478,7 +478,7 @@ dotnet test Tests/HackerOs.UI.E2E.Tests -c Release --no-build --filter "FullyQua
     `v3/7` onto `v3/3` with `LowStorageSpaceTests` (Chromium quota lowered,
     [`system-backup.md`](system-backup.md)), 24/24 with the three accessibility
     tests (`v3/13`, 2026-10-17, about 16 min 30 s)
-    (2026-10-16: contrast of `--hos-text-muted` of the HackerOS theme, ARIA
+    (2026-10-16: contrast of `--hos-text-muted` of the KazoOS theme, ARIA
     states written as `"true"`/`"false"`, see
     [`old/common-pitfalls.md`](old/common-pitfalls.md) §8; the Mobile choice
     test waits for the switch before reloading, because writing the setting to

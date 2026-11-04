@@ -140,7 +140,7 @@ given in the work item's thread.
 | `v3/10` | Where does the server get an app's `network.real.access` grant from? (Server list / Grants pushed by the OS / Real network turned off for all apps) | Server list (`Proxy:GrantedApps`) |
 | `v3/12` | 1. French name "Gestionnaire de serveur web" (keep / English name); 2. a site's storage access buttons (follow the language / force French); 3. Monaco menus (English / language pack, several hundred KiB); 4. names of the built-in themes (English / translated) | 1A 2A 3A 4A |
 | `v3/13` | 1. Does the Accessibility page modify the user only or also "All users"; 2. does high contrast cover the theme previews; 3. "Reduce animations" as Auto/On/Off or a simple switch | 1A 2A 3A |
-| `v3/14` | Keep whole HackerOS assemblies in the trimmed publication, or trim everything later (~280 interop calls to make safe, ~0.4 MiB Brotli gain)? | Keep whole (ADR 0113) |
+| `v3/14` | Keep whole KazoOS assemblies in the trimmed publication, or trim everything later (~280 interop calls to make safe, ~0.4 MiB Brotli gain)? | Keep whole (ADR 0113) |
 | `v3/15` | Remove the three `[Obsolete]` APIs before 1.0? | Remove (done) |
 | `v3/15` | Which packages does the 1.0 compatibility promise cover? (SDK only / everything) | SDK only (ADR 0114) |
 

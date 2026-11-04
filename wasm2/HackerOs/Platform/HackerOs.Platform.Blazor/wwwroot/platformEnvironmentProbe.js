@@ -1,5 +1,5 @@
 /**
- * HackerOS platform-environment probe interop. Reads raw browser signals only — no HackerOS
+ * KazoOS platform-environment probe interop. Reads raw browser signals only — no KazoOS
  * domain logic here (see doc/en/wasm/dev/adr/0015-browser-storage-and-indexeddb-adapter.md's JS-isolation
  * precedent). The decision of which platform these signals suggest is made in C#
  * (PlatformEnvironmentPolicy) so it stays unit-testable without a browser.

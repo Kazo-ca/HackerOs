@@ -1,6 +1,6 @@
 > [Version française](../../../../fr/wasm/dev/plans/asp-hack-plan.md)
 
-# Web phase: ASP.Hack, internal HackerOS websites
+# Web phase: ASP.Hack, internal KazoOS websites
 
 **Status:** plan validated by Benoit on 2026-10-16 (answers to the questionnaire of
 22 questions, section 4.1). The decisions are in ADR 0073 to 0078,
@@ -13,7 +13,7 @@ into `main` without Benoit.
 
 ## 1. Purpose
 
-Give HackerOS **internal websites**, served by the OS and browsed with
+Give KazoOS **internal websites**, served by the OS and browsed with
 its browser:
 
 - **ASP.Hack projects** written in C#, modeled on ASP.NET MVC
@@ -58,7 +58,7 @@ its browser:
    names (`[HttpGet]`, `[Route]`, `[FromBody]`), base classes prefixed
    `Hack` (`HackController`, `HackHttpContext`); only the useful subset
    (section 6 of ADR 0076).
-4. **A site's JS is isolated.** It never touches HackerOS or the Internet:
+4. **A site's JS is isolated.** It never touches KazoOS or the Internet:
    everything goes through the simulated network.
 5. **No server required.** Everything runs in the Ecosystem host. The optional
    server serves only as a relay to the real network, when it is there.
