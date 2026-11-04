@@ -36,6 +36,8 @@ Benoit's answers:
    prefixes").
 3. Namespaces and packages: **`Kazo.Os.*`**.
 4. He renames the repository `Kazo-ca/HackerOs` to **`Kazo-ca/Os`** himself.
+5. Site address: **both, with a redirect**: `os.kazo.ca` becomes the main
+   address, `hackos.kazo.ca` stays open to recover the data.
 
 ## Decision
 
@@ -97,7 +99,17 @@ the other, not in parallel.
    ASP.Kazo, Kazo Store, still reading the old names.
 6. `rename/6-storage-migration`: migration of the IndexedDB databases, the
    configuration files and `localStorage`, with its tests.
-7. After 3.0.0 is published: update the satellite repositories (app
+7. `rename/7-new-address`: move to `os.kazo.ca`. The browser sees two
+   different sites (two origins), so the IndexedDB databases of
+   `hackos.kazo.ca` are not visible from `os.kazo.ca`. `hackos.kazo.ca`
+   keeps serving the OS: a visitor with no account is redirected to
+   `os.kazo.ca`; a visitor who has data sees a "KazoOS has moved" notice
+   that offers to make a backup (Settings ▸ Backup) then opens
+   `os.kazo.ca`, where they restore it. GitHub Pages serves one domain per
+   repository: `hackos.kazo.ca` moves to a second Pages site (separate
+   repository) or stays this repository's domain with `os.kazo.ca` second;
+   the work item picks and documents it.
+8. After 3.0.0 is published: update the satellite repositories (app
    template, app marketplace, ported apps) to `Kazo.Os.*`.
 
 ## Consequences
@@ -105,10 +117,9 @@ the other, not in parallel.
 - Every third-party app must move to `Kazo.Os.*` 3.0.0 and change its
   `using` directives and type names. The migration guide goes in
   `doc/{fr,en}/wasm/framework/`.
-- Existing users keep their data thanks to the migration of point 2,
-  provided the site address (the browser origin) does not change: IndexedDB
-  databases belong to an origin. The site therefore stays on
-  `hackos.kazo.ca` until Benoit decides otherwise.
+- On `hackos.kazo.ca`, existing users keep their data thanks to the
+  migration of point 2. To take it to `os.kazo.ca`, they go through a
+  backup (work item 7): nothing is transferred without them.
 - GitHub redirects the old repository name to `Kazo-ca/Os`, but the links in
   the docs, issue templates and workflows are updated.
 - Work item 3 changes almost every file path: a PR opened before it will

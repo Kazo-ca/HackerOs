@@ -212,7 +212,7 @@ of [`AGENTS.md`](../../../../AGENTS.md), which Claude Code reads through
 | Note | Content |
 | --- | --- |
 | [`decisions-not-built.md`](decisions-not-built.md) | Decisions Benoit took in discussion that are not coded nor written anywhere else yet: windows and taskbar (remaining work items of #242), real sites in the browser (#266: public proxy and Wayback left), ported third-party apps, server-hosted apps, ideas taken from daedalOS, editors. |
-| Rename (2026-11-04) | HackerOS becomes KazoOS ([ADR 0228](../dev/adr/0228-rename-to-kazoos.md)): series `rename/base` in progress, work items 2 to 7 listed in the ADR. Benoit renames the repository to `Kazo-ca/Os` himself. The site stays on `hackos.kazo.ca` (same origin, data kept) until he decides otherwise. |
+| Rename (2026-11-04) | HackerOS becomes KazoOS ([ADR 0228](../dev/adr/0228-rename-to-kazoos.md)): series `rename/base` in progress, work items 2 to 8 listed in the ADR. Benoit renames the repository to `Kazo-ca/Os` himself. The site moves to `os.kazo.ca`; `hackos.kazo.ca` stays open to recover data through a backup (work item 7). |
 | [`known-test-failures.md`](known-test-failures.md) | Known pre-existing test failures (to name in a PR, not to hide) and recent environment tips. |
 
 ## Environment and pitfalls

@@ -37,6 +37,9 @@ Réponses de Benoit :
    préfix `Hack` »).
 3. Espaces de noms et paquets : **`Kazo.Os.*`**.
 4. Il renomme lui-même le dépôt `Kazo-ca/HackerOs` en **`Kazo-ca/Os`**.
+5. Adresse du site : **les deux, avec redirection** : `os.kazo.ca` devient
+   l'adresse principale, `hackos.kazo.ca` reste ouvert pour récupérer les
+   données.
 
 ## Décision
 
@@ -102,7 +105,17 @@ passent l'un après l'autre, pas en parallèle.
    fichiers, ASP.Kazo, Kazo Store, avec la lecture des anciens noms.
 6. `rename/6-storage-migration` : migration des bases IndexedDB, des
    fichiers de configuration et du `localStorage`, avec ses tests.
-7. Après la publication de 3.0.0 : mise à jour des dépôts satellites
+7. `rename/7-new-address` : passage à `os.kazo.ca`. Le navigateur voit
+   deux sites différents (deux origines), donc les bases IndexedDB de
+   `hackos.kazo.ca` ne sont pas visibles depuis `os.kazo.ca`.
+   `hackos.kazo.ca` continue de servir l'OS : un visiteur sans compte y est
+   redirigé vers `os.kazo.ca` ; un visiteur qui a des données voit un avis
+   « KazoOS a déménagé » qui propose de faire une sauvegarde (Paramètres ▸
+   Sauvegarde) puis ouvre `os.kazo.ca`, où il la restaure. GitHub Pages ne
+   sert qu'un domaine par dépôt : `hackos.kazo.ca` passe sur un second site
+   Pages (dépôt séparé) ou reste le domaine de ce dépôt avec `os.kazo.ca`
+   en second ; le chantier choisit et documente.
+8. Après la publication de 3.0.0 : mise à jour des dépôts satellites
    (modèle d'app, marché d'apps, apps portées) vers `Kazo.Os.*`.
 
 ## Conséquences
@@ -110,11 +123,9 @@ passent l'un après l'autre, pas en parallèle.
 - Toutes les apps tierces doivent passer à `Kazo.Os.*` 3.0.0 et changer
   leurs `using` et noms de types. Le guide de migration va dans
   `doc/{fr,en}/wasm/framework/`.
-- Les utilisateurs existants gardent leurs données grâce à la migration du
-  point 2, à condition que l'adresse du site (l'origine du navigateur) ne
-  change pas : les bases IndexedDB appartiennent à une origine. Le site
-  reste donc sur `hackos.kazo.ca` tant que Benoit n'en décide pas
-  autrement.
+- Sur `hackos.kazo.ca`, les utilisateurs existants gardent leurs données
+  grâce à la migration du point 2. Pour les emporter sur `os.kazo.ca`, ils
+  passent par une sauvegarde (chantier 7) : rien n'est transféré sans eux.
 - GitHub redirige l'ancien nom du dépôt vers `Kazo-ca/Os`, mais les liens
   des docs, des gabarits d'issues et des workflows sont mis à jour.
 - Le chantier 3 change presque tous les chemins de fichiers : une PR
