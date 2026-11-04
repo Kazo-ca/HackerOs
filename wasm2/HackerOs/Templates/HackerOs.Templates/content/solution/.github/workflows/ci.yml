@@ -1,4 +1,4 @@
-# Builds and tests the Release profile: the HackerOS packages from nuget.org, at the version of the
+# Builds and tests the Release profile: the KazoOS packages from nuget.org, at the version of the
 # submodule (ADR 0176 §4, §6). This is what the Hack Store compiles.
 name: CI
 
@@ -22,7 +22,7 @@ jobs:
         with:
           global-json-file: global.json
 
-      - name: Check the HackerOS submodule
+      - name: Check the KazoOS submodule
         run: bash .github/scripts/check-hackeros-submodule.sh
 
       - name: Build (Release, packages)

@@ -3,7 +3,7 @@ using System.Globalization;
 namespace HackerOs.Simulation.Abstractions.Processes;
 
 /// <summary>
-/// The per-process resource limits of ADR 0125, Linux's <c>RLIMIT_*</c> retained by HackerOS. The
+/// The per-process resource limits of ADR 0125, Linux's <c>RLIMIT_*</c> retained by KazoOS. The
 /// order is the order of the lines of <c>/proc/&lt;pid&gt;/limits</c>.
 /// </summary>
 public enum ResourceLimitKind
@@ -13,7 +13,7 @@ public enum ResourceLimitKind
 
     /// <summary>
     /// <c>RLIMIT_RSS</c>: resident memory (<c>VmRSS</c>), in bytes (<c>ulimit -m</c> counts KiB). Linux
-    /// has ignored it since 2.6; HackerOS applies it, because resident memory is what it measures.
+    /// has ignored it since 2.6; KazoOS applies it, because resident memory is what it measures.
     /// </summary>
     Rss,
 
@@ -70,7 +70,7 @@ public sealed record ProcessResourceLimits(ResourceLimit Cpu, ResourceLimit Rss,
     /// <summary>The hard <c>nofile</c> of a common Linux distribution (systemd's default, <c>524288</c>).</summary>
     public const long DefaultNoFileHard = 524288;
 
-    /// <summary>The <c>nproc</c> soft and hard value used by HackerOS (ADR 0125, section 6).</summary>
+    /// <summary>The <c>nproc</c> soft and hard value used by KazoOS (ADR 0125, section 6).</summary>
     public const long DefaultNProc = 4096;
 
     /// <summary>

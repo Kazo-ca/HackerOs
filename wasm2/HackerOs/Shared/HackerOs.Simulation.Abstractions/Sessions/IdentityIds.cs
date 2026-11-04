@@ -53,7 +53,7 @@ public readonly record struct SessionId
     public override string ToString() => Value.ToString("N", CultureInfo.InvariantCulture);
 }
 
-/// <summary>Identifies one HackerOS installation/profile, used by app/device settings scope.</summary>
+/// <summary>Identifies one KazoOS installation/profile, used by app/device settings scope.</summary>
 public readonly record struct InstallationId
 {
     private InstallationId(Guid value) => Value = value;

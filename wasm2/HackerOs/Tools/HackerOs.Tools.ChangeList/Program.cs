@@ -114,7 +114,7 @@ public static class Program
 
     private static void PrintUsage() =>
         Console.WriteLine("""
-            HackerOS change list tool (ADR 0186)
+            KazoOS change list tool (ADR 0186)
               site --changes <dir> --version <v> --output <file> [--repository <url>]
               collect --changes <dir> --version <v> --date <yyyy-MM-dd>
               notes --changes <dir> --version <v> --kind release|package --output <file> [--repository <url>]

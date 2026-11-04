@@ -62,7 +62,7 @@ checks for the other apps.
 `~/Desktop/.mobile/layout.conf`:
 
 ```ini
-# HackerOS mobile Home layout
+# KazoOS mobile Home layout
 version=1
 
 [dock]

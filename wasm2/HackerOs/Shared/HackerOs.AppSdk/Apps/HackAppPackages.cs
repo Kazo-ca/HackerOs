@@ -208,7 +208,7 @@ public static class HackAppPackages
         CallAsync(gateway => gateway.GetPackageUpdatesAsync(cancellationToken));
 
     /// <summary>
-    /// Restarts HackerOS so that the apps installed, updated or removed since it started take
+    /// Restarts KazoOS so that the apps installed, updated or removed since it started take
     /// effect (ADR 0182, Q5 C): like Start ▸ Restart, without an administrator, and only when such a
     /// change is waiting (ADR 0212 §3). The session ends; the returned task may never complete.
     /// </summary>

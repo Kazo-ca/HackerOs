@@ -215,7 +215,7 @@ export async function open(dotnet, id, title, width, height, placement) {
     if (registry) {
         registry.attach(win.document);
     } else {
-        console.warn("[HackerOS] Display surfaces: the event mirror is not installed; content in detached windows will not react to input.");
+        console.warn("[KazoOS] Display surfaces: the event mirror is not installed; content in detached windows will not react to input.");
     }
     watch(surface);
     surfaces.set(id, surface);

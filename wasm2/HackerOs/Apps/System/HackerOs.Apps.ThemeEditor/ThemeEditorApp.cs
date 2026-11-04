@@ -36,7 +36,7 @@ public sealed class ThemeEditorApp : AppDefinition
 
     /// <inheritdoc />
     public override string Description =>
-        "Create HackerOS themes from verified design tokens, with live preview and token documentation";
+        "Create KazoOS themes from verified design tokens, with live preview and token documentation";
 
     /// <inheritdoc />
     public override string Category => "system";

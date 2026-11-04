@@ -14,11 +14,11 @@ namespace HackerOs.Platform.Core.Clipboard;
 /// <item><b>guest to host</b>: when an app puts content with <c>text/plain</c> on the clipboard (a file
 /// list included, as its paths), the text is written to the host with
 /// <c>navigator.clipboard.writeText</c>, within the user gesture (Ctrl+C, a click) that caused it;</item>
-/// <item><b>host to guest</b>: a <c>paste</c> event whose text differs from what HackerOS last wrote
+/// <item><b>host to guest</b>: a <c>paste</c> event whose text differs from what KazoOS last wrote
 /// becomes the current entry (origin <see cref="SystemClipboardOrigin.Host"/>); host files pasted
 /// are recorded by name under <see cref="HostFilesMediaType"/> and imported by the app that receives
 /// the paste (the File Explorer), like a drop from the host;</item>
-/// <item>native copies inside HackerOS (a text field, the terminal) also become the current entry.</item>
+/// <item>native copies inside KazoOS (a text field, the terminal) also become the current entry.</item>
 /// </list>
 /// The direction is the <c>sharing</c> key of <c>/etc/hackeros/clipboard.config</c>
 /// (<see cref="ClipboardSettingsDocuments"/>), re-read whenever the file or the session changes.
@@ -261,7 +261,7 @@ public sealed class HostClipboardBridge : IHostClipboardSink, IAsyncDisposable
         }
         catch (Exception exception) when (exception is not OperationCanceledException)
         {
-            // The host refused (no focus, no permission, no clipboard API): HackerOS keeps its clipboard.
+            // The host refused (no focus, no permission, no clipboard API): KazoOS keeps its clipboard.
             _logger.LogDebug(exception, "clipboard: host clipboard call failed");
         }
     }

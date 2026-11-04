@@ -2,7 +2,7 @@
 # that "hackpkg install <owner>/<repo>" installs it without the Hack Store.
 #
 # On a tag v<version> (the app's Version in its [AppManifest] class), this workflow:
-#   1. checks the HackerOS submodule and that the tag is the manifest version;
+#   1. checks the KazoOS submodule and that the tag is the manifest version;
 #   2. checks out the hackeros-packages branch (an orphan branch the first time), so the versions
 #      already published stay listed in index.json with their signatures;
 #   3. packs the app there (HackerOsPack); with the HACKEROS_APP_SIGNING_KEY secret (the private key
@@ -10,7 +10,7 @@
 #      the package is published unsigned and the run shows a warning;
 #   4. commits and pushes the branch.
 # This is the only workflow of the repository allowed to write to it.
-name: Publish the HackerOS packages
+name: Publish the KazoOS packages
 
 on:
   push:
@@ -40,7 +40,7 @@ jobs:
         with:
           global-json-file: global.json
 
-      - name: Check the HackerOS submodule
+      - name: Check the KazoOS submodule
         run: bash .github/scripts/check-hackeros-submodule.sh
 
       - name: Check out the packages branch

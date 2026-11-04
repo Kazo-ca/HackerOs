@@ -15,7 +15,7 @@ sign-out. Decision: [ADR 0204](adr/0204-os-event-sounds.md), issue
   a sound before that gesture (a guest session opened by itself) is dropped.
 - On a new installation, the first sign-in sound plays a few seconds after the
   desktop appears, once the built-in themes are written.
-- Built-in themes: **HackerOS** (`hackeros`, console bleeps, the default) and
+- Built-in themes: **KazoOS** (`hackeros`, console bleeps, the default) and
   **Soft** (`soft`, chimes).
 
 ## The `sound.config` setting

@@ -52,7 +52,7 @@
     <value>  ^S  Enregistre le fichier sans rien demander</value>
   </data>
   <data name="Help.Title" xml:space="preserve">
-    <value>  Aide de GNU nano (HackerOS)</value>
+    <value>  Aide de GNU nano (KazoOS)</value>
   </data>
   <data name="Help.WhereIs" xml:space="preserve">
     <value>  ^W  Chercher : recherche vers l'avant (^F aussi) ; Entrée sur une réponse vide répète</value>

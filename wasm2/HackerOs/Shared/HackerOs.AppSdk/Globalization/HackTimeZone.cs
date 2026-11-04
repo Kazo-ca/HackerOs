@@ -4,7 +4,7 @@ using System.Globalization;
 namespace HackerOs.AppSdk.Globalization;
 
 /// <summary>
-/// The local time of HackerOS (ADR 0193): which time zone a process shows its dates in, and how to
+/// The local time of KazoOS (ADR 0193): which time zone a process shows its dates in, and how to
 /// convert the OS's UTC time (<see cref="IAppExecutionContext.Clock"/>) to it.
 /// </summary>
 /// <remarks>

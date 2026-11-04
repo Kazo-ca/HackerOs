@@ -184,7 +184,7 @@ public interface IObservableHostFolder
 }
 
 /// <summary>
-/// Whether the user can see HackerOS (ADR 0185 §15): a network drive is read again on a timer only
+/// Whether the user can see KazoOS (ADR 0185 §15): a network drive is read again on a timer only
 /// while the page is visible, and at once when the page comes back (shown again or focused).
 /// </summary>
 public interface IHostActivitySignal

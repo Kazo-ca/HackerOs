@@ -28,7 +28,7 @@ public sealed record ComposedPage(string Html, string Title, Uri BaseUrl, int Su
 /// The policy (<see cref="ContentSecurityPolicy"/>) lets the frame load nothing but <c>data:</c>
 /// and <c>blob:</c> URLs: whatever the page tries to reach on its own (a resource added by a
 /// script the bridge did not see, a <c>WebSocket</c>…) is refused by the host browser, so a site's
-/// JavaScript never reaches the real Internet nor HackerOS.
+/// JavaScript never reaches the real Internet nor KazoOS.
 /// </remarks>
 public sealed class HtmlPageComposer
 {
@@ -86,7 +86,7 @@ public sealed class HtmlPageComposer
         {
             // Nested browsing contexts would need a bridge of their own: not in v1 (ADR 0075 §3).
             _loader.Log.Add(new ConsoleLogEntry(ConsoleLevel.Warning,
-                $"Nested <{frame.LocalName}> is not supported by HackerOS Browser yet; it stays empty.", BrowserUrl.ToDisplayString(documentUrl)));
+                $"Nested <{frame.LocalName}> is not supported by KazoOS Browser yet; it stays empty.", BrowserUrl.ToDisplayString(documentUrl)));
             frame.SetAttribute(frame.LocalName == "object" ? "data" : "src", "about:blank");
         }
 

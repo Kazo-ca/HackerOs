@@ -181,12 +181,12 @@ type=PATH msg=audit(1792218000.123:42): op=write path="/etc/hosts" uid=0 auid=10
 
 - `uid`: the identity that writes (`root` for a system operation or one elevated by
   `sudo`/approval); `auid`: the original human, `unset` for the OS.
-- HackerOS has no numeric identifiers: `root` is `0`, a user
+- KazoOS has no numeric identifiers: `root` is `0`, a user
   `1000`, `unset` `4294967295`; the `UID=` and `AUID=` fields give the names,
   like `auditd`'s enriched fields.
 - A refusal adds `err=<code>` (for example `err=PermissionDenied`). The content
   is never written.
-- HackerOS has no `chown` operation: there is therefore nothing to audit for it.
+- KazoOS has no `chown` operation: there is therefore nothing to audit for it.
 
 `AuditLineFormat` (Simulation.Abstractions) writes and reads back these lines.
 

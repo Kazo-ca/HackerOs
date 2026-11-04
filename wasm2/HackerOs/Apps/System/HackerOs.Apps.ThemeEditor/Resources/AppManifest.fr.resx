@@ -13,7 +13,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Description" xml:space="preserve">
-    <value>Créer des thèmes HackerOS à partir de jetons de design vérifiés, avec aperçu en direct et documentation des jetons</value>
+    <value>Créer des thèmes KazoOS à partir de jetons de design vérifiés, avec aperçu en direct et documentation des jetons</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Éditeur de thèmes</value>

@@ -6,10 +6,10 @@ Décision : [ADR 0205](../dev/adr/0205-cursor-themes.md).
 
 ## À quoi ça sert
 
-Un thème de curseurs remplace le pointeur de toute la surface de HackerOS
+Un thème de curseurs remplace le pointeur de toute la surface de KazoOS
 (bureau, barre des tâches, fenêtres et apps) par des images PNG. On le choisit
 dans **Paramètres ▸ Apparence ▸ Curseurs**. Trois thèmes sont intégrés :
-**Système** (les curseurs de l'appareil, par défaut), **HackerOS Néon** et
+**Système** (les curseurs de l'appareil, par défaut), **KazoOS Néon** et
 **Gothique Pourpre** ; chacun peut ajouter les siens.
 
 ## Créer un thème
@@ -110,7 +110,7 @@ clé `theme`.
 
 ## Thèmes intégrés
 
-Les images de HackerOS Néon et Gothique Pourpre sont dans
+Les images de KazoOS Néon et Gothique Pourpre sont dans
 `wasm2/HackerOs/Platform/HackerOs.Theming.Blazor/wwwroot/cursors/<id>/` et sont
 dessinées par `wasm2/HackerOs/build/tools/generate-cursor-themes.py` (Pillow).
 Changer un dessin ou un point actif demande de modifier ensemble le script et

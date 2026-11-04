@@ -130,7 +130,7 @@ public partial class ThemeEditorWindow : WindowAppBase, IWindowCloseGuard
         {
             Title = L["Dialog.Open.Title"],
             InitialDirectory = VirtualPath.Parse(HomeDirectory),
-            Filters = [new FileDialogFilter("HackerOS themes", [ThemeFile.Extension], [ThemeFile.MediaType])],
+            Filters = [new FileDialogFilter("KazoOS themes", [ThemeFile.Extension], [ThemeFile.MediaType])],
             RequestedAccess = SelectedFileAccess.Read
         });
         if (result.Status == FileDialogStatus.Selected && result.Resources.Count > 0)
@@ -198,7 +198,7 @@ public partial class ThemeEditorWindow : WindowAppBase, IWindowCloseGuard
             InitialDirectory = VirtualPath.Parse(HomeDirectory),
             SuggestedFileName = $"{_document.Id}{ThemeFile.Extension}",
             DefaultExtension = ThemeFile.Extension,
-            Filters = [new FileDialogFilter("HackerOS themes", [ThemeFile.Extension], [ThemeFile.MediaType])],
+            Filters = [new FileDialogFilter("KazoOS themes", [ThemeFile.Extension], [ThemeFile.MediaType])],
             ConfirmOverwrite = true
         });
         if (result.Status != FileDialogStatus.Selected || result.Resource is null)

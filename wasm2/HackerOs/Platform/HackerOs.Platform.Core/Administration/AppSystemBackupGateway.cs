@@ -74,6 +74,6 @@ internal sealed class AppSystemBackupGateway : IAppSystemBackupGateway
     private SystemBackupService Require()
     {
         _capabilities.Require(AppCapabilities.SystemBackup);
-        return _backup?.Invoke() ?? throw new NotSupportedException("This HackerOS host cannot back up or restore the machine.");
+        return _backup?.Invoke() ?? throw new NotSupportedException("This KazoOS host cannot back up or restore the machine.");
     }
 }

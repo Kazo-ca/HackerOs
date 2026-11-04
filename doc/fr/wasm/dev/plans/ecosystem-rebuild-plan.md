@@ -1,6 +1,6 @@
 > [English version](../../../../en/wasm/dev/plans/ecosystem-rebuild-plan.md)
 
-# Plan de refonte de l'écosystème HackerOS
+# Plan de refonte de l'écosystème KazoOS
 
 **Statut :** plan validé avec Benoit le 2026-10-10. Les quatre phases sont
 réalisées et fusionnées dans `rebuild/base` (phase 4 terminée le 2026-10-11 par

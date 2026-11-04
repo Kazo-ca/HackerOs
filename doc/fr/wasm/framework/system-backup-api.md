@@ -13,7 +13,7 @@ abîmée, vide, falsifiée (empreinte fausse) ou d'une autre version de schéma 
 refusée **avant** toute écriture, avec un message qui nomme les deux versions :
 
 ```text
-This backup uses database schema version 3; this HackerOS uses version 4. It cannot be restored here.
+This backup uses database schema version 3; this KazoOS uses version 4. It cannot be restored here.
 ```
 
 Nom : `hackeros-AAAAMMJJ-HHMMSSZ.hosbak` (heure UTC de l'export).

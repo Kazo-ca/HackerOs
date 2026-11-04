@@ -1,6 +1,6 @@
 {
-  "name": "HackerOS",
-  "short_name": "HackerOS",
+  "name": "KazoOS",
+  "short_name": "KazoOS",
   "description": "Blazor WebAssembly Computer Simulation Operating System",
   "id": "./",
   "start_url": "./",

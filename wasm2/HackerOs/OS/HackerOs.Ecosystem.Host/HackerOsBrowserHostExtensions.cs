@@ -41,7 +41,7 @@ public sealed record HackerOsBrowserHostOptions
 }
 
 /// <summary>
-/// The composition root of a standalone HackerOS host running in the browser (ADR 0098 §2): what
+/// The composition root of a standalone KazoOS host running in the browser (ADR 0098 §2): what
 /// <c>OS/HackerOs.Ecosystem/Program.cs</c> did before the host was a package. A host's
 /// <c>Program.cs</c> is then:
 /// <code>
@@ -99,7 +99,7 @@ public static partial class HackerOsBrowserHostExtensions
                     provider.GetService<Microsoft.Extensions.Logging.ILogger<InstalledAppAssetPublisher>>())
                 : null)
         {
-            // ADR 0222 §2: their satellite assemblies, for every language HackerOS speaks.
+            // ADR 0222 §2: their satellite assemblies, for every language KazoOS speaks.
             Satellites = new InstalledAppSatellites(HackerOs.AppSdk.Globalization.HackLocale.SupportedLanguages.Select(static culture => culture.Name)),
         });
         // ADR 0162: an app asset that fails to load after a rebuild or a deployment means the OS
@@ -137,7 +137,7 @@ public static partial class HackerOsBrowserHostExtensions
         // ADR 0098 §5: app assets are the static web assets of their package, checked at first read.
         builder.Services.AddSingleton<IAppAssetSource>(new InstalledAppAssetSource(
             new StaticWebAssetAppAssetSource(new Uri(builder.HostEnvironment.BaseAddress)), installedApps));
-        // ADR 0134, ADR 0137: the OS asks its own origin whether a HackerOS server served it.
+        // ADR 0134, ADR 0137: the OS asks its own origin whether a KazoOS server served it.
         Uri ownOrigin = new(builder.HostEnvironment.BaseAddress);
         builder.Services.AddScoped<IHostInfoClient>(provider => new HttpHostInfoClient(provider.GetRequiredService<HttpClient>(), ownOrigin));
         // ADR 0066: decided once from appsettings.json and what the build compiled in. Must precede

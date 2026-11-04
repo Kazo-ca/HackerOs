@@ -4,7 +4,7 @@
 
 ## Purpose
 
-A HackerOS app, system or third-party, obtains OS services only through the
+A KazoOS app, system or third-party, obtains OS services only through the
 public SDK (plan principle 3, ADR 0055). This document describes:
 
 - what makes up the SDK and what an app may reference and inject;

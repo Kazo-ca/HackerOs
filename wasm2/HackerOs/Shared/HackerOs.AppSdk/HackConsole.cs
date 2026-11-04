@@ -41,7 +41,7 @@ public sealed class DetachedAppConsoleGateway : IAppConsoleGateway
 }
 
 /// <summary>
-/// <c>System.Console</c> for HackerOS apps (ADR 0064): the standard streams of the app running
+/// <c>System.Console</c> for KazoOS apps (ADR 0064): the standard streams of the app running
 /// in the ambient <see cref="HackExecutionContext"/>. A terminal command gets the same streams as
 /// <see cref="TerminalExecutionContext.StandardOutput"/>; a window app started from a shell
 /// (<c>text-editor notes.txt</c>) writes into that shell's terminal; an app started from the

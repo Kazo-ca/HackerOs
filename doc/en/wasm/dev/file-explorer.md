@@ -363,7 +363,7 @@ section.
   OS gives decides first (`FileMetadata.Length`, or `MeasureAsync` for a folder), then the content is
   read or compressed into a blob of the page (`prepareDownload`, one at a time). Beyond about 50 MB
   nothing is prepared and the drag shows a bubble "Too large to drag out of the browser (size): use
-  Download"; dragging into a HackerOS folder still works. Applies to every view of the shared control,
+  Download"; dragging into a KazoOS folder still works. Applies to every view of the shared control,
   the desktop included; not on touch. If the drag starts before the preparation ends (large folder), it
   stays internal. Code in `FileView.ExternalDrag.cs`. Tests: `FileViewExternalDragTests`.
 - [x] `explorer/network-drives-sidebar-alignment` (after the series, Benoit's request of 2026-10-29):
@@ -390,7 +390,7 @@ the archive (the manifest declares `application/zip`, `.zip` in its `fileHandler
 - `Archives/ZipArchiveIndex.cs`: the table of contents of a `.zip`, read once from its bytes
   (`System.IO.Compression`). The folders the zip only implies (`a/b/c.txt` with no `a/` entry) are
   added. Names are cleaned as an extraction would clean them; an entry that climbs out (`..`, "zip
-  slip") or whose name is not a valid HackerOS path is left out.
+  slip") or whose name is not a valid KazoOS path is left out.
 - `Archives/ZipArchiveBrowser.cs`: finds the archive of a path (the first `*.zip` segment that is a
   file; a folder named `x.zip` stays a folder; a path with no `.zip` segment costs no read), caches the
   last 4 archives while their revision does not change, and extracts an entry (a file or a whole

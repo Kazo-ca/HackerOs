@@ -46,10 +46,10 @@
     <value>OK</value>
   </data>
   <data name="Detach.Blocked" xml:space="preserve">
-    <value>La fenêtre détachée a été bloquée par votre navigateur. Autorisez les fenêtres pop-up pour HackerOS, puis réessayez.</value>
+    <value>La fenêtre détachée a été bloquée par votre navigateur. Autorisez les fenêtres pop-up pour KazoOS, puis réessayez.</value>
   </data>
   <data name="Detach.Unsupported" xml:space="preserve">
-    <value>Cet hôte HackerOS ne peut pas ouvrir de fenêtres détachées.</value>
+    <value>Cet hôte KazoOS ne peut pas ouvrir de fenêtres détachées.</value>
   </data>
   <data name="Detached.BringBack" xml:space="preserve">
     <value>Ramener la page ici</value>
@@ -121,7 +121,7 @@
     <value>Vérifiez qu'un processus écoute sur ce port (netstat -tlnp).</value>
   </data>
   <data name="Error.ConnectionRefused.Hint.Start" xml:space="preserve">
-    <value>Si le site est hébergé dans HackerOS, démarrez son app ou son service.</value>
+    <value>Si le site est hébergé dans KazoOS, démarrez son app ou son service.</value>
   </data>
   <data name="Error.ConnectionRefused.Message" xml:space="preserve">
     <value>{0} n'autorise pas la connexion.</value>
@@ -157,7 +157,7 @@
     <value>Vérifiez la connexion.</value>
   </data>
   <data name="Error.Hint.HostedInstalled" xml:space="preserve">
-    <value>Si le site est hébergé dans HackerOS, vérifiez que son app ou son service est installé.</value>
+    <value>Si le site est hébergé dans KazoOS, vérifiez que son app ou son service est installé.</value>
   </data>
   <data name="Error.Hint.Reload" xml:space="preserve">
     <value>Actualisez la page.</value>
@@ -217,7 +217,7 @@
     <value>Utilisez un lien ou un formulaire pour naviguer.</value>
   </data>
   <data name="Error.ScriptNavigation.Message" xml:space="preserve">
-    <value>La page a modifié window.location, ce que le Navigateur HackerOS ne prend pas encore en charge : les liens, les formulaires et history.pushState fonctionnent.</value>
+    <value>La page a modifié window.location, ce que le Navigateur KazoOS ne prend pas encore en charge : les liens, les formulaires et history.pushState fonctionnent.</value>
   </data>
   <data name="Error.ScriptNavigation.Title" xml:space="preserve">
     <value>Cette page a navigué par script</value>
@@ -280,7 +280,7 @@
     <value>Saisissez une URL ou un chemin (file:///home/…) dans la barre d'adresse pour commencer à naviguer.</value>
   </data>
   <data name="NewTab.Title" xml:space="preserve">
-    <value>Navigateur HackerOS</value>
+    <value>Navigateur KazoOS</value>
   </data>
   <data name="Notice.FormHistoryCleared" xml:space="preserve">
     <value>Historique des formulaires effacé : les champs ne suggèrent plus ce que vous avez saisi auparavant.</value>
@@ -319,7 +319,7 @@
     <value>Rattacher</value>
   </data>
   <data name="Surface.ReattachTitle" xml:space="preserve">
-    <value>Ramener la page dans HackerOS</value>
+    <value>Ramener la page dans KazoOS</value>
   </data>
   <data name="Toolbar.AddressBar" xml:space="preserve">
     <value>Barre d'adresse URL</value>
@@ -358,7 +358,7 @@
     <value>Afficher le code source de la page (Ctrl+U)</value>
   </data>
   <data name="Source.RealNetwork" xml:space="preserve">
-    <value>Vrai site, par le proxy du serveur HackerOS</value>
+    <value>Vrai site, par le proxy du serveur KazoOS</value>
   </data>
   <data name="Source.LocalSite" xml:space="preserve">
     <value>Site de cette machine</value>
@@ -373,9 +373,9 @@
     <value>Votre administrateur a bloqué {0}.</value>
   </data>
   <data name="Error.Blocked.Hint" xml:space="preserve">
-    <value>L'opérateur du serveur HackerOS n'autorise pas cette adresse, ce port ou cette app (réglages HackerOs:Proxy).</value>
+    <value>L'opérateur du serveur KazoOS n'autorise pas cette adresse, ce port ou cette app (réglages HackerOs:Proxy).</value>
   </data>
   <data name="Error.NameNotResolved.Hint.Server" xml:space="preserve">
-    <value>Pour ouvrir un vrai site, connectez cette machine à un serveur HackerOS (Paramètres ▸ Réseau ▸ Serveur facultatif).</value>
+    <value>Pour ouvrir un vrai site, connectez cette machine à un serveur KazoOS (Paramètres ▸ Réseau ▸ Serveur facultatif).</value>
   </data>
 </root>

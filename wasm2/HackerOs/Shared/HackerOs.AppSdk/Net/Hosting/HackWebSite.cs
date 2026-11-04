@@ -23,7 +23,7 @@ public enum HackWebSiteScope
 }
 
 /// <summary>
-/// One hosted static site: the content of a <c>.site</c> file (JSON), the HackerOS counterpart of a
+/// One hosted static site: the content of a <c>.site</c> file (JSON), the KazoOS counterpart of a
 /// site in IIS's <c>applicationHost.config</c> or of an nginx file in <c>sites-available</c>
 /// (ADR 0077, section 1). <c>hackwebd</c> serves it; Web Server Manager edits it.
 /// </summary>

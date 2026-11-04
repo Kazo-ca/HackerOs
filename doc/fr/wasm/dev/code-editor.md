@@ -108,7 +108,7 @@ un saut de ligne dans le fichier.
 
 Dans le terminal, seuls Ctrl+` et Ctrl+J sont interceptés ; les autres touches
 vont au shell. Chrome garde Ctrl+N, Ctrl+W et Ctrl+T pour lui tant que
-HackerOS n'est pas installé en PWA ; chaque commande a aussi son entrée de
+KazoOS n'est pas installé en PWA ; chaque commande a aussi son entrée de
 menu.
 
 ## Mettre à jour Monaco

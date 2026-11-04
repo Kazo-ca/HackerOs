@@ -11,7 +11,7 @@ public sealed record ThemePreferences(
     string AccentId,
     bool AnimationsEnabled)
 {
-    /// <summary>Gets the clean-profile HackerOS/Android/green preferences with animations enabled.</summary>
+    /// <summary>Gets the clean-profile KazoOS/Android/green preferences with animations enabled.</summary>
     public static ThemePreferences Default { get; } = new(
         WellKnownThemeIds.HackerOs,
         WellKnownThemeIds.Android,

@@ -1,37 +1,37 @@
 > [Version française](../../fr/wasm/features.md)
 
-# HackerOS: overview and features
+# KazoOS: overview and features
 
 ## At a glance
 
-HackerOS is a **complete operating system that runs in the browser**. It
+KazoOS is a **complete operating system that runs in the browser**. It
 offers a desktop with windows, a mobile interface, a persistent file system,
 user accounts, a terminal with a real shell and more than 70 Linux commands, a
 simulated network with its own web sites, and a suite of core applications. It
 works offline and installs like an app, with nothing more than a recent
 browser.
 
-HackerOS is also a **development platform**. Its public SDK, published on
+KazoOS is also a **development platform**. Its public SDK, published on
 NuGet, lets you write windowed applications, shell commands, services and web
 sites in C# that run inside the OS. Developers get everything the OS already
 provides (windows, files, network, security, themes, languages, mobile) and
 focus on their application.
 
-HackerOS is written in C# with Blazor WebAssembly (.NET 10). The current
+KazoOS is written in C# with Blazor WebAssembly (.NET 10). The current
 version is **2.2.2**. Try it at <https://hackos.kazo.ca/>.
 
 ## The goal of the ecosystem
 
-The HackerOS ecosystem lets a developer **write an application once, in C#,
-and run it wherever HackerOS runs**: online, offline, on their own server or
+The KazoOS ecosystem lets a developer **write an application once, in C#,
+and run it wherever KazoOS runs**: online, offline, on their own server or
 embedded in another product. The OS provides the complete environment
 (desktop, mobile, files, terminal, network, accounts), and the application is
-then distributed through the **Hack Store**, the HackerOS app store.
+then distributed through the **Hack Store**, the KazoOS app store.
 
 The ecosystem is made of:
 
-- **HackerOS**, the OS itself (this repository);
-- **the HackerOS SDK**, the `HackerOs.*` NuGet packages used to build on the
+- **KazoOS**, the OS itself (this repository);
+- **the KazoOS SDK**, the `HackerOs.*` NuGet packages used to build on the
   OS from another repository;
 - **the template repository** [HackerOs-AppTemplate](https://github.com/Kazo-ca/HackerOs-AppTemplate),
   the starting point of a new application;
@@ -39,7 +39,7 @@ The ecosystem is made of:
   the reviewed list of applications offered by the Hack Store (in development);
 - **the applications** themselves, each in its own repository.
 
-## Why build for or with HackerOS
+## Why build for or with KazoOS
 
 - **A familiar API.** The file API looks like `System.IO` (`HackFile`,
   `HackDirectory`, `HackPath`…) and an application is described by a plain C#
@@ -65,16 +65,16 @@ The ecosystem is made of:
 - **Built-in distribution.** An application installs from its GitHub
   repository with one command, or with one click from the Hack Store.
 
-## Ways to use and deploy HackerOS
+## Ways to use and deploy KazoOS
 
 | Use | For whom | Description |
 | --- | --- | --- |
-| **Online** | Everyone | Open <https://hackos.kazo.ca/>. HackerOS installs like an app (PWA) and then works offline. |
+| **Online** | Everyone | Open <https://hackos.kazo.ca/>. KazoOS installs like an app (PWA) and then works offline. |
 | **Self-hosted static site** | Organizations, teachers | Each version publishes a `hackeros-wasm-<version>.zip` archive in the [GitHub Releases](https://github.com/Kazo-ca/HackerOs/releases). It can be dropped on any static hosting (GitHub Pages, web server). See [`github-pages-deployment.md`](dev/github-pages-deployment.md). |
-| **With the HackerOS server** | Organizations, advanced users | The optional ASP.NET Core server serves the OS and adds accounts synchronized across devices and a relay to the real network. See [`server-hosting.md`](dev/server-hosting.md). |
+| **With the KazoOS server** | Organizations, advanced users | The optional ASP.NET Core server serves the OS and adds accounts synchronized across devices and a relay to the real network. See [`server-hosting.md`](dev/server-hosting.md). |
 | **Embedded in your own product** | Developers, companies | The NuGet packages and the `dotnet new hackeros-host` template let you compose your own host with your own applications. See [`building-on-hackeros.md`](framework/building-on-hackeros.md). |
 | **Developing applications** | Developers | SDK NuGet packages, `dotnet new` templates, template repository, then installation from the terminal with `hackpkg`. See [`sdk-developer-guide.md`](framework/sdk-developer-guide.md). |
-| **Installable local server** | Advanced users | Every version publishes the HackerOS server for Windows, Linux and macOS (`hackeros-server-<version>-<system>`) and the Docker image `ghcr.io/kazo-ca/hackeros-server`. It installs as a service on your computer or on a machine of your local network, without being exposed to the internet, and the online OS links to it with a pairing code (Settings > Server connection > Local server). See [`installable-server.md`](dev/installable-server.md). |
+| **Installable local server** | Advanced users | Every version publishes the KazoOS server for Windows, Linux and macOS (`hackeros-server-<version>-<system>`) and the Docker image `ghcr.io/kazo-ca/hackeros-server`. It installs as a service on your computer or on a machine of your local network, without being exposed to the internet, and the online OS links to it with a pairing code (Settings > Server connection > Local server). See [`installable-server.md`](dev/installable-server.md). |
 
 ## Available features
 
@@ -97,7 +97,7 @@ This section lists what is released in the `main` branch and online.
 - **Mouse Back and Forward buttons**: the Back button, Alt+← and the phone's
   Back (Android button or gesture, iOS swipe) go back inside the active app
   (File Explorer, browser, Settings, Hack Store) instead of moving the tab back
-  and leaving HackerOS; the Forward button and Alt+→ go forward.
+  and leaving KazoOS; the Forward button and Alt+→ go forward.
   ([ADR 0220](dev/adr/0220-mouse-back-forward-buttons.md))
   The Start menu shows the signed-in user and their Power button: sign out or
   restart. ([ADR 0195](dev/adr/0195-start-menu-power-button.md))
@@ -166,7 +166,7 @@ This section lists what is released in the `main` branch and online.
 - **Text editor** and **code editor** with syntax highlighting.
   ([`text-editor.md`](dev/text-editor.md), [`code-editor.md`](dev/code-editor.md))
 - **Web browser** for the sites of the simulated network and, with a connected
-  HackerOS server, real sites through its proxy (cookies and signing in to
+  KazoOS server, real sites through its proxy (cookies and signing in to
   accounts included); an address-bar icon tells where the page came from.
   ([`browser-html-rendering.md`](dev/browser-html-rendering.md), [ADR 0210](dev/adr/0210-browser-real-sites-through-the-proxy.md))
 - **Settings**: accounts, appearance, screens, language, accessibility,
@@ -188,7 +188,7 @@ This section lists what is released in the `main` branch and online.
   [`blazor-sites.md`](framework/blazor-sites.md))
 - **Access to the real network** through the optional server, for allowed
   applications. ([`server-network-relay.md`](dev/server-network-relay.md))
-- **Installable local server**: the HackerOS server installs as a service
+- **Installable local server**: the KazoOS server installs as a service
   (Windows, Linux, macOS, Docker) on your computer or on a machine of your
   local network in HTTPS, and the OS, even online on GitHub Pages, links to it
   with a pairing code. ([`installable-server.md`](dev/installable-server.md),
@@ -261,14 +261,14 @@ This section lists what is released in the `main` branch and online.
   the time in the user's zone, automatic or chosen in Settings ▸ Date and time.
   ([`time-zone.md`](framework/time-zone.md))
 - **Cursor themes**: the pointer of the whole OS as PNG images, System,
-  HackerOS Neon, Gothic Crimson or your own themes, chosen in Settings ▸
+  KazoOS Neon, Gothic Crimson or your own themes, chosen in Settings ▸
   Appearance ▸ Cursors. ([`cursor-themes.md`](framework/cursor-themes.md))
 - **Icon packs**: PNG images replace the icons of apps, folders and files
   everywhere in the OS, chosen in Settings ▸ Appearance; a "Néon" sample pack
   is included. ([`icon-packs.md`](dev/icon-packs.md),
   [ADR 0203](dev/adr/0203-icon-packs.md))
 - **System sounds**: notifications, warnings, errors, sign-in and sign-out. Two
-  built-in themes (HackerOS and Soft), your own themes in OGG or MP3, volume and
+  built-in themes (KazoOS and Soft), your own themes in OGG or MP3, volume and
   mute in Settings ▸ Sound.
   ([`system-sounds.md`](dev/system-sounds.md), [ADR 0204](dev/adr/0204-os-event-sounds.md))
 
@@ -312,7 +312,7 @@ This section lists what is released in the `main` branch and online.
   ([ADR 0189](dev/adr/0189-app-sources-trust-and-per-user-install.md),
   [ADR 0208](dev/adr/0208-hack-store-sources-trust-build.md),
   [ADR 0214](dev/adr/0214-hack-store-hot-add-signing-transactions.md))
-- **Hack Store**: the HackerOS app store, pinned by default in the Start menu,
+- **Hack Store**: the KazoOS app store, pinned by default in the Start menu,
   on desktop and mobile. Home by categories, search, app page (screenshots,
   description, size, license, capabilities, trust), install for oneself or for
   everyone, open, update, uninstall, Installed tab and "Restart to finish". It
@@ -384,7 +384,7 @@ points to its PR.
 
 ### Optional ported applications
 
-Well-known open source applications adapted to HackerOS, each in its own
+Well-known open source applications adapted to KazoOS, each in its own
 repository. They are not part of the OS: they will be installed separately,
 with `hackpkg` and then from the Hack Store.
 

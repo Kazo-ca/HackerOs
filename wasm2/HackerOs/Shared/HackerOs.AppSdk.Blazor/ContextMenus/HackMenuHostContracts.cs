@@ -85,7 +85,7 @@ public interface IHackContextMenu
 
 /// <summary>
 /// A window's context menus, as a component sees them (<c>Menus</c>, ADR 0150 §4): attach a menu to
-/// any element, define one in C#, or open one from code. Outside a HackerOS window (a unit test),
+/// any element, define one in C#, or open one from code. Outside a KazoOS window (a unit test),
 /// attaching returns no attribute and nothing opens.
 /// </summary>
 /// <example>
@@ -111,7 +111,7 @@ public sealed class HackMenus
     /// <summary>Gets the window's menus this view uses.</summary>
     internal IHackMenuHost? Host => _host;
 
-    /// <summary>Gets whether the OS menus are reachable (inside a HackerOS window).</summary>
+    /// <summary>Gets whether the OS menus are reachable (inside a KazoOS window).</summary>
     public bool IsAvailable => _host is not null;
 
     /// <summary>

@@ -397,14 +397,14 @@ public sealed class HackWebDbTransactionStore<T>
 /// <summary>Registers a site's database.</summary>
 public static class HackWebDbServiceCollectionExtensions
 {
-    /// <summary>Name of the in-memory database a site gets when it runs outside HackerOS.</summary>
+    /// <summary>Name of the in-memory database a site gets when it runs outside KazoOS.</summary>
     public const string InMemoryName = "hackweb.in-memory";
 
     /// <summary>
     /// Registers <see cref="HackWebDb"/>, the site's browser database <c>hackweb.&lt;app id&gt;</c>, with its
     /// versions. It opens on first use. When the services hold an <see cref="IAppWebDatabaseGateway"/>
     /// (a test's <see cref="HackWebDbInMemoryBackend"/>), it is used instead of the OS; a site built
-    /// outside HackerOS without one gets an in-memory database (<see cref="InMemoryName"/>).
+    /// outside KazoOS without one gets an in-memory database (<see cref="InMemoryName"/>).
     /// </summary>
     /// <param name="services">The site's services.</param>
     /// <param name="schema">Declares the versions (<see cref="HackWebDbSchemaBuilder.Version"/>).</param>
@@ -419,7 +419,7 @@ public static class HackWebDbServiceCollectionExtensions
 
         // The site's own process context, taken when the site builds its services (in its process).
         IAppWebDatabaseGateway? fromOs = HackExecutionContext.CurrentOrNull?.WebDatabase;
-        // Outside HackerOS (a site's unit tests run HackWebHost.CreateApplication), the database is in
+        // Outside KazoOS (a site's unit tests run HackWebHost.CreateApplication), the database is in
         // memory and lives as long as the application.
         services.TryAddSingleton(provider => new HackWebDb(
             provider.GetService<IAppWebDatabaseGateway>()

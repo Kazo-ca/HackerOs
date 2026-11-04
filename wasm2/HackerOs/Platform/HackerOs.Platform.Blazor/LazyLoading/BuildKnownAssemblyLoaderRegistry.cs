@@ -144,7 +144,7 @@ public sealed record BuildKnownAssemblyLoadOutcome(string AssemblyName, BuildKno
         name,
         BuildKnownAssemblyLoadStatus.HostBuildChanged,
         null,
-        "HackerOS was updated while it was running: restart it to open this app.");
+        "KazoOS was updated while it was running: restart it to open this app.");
 }
 
 /// <summary>Why a <see cref="BuildKnownAssemblyLoaderRegistry.LoadAsync"/> request succeeded or not.</summary>

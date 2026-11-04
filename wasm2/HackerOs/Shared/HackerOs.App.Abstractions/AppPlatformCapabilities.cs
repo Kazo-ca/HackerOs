@@ -28,7 +28,7 @@ public enum PlatformKeyboardStrategy
     /// <summary>Only a physical keyboard is assumed; no on-screen keyboard is ever shown by the shell.</summary>
     PhysicalOnly,
 
-    /// <summary>The shell can present a HackerOS-owned virtual keyboard instead of the native one.</summary>
+    /// <summary>The shell can present a KazoOS-owned virtual keyboard instead of the native one.</summary>
     VirtualHackerOsKeyboard
 }
 
@@ -185,7 +185,7 @@ public sealed class AppPlatformCapabilityRegistry : IAppPlatformCapabilityRegist
     }
 }
 
-/// <summary>Built-in capability descriptors for the platforms shipped by HackerOS itself.</summary>
+/// <summary>Built-in capability descriptors for the platforms shipped by KazoOS itself.</summary>
 public static class WellKnownAppPlatformCapabilities
 {
     /// <summary>Floating windows, a persistent taskbar, pointer/keyboard-first input.</summary>

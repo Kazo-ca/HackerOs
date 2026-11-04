@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <PackageId>HackerOs.Infrastructure.Browser</PackageId>
-    <Description>Browser infrastructure of HackerOS: IndexedDB storage, Web Worker runtime and the JavaScript they need.</Description>
+    <Description>Browser infrastructure of KazoOS: IndexedDB storage, Web Worker runtime and the JavaScript they need.</Description>
     <PackageTags>hackeros;browser;indexeddb</PackageTags>
   </PropertyGroup>
 

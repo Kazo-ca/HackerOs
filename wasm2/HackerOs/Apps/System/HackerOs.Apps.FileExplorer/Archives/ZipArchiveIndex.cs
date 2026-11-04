@@ -11,7 +11,7 @@ namespace HackerOs.Apps.FileExplorer.Archives;
 /// <remarks>
 /// Entry names are cleaned like an extraction would clean them: backslashes become slashes, empty and
 /// <c>.</c> segments are dropped, and an entry that climbs out of the archive (<c>..</c>, the "zip slip")
-/// or whose name is not a valid HackerOS path is left out instead of being shown.
+/// or whose name is not a valid KazoOS path is left out instead of being shown.
 /// </remarks>
 internal sealed class ZipArchiveIndex
 {
@@ -76,7 +76,7 @@ internal sealed class ZipArchiveIndex
 
         try
         {
-            // The same rules as every HackerOS path (no control characters, at most 255 bytes a segment).
+            // The same rules as every KazoOS path (no control characters, at most 255 bytes a segment).
             return VirtualPath.Parse("/" + string.Join('/', segments)).Value[1..];
         }
         catch (FormatException)

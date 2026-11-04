@@ -22,13 +22,13 @@
     <value>Correlation: {0}</value>
   </data>
   <data name="Fatal.BoundaryTitle" xml:space="preserve">
-    <value>HackerOS encountered an error</value>
+    <value>KazoOS encountered an error</value>
   </data>
   <data name="Fatal.Recorded" xml:space="preserve">
     <value>The failure was recorded without exposing sensitive details.</value>
   </data>
   <data name="Fatal.Title" xml:space="preserve">
-    <value>HackerOS could not start</value>
+    <value>KazoOS could not start</value>
   </data>
   <data name="Login.Rejected" xml:space="preserve">
     <value>The local credentials were not accepted.</value>
@@ -79,7 +79,7 @@
     <value>Display name</value>
   </data>
   <data name="Setup.Intro" xml:space="preserve">
-    <value>Initialize this local HackerOS profile.</value>
+    <value>Initialize this local KazoOS profile.</value>
   </data>
   <data name="Setup.LoginName" xml:space="preserve">
     <value>Login name</value>
@@ -100,13 +100,13 @@
     <value>Open apps will close.</value>
   </data>
   <data name="Update.Ready" xml:space="preserve">
-    <value>A HackerOS update is ready.</value>
+    <value>A KazoOS update is ready.</value>
   </data>
   <data name="Update.VersionReady" xml:space="preserve">
-    <value>HackerOS {0} is available.</value>
+    <value>KazoOS {0} is available.</value>
   </data>
   <data name="Update.DownloadFailed" xml:space="preserve">
-    <value>The new version could not be downloaded: HackerOS keeps the current one. Try again later.</value>
+    <value>The new version could not be downloaded: KazoOS keeps the current one. Try again later.</value>
   </data>
   <data name="Update.Restart" xml:space="preserve">
     <value>Restart to update</value>
@@ -184,7 +184,7 @@
     <value>Reset this machine?</value>
   </data>
   <data name="FactoryReset.Body" xml:space="preserve">
-    <value>Without a password, the only way back in is to erase HackerOS in this browser and start over. Everything is deleted:</value>
+    <value>Without a password, the only way back in is to erase KazoOS in this browser and start over. Everything is deleted:</value>
   </data>
   <data name="FactoryReset.LossAccounts" xml:space="preserve">
     <value>every user account, its password and its passkeys</value>

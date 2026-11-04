@@ -1,6 +1,6 @@
 > [English version](../../../en/wasm/memory/README.md)
 
-# Mémoire du projet HackerOS
+# Mémoire du projet KazoOS
 
 État du projet et conventions de travail au **2026-10-31**. Ce dossier sert de
 point de reprise : un nouveau contributeur (humain ou agent) y trouve ce qui
@@ -12,7 +12,7 @@ jour à la fin de chaque série ou quand une convention change.
 - **Code actif** : `wasm2/HackerOs/` (OS simulé en Blazor WebAssembly, .NET 10,
   solution `HackerOs.sln`). `src/` est l'ancienne version, gardée comme
   référence.
-- **Version** : HackerOS et le SDK passent en **2.2.2** (`build/Versions.props`),
+- **Version** : KazoOS et le SDK passent en **2.2.2** (`build/Versions.props`),
   préparée le 2026-11-01 dans la PR `release/2.2.2` vers `main` ; elle est
   publiée (tag `v2.2.2`, GitHub Release, nuget.org) quand cette PR arrive dans
   `main`. Elle compile la clé publique du catalogue officiel dans l'OS
@@ -77,7 +77,7 @@ jour à la fin de chaque série ou quand une convention change.
 - **Thèmes de curseurs** (ADR 0205, série `todo/base`, chantier
   `todo/9-cursor-themes`, issue #257) : dossiers `cursor.theme` de PNG dans
   `/etc/hackeros/cursors/` et `~/.config/hackeros/cursors/`, `cursors.config`,
-  thèmes intégrés Système (défaut), HackerOS Néon et Gothique Pourpre,
+  thèmes intégrés Système (défaut), KazoOS Néon et Gothique Pourpre,
   appliqués à toute la surface par `cursorTheme.js`, apps comprises. Fusionné
   dans `todo/base` (PR #301) ; Benoit a confirmé le 2026-10-31 le thème par
   défaut Système et la portée partout.
@@ -206,7 +206,7 @@ section **IV** de [`AGENTS.md`](../../../../AGENTS.md), que Claude Code lit par
   `PublicAPI.Unshipped.txt` ; un ajout passe par `Unshipped` jusqu'à la
   publication suivante (`build/tools/ship-public-api.sh`).
 - **Publier** : changer `HackerOsVersion` dans `build/Versions.props` et
-  fusionner dans `main` ; le workflow `Release HackerOS` crée le tag, la
+  fusionner dans `main` ; le workflow `Release KazoOS` crée le tag, la
   Release GitHub et pousse sur nuget.org ([`releases.md`](../dev/releases.md),
   ADR 0173).
 

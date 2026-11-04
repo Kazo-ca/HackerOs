@@ -30,7 +30,7 @@ public partial class ThemeScope : ComponentBase, IAsyncDisposable
     [Parameter]
     public ThemePlatform Platform { get; set; } = ThemePlatform.Desktop;
 
-    /// <summary>Gets or sets the validated accent identifier; only HackerOS consumes its color.</summary>
+    /// <summary>Gets or sets the validated accent identifier; only KazoOS consumes its color.</summary>
     [Parameter]
     public string AccentId { get; set; } = WellKnownAccentIds.Green;
 

@@ -1,7 +1,7 @@
 # HackerOs.AppSdk.Icons
 
 Offline icon contracts, searchable embedded catalogs, and the native Blazor `HackerIcon`
-renderer used by HackerOS apps and reusable shell components. The package embeds its Bootstrap,
+renderer used by KazoOS apps and reusable shell components. The package embeds its Bootstrap,
 Font Awesome Free, Lucide, and Simple Icons metadata; consumers do not need a CDN, web font, or
 server connection.
 

@@ -103,7 +103,7 @@ key down would let the end of the keystroke insert a line break in the file.
 
 In the terminal, only Ctrl+` and Ctrl+J are intercepted; the other keys go to
 the shell. Chrome keeps Ctrl+N, Ctrl+W and Ctrl+T for itself as long as
-HackerOS is not installed as a PWA; each command also has its menu entry.
+KazoOS is not installed as a PWA; each command also has its menu entry.
 
 ## Updating Monaco
 

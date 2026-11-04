@@ -13,7 +13,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Description" xml:space="preserve">
-    <value>Parcourir, rechercher et copier des extraits d'utilisation de chaque icône fournie avec HackerOS : Bootstrap Icons, Font Awesome, Lucide et Simple Icons</value>
+    <value>Parcourir, rechercher et copier des extraits d'utilisation de chaque icône fournie avec KazoOS : Bootstrap Icons, Font Awesome, Lucide et Simple Icons</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Visionneuse d'icônes</value>

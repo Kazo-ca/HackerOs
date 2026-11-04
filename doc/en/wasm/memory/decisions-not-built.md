@@ -25,7 +25,7 @@ everywhere (ADR 0178 to 0184).
 
 ## Browser: showing real sites (issue #266)
 
-Analysis of 2026-10-29. The HackerOS server proxy is built
+Analysis of 2026-10-29. The KazoOS server proxy is built
 ([ADR 0210](../dev/adr/0210-browser-real-sites-through-the-proxy.md), `todo/base`
 series): the Browser's right, cookies, redirects, source icon, "Not secure",
 errors. Decisions still to build:
@@ -68,14 +68,14 @@ Debate of 2026-10-19, recap validated by Benoit, nothing started:
   host.
 - **Native apps**: one disposable Hyper-V VM per user (the VM is the sandbox),
   guest OS chosen by the administrator, warm pool of 2 VMs, queue when full.
-  Install by the administrator only + a HackerOS declaration file; access by
+  Install by the administrator only + a KazoOS declaration file; access by
   group (e.g. `hostapps`). An agent in the VM captures each window, H.264 over
   WebSocket + WebCodecs, input over a Hyper-V socket. v1: keyboard, mouse, text
   clipboard, secondary windows. Home folder through WinFsp from the sync
-  store. Internet through NAT, no local network. Closing the app in HackerOS
+  store. Internet through NAT, no local network. Closing the app in KazoOS
   closes it; losing the browser = grace period. Shown in `ps`, `kill` and Task
   Manager as "host" processes.
-- **Server-side HackerOS apps**: a server execution flag in `[AppManifest]`,
+- **Server-side KazoOS apps**: a server execution flag in `[AppManifest]`,
   installed by the administrator, a restricted process per user, same SDK,
   files = synced home, network through the relay rules. Greyed out offline.
 - Planned: 5 ADRs and 9 work items, starting with a proof of concept of
@@ -85,7 +85,7 @@ Debate of 2026-10-19, recap validated by Benoit, nothing started:
 ## Ideas taken from daedalOS
 
 Evaluation of 2026-10-28. Benoit chose "nothing for now": finish the current
-series first. What HackerOS lacks and could use: URL deep links (`?app=`,
+series first. What KazoOS lacks and could use: URL deep links (`?app=`,
 `?open=`), a "Run" box (Super+R), screensaver
 and idle lock, file search in the launcher, hover preview (see #242), file
 thumbnails (`~/.cache/thumbnails`), viewers (Markdown, PDF, images, video),
@@ -114,5 +114,5 @@ viewers live, scope of `?app=`, Eruda or not.
 ## Known gaps
 
 - Window geometry is not saved at sign-out.
-- Chrome captures `Ctrl+Shift+T` and `Ctrl+Shift+W` unless HackerOS is
+- Chrome captures `Ctrl+Shift+T` and `Ctrl+Shift+W` unless KazoOS is
   installed as a PWA (ADR 0061).

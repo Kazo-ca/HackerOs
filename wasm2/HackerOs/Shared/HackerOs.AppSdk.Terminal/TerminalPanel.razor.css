@@ -27,7 +27,7 @@
 }
 
 /* xterm.css paints the viewport black; the rows that do not fill a whole cell height at the
-   bottom would show as a black band on HackerOS's background. */
+   bottom would show as a black band on KazoOS's background. */
 .terminal-surface ::deep .xterm-viewport {
     background-color: var(--hos-bg-base, #0d1114);
 }

@@ -119,7 +119,7 @@ Les valeurs sont sérialisées avec les options du site (`builder.Json`), donc p
 généré : le type rangé doit y figurer (`[JsonSerializable(typeof(Note))]`). `string`, `int`,
 `long`, `double` et `bool` fonctionnent sans lui.
 
-### Hors de HackerOS et dans les tests
+### Hors de KazoOS et dans les tests
 
 - `HackWebHost.CreateApplication` sans OS : la base est en mémoire (`hackweb.in-memory`), propre à
   l'application. Les tests de l'Intranet tournent ainsi sans rien configurer.

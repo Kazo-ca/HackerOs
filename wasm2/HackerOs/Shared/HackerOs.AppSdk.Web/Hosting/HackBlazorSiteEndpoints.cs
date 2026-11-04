@@ -102,17 +102,17 @@ public static class HackBlazorSiteEndpoints
         """;
 
     /// <summary>
-    /// The loader script. The HackerOS browser never runs it (it starts the site itself); any other
-    /// client that runs it only learns that the site needs the HackerOS browser.
+    /// The loader script. The KazoOS browser never runs it (it starts the site itself); any other
+    /// client that runs it only learns that the site needs the KazoOS browser.
     /// </summary>
     private const string LoaderScript = """
-        // blazor.hack.js: the loader of an interactive Blazor site of HackerOS (ADR 0084).
-        // The HackerOS browser recognises this script, reads _framework/blazor.boot.json and draws the
+        // blazor.hack.js: the loader of an interactive Blazor site of KazoOS (ADR 0084).
+        // The KazoOS browser recognises this script, reads _framework/blazor.boot.json and draws the
         // site's root component itself; a page that runs this script is outside that browser.
         (function () {
             var app = document.getElementById("app");
             if (app) {
-                app.textContent = "This site is an interactive HackerOS site: open it in the HackerOS browser.";
+                app.textContent = "This site is an interactive KazoOS site: open it in the KazoOS browser.";
             }
         })();
 

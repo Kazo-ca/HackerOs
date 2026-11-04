@@ -309,7 +309,7 @@ approval:
   `hackpkg update` keeps each copy where it is.
 - **No restart** ([ADR 0214](adr/0214-hack-store-hot-add-signing-transactions.md)):
   the app appears at once. Only the update, removal or rollback of an app already
-  loaded in the page waits for a restart of HackerOS; `hackpkg list` shows
+  loaded in the page waits for a restart of KazoOS; `hackpkg list` shows
   `(restart pending)` until then.
 - **Dangerous capabilities**: asked at first launch, as for any non-system app.
 - **Publishing**: `dotnet build -c Release -t:HackerOsPack` in the app project
@@ -344,7 +344,7 @@ approval:
   `styles.css` sheet does for a compiled app.
 - **Translations** ([ADR 0222](adr/0222-installed-app-satellite-assemblies.md)):
   before loading one of the app's assemblies, the OS reads its satellite
-  `lib/<culture>/<assembly>.resources.dll` for each HackerOS language
+  `lib/<culture>/<assembly>.resources.dll` for each KazoOS language
   (`InstalledAppSatellites`) and loads it: `IStringLocalizer` and
   `ResourceManager` find its translated texts, whatever the process's `LANG`.
   `AppPackage` refuses a satellite that translates no declared assembly.

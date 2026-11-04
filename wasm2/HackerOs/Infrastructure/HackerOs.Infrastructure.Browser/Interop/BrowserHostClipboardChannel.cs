@@ -5,7 +5,7 @@ namespace HackerOs.Infrastructure.Browser.Interop;
 
 /// <summary>
 /// Browser half of the host clipboard bridge (ADR 0065): imports <c>hostClipboard.js</c> of this
-/// library, whose page listeners report host pastes and native copies, and which writes HackerOS text
+/// library, whose page listeners report host pastes and native copies, and which writes KazoOS text
 /// to the real clipboard with <c>navigator.clipboard.writeText</c>.
 /// </summary>
 /// <remarks>
@@ -116,7 +116,7 @@ public sealed class BrowserHostClipboardChannel : IHostClipboardChannel
         [JSInvokable]
         public void OnHostPaste(string? text, string[]? fileNames) => sink.OnHostPaste(text, fileNames ?? []);
 
-        /// <summary>A native copy or cut inside HackerOS.</summary>
+        /// <summary>A native copy or cut inside KazoOS.</summary>
         /// <param name="text">Copied text.</param>
         [JSInvokable]
         public void OnNativeCopy(string text) => sink.OnNativeCopy(text);

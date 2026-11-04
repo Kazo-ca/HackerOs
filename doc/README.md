@@ -1,4 +1,4 @@
-# HackerOS documentation
+# KazoOS documentation
 
 | Language | Index |
 | --- | --- |

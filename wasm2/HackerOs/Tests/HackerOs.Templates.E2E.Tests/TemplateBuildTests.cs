@@ -30,9 +30,9 @@ public sealed class TemplateBuildTests(TemplateWorkspace workspace)
     }
 
     /// <summary>
-    /// ADR 0176 §8, ADR 0207: a repository made with <c>hackeros-solution</c>, its HackerOS submodule
+    /// ADR 0176 §8, ADR 0207: a repository made with <c>hackeros-solution</c>, its KazoOS submodule
     /// replaced by this repository (<c>HackerOsSourceRoot</c>), builds and tests both profiles. Debug
-    /// compiles HackerOS from the sources (every HackerOS reference is a project, the host aggregates
+    /// compiles KazoOS from the sources (every KazoOS reference is a project, the host aggregates
     /// the app with the base apps, system apps included); Release takes the packages of the local
     /// feed. Without the submodule the build stops with HOSAPP0070.
     /// </summary>
@@ -85,7 +85,7 @@ public sealed class TemplateBuildTests(TemplateWorkspace workspace)
         Assert.True(File.Exists(Path.Combine(directory, "src", "Contoso.Board", "bin", "hackeros-packages", "index.json")));
     }
 
-    /// <summary>Every HackerOS library of a restore output has the expected type (<c>project</c> or <c>package</c>).</summary>
+    /// <summary>Every KazoOS library of a restore output has the expected type (<c>project</c> or <c>package</c>).</summary>
     private static void AssertHackerOsReferences(string assetsFile, string expectedType)
     {
         using JsonDocument assets = JsonDocument.Parse(File.ReadAllText(assetsFile));

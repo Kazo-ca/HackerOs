@@ -5,7 +5,7 @@
 ## Purpose
 
 When nobody knows an administrator password any more, the sign-in screen
-offers to erase HackerOS in this browser and start over at the first-run
+offers to erase KazoOS in this browser and start over at the first-run
 setup. Decision: [ADR 0226](adr/0226-forgot-password-factory-reset.md).
 
 ## For the user
@@ -16,7 +16,7 @@ setup. Decision: [ADR 0226](adr/0226-forgot-password-factory-reset.md).
    every setting, theme and log.
 3. Type `ERASE` (`EFFACER` in French) then **Erase and restart**. **Cancel**
    or Escape closes the box without erasing anything.
-4. The boot screen shows, the page reloads and HackerOS starts again on the
+4. The boot screen shows, the page reloads and KazoOS starts again on the
    creation of the first account (or **Start as guest**).
 
 The link is not shown while the guest is the only account: it has no password
@@ -38,7 +38,7 @@ without rebuilding:
 }
 ```
 
-The HackerOS server (`HackerOs.Server`) serves the OS's published files as
+The KazoOS server (`HackerOs.Server`) serves the OS's published files as
 they are: the same key applies. A missing or unreadable value reads as
 `true`. An administrator can still erase the machine from Settings ▸ System.
 

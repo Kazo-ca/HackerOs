@@ -42,7 +42,7 @@ commande ─▶ TerminalOutputWriter ─▶ TerminalPanel.Write ("\n" → "\r\n"
 Le fond, le texte et le curseur viennent des jetons de design lus sur
 l'élément hôte (`--hos-bg-base`, `--hos-text-primary`, `--hos-accent`) ; la
 police vient de `--hos-font-mono` (`0.875rem`, 14 px à 100 %). La palette des 16 couleurs ANSI est
-celle du legacy, avec le vert d'accent de HackerOS. Le style du cadre est dans
+celle du legacy, avec le vert d'accent de KazoOS. Le style du cadre est dans
 `TerminalPanel.razor.css` ; la grille elle-même est dessinée par xterm.js.
 
 Accessibilité ([`accessibility.md`](accessibility.md), ADR 0105) : `TerminalPanel` lit
@@ -74,7 +74,7 @@ que si `/etc/hackeros/clipboard.config` le permet ([`clipboard.md`](clipboard.md
 ADR 0065).
 
 Chrome se réserve Ctrl+W, Ctrl+N et Ctrl+T (fermer l'onglet, nouvelle
-fenêtre, nouvel onglet) tant que HackerOS n'est pas installé en PWA : ces
+fenêtre, nouvel onglet) tant que KazoOS n'est pas installé en PWA : ces
 touches n'atteignent alors pas le terminal.
 
 Pendant qu'une ligne s'exécute, les touches vont à l'**entrée standard** de

@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <PackageId>HackerOs.Commands</PackageId>
-    <Description>The built-in HackerOS terminal commands (ls, cat, grep, curl, nano...), one lazy-loaded assembly.</Description>
+    <Description>The built-in KazoOS terminal commands (ls, cat, grep, curl, nano...), one lazy-loaded assembly.</Description>
     <PackageTags>hackeros;app;commands</PackageTags>
   </PropertyGroup>
 

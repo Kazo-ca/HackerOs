@@ -4,14 +4,14 @@
 
   <PropertyGroup>
     <PackageId>HackerOs.AppSdk.Web.Blazor</PackageId>
-    <Description>Interactive Blazor sites of ASP.Hack: site router, navigation and the view the HackerOS browser draws a site in.</Description>
+    <Description>Interactive Blazor sites of ASP.Hack: site router, navigation and the view the KazoOS browser draws a site in.</Description>
     <PackageTags>hackeros;app-sdk;asp-hack;blazor</PackageTags>
   </PropertyGroup>
 
   <!--
     Blazor sites of ASP.Hack (ADR 0073 §4, ADR 0084): the components a site uses to navigate by the
     URL of the browser tab (HackSiteRouter, HackSiteNavigationManager, HackNavLink, HackPageTitle),
-    the view the HackerOS browser draws a site in (HackWebSiteView) and the contract the platform
+    the view the KazoOS browser draws a site in (HackWebSiteView) and the contract the platform
     implements to start a site's renderer (IHackWebSiteHost). An SDK library (ADR 0055): no
     reference to Platform Core.
   -->

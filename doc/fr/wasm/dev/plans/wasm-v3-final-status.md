@@ -140,7 +140,7 @@ donnent dans le fil du chantier.
 | `v3/10` | D'où le serveur tient-il l'accord `network.real.access` d'une app ? (Liste du serveur / Accords poussés par l'OS / Vrai réseau coupé pour toutes les apps) | Liste du serveur (`Proxy:GrantedApps`) |
 | `v3/12` | 1. Nom français « Gestionnaire de serveur web » (garder / nom anglais) ; 2. boutons d'accès d'un site au stockage (suivent la langue / forcer le français) ; 3. menus de Monaco (anglais / pack de langue, plusieurs centaines de Kio) ; 4. noms des thèmes intégrés (anglais / traduits) | 1A 2A 3A 4A |
 | `v3/13` | 1. La page Accessibilité modifie l'utilisateur seul ou aussi « Tous les utilisateurs » ; 2. le contraste élevé recouvre les aperçus de thèmes ; 3. « Réduire les animations » en Auto/Activé/Désactivé ou simple interrupteur | 1A 2A 3A |
-| `v3/14` | Garder les assemblies HackerOS entières dans la publication élaguée, ou tout élaguer plus tard (~280 appels d'interop à rendre sûrs, ~0,4 Mio Brotli de gain) ? | Garder entières (ADR 0113) |
+| `v3/14` | Garder les assemblies KazoOS entières dans la publication élaguée, ou tout élaguer plus tard (~280 appels d'interop à rendre sûrs, ~0,4 Mio Brotli de gain) ? | Garder entières (ADR 0113) |
 | `v3/15` | Retirer les trois API `[Obsolete]` avant la 1.0 ? | Retirer (fait) |
 | `v3/15` | Quels paquets la promesse de compatibilité 1.0 couvre-t-elle ? (SDK seulement / tout) | SDK seulement (ADR 0114) |
 

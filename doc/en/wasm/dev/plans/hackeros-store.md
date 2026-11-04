@@ -13,7 +13,7 @@ separate plan for the app store of
 
 A **Hack Store** system app, in the style of the Play Store or Microsoft Store,
 pinned by default in the Start menu, that lists the apps that can be installed
-in HackerOS, shows their page, and installs, updates or removes them in one
+in KazoOS, shows their page, and installs, updates or removes them in one
 click. Apps come from a reviewed catalog (`Kazo-ca/HackerOs-AppMarketPlace`),
 where each version is built by us from its source code. In v2, the Store also
 offers theme packs.

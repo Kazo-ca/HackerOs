@@ -30,7 +30,7 @@ public sealed record IconDescriptor(
     string? Variant);
 
 /// <summary>
-/// Resolves and searches the icons bundled with HackerOS. Registered as a process-wide singleton
+/// Resolves and searches the icons bundled with KazoOS. Registered as a process-wide singleton
 /// (see <c>EcosystemServiceCollectionExtensions</c>) so it is available to every window, terminal,
 /// and OS shell surface without each consumer re-parsing icon data.
 /// </summary>

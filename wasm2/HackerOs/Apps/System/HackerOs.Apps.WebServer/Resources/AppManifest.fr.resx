@@ -13,7 +13,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="org.hackeros.hackwebd.Description" xml:space="preserve">
-    <value>Serveur web de HackerOS : sert les sites statiques déclarés dans /etc/hackweb/sites et ~/.config/hackweb/sites</value>
+    <value>Serveur web de KazoOS : sert les sites statiques déclarés dans /etc/hackweb/sites et ~/.config/hackweb/sites</value>
   </data>
   <data name="org.hackeros.web-server-manager.Description" xml:space="preserve">
     <value>Publier des dossiers comme sites web et gérer le serveur web hackwebd</value>

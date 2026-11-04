@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Synthesizes the built-in HackerOS sound themes (ADR 0204) as WAV files.
+"""Synthesizes the built-in KazoOS sound themes (ADR 0204) as WAV files.
 
 Usage, from wasm2/HackerOs:
     python3 build/tools/generate-system-sounds.py /tmp/sounds
@@ -61,7 +61,7 @@ def write(name, samples):
 os.makedirs(os.path.join(out, 'hackeros'), exist_ok=True)
 os.makedirs(os.path.join(out, 'soft'), exist_ok=True)
 
-# "HackerOS": short console bleeps.
+# "KazoOS": short console bleeps.
 write('hackeros/message-new-instant', seq(note(square, 880, 0.06), note(square, 1320, 0.09), gap=0.02))
 write('hackeros/dialog-warning', seq(note(square, 660, 0.08), note(square, 660, 0.08), gap=0.05))
 write('hackeros/dialog-error', note(saw, 240, 0.32, glide=150))

@@ -153,7 +153,7 @@ public sealed class HostFolderFileSystemProvider : IFileSystemProvider
             List<FileSystemDirectoryItem> items = [];
             foreach (HostFolderEntry child in children)
             {
-                // A host name HackerOS cannot represent (a control character) is left out.
+                // A host name KazoOS cannot represent (a control character) is left out.
                 if (TryParseName(child.Name) is { } name)
                 {
                     items.Add(new FileSystemDirectoryItem(name, Metadata(Child(request.Path, name.Value), child)));

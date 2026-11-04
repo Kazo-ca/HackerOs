@@ -4,7 +4,7 @@ using HackerOs.App.Abstractions;
 namespace HackerOs.Platform.Core.Apps.Packages;
 
 /// <summary>
-/// Where an app package comes from: a GitHub repository that publishes HackerOS app packages
+/// Where an app package comes from: a GitHub repository that publishes KazoOS app packages
 /// (ADR 0182 §2, §4), written <c>github:Kazo-ca/HackerOs-App-Webamp</c>, or an app of a catalog of
 /// <c>[catalogs]</c> (ADR 0188, ADR 0212 §1), written <c>catalog:official/org.example.notes</c>;
 /// either optionally followed by <c>@1.0.0</c>.

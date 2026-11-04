@@ -423,7 +423,7 @@ public sealed class ProcFileSystemProviderTests
 
         Assert.Equal(2, cpuinfo.Split("processor\t:").Length - 1);
         Assert.Contains("processor\t: 1\n", cpuinfo);
-        Assert.Contains("model name\t: HackerOS Virtual CPU (test-rig)\n", cpuinfo);
+        Assert.Contains("model name\t: KazoOS Virtual CPU (test-rig)\n", cpuinfo);
     }
 
     [Fact]

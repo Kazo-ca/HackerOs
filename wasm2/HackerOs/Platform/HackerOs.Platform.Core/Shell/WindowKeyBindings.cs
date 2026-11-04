@@ -45,7 +45,7 @@ public enum WindowKeyboardAction
     SnapRight,
 
     /// <summary>
-    /// Show HackerOS full screen in the host browser, or leave full screen. Full screen is where the
+    /// Show KazoOS full screen in the host browser, or leave full screen. Full screen is where the
     /// host grants the keyboard lock, hence the Linux keys.
     /// </summary>
     ToggleFullScreen,
@@ -62,7 +62,7 @@ public enum WindowKeyBindingSet
 {
     /// <summary>
     /// The usual Linux desktop keys (Alt+Tab, Alt+F4, Super+arrows). The host system catches them
-    /// before the page, so they are only active while HackerOS holds the keyboard lock (full screen).
+    /// before the page, so they are only active while KazoOS holds the keyboard lock (full screen).
     /// </summary>
     Linux,
 
@@ -356,11 +356,11 @@ public static class WindowKeyBindingsSettingsDocuments
         get
         {
             StringBuilder builder = new();
-            builder.Append("# HackerOS window manager shortcuts (ADR 0095).\n");
+            builder.Append("# KazoOS window manager shortcuts (ADR 0095).\n");
             builder.Append("# Machine default; each user may override a line in ~/.config/hackeros/keybindings.config.\n");
             builder.Append("# Uncomment a line to change it. Several chords: separate them with commas. Empty: no shortcut.\n");
             builder.Append("# Modifiers: Ctrl, Alt, Shift, Super. Backquote is the key above Tab.\n");
-            builder.Append("\n# Active only in full screen, once HackerOS holds the keyboard lock.\n[linux]\n");
+            builder.Append("\n# Active only in full screen, once KazoOS holds the keyboard lock.\n[linux]\n");
             foreach ((_, string key, string linux, _) in Defaults)
             {
                 builder.Append(CultureInfo.InvariantCulture, $"#{key} = {linux}\n");

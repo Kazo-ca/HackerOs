@@ -1,4 +1,4 @@
-# ADR 0098 §2: packs every library HackerOS publishes (each project importing
+# ADR 0098 §2: packs every library KazoOS publishes (each project importing
 # Platform/Packaging.props, plus the templates) into artifacts/local-nupkg.
 # Local only: nothing is ever pushed to nuget.org. Another repository consumes the
 # folder through a nuget.config (sample: build/nuget.config.sample).

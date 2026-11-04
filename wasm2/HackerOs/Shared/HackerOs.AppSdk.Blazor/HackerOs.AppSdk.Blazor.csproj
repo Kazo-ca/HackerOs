@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <PackageId>HackerOs.AppSdk.Blazor</PackageId>
-    <Description>HackerOS App SDK for window apps: HackComponentBase, window base classes, dialogs and Blazor helpers.</Description>
+    <Description>KazoOS App SDK for window apps: HackComponentBase, window base classes, dialogs and Blazor helpers.</Description>
     <PackageTags>hackeros;app-sdk;blazor</PackageTags>
   </PropertyGroup>
 

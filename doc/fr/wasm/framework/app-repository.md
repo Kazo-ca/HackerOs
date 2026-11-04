@@ -4,13 +4,13 @@
 
 ## Objet
 
-Le point de départ d'une app HackerOS dans son propre dépôt : une solution qui
-se lance en débogage dans l'OS, dont la version de HackerOS est fixée par un
+Le point de départ d'une app KazoOS dans son propre dépôt : une solution qui
+se lance en débogage dans l'OS, dont la version de KazoOS est fixée par un
 sous-module, et qui se publie dans le Hack Store par un tag. Décisions :
 [ADR 0176](../dev/adr/0176-app-repository-template.md),
 [ADR 0188](../dev/adr/0188-hack-store-and-app-catalog.md) §7,
 [ADR 0207](../dev/adr/0207-solution-template-implementation.md).
-Le guide général d'un dépôt qui utilise HackerOS est
+Le guide général d'un dépôt qui utilise KazoOS est
 [`building-on-hackeros.md`](building-on-hackeros.md).
 
 ## Créer le dépôt
@@ -29,12 +29,12 @@ Deux façons, même résultat :
   cd Contoso.Notes
   git init
   git submodule add --depth 1 https://github.com/Kazo-ca/HackerOs.git external/HackerOs
-  git -C external/HackerOs checkout v<version de HackerOS>
+  git -C external/HackerOs checkout v<version de KazoOS>
   ```
 
   `dotnet new` ne sait pas créer le lien du sous-module ; sans lui, le build
   s'arrête sur `HOSAPP0070` avec la commande à lancer. Dans Visual Studio
-  (Nouveau projet) ou Rider, le modèle s'appelle « HackerOS app solution ».
+  (Nouveau projet) ou Rider, le modèle s'appelle « KazoOS app solution ».
 
 ## Ce qui est généré
 
@@ -42,7 +42,7 @@ Deux façons, même résultat :
 | --- | --- |
 | `<Nom>.sln` | la solution (dossiers `src` et `tests`) |
 | `src/<Nom>/` | l'app fenêtrée ; sa classe `[AppManifest]` (avec `Version`) génère `manifest.json` |
-| `src/<Nom>.Os/` | l'hôte : tout HackerOS, les apps de base et l'app ; le projet à démarrer |
+| `src/<Nom>.Os/` | l'hôte : tout KazoOS, les apps de base et l'app ; le projet à démarrer |
 | `tests/<Nom>.Tests/` | tests xUnit de l'app |
 | `Directory.Build.props` | racine du sous-module, profil, import de `Versions.props` |
 | `Directory.Build.targets` | import du mode source externe, contrôle du sous-module |
@@ -53,7 +53,7 @@ Deux façons, même résultat :
 | `.github/workflows/publish-packages.yml` | paquet signé poussé sur la branche `hackeros-packages` sur un tag `v*` ([ADR 0219](../dev/adr/0219-app-authors-signing-tool.md)) |
 | `README.md`, `readme-fr.md` | ces étapes, pour le dépôt créé |
 
-## La version de HackerOS
+## La version de KazoOS
 
 `external/HackerOs/wasm2/HackerOs/build/Versions.props` est la version du
 dépôt : `Directory.Build.props` l'importe, et chaque référence `HackerOs.*`
@@ -64,18 +64,18 @@ sous-module : la CI refuse un sous-module modifié ou hors de son tag
 
 ## Les deux profils
 
-| Profil | HackerOS vient de | Sortie de restauration |
+| Profil | KazoOS vient de | Sortie de restauration |
 | --- | --- | --- |
 | `Debug` (`HackerOsUseSource=true`) | les projets du sous-module : on entre dans le SDK et l'OS, points d'arrêt partout | `obj/source/` |
 | `Release` (`HackerOsUseSource=false`) | les paquets `HackerOs.*` de nuget.org, à la version du sous-module | `obj/` |
 
 `-p:HackerOsUseSource=true` ou `false` force l'un ou l'autre ;
-`-p:HackerOsSourceRoot=<dossier>` pointe vers une autre copie de HackerOS
+`-p:HackerOsSourceRoot=<dossier>` pointe vers une autre copie de KazoOS
 (dossier de `HackerOs.sln`). Le premier build `Debug` compile tout l'OS.
 
 ### Comment marche le profil `Debug`
 
-`build/HackerOs.ExternalSource.targets` (dans le dépôt HackerOS) est importé
+`build/HackerOs.ExternalSource.targets` (dans le dépôt KazoOS) est importé
 depuis le sous-module. Il :
 
 1. trouve les projets qui peuvent être des paquets : `Shared/*`, `Platform/*`,
@@ -87,7 +87,7 @@ depuis le sous-module. Il :
 3. retire `HackerOs.App.Build` et importe `HackerOs.Apps.targets` pour les
    projets qui déclarent `HackerOsAppProject` ou `HackerOsAppHost` : même
    générateur de manifeste, mêmes analyseurs, même agrégation dans l'hôte que
-   dans le dépôt HackerOS (`HackerOsExternalSource=true`).
+   dans le dépôt KazoOS (`HackerOsExternalSource=true`).
 
 La frontière du SDK (`HOSAPP0030`) vérifie les références qui entrent dans le
 sous-module ; un projet de votre dépôt peut en référencer un autre. Une app
@@ -126,7 +126,7 @@ compile l'app au commit indiqué (ADR 0188 §4 à §6).
 
 ### Le secret `HACK_STORE_TOKEN`
 
-C'est un jeton d'accès personnel GitHub de **l'auteur de l'app** : ni HackerOS
+C'est un jeton d'accès personnel GitHub de **l'auteur de l'app** : ni KazoOS
 ni le catalogue ne le fournissent. Avec lui, le workflow lit le nom de
 l'auteur, forke `Kazo-ca/HackerOs-AppMarketPlace` sur son compte, y pousse la
 branche `<appId>_<version>` et ouvre la pull request vers le catalogue.
@@ -162,12 +162,12 @@ gh secret set HACK_STORE_TOKEN --repo <propriétaire>/<dépôt>
 - **Sans le secret**, rien ne bloque : le dossier `apps/<appId>_<version>/`
   reste en artefact du workflow, et l'auteur ouvre la pull request lui-même.
 - À ne pas confondre avec `HACKEROS_APP_SIGNING_KEY` (section suivante), une
-  clé que l'outillage HackerOS génère pour signer les paquets.
+  clé que l'outillage KazoOS génère pour signer les paquets.
 
 ## Publier sur `hackeros-packages` et signer
 
 [ADR 0219](../dev/adr/0219-app-authors-signing-tool.md). Le même tag `v*` lance
-**Publish the HackerOS packages** (`publish-packages.yml`, seul workflow avec
+**Publish the KazoOS packages** (`publish-packages.yml`, seul workflow avec
 `contents: write`) : il récupère la branche `hackeros-packages` (orpheline la
 première fois), y fait le paquet (`HackerOsPack`, `HackerOsPackageOutput`), garde
 les versions déjà publiées et leurs signatures, puis pousse la branche.
@@ -189,7 +189,7 @@ Pour signer :
 Sans le secret, le paquet part non signé (SHA-256 seulement) avec un
 avertissement. En local : variable `HACKEROS_APP_SIGNING_KEY` ou
 `-p:HackerOsSigningKeyFile=<fichier.pem>` sur `HackerOsPack`. Il faut une
-version de HackerOS qui contient l'ADR 0219 (2.2.1 ou plus récente).
+version de KazoOS qui contient l'ADR 0219 (2.2.1 ou plus récente).
 
 ## Le dépôt template GitHub
 

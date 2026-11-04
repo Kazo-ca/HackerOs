@@ -25,7 +25,7 @@ public sealed class WhatsNewServiceTests
 
     private static readonly string Document = $$"""
         {
-          "product": "HackerOS",
+          "product": "KazoOS",
           "version": "2.2.0",
           "groups": [
             { "version": null, "since": "2.2.0", "entries": [ {{Entry(Next, "fixed")}} ] },

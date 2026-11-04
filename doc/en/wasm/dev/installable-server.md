@@ -7,7 +7,7 @@
 
 ## Purpose
 
-The optional HackerOS server (`HackerOs.Server`: HTTP, TCP and UDP network
+The optional KazoOS server (`HackerOs.Server`: HTTP, TCP and UDP network
 relay, accounts, devices, synchronization) installs on the user's computer as
 a **service** that starts with the machine, with no .NET installed and no
 command line to learn. The OS stays usable without it (GitHub Pages, PWA); it
@@ -39,7 +39,7 @@ downloads for the running version, the Docker image, the releases page and
 this guide.
 
 Each archive is a self-contained single-file program that also carries the
-published OS: the server serves HackerOS itself
+published OS: the server serves KazoOS itself
 ([`server-hosting.md`](server-hosting.md)).
 
 ## Install
@@ -53,8 +53,8 @@ Extract the archive, then in PowerShell **as administrator**:
 .\install.ps1 -Lan 192.168.1.20    # also the local network over HTTPS
 ```
 
-- Program in `C:\Program Files\HackerOS Server`, data in
-  `C:\ProgramData\HackerOS Server`.
+- Program in `C:\Program Files\KazoOS Server`, data in
+  `C:\ProgramData\KazoOS Server`.
 - Windows service `HackerOSServer` (automatic start), account `LocalService`.
 - With `-Lan`: inbound firewall rule on the HTTPS port, **Private profile
   only**.
@@ -115,7 +115,7 @@ account (created if missing, with no usable password). In the OS:
 1. **Settings > Server connection > Local server**.
 2. Type the address (`http://localhost:5888` by default, or
    `https://192.168.1.20:5889` from another device) and press **Test**: the
-   OS says whether a HackerOS server answers and its version.
+   OS says whether a KazoOS server answers and its version.
 3. Type the code and press **Pair this device**. The device is connected and
    a synchronization starts.
 

@@ -1,6 +1,6 @@
 <Project>
   <!--
     Stops the import of wasm2/HackerOs/Directory.Build.props: this app is built the way another
-    repository builds it, from the HackerOS packages only (Tests/fixtures/sdk-compat/README.md).
+    repository builds it, from the KazoOS packages only (Tests/fixtures/sdk-compat/README.md).
   -->
 </Project>

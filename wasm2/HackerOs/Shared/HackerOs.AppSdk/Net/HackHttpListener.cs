@@ -34,7 +34,7 @@ namespace HackerOs.AppSdk.Net;
 /// await listener.StartAsync();
 /// HackHttpListenerContext context = await listener.GetContextAsync();
 /// context.Response.ContentType = "text/plain; charset=utf-8";
-/// context.Response.Write("Hello from HackerOS");
+/// context.Response.Write("Hello from KazoOS");
 /// context.Response.Close();
 /// </code>
 /// </example>

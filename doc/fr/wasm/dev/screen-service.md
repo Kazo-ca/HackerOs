@@ -92,7 +92,7 @@ La place de l'écran reste dans sa ligne numérotée.
   [`secondary-screen-desktop.md`](secondary-screen-desktop.md)) ; sans lui, le numéro de l'écran
   sur la couleur du bureau.
 - **Plein écran** : bouton `⤢` en haut à droite, `⤡` pour en sortir (ou `Échap`).
-- **Bandeau** : « L'onglet principal de HackerOS est caché… » tant que l'onglet
+- **Bandeau** : « L'onglet principal de KazoOS est caché… » tant que l'onglet
   principal est caché (`visibilitychange`).
 - **Zone de travail** : la taille intérieure de la fenêtre à l'ouverture, puis celle du
   bureau de l'écran, qu'il mesure lui-même (chantier 4) ; le service ne la change plus quand

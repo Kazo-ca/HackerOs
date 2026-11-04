@@ -16,7 +16,7 @@
     <value>ln: failed to create hard link '{0}' =&gt; '{1}': {2}</value>
   </data>
   <data name="HardLinkHint" xml:space="preserve">
-    <value>ln: hint: the HackerOS filesystem has no hard links; use 'ln -s' for a symbolic link</value>
+    <value>ln: hint: the KazoOS filesystem has no hard links; use 'ln -s' for a symbolic link</value>
   </data>
   <data name="InvalidOption" xml:space="preserve">
     <value>ln: invalid option -- '{0}'</value>

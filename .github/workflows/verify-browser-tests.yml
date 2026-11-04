@@ -1,4 +1,4 @@
-name: Verify HackerOS browser tests
+name: Verify KazoOS browser tests
 
 # The Playwright suites run every night on main, and only when main changed since the last
 # completed run on main (issue #292). They do not run on pull requests: known unstable browser

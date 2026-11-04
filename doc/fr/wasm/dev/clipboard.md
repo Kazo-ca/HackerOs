@@ -7,7 +7,7 @@ L'API du presse-papiers pour les apps (`HackClipboard`, listes de fichiers, form
 ## Objet
 
 Mise en œuvre de l'[ADR 0065](adr/0065-os-clipboard-and-host-bridge.md), qui
-complète l'ADR 0056 §12. HackerOS a **un seul presse-papiers**, tenu par l'OS
+complète l'ADR 0056 §12. KazoOS a **un seul presse-papiers**, tenu par l'OS
 et partagé par toutes les apps de la session ; un pont recopie son texte vers
 le presse-papiers de la vraie machine et y reprend ce que l'utilisateur colle,
 comme les Guest Additions de VirtualBox. L'usage du presse-papiers dans

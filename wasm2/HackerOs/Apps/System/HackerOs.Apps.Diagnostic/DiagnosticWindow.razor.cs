@@ -24,10 +24,10 @@ namespace HackerOs.Apps.Diagnostic;
 /// <item><see cref="HackStorageDiagnostics"/> (capability <c>system.storage.inspect</c>, dangerous:
 /// the snapshot bypasses file permissions, so an administrator approves this app at its first
 /// launch);</item>
-/// <item>the save dialog and <see cref="HackFile"/> to save the JSON inside HackerOS;</item>
+/// <item>the save dialog and <see cref="HackFile"/> to save the JSON inside KazoOS;</item>
 /// <item><see cref="HackClipboard"/> (capability <c>clipboard.write</c>) to copy the JSON: the OS
 /// clipboard mirrors its text to the real machine's clipboard (ADR 0065), so it can be pasted outside
-/// HackerOS;</item>
+/// KazoOS;</item>
 /// <item><see cref="BrowserFileDownloader"/> of the SDK to download the JSON to the real browser
 /// (ADR 0060);</item>
 /// <item><see cref="HackCrossOriginIsolation"/> (no capability) for the page's cross-origin

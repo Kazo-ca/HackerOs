@@ -10,10 +10,10 @@ précisée par l'[ADR 0081](adr/0081-detached-display-windows-adjustments.md).
 
 ## Objet
 
-Une page web peut quitter le bureau de HackerOS et s'ouvrir dans une **fenêtre
+Une page web peut quitter le bureau de KazoOS et s'ouvrir dans une **fenêtre
 du navigateur hôte** : l'utilisateur garde l'OS dans un onglet et la page dans
 une autre fenêtre, qu'il peut placer sur un autre moniteur. Ce n'est pas un
-second HackerOS : la fenêtre ne démarre ni .NET ni OS. Elle est une **surface
+second KazoOS : la fenêtre ne démarre ni .NET ni OS. Elle est une **surface
 d'affichage** de l'instance principale, comme un deuxième écran branché sur la
 même machine : l'instance principale y dessine, en reçoit les clics et les
 touches, et continue de servir la page (réseau, cookies, `localStorage`).

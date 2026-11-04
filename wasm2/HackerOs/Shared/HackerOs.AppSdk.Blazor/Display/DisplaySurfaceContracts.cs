@@ -118,7 +118,7 @@ public interface IDisplaySurfaceService
     /// <summary>
     /// Opens a new host window. Call it from a user gesture (a click, a key press): host browsers
     /// block windows opened without one. A blocked window posts an OS notification explaining how
-    /// to allow pop-ups for HackerOS.
+    /// to allow pop-ups for KazoOS.
     /// </summary>
     /// <param name="options">Title and size of the new window.</param>
     /// <param name="cancellationToken">Cancels the request.</param>

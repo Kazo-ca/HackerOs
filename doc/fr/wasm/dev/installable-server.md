@@ -7,7 +7,7 @@ Issue `TODO` #267, [ADR 0191](adr/0191-installable-local-server.md). Série
 
 ## But
 
-Le serveur HackerOS optionnel (`HackerOs.Server` : relais réseau HTTP, TCP et
+Le serveur KazoOS optionnel (`HackerOs.Server` : relais réseau HTTP, TCP et
 UDP, comptes, appareils, synchronisation) s'installe sur l'ordinateur de
 l'utilisateur comme un **service** qui démarre avec la machine, sans .NET
 installé ni ligne de commande à connaître. L'OS reste utilisable sans lui
@@ -39,7 +39,7 @@ téléchargements pour la version en cours, l'image Docker, la page des versions
 et ce guide.
 
 Chaque archive est un programme autonome (self-contained, un seul fichier) qui
-contient aussi l'OS publié : le serveur sert HackerOS lui-même
+contient aussi l'OS publié : le serveur sert KazoOS lui-même
 ([`server-hosting.md`](server-hosting.md)).
 
 ## Installer
@@ -53,8 +53,8 @@ Décompresser l'archive, puis dans PowerShell **en administrateur** :
 .\install.ps1 -Lan 192.168.1.20    # aussi le réseau local en HTTPS
 ```
 
-- Programme dans `C:\Program Files\HackerOS Server`, données dans
-  `C:\ProgramData\HackerOS Server`.
+- Programme dans `C:\Program Files\KazoOS Server`, données dans
+  `C:\ProgramData\KazoOS Server`.
 - Service Windows `HackerOSServer` (démarrage automatique), compte
   `LocalService`.
 - Avec `-Lan` : règle de pare-feu entrante sur le port HTTPS, **profil Privé
@@ -117,7 +117,7 @@ programme et **garde** `hackeros-server.json` et les données
 1. **Paramètres > Connexion au serveur > Serveur local**.
 2. Taper l'adresse (`http://localhost:5888` par défaut, ou
    `https://192.168.1.20:5889` depuis un autre appareil) et appuyer sur
-   **Tester** : l'OS indique si un serveur HackerOS répond et sa version.
+   **Tester** : l'OS indique si un serveur KazoOS répond et sa version.
 3. Taper le code et appuyer sur **Appairer cet appareil**. L'appareil est
    connecté et une synchronisation démarre.
 

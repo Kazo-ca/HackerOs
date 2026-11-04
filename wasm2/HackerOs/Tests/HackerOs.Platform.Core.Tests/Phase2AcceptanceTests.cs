@@ -38,7 +38,7 @@ public sealed class Phase2AcceptanceTests
         Name = "Terminal",
         Version = "1.0.0",
         PublisherId = "pub.hackeros",
-        Description = "Command line interface for HackerOS",
+        Description = "Command line interface for KazoOS",
         Kind = AppKind.Terminal,
         EntryPoint = new AppEntryPointManifest("HackerOs.Platform.Core.Tests", typeof(DummyTerminalApp).FullName!),
         SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),

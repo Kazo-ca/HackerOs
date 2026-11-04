@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageId>HackerOs.AppSdk.Icons</PackageId>
-    <Description>Framework-independent icon catalog and native Blazor SVG renderer used by HackerOS apps and reusable shell packages.</Description>
+    <Description>Framework-independent icon catalog and native Blazor SVG renderer used by KazoOS apps and reusable shell packages.</Description>
     <PackageTags>hackeros;icons;svg;blazor;app-sdk</PackageTags>
   </PropertyGroup>
 

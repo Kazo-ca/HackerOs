@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Components;
 namespace HackerOs.AppSdk.Blazor;
 
 /// <summary>
-/// Base component for a HackerOS window application.
+/// Base component for a KazoOS window application.
 /// </summary>
 /// <remarks>
 /// Component lifecycle overrides are sealed so framework setup cannot be skipped.

@@ -40,7 +40,7 @@
     <value>No icons match "{0}".</value>
   </data>
   <data name="Header.Title" xml:space="preserve">
-    <value>HackerOS Icon Library</value>
+    <value>KazoOS Icon Library</value>
   </data>
   <data name="Library.All" xml:space="preserve">
     <value>All ({0})</value>

@@ -736,7 +736,7 @@ HackerOs.Server.Contracts.Versioning.VersioningContractsJsonContext.VersioningCo
 HackerOs.Server.Contracts.Versioning.VersioningContractsJsonContext.VersioningContractsJsonContext(System.Text.Json.JsonSerializerOptions! options) -> void
 const HackerOs.Server.Contracts.Hosting.HostInfoRoutes.ApiPath = "/api/hackeros/host-info" -> string!
 const HackerOs.Server.Contracts.Hosting.HostInfoRoutes.DiscoveryFile = "hackeros-host.json" -> string!
-const HackerOs.Server.Contracts.Hosting.HostInfoRoutes.ServerProduct = "HackerOS Server" -> string!
+const HackerOs.Server.Contracts.Hosting.HostInfoRoutes.ServerProduct = "KazoOS Server" -> string!
 const HackerOs.Server.Contracts.Proxy.ProxyErrorCode.BlockedAddress = "BLOCKED_ADDRESS" -> string!
 const HackerOs.Server.Contracts.Proxy.ProxyErrorCode.BlockedPort = "BLOCKED_PORT" -> string!
 const HackerOs.Server.Contracts.Proxy.ProxyErrorCode.BodyMismatch = "BODY_MISMATCH" -> string!

@@ -86,5 +86,5 @@ public abstract class HackEmbeddableComponent : HackComponentBase
 
     /// <summary>Gets the execution context of the host window, or throws when the component is not inside one.</summary>
     protected IAppExecutionContext HostContext =>
-        AppContext ?? throw new InvalidOperationException("An embedded component must be rendered inside a HackerOS window.");
+        AppContext ?? throw new InvalidOperationException("An embedded component must be rendered inside a KazoOS window.");
 }

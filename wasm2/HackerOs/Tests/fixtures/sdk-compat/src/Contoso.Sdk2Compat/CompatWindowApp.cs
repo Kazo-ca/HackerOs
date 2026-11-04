@@ -28,7 +28,7 @@ public sealed class CompatWindowApp : AppDefinition
     public override string PublisherId => "pub.contoso";
 
     /// <inheritdoc />
-    public override string Description => "A window app compiled against HackerOS SDK 2.0.0 that shows the OS file control.";
+    public override string Description => "A window app compiled against KazoOS SDK 2.0.0 that shows the OS file control.";
 
     /// <inheritdoc />
     public override IReadOnlyList<string> Capabilities =>

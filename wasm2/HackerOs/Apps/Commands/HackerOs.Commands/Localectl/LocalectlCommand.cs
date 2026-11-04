@@ -12,7 +12,7 @@ namespace HackerOs.Commands.Localectl;
 /// system locale in <c>/etc/locale.conf</c>:
 /// <list type="bullet">
 /// <item><c>localectl</c> / <c>localectl status</c>: prints the variables of <c>/etc/locale.conf</c>.</item>
-/// <item><c>localectl list-locales</c>: prints the locales HackerOS knows, one per line.</item>
+/// <item><c>localectl list-locales</c>: prints the locales KazoOS knows, one per line.</item>
 /// <item><c>localectl set-locale LANG=fr_CA.UTF-8 [LC_TIME=…]</c>: replaces the file. Like on Linux,
 /// only root may do it (<c>sudo localectl set-locale …</c>); the file's owner and mode decide.</item>
 /// </list>

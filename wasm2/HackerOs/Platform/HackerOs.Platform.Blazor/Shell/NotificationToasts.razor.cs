@@ -102,7 +102,7 @@ public partial class NotificationToasts : ComponentBase
     };
 
     /// <summary>
-    /// The app's name in the session language when the catalog knows it; "HackerOS" for the OS's own
+    /// The app's name in the session language when the catalog knows it; "KazoOS" for the OS's own
     /// sources (kernel, storage, what's new…), which are no apps; otherwise the raw id.
     /// </summary>
     private string SourceLabel(string sourceAppId)
@@ -114,7 +114,7 @@ public partial class NotificationToasts : ComponentBase
             return catalog.Localize(manifest, culture).Name;
         }
 
-        return sourceAppId.StartsWith(SystemSourcePrefix, StringComparison.Ordinal) ? "HackerOS" : sourceAppId;
+        return sourceAppId.StartsWith(SystemSourcePrefix, StringComparison.Ordinal) ? "KazoOS" : sourceAppId;
     }
 
     private async Task RunActionAsync(Notification notification, NotificationAction action)

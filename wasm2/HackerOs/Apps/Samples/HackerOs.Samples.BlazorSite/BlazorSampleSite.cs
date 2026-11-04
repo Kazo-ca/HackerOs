@@ -8,7 +8,7 @@ namespace HackerOs.Samples.BlazorSite;
 
 /// <summary>
 /// Manifest and server side of "Blazor Sample Site" (ADR 0084): a web app whose pages are Blazor
-/// components drawn by the HackerOS browser (<see cref="BlazorRoot"/>), with an API route the pages
+/// components drawn by the KazoOS browser (<see cref="BlazorRoot"/>), with an API route the pages
 /// call through <c>Site.Http</c>. The build generates <c>manifest.json</c> and
 /// <c>BlazorSampleSiteWebHost</c>, the entry point that serves the site.
 /// </summary>

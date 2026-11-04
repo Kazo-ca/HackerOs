@@ -120,7 +120,7 @@ public sealed class WindowKeyboardCommands : IDisposable
     /// <summary>Gets what the keyboard is doing right now.</summary>
     public WindowKeyboardMode Mode { get; private set; }
 
-    /// <summary>Gets whether HackerOS holds the host keyboard lock (full screen), which enables the Linux keys.</summary>
+    /// <summary>Gets whether KazoOS holds the host keyboard lock (full screen), which enables the Linux keys.</summary>
     public bool IsKeyboardLocked { get; private set; }
 
     /// <summary>Gets the open window menu, or <see langword="null"/>.</summary>

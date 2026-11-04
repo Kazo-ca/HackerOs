@@ -1,8 +1,8 @@
 > [English version](readme.md)
 
-# HackerOS
+# KazoOS
 
-HackerOS est un **système d'exploitation simulé qui tourne dans le navigateur**,
+KazoOS est un **système d'exploitation simulé qui tourne dans le navigateur**,
 écrit en C# avec Blazor WebAssembly (.NET 10). Il offre un environnement complet
 pour développer et exécuter des applications : bureau et fenêtres, système de
 fichiers persistant, processus, shell POSIX et commandes Linux, réseau simulé,
@@ -10,7 +10,7 @@ sites web internes, et un **SDK public** (paquets NuGet) pour créer ses propres
 apps, commandes, services et sites.
 
 - **Essayer** : <https://hackos.kazo.ca/> (PWA, fonctionne hors ligne).
-- **Fonctionnalités** : [présentation et fonctionnalités de HackerOS](doc/fr/wasm/features.md) : ce que HackerOS offre aujourd'hui, le but de l'écosystème, les façons de le déployer et ce qui est en cours de développement.
+- **Fonctionnalités** : [présentation et fonctionnalités de KazoOS](doc/fr/wasm/features.md) : ce que KazoOS offre aujourd'hui, le but de l'écosystème, les façons de le déployer et ce qui est en cours de développement.
 - **Code** : [`wasm2/HackerOs/`](wasm2/HackerOs/readme-fr.md).
 - **Documentation** : [`doc/fr/wasm/README.md`](doc/fr/wasm/README.md) (en anglais : [`doc/en/wasm/README.md`](doc/en/wasm/README.md)).
 - Dépôt source : [Kazo-ca/HackerOs](https://github.com/Kazo-ca/HackerOs).
@@ -34,10 +34,10 @@ l'exécution des tests E2E sont décrits dans
 
 | Pour… | Lire |
 | --- | --- |
-| Découvrir ce que HackerOS offre et ce qui s'en vient | [`features.md`](doc/fr/wasm/features.md) |
+| Découvrir ce que KazoOS offre et ce qui s'en vient | [`features.md`](doc/fr/wasm/features.md) |
 | Comprendre le code de l'OS | [`project-overview.md`](doc/fr/wasm/dev/project-overview.md), puis [`doc/fr/wasm/dev/`](doc/fr/wasm/dev/README.md) |
 | Écrire une app, une commande ou un service | [`sdk-developer-guide.md`](doc/fr/wasm/framework/sdk-developer-guide.md) et [`sdk-reference.md`](doc/fr/wasm/framework/sdk-reference.md) |
-| Construire sur HackerOS depuis un autre dépôt | [`building-on-hackeros.md`](doc/fr/wasm/framework/building-on-hackeros.md) |
+| Construire sur KazoOS depuis un autre dépôt | [`building-on-hackeros.md`](doc/fr/wasm/framework/building-on-hackeros.md) |
 | Créer un site web interne (ASP.Hack, Blazor) | [`asp-hack-developer-guide.md`](doc/fr/wasm/framework/asp-hack-developer-guide.md) |
 | Éviter les problèmes déjà rencontrés | [`pitfalls.md`](doc/fr/wasm/dev/pitfalls.md) |
 | Connaître l'état du projet et ses conventions | [`doc/fr/wasm/memory/`](doc/fr/wasm/memory/README.md) |
@@ -47,7 +47,7 @@ l'exécution des tests E2E sont décrits dans
 
 | Dossier | Contenu |
 | --- | --- |
-| [`wasm2/HackerOs/`](wasm2/HackerOs/readme-fr.md) | **Version active** : la solution HackerOS (OS, SDK, apps, hôtes, tests). |
+| [`wasm2/HackerOs/`](wasm2/HackerOs/readme-fr.md) | **Version active** : la solution KazoOS (OS, SDK, apps, hôtes, tests). |
 | [`doc/`](doc/fr/README.md) | Documentation. |
 | [`src/`](src/readme-fr.md) | Version legacy en TypeScript, gardée en lecture seule comme référence. |
 | [`.github/workflows/`](.github/workflows/) | Vérification et publication GitHub Pages. |

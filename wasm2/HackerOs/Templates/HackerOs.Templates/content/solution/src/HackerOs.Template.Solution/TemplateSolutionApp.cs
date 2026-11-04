@@ -31,7 +31,7 @@ public sealed class TemplateSolutionApp : AppDefinition
     public override string PublisherId => "pub.template";
 
     /// <inheritdoc />
-    public override string Description => "A HackerOS window app.";
+    public override string Description => "A KazoOS window app.";
 
     /// <inheritdoc />
     public override IReadOnlyList<string> Capabilities => [AppCapabilities.FileSystemUserHomeRead];

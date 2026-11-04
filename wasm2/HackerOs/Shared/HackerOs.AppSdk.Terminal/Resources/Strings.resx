@@ -28,7 +28,7 @@
     <value>cannot start the shell: {0}</value>
   </data>
   <data name="Panel.Welcome" xml:space="preserve">
-    <value>HackerOS Terminal v1.0.0 — Type 'help' for available commands.</value>
+    <value>KazoOS Terminal v1.0.0 — Type 'help' for available commands.</value>
   </data>
   <data name="Screen.Label" xml:space="preserve">
     <value>Full-screen terminal command</value>

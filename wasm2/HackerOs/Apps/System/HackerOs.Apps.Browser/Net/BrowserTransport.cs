@@ -75,7 +75,7 @@ public enum BrowserResponseSource
     /// <summary>A local file (<c>file://</c>).</summary>
     File,
 
-    /// <summary>The real Internet, through the HackerOS server's relay.</summary>
+    /// <summary>The real Internet, through the KazoOS server's relay.</summary>
     RealNetwork,
 }
 

@@ -9,7 +9,7 @@ namespace HackerOs.Samples.Intranet.Tests;
 /// <summary>
 /// A browser-like client of the Intranet site run in process (<see cref="HackWebHost.CreateApplication"/>,
 /// the site's generated route and view tables): it keeps the cookies the site sets, like the tab of the
-/// HackerOS browser, and finds the anti-forgery field of a form.
+/// KazoOS browser, and finds the anti-forgery field of a form.
 /// </summary>
 internal sealed partial class IntranetClient
 {

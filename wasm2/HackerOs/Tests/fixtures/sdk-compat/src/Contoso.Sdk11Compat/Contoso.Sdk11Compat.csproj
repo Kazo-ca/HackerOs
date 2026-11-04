@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <!--
-    ADR 0114, ADR 0132 §1: a third-party app compiled once against the HackerOS 1.1.0 packages, which
+    ADR 0114, ADR 0132 §1: a third-party app compiled once against the KazoOS 1.1.0 packages, which
     uses what SDK 1.1 added (window title, password rule of HackUserAccounts). Its package, kept in
     ../../packages, is loaded by the current OS in the compatibility tests; it is never rebuilt
     against a newer SDK.
@@ -15,7 +15,7 @@
     <PackageId>Contoso.Sdk11Compat</PackageId>
     <Version>$(HackerOsVersion)</Version>
     <Authors>Contoso</Authors>
-    <Description>HackerOS SDK compatibility fixture: a window app and a command compiled against SDK $(HackerOsVersion), using the SDK 1.1 additions.</Description>
+    <Description>KazoOS SDK compatibility fixture: a window app and a command compiled against SDK $(HackerOsVersion), using the SDK 1.1 additions.</Description>
   </PropertyGroup>
 
   <ItemGroup>

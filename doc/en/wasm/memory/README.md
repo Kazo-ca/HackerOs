@@ -1,6 +1,6 @@
 > [Version française](../../../fr/wasm/memory/README.md)
 
-# HackerOS project memory
+# KazoOS project memory
 
 Project status and working conventions as of **2026-10-31**. This folder serves as a
 resumption point: a new contributor (human or agent) finds here what is
@@ -12,7 +12,7 @@ at the end of each series or when a convention changes.
 - **Active code**: `wasm2/HackerOs/` (simulated OS in Blazor WebAssembly, .NET 10,
   solution `HackerOs.sln`). `src/` is the old version, kept as a
   reference.
-- **Version**: HackerOS and the SDK move to **2.2.2** (`build/Versions.props`),
+- **Version**: KazoOS and the SDK move to **2.2.2** (`build/Versions.props`),
   prepared on 2026-11-01 in the `release/2.2.2` PR to `main`; it is published
   (`v2.2.2` tag, GitHub Release, nuget.org) when that PR lands in `main`. It
   compiles the official catalog's public key into the OS
@@ -76,7 +76,7 @@ at the end of each series or when a convention changes.
 - **Cursor themes** (ADR 0205, series `todo/base`, work item
   `todo/9-cursor-themes`, issue #257): `cursor.theme` folders of PNGs in
   `/etc/hackeros/cursors/` and `~/.config/hackeros/cursors/`, `cursors.config`,
-  built-in System (default), HackerOS Neon and Gothic Crimson themes, applied
+  built-in System (default), KazoOS Neon and Gothic Crimson themes, applied
   to the whole surface by `cursorTheme.js`, apps included. Merged into
   `todo/base` (PR #301); on 2026-10-31 Benoit confirmed System as the default
   theme and the reach everywhere.
@@ -203,7 +203,7 @@ of [`AGENTS.md`](../../../../AGENTS.md), which Claude Code reads through
   `PublicAPI.Unshipped.txt`; an addition goes through `Unshipped` until the
   next release (`build/tools/ship-public-api.sh`).
 - **Publishing**: change `HackerOsVersion` in `build/Versions.props` and
-  merge into `main`; the `Release HackerOS` workflow creates the tag, the
+  merge into `main`; the `Release KazoOS` workflow creates the tag, the
   GitHub Release and pushes to nuget.org ([`releases.md`](../dev/releases.md),
   ADR 0173).
 

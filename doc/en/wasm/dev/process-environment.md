@@ -7,7 +7,7 @@ and 6, clarified by ADR 0053.
 
 ## Goal
 
-Each HackerOS process now carries, as on Linux:
+Each KazoOS process now carries, as on Linux:
 
 - its **arguments** (`argv`, including the command name);
 - its **current directory**, a canonical absolute path;

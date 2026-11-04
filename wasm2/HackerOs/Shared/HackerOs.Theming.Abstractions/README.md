@@ -1,6 +1,6 @@
 # HackerOs.Theming.Abstractions
 
-Framework-neutral contracts for the built-in HackerOS theme system. The package exposes the
+Framework-neutral contracts for the built-in KazoOS theme system. The package exposes the
 stable desktop/mobile theme IDs, the bounded accent IDs, `ThemeCatalog`, and the persisted
 `ThemePreferences` value. It has no Blazor, browser, host, or server dependency.
 

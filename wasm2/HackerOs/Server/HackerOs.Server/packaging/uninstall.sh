@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Removes the HackerOS Server service and program files (Linux and macOS). ADR 0191.
+# Removes the KazoOS Server service and program files (Linux and macOS). ADR 0191.
 #   sudo ./uninstall.sh            keeps the data folder (accounts, synchronized files, certificates)
 #   sudo ./uninstall.sh --purge    also deletes the data folder
 # --prefix and --data must match the ones given to install.sh, if any.
@@ -43,7 +43,7 @@ if [[ -f "$PREFIX/HackerOs.Server" ]]; then rm -rf "$PREFIX"; fi
 if [[ $PURGE -eq 1 ]]; then
   if [[ -d "$DATA" ]]; then rm -rf "$DATA"; fi
   if [[ "$(uname -s)" == "Linux" ]] && id hackeros > /dev/null 2>&1; then userdel hackeros || true; fi
-  echo "HackerOS Server and its data were removed."
+  echo "KazoOS Server and its data were removed."
 else
-  echo "HackerOS Server was removed; its data stays in $DATA (--purge deletes it)."
+  echo "KazoOS Server was removed; its data stays in $DATA (--purge deletes it)."
 fi

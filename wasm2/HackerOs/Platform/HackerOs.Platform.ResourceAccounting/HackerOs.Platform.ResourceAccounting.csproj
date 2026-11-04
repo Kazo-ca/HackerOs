@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <PackageId>HackerOs.Platform.ResourceAccounting</PackageId>
-    <Description>Optional measured CPU time and process memory for HackerOS (ADR 0066). Referenced by a host only when accounting is compiled in.</Description>
+    <Description>Optional measured CPU time and process memory for KazoOS (ADR 0066). Referenced by a host only when accounting is compiled in.</Description>
     <PackageTags>hackeros;platform;accounting</PackageTags>
   </PropertyGroup>
 

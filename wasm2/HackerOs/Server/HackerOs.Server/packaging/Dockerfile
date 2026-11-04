@@ -1,4 +1,4 @@
-# HackerOS Server image (ADR 0191 §4): ghcr.io/kazo-ca/hackeros-server.
+# KazoOS Server image (ADR 0191 §4): ghcr.io/kazo-ca/hackeros-server.
 #
 # Built by release.yml from the linux-x64 and linux-arm64 publications of build/publish-server.sh,
 # unpacked as <context>/amd64/ and <context>/arm64/ (docker buildx sets TARGETARCH):

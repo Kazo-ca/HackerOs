@@ -1,4 +1,4 @@
-// Bootstrap of one HackerOS Web Worker (ADR 0070, section 4), started by workerHost.js.
+// Bootstrap of one KazoOS Web Worker (ADR 0070, section 4), started by workerHost.js.
 //
 // It loads the page's own .NET runtime (_framework/dotnet.js) into this worker, then forwards every
 // message to the exported entry point of HackerOs.Platform.WorkerHost (BrowserWorkerEntryPoint), and
@@ -58,7 +58,7 @@ async function boot({ dotnetUrl, entryAssembly, entryType, ringUrl, rings }) {
                 waitForSyncAnswer = ring.waitForSyncAnswer;
             } catch (error) {
                 // The worker still runs, with messages only; its "ready" tells the page so.
-                console.warn('HackerOS worker: shared rings unavailable, messages only', error);
+                console.warn('KazoOS worker: shared rings unavailable, messages only', error);
             }
         }
 

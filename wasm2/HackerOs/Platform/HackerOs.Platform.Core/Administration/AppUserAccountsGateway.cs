@@ -67,7 +67,7 @@ internal sealed class AppUserAccountsGateway : IAppUserAccountsGateway
     public async ValueTask<HackUserAccount> CreateAsync(HackNewUserAccount account, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(account);
-        LocalAccountService service = Accounts?.Invoke() ?? throw new NotSupportedException("This HackerOS host cannot add accounts.");
+        LocalAccountService service = Accounts?.Invoke() ?? throw new NotSupportedException("This KazoOS host cannot add accounts.");
         _capabilities.Require(AppCapabilities.UsersManage);
         string login = account.LoginName.Trim();
         string admin = await _gate.AuthenticateAsync(_gate.Text["Admin.AddUser", login], "users.add", login, cancellationToken).ConfigureAwait(false);
@@ -79,7 +79,7 @@ internal sealed class AppUserAccountsGateway : IAppUserAccountsGateway
     public async ValueTask DeleteAsync(string loginName, bool removeHome, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(loginName);
-        LocalAccountService service = Accounts?.Invoke() ?? throw new NotSupportedException("This HackerOS host cannot delete accounts.");
+        LocalAccountService service = Accounts?.Invoke() ?? throw new NotSupportedException("This KazoOS host cannot delete accounts.");
         _capabilities.Require(AppCapabilities.UsersManage);
         string admin = await _gate.AuthenticateAsync(
             _gate.Text[removeHome ? "Admin.DeleteUserAndHome" : "Admin.DeleteUser", loginName],
@@ -92,7 +92,7 @@ internal sealed class AppUserAccountsGateway : IAppUserAccountsGateway
     /// <inheritdoc />
     public async ValueTask<IReadOnlyList<HackPasskey>> ListPasskeysAsync(CancellationToken cancellationToken = default)
     {
-        PasskeyService service = Passkeys?.Invoke() ?? throw new NotSupportedException("This HackerOS host has no passkeys.");
+        PasskeyService service = Passkeys?.Invoke() ?? throw new NotSupportedException("This KazoOS host has no passkeys.");
         IReadOnlyList<LocalPasskeyCredential> passkeys = await service.ListAsync(_gate.Principal.UserId, cancellationToken).ConfigureAwait(false);
         IReadOnlySet<string> unlocking = await service.GetKeyringPasskeyIdsAsync(_gate.Principal, cancellationToken).ConfigureAwait(false);
         return [.. passkeys.Select(passkey => ToPasskey(passkey, unlocking))];
@@ -101,7 +101,7 @@ internal sealed class AppUserAccountsGateway : IAppUserAccountsGateway
     /// <inheritdoc />
     public async ValueTask<HackPasskey> AddPasskeyAsync(string name, CancellationToken cancellationToken = default)
     {
-        PasskeyService service = Passkeys?.Invoke() ?? throw new NotSupportedException("This HackerOS host has no passkeys.");
+        PasskeyService service = Passkeys?.Invoke() ?? throw new NotSupportedException("This KazoOS host has no passkeys.");
         LocalPasskeyCredential passkey = await service.RegisterAsync(_gate.Principal, name, cancellationToken).ConfigureAwait(false);
         IReadOnlySet<string> unlocking = await service.GetKeyringPasskeyIdsAsync(_gate.Principal, cancellationToken).ConfigureAwait(false);
         return ToPasskey(passkey, unlocking);
@@ -110,7 +110,7 @@ internal sealed class AppUserAccountsGateway : IAppUserAccountsGateway
     /// <inheritdoc />
     public ValueTask<bool> RemovePasskeyAsync(string passkeyId, CancellationToken cancellationToken = default)
     {
-        PasskeyService service = Passkeys?.Invoke() ?? throw new NotSupportedException("This HackerOS host has no passkeys.");
+        PasskeyService service = Passkeys?.Invoke() ?? throw new NotSupportedException("This KazoOS host has no passkeys.");
         return service.RemoveAsync(_gate.Principal, passkeyId, cancellationToken);
     }
 
@@ -150,5 +150,5 @@ internal sealed class AppUserAccountsGateway : IAppUserAccountsGateway
     }
 
     private LocalPasswordService Service() =>
-        _passwords?.Invoke() ?? throw new NotSupportedException("This HackerOS host cannot change passwords.");
+        _passwords?.Invoke() ?? throw new NotSupportedException("This KazoOS host cannot change passwords.");
 }

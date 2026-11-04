@@ -86,7 +86,7 @@ public sealed class BrowserStorageRecoveryClassifierTests
         StorageRecoveryPresentation presentation =
             BrowserStorageRecoveryClassifier.AwaitDestructiveConfirmation(
                 action,
-                "All local HackerOS profiles and files",
+                "All local KazoOS profiles and files",
                 CorrelationId);
 
         Assert.Equal(StorageRecoveryState.AwaitingDestructiveConfirmation, presentation.State);

@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <PackageId>HackerOs.Platform.RemoteRendering</PackageId>
-    <Description>Trial of HackerOS window apps rendered in a Web Worker (ADR 0129, ADR 0133): a Blazor renderer in the worker, DOM changes applied by the window's host on the page.</Description>
+    <Description>Trial of KazoOS window apps rendered in a Web Worker (ADR 0129, ADR 0133): a Blazor renderer in the worker, DOM changes applied by the window's host on the page.</Description>
     <PackageTags>hackeros;platform;blazor;web-workers</PackageTags>
   </PropertyGroup>
 

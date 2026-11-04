@@ -1,7 +1,7 @@
 namespace HackerOs.Infrastructure.Browser.Schema;
 
 /// <summary>
-/// Declares the canonical HackerOS browser-storage IndexedDB database: its name, schema version,
+/// Declares the canonical KazoOS browser-storage IndexedDB database: its name, schema version,
 /// object stores, and cross-store transaction boundaries, per <c>P2-IDB-002</c> and ADR 0015
 /// (<c>D-008</c>).
 /// </summary>
@@ -14,7 +14,7 @@ namespace HackerOs.Infrastructure.Browser.Schema;
 /// </remarks>
 public static class HackerOsIndexedDbSchema
 {
-    /// <summary>Gets the single IndexedDB database name used by HackerOS.</summary>
+    /// <summary>Gets the single IndexedDB database name used by KazoOS.</summary>
     public const string DatabaseName = "hackeros";
 
     /// <summary>Gets the current schema version passed to <c>indexedDB.open</c>.</summary>

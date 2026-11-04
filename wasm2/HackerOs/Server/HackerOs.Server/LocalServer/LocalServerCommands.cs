@@ -91,7 +91,7 @@ public sealed class LocalServerCommand
 
         await output.WriteLineAsync($"Pairing code for '{Account}': {code}").ConfigureAwait(false);
         await output.WriteLineAsync(
-            $"Valid once, for {PairingCodeStore.Lifetime.TotalMinutes:0} minutes. In HackerOS: Settings > Server connection > Local server, type the server address and this code.")
+            $"Valid once, for {PairingCodeStore.Lifetime.TotalMinutes:0} minutes. In KazoOS: Settings > Server connection > Local server, type the server address and this code.")
             .ConfigureAwait(false);
         return 0;
     }

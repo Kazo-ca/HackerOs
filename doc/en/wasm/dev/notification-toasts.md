@@ -11,14 +11,14 @@ implements [ADR 0216](adr/0216-do-not-disturb.md) (section 5).
 
 - Each new notification from the OS or an app shows as a **bubble**: bottom right, above
   the taskbar of screen 1 on a computer, at the top of the screen on a phone. It carries
-  the app's name (or "HackerOS"), the title, the text, the action buttons and a "×".
+  the app's name (or "KazoOS"), the title, the text, the action buttons and a "×".
 - A bubble leaves after **6 s**. The pointer or the keyboard focus on it holds it; it gets
   a fresh 6 s once they leave. 3 bubbles at most: the oldest makes room.
 - The "×" hides the bubble. The notification stays in the clock panel (the shade on a
   phone). Dismissing it in the panel also removes its bubble.
 - No bubble while the panel is open: the notification arrives in the list.
 - **Do not disturb**: no bubble and no notification sound while it is on (see section 5).
-- **Update ready**: once signed in, "HackerOS x.y.z is available. Open apps will close."
+- **Update ready**: once signed in, "KazoOS x.y.z is available. Open apps will close."
   arrives as a bubble and stays in the panel with the "Restart to update" button. On the
   sign-in screen, the notice in the bottom corner stays, with the same button.
 

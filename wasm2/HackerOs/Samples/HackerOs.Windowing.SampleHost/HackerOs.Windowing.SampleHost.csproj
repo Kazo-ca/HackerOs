@@ -20,7 +20,7 @@
       Deliberately only the seven projects in the desktop package dependency closure. No
       HackerOs.Ecosystem, app projects, Platform.Core, or Simulation.Abstractions: this project
       is EXT-WIN-011's proof that the extracted themes, window engine, chrome, icons, and taskbar
-      are consumable by a host with no knowledge of HackerOS's process/app model.
+      are consumable by a host with no knowledge of KazoOS's process/app model.
     -->
     <ProjectReference Include="..\..\Shared\HackerOs.Theming.Abstractions\HackerOs.Theming.Abstractions.csproj" />
     <ProjectReference Include="..\..\Platform\HackerOs.Theming.Blazor\HackerOs.Theming.Blazor.csproj" />

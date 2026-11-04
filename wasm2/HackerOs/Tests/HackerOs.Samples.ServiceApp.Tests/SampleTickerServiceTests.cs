@@ -28,7 +28,7 @@ public sealed class SampleTickerServiceTests
         Name = "Sample Ticker Service",
         Version = "1.0.0",
         PublisherId = "pub.hackeros",
-        Description = "Deterministic status and ticker background service for HackerOS sessions",
+        Description = "Deterministic status and ticker background service for KazoOS sessions",
         Kind = AppKind.Service,
         EntryPoint = new AppEntryPointManifest("HackerOs.Samples.ServiceApp.dll", "HackerOs.Samples.ServiceApp.SampleTickerService"),
         SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),

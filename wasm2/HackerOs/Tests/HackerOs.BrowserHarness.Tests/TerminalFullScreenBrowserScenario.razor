@@ -79,7 +79,7 @@
             while (true)
             {
                 await screen.RenderAsync(new TerminalScreenFrame(
-                    ["HackerOS full-screen terminal", _text, "Ctrl+X Exit"],
+                    ["KazoOS full-screen terminal", _text, "Ctrl+X Exit"],
                     new TerminalCursor(_text.Length, 1),
                     "Interactive terminal editor test"), cancellationToken);
                 TerminalKeyEvent key = await screen.ReadKeyAsync(cancellationToken);
