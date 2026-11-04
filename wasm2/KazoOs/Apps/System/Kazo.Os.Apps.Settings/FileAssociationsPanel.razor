@@ -1,0 +1,72 @@
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
+@using Kazo.Os.AppSdk.Apps
+@using Kazo.Os.AppSdk.Blazor.Settings
+@using Kazo.Os.Simulation.Abstractions.Settings
+
+@*
+    Settings > File Associations (ADR 0121, section 4): one row per file type or URI scheme an
+    installed app declares, with the app that opens it for this user. A choice is written to
+    ~/.config/hackeros/file-associations.json and comes before the administrator's default
+    (/etc/hackeros/file-associations.json), for this user only.
+*@
+<div class="setting-group associations-panel">
+    <h4>@L["FileAssociations.Title"]</h4>
+    <p class="setting-desc">
+        @LocalizedMarkup.Format(L["FileAssociations.Description"], LocalizedMarkup.Code("~/.config/hackeros/file-associations.json"), LocalizedMarkup.Code("/etc/hackeros/file-associations.json"))
+    </p>
+
+    @if (!_loaded)
+    {
+        <p class="setting-desc">@L["Common.Loading"]</p>
+    }
+    else if (_rows.Count == 0)
+    {
+        <p class="setting-desc">@L["FileAssociations.Empty"]</p>
+    }
+    else
+    {
+        <div class="assoc-filter">
+            <span class="assoc-prompt" aria-hidden="true">&gt;</span>
+            <input type="search" class="assoc-filter-input" placeholder="@L["FileAssociations.Filter"]"
+                   aria-label="@L["FileAssociations.Filter"]" @bind="_filter" @bind:event="oninput" />
+        </div>
+        <div class="assoc-table" role="table" aria-label="@L["FileAssociations.Title"]">
+            <div class="assoc-row assoc-head" role="row">
+                <span role="columnheader">@L["FileAssociations.Column.Type"]</span>
+                <span role="columnheader">@L["FileAssociations.Column.Action"]</span>
+                <span role="columnheader">@L["FileAssociations.Column.App"]</span>
+            </div>
+            @foreach (FileAssociationRow row in VisibleRows)
+            {
+                <div class="assoc-row" role="row" @key="row.Key">
+                    <span class="assoc-target" role="cell">
+                        <code>@row.Label</code>
+                        @if (row.Label != row.Target)
+                        {
+                            <span class="assoc-media">@row.Target</span>
+                        }
+                    </span>
+                    <span class="assoc-action" role="cell">@ActionLabel(row.Action)</span>
+                    <span class="assoc-choice" role="cell">
+                        <select class="assoc-select" disabled="@_isBusy"
+                                aria-label="@L["FileAssociations.ChooseFor", row.Label, ActionLabel(row.Action)]"
+                                value="@(row.UserAppId ?? string.Empty)"
+                                @onchange="args => ChooseAsync(row, args.Value as string)">
+                            <option value="">@FallbackLabel(row)</option>
+                            @foreach (KazoAppInfo app in row.Candidates)
+                            {
+                                <option value="@app.Id">@app.Name</option>
+                            }
+                        </select>
+                        <SettingOriginBadge Source="@(row.UserAppId is not null ? SettingLayer.User : row.SystemAppId is not null ? SettingLayer.System : SettingLayer.Default)" />
+                    </span>
+                </div>
+            }
+        </div>
+    }
+
+    @if (_message is not null)
+    {
+        <div class="@(_messageIsError ? "assoc-message is-error" : "assoc-message")" role="@(_messageIsError ? "alert" : "status")">@_message</div>
+    }
+</div>

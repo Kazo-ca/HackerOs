@@ -57,7 +57,7 @@ notification affiche l'état de la connexion ».
 
 ## Conséquences
 
-- `HackerOs.Server` gagne `GET /api/hackeros/host-info` (version de l'API,
+- `Kazo.Os.Server` gagne `GET /api/hackeros/host-info` (version de l'API,
   nom du serveur) ; l'OS gagne la détection et l'icône.
 - Tests : boot servi par le serveur → connexion sans boîte ; serveur arrêté →
   icône « Hors ligne », OS utilisable ; `auto-connect=false` respecté.

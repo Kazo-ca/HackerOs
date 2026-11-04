@@ -1,6 +1,6 @@
 > [English version](../../../../en/wasm/dev/adr/0149-sdk-2-0-file-view-removal.md)
 
-# ADR 0149 : SDK 2.0, retrait de `HackerOs.AppSdk.FileView` et contrats de fichiers
+# ADR 0149 : SDK 2.0, retrait de `Kazo.Os.AppSdk.FileView` et contrats de fichiers
 
 ## Statut
 
@@ -17,7 +17,7 @@ Accepté le 2026-10-19.
 ## Contexte
 
 Le SDK 1.x promet qu'une app compilée contre `1.x` tourne sur tout OS `1.y`
-(ADR 0114 §2). `HackerOs.AppSdk.FileView` en fait partie depuis le gel. Le
+(ADR 0114 §2). `Kazo.Os.AppSdk.FileView` en fait partie depuis le gel. Le
 retirer au profit du contrat `hackeros.file-view` (ADR 0148) est une rupture,
 donc une majeure. L'OS refuse déjà une app d'une autre majeure (ADR 0098 §3).
 
@@ -32,7 +32,7 @@ ajouts restent dans `PublicAPI.Unshipped.txt` et les retraits y sont écrits
 
 ### 2. Retiré du SDK
 
-- Le paquet `HackerOs.AppSdk.FileView` entier : `FileView`, `FileViewTree`,
+- Le paquet `Kazo.Os.AppSdk.FileView` entier : `FileView`, `FileViewTree`,
   `FileViewDetails`, `FileViewIcons`, `FileViewBreadcrumb`,
   `FileViewDropZone`, `FileViewItem`, les menus
   (`IFileViewContextMenuProvider` et ses types), `IShellIconProvider`,
@@ -40,7 +40,7 @@ ajouts restent dans `PublicAPI.Unshipped.txt` et les retraits y sont écrits
   classe.
 - Ses types publics sont écrits `*REMOVED*`. Le code devient
   l'**implémentation interne** de l'explorateur de fichiers
-  (`Apps/System/HackerOs.Apps.FileExplorer`), qui n'est pas couvert par la
+  (`Apps/System/Kazo.Os.Apps.FileExplorer`), qui n'est pas couvert par la
   promesse (ADR 0114 §2).
 - La 2.0 ne garde aucun type `[Obsolete]` pour la transition : comme pour la
   1.0, une app recompile contre la nouvelle surface.
@@ -62,10 +62,10 @@ conflit de noms.
 
 ### 4. Paquets couverts
 
-Le tableau de l'ADR 0114 §2 devient, pour la 2.0 : `HackerOs.App.Abstractions`,
-`HackerOs.Simulation.Abstractions`, `HackerOs.Theming.Abstractions`,
-`HackerOs.AppSdk`, `.Blazor`, `.Terminal`, `.Web`, `.Web.Blazor`, `.Icons`,
-`.VirtualKeyboard`, `HackerOs.Theming.Blazor`, le contrat de build et le format
+Le tableau de l'ADR 0114 §2 devient, pour la 2.0 : `Kazo.Os.App.Abstractions`,
+`Kazo.Os.Simulation.Abstractions`, `Kazo.Os.Theming.Abstractions`,
+`Kazo.Os.AppSdk`, `.Blazor`, `.Terminal`, `.Web`, `.Web.Blazor`, `.Icons`,
+`.VirtualKeyboard`, `Kazo.Os.Theming.Blazor`, le contrat de build et le format
 du manifeste. Le reste de l'ADR 0114 ne change pas.
 
 ### 5. Fixtures et preuve

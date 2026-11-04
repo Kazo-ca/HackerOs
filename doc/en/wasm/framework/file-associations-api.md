@@ -2,7 +2,7 @@
 
 # Per-user file associations (API and formats)
 
-This document describes what an app or a third party sees of file associations: the format of the two files, the resolution order, the `HackApps` API and the capabilities. The implementation (layers, index, Settings panel, "Open with", `xdg-mime`, tests) is in [`../dev/user-file-associations.md`](../dev/user-file-associations.md).
+This document describes what an app or a third party sees of file associations: the format of the two files, the resolution order, the `KazoApps` API and the capabilities. The implementation (layers, index, Settings panel, "Open with", `xdg-mime`, tests) is in [`../dev/user-file-associations.md`](../dev/user-file-associations.md).
 
 ## Files and format
 
@@ -37,19 +37,19 @@ to `OpenFile`, `EditFile`, `OpenUri`, `RevealFile` (`inode/directory`) and
 
 | Member | Role | Capabilities |
 |---|---|---|
-| `HackApps.GetDefaultHandlersAsync()` | `HackFileAssociation(Target, Action, AppId, Layer)` rows: the user's, then the machine's. The first row for a target and an action is the one used. | `file-associations.read` |
-| `HackApps.SetDefaultHandlerAsync(target, appId, action = "open")` | Writes the user's choice. The app must declare the target and the action. | `file-associations.read`, `filesystem.user-home.write` |
-| `HackApps.ResetDefaultHandlerAsync(target, action = "open")` | Removes the user's choice. | same |
+| `KazoApps.GetDefaultHandlersAsync()` | `KazoFileAssociation(Target, Action, AppId, Layer)` rows: the user's, then the machine's. The first row for a target and an action is the one used. | `file-associations.read` |
+| `KazoApps.SetDefaultHandlerAsync(target, appId, action = "open")` | Writes the user's choice. The app must declare the target and the action. | `file-associations.read`, `filesystem.user-home.write` |
+| `KazoApps.ResetDefaultHandlerAsync(target, action = "open")` | Removes the user's choice. | same |
 
-`HackDefaultHandlerStatus`: `Changed`, `InvalidTarget`, `InvalidAction`,
+`KazoDefaultHandlerStatus`: `Changed`, `InvalidTarget`, `InvalidAction`,
 `AppNotFound`, `AppCannotHandle`, `FileInvalid`, `WriteFailed`. A target is
 `.ext` or `type/subtype`, lowercased. A gateway older than
 ADR 0121 throws `NotSupportedException`.
 
 ```csharp
-HackDefaultHandlerStatus status = await HackApps.SetDefaultHandlerAsync(".md", "org.hackeros.code-editor");
-await HackApps.SetDefaultHandlerAsync("x-scheme-handler/https", "com.example.browser");
-await HackApps.ResetDefaultHandlerAsync(".md");
+KazoDefaultHandlerStatus status = await KazoApps.SetDefaultHandlerAsync(".md", "org.hackeros.code-editor");
+await KazoApps.SetDefaultHandlerAsync("x-scheme-handler/https", "com.example.browser");
+await KazoApps.ResetDefaultHandlerAsync(".md");
 ```
 
 ## Capabilities

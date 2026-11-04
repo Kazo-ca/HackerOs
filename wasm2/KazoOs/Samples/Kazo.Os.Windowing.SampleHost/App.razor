@@ -1,0 +1,121 @@
+@inject WindowRuntime WindowRuntime
+@implements IDisposable
+@using Kazo.Os.Theming.Abstractions
+@using Kazo.Os.Theming.Blazor
+
+<ThemeScope ThemeId="@_themeId"
+            Platform="ThemePlatform.Desktop"
+            AccentId="@_accentId"
+            AnimationsEnabled="true">
+<div class="sample-shell">
+    <form class="sample-theme-picker" aria-label="Sample chrome theme">
+        <label for="sample-theme">Theme</label>
+        <select id="sample-theme" @bind="_themeId">
+            @foreach (ThemeDefinition theme in ThemeCatalog.DesktopThemes)
+            {
+                <option value="@theme.Id">@theme.DisplayName</option>
+            }
+        </select>
+        <label for="sample-accent">Kazo OS accent</label>
+        <select id="sample-accent" @bind="_accentId">
+            @foreach (string accentId in ThemeCatalog.AccentIds)
+            {
+                <option value="@accentId">@accentId</option>
+            }
+        </select>
+    </form>
+
+    <div class="sample-workspace">
+        <WindowSurface Runtime="WindowRuntime">
+            <WindowContent Context="window">
+                @window.Content
+            </WindowContent>
+        </WindowSurface>
+    </div>
+
+    @if (_launcher.IsOpen)
+    {
+        <div class="sample-launcher" role="dialog" aria-label="Sample launcher">
+            <h2>Sample applications</h2>
+            <ul class="sample-launcher-list">
+                @foreach (SampleAppDescriptor app in SampleAppCatalog.Apps)
+                {
+                    <li>
+                        <button type="button" @onclick="() => OpenApp(app)">@app.Title</button>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+
+    <Taskbar WindowSource="_windowSource"
+             Commands="_commands"
+             Launcher="_launcher"
+             StatusSource="_status"
+             Options="_options" />
+</div>
+</ThemeScope>
+
+@code {
+    private readonly TaskbarOptions _options = new() { LauncherMark = "◆", LauncherLabel = "Apps" };
+    private string _themeId = WellKnownThemeIds.HackerOs;
+    private string _accentId = WellKnownAccentIds.Green;
+    private SampleWindowSource _windowSource = null!;
+    private SampleCommands _commands = null!;
+    private SampleLauncher _launcher = null!;
+    private SampleStatusSource _status = null!;
+
+    /// <inheritdoc />
+    protected override void OnInitialized()
+    {
+        _windowSource = new SampleWindowSource(WindowRuntime);
+        _commands = new SampleCommands(WindowRuntime);
+        _launcher = new SampleLauncher();
+        _launcher.Changed += Rerender;
+        _status = new SampleStatusSource();
+    }
+
+    private void Rerender() => InvokeAsync(StateHasChanged);
+
+    private void OpenApp(SampleAppDescriptor app)
+    {
+        _launcher.Close();
+        WindowRuntimeState? existing = WindowRuntime.Windows.FirstOrDefault(w => w.AppId == app.Id);
+        if (existing is not null)
+        {
+            if (existing.VisualState == WindowVisualState.Minimized)
+            {
+                WindowRuntime.Apply(new RestoreWindowCommand(existing.Id));
+            }
+
+            WindowRuntime.Apply(new FocusWindowCommand(existing.Id));
+            return;
+        }
+
+        int cascade = WindowRuntime.Windows.Count % 6;
+        WindowRuntimeState state = new(
+            WindowId.FromGuid(Guid.NewGuid()),
+            app.Id,
+            WindowOwnerId.FromGuid(Guid.NewGuid()),
+            app.Title,
+            iconAssetPath: null,
+            new WindowBounds(60 + (cascade * 24), 50 + (cascade * 24), 420, 280),
+            restoreBounds: null,
+            zOrder: 0,
+            WindowVisualState.Normal,
+            new WindowConstraints(isResizable: true, minWidth: 260, minHeight: 180),
+            WindowModality.Modeless,
+            ownerId: null,
+            isFocused: false,
+            content: app.Content);
+        WindowRuntime.Apply(new CreateWindowCommand(state));
+    }
+
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        _launcher.Changed -= Rerender;
+        _windowSource.Dispose();
+        _status.Dispose();
+    }
+}

@@ -2,12 +2,12 @@
 
 # OS file control: usage from an app
 
-This document describes what an app gets when it displays the file control (`HackFileView`) or opens an OS file dialog, and what changes for it depending on the host. The explorer provider (`ExplorerFileView`, contracts and composition) is in [`dev/file-explorer.md`](../dev/file-explorer.md).
+This document describes what an app gets when it displays the file control (`KazoFileView`) or opens an OS file dialog, and what changes for it depending on the host. The explorer provider (`ExplorerFileView`, contracts and composition) is in [`dev/file-explorer.md`](../dev/file-explorer.md).
 
-## Display through `HackFileView`
+## Display through `KazoFileView`
 
-Every app displays it through the SDK's `HackFileView` (`HackerOs.AppSdk.Blazor.Files`)
-and so does the explorer: its window renders `<HackFileView>` and keeps the chrome
+Every app displays it through the SDK's `KazoFileView` (`Kazo.Os.AppSdk.Blazor.Files`)
+and so does the explorer: its window renders `<KazoFileView>` and keeps the chrome
 (bars, Locations, Trash, status bar). The Rename,
 Delete, Cut, Copy, Paste, Properties and Open with buttons call
 `IHackFileView.ExecuteAsync` with the identifier of the corresponding menu
@@ -45,7 +45,7 @@ platform falls back to its `VirtualFolderBrowser` list.
 On the mobile platform ([ADR 0171](../dev/adr/0171-mobile-file-explorer-and-full-screen-dialogs.md)),
 the dialogs open full screen and pass `OpenOnTap` to the control: one tap
 enters a folder or takes a file, with no double click. An app can ask for the
-same behavior with `<HackFileView OpenOnTap="true">`.
+same behavior with `<KazoFileView OpenOnTap="true">`.
 
 ## Language
 

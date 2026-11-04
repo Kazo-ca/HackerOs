@@ -3,15 +3,15 @@
 # Plan for extracting the window system and the taskbar
 
 **Status:** architecture proposal and resumption plan  
-**Immediate target:** reuse by several hosts of `HackerOs.sln`  
+**Immediate target:** reuse by several hosts of `Kazo.Os.sln`  
 **Future target:** publication as versioned NuGet packages  
-**Code concerned:** `wasm2/HackerOs/Platform/HackerOs.Platform.Blazor/`
+**Code concerned:** `wasm2/KazoOs/Platform/Kazo.Os.Platform.Blazor/`
 
 ## 1. Goal
 
 Extract the window engine, its Blazor components and the taskbar from
 their current project so that they can be consumed by another application
-of the solution without depending on the `HackerOs.Ecosystem` host project.
+of the solution without depending on the `Kazo.Os.Ecosystem` host project.
 
 The extraction must produce projects usable immediately through project
 references. Their public APIs, dependencies and static resources must
@@ -26,7 +26,7 @@ icons, clock, notifications and theme strategy.
 ## 2. Current state and couplings to address
 
 The current code is mainly grouped in
-`Platform/HackerOs.Platform.Blazor`:
+`Platform/Kazo.Os.Platform.Blazor`:
 
 - `Windows/WindowRuntime.cs` owns the state and transitions of windows;
 - `Windows/WindowRuntimeState.cs` contains the identity, geometry, focus,
@@ -51,7 +51,7 @@ contracts.
 ### 2.1 Recent change: generic content and dialogs (2026-08)
 
 An additional coupling, absent from the initial writing of this document, exists
-in `Platform/HackerOs.Platform.Blazor/Dialogs/`: `FileDialogCoordinator`,
+in `Platform/Kazo.Os.Platform.Blazor/Dialogs/`: `FileDialogCoordinator`,
 `DialogCoordinator` and `FileDialogWindowAdapter` create owner-modal windows via
 `WindowRuntime.Apply(new CreateWindowCommand(...))`, exactly as
 `WindowLaunchCoordinator` does for applications. These dialogs (file
@@ -72,34 +72,34 @@ special case per window type.
 
 ### 3.1 Proposed projects
 
-Create the following projects under `wasm2/HackerOs/`:
+Create the following projects under `wasm2/KazoOs/`:
 
 ```text
 Shared/
-  HackerOs.Windowing.Abstractions/
+  Kazo.Os.Windowing.Abstractions/
 Platform/
-  HackerOs.Windowing.Core/
-  HackerOs.Windowing.Blazor/
-  HackerOs.Taskbar.Blazor/
-  HackerOs.Platform.Blazor/          # composition/adaptateurs HackerOS existants
+  Kazo.Os.Windowing.Core/
+  Kazo.Os.Windowing.Blazor/
+  Kazo.Os.Taskbar.Blazor/
+  Kazo.Os.Platform.Blazor/          # composition/adaptateurs HackerOS existants
 Tests/
-  HackerOs.Windowing.Core.Tests/
-  HackerOs.Windowing.Blazor.Tests/
-  HackerOs.Taskbar.Blazor.Tests/
+  Kazo.Os.Windowing.Core.Tests/
+  Kazo.Os.Windowing.Blazor.Tests/
+  Kazo.Os.Taskbar.Blazor.Tests/
 Samples/
-  HackerOs.Windowing.SampleHost/     # consommateur sans HackerOs.Ecosystem
+  Kazo.Os.Windowing.SampleHost/     # consommateur sans Kazo.Os.Ecosystem
 ```
 
 The names may be adjusted before creation, but the dependency boundaries
 must be kept.
 
-`HackerOs.sln` is a classic `.sln` file (not the `slnx` XML format): each
+`Kazo.Os.sln` is a classic `.sln` file (not the `slnx` XML format): each
 new project must be added explicitly via `dotnet sln add`, with a
 `GlobalSection(ProjectConfigurationPlatforms)` entry and, if placed in an existing
 solution folder (`Shared`, `Platform`, `Tests`, `Samples`), a
 `GlobalSection(NestedProjects)` entry. No automatic discovery takes place.
 
-### 3.2 `HackerOs.Windowing.Abstractions`
+### 3.2 `Kazo.Os.Windowing.Abstractions`
 
 .NET library without Blazor, MudBlazor, browser or HackerOS host dependency.
 
@@ -117,11 +117,11 @@ It must contain:
 - the taskbar command contracts: activate, minimize, restore, close,
   show home or open a surface provided by the host;
 - no host theme model. Since the update of 2026-08-19, the
-  framework-neutral catalog lives in `HackerOs.Theming.Abstractions` and the
-  visual/static asset vocabulary in `HackerOs.Theming.Blazor`; the chrome packages
+  framework-neutral catalog lives in `Kazo.Os.Theming.Abstractions` and the
+  visual/static asset vocabulary in `Kazo.Os.Theming.Blazor`; the chrome packages
   consume only the `--hos-*` tokens, never arbitrary CSS.
 
-The `Shared/HackerOs.AppSdk.Icons` project already exists and provides a render-independent
+The `Shared/Kazo.Os.AppSdk.Icons` project already exists and provides a render-independent
 icon identity model; the window and taskbar icon contracts
 must reuse it rather than recreate one.
 
@@ -130,7 +130,7 @@ not be mandatory in the exportable engine. Use a validated opaque owner
 identifier, then provide a HackerOS adapter that keeps the existing
 process/application relationships.
 
-### 3.3 `HackerOs.Windowing.Core`
+### 3.3 `Kazo.Os.Windowing.Core`
 
 Headless library containing:
 
@@ -144,14 +144,14 @@ Headless library containing:
 - optional serializable geometry state;
 - deterministic events observable by the host.
 
-It depends on `HackerOs.Windowing.Abstractions` and may reference
+It depends on `Kazo.Os.Windowing.Abstractions` and may reference
 `Microsoft.AspNetCore.Components` (only for the `RenderFragment` delegate type
 carried by `WindowRuntimeState.Content`, cf. 2.1 and 3.2). It must contain no
 `.razor` component, no `RenderFragment` produced by the engine itself, no
 MudBlazor and no JavaScript interop: the engine stays headless, it only consumes
 the content that the caller provides to it without ever building it.
 
-### 3.4 `HackerOs.Windowing.Blazor`
+### 3.4 `Kazo.Os.Windowing.Blazor`
 
 Razor Class Library containing:
 
@@ -171,7 +171,7 @@ The package must embed its resources through the standard Razor
 Class Library mechanisms (`_content/{PackageId}/...`). No path may depend on the
 name of the host project.
 
-### 3.5 `HackerOs.Taskbar.Blazor`
+### 3.5 `Kazo.Os.Taskbar.Blazor`
 
 Separate Razor Class Library so that a consumer can use the window engine
 without adopting the HackerOS taskbar.
@@ -213,14 +213,14 @@ does **not** have `@using Microsoft.AspNetCore.Components.Web` compiles with no
 error or warning, but Razor then recognizes no `@onclick` (nor the
 other DOM events) as an event binding: it renders them as a literal
 HTML attribute (`@onclick="..."` visible as is in the DOM), and clicks
-therefore silently do nothing. `HackerOs.Windowing.Blazor` (3.4) had this
-`@using`; `HackerOs.Taskbar.Blazor` did not have it at creation and stayed
+therefore silently do nothing. `Kazo.Os.Windowing.Blazor` (3.4) had this
+`@using`; `Kazo.Os.Taskbar.Blazor` did not have it at creation and stayed
 broken throughout the development of the component until it was
 diagnosed in the browser. Systematically check this `@using` in the
 `_Imports.razor` of any new RCL, and confirm with a browser test
 that a click produces an observable effect, not only that the build succeeds.
 
-### 3.6 `HackerOs.Platform.Blazor`
+### 3.6 `Kazo.Os.Platform.Blazor`
 
 The existing project becomes the HackerOS composition layer:
 
@@ -234,13 +234,13 @@ The existing project becomes the HackerOS composition layer:
 Thus, the exportable packages do not know the full model of the OS.
 
 Verified in the current code: `WindowCloseCoordinator` depends on
-`AppLifecycleOrchestrator` (`HackerOs.Platform.Core.Lifecycle`) and
+`AppLifecycleOrchestrator` (`Kazo.Os.Platform.Core.Lifecycle`) and
 `WindowAppRenderer` depends on `AppDescriptor`
-(`HackerOs.Platform.Core.Discovery`) as well as on `WindowAppBase`/
-`IWindowCloseGuard` (`HackerOs.AppSdk.Blazor`). Both therefore confirm the
-boundary above and remain in `HackerOs.Platform.Blazor` without any change
+(`Kazo.Os.Platform.Core.Discovery`) as well as on `WindowAppBase`/
+`IWindowCloseGuard` (`Kazo.Os.AppSdk.Blazor`). Both therefore confirm the
+boundary above and remain in `Kazo.Os.Platform.Blazor` without any change
 of public signature during the extraction. The dialog system (2.1) follows the
-same rule: `FileDialogWindowAdapter` stays in `HackerOs.Platform.Blazor` and
+same rule: `FileDialogWindowAdapter` stays in `Kazo.Os.Platform.Blazor` and
 uses only the generic `Content`/`OnRequestClose` mechanism of the exported engine.
 
 ## 4. Expected consumption API
@@ -283,7 +283,7 @@ be chosen after the public API review.
 6. Extract the taskbar after the engine has stabilized and introduce its abstract
    data sources.
 7. Migrate `DesktopShell` to the new components.
-8. Add a sample host that references neither `HackerOs.Ecosystem` nor the HackerOS
+8. Add a sample host that references neither `Kazo.Os.Ecosystem` nor the HackerOS
    application projects.
 9. Delete the old types only after all tests and
    consumers succeed.
@@ -372,50 +372,50 @@ but are missing in a package.
 
 ## 10. Implementation plan
 
-- [x] `EXT-WIN-001` Create `HackerOs.Windowing.Abstractions` and document its public
+- [x] `EXT-WIN-001` Create `Kazo.Os.Windowing.Abstractions` and document its public
   API. **Completed 2026-08-17** (late follow-up, after Phase D): the
-  initial deferral ("the generic contracts live in `HackerOs.Windowing.Core`
+  initial deferral ("the generic contracts live in `Kazo.Os.Windowing.Core`
   ... the actual split remains to be done before Phase B") had never been
   closed although Phases B to D had already finished without it.
   `WindowId`, `WindowOwnerId`, `WindowBounds`, `WindowConstraints`,
   `WindowVisualState`, `WindowModality`, `WindowRuntimeState`, and all the
   commands/events (`WindowCommand`/`WindowEvent` and their derived types)
-  are moved into the new project `Platform/HackerOs.Windowing.Abstractions/`
-  (same type names, namespace `HackerOs.Windowing.Abstractions` instead of
-  `HackerOs.Windowing.Core`; a non-backward-compatible change but without real
+  are moved into the new project `Platform/Kazo.Os.Windowing.Abstractions/`
+  (same type names, namespace `Kazo.Os.Windowing.Abstractions` instead of
+  `Kazo.Os.Windowing.Core`; a non-backward-compatible change but without real
   risk since `PublicAPI.Shipped.txt` was empty for both projects, so
-  nothing had yet been published under SemVer). `HackerOs.Windowing.Core` now
+  nothing had yet been published under SemVer). `Kazo.Os.Windowing.Core` now
   contains only `WindowRuntime` (the engine) and references Abstractions by
-  `ProjectReference`. The 30 consumer files (`HackerOs.Windowing.Blazor`,
-  `HackerOs.Taskbar.Blazor`, `HackerOs.Platform.Blazor`, the sample host, and
+  `ProjectReference`. The 30 consumer files (`Kazo.Os.Windowing.Blazor`,
+  `Kazo.Os.Taskbar.Blazor`, `Kazo.Os.Platform.Blazor`, the sample host, and
   all the test projects concerned) received the additional `using`/`@using`
-  needed. `dotnet build HackerOs.sln` in Debug and in Release passes with 0
+  needed. `dotnet build Kazo.Os.sln` in Debug and in Release passes with 0
   warnings/0 errors (including the `PublicApiAnalyzers` baselines
   regenerated via `dotnet format analyzers --diagnostics RS0016`), and
-  `dotnet test` on `HackerOs.Windowing.Core.Tests`, `HackerOs.Taskbar.Blazor.Tests`,
-  `HackerOs.Platform.Blazor.Tests` and `HackerOs.Ecosystem.Tests` passes
+  `dotnet test` on `Kazo.Os.Windowing.Core.Tests`, `Kazo.Os.Taskbar.Blazor.Tests`,
+  `Kazo.Os.Platform.Blazor.Tests` and `Kazo.Os.Ecosystem.Tests` passes
   entirely. Verified in the browser: the sample host and the
   `window`/`taskbar` scenarios of the harness work identically, without console
   error.
 - [x] `EXT-WIN-002` Decouple the generic identities from the HackerOS process
   identities. `WindowRuntimeState` now carries `WindowOwnerId` (opaque,
   derived from the app instance) instead of `ProcessId`/`AppInstanceId`.
-- [x] `EXT-WIN-003` Move the headless engine into `HackerOs.Windowing.Core`.
+- [x] `EXT-WIN-003` Move the headless engine into `Kazo.Os.Windowing.Core`.
   The project now references only `Microsoft.AspNetCore.Components`, no
   HackerOS dependency.
 - [x] `EXT-WIN-004` Port the runtime tests and add a HackerOS-independent
-  contract suite. `HackerOs.Windowing.Core.Tests` (11 tests) references
-  only `HackerOs.Windowing.Core`.
-- [x] `EXT-WIN-005` Create the Razor Class Library `HackerOs.Windowing.Blazor` with
+  contract suite. `Kazo.Os.Windowing.Core.Tests` (11 tests) references
+  only `Kazo.Os.Windowing.Core`.
+- [x] `EXT-WIN-005` Create the Razor Class Library `Kazo.Os.Windowing.Blazor` with
   collocated assets. `DesktopArea.razor`, `WindowHost.razor` and
   `WindowChrome.razor` (+ `.razor.css`/`.razor.js`) moved from
-  `Platform.Blazor`, served from `_content/HackerOs.Windowing.Blazor/...`.
+  `Platform.Blazor`, served from `_content/Kazo.Os.Windowing.Blazor/...`.
   `WindowSurface` (see 3.4) is **implemented 2026-08-17**: configurable
   component that receives `Runtime` (a `WindowRuntime`) and `WindowContent`,
   subscribes itself to `Runtime.StateChanged`, and translates the
   `OnFocus`/`OnMinimize`/`OnToggleMaximize`/`OnClose`/`OnGesture` callbacks of
   `DesktopArea` into `Runtime.Apply(...)` calls, exactly the boilerplate that
-  `HackerOs.Windowing.SampleHost/App.razor` had reimplemented by hand until then.
+  `Kazo.Os.Windowing.SampleHost/App.razor` had reimplemented by hand until then.
   The sample host is migrated to `<WindowSurface Runtime="WindowRuntime">` to
   prove real consumption, not only compilation; verified in the
   browser: opening through the launcher, focus, interaction (increment),
@@ -435,16 +435,16 @@ but are missing in a package.
 - [x] `EXT-WIN-007` Define the taskbar source and command contracts.
   `ITaskbarWindowSource`, `ITaskbarCommandDispatcher`, `ITaskbarLauncher`,
   `ITaskbarStatusSource`, `ITaskbarNotificationSource`,
-  `ITaskbarSessionCommands`, `TaskbarOptions` in `HackerOs.Taskbar.Blazor`.
-- [x] `EXT-WIN-008` Create `HackerOs.Taskbar.Blazor` and its component tests.
+  `ITaskbarSessionCommands`, `TaskbarOptions` in `Kazo.Os.Taskbar.Blazor`.
+- [x] `EXT-WIN-008` Create `Kazo.Os.Taskbar.Blazor` and its component tests.
   `Taskbar.razor` now receives only these contracts (all nullable) instead of
   injecting `WindowRuntime`/`ISimulationClock`; each optional zone
   disappears cleanly when its contract is not provided (verified in the
-  browser for all five). `HackerOs.Taskbar.Blazor.Tests` covers the pure
+  browser for all five). `Kazo.Os.Taskbar.Blazor.Tests` covers the pure
   interaction logic (`TaskbarWindowInteraction`, 4 tests). Pitfall
   encountered, see the note in section 3.5 below.
 - [x] `EXT-WIN-009` Implement the HackerOS adapters in
-  `HackerOs.Platform.Blazor`. Six classes in `Shell/TaskbarAdapters.cs`:
+  `Kazo.Os.Platform.Blazor`. Six classes in `Shell/TaskbarAdapters.cs`:
   `TaskbarWindowSourceAdapter`, `TaskbarCommandDispatcherAdapter` (routes
   `Close` through the same close-guard mechanism as `DesktopShell`),
   `TaskbarLauncherAdapter`/`TaskbarNotificationSourceAdapter` (themselves own
@@ -462,11 +462,11 @@ but are missing in a package.
   on the adapter instead of a Blazor `EventCallback` no longer triggered the
   automatic re-render of the parent; fixed by an explicit call.
 - [x] `EXT-WIN-011` Create an internal sample host without dependency on
-  `HackerOs.Ecosystem`. `Samples/HackerOs.Windowing.SampleHost` references
-  only the exportable desktop closure: `HackerOs.Theming.Abstractions`,
-  `HackerOs.Theming.Blazor`, `HackerOs.Windowing.Abstractions`,
-  `HackerOs.Windowing.Core`, `HackerOs.Windowing.Blazor`,
-  `HackerOs.AppSdk.Icons` and `HackerOs.Taskbar.Blazor`; its own application
+  `Kazo.Os.Ecosystem`. `Samples/Kazo.Os.Windowing.SampleHost` references
+  only the exportable desktop closure: `Kazo.Os.Theming.Abstractions`,
+  `Kazo.Os.Theming.Blazor`, `Kazo.Os.Windowing.Abstractions`,
+  `Kazo.Os.Windowing.Core`, `Kazo.Os.Windowing.Blazor`,
+  `Kazo.Os.AppSdk.Icons` and `Kazo.Os.Taskbar.Blazor`; its own application
   source (two
   trivial Blazor components), its own taskbar adapters, and
   enables neither notifications nor session commands (zones cleanly absent,
@@ -475,8 +475,8 @@ but are missing in a package.
 - [x] `EXT-WIN-012` Add the packaging metadata and produce local
   NuGet packages. `Platform/Packaging.props` is imported by the seven projects of
   the desktop closure: the four historical Windowing/Taskbar packages,
-  `HackerOs.Theming.Abstractions`, `HackerOs.Theming.Blazor`, as well as
-  `HackerOs.AppSdk.Icons` (public dependency of Taskbar). It sets
+  `Kazo.Os.Theming.Abstractions`, `Kazo.Os.Theming.Blazor`, as well as
+  `Kazo.Os.AppSdk.Icons` (public dependency of Taskbar). It sets
   `Version=0.1.0-local`, `Authors`, `RepositoryUrl`/`RepositoryType`,
   `PackageTags`, `PackageLicenseFile`/`PackageReadmeFile`,
   `GenerateDocumentationFile=true`, `.snupkg` symbols, and GitHub SourceLink
@@ -491,7 +491,7 @@ but are missing in a package.
   `IconCatalog`, without behavioral change.
   `artifacts/` and `*.nupkg` are already covered by the repository `.gitignore`.
 - [x] `EXT-WIN-013` Test a sample consuming only the local packages.
-  `Samples/HackerOs.Windowing.SampleHost/nuget.config` declares a local
+  `Samples/Kazo.Os.Windowing.SampleHost/nuget.config` declares a local
   source (`<clear/>` + `nuget.org` + `../../artifacts/local-nupkg`). The csproj
   keeps the `ProjectReference` by default for development, but
   `-p:UseLocalHackerOsPackages=true` replaces them with seven
@@ -505,17 +505,17 @@ but are missing in a package.
   notifications/session as expected), and above all the packaged static assets
   of the RCL (`DesktopArea.razor.js`, `WindowHost.razor.js`,
   `WindowChrome.razor.js`) load with `200 OK` from
-  `_content/HackerOs.Windowing.Blazor/...`: historical proof that the
+  `_content/Kazo.Os.Windowing.Blazor/...`: historical proof that the
   `staticwebassets/` content of the `.nupkg` works at runtime, not only by
   coincidence of project reference. The workflow also checks that
-  `_content/HackerOs.Theming.Blazor/themes.css` is physically present in
+  `_content/Kazo.Os.Theming.Blazor/themes.css` is physically present in
   the package-only publication. The window pointer move gesture
   (synthetic `pointerdown`/`pointermove`/`pointerup`) was also
   replayed successfully against the packaged assets, with an exact delta
   (`+60,+30`). The default mode remains `ProjectReference` (normal development
   ergonomics in the repository); `nuget.config` and the conditional mode
   allow replaying the verification without editing the csproj.
-  `HackerOs.MobileShell.Blazor` is package-ready and shares the theme, but
+  `Kazo.Os.MobileShell.Blazor` is package-ready and shares the theme, but
   deliberately remains outside this **desktop** closure/test EXT-WIN-013.
 - [x] `EXT-WIN-014` Add API baseline, Release/trimming tests and versioning
   documentation. `Microsoft.CodeAnalysis.PublicApiAnalyzers` (3.3.4) is
@@ -534,33 +534,33 @@ but are missing in a package.
   seven projects will fail the build (RS0016/RS0017) until
   `PublicAPI.Unshipped.txt` is updated: intended behavior.
   Release/trimming proof: `dotnet publish
-  Samples/HackerOs.Windowing.SampleHost -c Release` finishes without any
+  Samples/Kazo.Os.Windowing.SampleHost -c Release` finishes without any
   warning (no `warn`/`IL####` in the full output), the IL Linker
   runs ("Optimizing assemblies for size") and the seven
   assemblies of the exported closure appear
   properly trimmed in `wwwroot/_framework/` next to the sample itself.
-  **Rechecked 2026-08-17** after the addition of `HackerOs.Windowing.Abstractions`,
+  **Rechecked 2026-08-17** after the addition of `Kazo.Os.Windowing.Abstractions`,
   then extended on 2026-08-19: the workflow now produces the seven
   `.nupkg`/`.snupkg` of the desktop closure without warnings.
 - [x] `EXT-WIN-015` Update the solution, the architecture documents and the
-  integration list. `HackerOs.sln` already contains the 6 exported projects/tests/
+  integration list. `Kazo.Os.sln` already contains the 6 exported projects/tests/
   sample from the previous phases (no addition required here). Updated:
   `docs/window-runtime.md` (removes the obsolete claim "no RenderFragment"
-  and "coupled to ProcessId/AppInstanceId", documents `HackerOs.Windowing.Core`,
+  and "coupled to ProcessId/AppInstanceId", documents `Kazo.Os.Windowing.Core`,
   `WindowOwnerId`, and the approved `RenderFragment? Content`); `docs/desktop-shell.md`
   (replaces the description of the former `Shell/Taskbar.razor` with
-  `HackerOs.Taskbar.Blazor.Taskbar` + `Shell/TaskbarAdapters.cs`);
+  `Kazo.Os.Taskbar.Blazor.Taskbar` + `Shell/TaskbarAdapters.cs`);
   `docs/integration-task-list.md` sections 11 and 14 (relocation note
   pointing to this document, `P2-WIN-*`/`P2-SHELL-002` history kept as
   is in accordance with the "never delete a task" rule).
-  `dotnet build HackerOs.sln -c Debug` finishes with 0 warnings/0 errors after
+  `dotnet build Kazo.Os.sln -c Debug` finishes with 0 warnings/0 errors after
   each of the sections `EXT-WIN-012` to `014` (packaging metadata,
   `Microsoft.CodeAnalysis.PublicApiAnalyzers`, RS0041 in `NoWarn`).
-  **Updated 2026-08-17** (`EXT-WIN-001`): `HackerOs.sln` now contains
-  a 7th exported project, `HackerOs.Windowing.Abstractions`, added
+  **Updated 2026-08-17** (`EXT-WIN-001`): `Kazo.Os.sln` now contains
+  a 7th exported project, `Kazo.Os.Windowing.Abstractions`, added
   via `dotnet sln add ... -s Platform` (so with the
   `ProjectConfigurationPlatforms` and `NestedProjects` entries correctly generated,
-  not edited by hand); `dotnet build HackerOs.sln -c Debug` and
+  not edited by hand); `dotnet build Kazo.Os.sln -c Debug` and
   `-c Release` both finish with 0 warnings/0 errors.
 
 ## 11. Definition of completion
@@ -568,28 +568,28 @@ but are missing in a package.
 The extraction is complete when:
 
 - [x] an application of the solution uses windows and taskbar without referencing
-  `HackerOs.Ecosystem` (`Samples/HackerOs.Windowing.SampleHost`, `EXT-WIN-011`);
+  `Kazo.Os.Ecosystem` (`Samples/Kazo.Os.Windowing.SampleHost`, `EXT-WIN-011`);
 - [x] the headless engine depends on neither Blazor nor the HackerOS services
-  (`HackerOs.Windowing.Core`: zero project references, only
+  (`Kazo.Os.Windowing.Core`: zero project references, only
   `Microsoft.AspNetCore.Components` for the `RenderFragment` delegate type);
 - [x] the taskbar consumes only its public contracts
-  (`HackerOs.Taskbar.Blazor`, `EXT-WIN-007`/`008`);
+  (`Kazo.Os.Taskbar.Blazor`, `EXT-WIN-007`/`008`);
 - [x] HackerOS keeps its behavior through explicit adapters
   (`Shell/TaskbarAdapters.cs`, verified in the browser without regression, `EXT-WIN-009`/`010`);
-- [x] the headless, component and browser tests pass (`dotnet test HackerOs.sln`
-  and `HackerOs.BrowserHarness.Tests` checks at each phase). A permanent Playwright
+- [x] the headless, component and browser tests pass (`dotnet test Kazo.Os.sln`
+  and `Kazo.Os.BrowserHarness.Tests` checks at each phase). A permanent Playwright
   E2E test was missing for the `taskbar` scenario (verified only by
   hand through the browser during Phase C): added
   `Taskbar_reacts_to_contracts_and_hides_optional_zones_cleanly` in
-  `Tests/HackerOs.E2E.Tests/IndexedDbBrowserContractTests.cs`, which exercises the
+  `Tests/Kazo.Os.E2E.Tests/IndexedDbBrowserContractTests.cs`, which exercises the
   background→focused→minimized→focused cycle by click, the dynamic addition of a
   window, notification and clock pushed without a taskbar command, the
   launcher, sign-out, and the clean disappearance/reappearance of each
   of the 5 optional zones when its contract is removed; `taskbar` was also
   added to the scenario list of the axe-core accessibility test. Both
-  suites `HackerOs.E2E.Tests` (15/15) and `HackerOs.UI.E2E.Tests` (4/4) pass
+  suites `Kazo.Os.E2E.Tests` (15/15) and `Kazo.Os.UI.E2E.Tests` (4/4) pass
   entirely (requires a prior Release build of
-  `Tests/HackerOs.BrowserHarness.Tests` and `test/test`, which these suites launch
+  `Tests/Kazo.Os.BrowserHarness.Tests` and `test/test`, which these suites launch
   themselves via `dotnet run --no-build -c Release`);
 - [x] the static resources work from a project reference and from
   a local NuGet package (`EXT-WIN-011` then `EXT-WIN-013`);

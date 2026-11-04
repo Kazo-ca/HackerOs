@@ -5,7 +5,7 @@
 > **Statut : essai terminé, verdict « on s'arrête »** ([ADR 0133](adr/0133-window-rendering-in-worker-verdict.md)).
 > Le code reste dans le dépôt, coupé par défaut. Aucune app ne doit en
 > dépendre ; les fenêtres tournent sur le fil principal (ADR 0070 §1) et une
-> charge lourde passe par `HackBackground` ([`background-jobs.md`](../framework/background-jobs.md)).
+> charge lourde passe par `KazoBackground` ([`background-jobs.md`](../framework/background-jobs.md)).
 
 ## Rôle
 
@@ -15,7 +15,7 @@ coûte (ADR 0129). Le sujet est la Calculatrice, inchangée.
 
 ## Activer l'essai
 
-Dans `OS/HackerOs.Ecosystem/wwwroot/appsettings.json` :
+Dans `OS/Kazo.Os.Ecosystem/wwwroot/appsettings.json` :
 
 ```json
 "HackerOs": {
@@ -31,7 +31,7 @@ Dans `OS/HackerOs.Ecosystem/wwwroot/appsettings.json` :
 - `Apps` : identifiants des apps à fenêtre rendues dans un worker. Une app
   avec de l'interop JavaScript propre ne marchera pas (pas d'`IJSRuntime`
   dans le worker).
-- Seulement dans le navigateur, avec les workers (`AddHackerOsWorkerProcesses`).
+- Seulement dans le navigateur, avec les workers (`AddKazoOsWorkerProcesses`).
   Si l'hôte des processus distants n'est pas celui des workers (tests, Server
   en mode interactif), la fenêtre se rend sur la page comme avant.
 
@@ -55,10 +55,10 @@ WindowAppRenderer                                  WorkerProcessHost
 
 | Projet | Types |
 |---|---|
-| `Platform/HackerOs.Platform.Blazor` | `IRemoteWindowRendering` (`GetHostComponent`) ; `WindowAppRenderer` le consulte s'il est enregistré. |
-| `Platform/HackerOs.Platform.WorkerHost` | Messages `ui` (worker → OS) et `uin` (OS → worker) ; `start` avec `k = 3`, `ra`/`rt` (le runner) ; côté worker `IWorkerWindowRunner`, `WorkerWindowRun` ; côté OS `WorkerRemoteProcessHost.StartWindowAsync`, `RemoteWindowProcess`, `RemoteProcessSession.UiReceiver`. |
-| `Platform/HackerOs.Platform.RemoteRendering` (nouveau) | **Worker/** : `WorkerWindowRunner`, `WorkerWindowRenderer`, `WorkerWindowRoot`, `DomPatchWriter`, `DomEventArgsReader`, `RemoteDialogService`. **Host/** : `RemoteWindowHost` (+ `.razor.cs`, `.razor.css`, `.razor.js`), `RemoteWindowRendering`, `RemoteWindowRenderingOptions`. `AddHackerOsRemoteWindowRendering`. |
-| `OS/HackerOs.Ecosystem.Host` | Lit la section `HackerOs:RemoteWindowRendering` et appelle `AddHackerOsRemoteWindowRendering`. |
+| `Platform/Kazo.Os.Platform.Blazor` | `IRemoteWindowRendering` (`GetHostComponent`) ; `WindowAppRenderer` le consulte s'il est enregistré. |
+| `Platform/Kazo.Os.Platform.WorkerHost` | Messages `ui` (worker → OS) et `uin` (OS → worker) ; `start` avec `k = 3`, `ra`/`rt` (le runner) ; côté worker `IWorkerWindowRunner`, `WorkerWindowRun` ; côté OS `WorkerRemoteProcessHost.StartWindowAsync`, `RemoteWindowProcess`, `RemoteProcessSession.UiReceiver`. |
+| `Platform/Kazo.Os.Platform.RemoteRendering` (nouveau) | **Worker/** : `WorkerWindowRunner`, `WorkerWindowRenderer`, `WorkerWindowRoot`, `DomPatchWriter`, `DomEventArgsReader`, `RemoteDialogService`. **Host/** : `RemoteWindowHost` (+ `.razor.cs`, `.razor.css`, `.razor.js`), `RemoteWindowRendering`, `RemoteWindowRenderingOptions`. `AddKazoOsRemoteWindowRendering`. |
+| `OS/Kazo.Os.Ecosystem.Host` | Lit la section `HackerOs:RemoteWindowRendering` et appelle `AddKazoOsRemoteWindowRendering`. |
 
 ### Processus
 
@@ -117,10 +117,10 @@ pour le runtime et le jeu d'assemblies du boot), lots de 72 octets en moyenne.
 Pour les refaire :
 
 ```bash
-build/publish-trimmed.sh   # ou dotnet publish OS/HackerOs.Ecosystem -c Release -o artifacts/publish-trimmed/publish
+build/publish-trimmed.sh   # ou dotnet publish OS/Kazo.Os.Ecosystem -c Release -o artifacts/publish-trimmed/publish
 python3 -m http.server 8601 --bind 127.0.0.1 -d artifacts/publish-trimmed/publish/wwwroot &
 HACKEROS_TRIMMED_URL=http://127.0.0.1:8601 HACKEROS_TRIMMED_ARTIFACTS=$PWD/artifacts/publish-trimmed/remote \
-  dotnet test Tests/HackerOs.TrimmedPublish.E2E.Tests -c Release --filter "FullyQualifiedName~calculator"
+  dotnet test Tests/Kazo.Os.TrimmedPublish.E2E.Tests -c Release --filter "FullyQualifiedName~calculator"
 ```
 
 Le test active l'essai en réécrivant `appsettings.json` à la volée et écrit
@@ -148,8 +148,8 @@ Le test active l'essai en réécrivant `appsettings.json` à la volée et écrit
 
 | Projet | Ce qu'il vérifie |
 |---|---|
-| `Tests/HackerOs.Platform.RemoteRendering.Tests` | `WorkerWindowRenderer` + `DomPatchWriter` rendent de vrais composants dans un faux DOM (`FakeDom`, même logique que le module JavaScript) : premier rendu, textes, éléments conditionnels, attributs booléens, composants et régions aplatis, liste à `@key` déplacée sans recréation, `@bind` (texte, case), drapeaux d'événements, SVG, gestionnaire retiré, gestionnaire qui lève ; `DomEventArgsReader` ; `RemoteDialogService`. |
-| `Tests/HackerOs.TrimmedPublish.E2E.Tests` (`TrimmedPublishTests.RemoteWindows.cs`) | Sur la publication trimmée : la Calculatrice en worker calcule à la souris et au clavier, garde son CSS, `Tab`, axe, `Alt+F7`/`Alt+Q`, worker dédié libéré ; et les mesures. |
+| `Tests/Kazo.Os.Platform.RemoteRendering.Tests` | `WorkerWindowRenderer` + `DomPatchWriter` rendent de vrais composants dans un faux DOM (`FakeDom`, même logique que le module JavaScript) : premier rendu, textes, éléments conditionnels, attributs booléens, composants et régions aplatis, liste à `@key` déplacée sans recréation, `@bind` (texte, case), drapeaux d'événements, SVG, gestionnaire retiré, gestionnaire qui lève ; `DomEventArgsReader` ; `RemoteDialogService`. |
+| `Tests/Kazo.Os.TrimmedPublish.E2E.Tests` (`TrimmedPublishTests.RemoteWindows.cs`) | Sur la publication trimmée : la Calculatrice en worker calcule à la souris et au clavier, garde son CSS, `Tab`, axe, `Alt+F7`/`Alt+Q`, worker dédié libéré ; et les mesures. |
 
 ## Liste des tâches du chantier `exec/6-remote-renderer-poc`
 

@@ -50,7 +50,7 @@ lock file, the bundle, or the license notice is missing.
 `OpenFolderAsync` (`CodeEditorWindow.razor`) uses the existing
 `WindowAppBase.SelectFolderAsync` dialog, then scopes a fresh
 `IAppFileSystemGateway` to that folder via `WithSelectedHandle` and renders the
-shared `HackerOs.AppSdk.FileView` component in `Mode="FileViewMode.Tree"`
+shared `Kazo.Os.AppSdk.FileView` component in `Mode="FileViewMode.Tree"`
 inside a sidebar. Opening a file in the tree adds an editor tab through a
 `CodeEditorFileService` scoped to the open folder's file system. No dedicated
 Code-Editor-specific tree service was introduced — the feature reuses
@@ -58,7 +58,7 @@ Code-Editor-specific tree service was introduced — the feature reuses
 
 ### Integrated terminal
 
-The Code Editor embeds the shared `HackerOs.AppSdk.Terminal` `TerminalPanel`
+The Code Editor embeds the shared `Kazo.Os.AppSdk.Terminal` `TerminalPanel`
 component directly (`CallerAppId="org.hackeros.code-editor"`), one instance
 per open terminal tab, all mounted simultaneously (only the active one is
 shown, via CSS) so output survives tab switches. New terminal tabs default
@@ -80,7 +80,7 @@ dirty tab unless the caller explicitly confirms discard. `CaptureRecovery` and
 Developers rebuilding the checked-in browser asset use:
 
 ```powershell
-cd Apps/System/HackerOs.Apps.CodeEditor
+cd Apps/System/Kazo.Os.Apps.CodeEditor
 npm ci
 npm run build
 ```

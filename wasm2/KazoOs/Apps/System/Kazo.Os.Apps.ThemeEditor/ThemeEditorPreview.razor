@@ -1,0 +1,95 @@
+@inherits KazoComponentBase
+@* Live preview of the edited theme (ADR 0103 §2.1): a sample desktop with a window, controls and a
+   taskbar, drawn by a nested ThemeScope with the base theme and the edited tokens, so it uses the
+   exact stylesheet and tokens the shell will use. *@
+<div class="preview-host" role="group" aria-label="@L["Preview.Live"]">
+    <ThemeScope ThemeId="@Resolved.BaseThemeId"
+                Platform="@Platform"
+                AccentId="@WellKnownAccentIds.Green"
+                AnimationsEnabled="@AnimationsEnabled"
+                Tokens="@Tokens">
+        <div class="sample-desktop @(Platform == ThemePlatform.Mobile ? "is-mobile" : "is-desktop")">
+            <section class="sample-window" aria-label="@L["Preview.SampleWindow"]">
+                <header class="sample-titlebar">
+                    <span class="sample-title">@L["Preview.SampleTitle", ThemeName]</span>
+                    <span class="sample-controls" aria-hidden="true">
+                        <span class="sample-control">&#8211;</span>
+                        <span class="sample-control">&#9633;</span>
+                        <span class="sample-control sample-close">&#10005;</span>
+                    </span>
+                </header>
+                <div class="sample-content">
+                    <h3 class="sample-heading">@L["Preview.PrimaryText"]</h3>
+                    <p class="sample-secondary">@L["Preview.SecondaryText"]</p>
+                    <p class="sample-muted">@L["Preview.MutedText"]</p>
+                    <div class="sample-row">
+                        <button type="button" class="sample-button is-primary">@L["Preview.Primary"]</button>
+                        <button type="button" class="sample-button">@L["Preview.Default"]</button>
+                        <button type="button" class="sample-button is-danger">@L["Preview.Delete"]</button>
+                    </div>
+                    <input class="sample-input" aria-label="@L["Preview.SampleInput"]" value="~/projects/neon" readonly />
+                    <ul class="sample-list" aria-label="@L["Preview.SampleList"]">
+                        <li>notes.txt</li>
+                        <li class="is-selected">theme.theme</li>
+                        <li>wallpaper.png</li>
+                    </ul>
+                    <div class="sample-row">
+                        <span class="sample-badge is-success">@L["Preview.Success"]</span>
+                        <span class="sample-badge is-warning">@L["Preview.Warning"]</span>
+                        <span class="sample-badge is-error">@L["Preview.Error"]</span>
+                        <span class="sample-badge is-info">@L["Preview.Info"]</span>
+                    </div>
+                    <pre class="sample-mono">$ hackfetch --theme @ThemeName</pre>
+                </div>
+            </section>
+            <footer class="sample-taskbar" aria-hidden="true">
+                <span class="sample-launcher">H_</span>
+                <span class="sample-task is-active">@L["Preview.TaskThemeEditor"]</span>
+                <span class="sample-task">@L["Preview.TaskTerminal"]</span>
+                <span class="sample-clock">13:37</span>
+            </footer>
+        </div>
+    </ThemeScope>
+    <div class="preview-card">
+        <ThemePreview ThemeId="@Resolved.BaseThemeId" Tokens="@Tokens" Title="@ThemeName" AnimationsEnabled="@AnimationsEnabled" />
+    </div>
+    @if (Resolved.BaseThemeId != BaseThemeId)
+    {
+        <p class="preview-note">
+            @L[Platform == ThemePlatform.Mobile ? "Preview.Note.Mobile" : "Preview.Note.Desktop",
+               ThemeCatalog.Get(Resolved.BaseThemeId).DisplayName, ThemeCatalog.Get(BaseThemeId).DisplayName]
+        </p>
+    }
+</div>
+
+@code {
+    /// <summary>Gets or sets the built-in base theme of the edited theme.</summary>
+    [Parameter, EditorRequired]
+    public string BaseThemeId { get; set; } = WellKnownThemeIds.HackerOs;
+
+    /// <summary>Gets or sets the form factor previewed.</summary>
+    [Parameter]
+    public ThemePlatform Platform { get; set; } = ThemePlatform.Desktop;
+
+    /// <summary>Gets or sets the valid tokens of the edited theme.</summary>
+    [Parameter]
+    public IReadOnlyList<KeyValuePair<string, string>>? Tokens { get; set; }
+
+    /// <summary>Gets or sets the theme name shown in the sample.</summary>
+    [Parameter]
+    public string ThemeName { get; set; } = "Theme";
+
+    /// <summary>Gets or sets whether animation tokens apply.</summary>
+    [Parameter]
+    public bool AnimationsEnabled { get; set; } = true;
+
+    /// <summary>The Theme Editor's texts in the language of its process (ADR 0104).</summary>
+    private IStringLocalizer<Strings> L => AppContext.GetLocalizer<Strings>();
+
+    // The same rule the shell applies (ResolvedTheme): a base of the other form factor is replaced
+    // by that form factor's default theme.
+    private ResolvedTheme Resolved => ResolvedTheme.Resolve(
+        "preview",
+        Platform,
+        [new UserTheme("preview", ThemeName.Length == 0 ? "Theme" : ThemeName, BaseThemeId, [Platform], Tokens ?? [])]);
+}

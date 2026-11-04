@@ -29,7 +29,7 @@ language follows the locale, as on Linux:
 
 systemd format: one `NAME=value` line per variable (`LANG`, `LANGUAGE`,
 `LC_MESSAGES`, `LC_TIME`, `LC_NUMERIC`, `LC_MONETARY`...), `#` for
-comments. `HackLocale.ParseLocaleConf` / `FormatLocaleConf` read and
+comments. `KazoLocale.ParseLocaleConf` / `FormatLocaleConf` read and
 write this format.
 
 At sign-in, `LoginEnvironment.Build` applies in order: default
@@ -39,14 +39,14 @@ At sign-in, `LoginEnvironment.Build` applies in order: default
 
 ### How the language is read
 
-- `HackLocale.ResolveLanguage(getVar)`: `LC_ALL`, then `LC_MESSAGES`, then
+- `KazoLocale.ResolveLanguage(getVar)`: `LC_ALL`, then `LC_MESSAGES`, then
   `LANG`; `fr_*` → `fr`, everything else → `en`.
-- `HackLocale.ResolveFormatCulture(getVar, LC_TIME)`: the full culture
+- `KazoLocale.ResolveFormatCulture(getVar, LC_TIME)`: the full culture
   (`fr-CA`) for dates, numbers and currencies; `C`/`POSIX` → invariant
   culture.
 - Apps: `IAppExecutionContext.Culture` and `.FormatCulture` (default members,
   read from the process environment on each call), and
-  `HackEnvironment.Culture` / `.FormatCulture` for the ambient context.
+  `KazoEnvironment.Culture` / `.FormatCulture` for the ambient context.
 - Platform: `SessionLocaleService` (Platform.Core), with `Culture`,
   `FormatCulture`, `LocaleName` and the `Changed` event. `App.razor` calls
   `UseSystemLocaleAsync()` at startup and `UseSessionLocaleAsync(principal)`
@@ -58,18 +58,18 @@ languages.
 
 ### Localizers
 
-- `HackStringLocalizer` (AppSdk): an `IStringLocalizer` over a
+- `KazoStringLocalizer` (AppSdk): an `IStringLocalizer` over a
   `ResourceManager`, with a function that gives the culture on each read.
   Arguments (`L["Clé", n]`) are formatted with the text's culture. A key
   missing in French gives the English text and a debug warning,
   once per key.
 - `AppContext.GetLocalizer<Strings>()`: localizer bound to the app's
-  **process**. `HackLocalization.GetLocalizer<Strings>()` with no argument reads the
+  **process**. `KazoLocalization.GetLocalizer<Strings>()` with no argument reads the
   ambient context.
 - `SessionStringLocalizer<T>` (Platform.Core): what
   `@inject IStringLocalizer<T>` receives in a platform component, bound to
-  `SessionLocaleService.Culture`. `AddHackerOsPlatformLocalization()` declares
-  it (called by `AddHackerOsEcosystem`, hence for the three hosts).
+  `SessionLocaleService.Culture`. `AddKazoOsPlatformLocalization()` declares
+  it (called by `AddKazoOsEcosystem`, hence for the three hosts).
 - `EnglishStringLocalizer<T>` (AppSdk): always English, for component
   tests: `services.AddSingleton(typeof(IStringLocalizer<>), typeof(EnglishStringLocalizer<>))`.
 
@@ -87,7 +87,7 @@ to change culture:
 - in Web Workers, `BrowserWorkerAssemblyLoader.LoadLazyAsync`, once.
 
 An app installed by `hackpkg` or the Hack Store has its satellites in its
-package (`lib/<culture>/<assembly>.resources.dll`, put there by `HackerOsPack`);
+package (`lib/<culture>/<assembly>.resources.dll`, put there by `KazoOsPack`);
 the OS loads them before the app's first render, for each Kazo OS language
 (`InstalledAppSatellites`, [ADR 0222](../dev/adr/0222-installed-app-satellite-assemblies.md)).
 Nothing to declare: a `Resources/Strings.fr.resx` is enough, as for an app
@@ -131,7 +131,7 @@ their texts travel in `BuiltInApplications.json`.
    constructor) in the project's root namespace. The resources are
    `Resources/Strings.resx` (English) and `Resources/Strings.fr.resx`
    (French). A subfolder gives a sub-namespace:
-   `HackerOs.Commands.Ls.Strings` ↔ `Resources/Ls/Strings.resx`. The resource
+   `Kazo.Os.Commands.Ls.Strings` ↔ `Resources/Ls/Strings.resx`. The resource
    name follows the rule `<assembly>.Resources.<type name without the assembly prefix>`.
 2. **Writing the `.resx` files.** `build/tools/resx.py output.resx table.json` writes
    a sorted `.resx` from a JSON table `{"Key": "Text"}`. Both files
@@ -145,12 +145,12 @@ their texts travel in `BuiltInApplications.json`.
    - Command: `IStringLocalizer<Strings> text = context.App.GetLocalizer<Strings>();`.
      The glibc-style file error reasons ("Aucun fichier ou dossier de ce
      nom") come from `CommandText.Reason`/`FileError`/`Describe`
-     (`HackerOs.Commands.Common`), and `ShellErrorText.Describe(exception, context)`
+     (`Kazo.Os.Commands.Common`), and `ShellErrorText.Describe(exception, context)`
      gives them in French for a third-party app.
    - Platform component: `@inject IStringLocalizer<Strings> L`.
    - SDK library (`AppSdk.Blazor`, `FileView`, `Terminal`): the
      app context received as a cascading value, `AppContext.GetLocalizer<Strings>()`, or
-     `HackLocalization.GetLocalizer<Strings>()` outside a component.
+     `KazoLocalization.GetLocalizer<Strings>()` outside a component.
    - Platform code outside a component (Platform.Core):
      `Strings.For(culture)[...]`.
 5. **Dates and numbers**: `FormatCulture` (app) or
@@ -187,11 +187,11 @@ their texts travel in `BuiltInApplications.json`.
 
 ## Task list
 
-- [x] `HackLocale`: glibc rules, `locale.conf`, known locales.
+- [x] `KazoLocale`: glibc rules, `locale.conf`, known locales.
 - [x] `LoginEnvironment`: `/etc/locale.conf` and `~/.config/locale.conf`; seeder.
-- [x] `IAppExecutionContext.Culture` / `.FormatCulture`, `HackEnvironment`.
-- [x] `HackStringLocalizer`, `GetLocalizer<T>`, `EnglishStringLocalizer<T>`.
-- [x] `SessionLocaleService`, `SessionStringLocalizer<T>`, `AddHackerOsPlatformLocalization`.
+- [x] `IAppExecutionContext.Culture` / `.FormatCulture`, `KazoEnvironment`.
+- [x] `KazoStringLocalizer`, `GetLocalizer<T>`, `EnglishStringLocalizer<T>`.
+- [x] `SessionLocaleService`, `SessionStringLocalizer<T>`, `AddKazoOsPlatformLocalization`.
 - [x] `fr` satellites loaded in the browser (main thread and workers).
 - [x] Generator: `AppManifest.<culture>.resx` → `localization/`, `HOSAPP0040`; `localized` aggregator.
 - [x] Catalog, launcher, window titles, `IAppCatalogGateway` localized.
@@ -200,4 +200,4 @@ their texts travel in `BuiltInApplications.json`.
 - [x] Settings Language panel.
 - [x] Platform translation (desktop, taskbar, launcher, dialogs, sign-in).
 - [x] Translation of system apps and commands.
-- [x] Tests: `.resx` parity, `HackLocale`, generator, E2E in French.
+- [x] Tests: `.resx` parity, `KazoLocale`, generator, E2E in French.

@@ -26,9 +26,9 @@ dont Blazor retrouve les éléments, et le pont des pages isolées de l'ADR 0075
 Le navigateur est une app de base : il n'obtient les services de l'OS que par
 le SDK (ADR 0055, diagnostic `HOSAPP0031`). Le contrat (`IDisplaySurfaceService`,
 `IDisplaySurface`, `DisplaySurfaceOptions`, `DisplaySurfaceOpenResult`) et le
-composant `DisplaySurfaceContent` vont donc dans `HackerOs.AppSdk.Blazor`
+composant `DisplaySurfaceContent` vont donc dans `Kazo.Os.AppSdk.Blazor`
 (espace de noms `.Display`), comme `IDialogService`. L'implémentation
-`DisplaySurfaceService` reste dans `HackerOs.Platform.Blazor` et
+`DisplaySurfaceService` reste dans `Kazo.Os.Platform.Blazor` et
 `AddHackerOsEcosystem` l'enregistre (portée de session, un circuit sur le
 serveur). Le bureau est la surface principale implicite ; le service ne gère
 que les autres.
@@ -40,7 +40,7 @@ principale, puis son élément est déplacé dans la fenêtre détachée
 (`DisplaySurfaceContent`). Le moteur garde ses références aux nœuds et continue
 de les mettre à jour où qu'ils soient. Deux mécanismes de Blazor supposent
 pourtant un seul document ; un initialiseur JS de la bibliothèque
-(`HackerOs.Platform.Blazor.lib.module.js`, pris en charge par les trois hôtes
+(`Kazo.Os.Platform.Blazor.lib.module.js`, pris en charge par les trois hôtes
 sans référence manuelle) les étend avant le démarrage de Blazor :
 
 - **Événements.** Blazor délègue tous les événements par des écouteurs posés

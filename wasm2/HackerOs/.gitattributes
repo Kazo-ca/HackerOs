@@ -1,4 +1,0 @@
-# The public raw-string constants of this file are recorded in PublicAPI.Shipped.txt with
-# "\n" line breaks; a CRLF checkout (core.autocrlf=true on Windows) changes their value and
-# fails the build with RS0016/RS0017. Keep it LF in every working copy.
-Platform/HackerOs.Platform.Core/FileSystem/TestDemoFixtureSeeder.cs text eol=lf

@@ -32,7 +32,7 @@ nowhere.
 ### 1. Classification of capabilities (D23)
 
 `AppCapabilities` gains an exact classification by identifier, in the same file
-(`Shared/HackerOs.App.Abstractions/AppCapabilities.cs`):
+(`Shared/Kazo.Os.App.Abstractions/AppCapabilities.cs`):
 
 ```csharp
 public enum CapabilityRisk { Normal, Dangerous }
@@ -148,7 +148,7 @@ only.
 When a non-system app that has at least one **pending** dangerous capability
 is launched, `AppLifecycleOrchestrator.LaunchAsync` calls, before creating the
 process, `IDangerousCapabilityGate.EnsureDecidedAsync(manifest, principal)`
-(`Platform/HackerOs.Platform.Core/Policy/`):
+(`Platform/Kazo.Os.Platform.Core/Policy/`):
 
 1. **`block` policy:** no window. The app starts without its dangerous
    capabilities. `capability.blocked` entry in `/var/log/auth.log`.
@@ -181,7 +181,7 @@ any missing capability.
 
 ### 6. The special window
 
-Native Blazor component `Platform/HackerOs.Platform.Blazor/Security/DangerousCapabilityApprovalOverlay.razor`,
+Native Blazor component `Platform/Kazo.Os.Platform.Blazor/Security/DangerousCapabilityApprovalOverlay.razor`,
 with a collocated `.razor.css`; no MudBlazor, since it is part of the
 OS chrome. It imitates the Windows UAC "secure desktop":
 
@@ -280,5 +280,5 @@ applies.
   ADR 0044 (settings as files), ADR 0045 (`auth.log`), ADR 0048 (system
   apps).
 - [`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), section 6.4.
-- `Platform/HackerOs.Platform.Core/Policy/CleanProfileCapabilityGrantSeeder.cs`,
-  `Shared/HackerOs.App.Abstractions/AppCapabilities.cs`.
+- `Platform/Kazo.Os.Platform.Core/Policy/CleanProfileCapabilityGrantSeeder.cs`,
+  `Shared/Kazo.Os.App.Abstractions/AppCapabilities.cs`.

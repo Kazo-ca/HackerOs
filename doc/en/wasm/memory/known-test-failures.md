@@ -12,19 +12,19 @@ in [`../dev/pitfalls.md`](../dev/pitfalls.md) §4.
 
 | Suite | Test | Symptom |
 | --- | --- | --- |
-| `HackerOs.E2E.Tests` | `Window_runtime_renders_and_handles_mouse_and_touch_pointer_gestures`, `Window_runtime_handles_every_resize_edge_in_real_browser` | Time-out; still there after ADR 0177. |
-| `HackerOs.UI.E2E.Tests` | `Every_listed_surface_has_no_serious_axe_violation…`, `Representative_real_app_surfaces…` (axe) | `label-content-name-mismatch` on the taskbar's `.launcher-trigger` and `.taskbar-clock`. |
-| `HackerOs.TrimmedPublish.E2E.Tests` | Calculator test (axe) | `label-content-name-mismatch` on the MC, MR, M+, M-, AC, x² keys. |
-| `HackerOs.UI.E2E.Tests` | `LowStorageSpaceTests.A_full_quota_warns_once…` | "No low-space notification within 60 s". |
+| `Kazo.Os.E2E.Tests` | `Window_runtime_renders_and_handles_mouse_and_touch_pointer_gestures`, `Window_runtime_handles_every_resize_edge_in_real_browser` | Time-out; still there after ADR 0177. |
+| `Kazo.Os.UI.E2E.Tests` | `Every_listed_surface_has_no_serious_axe_violation…`, `Representative_real_app_surfaces…` (axe) | `label-content-name-mismatch` on the taskbar's `.launcher-trigger` and `.taskbar-clock`. |
+| `Kazo.Os.TrimmedPublish.E2E.Tests` | Calculator test (axe) | `label-content-name-mismatch` on the MC, MR, M+, M-, AC, x² keys. |
+| `Kazo.Os.UI.E2E.Tests` | `LowStorageSpaceTests.A_full_quota_warns_once…` | "No low-space notification within 60 s". |
 
 ## Flaky (pass alone, sometimes fail under load)
 
 - `AppInstallationService` (unit tests);
 - `LocalNetworkTests` with a web worker;
 - the detached-window E2E harness;
-- `HackerOs.UI.E2E.Tests`: `FileExplorerDownload` and `BrowserHomePage` when
+- `Kazo.Os.UI.E2E.Tests`: `FileExplorerDownload` and `BrowserHomePage` when
   the whole suite runs;
-- `HackerOs.Platform.WorkerHost.Tests`: one timing test.
+- `Kazo.Os.Platform.WorkerHost.Tests`: one timing test.
 
 CI reruns a failed test once and reports "Flaky test" if it passes on the
 second try ([`../dev/ci-workflows.md`](../dev/ci-workflows.md)).

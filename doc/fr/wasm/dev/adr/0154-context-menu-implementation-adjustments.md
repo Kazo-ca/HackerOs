@@ -92,8 +92,8 @@ Les exemples de l'ADR 0150 et du plan sans `@(…)` ne compilent pas tels quels.
 
 ### 8. Icônes
 
-`HackIcon` et `HackIcons` vivent dans `HackerOs.AppSdk.Icons` (à côté
-d'`IconLibrary`) ; `HackerOs.AppSdk.Blazor` référence désormais ce paquet.
+`HackIcon` et `HackIcons` vivent dans `Kazo.Os.AppSdk.Icons` (à côté
+d'`IconLibrary`) ; `Kazo.Os.AppSdk.Blazor` référence désormais ce paquet.
 
 ## Conséquences
 

@@ -47,7 +47,7 @@ Accepted on 2026-10-31; Benoit chose the recommendations (A, A, A, see
 
 ### 1. Two ways to catch Back: the mouse and the history (Q1)
 
-A `hardwareNavigation.js` module (in `HackerOs.Platform.Blazor`'s `wwwroot/`,
+A `hardwareNavigation.js` module (in `Kazo.Os.Platform.Blazor`'s `wwwroot/`,
 imported by the service of §2) listens to the OS document and holds no rule:
 it turns a gesture into "Back" or "Forward" with its source, and calls C#.
 
@@ -74,7 +74,7 @@ it turns a gesture into "Back" or "Forward" with its source, and calls C#.
 
 ### 2. `HardwareNavigationService` sends the gesture to the active window
 
-A scoped service of `HackerOs.Platform.Blazor` receives the module's calls and
+A scoped service of `Kazo.Os.Platform.Blazor` receives the module's calls and
 picks the target:
 
 - **Desktop**: the focused window (not minimized). Back calls its
@@ -93,7 +93,7 @@ picks the target:
 
 ### 3. SDK: two more sources and `IAppForwardHandler` (Q2)
 
-Additions in `HackerOs.AppSdk.Blazor` (`PublicAPI.Unshipped.txt`, next minor),
+Additions in `Kazo.Os.AppSdk.Blazor` (`PublicAPI.Unshipped.txt`, next minor),
 with no change to what exists:
 
 - `AppBackSource.MouseButton`: the mouse Back or Forward button;

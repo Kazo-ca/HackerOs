@@ -8,7 +8,7 @@ The HackerOS Design System provides a polished HackerOS default while allowing
 the complete shell to adopt the built-in historical desktop and mobile themes.
 It combines MudBlazor platform wrappers with component-scoped CSS files
 (`.razor.css`) and the shared semantic properties owned by
-`HackerOs.Theming.Blazor`. See [`theming.md`](theming.md) for the catalog,
+`Kazo.Os.Theming.Blazor`. See [`theming.md`](theming.md) for the catalog,
 runtime scope, persistence contract, and extension instructions.
 
 ---
@@ -18,7 +18,7 @@ runtime scope, persistence contract, and extension instructions.
 Colors, surfaces, typography, borders, status, shape, motion, window chrome,
 taskbar/launcher, and mobile navigation are controlled by semantic `--hos-*`
 custom properties declared once in
-`Platform/HackerOs.Theming.Blazor/wwwroot/themes.css`. Component CSS consumes
+`Platform/Kazo.Os.Theming.Blazor/wwwroot/themes.css`. Component CSS consumes
 those properties with a safe fallback; it does not redefine a theme palette or
 branch on a theme ID. Compatibility `--hackeros-*` aliases exist only to keep
 older app CSS working while it moves to the semantic vocabulary.
@@ -47,7 +47,7 @@ Icons (Bootstrap Icons, Font Awesome, Lucide, Simple Icons, and MudBlazor's bund
 Material Design set) render as inline SVG colored via inherited `fill`/`stroke:
 currentColor` — never a hardcoded fill color — so every icon automatically matches
 the surrounding text color and adapts to theme changes with no per-icon work. Use the
-`HackerIcon` component (`HackerOs.AppSdk.Icons`) rather than raw `<svg>` markup or an
+`HackerIcon` component (`Kazo.Os.AppSdk.Icons`) rather than raw `<svg>` markup or an
 icon font; see [`icon-library.md`](icon-library.md). Default size is 20px; use larger
 sizes (e.g. 28–56px) sparingly, for emphasis in detail panels or empty states.
 

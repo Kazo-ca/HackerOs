@@ -5,7 +5,7 @@ on:
     branches: [ "main" ]
     paths:
       - 'src/**'
-      - 'wasm2/HackerOs/**'
+      - 'wasm2/KazoOs/**'
       - 'package*.json'
       - 'tsconfig*.json'
       - 'webpack.config.js'
@@ -18,7 +18,7 @@ on:
       - 'package*.json'
       - 'tsconfig*.json'
       - 'webpack.config.js'
-      - 'wasm2/HackerOs/build/assemble-pages.ps1'
+      - 'wasm2/KazoOs/build/assemble-pages.ps1'
       - '.github/workflows/deploy-to-pages.yml'
   workflow_dispatch:
 
@@ -53,8 +53,8 @@ jobs:
         id: wasm
         uses: actions/cache@v5
         with:
-          path: wasm2/HackerOs/artifacts/pages-publish/wwwroot
-          key: pages-wasm-v1-${{ runner.os }}-${{ hashFiles('wasm2/HackerOs/**', '!wasm2/HackerOs/**/bin/**', '!wasm2/HackerOs/**/obj/**', '!wasm2/HackerOs/artifacts/**', '!wasm2/HackerOs/**/node_modules/**', '!wasm2/HackerOs/**/TestResults/**') }}
+          path: wasm2/KazoOs/artifacts/pages-publish/wwwroot
+          key: pages-wasm-v1-${{ runner.os }}-${{ hashFiles('wasm2/KazoOs/**', '!wasm2/KazoOs/**/bin/**', '!wasm2/KazoOs/**/obj/**', '!wasm2/KazoOs/artifacts/**', '!wasm2/KazoOs/**/node_modules/**', '!wasm2/KazoOs/**/TestResults/**') }}
 
       - name: Setup Node.js
         if: steps.legacy.outputs.cache-hit != 'true'
@@ -77,19 +77,19 @@ jobs:
 
       - name: Install WASM workload
         if: steps.wasm.outputs.cache-hit != 'true'
-        working-directory: wasm2/HackerOs
+        working-directory: wasm2/KazoOs
         run: dotnet workload install wasm-tools
 
       - name: Publish standalone WASM for /
         if: steps.wasm.outputs.cache-hit != 'true'
-        working-directory: wasm2/HackerOs
+        working-directory: wasm2/KazoOs
         run: >-
-          dotnet publish OS/HackerOs.Ecosystem/HackerOs.Ecosystem.csproj
+          dotnet publish OS/Kazo.Os.Ecosystem/Kazo.Os.Ecosystem.csproj
           --configuration Release --output artifacts/pages-publish -m:1
 
       - name: Assemble WASM root and legacy subdirectory
         shell: pwsh
-        run: ./wasm2/HackerOs/build/assemble-pages.ps1
+        run: ./wasm2/KazoOs/build/assemble-pages.ps1
 
       - name: Setup Pages
         if: github.event_name != 'pull_request'
@@ -99,7 +99,7 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v5
         with:
-          path: wasm2/HackerOs/artifacts/pages
+          path: wasm2/KazoOs/artifacts/pages
 
   deploy:
     if: github.event_name != 'pull_request'

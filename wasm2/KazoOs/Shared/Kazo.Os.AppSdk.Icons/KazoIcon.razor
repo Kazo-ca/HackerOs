@@ -1,0 +1,55 @@
+@namespace Kazo.Os.AppSdk.Icons
+@inject IIconCatalog Catalog
+
+<svg class="hacker-icon"
+     viewBox="@(_resolved?.ViewBox ?? "0 0 24 24")"
+     width="@Size"
+     height="@Size"
+     fill="@(_resolved is { StrokeBased: true } ? "none" : "currentColor")"
+     stroke="@(_resolved is { StrokeBased: true } ? "currentColor" : null)"
+     stroke-width="@(_resolved is { StrokeBased: true } ? "2" : null)"
+     stroke-linecap="@(_resolved is { StrokeBased: true } ? "round" : null)"
+     stroke-linejoin="@(_resolved is { StrokeBased: true } ? "round" : null)"
+     role="img"
+     aria-hidden="@(string.IsNullOrEmpty(EffectiveTitle) ? "true" : null)"
+     aria-label="@(string.IsNullOrEmpty(EffectiveTitle) ? null : EffectiveTitle)"
+     @attributes="AdditionalAttributes">
+    @if (_resolved is not null)
+    {
+        @((MarkupString)_resolved.Markup)
+    }
+</svg>
+
+@code {
+    /// <summary>An already-resolved icon. Takes precedence over <see cref="Library"/>/<see cref="Name"/>.</summary>
+    [Parameter] public IconDescriptor? Icon { get; set; }
+
+    /// <summary>The library to resolve <see cref="Name"/> from, when <see cref="Icon"/> is not supplied.</summary>
+    [Parameter] public IconLibrary Library { get; set; }
+
+    /// <summary>The icon's lookup name within <see cref="Library"/>, when <see cref="Icon"/> is not supplied.</summary>
+    [Parameter] public string? Name { get; set; }
+
+    /// <summary>The rendered width/height in pixels. Defaults to 20.</summary>
+    [Parameter] public int Size { get; set; } = 20;
+
+    /// <summary>Overrides the accessible name. Defaults to the resolved icon's display name.</summary>
+    [Parameter] public string? Title { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private IconDescriptor? _resolved;
+
+    private string? EffectiveTitle => Title ?? _resolved?.DisplayName;
+
+    protected override void OnParametersSet()
+    {
+        _resolved = Icon;
+        if (_resolved is null && !string.IsNullOrEmpty(Name))
+        {
+            Catalog.TryGet(Library, Name, out IconDescriptor? found);
+            _resolved = found;
+        }
+    }
+}

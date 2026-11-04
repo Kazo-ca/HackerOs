@@ -18,7 +18,7 @@ two execution modes:
 
 - **WebAssembly**: the project is a Blazor WASM assembly lazy-loaded
   on demand, like the existing system apps (`docs/lazy-loading.md`).
-- **Server**: the project runs on the `Server/HackerOs.Server` side and is reached
+- **Server**: the project runs on the `Server/Kazo.Os.Server` side and is reached
   from the Browser through the proxy bridge already in place (ADR 0028).
 
 If no domain is declared, the default domain is derived from the project name
@@ -43,7 +43,7 @@ iteration.
   fallback) via DI + manifest capability, reused here for the
   WebAssembly-vs-Server resolution and for the unified DNS resolution (§7).
 - [ADR 0027](../adr/0027-server-hosted-blazor-ui.md) and
-  [ADR 0028](../adr/0028-client-side-server-connection.md): `Server/HackerOs.Server`
+  [ADR 0028](../adr/0028-client-side-server-connection.md): `Server/Kazo.Os.Server`
   already hosts the Razor component tree and an `IProxyClient` for real network
   commands; the Server mode of this plan reuses these two
   mechanisms rather than inventing a third.
@@ -62,9 +62,9 @@ iteration.
   `user-scripts.execute`. File scaffolding (§8, phase 1) respects
   this limit; the compiled preview (§8, phase 2) cannot without the
   `D-xxx` decision of the compilation/execution plan.
-- `Shared/HackerOs.App.Abstractions/AppManifest.cs`, `AppKind.cs`: existing
+- `Shared/Kazo.Os.App.Abstractions/AppManifest.cs`, `AppKind.cs`: existing
   manifest model, anchor point of the new `Web` block (§4).
-- `Shared/HackerOs.Simulation.Abstractions/Network/SimulatedNetworkServiceContracts.cs`:
+- `Shared/Kazo.Os.Simulation.Abstractions/Network/SimulatedNetworkServiceContracts.cs`:
   existing `ISimulatedWebsiteRegistry`/`ISimulatedDns`, not modified by this
   plan (§7 adds a parallel registry, not an extension of these).
 
@@ -98,7 +98,7 @@ between client and server.
 ### 4.1 New enumeration value
 
 ```csharp
-// Shared/HackerOs.App.Abstractions/AppKind.cs
+// Shared/Kazo.Os.App.Abstractions/AppKind.cs
 public enum AppKind
 {
     Window,
@@ -121,7 +121,7 @@ public WebAppManifest? Web { get; init; }
 /// Domaine explicite (ex. "mycompany.hos"). Si null, le domaine par défaut
 /// dérive du nom d'assembly/namespace du projet — voir §4.3.
 /// </param>
-/// <param name="ExecutionMode">WebAssembly (lazy-load client) ou Server (hébergé par HackerOs.Server).</param>
+/// <param name="ExecutionMode">WebAssembly (lazy-load client) ou Server (hébergé par Kazo.Os.Server).</param>
 /// <param name="RootComponentType">
 /// Nom qualifié du composant Razor racine à monter (mode WebAssembly
 /// uniquement). Convention par défaut si absent : voir §5.2.
@@ -170,7 +170,7 @@ Resolution order, from most specific to most generic:
 Full reuse of the existing mechanism (`docs/lazy-loading.md`):
 
 - The assembly of the Web project is declared `<BlazorWebAssemblyLazyLoad>` in
-  `HackerOs.Ecosystem.csproj`, exactly like the current system apps.
+  `Kazo.Os.Ecosystem.csproj`, exactly like the current system apps.
 - Its `app.manifest.json` is embedded and discovered by
   `BuildKnownLazyAppDescriptorRegistry` just like the
   `Window`/`Terminal`/`Service` manifests.
@@ -196,12 +196,12 @@ WASM), not classic ASP.NET Core MVC/Razor Pages, which assumes
 a real HTTP request/response cycle. A classic MVC/Razor Pages project must
 use Server mode (§6).
 
-## 6. Server mode: hosting in `HackerOs.Server`, access through proxy
+## 6. Server mode: hosting in `Kazo.Os.Server`, access through proxy
 
 ### 6.1 Hosting
 
 The referenced ASP.NET project is deployed/run **inside the existing
-`Server/HackerOs.Server` process**, alongside its current sync/identity/proxy APIs
+`Server/Kazo.Os.Server` process**, alongside its current sync/identity/proxy APIs
 (ADR 0027 already added a third Razor hosting mode there;
 this plan adds a fourth, dedicated to referenced Web projects).
 
@@ -220,7 +220,7 @@ dedicated ADR:
   important: a project referenced at build time by the host developer
   does **not** have the same threat model as a future project compiled on the fly
   from user code (Phase 2, §8); the former can reasonably
-  share the `HackerOs.Server` process without an additional sandbox; the
+  share the `Kazo.Os.Server` process without an additional sandbox; the
   latter cannot. This plan therefore pre-approves in-process hosting
   only for projects referenced at build time.
 
@@ -228,7 +228,7 @@ dedicated ADR:
 
 The Browser never opens a direct HTTP connection to the real host. It
 goes through `IProxyClient` (ADR 0028), exactly like the real fallback of
-`ping`. The proxied request targets `HackerOs.Server` with the resolved domain
+`ping`. The proxied request targets `Kazo.Os.Server` with the resolved domain
 (§4.3) passed as a header or in the path, so that the §6.1 middleware routes
 to the right sub-app.
 
@@ -333,7 +333,7 @@ in this order (each step can be a separate ADR):
    new enum value, `WebAppManifest`, default domain resolution,
    component mounting without iframe. Depends on nothing other than
    what exists.
-2. **ADR: Server hosting in `HackerOs.Server` and iframe exception.**
+2. **ADR: Server hosting in `Kazo.Os.Server` and iframe exception.**
    Covers §6: sub-app mounting, proxy routing by domain, and the explicit
    exception to ADR 0021 for iframe rendering scoped to real hosted apps.
    Depends on (1) for the manifest model, and blocked by the proxy's
@@ -348,7 +348,7 @@ in this order (each step can be a separate ADR):
 ## 10. Out of scope for now
 
 - Hosting Web projects on an external real server not operated by
-  `HackerOs.Server` (ruled out by the user's decision in §Context).
+  `Kazo.Os.Server` (ruled out by the user's decision in §Context).
 - Multi-tenancy/multi-user isolation of hosted Server apps:
   inherits the single-tenant limitation already recorded by ADR 0027.
 - On-the-fly compilation/execution of Web projects created in-game (Phase 2,

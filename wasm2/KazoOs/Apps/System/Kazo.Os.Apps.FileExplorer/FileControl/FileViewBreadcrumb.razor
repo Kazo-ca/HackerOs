@@ -1,0 +1,32 @@
+@namespace Kazo.Os.Apps.FileExplorer.FileControl
+@using Microsoft.AspNetCore.Components.Web
+@implements IDisposable
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
+
+@*
+    Breadcrumb ("fil d'Ariane") of a FileView's current directory (ADR 0058, section 1): one button per
+    segment from "/" down. A click navigates the owner there; a drop on a segment goes through the owner's
+    drop pipeline (FileView.DropOntoAsync), so the same DropRequested/move/copy rules apply as on a folder.
+*@
+<nav class="file-view-breadcrumb" aria-label="@Owner.L["Breadcrumb.Label"]" @ref="_element">
+    @{ IReadOnlyList<(string Label, VirtualPath Path)> segments = Segments; }
+    @for (int index = 0; index < segments.Count; index++)
+    {
+        (string label, VirtualPath path) = segments[index];
+        bool isLast = index == segments.Count - 1;
+        @if (index > 0)
+        {
+            <span class="file-view-breadcrumb-separator" aria-hidden="true">›</span>
+        }
+        <button type="button"
+                class="file-view-breadcrumb-segment @(isLast ? "current" : null)"
+                title="@path.Value"
+                aria-current="@(isLast ? "location" : null)"
+                data-drop-target="@(Owner.AllowDragDrop ? "true" : null)"
+                @onclick="() => NavigateAsync(path)"
+                @ondragover:preventDefault="Owner.AllowDragDrop"
+                @ondrop="args => DropAsync(path, args)">
+            @label
+        </button>
+    }
+</nav>

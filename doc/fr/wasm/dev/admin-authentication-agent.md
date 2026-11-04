@@ -11,7 +11,7 @@ Comme `polkit` sous Linux, l'app ne voit jamais le mot de passe (ADR 0055,
 section 5) :
 
 1. l'app appelle une API du SDK, sans identifiants (par exemple
-   `HackAppManagement.UninstallAsync(id, HackInstallScope.Machine)`) ;
+   `KazoAppManagement.UninstallAsync(id, KazoInstallScope.Machine)`) ;
 2. la passerelle vérifie la capacité (`apps.manage`), puis demande à l'agent de
    confirmer un administrateur ;
 3. l'agent affiche sa propre fenêtre, dessinée par la plateforme au-dessus de
@@ -21,7 +21,7 @@ section 5) :
    (ADR 0042), et l'issue est écrite dans `/var/log/auth.log` ;
 5. si un administrateur s'est authentifié, l'OS fait l'opération lui-même, dans
    un contexte système audité ; sinon la passerelle lève
-   `HackUnauthorizedAccessException`.
+   `KazoUnauthorizedAccessException`.
 
 Un processus lancé par `sudo` (`IsRootElevated`) agit déjà en root : l'agent ne
 demande rien et le journal porte `via=sudo`.
@@ -30,10 +30,10 @@ demande rien et le journal porte `via=sudo`.
 
 | Élément | Projet | Rôle |
 |---|---|---|
-| `IAdministratorAuthenticationAgent`, `AdministratorAuthenticationRequest`, `AdministratorAuthenticationResult` | `Platform/HackerOs.Platform.Core/Elevation` | contrat appelé par les passerelles |
+| `IAdministratorAuthenticationAgent`, `AdministratorAuthenticationRequest`, `AdministratorAuthenticationResult` | `Platform/Kazo.Os.Platform.Core/Elevation` | contrat appelé par les passerelles |
 | `AdministratorAuthenticationAgent` | idem | implémentation : root direct, trois essais, journal |
 | `IAdministratorAuthenticationPrompt`, `AdministratorAuthenticationPromptRequest`, `AdministratorAuthenticationAttempt` | idem | surface qui montre la demande ; elle ne décide rien |
-| `AdministratorAuthenticationBroker` | `Platform/HackerOs.Platform.Blazor/Security` | file d'attente des demandes, implémente `IAdministratorAuthenticationPrompt` |
+| `AdministratorAuthenticationBroker` | `Platform/Kazo.Os.Platform.Blazor/Security` | file d'attente des demandes, implémente `IAdministratorAuthenticationPrompt` |
 | `AdministratorAuthenticationOverlay` | idem | fenêtre « bureau sécurisé » rendue par `DesktopShell` et `MobileShell` |
 
 Enregistrement dans l'hôte Ecosystem (`EcosystemServiceCollectionExtensions`) :
@@ -92,14 +92,14 @@ AdministratorAuthenticationResult auth = await agent.AuthenticateAsync(
     cancellationToken);
 if (!auth.Succeeded)
 {
-    throw new HackUnauthorizedAccessException($"Administrator authentication failed ({auth.FailureReason}).");
+    throw new KazoUnauthorizedAccessException($"Administrator authentication failed ({auth.FailureReason}).");
 }
 // L'OS agit ensuite lui-même, en contexte système.
 ```
 
-`AppManagementGateway` (`Platform/HackerOs.Platform.Core/Execution`) est le
+`AppManagementGateway` (`Platform/Kazo.Os.Platform.Core/Execution`) est le
 premier utilisateur. Le chantier `4-sdk-system-admin` le réutilise tel quel
-par `AdministratorGate` (`Platform/HackerOs.Platform.Core/Administration`) :
+par `AdministratorGate` (`Platform/Kazo.Os.Platform.Core/Administration`) :
 `AppPermissionAdministrationGateway` (politique et décisions machine) et
 `AppSystemPowerGateway` (redémarrage, réinitialisation). Voir
 [`system-administration.md`](../framework/system-administration.md).
@@ -115,20 +115,20 @@ par `AdministratorGate` (`Platform/HackerOs.Platform.Core/Administration`) :
 - **Mode texte du terminal non couvert ici.** L'ADR 0055 demande une saisie en
   mode texte quand l'opération part d'un terminal. Le terminal ne dispose pas
   encore d'une invite d'identifiants fournie par l'appelant : elle arrive avec
-  `HackCredentialPrompt` (chantier `4-sdk-shell-host`). D'ici là, une commande
+  `KazoCredentialPrompt` (chantier `4-sdk-shell-host`). D'ici là, une commande
   qui demande un administrateur voit la fenêtre du bureau, et `sudo` reste le
   moyen texte d'agir en root.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Elevation/AdministratorAuthenticationAgentTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Elevation/AdministratorAuthenticationAgentTests.cs` :
   root sans demande, absence de surface, essai faux puis juste, trois échecs,
   surface qui tente de forger une approbation, demande de clé d'accès fermée
   qui ne coûte pas d'essai puis clé vérifiée, pas de bouton sans vérificateur.
-- `Tests/HackerOs.Platform.Core.Tests/Execution/AppCatalogGatewayTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Execution/AppCatalogGatewayTests.cs` :
   portée machine refusée ou acceptée, app système refusée avant toute demande,
   `sudo` sans demande.
-- `Tests/HackerOs.Platform.Blazor.Tests/Security/AdministratorAuthenticationOverlayTests.cs` :
+- `Tests/Kazo.Os.Platform.Blazor.Tests/Security/AdministratorAuthenticationOverlayTests.cs` :
   rendu de la fenêtre et comportement du courtier.
 
 ## Liste des tâches (`rebuild/4-sdk-user-and-apps`)
@@ -136,6 +136,6 @@ par `AdministratorGate` (`Platform/HackerOs.Platform.Core/Administration`) :
 - [x] Contrats et implémentation de l'agent dans Platform Core.
 - [x] Courtier et fenêtre dans Platform Blazor, rendus par les deux shells.
 - [x] Enregistrement dans l'hôte Ecosystem et passage à la fabrique de contextes.
-- [x] Utilisation par `HackAppManagement` pour la portée machine.
+- [x] Utilisation par `KazoAppManagement` pour la portée machine.
 - [x] Tests et documentation.
-- [ ] Mode texte dans le terminal (avec `HackCredentialPrompt`, `4-sdk-shell-host`).
+- [ ] Mode texte dans le terminal (avec `KazoCredentialPrompt`, `4-sdk-shell-host`).

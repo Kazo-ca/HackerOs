@@ -11,7 +11,7 @@ hard-coded app IDs.
 
 ## Architecture
 
-### `HackerOs.App.Abstractions`
+### `Kazo.Os.App.Abstractions`
 
 This project owns:
 
@@ -29,7 +29,7 @@ This project owns:
 It contains no runtime loading, reflection, Blazor, storage, or policy
 implementation.
 
-### `HackerOs.AppSdk`
+### `Kazo.Os.AppSdk`
 
 This project owns:
 
@@ -42,7 +42,7 @@ This project owns:
 
 `WindowAppBase` is deliberately absent. It will live in a Blazor-specific SDK
 project so terminal and service apps do not reference Blazor. That project now
-exists as `HackerOs.AppSdk.Blazor`; see `blazor-app-sdk.md`.
+exists as `Kazo.Os.AppSdk.Blazor`; see `blazor-app-sdk.md`.
 
 ## Manifest usage
 

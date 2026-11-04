@@ -4,7 +4,7 @@
 
 ## Objet
 
-La publication Release de l'hôte Ecosystem (`OS/HackerOs.Ecosystem`) est
+La publication Release de l'hôte Ecosystem (`OS/Kazo.Os.Ecosystem`) est
 élaguée par ILLink (chantier `v3/14-trimming`, ADR 0106 et 0113) : le code du
 framework .NET que Kazo OS n'utilise pas est retiré des fichiers
 WebAssembly. Le premier chargement télécharge moins, et chaque Web Worker
@@ -23,13 +23,13 @@ satellites `fr/` compris). L'AOT est hors périmètre.
 ```
 Ecosystem.csproj            PublishTrimmed=true, TrimMode=partial
         │
-        ├─ CollectHackerOsBuiltInApplications (build/HackerOs.Apps.targets)
+        ├─ CollectKazoOsBuiltInApplications (build/Kazo.Os.Apps.targets)
         │     ManifestGenerator aggregate --trimmer-roots
         │       → obj/.../BuiltInApplications.json
-        │       → obj/.../HackerOs.TrimmerRoots.xml  ──► TrimmerRootDescriptor
+        │       → obj/.../Kazo.Os.TrimmerRoots.xml  ──► TrimmerRootDescriptor
         │
-        └─ _HackerOsRootHackerOsAssemblies (avant PrepareForILLink)
-              chaque HackerOs.*.dll publiée ──► TrimmerRootAssembly
+        └─ _KazoOsRootKazoOsAssemblies (avant PrepareForILLink)
+              chaque Kazo.Os.*.dll publiée ──► TrimmerRootAssembly
                                     │
                               ILLink (publish)
             framework et bibliothèques élaguables : élagués
@@ -47,7 +47,7 @@ Ecosystem.csproj            PublishTrimmed=true, TrimMode=partial
   l'interop JavaScript, qui les sérialise par réflexion sans que l'analyse de
   trimming le voie. Un élagage membre par membre casse le démarrage (stockage
   « unavailable ») pour seulement 0,4 Mio de Brotli gagné (ADR 0113 §1).
-- **`HackerOs.TrimmerRoots.xml`** (`TrimmerRootDescriptorWriter` du générateur
+- **`Kazo.Os.TrimmerRoots.xml`** (`TrimmerRootDescriptorWriter` du générateur
   de manifestes) : une ligne `<assembly fullname="…" preserve="all" />` par
   assembly que nomme un manifeste (point d'entrée, entrées par plateforme,
   composants, `web.blazor`). Il couvre les apps installées en paquets, même
@@ -61,14 +61,14 @@ Ecosystem.csproj            PublishTrimmed=true, TrimMode=partial
 ### Publier et tester
 
 ```bash
-wasm2/HackerOs/build/publish-trimmed.sh            # publie, mesure, sert, teste
-wasm2/HackerOs/build/publish-trimmed.sh --compare  # publie aussi sans trimming et compare
-wasm2/HackerOs/build/publish-trimmed.sh --skip-build
+wasm2/KazoOs/build/publish-trimmed.sh            # publie, mesure, sert, teste
+wasm2/KazoOs/build/publish-trimmed.sh --compare  # publie aussi sans trimming et compare
+wasm2/KazoOs/build/publish-trimmed.sh --skip-build
 ```
 
 Le script publie dans `artifacts/publish-trimmed/publish`, échoue sur toute
 alerte `IL…`, sert la publication sur `127.0.0.1` et `127.0.0.2`, puis lance
-`Tests/HackerOs.TrimmedPublish.E2E.Tests` :
+`Tests/Kazo.Os.TrimmedPublish.E2E.Tests` :
 
 | Test | Ce qu'il vérifie |
 |---|---|
@@ -76,7 +76,7 @@ alerte `IL…`, sert la publication sur `127.0.0.1` et `127.0.0.2`, puis lance
 | `Trimmed_publish_boots_offline_after_the_first_load` | sur `127.0.0.2` (le service worker n'est pas enregistré sur `127.0.0.1`) : mise en cache de la version, rechargement sans réseau, connexion, lancement d'une app jamais chargée |
 | `The_calculator_rendered_in_a_worker_works_like_on_the_page` | essai de l'ADR 0133, réglage activé par une réécriture d'`appsettings.json` : la Calculatrice dans un worker calcule à la souris et au clavier, garde son CSS, `Tab`, axe, `Alt+F7`/`Alt+Q`, worker dédié libéré à la fermeture ([`remote-window-rendering.md`](remote-window-rendering.md)) |
 | `Measures_the_calculator_on_the_page_and_in_a_worker` | mesures de l'ADR 0133 (ouverture, latence, mémoire, lots), écrites dans `remote-window-measurements.json` du dossier des artefacts |
-| `An_installed_app_finds_its_wwwroot_files_and_its_worker_scripts` | ADR 0206 : le paquet de test `Tests/fixtures/installed-app` (emballé par le script avec `HackerOsPack`, servi par Playwright à la place de `raw.githubusercontent.com`) est installé par `sudo hackpkg install`, l'OS redémarre, l'app importe son module, lance son Web Worker (`importScripts` relatif) et affiche son image ; sur `127.0.0.1`, par le service worker du mode `installed-apps` |
+| `An_installed_app_finds_its_wwwroot_files_and_its_worker_scripts` | ADR 0206 : le paquet de test `Tests/fixtures/installed-app` (emballé par le script avec `KazoOsPack`, servi par Playwright à la place de `raw.githubusercontent.com`) est installé par `sudo hackpkg install`, l'OS redémarre, l'app importe son module, lance son Web Worker (`importScripts` relatif) et affiche son image ; sur `127.0.0.1`, par le service worker du mode `installed-apps` |
 | `The_published_service_worker_serves_installed_app_files_to_a_worker` | ADR 0206 sur `127.0.0.2` : le service worker publié sert les fichiers du cache `hackeros-installed-apps` à un Web Worker sous isolation cross-origin |
 | `Trimmed_publish_shows_a_new_notification_as_a_bubble_above_the_taskbar` | ADR 0197 : la notification des nouveautés postée à la connexion d'un nouveau compte apparaît en bulle au-dessus de la barre (source « Kazo OS », titre, bouton « Voir »), part seule après environ 6 s et reste dans le panneau de l'horloge ([`notification-toasts.md`](notification-toasts.md)) |
 | `Trimmed_publish_shows_unread_notifications_next_to_the_clock` | ADR 0196 : un nouveau compte reçoit la notification des nouveautés (`whats-new.json` servi) ; point et infobulle de l'horloge, aucun point sur Applications, panneau ouvert = lu, **Voir** ouvre Paramètres ▸ Nouveautés et ferme la notification ; captures `trimmed-clock-dot.png` et `trimmed-whats-new-page.png` |
@@ -93,7 +93,7 @@ Release : son test de démarrage porte donc lui aussi sur la publication trimmé
 ### Un hôte d'un autre dépôt
 
 Le gabarit `hackeros-host` publie trimmé de la même façon. Les cibles de
-`HackerOs.App.Build` génèrent les racines et gardent les paquets `HackerOs.*`
+`Kazo.Os.App.Build` génèrent les racines et gardent les paquets `Kazo.Os.*`
 entiers ; les gabarits d'apps partent avec `IsTrimmable=true`, et le paquet
 active l'analyse de trimming dans un projet d'app qui ne la règle pas.
 
@@ -102,7 +102,7 @@ active l'analyse de trimming dans un projet d'app qui ne la règle pas.
 La conversion WebCIL du SDK est incrémentale par dates de fichiers. Une
 publication non trimmée (`-p:PublishTrimmed=false`) faite après une publication
 trimmée dans le même dossier `obj/` peut reprendre les assemblies élaguées.
-Avant de comparer, supprimer `OS/HackerOs.Ecosystem/obj/Release/net10.0/linked`,
+Avant de comparer, supprimer `OS/Kazo.Os.Ecosystem/obj/Release/net10.0/linked`,
 `webcil` et `tmp-webcil` (le script le fait).
 
 ## Décisions clés
@@ -118,10 +118,10 @@ Avant de comparer, supprimer `OS/HackerOs.Ecosystem/obj/Release/net10.0/linked`,
 ## Tâches
 
 - [x] `PublishTrimmed=true` et `TrimMode=partial` dans l'Ecosystem et le gabarit d'hôte.
-- [x] `HackerOs.TrimmerRoots.xml` généré par l'agrégation et passé à ILLink.
-- [x] Assemblies `HackerOs.*` gardées entières à la publication d'un hôte.
+- [x] `Kazo.Os.TrimmerRoots.xml` généré par l'agrégation et passé à ILLink.
+- [x] Assemblies `Kazo.Os.*` gardées entières à la publication d'un hôte.
 - [x] Justifications des suppressions d'avertissements mises à jour.
-- [x] `HackerOs.App.Build` : analyse de trimming dans les projets d'apps ; gabarits `IsTrimmable=true`.
-- [x] `build/publish-trimmed.sh` et `Tests/HackerOs.TrimmedPublish.E2E.Tests`.
+- [x] `Kazo.Os.App.Build` : analyse de trimming dans les projets d'apps ; gabarits `IsTrimmable=true`.
+- [x] `build/publish-trimmed.sh` et `Tests/Kazo.Os.TrimmedPublish.E2E.Tests`.
 - [x] Tailles avant et après mesurées (ici et dans `building-and-testing.md`).
 - [x] ADR 0113.

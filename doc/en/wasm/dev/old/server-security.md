@@ -22,7 +22,7 @@ This document records the optional server's currently implemented security bound
 - [x] Reject non-HTTP protocols and non-HTTP(S) target schemes.
 - [x] Reject IPv4-mapped IPv6 loopback.
 - [x] Prove the validated address is visible during transport and cleared afterward.
-- [x] Focused command: `dotnet test Tests/HackerOs.Server.Tests/HackerOs.Server.Tests.csproj --configuration Release --no-restore` — 40 passed, 0 failed, 0 skipped on 2026-08-04. `ServerStartupIntegrationTests` proves the documented `HACKEROS_ConnectionStrings__HackerOsDb` override drives fresh schema creation and `/health`; it also rejects anonymous account access and proves bounded SQLite backup/restore.
+- [x] Focused command: `dotnet test Tests/Kazo.Os.Server.Tests/Kazo.Os.Server.Tests.csproj --configuration Release --no-restore` — 40 passed, 0 failed, 0 skipped on 2026-08-04. `ServerStartupIntegrationTests` proves the documented `HACKEROS_ConnectionStrings__HackerOsDb` override drives fresh schema creation and `/health`; it also rejects anonymous account access and proves bounded SQLite backup/restore.
 
 ## Remaining gates
 

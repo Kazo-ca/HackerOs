@@ -25,19 +25,19 @@ appareils :
 
 | Rôle | Fichier |
 | --- | --- |
-| Synchro du dossier personnel (push, pull, conflits, résolution) | `Platform/HackerOs.Platform.Core/ServerConnection/IFileSystemSyncService.cs` (`FileSystemSyncService`) |
+| Synchro du dossier personnel (push, pull, conflits, résolution) | `Platform/Kazo.Os.Platform.Core/ServerConnection/IFileSystemSyncService.cs` (`FileSystemSyncService`) |
 | Opérations sur les fichiers de la synchro (écrire, déplacer, corbeille) | `ServerConnection/SyncFileOperations.cs` |
 | Contrats des conflits et fichier `sync-conflicts.json` | `ServerConnection/SyncConflicts.cs` |
 | Synchro périodique | `ServerConnection/SyncScheduler.cs` |
 | État du dialogue de conflit | `ServerConnection/SyncConflictCenter.cs` |
 | Réglages `sync.config` | `ServerConnection/SyncSettingsDocuments.cs` |
 | Associations de fichiers (avec pierre tombale) | `ServerConnection/IFileAssociationsSyncService.cs` |
-| États des enregistrements et curseurs (IndexedDB, schéma v4) | `Infrastructure/HackerOs.Infrastructure.Browser/Sync/IndexedDbSyncRecordStateRepository.cs`, `IndexedDbSyncCursorRepository.cs` |
-| Dialogue de conflit de l'OS | `Platform/HackerOs.Platform.Blazor/Sync/SyncConflictOverlay.razor` (dans `DesktopShell` et `MobileShell`) |
-| Onglet Synchronisation | `Apps/System/HackerOs.Apps.Settings/SettingsWindow.razor` |
-| SDK | `Shared/HackerOs.AppSdk/Administration/HackServerConnection.cs`, `ServerConnectionContracts.cs` |
-| Connexion automatique au serveur qui sert l'OS, icône d'état ([`server-hosting.md`](server-hosting.md)) | `ServerConnection/ServerPresenceService.cs`, `HostInfoClient.cs`, `Platform/HackerOs.Platform.Blazor/Shell/ServerStatusIndicator.razor` |
-| Purge des pierres tombales (serveur) | `Server/HackerOs.Server/Services/SyncService.cs` (`PurgeExpiredTombstonesAsync`), `SyncTombstonePurgeService.cs` |
+| États des enregistrements et curseurs (IndexedDB, schéma v4) | `Infrastructure/Kazo.Os.Infrastructure.Browser/Sync/IndexedDbSyncRecordStateRepository.cs`, `IndexedDbSyncCursorRepository.cs` |
+| Dialogue de conflit de l'OS | `Platform/Kazo.Os.Platform.Blazor/Sync/SyncConflictOverlay.razor` (dans `DesktopShell` et `MobileShell`) |
+| Onglet Synchronisation | `Apps/System/Kazo.Os.Apps.Settings/SettingsWindow.razor` |
+| SDK | `Shared/Kazo.Os.AppSdk/Administration/KazoServerConnection.cs`, `ServerConnectionContracts.cs` |
+| Connexion automatique au serveur qui sert l'OS, icône d'état ([`server-hosting.md`](server-hosting.md)) | `ServerConnection/ServerPresenceService.cs`, `HostInfoClient.cs`, `Platform/Kazo.Os.Platform.Blazor/Shell/ServerStatusIndicator.razor` |
+| Purge des pierres tombales (serveur) | `Server/Kazo.Os.Server/Services/SyncService.cs` (`PurgeExpiredTombstonesAsync`), `SyncTombstonePurgeService.cs` |
 
 ### État suivi par enregistrement
 
@@ -160,13 +160,13 @@ paused = true
 
 ## Utilisation / API
 
-SDK (`HackServerConnection`, capacité dangereuse `server.connection.manage`) :
+SDK (`KazoServerConnection`, capacité dangereuse `server.connection.manage`) :
 
 | Méthode | Effet |
 | --- | --- |
-| `GetConflictsAsync()` | Conflits en attente (`HackSyncConflict(Domain, Path, DetectedAt)`). |
+| `GetConflictsAsync()` | Conflits en attente (`KazoSyncConflict(Domain, Path, DetectedAt)`). |
 | `ShowConflictsAsync()` | Ouvre le dialogue de conflit de l'OS. |
-| `GetSyncStatusAsync()` | `HackSyncStatus` : actif, suspendu, en ligne, dernier passage, envoyés, reçus, dernière erreur, intervalle. |
+| `GetSyncStatusAsync()` | `KazoSyncStatus` : actif, suspendu, en ligne, dernier passage, envoyés, reçus, dernière erreur, intervalle. |
 | `SetSyncPausedAsync(bool)` | Écrit `paused` dans la couche utilisateur ; une reprise lance un passage. |
 | `SyncNowAsync()` | Un passage complet tout de suite. |
 | `SyncAsync(domaine, sens)` | Inchangé : un domaine dans un sens. |
@@ -177,7 +177,7 @@ Plateforme (`IFileSystemSyncService`) : `PushAsync` et `PullAsync` rendent un
 l'événement `ConflictsChanged`, `ListSynchronizedDirectoriesAsync`.
 
 Commande : `trash list` ajoute « (deleted on another device) » aux éléments
-mis à la corbeille par la synchro ; `HackTrashItem.DeletedOnAnotherDevice` le
+mis à la corbeille par la synchro ; `KazoTrashItem.DeletedOnAnotherDevice` le
 dit aux apps.
 
 ## Décisions de mise en œuvre
@@ -205,7 +205,7 @@ dit aux apps.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/ServerConnection/FileSystemSyncDeletionAndConflictTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/ServerConnection/FileSystemSyncDeletionAndConflictTests.cs` :
   deux appareils et un serveur en mémoire aux mêmes règles que le vrai
   (suppression propagée, pierre tombale reçue mise à la corbeille, entrée
   jamais synchronisée, renommage, corbeille vidée, fichier figé et reprise
@@ -215,9 +215,9 @@ dit aux apps.
 - `FileSystemSyncServiceTests.cs`, `FileAssociationsSyncServiceTests.cs`
   (pierre tombale envoyée une fois, jamais pour un fichier jamais synchronisé,
   pierre tombale reçue qui rétablit les valeurs par défaut).
-- `Tests/HackerOs.Server.Tests/SyncServiceTests.cs` : purge après 90 jours, ligne
+- `Tests/Kazo.Os.Server.Tests/SyncServiceTests.cs` : purge après 90 jours, ligne
   de plus grande séquence gardée.
-- `Tests/HackerOs.AppSdk.Tests/IO/HackTrashTests.cs` : origine lue dans le
+- `Tests/Kazo.Os.AppSdk.Tests/IO/KazoTrashTests.cs` : origine lue dans le
   `.trashinfo`.
 
 ## Liste des tâches

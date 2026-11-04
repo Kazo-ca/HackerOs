@@ -1,0 +1,104 @@
+@using Kazo.Os.AppSdk.Icons
+@using Kazo.Os.Platform.Core.ServerConnection
+@implements IDisposable
+
+@*
+    Synchronization conflict dialog of ADR 0101 section 2. Rendered by the platform shell above
+    every window, like the other OS dialogs: one card per file, three choices, "Apply to all".
+*@
+@if (_center is { IsDialogOpen: true } center && center.Conflicts.Count > 0)
+{
+    <div class="scd-veil"
+         @onkeydown="HandleKeyDown"
+         @onkeydown:stopPropagation="true"
+         @onclick:stopPropagation="true">
+        <section class="scd-window"
+                 role="dialog"
+                 aria-modal="true"
+                 aria-labelledby="scd-title"
+                 aria-describedby="scd-subtitle">
+            <header class="scd-banner">
+                <KazoIcon Library="IconLibrary.Lucide" Name="git-compare-arrows" Size="26" Title="" class="scd-banner-icon" />
+                <div>
+                    <h2 id="scd-title">@L["Sync.Title"]</h2>
+                    <p id="scd-subtitle">
+                        @(center.Conflicts.Count == 1
+                            ? L["Sync.Subtitle.One"]
+                            : L["Sync.Subtitle.Many", center.Conflicts.Count])
+                        @L["Sync.Subtitle.Frozen"]
+                    </p>
+                </div>
+            </header>
+
+            <div class="scd-body">
+                @if (center.Conflicts.Count > 1)
+                {
+                    <div class="scd-apply-all" role="group" aria-label="@L["Sync.ApplyToAll"]">
+                        <span>@L["Sync.ApplyToAllPrompt"]</span>
+                        <button type="button" disabled="@_isBusy" @onclick="() => ResolveAllAsync(SyncConflictChoice.KeepMine)">@L["Sync.KeepMineAll"]</button>
+                        <button type="button" disabled="@(_isBusy || !AllRemoteKnown)" @onclick="() => ResolveAllAsync(SyncConflictChoice.KeepOther)">@L["Sync.KeepOtherAll"]</button>
+                        <button type="button" disabled="@(_isBusy || !AllRemoteKnown)" @onclick="() => ResolveAllAsync(SyncConflictChoice.KeepBoth)">@L["Sync.KeepBoth"]</button>
+                    </div>
+                }
+
+                <ul class="scd-files">
+                    @foreach (SyncFileConflict conflict in center.Conflicts)
+                    {
+                        <li @key="conflict.RecordId" class="scd-file">
+                            <div class="scd-file-path">
+                                <KazoIcon Library="IconLibrary.Lucide" Name="file-warning" Size="16" Title="" />
+                                <code>~/@conflict.RelativePath</code>
+                            </div>
+
+                            <div class="scd-versions">
+                                <div class="scd-version scd-version-local">
+                                    <h3>@L["Sync.ThisDevice"]</h3>
+                                    @VersionFacts(conflict.Local)
+                                    @if (_previews.TryGetValue(conflict.RecordId, out SyncConflictPreview? localPreview) && localPreview.LocalText is { } localText)
+                                    {
+                                        <pre class="scd-preview">@localText</pre>
+                                    }
+                                </div>
+                                <div class="scd-version scd-version-remote">
+                                    <h3>@L["Sync.OtherDevice"]</h3>
+                                    @if (conflict.Remote is { } remote)
+                                    {
+                                        @VersionFacts(remote)
+                                        @if (_previews.TryGetValue(conflict.RecordId, out SyncConflictPreview? remotePreview) && remotePreview.RemoteText is { } remoteText)
+                                        {
+                                            <pre class="scd-preview">@remoteText</pre>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <p class="scd-pending">@L["Sync.NotReceived"]</p>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="scd-actions">
+                                @if (!_previews.ContainsKey(conflict.RecordId))
+                                {
+                                    <button type="button" class="scd-link" disabled="@_isBusy" @onclick="() => LoadPreviewAsync(conflict.RecordId)">@L["Sync.Preview"]</button>
+                                }
+                                <button type="button" disabled="@_isBusy" @onclick="() => ResolveAsync(conflict.RecordId, SyncConflictChoice.KeepMine)">@L["Sync.KeepMine"]</button>
+                                <button type="button" disabled="@(_isBusy || conflict.Remote is null)" @onclick="() => ResolveAsync(conflict.RecordId, SyncConflictChoice.KeepOther)">@L["Sync.KeepOther"]</button>
+                                <button type="button" class="scd-primary" disabled="@(_isBusy || conflict.Remote is null)" @onclick="() => ResolveAsync(conflict.RecordId, SyncConflictChoice.KeepBoth)">@L["Sync.KeepBoth"]</button>
+                            </div>
+                        </li>
+                    }
+                </ul>
+
+                @if (!string.IsNullOrEmpty(_error))
+                {
+                    <p class="scd-error" role="alert">@_error</p>
+                }
+            </div>
+
+            <footer class="scd-footer">
+                <span>@L["Sync.Footer"] <code>.sync-conflict-…</code>@L["Sync.FooterEnd"]</span>
+                <button type="button" class="scd-later" disabled="@_isBusy" @onclick="Later">@L["Sync.Later"]</button>
+            </footer>
+        </section>
+    </div>
+}

@@ -30,14 +30,14 @@ its browser:
 
 ## 2. Starting point (verified on `web/base`)
 
-- The simulated sites (HackMail, HackerSearch, forum, darknet, bank) are
+- The simulated sites (KazoMail, KazoSearch, forum, darknet, bank) are
   `ISimulatedWebsiteController` instances registered at host startup
   (`Platform.Core/Network/Websites/`). Their routing is minimal (`Get`/`Post`,
   exact path or `{param}` on one segment).
 - `SimulatedHttpResponse` does not carry HTML: it carries a structured
   `SimulatedPage` (sections), drawn by `SimulatedPageRenderer.razor`. There is no way
   to return HTML, CSS, JS, JSON or bytes.
-- The network SDK (`HackHttpClient`, `IAppNetworkGateway`, ADR 0055, 0056) can
+- The network SDK (`KazoHttpClient`, `IAppNetworkGateway`, ADR 0055, 0056) can
   send all HTTP methods, with a fallback to the real network through the
   optional server relay (`network.real.access`). No app can
   listen on a port; `netstat` has nothing to show; there is no
@@ -52,11 +52,11 @@ its browser:
    DNS resolver; a closed port answers `ERR_CONNECTION_REFUSED`; the browser
    itself loads the subresources of a page.
 2. **Public SDK only.** ASP.Hack is a library of the SDK
-   (`HackerOsSdkLibrary`); a site references neither Platform Core nor the
+   (`KazoOsSdkLibrary`); a site references neither Platform Core nor the
    internal services (ADR 0055, codes `HOSAPP0030/0031`).
 3. **Resemble ASP.NET without copying it.** Same ideas and same attribute
    names (`[HttpGet]`, `[Route]`, `[FromBody]`), base classes prefixed
-   `Hack` (`HackController`, `HackHttpContext`); only the useful subset
+   `Hack` (`KazoController`, `KazoHttpContext`); only the useful subset
    (section 6 of ADR 0076).
 4. **A site's JS is isolated.** It never touches Kazo OS or the Internet:
    everything goes through the simulated network.
@@ -78,7 +78,7 @@ its browser:
 | 2 | An app site (project) is **external**: served read-only from the project resources, under the name it declares. A site created by the user is **hosted in the OS**, from its files, on `localhost`. | 0073, 0077 |
 | 3 | A site has no `filesystem.*` capability; an interactive Blazor site has no access to files either. | 0073 |
 | 4 | OS DNS resolver (`hackdns` service): `/etc/hosts`, manifest URLs, declared static sites, simulated network, then fallback to the server relay if available. | 0074 |
-| 5 | `HackHttpListener` (modeled on `System.Net.HttpListener`), `network.listen` capability, ports < 1024 reserved for the administrator, table of listening ports, on-demand activation (like systemd sockets), real HTTP bodies (`Content-Type` + bytes). | 0074 |
+| 5 | `KazoHttpListener` (modeled on `System.Net.HttpListener`), `network.listen` capability, ports < 1024 reserved for the administrator, table of listening ports, on-demand activation (like systemd sockets), real HTTP bodies (`Content-Type` + bytes). | 0074 |
 | 6 | The browser renders real HTML in an isolated iframe (`sandbox="allow-scripts"`, without same origin), itself loads subresources through the simulated network and relays `fetch`, `XMLHttpRequest`, links and forms; `file://` reads the files of the OS. | 0075 |
 | 7 | ASP.Hack MVC: middleware pipeline, attribute routing and conventional routing generated at build time, model binding, results, per-request DI, cookie session. | 0076 |
 | 8 | Two view engines: `.razor` components rendered to HTML (`HtmlRenderer`), and `.cshtml` views compiled at build time by the Razor compiler with an ASP.Hack base class (after a proof of feasibility); `.cshtml` compilation in the OS later. | 0076 |
@@ -122,16 +122,16 @@ Benoit kept all the recommendations, with a clarification on question 3.
 |---|---|---|
 | `web/1-adr` | This plan, ADR 0073 to 0078, index. | n/a |
 | `web/2-http-bodies` | Real HTTP bodies in the simulated contracts and the SDK (`Content-Type`, bytes, headers); `SimulatedPage` stays for existing sites; `curl` displays the raw body. | `1` |
-| `web/3-listener-dns` | `HackHttpListener`, `network.listen`, port table, `hackdns`, `/etc/hosts`, manifest `Urls`, on-demand activation, `netstat -tlnp`, `/proc/net/tcp`, shared web worker and remote gateway for a listener in this worker. | `2` |
+| `web/3-listener-dns` | `KazoHttpListener`, `network.listen`, port table, `hackdns`, `/etc/hosts`, manifest `Urls`, on-demand activation, `netstat -tlnp`, `/proc/net/tcp`, shared web worker and remote gateway for a listener in this worker. | `2` |
 | `web/4-browser-html` | Isolated iframe, subresource loader, `fetch`/XHR/forms bridge, `file://`, "source" tab, network errors. | `2` |
 | `web/5-static-sites` | `.site` files, `hackwebd` service (static files, index, MIME types, 404), Web Server Manager app, opening a folder as a site. | `3`, `4` |
-| `web/6-mvc-core` | `HackerOs.AppSdk.Web` library: `WebAppDefinition`, `HackWebApplication`, middlewares, route generator, controllers, binding, JSON/Content/File/Redirect results, per-request DI, session. | `3` |
+| `web/6-mvc-core` | `Kazo.Os.AppSdk.Web` library: `WebAppDefinition`, `KazoWebApplication`, middlewares, route generator, controllers, binding, JSON/Content/File/Redirect results, per-request DI, session. | `3` |
 | `web/7-razor-views` | `.razor` views to HTML, layout, partials, `Model`, URL helpers, anti-forgery, project `wwwroot` served read-only. | `6` |
 | `web/8-cshtml-views` | Proof of feasibility then `.cshtml` views compiled at build time (`@model`, `@inject`, `@section`, `_Layout`, `_ViewStart`). If the proof fails, a replacement ADR is written before the code. | `7` |
 | `web/9-blazor-sites` | Interactive Blazor sites drawn in the page area of the browser, URL navigation, without `filesystem.*` capability. | `4`, `6` |
 | `web/10-detached-window` | Detached window driven by the main instance (display link), for HTML pages first. | `4` |
 | `web/11-sample-final` | "Intranet" sample app (pages, REST API, JS, Blazor), guide `asp-hack-developer-guide.md`, `sdk-reference.md`, final verification. | all |
-| `web/12-site-data` | Added after closing (ADR 0087 §4): `HackWebDb` database of a site, debug logs `/var/log/hackweb/<id>.log`, browser autofill (ADR 0073 §3, ADR 0088). | `11` |
+| `web/12-site-data` | Added after closing (ADR 0087 §4): `KazoWebDb` database of a site, debug logs `/var/log/hackweb/<id>.log`, browser autofill (ADR 0073 §3, ADR 0088). | `11` |
 
 Order: `2`; then `3` and `4` in parallel; then `5`, `6` and `10`; then `7`
 and `9`; then `8`; then `11`.
@@ -141,7 +141,7 @@ and `9`; then `8`; then `11`.
 - Compiling an ASP.Hack project or a `.cshtml` view **in the OS** (Roslyn in the
   browser): the engine and the deployment allow it, the work item will come
   later.
-- Migrating HackMail, HackerSearch and the other registered sites to ASP.Hack.
+- Migrating KazoMail, KazoSearch and the other registered sites to ASP.Hack.
 - Second desktop screen (the display link of ADR 0078 prepares it).
 - Real HTTPS, certificates, full authentication (roles, OAuth), OpenAPI,
   WebSockets.
@@ -169,5 +169,5 @@ None. The last two were settled by Benoit on 2026-10-16 (decisions
 - [x] `web/8-cshtml-views` ([`asp-hack-cshtml-views.md`](../../framework/asp-hack-cshtml-views.md), ADR 0086: proof succeeded, no interpreted engine)
 - [x] `web/9-blazor-sites` ([`blazor-sites.md`](../../framework/blazor-sites.md), ADR 0084)
 - [x] `web/10-detached-window` ([`detached-display-windows.md`](../detached-display-windows.md), ADR 0081)
-- [x] `web/11-sample-final` ([`asp-hack-developer-guide.md`](../../framework/asp-hack-developer-guide.md), ADR 0087: Intranet sample, `target` links of Blazor sites, views compilable in a shipped app, `TryValidateModel`; the `HackWebDb` database of ADR 0073 §3, a site's debug logs and autofill are done by `web/12`)
+- [x] `web/11-sample-final` ([`asp-hack-developer-guide.md`](../../framework/asp-hack-developer-guide.md), ADR 0087: Intranet sample, `target` links of Blazor sites, views compilable in a shipped app, `TryValidateModel`; the `KazoWebDb` database of ADR 0073 §3, a site's debug logs and autofill are done by `web/12`)
 - [x] `web/12-site-data` ([`asp-hack-site-data.md`](../../framework/asp-hack-site-data.md), ADR 0088: `hackweb.<id>` database through an OS gateway, Diagnostic and uninstall, `ILogger<T>` to `/var/log/hackweb/<id>.log`, browser form history; the Intranet keeps its notes in its database)

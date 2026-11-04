@@ -4,7 +4,7 @@
 
 Commands added or reviewed by [ADR 0064](adr/0064-posix-shell-scripts-jobs-and-app-commands.md)
 so that the terminal behaves like a Linux shell. They live in
-`Apps/Commands/HackerOs.Commands/` (one folder per command, ADR 0051), depend
+`Apps/Commands/Kazo.Os.Commands/` (one folder per command, ADR 0051), depend
 only on the public SDK (ADR 0055) and are system apps. The shell language
 itself (pipes, redirections, scripts, jobs, apps launched by name) is
 described in [`shell-interpreter.md`](shell-interpreter.md); the commands that
@@ -23,8 +23,8 @@ alice@hackeros:~$ watch -n 1 'ps | wc -l'
 
 - **Mimic the real thing**: messages, options and exit codes of coreutils,
   procps, iproute2, net-tools, Info-ZIP and systemd; each displayed value
-  comes from a real OS source (`/proc`, `HackDriveInfo`,
-  `HackServiceController`, simulated network) or is documented as simulated.
+  comes from a real OS source (`/proc`, `KazoDriveInfo`,
+  `KazoServiceController`, simulated network) or is documented as simulated.
 - Files go through the `Hack*` API (or the file gateway for older commands):
   paths relative to the command's directory, the command's permissions and
   capabilities.
@@ -67,11 +67,11 @@ alice@hackeros:~$ watch -n 1 'ps | wc -l'
 |---|---|---|
 | `mkdir` | `-p`/`--parents`, `-v`/`--verbose`, `--` | Like coreutils: without `-p`, the parent must exist and an existing folder gives "File exists"; with `-p`, each missing component is created (one `mkdir(2)` per component, with the parent's revision), an existing folder is not an error and a file on the path gives "Not a directory". `-v` prints `mkdir: created directory '…'` for each folder created. Mode `0755`. |
 | `chmod` | octal or symbolic `MODE` (`+x`, `u+x`, `go-w`, `a=r`, `u=rwx,g=rx,o=`, `g+u`, `X`), `-R`, `-v`, `-c`, `-f` | Without a class letter, the `022` mask applies (`+w` = owner only); special bits (4th digit) are ignored. |
-| `ln` | `-s`, `-f`, `-n`, `-v`, `CIBLE [LIEN]`, `CIBLE… DOSSIER` | Symbolic links through `HackFile.CreateSymbolicLinkAsync`; the target text is kept as is. Without `-s`: `Operation not supported` (no hard links in the Kazo OS filesystem) and the advice to use `-s`. |
+| `ln` | `-s`, `-f`, `-n`, `-v`, `CIBLE [LIEN]`, `CIBLE… DOSSIER` | Symbolic links through `KazoFile.CreateSymbolicLinkAsync`; the target text is kept as is. Without `-s`: `Operation not supported` (no hard links in the Kazo OS filesystem) and the advice to use `-s`. |
 | `locate` | `-i -b -c -e`, `-l N` | No `updatedb` database: live walk with the user's rights, `/proc`, `/dev`, `/sys`, `/run` excluded; a pattern without wildcards is searched anywhere in the path. Code 1 with no result. |
 | `du` | `-a -s -h -c -b`, `-d N` | 4 KiB blocks like ext4 (one per folder); display in KiB. |
 | `grep` | `-i -n -v`, `-r`/`-R` (recursive, current folder when no file), combinable options (`-rn`) | Prefixes the file name when there are several or with `-r`; symbolic links encountered are not followed. |
-| `df` | `-h -T -a` | `HackDriveInfo` disks (`/dev/hda` on `/`): real browser usage and quota since ADR 0099 §2; `-a` adds the pseudo-filesystems of `/proc/mounts`. |
+| `df` | `-h -T -a` | `KazoDriveInfo` disks (`/dev/hda` on `/`): real browser usage and quota since ADR 0099 §2; `-a` adds the pseudo-filesystems of `/proc/mounts`. |
 | `zip` | `-r -q -j -d -0…-9` | Real deflate archive readable by any zip tool; updates an existing archive; Unix modes are stored in the external attributes. |
 | `unzip` | `-l -t -p -o -n -q -j`, `-d DOSSIER`, `[MOTIFS]` | Restores modes (`+x`); refuses an entry that would escape the folder (`../`, "zip slip"); does not replace a file without `-o`. |
 | `xdg-open` | `FICHIER`, `DOSSIER` or `URI` (a single argument) | Like freedesktop (ADR 0096 §3): a path opens with its association (a folder in the file manager, `inode/directory`), a URI with the handler of its scheme (`x-scheme-handler/<scheme>`, the browser for `http`/`https`, the file for `file://`). Returns as soon as it is sent. `xdg-open` codes: 0 sent, 1 command line, 3 no app, 4 missing file or failure; several apps with no default give 4 and the list of candidates (a terminal has no picker and the OS does not guess). `apps.launch`. |
@@ -81,7 +81,7 @@ alice@hackeros:~$ watch -n 1 'ps | wc -l'
 
 | Command | Options | Notes |
 |---|---|---|
-| `top` | `-b`, `-n N`, `-d SECONDES`, `-u USER`, `-o CHAMP` | Full screen refreshed every 3 s; keys `q`, `M`, `P`, `N`, `T`. CPU from two reads of `/proc/stat`, memory from `/proc/meminfo`, processes through `HackProcess`. |
+| `top` | `-b`, `-n N`, `-d SECONDES`, `-u USER`, `-o CHAMP` | Full screen refreshed every 3 s; keys `q`, `M`, `P`, `N`, `T`. CPU from two reads of `/proc/stat`, memory from `/proc/meminfo`, processes through `KazoProcess`. |
 | `htop` | `-d DIXIÈMES`, `-u USER`, `-t`, `-C` | Per-core bars, colored memory and swap, scrolling list with selection, tree (`t`), sort (`P`/`M`/`T`/`N`), search (`/`), user (`u`), `k` kills the chosen process (`process.manage`), `q` quits. |
 | `nice` | `-n N`, `-N`, `--adjustment=N` | Without a command: prints the shell's priority. Otherwise launches the command with `nice + N` (10 by default, bounded to -20..19). Lowering the value requires root: `sudo nice -n -5 cmd` launches the command as root (ADR 0136), `sudo renice` changes an already launched process. Commands that drive the shell also work (`nice -n 5 nice` prints 5). See [`process-priority-and-unresponsive-windows.md`](process-priority-and-unresponsive-windows.md). |
 | `renice` | `[-n] N`, `-p PID…` | Changes the priority of existing processes; raising is allowed on one's own processes, lowering or touching those of another user requires root (`Permission denied` / `Operation not permitted`). `-g` and `-u` are refused. `process.manage` for a process that is neither one's own nor a child (ADR 0140). |
@@ -123,7 +123,7 @@ Out of space: a refused write prints `No space left on device`
 | `curl` | `-I -i -v -L -s -f`, `-o FICHIER`, `-O`, `-H "Nom: valeur"`, `-A`, `-X`, `-d`/`--data-raw`/`--data-binary` (`@fichier`), `--data-urlencode`, `--json` | `-o`, `-O`, `-H`, `-A`, `-s` added by ADR 0064; raw bodies, `-i`, `--json`, `--data-*` and optional `-f` since `web/2-http-bodies` (ADR 0074 §1): without `-f`, an HTTP error prints the body and exits with 0, like the real `curl` ([`http-bodies.md`](../framework/http-bodies.md)). |
 | `wget` | `-O FICHIER` (`-O -` = output), `-P DOSSIER`, `-q`, `-S`, `--spider` | Never replaces: `fichier.1`, `fichier.2`…; progress on the error output. |
 | `ip` (`ifconfig`) | `addr`, `link`, `route`, `neigh`, `-br`, `-s`, `dev NOM` | `lo` 127.0.0.1/8 and `eth0` 192.168.1.100/24 behind the simulated network's router 192.168.1.1, stable MAC derived from the machine name; real counters from `/proc/net/dev`. |
-| `netstat` (`ss`) | `-t -u -l -n -a -p`, `-i`, `-r`, `-s` | Listening ports come from the OS port table (`HackIPGlobalProperties`, since `web/3`): simulated `localhost` daemons and app sockets; `-p` shows `PID/program` for root or the same user, otherwise `-` and the net-tools note; `-i` and `-s` read `/proc/net/dev`. |
+| `netstat` (`ss`) | `-t -u -l -n -a -p`, `-i`, `-r`, `-s` | Listening ports come from the OS port table (`KazoIPGlobalProperties`, since `web/3`): simulated `localhost` daemons and app sockets; `-p` shows `PID/program` for root or the same user, otherwise `-` and the net-tools note; `-i` and `-s` read `/proc/net/dev`. |
 | `nslookup` | `<name>` or `<address>` | Queries `hackdns` (`web/3`): indicates the source (`/etc/hosts`, loopback, web app, hosted site or simulated network); `NXDOMAIN` and code 1 if the name is unknown ([`listening-ports-and-dns.md`](../framework/listening-ports-and-dns.md)). |
 
 ## Scripts
@@ -136,25 +136,25 @@ Out of space: a refused write prints `No space left on device`
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Shell/ShellInterpreterTests.Commands.cs`:
+- `Tests/Kazo.Os.Platform.Core.Tests/Shell/ShellInterpreterTests.Commands.cs`:
   `test`/`[`, `read` with `while read`, `printf`, `seq`, `cut | sort | uniq -c`,
   `sort -k -t -n -r`, `tail -n +N`, `head -c`, `tee`, `chmod +x` then
   `./script`, symbolic modes, `ln -s` and refusal of hard links,
   `zip`/`unzip` with modes, `whoami`, `basename`, `dirname`, `which`,
   `du`, `locate`, `jobs` and `kill %1`, `kill PID` and `kill -9 PID` on a real
   process, `grep -r`, `ip`, `top -b`.
-- `Tests/HackerOs.Commands.Wave5.Tests`: `chmod`, `kill`, `sort`, `head`,
+- `Tests/Kazo.Os.Commands.Wave5.Tests`: `chmod`, `kill`, `sort`, `head`,
   `tail`, `mkdir` (`-p`, `-v`, existing folder, file on the path, `..`), `hackbackup` and `hackpkg` with fake gateways.
-- `Tests/HackerOs.Commands.Tests/XdgOpenCommandTests.cs`: relative path, folder, missing file, no app, several apps, URI, unknown scheme, command line, refusal (`v3/4`). The parity scenario (`CommandParityTests`) compares the command in a Web Worker and on the main thread.
-- `Tests/HackerOs.Ecosystem.Tests`: 94 built-in apps including 75 commands (`stress` added by `rebuild/5-worker-processes`, `nslookup` by `web/3`, `ausearch` by `v3/8-settings-security`, `xdg-open` by `v3/4`, `hackbackup` by `v3/7`, `localectl` by `v3/12`, `xdg-mime` by `v3/4b`, `passwd` by `v3/8`, `prlimit` by `exec/2`, `nice` and `renice` by `exec/4`, `dmesg` by `exec/3`, `hackpkg` by ADR 0182).
-- `Tests/HackerOs.Commands.Tests`: `ausearch` filters; `LocalizedCommandsTests` and `LocalizedCommandsMzTests` run commands with `LANG=fr_FR.UTF-8` (`mkdir`, `rm`, `seq`, `sleep`, `printf`, `test`, `sudo`, `xdg-open`…), verify the same keys in English and French and the French description and usage of the 75 commands generated in `localization/`. `NanoCommandTests` draws the `nano` bars in French, `LocalizationShellTests` (WorkerHost) goes through the real shell.
+- `Tests/Kazo.Os.Commands.Tests/XdgOpenCommandTests.cs`: relative path, folder, missing file, no app, several apps, URI, unknown scheme, command line, refusal (`v3/4`). The parity scenario (`CommandParityTests`) compares the command in a Web Worker and on the main thread.
+- `Tests/Kazo.Os.Ecosystem.Tests`: 94 built-in apps including 75 commands (`stress` added by `rebuild/5-worker-processes`, `nslookup` by `web/3`, `ausearch` by `v3/8-settings-security`, `xdg-open` by `v3/4`, `hackbackup` by `v3/7`, `localectl` by `v3/12`, `xdg-mime` by `v3/4b`, `passwd` by `v3/8`, `prlimit` by `exec/2`, `nice` and `renice` by `exec/4`, `dmesg` by `exec/3`, `hackpkg` by ADR 0182).
+- `Tests/Kazo.Os.Commands.Tests`: `ausearch` filters; `LocalizedCommandsTests` and `LocalizedCommandsMzTests` run commands with `LANG=fr_FR.UTF-8` (`mkdir`, `rm`, `seq`, `sleep`, `printf`, `test`, `sudo`, `xdg-open`…), verify the same keys in English and French and the French description and usage of the 75 commands generated in `localization/`. `NanoCommandTests` draws the `nano` bars in French, `LocalizationShellTests` (WorkerHost) goes through the real shell.
 
 ## Task list
 
 - [x] `sort`, `head`, `tail` (`-f`), `kill` (`%job`, signals), `curl` (`-o`, `-O`, `-H`) reviewed.
 - [x] Symbolic and recursive `chmod` (`chmod +x`).
 - [x] `cut`, `tee`, `uniq`, `printf`, `seq`, `basename`, `dirname`.
-- [x] `ln -s` and `HackFile.CreateSymbolicLinkAsync`.
+- [x] `ln -s` and `KazoFile.CreateSymbolicLinkAsync`.
 - [x] `locate`, `du`, `df`, `zip`, `unzip`.
 - [x] `top`, `htop` (colors in full-screen frames), `watch`, `jobs`, `sleep`, `whoami`, `which`.
 - [x] `mkdir -p` and `-v` (`rebuild/5-ui-a11y-mkdir`, 2026-10-16).
@@ -166,7 +166,7 @@ Out of space: a refused write prints `No space left on device`
 - [x] `xdg-open` (`v3/4-intents`, ADR 0096).
 - [x] `xdg-mime` (`v3/4b`, ADR 0121).
 - [x] Tests and documentation.
-- [x] ADR 0069 (`rebuild/5-graceful-stop`): `find`, `grep` (and `grep -r`), `du`, `zip`, `unzip`, `locate` call `HackProcess.CheckpointAsync` in their loops; `kill` sends `Terminated`.
+- [x] ADR 0069 (`rebuild/5-graceful-stop`): `find`, `grep` (and `grep -r`), `du`, `zip`, `unzip`, `locate` call `KazoProcess.CheckpointAsync` in their loops; `kill` sends `Terminated`.
 - [x] `hackbackup` and `ENOSPC`/`EFBIG` messages (`v3/7-storage-backup`, ADR 0099).
 - [x] `hackpkg`: install apps from their GitHub repository (ADR 0182).
 - [x] `hackpkg`: `--user`, `--system`, `sources add/remove`, `policy`, `--allow-untrusted` removed (ADR 0189, ADR 0208).

@@ -58,7 +58,7 @@ roles; this is now part of the wrapper convention.
 
 ## Wrapper Conventions
 
-- Place reusable complex controls under `Platform/HackerOs.Platform.Blazor/Controls/`
+- Place reusable complex controls under `Platform/Kazo.Os.Platform.Blazor/Controls/`
   or the owning Platform feature directory.
 - Name wrappers for the HackerOS workflow, not the underlying Mud component.
 - Keep domain state and commands in renderer-independent contracts; wrappers

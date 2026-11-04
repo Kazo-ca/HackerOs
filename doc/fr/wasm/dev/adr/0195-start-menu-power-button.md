@@ -6,7 +6,7 @@
 
 Accepté le 2026-10-30. Demande de Benoit du 2026-10-30 (fil « Déplacer Power dans
 le menu Démarrer »). Issue de suivi pour « Changer d'utilisateur » :
-[#290](https://github.com/Kazo-ca/HackerOs/issues/290).
+[#290](https://github.com/Kazo-ca/Os/issues/290).
 
 - **Complète :** [ADR 0187](0187-guest-start-and-sign-in-credits.md) (compte
   invité et son affichage dans le menu Démarrer),
@@ -42,7 +42,7 @@ le menu Démarrer »). Issue de suivi pour « Changer d'utilisateur » :
 - Sur un petit écran, le bouton reste visible et occupe toute la largeur de la
   colonne.
 - La barre des tâches de HackerOS n'a plus de bouton de session. Le paquet
-  `HackerOs.Taskbar.Blazor` garde `ITaskbarSessionCommands` pour les autres hôtes.
+  `Kazo.Os.Taskbar.Blazor` garde `ITaskbarSessionCommands` pour les autres hôtes.
 - L'utilisateur reste affiché en haut du menu Démarrer, comme avant, pour tout
   compte.
 
@@ -79,7 +79,7 @@ connexion.
 - Le faire demande plusieurs sessions ouvertes en même temps, ce que l'OS ne sait
   pas faire : `ISessionService`, les fenêtres, les processus, le cycle de vie des
   apps et les préférences vivantes supposent une session unique. Le travail est
-  listé dans l'issue [#290](https://github.com/Kazo-ca/HackerOs/issues/290)
+  listé dans l'issue [#290](https://github.com/Kazo-ca/Os/issues/290)
   (étiquette `TODO`).
 
 ### 5. Thèmes

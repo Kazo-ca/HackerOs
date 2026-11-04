@@ -1,0 +1,93 @@
+@using Kazo.Os.AppSdk.Accessibility
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
+@implements IAsyncDisposable
+
+@*
+    Settings > Accessibility (ADR 0105): high contrast, text size and reduced motion, written to
+    ~/.config/hackeros/accessibility.config. The shell applies a change as soon as the file changes.
+*@
+<div class="setting-group a11y-panel a11y-state">
+    <h4 id="a11y-state-title">@L["Accessibility.State.Title"]</h4>
+    <p class="setting-desc">
+        @LocalizedMarkup.Format(L["Accessibility.State.Description"],
+            LocalizedMarkup.Code("~/.config/hackeros/" + DocumentFileName),
+            LocalizedMarkup.Code("/etc/hackeros/" + DocumentFileName))
+    </p>
+    <dl class="a11y-readout" aria-labelledby="a11y-state-title">
+        <dt>@L["Accessibility.HighContrast.Title"]</dt>
+        <dd>@OnOff(_effective.HighContrast)</dd>
+        <dt>@L["Accessibility.TextScale.Title"]</dt>
+        <dd>@Percent(_effective.TextScale)</dd>
+        <dt>@L["Accessibility.ReducedMotion.Title"]</dt>
+        <dd>@OnOff(_effective.ReducedMotion)</dd>
+    </dl>
+</div>
+
+@if (!_loaded)
+{
+    <p class="setting-desc">@L["Common.Loading"]</p>
+}
+else
+{
+    <div class="setting-group a11y-panel">
+        <h4 id="a11y-contrast-title">@L["Accessibility.HighContrast.Title"] <SettingOriginBadge Source="@SourceOf(HighContrastKey)" IsLocked="@IsLocked(HighContrastKey)" /></h4>
+        <p class="setting-desc">@L["Accessibility.HighContrast.Description"]</p>
+        <div class="a11y-options" role="radiogroup" aria-labelledby="a11y-contrast-title">
+            @foreach (string mode in Modes)
+            {
+                <button type="button" role="radio" class="@OptionClass(_highContrast == mode)"
+                        aria-checked="@(_highContrast == mode ? "true" : "false")"
+                        disabled="@(_isBusy || IsLocked(HighContrastKey))"
+                        @onclick="() => SetAsync(HighContrastKey, mode)">
+                    <span class="a11y-tag" aria-hidden="true">@ModeTag(mode)</span>
+                    <span class="a11y-label">@ModeLabel(mode)</span>
+                </button>
+            }
+        </div>
+    </div>
+
+    <div class="setting-group a11y-panel">
+        <h4 id="a11y-text-title">@L["Accessibility.TextScale.Title"] <SettingOriginBadge Source="@SourceOf(TextScaleKey)" IsLocked="@IsLocked(TextScaleKey)" /></h4>
+        <p class="setting-desc">@L["Accessibility.TextScale.Description"]</p>
+        <div class="a11y-options a11y-scales" role="radiogroup" aria-labelledby="a11y-text-title">
+            @foreach (string scale in TextScaleValues)
+            {
+                <button type="button" role="radio" class="@OptionClass(_textScale == scale)"
+                        aria-checked="@(_textScale == scale ? "true" : "false")"
+                        disabled="@(_isBusy || IsLocked(TextScaleKey))"
+                        @onclick="() => SetAsync(TextScaleKey, scale)">
+                    <span class="a11y-sample a11y-sample-@scale.Replace(".", string.Empty)" aria-hidden="true">Aa</span>
+                    <span class="a11y-label">@Percent(ParseScale(scale))</span>
+                </button>
+            }
+        </div>
+    </div>
+
+    <div class="setting-group a11y-panel">
+        <h4 id="a11y-motion-title">@L["Accessibility.ReducedMotion.Title"] <SettingOriginBadge Source="@SourceOf(ReducedMotionKey)" IsLocked="@IsLocked(ReducedMotionKey)" /></h4>
+        <p class="setting-desc">@L["Accessibility.ReducedMotion.Description"]</p>
+        <div class="a11y-options" role="radiogroup" aria-labelledby="a11y-motion-title">
+            @foreach (string mode in Modes)
+            {
+                <button type="button" role="radio" class="@OptionClass(_reducedMotion == mode)"
+                        aria-checked="@(_reducedMotion == mode ? "true" : "false")"
+                        disabled="@(_isBusy || IsLocked(ReducedMotionKey))"
+                        @onclick="() => SetAsync(ReducedMotionKey, mode)">
+                    <span class="a11y-tag" aria-hidden="true">@ModeTag(mode)</span>
+                    <span class="a11y-label">@ModeLabel(mode)</span>
+                </button>
+            }
+        </div>
+        @if (AnimationsLockedOff)
+        {
+            <p class="setting-desc a11y-note">
+                @LocalizedMarkup.Format(L["Accessibility.ReducedMotion.AnimationsLocked"], LocalizedMarkup.Code("animationsEnabled = false"))
+            </p>
+        }
+    </div>
+}
+
+@if (_message is not null)
+{
+    <div class="@(_messageIsError ? "a11y-message is-error" : "a11y-message")" role="@(_messageIsError ? "alert" : "status")">@_message</div>
+}

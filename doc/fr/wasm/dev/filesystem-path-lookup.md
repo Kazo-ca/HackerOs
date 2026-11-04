@@ -61,15 +61,15 @@ FileSystemService.WriteAsync(path)
 
 ## Tests
 
-- `Tests/HackerOs.Infrastructure.Browser.Tests/IndexedDbFileSystemReaderTests.cs` :
+- `Tests/Kazo.Os.Infrastructure.Browser.Tests/IndexedDbFileSystemReaderTests.cs` :
   une seule transaction `resolvePath` pour un chemin profond, nom absent,
   liste partielle, lien orphelin, comptage disque.
-- `Tests/HackerOs.Infrastructure.Browser.Tests/IndexedDbFileSystemProviderTests.cs` :
+- `Tests/Kazo.Os.Infrastructure.Browser.Tests/IndexedDbFileSystemProviderTests.cs` :
   scénarios du fournisseur adaptés au parcours en une transaction.
-- `Tests/HackerOs.Platform.Core.Tests/FileSystem/FileSystemPathResolverTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/FileSystem/FileSystemPathResolverTests.cs` :
   parcours en une requête, premier composant absent, droit de traverser et
   redémarrage sur un lien, chemin qui traverse un montage.
-- Les suites E2E (`HackerOs.E2E.Tests`, `HackerOs.UI.E2E.Tests`) exercent
+- Les suites E2E (`Kazo.Os.E2E.Tests`, `Kazo.Os.UI.E2E.Tests`) exercent
   `resolvePath` dans un vrai navigateur à chaque démarrage.
 - Effet de bord sur les tests UI : le système de fichiers plus rapide a révélé
   une course dans `E2ESupport.SelectFileExplorerEntryAsync` (le clic sur une

@@ -1,0 +1,13 @@
+<Project>
+  <!--
+    Kazo.Os.App.Build (ADR 0098 §2): the same build integration as inside the Kazo OS repository,
+    in package mode. A project referencing this package is an app (manifest.json generated after the
+    build, SDK boundary checked on its Kazo.Os.* packages) unless it sets KazoOsAppHost to true,
+    in which case it aggregates the apps of its packages into BuiltInApplications.json.
+  -->
+  <PropertyGroup>
+    <KazoOsBuildFromPackage>true</KazoOsBuildFromPackage>
+  </PropertyGroup>
+
+  <Import Project="$(MSBuildThisFileDirectory)../hackeros-build/Kazo.Os.Apps.targets" />
+</Project>

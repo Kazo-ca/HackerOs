@@ -14,12 +14,12 @@ Accepted on 2026-10-17 (work item `v3/1-adr`, for the work item `v3/14-trimming`
 
 ## Context
 
-- `HackerOs.Ecosystem.csproj:12` has `PublishTrimmed=False`. Yet
+- `Kazo.Os.Ecosystem.csproj:12` has `PublishTrimmed=False`. Yet
   `Directory.Build.props` sets `IsTrimmable=true` and `EnableTrimAnalyzer=true`
   on all non-test projects (except the server and the E2E support), and
   `TreatWarningsAsErrors` is active: the analysis runs, the trimming never.
 - The built-in apps are lazily loaded (`BlazorWebAssemblyLazyLoad`,
-  `build/HackerOs.Apps.targets:310-333`) then instantiated by reflection:
+  `build/Kazo.Os.Apps.targets:310-333`) then instantiated by reflection:
   `Activator.CreateInstance` of the entry point (`AppLifecycleOrchestrator.cs:136-144`),
   type looked up by its name (`AppEntryPointDiscovery.cs:99`), loading by name
   in the workers (`WorkerAssemblyLoader.cs:38-47`, `WorkerProcessHost.cs:295-300`),
@@ -45,7 +45,7 @@ Accepted on 2026-10-17 (work item `v3/1-adr`, for the work item `v3/14-trimming`
    warning suppression that remains carries a comment saying which root
    makes it safe; a suppression without justification is a defect.
 4. An app from another repository (package, ADR 0098) is trimmed at the publish of
-   the host that includes it: the `HackerOs.App.Build` package enables the trimming
+   the host that includes it: the `Kazo.Os.App.Build` package enables the trimming
    analysis in app projects, and the templates ship with
    `IsTrimmable=true`.
 5. **Test**: `build/publish-trimmed.sh` publishes the Ecosystem as a trimmed Release

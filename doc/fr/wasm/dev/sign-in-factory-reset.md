@@ -40,7 +40,7 @@ fichiers publiés, sans recompiler :
 }
 ```
 
-Le serveur Kazo OS (`HackerOs.Server`) sert les fichiers publiés de l'OS tels
+Le serveur Kazo OS (`Kazo.Os.Server`) sert les fichiers publiés de l'OS tels
 quels : la même clé s'applique. Une valeur absente ou illisible vaut `true`.
 Un administrateur peut toujours effacer la machine depuis Paramètres ▸
 Système.
@@ -49,14 +49,14 @@ Le service worker met `appsettings.json` en cache sans vérifier son
 empreinte : le fichier modifié n'empêche pas l'installation hors ligne. Un
 navigateur qui a déjà installé cette version garde l'ancien fichier jusqu'à
 la version suivante ; pour qu'un changement s'applique partout, le faire
-avant le premier déploiement (ou dans `OS/HackerOs.Ecosystem/wwwroot/appsettings.json`
+avant le premier déploiement (ou dans `OS/Kazo.Os.Ecosystem/wwwroot/appsettings.json`
 avant `dotnet publish`).
 
 ## Architecture
 
 | Élément | Rôle |
 | --- | --- |
-| `SignInFactoryResetSettings` (`Ecosystem.Host`) | Lit `HackerOs:SignIn:FactoryReset:Enabled` une fois au démarrage ; enregistré par `AddHackerOsBrowserHost`. |
+| `SignInFactoryResetSettings` (`Ecosystem.Host`) | Lit `HackerOs:SignIn:FactoryReset:Enabled` une fois au démarrage ; enregistré par `AddKazoOsBrowserHost`. |
 | `SignInFactoryReset` (`Ecosystem.Host`) | `IsOffered` (clé de déploiement, `true` si l'hôte n'a rien enregistré) et `RunAsync`, qui revérifie la clé puis appelle le service d'alimentation. |
 | `SignInFactoryResetPrompt` (`.razor`, `.razor.cs`, `.razor.css`) | Lien et boîte de confirmation ; `IsConfirmationTyped` compare le mot tapé sans tenir compte de la casse ni des espaces autour. |
 | `SystemPowerService.FactoryResetFromSignInAsync` (`Platform.Core`) | Même séquence que `FactoryResetAsync` (journaux vidés, session fermée, base IndexedDB supprimée, page rechargée) ; audit `system.factory-reset` avec `origin = sign-in`. |
@@ -75,10 +75,10 @@ avant `dotnet publish`).
 
 ## Tests
 
-- `Tests/HackerOs.Ecosystem.Tests/SignInFactoryResetTests.cs` : lecture de la
+- `Tests/Kazo.Os.Ecosystem.Tests/SignInFactoryResetTests.cs` : lecture de la
   clé, `appsettings.json` publié, mot de confirmation, déploiement désactivé
   qui n'efface rien, rendu fermé et ouvert en anglais et en français.
-- `Tests/HackerOs.Platform.Core.Tests/Administration/SystemAdministrationGatewayTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Administration/SystemAdministrationGatewayTests.cs` :
   effacement puis redémarrage, entrée d'audit `origin = sign-in`.
 
 ## Liste des tâches

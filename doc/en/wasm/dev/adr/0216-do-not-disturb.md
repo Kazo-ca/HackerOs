@@ -4,7 +4,7 @@
 
 ## Status
 
-Accepted on 2026-10-31, issue [#296](https://github.com/Kazo-ca/HackerOs/issues/296), done
+Accepted on 2026-10-31, issue [#296](https://github.com/Kazo-ca/Os/issues/296), done
 in the `todo/` series (branch `todo/22-do-not-disturb`). Completes the notification bubbles
 ([ADR 0197](0197-notification-toasts.md)), the unread notifications dot
 ([ADR 0196](0196-unread-notifications-dot.md)) and the OS sounds

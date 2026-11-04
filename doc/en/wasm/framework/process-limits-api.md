@@ -2,7 +2,7 @@
 
 # Process limits for apps
 
-This document describes what an app sees and can do with the limits of its process (`HackProcess`, `/proc/<pid>/limits`). The implementation (tables, controller, reading of `limits.conf`, shell commands) is in [`../dev/process-limits.md`](../dev/process-limits.md).
+This document describes what an app sees and can do with the limits of its process (`KazoProcess`, `/proc/<pid>/limits`). The implementation (tables, controller, reading of `limits.conf`, shell commands) is in [`../dev/process-limits.md`](../dev/process-limits.md).
 
 ## Role
 
@@ -51,10 +51,10 @@ or `off (HackerOs:ResourceLimits:Enabled=false)`. `/proc/<pid>/fd/` (folder
 ## SDK API
 
 ```csharp
-HackProcess self = await HackProcess.GetCurrentProcessAsync();
-HackResourceLimits limits = await self.GetResourceLimitsAsync();
+KazoProcess self = await KazoProcess.GetCurrentProcessAsync();
+KazoResourceLimits limits = await self.GetResourceLimitsAsync();
 await self.SetResourceLimitAsync(ResourceLimitKind.NoFile, 256, limits.NoFile.Hard);
 ```
 
-Errors: `ArgumentException` (`EINVAL`), `HackUnauthorizedAccessException`
+Errors: `ArgumentException` (`EINVAL`), `KazoUnauthorizedAccessException`
 (`EPERM`), `InvalidOperationException` (`ESRCH`).

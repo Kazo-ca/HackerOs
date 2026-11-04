@@ -111,7 +111,7 @@ seul le texte part vers l'hôte, et seulement si le réglage le permet.
 ### 6. JavaScript minimal
 
 Un module `hostClipboard.js` dans le `wwwroot/` de
-`HackerOs.Infrastructure.Browser`, importé par `BrowserHostClipboardChannel`
+`Kazo.Os.Infrastructure.Browser`, importé par `BrowserHostClipboardChannel`
 (contrat `IHostClipboardChannel` dans Simulation.Abstractions). Aucun hôte ne
 le référence. La logique (origines, sens, séquence, session) reste en C# dans
 `HostClipboardBridge`, testable sans navigateur ; le module ne garde que l'état

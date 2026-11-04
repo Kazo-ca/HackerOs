@@ -50,7 +50,7 @@ Rationale:
 
 ### Network domain contracts
 
-- Simulated network lives in `Shared/HackerOs.Simulation.Abstractions/Network/`.
+- Simulated network lives in `Shared/Kazo.Os.Simulation.Abstractions/Network/`.
 - No real DNS, real TCP/IP, or real HTTP ever occurs from these contracts.
 - `SimulatedHost` records carry hostname, IP, OS fingerprint, up/down state, latency, and an open/closed/filtered port map.
 - `SimulatedDns` provides hostname→IP and reverse IP→hostname resolution.
@@ -67,7 +67,7 @@ Rationale:
 
 ### Browser app rendering
 
-- The Browser Window app (`org.hackeros.browser`) displays `SimulatedPage` sections using collocated Blazor components under `Apps/System/HackerOs.Apps.Browser/`.
+- The Browser Window app (`org.hackeros.browser`) displays `SimulatedPage` sections using collocated Blazor components under `Apps/System/Kazo.Os.Apps.Browser/`.
 - Navigation, history, bookmarks, and cookie jars live in per-window C# state; the window close disposes all session cookies.
 - Simulated page content never requires `IJSRuntime`; only the URL input bar uses a minimal collocated JS module for focus-on-navigate behavior.
 - Source inspector shows the raw typed section model, not reconstructed HTML.

@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../../Platform/Packaging.props" />
+
+  <PropertyGroup>
+    <PackageId>Kazo.Os.App.Abstractions</PackageId>
+    <Description>HackerOs App SDK contracts: AppDefinition and [AppManifest], the schema-v1 app manifest and its validator, capabilities, SemanticVersion and KazoOsSdk.Version.</Description>
+    <PackageTags>hackeros;app-sdk;contracts;manifest</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Schema\*.json" LogicalName="Kazo.Os.App.Abstractions.Schema.%(Filename)%(Extension)" />
+  </ItemGroup>
+
+</Project>

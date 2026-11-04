@@ -68,7 +68,7 @@ GitHub Actions does not run in this repository (no runner since August
 - `build/verify-hosts.sh` on the three hosts, work item options enabled
   **and** turned off (plan, principle 6).
 - Trimmed publish (`build/publish-trimmed.sh` and
-  `HackerOs.TrimmedPublish.E2E.Tests`, ADR 0113) and SDK compatibility app,
+  `Kazo.Os.TrimmedPublish.E2E.Tests`, ADR 0113) and SDK compatibility app,
   as since `v3/14` and `v3/15`.
 - Docs and indexes up to date in the same change (AGENTS.md III.4).
 

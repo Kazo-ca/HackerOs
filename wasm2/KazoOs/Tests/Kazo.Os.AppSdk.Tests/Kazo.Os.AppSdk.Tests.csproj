@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="10.1.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="4.0.1" />
+    <!-- KazoBackgroundAnalyzerTests compile source snippets with the HOSBG analyzer (ADR 0128). -->
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Kazo.Os.AppSdk\Kazo.Os.AppSdk.csproj" />
+    <ProjectReference Include="..\Kazo.Os.Tests.Support\Kazo.Os.Tests.Support.csproj" />
+    <!-- Referenced as a library, not as this project's analyzer: the SDK tests pass lambdas on purpose. -->
+    <ProjectReference Include="..\..\Tools\Kazo.Os.Tools.BackgroundAnalyzer\Kazo.Os.Tools.BackgroundAnalyzer.csproj" />
+  </ItemGroup>
+
+</Project>

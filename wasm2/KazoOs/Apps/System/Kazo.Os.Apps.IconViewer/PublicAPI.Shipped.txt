@@ -1,0 +1,22 @@
+#nullable enable
+Kazo.Os.Apps.IconViewer.IconViewerApp
+Kazo.Os.Apps.IconViewer.IconViewerApp.IconViewerApp() -> void
+Kazo.Os.Apps.IconViewer.IconViewerWindow
+Kazo.Os.Apps.IconViewer.IconViewerWindow.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Apps.IconViewer.IconViewerWindow.IconViewerWindow() -> void
+Kazo.Os.Apps.IconViewer._Imports
+Kazo.Os.Apps.IconViewer._Imports.Execute() -> void
+Kazo.Os.Apps.IconViewer._Imports._Imports() -> void
+override Kazo.Os.Apps.IconViewer.IconViewerApp.Assets.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AssetManifest!>!
+override Kazo.Os.Apps.IconViewer.IconViewerApp.Description.get -> string!
+override Kazo.Os.Apps.IconViewer.IconViewerApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Apps.IconViewer.IconViewerApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Apps.IconViewer.IconViewerApp.Id.get -> string!
+override Kazo.Os.Apps.IconViewer.IconViewerApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Apps.IconViewer.IconViewerApp.MobileEntryPoint.get -> System.Type?
+override Kazo.Os.Apps.IconViewer.IconViewerApp.Name.get -> string!
+override Kazo.Os.Apps.IconViewer.IconViewerApp.PublisherId.get -> string!
+override Kazo.Os.Apps.IconViewer.IconViewerApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Apps.IconViewer.IconViewerWindow.OnAppAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.IconViewer.IconViewerWindow.OnAppInitialized() -> void
+~override Kazo.Os.Apps.IconViewer.IconViewerWindow.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

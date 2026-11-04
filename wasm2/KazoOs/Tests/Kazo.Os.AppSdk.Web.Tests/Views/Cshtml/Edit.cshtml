@@ -1,0 +1,12 @@
+@model ContactForm
+@Html.ValidationSummary(excludePropertyErrors: true)
+@using (Html.BeginForm("Edit", "Cshtml", htmlAttributes: KazoRoute.Values(new { @class = "edit" })))
+{
+    @Html.LabelFor(m => m.Name)
+    @Html.TextBoxFor(m => m.Name)
+    @Html.ValidationMessageFor(m => m.Name)
+    @Html.TextBoxFor(m => m.Age, KazoRoute.Values(new { type = "number" }))
+    @Html.ValidationMessageFor(m => m.Age)
+    @Html.CheckBoxFor(m => m.Subscribe)
+    <button type="submit">Save</button>
+}

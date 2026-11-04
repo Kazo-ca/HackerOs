@@ -15,7 +15,7 @@ la mémoire, le CPU et la charge ; `/dev` offre les périphériques `null`, `zer
 
 ## Architecture
 
-Code : `Platform/HackerOs.Platform.Core/FileSystem/Virtual/`.
+Code : `Platform/Kazo.Os.Platform.Core/FileSystem/Virtual/`.
 
 | Type | Rôle |
 | --- | --- |
@@ -38,7 +38,7 @@ montre, puis le fournisseur virtuel les masque.
 Contrats touchés :
 
 - `FileSystemEntryKind.CharacterDevice` et `CharacterDeviceMetadata`
-  (`Shared/HackerOs.Simulation.Abstractions/FileSystem/FileSystemEntryMetadata.cs`).
+  (`Shared/Kazo.Os.Simulation.Abstractions/FileSystem/FileSystemEntryMetadata.cs`).
   Les fournisseurs IndexedDB et mémoire refusent de créer ce type
   (`UnsupportedOperation`). `ls -l` l'affiche avec `c` (et les liens avec `l`).
 - `AppOperationContext.ProcessId` (`long?`), renseigné par
@@ -92,7 +92,7 @@ MemSource:	simulated
 ```
 
 `Name` est le dernier segment de l'`appId`, tronqué à 15 caractères. Pour une
-tâche `HackBackground` (ADR 0128, ADR 0140, [`background-jobs.md`](../framework/background-jobs.md)),
+tâche `KazoBackground` (ADR 0128, ADR 0140, [`background-jobs.md`](../framework/background-jobs.md)),
 `Name` est le nom de la tâche (`code-editor:sea`, tronqué de même) et deux
 lignes suivent `Session` : `Job:` (le nom entier, `code-editor:search`) et
 `Host:` (`MainThread` ou `Worker`). `Cpu` est
@@ -106,7 +106,7 @@ processus simulé sans code) ; voir
 Quand la mémoire d'un processus est mesurée (ADR 0068,
 [`memory-accounting.md`](memory-accounting.md)), cinq lignes suivent `VmRSS`,
 dans l'ordre de Linux : `RssAnon`, `RssFile`, `VmData` (part noyau), `VmExe`
-en kB, puis `HackAllocBytes` (octets alloués depuis le démarrage du processus,
+en kB, puis `KazoAllocBytes` (octets alloués depuis le démarrage du processus,
 sans unité). `VmRSS = RssAnon + RssFile + VmData`. Un processus simulé n'a
 aucune de ces lignes : le format est exactement celui d'avant la phase 5.
 
@@ -230,7 +230,7 @@ pour agir.
   en phase 3. Elle est faite dès la phase 1, comme le demande la section 5.4 du
   plan, parce qu'elle ne dépend que de `/proc`. La refonte des commandes de la
   phase 3 la conserve. Le gestionnaire de tâches est passé à `/proc` en
-  phase 4 ([`task-manager.md`](task-manager.md), `HackProcess`).
+  phase 4 ([`task-manager.md`](task-manager.md), `KazoProcess`).
 - **Pas d'événements de changement** : le marqueur `IVirtualFileSystemProvider`
   est vérifié au seul endroit qui publie, `FileSystemService`.
 - **Mutations refusées par le fournisseur lui-même**, en plus des bits de mode :
@@ -242,14 +242,14 @@ pour agir.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/FileSystem/Virtual/` : listage de `/`,
+- `Tests/Kazo.Os.Platform.Core.Tests/FileSystem/Virtual/` : listage de `/`,
   formats exacts de `status`, `meminfo`, `cpuinfo`, `uptime` et `loadavg`,
   visibilité selon `process.list`, `/proc/self`, refus des mutations, `/dev/null`,
   lecture bornée de `/dev/zero`, annulation, refus de `CharacterDevice` par le
   stockage, et aucune écriture dans le dépôt racine.
-- `Tests/HackerOs.Commands.Wave5.Tests/PsCommandTests.cs` : `ps` contre le vrai
+- `Tests/Kazo.Os.Commands.Wave5.Tests/PsCommandTests.cs` : `ps` contre le vrai
   fournisseur `/proc`.
-- `Tests/HackerOs.Platform.Core.Tests/FileSystem/Virtual/ProcMetricsTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/FileSystem/Virtual/ProcMetricsTests.cs` :
   fichiers de mesure de la phase 4 (voir [`system-metrics.md`](system-metrics.md)).
 
 ## Liste des tâches

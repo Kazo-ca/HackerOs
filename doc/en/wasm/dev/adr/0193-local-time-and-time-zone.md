@@ -6,7 +6,7 @@
 
 Accepted on 2026-10-29. Benoit's decisions 3 and 4 of 2026-10-29 (thread "Improve
 windows and taskbar"), work item 2 of issue
-[#242](https://github.com/Kazo-ca/HackerOs/issues/242).
+[#242](https://github.com/Kazo-ca/Os/issues/242).
 
 - **Completes:** [ADR 0104](0104-localization.md) (language and formats of the
   session), [ADR 0105](0105-accessibility-preferences.md) (same two-layer live
@@ -65,7 +65,7 @@ read the time again move to the new zone.
 - Without `TZ`, an OS process follows the session service (§3), so the change made
   in Settings. A process in a web worker receives the session's zone when it
   starts and keeps it.
-- `HackTimeZone` (namespace `HackerOs.AppSdk.Globalization`) gives `Current`,
+- `HackTimeZone` (namespace `Kazo.Os.AppSdk.Globalization`) gives `Current`,
   `Now`, `ToLocal(...)`, `TryFind(...)`, `Resolve(...)`, `FormatOffset(...)` and the
   `Available` list of IANA zones. Apps no longer use `ToLocalTime()` or
   `TimeZoneInfo.Local`.

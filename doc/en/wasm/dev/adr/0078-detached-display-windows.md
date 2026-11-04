@@ -18,7 +18,7 @@ a second screen in another window; this work item must prepare for it.
 
 Starting a second instance of HackerOS in the new window would give a
 second OS: its processes, memory and state would be separate, and
-`HackerOs.Server` accepts only one active circuit.
+`Kazo.Os.Server` accepts only one active circuit.
 
 ## Decision
 

@@ -5,7 +5,7 @@
 ## Status
 
 Accepted on 2026-10-30, work item 5 of the taskbar series (issue
-[#242](https://github.com/Kazo-ca/HackerOs/issues/242), points 10 and 11 of the decisions taken
+[#242](https://github.com/Kazo-ca/Os/issues/242), points 10 and 11 of the decisions taken
 with Benoit on 2026-10-29: choice B, "preview + peek like on Windows"). Done in the `todo/`
 series (branch `todo/13-taskbar-previews`). Builds on the per-screen taskbars
 ([ADR 0179](0179-per-screen-taskbars-and-other-screen-menus.md)) and the taskbar menus
@@ -14,10 +14,10 @@ series (branch `todo/13-taskbar-previews`). Builds on the per-screen taskbars
 
 ## Context
 
-- The taskbar (`HackerOs.Taskbar.Blazor`) is a neutral package: it receives its sources and
+- The taskbar (`Kazo.Os.Taskbar.Blazor`) is a neutral package: it receives its sources and
   commands through interfaces. Hovering a window's button shows nothing.
 - Each window is an `article.window-host` element with `data-window-id` (package
-  `HackerOs.Windowing.Blazor`). A minimized window keeps its element, with the `hidden`
+  `Kazo.Os.Windowing.Blazor`). A minimized window keeps its element, with the `hidden`
   attribute. The windows of a secondary screen are moved by portal into that screen's document,
   which also holds its taskbar (ADR 0178, 0179).
 - Benoit's decisions: the preview is a reduced **live** copy of the window (cloned HTML, CSS

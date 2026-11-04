@@ -41,7 +41,7 @@ son format de persistance par un fichier texte sous le bureau.
 | `MobileAppIcon` | Image déclarée de l’app, partagée entre pages, dock et tiroir ; repli Lucide. |
 | `MobileHomeLayout` | Modèle interne borné, lecture avec `ConfigDocumentFormat`, écriture texte déterministe et ancienne lecture JSON pour migration seulement. |
 | `MobileHomeLayoutStore` | Fichier VFS caché via `IOsSettingsService`, éditions sérialisées et projection publiée après succès. |
-| `MobileSettingsDocuments` | Schéma du document OS `mobile`, accessible à Paramètres par `HackSettings.OpenSystemAsync`. |
+| `MobileSettingsDocuments` | Schéma du document OS `mobile`, accessible à Paramètres par `KazoSettings.OpenSystemAsync`. |
 | `WindowProcessObserver` | Pont processus/fenêtres partagé avec le desktop pour les lancements indirects et arrêts. |
 | `wwwroot/mobileGestures.js` | Primitives navigateur : capture, appui long, clic parasite, taille ; C# décide du sens et des seuils. |
 
@@ -119,7 +119,7 @@ toute la pile agrandie à l'écran ; seule la dernière fenêtre reçoit les
 entrées, le propriétaire reste monté dessous (`inert`) et n'est plus réduit.
 Le bouton Retour du système ferme le dialogue du dessus. Dans les dialogues de
 fichiers, un seul toucher entre dans un dossier ou prend un fichier
-(`HackFileView.OpenOnTap`) ; il n'y a pas de double-clic sur mobile. Les
+(`KazoFileView.OpenOnTap`) ; il n'y a pas de double-clic sur mobile. Les
 dialogues mobiles n'ont pas de barre de titre : ils ont leur bouton Annuler et
 le Retour du système.
 

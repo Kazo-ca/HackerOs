@@ -90,7 +90,7 @@ Le flux de mise à jour standard d'un service worker, qui manque aujourd'hui :
 Garde le fonctionnement hors ligne et les en-têtes d'isolation que le worker
 ajoute sur un hôte statique (ADR 0131). Aucun numéro à la main : le nom du
 cache vient déjà du manifeste généré au build. Petit module JS dans
-`HackerOs.Ecosystem.Host` (API navigateur que C# ne peut pas appeler), la
+`Kazo.Os.Ecosystem.Host` (API navigateur que C# ne peut pas appeler), la
 logique reste en C#.
 
 ### B. Réseau d'abord pour la page
@@ -133,14 +133,14 @@ aux fichiers de `_framework/`. Écarté.
 Option A, avec le téléchargement en arrière-plan, le redémarrage propre des
 autres onglets et le même flux pour « Redémarrer » du menu Démarrer.
 
-1. **`HostUpdateInstaller`** (`HackerOs.Platform.Blazor`, à côté de
+1. **`HostUpdateInstaller`** (`Kazo.Os.Platform.Blazor`, à côté de
    `HostReleaseMonitor`) porte la logique en C#, derrière `IHostUpdateWorker`.
    `DownloadAsync` rend `NoWorker`, `UpToDate`, `Ready` ou `Unavailable` ; les
    appels pendant un téléchargement le partagent, un `Ready` est gardé, tout
    autre résultat est revérifié à l'appel suivant. `ActivateDownloadedAsync`
    active le worker en attente seulement quand le téléchargement est `Ready`.
    Une erreur JavaScript vaut `Unavailable` : la version actuelle continue.
-2. **`hostUpdate.js`** (`HackerOs.Ecosystem.Host`, chargé par
+2. **`hostUpdate.js`** (`Kazo.Os.Ecosystem.Host`, chargé par
    `BrowserHostUpdateWorker`) : `download()` appelle `registration.update()` et
    attend que le nouveau worker soit installé (cache rempli et vérifié, au plus
    3 minutes) ; `activate()` envoie `SKIP_WAITING` et attend le
@@ -176,4 +176,4 @@ autres onglets et le même flux pour « Redémarrer » du menu Démarrer.
   son annonce, même si l'utilisateur ne redémarre pas tout de suite ; le
   navigateur le faisait déjà à la navigation suivante.
 - Rien de nouveau dans le SDK des apps ; ajouts publics dans
-  `HackerOs.Platform.Blazor` (`PublicAPI.Unshipped.txt`).
+  `Kazo.Os.Platform.Blazor` (`PublicAPI.Unshipped.txt`).

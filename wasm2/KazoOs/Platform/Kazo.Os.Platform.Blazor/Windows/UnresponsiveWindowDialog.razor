@@ -1,0 +1,45 @@
+@namespace Kazo.Os.Platform.Blazor.Windows
+
+@*
+    The "not responding" dialog of ADR 0127 §3, attached to one window only (rendered in its
+    WindowHost overlay): the other windows and the taskbar stay usable, as with the Windows
+    "Wait / Close the program" ghost dialog or GNOME's "Force quit / Wait".
+*@
+<div class="unresponsive-veil"
+     @ref="_veil"
+     @onkeydown="HandleKeyDownAsync"
+     @onkeydown:stopPropagation="true"
+     @onpointerdown:stopPropagation="true"
+     @oncontextmenu:preventDefault="true">
+    <section class="unresponsive-dialog"
+             role="alertdialog"
+             aria-labelledby="@TitleId"
+             aria-describedby="@MessageId"
+             data-testid="unresponsive-dialog">
+        <div class="unresponsive-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+                <circle cx="12" cy="12" r="9" />
+                <polyline points="12,7 12,12 15.5,14" />
+            </svg>
+        </div>
+        <div class="unresponsive-text">
+            <h2 id="@TitleId">@string.Format(L["Unresponsive.Title"], DisplayName)</h2>
+            <p id="@MessageId">@L["Unresponsive.Message"]</p>
+        </div>
+        <div class="unresponsive-actions">
+            <button type="button"
+                    class="unresponsive-button unresponsive-wait"
+                    data-testid="unresponsive-wait"
+                    @ref="_waitButton"
+                    @onclick="WaitAsync">
+                @L["Unresponsive.Wait"]
+            </button>
+            <button type="button"
+                    class="unresponsive-button unresponsive-terminate"
+                    data-testid="unresponsive-terminate"
+                    @onclick="TerminateAsync">
+                @L["Unresponsive.Terminate"]
+            </button>
+        </div>
+    </section>
+</div>

@@ -20,19 +20,19 @@ pointer gestures but never own state.
   visible windows and restores/focuses existing singleton windows.
 
 `WindowRuntime`, `WindowRuntimeState`, and the geometry/message types now live
-in the standalone `HackerOs.Windowing.Core` project (see
+in the standalone `Kazo.Os.Windowing.Core` project (see
 [`window-taskbar-export-plan.md`](window-taskbar-export-plan.md)), not in
-`HackerOs.Platform.Blazor`. Two consequences of that extraction:
+`Kazo.Os.Platform.Blazor`. Two consequences of that extraction:
 
 - The model no longer references `ProcessId`/`AppInstanceId` directly. It owns
-  windows through the opaque `WindowOwnerId` struct; `HackerOs.Platform.Blazor`
+  windows through the opaque `WindowOwnerId` struct; `Kazo.Os.Platform.Blazor`
   adapts its own process/app-instance identity to `WindowOwnerId` at the
   boundary, so a non-HackerOS host can drive the same engine.
 - `WindowRuntimeState` carries an optional `Content` (`RenderFragment?`) and
   `OnRequestClose` (`Func<Task>?`) so a host can attach arbitrary Blazor
   content (an app's UI, or a dialog) to a window without the engine knowing
   concrete component types. This is a deliberate, approved exception to
-  "renderer-independent": `HackerOs.Windowing.Core` still has zero project
+  "renderer-independent": `Kazo.Os.Windowing.Core` still has zero project
   references and only takes a package dependency on
   `Microsoft.AspNetCore.Components` for the `RenderFragment` delegate type —
   it has no `.razor` files, no MudBlazor, and no JS interop. It contains no

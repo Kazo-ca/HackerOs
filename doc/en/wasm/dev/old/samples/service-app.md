@@ -20,7 +20,7 @@ example of the app-owned topic messaging lane described in
 | `SampleTickerTopics.cs` | Names the topic (`app/org.hackeros.samples.service-app/ticked`) `SampleTickerEvent` is published on, built only through `TopicNames` |
 | `app.manifest.json` | Manifest for `org.hackeros.samples.service-app` (`kind`: `"service"`, `autoStart`: `true`) |
 | `README.md` | Service documentation inside the project directory |
-| `Tests/HackerOs.Samples.ServiceApp.Tests/SampleTickerServiceTests.cs` | Unit tests for startup, event publishing, cancellation, cleanup, and fresh restart |
+| `Tests/Kazo.Os.Samples.ServiceApp.Tests/SampleTickerServiceTests.cs` | Unit tests for startup, event publishing, cancellation, cleanup, and fresh restart |
 
 ## Service Lifecycle
 

@@ -32,7 +32,7 @@ Trimmed Release publish of the Ecosystem (`artifacts/publish-trimmed`),
 headless Chromium, 300 clicks on the Calculator keys, 6
 openings per mode. Test that produces them:
 `Measures_the_calculator_on_the_page_and_in_a_worker`
-(`Tests/HackerOs.TrimmedPublish.E2E.Tests`), which writes
+(`Tests/Kazo.Os.TrimmedPublish.E2E.Tests`), which writes
 `remote-window-measurements.json`.
 
 | Measurement | On the page (setting off) | In a worker (setting on) | Difference |
@@ -57,7 +57,7 @@ heap: 5,694 KiB empty, 5,866 KiB with the window.
 
 Each worker loads the whole boot assembly set (`workerBootstrap.js`,
 ADR 0070): 87 assemblies, ≈ 20.3 MB, plus 1.98 MB of base assemblies.
-`HackerOs.AppSdk.Icons` alone weighs 8.67 MB; the native runtime 3 MB,
+`Kazo.Os.AppSdk.Icons` alone weighs 8.67 MB; the native runtime 3 MB,
 ICU 0.55 MB. The window itself only adds ≈ 11 MiB. The cost is therefore
 that of one more .NET runtime, not of rendering.
 
@@ -91,12 +91,12 @@ apps:
 The trial code stays in the repository, with no effect as long as the setting is
 off:
 
-- `Platform/HackerOs.Platform.RemoteRendering` (new project): the
+- `Platform/Kazo.Os.Platform.RemoteRendering` (new project): the
   worker's `Renderer`, the DOM operation translator, the page's window host
   and its collocated JavaScript module;
-- `HackerOs.Platform.WorkerHost`: messages `ui` and `uin`, `start` `k = 3`,
+- `Kazo.Os.Platform.WorkerHost`: messages `ui` and `uin`, `start` `k = 3`,
   `WorkerRemoteProcessHost.StartWindowAsync`, `RemoteWindowProcess`;
-- `HackerOs.Platform.Blazor`: `IRemoteWindowRendering`, consulted by
+- `Kazo.Os.Platform.Blazor`: `IRemoteWindowRendering`, consulted by
   `WindowAppRenderer` when the service exists;
 - the Ecosystem's `appsettings.json`: `HackerOs:RemoteWindowRendering`
   (`Enabled: false`, `Apps: ["org.hackeros.calculator"]`).
@@ -150,7 +150,7 @@ but Blazor's analyzer (`BL0006`) warns that they "will change in a future
 version". The criterion "no internal API" is met to the letter; in
 practice, a .NET update can break the translator. The files that
 read them disable `BL0006` with this reason, and the unit tests
-(`Tests/HackerOs.Platform.RemoteRendering.Tests`) serve as a safeguard at
+(`Tests/Kazo.Os.Platform.RemoteRendering.Tests`) serve as a safeguard at
 each version upgrade.
 
 ## Options submitted to Benoit

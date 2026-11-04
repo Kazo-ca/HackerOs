@@ -2,9 +2,9 @@
 
 # Notification bubbles
 
-Work item 1 of the taskbar series (issue [#242](https://github.com/Kazo-ca/HackerOs/issues/242)),
+Work item 1 of the taskbar series (issue [#242](https://github.com/Kazo-ca/Os/issues/242)),
 implementation of [ADR 0197](adr/0197-notification-toasts.md), done in the `todo/` series.
-The "Do not disturb" mode (issue [#296](https://github.com/Kazo-ca/HackerOs/issues/296))
+The "Do not disturb" mode (issue [#296](https://github.com/Kazo-ca/Os/issues/296))
 implements [ADR 0216](adr/0216-do-not-disturb.md) (section 5).
 
 ## 1. What the user sees
@@ -75,7 +75,7 @@ and `prefers-reduced-motion: no-preference`.
 | `OsSoundService.DoNotDisturb` | Plays no notification sound while the mode is on; the other sounds remain. |
 | `ClockPanel` | `role="switch"` switch next to the Notifications heading. |
 | `DoNotDisturbIndicator` (public) | The moon of the notification area, placed by `DesktopShell`; `OnClick` opens the panel. `MobileShell` shows the moon on the shade handle and adds it to its name. |
-| `NotificationsPanel` (Settings) | Page `--page=notifications`, through the public SDK (`HackSettings.OpenSystemAsync`). |
+| `NotificationsPanel` (Settings) | Page `--page=notifications`, through the public SDK (`KazoSettings.OpenSystemAsync`). |
 
 Tests: `DoNotDisturbServiceTests`, `OsSoundServiceTests.Do_not_disturb_mutes_the_notification_sounds_only`,
 `NotificationsPanelTests`, `DoNotDisturbTests` (UI.E2E: switch, moon, reload).

@@ -4,7 +4,7 @@
 
 ## Overview
 
-This report documents the migration of the simulated network, DNS resolver, website controllers, browser application, and network terminal commands (`ping`, `nmap`, `curl`) into Blazor WebAssembly C# (`wasm2/HackerOs/`).
+This report documents the migration of the simulated network, DNS resolver, website controllers, browser application, and network terminal commands (`ping`, `nmap`, `curl`) into Blazor WebAssembly C# (`wasm2/KazoOs/`).
 
 ---
 
@@ -12,13 +12,13 @@ This report documents the migration of the simulated network, DNS resolver, webs
 
 | Task ID | Feature Name | Legacy Source | C# Project / Location | Automated Test Evidence | Status |
 |---|---|---|---|---|---|
-| `P4-W4-001` | Network Domain Contracts | `src/core/network.ts` | `Shared/HackerOs.Simulation.Abstractions/Network/` | `Wave4NetworkTests` | **MIGRATED** |
-| `P4-W4-002` | In-Memory Network Registry | `src/core/network.ts` | `Platform/HackerOs.Platform.Core/Network/` | `Wave4NetworkTests` | **MIGRATED** |
-| `P4-W4-003` | Browser App Port | `src/apps/browser.ts` | `Apps/System/HackerOs.Apps.Browser/` | `BrowserWindow`, `SimulatedPageRenderer` | **MIGRATED** |
+| `P4-W4-001` | Network Domain Contracts | `src/core/network.ts` | `Shared/Kazo.Os.Simulation.Abstractions/Network/` | `Wave4NetworkTests` | **MIGRATED** |
+| `P4-W4-002` | In-Memory Network Registry | `src/core/network.ts` | `Platform/Kazo.Os.Platform.Core/Network/` | `Wave4NetworkTests` | **MIGRATED** |
+| `P4-W4-003` | Browser App Port | `src/apps/browser.ts` | `Apps/System/Kazo.Os.Apps.Browser/` | `BrowserWindow`, `SimulatedPageRenderer` | **MIGRATED** |
 | `P4-W4-004` | Rendering Strategy ADR | — | `docs/adr/0021-simulated-network-and-browser-rendering.md` | ADR 0021 (DECISION: D-015 Component Model) | **MIGRATED** |
-| `P4-W4-005` | Website Controllers | `src/websites/` | `Platform/HackerOs.Platform.Core/Network/Websites/` | `HackerSearch`, `HackMail`, `CryptoBank`, `Darknet`, `Forum` | **MIGRATED** |
-| `P4-W4-006` | Network Terminal Commands | `src/commands/` | `Apps/Commands/HackerOs.Commands.{Ping,Nmap,Curl}/` | `PingCommandTests`, `NmapCommandTests`, `CurlCommandTests` | **MIGRATED** |
-| `P4-W4-007` | Zero External Network Proof | — | `Tests/HackerOs.Network.Tests/Wave4NetworkTests.cs` | `NetworkService_MakesZeroRealSocketsOrHttpCalls` | **MIGRATED** |
+| `P4-W4-005` | Website Controllers | `src/websites/` | `Platform/Kazo.Os.Platform.Core/Network/Websites/` | `HackerSearch`, `HackMail`, `CryptoBank`, `Darknet`, `Forum` | **MIGRATED** |
+| `P4-W4-006` | Network Terminal Commands | `src/commands/` | `Apps/Commands/Kazo.Os.Commands.{Ping,Nmap,Curl}/` | `PingCommandTests`, `NmapCommandTests`, `CurlCommandTests` | **MIGRATED** |
+| `P4-W4-007` | Zero External Network Proof | — | `Tests/Kazo.Os.Network.Tests/Wave4NetworkTests.cs` | `NetworkService_MakesZeroRealSocketsOrHttpCalls` | **MIGRATED** |
 
 ---
 

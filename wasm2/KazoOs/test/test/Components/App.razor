@@ -1,0 +1,81 @@
+@using Microsoft.AspNetCore.Components.Web
+@inject TestHarnessOptions HarnessOptions
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kazo OS</title>
+    <base href="/" />
+    <!--
+      Same icon as the standalone PWA (OS/Kazo.Os.Ecosystem/wwwroot/index.html), served unprefixed
+      from Kazo.Os.Ecosystem's static web assets. Without a declared icon the browser requests
+      /favicon.ico, which 404s and fails the host smoke test (build/verify-hosts.sh).
+    -->
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+    <ResourcePreloader />
+    <ImportMap />
+
+    <!-- MudBlazor Styles -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+
+    <!-- Kazo OS Global CSS Design System & Scoped CSS Bundles -->
+    <link rel="stylesheet" href="_content/Kazo.Os.Platform.Blazor/Kazo.Os.Platform.Blazor.bundle.scp.css" />
+    <!--
+      The design-system tokens (--hos-*) are a static web asset of Kazo.Os.Ecosystem.Host (ADR 0098 §2),
+      so every host serves them under that library's _content/ prefix. This host must never keep its own
+      wwwroot/app.css: the `dotnet new blazor` stub once shadowed the real file and left every Kazo OS
+      surface unstyled (see doc/en/wasm/dev/old/webassembly-debugging.md).
+    -->
+    <link rel="stylesheet" href="_content/Kazo.Os.Ecosystem.Host/css/app.css" />
+    <link rel="stylesheet" href="@Assets["test.styles.css"]" />
+
+    <HeadOutlet @rendermode="new InteractiveWebAssemblyRenderMode(prerender: false)" />
+</head>
+
+<body>
+    <Kazo.Os.Ecosystem.App @rendermode="new InteractiveWebAssemblyRenderMode(prerender: false)" TestDemoEnabled="@HarnessOptions.TestDemoEnabled" />
+    <script src="@Assets["_framework/blazor.web.js"]"></script>
+    <!-- MudBlazor Script -->
+    <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+    <script>
+        if ('serviceWorker' in navigator && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1')) {
+            navigator.serviceWorker.register('_content/Kazo.Os.Ecosystem/service-worker.js', { updateViaCache: 'none' })
+                .then(registration => {
+                    registration.onupdatefound = () => {
+                        const installingWorker = registration.installing;
+                        if (installingWorker) {
+                            installingWorker.onstatechange = () => {
+                                if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    window.dispatchEvent(new CustomEvent('hackeros-pwa-update-available', {
+                                        detail: { registration }
+                                    }));
+                                }
+                            };
+                        }
+                    };
+                })
+                .catch(err => console.warn('Service worker registration failed:', err));
+
+            let refreshing = false;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (!refreshing) {
+                    refreshing = true;
+                    window.location.reload();
+                }
+            });
+        } else if ('serviceWorker' in navigator) {
+            // Unregister any stale service workers in development mode to prevent STATUS_ACCESS_VIOLATION crashes
+            navigator.serviceWorker.getRegistrations().then(registrations => {
+                for (let registration of registrations) {
+                    registration.unregister();
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

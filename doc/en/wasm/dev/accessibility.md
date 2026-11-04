@@ -52,7 +52,7 @@ groups of radio buttons (contrast, size, animations), each showing where its val
 | `AccessibilityPreferenceService` | Platform.Core | Reads and watches the document, follows `ThemePreferenceService` (for `animationsEnabled`) and the host probe; `Effective` and `Changed`. One per session. |
 | `IHostAccessibilityProbe`, `BrowserHostAccessibilityProbe`, `hostAccessibilityProbe.js` | Platform.Core, Platform.Blazor | Host media queries, with no decision logic. |
 | `AppAccessibilityGateway` | Platform.Core | An app's view, wired by `AppExecutionContextFactory`. |
-| `HackAccessibility`, `HackAccessibilityPreferences`, `IAppAccessibilityGateway` | AppSdk | Public API. |
+| `KazoAccessibility`, `KazoAccessibilityPreferences`, `IAppAccessibilityGateway` | AppSdk | Public API. |
 | `ThemeScope` (`HighContrast`, `TextScale`) | Theming.Blazor | `data-contrast` and `data-text-scale` attributes next to `data-motion`. |
 | `themes.css` | Theming.Blazor | High contrast layer, root font, reduced motion rule. |
 | `AccessibilityPanel` | Apps.Settings | The Accessibility page. |
@@ -87,12 +87,12 @@ Each one reads `AppContext.Accessibility` on opening and follows `Changed`.
 ## API
 
 ```csharp
-using HackerOs.AppSdk.Accessibility;
+using Kazo.Os.AppSdk.Accessibility;
 
-HackAccessibilityPreferences a11y = await HackAccessibility.GetPreferencesAsync();
+KazoAccessibilityPreferences a11y = await KazoAccessibility.GetPreferencesAsync();
 int fontSize = a11y.Scale(14);                 // 28 at 200%
 bool blink = !a11y.ReducedMotion;
-HackAccessibility.PreferencesChanged += (_, _) => { /* re-read and redraw */ };
+KazoAccessibility.PreferencesChanged += (_, _) => { /* re-read and redraw */ };
 ```
 
 No capability. Without the service (tests, Web Worker processes), the default values apply.
@@ -100,9 +100,9 @@ No capability. Without the service (tests, Web Worker processes), the default va
 ## Tests
 
 - Unit: `AccessibilityPreferenceServiceTests` (Platform.Core: `auto` rules, layers,
-  invalid value, host, `animationsEnabled`), `HackAccessibilityTests` (AppSdk),
+  invalid value, host, `animationsEnabled`), `KazoAccessibilityTests` (AppSdk),
   `ThemeComponentRenderTests` (`ThemeScope` attributes).
-- E2E (`Tests/HackerOs.UI.E2E.Tests/AccessibilityPreferencesTests.cs`, see
+- E2E (`Tests/Kazo.Os.UI.E2E.Tests/AccessibilityPreferencesTests.cs`, see
   [`building-and-testing.md`](building-and-testing.md)):
   - axe scans of the Terminal, the browser, the calculator, the system monitor, Theme
     Editor, Settings > Backup and Settings > Accessibility, with and without high
@@ -131,7 +131,7 @@ outside the main thread.
 
 - [x] `accessibility.config` document (schema, default `/etc` file, OS document registry).
 - [x] `AccessibilityPreferenceService` and host media query probe.
-- [x] `HackAccessibility` in the SDK, gateway wired by the context factory.
+- [x] `KazoAccessibility` in the SDK, gateway wired by the context factory.
 - [x] `ThemeScope`: `data-contrast`, `data-text-scale`; effective reduced motion.
 - [x] `themes.css`: high contrast layer, root font, reduced motion rule; text sizes in `rem`.
 - [x] Settings > Accessibility (English and French); Animations setting removed from Appearance.

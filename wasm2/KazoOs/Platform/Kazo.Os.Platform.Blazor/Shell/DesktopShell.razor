@@ -1,0 +1,707 @@
+@using Kazo.Os.App.Abstractions
+@using Kazo.Os.AppSdk.Blazor
+@using Kazo.Os.Platform.Blazor.Dialogs
+@using Kazo.Os.Platform.Blazor.Security
+@using Kazo.Os.Platform.Blazor.Windows
+@using Kazo.Os.Platform.Core.Discovery
+@using Kazo.Os.Platform.Core.FileSystem
+@using Kazo.Os.Platform.Core.Lifecycle
+@using Kazo.Os.Platform.Core.Shell
+@using Kazo.Os.Simulation.Abstractions.Sessions
+@using Kazo.Os.Simulation.Abstractions.Time
+@using Kazo.Os.Simulation.Abstractions.Events
+@using Kazo.Os.Simulation.Abstractions.Processes
+@implements IDisposable
+@inject WindowRuntime WindowRuntime
+@inject WindowLaunchCoordinator LaunchCoordinator
+@inject AppLifecycleOrchestrator Orchestrator
+@inject IProcessManager ProcessManager
+@inject WindowCloseCoordinator CloseCoordinator
+@inject WindowResponsivenessMonitor Responsiveness
+@inject WindowCloseGuardRegistry CloseGuards
+@inject AppBackHandlerRegistry BackHandlers
+@inject WindowAppEventDispatcher WindowEvents
+@inject AppWindowGatewayFactory WindowGateways
+@inject WindowKeyboardCommands KeyboardCommands
+@inject Kazo.Os.Platform.Blazor.Display.ScreenService Screens
+@inject ISessionService SessionService
+@inject ISimulationClock SimulationClock
+@inject IEventBus EventBus
+@inject FileDialogWindowAdapter FileDialogAdapter
+@inject TestDemoFixtureSeeder TestDemoSeeder
+@inject IStringLocalizer<Strings> L
+@inject Kazo.Os.Platform.Core.AppCatalog Catalog
+@inject Kazo.Os.Platform.Core.Globalization.SessionLocaleService SessionLocale
+@inject IServiceProvider Services
+@inject Kazo.Os.Platform.Core.Globalization.SessionTimeZoneService TimeZones
+@inject Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuService ContextMenus
+
+<div class="desktop-shell" @onkeydown="HandleShellKeyDown">
+    <div class="desktop-workspace">
+        <DesktopArea Windows="WindowRuntime.Windows"
+                     Layers="_windowLayers"
+                     PeekWindowId="_taskbarPreviews.PeekWindowId"
+                     BackgroundContent="EffectiveBackgroundContent"
+                     BackgroundInteractive="UsesDesktopSurface"
+                     WallpaperContent="PrimaryWallpaper"
+                     OnFocus="HandleFocus"
+                     OnMinimize="HandleMinimize"
+                     OnToggleMaximize="HandleToggleMaximize"
+                     OnClose="HandleClose"
+                     OnBack="HandleBack"
+                     OnWindowMenu="HandleWindowMenu"
+                     OnGesture="HandleGesture"
+                     WindowOverlay="UnresponsiveWindowOverlay.ForWindow">
+            <WindowContent Context="window">
+                @if (window.Content is not null)
+                {
+                    @window.Content
+                }
+                else if (Orchestrator.TryGetRunningInstance(AppInstanceId.FromGuid(window.OwnerInstanceId.Value), out AppDescriptor? descriptor, out IAppExecutionContext? context))
+                {
+                    <WindowAppRenderer Window="window"
+                                       Descriptor="descriptor"
+                                       AppContext="context"
+                                       CloseGuards="CloseGuards"
+                                       BackHandlers="BackHandlers"
+                                       WindowEvents="WindowEvents"
+                                       WindowGateways="WindowGateways" />
+                }
+                else
+                {
+                    <div class="window-content-placeholder">@window.Title</div>
+                }
+            </WindowContent>
+        </DesktopArea>
+    </div>
+
+    @if (_launcher.IsOpen && _launcher.Display.IsPrimary)
+    {
+        <AppLauncher OnClose="CloseLauncher" OnAppSelected="HandleAppSelected" OnSendToDesktop="SendToDesktopCallback" OnCreateAccount="OpenUsersSettingsAsync" OnSignOut="OpenLogout" OnRestart="RestartCallback" />
+    }
+
+    @if (!string.IsNullOrEmpty(_launchError))
+    {
+        <aside class="lazy-launch-error" role="alert">@_launchError</aside>
+    }
+
+    @if (_isLogoutOpen)
+    {
+        <LogoutDialog OnClose="CloseLogout" OnLoggedOut="HandleLoggedOutAsync" Restart="_isRestart" />
+    }
+
+    <Kazo.Os.Taskbar.Blazor.Taskbar WindowSource="_taskbarWindowSource"
+                                      Commands="_taskbarCommands"
+                                      Launcher="_primaryLauncher"
+                                      StatusSource="_taskbarStatus"
+                                      ClockPanelSource="_clockPanel"
+                                      ClockPanelContent="@ClockPanelFragment"
+                                      NotificationAreaContent="@NotificationAreaFragment"
+                                      ContextMenus="_taskbarMenus.For(DisplayId.Primary)"
+                                      Previews="_taskbarPreviews" />
+
+    @* ADR 0197: the notification bubbles, above the taskbar of screen 1, hidden while the clock panel is open. *@
+    <NotificationToasts IsPanelOpen="_clockPanel.IsOpen" />
+
+    @if (TestDemoEnabled)
+    {
+        <div class="e2e-test-demo-panel">
+            <button type="button" id="btn-test-demo" @onclick="RunTestDemoAsync" disabled="@_testDemoRunning">
+                @(_testDemoRunning ? "Seeding…" : "Test Demo")
+            </button>
+            @if (_testDemoStatus is not null)
+            {
+                <output id="test-demo-status" role="status">@_testDemoStatus</output>
+            }
+        </div>
+    }
+
+    @* ADR 0127 §2: samples which windows stop answering their inputs. *@
+    <WindowResponsivenessHost />
+
+    @* ADR 0220: the mouse's Back/Forward buttons, Alt+←/→ and the tab's Back go to the focused window. *@
+    <Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationListener />
+
+    @* ADR 0178 §4: the secondary screens, each with its desktop, and the « Restaurer les écrans » offer. *@
+    <Kazo.Os.Platform.Blazor.Display.ScreenLayer ScreenContent="SecondaryDesktopFragment" ScreenTaskbar="SecondaryTaskbarFragment" />
+
+    @* ADR 0179 §2: these overlays show on the screen where the user acts. *@
+    @* ADR 0179 §6: the number of screen 1 while « Autre écran ▸ Écran N » is highlighted. *@
+    <Kazo.Os.Platform.Blazor.Display.ScreenIdentifyVeil Number="1" />
+
+    <Kazo.Os.Platform.Blazor.Display.ScreenOverlayHost>
+        @* ADR 0095 §3: window switcher, keyboard move/resize and window menu. *@
+        <WindowManagerOverlays Commands="KeyboardCommands" />
+
+        @* ADR 0150 §6: the OS context menu, above every window. *@
+        <Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuOverlay />
+    </Kazo.Os.Platform.Blazor.Display.ScreenOverlayHost>
+
+    @* ADR 0049: secure-desktop approval, above every window and the taskbar. *@
+    @* ADR 0101: synchronization conflicts and the session's periodic sync. *@
+    <Kazo.Os.Platform.Blazor.Sync.SyncConflictOverlay />
+    <DangerousCapabilityApprovalOverlay />
+    <AdministratorAuthenticationOverlay />
+    <AppInstallApprovalOverlay />
+</div>
+
+@code {
+    private bool _isLogoutOpen;
+    private bool _isRestart;
+    private string? _launchError;
+    private TaskbarWindowSourceAdapter _taskbarWindowSource = null!;
+    private TaskbarCommandDispatcherAdapter _taskbarCommands = null!;
+    private TaskbarLauncherAdapter _launcher = null!;
+    private Kazo.Os.Taskbar.Blazor.ITaskbarLauncher _primaryLauncher = null!;
+    private readonly Dictionary<DisplayId, TaskbarWindowSourceAdapter> _screenTaskbarSources = [];
+    private TaskbarClockPanelSourceAdapter _clockPanel = null!;
+    private TaskbarStatusSourceAdapter _taskbarStatus = null!;
+    private TaskbarContextMenus _taskbarMenus = null!;
+
+    /// <summary>ADR 0199: the hover previews of every taskbar, and the peek they drive.</summary>
+    private readonly TaskbarWindowPreviews _taskbarPreviews = new();
+
+    private RenderFragment ClockPanelFragment => builder =>
+    {
+        builder.OpenComponent<ClockPanel>(0);
+        builder.AddAttribute(1, nameof(ClockPanel.OnClose), EventCallback.Factory.Create(this, CloseClockPanel));
+        builder.CloseComponent();
+    };
+
+    // ADR 0134 §2: the server connection icon; "Server settings" opens the Settings app.
+    // ADR 0216 §5: the "Do not disturb" moon; a click opens the clock panel, which holds the switch.
+    private RenderFragment NotificationAreaFragment => builder =>
+    {
+        builder.OpenComponent<DoNotDisturbIndicator>(0);
+        builder.AddAttribute(1, nameof(DoNotDisturbIndicator.OnClick), EventCallback.Factory.Create(this, _clockPanel.Toggle));
+        builder.CloseComponent();
+        builder.OpenComponent<ServerStatusIndicator>(2);
+        builder.AddAttribute(3, nameof(ServerStatusIndicator.OnOpenSettings), EventCallback.Factory.Create(this, OpenServerSettingsAsync));
+        builder.CloseComponent();
+    };
+
+    private Task OpenServerSettingsAsync() =>
+        Catalog.Manifests.TryGetValue(SettingsAppId, out AppManifest? settings)
+            ? HandleAppSelected(settings)
+            : Task.CompletedTask;
+
+    /// <summary>ADR 0187 section 5: the guest's Start menu reminder opens Settings ▸ Users.</summary>
+    private Task OpenUsersSettingsAsync() =>
+        Catalog.Manifests.TryGetValue(SettingsAppId, out AppManifest? settings)
+            ? LaunchAsync(settings, ["--page=users"])
+            : Task.CompletedTask;
+
+    /// <summary>The Settings app, opened from the server icon's panel.</summary>
+    private const string SettingsAppId = "org.hackeros.settings";
+
+    [Parameter]
+    public EventCallback OnLoggedOut { get; set; }
+
+    /// <summary>
+    /// Gets or sets what the host does for « Redémarrer » of the Start menu's Power button
+    /// (ADR 0195), raised once the session ended like a sign-out: the browser host reloads the OS
+    /// past its caches. The Start menu offers no « Redémarrer » when it is not supplied.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnRestart { get; set; }
+
+    private EventCallback RestartCallback => OnRestart.HasDelegate
+        ? EventCallback.Factory.Create(this, OpenRestart)
+        : default;
+
+    /// <summary>
+    /// Gets or sets optional content forwarded unchanged to <see cref="DesktopArea.BackgroundContent"/>
+    /// (`INT-012`) — this shell doesn't need to know what the content is, only that a future composition
+    /// root may want to supply some.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? BackgroundContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets whether the shell draws the desktop app (ADR 0160 §1) when no
+    /// <see cref="BackgroundContent"/> is supplied: the icons of <c>~/Desktop</c>, Home and Trash.
+    /// <see langword="true"/> by default; a host may turn it off for a bare desktop.
+    /// </summary>
+    [Parameter]
+    public bool ShowDesktopIcons { get; set; } = true;
+
+    private DesktopSurfaceHost? _desktopSurface;
+
+    /// <summary>The window layers of every screen: windows render once and move to their screen's layer (ADR 0178 §3).</summary>
+    private readonly WindowLayers _windowLayers = new();
+
+    private bool UsesDesktopSurface => BackgroundContent is null && ShowDesktopIcons;
+
+    /// <summary>
+    /// The desktop of a secondary screen (ADR 0178 §1): the wallpaper only, the icons stay on
+    /// screen 1. It shares the window layers, so the windows of its screen move into it (they stay
+    /// rendered, with their callbacks, by the area of screen 1), and it measures the screen's work area.
+    /// </summary>
+    private RenderFragment<Kazo.Os.Platform.Blazor.Display.SecondaryScreen> SecondaryDesktopFragment => screen =>
+        @<DesktopArea Windows="WindowRuntime.Windows"
+                      Layers="_windowLayers"
+                      DisplayId="screen.Id"
+                      WallpaperContent="@(ScreenWallpaper(screen.Id.Number))"
+                      OnGesture="HandleGesture" />;
+
+    /// <summary>The wallpaper of screen 1 (ADR 0202 §4).</summary>
+    private RenderFragment PrimaryWallpaper => ScreenWallpaper(1);
+
+    /// <summary>The wallpaper of a screen: its own choice, otherwise the one of screen 1 (ADR 0202 §1).</summary>
+    private static RenderFragment ScreenWallpaper(int number) => @<DesktopWallpaper ScreenNumber="number" />;
+
+    /// <summary>
+    /// The taskbar of a secondary screen (ADR 0179 §1): the windows of its screen, its Start button
+    /// and its clock. The notification area and the clock panel stay on screen 1; the session's Power
+    /// button is in the Start menu (ADR 0195). The Start menu opened from it shows on that screen.
+    /// </summary>
+    private RenderFragment<Kazo.Os.Platform.Blazor.Display.SecondaryScreen> SecondaryTaskbarFragment => screen =>
+        @<text>
+            @if (_launcher.IsOpen && _launcher.Display == screen.Id)
+            {
+                <AppLauncher OnClose="CloseLauncher" OnAppSelected="HandleAppSelected" OnSendToDesktop="SendToDesktopCallback" OnCreateAccount="OpenUsersSettingsAsync" OnSignOut="OpenLogout" OnRestart="RestartCallback" />
+            }
+            <Kazo.Os.Taskbar.Blazor.Taskbar WindowSource="ScreenTaskbarSource(screen.Id)"
+                                              Commands="_taskbarCommands"
+                                              Launcher="_launcher.For(screen.Id)"
+                                              StatusSource="_taskbarStatus"
+                                              ContextMenus="_taskbarMenus.For(screen.Id)"
+                                              Previews="_taskbarPreviews" />
+        </text>;
+
+    /// <summary>The window list of a secondary screen's taskbar, kept while the screen is open.</summary>
+    private TaskbarWindowSourceAdapter ScreenTaskbarSource(DisplayId display)
+    {
+        if (!_screenTaskbarSources.TryGetValue(display, out TaskbarWindowSourceAdapter? source))
+        {
+            source = new TaskbarWindowSourceAdapter(
+                WindowRuntime,
+                window => TaskbarScreenFilter.Lists(display, Screens.PrimaryTaskbar, window.DisplayId));
+            _screenTaskbarSources[display] = source;
+        }
+
+        return source;
+    }
+
+    private void OnScreensChanged()
+    {
+        // primary-taskbar may have changed; the taskbars of closed screens are gone.
+        _taskbarWindowSource.Refresh();
+        foreach (DisplayId closed in _screenTaskbarSources.Keys.Where(display => Screens.Screens.All(screen => screen.Id != display)).ToArray())
+        {
+            _screenTaskbarSources.Remove(closed, out TaskbarWindowSourceAdapter? source);
+            source?.Dispose();
+        }
+
+        if (_launcher.IsOpen && !_launcher.Display.IsPrimary && Screens.Screens.All(screen => screen.Id != _launcher.Display))
+        {
+            _launcher.Close();
+        }
+
+        Rerender();
+    }
+
+    private RenderFragment? EffectiveBackgroundContent => BackgroundContent ?? (ShowDesktopIcons ? DesktopSurfaceFragment : null);
+
+    private RenderFragment DesktopSurfaceFragment => builder =>
+    {
+        builder.OpenComponent<DesktopSurfaceHost>(0);
+        builder.AddComponentReferenceCapture(1, component => _desktopSurface = (DesktopSurfaceHost)component);
+        builder.CloseComponent();
+    };
+
+    /// <summary>"Send to ▸ Desktop" is offered while the desktop app runs.</summary>
+    private EventCallback<AppManifest> SendToDesktopCallback => _desktopSurface?.ProcessId is not null
+        ? EventCallback.Factory.Create<AppManifest>(this, SendToDesktopAsync)
+        : default;
+
+    /// <summary>Hands the app to the running desktop, which writes its shortcut in <c>~/Desktop</c> (ADR 0160 §6).</summary>
+    private async Task SendToDesktopAsync(AppManifest manifest)
+    {
+        _launcher.Close();
+        if (_desktopSurface is { } surface && !await surface.CreateShortcutAsync(manifest.Id))
+        {
+            _launchError = L["Shell.LaunchFailed"];
+        }
+
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Shows the E2E-only "Test Demo" fixture-seeding control. Must only ever be set
+    /// true by a trusted, out-of-band signal from the test harness (see
+    /// doc/en/wasm/dev/old/e2e-test-demo-mode.md) — never reachable from a normal app launch.
+    /// </summary>
+    [Parameter]
+    public bool TestDemoEnabled { get; set; }
+
+    private bool _testDemoRunning;
+    private string? _testDemoStatus;
+
+    private void CloseLauncher()
+    {
+        _launcher.Close();
+    }
+
+    private void CloseClockPanel()
+    {
+        _clockPanel.Close();
+    }
+
+    private void OpenLogout() => OpenSessionEnd(restart: false);
+
+    private void OpenRestart() => OpenSessionEnd(restart: true);
+
+    /// <summary>ADR 0195: « Se déconnecter » and « Redémarrer » share the sign-out dialog.</summary>
+    private void OpenSessionEnd(bool restart)
+    {
+        _isRestart = restart;
+        _isLogoutOpen = true;
+        _launcher.Close();
+        _clockPanel.Close();
+        Rerender();
+    }
+
+    private void CloseLogout()
+    {
+        _isLogoutOpen = false;
+    }
+
+    private async Task HandleLoggedOutAsync()
+    {
+        _isLogoutOpen = false;
+        if (_isRestart && OnRestart.HasDelegate)
+        {
+            await OnRestart.InvokeAsync();
+        }
+        else if (OnLoggedOut.HasDelegate)
+        {
+            await OnLoggedOut.InvokeAsync();
+        }
+    }
+
+    private Task HandleAppSelected(AppManifest manifest) => LaunchAsync(manifest, []);
+
+    // ADR 0179 §1: an app started from a screen's Start menu opens on that screen; from screen 1's
+    // notification area, on screen 1.
+    private Task LaunchAsync(AppManifest manifest, IReadOnlyList<string> arguments) =>
+        LaunchAsync(manifest, arguments, _launcher.IsOpen ? _launcher.Display : DisplayId.Primary);
+
+    /// <summary>ADR 0194 §3-4: an app started from a taskbar menu opens on that taskbar's screen.</summary>
+    private Task LaunchFromTaskbarAsync(string appId, IReadOnlyList<string> arguments, DisplayId display) =>
+        Catalog.Manifests.TryGetValue(appId, out AppManifest? manifest)
+            ? LaunchAsync(manifest, arguments, display)
+            : Task.CompletedTask;
+
+    /// <summary>ADR 0194 §3: « Nouvelle fenêtre » for an app in the catalog that accepts more than one window.</summary>
+    private bool CanOpenNewWindow(string appId) =>
+        Catalog.Manifests.TryGetValue(appId, out AppManifest? manifest)
+        && manifest.Kind == AppKind.Window
+        && !manifest.SingleInstancePerUser;
+
+    private async Task LaunchAsync(AppManifest manifest, IReadOnlyList<string> arguments, DisplayId display)
+    {
+        _launcher.Close();
+        if (SessionService.CurrentPrincipal is not AuthenticatedPrincipal principal)
+        {
+            return;
+        }
+
+        AppLaunchResult result;
+        using (LaunchCoordinator.OpenOnDisplay(manifest.Id, display))
+        {
+            result = await Orchestrator.LaunchAsync(
+                new AppLaunchRequest(manifest.Id, principal, arguments));
+            if (result.IsSuccess)
+            {
+                await LaunchCoordinator.PresentAsync(manifest, result);
+            }
+        }
+        _launchError = result.IsSuccess
+            ? null
+            : result.ErrorMessage ?? result.ErrorCode ?? L["Shell.LaunchFailed"];
+        StateHasChanged();
+    }
+
+    private void HandleFocus(WindowId id) => WindowRuntime.Apply(new FocusWindowCommand(id));
+    private void HandleMinimize(WindowId id) => WindowRuntime.Apply(new MinimizeWindowCommand(id));
+    private void HandleToggleMaximize(WindowId id)
+    {
+        WindowRuntimeState? window = WindowRuntime.Windows.FirstOrDefault(w => w.Id == id);
+        if (window is not null)
+        {
+            if (window.VisualState == WindowVisualState.Maximized)
+            {
+                WindowRuntime.Apply(new RestoreWindowCommand(id));
+            }
+            else
+            {
+                WindowRuntime.Apply(new MaximizeWindowCommand(id));
+            }
+        }
+    }
+
+    private async Task HandleClose(WindowId id)
+    {
+        // ADR 0127 §3: the close button of a window that does not answer opens "Attendre |
+        // Terminer l'application" instead of a close the frozen app could not answer.
+        if (Responsiveness.InterceptClose(id))
+        {
+            return;
+        }
+
+        WindowRuntimeState? window = WindowRuntime.Windows.FirstOrDefault(w => w.Id == id);
+        if (window?.OnRequestClose is { } onRequestClose)
+        {
+            await onRequestClose();
+            StateHasChanged();
+            return;
+        }
+
+        await CloseCoordinator.CloseAsync(
+            id,
+            cancellationToken => CloseGuards.ConfirmCloseAsync(id, cancellationToken));
+        StateHasChanged();
+    }
+
+    private async Task HandleBack(WindowId id)
+    {
+        // Only step 2 of plan §7.3's ordered Back sequence — the app's declared IAppBackHandler.
+        // Steps 3-5 (navigation stack, close-and-go-Home fallback) require MOB-011, out of scope
+        // here; a NotHandled/no-handler result is a valid no-op for this slice.
+        await BackHandlers.NavigateBackAsync(id, new AppBackRequest(AppBackSource.DesktopChromeButton));
+    }
+
+    private void HandleWindowMenu(WindowMenuRequest request) =>
+        KeyboardCommands.OpenMenu(request.WindowId, request.ClientX, request.ClientY, request.Kind);
+
+    /// <summary>« Nouvel écran » (ADR 0178 §4): opens a screen during the click; <see langword="null"/> when the browser refused.</summary>
+    private async Task<DisplayId?> OpenScreenAsync()
+    {
+        Kazo.Os.Platform.Blazor.Display.ScreenOpenResult result = await Screens.OpenScreenAsync();
+        return result is { Status: Kazo.Os.Platform.Blazor.Display.ScreenOpenStatus.Opened, Screen: { } screen } ? screen.Id : null;
+    }
+
+    private void HandleGesture(WindowCommand command)
+    {
+        // A secondary screen's desktop may report its size once more after its screen was removed.
+        if (command is ChangeViewportCommand viewport && !WindowRuntime.Displays.Contains(viewport.DisplayId))
+        {
+            return;
+        }
+
+        // A window dropped on a screen that closed during the drag stays on its own screen (ADR 0183).
+        if (command is MoveWindowToDisplayCommand drop && !WindowRuntime.Displays.Contains(drop.DisplayId))
+        {
+            return;
+        }
+
+        try
+        {
+            WindowRuntime.Apply(command);
+        }
+        catch (InvalidOperationException)
+        {
+            // Defense in depth against a stray gesture command that no longer matches window
+            // state (e.g. a resize in flight for a window that just became non-resizable, or a
+            // move/resize racing a minimize/close). WindowChrome already guards the common cases;
+            // this keeps the shell responsive instead of raising an unhandled exception through
+            // the render loop for a display-only pointer gesture.
+        }
+    }
+
+    private async Task RunTestDemoAsync()
+    {
+        if (!TestDemoEnabled || _testDemoRunning)
+        {
+            return;
+        }
+
+        if (SessionService.CurrentPrincipal is not AuthenticatedPrincipal principal)
+        {
+            _testDemoStatus = "Error: no signed-in user.";
+            return;
+        }
+
+        _testDemoRunning = true;
+        _testDemoStatus = null;
+        StateHasChanged();
+        try
+        {
+            string root = await TestDemoSeeder.SeedAsync(principal);
+            _testDemoStatus = $"Seeded:{root}";
+        }
+        catch (Exception exception)
+        {
+            _testDemoStatus = $"Error:{exception.Message}";
+        }
+        finally
+        {
+            _testDemoRunning = false;
+            StateHasChanged();
+        }
+    }
+
+    private IDisposable? _processSubscription;
+    private Func<WindowId, Task>? _closeWindow;
+    private Func<Task<DisplayId?>>? _openScreen;
+    private NotificationAttention? _notificationAttention;
+    private AppUpdateAttention? _appUpdates;
+
+
+    protected override void OnInitialized()
+    {
+        WindowRuntime.StateChanged += Rerender;
+        FileDialogAdapter.Changed += Rerender;
+        _closeWindow = HandleClose;
+        KeyboardCommands.CloseWindow = _closeWindow;
+        _openScreen = OpenScreenAsync;
+        KeyboardCommands.OpenScreen = _openScreen;
+        _processSubscription = new WindowProcessObserver(EventBus, ProcessManager, Orchestrator, WindowRuntime, LaunchCoordinator, work => InvokeAsync(work));
+
+        _taskbarWindowSource = new TaskbarWindowSourceAdapter(
+            WindowRuntime,
+            window => TaskbarScreenFilter.Lists(DisplayId.Primary, Screens.PrimaryTaskbar, window.DisplayId));
+        _taskbarCommands = new TaskbarCommandDispatcherAdapter(WindowRuntime, CloseCoordinator, CloseGuards);
+        _launcher = new TaskbarLauncherAdapter();
+        _primaryLauncher = _launcher.For(DisplayId.Primary);
+        Screens.Changed += OnScreensChanged;
+        _launcher.Changed += Rerender;
+        _clockPanel = new TaskbarClockPanelSourceAdapter();
+        _clockPanel.Changed += Rerender;
+        _taskbarPreviews.Changed += Rerender;
+        _taskbarStatus = new TaskbarStatusSourceAdapter(SimulationClock, SessionLocale, TimeZones);
+        // ADR 0196: the clock's dot counts the notifications not looked at yet; opening the panel reads them.
+        if (Services.GetService(typeof(INotificationQueue)) is INotificationQueue notifications)
+        {
+            _notificationAttention = new NotificationAttention(notifications, () => SessionService.CurrentPrincipal?.UserId, SimulationClock);
+            _notificationAttention.Changed += OnUnreadNotificationsChanged;
+            _clockPanel.Changed += OnClockPanelChanged;
+        }
+
+        // ADR 0186 §4.5: the sign-in notification of unseen changes.
+        _ = PostWhatsNewAsync();
+        // ADR 0212 §5: the Hack Store's update check; a notification shows what it finds.
+        _appUpdates = new AppUpdateAttention(Services);
+        _appUpdates.Start();
+        _taskbarMenus = new TaskbarContextMenus(
+            ContextMenus,
+            KeyboardCommands,
+            WindowRuntime,
+            L,
+            appId => Catalog.Manifests.ContainsKey(appId),
+            CanOpenNewWindow,
+            (appId, arguments, display) => InvokeAsync(() => LaunchFromTaskbarAsync(appId, arguments, display)));
+        _hardwareNavigation = Services.GetService(typeof(Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationService))
+            as Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationService;
+        if (_hardwareNavigation is not null)
+        {
+            _hardwareNavigationRoute = RouteHardwareNavigationAsync;
+            _hardwareNavigation.Route = _hardwareNavigationRoute;
+        }
+    }
+
+    private Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationService? _hardwareNavigation;
+    private Func<Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationRequest, Task>? _hardwareNavigationRoute;
+
+    /// <summary>
+    /// ADR 0220 §2: an open context menu or Start menu closes first, as with Escape; otherwise the gesture
+    /// goes to the focused window, and nothing happens when it has nothing to go back to.
+    /// </summary>
+    private async Task RouteHardwareNavigationAsync(Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationRequest request)
+    {
+        if (ContextMenus.Current is not null)
+        {
+            ContextMenus.Close();
+            return;
+        }
+
+        if (_launcher.IsOpen)
+        {
+            _launcher.Close();
+            return;
+        }
+
+        await _hardwareNavigation!.NavigateFocusedWindowAsync(request);
+    }
+
+    /// <summary>Posts the sign-in notification of unseen changes, then shows its dot at once.</summary>
+    private async Task PostWhatsNewAsync()
+    {
+        await WhatsNewSignInNotice.PostAsync(Services);
+        _notificationAttention?.Refresh();
+    }
+
+    private void OnUnreadNotificationsChanged() =>
+        InvokeAsync(() => _clockPanel.SetUnreadCount(_notificationAttention?.UnreadCount ?? 0));
+
+    private void OnClockPanelChanged()
+    {
+        if (_notificationAttention is not null && _notificationAttention.IsViewing != _clockPanel.IsOpen)
+        {
+            _notificationAttention.IsViewing = _clockPanel.IsOpen;
+        }
+    }
+
+    private void Rerender()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void HandleShellKeyDown(KeyboardEventArgs args)
+    {
+        if (args.Key == "Escape")
+        {
+            if (_launcher.IsOpen)
+            {
+                _launcher.Close();
+            }
+            else if (_clockPanel.IsOpen)
+            {
+                _clockPanel.Close();
+            }
+        }
+    }
+
+    public void Dispose()
+    {
+        WindowRuntime.StateChanged -= Rerender;
+        FileDialogAdapter.Changed -= Rerender;
+        if (ReferenceEquals(KeyboardCommands.CloseWindow, _closeWindow))
+        {
+            KeyboardCommands.CloseWindow = null;
+        }
+
+        if (ReferenceEquals(KeyboardCommands.OpenScreen, _openScreen))
+        {
+            KeyboardCommands.OpenScreen = null;
+        }
+
+        if (_hardwareNavigation is not null && ReferenceEquals(_hardwareNavigation.Route, _hardwareNavigationRoute))
+        {
+            _hardwareNavigation.Route = null;
+        }
+
+        _processSubscription?.Dispose();
+        _launcher.Changed -= Rerender;
+        _clockPanel.Changed -= Rerender;
+        _taskbarPreviews.Changed -= Rerender;
+        _taskbarWindowSource.Dispose();
+        Screens.Changed -= OnScreensChanged;
+        foreach (TaskbarWindowSourceAdapter source in _screenTaskbarSources.Values)
+        {
+            source.Dispose();
+        }
+
+        _screenTaskbarSources.Clear();
+        _taskbarStatus.Dispose();
+        _appUpdates?.Dispose();
+        _clockPanel.Changed -= OnClockPanelChanged;
+        if (_notificationAttention is not null)
+        {
+            _notificationAttention.Changed -= OnUnreadNotificationsChanged;
+            _notificationAttention.Dispose();
+        }
+        _taskbarMenus.Dispose();
+    }
+}

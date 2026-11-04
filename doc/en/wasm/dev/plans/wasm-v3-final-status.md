@@ -56,21 +56,21 @@ Chromium from `/opt/pw-browsers`. GitHub Actions is down across the whole reposi
 
 | Step | Result |
 |---|---|
-| `dotnet build HackerOs.sln`, Debug then Release | succeeded, 0 warnings, 0 errors |
-| Unit and integration tests, 40 projects (`--no-build -c Debug`) | 3,397 passed, 0 failed (including `HackerOs.SdkCompatibility.Tests` 5/5, `HackerOs.Platform.Core.Tests` 1,125/1,125, `HackerOs.Tools.ManifestGenerator.Tests` 67/67) |
-| `HackerOs.E2E.Tests` | 16/16 |
-| `HackerOs.UI.E2E.Tests` | 24/24 |
-| `HackerOs.Templates.E2E.Tests` (including the host that loads the compatibility app 1.0.0) | 6/6 |
-| `HackerOs.Pwa.E2E.Tests` | 5/6 on the first run, then 6/6 twice in a row after the fix below |
+| `dotnet build Kazo.Os.sln`, Debug then Release | succeeded, 0 warnings, 0 errors |
+| Unit and integration tests, 40 projects (`--no-build -c Debug`) | 3,397 passed, 0 failed (including `Kazo.Os.SdkCompatibility.Tests` 5/5, `Kazo.Os.Platform.Core.Tests` 1,125/1,125, `Kazo.Os.Tools.ManifestGenerator.Tests` 67/67) |
+| `Kazo.Os.E2E.Tests` | 16/16 |
+| `Kazo.Os.UI.E2E.Tests` | 24/24 |
+| `Kazo.Os.Templates.E2E.Tests` (including the host that loads the compatibility app 1.0.0) | 6/6 |
+| `Kazo.Os.Pwa.E2E.Tests` | 5/6 on the first run, then 6/6 twice in a row after the fix below |
 | `build/publish-trimmed.sh` (merge bar) | PASS: 134 `.wasm` files, 26.4 MiB (8.0 MiB Brotli); login, every window app in the Start menu, pipe in the worker pool, Intranet, sample Blazor site, offline restart |
-| `build/verify-hosts.sh` (three hosts) | PASS: published Ecosystem (metrics on, off at build, off by setting), `test/test`, `HackerOs.Server` |
+| `build/verify-hosts.sh` (three hosts) | PASS: published Ecosystem (metrics on, off at build, off by setting), `test/test`, `Kazo.Os.Server` |
 
 The only code fix of this work item: the PWA test
 `Reload_fully_offline_boots_the_app_and_preserves_a_saved_file` clicked the
 file row only once; when the explorer list
 reloaded right after navigation, the selection was lost and the
 "Download" button stayed disabled. `PwaTestSupport.AssertFileContentAsync` takes up
-the loop of `SelectFileExplorerEntryAsync` from `HackerOs.UI.E2E.Tests`: click
+the loop of `SelectFileExplorerEntryAsync` from `Kazo.Os.UI.E2E.Tests`: click
 until the row is selected. This was the "offline" failure
 observed on `v3/base` since `v3/12`. Without IPv6, the suite falls back to
 `127.0.0.2` since `v3/7` ([`pwa-cache-recovery.md`](../pwa-cache-recovery.md)).
@@ -89,14 +89,14 @@ container, .NET SDK 10.0.402):
 
 | Step | Result |
 |---|---|
-| `dotnet build HackerOs.sln`, Debug then Release | succeeded, 0 warnings, 0 errors |
-| Unit and integration tests, 40 projects (`--no-build -c Debug`) | 3,510 passed, 0 failed (including `HackerOs.SdkCompatibility.Tests` 5/5) |
-| `HackerOs.E2E.Tests` | 16/16 |
-| `HackerOs.UI.E2E.Tests` | 27/27 |
-| `HackerOs.Templates.E2E.Tests` (including the host that loads the 1.0.0 app) | 6/6 |
-| `HackerOs.Pwa.E2E.Tests` | 6/6 |
+| `dotnet build Kazo.Os.sln`, Debug then Release | succeeded, 0 warnings, 0 errors |
+| Unit and integration tests, 40 projects (`--no-build -c Debug`) | 3,510 passed, 0 failed (including `Kazo.Os.SdkCompatibility.Tests` 5/5) |
+| `Kazo.Os.E2E.Tests` | 16/16 |
+| `Kazo.Os.UI.E2E.Tests` | 27/27 |
+| `Kazo.Os.Templates.E2E.Tests` (including the host that loads the 1.0.0 app) | 6/6 |
+| `Kazo.Os.Pwa.E2E.Tests` | 6/6 |
 | `build/publish-trimmed.sh` | PASS: 134 `.wasm` files, 26.6 MiB (8.0 MiB Brotli), every window app, worker pool, Intranet, Blazor site, offline restart |
-| `build/verify-hosts.sh` (three hosts) | PASS: Ecosystem (three metrics modes), `test/test`, `HackerOs.Server` |
+| `build/verify-hosts.sh` (three hosts) | PASS: Ecosystem (three metrics modes), `test/test`, `Kazo.Os.Server` |
 
 During the merge of `v3/base`, the `kill -9` escalation failed once
 (known unstable test, see below); it passes in the full series.
@@ -150,18 +150,18 @@ They were already failing or flaky on `v3/base` before this work item; none
 failed during this verification, and none is a regression of the
 migration:
 
-- `A_command_that_spins_at_once` (`HackerOs.Platform.WorkerHost.Tests`) failed
+- `A_command_that_spins_at_once` (`Kazo.Os.Platform.WorkerHost.Tests`) failed
   on every run on `v3/base` during the day; it passes here, on a
   less loaded machine, which places it among the load-sensitive tests;
 - the `kill -9` escalation, `CommandParityTests` (`zip` then `unzip`),
   `CpuAccountingOverheadTests` and `AppInstallationService` are unstable under
   load;
-- the offline test of `HackerOs.Pwa.E2E.Tests` failed on `v3/base`
+- the offline test of `Kazo.Os.Pwa.E2E.Tests` failed on `v3/base`
   since `v3/12`; it is fixed by this work item (see above);
-- `HackerOs.Pwa.E2E.Tests` publishes the OS with versions `1.0.0-pwatest-v1` and
+- `Kazo.Os.Pwa.E2E.Tests` publishes the OS with versions `1.0.0-pwatest-v1` and
   `-v2`; the generator then rewrites the committed `manifest.json` files of the apps
   with `sdkCompatibility.minimumVersion` = `1.0.0-pwatest-v2` (85 files). These
-  changes must be undone (`git checkout -- wasm2/HackerOs/Apps`) before
+  changes must be undone (`git checkout -- wasm2/KazoOs/Apps`) before
   committing after this suite;
 - the UI bench for detached windows sometimes starts badly when suites
   run back to back.

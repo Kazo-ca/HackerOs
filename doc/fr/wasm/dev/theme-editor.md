@@ -24,15 +24,15 @@ Le format du fichier `.theme` (sections, emplacements, lecture tolérante, médi
 
 | Pièce | Projet | Rôle |
 |---|---|---|
-| `ThemeTokenCatalog`, `ThemeTokenValidator` | `Shared/HackerOs.Theming.Abstractions` | liste et vérification des jetons |
+| `ThemeTokenCatalog`, `ThemeTokenValidator` | `Shared/Kazo.Os.Theming.Abstractions` | liste et vérification des jetons |
 | `ThemeFile` | idem | `Parse` (tolérant) et `Serialize` du format `.theme` |
 | `UserTheme`, `UserThemeLibrary` | idem | thème lu ; lecture des deux dossiers par délégués (`LoadAsync`), règles de non-masquage (`Build`) |
 | `ResolvedTheme.Resolve` | idem | thème réellement dessiné pour un id et une forme (bureau ou mobile) |
-| `ThemeScope`, `ThemePreview` (paramètre `Tokens`) | `Platform/HackerOs.Theming.Blazor` | appliquent les jetons par `style.setProperty` sur leur élément racine, via `wwwroot/themeTokens.js` (seules les propriétés `--hos-*` sont touchées, et seulement les différences) |
-| `UserThemeCatalogService` | `Platform/HackerOs.Platform.Core/Appearance` | catalogue vivant du shell : lit `/etc` comme le système et `~` comme l'utilisateur, surveille les deux dossiers (`SettingsFilesWatcher.ForDirectories`), relit au changement de session, journalise chaque avertissement une fois |
-| `App.razor` | `OS/HackerOs.Ecosystem` | `ThemeScope ThemeId=@ActiveTheme.BaseThemeId Tokens=@ActiveTheme.UserTheme?.Tokens` |
-| Theme Editor | `Apps/System/HackerOs.Apps.ThemeEditor` | l'app |
-| Paramètres | `Apps/System/HackerOs.Apps.Settings` | thèmes utilisateur dans les listes bureau et mobile, bouton « Open the Theme Editor » |
+| `ThemeScope`, `ThemePreview` (paramètre `Tokens`) | `Platform/Kazo.Os.Theming.Blazor` | appliquent les jetons par `style.setProperty` sur leur élément racine, via `wwwroot/themeTokens.js` (seules les propriétés `--hos-*` sont touchées, et seulement les différences) |
+| `UserThemeCatalogService` | `Platform/Kazo.Os.Platform.Core/Appearance` | catalogue vivant du shell : lit `/etc` comme le système et `~` comme l'utilisateur, surveille les deux dossiers (`SettingsFilesWatcher.ForDirectories`), relit au changement de session, journalise chaque avertissement une fois |
+| `App.razor` | `OS/Kazo.Os.Ecosystem` | `ThemeScope ThemeId=@ActiveTheme.BaseThemeId Tokens=@ActiveTheme.UserTheme?.Tokens` |
+| Theme Editor | `Apps/System/Kazo.Os.Apps.ThemeEditor` | l'app |
+| Paramètres | `Apps/System/Kazo.Os.Apps.Settings` | thèmes utilisateur dans les listes bureau et mobile, bouton « Open the Theme Editor » |
 
 ### Résolution d'un id
 
@@ -59,7 +59,7 @@ système) pour lister `/etc/hackeros/themes`. Fenêtre 1180 × 760, minimum
   `~/.config/hackeros/themes/<id>.theme`, dossier créé au besoin), *Export…*
   (n'importe où par le dialogue), *Use on desktop* / *Use on mobile* (écrit
   l'id dans la couche utilisateur de `appearance` par
-  `HackSettings.OpenSystemAsync`).
+  `KazoSettings.OpenSystemAsync`).
 - **Colonne de gauche** : nom, id (suit le nom tant qu'il n'est pas modifié à
   la main), thème de base, formes proposées, chemin ; liste des thèmes
   installés et avertissements de leurs fichiers.
@@ -87,14 +87,14 @@ phrases de la documentation contiennent du `<code>` et sont rendues comme
 balisage depuis les ressources de l'assembly (jamais depuis un fichier), d'où
 le `::deep code` de `ThemeTokenDocumentation.razor.css`.
 
-L'API de lecture du paquet `HackerOs.Theming.Abstractions` (messages localisés, validation des jetons) est dans [`../framework/theme-files.md`](../framework/theme-files.md).
+L'API de lecture du paquet `Kazo.Os.Theming.Abstractions` (messages localisés, validation des jetons) est dans [`../framework/theme-files.md`](../framework/theme-files.md).
 
 ## Décisions clés
 
 - Les fichiers sont lus et écrits par la passerelle de fichiers de l'app
   (`IAppFileSystemGateway`), comme l'éditeur de texte : un fichier choisi dans
   un dialogue hors du dossier personnel n'est accessible que par le jeton que
-  le dialogue a remis, ce que `HackFile` ne sait pas porter. C'est du C# ; le
+  le dialogue a remis, ce que `KazoFile` ne sait pas porter. C'est du C# ; le
   JS ne touche jamais aux fichiers (ADR 0103 §1 et §2).
 - La lecture des dossiers est partagée par délégués (`UserThemeLibrary.LoadAsync`)
   pour que le shell (passerelles de l'OS) et les apps (SDK) utilisent les mêmes
@@ -114,5 +114,5 @@ L'API de lecture du paquet `HackerOs.Theming.Abstractions` (messages localisés,
 - [x] Paramètres : thèmes utilisateur listés, lien vers l'éditeur.
 - [x] Tests : format, jetons refusés, non-masquage, résolution, thème appliqué
   après rechargement, modèle de l'éditeur (`Platform.Core.Tests/Appearance`,
-  `HackerOs.Apps.ThemeEditor.Tests`).
+  `Kazo.Os.Apps.ThemeEditor.Tests`).
 - [ ] Scans axe de l'éditeur : chantier `v3/13`.

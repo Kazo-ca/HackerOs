@@ -1,0 +1,1311 @@
+#nullable enable
+Kazo.Os.Platform.Blazor.Components.KazoComponentHost
+Kazo.Os.Platform.Blazor.Components.KazoComponentHost.GetProviders(string! contract) -> System.Collections.Generic.IReadOnlyList<(string! AppId, Kazo.Os.App.Abstractions.AppComponentManifest! Component)>!
+Kazo.Os.Platform.Blazor.Components.KazoComponentHost.KazoComponentHost(Kazo.Os.Platform.Core.AppCatalog! catalog, Kazo.Os.Platform.Core.Lifecycle.IAppEnablementRegistry! enablement, System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<(Kazo.Os.Platform.Core.Discovery.AppDescriptor? Descriptor, string? Error)>!>! descriptors) -> void
+Kazo.Os.Platform.Blazor.Components.KazoComponentHost.KazoComponentHost(Kazo.Os.Platform.Core.AppCatalog! catalog, Kazo.Os.Platform.Core.Lifecycle.IAppEnablementRegistry! enablement, System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<(Kazo.Os.Platform.Core.Discovery.AppDescriptor? Descriptor, string? Error)>!>! descriptors, System.Collections.Generic.IEnumerable<Kazo.Os.Platform.Blazor.Components.KazoPlatformComponent!>? platformComponents, System.Action<string!>? reportError) -> void
+Kazo.Os.Platform.Blazor.Components.KazoComponentHost.ReportWarning.get -> System.Action<string!>?
+Kazo.Os.Platform.Blazor.Components.KazoComponentHost.ReportWarning.init -> void
+Kazo.Os.Platform.Blazor.Components.KazoComponentHost.ResolveAsync(string! contract, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Blazor.Components.KazoComponentResolution!>!
+Kazo.Os.Platform.Blazor.Components.KazoComponentHost.Selection.get -> Kazo.Os.Platform.Core.ComponentProviders.IComponentProviderSelection?
+Kazo.Os.Platform.Blazor.Components.KazoComponentHost.Selection.init -> void
+Kazo.Os.Platform.Blazor.Components.KazoPlatformComponent
+Kazo.Os.Platform.Blazor.Components.KazoPlatformComponent.ComponentType.get -> System.Type!
+Kazo.Os.Platform.Blazor.Components.KazoPlatformComponent.Contract.get -> string!
+Kazo.Os.Platform.Blazor.Components.KazoPlatformComponent.KazoPlatformComponent(string! contract, System.Type! componentType) -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLayout
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel.<Clone>$() -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel!
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel.ContextMenuLevel(System.Collections.Generic.IReadOnlyList<Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow!>! Rows) -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel.Deconstruct(out System.Collections.Generic.IReadOnlyList<Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow!>! Rows) -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel.Equals(Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel? other) -> bool
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel.Rows.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow!>!
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel.Rows.init -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigation
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigation.Close = 1 -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigation
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigation.Invoke = 2 -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigation
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigation.None = 0 -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigation
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigator
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigator.Active.get -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigator.OpenLevel!
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigator.Back() -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigator.Chosen.get -> Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItemDefinition?
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigator.Click(int level, int row) -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigation
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigator.ContextMenuNavigator(Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel! root, bool highlightFirst) -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigator.HandleKey(string! key) -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigation
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigator.Hover(int level, int row) -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigator.Levels.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigator.OpenLevel!>!
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigator.OpenLevel
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigator.OpenLevel.Highlight.get -> int
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigator.OpenLevel.Highlight.set -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigator.OpenLevel.Level.get -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel!
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigator.OpenLevel.OpenLevel(Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel! level, int highlight) -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigator.OpenLevel.ParentRow.get -> int
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuNavigator.OpenLevel.ParentRow.init -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuOrigin
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuOrigin.Code = 3 -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuOrigin
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuOrigin.Keyboard = 2 -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuOrigin
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuOrigin.Pointer = 0 -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuOrigin
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuOrigin.Touch = 1 -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuOrigin
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuOverlay
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuOverlay.ContextMenuOverlay() -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuOverlay.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuOverlay.OnDismissed() -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuOverlay.OnRequestedAsync(string! token, double clientX, double clientY, string! origin) -> System.Threading.Tasks.Task<bool>!
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuOverlay.OnTokensReleased(string![]! tokens) -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuOverlay.Presentation.get -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuPresentation
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuOverlay.Presentation.set -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuPresentation
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuPresentation.Popup = 0 -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuPresentation
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuPresentation.Sheet = 1 -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuPresentation
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.<Clone>$() -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow!
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.ContextMenuRow(Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItemDefinition? Item, Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel? Submenu) -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.Deconstruct(out Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItemDefinition? Item, out Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel? Submenu) -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.Equals(Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow? other) -> bool
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.IsSelectable.get -> bool
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.IsSeparator.get -> bool
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.Item.get -> Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItemDefinition?
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.Item.init -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.Submenu.get -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel?
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.Submenu.init -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuScope
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuScope.Attach(string! name, object? item) -> System.Collections.Generic.IReadOnlyDictionary<string!, object!>!
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuScope.AttachedCount.get -> int
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuScope.Close() -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuScope.Dispose() -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuScope.Id.get -> string!
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuScope.IsDisposed.get -> bool
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuScope.OpenAsync(string! name, object? item, double clientX, double clientY) -> System.Threading.Tasks.Task<bool>!
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuScope.Register(Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuRegistration! registration) -> System.IDisposable!
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuService
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuService.Changed -> System.Action?
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuService.Close() -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuService.ContextMenuService(Microsoft.Extensions.Logging.ILogger<Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuService!>? logger = null, Kazo.Os.Platform.Blazor.ContextMenus.IFileMenuEntrySource? fileMenuEntries = null) -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuService.CreateScope(Kazo.Os.AppSdk.IAppExecutionContext? context) -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuScope!
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuService.Current.get -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession?
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuService.InvokeAsync(Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItemDefinition! item) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuService.OpenAsync(Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuScope! scope, string! name, object? item, double clientX, double clientY, Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuOrigin origin) -> System.Threading.Tasks.Task<bool>!
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuService.OpenFromTokenAsync(string! token, double clientX, double clientY, Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuOrigin origin) -> System.Threading.Tasks.Task<bool>!
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuService.Release(System.Collections.Generic.IEnumerable<string!>! tokens) -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuService.TryResolve(string! token, out Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuScope? scope, out string? name, out object? item) -> bool
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.<Clone>$() -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession!
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.ClientX.get -> double
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.ClientX.init -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.ClientY.get -> double
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.ClientY.init -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.ContextMenuSession(Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuScope! Scope, string! Name, object? Item, string? Label, Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel! Root, double ClientX, double ClientY, Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuOrigin Origin) -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.Deconstruct(out Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuScope! Scope, out string! Name, out object? Item, out string? Label, out Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel! Root, out double ClientX, out double ClientY, out Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuOrigin Origin) -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.Equals(Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession? other) -> bool
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.Item.get -> object?
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.Item.init -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.Label.get -> string?
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.Label.init -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.Name.get -> string!
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.Name.init -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.Origin.get -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuOrigin
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.Origin.init -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.Root.get -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel!
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.Root.init -> void
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.Scope.get -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuScope!
+Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.Scope.init -> void
+Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntries
+Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntries.ApplyAsync(Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuDefinition! menu, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntries.FileMenuEntries(Kazo.Os.Platform.Core.AppCatalog! catalog, Kazo.Os.Platform.Core.ContextMenus.FileContextMenuRegistry! registry, Kazo.Os.Platform.Core.ContextMenus.FileContextMenuLauncher! launcher, System.Func<System.Threading.CancellationToken, System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlySet<string!>!>>! hidden, System.Func<System.Globalization.CultureInfo!>! culture, System.Func<string!, Kazo.Os.App.Abstractions.AppContextMenuEntryManifest!, string!, System.Collections.Generic.IReadOnlyList<string!>!, System.Threading.Tasks.Task!>! launch) -> void
+Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntries.OpenScreens.get -> System.Func<System.Collections.Generic.IReadOnlySet<int>!>!
+Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntries.OpenScreens.init -> void
+Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement
+Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate
+Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.<Clone>$() -> Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate!
+Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.AppId.get -> string!
+Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.AppId.init -> void
+Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.Candidate(string! AppId, Kazo.Os.App.Abstractions.AppContextMenuEntryManifest! Entry, Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItemDefinition! Item) -> void
+Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.Deconstruct(out string! AppId, out Kazo.Os.App.Abstractions.AppContextMenuEntryManifest! Entry, out Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItemDefinition! Item) -> void
+Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.Entry.get -> Kazo.Os.App.Abstractions.AppContextMenuEntryManifest!
+Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.Entry.init -> void
+Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.Equals(Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate? other) -> bool
+Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.Item.get -> Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItemDefinition!
+Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.Item.init -> void
+Kazo.Os.Platform.Blazor.ContextMenus.IFileMenuEntrySource
+Kazo.Os.Platform.Blazor.ContextMenus.IFileMenuEntrySource.ApplyAsync(Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuDefinition! menu, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.ContextMenus.PlatformContextMenu
+Kazo.Os.Platform.Blazor.ContextMenus.PlatformContextMenu.Build.get -> System.Func<Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuDefinition!>?
+Kazo.Os.Platform.Blazor.ContextMenus.PlatformContextMenu.Build.set -> void
+Kazo.Os.Platform.Blazor.ContextMenus.PlatformContextMenu.Close() -> void
+Kazo.Os.Platform.Blazor.ContextMenus.PlatformContextMenu.Dispose() -> void
+Kazo.Os.Platform.Blazor.ContextMenus.PlatformContextMenu.Label.get -> string?
+Kazo.Os.Platform.Blazor.ContextMenus.PlatformContextMenu.Label.set -> void
+Kazo.Os.Platform.Blazor.ContextMenus.PlatformContextMenu.Name.get -> string!
+Kazo.Os.Platform.Blazor.ContextMenus.PlatformContextMenu.Name.set -> void
+Kazo.Os.Platform.Blazor.ContextMenus.PlatformContextMenu.OpenAsync(object? item, double clientX, double clientY) -> System.Threading.Tasks.Task<bool>!
+Kazo.Os.Platform.Blazor.ContextMenus.PlatformContextMenu.Opening.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuOpeningEventArgs!>
+Kazo.Os.Platform.Blazor.ContextMenus.PlatformContextMenu.Opening.set -> void
+Kazo.Os.Platform.Blazor.ContextMenus.PlatformContextMenu.PlatformContextMenu() -> void
+Kazo.Os.Platform.Blazor.Controls.PlatformComplexControlsProof
+Kazo.Os.Platform.Blazor.Controls.PlatformComplexControlsProof.PlatformComplexControlsProof() -> void
+Kazo.Os.Platform.Blazor.Dialogs.AppChooserDialog
+Kazo.Os.Platform.Blazor.Dialogs.AppChooserDialog.AppChooserDialog() -> void
+Kazo.Os.Platform.Blazor.Dialogs.AppChooserDialog.Coordinator.get -> Kazo.Os.Platform.Blazor.Dialogs.DialogCoordinator!
+Kazo.Os.Platform.Blazor.Dialogs.AppChooserDialog.Coordinator.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.AppChooserDialog.Presentation.get -> Kazo.Os.Platform.Blazor.Dialogs.AppChooserPresentation!
+Kazo.Os.Platform.Blazor.Dialogs.AppChooserDialog.Presentation.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.AppChooserPresentation
+Kazo.Os.Platform.Blazor.Dialogs.AppChooserPresentation.AppChooserPresentation(System.Guid Id, string! AppId, System.Guid AppInstanceId, Kazo.Os.Simulation.Abstractions.Processes.ProcessId ProcessId, string! UserId, Kazo.Os.AppSdk.Blazor.AppChooserDialogRequest! Request) -> void
+Kazo.Os.Platform.Blazor.Dialogs.AppChooserPresentation.Deconstruct(out System.Guid Id, out string! AppId, out System.Guid AppInstanceId, out Kazo.Os.Simulation.Abstractions.Processes.ProcessId ProcessId, out string! UserId, out Kazo.Os.AppSdk.Blazor.AppChooserDialogRequest! Request) -> void
+Kazo.Os.Platform.Blazor.Dialogs.AppChooserPresentation.Equals(Kazo.Os.Platform.Blazor.Dialogs.AppChooserPresentation? other) -> bool
+Kazo.Os.Platform.Blazor.Dialogs.AppChooserPresentation.Request.get -> Kazo.Os.AppSdk.Blazor.AppChooserDialogRequest!
+Kazo.Os.Platform.Blazor.Dialogs.AppChooserPresentation.Request.init -> void
+Kazo.Os.Platform.Blazor.Dialogs.CredentialPromptDialog
+Kazo.Os.Platform.Blazor.Dialogs.CredentialPromptDialog.Coordinator.get -> Kazo.Os.Platform.Blazor.Dialogs.DialogCoordinator!
+Kazo.Os.Platform.Blazor.Dialogs.CredentialPromptDialog.Coordinator.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.CredentialPromptDialog.CredentialPromptDialog() -> void
+Kazo.Os.Platform.Blazor.Dialogs.CredentialPromptDialog.Presentation.get -> Kazo.Os.Platform.Blazor.Dialogs.CredentialPromptPresentation!
+Kazo.Os.Platform.Blazor.Dialogs.CredentialPromptDialog.Presentation.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.CredentialPromptPresentation
+Kazo.Os.Platform.Blazor.Dialogs.CredentialPromptPresentation.CredentialPromptPresentation(System.Guid Id, string! AppId, System.Guid AppInstanceId, Kazo.Os.Simulation.Abstractions.Processes.ProcessId ProcessId, string! UserId, Kazo.Os.AppSdk.Blazor.CredentialPromptDialogRequest! Request) -> void
+Kazo.Os.Platform.Blazor.Dialogs.CredentialPromptPresentation.Deconstruct(out System.Guid Id, out string! AppId, out System.Guid AppInstanceId, out Kazo.Os.Simulation.Abstractions.Processes.ProcessId ProcessId, out string! UserId, out Kazo.Os.AppSdk.Blazor.CredentialPromptDialogRequest! Request) -> void
+Kazo.Os.Platform.Blazor.Dialogs.CredentialPromptPresentation.Equals(Kazo.Os.Platform.Blazor.Dialogs.CredentialPromptPresentation? other) -> bool
+Kazo.Os.Platform.Blazor.Dialogs.CredentialPromptPresentation.Request.get -> Kazo.Os.AppSdk.Blazor.CredentialPromptDialogRequest!
+Kazo.Os.Platform.Blazor.Dialogs.CredentialPromptPresentation.Request.init -> void
+Kazo.Os.Platform.Blazor.Dialogs.DialogCoordinator
+Kazo.Os.Platform.Blazor.Dialogs.DialogCoordinator.ActiveRequest.get -> Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation?
+Kazo.Os.Platform.Blazor.Dialogs.DialogCoordinator.ActiveRequestFor(System.Guid appInstanceId) -> Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation?
+Kazo.Os.Platform.Blazor.Dialogs.DialogCoordinator.Cancel(System.Guid requestId) -> bool
+Kazo.Os.Platform.Blazor.Dialogs.DialogCoordinator.Changed -> System.Action?
+Kazo.Os.Platform.Blazor.Dialogs.DialogCoordinator.ChooseAppAsync(Kazo.Os.AppSdk.IAppExecutionContext! context, Kazo.Os.AppSdk.Blazor.AppChooserDialogRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.AppChooserDialogResult!>
+Kazo.Os.Platform.Blazor.Dialogs.DialogCoordinator.CompleteProvided(System.Guid requestId, object? result) -> bool
+Kazo.Os.Platform.Blazor.Dialogs.DialogCoordinator.CredentialPromptAsync(Kazo.Os.AppSdk.IAppExecutionContext! context, Kazo.Os.AppSdk.Blazor.CredentialPromptDialogRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.CredentialPromptDialogResult!>
+Kazo.Os.Platform.Blazor.Dialogs.DialogCoordinator.DialogCoordinator(Kazo.Os.AppSdk.Blazor.IFileDialogService! fileDialogs) -> void
+Kazo.Os.Platform.Blazor.Dialogs.DialogCoordinator.DialogCoordinator(Kazo.Os.AppSdk.Blazor.IFileDialogService! fileDialogs, Kazo.Os.Platform.Core.Sounds.OsSoundService? sounds) -> void
+Kazo.Os.Platform.Blazor.Dialogs.DialogCoordinator.Dispose() -> void
+Kazo.Os.Platform.Blazor.Dialogs.DialogCoordinator.MessageBoxAsync(Kazo.Os.AppSdk.IAppExecutionContext! context, Kazo.Os.AppSdk.Blazor.MessageBoxDialogRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.MessageBoxDialogResult!>
+Kazo.Os.Platform.Blazor.Dialogs.DialogCoordinator.OpenFileAsync(Kazo.Os.AppSdk.IAppExecutionContext! context, Kazo.Os.AppSdk.Blazor.OpenFileDialogRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.OpenFileDialogResult!>
+Kazo.Os.Platform.Blazor.Dialogs.DialogCoordinator.OpenWithAsync(Kazo.Os.AppSdk.IAppExecutionContext! context, Kazo.Os.AppSdk.Blazor.Files.OpenWithDialogRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.Files.OpenWithDialogResult!>
+Kazo.Os.Platform.Blazor.Dialogs.DialogCoordinator.ResolveFileConflictAsync(Kazo.Os.AppSdk.IAppExecutionContext! context, Kazo.Os.AppSdk.Blazor.Files.FileConflictDialogRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.Files.FileConflictDialogResult!>
+Kazo.Os.Platform.Blazor.Dialogs.DialogCoordinator.SaveFileAsync(Kazo.Os.AppSdk.IAppExecutionContext! context, Kazo.Os.AppSdk.Blazor.SaveFileDialogRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.SaveFileDialogResult!>
+Kazo.Os.Platform.Blazor.Dialogs.DialogCoordinator.SelectApp(System.Guid requestId, string! appId, bool alwaysUse) -> bool
+Kazo.Os.Platform.Blazor.Dialogs.DialogCoordinator.SelectCredentialPrompt(System.Guid requestId, string! loginName, string! password) -> bool
+Kazo.Os.Platform.Blazor.Dialogs.DialogCoordinator.SelectFolderAsync(Kazo.Os.AppSdk.IAppExecutionContext! context, Kazo.Os.AppSdk.Blazor.SelectFolderDialogRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.SelectFolderDialogResult!>
+Kazo.Os.Platform.Blazor.Dialogs.DialogCoordinator.SelectMessageBox(System.Guid requestId, Kazo.Os.AppSdk.Blazor.MessageBoxResult result) -> bool
+Kazo.Os.Platform.Blazor.Dialogs.DialogCoordinator.SelectTextInput(System.Guid requestId, string? value) -> bool
+Kazo.Os.Platform.Blazor.Dialogs.DialogCoordinator.ShowFilePropertiesAsync(Kazo.Os.AppSdk.IAppExecutionContext! context, Kazo.Os.AppSdk.Blazor.Files.FilePropertiesDialogRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.Files.FilePropertiesDialogResult!>
+Kazo.Os.Platform.Blazor.Dialogs.DialogCoordinator.TextInputAsync(Kazo.Os.AppSdk.IAppExecutionContext! context, Kazo.Os.AppSdk.Blazor.TextInputDialogRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.TextInputDialogResult!>
+Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation
+Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation.AppId.get -> string!
+Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation.AppId.init -> void
+Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation.AppInstanceId.get -> System.Guid
+Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation.AppInstanceId.init -> void
+Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation.Deconstruct(out System.Guid Id, out string! AppId, out System.Guid AppInstanceId, out Kazo.Os.Simulation.Abstractions.Processes.ProcessId ProcessId, out string! UserId) -> void
+Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation.DialogPresentation(Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation! original) -> void
+Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation.DialogPresentation(System.Guid Id, string! AppId, System.Guid AppInstanceId, Kazo.Os.Simulation.Abstractions.Processes.ProcessId ProcessId, string! UserId) -> void
+Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation.Id.get -> System.Guid
+Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation.Id.init -> void
+Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation.ProcessId.get -> Kazo.Os.Simulation.Abstractions.Processes.ProcessId
+Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation.ProcessId.init -> void
+Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation.UserId.get -> string!
+Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation.UserId.init -> void
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.AllowDirectorySelection.get -> bool
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.AllowDirectorySelection.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.AllowFileSelection.get -> bool
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.AllowFileSelection.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.AllowMultipleSelection.get -> bool
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.AllowMultipleSelection.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.Context.get -> Kazo.Os.AppSdk.IAppExecutionContext?
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.Context.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.DirectoryChanged.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.App.Abstractions.VirtualPath>
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.DirectoryChanged.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.Dispose() -> void
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.Features.get -> Kazo.Os.AppSdk.Blazor.Files.KazoFileViewFeatures
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.Features.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.FileActivated.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.App.Abstractions.VirtualPath>
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.FileActivated.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.FileControlChanged.get -> Microsoft.AspNetCore.Components.EventCallback<bool>
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.FileControlChanged.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.FileDialogBrowser() -> void
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.FileFilter.get -> System.Func<string!, string?, bool>?
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.FileFilter.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.FileSystem.get -> Kazo.Os.Simulation.Abstractions.Gateways.IAppFileSystemGateway!
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.FileSystem.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.InitialDirectory.get -> Kazo.Os.App.Abstractions.VirtualPath
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.InitialDirectory.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.OpenOnTap.get -> bool?
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.OpenOnTap.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.RefreshAsync() -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.RefreshFilter() -> void
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.RevealAsync(Kazo.Os.App.Abstractions.VirtualPath path) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.SelectionChanged.get -> Microsoft.AspNetCore.Components.EventCallback<System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.VirtualPath>!>
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogBrowser.SelectionChanged.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogCoordinator
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogCoordinator.ActiveRequest.get -> Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation?
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogCoordinator.ActiveRequestFor(System.Guid appInstanceId) -> Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation?
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogCoordinator.Cancel(System.Guid requestId) -> bool
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogCoordinator.Changed -> System.Action?
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogCoordinator.Dispose() -> void
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogCoordinator.FileDialogCoordinator(Kazo.Os.Simulation.Abstractions.Sessions.SessionId sessionId, Kazo.Os.Simulation.Abstractions.Gateways.IFileSystemSelectedResourceHandleRegistry! handleRegistry, System.TimeSpan? handleLifetime = null) -> void
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogCoordinator.OpenFileAsync(Kazo.Os.AppSdk.IAppExecutionContext! context, Kazo.Os.AppSdk.Blazor.OpenFileDialogRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.OpenFileDialogResult!>
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogCoordinator.SaveFileAsync(Kazo.Os.AppSdk.IAppExecutionContext! context, Kazo.Os.AppSdk.Blazor.SaveFileDialogRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.SaveFileDialogResult!>
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogCoordinator.SelectFolder(System.Guid requestId, Kazo.Os.App.Abstractions.VirtualPath path) -> bool
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogCoordinator.SelectFolderAsync(Kazo.Os.AppSdk.IAppExecutionContext! context, Kazo.Os.AppSdk.Blazor.SelectFolderDialogRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.SelectFolderDialogResult!>
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogCoordinator.SelectOpen(System.Guid requestId, System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.VirtualPath>! paths) -> bool
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogCoordinator.SelectSave(System.Guid requestId, Kazo.Os.App.Abstractions.VirtualPath path) -> bool
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogCoordinator.SessionId.get -> Kazo.Os.Simulation.Abstractions.Sessions.SessionId
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation.AppId.get -> string!
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation.AppId.init -> void
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation.AppInstanceId.get -> System.Guid
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation.AppInstanceId.init -> void
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation.Context.get -> Kazo.Os.AppSdk.IAppExecutionContext?
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation.Context.init -> void
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation.Deconstruct(out System.Guid Id, out string! AppId, out System.Guid AppInstanceId, out Kazo.Os.Simulation.Abstractions.Processes.ProcessId ProcessId, out string! UserId, out Kazo.Os.Simulation.Abstractions.Gateways.IAppFileSystemGateway! FileSystem) -> void
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation.FileDialogPresentation(Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation! original) -> void
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation.FileDialogPresentation(System.Guid Id, string! AppId, System.Guid AppInstanceId, Kazo.Os.Simulation.Abstractions.Processes.ProcessId ProcessId, string! UserId, Kazo.Os.Simulation.Abstractions.Gateways.IAppFileSystemGateway! FileSystem) -> void
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation.FileSystem.get -> Kazo.Os.Simulation.Abstractions.Gateways.IAppFileSystemGateway!
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation.FileSystem.init -> void
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation.Id.get -> System.Guid
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation.Id.init -> void
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation.ProcessId.get -> Kazo.Os.Simulation.Abstractions.Processes.ProcessId
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation.ProcessId.init -> void
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation.UserId.get -> string!
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation.UserId.init -> void
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogWindowAdapter
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogWindowAdapter.Changed -> System.Action?
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogWindowAdapter.Dispose() -> void
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogWindowAdapter.FileDialogWindowAdapter(Kazo.Os.Platform.Blazor.Dialogs.FileDialogCoordinator! fileCoordinator, Kazo.Os.Windowing.Core.WindowRuntime! windows, Kazo.Os.Platform.Blazor.Dialogs.DialogCoordinator? basicCoordinator = null, Kazo.Os.Platform.Core.Globalization.SessionLocaleService? locale = null) -> void
+Kazo.Os.Platform.Blazor.Dialogs.FileDialogWindowAdapter.IsDialogWindow(Kazo.Os.Windowing.Abstractions.WindowId windowId) -> bool
+Kazo.Os.Platform.Blazor.Dialogs.FolderSelectDialog
+Kazo.Os.Platform.Blazor.Dialogs.FolderSelectDialog.Coordinator.get -> Kazo.Os.Platform.Blazor.Dialogs.FileDialogCoordinator!
+Kazo.Os.Platform.Blazor.Dialogs.FolderSelectDialog.Coordinator.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.FolderSelectDialog.FolderSelectDialog() -> void
+Kazo.Os.Platform.Blazor.Dialogs.FolderSelectDialog.Presentation.get -> Kazo.Os.Platform.Blazor.Dialogs.SelectFolderDialogPresentation!
+Kazo.Os.Platform.Blazor.Dialogs.FolderSelectDialog.Presentation.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.MessageBoxDialog
+Kazo.Os.Platform.Blazor.Dialogs.MessageBoxDialog.Coordinator.get -> Kazo.Os.Platform.Blazor.Dialogs.DialogCoordinator!
+Kazo.Os.Platform.Blazor.Dialogs.MessageBoxDialog.Coordinator.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.MessageBoxDialog.MessageBoxDialog() -> void
+Kazo.Os.Platform.Blazor.Dialogs.MessageBoxDialog.Presentation.get -> Kazo.Os.Platform.Blazor.Dialogs.MessageBoxPresentation!
+Kazo.Os.Platform.Blazor.Dialogs.MessageBoxDialog.Presentation.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.MessageBoxPresentation
+Kazo.Os.Platform.Blazor.Dialogs.MessageBoxPresentation.Deconstruct(out System.Guid Id, out string! AppId, out System.Guid AppInstanceId, out Kazo.Os.Simulation.Abstractions.Processes.ProcessId ProcessId, out string! UserId, out Kazo.Os.AppSdk.Blazor.MessageBoxDialogRequest! Request) -> void
+Kazo.Os.Platform.Blazor.Dialogs.MessageBoxPresentation.Equals(Kazo.Os.Platform.Blazor.Dialogs.MessageBoxPresentation? other) -> bool
+Kazo.Os.Platform.Blazor.Dialogs.MessageBoxPresentation.MessageBoxPresentation(System.Guid Id, string! AppId, System.Guid AppInstanceId, Kazo.Os.Simulation.Abstractions.Processes.ProcessId ProcessId, string! UserId, Kazo.Os.AppSdk.Blazor.MessageBoxDialogRequest! Request) -> void
+Kazo.Os.Platform.Blazor.Dialogs.MessageBoxPresentation.Request.get -> Kazo.Os.AppSdk.Blazor.MessageBoxDialogRequest!
+Kazo.Os.Platform.Blazor.Dialogs.MessageBoxPresentation.Request.init -> void
+Kazo.Os.Platform.Blazor.Dialogs.OpenFileDialog
+Kazo.Os.Platform.Blazor.Dialogs.OpenFileDialog.Coordinator.get -> Kazo.Os.Platform.Blazor.Dialogs.FileDialogCoordinator!
+Kazo.Os.Platform.Blazor.Dialogs.OpenFileDialog.Coordinator.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.OpenFileDialog.OpenFileDialog() -> void
+Kazo.Os.Platform.Blazor.Dialogs.OpenFileDialog.Presentation.get -> Kazo.Os.Platform.Blazor.Dialogs.OpenFileDialogPresentation!
+Kazo.Os.Platform.Blazor.Dialogs.OpenFileDialog.Presentation.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.OpenFileDialogPresentation
+Kazo.Os.Platform.Blazor.Dialogs.OpenFileDialogPresentation.Deconstruct(out System.Guid Id, out string! AppId, out System.Guid AppInstanceId, out Kazo.Os.Simulation.Abstractions.Processes.ProcessId ProcessId, out string! UserId, out Kazo.Os.Simulation.Abstractions.Gateways.IAppFileSystemGateway! FileSystem, out Kazo.Os.AppSdk.Blazor.OpenFileDialogRequest! Request) -> void
+Kazo.Os.Platform.Blazor.Dialogs.OpenFileDialogPresentation.Equals(Kazo.Os.Platform.Blazor.Dialogs.OpenFileDialogPresentation? other) -> bool
+Kazo.Os.Platform.Blazor.Dialogs.OpenFileDialogPresentation.OpenFileDialogPresentation(System.Guid Id, string! AppId, System.Guid AppInstanceId, Kazo.Os.Simulation.Abstractions.Processes.ProcessId ProcessId, string! UserId, Kazo.Os.Simulation.Abstractions.Gateways.IAppFileSystemGateway! FileSystem, Kazo.Os.AppSdk.Blazor.OpenFileDialogRequest! Request) -> void
+Kazo.Os.Platform.Blazor.Dialogs.OpenFileDialogPresentation.Request.get -> Kazo.Os.AppSdk.Blazor.OpenFileDialogRequest!
+Kazo.Os.Platform.Blazor.Dialogs.OpenFileDialogPresentation.Request.init -> void
+Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialog
+Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialog.Coordinator.get -> Kazo.Os.Platform.Blazor.Dialogs.DialogCoordinator!
+Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialog.Coordinator.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialog.Presentation.get -> Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialogPresentation!
+Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialog.Presentation.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialog.ProvidedFileDialog() -> void
+Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialogPresentation
+Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialogPresentation.Context.get -> Kazo.Os.AppSdk.IAppExecutionContext!
+Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialogPresentation.Context.init -> void
+Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialogPresentation.Deconstruct(out System.Guid Id, out string! AppId, out System.Guid AppInstanceId, out Kazo.Os.Simulation.Abstractions.Processes.ProcessId ProcessId, out string! UserId, out string! Dialog, out object! Request, out Kazo.Os.AppSdk.IAppExecutionContext! Context) -> void
+Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialogPresentation.Dialog.get -> string!
+Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialogPresentation.Dialog.init -> void
+Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialogPresentation.Equals(Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialogPresentation? other) -> bool
+Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialogPresentation.ProvidedFileDialogPresentation(System.Guid Id, string! AppId, System.Guid AppInstanceId, Kazo.Os.Simulation.Abstractions.Processes.ProcessId ProcessId, string! UserId, string! Dialog, object! Request, Kazo.Os.AppSdk.IAppExecutionContext! Context) -> void
+Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialogPresentation.Request.get -> object!
+Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialogPresentation.Request.init -> void
+Kazo.Os.Platform.Blazor.Dialogs.SaveFileDialog
+Kazo.Os.Platform.Blazor.Dialogs.SaveFileDialog.Coordinator.get -> Kazo.Os.Platform.Blazor.Dialogs.FileDialogCoordinator!
+Kazo.Os.Platform.Blazor.Dialogs.SaveFileDialog.Coordinator.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.SaveFileDialog.Presentation.get -> Kazo.Os.Platform.Blazor.Dialogs.SaveFileDialogPresentation!
+Kazo.Os.Platform.Blazor.Dialogs.SaveFileDialog.Presentation.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.SaveFileDialog.SaveFileDialog() -> void
+Kazo.Os.Platform.Blazor.Dialogs.SaveFileDialogPresentation
+Kazo.Os.Platform.Blazor.Dialogs.SaveFileDialogPresentation.Deconstruct(out System.Guid Id, out string! AppId, out System.Guid AppInstanceId, out Kazo.Os.Simulation.Abstractions.Processes.ProcessId ProcessId, out string! UserId, out Kazo.Os.Simulation.Abstractions.Gateways.IAppFileSystemGateway! FileSystem, out Kazo.Os.AppSdk.Blazor.SaveFileDialogRequest! Request) -> void
+Kazo.Os.Platform.Blazor.Dialogs.SaveFileDialogPresentation.Equals(Kazo.Os.Platform.Blazor.Dialogs.SaveFileDialogPresentation? other) -> bool
+Kazo.Os.Platform.Blazor.Dialogs.SaveFileDialogPresentation.Request.get -> Kazo.Os.AppSdk.Blazor.SaveFileDialogRequest!
+Kazo.Os.Platform.Blazor.Dialogs.SaveFileDialogPresentation.Request.init -> void
+Kazo.Os.Platform.Blazor.Dialogs.SaveFileDialogPresentation.SaveFileDialogPresentation(System.Guid Id, string! AppId, System.Guid AppInstanceId, Kazo.Os.Simulation.Abstractions.Processes.ProcessId ProcessId, string! UserId, Kazo.Os.Simulation.Abstractions.Gateways.IAppFileSystemGateway! FileSystem, Kazo.Os.AppSdk.Blazor.SaveFileDialogRequest! Request) -> void
+Kazo.Os.Platform.Blazor.Dialogs.SelectFolderDialogPresentation
+Kazo.Os.Platform.Blazor.Dialogs.SelectFolderDialogPresentation.Deconstruct(out System.Guid Id, out string! AppId, out System.Guid AppInstanceId, out Kazo.Os.Simulation.Abstractions.Processes.ProcessId ProcessId, out string! UserId, out Kazo.Os.Simulation.Abstractions.Gateways.IAppFileSystemGateway! FileSystem, out Kazo.Os.AppSdk.Blazor.SelectFolderDialogRequest! Request) -> void
+Kazo.Os.Platform.Blazor.Dialogs.SelectFolderDialogPresentation.Equals(Kazo.Os.Platform.Blazor.Dialogs.SelectFolderDialogPresentation? other) -> bool
+Kazo.Os.Platform.Blazor.Dialogs.SelectFolderDialogPresentation.Request.get -> Kazo.Os.AppSdk.Blazor.SelectFolderDialogRequest!
+Kazo.Os.Platform.Blazor.Dialogs.SelectFolderDialogPresentation.Request.init -> void
+Kazo.Os.Platform.Blazor.Dialogs.SelectFolderDialogPresentation.SelectFolderDialogPresentation(System.Guid Id, string! AppId, System.Guid AppInstanceId, Kazo.Os.Simulation.Abstractions.Processes.ProcessId ProcessId, string! UserId, Kazo.Os.Simulation.Abstractions.Gateways.IAppFileSystemGateway! FileSystem, Kazo.Os.AppSdk.Blazor.SelectFolderDialogRequest! Request) -> void
+Kazo.Os.Platform.Blazor.Dialogs.TextInputDialog
+Kazo.Os.Platform.Blazor.Dialogs.TextInputDialog.Coordinator.get -> Kazo.Os.Platform.Blazor.Dialogs.DialogCoordinator!
+Kazo.Os.Platform.Blazor.Dialogs.TextInputDialog.Coordinator.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.TextInputDialog.Presentation.get -> Kazo.Os.Platform.Blazor.Dialogs.TextInputPresentation!
+Kazo.Os.Platform.Blazor.Dialogs.TextInputDialog.Presentation.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.TextInputDialog.TextInputDialog() -> void
+Kazo.Os.Platform.Blazor.Dialogs.TextInputPresentation
+Kazo.Os.Platform.Blazor.Dialogs.TextInputPresentation.Deconstruct(out System.Guid Id, out string! AppId, out System.Guid AppInstanceId, out Kazo.Os.Simulation.Abstractions.Processes.ProcessId ProcessId, out string! UserId, out Kazo.Os.AppSdk.Blazor.TextInputDialogRequest! Request) -> void
+Kazo.Os.Platform.Blazor.Dialogs.TextInputPresentation.Equals(Kazo.Os.Platform.Blazor.Dialogs.TextInputPresentation? other) -> bool
+Kazo.Os.Platform.Blazor.Dialogs.TextInputPresentation.Request.get -> Kazo.Os.AppSdk.Blazor.TextInputDialogRequest!
+Kazo.Os.Platform.Blazor.Dialogs.TextInputPresentation.Request.init -> void
+Kazo.Os.Platform.Blazor.Dialogs.TextInputPresentation.TextInputPresentation(System.Guid Id, string! AppId, System.Guid AppInstanceId, Kazo.Os.Simulation.Abstractions.Processes.ProcessId ProcessId, string! UserId, Kazo.Os.AppSdk.Blazor.TextInputDialogRequest! Request) -> void
+Kazo.Os.Platform.Blazor.Dialogs.VirtualFolderBrowser
+Kazo.Os.Platform.Blazor.Dialogs.VirtualFolderBrowser.AllowDirectorySelection.get -> bool
+Kazo.Os.Platform.Blazor.Dialogs.VirtualFolderBrowser.AllowDirectorySelection.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.VirtualFolderBrowser.AllowFileSelection.get -> bool
+Kazo.Os.Platform.Blazor.Dialogs.VirtualFolderBrowser.AllowFileSelection.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.VirtualFolderBrowser.AllowMultipleSelection.get -> bool
+Kazo.Os.Platform.Blazor.Dialogs.VirtualFolderBrowser.AllowMultipleSelection.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.VirtualFolderBrowser.DirectoryChanged.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemDirectorySnapshot!>
+Kazo.Os.Platform.Blazor.Dialogs.VirtualFolderBrowser.DirectoryChanged.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.VirtualFolderBrowser.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Platform.Blazor.Dialogs.VirtualFolderBrowser.FileActivated.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemDirectoryItem!>
+Kazo.Os.Platform.Blazor.Dialogs.VirtualFolderBrowser.FileActivated.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.VirtualFolderBrowser.FileFilter.get -> System.Func<Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemDirectoryItem!, bool>?
+Kazo.Os.Platform.Blazor.Dialogs.VirtualFolderBrowser.FileFilter.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.VirtualFolderBrowser.FileSystem.get -> Kazo.Os.Simulation.Abstractions.Gateways.IAppFileSystemGateway!
+Kazo.Os.Platform.Blazor.Dialogs.VirtualFolderBrowser.FileSystem.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.VirtualFolderBrowser.InitialDirectory.get -> Kazo.Os.App.Abstractions.VirtualPath
+Kazo.Os.Platform.Blazor.Dialogs.VirtualFolderBrowser.InitialDirectory.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.VirtualFolderBrowser.RefreshAsync() -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.Dialogs.VirtualFolderBrowser.SelectionChanged.get -> Microsoft.AspNetCore.Components.EventCallback<System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.VirtualPath>!>
+Kazo.Os.Platform.Blazor.Dialogs.VirtualFolderBrowser.SelectionChanged.set -> void
+Kazo.Os.Platform.Blazor.Dialogs.VirtualFolderBrowser.VirtualFolderBrowser() -> void
+Kazo.Os.Platform.Blazor.Display.DisplaySurfaceService
+Kazo.Os.Platform.Blazor.Display.DisplaySurfaceService.CloseAllAsync() -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.Display.DisplaySurfaceService.DisplaySurfaceService(Microsoft.JSInterop.IJSRuntime! jsRuntime, Kazo.Os.Simulation.Abstractions.Notifications.INotificationQueue? notifications = null, Kazo.Os.Simulation.Abstractions.Sessions.ISessionService? session = null, Kazo.Os.Simulation.Abstractions.Time.ISimulationClock? clock = null, Kazo.Os.Platform.Core.Globalization.SessionLocaleService? locale = null) -> void
+Kazo.Os.Platform.Blazor.Display.DisplaySurfaceService.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Platform.Blazor.Display.DisplaySurfaceService.OnSurfaceEvent(string! id, string! type, int width, int height) -> void
+Kazo.Os.Platform.Blazor.Display.DisplaySurfaceService.OpenAsync(Kazo.Os.AppSdk.Blazor.Display.DisplaySurfaceOptions! options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Blazor.Display.DisplaySurfaceOpenResult!>!
+Kazo.Os.Platform.Blazor.Display.DisplaySurfaceService.Surfaces.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Blazor.Display.IDisplaySurface!>!
+Kazo.Os.Platform.Blazor.Display.DisplaySurfaceService.SurfacesChanged -> System.Action?
+Kazo.Os.Platform.Blazor.Display.ScreenControl
+Kazo.Os.Platform.Blazor.Display.ScreenControl.Changed -> System.Action?
+Kazo.Os.Platform.Blazor.Display.ScreenControl.CloseScreenAsync(int number) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.Display.ScreenControl.Dispose() -> void
+Kazo.Os.Platform.Blazor.Display.ScreenControl.GetState(System.Guid appInstanceId) -> Kazo.Os.AppSdk.Administration.KazoScreensState!
+Kazo.Os.Platform.Blazor.Display.ScreenControl.IdentifyAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.Display.ScreenControl.IsAvailable.get -> bool
+Kazo.Os.Platform.Blazor.Display.ScreenControl.OpenScreenAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Administration.KazoScreenOpenStatus>!
+Kazo.Os.Platform.Blazor.Display.ScreenControl.RequestPermissionAsync() -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Administration.KazoScreenPermission>!
+Kazo.Os.Platform.Blazor.Display.ScreenControl.RestoreScreensAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<int>!
+Kazo.Os.Platform.Blazor.Display.ScreenControl.ScreenControl(Kazo.Os.Platform.Blazor.Display.ScreenService! screens, Kazo.Os.Windowing.Core.WindowRuntime! runtime) -> void
+Kazo.Os.Platform.Blazor.Display.ScreenControl.ToggleFullScreenAsync(System.Guid appInstanceId) -> System.Threading.Tasks.Task<bool>!
+Kazo.Os.Platform.Blazor.Display.ScreenIdentifyVeil
+Kazo.Os.Platform.Blazor.Display.ScreenIdentifyVeil.Dispose() -> void
+Kazo.Os.Platform.Blazor.Display.ScreenIdentifyVeil.Number.get -> int
+Kazo.Os.Platform.Blazor.Display.ScreenIdentifyVeil.Number.set -> void
+Kazo.Os.Platform.Blazor.Display.ScreenIdentifyVeil.ScreenIdentifyVeil() -> void
+Kazo.Os.Platform.Blazor.Display.ScreenLayer
+Kazo.Os.Platform.Blazor.Display.ScreenLayer.Dispose() -> void
+Kazo.Os.Platform.Blazor.Display.ScreenLayer.ScreenContent.get -> Microsoft.AspNetCore.Components.RenderFragment<Kazo.Os.Platform.Blazor.Display.SecondaryScreen!>?
+Kazo.Os.Platform.Blazor.Display.ScreenLayer.ScreenContent.set -> void
+Kazo.Os.Platform.Blazor.Display.ScreenLayer.ScreenLayer() -> void
+Kazo.Os.Platform.Blazor.Display.ScreenLayer.ScreenTaskbar.get -> Microsoft.AspNetCore.Components.RenderFragment<Kazo.Os.Platform.Blazor.Display.SecondaryScreen!>?
+Kazo.Os.Platform.Blazor.Display.ScreenLayer.ScreenTaskbar.set -> void
+Kazo.Os.Platform.Blazor.Display.ScreenOpenResult
+Kazo.Os.Platform.Blazor.Display.ScreenOpenResult.<Clone>$() -> Kazo.Os.Platform.Blazor.Display.ScreenOpenResult!
+Kazo.Os.Platform.Blazor.Display.ScreenOpenResult.Deconstruct(out Kazo.Os.Platform.Blazor.Display.ScreenOpenStatus Status, out Kazo.Os.Platform.Blazor.Display.SecondaryScreen? Screen) -> void
+Kazo.Os.Platform.Blazor.Display.ScreenOpenResult.Equals(Kazo.Os.Platform.Blazor.Display.ScreenOpenResult? other) -> bool
+Kazo.Os.Platform.Blazor.Display.ScreenOpenResult.Screen.get -> Kazo.Os.Platform.Blazor.Display.SecondaryScreen?
+Kazo.Os.Platform.Blazor.Display.ScreenOpenResult.Screen.init -> void
+Kazo.Os.Platform.Blazor.Display.ScreenOpenResult.ScreenOpenResult(Kazo.Os.Platform.Blazor.Display.ScreenOpenStatus Status, Kazo.Os.Platform.Blazor.Display.SecondaryScreen? Screen) -> void
+Kazo.Os.Platform.Blazor.Display.ScreenOpenResult.Status.get -> Kazo.Os.Platform.Blazor.Display.ScreenOpenStatus
+Kazo.Os.Platform.Blazor.Display.ScreenOpenResult.Status.init -> void
+Kazo.Os.Platform.Blazor.Display.ScreenOpenStatus
+Kazo.Os.Platform.Blazor.Display.ScreenOpenStatus.Blocked = 1 -> Kazo.Os.Platform.Blazor.Display.ScreenOpenStatus
+Kazo.Os.Platform.Blazor.Display.ScreenOpenStatus.LimitReached = 3 -> Kazo.Os.Platform.Blazor.Display.ScreenOpenStatus
+Kazo.Os.Platform.Blazor.Display.ScreenOpenStatus.Opened = 0 -> Kazo.Os.Platform.Blazor.Display.ScreenOpenStatus
+Kazo.Os.Platform.Blazor.Display.ScreenOpenStatus.Unavailable = 2 -> Kazo.Os.Platform.Blazor.Display.ScreenOpenStatus
+Kazo.Os.Platform.Blazor.Display.ScreenOverlayHost
+Kazo.Os.Platform.Blazor.Display.ScreenOverlayHost.ChildContent.get -> Microsoft.AspNetCore.Components.RenderFragment?
+Kazo.Os.Platform.Blazor.Display.ScreenOverlayHost.ChildContent.set -> void
+Kazo.Os.Platform.Blazor.Display.ScreenOverlayHost.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Platform.Blazor.Display.ScreenOverlayHost.ScreenOverlayHost() -> void
+Kazo.Os.Platform.Blazor.Display.ScreenPermission
+Kazo.Os.Platform.Blazor.Display.ScreenPermission.Denied = 4 -> Kazo.Os.Platform.Blazor.Display.ScreenPermission
+Kazo.Os.Platform.Blazor.Display.ScreenPermission.Granted = 3 -> Kazo.Os.Platform.Blazor.Display.ScreenPermission
+Kazo.Os.Platform.Blazor.Display.ScreenPermission.Prompt = 2 -> Kazo.Os.Platform.Blazor.Display.ScreenPermission
+Kazo.Os.Platform.Blazor.Display.ScreenPermission.Unknown = 0 -> Kazo.Os.Platform.Blazor.Display.ScreenPermission
+Kazo.Os.Platform.Blazor.Display.ScreenPermission.Unsupported = 1 -> Kazo.Os.Platform.Blazor.Display.ScreenPermission
+Kazo.Os.Platform.Blazor.Display.ScreenService
+Kazo.Os.Platform.Blazor.Display.ScreenService.CanOpenScreen.get -> bool
+Kazo.Os.Platform.Blazor.Display.ScreenService.Changed -> System.Action?
+Kazo.Os.Platform.Blazor.Display.ScreenService.CloseScreenAsync(Kazo.Os.Windowing.Abstractions.DisplayId id) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.Display.ScreenService.DismissRestoreAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.Display.ScreenService.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Platform.Blazor.Display.ScreenService.IdentifyAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.Display.ScreenService.IsIdentifying.get -> bool
+Kazo.Os.Platform.Blazor.Display.ScreenService.IsPrimaryFullScreen.get -> bool
+Kazo.Os.Platform.Blazor.Display.ScreenService.IsPrimaryHidden.get -> bool
+Kazo.Os.Platform.Blazor.Display.ScreenService.IsStarted.get -> bool
+Kazo.Os.Platform.Blazor.Display.ScreenService.OnPermission(string! state) -> void
+Kazo.Os.Platform.Blazor.Display.ScreenService.OnPrimaryFullScreen(bool fullScreen) -> void
+Kazo.Os.Platform.Blazor.Display.ScreenService.OnPrimaryVisibility(bool hidden) -> void
+Kazo.Os.Platform.Blazor.Display.ScreenService.OnScreenFullScreen(string! surfaceId, bool fullScreen) -> void
+Kazo.Os.Platform.Blazor.Display.ScreenService.OnScreenGeometry(string! surfaceId, int left, int top, int width, int height) -> void
+Kazo.Os.Platform.Blazor.Display.ScreenService.OnScreenMonitorLost(string! surfaceId) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.Display.ScreenService.OnScreenPlaced(string! surfaceId, string! label) -> void
+Kazo.Os.Platform.Blazor.Display.ScreenService.OpenScreenAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Platform.Blazor.Display.ScreenOpenResult!>!
+Kazo.Os.Platform.Blazor.Display.ScreenService.Permission.get -> Kazo.Os.Platform.Blazor.Display.ScreenPermission
+Kazo.Os.Platform.Blazor.Display.ScreenService.PrimaryTaskbar.get -> Kazo.Os.Platform.Core.Shell.PrimaryTaskbarMode
+Kazo.Os.Platform.Blazor.Display.ScreenService.RequestPermissionAsync() -> System.Threading.Tasks.Task<Kazo.Os.Platform.Blazor.Display.ScreenPermission>!
+Kazo.Os.Platform.Blazor.Display.ScreenService.RestorableScreens.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Windowing.Abstractions.DisplayId>!
+Kazo.Os.Platform.Blazor.Display.ScreenService.RestoreScreensAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<int>!
+Kazo.Os.Platform.Blazor.Display.ScreenService.ScreenService(Kazo.Os.Platform.Blazor.Display.DisplaySurfaceService! surfaces, Microsoft.JSInterop.IJSRuntime! jsRuntime, Kazo.Os.Windowing.Core.WindowRuntime! runtime, Kazo.Os.Platform.Core.Settings.IOsSettingsService? settings = null, Microsoft.Extensions.Logging.ILogger<Kazo.Os.Platform.Blazor.Display.ScreenService!>? logger = null, Kazo.Os.Platform.Core.Globalization.SessionLocaleService? locale = null) -> void
+Kazo.Os.Platform.Blazor.Display.ScreenService.Screens.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Platform.Blazor.Display.SecondaryScreen!>!
+Kazo.Os.Platform.Blazor.Display.ScreenService.SetPrimaryTaskbarAsync(Kazo.Os.Platform.Core.Shell.PrimaryTaskbarMode mode, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.Display.ScreenService.StartAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.Display.ScreenService.ToggleFullScreenAsync(Kazo.Os.Windowing.Abstractions.DisplayId id) -> System.Threading.Tasks.Task<bool>!
+Kazo.Os.Platform.Blazor.Display.ScreenService.TogglePrimaryFullScreenAsync() -> System.Threading.Tasks.Task<bool>!
+Kazo.Os.Platform.Blazor.Display.SecondaryScreen
+Kazo.Os.Platform.Blazor.Display.SecondaryScreen.Geometry.get -> Kazo.Os.Platform.Core.Shell.ScreenGeometry?
+Kazo.Os.Platform.Blazor.Display.SecondaryScreen.Id.get -> Kazo.Os.Windowing.Abstractions.DisplayId
+Kazo.Os.Platform.Blazor.Display.SecondaryScreen.IsFullScreen.get -> bool
+Kazo.Os.Platform.Blazor.Display.SecondaryScreen.MonitorLabel.get -> string?
+Kazo.Os.Platform.Blazor.Display.SecondaryScreen.Surface.get -> Kazo.Os.AppSdk.Blazor.Display.IDisplaySurface!
+Kazo.Os.Platform.Blazor.Hosting.IEcosystemHostEnvironment
+Kazo.Os.Platform.Blazor.Hosting.IEcosystemHostEnvironment.IsDevelopment.get -> bool
+Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome
+Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome.<Clone>$() -> Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome!
+Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome.Assembly.get -> System.Reflection.Assembly?
+Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome.Assembly.init -> void
+Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome.AssemblyName.get -> string!
+Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome.AssemblyName.init -> void
+Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome.BuildKnownAssemblyLoadOutcome(string! AssemblyName, Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadStatus Status, System.Reflection.Assembly? Assembly, string? Detail) -> void
+Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome.Deconstruct(out string! AssemblyName, out Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadStatus Status, out System.Reflection.Assembly? Assembly, out string? Detail) -> void
+Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome.Detail.get -> string?
+Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome.Detail.init -> void
+Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome.Equals(Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome? other) -> bool
+Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome.Status.get -> Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadStatus
+Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome.Status.init -> void
+Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadStatus
+Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadStatus.Cancelled = 3 -> Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadStatus
+Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadStatus.Failed = 4 -> Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadStatus
+Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadStatus.HostBuildChanged = 5 -> Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadStatus
+Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadStatus.Loaded = 0 -> Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadStatus
+Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadStatus.Missing = 2 -> Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadStatus
+Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadStatus.NotDeclared = 1 -> Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadStatus
+Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoaderRegistry
+Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoaderRegistry.AddKnownAssemblies(System.Collections.Generic.IEnumerable<string!>! assemblyNames) -> void
+Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoaderRegistry.BuildKnownAssemblyLoaderRegistry(System.Collections.Generic.IEnumerable<string!>! knownAssemblies, Kazo.Os.Platform.Blazor.LazyLoading.IBuildKnownAssemblyTransport! transport) -> void
+Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoaderRegistry.BuildKnownAssemblyLoaderRegistry(System.Collections.Generic.IEnumerable<string!>! knownAssemblies, Kazo.Os.Platform.Blazor.LazyLoading.IBuildKnownAssemblyTransport! transport, Kazo.Os.Platform.Blazor.LazyLoading.HostBuildUpdateMonitor! buildMonitor) -> void
+Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoaderRegistry.LoadAsync(string! assemblyName, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome!>!
+Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownLazyAppDescriptorRegistry
+Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownLazyAppDescriptorRegistry.BuildKnownLazyAppDescriptorRegistry(Kazo.Os.Platform.Core.AppCatalog! catalog, Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoaderRegistry! assemblies) -> void
+Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownLazyAppDescriptorRegistry.Descriptors.get -> System.Collections.Generic.IReadOnlyDictionary<string!, Kazo.Os.Platform.Core.Discovery.AppDescriptor!>!
+Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownLazyAppDescriptorRegistry.EnsureAvailableAsync(string! appId, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<Kazo.Os.Platform.Core.Lifecycle.AppDescriptorLoadResult!>
+Kazo.Os.Platform.Blazor.LazyLoading.HostBuildIdentity
+Kazo.Os.Platform.Blazor.LazyLoading.HostBuildUpdateMonitor
+Kazo.Os.Platform.Blazor.LazyLoading.HostBuildUpdateMonitor.CheckAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+Kazo.Os.Platform.Blazor.LazyLoading.HostBuildUpdateMonitor.HostBuildUpdateMonitor(Kazo.Os.Platform.Blazor.LazyLoading.IHostBuildProbe! probe) -> void
+Kazo.Os.Platform.Blazor.LazyLoading.HostBuildUpdateMonitor.IsUpdatePending.get -> bool
+Kazo.Os.Platform.Blazor.LazyLoading.HostBuildUpdateMonitor.UpdatePending -> System.Action?
+Kazo.Os.Platform.Blazor.LazyLoading.HostReleaseMonitor
+Kazo.Os.Platform.Blazor.LazyLoading.HostReleaseMonitor.AvailableVersion.get -> string?
+Kazo.Os.Platform.Blazor.LazyLoading.HostReleaseMonitor.CheckAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+Kazo.Os.Platform.Blazor.LazyLoading.HostReleaseMonitor.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Platform.Blazor.LazyLoading.HostReleaseMonitor.HostReleaseMonitor(Kazo.Os.Platform.Blazor.LazyLoading.IHostReleaseProbe! probe, string! runningVersion, Kazo.Os.Platform.Blazor.LazyLoading.HostBuildUpdateMonitor? buildMonitor = null) -> void
+Kazo.Os.Platform.Blazor.LazyLoading.HostReleaseMonitor.ReleaseAvailable -> System.Action<string!>?
+Kazo.Os.Platform.Blazor.LazyLoading.HostReleaseMonitor.RunningVersion.get -> string!
+Kazo.Os.Platform.Blazor.LazyLoading.HostReleaseMonitor.Start(System.TimeSpan interval) -> void
+Kazo.Os.Platform.Blazor.LazyLoading.HostUpdateDownloadResult
+Kazo.Os.Platform.Blazor.LazyLoading.HostUpdateDownloadResult.NoWorker = 0 -> Kazo.Os.Platform.Blazor.LazyLoading.HostUpdateDownloadResult
+Kazo.Os.Platform.Blazor.LazyLoading.HostUpdateDownloadResult.Ready = 2 -> Kazo.Os.Platform.Blazor.LazyLoading.HostUpdateDownloadResult
+Kazo.Os.Platform.Blazor.LazyLoading.HostUpdateDownloadResult.Unavailable = 3 -> Kazo.Os.Platform.Blazor.LazyLoading.HostUpdateDownloadResult
+Kazo.Os.Platform.Blazor.LazyLoading.HostUpdateDownloadResult.UpToDate = 1 -> Kazo.Os.Platform.Blazor.LazyLoading.HostUpdateDownloadResult
+Kazo.Os.Platform.Blazor.LazyLoading.HostUpdateInstaller
+Kazo.Os.Platform.Blazor.LazyLoading.HostUpdateInstaller.ActivateDownloadedAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+Kazo.Os.Platform.Blazor.LazyLoading.HostUpdateInstaller.ActivatedElsewhere -> System.Action?
+Kazo.Os.Platform.Blazor.LazyLoading.HostUpdateInstaller.DownloadAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Platform.Blazor.LazyLoading.HostUpdateDownloadResult>!
+Kazo.Os.Platform.Blazor.LazyLoading.HostUpdateInstaller.HostUpdateInstaller(Kazo.Os.Platform.Blazor.LazyLoading.IHostUpdateWorker! worker) -> void
+Kazo.Os.Platform.Blazor.LazyLoading.HostUpdateInstaller.StartAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.LazyLoading.IBuildKnownAssemblyTransport
+Kazo.Os.Platform.Blazor.LazyLoading.IBuildKnownAssemblyTransport.LoadAsync(System.Collections.Generic.IReadOnlyList<string!>! assemblyNames, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<System.Reflection.Assembly!>!>!
+Kazo.Os.Platform.Blazor.LazyLoading.IHostBuildProbe
+Kazo.Os.Platform.Blazor.LazyLoading.IHostBuildProbe.GetRunningBuildAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<string?>
+Kazo.Os.Platform.Blazor.LazyLoading.IHostBuildProbe.GetServedBuildAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<string?>
+Kazo.Os.Platform.Blazor.LazyLoading.IHostReleaseProbe
+Kazo.Os.Platform.Blazor.LazyLoading.IHostReleaseProbe.GetServedVersionDocumentAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<string?>
+Kazo.Os.Platform.Blazor.LazyLoading.IHostUpdateWorker
+Kazo.Os.Platform.Blazor.LazyLoading.IHostUpdateWorker.ActivateAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.Platform.Blazor.LazyLoading.IHostUpdateWorker.DownloadAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<Kazo.Os.Platform.Blazor.LazyLoading.HostUpdateDownloadResult>
+Kazo.Os.Platform.Blazor.LazyLoading.IHostUpdateWorker.ListenAsync(System.Action! activatedElsewhere, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask
+Kazo.Os.Platform.Blazor.LazyLoading.StaticWebAssetAppAssetSource
+Kazo.Os.Platform.Blazor.LazyLoading.StaticWebAssetAppAssetSource.Dispose() -> void
+Kazo.Os.Platform.Blazor.LazyLoading.StaticWebAssetAppAssetSource.ReadAsync(Kazo.Os.App.Abstractions.AppManifest! manifest, string! assetPath, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<byte[]?>
+Kazo.Os.Platform.Blazor.LazyLoading.StaticWebAssetAppAssetSource.StaticWebAssetAppAssetSource(System.Uri! baseAddress) -> void
+Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationDirection
+Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationDirection.Back = 0 -> Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationDirection
+Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationDirection.Forward = 1 -> Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationDirection
+Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationListener
+Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationListener.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationListener.HardwareNavigationListener() -> void
+Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationListener.OnHardwareNavigationAsync(bool forward, string! source) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationRequest
+Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationRequest.<Clone>$() -> Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationRequest!
+Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationRequest.Deconstruct(out Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationDirection Direction, out Kazo.Os.AppSdk.Blazor.AppBackSource Source) -> void
+Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationRequest.Direction.get -> Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationDirection
+Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationRequest.Direction.init -> void
+Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationRequest.Equals(Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationRequest? other) -> bool
+Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationRequest.HardwareNavigationRequest(Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationDirection Direction, Kazo.Os.AppSdk.Blazor.AppBackSource Source) -> void
+Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationRequest.Source.get -> Kazo.Os.AppSdk.Blazor.AppBackSource
+Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationRequest.Source.init -> void
+Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationService
+Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationService.HardwareNavigationService(Kazo.Os.Windowing.Core.WindowRuntime! windowRuntime, Kazo.Os.Platform.Blazor.Windows.AppBackHandlerRegistry! handlers) -> void
+Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationService.NavigateAsync(Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationRequest! request) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationService.NavigateFocusedWindowAsync(Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationRequest! request) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Blazor.AppBackResult!>!
+Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationService.NavigateWindowAsync(Kazo.Os.Windowing.Abstractions.WindowId windowId, Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationRequest! request) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Blazor.AppBackResult!>!
+Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationService.Route.get -> System.Func<Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationRequest!, System.Threading.Tasks.Task!>?
+Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationService.Route.set -> void
+Kazo.Os.Platform.Blazor.Security.AdministratorAuthenticationBroker
+Kazo.Os.Platform.Blazor.Security.AdministratorAuthenticationBroker.AdministratorAuthenticationBroker() -> void
+Kazo.Os.Platform.Blazor.Security.AdministratorAuthenticationBroker.Attach() -> System.IDisposable!
+Kazo.Os.Platform.Blazor.Security.AdministratorAuthenticationBroker.Changed -> System.Action?
+Kazo.Os.Platform.Blazor.Security.AdministratorAuthenticationBroker.Current.get -> Kazo.Os.Platform.Blazor.Security.AdministratorAuthenticationBroker.PendingAuthentication?
+Kazo.Os.Platform.Blazor.Security.AdministratorAuthenticationBroker.PendingAuthentication
+Kazo.Os.Platform.Blazor.Security.AdministratorAuthenticationBroker.PendingAuthentication.Complete(Kazo.Os.Platform.Core.Elevation.AdministratorAuthenticationOutcome outcome) -> void
+Kazo.Os.Platform.Blazor.Security.AdministratorAuthenticationBroker.PendingAuthentication.Request.get -> Kazo.Os.Platform.Core.Elevation.AdministratorAuthenticationPromptRequest!
+Kazo.Os.Platform.Blazor.Security.AdministratorAuthenticationBroker.RequestAsync(Kazo.Os.Platform.Core.Elevation.AdministratorAuthenticationPromptRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Platform.Core.Elevation.AdministratorAuthenticationOutcome>!
+Kazo.Os.Platform.Blazor.Security.AdministratorAuthenticationOverlay
+Kazo.Os.Platform.Blazor.Security.AdministratorAuthenticationOverlay.AdministratorAuthenticationOverlay() -> void
+Kazo.Os.Platform.Blazor.Security.AdministratorAuthenticationOverlay.Broker.get -> Kazo.Os.Platform.Blazor.Security.AdministratorAuthenticationBroker!
+Kazo.Os.Platform.Blazor.Security.AdministratorAuthenticationOverlay.Broker.set -> void
+Kazo.Os.Platform.Blazor.Security.AdministratorAuthenticationOverlay.Dispose() -> void
+Kazo.Os.Platform.Blazor.Security.AppInstallApprovalBroker
+Kazo.Os.Platform.Blazor.Security.AppInstallApprovalBroker.AppInstallApprovalBroker() -> void
+Kazo.Os.Platform.Blazor.Security.AppInstallApprovalBroker.Attach() -> System.IDisposable!
+Kazo.Os.Platform.Blazor.Security.AppInstallApprovalBroker.Changed -> System.Action?
+Kazo.Os.Platform.Blazor.Security.AppInstallApprovalBroker.Current.get -> Kazo.Os.Platform.Blazor.Security.AppInstallApprovalBroker.PendingApproval?
+Kazo.Os.Platform.Blazor.Security.AppInstallApprovalBroker.PendingApproval
+Kazo.Os.Platform.Blazor.Security.AppInstallApprovalBroker.PendingApproval.Complete(Kazo.Os.Platform.Core.Elevation.AppInstallApprovalOutcome outcome) -> void
+Kazo.Os.Platform.Blazor.Security.AppInstallApprovalBroker.PendingApproval.Request.get -> Kazo.Os.Platform.Core.Elevation.AppInstallApprovalRequest!
+Kazo.Os.Platform.Blazor.Security.AppInstallApprovalBroker.RequestAsync(Kazo.Os.Platform.Core.Elevation.AppInstallApprovalRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Platform.Core.Elevation.AppInstallApprovalOutcome>!
+Kazo.Os.Platform.Blazor.Security.AppInstallApprovalOverlay
+Kazo.Os.Platform.Blazor.Security.AppInstallApprovalOverlay.AppInstallApprovalOverlay() -> void
+Kazo.Os.Platform.Blazor.Security.AppInstallApprovalOverlay.Broker.get -> Kazo.Os.Platform.Blazor.Security.AppInstallApprovalBroker!
+Kazo.Os.Platform.Blazor.Security.AppInstallApprovalOverlay.Broker.set -> void
+Kazo.Os.Platform.Blazor.Security.AppInstallApprovalOverlay.Dispose() -> void
+Kazo.Os.Platform.Blazor.Security.DangerousCapabilityApprovalBroker
+Kazo.Os.Platform.Blazor.Security.DangerousCapabilityApprovalBroker.Attach() -> System.IDisposable!
+Kazo.Os.Platform.Blazor.Security.DangerousCapabilityApprovalBroker.Changed -> System.Action?
+Kazo.Os.Platform.Blazor.Security.DangerousCapabilityApprovalBroker.Current.get -> Kazo.Os.Platform.Blazor.Security.DangerousCapabilityApprovalBroker.PendingApproval?
+Kazo.Os.Platform.Blazor.Security.DangerousCapabilityApprovalBroker.DangerousCapabilityApprovalBroker() -> void
+Kazo.Os.Platform.Blazor.Security.DangerousCapabilityApprovalBroker.HasHost.get -> bool
+Kazo.Os.Platform.Blazor.Security.DangerousCapabilityApprovalBroker.PendingApproval
+Kazo.Os.Platform.Blazor.Security.DangerousCapabilityApprovalBroker.PendingApproval.Complete(Kazo.Os.Platform.Core.Policy.DangerousCapabilityApprovalOutcome outcome) -> void
+Kazo.Os.Platform.Blazor.Security.DangerousCapabilityApprovalBroker.PendingApproval.Request.get -> Kazo.Os.Platform.Core.Policy.DangerousCapabilityApprovalRequest!
+Kazo.Os.Platform.Blazor.Security.DangerousCapabilityApprovalBroker.RequestAsync(Kazo.Os.Platform.Core.Policy.DangerousCapabilityApprovalRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Platform.Core.Policy.DangerousCapabilityApprovalOutcome>!
+Kazo.Os.Platform.Blazor.Security.DangerousCapabilityApprovalOverlay
+Kazo.Os.Platform.Blazor.Security.DangerousCapabilityApprovalOverlay.Broker.get -> Kazo.Os.Platform.Blazor.Security.DangerousCapabilityApprovalBroker!
+Kazo.Os.Platform.Blazor.Security.DangerousCapabilityApprovalOverlay.Broker.set -> void
+Kazo.Os.Platform.Blazor.Security.DangerousCapabilityApprovalOverlay.DangerousCapabilityApprovalOverlay() -> void
+Kazo.Os.Platform.Blazor.Security.DangerousCapabilityApprovalOverlay.Dispose() -> void
+Kazo.Os.Platform.Blazor.Shell.AppLauncher
+Kazo.Os.Platform.Blazor.Shell.AppLauncher.AppLauncher() -> void
+Kazo.Os.Platform.Blazor.Shell.AppLauncher.Dispose() -> void
+Kazo.Os.Platform.Blazor.Shell.AppLauncher.OnAppDragEnded(bool dropped) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.Shell.AppLauncher.OnAppSelected.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.App.Abstractions.AppManifest!>
+Kazo.Os.Platform.Blazor.Shell.AppLauncher.OnAppSelected.set -> void
+Kazo.Os.Platform.Blazor.Shell.AppLauncher.OnClose.get -> Microsoft.AspNetCore.Components.EventCallback
+Kazo.Os.Platform.Blazor.Shell.AppLauncher.OnClose.set -> void
+Kazo.Os.Platform.Blazor.Shell.AppLauncher.OnCreateAccount.get -> Microsoft.AspNetCore.Components.EventCallback
+Kazo.Os.Platform.Blazor.Shell.AppLauncher.OnCreateAccount.set -> void
+Kazo.Os.Platform.Blazor.Shell.AppLauncher.OnRestart.get -> Microsoft.AspNetCore.Components.EventCallback
+Kazo.Os.Platform.Blazor.Shell.AppLauncher.OnRestart.set -> void
+Kazo.Os.Platform.Blazor.Shell.AppLauncher.OnSendToDesktop.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.App.Abstractions.AppManifest!>
+Kazo.Os.Platform.Blazor.Shell.AppLauncher.OnSendToDesktop.set -> void
+Kazo.Os.Platform.Blazor.Shell.AppLauncher.OnSignOut.get -> Microsoft.AspNetCore.Components.EventCallback
+Kazo.Os.Platform.Blazor.Shell.AppLauncher.OnSignOut.set -> void
+Kazo.Os.Platform.Blazor.Shell.BrowserHostAccessibilityProbe
+Kazo.Os.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.BrowserHostAccessibilityProbe(Microsoft.JSInterop.IJSRuntime! jsRuntime) -> void
+Kazo.Os.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.Changed -> System.Action?
+Kazo.Os.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.Current.get -> Kazo.Os.Platform.Core.Appearance.HostAccessibilitySignals!
+Kazo.Os.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.InitializeAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.OnHostAccessibilityChanged(Kazo.Os.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals! signals) -> void
+Kazo.Os.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals
+Kazo.Os.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals.<Clone>$() -> Kazo.Os.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals!
+Kazo.Os.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals.Deconstruct(out bool PrefersMoreContrast, out bool ForcedColors, out bool PrefersReducedMotion) -> void
+Kazo.Os.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals.Equals(Kazo.Os.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals? other) -> bool
+Kazo.Os.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals.ForcedColors.get -> bool
+Kazo.Os.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals.ForcedColors.init -> void
+Kazo.Os.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals.PrefersMoreContrast.get -> bool
+Kazo.Os.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals.PrefersMoreContrast.init -> void
+Kazo.Os.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals.PrefersReducedMotion.get -> bool
+Kazo.Os.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals.PrefersReducedMotion.init -> void
+Kazo.Os.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals.RawSignals(bool PrefersMoreContrast, bool ForcedColors, bool PrefersReducedMotion) -> void
+Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe
+Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.BrowserPlatformEnvironmentProbe(Microsoft.JSInterop.IJSRuntime! jsRuntime) -> void
+Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.Changed -> System.Action?
+Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.Current.get -> Kazo.Os.Platform.Core.Shell.PlatformEnvironmentSnapshot!
+Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.InitializeAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.OnEnvironmentChanged(Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals! signals) -> void
+Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals
+Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals.<Clone>$() -> Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals!
+Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals.Deconstruct(out int LogicalWidth, out int LogicalHeight, out bool PointerIsCoarse, out bool HasHover, out int MaxTouchPoints, out bool IsStandalone) -> void
+Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals.Equals(Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals? other) -> bool
+Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals.HasHover.get -> bool
+Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals.HasHover.init -> void
+Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals.IsStandalone.get -> bool
+Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals.IsStandalone.init -> void
+Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals.LogicalHeight.get -> int
+Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals.LogicalHeight.init -> void
+Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals.LogicalWidth.get -> int
+Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals.LogicalWidth.init -> void
+Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals.MaxTouchPoints.get -> int
+Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals.MaxTouchPoints.init -> void
+Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals.PointerIsCoarse.get -> bool
+Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals.PointerIsCoarse.init -> void
+Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals.RawSignals(int LogicalWidth, int LogicalHeight, bool PointerIsCoarse, bool HasHover, int MaxTouchPoints, bool IsStandalone) -> void
+Kazo.Os.Platform.Blazor.Shell.ClockPanel
+Kazo.Os.Platform.Blazor.Shell.ClockPanel.ClockPanel() -> void
+Kazo.Os.Platform.Blazor.Shell.ClockPanel.Dispose() -> void
+Kazo.Os.Platform.Blazor.Shell.ClockPanel.OnClose.get -> Microsoft.AspNetCore.Components.EventCallback
+Kazo.Os.Platform.Blazor.Shell.ClockPanel.OnClose.set -> void
+Kazo.Os.Platform.Blazor.Shell.DesktopShell
+Kazo.Os.Platform.Blazor.Shell.DesktopShell.BackgroundContent.get -> Microsoft.AspNetCore.Components.RenderFragment?
+Kazo.Os.Platform.Blazor.Shell.DesktopShell.BackgroundContent.set -> void
+Kazo.Os.Platform.Blazor.Shell.DesktopShell.DesktopShell() -> void
+Kazo.Os.Platform.Blazor.Shell.DesktopShell.Dispose() -> void
+Kazo.Os.Platform.Blazor.Shell.DesktopShell.OnLoggedOut.get -> Microsoft.AspNetCore.Components.EventCallback
+Kazo.Os.Platform.Blazor.Shell.DesktopShell.OnLoggedOut.set -> void
+Kazo.Os.Platform.Blazor.Shell.DesktopShell.OnRestart.get -> Microsoft.AspNetCore.Components.EventCallback
+Kazo.Os.Platform.Blazor.Shell.DesktopShell.OnRestart.set -> void
+Kazo.Os.Platform.Blazor.Shell.DesktopShell.ShowDesktopIcons.get -> bool
+Kazo.Os.Platform.Blazor.Shell.DesktopShell.ShowDesktopIcons.set -> void
+Kazo.Os.Platform.Blazor.Shell.DesktopShell.TestDemoEnabled.get -> bool
+Kazo.Os.Platform.Blazor.Shell.DesktopShell.TestDemoEnabled.set -> void
+Kazo.Os.Platform.Blazor.Shell.DesktopSurfaceHost
+Kazo.Os.Platform.Blazor.Shell.DesktopSurfaceHost.CreateShortcutAsync(string! appId) -> System.Threading.Tasks.Task<bool>!
+Kazo.Os.Platform.Blazor.Shell.DesktopSurfaceHost.DesktopSurfaceHost() -> void
+Kazo.Os.Platform.Blazor.Shell.DesktopSurfaceHost.Dispose() -> void
+Kazo.Os.Platform.Blazor.Shell.DesktopSurfaceHost.ProcessId.get -> Kazo.Os.Simulation.Abstractions.Processes.ProcessId?
+Kazo.Os.Platform.Blazor.Shell.DesktopWallpaper
+Kazo.Os.Platform.Blazor.Shell.DesktopWallpaper.DesktopWallpaper() -> void
+Kazo.Os.Platform.Blazor.Shell.DesktopWallpaper.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Platform.Blazor.Shell.DesktopWallpaper.Mobile.get -> bool
+Kazo.Os.Platform.Blazor.Shell.DesktopWallpaper.Mobile.set -> void
+Kazo.Os.Platform.Blazor.Shell.DesktopWallpaper.ScreenNumber.get -> int
+Kazo.Os.Platform.Blazor.Shell.DesktopWallpaper.ScreenNumber.set -> void
+Kazo.Os.Platform.Blazor.Shell.DoNotDisturbIndicator
+Kazo.Os.Platform.Blazor.Shell.DoNotDisturbIndicator.Dispose() -> void
+Kazo.Os.Platform.Blazor.Shell.DoNotDisturbIndicator.DoNotDisturbIndicator() -> void
+Kazo.Os.Platform.Blazor.Shell.DoNotDisturbIndicator.OnClick.get -> Microsoft.AspNetCore.Components.EventCallback
+Kazo.Os.Platform.Blazor.Shell.DoNotDisturbIndicator.OnClick.set -> void
+Kazo.Os.Platform.Blazor.Shell.LauncherAppProjection
+Kazo.Os.Platform.Blazor.Shell.LauncherAppProjectionResult
+Kazo.Os.Platform.Blazor.Shell.LauncherAppProjectionResult.<Clone>$() -> Kazo.Os.Platform.Blazor.Shell.LauncherAppProjectionResult!
+Kazo.Os.Platform.Blazor.Shell.LauncherAppProjectionResult.Categories.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.Platform.Blazor.Shell.LauncherAppProjectionResult.Categories.init -> void
+Kazo.Os.Platform.Blazor.Shell.LauncherAppProjectionResult.Deconstruct(out System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppManifest!>! LaunchableApps, out System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppManifest!>! PinnedApps, out System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppManifest!>! VisibleApps, out System.Collections.Generic.IReadOnlyList<string!>! Categories) -> void
+Kazo.Os.Platform.Blazor.Shell.LauncherAppProjectionResult.Equals(Kazo.Os.Platform.Blazor.Shell.LauncherAppProjectionResult? other) -> bool
+Kazo.Os.Platform.Blazor.Shell.LauncherAppProjectionResult.LaunchableApps.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppManifest!>!
+Kazo.Os.Platform.Blazor.Shell.LauncherAppProjectionResult.LaunchableApps.init -> void
+Kazo.Os.Platform.Blazor.Shell.LauncherAppProjectionResult.LauncherAppProjectionResult(System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppManifest!>! LaunchableApps, System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppManifest!>! PinnedApps, System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppManifest!>! VisibleApps, System.Collections.Generic.IReadOnlyList<string!>! Categories) -> void
+Kazo.Os.Platform.Blazor.Shell.LauncherAppProjectionResult.PinnedApps.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppManifest!>!
+Kazo.Os.Platform.Blazor.Shell.LauncherAppProjectionResult.PinnedApps.init -> void
+Kazo.Os.Platform.Blazor.Shell.LauncherAppProjectionResult.VisibleApps.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppManifest!>!
+Kazo.Os.Platform.Blazor.Shell.LauncherAppProjectionResult.VisibleApps.init -> void
+Kazo.Os.Platform.Blazor.Shell.LogoutDialog
+Kazo.Os.Platform.Blazor.Shell.LogoutDialog.LogoutDialog() -> void
+Kazo.Os.Platform.Blazor.Shell.LogoutDialog.OnClose.get -> Microsoft.AspNetCore.Components.EventCallback
+Kazo.Os.Platform.Blazor.Shell.LogoutDialog.OnClose.set -> void
+Kazo.Os.Platform.Blazor.Shell.LogoutDialog.OnLoggedOut.get -> Microsoft.AspNetCore.Components.EventCallback
+Kazo.Os.Platform.Blazor.Shell.LogoutDialog.OnLoggedOut.set -> void
+Kazo.Os.Platform.Blazor.Shell.LogoutDialog.Restart.get -> bool
+Kazo.Os.Platform.Blazor.Shell.LogoutDialog.Restart.set -> void
+Kazo.Os.Platform.Blazor.Shell.MobileAppIcon
+Kazo.Os.Platform.Blazor.Shell.MobileAppIcon.App.get -> Kazo.Os.App.Abstractions.AppManifest!
+Kazo.Os.Platform.Blazor.Shell.MobileAppIcon.App.set -> void
+Kazo.Os.Platform.Blazor.Shell.MobileAppIcon.MobileAppIcon() -> void
+Kazo.Os.Platform.Blazor.Shell.MobileHomeScreen
+Kazo.Os.Platform.Blazor.Shell.MobileHomeScreen.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Platform.Blazor.Shell.MobileHomeScreen.IsDrawerOpen.get -> bool
+Kazo.Os.Platform.Blazor.Shell.MobileHomeScreen.IsDrawerOpen.set -> void
+Kazo.Os.Platform.Blazor.Shell.MobileHomeScreen.MobileHomeScreen() -> void
+Kazo.Os.Platform.Blazor.Shell.MobileHomeScreen.OnAppSelected.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.App.Abstractions.AppManifest!>
+Kazo.Os.Platform.Blazor.Shell.MobileHomeScreen.OnAppSelected.set -> void
+Kazo.Os.Platform.Blazor.Shell.MobileHomeScreen.OnDrawerChanged.get -> Microsoft.AspNetCore.Components.EventCallback<bool>
+Kazo.Os.Platform.Blazor.Shell.MobileHomeScreen.OnDrawerChanged.set -> void
+Kazo.Os.Platform.Blazor.Shell.MobileHomeScreen.ReportHomeGestureAsync(string! surface, double dx, double dy) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.Shell.MobileHomeScreen.ReportHomeLongPress(string! appId) -> void
+Kazo.Os.Platform.Blazor.Shell.MobileNavigationCommandsAdapter
+Kazo.Os.Platform.Blazor.Shell.MobileNavigationCommandsAdapter.MobileNavigationCommandsAdapter(Kazo.Os.Windowing.Core.WindowRuntime! windowRuntime, Kazo.Os.Platform.Blazor.Windows.AppBackHandlerRegistry! backHandlers, Kazo.Os.Platform.Blazor.Shell.MobileNavigationHistory! history, System.Func<Kazo.Os.Windowing.Abstractions.WindowId, System.Threading.Tasks.Task!>! closeWindow, System.Func<bool>! isOverlayOpen, System.Action! closeOverlay, System.Action! toggleRecent) -> void
+Kazo.Os.Platform.Blazor.Shell.MobileNavigationCommandsAdapter.RequestBack() -> void
+Kazo.Os.Platform.Blazor.Shell.MobileNavigationCommandsAdapter.RequestBackAsync(Kazo.Os.AppSdk.Blazor.AppBackSource source) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.Shell.MobileNavigationCommandsAdapter.RequestForwardAsync(Kazo.Os.AppSdk.Blazor.AppBackSource source) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.Shell.MobileNavigationCommandsAdapter.RequestHome() -> void
+Kazo.Os.Platform.Blazor.Shell.MobileNavigationCommandsAdapter.RequestRecent() -> void
+Kazo.Os.Platform.Blazor.Shell.MobileNavigationHistory
+Kazo.Os.Platform.Blazor.Shell.MobileNavigationHistory.Dispose() -> void
+Kazo.Os.Platform.Blazor.Shell.MobileNavigationHistory.MobileNavigationHistory(Kazo.Os.Windowing.Core.WindowRuntime! runtime) -> void
+Kazo.Os.Platform.Blazor.Shell.MobileNavigationHistory.TryPopPrevious(out Kazo.Os.Windowing.Abstractions.WindowId windowId) -> bool
+Kazo.Os.Platform.Blazor.Shell.MobileRecentProjection
+Kazo.Os.Platform.Blazor.Shell.MobileShell
+Kazo.Os.Platform.Blazor.Shell.MobileShell.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Platform.Blazor.Shell.MobileShell.MobileShell() -> void
+Kazo.Os.Platform.Blazor.Shell.MobileShell.OnSwipeDownDetected() -> void
+Kazo.Os.Platform.Blazor.Shell.MobileShell.ReportMobileWorkspaceSize(double width, double height) -> void
+Kazo.Os.Platform.Blazor.Shell.MobileShell.ReportShellGestureAsync(string! surface, double dx, double dy) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.Shell.NotificationToastPlacement
+Kazo.Os.Platform.Blazor.Shell.NotificationToastPlacement.AboveTaskbar = 0 -> Kazo.Os.Platform.Blazor.Shell.NotificationToastPlacement
+Kazo.Os.Platform.Blazor.Shell.NotificationToastPlacement.TopOfScreen = 1 -> Kazo.Os.Platform.Blazor.Shell.NotificationToastPlacement
+Kazo.Os.Platform.Blazor.Shell.NotificationToasts
+Kazo.Os.Platform.Blazor.Shell.NotificationToasts.Dispose() -> void
+Kazo.Os.Platform.Blazor.Shell.NotificationToasts.IsPanelOpen.get -> bool
+Kazo.Os.Platform.Blazor.Shell.NotificationToasts.IsPanelOpen.set -> void
+Kazo.Os.Platform.Blazor.Shell.NotificationToasts.NotificationToasts() -> void
+Kazo.Os.Platform.Blazor.Shell.NotificationToasts.Placement.get -> Kazo.Os.Platform.Blazor.Shell.NotificationToastPlacement
+Kazo.Os.Platform.Blazor.Shell.NotificationToasts.Placement.set -> void
+Kazo.Os.Platform.Blazor.Shell.PlatformShellSwitchCoordinator
+Kazo.Os.Platform.Blazor.Shell.PlatformShellSwitchCoordinator.PlatformShellSwitchCoordinator(Kazo.Os.Windowing.Core.WindowRuntime! windowRuntime, Kazo.Os.Platform.Core.Lifecycle.AppLifecycleOrchestrator! orchestrator, Kazo.Os.Platform.Blazor.Windows.WindowCloseGuardRegistry! closeGuards, Kazo.Os.Platform.Core.Shell.UiPlatformPreferenceService! platformPreference, Kazo.Os.Platform.Core.AppCatalog! catalog) -> void
+Kazo.Os.Platform.Blazor.Shell.PlatformShellSwitchCoordinator.RequestAutoAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+Kazo.Os.Platform.Blazor.Shell.PlatformShellSwitchCoordinator.RequestExplicitAsync(Kazo.Os.App.Abstractions.AppPlatformId targetPlatform, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+Kazo.Os.Platform.Blazor.Shell.ServerStatusIndicator
+Kazo.Os.Platform.Blazor.Shell.ServerStatusIndicator.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Platform.Blazor.Shell.ServerStatusIndicator.OnOpenSettings.get -> Microsoft.AspNetCore.Components.EventCallback
+Kazo.Os.Platform.Blazor.Shell.ServerStatusIndicator.OnOpenSettings.set -> void
+Kazo.Os.Platform.Blazor.Shell.ServerStatusIndicator.ServerStatusIndicator() -> void
+Kazo.Os.Platform.Blazor.Shell.ShellAppIcon
+Kazo.Os.Platform.Blazor.Shell.ShellAppIcon.App.get -> Kazo.Os.App.Abstractions.AppManifest!
+Kazo.Os.Platform.Blazor.Shell.ShellAppIcon.App.set -> void
+Kazo.Os.Platform.Blazor.Shell.ShellAppIcon.Dispose() -> void
+Kazo.Os.Platform.Blazor.Shell.ShellAppIcon.Fill.get -> bool
+Kazo.Os.Platform.Blazor.Shell.ShellAppIcon.Fill.set -> void
+Kazo.Os.Platform.Blazor.Shell.ShellAppIcon.ShellAppIcon() -> void
+Kazo.Os.Platform.Blazor.Shell.ShellAppIcon.Size.get -> int
+Kazo.Os.Platform.Blazor.Shell.ShellAppIcon.Size.set -> void
+Kazo.Os.Platform.Blazor.Shell.ShellAppIcon.UseDeclaredImage.get -> bool
+Kazo.Os.Platform.Blazor.Shell.ShellAppIcon.UseDeclaredImage.set -> void
+Kazo.Os.Platform.Blazor.Shell.ShellNotificationActions
+Kazo.Os.Platform.Blazor.Shell.ShellNotificationActions.Register(string! actionId, System.Func<System.Threading.Tasks.Task!>! handler) -> System.IDisposable!
+Kazo.Os.Platform.Blazor.Shell.ShellNotificationActions.ShellNotificationActions() -> void
+Kazo.Os.Platform.Blazor.Shell.ShellNotificationActions.TryGet(string! actionId, out System.Func<System.Threading.Tasks.Task!>? handler) -> bool
+Kazo.Os.Platform.Blazor.Shell.TaskbarClockPanelSourceAdapter
+Kazo.Os.Platform.Blazor.Shell.TaskbarClockPanelSourceAdapter.Changed -> System.Action?
+Kazo.Os.Platform.Blazor.Shell.TaskbarClockPanelSourceAdapter.Close() -> void
+Kazo.Os.Platform.Blazor.Shell.TaskbarClockPanelSourceAdapter.IsOpen.get -> bool
+Kazo.Os.Platform.Blazor.Shell.TaskbarClockPanelSourceAdapter.SetUnreadCount(int value) -> void
+Kazo.Os.Platform.Blazor.Shell.TaskbarClockPanelSourceAdapter.TaskbarClockPanelSourceAdapter() -> void
+Kazo.Os.Platform.Blazor.Shell.TaskbarClockPanelSourceAdapter.Toggle() -> void
+Kazo.Os.Platform.Blazor.Shell.TaskbarClockPanelSourceAdapter.UnreadCount.get -> int
+Kazo.Os.Platform.Blazor.Shell.TaskbarCommandDispatcherAdapter
+Kazo.Os.Platform.Blazor.Shell.TaskbarCommandDispatcherAdapter.Activate(Kazo.Os.Windowing.Abstractions.WindowId id) -> void
+Kazo.Os.Platform.Blazor.Shell.TaskbarCommandDispatcherAdapter.Close(Kazo.Os.Windowing.Abstractions.WindowId id) -> void
+Kazo.Os.Platform.Blazor.Shell.TaskbarCommandDispatcherAdapter.Minimize(Kazo.Os.Windowing.Abstractions.WindowId id) -> void
+Kazo.Os.Platform.Blazor.Shell.TaskbarCommandDispatcherAdapter.Restore(Kazo.Os.Windowing.Abstractions.WindowId id) -> void
+Kazo.Os.Platform.Blazor.Shell.TaskbarCommandDispatcherAdapter.TaskbarCommandDispatcherAdapter(Kazo.Os.Windowing.Core.WindowRuntime! runtime, Kazo.Os.Platform.Blazor.Windows.WindowCloseCoordinator! closeCoordinator, Kazo.Os.Platform.Blazor.Windows.WindowCloseGuardRegistry! closeGuards) -> void
+Kazo.Os.Platform.Blazor.Shell.TaskbarLauncherAdapter
+Kazo.Os.Platform.Blazor.Shell.TaskbarLauncherAdapter.Changed -> System.Action?
+Kazo.Os.Platform.Blazor.Shell.TaskbarLauncherAdapter.Close() -> void
+Kazo.Os.Platform.Blazor.Shell.TaskbarLauncherAdapter.HasAttention.get -> bool
+Kazo.Os.Platform.Blazor.Shell.TaskbarLauncherAdapter.IsOpen.get -> bool
+Kazo.Os.Platform.Blazor.Shell.TaskbarLauncherAdapter.Open() -> void
+Kazo.Os.Platform.Blazor.Shell.TaskbarLauncherAdapter.SetAttention(bool value) -> void
+Kazo.Os.Platform.Blazor.Shell.TaskbarLauncherAdapter.TaskbarLauncherAdapter() -> void
+Kazo.Os.Platform.Blazor.Shell.TaskbarLauncherAdapter.Toggle() -> void
+Kazo.Os.Platform.Blazor.Shell.TaskbarSessionCommandsAdapter
+Kazo.Os.Platform.Blazor.Shell.TaskbarSessionCommandsAdapter.RequestLogout() -> void
+Kazo.Os.Platform.Blazor.Shell.TaskbarSessionCommandsAdapter.TaskbarSessionCommandsAdapter(System.Action! requestLogout) -> void
+Kazo.Os.Platform.Blazor.Shell.TaskbarStatusSourceAdapter
+Kazo.Os.Platform.Blazor.Shell.TaskbarStatusSourceAdapter.Changed -> System.Action?
+Kazo.Os.Platform.Blazor.Shell.TaskbarStatusSourceAdapter.Dispose() -> void
+Kazo.Os.Platform.Blazor.Shell.TaskbarStatusSourceAdapter.FormatCulture.get -> System.Globalization.CultureInfo!
+Kazo.Os.Platform.Blazor.Shell.TaskbarStatusSourceAdapter.TaskbarStatusSourceAdapter(Kazo.Os.Simulation.Abstractions.Time.ISimulationClock! clock, Kazo.Os.Platform.Core.Globalization.SessionLocaleService? locale = null) -> void
+Kazo.Os.Platform.Blazor.Shell.TaskbarStatusSourceAdapter.TaskbarStatusSourceAdapter(Kazo.Os.Simulation.Abstractions.Time.ISimulationClock! clock, Kazo.Os.Platform.Core.Globalization.SessionLocaleService? locale, Kazo.Os.Platform.Core.Globalization.SessionTimeZoneService? timeZones) -> void
+Kazo.Os.Platform.Blazor.Shell.TaskbarStatusSourceAdapter.TimeZone.get -> System.TimeZoneInfo!
+Kazo.Os.Platform.Blazor.Shell.TaskbarStatusSourceAdapter.UtcNow.get -> System.DateTimeOffset
+Kazo.Os.Platform.Blazor.Shell.TaskbarWindowSourceAdapter
+Kazo.Os.Platform.Blazor.Shell.TaskbarWindowSourceAdapter.Changed -> System.Action?
+Kazo.Os.Platform.Blazor.Shell.TaskbarWindowSourceAdapter.Dispose() -> void
+Kazo.Os.Platform.Blazor.Shell.TaskbarWindowSourceAdapter.TaskbarWindowSourceAdapter(Kazo.Os.Windowing.Core.WindowRuntime! runtime) -> void
+Kazo.Os.Platform.Blazor.Shell.TaskbarWindowSourceAdapter.Windows.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Taskbar.Blazor.TaskbarWindowItem!>!
+Kazo.Os.Platform.Blazor.Shell.UpdateReadyNotification
+Kazo.Os.Platform.Blazor.Shell.UpdateReadyNotification.Dispose() -> void
+Kazo.Os.Platform.Blazor.Shell.UpdateReadyNotification.Show(Kazo.Os.Simulation.Abstractions.Sessions.LocalUserId user, string! title, string! message, string! restartLabel) -> bool
+Kazo.Os.Platform.Blazor.Shell.UpdateReadyNotification.ShowDownloadFailed(Kazo.Os.Simulation.Abstractions.Sessions.LocalUserId user, string! title, string! message, string! restartLabel) -> void
+Kazo.Os.Platform.Blazor.Shell.UpdateReadyNotification.UpdateReadyNotification(Kazo.Os.Simulation.Abstractions.Notifications.INotificationQueue! queue, Kazo.Os.Simulation.Abstractions.Time.ISimulationClock! clock, Kazo.Os.Platform.Blazor.Shell.ShellNotificationActions? actions, System.Func<System.Threading.Tasks.Task!>! restart) -> void
+Kazo.Os.Platform.Blazor.Sites.KazoWebSiteHost
+Kazo.Os.Platform.Blazor.Sites.KazoWebSiteHost.FindSite(System.Uri! pageUrl) -> Kazo.Os.App.Abstractions.AppManifest?
+Kazo.Os.Platform.Blazor.Sites.KazoWebSiteHost.KazoWebSiteHost(Kazo.Os.Platform.Core.AppCatalog! catalog, Kazo.Os.Platform.Core.Lifecycle.IAppEnablementRegistry! enablement, Kazo.Os.Simulation.Abstractions.Sessions.ISessionService! sessions, System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<(Kazo.Os.Platform.Core.Discovery.AppDescriptor? Descriptor, string? Error)>!>! descriptors, Kazo.Os.Platform.Blazor.Sites.KazoWebSiteHost.StartRenderer! start, System.Func<Kazo.Os.Simulation.Abstractions.Processes.ProcessId, Kazo.Os.Simulation.Abstractions.Processes.ProcessExitReason, System.Threading.Tasks.Task<bool>!>! stop) -> void
+Kazo.Os.Platform.Blazor.Sites.KazoWebSiteHost.StartAsync(Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStartRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStart!>!
+Kazo.Os.Platform.Blazor.Sites.KazoWebSiteHost.StartRenderer
+Kazo.Os.Platform.Blazor.Sounds.BrowserSoundOutput
+Kazo.Os.Platform.Blazor.Sounds.BrowserSoundOutput.BrowserSoundOutput(Microsoft.JSInterop.IJSRuntime! jsRuntime) -> void
+Kazo.Os.Platform.Blazor.Sounds.BrowserSoundOutput.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Platform.Blazor.Sounds.BrowserSoundOutput.PlayAsync(Kazo.Os.Platform.Core.Sounds.OsSoundClip! clip, double volume, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.Platform.Blazor.Sync.SyncConflictOverlay
+Kazo.Os.Platform.Blazor.Sync.SyncConflictOverlay.Dispose() -> void
+Kazo.Os.Platform.Blazor.Sync.SyncConflictOverlay.Services.get -> System.IServiceProvider!
+Kazo.Os.Platform.Blazor.Sync.SyncConflictOverlay.Services.set -> void
+Kazo.Os.Platform.Blazor.Sync.SyncConflictOverlay.SyncConflictOverlay() -> void
+Kazo.Os.Platform.Blazor.Windows.AppBackHandlerRegistry
+Kazo.Os.Platform.Blazor.Windows.AppBackHandlerRegistry.AppBackHandlerRegistry() -> void
+Kazo.Os.Platform.Blazor.Windows.AppBackHandlerRegistry.NavigateBackAsync(Kazo.Os.Windowing.Abstractions.WindowId windowId, Kazo.Os.AppSdk.Blazor.AppBackRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.AppBackResult!>
+Kazo.Os.Platform.Blazor.Windows.AppBackHandlerRegistry.NavigateForwardAsync(Kazo.Os.Windowing.Abstractions.WindowId windowId, Kazo.Os.AppSdk.Blazor.AppForwardRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.AppBackResult!>
+Kazo.Os.Platform.Blazor.Windows.AppBackHandlerRegistry.Register(Kazo.Os.Windowing.Abstractions.WindowId windowId, Kazo.Os.AppSdk.Blazor.IAppBackHandler! handler) -> System.IDisposable!
+Kazo.Os.Platform.Blazor.Windows.AppBackHandlerRegistry.RegisterForward(Kazo.Os.Windowing.Abstractions.WindowId windowId, Kazo.Os.AppSdk.Blazor.IAppForwardHandler! handler) -> System.IDisposable!
+Kazo.Os.Platform.Blazor.Windows.AppWindowGatewayFactory
+Kazo.Os.Platform.Blazor.Windows.AppWindowGatewayFactory.AppWindowGatewayFactory(Kazo.Os.Windowing.Core.WindowRuntime! runtime) -> void
+Kazo.Os.Platform.Blazor.Windows.AppWindowGatewayFactory.AppWindowGatewayFactory(Kazo.Os.Windowing.Core.WindowRuntime! runtime, Kazo.Os.Platform.Blazor.Windows.WindowLaunchCoordinator! launchCoordinator) -> void
+Kazo.Os.Platform.Blazor.Windows.AppWindowGatewayFactory.Create(Kazo.Os.Windowing.Abstractions.WindowId windowId, Kazo.Os.App.Abstractions.AppManifest! manifest) -> Kazo.Os.AppSdk.Blazor.IAppWindowGateway!
+Kazo.Os.Platform.Blazor.Windows.BrowserWindowClientAreaProbe
+Kazo.Os.Platform.Blazor.Windows.BrowserWindowClientAreaProbe.BrowserWindowClientAreaProbe(Microsoft.JSInterop.IJSRuntime! jsRuntime) -> void
+Kazo.Os.Platform.Blazor.Windows.BrowserWindowClientAreaProbe.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Platform.Blazor.Windows.BrowserWindowClientAreaProbe.MeasureAsync(Kazo.Os.Windowing.Abstractions.WindowId windowId) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.KazoWindowSize?>
+Kazo.Os.Platform.Blazor.Windows.IRemoteWindowRendering
+Kazo.Os.Platform.Blazor.Windows.IRemoteWindowRendering.GetHostComponent(Kazo.Os.Platform.Core.Discovery.AppDescriptor! descriptor) -> System.Type?
+Kazo.Os.Platform.Blazor.Windows.IWindowClientAreaProbe
+Kazo.Os.Platform.Blazor.Windows.IWindowClientAreaProbe.MeasureAsync(Kazo.Os.Windowing.Abstractions.WindowId windowId) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.KazoWindowSize?>
+Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry
+Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry.<Clone>$() -> Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry!
+Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry.Deconstruct(out double Width, out double Height, out bool IsMaximized) -> void
+Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry.Equals(Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry? other) -> bool
+Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry.Height.get -> double
+Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry.Height.init -> void
+Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry.IsMaximized.get -> bool
+Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry.IsMaximized.init -> void
+Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry.SavedWindowGeometry(double Width, double Height, bool IsMaximized) -> void
+Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry.Width.get -> double
+Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry.Width.init -> void
+Kazo.Os.Platform.Blazor.Windows.UnresponsiveWindowDialog
+Kazo.Os.Platform.Blazor.Windows.UnresponsiveWindowDialog.AppName.get -> string?
+Kazo.Os.Platform.Blazor.Windows.UnresponsiveWindowDialog.AppName.set -> void
+Kazo.Os.Platform.Blazor.Windows.UnresponsiveWindowDialog.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Platform.Blazor.Windows.UnresponsiveWindowDialog.OnTerminate.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Windowing.Abstractions.WindowId>
+Kazo.Os.Platform.Blazor.Windows.UnresponsiveWindowDialog.OnTerminate.set -> void
+Kazo.Os.Platform.Blazor.Windows.UnresponsiveWindowDialog.OnWait.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Windowing.Abstractions.WindowId>
+Kazo.Os.Platform.Blazor.Windows.UnresponsiveWindowDialog.OnWait.set -> void
+Kazo.Os.Platform.Blazor.Windows.UnresponsiveWindowDialog.UnresponsiveWindowDialog() -> void
+Kazo.Os.Platform.Blazor.Windows.UnresponsiveWindowDialog.Window.get -> Kazo.Os.Windowing.Abstractions.WindowRuntimeState!
+Kazo.Os.Platform.Blazor.Windows.UnresponsiveWindowDialog.Window.set -> void
+Kazo.Os.Platform.Blazor.Windows.UnresponsiveWindowOverlay
+Kazo.Os.Platform.Blazor.Windows.UnresponsiveWindowOverlay.Dispose() -> void
+Kazo.Os.Platform.Blazor.Windows.UnresponsiveWindowOverlay.UnresponsiveWindowOverlay() -> void
+Kazo.Os.Platform.Blazor.Windows.UnresponsiveWindowOverlay.Window.get -> Kazo.Os.Windowing.Abstractions.WindowRuntimeState!
+Kazo.Os.Platform.Blazor.Windows.UnresponsiveWindowOverlay.Window.set -> void
+Kazo.Os.Platform.Blazor.Windows.WindowAppEventDispatcher
+Kazo.Os.Platform.Blazor.Windows.WindowAppEventDispatcher.Dispose() -> void
+Kazo.Os.Platform.Blazor.Windows.WindowAppEventDispatcher.Register(Kazo.Os.Windowing.Abstractions.WindowId windowId, Kazo.Os.AppSdk.Blazor.IWindowAppEventTarget! target) -> System.IDisposable!
+Kazo.Os.Platform.Blazor.Windows.WindowAppEventDispatcher.WhenIdleAsync() -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.Windows.WindowAppEventDispatcher.WindowAppEventDispatcher(Kazo.Os.Windowing.Core.WindowRuntime! runtime, Kazo.Os.Platform.Blazor.Windows.IWindowClientAreaProbe? probe = null) -> void
+Kazo.Os.Platform.Blazor.Windows.WindowAppRenderValidator
+Kazo.Os.Platform.Blazor.Windows.WindowAppRenderer
+Kazo.Os.Platform.Blazor.Windows.WindowAppRenderer.AppContext.get -> Kazo.Os.AppSdk.IAppExecutionContext!
+Kazo.Os.Platform.Blazor.Windows.WindowAppRenderer.AppContext.set -> void
+Kazo.Os.Platform.Blazor.Windows.WindowAppRenderer.BackHandlers.get -> Kazo.Os.Platform.Blazor.Windows.AppBackHandlerRegistry!
+Kazo.Os.Platform.Blazor.Windows.WindowAppRenderer.BackHandlers.set -> void
+Kazo.Os.Platform.Blazor.Windows.WindowAppRenderer.CloseGuards.get -> Kazo.Os.Platform.Blazor.Windows.WindowCloseGuardRegistry!
+Kazo.Os.Platform.Blazor.Windows.WindowAppRenderer.CloseGuards.set -> void
+Kazo.Os.Platform.Blazor.Windows.WindowAppRenderer.Descriptor.get -> Kazo.Os.Platform.Core.Discovery.AppDescriptor!
+Kazo.Os.Platform.Blazor.Windows.WindowAppRenderer.Descriptor.set -> void
+Kazo.Os.Platform.Blazor.Windows.WindowAppRenderer.Dispose() -> void
+Kazo.Os.Platform.Blazor.Windows.WindowAppRenderer.Window.get -> Kazo.Os.Windowing.Abstractions.WindowRuntimeState!
+Kazo.Os.Platform.Blazor.Windows.WindowAppRenderer.Window.set -> void
+Kazo.Os.Platform.Blazor.Windows.WindowAppRenderer.WindowAppRenderer() -> void
+Kazo.Os.Platform.Blazor.Windows.WindowAppRenderer.WindowEvents.get -> Kazo.Os.Platform.Blazor.Windows.WindowAppEventDispatcher?
+Kazo.Os.Platform.Blazor.Windows.WindowAppRenderer.WindowEvents.set -> void
+Kazo.Os.Platform.Blazor.Windows.WindowAppRenderer.WindowGateways.get -> Kazo.Os.Platform.Blazor.Windows.AppWindowGatewayFactory?
+Kazo.Os.Platform.Blazor.Windows.WindowAppRenderer.WindowGateways.set -> void
+Kazo.Os.Platform.Blazor.Windows.WindowCloseCoordinator
+Kazo.Os.Platform.Blazor.Windows.WindowCloseCoordinator.CloseAsync(Kazo.Os.Windowing.Abstractions.WindowId windowId, System.Func<System.Threading.CancellationToken, System.Threading.Tasks.ValueTask<bool>>? confirmAsync = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<Kazo.Os.Windowing.Abstractions.WindowEvent!>!>!
+Kazo.Os.Platform.Blazor.Windows.WindowCloseCoordinator.WindowCloseCoordinator(Kazo.Os.Windowing.Core.WindowRuntime! runtime, Kazo.Os.Platform.Core.Lifecycle.AppLifecycleOrchestrator! lifecycle) -> void
+Kazo.Os.Platform.Blazor.Windows.WindowCloseGuardRegistry
+Kazo.Os.Platform.Blazor.Windows.WindowCloseGuardRegistry.ConfirmCloseAsync(Kazo.Os.Windowing.Abstractions.WindowId windowId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.Platform.Blazor.Windows.WindowCloseGuardRegistry.Register(Kazo.Os.Windowing.Abstractions.WindowId windowId, Kazo.Os.AppSdk.Blazor.IWindowCloseGuard! guard) -> System.IDisposable!
+Kazo.Os.Platform.Blazor.Windows.WindowCloseGuardRegistry.WindowCloseGuardRegistry() -> void
+Kazo.Os.Platform.Blazor.Windows.WindowGeometryPersistence
+Kazo.Os.Platform.Blazor.Windows.WindowGeometryPersistence.RestoreAsync(string! appId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry?>
+Kazo.Os.Platform.Blazor.Windows.WindowGeometryPersistence.SaveAsync(string! appId, Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry! geometry, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.Platform.Blazor.Windows.WindowGeometryPersistence.WindowGeometryPersistence(Kazo.Os.Platform.Core.Settings.IOsSettingsService! settings) -> void
+Kazo.Os.Platform.Blazor.Windows.WindowGeometryPersistence.WindowGeometryPersistence(Kazo.Os.Platform.Core.Settings.IOsSettingsService! settings, Microsoft.Extensions.Logging.ILogger<Kazo.Os.Platform.Blazor.Windows.WindowGeometryPersistence!>? logger) -> void
+Kazo.Os.Platform.Blazor.Windows.WindowGeometryRecorder
+Kazo.Os.Platform.Blazor.Windows.WindowGeometryRecorder.Dispose() -> void
+Kazo.Os.Platform.Blazor.Windows.WindowGeometryRecorder.ReadAsync(string! appId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry?>
+Kazo.Os.Platform.Blazor.Windows.WindowGeometryRecorder.Track(Kazo.Os.Windowing.Abstractions.WindowId windowId, string! appId) -> void
+Kazo.Os.Platform.Blazor.Windows.WindowGeometryRecorder.WhenIdleAsync() -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.Windows.WindowGeometryRecorder.WindowGeometryRecorder(Kazo.Os.Windowing.Core.WindowRuntime! runtime, Kazo.Os.Platform.Blazor.Windows.WindowGeometryPersistence! persistence) -> void
+Kazo.Os.Platform.Blazor.Windows.WindowGeometryRecorder.WindowGeometryRecorder(Kazo.Os.Windowing.Core.WindowRuntime! runtime, Kazo.Os.Platform.Blazor.Windows.WindowGeometryPersistence! persistence, System.TimeSpan debounce) -> void
+Kazo.Os.Platform.Blazor.Windows.WindowGeometrySettings
+Kazo.Os.Platform.Blazor.Windows.WindowKeyInput
+Kazo.Os.Platform.Blazor.Windows.WindowKeyInput.<Clone>$() -> Kazo.Os.Platform.Blazor.Windows.WindowKeyInput!
+Kazo.Os.Platform.Blazor.Windows.WindowKeyInput.Alt.get -> bool
+Kazo.Os.Platform.Blazor.Windows.WindowKeyInput.Alt.init -> void
+Kazo.Os.Platform.Blazor.Windows.WindowKeyInput.Code.get -> string!
+Kazo.Os.Platform.Blazor.Windows.WindowKeyInput.Code.init -> void
+Kazo.Os.Platform.Blazor.Windows.WindowKeyInput.Control.get -> bool
+Kazo.Os.Platform.Blazor.Windows.WindowKeyInput.Control.init -> void
+Kazo.Os.Platform.Blazor.Windows.WindowKeyInput.Deconstruct(out string! Key, out string! Code, out bool Control, out bool Alt, out bool Shift, out bool Super) -> void
+Kazo.Os.Platform.Blazor.Windows.WindowKeyInput.Equals(Kazo.Os.Platform.Blazor.Windows.WindowKeyInput? other) -> bool
+Kazo.Os.Platform.Blazor.Windows.WindowKeyInput.Key.get -> string!
+Kazo.Os.Platform.Blazor.Windows.WindowKeyInput.Key.init -> void
+Kazo.Os.Platform.Blazor.Windows.WindowKeyInput.Shift.get -> bool
+Kazo.Os.Platform.Blazor.Windows.WindowKeyInput.Shift.init -> void
+Kazo.Os.Platform.Blazor.Windows.WindowKeyInput.Super.get -> bool
+Kazo.Os.Platform.Blazor.Windows.WindowKeyInput.Super.init -> void
+Kazo.Os.Platform.Blazor.Windows.WindowKeyInput.WindowKeyInput(string! Key, string! Code, bool Control, bool Alt, bool Shift, bool Super) -> void
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.ActiveBindings.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Platform.Core.Shell.WindowKeyBinding!>!
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.Bindings.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Platform.Core.Shell.WindowKeyBinding!>!
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.CanOpenScreen.get -> bool
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.Changed -> System.Action?
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.CloseMenu() -> void
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.CloseWindow.get -> System.Func<Kazo.Os.Windowing.Abstractions.WindowId, System.Threading.Tasks.Task!>?
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.CloseWindow.set -> void
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.Dispose() -> void
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.ExecuteAsync(Kazo.Os.Platform.Core.Shell.WindowKeyboardAction action) -> System.Threading.Tasks.Task<bool>!
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.ExecuteForWindowAsync(Kazo.Os.Platform.Core.Shell.WindowKeyboardAction action, Kazo.Os.Windowing.Abstractions.WindowId windowId) -> System.Threading.Tasks.Task<bool>!
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.GetMenuItems(Kazo.Os.Windowing.Abstractions.WindowId windowId) -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Platform.Blazor.Windows.WindowMenuItem!>!
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.GetMenuItems(Kazo.Os.Windowing.Abstractions.WindowId windowId, Kazo.Os.Windowing.Blazor.WindowMenuKind kind) -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Platform.Blazor.Windows.WindowMenuItem!>!
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.GetScreenMenuItems(Kazo.Os.Windowing.Abstractions.WindowId windowId) -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Platform.Blazor.Windows.WindowScreenMenuItem!>!
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.HandleAltReleased() -> void
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.HandleGrabbedKey(Kazo.Os.Platform.Blazor.Windows.WindowKeyInput! input) -> bool
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.IsFullScreen.get -> bool
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.IsKeyboardLocked.get -> bool
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.Menu.get -> Kazo.Os.Platform.Blazor.Windows.WindowMenuState?
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.Mode.get -> Kazo.Os.Platform.Blazor.Windows.WindowKeyboardMode
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.ModeWindow.get -> Kazo.Os.Windowing.Abstractions.WindowId?
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.MoveToNewScreenAsync(Kazo.Os.Windowing.Abstractions.WindowId windowId) -> System.Threading.Tasks.Task<bool>!
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.MoveToScreen(Kazo.Os.Windowing.Abstractions.WindowId windowId, Kazo.Os.Windowing.Abstractions.DisplayId display) -> bool
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.OpenMenu(Kazo.Os.Windowing.Abstractions.WindowId windowId, double? clientX, double? clientY) -> void
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.OpenMenu(Kazo.Os.Windowing.Abstractions.WindowId windowId, double? clientX, double? clientY, Kazo.Os.Windowing.Blazor.WindowMenuKind kind) -> void
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.OpenScreen.get -> System.Func<System.Threading.Tasks.Task<Kazo.Os.Windowing.Abstractions.DisplayId?>!>?
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.OpenScreen.set -> void
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.SetHostKeyboardState(bool fullScreen, bool locked) -> void
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.ShortcutOf(Kazo.Os.Platform.Core.Shell.WindowKeyboardAction action) -> string?
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.StartAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.SwitcherSelection.get -> Kazo.Os.Windowing.Abstractions.WindowId?
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.SwitcherWindows.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Windowing.Abstractions.WindowRuntimeState!>!
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.ToggleFullScreen.get -> System.Func<System.Threading.Tasks.Task!>?
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.ToggleFullScreen.set -> void
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.WindowKeyboardCommands(Kazo.Os.Windowing.Core.WindowRuntime! runtime, Kazo.Os.Platform.Core.Settings.IOsSettingsService? settings = null, Microsoft.Extensions.Logging.ILogger<Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands!>? logger = null, Kazo.Os.Platform.Core.Globalization.SessionLocaleService? locale = null) -> void
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardMode
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardMode.Moving = 2 -> Kazo.Os.Platform.Blazor.Windows.WindowKeyboardMode
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardMode.None = 0 -> Kazo.Os.Platform.Blazor.Windows.WindowKeyboardMode
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardMode.Resizing = 3 -> Kazo.Os.Platform.Blazor.Windows.WindowKeyboardMode
+Kazo.Os.Platform.Blazor.Windows.WindowKeyboardMode.Switching = 1 -> Kazo.Os.Platform.Blazor.Windows.WindowKeyboardMode
+Kazo.Os.Platform.Blazor.Windows.WindowLaunchCoordinator
+Kazo.Os.Platform.Blazor.Windows.WindowLaunchCoordinator.DefaultTitle(Kazo.Os.App.Abstractions.AppManifest! manifest) -> string!
+Kazo.Os.Platform.Blazor.Windows.WindowLaunchCoordinator.IconFor(Kazo.Os.App.Abstractions.AppManifest! manifest) -> string?
+Kazo.Os.Platform.Blazor.Windows.WindowLaunchCoordinator.IsShellSurface(string! appId) -> bool
+Kazo.Os.Platform.Blazor.Windows.WindowLaunchCoordinator.PresentAsync(Kazo.Os.App.Abstractions.AppManifest! manifest, Kazo.Os.Platform.Core.Lifecycle.AppLaunchResult! launch, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+Kazo.Os.Platform.Blazor.Windows.WindowLaunchCoordinator.PresentAsync(Kazo.Os.App.Abstractions.AppManifest! manifest, Kazo.Os.Simulation.Abstractions.Processes.ProcessRecord! process, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+Kazo.Os.Platform.Blazor.Windows.WindowLaunchCoordinator.ReserveShellSurface(string! appId) -> System.IDisposable!
+Kazo.Os.Platform.Blazor.Windows.WindowLaunchCoordinator.WindowLaunchCoordinator(Kazo.Os.Windowing.Core.WindowRuntime! windows) -> void
+Kazo.Os.Platform.Blazor.Windows.WindowLaunchCoordinator.WindowLaunchCoordinator(Kazo.Os.Windowing.Core.WindowRuntime! windows, Kazo.Os.Platform.Blazor.Windows.WindowGeometryRecorder! geometry) -> void
+Kazo.Os.Platform.Blazor.Windows.WindowLaunchCoordinator.WindowLaunchCoordinator(Kazo.Os.Windowing.Core.WindowRuntime! windows, Kazo.Os.Platform.Core.AppCatalog! catalog, Kazo.Os.Platform.Core.Globalization.SessionLocaleService! locale, Kazo.Os.Platform.Blazor.Windows.WindowGeometryRecorder? geometry = null) -> void
+Kazo.Os.Platform.Blazor.Windows.WindowLaunchCoordinator.WindowLaunchCoordinator(Kazo.Os.Windowing.Core.WindowRuntime! windows, Kazo.Os.Platform.Core.AppCatalog! catalog, Kazo.Os.Platform.Core.Globalization.SessionLocaleService! locale, Kazo.Os.Platform.Blazor.Windows.WindowGeometryRecorder? geometry, Kazo.Os.Platform.Core.Appearance.IconPackService? iconPacks) -> void
+Kazo.Os.Platform.Blazor.Windows.WindowManagerOverlays
+Kazo.Os.Platform.Blazor.Windows.WindowManagerOverlays.Commands.get -> Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands!
+Kazo.Os.Platform.Blazor.Windows.WindowManagerOverlays.Commands.set -> void
+Kazo.Os.Platform.Blazor.Windows.WindowManagerOverlays.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Platform.Blazor.Windows.WindowManagerOverlays.OnAltReleased() -> void
+Kazo.Os.Platform.Blazor.Windows.WindowManagerOverlays.OnGrabbedKey(string! key, string! code, bool control, bool alt, bool shift, bool super) -> void
+Kazo.Os.Platform.Blazor.Windows.WindowManagerOverlays.OnHostKeyboardState(bool fullScreen, bool locked) -> void
+Kazo.Os.Platform.Blazor.Windows.WindowManagerOverlays.OnShortcutAsync(int action) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.Windows.WindowManagerOverlays.WindowManagerOverlays() -> void
+Kazo.Os.Platform.Blazor.Windows.WindowMenuItem
+Kazo.Os.Platform.Blazor.Windows.WindowMenuItem.<Clone>$() -> Kazo.Os.Platform.Blazor.Windows.WindowMenuItem!
+Kazo.Os.Platform.Blazor.Windows.WindowMenuItem.Action.get -> Kazo.Os.Platform.Core.Shell.WindowKeyboardAction
+Kazo.Os.Platform.Blazor.Windows.WindowMenuItem.Action.init -> void
+Kazo.Os.Platform.Blazor.Windows.WindowMenuItem.Deconstruct(out Kazo.Os.Platform.Core.Shell.WindowKeyboardAction Action, out string! Label, out string? Shortcut, out bool IsEnabled) -> void
+Kazo.Os.Platform.Blazor.Windows.WindowMenuItem.Equals(Kazo.Os.Platform.Blazor.Windows.WindowMenuItem? other) -> bool
+Kazo.Os.Platform.Blazor.Windows.WindowMenuItem.IsEnabled.get -> bool
+Kazo.Os.Platform.Blazor.Windows.WindowMenuItem.IsEnabled.init -> void
+Kazo.Os.Platform.Blazor.Windows.WindowMenuItem.Label.get -> string!
+Kazo.Os.Platform.Blazor.Windows.WindowMenuItem.Label.init -> void
+Kazo.Os.Platform.Blazor.Windows.WindowMenuItem.Shortcut.get -> string?
+Kazo.Os.Platform.Blazor.Windows.WindowMenuItem.Shortcut.init -> void
+Kazo.Os.Platform.Blazor.Windows.WindowMenuItem.WindowMenuItem(Kazo.Os.Platform.Core.Shell.WindowKeyboardAction Action, string! Label, string? Shortcut, bool IsEnabled) -> void
+Kazo.Os.Platform.Blazor.Windows.WindowMenuState
+Kazo.Os.Platform.Blazor.Windows.WindowMenuState.<Clone>$() -> Kazo.Os.Platform.Blazor.Windows.WindowMenuState!
+Kazo.Os.Platform.Blazor.Windows.WindowMenuState.Deconstruct(out Kazo.Os.Windowing.Abstractions.WindowId WindowId, out double X, out double Y) -> void
+Kazo.Os.Platform.Blazor.Windows.WindowMenuState.Equals(Kazo.Os.Platform.Blazor.Windows.WindowMenuState? other) -> bool
+Kazo.Os.Platform.Blazor.Windows.WindowMenuState.FromKeyboard.get -> bool
+Kazo.Os.Platform.Blazor.Windows.WindowMenuState.FromKeyboard.init -> void
+Kazo.Os.Platform.Blazor.Windows.WindowMenuState.Kind.get -> Kazo.Os.Windowing.Blazor.WindowMenuKind
+Kazo.Os.Platform.Blazor.Windows.WindowMenuState.Kind.init -> void
+Kazo.Os.Platform.Blazor.Windows.WindowMenuState.WindowId.get -> Kazo.Os.Windowing.Abstractions.WindowId
+Kazo.Os.Platform.Blazor.Windows.WindowMenuState.WindowId.init -> void
+Kazo.Os.Platform.Blazor.Windows.WindowMenuState.WindowMenuState(Kazo.Os.Windowing.Abstractions.WindowId WindowId, double X, double Y) -> void
+Kazo.Os.Platform.Blazor.Windows.WindowMenuState.X.get -> double
+Kazo.Os.Platform.Blazor.Windows.WindowMenuState.X.init -> void
+Kazo.Os.Platform.Blazor.Windows.WindowMenuState.Y.get -> double
+Kazo.Os.Platform.Blazor.Windows.WindowMenuState.Y.init -> void
+Kazo.Os.Platform.Blazor.Windows.WindowResponsivenessHost
+Kazo.Os.Platform.Blazor.Windows.WindowResponsivenessHost.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Platform.Blazor.Windows.WindowResponsivenessHost.Monitor.get -> Kazo.Os.Platform.Blazor.Windows.WindowResponsivenessMonitor!
+Kazo.Os.Platform.Blazor.Windows.WindowResponsivenessHost.Monitor.set -> void
+Kazo.Os.Platform.Blazor.Windows.WindowResponsivenessHost.ReportInputAsync(string! windowId, double latencyMilliseconds) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.Windows.WindowResponsivenessHost.WindowResponsivenessHost() -> void
+Kazo.Os.Platform.Blazor.Windows.WindowResponsivenessMonitor
+Kazo.Os.Platform.Blazor.Windows.WindowResponsivenessMonitor.Changed -> System.Action?
+Kazo.Os.Platform.Blazor.Windows.WindowResponsivenessMonitor.Dispose() -> void
+Kazo.Os.Platform.Blazor.Windows.WindowResponsivenessMonitor.Evaluate() -> void
+Kazo.Os.Platform.Blazor.Windows.WindowResponsivenessMonitor.InterceptClose(Kazo.Os.Windowing.Abstractions.WindowId windowId) -> bool
+Kazo.Os.Platform.Blazor.Windows.WindowResponsivenessMonitor.IsDialogEnabled.get -> bool
+Kazo.Os.Platform.Blazor.Windows.WindowResponsivenessMonitor.IsDialogOpen(Kazo.Os.Windowing.Abstractions.WindowId windowId) -> bool
+Kazo.Os.Platform.Blazor.Windows.WindowResponsivenessMonitor.IsMeasuring.get -> bool
+Kazo.Os.Platform.Blazor.Windows.WindowResponsivenessMonitor.ReportInput(Kazo.Os.Windowing.Abstractions.WindowId windowId, System.TimeSpan latency) -> void
+Kazo.Os.Platform.Blazor.Windows.WindowResponsivenessMonitor.StartAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.Windows.WindowResponsivenessMonitor.TerminateAsync(Kazo.Os.Windowing.Abstractions.WindowId windowId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Blazor.Windows.WindowResponsivenessMonitor.Threshold.get -> System.TimeSpan
+Kazo.Os.Platform.Blazor.Windows.WindowResponsivenessMonitor.UnresponsiveWindows.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Windowing.Abstractions.WindowId>!
+Kazo.Os.Platform.Blazor.Windows.WindowResponsivenessMonitor.Wait(Kazo.Os.Windowing.Abstractions.WindowId windowId) -> void
+Kazo.Os.Platform.Blazor.Windows.WindowResponsivenessMonitor.WindowResponsivenessMonitor(Kazo.Os.Windowing.Core.WindowRuntime! runtime, Kazo.Os.Simulation.Abstractions.Processes.IProcessManager! processes, Kazo.Os.Simulation.Abstractions.Processes.ICpuTimeAccountant! accountant) -> void
+Kazo.Os.Platform.Blazor.Windows.WindowResponsivenessMonitor.WindowResponsivenessMonitor(Kazo.Os.Windowing.Core.WindowRuntime! runtime, Kazo.Os.Simulation.Abstractions.Processes.IProcessManager! processes, Kazo.Os.Simulation.Abstractions.Processes.ICpuTimeAccountant! accountant, System.TimeSpan threshold, System.TimeProvider? timeProvider, Kazo.Os.Platform.Core.Settings.IOsSettingsService? settings, Microsoft.Extensions.Logging.ILogger<Kazo.Os.Platform.Blazor.Windows.WindowResponsivenessMonitor!>? logger) -> void
+Kazo.Os.Platform.Blazor.Windows.WindowScreenMenuItem
+Kazo.Os.Platform.Blazor.Windows.WindowScreenMenuItem.<Clone>$() -> Kazo.Os.Platform.Blazor.Windows.WindowScreenMenuItem!
+Kazo.Os.Platform.Blazor.Windows.WindowScreenMenuItem.Deconstruct(out Kazo.Os.Windowing.Abstractions.DisplayId Display, out string! Label, out bool IsEnabled) -> void
+Kazo.Os.Platform.Blazor.Windows.WindowScreenMenuItem.Display.get -> Kazo.Os.Windowing.Abstractions.DisplayId
+Kazo.Os.Platform.Blazor.Windows.WindowScreenMenuItem.Display.init -> void
+Kazo.Os.Platform.Blazor.Windows.WindowScreenMenuItem.Equals(Kazo.Os.Platform.Blazor.Windows.WindowScreenMenuItem? other) -> bool
+Kazo.Os.Platform.Blazor.Windows.WindowScreenMenuItem.IsEnabled.get -> bool
+Kazo.Os.Platform.Blazor.Windows.WindowScreenMenuItem.IsEnabled.init -> void
+Kazo.Os.Platform.Blazor.Windows.WindowScreenMenuItem.Label.get -> string!
+Kazo.Os.Platform.Blazor.Windows.WindowScreenMenuItem.Label.init -> void
+Kazo.Os.Platform.Blazor.Windows.WindowScreenMenuItem.WindowScreenMenuItem(Kazo.Os.Windowing.Abstractions.DisplayId Display, string! Label, bool IsEnabled) -> void
+Kazo.Os.Platform.Blazor._Imports
+Kazo.Os.Platform.Blazor._Imports.Execute() -> void
+Kazo.Os.Platform.Blazor._Imports._Imports() -> void
+abstract Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation.<Clone>$() -> Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation!
+abstract Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation.<Clone>$() -> Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation!
+const Kazo.Os.Platform.Blazor.Display.DisplaySurfaceService.NotificationSource = "org.hackeros.display" -> string!
+const Kazo.Os.Platform.Blazor.Shell.DesktopSurfaceHost.DesktopAppId = "org.hackeros.desktop" -> string!
+const Kazo.Os.Platform.Blazor.Shell.UpdateReadyNotification.RestartActionId = "hackeros.update.restart" -> string!
+const Kazo.Os.Platform.Blazor.Shell.UpdateReadyNotification.SourceAppId = "org.hackeros.update" -> string!
+const Kazo.Os.Platform.Blazor.Sites.KazoWebSiteHost.RendererArgument = "--type=renderer" -> string!
+const Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.FineKeyboardStep = 1 -> double
+const Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.KeyboardStep = 10 -> double
+const Kazo.Os.Platform.Blazor.Windows.WindowLaunchCoordinator.CascadeStep = 28 -> double
+override Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel.Equals(object? obj) -> bool
+override Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel.GetHashCode() -> int
+override Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel.ToString() -> string!
+override Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.Equals(object? obj) -> bool
+override Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.GetHashCode() -> int
+override Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.ToString() -> string!
+override Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.Equals(object? obj) -> bool
+override Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.GetHashCode() -> int
+override Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.ToString() -> string!
+override Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.Equals(object? obj) -> bool
+override Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.GetHashCode() -> int
+override Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.ToString() -> string!
+override Kazo.Os.Platform.Blazor.Dialogs.AppChooserDialog.OnInitialized() -> void
+override Kazo.Os.Platform.Blazor.Dialogs.AppChooserPresentation.<Clone>$() -> Kazo.Os.Platform.Blazor.Dialogs.AppChooserPresentation!
+override Kazo.Os.Platform.Blazor.Dialogs.AppChooserPresentation.Equals(object? obj) -> bool
+override Kazo.Os.Platform.Blazor.Dialogs.AppChooserPresentation.GetHashCode() -> int
+override Kazo.Os.Platform.Blazor.Dialogs.AppChooserPresentation.ToString() -> string!
+override Kazo.Os.Platform.Blazor.Dialogs.CredentialPromptPresentation.<Clone>$() -> Kazo.Os.Platform.Blazor.Dialogs.CredentialPromptPresentation!
+override Kazo.Os.Platform.Blazor.Dialogs.CredentialPromptPresentation.Equals(object? obj) -> bool
+override Kazo.Os.Platform.Blazor.Dialogs.CredentialPromptPresentation.GetHashCode() -> int
+override Kazo.Os.Platform.Blazor.Dialogs.CredentialPromptPresentation.ToString() -> string!
+override Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation.Equals(object? obj) -> bool
+override Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation.GetHashCode() -> int
+override Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation.ToString() -> string!
+override Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation.Equals(object? obj) -> bool
+override Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation.GetHashCode() -> int
+override Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation.ToString() -> string!
+override Kazo.Os.Platform.Blazor.Dialogs.FolderSelectDialog.OnParametersSet() -> void
+override Kazo.Os.Platform.Blazor.Dialogs.MessageBoxPresentation.<Clone>$() -> Kazo.Os.Platform.Blazor.Dialogs.MessageBoxPresentation!
+override Kazo.Os.Platform.Blazor.Dialogs.MessageBoxPresentation.Equals(object? obj) -> bool
+override Kazo.Os.Platform.Blazor.Dialogs.MessageBoxPresentation.GetHashCode() -> int
+override Kazo.Os.Platform.Blazor.Dialogs.MessageBoxPresentation.ToString() -> string!
+override Kazo.Os.Platform.Blazor.Dialogs.OpenFileDialogPresentation.<Clone>$() -> Kazo.Os.Platform.Blazor.Dialogs.OpenFileDialogPresentation!
+override Kazo.Os.Platform.Blazor.Dialogs.OpenFileDialogPresentation.Equals(object? obj) -> bool
+override Kazo.Os.Platform.Blazor.Dialogs.OpenFileDialogPresentation.GetHashCode() -> int
+override Kazo.Os.Platform.Blazor.Dialogs.OpenFileDialogPresentation.ToString() -> string!
+override Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialog.OnInitialized() -> void
+override Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialogPresentation.<Clone>$() -> Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialogPresentation!
+override Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialogPresentation.Equals(object? obj) -> bool
+override Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialogPresentation.GetHashCode() -> int
+override Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialogPresentation.ToString() -> string!
+override Kazo.Os.Platform.Blazor.Dialogs.SaveFileDialog.OnParametersSet() -> void
+override Kazo.Os.Platform.Blazor.Dialogs.SaveFileDialogPresentation.<Clone>$() -> Kazo.Os.Platform.Blazor.Dialogs.SaveFileDialogPresentation!
+override Kazo.Os.Platform.Blazor.Dialogs.SaveFileDialogPresentation.Equals(object? obj) -> bool
+override Kazo.Os.Platform.Blazor.Dialogs.SaveFileDialogPresentation.GetHashCode() -> int
+override Kazo.Os.Platform.Blazor.Dialogs.SaveFileDialogPresentation.ToString() -> string!
+override Kazo.Os.Platform.Blazor.Dialogs.SelectFolderDialogPresentation.<Clone>$() -> Kazo.Os.Platform.Blazor.Dialogs.SelectFolderDialogPresentation!
+override Kazo.Os.Platform.Blazor.Dialogs.SelectFolderDialogPresentation.Equals(object? obj) -> bool
+override Kazo.Os.Platform.Blazor.Dialogs.SelectFolderDialogPresentation.GetHashCode() -> int
+override Kazo.Os.Platform.Blazor.Dialogs.SelectFolderDialogPresentation.ToString() -> string!
+override Kazo.Os.Platform.Blazor.Dialogs.TextInputDialog.OnInitialized() -> void
+override Kazo.Os.Platform.Blazor.Dialogs.TextInputPresentation.<Clone>$() -> Kazo.Os.Platform.Blazor.Dialogs.TextInputPresentation!
+override Kazo.Os.Platform.Blazor.Dialogs.TextInputPresentation.Equals(object? obj) -> bool
+override Kazo.Os.Platform.Blazor.Dialogs.TextInputPresentation.GetHashCode() -> int
+override Kazo.Os.Platform.Blazor.Dialogs.TextInputPresentation.ToString() -> string!
+override Kazo.Os.Platform.Blazor.Dialogs.VirtualFolderBrowser.OnParametersSetAsync() -> System.Threading.Tasks.Task!
+override Kazo.Os.Platform.Blazor.Display.ScreenIdentifyVeil.OnInitialized() -> void
+override Kazo.Os.Platform.Blazor.Display.ScreenLayer.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override Kazo.Os.Platform.Blazor.Display.ScreenLayer.OnInitialized() -> void
+override Kazo.Os.Platform.Blazor.Display.ScreenOpenResult.Equals(object? obj) -> bool
+override Kazo.Os.Platform.Blazor.Display.ScreenOpenResult.GetHashCode() -> int
+override Kazo.Os.Platform.Blazor.Display.ScreenOpenResult.ToString() -> string!
+override Kazo.Os.Platform.Blazor.Display.ScreenOverlayHost.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome.Equals(object? obj) -> bool
+override Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome.GetHashCode() -> int
+override Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome.ToString() -> string!
+override Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationListener.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationListener.OnInitialized() -> void
+override Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationRequest.Equals(object? obj) -> bool
+override Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationRequest.GetHashCode() -> int
+override Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationRequest.ToString() -> string!
+override Kazo.Os.Platform.Blazor.Shell.AppLauncher.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override Kazo.Os.Platform.Blazor.Shell.AppLauncher.OnInitializedAsync() -> System.Threading.Tasks.Task!
+override Kazo.Os.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals.Equals(object? obj) -> bool
+override Kazo.Os.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals.GetHashCode() -> int
+override Kazo.Os.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals.ToString() -> string!
+override Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals.Equals(object? obj) -> bool
+override Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals.GetHashCode() -> int
+override Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals.ToString() -> string!
+override Kazo.Os.Platform.Blazor.Shell.ClockPanel.OnInitialized() -> void
+override Kazo.Os.Platform.Blazor.Shell.DesktopShell.OnInitialized() -> void
+override Kazo.Os.Platform.Blazor.Shell.DoNotDisturbIndicator.OnInitialized() -> void
+override Kazo.Os.Platform.Blazor.Shell.LauncherAppProjectionResult.Equals(object? obj) -> bool
+override Kazo.Os.Platform.Blazor.Shell.LauncherAppProjectionResult.GetHashCode() -> int
+override Kazo.Os.Platform.Blazor.Shell.LauncherAppProjectionResult.ToString() -> string!
+override Kazo.Os.Platform.Blazor.Shell.MobileHomeScreen.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override Kazo.Os.Platform.Blazor.Shell.MobileHomeScreen.OnInitializedAsync() -> System.Threading.Tasks.Task!
+override Kazo.Os.Platform.Blazor.Shell.MobileShell.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override Kazo.Os.Platform.Blazor.Shell.MobileShell.OnInitialized() -> void
+override Kazo.Os.Platform.Blazor.Shell.NotificationToasts.OnInitialized() -> void
+override Kazo.Os.Platform.Blazor.Shell.NotificationToasts.OnParametersSet() -> void
+override Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry.Equals(object? obj) -> bool
+override Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry.GetHashCode() -> int
+override Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry.ToString() -> string!
+override Kazo.Os.Platform.Blazor.Windows.UnresponsiveWindowOverlay.OnInitialized() -> void
+override Kazo.Os.Platform.Blazor.Windows.WindowKeyInput.Equals(object? obj) -> bool
+override Kazo.Os.Platform.Blazor.Windows.WindowKeyInput.GetHashCode() -> int
+override Kazo.Os.Platform.Blazor.Windows.WindowKeyInput.ToString() -> string!
+override Kazo.Os.Platform.Blazor.Windows.WindowMenuItem.Equals(object? obj) -> bool
+override Kazo.Os.Platform.Blazor.Windows.WindowMenuItem.GetHashCode() -> int
+override Kazo.Os.Platform.Blazor.Windows.WindowMenuItem.ToString() -> string!
+override Kazo.Os.Platform.Blazor.Windows.WindowMenuState.Equals(object? obj) -> bool
+override Kazo.Os.Platform.Blazor.Windows.WindowMenuState.GetHashCode() -> int
+override Kazo.Os.Platform.Blazor.Windows.WindowMenuState.ToString() -> string!
+override Kazo.Os.Platform.Blazor.Windows.WindowScreenMenuItem.Equals(object? obj) -> bool
+override Kazo.Os.Platform.Blazor.Windows.WindowScreenMenuItem.GetHashCode() -> int
+override Kazo.Os.Platform.Blazor.Windows.WindowScreenMenuItem.ToString() -> string!
+override sealed Kazo.Os.Platform.Blazor.Dialogs.AppChooserPresentation.Equals(Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation? other) -> bool
+override sealed Kazo.Os.Platform.Blazor.Dialogs.CredentialPromptPresentation.Equals(Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation? other) -> bool
+override sealed Kazo.Os.Platform.Blazor.Dialogs.MessageBoxPresentation.Equals(Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation? other) -> bool
+override sealed Kazo.Os.Platform.Blazor.Dialogs.OpenFileDialogPresentation.Equals(Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation? other) -> bool
+override sealed Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialogPresentation.Equals(Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation? other) -> bool
+override sealed Kazo.Os.Platform.Blazor.Dialogs.SaveFileDialogPresentation.Equals(Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation? other) -> bool
+override sealed Kazo.Os.Platform.Blazor.Dialogs.SelectFolderDialogPresentation.Equals(Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation? other) -> bool
+override sealed Kazo.Os.Platform.Blazor.Dialogs.TextInputPresentation.Equals(Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation? other) -> bool
+static Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLayout.Arrange(System.Collections.Generic.IEnumerable<Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuGroupDefinition!>! groups) -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel?
+static Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLayout.FindByLetter(Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel! level, int from, char letter) -> int
+static Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLayout.NextSelectable(Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel! level, int from, int direction) -> int
+static Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel.operator !=(Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel? left, Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel? right) -> bool
+static Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel.operator ==(Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel? left, Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuLevel? right) -> bool
+static Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.operator !=(Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow? left, Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow? right) -> bool
+static Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.operator ==(Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow? left, Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow? right) -> bool
+static Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.operator !=(Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession? left, Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession? right) -> bool
+static Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.operator ==(Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession? left, Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession? right) -> bool
+static Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntries.IconOf(string? assembly, Kazo.Os.App.Abstractions.AppContextMenuIconManifest? icon) -> Kazo.Os.AppSdk.Icons.KazoSurfaceIcon?
+static Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntries.IdOf(string! appId, string! name) -> string!
+static Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntries.ScopeName(Kazo.Os.AppSdk.Files.FileMenuScope scope) -> string!
+static Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.operator !=(Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate? left, Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate? right) -> bool
+static Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.operator ==(Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate? left, Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate? right) -> bool
+static Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Place(Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuDefinition! menu, System.Collections.Generic.IReadOnlyList<Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate!>! candidates) -> void
+static Kazo.Os.Platform.Blazor.Dialogs.AppChooserPresentation.operator !=(Kazo.Os.Platform.Blazor.Dialogs.AppChooserPresentation? left, Kazo.Os.Platform.Blazor.Dialogs.AppChooserPresentation? right) -> bool
+static Kazo.Os.Platform.Blazor.Dialogs.AppChooserPresentation.operator ==(Kazo.Os.Platform.Blazor.Dialogs.AppChooserPresentation? left, Kazo.Os.Platform.Blazor.Dialogs.AppChooserPresentation? right) -> bool
+static Kazo.Os.Platform.Blazor.Dialogs.CredentialPromptPresentation.operator !=(Kazo.Os.Platform.Blazor.Dialogs.CredentialPromptPresentation? left, Kazo.Os.Platform.Blazor.Dialogs.CredentialPromptPresentation? right) -> bool
+static Kazo.Os.Platform.Blazor.Dialogs.CredentialPromptPresentation.operator ==(Kazo.Os.Platform.Blazor.Dialogs.CredentialPromptPresentation? left, Kazo.Os.Platform.Blazor.Dialogs.CredentialPromptPresentation? right) -> bool
+static Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation.operator !=(Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation? left, Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation? right) -> bool
+static Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation.operator ==(Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation? left, Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation? right) -> bool
+static Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation.operator !=(Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation? left, Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation? right) -> bool
+static Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation.operator ==(Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation? left, Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation? right) -> bool
+static Kazo.Os.Platform.Blazor.Dialogs.MessageBoxPresentation.operator !=(Kazo.Os.Platform.Blazor.Dialogs.MessageBoxPresentation? left, Kazo.Os.Platform.Blazor.Dialogs.MessageBoxPresentation? right) -> bool
+static Kazo.Os.Platform.Blazor.Dialogs.MessageBoxPresentation.operator ==(Kazo.Os.Platform.Blazor.Dialogs.MessageBoxPresentation? left, Kazo.Os.Platform.Blazor.Dialogs.MessageBoxPresentation? right) -> bool
+static Kazo.Os.Platform.Blazor.Dialogs.OpenFileDialogPresentation.operator !=(Kazo.Os.Platform.Blazor.Dialogs.OpenFileDialogPresentation? left, Kazo.Os.Platform.Blazor.Dialogs.OpenFileDialogPresentation? right) -> bool
+static Kazo.Os.Platform.Blazor.Dialogs.OpenFileDialogPresentation.operator ==(Kazo.Os.Platform.Blazor.Dialogs.OpenFileDialogPresentation? left, Kazo.Os.Platform.Blazor.Dialogs.OpenFileDialogPresentation? right) -> bool
+static Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialogPresentation.operator !=(Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialogPresentation? left, Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialogPresentation? right) -> bool
+static Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialogPresentation.operator ==(Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialogPresentation? left, Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialogPresentation? right) -> bool
+static Kazo.Os.Platform.Blazor.Dialogs.SaveFileDialogPresentation.operator !=(Kazo.Os.Platform.Blazor.Dialogs.SaveFileDialogPresentation? left, Kazo.Os.Platform.Blazor.Dialogs.SaveFileDialogPresentation? right) -> bool
+static Kazo.Os.Platform.Blazor.Dialogs.SaveFileDialogPresentation.operator ==(Kazo.Os.Platform.Blazor.Dialogs.SaveFileDialogPresentation? left, Kazo.Os.Platform.Blazor.Dialogs.SaveFileDialogPresentation? right) -> bool
+static Kazo.Os.Platform.Blazor.Dialogs.SelectFolderDialogPresentation.operator !=(Kazo.Os.Platform.Blazor.Dialogs.SelectFolderDialogPresentation? left, Kazo.Os.Platform.Blazor.Dialogs.SelectFolderDialogPresentation? right) -> bool
+static Kazo.Os.Platform.Blazor.Dialogs.SelectFolderDialogPresentation.operator ==(Kazo.Os.Platform.Blazor.Dialogs.SelectFolderDialogPresentation? left, Kazo.Os.Platform.Blazor.Dialogs.SelectFolderDialogPresentation? right) -> bool
+static Kazo.Os.Platform.Blazor.Dialogs.TextInputPresentation.operator !=(Kazo.Os.Platform.Blazor.Dialogs.TextInputPresentation? left, Kazo.Os.Platform.Blazor.Dialogs.TextInputPresentation? right) -> bool
+static Kazo.Os.Platform.Blazor.Dialogs.TextInputPresentation.operator ==(Kazo.Os.Platform.Blazor.Dialogs.TextInputPresentation? left, Kazo.Os.Platform.Blazor.Dialogs.TextInputPresentation? right) -> bool
+static Kazo.Os.Platform.Blazor.Display.ScreenOpenResult.operator !=(Kazo.Os.Platform.Blazor.Display.ScreenOpenResult? left, Kazo.Os.Platform.Blazor.Display.ScreenOpenResult? right) -> bool
+static Kazo.Os.Platform.Blazor.Display.ScreenOpenResult.operator ==(Kazo.Os.Platform.Blazor.Display.ScreenOpenResult? left, Kazo.Os.Platform.Blazor.Display.ScreenOpenResult? right) -> bool
+static Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome.Cancelled(string! name) -> Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome!
+static Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome.Failed(string! name, string! detail) -> Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome!
+static Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome.HostBuildChanged(string! name) -> Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome!
+static Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome.Loaded(string! name, System.Reflection.Assembly! assembly) -> Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome!
+static Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome.Missing(string! name) -> Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome!
+static Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome.NotDeclared(string! name) -> Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome!
+static Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome.operator !=(Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome? left, Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome? right) -> bool
+static Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome.operator ==(Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome? left, Kazo.Os.Platform.Blazor.LazyLoading.BuildKnownAssemblyLoadOutcome? right) -> bool
+static Kazo.Os.Platform.Blazor.LazyLoading.HostBuildIdentity.FromMarkup(string? markup) -> string?
+static Kazo.Os.Platform.Blazor.LazyLoading.HostReleaseMonitor.ParseVersion(string? document) -> string?
+static Kazo.Os.Platform.Blazor.LazyLoading.StaticWebAssetAppAssetSource.RelativeUrl(Kazo.Os.App.Abstractions.AppManifest! manifest, string! assetPath) -> string!
+static Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationRequest.operator !=(Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationRequest? left, Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationRequest? right) -> bool
+static Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationRequest.operator ==(Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationRequest? left, Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationRequest? right) -> bool
+static Kazo.Os.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals.operator !=(Kazo.Os.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals? left, Kazo.Os.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals? right) -> bool
+static Kazo.Os.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals.operator ==(Kazo.Os.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals? left, Kazo.Os.Platform.Blazor.Shell.BrowserHostAccessibilityProbe.RawSignals? right) -> bool
+static Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals.operator !=(Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals? left, Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals? right) -> bool
+static Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals.operator ==(Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals? left, Kazo.Os.Platform.Blazor.Shell.BrowserPlatformEnvironmentProbe.RawSignals? right) -> bool
+static Kazo.Os.Platform.Blazor.Shell.LauncherAppProjection.Create(System.Collections.Generic.IEnumerable<Kazo.Os.App.Abstractions.AppManifest!>! manifests, Kazo.Os.Platform.Core.Lifecycle.IAppEnablementRegistry! enablement, System.Collections.Generic.IEnumerable<string!>! pinnedAppIds, string? selectedCategory = null, string? searchQuery = null) -> Kazo.Os.Platform.Blazor.Shell.LauncherAppProjectionResult!
+static Kazo.Os.Platform.Blazor.Shell.LauncherAppProjectionResult.Empty.get -> Kazo.Os.Platform.Blazor.Shell.LauncherAppProjectionResult!
+static Kazo.Os.Platform.Blazor.Shell.LauncherAppProjectionResult.operator !=(Kazo.Os.Platform.Blazor.Shell.LauncherAppProjectionResult? left, Kazo.Os.Platform.Blazor.Shell.LauncherAppProjectionResult? right) -> bool
+static Kazo.Os.Platform.Blazor.Shell.LauncherAppProjectionResult.operator ==(Kazo.Os.Platform.Blazor.Shell.LauncherAppProjectionResult? left, Kazo.Os.Platform.Blazor.Shell.LauncherAppProjectionResult? right) -> bool
+static Kazo.Os.Platform.Blazor.Shell.MobileRecentProjection.BuildItems(System.Collections.Generic.IReadOnlyList<Kazo.Os.Windowing.Abstractions.WindowRuntimeState!>! windows) -> System.Collections.Generic.IReadOnlyList<Kazo.Os.MobileShell.Blazor.MobileRecentItem!>!
+static Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry.operator !=(Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry? left, Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry? right) -> bool
+static Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry.operator ==(Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry? left, Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry? right) -> bool
+static Kazo.Os.Platform.Blazor.Windows.UnresponsiveWindowOverlay.ForWindow.get -> Microsoft.AspNetCore.Components.RenderFragment<Kazo.Os.Windowing.Abstractions.WindowRuntimeState!>!
+static Kazo.Os.Platform.Blazor.Windows.WindowAppEventDispatcher.EstimateClientSize(Kazo.Os.Windowing.Abstractions.WindowBounds bounds) -> Kazo.Os.AppSdk.Blazor.KazoWindowSize
+static Kazo.Os.Platform.Blazor.Windows.WindowAppRenderValidator.Validate(Kazo.Os.Windowing.Abstractions.WindowRuntimeState! window, Kazo.Os.Platform.Core.Discovery.AppDescriptor! descriptor, Kazo.Os.AppSdk.IAppExecutionContext! appContext) -> void
+static Kazo.Os.Platform.Blazor.Windows.WindowGeometrySettings.GetFile(string! appId) -> Kazo.Os.Platform.Core.Settings.OsSettingsFile!
+static Kazo.Os.Platform.Blazor.Windows.WindowGeometrySettings.Parse(string? content) -> Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry?
+static Kazo.Os.Platform.Blazor.Windows.WindowGeometrySettings.Serialize(string! appId, Kazo.Os.Platform.Blazor.Windows.SavedWindowGeometry! geometry) -> string!
+static Kazo.Os.Platform.Blazor.Windows.WindowKeyInput.operator !=(Kazo.Os.Platform.Blazor.Windows.WindowKeyInput? left, Kazo.Os.Platform.Blazor.Windows.WindowKeyInput? right) -> bool
+static Kazo.Os.Platform.Blazor.Windows.WindowKeyInput.operator ==(Kazo.Os.Platform.Blazor.Windows.WindowKeyInput? left, Kazo.Os.Platform.Blazor.Windows.WindowKeyInput? right) -> bool
+static Kazo.Os.Platform.Blazor.Windows.WindowLaunchCoordinator.InitialBounds(Kazo.Os.App.Abstractions.WindowOptions! options, int cascadeIndex, Kazo.Os.Windowing.Abstractions.WindowBounds workArea) -> Kazo.Os.Windowing.Abstractions.WindowBounds
+static Kazo.Os.Platform.Blazor.Windows.WindowLaunchCoordinator.RestoredBounds(Kazo.Os.App.Abstractions.WindowOptions! options, double savedWidth, double savedHeight, int cascadeIndex, Kazo.Os.Windowing.Abstractions.WindowBounds workArea) -> Kazo.Os.Windowing.Abstractions.WindowBounds
+static Kazo.Os.Platform.Blazor.Windows.WindowLaunchCoordinator.ToConstraints(Kazo.Os.App.Abstractions.WindowOptions! options) -> Kazo.Os.Windowing.Abstractions.WindowConstraints!
+static Kazo.Os.Platform.Blazor.Windows.WindowMenuItem.operator !=(Kazo.Os.Platform.Blazor.Windows.WindowMenuItem? left, Kazo.Os.Platform.Blazor.Windows.WindowMenuItem? right) -> bool
+static Kazo.Os.Platform.Blazor.Windows.WindowMenuItem.operator ==(Kazo.Os.Platform.Blazor.Windows.WindowMenuItem? left, Kazo.Os.Platform.Blazor.Windows.WindowMenuItem? right) -> bool
+static Kazo.Os.Platform.Blazor.Windows.WindowMenuState.operator !=(Kazo.Os.Platform.Blazor.Windows.WindowMenuState? left, Kazo.Os.Platform.Blazor.Windows.WindowMenuState? right) -> bool
+static Kazo.Os.Platform.Blazor.Windows.WindowMenuState.operator ==(Kazo.Os.Platform.Blazor.Windows.WindowMenuState? left, Kazo.Os.Platform.Blazor.Windows.WindowMenuState? right) -> bool
+static Kazo.Os.Platform.Blazor.Windows.WindowScreenMenuItem.operator !=(Kazo.Os.Platform.Blazor.Windows.WindowScreenMenuItem? left, Kazo.Os.Platform.Blazor.Windows.WindowScreenMenuItem? right) -> bool
+static Kazo.Os.Platform.Blazor.Windows.WindowScreenMenuItem.operator ==(Kazo.Os.Platform.Blazor.Windows.WindowScreenMenuItem? left, Kazo.Os.Platform.Blazor.Windows.WindowScreenMenuItem? right) -> bool
+static readonly Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.Separator -> Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow!
+static readonly Kazo.Os.Platform.Blazor.LazyLoading.HostReleaseMonitor.DefaultInterval -> System.TimeSpan
+static readonly Kazo.Os.Platform.Blazor.Windows.WindowGeometryRecorder.DefaultDebounce -> System.TimeSpan
+static readonly Kazo.Os.Platform.Blazor.Windows.WindowResponsivenessHost.SampleInterval -> System.TimeSpan
+static readonly Kazo.Os.Platform.Blazor.Windows.WindowResponsivenessMonitor.LongInputDelay -> System.TimeSpan
+static readonly Kazo.Os.Platform.Blazor.Windows.WindowResponsivenessMonitor.TerminateGracePeriod -> System.TimeSpan
+virtual Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation.EqualityContract.get -> System.Type!
+virtual Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation.Equals(Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation? other) -> bool
+virtual Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation.PrintMembers(System.Text.StringBuilder! builder) -> bool
+virtual Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation.EqualityContract.get -> System.Type!
+virtual Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation.Equals(Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation? other) -> bool
+virtual Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation.PrintMembers(System.Text.StringBuilder! builder) -> bool
+virtual Kazo.Os.Platform.Blazor.Sites.KazoWebSiteHost.StartRenderer.Invoke(string! appId, Kazo.Os.Simulation.Abstractions.Sessions.AuthenticatedPrincipal! principal, Kazo.Os.Simulation.Abstractions.Processes.ProcessId parentPid, System.Collections.Generic.IReadOnlyList<string!>! arguments, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Kazo.Os.Platform.Core.Lifecycle.AppLaunchResult!>!
+~override Kazo.Os.Platform.Blazor.Controls.PlatformComplexControlsProof.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Platform.Blazor.Dialogs.AppChooserDialog.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Platform.Blazor.Dialogs.CredentialPromptDialog.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Platform.Blazor.Dialogs.FolderSelectDialog.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Platform.Blazor.Dialogs.MessageBoxDialog.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Platform.Blazor.Dialogs.OpenFileDialog.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Platform.Blazor.Dialogs.ProvidedFileDialog.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Platform.Blazor.Dialogs.SaveFileDialog.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Platform.Blazor.Dialogs.TextInputDialog.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Platform.Blazor.Dialogs.VirtualFolderBrowser.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Platform.Blazor.Display.ScreenIdentifyVeil.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Platform.Blazor.Display.ScreenLayer.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Platform.Blazor.Display.ScreenOverlayHost.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Platform.Blazor.Navigation.HardwareNavigationListener.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Platform.Blazor.Shell.AppLauncher.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Platform.Blazor.Shell.ClockPanel.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Platform.Blazor.Shell.DesktopShell.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Platform.Blazor.Shell.DoNotDisturbIndicator.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Platform.Blazor.Shell.LogoutDialog.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Platform.Blazor.Shell.MobileAppIcon.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Platform.Blazor.Shell.MobileHomeScreen.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Platform.Blazor.Shell.MobileShell.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Platform.Blazor.Shell.NotificationToasts.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Platform.Blazor.Windows.UnresponsiveWindowOverlay.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

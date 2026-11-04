@@ -8,10 +8,10 @@
 no overlap, clipped text, inaccessible controls, or blank third-party canvases.
 The automated half of this is now real, executable evidence:
 
-- `Tests/HackerOs.E2E.Tests/IndexedDbBrowserContractTests.Representative_platform_surfaces_have_no_axe_violations`
+- `Tests/Kazo.Os.E2E.Tests/IndexedDbBrowserContractTests.Representative_platform_surfaces_have_no_axe_violations`
   — 7 isolated-harness scenarios (idle, window, dialog, full-screen Terminal,
   local Monaco Code Editor, Hack Paint canvas, taskbar).
-- `Tests/HackerOs.UI.E2E.Tests/AccessibilityAndVisualCoverageTests.Representative_real_app_surfaces_have_no_axe_violations_and_no_mobile_overflow`
+- `Tests/Kazo.Os.UI.E2E.Tests/AccessibilityAndVisualCoverageTests.Representative_real_app_surfaces_have_no_axe_violations_and_no_mobile_overflow`
   — the real desktop shell, launcher, File Explorer, Settings, Code Editor, and
   Hack Paint windows, axe-scanned and screenshotted at both desktop (1280×800)
   and mobile (375×812) viewports, with screenshots persisted to
@@ -29,7 +29,7 @@ The real app (not the isolated test harness) is the right target for this
 pass, since it has actual navigation between apps.
 
 ```powershell
-cd wasm2/HackerOs
+cd wasm2/KazoOs
 dotnet run --configuration Release --project test/test/test.csproj --urls http://127.0.0.1:5252
 ```
 
@@ -38,9 +38,9 @@ pass, since NVDA/JAWS/VoiceOver support varies — see the browser-support note
 below) and create a local profile when prompted (any login/display name,
 password ≥ 8 characters).
 
-Alternative: a fresh `dotnet publish` of `OS/HackerOs.Ecosystem` served
+Alternative: a fresh `dotnet publish` of `OS/Kazo.Os.Ecosystem` served
 statically also works and is closer to production (see
-`Tests/HackerOs.Pwa.E2E.Tests/PublishedAppHost.cs` for exactly how the
+`Tests/Kazo.Os.Pwa.E2E.Tests/PublishedAppHost.cs` for exactly how the
 automated PWA suite does this, if you want the identical setup) — either
 target is fine for this checklist.
 

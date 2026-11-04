@@ -69,7 +69,7 @@ GitHub Actions ne tourne pas dans ce dépôt (aucun exécuteur depuis août
 - `build/verify-hosts.sh` sur les trois hôtes, options du chantier activées
   **et** coupées (plan, principe 6).
 - Publication trimmée (`build/publish-trimmed.sh` et
-  `HackerOs.TrimmedPublish.E2E.Tests`, ADR 0113) et app de compatibilité du
+  `Kazo.Os.TrimmedPublish.E2E.Tests`, ADR 0113) et app de compatibilité du
   SDK, comme depuis `v3/14` et `v3/15`.
 - Docs et index à jour dans le même changement (AGENTS.md III.4).
 

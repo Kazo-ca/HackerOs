@@ -4,7 +4,7 @@
 
 Chantier `web/11-sample-final`, dernier de la phase web ([`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md)).
 Ce guide montre comment écrire un **site interne** de Kazo OS avec ASP.Hack, en
-suivant l'exemple **Intranet** (`Apps/Samples/HackerOs.Samples.Intranet`,
+suivant l'exemple **Intranet** (`Apps/Samples/Kazo.Os.Samples.Intranet`,
 `http://intranet.hack/`), qui réunit toutes les briques de la phase. Décisions
 propres à ce chantier : [ADR 0087](../dev/adr/0087-asp-hack-intranet-sample-adjustments.md).
 Référence de chaque type : [`sdk-reference.md`](sdk-reference.md#sites-web-asphack).
@@ -35,7 +35,7 @@ gestionnaire de tâches et `netstat -tlnp`.
 
 ## Visiter l'exemple
 
-Lancer un hôte (`dotnet run --project OS/HackerOs.Ecosystem`, voir
+Lancer un hôte (`dotnet run --project OS/Kazo.Os.Ecosystem`, voir
 [`building-and-testing.md`](../dev/building-and-testing.md)), ouvrir le navigateur de
 l'OS et taper `intranet.hack`.
 
@@ -44,7 +44,7 @@ l'OS et taper `intranet.hack`.
 | `/` | Annonces, compteurs, état du site | vue `.cshtml` dans un layout `.razor` ; `health.js` appelle `/health` par `fetch` |
 | `/Home/Profile` | Choix d'un nom | `Html.BeginForm`, `TextBoxFor`, validation, jeton anti-falsification, nom gardé en session |
 | `/People` | Annuaire | recherche faite par le serveur (`?q=`), puis filtrée par `people.js` sur `/api/people` à chaque touche |
-| `/Notes` | Wiki d'équipe | vues `.razor`, partial `_NoteCard`, création/édition/suppression par formulaires (post/redirect/get), étoile qui épingle par `PATCH /api/notes/{id}` ; notes gardées dans la base du site (`HackWebDb`), qui survivent à l'arrêt du site et au redémarrage |
+| `/Notes` | Wiki d'équipe | vues `.razor`, partial `_NoteCard`, création/édition/suppression par formulaires (post/redirect/get), étoile qui épingle par `PATCH /api/notes/{id}` ; notes gardées dans la base du site (`KazoWebDb`), qui survivent à l'arrêt du site et au redémarrage |
 | `/board` | Tableau de tâches | site Blazor dessiné par le navigateur : ajouter, déplacer, supprimer une carte sans recharger, lien vers `/board/tasks/{id}` |
 | `/api/notes`, `/api/people`, `/api/tasks`, `/api/me`, `/health` | JSON | API REST complète (`GET`, `POST`, `PUT`, `PATCH`, `DELETE`, problèmes RFC 9457) |
 
@@ -76,21 +76,21 @@ Un site est un projet sous `Apps/` (comme toute app livrée), au SDK Razor :
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.13" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.14" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Shared\HackerOs.App.Abstractions\HackerOs.App.Abstractions.csproj" />
-    <ProjectReference Include="..\..\..\Shared\HackerOs.AppSdk\HackerOs.AppSdk.csproj" />
-    <ProjectReference Include="..\..\..\Shared\HackerOs.AppSdk.Web\HackerOs.AppSdk.Web.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Kazo.Os.App.Abstractions\Kazo.Os.App.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Kazo.Os.AppSdk\Kazo.Os.AppSdk.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Kazo.Os.AppSdk.Web\Kazo.Os.AppSdk.Web.csproj" />
     <!-- Seulement pour des pages Blazor interactives : -->
-    <ProjectReference Include="..\..\..\Shared\HackerOs.AppSdk.Blazor\HackerOs.AppSdk.Blazor.csproj" />
-    <ProjectReference Include="..\..\..\Shared\HackerOs.AppSdk.Web.Blazor\HackerOs.AppSdk.Web.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Kazo.Os.AppSdk.Blazor\Kazo.Os.AppSdk.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Kazo.Os.AppSdk.Web.Blazor\Kazo.Os.AppSdk.Web.Blazor.csproj" />
   </ItemGroup>
 </Project>
 ```
 
-Le build (`build/HackerOs.Apps.targets`) ajoute tout seul, parce que le projet
-référence `HackerOs.AppSdk.Web` :
+Le build (`build/Kazo.Os.Apps.targets`) ajoute tout seul, parce que le projet
+référence `Kazo.Os.AppSdk.Web` :
 
 - le générateur de routes (ADR 0082) : table des contrôleurs, table des vues et
   classe d'entrée `<Définition>WebHost` ;
@@ -105,7 +105,7 @@ référence `HackerOs.AppSdk.Web` :
 Arborescence de l'exemple :
 
 ```text
-HackerOs.Samples.Intranet/
+Kazo.Os.Samples.Intranet/
   IntranetSite.cs                 [AppManifest] partial WebAppDefinition, Configure
   Models/                         Note, Person, BoardTask, ProfileForm, IntranetJsonContext
   Services/                       NoteStore, TaskBoard, StaffDirectory, AnnouncementFeed, IntranetSession
@@ -135,7 +135,7 @@ public sealed partial class IntranetSite : WebAppDefinition   // partial : le bu
     public override IReadOnlyList<string> Capabilities =>
         [AppCapabilities.NetworkListen, AppCapabilities.NetworkSimulatedRead, AppCapabilities.NetworkSimulatedWrite];
 
-    public override void Configure(HackWebApplicationBuilder builder) { ... }
+    public override void Configure(KazoWebApplicationBuilder builder) { ... }
 }
 ```
 
@@ -155,20 +155,20 @@ public sealed partial class IntranetSite : WebAppDefinition   // partial : le bu
 `web` partagé quand l'hôte en a un. L'ordre est celui d'ASP.NET Core :
 
 ```csharp
-public override void Configure(HackWebApplicationBuilder builder)
+public override void Configure(KazoWebApplicationBuilder builder)
 {
     builder.Services.AddSingleton<NoteStore>();                 // un par processus du site
     builder.Services.AddSingleton<TaskBoard>();
     builder.Json.SerializerOptions.TypeInfoResolverChain.Insert(0, IntranetJsonContext.Default);
 
-    HackWebApplication app = builder.Build();
+    KazoWebApplication app = builder.Build();
     app.UseExceptionPage();          // une exception devient une page d'erreur au style console
     app.UseStaticFiles();            // wwwroot/ embarqué, avant le routage des contrôleurs
-    app.UseCookieSession();          // HttpContext.Session, cookie .HackSession
+    app.UseCookieSession();          // HttpContext.Session, cookie .KazoSession
     app.Use(async (context, next) => { context.Response.Headers["X-Powered-By"] = "ASP.Hack"; await next(); });
 
-    app.MapGet("/health", context => HackResults.Json(..., IntranetJsonContext.Default.SiteStatus));
-    app.MapGet("/api/me", context => HackResults.Json(new Visitor(IntranetSession.DisplayName(context)), ...));
+    app.MapGet("/health", context => KazoResults.Json(..., IntranetJsonContext.Default.SiteStatus));
+    app.MapGet("/api/me", context => KazoResults.Json(new Visitor(IntranetSession.DisplayName(context)), ...));
     app.MapControllers();            // routes d'attribut + {controller=Home}/{action=Index}/{id?}
     // Avec BlazorRoot, la page hôte Blazor est ajoutée après Configure, en dernier recours.
 }
@@ -182,12 +182,12 @@ public override void Configure(HackWebApplicationBuilder builder)
 
 ## 4. Contrôleurs de pages
 
-`HackController` (le `Controller` d'ASP.NET) : `View()`, `PartialView()`,
+`KazoController` (le `Controller` d'ASP.NET) : `View()`, `PartialView()`,
 `ViewData`, `RedirectToAction`, liaison des types complexes depuis le
 formulaire.
 
 ```csharp
-public sealed class NotesController(NoteStore store, ILogger<NotesController> logger) : HackController
+public sealed class NotesController(NoteStore store, ILogger<NotesController> logger) : KazoController
 {
     public async Task<IHackActionResult> Index(CancellationToken cancellationToken) =>
         View(await store.AllAsync(cancellationToken));                       // Views/Notes/Index.razor
@@ -224,14 +224,14 @@ public sealed class NotesController(NoteStore store, ILogger<NotesController> lo
 
 ## 5. API REST
 
-`HackApiController` (`[ApiController]` d'ASP.NET) : corps JSON par défaut,
+`KazoApiController` (`[ApiController]` d'ASP.NET) : corps JSON par défaut,
 `400` automatique avec un problème RFC 9457 si `ModelState` est invalide, et
 statuts d'erreur sans corps changés en problèmes. Une action d'API doit avoir
 une route d'attribut (`HOSWEB0007`).
 
 ```csharp
 [Route("api/notes")]
-public sealed class NotesApiController(NoteStore store) : HackApiController
+public sealed class NotesApiController(NoteStore store) : KazoApiController
 {
     [HttpGet] public IReadOnlyList<Note> List([FromQuery] string? q = null) => ...;
     [HttpGet("{id:int}", Name = "GetNote")]
@@ -260,16 +260,16 @@ Les deux genres de vues se mêlent ; choisissez par goût, le moteur est le mêm
 
 | | `.cshtml` (ADR 0086) | `.razor` (ADR 0083) |
 |---|---|---|
-| Modèle | `@model HomeViewModel` | `@inherits HackView<Note>` |
+| Modèle | `@model HomeViewModel` | `@inherits KazoView<Note>` |
 | Layout | `_ViewStart.cshtml` (`Layout = "_Layout"`) ou `Layout = "..."` | `@layout _Layout` |
-| Lien | `@Html.ActionLink("Notes", "Index", "Notes")` | `<HackLink Action="Index" Controller="Notes">` |
-| Formulaire | `@using (Html.BeginForm("Profile", "Home")) { ... }` | `<HackForm Action="Edit" RouteValues="...">` |
-| Champ lié | `@Html.TextBoxFor(m => m.Name)`, `ValidationMessageFor` | `<input name="Title" value="@Model.Title" />`, `<HackValidationMessage For="Title" />` |
-| Section | `@section Scripts { ... }` | `<HackSection Name="Scripts">` |
-| Partial | `@await Html.PartialAsync("_Card", x)` | `<HackPartial Name="_NoteCard" Model="note" />` |
+| Lien | `@Html.ActionLink("Notes", "Index", "Notes")` | `<KazoLink Action="Index" Controller="Notes">` |
+| Formulaire | `@using (Html.BeginForm("Profile", "Home")) { ... }` | `<KazoForm Action="Edit" RouteValues="...">` |
+| Champ lié | `@Html.TextBoxFor(m => m.Name)`, `ValidationMessageFor` | `<input name="Title" value="@Model.Title" />`, `<KazoValidationMessage For="Title" />` |
+| Section | `@section Scripts { ... }` | `<KazoSection Name="Scripts">` |
+| Partial | `@await Html.PartialAsync("_Card", x)` | `<KazoPartial Name="_NoteCard" Model="note" />` |
 
 Dans l'exemple, le layout est un composant `.razor` (`Views/Shared/_Layout.razor`,
-classe `HackLayout`, code dans `_Layout.razor.cs`) ; les vues `.cshtml` le
+classe `KazoLayout`, code dans `_Layout.razor.cs`) ; les vues `.cshtml` le
 trouvent par `_ViewStart.cshtml`, les vues `.razor` par `@layout _Layout`. Il
 rend le titre (`ViewData.Title`), la navigation (lien actif d'après
 `Request.RouteValues["controller"]`), le nom de session et la section
@@ -320,27 +320,27 @@ le composant dans la zone de page, sans iframe (ADR 0084).
 
 ```razor
 @* Board/BoardApp.razor *@
-@inherits HackComponentBase
-<HackSiteRouter AppAssembly="typeof(BoardApp).Assembly" DefaultLayout="typeof(BoardLayout)">
+@inherits KazoComponentBase
+<KazoSiteRouter AppAssembly="typeof(BoardApp).Assembly" DefaultLayout="typeof(BoardLayout)">
     <NotFound>...</NotFound>
-</HackSiteRouter>
+</KazoSiteRouter>
 
 @* Board/Pages/BoardPage.razor *@
 @page "/board"
-@inherits HackComponentBase
-<HackPageTitle Title="Board - Intranet" />
+@inherits KazoComponentBase
+<KazoPageTitle Title="Board - Intranet" />
 ...
 ```
 
 ```csharp
 // BoardPage.razor.cs
-[CascadingParameter] private HackWebSite? Site { get; set; }
+[CascadingParameter] private KazoWebSite? Site { get; set; }
 
 IReadOnlyList<BoardTask>? tasks = await Site.Http.GetFromJsonAsync("api/tasks", IntranetJsonContext.Default.IReadOnlyListBoardTask);
-HackHttpResponse created = await Site.Http.PostAsync("api/tasks", HackJsonContent.Create(draft, IntranetJsonContext.Default.BoardTask));
+KazoHttpResponse created = await Site.Http.PostAsync("api/tasks", KazoJsonContent.Create(draft, IntranetJsonContext.Default.BoardTask));
 ```
 
-- Chaque composant porte `@inherits HackComponentBase` (ou `HackSiteLayoutBase`
+- Chaque composant porte `@inherits KazoComponentBase` (ou `KazoSiteLayoutBase`
   pour un layout) : ses événements s'exécutent sous l'identité du processus de
   rendu. La règle est vérifiée par fichier (`AmbientFrameSourceTests`).
 - Les pages n'ont pas accès aux services du site : elles appellent son API par
@@ -360,30 +360,30 @@ HackHttpResponse created = await Site.Http.PostAsync("api/tasks", HackJsonConten
 
 Trois niveaux, tous dans l'exemple :
 
-1. **En mémoire** (`Tests/HackerOs.Samples.Intranet.Tests`, comme `TestServer`
+1. **En mémoire** (`Tests/Kazo.Os.Samples.Intranet.Tests`, comme `TestServer`
    d'ASP.NET Core) : le site est construit sans OS ni listener et reçoit des
    requêtes.
 
    ```csharp
-   HackWebApplication app = HackWebHost.CreateApplication(
-       new IntranetSite(), HackWebGeneratedRoutes.Table, views: HackWebGeneratedRoutes.Views);
-   HackWebResponseData home = await app.ProcessAsync(HackWebRequestData.Create("GET", "http://intranet.hack/"));
+   KazoWebApplication app = KazoWebHost.CreateApplication(
+       new IntranetSite(), KazoWebGeneratedRoutes.Table, views: KazoWebGeneratedRoutes.Views);
+   KazoWebResponseData home = await app.ProcessAsync(KazoWebRequestData.Create("GET", "http://intranet.hack/"));
    ```
 
-   `HackWebGeneratedRoutes` est interne à l'assembly du site :
-   `<InternalsVisibleTo Include="HackerOs.Samples.Intranet.Tests" />`.
+   `KazoWebGeneratedRoutes` est interne à l'assembly du site :
+   `<InternalsVisibleTo Include="Kazo.Os.Samples.Intranet.Tests" />`.
    `IntranetClient` y garde les cookies comme un onglet et retrouve le champ
    anti-falsification d'un formulaire.
-2. **Dans un OS complet** (`Tests/HackerOs.Platform.WorkerHost.Tests/MvcSiteTests`) :
+2. **Dans un OS complet** (`Tests/Kazo.Os.Platform.WorkerHost.Tests/MvcSiteTests`) :
    `curl` démarre le site à la demande, sur le fil principal et dans le worker
    `web`.
-3. **Dans Chromium** (`Tests/HackerOs.UI.E2E.Tests/BrowserIntranetTests`) : le
+3. **Dans Chromium** (`Tests/Kazo.Os.UI.E2E.Tests/BrowserIntranetTests`) : le
    navigateur de l'OS parcourt l'exemple (scripts, formulaire, session, tableau
    Blazor, retour par `target="_top"`). `BrowserSiteDataTests` y vérifie la
    base IndexedDB du site, la saisie semi-automatique, le journal de débogage
    et le Diagnostic.
 
-En mémoire, `HackWebDb` est une base en mémoire propre à l'application : les
+En mémoire, `KazoWebDb` est une base en mémoire propre à l'application : les
 tests n'ont rien à configurer ([`asp-hack-site-data.md`](asp-hack-site-data.md#hors-de-hackeros-et-dans-les-tests)).
 
 ## 10. Installer le site dans l'OS
@@ -408,11 +408,11 @@ manifestes et les assemblies paresseuses (`BuildKnownLazyAppsTests`,
 | Traces du site | `builder.Logging.EnableDebugLog()`, puis `tail /var/log/hackweb/<id>.log` : requêtes, `ILogger<T>`, exceptions |
 | Contenu de la base du site | app « IndexedDB Diagnostic », rubrique *Website databases* (magasins, nombre d'enregistrements, taille ; effacement) |
 | Page Blazor qui plante | « Aw, Snap! » du navigateur ; le processus de rendu finit en défaut, l'OS continue |
-| Redémarrer le site | `kill` du processus : la requête suivante le redémarre (sessions et données en mémoire perdues, base `HackWebDb` conservée) |
+| Redémarrer le site | `kill` du processus : la requête suivante le redémarre (sessions et données en mémoire perdues, base `KazoWebDb` conservée) |
 
 ## Limites connues
 
-- **Données.** Les notes de l'exemple sont dans sa base `HackWebDb` (ADR 0088) ;
+- **Données.** Les notes de l'exemple sont dans sa base `KazoWebDb` (ADR 0088) ;
   les cartes du tableau, les annonces et l'annuaire restent en mémoire du
   processus du site et reviennent à leur état initial quand il s'arrête.
 - Les formulaires d'un site Blazor n'ont pas la saisie semi-automatique du
@@ -422,7 +422,7 @@ manifestes et les assemblies paresseuses (`BuildKnownLazyAppsTests`,
 - Les requêtes `Site.Http` des pages Blazor n'apparaissent pas dans l'onglet
   Network.
 - Chaque `curl` a son pot à cookies. Pour rejouer une session, passez le
-  cookie à la main : `curl -H 'Cookie: .HackSession=…'` est envoyé au site,
+  cookie à la main : `curl -H 'Cookie: .KazoSession=…'` est envoyé au site,
   fusionné avec le pot (ce qui est tapé gagne), sur l'hôte demandé seulement,
   sans jamais être stocké (ADR 0089).
 - Compiler un site **dans l'OS** reste hors périmètre (ADR 0076 §8).
@@ -435,6 +435,6 @@ manifestes et les assemblies paresseuses (`BuildKnownLazyAppsTests`,
 - [x] Vues compilables dans une app livrée : classes de base sans annotation de trimming (ADR 0087 §2).
 - [x] `TryValidateModel` sur les contrôleurs (ADR 0087 §3).
 - [x] Exemple installé dans l'Ecosystem et `test/test`, tests de l'Ecosystem mis à jour.
-- [x] Tests en mémoire (`HackerOs.Samples.Intranet.Tests`) et E2E Chromium (`BrowserIntranetTests`).
-- [x] `web/12` : notes de l'exemple dans `HackWebDb`, journal de débogage, filtre `GET /api/notes?author=` par l'index `byAuthor` ([`asp-hack-site-data.md`](asp-hack-site-data.md)).
+- [x] Tests en mémoire (`Kazo.Os.Samples.Intranet.Tests`) et E2E Chromium (`BrowserIntranetTests`).
+- [x] `web/12` : notes de l'exemple dans `KazoWebDb`, journal de débogage, filtre `GET /api/notes?author=` par l'index `byAuthor` ([`asp-hack-site-data.md`](asp-hack-site-data.md)).
 - [x] Ce guide, `sdk-reference.md`, ADR 0087, plan, index et documents de la phase mis à jour.

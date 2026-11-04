@@ -65,7 +65,7 @@ déplacement).
 ## Conséquences
 
 - API publique ajoutée (dans `PublicAPI.Unshipped.txt`) :
-  `HackerOs.Windowing.Abstractions.SnapWindowCommand`,
+  `Kazo.Os.Windowing.Abstractions.SnapWindowCommand`,
   `WindowRuntimeState.IsSnapped`, `WindowChrome.ReportDragRestoreAsync` et
   `WindowChrome.ReportTitleDoubleClickAsync`. Ajouts seulement, rien ne change pour
   les apps.

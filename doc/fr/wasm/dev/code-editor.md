@@ -2,7 +2,7 @@
 
 # Éditeur de code
 
-`Apps/System/HackerOs.Apps.CodeEditor` (`org.hackeros.code-editor`) : éditeur
+`Apps/System/Kazo.Os.Apps.CodeEditor` (`org.hackeros.code-editor`) : éditeur
 de code façon VS Code, sur Monaco 0.55 (ADR 0020) et disposé en atelier
 (ADR 0062), avec un dock en bas (ADR 0063). Il ouvre des fichiers et des
 dossiers du système de fichiers virtuel, cherche dans tout un dossier, et
@@ -16,7 +16,7 @@ est archivée dans [`old/code-editor.md`](old/code-editor.md).
 | Domaine | Ce que l'utilisateur fait |
 | --- | --- |
 | Dossier | File › Open Folder… (ou le bouton de l'explorateur vide) ; le bouton « Nouveau dossier » du dialogue crée le dossier d'un nouveau projet (ADR 0175) ; l'arbre du dossier s'affiche dans la barre latérale ; File › Close Folder. |
-| Explorateur | Un clic montre un fichier sans quitter l'arbre (flèches, Suppr, F2 restent à l'arbre) ; double-clic ou Entrée l'ouvre et donne le focus à l'éditeur. Boutons « New File… », « New Folder… », « Refresh » ; le nom se tape en place dans le dossier sélectionné. L'arbre est le contrôle de fichiers de l'OS (`HackFileView` en mode arbre, fourni par l'explorateur, ADR 0155) : son menu est celui de l'OS (Ouvrir, Ouvrir avec, Couper, Copier, Coller dans le dossier, Renommer, Mettre à la corbeille, Supprimer définitivement, Propriétés), auquel l'éditeur ajoute New File…, New Folder…, Find in Folder… et Open in Integrated Terminal par `ContextMenuOpening`. Glisser-déposer, presse-papiers, corbeille et erreurs (vers la barre d'état) sont ceux du contrôle, avec la poignée du dossier choisi (`SelectedResource`). |
+| Explorateur | Un clic montre un fichier sans quitter l'arbre (flèches, Suppr, F2 restent à l'arbre) ; double-clic ou Entrée l'ouvre et donne le focus à l'éditeur. Boutons « New File… », « New Folder… », « Refresh » ; le nom se tape en place dans le dossier sélectionné. L'arbre est le contrôle de fichiers de l'OS (`KazoFileView` en mode arbre, fourni par l'explorateur, ADR 0155) : son menu est celui de l'OS (Ouvrir, Ouvrir avec, Couper, Copier, Coller dans le dossier, Renommer, Mettre à la corbeille, Supprimer définitivement, Propriétés), auquel l'éditeur ajoute New File…, New Folder…, Find in Folder… et Open in Integrated Terminal par `ContextMenuOpening`. Glisser-déposer, presse-papiers, corbeille et erreurs (vers la barre d'état) sont ceux du contrôle, avec la poignée du dossier choisi (`SelectedResource`). |
 | Onglets | Plusieurs fichiers ouverts, chacun avec son historique d'annulation, sa sélection et son défilement. Point « ● » sur un onglet modifié, croix au survol ; clic du milieu pour fermer ; nom du dossier ajouté quand deux onglets ont le même nom. Ctrl+Tab et Ctrl+Maj+Tab changent d'onglet. |
 | Recherche | Ctrl+Maj+F ou l'icône loupe : recherche dans tous les fichiers du dossier, pendant la frappe. Options casse (Aa), mot entier (ab), expression régulière (.*), « files to include » et « files to exclude » (`*.cs`, `src/**`). Résultats groupés par fichier, repliables ; un clic ouvre le fichier et sélectionne l'occurrence. Le texte sélectionné dans l'éditeur sert de recherche initiale. |
 | Ouverture rapide | Ctrl+P : liste les fichiers du dossier, filtrés en sous-suite floue (`edwin` trouve `EditorWindow.razor`), flèches et Entrée. Sans dossier ouvert, Ctrl+P ouvre la boîte « Open File ». |
@@ -33,13 +33,13 @@ IntelliSense entre fichiers, contrôle de source, débogueur, extensions.
 
 | Élément | Rôle |
 | --- | --- |
-| `CodeEditorWindow.razor` / `.razor.cs` / `.razor.css` | Atelier : menus, barre d'activité, barre latérale, onglets, fil d'Ariane, zone Monaco, filigrane, dock du bas (Status, Terminal par `HackEmbeddedComponent<IHackTerminal>`, Problems), barre d'état. Possède la session, l'espace de travail, la récupération et le garde de fermeture. |
+| `CodeEditorWindow.razor` / `.razor.cs` / `.razor.css` | Atelier : menus, barre d'activité, barre latérale, onglets, fil d'Ariane, zone Monaco, filigrane, dock du bas (Status, Terminal par `KazoEmbeddedComponent<IHackTerminal>`, Problems), barre d'état. Possède la session, l'espace de travail, la récupération et le garde de fermeture. |
 | `CodeEditorWindow.razor.js` | Module collocé : `createEditor` (Monaco + nom accessible), `attachWorkbench` (raccourcis capturés avant le navigateur et Monaco, puis `OnShortcut(nom)` ; poignées de redimensionnement qui posent `--sidebar-width` et `--panel-height` sur la racine). |
 | `CodeEditor.monaco.entry.js` → `wwwroot/monaco/monaco.bundle.js` | Thème `hackeros-dark` et `createCodeEditor` : un modèle par onglet (`showDocument`, `closeDocument`), `setLanguage`, `reveal`, `runAction`, `getSelectedText`, `setOptions`, `flush`, `markSaved`, `layout`, `focus`, `destroy` ; renvoie `OnDirtyChanged(id, modifié)` à chaque bascule, `OnEditorChanged(id, contenu)` après 400 ms sans frappe, et `OnCursorChanged(ligne, colonne, sélection)` après 60 ms. |
 | `CodeEditorSession`, `CodeEditorDocument` | Onglets et contenu en C# ; `RelocatePaths` suit un renommage de fichier ou de dossier. |
 | `CodeEditorWorkspace` | Dossier ouvert : liste des fichiers (exclusions `.git`, `.svn`, `.hg`, `node_modules`, `bin`, `obj` ; au plus 5 000), création de fichiers et de dossiers, chemins relatifs. |
 | `CodeEditorSearch.cs` | `CodeEditorTextSearch` (ligne par ligne, 1 000 occurrences par fichier, aperçu coupé autour de l'occurrence), `CodeEditorGlob`, `CodeEditorWorkspaceSearch` (5 000 occurrences au total, fichiers de plus de 1 Mio ignorés), `CodeEditorQuickOpen` (classement flou). |
-| `CodeEditorExplorer`, `CodeEditorSearchView`, `CodeEditorQuickOpenPalette`, `CodeEditorCursorStatus` | Vues de la barre latérale, boîte Ctrl+P et position du curseur, chacune avec son CSS collocé. Depuis `desk/3`, `CodeEditorExplorer` affiche `HackFileView` (plus de référence à `HackerOs.AppSdk.FileView`) : `Opening` ouvre un fichier dans un onglet (`Handled`), `SelectionChanged` le montre, `Renamed` fait suivre les onglets. |
+| `CodeEditorExplorer`, `CodeEditorSearchView`, `CodeEditorQuickOpenPalette`, `CodeEditorCursorStatus` | Vues de la barre latérale, boîte Ctrl+P et position du curseur, chacune avec son CSS collocé. Depuis `desk/3`, `CodeEditorExplorer` affiche `KazoFileView` (plus de référence à `Kazo.Os.AppSdk.FileView`) : `Opening` ouvre un fichier dans un onglet (`Handled`), `SelectionChanged` le montre, `Renamed` fait suivre les onglets. |
 
 Le contenu de chaque fichier appartient à `CodeEditorDocument` (C#). Monaco
 garde un modèle par onglet pour l'historique et la position ; quand un onglet
@@ -71,7 +71,7 @@ Arrêt demandé par l'OS (ADR 0069 : déconnexion, `kill`, « End task ») :
 `OnAppStopRequestedAsync` annule l'attente de 1,5 s et écrit tout de suite la
 copie de récupération si un onglet est modifié ; l'OS attend cette écriture
 avant de fermer la fenêtre. La recherche dans le dossier et le parcours du
-dossier appellent `HackProcess.CheckpointAsync` entre deux fichiers ou
+dossier appellent `KazoProcess.CheckpointAsync` entre deux fichiers ou
 dossiers : la page reste fluide et la recherche s'arrête sur une demande
 d'arrêt.
 
@@ -114,7 +114,7 @@ menu.
 ## Mettre à jour Monaco
 
 Comme avant : modifier `package.json`, puis dans
-`Apps/System/HackerOs.Apps.CodeEditor` lancer `npm ci && npm run build`, et
+`Apps/System/Kazo.Os.Apps.CodeEditor` lancer `npm ci && npm run build`, et
 versionner `wwwroot/monaco/`. Le build .NET n'exécute pas npm.
 
 ## Tâches
@@ -126,7 +126,7 @@ versionner `wwwroot/monaco/`. Le build .NET n'exécute pas npm.
 - [x] `CodeEditorWorkspace` : liste des fichiers, création, chemins relatifs.
 - [x] Recherche dans le dossier (casse, mot entier, regex, globs, contenu non
   enregistré) et ouverture rapide floue.
-- [x] Recherche dans le dossier en tâche `HackBackground` (`exec/5`, ADR 0140).
+- [x] Recherche dans le dossier en tâche `KazoBackground` (`exec/5`, ADR 0140).
 - [x] Vues Explorateur (création en place, menu contextuel, corbeille) et
   Recherche ; boîte Ctrl+P.
 - [x] Atelier : menus, barre d'activité, barre latérale et terminal
@@ -182,7 +182,7 @@ Les deux points encore ouverts dans l'ancien suivi (P4-W3-002, P4-W3-007) ont
 
 Contrôle de fichiers de l'OS (`desk/3-file-control`, ADR 0155) :
 
-- [x] Arbre de l'explorateur latéral sur `HackFileView` (mode arbre, sélection
+- [x] Arbre de l'explorateur latéral sur `KazoFileView` (mode arbre, sélection
   simple, poignée du dossier choisi par `SelectedResource`).
 - [x] Entrées de l'éditeur ajoutées au menu de l'OS par `ContextMenuOpening`
   (fond : New File…/New Folder… à la place de « Nouveau dossier » ; dossier :

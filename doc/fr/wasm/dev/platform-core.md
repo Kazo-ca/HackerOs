@@ -1,18 +1,18 @@
 > [English version](../../../en/wasm/dev/platform-core.md)
 
-# Plateforme : `HackerOs.Platform.Core`
+# Plateforme : `Kazo.Os.Platform.Core`
 
 ## Objet
 
-`Platform/HackerOs.Platform.Core` contient les services de l'OS, sans interface
+`Platform/Kazo.Os.Platform.Core` contient les services de l'OS, sans interface
 graphique : ce qui fait le système simulé (fichiers, processus, shell, sessions,
 capacités, réseau simulé, journaux). Il implémente les passerelles que le SDK
 expose aux apps (`IAppExecutionContext`, `Hack*`) et ne doit jamais être
 référencé par une app (règle de la frontière, ADR 0055). Les contrats qu'il
-implémente sont dans `Shared/HackerOs.Simulation.Abstractions` et
-`Shared/HackerOs.App.Abstractions` ; l'interface graphique est dans
-`HackerOs.Platform.Blazor`, le stockage navigateur dans
-`HackerOs.Infrastructure.Browser` ([`browser-infrastructure.md`](browser-infrastructure.md)).
+implémente sont dans `Shared/Kazo.Os.Simulation.Abstractions` et
+`Shared/Kazo.Os.App.Abstractions` ; l'interface graphique est dans
+`Kazo.Os.Platform.Blazor`, le stockage navigateur dans
+`Kazo.Os.Infrastructure.Browser` ([`browser-infrastructure.md`](browser-infrastructure.md)).
 
 Vue d'ensemble des couches : [`project-overview.md`](project-overview.md).
 Environ 240 fichiers C# (51 000 lignes) ; le dossier se lit par sous-système.
@@ -47,9 +47,9 @@ Environ 240 fichiers C# (51 000 lignes) ; le dossier se lit par sous-système.
   instance (fenêtre, service, commande) à partir des singletons de la plateforme
   et des capacités accordées. Chaque passerelle vérifie la capacité qu'elle
   exige avant d'agir (`AppCapabilityChecker`).
-- Les services sont enregistrés par `AddHackerOsEcosystem`
-  (`OS/HackerOs.Ecosystem.Host`), qui déclare les services de cette couche ;
-  `AddHackerOsPlatformLocalization` (`Globalization/`) en fait partie.
+- Les services sont enregistrés par `AddKazoOsEcosystem`
+  (`OS/Kazo.Os.Ecosystem.Host`), qui déclare les services de cette couche ;
+  `AddKazoOsPlatformLocalization` (`Globalization/`) en fait partie.
 - Plusieurs services ont une implémentation `InMemory*` (tests, mode sans
   navigateur) ; la persistance réelle vient de l'infrastructure navigateur.
 
@@ -66,7 +66,7 @@ Environ 240 fichiers C# (51 000 lignes) ; le dossier se lit par sous-système.
 
 ## Tests
 
-`Tests/HackerOs.Platform.Core.Tests` couvre les sous-systèmes ci-dessus ; les
-tests par fonctionnalité sont dans les projets `Tests/HackerOs.Platform.*`,
-`Tests/HackerOs.Ecosystem.Tests` et `Tests/HackerOs.Commands.Tests`. Commandes :
+`Tests/Kazo.Os.Platform.Core.Tests` couvre les sous-systèmes ci-dessus ; les
+tests par fonctionnalité sont dans les projets `Tests/Kazo.Os.Platform.*`,
+`Tests/Kazo.Os.Ecosystem.Tests` et `Tests/Kazo.Os.Commands.Tests`. Commandes :
 [`building-and-testing.md`](building-and-testing.md).

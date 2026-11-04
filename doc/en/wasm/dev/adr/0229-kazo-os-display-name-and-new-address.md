@@ -1,6 +1,6 @@
 > [Version française](../../../../fr/wasm/dev/adr/0229-kazo-os-display-name-and-new-address.md)
 
-# ADR 0229: "Kazo OS" with a space, `Kazo.Os.App.*` repositories, redirect to os.kazo.ca
+# ADR 0229: "Kazo OS" with a space, `Os-App-*` repositories, redirect to os.kazo.ca
 
 ## Status
 
@@ -18,8 +18,10 @@ After ADR 0228, Benoit (2026-11-04):
 
 1. On the social image: "A space is missing between Kazo and Os in the
    image", then he chose **"Kazo OS"** with a space.
-2. Names of the app repositories: he chose **`Kazo.Os.App.*`**, like the
-   namespaces.
+2. Names of the app repositories: he first chose `Kazo.Os.App.*`, then
+   renamed every repository himself by removing "Hacker": **`Os-App-*`**,
+   `Os-AppTemplate`, `Os-AppMarketPlace` ("I renamed all the git
+   repositories and removed the `Hacker` from `HackerOs` in the name").
 3. Site address: "we drop the migration. But we must do a redirect". The
    redirect is done by Cloudflare; "I do the Cloudflare redirect in another
    session".
@@ -31,11 +33,11 @@ After ADR 0228, Benoit (2026-11-04):
    Technical names do not change: `Kazo.Os.*`, `Kazo*`, `kazoos`
    (databases, paths, `.kazoos` extension).
 2. **Repositories.** The main repository is `Kazo-ca/Os`. App repositories
-   follow the namespaces: `HackerOs-App-Chess` → `Kazo.Os.App.Chess` (same
+   lose "Hacker": `HackerOs-App-Chess` → `Os-App-Chess` (same
    for Webamp, IRC, EmulatorJS, BoxedWine), `HackerOs-AppTemplate` →
-   `Kazo.Os.AppTemplate`, `HackerOs-AppMarketPlace` →
-   `Kazo.Os.AppMarketPlace`. Benoit renames the repositories; work item 8
-   updates their code and the links.
+   `Os-AppTemplate`, `HackerOs-AppMarketPlace` →
+   `Os-AppMarketPlace`. Benoit renamed them; the links are fixed in
+   work item 3 and their code in work item 8.
 3. **Site address.** `os.kazo.ca` is the only address served by GitHub
    Pages. `hackos.kazo.ca` is redirected by a Cloudflare Worker: it answers
    `/service-worker.js` with a script that clears the cache, unregisters

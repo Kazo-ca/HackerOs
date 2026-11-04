@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <Import Project="..\Packaging.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackageId>Kazo.Os.MobileShell.Blazor</PackageId>
+    <Description>Mobile shell chrome Razor components driven entirely by host-supplied contracts, starting with the Android-inspired Back/Home/Recent system navigation bar. Mobile has no taskbar, so this is a sibling package to Kazo.Os.Taskbar.Blazor rather than a modification of it.</Description>
+    <PackageTags>hackeros;windowing;blazor;desktop-shell</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Kazo.Os.AppSdk.Icons\Kazo.Os.AppSdk.Icons.csproj" />
+    <ProjectReference Include="..\Kazo.Os.Theming.Blazor\Kazo.Os.Theming.Blazor.csproj" />
+    <ProjectReference Include="..\Kazo.Os.Windowing.Abstractions\Kazo.Os.Windowing.Abstractions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.14" />
+  </ItemGroup>
+
+</Project>

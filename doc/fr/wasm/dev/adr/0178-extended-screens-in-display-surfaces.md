@@ -45,7 +45,7 @@ chantiers : [`multi-monitor-plan.md`](../plans/multi-monitor-plan.md).
    `~/Desktop` restent sur l'écran 1 (réponse de Benoit du 2026-10-28). Il n'y a qu'un mode : le **bureau étendu**. Le
    miroir est impossible (un élément DOM ne vit qu'à un endroit) et n'est pas
    proposé.
-2. **Écrans dans le gestionnaire de fenêtres** (`HackerOs.Windowing.Abstractions`,
+2. **Écrans dans le gestionnaire de fenêtres** (`Kazo.Os.Windowing.Abstractions`,
    API publique, `PublicAPI.Unshipped.txt`) :
    - `DisplayId` (valeur ; `DisplayId.Primary` est l'écran 1) et
      `WindowRuntimeState.DisplayId` (par défaut `Primary`).
@@ -73,7 +73,7 @@ chantiers : [`multi-monitor-plan.md`](../plans/multi-monitor-plan.md).
    recrée ni le composant ni l'app. Une iframe dans une fenêtre déplacée se
    recharge : le navigateur de l'OS réécrit déjà sa page ; les autres apps à
    iframe perdent l'état JS de l'iframe, et la doc le dit.
-4. **Service d'écrans** (`HackerOs.Platform.Blazor`, interne à l'OS) :
+4. **Service d'écrans** (`Kazo.Os.Platform.Blazor`, interne à l'OS) :
    - Sous Chrome et Edge, il demande la permission `window-management` au
      premier usage (pendant un clic), liste les moniteurs avec
      `getScreenDetails()` et ouvre la surface d'un nouvel écran sur un moniteur
@@ -107,7 +107,7 @@ chantiers : [`multi-monitor-plan.md`](../plans/multi-monitor-plan.md).
 
 - Sans écran secondaire, le rendu et le comportement ne changent pas : un seul
   `DisplayId.Primary`, et les commandes existantes gardent leur forme.
-- Les types publics ajoutés à `HackerOs.Windowing.Abstractions` passent dans
+- Les types publics ajoutés à `Kazo.Os.Windowing.Abstractions` passent dans
   `PublicAPI.Unshipped.txt` et dans la version mineure suivante.
 - Le portail des fenêtres touche tout le rendu des fenêtres : il a son propre
   chantier et ses tests navigateur (aucun composant recréé, focus et menu
@@ -120,7 +120,7 @@ chantiers : [`multi-monitor-plan.md`](../plans/multi-monitor-plan.md).
 
 - Tests unitaires de `WindowRuntime` : zones par écran, changement d'écran dans
   chaque état, modale qui suit son propriétaire, écran retiré.
-- Tests navigateur (`HackerOs.BrowserHarness.Tests`) : fenêtre déplacée entre
+- Tests navigateur (`Kazo.Os.BrowserHarness.Tests`) : fenêtre déplacée entre
   deux `DesktopArea` sans être recréée.
 - UI.E2E : deuxième écran ouvert par « Nouvel écran », fenêtre déplacée, écran
   fermé et fenêtres revenues sur l'écran 1 ; repli sans `getScreenDetails`.

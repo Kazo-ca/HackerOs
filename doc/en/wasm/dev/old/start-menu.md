@@ -15,7 +15,7 @@ menu never creates a process or a window directly.
 
 ### UI and launch projection
 
-`Platform/HackerOs.Platform.Blazor/Shell/AppLauncher.razor` owns the interaction
+`Platform/Kazo.Os.Platform.Blazor/Shell/AppLauncher.razor` owns the interaction
 surface and its collocated CSS/code-behind. `LauncherAppProjection` builds the
 visible list from trusted runtime state. An item is launchable only when all of
 the following are true:
@@ -35,7 +35,7 @@ the same `OnAppSelected` callback as every other item.
 
 ### Per-user pin persistence
 
-`StartMenuPreferencesService` in `HackerOs.Platform.Core` maintains an ordered,
+`StartMenuPreferencesService` in `Kazo.Os.Platform.Core` maintains an ordered,
 immutable snapshot for each `LocalUserId`. It persists one OS-owned settings
 document because settings definitions are registered before a user exists:
 

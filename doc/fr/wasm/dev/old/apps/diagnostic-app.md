@@ -4,7 +4,7 @@
 
 ## Purpose
 
-`Apps/System/HackerOs.Apps.Diagnostic/` provides a comprehensive browser storage inspector and diagnostic application for HackerOS. It enables developers and AI agents to query, inspect, filter, copy, and export all 12 IndexedDB object stores, while demonstrating how UNIX/Linux inode file metadata (`fsEntries`) correlates with directory link hierarchies (`fsLinks`) to form canonical virtual file paths.
+`Apps/System/Kazo.Os.Apps.Diagnostic/` provides a comprehensive browser storage inspector and diagnostic application for HackerOS. It enables developers and AI agents to query, inspect, filter, copy, and export all 12 IndexedDB object stores, while demonstrating how UNIX/Linux inode file metadata (`fsEntries`) correlates with directory link hierarchies (`fsLinks`) to form canonical virtual file paths.
 
 ## Architecture & Store Structure
 
@@ -40,9 +40,9 @@ Because `fsEntries` acts like a Linux inode table without storing absolute paths
 
 ## Completed Task Checklist
 
-- [x] Create project file `HackerOs.Apps.Diagnostic.csproj` with MudBlazor and Infrastructure references.
+- [x] Create project file `Kazo.Os.Apps.Diagnostic.csproj` with MudBlazor and Infrastructure references.
 - [x] Create manifest `app.manifest.json` declaring reverse-domain ID `org.hackeros.diagnostic`.
 - [x] Implement `IndexedDbInspectorService.cs` with `BackupRestore` transaction and path resolver.
 - [x] Implement `DiagnosticWindow.razor` & `DiagnosticWindow.razor.css` with Gothic/Hacker dark theme UI.
-- [x] Register `HackerOs.Apps.Diagnostic` in `HackerOs.Ecosystem.csproj`.
+- [x] Register `Kazo.Os.Apps.Diagnostic` in `Kazo.Os.Ecosystem.csproj`.
 - [x] Verify project compilation and test suite execution.

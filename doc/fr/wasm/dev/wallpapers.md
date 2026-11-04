@@ -6,9 +6,9 @@ Décisions : [ADR 0202](adr/0202-desktop-wallpaper-images.md) (bureau),
 [ADR 0217](adr/0217-mobile-home-wallpaper.md) (écran d'accueil mobile) et
 [ADR 0218](adr/0218-set-as-wallpaper-file-menu.md) (« Définir comme fond
 d'écran » dans le menu des images). Issues
-[#254](https://github.com/Kazo-ca/HackerOs/issues/254),
-[#297](https://github.com/Kazo-ca/HackerOs/issues/297) et
-[#298](https://github.com/Kazo-ca/HackerOs/issues/298).
+[#254](https://github.com/Kazo-ca/Os/issues/254),
+[#297](https://github.com/Kazo-ca/Os/issues/297) et
+[#298](https://github.com/Kazo-ca/Os/issues/298).
 
 ## But
 
@@ -47,7 +47,7 @@ Un `nano ~/.config/hackeros/appearance.config` change le fond à l'enregistremen
 
 | Source | Emplacement |
 | --- | --- |
-| Livrées avec l'OS | `builtin:hacker-grid`, `builtin:circuit`, `builtin:aurora`, `builtin:nebula` (fichiers statiques `_content/HackerOs.Theming.Blazor/wallpapers/*.webp`) |
+| Livrées avec l'OS | `builtin:hacker-grid`, `builtin:circuit`, `builtin:aurora`, `builtin:nebula` (fichiers statiques `_content/Kazo.Os.Theming.Blazor/wallpapers/*.webp`) |
 | Système | `/usr/share/hackeros/wallpapers/` |
 | Utilisateur | `~/.local/share/hackeros/wallpapers/` |
 | Packs installés | `/usr/share/hackeros/theme-packs/<pack>/wallpapers/`, `~/.local/share/hackeros/theme-packs/<pack>/wallpapers/` (ADR 0190) |
@@ -57,12 +57,12 @@ Un `nano ~/.config/hackeros/appearance.config` change le fond à l'enregistremen
 
 | Élément | Projet | Rôle |
 | --- | --- | --- |
-| `WallpaperCatalog`, `WallpaperFit`, `BuiltInWallpaper` | `HackerOs.Theming.Abstractions` | Images livrées, dossiers, extensions, type lu dans les octets (`TryDetectMediaType`), limite de 16 Mo, valeurs de `wallpaperFit`. |
-| `AppearanceSettingsDocuments` | `HackerOs.Platform.Core` | Déclare les clés `wallpaper`, `wallpaperFit`, `wallpaperScreen2..9`, `mobileWallpaper`, `mobileWallpaperFit`. |
-| `WallpaperService`, `WallpaperPreferences`, `WallpaperImage` | `HackerOs.Platform.Core` | Suit `appearance.config`, lit un fichier en tant qu'utilisateur de la session, refuse ce qui n'est pas une image, garde une copie par fichier affiché. `GetImageAsync(écran)` pour le bureau, `GetMobileImageAsync()` pour le mobile. |
-| `DesktopWallpaper` (`.razor`, `.razor.cs`, `.razor.css`, `.razor.js`) | `HackerOs.Platform.Blazor` | Dessine l'image d'un écran ; adresse `blob:` pour un fichier, adresse statique pour une image livrée ; classes `fit-*`. Avec `Mobile="true"`, l'image du mobile ; `MobileShell` la place derrière l'écran d'accueil, qui devient transparent et ombre ses textes. |
-| `DesktopArea.WallpaperContent` | `HackerOs.Windowing.Blazor` | Couche entre le fond du thème et les icônes. `DesktopShell` la remplit pour l'écran 1 et chaque écran secondaire. |
-| `WallpaperPanel` | `HackerOs.Apps.Settings` | Vignettes, « Parcourir… », « Ajustement », choix de l'écran ou « Mobile » ; SDK public seulement. |
+| `WallpaperCatalog`, `WallpaperFit`, `BuiltInWallpaper` | `Kazo.Os.Theming.Abstractions` | Images livrées, dossiers, extensions, type lu dans les octets (`TryDetectMediaType`), limite de 16 Mo, valeurs de `wallpaperFit`. |
+| `AppearanceSettingsDocuments` | `Kazo.Os.Platform.Core` | Déclare les clés `wallpaper`, `wallpaperFit`, `wallpaperScreen2..9`, `mobileWallpaper`, `mobileWallpaperFit`. |
+| `WallpaperService`, `WallpaperPreferences`, `WallpaperImage` | `Kazo.Os.Platform.Core` | Suit `appearance.config`, lit un fichier en tant qu'utilisateur de la session, refuse ce qui n'est pas une image, garde une copie par fichier affiché. `GetImageAsync(écran)` pour le bureau, `GetMobileImageAsync()` pour le mobile. |
+| `DesktopWallpaper` (`.razor`, `.razor.cs`, `.razor.css`, `.razor.js`) | `Kazo.Os.Platform.Blazor` | Dessine l'image d'un écran ; adresse `blob:` pour un fichier, adresse statique pour une image livrée ; classes `fit-*`. Avec `Mobile="true"`, l'image du mobile ; `MobileShell` la place derrière l'écran d'accueil, qui devient transparent et ombre ses textes. |
+| `DesktopArea.WallpaperContent` | `Kazo.Os.Windowing.Blazor` | Couche entre le fond du thème et les icônes. `DesktopShell` la remplit pour l'écran 1 et chaque écran secondaire. |
+| `WallpaperPanel` | `Kazo.Os.Apps.Settings` | Vignettes, « Parcourir… », « Ajustement », choix de l'écran ou « Mobile » ; SDK public seulement. |
 
 ## « Définir comme fond d'écran » dans les menus des fichiers
 
@@ -95,14 +95,14 @@ quel.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Appearance/WallpaperTests.cs` : règles du
+- `Tests/Kazo.Os.Platform.Core.Tests/Appearance/WallpaperTests.cs` : règles du
   catalogue, schéma, service (image livrée, fichier, écran propre, mobile, repli).
-- `Tests/HackerOs.Apps.Settings.Tests/WallpaperPanelTests.cs` : panneau
+- `Tests/Kazo.Os.Apps.Settings.Tests/WallpaperPanelTests.cs` : panneau
   (vignettes, choix par écran ou pour le mobile, « Parcourir… », ajustement, français).
-- `Tests/HackerOs.Apps.Settings.Tests/SetWallpaperServiceTests.cs` : entrées
+- `Tests/Kazo.Os.Apps.Settings.Tests/SetWallpaperServiceTests.cs` : entrées
   de menu, écran de chaque entrée, clé écrite, fichier refusé, clé verrouillée,
   notification.
-- `Tests/HackerOs.Platform.Blazor.Tests/ContextMenus/FileMenuEntriesTests.cs` :
+- `Tests/Kazo.Os.Platform.Blazor.Tests/ContextMenus/FileMenuEntriesTests.cs` :
   filtre par écran (entrée simple ou sous-menu des écrans ouverts).
 
 ## Hors de ce chantier

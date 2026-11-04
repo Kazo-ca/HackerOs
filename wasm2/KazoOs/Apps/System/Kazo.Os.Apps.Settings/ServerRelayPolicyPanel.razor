@@ -1,0 +1,48 @@
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
+@using Kazo.Os.AppSdk.Administration
+
+@*
+    Settings > Server Connection > Network relay (ADR 0102 §5): what the connected server lets apps
+    holding network.real.access reach, as GET /api/proxy/policy reports it. Read-only: the policy
+    lives in the server's appsettings.json, under HackerOs:Proxy.
+*@
+<section class="relay-policy" aria-label="@L["Relay.AriaLabel"]">
+    <h5>@L["Relay.Title"]</h5>
+    @if (_isLoading)
+    {
+        <p class="setting-desc">@L["Relay.Loading"]</p>
+    }
+    else if (_error is not null)
+    {
+        <p class="relay-error">@_error</p>
+    }
+    else if (_policy is null)
+    {
+        <p class="setting-desc">@L["Relay.Unavailable"]</p>
+    }
+    else if (!_policy.Enabled)
+    {
+        <p class="relay-off">@L["Relay.Off"]</p>
+    }
+    else
+    {
+        <dl class="relay-grid">
+            <dt>@L["Relay.HttpPorts"]</dt>
+            <dd>@Ports(_policy.HttpPorts)</dd>
+            <dt>@L["Relay.TcpPorts"]</dt>
+            <dd>@Ports(_policy.TcpPorts)</dd>
+            <dt>@L["Relay.UdpPorts"]</dt>
+            <dd>@Ports(_policy.UdpPorts)</dd>
+            <dt>@L["Relay.PrivateNetworks"]</dt>
+            <dd>@(_policy.AllowPrivateNetworks ? L["Relay.Reachable"] : L["Relay.Blocked"])</dd>
+            <dt>@L["Relay.Quotas"]</dt>
+            <dd>@Quotas(_policy)</dd>
+            <dt>@L["Relay.GrantedApps"]</dt>
+            <dd>@string.Join(", ", _policy.GrantedApps)</dd>
+        </dl>
+        @foreach (string warning in _policy.Warnings)
+        {
+            <p class="relay-warning">@warning</p>
+        }
+    }
+</section>

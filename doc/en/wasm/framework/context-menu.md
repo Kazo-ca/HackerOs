@@ -15,7 +15,7 @@ the Windows or GNOME menu. It is the basis of the file control menus
 Decisions: [ADR 0150](../dev/adr/0150-os-context-menu.md); implementation
 adjustments: [ADR 0154](../dev/adr/0154-context-menu-implementation-adjustments.md).
 
-Since work item 3 (ADR 0155), the file control (`HackFileView`) menus
+Since work item 3 (ADR 0155), the file control (`KazoFileView`) menus
 are OS menus: the explorer provider
 defines one menu per control, fills it on each opening (plan §7) and
 passes it to the host's `ContextMenuOpening`; the `MudMenu` of `FileView` is no longer
@@ -30,21 +30,21 @@ apps register: see [App entries](#app-entries-in-the-file-menus-work-item-4).
 ### In the markup
 
 ```razor
-@using HackerOs.AppSdk.Blazor.ContextMenus
-@using HackerOs.AppSdk.Icons
+@using Kazo.Os.AppSdk.Blazor.ContextMenus
+@using Kazo.Os.AppSdk.Icons
 
-<HackContextMenu Name="rows" Opening="OnRowsMenuOpening">
-    <HackMenuItem Id="open" Title="@L["Menu.Open"]" Icon="OpenIcon" OnClick="@(item => OpenAsync((Row)item!))" />
-    <HackMenuGroup>
-        <HackMenuItem Id="export" Title="@L["Menu.Export"]">
-            <HackMenuItem Id="csv" Title="CSV" OnClick="@(item => ExportAsync((Row)item!, "csv"))" />
-            <HackMenuItem Id="json" Title="JSON" OnClick="@(item => ExportAsync((Row)item!, "json"))" />
-        </HackMenuItem>
-    </HackMenuGroup>
-    <HackMenuGroup>
-        <HackMenuItem Id="delete" Title="@L["Menu.Delete"]" Shortcut="Del" OnClick="@(item => DeleteAsync((Row)item!))" />
-    </HackMenuGroup>
-</HackContextMenu>
+<KazoContextMenu Name="rows" Opening="OnRowsMenuOpening">
+    <KazoMenuItem Id="open" Title="@L["Menu.Open"]" Icon="OpenIcon" OnClick="@(item => OpenAsync((Row)item!))" />
+    <KazoMenuGroup>
+        <KazoMenuItem Id="export" Title="@L["Menu.Export"]">
+            <KazoMenuItem Id="csv" Title="CSV" OnClick="@(item => ExportAsync((Row)item!, "csv"))" />
+            <KazoMenuItem Id="json" Title="JSON" OnClick="@(item => ExportAsync((Row)item!, "json"))" />
+        </KazoMenuItem>
+    </KazoMenuGroup>
+    <KazoMenuGroup>
+        <KazoMenuItem Id="delete" Title="@L["Menu.Delete"]" Shortcut="Del" OnClick="@(item => DeleteAsync((Row)item!))" />
+    </KazoMenuGroup>
+</KazoContextMenu>
 
 @foreach (Row row in _rows)
 {
@@ -52,10 +52,10 @@ apps register: see [App entries](#app-entries-in-the-file-menus-work-item-4).
 }
 
 @code {
-    private static readonly HackIcon OpenIcon = HackIcons.Vector(IconLibrary.Lucide, "folder-open");
+    private static readonly KazoSurfaceIcon OpenIcon = KazoIcons.Vector(IconLibrary.Lucide, "folder-open");
 
     // Avant chaque ouverture, pour l'objet attaché : masquer, désactiver, ajouter, annuler.
-    private void OnRowsMenuOpening(HackMenuOpeningEventArgs args)
+    private void OnRowsMenuOpening(KazoMenuOpeningEventArgs args)
     {
         if (args.Item is Row { IsReadOnly: true })
         {
@@ -65,9 +65,9 @@ apps register: see [App entries](#app-entries-in-the-file-menus-work-item-4).
 }
 ```
 
-- `HackContextMenu` draws **nothing** where it is written: it describes the menu
+- `KazoContextMenu` draws **nothing** where it is written: it describes the menu
   to the OS. The name (`Name`) is unique within the window.
-- `Menus` exists on `WindowAppBase` and on `HackComponentBase`.
+- `Menus` exists on `WindowAppBase` and on `KazoComponentBase`.
   `Menus.Attach(name, object)` returns two attributes (`data-hack-menu`,
   `data-hack-menu-token`); the object stays in C#, under an opaque token. The same
   object attached again keeps its token (by reference for an object, by
@@ -91,7 +91,7 @@ apps register: see [App entries](#app-entries-in-the-file-menus-work-item-4).
 protected override void OnAppInitialized()
 {
     Menus.Define("rows-area", menu => menu
-        .Item("new", L["Menu.New"], _ => CreateAsync(), icon: HackIcons.Vector(IconLibrary.Lucide, "file-plus"))
+        .Item("new", L["Menu.New"], _ => CreateAsync(), icon: KazoIcons.Vector(IconLibrary.Lucide, "file-plus"))
         .Group(group => group
             .Submenu("sort", L["Menu.SortBy"], sort => sort
                 .Item("sort-name", L["Menu.Name"], _ => SortAsync("name"))
@@ -111,29 +111,29 @@ protected override void OnAppInitialized()
 <button @onclick="@(args => Menus.OpenAsync("rows-area", null, args.ClientX, args.ClientY))">⋯</button>
 ```
 
-`HackContextMenu.Controller` (`IHackContextMenu`) also gives `OpenAsync(object, x, y)`
+`KazoContextMenu.Controller` (`IHackContextMenu`) also gives `OpenAsync(object, x, y)`
 and `Close()`.
 
-The full example is in the sample app `HackerOs.Samples.WindowApp`
+The full example is in the sample app `Kazo.Os.Samples.WindowApp`
 (section "Context Menu").
 
 ## Model
 
 | Type | Role |
 |---|---|
-| `HackMenuDefinition` | A menu: `Name`, `Label` (accessible name), `Groups`; `Find`, `Hide`, `Disable`, `AddGroup`, `Clone`, `Validate`; `MaxDepth = 3` |
-| `HackMenuGroupDefinition` | A group of entries: a separator is only drawn between two visible groups |
-| `HackMenuItemDefinition` | An entry: `Id`, `Title` (already translated), `Icon`, `IsDisabled`, `IsVisible`, `Shortcut` (text only), `OnClick`, `Children` (submenu, groups) |
-| `HackMenuBuilder` | Construction in C#: `Item`, `Submenu`, `Group` |
-| `HackMenuOpeningEventArgs` | `Menu` (copy for this opening), `Item`, `Cancel` |
-| `HackIcons.Vector(library, name)`, `HackIcons.FromImage(path)` | Described icon (`HackIcon`), drawn by the OS (`HackerOs.AppSdk.Icons`) |
-| `HackMenus` | A component's `Menus`: `Attach`, `Define`, `OpenAsync`, `Close`, `IsAvailable` |
+| `KazoMenuDefinition` | A menu: `Name`, `Label` (accessible name), `Groups`; `Find`, `Hide`, `Disable`, `AddGroup`, `Clone`, `Validate`; `MaxDepth = 3` |
+| `KazoMenuGroupDefinition` | A group of entries: a separator is only drawn between two visible groups |
+| `KazoMenuItemDefinition` | An entry: `Id`, `Title` (already translated), `Icon`, `IsDisabled`, `IsVisible`, `Shortcut` (text only), `OnClick`, `Children` (submenu, groups) |
+| `KazoMenuBuilder` | Construction in C#: `Item`, `Submenu`, `Group` |
+| `KazoMenuOpeningEventArgs` | `Menu` (copy for this opening), `Item`, `Cancel` |
+| `KazoIcons.Vector(library, name)`, `KazoIcons.FromImage(path)` | Described icon (`KazoSurfaceIcon`), drawn by the OS (`Kazo.Os.AppSdk.Icons`) |
+| `KazoMenus` | A component's `Menus`: `Attach`, `Define`, `OpenAsync`, `Close`, `IsAvailable` |
 | `IHackMenuHost` | OS side of a window's menus (implemented by the platform, passed as a cascading value) |
 | `IHackContextMenu` | Contract controller: `Name`, `OpenAsync`, `Close` |
 
 Rules checked on each opening (`Validate`): identifiers present and
 unique across the whole menu, three levels at most, no action on an entry
-that opens a submenu. The C# builder and `HackMenuItem` refuse a
+that opens a submenu. The C# builder and `KazoMenuItem` refuse a
 fourth level from construction.
 
 ### Separators
@@ -149,8 +149,8 @@ After the filters (`IsVisible`, `Opening` adjustments):
 
 ```text
 App (SDK)                                         Plateforme (Platform.Blazor)
-<HackContextMenu Name="rows">  ── contrat ──►     PlatformContextMenu (HackPlatformComponent)
-   HackMenuItem / HackMenuGroup                       │ inscrit le menu dans la fenêtre
+<KazoContextMenu Name="rows">  ── contrat ──►     PlatformContextMenu (KazoPlatformComponent)
+   KazoMenuItem / KazoMenuGroup                       │ inscrit le menu dans la fenêtre
 <tr @attributes="Menus.Attach("rows", row)">          ▼
         │ data-hack-menu-token              ContextMenuScope (une par fenêtre, IHackMenuHost)
         ▼                                             │
@@ -160,9 +160,9 @@ ContextMenuOverlay.razor.js ── jeton, x, y ──► ContextMenuService (un 
                                              ContextMenuOverlay (bureau : panneaux ; mobile : feuille)
 ```
 
-- **Contract.** `HackContextMenu` is a typed component
-  (`HackContractComponent<IHackContextMenu>`, ADR 0153); the platform provides
-  `hackeros.context-menu` through `HackPlatformComponent` (`PlatformContextMenu`),
+- **Contract.** `KazoContextMenu` is a typed component
+  (`KazoContractComponent<IHackContextMenu>`, ADR 0153); the platform provides
+  `hackeros.context-menu` through `KazoPlatformComponent` (`PlatformContextMenu`),
   with no manifest or app loading. `PlatformContextMenu` draws nothing: it
   registers the menu in the window and renders the controller.
 - **Window.** `WindowAppRenderer` creates a `ContextMenuScope` per window
@@ -250,7 +250,7 @@ adjustments: [ADR 0159](../dev/adr/0159-app-menu-entries-implementation-adjustme
 An app adds its own entries to the file menus ("Extract here",
 "Publish as website...") without the app that displays the files knowing
 about it. The entries appear everywhere the file control
-(`HackFileView`) is displayed: explorer, Open / Save dialogs,
+(`KazoFileView`) is displayed: explorer, Open / Save dialogs,
 any host app and, in work item 5, the desktop, whatever the provider of the
 control chosen by the administrator (ADR 0156).
 
@@ -260,9 +260,9 @@ The app's `[AppManifest]` class requests the `shell.context-menu` capability and
 declares **one** static method marked `[RegisterFileContextMenu]`:
 
 ```csharp
-using HackerOs.AppSdk.Blazor.Files;
-using HackerOs.AppSdk.Files;
-using HackerOs.AppSdk.Icons;
+using Kazo.Os.AppSdk.Blazor.Files;
+using Kazo.Os.AppSdk.Files;
+using Kazo.Os.AppSdk.Icons;
 
 [AppManifest]
 public sealed class ZipperApp : AppDefinition
@@ -276,8 +276,8 @@ public sealed class ZipperApp : AppDefinition
     public static void RegisterFileContextMenu(RegisterFileContextMenuContext context)
     {
         context.Register("Menu.Extract", "extract", intent: ExtractIntent,
-            icon: HackIcons.Vector(IconLibrary.Lucide, "package-open"),
-            types: [".zip", "application/zip"], after: HackFileMenuItems.Open);
+            icon: KazoIcons.Vector(IconLibrary.Lucide, "package-open"),
+            types: [".zip", "application/zip"], after: KazoFileMenuItems.Open);
 
         // Un sous-menu : le parent n'a pas d'intent, les enfants prennent sa portée.
         context.Register("Menu.Convert", "convert", scope: FileMenuScope.File | FileMenuScope.Directory);
@@ -293,14 +293,14 @@ public sealed class ZipperApp : AppDefinition
 | `name` | Short identifier, unique within the app (`extract-here`) | required |
 | `target` | `"self"` or the id of another app that declares the intent | `"self"` |
 | `intent` | Intent handed to the target; absent on a submenu parent | none |
-| `icon` | `HackIcons.Vector(…)` or `HackIcons.FromImage("icons/x.svg")` (app asset) | none |
+| `icon` | `KazoIcons.Vector(…)` or `KazoIcons.FromImage("icons/x.svg")` (app asset) | none |
 | `scope` | `File`, `Directory`, `Background`, `Desktop`, combinable | `File` (the parent's for a child) |
 | `types` | `.zip`, `application/zip`, `image/*`, `*`, `inode/directory` | all |
 | `selection` | `All` (one launch, all paths), `Each` (one per path), `Single` (hidden if several) | `All` |
 | `first` / `after` / `afterGroup` | Common group at the top; right after X in its group; new group after X's | common group before "Properties" |
 | `parent` | Submenu of an entry of the same app (3 levels at most) | none |
 
-`X` is a constant of `HackFileMenuItems` (`open`, `copy`, `properties`...)
+`X` is a constant of `KazoFileMenuItems` (`open`, `copy`, `properties`...)
 or the `name` of an entry of the app.
 
 An entry can depend on the open screens
@@ -323,13 +323,13 @@ The target is launched with its own rights. If it declares the intent, it
 receives it in `AppContext.LaunchIntent` (or `OnIntentReceivedAsync` for a
 single instance already open), with the payload
 `{"paths":["/home/alice/a.zip"],"scope":"File","entry":"extract"}`, which
-`HackFileMenuIntent` reads (`ReadPaths`, `ReadScope`, and `ReadEntry` for the
+`KazoFileMenuIntent` reads (`ReadPaths`, `ReadScope`, and `ReadEntry` for the
 name of the chosen entry: one intent can serve several entries, ADR 0218 §3):
 
 ```csharp
 if (LaunchIntent is { IntentId: ZipperApp.ExtractIntent } intent)
 {
-    foreach (string path in HackFileMenuIntent.ReadPaths(intent.PayloadJson))
+    foreach (string path in KazoFileMenuIntent.ReadPaths(intent.PayloadJson))
     {
         await ExtractAsync(path);
     }
@@ -348,8 +348,8 @@ displayed.
    fingerprint, app version), removes the files of apps uninstalled
    for the machine, then rereads the folder. An invalid file is ignored and
    reported in `/var/log/syslog`.
-2. The file control provider sets `HackMenuDefinition.FileMenu`
-   (`HackFileMenuContext`: scope, items, folder) on the menu it opens.
+2. The file control provider sets `KazoMenuDefinition.FileMenu`
+   (`KazoFileMenuContext`: scope, items, folder) on the menu it opens.
 3. After `Opening`, `ContextMenuService` calls `IFileMenuEntrySource`
    (`FileMenuEntries`, Platform Blazor): filters (`FileContextMenuMatcher`:
    scope, types, selection, open screens read by `FileMenuEntries.OpenScreens`), apps installed for the user and valid targets
@@ -372,7 +372,7 @@ org.hackeros.file-explorer.extract-here=true
 
 Hiding a parent hides its submenu; the file is reread on each
 opening, so an edit with `nano` applies to the next menu. A system
-app does this through the public API `HackFileMenuEntries`
+app does this through the public API `KazoFileMenuEntries`
 (`GetEntriesAsync`, `SetHiddenAsync`, capability `apps.manage`).
 
 ### Migrated OS entries
@@ -384,60 +384,60 @@ app does this through the public API `HackFileMenuEntries`
 
 ### Tests
 
-- `Tests/HackerOs.App.Abstractions.Tests/AppManifestContextMenusTests.cs`:
+- `Tests/Kazo.Os.App.Abstractions.Tests/AppManifestContextMenusTests.cs`:
   validator rules, canonical form, JSON round trip.
-- `Tests/HackerOs.AppSdk.Blazor.Tests/RegisterFileContextMenuTests.cs`:
+- `Tests/Kazo.Os.AppSdk.Blazor.Tests/RegisterFileContextMenuTests.cs`:
   `Register`, payload, default identifiers identical in the SDK and the
   validator.
-- `Tests/HackerOs.Tools.ManifestGenerator.Tests/ContextMenuRegistrationTests.cs`:
+- `Tests/Kazo.Os.Tools.ManifestGenerator.Tests/ContextMenuRegistrationTests.cs`:
   titles per culture, `HOSAPP0026` to `HOSAPP0028`, determinism.
-- `Tests/HackerOs.Platform.Core.Tests/ContextMenus/FileContextMenuTests.cs`:
+- `Tests/Kazo.Os.Platform.Core.Tests/ContextMenus/FileContextMenuTests.cs`:
   `context-menus.d` folder (rank, rewrite, removal, invalid files),
-  filters, preferences, launches, `HackFileMenuEntries`.
-- `Tests/HackerOs.Platform.Blazor.Tests/ContextMenus/FileMenuEntriesTests.cs`:
+  filters, preferences, launches, `KazoFileMenuEntries`.
+- `Tests/Kazo.Os.Platform.Blazor.Tests/ContextMenus/FileMenuEntriesTests.cs`:
   placement, emptied submenus, click, empty space, service.
-- `Tests/HackerOs.Apps.Settings.Tests/FileMenuEntriesPanelTests.cs`: list
+- `Tests/Kazo.Os.Apps.Settings.Tests/FileMenuEntriesPanelTests.cs`: list
   order.
-- `Tests/HackerOs.UI.E2E.Tests/FileMenuEntriesTests.cs`: "Extract here" after
+- `Tests/Kazo.Os.UI.E2E.Tests/FileMenuEntriesTests.cs`: "Extract here" after
   "Open" on an uploaded archive, extraction, "Publish as website..."
   on the extracted folder.
 
 ### Tasks (work item 4)
 
 - [x] `contextMenus` manifest contract, schema, serializer, validator, `shell.context-menu` capability.
-- [x] SDK: `[RegisterFileContextMenu]`, `RegisterFileContextMenuContext`, `MenuSelection`, `HackFileMenuIntent`, `HackMenuDefinition.FileMenu`.
+- [x] SDK: `[RegisterFileContextMenu]`, `RegisterFileContextMenuContext`, `MenuSelection`, `KazoFileMenuIntent`, `KazoMenuDefinition.FileMenu`.
 - [x] Generator: method execution, EN/FR titles, `HOSAPP0026` to `HOSAPP0028`.
 - [x] OS: `context-menus.d`, filters, placement, launch, hidden entries.
 - [x] Migration of "Extract here" and "Publish as website...".
-- [x] Settings ▸ File menus and `HackFileMenuEntries`.
+- [x] Settings ▸ File menus and `KazoFileMenuEntries`.
 - [x] Tests, ADR 0159, documents and index.
 
 ## Tests
 
-- `Tests/HackerOs.AppSdk.Blazor.Tests/HackContextMenuTests.cs`: implicit
+- `Tests/Kazo.Os.AppSdk.Blazor.Tests/KazoContextMenuTests.cs`: implicit
   groups, fourth level refused, validation, copy, `Menus` outside a window,
   `Define`, description of the markup menu to the provider, action in the
   app's context, nothing drawn without a provider.
-- `Tests/HackerOs.Platform.Blazor.Tests/ContextMenus/`: separator collapsing
+- `Tests/Kazo.Os.Platform.Blazor.Tests/ContextMenus/`: separator collapsing
   (the plan's "Open with" example), empty submenus, keyboard and hover,
   tokens (same object, values, release), duplicate menus, `Opening` on a
   copy, canceled or broken menus, a single open menu in the OS, action in the
   app's context after closing, platform provider end to
   end.
-- `Tests/HackerOs.Ecosystem.Tests`: the service container resolves the contract
+- `Tests/Kazo.Os.Ecosystem.Tests`: the service container resolves the contract
   to `PlatformContextMenu` without loading an app.
 
 ## Tasks (work item 2)
 
-- [x] SDK model (`HackMenuDefinition`, groups, entries, three levels, validation, copy).
-- [x] Construction in C# (`HackMenuBuilder`, `Menus.Define`).
-- [x] Markup (`HackContextMenu`, `HackMenuItem`, `HackMenuGroup`) on the `hackeros.context-menu` contract.
-- [x] `Menus.Attach` and tokens; `Menus` on `WindowAppBase` and `HackComponentBase`.
-- [x] `HackIcons` (vector or image).
+- [x] SDK model (`KazoMenuDefinition`, groups, entries, three levels, validation, copy).
+- [x] Construction in C# (`KazoMenuBuilder`, `Menus.Define`).
+- [x] Markup (`KazoContextMenu`, `KazoMenuItem`, `KazoMenuGroup`) on the `hackeros.context-menu` contract.
+- [x] `Menus.Attach` and tokens; `Menus` on `WindowAppBase` and `KazoComponentBase`.
+- [x] `KazoIcons` (vector or image).
 - [x] Platform provider (`PlatformContextMenu`), one scope per window (`WindowAppRenderer`).
 - [x] Service: one open menu in the OS, `Opening`, separator collapsing, errors to the log.
 - [x] Native multi-level rendering (desktop) and bottom sheet (mobile), OS theme, ARIA.
 - [x] Script: right click, long press, Menu key, Shift+F10, on-screen placement, closing, focus restored, tokens released.
 - [x] Keyboard (`ContextMenuNavigator`).
-- [x] Example in `HackerOs.Samples.WindowApp`.
+- [x] Example in `Kazo.Os.Samples.WindowApp`.
 - [x] Tests, ADR 0154, document index.

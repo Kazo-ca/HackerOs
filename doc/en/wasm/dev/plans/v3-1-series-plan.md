@@ -55,7 +55,7 @@ Series v3.1 therefore keeps two code work items, plus the publication of 1.1.
 GitHub Actions does not run in the repository: the local suite is authoritative, as
 for the v3 series. Before merging, each work item builds the solution and
 passes the tests of the projects it touches, the UI E2E suite for windows,
-`HackerOs.SdkCompatibility.Tests` and `build/publish-trimmed.sh`.
+`Kazo.Os.SdkCompatibility.Tests` and `build/publish-trimmed.sh`.
 
 ## Tasks of this work item
 

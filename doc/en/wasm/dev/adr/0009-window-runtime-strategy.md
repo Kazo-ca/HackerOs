@@ -61,7 +61,7 @@ unproven package would add payload and a second state owner before reducing risk
 ## Decision
 
 Build a purpose-built window runtime in
-`Platform/HackerOs.Platform.Blazor`, backed by browser-independent state and
+`Platform/Kazo.Os.Platform.Blazor`, backed by browser-independent state and
 transition logic.
 
 C# is authoritative for:

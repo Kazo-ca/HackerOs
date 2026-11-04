@@ -98,7 +98,7 @@ l'explorateur), quand même l'explorateur manque.
   était rendue, et laissait une bande vide sous la barre de titre.
 - Les tests de bout en bout qui pilotent les dialogues de l'OS lisent des
   lignes (`role=row`) plutôt que des options ; ceux du banc d'essai sans
-  explorateur (`HackerOs.E2E.Tests`) couvrent le repli.
+  explorateur (`Kazo.Os.E2E.Tests`) couvrent le repli.
 
 ## Références
 

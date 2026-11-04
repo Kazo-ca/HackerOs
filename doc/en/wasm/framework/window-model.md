@@ -27,10 +27,10 @@ implementation of [ADR 0095](../dev/adr/0095-window-events-sizes-and-keyboard.md
 | --- | --- |
 | `OnWindowActivated[Async]()` | The window receives focus. |
 | `OnWindowDeactivated[Async]()` | The window loses focus (another window, minimizing, no window left in the foreground). |
-| `OnWindowStateChanged[Async](previous, current)` | `HackWindowState`: `Normal`, `Minimized`, `Maximized`. |
-| `OnWindowResized[Async](HackWindowSize size)` | Size of the client area (without the title bar), in CSS pixels, **only once at the end** of a resize (mouse gesture, keyboard, maximizing, restoring, change of the work area). |
+| `OnWindowStateChanged[Async](previous, current)` | `KazoWindowState`: `Normal`, `Minimized`, `Maximized`. |
+| `OnWindowResized[Async](KazoWindowSize size)` | Size of the client area (without the title bar), in CSS pixels, **only once at the end** of a resize (mouse gesture, keyboard, maximizing, restoring, change of the work area). |
 | `IsWindowActive`, `WindowState`, `WindowSize` | Last known state, to be read in rendering. |
-| `TrackDisplaySurface(IDisplaySurface)` | Makes a detached window followed (ADR 0078/0081): its focus, loss of focus and size trigger the same hooks. `HackWindowSize.DisplaySurfaceId` then indicates the surface. The result is released when the surface is reattached. |
+| `TrackDisplaySurface(IDisplaySurface)` | Makes a detached window followed (ADR 0078/0081): its focus, loss of focus and size trigger the same hooks. `KazoWindowSize.DisplaySurfaceId` then indicates the surface. The result is released when the surface is reattached. |
 
 Guaranteed order:
 
@@ -53,7 +53,7 @@ has already happened and continues.
 
 @code {
     protected override Task OnWindowDeactivatedAsync() => PauseAnimationAsync();
-    protected override void OnWindowResized(HackWindowSize size) => _columns = (int)(size.Width / 120);
+    protected override void OnWindowResized(KazoWindowSize size) => _columns = (int)(size.Width / 120);
 }
 ```
 
@@ -277,7 +277,7 @@ the mobile desktop's recents and the frame's accessible name (`aria-labelledby`)
   cleans the title with `WindowTitles.Sanitize` (Windowing.Abstractions) and publishes
   `WindowTitleChangedEvent`; an unchanged title produces nothing. Surfaces reread
   `WindowRuntimeState.Title` on each `StateChanged`.
-- `AppWindowGatewayFactory` (Platform.Blazor, registered by `AddHackerOsEcosystem`) creates one
+- `AppWindowGatewayFactory` (Platform.Blazor, registered by `AddKazoOsEcosystem`) creates one
   `IAppWindowGateway` per window, bound to its `WindowId`. `WindowAppRenderer` receives it
   (`WindowGateways`, passed by `DesktopShell` and `MobileShell`) and gives it to the app through a fixed
   `CascadingValue`: the app can only reach its own window.
@@ -310,7 +310,7 @@ the mobile desktop's recents and the frame's accessible name (`aria-labelledby`)
 
 - **Full screen added** (`toggle-fullscreen`, `Alt+F11`, menu entry): keyboard
   locking only exists in full screen, so a way to enter it was needed.
-- **`HackWindowSize.DisplaySurfaceId`**: distinguishes the resizing of a detached window from
+- **`KazoWindowSize.DisplaySurfaceId`**: distinguishes the resizing of a detached window from
   that of the desktop window.
 - **Measured size** in the browser, estimated only as a fallback (tests, server rendering).
 - **`/etc/hackeros/keybindings.config` shipped as comments**: active values come from
@@ -349,7 +349,7 @@ the mobile desktop's recents and the frame's accessible name (`aria-labelledby`)
 - `WindowAppBaseWindowTitleTests` (Blazor SDK), `WindowTitleTests` (Windowing.Core),
   `AppWindowGatewayFactoryTests` (Platform.Blazor): title set before the first render, same title
   ignored, cleaning, return to the app name, a single window targeted, closed window, surfaces.
-- E2E `HackPaintWindowTitleTests` (UI.E2E): `Untitled — Hack Paint`, `*` after a stroke, file
+- E2E `KazoPaintWindowTitleTests` (UI.E2E): `Untitled — Hack Paint`, `*` after a stroke, file
   name after "Save As" in the title bar and the taskbar.
 - E2E `WindowKeyboardCommandsTests` (UI.E2E): `` Alt+` `` switches window and `Alt+Q` closes the
   active window in a Chromium tab.
@@ -359,7 +359,7 @@ the mobile desktop's recents and the frame's accessible name (`aria-labelledby`)
 - [x] Fix the double move on release and the transition before/after projection.
 - [x] Cover intermediate frames in Chromium and in the OS restore scenario.
 
-- [x] Window hooks in `WindowAppBase` and SDK contracts (`HackWindowState`, `HackWindowSize`).
+- [x] Window hooks in `WindowAppBase` and SDK contracts (`KazoWindowState`, `KazoWindowSize`).
 - [x] Runtime facts: published batch, end of resize, fix for minimizing in the background.
 - [x] `WindowAppEventDispatcher` dispatcher and client area measurement.
 - [x] Detached windows followed (`TrackDisplaySurface`, browser).

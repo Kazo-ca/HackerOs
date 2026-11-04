@@ -2,12 +2,12 @@
 
 # Contrôle de fichiers de l'OS : usage depuis une app
 
-Ce document décrit ce qu'une app obtient quand elle affiche le contrôle de fichiers (`HackFileView`) ou ouvre un dialogue de fichiers de l'OS, et ce qui change pour elle selon l'hôte. Le fournisseur de l'explorateur (`ExplorerFileView`, contrats et composition) est dans [`dev/file-explorer.md`](../dev/file-explorer.md).
+Ce document décrit ce qu'une app obtient quand elle affiche le contrôle de fichiers (`KazoFileView`) ou ouvre un dialogue de fichiers de l'OS, et ce qui change pour elle selon l'hôte. Le fournisseur de l'explorateur (`ExplorerFileView`, contrats et composition) est dans [`dev/file-explorer.md`](../dev/file-explorer.md).
 
-## Affichage par `HackFileView`
+## Affichage par `KazoFileView`
 
-Toute app l'affiche par `HackFileView` du SDK (`HackerOs.AppSdk.Blazor.Files`)
-et l'explorateur aussi : sa fenêtre rend `<HackFileView>` et garde le chrome
+Toute app l'affiche par `KazoFileView` du SDK (`Kazo.Os.AppSdk.Blazor.Files`)
+et l'explorateur aussi : sa fenêtre rend `<KazoFileView>` et garde le chrome
 (barres, Emplacements, Corbeille, barre d'état). Les boutons Renommer,
 Supprimer, Couper, Copier, Coller, Propriétés et Ouvrir avec appellent
 `IHackFileView.ExecuteAsync` avec l'identifiant de l'entrée de menu
@@ -45,7 +45,7 @@ plateforme reprend sa liste `VirtualFolderBrowser`.
 Sur la plateforme mobile ([ADR 0171](../dev/adr/0171-mobile-file-explorer-and-full-screen-dialogs.md)),
 les dialogues s'ouvrent en plein écran et passent `OpenOnTap` au contrôle :
 un toucher entre dans un dossier ou prend un fichier, sans double-clic. Une
-app peut demander le même comportement avec `<HackFileView OpenOnTap="true">`.
+app peut demander le même comportement avec `<KazoFileView OpenOnTap="true">`.
 
 ## Langue
 

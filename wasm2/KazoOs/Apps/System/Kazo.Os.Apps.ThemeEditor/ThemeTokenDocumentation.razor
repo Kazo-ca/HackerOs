@@ -1,0 +1,79 @@
+@inherits KazoComponentBase
+@* Theme documentation generated from ThemeTokenCatalog (ADR 0103 §2.3): the file format, where
+   themes live, the value types and every token. *@
+<article class="theme-docs">
+    <section>
+        <h3>@L["Docs.Files.Heading"]</h3>
+        <p>@Markup("Docs.Files.Intro")</p>
+<pre class="docs-sample">[theme]
+id = neon-crypt
+name = Neon Crypt
+base = hackeros
+platforms = desktop, mobile
+
+[tokens]
+--hos-bg-base = #0b0f0b
+--hos-accent = #39ff14
+--hos-font-mono = "JetBrains Mono", monospace</pre>
+        <ul>
+            <li>@Markup("Docs.Files.Id")</li>
+            <li>@Markup("Docs.Files.Base")</li>
+            <li>@Markup("Docs.Files.Platforms")</li>
+            <li>@Markup("Docs.Files.Tokens")</li>
+        </ul>
+    </section>
+
+    <section>
+        <h3>@L["Docs.Types.Heading"]</h3>
+        <dl class="docs-types">
+            @foreach (ThemeTokenType type in Enum.GetValues<ThemeTokenType>())
+            {
+                <dt>@Strings.TypeLabel(L, type)</dt><dd>@Markup($"Docs.Types.{type}")</dd>
+            }
+        </dl>
+    </section>
+
+    @foreach (ThemeTokenGroup group in Enum.GetValues<ThemeTokenGroup>())
+    {
+        <section>
+            <h3>@Strings.GroupLabel(L, group)</h3>
+            <table class="docs-table">
+                <thead>
+                    <tr><th scope="col">@L["Docs.Column.Token"]</th><th scope="col">@L["Docs.Column.Type"]</th><th scope="col">@L["Docs.Column.Changes"]</th><th scope="col">@L["Docs.Column.Example"]</th></tr>
+                </thead>
+                <tbody>
+                    @foreach (ThemeTokenDefinition token in ThemeTokenCatalog.InGroup(group))
+                    {
+                        <tr>
+                            <td><code>@token.Name</code><span class="docs-label">@token.GetLabel(Strings.CultureOf(L))</span></td>
+                            <td>@Strings.TypeLabel(L, token.Type)</td>
+                            <td>
+                                @token.GetDescription(Strings.CultureOf(L))
+                                @if (token.RgbCompanion is { } companion)
+                                {
+                                    <span class="docs-companion">@AlsoSets.Before<code>@companion</code>@AlsoSets.After</span>
+                                }
+                            </td>
+                            <td><code>@token.Example</code></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </section>
+    }
+</article>
+
+@code {
+    /// <summary>The Theme Editor's texts in the language of its process (ADR 0104).</summary>
+    private IStringLocalizer<Strings> L => AppContext.GetLocalizer<Strings>();
+
+    // "Also sets {0}." split around the companion token's <code>.
+    private (string Before, string After) AlsoSets => Strings.Around(L["Docs.AlsoSets"]);
+
+    /// <summary>
+    /// A documentation sentence holding <c>&lt;code&gt;</c> markup. The text comes from this assembly's
+    /// own resources (never from a file or a user), so it is rendered as markup; the stylesheet styles
+    /// its <c>code</c> elements through <c>::deep</c>.
+    /// </summary>
+    private MarkupString Markup(string key) => new(L[key]);
+}

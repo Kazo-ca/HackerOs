@@ -1,0 +1,71 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../../Platform/Packaging.props" />
+
+  <PropertyGroup>
+    <PackageId>Kazo.Os.AppSdk</PackageId>
+    <Description>Kazo OS App SDK: the Hack* APIs an app uses (KazoFile, KazoStream, KazoDirectory, KazoProcess, KazoApps, KazoUser...) through its execution context.</Description>
+    <PackageTags>hackeros;app-sdk</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kazo.Os.App.Abstractions\Kazo.Os.App.Abstractions.csproj" />
+    <ProjectReference Include="..\Kazo.Os.Simulation.Abstractions\Kazo.Os.Simulation.Abstractions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- ADR 0104: IStringLocalizer, the contract KazoStringLocalizer implements. -->
+    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="10.0.14" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- ADR 0069: the OS's per-process scheduler stamps the time slice CheckpointAsync reads (KazoProcessSlice). -->
+    <InternalsVisibleTo Include="Kazo.Os.Platform.Core" />
+    <InternalsVisibleTo Include="Kazo.Os.AppSdk.Tests" />
+    <!-- Tests that wait for the work deferred on a stop request, as the OS does. -->
+    <InternalsVisibleTo Include="Kazo.Os.AppSdk.Blazor.Tests" />
+    <!-- ADR 0066/0067: only the optional resource-accounting project may install the context-switch
+         hook on KazoExecutionContext's ambient frame; apps never can. -->
+    <InternalsVisibleTo Include="Kazo.Os.Platform.ResourceAccounting" />
+    <!-- ADR 0067: the OS gateways open the "kernel" sub-frame (stime) with KazoExecutionContext.EnterKernel. -->
+    <InternalsVisibleTo Include="Kazo.Os.Platform.Core" />
+    <!-- ADR 0070: the worker host is the OS inside a Web Worker: it meters CPU with the same hook,
+         opens the kernel sub-frame around remote calls and waits for the work deferred on a stop
+         request. Apps still never can. -->
+    <InternalsVisibleTo Include="Kazo.Os.Platform.WorkerHost" />
+    <InternalsVisibleTo Include="Kazo.Os.Platform.WorkerHost.Tests" />
+  </ItemGroup>
+
+  <!--
+    ADR 0128 section 2 / ADR 0140: the KazoBackground analyzer (HOSBG rules) ships in this package,
+    so every app that references the SDK package builds with it. Build order only here: the
+    analyzer is packed from its output folder into analyzers/dotnet/cs. In-repo apps get it through
+    build/Kazo.Os.Apps.targets.
+  -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\Tools\Kazo.Os.Tools.BackgroundAnalyzer\Kazo.Os.Tools.BackgroundAnalyzer.csproj"
+                      ReferenceOutputAssembly="false" Private="false" PrivateAssets="all"
+                      SkipGetTargetFrameworkProperties="true"
+                      GlobalPropertiesToRemove="TargetFramework;RuntimeIdentifier;SelfContained" />
+  </ItemGroup>
+
+  <Target Name="_KazoOsPackBackgroundAnalyzer">
+    <MSBuild Projects="..\..\Tools\Kazo.Os.Tools.BackgroundAnalyzer\Kazo.Os.Tools.BackgroundAnalyzer.csproj"
+             Targets="GetTargetPath"
+             Properties="Configuration=$(Configuration)"
+             RemoveProperties="TargetFramework;RuntimeIdentifier;SelfContained">
+      <Output TaskParameter="TargetOutputs" PropertyName="_KazoOsBackgroundAnalyzerPath" />
+    </MSBuild>
+    <ItemGroup>
+      <TfmSpecificPackageFile Include="$(_KazoOsBackgroundAnalyzerPath)" PackagePath="analyzers/dotnet/cs/" />
+    </ItemGroup>
+  </Target>
+
+  <PropertyGroup>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_KazoOsPackBackgroundAnalyzer</TargetsForTfmSpecificContentInPackage>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

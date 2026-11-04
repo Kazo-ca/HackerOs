@@ -2,7 +2,7 @@
 
 # Applications par défaut propres à chaque utilisateur
 
-Ce document couvre la mise en œuvre des associations de fichiers par utilisateur. Les formats des deux fichiers, l'ordre de résolution, l'API `HackApps` et les capacités sont dans [`../framework/file-associations-api.md`](../framework/file-associations-api.md).
+Ce document couvre la mise en œuvre des associations de fichiers par utilisateur. Les formats des deux fichiers, l'ordre de résolution, l'API `KazoApps` et les capacités sont dans [`../framework/file-associations-api.md`](../framework/file-associations-api.md).
 
 Chantier `v3/4b`, suite de `v3/4-intents`, selon
 l'[ADR 0121](adr/0121-user-file-associations.md). Complète
@@ -20,7 +20,7 @@ d'administrateur. Son choix passe avant celui de la machine, comme
 
 ```text
 Paramètres / « Ouvrir avec » / xdg-mime
-        │ HackApps.Get/Set/ResetDefaultHandlerAsync
+        │ KazoApps.Get/Set/ResetDefaultHandlerAsync
         ▼
 IAppCatalogGateway (AppCatalogGateway ; RemoteCatalogGateway dans un worker : cat.defaults, cat.setdef)
         │ capacités file-associations.read (+ filesystem.user-home.write pour écrire)
@@ -71,7 +71,7 @@ AppIntentDispatcher (passe le principal à chaque résolution)
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Intents/UserFileAssociationTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Intents/UserFileAssociationTests.cs` :
   ordre des couches, utilisateur par utilisateur, choix périmé, `open` et
   `edit` séparés, fichier `0644` et réinitialisation, fichier invalide gardé,
   refus (`InvalidTarget`, `InvalidAction`, `AppNotFound`, `AppCannotHandle`),
@@ -80,7 +80,7 @@ AppIntentDispatcher (passe le principal à chaque résolution)
 - `AppCatalogGatewayTests` : capacités et ordre des lignes.
 - `XdgMimeCommandTests`, parité `xdg-mime` dans `CommandParityTests`,
   `WireCodecIntentTests.Default_handlers_keep_target_action_app_and_layer`.
-- `HackerOs.Apps.Settings.Tests/FileAssociationsPanelTests.cs` : lignes du
+- `Kazo.Os.Apps.Settings.Tests/FileAssociationsPanelTests.cs` : lignes du
   panneau.
 
 ## Liste des tâches

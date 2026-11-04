@@ -7,7 +7,7 @@
 Accepted on 2026-10-29. Decisions made with Benoit in the thread "Show what's new since the last
 visit" (12 questions asked on 2026-10-28, answers on 2026-10-29: Q2 = C, Q8 = B, the others as
 recommended). Plan: https://claude.ai/artifact/Q9BdEs6HxUCjiD1os1TPNq. Tracking: TODO issue
-[#252](https://github.com/Kazo-ca/HackerOs/issues/252).
+[#252](https://github.com/Kazo-ca/Os/issues/252).
 
 Implemented in work items (§9). Work item 1 (format, test, entries of 2.1.0 and of the next
 version) and work item 5 (PR check) come with this ADR.
@@ -27,7 +27,7 @@ Benoit wants to see in the OS what changed since the last visit, grouped by vers
 
 State when the decision was made (main `0673428f`):
 
-- The only version is `HackerOsVersion` in `wasm2/HackerOs/build/Versions.props` (2.1.0).
+- The only version is `HackerOsVersion` in `wasm2/KazoOs/build/Versions.props` (2.1.0).
 - `release.yml` publishes notes generated automatically by GitHub (PR titles).
 - `/version.json` is only used by the "restart to update" banner (ADR 0174).
 - Pages deploys `main` on every merge, while the version changes less often: a feature is online
@@ -39,10 +39,10 @@ State when the decision was made (main `0673428f`):
 
 ### 1. One file per change (Q1: A)
 
-- Each change is a small file `wasm2/HackerOs/changes/unreleased/<id>.json`. Two PRs open at the
+- Each change is a small file `wasm2/KazoOs/changes/unreleased/<id>.json`. Two PRs open at the
   same time never write to the same file: no merge conflict.
 - When a version is released, all entries of `unreleased/` are grouped into
-  `wasm2/HackerOs/changes/<version>.json`, with the date of the version, in the PR that changes
+  `wasm2/KazoOs/changes/<version>.json`, with the date of the version, in the PR that changes
   `Versions.props` (script `build/tools/collect-changes.sh`, work item 4, like
   `ship-public-api.sh` for the public API).
 - The ID of an entry never changes, even when it moves into a version file.
@@ -79,7 +79,7 @@ A version file has the form:
 { "version": "2.1.0", "date": "2026-10-26", "entries": [ … ] }
 ```
 
-The `ChangeEntriesTests` test (`Tests/HackerOs.Ecosystem.Tests`) checks all of this: schema, valid
+The `ChangeEntriesTests` test (`Tests/Kazo.Os.Ecosystem.Tests`) checks all of this: schema, valid
 GUID unique across `changes/`, file name equal to the ID or the version, known category and
 audience, non-empty texts in both languages, links to files that exist, and no version file newer
 than `HackerOsVersion`.
@@ -92,7 +92,7 @@ The entries of `unreleased/` are shown as soon as they are deployed, under a gro
 
 ### 4. In the OS (Q7, Q9, Q10: A)
 
-1. **`/whats-new.json`**: the build of `OS/HackerOs.Ecosystem` assembles `changes/*.json` and
+1. **`/whats-new.json`**: the build of `OS/Kazo.Os.Ecosystem` assembles `changes/*.json` and
    `changes/unreleased/` into one file served at the root of the site, like `/version.json`
    (ADR 0174). Only entries whose audience contains `user` go into it.
 2. **What's new service** (Platform.Core): it reads this file and the account's state, then
@@ -119,10 +119,10 @@ Benoit and will be corrected here if he prefers the released version only.
 ### 6. PR check (Q12: A)
 
 - The **Change list entry** workflow (`.github/workflows/changelog-entry.yml`) runs on every PR to
-  `main`. It fails if the PR touches the product (`wasm2/HackerOs` outside `Tests/`, `docs/`,
+  `main`. It fails if the PR touches the product (`wasm2/KazoOs` outside `Tests/`, `docs/`,
   `changes/` and `.md` files) without **adding** a file in `changes/unreleased/`, unless the PR
   has the **`no-changelog`** label. The rule is in
-  `wasm2/HackerOs/build/tools/check-change-entry.sh`, which can be run by hand.
+  `wasm2/KazoOs/build/tools/check-change-entry.sh`, which can be run by hand.
 - `no-changelog` is for what neither a user nor an app author can see: refactoring, tests, build,
   CI.
 - Work item PRs to a `<series>/base` branch already add their entry, so the final PR to `main`
@@ -133,7 +133,7 @@ Benoit and will be corrected here if he prefers the released version only.
 
 - `release.yml` builds the GitHub Release text from `changes/<version>.json` (English, all
   entries, grouped by category), instead of GitHub's notes.
-- `pack-local.sh` fills `PackageReleaseNotes` of every `HackerOs.*` package with the version's
+- `pack-local.sh` fills `PackageReleaseNotes` of every `Kazo.Os.*` package with the version's
   `developer` entries, plus the link to the Release.
 - `CHANGELOG.md` (English) and `CHANGELOG-fr.md` (French) are generated at the root of the
   repository, each with a link to the other on the first line, like the readmes.
@@ -151,7 +151,7 @@ Benoit and will be corrected here if he prefers the released version only.
 1. ADR 0186 + format: `changes/` folder, `ChangeEntriesTests`, entries of 2.1.0 and of the next
    version. **Done with this ADR.**
 2. Served file + service: `/whats-new.json` at build time, what's new service, per-account state,
-   new account rule. **Done** (`whats-new/2-served-file-and-service`: `Tools/HackerOs.Tools.ChangeList`,
+   new account rule. **Done** (`whats-new/2-served-file-and-service`: `Tools/Kazo.Os.Tools.ChangeList`,
    `WhatsNewService`, SDK `HackWhatsNew`).
 3. User interface: Settings ▸ About ▸ What's new page, notification after sign-in, Start menu dot,
    English and French texts. **Done** (`whats-new/3-whats-new-page`: `WhatsNewPanel`,
@@ -159,7 +159,7 @@ Benoit and will be corrected here if he prefers the released version only.
    About, reached also from About's **What's new?** button).
 4. Publications: `collect-changes.sh`, Release text in `release.yml`, `PackageReleaseNotes`,
    `CHANGELOG.md` and `CHANGELOG-fr.md`. **Done** (`whats-new/4-release-notes`: `collect`, `notes`
-   and `changelog` commands of `Tools/HackerOs.Tools.ChangeList`; the PR check also accepts a new
+   and `changelog` commands of `Tools/Kazo.Os.Tools.ChangeList`; the PR check also accepts a new
    `changes/<version>.json`).
 5. PR check: **Change list entry** workflow and `no-changelog` label. **Done with this ADR.**
 

@@ -53,7 +53,7 @@ modèle est plus fidèle au bureau Linux que HackerOS imite.
 - `SavedWindowGeometry` porte `Width`, `Height` et `IsMaximized` (plus de
   `Bounds`) ; `WindowLaunchCoordinator.RestoredBounds` prend la taille lue et
   l'indice de cascade ; `MinimumVisibleTitleBarWidth` disparaît. Ces types sont
-  dans `HackerOs.Platform.Blazor`, hors de la promesse du SDK (ADR 0114 §2), et
+  dans `Kazo.Os.Platform.Blazor`, hors de la promesse du SDK (ADR 0114 §2), et
   n'étaient pas encore publiés (`PublicAPI.Unshipped.txt`).
 - `WindowOptions.RememberGeometry` (SDK 1.1) ne change pas : à `false`, la
   fenêtre s'ouvre toujours à sa taille déclarée.

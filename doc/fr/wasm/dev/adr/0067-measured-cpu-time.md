@@ -106,7 +106,7 @@ colonne d'état, et `/proc/<pid>/status` ajoute `Responding: 0|1`.
 
 ### 6. Hôte serveur
 
-Sur `HackerOs.Server` (rendu Interactive Server), plusieurs threads exécutent
+Sur `Kazo.Os.Server` (rendu Interactive Server), plusieurs threads exécutent
 du code en même temps : le rappel reste juste par thread, mais le temps
 `idle` et le compositeur n'ont plus de sens simple. La mesure y est coupée par
 défaut (ADR 0066) jusqu'à un ADR propre à cet hôte.
@@ -122,8 +122,8 @@ défaut (ADR 0066) jusqu'à un ADR propre à cet hôte.
 ## Références
 
 - [`execution-isolation-plan.md`](../plans/execution-isolation-plan.md)
-- `Shared/HackerOs.AppSdk/HackExecutionContext.cs`,
-  `Shared/HackerOs.AppSdk.Blazor/AmbientComponentDispatch.cs`,
-  `Platform/HackerOs.Platform.Core/FileSystem/Virtual/ProcFileSystemProvider.cs`.
+- `Shared/Kazo.Os.AppSdk/KazoExecutionContext.cs`,
+  `Shared/Kazo.Os.AppSdk.Blazor/AmbientComponentDispatch.cs`,
+  `Platform/Kazo.Os.Platform.Core/FileSystem/Virtual/ProcFileSystemProvider.cs`.
 - `proc(5)` : `/proc/<pid>/stat`, `/proc/stat`.
 - ADR 0043, 0057, 0066, 0068, 0070.

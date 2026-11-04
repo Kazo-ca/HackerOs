@@ -21,10 +21,10 @@ manque par rapport au legacy (`src/apps/`). État constaté sur `rebuild/base`
 
 | App | Existe | Manque |
 |---|---|---|
-| Explorateur (`HackerOs.Apps.FileExplorer`) | navigation, historique, création, renommage, corbeille (ADR 0052), zip, propriétés, « ouvrir avec », envoi et téléchargement ; glisser-déposer d'un élément **sur un dossier** de la vue (`FileView.OnItemDropAsync` : déplacer, Ctrl pour copier) | couper, copier, coller ; dépôt sur le fond de la vue, l'arbre ou le fil d'Ariane ; dépôt de fichiers venant du système hôte |
-| Gestionnaire de tâches (`HackerOs.Apps.SystemMonitor`) | onglets Overview, Processes, Services, Hardware ; kill ; mode de démarrage des services | performance avec graphiques, disque, réseau (onglets du legacy : `performance`, `disk`, `network`), détail par processus, filtre, sélection multiple |
-| Éditeur de texte (`HackerOs.Apps.TextEditor`) | ouvrir, enregistrer, enregistrer sous, recherche (`TextEditorFindEngine`), détection des conflits | remplacer, tout remplacer (le legacy les avait) |
-| Console (`HackerOs.Apps.Terminal`, `TerminalPanel`) | historique, répertoire courant, complétion des **noms de commandes** par Tab (phase 3) | complétion des chemins, plusieurs onglets |
+| Explorateur (`Kazo.Os.Apps.FileExplorer`) | navigation, historique, création, renommage, corbeille (ADR 0052), zip, propriétés, « ouvrir avec », envoi et téléchargement ; glisser-déposer d'un élément **sur un dossier** de la vue (`FileView.OnItemDropAsync` : déplacer, Ctrl pour copier) | couper, copier, coller ; dépôt sur le fond de la vue, l'arbre ou le fil d'Ariane ; dépôt de fichiers venant du système hôte |
+| Gestionnaire de tâches (`Kazo.Os.Apps.SystemMonitor`) | onglets Overview, Processes, Services, Hardware ; kill ; mode de démarrage des services | performance avec graphiques, disque, réseau (onglets du legacy : `performance`, `disk`, `network`), détail par processus, filtre, sélection multiple |
+| Éditeur de texte (`Kazo.Os.Apps.TextEditor`) | ouvrir, enregistrer, enregistrer sous, recherche (`TextEditorFindEngine`), détection des conflits | remplacer, tout remplacer (le legacy les avait) |
+| Console (`Kazo.Os.Apps.Terminal`, `TerminalPanel`) | historique, répertoire courant, complétion des **noms de commandes** par Tab (phase 3) | complétion des chemins, plusieurs onglets |
 
 ## Décision
 
@@ -73,7 +73,7 @@ n'utilise que le SDK (ADR 0055).
 - **Fichiers du système hôte** (glissés depuis le bureau réel de
   l'utilisateur) : envoi dans le dossier cible par le chemin d'envoi
   existant. Conflits de noms comme pour le collage.
-- Ces ajouts vivent dans `HackerOs.AppSdk.FileView` quand ils concernent la
+- Ces ajouts vivent dans `Kazo.Os.AppSdk.FileView` quand ils concernent la
   vue (fond, arbre), pour que toute app qui affiche une `FileView` en profite.
 
 ### 2. Gestionnaire de tâches
@@ -187,8 +187,8 @@ changement, et documente ses API dans `docs/app-sdk.md` (créé par
 |---|---|---|
 | `rebuild/4-sdk-boundary` | ADR 0055 sections 1 à 3 et 6 : cible MSBuild `HOSAPP0002` / `HOSSDK0001`, contrôle `HOSAPP0003` dans le générateur de manifeste, test de sources `IJSRuntime`, liste d'exemptions des projets en défaut, retrait des références `Platform.Core` inutilisées (Calculator, HackPaint, IconViewer, TextEditor, Browser). Création de `docs/app-sdk.md`. | — |
 | `rebuild/4-sdk-user-and-apps` | ADR 0056 sections 1 à 3 et ADR 0055 section 5 : `HackUser`, `HackEnvironment.GetFolderPath`, `HackApps`, `HackAppManagement`, agent d'authentification de l'OS. Migration de FileExplorer, TextEditor, CodeEditor (utilisateur) et de l'onglet « Installed Apps » de Paramètres. | `4-sdk-boundary` |
-| `rebuild/4-sdk-network` | ADR 0056 section 6 : `IAppNetworkGateway`, `HackDns`, `HackPing`, `HackHttpClient`, `HackTcpClient`, repli réel dans Platform Core, `ShellErrorText` dans le SDK. Migration de Browser, `ping`, `curl`, `cat`, `nmap` ; `HackerOs.Commands` sans `Platform.Core` ni `Server.Contracts`. | `4-sdk-boundary` |
-| `rebuild/4-sdk-shell-host` | ADR 0056 section 7 : capacité `shell.host`, `HackShell`, `IHackShell` (sans la complétion des chemins), `HackCredentialPrompt` ; `TerminalPanel` et `HackerOs.AppSdk.Terminal` sans `Platform.Core` ; `IsSystemApp="true"` pour CodeEditor. | `4-sdk-boundary` |
+| `rebuild/4-sdk-network` | ADR 0056 section 6 : `IAppNetworkGateway`, `HackDns`, `HackPing`, `HackHttpClient`, `HackTcpClient`, repli réel dans Platform Core, `ShellErrorText` dans le SDK. Migration de Browser, `ping`, `curl`, `cat`, `nmap` ; `Kazo.Os.Commands` sans `Platform.Core` ni `Server.Contracts`. | `4-sdk-boundary` |
+| `rebuild/4-sdk-shell-host` | ADR 0056 section 7 : capacité `shell.host`, `HackShell`, `IHackShell` (sans la complétion des chemins), `HackCredentialPrompt` ; `TerminalPanel` et `Kazo.Os.AppSdk.Terminal` sans `Platform.Core` ; `IsSystemApp="true"` pour CodeEditor. | `4-sdk-boundary` |
 | `rebuild/4-sdk-system-admin` | ADR 0056 sections 8 à 11 : `HackSettings.OpenSystemAsync`, `HackPermissionAdministration`, `HackServerConnection`, `HackSystem`, `HackStorageDiagnostics`, capacités `permissions.manage`, `server.connection.manage`, `system.power`, `system.storage.inspect`. Migration du reste de Paramètres et de Diagnostic. | `4-sdk-user-and-apps` |
 | `rebuild/4-proc-metrics` | ADR 0057 : comptage dans la passerelle fichier, la persistance et la passerelle réseau ; `/proc/stat`, `/proc/<pid>/io`, `/proc/diskstats`, `/proc/net/dev`, `/proc/mounts` ; `StorageCapacityBytes` ; `HackDriveInfo`. Mise à jour de `virtual-proc-and-dev.md`. | `4-sdk-network` |
 | `rebuild/4-file-explorer` | ADR 0056 section 12 et ADR 0058 section 1 : `HackClipboard` et opération couper/copier, couper-copier-coller, conflits de noms, glisser-déposer sur le fond, l'arbre, le fil d'Ariane, la corbeille et depuis l'hôte. | `4-sdk-user-and-apps` |
@@ -214,6 +214,6 @@ Ordre :
 - Legacy : `src/apps/file-explorer.ts`, `src/apps/system-monitor.ts`,
   `src/apps/text-editor.ts`, `src/apps/terminal.ts`.
 - ADR 0016, 0050, 0051, 0052, 0055, 0056, 0057.
-- `Shared/HackerOs.AppSdk.FileView/FileView.razor.cs`,
-  `Apps/System/HackerOs.Apps.TextEditor/TextEditorFindEngine.cs`,
-  `Shared/HackerOs.AppSdk.Terminal/TerminalPanel.razor`.
+- `Shared/Kazo.Os.AppSdk.FileView/FileView.razor.cs`,
+  `Apps/System/Kazo.Os.Apps.TextEditor/TextEditorFindEngine.cs`,
+  `Shared/Kazo.Os.AppSdk.Terminal/TerminalPanel.razor`.

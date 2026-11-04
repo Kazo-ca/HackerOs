@@ -48,7 +48,7 @@ error in the log.
 
 ## Tokens
 
-`ThemeTokenCatalog` (`HackerOs.Theming.Abstractions`) lists the 68 editable
+`ThemeTokenCatalog` (`Kazo.Os.Theming.Abstractions`) lists the 68 editable
 tokens, each with a type, a group, a label, a description and an
 example. The **Documentation** tab of the editor is generated from this list.
 
@@ -87,7 +87,7 @@ write `rgba(var(--hos-accent-rgb), .2)`.
 
 ## Localized messages of the Theming.Abstractions package
 
-`HackerOs.Theming.Abstractions` has its own `Resources/Strings.resx` /
+`Kazo.Os.Theming.Abstractions` has its own `Resources/Strings.resx` /
 `Strings.fr.resx`, read by a plain `ResourceManager` (the package stays free of
 Kazo OS dependencies) with the culture the caller passes: an app gives
 `AppContext.Culture` (the editor takes it from its localizer, `Strings.CultureOf(L)`),

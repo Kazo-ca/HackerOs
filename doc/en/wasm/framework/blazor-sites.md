@@ -40,41 +40,41 @@ that calls the site's API, page that crashes.
 
 ```text
  Navigateur (fenêtre, processus du navigateur)
- ├─ GET http://site.hack/page ───────────────► site (processus web, HackWebHost)
+ ├─ GET http://site.hack/page ───────────────► site (processus web, KazoWebHost)
  │   ◄── page hôte (<script src="_framework/blazor.hack.js">)      │ routes MVC/minimales d'abord,
  ├─ GET /_framework/blazor.boot.json ──────────────────────────────┘ puis page hôte, chargeur, boot.json
  ├─ IHackWebSiteHost.StartAsync(page, boot, contexte du navigateur)
- │     └─ HackWebSiteHost (Platform.Blazor) : app Web qui sert l'origine, racine chargée,
+ │     └─ KazoWebSiteHost (Platform.Blazor) : app Web qui sert l'origine, racine chargée,
  │        AppLifecycleOrchestrator.StartAuxiliaryAsync → processus de rendu (enfant, auxiliaire)
- └─ <HackWebSiteView Process Url Cookies …>            zone de page, sans iframe
+ └─ <KazoWebSiteView Process Url Cookies …>            zone de page, sans iframe
        ├─ CascadingValue IAppExecutionContext (processus de rendu)
-       ├─ CascadingValue HackWebSite (Navigation, Http, Title)
-       ├─ HackSiteErrorBoundary ─► OnFaulted → « Aw, Snap! », processus en défaut
-       └─ composant racine du site (HackSiteRouter → pages @page, layouts, HackNavLink, HackPageTitle)
-             clics sur <a href> capturés par HackWebSiteView.razor.js → navigation interne ou du navigateur
+       ├─ CascadingValue KazoWebSite (Navigation, Http, Title)
+       ├─ KazoSiteErrorBoundary ─► OnFaulted → « Aw, Snap! », processus en défaut
+       └─ composant racine du site (KazoSiteRouter → pages @page, layouts, KazoNavLink, KazoPageTitle)
+             clics sur <a href> capturés par KazoWebSiteView.razor.js → navigation interne ou du navigateur
 ```
 
 | File | Role |
 |---|---|
-| `Shared/HackerOs.App.Abstractions/Definition/AppDefinition.cs` | `BlazorRoot` (`Type?`); the generator writes `web.blazor { assembly, type }` (schema, serializer, validator `manifest.web.blazor.assembly`). |
-| `Shared/HackerOs.AppSdk/Net/Hosting/HackBlazorBoot.cs` | `HackBlazorBootManifest` (`appId`, `appName`, `entryAssembly`, `rootComponent`), paths `_framework/blazor.hack.js` and `_framework/blazor.boot.json`. |
-| `Shared/HackerOs.AppSdk/Net/HackHttp.cs` | `HackHttpClient.BaseAddress`: relative URIs resolved like `HttpClient.BaseAddress`. |
-| `Shared/HackerOs.AppSdk.Web/Hosting/HackBlazorSiteEndpoints.cs` | The three responses of a site with a Blazor root, last (`MapFallback`, order `1 000 000`); `IsHostPage(html)`. |
-| `Shared/HackerOs.AppSdk.Web/Hosting/HackWebApplication.cs`, `HackWebHost.cs` | `MapFallback(pattern, handler)`; `CreateApplication` adds the Blazor endpoints after `Configure`. |
-| `Shared/HackerOs.AppSdk.Web.Blazor/Sites/` | Blazor SDK for sites: `IHackWebSiteHost`, `IHackWebSiteProcess`, `HackWebSiteView`, `HackWebSite`, `HackSiteNavigationManager`, `HackSiteRouter`, `HackSiteLayoutBase`, `HackNavLink`, `HackPageTitle`, `HackSiteErrorBoundary`. |
-| `Platform/HackerOs.Platform.Blazor/Sites/HackWebSiteHost.cs` | Implementation: finds the app by `web.urls`, refuses a `boot.json` from another app, loads the assembly (lazily), checks the root, starts the renderer process; `RendererProcess` relays `Exited`. |
-| `Platform/HackerOs.Platform.Core/Lifecycle/AppLifecycleOrchestrator.cs` | `StartAuxiliaryAsync(appId, principal, parentPid, argv)`: `Auxiliary` process, the site's capabilities minus `network.listen*`, tracked like a window (`StopAsync`). |
-| `Platform/HackerOs.Platform.Core/Processes/InMemoryProcessManager.cs` | `ProcessStartRequest.Auxiliary`; `TryGetSingleton` ignores auxiliary processes. |
-| `Apps/System/HackerOs.Apps.Browser/BrowserWindow.razor(.cs)` | Host page detection, `TryStartSiteAsync`, `ShowsSite` branch, internal navigation (back/forward), "Aw, Snap!", process stop when leaving the page; page area rendered in a single place through `DisplaySurfaceContent`. |
-| `Apps/System/HackerOs.Apps.Browser/BrowserErrorPages.cs` | `ForRendererCrash` (`STATUS_ACCESS_VIOLATION`, `RESULT_CODE_KILLED`), `ForSiteNotStarted` (`ERR_SITE_NOT_STARTED`). |
-| `Shared/HackerOs.AppSdk.Blazor/Display/DisplaySurfaceContent.razor.cs` | `Surface` becomes optional: without a surface, the content stays in place; content that is always rendered by the portal keeps its components on detach. |
-| `Apps/Samples/HackerOs.Samples.BlazorSite/` | Sample site: `BlazorSampleSite` (definition, `/api/greeting/{name}`), `App.razor`, `Layout/MainLayout`, `Pages/Index`, `Pages/Hello`, `Pages/Crash`. Referenced by `OS/HackerOs.Ecosystem` and `test/test`. |
+| `Shared/Kazo.Os.App.Abstractions/Definition/AppDefinition.cs` | `BlazorRoot` (`Type?`); the generator writes `web.blazor { assembly, type }` (schema, serializer, validator `manifest.web.blazor.assembly`). |
+| `Shared/Kazo.Os.AppSdk/Net/Hosting/KazoBlazorBoot.cs` | `KazoBlazorBootManifest` (`appId`, `appName`, `entryAssembly`, `rootComponent`), paths `_framework/blazor.hack.js` and `_framework/blazor.boot.json`. |
+| `Shared/Kazo.Os.AppSdk/Net/KazoHttp.cs` | `KazoHttpClient.BaseAddress`: relative URIs resolved like `HttpClient.BaseAddress`. |
+| `Shared/Kazo.Os.AppSdk.Web/Hosting/KazoBlazorSiteEndpoints.cs` | The three responses of a site with a Blazor root, last (`MapFallback`, order `1 000 000`); `IsHostPage(html)`. |
+| `Shared/Kazo.Os.AppSdk.Web/Hosting/KazoWebApplication.cs`, `KazoWebHost.cs` | `MapFallback(pattern, handler)`; `CreateApplication` adds the Blazor endpoints after `Configure`. |
+| `Shared/Kazo.Os.AppSdk.Web.Blazor/Sites/` | Blazor SDK for sites: `IHackWebSiteHost`, `IHackWebSiteProcess`, `KazoWebSiteView`, `KazoWebSite`, `KazoSiteNavigationManager`, `KazoSiteRouter`, `KazoSiteLayoutBase`, `KazoNavLink`, `KazoPageTitle`, `KazoSiteErrorBoundary`. |
+| `Platform/Kazo.Os.Platform.Blazor/Sites/KazoWebSiteHost.cs` | Implementation: finds the app by `web.urls`, refuses a `boot.json` from another app, loads the assembly (lazily), checks the root, starts the renderer process; `RendererProcess` relays `Exited`. |
+| `Platform/Kazo.Os.Platform.Core/Lifecycle/AppLifecycleOrchestrator.cs` | `StartAuxiliaryAsync(appId, principal, parentPid, argv)`: `Auxiliary` process, the site's capabilities minus `network.listen*`, tracked like a window (`StopAsync`). |
+| `Platform/Kazo.Os.Platform.Core/Processes/InMemoryProcessManager.cs` | `ProcessStartRequest.Auxiliary`; `TryGetSingleton` ignores auxiliary processes. |
+| `Apps/System/Kazo.Os.Apps.Browser/BrowserWindow.razor(.cs)` | Host page detection, `TryStartSiteAsync`, `ShowsSite` branch, internal navigation (back/forward), "Aw, Snap!", process stop when leaving the page; page area rendered in a single place through `DisplaySurfaceContent`. |
+| `Apps/System/Kazo.Os.Apps.Browser/BrowserErrorPages.cs` | `ForRendererCrash` (`STATUS_ACCESS_VIOLATION`, `RESULT_CODE_KILLED`), `ForSiteNotStarted` (`ERR_SITE_NOT_STARTED`). |
+| `Shared/Kazo.Os.AppSdk.Blazor/Display/DisplaySurfaceContent.razor.cs` | `Surface` becomes optional: without a surface, the content stays in place; content that is always rendered by the portal keeps its components on detach. |
+| `Apps/Samples/Kazo.Os.Samples.BlazorSite/` | Sample site: `BlazorSampleSite` (definition, `/api/greeting/{name}`), `App.razor`, `Layout/MainLayout`, `Pages/Index`, `Pages/Hello`, `Pages/Crash`. Referenced by `OS/Kazo.Os.Ecosystem` and `test/test`. |
 
 ### Renderer process lifecycle
 
 1. The browser receives a `text/html` that contains `_framework/blazor.hack.js`
    and reads `blazor.boot.json` (visible in the Network tab).
-2. `HackWebSiteHost` finds the installed `Web` app one of whose `web.urls` URLs
+2. `KazoWebSiteHost` finds the installed `Web` app one of whose `web.urls` URLs
    has the page's scheme, host and port; it refuses if `boot.json` names another
    app, if the app has no `web.blazor`, or if the type is not a
    component.
@@ -91,11 +91,11 @@ that calls the site's API, page that crashes.
 
 ### Navigation
 
-- `HackWebSiteView.razor.js` listens to `click` in the capture phase on the page
+- `KazoWebSiteView.razor.js` listens to `click` in the capture phase on the page
   area: a `<a href>` of the site is stopped before the OS's Blazor router (which
   listens on `document`) and handed to `OnLinkClicked`. Modified clicks, secondary
   button, `download`, `javascript:` pass through.
-- Within the site and without `forceLoad`: `HackSiteNavigationManager.SetLocation`
+- Within the site and without `forceLoad`: `KazoSiteNavigationManager.SetLocation`
   (the site's `LocationChanged`), then `OnLocationChanged` → the browser updates
   the address and history (`pushState`/`replaceState`), no request.
 - Elsewhere, or `forceLoad`: `OnNavigate` → ordinary browser navigation,
@@ -123,58 +123,58 @@ public sealed partial class Intranet : WebAppDefinition
     public override IReadOnlyList<string> Capabilities =>
         [AppCapabilities.NetworkListen, AppCapabilities.NetworkSimulatedRead, AppCapabilities.NetworkSimulatedWrite];
 
-    public override void Configure(HackWebApplicationBuilder builder)
+    public override void Configure(KazoWebApplicationBuilder builder)
     {
-        HackWebApplication app = builder.Build();
-        app.MapGet("/api/notes", () => HackResults.Json(...));   // routes de données
+        KazoWebApplication app = builder.Build();
+        app.MapGet("/api/notes", () => KazoResults.Json(...));   // routes de données
         app.MapControllers();                                     // MVC éventuel
         // la page hôte, blazor.hack.js et blazor.boot.json sont ajoutés après Configure
     }
 }
 ```
 
-The project references `HackerOs.AppSdk.Web` and `HackerOs.AppSdk.Web.Blazor`;
-`_Imports.razor` makes the components inherit from `HackComponentBase`
-(`@inherits HackComponentBase`) and imports `HackerOs.AppSdk.Web.Blazor.Sites`.
+The project references `Kazo.Os.AppSdk.Web` and `Kazo.Os.AppSdk.Web.Blazor`;
+`_Imports.razor` makes the components inherit from `KazoComponentBase`
+(`@inherits KazoComponentBase`) and imports `Kazo.Os.AppSdk.Web.Blazor.Sites`.
 
 ### Root component, pages, layout
 
 ```razor
 @* App.razor *@
-<HackSiteRouter AppAssembly="typeof(App).Assembly" DefaultLayout="typeof(MainLayout)">
+<KazoSiteRouter AppAssembly="typeof(App).Assembly" DefaultLayout="typeof(MainLayout)">
     <NotFound><p>Rien ici.</p></NotFound>
-</HackSiteRouter>
+</KazoSiteRouter>
 
 @* Layout/MainLayout.razor *@
-@inherits HackSiteLayoutBase
-<nav><HackNavLink href="/" Match="NavLinkMatch.All">Accueil</HackNavLink> <HackNavLink href="/notes">Notes</HackNavLink></nav>
+@inherits KazoSiteLayoutBase
+<nav><KazoNavLink href="/" Match="NavLinkMatch.All">Accueil</KazoNavLink> <KazoNavLink href="/notes">Notes</KazoNavLink></nav>
 <main>@Body</main>
 
 @* Pages/Note.razor *@
 @page "/notes/{Id:int}"
-<HackPageTitle Title="@($"Note {Id}")" />
+<KazoPageTitle Title="@($"Note {Id}")" />
 @code {
     [Parameter] public int Id { get; set; }
-    [CascadingParameter] HackWebSite Site { get; set; } = default!;
+    [CascadingParameter] KazoWebSite Site { get; set; } = default!;
     protected override async Task OnInitializedAsync() =>
         _note = await Site.Http.GetFromJsonAsync($"api/notes/{Id}", NotesJson.Default.Note);
 }
 ```
 
-| Type (`HackerOs.AppSdk.Web.Blazor.Sites`) | Role |
+| Type (`Kazo.Os.AppSdk.Web.Blazor.Sites`) | Role |
 |---|---|
-| `HackWebSite` (cascaded) | `AppId`, `Name`, `Navigation`, `Http` (`BaseAddress` = the site's address, the tab's cookies), `Title`, `SetTitle`, `TitleChanged`. |
-| `HackSiteNavigationManager` | The tab's `NavigationManager`: `Uri`, `BaseUri`, `NavigateTo(uri, forceLoad, replace)`, `LocationChanged`, `ToBaseRelativePath`; `IsWithinSite(uri)`. |
-| `HackSiteRouter` | `AppAssembly`, `DefaultLayout`, `NotFound`; Blazor `@page` templates (`{id:int}`, `{x?}`, `{*rest}`), `[Layout]` and nested layouts, converted parameters (`string`, integers, `bool`, `Guid`, `decimal`, `double`, `float`, `DateTime`, `DateOnly`, `TimeOnly`, nullables). |
-| `HackSiteLayoutBase` | Base of a layout (`Body`). |
-| `HackNavLink` | `Href`, `Match` (`Prefix`/`All`), `ActiveClass`, free attributes. |
-| `HackPageTitle` | `Title` → tab title. |
-| `HackWebSiteView` | The browser's view: `Process`, `Url`, `Cookies`, `OnLocationChanged`, `OnNavigate`, `OnTitleChanged`, `OnFaulted`. Apps do not need to use it. |
+| `KazoWebSite` (cascaded) | `AppId`, `Name`, `Navigation`, `Http` (`BaseAddress` = the site's address, the tab's cookies), `Title`, `SetTitle`, `TitleChanged`. |
+| `KazoSiteNavigationManager` | The tab's `NavigationManager`: `Uri`, `BaseUri`, `NavigateTo(uri, forceLoad, replace)`, `LocationChanged`, `ToBaseRelativePath`; `IsWithinSite(uri)`. |
+| `KazoSiteRouter` | `AppAssembly`, `DefaultLayout`, `NotFound`; Blazor `@page` templates (`{id:int}`, `{x?}`, `{*rest}`), `[Layout]` and nested layouts, converted parameters (`string`, integers, `bool`, `Guid`, `decimal`, `double`, `float`, `DateTime`, `DateOnly`, `TimeOnly`, nullables). |
+| `KazoSiteLayoutBase` | Base of a layout (`Body`). |
+| `KazoNavLink` | `Href`, `Match` (`Prefix`/`All`), `ActiveClass`, free attributes. |
+| `KazoPageTitle` | `Title` → tab title. |
+| `KazoWebSiteView` | The browser's view: `Process`, `Url`, `Cookies`, `OnLocationChanged`, `OnNavigate`, `OnTitleChanged`, `OnFaulted`. Apps do not need to use it. |
 | `IHackWebSiteHost`, `IHackWebSiteProcess` | Contract implemented by the platform, used by the browser. |
 
-The site's components derive from `HackComponentBase`: their events and
+The site's components derive from `KazoComponentBase`: their events and
 lifecycle run under the renderer process's identity, so
-`Site.Http`, `HackDns`, etc. go through its capabilities.
+`Site.Http`, `KazoDns`, etc. go through its capabilities.
 
 ### What a site does not do
 
@@ -219,24 +219,24 @@ lifecycle run under the renderer process's identity, so
 
 | Suite | What is checked |
 |---|---|
-| `Tests/HackerOs.App.Abstractions.Tests` | `BlazorRoot` → `web.blazor` (mapper, serializer, schema `web-blazor.valid.json`, validator). |
-| `Tests/HackerOs.AppSdk.Web.Tests/Hosting/BlazorSiteEndpointsTests.cs` | Host page for paths without an extension, `404` with an extension, site routes first, `boot.json`, `blazor.hack.js`, site without a root. |
-| `Tests/HackerOs.AppSdk.Web.Blazor.Tests` | Router (templates, precedence, conversion), navigation (`NavigateTo`, `SetLocation`, `IsWithinSite`), `HackWebSite` (title, client). |
-| `Tests/HackerOs.Platform.Core.Tests` | `TryGetSingleton` ignores auxiliaries; `StartAuxiliaryAsync` (parent, `argv`, capabilities, not the site's instance, stop in `Fault`). |
-| `Tests/HackerOs.Platform.Blazor.Tests/HackWebSiteHostTests.cs` | App found by origin, `boot.json` of another app refused, root missing or not a component, stop and `Exited`. |
-| `Tests/HackerOs.Network.Tests` | `HackHttpClient.BaseAddress`. |
-| `Tests/HackerOs.Platform.WorkerHost.Tests/BlazorSiteTests.cs` | `curl` on a site with a Blazor root: host page, `boot.json`, loader, API, `404`, main thread and worker. |
-| `Tests/HackerOs.UI.E2E.Tests/BrowserBlazorSiteTests.cs` | Chromium: sample site drawn without an iframe, counter, link without reload, API, back/forward inside the site, "Aw, Snap!", reload, leaving the site. |
+| `Tests/Kazo.Os.App.Abstractions.Tests` | `BlazorRoot` → `web.blazor` (mapper, serializer, schema `web-blazor.valid.json`, validator). |
+| `Tests/Kazo.Os.AppSdk.Web.Tests/Hosting/BlazorSiteEndpointsTests.cs` | Host page for paths without an extension, `404` with an extension, site routes first, `boot.json`, `blazor.hack.js`, site without a root. |
+| `Tests/Kazo.Os.AppSdk.Web.Blazor.Tests` | Router (templates, precedence, conversion), navigation (`NavigateTo`, `SetLocation`, `IsWithinSite`), `KazoWebSite` (title, client). |
+| `Tests/Kazo.Os.Platform.Core.Tests` | `TryGetSingleton` ignores auxiliaries; `StartAuxiliaryAsync` (parent, `argv`, capabilities, not the site's instance, stop in `Fault`). |
+| `Tests/Kazo.Os.Platform.Blazor.Tests/KazoWebSiteHostTests.cs` | App found by origin, `boot.json` of another app refused, root missing or not a component, stop and `Exited`. |
+| `Tests/Kazo.Os.Network.Tests` | `KazoHttpClient.BaseAddress`. |
+| `Tests/Kazo.Os.Platform.WorkerHost.Tests/BlazorSiteTests.cs` | `curl` on a site with a Blazor root: host page, `boot.json`, loader, API, `404`, main thread and worker. |
+| `Tests/Kazo.Os.UI.E2E.Tests/BrowserBlazorSiteTests.cs` | Chromium: sample site drawn without an iframe, counter, link without reload, API, back/forward inside the site, "Aw, Snap!", reload, leaving the site. |
 
 ## Tasks
 
 - [x] ADR 0084.
 - [x] `BlazorRoot`, `web.blazor` manifest (schema, serializer, validator, mapper).
 - [x] `ProcessStartRequest.Auxiliary`, `TryGetSingleton`, `StartAuxiliaryAsync`.
-- [x] Host page, loader and `boot.json` (`HackBlazorSiteEndpoints`, `MapFallback`).
-- [x] `HackHttpClient.BaseAddress`.
-- [x] `HackerOs.AppSdk.Web.Blazor` library (view, site, navigation, router, layout, link, title, error boundary).
-- [x] `HackWebSiteHost` (Platform.Blazor), registration in the Ecosystem.
+- [x] Host page, loader and `boot.json` (`KazoBlazorSiteEndpoints`, `MapFallback`).
+- [x] `KazoHttpClient.BaseAddress`.
+- [x] `Kazo.Os.AppSdk.Web.Blazor` library (view, site, navigation, router, layout, link, title, error boundary).
+- [x] `KazoWebSiteHost` (Platform.Blazor), registration in the Ecosystem.
 - [x] Browser: startup, internal navigation, back/forward, "Aw, Snap!", stop, detached window without state loss.
 - [x] Sample site in both hosts.
 - [x] Unit, `curl` and E2E tests.

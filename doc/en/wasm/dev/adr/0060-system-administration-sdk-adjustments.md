@@ -53,7 +53,7 @@ writing them, five points of the ADR did not hold as written:
 4. **`HackSettingsDocument.SetManyAsync(values, layer)`** writes several keys
    of a layer in a single edit of the file, hence a single approval.
 5. **Diagnostic copies to the host clipboard** through
-   `BrowserClipboard` (`HackerOs.AppSdk.Blazor`, module `clipboard.js`), and
+   `BrowserClipboard` (`Kazo.Os.AppSdk.Blazor`, module `clipboard.js`), and
    also offers "Download JSON" and "Save to HackerOS". It
    no longer declares `clipboard.write`.
 

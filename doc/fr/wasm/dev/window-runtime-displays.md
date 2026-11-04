@@ -10,7 +10,7 @@ chantiers suivants (portail des fenêtres, service d'écrans) s'appuient sur lui
 
 ## 1. Identité d'un écran
 
-`DisplayId` (`HackerOs.Windowing.Abstractions`) est le numéro que voit
+`DisplayId` (`Kazo.Os.Windowing.Abstractions`) est le numéro que voit
 l'utilisateur :
 
 | Membre | Rôle |
@@ -86,10 +86,10 @@ son ancre. Un écran retiré libère son numéro.
 ## 7. API publique et tests
 
 - Les nouveaux types et membres sont dans `PublicAPI.Unshipped.txt` de
-  `HackerOs.Windowing.Abstractions` et `HackerOs.Windowing.Core`. Les signatures
+  `Kazo.Os.Windowing.Abstractions` et `Kazo.Os.Windowing.Core`. Les signatures
   existantes ne changent pas (`ChangeViewportCommand` et
   `WindowViewportChangedEvent` gardent leur constructeur et reçoivent un second
   constructeur).
-- Tests : `Tests/HackerOs.Windowing.Core.Tests/WindowRuntimeDisplayTests.cs`
+- Tests : `Tests/Kazo.Os.Windowing.Core.Tests/WindowRuntimeDisplayTests.cs`
   (numéros, zones par écran, changement d'écran dans chaque état, modales, écran
   retiré).

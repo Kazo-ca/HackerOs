@@ -140,7 +140,7 @@ line.
 
 ### 7. Commands and `nano`
 
-Commands added to the `HackerOs.Commands` project (one folder per command):
+Commands added to the `Kazo.Os.Commands` project (one folder per command):
 `locate`, `zip`, `unzip`, `cut`, `tee`, `whoami`, `df`, `du`, `top`, `htop`,
 `systemctl` (alias `service`), `watch`, `jobs`, `wget`, `ip` (alias
 `ifconfig`), `netstat` (alias `ss`), `ln`, `test`, `true`, `false`, `read`,

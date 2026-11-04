@@ -1,0 +1,26 @@
+#nullable enable
+Kazo.Os.Apps.Terminal.TerminalApp
+Kazo.Os.Apps.Terminal.TerminalApp.TerminalApp() -> void
+Kazo.Os.Apps.Terminal.TerminalEmbed
+Kazo.Os.Apps.Terminal.TerminalEmbed.TerminalEmbed() -> void
+Kazo.Os.Apps.Terminal.TerminalWindow
+Kazo.Os.Apps.Terminal.TerminalWindow.TerminalWindow() -> void
+Kazo.Os.Apps.Terminal._Imports
+Kazo.Os.Apps.Terminal._Imports.Execute() -> void
+Kazo.Os.Apps.Terminal._Imports._Imports() -> void
+override Kazo.Os.Apps.Terminal.TerminalApp.Assets.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AssetManifest!>!
+override Kazo.Os.Apps.Terminal.TerminalApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Apps.Terminal.TerminalApp.Components.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppComponent!>!
+override Kazo.Os.Apps.Terminal.TerminalApp.Description.get -> string!
+override Kazo.Os.Apps.Terminal.TerminalApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Apps.Terminal.TerminalApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Apps.Terminal.TerminalApp.Id.get -> string!
+override Kazo.Os.Apps.Terminal.TerminalApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Apps.Terminal.TerminalApp.MobileEntryPoint.get -> System.Type?
+override Kazo.Os.Apps.Terminal.TerminalApp.Name.get -> string!
+override Kazo.Os.Apps.Terminal.TerminalApp.PublisherId.get -> string!
+override Kazo.Os.Apps.Terminal.TerminalApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Apps.Terminal.TerminalApp.SingleInstancePerUser.get -> bool
+override Kazo.Os.Apps.Terminal.TerminalEmbed.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+~override Kazo.Os.Apps.Terminal.TerminalEmbed.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.Terminal.TerminalWindow.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

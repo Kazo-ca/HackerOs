@@ -17,12 +17,12 @@ Accepté le 2026-10-22.
 Les apps chargées à la demande (ADR 0113, `BuildKnownAssemblyLoaderRegistry`)
 vont chercher leur `.wasm` au premier lancement, sous le nom à empreinte que
 le `dotnet.js` de la page connaît depuis le démarrage
-(`HackerOs.Apps.Settings.yesfevpgxl.wasm`). Si l'origine sert un autre build
+(`Kazo.Os.Apps.Settings.yesfevpgxl.wasm`). Si l'origine sert un autre build
 entre-temps (F5 dans Visual Studio pendant qu'un onglet reste ouvert, hot
 reload, déploiement d'une nouvelle version), ce fichier n'existe plus ou n'a
 plus la bonne empreinte : le navigateur refuse la réponse (contrôle
 d'intégrité) et le lancement échoue avec
-`download '…/_framework/HackerOs.Apps.Settings.yesfevpgxl.wasm' failed 0
+`download '…/_framework/Kazo.Os.Apps.Settings.yesfevpgxl.wasm' failed 0
 TypeError: Failed to fetch`. Rien n'expliquait à l'utilisateur qu'un
 rechargement suffisait.
 
@@ -59,7 +59,7 @@ bouton était désactivé.
   session fermée (les apps reçoivent leur annulation), puis rechargement de la
   page. Aucune élévation n'est demandée : rien ne change sur la machine, on
   charge seulement les fichiers déjà installés.
-- Le module `OS/HackerOs.Ecosystem.Host/wwwroot/hostBuild.js` lit l'import map
+- Le module `OS/Kazo.Os.Ecosystem.Host/wwwroot/hostBuild.js` lit l'import map
   et redemande la page ; la comparaison reste en C#.
 
 ### 3. Hors du code

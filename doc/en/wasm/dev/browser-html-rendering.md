@@ -33,8 +33,8 @@ The browser also gains:
 
 ```
 BrowserWindow ── NavigateAsync ──► BrowserResourceLoader ──► SdkBrowserTransport
-     │                                  │  (journal Network/Console)   ├─ http(s) : HackHttpClient + cookies de l'onglet
-     │                                  ▼                              └─ file:   : HackFile / HackDirectoryInfo
+     │                                  │  (journal Network/Console)   ├─ http(s) : KazoHttpClient + cookies de l'onglet
+     │                                  ▼                              └─ file:   : KazoFile / KazoDirectoryInfo
      │                            DevToolsLog ◄── DevToolsPanel
      ▼
 HtmlPageComposer (AngleSharp) ── SubresourceFetcher + CssResourceRewriter
@@ -48,13 +48,13 @@ PageBridgeHandler ◄── PageBridge.js (dans la page) : fetch, XHR, liens, fo
      └── PageStorage (~/.local/share/hackeros/browser/storage/<site>/local-storage.json)
 ```
 
-All files are under `Apps/System/HackerOs.Apps.Browser/`:
+All files are under `Apps/System/Kazo.Os.Apps.Browser/`:
 
 | Folder / file | Role |
 |---|---|
 | `Net/BrowserTransport.cs` | `BrowserRequest`, `BrowserResponse`, `BrowserFetchResult`, `IBrowserTransport`, `BrowserErrorCodes` codes. |
-| `Net/SdkBrowserTransport.cs` | Real transport: `HackHttpClient` (tab cookies or empty container depending on credentials, forbidden headers filtered) and `file:` (file or listing). |
-| `Net/BrowserUrl.cs` | Address bar (`view-source:`, `about:blank`, `/…` and `~/…` paths, HackerSearch search), relative resolution, origin, per-site storage key. |
+| `Net/SdkBrowserTransport.cs` | Real transport: `KazoHttpClient` (tab cookies or empty container depending on credentials, forbidden headers filtered) and `file:` (file or listing). |
+| `Net/BrowserUrl.cs` | Address bar (`view-source:`, `about:blank`, `/…` and `~/…` paths, KazoSearch search), relative resolution, origin, per-site storage key. |
 | `Net/DirectoryListingPage.cs` | "Index of" page of a local folder. |
 | `Net/BrowserResourceLoader.cs` | Single pass-through point: each request produces a Network line and, on failure, a "Failed to load resource" Console message. |
 | `Rendering/HtmlPageComposer.cs` | Parses the HTML (AngleSharp), inlines subresources, removes `<base>` and frames, adds charset, `<base href>`, CSP and the bridge script. |
@@ -68,9 +68,9 @@ All files are under `Apps/System/HackerOs.Apps.Browser/`:
 | `BrowserPageView.razor(.js)` | Creates the isolated iframe, relays messages, detects a script navigation. |
 | `BrowserErrorPages.cs`, `BrowserDownloads.cs` | Error pages and downloads. |
 
-`SimulatedFileTypes` (`Shared/HackerOs.Simulation.Abstractions/Network/`)
+`SimulatedFileTypes` (`Shared/Kazo.Os.Simulation.Abstractions/Network/`)
 gives the MIME type of a local file from its extension.
-`HackCookieContainer.Remove` (SDK) deletes a cookie expired by the page.
+`KazoCookieContainer.Remove` (SDK) deletes a cookie expired by the page.
 
 ## How it works
 
@@ -170,7 +170,7 @@ is recreated there and its bridge keeps talking to this browser.
   `F5`: reload; `Alt+←`/`Alt+→`: history. These shortcuts also work
   when the focus is in the page.
 - A site that wants to be called from another origin returns
-  `Access-Control-Allow-Origin` (HackerSearch does so on `/api/search`).
+  `Access-Control-Allow-Origin` (KazoSearch does so on `/api/search`).
 
 ## Key decisions
 
@@ -197,18 +197,18 @@ is recreated there and its bridge keeps talking to this browser.
 
 ## Tests
 
-- `Tests/HackerOs.Apps.Browser.Tests`: HTML composition, CSS rewriting, bridge
+- `Tests/Kazo.Os.Apps.Browser.Tests`: HTML composition, CSS rewriting, bridge
   (CORS, credentials, cookies), URLs, storage, error pages, listing,
   downloads, developer tools log.
-- `Tests/HackerOs.UI.E2E.Tests/BrowserHtmlRenderingTests.cs`: in Chromium,
+- `Tests/Kazo.Os.UI.E2E.Tests/BrowserHtmlRenderingTests.cs`: in Chromium,
   web page with CSS, script, `fetch` and cookie; sandbox verified; Network
   tab; source view; XHR and `POST` form; local `file://` site with
   `localStorage`, CORS `fetch`, link and back; DNS error page.
-- `Tests/HackerOs.Apps.Browser.Tests/FormHistoryTests.cs` and
-  `Tests/HackerOs.UI.E2E.Tests/BrowserSiteDataTests.cs`: form
+- `Tests/Kazo.Os.Apps.Browser.Tests/FormHistoryTests.cs` and
+  `Tests/Kazo.Os.UI.E2E.Tests/BrowserSiteDataTests.cs`: form
   history (file, limits, `<datalist>` in Chromium).
-- `Tests/HackerOs.UI.E2E.Tests/BrowserHomePageTests.cs`: outside demo mode, the
-  browser opens on HackerSearch and a search typed in the address bar
+- `Tests/Kazo.Os.UI.E2E.Tests/BrowserHomePageTests.cs`: outside demo mode, the
+  browser opens on KazoSearch and a search typed in the address bar
   displays its results (ADR 0085: the default network catalog
   is wired into the OS).
 - Test pages: `example.hackeros` (`/page.html`, `/form.html`, `/echo`,

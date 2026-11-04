@@ -35,7 +35,7 @@ A full-screen command uses the SDK's `IFullScreenTerminalSession` contract: `Ent
 
 ## IHackTerminal
 
-`IHackTerminal` (file `Shared/HackerOs.AppSdk/Components/IHackTerminal.cs`) has the members `RunCommandAsync(commandLine)`, `SetWorkingDirectoryAsync(path)`, `SendInputAsync(text)`, `ReadOutput(maxCharacters)` (65,536 characters by default), `ClearAsync()` and `FocusAsync()`.
+`IHackTerminal` (file `Shared/Kazo.Os.AppSdk/Components/IHackTerminal.cs`) has the members `RunCommandAsync(commandLine)`, `SetWorkingDirectoryAsync(path)`, `SendInputAsync(text)`, `ReadOutput(maxCharacters)` (65,536 characters by default), `ClearAsync()` and `FocusAsync()`.
 
 Commands sent by a host (`IHackTerminal.RunCommandAsync`) are
 never continued.

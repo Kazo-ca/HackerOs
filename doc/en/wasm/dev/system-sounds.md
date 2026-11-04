@@ -4,7 +4,7 @@
 
 The OS plays a sound for its events: notification, warning, error, sign-in and
 sign-out. Decision: [ADR 0204](adr/0204-os-event-sounds.md), issue
-[#256](https://github.com/Kazo-ca/HackerOs/issues/256).
+[#256](https://github.com/Kazo-ca/Os/issues/256).
 
 ## For the user
 
@@ -95,11 +95,11 @@ otherwise the `hackeros` theme. The same event twice within 150 ms sounds once.
 The sounds are computed, with no sample from elsewhere:
 
 ```sh
-cd wasm2/HackerOs
+cd wasm2/KazoOs
 python3 build/tools/generate-system-sounds.py /tmp/sounds
 for f in /tmp/sounds/*/*.wav; do ffmpeg -y -i "$f" -c:a libvorbis -q:a 2 -ar 22050 -ac 1 "${f%.wav}.oga"; done
-cp /tmp/sounds/hackeros/*.oga Platform/HackerOs.Platform.Core/Sounds/Themes/hackeros/
-cp /tmp/sounds/soft/*.oga Platform/HackerOs.Platform.Core/Sounds/Themes/soft/
+cp /tmp/sounds/hackeros/*.oga Platform/Kazo.Os.Platform.Core/Sounds/Themes/hackeros/
+cp /tmp/sounds/soft/*.oga Platform/Kazo.Os.Platform.Core/Sounds/Themes/soft/
 ```
 
 An existing installation keeps its old files (`FileSystemSeeder` overwrites
@@ -107,7 +107,7 @@ nothing).
 
 ## Tests
 
-`Tests/HackerOs.Platform.Core.Tests/Sounds/`: `index.theme` format and names,
+`Tests/Kazo.Os.Platform.Core.Tests/Sounds/`: `index.theme` format and names,
 installed files, sign-in sound, sounds off, notification severity, user theme
 and fallback, 1 MB limit, no masking, theme change, repeat guard, clamped
 volume.

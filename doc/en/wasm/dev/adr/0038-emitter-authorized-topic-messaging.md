@@ -8,11 +8,11 @@ Accepted on 2026-08-17.
 
 ## Context
 
-`Shared/HackerOs.Simulation.Abstractions/Events/EventBusContracts.cs` (`IEventBus`), implemented by
-`Platform/HackerOs.Platform.Core/Events/InMemoryEventBus.cs`, is the one in-process pub/sub mechanism in
+`Shared/Kazo.Os.Simulation.Abstractions/Events/EventBusContracts.cs` (`IEventBus`), implemented by
+`Platform/Kazo.Os.Platform.Core/Events/InMemoryEventBus.cs`, is the one in-process pub/sub mechanism in
 HackerOS (`P1-SYS-008`). It is exposed to app code as `IAppEventGateway`
-(`Shared/HackerOs.Simulation.Abstractions/Gateways/AppGatewayContracts.cs`), whose current implementation,
-`Platform/HackerOs.Platform.Core/Execution/AppEventGateway.cs`, is a blind pass-through:
+(`Shared/Kazo.Os.Simulation.Abstractions/Gateways/AppGatewayContracts.cs`), whose current implementation,
+`Platform/Kazo.Os.Platform.Core/Execution/AppEventGateway.cs`, is a blind pass-through:
 
 ```csharp
 public IReadOnlyList<EventDispatchFault> Publish<TEvent>(TEvent @event) where TEvent : notnull =>
@@ -32,7 +32,7 @@ lifecycle events. Enumerating every real (non-test) `.Publish(` call site in the
 | `Platform.Core/Processes/InMemoryProcessManager.cs` (4 sites) | `ProcessStateChangedEvent` | Platform.Core (trusted) |
 | `Platform.Core/Diagnostics/EventPublishingDiagnosticSink.cs` | `DiagnosticEntryRecordedEvent`, `DiagnosticLogClearedEvent` | Platform.Core (trusted) |
 | `Platform.Core/Lifecycle/AppLifecycleOrchestrator.cs` | `AppDisabledEvent` | Platform.Core (trusted) |
-| `Apps/Samples/HackerOs.Samples.ServiceApp/SampleTickerService.cs` | `SampleTickerEvent` | **App code, via `context.Events.Publish` (`IAppEventGateway`)** |
+| `Apps/Samples/Kazo.Os.Samples.ServiceApp/SampleTickerService.cs` | `SampleTickerEvent` | **App code, via `context.Events.Publish` (`IAppEventGateway`)** |
 
 Every trusted lifecycle event is already published exclusively from `Platform.Core`. Nothing today
 actually publishes a kernel event from app code — but nothing *prevents* it either, and the one existing
@@ -100,7 +100,7 @@ exact-capability-matching precedent.
   (`P1-EXEC-004`): `IAppEventGateway.Publish<TEvent>` no longer succeeds for an arbitrary event type. This
   is intentional and is the entire point of this ADR; any future app relying on publishing a kernel event
   type directly must instead publish to its own topic and have interested parties subscribe to that topic.
-- `SampleTickerService` (`Apps/Samples/HackerOs.Samples.ServiceApp`) must migrate to the topic lane as part
+- `SampleTickerService` (`Apps/Samples/Kazo.Os.Samples.ServiceApp`) must migrate to the topic lane as part
   of implementation (`MSG-004`) — it is the one real call site this ADR's table identifies as needing a
   code change, not just a policy statement.
 - `FileView`'s directory-watch support (ADR 0037) depends on `MSG-006` through `MSG-009` (shared
@@ -118,8 +118,8 @@ exact-capability-matching precedent.
   full specification.
 - [`../Global-FileView-And-MessagingSystem/integrationPlan.md`](../old/Global-FileView-And-MessagingSystem/integrationPlan.md) —
   Phase 1 (`MSG-001`–`MSG-005`) and Phase 2 (`MSG-006`–`MSG-010`).
-- `Shared/HackerOs.Simulation.Abstractions/Events/TopicMessagingContracts.cs` and
-  `Shared/HackerOs.Simulation.Abstractions/FileSystem/FileSystemWatchContracts.cs` — accepted contract
+- `Shared/Kazo.Os.Simulation.Abstractions/Events/TopicMessagingContracts.cs` and
+  `Shared/Kazo.Os.Simulation.Abstractions/FileSystem/FileSystemWatchContracts.cs` — accepted contract
   skeletons.
 - ADR 0002: Authority Comes from Trusted Policy — the general principle this ADR extends to publish
   authorization.

@@ -39,7 +39,7 @@ l'éliminer des mémoires, de la documentation et le remplacer par une mention
   `building-on-hackeros.md`, `sdk-packages.md`, `ecosystem-rebuild-plan.md`,
   `wasm-v3-completion-plan.md`, `wasm-v3-final-status.md`,
   `execution-followups-plan.md`, documents des mesures, `README.md` de
-  `wasm2/HackerOs` et index) ; quelques commentaires de code aussi.
+  `wasm2/KazoOs` et index) ; quelques commentaires de code aussi.
 - La mémoire du projet ne garde que la règle.
 
 ## Références

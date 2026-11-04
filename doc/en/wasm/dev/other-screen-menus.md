@@ -87,18 +87,18 @@ screen 1, in each screen of `ScreenLayer` for the others.
 
 ## 5. Tests
 
-- `Tests/HackerOs.Platform.Blazor.Tests/OtherScreenMenuTests.cs`: Maximize menu entries, kind and
+- `Tests/Kazo.Os.Platform.Blazor.Tests/OtherScreenMenuTests.cs`: Maximize menu entries, kind and
   origin of the open menu, submenu screens (current screen disabled, single screen, French), move
   and focus, shortcuts going round, shortcuts without effect on one screen, shortcut defaults, New
   screen accepted then refused, number read by the veil.
-- `Tests/HackerOs.Platform.Blazor.Tests/WindowMenuContextMenuTests.cs`: both menus opened in
+- `Tests/Kazo.Os.Platform.Blazor.Tests/WindowMenuContextMenuTests.cs`: both menus opened in
   `ContextMenuService` with their submenu, choosing a screen, closing both ways, veil shown on
   each screen with the target marked, then removed on close.
-- `Tests/HackerOs.UI.E2E.Tests/ScreenServiceTests.cs`, real Chromium with screen 2 restored: right
+- `Tests/Kazo.Os.UI.E2E.Tests/ScreenServiceTests.cs`, real Chromium with screen 2 restored: right
   click on Maximize; hovering "Screen 2" → veil on screen 2 only, removed when the pointer passes
   over it and when it leaves the entry; "Screen 2" moves the window; `Ctrl+Alt+Shift+Left` brings
   it back; "New screen" opens screen 3 with the window.
-- `Tests/HackerOs.UI.E2E.Tests/WindowAppIconTests.cs`: same expectations as before; the menu is
+- `Tests/Kazo.Os.UI.E2E.Tests/WindowAppIconTests.cs`: same expectations as before; the menu is
   now found by `[data-context-menu='window-menu']`.
 
 ## 6. Limits

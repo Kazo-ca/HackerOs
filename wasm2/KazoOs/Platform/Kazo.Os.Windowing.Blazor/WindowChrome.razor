@@ -1,0 +1,423 @@
+@namespace Kazo.Os.Windowing.Blazor
+@using Microsoft.JSInterop
+@implements IAsyncDisposable
+@inject IJSRuntime JSRuntime
+@inject IServiceProvider LocalizationServices
+
+<div class="chrome-interaction-layer" @ref="_interactionLayer" @onpointerdown:stopPropagation>
+<header class="window-chrome @(Window.IsFocused ? "is-focused" : "is-background")"
+        data-window-gesture="@(Window.Constraints.IsMovable ? "move" : null)">
+    <div class="window-identity">
+        @if (Window.SupportsBack)
+        {
+            <button type="button" class="chrome-button chrome-button-back" aria-label="@L["Chrome.Back"]" title="@L["Chrome.Back"]" @onclick="BackAsync">
+                <svg viewBox="0 0 12 12" aria-hidden="true" focusable="false">
+                    <polyline points="7,2 3,6 7,10" />
+                </svg>
+            </button>
+        }
+        @if (OnWindowMenu.HasDelegate)
+        {
+            @* The app icon opens its system menu on right click; left click only activates the window. *@
+            <button type="button" class="chrome-button chrome-button-menu" aria-label="@L["Chrome.WindowMenu"]" title="@L["Chrome.WindowMenuHint"]" aria-haspopup="menu"
+                    @onclick="FocusIconAsync"
+                    @oncontextmenu="OpenWindowMenuAtPointerAsync"
+                    @oncontextmenu:preventDefault="true"
+                    @oncontextmenu:stopPropagation="true">
+                @if (!string.IsNullOrWhiteSpace(Window.IconAssetPath))
+                {
+                    <img class="window-icon" src="@Window.IconAssetPath" alt="" />
+                }
+                else
+                {
+                    <svg viewBox="0 0 12 12" aria-hidden="true" focusable="false">
+                        <rect x="1" y="1" width="10" height="10" rx="1" />
+                        <line x1="1" y1="4" x2="11" y2="4" />
+                    </svg>
+                }
+            </button>
+        }
+        else if (!string.IsNullOrWhiteSpace(Window.IconAssetPath))
+        {
+            <img class="window-icon" src="@Window.IconAssetPath" alt="" />
+        }
+        <h2 id="@TitleId">@Window.Title@if (!Window.IsResponding)
+            {
+                @* Display only (ADR 0127 §3): Window.Title keeps the app's own title. *@
+                <span class="window-title-state">@(" " + L["Chrome.NotResponding"])</span>
+            }</h2>
+    </div>
+    <div class="window-actions" aria-label="@L["Chrome.Controls"]">
+        <button type="button" class="chrome-button chrome-button-minimize" aria-label="@L["Chrome.Minimize"]" title="@L["Chrome.Minimize"]" @onclick="MinimizeAsync">
+            <svg viewBox="0 0 12 12" aria-hidden="true" focusable="false">
+                <line x1="2" y1="9" x2="10" y2="9" />
+            </svg>
+        </button>
+        @if (Window.Constraints.IsResizable)
+        {
+        @* ADR 0179 §4: right click opens snap, full screen and « Autre écran »; left click is unchanged (ADR 0177). *@
+        <button type="button" class="chrome-button chrome-button-maximize" aria-label="@ToggleLabel" title="@ToggleLabel" @onclick="ToggleMaximizeAsync"
+                @oncontextmenu="OpenMaximizeMenuAtPointerAsync"
+                @oncontextmenu:preventDefault="@OnWindowMenu.HasDelegate"
+                @oncontextmenu:stopPropagation="@OnWindowMenu.HasDelegate">
+            @if (Window.VisualState == WindowVisualState.Maximized)
+            {
+                <svg viewBox="0 0 12 12" aria-hidden="true" focusable="false">
+                    <rect x="1.5" y="3.5" width="7" height="7" />
+                    <rect x="3.5" y="1.5" width="7" height="7" class="chrome-icon-overlay" />
+                </svg>
+            }
+            else
+            {
+                <svg viewBox="0 0 12 12" aria-hidden="true" focusable="false">
+                    <rect x="2" y="2" width="8" height="8" />
+                </svg>
+            }
+        </button>
+        }
+        <button type="button" class="chrome-button chrome-button-close" aria-label="@L["Chrome.Close"]" title="@L["Chrome.Close"]" @onclick="CloseAsync">
+            <svg viewBox="0 0 12 12" aria-hidden="true" focusable="false">
+                <line x1="2" y1="2" x2="10" y2="10" />
+                <line x1="10" y1="2" x2="2" y2="10" />
+            </svg>
+        </button>
+    </div>
+</header>
+@if (Window.Constraints.IsResizable && Window.VisualState == WindowVisualState.Normal)
+{
+    @* A maximized window has no edge to drag: no handle may sit over its title bar buttons. *@
+    @foreach (string edge in ResizeEdges)
+    {
+        <span class="resize-handle resize-@edge" data-window-gesture="resize" data-resize-edge="@edge" aria-hidden="true"></span>
+    }
+}
+</div>
+
+@code {
+    /// <summary>Gets or sets the authoritative window snapshot.</summary>
+    [Parameter, EditorRequired]
+    public WindowRuntimeState Window { get; set; } = null!;
+
+    /// <summary>Gets or sets the ID used to label the dialog host.</summary>
+    [Parameter, EditorRequired]
+    public string TitleId { get; set; } = string.Empty;
+
+    /// <summary>Gets or sets the minimize request callback.</summary>
+    [Parameter]
+    public EventCallback<WindowId> OnMinimize { get; set; }
+
+    /// <summary>Gets or sets the focus request applied before chrome interactions.</summary>
+    [Parameter]
+    public EventCallback<WindowId> OnFocus { get; set; }
+
+    /// <summary>Gets or sets the maximize/restore request callback.</summary>
+    [Parameter]
+    public EventCallback<WindowId> OnToggleMaximize { get; set; }
+
+    /// <summary>Gets or sets the close request callback.</summary>
+    [Parameter]
+    public EventCallback<WindowId> OnClose { get; set; }
+
+    /// <summary>
+    /// Gets or sets the Back request callback, invoked when the user activates the chrome Back
+    /// button rendered for a window that declares <see cref="WindowRuntimeState.SupportsBack"/>,
+    /// per doc/en/wasm/dev/old/mobile-interface-platform-plan.md §8 (<c>MOB-013</c>).
+    /// </summary>
+    [Parameter]
+    public EventCallback<WindowId> OnBack { get; set; }
+
+    /// <summary>
+    /// Gets or sets the window menu request callback (ADR 0095 §3): raised by a right click on the
+    /// title bar or by the window menu button, which is only shown when this callback is set.
+    /// </summary>
+    [Parameter]
+    public EventCallback<WindowMenuRequest> OnWindowMenu { get; set; }
+
+    /// <summary>Gets or sets the C# command callback for pointer gestures.</summary>
+    [Parameter]
+    public EventCallback<WindowCommand> OnGesture { get; set; }
+
+    private static readonly string[] ResizeEdges = ["top", "right", "bottom", "left", "top-left", "top-right", "bottom-right", "bottom-left"];
+    private ElementReference _interactionLayer;
+    private IJSObjectReference? _module;
+    private DotNetObjectReference<WindowChrome>? _selfReference;
+
+    private string ToggleLabel => Window.VisualState == WindowVisualState.Maximized ? L["Chrome.Restore"] : L["Chrome.Maximize"];
+
+    /// <summary>Gets the package's texts: the host's session language, or English without localization (ADR 0104).</summary>
+    private IStringLocalizer L => _localizer ??= PackageStringLocalizer.Resolve<Strings>(LocalizationServices);
+    private IStringLocalizer? _localizer;
+
+    private async Task MinimizeAsync()
+    {
+        await OnFocus.InvokeAsync(Window.Id);
+        await OnMinimize.InvokeAsync(Window.Id);
+    }
+
+    private async Task ToggleMaximizeAsync()
+    {
+        await OnFocus.InvokeAsync(Window.Id);
+        await OnToggleMaximize.InvokeAsync(Window.Id);
+    }
+
+    private async Task CloseAsync()
+    {
+        await OnFocus.InvokeAsync(Window.Id);
+        await OnClose.InvokeAsync(Window.Id);
+    }
+
+    private async Task OpenWindowMenuAtPointerAsync(MouseEventArgs args)
+    {
+        if (!OnWindowMenu.HasDelegate)
+        {
+            return;
+        }
+
+        await OnFocus.InvokeAsync(Window.Id);
+        await OnWindowMenu.InvokeAsync(new WindowMenuRequest(Window.Id, args.ClientX, args.ClientY));
+    }
+
+    private async Task OpenMaximizeMenuAtPointerAsync(MouseEventArgs args)
+    {
+        if (!OnWindowMenu.HasDelegate)
+        {
+            return;
+        }
+
+        await OnFocus.InvokeAsync(Window.Id);
+        await OnWindowMenu.InvokeAsync(new WindowMenuRequest(Window.Id, args.ClientX, args.ClientY) { Kind = WindowMenuKind.MaximizeButton });
+    }
+
+    private Task FocusIconAsync() => OnFocus.InvokeAsync(Window.Id);
+
+    private async Task BackAsync()
+    {
+        await OnFocus.InvokeAsync(Window.Id);
+        await OnBack.InvokeAsync(Window.Id);
+    }
+
+    /// <inheritdoc />
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        _module = await JSRuntime.InvokeAsync<IJSObjectReference>(
+            "import",
+            "./_content/Kazo.Os.Windowing.Blazor/WindowChrome.razor.js");
+        _selfReference = DotNetObjectReference.Create(this);
+        await _module.InvokeVoidAsync("attachWindowGestures", _interactionLayer, _selfReference);
+    }
+
+    /// <summary>Focuses the window at pointer-down, before any gesture updates.</summary>
+    [JSInvokable]
+    public Task ReportGestureStartedAsync() => OnFocus.InvokeAsync(Window.Id);
+
+    /// <summary>
+    /// Ends a pointer gesture. Moves project the current authoritative position and remove the
+    /// browser preview atomically; resizes report one completed resize (ADR 0095 §1).
+    /// </summary>
+    [JSInvokable]
+    public async Task ReportGestureCompletedAsync(string mode)
+    {
+        if (string.Equals(mode, "resize", StringComparison.Ordinal))
+        {
+            await OnGesture.InvokeAsync(new CompleteWindowResizeCommand(Window.Id));
+        }
+        else if (string.Equals(mode, "move", StringComparison.Ordinal) && _module is not null)
+        {
+            // This separate callback follows the move command and its parameter render. Its
+            // snapshot includes C# constraints, even if WindowHost's JS projection is still pending.
+            await _module.InvokeVoidAsync("completeWindowMove", _interactionLayer, Window.Bounds.X, Window.Bounds.Y);
+        }
+    }
+
+    /// <summary>
+    /// Ends a move whose pointer was released over another screen (ADR 0183): the window changes
+    /// screen, keeping its components, then takes the dropped position in that screen's work area.
+    /// </summary>
+    /// <param name="displayNumber">The number of the screen under the pointer.</param>
+    /// <param name="x">The window's left edge in that screen's window layer.</param>
+    /// <param name="y">The window's top edge in that screen's window layer.</param>
+    [JSInvokable]
+    public async Task ReportScreenDropAsync(int displayNumber, double x, double y)
+    {
+        if (Window.VisualState != WindowVisualState.Normal
+            || !Window.Constraints.IsMovable
+            || displayNumber < 1
+            || !double.IsFinite(x) || !double.IsFinite(y))
+        {
+            return;
+        }
+
+        WindowId gestureWindowId = Window.Id;
+        DisplayId target = DisplayId.FromNumber(displayNumber);
+        await OnFocus.InvokeAsync(gestureWindowId);
+        if (target != Window.DisplayId)
+        {
+            await OnGesture.InvokeAsync(new MoveWindowToDisplayCommand(gestureWindowId, target));
+        }
+
+        await OnGesture.InvokeAsync(new MoveWindowCommand(gestureWindowId, x, y));
+    }
+
+    /// <summary>
+    /// Toggles maximize after a double click on the title bar (ADR 0177): a maximized window is
+    /// restored, any other one (snapped included) is maximized when it is resizable.
+    /// </summary>
+    [JSInvokable]
+    public async Task ReportTitleDoubleClickAsync()
+    {
+        if (Window.VisualState != WindowVisualState.Maximized && !Window.Constraints.IsResizable)
+        {
+            return;
+        }
+
+        await ToggleMaximizeAsync();
+    }
+
+    /// <summary>
+    /// Starts dragging a maximized or snapped window by its title bar (ADR 0177): the window gets back
+    /// its geometry from before the maximize or the snap and is placed so that the pointer keeps its
+    /// relative place on the title bar.
+    /// </summary>
+    /// <param name="pointerX">Pointer position in desktop coordinates.</param>
+    /// <param name="pointerY">Pointer position in desktop coordinates.</param>
+    /// <param name="grabRatioX">Where the title bar was grabbed, from 0 (left edge) to 1 (right edge).</param>
+    /// <param name="grabOffsetY">Distance from the top of the window to the pointer when grabbed.</param>
+    /// <returns>The restored bounds as <c>[x, y, width, height]</c>, or <see langword="null"/> when nothing was restored.</returns>
+    [JSInvokable]
+    public async Task<double[]?> ReportDragRestoreAsync(double pointerX, double pointerY, double grabRatioX, double grabOffsetY)
+    {
+        bool restorable = Window.VisualState == WindowVisualState.Maximized || Window.IsSnapped;
+        if (!restorable || !Window.Constraints.IsMovable
+            || !double.IsFinite(pointerX) || !double.IsFinite(pointerY)
+            || !double.IsFinite(grabRatioX) || !double.IsFinite(grabOffsetY))
+        {
+            return null;
+        }
+
+        WindowId windowId = Window.Id;
+        WindowBounds restored = Window.RestoreBounds ?? Window.Bounds;
+        double ratio = Math.Clamp(grabRatioX, 0, 1);
+        await OnFocus.InvokeAsync(windowId);
+        await OnGesture.InvokeAsync(new RestoreWindowCommand(windowId));
+        await OnGesture.InvokeAsync(new MoveWindowCommand(
+            windowId,
+            pointerX - (restored.Width * ratio),
+            pointerY - Math.Max(0, grabOffsetY)));
+        WindowBounds bounds = Window.Bounds;
+        return [bounds.X, bounds.Y, bounds.Width, bounds.Height];
+    }
+
+    /// <summary>Converts a cumulative browser-reported pointer delta into an authoritative C# command.</summary>
+    [JSInvokable]
+    public async Task ReportPointerDeltaAsync(
+        string mode,
+        string? edge,
+        double deltaX,
+        double deltaY,
+        double originX,
+        double originY,
+        double originWidth,
+        double originHeight)
+    {
+        // JS serializes NaN/Infinity as null, which cannot reach this method's double parameters.
+        // Also reject non-finite values from direct callers before they can corrupt runtime state.
+        if (Window.VisualState != WindowVisualState.Normal
+            || !double.IsFinite(deltaX) || !double.IsFinite(deltaY)
+            || !double.IsFinite(originX) || !double.IsFinite(originY)
+            || !double.IsFinite(originWidth) || !double.IsFinite(originHeight))
+        {
+            return;
+        }
+
+        // Capture identity before awaiting focus because focus changes z-order
+        // and therefore rerenders the ordered window collection.
+        WindowId gestureWindowId = Window.Id;
+        WindowBounds origin = new(originX, originY, originWidth, originHeight);
+        await OnFocus.InvokeAsync(gestureWindowId);
+        if (string.Equals(mode, "move", StringComparison.Ordinal))
+        {
+            if (!Window.Constraints.IsMovable)
+            {
+                // Defense in depth: the header omits data-window-gesture="move" for a pinned
+                // window, but a drag already in flight when constraints change should no-op
+                // rather than reach WindowRuntime.Move, which throws for this case.
+                return;
+            }
+
+            await OnGesture.InvokeAsync(new MoveWindowCommand(
+                gestureWindowId,
+                origin.X + deltaX,
+                origin.Y + deltaY));
+            return;
+        }
+
+        if (!Window.Constraints.IsResizable)
+        {
+            // Defense in depth: the resize handles are hidden for a non-resizable window, but a
+            // drag gesture already in flight when constraints change should still no-op rather
+            // than reach WindowRuntime.Resize, which throws for this case.
+            return;
+        }
+
+        WindowBounds resized = Resize(origin, edge, deltaX, deltaY);
+        await OnGesture.InvokeAsync(new ResizeWindowCommand(gestureWindowId, resized));
+    }
+
+    /// <inheritdoc />
+    public async ValueTask DisposeAsync()
+    {
+        if (_module is not null)
+        {
+            try
+            {
+                await _module.InvokeVoidAsync("detachWindowGestures", _interactionLayer);
+                await _module.DisposeAsync();
+            }
+            catch (JSDisconnectedException)
+            {
+            }
+        }
+
+        _selfReference?.Dispose();
+    }
+
+    private static WindowBounds Resize(
+        WindowBounds origin,
+        string? edge,
+        double deltaX,
+        double deltaY)
+    {
+        double x = origin.X;
+        double y = origin.Y;
+        double width = origin.Width;
+        double height = origin.Height;
+        string resizeEdge = edge ?? string.Empty;
+
+        if (resizeEdge.Contains("left", StringComparison.Ordinal))
+        {
+            x += deltaX;
+            width -= deltaX;
+        }
+        else if (resizeEdge.Contains("right", StringComparison.Ordinal))
+        {
+            width += deltaX;
+        }
+
+        if (resizeEdge.Contains("top", StringComparison.Ordinal))
+        {
+            y += deltaY;
+            height -= deltaY;
+        }
+        else if (resizeEdge.Contains("bottom", StringComparison.Ordinal))
+        {
+            height += deltaY;
+        }
+
+        return new WindowBounds(x, y, width, height);
+    }
+}

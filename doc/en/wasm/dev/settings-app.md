@@ -4,7 +4,7 @@
 
 ## Purpose
 
-Describes the system app `Apps/System/HackerOs.Apps.Settings`: the OS control
+Describes the system app `Apps/System/Kazo.Os.Apps.Settings`: the OS control
 panel. It owns no data: each page reads and writes OS files (settings as files,
 ADR 0044) or calls an SDK `Hack*` facade. The decisions that shaped it are
 ADR 0047 (manifest), ADR 0048 (system app), ADR 0096 (`--app=` arguments),
@@ -17,7 +17,7 @@ page), `SettingsWindow.Navigation.cs` (list of pages, collapsed state,
 keyboard), `SettingsWindow.Mobile.cs` (mobile preferences), one `*Panel.razor`
 panel per page, `Strings.cs` and `Resources/` (English and French texts). The
 `manifest.json` is generated at build time from `SettingsApp.cs` (do not edit
-it). Tests: `Tests/HackerOs.Apps.Settings.Tests`.
+it). Tests: `Tests/Kazo.Os.Apps.Settings.Tests`.
 
 ## Side menu (ADR 0170)
 
@@ -44,22 +44,22 @@ Memory, Backup, What's new, About).
 |---|---|---|
 | Appearance (`appearance`) | (in `SettingsWindow.razor`) | Write layer (user or system), desktop and mobile theme, accent, animations, user themes (`/etc/hackeros/themes` and `~/.config/hackeros/themes`, `UserThemeLibrary`), wallpaper (`WallpaperPanel`, ADR 0202); writes `appearance.config`. |
 | Desktop (`desktop`) | `DesktopPanel` | Desktop options and layout (`desktop.config`, ADR 0160). |
-| Screens (`screens`) | `ScreensPanel` | Open screens through `HackScreens` (Identify, New screen, Restore, Close, Full screen, permission; ADR 0184); `screens.config`: `primary-taskbar` choice, remembered screens and Forget (ADR 0179 §7, [`screens-settings.md`](screens-settings.md)). |
+| Screens (`screens`) | `ScreensPanel` | Open screens through `KazoScreens` (Identify, New screen, Restore, Close, Full screen, permission; ADR 0184); `screens.config`: `primary-taskbar` choice, remembered screens and Forget (ADR 0179 §7, [`screens-settings.md`](screens-settings.md)). |
 | Accessibility (`accessibility`) | `AccessibilityPanel` | High contrast, text size, reduced motion (ADR 0105). |
 | Language (`language`) | `LanguagePanel` | Interface language. |
-| File associations (`file-associations`) | `FileAssociationsPanel` | Default applications, system or user layer (`HackFileAssociationLayer`, ADR 0121). |
+| File associations (`file-associations`) | `FileAssociationsPanel` | Default applications, system or user layer (`KazoFileAssociationLayer`, ADR 0121). |
 | Granted permissions (`capabilities`) | (in the window) | Capabilities granted to the user. |
 | Permissions (`permissions`) | `AppPermissionsPanel` | Per-app decisions and approvals of dangerous capabilities (ADR 0049). |
 | Installed applications (`installed-apps`) | `InstalledAppsPanel` | List of apps and their commands, uninstall and reinstall (ADR 0048). |
-| OS components (`os-components`) | `OsComponentsPanel` | Provider chosen for each contract (`HackComponentProviders.GetOverviewAsync`, `SetProviderAsync`). |
+| OS components (`os-components`) | `OsComponentsPanel` | Provider chosen for each contract (`KazoComponentProviders.GetOverviewAsync`, `SetProviderAsync`). |
 | File menus (`file-menus`) | `FileMenuEntriesPanel` | Menu entries registered by apps (ADR 0151). |
-| Server connection (`server`) | `ServerRelayPolicyPanel` (+ the window) | Optional server, network relay (ADR 0102, 0134). Visible in all cases, the state comes from `HackServerConnection`. When not connected, `LocalServerPanel` lists the installable server downloads, tests an address and pairs the device with a code ([`installable-server.md`](installable-server.md), ADR 0191). |
+| Server connection (`server`) | `ServerRelayPolicyPanel` (+ the window) | Optional server, network relay (ADR 0102, 0134). Visible in all cases, the state comes from `KazoServerConnection`. When not connected, `LocalServerPanel` lists the installable server downloads, tests an address and pairs the device with a code ([`installable-server.md`](installable-server.md), ADR 0191). |
 | Synchronization (`sync`) | (in the window) | Sync state and conflicts (ADR 0101). |
 | Users (`users`) | `UsersPanel` (+ `PasskeysPanel`) | Accounts, passwords, adding and deleting accounts by an administrator, session passkeys (ADR 0120, 0168, 0169; see [Users page](#users-page)). |
 | Memory (`memory`) | `MemoryPanel` | File `/etc/hackeros/memory.config`, section `[oom-killer]` (ADR 0126). |
-| Backup (`backup`) | `BackupPanel` | Present only if `HackSystemBackup.IsSupportedFor` allows it (ADR 0099). |
-| What's new (`whats-new`) | `WhatsNewPanel` | The OS change list by version, the next one first, with a **New** badge on unseen changes; they become seen when the page closes (`HackWhatsNew`, ADR 0186). The sign-in notification opens it with `--page=whats-new`. |
-| About (`about`) | (in the window) | Authority, reboot (`HackSystem.RebootAsync`), danger zone: factory reset (`HackSystem.FactoryResetAsync`), confirmed by typing `RESET`, which erases everything the OS keeps in the browser ([ADR 0227](adr/0227-factory-reset-erases-everything.md)). A **What's new?** button next to the version opens the What's new page. |
+| Backup (`backup`) | `BackupPanel` | Present only if `KazoSystemBackup.IsSupportedFor` allows it (ADR 0099). |
+| What's new (`whats-new`) | `WhatsNewPanel` | The OS change list by version, the next one first, with a **New** badge on unseen changes; they become seen when the page closes (`KazoWhatsNew`, ADR 0186). The sign-in notification opens it with `--page=whats-new`. |
+| About (`about`) | (in the window) | Authority, reboot (`KazoSystem.RebootAsync`), danger zone: factory reset (`KazoSystem.FactoryResetAsync`), confirmed by typing `RESET`, which erases everything the OS keeps in the browser ([ADR 0227](adr/0227-factory-reset-erases-everything.md)). A **What's new?** button next to the version opens the What's new page. |
 | Application (`application`) | `AppDetailsPanel` | Added only with `--app=<id>` (ADR 0096): details and settings of an app. |
 
 ## Launch arguments
@@ -75,13 +75,13 @@ Memory, Backup, What's new, About).
 
 | Data | Access | Capability |
 |---|---|---|
-| `appearance.config`, `mobile` (system documents) | `HackSettings.OpenSystemAsync` | `filesystem.system.*` to write `/etc` |
-| Installed apps, default handlers | `HackApps` (`GetInstalledAsync`, `GetDefaultHandlersAsync`, `SetDefaultHandlerAsync`, `ResetDefaultHandlerAsync`), `HackAppInstallInfo` | `apps.launch`, `apps.manage`, `file-associations.read` / `.write` |
-| Server | `HackServerConnection` | `server.connection.manage` |
-| Processes and services | `HackServiceController`, process list | `process.list`, `services.manage` |
-| Backup | `HackSystemBackup` | `system.backup` |
-| Reboot, reset | `HackSystem` | `system.power` |
-| Permissions, users | `HackPermissionAdministration`, `HackUserAccounts` | `permissions.manage`, `users.manage` |
+| `appearance.config`, `mobile` (system documents) | `KazoSettings.OpenSystemAsync` | `filesystem.system.*` to write `/etc` |
+| Installed apps, default handlers | `KazoApps` (`GetInstalledAsync`, `GetDefaultHandlersAsync`, `SetDefaultHandlerAsync`, `ResetDefaultHandlerAsync`), `KazoAppInstallInfo` | `apps.launch`, `apps.manage`, `file-associations.read` / `.write` |
+| Server | `KazoServerConnection` | `server.connection.manage` |
+| Processes and services | `KazoServiceController`, process list | `process.list`, `services.manage` |
+| Backup | `KazoSystemBackup` | `system.backup` |
+| Reboot, reset | `KazoSystem` | `system.power` |
+| Permissions, users | `KazoPermissionAdministration`, `KazoUserAccounts` | `permissions.manage`, `users.manage` |
 
 The two administration operations (reboot, reset) have the OS ask an
 administrator for confirmation in its own window; the app never sees the
@@ -94,19 +94,19 @@ bottom:
 
 - **Guest banner** (guest account session only, ADR 0187): "You are using the
   guest account" and the "Create my account" button, which asks the OS for its
-  form (`HackUserAccounts.RequestGuestAccountCreationAsync`); the guest session
+  form (`KazoUserAccounts.RequestGuestAccountCreationAsync`); the guest session
   closes and the form opens on the sign-in screen. See
   [`guest-account.md`](guest-account.md).
 - **Account list**: login name, display name, badges "Administrator", "You",
   number of passkeys, state `P`/`NP`/`L`. For an administrator, a "Delete" link
   on each account other than their own opens a confirmation with the checkbox
   "Also delete its home folder `/home/<login>`", unchecked by default
-  (`HackUserAccounts.DeleteAsync(login, removeHome)`).
+  (`KazoUserAccounts.DeleteAsync(login, removeHome)`).
 - **Add an account** (administrator only, and absent while the guest
   account exists): login name, display name, standard
   or administrator type, initial password and confirmation, checked by
-  `HackUserAccounts.ValidateNewAccount` before sending
-  (`HackUserAccounts.CreateAsync`).
+  `KazoUserAccounts.ValidateNewAccount` before sending
+  (`KazoUserAccounts.CreateAsync`).
 - **My passkeys** (everyone): name, date added and date of last use, "keychain"
   badge if the key opens the keychain (PRF), "Remove" button, and a "Name"
   field + "Add a passkey" that starts the browser prompt. Without WebAuthn

@@ -1,7 +1,0 @@
-{
-  "repository": "https://github.com/example/HackerOs-App-Template",
-  "project": "src/HackerOs.Template.Solution/HackerOs.Template.Solution.csproj",
-  "category": "productivity",
-  "tags": ["sample"],
-  "license": "MIT"
-}

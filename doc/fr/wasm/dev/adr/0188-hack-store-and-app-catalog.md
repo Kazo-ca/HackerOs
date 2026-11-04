@@ -1,6 +1,6 @@
 > [English version](../../../../en/wasm/dev/adr/0188-hack-store-and-app-catalog.md)
 
-# ADR 0188 : le Hack Store et le catalogue `HackerOs-AppMarketPlace`
+# ADR 0188 : le Hack Store et le catalogue `Os-AppMarketPlace`
 
 ## Statut
 
@@ -19,7 +19,7 @@ thèmes (v2) dans l'[ADR 0190](0190-theme-packs.md).
 - `hackpkg` (ADR 0182) installe une app depuis la branche `hackeros-packages`
   de son dépôt GitHub, lue par `raw.githubusercontent.com`. Il n'y a ni liste
   d'apps, ni interface graphique.
-- Le dépôt [`Kazo-ca/HackerOs-AppMarketPlace`](https://github.com/Kazo-ca/HackerOs-AppMarketPlace)
+- Le dépôt [`Kazo-ca/Os-AppMarketPlace`](https://github.com/Kazo-ca/Os-AppMarketPlace)
   existe et est vide.
 - Le menu Démarrer a une section **Épinglées** (l'« accès rapide ») ; un
   nouveau profil n'y a aucune app aujourd'hui.
@@ -60,7 +60,7 @@ Le Store vérifie les mises à jour au démarrage de la session puis toutes les
 envoie une notification ; la mise à jour se fait en un clic, avec les mêmes
 droits que l'installation (ADR 0189). Pas de mise à jour automatique.
 
-### 4. Le dépôt catalogue `HackerOs-AppMarketPlace`
+### 4. Le dépôt catalogue `Os-AppMarketPlace`
 
 Branche `main`, relue par pull request : **un dossier par version d'app**,
 nommé `<appId>_<version>`.
@@ -86,7 +86,7 @@ categories.json                  liste fermée des catégories, libellés fr et 
 
 ```json
 {
-  "repository": "https://github.com/example/HackerOs-App-MyApp",
+  "repository": "https://github.com/example/Os-App-MyApp",
   "commit": "3f2a9c1…",
   "category": "productivity",
   "tags": ["notes", "markdown"],
@@ -144,7 +144,7 @@ reste dans l'historique de `main`).
 Le modèle `hackeros-solution` (ADR 0176) reçoit un workflow : sur un tag `v*`,
 il compile l'app, produit le dossier `<appId>_<version>` (icône, descriptions et
 `store.json` pris dans un dossier `store/` du dépôt de l'app, commit du tag) et
-ouvre la PR vers `HackerOs-AppMarketPlace` depuis un fork de l'auteur, avec un
+ouvre la PR vers `Os-AppMarketPlace` depuis un fork de l'auteur, avec un
 jeton que l'auteur met dans ses secrets. Sans jeton, le dossier est laissé en
 artefact du workflow, à soumettre à la main.
 
@@ -195,7 +195,7 @@ recommandation.
 
 - [ ] Modèle `hackeros-solution` (tâches de l'ADR 0176), avec le workflow du §7.
 - [ ] Servir les ressources `wwwroot/` des apps installées (limite de l'ADR 0182).
-- [ ] Dépôt `HackerOs-AppMarketPlace` : `categories.json`, modèle de PR,
+- [ ] Dépôt `Os-AppMarketPlace` : `categories.json`, modèle de PR,
       `validate.yml`, `publish.yml`, branche `packages`, `catalog.json`.
 - [ ] App système Hack Store (v1, §1 à §3), épinglage par défaut et migration.
 - [ ] `hackpkg install <appId>` depuis les catalogues.

@@ -14,10 +14,10 @@ HackerOS applications must be created in dedicated assemblies referencing only t
 
 | Package / Project | Target Application Kind | Key Classes & Features |
 |---|---|---|
-| `HackerOs.App.Abstractions` | All Applications | Manifests, Capabilities, Authorities, `VirtualPath`, Result/Error types |
-| `HackerOs.AppSdk` | Terminal & Service Apps | `AppBase`, `TerminalAppBase`, `ServiceAppBase`, `TerminalExecutionContext` |
-| `HackerOs.AppSdk.Blazor` | Window Applications | `WindowAppBase`, `IFileDialogService`, Scoped CSS support, MudBlazor wrappers |
-| `HackerOs.AppSdk.Icons` | Any Application, or the OS shell | `IIconCatalog`, `HackerIcon`, five icon libraries as themeable inline SVG |
+| `Kazo.Os.App.Abstractions` | All Applications | Manifests, Capabilities, Authorities, `VirtualPath`, Result/Error types |
+| `Kazo.Os.AppSdk` | Terminal & Service Apps | `AppBase`, `TerminalAppBase`, `ServiceAppBase`, `TerminalExecutionContext` |
+| `Kazo.Os.AppSdk.Blazor` | Window Applications | `WindowAppBase`, `IFileDialogService`, Scoped CSS support, MudBlazor wrappers |
+| `Kazo.Os.AppSdk.Icons` | Any Application, or the OS shell | `IIconCatalog`, `HackerIcon`, five icon libraries as themeable inline SVG |
 
 ---
 
@@ -28,7 +28,7 @@ Every application defines an `app.manifest.json` declaring its application kind:
 ### 1. Window App (`kind: "window"`)
 Visual Blazor component inheriting `WindowAppBase`.
 ```razor
-@using HackerOs.AppSdk.Blazor
+@using Kazo.Os.AppSdk.Blazor
 @inherits WindowAppBase
 
 <div class="my-app">
@@ -47,7 +47,7 @@ Visual Blazor component inheriting `WindowAppBase`.
 ### 2. Terminal App (`kind: "terminal"`)
 Command-line tool deriving `TerminalAppBase`.
 ```csharp
-using HackerOs.AppSdk;
+using Kazo.Os.AppSdk;
 
 public class MyCommandApp : TerminalAppBase
 {
@@ -62,7 +62,7 @@ public class MyCommandApp : TerminalAppBase
 ### 3. Service App (`kind: "service"`)
 Background daemon deriving `ServiceAppBase`.
 ```csharp
-using HackerOs.AppSdk;
+using Kazo.Os.AppSdk;
 
 public class MyServiceApp : ServiceAppBase
 {
@@ -110,10 +110,10 @@ public class MyServiceApp : ServiceAppBase
 
 Any app (window, terminal-adjacent tooling, or the OS shell) can draw a themeable
 inline-SVG icon from Bootstrap Icons, Font Awesome, Lucide, or Simple Icons by
-referencing `HackerOs.AppSdk.Icons` and using the `HackerIcon` component:
+referencing `Kazo.Os.AppSdk.Icons` and using the `HackerIcon` component:
 
 ```razor
-@using HackerOs.AppSdk.Icons
+@using Kazo.Os.AppSdk.Icons
 
 <HackerIcon Library="IconLibrary.Bootstrap" Name="house" Size="20" />
 ```
@@ -139,5 +139,5 @@ Applications request exact capability identifiers in `app.manifest.json`. The OS
 
 Validate app manifests using the CLI validator:
 ```bash
-dotnet run --project Tools/HackerOs.Tools.ManifestValidator -- app.manifest.json
+dotnet run --project Tools/Kazo.Os.Tools.ManifestValidator -- app.manifest.json
 ```

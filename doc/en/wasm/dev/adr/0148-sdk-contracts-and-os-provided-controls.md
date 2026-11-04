@@ -13,7 +13,7 @@ Accepted on 2026-10-19.
   is provided by the OS).
 - **Completes:** ADR 0063 (embeddable components): its mechanism becomes the
   basis of all shared controls.
-- **Replaces:** ADR 0037 §1 (library `HackerOs.AppSdk.FileView`
+- **Replaces:** ADR 0037 §1 (library `Kazo.Os.AppSdk.FileView`
   compiled into the host app) and §8 (the explorer keeps its own
   "Open With" and "Properties" dialog boxes). The other points of ADR 0037 (single
   model for the three views, in-place renaming, drag and drop, delegated icons,
@@ -103,7 +103,7 @@ are the same everywhere (explorer, desktop, any app).
   all apps without recompilation.
 - The explorer becomes the single source of truth for the file control:
   it provides it and displays it itself through `HackFileView`.
-- The `HackerOs.AppSdk.FileView` library leaves the SDK (ADR 0149).
+- The `Kazo.Os.AppSdk.FileView` library leaves the SDK (ADR 0149).
 - Work item 1 of the plan delivers the typed host component, the registry read at
   startup, the reserved contracts and the passing of the host's rights.
 

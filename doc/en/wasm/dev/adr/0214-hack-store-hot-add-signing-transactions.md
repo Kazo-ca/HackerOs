@@ -5,7 +5,7 @@
 ## Status
 
 Accepted on 2026-10-31, work item `todo/19-hackstore-later` (`TODO` issue
-[#251](https://github.com/Kazo-ca/HackerOs/issues/251), work item 7 of the Hack
+[#251](https://github.com/Kazo-ca/Os/issues/251), work item 7 of the Hack
 Store plan). Carries out answer B to Q5 of
 [ADR 0182](0182-install-apps-from-github.md) ("later: adding without a
 restart"), the signing that ADR 0182 left open ("Consequences") and question 1
@@ -96,8 +96,8 @@ below); he chose answer A to each on 2026-10-31.
    The keys of a `catalog:<name>` source are those of `catalog:<name>`; those of
    a `github:` repository are those of `github.com/<owner>` and of
    `github.com/<owner>/<repo>`.
-5. **(Q3 A) Official catalog**: the `HackerOs.MarketPlace.Tool` tool of the
-   `Kazo-ca/HackerOs-AppMarketPlace` repository gains `keygen` (creates the pair,
+5. **(Q3 A) Official catalog**: the `Kazo.Os.MarketPlace.Tool` tool of the
+   `Kazo-ca/Os-AppMarketPlace` repository gains `keygen` (creates the pair,
    writes the PKCS#8 private key to a local file, prints the public key) and
    `sign`; the `publish.yml` workflow signs each package with the
    `HACK_STORE_SIGNING_KEY` secret when it exists. Benoit creates the pair on his
@@ -182,7 +182,7 @@ that throws `NotSupportedException`.
   again to get their signature before that OS version.
 - Signing an app repository (`github:`) is possible with the same format; a tool
   for authors is still to do (`TODO` issue
-  [#321](https://github.com/Kazo-ca/HackerOs/issues/321)).
+  [#321](https://github.com/Kazo-ca/Os/issues/321)).
 - An update takes two versions on disk; data backups count in the user's quota.
 
 ## Questions asked to Benoit

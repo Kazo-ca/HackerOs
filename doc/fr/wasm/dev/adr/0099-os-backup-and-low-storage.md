@@ -14,7 +14,7 @@ Accepté le 2026-10-17 (chantier `v3/1-adr`, pour le chantier `v3/7-storage-back
 
 ## Contexte
 
-- `IndexedDbBackupService` (`Infrastructure/HackerOs.Infrastructure.Browser/Backup/`)
+- `IndexedDbBackupService` (`Infrastructure/Kazo.Os.Infrastructure.Browser/Backup/`)
   exporte toute la base en un JSON (`formatVersion: 1`, version du schéma,
   magasins, SHA-256) et la restaure en fusion ou en remplacement. Il est testé
   mais enregistré nulle part.

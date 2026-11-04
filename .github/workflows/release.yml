@@ -1,6 +1,6 @@
 name: Release Kazo OS
 
-# ADR 0173: wasm2/HackerOs/build/Versions.props is the only version of Kazo OS. When a
+# ADR 0173: wasm2/KazoOs/build/Versions.props is the only version of Kazo OS. When a
 # commit of main carries a version that has no v<version> tag yet, and "Verify Kazo OS
 # WASM" passed on that commit, this workflow packs every published library, pushes the
 # packages to nuget.org (when publishing is configured), then tags the commit and creates
@@ -41,8 +41,8 @@ concurrency:
 env:
   DOTNET_NOLOGO: "true"
   DOTNET_CLI_TELEMETRY_OPTOUT: "true"
-  HACKEROS_SOLUTION_DIR: wasm2/HackerOs
-  RELEASE_DIR: wasm2/HackerOs/artifacts/release
+  HACKEROS_SOLUTION_DIR: wasm2/KazoOs
+  RELEASE_DIR: wasm2/KazoOs/artifacts/release
   NUGET_SOURCE: https://api.nuget.org/v3/index.json
 
 jobs:
@@ -73,9 +73,9 @@ jobs:
         env:
           REPUBLISH: ${{ github.event.inputs.republish || 'false' }}
         run: |
-          version="$(sed -n 's:.*<HackerOsVersion>\(.*\)</HackerOsVersion>.*:\1:p' "$HACKEROS_SOLUTION_DIR/build/Versions.props")"
+          version="$(sed -n 's:.*<KazoOsVersion>\(.*\)</KazoOsVersion>.*:\1:p' "$HACKEROS_SOLUTION_DIR/build/Versions.props")"
           if ! [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
-            echo "::error title=Version::build/Versions.props has no valid HackerOsVersion ('$version')."
+            echo "::error title=Version::build/Versions.props has no valid KazoOsVersion ('$version')."
             exit 1
           fi
           tag="v$version"
@@ -117,7 +117,7 @@ jobs:
         working-directory: ${{ env.HACKEROS_SOLUTION_DIR }}
         run: build/pack-local.sh --configuration Release --output artifacts/release/nupkg --ci
 
-      # Only HackerOs.* packages of this version leave the runner (never a test fixture).
+      # Only Kazo.Os.* packages of this version leave the runner (never a test fixture).
       - name: Check the packages
         if: steps.plan.outputs.mode != 'none'
         shell: bash
@@ -125,13 +125,13 @@ jobs:
           VERSION: ${{ steps.plan.outputs.version }}
         run: |
           shopt -s nullglob
-          packages=("$RELEASE_DIR"/nupkg/HackerOs.*."$VERSION".nupkg)
+          packages=("$RELEASE_DIR"/nupkg/Kazo.Os.*."$VERSION".nupkg)
           if [[ ${#packages[@]} -eq 0 ]]; then
-            echo "::error title=Packages::No HackerOs.*.$VERSION.nupkg was produced."
+            echo "::error title=Packages::No Kazo.Os.*.$VERSION.nupkg was produced."
             exit 1
           fi
           mkdir -p "$RELEASE_DIR/assets"
-          cp "$RELEASE_DIR"/nupkg/HackerOs.*."$VERSION".nupkg "$RELEASE_DIR"/nupkg/HackerOs.*."$VERSION".snupkg "$RELEASE_DIR/assets/"
+          cp "$RELEASE_DIR"/nupkg/Kazo.Os.*."$VERSION".nupkg "$RELEASE_DIR"/nupkg/Kazo.Os.*."$VERSION".snupkg "$RELEASE_DIR/assets/"
           {
             echo "${#packages[@]} packages:"
             for package in "${packages[@]}"; do echo "- $(basename "$package")"; done
@@ -141,7 +141,7 @@ jobs:
         if: steps.plan.outputs.mode == 'release'
         working-directory: ${{ env.HACKEROS_SOLUTION_DIR }}
         run: >-
-          dotnet publish OS/HackerOs.Ecosystem/HackerOs.Ecosystem.csproj
+          dotnet publish OS/Kazo.Os.Ecosystem/Kazo.Os.Ecosystem.csproj
           --configuration Release
           --output artifacts/release/publish
 
@@ -178,7 +178,7 @@ jobs:
             exit 0
           fi
           # dotnet nuget push also pushes the .snupkg next to each .nupkg.
-          for package in "$RELEASE_DIR"/nupkg/HackerOs.*."$VERSION".nupkg; do
+          for package in "$RELEASE_DIR"/nupkg/Kazo.Os.*."$VERSION".nupkg; do
             dotnet nuget push "$package" --api-key "$key" --source "$NUGET_SOURCE" --skip-duplicate
           done
           echo "NuGet: packages pushed to nuget.org." >> "$GITHUB_STEP_SUMMARY"
@@ -199,7 +199,7 @@ jobs:
           # GitHub's generated notes only for a version released before the change list existed.
           notes="$RELEASE_DIR/release-notes.md"
           if [[ -f "$HACKEROS_SOLUTION_DIR/changes/$VERSION.json" ]]; then
-            dotnet run --project "$HACKEROS_SOLUTION_DIR/Tools/HackerOs.Tools.ChangeList/HackerOs.Tools.ChangeList.csproj" -c Release -- \
+            dotnet run --project "$HACKEROS_SOLUTION_DIR/Tools/Kazo.Os.Tools.ChangeList/Kazo.Os.Tools.ChangeList.csproj" -c Release -- \
               notes --changes "$HACKEROS_SOLUTION_DIR/changes" --version "$VERSION" --kind release \
               --repository "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" --output "$notes"
             flags=(--title "Kazo OS $VERSION" --target "$SHA" --notes-file "$notes")
@@ -305,7 +305,7 @@ jobs:
           tags=(--tag "$image:$VERSION")
           [[ "$PRERELEASE" == "true" ]] || tags+=(--tag "$image:latest")
           docker buildx build --platform linux/amd64,linux/arm64 \
-            --file "$HACKEROS_SOLUTION_DIR/Server/HackerOs.Server/packaging/Dockerfile" \
+            --file "$HACKEROS_SOLUTION_DIR/Server/Kazo.Os.Server/packaging/Dockerfile" \
             --label "org.opencontainers.image.source=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" \
             --label "org.opencontainers.image.version=$VERSION" \
             "${tags[@]}" --push image

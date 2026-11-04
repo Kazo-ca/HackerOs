@@ -68,14 +68,14 @@ Default: `MainThread` for a windowed app, `Pool` for a command,
 ### 4. The OS seen from a worker
 
 - The worker loads the SDK and app assemblies, and a **process
-  host** (`HackerOs.Platform.WorkerHost`) that implements
+  host** (`Kazo.Os.Platform.WorkerHost`) that implements
   `IAppExecutionContext` through **remote gateways**: each SDK call
   becomes a message to the OS on the main thread, which applies the
   same capability checks as today. The SDK does not change: a
   command does not know where it runs.
 - The standard streams (stdin, stdout, stderr) are message-based pipes.
 - The JavaScript (worker creation, `postMessage`, `terminate`) is a module
-  in the `wwwroot/` of `HackerOs.Infrastructure.Browser`, imported by the C#
+  in the `wwwroot/` of `Kazo.Os.Infrastructure.Browser`, imported by the C#
   code. No host references it (AGENTS.md).
 
 ### 5. Heartbeat and escalation
@@ -94,7 +94,7 @@ Default: `MainThread` for a windowed app, `Pool` for a command,
 
 ### 6. Outside the browser
 
-`HackerOs.Server` (Interactive Server rendering) has no .NET Web Worker: all
+`Kazo.Os.Server` (Interactive Server rendering) has no .NET Web Worker: all
 processes stay in the server process there. `AppExecutionHost` is
 ignored there, with an information line in the log. This may change in
 an ADR specific to this host.
@@ -109,7 +109,7 @@ an ADR specific to this host.
   local gateways. A contract test runs the same SDK scenarios
   in both modes.
 - The first version may limit the pool to built-in commands
-  (`HackerOs.Commands`), then open it to other apps.
+  (`Kazo.Os.Commands`), then open it to other apps.
 
 ## References
 

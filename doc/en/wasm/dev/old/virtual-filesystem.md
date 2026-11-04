@@ -36,7 +36,7 @@ settings UI observes one document and one revision.
 
 ## Implemented metadata contracts
 
-`HackerOs.Simulation.Abstractions.FileSystem` now provides:
+`Kazo.Os.Simulation.Abstractions.FileSystem` now provides:
 
 - `FileSystemEntryId`, a canonical opaque 128-bit identity independent of path;
 - `FileSystemEntryName`, which applies Unicode Form C and the 255-byte limit;
@@ -232,7 +232,7 @@ Focused contract tests remain browser-free and use deterministic IDs, time, and
 in-memory providers. The required complete gate is:
 
 ```powershell
-dotnet test HackerOs.sln --no-restore
+dotnet test Kazo.Os.sln --no-restore
 ```
 
 ## Exclusions

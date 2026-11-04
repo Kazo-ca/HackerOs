@@ -87,10 +87,10 @@ Détail de chacun :
   Une fois la Phase 6 en place, rien ne prévoit de versionner/mettre à jour
   une app tierce indépendamment du reste.
 - **Boucle de développement locale (`S-016`)** — le SDK a un validateur de
-  manifeste (`Tools/HackerOs.Tools.ManifestValidator`) et des templates
+  manifeste (`Tools/Kazo.Os.Tools.ManifestValidator`) et des templates
   `dotnet new`, mais rien pour lancer/tester son app *dans* HackerOS
   localement avec hot-reload, sans passer par le build complet de
-  `HackerOs.Ecosystem`.
+  `Kazo.Os.Ecosystem`.
 
 ## 4. Manques relevés mais non promus (discussion seulement)
 
@@ -118,7 +118,7 @@ pour écrire une portée concrète. Ils sont notés ici pour ne pas les perdre.
 - **Recherche globale (« spotlight »)** — pas de recherche unifiée à travers
   apps, fichiers, et commandes.
 - **Widgets / mini-surfaces de bureau** — rien au-delà des fenêtres complètes
-  gérées par `HackerOs.Windowing.Core`.
+  gérées par `Kazo.Os.Windowing.Core`.
 - **Monétisation/licence** — absent partout ; pertinent seulement si
   l'ambition inclut des développeurs tiers rémunérés.
 

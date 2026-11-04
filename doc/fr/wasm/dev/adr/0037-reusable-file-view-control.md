@@ -8,15 +8,15 @@ Accepted on 2026-08-17.
 
 ## Context
 
-`Apps/System/HackerOs.Apps.FileExplorer/FileExplorerWindow.razor` is the only place in HackerOS that
+`Apps/System/Kazo.Os.Apps.FileExplorer/FileExplorerWindow.razor` is the only place in HackerOS that
 renders virtual-filesystem contents today, and it does so entirely inline: Details/Grid rendering,
 multi-selection, sort ordering, an inline `MudMenu`-based context menu, and every file operation
 (create/rename/delete/move/copy) are implemented directly in one ~1000-line component, coupled to
 `FileExplorerState`. There is no Tree view. Renaming goes through a boxed dialog flow rather than
 in-place editing. Icons are drawn from a hardcoded two-branch `if` (`folder` vs. `file-text`) against
-`HackerOs.AppSdk.Icons`, with no per-extension table and no seam for a host to override an icon.
+`Kazo.Os.AppSdk.Icons`, with no per-extension table and no seam for a host to override an icon.
 Drag & drop is entirely unimplemented — only the unused payload records
-`Shared/HackerOs.AppSdk/DragDrop/VirtualFileDragPayload.cs` exist. There is no reusable `ContextMenu`
+`Shared/Kazo.Os.AppSdk/DragDrop/VirtualFileDragPayload.cs` exist. There is no reusable `ContextMenu`
 component anywhere in the codebase and no extension point for a host or a `.zip`-type-specific feature
 to add a menu item without editing `FileExplorerWindow.razor` directly.
 
@@ -32,13 +32,13 @@ this ADR records the binding architectural commitments, not the complete spec.
 
 ## Decision
 
-Introduce `Shared/HackerOs.AppSdk.FileView`, a new Razor class library owning one reusable `FileView`
+Introduce `Shared/Kazo.Os.AppSdk.FileView`, a new Razor class library owning one reusable `FileView`
 control, as the canonical way every host renders virtual-filesystem directory contents in HackerOS,
 under these binding constraints:
 
-1. **Host-agnostic, capability-transparent.** `HackerOs.AppSdk.FileView` references only
-   `HackerOs.App.Abstractions`, `HackerOs.AppSdk`, `HackerOs.AppSdk.Icons`, and
-   `HackerOs.Simulation.Abstractions` — never `HackerOs.Platform.Core` or any concrete platform
+1. **Host-agnostic, capability-transparent.** `Kazo.Os.AppSdk.FileView` references only
+   `Kazo.Os.App.Abstractions`, `Kazo.Os.AppSdk`, `Kazo.Os.AppSdk.Icons`, and
+   `Kazo.Os.Simulation.Abstractions` — never `Kazo.Os.Platform.Core` or any concrete platform
    implementation. `FileView` never constructs or resolves its own `IAppFileSystemGateway`/
    `IAppFileSystemWatchGateway`/`IAppIntentGateway`; the host app passes its own already-scoped gateways
    in. `FileView` therefore always runs under exactly the capabilities/authority already granted to its
@@ -72,7 +72,7 @@ under these binding constraints:
 
 ## Consequences
 
-- A new shared project and its paired `Tests/HackerOs.AppSdk.FileView.Tests` project join the solution
+- A new shared project and its paired `Tests/Kazo.Os.AppSdk.FileView.Tests` project join the solution
   and the build/test matrix.
 - `FileExplorerWindow.razor` shrinks substantially once Phase 4 lands; its current inline
   listing/selection/sort/context-menu code is removed rather than retained alongside `FileView`.

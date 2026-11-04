@@ -1,6 +1,6 @@
 > [Version française](../../../../fr/wasm/dev/adr/0130-server-serves-webassembly-os-and-api.md)
 
-# ADR 0130: `HackerOs.Server` serves the OS in WebAssembly and keeps only its API
+# ADR 0130: `Kazo.Os.Server` serves the OS in WebAssembly and keeps only its API
 
 ## Status
 
@@ -19,7 +19,7 @@ follows applies the recommended answer while awaiting it.
 
 ## Context
 
-Today (`Server/HackerOs.Server/Program.cs`), the server renders the whole OS
+Today (`Server/Kazo.Os.Server/Program.cs`), the server renders the whole OS
 interface **on the server side** (`AddInteractiveServerComponents`,
 `Components/App.razor`), a single circuit at a time, and the OS calls the
 server's services directly there (`DirectServerConnectionClients`). App code
@@ -45,7 +45,7 @@ authentication). This is what this ADR decides.
 ### 2. How the server serves the OS (question asked to Benoit)
 
 Applied while awaiting (recommended): **the published files of the Ecosystem**,
-as is. The server references `OS/HackerOs.Ecosystem` as a hosted WebAssembly
+as is. The server references `OS/Kazo.Os.Ecosystem` as a hosted WebAssembly
 client, serves `_framework/`, `index.html`, the PWA manifest and the
 Ecosystem's service worker (`MapStaticAssets`, fallback to `index.html`), and
 no longer has any Razor component.
@@ -84,13 +84,13 @@ contradict the rule "nothing must require the server".
 
 | Host | Role |
 |---|---|
-| `OS/HackerOs.Ecosystem` | Standalone PWA, offline, no server (unchanged). |
+| `OS/Kazo.Os.Ecosystem` | Standalone PWA, offline, no server (unchanged). |
 | `test/test` | Interactive debugging of WebAssembly components (unchanged). |
-| `Server/HackerOs.Server` | Serves the Ecosystem OS **and** the optional API. No more server-side rendering. |
+| `Server/Kazo.Os.Server` | Serves the Ecosystem OS **and** the optional API. No more server-side rendering. |
 
 ## Consequences
 
-- `build/verify-hosts.sh` and `HackerOs.HostSmoke.Tests`: the Server host has
+- `build/verify-hosts.sh` and `Kazo.Os.HostSmoke.Tests`: the Server host has
   workers and `/proc/hackeros/workers`; `kill -9` of a loop is checked there.
 - The server tests that went through the direct client go through HTTP.
 - Docs: `AGENTS.md` (hosts section), [`project-overview.md`](../project-overview.md),

@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Kazo.Os.App.Abstractions\Kazo.Os.App.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Shared\Kazo.Os.AppSdk\Kazo.Os.AppSdk.csproj" />
+    <ProjectReference Include="..\..\Shared\Kazo.Os.Simulation.Abstractions\Kazo.Os.Simulation.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

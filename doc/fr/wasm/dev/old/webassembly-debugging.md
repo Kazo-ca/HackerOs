@@ -4,7 +4,7 @@
 
 ## Overview
 
-This document describes how WebAssembly debugging, Razor Class Library static web assets, MudBlazor integration, and browser stability optimizations are configured using `wasm2/HackerOs/test/test/test.csproj` as the ASP.NET Core WebAssembly debug host for `HackerOs.Ecosystem.csproj`.
+This document describes how WebAssembly debugging, Razor Class Library static web assets, MudBlazor integration, and browser stability optimizations are configured using `wasm2/KazoOs/test/test/test.csproj` as the ASP.NET Core WebAssembly debug host for `Kazo.Os.Ecosystem.csproj`.
 
 ## Architecture & Configuration
 
@@ -13,30 +13,30 @@ This document describes how WebAssembly debugging, Razor Class Library static we
    - Calls `app.UseWebAssemblyDebugging()` in development mode.
    - Maps razor components with `AddInteractiveWebAssemblyRenderMode()`.
    - Maps static assets via `app.MapStaticAssets()`.
-   - References `HackerOs.Ecosystem.csproj`.
+   - References `Kazo.Os.Ecosystem.csproj`.
 
-2. **Client Project (`HackerOs.Ecosystem.csproj`):**
+2. **Client Project (`Kazo.Os.Ecosystem.csproj`):**
    - Uses `Microsoft.NET.Sdk.BlazorWebAssembly`.
    - Registers all required client DI services (`AddHackerOsEcosystem`, `AddMudServices`, `IBuildKnownAssemblyTransport`, `BuildKnownAssemblyLoaderRegistry`, `BuildKnownLazyAppDescriptorRegistry`) in `Program.cs` and `EcosystemServiceCollectionExtensions.cs`.
-   - Exposes static web assets under `_content/HackerOs.Ecosystem/` (including `css/app.css`, `manifest.webmanifest`, and icons).
+   - Exposes static web assets under `_content/Kazo.Os.Ecosystem/` (including `css/app.css`, `manifest.webmanifest`, and icons).
 
 3. **Static Web Assets, MudBlazor & Scoped Bundles (`test/Components/App.razor`):**
    - **MudBlazor UI Library:** Registers `services.AddMudServices()` in DI and links MudBlazor CSS (`_content/MudBlazor/MudBlazor.min.css`) and JS (`_content/MudBlazor/MudBlazor.min.js`).
-   - **Platform UI Scoped CSS Bundle:** Links `_content/HackerOs.Platform.Blazor/HackerOs.Platform.Blazor.bundle.scp.css` for desktop shell, window chrome, and taskbar styles.
-   - **Update (v3/6, ADR 0098 §2):** the design tokens now live in `OS/HackerOs.Ecosystem.Host/wwwroot/css/app.css`
-     and every host links `_content/HackerOs.Ecosystem.Host/css/app.css`; the paragraph below describes the
+   - **Platform UI Scoped CSS Bundle:** Links `_content/Kazo.Os.Platform.Blazor/Kazo.Os.Platform.Blazor.bundle.scp.css` for desktop shell, window chrome, and taskbar styles.
+   - **Update (v3/6, ADR 0098 §2):** the design tokens now live in `OS/Kazo.Os.Ecosystem.Host/wwwroot/css/app.css`
+     and every host links `_content/Kazo.Os.Ecosystem.Host/css/app.css`; the paragraph below describes the
      earlier layout.
    - **HackerOS Global CSS:** Links `href="css/app.css"` directly (not via `@Assets["app.css"]`), the static
-     web asset route exposed by the `HackerOs.Ecosystem.csproj` ProjectReference for its own
+     web asset route exposed by the `Kazo.Os.Ecosystem.csproj` ProjectReference for its own
      `wwwroot/css/app.css`. This is the single source of truth for the `--hos-*` design tokens; `test/test`
-     and `Server/HackerOs.Server` must never keep their own `wwwroot/app.css` copy. Note the route is
-     `css/app.css`, not `app.css` — `HackerOs.Ecosystem` is itself a `Microsoft.NET.Sdk.BlazorWebAssembly`
+     and `Server/Kazo.Os.Server` must never keep their own `wwwroot/app.css` copy. Note the route is
+     `css/app.css`, not `app.css` — `Kazo.Os.Ecosystem` is itself a `Microsoft.NET.Sdk.BlazorWebAssembly`
      app (not a Razor Class Library), so when referenced by another app project its static web assets keep
-     their original unprefixed `wwwroot`-relative route instead of gaining a `_content/HackerOs.Ecosystem/`
+     their original unprefixed `wwwroot`-relative route instead of gaining a `_content/Kazo.Os.Ecosystem/`
      prefix. Using `@Assets["app.css"]` previously silently matched this host's own now-deleted scaffold
      `wwwroot/app.css` instead of erroring, which is how the hosts drifted from the real theme in the first
      place.
-   - **Ecosystem Scoped CSS:** Links `_content/HackerOs.Ecosystem/HackerOs.Ecosystem.styles.css`.
+   - **Ecosystem Scoped CSS:** Links `_content/Kazo.Os.Ecosystem/Kazo.Os.Ecosystem.styles.css`.
    - **Host Styles:** Links `@Assets["test.styles.css"]` (this host's own scoped CSS bundle, not shared).
    - **Dynamic Component Tags:** Supports dynamic style and script tag injection per Razor component via `<HeadOutlet />` and `<HeadContent>`.
 
@@ -45,10 +45,10 @@ This document describes how WebAssembly debugging, Razor Class Library static we
 
 ## Task List
 
-- [x] Configure `HackerOs.Ecosystem/Program.cs` client DI service registration for WebAssembly runtime execution.
+- [x] Configure `Kazo.Os.Ecosystem/Program.cs` client DI service registration for WebAssembly runtime execution.
 - [x] Register `AddMudServices()` in `EcosystemServiceCollectionExtensions.cs`.
 - [x] Link MudBlazor CSS (`_content/MudBlazor/MudBlazor.min.css`) and JS (`_content/MudBlazor/MudBlazor.min.js`) in `App.razor` and `index.html`.
-- [x] Link `HackerOs.Platform.Blazor` scoped CSS bundle (`_content/HackerOs.Platform.Blazor/HackerOs.Platform.Blazor.bundle.scp.css`) in `App.razor` and `index.html`.
-- [x] Link `HackerOs.Ecosystem` static web assets and CSS design tokens in `App.razor`.
+- [x] Link `Kazo.Os.Platform.Blazor` scoped CSS bundle (`_content/Kazo.Os.Platform.Blazor/Kazo.Os.Platform.Blazor.bundle.scp.css`) in `App.razor` and `index.html`.
+- [x] Link `Kazo.Os.Ecosystem` static web assets and CSS design tokens in `App.razor`.
 - [x] Enable component-level script and style tag support via `<HeadOutlet />`.
 - [x] Prevent Chromium `STATUS_ACCESS_VIOLATION` crashes by unregistering Service Workers on `localhost` during development.

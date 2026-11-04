@@ -97,8 +97,8 @@ vérifiés) ; `[IgnoreAntiforgeryToken]` l'annule pour une action. `<HackForm>`
 
 ### 6. `wwwroot` embarqué, servi en lecture seule
 
-- `build/HackerOs.Apps.targets` embarque `wwwroot/**` d'un projet qui référence
-  `HackerOs.AppSdk.Web` comme ressources `wwwroot/<chemin>` (propriété
+- `build/Kazo.Os.Apps.targets` embarque `wwwroot/**` d'un projet qui référence
+  `Kazo.Os.AppSdk.Web` comme ressources `wwwroot/<chemin>` (propriété
   `HackerOsEmbedWebRoot` pour forcer ou interdire), et les retire des contenus :
   le `wwwroot` d'un site n'est jamais une ressource web statique de l'hôte
   (`_content/`). Le Razor class library d'une app à fenêtre garde son `wwwroot`
@@ -116,7 +116,7 @@ vérifiés) ; `[IgnoreAntiforgeryToken]` l'annule pour une action. `<HackForm>`
 
 ## Conséquences
 
-- `HackerOs.AppSdk.Web` référence `Microsoft.AspNetCore.Components.Web` (pour
+- `Kazo.Os.AppSdk.Web` référence `Microsoft.AspNetCore.Components.Web` (pour
   `HtmlRenderer` et les composants) ; les projets de test qui ont des vues
   passent au SDK `Microsoft.NET.Sdk.Razor`.
 - `HackWebApplicationBuilder` et `HackWebHost` gagnent une surcharge avec

@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <!--
+      ADR 0106 §4: the host that installs this app trims it when it publishes; the trim analysis
+      reports here, at build, any reflection the trimmer could not follow.
+    -->
+    <IsTrimmable>true</IsTrimmable>
+    <!-- A Kazo OS app; also read by the Debug profile of a hackeros-solution repository (ADR 0207). -->
+    <KazoOsAppProject>true</KazoOsAppProject>
+    <!-- One version for every Kazo OS package (ADR 0098 §1). -->
+    <KazoOsVersion>0.0.0-dev</KazoOsVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.14" />
+    <PackageReference Include="Kazo.Os.AppSdk" Version="$(KazoOsVersion)" />
+    <PackageReference Include="Kazo.Os.AppSdk.Blazor" Version="$(KazoOsVersion)" />
+    <!-- Generates manifest.json after the build and checks the SDK boundary (HOSAPP0030). -->
+    <PackageReference Include="Kazo.Os.App.Build" Version="$(KazoOsVersion)" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>

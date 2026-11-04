@@ -38,7 +38,7 @@ without rebuilding:
 }
 ```
 
-The Kazo OS server (`HackerOs.Server`) serves the OS's published files as
+The Kazo OS server (`Kazo.Os.Server`) serves the OS's published files as
 they are: the same key applies. A missing or unreadable value reads as
 `true`. An administrator can still erase the machine from Settings ▸ System.
 
@@ -46,13 +46,13 @@ The service worker caches `appsettings.json` without checking its hash: the
 edited file does not stop the offline install. A browser that already
 installed this release keeps the previous file until the next release; for a
 change to apply everywhere, make it before the first deployment (or in
-`OS/HackerOs.Ecosystem/wwwroot/appsettings.json` before `dotnet publish`).
+`OS/Kazo.Os.Ecosystem/wwwroot/appsettings.json` before `dotnet publish`).
 
 ## Architecture
 
 | Element | Role |
 | --- | --- |
-| `SignInFactoryResetSettings` (`Ecosystem.Host`) | Reads `HackerOs:SignIn:FactoryReset:Enabled` once at boot; registered by `AddHackerOsBrowserHost`. |
+| `SignInFactoryResetSettings` (`Ecosystem.Host`) | Reads `HackerOs:SignIn:FactoryReset:Enabled` once at boot; registered by `AddKazoOsBrowserHost`. |
 | `SignInFactoryReset` (`Ecosystem.Host`) | `IsOffered` (deployment key, `true` when the host registered nothing) and `RunAsync`, which checks the key again then calls the power service. |
 | `SignInFactoryResetPrompt` (`.razor`, `.razor.cs`, `.razor.css`) | Link and confirmation box; `IsConfirmationTyped` compares the typed word ignoring case and surrounding spaces. |
 | `SystemPowerService.FactoryResetFromSignInAsync` (`Platform.Core`) | Same sequence as `FactoryResetAsync` (logs flushed, session ended, IndexedDB database deleted, page reloaded); `system.factory-reset` audit with `origin = sign-in`. |
@@ -71,11 +71,11 @@ change to apply everywhere, make it before the first deployment (or in
 
 ## Tests
 
-- `Tests/HackerOs.Ecosystem.Tests/SignInFactoryResetTests.cs`: reading the
+- `Tests/Kazo.Os.Ecosystem.Tests/SignInFactoryResetTests.cs`: reading the
   key, the published `appsettings.json`, the confirmation word, a disabled
   deployment that erases nothing, closed and open rendering in English and
   French.
-- `Tests/HackerOs.Platform.Core.Tests/Administration/SystemAdministrationGatewayTests.cs`:
+- `Tests/Kazo.Os.Platform.Core.Tests/Administration/SystemAdministrationGatewayTests.cs`:
   erase then restart, `origin = sign-in` audit entry.
 
 ## Task list

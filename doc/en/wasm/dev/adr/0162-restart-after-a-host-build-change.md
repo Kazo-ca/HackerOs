@@ -17,12 +17,12 @@ Accepted on 2026-10-22.
 On-demand apps (ADR 0113, `BuildKnownAssemblyLoaderRegistry`)
 fetch their `.wasm` at first launch, under the fingerprinted name that
 the page's `dotnet.js` has known since startup
-(`HackerOs.Apps.Settings.yesfevpgxl.wasm`). If the origin serves another build
+(`Kazo.Os.Apps.Settings.yesfevpgxl.wasm`). If the origin serves another build
 in the meantime (F5 in Visual Studio while a tab stays open, hot
 reload, deployment of a new version), this file no longer exists or no longer has
 the right fingerprint: the browser refuses the response (integrity check) and
 the launch fails with
-`download '…/_framework/HackerOs.Apps.Settings.yesfevpgxl.wasm' failed 0
+`download '…/_framework/Kazo.Os.Apps.Settings.yesfevpgxl.wasm' failed 0
 TypeError: Failed to fetch`. Nothing explained to the user that a
 reload was enough.
 
@@ -59,7 +59,7 @@ button was disabled.
   session closed (apps receive their cancellation), then page
   reload. No elevation is requested: nothing changes on the machine, we
   only load the already installed files.
-- The module `OS/HackerOs.Ecosystem.Host/wwwroot/hostBuild.js` reads the import map
+- The module `OS/Kazo.Os.Ecosystem.Host/wwwroot/hostBuild.js` reads the import map
   and requests the page again; the comparison stays in C#.
 
 ### 3. Outside the code

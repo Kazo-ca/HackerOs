@@ -5,7 +5,7 @@
 ## Status
 
 Accepted on 2026-10-31, work item `todo/18-theme-packs` (`TODO` issue
-[#253](https://github.com/Kazo-ca/HackerOs/issues/253), Hack Store v2).
+[#253](https://github.com/Kazo-ca/Os/issues/253), Hack Store v2).
 Implements [ADR 0190](0190-theme-packs.md) §1 to §3, on the Store of
 [ADR 0212](0212-hack-store-app-build.md) and the trust rules of
 [ADR 0189](0189-app-sources-trust-and-per-user-install.md) and
@@ -69,7 +69,7 @@ cursors/*.png                 images named by cursor.theme, hotspot checked
   `unexpected-file`, `bad-file`, `file-too-large`, `remote-address`,
   `unsupported`, `bad-description`) that the Store translates.
 
-The code is `ThemePack.Read` in `HackerOs.Platform.Core` (Apps/ThemePacks).
+The code is `ThemePack.Read` in `Kazo.Os.Platform.Core` (Apps/ThemePacks).
 The catalog CI will apply the same rules (Q2).
 
 ### 2. In the catalog
@@ -163,7 +163,7 @@ Themes tab only, not in the apps badge (`AppUpdateMonitor`).
    into the existing folders (`/etc/hackeros/cursors/`…). A keeps a clean
    removal and an atomic update.
 2. **Q2, catalog CI.** A (recommended): a `TODO` issue on
-   `HackerOs-AppMarketPlace` to check `kind: "theme-pack"`, done once
+   `Os-AppMarketPlace` to check `kind: "theme-pack"`, done once
    `todo/base` is on `main`. B: do it in this work item.
 3. **Q3, after the install.** A (recommended): nothing is applied, an "Open
    Appearance" button. B: apply the whole pack at once.
@@ -173,7 +173,7 @@ Themes tab only, not in the apps badge (`AppUpdateMonitor`).
 ## Benoit's answers
 
 On 2026-10-31: **Q1 A** (read in place), **Q2 A** (`TODO` issue
-[AppMarketPlace #4](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/4)
+[AppMarketPlace #4](https://github.com/Kazo-ca/Os-AppMarketPlace/issues/4)
 after `main`), **Q3 A** (nothing applied, "Open Appearance" button),
 **Q4 A** (Themes tab only, no badge).
 
@@ -188,4 +188,4 @@ after `main`), **Q3 A** (nothing applied, "Open Appearance" button),
 - [x] Hack Store Themes tab.
 - [x] Tests: format, gateway, pack folders, Store tab.
 - [ ] Catalog CI for `kind: "theme-pack"` (Q2, `TODO` issue
-      [AppMarketPlace #4](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/4)).
+      [AppMarketPlace #4](https://github.com/Kazo-ca/Os-AppMarketPlace/issues/4)).

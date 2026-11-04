@@ -8,9 +8,9 @@ This document describes how an app opens a surface, draws its content in it, fol
 
 | File | Role |
 |---|---|
-| `Shared/HackerOs.AppSdk.Blazor/Display/DisplaySurfaceContracts.cs` | Public contract: `IDisplaySurfaceService`, `IDisplaySurface`, `DisplaySurfaceOptions`, `DisplaySurfaceOpenResult`, `DisplaySurfaceOpenStatus`, `DisplaySurfaceState`. |
-| `Shared/HackerOs.AppSdk.Blazor/Display/DisplaySurfaceContent.razor(.cs,.css)` | Portal: renders its content here, then moves its element into the surface; renders it back before being removed. `Surface` is optional (ADR 0084 §7): with no open surface, the content stays in place, which makes it possible to render it only once and keep its state when detaching. |
-| `Shared/HackerOs.AppSdk/Apps/HackBrowser.cs` | `HackBrowser.OpenAsync(url)`, `HackBrowser.OpenDetachedAsync(url)`. |
+| `Shared/Kazo.Os.AppSdk.Blazor/Display/DisplaySurfaceContracts.cs` | Public contract: `IDisplaySurfaceService`, `IDisplaySurface`, `DisplaySurfaceOptions`, `DisplaySurfaceOpenResult`, `DisplaySurfaceOpenStatus`, `DisplaySurfaceState`. |
+| `Shared/Kazo.Os.AppSdk.Blazor/Display/DisplaySurfaceContent.razor(.cs,.css)` | Portal: renders its content here, then moves its element into the surface; renders it back before being removed. `Surface` is optional (ADR 0084 §7): with no open surface, the content stays in place, which makes it possible to render it only once and keep its state when detaching. |
+| `Shared/Kazo.Os.AppSdk/Apps/KazoBrowser.cs` | `KazoBrowser.OpenAsync(url)`, `KazoBrowser.OpenDetachedAsync(url)`. |
 
 ## Opening a surface
 
@@ -49,7 +49,7 @@ text style onto the surface root.
 `IDisplaySurface.Changed` reports the size (`Width`, `Height`), the focus
 (`HasFocus`), the title and the state. It arrives outside any Blazor event and
 outside the app's context: a component handles it with `InvokeAsync` and, if it
-calls the SDK, `HackExecutionContext.Enter(AppContext)`.
+calls the SDK, `KazoExecutionContext.Enter(AppContext)`.
 
 | State | When |
 |---|---|
@@ -65,13 +65,13 @@ window. Reloading or closing the OS tab closes all surfaces.
 
 ```csharp
 // From a click: the host browser refuses a window without a gesture.
-await HackBrowser.OpenDetachedAsync("https://intranet.hack/rapport");
+await KazoBrowser.OpenDetachedAsync("https://intranet.hack/rapport");
 ```
 
 Launches the browser with `--detached <url>` (capability `apps.launch`): the
 detached window opens before the first navigation. If it is blocked, the
 page is displayed in the OS browser, with the banner and the notification.
-`HackBrowser.OpenAsync(url)` simply opens the address in a new
+`KazoBrowser.OpenAsync(url)` simply opens the address in a new
 browser.
 
 ## Limits for apps

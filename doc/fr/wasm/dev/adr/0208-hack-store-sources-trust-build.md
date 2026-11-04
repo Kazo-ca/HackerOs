@@ -5,7 +5,7 @@
 ## Statut
 
 Accepté le 2026-10-30, chantier `todo/3-hackstore-sources-trust` (issue `TODO`
-[#248](https://github.com/Kazo-ca/HackerOs/issues/248), Hack Store 3). Met en
+[#248](https://github.com/Kazo-ca/Os/issues/248), Hack Store 3). Met en
 œuvre l'[ADR 0189](0189-app-sources-trust-and-per-user-install.md). Ne change
 aucune de ses décisions sauf une : le catalogue n'est pas construit « à
 l'ouverture de la session » mais au démarrage de la page, avec un masquage par
@@ -35,8 +35,8 @@ noire.
    niveau est réservé aux apps du catalogue officiel installées par le Store
    (Hack Store 4, issue #249).
 2. **Valeurs fixées à la compilation.** L'hôte (`HackerOsAppHost=true`) règle
-   des propriétés MSBuild que `build/HackerOs.Apps.targets` transforme en
-   `AssemblyMetadata` (préfixe `HackerOs.AppPackages.`) de son assembly ;
+   des propriétés MSBuild que `build/Kazo.Os.Apps.targets` transforme en
+   `AssemblyMetadata` (préfixe `Kazo.Os.AppPackages.`) de son assembly ;
    `AppPackageDefaults.FromAssembly` les lit au démarrage. Une propriété vide
    garde la valeur standard (catalogue officiel, `catalog:official` et
    `github.com/Kazo-ca` de confiance, 6 h, rien de bloqué) :
@@ -106,7 +106,7 @@ noire.
 ## Tâches
 
 - [x] `app-sources.config` : `[catalogs]`, `[updates]`, sources non fiables,
-      valeurs fixées à la compilation (`AppPackageDefaults`, `HackerOs.Apps.targets`).
+      valeurs fixées à la compilation (`AppPackageDefaults`, `Kazo.Os.Apps.targets`).
 - [x] `app-policy.config` : lecture, défauts, création au démarrage (`FileSystemSeeder`).
 - [x] Installation pour soi, une seule copie, catalogue par session (`InstalledPackageCatalog`).
 - [x] Fenêtre de validation en deux étapes (`AppInstallApprovalBroker`, `AppInstallApprovalOverlay`).

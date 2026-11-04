@@ -1,0 +1,87 @@
+#nullable enable
+Kazo.Os.Apps.ErrorLogViewer.ErrorLogViewerApp
+Kazo.Os.Apps.ErrorLogViewer.ErrorLogViewerApp.ErrorLogViewerApp() -> void
+Kazo.Os.Apps.ErrorLogViewer.ErrorLogViewerWindow
+Kazo.Os.Apps.ErrorLogViewer.ErrorLogViewerWindow.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Apps.ErrorLogViewer.ErrorLogViewerWindow.ErrorLogViewerWindow() -> void
+Kazo.Os.Apps.ErrorLogViewer.LogFileContent
+Kazo.Os.Apps.ErrorLogViewer.LogFileContent.<Clone>$() -> Kazo.Os.Apps.ErrorLogViewer.LogFileContent!
+Kazo.Os.Apps.ErrorLogViewer.LogFileContent.Deconstruct(out Kazo.Os.Apps.ErrorLogViewer.LogSource! Source, out System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.ErrorLogViewer.LogRow!>! Rows, out int UnparsedLineCount, out Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemError? Error) -> void
+Kazo.Os.Apps.ErrorLogViewer.LogFileContent.Equals(Kazo.Os.Apps.ErrorLogViewer.LogFileContent? other) -> bool
+Kazo.Os.Apps.ErrorLogViewer.LogFileContent.Error.get -> Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemError?
+Kazo.Os.Apps.ErrorLogViewer.LogFileContent.Error.init -> void
+Kazo.Os.Apps.ErrorLogViewer.LogFileContent.LogFileContent(Kazo.Os.Apps.ErrorLogViewer.LogSource! Source, System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.ErrorLogViewer.LogRow!>! Rows, int UnparsedLineCount, Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemError? Error) -> void
+Kazo.Os.Apps.ErrorLogViewer.LogFileContent.Rows.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.ErrorLogViewer.LogRow!>!
+Kazo.Os.Apps.ErrorLogViewer.LogFileContent.Rows.init -> void
+Kazo.Os.Apps.ErrorLogViewer.LogFileContent.Source.get -> Kazo.Os.Apps.ErrorLogViewer.LogSource!
+Kazo.Os.Apps.ErrorLogViewer.LogFileContent.Source.init -> void
+Kazo.Os.Apps.ErrorLogViewer.LogFileContent.UnparsedLineCount.get -> int
+Kazo.Os.Apps.ErrorLogViewer.LogFileContent.UnparsedLineCount.init -> void
+Kazo.Os.Apps.ErrorLogViewer.LogFileReader
+Kazo.Os.Apps.ErrorLogViewer.LogFileReader.ListSourcesAsync(bool includeArchives, bool includeAudit = false, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.ErrorLogViewer.LogSource!>!>!
+Kazo.Os.Apps.ErrorLogViewer.LogFileReader.LogFileReader(Kazo.Os.Simulation.Abstractions.Gateways.IAppFileSystemGateway! fileSystem) -> void
+Kazo.Os.Apps.ErrorLogViewer.LogFileReader.ReadAsync(Kazo.Os.Apps.ErrorLogViewer.LogSource! source, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Apps.ErrorLogViewer.LogFileContent!>!
+Kazo.Os.Apps.ErrorLogViewer.LogFileReader.TruncateAsync(Kazo.Os.Apps.ErrorLogViewer.LogSource! source, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemMutationResult!>!
+Kazo.Os.Apps.ErrorLogViewer.LogRow
+Kazo.Os.Apps.ErrorLogViewer.LogRow.<Clone>$() -> Kazo.Os.Apps.ErrorLogViewer.LogRow!
+Kazo.Os.Apps.ErrorLogViewer.LogRow.Deconstruct(out Kazo.Os.Simulation.Abstractions.Diagnostics.LogLine! Line, out Kazo.Os.Apps.ErrorLogViewer.LogSource! Source, out int LineNumber) -> void
+Kazo.Os.Apps.ErrorLogViewer.LogRow.Equals(Kazo.Os.Apps.ErrorLogViewer.LogRow? other) -> bool
+Kazo.Os.Apps.ErrorLogViewer.LogRow.Line.get -> Kazo.Os.Simulation.Abstractions.Diagnostics.LogLine!
+Kazo.Os.Apps.ErrorLogViewer.LogRow.Line.init -> void
+Kazo.Os.Apps.ErrorLogViewer.LogRow.LineNumber.get -> int
+Kazo.Os.Apps.ErrorLogViewer.LogRow.LineNumber.init -> void
+Kazo.Os.Apps.ErrorLogViewer.LogRow.LogRow(Kazo.Os.Simulation.Abstractions.Diagnostics.LogLine! Line, Kazo.Os.Apps.ErrorLogViewer.LogSource! Source, int LineNumber) -> void
+Kazo.Os.Apps.ErrorLogViewer.LogRow.Source.get -> Kazo.Os.Apps.ErrorLogViewer.LogSource!
+Kazo.Os.Apps.ErrorLogViewer.LogRow.Source.init -> void
+Kazo.Os.Apps.ErrorLogViewer.LogSource
+Kazo.Os.Apps.ErrorLogViewer.LogSource.<Clone>$() -> Kazo.Os.Apps.ErrorLogViewer.LogSource!
+Kazo.Os.Apps.ErrorLogViewer.LogSource.Deconstruct(out Kazo.Os.App.Abstractions.VirtualPath Path, out string! Label, out bool IsArchive) -> void
+Kazo.Os.Apps.ErrorLogViewer.LogSource.Equals(Kazo.Os.Apps.ErrorLogViewer.LogSource? other) -> bool
+Kazo.Os.Apps.ErrorLogViewer.LogSource.IsArchive.get -> bool
+Kazo.Os.Apps.ErrorLogViewer.LogSource.IsArchive.init -> void
+Kazo.Os.Apps.ErrorLogViewer.LogSource.Label.get -> string!
+Kazo.Os.Apps.ErrorLogViewer.LogSource.Label.init -> void
+Kazo.Os.Apps.ErrorLogViewer.LogSource.LogSource(Kazo.Os.App.Abstractions.VirtualPath Path, string! Label, bool IsArchive) -> void
+Kazo.Os.Apps.ErrorLogViewer.LogSource.Path.get -> Kazo.Os.App.Abstractions.VirtualPath
+Kazo.Os.Apps.ErrorLogViewer.LogSource.Path.init -> void
+Kazo.Os.Apps.ErrorLogViewer.LogSource.RequiresRoot.get -> bool
+Kazo.Os.Apps.ErrorLogViewer.LogSource.RequiresRoot.init -> void
+Kazo.Os.Apps.ErrorLogViewer._Imports
+Kazo.Os.Apps.ErrorLogViewer._Imports.Execute() -> void
+Kazo.Os.Apps.ErrorLogViewer._Imports._Imports() -> void
+const Kazo.Os.Apps.ErrorLogViewer.ErrorLogViewerWindow.MaxDisplayedRows = 2000 -> int
+const Kazo.Os.Apps.ErrorLogViewer.LogFileReader.MaxArchives = 5 -> int
+override Kazo.Os.Apps.ErrorLogViewer.ErrorLogViewerApp.Assets.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AssetManifest!>!
+override Kazo.Os.Apps.ErrorLogViewer.ErrorLogViewerApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Apps.ErrorLogViewer.ErrorLogViewerApp.Category.get -> string!
+override Kazo.Os.Apps.ErrorLogViewer.ErrorLogViewerApp.Description.get -> string!
+override Kazo.Os.Apps.ErrorLogViewer.ErrorLogViewerApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Apps.ErrorLogViewer.ErrorLogViewerApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Apps.ErrorLogViewer.ErrorLogViewerApp.Id.get -> string!
+override Kazo.Os.Apps.ErrorLogViewer.ErrorLogViewerApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Apps.ErrorLogViewer.ErrorLogViewerApp.MobileEntryPoint.get -> System.Type?
+override Kazo.Os.Apps.ErrorLogViewer.ErrorLogViewerApp.Name.get -> string!
+override Kazo.Os.Apps.ErrorLogViewer.ErrorLogViewerApp.PublisherId.get -> string!
+override Kazo.Os.Apps.ErrorLogViewer.ErrorLogViewerApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Apps.ErrorLogViewer.ErrorLogViewerApp.SingleInstancePerUser.get -> bool
+override Kazo.Os.Apps.ErrorLogViewer.ErrorLogViewerWindow.OnAppInitializedAsync() -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.ErrorLogViewer.LogFileContent.Equals(object? obj) -> bool
+override Kazo.Os.Apps.ErrorLogViewer.LogFileContent.GetHashCode() -> int
+override Kazo.Os.Apps.ErrorLogViewer.LogFileContent.ToString() -> string!
+override Kazo.Os.Apps.ErrorLogViewer.LogRow.Equals(object? obj) -> bool
+override Kazo.Os.Apps.ErrorLogViewer.LogRow.GetHashCode() -> int
+override Kazo.Os.Apps.ErrorLogViewer.LogRow.ToString() -> string!
+override Kazo.Os.Apps.ErrorLogViewer.LogSource.Equals(object? obj) -> bool
+override Kazo.Os.Apps.ErrorLogViewer.LogSource.GetHashCode() -> int
+override Kazo.Os.Apps.ErrorLogViewer.LogSource.ToString() -> string!
+static Kazo.Os.Apps.ErrorLogViewer.LogFileContent.operator !=(Kazo.Os.Apps.ErrorLogViewer.LogFileContent? left, Kazo.Os.Apps.ErrorLogViewer.LogFileContent? right) -> bool
+static Kazo.Os.Apps.ErrorLogViewer.LogFileContent.operator ==(Kazo.Os.Apps.ErrorLogViewer.LogFileContent? left, Kazo.Os.Apps.ErrorLogViewer.LogFileContent? right) -> bool
+static Kazo.Os.Apps.ErrorLogViewer.LogFileReader.Parse(Kazo.Os.Apps.ErrorLogViewer.LogSource! source, string! text) -> Kazo.Os.Apps.ErrorLogViewer.LogFileContent!
+static Kazo.Os.Apps.ErrorLogViewer.LogRow.operator !=(Kazo.Os.Apps.ErrorLogViewer.LogRow? left, Kazo.Os.Apps.ErrorLogViewer.LogRow? right) -> bool
+static Kazo.Os.Apps.ErrorLogViewer.LogRow.operator ==(Kazo.Os.Apps.ErrorLogViewer.LogRow? left, Kazo.Os.Apps.ErrorLogViewer.LogRow? right) -> bool
+static Kazo.Os.Apps.ErrorLogViewer.LogSource.operator !=(Kazo.Os.Apps.ErrorLogViewer.LogSource? left, Kazo.Os.Apps.ErrorLogViewer.LogSource? right) -> bool
+static Kazo.Os.Apps.ErrorLogViewer.LogSource.operator ==(Kazo.Os.Apps.ErrorLogViewer.LogSource? left, Kazo.Os.Apps.ErrorLogViewer.LogSource? right) -> bool
+static readonly Kazo.Os.Apps.ErrorLogViewer.LogFileReader.AppLogDirectory -> Kazo.Os.App.Abstractions.VirtualPath
+static readonly Kazo.Os.Apps.ErrorLogViewer.LogFileReader.LogDirectory -> Kazo.Os.App.Abstractions.VirtualPath
+static readonly Kazo.Os.Apps.ErrorLogViewer.LogFileReader.SyslogPath -> Kazo.Os.App.Abstractions.VirtualPath
+~override Kazo.Os.Apps.ErrorLogViewer.ErrorLogViewerWindow.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

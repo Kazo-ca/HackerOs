@@ -2,7 +2,7 @@
 
 # Icon packs
 
-Decision: [ADR 0203](adr/0203-icon-packs.md). Issue: [#255](https://github.com/Kazo-ca/HackerOs/issues/255).
+Decision: [ADR 0203](adr/0203-icon-packs.md). Issue: [#255](https://github.com/Kazo-ca/Os/issues/255).
 
 ## Purpose
 
@@ -43,12 +43,12 @@ system log (`icons: …`) and Settings shows how many there are.
 
 | Part | Project | Role |
 | --- | --- | --- |
-| `IconPackLibrary`, `IconPack`, `IconPackInfo`, `IconPackFileAccess` | `HackerOs.Theming.Abstractions` | Reads the folders through the caller's file access, validation, `data:` URLs, lookup rules |
-| `IconPackSettingsDocuments` | `HackerOs.Platform.Core` | `icons` document (`iconPackId`, `builtin` by default) declared in `OsSettingsDocumentRegistry` |
-| `IconPackService` | `HackerOs.Platform.Core` | The shell's selected pack, re-read when `icons.config` or the session changes, `Changed` event |
-| `BuiltInIconPacks`, `FileSystemSeeder` | `HackerOs.Platform.Core` | Embedded "Néon" pack, copied to `/usr/share/icons/neon/` in the background after the login (`InstallIconPacksAsync`, started once per boot by `LocalSessionService`). Like dpkg's `.list` files, `/var/lib/hackeros/installed/icon-packs.list` records the installed files: a boot whose list matches skips the install, and an install cut by a reload completes its empty files at the next boot |
-| `ShellAppIcon` | `HackerOs.Platform.Blazor` | App icon of the Start menu and the mobile home |
-| `WindowLaunchCoordinator.IconFor`, `SetWindowIconCommand` | `HackerOs.Platform.Blazor`, `HackerOs.Windowing.*` | Window and taskbar icon, changed live |
+| `IconPackLibrary`, `IconPack`, `IconPackInfo`, `IconPackFileAccess` | `Kazo.Os.Theming.Abstractions` | Reads the folders through the caller's file access, validation, `data:` URLs, lookup rules |
+| `IconPackSettingsDocuments` | `Kazo.Os.Platform.Core` | `icons` document (`iconPackId`, `builtin` by default) declared in `OsSettingsDocumentRegistry` |
+| `IconPackService` | `Kazo.Os.Platform.Core` | The shell's selected pack, re-read when `icons.config` or the session changes, `Changed` event |
+| `BuiltInIconPacks`, `FileSystemSeeder` | `Kazo.Os.Platform.Core` | Embedded "Néon" pack, copied to `/usr/share/icons/neon/` in the background after the login (`InstallIconPacksAsync`, started once per boot by `LocalSessionService`). Like dpkg's `.list` files, `/var/lib/hackeros/installed/icon-packs.list` records the installed files: a boot whose list matches skips the install, and an install cut by a reload completes its empty files at the next boot |
+| `ShellAppIcon` | `Kazo.Os.Platform.Blazor` | App icon of the Start menu and the mobile home |
+| `WindowLaunchCoordinator.IconFor`, `SetWindowIconCommand` | `Kazo.Os.Platform.Blazor`, `Kazo.Os.Windowing.*` | Window and taskbar icon, changed live |
 | `ExplorerFileView` (`IconPack` part), `IconPackShellIconProvider` | File Explorer | Files, folders and shortcuts, read with the host app's rights through the public SDK |
 | `IconPackPanel` | Settings | Pack list, preview, writes the chosen layer |
 

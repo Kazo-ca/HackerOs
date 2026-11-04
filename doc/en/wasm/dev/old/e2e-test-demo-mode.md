@@ -16,7 +16,7 @@ fixture tree in one click.
 
 ## How it is gated
 
-The button (`#btn-test-demo` in `Platform/HackerOs.Platform.Blazor/Shell/DesktopShell.razor`)
+The button (`#btn-test-demo` in `Platform/Kazo.Os.Platform.Blazor/Shell/DesktopShell.razor`)
 only renders when `DesktopShell.TestDemoEnabled` is `true`. That parameter is
 threaded from a single source of truth: a `--test-demo` command-line argument
 passed to the ASP.NET Core test-harness process (`test/test/test.csproj`).
@@ -28,8 +28,8 @@ dotnet run test-harness-process
     → test/test/Components/App.razor (@inject TestHarnessOptions) reads it once,
       server-side, while rendering the static page shell (prerender:false only
       skips the *child* WASM component, not this outer shell)
-    → passed as a typed Razor parameter into <HackerOs.Ecosystem.App TestDemoEnabled="..." />
-    → HackerOs.Ecosystem.App passes it down to <DesktopShell TestDemoEnabled="..." />
+    → passed as a typed Razor parameter into <Kazo.Os.Ecosystem.App TestDemoEnabled="..." />
+    → Kazo.Os.Ecosystem.App passes it down to <DesktopShell TestDemoEnabled="..." />
 ```
 
 Because the flag only exists when the host process itself was started with
@@ -57,7 +57,7 @@ startInfo.ArgumentList.Add("--test-demo");
 ## What clicking it does
 
 `DesktopShell.RunTestDemoAsync` calls
-`Platform/HackerOs.Platform.Core/FileSystem/TestDemoFixtureSeeder.SeedAsync`,
+`Platform/Kazo.Os.Platform.Core/FileSystem/TestDemoFixtureSeeder.SeedAsync`,
 which writes directly through the trusted `IFileSystemService` (the same way
 `FileSystemSeeder` provisions `/home/{user}` at login — a system operation, not
 a sandboxed app call) to create, under the signed-in user's

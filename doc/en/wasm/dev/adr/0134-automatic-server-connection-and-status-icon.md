@@ -57,7 +57,7 @@ shows the connection state".
 
 ## Consequences
 
-- `HackerOs.Server` gains `GET /api/hackeros/host-info` (API version,
+- `Kazo.Os.Server` gains `GET /api/hackeros/host-info` (API version,
   server name); the OS gains the detection and the icon.
 - Tests: boot served by the server → connection without a box; server stopped →
   "Offline" icon, OS usable; `auto-connect=false` respected.

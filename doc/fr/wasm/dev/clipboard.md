@@ -2,7 +2,7 @@
 
 # Presse-papiers de l'OS et partage avec l'hôte
 
-L'API du presse-papiers pour les apps (`HackClipboard`, listes de fichiers, format GNOME) est dans [`clipboard-api.md`](../framework/clipboard-api.md).
+L'API du presse-papiers pour les apps (`KazoClipboard`, listes de fichiers, format GNOME) est dans [`clipboard-api.md`](../framework/clipboard-api.md).
 
 ## Objet
 
@@ -17,7 +17,7 @@ l'explorateur (couper, copier, coller, conflits de noms) est décrit dans
 ## Architecture
 
 ```text
-App ──► HackClipboard ──► IAppClipboardGateway ──► AppClipboardGateway ──► SystemClipboard (une entrée par session)
+App ──► KazoClipboard ──► IAppClipboardGateway ──► AppClipboardGateway ──► SystemClipboard (une entrée par session)
                                                        clipboard.read / .write          │ Changed, séquence, origine
                                                                                           ▼
               /etc/hackeros/clipboard.config ──► HostClipboardBridge (Platform Core)
@@ -29,15 +29,15 @@ App ──► HackClipboard ──► IAppClipboardGateway ──► AppClipboar
 
 | Pièce | Où | Rôle |
 |---|---|---|
-| `SystemClipboard`, `SystemClipboardEntry`, `SystemClipboardOrigin` | `Platform/HackerOs.Platform.Core/Clipboard/` | Le presse-papiers : entrée multi-formats par session, numéro de séquence, origine (`Guest`, `GuestNative`, `Host`), vidé à la déconnexion. En mémoire seulement. |
+| `SystemClipboard`, `SystemClipboardEntry`, `SystemClipboardOrigin` | `Platform/Kazo.Os.Platform.Core/Clipboard/` | Le presse-papiers : entrée multi-formats par session, numéro de séquence, origine (`Guest`, `GuestNative`, `Host`), vidé à la déconnexion. En mémoire seulement. |
 | `ClipboardSettingsDocuments`, `ClipboardSharingMode` | idem | Document `clipboard` (clé `sharing`) et sens permis. |
 | `HostClipboardBridge` | idem | Recopie le texte vers l'hôte, applique les collages de l'hôte et les copies natives, relit le réglage à chaud. Toute la logique testable. |
-| `IHostClipboardChannel`, `IHostClipboardSink` | `Shared/HackerOs.Simulation.Abstractions/Clipboard/` | Contrat entre le pont et la page. |
-| `BrowserHostClipboardChannel` | `Infrastructure/HackerOs.Infrastructure.Browser/Interop/` | Importe `hostClipboard.js` et relaie ses rappels. |
-| `hostClipboard.js` | `Infrastructure/HackerOs.Infrastructure.Browser/wwwroot/` | Écoute `paste` (capture, document), `copy` et `cut` (bulle, window) ; appelle `writeText`. |
-| `FileView.attachPasteTarget` | `Apps/System/HackerOs.Apps.FileExplorer/FileControl/FileView.razor.js` | Ctrl+V par l'événement `paste` ; fichiers de l'hôte importés comme un dépôt. |
+| `IHostClipboardChannel`, `IHostClipboardSink` | `Shared/Kazo.Os.Simulation.Abstractions/Clipboard/` | Contrat entre le pont et la page. |
+| `BrowserHostClipboardChannel` | `Infrastructure/Kazo.Os.Infrastructure.Browser/Interop/` | Importe `hostClipboard.js` et relaie ses rappels. |
+| `hostClipboard.js` | `Infrastructure/Kazo.Os.Infrastructure.Browser/wwwroot/` | Écoute `paste` (capture, document), `copy` et `cut` (bulle, window) ; appelle `writeText`. |
+| `FileView.attachPasteTarget` | `Apps/System/Kazo.Os.Apps.FileExplorer/FileControl/FileView.razor.js` | Ctrl+V par l'événement `paste` ; fichiers de l'hôte importés comme un dépôt. |
 
-Le pont est enregistré par `AddHackerOsEcosystem` (portée par circuit, comme
+Le pont est enregistré par `AddKazoOsEcosystem` (portée par circuit, comme
 tout ce qui dépend d'`IJSRuntime`) et démarré par `App.razor` après le
 chargement des préférences ; un échec n'empêche jamais le démarrage.
 
@@ -102,15 +102,15 @@ la convention de l'ADR 0044.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Clipboard/SystemClipboardTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Clipboard/SystemClipboardTests.cs` :
   séquence, formats multiples, origine, copie de l'entrée, effacement.
-- `Tests/HackerOs.Platform.Core.Tests/Clipboard/ClipboardSettingsDocumentsTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Clipboard/ClipboardSettingsDocumentsTests.cs` :
   valeurs de `sharing`, fichier installé, surcharge utilisateur, `[locked]`.
-- `Tests/HackerOs.Platform.Core.Tests/Clipboard/HostClipboardBridgeTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Clipboard/HostClipboardBridgeTests.cs` :
   écriture vers l'hôte, liste de fichiers en chemins, collage sans écho,
   fichiers de l'hôte, copie native, chaque mode, verrou, changement à chaud,
   déconnexion, refus du navigateur, absence de session.
-- `Tests/HackerOs.Apps.FileExplorer.FileControl.Tests/FileViewDropAndClipboardTests.cs` :
+- `Tests/Kazo.Os.Apps.FileExplorer.FileControl.Tests/FileViewDropAndClipboardTests.cs` :
   Ctrl+V par l'événement `paste`, fichiers de l'hôte collés.
 
 ## Liste des tâches
@@ -120,7 +120,7 @@ la convention de l'ADR 0044.
 - [x] Document `clipboard.config` (clé `sharing`, `[locked]`), installé au premier démarrage, listé par `OsSettingsDocumentRegistry`.
 - [x] `HostClipboardBridge` et contrat `IHostClipboardChannel`.
 - [x] `BrowserHostClipboardChannel` et `hostClipboard.js` dans Infrastructure.Browser.
-- [x] Enregistrement dans `AddHackerOsEcosystem`, démarrage dans `App.razor`.
+- [x] Enregistrement dans `AddKazoOsEcosystem`, démarrage dans `App.razor`.
 - [x] `FileView` : Ctrl+V par `paste`, fichiers de l'hôte collés importés comme un dépôt.
-- [x] Diagnostic copie par `HackClipboard` (`clipboard.write`) ; `BrowserClipboard` `[Obsolete]`, puis retiré en 1.0 (ADR 0114).
+- [x] Diagnostic copie par `KazoClipboard` (`clipboard.write`) ; `BrowserClipboard` `[Obsolete]`, puis retiré en 1.0 (ADR 0114).
 - [x] Tests et documentation.

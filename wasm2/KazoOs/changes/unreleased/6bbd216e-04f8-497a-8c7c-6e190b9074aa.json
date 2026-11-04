@@ -1,0 +1,18 @@
+{
+  "id": "6bbd216e-04f8-497a-8c7c-6e190b9074aa",
+  "category": "developer",
+  "audience": [
+    "developer"
+  ],
+  "title": {
+    "en": "SDK 3.0: the Kazo.Os.* packages and the Kazo* types",
+    "fr": "SDK 3.0 : les paquets Kazo.Os.* et les types Kazo*"
+  },
+  "description": {
+    "en": "Every package moves from HackerOs.* to Kazo.Os.* (Kazo.Os.AppSdk, Kazo.Os.Templates...) and every SDK type from Hack* to Kazo* (HackFile becomes KazoFile, HackerIcon becomes KazoIcon, and the HackIcon record becomes KazoSurfaceIcon). The version is 3.0.0: an app built on SDK 2.x is refused and must be rebuilt against the new packages.",
+    "fr": "Tous les paquets passent de HackerOs.* à Kazo.Os.* (Kazo.Os.AppSdk, Kazo.Os.Templates...) et tous les types du SDK de Hack* à Kazo* (HackFile devient KazoFile, HackerIcon devient KazoIcon, et l'enregistrement HackIcon devient KazoSurfaceIcon). La version est 3.0.0 : une app construite sur le SDK 2.x est refusée et doit être reconstruite avec les nouveaux paquets."
+  },
+  "links": [
+    "doc/en/wasm/dev/adr/0228-rename-to-kazoos.md"
+  ]
+}

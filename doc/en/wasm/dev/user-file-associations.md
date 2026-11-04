@@ -2,7 +2,7 @@
 
 # Per-user default applications
 
-This document covers the implementation of per-user file associations. The formats of the two files, the resolution order, the `HackApps` API and the capabilities are in [`../framework/file-associations-api.md`](../framework/file-associations-api.md).
+This document covers the implementation of per-user file associations. The formats of the two files, the resolution order, the `KazoApps` API and the capabilities are in [`../framework/file-associations-api.md`](../framework/file-associations-api.md).
 
 Work item `v3/4b`, follow-up to `v3/4-intents`, following
 [ADR 0121](adr/0121-user-file-associations.md). Completes
@@ -20,7 +20,7 @@ precedence over `/etc/xdg/mimeapps.list` on Linux.
 
 ```text
 Paramètres / « Ouvrir avec » / xdg-mime
-        │ HackApps.Get/Set/ResetDefaultHandlerAsync
+        │ KazoApps.Get/Set/ResetDefaultHandlerAsync
         ▼
 IAppCatalogGateway (AppCatalogGateway ; RemoteCatalogGateway dans un worker : cat.defaults, cat.setdef)
         │ capacités file-associations.read (+ filesystem.user-home.write pour écrire)
@@ -69,7 +69,7 @@ AppIntentDispatcher (passe le principal à chaque résolution)
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Intents/UserFileAssociationTests.cs`:
+- `Tests/Kazo.Os.Platform.Core.Tests/Intents/UserFileAssociationTests.cs`:
   layer order, user by user, stale choice, separate `open` and `edit`, `0644`
   file and reset, invalid file kept, refusals (`InvalidTarget`, `InvalidAction`,
   `AppNotFound`, `AppCannotHandle`), scheme, "Open with", list of defaults.
@@ -77,7 +77,7 @@ AppIntentDispatcher (passe le principal à chaque résolution)
 - `AppCatalogGatewayTests`: capabilities and row order.
 - `XdgMimeCommandTests`, `xdg-mime` parity in `CommandParityTests`,
   `WireCodecIntentTests.Default_handlers_keep_target_action_app_and_layer`.
-- `HackerOs.Apps.Settings.Tests/FileAssociationsPanelTests.cs`: panel rows.
+- `Kazo.Os.Apps.Settings.Tests/FileAssociationsPanelTests.cs`: panel rows.
 
 ## Task list
 

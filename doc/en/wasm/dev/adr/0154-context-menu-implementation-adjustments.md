@@ -92,8 +92,8 @@ The examples of ADR 0150 and of the plan without `@(…)` do not compile as is.
 
 ### 8. Icons
 
-`HackIcon` and `HackIcons` live in `HackerOs.AppSdk.Icons` (next to
-`IconLibrary`); `HackerOs.AppSdk.Blazor` now references this package.
+`HackIcon` and `HackIcons` live in `Kazo.Os.AppSdk.Icons` (next to
+`IconLibrary`); `Kazo.Os.AppSdk.Blazor` now references this package.
 
 ## Consequences
 

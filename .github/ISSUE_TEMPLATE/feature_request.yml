@@ -5,9 +5,9 @@ body:
   - type: markdown
     attributes:
       value: |
-        Merci ! Avant d'ouvrir la demande, vérifiez la [présentation des fonctionnalités](https://github.com/Kazo-ca/HackerOs/blob/main/doc/fr/wasm/features.md) et les [issues ouvertes](https://github.com/Kazo-ca/HackerOs/issues). Vous pouvez écrire en français ou en anglais.
+        Merci ! Avant d'ouvrir la demande, vérifiez la [présentation des fonctionnalités](https://github.com/Kazo-ca/Os/blob/main/doc/fr/wasm/features.md) et les [issues ouvertes](https://github.com/Kazo-ca/Os/issues). Vous pouvez écrire en français ou en anglais.
 
-        Thank you! Before opening the request, check the [features overview](https://github.com/Kazo-ca/HackerOs/blob/main/doc/en/wasm/features.md) and the [open issues](https://github.com/Kazo-ca/HackerOs/issues). You may write in French or in English.
+        Thank you! Before opening the request, check the [features overview](https://github.com/Kazo-ca/Os/blob/main/doc/en/wasm/features.md) and the [open issues](https://github.com/Kazo-ca/Os/issues). You may write in French or in English.
   - type: checkboxes
     id: checks
     attributes:

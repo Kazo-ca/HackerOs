@@ -20,9 +20,9 @@ Accepté le 2026-10-17 (chantier `v3/1-adr`, pour les chantiers
 
 ## Contexte
 
-- Les bibliothèques du SDK (`HackerOs.App.Abstractions`, `HackerOs.AppSdk`,
-  `HackerOs.AppSdk.Blazor`, `.Terminal`, `.Web`, `.Web.Blazor`, `.FileView`,
-  `HackerOs.Simulation.Abstractions`) n'ont ni version ni `PackageId`. Seuls
+- Les bibliothèques du SDK (`Kazo.Os.App.Abstractions`, `Kazo.Os.AppSdk`,
+  `Kazo.Os.AppSdk.Blazor`, `.Terminal`, `.Web`, `.Web.Blazor`, `.FileView`,
+  `Kazo.Os.Simulation.Abstractions`) n'ont ni version ni `PackageId`. Seuls
   trois projets `Shared` et six projets de fenêtrage importent
   `Platform/Packaging.props` (version unique `0.1.0-local`, analyseur d'API
   publique). Une app ne se construit qu'à l'intérieur de ce dépôt
@@ -56,12 +56,12 @@ Accepté le 2026-10-17 (chantier `v3/1-adr`, pour les chantiers
 
 | Paquet | Contenu | Pour |
 |---|---|---|
-| `HackerOs.App.Abstractions`, `HackerOs.AppSdk`, `HackerOs.AppSdk.Blazor`, `HackerOs.AppSdk.Terminal`, `HackerOs.AppSdk.Web`, `HackerOs.AppSdk.Web.Blazor`, `HackerOs.AppSdk.FileView`, `HackerOs.AppSdk.Icons`, `HackerOs.AppSdk.VirtualKeyboard`, `HackerOs.Theming.Abstractions` | le SDK public | écrire une app |
-| `HackerOs.App.Build` | `build/HackerOs.Apps.targets` en `buildTransitive`, le générateur de manifeste et les règles de frontière du SDK | qu'une app hors du dépôt produise son `manifest.json` comme ici |
-| `HackerOs.Platform.*`, `HackerOs.Infrastructure.Browser`, `HackerOs.Windowing.*`, `HackerOs.Theming.Blazor`, `HackerOs.MobileShell.Blazor` | la plateforme | composer un hôte d'OS |
-| `HackerOs.Ecosystem.Host` | la composition de l'hôte (aujourd'hui dans l'exe `HackerOs.Ecosystem` : `EcosystemServiceCollectionExtensions`, composants racine), sortie dans une bibliothèque ; l'exe devient une coquille qui l'appelle | qu'un autre dépôt fasse son propre hôte PWA avec ses apps en plus des apps de base |
-| `HackerOs.Apps.*`, `HackerOs.Commands` | les apps et commandes de base | les inclure dans un autre hôte |
-| `HackerOs.Templates` | les gabarits `dotnet new` (point 6) | démarrer un projet |
+| `Kazo.Os.App.Abstractions`, `Kazo.Os.AppSdk`, `Kazo.Os.AppSdk.Blazor`, `Kazo.Os.AppSdk.Terminal`, `Kazo.Os.AppSdk.Web`, `Kazo.Os.AppSdk.Web.Blazor`, `Kazo.Os.AppSdk.FileView`, `Kazo.Os.AppSdk.Icons`, `Kazo.Os.AppSdk.VirtualKeyboard`, `Kazo.Os.Theming.Abstractions` | le SDK public | écrire une app |
+| `Kazo.Os.App.Build` | `build/Kazo.Os.Apps.targets` en `buildTransitive`, le générateur de manifeste et les règles de frontière du SDK | qu'une app hors du dépôt produise son `manifest.json` comme ici |
+| `Kazo.Os.Platform.*`, `Kazo.Os.Infrastructure.Browser`, `Kazo.Os.Windowing.*`, `Kazo.Os.Theming.Blazor`, `Kazo.Os.MobileShell.Blazor` | la plateforme | composer un hôte d'OS |
+| `Kazo.Os.Ecosystem.Host` | la composition de l'hôte (aujourd'hui dans l'exe `Kazo.Os.Ecosystem` : `EcosystemServiceCollectionExtensions`, composants racine), sortie dans une bibliothèque ; l'exe devient une coquille qui l'appelle | qu'un autre dépôt fasse son propre hôte PWA avec ses apps en plus des apps de base |
+| `Kazo.Os.Apps.*`, `Kazo.Os.Commands` | les apps et commandes de base | les inclure dans un autre hôte |
+| `Kazo.Os.Templates` | les gabarits `dotnet new` (point 6) | démarrer un projet |
 
 - `Simulation.Abstractions` est publié parce que le SDK l'expose, mais reste
   hors des références autorisées d'une app (ADR 0055).
@@ -76,7 +76,7 @@ Accepté le 2026-10-17 (chantier `v3/1-adr`, pour les chantiers
 
 ### 3. Compatibilité du SDK vérifiée au chargement
 
-- `HackerOs.App.Abstractions` expose `HackerOsSdk.Version`, tiré de sa version
+- `Kazo.Os.App.Abstractions` expose `HackerOsSdk.Version`, tiré de sa version
   d'assembly au build.
 - Le générateur écrit comme minimum **la version du SDK contre laquelle l'app a
   été compilée** (au lieu de `1.0.0` en dur), sauf si l'app déclare autre chose.
@@ -111,7 +111,7 @@ Accepté le 2026-10-17 (chantier `v3/1-adr`, pour les chantiers
 
 ### 6. Gabarits `dotnet new`
 
-`HackerOs.Templates` fournit `hackeros-window` (app à fenêtre),
+`Kazo.Os.Templates` fournit `hackeros-window` (app à fenêtre),
 `hackeros-command` (commande), `hackeros-service` (service),
 `hackeros-site` (site ASP.Hack) et `hackeros-host` (hôte PWA qui inclut les apps
 de base et les apps du dépôt). Chaque gabarit est construit et testé par un test
@@ -141,5 +141,5 @@ l'utilisent déjà (valeur stockée), sinon elle part aussi.
   (`v3/6`) puis le guide complet du dépôt tiers (`v3/15`) ;
   `building-and-testing.md`, `project-overview.md`, `sdk-reference.md` et
   `app-installation.md` sont mis à jour.
-- La sortie de la composition de l'hôte dans `HackerOs.Ecosystem.Host` ne change
+- La sortie de la composition de l'hôte dans `Kazo.Os.Ecosystem.Host` ne change
   rien au comportement ; `build/verify-hosts.sh` le vérifie.

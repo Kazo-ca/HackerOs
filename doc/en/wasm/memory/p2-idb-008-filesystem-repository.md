@@ -11,7 +11,7 @@
 ## 1. Owning Files, Types, and Method Signatures
 
 ### Contracts (Abstractions)
-**Location:** `wasm2/HackerOs/Shared/HackerOs.Simulation.Abstractions/FileSystem/`
+**Location:** `wasm2/KazoOs/Shared/Kazo.Os.Simulation.Abstractions/FileSystem/`
 
 - **IFileSystemProvider** — Core provider interface
   - All mutation methods return: `ValueTask<FileSystemMutationResult>`
@@ -42,7 +42,7 @@
   - IAsyncDisposable
 
 ### In-Memory Implementation
-**Location:** `wasm2/HackerOs/Platform/HackerOs.Platform.Core/FileSystem/`
+**Location:** `wasm2/KazoOs/Platform/Kazo.Os.Platform.Core/FileSystem/`
 
 - **InMemoryFileSystemRepository** — Full provider implementation
   - Lock-based, stores entries in `Dictionary<FileSystemEntryId, EntryRecord>` + `Dictionary<string, FileSystemEntryId>` for path lookup
@@ -54,9 +54,9 @@
   - Pattern: `EnsureDirectoryAsync` checks if path exists before creating
 
 ### Schema & Transaction Boundaries
-**Location:** `wasm2/HackerOs/Infrastructure/HackerOs.Infrastructure.Browser/Schema/`
+**Location:** `wasm2/KazoOs/Infrastructure/Kazo.Os.Infrastructure.Browser/Schema/`
 
-- **HackerOsIndexedDbSchema** (static class)
+- **KazoOsIndexedDbSchema** (static class)
   - Constants: DatabaseName = "hackeros", CurrentVersion = 1
   - Object stores:
     - `fsEntries`: `[id]` ← entry metadata
@@ -71,7 +71,7 @@
   - Method: `RequiresChunking(long fileSizeBytes): bool`
 
 ### Interop Adapter
-**Location:** `wasm2/HackerOs/Infrastructure/HackerOs.Infrastructure.Browser/Interop/`
+**Location:** `wasm2/KazoOs/Infrastructure/Kazo.Os.Infrastructure.Browser/Interop/`
 
 - **IndexedDbInteropAdapter** (internal sealed class)
   - Methods:
@@ -83,7 +83,7 @@
 
 ## 2. Smallest Coherent Implementation Slice
 
-**Create:** `IndexedDbFileSystemRepository.cs` in `Infrastructure/HackerOs.Infrastructure.Browser/FileSystem/`
+**Create:** `IndexedDbFileSystemRepository.cs` in `Infrastructure/Kazo.Os.Infrastructure.Browser/FileSystem/`
 
 ### Phase 1: Serialization Layer
 1. **FileSystemEntryMetadata ↔ JsonElement** converters (per entry kind)
@@ -149,7 +149,7 @@ private async ValueTask EnsureDirectoryAsync(string pathValue, ushort mode, ...)
 
 ## 3. Reusable Contract Tests
 
-Located in `Tests/HackerOs.Platform.Core.Tests/FileSystem/`:
+Located in `Tests/Kazo.Os.Platform.Core.Tests/FileSystem/`:
 
 - **FileSystemContractSuiteTests.cs**
   - `Crud_round_trip_streams_large_binary_content` — tests 192 KiB chunks
@@ -192,6 +192,6 @@ These are transactional consistency concerns, not blockers; they're already desi
 ## References
 - `docs/virtual-filesystem.md` — filesystem design
 - `docs/browser-storage.md` — IndexedDB schema and boundaries
-- `Infrastructure/HackerOs.Infrastructure.Browser/Schema/HackerOsIndexedDbSchema.cs` — schema declaration
-- `Platform/HackerOs.Platform.Core/FileSystem/InMemoryFileSystemRepository.cs` — in-memory reference
-- `Tests/HackerOs.Platform.Core.Tests/FileSystem/` — contract suites
+- `Infrastructure/Kazo.Os.Infrastructure.Browser/Schema/KazoOsIndexedDbSchema.cs` — schema declaration
+- `Platform/Kazo.Os.Platform.Core/FileSystem/InMemoryFileSystemRepository.cs` — in-memory reference
+- `Tests/Kazo.Os.Platform.Core.Tests/FileSystem/` — contract suites

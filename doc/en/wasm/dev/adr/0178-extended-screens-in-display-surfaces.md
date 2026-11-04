@@ -42,7 +42,7 @@ merged. The interface (taskbars, menus, veil, settings) is in
    `~/Desktop` icons stay on screen 1 (Benoit's answer of 2026-10-28). There is only one mode: the
    **extended desktop**. Mirroring is impossible (a DOM element lives in one
    place only) and is not offered.
-2. **Screens in the window manager** (`HackerOs.Windowing.Abstractions`, public
+2. **Screens in the window manager** (`Kazo.Os.Windowing.Abstractions`, public
    API, `PublicAPI.Unshipped.txt`):
    - `DisplayId` (value; `DisplayId.Primary` is screen 1) and
      `WindowRuntimeState.DisplayId` (`Primary` by default).
@@ -69,7 +69,7 @@ merged. The interface (taskbars, menus, veil, settings) is in
    neither the component nor the app. An iframe in a moved window reloads: the
    OS browser already rewrites its page; other iframe apps lose the iframe's JS
    state, and the docs say so.
-4. **Screen service** (`HackerOs.Platform.Blazor`, internal to the OS):
+4. **Screen service** (`Kazo.Os.Platform.Blazor`, internal to the OS):
    - In Chrome and Edge, it asks for the `window-management` permission on
      first use (during a click), lists monitors with `getScreenDetails()` and
      opens a new screen's surface on a free monitor (the monitor's
@@ -103,7 +103,7 @@ merged. The interface (taskbars, menus, veil, settings) is in
 
 - Without a secondary screen, rendering and behavior do not change: one
   `DisplayId.Primary`, and existing commands keep their shape.
-- The public types added to `HackerOs.Windowing.Abstractions` go into
+- The public types added to `Kazo.Os.Windowing.Abstractions` go into
   `PublicAPI.Unshipped.txt` and the next minor version.
 - The window portal touches all window rendering: it has its own work item and
   browser tests (no component recreated, focus and context menu kept).
@@ -114,7 +114,7 @@ merged. The interface (taskbars, menus, veil, settings) is in
 
 - `WindowRuntime` unit tests: work areas per screen, changing screens in each
   state, modal following its owner, screen removed.
-- Browser tests (`HackerOs.BrowserHarness.Tests`): window moved between two
+- Browser tests (`Kazo.Os.BrowserHarness.Tests`): window moved between two
   `DesktopArea`s without being recreated.
 - UI.E2E: second screen opened by "New screen", window moved, screen closed and
   windows back on screen 1; fallback without `getScreenDetails`.

@@ -38,7 +38,7 @@ app, `IsEnabled` state in `IPersistentAppCatalogRepository`), but:
 - The host marks its system apps on the `ProjectReference`:
 
   ```xml
-  <ProjectReference Include="..\..\Apps\System\HackerOs.Apps.Terminal\HackerOs.Apps.Terminal.csproj"
+  <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.Terminal\Kazo.Os.Apps.Terminal.csproj"
                     IsSystemApp="true" />
   ```
 
@@ -128,7 +128,7 @@ it is so in the machine file **or** in their user file.
 ### 4. Installation service
 
 `IAppInstallationService` / `AppInstallationService`
-(`Platform/HackerOs.Platform.Core/Apps/`):
+(`Platform/Kazo.Os.Platform.Core/Apps/`):
 
 ```csharp
 public interface IAppInstallationService

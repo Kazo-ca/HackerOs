@@ -2,7 +2,7 @@
 
 # Fenêtres détachées
 
-Le contrat des surfaces pour les apps (`IDisplaySurfaceService`, `DisplaySurfaceContent`, événements, `HackBrowser.OpenDetachedAsync`) est dans [`display-surface-api.md`](../framework/display-surface-api.md).
+Le contrat des surfaces pour les apps (`IDisplaySurfaceService`, `DisplaySurfaceContent`, événements, `KazoBrowser.OpenDetachedAsync`) est dans [`display-surface-api.md`](../framework/display-surface-api.md).
 
 **Phase web, chantier `web/10-detached-window`** ([`asp-hack-plan.md`](plans/asp-hack-plan.md),
 section 5). Décision : [ADR 0078](adr/0078-detached-display-windows.md),
@@ -36,19 +36,19 @@ IDisplaySurfaceService (SDK Blazor)                                │ messages 
  └─ DisplaySurfaceService (Platform.Blazor) ◄── displaySurfaces.js ◄┘ (remis à la fenêtre principale)
          │                                       │  styles recopiés, taille, focus, fermeture
          └─ notification si la fenêtre est bloquée └─ displaySurfaceRelay.js (chargé dans la surface)
-HackerOs.Platform.Blazor.lib.module.js (initialiseur JS, avant Blazor) :
+Kazo.Os.Platform.Blazor.lib.module.js (initialiseur JS, avant Blazor) :
   écouteurs de `document` reposés sur chaque surface ; `[_bl_…]` cherché aussi dans les surfaces
 ```
 
 | Fichier | Rôle |
 |---|---|
-| `Platform/HackerOs.Platform.Blazor/Display/DisplaySurfaceService.cs` | Implémentation : ouvre, suit et ferme les surfaces ; publie la notification « fenêtre bloquée ». |
-| `Platform/HackerOs.Platform.Blazor/wwwroot/displaySurfaces.js` | `window.open`, document de la surface (`<base>`, styles recopiés et tenus à jour, apparence héritée de l'ancre), déplacement du contenu, événements `resize`/`focus`/`blur`/fermeture, messages remis à la fenêtre principale. |
-| `Platform/HackerOs.Platform.Blazor/wwwroot/displaySurfaceRelay.js` | Chargé dans la surface : poster un message « depuis » la surface. |
-| `Platform/HackerOs.Platform.Blazor/wwwroot/displaySurface.css` | Style de base du document d'une surface. |
-| `Platform/HackerOs.Platform.Blazor/wwwroot/HackerOs.Platform.Blazor.lib.module.js` | Initialiseur JS (`beforeStart`, `beforeWebStart`) : relais des écouteurs et des `@ref`. |
-| `Apps/System/HackerOs.Apps.Browser/BrowserWindow.razor(.cs,.css)` | Bouton `⧉`, placeholder, barre de la fenêtre détachée, rattachement, argument `--detached`. |
-| `Apps/System/HackerOs.Apps.Browser/BrowserPageView.razor.js` | Réponses du pont envoyées par le relais quand la page est dans une surface. |
+| `Platform/Kazo.Os.Platform.Blazor/Display/DisplaySurfaceService.cs` | Implémentation : ouvre, suit et ferme les surfaces ; publie la notification « fenêtre bloquée ». |
+| `Platform/Kazo.Os.Platform.Blazor/wwwroot/displaySurfaces.js` | `window.open`, document de la surface (`<base>`, styles recopiés et tenus à jour, apparence héritée de l'ancre), déplacement du contenu, événements `resize`/`focus`/`blur`/fermeture, messages remis à la fenêtre principale. |
+| `Platform/Kazo.Os.Platform.Blazor/wwwroot/displaySurfaceRelay.js` | Chargé dans la surface : poster un message « depuis » la surface. |
+| `Platform/Kazo.Os.Platform.Blazor/wwwroot/displaySurface.css` | Style de base du document d'une surface. |
+| `Platform/Kazo.Os.Platform.Blazor/wwwroot/Kazo.Os.Platform.Blazor.lib.module.js` | Initialiseur JS (`beforeStart`, `beforeWebStart`) : relais des écouteurs et des `@ref`. |
+| `Apps/System/Kazo.Os.Apps.Browser/BrowserWindow.razor(.cs,.css)` | Bouton `⧉`, placeholder, barre de la fenêtre détachée, rattachement, argument `--detached`. |
+| `Apps/System/Kazo.Os.Apps.Browser/BrowserPageView.razor.js` | Réponses du pont envoyées par le relais quand la page est dans une surface. |
 
 ## Fonctionnement
 
@@ -112,12 +112,12 @@ Ce qui fait marcher Blazor dans un autre document (ADR 0081 §2) :
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Blazor.Tests/Display/DisplaySurfaceServiceTests.cs` :
+- `Tests/Kazo.Os.Platform.Blazor.Tests/Display/DisplaySurfaceServiceTests.cs` :
   ouverture, fenêtre bloquée et notification, hôte sans JavaScript, événements
   et fermeture par l'utilisateur, fermeture par l'OS, titre, montage et focus.
-- `Tests/HackerOs.AppSdk.Tests/Apps/HackBrowserTests.cs` : arguments du
+- `Tests/Kazo.Os.AppSdk.Tests/Apps/KazoBrowserTests.cs` : arguments du
   lancement, adresse vide, navigateur absent.
-- `Tests/HackerOs.UI.E2E.Tests/BrowserDetachedWindowTests.cs` (Chromium réel,
+- `Tests/Kazo.Os.UI.E2E.Tests/BrowserDetachedWindowTests.cs` (Chromium réel,
   hôte `test/test`) : détacher une page, vérifier son script, son `fetch`, la
   recopie des styles ; naviguer depuis l'OS et poster un formulaire dans la
   fenêtre détachée ; cliquer **Reattach** dans la fenêtre détachée (preuve de
@@ -133,7 +133,7 @@ Ce qui fait marcher Blazor dans un autre document (ADR 0081 §2) :
 - [x] Relais des messages du pont des pages isolées.
 - [x] Navigateur : `⧉`, placeholder, barre de la fenêtre détachée, rattacher,
   réécriture de la page, titre suivi, `--detached`.
-- [x] `HackBrowser.OpenAsync` et `OpenDetachedAsync`.
+- [x] `KazoBrowser.OpenAsync` et `OpenDetachedAsync`.
 - [x] Notification et bandeau quand la fenêtre est bloquée.
 - [x] Tests unitaires et E2E.
 - [x] ADR 0081, ce document, index, plan, références du SDK.

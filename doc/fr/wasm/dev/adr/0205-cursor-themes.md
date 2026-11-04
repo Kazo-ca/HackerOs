@@ -5,7 +5,7 @@
 ## Statut
 
 Accepté le 2026-10-30 (série `todo/base`, chantier `todo/9-cursor-themes`,
-issue [#257](https://github.com/Kazo-ca/HackerOs/issues/257)). C'est le
+issue [#257](https://github.com/Kazo-ca/Os/issues/257)). C'est le
 « nouveau système de l'OS, avec sa propre ADR » que demande le §4 de
 l'[ADR 0190](0190-theme-packs.md) avant que le Hack Store accepte le dossier
 `cursors/` d'un pack.
@@ -77,7 +77,7 @@ text = ibeam.png 16 16
 - **HackerOS Néon** (`hackeros-neon`) et **Gothique Pourpre**
   (`gothic-crimson`) : 15 curseurs PNG de 32 × 32 chacun (flèche, main, I,
   sablier, flèche occupée, aide, croix, déplacer, interdit, main ouverte et
-  fermée, quatre doubles flèches), livrés par `HackerOs.Theming.Blazor`
+  fermée, quatre doubles flèches), livrés par `Kazo.Os.Theming.Blazor`
   (`wwwroot/cursors/<id>/`) et dessinés par
   `build/tools/generate-cursor-themes.py`. Leurs points actifs sont déclarés
   dans `CursorThemeCatalog`, un test vérifie chaque fichier.
@@ -98,7 +98,7 @@ commenté dans une nouvelle installation.
   contre les thèmes intégrés et les dossiers (lus avec les droits du système
   pour `/etc` et de l'utilisateur pour `~`), et relit quand le fichier ou la
   session change.
-- `CursorThemeSurface` (`HackerOs.Theming.Blazor`), rendu une fois par
+- `CursorThemeSurface` (`Kazo.Os.Theming.Blazor`), rendu une fois par
   `App.razor`, passe les images au module `cursorTheme.js` de la bibliothèque,
   qui :
   1. réécrit chaque règle CSS de même origine dont `cursor` est un nom du
@@ -135,9 +135,9 @@ et reprend les vérifications de `CursorThemeFile`.
 
 ## Conséquences
 
-- Nouveaux types publics dans `HackerOs.Theming.Abstractions` (`CursorNames`,
+- Nouveaux types publics dans `Kazo.Os.Theming.Abstractions` (`CursorNames`,
   `CursorImage`, `CursorTheme`, `CursorThemeCatalog`, `CursorThemeFile`,
-  `CursorThemeLibrary`) et `HackerOs.Theming.Blazor` (`CursorThemeSurface`),
+  `CursorThemeLibrary`) et `Kazo.Os.Theming.Blazor` (`CursorThemeSurface`),
   dans `PublicAPI.Unshipped.txt` pour la prochaine version mineure.
 - Un thème copié dans un dossier apparaît dans Paramètres à la prochaine
   ouverture de la page et s'applique quand on le choisit ; modifier les images

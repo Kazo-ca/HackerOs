@@ -51,21 +51,21 @@ La mise en œuvre a montré trois choses :
 ## Décision
 
 1. **Toutes les assemblies HackerOS restent entières.** Une cible de
-   `build/HackerOs.Apps.targets` (`_HackerOsRootHackerOsAssemblies`, hôtes
+   `build/Kazo.Os.Apps.targets` (`_HackerOsRootHackerOsAssemblies`, hôtes
    seulement, quand `PublishTrimmed` vaut `true`) ajoute chaque assembly
-   `HackerOs.*` de la publication en `TrimmerRootAssembly`. Le framework et les
+   `Kazo.Os.*` de la publication en `TrimmerRootAssembly`. Le framework et les
    autres bibliothèques élaguables sont élagués ; les paquets non élaguables
    (MudBlazor, AngleSharp…) restent entiers (`TrimMode=partial`, inchangé). Ceci
    remplace « seules nos assemblies sont élaguées » de l'ADR 0106 §1. Passer à
    un élagage de nos assemblies demanderait d'abord de rendre toute l'interop
    JavaScript sûre (sérialisation générée) : un nouvel ADR, avec des mesures.
 2. **Racines générées : des assemblies entières.** Le générateur de manifestes
-   (`aggregate --trimmer-roots`) écrit `HackerOs.TrimmerRoots.xml` à côté de
+   (`aggregate --trimmer-roots`) écrit `Kazo.Os.TrimmerRoots.xml` à côté de
    `BuiltInApplications.json` ; l'hôte le passe à ILLink
    (`TrimmerRootDescriptor`). Chaque assembly nommée par un manifeste (point
    d'entrée, entrées par plateforme, composants, racine Blazor d'un site) y est
    gardée entière (`preserve="all"`), pas seulement les types nommés. C'est ce
-   qui garde une app d'un autre dépôt qui ne s'appelle pas `HackerOs.*` (§1 ne
+   qui garde une app d'un autre dépôt qui ne s'appelle pas `Kazo.Os.*` (§1 ne
    la couvre pas). La classe `AppDefinition` n'a pas besoin de racine : l'OS ne
    l'instancie jamais (le manifeste vient du JSON, le `WebHost` généré d'un site
    l'appelle par du code). Ceci remplace le détail de l'ADR 0106 §2.
@@ -78,7 +78,7 @@ La mise en œuvre a montré trois choses :
    (ADR 0082, 0083, 0086). Les suppressions d'avertissements restantes citent
    maintenant cet ADR au lieu de « PublishTrimmed est désactivé ».
 4. **Test de la publication.** `build/publish-trimmed.sh` publie, mesure, sert
-   la publication et lance `Tests/HackerOs.TrimmedPublish.E2E.Tests` (connexion,
+   la publication et lance `Tests/Kazo.Os.TrimmedPublish.E2E.Tests` (connexion,
    chaque app fenêtrée du menu, une commande dans un worker, l'Intranet et le
    site Blazor, puis démarrage hors ligne). Le service worker n'est enregistré
    ni sur `localhost` ni sur `127.0.0.1` (`index.html`) : le test hors ligne
@@ -97,12 +97,12 @@ La mise en œuvre a montré trois choses :
   (13,5 à 8,0 Mio en Brotli). Le premier chargement télécharge moins, et chaque
   worker démarre un runtime plus petit.
 - Les commutateurs de fonctionnalité de la mesure des ressources (ADR 0066) ne
-  suppriment pas de code à l'intérieur de `HackerOs.Platform.ResourceAccounting`,
+  suppriment pas de code à l'intérieur de `Kazo.Os.Platform.ResourceAccounting`,
   gardée entière ; avec les deux mesures coupées au build, l'assembly n'est
   toujours pas publiée.
 - Le gabarit `hackeros-host` publie trimmé de la même façon (`PublishTrimmed`,
   `TrimMode=partial`) ; les gabarits d'apps partent avec `IsTrimmable=true`, et
-  `HackerOs.App.Build` active l'analyse dans un projet d'app qui ne la règle pas
+  `Kazo.Os.App.Build` active l'analyse dans un projet d'app qui ne la règle pas
   lui-même (ADR 0106 §4, inchangé).
 - `verify-hosts.sh` publie l'Ecosystem comme avant : il teste donc désormais la
   publication trimmée.

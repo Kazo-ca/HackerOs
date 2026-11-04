@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <Import Project="../../../Platform/Packaging.props" />
+
+  <PropertyGroup>
+    <PackageId>Kazo.Os.Apps.CodeEditor</PackageId>
+    <Description>The base Kazo OS code editor workbench app, to include in an OS host (ProjectReference or PackageReference, optionally IsSystemApp).</Description>
+    <PackageTags>hackeros;app</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.14" />
+    <PackageReference Include="MudBlazor" Version="9.11.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\Kazo.Os.App.Abstractions\Kazo.Os.App.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Kazo.Os.AppSdk\Kazo.Os.AppSdk.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Kazo.Os.AppSdk.Blazor\Kazo.Os.AppSdk.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Kazo.Os.Simulation.Abstractions\Kazo.Os.Simulation.Abstractions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The background search task and its DTOs are internal (ADR 0140); the tests run them inline. -->
+    <InternalsVisibleTo Include="Kazo.Os.Apps.CodeEditor.Tests" />
+  </ItemGroup>
+
+  <Target Name="ValidateCodeEditorAssets" BeforeTargets="PrepareForBuild">
+    <Error Condition="!Exists('package-lock.json')"
+           Text="Code Editor requires the pinned package-lock.json for reproducible Monaco assets." />
+    <Error Condition="!Exists('wwwroot/monaco/monaco.bundle.js')"
+           Text="Monaco bundle is missing. Run npm ci and npm run build in the Code Editor project." />
+    <Error Condition="!Exists('wwwroot/monaco/monaco.bundle.LICENSE.txt')"
+           Text="Monaco third-party license notice is missing." />
+  </Target>
+
+</Project>

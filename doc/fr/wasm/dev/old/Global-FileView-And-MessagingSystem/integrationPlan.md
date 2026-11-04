@@ -37,23 +37,23 @@ Phases 1 onward may begin.
 
 ## Phase 1 — Topic messaging foundation
 
-**Scope and location:** Contracts in `Shared/HackerOs.Simulation.Abstractions/Events/`; implementation in
-`Platform/HackerOs.Platform.Core/Events/`; tests in `Tests/HackerOs.Platform.Core.Tests/Events/`.
+**Scope and location:** Contracts in `Shared/Kazo.Os.Simulation.Abstractions/Events/`; implementation in
+`Platform/Kazo.Os.Platform.Core/Events/`; tests in `Tests/Kazo.Os.Platform.Core.Tests/Events/`.
 **Prerequisites:** `ADR-MSG-1`.
 **Explicit exclusions:** No filesystem-watch wiring yet (Phase 2); no `FileView` consumption yet (Phase 3).
 
 **Delivered:** `TopicName`, `TopicNameBuilder`, `TopicNames`, `TopicMessage<TPayload>`,
 `PublisherIdentity`, `SharedChannelPolicy`/`SharedChannelAccessMode` (tri-state per direction — see
 Phase 1B), `TopicPublishOutcome`, `TopicPublishResult`, `ITopicMessageBus`,
-`ITopicChannelSubscription<TPayload>` in `Shared/HackerOs.Simulation.Abstractions/Events/TopicMessagingContracts.cs`,
-and `InMemoryTopicMessageBus` in `Platform/HackerOs.Platform.Core/Events/InMemoryTopicMessageBus.cs`.
+`ITopicChannelSubscription<TPayload>` in `Shared/Kazo.Os.Simulation.Abstractions/Events/TopicMessagingContracts.cs`,
+and `InMemoryTopicMessageBus` in `Platform/Kazo.Os.Platform.Core/Events/InMemoryTopicMessageBus.cs`.
 
 - [x] `MSG-001` Implement `InMemoryTopicMessageBus : ITopicMessageBus` in `Platform.Core`, including exact
   namespace-ownership publish authorization and one-time shared-channel registration/ownership checks.
   Completed 2026-08-17.
 - [x] `MSG-002` Implement `TopicName`/`TopicNameBuilder` segment validation (non-empty, lowercase,
   `[a-z0-9-]+`, no wildcards) with focused tests for every rejected shape. Completed 2026-08-17 —
-  `Tests/HackerOs.Platform.Core.Tests/Events/TopicNameTests.cs`.
+  `Tests/Kazo.Os.Platform.Core.Tests/Events/TopicNameTests.cs`.
 - [x] `MSG-003` Extend `IAppEventGateway`/`AppEventGateway` with the topic-bus members; change
   `Publish<TEvent>` to enforce the app-publishable allow-list decided by `ADR-MSG-1` (reject, don't throw,
   matching the existing `EventDispatchFault`-style isolation convention). Completed 2026-08-17 — no CLR
@@ -64,33 +64,33 @@ and `InMemoryTopicMessageBus` in `Platform/HackerOs.Platform.Core/Events/InMemor
   decided lane. Completed 2026-08-17 — the seven kernel-lifecycle call sites (`LocalSessionService`,
   `InMemoryProcessManager`, `EventPublishingDiagnosticSink`, `AppLifecycleOrchestrator`) already injected
   `IEventBus` directly, never `IAppEventGateway`, so no code change was needed there; the one real
-  app-facing site, `Apps/Samples/HackerOs.Samples.ServiceApp/SampleTickerService.cs`, migrated to
+  app-facing site, `Apps/Samples/Kazo.Os.Samples.ServiceApp/SampleTickerService.cs`, migrated to
   `SampleTickerTopics.Ticked` (`app/org.hackeros.samples.service-app/ticked`).
 - [x] `MSG-005` Add tests: cross-namespace publish denial, shared-channel capability enforcement (granted
   and denied), one-time channel-ownership registration conflict, exception isolation on both `Subscribe`
   overloads, and `ITopicChannelSubscription` disposal completing its channel and detaching the subscriber.
-  Completed 2026-08-17 — `Tests/HackerOs.Platform.Core.Tests/Events/InMemoryTopicMessageBusTests.cs`.
+  Completed 2026-08-17 — `Tests/Kazo.Os.Platform.Core.Tests/Events/InMemoryTopicMessageBusTests.cs`.
 
-**Validation and completion evidence:** `dotnet build HackerOs.sln --no-incremental` — 0 warnings, 0
-errors. `dotnet test` on `HackerOs.Platform.Core.Tests` (370 tests), `HackerOs.Ecosystem.Tests` (12,
-including a DI-graph assertion that `ITopicMessageBus` resolves), and `HackerOs.Samples.ServiceApp.Tests`
+**Validation and completion evidence:** `dotnet build Kazo.Os.sln --no-incremental` — 0 warnings, 0
+errors. `dotnet test` on `Kazo.Os.Platform.Core.Tests` (370 tests), `Kazo.Os.Ecosystem.Tests` (12,
+including a DI-graph assertion that `ITopicMessageBus` resolves), and `Kazo.Os.Samples.ServiceApp.Tests`
 (4, proving the `SampleTickerEvent` migration works end-to-end) all pass, 2026-08-17.
 
 ## Phase 1B — Declared topic permissions and optional per-channel access
 
-**Scope and location:** `Shared/HackerOs.App.Abstractions/` (`TopicPermissions.cs`, `AppManifest.cs`,
+**Scope and location:** `Shared/Kazo.Os.App.Abstractions/` (`TopicPermissions.cs`, `AppManifest.cs`,
 `AppManifestValidator.cs`, `Policy/CapabilityGrant.cs`, `Schema/manifest.schema.v1.json`);
-`Shared/HackerOs.Simulation.Abstractions/Events/TopicMessagingContracts.cs` (`TopicPermissionNames`
-extension methods); tests in `Tests/HackerOs.App.Abstractions.Tests/`.
+`Shared/Kazo.Os.Simulation.Abstractions/Events/TopicMessagingContracts.cs` (`TopicPermissionNames`
+extension methods); tests in `Tests/Kazo.Os.App.Abstractions.Tests/`.
 **Prerequisites:** Phase 1 (`MSG-001`–`MSG-005`); [ADR 0040](../../adr/0040-declared-topic-permissions.md).
-**Explicit exclusions:** No approval/permissions UI (future work, not started); `HackerOs.Apps.FileExplorer`
+**Explicit exclusions:** No approval/permissions UI (future work, not started); `Kazo.Os.Apps.FileExplorer`
 does not yet declare or use any topic permission (deferred to Phase 4, alongside the `Topics`/`Messages`
 convention — see [`MessagingSystem.md`](MessagingSystem.md#process-targeted-topics-and-inter-app-messaging)).
 
 - [x] `MSG-006` Refactor `SharedChannelPolicy` from a nullable-string pair to an explicit, optional,
   per-direction `SharedChannelAccessMode` (`Open`/`OwnerOnly`/`RequiresCapability`) tri-state; update
   `InMemoryTopicMessageBus`'s authorization logic and every existing test. Completed 2026-08-17.
-- [x] `MSG-007` Implement `TopicPermissions.IsWellFormed`/`IsOwnedByApp` (`Shared/HackerOs.App.Abstractions/TopicPermissions.cs`)
+- [x] `MSG-007` Implement `TopicPermissions.IsWellFormed`/`IsOwnedByApp` (`Shared/Kazo.Os.App.Abstractions/TopicPermissions.cs`)
   and `TopicName.ToPublishPermission()`/`ToSubscribePermission()` extension methods. Completed 2026-08-17.
 - [x] `MSG-008` Extend `CapabilityGrant`'s constructor validation and `AppManifestValidator.ValidateCapabilities`
   to accept a well-formed topic permission alongside the fixed `AppCapabilities` catalog. Completed
@@ -104,16 +104,16 @@ convention — see [`MessagingSystem.md`](MessagingSystem.md#process-targeted-to
   a well-formed permission accepted as a requested capability), and `CapabilityGrant` accepting/rejecting
   accordingly. Completed 2026-08-17.
 
-**Validation and completion evidence:** `dotnet test` on `HackerOs.Platform.Core.Tests` (370 tests) and
-`HackerOs.App.Abstractions.Tests` (91 tests, including the updated canonical-fixture round-trip and new
+**Validation and completion evidence:** `dotnet test` on `Kazo.Os.Platform.Core.Tests` (370 tests) and
+`Kazo.Os.App.Abstractions.Tests` (91 tests, including the updated canonical-fixture round-trip and new
 `TopicPermissionsTests.cs`/`AppManifestValidatorTests.cs` cases) pass, 2026-08-17.
 
 ## Phase 2 — Filesystem watch API
 
-**Scope and location:** Contracts in `Shared/HackerOs.Simulation.Abstractions/FileSystem/`; provider
-wiring in `Platform/HackerOs.Platform.Core/FileSystem/FileSystemService.cs`; gateway in
-`Platform/HackerOs.Platform.Core/Execution/AppFileSystemWatchGateway.cs`; tests in
-`Tests/HackerOs.Platform.Core.Tests/FileSystem/FileSystemWatchTests.cs`.
+**Scope and location:** Contracts in `Shared/Kazo.Os.Simulation.Abstractions/FileSystem/`; provider
+wiring in `Platform/Kazo.Os.Platform.Core/FileSystem/FileSystemService.cs`; gateway in
+`Platform/Kazo.Os.Platform.Core/Execution/AppFileSystemWatchGateway.cs`; tests in
+`Tests/Kazo.Os.Platform.Core.Tests/FileSystem/FileSystemWatchTests.cs`.
 **Prerequisites:** Phase 1 complete.
 **Explicit exclusions:** `FileSystemWatchScope.Recursive` **and** `FileSystemWatchScope.ThisEntry` are
 deferred (see [`MessagingSystem.md`](MessagingSystem.md#filesystem-watch-api) — `ThisEntry` was
@@ -125,9 +125,9 @@ server-side filtering channel wrapper with no current caller); no `FileView` con
 `FileSystemTopics.ForDirectory` (implemented — hex-encodes each path segment, never a single hashed
 blob), `IAppFileSystemWatchGateway.WatchAsync` (renamed from the originally-skeletoned synchronous
 `Watch` — every filesystem authorization check in this codebase is async, so the gateway had to be) in
-`Shared/HackerOs.Simulation.Abstractions/FileSystem/FileSystemWatchContracts.cs`;
+`Shared/Kazo.Os.Simulation.Abstractions/FileSystem/FileSystemWatchContracts.cs`;
 `AppFileSystemWatchGateway` in `Platform.Core`; `KernelPublisherIdentity` in
-`Platform/HackerOs.Platform.Core/Events/KernelPublisherIdentity.cs`.
+`Platform/Kazo.Os.Platform.Core/Events/KernelPublisherIdentity.cs`.
 
 - [x] `MSG-011` Register the `shared/filesystem/changed` channel at platform startup (in
   `FileSystemService`'s constructor, run once per singleton construction) with
@@ -153,24 +153,24 @@ blob), `IAppFileSystemWatchGateway.WatchAsync` (renamed from the originally-skel
   rejected with `NotSupportedException`, and subscription disposal stops delivery. Completed 2026-08-17 —
   `FileSystemWatchTests.cs` (13 tests).
 
-**Validation and completion evidence:** `dotnet build HackerOs.sln --no-incremental` — 0 warnings, 0
-errors. `dotnet test` on `HackerOs.Platform.Core.Tests` (383 tests, including the 13 new
-`FileSystemWatchTests`) and `HackerOs.Ecosystem.Tests` (12, confirming `FileSystemService`'s new
+**Validation and completion evidence:** `dotnet build Kazo.Os.sln --no-incremental` — 0 warnings, 0
+errors. `dotnet test` on `Kazo.Os.Platform.Core.Tests` (383 tests, including the 13 new
+`FileSystemWatchTests`) and `Kazo.Os.Ecosystem.Tests` (12, confirming `FileSystemService`'s new
 `ITopicMessageBus` dependency and `AppExecutionContextFactory`'s new `Watch` wiring both resolve through
 the real DI graph) pass, 2026-08-17.
 
 ## Phase 3 — `FileView` control
 
-**Scope and location:** New project `Shared/HackerOs.AppSdk.FileView/`; tests in
-`Tests/HackerOs.AppSdk.FileView.Tests/`.
+**Scope and location:** New project `Shared/Kazo.Os.AppSdk.FileView/`; tests in
+`Tests/Kazo.Os.AppSdk.FileView.Tests/`.
 **Prerequisites:** `ADR-FV-1`; Phase 2 for `Watch` support (the control can be built against a `null`
 `Watch` parameter first and gain live updates once Phase 2 lands — these two phases may run in parallel
 after `ADR-FV-1`).
 **Explicit exclusions:** No `FileExplorerWindow`/Desktop wiring yet (Phase 4/6); external OS file drag-in
 and literal host-OS icon extraction remain permanently out of scope per `FileViewControl.md`.
 
-**Skeleton delivered now (this task):** the project itself (`.csproj`, referencing `HackerOs.App.Abstractions`,
-`HackerOs.AppSdk`, `HackerOs.AppSdk.Icons`, `HackerOs.Simulation.Abstractions`), plus, as interfaces/models
+**Skeleton delivered now (this task):** the project itself (`.csproj`, referencing `Kazo.Os.App.Abstractions`,
+`Kazo.Os.AppSdk`, `Kazo.Os.AppSdk.Icons`, `Kazo.Os.Simulation.Abstractions`), plus, as interfaces/models
 with no behavior: `FileViewMode`, `FileViewFolderActivationMode`, `FileViewItem` (properties only, no
 mutation logic), `FileViewColumn`, `IShellIconProvider`/`ShellIconDescriptor`/`ShellIconKind`,
 the full `FileViewCancelEventArgs` hierarchy, `IFileViewContextMenuProvider`/`FileViewContextMenuScope`/
@@ -268,7 +268,7 @@ renders nothing yet) with its collocated `.razor.css`.
   `FV-009`/`FV-010`): every cancelable event's veto path (Navigating/Opening/Renaming/Deleting/Copying/
   SelectionChanging), rename commit/cancel/idempotency, all three folder-activation modes, delete, create
   (including the unique-name "New Folder (2)" interactive path), copy, and live-watch pickup. 25 tests,
-  `Tests/HackerOs.AppSdk.FileView.Tests/FileViewTests.cs`. No bUnit in this solution: components are
+  `Tests/Kazo.Os.AppSdk.FileView.Tests/FileViewTests.cs`. No bUnit in this solution: components are
   attached to a real `RenderHandle` via a minimal custom `Renderer` (`TestComponentRenderer.cs`) so
   `StateHasChanged`/`InvokeAsync` behave exactly as in production, while `FileView`'s real markup — which
   would otherwise pull in MudBlazor/JSInterop — is suppressed by a test-only `BuildRenderTree` override, per
@@ -277,11 +277,11 @@ renders nothing yet) with its collocated `.razor.css`.
   *ordering* tests remain for when a second real `IFileViewContextMenuProvider` exists (Phase 4's `.zip`
   provider, `INT-003`). Completed 2026-08-17.
 
-**Validation and completion evidence:** `dotnet build HackerOs.sln --no-incremental` — 0 warnings, 0 errors.
-`dotnet test` on `Tests/HackerOs.AppSdk.FileView.Tests` (63/63 — the original 25 (`FileViewTests.cs`) plus 5
+**Validation and completion evidence:** `dotnet build Kazo.Os.sln --no-incremental` — 0 warnings, 0 errors.
+`dotnet test` on `Tests/Kazo.Os.AppSdk.FileView.Tests` (63/63 — the original 25 (`FileViewTests.cs`) plus 5
 (`FileViewDetailsTests.cs`), 10 (`FileViewIconsTests.cs`), 13 (`FileViewTreeTests.cs`), and 10
-(`FileViewDragDropTests.cs`)), `HackerOs.Platform.Core.Tests` (383/383, unaffected), and
-`HackerOs.Ecosystem.Tests` (12/12) all pass, 2026-08-18. The Icons tests cover tile click/dblclick/F2 and
+(`FileViewDragDropTests.cs`)), `Kazo.Os.Platform.Core.Tests` (383/383, unaffected), and
+`Kazo.Os.Ecosystem.Tests` (12/12) all pass, 2026-08-18. The Icons tests cover tile click/dblclick/F2 and
 the full marquee-select flow (replace, Ctrl-additive, below-threshold no-op, multiselect-disallowed no-op)
 via a `FakeJSRuntime`/`FakeJSObjectReference` test double (no real browser/JS host in this xunit process —
 see `FakeJSRuntime.cs`). The Tree tests cover root-node/`Owner.Items` mirroring, expansion-state cache
@@ -304,9 +304,9 @@ manual/E2E browser check yet since there is still no in-app host (Phase 4) to pr
 plus first-hand verification of the drag-drop/focus native-event timing assumptions and the
 `accessibility.md` human-evidence checklist, all move to Phase 4 completion.
 
-## Phase 4 — Migrate `HackerOs.Apps.FileExplorer` onto `FileView`
+## Phase 4 — Migrate `Kazo.Os.Apps.FileExplorer` onto `FileView`
 
-**Scope and location:** `Apps/System/HackerOs.Apps.FileExplorer/`.
+**Scope and location:** `Apps/System/Kazo.Os.Apps.FileExplorer/`.
 **Prerequisites:** Phase 3 complete through at least `FV-008`.
 **Explicit exclusions:** No change to `OpenWithDialog.razor`/`FilePropertiesDialog.razor` behavior — they
 remain host-owned dialogs `FileView` doesn't know about.
@@ -335,7 +335,7 @@ remain host-owned dialogs `FileView` doesn't know about.
   table and external scripting surface; covered by 3 new tests in `FileViewTests.cs`.
 - [x] `INT-002` Add a Tree-mode toggle to the existing view-mode toolbar control (today Details/Grid only).
   Completed 2026-08-18 — trivial once `FileExplorerState.ViewMode` was retyped from the old two-value
-  `FileExplorerViewMode` enum to `HackerOs.AppSdk.FileView.FileViewMode` directly (itself an instance of
+  `FileExplorerViewMode` enum to `Kazo.Os.AppSdk.FileView.FileViewMode` directly (itself an instance of
   "wire through instead of duplicating"): a third toolbar button plus `@bind-Mode="_state.ViewMode"`.
 - [x] `INT-003` Register a `.zip` `IFileViewContextMenuProvider` inserting `"UnZip Here…"` after `"open"`.
   Completed 2026-08-18 — `ZipFileContextMenuProvider.cs`, the first real `IFileViewContextMenuProvider` in
@@ -344,9 +344,9 @@ remain host-owned dialogs `FileView` doesn't know about.
   `OnAppInitialized()`, before `@ref` captures the `FileView` instance. Extraction logic itself lives in
   `FileExplorerZipService.cs`, shared with the toolbar's own Extract button — one implementation, two
   entry points, per the plan's "reusing the same extraction logic" note.
-- [x] `INT-004` Update `HackerOs.Apps.FileExplorer.csproj` to reference `HackerOs.AppSdk.FileView`.
+- [x] `INT-004` Update `Kazo.Os.Apps.FileExplorer.csproj` to reference `Kazo.Os.AppSdk.FileView`.
   Completed 2026-08-18.
-- [x] `INT-005` Update `Tests/HackerOs.Apps.FileExplorer.Tests/` for the new composition; update
+- [x] `INT-005` Update `Tests/Kazo.Os.Apps.FileExplorer.Tests/` for the new composition; update
   [`../apps/file-explorer.md`](../apps/file-explorer.md)'s architecture section per this repo's
   documentation-is-part-of-done rule. Completed 2026-08-18. `FileExplorerStateTests.cs`'s sort/selection
   tests were deleted (that functionality moved to `FileView`, tested there already) rather than adapted;
@@ -354,20 +354,20 @@ remain host-owned dialogs `FileView` doesn't know about.
   2). `file-explorer.md` rewritten to describe the hosted-`FileView` architecture, including a "Known
   gaps" section (see validation notes below).
 
-**Validation and completion evidence:** `dotnet build HackerOs.sln --no-incremental` — 0 warnings, 0
-errors. `dotnet test` on `HackerOs.Apps.FileExplorer.Tests` (4/4), `HackerOs.AppSdk.FileView.Tests`
-(66/66 — the 63 from Phase 3 plus 3 new `Filter`/`RefreshFilter` tests), `HackerOs.Platform.Core.Tests`
-(383/383), and `HackerOs.Ecosystem.Tests` (12/12) all pass, 2026-08-18.
+**Validation and completion evidence:** `dotnet build Kazo.Os.sln --no-incremental` — 0 warnings, 0
+errors. `dotnet test` on `Kazo.Os.Apps.FileExplorer.Tests` (4/4), `Kazo.Os.AppSdk.FileView.Tests`
+(66/66 — the 63 from Phase 3 plus 3 new `Filter`/`RefreshFilter` tests), `Kazo.Os.Platform.Core.Tests`
+(383/383), and `Kazo.Os.Ecosystem.Tests` (12/12) all pass, 2026-08-18.
 
 **Live browser check — completed, 2026-08-18.** The earlier "partially blocked" state below was chased
 down to its actual root causes (five separate, genuine, pre-existing infrastructure bugs, none introduced
 by the `FileView`/`FileExplorer` migration itself) and all five are now fixed, verified across **all three
-HackerOS hosts** — `HackerOs.Server` (Interactive Server), `test/test` (WASM debug harness), and the
-standalone `HackerOs.Ecosystem` WASM PWA:
+HackerOS hosts** — `Kazo.Os.Server` (Interactive Server), `test/test` (WASM debug harness), and the
+standalone `Kazo.Os.Ecosystem` WASM PWA:
 
-1. **`.claude/launch.json` missing `ASPNETCORE_ENVIRONMENT=Development`** for `HackerOs.Server` — without
+1. **`.claude/launch.json` missing `ASPNETCORE_ENVIRONMENT=Development`** for `Kazo.Os.Server` — without
    it, ASP.NET Core's static-web-assets *development* runtime handler (needed to compose assets from
-   referenced projects like `HackerOs.Ecosystem`/`HackerOs.AppSdk.FileView`) never activates and every
+   referenced projects like `Kazo.Os.Ecosystem`/`Kazo.Os.AppSdk.FileView`) never activates and every
    static asset 500s. Worked around per-session by launching with the env var set explicitly; the
    launch-config gap itself is unfixed (out of scope, flagged separately).
 2. **Singleton services capturing a dead `IJSRuntime`** — `EcosystemServiceCollectionExtensions.cs`
@@ -391,15 +391,15 @@ standalone `HackerOs.Ecosystem` WASM PWA:
 4. **SignalR's default 32KB message cap** — the initial interactive render (desktop shell + taskbar +
    app launcher, backed by the full app-catalog/manifest set) produces a render batch larger than that on
    first connect, closing the circuit immediately. Fixed via `Configure<HubOptions>` on the server host.
-5. **Wrong `app.css`** — both `HackerOs.Server` and `test/test`'s host pages linked their own
+5. **Wrong `app.css`** — both `Kazo.Os.Server` and `test/test`'s host pages linked their own
    project-local `wwwroot/app.css` (the unmodified `dotnet new blazor` scaffold stub, 3 rules) instead of
-   `HackerOs.Ecosystem`'s real design-system tokens at `wwwroot/css/app.css`, leaving every surface
+   `Kazo.Os.Ecosystem`'s real design-system tokens at `wwwroot/css/app.css`, leaving every surface
    completely unstyled. Fixed by correcting the `<link>` path in both hosts' `App.razor`.
-6. **`test/test` WASM entry-point conflict** — `HackerOs.Ecosystem`'s own `Program.cs` (needed for its
+6. **`test/test` WASM entry-point conflict** — `Kazo.Os.Ecosystem`'s own `Program.cs` (needed for its
    separate standalone-PWA deployment) still executes when the assembly is merely loaded as a referenced
    component library by another Blazor WebAssembly host, because .NET's WASM boot process invokes `Main()`
    on every loaded assembly that declares one, not just the actual hosting project's. There, `"#app"`
-   never exists (that host mounts `HackerOs.Ecosystem.App` via marker-based auto-discovery instead), so
+   never exists (that host mounts `Kazo.Os.Ecosystem.App` via marker-based auto-discovery instead), so
    `RootComponents.Add<App>("#app")` failed at mount time and aborted `RunAsync()` entirely before the
    marker-based components ever got a turn — `test/test` has no dedicated `.Client` WASM project of its
    own, so this file's `RunAsync()` is what bootstraps the shared WASM runtime there too. Fixed by checking
@@ -409,19 +409,19 @@ standalone `HackerOs.Ecosystem` WASM PWA:
 All three hosts were exercised end-to-end in a real browser: boot → create administrator → sign in →
 desktop → launch File Explorer (`org.hackeros.file-explorer`) → navigate into a subdirectory → switch
 between Details/Icons/Tree view modes → create a file → select it → delete it, all working correctly. The
-`HackerOs.Server` host was additionally confirmed properly styled (dark theme, design tokens) after fix
+`Kazo.Os.Server` host was additionally confirmed properly styled (dark theme, design tokens) after fix
 #5. Drag-drop between two windows and the zip context-menu item were not separately re-exercised in this
-pass (already covered by `HackerOs.AppSdk.FileView.Tests`/component tests) but nothing in these fixes
-touches that code path. `dotnet test` on `HackerOs.sln` (excluding `E2E`/`UI.E2E`, which need a Playwright
+pass (already covered by `Kazo.Os.AppSdk.FileView.Tests`/component tests) but nothing in these fixes
+touches that code path. `dotnet test` on `Kazo.Os.sln` (excluding `E2E`/`UI.E2E`, which need a Playwright
 browser harness not available in this environment) — 28/28 test projects pass; the 3 pre-existing failures
-in `HackerOs.Infrastructure.Browser.Tests` (`declaredTopicPermissions` manifest-fixture/serializer
+in `Kazo.Os.Infrastructure.Browser.Tests` (`declaredTopicPermissions` manifest-fixture/serializer
 mismatch) predate this session's work and are unrelated to `FileView`/`FileExplorer`, tracked separately.
 
 ## Phase 5 — Directory file association
 
-**Scope and location:** `Shared/HackerOs.App.Abstractions/AppManifest.cs` (`FileHandlerManifest` matching
-only, no schema shape change needed — `MediaType` already exists), `Platform/HackerOs.Platform.Core/Intents/FileAssociationResolver.cs`,
-`Apps/System/HackerOs.Apps.FileExplorer/app.manifest.json`.
+**Scope and location:** `Shared/Kazo.Os.App.Abstractions/AppManifest.cs` (`FileHandlerManifest` matching
+only, no schema shape change needed — `MediaType` already exists), `Platform/Kazo.Os.Platform.Core/Intents/FileAssociationResolver.cs`,
+`Apps/System/Kazo.Os.Apps.FileExplorer/app.manifest.json`.
 **Prerequisites:** `ADR-INT-1`.
 **Explicit exclusions:** No change to how *files* (non-directories) are associated — this phase only adds
 directory handling alongside the existing extension/media-type matching.
@@ -446,7 +446,7 @@ directory handling alongside the existing extension/media-type matching.
   now-seeded association document first — see `INT-009` — so they still genuinely exercise the
   no-configured-default paths rather than incidentally hitting the new seeded default).
 - [x] `INT-008` Add a `FileHandlerManifest(MediaType: "inode/directory", Extensions: [], Actions: ["open"])`
-  entry to `HackerOs.Apps.FileExplorer/app.manifest.json`'s (currently absent) `fileHandlers` declaration.
+  entry to `Kazo.Os.Apps.FileExplorer/app.manifest.json`'s (currently absent) `fileHandlers` declaration.
   Completed 2026-08-18.
 - [x] `INT-009` Seed `org.hackeros.file-explorer` as the protected default handler for `inode/directory` in
   the canonical `/etc/hackeros/file-associations.json` document (`FileAssociationSettingsDocuments`),
@@ -459,11 +459,11 @@ directory handling alongside the existing extension/media-type matching.
   subsection covering both the caller side (`FileView.ActivateItemAsync`) and handler side
   (`org.hackeros.file-explorer`'s manifest + seeded default), plus updated `Tests` section entries.
 
-**Validation and completion evidence:** `dotnet build HackerOs.sln --no-incremental` — 0 warnings, 0
-errors. `dotnet test` on `HackerOs.Platform.Core.Tests` (388/388 — 383 from Phase 4 plus 4 new
+**Validation and completion evidence:** `dotnet build Kazo.Os.sln --no-incremental` — 0 warnings, 0
+errors. `dotnet test` on `Kazo.Os.Platform.Core.Tests` (388/388 — 383 from Phase 4 plus 4 new
 `FileAssociationResolverTests` directory-handler tests plus 1 new `AppIntentDispatcherTests` end-to-end
-test), `HackerOs.Apps.FileExplorer.Tests` (4/4), `HackerOs.AppSdk.FileView.Tests` (66/66),
-`HackerOs.Ecosystem.Tests` (12/12), and `HackerOs.App.Abstractions.Tests` (91/91) all pass, 2026-08-18.
+test), `Kazo.Os.Apps.FileExplorer.Tests` (4/4), `Kazo.Os.AppSdk.FileView.Tests` (66/66),
+`Kazo.Os.Ecosystem.Tests` (12/12), and `Kazo.Os.App.Abstractions.Tests` (91/91) all pass, 2026-08-18.
 The headless end-to-end test the plan called for —
 `AppIntentDispatcherTests.Open_file_intent_for_a_directory_resolves_org_hackeros_file_explorer_as_the_seeded_default_and_launches_it`
 — opens a directory path via the real `AppIntentDispatcher` (the same call `AppIntentGateway.OpenFileAsync`
@@ -475,8 +475,8 @@ matching `FV-009`'s `NewWindow` activation path end-to-end, exactly as the plan 
 
 ## Phase 6 — `DesktopArea`/`DesktopShell` background slot (infrastructure only)
 
-**Scope and location:** `Platform/HackerOs.Windowing.Blazor/DesktopArea.razor`,
-`Platform/HackerOs.Platform.Blazor/Shell/DesktopShell.razor`.
+**Scope and location:** `Platform/Kazo.Os.Windowing.Blazor/DesktopArea.razor`,
+`Platform/Kazo.Os.Platform.Blazor/Shell/DesktopShell.razor`.
 **Prerequisites:** None beyond this document's approval — independent of every phase above.
 **Explicit exclusions:** Per the [confirmed
 decision](../Global-FileView-And-MessagingSystem.md#key-decisions-already-made), this phase does **not**
@@ -497,11 +497,11 @@ plan.
   `DesktopArea` without a background slot) as its own optional `BackgroundContent` parameter, so a future
   composition root can supply content without `DesktopShell` needing to know what that content is.
   Completed 2026-08-18 — a one-line pass-through parameter, nothing more.
-- [x] `INT-013` Add a component test in `Tests/HackerOs.Platform.Blazor.Tests/` proving supplied
+- [x] `INT-013` Add a component test in `Tests/Kazo.Os.Platform.Blazor.Tests/` proving supplied
   `BackgroundContent` renders in the correct DOM position relative to `window-layer`, and that omitting it
   changes nothing observable (backward compatible, opt-in). Completed 2026-08-18 —
   `DesktopAreaBackgroundContentTests.cs`, using a new `FrameCapturingRenderer` (same no-bUnit
-  `TestComponentRenderer` pattern established for `HackerOs.AppSdk.FileView.Tests`, but capturing the
+  `TestComponentRenderer` pattern established for `Kazo.Os.AppSdk.FileView.Tests`, but capturing the
   render tree's frames via `Renderer.GetCurrentRenderTreeFrames` instead of discarding them, since this is
   the first test in this solution that needs to assert actual DOM element order rather than just C#
   backing state). One real wrinkle worth recording: `desktop-grid`'s `<div>` has nothing dynamic inside it,
@@ -513,10 +513,10 @@ plan.
 - [x] `INT-014` Update [`../desktop-shell.md`](../desktop-shell.md) to document the new slot. Completed
   2026-08-18.
 
-**Validation and completion evidence:** `dotnet build HackerOs.sln --no-incremental` — 0 warnings, 0
-errors. `dotnet test` on `HackerOs.Platform.Blazor.Tests` (34/34 — 32 existing plus 2 new
-`DesktopAreaBackgroundContentTests`), `HackerOs.Platform.Core.Tests` (388/388), `HackerOs.Ecosystem.Tests`
-(12/12), and `HackerOs.Windowing.Core.Tests` (11/11) all pass, 2026-08-18. No manual browser check: this
+**Validation and completion evidence:** `dotnet build Kazo.Os.sln --no-incremental` — 0 warnings, 0
+errors. `dotnet test` on `Kazo.Os.Platform.Blazor.Tests` (34/34 — 32 existing plus 2 new
+`DesktopAreaBackgroundContentTests`), `Kazo.Os.Platform.Core.Tests` (388/388), `Kazo.Os.Ecosystem.Tests`
+(12/12), and `Kazo.Os.Windowing.Core.Tests` (11/11) all pass, 2026-08-18. No manual browser check: this
 phase adds an unused slot with no current caller (per its own explicit exclusion), so there is nothing
 visually different to observe yet — the component test is the complete verification surface for what this
 phase actually delivers.
@@ -528,7 +528,7 @@ phase actually delivers.
 - [x] `MessagingSystem.md` full specification.
 - [x] This integration plan.
 - [x] `docs/README.md` index updated.
-- [x] `TopicMessagingContracts.cs`, `FileSystemWatchContracts.cs`, and the `HackerOs.AppSdk.FileView`
+- [x] `TopicMessagingContracts.cs`, `FileSystemWatchContracts.cs`, and the `Kazo.Os.AppSdk.FileView`
   project — long since grown past "skeletons" into the full implementation tracked by Phases 1 through 6
   above, all now complete.
 

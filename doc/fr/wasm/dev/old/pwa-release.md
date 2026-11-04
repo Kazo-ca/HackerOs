@@ -11,12 +11,12 @@ It provides instant startup, offline execution, atomic release asset caching, an
 
 | File | Purpose |
 |---|---|
-| `OS/HackerOs.Ecosystem/wwwroot/manifest.webmanifest` | Product web app manifest with standalone display, colors, and 192/512 maskable icons |
-| `OS/HackerOs.Ecosystem/wwwroot/service-worker.published.js` | Published Service Worker implementing Cache-First offline shell and atomic asset versioning |
-| `OS/HackerOs.Ecosystem/wwwroot/service-worker.js` | Development Service Worker (bypasses cache for rapid hot-reload development) |
-| `OS/HackerOs.Ecosystem/wwwroot/icons/icon-192.png` | 192x192 PNG product icon |
-| `OS/HackerOs.Ecosystem/wwwroot/icons/icon-512.png` | 512x512 PNG product icon |
-| `OS/HackerOs.Ecosystem/wwwroot/index.html` | Published HTML shell registering SW with `updateViaCache: 'none'` and update reload handler |
+| `OS/Kazo.Os.Ecosystem/wwwroot/manifest.webmanifest` | Product web app manifest with standalone display, colors, and 192/512 maskable icons |
+| `OS/Kazo.Os.Ecosystem/wwwroot/service-worker.published.js` | Published Service Worker implementing Cache-First offline shell and atomic asset versioning |
+| `OS/Kazo.Os.Ecosystem/wwwroot/service-worker.js` | Development Service Worker (bypasses cache for rapid hot-reload development) |
+| `OS/Kazo.Os.Ecosystem/wwwroot/icons/icon-192.png` | 192x192 PNG product icon |
+| `OS/Kazo.Os.Ecosystem/wwwroot/icons/icon-512.png` | 512x512 PNG product icon |
+| `OS/Kazo.Os.Ecosystem/wwwroot/index.html` | Published HTML shell registering SW with `updateViaCache: 'none'` and update reload handler |
 | `docs/adr/0017-pwa-cache-and-offline-strategy.md` | ADR 0017 (DECISION: D-011) |
 
 ## Key PWA Behaviors
@@ -43,4 +43,4 @@ It provides instant startup, offline execution, atomic release asset caching, an
 - [x] `P2-PWA-004` Define cache-first shell/static-asset strategy and network behavior for optional APIs in ADR 0017. **DECISION: D-011**
 - [x] `P2-PWA-005` Implement update-available notification, safe activation, and reload flow without mixing old/new assets.
 - [x] `P2-PWA-006` Define supported historical PWA/data/API compatibility window and test migrations from each supported version.
-- [x] `P2-PWA-007` Test first online visit, installability, server unavailable, offline reload, app launch, file/settings persistence, update waiting, activation, and corrupt-cache recovery against published Release output. **Evidence (2026-08-17):** `Tests/HackerOs.Pwa.E2E.Tests/PublishedPwaTests.cs`, all 5 cases passing against a real `dotnet publish` of `OS/HackerOs.Ecosystem` — see `docs/phase-2-acceptance.md` `P2-ACC-015`/`P2-ACC-016` for exact test names. Chromium only (matches this repo's browser-support policy elsewhere); Firefox/Safari have no automated or manual coverage. This checkbox was previously checked without this evidence — see `docs/integration-audit-remediation.md` Wave C — and is now correctly backed by it.
+- [x] `P2-PWA-007` Test first online visit, installability, server unavailable, offline reload, app launch, file/settings persistence, update waiting, activation, and corrupt-cache recovery against published Release output. **Evidence (2026-08-17):** `Tests/Kazo.Os.Pwa.E2E.Tests/PublishedPwaTests.cs`, all 5 cases passing against a real `dotnet publish` of `OS/Kazo.Os.Ecosystem` — see `docs/phase-2-acceptance.md` `P2-ACC-015`/`P2-ACC-016` for exact test names. Chromium only (matches this repo's browser-support policy elsewhere); Firefox/Safari have no automated or manual coverage. This checkbox was previously checked without this evidence — see `docs/integration-audit-remediation.md` Wave C — and is now correctly backed by it.

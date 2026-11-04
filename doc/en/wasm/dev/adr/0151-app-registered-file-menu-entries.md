@@ -69,7 +69,7 @@ registration of all the app's entries fail (nothing partial).
 ### 3. Registration at install time
 
 1. **Built-in apps**: the manifest generator
-   (`HackerOs.Tools.ManifestGenerator`) calls the method **at build time** and
+   (`Kazo.Os.Tools.ManifestGenerator`) calls the method **at build time** and
    writes the result in `manifest.json` (optional property
    `contextMenus`, omitted without entries) and `BuiltInApplications.json`. The
    schema, the allowlist of `AppManifestJsonSerializer`, the test canonical

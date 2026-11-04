@@ -5,7 +5,7 @@
 **Status:** Active execution plan  
 **Created:** 2026-08-01  
 **Architecture source:** `doc/fr/wasm/dev/plans/wasm-v3-migration-analyse.md`  
-**Implementation root:** `wasm2/HackerOs/`  
+**Implementation root:** `wasm2/KazoOs/`  
 **Legacy behavioral reference:** `src/` (read-only during this migration unless a
 separate task explicitly authorizes a legacy fix)
 
@@ -44,9 +44,9 @@ phase before editing code.
   available, and do not mark the decision accepted until the user explicitly
   approves an option.
 - [ ] Update test counts and validation commands in
-  `wasm2/HackerOs/docs/implementation-status.md` after each completed slice.
+  `wasm2/KazoOs/docs/implementation-status.md` after each completed slice.
 - [ ] Run the narrowest relevant test immediately after the first substantive
-  edit, then run `dotnet test HackerOs.sln` before closing a completed slice.
+  edit, then run `dotnet test Kazo.Os.sln` before closing a completed slice.
 - [ ] Test published Release output for browser, trimming, PWA, lazy-loading, and
   service-worker work. Debug-only behavior is not completion evidence.
 - [ ] Preserve user changes and unrelated dirty worktree content. Never restore
@@ -96,7 +96,7 @@ Before opening the next phase:
 
 ### 0.4 Global rules that apply to every task
 
-- All new implementation code belongs under `wasm2/HackerOs/`.
+- All new implementation code belongs under `wasm2/KazoOs/`.
 - Do not add or modify implementation code under `src/`; use it only to capture
   observable behavior, domain rules, sample data, and migration tests.
 - C# owns domain behavior. JavaScript is limited to browser APIs and isolated
@@ -161,8 +161,8 @@ Before opening the next phase:
 
 ## 2. Current Validated Baseline
 
-**Scope:** Existing projects under `wasm2/HackerOs/Shared/`,
-`wasm2/HackerOs/Platform/HackerOs.Platform.Core/`, and their test projects.  
+**Scope:** Existing projects under `wasm2/KazoOs/Shared/`,
+`wasm2/KazoOs/Platform/Kazo.Os.Platform.Core/`, and their test projects.  
 **Excluded:** No host, browser infrastructure, visible platform UI, or first-party
 app is implied by these completed tasks.
 
@@ -185,12 +185,12 @@ app is implied by these completed tasks.
 
 **References:**
 
-- `wasm2/HackerOs/docs/implementation-status.md`
-- `wasm2/HackerOs/docs/app-contracts.md`
-- `wasm2/HackerOs/docs/app-catalog.md`
-- `wasm2/HackerOs/docs/settings-system.md`
-- `wasm2/HackerOs/docs/blazor-app-sdk.md`
-- `wasm2/HackerOs/docs/adr/0001-*.md` through `0007-*.md`
+- `wasm2/KazoOs/docs/implementation-status.md`
+- `wasm2/KazoOs/docs/app-contracts.md`
+- `wasm2/KazoOs/docs/app-catalog.md`
+- `wasm2/KazoOs/docs/settings-system.md`
+- `wasm2/KazoOs/docs/blazor-app-sdk.md`
+- `wasm2/KazoOs/docs/adr/0001-*.md` through `0007-*.md`
 
 ## 3. Milestone and Dependency Order
 
@@ -216,7 +216,7 @@ and CI tasks apply continuously and can block any phase gate.
 ## 4. Architecture Decisions Before New Kernel Code
 
 **Scope and location:** New ADRs in `doc/fr/wasm/dev/adr/`; resulting
-contract updates only in `Shared/` and `Platform/HackerOs.Platform.Core/`.  
+contract updates only in `Shared/` and `Platform/Kazo.Os.Platform.Core/`.  
 **Prerequisites:** Baseline complete.  
 **Explicit exclusions:** No Blazor rendering, IndexedDB, PWA, first-party app UI,
 or server implementation.
@@ -294,16 +294,16 @@ file, and reflected in affected contract tests before dependent tasks begin.
 ## 5. Virtual Filesystem Contracts and In-Memory Reference
 
 **Scope and location:** Contracts in
-`Shared/HackerOs.Simulation.Abstractions/FileSystem/`; implementation in
-`Platform/HackerOs.Platform.Core/FileSystem/`; tests in
-`Tests/HackerOs.Platform.Core.Tests/FileSystem/`; documentation in
+`Shared/Kazo.Os.Simulation.Abstractions/FileSystem/`; implementation in
+`Platform/Kazo.Os.Platform.Core/FileSystem/`; tests in
+`Tests/Kazo.Os.Platform.Core.Tests/FileSystem/`; documentation in
 `docs/virtual-filesystem.md`.  
 **Prerequisites:** `P1-ADR-001`, existing `VirtualPath`, settings projection.  
 **Explicit exclusions:** No IndexedDB, native browser files, server storage,
 File Explorer UI, sync, encryption, or gameplay remote filesystems.
 
 - [x] `P1-FS-001` Define immutable filesystem entry IDs and file/directory/link
-  metadata records in `HackerOs.Simulation.Abstractions`.
+  metadata records in `Kazo.Os.Simulation.Abstractions`.
   - **Completed: 2026-08-01** — Six focused metadata contract tests and all 64
     solution tests pass with warnings as errors.
 - [x] `P1-FS-002` Define read, enumerate, create, write, move, copy, delete, stat,
@@ -356,10 +356,10 @@ not a full compliance requirement).
 
 ## 6. Policy, Capability Grants, and Settings Scopes
 
-**Scope and location:** Contracts in `Shared/HackerOs.App.Abstractions/Policy/`
-and `Shared/HackerOs.Simulation.Abstractions/Settings/`; implementation in
-`Platform/HackerOs.Platform.Core/Policy/`; tests in
-`Tests/HackerOs.Platform.Core.Tests/Policy/`; docs in `docs/policy-system.md`.  
+**Scope and location:** Contracts in `Shared/Kazo.Os.App.Abstractions/Policy/`
+and `Shared/Kazo.Os.Simulation.Abstractions/Settings/`; implementation in
+`Platform/Kazo.Os.Platform.Core/Policy/`; tests in
+`Tests/Kazo.Os.Platform.Core.Tests/Policy/`; docs in `docs/policy-system.md`.  
 **Prerequisites:** `P1-ADR-004`, exact capability baseline, authority ADR.  
 **Explicit exclusions:** No permission prompt UI, no server authorization, no
 malicious-code sandbox, and no wildcard capability grants.
@@ -437,9 +437,9 @@ authority enforcement for every settings scope and filesystem access path.
 ## 7. Session, Process, Clock, Events, and Diagnostics
 
 **Scope and location:** Contracts in
-`Shared/HackerOs.Simulation.Abstractions/{Sessions,Processes,Events,Diagnostics}/`;
-implementation in corresponding `Platform/HackerOs.Platform.Core/` folders;
-tests in `Tests/HackerOs.Platform.Core.Tests/`; docs in
+`Shared/Kazo.Os.Simulation.Abstractions/{Sessions,Processes,Events,Diagnostics}/`;
+implementation in corresponding `Platform/Kazo.Os.Platform.Core/` folders;
+tests in `Tests/Kazo.Os.Platform.Core.Tests/`; docs in
 `docs/session-and-process-lifecycle.md`.  
 **Prerequisites:** `P1-ADR-005`, `P1-ADR-006`, policy contracts.  
 **Explicit exclusions:** No browser login screen, server identity, real CPU/RAM
@@ -449,7 +449,7 @@ resume.
 - [x] `P1-SYS-001` Define user, group, authority, session ID, installation ID,
   device ID, and authenticated principal records.
   - **Completed: 2026-08-01** — Identity records live in
-    `Shared/HackerOs.Simulation.Abstractions/Sessions/`; 16 tests pass.
+    `Shared/Kazo.Os.Simulation.Abstractions/Sessions/`; 16 tests pass.
 - [x] `P1-SYS-002` Define `ISessionService` startup/login/logout/shutdown state
   machine and session cancellation token ownership.
   - Session owns the root session cancellation source for its lifetime.
@@ -516,7 +516,7 @@ resume.
   - **Completed: 2026-08-01** — Each named behavior has a dedicated unit test
     in its own subsystem's test file (session/process manager/event
     bus/diagnostics/filesystem seeder), and
-    `Tests/HackerOs.Platform.Core.Tests/Processes/CrossCuttingLifecycleTests.cs`
+    `Tests/Kazo.Os.Platform.Core.Tests/Processes/CrossCuttingLifecycleTests.cs`
     adds 4 end-to-end tests proving logout cancels every descendant process
     token with a full audit trail, killing a parent process does not disturb
     the session or unrelated processes, resource ticks stop counting a process
@@ -526,15 +526,15 @@ resume.
 **Validation and completion evidence:** All lifecycle behavior executes without a
 browser; no test sleeps or depends on wall-clock timing; shutdown order is
 deterministic. **Completed: 2026-08-01** — 277 solution tests pass with
-warnings as errors (`dotnet test HackerOs.sln --no-restore`).
+warnings as errors (`dotnet test Kazo.Os.sln --no-restore`).
 
 ## 7.1 App Execution Context and Scoped Gateways
 
 **Scope and location:** Expand existing `IAppExecutionContext` in
-`Shared/HackerOs.AppSdk/Execution/`; gateway contracts in
-`Shared/HackerOs.Simulation.Abstractions/Gateways/`; factories/policy wrappers in
-`Platform/HackerOs.Platform.Core/Execution/`; tests in
-`Tests/HackerOs.Platform.Core.Tests/Execution/`; docs in
+`Shared/Kazo.Os.AppSdk/Execution/`; gateway contracts in
+`Shared/Kazo.Os.Simulation.Abstractions/Gateways/`; factories/policy wrappers in
+`Platform/Kazo.Os.Platform.Core/Execution/`; tests in
+`Tests/Kazo.Os.Platform.Core.Tests/Execution/`; docs in
 `docs/app-execution-context.md`.  
 **Prerequisites:** Filesystem, settings, policy, events, diagnostics, clock, and
 session/process contracts.  
@@ -546,13 +546,13 @@ filesystem service, or authority claims supplied by app code.
   user/session/instance/process identity, cancellation, and narrow gateway
   interfaces; do not turn it into a global `IOS` service locator.
   **Completed: 2026-08-01** — expanded in place at
-  `Shared/HackerOs.AppSdk/IAppExecutionContext.cs` (kept the existing file
+  `Shared/Kazo.Os.AppSdk/IAppExecutionContext.cs` (kept the existing file
   location rather than moving to an `Execution/` subfolder, since no other file
-  in `HackerOs.AppSdk` used one).
+  in `Kazo.Os.AppSdk` used one).
 - [x] `P1-EXEC-002` Define capability checker results that include exact grant,
   authority, structured constraint, denial reason, and policy revision.
   **Completed: 2026-08-01** — `AppCapabilityChecker` in
-  `Platform/HackerOs.Platform.Core/Execution/`, delegating to
+  `Platform/Kazo.Os.Platform.Core/Execution/`, delegating to
   `ICapabilityGrantRepository.Evaluate`.
 - [x] `P1-EXEC-003` Define app-scoped filesystem gateway that applies policy to
   every read/write/enumerate/create/move/copy/delete/stat operation.
@@ -591,13 +591,13 @@ filesystem service, or authority claims supplied by app code.
   isolation, handle expiry/revocation, cancellation propagation, and inability to
   resolve platform internals.
   **Completed: 2026-08-01** — 16 tests in
-  `Tests/HackerOs.Platform.Core.Tests/Execution/AppExecutionContextTests.cs`.
+  `Tests/Kazo.Os.Platform.Core.Tests/Execution/AppExecutionContextTests.cs`.
 
 **Validation and completion evidence:** Sample Window/Terminal/Service test apps
 perform approved operations only through scoped gateways; denied operations fail
 with stable results; no app project references Platform or Infrastructure.
 **Completed: 2026-08-01** — 293 solution tests pass with warnings as errors
-(`dotnet test HackerOs.sln --no-restore`), 16 of which are new
+(`dotnet test Kazo.Os.sln --no-restore`), 16 of which are new
 `P1-EXEC-008` contract/security tests covering: capability denial with stable
 `AppGatewayAccessDeniedException` reasons; structured path-constrained grants;
 filesystem gateway capability enforcement; own-process operations requiring no
@@ -606,7 +606,7 @@ capability while managing/killing another process requires
 lazy expiry, explicit revocation, and automatic revocation on process exit and
 user logout; execution-context cancellation propagation on process kill; and a
 reflection-based check that `IAppExecutionContext` exposes no `IServiceProvider`
-or `HackerOs.Platform.Core` concrete type. A pre-existing bug was fixed as part
+or `Kazo.Os.Platform.Core` concrete type. A pre-existing bug was fixed as part
 of this work: `FileSystemSelectedResourceHandleRegistry.Issue` passed
 `ICapabilityGrantRepository.CurrentPolicyRevision` directly into the handle
 constructor, which throws for any repository that has never issued a grant
@@ -615,9 +615,9 @@ constructor, which throws for any repository that has never issued a grant
 
 ## 8. Intent Dispatch, Associations, Discovery, and Lifecycle Orchestration
 
-**Scope and location:** `Platform/HackerOs.Platform.Core/{Intents,Discovery,Lifecycle}/`,
+**Scope and location:** `Platform/Kazo.Os.Platform.Core/{Intents,Discovery,Lifecycle}/`,
 contract additions under `Shared/`, tests in
-`Tests/HackerOs.Platform.Core.Tests/`, docs in `docs/app-runtime.md`.  
+`Tests/Kazo.Os.Platform.Core.Tests/`, docs in `docs/app-runtime.md`.  
 **Prerequisites:** Filesystem, policy, session/process, app catalog.  
 **Explicit exclusions:** No window rendering, reflection over arbitrary runtime
 packages, lazy assembly loading, or UI permission prompts.
@@ -662,10 +662,10 @@ without Blazor or browser APIs.
 ## 9. Canonical Manifest Schema and Build Profile
 
 **Scope and location:** JSON schema and examples in
-`Shared/HackerOs.App.Abstractions/Schema/`; build profile under
-`OS/HackerOs.Ecosystem/Profiles/` when the host exists; processor/tooling in a new
-`Tools/HackerOs.Build/` project only if ordinary MSBuild cannot safely validate
-it; tests under `Tests/HackerOs.Build.Tests/`; docs in
+`Shared/Kazo.Os.App.Abstractions/Schema/`; build profile under
+`OS/Kazo.Os.Ecosystem/Profiles/` when the host exists; processor/tooling in a new
+`Tools/Kazo.Os.Build/` project only if ordinary MSBuild cannot safely validate
+it; tests under `Tests/Kazo.Os.Build.Tests/`; docs in
 `docs/build-profile.md`.  
 **Prerequisites:** `P1-ADR-003`, catalog, policy model, app descriptors.  
 **Explicit exclusions:** No YAML unless separately approved; no runtime package
@@ -676,11 +676,11 @@ download; no generated metadata that app authors must duplicate manually.
   Presentation, OS compatibility, Settings schema, Intents, Assets, Update, and
   AutoStart per section 7.2; published Draft 2020-12
   `Schema/manifest.schema.v1.json` embedded as a resource in
-  `HackerOs.App.Abstractions` via `ManifestSchemaResource`; added one valid
+  `Kazo.Os.App.Abstractions` via `ManifestSchemaResource`; added one valid
   fixture per app kind and 9 invalid fixtures under `Schema/Fixtures/`,
   verified by `ManifestSchemaConformanceTests`.)_
 - [x] `P1-BLD-002` Add `System.Text.Json` source-generation context and canonical
-  serialization fixtures. _(Implemented in `Shared/HackerOs.App.Abstractions/AppManifestJsonSerializer.cs` with a strict source-generated context, canonical manifest serialization, duplicate/unknown-property rejection, and a golden fixture under `Shared/HackerOs.App.Abstractions/Schema/Fixtures/app-manifest.canonical.json`; validated by `Tests/HackerOs.App.Abstractions.Tests/Serialization/AppManifestJsonSerializerTests.cs`.)_
+  serialization fixtures. _(Implemented in `Shared/Kazo.Os.App.Abstractions/AppManifestJsonSerializer.cs` with a strict source-generated context, canonical manifest serialization, duplicate/unknown-property rejection, and a golden fixture under `Shared/Kazo.Os.App.Abstractions/Schema/Fixtures/app-manifest.canonical.json`; validated by `Tests/Kazo.Os.App.Abstractions.Tests/Serialization/AppManifestJsonSerializerTests.cs`.)_
 - [x] `P1-BLD-003` Validate unknown fields, localization/assets, capabilities,
   settings schemas, intents, dependencies, and app-kind-specific sections.
   _(2025-06 update: JSON Schema enforces `additionalProperties: false` plus
@@ -692,40 +692,40 @@ download; no generated metadata that app authors must duplicate manually.
   validation predates this change. Build-profile cross-reference and
   build-time asset-existence checks remain out of scope, tracked under
   `P1-BLD-005`/`P1-BLD-008`. Verified again on 2026-08-02 with
-  `dotnet test HackerOs.sln --no-restore` (339 tests, 0 failures).)_
+  `dotnet test Kazo.Os.sln --no-restore` (339 tests, 0 failures).)_
 - [x] `P1-BLD-004` Define build-profile JSON for included projects/packages,
   eager/lazy status, boot-critical alternatives, defaults, grants, associations,
   locales, themes, and optional server features. _(Implemented in
-  `Shared/HackerOs.App.Abstractions/BuildProfileManifest.cs` with
+  `Shared/Kazo.Os.App.Abstractions/BuildProfileManifest.cs` with
   `BuildProfileJsonSerializer` and `BuildProfileValidator`; covered by
-  `Tests/HackerOs.App.Abstractions.Tests/BuildProfileManifestTests.cs`.)_
+  `Tests/Kazo.Os.App.Abstractions.Tests/BuildProfileManifestTests.cs`.)_
 - [x] `P1-BLD-005` Validate that profile references resolve and excluded apps'
   assets are absent from publish output. _(Implemented in
-  `Shared/HackerOs.App.Abstractions/BuildProfileValidator.cs` by rejecting
+  `Shared/Kazo.Os.App.Abstractions/BuildProfileValidator.cs` by rejecting
   unresolved package/app references and by keeping publish asset output scoped to
   the included app set; verified by
-  `Tests/HackerOs.App.Abstractions.Tests/BuildProfileManifestTests.cs`.)_
+  `Tests/Kazo.Os.App.Abstractions.Tests/BuildProfileManifestTests.cs`.)_
 - [x] `P1-BLD-006` Generate or assemble the explicit discovery list without
   hard-coded `switch` statements. _(Implemented in
-  `Shared/HackerOs.App.Abstractions/BuildProfileValidator.cs` with a
+  `Shared/Kazo.Os.App.Abstractions/BuildProfileValidator.cs` with a
   deterministic `BuildDiscoveryAppIds` helper that assembles package/default app
   IDs into an explicit discovery order; validated by
-  `Tests/HackerOs.App.Abstractions.Tests/BuildProfileManifestTests.cs`.)_
+  `Tests/Kazo.Os.App.Abstractions.Tests/BuildProfileManifestTests.cs`.)_
 - [x] `P1-BLD-007` Validate profile dependency graph and boot recovery before
-  compile/publish. _(Implemented in `Shared/HackerOs.App.Abstractions/BuildProfileValidator.cs` by rejecting dependency cycles among included apps and requiring at least one boot-critical package in the selected profile; validated by `Tests/HackerOs.App.Abstractions.Tests/BuildProfileManifestTests.cs`.)_
-- [x] `P1-BLD-008` Add invalid fixture tests for every schema/build-profile error. _(Completed in `Tests/HackerOs.App.Abstractions.Tests/BuildProfileManifestTests.cs` with explicit regression cases for duplicate packages, invalid load modes, duplicate values, unresolved references, dependency cycles, and boot-recovery validation; existing schema conformance fixtures already cover every structural schema error.)_
+  compile/publish. _(Implemented in `Shared/Kazo.Os.App.Abstractions/BuildProfileValidator.cs` by rejecting dependency cycles among included apps and requiring at least one boot-critical package in the selected profile; validated by `Tests/Kazo.Os.App.Abstractions.Tests/BuildProfileManifestTests.cs`.)_
+- [x] `P1-BLD-008` Add invalid fixture tests for every schema/build-profile error. _(Completed in `Tests/Kazo.Os.App.Abstractions.Tests/BuildProfileManifestTests.cs` with explicit regression cases for duplicate packages, invalid load modes, duplicate values, unresolved references, dependency cycles, and boot-recovery validation; existing schema conformance fixtures already cover every structural schema error.)_
 
 **Phase 1 exit gate:**
 
 - [x] `P1-GATE-001` All Phase 1 headless contracts and implementations build with
-  warnings as errors. _(Verified 2026-08-02: `dotnet build HackerOs.sln --no-incremental` and `dotnet build HackerOs.sln -c Release --no-incremental` both complete with 0 warnings/0 errors; `Directory.Build.props` sets `TreatWarningsAsErrors` solution-wide.)_
+  warnings as errors. _(Verified 2026-08-02: `dotnet build Kazo.Os.sln --no-incremental` and `dotnet build Kazo.Os.sln -c Release --no-incremental` both complete with 0 warnings/0 errors; `Directory.Build.props` sets `TreatWarningsAsErrors` solution-wide.)_
 - [x] `P1-GATE-002` All test doubles and in-memory implementations satisfy shared
-  contract suites. _(Verified 2026-08-02: `dotnet test HackerOs.sln --no-restore` passes 344 tests, 0 failed, across all 4 test projects, exercising every in-memory implementation against its shared contract suite.)_
+  contract suites. _(Verified 2026-08-02: `dotnet test Kazo.Os.sln --no-restore` passes 344 tests, 0 failed, across all 4 test projects, exercising every in-memory implementation against its shared contract suite.)_
 - [x] `P1-GATE-003` A headless kernel integration test covers boot, session,
   discovery, app launch, command execution, settings/files, disable, logout, and
-  shutdown. _(Implemented in `Tests/HackerOs.Platform.Core.Tests/HeadlessKernelIntegrationTests.cs`: boots the full in-memory stack, logs in and seeds a real gateway-addressable home directory, discovers two apps from a real host assembly, launches and synchronously executes a Terminal app that performs real capability-checked filesystem create/write/read and settings-read operations through its scoped gateways, shuts down a running Service app via `StopAllAsync` and asserts its `ServiceStopReason.Shutdown`, disables the Terminal app and proves relaunch is denied, then logs out and asserts the full login/logout audit trail — with zero Blazor/browser/UI dependency.)_
+  shutdown. _(Implemented in `Tests/Kazo.Os.Platform.Core.Tests/HeadlessKernelIntegrationTests.cs`: boots the full in-memory stack, logs in and seeds a real gateway-addressable home directory, discovers two apps from a real host assembly, launches and synchronously executes a Terminal app that performs real capability-checked filesystem create/write/read and settings-read operations through its scoped gateways, shuts down a running Service app via `StopAllAsync` and asserts its `ServiceStopReason.Shutdown`, disables the Terminal app and proves relaunch is denied, then logs out and asserts the full login/logout audit trail — with zero Blazor/browser/UI dependency.)_
 - [x] `P1-GATE-004` Release/trimming analyzer reports no unaddressed public SDK or
-  reflection warnings. _(2026-08-02: enabled `IsTrimmable`/`EnableTrimAnalyzer` for every non-test project in `Directory.Build.props`. A Release rebuild surfaced 3 genuine trim warnings in `AppEntryPointDiscovery.Discover` and the two `Activator.CreateInstance` sites in `AppLifecycleOrchestrator` — all inherent to the deliberate, bounded, host-assembly-list-only reflection boundary. `Discover` is now annotated `[RequiresUnreferencedCode]` (propagated honestly to callers instead of hidden), and the two orchestrator call sites carry a justified `[UnconditionalSuppressMessage("Trimming", "IL2072", ...)]` referencing this task and the future Phase 2/6 host-publish trim-root follow-up. `dotnet build HackerOs.sln -c Release --no-incremental` now reports 0 warnings/0 errors.)_
+  reflection warnings. _(2026-08-02: enabled `IsTrimmable`/`EnableTrimAnalyzer` for every non-test project in `Directory.Build.props`. A Release rebuild surfaced 3 genuine trim warnings in `AppEntryPointDiscovery.Discover` and the two `Activator.CreateInstance` sites in `AppLifecycleOrchestrator` — all inherent to the deliberate, bounded, host-assembly-list-only reflection boundary. `Discover` is now annotated `[RequiresUnreferencedCode]` (propagated honestly to callers instead of hidden), and the two orchestrator call sites carry a justified `[UnconditionalSuppressMessage("Trimming", "IL2072", ...)]` referencing this task and the future Phase 2/6 host-publish trim-root follow-up. `dotnet build Kazo.Os.sln -c Release --no-incremental` now reports 0 warnings/0 errors.)_
 - [x] `P1-GATE-005` Documentation and ADRs are current; no unresolved Phase 1
   blocker remains. _(2026-08-02: `implementation-status.md` and this file were
   refreshed with the `P1-GATE-001` through `P1-GATE-004` evidence above;
@@ -740,8 +740,8 @@ download; no generated metadata that app authors must duplicate manually.
 ## 10. Browser Infrastructure and IndexedDB
 
 **Scope and location:** New project
-`Infrastructure/HackerOs.Infrastructure.Browser/`; browser-specific contract
-tests in `Tests/HackerOs.Infrastructure.Browser.Tests/`; JS modules under that
+`Infrastructure/Kazo.Os.Infrastructure.Browser/`; browser-specific contract
+tests in `Tests/Kazo.Os.Infrastructure.Browser.Tests/`; JS modules under that
 project's static web assets; docs in `docs/browser-storage.md`.  
 **Prerequisites:** Phase 1 filesystem/settings/repository contracts and browser
 support decision `D-008`. May proceed in parallel with the window runtime after
@@ -755,7 +755,7 @@ worker data caching, or direct raw IndexedDB access from apps.
     `docs/adr/0015-browser-storage-and-indexeddb-adapter.md`. Supported
     browsers: Chromium 89+, Firefox 90+, Safari 15+ (evergreen only). Adapter
     approach: hand-written minimal collocated JS module(s) under
-    `Infrastructure/HackerOs.Infrastructure.Browser/wwwroot/` wrapping native
+    `Infrastructure/Kazo.Os.Infrastructure.Browser/wwwroot/` wrapping native
     IndexedDB with batched, transaction-oriented primitives; no third-party
     IndexedDB NuGet package; C# owns schema/migration ordering. See
     `docs/browser-storage.md`.
@@ -764,14 +764,14 @@ worker data caching, or direct raw IndexedDB access from apps.
   metadata/content, packages/catalog, grants, audit, sync metadata, and bounded
   diagnostics.
   - **Completed: 2026-08-02** — Implemented in the new
-    `Infrastructure/HackerOs.Infrastructure.Browser` project:
+    `Infrastructure/Kazo.Os.Infrastructure.Browser` project:
     `Schema/IndexedDbSchemaModel.cs` (validated `IndexedDbIndexDefinition`,
     `IndexedDbObjectStoreDefinition`, `IndexedDbTransactionBoundary` records) and
     `Schema/HackerOsIndexedDbSchema.cs` (the `hackeros` database, schema version
     `1`, 12 object stores — `users`, `groups`, `sessions`, `settings`, `fsEntries`,
     `fsLinks`, `fsContent`, `catalog`, `grants`, `audit`, `diagnostics`,
     `syncMetadata` — plus 11 named transaction boundaries). Tested by
-    `Tests/HackerOs.Infrastructure.Browser.Tests/HackerOsIndexedDbSchemaTests.cs`
+    `Tests/Kazo.Os.Infrastructure.Browser.Tests/HackerOsIndexedDbSchemaTests.cs`
     (13 tests). See `docs/browser-storage.md` for the full store/index/
     transaction-boundary rationale. No JS module or C# repository exists yet —
     those remain `P2-IDB-004`/`P2-IDB-005`. The content policy and final
@@ -779,18 +779,18 @@ worker data caching, or direct raw IndexedDB access from apps.
 - [x] `P2-IDB-003` Separate file metadata from blob/chunk content; decide maximum
   file/chunk size, hashing, deduplication, and garbage collection. **DECISION: D-009**
   - **Completed: 2026-08-02** — Declared in
-    `Infrastructure/HackerOs.Infrastructure.Browser/Schema/FileContentStoragePolicy.cs`
+    `Infrastructure/Kazo.Os.Infrastructure.Browser/Schema/FileContentStoragePolicy.cs`
     with a deterministic 16 MiB maximum file size, 256 KiB maximum chunk size,
     `SHA-256` hashing, hash-based chunk deduplication, and a 30-day orphan
     retention window. Tested by
-    `Tests/HackerOs.Infrastructure.Browser.Tests/FileContentStoragePolicyTests.cs`.
+    `Tests/Kazo.Os.Infrastructure.Browser.Tests/FileContentStoragePolicyTests.cs`.
 - [x] `P2-IDB-004` Implement a minimal collocated/static JS module for IndexedDB
   transactions; batch operations to avoid fine-grained JS interop.
   - **Completed: 2026-08-02** — `wwwroot/indexedDb.js` exposes database open
     with a C#-supplied declarative migration plan, ordered batched readonly/
     readwrite transactions, and explicit database deletion for recovery/tests.
     The Razor SDK publishes it at
-    `_content/HackerOs.Infrastructure.Browser/indexedDb.js`; app code has no
+    `_content/Kazo.Os.Infrastructure.Browser/indexedDb.js`; app code has no
     direct access. Syntax validation (`node --check`), static-web-asset manifest
     inspection, 14 schema tests, and the 362-test solution gate pass. The global
     Razor asset validator was also fixed to support Razor SDK projects that
@@ -948,7 +948,7 @@ worker data caching, or direct raw IndexedDB access from apps.
 
 **References:**
 
-- `wasm2/HackerOs/docs/settings-system.md`
+- `wasm2/KazoOs/docs/settings-system.md`
 - [MDN IndexedDB](https://developer.mozilla.org/docs/Web/API/IndexedDB_API)
 - [MDN StorageManager estimate](https://developer.mozilla.org/docs/Web/API/StorageManager/estimate)
 - [MDN persistent storage](https://developer.mozilla.org/docs/Web/API/StorageManager/persist)
@@ -957,7 +957,7 @@ worker data caching, or direct raw IndexedDB access from apps.
 ## 10.1 Platform UI Library Decision
 
 **Scope and location:** ADR in `docs/adr/0016-platform-ui-library.md`; proof in a
-temporary or retained reusable component under `Platform/HackerOs.Platform.Blazor/`;
+temporary or retained reusable component under `Platform/Kazo.Os.Platform.Blazor/`;
 documentation in `docs/platform-ui-library.md`.  
 **Prerequisites:** Phase 1 gate and repository MudBlazor guidance.  
 **Explicit exclusions:** No second competing component framework, no app-specific
@@ -993,15 +993,15 @@ payload measurements are documented.
 ## 11. Platform Blazor Window Runtime
 
 **Scope and location:** New Razor Class Library
-`Platform/HackerOs.Platform.Blazor/`; tests in
-`Tests/HackerOs.Platform.Blazor.Tests/`; components and assets collocated; docs in
+`Platform/Kazo.Os.Platform.Blazor/`; tests in
+`Tests/Kazo.Os.Platform.Blazor.Tests/`; components and assets collocated; docs in
 `docs/window-runtime.md`.
 **Relocated (`EXT-WIN-001`–`006`, see [`window-taskbar-export-plan.md`](window-taskbar-export-plan.md)):**
 the headless state machine (`WindowRuntime`, `WindowRuntimeState`, geometry/message
-types) now lives in standalone `Platform/HackerOs.Windowing.Core/`, tested in
-`Tests/HackerOs.Windowing.Core.Tests/`; the Razor components (`DesktopArea`,
-`WindowHost`, `WindowChrome`) now live in standalone `Platform/HackerOs.Windowing.Blazor/`.
-`HackerOs.Platform.Blazor` references both and supplies the HackerOS-specific adapters
+types) now lives in standalone `Platform/Kazo.Os.Windowing.Core/`, tested in
+`Tests/Kazo.Os.Windowing.Core.Tests/`; the Razor components (`DesktopArea`,
+`WindowHost`, `WindowChrome`) now live in standalone `Platform/Kazo.Os.Windowing.Blazor/`.
+`Kazo.Os.Platform.Blazor` references both and supplies the HackerOS-specific adapters
 (`WindowCloseCoordinator`, `WindowLaunchCoordinator`, `WindowAppRenderer`) that remain
 here because they depend on `AppLifecycleOrchestrator`/`AppCatalog`. The task history
 below predates the relocation and is retained as-is; current architecture is documented
@@ -1093,7 +1093,7 @@ until the browser repository contract is ready.
 
 **References:**
 
-- `wasm2/HackerOs/docs/blazor-app-sdk.md`
+- `wasm2/KazoOs/docs/blazor-app-sdk.md`
 - ADR 0006 and ADR 0007
 - [Blazor component lifecycle](https://learn.microsoft.com/aspnet/core/blazor/components/lifecycle?view=aspnetcore-10.0)
 - [Blazor JS isolation](https://learn.microsoft.com/aspnet/core/blazor/javascript-interoperability/location-of-javascript?view=aspnetcore-10.0#collocated-javascript-files)
@@ -1103,7 +1103,7 @@ until the browser repository contract is ready.
 ## 12. Modal File and Folder Dialogs
 
 **Scope and location:** Components/services in
-`Platform/HackerOs.Platform.Blazor/Dialogs/`; headless authorization remains in
+`Platform/Kazo.Os.Platform.Blazor/Dialogs/`; headless authorization remains in
 Platform Core/filesystem; tests in Platform Blazor/Core test projects; docs in
 `docs/file-dialogs.md`.  
 **Prerequisites:** Window modality, filesystem, policy, session.  
@@ -1177,16 +1177,16 @@ by selecting one file.
 ## 13. Blazor WebAssembly PWA Host
 
 **Scope and location:** New standalone Blazor WebAssembly project
-`OS/HackerOs.Ecosystem/`; host-specific assets in its `wwwroot/`; tests in
-`Tests/HackerOs.Ecosystem.Tests/`; docs in `docs/ecosystem-host.md`.  
+`OS/Kazo.Os.Ecosystem/`; host-specific assets in its `wwwroot/`; tests in
+`Tests/Kazo.Os.Ecosystem.Tests/`; docs in `docs/ecosystem-host.md`.  
 **Prerequisites:** Phase 1 gate; enough Platform Blazor/Browser contracts to wire
 the composition root.  
 **Explicit exclusions:** No business/domain behavior in the host, no app-specific
 UI, no server requirement, no root DI exposure, and no runtime package loader.
 
 - [x] `P2-HOST-001` Scaffold standalone .NET 10 Blazor WASM PWA with no template
-  sample pages/assets and add it to `HackerOs.sln`.
-  - **Completed: 2026-08-02** — `OS/HackerOs.Ecosystem` is a standalone .NET 10
+  sample pages/assets and add it to `Kazo.Os.sln`.
+  - **Completed: 2026-08-02** — `OS/Kazo.Os.Ecosystem` is a standalone .NET 10
     Blazor WASM PWA in the `OS` solution folder. Template pages, layout, styles,
     placeholder icons, and the trim-unsafe template router were removed; only the
     boot-critical surface, scoped CSS, manifest, and service workers remain.
@@ -1204,7 +1204,7 @@ UI, no server requirement, no root DI exposure, and no runtime package loader.
 - [x] `P2-HOST-004` Validate DI graph in a host test: repositories, settings,
   filesystem, policy, session, process, lifecycle, intents, windows, dialogs,
   notifications, clock, and diagnostics.
-  - **Completed: 2026-08-02** — `HackerOs.Ecosystem.Tests` builds the production
+  - **Completed: 2026-08-02** — `Kazo.Os.Ecosystem.Tests` builds the production
     registration graph with DI validation enabled, resolves every required slice,
     verifies persistent aliases, creates a session-bound dialog coordinator, and
     disposes the IndexedDB-backed container asynchronously.
@@ -1241,16 +1241,16 @@ UI, no server requirement, no root DI exposure, and no runtime package loader.
 
 ## 14. Desktop Shell, Taskbar, Launcher, Notifications, and Recovery
 
-**Scope and location:** `Platform/HackerOs.Platform.Blazor/Shell/` for reusable
-shell components; host-only boot/recovery UI in `OS/HackerOs.Ecosystem/`;
+**Scope and location:** `Platform/Kazo.Os.Platform.Blazor/Shell/` for reusable
+shell components; host-only boot/recovery UI in `OS/Kazo.Os.Ecosystem/`;
 collocated assets; docs in `docs/desktop-shell.md`.
 **Relocated (`EXT-WIN-007`–`010`, see [`window-taskbar-export-plan.md`](window-taskbar-export-plan.md)):**
-the taskbar itself moved to standalone `Platform/HackerOs.Taskbar.Blazor/`, driven by
+the taskbar itself moved to standalone `Platform/Kazo.Os.Taskbar.Blazor/`, driven by
 host-supplied contracts rather than concrete HackerOS services. The former
 `Shell/Taskbar.razor/.css` was deleted; `Shell/TaskbarAdapters.cs` now implements the
 contracts against `WindowRuntime`/`AppCatalog`/`ISimulationClock`/`INotificationQueue`/
 `ISessionService`/`AppIntentDispatcher`, and `DesktopShell.razor` renders
-`HackerOs.Taskbar.Blazor.Taskbar` with those adapters. `P2-SHELL-002` below predates the
+`Kazo.Os.Taskbar.Blazor.Taskbar` with those adapters. `P2-SHELL-002` below predates the
 relocation and is retained as history; current architecture is documented in
 `docs/desktop-shell.md`.
 **Prerequisites:** Window runtime, app runtime, session/policy, host.  
@@ -1287,8 +1287,8 @@ hard-coded default app switch.
 
 ## 15. First-Slice App Project Standard
 
-**Scope and location:** Each app under `Apps/System/HackerOs.Apps.{Name}/`; each
-command under `Apps/Commands/HackerOs.Commands.{Name}/`; each owns manifest,
+**Scope and location:** Each app under `Apps/System/Kazo.Os.Apps.{Name}/`; each
+command under `Apps/Commands/Kazo.Os.Commands.{Name}/`; each owns manifest,
 source, scoped assets, tests, README, and feature documentation.  
 **Prerequisites:** Host, platform runtime, filesystem, policy, process, dialogs.  
 **Explicit exclusions:** No app implementation inside the host or Platform
@@ -1308,8 +1308,8 @@ projects; no cross-app concrete references; no mass legacy migration.
 
 ## 16. Terminal Emulator and Shell
 
-**Scope and location:** `Apps/System/HackerOs.Apps.Terminal/`; shell contracts in
-`Shared/HackerOs.Simulation.Abstractions/Terminal/`; parser/runtime in Platform
+**Scope and location:** `Apps/System/Kazo.Os.Apps.Terminal/`; shell contracts in
+`Shared/Kazo.Os.Simulation.Abstractions/Terminal/`; parser/runtime in Platform
 Core only when reusable; xterm integration in collocated
 `TerminalWindow.razor.js`; docs in `docs/apps/terminal.md`.  
 **Prerequisites:** `P1-ADR-007`, app runtime, windows, filesystem, process, policy.  
@@ -1361,28 +1361,28 @@ Its canonical manifest `terminal` section defines command name, static aliases,
 usage, streams, and entry point. Commands are discovered through the app catalog,
 not an unrelated reflection/attribute registry.
 
-- [x] `P2-CMD-001` Create `HackerOs.Commands.Pwd` (`org.hackeros.cmd.pwd`) and
+- [x] `P2-CMD-001` Create `Kazo.Os.Commands.Pwd` (`org.hackeros.cmd.pwd`) and
   print canonical working directory with exit code tests.
-- [x] `P2-CMD-002` Create `HackerOs.Commands.Ls` (`org.hackeros.cmd.ls`) with
+- [x] `P2-CMD-002` Create `Kazo.Os.Commands.Ls` (`org.hackeros.cmd.ls`) with
   first-slice default and documented `-a`/`-l` behavior, permission errors, and
   deterministic sorting.
-- [x] `P2-CMD-003` Create `HackerOs.Commands.Cd` (`org.hackeros.cmd.cd`) with
+- [x] `P2-CMD-003` Create `Kazo.Os.Commands.Cd` (`org.hackeros.cmd.cd`) with
   relative/absolute/home paths and a structured session-directory change result;
   the command does not mutate a global singleton.
-- [x] `P2-CMD-004` Create `HackerOs.Commands.Cat` (`org.hackeros.cmd.cat`) for
+- [x] `P2-CMD-004` Create `Kazo.Os.Commands.Cat` (`org.hackeros.cmd.cat`) for
   text streams, multiple inputs only if approved, binary rejection, and standard
   error/exit codes.
-- [x] `P2-CMD-005` Create `HackerOs.Commands.Echo` (`org.hackeros.cmd.echo`) for
+- [x] `P2-CMD-005` Create `Kazo.Os.Commands.Echo` (`org.hackeros.cmd.echo`) for
   argument output; redirection remains shell work and is excluded.
 - [x] `P2-CMD-006` Add headless tests for success, missing path, permission denied,
   cancellation, Unicode content, large streamed files, and exit codes.
 
 **References:** `src/commands/linux/{pwd,ls,cd,cat,echo}.ts` as behavioral
-reference; `wasm2/HackerOs/docs/app-contracts.md`.
+reference; `wasm2/KazoOs/docs/app-contracts.md`.
 
 ## 18. File Explorer Window App
 
-**Scope and location:** `Apps/System/HackerOs.Apps.FileExplorer/`; components and
+**Scope and location:** `Apps/System/Kazo.Os.Apps.FileExplorer/`; components and
 assets collocated; docs in `docs/apps/file-explorer.md`.  
 **Prerequisites:** Filesystem, windows, dialogs, intent dispatcher, associations.  
 **Explicit exclusions:** No native disk, simulated remote hosts, cloud storage,
@@ -1410,7 +1410,7 @@ archive manager, full desktop drag/drop, or advanced search in the first slice.
 
 ## 19. Text Editor Window App and First File Handler
 
-**Scope and location:** `Apps/System/HackerOs.Apps.TextEditor/`; docs in
+**Scope and location:** `Apps/System/Kazo.Os.Apps.TextEditor/`; docs in
 `docs/apps/text-editor.md`.  
 **Prerequisites:** Filesystem, dialogs, associations, windows.  
 **Explicit exclusions:** No Monaco/code intelligence, script execution,
@@ -1444,7 +1444,7 @@ validation, and audit path.
 
 ## 20. First Session Service App
 
-**Scope and location:** `Apps/Samples/HackerOs.Samples.ServiceApp/`; no window
+**Scope and location:** `Apps/Samples/Kazo.Os.Samples.ServiceApp/`; no window
 component; docs/README in the project and `docs/samples/service-app.md`.  
 **Prerequisites:** Service lifecycle, process manager, event bus, session.  
 **Explicit exclusions:** No persistence/resume of volatile work, no service worker
@@ -1459,7 +1459,7 @@ background execution, no always-running server job.
 
 ## 21. PWA Packaging, Offline Operation, and Updates
 
-**Scope and location:** `OS/HackerOs.Ecosystem/wwwroot/` service worker, web app
+**Scope and location:** `OS/Kazo.Os.Ecosystem/wwwroot/` service worker, web app
 manifest, icons, update UI; browser E2E tests; docs in `docs/pwa-release.md`.  
 **Prerequisites:** Host and first-slice static assets, IndexedDB migrations.  
 **Explicit exclusions:** No push notifications, server sync, runtime-downloaded
@@ -1480,8 +1480,8 @@ packages, or development-mode claims of offline support.
 - [x] `P2-PWA-007` Test first online visit, installability, server unavailable,
   offline reload, app launch, file/settings persistence, update waiting,
   activation, and corrupt-cache recovery against published Release output.
-  - **Evidence 2026-08-17:** `Tests/HackerOs.Pwa.E2E.Tests/PublishedPwaTests.cs`,
-    5 tests against a real `dotnet publish` of `OS/HackerOs.Ecosystem` serving
+  - **Evidence 2026-08-17:** `Tests/Kazo.Os.Pwa.E2E.Tests/PublishedPwaTests.cs`,
+    5 tests against a real `dotnet publish` of `OS/Kazo.Os.Ecosystem` serving
     the actual `service-worker.published.js` (not a dev server): first visit
     + install + activation with populated cache; reload with the origin
     server stopped; reload fully offline (`BrowserContext.SetOfflineAsync`)
@@ -1499,7 +1499,7 @@ packages, or development-mode claims of offline support.
 ## 22. Phase 2 Acceptance and Exit Gate
 
 **Scope and location:** Headless integration tests under `Tests/`; browser E2E
-project `Tests/HackerOs.E2E.Tests/`; published host output; acceptance evidence in
+project `Tests/Kazo.Os.E2E.Tests/`; published host output; acceptance evidence in
 `docs/phase-2-acceptance.md`.  
 **Prerequisites:** All Phase 2A/2B required tasks.  
 **Explicit exclusions:** No Phase 3 SDK freeze or mass legacy migration can be
@@ -1550,15 +1550,15 @@ used to defer these failures.
     `docs/phase-2-acceptance.md`.
 - [ ] `P2-ACC-017` Unit/contract tests remain browser-free where designed; browser
   lifecycle/static assets/PWA run in automated real-browser CI.
-  - **Progress 2026-08-17 — PARTIAL:** `Tests/HackerOs.Pwa.E2E.Tests` (P2-PWA-007)
-    is now an ordinary part of `dotnet test HackerOs.sln`, so
+  - **Progress 2026-08-17 — PARTIAL:** `Tests/Kazo.Os.Pwa.E2E.Tests` (P2-PWA-007)
+    is now an ordinary part of `dotnet test Kazo.Os.sln`, so
     `.github/workflows/deploy-wasm.yml`'s existing test step already covers it —
     no separate CI wiring was needed. Local Release runs are green project by
     project. **Still blocked:** an actual hosted GitHub Actions green run — the
     account's last runs failed with "the job was not started because your
     account is locked due to a billing issue" (`gh run view`), unrelated to any
     code change here and requiring the user to resolve billing directly.
-- [x] `P2-GATE-001` `dotnet test HackerOs.sln` passes with warnings as errors.
+- [x] `P2-GATE-001` `dotnet test Kazo.Os.sln` passes with warnings as errors.
   - **Revalidated: 2026-08-04.** Standalone Release build passed with 0 warnings
     and 0 errors; the subsequent `--no-build` solution run passed 622 tests with
     no failures or skips. The package vulnerability scan reported no vulnerable
@@ -1595,8 +1595,8 @@ used to defer these failures.
 
 ## 23. Public SDK 1.0 Candidate
 
-**Scope and location:** Public contracts in `Shared/HackerOs.App*` and
-`Shared/HackerOs.Simulation.Abstractions`; samples under `Apps/Samples/`; tooling
+**Scope and location:** Public contracts in `Shared/Kazo.Os.App*` and
+`Shared/Kazo.Os.Simulation.Abstractions`; samples under `Apps/Samples/`; tooling
 under `Tools/`; docs under `docs/sdk/`.  
 **Prerequisites:** Phase 2 exit gate.  
 **Explicit exclusions:** Do not freeze browser infrastructure or platform
@@ -1701,7 +1701,7 @@ deferred by ADR; SDK 1.0 candidate is documented.
 
 ## 26. Migration Rules for Every Legacy Feature
 
-**Scope and location:** New app/command/domain projects under `wasm2/HackerOs/`;
+**Scope and location:** New app/command/domain projects under `wasm2/KazoOs/`;
 behavior capture may read/run `src/`; migration evidence under
 `docs/migration/`.  
 **Prerequisites:** Phase 3 SDK gate.  
@@ -1777,7 +1777,7 @@ capability; no arbitrary user script access to host internals.
     Open Folder tree view was added (reusing the shared `FileView` control with
     live directory watching), and an embedded tabbed terminal was added by
     extracting the Terminal app's session/shell/rendering logic into a new
-    shared `HackerOs.AppSdk.Terminal` library (`TerminalPanel`). The Chromium
+    shared `Kazo.Os.AppSdk.Terminal` library (`TerminalPanel`). The Chromium
     edit/mode/disposal contract test and the recovery store's home-path bug
     (it was deriving the VFS path from the opaque user ID instead of the home
     path, so every save silently failed) were also fixed. Real rendered reload
@@ -1919,16 +1919,16 @@ real systems; gameplay remains a controlled simulation.
 
 > **Update (ADR 0028):** the browser client adapters this section anticipated
 > now exist for identity/proxy — `IAccountClient`/`IProxyClient`/
-> `IServerConnectionService`, living in `Platform/HackerOs.Platform.Core/ServerConnection/`
+> `IServerConnectionService`, living in `Platform/Kazo.Os.Platform.Core/ServerConnection/`
 > (not Browser Infrastructure — they're plain `HttpClient`, no JS interop; see
 > ADR 0028's Implementation notes for why). Sync itself still has no client
 > adapter. See `docs/server-implementation-pass.md` for the current, tracked
 > state of every remaining piece — that doc, not this section, is authoritative
 > for what's left.
 
-**Scope and location:** New `Server/HackerOs.Server.Contracts/` and
-`Server/HackerOs.Server/`; browser client adapters in Browser Infrastructure;
-docs in `docs/server/`; server tests in `Tests/HackerOs.Server.Tests/`.  
+**Scope and location:** New `Server/Kazo.Os.Server.Contracts/` and
+`Server/Kazo.Os.Server/`; browser client adapters in Browser Infrastructure;
+docs in `docs/server/`; server tests in `Tests/Kazo.Os.Server.Tests/`.  
 **Prerequisites:** Stable local schemas and Phase 2 offline gate; conflict ADRs
 before sync; security review before proxy.  
 **Explicit exclusions:** Server does not host required desktop/filesystem/domain
@@ -2271,13 +2271,13 @@ ADR and user decision. At minimum:
 - `doc/fr/wasm/dev/old/wasm-ecosystem-usage.md` - historical ideas only. If it conflicts
   with the approved migration analysis or ADRs, do not follow it.
 - `project requirement v2.md` - product/game background requirements.
-- `wasm2/HackerOs/docs/implementation-status.md` - implemented state and test
+- `wasm2/KazoOs/docs/implementation-status.md` - implemented state and test
   count.
-- `wasm2/HackerOs/docs/app-contracts.md` - manifests, authority, intents, and app
+- `wasm2/KazoOs/docs/app-contracts.md` - manifests, authority, intents, and app
   bases.
-- `wasm2/HackerOs/docs/app-catalog.md` - deterministic app dependency graph.
-- `wasm2/HackerOs/docs/settings-system.md` - canonical settings projection.
-- `wasm2/HackerOs/docs/blazor-app-sdk.md` - window app lifecycle and dialogs.
+- `wasm2/KazoOs/docs/app-catalog.md` - deterministic app dependency graph.
+- `wasm2/KazoOs/docs/settings-system.md` - canonical settings projection.
+- `wasm2/KazoOs/docs/blazor-app-sdk.md` - window app lifecycle and dialogs.
 - `doc/fr/wasm/dev/adr/` - accepted decisions.
 - `src/` - legacy observable behavior only.
 

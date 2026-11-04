@@ -1,0 +1,84 @@
+#nullable enable
+Kazo.Os.AppSdk.Icons.KazoSurfaceIcon
+Kazo.Os.AppSdk.Icons.KazoSurfaceIcon.<Clone>$() -> Kazo.Os.AppSdk.Icons.KazoSurfaceIcon!
+Kazo.Os.AppSdk.Icons.KazoSurfaceIcon.Deconstruct(out Kazo.Os.AppSdk.Icons.KazoIconKind Kind, out Kazo.Os.AppSdk.Icons.IconLibrary Library, out string! Source) -> void
+Kazo.Os.AppSdk.Icons.KazoSurfaceIcon.Equals(Kazo.Os.AppSdk.Icons.KazoSurfaceIcon? other) -> bool
+Kazo.Os.AppSdk.Icons.KazoSurfaceIcon.KazoSurfaceIcon(Kazo.Os.AppSdk.Icons.KazoIconKind Kind, Kazo.Os.AppSdk.Icons.IconLibrary Library, string! Source) -> void
+Kazo.Os.AppSdk.Icons.KazoSurfaceIcon.Kind.get -> Kazo.Os.AppSdk.Icons.KazoIconKind
+Kazo.Os.AppSdk.Icons.KazoSurfaceIcon.Kind.init -> void
+Kazo.Os.AppSdk.Icons.KazoSurfaceIcon.Library.get -> Kazo.Os.AppSdk.Icons.IconLibrary
+Kazo.Os.AppSdk.Icons.KazoSurfaceIcon.Library.init -> void
+Kazo.Os.AppSdk.Icons.KazoSurfaceIcon.Source.get -> string!
+Kazo.Os.AppSdk.Icons.KazoSurfaceIcon.Source.init -> void
+Kazo.Os.AppSdk.Icons.KazoIconKind
+Kazo.Os.AppSdk.Icons.KazoIconKind.Image = 1 -> Kazo.Os.AppSdk.Icons.KazoIconKind
+Kazo.Os.AppSdk.Icons.KazoIconKind.Vector = 0 -> Kazo.Os.AppSdk.Icons.KazoIconKind
+Kazo.Os.AppSdk.Icons.KazoIcons
+Kazo.Os.AppSdk.Icons.KazoIcon
+Kazo.Os.AppSdk.Icons.KazoIcon.AdditionalAttributes.get -> System.Collections.Generic.IDictionary<string!, object!>?
+Kazo.Os.AppSdk.Icons.KazoIcon.AdditionalAttributes.set -> void
+Kazo.Os.AppSdk.Icons.KazoIcon.KazoIcon() -> void
+Kazo.Os.AppSdk.Icons.KazoIcon.Icon.get -> Kazo.Os.AppSdk.Icons.IconDescriptor?
+Kazo.Os.AppSdk.Icons.KazoIcon.Icon.set -> void
+Kazo.Os.AppSdk.Icons.KazoIcon.Library.get -> Kazo.Os.AppSdk.Icons.IconLibrary
+Kazo.Os.AppSdk.Icons.KazoIcon.Library.set -> void
+Kazo.Os.AppSdk.Icons.KazoIcon.Name.get -> string?
+Kazo.Os.AppSdk.Icons.KazoIcon.Name.set -> void
+Kazo.Os.AppSdk.Icons.KazoIcon.Size.get -> int
+Kazo.Os.AppSdk.Icons.KazoIcon.Size.set -> void
+Kazo.Os.AppSdk.Icons.KazoIcon.Title.get -> string?
+Kazo.Os.AppSdk.Icons.KazoIcon.Title.set -> void
+Kazo.Os.AppSdk.Icons.IIconCatalog
+Kazo.Os.AppSdk.Icons.IIconCatalog.Count(Kazo.Os.AppSdk.Icons.IconLibrary? library = null) -> int
+Kazo.Os.AppSdk.Icons.IIconCatalog.GetAll(Kazo.Os.AppSdk.Icons.IconLibrary? library = null) -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Icons.IconDescriptor!>!
+Kazo.Os.AppSdk.Icons.IIconCatalog.Libraries.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Icons.IconLibrary>!
+Kazo.Os.AppSdk.Icons.IIconCatalog.Search(string! query, Kazo.Os.AppSdk.Icons.IconLibrary? library = null, int maxResults = 200) -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Icons.IconDescriptor!>!
+Kazo.Os.AppSdk.Icons.IIconCatalog.TryGet(Kazo.Os.AppSdk.Icons.IconLibrary library, string! name, out Kazo.Os.AppSdk.Icons.IconDescriptor! descriptor) -> bool
+Kazo.Os.AppSdk.Icons.IconCatalog
+Kazo.Os.AppSdk.Icons.IconCatalog.Count(Kazo.Os.AppSdk.Icons.IconLibrary? library = null) -> int
+Kazo.Os.AppSdk.Icons.IconCatalog.GetAll(Kazo.Os.AppSdk.Icons.IconLibrary? library = null) -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Icons.IconDescriptor!>!
+Kazo.Os.AppSdk.Icons.IconCatalog.IconCatalog() -> void
+Kazo.Os.AppSdk.Icons.IconCatalog.Libraries.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Icons.IconLibrary>!
+Kazo.Os.AppSdk.Icons.IconCatalog.Search(string! query, Kazo.Os.AppSdk.Icons.IconLibrary? library = null, int maxResults = 200) -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Icons.IconDescriptor!>!
+Kazo.Os.AppSdk.Icons.IconCatalog.TryGet(Kazo.Os.AppSdk.Icons.IconLibrary library, string! name, out Kazo.Os.AppSdk.Icons.IconDescriptor! descriptor) -> bool
+Kazo.Os.AppSdk.Icons.IconDescriptor
+Kazo.Os.AppSdk.Icons.IconDescriptor.<Clone>$() -> Kazo.Os.AppSdk.Icons.IconDescriptor!
+Kazo.Os.AppSdk.Icons.IconDescriptor.Deconstruct(out Kazo.Os.AppSdk.Icons.IconLibrary Library, out string! Name, out string! DisplayName, out string! ViewBox, out string! Markup, out bool StrokeBased, out string? Variant) -> void
+Kazo.Os.AppSdk.Icons.IconDescriptor.DisplayName.get -> string!
+Kazo.Os.AppSdk.Icons.IconDescriptor.DisplayName.init -> void
+Kazo.Os.AppSdk.Icons.IconDescriptor.Equals(Kazo.Os.AppSdk.Icons.IconDescriptor? other) -> bool
+Kazo.Os.AppSdk.Icons.IconDescriptor.IconDescriptor(Kazo.Os.AppSdk.Icons.IconLibrary Library, string! Name, string! DisplayName, string! ViewBox, string! Markup, bool StrokeBased, string? Variant) -> void
+Kazo.Os.AppSdk.Icons.IconDescriptor.Library.get -> Kazo.Os.AppSdk.Icons.IconLibrary
+Kazo.Os.AppSdk.Icons.IconDescriptor.Library.init -> void
+Kazo.Os.AppSdk.Icons.IconDescriptor.Markup.get -> string!
+Kazo.Os.AppSdk.Icons.IconDescriptor.Markup.init -> void
+Kazo.Os.AppSdk.Icons.IconDescriptor.Name.get -> string!
+Kazo.Os.AppSdk.Icons.IconDescriptor.Name.init -> void
+Kazo.Os.AppSdk.Icons.IconDescriptor.StrokeBased.get -> bool
+Kazo.Os.AppSdk.Icons.IconDescriptor.StrokeBased.init -> void
+Kazo.Os.AppSdk.Icons.IconDescriptor.Variant.get -> string?
+Kazo.Os.AppSdk.Icons.IconDescriptor.Variant.init -> void
+Kazo.Os.AppSdk.Icons.IconDescriptor.ViewBox.get -> string!
+Kazo.Os.AppSdk.Icons.IconDescriptor.ViewBox.init -> void
+Kazo.Os.AppSdk.Icons.IconLibrary
+Kazo.Os.AppSdk.Icons.IconLibrary.Bootstrap = 0 -> Kazo.Os.AppSdk.Icons.IconLibrary
+Kazo.Os.AppSdk.Icons.IconLibrary.FontAwesome = 1 -> Kazo.Os.AppSdk.Icons.IconLibrary
+Kazo.Os.AppSdk.Icons.IconLibrary.Lucide = 2 -> Kazo.Os.AppSdk.Icons.IconLibrary
+Kazo.Os.AppSdk.Icons.IconLibrary.SimpleIcons = 3 -> Kazo.Os.AppSdk.Icons.IconLibrary
+Kazo.Os.AppSdk.Icons._Imports
+Kazo.Os.AppSdk.Icons._Imports.Execute() -> void
+Kazo.Os.AppSdk.Icons._Imports._Imports() -> void
+override Kazo.Os.AppSdk.Icons.KazoSurfaceIcon.Equals(object? obj) -> bool
+override Kazo.Os.AppSdk.Icons.KazoSurfaceIcon.GetHashCode() -> int
+override Kazo.Os.AppSdk.Icons.KazoSurfaceIcon.ToString() -> string!
+override Kazo.Os.AppSdk.Icons.KazoIcon.OnParametersSet() -> void
+override Kazo.Os.AppSdk.Icons.IconDescriptor.Equals(object? obj) -> bool
+override Kazo.Os.AppSdk.Icons.IconDescriptor.GetHashCode() -> int
+override Kazo.Os.AppSdk.Icons.IconDescriptor.ToString() -> string!
+static Kazo.Os.AppSdk.Icons.KazoSurfaceIcon.operator !=(Kazo.Os.AppSdk.Icons.KazoSurfaceIcon? left, Kazo.Os.AppSdk.Icons.KazoSurfaceIcon? right) -> bool
+static Kazo.Os.AppSdk.Icons.KazoSurfaceIcon.operator ==(Kazo.Os.AppSdk.Icons.KazoSurfaceIcon? left, Kazo.Os.AppSdk.Icons.KazoSurfaceIcon? right) -> bool
+static Kazo.Os.AppSdk.Icons.KazoIcons.FromImage(string! assetPathOrUri) -> Kazo.Os.AppSdk.Icons.KazoSurfaceIcon!
+static Kazo.Os.AppSdk.Icons.KazoIcons.Vector(Kazo.Os.AppSdk.Icons.IconLibrary library, string! name) -> Kazo.Os.AppSdk.Icons.KazoSurfaceIcon!
+static Kazo.Os.AppSdk.Icons.IconDescriptor.operator !=(Kazo.Os.AppSdk.Icons.IconDescriptor? left, Kazo.Os.AppSdk.Icons.IconDescriptor? right) -> bool
+static Kazo.Os.AppSdk.Icons.IconDescriptor.operator ==(Kazo.Os.AppSdk.Icons.IconDescriptor? left, Kazo.Os.AppSdk.Icons.IconDescriptor? right) -> bool
+~override Kazo.Os.AppSdk.Icons.KazoIcon.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

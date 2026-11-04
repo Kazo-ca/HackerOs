@@ -11,12 +11,12 @@ détaillée dans [`github-pages-deployment.md`](github-pages-deployment.md).
 
 | Workflow (fichier) | Déclencheurs | Ce qu'il vérifie |
 | --- | --- | --- |
-| **Verify Kazo OS WASM** (`deploy-wasm.yml`) | Toute PR qui touche `wasm2/HackerOs/**` (sauf `wasm2/HackerOs/docs/**`) ou ce workflow ; push sur `main` et sur `*/base` ; manuel | Paquets locaux Windowing/Taskbar, restauration, build Release (avertissements en erreurs), scan Razor (pas de `<style>`, `<script>` ni gestionnaire `on*` en ligne), paquets vulnérables, tous les tests sans navigateur, publication de la PWA. |
+| **Verify Kazo OS WASM** (`deploy-wasm.yml`) | Toute PR qui touche `wasm2/KazoOs/**` (sauf `wasm2/KazoOs/docs/**`) ou ce workflow ; push sur `main` et sur `*/base` ; manuel | Paquets locaux Windowing/Taskbar, restauration, build Release (avertissements en erreurs), scan Razor (pas de `<style>`, `<script>` ni gestionnaire `on*` en ligne), paquets vulnérables, tous les tests sans navigateur, publication de la PWA. |
 | **Verify local Windowing and Taskbar packages** (`window-taskbar-packages.yml`) | PR ou push (`main`, `*/base`) qui touche les projets de fenêtrage, de thème, d'icônes, de barre des tâches ou l'exemple SampleHost | Paquets et symboles produits dans l'ordre des dépendances, exemple restauré **uniquement** depuis ces paquets, compilé et publié. |
 | **Deploy to GitHub Pages** (`deploy-to-pages.yml`) | Push sur `main` (déploie) ; PR qui touche le legacy (`src/**`, `package*.json`, `tsconfig*.json`, `webpack.config.js`), `assemble-pages.ps1` ou ce workflow (construit sans déployer) ; manuel | Build legacy pour `/legacy/`, publication WASM, assemblage du site combiné. Une PR a son propre groupe de concurrence : elle n'annule jamais un déploiement de `main`. |
 | **Verify Kazo OS browser tests** (`verify-browser-tests.yml`) | Chaque nuit sur `main` (06:17 UTC), **seulement si `main` a changé depuis le dernier commit testé** ; manuel (tourne toujours) | Les six projets Playwright, avec le Chromium installé par Playwright. Un échec la nuit ouvre ou complète une issue ([section dédiée](#tests-navigateur-chaque-nuit)). |
-| **Release Kazo OS** (`release.yml`) | Fin réussie de *Verify Kazo OS WASM* après un push sur `main` ; manuel (option `republish`) | Publie une version dont le tag `v<version>` n'existe pas encore : paquets `HackerOs.*`, site WASM zippé, envoi sur nuget.org, tag et GitHub Release ([`releases.md`](releases.md), ADR 0173). |
-| **Change list entry** (`changelog-entry.yml`) | Toute PR vers `main` (ouverte, poussée, étiquette ajoutée ou retirée) | Une PR qui touche le produit (`wasm2/HackerOs` hors `Tests/`, `docs/`, `changes/` et fichiers `.md`) ajoute au moins une entrée `wasm2/HackerOs/changes/unreleased/<guid>.json`, sauf avec l'étiquette `no-changelog` ([`change-list.md`](change-list.md), ADR 0186). Le format des entrées est vérifié par `ChangeEntriesTests` dans *Verify Kazo OS WASM*. |
+| **Release Kazo OS** (`release.yml`) | Fin réussie de *Verify Kazo OS WASM* après un push sur `main` ; manuel (option `republish`) | Publie une version dont le tag `v<version>` n'existe pas encore : paquets `Kazo.Os.*`, site WASM zippé, envoi sur nuget.org, tag et GitHub Release ([`releases.md`](releases.md), ADR 0173). |
+| **Change list entry** (`changelog-entry.yml`) | Toute PR vers `main` (ouverte, poussée, étiquette ajoutée ou retirée) | Une PR qui touche le produit (`wasm2/KazoOs` hors `Tests/`, `docs/`, `changes/` et fichiers `.md`) ajoute au moins une entrée `wasm2/KazoOs/changes/unreleased/<guid>.json`, sauf avec l'étiquette `no-changelog` ([`change-list.md`](change-list.md), ADR 0186). Le format des entrées est vérifié par `ChangeEntriesTests` dans *Verify Kazo OS WASM*. |
 
 Les PR vers `main` comme vers une branche d'intégration `<série>/base` sont
 vérifiées : le déclencheur `pull_request` n'a pas de filtre de branche. Le
@@ -25,7 +25,7 @@ chantier.
 
 Une PR qui ne touche que la doc (`doc/**`, `*.md` à la racine) ne lance que
 *Change list entry* (vers `main`), qui passe tout de suite puisqu'elle ne touche pas
-le produit. Les `README.md` des projets sous `wasm2/HackerOs` restent des
+le produit. Les `README.md` des projets sous `wasm2/KazoOs` restent des
 entrées du build (paquets NuGet, `AnalyzerReleases.*.md`) : les modifier lance
 la vérification.
 
@@ -119,7 +119,7 @@ Pourquoi : avec `dotnet-version: 10.0.x`, le script d'installation suit le lien
 job échouait avant toute compilation. Avec une version exacte, le script
 télécharge depuis `builds.dotnet.microsoft.com`, qui répondait normalement. Si
 le fichier de métadonnées est illisible, l'action se replie sur `10.0.x` avec un
-avertissement. `wasm2/HackerOs/global.json` (`10.0.100`, `latestFeature`)
+avertissement. `wasm2/KazoOs/global.json` (`10.0.100`, `latestFeature`)
 accepte toute version 10.0 plus récente.
 
 ## Contrôles obligatoires

@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../../Platform/Packaging.props" />
+
+  <PropertyGroup>
+    <PackageId>Kazo.Os.Simulation.Abstractions</PackageId>
+    <Description>Contracts of the simulated machine (file system, processes, sessions, network, events) exposed by the Kazo OS SDK. Not referenced directly by apps.</Description>
+    <PackageTags>hackeros;simulation;contracts</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kazo.Os.App.Abstractions\Kazo.Os.App.Abstractions.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

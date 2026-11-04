@@ -30,7 +30,7 @@ the text, `ContentBytes` the bytes. `curl` writes the raw body.
 ### 2. `HackHttpListener`
 
 Modeled on `System.Net.HttpListener` (`Prefixes`, `Start`, `GetContextAsync`,
-`HackHttpListenerContext.Request/Response`), in `HackerOs.AppSdk.Net`.
+`HackHttpListenerContext.Request/Response`), in `Kazo.Os.AppSdk.Net`.
 
 - Capability `network.listen` (normal). A port < 1024 requires
   `network.listen.privileged` (dangerous, administrator approval), like
@@ -83,5 +83,5 @@ of the answer.
   `hackdns` then the port table before the simulated network.
 - The byte counting of `/proc/net/dev` (ADR 0057) also counts local
   traffic, on `lo`.
-- The contracts of `HackerOs.Simulation.Abstractions` change: existing sites
+- The contracts of `Kazo.Os.Simulation.Abstractions` change: existing sites
   are adapted in the same work item.

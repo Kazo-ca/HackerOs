@@ -48,7 +48,7 @@ erreur dans le journal.
 
 ## Jetons
 
-`ThemeTokenCatalog` (`HackerOs.Theming.Abstractions`) liste les 68 jetons
+`ThemeTokenCatalog` (`Kazo.Os.Theming.Abstractions`) liste les 68 jetons
 modifiables, chacun avec un type, un groupe, un libellé, une description et un
 exemple. L'onglet **Documentation** de l'éditeur est généré depuis cette liste.
 
@@ -87,7 +87,7 @@ compagnon `--hos-…-rgb` (« r, g, b ») calculé, utilisé par les styles qui
 
 ## Messages localisés du paquet Theming.Abstractions
 
-`HackerOs.Theming.Abstractions` a ses propres `Resources/Strings.resx` /
+`Kazo.Os.Theming.Abstractions` a ses propres `Resources/Strings.resx` /
 `Strings.fr.resx`, lus par un simple `ResourceManager` (le paquet reste sans
 dépendance Kazo OS) avec la culture que l'appelant passe : une app donne
 `AppContext.Culture` (l'éditeur la tire de son localiseur, `Strings.CultureOf(L)`),

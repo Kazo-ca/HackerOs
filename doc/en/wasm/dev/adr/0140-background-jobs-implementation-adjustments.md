@@ -40,7 +40,7 @@ analyzer at build time. Four constraints weighed on the implementation:
   and the same errors. An app tested this way behaves identically under the OS.
 - The trusted factory (`AppExecutionContextFactory.BackgroundJobs`, an
   `init` property so as not to touch the shipped constructor) wires up
-  `BackgroundJobService` from `HackerOs.Platform.Core`.
+  `BackgroundJobService` from `Kazo.Os.Platform.Core`.
 
 ### 2. Process of a task
 
@@ -121,9 +121,9 @@ can communicate its PID through its progress (example in the sample window).
 
 ### 8. Analyzer
 
-- Project `Tools/HackerOs.Tools.BackgroundAnalyzer` (netstandard2.0), shipped
-  in the `HackerOs.AppSdk` package (`analyzers/dotnet/cs`) and wired to the
-  repository's apps by `build/HackerOs.Apps.targets`.
+- Project `Tools/Kazo.Os.Tools.BackgroundAnalyzer` (netstandard2.0), shipped
+  in the `Kazo.Os.AppSdk` package (`analyzers/dotnet/cs`) and wired to the
+  repository's apps by `build/Kazo.Os.Apps.targets`.
 - Codes: `HOSBG0001` (not a static method group: lambda, anonymous method,
   instance method, non-`static` local function, delegate passed through a
   variable), `HOSBG0002` (input or result type outside the `HackWireContext`
@@ -147,7 +147,7 @@ can communicate its PID through its progress (example in the sample window).
 | Hack Paint filters | Not applicable | Hack Paint has no filter. Rotation and cropping remain: a pass of copies, on a buffer that can be 64 MiB (4096 × 4096 in RGBA), four times the limit of an input. A future filter will go through a task and a temporary file. |
 
 The requested example is a "Background Task" section of
-`Apps/Samples/HackerOs.Samples.WindowApp` (prime number count with
+`Apps/Samples/Kazo.Os.Samples.WindowApp` (prime number count with
 progress, cancellation and Kill button), rather than a new app: the sample
 window is already the one that shows the SDK of a windowed app.
 
@@ -159,7 +159,7 @@ window is already the one that shows the SDK of a windowed app.
   [`sdk-reference.md`](../../framework/sdk-reference.md), [`code-editor.md`](../code-editor.md),
   [`file-explorer.md`](../file-explorer.md), [`hack-paint.md`](../hack-paint.md).
 - Public additions in `PublicAPI.Unshipped.txt` of the SDK, of
-  `HackerOs.Platform.Core` and of `HackerOs.Platform.WorkerHost`; published with
+  `Kazo.Os.Platform.Core` and of `Kazo.Os.Platform.WorkerHost`; published with
   SDK 1.2 in `exec/10` (ADR 0132).
 - `exec/4` wires up the `nice` scheduling of tasks and the `Nice` line.
 - Two questions for Benoit (grace period when the app closes, PID in the

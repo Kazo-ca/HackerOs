@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    ASP.Hack route generator (ADR 0082): a Roslyn incremental source generator that writes, at build
+    time, the controller route table of a web app (KazoWebGeneratedRoutes) and the entry point of each
+    partial WebAppDefinition. No reflection at run time: trimming-safe, and route conflicts are build
+    errors (HOSWEBnnnn). Apps get it as an analyzer through build/Kazo.Os.Apps.targets. The route
+    template parser is the runtime's own file, linked from Kazo.Os.AppSdk.Web.
+  -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <IsRoslynComponent>true</IsRoslynComponent>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <IsTrimmable>false</IsTrimmable>
+    <EnableTrimAnalyzer>false</EnableTrimAnalyzer>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="5.9.0" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\Shared\Kazo.Os.AppSdk.Web\Routing\KazoRouteTemplate.cs" Link="Shared\KazoRouteTemplate.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Release tracking of the HOSWEB rules (RS2008). -->
+    <AdditionalFiles Include="AnalyzerReleases.Shipped.md" />
+    <AdditionalFiles Include="AnalyzerReleases.Unshipped.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Kazo.Os.AppSdk.Web.Tests" />
+  </ItemGroup>
+
+</Project>

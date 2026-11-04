@@ -5,7 +5,7 @@
 ## Statut
 
 Accepté le 2026-10-30, chantier 5 de la série barre des tâches (issue
-[#242](https://github.com/Kazo-ca/HackerOs/issues/242), points 10 et 11 des décisions prises
+[#242](https://github.com/Kazo-ca/Os/issues/242), points 10 et 11 des décisions prises
 avec Benoit le 2026-10-29 : choix B, « aperçu + peek comme sous Windows »). Fait dans la série
 `todo/` (branche `todo/13-taskbar-previews`). S'appuie sur les barres par écran
 ([ADR 0179](0179-per-screen-taskbars-and-other-screen-menus.md)) et les menus de la barre
@@ -14,10 +14,10 @@ avec Benoit le 2026-10-29 : choix B, « aperçu + peek comme sous Windows »). F
 
 ## Contexte
 
-- La barre des tâches (`HackerOs.Taskbar.Blazor`) est un paquet neutre : elle reçoit ses
+- La barre des tâches (`Kazo.Os.Taskbar.Blazor`) est un paquet neutre : elle reçoit ses
   sources et ses commandes par des interfaces. Survoler le bouton d'une fenêtre ne montre rien.
 - Chaque fenêtre est un élément `article.window-host` avec `data-window-id` (paquet
-  `HackerOs.Windowing.Blazor`). Une fenêtre minimisée garde son élément, avec l'attribut
+  `Kazo.Os.Windowing.Blazor`). Une fenêtre minimisée garde son élément, avec l'attribut
   `hidden`. Les fenêtres d'un écran secondaire sont déplacées par portail dans le document de
   cet écran, où se trouve aussi sa barre (ADR 0178, 0179).
 - Décisions de Benoit : l'aperçu est une copie réduite **en direct** de la fenêtre (HTML cloné,

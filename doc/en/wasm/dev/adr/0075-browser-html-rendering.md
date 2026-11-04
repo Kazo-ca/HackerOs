@@ -83,6 +83,6 @@ through its absolute URLs.
 
 - New AngleSharp dependency in the Browser app only.
 - The JS code stays minimal and belongs to the Browser app; nothing is added to the
-  hosts. In `HackerOs.Server` (Interactive Server rendering), the bridge works
+  hosts. In `Kazo.Os.Server` (Interactive Server rendering), the bridge works
   the same way: the JS runs in the browser, the C# on the server.
 - The links and forms of `SimulatedPage` pages do not change.

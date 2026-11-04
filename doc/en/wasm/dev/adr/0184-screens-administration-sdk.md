@@ -16,10 +16,10 @@ my window, placing a window) stays for later. Implementation: [`screens-settings
   list of open screens with the monitor name, the Identify, New screen, Restore screens and Full
   screen buttons, and the state of the `window-management` permission.
 - Settings is a base app: it only goes through the public SDK. `ScreenService` (ADR 0180) is an OS
-  service in `HackerOs.Platform.Blazor`, out of its reach. The first version of the page (PR #233)
+  service in `Kazo.Os.Platform.Blazor`, out of its reach. The first version of the page (PR #233)
   only reads and writes `screens.config`.
 - The other administration pages share one model: a static `Hack*` facade in
-  `HackerOs.AppSdk.Administration`, an `IApp*Gateway` on `IAppExecutionContext` (unsupported by
+  `Kazo.Os.AppSdk.Administration`, an `IApp*Gateway` on `IAppExecutionContext` (unsupported by
   default), a trusted gateway in Platform Core that checks a capability, and an OS service behind
   it (ADR 0056 §8 to 11, ADR 0159 §8).
 - The browser imposes its gestures: `window.open`, the permission request (`getScreenDetails()`)
@@ -28,7 +28,7 @@ my window, placing a window) stays for later. Implementation: [`screens-settings
 
 ## Decision
 
-1. **Facade.** `HackScreens` in `HackerOs.AppSdk.Administration`, each member with an
+1. **Facade.** `HackScreens` in `Kazo.Os.AppSdk.Administration`, each member with an
    explicit-context overload:
 
    | Member | Role |

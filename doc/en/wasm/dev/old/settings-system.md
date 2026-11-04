@@ -11,11 +11,11 @@ filesystem projects those same records at paths such as
 
 ## Architecture
 
-`HackerOs.Simulation.Abstractions` defines settings documents, read/write
+`Kazo.Os.Simulation.Abstractions` defines settings documents, read/write
 results, whole-document validators, optimistic revisions, the canonical service,
 and filesystem projection interfaces.
 
-`HackerOs.Platform.Core` currently provides:
+`Kazo.Os.Platform.Core` currently provides:
 
 - `InMemorySettingsDocumentService`, a headless reference implementation;
 - `SettingsFileProjection`, which delegates file operations to the canonical
@@ -23,7 +23,7 @@ and filesystem projection interfaces.
 - strict validators/codecs for file associations, appearance, UI-platform
   preference, and Start-menu profiles.
 
-`HackerOs.Infrastructure.Browser` supplies the production
+`Kazo.Os.Infrastructure.Browser` supplies the production
 `IndexedDbSettingsDocumentService` behind those same contracts without changing
 authorization or projection semantics.
 

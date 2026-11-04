@@ -97,7 +97,7 @@ public override WindowOptions? Window => new()
 ```
 
 `WindowOptions.RememberGeometry` is an addition of SDK 1.1
-(`PublicAPI.Shipped.txt` of `HackerOs.App.Abstractions` since `v3.1/4-sdk-1-1`). The generator writes
+(`PublicAPI.Shipped.txt` of `Kazo.Os.App.Abstractions` since `v3.1/4-sdk-1-1`). The generator writes
 `window.rememberGeometry` in `manifest.json` only when it is `false`: the
 manifests of apps that keep the default stay byte-for-byte identical. The v1
 schema accepts it as an optional field, the strict deserializer too.

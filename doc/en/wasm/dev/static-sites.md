@@ -2,7 +2,7 @@
 
 # Static sites: `.site` files, `hackwebd` and Web Server Manager
 
-The format of `.site` files and the `HackWebSiteFile` API intended for apps and tools are in [`static-site-files.md`](../framework/static-site-files.md).
+The format of `.site` files and the `KazoWebSiteFile` API intended for apps and tools are in [`static-site-files.md`](../framework/static-site-files.md).
 
 Work item `web/5-static-sites` of the web phase (ASP.Hack). Decisions:
 [ADR 0077](adr/0077-hosted-static-sites.md) and its adjustments,
@@ -30,12 +30,12 @@ Publish a folder as a website, as with IIS, Apache or nginx:
 ```text
  Web Server Manager ─┬─ écrit ───────────► /etc/hackweb/sites/*.site      (admin, tous ports, servi en www-data)
  (fenêtre)           │                     ~/.config/hackweb/sites/*.site (utilisateur, ports ≥ 1024)
-                     ├─ HackServiceController (start/stop/restart hackwebd)
-                     └─ HackIPGlobalProperties (sockets de hackwebd → état des sites)
+                     ├─ KazoServiceController (start/stop/restart hackwebd)
+                     └─ KazoIPGlobalProperties (sockets de hackwebd → état des sites)
 
  hackwebd (service, worker dédié, AutoStart)
-   ├─ HackFileSystemWatcher "*.site" sur les deux dossiers ─► rechargement à chaud
-   ├─ HackHttpListener par préfixe normalisé ─► StaticFileHandler
+   ├─ KazoFileSystemWatcher "*.site" sur les deux dossiers ─► rechargement à chaud
+   ├─ KazoHttpListener par préfixe normalisé ─► StaticFileHandler
    │      └─ WwwDataAccess (droits « other » pour un site système)
    └─ context.Logging.AppendToLogFile ─► /var/log/hackweb/<site>.access.log, error.log
 
@@ -44,11 +44,11 @@ Publish a folder as a website, as with IIS, Apache or nginx:
 
 | Element | Project | Role |
 |---|---|---|
-| `HackWebdApp`, `HackWebdService` | `Apps/System/HackerOs.Apps.WebServer` | The service: reconciliation of listeners, accept loop, logs. |
-| `StaticFileHandler`, `WwwDataAccess`, `HackWebdLog` | same, `Daemon/` | Request handling, `www-data` permissions, log formats. |
+| `KazoWebdApp`, `KazoWebdService` | `Apps/System/Kazo.Os.Apps.WebServer` | The service: reconciliation of listeners, accept loop, logs. |
+| `StaticFileHandler`, `WwwDataAccess`, `KazoWebdLog` | same, `Daemon/` | Request handling, `www-data` permissions, log formats. |
 | `WebServerManagerApp`, `WebServerManagerWindow`, `WebSiteStore` | same, `Manager/` | The windowed app and its interface-free logic. |
-| `WebServerManagerApp.RegisterFileContextMenu`, `PublishSiteIntent` | `Apps/System/HackerOs.Apps.WebServer` | "Publish as a web site…" entry of the folder menus, registered by Web Server Manager (ADR 0151 §8, ADR 0159): `Directory` scope, a single folder, intent `org.hackeros.web-server-manager.publish-site.v1` received at launch or through `IntentReceived`. Was `PublishSiteContextMenuProvider`, then `FileExplorerMenuEntries.PublishSite`. |
-| `HostedSiteNameSource` | `Platform/HackerOs.Platform.Core/Network/Local` | Source 4 of the resolver (`IHostedSiteNameSource`, asynchronous). |
+| `WebServerManagerApp.RegisterFileContextMenu`, `PublishSiteIntent` | `Apps/System/Kazo.Os.Apps.WebServer` | "Publish as a web site…" entry of the folder menus, registered by Web Server Manager (ADR 0151 §8, ADR 0159): `Directory` scope, a single folder, intent `org.hackeros.web-server-manager.publish-site.v1` received at launch or through `IntentReceived`. Was `PublishSiteContextMenuProvider`, then `FileExplorerMenuEntries.PublishSite`. |
+| `HostedSiteNameSource` | `Platform/Kazo.Os.Platform.Core/Network/Local` | Source 4 of the resolver (`IHostedSiteNameSource`, asynchronous). |
 | `IAppLoggingGateway.AppendToLogFile`, `LogFileTarget.ForDaemon` | `Simulation.Abstractions`, `Platform.Core` | System daemon logs (ADR 0080 §3). |
 
 The service and the Manager are in **the same assembly**: the Manager drives
@@ -64,7 +64,7 @@ the same app provides. Both are system apps (`IsSystemApp` on the hosts'
   stoppable through `systemctl stop hackwebd` (the ports are released:
   `curl` then answers `Failed to connect`, code 7).
 - On each change to a `.site` (or at startup), it **reconciles**: one
-  `HackHttpListener` per normalized prefix; a prefix already taken (by another
+  `KazoHttpListener` per normalized prefix; a prefix already taken (by another
   site or another program) is logged as `[emerg]` and the site stays
   "partial" or "down".
 - Request: `GET`, `HEAD`, `OPTIONS` (otherwise `405` + `Allow`); decoded path,
@@ -156,25 +156,25 @@ Save in the Manager and **Open in browser**.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.WorkerHost.Tests/StaticSitesTests.cs`: full OS
+- `Tests/Kazo.Os.Platform.WorkerHost.Tests/StaticSitesTests.cs`: full OS
   (processes on the main thread and in workers): user site served (type,
   default document, `404`, `nslookup`), `304` by `ETag`, `403` then folder
   listing after hot reload, refusal of a privileged port and log formats,
   system site on port 80 served as `www-data` (`403` on a `0600` file and on a
   home folder), `netstat`, `systemctl stop`.
-- `Tests/HackerOs.Apps.WebServer.Tests`: URL → file mapping (traversals
+- `Tests/Kazo.Os.Apps.WebServer.Tests`: URL → file mapping (traversals
   rejected), site states, suggestion of a site from a folder, log formats.
-- `Tests/HackerOs.AppSdk.Tests/Net/HackWebSiteFileTests.cs`: reading,
+- `Tests/Kazo.Os.AppSdk.Tests/Net/KazoWebSiteFileTests.cs`: reading,
   validation and writing of `.site` files.
-- `Tests/HackerOs.Platform.Core.Tests/Diagnostics/DaemonLogFileTests.cs`:
+- `Tests/Kazo.Os.Platform.Core.Tests/Diagnostics/DaemonLogFileTests.cs`:
   `LogFileTarget.ForDaemon` and the "system apps only" rule.
 
 ## Task list
 
-- [x] `.site` format in the SDK (`HackWebSite`, `HackWebSiteFile`), validation in the style of `nginx -t`.
+- [x] `.site` format in the SDK (`KazoWebSite`, `KazoWebSiteFile`), validation in the style of `nginx -t`.
 - [x] `/etc/hackweb/sites` created by `FileSystemSeeder`; `~/.config/hackweb/sites` created by `hackwebd`.
 - [x] System daemon logs (`AppendToLogFile`, `LogFileTarget.ForDaemon`, workers' `log.file` operation).
-- [x] `HostedSiteNameSource` and asynchronous `IHostedSiteNameSource`; `HackAppInfo.Urls` (external sites).
+- [x] `HostedSiteNameSource` and asynchronous `IHostedSiteNameSource`; `KazoAppInfo.Urls` (external sites).
 - [x] `hackwebd`: hot reconciliation, files, default documents, listing, MIME, `301`/`304`/`403`/`404`/`405`, `www-data`.
 - [x] Web Server Manager: groups, states, form, scope, Browse, Save/Start/Stop/Delete, browser, logs, service control.
 - [x] Explorer: "Publish as a web site…" on a folder.

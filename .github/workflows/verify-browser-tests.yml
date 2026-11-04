@@ -66,7 +66,7 @@ jobs:
     timeout-minutes: 90
     defaults:
       run:
-        working-directory: wasm2/HackerOs
+        working-directory: wasm2/KazoOs
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -80,11 +80,11 @@ jobs:
       - name: Build Release test assemblies
         run: |
           mkdir -p artifacts/local-nupkg
-          dotnet build HackerOs.sln --configuration Release -m:1
+          dotnet build Kazo.Os.sln --configuration Release -m:1
 
       - name: Install Playwright Chromium
         shell: pwsh
-        run: ./Tests/HackerOs.E2E.Tests/bin/Release/net10.0/playwright.ps1 install --with-deps chromium
+        run: ./Tests/Kazo.Os.E2E.Tests/bin/Release/net10.0/playwright.ps1 install --with-deps chromium
 
       - name: Test browser suites
         shell: pwsh
@@ -96,8 +96,8 @@ jobs:
         with:
           name: hackeros-browser-tests-${{ github.run_attempt }}
           path: |
-            wasm2/HackerOs/artifacts/test-results/Browser
-            wasm2/HackerOs/artifacts/playwright
+            wasm2/KazoOs/artifacts/test-results/Browser
+            wasm2/KazoOs/artifacts/playwright
           if-no-files-found: warn
           retention-days: 14
 

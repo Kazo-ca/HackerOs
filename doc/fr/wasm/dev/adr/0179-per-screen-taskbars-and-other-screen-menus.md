@@ -15,7 +15,7 @@ l'icône de fenêtre). Plan : [`multi-monitor-plan.md`](../plans/multi-monitor-p
 
 ## Contexte
 
-- La barre des tâches (`HackerOs.Taskbar.Blazor.Taskbar`), le menu Démarrer et
+- La barre des tâches (`Kazo.Os.Taskbar.Blazor.Taskbar`), le menu Démarrer et
   la zone de notification n'existent qu'une fois, dans l'onglet principal.
   `TaskbarWindowSourceAdapter` lui donne toutes les fenêtres de `WindowRuntime`.
 - Le menu de fenêtre (ADR 0095 §3, `WindowManagerOverlays`) est une liste à un
@@ -104,7 +104,7 @@ l'icône de fenêtre). Plan : [`multi-monitor-plan.md`](../plans/multi-monitor-p
 
 ## Conséquences
 
-- La barre des tâches reçoit un filtre par écran ; `HackerOs.Taskbar.Blazor`
+- La barre des tâches reçoit un filtre par écran ; `Kazo.Os.Taskbar.Blazor`
   n'a pas d'autre changement public.
 - Le menu de fenêtre change de composant. Les tests du menu (`WindowKeyboardCommands`,
   `WindowAppIconTests`) doivent rester verts sans changer leurs attentes.

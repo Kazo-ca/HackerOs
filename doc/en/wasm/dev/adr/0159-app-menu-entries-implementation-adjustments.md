@@ -29,7 +29,7 @@ clarified or corrected. This ADR records them; the usage guide is
 ### 1. A single registration: at build time, for all apps
 
 All the ecosystem's apps are compiled into the host
-(`HackerOs.App.Build`): there is no package installation at
+(`Kazo.Os.App.Build`): there is no package installation at
 run time where the OS would run the method (ADR 0151 §3.2). The manifest
 generator therefore runs it for **each** app, at build time, and writes the entries
 in `manifest.json` (`contextMenus`, omitted without entries) then in

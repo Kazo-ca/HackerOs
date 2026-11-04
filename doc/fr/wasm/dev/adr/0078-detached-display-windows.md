@@ -18,7 +18,7 @@ tard un deuxième écran dans une autre fenêtre ; ce chantier doit le préparer
 
 Démarrer une seconde instance de HackerOS dans la nouvelle fenêtre donnerait un
 second OS : ses processus, sa mémoire et son état seraient séparés, et
-`HackerOs.Server` n'accepte qu'un circuit actif.
+`Kazo.Os.Server` n'accepte qu'un circuit actif.
 
 ## Décision
 

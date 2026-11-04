@@ -5,7 +5,7 @@
 ## Statut
 
 Accepté le 2026-10-31, chantier `todo/25-app-signing-tool` (série `todo/base`,
-issue `TODO` [#321](https://github.com/Kazo-ca/HackerOs/issues/321)).
+issue `TODO` [#321](https://github.com/Kazo-ca/Os/issues/321)).
 Complète l'[ADR 0214](0214-hack-store-hot-add-signing-transactions.md) §2 pour
 les sources `github:` ; ne change rien à la vérification faite par l'OS.
 
@@ -14,7 +14,7 @@ les sources `github:` ; ne change rien à la vérification faite par l'OS.
 L'ADR 0214 §2 accepte un champ `signature` (ECDSA P-256, SHA-256, IEEE P1363 en
 base64) pour chaque version de l'`index.json` d'un dépôt d'app, et des clés
 publiques dans `[signing-keys]` de `/etc/hackeros/app-sources.config`. Le
-catalogue officiel signe déjà ses paquets (`HackerOs.MarketPlace.Tool keygen` /
+catalogue officiel signe déjà ses paquets (`Kazo.Os.MarketPlace.Tool keygen` /
 `sign`, secret `HACK_STORE_SIGNING_KEY`). Un auteur qui publie depuis son propre
 dépôt (`github:<owner>/<repo>`, branche `hackeros-packages`) n'a aucun outil :
 
@@ -28,8 +28,8 @@ dépôt (`github:<owner>/<repo>`, branche `hackeros-packages`) n'a aucun outil :
 
 ### 1. Outil : l'outillage de build HackerOS (Q1 A)
 
-Le générateur de manifestes (`HackerOs.Tools.ManifestGenerator`, livré dans le
-paquet `HackerOs.App.Build` et utilisé par `HackerOsPack`) gagne deux commandes,
+Le générateur de manifestes (`Kazo.Os.Tools.ManifestGenerator`, livré dans le
+paquet `Kazo.Os.App.Build` et utilisé par `HackerOsPack`) gagne deux commandes,
 au même format que l'outil du catalogue :
 
 - `keygen --private-key <fichier.pem>` : crée une paire P-256, écrit la clé
@@ -41,7 +41,7 @@ au même format que l'outil du catalogue :
   signature d'un paquet (clé lue dans `HACKEROS_APP_SIGNING_KEY` sans
   `--private-key`).
 
-Cibles MSBuild de `HackerOs.Apps.targets` :
+Cibles MSBuild de `Kazo.Os.Apps.targets` :
 
 - `dotnet build -t:HackerOsKeyGen -p:HackerOsSigningKeyFile=<fichier.pem>` :
   lance `keygen`. La propriété est obligatoire (`HOSAPP0061`) : aucun chemin par
@@ -65,7 +65,7 @@ changer).
 
 ### 3. Branche `hackeros-packages` : nouveau workflow (Q2 A)
 
-Le modèle `hackeros-solution` (et donc `Kazo-ca/HackerOs-AppTemplate`) gagne
+Le modèle `hackeros-solution` (et donc `Kazo-ca/Os-AppTemplate`) gagne
 `.github/workflows/publish-packages.yml`, sur un tag `v*` :
 
 1. vérifie le sous-module et le tag (= version du manifeste), comme le workflow
@@ -111,10 +111,10 @@ compiler la clé avec `HackerOsAppSigningKeys`.
 ## Conséquences
 
 - Un auteur signe avec ce qu'il a déjà (`dotnet build`), rien à installer.
-- Le catalogue officiel garde son propre outil (`HackerOs.MarketPlace.Tool`),
+- Le catalogue officiel garde son propre outil (`Kazo.Os.MarketPlace.Tool`),
   au même format ; les deux ne partagent pas de code (le catalogue compile
   l'OS depuis son sous-module).
-- `Kazo-ca/HackerOs-AppTemplate` reçoit le workflow quand il est régénéré sur
+- `Kazo-ca/Os-AppTemplate` reçoit le workflow quand il est régénéré sur
   la version qui contient ce chantier (PR en brouillon d'ici là).
 - La clé privée ne quitte jamais la machine de l'auteur, sauf dans le secret
   de son dépôt ; aucun agent ne la manipule.
@@ -138,4 +138,4 @@ Posées le 2026-10-31 ; Benoit a choisi les recommandations (A) le même jour, t
 - [x] Workflow `publish-packages.yml` du modèle `hackeros-solution`, `*.pem` ignoré.
 - [x] Tests (`ManifestGenerator`, `AppPackageWriterTests`).
 - [x] Documentation (`app-installation.md`, `framework/app-repository.md`).
-- [ ] `Kazo-ca/HackerOs-AppTemplate` régénéré sur la version qui contient ce chantier.
+- [ ] `Kazo-ca/Os-AppTemplate` régénéré sur la version qui contient ce chantier.

@@ -30,14 +30,14 @@ son navigateur :
 
 ## 2. Constat de départ (vérifié sur `web/base`)
 
-- Les sites simulés (HackMail, HackerSearch, forum, darknet, banque) sont des
+- Les sites simulés (KazoMail, KazoSearch, forum, darknet, banque) sont des
   `ISimulatedWebsiteController` enregistrés au démarrage de l'hôte
   (`Platform.Core/Network/Websites/`). Leur routage est minimal (`Get`/`Post`,
   chemin exact ou `{param}` sur un segment).
 - `SimulatedHttpResponse` ne porte pas de HTML : il porte un `SimulatedPage`
   structuré (sections), dessiné par `SimulatedPageRenderer.razor`. Aucun moyen
   de renvoyer du HTML, du CSS, du JS, du JSON ou des octets.
-- Le SDK réseau (`HackHttpClient`, `IAppNetworkGateway`, ADR 0055, 0056) sait
+- Le SDK réseau (`KazoHttpClient`, `IAppNetworkGateway`, ADR 0055, 0056) sait
   envoyer toutes les méthodes HTTP, avec un repli sur le réseau réel par le
   relais du serveur optionnel (`network.real.access`). Aucune app ne peut
   écouter un port ; `netstat` n'a rien à montrer ; il n'y a pas de
@@ -52,11 +52,11 @@ son navigateur :
    résolveur DNS ; un port fermé répond `ERR_CONNECTION_REFUSED` ; le navigateur
    charge lui-même les sous-ressources d'une page.
 2. **SDK public seulement.** ASP.Hack est une bibliothèque du SDK
-   (`HackerOsSdkLibrary`) ; un site ne référence ni Platform Core ni les
+   (`KazoOsSdkLibrary`) ; un site ne référence ni Platform Core ni les
    services internes (ADR 0055, codes `HOSAPP0030/0031`).
 3. **Ressembler à ASP.NET sans le recopier.** Mêmes idées et mêmes noms
    d'attributs (`[HttpGet]`, `[Route]`, `[FromBody]`), classes de base préfixées
-   `Hack` (`HackController`, `HackHttpContext`) ; seulement le sous-ensemble
+   `Hack` (`KazoController`, `KazoHttpContext`) ; seulement le sous-ensemble
    utile (section 6 de l'ADR 0076).
 4. **Le JS d'un site est isolé.** Il ne touche jamais Kazo OS ni Internet :
    tout passe par le réseau simulé.
@@ -78,7 +78,7 @@ son navigateur :
 | 2 | Un site d'app (projet) est **externe** : servi en lecture seule depuis les ressources du projet, sous le nom qu'il déclare. Un site créé par l'utilisateur est **hébergé dans l'OS**, depuis ses fichiers, sur `localhost`. | 0073, 0077 |
 | 3 | Un site n'a aucune capacité `filesystem.*` ; un site Blazor interactif n'a pas accès aux fichiers non plus. | 0073 |
 | 4 | Résolveur DNS de l'OS (service `hackdns`) : `/etc/hosts`, URL des manifestes, sites statiques déclarés, réseau simulé, puis repli sur le relais du serveur s'il est disponible. | 0074 |
-| 5 | `HackHttpListener` (calqué sur `System.Net.HttpListener`), capacité `network.listen`, ports < 1024 réservés à l'administrateur, table des ports à l'écoute, activation à la demande (comme les sockets de systemd), corps HTTP réels (`Content-Type` + octets). | 0074 |
+| 5 | `KazoHttpListener` (calqué sur `System.Net.HttpListener`), capacité `network.listen`, ports < 1024 réservés à l'administrateur, table des ports à l'écoute, activation à la demande (comme les sockets de systemd), corps HTTP réels (`Content-Type` + octets). | 0074 |
 | 6 | Le navigateur rend du vrai HTML dans une iframe isolée (`sandbox="allow-scripts"`, sans même origine), charge lui-même les sous-ressources par le réseau simulé et relaie `fetch`, `XMLHttpRequest`, liens et formulaires ; `file://` lit les fichiers de l'OS. | 0075 |
 | 7 | ASP.Hack MVC : pipeline de middlewares, routage par attributs et conventionnel généré au build, liaison de modèle, résultats, DI par requête, session par cookie. | 0076 |
 | 8 | Deux moteurs de vues : composants `.razor` rendus en HTML (`HtmlRenderer`), et vues `.cshtml` compilées au build par le compilateur Razor avec une classe de base ASP.Hack (après une preuve de faisabilité) ; compilation `.cshtml` dans l'OS plus tard. | 0076 |
@@ -122,16 +122,16 @@ Benoit a retenu toutes les recommandations, avec une précision sur la question 
 |---|---|---|
 | `web/1-adr` | Ce plan, ADR 0073 à 0078, index. | — |
 | `web/2-http-bodies` | Corps HTTP réels dans les contrats simulés et le SDK (`Content-Type`, octets, en-têtes) ; `SimulatedPage` reste pour les sites existants ; `curl` affiche le corps brut. | `1` |
-| `web/3-listener-dns` | `HackHttpListener`, `network.listen`, table des ports, `hackdns`, `/etc/hosts`, `Urls` du manifeste, activation à la demande, `netstat -tlnp`, `/proc/net/tcp`, worker web partagé et passerelle distante pour un listener dans ce worker. | `2` |
+| `web/3-listener-dns` | `KazoHttpListener`, `network.listen`, table des ports, `hackdns`, `/etc/hosts`, `Urls` du manifeste, activation à la demande, `netstat -tlnp`, `/proc/net/tcp`, worker web partagé et passerelle distante pour un listener dans ce worker. | `2` |
 | `web/4-browser-html` | Iframe isolée, chargeur de sous-ressources, pont `fetch`/XHR/formulaires, `file://`, onglet « source », erreurs réseau. | `2` |
 | `web/5-static-sites` | Fichiers `.site`, service `hackwebd` (fichiers statiques, index, types MIME, 404), app Web Server Manager, ouverture d'un dossier comme site. | `3`, `4` |
-| `web/6-mvc-core` | Bibliothèque `HackerOs.AppSdk.Web` : `WebAppDefinition`, `HackWebApplication`, middlewares, générateur de routes, contrôleurs, liaison, résultats JSON/Content/File/Redirect, DI par requête, session. | `3` |
+| `web/6-mvc-core` | Bibliothèque `Kazo.Os.AppSdk.Web` : `WebAppDefinition`, `KazoWebApplication`, middlewares, générateur de routes, contrôleurs, liaison, résultats JSON/Content/File/Redirect, DI par requête, session. | `3` |
 | `web/7-razor-views` | Vues `.razor` en HTML, layout, partials, `Model`, helpers d'URL, anti-forgery, `wwwroot` du projet servi en lecture seule. | `6` |
 | `web/8-cshtml-views` | Preuve de faisabilité puis vues `.cshtml` compilées au build (`@model`, `@inject`, `@section`, `_Layout`, `_ViewStart`). Si la preuve échoue, un ADR de remplacement est écrit avant le code. | `7` |
 | `web/9-blazor-sites` | Sites Blazor interactifs dessinés dans la zone de page du navigateur, navigation par URL, sans capacité `filesystem.*`. | `4`, `6` |
 | `web/10-detached-window` | Fenêtre détachée pilotée par l'instance principale (lien d'affichage), pour les pages HTML d'abord. | `4` |
 | `web/11-sample-final` | App exemple « Intranet » (pages, API REST, JS, Blazor), guide `asp-hack-developer-guide.md`, `sdk-reference.md`, vérification finale. | tous |
-| `web/12-site-data` | Ajouté après la clôture (ADR 0087 §4) : base `HackWebDb` d'un site, journaux de débogage `/var/log/hackweb/<id>.log`, saisie semi-automatique du navigateur (ADR 0073 §3, ADR 0088). | `11` |
+| `web/12-site-data` | Ajouté après la clôture (ADR 0087 §4) : base `KazoWebDb` d'un site, journaux de débogage `/var/log/hackweb/<id>.log`, saisie semi-automatique du navigateur (ADR 0073 §3, ADR 0088). | `11` |
 
 Ordre : `2` ; puis `3` et `4` en parallèle ; puis `5`, `6` et `10` ; puis `7`
 et `9` ; puis `8` ; puis `11`.
@@ -141,7 +141,7 @@ et `9` ; puis `8` ; puis `11`.
 - Compiler un projet ASP.Hack ou une vue `.cshtml` **dans l'OS** (Roslyn dans le
   navigateur) : le moteur et le déploiement le permettent, le chantier viendra
   plus tard.
-- Migrer HackMail, HackerSearch et les autres sites enregistrés vers ASP.Hack.
+- Migrer KazoMail, KazoSearch et les autres sites enregistrés vers ASP.Hack.
 - Deuxième écran du bureau (le lien d'affichage de l'ADR 0078 le prépare).
 - HTTPS réel, certificats, authentification complète (rôles, OAuth), OpenAPI,
   WebSockets.
@@ -169,5 +169,5 @@ Aucune. Les deux dernières ont été tranchées par Benoit le 2026-10-16 (déci
 - [x] `web/8-cshtml-views` ([`asp-hack-cshtml-views.md`](../../framework/asp-hack-cshtml-views.md), ADR 0086 : preuve réussie, pas de moteur interprété)
 - [x] `web/9-blazor-sites` ([`blazor-sites.md`](../../framework/blazor-sites.md), ADR 0084)
 - [x] `web/10-detached-window` ([`detached-display-windows.md`](../detached-display-windows.md), ADR 0081)
-- [x] `web/11-sample-final` ([`asp-hack-developer-guide.md`](../../framework/asp-hack-developer-guide.md), ADR 0087 : exemple Intranet, liens `target` des sites Blazor, vues compilables dans une app livrée, `TryValidateModel` ; la base `HackWebDb` de l'ADR 0073 §3, les journaux de débogage d'un site et la saisie semi-automatique sont faits par `web/12`)
+- [x] `web/11-sample-final` ([`asp-hack-developer-guide.md`](../../framework/asp-hack-developer-guide.md), ADR 0087 : exemple Intranet, liens `target` des sites Blazor, vues compilables dans une app livrée, `TryValidateModel` ; la base `KazoWebDb` de l'ADR 0073 §3, les journaux de débogage d'un site et la saisie semi-automatique sont faits par `web/12`)
 - [x] `web/12-site-data` ([`asp-hack-site-data.md`](../../framework/asp-hack-site-data.md), ADR 0088 : base `hackweb.<id>` par une passerelle de l'OS, Diagnostic et désinstallation, `ILogger<T>` vers `/var/log/hackweb/<id>.log`, historique de formulaires du navigateur ; l'Intranet garde ses notes dans sa base)

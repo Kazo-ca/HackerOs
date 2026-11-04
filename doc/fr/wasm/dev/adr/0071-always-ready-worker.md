@@ -84,5 +84,5 @@ qu'un worker se libère, et le journal `/var/log/syslog` le note une fois
 ## Références
 
 - [`execution-isolation-plan.md`](../plans/execution-isolation-plan.md)
-- `OS/HackerOs.Ecosystem/EcosystemBootCoordinator.cs`.
+- `OS/Kazo.Os.Ecosystem/EcosystemBootCoordinator.cs`.
 - ADR 0067, 0069, 0070.

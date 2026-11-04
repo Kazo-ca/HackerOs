@@ -14,8 +14,8 @@ in the host comes down to a `ProjectReference`.
 
 ## `AppDefinition` and `[AppManifest]`
 
-Project `Shared/HackerOs.App.Abstractions`, folder `Definition/`, namespace
-`HackerOs.App.Abstractions`.
+Project `Shared/Kazo.Os.App.Abstractions`, folder `Definition/`, namespace
+`Kazo.Os.App.Abstractions`.
 
 | Type | Role |
 | --- | --- |
@@ -84,15 +84,15 @@ public sealed class TextEditorApp : AppDefinition
 - A null `TerminalCommand.Aliases` becomes an empty list.
 - `sdkCompatibility` (ADR 0098 §3): by default, `minimumVersion` is the version
   of the SDK against which the app was compiled. The generator reads it from the
-  `AssemblyInformationalVersion` of the `HackerOs.App.Abstractions.dll`
+  `AssemblyInformationalVersion` of the `Kazo.Os.App.Abstractions.dll`
   referenced by the app (for example `2.0.0`, see
   [`sdk-packages.md`](sdk-packages.md)) and passes it to
   `ToManifest(definition, sdkMinimumVersion)`; `ToManifest(definition)` takes
-  `HackerOsSdk.Version`, the version of the loaded SDK. An app that wants a range
+  `KazoOsSdk.Version`, the version of the loaded SDK. An app that wants a range
   overrides `AppDefinition.SdkCompatibility` (minimum and optional maximum).
   At load time, `AppCatalog` refuses an app whose range does not accept the host's
   SDK (`catalog.sdk.incompatible`): same major version as the minimum,
-  minimum ≤ SDK ≤ maximum (`HackerOsSdk.IsCompatible`).
+  minimum ≤ SDK ≤ maximum (`KazoOsSdk.IsCompatible`).
 - `osCompatibility` and `update` are not exposed by `AppDefinition`: they
   remain absent from the generated manifest.
 - `[AppManifest(Execution = …)]` becomes `execution`, always written, resolved
@@ -116,7 +116,7 @@ public sealed class TextEditorApp : AppDefinition
 ### Execution host (ADR 0070)
 
 The `[AppManifest]` attribute says **where** the OS runs the app, through its
-named property `Execution` (`AppExecutionHost`, `HackerOs.App.Abstractions`):
+named property `Execution` (`AppExecutionHost`, `Kazo.Os.App.Abstractions`):
 
 | Value | `execution` field | Where | Default for |
 | --- | --- | --- | --- |
@@ -144,7 +144,7 @@ public sealed class CdApp : AppDefinition { … }
   `AppManifestJsonSerializer.DeserializeStrict` know `execution`.
 - A command or service that needs something a worker does not offer declares
   `MainThread`, **with the reason as a comment** above the attribute. In
-  `HackerOs.Commands`: the shell built-ins (`cd`, `exit`, `export`,
+  `Kazo.Os.Commands`: the shell built-ins (`cd`, `exit`, `export`,
   `unset`, `jobs`, `read`, `help`, `which`, `kill`, `sudo`, `watch`), `passwd`,
   `hackbackup`, `nice` and `renice` (ADR 0127), and the full-screen commands
   (`nano`, `top`, `htop`). The sample service and
@@ -156,7 +156,7 @@ public sealed class CdApp : AppDefinition { … }
   `AppDefinition.Urls` (field `web.urls`): see
   [`listening-ports-and-dns.md`](listening-ports-and-dns.md).
 - A host without Web Workers ignores `execution` (ADR 0070 §6). There are no more
-  in this repository: `HackerOs.Server` serves the OS in WebAssembly since
+  in this repository: `Kazo.Os.Server` serves the OS in WebAssembly since
   [ADR 0130](../dev/adr/0130-server-serves-webassembly-os-and-api.md).
 
 Details of the mechanism: [`worker-processes.md`](../dev/worker-processes.md).
@@ -164,7 +164,7 @@ Details of the mechanism: [`worker-processes.md`](../dev/worker-processes.md).
 ### Deviation from the ADR text
 
 ADR 0047 writes `SettingsSchema? Settings`. `SettingsSchema` lives in
-`HackerOs.Simulation.Abstractions`, which `HackerOs.App.Abstractions` does not
+`Kazo.Os.Simulation.Abstractions`, which `Kazo.Os.App.Abstractions` does not
 reference. The property therefore uses the existing manifest record
 `AppSettingsSchemaManifest?`, in accordance with the ADR's rule "rare cases
 reuse the existing `*Manifest` records". The JSON content is the
@@ -182,8 +182,8 @@ point rules of `AppEntryPointDiscovery` pass.
 
 ### Tool
 
-`Tools/HackerOs.Tools.ManifestGenerator` (.NET executable, shared framework
-`Microsoft.AspNetCore.App`) replaces the former `HackerOs.Tools.ManifestValidator`.
+`Tools/Kazo.Os.Tools.ManifestGenerator` (.NET executable, shared framework
+`Microsoft.AspNetCore.App`) replaces the former `Kazo.Os.Tools.ManifestValidator`.
 
 | Command | Role |
 | --- | --- |
@@ -221,14 +221,14 @@ overwritten at the next build.
 
 ### MSBuild integration
 
-`build/HackerOs.Apps.targets`, imported by `Directory.Build.targets`:
+`build/Kazo.Os.Apps.targets`, imported by `Directory.Build.targets`:
 
 | Element | Role |
 | --- | --- |
-| `$(HackerOsAppProject)` | `true` by default under `Apps/`; a project elsewhere sets it itself. There is no exception: a project under `Apps/` without an `[AppManifest]` class fails with `HOSAPP0001`. |
+| `$(KazoOsAppProject)` | `true` by default under `Apps/`; a project elsewhere sets it itself. There is no exception: a project under `Apps/` without an `[AppManifest]` class fails with `HOSAPP0001`. |
 | `ProjectReference` to the generator | Added automatically to app projects for build ordering (`ReferenceOutputAssembly=false`, `PrivateAssets=all`: the tool never enters the graph of a WebAssembly host). |
-| Target `GenerateHackerOsAppManifests` | After `CopyFilesToOutputDirectory`. Incremental: inputs = compiled assembly, tool, dependency list, existing manifests; output = stamp file. |
-| Target `GetHackerOsAppManifests` | Query target for the host: the project's manifests, with the metadata `AssemblyName`, `AssemblyFileName` and `AppProject`. Empty for a project that is not an app. |
+| Target `GenerateKazoOsAppManifests` | After `CopyFilesToOutputDirectory`. Incremental: inputs = compiled assembly, tool, dependency list, existing manifests; output = stamp file. |
+| Target `GetKazoOsAppManifests` | Query target for the host: the project's manifests, with the metadata `AssemblyName`, `AssemblyFileName` and `AppProject`. Empty for a project that is not an app. |
 
 ### Error codes
 
@@ -254,7 +254,7 @@ with the full name of the class at fault: `App.csproj : error HOSAPP0005: [Ns.My
 | `HOSAPP0023` | Generation: resource declared in `Assets` missing from the project's `wwwroot/`; its SHA-256 cannot be computed (ADR 0098 §5). |
 | `HOSAPP0024` | Aggregation: non-system app that declares a negative `OomScoreAdjust` (ADR 0126 §4, ADR 0142 §6, [`oom-killer.md`](../dev/oom-killer.md)). |
 | `HOSAPP0025` | Removed, never reused: refused `hackeros.file-view` and `hackeros.file-dialogs` to a non-system app (ADR 0153 §4), which ADR 0156 opens to any windowed app (ADR 0158 §1). |
-| `HOSAPP0030` | SDK boundary: `ProjectReference` forbidden in an app project (ADR 0055 §2, number fixed by ADR 0059). Emitted by the target `ValidateHackerOsSdkBoundary`. See [`app-sdk.md`](app-sdk.md). |
+| `HOSAPP0030` | SDK boundary: `ProjectReference` forbidden in an app project (ADR 0055 §2, number fixed by ADR 0059). Emitted by the target `ValidateKazoOsSdkBoundary`. See [`app-sdk.md`](app-sdk.md). |
 | `HOSAPP0031` | SDK boundary: injected service that is neither an SDK type, nor MudBlazor, nor `IJSRuntime` (ADR 0055 §3, ADR 0059). See [`app-sdk.md`](app-sdk.md). |
 | `HOSAPP0040` | Manifest translations (ADR 0104 §4): unreadable `Resources/AppManifest.<culture>.resx`, invalid culture name, key other than `Name`, `Description`, `Terminal.Usage` (prefixed with the id in a multi-app project), `Terminal.Usage` for an app that is not a command, or a referenced `localization/` file that is unreadable at aggregation. See [`localization.md`](localization.md). |
 | `HOSAPP0090` | Invalid tool arguments. |
@@ -269,7 +269,7 @@ is known): they are checked at aggregation in the host.
 The 44 projects under `Apps/` (12 apps, 28 commands, 4 samples) have their
 `[AppManifest]` class and their generated `manifest.json`; there is no hand-written
 `app.manifest.json` left and no `StaticManifest` field.
-`Apps/System/HackerOs.Apps.Calculator` (`CalculatorApp`) served as the example.
+`Apps/System/Kazo.Os.Apps.Calculator` (`CalculatorApp`) served as the example.
 
 Class naming convention: name of the entry point without the `Window` or
 `Command` suffix, followed by `App` (`CalculatorWindow` → `CalculatorApp`,
@@ -299,31 +299,31 @@ used by its `StaticManifest`.
 
 Since work item `rebuild/3-commands-merge`, the built-in commands (28, then
 29 with `trash` of work item `rebuild/3-trash`, see [`trash.md`](../dev/trash.md)) are
-in a single project, `Apps/Commands/HackerOs.Commands/HackerOs.Commands.csproj`:
+in a single project, `Apps/Commands/Kazo.Os.Commands/Kazo.Os.Commands.csproj`:
 
 - one folder per command (`Cat/CatApp.cs`, `Cat/CatCommand.cs`), each keeping
-  its namespace (`HackerOs.Commands.Cat`) and its `[AppManifest]` class;
+  its namespace (`Kazo.Os.Commands.Cat`) and its `[AppManifest]` class;
 - the generator writes `manifests/<appId>.json` ("several classes" form);
-  only `entryPoint.assembly` changes, it is `HackerOs.Commands.dll`;
+  only `entryPoint.assembly` changes, it is `Kazo.Os.Commands.dll`;
 - **app identifiers do not change** (`org.hackeros.cmd.cat`,
   `org.hackeros.commands.curl`…): `apps.config`, `app-permissions.config` and
   existing aliases remain valid;
 - the host has only one `ProjectReference ... IsSystemApp="true"` for all
   commands; the assembly is loaded on demand as a single block
   (`BuildKnownLazyAssemblies.Names` contains it only once);
-- the test projects (`HackerOs.Commands.Tests`, `HackerOs.Commands.Wave5.Tests`,
-  `HackerOs.Commands.Nano.Tests`, `HackerOs.Network.Tests`) reference this project.
+- the test projects (`Kazo.Os.Commands.Tests`, `Kazo.Os.Commands.Wave5.Tests`,
+  `Kazo.Os.Commands.Nano.Tests`, `Kazo.Os.Network.Tests`) reference this project.
 
 `cd`, `pwd`, `clear`, `help` and `sudo` are installed and resolved like the
 other commands: the terminal knows no names (work item
 `rebuild/3-shell-commands`, ADR 0051 sections 2 to 5, see
 [`shell-commands.md`](../dev/shell-commands.md)). Those that act on the shell
 declare the `shell.control` capability. A third-party command remains a separate project (template:
-`Apps/Samples/HackerOs.Samples.TerminalApp`).
+`Apps/Samples/Kazo.Os.Samples.TerminalApp`).
 
 ### Tests
 
-`Tests/HackerOs.Tools.ManifestGenerator.Tests`:
+`Tests/Kazo.Os.Tools.ManifestGenerator.Tests`:
 
 - `AppDefinitionInspectorTests`: one test per code `HOSAPP0001` to `HOSAPP0011`
   on test definitions;
@@ -352,21 +352,21 @@ not declared as assets. Error: `HOSAPP0040`. See
 
 ### Declaring a host
 
-A host project declares `<HackerOsAppHost>true</HackerOsAppHost>`. In this repository,
-only `OS/HackerOs.Ecosystem` does so. `test/test` reuses the compiled
+A host project declares `<KazoOsAppHost>true</KazoOsAppHost>`. In this repository,
+only `OS/Kazo.Os.Ecosystem` does so. `test/test` reuses the compiled
 catalog of the Ecosystem (`BuildKnownLazyApps.Catalog`) and does not aggregate
 itself; the server serves the Ecosystem's published files as they are, apps
 included (ADR 0130). Outside the repository, a host references the package
-`HackerOs.App.Build` and declares the same property (`hackeros-host` template, see
+`Kazo.Os.App.Build` and declares the same property (`hackeros-host` template, see
 [`sdk-packages.md`](sdk-packages.md)).
 
-### Target `CollectHackerOsBuiltInApplications`
+### Target `CollectKazoOsBuiltInApplications`
 
-In `build/HackerOs.Apps.targets`, after `ResolveProjectReferences` (so before
+In `build/Kazo.Os.Apps.targets`, after `ResolveProjectReferences` (so before
 resource preparation and before the Blazor targets):
 
 1. for each direct `ProjectReference` (excluding references with
-   `ReferenceOutputAssembly=false`), calls `GetHackerOsAppManifests` with the
+   `ReferenceOutputAssembly=false`), calls `GetKazoOsAppManifests` with the
    same global properties as `ResolveProjectReferences`; a project that is
    not an app returns nothing and is ignored;
 2. attaches to each manifest the `IsSystemApp` metadata of its `ProjectReference`
@@ -377,14 +377,14 @@ resource preparation and before the Blazor targets):
    `obj/<config>/<tfm>/BuiltInApplications.json` only if its bytes change
    (no needless recompilation); it also measures there each app's
    **image** (ADR 0068) from the path of its assembly and its list of
-   dependencies, which `GetHackerOsAppManifests` returns (`AssemblyPath`,
+   dependencies, which `GetKazoOsAppManifests` returns (`AssemblyPath`,
    `DependenciesFile`); finally it copies the translated texts that
    `localizations` references into the optional `localized` property of each entry
    (`{"fr":{"name":…}}`, ADR 0104), which `AppCatalog.Localize` applies;
-4. adds this file as an `EmbeddedResource` (`HackerOs.BuiltInApplications.json`);
+4. adds this file as an `EmbeddedResource` (`Kazo.Os.BuiltInApplications.json`);
 5. adds a `BlazorWebAssemblyLazyLoad` for each app's assembly (first
    removing any hand-written duplicate);
-6. passes to ILLink the file `obj/<config>/<tfm>/HackerOs.TrimmerRoots.xml` that
+6. passes to ILLink the file `obj/<config>/<tfm>/Kazo.Os.TrimmerRoots.xml` that
    the same command writes (`--trimmer-roots`): each assembly named by a
    manifest is kept whole there for a trimmed publish (ADR 0106,
    ADR 0113, [`trimmed-publish.md`](../dev/trimmed-publish.md)).
@@ -392,23 +392,23 @@ resource preparation and before the Blazor targets):
 Apps installed as a **package** (ADR 0098 §2) follow the same path: each
 app package contains its manifests under `hackeros/manifests/` (their translations
 under `hackeros/localization/`) and a file
-`buildTransitive/<PackageId>.targets` that declares them as `HackerOsPackagedApp`
+`buildTransitive/<PackageId>.targets` that declares them as `KazoOsPackagedApp`
 items (metadata `PackageId`, `AssemblyFileName`,
-`AssemblyPath`). The target `_HackerOsCollectPackagedAppManifests` adds them to
+`AssemblyPath`). The target `_KazoOsCollectPackagedAppManifests` adds them to
 the list; `IsSystemApp` comes from the host's `PackageReference` on that package
 (an app package that arrives as a dependency is never system). The target
-`_HackerOsPackageAppManifests` produces these files when an app project is
+`_KazoOsPackageAppManifests` produces these files when an app project is
 packaged.
 
 The anchoring after `ResolveProjectReferences` is checked by a
-`dotnet publish -c Release` of the Ecosystem: `HackerOs.Apps.Calculator` appears
+`dotnet publish -c Release` of the Ecosystem: `Kazo.Os.Apps.Calculator` appears
 in the `lazyAssembly` section of the published boot configuration, and the
 generator does not appear in `_framework`.
 
 ### Format
 
 ```json
-{"schemaVersion":1,"applications":[{"isSystemApp":false,"manifest":{"schemaVersion":1,"id":"org.hackeros.calculator", "...": "..."},"image":{"assemblies":[{"name":"HackerOs.Apps.Calculator.dll","bytes":17408,"shared":false},{"name":"HackerOs.AppSdk.dll","bytes":400896,"shared":true}]}}]}
+{"schemaVersion":1,"applications":[{"isSystemApp":false,"manifest":{"schemaVersion":1,"id":"org.hackeros.calculator", "...": "..."},"image":{"assemblies":[{"name":"Kazo.Os.Apps.Calculator.dll","bytes":17408,"shared":false},{"name":"Kazo.Os.AppSdk.dll","bytes":400896,"shared":true}]}}]}
 ```
 
 `image` (optional, ADR 0068) lists the assemblies the app maps, sorted by
@@ -420,7 +420,7 @@ libraries it references, directly or not (`shared: true`), excluding the
 does not change: sizes live only in this file produced at each
 build.
 
-`BuiltInApplicationsJsonSerializer` (`HackerOs.App.Abstractions`, next to
+`BuiltInApplicationsJsonSerializer` (`Kazo.Os.App.Abstractions`, next to
 `AppManifestJsonSerializer`) writes the canonical form (applications sorted by
 identifier, canonical manifests) and rereads in strict mode (unknown or
 duplicate property, `schemaVersion` other than 1, non-boolean `isSystemApp` = error;
@@ -431,8 +431,8 @@ is never written by hand or versioned.
 
 ### Reading at startup
 
-`HostAppCatalog.Load(assembly)` (`HackerOs.Ecosystem.Host`) reads the resource
-`HackerOs.BuiltInApplications.json` of the host's assembly and builds
+`HostAppCatalog.Load(assembly)` (`Kazo.Os.Ecosystem.Host`) reads the resource
+`Kazo.Os.BuiltInApplications.json` of the host's assembly and builds
 `Catalog` with `AppCatalog.BuildFromBuiltInApplications`: the catalog carries
 the system flags (see "System apps" below); `Images` gives each
 app's image (read by memory measurement) and `LazyAssemblyNames` the only
@@ -443,21 +443,21 @@ assembly. Only the
 JSON is read: the app DLLs stay loaded at first launch and the
 `AppDefinition` classes are never instantiated at runtime.
 
-It is the only source: `HackerOs.Ecosystem.csproj` no longer embeds a hand-written
-manifest (`HackerOs.Ecosystem.Manifests.*`) and no longer has a
+It is the only source: `Kazo.Os.Ecosystem.csproj` no longer embeds a hand-written
+manifest (`Kazo.Os.Ecosystem.Manifests.*`) and no longer has a
 `BlazorWebAssemblyLazyLoad` list, and the transition target
-`_HackerOsMarkLegacySystemManifests` disappeared with them: `IsSystemApp` comes
+`_KazoOsMarkLegacySystemManifests` disappeared with them: `IsSystemApp` comes
 only from `BuiltInApplications.json`. A missing resource is a startup error.
 
 ### Installing an app
 
 Once the app has its `[AppManifest]` class: a `ProjectReference` in
-`HackerOs.Ecosystem.csproj`, with `IsSystemApp="true"` if the host declares it
+`Kazo.Os.Ecosystem.csproj`, with `IsSystemApp="true"` if the host declares it
 system. Nothing else.
 
 ### Tests
 
-- `BuiltInApplicationsJsonSerializerTests` (`HackerOs.App.Abstractions.Tests`):
+- `BuiltInApplicationsJsonSerializerTests` (`Kazo.Os.App.Abstractions.Tests`):
   sorting and canonical round trip, empty document, normalization, strict rejections.
 - `BuiltInApplicationsAggregatorTests`: `IsSystemApp` carried over, duplicate
   identifier refused (`HOSAPP0021`), missing or invalid manifest (`HOSAPP0020`),
@@ -465,9 +465,9 @@ system. Nothing else.
 - `MsBuildIntegrationTests.Host_embeds_BuiltInApplications_...`: real build of
   `Tests/ManifestGenerator.Fixtures.Host` (a system app, a two-app project,
   a project that is not an app, ignored).
-- `BuildKnownLazyAppsTests` (`HackerOs.Ecosystem.Tests`): the catalog contains
+- `BuildKnownLazyAppsTests` (`Kazo.Os.Ecosystem.Tests`): the catalog contains
   all the host's apps (75 today: 12 windowed and 63 commands, `stress` since ADR 0070); all come from the aggregated resource (no
-  `HackerOs.Ecosystem.Manifests.*` resource), and the lazy loading list is
+  `Kazo.Os.Ecosystem.Manifests.*` resource), and the lazy loading list is
   exactly that of their assemblies.
 
 ## SDK version, commands, integrity (ADR 0098 §3-5)
@@ -477,7 +477,7 @@ system. Nothing else.
   `catalog.dependency.unavailable` for an app that depends on one of them as required) instead of
   failing: the OS starts without them, startup writes it to
   `/var/log/syslog` (category `catalog`) and Settings lists them as
-  incompatible with the reason (`HackAppInstallState.Incompatible`, `Problem`).
+  incompatible with the reason (`KazoAppInstallState.Incompatible`, `Problem`).
 - **Duplicate commands**: refused at build time (`HOSAPP0022`). At load time, if two
   apps nevertheless declare the same name, a system app wins, otherwise the
   first enabled one; the other loses that name (`AppCatalog.FindCommandOwner`,
@@ -491,7 +491,7 @@ system. Nothing else.
   `StaticWebAssetAppAssetSource`, `_content/<assembly>/<path>`) and checks its
   fingerprint on its **first** read of the session, like `dpkg --verify`. A
   tampered resource is refused (`AppAssetIntegrityException`), the app is marked
-  damaged (`HackAppInstallState.Damaged` in Settings) and the event
+  damaged (`KazoAppInstallState.Damaged` in Settings) and the event
   `catalog.asset.damaged` goes to `/var/log/syslog`. Assemblies remain
   covered by the integrity of Blazor's boot manifest.
 
@@ -508,7 +508,7 @@ always be non-system.
 
 ### API
 
-`AppCatalog` (`Platform/HackerOs.Platform.Core/AppCatalog.cs`):
+`AppCatalog` (`Platform/Kazo.Os.Platform.Core/AppCatalog.cs`):
 
 | Member | Role |
 |---|---|
@@ -528,7 +528,7 @@ hosts (`Program.cs`); OS services therefore read
 
 | System | Non-system (uninstallable) |
 |---|---|
-| Terminal, File Explorer, Settings, Text Editor, Code Editor (since `rebuild/4-sdk-shell-host`: its terminal hosts a shell, ADR 0056 §7), System Monitor, Error Log Viewer, Theme Editor (reads `/etc/hackeros/themes`, ADR 0103), and the 70 commands (project `HackerOs.Commands`, `xdg-open` included since `v3/4`, `xdg-mime` since `v3/4b`, `passwd` since `v3/8`) | Browser, Calculator, Diagnostics, HackPaint, Icon Viewer |
+| Terminal, File Explorer, Settings, Text Editor, Code Editor (since `rebuild/4-sdk-shell-host`: its terminal hosts a shell, ADR 0056 §7), System Monitor, Error Log Viewer, Theme Editor (reads `/etc/hackeros/themes`, ADR 0103), and the 70 commands (project `Kazo.Os.Commands`, `xdg-open` included since `v3/4`, `xdg-mime` since `v3/4b`, `passwd` since `v3/8`) | Browser, Calculator, Diagnostics, KazoPaint, Icon Viewer |
 
 Effects of the status: a system app is not uninstallable (see
 [`app-installation.md`](../dev/app-installation.md), ADR 0048 §2-6); its dangerous
@@ -536,24 +536,24 @@ capabilities granted by default arrive with ADR 0049.
 
 ### Tests
 
-- `AppCatalogTests` (`HackerOs.Platform.Core.Tests`): no system app by
+- `AppCatalogTests` (`Kazo.Os.Platform.Core.Tests`): no system app by
   default, exposed set and ordinal comparison, unknown identifier refused,
   flag taken from each `BuiltInApplication` entry.
-- `SystemAppTrustTests` (`HackerOs.App.Abstractions.Tests`): no
+- `SystemAppTrustTests` (`Kazo.Os.App.Abstractions.Tests`): no
   "SystemApp" member on `AppDefinition`, `AppManifest`, `[AppManifest]`; a
   `manifest.json` that claims `isSystemApp` is rejected.
 - `BuildKnownLazyAppsTests.System_apps_follow_the_host_ProjectReference_metadata`
-  (`HackerOs.Ecosystem.Tests`): the system set of the host's catalog is
+  (`Kazo.Os.Ecosystem.Tests`): the system set of the host's catalog is
   exactly the table above.
 
 ## Tasks
 
 - [x] `rebuild/2-app-definition`: `AppDefinition`, `[AppManifest]`,
   `FileHandler`, `TerminalCommand`, `AppDefinitionMapper`, mapper tests
-  (`Tests/HackerOs.App.Abstractions.Tests/Definition`).
-- [x] `rebuild/2-manifest-generator`: `Tools/HackerOs.Tools.ManifestGenerator` (`generate`, `validate`), `build/HackerOs.Apps.targets`, targets `GenerateHackerOsAppManifests` and `GetHackerOsAppManifests`, `HOSAPP*` errors, test projects, Calculator migrated as an example.
-- [x] `rebuild/2-builtin-applications`: target `CollectHackerOsBuiltInApplications`, embedded `BuiltInApplications.json`, automatic lazy load, `BuildKnownLazyApps` reads the new file, `IsSystemApp` carried over.
-- [x] `rebuild/2-system-apps` (ADR 0048): `AppCatalog.SystemAppIds` and `IsSystemApp`, `AppCatalog.Build(manifests, systemAppIds)` and `BuildFromBuiltInApplications`, `IsSystemApp="true"` set on the Ecosystem's `ProjectReference`s, transition bridge `_HackerOsMarkLegacySystemManifests`, tests.
+  (`Tests/Kazo.Os.App.Abstractions.Tests/Definition`).
+- [x] `rebuild/2-manifest-generator`: `Tools/Kazo.Os.Tools.ManifestGenerator` (`generate`, `validate`), `build/Kazo.Os.Apps.targets`, targets `GenerateKazoOsAppManifests` and `GetKazoOsAppManifests`, `HOSAPP*` errors, test projects, Calculator migrated as an example.
+- [x] `rebuild/2-builtin-applications`: target `CollectKazoOsBuiltInApplications`, embedded `BuiltInApplications.json`, automatic lazy load, `BuildKnownLazyApps` reads the new file, `IsSystemApp` carried over.
+- [x] `rebuild/2-system-apps` (ADR 0048): `AppCatalog.SystemAppIds` and `IsSystemApp`, `AppCatalog.Build(manifests, systemAppIds)` and `BuildFromBuiltInApplications`, `IsSystemApp="true"` set on the Ecosystem's `ProjectReference`s, transition bridge `_KazoOsMarkLegacySystemManifests`, tests.
 - [x] `rebuild/2-app-uninstall` (ADR 0048 §2-6): uninstall through `apps.config`, see [`app-installation.md`](../dev/app-installation.md).
 - [x] `rebuild/5-worker-processes` (ADR 0070): `AppManifestAttribute.Execution`, `AppExecutionHost`, `execution` field (schema, whitelist, validator, canonical fixture), defaults by kind in the mapper, each command and service declares its host or gets the default.
 - [x] `v3/6-sdk-versioning` (ADR 0098): SDK version written by the generator and checked at load time, `HOSAPP0022`/`HOSAPP0023`, single owner of a command, resource fingerprints and `AppAssetStore`, aggregation of packaged apps, `HostAppCatalog`.
@@ -561,4 +561,4 @@ capabilities granted by default arrive with ADR 0049.
 - [x] `v3/4b` (ADR 0121): per-user file and scheme associations, `xdg-mime` command.
 - [x] `v3/12-localization` (ADR 0104): `AppManifest.<culture>.resx` → `localization/`, `HOSAPP0040`, `localized` property of `BuiltInApplications.json`, `AppCatalog.Localize`.
 - [x] `exec/3-oom-killer` (ADR 0126, ADR 0142): `AppDefinition.OomScoreAdjust` (SDK 1.2), `oomScoreAdj` field, `HOSAPP0024`.
-- [x] `rebuild/2-app-migration`: `[AppManifest]` classes for the other 43 apps, equality test with the old JSON files, removal of the `app.manifest.json` files, `StaticManifest`, the host's manual lists and the target `_HackerOsMarkLegacySystemManifests`, the `Content Update` rule of `Directory.Build.targets` and the "transition" exceptions.
+- [x] `rebuild/2-app-migration`: `[AppManifest]` classes for the other 43 apps, equality test with the old JSON files, removal of the `app.manifest.json` files, `StaticManifest`, the host's manual lists and the target `_KazoOsMarkLegacySystemManifests`, the `Content Update` rule of `Directory.Build.targets` and the "transition" exceptions.

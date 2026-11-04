@@ -2,7 +2,7 @@
 
 # Measured per-process memory, in layers
 
-This document covers the implementation of layered memory measurement. What an app sees (`HackProcess.WorkingSet64`, `PrivateMemorySize64`, fields of `/proc/<pid>/status` and `/proc/meminfo`, measured or simulated) is in [`../framework/process-resources-api.md`](../framework/process-resources-api.md).
+This document covers the implementation of layered memory measurement. What an app sees (`KazoProcess.WorkingSet64`, `PrivateMemorySize64`, fields of `/proc/<pid>/status` and `/proc/meminfo`, measured or simulated) is in [`../framework/process-resources-api.md`](../framework/process-resources-api.md).
 
 Implementation of the `rebuild/5-memory-accounting` work item of phase 5
 ([`execution-isolation-plan.md`](plans/execution-isolation-plan.md)):
@@ -19,8 +19,8 @@ layers, like `/proc/<pid>/status` on Linux, **without changing app code**:
 | Layer | Source | Precision | `/proc/<pid>/status` field |
 |---|---|---|---|
 | Image | size of the app's assemblies, measured by the host build | exact | `VmExe` (the app's assembly), `RssFile` (+ shared assemblies) |
-| OS resources | bytes the OS holds for the process: `HackFileStream` buffers, clipboard, pipes, in-flight sockets, fixed cost per window | exact | `VmData` (kernel part) |
-| Allocations | `GC.GetAllocatedBytesForCurrentThread()` read at each context switch | exact | `HackAllocBytes` |
+| OS resources | bytes the OS holds for the process: `KazoFileStream` buffers, clipboard, pipes, in-flight sockets, fixed cost per window | exact | `VmData` (kernel part) |
+| Allocations | `GC.GetAllocatedBytesForCurrentThread()` read at each context switch | exact | `KazoAllocBytes` |
 | Resident | real heap distributed after each GC in proportion to recent allocations, with exponential decay | estimate | `RssAnon` |
 
 `VmRSS = RssAnon + RssFile + VmData`. The measurement limits nothing by
@@ -29,7 +29,7 @@ itself: the per-process `rss` limit comes from ADR 0125
 default**, from ADR 0126 (which replaces ADR 0068 §3) and ADR 0142
 ([`oom-killer.md`](oom-killer.md)); it only acts if memory is measured.
 
-Measurement off (at build by `HackerOsMemoryAccounting=false`, or by
+Measurement off (at build by `KazoOsMemoryAccounting=false`, or by
 `HackerOs:ResourceAccounting:Memory:Enabled=false`): exact behavior from
 before phase 5 (simulated `VmRSS`, no layer line, three-line `meminfo`,
 `MemSource: simulated`).
@@ -38,13 +38,13 @@ before phase 5 (simulated `VmRSS`, no layer line, three-line `meminfo`,
 
 | Element | Project | Role |
 |---|---|---|
-| `IMemoryAccountant` (`TryGetProcessMemory`, `TryGetSystemMemory`), `ProcessMemoryUsage`, `SystemMemoryUsage` | `Shared/HackerOs.Simulation.Abstractions` (`Processes/`) | contract read by `/proc`; `false` = simulated value |
+| `IMemoryAccountant` (`TryGetProcessMemory`, `TryGetSystemMemory`), `ProcessMemoryUsage`, `SystemMemoryUsage` | `Shared/Kazo.Os.Simulation.Abstractions` (`Processes/`) | contract read by `/proc`; `false` = simulated value |
 | `IKernelMemoryLedger`, `KernelMemoryCharge`, `KernelMemoryKind` | same (`Processes/MemoryAccountingContracts.cs`) | ledger of the memory held by the OS for a process |
-| `NullMemoryAccountant`, `NullKernelMemoryLedger` | `Platform/HackerOs.Platform.Core` (`Processes/Accounting/`) | measurement off: nothing is measured, no charge costs anything |
-| `AppImage`, `AppImageAssembly`, `BuiltInApplication.Image` | `Shared/HackerOs.App.Abstractions` | image of an app in `BuiltInApplications.json` |
-| `AppImageInspector` | `Tools/HackerOs.Tools.ManifestGenerator` | reads the assembly references (metadata, without loading code) and measures the files |
-| `HostAppCatalog.Images` (`BuildKnownLazyApps.Images` in the Ecosystem) | `OS/HackerOs.Ecosystem.Host` | host catalog images, by app id |
-| `AllocationTracker` | `Platform/HackerOs.Platform.ResourceAccounting` (`Memory/`) | allocations layer: observer of the context-switch hook |
+| `NullMemoryAccountant`, `NullKernelMemoryLedger` | `Platform/Kazo.Os.Platform.Core` (`Processes/Accounting/`) | measurement off: nothing is measured, no charge costs anything |
+| `AppImage`, `AppImageAssembly`, `BuiltInApplication.Image` | `Shared/Kazo.Os.App.Abstractions` | image of an app in `BuiltInApplications.json` |
+| `AppImageInspector` | `Tools/Kazo.Os.Tools.ManifestGenerator` | reads the assembly references (metadata, without loading code) and measures the files |
+| `HostAppCatalog.Images` (`BuildKnownLazyApps.Images` in the Ecosystem) | `OS/Kazo.Os.Ecosystem.Host` | host catalog images, by app id |
+| `AllocationTracker` | `Platform/Kazo.Os.Platform.ResourceAccounting` (`Memory/`) | allocations layer: observer of the context-switch hook |
 | `KernelMemoryLedger` | same | OS resources layer |
 | `MeasuredMemoryAccountant`, `MemoryAccountingConstants` | same | the four layers, heap distribution, the constants |
 | `IManagedHeapProbe`, `GcManagedHeapProbe` | same | what is read from the GC (replaceable in tests) |
@@ -52,11 +52,11 @@ before phase 5 (simulated `VmRSS`, no layer line, three-line `meminfo`,
 ### Image
 
 The host build measures each app's image during aggregation
-(`CollectHackerOsBuiltInApplications`, [`app-model.md`](../framework/app-model.md)):
+(`CollectKazoOsBuiltInApplications`, [`app-model.md`](../framework/app-model.md)):
 
-- `GetHackerOsAppManifests` also returns the path of the app's assembly
+- `GetKazoOsAppManifests` also returns the path of the app's assembly
   (`AssemblyPath`) and its dependency list (`DependenciesFile`, the file that
-  `GenerateHackerOsAppManifests` already writes);
+  `GenerateKazoOsAppManifests` already writes);
 - `AppImageInspector` takes the size of the app's assembly (unshared),
   follows its references, direct or not, and measures those it finds in the
   list (shared);
@@ -65,7 +65,7 @@ The host build measures each app's image during aggregation
   libc shared by all processes. Reference assemblies (`ref` folder) are
   ignored.
 
-Several apps in the same assembly (the commands of `HackerOs.Commands`) each
+Several apps in the same assembly (the commands of `Kazo.Os.Commands`) each
 have this assembly as `VmExe`, like each BusyBox applet maps the BusyBox
 binary. `/proc/meminfo` counts each assembly **once** (`Mapped`), regardless
 of the number of processes that map it.
@@ -79,7 +79,7 @@ the ledger, resizes it when its buffer changes and releases it at the end:
 
 | Object | Who charges | Size | Charged to |
 |---|---|---|---|
-| `HackFileStream` write buffer | the stream, through `IAppFileSystemGateway.ChargeStreamBuffer()` | capacity of the `MemoryStream` | the app's process; released when the stream closes |
+| `KazoFileStream` write buffer | the stream, through `IAppFileSystemGateway.ChargeStreamBuffer()` | capacity of the `MemoryStream` | the app's process; released when the stream closes |
 | Clipboard | `SystemClipboard`, through `AppClipboardGateway` | 2 bytes per character (MIME types and contents) | the process that copied; released when the content is replaced or cleared; nothing for the OS or the host |
 | Shell pipe | `ShellPipe`, created by `ShellInterpreter` | 2 bytes per pending character | the shell process that created the pipe; released when reading closes or when writing is closed and the pipe drained |
 | Socket | `AppNetworkGateway`, for each call | `SocketBufferBytes` = 144 KiB (`tcp_rmem` 128 KiB + `tcp_wmem` 16 KiB) | the app's process, for the duration of the call |
@@ -146,7 +146,7 @@ load tests:
 
 ## Usage
 
-Reading `/proc/<pid>/status`, `/proc/meminfo` and the `HackProcess` properties is described in [`../framework/process-resources-api.md`](../framework/process-resources-api.md).
+Reading `/proc/<pid>/status`, `/proc/meminfo` and the `KazoProcess` properties is described in [`../framework/process-resources-api.md`](../framework/process-resources-api.md).
 
 ### Charging an OS resource (OS code)
 
@@ -158,16 +158,16 @@ buffer.Resize(bufferedChars * sizeof(char));   // on each change
 
 ### Composition
 
-`AddHackerOsResourceAccounting` (`HackerOs.Ecosystem.Host`) composes the
+`AddKazoOsResourceAccounting` (`Kazo.Os.Ecosystem.Host`) composes the
 measurement when `plan.MemoryActive` and
 `ResourceAccountingFeatures.IsMemoryAccountingSupported`: `AllocationTracker`
 registered on the dispatcher, `KernelMemoryLedger` (`IKernelMemoryLedger`),
 `MeasuredMemoryAccountant` (`IMemoryAccountant`), with the images the host
-passes to it (`AddHackerOsResourceAccounting(configuration, images)`;
-`AddHackerOsBrowserHost` passes `HostAppCatalog.Images`, the server and
+passes to it (`AddKazoOsResourceAccounting(configuration, images)`;
+`AddKazoOsBrowserHost` passes `HostAppCatalog.Images`, the server and
 `test/test` pass `BuildKnownLazyApps.Images`; without images, no app has an
 image layer). Otherwise, the null implementations are registered.
-`AddHackerOsEcosystem` passes the ledger to the clipboard, the shell, and the
+`AddKazoOsEcosystem` passes the ledger to the clipboard, the shell, and the
 file and network gateways.
 
 ## Decisions
@@ -198,13 +198,13 @@ file and network gateways.
 
 | Suite | Covers |
 |---|---|
-| `HackerOs.Platform.ResourceAccounting.Tests` | `AllocationTracker` (attribution between two switches, first read, forgetting, real hook), `KernelMemoryLedger`, `MeasuredMemoryAccountant` (constants, image, kernel part and window, distribution, only after a GC, half-life, kernel part removed, shared assemblies counted once, simulated or measured, dead processes), real `ls` command under the real hook |
-| `HackerOs.Samples.ServiceApp.Tests` | real service (`SampleTickerService`) measured under the real hook, without changing its code |
-| `HackerOs.Ecosystem.Tests` | all catalog apps have their image; the text editor (window) measured with the real size of its DLL; composition: measurement, ledger and observer present exactly when memory is active |
-| `HackerOs.Platform.Core.Tests` | format of measured `status` and `meminfo`, simulated process unchanged; clipboard and pipe charges; `HackProcess.PrivateMemorySize64` |
-| `HackerOs.AppSdk.Tests` | write stream buffer charged then released, nothing for a read stream |
-| `HackerOs.Network.Tests` | socket charged for the duration of the call |
-| `HackerOs.App.Abstractions.Tests`, `HackerOs.Tools.ManifestGenerator.Tests` | strict `image` field, round trip; aggregation and image measurement; framework excluded |
+| `Kazo.Os.Platform.ResourceAccounting.Tests` | `AllocationTracker` (attribution between two switches, first read, forgetting, real hook), `KernelMemoryLedger`, `MeasuredMemoryAccountant` (constants, image, kernel part and window, distribution, only after a GC, half-life, kernel part removed, shared assemblies counted once, simulated or measured, dead processes), real `ls` command under the real hook |
+| `Kazo.Os.Samples.ServiceApp.Tests` | real service (`SampleTickerService`) measured under the real hook, without changing its code |
+| `Kazo.Os.Ecosystem.Tests` | all catalog apps have their image; the text editor (window) measured with the real size of its DLL; composition: measurement, ledger and observer present exactly when memory is active |
+| `Kazo.Os.Platform.Core.Tests` | format of measured `status` and `meminfo`, simulated process unchanged; clipboard and pipe charges; `KazoProcess.PrivateMemorySize64` |
+| `Kazo.Os.AppSdk.Tests` | write stream buffer charged then released, nothing for a read stream |
+| `Kazo.Os.Network.Tests` | socket charged for the duration of the call |
+| `Kazo.Os.App.Abstractions.Tests`, `Kazo.Os.Tools.ManifestGenerator.Tests` | strict `image` field, round trip; aggregation and image measurement; framework excluded |
 
 ## Task list
 
@@ -214,6 +214,6 @@ file and network gateways.
 - [x] Allocations layer: `AllocationTracker` on the context-switch hook.
 - [x] Resident layer: heap distribution after GC, exponential decay, documented and tested constants.
 - [x] Composition according to ADR 0066; measurement off = exact previous behavior.
-- [x] `/proc/<pid>/status`, `/proc/meminfo`, `HackProcess.PrivateMemorySize64`.
+- [x] `/proc/<pid>/status`, `/proc/meminfo`, `KazoProcess.PrivateMemorySize64`.
 - [x] Tests on a real windowed app, command and service, without changing their code.
 - [x] Documentation and index.

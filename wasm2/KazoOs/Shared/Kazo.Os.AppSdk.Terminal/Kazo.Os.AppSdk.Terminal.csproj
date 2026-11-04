@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <Import Project="../../Platform/Packaging.props" />
+
+  <PropertyGroup>
+    <PackageId>Kazo.Os.AppSdk.Terminal</PackageId>
+    <Description>Kazo OS App SDK for terminal commands and the embeddable terminal contract (IHackTerminal, KazoConsole).</Description>
+    <PackageTags>hackeros;app-sdk;terminal</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kazo.Os.App.Abstractions\Kazo.Os.App.Abstractions.csproj" />
+    <ProjectReference Include="..\Kazo.Os.AppSdk\Kazo.Os.AppSdk.csproj" />
+    <ProjectReference Include="..\Kazo.Os.AppSdk.Blazor\Kazo.Os.AppSdk.Blazor.csproj" />
+    <ProjectReference Include="..\Kazo.Os.AppSdk.VirtualKeyboard\Kazo.Os.AppSdk.VirtualKeyboard.csproj" />
+  </ItemGroup>
+
+  <!-- npm build inputs, not app content: published, they would collide with the Code Editor's. -->
+  <ItemGroup>
+    <Content Remove="package.json;package-lock.json" />
+    <None Include="package.json;package-lock.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Kazo.Os.AppSdk.Terminal.Tests" />
+  </ItemGroup>
+
+  <!-- xterm.js is bundled from the pinned package-lock.json into wwwroot/xterm (ADR 0061). -->
+  <Target Name="ValidateTerminalAssets" BeforeTargets="PrepareForBuild">
+    <Error Condition="!Exists('package-lock.json')"
+           Text="The terminal requires the pinned package-lock.json for reproducible xterm.js assets." />
+    <Error Condition="!Exists('wwwroot/xterm/xterm.bundle.js')"
+           Text="xterm.js bundle is missing. Run npm ci and npm run build in the Kazo.Os.AppSdk.Terminal project." />
+    <Error Condition="!Exists('wwwroot/xterm/xterm.bundle.LICENSE.txt')"
+           Text="xterm.js third-party license notice is missing." />
+  </Target>
+
+</Project>

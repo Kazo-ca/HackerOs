@@ -1,0 +1,4 @@
+@inherits KazoView<Note>
+<li class="note@(Model.Done ? " done" : "")">
+    <KazoLink Action="Details" RouteValues="@KazoRoute.Values(new { id = Model.Id })">@Model.Title</KazoLink>
+</li>

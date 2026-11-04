@@ -17,7 +17,7 @@ Benoit a demandé une page de présentation de HackerOS, liée depuis le
 liste les fonctionnalités disponibles, le but de l'écosystème, les façons de
 déployer l'OS, et une section « En cours de développement » avec les ADR et
 les issues. Il a demandé d'y lister les apps portées dans leurs propres dépôts
-(`Kazo-ca/HackerOs-App-*`) comme fonctionnalités optionnelles en cours, et a
+(`Kazo-ca/Os-App-*`) comme fonctionnalités optionnelles en cours, et a
 choisi de nommer aussi Chess et EmulatorJS, malgré l'ADR 0135 §2.
 
 ## Décision

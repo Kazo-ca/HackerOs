@@ -1,6 +1,6 @@
 > [English version](../../../en/wasm/dev/server-hosting.md)
 
-# OS servi par `HackerOs.Server` et connexion automatique
+# OS servi par `Kazo.Os.Server` et connexion automatique
 
 Chantier `exec/8-server-wasm` (série `exec`), ADR
 [0130](adr/0130-server-serves-webassembly-os-and-api.md),
@@ -9,8 +9,8 @@ Chantier `exec/8-server-wasm` (série `exec`), ADR
 
 ## But
 
-- `HackerOs.Server` sert **le même OS que la PWA** : les fichiers publiés de
-  `OS/HackerOs.Ecosystem`, tels quels. L'OS tourne dans le navigateur en
+- `Kazo.Os.Server` sert **le même OS que la PWA** : les fichiers publiés de
+  `OS/Kazo.Os.Ecosystem`, tels quels. L'OS tourne dans le navigateur en
   WebAssembly, avec ses Web Workers, ses mesures et `/proc/hackeros`. Le
   serveur ne garde que son API (comptes, synchronisation, relais réseau,
   administration).
@@ -21,7 +21,7 @@ Chantier `exec/8-server-wasm` (série `exec`), ADR
 ## Architecture
 
 ```text
- Navigateur                                        HackerOs.Server
+ Navigateur                                        Kazo.Os.Server
  ──────────                                        ───────────────
  index.html, _framework/, apps  ◄── MapStaticAssets ── fichiers publiés de l'Ecosystem
  GET hackeros-host.json         ◄── middleware ──────── {"isServer":true, ...}
@@ -33,21 +33,21 @@ Chantier `exec/8-server-wasm` (série `exec`), ADR
 
 | Partie | Fichier |
 |---|---|
-| Pipeline du serveur | `Server/HackerOs.Server/Program.cs` |
-| Réécriture des pages vers `index.html` | `Server/HackerOs.Server/Endpoints/OsPageRewrite.cs` |
-| `host-info` et `hackeros-host.json` | `Server/HackerOs.Server/Endpoints/VersionEndpoints.cs` |
-| Contrat | `Server/HackerOs.Server.Contracts/Hosting/HostInfoContracts.cs` |
-| Fichier « pas de serveur » de la PWA | `OS/HackerOs.Ecosystem/wwwroot/hackeros-host.json` |
-| Détection et vérification | `Platform/HackerOs.Platform.Core/ServerConnection/HostInfoClient.cs` |
-| État et reprise | `Platform/HackerOs.Platform.Core/ServerConnection/ServerPresenceService.cs` |
-| Icône et panneau | `Platform/HackerOs.Platform.Blazor/Shell/ServerStatusIndicator.razor` (`.razor.cs`, `.razor.css`) |
-| Zone de notification | `Platform/HackerOs.Taskbar.Blazor/Taskbar.razor` (`NotificationAreaContent`) |
-| Composition | `OS/HackerOs.Ecosystem.Host/EcosystemServiceCollectionExtensions.cs`, `HackerOsBrowserHostExtensions.cs` |
+| Pipeline du serveur | `Server/Kazo.Os.Server/Program.cs` |
+| Réécriture des pages vers `index.html` | `Server/Kazo.Os.Server/Endpoints/OsPageRewrite.cs` |
+| `host-info` et `hackeros-host.json` | `Server/Kazo.Os.Server/Endpoints/VersionEndpoints.cs` |
+| Contrat | `Server/Kazo.Os.Server.Contracts/Hosting/HostInfoContracts.cs` |
+| Fichier « pas de serveur » de la PWA | `OS/Kazo.Os.Ecosystem/wwwroot/hackeros-host.json` |
+| Détection et vérification | `Platform/Kazo.Os.Platform.Core/ServerConnection/HostInfoClient.cs` |
+| État et reprise | `Platform/Kazo.Os.Platform.Core/ServerConnection/ServerPresenceService.cs` |
+| Icône et panneau | `Platform/Kazo.Os.Platform.Blazor/Shell/ServerStatusIndicator.razor` (`.razor.cs`, `.razor.css`) |
+| Zone de notification | `Platform/Kazo.Os.Taskbar.Blazor/Taskbar.razor` (`NotificationAreaContent`) |
+| Composition | `OS/Kazo.Os.Ecosystem.Host/EcosystemServiceCollectionExtensions.cs`, `KazoOsBrowserHostExtensions.cs` |
 
 ## Démarrer le serveur
 
 ```bash
-dotnet run --project Server/HackerOs.Server   # http://localhost:5000 par défaut
+dotnet run --project Server/Kazo.Os.Server   # http://localhost:5000 par défaut
 ```
 
 Le navigateur ouvre l'adresse du serveur et reçoit l'OS. Un intergiciel posé
@@ -55,7 +55,7 @@ juste après `builder.Build()` ajoute `Cross-Origin-Opener-Policy` et
 `Cross-Origin-Embedder-Policy: credentialless` à toutes les réponses, selon
 `HackerOs:CrossOriginIsolation` de l'`appsettings.json` du serveur (`auto` par
 défaut ; `off` n'ajoute rien) : la page est isolée (ADR 0131, 0143). En production,
-`dotnet publish Server/HackerOs.Server` copie les fichiers de l'Ecosystem dans
+`dotnet publish Server/Kazo.Os.Server` copie les fichiers de l'Ecosystem dans
 son `wwwroot`. Toute adresse de page (`/`, un lien profond) reçoit
 `index.html` ; `/api/...`, `/health`, `/openapi`, `/scalar` et les fichiers ne
 sont jamais réécrits.
@@ -65,7 +65,7 @@ sont jamais réécrits.
 1. Au démarrage du bureau, l'OS lit `/etc/hackeros/server.config`. Si
    `auto-connect` n'est pas `false` (ou `no`, `off`, `0`), il lit
    `hackeros-host.json` sur sa propre origine : la PWA répond « pas de
-   serveur », `HackerOs.Server` répond « serveur ».
+   serveur », `Kazo.Os.Server` répond « serveur ».
 2. Le serveur retenu est celui du compte lié à l'appareil (Paramètres, ADR
    0028), sinon celui qui a servi l'OS.
 3. L'OS appelle `GET /api/hackeros/host-info` : réponse en API 1.x =
@@ -125,20 +125,20 @@ contient pas cette page ([`pitfalls.md`](pitfalls.md)).
 
 ## Tests
 
-- `Tests/HackerOs.Server.Tests/ServerOsHostingIntegrationTests.cs` : page de
+- `Tests/Kazo.Os.Server.Tests/ServerOsHostingIntegrationTests.cs` : page de
   l'OS sur `/` et un lien profond, 404 d'une route d'API inconnue, détection
   sur les deux adresses, compte créé puis utilisé depuis un deuxième appareil,
   mauvais mot de passe refusé.
-- `Tests/HackerOs.Platform.Core.Tests/ServerConnection/ServerPresenceServiceTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/ServerConnection/ServerPresenceServiceTests.cs` :
   connexion sans compte et sans question, hôte statique sans icône, serveur lié
   à la main, hors ligne puis reprise avec délai croissant, API incompatible,
   « S'identifier », `auto-connect=false`, sel identique d'un appareil à l'autre.
-- `build/verify-hosts.sh` (`Tests/HackerOs.HostSmoke.Tests`) : parcours
+- `build/verify-hosts.sh` (`Tests/Kazo.Os.HostSmoke.Tests`) : parcours
   `server` avec workers, mesures et icône ; aucune icône sur les autres.
 
 ## Liste des tâches
 
-- [x] Servir les fichiers publiés de l'Ecosystem depuis `HackerOs.Server`.
+- [x] Servir les fichiers publiés de l'Ecosystem depuis `Kazo.Os.Server`.
 - [x] Retirer Interactive Server, clients directs et références aux apps.
 - [x] Réécrire les pages de l'OS vers `index.html` dans tous les environnements.
 - [x] `host-info` et `hackeros-host.json` (serveur et PWA).

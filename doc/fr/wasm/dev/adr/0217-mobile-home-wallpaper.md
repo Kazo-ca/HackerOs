@@ -6,7 +6,7 @@
 
 Accepté le 2026-10-31 ; Benoit a choisi les recommandations (voir « Questions
 posées à Benoit »). Issue
-[#297](https://github.com/Kazo-ca/HackerOs/issues/297), série `todo/base`
+[#297](https://github.com/Kazo-ca/Os/issues/297), série `todo/base`
 (branche `todo/23-mobile-wallpaper`).
 
 - **Complète :** [ADR 0202](0202-desktop-wallpaper-images.md) (fonds d'écran en

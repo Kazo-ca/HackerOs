@@ -25,7 +25,7 @@
       "command": "dotnet",
       "args": [
         "build",
-        "${workspaceFolder}/wasm2/HackerOs/test/test/test.csproj",
+        "${workspaceFolder}/wasm2/KazoOs/test/test/test.csproj",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
@@ -37,7 +37,7 @@
       "command": "dotnet",
       "args": [
         "build",
-        "${workspaceFolder}/wasm2/HackerOs/OS/HackerOs.Ecosystem/HackerOs.Ecosystem.csproj",
+        "${workspaceFolder}/wasm2/KazoOs/OS/Kazo.Os.Ecosystem/Kazo.Os.Ecosystem.csproj",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
@@ -49,7 +49,7 @@
       "command": "dotnet",
       "args": [
         "build",
-        "${workspaceFolder}/wasm2/HackerOs/Server/HackerOs.Server/HackerOs.Server.csproj",
+        "${workspaceFolder}/wasm2/KazoOs/Server/Kazo.Os.Server/Kazo.Os.Server.csproj",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],

@@ -24,7 +24,7 @@ du modèle d'app, d'où viennent ses fichiers et à quoi il a droit.
 ### 1. Nouveau genre d'app `Web`
 
 `AppKind` gagne `Web` (`"web"` dans `manifest.json`). La définition dérive de
-`WebAppDefinition` (bibliothèque `HackerOs.AppSdk.Web`) :
+`WebAppDefinition` (bibliothèque `Kazo.Os.AppSdk.Web`) :
 
 ```csharp
 [AppManifest]

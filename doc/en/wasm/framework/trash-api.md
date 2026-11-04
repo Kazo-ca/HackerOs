@@ -1,8 +1,8 @@
 > [Version française](../../../fr/wasm/framework/trash-api.md)
 
-# Trash: `.trashinfo` format and `HackTrash` API
+# Trash: `.trashinfo` format and `KazoTrash` API
 
-This document describes what an app sees of the trash: the SDK's `HackTrash` API, the rules that apply to its operations, and the `.trashinfo` format that apps and other implementations read or write. The place of the trash in the OS, the `rm` and `trash` commands, the explorer and synchronization are in [`dev/trash.md`](../dev/trash.md).
+This document describes what an app sees of the trash: the SDK's `KazoTrash` API, the rules that apply to its operations, and the `.trashinfo` format that apps and other implementations read or write. The place of the trash in the OS, the `rm` and `trash` commands, the explorer and synchronization are in [`dev/trash.md`](../dev/trash.md).
 
 ## On-disk format
 
@@ -32,7 +32,7 @@ DeletionDate=2026-10-10T14:03:27
 
 - When listing, a `.trashinfo` without an item is deleted; an item without a
   `.trashinfo` is listed with an unknown origin.
-- An item deleted on another device carries, in its `.trashinfo`, the extension keys `X-HackerOS-Origin=deleted-on-another-device` and `X-HackerOS-Device=<device>`, which other implementations ignore. `HackTrashItem.DeletedOnAnotherDevice` reports it to apps.
+- An item deleted on another device carries, in its `.trashinfo`, the extension keys `X-HackerOS-Origin=deleted-on-another-device` and `X-HackerOS-Device=<device>`, which other implementations ignore. `KazoTrashItem.DeletedOnAnotherDevice` reports it to apps.
 
 ## Trash of the effective user
 
@@ -48,37 +48,37 @@ the user).
 | Case | Behavior |
 | --- | --- |
 | Item on the main file system | Moved into `files/` (content, permissions, owner and dates kept), if the caller has the right to delete it (write on the parent folder, capabilities). |
-| `/proc`, `/dev` (virtual mounts) | Refused: `HackIOException` "Cannot move to trash: virtual file system". Detected by the move's `CrossMountOperation`; nothing is left in `info/`. |
+| `/proc`, `/dev` (virtual mounts) | Refused: `KazoIOException` "Cannot move to trash: virtual file system". Detected by the move's `CrossMountOperation`; nothing is left in `info/`. |
 | Item already in the trash | Deleted permanently. |
-| `/`, the home folder, a folder that contains the trash (`~/.local`, the trash itself) | Refused: `HackIOException`, code `ProtectedEntry`. |
+| `/`, the home folder, a folder that contains the trash (`~/.local`, the trash itself) | Refused: `KazoIOException`, code `ProtectedEntry`. |
 | Symbolic link | The link itself goes to the trash, not its target. |
 
-## `HackTrash` API
+## `KazoTrash` API
 
-`Shared/HackerOs.AppSdk/IO/HackTrash.cs`. Static class, ambient context of
-ADR 0043 (`HackExecutionContext.Current`), `Hack*` exceptions. No
+`Shared/Kazo.Os.AppSdk/IO/KazoTrash.cs`. Static class, ambient context of
+ADR 0043 (`KazoExecutionContext.Current`), `Hack*` exceptions. No
 new capability: the `filesystem.*` capabilities and the permissions decide, as
-for `HackFile`.
+for `KazoFile`.
 
 ```csharp
-HackTrashItem item = await HackTrash.MoveToTrashAsync("Documents/rapport.txt");
-IReadOnlyList<HackTrashItem> items = await HackTrash.GetItemsAsync();   // plus ancien d'abord
-string restoredTo = await HackTrash.RestoreAsync(item);                 // ou RestoreAsync(item, "~/ailleurs.txt")
-await HackTrash.DeleteAsync(item);                                      // suppression définitive d'un élément
-await HackTrash.EmptyAsync();                                           // vide tout
-string root = HackTrash.TrashDirectory;                                 // ~/.local/share/Trash ou /root/...
+KazoTrashItem item = await KazoTrash.MoveToTrashAsync("Documents/rapport.txt");
+IReadOnlyList<KazoTrashItem> items = await KazoTrash.GetItemsAsync();   // plus ancien d'abord
+string restoredTo = await KazoTrash.RestoreAsync(item);                 // ou RestoreAsync(item, "~/ailleurs.txt")
+await KazoTrash.DeleteAsync(item);                                      // suppression définitive d'un élément
+await KazoTrash.EmptyAsync();                                           // vide tout
+string root = KazoTrash.TrashDirectory;                                 // ~/.local/share/Trash ou /root/...
 ```
 
 | Member | Detail |
 | --- | --- |
-| `MoveToTrashAsync(path)` | Missing path → `HackFileNotFoundException`. Returns the item created (`Name` = name in `files/`). |
+| `MoveToTrashAsync(path)` | Missing path → `KazoFileNotFoundException`. Returns the item created (`Name` = name in `files/`). |
 | `GetItemsAsync()` | Sorted by deletion date then by name; empty if the trash does not exist. |
-| `RestoreAsync(item, destination?)` | Destination, otherwise the `Path` read from the `.trashinfo` (then `item.OriginalPath`). Recreates missing parent folders. Destination occupied → `HackIOException` "already exists", nothing is overwritten. Unknown origin without a destination → `HackIOException`. Deletes the `.trashinfo`. |
-| `DeleteAsync(item)` | Deletes the item and its `.trashinfo`; neither of them → `HackFileNotFoundException`. |
+| `RestoreAsync(item, destination?)` | Destination, otherwise the `Path` read from the `.trashinfo` (then `item.OriginalPath`). Recreates missing parent folders. Destination occupied → `KazoIOException` "already exists", nothing is overwritten. Unknown origin without a destination → `KazoIOException`. Deletes the `.trashinfo`. |
+| `DeleteAsync(item)` | Deletes the item and its `.trashinfo`; neither of them → `KazoFileNotFoundException`. |
 | `EmptyAsync()` | Deletes all the content of `files/` and `info/` (the folders remain). |
 | `TrashDirectory` | Canonical path of the effective user's trash. |
 
-`HackTrashItem(Name, OriginalPath, DeletedAt, IsDirectory, Length)`: `Name` is
+`KazoTrashItem(Name, OriginalPath, DeletedAt, IsDirectory, Length)`: `Name` is
 the stable identifier; `Length` is the size of the file or the sum of the
 files in the folder. Only `Name` is used to find the item.
 
@@ -86,5 +86,5 @@ Each move to the trash, restoration and permanent deletion is written at
 `Information` level in the app's log (`/var/log/apps/<appId>.log`,
 ADR 0045).
 
-`HackFile.DeleteAsync` and `HackDirectory.DeleteAsync` remain permanent
+`KazoFile.DeleteAsync` and `KazoDirectory.DeleteAsync` remain permanent
 deletions, like `System.IO`.

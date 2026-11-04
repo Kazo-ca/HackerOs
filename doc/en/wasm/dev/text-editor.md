@@ -2,7 +2,7 @@
 
 # Text editor
 
-System app `HackerOs.Apps.TextEditor` (`org.hackeros.text-editor`). This document
+System app `Kazo.Os.Apps.TextEditor` (`org.hackeros.text-editor`). This document
 describes how it currently works and the search with replacement added by the
 `rebuild/4-text-editor` work item (phase 4, [ADR 0058](adr/0058-base-app-features.md) §3).
 
@@ -19,7 +19,7 @@ SDK boundary since `rebuild/4-sdk-user-and-apps`.
 | --- | --- |
 | `TextEditorApp` | `[AppManifest]` manifest: capabilities `apps.launch`, home folder read and write, Open/Save dialog boxes, notifications; `text/plain` file handler. |
 | `TextEditorDocument` | State of a document: path, content, MIME type, loading state, modified or not, revision read. |
-| `TextEditorFindEngine` | Search and replace logic, without Blazor or JavaScript, tested on its own (`Tests/HackerOs.Apps.TextEditor.Tests`). |
+| `TextEditorFindEngine` | Search and replace logic, without Blazor or JavaScript, tested on its own (`Tests/Kazo.Os.Apps.TextEditor.Tests`). |
 | `TextEditorWindow.razor` | Window: menus, search and replace bar, text area, status bar, keyboard shortcuts. |
 | `TextEditorWindow.razor.js` | What C# cannot reach: selection in the text area (`selectRange`, `getSelectionRange`) and blocking of browser shortcuts (`guardEditorShortcuts`). |
 
@@ -87,7 +87,7 @@ substring, case-insensitive.
   so **Save** (Ctrl+S) writes in place, without a dialog. Before, the path never
   arrived (`LaunchFilePath` was set by no one): the editor opened empty and Save
   behaved like Save as. CodeEditor follows the same rule.
-- **Text or binary** is decided on the content (`HackTextContent.TryDecode`,
+- **Text or binary** is decided on the content (`KazoTextContent.TryDecode`,
   SDK): strict UTF-8 with no control byte other than tab, line endings, form
   feed, backspace and escape. An empty file created by "New File" (labeled
   binary by the file system) therefore opens.
@@ -103,7 +103,7 @@ substring, case-insensitive.
 
 When the OS asks the editor to stop (logout, `kill`, "End task") while the
 document is modified, `OnAppStopRequestedAsync` writes the text into a
-`HackRecoveryDraft` draft
+`KazoRecoveryDraft` draft
 (`~/.local/state/org.hackeros.text-editor/recovery/draft.json`, folder
 `0700`) with the path of the original file; the OS waits for this write before
 closing the window. At the next launch without a file, the draft is taken back
@@ -143,6 +143,6 @@ tests). Plurals follow the language's rule (0 and 1 singular in French).
 ## Task list (feedback after `rebuild/4-text-editor`, delivered with `rebuild/4-file-explorer`)
 
 - [x] Read the launch file from the process arguments (TextEditor, CodeEditor).
-- [x] Decide text/binary on the content (`HackTextContent`).
+- [x] Decide text/binary on the content (`KazoTextContent`).
 - [x] Save as to a new file.
 - [x] Open/Save dialogs: double click, layout within the window.

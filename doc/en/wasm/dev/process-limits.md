@@ -22,8 +22,8 @@ This document covers the implementation of process limits: tables, controller, r
 | Operations `fs.fdopen`, `fs.fdclose`, `proc.rlimit` | WorkerHost | The same calls from a worker ([`worker-processes.md`](worker-processes.md)). |
 | `ulimit` (built-in) | Platform.Core, `ShellInterpreter.Ulimit.cs` | Reads and changes the limits of the shell's process. |
 | `prlimit` | Commands | Reads and changes the limits of a process. |
-| `HackProcess.GetResourceLimitsAsync` / `SetResourceLimitAsync`, `HackResourceLimits` | AppSdk | Public API (SDK 1.2, `PublicAPI.Unshipped.txt`). |
-| `AddHackerOsResourceLimits(configuration)` | Ecosystem.Host | Reads `HackerOs:ResourceLimits:Enabled` for the host. |
+| `KazoProcess.GetResourceLimitsAsync` / `SetResourceLimitAsync`, `KazoResourceLimits` | AppSdk | Public API (SDK 1.2, `PublicAPI.Unshipped.txt`). |
+| `AddKazoOsResourceLimits(configuration)` | Ecosystem.Host | Reads `HackerOs:ResourceLimits:Enabled` for the host. |
 
 ## Usage
 
@@ -103,13 +103,13 @@ Details: ADR 0139.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Processes/InMemoryProcessManagerTests.Limits.cs`
+- `Tests/Kazo.Os.Platform.Core.Tests/Processes/InMemoryProcessManagerTests.Limits.cs`
   and `ResourceLimitsConfigurationTests.cs`: tables, `setrlimit` rules,
   disabled limits, exemptions, descriptors, `pam_limits`, controller.
-- `Tests/HackerOs.Platform.WorkerHost.Tests/ProcessLimitsTests.cs`: end to
+- `Tests/Kazo.Os.Platform.WorkerHost.Tests/ProcessLimitsTests.cs`: end to
   end, on the main thread and in a worker (`ulimit`, `prlimit`,
   `/proc/self/limits`, `EMFILE`, `EAGAIN`, exits 152 and 137).
-- `Tests/HackerOs.AppSdk.Tests/HackResourceLimitsTests.cs`: reading of
+- `Tests/Kazo.Os.AppSdk.Tests/KazoResourceLimitsTests.cs`: reading of
   `/proc/<pid>/limits`.
 - `CommandParityTests`: `prlimit` in a worker and on the main thread.
 - `build/verify-hosts.sh`: limits step on the three hosts and

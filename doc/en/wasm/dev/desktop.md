@@ -2,7 +2,7 @@
 
 # Desktop: icons, shortcuts and `desktop.config`
 
-The `HackDesktop*` types, the `desktop.config` file, the `.desktop` shortcuts and the shortcut-creation intent intended for apps are in [`desktop-api.md`](../framework/desktop-api.md).
+The `KazoDesktop*` types, the `desktop.config` file, the `.desktop` shortcuts and the shortcut-creation intent intended for apps are in [`desktop-api.md`](../framework/desktop-api.md).
 
 Work item `desk/5-desktop` of the plan
 [`desktop-and-context-menu-plan.md`](plans/desktop-and-context-menu-plan.md) (§5).
@@ -41,7 +41,7 @@ On mobile, there are no desktop icons (ADR 0152 §7).
 DesktopShell ──► DesktopArea.BackgroundContent (BackgroundInteractive)
                    └─ DesktopSurfaceHost ── launches org.hackeros.desktop (real process)
                         └─ DesktopSurface (Desktop app, rights from its manifest)
-                             └─ HackFileView Mode=Desktop ──► registry ──► ExplorerFileView
+                             └─ KazoFileView Mode=Desktop ──► registry ──► ExplorerFileView
                                                                 └─ FileView ─► FileViewDesktop (grid)
 ```
 
@@ -49,7 +49,7 @@ DesktopShell ──► DesktopArea.BackgroundContent (BackgroundInteractive)
 | --- | --- | --- |
 | `DesktopSurfaceHost` | `Platform.Blazor` (`Shell/`) | Reserves the app as the shell surface (`WindowLaunchCoordinator.ReserveShellSurface`), launches it for the session user, renders its entry component outside a window with the app context and a menu scope, relaunches it once if it crashes. `CreateShortcutAsync(appId)` sends the shortcut intent. |
 | `DesktopArea.BackgroundInteractive` | `Windowing.Blazor` | Renders the background layer clickable and readable; the windows layer lets the pointer through outside the windows. |
-| **Desktop** app (`org.hackeros.desktop`) | `Apps/System/HackerOs.Apps.Desktop` | Hidden, single-instance system app, public SDK only. Creates `~/Desktop` if missing, reads and writes `desktop.config`, tracks `~/.config/hackeros`, completes the background menu, receives the shortcut intent. |
+| **Desktop** app (`org.hackeros.desktop`) | `Apps/System/Kazo.Os.Apps.Desktop` | Hidden, single-instance system app, public SDK only. Creates `~/Desktop` if missing, reads and writes `desktop.config`, tracks `~/.config/hackeros`, completes the background menu, receives the shortcut intent. |
 | `FileViewDesktop` | explorer, `FileControl/` (`AppSdk.FileView` before SDK 2.0) | The Desktop mode of the internal control: measured grid (`ResizeObserver`), selection, lasso, keyboard, drag and drop, system icons. Collocated script `FileViewDesktop.razor.js`. |
 | `ExplorerFileView` (`ExplorerFileView.Desktop.cs`) | `Apps.FileExplorer` | The provider: menus and actions for Home and Trash, full or empty Trash state, shortcut decoration (app name and icon, grayed out if the app is missing), launching a shortcut, creating shortcuts on an app drop. |
 | Start menu (`AppLauncher.Menu.cs`, `AppLauncher.razor.js`) | `Platform.Blazor` | OS menu on each app (Open, Pin, Send to ▸ Desktop) and dragging an app (`application/vnd.hackeros.app+json`). |
@@ -98,24 +98,24 @@ Page after Appearance: icon size, auto-arrange, alignment, system icons, sort,
 
 ## Tests
 
-- `HackerOs.AppSdk.Tests/Files/HackDesktopTests.cs`: order, placement,
+- `Kazo.Os.AppSdk.Tests/Files/KazoDesktopTests.cs`: order, placement,
   collisions, off-screen, auto-arrange, moves, shortcuts (reading, writing,
   rejection, numbered names), `desktop.config` (reading, writing, encoded
   keys, folder creation).
-- `HackerOs.Apps.FileExplorer.FileControl.Tests/FileViewDesktopTests.cs`: app
+- `Kazo.Os.Apps.FileExplorer.FileControl.Tests/FileViewDesktopTests.cs`: app
   drag payload.
-- `HackerOs.Platform.Blazor.Tests/WindowLaunchCoordinatorTests.cs`:
+- `Kazo.Os.Platform.Blazor.Tests/WindowLaunchCoordinatorTests.cs`:
   surface reservation.
-- `HackerOs.Apps.Settings.Tests/SettingsWindowTests.cs`: `--page=`.
-- `HackerOs.Ecosystem.Tests/BuildKnownLazyAppsTests.cs`: the Desktop app is a
+- `Kazo.Os.Apps.Settings.Tests/SettingsWindowTests.cs`: `--page=`.
+- `Kazo.Os.Ecosystem.Tests/BuildKnownLazyAppsTests.cs`: the Desktop app is a
   system app loaded on demand.
 
 ## Tasks (work item `desk/5-desktop`)
 
 - [x] ADR 0160 (adjustments to ADR 0152).
-- [x] SDK contract: `HackDesktop*`, `HackDesktopEntry`, `HackDesktopSettings`,
-  `HackAppIcons`, `HackFileMenuItems.EmptyTrash`.
-- [x] `HackFileView`: `HackFileViewMode.Desktop`, `DesktopOptions`,
+- [x] SDK contract: `KazoDesktop*`, `KazoDesktopEntry`, `KazoDesktopSettings`,
+  `KazoAppIcons`, `KazoFileMenuItems.EmptyTrash`.
+- [x] `KazoFileView`: `KazoFileViewMode.Desktop`, `DesktopOptions`,
   `DesktopPositions`, `DesktopPositionsChanged`.
 - [x] `FileViewDesktop`: grid, selection, lasso, keyboard, renaming,
   drag and drop, system icons.

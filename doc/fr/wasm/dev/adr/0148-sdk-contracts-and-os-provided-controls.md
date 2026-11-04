@@ -13,7 +13,7 @@ Accepté le 2026-10-19.
   générique est fourni par l'OS).
 - **Complète :** l'ADR 0063 (composants intégrables) : son mécanisme devient la
   base de tous les contrôles partagés.
-- **Remplace :** l'ADR 0037 §1 (bibliothèque `HackerOs.AppSdk.FileView`
+- **Remplace :** l'ADR 0037 §1 (bibliothèque `Kazo.Os.AppSdk.FileView`
   compilée dans l'app hôte) et §8 (l'explorateur garde ses propres boîtes
   « Ouvrir avec » et « Propriétés »). Les autres points de l'ADR 0037 (modèle
   unique des trois vues, renommage en place, glisser-déposer, icônes déléguées,
@@ -103,7 +103,7 @@ sont les mêmes partout (explorateur, bureau, toute app).
   toutes les apps sans recompilation.
 - L'explorateur devient l'unique source de vérité du contrôle de fichiers :
   il le fournit et l'affiche lui-même par `HackFileView`.
-- La bibliothèque `HackerOs.AppSdk.FileView` quitte le SDK (ADR 0149).
+- La bibliothèque `Kazo.Os.AppSdk.FileView` quitte le SDK (ADR 0149).
 - Le chantier 1 du plan livre le composant hôte typé, le registre lu au
   démarrage, les contrats réservés et le passage des droits de l'hôte.
 

@@ -1,0 +1,564 @@
+#nullable enable
+Kazo.Os.Apps.FileExplorer.ExplorerFileDialogs
+Kazo.Os.Apps.FileExplorer.ExplorerFileDialogs.Completed.get -> Microsoft.AspNetCore.Components.EventCallback<object?>
+Kazo.Os.Apps.FileExplorer.ExplorerFileDialogs.Completed.set -> void
+Kazo.Os.Apps.FileExplorer.ExplorerFileDialogs.Dialog.get -> string?
+Kazo.Os.Apps.FileExplorer.ExplorerFileDialogs.Dialog.set -> void
+Kazo.Os.Apps.FileExplorer.ExplorerFileDialogs.ExplorerFileDialogs() -> void
+Kazo.Os.Apps.FileExplorer.ExplorerFileDialogs.Request.get -> object?
+Kazo.Os.Apps.FileExplorer.ExplorerFileDialogs.Request.set -> void
+Kazo.Os.Apps.FileExplorer.ExplorerFileView
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.AllowMultiSelect.get -> bool
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.AllowMultiSelect.set -> void
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.CanExecute(string! command) -> bool
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.CanPaste.get -> bool
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.ClearSelection() -> void
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.ContextMenuOpening.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.AppSdk.Blazor.Files.KazoFileMenuOpeningEventArgs!>
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.ContextMenuOpening.set -> void
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.CurrentDirectory.get -> string!
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.Deleted.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.AppSdk.Blazor.Files.KazoFileViewDeletedEventArgs!>
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.Deleted.set -> void
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.DesktopOptions.get -> Kazo.Os.AppSdk.Files.KazoDesktopOptions?
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.DesktopOptions.set -> void
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.DesktopPositions.get -> System.Collections.Generic.IReadOnlyDictionary<string!, Kazo.Os.AppSdk.Files.KazoDesktopCell>?
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.DesktopPositions.set -> void
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.DesktopPositionsChanged.get -> Microsoft.AspNetCore.Components.EventCallback<System.Collections.Generic.IReadOnlyDictionary<string!, Kazo.Os.AppSdk.Files.KazoDesktopCell>!>
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.DesktopPositionsChanged.set -> void
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.ErrorOccurred.get -> Microsoft.AspNetCore.Components.EventCallback<string!>
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.ErrorOccurred.set -> void
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.ExecuteAsync(string! command) -> System.Threading.Tasks.Task!
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.ExplorerFileView() -> void
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.Features.get -> Kazo.Os.AppSdk.Blazor.Files.KazoFileViewFeatures
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.Features.set -> void
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.Filter.get -> System.Func<Kazo.Os.AppSdk.Blazor.Files.KazoFileViewItem!, bool>?
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.Filter.set -> void
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.InitialDirectory.get -> string!
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.InitialDirectory.set -> void
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.IsBusy.get -> bool
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.Items.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Blazor.Files.KazoFileViewItem!>!
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.Mode.get -> Kazo.Os.AppSdk.Blazor.Files.KazoFileViewMode
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.Mode.set -> void
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.ModeChanged.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.AppSdk.Blazor.Files.KazoFileViewMode>
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.ModeChanged.set -> void
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.NavigateAsync(string! path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.Navigated.get -> Microsoft.AspNetCore.Components.EventCallback<string!>
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.Navigated.set -> void
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.OpenOnTap.get -> bool
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.OpenOnTap.set -> void
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.Opening.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.AppSdk.Blazor.Files.KazoFileViewOpeningEventArgs!>
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.Opening.set -> void
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.RefreshAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.RefreshFilter() -> void
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.Renamed.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.AppSdk.Blazor.Files.KazoFileViewRenamedEventArgs!>
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.Renamed.set -> void
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.RevealAsync(string! path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.SelectedItems.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Blazor.Files.KazoFileViewItem!>!
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.SelectedResource.get -> Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemSelectedResourceHandle?
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.SelectedResource.set -> void
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.SelectionChanged.get -> Microsoft.AspNetCore.Components.EventCallback<System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Blazor.Files.KazoFileViewItem!>!>
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.SelectionChanged.set -> void
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.StateChanged -> System.EventHandler?
+Kazo.Os.Apps.FileExplorer.ExplorerFileView.WhenIdleAsync() -> System.Threading.Tasks.Task!
+Kazo.Os.Apps.FileExplorer.ExplorerSidebarResizer
+Kazo.Os.Apps.FileExplorer.ExplorerSidebarResizer.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Apps.FileExplorer.ExplorerSidebarResizer.ExplorerSidebarResizer() -> void
+Kazo.Os.Apps.FileExplorer.ExplorerSidebarResizer.Label.get -> string!
+Kazo.Os.Apps.FileExplorer.ExplorerSidebarResizer.Label.set -> void
+Kazo.Os.Apps.FileExplorer.ExplorerSidebarResizer.OnResized(int width) -> System.Threading.Tasks.Task!
+Kazo.Os.Apps.FileExplorer.ExplorerSidebarResizer.PanelSelector.get -> string!
+Kazo.Os.Apps.FileExplorer.ExplorerSidebarResizer.PanelSelector.set -> void
+Kazo.Os.Apps.FileExplorer.ExplorerSidebarResizer.Width.get -> int
+Kazo.Os.Apps.FileExplorer.ExplorerSidebarResizer.Width.set -> void
+Kazo.Os.Apps.FileExplorer.ExplorerSidebarResizer.WidthChanged.get -> Microsoft.AspNetCore.Components.EventCallback<int>
+Kazo.Os.Apps.FileExplorer.ExplorerSidebarResizer.WidthChanged.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext.<Clone>$() -> Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext!
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext.Deconstruct(out Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuScope Scope, out Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem? Item) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext.Equals(Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext? other) -> bool
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext.FileViewContextMenuContext(Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuScope Scope, Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem? Item) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext.Item.get -> Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem?
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext.Item.init -> void
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext.Scope.get -> Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuScope
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext.Scope.init -> void
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuScope
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuScope.Background = 0 -> Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuScope
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuScope.Directory = 1 -> Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuScope
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuScope.File = 2 -> Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuScope
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuScope.FileType = 3 -> Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuScope
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.<Clone>$() -> Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem!
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.Deconstruct(out string! Id, out string! Label, out Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor? Icon, out System.Func<System.Threading.Tasks.Task!>! OnActivate, out bool IsSeparatorBefore, out bool IsDisabled) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.Equals(Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem? other) -> bool
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.FileViewMenuItem(string! Id, string! Label, Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor? Icon, System.Func<System.Threading.Tasks.Task!>! OnActivate, bool IsSeparatorBefore = false, bool IsDisabled = false) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.Icon.get -> Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor?
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.Icon.init -> void
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.Id.get -> string!
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.Id.init -> void
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.IsDisabled.get -> bool
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.IsDisabled.init -> void
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.IsSeparatorBefore.get -> bool
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.IsSeparatorBefore.init -> void
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.Label.get -> string!
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.Label.init -> void
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.OnActivate.get -> System.Func<System.Threading.Tasks.Task!>!
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.OnActivate.init -> void
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItemCollection
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItemCollection.Add(Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem! item) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItemCollection.Clear() -> void
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItemCollection.FileViewMenuItemCollection() -> void
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItemCollection.InsertAfter(string! afterId, Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem! item) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItemCollection.InsertBefore(string! beforeId, Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem! item) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItemCollection.Items.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem!>!
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItemCollection.Remove(string! id) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.IFileViewContextMenuProvider
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.IFileViewContextMenuProvider.Customize(Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext! context, Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItemCollection! items) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.IFileViewContextMenuProvider.Matches(Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem! item) -> bool
+Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.IFileViewContextMenuProvider.Scope.get -> Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuScope
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewCancelEventArgs
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewCancelEventArgs.Cancel.get -> bool
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewCancelEventArgs.Cancel.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewCancelEventArgs.FileViewCancelEventArgs() -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewClipboardAction
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewClipboardAction.Copy = 1 -> Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewClipboardAction
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewClipboardAction.Cut = 0 -> Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewClipboardAction
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewClipboardAction.Paste = 2 -> Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewClipboardAction
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewClipboardRequestedEventArgs
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewClipboardRequestedEventArgs.Action.get -> Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewClipboardAction
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewClipboardRequestedEventArgs.Destination.get -> Kazo.Os.App.Abstractions.VirtualPath
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewClipboardRequestedEventArgs.FileViewClipboardRequestedEventArgs(Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewClipboardAction action, System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem!>! items, Kazo.Os.App.Abstractions.VirtualPath destination) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewClipboardRequestedEventArgs.Items.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem!>!
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewContextMenuOpeningEventArgs
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewContextMenuOpeningEventArgs.FileViewContextMenuOpeningEventArgs(Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuScope scope, Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem? item, Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItemCollection! items) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewContextMenuOpeningEventArgs.Item.get -> Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem?
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewContextMenuOpeningEventArgs.Items.get -> Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItemCollection!
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewContextMenuOpeningEventArgs.Scope.get -> Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuScope
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewCopiedEventArgs
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewCopiedEventArgs.Destination.get -> Kazo.Os.App.Abstractions.VirtualPath
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewCopiedEventArgs.FileViewCopiedEventArgs(System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem!>! items, Kazo.Os.App.Abstractions.VirtualPath destination) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewCopiedEventArgs.Items.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem!>!
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewCopyingEventArgs
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewCopyingEventArgs.Destination.get -> Kazo.Os.App.Abstractions.VirtualPath
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewCopyingEventArgs.FileViewCopyingEventArgs(System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem!>! items, Kazo.Os.App.Abstractions.VirtualPath destination) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewCopyingEventArgs.Items.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem!>!
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewCreatedEventArgs
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewCreatedEventArgs.FileViewCreatedEventArgs(Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem! item) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewCreatedEventArgs.Item.get -> Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem!
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewCreatingEventArgs
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewCreatingEventArgs.FileViewCreatingEventArgs(Kazo.Os.App.Abstractions.VirtualPath parentDirectory, string! name, Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemEntryKind kind) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewCreatingEventArgs.Kind.get -> Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemEntryKind
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewCreatingEventArgs.Name.get -> string!
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewCreatingEventArgs.ParentDirectory.get -> Kazo.Os.App.Abstractions.VirtualPath
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDeleteRequestedEventArgs
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDeleteRequestedEventArgs.FileViewDeleteRequestedEventArgs(System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem!>! items, bool permanent) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDeleteRequestedEventArgs.Items.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem!>!
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDeleteRequestedEventArgs.Permanent.get -> bool
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDeletedEventArgs
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDeletedEventArgs.FileViewDeletedEventArgs(System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.VirtualPath>! paths) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDeletedEventArgs.Paths.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.VirtualPath>!
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDeletingEventArgs
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDeletingEventArgs.FileViewDeletingEventArgs(System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem!>! items) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDeletingEventArgs.Items.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem!>!
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry.<Clone>$() -> Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry!
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry.Deconstruct(out Kazo.Os.App.Abstractions.VirtualPath Path, out bool IsDirectory) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry.Equals(Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry? other) -> bool
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry.FileViewDraggedEntry(Kazo.Os.App.Abstractions.VirtualPath Path, bool IsDirectory) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry.IsDirectory.get -> bool
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry.IsDirectory.init -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry.Path.get -> Kazo.Os.App.Abstractions.VirtualPath
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry.Path.init -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDropRequestedEventArgs
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDropRequestedEventArgs.AppIds.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDropRequestedEventArgs.AppIds.init -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDropRequestedEventArgs.Copy.get -> bool
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDropRequestedEventArgs.Destination.get -> Kazo.Os.App.Abstractions.VirtualPath?
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDropRequestedEventArgs.Entries.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry!>!
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDropRequestedEventArgs.FileViewDropRequestedEventArgs(Kazo.Os.App.Abstractions.VirtualPath? destination, System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry!>! entries, System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.IO.KazoHostFile!>! hostFiles, bool copy) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDropRequestedEventArgs.HostFiles.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.IO.KazoHostFile!>!
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDropRequestedEventArgs.IsEmpty.get -> bool
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewMovedEventArgs
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewMovedEventArgs.Destination.get -> Kazo.Os.App.Abstractions.VirtualPath
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewMovedEventArgs.FileViewMovedEventArgs(System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem!>! items, Kazo.Os.App.Abstractions.VirtualPath destination) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewMovedEventArgs.Items.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem!>!
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewMovingEventArgs
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewMovingEventArgs.Destination.get -> Kazo.Os.App.Abstractions.VirtualPath
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewMovingEventArgs.FileViewMovingEventArgs(System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem!>! items, Kazo.Os.App.Abstractions.VirtualPath destination) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewMovingEventArgs.Items.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem!>!
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewNavigatingEventArgs
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewNavigatingEventArgs.FileViewNavigatingEventArgs(Kazo.Os.App.Abstractions.VirtualPath from, Kazo.Os.App.Abstractions.VirtualPath to) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewNavigatingEventArgs.From.get -> Kazo.Os.App.Abstractions.VirtualPath
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewNavigatingEventArgs.To.get -> Kazo.Os.App.Abstractions.VirtualPath
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewOpenedEventArgs
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewOpenedEventArgs.FileViewOpenedEventArgs(Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem! item) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewOpenedEventArgs.Item.get -> Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem!
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewOpeningEventArgs
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewOpeningEventArgs.FileViewOpeningEventArgs(Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem! item, Kazo.Os.Apps.FileExplorer.FileControl.FileViewFolderActivationMode mode) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewOpeningEventArgs.Item.get -> Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem!
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewOpeningEventArgs.Mode.get -> Kazo.Os.Apps.FileExplorer.FileControl.FileViewFolderActivationMode
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewPathChangedEventArgs
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewPathChangedEventArgs.FileViewPathChangedEventArgs(Kazo.Os.App.Abstractions.VirtualPath path) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewPathChangedEventArgs.Path.get -> Kazo.Os.App.Abstractions.VirtualPath
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewRenamedEventArgs
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewRenamedEventArgs.FileViewRenamedEventArgs(Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem! item, string! previousName) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewRenamedEventArgs.Item.get -> Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem!
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewRenamedEventArgs.PreviousName.get -> string!
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewRenamingEventArgs
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewRenamingEventArgs.FileViewRenamingEventArgs(Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem! item, string! proposedName) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewRenamingEventArgs.Item.get -> Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem!
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewRenamingEventArgs.ProposedName.get -> string!
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewSelectionChangedEventArgs
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewSelectionChangedEventArgs.FileViewSelectionChangedEventArgs(System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem!>! selection) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewSelectionChangedEventArgs.Selection.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem!>!
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewSelectionChangingEventArgs
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewSelectionChangingEventArgs.FileViewSelectionChangingEventArgs(System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem!>! proposedSelection) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewSelectionChangingEventArgs.ProposedSelection.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem!>!
+Kazo.Os.Apps.FileExplorer.FileControl.FileView
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.AllowDragDrop.get -> bool
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.AllowDragDrop.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.AllowMultiSelect.get -> bool
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.AllowMultiSelect.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.CanPaste.get -> bool
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.CanPaste.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.ClearSelect() -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.ClipboardRequested.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewClipboardRequestedEventArgs!>
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.ClipboardRequested.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.Columns.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.FileExplorer.FileControl.FileViewColumn!>?
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.Columns.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.ContextMenuOpening -> System.EventHandler<Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewContextMenuOpeningEventArgs!>?
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.ContextMenuProviders.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.IFileViewContextMenuProvider!>!
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.ContextMenuProviders.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.Copied -> System.EventHandler<Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewCopiedEventArgs!>?
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.Copying -> System.EventHandler<Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewCopyingEventArgs!>?
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.Created -> System.EventHandler<Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewCreatedEventArgs!>?
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.Creating -> System.EventHandler<Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewCreatingEventArgs!>?
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.CurrentDirectory.get -> Kazo.Os.App.Abstractions.VirtualPath
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.CutPaths.get -> System.Collections.Generic.IReadOnlyCollection<string!>?
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.CutPaths.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.DeleteRequested.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDeleteRequestedEventArgs!>
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.DeleteRequested.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.Deleted -> System.EventHandler<Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDeletedEventArgs!>?
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.Deleting -> System.EventHandler<Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDeletingEventArgs!>?
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.DropRequested.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDropRequestedEventArgs!>
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.DropRequested.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.FileSystem.get -> Kazo.Os.Simulation.Abstractions.Gateways.IAppFileSystemGateway!
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.FileSystem.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.FileView() -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.Filter.get -> System.Func<Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem!, bool>?
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.Filter.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.FolderActivation.get -> Kazo.Os.Apps.FileExplorer.FileControl.FileViewFolderActivationMode
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.FolderActivation.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.GetItemTooltipAsync(string! path) -> System.Threading.Tasks.Task<string![]?>!
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.IconProvider.get -> Kazo.Os.Apps.FileExplorer.FileControl.Icons.IShellIconProvider?
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.IconProvider.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.InitialDirectory.get -> Kazo.Os.App.Abstractions.VirtualPath
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.InitialDirectory.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.Intents.get -> Kazo.Os.Simulation.Abstractions.Gateways.IAppIntentGateway?
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.Intents.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.Items.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem!>!
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.LoadFolderPreviewsAsync(string![]! paths) -> System.Threading.Tasks.Task!
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.Mode.get -> Kazo.Os.Apps.FileExplorer.FileControl.FileViewMode
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.Mode.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.ModeChanged.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Apps.FileExplorer.FileControl.FileViewMode>
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.ModeChanged.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.Moved -> System.EventHandler<Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewMovedEventArgs!>?
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.Moving -> System.EventHandler<Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewMovingEventArgs!>?
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.NavigateAsync(Kazo.Os.App.Abstractions.VirtualPath path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.Navigating -> System.EventHandler<Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewNavigatingEventArgs!>?
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.OnCustomFolderActivate.get -> System.Func<Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem!, System.Threading.Tasks.Task!>?
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.OnCustomFolderActivate.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.OnPasteShortcutAsync(bool hostFiles) -> System.Threading.Tasks.Task!
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.OnPathChange -> System.EventHandler<Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewPathChangedEventArgs!>?
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.Opened -> System.EventHandler<Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewOpenedEventArgs!>?
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.Opening -> System.EventHandler<Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewOpeningEventArgs!>?
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.OwnerAppId.get -> string?
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.OwnerAppId.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.PrepareExternalDragAsync(string! path, string![]! selectedPaths) -> System.Threading.Tasks.Task!
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.RefreshAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.RefreshFilter() -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.Renamed -> System.EventHandler<Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewRenamedEventArgs!>?
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.Renaming -> System.EventHandler<Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewRenamingEventArgs!>?
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.RevealAsync(Kazo.Os.App.Abstractions.VirtualPath path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.SelectByName(string! fileName) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.SelectedItem.get -> Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem?
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.SelectedItems.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem!>!
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.SelectionChanged -> System.EventHandler<Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewSelectionChangedEventArgs!>?
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.SelectionChanging -> System.EventHandler<Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewSelectionChangingEventArgs!>?
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.Watch.get -> Kazo.Os.Simulation.Abstractions.FileSystem.IAppFileSystemWatchGateway?
+Kazo.Os.Apps.FileExplorer.FileControl.FileView.Watch.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewBreadcrumb
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewBreadcrumb.Dispose() -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewBreadcrumb.FileViewBreadcrumb() -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewBreadcrumb.Owner.get -> Kazo.Os.Apps.FileExplorer.FileControl.FileView!
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewBreadcrumb.Owner.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewBreadcrumb.RootLabel.get -> string!
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewBreadcrumb.RootLabel.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewColumn
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewColumn.<Clone>$() -> Kazo.Os.Apps.FileExplorer.FileControl.FileViewColumn!
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewColumn.Deconstruct(out string! Key, out string! Header, out System.Func<Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem!, System.IComparable!>! SortAccessor, out double? Width) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewColumn.Equals(Kazo.Os.Apps.FileExplorer.FileControl.FileViewColumn? other) -> bool
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewColumn.FileViewColumn(string! Key, string! Header, System.Func<Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem!, System.IComparable!>! SortAccessor, double? Width = null) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewColumn.Header.get -> string!
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewColumn.Header.init -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewColumn.Key.get -> string!
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewColumn.Key.init -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewColumn.SortAccessor.get -> System.Func<Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem!, System.IComparable!>!
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewColumn.SortAccessor.init -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewColumn.Width.get -> double?
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewColumn.Width.init -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewContextMenu
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewContextMenu.FileViewContextMenu() -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewContextMenu.Owner.get -> Kazo.Os.Apps.FileExplorer.FileControl.FileView!
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewContextMenu.Owner.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewDesktop
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewDesktop.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewDesktop.FileViewDesktop() -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewDesktop.Owner.get -> Kazo.Os.Apps.FileExplorer.FileControl.FileView!
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewDesktop.Owner.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewDetails
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewDetails.FileViewDetails() -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewDetails.Owner.get -> Kazo.Os.Apps.FileExplorer.FileControl.FileView!
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewDetails.Owner.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewDropZone
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewDropZone.ChildContent.get -> Microsoft.AspNetCore.Components.RenderFragment?
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewDropZone.ChildContent.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewDropZone.Class.get -> string?
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewDropZone.Class.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewDropZone.Destination.get -> Kazo.Os.App.Abstractions.VirtualPath?
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewDropZone.Destination.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewDropZone.Dropped.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDropRequestedEventArgs!>
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewDropZone.Dropped.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewDropZone.FileViewDropZone() -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewDropZone.Owner.get -> Kazo.Os.Apps.FileExplorer.FileControl.FileView!
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewDropZone.Owner.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewFolderActivationMode
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewFolderActivationMode.Custom = 2 -> Kazo.Os.Apps.FileExplorer.FileControl.FileViewFolderActivationMode
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewFolderActivationMode.Navigate = 0 -> Kazo.Os.Apps.FileExplorer.FileControl.FileViewFolderActivationMode
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewFolderActivationMode.NewWindow = 1 -> Kazo.Os.Apps.FileExplorer.FileControl.FileViewFolderActivationMode
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewIcons
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewIcons.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewIcons.FileViewIcons() -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewIcons.Owner.get -> Kazo.Os.Apps.FileExplorer.FileControl.FileView!
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewIcons.Owner.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem.Deselect() -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem.FileName.get -> string!
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem.FileViewItem(Kazo.Os.App.Abstractions.VirtualPath fullPath, string! fileName, bool isDirectory, Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemEntryMetadata! metadata) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem.FullPath.get -> Kazo.Os.App.Abstractions.VirtualPath
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem.IconOverride.get -> Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor?
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem.IconOverride.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem.IsCut.get -> bool
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem.IsDirectory.get -> bool
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem.IsRenaming.get -> bool
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem.IsSelected.get -> bool
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem.Metadata.get -> Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemEntryMetadata!
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem.Rename() -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem.Select(bool additive = false) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewMode
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewMode.Desktop = 3 -> Kazo.Os.Apps.FileExplorer.FileControl.FileViewMode
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewMode.Details = 1 -> Kazo.Os.Apps.FileExplorer.FileControl.FileViewMode
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewMode.Icons = 2 -> Kazo.Os.Apps.FileExplorer.FileControl.FileViewMode
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewMode.Tree = 0 -> Kazo.Os.Apps.FileExplorer.FileControl.FileViewMode
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewTree
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewTree.FileViewTree() -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewTree.Owner.get -> Kazo.Os.Apps.FileExplorer.FileControl.FileView!
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewTree.Owner.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewTreeNode
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewTreeNode.Depth.get -> int
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewTreeNode.Depth.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewTreeNode.FileViewTreeNode() -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewTreeNode.Node.get -> Kazo.Os.Apps.FileExplorer.FileControl.FileViewTreeNodeState!
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewTreeNode.Node.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewTreeNode.Owner.get -> Kazo.Os.Apps.FileExplorer.FileControl.FileView!
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewTreeNode.Owner.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewTreeNode.Root.get -> Kazo.Os.Apps.FileExplorer.FileControl.FileViewTree!
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewTreeNode.Root.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewTreeNodeState
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewTreeNodeState.Children.get -> System.Collections.Generic.List<Kazo.Os.Apps.FileExplorer.FileControl.FileViewTreeNodeState!>?
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewTreeNodeState.Children.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewTreeNodeState.FileViewTreeNodeState() -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewTreeNodeState.IsExpanded.get -> bool
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewTreeNodeState.IsExpanded.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewTreeNodeState.IsLoading.get -> bool
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewTreeNodeState.IsLoading.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewTreeNodeState.Item.get -> Kazo.Os.Apps.FileExplorer.FileControl.FileViewItem!
+Kazo.Os.Apps.FileExplorer.FileControl.FileViewTreeNodeState.Item.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.DefaultShellIconProvider
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.DefaultShellIconProvider.DefaultShellIconProvider() -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.DefaultShellIconProvider.Resolve(Kazo.Os.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest request) -> Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor!
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest.Deconstruct(out Kazo.Os.App.Abstractions.VirtualPath Path, out bool IsDirectory, out string? Extension, out string? MediaType) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest.Equals(Kazo.Os.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest other) -> bool
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest.Extension.get -> string?
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest.Extension.init -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest.FileViewIconRequest() -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest.FileViewIconRequest(Kazo.Os.App.Abstractions.VirtualPath Path, bool IsDirectory, string? Extension, string? MediaType) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest.IsDirectory.get -> bool
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest.IsDirectory.init -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest.MediaType.get -> string?
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest.MediaType.init -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest.Path.get -> Kazo.Os.App.Abstractions.VirtualPath
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest.Path.init -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.IShellIconProvider
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.IShellIconProvider.Resolve(Kazo.Os.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest request) -> Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor!
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.IconPackShellIconProvider
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.IconPackShellIconProvider.IconPackShellIconProvider(Kazo.Os.Theming.Abstractions.IconPacks.IconPack! pack, Kazo.Os.Apps.FileExplorer.FileControl.Icons.IShellIconProvider? fallback = null) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.IconPackShellIconProvider.Pack.get -> Kazo.Os.Theming.Abstractions.IconPacks.IconPack!
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.IconPackShellIconProvider.Resolve(Kazo.Os.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest request) -> Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor!
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIcon
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIcon.Icon.get -> Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor?
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIcon.Icon.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIcon.ShellIcon() -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIcon.Size.get -> int
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIcon.Size.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.<Clone>$() -> Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor!
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.Deconstruct(out Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconKind Kind, out string? LibraryOrPath, out string? Name) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.Equals(Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor? other) -> bool
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.Kind.get -> Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconKind
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.Kind.init -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.LibraryOrPath.get -> string?
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.LibraryOrPath.init -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.Name.get -> string?
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.Name.init -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.ShellIconDescriptor(Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconKind Kind, string? LibraryOrPath, string? Name) -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconKind
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconKind.Custom = 2 -> Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconKind
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconKind.Png = 1 -> Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconKind
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconKind.Vector = 0 -> Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconKind
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconLabel
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconLabel.ChildContent.get -> Microsoft.AspNetCore.Components.RenderFragment?
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconLabel.ChildContent.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconLabel.Icon.get -> Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor?
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconLabel.Icon.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconLabel.ShellIconLabel() -> void
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconLabel.Size.get -> int
+Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconLabel.Size.set -> void
+Kazo.Os.Apps.FileExplorer.FileControl._Imports
+Kazo.Os.Apps.FileExplorer.FileControl._Imports.Execute() -> void
+Kazo.Os.Apps.FileExplorer.FileControl._Imports._Imports() -> void
+Kazo.Os.Apps.FileExplorer.FileExplorerApp
+Kazo.Os.Apps.FileExplorer.FileExplorerApp.FileExplorerApp() -> void
+Kazo.Os.Apps.FileExplorer.FileExplorerMobileWindow
+Kazo.Os.Apps.FileExplorer.FileExplorerMobileWindow.FileExplorerMobileWindow() -> void
+Kazo.Os.Apps.FileExplorer.FileExplorerState
+Kazo.Os.Apps.FileExplorer.FileExplorerState.CanNavigateBack.get -> bool
+Kazo.Os.Apps.FileExplorer.FileExplorerState.CanNavigateForward.get -> bool
+Kazo.Os.Apps.FileExplorer.FileExplorerState.CanNavigateUp.get -> bool
+Kazo.Os.Apps.FileExplorer.FileExplorerState.CurrentPath.get -> string!
+Kazo.Os.Apps.FileExplorer.FileExplorerState.FileExplorerState(string! initialPath = "/home/user") -> void
+Kazo.Os.Apps.FileExplorer.FileExplorerState.NavigateBack() -> void
+Kazo.Os.Apps.FileExplorer.FileExplorerState.NavigateForward() -> void
+Kazo.Os.Apps.FileExplorer.FileExplorerState.NavigateTo(string! newPath) -> void
+Kazo.Os.Apps.FileExplorer.FileExplorerState.NavigateUp() -> void
+Kazo.Os.Apps.FileExplorer.FileExplorerState.NotifyStateChanged() -> void
+Kazo.Os.Apps.FileExplorer.FileExplorerState.SearchQuery.get -> string!
+Kazo.Os.Apps.FileExplorer.FileExplorerState.SearchQuery.set -> void
+Kazo.Os.Apps.FileExplorer.FileExplorerState.StateChanged -> System.Action?
+Kazo.Os.Apps.FileExplorer.FileExplorerState.ViewMode.get -> Kazo.Os.Apps.FileExplorer.FileControl.FileViewMode
+Kazo.Os.Apps.FileExplorer.FileExplorerState.ViewMode.set -> void
+Kazo.Os.Apps.FileExplorer.FileExplorerWindow
+Kazo.Os.Apps.FileExplorer.FileExplorerWindow.CanNavigateBackChanged -> System.Action?
+Kazo.Os.Apps.FileExplorer.FileExplorerWindow.CanNavigateForward.get -> bool
+Kazo.Os.Apps.FileExplorer.FileExplorerWindow.CanNavigateForwardChanged -> System.Action?
+Kazo.Os.Apps.FileExplorer.FileExplorerWindow.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Apps.FileExplorer.FileExplorerWindow.FileExplorerWindow() -> void
+Kazo.Os.Apps.FileExplorer.FileExplorerWindow.NavigateForwardAsync(Kazo.Os.AppSdk.Blazor.AppForwardRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.AppBackResult!>
+Kazo.Os.Apps.FileExplorer.NetworkDrivesSidebar
+Kazo.Os.Apps.FileExplorer.NetworkDrivesSidebar.CurrentPath.get -> string?
+Kazo.Os.Apps.FileExplorer.NetworkDrivesSidebar.CurrentPath.set -> void
+Kazo.Os.Apps.FileExplorer.NetworkDrivesSidebar.Failed.get -> Microsoft.AspNetCore.Components.EventCallback<string!>
+Kazo.Os.Apps.FileExplorer.NetworkDrivesSidebar.Failed.set -> void
+Kazo.Os.Apps.FileExplorer.NetworkDrivesSidebar.Navigate.get -> Microsoft.AspNetCore.Components.EventCallback<string!>
+Kazo.Os.Apps.FileExplorer.NetworkDrivesSidebar.Navigate.set -> void
+Kazo.Os.Apps.FileExplorer.NetworkDrivesSidebar.NetworkDrivesSidebar() -> void
+Kazo.Os.Apps.FileExplorer.NetworkDrivesSidebar.ReloadAsync() -> System.Threading.Tasks.Task!
+Kazo.Os.Apps.FileExplorer.TrashView
+Kazo.Os.Apps.FileExplorer.TrashView.ReloadAsync() -> System.Threading.Tasks.Task!
+Kazo.Os.Apps.FileExplorer.TrashView.Restored.get -> Microsoft.AspNetCore.Components.EventCallback<System.Collections.Generic.IReadOnlyList<string!>!>
+Kazo.Os.Apps.FileExplorer.TrashView.Restored.set -> void
+Kazo.Os.Apps.FileExplorer.TrashView.TrashView() -> void
+Kazo.Os.Apps.FileExplorer._Imports
+Kazo.Os.Apps.FileExplorer._Imports.Execute() -> void
+Kazo.Os.Apps.FileExplorer._Imports._Imports() -> void
+override Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext.Equals(object? obj) -> bool
+override Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext.GetHashCode() -> int
+override Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext.ToString() -> string!
+override Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.Equals(object? obj) -> bool
+override Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.GetHashCode() -> int
+override Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.ToString() -> string!
+override Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry.Equals(object? obj) -> bool
+override Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry.GetHashCode() -> int
+override Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry.ToString() -> string!
+override Kazo.Os.Apps.FileExplorer.FileControl.FileView.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.FileExplorer.FileControl.FileView.OnParametersSetAsync() -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.FileExplorer.FileControl.FileViewBreadcrumb.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.FileExplorer.FileControl.FileViewBreadcrumb.OnParametersSet() -> void
+override Kazo.Os.Apps.FileExplorer.FileControl.FileViewColumn.Equals(object? obj) -> bool
+override Kazo.Os.Apps.FileExplorer.FileControl.FileViewColumn.GetHashCode() -> int
+override Kazo.Os.Apps.FileExplorer.FileControl.FileViewColumn.ToString() -> string!
+override Kazo.Os.Apps.FileExplorer.FileControl.FileViewDesktop.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.FileExplorer.FileControl.FileViewDesktop.OnParametersSet() -> void
+override Kazo.Os.Apps.FileExplorer.FileControl.FileViewDropZone.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest.GetHashCode() -> int
+override Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.Equals(object? obj) -> bool
+override Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.GetHashCode() -> int
+override Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.ToString() -> string!
+override Kazo.Os.Apps.FileExplorer.FileExplorerApp.Assets.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AssetManifest!>!
+override Kazo.Os.Apps.FileExplorer.FileExplorerApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Apps.FileExplorer.FileExplorerApp.Components.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppComponent!>!
+override Kazo.Os.Apps.FileExplorer.FileExplorerApp.Description.get -> string!
+override Kazo.Os.Apps.FileExplorer.FileExplorerApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Apps.FileExplorer.FileExplorerApp.FileHandlers.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.FileHandler!>!
+override Kazo.Os.Apps.FileExplorer.FileExplorerApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Apps.FileExplorer.FileExplorerApp.Id.get -> string!
+override Kazo.Os.Apps.FileExplorer.FileExplorerApp.Intents.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppIntentDeclarationManifest!>!
+override Kazo.Os.Apps.FileExplorer.FileExplorerApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Apps.FileExplorer.FileExplorerApp.MobileEntryPoint.get -> System.Type?
+override Kazo.Os.Apps.FileExplorer.FileExplorerApp.Name.get -> string!
+override Kazo.Os.Apps.FileExplorer.FileExplorerApp.PublisherId.get -> string!
+override Kazo.Os.Apps.FileExplorer.FileExplorerApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Apps.FileExplorer.FileExplorerMobileWindow.CanNavigateBack.get -> bool
+override Kazo.Os.Apps.FileExplorer.FileExplorerMobileWindow.NavigateBackAsync(Kazo.Os.AppSdk.Blazor.AppBackRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.AppBackResult!>
+override Kazo.Os.Apps.FileExplorer.FileExplorerWindow.OnAppAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.FileExplorer.FileExplorerWindow.OnAppInitialized() -> void
+override Kazo.Os.Apps.FileExplorer.FileExplorerWindow.OnAppInitializedAsync() -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.FileExplorer.FileExplorerWindow.OnAppStopRequestedAsync(Kazo.Os.AppSdk.Diagnostics.KazoStopRequestedEventArgs! e) -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.FileExplorer.NetworkDrivesSidebar.OnInitializedAsync() -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.FileExplorer.NetworkDrivesSidebar.OnParametersSetAsync() -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.FileExplorer.TrashView.OnInitializedAsync() -> System.Threading.Tasks.Task!
+static Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext.operator !=(Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext? left, Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext? right) -> bool
+static Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext.operator ==(Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext? left, Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewContextMenuContext? right) -> bool
+static Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.operator !=(Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem? left, Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem? right) -> bool
+static Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem.operator ==(Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem? left, Kazo.Os.Apps.FileExplorer.FileControl.ContextMenu.FileViewMenuItem? right) -> bool
+static Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry.operator !=(Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry? left, Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry? right) -> bool
+static Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry.operator ==(Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry? left, Kazo.Os.Apps.FileExplorer.FileControl.Events.FileViewDraggedEntry? right) -> bool
+static Kazo.Os.Apps.FileExplorer.FileControl.FileViewColumn.operator !=(Kazo.Os.Apps.FileExplorer.FileControl.FileViewColumn? left, Kazo.Os.Apps.FileExplorer.FileControl.FileViewColumn? right) -> bool
+static Kazo.Os.Apps.FileExplorer.FileControl.FileViewColumn.operator ==(Kazo.Os.Apps.FileExplorer.FileControl.FileViewColumn? left, Kazo.Os.Apps.FileExplorer.FileControl.FileViewColumn? right) -> bool
+static Kazo.Os.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest.operator !=(Kazo.Os.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest left, Kazo.Os.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest right) -> bool
+static Kazo.Os.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest.operator ==(Kazo.Os.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest left, Kazo.Os.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest right) -> bool
+static Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.Png(string! assetPathOrUri) -> Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor!
+static Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.Vector(Kazo.Os.AppSdk.Icons.IconLibrary library, string! name) -> Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor!
+static Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.operator !=(Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor? left, Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor? right) -> bool
+static Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor.operator ==(Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor? left, Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconDescriptor? right) -> bool
+static Kazo.Os.Apps.FileExplorer.FileExplorerApp.RegisterFileContextMenu(Kazo.Os.AppSdk.Blazor.Files.RegisterFileContextMenuContext! context) -> void
+virtual Kazo.Os.Apps.FileExplorer.FileExplorerWindow.CanNavigateBack.get -> bool
+virtual Kazo.Os.Apps.FileExplorer.FileExplorerWindow.NavigateBackAsync(Kazo.Os.AppSdk.Blazor.AppBackRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.AppBackResult!>
+~override Kazo.Os.Apps.FileExplorer.FileControl.FileView.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.FileExplorer.FileControl.FileViewBreadcrumb.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.FileExplorer.FileControl.FileViewContextMenu.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.FileExplorer.FileControl.FileViewDesktop.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.FileExplorer.FileControl.FileViewDetails.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.FileExplorer.FileControl.FileViewDropZone.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.FileExplorer.FileControl.FileViewIcons.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.FileExplorer.FileControl.FileViewTree.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.FileExplorer.FileControl.FileViewTreeNode.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest.Equals(object obj) -> bool
+~override Kazo.Os.Apps.FileExplorer.FileControl.Icons.FileViewIconRequest.ToString() -> string
+~override Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIcon.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.FileExplorer.FileControl.Icons.ShellIconLabel.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.FileExplorer.FileExplorerMobileWindow.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.FileExplorer.FileExplorerWindow.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.FileExplorer.NetworkDrivesSidebar.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.FileExplorer.TrashView.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

@@ -3,19 +3,19 @@
 # Publishing a Kazo OS version
 
 A new version is published by changing **a single file**:
-`wasm2/HackerOs/build/Versions.props`. Once the change is merged into `main`,
+`wasm2/KazoOs/build/Versions.props`. Once the change is merged into `main`,
 GitHub Actions creates the tag, the GitHub Release and pushes the packages to
 nuget.org ([ADR 0173](adr/0173-automatic-releases-from-the-version-file.md)).
 
 ## The version file
 
 ```xml
-<HackerOsVersion>2.2.2</HackerOsVersion>
+<KazoOsVersion>2.2.2</KazoOsVersion>
 ```
 
-`Directory.Build.props` imports it: every assembly, each of the 42 `HackerOs.*`
+`Directory.Build.props` imports it: every assembly, each of the 42 `Kazo.Os.*`
 packages, the `dotnet new` templates, the generated manifests
-(`sdkCompatibility.minimumVersion`) and `HackerOsSdk.Version` (shown in
+(`sdkCompatibility.minimumVersion`) and `KazoOsSdk.Version` (shown in
 Settings ▸ About and on the welcome screen) derive from it. No code or test
 repeats the number.
 
@@ -34,10 +34,10 @@ Pick the number following SemVer
 1. Create a branch from `main`.
 2. For a minor or major version, fold the public API:
    `build/tools/ship-public-api.sh` (`--check` to see without changing anything).
-3. Change `HackerOsVersion` in `build/Versions.props`.
+3. Change `KazoOsVersion` in `build/Versions.props`.
    In the same PR, group the entries of `changes/unreleased/` into
    `changes/<version>.json` ([`change-list.md`](change-list.md), ADR 0186).
-4. (Advised) build once (`dotnet build HackerOs.sln -c Release`) and commit the
+4. (Advised) build once (`dotnet build Kazo.Os.sln -c Release`) and commit the
    rewritten manifests; the build regenerates them anyway.
 5. Open the PR to `main`, wait for the green verification, merge.
 6. Watch the **Actions** tab: *Verify Kazo OS WASM* runs on `main`, then
@@ -49,10 +49,10 @@ Pick the number following SemVer
 File: `.github/workflows/release.yml`. It starts when *Verify Kazo OS WASM*
 ends **successfully** after a push to `main`, then:
 
-1. reads `HackerOsVersion` from the verified commit; if the `v<version>` tag
+1. reads `KazoOsVersion` from the verified commit; if the `v<version>` tag
    already exists, it stops (nothing to release);
 2. packs with `build/pack-local.sh --ci`;
-3. keeps only the `HackerOs.*.<version>.nupkg` and `.snupkg` files;
+3. keeps only the `Kazo.Os.*.<version>.nupkg` and `.snupkg` files;
 4. publishes the PWA (`dotnet publish`) and zips it as `hackeros-wasm-<version>.zip`;
 5. pushes the packages to nuget.org when that is configured (see below);
 6. creates the tag and the GitHub Release: title `Kazo OS <version>`, notes
@@ -97,7 +97,7 @@ Two options; the first is recommended (no key to store or renew).
    - *Repository*: `HackerOs`;
    - *Workflow file*: `release.yml` (the name only, without `.github/workflows/`);
    - *Environment*: leave empty.
-4. In GitHub: repository `Kazo-ca/HackerOs` ▸ **Settings** ▸ **Secrets and
+4. In GitHub: repository `Kazo-ca/Os` ▸ **Settings** ▸ **Secrets and
    variables** ▸ **Actions** ▸ **Variables** tab ▸ **New repository variable**:
    name `NUGET_USER`, value = your nuget.org **user name** (the profile name,
    not the email address).
@@ -110,7 +110,7 @@ key valid for one hour.
 1. nuget.org ▸ account menu ▸ **API Keys** ▸ **Create**.
 2. *Key name*: `HackerOs GitHub Actions`; *Expires in*: 365 days; *Select
    scopes*: **Push** ▸ *Push new packages and package versions*; *Glob
-   pattern*: `HackerOs.*`. Create, then **Copy**.
+   pattern*: `Kazo.Os.*`. Create, then **Copy**.
 3. GitHub ▸ **Settings** ▸ **Secrets and variables** ▸ **Actions** ▸
    **Secrets** tab ▸ **New repository secret**: name `NUGET_API_KEY`, value =
    the copied key.
@@ -123,7 +123,7 @@ without either, it publishes the GitHub Release alone with the warning
 ### Optional: reserving the `HackerOs.` prefix
 
 A prefix reservation shows the "verified" badge and prevents a third party from
-publishing a `HackerOs.*` package. It is requested by email to
+publishing a `Kazo.Os.*` package. It is requested by email to
 `account@nuget.org` (see the *ID prefix reservation* page of the NuGet
 documentation), after the first release.
 
@@ -134,7 +134,7 @@ documentation), after the first release.
 - Summary of the *Release Kazo OS* job: the package list and the line
   "NuGet: packages pushed to nuget.org" (or "not configured").
 - nuget.org: a new package is indexed within minutes
-  (`https://www.nuget.org/packages/HackerOs.AppSdk`).
+  (`https://www.nuget.org/packages/Kazo.Os.AppSdk`).
 
 ## Troubleshooting
 

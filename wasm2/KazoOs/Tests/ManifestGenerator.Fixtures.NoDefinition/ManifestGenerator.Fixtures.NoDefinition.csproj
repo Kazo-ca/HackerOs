@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Build fixture for Kazo.Os.Tools.ManifestGenerator.Tests (ADR 0047). Not part of the solution. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <KazoOsAppProject>true</KazoOsAppProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Kazo.Os.App.Abstractions\Kazo.Os.App.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Shared\Kazo.Os.AppSdk\Kazo.Os.AppSdk.csproj" />
+  </ItemGroup>
+</Project>

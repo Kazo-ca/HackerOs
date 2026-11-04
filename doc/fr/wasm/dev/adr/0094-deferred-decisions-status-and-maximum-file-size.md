@@ -40,7 +40,7 @@ toutes comme manquantes.
    | 12 | Interface de récupération quand Paramètres et Terminal sont désactivés | **Sans objet** : il n'y a plus de désactivation (ADR 0048), et une app système ne se désinstalle pas. Paramètres et Terminal sont des apps système, donc toujours présents. |
 
 2. **Taille maximale d'un fichier.** La règle déjà appliquée par
-   `Infrastructure/HackerOs.Infrastructure.Browser/Schema/FileContentStoragePolicy.cs`
+   `Infrastructure/Kazo.Os.Infrastructure.Browser/Schema/FileContentStoragePolicy.cs`
    devient la règle documentée :
    - un fichier fait au plus **16 Mio** (`DefaultMaxFileSizeBytes`) ;
    - son contenu est découpé en blocs d'au plus **256 Kio**

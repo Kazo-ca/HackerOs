@@ -56,21 +56,21 @@ Chromium de `/opt/pw-browsers`. GitHub Actions est en panne dans tout le dépôt
 
 | Étape | Résultat |
 |---|---|
-| `dotnet build HackerOs.sln`, Debug puis Release | réussi, 0 avertissement, 0 erreur |
-| Tests unitaires et d'intégration, 40 projets (`--no-build -c Debug`) | 3 397 réussis, 0 échec (dont `HackerOs.SdkCompatibility.Tests` 5/5, `HackerOs.Platform.Core.Tests` 1 125/1 125, `HackerOs.Tools.ManifestGenerator.Tests` 67/67) |
-| `HackerOs.E2E.Tests` | 16/16 |
-| `HackerOs.UI.E2E.Tests` | 24/24 |
-| `HackerOs.Templates.E2E.Tests` (dont l'hôte qui charge l'app de compatibilité 1.0.0) | 6/6 |
-| `HackerOs.Pwa.E2E.Tests` | 5/6 au premier passage, puis 6/6 deux fois de suite après la correction ci-dessous |
+| `dotnet build Kazo.Os.sln`, Debug puis Release | réussi, 0 avertissement, 0 erreur |
+| Tests unitaires et d'intégration, 40 projets (`--no-build -c Debug`) | 3 397 réussis, 0 échec (dont `Kazo.Os.SdkCompatibility.Tests` 5/5, `Kazo.Os.Platform.Core.Tests` 1 125/1 125, `Kazo.Os.Tools.ManifestGenerator.Tests` 67/67) |
+| `Kazo.Os.E2E.Tests` | 16/16 |
+| `Kazo.Os.UI.E2E.Tests` | 24/24 |
+| `Kazo.Os.Templates.E2E.Tests` (dont l'hôte qui charge l'app de compatibilité 1.0.0) | 6/6 |
+| `Kazo.Os.Pwa.E2E.Tests` | 5/6 au premier passage, puis 6/6 deux fois de suite après la correction ci-dessous |
 | `build/publish-trimmed.sh` (porte de fusion) | PASS : 134 fichiers `.wasm`, 26,4 Mio (8,0 Mio Brotli) ; connexion, chaque app fenêtrée du menu Démarrer, tube dans le pool de workers, Intranet, site Blazor d'exemple, redémarrage hors ligne |
-| `build/verify-hosts.sh` (trois hôtes) | PASS : Ecosystem publié (mesures actives, coupées au build, coupées par réglage), `test/test`, `HackerOs.Server` |
+| `build/verify-hosts.sh` (trois hôtes) | PASS : Ecosystem publié (mesures actives, coupées au build, coupées par réglage), `test/test`, `Kazo.Os.Server` |
 
 Seule correction de code de ce chantier : le test PWA
 `Reload_fully_offline_boots_the_app_and_preserves_a_saved_file` cliquait la
 ligne du fichier une seule fois ; quand la liste de l'explorateur se
 rechargeait juste après la navigation, la sélection tombait et le bouton
 « Download » restait désactivé. `PwaTestSupport.AssertFileContentAsync` reprend
-la boucle de `SelectFileExplorerEntryAsync` de `HackerOs.UI.E2E.Tests` : cliquer
+la boucle de `SelectFileExplorerEntryAsync` de `Kazo.Os.UI.E2E.Tests` : cliquer
 jusqu'à ce que la ligne soit sélectionnée. C'était l'échec « hors ligne »
 relevé sur `v3/base` depuis `v3/12`. Sans IPv6, la suite se replie sur
 `127.0.0.2` depuis `v3/7` ([`pwa-cache-recovery.md`](../pwa-cache-recovery.md)).
@@ -89,14 +89,14 @@ conteneur, .NET SDK 10.0.402) :
 
 | Étape | Résultat |
 |---|---|
-| `dotnet build HackerOs.sln`, Debug puis Release | réussi, 0 avertissement, 0 erreur |
-| Tests unitaires et d'intégration, 40 projets (`--no-build -c Debug`) | 3 510 réussis, 0 échec (dont `HackerOs.SdkCompatibility.Tests` 5/5) |
-| `HackerOs.E2E.Tests` | 16/16 |
-| `HackerOs.UI.E2E.Tests` | 27/27 |
-| `HackerOs.Templates.E2E.Tests` (dont l'hôte qui charge l'app 1.0.0) | 6/6 |
-| `HackerOs.Pwa.E2E.Tests` | 6/6 |
+| `dotnet build Kazo.Os.sln`, Debug puis Release | réussi, 0 avertissement, 0 erreur |
+| Tests unitaires et d'intégration, 40 projets (`--no-build -c Debug`) | 3 510 réussis, 0 échec (dont `Kazo.Os.SdkCompatibility.Tests` 5/5) |
+| `Kazo.Os.E2E.Tests` | 16/16 |
+| `Kazo.Os.UI.E2E.Tests` | 27/27 |
+| `Kazo.Os.Templates.E2E.Tests` (dont l'hôte qui charge l'app 1.0.0) | 6/6 |
+| `Kazo.Os.Pwa.E2E.Tests` | 6/6 |
 | `build/publish-trimmed.sh` | PASS : 134 fichiers `.wasm`, 26,6 Mio (8,0 Mio Brotli), chaque app fenêtrée, pool de workers, Intranet, site Blazor, redémarrage hors ligne |
-| `build/verify-hosts.sh` (trois hôtes) | PASS : Ecosystem (trois modes de mesure), `test/test`, `HackerOs.Server` |
+| `build/verify-hosts.sh` (trois hôtes) | PASS : Ecosystem (trois modes de mesure), `test/test`, `Kazo.Os.Server` |
 
 Pendant la fusion de `v3/base`, l'escalade de `kill -9` a échoué une fois
 (test instable connu, voir plus bas) ; elle passe dans la série complète.
@@ -150,18 +150,18 @@ Ils échouaient ou vacillaient déjà sur `v3/base` avant ce chantier ; aucun
 n'a échoué pendant cette vérification, et aucun n'est une régression de la
 migration :
 
-- `A_command_that_spins_at_once` (`HackerOs.Platform.WorkerHost.Tests`) échouait
+- `A_command_that_spins_at_once` (`Kazo.Os.Platform.WorkerHost.Tests`) échouait
   à chaque exécution sur `v3/base` en cours de journée ; il passe ici, sous une
   machine moins chargée, ce qui le range parmi les tests sensibles à la charge ;
 - l'escalade de `kill -9`, `CommandParityTests` (`zip` puis `unzip`),
   `CpuAccountingOverheadTests` et `AppInstallationService` sont instables sous
   charge ;
-- le test hors ligne de `HackerOs.Pwa.E2E.Tests` échouait sur `v3/base`
+- le test hors ligne de `Kazo.Os.Pwa.E2E.Tests` échouait sur `v3/base`
   depuis `v3/12` ; il est corrigé par ce chantier (voir plus haut) ;
-- `HackerOs.Pwa.E2E.Tests` publie l'OS avec les versions `1.0.0-pwatest-v1` et
+- `Kazo.Os.Pwa.E2E.Tests` publie l'OS avec les versions `1.0.0-pwatest-v1` et
   `-v2` ; le générateur réécrit alors les `manifest.json` commités des apps
   avec `sdkCompatibility.minimumVersion` = `1.0.0-pwatest-v2` (85 fichiers). Il
-  faut annuler ces modifications (`git checkout -- wasm2/HackerOs/Apps`) avant
+  faut annuler ces modifications (`git checkout -- wasm2/KazoOs/Apps`) avant
   de commiter après cette suite ;
 - le banc UI des fenêtres détachées démarre parfois mal quand les suites
   s'enchaînent.

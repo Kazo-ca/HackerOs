@@ -66,7 +66,7 @@ shutdown, faults, and bounded history.
 
 ## Implemented architecture
 
-**Contracts** — `Shared/HackerOs.Simulation.Abstractions/`:
+**Contracts** — `Shared/Kazo.Os.Simulation.Abstractions/`:
 
 - `Sessions/IdentityContracts.cs` — `LocalUserId`, `LocalGroupId`, `SessionId`,
   `InstallationId`, `DeviceId`, `LocalLoginName`, `LocalPasswordCredential`,
@@ -93,7 +93,7 @@ shutdown, faults, and bounded history.
 - `Events/EventBusContracts.cs`, `Diagnostics/DiagnosticsContracts.cs` — typed
   event bus and diagnostics/audit contracts (also Section 7 prerequisites).
 
-**Implementation** — `Platform/HackerOs.Platform.Core/`:
+**Implementation** — `Platform/Kazo.Os.Platform.Core/`:
 
 - `Sessions/LocalPasswordHasher.cs` — PBKDF2-SHA256 (`"pbkdf2-sha256-v1"`,
   210,000 iterations by default) credential creation/verification using
@@ -163,7 +163,7 @@ IReadOnlyList<ProcessResourceSample> samples = resourceSimulator.Tick(processMan
 - [x] Add lifecycle/resource contract tests with no sleeps.
   - **Completed: 2026-08-01** — 95 Section 7 tests pass, including 4
     cross-cutting tests in
-    `Tests/HackerOs.Platform.Core.Tests/Processes/CrossCuttingLifecycleTests.cs`
+    `Tests/Kazo.Os.Platform.Core.Tests/Processes/CrossCuttingLifecycleTests.cs`
     that combine session, process manager, event bus, audit log, and resource
     simulator behavior in a single deterministic scenario. Full solution:
     277 tests pass with warnings as errors.

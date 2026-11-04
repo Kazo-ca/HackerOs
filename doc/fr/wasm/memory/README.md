@@ -9,8 +9,8 @@ jour à la fin de chaque série ou quand une convention change.
 
 ## Où en est le projet
 
-- **Code actif** : `wasm2/HackerOs/` (OS simulé en Blazor WebAssembly, .NET 10,
-  solution `HackerOs.sln`). `src/` est l'ancienne version, gardée comme
+- **Code actif** : `wasm2/KazoOs/` (OS simulé en Blazor WebAssembly, .NET 10,
+  solution `Kazo.Os.sln`). `src/` est l'ancienne version, gardée comme
   référence.
 - **Version** : Kazo OS et le SDK passent en **2.2.2** (`build/Versions.props`),
   préparée le 2026-11-01 dans la PR `release/2.2.2` vers `main` ; elle est
@@ -24,9 +24,9 @@ jour à la fin de chaque série ou quand une convention change.
   Hack Store : ADR 0219 (signature des auteurs), 0221 (toutes les ressources
   statiques dans le paquet, CSS isolé) et 0222 (satellites des apps
   installées). Le catalogue doit demander le `manifest.json` du paquet
-  (issue Kazo-ca/HackerOs-AppMarketPlace#6). La 2.2.0 (2026-10-31) a versé
+  (issue Kazo-ca/Os-AppMarketPlace#6). La 2.2.0 (2026-10-31) a versé
   dans `Shipped` les 3020 lignes d'API ajoutées depuis la 2.1.0 (Hack Store,
-  modèle `hackeros-solution`, thèmes…). Le SDK 2.0.0 a retiré `HackerOs.AppSdk.FileView` et
+  modèle `hackeros-solution`, thèmes…). Le SDK 2.0.0 a retiré `Kazo.Os.AppSdk.FileView` et
   refuse les apps 1.x
   ([ADR 0161](../dev/adr/0161-sdk-2-0-implementation-adjustments.md)).
   La 2.1.0 (2026-10-26) est la première version publiée automatiquement
@@ -41,7 +41,7 @@ jour à la fin de chaque série ou quand une convention change.
 | Phase web | ASP.Hack (MVC, vues `.razor`/`.cshtml`), sites Blazor, sites statiques, rendu HTML du navigateur, fenêtres détachées | [`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md) |
 | V3 (`v3/1` à `v3/16`) | Fin de la migration wasm v3, SDK 1.0 gelé, publication trimmée | [`wasm-v3-final-status.md`](../dev/plans/wasm-v3-final-status.md) |
 | V3.1 | Géométrie et titre des fenêtres, SDK 1.1 | [`v3-1-series-plan.md`](../dev/plans/v3-1-series-plan.md) |
-| EXEC (`exec/*`) | Limites de processus, OOM killer, passerelles distantes, boîte « ne répond pas », `HackBackground`, OS servi par `HackerOs.Server`, isolation cross-origin, SDK 1.2 | [`execution-followups-plan.md`](../dev/plans/execution-followups-plan.md) |
+| EXEC (`exec/*`) | Limites de processus, OOM killer, passerelles distantes, boîte « ne répond pas », `KazoBackground`, OS servi par `Kazo.Os.Server`, isolation cross-origin, SDK 1.2 | [`execution-followups-plan.md`](../dev/plans/execution-followups-plan.md) |
 | DESK (`desk/0` à `desk/6`) | Contrôle de fichiers fourni par l'OS, menu contextuel central, entrées de menu des apps, bureau, SDK 2.0 | [`desktop-and-context-menu-plan.md`](../dev/plans/desktop-and-context-menu-plan.md) |
 | Multi-moniteur (`multi-monitor/0` à `multi-monitor/9`) | Bureau étendu : un écran par surface d'affichage, `DisplayId` et zone de travail par écran, fenêtres déplacées par portail, service d'écrans (Chrome/Edge, repli ailleurs), une barre des tâches par écran, menus « Autre écran » et voile d'identification, Paramètres ▸ Écrans, glisser entre écrans ; aucun changement du SDK des apps | [`multi-monitor-plan.md`](../dev/plans/multi-monitor-plan.md) |
 | File Explorer (`explorer/1` à `explorer/9`) | Barre latérale redimensionnable, état vide dans la liste, glisser vers l'ordinateur, raccourcis, lecteurs réseau suivis, erreurs en `MessageBox` ; le `.zip` ouvert comme dossier est fait dans `todo/base` (`todo/10-zip-as-folder`, issue #241) | [ADR 0185](../dev/adr/0185-file-explorer-improvements.md), [`file-explorer.md`](../dev/file-explorer.md) |
@@ -59,7 +59,7 @@ jour à la fin de chaque série ou quand une convention change.
   (prochaine mineure).
 - **Explorateur mobile** (octobre 2026, PR #212 vers `main`) : point d'entrée
   mobile des apps honoré, explorateur de fichiers mobile, dialogues en plein
-  écran sur mobile, un toucher ouvre (`HackFileView.OpenOnTap`) (ADR 0171).
+  écran sur mobile, un toucher ouvre (`KazoFileView.OpenOnTap`) (ADR 0171).
 - **Depuis le multi-moniteur** (sur `main`, 28 au 30 octobre 2026) : dossier de
   l'ordinateur monté comme lecteur réseau (ADR 0181), `hackpkg install` depuis
   GitHub (ADR 0182), présentation des fonctionnalités `features.md` (ADR 0192),
@@ -86,7 +86,7 @@ jour à la fin de chaque série ou quand une convention change.
   réservées) : chantier 1 du Hack Store fait, modèle
   `hackeros-solution` et workflow de publication vers le catalogue (ADR 0207,
   [`app-repository.md`](../framework/app-repository.md), issue #246). Le
-  dépôt `HackerOs-AppTemplate` ne sera régénéré qu'avec un sous-module sur la
+  dépôt `Os-AppTemplate` ne sera régénéré qu'avec un sous-module sur la
   release qui contient ce modèle, la 2.2.0 (PR en brouillon dans ce dépôt).
   Fonds d'écran en image faits aussi ([ADR 0202](../dev/adr/0202-desktop-wallpaper-images.md),
   issue #254, [`wallpapers.md`](../dev/wallpapers.md)).
@@ -106,7 +106,7 @@ jour à la fin de chaque série ou quand une convention change.
   posée à Benoit). Voir [`app-installation.md`](../dev/app-installation.md).
 - **Hack Store 5, l'app** (ADR 0212, issue `TODO` #249, série `todo/base`,
   branche `todo/5-hackstore-app`) : app système `org.hackeros.store`
-  (`HackerOs.Apps.Store`), source `catalog:<nom>/<appId>@<version>`,
+  (`Kazo.Os.Apps.Store`), source `catalog:<nom>/<appId>@<version>`,
   `hackpkg install <appId>`, `AppUpdateMonitor` et notification, épinglage par
   défaut (`defaultPinsApplied` de `start-menu.json`). Réponses de Benoit
   (2026-10-31) : Q1 A redémarrage sans administrateur, Q2 A source
@@ -125,7 +125,7 @@ jour à la fin de chaque série ou quand une convention change.
 - **Hack Store, étapes suivantes** (ADR 0214, issue `TODO` #251, série
   `todo/base`, branche `todo/19-hackstore-later`) : ajout sans redémarrage
   (catalogue vivant `AppCatalog.Changed`), signatures ECDSA P-256
-  (`[signing-keys]`, `HackerOsAppSigningKeys`), journal `.transaction`,
+  (`[signing-keys]`, `KazoOsAppSigningKeys`), journal `.transaction`,
   `hackpkg rollback`/`repair`, `AppDataGuard`. Cinq questions posées à Benoit,
   réponse A à chacune. La clé du catalogue officiel a été créée par Benoit le
   2026-11-01 (`keygen`, secret `HACK_STORE_SIGNING_KEY` du catalogue) ; sa clé
@@ -166,7 +166,7 @@ jour à la fin de chaque série ou quand une convention change.
   0193 heure locale, 0194 menus de la barre des tâches, 0195 bouton
   Marche/arrêt du menu Démarrer, 0196 point des notifications non lues ; série `todo/base` : 0197 bulles de
   notification, 0201 « Changer d'utilisateur » reste grisé, 0203 packs d'icônes, 0207 modèle `hackeros-solution`, 0208 sources de confiance du Hack Store, 0212 app Hack Store, 0213 packs de thèmes, 0214 Hack Store sans redémarrage, signature et transactions, 0215 réponses du Hack Store (pas de badge, appId ambigu refusé) (les
-  autres numéros jusqu'à 0211 sont réservés par ses chantiers ; 0216 à 0219 par le lot 3 : 0216 mode « Ne pas déranger », 0217 fond d'écran de l'accueil mobile, 0218 « Définir comme fond d'écran » dans le menu des images, 0219 outil de signature des auteurs d'apps) ; 0220 boutons Précédent et Suivant de la souris, série `mouse-back/base` ; 0221 toutes les ressources statiques d'une app dans son paquet et CSS isolé d'une app installée (branche `app-assets/static-web-assets`) ; 0222 traductions des apps installées, assemblages satellites (#337, branche `app-assets/satellite-assemblies`) ; 0223 redémarrer sur la nouvelle version (série `version-cache/base`) ; 0224 réessayer le démarrage après une erreur du serveur (branche `boot/retry-server-errors`) ; 0225 servir les fichiers des apps installées à chaque page (branche `installed-apps/serve-uncontrolled-page`) ; 0226 mot de passe oublié, réinitialiser depuis la connexion (branche `login/forgot-password-factory-reset`) ; 0227 la réinitialisation efface tout le navigateur (branche `login/factory-reset-erase-everything`) ; 0228 HackerOS devient Kazo OS (série `rename/base`) ; 0229 « Kazo OS » avec une espace, dépôts `Kazo.Os.App.*`, redirection vers os.kazo.ca. **Prochain numéro libre :
+  autres numéros jusqu'à 0211 sont réservés par ses chantiers ; 0216 à 0219 par le lot 3 : 0216 mode « Ne pas déranger », 0217 fond d'écran de l'accueil mobile, 0218 « Définir comme fond d'écran » dans le menu des images, 0219 outil de signature des auteurs d'apps) ; 0220 boutons Précédent et Suivant de la souris, série `mouse-back/base` ; 0221 toutes les ressources statiques d'une app dans son paquet et CSS isolé d'une app installée (branche `app-assets/static-web-assets`) ; 0222 traductions des apps installées, assemblages satellites (#337, branche `app-assets/satellite-assemblies`) ; 0223 redémarrer sur la nouvelle version (série `version-cache/base`) ; 0224 réessayer le démarrage après une erreur du serveur (branche `boot/retry-server-errors`) ; 0225 servir les fichiers des apps installées à chaque page (branche `installed-apps/serve-uncontrolled-page`) ; 0226 mot de passe oublié, réinitialiser depuis la connexion (branche `login/forgot-password-factory-reset`) ; 0227 la réinitialisation efface tout le navigateur (branche `login/factory-reset-erase-everything`) ; 0228 HackerOS devient Kazo OS (série `rename/base`) ; 0229 « Kazo OS » avec une espace, dépôts `Os-App-*`, redirection vers os.kazo.ca. **Prochain numéro libre :
   0230.** Avant d'en
   prendre un, vérifier `dev/adr/` sur `main` et les PR ouvertes.
 
@@ -205,7 +205,7 @@ section **IV** de [`AGENTS.md`](../../../../AGENTS.md), que Claude Code lit par
 - **SDK** : l'API publique est suivie par `PublicAPI.Shipped.txt` /
   `PublicAPI.Unshipped.txt` ; un ajout passe par `Unshipped` jusqu'à la
   publication suivante (`build/tools/ship-public-api.sh`).
-- **Publier** : changer `HackerOsVersion` dans `build/Versions.props` et
+- **Publier** : changer `KazoOsVersion` dans `build/Versions.props` et
   fusionner dans `main` ; le workflow `Release Kazo OS` crée le tag, la
   Release GitHub et pousse sur nuget.org ([`releases.md`](../dev/releases.md),
   ADR 0173).
@@ -215,7 +215,7 @@ section **IV** de [`AGENTS.md`](../../../../AGENTS.md), que Claude Code lit par
 | Note | Contenu |
 | --- | --- |
 | [`decisions-not-built.md`](decisions-not-built.md) | Décisions prises par Benoit en discussion et pas encore codées ni écrites ailleurs : fenêtres et barre des tâches (chantiers restants de #242), vrais sites dans le navigateur (#266 : proxy public et Wayback restants), apps tierces portées, apps hébergées par le serveur, idées tirées de daedalOS, éditeurs. |
-| Renommage (2026-11-04) | HackerOS devient Kazo OS ([ADR 0228](../dev/adr/0228-rename-to-kazoos.md), [ADR 0229](../dev/adr/0229-kazo-os-display-name-and-new-address.md)) : série `rename/base` en cours, chantiers 2 à 8 listés dans l'ADR. Benoit renomme lui-même le dépôt en `Kazo-ca/Os`. Dépôts d'apps renommés `Kazo.Os.App.*`. Le site passe à `os.kazo.ca` ; `hackos.kazo.ca` est redirigé par un Worker Cloudflare (PR #362), sans récupération des données. |
+| Renommage (2026-11-04) | HackerOS devient Kazo OS ([ADR 0228](../dev/adr/0228-rename-to-kazoos.md), [ADR 0229](../dev/adr/0229-kazo-os-display-name-and-new-address.md)) : série `rename/base` en cours, chantiers 2 à 8 listés dans l'ADR. Benoit renomme lui-même le dépôt en `Kazo-ca/Os`. Dépôts d'apps renommés `Os-App-*`, `Os-AppTemplate`, `Os-AppMarketPlace`. Le site passe à `os.kazo.ca` ; `hackos.kazo.ca` est redirigé par un Worker Cloudflare (PR #362), sans récupération des données. Chantiers 3 et 4 réunis (SDK 3.0.0, paquets `Kazo.Os.*`, types `Kazo*`) : l'enregistrement `HackIcon` devient `KazoSurfaceIcon`, car le composant `HackerIcon` prend le nom `KazoIcon`. Benoit (2026-11-04) : le magasin s'appelle « Kazo OS Store » (chantier 5). Les badges NuGet du readme visent `Kazo.Os.AppSdk` et `Kazo.Os.Templates`. |
 | [`known-test-failures.md`](known-test-failures.md) | Échecs de tests préexistants connus (à nommer dans une PR, pas à cacher) et astuces d'environnement récentes. |
 
 ## Environnement et pièges

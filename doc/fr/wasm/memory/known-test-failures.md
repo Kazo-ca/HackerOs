@@ -13,19 +13,19 @@ cette liste. Les causes déjà trouvées et corrigées sont dans
 
 | Suite | Test | Symptôme |
 | --- | --- | --- |
-| `HackerOs.E2E.Tests` | `Window_runtime_renders_and_handles_mouse_and_touch_pointer_gestures`, `Window_runtime_handles_every_resize_edge_in_real_browser` | Délai dépassé ; toujours là après l'ADR 0177. |
-| `HackerOs.UI.E2E.Tests` | `Every_listed_surface_has_no_serious_axe_violation…`, `Representative_real_app_surfaces…` (axe) | `label-content-name-mismatch` sur `.launcher-trigger` et `.taskbar-clock` de la barre des tâches. |
-| `HackerOs.TrimmedPublish.E2E.Tests` | test de la Calculatrice (axe) | `label-content-name-mismatch` sur les touches MC, MR, M+, M-, AC, x². |
-| `HackerOs.UI.E2E.Tests` | `LowStorageSpaceTests.A_full_quota_warns_once…` | « No low-space notification within 60 s ». |
+| `Kazo.Os.E2E.Tests` | `Window_runtime_renders_and_handles_mouse_and_touch_pointer_gestures`, `Window_runtime_handles_every_resize_edge_in_real_browser` | Délai dépassé ; toujours là après l'ADR 0177. |
+| `Kazo.Os.UI.E2E.Tests` | `Every_listed_surface_has_no_serious_axe_violation…`, `Representative_real_app_surfaces…` (axe) | `label-content-name-mismatch` sur `.launcher-trigger` et `.taskbar-clock` de la barre des tâches. |
+| `Kazo.Os.TrimmedPublish.E2E.Tests` | test de la Calculatrice (axe) | `label-content-name-mismatch` sur les touches MC, MR, M+, M-, AC, x². |
+| `Kazo.Os.UI.E2E.Tests` | `LowStorageSpaceTests.A_full_quota_warns_once…` | « No low-space notification within 60 s ». |
 
 ## Instables (passent seuls, échouent parfois sous charge)
 
 - `AppInstallationService` (tests unitaires) ;
 - `LocalNetworkTests` avec un web worker ;
 - le harnais E2E des fenêtres détachées ;
-- `HackerOs.UI.E2E.Tests` : `FileExplorerDownload` et `BrowserHomePage` quand
+- `Kazo.Os.UI.E2E.Tests` : `FileExplorerDownload` et `BrowserHomePage` quand
   toute la suite tourne ;
-- `HackerOs.Platform.WorkerHost.Tests` : un test de temps.
+- `Kazo.Os.Platform.WorkerHost.Tests` : un test de temps.
 
 La CI relance une fois un test en échec et signale « Flaky test » s'il passe au
 second essai ([`../dev/ci-workflows.md`](../dev/ci-workflows.md)).

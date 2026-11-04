@@ -51,7 +51,7 @@ l'app (C). Benoit a choisi B.
 - Une app qui doit connaître le résultat réel appelle `PublishAsync`, partout.
   Le guide du SDK recommande cette forme pour le code qui peut tourner en
   worker.
-- Nouvelle ligne dans `Shared/HackerOs.Simulation.Abstractions/PublicAPI.Unshipped.txt` ;
+- Nouvelle ligne dans `Shared/Kazo.Os.Simulation.Abstractions/PublicAPI.Unshipped.txt` ;
   `HackerOsVersion` reste `1.2.0` jusqu'à la prochaine publication.
 - Test : `RemoteEventsTests.PublishAsync_returns_the_outcome_and_the_subscriber_faults_decided_by_the_OS`
   vérifie le même résultat sur le fil principal et en worker (livré, refusé,

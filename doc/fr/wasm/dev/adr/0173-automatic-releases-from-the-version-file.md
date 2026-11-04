@@ -12,13 +12,13 @@ le reste de l'ADR 0098 (version unique, paquets, flux local) tient toujours.
 
 ## Contexte
 
-- `wasm2/HackerOs/build/Versions.props` (`HackerOsVersion`) donne déjà sa
-  version à chaque projet (ADR 0098 §1) : assemblies, 42 paquets `HackerOs.*`,
+- `wasm2/KazoOs/build/Versions.props` (`HackerOsVersion`) donne déjà sa
+  version à chaque projet (ADR 0098 §1) : assemblies, 42 paquets `Kazo.Os.*`,
   modèles, manifestes générés, `HackerOsSdk.Version` affichée par l'OS.
 - Une publication restait manuelle : aucun tag, aucune GitHub Release, paquets
   produits seulement dans `artifacts/local-nupkg`.
 - Un seul endroit codait encore le numéro en dur : le test
-  `PublishedPagesTests` de `HackerOs.Pwa.E2E.Tests` (`"2.0.3"`).
+  `PublishedPagesTests` de `Kazo.Os.Pwa.E2E.Tests` (`"2.0.3"`).
 
 ## Décision
 
@@ -32,7 +32,7 @@ le reste de l'ADR 0098 (version unique, paquets, flux local) tient toujours.
    quand **Verify HackerOS WASM** réussit sur un push de `main` : il lit la
    version du commit vérifié et, si le tag `v<version>` n'existe pas,
    - empaquette par `build/pack-local.sh --ci` (`ContinuousIntegrationBuild=true`) ;
-   - garde seulement les `HackerOs.*.<version>.nupkg` et `.snupkg` (jamais une
+   - garde seulement les `Kazo.Os.*.<version>.nupkg` et `.snupkg` (jamais une
      app de compatibilité `Contoso.*`) ;
    - publie le site WASM et le zippe (`hackeros-wasm-<version>.zip`) ;
    - pousse les paquets sur nuget.org (`--skip-duplicate`) ;
@@ -58,7 +58,7 @@ le reste de l'ADR 0098 (version unique, paquets, flux local) tient toujours.
 
 - Une PR qui ne change pas la version ne publie rien ; une PR qui la change
   publie une seule fois, après une vérification verte de `main`.
-- Les identifiants `HackerOs.*` deviennent publics sur nuget.org ; le flux
+- Les identifiants `Kazo.Os.*` deviennent publics sur nuget.org ; le flux
   local reste disponible pour essayer une version non publiée.
 - Le workflow n'est jamais déclenché par une PR ni par une branche
   `*/base`.

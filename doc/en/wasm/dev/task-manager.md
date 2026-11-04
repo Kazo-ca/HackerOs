@@ -3,8 +3,8 @@
 # Task manager
 
 Implementation of the `rebuild/4-task-manager` work item of phase 4: ADR 0056
-sections 4 and 5 (`HackProcess`, `HackServiceController`) and ADR 0058 section 2
-(rewrite of `HackerOs.Apps.SystemMonitor`). The metrics read come from the
+sections 4 and 5 (`KazoProcess`, `KazoServiceController`) and ADR 0058 section 2
+(rewrite of `Kazo.Os.Apps.SystemMonitor`). The metrics read come from the
 `4-proc-metrics` work item ([`system-metrics.md`](system-metrics.md),
 ADR 0057).
 
@@ -16,15 +16,15 @@ third-party app or `ps` can read as well.
 
 | Tab | Content | Source |
 | --- | --- | --- |
-| Processes | PID, name, user, state, CPU, memory, disk read and write per second; sort, filter, multiple selection, "End task" (`SIGTERM`), "Force kill" (`SIGKILL`, context menu), details | `HackProcess` → `/proc/<pid>/status`, `stat`, `cmdline`, `cwd`, `io` |
+| Processes | PID, name, user, state, CPU, memory, disk read and write per second; sort, filter, multiple selection, "End task" (`SIGTERM`), "Force kill" (`SIGKILL`, context menu), details | `KazoProcess` → `/proc/<pid>/status`, `stat`, `cmdline`, `cwd`, `io` |
 | Performance | summary (former Overview tab), total or per-core CPU chart, memory chart, hardware section (former "Hardware & System Info" tab) | `/proc/stat`, `/proc/meminfo`, `/proc/uptime`, `/proc/loadavg`, `/proc/cpuinfo` |
-| Disk | used and free space of each disk; read and write rates, active time, counters | `HackDriveInfo`, `/proc/diskstats` |
+| Disk | used and free space of each disk; read and write rates, active time, counters | `KazoDriveInfo`, `/proc/diskstats` |
 | Network | received and sent rates per interface, packets, errors, drops | `/proc/net/dev` |
-| Services | installed services, state, PID, start type, start and stop | `HackServiceController` |
+| Services | installed services, state, PID, start type, start and stop | `KazoServiceController` |
 
 The app now references only the SDK: `IProcessManager`, `AppCatalog`,
 `AppLifecycleOrchestrator` and `IEventBus` are gone, and its ADR 0055 exemption
-is removed from `build/HackerOs.Apps.targets`.
+is removed from `build/Kazo.Os.Apps.targets`.
 
 ## Architecture
 
@@ -32,11 +32,11 @@ is removed from `build/HackerOs.Apps.targets`.
 
 | Type | Project | Role |
 | --- | --- | --- |
-| `HackProcess`, `HackProcessState`, `HackProcessIoCounters` | `HackerOs.AppSdk` (`Diagnostics/`) | a process, modeled on `System.Diagnostics.Process`, read from `/proc` through the app's file gateway |
-| `HackServiceController`, `HackServiceControllerStatus` | `HackerOs.AppSdk` (`ServiceProcess/`) | a service, modeled on `System.ServiceProcess.ServiceController` |
-| `HackLineChart`, `HackChartSeries`, `HackChartGeometry`, `HackChartSize` | `HackerOs.AppSdk.Blazor` (`Charts/`) | native SVG line chart, without a library or JavaScript |
+| `KazoProcess`, `KazoProcessState`, `KazoProcessIoCounters` | `Kazo.Os.AppSdk` (`Diagnostics/`) | a process, modeled on `System.Diagnostics.Process`, read from `/proc` through the app's file gateway |
+| `KazoServiceController`, `KazoServiceControllerStatus` | `Kazo.Os.AppSdk` (`ServiceProcess/`) | a service, modeled on `System.ServiceProcess.ServiceController` |
+| `KazoLineChart`, `KazoChartSeries`, `KazoChartGeometry`, `KazoChartSize` | `Kazo.Os.AppSdk.Blazor` (`Charts/`) | native SVG line chart, without a library or JavaScript |
 
-### App (`Apps/System/HackerOs.Apps.SystemMonitor`)
+### App (`Apps/System/Kazo.Os.Apps.SystemMonitor`)
 
 | File | Role |
 | --- | --- |
@@ -49,7 +49,7 @@ is removed from `build/HackerOs.Apps.targets`.
 | `Processes/EndTaskRunner.cs` | stopping a selection, refusals reported process by process |
 | `Tabs/*.razor` | one component per tab and the details panel, each with its isolated CSS |
 
-All the tab components inherit from `HackComponentBase`: their event handlers
+All the tab components inherit from `KazoComponentBase`: their event handlers
 run in the app's ambient context (ADR 0043). `PerformanceTab`, `DiskTab` and
 `NetworkTab`, which do not call the SDK, were switched to it in phase 5 so that
 their time is counted for the app and not for the compositor (ADR 0067,
@@ -78,15 +78,15 @@ their time is counted for the app and not for the compositor (ADR 0067,
 - "estimated" mention (ADR 0066): the header of the CPU and Memory columns
   carries a small dotted label as long as at least one row comes from the
   simulator (`CpuSource:` / `MemSource:` of `/proc/<pid>/status` different from
-  `measured`, read in `HackProcess.Status`). Its tooltip says so. See
+  `measured`, read in `KazoProcess.Status`). Its tooltip says so. See
   [`resource-accounting.md`](resource-accounting.md). With measured memory
   (ADR 0068, [`memory-accounting.md`](memory-accounting.md)), the Memory column
   shows the measured `VmRSS` for all built-in apps and the label disappears
   from that column as soon as all rows are measured; a process's details show
-  the layers (`RssAnon`, `RssFile`, `VmData`, `VmExe`, `HackAllocBytes`) in its
-  full `status`. The app has not changed: it still reads `HackProcess`.
+  the layers (`RssAnon`, `RssFile`, `VmData`, `VmExe`, `KazoAllocBytes`) in its
+  full `status`. The app has not changed: it still reads `KazoProcess`.
 - "Not responding" (ADR 0067): when `/proc/<pid>/status` carries
-  `Responding: 0` (`HackProcess.Responding` false), the state column displays
+  `Responding: 0` (`KazoProcess.Responding` false), the state column displays
   "Not responding" in red in place of the state, with a tooltip; sorting by
   state takes it into account. Display only: the manager stops nothing by
   itself, "End task" remains its only means. See
@@ -103,7 +103,7 @@ their time is counted for the app and not for the compositor (ADR 0067,
   (`ProcessTable.ShowPriority`, hidden at the start); it shows the `nice` value
   read from `/proc/<pid>/stat` and can be sorted. The manager only displays it:
   it is changed with `renice`. See [`process-priority-and-unresponsive-windows.md`](process-priority-and-unresponsive-windows.md).
-- Background tasks: a `HackBackground.RunAsync` task is a child process of its
+- Background tasks: a `KazoBackground.RunAsync` task is a child process of its
   app (ADR 0128, 0140); it appears as a separate row, named after the task
   (`Name:` of `status`, `Job:` and `Host:` lines), and "End task" stops it like
   the others ([`background-jobs.md`](../framework/background-jobs.md)).
@@ -124,14 +124,14 @@ their time is counted for the app and not for the compositor (ADR 0067,
   Enter for details. Right-click on a row: menu Details, End task, Force kill
   (the row is selected alone if it was not).
 - **End task** (ADR 0069 §4, `SIGTERM`): a confirmation window lists the
-  processes, then each receives `HackProcess.TerminateAsync`: it is notified
+  processes, then each receives `KazoProcess.TerminateAsync`: it is notified
   (`StopRequested`, reason `Terminated`), its token is cancelled, and it has 5
   seconds to finish before the OS kills it. A windowed app keeps a draft of its
   unsaved changes then its window closes. The selected processes are signaled
   together, not one after the other: three blocked processes do not cost 15
   seconds.
 - **Force kill** (context menu, `SIGKILL`): separate confirmation ("it cannot
-  react"), then `HackProcess.KillAsync`: immediate, without `StopRequested`,
+  react"), then `KazoProcess.KillAsync`: immediate, without `StopRequested`,
   descendants included.
 - In both cases, a refusal (`process.manage` missing) is noted for that process
   and does not stop the others; a process already finished counts as stopped.
@@ -155,12 +155,12 @@ stops appears stopped without reloading the list. An unreadable start type
 
 ## SDK API
 
-### `HackProcess` (ADR 0056 §4)
+### `KazoProcess` (ADR 0056 §4)
 
 ```csharp
-HackProcess[] all = await HackProcess.GetProcessesAsync();     // par PID croissant
-HackProcess me = await HackProcess.GetCurrentProcessAsync();
-HackProcess p = await HackProcess.GetProcessByIdAsync(42);     // ArgumentException s'il n'existe pas
+KazoProcess[] all = await KazoProcess.GetProcessesAsync();     // par PID croissant
+KazoProcess me = await KazoProcess.GetCurrentProcessAsync();
+KazoProcess p = await KazoProcess.GetProcessByIdAsync(42);     // ArgumentException s'il n'existe pas
 await p.RefreshAsync();                                        // HasExited si /proc/42 a disparu
 IReadOnlyDictionary<string, string>? env = await p.GetEnvironmentVariablesAsync();
 bool closedByItself = await p.CloseMainWindowAsync(TimeSpan.FromSeconds(5));
@@ -184,7 +184,7 @@ await p.KillAsync();                                           // SIGKILL
   Changing the priority goes through `IAppProcessGateway.SetNice` (`renice`
   command).
 - Limits (ADR 0125, [`process-limits.md`](process-limits.md)):
-  `GetResourceLimitsAsync()` reads `/proc/<pid>/limits` (`HackResourceLimits`:
+  `GetResourceLimitsAsync()` reads `/proc/<pid>/limits` (`KazoResourceLimits`:
   `Cpu`, `Rss`, `NoFile`, `NProc`, `Enforcement`, `IsCpuMeasured`,
   `IsMemoryMeasured`); `SetResourceLimitAsync(kind, souple, dure)` changes one
   like `prlimit` (`process.manage` for another process, `sudo` to raise a hard
@@ -194,7 +194,7 @@ await p.KillAsync();                                           // SIGKILL
   Visibility of `/proc`: its own process, the others with `process.list`.
   Reading `/proc` requires `filesystem.system.read`. Through the gateway
   (`IAppProcessGateway`), an app also sees, stops and kills its own descendants
-  (its `HackBackground` tasks) without `process.list` or `process.manage`
+  (its `KazoBackground` tasks) without `process.list` or `process.manage`
   (ADR 0140 §7).
 - Action: `KillAsync` (`SIGKILL`: immediate, descendants included, no
   `StopRequested`), `TerminateAsync` (`SIGTERM` of another process, reason
@@ -203,14 +203,14 @@ await p.KillAsync();                                           // SIGKILL
   through `IAppProcessGateway`. Both polite stops return `false` when the OS had
   to kill the process at the deadline. See ADR 0069 and
   [`app-sdk.md`](../framework/app-sdk.md#clean-shutdown-and-checkpoints-adr-0069). Exceptions:
-  `HackUnauthorizedAccessException` (`process.manage` capability missing for
+  `KazoUnauthorizedAccessException` (`process.manage` capability missing for
   another process), `InvalidOperationException` (process already finished).
 
-### `HackServiceController` (ADR 0056 §5)
+### `KazoServiceController` (ADR 0056 §5)
 
 ```csharp
-HackServiceController[] services = await HackServiceController.GetServicesAsync();
-HackServiceController sync = services[0];
+KazoServiceController[] services = await KazoServiceController.GetServicesAsync();
+KazoServiceController sync = services[0];
 await sync.StartAsync();
 await sync.SetStartTypeAsync(ServiceStartMode.Automatic);
 ```
@@ -219,27 +219,27 @@ await sync.SetStartTypeAsync(ServiceStartMode.Automatic);
   `Status` (`Stopped`, `StartPending`, `StopPending`, `Running`, values of
   `ServiceControllerStatus`, deduced from the active state: `failed` gives
   `Stopped`), `StartType` (`ServiceStartMode?`), `ProcessId`.
-- systemd-style states (ADR 0097): `ActiveState` (`HackServiceActiveState`:
+- systemd-style states (ADR 0097): `ActiveState` (`KazoServiceActiveState`:
   `Inactive`, `Activating`, `Active`, `Deactivating`, `Failed`), `Result`
-  (`HackServiceResult`: `Success`, `ExitCode`, `Exception`, `Killed`,
-  `Timeout`), `Health` (`HackServiceHealth`), `StatusText`,
+  (`KazoServiceResult`: `Success`, `ExitCode`, `Exception`, `Killed`,
+  `Timeout`), `Health` (`KazoServiceHealth`), `StatusText`,
   `ActiveStateChangedAt`, `ExitCode`. `ResetFailedAsync()` clears `failed`;
-  `RefreshStatusAsync()` rereads the state alone. `HackServiceStates.ToSystemdName`
+  `RefreshStatusAsync()` rereads the state alone. `KazoServiceStates.ToSystemdName`
   gives systemd's words.
-- List: `HackApps.GetInstalledAsync` filtered on `AppKind.Service`, sorted by
-  name. State: `HackProcess`. Start type and actions:
+- List: `KazoApps.GetInstalledAsync` filtered on `AppKind.Service`, sorted by
+  name. State: `KazoProcess`. Start type and actions:
   `IAppServiceControlGateway`.
 - Capabilities: none to list; `services.manage` to act on another app's service
-  and to read its start type. Failures: `HackUnauthorizedAccessException`
+  and to read its start type. Failures: `KazoUnauthorizedAccessException`
   (refusal), `InvalidOperationException` (service uninstalled, disabled or
   failed).
 
-### `HackLineChart` (`HackerOs.AppSdk.Blazor.Charts`)
+### `KazoLineChart` (`Kazo.Os.AppSdk.Blazor.Charts`)
 
 ```razor
-<HackLineChart Title="Total CPU usage"
-               Series="@([new HackChartSeries("Total", cpuHistory)])"
-               Maximum="100" Filled="true" Size="HackChartSize.Large"
+<KazoLineChart Title="Total CPU usage"
+               Series="@([new KazoChartSeries("Total", cpuHistory)])"
+               Maximum="100" Filled="true" Size="KazoChartSize.Large"
                ValueFormatter="FormatPercent" />
 ```
 
@@ -263,17 +263,17 @@ await sync.SetStartTypeAsync(ServiceStartMode.Automatic);
   stays readable, the type is `null`.
 - **Additions to the ADR 0056 list**: `SessionId`, `StateCode`, `Arguments`,
   `IoCounters`, `Status`, `GetEnvironmentVariablesAsync`, `GetChildren`,
-  `GetCurrentProcessAsync`, `HackServiceController.ProcessId` and `Description`:
+  `GetCurrentProcessAsync`, `KazoServiceController.ProcessId` and `Description`:
   everything that a process's details and the Services tab display, with no
   source other than `/proc` and the catalog. `ParseStatus` and `ParseIo` are
   public for apps that read `/proc` themselves.
 - **Chart in the SDK**: ADR 0058 asks for native SVG components;
-  `HackLineChart` lives in `HackerOs.AppSdk.Blazor` so that another app
+  `KazoLineChart` lives in `Kazo.Os.AppSdk.Blazor` so that another app
   (Diagnostic, a third-party app) reuses it, as `AGENTS.md` requires.
 - **Minimized window detected in JavaScript**: the SDK does not expose the
   window's state. The window's module observes its own visibility, the one
   point that C# does not see; it is imported from
-  `./_content/HackerOs.Apps.SystemMonitor/` (ADR 0055 §3). The same module
+  `./_content/Kazo.Os.Apps.SystemMonitor/` (ADR 0055 §3). The same module
   prevents Ctrl+A from selecting the whole page when the table has focus.
 - **Tabs not kept** (`KeepPanelsAlive="false"`): only the visible tab renders
   every second. State that must survive a tab change (sort, filter, selection,
@@ -288,27 +288,27 @@ await sync.SetStartTypeAsync(ServiceStartMode.Automatic);
   enforces the same bounds as `ResourceProfile`.
 - **No observer effect on the disk.** The manager must not become the first
   reader of the disk it monitors:
-  - `HackProcess` reads the `cwd` link like `readlink`, without resolving its
+  - `KazoProcess` reads the `cwd` link like `readlink`, without resolving its
     target. Following the link made the current directory of each process be
     resolved in IndexedDB, one segment per transaction, every second (about 40
     reads per second measured on `hda`, against 4 at rest);
-  - disk space (`HackDriveInfo`, which walks the IndexedDB entries) is reread
+  - disk space (`KazoDriveInfo`, which walks the IndexedDB entries) is reread
     only every 10 reads (`SystemMonitorWindow.DriveRefreshEvery`), just as one
     does not run `df` in a loop.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Execution/HackProcessTests.cs`:
-  `HackProcess` and `HackServiceController` on the real `/proc` provider and
+- `Tests/Kazo.Os.Platform.Core.Tests/Execution/KazoProcessTests.cs`:
+  `KazoProcess` and `KazoServiceController` on the real `/proc` provider and
   `AppFileSystemGateway`; visibility without `process.list`, private `io` and
   `environ`, finished process, refusal and output of `KillAsync`, deadline of
   `CloseMainWindowAsync`, reason and deadline of `TerminateAsync`, services
   (state, unreadable type, disabled, refusal).
-- `Tests/HackerOs.Platform.Core.Tests/Lifecycle/AppLifecycleOrchestratorTests.cs`:
+- `Tests/Kazo.Os.Platform.Core.Tests/Lifecycle/AppLifecycleOrchestratorTests.cs`:
   the process receives the `Resources` weights of its manifest.
-- `Tests/HackerOs.AppSdk.Blazor.Tests/HackChartGeometryTests.cs`: automatic
+- `Tests/Kazo.Os.AppSdk.Blazor.Tests/KazoChartGeometryTests.cs`: automatic
   scale, point position, area, invariant culture.
-- `Tests/HackerOs.Apps.SystemMonitor.Tests/`: `/proc` parsers
+- `Tests/Kazo.Os.Apps.SystemMonitor.Tests/`: `/proc` parsers
   (`ProcFilesTests`), differences and history (`SystemMetricsTests`), sort,
   filter, selection and "End task" (`ProcessTableTests`), "End task" as
   `SIGTERM` 5 s and "Force kill" as `SIGKILL`, selection signaled together
@@ -326,9 +326,9 @@ a culture stay invariant. The names and values read from `/proc` (fields of
 
 ## Task list for work item `rebuild/4-task-manager`
 
-- [x] `HackProcess`: reading of `/proc/<pid>/status`, `cmdline`, `cwd`, `io`, `environ`; `KillAsync`, `CloseMainWindowAsync` through `IAppProcessGateway`.
-- [x] `HackServiceController`: list through `HackApps`, state through `HackProcess`, actions and start type through `IAppServiceControlGateway`.
-- [x] `HackLineChart`: native SVG chart in `HackerOs.AppSdk.Blazor`.
+- [x] `KazoProcess`: reading of `/proc/<pid>/status`, `cmdline`, `cwd`, `io`, `environ`; `KillAsync`, `CloseMainWindowAsync` through `IAppProcessGateway`.
+- [x] `KazoServiceController`: list through `KazoApps`, state through `KazoProcess`, actions and start type through `IAppServiceControlGateway`.
+- [x] `KazoLineChart`: native SVG chart in `Kazo.Os.AppSdk.Blazor`.
 - [x] `/proc` parsers and computation of rates by difference, 60 s history.
 - [x] Table model: sort, filter, multiple selection (Ctrl, Shift, Ctrl+A), details.
 - [x] Window rewrite: tabs Processes, Performance, Disk, Network, Services; details; confirmed "End task", refusal per process; one-second refresh suspended when the window is minimized.
@@ -343,7 +343,7 @@ a culture stay invariant. The names and values read from `/proc` (fields of
 - [x] "End task" goes from `KillAsync` to `TerminateAsync` (`SIGTERM`, 5 s), with its confirmation (ADR 0058 §2).
 - [x] "Force kill" (`SIGKILL`) in the rows' context menu and on Shift+Delete, with its own confirmation.
 - [x] Selection signaled in parallel, report in selection order (`EndTaskRunner`, `EndTaskMode`).
-- [x] Tests: `EndTaskTests`, `HackProcessTests.TerminateAsync_*`.
+- [x] Tests: `EndTaskTests`, `KazoProcessTests.TerminateAsync_*`.
 
 ## Work item `rebuild/5-worker-processes` (ADR 0070, 0071)
 

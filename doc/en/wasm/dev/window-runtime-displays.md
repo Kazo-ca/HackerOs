@@ -10,7 +10,7 @@ The next work items (window portal, screen service) build on it.
 
 ## 1. Screen identity
 
-`DisplayId` (`HackerOs.Windowing.Abstractions`) is the number the user sees:
+`DisplayId` (`Kazo.Os.Windowing.Abstractions`) is the number the user sees:
 
 | Member | Role |
 | --- | --- |
@@ -84,9 +84,9 @@ under its anchor. A removed screen frees its number.
 ## 7. Public API and tests
 
 - The new types and members are in `PublicAPI.Unshipped.txt` of
-  `HackerOs.Windowing.Abstractions` and `HackerOs.Windowing.Core`. Existing
+  `Kazo.Os.Windowing.Abstractions` and `Kazo.Os.Windowing.Core`. Existing
   signatures do not change (`ChangeViewportCommand` and
   `WindowViewportChangedEvent` keep their constructor and get a second one).
-- Tests: `Tests/HackerOs.Windowing.Core.Tests/WindowRuntimeDisplayTests.cs`
+- Tests: `Tests/Kazo.Os.Windowing.Core.Tests/WindowRuntimeDisplayTests.cs`
   (numbers, work areas per screen, changing screen in every state, modals,
   removed screen).

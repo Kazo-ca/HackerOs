@@ -27,10 +27,10 @@ séquencement pour décider quoi attaquer ensuite.
 **Déjà confirmé fait** (PR #79 mergée — branche `feature/windowing-taskbar-extraction`,
 historique `EXT-WIN-001` à `EXT-WIN-015`) :
 
-- `HackerOs.Windowing.Core` (moteur headless, zéro dépendance HackerOS) — existe.
-- `HackerOs.Windowing.Blazor` (RCL fenêtres/chrome) — existe.
-- `HackerOs.Taskbar.Blazor` (RCL taskbar par contrats) — existe.
-- `Samples/HackerOs.Windowing.SampleHost` — existe, ne référence pas `HackerOs.Ecosystem`.
+- `Kazo.Os.Windowing.Core` (moteur headless, zéro dépendance HackerOS) — existe.
+- `Kazo.Os.Windowing.Blazor` (RCL fenêtres/chrome) — existe.
+- `Kazo.Os.Taskbar.Blazor` (RCL taskbar par contrats) — existe.
+- `Samples/Kazo.Os.Windowing.SampleHost` — existe, ne référence pas `Kazo.Os.Ecosystem`.
 - Adaptateurs HackerOS (`Shell/TaskbarAdapters.cs`) et migration de `DesktopShell` — faits, vérifiés navigateur.
 - Packaging NuGet local + baseline API publique + preuve Release/trimming — faits.
 - Couverture de tests (headless, composants, E2E Playwright `taskbar`) — faite.
@@ -38,16 +38,16 @@ historique `EXT-WIN-001` à `EXT-WIN-015`) :
 **Les deux points restés ouverts malgré la mention "extraction terminée le
 2026-08-13" ont été fermés aujourd'hui :**
 
-- [x] **`EXT-WIN-001`** — Nouveau projet `Platform/HackerOs.Windowing.Abstractions/`
+- [x] **`EXT-WIN-001`** — Nouveau projet `Platform/Kazo.Os.Windowing.Abstractions/`
   créé : `WindowId`, `WindowOwnerId`, `WindowBounds`, `WindowConstraints`,
   `WindowVisualState`, `WindowModality`, `WindowRuntimeState`, et toutes les
   commandes/événements y sont déplacés (même noms, nouveau namespace).
-  `HackerOs.Windowing.Core` ne garde que la classe `WindowRuntime` et
-  référence Abstractions. Ajouté à `HackerOs.sln` via `dotnet sln add`. Les
+  `Kazo.Os.Windowing.Core` ne garde que la classe `WindowRuntime` et
+  référence Abstractions. Ajouté à `Kazo.Os.sln` via `dotnet sln add`. Les
   30 fichiers consommateurs mis à jour. `dotnet build` (Debug et Release) et
   `dotnet test` passent tous à 0 échec ; `dotnet pack`/`dotnet publish`
   produisent les 4 packages/assemblys exportés sans avertissement.
-- [x] **`WindowSurface`** — Composant implémenté dans `HackerOs.Windowing.Blazor`
+- [x] **`WindowSurface`** — Composant implémenté dans `Kazo.Os.Windowing.Blazor`
   (`WindowSurface.razor`) : reçoit `Runtime` + `WindowContent`, s'abonne à
   `Runtime.StateChanged`, et traduit les callbacks de `DesktopArea` en
   `Runtime.Apply(...)`. Le sample host est migré vers
@@ -61,12 +61,12 @@ historique `EXT-WIN-001` à `EXT-WIN-015`) :
   rupture sans bénéfice réel.
 
 **Point relevé pendant la vérification, hors scope de ce lot** : la suite
-`HackerOs.E2E.Tests` a un test préexistant flaky/racy sans rapport avec le
+`Kazo.Os.E2E.Tests` a un test préexistant flaky/racy sans rapport avec le
 windowing — `IndexedDbBrowserContractTests.Group_and_settings_contracts_pass_in_real_browser`
 échoue de façon reproductible avec `IndexedDB database 'hackeros' version 2 is
 not open`, une race entre `VerifyBackupRestoreAsync` (restore destructif) et
 `VerifyOrphanCleanupAsync` (appel JS brut juste après) dans
-`Tests/HackerOs.BrowserHarness.Tests/App.razor`. Reproduit de façon identique
+`Tests/Kazo.Os.BrowserHarness.Tests/App.razor`. Reproduit de façon identique
 avant et après ce lot de travail ; n'affecte aucun test lié aux
 fenêtres/taskbar. Laissé pour un futur passage sur le sujet IndexedDB backup/
 recovery plutôt que traité ici.
@@ -103,8 +103,8 @@ Phase 2a (sous-tranche, après le spike de faisabilité §16.2) : le moteur de
 fenêtrage gagne un mode de présentation « surface unique plein écran »
 réutilisant les mécanismes Maximize/Minimize existants
 (`SingleSurfacePresentationPolicy`, `WindowHost.ShowChrome`,
-`SingleSurfaceArea`), et un nouveau package `HackerOs.MobileShell.Blazor`
-(frère de `HackerOs.Taskbar.Blazor`) fournit `MobileSystemNavigationBar`
+`SingleSurfaceArea`), et un nouveau package `Kazo.Os.MobileShell.Blazor`
+(frère de `Kazo.Os.Taskbar.Blazor`) fournit `MobileSystemNavigationBar`
 (Back/Home/Recent). En bonus, un vrai bug latent a été corrigé au passage :
 `WindowChrome` ignorait déjà `Constraints.IsResizable` (les dialogues de
 fichiers non redimensionnables en étaient déjà affectés).
@@ -112,7 +112,7 @@ fichiers non redimensionnables en étaient déjà affectés).
 Phase 2b (sous-tranche, `MOB-008`) : `PlatformShellSwitchCoordinator` confirme
 puis arrête (`ProcessExitReason.PlatformChanged`, nouveau) seulement les
 fenêtres dont le point d'entrée change réellement entre les deux plateformes
-(une fenêtre à point d'entrée partagé, ex. `HackerOs.Samples.PlatformApp`,
+(une fenêtre à point d'entrée partagé, ex. `Kazo.Os.Samples.PlatformApp`,
 survit telle quelle grâce au `WindowRuntime` singleton partagé entre les deux
 shells) — puis persiste le choix, dans cet ordre, contrairement au câblage
 Phase 0 de `ClockPanel.razor` qui persistait sans confirmer. `App.razor` rend
@@ -160,13 +160,13 @@ preuves. État à l'issue de la session du 2026-08-17 :
 
 - [x] `P2-ACC-015` — PWA publiée fonctionne après install en ligne, serveur
   arrêté, navigateur hors-ligne. **Preuve réelle** :
-  `Tests/HackerOs.Pwa.E2E.Tests` (nouveau projet), contre un vrai
+  `Tests/Kazo.Os.Pwa.E2E.Tests` (nouveau projet), contre un vrai
   `dotnet publish` servant le vrai `service-worker.published.js`.
 - [x] `P2-ACC-016` — Une mise à jour PWA préserve les données compatibles et
   ne mélange jamais les assets de deux versions. **Preuve réelle**, même
   projet.
 - [ ] `P2-ACC-017` — Matrice CI navigateur réelle verte et hébergée.
-  `HackerOs.Pwa.E2E.Tests` tourne déjà automatiquement dans le step CI
+  `Kazo.Os.Pwa.E2E.Tests` tourne déjà automatiquement dans le step CI
   existant (aucun câblage supplémentaire nécessaire) et les runs locaux sont
   verts. **Reste bloqué** : le compte GitHub est verrouillé pour facturation
   (`gh run view` : "the job was not started because your account is locked
@@ -182,7 +182,7 @@ preuves. État à l'issue de la session du 2026-08-17 :
   (nouveau test `AccessibilityAndVisualCoverageTests`, 8 catégories de
   violations réelles trouvées et corrigées sur 6 surfaces — dont une
   régression `aria-labelledby` sur chaque fenêtre, et la découverte que
-  `test/test` et `HackerOs.Server` ne chargeaient jamais le vrai thème sombre
+  `test/test` et `Kazo.Os.Server` ne chargeaient jamais le vrai thème sombre
   de l'app). La **checklist humaine** clavier/lecteur d'écran
   ([`Human-test-needed-p2-GATE-003.md`](Human-test-needed-p2-GATE-003.md)) est
   **explicitement passée en skip pour ne plus bloquer la fermeture du gate** —

@@ -1,6 +1,6 @@
 > [Version française](../../../fr/wasm/framework/static-site-files.md)
 
-# Static site files (`.site`) and the `HackWebSiteFile` API
+# Static site files (`.site`) and the `KazoWebSiteFile` API
 
 This document describes the format of the `.site` files that an app or a tool writes to publish a folder as a website, and the SDK API that reads and writes them. The `hackwebd` service that serves these files, its logs and Web Server Manager are described in [`dev/static-sites.md`](../dev/static-sites.md).
 
@@ -13,8 +13,8 @@ This document describes the format of the `.site` files that an app or a tool wr
 
 | Item | Project | Role |
 |---|---|---|
-| `HackWebSite`, `HackWebSiteDeclaration`, `HackWebSiteScope` | `Shared/HackerOs.AppSdk/Net/Hosting` | Content of a `.site` and the file read (path, scope, owner, errors). |
-| `HackWebSiteFile` | same | Locations, `Parse`, `Validate`, `Serialize`, `TryParseBinding`, `ReadAllAsync`. Shared by the daemon, the Manager and the resolver. |
+| `KazoWebSite`, `KazoWebSiteDeclaration`, `KazoWebSiteScope` | `Shared/Kazo.Os.AppSdk/Net/Hosting` | Content of a `.site` and the file read (path, scope, owner, errors). |
+| `KazoWebSiteFile` | same | Locations, `Parse`, `Validate`, `Serialize`, `TryParseBinding`, `ReadAllAsync`. Shared by the daemon, the Manager and the resolver. |
 
 ## The `.site` file
 
@@ -34,7 +34,7 @@ This document describes the format of the `.site` files that an app or a tool wr
   and trailing commas are tolerated (hand-edited file).
 - `root`: absolute path, neither `/` nor `..`.
 - `bindings`: `http://host[:port]/path/` prefixes normalized like those of
-  `HackHttpListener` (`+`, `*` accepted). `https://` refused (no
+  `KazoHttpListener` (`+`, `*` accepted). `https://` refused (no
   certificates, ADR 0080). A user site cannot take a port
   < 1024: the error goes to `error.log`.
 - An invalid or disabled site is not served; it stays listed (state
@@ -52,7 +52,7 @@ This document describes the format of the `.site` files that an app or a tool wr
 For an app developer, the format is in the SDK:
 
 ```csharp
-IReadOnlyList<HackWebSiteDeclaration> sites = await HackWebSiteFile.ReadAllAsync();
-HackWebSiteDeclaration parsed = HackWebSiteFile.Parse(path, json, HackWebSiteScope.User, "alice");
-IReadOnlyList<string> errors = HackWebSiteFile.Validate(site, HackWebSiteScope.User);
+IReadOnlyList<KazoWebSiteDeclaration> sites = await KazoWebSiteFile.ReadAllAsync();
+KazoWebSiteDeclaration parsed = KazoWebSiteFile.Parse(path, json, KazoWebSiteScope.User, "alice");
+IReadOnlyList<string> errors = KazoWebSiteFile.Validate(site, KazoWebSiteScope.User);
 ```

@@ -17,11 +17,11 @@ is locked, plus a replacement set that is always active.
 
 ## Context
 
-- `WindowRuntime` (`Platform/HackerOs.Windowing.Core/WindowRuntime.cs`) already
+- `WindowRuntime` (`Platform/Kazo.Os.Windowing.Core/WindowRuntime.cs`) already
   produces the events `WindowFocused`, `WindowResized`, `WindowVisualStateChanged`
   (Normal, Minimized, Maximized), but only the desktop, the taskbar and the
   window surface subscribe to them, to redraw. No app receives them.
-- `WindowLaunchCoordinator` (`Platform/HackerOs.Platform.Blazor/Windows/WindowLaunchCoordinator.cs:73-77`)
+- `WindowLaunchCoordinator` (`Platform/Kazo.Os.Platform.Blazor/Windows/WindowLaunchCoordinator.cs:73-77`)
   opens every window at 800×560 with a minimum of 360×240, no maximum. Neither
   `AppDefinition`, nor `AppManifest`, nor `manifest.schema.v1.json` has a size
   field.
@@ -48,7 +48,7 @@ thread:
 
 - `HackWindowState` (`Normal`, `Minimized`, `Maximized`) and `HackWindowSize`
   (width and height of the client area in CSS pixels) are SDK types
-  (`HackerOs.AppSdk.Blazor`), never the types of `HackerOs.Windowing.*`
+  (`Kazo.Os.AppSdk.Blazor`), never the types of `Kazo.Os.Windowing.*`
   (ADR 0055).
 - Each hook has its `...Async` variant. An exception in a hook is
   logged in `/var/log/apps/<appId>.log` and does not prevent the transition:

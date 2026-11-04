@@ -14,7 +14,7 @@ annonçait ce plan à part pour le magasin d'apps de
 Une app système **Hack Store**, façon Play Store ou Microsoft Store, épinglée
 par défaut dans le menu Démarrer, qui liste les apps qu'on peut installer dans
 Kazo OS, montre leur fiche, et les installe, met à jour ou retire en un clic.
-Les apps viennent d'un catalogue relu (`Kazo-ca/HackerOs-AppMarketPlace`), où
+Les apps viennent d'un catalogue relu (`Kazo-ca/Os-AppMarketPlace`), où
 chaque version est compilée par nous depuis son code source. En v2, le Store
 propose aussi des packs de thèmes.
 
@@ -53,7 +53,7 @@ Chaque ligne est un chantier, avec sa branche et sa PR.
    `sources`, `policy`, Paramètres ▸ Apps ▸ Sources. **Fait** (issue #248,
    [ADR 0208](../adr/0208-hack-store-sources-trust-build.md) : catalogue chargé
    au démarrage et masqué par session).
-4. **Dépôt `HackerOs-AppMarketPlace`** (ADR 0188 §4 à §6) : `categories.json`,
+4. **Dépôt `Os-AppMarketPlace`** (ADR 0188 §4 à §6) : `categories.json`,
    modèle de PR, `validate.yml` (format, manifeste, commit, compilation,
    vérification des API, CodeQL, commentaire des capacités), `publish.yml`,
    branche `packages`, `catalog.json`, 3 versions gardées.
@@ -81,7 +81,7 @@ Chaque ligne est un chantier, avec sa branche et sa PR.
    avec toutes les parties (thèmes, fonds, icônes, sons, curseurs). **Fait**
    (branche `todo/18-theme-packs`, issue #253,
    [ADR 0213](../adr/0213-theme-packs-build.md)) ; CI du catalogue :
-   [AppMarketPlace #4](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/4).
+   [AppMarketPlace #4](https://github.com/Kazo-ca/Os-AppMarketPlace/issues/4).
 9. Un chantier par nouveau système de l'OS, chacun avec son ADR : fonds
    d'écran en image, packs d'icônes, sons des évènements, thèmes de curseurs.
    Le Store accepte chaque partie d'un pack quand son système existe.

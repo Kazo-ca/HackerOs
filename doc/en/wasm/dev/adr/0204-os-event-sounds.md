@@ -6,7 +6,7 @@
 
 Accepted on 2026-10-30. Work item 9 of the Hack Store plan
 ([ADR 0190](0190-theme-packs.md) §4, point 3), `TODO` issue
-[#256](https://github.com/Kazo-ca/HackerOs/issues/256), `todo/base` series.
+[#256](https://github.com/Kazo-ca/Os/issues/256), `todo/base` series.
 
 - **Complements:** [ADR 0190](0190-theme-packs.md) (the `sounds/` folder of a
   `.hacktheme` pack targets this system), [ADR 0044](0044-settings-as-files.md)
@@ -76,7 +76,7 @@ panel; opening another session does not.
 `hackeros` ("HackerOS", console bleeps, the default) and `soft` ("Soft",
 chimes) are computed by `build/tools/generate-system-sounds.py` (no sample from
 elsewhere), encoded as OGG Vorbis (about 5 KB per sound), embedded in
-`HackerOs.Platform.Core` and written by `FileSystemSeeder` to
+`Kazo.Os.Platform.Core` and written by `FileSystemSeeder` to
 `/usr/share/sounds/<id>/` (root, `0644`), like a distribution package. An
 existing file is never replaced. `~/.local/share/sounds/` is created in every
 home folder.
@@ -108,7 +108,7 @@ switch, the volume, the list of themes of `/usr/share/sounds` and
 
 - A pack's `sounds/` folder becomes a sound theme copied to
   `~/.local/share/sounds/<packId>/`, with no other system to build.
-- About 50 KB of sounds are added to `HackerOs.Platform.Core` and to the
+- About 50 KB of sounds are added to `Kazo.Os.Platform.Core` and to the
   simulated disk.
 - A change to the built-in sounds does not reach an existing installation (the
   file is already there), as for the other seeded files.

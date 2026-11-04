@@ -97,7 +97,7 @@ the explorer), when even the explorer is missing.
   was rendered, and left an empty band under the title bar.
 - The end-to-end tests that drive the OS dialogs read rows (`role=row`)
   rather than options; those of the test bench without an explorer
-  (`HackerOs.E2E.Tests`) cover the fallback.
+  (`Kazo.Os.E2E.Tests`) cover the fallback.
 
 ## References
 

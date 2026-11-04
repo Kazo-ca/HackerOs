@@ -5,7 +5,7 @@
 Mobile home uses `~/Desktop/.mobile/layout.conf` (text sections and keys,
 ADR 0166; read migration from the old JSON) for pages
 and the dock. The layered OS document `mobile.config` exposes `mouseHelpers`
-(default `true`) to Settings through `HackSettings.OpenSystemAsync(AppContext, "mobile")`.
+(default `true`) to Settings through `KazoSettings.OpenSystemAsync(AppContext, "mobile")`.
 See [mobile-home-screen.md](../dev/mobile-home-screen.md) and ADR 0165/0166.
 `OsSettingsFile` can now use `OsSettingsLocation.UserHome` to
 resolve a path under the session's home folder; access remains
@@ -48,7 +48,7 @@ migration, read-only.
 | Clipboard sharing with the host (key `sharing`, ADR 0065, see [`clipboard.md`](../dev/clipboard.md)) | `/etc/hackeros/clipboard.config` | `~/.config/hackeros/clipboard.config` |
 | Periodic sync (ADR 0101 §4, see [`synchronization.md`](../dev/synchronization.md)) | `/etc/hackeros/sync.config` (`intervalMinutes`, read only here) | `~/.config/hackeros/sync.config` (`paused`) |
 | Pending sync conflicts (ADR 0101 §2) | none | `~/.local/state/hackeros/sync-conflicts.json` |
-| Desktop (`[view]` size, rearrangement, sort, system icons; `[positions]` cell of each icon; read and written by `HackDesktopSettings`, no schema; ADR 0152, 0160, see [`desktop.md`](../dev/desktop.md)) | none | `~/.config/hackeros/desktop.config` |
+| Desktop (`[view]` size, rearrangement, sort, system icons; `[positions]` cell of each icon; read and written by `KazoDesktopSettings`, no schema; ADR 0152, 0160, see [`desktop.md`](../dev/desktop.md)) | none | `~/.config/hackeros/desktop.config` |
 
 `~/.local/state/` holds device-specific state: file system
 synchronization ignores it (`IFileSystemSyncService.IsDeviceLocal`).
@@ -75,7 +75,7 @@ keyring. OS documents only accept public keys. Details: [`sensitive-settings.md`
 | Simulation.Abstractions | `LayeredConfigResolver`, `LayeredConfigSnapshot` | Layer merging, locks, `settings: <path>:<line>: <message>` warnings. |
 | Simulation.Abstractions | `SettingsTextFile`, `SettingsFilesWatcher` | Reading, writing (creating missing folders) and watching the two files of a document through a file gateway. |
 | Simulation.Abstractions | `ILegacySettingsStore`, `LegacySettingsRecord` | Contract for reading the old store, for the migration. |
-| AppSdk | `HackSettings`, `HackSettingsDocument` | Typed API for apps. |
+| AppSdk | `KazoSettings`, `KazoSettingsDocument` | Typed API for apps. |
 | AppSdk.Blazor | `SettingOriginBadge` | Reusable badge "yours", "system default", "built-in", "locked by admin". |
 | Platform.Core | `IOsSettingsService`, `OsSettingsService` | OS documents (`OsSettingsDocument`) and whole files (`OsSettingsFile`), for the current session. |
 | Platform.Core | `SettingsStoreToFilesMigration` | One-time migration from IndexedDB, then default files. |
@@ -122,10 +122,10 @@ Another app has no access to an app's private folder `~/.config/<appId>/`.
 The schema comes from `AppManifest.Settings` (keys, types, default values,
 groups). Each method exists with the app's context as a parameter, and without
 it: it then uses the ambient context of ADR 0043
-(`HackExecutionContext.Current`), like the `Hack*` file API.
+(`KazoExecutionContext.Current`), like the `Hack*` file API.
 
 ```csharp
-await using HackSettingsDocument settings = await HackSettings.OpenAsync(AppContext);
+await using KazoSettingsDocument settings = await KazoSettings.OpenAsync(AppContext);
 EditorTheme theme = settings.Get<EditorTheme>("theme");      // enum : "high-contrast" <-> HighContrast
 bool locked = settings.IsLocked("autosave");
 SettingLayer source = settings.GetSource("theme");          // Default, System ou User
@@ -133,12 +133,12 @@ settings.Changed += (_, e) => Refresh(e.ChangedKeys);       // édition externe 
 await settings.SetAsync("Editor.tab-size", 2);              // couche utilisateur
 await settings.ResetAsync("theme");                         // retire la valeur utilisateur
 
-int size = await HackSettings.GetAsync<int>(AppContext, "Editor.tab-size"); // lecture ponctuelle
-int same = await HackSettings.GetAsync<int>("Editor.tab-size");             // contexte ambiant
+int size = await KazoSettings.GetAsync<int>(AppContext, "Editor.tab-size"); // lecture ponctuelle
+int same = await KazoSettings.GetAsync<int>("Editor.tab-size");             // contexte ambiant
 ```
 
 - An undeclared key or an incompatible type throws `ArgumentException`.
-- Writing a locked key throws `HackSettingLockedException` (with the path
+- Writing a locked key throws `KazoSettingLockedException` (with the path
   of the system file).
 - A file error is translated into `UnauthorizedAccessException`,
   `FileNotFoundException` or `IOException`.
@@ -148,10 +148,10 @@ int same = await HackSettings.GetAsync<int>("Editor.tab-size");             // c
 Several keys of the same layer are written in a single file edit
 with `SetManyAsync(values, layer)` (a single approval for `/etc`).
 
-#### OS documents (`HackSettings.OpenSystemAsync`, ADR 0056 §8)
+#### OS documents (`KazoSettings.OpenSystemAsync`, ADR 0056 §8)
 
 ```csharp
-await using HackSettingsDocument appearance = await HackSettings.OpenSystemAsync(AppContext, "appearance");
+await using KazoSettingsDocument appearance = await KazoSettings.OpenSystemAsync(AppContext, "appearance");
 string accent = appearance.Get<string>("accent");
 await appearance.SetAsync("accent", "cyan");                       // ~/.config/hackeros/appearance.config
 await appearance.SetManyAsync(values, SettingLayer.System);        // /etc/hackeros : sudo ou approbation
@@ -196,7 +196,7 @@ The app offers two targets: "Only me" (user layer) and "All
 users (system default)". Each setting displays its origin; a locked
 setting is disabled for the user target. Writing the system layer
 requires administrator approval; a refusal displays a message instead of an
-error. Appearance goes through `HackSettings.OpenSystemAsync`
+error. Appearance goes through `KazoSettings.OpenSystemAsync`
 (work item `4-sdk-system-admin`). "Synchronize" pushes and pulls the file
 system, pulls permissions, pushes and pulls associations, then rereads
 appearance. The "Synchronization" tab (ADR 0101) shows the state of
@@ -205,12 +205,12 @@ periodic sync, suspends it for the user (`paused` in
 conflicts with a button that opens the conflict dialog. The "Installed Apps" tab writes the `apps.config` files
 (see [`app-installation.md`](../dev/app-installation.md)).
 
-The "Language" tab (ADR 0104, `LanguagePanel`) does not use `HackSettings`:
+The "Language" tab (ADR 0104, `LanguagePanel`) does not use `KazoSettings`:
 the locale is a systemd file. It shows the language, `LANG`, the
 `LC_MESSAGES`/`LC_ALL` overrides and an example of the session's formats (read
 from the Settings process environment), then offers "Follow the system
-language" or one of the `HackLocale.AvailableLocales`. Choosing a locale writes
-`LANG=<locale>` in `~/.config/locale.conf` (`HackLocale.FormatLocaleConf`,
+language" or one of the `KazoLocale.AvailableLocales`. Choosing a locale writes
+`LANG=<locale>` in `~/.config/locale.conf` (`KazoLocale.FormatLocaleConf`,
 `~/.config` created if needed); "Follow the system language" removes `LANG` and
 deletes the file if it contains nothing else (a `LC_TIME` is kept).
 The change applies at the next sign-in, which the panel displays.
@@ -218,7 +218,7 @@ The change applies at the next sign-in, which the panel displays.
 `sudo localectl set-locale` hint. The app declares for this
 `filesystem.user-home.read` and `filesystem.user-home.write`. There is no
 "Sign out" button: the SDK does not expose sign-out to apps.
-Tests: `Tests/HackerOs.Apps.Settings.Tests/LanguagePanelTests.cs`.
+Tests: `Tests/Kazo.Os.Apps.Settings.Tests/LanguagePanelTests.cs`.
 
 ## Migration
 
@@ -258,12 +258,12 @@ nor sign-in. The IndexedDB schema does not change.
 
 ## Contract tests
 
-In `Tests/HackerOs.Platform.Core.Tests/Settings/`:
+In `Tests/Kazo.Os.Platform.Core.Tests/Settings/`:
 
 - `LayeredConfigResolverTests`: layers, locks, tolerant parsing, warning
   text, reserved group;
 - `ConfigDocumentEditorTests`: writing that preserves human text;
-- `HackSettingsTests`: SDK API on the real file system, owner
+- `KazoSettingsTests`: SDK API on the real file system, owner
   and mode, lock, reset, warnings, permissions on `/etc`,
   isolation between apps, change notification;
 - `SettingsStoreToFilesMigrationTests`: default files, one-time copy,
@@ -274,7 +274,7 @@ In `Tests/HackerOs.Platform.Core.Tests/Settings/`:
 ## Task list
 
 - [x] Layer engine, locks and tolerant parsing
-- [x] Typed `HackSettings` API in the SDK
+- [x] Typed `KazoSettings` API in the SDK
 - [x] `IOsSettingsService` service and OS documents as files
 - [x] Window geometry in `~/.local/state`, excluded from synchronization
 - [x] Migration from the IndexedDB store

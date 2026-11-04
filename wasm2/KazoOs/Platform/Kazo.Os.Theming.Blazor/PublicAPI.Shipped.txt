@@ -1,0 +1,49 @@
+#nullable enable
+Kazo.Os.Theming.Blazor.CursorThemeSurface
+Kazo.Os.Theming.Blazor.CursorThemeSurface.CursorThemeSurface() -> void
+Kazo.Os.Theming.Blazor.CursorThemeSurface.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Theming.Blazor.CursorThemeSurface.Theme.get -> Kazo.Os.Theming.Abstractions.CursorTheme?
+Kazo.Os.Theming.Blazor.CursorThemeSurface.Theme.set -> void
+Kazo.Os.Theming.Blazor.Localization.PackageStringLocalizer
+Kazo.Os.Theming.Blazor.ThemePreview
+Kazo.Os.Theming.Blazor.ThemePreview.AccentId.get -> string!
+Kazo.Os.Theming.Blazor.ThemePreview.AccentId.set -> void
+Kazo.Os.Theming.Blazor.ThemePreview.AnimationsEnabled.get -> bool
+Kazo.Os.Theming.Blazor.ThemePreview.AnimationsEnabled.set -> void
+Kazo.Os.Theming.Blazor.ThemePreview.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Theming.Blazor.ThemePreview.ThemeId.get -> string!
+Kazo.Os.Theming.Blazor.ThemePreview.ThemeId.set -> void
+Kazo.Os.Theming.Blazor.ThemePreview.ThemePreview() -> void
+Kazo.Os.Theming.Blazor.ThemePreview.Title.get -> string?
+Kazo.Os.Theming.Blazor.ThemePreview.Title.set -> void
+Kazo.Os.Theming.Blazor.ThemePreview.Tokens.get -> System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>?
+Kazo.Os.Theming.Blazor.ThemePreview.Tokens.set -> void
+Kazo.Os.Theming.Blazor.ThemeScope
+Kazo.Os.Theming.Blazor.ThemeScope.AccentId.get -> string!
+Kazo.Os.Theming.Blazor.ThemeScope.AccentId.set -> void
+Kazo.Os.Theming.Blazor.ThemeScope.AnimationsEnabled.get -> bool
+Kazo.Os.Theming.Blazor.ThemeScope.AnimationsEnabled.set -> void
+Kazo.Os.Theming.Blazor.ThemeScope.ChildContent.get -> Microsoft.AspNetCore.Components.RenderFragment?
+Kazo.Os.Theming.Blazor.ThemeScope.ChildContent.set -> void
+Kazo.Os.Theming.Blazor.ThemeScope.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Theming.Blazor.ThemeScope.HighContrast.get -> bool
+Kazo.Os.Theming.Blazor.ThemeScope.HighContrast.set -> void
+Kazo.Os.Theming.Blazor.ThemeScope.Platform.get -> Kazo.Os.Theming.Abstractions.ThemePlatform
+Kazo.Os.Theming.Blazor.ThemeScope.Platform.set -> void
+Kazo.Os.Theming.Blazor.ThemeScope.TextScale.get -> double
+Kazo.Os.Theming.Blazor.ThemeScope.TextScale.set -> void
+Kazo.Os.Theming.Blazor.ThemeScope.ThemeId.get -> string!
+Kazo.Os.Theming.Blazor.ThemeScope.ThemeId.set -> void
+Kazo.Os.Theming.Blazor.ThemeScope.ThemeScope() -> void
+Kazo.Os.Theming.Blazor.ThemeScope.Tokens.get -> System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>?
+Kazo.Os.Theming.Blazor.ThemeScope.Tokens.set -> void
+Kazo.Os.Theming.Blazor._Imports
+Kazo.Os.Theming.Blazor._Imports.Execute() -> void
+Kazo.Os.Theming.Blazor._Imports._Imports() -> void
+override Kazo.Os.Theming.Blazor.ThemePreview.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override Kazo.Os.Theming.Blazor.ThemePreview.OnParametersSet() -> void
+override Kazo.Os.Theming.Blazor.ThemeScope.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override Kazo.Os.Theming.Blazor.ThemeScope.OnParametersSet() -> void
+static Kazo.Os.Theming.Blazor.Localization.PackageStringLocalizer.Resolve<TResource>(System.IServiceProvider? services) -> Microsoft.Extensions.Localization.IStringLocalizer!
+~override Kazo.Os.Theming.Blazor.ThemePreview.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Theming.Blazor.ThemeScope.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

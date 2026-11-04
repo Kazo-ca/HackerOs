@@ -59,5 +59,5 @@ Partout où l'ADR 0055 et le tableau des chantiers de l'ADR 0058 écrivent
 ## Références
 
 - ADR 0047 (codes `HOSAPP0001` à `HOSAPP0099`), ADR 0055, ADR 0058.
-- `Tools/HackerOs.Tools.ManifestGenerator/GeneratorDiagnostic.cs`,
-  `build/HackerOs.Apps.targets`.
+- `Tools/Kazo.Os.Tools.ManifestGenerator/GeneratorDiagnostic.cs`,
+  `build/Kazo.Os.Apps.targets`.

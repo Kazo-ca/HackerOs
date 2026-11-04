@@ -56,7 +56,7 @@ notait comme problème connu.
   les hôtes du catalogue.
 - Les hôtes et adresses sont ceux de `src/core/network.ts` (`192.168.1.x`), sans
   collision avec les `10.0.0.x` du jeu de test.
-- Le test `Tests/HackerOs.UI.E2E.Tests/BrowserHomePageTests.cs` ouvre le
+- Le test `Tests/Kazo.Os.UI.E2E.Tests/BrowserHomePageTests.cs` ouvre le
   navigateur hors mode démo et vérifie la page d'accueil puis une recherche.
 - Un futur paquet de contenu (ADR 0023) pourra ajouter des hôtes au même
   registre ; ce n'est pas tranché ici.

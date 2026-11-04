@@ -4,14 +4,14 @@
 
 ## Purpose
 
-`Apps/System/HackerOs.Apps.FileExplorer/` provides the graphical virtual file manager and directory browser for HackerOS v3, implemented as a first-party `AppKind.Window` application.
+`Apps/System/Kazo.Os.Apps.FileExplorer/` provides the graphical virtual file manager and directory browser for HackerOS v3, implemented as a first-party `AppKind.Window` application.
 
 ## Architecture
 
-As of Phase 4 (`INT-001`–`INT-005`, see `docs/Global-FileView-And-MessagingSystem/integrationPlan.md`), this app hosts the shared `Shared/HackerOs.AppSdk.FileView` control for listing/selection/rename/drag-drop/context-menu instead of implementing those inline (`ADR 0037`). This window keeps only the chrome `FileView` deliberately doesn't own:
+As of Phase 4 (`INT-001`–`INT-005`, see `docs/Global-FileView-And-MessagingSystem/integrationPlan.md`), this app hosts the shared `Shared/Kazo.Os.AppSdk.FileView` control for listing/selection/rename/drag-drop/context-menu instead of implementing those inline (`ADR 0037`). This window keeps only the chrome `FileView` deliberately doesn't own:
 
 - **`FileExplorerWindow.razor/.css`**: Primary window UI inheriting `WindowAppBase`. Renders the toolbar (Back, Forward, Up, Refresh, Home, Address Bar, Search box, view-mode toggle — Details/Icons/Tree), the actions toolbar (New Folder, New File, Rename, Delete, Properties, Open With, Upload, Download, Compress, Extract), and the status bar, around a hosted `<FileView>`. Toolbar actions that `FileView` doesn't expose a public method for (create/delete) call `AppContext.FileSystem` directly — the same raw gateway calls `FileView`'s own internal context-menu handlers make, just from this project instead of that one — then call `FileView.RefreshAsync()`. Rename/Properties/Open With instead go through `FileView`'s public `SelectedItem`/`FileViewItem.Rename()` surface with zero duplicated logic. Subscribes to `FileView.OnPathChange` (keeps the address bar and back/forward history in sync when the user navigates *inside* `FileView`, e.g. double-clicking a folder) and `FileView.Opened` (dispatches non-directory activations through the existing app-intent flow, since `FileView` itself only handles folder navigation, not file launching).
-- **`FileExplorerState.cs`**: Navigation history only now (`CurrentPath`, `_backStack`/`_forwardStack`, `NavigateTo`/`Back`/`Forward`/`Up`) plus `ViewMode` (now `HackerOs.AppSdk.FileView.FileViewMode` directly, not a redundant local enum) and `SearchQuery`. Sorting and selection moved to `FileView` entirely and were deleted here rather than kept as an unused parallel path.
+- **`FileExplorerState.cs`**: Navigation history only now (`CurrentPath`, `_backStack`/`_forwardStack`, `NavigateTo`/`Back`/`Forward`/`Up`) plus `ViewMode` (now `Kazo.Os.AppSdk.FileView.FileViewMode` directly, not a redundant local enum) and `SearchQuery`. Sorting and selection moved to `FileView` entirely and were deleted here rather than kept as an unused parallel path.
 - **`FileExplorerZipService.cs`**: The one implementation of zip compress/extract against the virtual filesystem, shared between the toolbar's Compress/Extract buttons and `ZipFileContextMenuProvider`.
 - **`ZipFileContextMenuProvider.cs`**: The first real `IFileViewContextMenuProvider` in the codebase (`INT-003`, the integration plan's worked example) — a `FileType`-scoped provider matching `.zip` files that inserts `"UnZip Here…"` immediately after `FileView`'s default `"open"` context-menu item, calling into `FileExplorerZipService`.
 - **`OpenWithDialog.razor/.css`**: Modal dialog presenting catalog apps (`AppCatalog`) and allowing the user to select an app to open a file with via `AppIntentDispatcher`. Unchanged — explicitly excluded from the `FileView` migration.
@@ -42,6 +42,6 @@ As of Phase 4 (`INT-001`–`INT-005`, see `docs/Global-FileView-And-MessagingSys
 - [x] `P2-FILE-004` Implement folder/file creation, rename, delete, and properties dialog.
 - [x] `P2-FILE-005` & `P2-FILE-006` Implement intent dispatch for opening files and "Open With" dialog.
 - [x] `P2-FILE-007` Implement real-time event subscription auto-refresh.
-- [x] `P2-FILE-008` Add unit tests in `Tests/HackerOs.Apps.FileExplorer.Tests/`.
+- [x] `P2-FILE-008` Add unit tests in `Tests/Kazo.Os.Apps.FileExplorer.Tests/`.
 - [x] `INT-001`–`INT-005` Migrate onto `FileView` (Phase 4) — see
   `docs/Global-FileView-And-MessagingSystem/integrationPlan.md`.

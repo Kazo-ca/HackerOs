@@ -34,7 +34,7 @@ the same model.
 
 ### 1. xterm.js, embedded in the terminal library
 
-`Shared/HackerOs.AppSdk.Terminal` embeds `@xterm/xterm` 6.0.0 and
+`Shared/Kazo.Os.AppSdk.Terminal` embeds `@xterm/xterm` 6.0.0 and
 `@xterm/addon-fit` 0.11.0, versions pinned by `package-lock.json`.
 `build.mjs` (esbuild) produces `wwwroot/xterm/xterm.bundle.js`,
 `xterm.bundle.css` and `xterm.bundle.LICENSE.txt`, versioned in the repository:

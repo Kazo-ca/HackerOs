@@ -27,7 +27,7 @@ n'est pas livré) et **au démarrage** (le code est livré mais n'est jamais
 branché).
 
 Contrainte : les hôtes publient avec `PublishTrimmed=False`
-(`OS/HackerOs.Ecosystem/HackerOs.Ecosystem.csproj`). Un simple feature switch
+(`OS/Kazo.Os.Ecosystem/Kazo.Os.Ecosystem.csproj`). Un simple feature switch
 .NET (`[FeatureSwitchDefinition]`) ne retirerait donc aucun code du binaire.
 
 ## Décision
@@ -40,24 +40,24 @@ interrupteur. Couper l'une ne touche pas l'autre.
 ### 2. Au build : un projet à part, référencé sous condition
 
 Le code de mesure vit dans un projet dédié,
-`Platform/HackerOs.Platform.ResourceAccounting`, qui dépend de Platform Core
+`Platform/Kazo.Os.Platform.ResourceAccounting`, qui dépend de Platform Core
 et non l'inverse. Platform Core ne connaît que des contrats
 (`ICpuTimeAccountant`, `IMemoryAccountant`, dans Simulation Abstractions) et
 leurs implémentations nulles.
 
-Deux propriétés MSBuild, lues par `build/HackerOs.ResourceAccounting.targets`
+Deux propriétés MSBuild, lues par `build/Kazo.Os.ResourceAccounting.targets`
 importé par chaque hôte :
 
 ```xml
-<HackerOsCpuAccounting>true</HackerOsCpuAccounting>       <!-- défaut -->
-<HackerOsMemoryAccounting>true</HackerOsMemoryAccounting> <!-- défaut -->
+<HackerOsCpuAccounting>true</KazoOsCpuAccounting>       <!-- défaut -->
+<HackerOsMemoryAccounting>true</KazoOsMemoryAccounting> <!-- défaut -->
 ```
 
 - Si les deux valent `false`, l'hôte ne référence pas le projet : le code de
   mesure **n'est pas dans le binaire**.
 - Chaque propriété devient aussi une `RuntimeHostConfigurationOption`
-  (`HackerOs.ResourceAccounting.Cpu.IsSupported`,
-  `HackerOs.ResourceAccounting.Memory.IsSupported`), lue par
+  (`Kazo.Os.ResourceAccounting.Cpu.IsSupported`,
+  `Kazo.Os.ResourceAccounting.Memory.IsSupported`), lue par
   `AppContext.TryGetSwitch`. Le jour où la publication active le trimming, les
   propriétés de garde marquées `[FeatureSwitchDefinition]` retirent aussi le
   code d'une mesure coupée alors que l'autre reste.
@@ -65,7 +65,7 @@ importé par chaque hôte :
 ### 3. Au démarrage : `appsettings.json`
 
 L'hôte Ecosystem reçoit un `wwwroot/appsettings.json` (lu par
-`WebAssemblyHostBuilder.Configuration`) ; `test/test` et `HackerOs.Server`
+`WebAssemblyHostBuilder.Configuration`) ; `test/test` et `Kazo.Os.Server`
 lisent le leur.
 
 ```json
@@ -90,7 +90,7 @@ lisent le leur.
   ne va pas dans `/etc/hackeros` (ADR 0044), que l'utilisateur de l'OS
   pourrait modifier.
 
-Valeur par défaut de `HackerOs.Server` : les deux mesures **coupées** tant que
+Valeur par défaut de `Kazo.Os.Server` : les deux mesures **coupées** tant que
 l'ADR 0067 n'a pas été validé sur un hôte multithread (section 6 de l'ADR
 0067).
 

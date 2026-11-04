@@ -38,7 +38,7 @@ Une fenêtre reste sur le fil principal : l'essai de rendu dans un worker
 [`remote-window-rendering.md`](remote-window-rendering.md)). Son prototype,
 coupé par défaut, est le seul à démarrer un processus `start` `k = 3`.
 
-Les 74 commandes de `HackerOs.Commands` : 56 en `pool`, 18 en `mainThread`
+Les 74 commandes de `Kazo.Os.Commands` : 56 en `pool`, 18 en `mainThread`
 avec la raison en commentaire dans leur définition (`cd`, `exit`, `export`,
 `unset`, `jobs`, `read`, `help`, `which`, `kill` pilotent le shell ; `sudo`
 demande un mot de passe à l'agent d'authentification ; `passwd` lit le terminal sans écho ; `hackbackup` ouvre
@@ -47,11 +47,11 @@ le sélecteur de fichiers du navigateur, qui exige le geste de l'utilisateur ; `
 par le shell appelant (`RunNicedAsync`) et `renice` change une priorité, ce
 qu'aucune passerelle d'un worker n'offre, ADR 0127) ; les 16 premières raisons ont été
 relues par `exec/1-remote-gateways` et tiennent toujours (ADR 0138 §9). Le
-service d'exemple et `hackwebd` tournent en worker dédié depuis que `HackEvents`
+service d'exemple et `hackwebd` tournent en worker dédié depuis que `KazoEvents`
 et `Watch` traversent la frontière (ADR 0124).
 
 Les trois hôtes ont les workers : `test/test` exécute côté navigateur le
-`Program.cs` de l'Ecosystem, et `HackerOs.Server` sert l'OS de l'Ecosystem en
+`Program.cs` de l'Ecosystem, et `Kazo.Os.Server` sert l'OS de l'Ecosystem en
 WebAssembly depuis l'ADR 0130 (son ancien rendu Interactive Server, sans
 worker, a été retiré). Un hôte composé sans `IWebWorkerRuntime` écrit dans
 `/var/log/syslog` « workers: no Web Worker on this host: AppExecutionHost
@@ -74,13 +74,13 @@ worker, a été retiré). Un hôte composé sans `IWebWorkerRuntime` écrit dans
 
 | Projet | Types |
 |---|---|
-| `Shared/HackerOs.App.Abstractions` | `AppExecutionHost`, `AppExecutionHosts` (`DefaultFor`, `Resolve`, `Of`, `IsWorker`), `AppManifestAttribute.Execution`, `AppManifest.Execution`. |
-| `Shared/HackerOs.Simulation.Abstractions/Workers` | `IWebWorkerRuntime`, `IWebWorker`, `WebWorkerStartOptions` ; `IWorkerPoolStatus`, `WorkerSnapshot`, `WorkerRole`, `WorkerState`. |
-| `Platform/HackerOs.Platform.Core` | `IRemoteProcessHost`, `RemoteProcessLaunch`, `RemoteProcessExit`, `IRemoteService`, `ExecutionPlacement` (groupe d'un pipeline), `SystemStartupSignal` ; `AppLifecycleOrchestrator` lance à distance ce que `ShouldRunRemotely` accepte ; `/proc/hackeros/workers`. |
-| `Platform/HackerOs.Platform.WorkerHost` | **Protocole** : `WorkerMessages`, `WireCodec` (encodage explicite, sans réflexion), `RemoteErrors`, `RemoteOps`. **Côté worker** : `WorkerProcessHost`, `RemoteAppExecutionContext`, passerelles distantes (`RemoteGateways`, `RemoteFileSystemGateway`, `RemoteStandardStreams`), `WorkerCpuMeter`, `WorkerAssemblyLoader`, `BrowserWorkerEntryPoint`. **Côté OS** : `WorkerPool`, `WorkerConnection`, `RemoteProcessSession`, `WorkerRemoteProcessHost`, `WorkerAwareCpuTimeAccountant`, `WorkerAwareMemoryAccountant`, `AddHackerOsWorkerProcesses`. **Tests** : `LoopbackWebWorkerRuntime`. |
-| `Infrastructure/HackerOs.Infrastructure.Browser` | `wwwroot/workerHost.js` (création, `postMessage`, `terminate`, `hardwareConcurrency`, `requestIdleCallback`), `wwwroot/workerBootstrap.js` (runtime .NET du worker), `Workers/BrowserWebWorkerRuntime`. Aucun hôte ne les référence : ils sont importés par le C# (`_content/HackerOs.Infrastructure.Browser/…`). |
-| `OS/HackerOs.Ecosystem.Host` | `AddHackerOsBrowserHost` (appelé par le `Program.cs` de l'Ecosystem) enregistre `BrowserWebWorkerRuntime` et les workers **dans le navigateur seulement** (`OperatingSystem.IsBrowser()`), en préchargeant `HackerOs.Commands.dll` et avec `KnownAssemblies` = les assemblies paresseuses du catalogue (ADR 0124 §4) ; `EcosystemBootCoordinator.MarkSystemStarted` donne le signal de fin de boot. |
-| `Apps/System/HackerOs.Apps.SystemMonitor` | `ProcWorkers`/`ParseWorkers`, section « Workers » de l'onglet Performance. |
+| `Shared/Kazo.Os.App.Abstractions` | `AppExecutionHost`, `AppExecutionHosts` (`DefaultFor`, `Resolve`, `Of`, `IsWorker`), `AppManifestAttribute.Execution`, `AppManifest.Execution`. |
+| `Shared/Kazo.Os.Simulation.Abstractions/Workers` | `IWebWorkerRuntime`, `IWebWorker`, `WebWorkerStartOptions` ; `IWorkerPoolStatus`, `WorkerSnapshot`, `WorkerRole`, `WorkerState`. |
+| `Platform/Kazo.Os.Platform.Core` | `IRemoteProcessHost`, `RemoteProcessLaunch`, `RemoteProcessExit`, `IRemoteService`, `ExecutionPlacement` (groupe d'un pipeline), `SystemStartupSignal` ; `AppLifecycleOrchestrator` lance à distance ce que `ShouldRunRemotely` accepte ; `/proc/hackeros/workers`. |
+| `Platform/Kazo.Os.Platform.WorkerHost` | **Protocole** : `WorkerMessages`, `WireCodec` (encodage explicite, sans réflexion), `RemoteErrors`, `RemoteOps`. **Côté worker** : `WorkerProcessHost`, `RemoteAppExecutionContext`, passerelles distantes (`RemoteGateways`, `RemoteFileSystemGateway`, `RemoteStandardStreams`), `WorkerCpuMeter`, `WorkerAssemblyLoader`, `BrowserWorkerEntryPoint`. **Côté OS** : `WorkerPool`, `WorkerConnection`, `RemoteProcessSession`, `WorkerRemoteProcessHost`, `WorkerAwareCpuTimeAccountant`, `WorkerAwareMemoryAccountant`, `AddKazoOsWorkerProcesses`. **Tests** : `LoopbackWebWorkerRuntime`. |
+| `Infrastructure/Kazo.Os.Infrastructure.Browser` | `wwwroot/workerHost.js` (création, `postMessage`, `terminate`, `hardwareConcurrency`, `requestIdleCallback`), `wwwroot/workerBootstrap.js` (runtime .NET du worker), `Workers/BrowserWebWorkerRuntime`. Aucun hôte ne les référence : ils sont importés par le C# (`_content/Kazo.Os.Infrastructure.Browser/…`). |
+| `OS/Kazo.Os.Ecosystem.Host` | `AddKazoOsBrowserHost` (appelé par le `Program.cs` de l'Ecosystem) enregistre `BrowserWebWorkerRuntime` et les workers **dans le navigateur seulement** (`OperatingSystem.IsBrowser()`), en préchargeant `Kazo.Os.Commands.dll` et avec `KnownAssemblies` = les assemblies paresseuses du catalogue (ADR 0124 §4) ; `EcosystemBootCoordinator.MarkSystemStarted` donne le signal de fin de boot. |
+| `Apps/System/Kazo.Os.Apps.SystemMonitor` | `ProcWorkers`/`ParseWorkers`, section « Workers » de l'onglet Performance. |
 
 ### Démarrage d'un worker
 
@@ -120,7 +120,7 @@ Messages JSON avec un champ `t` :
 | `note` | Appel sans réponse (journal, environnement), gardé dans l'ordre. |
 | `cancel` | Annuler un `call` en cours. |
 | `out` | Sortie standard ou d'erreur d'un processus. |
-| `exit` | Fin d'un processus : statut, code, message d'erreur ; pour une tâche `HackBackground`, `jr` (résultat JSON), `jf` (exception d'origine) et `jx` (tâche refusée). |
+| `exit` | Fin d'un processus : statut, code, message d'erreur ; pour une tâche `KazoBackground`, `jr` (résultat JSON), `jf` (exception d'origine) et `jx` (tâche refusée). |
 | `killed` | Accusé d'un `kill`. |
 | `stopdone`, `sstopped` | Fin du traitement d'un `stop` / `sstop`. |
 | `log` | Ligne de diagnostic du worker. |
@@ -128,7 +128,7 @@ Messages JSON avec un champ `t` :
 | `ui` | Essai de l'ADR 0133 : sortie de la fenêtre `p` vers son hôte sur la page (`d` : lot d'opérations DOM `b`, demande de dialogue `dlg`). |
 
 `start` porte `k` : 0 ou absent pour une commande, 1 pour un service, 2 pour
-une tâche `HackBackground` (ADR 0140), 3 pour une fenêtre de l'essai de
+une tâche `KazoBackground` (ADR 0140), 3 pour une fenêtre de l'essai de
 l'ADR 0133 (champs `ra`/`rt` : le runner de la plateforme qui la rend).
 
 ### Événements et surveillance de fichiers (ADR 0124, ADR 0138)
@@ -154,14 +154,14 @@ publication d'un worker n'est matérialisée en objet qu'une fois par type pour
 les abonnés du fil principal.
 
 Chaque `call` est servi sur le fil principal par `RemoteProcessSession` **sous
-le contexte d'exécution du processus** (`HackExecutionContext.Enter` puis
+le contexte d'exécution du processus** (`KazoExecutionContext.Enter` puis
 `EnterKernel`) : les mêmes vérifications de capacités et la même comptabilité
 qu'en local. La sortie a un crédit de 64 Kio en vol ; un fichier régulier de
 16 Mio au plus est lu d'un coup, au-delà par blocs.
 
-### Tâches `HackBackground` (ADR 0128, ADR 0140)
+### Tâches `KazoBackground` (ADR 0128, ADR 0140)
 
-Une tâche lancée par `HackBackground.RunAsync` est un processus enfant de l'app
+Une tâche lancée par `KazoBackground.RunAsync` est un processus enfant de l'app
 que l'OS crée sur le fil principal (`BackgroundJobService`), puis place dans un
 worker du pool par `WorkerRemoteProcessHost.RunBackgroundJobAsync` : un message
 `start` avec `k = 2`, la cible `jt` (`asm`, `ty`, `me`, `it`) et l'entrée `ji`.
@@ -175,7 +175,7 @@ même sérialisation ([`background-jobs.md`](../framework/background-jobs.md)).
 | `bg.progress` | `note` | Une remontée de progression de la tâche (`f`, `m`), déjà limitée à 10 par seconde. |
 | `bg.run` | `call` | Un processus déjà dans un worker lance une tâche (`jt`, `ji`, `n`, `ni`, numéro `j`) ; l'OS la place comme une autre et renvoie sa progression par des messages `bgp`, puis le résultat `{r}`. |
 
-Erreurs distantes : `bgfault` (`ty`, `st`) porte une `HackBackgroundJobException`
+Erreurs distantes : `bgfault` (`ty`, `st`) porte une `KazoBackgroundJobException`
 avec le type et la pile d'origine ; `killed` porte la raison `rs`.
 
 ### Pool, worker prêt, débordement (ADR 0070 §2-3, ADR 0071)
@@ -289,7 +289,7 @@ synchrones refusés avec le même message, mémoire du battement de cœur.
 Qui pose les en-têtes : le service worker de l'Ecosystem (selon
 `HackerOs:CrossOriginIsolation` de `appsettings.json`, repli `require-corp`
 avec un rechargement unique), l'intergiciel de `test/test` et de
-`HackerOs.Server`. L'Ecosystem servi sur `localhost` ou `127.0.0.1` n'a pas de
+`Kazo.Os.Server`. L'Ecosystem servi sur `localhost` ou `127.0.0.1` n'a pas de
 service worker, donc pas d'isolation (ADR 0143 §3) : on essaie sur
 `127.0.0.2`.
 
@@ -319,7 +319,7 @@ Côté hôte :
 if (OperatingSystem.IsBrowser())
 {
     builder.Services.AddSingleton<IWebWorkerRuntime, BrowserWebWorkerRuntime>();
-    builder.Services.AddHackerOsWorkerProcesses(o => o with { PreloadAssemblies = ["HackerOs.Commands.dll"] });
+    builder.Services.AddKazoOsWorkerProcesses(o => o with { PreloadAssemblies = ["Kazo.Os.Commands.dll"] });
 }
 ```
 
@@ -368,7 +368,7 @@ seule réponse : son descripteur est rendu dès cette réponse (ADR 0139 §3).
 
 ## Tests
 
-- `Tests/HackerOs.Platform.WorkerHost.Tests` (OS complet sans interface, workers
+- `Tests/Kazo.Os.Platform.WorkerHost.Tests` (OS complet sans interface, workers
   en boucle locale) :
   - `CommandParityTests` : **les 74 commandes intégrées** (`nslookup`, `ausearch`, `xdg-open`, `xdg-mime`, `passwd`, `hackbackup`, `dmesg`, `nice`, `renice` et `prlimit` comprises) exécutées dans les
     deux modes (fil principal, worker) avec la même sortie, le même code et le
@@ -386,9 +386,9 @@ seule réponse : son descripteur est rendu dès cette réponse (ADR 0139 §3).
     désabonnement au `kill` ; service d'exemple en worker dédié ;
     `sample-cmd` (projet d'exemple tiers) chargé à la demande ; refus d'une
     assembly inconnue.
-- `Tests/HackerOs.App.Abstractions.Tests` : `Execution` dans le mappeur, le
+- `Tests/Kazo.Os.App.Abstractions.Tests` : `Execution` dans le mappeur, le
   validateur, le sérialiseur et le schéma.
-- `Tests/HackerOs.HostSmoke.Tests` (`build/verify-hosts.sh`) : sur les trois
+- `Tests/Kazo.Os.HostSmoke.Tests` (`build/verify-hosts.sh`) : sur les trois
   hôtes (le serveur sert le même OS depuis l'ADR 0130), pipeline,
   `/proc/hackeros/workers`, `echo` pendant `stress`, « not-responding »,
   `kill -9` et `kill`.
@@ -397,8 +397,8 @@ seule réponse : son descripteur est rendu dès cette réponse (ADR 0139 §3).
 
 - [x] `AppExecutionHost` dans `[AppManifest]`, le mappeur, le validateur, le schéma et `manifest.json` (défauts de l'ADR 0070 §1).
 - [x] Contrats `IWebWorkerRuntime`, `IWorkerPoolStatus` ; `IRemoteProcessHost` dans l'orchestrateur.
-- [x] `HackerOs.Platform.WorkerHost` : protocole, hôte de processus du worker, passerelles distantes, flux standard par messages.
-- [x] Module JS dans `HackerOs.Infrastructure.Browser/wwwroot` et `BrowserWebWorkerRuntime`.
+- [x] `Kazo.Os.Platform.WorkerHost` : protocole, hôte de processus du worker, passerelles distantes, flux standard par messages.
+- [x] Module JS dans `Kazo.Os.Infrastructure.Browser/wwwroot` et `BrowserWebWorkerRuntime`.
 - [x] Pool par cœur virtuel, placement des pipelines, workers dédiés.
 - [x] Worker toujours prêt après le boot, débordement, retour à la taille, plafond et syslog (ADR 0071).
 - [x] Battement de cœur, mesures CPU et mémoire, « Not responding », étape 4 de l'escalade.
@@ -414,7 +414,7 @@ seule réponse : son descripteur est rendu dès cette réponse (ADR 0139 §3).
 
 - [x] Bus « wire » côté OS (`IWireTopicMessageBus`, `IWireEventBus`), mêmes règles d'autorisation.
 - [x] Opérations `ev.*`, `watch.open` et message `ev` ; crédit de 256 messages.
-- [x] Codecs intégrés et `HackWireContextAttribute` (SDK 1.2 ; versé dans `PublicAPI.Shipped.txt` par `exec/10-final`, ADR 0132 §2).
+- [x] Codecs intégrés et `KazoWireContextAttribute` (SDK 1.2 ; versé dans `PublicAPI.Shipped.txt` par `exec/10-final`, ADR 0132 §2).
 - [x] Désabonnement à la fin, au `kill` et à la mort du worker.
 - [x] Service d'exemple et `hackwebd` en worker dédié ; revue des 16 commandes en `mainThread`.
 - [x] `KnownAssemblies`, refus avec le code 127 ; `sample-cmd` dans l'Ecosystem et le test des hôtes.
@@ -437,13 +437,13 @@ seule réponse : son descripteur est rendu dès cette réponse (ADR 0139 §3).
 ## Liste des tâches du chantier `exec/9-cross-origin-isolation` (ADR 0131, ADR 0143)
 
 - [x] Réglage `HackerOs:CrossOriginIsolation`, constante d'audit et copie dans le service worker.
-- [x] En-têtes : service worker de l'Ecosystem (repli `require-corp`), intergiciel de `test/test` et `HackerOs.Server`.
+- [x] En-têtes : service worker de l'Ecosystem (repli `require-corp`), intergiciel de `test/test` et `Kazo.Os.Server`.
 - [x] Sonde de la page (`crossOriginIsolation.js`), raisons, ligne de `syslog`.
 - [x] Anneaux partagés (`sharedRing.js`) dans `workerHost.js` et `workerBootstrap.js`.
 - [x] Appels synchrones `ListProcesses`/`Kill`, opération `proc.list`, `sample-cmd --processes` et `--kill`.
 - [x] Mémoire par worker mesurée par le navigateur (`IWebWorkerMemoryMeter`).
 - [x] Lignes d'isolation de `/proc/hackeros/workers`, badge de Diagnostic.
-- [x] Suite (ADR 0146, choix C de Benoit) : `HackCrossOriginIsolation` dans le SDK, sans capacité, opération `coi.get` ; Diagnostic ne déclare plus `filesystem.system.read` ; `sample-cmd --isolation`.
+- [x] Suite (ADR 0146, choix C de Benoit) : `KazoCrossOriginIsolation` dans le SDK, sans capacité, opération `coi.get` ; Diagnostic ne déclare plus `filesystem.system.read` ; `sample-cmd --isolation`.
 - [x] Audit dans Chromium, `AuditPassed = true`.
 - [x] Tests : sonde et réglage, appels synchrones en bouclage, anneaux sous Node, `HostSmoke` et parcours `ecosystem-isolated`/`ecosystem-isolation-off`.
 
@@ -451,7 +451,7 @@ seule réponse : son descripteur est rendu dès cette réponse (ADR 0139 §3).
 
 Publication Release trimmée, Chromium sans écran. Un worker prêt et vide
 occupe **55,4 Mio** de mémoire linéaire WebAssembly (le runtime et les 87
-assemblies du boot, ≈ 20,3 Mo dont 8,67 Mo pour `HackerOs.AppSdk.Icons`) et
+assemblies du boot, ≈ 20,3 Mo dont 8,67 Mo pour `Kazo.Os.AppSdk.Icons`) et
 5,7 Mio de tas managé. Avec la Calculatrice : 66,5 Mio. Ouverture +≈ 340 ms
 (worker prêt), latence d'un clic p95 +3,3 ms. Détail et verdict dans
 l'[ADR 0133](adr/0133-window-rendering-in-worker-verdict.md).

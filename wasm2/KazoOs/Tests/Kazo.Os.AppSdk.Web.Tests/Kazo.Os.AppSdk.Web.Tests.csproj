@@ -1,0 +1,35 @@
+<!-- Razor SDK: the test site has .razor views (web/7). -->
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="10.1.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="4.0.1" />
+    <!-- GeneratorTests drive the route generator on source snippets. -->
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.9.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.14" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Kazo.Os.AppSdk.Web\Kazo.Os.AppSdk.Web.csproj" />
+    <!-- The test site in Site/ is compiled with the generator (analyzer); GeneratorTests also call it directly,
+         through the "generator" alias: its linked copy of KazoRouteTemplate would clash with the library's. -->
+    <ProjectReference Include="..\..\Tools\Kazo.Os.Tools.WebRouteGenerator\Kazo.Os.Tools.WebRouteGenerator.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="true"
+                      Aliases="generator" />
+  </ItemGroup>
+
+</Project>

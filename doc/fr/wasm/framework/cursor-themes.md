@@ -90,7 +90,7 @@ Ne posez pas de curseur par un attribut `style` ni par JavaScript
 
 ## API
 
-Paquet `HackerOs.Theming.Abstractions` :
+Paquet `Kazo.Os.Theming.Abstractions` :
 
 - `CursorNames` : la liste des noms (`All`), l'aperçu de Paramètres
   (`Preview`) et les replis (`GetFallback`).
@@ -98,21 +98,21 @@ Paquet `HackerOs.Theming.Abstractions` :
   (vérifie un PNG sans le décoder), `ToDataUrl`, limites `MaxImageBytes` et
   `MaxImageSize`.
 - `CursorThemeLibrary.LoadAsync` : lit les dossiers de `/etc` et `~` avec vos
-  propres fonctions de lecture (`HackDirectory`/`HackFile` dans une app).
+  propres fonctions de lecture (`KazoDirectory`/`KazoFile` dans une app).
 - `CursorThemeCatalog` : les thèmes intégrés ; `CursorTheme.Resolve` et
   `ResolveAll` appliquent les replis.
 
-Paquet `HackerOs.Theming.Blazor` : `CursorThemeSurface`, composant sans rendu
+Paquet `Kazo.Os.Theming.Blazor` : `CursorThemeSurface`, composant sans rendu
 qu'un hôte place une fois dans sa racine (`Theme="…"`).
 
-Réglage : document `cursors` (`HackSettings.OpenSystemAsync(context, "cursors")`),
+Réglage : document `cursors` (`KazoSettings.OpenSystemAsync(context, "cursors")`),
 clé `theme`.
 
 ## Thèmes intégrés
 
 Les images de Kazo OS Néon et Gothique Pourpre sont dans
-`wasm2/HackerOs/Platform/HackerOs.Theming.Blazor/wwwroot/cursors/<id>/` et sont
-dessinées par `wasm2/HackerOs/build/tools/generate-cursor-themes.py` (Pillow).
+`wasm2/KazoOs/Platform/Kazo.Os.Theming.Blazor/wwwroot/cursors/<id>/` et sont
+dessinées par `wasm2/KazoOs/build/tools/generate-cursor-themes.py` (Pillow).
 Changer un dessin ou un point actif demande de modifier ensemble le script et
 `CursorThemeCatalog` ; le test `Every_built_in_cursor_is_a_shipped_png_whose_hot_spot_is_inside`
 vérifie qu'ils s'accordent.

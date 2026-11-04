@@ -2,7 +2,7 @@
 
 # Redirection Cloudflare de hackos.kazo.ca vers os.kazo.ca
 
-Le script du Worker est dans [`wasm2/HackerOs/build/cloudflare/hackos-redirect-worker.mjs`](../../../../wasm2/HackerOs/build/cloudflare/hackos-redirect-worker.mjs). Vérification locale : `node wasm2/HackerOs/build/cloudflare/test-redirect-worker.mjs`. Contexte : [ADR 0228](adr/0228-rename-to-kazoos.md) (Kazo OS).
+Le script du Worker est dans [`wasm2/KazoOs/build/cloudflare/hackos-redirect-worker.mjs`](../../../../wasm2/KazoOs/build/cloudflare/hackos-redirect-worker.mjs). Vérification locale : `node wasm2/KazoOs/build/cloudflare/test-redirect-worker.mjs`. Contexte : [ADR 0228](adr/0228-rename-to-kazoos.md) (Kazo OS).
 
 ## Ce que fait le Worker
 
@@ -26,7 +26,7 @@ Testé localement avec Node : `/` → 301 `https://os.kazo.ca/`, `/legacy/?a=1` 
 GitHub Pages ne sert qu'un seul domaine personnalisé par dépôt. Avant d'activer la
 redirection :
 
-1. GitHub, dépôt Kazo-ca/HackerOs → **Settings → Pages → Custom domain** : remplacer
+1. GitHub, dépôt Kazo-ca/Os → **Settings → Pages → Custom domain** : remplacer
    `hackos.kazo.ca` par `os.kazo.ca`, **Save**, puis cocher **Enforce HTTPS** quand
    GitHub l'offre.
 2. Dans Cloudflare, l'enregistrement `os` doit être un `CNAME` vers `kazo-ca.github.io`.

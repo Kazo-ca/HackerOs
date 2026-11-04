@@ -1,0 +1,377 @@
+#nullable enable
+Kazo.Os.Infrastructure.Browser.Apps.BrowserInstalledAppAssets
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupService
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupService.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupService.ExportArchiveAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<byte[]!>
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupService.ExportAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<string!>
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupService.IndexedDbBackupService(Microsoft.JSInterop.IJSRuntime! runtime, System.TimeProvider? timeProvider = null) -> void
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupService.RestoreAsync(string! backupJson, Kazo.Os.Infrastructure.Browser.Backup.IndexedDbRestoreMode mode, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Infrastructure.Browser.Backup.IndexedDbRestoreResult!>
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupSummary
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupSummary.<Clone>$() -> Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupSummary!
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupSummary.CreatedAtUtc.get -> System.DateTimeOffset
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupSummary.CreatedAtUtc.init -> void
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupSummary.Deconstruct(out System.DateTimeOffset CreatedAtUtc, out int SchemaVersion, out int RecordCount, out System.Collections.Generic.IReadOnlyDictionary<string!, int>! StoreRecordCounts) -> void
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupSummary.Equals(Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupSummary? other) -> bool
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupSummary.IndexedDbBackupSummary(System.DateTimeOffset CreatedAtUtc, int SchemaVersion, int RecordCount, System.Collections.Generic.IReadOnlyDictionary<string!, int>! StoreRecordCounts) -> void
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupSummary.RecordCount.get -> int
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupSummary.RecordCount.init -> void
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupSummary.SchemaVersion.get -> int
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupSummary.SchemaVersion.init -> void
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupSummary.StoreRecordCounts.get -> System.Collections.Generic.IReadOnlyDictionary<string!, int>!
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupSummary.StoreRecordCounts.init -> void
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupValidationException
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupValidationException.IndexedDbBackupValidationException(string! message) -> void
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupValidationException.IndexedDbBackupValidationException(string! message, System.Exception! innerException) -> void
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbRestoreMode
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbRestoreMode.Merge = 1 -> Kazo.Os.Infrastructure.Browser.Backup.IndexedDbRestoreMode
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbRestoreMode.Replace = 2 -> Kazo.Os.Infrastructure.Browser.Backup.IndexedDbRestoreMode
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbRestoreResult
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbRestoreResult.<Clone>$() -> Kazo.Os.Infrastructure.Browser.Backup.IndexedDbRestoreResult!
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbRestoreResult.Deconstruct(out Kazo.Os.Infrastructure.Browser.Backup.IndexedDbRestoreMode Mode, out int RecordCount) -> void
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbRestoreResult.Equals(Kazo.Os.Infrastructure.Browser.Backup.IndexedDbRestoreResult? other) -> bool
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbRestoreResult.IndexedDbRestoreResult(Kazo.Os.Infrastructure.Browser.Backup.IndexedDbRestoreMode Mode, int RecordCount) -> void
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbRestoreResult.Mode.get -> Kazo.Os.Infrastructure.Browser.Backup.IndexedDbRestoreMode
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbRestoreResult.Mode.init -> void
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbRestoreResult.RecordCount.get -> int
+Kazo.Os.Infrastructure.Browser.Backup.IndexedDbRestoreResult.RecordCount.init -> void
+Kazo.Os.Infrastructure.Browser.Catalog.IndexedDbAppCatalogRepository
+Kazo.Os.Infrastructure.Browser.Catalog.IndexedDbAppCatalogRepository.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.Catalog.IndexedDbAppCatalogRepository.IndexedDbAppCatalogRepository(Microsoft.JSInterop.IJSRuntime! runtime) -> void
+Kazo.Os.Infrastructure.Browser.Catalog.IndexedDbAppCatalogRepository.ReadAllAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.PersistedAppCatalogEntry!>!>
+Kazo.Os.Infrastructure.Browser.Catalog.IndexedDbAppCatalogRepository.ReconcileAsync(System.Collections.Generic.IEnumerable<Kazo.Os.App.Abstractions.AppManifest!>! selectedManifests, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.PersistedAppCatalogEntry!>!>
+Kazo.Os.Infrastructure.Browser.Catalog.IndexedDbAppCatalogRepository.SetEnabledAsync(string! appId, bool enabled, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbAuditRepository
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbAuditRepository.AppendAsync(Kazo.Os.Simulation.Abstractions.Diagnostics.AuditEntry! entry, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbAuditRepository.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbAuditRepository.IndexedDbAuditRepository(Microsoft.JSInterop.IJSRuntime! runtime, Kazo.Os.Simulation.Abstractions.Diagnostics.IDiagnosticRedactor! redactor) -> void
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbAuditRepository.ReadAllAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<Kazo.Os.Simulation.Abstractions.Diagnostics.AuditEntry!>!>
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbDiagnosticRepository
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbDiagnosticRepository.AppendAsync(Kazo.Os.Simulation.Abstractions.Diagnostics.DiagnosticEntry! entry, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbDiagnosticRepository.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbDiagnosticRepository.IndexedDbDiagnosticRepository(Microsoft.JSInterop.IJSRuntime! runtime, Kazo.Os.Simulation.Abstractions.Diagnostics.IDiagnosticRedactor! redactor, int capacity) -> void
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbDiagnosticRepository.ReadAllAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<Kazo.Os.Simulation.Abstractions.Diagnostics.DiagnosticEntry!>!>
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbInspectorService
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbInspectorService.IndexedDbInspectorService(Microsoft.JSInterop.IJSRuntime! runtime) -> void
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbInspectorService.InspectDatabaseAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot!>
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.<Clone>$() -> Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot!
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.CapturedAtUtc.get -> System.DateTimeOffset
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.CapturedAtUtc.init -> void
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.DatabaseName.get -> string!
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.DatabaseName.init -> void
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.DatabaseVersion.get -> int
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.DatabaseVersion.init -> void
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.Deconstruct(out System.DateTimeOffset CapturedAtUtc, out string! DatabaseName, out int DatabaseVersion, out System.Collections.Generic.IReadOnlyList<Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot!>! Stores, out System.Collections.Generic.IReadOnlyDictionary<string!, string!>! ResolvedPaths, out int TotalLinkCount) -> void
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.Equals(Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot? other) -> bool
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.IndexedDbSnapshot(System.DateTimeOffset CapturedAtUtc, string! DatabaseName, int DatabaseVersion, System.Collections.Generic.IReadOnlyList<Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot!>! Stores, System.Collections.Generic.IReadOnlyDictionary<string!, string!>! ResolvedPaths, int TotalLinkCount) -> void
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.ResolvedPaths.get -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.ResolvedPaths.init -> void
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.Stores.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot!>!
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.Stores.init -> void
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.ToExportJson() -> string!
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.TotalLinkCount.get -> int
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.TotalLinkCount.init -> void
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.<Clone>$() -> Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot!
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.Deconstruct(out string! Name, out string! Purpose, out System.Collections.Generic.IReadOnlyList<string!>! KeyPath, out int RecordCount, out string! FormattedJson, out System.Text.Json.JsonElement RawElement) -> void
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.Equals(Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot? other) -> bool
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.FormattedJson.get -> string!
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.FormattedJson.init -> void
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.IndexedDbStoreSnapshot(string! Name, string! Purpose, System.Collections.Generic.IReadOnlyList<string!>! KeyPath, int RecordCount, string! FormattedJson, System.Text.Json.JsonElement RawElement) -> void
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.KeyPath.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.KeyPath.init -> void
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.Name.get -> string!
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.Name.init -> void
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.Purpose.get -> string!
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.Purpose.init -> void
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.RawElement.get -> System.Text.Json.JsonElement
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.RawElement.init -> void
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.RecordCount.get -> int
+Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.RecordCount.init -> void
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.<Clone>$() -> Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult!
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.CandidateHashes.get -> int
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.CandidateHashes.init -> void
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.Deconstruct(out int CandidateHashes, out int DeletedChunks, out int RetainedReferencedHashes) -> void
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.DeletedChunks.get -> int
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.DeletedChunks.init -> void
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.Equals(Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult? other) -> bool
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.IndexedDbFileContentCleanupResult(int CandidateHashes, int DeletedChunks, int RetainedReferencedHashes) -> void
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.RetainedReferencedHashes.get -> int
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.RetainedReferencedHashes.init -> void
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileSystemBootstrapper
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileSystemBootstrapper.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileSystemBootstrapper.EnsureRootAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileSystemBootstrapper.IndexedDbFileSystemBootstrapper(Microsoft.JSInterop.IJSRuntime! runtime, System.TimeProvider? timeProvider = null) -> void
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileSystemMaintenance
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileSystemMaintenance.CleanupAsync(int maximumHashes = 64, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult!>
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileSystemMaintenance.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileSystemMaintenance.IndexedDbFileSystemMaintenance(Microsoft.JSInterop.IJSRuntime! runtime) -> void
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileSystemMaintenance.InitializeAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult!>
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileSystemProvider
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileSystemProvider.CopyAsync(Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemCopyRequest! request, Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemAuthorizationContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemMutationResult!>
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileSystemProvider.CreateAsync(Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemCreateRequest! request, Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemAuthorizationContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemMutationResult!>
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileSystemProvider.DeleteAsync(Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemDeleteRequest! request, Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemAuthorizationContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemMutationResult!>
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileSystemProvider.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileSystemProvider.EnumerateAsync(Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemEnumerateRequest! request, Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemAuthorizationContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemResult<Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemDirectorySnapshot!>!>
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileSystemProvider.IndexedDbFileSystemProvider(Microsoft.JSInterop.IJSRuntime! runtime) -> void
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileSystemProvider.IndexedDbFileSystemProvider(Microsoft.JSInterop.IJSRuntime! runtime, Kazo.Os.Simulation.Abstractions.Metrics.IBlockDeviceStatistics? disk) -> void
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileSystemProvider.MeasureStoredContentBytesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<long>
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileSystemProvider.MoveAsync(Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemMoveRequest! request, Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemAuthorizationContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemMutationResult!>
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileSystemProvider.ProviderId.get -> string!
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileSystemProvider.ReadAsync(Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemReadRequest! request, Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemAuthorizationContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemResult<Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemContentReadHandle!>!>
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileSystemProvider.SetPermissionsAsync(Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemSetPermissionsRequest! request, Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemAuthorizationContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemMutationResult!>
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileSystemProvider.StatAsync(Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemStatRequest! request, Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemAuthorizationContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemResult<Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemEntrySnapshot!>!>
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileSystemProvider.StatComponentsAsync(Kazo.Os.App.Abstractions.VirtualPath path, Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemAuthorizationContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemResult<System.Collections.Generic.IReadOnlyList<Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemEntrySnapshot!>!>!>
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileSystemProvider.WriteAsync(Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemWriteRequest! request, Kazo.Os.Simulation.Abstractions.FileSystem.IFileSystemContentSource! content, Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemAuthorizationContext! context, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemMutationResult!>
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbStorageUsageProvider
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbStorageUsageProvider.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbStorageUsageProvider.GetUsageAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Simulation.Abstractions.Metrics.StorageUsage>
+Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbStorageUsageProvider.IndexedDbStorageUsageProvider(Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileSystemProvider! fileSystem, Microsoft.JSInterop.IJSRuntime! runtime) -> void
+Kazo.Os.Infrastructure.Browser.Globalization.BrowserSatelliteAssemblies
+Kazo.Os.Infrastructure.Browser.Interop.BrowserHostActivitySignal
+Kazo.Os.Infrastructure.Browser.Interop.BrowserHostActivitySignal.BrowserHostActivitySignal(Microsoft.JSInterop.IJSRuntime! runtime) -> void
+Kazo.Os.Infrastructure.Browser.Interop.BrowserHostActivitySignal.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.Interop.BrowserHostActivitySignal.IsVisible.get -> bool
+Kazo.Os.Infrastructure.Browser.Interop.BrowserHostActivitySignal.OnActivity(bool visible, bool resumed) -> void
+Kazo.Os.Infrastructure.Browser.Interop.BrowserHostActivitySignal.Resumed -> System.Action?
+Kazo.Os.Infrastructure.Browser.Interop.BrowserHostClipboardChannel
+Kazo.Os.Infrastructure.Browser.Interop.BrowserHostClipboardChannel.AttachAsync(Kazo.Os.Simulation.Abstractions.Clipboard.IHostClipboardSink! sink, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.Interop.BrowserHostClipboardChannel.BrowserHostClipboardChannel(Microsoft.JSInterop.IJSRuntime! runtime) -> void
+Kazo.Os.Infrastructure.Browser.Interop.BrowserHostClipboardChannel.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.Interop.BrowserHostClipboardChannel.SetDirectionsAsync(bool guestToHost, bool hostToGuest, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.Interop.BrowserHostClipboardChannel.SyncGuestTextAsync(string? text, bool writeToHost, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.Interop.BrowserHostFolderAccess
+Kazo.Os.Infrastructure.Browser.Interop.BrowserHostFolderAccess.BrowserHostFolderAccess(Microsoft.JSInterop.IJSRuntime! runtime) -> void
+Kazo.Os.Infrastructure.Browser.Interop.BrowserHostFolderAccess.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.Interop.BrowserHostFolderAccess.ForgetAsync(string! key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.Interop.BrowserHostFolderAccess.IsSupportedAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.Infrastructure.Browser.Interop.BrowserHostFolderAccess.LoadAsync(string! key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Simulation.Abstractions.FileSystem.IHostFolder?>
+Kazo.Os.Infrastructure.Browser.Interop.BrowserHostFolderAccess.PickAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Simulation.Abstractions.FileSystem.HostFolderPick?>
+Kazo.Os.Infrastructure.Browser.Interop.WebCryptoPasswordHasher
+Kazo.Os.Infrastructure.Browser.Interop.WebCryptoPasswordHasher.DecryptAesGcmAsync(byte[]! key, byte[]! nonce, byte[]! sealedData, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<byte[]?>
+Kazo.Os.Infrastructure.Browser.Interop.WebCryptoPasswordHasher.DeriveKeyAsync(string! password, byte[]! salt, int iterations, int keyLengthBytes, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<byte[]!>
+Kazo.Os.Infrastructure.Browser.Interop.WebCryptoPasswordHasher.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.Interop.WebCryptoPasswordHasher.EncryptAesGcmAsync(byte[]! key, byte[]! nonce, byte[]! plaintext, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<byte[]!>
+Kazo.Os.Infrastructure.Browser.Interop.WebCryptoPasswordHasher.WebCryptoPasswordHasher(Microsoft.JSInterop.IJSRuntime! runtime) -> void
+Kazo.Os.Infrastructure.Browser.Isolation.BrowserCrossOriginIsolation
+Kazo.Os.Infrastructure.Browser.Policy.IndexedDbCapabilityGrantRepository
+Kazo.Os.Infrastructure.Browser.Policy.IndexedDbCapabilityGrantRepository.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.Policy.IndexedDbCapabilityGrantRepository.EvaluateAsync(string! appId, string! userId, string! capability, Kazo.Os.App.Abstractions.AppAuthority actingAuthority, Kazo.Os.App.Abstractions.AppAuthority requiredAuthority, Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidate? resourceCandidate = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluation>
+Kazo.Os.Infrastructure.Browser.Policy.IndexedDbCapabilityGrantRepository.GetCurrentPolicyRevisionAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<long>
+Kazo.Os.Infrastructure.Browser.Policy.IndexedDbCapabilityGrantRepository.GrantAsync(string! appId, string! userId, string! capability, Kazo.Os.App.Abstractions.Policy.CapabilityGrantSource source, Kazo.Os.App.Abstractions.AppAuthority actingAuthority, System.Collections.Generic.IEnumerable<Kazo.Os.App.Abstractions.Policy.CapabilityConstraint!>? constraints = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationResult!>
+Kazo.Os.Infrastructure.Browser.Policy.IndexedDbCapabilityGrantRepository.ImportAsync(Kazo.Os.App.Abstractions.Policy.CapabilityGrantId id, string! appId, string! userId, string! capability, Kazo.Os.App.Abstractions.Policy.CapabilityGrantSource source, System.Collections.Generic.IEnumerable<Kazo.Os.App.Abstractions.Policy.CapabilityConstraint!>? constraints, bool isRevoked, Kazo.Os.App.Abstractions.AppAuthority actingAuthority, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationResult!>
+Kazo.Os.Infrastructure.Browser.Policy.IndexedDbCapabilityGrantRepository.IndexedDbCapabilityGrantRepository(Microsoft.JSInterop.IJSRuntime! runtime, System.TimeProvider? timeProvider = null, System.Func<System.Guid>? guidFactory = null) -> void
+Kazo.Os.Infrastructure.Browser.Policy.IndexedDbCapabilityGrantRepository.RevokeAsync(Kazo.Os.App.Abstractions.Policy.CapabilityGrantId grantId, Kazo.Os.App.Abstractions.AppAuthority actingAuthority, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationResult!>
+Kazo.Os.Infrastructure.Browser.Recovery.BrowserStorageRecoveryClassifier
+Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy
+Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.<Clone>$() -> Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy!
+Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.ChunkCountFor(long fileSizeBytes) -> int
+Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.ContentHashAlgorithm.get -> string!
+Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.DeduplicateChunks.get -> bool
+Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.Equals(Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy? other) -> bool
+Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.FileContentStoragePolicy(long maxFileSizeBytes, long maxChunkSizeBytes, string! contentHashAlgorithm, bool deduplicateChunks, System.TimeSpan orphanRetention) -> void
+Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.MaxChunkSizeBytes.get -> long
+Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.MaxFileSizeBytes.get -> long
+Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.OrphanRetention.get -> System.TimeSpan
+Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.RequiresChunking(long fileSizeBytes) -> bool
+Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema
+Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition
+Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.<Clone>$() -> Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition!
+Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.Equals(Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition? other) -> bool
+Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.IndexedDbIndexDefinition(string! name, System.Collections.Generic.IReadOnlyList<string!>! keyPath, bool unique = false, bool multiEntry = false) -> void
+Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.KeyPath.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.MultiEntry.get -> bool
+Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.Name.get -> string!
+Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.Unique.get -> bool
+Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition
+Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition.<Clone>$() -> Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition!
+Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition.AutoIncrement.get -> bool
+Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition.Equals(Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition? other) -> bool
+Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition.IndexedDbObjectStoreDefinition(string! name, System.Collections.Generic.IReadOnlyList<string!>! keyPath, bool autoIncrement, System.Collections.Generic.IReadOnlyList<Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition!>! indexes, string! purpose) -> void
+Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition.Indexes.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition!>!
+Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition.KeyPath.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition.Name.get -> string!
+Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition.Purpose.get -> string!
+Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary
+Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary.<Clone>$() -> Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary!
+Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary.Description.get -> string!
+Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary.Equals(Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary? other) -> bool
+Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary.IndexedDbTransactionBoundary(string! name, System.Collections.Generic.IReadOnlyList<string!>! objectStoreNames, string! description) -> void
+Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary.Name.get -> string!
+Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary.ObjectStoreNames.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.Infrastructure.Browser.ServerConnection.IndexedDbServerConnectionRepository
+Kazo.Os.Infrastructure.Browser.ServerConnection.IndexedDbServerConnectionRepository.ClearAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.ServerConnection.IndexedDbServerConnectionRepository.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.ServerConnection.IndexedDbServerConnectionRepository.GetAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Simulation.Abstractions.ServerConnection.ServerConnectionState?>
+Kazo.Os.Infrastructure.Browser.ServerConnection.IndexedDbServerConnectionRepository.IndexedDbServerConnectionRepository(Microsoft.JSInterop.IJSRuntime! runtime) -> void
+Kazo.Os.Infrastructure.Browser.ServerConnection.IndexedDbServerConnectionRepository.SetAsync(Kazo.Os.Simulation.Abstractions.ServerConnection.ServerConnectionState! state, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.Sessions.IndexedDbLocalGroupRepository
+Kazo.Os.Infrastructure.Browser.Sessions.IndexedDbLocalGroupRepository.CreateGroupAsync(Kazo.Os.Simulation.Abstractions.Sessions.LocalLoginName name, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Simulation.Abstractions.Sessions.LocalGroup!>
+Kazo.Os.Infrastructure.Browser.Sessions.IndexedDbLocalGroupRepository.DeleteGroupAsync(Kazo.Os.Simulation.Abstractions.Sessions.LocalGroupId id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.Sessions.IndexedDbLocalGroupRepository.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.Sessions.IndexedDbLocalGroupRepository.FindByIdAsync(Kazo.Os.Simulation.Abstractions.Sessions.LocalGroupId id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Simulation.Abstractions.Sessions.LocalGroup?>
+Kazo.Os.Infrastructure.Browser.Sessions.IndexedDbLocalGroupRepository.FindByNameAsync(Kazo.Os.Simulation.Abstractions.Sessions.LocalLoginName name, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Simulation.Abstractions.Sessions.LocalGroup?>
+Kazo.Os.Infrastructure.Browser.Sessions.IndexedDbLocalGroupRepository.IndexedDbLocalGroupRepository(Microsoft.JSInterop.IJSRuntime! runtime) -> void
+Kazo.Os.Infrastructure.Browser.Sessions.IndexedDbLocalGroupRepository.RenameGroupAsync(Kazo.Os.Simulation.Abstractions.Sessions.LocalGroupId id, Kazo.Os.Simulation.Abstractions.Sessions.LocalLoginName name, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Simulation.Abstractions.Sessions.LocalGroup!>
+Kazo.Os.Infrastructure.Browser.Sessions.IndexedDbLocalUserRepository
+Kazo.Os.Infrastructure.Browser.Sessions.IndexedDbLocalUserRepository.ConvertGuestUserAsync(Kazo.Os.Simulation.Abstractions.Sessions.LocalUserId id, Kazo.Os.Simulation.Abstractions.Sessions.LocalLoginName loginName, string! displayName, Kazo.Os.Simulation.Abstractions.Sessions.LocalPasswordCredential! credential, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Simulation.Abstractions.Sessions.LocalUser!>
+Kazo.Os.Infrastructure.Browser.Sessions.IndexedDbLocalUserRepository.CreateGuestUserAsync(Kazo.Os.Simulation.Abstractions.Sessions.LocalLoginName loginName, string! displayName, Kazo.Os.App.Abstractions.AppAuthority authority, Kazo.Os.Simulation.Abstractions.Sessions.LocalGroupId primaryGroupId, System.Collections.Generic.IReadOnlyCollection<Kazo.Os.Simulation.Abstractions.Sessions.LocalGroupId>! additionalGroupIds, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Simulation.Abstractions.Sessions.LocalUser!>
+Kazo.Os.Infrastructure.Browser.Sessions.IndexedDbLocalUserRepository.CreateUserAsync(Kazo.Os.Simulation.Abstractions.Sessions.LocalLoginName loginName, string! displayName, Kazo.Os.App.Abstractions.AppAuthority authority, Kazo.Os.Simulation.Abstractions.Sessions.LocalGroupId primaryGroupId, System.Collections.Generic.IReadOnlyCollection<Kazo.Os.Simulation.Abstractions.Sessions.LocalGroupId>? additionalGroupIds = null, Kazo.Os.Simulation.Abstractions.Sessions.LocalPasswordCredential? credential = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Simulation.Abstractions.Sessions.LocalUser!>
+Kazo.Os.Infrastructure.Browser.Sessions.IndexedDbLocalUserRepository.DeleteUserAsync(Kazo.Os.Simulation.Abstractions.Sessions.LocalUserId id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.Sessions.IndexedDbLocalUserRepository.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.Sessions.IndexedDbLocalUserRepository.FindByIdAsync(Kazo.Os.Simulation.Abstractions.Sessions.LocalUserId id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Simulation.Abstractions.Sessions.LocalUser?>
+Kazo.Os.Infrastructure.Browser.Sessions.IndexedDbLocalUserRepository.FindByLoginNameAsync(Kazo.Os.Simulation.Abstractions.Sessions.LocalLoginName loginName, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Simulation.Abstractions.Sessions.LocalUser?>
+Kazo.Os.Infrastructure.Browser.Sessions.IndexedDbLocalUserRepository.GetAllAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<Kazo.Os.Simulation.Abstractions.Sessions.LocalUser!>!>
+Kazo.Os.Infrastructure.Browser.Sessions.IndexedDbLocalUserRepository.IndexedDbLocalUserRepository(Microsoft.JSInterop.IJSRuntime! runtime, System.TimeProvider? timeProvider = null) -> void
+Kazo.Os.Infrastructure.Browser.Sessions.IndexedDbLocalUserRepository.SetAuthorityAsync(Kazo.Os.Simulation.Abstractions.Sessions.LocalUserId id, Kazo.Os.App.Abstractions.AppAuthority authority, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Simulation.Abstractions.Sessions.LocalUser!>
+Kazo.Os.Infrastructure.Browser.Sessions.IndexedDbLocalUserRepository.SetCredentialAsync(Kazo.Os.Simulation.Abstractions.Sessions.LocalUserId id, Kazo.Os.Simulation.Abstractions.Sessions.LocalPasswordCredential? credential, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Simulation.Abstractions.Sessions.LocalUser!>
+Kazo.Os.Infrastructure.Browser.Sessions.IndexedDbLocalUserRepository.SetEnabledAsync(Kazo.Os.Simulation.Abstractions.Sessions.LocalUserId id, bool enabled, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Simulation.Abstractions.Sessions.LocalUser!>
+Kazo.Os.Infrastructure.Browser.Sessions.IndexedDbLocalUserRepository.SetPasskeysAsync(Kazo.Os.Simulation.Abstractions.Sessions.LocalUserId id, System.Collections.Generic.IReadOnlyList<Kazo.Os.Simulation.Abstractions.Sessions.LocalPasskeyCredential!>! passkeys, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Simulation.Abstractions.Sessions.LocalUser!>
+Kazo.Os.Infrastructure.Browser.Settings.IndexedDbLegacySettingsStore
+Kazo.Os.Infrastructure.Browser.Settings.IndexedDbLegacySettingsStore.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.Settings.IndexedDbLegacySettingsStore.IndexedDbLegacySettingsStore(Microsoft.JSInterop.IJSRuntime! runtime) -> void
+Kazo.Os.Infrastructure.Browser.Settings.IndexedDbLegacySettingsStore.ReadAllAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<Kazo.Os.Simulation.Abstractions.Settings.LegacySettingsRecord!>!>
+Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageManager
+Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageManager.BrowserStorageManager(Microsoft.JSInterop.IJSRuntime! runtime) -> void
+Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageManager.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageManager.GetCapacityAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Simulation.Abstractions.Metrics.StorageCapacity?>
+Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageManager.GetStatusAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus!>
+Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageManager.RequestPersistenceAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageQuotaException
+Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageQuotaException.BrowserStorageQuotaException(string! message, System.Exception! innerException) -> void
+Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus
+Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus.<Clone>$() -> Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus!
+Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus.AvailableBytes.get -> long
+Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus.AvailableBytes.init -> void
+Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus.BrowserStorageStatus(long UsageBytes, long QuotaBytes, long AvailableBytes, bool IsPersisted, bool IsLowSpace) -> void
+Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus.Deconstruct(out long UsageBytes, out long QuotaBytes, out long AvailableBytes, out bool IsPersisted, out bool IsLowSpace) -> void
+Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus.Equals(Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus? other) -> bool
+Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus.IsLowSpace.get -> bool
+Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus.IsLowSpace.init -> void
+Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus.IsPersisted.get -> bool
+Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus.IsPersisted.init -> void
+Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus.QuotaBytes.get -> long
+Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus.QuotaBytes.init -> void
+Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus.UsageBytes.get -> long
+Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus.UsageBytes.init -> void
+Kazo.Os.Infrastructure.Browser.Sync.IndexedDbSyncCursorRepository
+Kazo.Os.Infrastructure.Browser.Sync.IndexedDbSyncCursorRepository.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.Sync.IndexedDbSyncCursorRepository.GetCursorAsync(string! domain, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<string?>
+Kazo.Os.Infrastructure.Browser.Sync.IndexedDbSyncCursorRepository.GetLastPulledAtAsync(string! domain, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.DateTimeOffset?>
+Kazo.Os.Infrastructure.Browser.Sync.IndexedDbSyncCursorRepository.IndexedDbSyncCursorRepository(Microsoft.JSInterop.IJSRuntime! runtime) -> void
+Kazo.Os.Infrastructure.Browser.Sync.IndexedDbSyncCursorRepository.SetCursorAsync(string! domain, string? cursor, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.Sync.IndexedDbSyncCursorRepository.SetLastPulledAtAsync(string! domain, System.DateTimeOffset pulledAtUtc, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.Sync.IndexedDbSyncRecordStateRepository
+Kazo.Os.Infrastructure.Browser.Sync.IndexedDbSyncRecordStateRepository.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.Sync.IndexedDbSyncRecordStateRepository.GetAsync(string! domain, System.Guid recordId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Simulation.Abstractions.Sync.SyncRecordTrackingState?>
+Kazo.Os.Infrastructure.Browser.Sync.IndexedDbSyncRecordStateRepository.IndexedDbSyncRecordStateRepository(Microsoft.JSInterop.IJSRuntime! runtime) -> void
+Kazo.Os.Infrastructure.Browser.Sync.IndexedDbSyncRecordStateRepository.ListAsync(string! domain, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<Kazo.Os.Simulation.Abstractions.Sync.SyncTrackedRecord!>!>
+Kazo.Os.Infrastructure.Browser.Sync.IndexedDbSyncRecordStateRepository.RemoveAsync(string! domain, System.Guid recordId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.Sync.IndexedDbSyncRecordStateRepository.SetAsync(string! domain, System.Guid recordId, Kazo.Os.Simulation.Abstractions.Sync.SyncRecordTrackingState! state, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.WebData.WebSiteDatabaseInterop
+Kazo.Os.Infrastructure.Browser.WebData.WebSiteDatabaseInterop.DeleteAsync(string! databaseName, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.WebData.WebSiteDatabaseInterop.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.WebData.WebSiteDatabaseInterop.ExecuteAsync(string! databaseName, string! requestJson, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<string!>
+Kazo.Os.Infrastructure.Browser.WebData.WebSiteDatabaseInterop.ListAsync(string! knownNamesJson, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<string!>
+Kazo.Os.Infrastructure.Browser.WebData.WebSiteDatabaseInterop.OpenAsync(string! databaseName, string! schemaJson, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+Kazo.Os.Infrastructure.Browser.WebData.WebSiteDatabaseInterop.WebSiteDatabaseInterop(Microsoft.JSInterop.IJSRuntime! runtime) -> void
+Kazo.Os.Infrastructure.Browser.Workers.BrowserWebWorkerRuntime
+Kazo.Os.Infrastructure.Browser.Workers.BrowserWebWorkerRuntime.BrowserWebWorkerRuntime() -> void
+Kazo.Os.Infrastructure.Browser.Workers.BrowserWebWorkerRuntime.EntryType.get -> string!
+Kazo.Os.Infrastructure.Browser.Workers.BrowserWebWorkerRuntime.EntryType.init -> void
+Kazo.Os.Infrastructure.Browser.Workers.BrowserWebWorkerRuntime.HardwareConcurrency.get -> int
+Kazo.Os.Infrastructure.Browser.Workers.BrowserWebWorkerRuntime.InitializeAsync() -> System.Threading.Tasks.Task!
+Kazo.Os.Infrastructure.Browser.Workers.BrowserWebWorkerRuntime.MeasureWorkersAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<int, long>?>!
+Kazo.Os.Infrastructure.Browser.Workers.BrowserWebWorkerRuntime.StartAsync(Kazo.Os.Simulation.Abstractions.Workers.WebWorkerStartOptions! options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Simulation.Abstractions.Workers.IWebWorker!>!
+Kazo.Os.Infrastructure.Browser.Workers.BrowserWebWorkerRuntime.WhenIdleAsync(System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+const Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupService.ArchiveExtension = ".hosbak" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.DefaultContentHashAlgorithm = "SHA-256" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.DefaultDeduplicateChunks = true -> bool
+const Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.DefaultMaxChunkSizeBytes = 262144 -> long
+const Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.DefaultMaxFileSizeBytes = 16777216 -> long
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.AuditStoreName = "audit" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.CatalogStoreName = "catalog" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.CurrentVersion = 4 -> int
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.DatabaseName = "hackeros" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.DiagnosticsStoreName = "diagnostics" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.FileContentStoreName = "fsContent" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.FileSystemEntryStoreName = "fsEntries" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.FileSystemLinkStoreName = "fsLinks" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.GrantStoreName = "grants" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.GroupStoreName = "groups" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.LocalBookkeepingStoreName = "syncMetadata" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.ServerConnectionStoreName = "serverConnection" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.SessionStoreName = "sessions" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.SettingsStoreName = "settings" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.SyncCursorStoreName = "syncCursors" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.SyncRecordStateStoreName = "syncRecordState" -> string!
+const Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.UserStoreName = "users" -> string!
+const Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageManager.LowSpaceByteThreshold = 67108864 -> long
+const Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageManager.LowSpaceRatioThreshold = 0.1 -> double
+override Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupSummary.Equals(object? obj) -> bool
+override Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupSummary.GetHashCode() -> int
+override Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupSummary.ToString() -> string!
+override Kazo.Os.Infrastructure.Browser.Backup.IndexedDbRestoreResult.Equals(object? obj) -> bool
+override Kazo.Os.Infrastructure.Browser.Backup.IndexedDbRestoreResult.GetHashCode() -> int
+override Kazo.Os.Infrastructure.Browser.Backup.IndexedDbRestoreResult.ToString() -> string!
+override Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.Equals(object? obj) -> bool
+override Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.GetHashCode() -> int
+override Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.ToString() -> string!
+override Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.Equals(object? obj) -> bool
+override Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.GetHashCode() -> int
+override Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.ToString() -> string!
+override Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.Equals(object? obj) -> bool
+override Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.GetHashCode() -> int
+override Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.ToString() -> string!
+override Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.Equals(object? obj) -> bool
+override Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.GetHashCode() -> int
+override Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.ToString() -> string!
+override Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.Equals(object? obj) -> bool
+override Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.GetHashCode() -> int
+override Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.ToString() -> string!
+override Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition.Equals(object? obj) -> bool
+override Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition.GetHashCode() -> int
+override Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition.ToString() -> string!
+override Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary.Equals(object? obj) -> bool
+override Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary.GetHashCode() -> int
+override Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary.ToString() -> string!
+override Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus.Equals(object? obj) -> bool
+override Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus.GetHashCode() -> int
+override Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus.ToString() -> string!
+static Kazo.Os.Infrastructure.Browser.Apps.BrowserInstalledAppAssets.LinkStyleSheetAsync(string! url) -> System.Threading.Tasks.Task<bool>!
+static Kazo.Os.Infrastructure.Browser.Apps.BrowserInstalledAppAssets.ListAsync() -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<string!>!>!
+static Kazo.Os.Infrastructure.Browser.Apps.BrowserInstalledAppAssets.PrepareAsync(System.TimeSpan timeout) -> System.Threading.Tasks.Task<bool>!
+static Kazo.Os.Infrastructure.Browser.Apps.BrowserInstalledAppAssets.PutAsync(string! url, byte[]! bytes, string! contentType) -> System.Threading.Tasks.Task!
+static Kazo.Os.Infrastructure.Browser.Apps.BrowserInstalledAppAssets.RemoveAsync(string! url) -> System.Threading.Tasks.Task<bool>!
+static Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupService.Inspect(string! backupJson) -> Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupSummary!
+static Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupService.ReadArchive(byte[]! archive) -> string!
+static Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupSummary.operator !=(Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupSummary? left, Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupSummary? right) -> bool
+static Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupSummary.operator ==(Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupSummary? left, Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupSummary? right) -> bool
+static Kazo.Os.Infrastructure.Browser.Backup.IndexedDbRestoreResult.operator !=(Kazo.Os.Infrastructure.Browser.Backup.IndexedDbRestoreResult? left, Kazo.Os.Infrastructure.Browser.Backup.IndexedDbRestoreResult? right) -> bool
+static Kazo.Os.Infrastructure.Browser.Backup.IndexedDbRestoreResult.operator ==(Kazo.Os.Infrastructure.Browser.Backup.IndexedDbRestoreResult? left, Kazo.Os.Infrastructure.Browser.Backup.IndexedDbRestoreResult? right) -> bool
+static Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.operator !=(Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot? left, Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot? right) -> bool
+static Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot.operator ==(Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot? left, Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbSnapshot? right) -> bool
+static Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.operator !=(Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot? left, Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot? right) -> bool
+static Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.operator ==(Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot? left, Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot? right) -> bool
+static Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.operator !=(Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult? left, Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult? right) -> bool
+static Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.operator ==(Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult? left, Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult? right) -> bool
+static Kazo.Os.Infrastructure.Browser.Globalization.BrowserSatelliteAssemblies.LoadAsync(System.Collections.Generic.IEnumerable<string!>! cultures) -> System.Threading.Tasks.Task<bool>!
+static Kazo.Os.Infrastructure.Browser.Isolation.BrowserCrossOriginIsolation.ProbeAsync(bool wanted) -> System.Threading.Tasks.Task<string?>!
+static Kazo.Os.Infrastructure.Browser.Recovery.BrowserStorageRecoveryClassifier.AwaitDestructiveConfirmation(Kazo.Os.Simulation.Abstractions.Recovery.StorageRecoveryActions action, string! affectedData, System.Guid correlationId) -> Kazo.Os.Simulation.Abstractions.Recovery.StorageRecoveryPresentation!
+static Kazo.Os.Infrastructure.Browser.Recovery.BrowserStorageRecoveryClassifier.Classify(System.Exception! exception, Kazo.Os.Simulation.Abstractions.Recovery.StorageRecoveryContext context, System.Guid correlationId) -> Kazo.Os.Simulation.Abstractions.Recovery.StorageRecoveryPresentation!
+static Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.Default.get -> Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy!
+static Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.operator !=(Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy? left, Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy? right) -> bool
+static Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.operator ==(Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy? left, Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy? right) -> bool
+static Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.ObjectStores.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition!>!
+static Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.TransactionBoundaries.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary!>!
+static Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.operator !=(Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition? left, Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition? right) -> bool
+static Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.operator ==(Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition? left, Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition? right) -> bool
+static Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition.operator !=(Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition? left, Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition? right) -> bool
+static Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition.operator ==(Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition? left, Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition? right) -> bool
+static Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary.operator !=(Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary? left, Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary? right) -> bool
+static Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary.operator ==(Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary? left, Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary? right) -> bool
+static Kazo.Os.Infrastructure.Browser.Settings.IndexedDbLegacySettingsStore.TryRead(System.Text.Json.JsonElement element, out Kazo.Os.Simulation.Abstractions.Settings.LegacySettingsRecord? record) -> bool
+static Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus.operator !=(Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus? left, Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus? right) -> bool
+static Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus.operator ==(Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus? left, Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus? right) -> bool
+static readonly Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.DefaultOrphanRetention -> System.TimeSpan

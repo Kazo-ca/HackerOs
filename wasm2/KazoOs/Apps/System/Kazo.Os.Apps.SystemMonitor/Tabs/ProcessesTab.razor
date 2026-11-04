@@ -1,0 +1,136 @@
+@namespace Kazo.Os.Apps.SystemMonitor.Tabs
+@inherits KazoComponentBase
+
+<div class="proc-tab">
+    <div class="proc-toolbar">
+        <input class="proc-filter"
+               type="search"
+               placeholder="@L["Processes.Filter.Placeholder"]"
+               aria-label="@L["Processes.Filter.AriaLabel"]"
+               value="@Table.Filter"
+               @oninput="OnFilterInput" />
+        <span class="proc-count">
+            @L["Processes.Count", Table.Visible.Count, Table.Rows.Count]
+            @if (Table.Selected.Count > 0)
+            {
+                <span class="proc-count-selected"> · @L["Processes.Selected", Table.Selected.Count]</span>
+            }
+        </span>
+        <button class="sysmon-btn sysmon-btn-ghost proc-column-toggle"
+                aria-pressed="@(Table.ShowPriority ? "true" : "false")"
+                title="@L["Processes.PriorityColumn.Title"]"
+                @onclick="TogglePriorityColumn">@L["Column.Priority"]</button>
+        <button class="sysmon-btn" disabled="@(Table.Selected.Count != 1)" @onclick="ShowSelectedDetails" title="@L["Processes.Details.Title"]">@L["Processes.Details"]</button>
+        <button class="sysmon-btn btn-danger" disabled="@(Table.Selected.Count == 0)" @onclick="EndSelectedAsync" title="@L["Processes.EndTask.Title"]">@L["EndTask.Title"]</button>
+    </div>
+
+    @* ADR 0069: the row menu adds "Force kill" (SIGKILL) next to the polite "End task" (SIGTERM).
+       The activator is only a positioning anchor; the menu opens at the cursor from a row's right click. *@
+    <MudMenu @ref="_rowMenu" PositionAtCursor="true">
+        <ActivatorContent>
+            <span class="visually-hidden">@L["Processes.Menu"]</span>
+        </ActivatorContent>
+        <ChildContent>
+            <MudMenuItem OnClick="ShowSelectedDetails" Disabled="@(Table.Selected.Count != 1)">
+                <span class="proc-menu-item">@L["Processes.Details"]<span class="proc-menu-key">@L["Processes.Menu.DetailsKey"]</span></span>
+            </MudMenuItem>
+            <MudDivider />
+            <MudMenuItem OnClick="EndSelectedAsync">
+                <span class="proc-menu-item">@L["EndTask.Title"]<span class="proc-menu-key">@L["Processes.Menu.EndKey"]</span></span>
+            </MudMenuItem>
+            <MudMenuItem OnClick="ForceKillSelectedAsync">
+                <span class="proc-menu-item proc-menu-danger">@L["ForceKill.Title"]<span class="proc-menu-key">@L["Processes.Menu.KillKey"]</span></span>
+            </MudMenuItem>
+        </ChildContent>
+    </MudMenu>
+
+    @if (EndTaskReport is { } report)
+    {
+        <div class="proc-report @(report.Failures.Count > 0 ? "has-failures" : "ok")" role="status">
+            <div class="proc-report-text">
+                <span>@ReportSummary(report)</span>
+                @if (report.Failures.Count > 0)
+                {
+                    <ul class="proc-report-failures">
+                        @foreach (EndTaskFailure failure in report.Failures)
+                        {
+                            <li><span class="mono">@failure.Pid</span> @failure.Name — @failure.Reason</li>
+                        }
+                    </ul>
+                }
+            </div>
+            <button class="sysmon-btn sysmon-btn-ghost" @onclick="OnDismissReport" aria-label="@L["Common.Dismiss"]">&#x2715;</button>
+        </div>
+    }
+
+    <div class="proc-content @(DetailProcess is not null ? "with-detail" : null)">
+        <div class="proc-table-wrapper" tabindex="0" data-sysmon-selectable @onkeydown="OnKeyDownAsync">
+            <table class="sysmon-table proc-table" role="grid" aria-multiselectable="true">
+                <thead>
+                    <tr>
+                        @foreach ((ProcessColumn column, string labelKey, bool numeric) in ShownColumns)
+                        {
+                            <th class="sortable @(numeric ? "num" : null) @(Table.SortColumn == column ? "sorted" : null)"
+                                aria-sort="@AriaSort(column)"
+                                @onclick="() => Table.ToggleSort(column)">
+                                @L[labelKey]@if (Table.IsEstimated(column))
+                                {
+                                    <span class="est-tag" title="@L["Processes.Estimated.Title"]">@L["Processes.Estimated"]</span>
+                                }<span class="sort-indicator" aria-hidden="true">@SortGlyph(column)</span>
+                            </th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (ProcessRow row in Table.Visible)
+                    {
+                        long pid = row.Pid;
+                        <tr class="@(Table.IsSelected(pid) ? "selected" : null)"
+                            aria-selected="@(Table.IsSelected(pid) ? "true" : "false")"
+                            @onclick="e => Table.Click(pid, e.CtrlKey || e.MetaKey, e.ShiftKey)"
+                            @ondblclick="() => OpenDetail(pid)"
+                            @oncontextmenu="e => OpenRowMenuAsync(e, pid)"
+                            @oncontextmenu:preventDefault="true">
+                            <td class="num mono">@row.Pid</td>
+                            <td>
+                                <span class="proc-name">@row.Name</span>
+                                <span class="proc-app">@row.AppId</span>
+                            </td>
+                            <td class="proc-user" title="@row.User">@DisplayUser(row.User)</td>
+                            <td>
+                                @if (row.Responding)
+                                {
+                                    <span class="state state-@row.StateCode">@StateLabel(row.State)</span>
+                                }
+                                else
+                                {
+                                    <span class="state state-not-responding" title="@L["Processes.NotResponding.Title"]">@L["Processes.NotResponding"]</span>
+                                }
+                            </td>
+                            <td class="num">@Units.Percent(row.CpuPercent, Formats)</td>
+                            <td class="num">@Units.Bytes(row.MemoryBytes, Formats)</td>
+                            <td class="num">@Units.Rate(row.ReadPerSecond, Formats)</td>
+                            <td class="num">@Units.Rate(row.WritePerSecond, Formats)</td>
+                            @if (Table.ShowPriority)
+                            {
+                                <td class="num mono">@row.Nice.ToString(Formats)</td>
+                            }
+                        </tr>
+                    }
+                    @if (Table.Visible.Count == 0)
+                    {
+                        <tr class="proc-empty"><td colspan="@(Table.ShowPriority ? 9 : 8)">@(Table.Rows.Count == 0 ? L["Processes.Empty.None"] : L["Processes.Empty.Filter"])</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (DetailProcess is { } detail)
+        {
+            <ProcessDetailPanel Process="detail"
+                                AllProcesses="Processes.Values"
+                                OnClose="CloseDetail"
+                                OnSelectProcess="OpenDetail" />
+        }
+    </div>
+</div>

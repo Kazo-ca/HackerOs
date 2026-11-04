@@ -86,7 +86,7 @@ The standard service worker update flow, missing today:
 
 Keeps offline use and the isolation headers the worker adds on a static host
 (ADR 0131). No number by hand: the cache name already comes from the manifest
-generated at build time. A small JS module in `HackerOs.Ecosystem.Host`
+generated at build time. A small JS module in `Kazo.Os.Ecosystem.Host`
 (browser API C# cannot call), the logic stays in C#.
 
 ### B. Network first for the page
@@ -127,14 +127,14 @@ import map if applied to `_framework/` files. Rejected.
 Option A, with the background download, the clean restart of other tabs and
 the same flow for the Start menu "Restart".
 
-1. **`HostUpdateInstaller`** (`HackerOs.Platform.Blazor`, next to
+1. **`HostUpdateInstaller`** (`Kazo.Os.Platform.Blazor`, next to
    `HostReleaseMonitor`) holds the logic in C#, behind `IHostUpdateWorker`.
    `DownloadAsync` returns `NoWorker`, `UpToDate`, `Ready` or `Unavailable`;
    calls during a download share it, a `Ready` is kept, any other result is
    checked again at the next call. `ActivateDownloadedAsync` activates the
    waiting worker only when the download is `Ready`. A JavaScript error counts
    as `Unavailable`: the current version keeps running.
-2. **`hostUpdate.js`** (`HackerOs.Ecosystem.Host`, loaded by
+2. **`hostUpdate.js`** (`Kazo.Os.Ecosystem.Host`, loaded by
    `BrowserHostUpdateWorker`): `download()` calls `registration.update()` and
    waits until the new worker is installed (cache filled and checked, at most 3
    minutes); `activate()` sends `SKIP_WAITING` and waits for `controllerchange`
@@ -166,5 +166,5 @@ the same flow for the Start menu "Restart".
 - A new version downloads (the size of a release, in the background) as soon as
   it is announced, even if the user does not restart right away; the browser
   already did it at the next navigation.
-- Nothing new in the app SDK; public additions in `HackerOs.Platform.Blazor`
+- Nothing new in the app SDK; public additions in `Kazo.Os.Platform.Blazor`
   (`PublicAPI.Unshipped.txt`).

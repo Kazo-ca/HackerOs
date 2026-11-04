@@ -8,12 +8,12 @@ and its adjustments in [ADR 0108](adr/0108-server-relay-implementation-adjustmen
 
 ## Goal
 
-The optional server (`Server/HackerOs.Server`) relays to the real network what
+The optional server (`Server/Kazo.Os.Server`) relays to the real network what
 a browser cannot do alone:
 
 - HTTP requests of **all** methods, with their body;
-- **TCP streams** (`HackTcpClient.ConnectAsync`);
-- **UDP datagrams** (`HackUdpClient`).
+- **TCP streams** (`KazoTcpClient.ConnectAsync`);
+- **UDP datagrams** (`KazoUdpClient`).
 
 It checks itself that the app is allowed to use the relay, applies a
 policy and quotas configured in `appsettings.json`, and writes a
@@ -29,13 +29,13 @@ takes up.
 
 ```
 App (SDK)                         OS (Platform Core)                     Serveur
-HackHttpClient ──► AppNetworkGateway.SendRealAsync ──► IProxyClient ──► POST /api/proxy/http
-HackTcpClient  ──► AppNetworkGateway.ConnectTcpAsync ─┐                  GET  /api/proxy/tcp (WebSocket)
-HackUdpClient  ──► AppNetworkGateway.ConnectUdpAsync ─┴► OpenStreamAsync ► GET  /api/proxy/udp (WebSocket)
-Paramètres     ──► HackServerConnection.GetRelayPolicyAsync ────────────► GET  /api/proxy/policy
+KazoHttpClient ──► AppNetworkGateway.SendRealAsync ──► IProxyClient ──► POST /api/proxy/http
+KazoTcpClient  ──► AppNetworkGateway.ConnectTcpAsync ─┐                  GET  /api/proxy/tcp (WebSocket)
+KazoUdpClient  ──► AppNetworkGateway.ConnectUdpAsync ─┴► OpenStreamAsync ► GET  /api/proxy/udp (WebSocket)
+Paramètres     ──► KazoServerConnection.GetRelayPolicyAsync ────────────► GET  /api/proxy/policy
 ```
 
-### Contracts (`HackerOs.Server.Contracts/Proxy`)
+### Contracts (`Kazo.Os.Server.Contracts/Proxy`)
 
 | Type | Role |
 |---|---|
@@ -140,18 +140,18 @@ relay is turned off. The same sentences are rendered in
 
 ```csharp
 // TCP : un flux comme NetworkStream.
-await using HackNetworkStream stream = await HackTcpClient.ConnectAsync("example.com", 443);
+await using KazoNetworkStream stream = await KazoTcpClient.ConnectAsync("example.com", 443);
 await stream.WriteAsync(request);
 int read = await stream.ReadAsync(buffer); // 0 quand la cible a fermé
 
 // UDP : un socket « connecté » à une cible.
-await using HackUdpClient udp = await HackUdpClient.ConnectAsync("pool.ntp.org", 123);
+await using KazoUdpClient udp = await KazoUdpClient.ConnectAsync("pool.ntp.org", 123);
 await udp.SendAsync(ntpRequest);
-HackUdpReceiveResult answer = await udp.ReceiveAsync();
+KazoUdpReceiveResult answer = await udp.ReceiveAsync();
 
 // POST relayé avec son corps si l'hôte n'est pas simulé.
-using HackHttpClient http = new();
-HackHttpResponse response = await http.PostAsync(url, new HackStringContent(json, "application/json"));
+using KazoHttpClient http = new();
+KazoHttpResponse response = await http.PostAsync(url, new KazoStringContent(json, "application/json"));
 ```
 
 - A socket requires `network.simulated.write`; the relay additionally requires
@@ -171,7 +171,7 @@ HackHttpResponse response = await http.PostAsync(url, new HackStringContent(json
 | other | `ConnectionFailed` (SDK network error) |
 
 Settings (server section) displays the policy of the connected server with
-`HackServerConnection.GetRelayPolicyAsync()`: ports, private ranges, quotas,
+`KazoServerConnection.GetRelayPolicyAsync()`: ports, private ranges, quotas,
 open streams, granted apps and warnings.
 
 ## Key decisions
@@ -207,8 +207,8 @@ open streams, granted apps and warnings.
 - [x] Token in the request on stream routes only.
 - [x] Startup warnings and in the policy response.
 - [x] OS WebSocket client and direct server client.
-- [x] `HackTcpClient.ConnectAsync`, `HackNetworkStream`, `HackUdpClient`, errors of a real stack.
-- [x] `HackServerConnection.GetRelayPolicyAsync` and Settings panel.
+- [x] `KazoTcpClient.ConnectAsync`, `KazoNetworkStream`, `KazoUdpClient`, errors of a real stack.
+- [x] `KazoServerConnection.GetRelayPolicyAsync` and Settings panel.
 - [x] Tests: service, WebSocket endpoints, direct client, network gateway, policy.
 - [x] ADR 0108 and documentation.
 

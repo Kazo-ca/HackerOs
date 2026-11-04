@@ -1,0 +1,122 @@
+@namespace Kazo.Os.Apps.SystemMonitor.Tabs
+@inherits KazoComponentBase
+
+<aside class="detail" aria-label="@L["Detail.AriaLabel"]">
+    <header class="detail-header">
+        <div>
+            <div class="detail-title">@Process.ProcessName</div>
+            <div class="detail-subtitle">PID @Process.Id · @Process.AppId</div>
+        </div>
+        <button class="sysmon-btn sysmon-btn-ghost" @onclick="OnClose" aria-label="@L["Detail.Close"]">&#x2715;</button>
+    </header>
+
+    <div class="detail-body">
+        <section>
+            <h4>@L["Detail.Overview"]</h4>
+            <dl class="kv">
+                <dt>@L["Detail.State"]</dt><dd><span class="state-dot state-@Process.StateCode"></span>@ProcessesTab.ProcessStateLabel(L, Process.State.ToString()) (@Process.StateCode)</dd>
+                <dt>@L["Detail.Kind"]</dt><dd>@KindLabel</dd>
+                <dt>@L["Detail.User"]</dt><dd title="@Process.UserId">@ProcessesTab.DisplayUser(Process.UserName)</dd>
+                <dt>@L["Detail.Started"]</dt><dd class="mono">@L["Detail.StartedValue", Process.StartTime.UtcDateTime.ToString("G", Formats)]</dd>
+                <dt>@L["Detail.Cpu"]</dt><dd>@Units.Percent(Process.CpuUsage, Formats)</dd>
+                <dt>@L["Detail.Memory"]</dt><dd>@Units.Bytes(Process.WorkingSet64, Formats)</dd>
+            </dl>
+        </section>
+
+        <section>
+            <h4>@L["Detail.CommandLine"]</h4>
+            <code class="detail-code">@(Process.CommandLine.Length > 0 ? Process.CommandLine : "—")</code>
+            <h4>@L["Detail.WorkingDirectory"]</h4>
+            <code class="detail-code">@(Process.WorkingDirectory ?? "—")</code>
+        </section>
+
+        <section>
+            <h4>@L["Detail.Family"]</h4>
+            <dl class="kv">
+                <dt>@L["Detail.Parent"]</dt>
+                <dd>
+                    @if (Parent is { } parent)
+                    {
+                        <button class="link-btn" @onclick="() => OnSelectProcess.InvokeAsync(parent.Id)">@parent.ProcessName (@parent.Id)</button>
+                    }
+                    else if (Process.ParentId is { } parentId)
+                    {
+                        <span>@L["Detail.NotVisible", parentId]</span>
+                    }
+                    else
+                    {
+                        <span>@L["Detail.StartedByOs"]</span>
+                    }
+                </dd>
+                <dt>@L["Detail.Children"]</dt>
+                <dd>
+                    @if (Children.Count == 0)
+                    {
+                        <span>@L["Detail.None"]</span>
+                    }
+                    @foreach (KazoProcess child in Children)
+                    {
+                        long childId = child.Id;
+                        <button class="link-btn" @onclick="() => OnSelectProcess.InvokeAsync(childId)">@child.ProcessName (@child.Id)</button>
+                    }
+                </dd>
+            </dl>
+        </section>
+
+        <section>
+            <h4>@L["Detail.Io"] <span class="detail-source">/proc/@Process.Id/io</span></h4>
+            @if (Process.IoCounters is { } io)
+            {
+                <dl class="kv">
+                    <dt>@L["Detail.ReadChars"]</dt><dd>@L["Detail.Calls", Units.Bytes(io.ReadChars, Formats), Units.Count(io.ReadSyscalls, Formats)]</dd>
+                    <dt>@L["Detail.WrittenChars"]</dt><dd>@L["Detail.Calls", Units.Bytes(io.WrittenChars, Formats), Units.Count(io.WriteSyscalls, Formats)]</dd>
+                    <dt>@L["Detail.FromDisk"]</dt><dd>@Units.Bytes(io.ReadBytes, Formats)</dd>
+                    <dt>@L["Detail.ToDisk"]</dt><dd>@Units.Bytes(io.WriteBytes, Formats)</dd>
+                    <dt>@L["Detail.Cancelled"]</dt><dd>@Units.Bytes(io.CancelledWriteBytes, Formats)</dd>
+                </dl>
+            }
+            else
+            {
+                <p class="detail-muted">@L["Detail.IoPrivate"]</p>
+            }
+        </section>
+
+        <section>
+            <h4>@L["Detail.Status"] <span class="detail-source">/proc/@Process.Id/status</span></h4>
+            <dl class="kv">
+                @foreach (KeyValuePair<string, string> field in Process.Status)
+                {
+                    <dt>@field.Key</dt><dd class="mono">@field.Value</dd>
+                }
+            </dl>
+        </section>
+
+        <section>
+            <h4>
+                @L["Detail.Environment"] <span class="detail-source">/proc/@Process.Id/environ</span>
+                <button class="link-btn" @onclick="LoadEnvironmentAsync">@L["Detail.Reload"]</button>
+            </h4>
+            @if (_loadingEnvironment)
+            {
+                <p class="detail-muted">@L["Detail.Reading"]</p>
+            }
+            else if (_environment is null)
+            {
+                <p class="detail-muted">@L["Detail.EnvironPrivate"]</p>
+            }
+            else if (_environment.Count == 0)
+            {
+                <p class="detail-muted">@L["Detail.Empty"]</p>
+            }
+            else
+            {
+                <dl class="kv kv-env">
+                    @foreach (KeyValuePair<string, string> variable in _environment.OrderBy(pair => pair.Key, StringComparer.Ordinal))
+                    {
+                        <dt>@variable.Key</dt><dd class="mono">@variable.Value</dd>
+                    }
+                </dl>
+            }
+        </section>
+    </div>
+</aside>

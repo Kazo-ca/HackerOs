@@ -2,9 +2,9 @@
 
 # Bulles de notification
 
-Chantier 1 de la série barre des tâches (issue [#242](https://github.com/Kazo-ca/HackerOs/issues/242)),
+Chantier 1 de la série barre des tâches (issue [#242](https://github.com/Kazo-ca/Os/issues/242)),
 mise en œuvre de l'[ADR 0197](adr/0197-notification-toasts.md), fait dans la série `todo/`.
-Le mode « Ne pas déranger » (issue [#296](https://github.com/Kazo-ca/HackerOs/issues/296)) met
+Le mode « Ne pas déranger » (issue [#296](https://github.com/Kazo-ca/Os/issues/296)) met
 en œuvre l'[ADR 0216](adr/0216-do-not-disturb.md) (section 5).
 
 ## 1. Ce que voit l'utilisateur
@@ -79,7 +79,7 @@ seules les bulles les prennent. L'entrée (glissé + fondu, 180 ms) ne joue que 
 | `OsSoundService.DoNotDisturb` | Ne joue pas le son d'une notification pendant que le mode est activé ; les autres sons restent. |
 | `ClockPanel` | Interrupteur `role="switch"` à côté du titre Notifications. |
 | `DoNotDisturbIndicator` (public) | La lune de la zone de notification, posée par `DesktopShell` ; `OnClick` ouvre le panneau. `MobileShell` montre la lune sur la poignée du volet et l'ajoute à son nom. |
-| `NotificationsPanel` (Paramètres) | Page `--page=notifications`, par le SDK public (`HackSettings.OpenSystemAsync`). |
+| `NotificationsPanel` (Paramètres) | Page `--page=notifications`, par le SDK public (`KazoSettings.OpenSystemAsync`). |
 
 Tests : `DoNotDisturbServiceTests`, `OsSoundServiceTests.Do_not_disturb_mutes_the_notification_sounds_only`,
 `NotificationsPanelTests`, `DoNotDisturbTests` (UI.E2E : interrupteur, lune, rechargement).

@@ -1,0 +1,59 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <!--
+    Kazo.Os.Ecosystem.Host (ADR 0098 §2): everything a Kazo OS host needs except its own
+    composition root. The desktop shell (App.razor, login progress), the boot coordinator, the
+    service composition (AddKazoOsEcosystem), optional resource accounting, the browser
+    infrastructure adapters and the global design tokens (wwwroot/css/app.css, served at
+    _content/Kazo.Os.Ecosystem.Host/css/app.css).
+
+    A host is then a Blazor WebAssembly project with an index.html, a Program.cs calling
+    AddKazoOsBrowserHost, and its apps as ProjectReference or PackageReference items: the build
+    aggregates their manifests into the host's own assembly (KazoOsAppHost), read back with
+    HostAppCatalog.Load. OS/Kazo.Os.Ecosystem is that host in this repository; the hackeros-host
+    template creates one elsewhere.
+  -->
+  <Import Project="..\..\Platform\Packaging.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Kazo.Os.Ecosystem</RootNamespace>
+    <!-- Required by the [JSImport] DOM-presence check of AddKazoOsBrowserHost (SYSLIB1074). -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PackageId>Kazo.Os.Ecosystem.Host</PackageId>
+    <Description>The Kazo OS host: desktop shell, boot coordinator, service composition and browser adapters. A host project adds its index.html, a Program.cs calling AddKazoOsBrowserHost and its apps.</Description>
+    <PackageTags>hackeros;blazor;webassembly;os-simulation;host</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.14" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Infrastructure\Kazo.Os.Infrastructure.Browser\Kazo.Os.Infrastructure.Browser.csproj" />
+    <ProjectReference Include="..\..\Platform\Kazo.Os.Platform.Blazor\Kazo.Os.Platform.Blazor.csproj" />
+    <ProjectReference Include="..\..\Platform\Kazo.Os.Platform.Core\Kazo.Os.Platform.Core.csproj" />
+    <!-- ADR 0070/0071: commands and services in Web Workers; part of the boot set, since every worker loads it. -->
+    <ProjectReference Include="..\..\Platform\Kazo.Os.Platform.WorkerHost\Kazo.Os.Platform.WorkerHost.csproj" />
+    <!-- ADR 0129 trial, ADR 0133: window apps rendered in a worker (off by default). -->
+    <ProjectReference Include="..\..\Platform\Kazo.Os.Platform.RemoteRendering\Kazo.Os.Platform.RemoteRendering.csproj" />
+    <ProjectReference Include="..\..\Platform\Kazo.Os.Theming.Blazor\Kazo.Os.Theming.Blazor.csproj" />
+    <ProjectReference Include="..\..\Shared\Kazo.Os.AppSdk.Icons\Kazo.Os.AppSdk.Icons.csproj" />
+    <ProjectReference Include="..\..\Shared\Kazo.Os.Theming.Abstractions\Kazo.Os.Theming.Abstractions.csproj" />
+  </ItemGroup>
+
+  <!--
+    ADR 0066: the accounting composition (#if HACKEROS_RESOURCE_ACCOUNTING) lives here, so the
+    switches decide whether this library references Kazo.Os.Platform.ResourceAccounting. The
+    published package is built with both measurements compiled in; a host still turns either off at
+    run time (appsettings.json) or through its own RuntimeHostConfigurationOption switches.
+  -->
+  <Import Project="..\..\build\Kazo.Os.ResourceAccounting.targets" />
+
+</Project>

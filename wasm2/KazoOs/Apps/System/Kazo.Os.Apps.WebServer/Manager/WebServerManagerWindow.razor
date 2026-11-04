@@ -1,0 +1,174 @@
+@using Kazo.Os.AppSdk.Blazor
+@using Kazo.Os.AppSdk.Net.Hosting
+@inherits WindowAppBase
+@implements IAsyncDisposable
+
+<div class="wsm">
+    <header class="wsm-header">
+        <div class="wsm-brand">
+            <span class="wsm-glyph" aria-hidden="true">◈</span>
+            <span class="wsm-title">@L["App.Name"]</span>
+            <span class="wsm-daemon @DaemonClass" title="@DaemonTitle">@DaemonText</span>
+        </div>
+        <div class="wsm-actions">
+            <button class="wsm-btn" @onclick="RefreshAsync" title="@L["Toolbar.Refresh.Title"]">@L["Toolbar.Refresh"]</button>
+            @if (_snapshot?.Daemon is { } daemon)
+            {
+                @if (daemon.ProcessId is null)
+                {
+                    <button class="wsm-btn" @onclick="StartDaemonAsync">@L["Toolbar.StartDaemon"]</button>
+                }
+                else
+                {
+                    <button class="wsm-btn" @onclick="RestartDaemonAsync">@L["Toolbar.Restart"]</button>
+                    <button class="wsm-btn wsm-btn-danger" @onclick="StopDaemonAsync">@L["Toolbar.Stop"]</button>
+                }
+            }
+            <button class="wsm-btn wsm-btn-accent" @onclick="NewSiteAsync">@L["Toolbar.NewSite"]</button>
+        </div>
+    </header>
+
+    @if (_message is not null)
+    {
+        <div class="wsm-banner @(_messageIsError ? "wsm-banner-error" : "wsm-banner-info")" role="@(_messageIsError ? "alert" : "status")">@_message</div>
+    }
+
+    <div class="wsm-body">
+        <nav class="wsm-sites" aria-label="@L["Sites.Label"]">
+            @foreach ((string title, string hint, IReadOnlyList<WebSiteRow> rows) in Groups)
+            {
+                <div class="wsm-group">
+                    <div class="wsm-group-title">@title <span class="wsm-group-hint">@hint</span></div>
+                    @if (rows.Count == 0)
+                    {
+                        <div class="wsm-empty">@L["Sites.None"]</div>
+                    }
+                    @foreach (WebSiteRow row in rows)
+                    {
+                        <button class="wsm-site @(IsSelected(row) ? "wsm-site-selected" : null)" @onclick="() => SelectAsync(row)">
+                            <span class="wsm-dot wsm-state-@row.State.ToString().ToLowerInvariant()" aria-hidden="true"></span>
+                            <span class="wsm-site-name">@row.Name</span>
+                            <span class="wsm-site-state">@StateLabel(row.State)</span>
+                            <span class="wsm-site-url">@(row.MainUrl ?? "—")</span>
+                        </button>
+                    }
+                </div>
+            }
+        </nav>
+
+        <section class="wsm-detail">
+            @if (_editor is { } editor)
+            {
+                <div class="wsm-tabs" role="tablist">
+                    <button role="tab" aria-selected="@(_tab == DetailTab.Settings ? "true" : "false")" class="wsm-tab @(_tab == DetailTab.Settings ? "wsm-tab-active" : null)" @onclick="() => _tab = DetailTab.Settings">@L["Tab.Settings"]</button>
+                    <button role="tab" aria-selected="@(_tab == DetailTab.Logs ? "true" : "false")" class="wsm-tab @(_tab == DetailTab.Logs ? "wsm-tab-active" : null)" disabled="@(editor.OriginalPath is null)" @onclick="ShowLogsAsync">@L["Tab.Logs"]</button>
+                </div>
+
+                @if (_tab == DetailTab.Settings)
+                {
+                    <form class="wsm-form" @onsubmit="SaveAsync" @onsubmit:preventDefault>
+                        <label class="wsm-field">
+                            <span>@L["Form.Name"]</span>
+                            <input class="wsm-input" @bind="editor.Name" @bind:event="oninput" @bind:after="Validate" spellcheck="false" />
+                        </label>
+
+                        <fieldset class="wsm-field wsm-scope">
+                            <legend>@L["Form.DeclaredIn"]</legend>
+                            <label><input type="radio" name="scope" checked="@(editor.Scope == KazoWebSiteScope.User)" @onchange="() => SetScopeAsync(KazoWebSiteScope.User)" /> @L["Form.Scope.User"] <code>~/.config/hackweb/sites</code> @L["Form.Scope.User.Hint"]</label>
+                            <label><input type="radio" name="scope" checked="@(editor.Scope == KazoWebSiteScope.System)" @onchange="() => SetScopeAsync(KazoWebSiteScope.System)" /> @L["Form.Scope.System"] <code>/etc/hackweb/sites</code> @L["Form.Scope.System.Hint"]</label>
+                        </fieldset>
+
+                        <label class="wsm-field">
+                            <span>@L["Form.Root"]</span>
+                            <span class="wsm-row">
+                                <input class="wsm-input" @bind="editor.Root" @bind:event="oninput" @bind:after="ValidateAsync" spellcheck="false" />
+                                <button type="button" class="wsm-btn" @onclick="BrowseRootAsync">@L["Form.Browse"]</button>
+                            </span>
+                        </label>
+
+                        <label class="wsm-field">
+                            <span>@L["Form.Bindings"] <small>@L["Form.Bindings.Hint"]</small></span>
+                            <textarea class="wsm-input wsm-textarea" rows="3" @bind="editor.Bindings" @bind:event="oninput" @bind:after="Validate" spellcheck="false"></textarea>
+                        </label>
+
+                        <label class="wsm-field">
+                            <span>@L["Form.DefaultDocuments"] <small>@L["Form.DefaultDocuments.Hint"]</small></span>
+                            <input class="wsm-input" @bind="editor.DefaultDocuments" @bind:event="oninput" @bind:after="Validate" spellcheck="false" />
+                        </label>
+
+                        <div class="wsm-checks">
+                            <label><input type="checkbox" @bind="editor.DirectoryBrowsing" /> @L["Form.DirectoryBrowsing"]</label>
+                            <label><input type="checkbox" @bind="editor.Enabled" /> @L["Form.Enabled"]</label>
+                        </div>
+
+                        @if (_errors.Count > 0)
+                        {
+                            <ul class="wsm-errors" role="alert">
+                                @foreach (string error in _errors)
+                                {
+                                    <li>@error</li>
+                                }
+                            </ul>
+                        }
+
+                        @if (_warning is not null)
+                        {
+                            <p class="wsm-warning">@_warning</p>
+                        }
+
+                        <div class="wsm-form-actions">
+                            <button type="submit" class="wsm-btn wsm-btn-accent" disabled="@(_errors.Count > 0)">@L["Form.Save"]</button>
+                            @if (editor.OriginalPath is not null)
+                            {
+                                <button type="button" class="wsm-btn" @onclick="ToggleEnabledAsync">@(editor.WasEnabled ? L["Form.StopSite"] : L["Form.StartSite"])</button>
+                                <button type="button" class="wsm-btn" disabled="@(SelectedUrl is null)" @onclick="OpenInBrowserAsync">@L["Form.OpenInBrowser"]</button>
+                                <button type="button" class="wsm-btn wsm-btn-danger" @onclick="DeleteAsync">@L["Form.Delete"]</button>
+                            }
+                            else
+                            {
+                                <button type="button" class="wsm-btn" @onclick="CancelNew">@L["Form.Cancel"]</button>
+                            }
+                        </div>
+
+                        @if (editor.OriginalPath is not null)
+                        {
+                            <p class="wsm-file">@L["Form.File"] <code>@editor.OriginalPath</code></p>
+                        }
+                    </form>
+                }
+                else
+                {
+                    <div class="wsm-logs">
+                        <h3>@L["Logs.Access"] <code>/var/log/hackweb/@(editor.Name).access.log</code></h3>
+                        <pre class="wsm-log">@(_accessLines.Count == 0 ? L["Logs.NoRequest"] : string.Join('\n', _accessLines))</pre>
+                        <h3>@L["Logs.Errors"] <code>/var/log/hackweb/error.log</code></h3>
+                        <pre class="wsm-log wsm-log-errors">@(_errorLines.Count == 0 ? L["Logs.NoErrors"] : string.Join('\n', _errorLines))</pre>
+                    </div>
+                }
+            }
+            else if (_selected is { App: { } app } external)
+            {
+                <div class="wsm-external">
+                    <h2>@app.Name <span class="wsm-tag">@L["External.Tag"]</span></h2>
+                    <p>@L["External.Before"]<code>@app.Id</code>@L["External.After"]</p>
+                    <ul class="wsm-urls">
+                        @foreach (string url in external.Urls)
+                        {
+                            <li><code>@url</code></li>
+                        }
+                    </ul>
+                    <button class="wsm-btn" disabled="@(external.MainUrl is null)" @onclick="OpenInBrowserAsync">@L["Form.OpenInBrowser"]</button>
+                </div>
+            }
+            else
+            {
+                <div class="wsm-placeholder">
+                    <p>@L["Placeholder.Pick"] <strong>@L["Toolbar.NewSite"]</strong>@L["Placeholder.PickEnd"]</p>
+                    <p class="wsm-muted">@L["Placeholder.PlainFiles"] <code>cat /etc/hackweb/sites/*.site</code>, <code>systemctl status hackwebd</code>, <code>netstat -tlnp</code>.</p>
+                </div>
+            }
+        </section>
+    </div>
+
+    <footer class="wsm-status" role="status">@StatusText</footer>
+</div>

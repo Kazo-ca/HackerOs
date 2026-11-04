@@ -1,0 +1,42 @@
+@namespace Kazo.Os.Apps.FileExplorer.FileControl
+@implements IAsyncDisposable
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
+
+@*
+    Root control shell: mode switch + shared chrome (context menu). All behavior lives in
+    FileView.razor.cs (FV-001 and later) — this file is markup only, per this repo's collocated-asset
+    convention for non-trivial components.
+*@
+<div class="file-view"
+     data-mode="@Mode"
+     data-drop-target
+     tabindex="-1"
+     @ref="_rootElement"
+     @attributes="MenuAttributesFor(null)"
+     @oncontextmenu="OnBackgroundContextMenuAsync"
+     @oncontextmenu:preventDefault="UsesOwnMenu"
+     @onkeydown="OnRootKeyDownAsync"
+     @ondragover:preventDefault="AllowDragDrop"
+     @ondrop="OnBackgroundDropAsync">
+    @if (Mode == FileViewMode.Details)
+    {
+        <FileViewDetails Owner="this" />
+    }
+    else if (Mode == FileViewMode.Icons)
+    {
+        <FileViewIcons Owner="this" />
+    }
+    else if (Mode == FileViewMode.Desktop && MenuBinding?.Desktop is not null)
+    {
+        <FileViewDesktop Owner="this" />
+    }
+    else
+    {
+        <FileViewTree Owner="this" />
+    }
+
+    @if (UsesOwnMenu)
+    {
+        <FileViewContextMenu @ref="_contextMenu" Owner="this" />
+    }
+</div>

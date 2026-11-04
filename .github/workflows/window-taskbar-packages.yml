@@ -5,31 +5,31 @@ on:
     branches: [ "main", "*/base" ]
     paths:
       - ".github/workflows/window-taskbar-packages.yml"
-      - "wasm2/HackerOs/Directory.Build.props"
-      - "wasm2/HackerOs/Directory.Build.targets"
-      - "wasm2/HackerOs/Platform/Packaging.props"
-      - "wasm2/HackerOs/Shared/HackerOs.Theming.Abstractions/**"
-      - "wasm2/HackerOs/Platform/HackerOs.Theming.Blazor/**"
-      - "wasm2/HackerOs/Platform/HackerOs.Windowing.Abstractions/**"
-      - "wasm2/HackerOs/Platform/HackerOs.Windowing.Core/**"
-      - "wasm2/HackerOs/Platform/HackerOs.Windowing.Blazor/**"
-      - "wasm2/HackerOs/Shared/HackerOs.AppSdk.Icons/**"
-      - "wasm2/HackerOs/Platform/HackerOs.Taskbar.Blazor/**"
-      - "wasm2/HackerOs/Samples/HackerOs.Windowing.SampleHost/**"
+      - "wasm2/KazoOs/Directory.Build.props"
+      - "wasm2/KazoOs/Directory.Build.targets"
+      - "wasm2/KazoOs/Platform/Packaging.props"
+      - "wasm2/KazoOs/Shared/Kazo.Os.Theming.Abstractions/**"
+      - "wasm2/KazoOs/Platform/Kazo.Os.Theming.Blazor/**"
+      - "wasm2/KazoOs/Platform/Kazo.Os.Windowing.Abstractions/**"
+      - "wasm2/KazoOs/Platform/Kazo.Os.Windowing.Core/**"
+      - "wasm2/KazoOs/Platform/Kazo.Os.Windowing.Blazor/**"
+      - "wasm2/KazoOs/Shared/Kazo.Os.AppSdk.Icons/**"
+      - "wasm2/KazoOs/Platform/Kazo.Os.Taskbar.Blazor/**"
+      - "wasm2/KazoOs/Samples/Kazo.Os.Windowing.SampleHost/**"
   pull_request:
     paths:
       - ".github/workflows/window-taskbar-packages.yml"
-      - "wasm2/HackerOs/Directory.Build.props"
-      - "wasm2/HackerOs/Directory.Build.targets"
-      - "wasm2/HackerOs/Platform/Packaging.props"
-      - "wasm2/HackerOs/Shared/HackerOs.Theming.Abstractions/**"
-      - "wasm2/HackerOs/Platform/HackerOs.Theming.Blazor/**"
-      - "wasm2/HackerOs/Platform/HackerOs.Windowing.Abstractions/**"
-      - "wasm2/HackerOs/Platform/HackerOs.Windowing.Core/**"
-      - "wasm2/HackerOs/Platform/HackerOs.Windowing.Blazor/**"
-      - "wasm2/HackerOs/Shared/HackerOs.AppSdk.Icons/**"
-      - "wasm2/HackerOs/Platform/HackerOs.Taskbar.Blazor/**"
-      - "wasm2/HackerOs/Samples/HackerOs.Windowing.SampleHost/**"
+      - "wasm2/KazoOs/Directory.Build.props"
+      - "wasm2/KazoOs/Directory.Build.targets"
+      - "wasm2/KazoOs/Platform/Packaging.props"
+      - "wasm2/KazoOs/Shared/Kazo.Os.Theming.Abstractions/**"
+      - "wasm2/KazoOs/Platform/Kazo.Os.Theming.Blazor/**"
+      - "wasm2/KazoOs/Platform/Kazo.Os.Windowing.Abstractions/**"
+      - "wasm2/KazoOs/Platform/Kazo.Os.Windowing.Core/**"
+      - "wasm2/KazoOs/Platform/Kazo.Os.Windowing.Blazor/**"
+      - "wasm2/KazoOs/Shared/Kazo.Os.AppSdk.Icons/**"
+      - "wasm2/KazoOs/Platform/Kazo.Os.Taskbar.Blazor/**"
+      - "wasm2/KazoOs/Samples/Kazo.Os.Windowing.SampleHost/**"
   workflow_dispatch:
 
 permissions:
@@ -39,8 +39,8 @@ env:
   DOTNET_NOLOGO: "true"
   DOTNET_CLI_TELEMETRY_OPTOUT: "true"
   LOCAL_PACKAGE_OUTPUT: artifacts/local-nupkg
-  NUGET_PACKAGES: ${{ github.workspace }}/wasm2/HackerOs/artifacts/windowing-sample-package-cache
-  SAMPLE_PROJECT: Samples/HackerOs.Windowing.SampleHost/HackerOs.Windowing.SampleHost.csproj
+  NUGET_PACKAGES: ${{ github.workspace }}/wasm2/KazoOs/artifacts/windowing-sample-package-cache
+  SAMPLE_PROJECT: Samples/Kazo.Os.Windowing.SampleHost/Kazo.Os.Windowing.SampleHost.csproj
   SAMPLE_PUBLISH_OUTPUT: artifacts/windowing-sample-package-publish
 
 jobs:
@@ -49,7 +49,7 @@ jobs:
     timeout-minutes: 30
     defaults:
       run:
-        working-directory: wasm2/HackerOs
+        working-directory: wasm2/KazoOs
 
     steps:
       - name: Checkout
@@ -66,54 +66,54 @@ jobs:
       - name: Read the Kazo OS version
         shell: bash
         run: >-
-          echo "HACKEROS_VERSION=$(sed -n 's:.*<HackerOsVersion>\(.*\)</HackerOsVersion>.*:\1:p' build/Versions.props)" >> "$GITHUB_ENV"
+          echo "HACKEROS_VERSION=$(sed -n 's:.*<KazoOsVersion>\(.*\)</KazoOsVersion>.*:\1:p' build/Versions.props)" >> "$GITHUB_ENV"
 
       - name: Pack theme contracts
         run: >-
-          dotnet pack Shared/HackerOs.Theming.Abstractions/HackerOs.Theming.Abstractions.csproj
+          dotnet pack Shared/Kazo.Os.Theming.Abstractions/Kazo.Os.Theming.Abstractions.csproj
           --configuration Release --output "$LOCAL_PACKAGE_OUTPUT"
 
       - name: Pack Blazor theming
         run: >-
-          dotnet pack Platform/HackerOs.Theming.Blazor/HackerOs.Theming.Blazor.csproj
+          dotnet pack Platform/Kazo.Os.Theming.Blazor/Kazo.Os.Theming.Blazor.csproj
           --configuration Release --output "$LOCAL_PACKAGE_OUTPUT"
 
       - name: Pack window contracts
         run: >-
-          dotnet pack Platform/HackerOs.Windowing.Abstractions/HackerOs.Windowing.Abstractions.csproj
+          dotnet pack Platform/Kazo.Os.Windowing.Abstractions/Kazo.Os.Windowing.Abstractions.csproj
           --configuration Release --output "$LOCAL_PACKAGE_OUTPUT"
 
       - name: Pack window runtime
         run: >-
-          dotnet pack Platform/HackerOs.Windowing.Core/HackerOs.Windowing.Core.csproj
+          dotnet pack Platform/Kazo.Os.Windowing.Core/Kazo.Os.Windowing.Core.csproj
           --configuration Release --output "$LOCAL_PACKAGE_OUTPUT"
 
       - name: Pack Blazor window chrome
         run: >-
-          dotnet pack Platform/HackerOs.Windowing.Blazor/HackerOs.Windowing.Blazor.csproj
+          dotnet pack Platform/Kazo.Os.Windowing.Blazor/Kazo.Os.Windowing.Blazor.csproj
           --configuration Release --output "$LOCAL_PACKAGE_OUTPUT"
 
       - name: Pack icon SDK
         run: >-
-          dotnet pack Shared/HackerOs.AppSdk.Icons/HackerOs.AppSdk.Icons.csproj
+          dotnet pack Shared/Kazo.Os.AppSdk.Icons/Kazo.Os.AppSdk.Icons.csproj
           --configuration Release --output "$LOCAL_PACKAGE_OUTPUT"
 
       - name: Pack taskbar
         run: >-
-          dotnet pack Platform/HackerOs.Taskbar.Blazor/HackerOs.Taskbar.Blazor.csproj
+          dotnet pack Platform/Kazo.Os.Taskbar.Blazor/Kazo.Os.Taskbar.Blazor.csproj
           --configuration Release --output "$LOCAL_PACKAGE_OUTPUT"
 
       - name: Verify package and symbol closure
         shell: bash
         run: |
           package_ids=(
-            HackerOs.Theming.Abstractions
-            HackerOs.Theming.Blazor
-            HackerOs.Windowing.Abstractions
-            HackerOs.Windowing.Core
-            HackerOs.Windowing.Blazor
-            HackerOs.AppSdk.Icons
-            HackerOs.Taskbar.Blazor
+            Kazo.Os.Theming.Abstractions
+            Kazo.Os.Theming.Blazor
+            Kazo.Os.Windowing.Abstractions
+            Kazo.Os.Windowing.Core
+            Kazo.Os.Windowing.Blazor
+            Kazo.Os.AppSdk.Icons
+            Kazo.Os.Taskbar.Blazor
           )
           for package_id in "${package_ids[@]}"; do
             test -s "$LOCAL_PACKAGE_OUTPUT/$package_id.$HACKEROS_VERSION.nupkg"
@@ -123,26 +123,26 @@ jobs:
       - name: Restore sample from local packages only
         run: >-
           dotnet restore "$SAMPLE_PROJECT"
-          --configfile Samples/HackerOs.Windowing.SampleHost/nuget.config
+          --configfile Samples/Kazo.Os.Windowing.SampleHost/nuget.config
           --force-evaluate --no-cache
-          -p:UseLocalHackerOsPackages=true
+          -p:UseLocalKazoOsPackages=true
 
       - name: Verify restored dependency kinds and versions
         shell: bash
         run: |
-          assets_file="Samples/HackerOs.Windowing.SampleHost/obj/project.assets.json"
+          assets_file="Samples/Kazo.Os.Windowing.SampleHost/obj/project.assets.json"
           if grep -q '"type": "project"' "$assets_file"; then
             echo "Package-only restore unexpectedly retained a project dependency."
             exit 1
           fi
           package_ids=(
-            HackerOs.Theming.Abstractions
-            HackerOs.Theming.Blazor
-            HackerOs.Windowing.Abstractions
-            HackerOs.Windowing.Core
-            HackerOs.Windowing.Blazor
-            HackerOs.AppSdk.Icons
-            HackerOs.Taskbar.Blazor
+            Kazo.Os.Theming.Abstractions
+            Kazo.Os.Theming.Blazor
+            Kazo.Os.Windowing.Abstractions
+            Kazo.Os.Windowing.Core
+            Kazo.Os.Windowing.Blazor
+            Kazo.Os.AppSdk.Icons
+            Kazo.Os.Taskbar.Blazor
           )
           for package_id in "${package_ids[@]}"; do
             grep -q "\"$package_id/$HACKEROS_VERSION\"" "$assets_file"
@@ -152,27 +152,27 @@ jobs:
         run: >-
           dotnet build "$SAMPLE_PROJECT"
           --configuration Release --no-restore
-          -p:UseLocalHackerOsPackages=true
+          -p:UseLocalKazoOsPackages=true
 
       - name: Publish package-only sample
         run: >-
           dotnet publish "$SAMPLE_PROJECT"
           --configuration Release --no-restore
           --output "$SAMPLE_PUBLISH_OUTPUT"
-          -p:UseLocalHackerOsPackages=true
+          -p:UseLocalKazoOsPackages=true
 
       - name: Verify packaged theme static asset
         shell: bash
         run: >-
           test -s
-          "$SAMPLE_PUBLISH_OUTPUT/wwwroot/_content/HackerOs.Theming.Blazor/themes.css"
+          "$SAMPLE_PUBLISH_OUTPUT/wwwroot/_content/Kazo.Os.Theming.Blazor/themes.css"
 
       - name: Upload verified packages and sample
         uses: actions/upload-artifact@v6
         with:
           name: hackeros-windowing-packages-${{ github.run_attempt }}
           path: |
-            wasm2/HackerOs/artifacts/local-nupkg
-            wasm2/HackerOs/artifacts/windowing-sample-package-publish
+            wasm2/KazoOs/artifacts/local-nupkg
+            wasm2/KazoOs/artifacts/windowing-sample-package-publish
           if-no-files-found: error
           retention-days: 7

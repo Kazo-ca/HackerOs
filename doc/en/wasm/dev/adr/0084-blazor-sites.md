@@ -138,7 +138,7 @@ site keeps its state (counters, forms in progress).
 - `DisplaySurfaceContent.Surface` becomes optional (section 7): the
   browser renders its page area only once through the portal, and a
   Blazor site keeps its state on detaching.
-- The sample site `HackerOs.Samples.BlazorSite` is installed in both
+- The sample site `Kazo.Os.Samples.BlazorSite` is installed in both
   hosts (hidden app, `http://blazor-sample.hack/`): it is the only Blazor site
   that the browser can serve as long as no app declares one.
 - A Blazor site uses the SDK's navigation components, not Blazor's;

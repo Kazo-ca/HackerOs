@@ -1,0 +1,631 @@
+<Project>
+  <!--
+    Kazo OS app model build integration (ADR 0047).
+
+    App projects ($(KazoOsAppProject) == true):
+      GenerateKazoOsAppManifests  runs ManifestGenerator after the build output is copied and
+                                    writes manifest.json (or manifests/<appId>.json) from the
+                                    project's [AppManifest] classes. Errors are HOSAPPnnnn. It also
+                                    checks the SDK boundary injection rule (HOSAPP0031, ADR 0055 §3).
+
+    App projects and SDK libraries ($(KazoOsSdkLibrary) == true):
+      ValidateKazoOsSdkBoundary   before project references are resolved, fails the build when a
+                                    ProjectReference leaves the SDK boundary (ADR 0055 §2):
+                                    HOSAPP0030 for an app, HOSSDK0001 for an SDK library. There is
+                                    no exemption: the temporary list of ADR 0055 §6 was removed by
+                                    the 4-sdk-boundary-final chantier.
+      GetKazoOsAppManifests       query target used by hosts: the manifest files of this project,
+                                    the name and path of its assembly and its dependency list.
+
+    Packages (ADR 0098 §2): this file ships in the Kazo.Os.App.Build package (hackeros-build/), imported by its
+    buildTransitive/Kazo.Os.App.Build.targets with $(KazoOsBuildFromPackage) == true. A project
+    outside this repository then gets the same manifest generation, SDK boundary and host
+    aggregation: the generator runs from the package's tools/ folder, a project referencing the
+    package is an app unless it is a host, and a host aggregates the apps of its PackageReference
+    items (each app package carries its manifests and a buildTransitive file declaring them as
+    KazoOsPackagedApp items) with the same IsSystemApp metadata as a ProjectReference.
+    _KazoOsPackageAppManifests puts an app's manifests and that file in its own package.
+
+    External source (ADR 0176 §5, ADR 0207 §3): a repository made with the hackeros-solution template
+    imports this file from its Kazo OS submodule through Kazo.Os.ExternalSource.targets
+    ($(KazoOsExternalSource) == true), in Debug. The repository rules then apply with the
+    submodule as the Kazo OS root: the generator and analyzers are the submodule's projects, and
+    the SDK boundary checks the references that enter the submodule. A ProjectReference to another
+    project of the app's own repository (outside the submodule) is that repository's business, as
+    in package mode.
+
+    Host projects ($(KazoOsAppHost) == true, today only OS/Kazo.Os.Ecosystem):
+      CollectKazoOsBuiltInApplications
+                                    after ResolveProjectReferences, asks every direct ProjectReference
+                                    for its manifests, aggregates them (with the reference's
+                                    IsSystemApp metadata) into BuiltInApplications.json, embeds it as
+                                    Kazo.Os.BuiltInApplications.json and marks each app assembly
+                                    BlazorWebAssemblyLazyLoad. Installing an app = one ProjectReference.
+                                    Each entry also carries the app's image (assembly sizes, ADR 0068).
+                                    It also writes Kazo.Os.TrimmerRoots.xml, the ILLink roots of those
+                                    apps (TrimmerRootDescriptor), for a trimmed publish (ADR 0106).
+  -->
+
+  <PropertyGroup Condition="'$(KazoOsBuildFromPackage)' != 'true'">
+    <_KazoOsRepoRoot>$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)..'))</_KazoOsRepoRoot>
+    <_KazoOsAppsRoot>$([MSBuild]::NormalizeDirectory('$(_KazoOsRepoRoot)Apps'))</_KazoOsAppsRoot>
+
+    <!-- Every project under Apps/ is an app project by default; a project elsewhere opts in itself. -->
+    <KazoOsAppProject Condition="'$(KazoOsAppProject)' == '' and $([MSBuild]::NormalizeDirectory('$(MSBuildProjectDirectory)').ToLowerInvariant().StartsWith('$(_KazoOsAppsRoot.ToLowerInvariant())'))">true</KazoOsAppProject>
+    <KazoOsAppProject Condition="'$(KazoOsAppProject)' == ''">false</KazoOsAppProject>
+    <KazoOsAppHost Condition="'$(KazoOsAppHost)' == ''">false</KazoOsAppHost>
+
+    <!-- SDK libraries (ADR 0055 §1): Shared/Kazo.Os.AppSdk and Shared/Kazo.Os.AppSdk.*. Tests named alike are not. -->
+    <_KazoOsSharedRoot>$([MSBuild]::NormalizeDirectory('$(_KazoOsRepoRoot)Shared'))</_KazoOsSharedRoot>
+    <KazoOsSdkLibrary Condition="'$(KazoOsSdkLibrary)' == '' and ('$(MSBuildProjectName)' == 'Kazo.Os.AppSdk' or $(MSBuildProjectName.StartsWith('Kazo.Os.AppSdk.'))) and $([MSBuild]::NormalizeDirectory('$(MSBuildProjectDirectory)').ToLowerInvariant().StartsWith('$(_KazoOsSharedRoot.ToLowerInvariant())'))">true</KazoOsSdkLibrary>
+    <KazoOsSdkLibrary Condition="'$(KazoOsSdkLibrary)' == ''">false</KazoOsSdkLibrary>
+
+    <KazoOsManifestGeneratorProject Condition="'$(KazoOsManifestGeneratorProject)' == ''">$(_KazoOsRepoRoot)Tools/Kazo.Os.Tools.ManifestGenerator/Kazo.Os.Tools.ManifestGenerator.csproj</KazoOsManifestGeneratorProject>
+  </PropertyGroup>
+
+  <!-- ADR 0106 §4, as in package mode: an app built in another repository is trimmed by the host that publishes it. -->
+  <PropertyGroup Condition="'$(KazoOsExternalSource)' == 'true' and '$(KazoOsAppProject)' == 'true'">
+    <IsTrimmable Condition="'$(IsTrimmable)' == ''">true</IsTrimmable>
+    <EnableTrimAnalyzer Condition="'$(EnableTrimAnalyzer)' == ''">true</EnableTrimAnalyzer>
+  </PropertyGroup>
+
+  <!--
+    Package mode (ADR 0098 §2): a project that references Kazo.Os.App.Build is an app unless it says
+    it is a host (or sets KazoOsAppProject itself). The generator comes from the package.
+  -->
+  <PropertyGroup Condition="'$(KazoOsBuildFromPackage)' == 'true'">
+    <KazoOsAppHost Condition="'$(KazoOsAppHost)' == ''">false</KazoOsAppHost>
+    <KazoOsAppProject Condition="'$(KazoOsAppProject)' == '' and '$(KazoOsAppHost)' != 'true'">true</KazoOsAppProject>
+    <KazoOsAppProject Condition="'$(KazoOsAppProject)' == ''">false</KazoOsAppProject>
+    <KazoOsSdkLibrary Condition="'$(KazoOsSdkLibrary)' == ''">false</KazoOsSdkLibrary>
+    <!--
+      ADR 0106 §4: an app built elsewhere is trimmed when a host publishes it, so its build runs the
+      trim analysis, as every shipping project of this repository does (Directory.Build.props).
+    -->
+    <IsTrimmable Condition="'$(IsTrimmable)' == '' and '$(KazoOsAppProject)' == 'true'">true</IsTrimmable>
+    <EnableTrimAnalyzer Condition="'$(EnableTrimAnalyzer)' == '' and '$(KazoOsAppProject)' == 'true'">true</EnableTrimAnalyzer>
+    <_KazoOsManifestGeneratorPath>$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)', '..', 'tools', 'generator', 'Kazo.Os.Tools.ManifestGenerator.dll'))</_KazoOsManifestGeneratorPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <_KazoOsDotnetHost>$(DOTNET_HOST_PATH)</_KazoOsDotnetHost>
+    <_KazoOsDotnetHost Condition="'$(_KazoOsDotnetHost)' == ''">dotnet</_KazoOsDotnetHost>
+  </PropertyGroup>
+
+  <!--
+    Build order only: the generator must be built before an app runs it. PrivateAssets keeps the
+    tool (which needs the server-side ASP.NET Core framework) out of every host's dependency graph.
+  -->
+  <ItemGroup Condition="'$(KazoOsBuildFromPackage)' != 'true' and ('$(KazoOsAppProject)' == 'true' or '$(KazoOsAppHost)' == 'true')">
+    <ProjectReference Include="$(KazoOsManifestGeneratorProject)"
+                      ReferenceOutputAssembly="false"
+                      Private="false"
+                      PrivateAssets="all"
+                      SkipGetTargetFrameworkProperties="true"
+                      GlobalPropertiesToRemove="TargetFramework;RuntimeIdentifier;SelfContained" />
+  </ItemGroup>
+
+  <!--
+    Build-time defaults of the app sources and the block list (ADR 0189 §1, §5, ADR 0208): a host
+    sets these properties to change what /etc/hackeros/app-sources.config and app-policy.config are
+    seeded with. Values are separated by commas; a property left empty keeps the standard value
+    (official catalog, github.com/Kazo-ca trusted, nothing blocked, 6 hours). Catalogs are written
+    name=https://.../catalog.json. Signing keys (ADR 0214 §2) are written source=base64 public key,
+    one item per key (KazoOsAppSigningKeys=catalog:mine=MFkw...), and are added to the official
+    catalog's own key. They reach AppPackageDefaults.FromAssembly as assembly metadata.
+  -->
+  <ItemGroup Condition="'$(KazoOsAppHost)' == 'true'">
+    <AssemblyMetadata Include="Kazo.Os.AppPackages.Catalogs" Value="$(KazoOsAppCatalogs)" Condition="'$(KazoOsAppCatalogs)' != ''" />
+    <AssemblyMetadata Include="Kazo.Os.AppPackages.Trusted" Value="$(KazoOsTrustedAppSources)" Condition="'$(KazoOsTrustedAppSources)' != ''" />
+    <AssemblyMetadata Include="Kazo.Os.AppPackages.UpdateIntervalHours" Value="$(KazoOsAppUpdateIntervalHours)" Condition="'$(KazoOsAppUpdateIntervalHours)' != ''" />
+    <AssemblyMetadata Include="Kazo.Os.AppPackages.SigningKeys" Value="$(KazoOsAppSigningKeys)" Condition="'$(KazoOsAppSigningKeys)' != ''" />
+    <AssemblyMetadata Include="Kazo.Os.AppPackages.BlockedApps" Value="$(KazoOsBlockedApps)" Condition="'$(KazoOsBlockedApps)' != ''" />
+    <AssemblyMetadata Include="Kazo.Os.AppPackages.BlockedCategories" Value="$(KazoOsBlockedAppCategories)" Condition="'$(KazoOsBlockedAppCategories)' != ''" />
+    <AssemblyMetadata Include="Kazo.Os.AppPackages.BlockedCapabilities" Value="$(KazoOsBlockedAppCapabilities)" Condition="'$(KazoOsBlockedAppCapabilities)' != ''" />
+  </ItemGroup>
+
+  <!--
+    ASP.Hack route generator (ADR 0082): a Roslyn source generator every app compiles with. It only
+    writes code when the app references Kazo.Os.AppSdk.Web (controllers, WebAppDefinition); for other
+    apps it does nothing. Analyzer only: never a runtime dependency of the app.
+  -->
+  <PropertyGroup Condition="'$(KazoOsBuildFromPackage)' != 'true'">
+    <KazoOsWebRouteGeneratorProject Condition="'$(KazoOsWebRouteGeneratorProject)' == ''">$(_KazoOsRepoRoot)Tools/Kazo.Os.Tools.WebRouteGenerator/Kazo.Os.Tools.WebRouteGenerator.csproj</KazoOsWebRouteGeneratorProject>
+  </PropertyGroup>
+  <!-- In package mode the generator is the package's analyzer (analyzers/dotnet/cs). -->
+  <ItemGroup Condition="'$(KazoOsBuildFromPackage)' != 'true' and '$(KazoOsAppProject)' == 'true'">
+    <ProjectReference Include="$(KazoOsWebRouteGeneratorProject)"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false"
+                      Private="false"
+                      PrivateAssets="all" />
+  </ItemGroup>
+
+  <!--
+    KazoBackground analyzer (ADR 0128 §2, ADR 0140): every app compiles with the HOSBG rules. In
+    package mode it is the Kazo.Os.AppSdk package's analyzer (analyzers/dotnet/cs).
+  -->
+  <PropertyGroup Condition="'$(KazoOsBuildFromPackage)' != 'true'">
+    <KazoOsBackgroundAnalyzerProject Condition="'$(KazoOsBackgroundAnalyzerProject)' == ''">$(_KazoOsRepoRoot)Tools/Kazo.Os.Tools.BackgroundAnalyzer/Kazo.Os.Tools.BackgroundAnalyzer.csproj</KazoOsBackgroundAnalyzerProject>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(KazoOsBuildFromPackage)' != 'true' and '$(KazoOsAppProject)' == 'true'">
+    <ProjectReference Include="$(KazoOsBackgroundAnalyzerProject)"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false"
+                      Private="false"
+                      PrivateAssets="all" />
+  </ItemGroup>
+
+  <!--
+    ASP.Hack wwwroot (ADR 0073 §2, ADR 0083 §6): a site's wwwroot/ is embedded in its assembly as resources
+    named "wwwroot/<relative path>" and served read-only by UseStaticFiles; it is never a static web asset
+    of the host (an app's wwwroot would otherwise land under _content/). On by default for a project that
+    references Kazo.Os.AppSdk.Web; set KazoOsEmbedWebRoot to true/false to decide yourself.
+  -->
+  <Target Name="_KazoOsEmbedWebRoot" BeforeTargets="AssignTargetPaths;ResolveStaticWebAssetsInputs;ResolveProjectStaticWebAssets">
+    <PropertyGroup>
+      <_KazoOsReferencesWebSdk Condition="'%(ProjectReference.Filename)' == 'Kazo.Os.AppSdk.Web'">true</_KazoOsReferencesWebSdk>
+      <_KazoOsReferencesWebSdk Condition="'%(PackageReference.Identity)' == 'Kazo.Os.AppSdk.Web'">true</_KazoOsReferencesWebSdk>
+      <KazoOsEmbedWebRoot Condition="'$(KazoOsEmbedWebRoot)' == '' and '$(_KazoOsReferencesWebSdk)' == 'true'">true</KazoOsEmbedWebRoot>
+    </PropertyGroup>
+    <ItemGroup Condition="'$(KazoOsEmbedWebRoot)' == 'true'">
+      <_KazoOsWebRootFile Include="$(MSBuildProjectDirectory)/wwwroot/**" />
+      <Content Remove="@(_KazoOsWebRootFile)" />
+      <None Remove="@(_KazoOsWebRootFile)" />
+      <EmbeddedResource Include="@(_KazoOsWebRootFile)"
+                        LogicalName="wwwroot/%(RecursiveDir)%(Filename)%(Extension)"
+                        WithCulture="false"
+                        Type="Non-Resx" />
+    </ItemGroup>
+  </Target>
+
+  <!--
+    ASP.Hack .cshtml views (ADR 0086 §2): the Razor compiler of the SDK compiles a .cshtml in MVC mode, whose
+    generated C# names a few ASP.NET MVC types. For a project that references Kazo.Os.AppSdk.Web and has
+    .cshtml files, this target adds a root _ViewImports.cshtml (base class KazoRazorPage<TModel> and the
+    helpers in place of MVC's implicit @inject) and a C# file of internal compatibility types with the names
+    the generated code expects. No ASP.NET MVC reference is involved. RAZORSDK1004 ("no Razor support for
+    MVC") is expected for these projects and kept as a message.
+  -->
+  <PropertyGroup>
+    <MSBuildWarningsAsMessages>$(MSBuildWarningsAsMessages);RAZORSDK1004</MSBuildWarningsAsMessages>
+    <_KazoOsAspHackRazorDir>$(MSBuildThisFileDirectory)asp-hack/</_KazoOsAspHackRazorDir>
+  </PropertyGroup>
+
+  <Target Name="_KazoOsAspHackRazorViews" BeforeTargets="AssignRazorGenerateTargetPaths;CoreCompile" Condition="'@(RazorGenerate)' != ''">
+    <PropertyGroup>
+      <_KazoOsCshtmlSite Condition="'%(ProjectReference.Filename)' == 'Kazo.Os.AppSdk.Web' and '@(RazorGenerate->WithMetadataValue('Extension', '.cshtml')->Count())' != '0'">true</_KazoOsCshtmlSite>
+      <_KazoOsCshtmlSite Condition="'%(PackageReference.Identity)' == 'Kazo.Os.AppSdk.Web' and '@(RazorGenerate->WithMetadataValue('Extension', '.cshtml')->Count())' != '0'">true</_KazoOsCshtmlSite>
+    </PropertyGroup>
+    <Error Condition="'$(_KazoOsCshtmlSite)' == 'true' and '$(_KazoOsAspHackRazorAdded)' != 'true' and Exists('$(MSBuildProjectDirectory)/_ViewImports.cshtml')"
+           Text="ASP.Hack provides the root _ViewImports.cshtml of a site (ADR 0086). Move this project's _ViewImports.cshtml to Views/_ViewImports.cshtml." />
+    <ItemGroup Condition="'$(_KazoOsCshtmlSite)' == 'true' and '$(_KazoOsAspHackRazorAdded)' != 'true'">
+      <RazorGenerate Include="$(_KazoOsAspHackRazorDir)_ViewImports.cshtml" Link="_ViewImports.cshtml" />
+      <Compile Include="$(_KazoOsAspHackRazorDir)KazoRazorCompat.cs" Link="obj/KazoRazorCompat.cs" />
+    </ItemGroup>
+    <PropertyGroup Condition="'$(_KazoOsCshtmlSite)' == 'true'">
+      <_KazoOsAspHackRazorAdded>true</_KazoOsAspHackRazorAdded>
+    </PropertyGroup>
+  </Target>
+
+  <!--
+    Generated manifests sit in the project directory (tracked by git for review) but are not
+    content: they must never be copied or published under the same name by several apps.
+  -->
+  <ItemGroup Condition="'$(KazoOsAppProject)' == 'true'">
+    <Content Remove="manifest.json;manifests/**;localization/**" />
+    <None Remove="manifest.json;manifests/**;localization/**" />
+    <!--
+      ADR 0104 section 4: Resources/AppManifest.<culture>.resx is read by the generator, which writes
+      localization/<culture>.json for the host catalog; it is not compiled into a satellite assembly.
+    -->
+    <EmbeddedResource Remove="Resources/AppManifest.*.resx" />
+    <None Include="Resources/AppManifest.*.resx" />
+  </ItemGroup>
+
+  <!-- Paths are computed inside targets so that IntermediateOutputPath is final. -->
+  <Target Name="_KazoOsAppManifestPaths">
+    <PropertyGroup>
+      <_KazoOsManifestStamp>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(IntermediateOutputPath)', 'hackeros-app-manifests.txt'))</_KazoOsManifestStamp>
+      <_KazoOsManifestDependencies>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(IntermediateOutputPath)', 'hackeros-app-dependencies.txt'))</_KazoOsManifestDependencies>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="_KazoOsResolveManifestGeneratorPath" Condition="'$(KazoOsBuildFromPackage)' != 'true'">
+    <MSBuild Projects="$(KazoOsManifestGeneratorProject)"
+             Targets="GetTargetPath"
+             Properties="Configuration=$(Configuration)"
+             RemoveProperties="TargetFramework;RuntimeIdentifier;SelfContained">
+      <Output TaskParameter="TargetOutputs" PropertyName="_KazoOsManifestGeneratorPath" />
+    </MSBuild>
+  </Target>
+
+  <Target Name="_KazoOsResolveManifestGenerator"
+          DependsOnTargets="_KazoOsAppManifestPaths;_KazoOsResolveManifestGeneratorPath"
+          Condition="'$(KazoOsAppProject)' == 'true'">
+
+    <ItemGroup>
+      <_KazoOsManifestDependency Include="@(ReferenceCopyLocalPaths->'%(FullPath)')" Condition="'%(Extension)' == '.dll'" />
+      <_KazoOsManifestDependency Include="@(ReferencePath->'%(FullPath)')" />
+      <_KazoOsExistingManifest Include="$(MSBuildProjectDirectory)/manifest.json" Condition="Exists('$(MSBuildProjectDirectory)/manifest.json')" />
+      <_KazoOsExistingManifest Include="$(MSBuildProjectDirectory)/manifests/*.json" />
+      <!-- ADR 0104: translations of the manifest, and the files generated from them. -->
+      <_KazoOsExistingManifest Include="$(MSBuildProjectDirectory)/Resources/AppManifest.*.resx" />
+      <_KazoOsExistingManifest Include="$(MSBuildProjectDirectory)/localization/**/*.json" />
+      <!-- ADR 0098 §5: declared assets are hashed from wwwroot/, so an edited asset reruns the generator. -->
+      <_KazoOsAssetFile Include="$(MSBuildProjectDirectory)/wwwroot/**" />
+    </ItemGroup>
+    <WriteLinesToFile File="$(_KazoOsManifestDependencies)"
+                      Lines="@(_KazoOsManifestDependency)"
+                      Overwrite="true"
+                      WriteOnlyWhenDifferent="true" />
+    <ItemGroup>
+      <FileWrites Include="$(_KazoOsManifestDependencies)" />
+    </ItemGroup>
+  </Target>
+
+  <!--
+    Incremental: reruns when the compiled assembly, the generator, or a manifest file (edited by
+    hand) is newer than the stamp. The tool only rewrites a manifest when its bytes change.
+  -->
+  <Target Name="GenerateKazoOsAppManifests"
+          AfterTargets="CopyFilesToOutputDirectory"
+          DependsOnTargets="_KazoOsResolveManifestGenerator"
+          Condition="'$(KazoOsAppProject)' == 'true'"
+          Inputs="@(IntermediateAssembly);$(_KazoOsManifestGeneratorPath);$(MSBuildThisFileFullPath);$(_KazoOsManifestDependencies);@(_KazoOsExistingManifest);@(_KazoOsAssetFile)"
+          Outputs="$(_KazoOsManifestStamp)">
+    <Exec Command="&quot;$(_KazoOsDotnetHost)&quot; &quot;$(_KazoOsManifestGeneratorPath)&quot; generate --assembly &quot;$(TargetPath)&quot; --project &quot;$(MSBuildProjectFullPath)&quot; --dependencies &quot;$(_KazoOsManifestDependencies)&quot; --stamp &quot;$(_KazoOsManifestStamp)&quot;"
+          StandardOutputImportance="low"
+          IgnoreExitCode="true">
+      <Output TaskParameter="ExitCode" PropertyName="_KazoOsManifestGeneratorExitCode" />
+    </Exec>
+    <!-- Exit code 1 = HOSAPP diagnostics already printed in canonical format (and logged as errors). -->
+    <Error Condition="'$(_KazoOsManifestGeneratorExitCode)' != '0' and '$(_KazoOsManifestGeneratorExitCode)' != '1'"
+           Code="HOSAPP0099"
+           Text="The Kazo OS manifest generator failed with exit code $(_KazoOsManifestGeneratorExitCode) without reporting a diagnostic." />
+    <!-- The tool keeps the stamp's bytes stable; touch it so the next build sees it as up to date. -->
+    <Touch Files="$(_KazoOsManifestStamp)" Condition="'$(_KazoOsManifestGeneratorExitCode)' == '0'" />
+    <ItemGroup>
+      <FileWrites Include="$(_KazoOsManifestStamp)" />
+    </ItemGroup>
+  </Target>
+
+  <!-- Query target for hosts (ADR 0047 §2): manifest files produced by this app project. -->
+  <Target Name="GetKazoOsAppManifests" DependsOnTargets="_KazoOsAppManifestPaths" Returns="@(_KazoOsAppManifestOutput)">
+    <ReadLinesFromFile File="$(_KazoOsManifestStamp)"
+                       Condition="'$(KazoOsAppProject)' == 'true' and Exists('$(_KazoOsManifestStamp)')">
+      <Output TaskParameter="Lines" ItemName="_KazoOsAppManifestLine" />
+    </ReadLinesFromFile>
+    <ItemGroup>
+      <_KazoOsAppManifestOutput Include="@(_KazoOsAppManifestLine)"
+                                  AssemblyName="$(AssemblyName)"
+                                  AssemblyFileName="$(TargetFileName)"
+                                  AssemblyPath="$(TargetPath)"
+                                  DependenciesFile="$(_KazoOsManifestDependencies)"
+                                  AppProject="$(MSBuildProjectFullPath)" />
+    </ItemGroup>
+  </Target>
+
+  <!--
+    KazoOsPack (ADR 0182 §1, §2): "dotnet build -c Release -t:KazoOsPack" writes every app of the
+    project as <version>/<appId>-<version>.hackapp and adds it to index.json in KazoOsPackageOutput,
+    the content of the repository's hackeros-packages branch (default: bin/hackeros-packages/).
+    The package holds every static web resource of the project, declared or not (ADR 0221 §1), and
+    the satellite assemblies of the app's own assemblies, lib/<culture>/<assembly>.resources.dll
+    (ADR 0222).
+    ADR 0219: each package is signed with the author's key, read from the HACKEROS_APP_SIGNING_KEY
+    environment variable (a workflow secret) or from the KazoOsSigningKeyFile PEM file; without
+    either it is published unsigned with warning HOSAPP0063. The key never goes on a command line.
+
+    KazoOsKeyGen (ADR 0219 §1): "dotnet build -t:KazoOsKeyGen -p:KazoOsSigningKeyFile=<file.pem>"
+    creates the author's key pair: the private key goes to that new file (keep it out of the
+    repository), the public key is printed for [signing-keys]. No default path, on purpose.
+  -->
+  <PropertyGroup>
+    <KazoOsPackageOutput Condition="'$(KazoOsPackageOutput)' == ''">$(MSBuildProjectDirectory)/bin/hackeros-packages</KazoOsPackageOutput>
+  </PropertyGroup>
+
+  <Target Name="KazoOsPack"
+          DependsOnTargets="Build;_KazoOsAppManifestPaths;_KazoOsResolveManifestGeneratorPath"
+          Condition="'$(KazoOsAppProject)' == 'true'">
+    <ReadLinesFromFile File="$(_KazoOsManifestStamp)" Condition="Exists('$(_KazoOsManifestStamp)')">
+      <Output TaskParameter="Lines" ItemName="_KazoOsPackManifest" />
+    </ReadLinesFromFile>
+    <Error Condition="'@(_KazoOsPackManifest)' == ''" Code="HOSAPP0060" Text="No Kazo OS manifest was generated for $(MSBuildProjectName): nothing to pack." />
+    <PropertyGroup>
+      <_KazoOsPackBin>$(TargetDir.TrimEnd('/\'))</_KazoOsPackBin>
+      <_KazoOsPackOutput>$(KazoOsPackageOutput.TrimEnd('/\'))</_KazoOsPackOutput>
+      <!--
+        ADR 0221 §1: the build's static web asset manifest lists every resource the project serves at
+        _content/<assembly>/ (wwwroot/, collocated .razor.js, the scoped CSS bundle); pack adds the
+        undeclared ones to the package's manifest.
+      -->
+      <_KazoOsPackWebAssets>$(StaticWebAssetBuildManifestPath)</_KazoOsPackWebAssets>
+      <_KazoOsPackWebAssets Condition="'$(_KazoOsPackWebAssets)' == ''">$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(IntermediateOutputPath)', 'staticwebassets.build.json'))</_KazoOsPackWebAssets>
+      <_KazoOsPackWebAssetsArgument Condition="'$(UsingMicrosoftNETSdkRazor)' == 'true'"> --web-assets &quot;$(_KazoOsPackWebAssets)&quot;</_KazoOsPackWebAssetsArgument>
+    </PropertyGroup>
+    <PropertyGroup>
+      <_KazoOsPackKeyArgument Condition="'$(KazoOsSigningKeyFile)' != ''"> --private-key &quot;$([MSBuild]::NormalizePath('$(MSBuildStartupDirectory)', '$(KazoOsSigningKeyFile)'))&quot;</_KazoOsPackKeyArgument>
+    </PropertyGroup>
+    <Exec Command="&quot;$(_KazoOsDotnetHost)&quot; &quot;$(_KazoOsManifestGeneratorPath)&quot; pack --manifest &quot;%(_KazoOsPackManifest.Identity)&quot; --bin &quot;$(_KazoOsPackBin)&quot; --webroot &quot;$(MSBuildProjectDirectory)/wwwroot&quot; --output &quot;$(_KazoOsPackOutput)&quot;$(_KazoOsPackWebAssetsArgument)$(_KazoOsPackKeyArgument)" />
+  </Target>
+
+  <Target Name="_KazoOsRequireSigningKeyFile">
+    <Error Condition="'$(KazoOsSigningKeyFile)' == ''"
+           Code="HOSAPP0061"
+           Text="KazoOsKeyGen needs the file of the new private key, outside the repository: dotnet build -t:KazoOsKeyGen -p:KazoOsSigningKeyFile=&lt;file.pem&gt; (ADR 0219)." />
+  </Target>
+
+  <!-- Build first: it builds the generator in the Kazo OS repository and in the Debug profile of an app repository. -->
+  <Target Name="KazoOsKeyGen"
+          DependsOnTargets="_KazoOsRequireSigningKeyFile;Build;_KazoOsResolveManifestGeneratorPath"
+          Condition="'$(KazoOsAppProject)' == 'true'">
+    <Exec Command="&quot;$(_KazoOsDotnetHost)&quot; &quot;$(_KazoOsManifestGeneratorPath)&quot; keygen --private-key &quot;$([MSBuild]::NormalizePath('$(MSBuildStartupDirectory)', '$(KazoOsSigningKeyFile)'))&quot;" />
+  </Target>
+
+  <!-- ===================================================================================== -->
+  <!-- SDK boundary (ADR 0055, codes per ADR 0059)                                            -->
+  <!-- ===================================================================================== -->
+
+  <PropertyGroup>
+    <!-- Paths relative to the Kazo OS root, forward slashes, compared case-insensitively. -->
+    <_KazoOsAppAllowedReferencePattern>(?i)^(Shared/Kazo\.Os\.(App|Simulation|Theming)\.Abstractions|Shared/Kazo\.Os\.AppSdk(\.[^/]+)?|Platform/Kazo\.Os\.Theming\.Blazor)/[^/]+\.csproj$|^Apps/.+\.csproj$</_KazoOsAppAllowedReferencePattern>
+    <_KazoOsSdkAllowedReferencePattern>(?i)^Shared/Kazo\.Os\.((App|Simulation|Theming)\.Abstractions|AppSdk(\.[^/]+)?)/[^/]+\.csproj$</_KazoOsSdkAllowedReferencePattern>
+  </PropertyGroup>
+
+  <!-- Evaluation-time snapshot of this project's own ProjectReference items (see ValidateKazoOsSdkBoundary). -->
+  <ItemGroup Condition="'$(KazoOsAppProject)' == 'true' or '$(KazoOsSdkLibrary)' == 'true'">
+    <_KazoOsDirectProjectReference Include="@(ProjectReference)" />
+  </ItemGroup>
+
+  <!--
+    Repository mode only: the rule is written in paths under the Kazo OS root. In package mode a
+    project's own ProjectReference items are its repository's business; what crosses the boundary
+    there is a Kazo OS package, checked by _ValidateKazoOsPackageBoundary below.
+  -->
+  <Target Name="ValidateKazoOsSdkBoundary"
+          BeforeTargets="ResolveProjectReferences"
+          Condition="'$(KazoOsBuildFromPackage)' != 'true' and ('$(KazoOsAppProject)' == 'true' or '$(KazoOsSdkLibrary)' == 'true')">
+    <PropertyGroup>
+      <_KazoOsBoundaryPattern Condition="'$(KazoOsAppProject)' == 'true'">$(_KazoOsAppAllowedReferencePattern)</_KazoOsBoundaryPattern>
+      <_KazoOsBoundaryPattern Condition="'$(KazoOsAppProject)' != 'true'">$(_KazoOsSdkAllowedReferencePattern)</_KazoOsBoundaryPattern>
+      <_KazoOsBoundaryCode Condition="'$(KazoOsAppProject)' == 'true'">HOSAPP0030</_KazoOsBoundaryCode>
+      <_KazoOsBoundaryCode Condition="'$(KazoOsAppProject)' != 'true'">HOSSDK0001</_KazoOsBoundaryCode>
+      <_KazoOsBoundaryRule Condition="'$(KazoOsAppProject)' == 'true'">An app may only reference the four *.Abstractions projects, the SDK (Kazo.Os.AppSdk*), Kazo.Os.Theming.Blazor or another project under Apps/</_KazoOsBoundaryRule>
+      <_KazoOsBoundaryRule Condition="'$(KazoOsAppProject)' != 'true'">An SDK library may only reference the four *.Abstractions projects or another SDK library</_KazoOsBoundaryRule>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <!--
+        Direct references only, captured at evaluation: the .NET SDK adds transitive ones to
+        @(ProjectReference) during the build, and those are checked in the project declaring them.
+        The generator references are build order / analyzer only (ReferenceOutputAssembly=false), added by this file.
+      -->
+      <_KazoOsBoundaryReference Include="@(_KazoOsDirectProjectReference->'%(FullPath)')"
+                                  Condition="'%(Filename)' != 'Kazo.Os.Tools.ManifestGenerator' and '%(Filename)' != 'Kazo.Os.Tools.WebRouteGenerator' and '%(Filename)' != 'Kazo.Os.Tools.BackgroundAnalyzer'" />
+      <_KazoOsBoundaryReference>
+        <RelativePath>$([MSBuild]::MakeRelative('$(_KazoOsRepoRoot)', '%(Identity)').Replace('\', '/'))</RelativePath>
+      </_KazoOsBoundaryReference>
+      <!-- External source (ADR 0207 §3): only the references that enter the Kazo OS submodule are checked. -->
+      <_KazoOsBoundaryReference Remove="@(_KazoOsBoundaryReference)"
+                                  Condition="'$(KazoOsExternalSource)' == 'true' and $([System.String]::Copy('%(RelativePath)').StartsWith('../'))" />
+      <_KazoOsBoundaryViolation Include="@(_KazoOsBoundaryReference)"
+                                  Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('%(RelativePath)', '$(_KazoOsBoundaryPattern)'))" />
+    </ItemGroup>
+
+    <Error Condition="'@(_KazoOsBoundaryViolation)' != ''"
+           Code="$(_KazoOsBoundaryCode)"
+           File="$(MSBuildProjectFullPath)"
+           Text="[$(MSBuildProjectName)] Forbidden project reference '%(_KazoOsBoundaryViolation.RelativePath)'. $(_KazoOsBoundaryRule) (ADR 0055 §2)." />
+  </Target>
+
+  <!--
+    ADR 0098 §2: the same rule for packages. Every compile reference that comes from a Kazo.Os.*
+    package (direct or transitive, so a helper library cannot smuggle the platform in) must be one
+    an app (or an SDK library) may use. Other packages are not Kazo OS's to judge.
+  -->
+  <PropertyGroup>
+    <_KazoOsAppAllowedPackagePattern>(?i)^Kazo\.Os\.((App|Simulation|Theming)\.Abstractions|AppSdk(\..+)?|Theming\.Blazor|App\.Build|Apps\..+|Commands)$</_KazoOsAppAllowedPackagePattern>
+    <_KazoOsSdkAllowedPackagePattern>(?i)^Kazo\.Os\.((App|Simulation|Theming)\.Abstractions|AppSdk(\..+)?)$</_KazoOsSdkAllowedPackagePattern>
+  </PropertyGroup>
+
+  <Target Name="_ValidateKazoOsPackageBoundary"
+          AfterTargets="ResolveAssemblyReferences"
+          Condition="'$(KazoOsAppProject)' == 'true' or '$(KazoOsSdkLibrary)' == 'true'">
+    <PropertyGroup>
+      <_KazoOsPackagePattern Condition="'$(KazoOsAppProject)' == 'true'">$(_KazoOsAppAllowedPackagePattern)</_KazoOsPackagePattern>
+      <_KazoOsPackagePattern Condition="'$(KazoOsAppProject)' != 'true'">$(_KazoOsSdkAllowedPackagePattern)</_KazoOsPackagePattern>
+      <_KazoOsPackageCode Condition="'$(KazoOsAppProject)' == 'true'">HOSAPP0030</_KazoOsPackageCode>
+      <_KazoOsPackageCode Condition="'$(KazoOsAppProject)' != 'true'">HOSSDK0001</_KazoOsPackageCode>
+    </PropertyGroup>
+    <ItemGroup>
+      <_KazoOsReferencedPackage Include="@(ReferencePath->'%(NuGetPackageId)'->Distinct())"
+                                  Condition="$([System.String]::Copy('%(ReferencePath.NuGetPackageId)').StartsWith('Kazo.Os.', StringComparison.OrdinalIgnoreCase))" />
+      <_KazoOsPackageViolation Include="@(_KazoOsReferencedPackage)"
+                                 Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('%(Identity)', '$(_KazoOsPackagePattern)'))" />
+    </ItemGroup>
+    <Error Condition="'@(_KazoOsPackageViolation)' != ''"
+           Code="$(_KazoOsPackageCode)"
+           File="$(MSBuildProjectFullPath)"
+           Text="[$(MSBuildProjectName)] Forbidden package '%(_KazoOsPackageViolation.Identity)'. An app may only use the *.Abstractions packages, the SDK (Kazo.Os.AppSdk*), Kazo.Os.Theming.Blazor, Kazo.Os.App.Build or app packages (Kazo.Os.Apps.*, Kazo.Os.Commands); an SDK library only the *.Abstractions packages and the SDK (ADR 0055 §2, ADR 0098 §2)." />
+  </Target>
+
+  <!-- ===================================================================================== -->
+  <!-- Host aggregation (ADR 0047 §3-4)                                                       -->
+  <!-- ===================================================================================== -->
+
+  <Target Name="_KazoOsSelectAppReferences">
+    <ItemGroup>
+      <_KazoOsAppReference Include="@(_MSBuildProjectReferenceExistent)"
+                             Condition="'%(_MSBuildProjectReferenceExistent.ReferenceOutputAssembly)' != 'false'" />
+    </ItemGroup>
+  </Target>
+
+  <!--
+    Target batching: one run per referenced project, so the manifests it returns can be tagged with
+    that reference's IsSystemApp metadata (ADR 0048). Non-app projects return nothing.
+  -->
+  <Target Name="_KazoOsCollectAppManifestsFromReference"
+          DependsOnTargets="_KazoOsSelectAppReferences"
+          Outputs="%(_KazoOsAppReference.Identity)">
+    <MSBuild Projects="@(_KazoOsAppReference)"
+             Targets="GetKazoOsAppManifests"
+             BuildInParallel="$(BuildInParallel)"
+             Properties="%(_KazoOsAppReference.SetConfiguration); %(_KazoOsAppReference.SetPlatform); %(_KazoOsAppReference.SetTargetFramework)"
+             RemoveProperties="%(_KazoOsAppReference.GlobalPropertiesToRemove)$(_GlobalPropertiesToRemoveFromProjectReferences)"
+             SkipNonexistentTargets="true">
+      <Output TaskParameter="TargetOutputs" ItemName="_KazoOsReferenceManifest" />
+    </MSBuild>
+    <ItemGroup>
+      <_KazoOsBuiltInManifest Include="@(_KazoOsReferenceManifest)"
+                                IsSystemApp="@(_KazoOsAppReference->'%(IsSystemApp)')" />
+      <_KazoOsReferenceManifest Remove="@(_KazoOsReferenceManifest)" />
+    </ItemGroup>
+  </Target>
+
+  <!--
+    ADR 0098 §2: apps installed as packages. Each app package declares its manifests as
+    KazoOsPackagedApp items (PackageId, AssemblyFileName, AssemblyPath metadata) through its
+    buildTransitive file; an app package another app package depends on comes along, like a
+    package manager installs a dependency. IsSystemApp comes from the host's PackageReference of
+    that package (a transitive one is never a system app).
+  -->
+  <!--
+    ADR 0228: a package built before SDK 3.0 declares its apps as HackerOsPackagedApp items. They are
+    collected like the others, so the SDK check refuses them by name (HOSAPP0021, another major)
+    instead of the host silently leaving them out.
+  -->
+  <Target Name="_KazoOsCollectPreRenamePackagedApps" Condition="'@(HackerOsPackagedApp)' != ''">
+    <ItemGroup>
+      <KazoOsPackagedApp Include="@(HackerOsPackagedApp)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_KazoOsCollectPackagedAppManifests" Condition="'@(KazoOsPackagedApp)' != ''">
+    <ItemGroup>
+      <_KazoOsSystemPackageId Include="@(PackageReference)" Condition="'%(PackageReference.IsSystemApp)' == 'true'" />
+      <!-- Keyed by package id, so Remove can intersect with the system packages. -->
+      <_KazoOsPackagedAppById Include="@(KazoOsPackagedApp->'%(PackageId)')" ManifestPath="%(KazoOsPackagedApp.FullPath)" />
+      <_KazoOsPackagedUserApp Include="@(_KazoOsPackagedAppById)" />
+      <_KazoOsPackagedUserApp Remove="@(_KazoOsSystemPackageId)" />
+      <_KazoOsPackagedSystemApp Include="@(_KazoOsPackagedAppById)" />
+      <_KazoOsPackagedSystemApp Remove="@(_KazoOsPackagedUserApp)" />
+      <_KazoOsBuiltInManifest Include="@(_KazoOsPackagedUserApp->'%(ManifestPath)')" IsSystemApp="false" DependenciesFile="" />
+      <_KazoOsBuiltInManifest Include="@(_KazoOsPackagedSystemApp->'%(ManifestPath)')" IsSystemApp="true" DependenciesFile="" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="CollectKazoOsBuiltInApplications"
+          AfterTargets="ResolveProjectReferences"
+          DependsOnTargets="_KazoOsResolveManifestGeneratorPath;_KazoOsCollectAppManifestsFromReference;_KazoOsCollectPreRenamePackagedApps;_KazoOsCollectPackagedAppManifests"
+          Condition="'$(KazoOsAppHost)' == 'true'">
+    <PropertyGroup>
+      <_KazoOsBuiltInApplicationsFile>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(IntermediateOutputPath)', 'BuiltInApplications.json'))</_KazoOsBuiltInApplicationsFile>
+      <_KazoOsBuiltInApplicationsList>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(IntermediateOutputPath)', 'hackeros-builtin-applications.txt'))</_KazoOsBuiltInApplicationsList>
+      <_KazoOsTrimmerRootsFile>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(IntermediateOutputPath)', 'Kazo.Os.TrimmerRoots.xml'))</_KazoOsTrimmerRootsFile>
+    </PropertyGroup>
+    <ItemGroup>
+      <!--
+        "<IsSystemApp>|<manifest>|<assembly>|<dependency list>"; an empty flag (metadata not set)
+        means false. The assembly and its dependency list size the app's image (ADR 0068).
+      -->
+      <_KazoOsBuiltInListLine Include="@(_KazoOsBuiltInManifest->'%(IsSystemApp)|%(Identity)|%(AssemblyPath)|%(DependenciesFile)')" />
+      <_KazoOsLazyAssembly Include="@(_KazoOsBuiltInManifest->'%(AssemblyFileName)'->Distinct())" />
+    </ItemGroup>
+    <WriteLinesToFile File="$(_KazoOsBuiltInApplicationsList)"
+                      Lines="@(_KazoOsBuiltInListLine)"
+                      Overwrite="true"
+                      WriteOnlyWhenDifferent="true" />
+
+    <Exec Command="&quot;$(_KazoOsDotnetHost)&quot; &quot;$(_KazoOsManifestGeneratorPath)&quot; aggregate --project &quot;$(MSBuildProjectFullPath)&quot; --apps &quot;$(_KazoOsBuiltInApplicationsList)&quot; --output &quot;$(_KazoOsBuiltInApplicationsFile)&quot; --trimmer-roots &quot;$(_KazoOsTrimmerRootsFile)&quot;"
+          StandardOutputImportance="low"
+          IgnoreExitCode="true"
+          Condition="'$(DesignTimeBuild)' != 'true'">
+      <Output TaskParameter="ExitCode" PropertyName="_KazoOsAggregateExitCode" />
+    </Exec>
+    <Error Condition="'$(_KazoOsAggregateExitCode)' != '' and '$(_KazoOsAggregateExitCode)' != '0' and '$(_KazoOsAggregateExitCode)' != '1'"
+           Code="HOSAPP0099"
+           Text="The Kazo OS manifest generator failed with exit code $(_KazoOsAggregateExitCode) without reporting a diagnostic." />
+
+    <ItemGroup>
+      <EmbeddedResource Include="$(_KazoOsBuiltInApplicationsFile)"
+                        LogicalName="Kazo.Os.BuiltInApplications.json"
+                        Condition="Exists('$(_KazoOsBuiltInApplicationsFile)')" />
+      <!-- Remove first: a host may still list a migrated app by hand during the transition. -->
+      <BlazorWebAssemblyLazyLoad Remove="@(_KazoOsLazyAssembly)" />
+      <BlazorWebAssemblyLazyLoad Include="@(_KazoOsLazyAssembly)" />
+      <!--
+        ADR 0106 §2: the OS reaches an app's entry point, components and site root only by the names
+        in its manifest, so a trimmed publish would drop the lazy-loaded app assemblies whole. The
+        generator writes their roots next to BuiltInApplications.json; ILLink reads them through
+        TrimmerRootDescriptor (ignored by an untrimmed publish).
+      -->
+      <TrimmerRootDescriptor Include="$(_KazoOsTrimmerRootsFile)" Condition="Exists('$(_KazoOsTrimmerRootsFile)')" />
+      <FileWrites Include="$(_KazoOsBuiltInApplicationsFile);$(_KazoOsBuiltInApplicationsList);$(_KazoOsTrimmerRootsFile)" />
+    </ItemGroup>
+  </Target>
+
+  <!--
+    ADR 0113 (adjusts ADR 0106 §1-2): a trimmed publish of a host keeps every Kazo OS assembly
+    whole (platform, SDK, browser infrastructure, apps from this repository or from packages) and
+    trims the framework and the other trimmable libraries. Their code hands its own records to
+    JavaScript interop and reflection-based JSON (IJSRuntime arguments are params object[], which
+    the trim analyzer cannot follow): a member-level trim removes properties and constructor
+    parameter names only serialization reads, with no build warning, for under 1 MB.
+    The apps of other names are kept whole by Kazo.Os.TrimmerRoots.xml.
+  -->
+  <Target Name="_KazoOsRootKazoOsAssemblies"
+          BeforeTargets="PrepareForILLink"
+          DependsOnTargets="_ComputeManagedAssemblyToLink"
+          Condition="'$(KazoOsAppHost)' == 'true' and '$(PublishTrimmed)' == 'true'">
+    <ItemGroup>
+      <TrimmerRootAssembly Include="@(ManagedAssemblyToLink->'%(Filename)')"
+                           Condition="$([System.String]::Copy('%(Filename)').StartsWith('Kazo.Os.', StringComparison.Ordinal))" />
+    </ItemGroup>
+  </Target>
+
+  <!-- ===================================================================================== -->
+  <!-- App packages (ADR 0098 §2)                                                             -->
+  <!-- ===================================================================================== -->
+
+  <!--
+    An app project that is packed carries its generated manifests under hackeros/manifests/ and a
+    buildTransitive/<PackageId>.targets that declares them as KazoOsPackagedApp items, so a host
+    referencing the package aggregates the app exactly as it would a ProjectReference.
+  -->
+  <PropertyGroup Condition="'$(KazoOsAppProject)' == 'true'">
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_KazoOsPackageAppManifests</TargetsForTfmSpecificContentInPackage>
+  </PropertyGroup>
+
+  <Target Name="_KazoOsPackageAppManifests" DependsOnTargets="_KazoOsAppManifestPaths">
+    <ReadLinesFromFile File="$(_KazoOsManifestStamp)" Condition="Exists('$(_KazoOsManifestStamp)')">
+      <Output TaskParameter="Lines" ItemName="_KazoOsPackManifest" />
+    </ReadLinesFromFile>
+    <Error Condition="'@(_KazoOsPackManifest)' == ''"
+           Code="HOSAPP0099"
+           Text="[$(MSBuildProjectName)] No generated manifest to pack: build the app before packing it." />
+    <PropertyGroup>
+      <_KazoOsPackageTargetsFile>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(IntermediateOutputPath)', 'hackeros-package', '$(PackageId).targets'))</_KazoOsPackageTargetsFile>
+    </PropertyGroup>
+    <ItemGroup>
+      <_KazoOsPackageTargetsLine Include="&lt;Project&gt;" />
+      <_KazoOsPackageTargetsLine Include="  &lt;!-- Generated by Kazo OS (ADR 0098 §2): the apps of package $(PackageId). --&gt;" />
+      <_KazoOsPackageTargetsLine Include="  &lt;ItemGroup&gt;" />
+      <_KazoOsPackageTargetsLine Include="@(_KazoOsPackManifest->'    &lt;KazoOsPackagedApp Include=&quot;%24(MSBuildThisFileDirectory)../hackeros/manifests/%(Filename)%(Extension)&quot; PackageId=&quot;$(PackageId)&quot; AssemblyFileName=&quot;$(TargetFileName)&quot; AssemblyPath=&quot;%24(MSBuildThisFileDirectory)../lib/$(TargetFramework)/$(TargetFileName)&quot; /&gt;')" />
+      <_KazoOsPackageTargetsLine Include="  &lt;/ItemGroup&gt;" />
+      <_KazoOsPackageTargetsLine Include="&lt;/Project&gt;" />
+    </ItemGroup>
+    <WriteLinesToFile File="$(_KazoOsPackageTargetsFile)" Lines="@(_KazoOsPackageTargetsLine)" Overwrite="true" WriteOnlyWhenDifferent="true" />
+    <ItemGroup>
+      <FileWrites Include="$(_KazoOsPackageTargetsFile)" />
+      <TfmSpecificPackageFile Include="@(_KazoOsPackManifest)" PackagePath="hackeros/manifests/%(Filename)%(Extension)" />
+      <!--
+        ADR 0104/0111: the translated manifest texts (localization/<culture>.json, resolved next to
+        manifests/ by the host's aggregation) travel with the manifests.
+      -->
+      <_KazoOsPackLocalization Include="$(MSBuildProjectDirectory)/localization/**/*.json" />
+      <TfmSpecificPackageFile Include="@(_KazoOsPackLocalization)" PackagePath="hackeros/localization/%(RecursiveDir)%(Filename)%(Extension)" />
+      <TfmSpecificPackageFile Include="$(_KazoOsPackageTargetsFile)" PackagePath="buildTransitive/$(PackageId).targets" />
+    </ItemGroup>
+  </Target>
+</Project>

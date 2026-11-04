@@ -53,7 +53,7 @@ L'ADR 0056 décrit `HackSettings.OpenSystemAsync`, `HackPermissionAdministration
 4. **`HackSettingsDocument.SetManyAsync(values, layer)`** écrit plusieurs clés
    d'une couche en une seule édition du fichier, donc une seule approbation.
 5. **Diagnostic copie dans le presse-papiers de l'hôte** par
-   `BrowserClipboard` (`HackerOs.AppSdk.Blazor`, module `clipboard.js`), et
+   `BrowserClipboard` (`Kazo.Os.AppSdk.Blazor`, module `clipboard.js`), et
    propose aussi « Télécharger le JSON » et « Enregistrer dans HackerOS ». Il
    ne déclare plus `clipboard.write`.
 

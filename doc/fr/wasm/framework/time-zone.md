@@ -28,19 +28,19 @@ utilisateur ; l'horloge suit tout de suite.
 ## Dans une app
 
 ```csharp
-using HackerOs.AppSdk.Globalization;
+using Kazo.Os.AppSdk.Globalization;
 
-TimeZoneInfo zone = AppContext.TimeZone;                // ou HackTimeZone.Current
-DateTimeOffset now = HackTimeZone.Now;                  // heure de l'OS dans ce fuseau
-string modified = HackTimeZone.ToLocal(entry.ModifiedAtUtc).ToString("g", AppContext.FormatCulture);
-string offset = HackTimeZone.FormatOffset(zone, now);   // "UTC-04:00"
+TimeZoneInfo zone = AppContext.TimeZone;                // ou KazoTimeZone.Current
+DateTimeOffset now = KazoTimeZone.Now;                  // heure de l'OS dans ce fuseau
+string modified = KazoTimeZone.ToLocal(entry.ModifiedAtUtc).ToString("g", AppContext.FormatCulture);
+string offset = KazoTimeZone.FormatOffset(zone, now);   // "UTC-04:00"
 ```
 
 - N'utilisez pas `DateTimeOffset.ToLocalTime()` ni `TimeZoneInfo.Local` : ils
   ignorent le choix de l'utilisateur.
 - Le format (12 h ou 24 h, ordre jour/mois) vient de `FormatCulture` (`LC_TIME`,
   [`localization.md`](localization.md)).
-- `HackTimeZone.Available` liste les fuseaux IANA `Région/Ville` et `UTC`, triés ;
+- `KazoTimeZone.Available` liste les fuseaux IANA `Région/Ville` et `UTC`, triés ;
   `TryFind` et `Resolve` lisent un nom ; `GetId` donne l'identifiant IANA.
 - Aucune capacité n'est nécessaire.
 

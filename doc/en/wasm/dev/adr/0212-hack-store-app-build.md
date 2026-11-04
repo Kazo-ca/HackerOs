@@ -5,7 +5,7 @@
 ## Status
 
 Accepted on 2026-10-31, work item `todo/5-hackstore-app` (`TODO` issue
-[#249](https://github.com/Kazo-ca/HackerOs/issues/249), Hack Store 5).
+[#249](https://github.com/Kazo-ca/Os/issues/249), Hack Store 5).
 Implements [ADR 0188](0188-hack-store-and-app-catalog.md) §1 to §3 and §8, on
 top of the sources and trust of [ADR 0208](0208-hack-store-sources-trust-build.md).
 Changes no decision of ADR 0188; settles what it left open. Four questions were
@@ -18,7 +18,7 @@ for his answers. On 2026-10-31 Benoit confirmed Q1 A and Q2 A, and chose Q3 C
 
 ADR 0188 decides the Hack Store app, its default pin, its updates and how
 `hackpkg` reads the catalogs. The `catalog.json` format is the one of branch
-`catalog/1-initial-catalog` of `Kazo-ca/HackerOs-AppMarketPlace`
+`catalog/1-initial-catalog` of `Kazo-ca/Os-AppMarketPlace`
 (`schemaVersion` 1, paths relative to the root of the `packages` branch, next
 to `catalog.json`). Still open: how an install from a catalog is written in
 `[installed]`, who may "Restart to finish", where the badge shows, which
@@ -73,7 +73,7 @@ already got the default pin.
    `HackPackageUpdate`. The new `IAppManagementGateway` members have a default
    implementation that throws `NotSupportedException`. `InstallAsync` and
    `GetInfoAsync` accept `catalog:<name>/<appId>` and an app ID alone.
-8. **The app.** `HackerOs.Apps.Store`, a system app (`IsSystemApp="true"`,
+8. **The app.** `Kazo.Os.Apps.Store`, a system app (`IsSystemApp="true"`,
    cannot be uninstalled), capabilities `apps.manage` and `apps.launch`, one
    instance per user, the same screen on desktop and mobile (container query).
 
@@ -84,7 +84,7 @@ already got the default pin.
   (`apps.catalog.unsupported`).
 - An app installed by the Store or by `hackpkg install <appId>` still appears
   after a restart (ADR 0182 Q5 C); hot add stays issue #251.
-- The host template (`HackerOs.Templates`) references `HackerOs.Apps.Store`,
+- The host template (`Kazo.Os.Templates`) references `Kazo.Os.Apps.Store`,
   published with the next version.
 
 ## Questions asked to Benoit

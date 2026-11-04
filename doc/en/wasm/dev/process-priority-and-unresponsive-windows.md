@@ -2,7 +2,7 @@
 
 # `nice` priority and windows that do not respond
 
-This document covers the implementation of the `nice` priority and of the detection of windows that do not respond. What an app sees and must do (`HackProcess.Nice` API, priority rules, the "Not responding" box, limits of a loop on the main thread) is in [`../framework/app-responsiveness-api.md`](../framework/app-responsiveness-api.md).
+This document covers the implementation of the `nice` priority and of the detection of windows that do not respond. What an app sees and must do (`KazoProcess.Nice` API, priority rules, the "Not responding" box, limits of a loop on the main thread) is in [`../framework/app-responsiveness-api.md`](../framework/app-responsiveness-api.md).
 
 Implementation of [ADR 0127](adr/0127-priority-and-not-responding-dialog.md),
 work item `exec/4-not-responding-ui` of the "follow-ups of step 5" series
@@ -55,17 +55,17 @@ The priority rules (range, inheritance, permissions, effect on the worker queue,
 
 | Element | Project | Role |
 | --- | --- | --- |
-| `ProcessNice` | `Shared/HackerOs.Simulation.Abstractions` | Bounds, `Clamp`, `ToPriority` (`20 + nice`). |
+| `ProcessNice` | `Shared/Kazo.Os.Simulation.Abstractions` | Bounds, `Clamp`, `ToPriority` (`20 + nice`). |
 | `IProcessManager.GetNice/SetNice`, `ProcessStartRequest.Nice` | same | Default members (0 / not supported) for process tables that do not have them. |
-| `InMemoryProcessManager` | `Platform/HackerOs.Platform.Core` | Keeps the value in the process entry, inherits it from the parent. |
+| `InMemoryProcessManager` | `Platform/Kazo.Os.Platform.Core` | Keeps the value in the process entry, inherits it from the parent. |
 | `IAppProcessGateway.GetNice/SetNice`, `AppProcessGateway` | Abstractions / Core | `setpriority(2)` checks (root, owner, capabilities). |
 | `IShellSession.RunNicedAsync`, `ShellInterpreter.RunNicedAsync` | AppSdk / Core | Runs a command at the requested niceness (child of the `nice` process). |
-| `nice`, `renice` | `Apps/Commands/HackerOs.Commands` | Commands (main thread: they need the shell or the process table). |
+| `nice`, `renice` | `Apps/Commands/Kazo.Os.Commands` | Commands (main thread: they need the shell or the process table). |
 | `ps`, `top`, `htop` | same | `NI` and `PRI`/`PR` columns. |
 | `ProcFileSystemProvider` | Core | Fields 18 and 19 of `/proc/<pid>/stat`. |
-| `HackProcess.Nice`, `HackProcess.BasePriority`, `HackProcess.ParseStatNice` | `Shared/HackerOs.AppSdk` | Read from `/proc/<pid>/stat`. |
-| `WorkerRunQueue` | `Platform/HackerOs.Platform.WorkerHost` | Queue of commands waiting for a worker, ordered by niceness then arrival. |
-| `ProcessTable.ShowPriority`, `ProcessColumn.Priority` | `Apps/System/HackerOs.Apps.SystemMonitor` | Priority column hidden by default. |
+| `KazoProcess.Nice`, `KazoProcess.BasePriority`, `KazoProcess.ParseStatNice` | `Shared/Kazo.Os.AppSdk` | Read from `/proc/<pid>/stat`. |
+| `WorkerRunQueue` | `Platform/Kazo.Os.Platform.WorkerHost` | Queue of commands waiting for a worker, ordered by niceness then arrival. |
+| `ProcessTable.ShowPriority`, `ProcessColumn.Priority` | `Apps/System/Kazo.Os.Apps.SystemMonitor` | Priority column hidden by default. |
 
 ## 2. Window that does not respond
 
@@ -121,14 +121,14 @@ key with `[locked]` (ADR 0044). The threshold remains that of the CPU measuremen
 
 | Element | Project | Role |
 | --- | --- | --- |
-| `WindowRuntimeState.IsResponding`, `SetWindowRespondingCommand`, `WindowRespondingChangedEvent` | `Platform/HackerOs.Windowing.Abstractions` / `Core` | Display state of the window, like a window manager's "hung" flag. |
-| `WindowChrome` | `Platform/HackerOs.Windowing.Blazor` | Localized suffix (`Chrome.NotResponding`). |
+| `WindowRuntimeState.IsResponding`, `SetWindowRespondingCommand`, `WindowRespondingChangedEvent` | `Platform/Kazo.Os.Windowing.Abstractions` / `Core` | Display state of the window, like a window manager's "hung" flag. |
+| `WindowChrome` | `Platform/Kazo.Os.Windowing.Blazor` | Localized suffix (`Chrome.NotResponding`). |
 | `WindowHost.Overlay`, `DesktopArea.WindowOverlay`, `SingleSurfaceArea.WindowOverlay` | same | Layer placed over the content of **one** window; class `is-not-responding` (gray), `aria-busy`. |
-| `WindowResponsivenessMonitor` | `Platform/HackerOs.Platform.Blazor/Windows` | The three cases, the end of the state, Wait, End, the close button; without a timer or JavaScript, tested with a fake clock. |
+| `WindowResponsivenessMonitor` | `Platform/Kazo.Os.Platform.Blazor/Windows` | The three cases, the end of the state, Wait, End, the close button; without a timer or JavaScript, tested with a fake clock. |
 | `WindowResponsivenessHost` (+ `.razor.js`) | same | Samples the monitor every second and passes it the input wait (`performance.now() - event.timeStamp`), measured in the capture phase on `.window-content`. |
 | `UnresponsiveWindowDialog` (+ `.razor.css`, `.razor.js` for the focus trap), `UnresponsiveWindowOverlay` | same | The box and its wiring into each window's layer. |
-| `WindowManagerSettingsDocuments` | `Platform/HackerOs.Platform.Core/Shell` | `window-manager` document (`[unresponsive] dialog`). |
-| `DesktopShell`, `MobileShell` | `Platform/HackerOs.Platform.Blazor/Shell` | Place the layer and the host; the close button goes through `InterceptClose`. |
+| `WindowManagerSettingsDocuments` | `Platform/Kazo.Os.Platform.Core/Shell` | `window-manager` document (`[unresponsive] dialog`). |
+| `DesktopShell`, `MobileShell` | `Platform/Kazo.Os.Platform.Blazor/Shell` | Place the layer and the host; the close button goes through `InterceptClose`. |
 
 The detached windows of ADR 0078 currently host only browser tabs
 (iframes), not app windows: the box lives in the window
@@ -167,14 +167,14 @@ will render it in its own surface with the same layer.
 
 | Project | Coverage |
 | --- | --- |
-| `HackerOs.Platform.Core.Tests` (`InMemoryProcessManagerTests.Nice`, `ProcFileSystemProviderTests`) | Value 0, inheritance, explicit value, bounds, finished process, gateway root/owner/capability rules, fields 18 and 19 of `stat`. |
-| `HackerOs.Platform.WorkerHost.Tests` (`WorkerRunQueueTests`, `CommandParityTests`) | Queue order (niceness then arrival, bounds), always-ready worker, parity of `nice`, `renice` and `ps -o` in a worker. |
-| `HackerOs.Commands.Wave5.Tests` (`PsCommandTests`) | `ps -l` (`PRI` 85 for `nice` 5), `ps -o pid,ni,comm`, unknown field. |
-| `HackerOs.AppSdk.Tests` (`HackProcessNiceTests`) | Reading of field 19, name with parentheses, short or invalid line, bounds. |
-| `HackerOs.Apps.SystemMonitor.Tests` (`ProcessTableTests`) | Priority column hidden by default, sorting, return to CPU sorting when it is hidden. |
-| `HackerOs.Windowing.Core.Tests` (`WindowRespondingTests`) | Flag, single event, title unchanged, persistence until cleared. |
-| `HackerOs.Platform.Blazor.Tests` (`WindowResponsivenessMonitorTests`) | The three cases with a fake clock, old flag ignored, wait charged to another process, end by fast input, short slice or inactivity, Wait then return, close button, End (2 s, `Terminated`), without measurement, window without a process. |
-| `HackerOs.E2E.Tests` (`IndexedDbBrowserContractTests.Unresponsive`, scenario `?scenario=unresponsive` of the browser harness) | In Chromium: suffix, gray, box, focus on Wait, `Tab` trapped, axe with no serious violation, `Escape`, return of the box, close button, End; real freeze of the main thread with a pending click (case 3) then end of the state. |
+| `Kazo.Os.Platform.Core.Tests` (`InMemoryProcessManagerTests.Nice`, `ProcFileSystemProviderTests`) | Value 0, inheritance, explicit value, bounds, finished process, gateway root/owner/capability rules, fields 18 and 19 of `stat`. |
+| `Kazo.Os.Platform.WorkerHost.Tests` (`WorkerRunQueueTests`, `CommandParityTests`) | Queue order (niceness then arrival, bounds), always-ready worker, parity of `nice`, `renice` and `ps -o` in a worker. |
+| `Kazo.Os.Commands.Wave5.Tests` (`PsCommandTests`) | `ps -l` (`PRI` 85 for `nice` 5), `ps -o pid,ni,comm`, unknown field. |
+| `Kazo.Os.AppSdk.Tests` (`KazoProcessNiceTests`) | Reading of field 19, name with parentheses, short or invalid line, bounds. |
+| `Kazo.Os.Apps.SystemMonitor.Tests` (`ProcessTableTests`) | Priority column hidden by default, sorting, return to CPU sorting when it is hidden. |
+| `Kazo.Os.Windowing.Core.Tests` (`WindowRespondingTests`) | Flag, single event, title unchanged, persistence until cleared. |
+| `Kazo.Os.Platform.Blazor.Tests` (`WindowResponsivenessMonitorTests`) | The three cases with a fake clock, old flag ignored, wait charged to another process, end by fast input, short slice or inactivity, Wait then return, close button, End (2 s, `Terminated`), without measurement, window without a process. |
+| `Kazo.Os.E2E.Tests` (`IndexedDbBrowserContractTests.Unresponsive`, scenario `?scenario=unresponsive` of the browser harness) | In Chromium: suffix, gray, box, focus on Wait, `Tab` trapped, axe with no serious violation, `Escape`, return of the box, close button, End; real freeze of the main thread with a pending click (case 3) then end of the state. |
 
 ## Task list
 
@@ -182,7 +182,7 @@ will render it in its own surface with the same layer.
 - [x] Process gateway: root, owner and capability checks.
 - [x] `nice` and `renice` (en/fr), `IShellSession.RunNicedAsync`.
 - [x] `ps -l`, `ps -o`, `top`, `htop`: `NI` and `PRI`/`PR`.
-- [x] `/proc/<pid>/stat` fields 18 and 19; `HackProcess.Nice`/`BasePriority`.
+- [x] `/proc/<pid>/stat` fields 18 and 19; `KazoProcess.Nice`/`BasePriority`.
 - [x] Worker queue ordered by niceness (`WorkerRunQueue`), always-ready worker left to interactive commands.
 - [x] Priority column hidden by default in the task manager.
 - [x] Window `IsResponding` state, command and event.

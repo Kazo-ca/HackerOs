@@ -8,15 +8,15 @@ Accepted on 2026-08-14.
 
 ## Context
 
-HackerOS ships two UI hosts today: `OS/HackerOs.Ecosystem`, the standalone
+HackerOS ships two UI hosts today: `OS/Kazo.Os.Ecosystem`, the standalone
 Blazor WebAssembly PWA (the static-deploy target), and `test/test`, an
 ASP.NET Core Blazor Web App that renders the same component tree via
 `AddInteractiveWebAssemblyRenderMode` as a developer debug harness. A third
-process, `Server/HackerOs.Server`, exists only as an optional API (sync,
+process, `Server/Kazo.Os.Server`, exists only as an optional API (sync,
 identity, proxy) — see `docs/hosting-model.md`.
 
 `docs/hosting-model.md`'s "Future direction" section already states, as a
-long-standing but unimplemented goal, that `HackerOs.Server` should become a
+long-standing but unimplemented goal, that `Kazo.Os.Server` should become a
 third way to serve the same Razor UI: "hosting the same Razor components the
 way `test/test` does today, but as a real deployment target rather than a
 debug harness, with backend-only contracts and services ... injected directly
@@ -25,11 +25,11 @@ client." That section explicitly gates implementation behind "its own ADR
 (server-hosted composition, render-mode strategy, contract injection
 boundary)." This ADR is that gate, triggered by backend-server integration
 work starting now: all three deployment shapes (WASM-only via `test/test`,
-static WASM via `OS/HackerOs.Ecosystem`, and the server-hosted UI) must build
+static WASM via `OS/Kazo.Os.Ecosystem`, and the server-hosted UI) must build
 and run side by side going forward.
 
 Two facts from the existing composition root, `AddHackerOsEcosystem`
-(`OS/HackerOs.Ecosystem/EcosystemServiceCollectionExtensions.cs`), bound what
+(`OS/Kazo.Os.Ecosystem/EcosystemServiceCollectionExtensions.cs`), bound what
 this ADR can responsibly decide for a first implementation slice:
 
 1. Nearly every service it registers — `IEventBus`, `INotificationQueue`,
@@ -62,7 +62,7 @@ this ADR can responsibly decide for a first implementation slice:
 Separately, two WASM-only seams in the shared UI code block Interactive
 Server rendering outright, independent of the multi-tenancy question:
 
-- `OS/HackerOs.Ecosystem/App.razor` injects `IWebAssemblyHostEnvironment`
+- `OS/Kazo.Os.Ecosystem/App.razor` injects `IWebAssemblyHostEnvironment`
   directly (used once, to gate exception detail in the fatal-error boundary).
   That service is not registered outside a WASM render context.
 - The only `IBuildKnownAssemblyTransport` implementation,
@@ -77,15 +77,15 @@ Server rendering outright, independent of the multi-tenancy question:
 
 ### Where the UI hosting code lives
 
-**Inside `Server/HackerOs.Server` in place.** Matches `docs/hosting-model.md`'s
+**Inside `Server/Kazo.Os.Server` in place.** Matches `docs/hosting-model.md`'s
 own documented intent verbatim (quoted above) and requires no new project or
-solution-folder wiring. `Server/HackerOs.Server.csproj` already uses
+solution-folder wiring. `Server/Kazo.Os.Server.csproj` already uses
 `Microsoft.NET.Sdk.Web`, the same SDK `test/test/test.csproj` uses to host a
 Blazor render-mode component tree today — that SDK combination is already
 proven in this repository.
 
-**A new sibling project** (e.g. `Server/HackerOs.Server.BlazorHost`)
-referencing `HackerOs.Server` for its services. Would keep the API-only
+**A new sibling project** (e.g. `Server/Kazo.Os.Server.BlazorHost`)
+referencing `Kazo.Os.Server` for its services. Would keep the API-only
 process free of Razor/component dependencies, but contradicts the "same
 process" framing `docs/hosting-model.md` already commits to, duplicates
 ASP.NET Core hosting boilerplate across two processes, and works against the
@@ -93,7 +93,7 @@ documented end state of injecting backend services directly into the UI
 composition root — that only makes sense if the UI and the services sharing
 that composition root live in one process.
 
-Decision: modify `Server/HackerOs.Server` in place.
+Decision: modify `Server/Kazo.Os.Server` in place.
 
 ### Render mode
 
@@ -134,26 +134,26 @@ known, explicit limitation, not a silently accepted one — see Consequences.
 
 ## Decision
 
-1. `Server/HackerOs.Server` becomes a third UI host by adding Razor
+1. `Server/Kazo.Os.Server` becomes a third UI host by adding Razor
    Components hosting (`AddRazorComponents().AddInteractiveServerComponents()`,
    `MapRazorComponents<App>().AddInteractiveServerRenderMode()`) directly to
    its existing `Program.cs`, alongside its unchanged sync/identity/proxy API
    surface. A new `Components/App.razor` mirrors `test/test/Components/App.razor`,
-   embedding the same shared `HackerOs.Ecosystem.App` root component.
+   embedding the same shared `Kazo.Os.Ecosystem.App` root component.
 2. Two render-mode-agnostic seams are introduced so the shared UI no longer
    hard-depends on WASM-only types:
-   - `IEcosystemHostEnvironment` (`Platform/HackerOs.Platform.Blazor/Hosting/`),
+   - `IEcosystemHostEnvironment` (`Platform/Kazo.Os.Platform.Blazor/Hosting/`),
      a one-property abstraction over "is this a development environment,"
      with a WASM-backed implementation (wraps `IWebAssemblyHostEnvironment`)
-     registered by `OS/HackerOs.Ecosystem` and `test/test`, and an
+     registered by `OS/Kazo.Os.Ecosystem` and `test/test`, and an
      ASP.NET Core-backed implementation (wraps `IHostEnvironment`) registered
-     by `Server/HackerOs.Server`. `App.razor` injects the abstraction instead
+     by `Server/Kazo.Os.Server`. `App.razor` injects the abstraction instead
      of `IWebAssemblyHostEnvironment` directly. Each host registers its own
      implementation before calling `AddHackerOsEcosystem`, mirroring the
      existing pattern for `IBuildKnownAssemblyTransport` (that method never
      registers a transport itself either).
    - A new eager `IBuildKnownAssemblyTransport` implementation,
-     `InProcessAssemblyTransport`, registered only by `Server/HackerOs.Server`,
+     `InProcessAssemblyTransport`, registered only by `Server/Kazo.Os.Server`,
      resolves requested assembly names from already-loaded process assemblies
      instead of downloading them.
 3. `AddHackerOsEcosystem` itself is not modified. The server host is
@@ -192,7 +192,7 @@ code review) and are recorded here so they aren't rediscovered:
   bridge is skipped for this host.
 - **`MapRazorComponents<App>()` has no route to match without a `@page`
   component somewhere in scope.** `App.razor` (in both `test/test` and
-  `Server/HackerOs.Server`) hardcodes `<HackerOs.Ecosystem.App />` in its
+  `Server/Kazo.Os.Server`) hardcodes `<Kazo.Os.Ecosystem.App />` in its
   body with no `<Routes>`/router — but an HTTP endpoint for `/` still doesn't
   exist unless *some* discovered type declares `@page "/"`. `test/test`
   has one only by accident: its unused template scaffold
@@ -200,13 +200,13 @@ code review) and are recorded here so they aren't rediscovered:
   way `Components/Routes.razor` is dead code) happens to declare `@page "/"`,
   which is what actually makes `/` resolvable there — `Home.razor`'s own
   content is never rendered, since `App.razor` ignores routing entirely.
-  `Server/HackerOs.Server` needed the same minimal `Components/Pages/Home.razor`
+  `Server/Kazo.Os.Server` needed the same minimal `Components/Pages/Home.razor`
   added deliberately (not as scaffold leftover) for `/` to resolve at all.
 
 ## Consequences
 
 - A third host builds and runs, proving the shared composition root and
-  `HackerOs.Ecosystem.App` component tree work outside a WASM render context,
+  `Kazo.Os.Ecosystem.App` component tree work outside a WASM render context,
   without disturbing either existing host or the existing API surface.
 - Concurrent multi-user access to the server-hosted UI is unsupported until a
   separate future project converts the composition root's singleton
@@ -219,13 +219,13 @@ code review) and are recorded here so they aren't rediscovered:
   abstraction (e.g. an `IAccountClient`-shaped interface) with an HTTP-backed
   implementation for the WASM hosts and a direct-injection implementation for
   the server-hosted UI, so the same UI component code compiles and runs
-  across all three hosts without `HackerOs.Server`'s EF/SQLite-specific types
+  across all three hosts without `Kazo.Os.Server`'s EF/SQLite-specific types
   leaking into shared UI code. That is its own future ADR.
 - `IEcosystemHostEnvironment` and `InProcessAssemblyTransport` are new, small,
   render-mode-specific seams; neither changes behavior for the two existing
   hosts.
 - No change to existing sync/identity/proxy endpoint behavior, authentication,
-  or database schema in `Server/HackerOs.Server` — this is purely additive UI
+  or database schema in `Server/Kazo.Os.Server` — this is purely additive UI
   hosting capability.
 - No production-hardening guidance (reverse-proxy/TLS termination for
   SignalR, session affinity/sticky sessions for scale-out) is established by
