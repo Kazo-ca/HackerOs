@@ -368,7 +368,7 @@
   <!-- ===================================================================================== -->
 
   <PropertyGroup>
-    <!-- Paths relative to the HackerOs root, forward slashes, compared case-insensitively. -->
+    <!-- Paths relative to the Kazo OS root, forward slashes, compared case-insensitively. -->
     <_KazoOsAppAllowedReferencePattern>(?i)^(Shared/Kazo\.Os\.(App|Simulation|Theming)\.Abstractions|Shared/Kazo\.Os\.AppSdk(\.[^/]+)?|Platform/Kazo\.Os\.Theming\.Blazor)/[^/]+\.csproj$|^Apps/.+\.csproj$</_KazoOsAppAllowedReferencePattern>
     <_KazoOsSdkAllowedReferencePattern>(?i)^Shared/Kazo\.Os\.((App|Simulation|Theming)\.Abstractions|AppSdk(\.[^/]+)?)/[^/]+\.csproj$</_KazoOsSdkAllowedReferencePattern>
   </PropertyGroup>
@@ -379,7 +379,7 @@
   </ItemGroup>
 
   <!--
-    Repository mode only: the rule is written in paths under the HackerOs root. In package mode a
+    Repository mode only: the rule is written in paths under the Kazo OS root. In package mode a
     project's own ProjectReference items are its repository's business; what crosses the boundary
     there is a Kazo OS package, checked by _ValidateKazoOsPackageBoundary below.
   -->
@@ -440,7 +440,7 @@
     </PropertyGroup>
     <ItemGroup>
       <_KazoOsReferencedPackage Include="@(ReferencePath->'%(NuGetPackageId)'->Distinct())"
-                                  Condition="$([System.String]::Copy('%(ReferencePath.NuGetPackageId)').StartsWith('HackerOs.', StringComparison.OrdinalIgnoreCase))" />
+                                  Condition="$([System.String]::Copy('%(ReferencePath.NuGetPackageId)').StartsWith('Kazo.Os.', StringComparison.OrdinalIgnoreCase))" />
       <_KazoOsPackageViolation Include="@(_KazoOsReferencedPackage)"
                                  Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('%(Identity)', '$(_KazoOsPackagePattern)'))" />
     </ItemGroup>
@@ -490,6 +490,17 @@
     package manager installs a dependency. IsSystemApp comes from the host's PackageReference of
     that package (a transitive one is never a system app).
   -->
+  <!--
+    ADR 0228: a package built before SDK 3.0 declares its apps as HackerOsPackagedApp items. They are
+    collected like the others, so the SDK check refuses them by name (HOSAPP0021, another major)
+    instead of the host silently leaving them out.
+  -->
+  <Target Name="_KazoOsCollectPreRenamePackagedApps" Condition="'@(HackerOsPackagedApp)' != ''">
+    <ItemGroup>
+      <KazoOsPackagedApp Include="@(HackerOsPackagedApp)" />
+    </ItemGroup>
+  </Target>
+
   <Target Name="_KazoOsCollectPackagedAppManifests" Condition="'@(KazoOsPackagedApp)' != ''">
     <ItemGroup>
       <_KazoOsSystemPackageId Include="@(PackageReference)" Condition="'%(PackageReference.IsSystemApp)' == 'true'" />
@@ -506,7 +517,7 @@
 
   <Target Name="CollectKazoOsBuiltInApplications"
           AfterTargets="ResolveProjectReferences"
-          DependsOnTargets="_KazoOsResolveManifestGeneratorPath;_KazoOsCollectAppManifestsFromReference;_KazoOsCollectPackagedAppManifests"
+          DependsOnTargets="_KazoOsResolveManifestGeneratorPath;_KazoOsCollectAppManifestsFromReference;_KazoOsCollectPreRenamePackagedApps;_KazoOsCollectPackagedAppManifests"
           Condition="'$(KazoOsAppHost)' == 'true'">
     <PropertyGroup>
       <_KazoOsBuiltInApplicationsFile>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(IntermediateOutputPath)', 'BuiltInApplications.json'))</_KazoOsBuiltInApplicationsFile>
@@ -569,7 +580,7 @@
           Condition="'$(KazoOsAppHost)' == 'true' and '$(PublishTrimmed)' == 'true'">
     <ItemGroup>
       <TrimmerRootAssembly Include="@(ManagedAssemblyToLink->'%(Filename)')"
-                           Condition="$([System.String]::Copy('%(Filename)').StartsWith('HackerOs.', StringComparison.Ordinal))" />
+                           Condition="$([System.String]::Copy('%(Filename)').StartsWith('Kazo.Os.', StringComparison.Ordinal))" />
     </ItemGroup>
   </Target>
 
