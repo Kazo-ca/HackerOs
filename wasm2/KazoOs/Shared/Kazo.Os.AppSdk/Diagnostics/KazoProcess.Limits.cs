@@ -84,7 +84,7 @@ public sealed partial class KazoProcess
 /// <summary>How the OS enforces the limits of one process (ADR 0125, section 2).</summary>
 public enum KazoResourceLimitEnforcement
 {
-    /// <summary>The host turned limits off (<c>HackerOs:ResourceLimits:Enabled=false</c>): nothing applies.</summary>
+    /// <summary>The host turned limits off (<c>KazoOs:ResourceLimits:Enabled=false</c>): nothing applies.</summary>
     Off,
 
     /// <summary>The process runs on the browser's main thread: a CPU or memory limit is checked between two slices only.</summary>

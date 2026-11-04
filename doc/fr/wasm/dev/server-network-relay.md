@@ -53,7 +53,7 @@ Nouveaux codes d'erreur : `GRANT_MISSING` (403), `RELAY_DISABLED` (503),
 
 | Classe | Rôle |
 |---|---|
-| `ProxyOptions`, `ProxyRelayPolicy` | section `HackerOs:Proxy` ; `ProxyRelayPolicy.From` pose les valeurs par défaut et calcule les limites effectives. |
+| `ProxyOptions`, `ProxyRelayPolicy` | section `KazoOs:Proxy` ; `ProxyRelayPolicy.From` pose les valeurs par défaut et calcule les limites effectives. |
 | `ProxyGrantAuthority` | `IsGrantedAsync` : l'app est dans `GrantedApps` ou un enregistrement `grants` synchronisé du compte lui donne `network.real.access`. |
 | `ProxyService` | validations communes (relais actif, app, accord, port, adresse épinglée, plages bloquées, quotas) ; `ExecuteHttpRequestAsync` envoie le corps ; `OpenStreamAsync` connecte le socket. |
 | `SocketProxyStreamConnector`, `SocketProxyStreamChannel` | connexion TCP/UDP (10 s), délai d'inactivité, compteurs d'octets, audit à la fermeture. |
@@ -67,7 +67,7 @@ Nouveaux codes d'erreur : `GRANT_MISSING` (403), `RELAY_DISABLED` (503),
 | `HttpProxyClient` | HTTP et flux (WebSocket `ws`/`wss`, jeton dans `access_token`). |
 | `WebSocketProxyStreamChannel` | attend la trame texte d'ouverture ou la fermeture `4001` ; découpe un envoi TCP en blocs de 64 Kio. |
 | `AppNetworkGateway` | `ConnectTcpAsync`, `ConnectUdpAsync`, relais HTTP avec corps. |
-| `RelayedSocket` | `IHackSocket` sur un flux : compte le trafic (`/proc/net/dev`) et la mémoire du noyau. |
+| `RelayedSocket` | `IKazoSocket` sur un flux : compte le trafic (`/proc/net/dev`) et la mémoire du noyau. |
 | `AppServerConnectionGateway.GetRelayPolicyAsync` | politique du serveur pour Paramètres, sans jamais exposer le jeton. |
 
 ## Protocole d'un flux
@@ -89,7 +89,7 @@ Nouveaux codes d'erreur : `GRANT_MISSING` (403), `RELAY_DISABLED` (503),
 ## Configuration (`appsettings.json`)
 
 ```json
-"HackerOs": {
+"KazoOs": {
   "Proxy": {
     "Enabled": true,
     "Http": { "AllowedPorts": [ 80, 443 ] },
@@ -107,9 +107,9 @@ Nouveaux codes d'erreur : `GRANT_MISSING` (403), `RELAY_DISABLED` (503),
       "StreamIdleTimeoutSeconds": 300
     },
     "GrantedApps": [
-      "org.hackeros.commands.curl", "org.hackeros.commands.wget",
-      "org.hackeros.commands.ping", "org.hackeros.cmd.cat",
-      "org.hackeros.commands.nmap", "org.hackeros.browser"
+      "org.kazoos.commands.curl", "org.kazoos.commands.wget",
+      "org.kazoos.commands.ping", "org.kazoos.cmd.cat",
+      "org.kazoos.commands.nmap", "org.kazoos.browser"
     ]
   }
 }
@@ -195,14 +195,14 @@ flux ouverts, apps accordées et avertissements.
   `Host`, `Authorization`, `X-Forwarded-For` et `X-Real-IP` restent bloqués) ;
   avec `FollowRedirects = false`, le serveur rend la redirection telle quelle
   (`Location`, `Set-Cookie`) et l'OS suit les sauts ; le Navigateur
-  (`org.hackeros.browser`) est dans les `GrantedApps` par défaut. Le quota de
+  (`org.kazoos.browser`) est dans les `GrantedApps` par défaut. Le quota de
   8 requêtes par appareil reste un refus : l'OS en garde 6 au plus en cours et
   retente un `QUOTA_EXCEEDED`.
 
 ## Liste des tâches
 
 - [x] Corps des requêtes HTTP : contrat, vérification taille et hash, toutes les méthodes, redirections.
-- [x] Options `HackerOs:Proxy` (ports, plages privées, quotas, apps accordées) et politique effective.
+- [x] Options `KazoOs:Proxy` (ports, plages privées, quotas, apps accordées) et politique effective.
 - [x] Contrôle de l'accord côté serveur (`GrantedApps` et accords synchronisés).
 - [x] Flux TCP et UDP : connecteur, canal, pompe WebSocket, codes de fermeture, audit.
 - [x] Jeton dans la requête sur les routes de flux seulement.

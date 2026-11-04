@@ -86,7 +86,7 @@ Blazor pour changer de culture :
   l'hôte (Infrastructure.Browser) ;
 - dans les Web Workers, `BrowserWorkerAssemblyLoader.LoadLazyAsync`, une fois.
 
-Une app installée par `hackpkg` ou le Hack Store a ses satellites dans son paquet
+Une app installée par `kazopkg` ou le Kazo OS Store a ses satellites dans son paquet
 (`lib/<culture>/<assemblage>.resources.dll`, mis par `KazoOsPack`) ; l'OS les
 charge avant le premier rendu de l'app, pour chaque langue de Kazo OS
 (`InstalledAppSatellites`, [ADR 0222](../dev/adr/0222-installed-app-satellite-assemblies.md)).
@@ -104,7 +104,7 @@ Le générateur de manifestes lit `Resources/AppManifest.<culture>.resx` :
 | `Terminal.Usage` | `TerminalCommandManifest.Usage` |
 
 Dans un projet à plusieurs apps (les commandes), chaque clé est préfixée de
-l'id : `org.hackeros.commands.ls.Description`.
+l'id : `org.kazoos.commands.ls.Description`.
 
 Les titres des entrées de menu de fichiers (ADR 0159 §3) vivent aussi dans ces
 fichiers, mais à part : l'anglais dans le fichier **neutre**

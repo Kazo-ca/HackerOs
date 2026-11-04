@@ -27,7 +27,7 @@ public interface IAppWindowGateway
     /// space trimmed, at most 256 characters) and shows it as given; <see langword="null"/>, empty
     /// or blank restores the app's localized name.
     /// </summary>
-    /// <param name="title">The full title, e.g. <c>photo.png — Hack Paint</c>.</param>
+    /// <param name="title">The full title, e.g. <c>photo.png — Kazo Paint</c>.</param>
     /// <param name="cancellationToken">Cancels the request before it is applied.</param>
     /// <returns>The title actually shown once cleaned.</returns>
     ValueTask<string> SetTitleAsync(string? title, CancellationToken cancellationToken = default);

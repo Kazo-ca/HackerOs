@@ -20,7 +20,7 @@ namespace Kazo.Os.Platform.Core.Administration;
 /// <param name="Proxy">Network relay client, read for its policy (ADR 0102 §5).</param>
 /// <param name="Scheduler">Periodic synchronization (ADR 0101 section 4).</param>
 /// <param name="ConflictCenter">The OS conflict dialog's state (ADR 0101 section 2).</param>
-/// <param name="Settings">Writes <c>~/.config/hackeros/sync.config</c>.</param>
+/// <param name="Settings">Writes <c>~/.config/kazoos/sync.config</c>.</param>
 public sealed record ServerConnectionGatewayServices(
     Func<IServerConnectionService> Connection,
     Func<IFileSystemSyncService>? FileSystemSync = null,
@@ -65,9 +65,9 @@ internal sealed class AppServerConnectionGateway : IAppServerConnectionGateway
     /// </summary>
     private static readonly Dictionary<string, string> RelayWarningKeys = new(StringComparer.Ordinal)
     {
-        ["HackerOs:Proxy:AllowAllPorts is on: the relay reaches every TCP and UDP port."] = "Relay.Warning.AllowAllPorts",
-        ["HackerOs:Proxy:AllowPrivateNetworks is on: the relay reaches the private networks of the server's machine (loopback and cloud metadata stay blocked)."] = "Relay.Warning.AllowPrivateNetworks",
-        ["HackerOs:Proxy:Quotas:Enabled is off: no size, concurrency, stream or idle limit applies."] = "Relay.Warning.QuotasDisabled"
+        ["KazoOs:Proxy:AllowAllPorts is on: the relay reaches every TCP and UDP port."] = "Relay.Warning.AllowAllPorts",
+        ["KazoOs:Proxy:AllowPrivateNetworks is on: the relay reaches the private networks of the server's machine (loopback and cloud metadata stay blocked)."] = "Relay.Warning.AllowPrivateNetworks",
+        ["KazoOs:Proxy:Quotas:Enabled is off: no size, concurrency, stream or idle limit applies."] = "Relay.Warning.QuotasDisabled"
     };
 
     /// <summary>Creates the gateway for one app instance.</summary>

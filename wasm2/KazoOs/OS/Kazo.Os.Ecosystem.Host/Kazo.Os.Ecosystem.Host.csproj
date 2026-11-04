@@ -10,7 +10,7 @@
     A host is then a Blazor WebAssembly project with an index.html, a Program.cs calling
     AddKazoOsBrowserHost, and its apps as ProjectReference or PackageReference items: the build
     aggregates their manifests into the host's own assembly (KazoOsAppHost), read back with
-    HostAppCatalog.Load. OS/Kazo.Os.Ecosystem is that host in this repository; the hackeros-host
+    HostAppCatalog.Load. OS/Kazo.Os.Ecosystem is that host in this repository; the kazoos-host
     template creates one elsewhere.
   -->
   <Import Project="..\..\Platform\Packaging.props" />
@@ -24,7 +24,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PackageId>Kazo.Os.Ecosystem.Host</PackageId>
     <Description>The Kazo OS host: desktop shell, boot coordinator, service composition and browser adapters. A host project adds its index.html, a Program.cs calling AddKazoOsBrowserHost and its apps.</Description>
-    <PackageTags>hackeros;blazor;webassembly;os-simulation;host</PackageTags>
+    <PackageTags>kazoos;blazor;webassembly;os-simulation;host</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
@@ -49,7 +49,7 @@
   </ItemGroup>
 
   <!--
-    ADR 0066: the accounting composition (#if HACKEROS_RESOURCE_ACCOUNTING) lives here, so the
+    ADR 0066: the accounting composition (#if KAZOOS_RESOURCE_ACCOUNTING) lives here, so the
     switches decide whether this library references Kazo.Os.Platform.ResourceAccounting. The
     published package is built with both measurements compiled in; a host still turns either off at
     run time (appsettings.json) or through its own RuntimeHostConfigurationOption switches.

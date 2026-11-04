@@ -21,7 +21,7 @@ public sealed class CursorThemeServiceTests
         using CursorThemeService service = new(harness.FileSystem, harness.Session, harness.Clock, harness.Settings);
         await service.InitializeAsync();
 
-        Assert.Contains("\ntheme=system\n", await harness.ReadAsync("/etc/hackeros/cursors.config"), StringComparison.Ordinal);
+        Assert.Contains("\ntheme=system\n", await harness.ReadAsync("/etc/kazoos/cursors.config"), StringComparison.Ordinal);
         Assert.Same(CursorThemeCatalog.System, service.Current);
     }
 
@@ -36,7 +36,7 @@ public sealed class CursorThemeServiceTests
         int notifications = 0;
         service.Changed += () => notifications++;
 
-        await harness.WriteAsUserAsync("/home/alice/.config/hackeros/cursors.config", "theme=hackeros-neon\n");
+        await harness.WriteAsUserAsync("/home/alice/.config/kazoos/cursors.config", "theme=kazoos-neon\n");
         await service.RefreshAsync();
 
         Assert.Equal(CursorThemeCatalog.NeonId, service.Current.Id);
@@ -48,12 +48,12 @@ public sealed class CursorThemeServiceTests
     {
         SettingsFilesHarness harness = new();
         await harness.BootAsync();
-        await harness.WriteAsRootAsync("/etc/hackeros/cursors/corporate/cursor.theme", Index);
-        await WriteBytesAsRootAsync(harness, "/etc/hackeros/cursors/corporate/arrow.png", CursorThemeFileTests.Png(32, 32));
+        await harness.WriteAsRootAsync("/etc/kazoos/cursors/corporate/cursor.theme", Index);
+        await WriteBytesAsRootAsync(harness, "/etc/kazoos/cursors/corporate/arrow.png", CursorThemeFileTests.Png(32, 32));
         // The hot spot (40, 0) is outside this 32 x 32 hand: refused, the host's pointer stays.
-        await WriteBytesAsRootAsync(harness, "/etc/hackeros/cursors/corporate/hand.png", CursorThemeFileTests.Png(32, 32));
+        await WriteBytesAsRootAsync(harness, "/etc/kazoos/cursors/corporate/hand.png", CursorThemeFileTests.Png(32, 32));
         await harness.LoginAsync(harness.Alice);
-        await harness.WriteAsUserAsync("/home/alice/.config/hackeros/cursors.config", "theme=corporate\n");
+        await harness.WriteAsUserAsync("/home/alice/.config/kazoos/cursors.config", "theme=corporate\n");
 
         using CursorThemeService service = new(harness.FileSystem, harness.Session, harness.Clock, harness.Settings);
         await service.InitializeAsync();
@@ -72,7 +72,7 @@ public sealed class CursorThemeServiceTests
         SettingsFilesHarness harness = new();
         await harness.BootAsync();
         await harness.LoginAsync(harness.Alice);
-        await harness.WriteAsUserAsync("/home/alice/.config/hackeros/cursors.config", "theme=deleted-theme\n");
+        await harness.WriteAsUserAsync("/home/alice/.config/kazoos/cursors.config", "theme=deleted-theme\n");
 
         using CursorThemeService service = new(harness.FileSystem, harness.Session, harness.Clock, harness.Settings);
         await service.InitializeAsync();

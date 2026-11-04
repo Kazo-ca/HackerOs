@@ -3,7 +3,7 @@
     Installs Kazo OS Server as a Windows service (ADR 0191).
 
 .DESCRIPTION
-    Copies the server into Program Files, writes hackeros-server.json, registers the
+    Copies the server into Program Files, writes kazoos-server.json, registers the
     "Kazo OS Server" service (virtual account NT AUTHORITY\LocalService), starts it and prints a
     one-time pairing code. By default the server only answers on this computer
     (http://localhost:5888). -Lan also opens it to the local network in HTTPS, with a local
@@ -13,7 +13,7 @@
 .EXAMPLE
     .\install.ps1
 .EXAMPLE
-    .\install.ps1 -Lan 192.168.1.20,hackeros-pc.local
+    .\install.ps1 -Lan 192.168.1.20,kazoos-pc.local
 #>
 [CmdletBinding()]
 param(
@@ -26,12 +26,12 @@ param(
     [string] $Account = 'admin',
     [string] $InstallDir = (Join-Path $env:ProgramFiles 'Kazo OS Server'),
     [string] $DataDir = (Join-Path $env:ProgramData 'Kazo OS Server'),
-    # Rewrite hackeros-server.json even if it exists (an upgrade keeps it otherwise).
+    # Rewrite kazoos-server.json even if it exists (an upgrade keeps it otherwise).
     [switch] $Reconfigure
 )
 
 $ErrorActionPreference = 'Stop'
-$ServiceName = 'HackerOSServer'
+$ServiceName = 'KazoOSServer'
 $PagesOrigin = 'https://kazo-ca.github.io'
 
 $principal = [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()
@@ -58,9 +58,9 @@ foreach ($folder in 'blobs', 'backups', 'pairing', 'logs', 'certs') {
 
 $sameFolder = (Resolve-Path $source).Path.TrimEnd('\') -ieq (Resolve-Path $InstallDir).Path.TrimEnd('\')
 if (-not $sameFolder) {
-    # The program files are replaced; hackeros-server.json (the configuration) is kept.
-    Get-ChildItem -Path $InstallDir -Force | Where-Object Name -ne 'hackeros-server.json' | Remove-Item -Recurse -Force
-    Get-ChildItem -Path $source -Force | Where-Object Name -ne 'hackeros-server.json' |
+    # The program files are replaced; kazoos-server.json (the configuration) is kept.
+    Get-ChildItem -Path $InstallDir -Force | Where-Object Name -ne 'kazoos-server.json' | Remove-Item -Recurse -Force
+    Get-ChildItem -Path $source -Force | Where-Object Name -ne 'kazoos-server.json' |
         Copy-Item -Destination $InstallDir -Recurse -Force
 }
 
@@ -72,7 +72,7 @@ Get-ChildItem -Path $InstallDir -Recurse -File | Unblock-File
 
 # ── Local network certificate (ADR 0191 §2, step 2) ──────────────────────────
 $hosts = @('localhost', '127.0.0.1', '[::1]')
-$caPath = Join-Path $DataDir 'certs\hackeros-local-ca.crt'
+$caPath = Join-Path $DataDir 'certs\kazoos-local-ca.crt'
 $pfxPath = Join-Path $DataDir 'certs\server.pfx'
 $pfxPassword = $null
 if ($Lan.Count -gt 0) {
@@ -122,28 +122,28 @@ if ($Lan.Count -gt 0) {
     $Reconfigure = $true
 }
 
-# ── Configuration (hackeros-server.json, read after appsettings.json) ────────
-$configPath = Join-Path $InstallDir 'hackeros-server.json'
+# ── Configuration (kazoos-server.json, read after appsettings.json) ────────
+$configPath = Join-Path $InstallDir 'kazoos-server.json'
 if (-not (Test-Path $configPath) -or $Reconfigure) {
     $endpoints = [ordered]@{ Local = @{ Url = "http://localhost:$Port" } }
     $origins = @($PagesOrigin)
-    $hackerOs = [ordered]@{ Pairing = @{ Root = (Join-Path $DataDir 'pairing') } }
+    $kazoOs = [ordered]@{ Pairing = @{ Root = (Join-Path $DataDir 'pairing') } }
     if ($Lan.Count -gt 0) {
         $endpoints.Lan = @{ Url = "https://*:$HttpsPort"; Certificate = @{ Path = $pfxPath; Password = $pfxPassword } }
         foreach ($name in $Lan) {
             if ($name.Contains(':')) { $origins += "https://[$name]:$HttpsPort" } else { $origins += "https://${name}:$HttpsPort" }
         }
-        $hackerOs.LocalServer = @{ CaCertificatePath = $caPath }
+        $kazoOs.LocalServer = @{ CaCertificatePath = $caPath }
     }
 
     $config = [ordered]@{
         AllowedHosts      = $hosts -join ';'
         Kestrel           = @{ Endpoints = $endpoints }
         Cors              = @{ AllowedOrigins = $origins }
-        ConnectionStrings = @{ HackerOsDb = "Data Source=$(Join-Path $DataDir 'hackeros.db')" }
+        ConnectionStrings = @{ KazoOsDb = "Data Source=$(Join-Path $DataDir 'kazoos.db')" }
         BlobStorage       = @{ Root = (Join-Path $DataDir 'blobs') }
         ServerBackup      = @{ Root = (Join-Path $DataDir 'backups') }
-        HackerOs          = $hackerOs
+        KazoOs          = $kazoOs
     }
     $config | ConvertTo-Json -Depth 6 | Set-Content -Path $configPath -Encoding utf8
     # The file holds the certificate password: administrators and the service only.
@@ -182,7 +182,7 @@ foreach ($name in $Lan) {
 }
 if ($Lan.Count -gt 0) {
     Write-Host "  Certificate to approve on each other device: $caPath"
-    Write-Host "  (also at http://localhost:$Port/api/hackeros/local-ca.crt)"
+    Write-Host "  (also at http://localhost:$Port/api/kazoos/local-ca.crt)"
 }
 Write-Host ''
 $pairOutput | ForEach-Object { Write-Host $_ }

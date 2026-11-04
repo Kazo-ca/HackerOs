@@ -8,7 +8,7 @@ namespace Kazo.Os.AppSdk.Blazor.Components;
 /// lazy and checks the type; apps embed through <see cref="KazoEmbeddedComponent{TController}"/>
 /// instead of calling it.
 /// </summary>
-public interface IHackComponentHost
+public interface IKazoComponentHost
 {
     /// <summary>Finds the component registered for <paramref name="contract"/> by an installed app.</summary>
     /// <param name="contract">Contract name, e.g. <c>KazoComponentContracts.Terminal</c>.</param>
@@ -17,7 +17,7 @@ public interface IHackComponentHost
     Task<KazoComponentResolution> ResolveAsync(string contract, CancellationToken cancellationToken = default);
 }
 
-/// <summary>Outcome of <see cref="IHackComponentHost.ResolveAsync"/>.</summary>
+/// <summary>Outcome of <see cref="IKazoComponentHost.ResolveAsync"/>.</summary>
 /// <param name="Contract">The requested contract.</param>
 /// <param name="ComponentType">The provider's component, deriving from <see cref="KazoEmbeddableComponent"/>; <see langword="null"/> when unavailable.</param>
 /// <param name="ProviderAppId">The app that registered it, when one was found.</param>

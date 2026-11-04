@@ -53,7 +53,7 @@ public interface IAppNetworkGateway
     /// Opens an HTTP listening socket on this machine for <paramref name="prefixes"/>
     /// (<c>http://host:port/path/</c>, ADR 0074 section 2), as <c>HttpListener.Start</c> does. The
     /// OS records the port in its table of listening ports until the socket is disposed or the
-    /// process ends; requests sent to it are handed to <see cref="IHackHttpListenerSocket.AcceptAsync"/>.
+    /// process ends; requests sent to it are handed to <see cref="IKazoHttpListenerSocket.AcceptAsync"/>.
     /// </summary>
     /// <remarks>
     /// Needs <c>network.listen</c>, plus <c>network.listen.privileged</c> for a port below 1024;
@@ -62,7 +62,7 @@ public interface IAppNetworkGateway
     /// </remarks>
     /// <param name="prefixes">Listener prefixes, each ending with <c>/</c>; <c>+</c> and <c>*</c> stand for any host.</param>
     /// <param name="cancellationToken">Cancels the call.</param>
-    ValueTask<KazoNetworkResult<IHackHttpListenerSocket>> ListenHttpAsync(
+    ValueTask<KazoNetworkResult<IKazoHttpListenerSocket>> ListenHttpAsync(
         IReadOnlyList<string> prefixes, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This network gateway cannot listen on ports.");
 
@@ -90,7 +90,7 @@ public interface IAppNetworkGateway
     /// <param name="hostNameOrAddress">Target host name or IP literal.</param>
     /// <param name="port">Target port, 1–65535.</param>
     /// <param name="cancellationToken">Cancels the connect.</param>
-    ValueTask<KazoNetworkResult<IHackSocket>> ConnectTcpAsync(
+    ValueTask<KazoNetworkResult<IKazoSocket>> ConnectTcpAsync(
         string hostNameOrAddress, int port, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This network gateway cannot open TCP connections.");
 
@@ -103,7 +103,7 @@ public interface IAppNetworkGateway
     /// <param name="hostNameOrAddress">Target host name or IP literal.</param>
     /// <param name="port">Target port, 1–65535.</param>
     /// <param name="cancellationToken">Cancels the call.</param>
-    ValueTask<KazoNetworkResult<IHackSocket>> ConnectUdpAsync(
+    ValueTask<KazoNetworkResult<IKazoSocket>> ConnectUdpAsync(
         string hostNameOrAddress, int port, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This network gateway cannot open UDP sockets.");
 }
@@ -113,7 +113,7 @@ public interface IAppNetworkGateway
 /// <see cref="IAppNetworkGateway.ConnectTcpAsync"/> or <see cref="IAppNetworkGateway.ConnectUdpAsync"/>.
 /// Disposing it closes the connection (a TCP FIN), as <c>close(2)</c>.
 /// </summary>
-public interface IHackSocket : IAsyncDisposable
+public interface IKazoSocket : IAsyncDisposable
 {
     /// <summary>Gets the address and port the socket is connected to.</summary>
     IPEndPoint RemoteEndPoint { get; }
@@ -136,7 +136,7 @@ public interface IHackSocket : IAsyncDisposable
 /// An HTTP listening socket of the OS (ADR 0074, section 2), opened by
 /// <see cref="IAppNetworkGateway.ListenHttpAsync"/>. Apps use it through <see cref="KazoHttpListener"/>.
 /// </summary>
-public interface IHackHttpListenerSocket : IAsyncDisposable
+public interface IKazoHttpListenerSocket : IAsyncDisposable
 {
     /// <summary>Gets the prefixes the socket answers, normalized (lower-case host, explicit port when not the default).</summary>
     IReadOnlyList<string> Prefixes { get; }
@@ -157,8 +157,8 @@ public interface IHackHttpListenerSocket : IAsyncDisposable
     void Respond(long exchangeId, KazoHttpListenerReply reply);
 }
 
-/// <summary>One request received by an <see cref="IHackHttpListenerSocket"/>, as it arrived on the wire.</summary>
-/// <param name="Id">Identifier of the exchange, unique on its socket, passed back to <see cref="IHackHttpListenerSocket.Respond"/>.</param>
+/// <summary>One request received by an <see cref="IKazoHttpListenerSocket"/>, as it arrived on the wire.</summary>
+/// <param name="Id">Identifier of the exchange, unique on its socket, passed back to <see cref="IKazoHttpListenerSocket.Respond"/>.</param>
 /// <param name="Method">HTTP method, upper case.</param>
 /// <param name="Url">Absolute URL requested (scheme, <c>Host</c> header, port, path and query).</param>
 /// <param name="Headers">Request headers, including <c>Host</c> and <c>Cookie</c>.</param>
@@ -317,11 +317,11 @@ internal sealed class UnsupportedAppNetworkGateway : IAppNetworkGateway
         string hostNameOrAddress, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException(Reason);
 
-    public ValueTask<KazoNetworkResult<IHackSocket>> ConnectTcpAsync(
+    public ValueTask<KazoNetworkResult<IKazoSocket>> ConnectTcpAsync(
         string hostNameOrAddress, int port, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException(Reason);
 
-    public ValueTask<KazoNetworkResult<IHackSocket>> ConnectUdpAsync(
+    public ValueTask<KazoNetworkResult<IKazoSocket>> ConnectUdpAsync(
         string hostNameOrAddress, int port, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException(Reason);
 }

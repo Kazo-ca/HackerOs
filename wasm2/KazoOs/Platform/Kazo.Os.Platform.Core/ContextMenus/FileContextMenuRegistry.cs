@@ -13,7 +13,7 @@ namespace Kazo.Os.Platform.Core.ContextMenus;
 
 /// <summary>
 /// The entries one app registered in the file menus, as the OS read them from
-/// <c>/etc/hackeros/context-menus.d/&lt;appId&gt;.json</c> (ADR 0151 §3).
+/// <c>/etc/kazoos/context-menus.d/&lt;appId&gt;.json</c> (ADR 0151 §3).
 /// </summary>
 /// <param name="AppId">The app.</param>
 /// <param name="Rank">Its installation rank: entries sharing a place follow it (ADR 0151 §4.6).</param>
@@ -21,7 +21,7 @@ namespace Kazo.Os.Platform.Core.ContextMenus;
 public sealed record RegisteredFileMenuApp(string AppId, int Rank, IReadOnlyList<AppContextMenuEntryManifest> Entries);
 
 /// <summary>
-/// The content of one <c>/etc/hackeros/context-menus.d/&lt;appId&gt;.json</c> file (ADR 0159 §4).
+/// The content of one <c>/etc/kazoos/context-menus.d/&lt;appId&gt;.json</c> file (ADR 0159 §4).
 /// </summary>
 /// <param name="SchemaVersion">Always 1.</param>
 /// <param name="AppId">The app; must match the file name.</param>
@@ -40,7 +40,7 @@ public sealed record FileContextMenuDocument(
 /// <summary>
 /// The registry of the file menu entries apps register (ADR 0151 §3, ADR 0159 §4), like the
 /// <c>HKCR\*\shell</c> keys of Windows: at boot it copies the <c>contextMenus</c> of every installed
-/// app's manifest to <c>/etc/hackeros/context-menus.d/&lt;appId&gt;.json</c>, removes the files of
+/// app's manifest to <c>/etc/kazoos/context-menus.d/&lt;appId&gt;.json</c>, removes the files of
 /// apps no longer installed for the machine, then reads the folder. Drawing a menu never runs app
 /// code: it only reads what this registry holds.
 /// </summary>
@@ -60,7 +60,7 @@ public sealed record FileContextMenuDocument(
 public sealed class FileContextMenuRegistry
 {
     /// <summary>The folder of the files.</summary>
-    public const string DirectoryPath = "/etc/hackeros/context-menus.d";
+    public const string DirectoryPath = "/etc/kazoos/context-menus.d";
 
     private readonly AppCatalog _catalog;
     private readonly IAppFileSystemGateway _system;

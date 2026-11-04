@@ -10,7 +10,7 @@ namespace Kazo.Os.AppSdk.Shell;
 /// </summary>
 /// <example>
 /// <code>
-/// await using IHackShell shell = await KazoShell.StartAsync(new KazoShellOptions
+/// await using IKazoShell shell = await KazoShell.StartAsync(new KazoShellOptions
 /// {
 ///     WorkingDirectory = KazoEnvironment.GetFolderPath(...),
 ///     CredentialPrompt = myTerminalPrompt,
@@ -28,7 +28,7 @@ public static class KazoShell
     /// <returns>The running shell; dispose it to end its process.</returns>
     /// <exception cref="KazoUnauthorizedAccessException">The app was not granted <c>shell.host</c>.</exception>
     /// <exception cref="KazoExecutionContextMissingException">No app context is active.</exception>
-    public static Task<IHackShell> StartAsync(KazoShellOptions? options = null, CancellationToken cancellationToken = default) =>
+    public static Task<IKazoShell> StartAsync(KazoShellOptions? options = null, CancellationToken cancellationToken = default) =>
         StartAsync(KazoExecutionContext.Current, options, cancellationToken);
 
     /// <summary>
@@ -40,7 +40,7 @@ public static class KazoShell
     /// <param name="cancellationToken">Cancels the start.</param>
     /// <returns>The running shell; dispose it to end its process.</returns>
     /// <exception cref="KazoUnauthorizedAccessException">The app was not granted <c>shell.host</c>.</exception>
-    public static async Task<IHackShell> StartAsync(
+    public static async Task<IKazoShell> StartAsync(
         IAppExecutionContext context, KazoShellOptions? options = null, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -67,5 +67,5 @@ public interface IAppShellHostGateway
     /// <param name="cancellationToken">Cancels the start.</param>
     /// <returns>The running shell.</returns>
     /// <exception cref="AppGatewayAccessDeniedException">The app was not granted <c>shell.host</c>.</exception>
-    Task<IHackShell> StartAsync(KazoShellOptions options, CancellationToken cancellationToken = default);
+    Task<IKazoShell> StartAsync(KazoShellOptions options, CancellationToken cancellationToken = default);
 }

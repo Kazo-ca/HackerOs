@@ -13,6 +13,6 @@ public static class MobileSettingsDocuments
     public static SettingsSchema Schema { get; } = new(1,
         [new SettingFieldDeclaration(MouseHelpersKey, SettingValueType.Boolean, "true", SettingSensitivity.Public)]);
 
-    /// <summary>Gets /etc/hackeros/mobile.config and its per-user override.</summary>
+    /// <summary>Gets /etc/kazoos/mobile.config and its per-user override.</summary>
     public static OsSettingsDocument Document { get; } = new("mobile", Schema);
 }

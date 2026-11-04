@@ -26,11 +26,11 @@ command can therefore provide its own improved `cd` without touching the
 terminal.
 
 ```text
-alice@hackeros:~$ cd projets && export CIBLE=10.0.0.5 && env | grep CIBLE
+alice@kazoos:~$ cd projets && export CIBLE=10.0.0.5 && env | grep CIBLE
 CIBLE=10.0.0.5
-alice@hackeros:~/projets$ cd -
+alice@kazoos:~/projets$ cd -
 /home/alice
-alice@hackeros:~$ sudo cat /etc/shadow | wc -l
+alice@kazoos:~$ sudo cat /etc/shadow | wc -l
 ```
 
 ## Architecture
@@ -114,26 +114,26 @@ A command's `argv[0]` is now the **name under which it was called**
 multi-call binary. `alias` declares `addalias`, `rmalias` and `unalias`; when
 called as `rmalias` or `unalias`, it behaves like `alias -r`. The interpreter
 no longer rewrites these names. The expansion of the user's aliases
-(`~/.hackeros/aliases`) stays in the shell.
+(`~/.kazoos/aliases`) stays in the shell.
 
 ## Commands
 
 | Command | App identifier | Capabilities | Behavior |
 |---|---|---|---|
-| `cd [dir\|-]` | `org.hackeros.cmd.cd` | `shell.control`, `filesystem.user-home.read`, `filesystem.system.read` | No argument: `HOME`. `-`: `OLDPWD`, displayed. Errors `No such file or directory`, `Not a directory`, `Permission denied`, code `1`. |
-| `pwd` | `org.hackeros.cmd.pwd` | none | Its own directory, inherited from the shell. |
-| `clear` (`cls`) | `org.hackeros.commands.clear` | none | Writes `ESC[H ESC[2J ESC[3J`. |
-| `help [cmd…]` (`man`) | `org.hackeros.commands.help` | `shell.control` | Lists the installed commands (`GetCommands`) or the usage and aliases of a command. Without a shell: code `1`. |
-| `export [NOM=valeur…]` | `org.hackeros.commands.export` | `shell.control` | Modifies the shell environment. With no argument (or `-p`): lines `declare -x NOM="valeur"`. `export NOM` keeps the value or exports an empty value. Invalid name: ``export: `x': not a valid identifier``, code `1`. |
-| `unset NOM…` | `org.hackeros.commands.unset` | `shell.control` | Removes variables from the shell; a missing variable is not an error. |
-| `env` | `org.hackeros.commands.env` | none | Its own environment, one `NOM=valeur` line per variable, sorted. `env NOM=v commande` is not supported (code `125`). |
-| `sudo cmd args…` | `org.hackeros.commands.sudo` | `shell.control` | See above. |
-| `exit [n]` | `org.hackeros.commands.exit` | `shell.control` | `IShellSession.Exit`: the shell exits with `n` (modulo 256) or `$?`; the rest of the line is not executed; non-numeric argument: code `2`; too many arguments: code `1`, the shell stays ([`terminal-console.md`](terminal-console.md)). |
-| `alias`, `addalias`, `rmalias`, `unalias` | `org.hackeros.commands.alias` | `filesystem.user-home.*` | `rmalias`/`unalias` = `alias -r`, chosen by `argv[0]`. |
-| `read [-r] [-p p] [nom…]` | `org.hackeros.commands.read` | `shell.control` | ADR 0064: reads a line from standard input and assigns the fields through `AssignVariable` ([`linux-commands.md`](linux-commands.md)). |
-| `jobs [-lprs]` | `org.hackeros.commands.jobs` | `shell.control` | ADR 0064: shell jobs (`IShellSession.Jobs`). |
-| `kill [-SIG] pid\|%job` | `org.hackeros.commands.kill` | `process.manage`, `shell.control` | ADR 0064: `%n` goes through `IShellSession.KillJob`. ADR 0069: with no option (or `-15`, `-TERM`), `SIGTERM`: the target receives `StopRequested` (reason `Terminated`, deadline at 5 simulated seconds), then its token is cancelled, and it is killed if it has not finished; `-9`/`-KILL` kills immediately, without `StopRequested`. A killed command exits with `137`, a command that stops on its token with `130`. |
-| `which nom…`, `watch cmd` | `org.hackeros.commands.which`, `…watch` | `shell.control` | ADR 0064: list of shell commands; `watch` reruns the line through `IShellSession.RunAsync`. |
+| `cd [dir\|-]` | `org.kazoos.cmd.cd` | `shell.control`, `filesystem.user-home.read`, `filesystem.system.read` | No argument: `HOME`. `-`: `OLDPWD`, displayed. Errors `No such file or directory`, `Not a directory`, `Permission denied`, code `1`. |
+| `pwd` | `org.kazoos.cmd.pwd` | none | Its own directory, inherited from the shell. |
+| `clear` (`cls`) | `org.kazoos.commands.clear` | none | Writes `ESC[H ESC[2J ESC[3J`. |
+| `help [cmd…]` (`man`) | `org.kazoos.commands.help` | `shell.control` | Lists the installed commands (`GetCommands`) or the usage and aliases of a command. Without a shell: code `1`. |
+| `export [NOM=valeur…]` | `org.kazoos.commands.export` | `shell.control` | Modifies the shell environment. With no argument (or `-p`): lines `declare -x NOM="valeur"`. `export NOM` keeps the value or exports an empty value. Invalid name: ``export: `x': not a valid identifier``, code `1`. |
+| `unset NOM…` | `org.kazoos.commands.unset` | `shell.control` | Removes variables from the shell; a missing variable is not an error. |
+| `env` | `org.kazoos.commands.env` | none | Its own environment, one `NOM=valeur` line per variable, sorted. `env NOM=v commande` is not supported (code `125`). |
+| `sudo cmd args…` | `org.kazoos.commands.sudo` | `shell.control` | See above. |
+| `exit [n]` | `org.kazoos.commands.exit` | `shell.control` | `IShellSession.Exit`: the shell exits with `n` (modulo 256) or `$?`; the rest of the line is not executed; non-numeric argument: code `2`; too many arguments: code `1`, the shell stays ([`terminal-console.md`](terminal-console.md)). |
+| `alias`, `addalias`, `rmalias`, `unalias` | `org.kazoos.commands.alias` | `filesystem.user-home.*` | `rmalias`/`unalias` = `alias -r`, chosen by `argv[0]`. |
+| `read [-r] [-p p] [nom…]` | `org.kazoos.commands.read` | `shell.control` | ADR 0064: reads a line from standard input and assigns the fields through `AssignVariable` ([`linux-commands.md`](linux-commands.md)). |
+| `jobs [-lprs]` | `org.kazoos.commands.jobs` | `shell.control` | ADR 0064: shell jobs (`IShellSession.Jobs`). |
+| `kill [-SIG] pid\|%job` | `org.kazoos.commands.kill` | `process.manage`, `shell.control` | ADR 0064: `%n` goes through `IShellSession.KillJob`. ADR 0069: with no option (or `-15`, `-TERM`), `SIGTERM`: the target receives `StopRequested` (reason `Terminated`, deadline at 5 simulated seconds), then its token is cancelled, and it is killed if it has not finished; `-9`/`-KILL` kills immediately, without `StopRequested`. A killed command exits with `137`, a command that stops on its token with `130`. |
+| `which nom…`, `watch cmd` | `org.kazoos.commands.which`, `…watch` | `shell.control` | ADR 0064: list of shell commands; `watch` reruns the line through `IShellSession.RunAsync`. |
 
 Opening a file, a folder or a URI from the shell goes through `xdg-open`
 (ADR 0096 §3, [`linux-commands.md`](linux-commands.md)): the command does not
@@ -153,7 +153,7 @@ otherwise.
 `TerminalPanel` keeps only line editing, display, completion and the
 credentials windows. Tab completion offers the names and aliases of the
 **installed** commands, like `help`; since `4-sdk-shell-host`, the shell
-computes it (`IHackShell.CompleteAsync`, [`shell-host.md`](../framework/shell-host.md)), paths included since `4-terminal` ([`terminal-console.md`](terminal-console.md)). `TerminalBuiltins` and the interpreter's `IShellBuiltins` hook
+computes it (`IKazoShell.CompleteAsync`, [`shell-host.md`](../framework/shell-host.md)), paths included since `4-terminal` ([`terminal-console.md`](terminal-console.md)). `TerminalBuiltins` and the interpreter's `IShellBuiltins` hook
 are gone.
 
 ## Key decisions
@@ -170,7 +170,7 @@ are gone.
 - **Command not found under `sudo`: code `1`**, like the real `sudo`, instead
   of `127` for the shell.
 - **`cd` checks with a real `chdir`** of the command's process, then undoes it:
-  the check goes through the public `Hack*` API, with the command's rights,
+  the check goes through the public `Kazo*` API, with the command's rights,
   without a new internal API.
 
 ## Tests
@@ -185,7 +185,7 @@ are gone.
 - `Tests/Kazo.Os.Commands.Tests/CoreCommandsTests.cs` and
   `Tests/Kazo.Os.Commands.Wave5.Tests/Wave5Tests.cs`: `cd`, `clear`, `help`
   with `FakeShellSession` (`Tests/Kazo.Os.Tests.Support/`).
-- `Tests/Kazo.Os.Ecosystem.Tests`: 87 built-in apps, 70 commands (`stress` since `rebuild/5-worker-processes`, `ausearch` since `v3/8`, `xdg-open` since `v3/4`, `hackbackup` since `v3/7`, `localectl` since `v3/12`, `xdg-mime` since `v3/4b`, `passwd` since `v3/8`).
+- `Tests/Kazo.Os.Ecosystem.Tests`: 87 built-in apps, 70 commands (`stress` since `rebuild/5-worker-processes`, `ausearch` since `v3/8`, `xdg-open` since `v3/4`, `kazobackup` since `v3/7`, `localectl` since `v3/12`, `xdg-mime` since `v3/4b`, `passwd` since `v3/8`).
 
 ## Task list
 

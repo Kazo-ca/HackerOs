@@ -42,7 +42,7 @@ internal sealed record StoreEntry(KazoCatalogApp? App, KazoInstalledPackage? Ins
 }
 
 /// <summary>
-/// What the Hack Store shows (ADR 0188 §2): the apps of every catalog merged with what is installed
+/// What the Kazo OS Store shows (ADR 0188 §2): the apps of every catalog merged with what is installed
 /// and the available updates. Pure data, so the window's rules are tested without a browser.
 /// </summary>
 /// <remarks>

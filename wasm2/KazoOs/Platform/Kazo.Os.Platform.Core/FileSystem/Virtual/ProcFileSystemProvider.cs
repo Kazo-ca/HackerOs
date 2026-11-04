@@ -44,7 +44,7 @@ public sealed class ProcFileSystemProvider : VirtualFileSystemProvider
     private const string NetDirectory = "net";
 
     /// <summary>Kazo OS's own entries (ADR 0071, section 5), like the <c>/proc/sys</c> of a vendor kernel.</summary>
-    private const string KazoOsDirectory = "hackeros";
+    private const string KazoOsDirectory = "kazoos";
 
     private const string WorkersFile = "workers";
 
@@ -387,7 +387,7 @@ public sealed class ProcFileSystemProvider : VirtualFileSystemProvider
 
         if (table is not { IsEnabled: true })
         {
-            builder.Append("# enforcement: off (HackerOs:ResourceLimits:Enabled=false)\n");
+            builder.Append("# enforcement: off (KazoOs:ResourceLimits:Enabled=false)\n");
             return builder.ToString();
         }
 
@@ -611,7 +611,7 @@ public sealed class ProcFileSystemProvider : VirtualFileSystemProvider
     private Kazo.Os.Simulation.Abstractions.Workers.IWorkerPoolStatus? WorkerPool() => _metrics.Workers?.Invoke();
 
     /// <summary>
-    /// The first lines of <c>/proc/hackeros/workers</c> (ADR 0131, section 5): whether the page is
+    /// The first lines of <c>/proc/kazoos/workers</c> (ADR 0131, section 5): whether the page is
     /// cross-origin isolated, why not, and what that gives the workers. Read by Diagnostic.
     /// </summary>
     private static void AppendIsolation(StringBuilder builder, Kazo.Os.Platform.Core.Isolation.CrossOriginIsolationStatus status)
@@ -627,7 +627,7 @@ public sealed class ProcFileSystemProvider : VirtualFileSystemProvider
     }
 
     /// <summary>
-    /// Renders <c>/proc/hackeros/workers</c> (ADR 0071, section 5): the ceiling and the pool size, then
+    /// Renders <c>/proc/kazoos/workers</c> (ADR 0071, section 5): the ceiling and the pool size, then
     /// one line per Web Worker with its role, state, virtual core, runtime memory, heartbeat age, busy
     /// time and the processes it hosts (only those the caller may see, like <c>/proc/&lt;pid&gt;</c>).
     /// </summary>

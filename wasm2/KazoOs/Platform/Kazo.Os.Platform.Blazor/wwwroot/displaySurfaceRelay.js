@@ -7,7 +7,7 @@
 // lives in the desktop window. The desktop therefore posts through this function: the message then
 // comes from the surface, exactly as if the page had never left its parent.
 
-window.hackerosSurfaceRelay = Object.freeze({
+window.kazoosSurfaceRelay = Object.freeze({
     post(target, message) {
         target.postMessage(message, "*");
     },

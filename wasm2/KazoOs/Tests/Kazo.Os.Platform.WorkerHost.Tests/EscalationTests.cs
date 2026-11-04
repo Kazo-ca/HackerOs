@@ -19,13 +19,13 @@ public sealed class EscalationTests
         WorkerSnapshot core = os.Pool!.GetWorkers().Single(w => w.Role == WorkerRole.Pool);
         Task<ShellRun> sleeping = os.RunAsync(os.OpenShell(), "sleep 100");
         await OsFixture.WaitUntilAsync(
-            () => os.FindPid("org.hackeros.commands.sleep") is not null && os.Pool.Connections.Any(w => w.Id == core.Id && w.ProcessCount == 1 && w.IsFree),
+            () => os.FindPid("org.kazoos.commands.sleep") is not null && os.Pool.Connections.Any(w => w.Id == core.Id && w.ProcessCount == 1 && w.IsFree),
             because: "sleep yields: its core heartbeats after taking it");
         Task<ShellRun> spinning = os.RunAsync("spin");
         await OsFixture.WaitUntilAsync(() => os.Pool.GetWorkers().Any(w => w.Id == core.Id && w.ProcessIds.Count == 2), because: "spin joins sleep on the free core");
         await TestCommands.Spinning.WaitAsync(TimeSpan.FromSeconds(10)); // placed is not running yet
         long spinPid = os.FindPid("org.test.spin")!.Value;
-        long sleepPid = os.FindPid("org.hackeros.commands.sleep")!.Value;
+        long sleepPid = os.FindPid("org.kazoos.commands.sleep")!.Value;
 
         // kill is a shell builtin on the main thread: it answers while the worker is stuck.
         ShellRun kill = await os.RunAsync(os.OpenShell(), $"kill -9 {spinPid}").WaitAsync(TimeSpan.FromSeconds(10));
@@ -58,7 +58,7 @@ public sealed class EscalationTests
         await OsFixture.WaitUntilAsync(
             () => os.Pool!.GetWorkers().Any(w => w.State == WorkerState.NotResponding),
             because: "the heartbeat stops for longer than the unresponsive threshold");
-        ShellRun workers = await os.RunAsync(os.OpenShell(), "cat /proc/hackeros/workers").WaitAsync(TimeSpan.FromSeconds(10));
+        ShellRun workers = await os.RunAsync(os.OpenShell(), "cat /proc/kazoos/workers").WaitAsync(TimeSpan.FromSeconds(10));
         Assert.Contains("not-responding", workers.Stdout, StringComparison.Ordinal);
         await OsFixture.WaitUntilAsync(() => os.Syslog.Any(line => line.Contains("not responding", StringComparison.Ordinal)));
 
@@ -119,7 +119,7 @@ public sealed class EscalationTests
         await using OsFixture os = await WorkerPoolTests.StartedAsync();
         using CancellationTokenSource ctrlC = new();
         Task<ShellRun> sleeping = os.RunAsync("sleep 100", cancellationToken: ctrlC.Token);
-        await OsFixture.WaitUntilAsync(() => os.FindPid("org.hackeros.commands.sleep") is not null);
+        await OsFixture.WaitUntilAsync(() => os.FindPid("org.kazoos.commands.sleep") is not null);
 
         await ctrlC.CancelAsync();
 

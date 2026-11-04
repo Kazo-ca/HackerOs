@@ -10,8 +10,8 @@ namespace Kazo.Os.Commands.Tests;
 /// <summary><c>xdg-mime</c> (ADR 0121, section 5): query and set the user's default applications.</summary>
 public sealed class XdgMimeCommandTests
 {
-    private const string Notepad = "org.hackeros.notepad";
-    private const string Editor = "org.hackeros.text-editor";
+    private const string Notepad = "org.kazoos.notepad";
+    private const string Editor = "org.kazoos.text-editor";
 
     [Fact]
     public async Task Query_default_prints_the_users_choice_before_the_systems()

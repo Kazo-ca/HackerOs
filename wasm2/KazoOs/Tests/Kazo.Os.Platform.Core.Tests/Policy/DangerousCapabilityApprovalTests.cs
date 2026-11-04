@@ -19,10 +19,10 @@ namespace Kazo.Os.Platform.Core.Tests.Policy;
 public sealed class DangerousCapabilityApprovalTests
 {
     private const string ScannerId = "org.example.scanner";
-    private const string SystemToolId = "org.hackeros.system-tool";
-    private const string MachineFile = "/etc/hackeros/app-permissions.config";
-    private const string UserFile = "/home/alice/.config/hackeros/app-permissions.config";
-    private const string SecurityFile = "/etc/hackeros/security.config";
+    private const string SystemToolId = "org.kazoos.system-tool";
+    private const string MachineFile = "/etc/kazoos/app-permissions.config";
+    private const string UserFile = "/home/alice/.config/kazoos/app-permissions.config";
+    private const string SecurityFile = "/etc/kazoos/security.config";
     private const string AdminPassword = "s3cret-admin";
 
     // ---- Parsing of app-permissions.config (section 4) ----
@@ -433,7 +433,7 @@ public sealed class DangerousCapabilityApprovalTests
         Id = id,
         Name = id == ScannerId ? "Scanner" : "System Tool",
         Version = "1.2.0",
-        PublisherId = id == ScannerId ? "org.example" : "pub.hackeros",
+        PublisherId = id == ScannerId ? "org.example" : "pub.kazoos",
         Description = "Dangerous-capability fixture.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Apps.Sample", "Kazo.Os.Apps.Sample.SampleApp"),

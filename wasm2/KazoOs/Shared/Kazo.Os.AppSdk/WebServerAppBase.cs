@@ -17,7 +17,7 @@ namespace Kazo.Os.AppSdk;
 /// <para>
 /// Requests are served concurrently. An exception thrown by <see cref="ProcessRequestAsync"/> becomes
 /// a <c>500 Internal Server Error</c>; a response the method did not close is sent when it returns.
-/// The ASP.Hack MVC host (ADR 0076) is built on this class.
+/// The ASP.Kazo MVC host (ADR 0076) is built on this class.
 /// </para>
 /// </remarks>
 public abstract class WebServerAppBase : ServiceAppBase

@@ -290,7 +290,7 @@ public sealed class WebRouteGeneratorTests
         (ImmutableArray<Diagnostic> diagnostics, _) = Run("""
             namespace AspNetCoreGeneratedDocument { internal sealed class Views_Home_Index { } }
             namespace Example.Intranet_Site.Views.Home { public sealed class Index : Microsoft.AspNetCore.Components.ComponentBase { } }
-            public sealed class HomeController : KazoController { public IHackActionResult Index() => View(); }
+            public sealed class HomeController : KazoController { public IKazoActionResult Index() => View(); }
             """,
             new RazorFile("Views/Home/Index.cshtml"),
             new RazorFile("Views/Home/Index.razor"));

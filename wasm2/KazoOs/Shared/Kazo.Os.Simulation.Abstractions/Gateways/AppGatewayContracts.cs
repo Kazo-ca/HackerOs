@@ -268,7 +268,7 @@ public interface IAppLoggingGateway
     /// under <c>/var/log</c> itself), with the same batching and rotation as every other log.
     /// </summary>
     /// <param name="relativePath">
-    /// <c>&lt;directory&gt;/&lt;file&gt;.log</c>, for example <c>hackweb/docs.access.log</c>. The
+    /// <c>&lt;directory&gt;/&lt;file&gt;.log</c>, for example <c>kazoweb/docs.access.log</c>. The
     /// directory may not be <c>apps</c>, which belongs to <see cref="Log"/>.
     /// </param>
     /// <param name="line">The line, written as is (a line break inside it is escaped).</param>
@@ -278,7 +278,7 @@ public interface IAppLoggingGateway
         throw new UnauthorizedAccessException("Daemon log files are not offered by this host.");
 
     /// <summary>
-    /// Appends one line to the debug log of the calling web site, <c>/var/log/hackweb/&lt;app id&gt;.log</c>
+    /// Appends one line to the debug log of the calling web site, <c>/var/log/kazoweb/&lt;app id&gt;.log</c>
     /// (ADR 0073 section 3, ADR 0088 section 5). Only an app of kind <c>Web</c> may do so, when the site
     /// enabled its debug log; the platform's log writer does the write, with the usual rotation.
     /// </summary>

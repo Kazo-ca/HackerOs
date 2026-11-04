@@ -386,10 +386,10 @@ public sealed partial class Wave4NetworkTests
     private static readonly AppManifest CatManifest = new()
     {
         SchemaVersion = 1,
-        Id = "org.hackeros.cmd.cat",
+        Id = "org.kazoos.cmd.cat",
         Name = "cat",
         Version = "1.0.0",
-        PublisherId = "pub.hackeros",
+        PublisherId = "pub.kazoos",
         Description = "Concatenate files and print on the standard output",
         Kind = AppKind.Terminal,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Commands.dll", "Kazo.Os.Commands.Cat.CatCommand"),
@@ -562,7 +562,7 @@ public sealed partial class Wave4NetworkTests
             denied.Contains(capability)
                 ? CapabilityPolicyEvaluation.DenyMissing(1)
                 : CapabilityPolicyEvaluation.Permit(new CapabilityGrant(
-                    CapabilityGrantId.FromGuid(Guid.NewGuid()), "org.hackeros.test", "user", capability, 1, CapabilityGrantSource.UserApproval));
+                    CapabilityGrantId.FromGuid(Guid.NewGuid()), "org.kazoos.test", "user", capability, 1, CapabilityGrantSource.UserApproval));
 
         public void Require(
             string capability, AppAuthority requiredAuthority = AppAuthority.User, CapabilityResourceCandidate? resourceCandidate = null)
@@ -615,7 +615,7 @@ public sealed partial class Wave4NetworkTests
     private sealed class ConnectedServerConnectionService : IServerConnectionService
     {
         private static readonly ServerConnectionState State = new(
-            Guid.NewGuid(), Guid.NewGuid(), "https://server.hackeros.test", "fingerprint", "refresh-token",
+            Guid.NewGuid(), Guid.NewGuid(), "https://server.kazoos.test", "fingerprint", "refresh-token",
             DateTimeOffset.UtcNow.AddDays(1));
 
         public ValueTask<ServerConnectionState?> GetStateAsync(CancellationToken cancellationToken = default) =>

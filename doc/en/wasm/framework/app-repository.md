@@ -1,17 +1,17 @@
 > [Version française](../../../fr/wasm/framework/app-repository.md)
 
-# App repository: the `hackeros-solution` template
+# App repository: the `kazoos-solution` template
 
 ## Purpose
 
 The starting point of a Kazo OS app in its own repository: a solution that
 runs in the OS under the debugger, whose Kazo OS version is set by a
-submodule, and that is published to the Hack Store with a tag. Decisions:
+submodule, and that is published to the Kazo OS Store with a tag. Decisions:
 [ADR 0176](../dev/adr/0176-app-repository-template.md),
 [ADR 0188](../dev/adr/0188-hack-store-and-app-catalog.md) §7,
 [ADR 0207](../dev/adr/0207-solution-template-implementation.md).
 The general guide for a repository that uses Kazo OS is
-[`building-on-hackeros.md`](building-on-hackeros.md).
+[`building-on-kazoos.md`](building-on-kazoos.md).
 
 ## Creating the repository
 
@@ -24,12 +24,12 @@ Two ways, same result:
 
   ```bash
   dotnet new install Kazo.Os.Templates
-  dotnet new hackeros-solution -n Contoso.Notes --appId com.contoso.notes \
+  dotnet new kazoos-solution -n Contoso.Notes --appId com.contoso.notes \
       --publisherId pub.contoso --repository contoso/Os-App-Notes
   cd Contoso.Notes
   git init
-  git submodule add --depth 1 https://github.com/Kazo-ca/Os.git external/HackerOs
-  git -C external/HackerOs checkout v<Kazo OS version>
+  git submodule add --depth 1 https://github.com/Kazo-ca/Os.git external/KazoOs
+  git -C external/KazoOs checkout v<Kazo OS version>
   ```
 
   `dotnet new` cannot create the submodule link; without it, the build stops
@@ -46,21 +46,21 @@ Two ways, same result:
 | `tests/<Name>.Tests/` | xUnit tests of the app |
 | `Directory.Build.props` | submodule root, profile, import of `Versions.props` |
 | `Directory.Build.targets` | import of the external source mode, submodule check |
-| `.gitmodules` | `external/HackerOs`, shallow clone |
+| `.gitmodules` | `external/KazoOs`, shallow clone |
 | `store/` | `icon.png` (256×256), `short_description.{en,fr}.txt`, `description.{en,fr}.md`, `store.json`, optional `screenshots/` |
 | `.github/workflows/ci.yml` | CI: submodule checked, build and tests in `Release` |
-| `.github/workflows/publish-to-hack-store.yml` | submission to the catalog on a `v*` tag |
-| `.github/workflows/publish-packages.yml` | signed package pushed to the `hackeros-packages` branch on a `v*` tag ([ADR 0219](../dev/adr/0219-app-authors-signing-tool.md)) |
+| `.github/workflows/publish-to-kazoos-store.yml` | submission to the catalog on a `v*` tag |
+| `.github/workflows/publish-packages.yml` | signed package pushed to the `kazoos-packages` branch on a `v*` tag ([ADR 0219](../dev/adr/0219-app-authors-signing-tool.md)) |
 | `README.md`, `readme-fr.md` | these steps, for the created repository |
 
 ## The Kazo OS version
 
-`external/HackerOs/wasm2/KazoOs/build/Versions.props` is the repository's
+`external/KazoOs/wasm2/KazoOs/build/Versions.props` is the repository's
 version: `Directory.Build.props` imports it, and every `Kazo.Os.*` reference
 uses `$(KazoOsVersion)`. Changing the version means moving the submodule to
 another release tag and committing that change. The submodule is never edited:
 CI refuses a submodule that is modified or off its tag
-(`.github/scripts/check-hackeros-submodule.sh`).
+(`.github/scripts/check-kazoos-submodule.sh`).
 
 ## The two profiles
 
@@ -90,11 +90,11 @@ imported from the submodule. It:
 
 The SDK boundary (`HOSAPP0030`) checks the references that enter the
 submodule; a project of your repository may reference another one. An app
-added with `dotnet new hackeros-window` (or `-command`, `-service`, `-site`)
+added with `dotnet new kazoos-window` (or `-command`, `-service`, `-site`)
 already declares `KazoOsAppProject=true`; add it to the host with
 `dotnet add src/<Name>.Os reference …`.
 
-## Publishing to the Hack Store
+## Publishing to the Kazo OS Store
 
 1. Fill `store/`: 256×256 PNG icon (200 KB at most), English short description
    of 120 characters at most (French is optional), descriptions, and in
@@ -104,7 +104,7 @@ already declares `KazoOsAppProject=true`; add it to the host with
    tests project, which has no such target).
 2. Change `Version` in the `[AppManifest]` class, commit, create the tag
    `v<version>` and push it.
-3. The **Publish to the Hack Store** workflow checks the submodule, builds the
+3. The **Publish to the Kazo OS Store** workflow checks the submodule, builds the
    app in `Release`, packs it (`KazoOsPack`), refuses a tag that is not the
    manifest version and produces `apps/<appId>_<version>/` (content of
    `store/`, the **package's** `manifest.json`, `store.json` with the tag's
@@ -134,7 +134,7 @@ Creating the token (a "classic" token):
 1. GitHub ▸ profile picture ▸ **Settings** ▸ **Developer settings** ▸
    **Personal access tokens** ▸ **Tokens (classic)** ▸ **Generate new token
    (classic)**.
-2. *Note*: for example `<repository> → Hack Store`; *Expiration*: short (90
+2. *Note*: for example `<repository> → Kazo OS Store`; *Expiration*: short (90
    days for example), renewed when it ends.
 3. Scopes: **`repo`** (fork, push, open the pull request) and **`workflow`**
    (GitHub refuses a push that brings to the fork changes of the catalog's
@@ -162,27 +162,27 @@ gh secret set HACK_STORE_TOKEN --repo <owner>/<repository>
 - Not to be confused with `HACKEROS_APP_SIGNING_KEY` (next section), a key the
   Kazo OS tooling generates to sign packages.
 
-## Publishing on `hackeros-packages` and signing
+## Publishing on `kazoos-packages` and signing
 
 [ADR 0219](../dev/adr/0219-app-authors-signing-tool.md). The same `v*` tag runs
 **Publish the Kazo OS packages** (`publish-packages.yml`, the only workflow
-with `contents: write`): it fetches the `hackeros-packages` branch (orphan the
+with `contents: write`): it fetches the `kazoos-packages` branch (orphan the
 first time), packs the app there (`KazoOsPack`, `KazoOsPackageOutput`),
 keeps the versions already published and their signatures, then pushes the
-branch. `hackpkg install <owner>/<repo>` then installs the app without the
+branch. `kazopkg install <owner>/<repo>` then installs the app without the
 Store.
 
 To sign:
 
 1. Once, outside the repository:
-   `dotnet build src/<Name> -t:KazoOsKeyGen -p:KazoOsSigningKeyFile=$HOME/hackeros-signing-key.pem`.
+   `dotnet build src/<Name> -t:KazoOsKeyGen -p:KazoOsSigningKeyFile=$HOME/kazoos-signing-key.pem`.
    The private key (PKCS#8, mode `0600`) goes to that new file, never replaced;
    the public key and the `github.com/<owner>=…` line are printed. `*.pem` is in
    the template's `.gitignore`.
 2. Put the content of the file in the repository's `HACKEROS_APP_SIGNING_KEY`
    secret, then keep the file offline.
 3. Publish the public key; an administrator adds it to `[signing-keys]` of
-   `/etc/hackeros/app-sources.config`. From then on, an unsigned or badly signed
+   `/etc/kazoos/app-sources.config`. From then on, an unsigned or badly signed
    package from this repository is refused.
 
 Without the secret, the package goes out unsigned (SHA-256 only) with a
@@ -193,7 +193,7 @@ version that contains ADR 0219 (2.2.1 or later).
 ## The GitHub template repository
 
 [`Kazo-ca/Os-AppTemplate`](https://github.com/Kazo-ca/Os-AppTemplate)
-is the output of `dotnet new hackeros-solution -n Kazo.Os.App` plus the
+is the output of `dotnet new kazoos-solution -n Kazo.Os.App` plus the
 submodule link. It is regenerated from the template, never edited by hand. It
 can only work with a submodule on a release that contains this template
 (2.2.0 or later, ADR 0207 §11).
@@ -201,7 +201,7 @@ can only work with a submodule on a release that contains this template
 ## Tasks
 
 - [x] External source mode (`Kazo.Os.ExternalSource.targets`, `Kazo.Os.Apps.targets`).
-- [x] `hackeros-solution` template, CI and publishing workflow.
+- [x] `kazoos-solution` template, CI and publishing workflow.
 - [x] `ide.host.json` of the templates.
 - [x] Test of both profiles (`Kazo.Os.Templates.E2E.Tests`).
 - [ ] Template repository regenerated on the release that contains this template.

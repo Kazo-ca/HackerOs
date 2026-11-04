@@ -7,7 +7,7 @@
 /* ── Simulated page shell ────────────────────────────────────────────────── */
 
 .simulated-page {
-    font-family: var(--hackeros-font-mono, "Courier New", monospace);
+    font-family: var(--kazoos-font-mono, "Courier New", monospace);
     color: var(--sim-fg, #33ff33);
     background: var(--sim-bg, #0d0d0d);
     min-height: 100%;

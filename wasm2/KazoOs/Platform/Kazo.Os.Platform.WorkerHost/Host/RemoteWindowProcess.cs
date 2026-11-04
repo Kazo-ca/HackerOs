@@ -28,7 +28,7 @@ public sealed class RemoteWindowProcess
     /// <summary>Gets the window's process id.</summary>
     public long Pid => _session.Pid;
 
-    /// <summary>Gets the number of the worker the window renders in (as in <c>/proc/hackeros/workers</c>).</summary>
+    /// <summary>Gets the number of the worker the window renders in (as in <c>/proc/kazoos/workers</c>).</summary>
     public int WorkerId => _worker.Id;
 
     /// <summary>Gets the memory of the window's worker runtime from its last heartbeat, in bytes.</summary>

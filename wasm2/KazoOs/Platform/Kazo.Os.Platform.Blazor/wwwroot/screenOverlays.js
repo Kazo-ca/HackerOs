@@ -9,7 +9,7 @@
 // browser) have no slot and leave the overlays where they are. The listeners sit on each window in
 // the capture phase, so they run before the listeners every overlay puts on `document`.
 
-const REGISTRY_KEY = Symbol.for("hackeros.displaySurfaces.documentListeners");
+const REGISTRY_KEY = Symbol.for("kazoos.displaySurfaces.documentListeners");
 const SLOT = "[data-screen-overlay-slot]";
 const FOLLOWED = ["pointerdown", "contextmenu", "keydown"];
 

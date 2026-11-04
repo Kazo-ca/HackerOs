@@ -157,11 +157,11 @@ internal static class PwaTestSupport
         page.EvaluateAsync<string[]>("async () => await caches.keys()");
 
     /// <summary>
-    /// The service worker's caches other than the release ones: <c>hackeros-isolation</c> keeps the
+    /// The service worker's caches other than the release ones: <c>kazoos-isolation</c> keeps the
     /// cross-origin isolation choice of this origin across releases (ADR 0131 §5, ADR 0143), so it is
     /// never purged with an old release.
     /// </summary>
-    public static readonly IReadOnlySet<string> ReleaseIndependentCaches = new HashSet<string>(StringComparer.Ordinal) { "hackeros-isolation" };
+    public static readonly IReadOnlySet<string> ReleaseIndependentCaches = new HashSet<string>(StringComparer.Ordinal) { "kazoos-isolation" };
 
     /// <summary>
     /// Asserts that the only release cache is <paramref name="expectedReleaseCache"/> and that every
@@ -170,8 +170,8 @@ internal static class PwaTestSupport
     public static async Task AssertOnlyReleaseCacheAsync(IPage page, string expectedReleaseCache)
     {
         string[] cacheKeys = await GetCacheKeysAsync(page);
-        Assert.Equal([expectedReleaseCache], cacheKeys.Where(key => key.StartsWith("hackeros-cache-", StringComparison.Ordinal)));
-        Assert.All(cacheKeys.Where(key => !key.StartsWith("hackeros-cache-", StringComparison.Ordinal)),
+        Assert.Equal([expectedReleaseCache], cacheKeys.Where(key => key.StartsWith("kazoos-cache-", StringComparison.Ordinal)));
+        Assert.All(cacheKeys.Where(key => !key.StartsWith("kazoos-cache-", StringComparison.Ordinal)),
             key => Assert.Contains(key, ReleaseIndependentCaches));
     }
 

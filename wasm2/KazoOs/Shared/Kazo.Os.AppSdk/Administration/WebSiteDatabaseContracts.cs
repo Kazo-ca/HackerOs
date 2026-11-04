@@ -1,7 +1,7 @@
 namespace Kazo.Os.AppSdk.Administration;
 
 /// <summary>One browser database of a web site (ADR 0088, section 4), as the Diagnostic app lists it.</summary>
-/// <param name="Name">The database name, <c>hackweb.&lt;app id&gt;</c>.</param>
+/// <param name="Name">The database name, <c>kazoweb.&lt;app id&gt;</c>.</param>
 /// <param name="AppId">The site's app id.</param>
 /// <param name="Version">The stored version.</param>
 /// <param name="Stores">The object stores and their record counts, by name.</param>

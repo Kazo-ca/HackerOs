@@ -8,7 +8,7 @@ namespace Kazo.Os.Platform.Core.Network;
 /// <c>curl</c>/<c>ping</c>/<c>nmap</c> to be smoke-tested end-to-end now that they're wired into the
 /// app catalog. This is deliberately not an attempt at a full simulated internet, which is
 /// out of scope here (no game in this repository, ADR 0135) — every
-/// hostname here uses the <c>.hackeros</c> suffix the server-side proxy already treats as a
+/// hostname here uses the <c>.kazoos</c> suffix the server-side proxy already treats as a
 /// simulated-only domain (<c>ProxyService</c>'s blocked-suffix list), so it's unambiguous that
 /// these hosts are smoke-test fixtures, never real network destinations.
 /// </summary>
@@ -19,7 +19,7 @@ public static class SmokeTestNetworkSeed
     [
         new SimulatedHost(
             Ip: "10.0.0.10",
-            Hostname: "example.hackeros",
+            Hostname: "example.kazoos",
             IsUp: true,
             LatencyMs: 12,
             Ports:
@@ -30,13 +30,13 @@ public static class SmokeTestNetworkSeed
             ]),
         new SimulatedHost(
             Ip: "10.0.0.20",
-            Hostname: "empty.hackeros",
+            Hostname: "empty.kazoos",
             IsUp: true,
             LatencyMs: 30,
             Ports: [new SimulatedPort(443, SimulatedPortState.Open, new SimulatedPortService("https"))])
     ];
 
-    /// <summary>Gets the seeded website controllers — only <c>example.hackeros</c> serves content.</summary>
+    /// <summary>Gets the seeded website controllers — only <c>example.kazoos</c> serves content.</summary>
     public static IReadOnlyList<ISimulatedWebsiteController> Websites { get; } =
     [
         new ExampleWebsiteController()
@@ -44,7 +44,7 @@ public static class SmokeTestNetworkSeed
 
     private sealed class ExampleWebsiteController : ISimulatedWebsiteController
     {
-        public string PrimaryHostname => "example.hackeros";
+        public string PrimaryHostname => "example.kazoos";
         public IReadOnlyCollection<string> AliasHostnames => [];
         public string Theme => "hacker";
         public string SiteName => "Example (smoke test)";
@@ -61,7 +61,7 @@ public static class SmokeTestNetworkSeed
                 "<!DOCTYPE html><html><head><title>Echo</title></head><body><p id=\"echo\">msg="
                 + System.Net.WebUtility.HtmlEncode(request.FormBody?.GetValueOrDefault("msg", "") ?? "")
                 + "</p></body></html>"),
-            "/api/ping" => WithHeader(SimulatedHttpResponse.Json("{\"pong\":true,\"host\":\"example.hackeros\"}"), "Access-Control-Allow-Origin", "*"),
+            "/api/ping" => WithHeader(SimulatedHttpResponse.Json("{\"pong\":true,\"host\":\"example.kazoos\"}"), "Access-Control-Allow-Origin", "*"),
             _ => StructuredPage(),
         };
 
@@ -118,7 +118,7 @@ public static class SmokeTestNetworkSeed
                 Title: "Example",
                 PageTheme: Theme,
                 Sections: ImmutableArray.Create<SimulatedPageSection>(
-                    new HeroSection("Welcome to example.hackeros", "A minimal smoke-test host."),
+                    new HeroSection("Welcome to example.kazoos", "A minimal smoke-test host."),
                     new ParagraphSection(
                         "This page exists only to prove curl/ping/nmap work end-to-end (ADR 0034). " +
                         "It is not real site content."))));

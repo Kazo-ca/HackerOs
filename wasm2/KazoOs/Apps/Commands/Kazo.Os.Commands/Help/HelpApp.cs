@@ -11,7 +11,7 @@ namespace Kazo.Os.Commands.Help;
 public sealed class HelpApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.help";
+    public override string Id => "org.kazoos.commands.help";
 
     /// <inheritdoc />
     public override string Name => "help";
@@ -23,7 +23,7 @@ public sealed class HelpApp : AppDefinition
     public override Type EntryPoint => typeof(HelpCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Display help and manual pages for commands";

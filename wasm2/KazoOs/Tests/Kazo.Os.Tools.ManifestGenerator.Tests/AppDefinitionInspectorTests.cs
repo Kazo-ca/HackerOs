@@ -25,7 +25,7 @@ public sealed class AppDefinitionInspectorTests
 
         Assert.True(result.IsSuccess);
         GeneratedManifest generated = Assert.Single(result.Manifests);
-        Assert.Equal("org.hackeros.tests.valid", generated.Manifest.Id);
+        Assert.Equal("org.kazoos.tests.valid", generated.Manifest.Id);
         Assert.Equal(typeof(ValidCommandApp).FullName, generated.DefinitionType);
         Assert.Equal(AppManifestJsonSerializer.SerializeCanonical(generated.Manifest), generated.CanonicalJson);
         Assert.Equal(new AppEntryPointManifest("Kazo.Os.Tools.ManifestGenerator.Tests.dll", typeof(FixtureCommand).FullName!), generated.Manifest.EntryPoint);
@@ -37,7 +37,7 @@ public sealed class AppDefinitionInspectorTests
         InspectionResult result = Inspect(typeof(ValidCommandApp), typeof(SecondCommandApp));
 
         Assert.True(result.IsSuccess);
-        Assert.Equal(["org.hackeros.tests.second", "org.hackeros.tests.valid"], result.Manifests.Select(item => item.Manifest.Id));
+        Assert.Equal(["org.kazoos.tests.second", "org.kazoos.tests.valid"], result.Manifests.Select(item => item.Manifest.Id));
     }
 
     [Fact]
@@ -100,7 +100,7 @@ public sealed class AppDefinitionInspectorTests
         InspectionResult result = AppDefinitionInspector.Inspect(Fixtures);
 
         Assert.True(result.IsSuccess, string.Join("; ", result.Diagnostics));
-        Assert.Equal("org.hackeros.tests.marked", Assert.Single(result.Manifests).Manifest.Id);
+        Assert.Equal("org.kazoos.tests.marked", Assert.Single(result.Manifests).Manifest.Id);
     }
 
     [Fact]
@@ -115,7 +115,7 @@ public sealed class AppDefinitionInspectorTests
     [Fact]
     public void Declared_assets_are_hashed_from_wwwroot()
     {
-        string root = Directory.CreateTempSubdirectory("hackeros-assets-").FullName;
+        string root = Directory.CreateTempSubdirectory("kazoos-assets-").FullName;
         try
         {
             Directory.CreateDirectory(Path.Combine(root, "data"));

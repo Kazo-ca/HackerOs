@@ -20,25 +20,25 @@ public sealed record UserThemeLibraryResult(IReadOnlyList<UserTheme> Themes, IRe
 }
 
 /// <summary>
-/// The catalog of user themes (ADR 0103 §2.2): files of <c>/etc/hackeros/themes/</c> (administrator)
-/// and <c>~/.config/hackeros/themes/</c> (user), shown with the built-in themes. An identifier that
+/// The catalog of user themes (ADR 0103 §2.2): files of <c>/etc/kazoos/themes/</c> (administrator)
+/// and <c>~/.config/kazoos/themes/</c> (user), shown with the built-in themes. An identifier that
 /// repeats a built-in theme, or a <c>~</c> identifier that repeats an <c>/etc</c> one, is refused:
 /// a theme never hides another one.
 /// </summary>
 public static class UserThemeLibrary
 {
     /// <summary>Folder of the themes installed for every user.</summary>
-    public const string SystemDirectory = "/etc/hackeros/themes";
+    public const string SystemDirectory = "/etc/kazoos/themes";
 
     /// <summary>Gets the folder of a user's own themes.</summary>
     /// <param name="homeDirectory">The user's home, such as <c>/home/alice</c>.</param>
     public static string GetUserDirectory(string homeDirectory)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(homeDirectory);
-        return $"{homeDirectory.TrimEnd('/')}/.config/hackeros/themes";
+        return $"{homeDirectory.TrimEnd('/')}/.config/kazoos/themes";
     }
 
-    /// <summary>Gets the path a user theme is saved to: <c>~/.config/hackeros/themes/&lt;id&gt;.theme</c>.</summary>
+    /// <summary>Gets the path a user theme is saved to: <c>~/.config/kazoos/themes/&lt;id&gt;.theme</c>.</summary>
     /// <param name="homeDirectory">The user's home.</param>
     /// <param name="themeId">Valid theme id.</param>
     public static string GetUserThemePath(string homeDirectory, string themeId)
@@ -110,8 +110,8 @@ public static class UserThemeLibrary
 
     /// <summary>
     /// Reads the <c>.theme</c> files of both folders and of the <c>themes/</c> folder of every
-    /// installed theme pack (ADR 0213 §3): <c>/usr/share/hackeros/theme-packs/*/themes/</c> as the
-    /// system, <c>~/.local/share/hackeros/theme-packs/*/themes/</c> as the user. A pack theme follows
+    /// installed theme pack (ADR 0213 §3): <c>/usr/share/kazoos/theme-packs/*/themes/</c> as the
+    /// system, <c>~/.local/share/kazoos/theme-packs/*/themes/</c> as the user. A pack theme follows
     /// the same no-masking rule as any other theme.
     /// </summary>
     /// <param name="listFiles">Lists the files of a folder (absolute paths); may throw when the folder is missing.</param>
@@ -244,7 +244,7 @@ public sealed record ResolvedTheme(string BaseThemeId, UserTheme? UserTheme, boo
     /// <param name="platform">Active form factor.</param>
     /// <param name="userThemes">Accepted user themes.</param>
     /// <remarks>
-    /// A user theme offered on a form factor its base does not target (a <c>hackeros</c>-based theme
+    /// A user theme offered on a form factor its base does not target (a <c>kazoos</c>-based theme
     /// with <c>platforms = desktop, mobile</c>, as in ADR 0103) applies its tokens over that form
     /// factor's default theme there, since a desktop stylesheet cannot skin the mobile shell.
     /// </remarks>

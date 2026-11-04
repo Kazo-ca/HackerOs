@@ -281,12 +281,22 @@ public sealed class KazoTrashTests
     public void A_trashinfo_written_by_the_sync_says_the_file_was_deleted_on_another_device()
     {
         string content = KazoTrashInfo.Format("/home/alice/note.txt", new DateTimeOffset(2026, 10, 17, 8, 0, 0, TimeSpan.Zero))
-            + "X-HackerOS-Origin=deleted-on-another-device\nX-HackerOS-Device=0f3c\n";
+            + "X-KazoOS-Origin=deleted-on-another-device\nX-KazoOS-Device=0f3c\n";
 
         KazoTrashInfo info = KazoTrashInfo.Parse(content)!;
 
         Assert.Equal("/home/alice/note.txt", info.OriginalPath);
         Assert.True(info.DeletedOnAnotherDevice);
         Assert.False(KazoTrashInfo.Parse(KazoTrashInfo.Format("/home/alice/a.txt", DateTimeOffset.Now))!.DeletedOnAnotherDevice);
+    }
+
+    [Fact]
+    public void A_trashinfo_written_before_the_rename_still_says_the_file_was_deleted_on_another_device()
+    {
+        // ADR 0228 §2: entries written before Kazo OS carry X-HackerOS-Origin.
+        string content = KazoTrashInfo.Format("/home/alice/old.txt", new DateTimeOffset(2026, 10, 17, 8, 0, 0, TimeSpan.Zero))
+            + "X-HackerOS-Origin=deleted-on-another-device\nX-HackerOS-Device=0f3c\n";
+
+        Assert.True(KazoTrashInfo.Parse(content)!.DeletedOnAnotherDevice);
     }
 }

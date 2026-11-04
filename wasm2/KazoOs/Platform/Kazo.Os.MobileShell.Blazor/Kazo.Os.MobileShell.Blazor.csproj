@@ -8,7 +8,7 @@
     <Nullable>enable</Nullable>
     <PackageId>Kazo.Os.MobileShell.Blazor</PackageId>
     <Description>Mobile shell chrome Razor components driven entirely by host-supplied contracts, starting with the Android-inspired Back/Home/Recent system navigation bar. Mobile has no taskbar, so this is a sibling package to Kazo.Os.Taskbar.Blazor rather than a modification of it.</Description>
-    <PackageTags>hackeros;windowing;blazor;desktop-shell</PackageTags>
+    <PackageTags>kazoos;windowing;blazor;desktop-shell</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

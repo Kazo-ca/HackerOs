@@ -56,13 +56,13 @@ Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSite.Title.get -> string!
 Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSite.TitleChanged -> System.Action<string!>?
 Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStart
 Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStart.<Clone>$() -> Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStart!
-Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStart.Deconstruct(out Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess? Process, out string? Error) -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStart.Deconstruct(out Kazo.Os.AppSdk.Web.Blazor.Sites.IKazoWebSiteProcess? Process, out string? Error) -> void
 Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStart.Equals(Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStart? other) -> bool
 Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStart.Error.get -> string?
 Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStart.Error.init -> void
-Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStart.KazoWebSiteStart(Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess? Process, string? Error) -> void
+Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStart.KazoWebSiteStart(Kazo.Os.AppSdk.Web.Blazor.Sites.IKazoWebSiteProcess? Process, string? Error) -> void
 Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStart.IsStarted.get -> bool
-Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStart.Process.get -> Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess?
+Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStart.Process.get -> Kazo.Os.AppSdk.Web.Blazor.Sites.IKazoWebSiteProcess?
 Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStart.Process.init -> void
 Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStartRequest
 Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStartRequest.<Clone>$() -> Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStartRequest!
@@ -89,22 +89,22 @@ Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteView.OnNavigate.get -> System.Func<Sy
 Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteView.OnNavigate.set -> void
 Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteView.OnTitleChanged.get -> System.Func<string!, System.Threading.Tasks.Task!>?
 Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteView.OnTitleChanged.set -> void
-Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteView.Process.get -> Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess!
+Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteView.Process.get -> Kazo.Os.AppSdk.Web.Blazor.Sites.IKazoWebSiteProcess!
 Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteView.Process.set -> void
 Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteView.Site.get -> Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSite?
 Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteView.Url.get -> System.Uri!
 Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteView.Url.set -> void
-Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteHost
-Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteHost.StartAsync(Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStartRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStart!>!
-Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess
-Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess.AppId.get -> string!
-Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess.AppName.get -> string!
-Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess.Context.get -> Kazo.Os.AppSdk.IAppExecutionContext!
-Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess.Exited -> System.Action?
-Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess.HasExited.get -> bool
-Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess.ProcessId.get -> Kazo.Os.Simulation.Abstractions.Processes.ProcessId
-Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess.RootComponent.get -> System.Type!
-Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess.StopAsync(bool faulted = false) -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Web.Blazor.Sites.IKazoWebSiteHost
+Kazo.Os.AppSdk.Web.Blazor.Sites.IKazoWebSiteHost.StartAsync(Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStartRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStart!>!
+Kazo.Os.AppSdk.Web.Blazor.Sites.IKazoWebSiteProcess
+Kazo.Os.AppSdk.Web.Blazor.Sites.IKazoWebSiteProcess.AppId.get -> string!
+Kazo.Os.AppSdk.Web.Blazor.Sites.IKazoWebSiteProcess.AppName.get -> string!
+Kazo.Os.AppSdk.Web.Blazor.Sites.IKazoWebSiteProcess.Context.get -> Kazo.Os.AppSdk.IAppExecutionContext!
+Kazo.Os.AppSdk.Web.Blazor.Sites.IKazoWebSiteProcess.Exited -> System.Action?
+Kazo.Os.AppSdk.Web.Blazor.Sites.IKazoWebSiteProcess.HasExited.get -> bool
+Kazo.Os.AppSdk.Web.Blazor.Sites.IKazoWebSiteProcess.ProcessId.get -> Kazo.Os.Simulation.Abstractions.Processes.ProcessId
+Kazo.Os.AppSdk.Web.Blazor.Sites.IKazoWebSiteProcess.RootComponent.get -> System.Type!
+Kazo.Os.AppSdk.Web.Blazor.Sites.IKazoWebSiteProcess.StopAsync(bool faulted = false) -> System.Threading.Tasks.Task!
 Kazo.Os.AppSdk.Web.Blazor._Imports
 Kazo.Os.AppSdk.Web.Blazor._Imports.Execute() -> void
 Kazo.Os.AppSdk.Web.Blazor._Imports._Imports() -> void
@@ -115,7 +115,7 @@ override Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStartRequest.Equals(object? 
 override Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStartRequest.GetHashCode() -> int
 override Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStartRequest.ToString() -> string!
 static Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStart.Failed(string! error) -> Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStart!
-static Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStart.Started(Kazo.Os.AppSdk.Web.Blazor.Sites.IHackWebSiteProcess! process) -> Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStart!
+static Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStart.Started(Kazo.Os.AppSdk.Web.Blazor.Sites.IKazoWebSiteProcess! process) -> Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStart!
 static Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStart.operator !=(Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStart? left, Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStart? right) -> bool
 static Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStart.operator ==(Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStart? left, Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStart? right) -> bool
 static Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStartRequest.operator !=(Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStartRequest? left, Kazo.Os.AppSdk.Web.Blazor.Sites.KazoWebSiteStartRequest? right) -> bool

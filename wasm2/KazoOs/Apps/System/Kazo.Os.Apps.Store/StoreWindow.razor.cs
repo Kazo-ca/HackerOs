@@ -25,7 +25,7 @@ internal enum StoreView
 }
 
 /// <summary>
-/// The Hack Store window (ADR 0188 §1 to §3, ADR 0212): home by categories, search, an app's page,
+/// The Kazo OS Store window (ADR 0188 §1 to §3, ADR 0212): home by categories, search, an app's page,
 /// Install for me / for everyone, Open, Update, Uninstall, the « Installed » tab and « Restart to
 /// finish ». The same component is the desktop window and the mobile screen.
 /// </summary>
@@ -74,7 +74,7 @@ public partial class StoreWindow
     private IStringLocalizer<Strings> L => _localizer ??= AppContext.GetLocalizer<Strings>();
 
     /// <summary>The language of the Store process, for the catalogs' texts.</summary>
-    private CultureInfo Culture => L is KazoStringLocalizer hack ? hack.Culture : KazoLocale.DefaultLanguage;
+    private CultureInfo Culture => L is KazoStringLocalizer kazo ? kazo.Culture : KazoLocale.DefaultLanguage;
 
     private StoreEntry? Selected => _selectedAppId is null ? null : _store.Find(_selectedAppId);
 
@@ -340,7 +340,7 @@ public partial class StoreWindow
     private Task OpenAppearanceAsync(StoreThemePackEntry entry) =>
         RunAsync(entry.PackId, async () => await KazoApps.LaunchAsync(SettingsAppId, [AppearancePageArgument]), reload: false);
 
-    private const string SettingsAppId = "org.hackeros.settings";
+    private const string SettingsAppId = "org.kazoos.settings";
     private const string AppearancePageArgument = "--page=appearance";
 
     private IReadOnlyList<StoreThemePackEntry> VisibleThemePacks => _themePacks.Search(_query, Culture);

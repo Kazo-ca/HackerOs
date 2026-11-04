@@ -27,13 +27,13 @@ public sealed class KazoWebSiteHostTests
         List<(string AppId, ProcessId Parent, IReadOnlyList<string> Arguments)> starts = [];
         List<(ProcessId Pid, ProcessExitReason Reason)> stops = [];
         KazoWebSiteHost host = CreateHost([SiteManifest("org.test.intranet", "http://intranet.hack/")], starts, stops);
-        StubContext browser = new(SiteManifest("org.hackeros.browser", "http://x.hack/"), ProcessId.FromInt64(7));
+        StubContext browser = new(SiteManifest("org.kazoos.browser", "http://x.hack/"), ProcessId.FromInt64(7));
 
         KazoWebSiteStart start = await host.StartAsync(new KazoWebSiteStartRequest(
             new Uri("http://intranet.hack/notes/5"), Boot("org.test.intranet"), browser));
 
         Assert.True(start.IsStarted, start.Error);
-        IHackWebSiteProcess process = start.Process!;
+        IKazoWebSiteProcess process = start.Process!;
         Assert.Equal("org.test.intranet", process.AppId);
         Assert.Equal(typeof(TestRoot), process.RootComponent);
         (string appId, ProcessId parent, IReadOnlyList<string> arguments) = starts.Single();
@@ -167,7 +167,7 @@ public sealed class KazoWebSiteHostTests
         Id = id,
         Name = id,
         Version = "1.0.0",
-        PublisherId = "pub.hackeros",
+        PublisherId = "pub.kazoos",
         Description = "A site.",
         Kind = AppKind.Web,
         EntryPoint = new AppEntryPointManifest(AssemblyName, typeof(TestRoot).FullName!),

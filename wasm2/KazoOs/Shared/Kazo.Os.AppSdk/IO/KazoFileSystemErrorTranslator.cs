@@ -13,7 +13,7 @@ internal enum KazoEntryTarget
 }
 
 /// <summary>
-/// Translates the engine's stable <see cref="FileSystemErrorCode"/> into the <c>Hack*</c> /
+/// Translates the engine's stable <see cref="FileSystemErrorCode"/> into the <c>Kazo*</c> /
 /// BCL exception the equivalent <c>System.IO</c> call would throw (ADR 0043, section 5 table).
 /// </summary>
 internal static class KazoFileSystemErrorTranslator

@@ -16,13 +16,13 @@ namespace Kazo.Os.Samples.BlazorSite;
 public sealed partial class BlazorSampleSite : WebAppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.samples.blazor-site";
+    public override string Id => "org.kazoos.samples.blazor-site";
 
     /// <inheritdoc />
     public override string Name => "Blazor Sample Site";
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description =>

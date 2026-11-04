@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Ln;
 public sealed class LnApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.ln";
+    public override string Id => "org.kazoos.commands.ln";
 
     /// <inheritdoc />
     public override string Name => "ln";
@@ -22,7 +22,7 @@ public sealed class LnApp : AppDefinition
     public override Type EntryPoint => typeof(LnCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Make links between files";

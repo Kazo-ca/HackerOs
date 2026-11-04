@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Head;
 public sealed class HeadApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.head";
+    public override string Id => "org.kazoos.commands.head";
 
     /// <inheritdoc />
     public override string Name => "head";
@@ -22,7 +22,7 @@ public sealed class HeadApp : AppDefinition
     public override Type EntryPoint => typeof(HeadCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Output the first part of files";

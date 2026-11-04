@@ -156,10 +156,10 @@ public sealed class AppManifestJsonSerializerTests
         const string payload = """
         {
           "schemaVersion": 1,
-          "id": "org.hackeros.text-editor",
+          "id": "org.kazoos.text-editor",
           "name": "Text Editor",
           "version": "1.0.0",
-          "publisherId": "org.hackeros",
+          "publisherId": "org.kazoos",
           "description": "Edits text files.",
           "kind": "window",
           "entryPoint": {
@@ -193,10 +193,10 @@ public sealed class AppManifestJsonSerializerTests
 
     private static AppManifest CreateManifest() => new()
     {
-        Id = "org.hackeros.text-editor",
+        Id = "org.kazoos.text-editor",
         Name = "Text Editor",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "Edits text files in the Kazo OS virtual filesystem.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Apps.TextEditor", "Kazo.Os.Apps.TextEditor.TextEditorApp"),
@@ -204,15 +204,15 @@ public sealed class AppManifestJsonSerializerTests
         Presentation = new PresentationManifest("editors", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
         Capabilities = ["filesystem.private.read"],
-        Dependencies = [new AppDependencyManifest("org.hackeros.shared", "1.0.0", Optional: true)],
+        Dependencies = [new AppDependencyManifest("org.kazoos.shared", "1.0.0", Optional: true)],
         Assets = [
             new AssetManifest("assets/editor.css", AssetKind.Css, "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef", "stylesheet")
         ],
         Localizations = [new LocalizationManifest("fr-FR", "locales/fr-FR.json")],
-        Intents = [new AppIntentDeclarationManifest("hackeros.open", "schemas/open.json")],
+        Intents = [new AppIntentDeclarationManifest("kazoos.open", "schemas/open.json")],
         Settings = new AppSettingsSchemaManifest(1, [new AppSettingFieldManifest("theme", AppSettingValueType.Enum, "dark", AppSettingScope.AppUser, AppSettingSensitivity.Public, ["dark", "light"])]),
         FileHandlers = [new FileHandlerManifest("text/plain", [".txt"], ["open", "edit"], 3)],
-        Components = [new AppComponentManifest("hackeros.text-view", "Kazo.Os.Apps.TextEditor", "Kazo.Os.Apps.TextEditor.TextViewEmbed")],
+        Components = [new AppComponentManifest("kazoos.text-view", "Kazo.Os.Apps.TextEditor", "Kazo.Os.Apps.TextEditor.TextViewEmbed")],
         Execution = AppExecutionHost.MainThread
     };
 

@@ -8,7 +8,7 @@ Work item `rebuild/4-terminal` of phase 4 (ADR 0058, section 4). The console
 reaches parity with a Linux terminal:
 
 - **Tab also completes paths**, and it is the shell that does it
-  (`IHackShell.CompleteAsync`), not the terminal emulator;
+  (`IKazoShell.CompleteAsync`), not the terminal emulator;
 - **`exit [n]`** is a catalog command that ends the shell;
 - **several tabs**, each with its own `hsh` shell.
 
@@ -64,11 +64,11 @@ like `bash`.
 | `exit 1 2` | `exit: too many arguments`, code `1`, the shell stays. |
 | `exit 4 \| cat` | In a pipe, the request reaches a copy of the shell and is lost, like `bash`'s subshell. |
 
-The command (`org.hackeros.commands.exit`, capability `shell.control`) calls
+The command (`org.kazoos.commands.exit`, capability `shell.control`) calls
 `IShellSession.Exit(int?)`. `ShellSession.RequestExit` notes the status; the
 interpreter does not execute the rest of the line (`exit 0 && echo late` prints
 nothing), then the shell host (`ShellHostService`) ends the `hsh` process with
-that status. `IHackShell.HasExited` becomes true and `ExecuteAsync` then throws
+that status. `IKazoShell.HasExited` becomes true and `ExecuteAsync` then throws
 `ObjectDisposedException`.
 
 **Ctrl+D** on an empty line, with no command running, does the same thing: the
@@ -77,7 +77,7 @@ terminal prints `exit` and ends the shell with `$?`.
 `TerminalPanel.OnExitRequested` is called when the shell has exited. Without a
 subscriber, the panel stays open and prints `[hsh exited with status n]`. A
 host that embeds the terminal by contract (ADR 0063) also receives the
-`IHackTerminal.Exited` event: the code editor closes the integrated terminal's
+`IKazoTerminal.Exited` event: the code editor closes the integrated terminal's
 tab, and hides the dock for the last one.
 
 ## Tabs
@@ -131,7 +131,7 @@ up to `TerminalTabs`.
   window" API, and the desktop already closes the window of a stopped process.
 - **CodeEditor keeps its own tabs** (ADR 0058); since ADR 0063, each embeds the
   Terminal app's terminal by contract, and the editor reacts to `exit` through
-  `IHackTerminal.Exited`.
+  `IKazoTerminal.Exited`.
 - **`;` is not recognized by the parser**: completion treats it as a separator
   to be ready, but the examples use `&&`.
 

@@ -179,11 +179,11 @@ public sealed class KazoDesktopTests
     [Fact]
     public void A_shortcut_round_trips_with_quoted_arguments()
     {
-        KazoDesktopEntry entry = new("My notes", "org.hackeros.text-editor", ["/home/alice/My notes.txt", "--line=3"], "file-text");
+        KazoDesktopEntry entry = new("My notes", "org.kazoos.text-editor", ["/home/alice/My notes.txt", "--line=3"], "file-text");
 
         string text = entry.Format();
 
-        Assert.Contains("Exec=org.hackeros.text-editor \"/home/alice/My notes.txt\" --line=3", text, StringComparison.Ordinal);
+        Assert.Contains("Exec=org.kazoos.text-editor \"/home/alice/My notes.txt\" --line=3", text, StringComparison.Ordinal);
         Assert.True(KazoDesktopEntry.TryParse(text, out KazoDesktopEntry? read));
         Assert.Equal(entry.Name, read.Name);
         Assert.Equal(entry.AppId, read.AppId);
@@ -194,7 +194,7 @@ public sealed class KazoDesktopTests
     [Fact]
     public void A_shortcut_drops_field_codes()
     {
-        Assert.True(KazoDesktopEntry.TryParse("[Desktop Entry]\nType=Application\nName=Editor\nExec=org.hackeros.text-editor %F 100%%\n", out KazoDesktopEntry? entry));
+        Assert.True(KazoDesktopEntry.TryParse("[Desktop Entry]\nType=Application\nName=Editor\nExec=org.kazoos.text-editor %F 100%%\n", out KazoDesktopEntry? entry));
 
         Assert.Equal(["100%"], entry.Arguments);
     }
@@ -225,13 +225,13 @@ public sealed class KazoDesktopTests
         using IDisposable scope = KazoTestHost.Enter(out FakeAppFileSystemGateway fs);
         fs.WithDirectory("/home/alice/Desktop");
 
-        string first = await KazoDesktopEntry.CreateShortcutAsync("/home/alice/Desktop", "org.hackeros.calculator", "Calculator");
-        string second = await KazoDesktopEntry.CreateShortcutAsync("/home/alice/Desktop", "org.hackeros.calculator", "Calculator");
+        string first = await KazoDesktopEntry.CreateShortcutAsync("/home/alice/Desktop", "org.kazoos.calculator", "Calculator");
+        string second = await KazoDesktopEntry.CreateShortcutAsync("/home/alice/Desktop", "org.kazoos.calculator", "Calculator");
 
         Assert.Equal("/home/alice/Desktop/Calculator.desktop", first);
         Assert.Equal("/home/alice/Desktop/Calculator (2).desktop", second);
         Assert.True(KazoDesktopEntry.TryParse(await KazoFile.ReadAllTextAsync(second), out KazoDesktopEntry? entry));
-        Assert.Equal("org.hackeros.calculator", entry.AppId);
+        Assert.Equal("org.kazoos.calculator", entry.AppId);
         await Assert.ThrowsAsync<ArgumentException>(() => KazoDesktopEntry.CreateShortcutAsync("/home/alice/Desktop", "not an id", "X"));
     }
 
@@ -297,7 +297,7 @@ public sealed class KazoDesktopTests
         await KazoDesktopSettings.SaveOptionsAsync(KazoDesktopOptions.Default with { IconSize = KazoDesktopIconSize.Small });
         await KazoDesktopSettings.SavePositionsAsync(new Dictionary<string, KazoDesktopCell> { [KazoDesktopItems.Trash] = Cell(0, 3) });
 
-        Assert.True(fs.Exists("/home/alice/.config/hackeros/desktop.config"));
+        Assert.True(fs.Exists("/home/alice/.config/kazoos/desktop.config"));
         KazoDesktopSettingsDocument read = await KazoDesktopSettings.ReadAsync();
         Assert.Equal(KazoDesktopIconSize.Small, read.Options.IconSize);
         Assert.Equal(Cell(0, 3), read.Positions[KazoDesktopItems.Trash]);

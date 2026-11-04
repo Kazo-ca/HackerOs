@@ -10,7 +10,7 @@ namespace Kazo.Os.Ecosystem.Tests;
 public sealed class InstalledAppAssetPublisherTests
 {
     private const string AppId = "org.kazo.sample";
-    private const string Folder = "/usr/lib/hackeros/apps/org.kazo.sample/1.0.0/wwwroot/";
+    private const string Folder = "/usr/lib/kazoos/apps/org.kazo.sample/1.0.0/wwwroot/";
     private static readonly byte[] Worker = Encoding.UTF8.GetBytes("importScripts('engine.js');");
     private static readonly byte[] Engine = Encoding.UTF8.GetBytes("self.engine = 1;");
 
@@ -136,8 +136,8 @@ public sealed class InstalledAppAssetPublisherTests
         (InstalledAppAssetPublisher publisher, InstalledApp app, _) = Create(cache, new()
         {
             [Folder + "engine/engine.js"] = Engine,
-            ["/etc/hackeros/apps.config"] = Encoding.UTF8.GetBytes("[installed]\norg.kazo.other=github:Kazo-ca/Other@1.0.0\n"),
-            ["/usr/lib/hackeros/apps/org.kazo.other/1.0.0/manifest.json"] = Encoding.UTF8.GetBytes(AppManifestJsonSerializer.SerializeCanonical(other)),
+            ["/etc/kazoos/apps.config"] = Encoding.UTF8.GetBytes("[installed]\norg.kazo.other=github:Kazo-ca/Other@1.0.0\n"),
+            ["/usr/lib/kazoos/apps/org.kazo.other/1.0.0/manifest.json"] = Encoding.UTF8.GetBytes(AppManifestJsonSerializer.SerializeCanonical(other)),
         }, manifest);
 
         await publisher.PublishAsync(app);

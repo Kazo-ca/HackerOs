@@ -19,7 +19,7 @@ public sealed class EndTaskTests
     public async Task End_task_terminates_politely_and_force_kill_kills_at_once()
     {
         FakeAppProcessGateway processes = new FakeAppProcessGateway()
-            .WithProcess(ProcessRecordFactory.Running(42, "org.hackeros.text-editor", Session, Now, Now));
+            .WithProcess(ProcessRecordFactory.Running(42, "org.kazoos.text-editor", Session, Now, Now));
         using IDisposable scope = Enter(processes);
         KazoProcess editor = await KazoProcess.GetProcessByIdAsync(42);
 
@@ -58,7 +58,7 @@ public sealed class EndTaskTests
     {
         FakeAppFileSystemGateway fileSystem = new FakeAppFileSystemGateway()
             .WithDirectory("/proc/42")
-            .WithFile("/proc/42/status", "Name:\ttext-editor\nAppId:\torg.hackeros.text-editor\nState:\tR (running)\nPPid:\t0\n");
+            .WithFile("/proc/42/status", "Name:\ttext-editor\nAppId:\torg.kazoos.text-editor\nState:\tR (running)\nPPid:\t0\n");
         return KazoExecutionContext.Enter(new MinimalAppExecutionContext(
             AppDefinitionMapper.ToManifest(new SystemMonitorApp()), fileSystem: fileSystem, processes: processes));
     }

@@ -4,7 +4,7 @@
 
 @*
     Settings > Date and time (ADR 0193): the current time in the chosen zone and in UTC, and the
-    time zone, written to ~/.config/hackeros/datetime.config. The clock follows a change at once.
+    time zone, written to ~/.config/kazoos/datetime.config. The clock follows a change at once.
 *@
 <div class="setting-group datetime-panel datetime-state">
     <h4 id="datetime-state-title">@L["DateTime.State.Title"]</h4>
@@ -28,7 +28,7 @@ else
         <h4 id="datetime-zone-title">@L["DateTime.Zone.Title"] <SettingOriginBadge Source="@Source" IsLocked="@IsLocked" /></h4>
         <p class="setting-desc">
             @LocalizedMarkup.Format(L["DateTime.Zone.Description"],
-                LocalizedMarkup.Code("~/.config/hackeros/" + DocumentFileName),
+                LocalizedMarkup.Code("~/.config/kazoos/" + DocumentFileName),
                 LocalizedMarkup.Code("TZ"))
         </p>
         <div class="datetime-options" role="radiogroup" aria-labelledby="datetime-zone-title">

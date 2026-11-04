@@ -41,7 +41,7 @@ arrivent sans casser une app 1.0 ou 1.1.
 Appliqué en attendant (recommandé) : **une seule publication, à la fin**, dans
 `exec/10-final` : `HackerOsVersion` passe à `1.2.0`, les fichiers `Unshipped`
 sont versés dans `Shipped`, [`sdk-packages.md`](../../framework/sdk-packages.md) et
-[`building-on-hackeros.md`](../../framework/building-on-hackeros.md) listent les ajouts.
+[`building-on-kazoos.md`](../../framework/building-on-kazoos.md) listent les ajouts.
 Pendant la série, `exec/base` reste en 1.1.0 avec des ajouts non publiés.
 
 L'autre choix : une version mineure par chantier qui ajoute une API (1.2, 1.3,
@@ -90,4 +90,4 @@ réserve.
 
 - ADR 0098, 0113, 0114, 0117, 0124 à 0131.
 - [`sdk-packages.md`](../../framework/sdk-packages.md),
-  [`building-on-hackeros.md`](../../framework/building-on-hackeros.md).
+  [`building-on-kazoos.md`](../../framework/building-on-kazoos.md).

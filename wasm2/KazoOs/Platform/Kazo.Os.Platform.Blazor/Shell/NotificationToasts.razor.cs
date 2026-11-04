@@ -26,8 +26,8 @@ public enum NotificationToastPlacement
 /// </summary>
 public partial class NotificationToasts : ComponentBase
 {
-    /// <summary>Prefix of the OS's own notification sources, such as <c>org.hackeros.kernel</c>.</summary>
-    private const string SystemSourcePrefix = "org.hackeros.";
+    /// <summary>Prefix of the OS's own notification sources, such as <c>org.kazoos.kernel</c>.</summary>
+    private const string SystemSourcePrefix = "org.kazoos.";
 
     private NotificationToastFeed _feed = null!;
     private DoNotDisturbService? _doNotDisturb;

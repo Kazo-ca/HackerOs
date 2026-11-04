@@ -9,8 +9,8 @@ using Kazo.Os.Theming.Abstractions;
 namespace Kazo.Os.Platform.Core.Execution;
 
 /// <summary>
-/// Theme packs of the Hack Store behind <see cref="KazoAppPackages"/> (ADR 0190, ADR 0213): the OS
-/// downloads the <c>.hacktheme</c> of a catalog itself, verifies it, and unpacks it for the session
+/// Theme packs of the Kazo OS Store behind <see cref="KazoAppPackages"/> (ADR 0190, ADR 0213): the OS
+/// downloads the <c>.kazotheme</c> of a catalog itself, verifies it, and unpacks it for the session
 /// user (written as that user, without an administrator, from a trusted catalog) or for every user
 /// (two-step approval of ADR 0189 §4, then written as the system). A pack holds no code, so it
 /// applies at once: no restart.

@@ -9,8 +9,8 @@ and shows it in the user's time zone. Decision: [ADR 0193](../dev/adr/0193-local
 
 | Layer | File | Key |
 | --- | --- | --- |
-| Machine (also the sign-in screen) | `/etc/hackeros/datetime.config` | `timeZone` |
-| User (wins) | `~/.config/hackeros/datetime.config` | `timeZone` |
+| Machine (also the sign-in screen) | `/etc/kazoos/datetime.config` | `timeZone` |
+| User (wins) | `~/.config/kazoos/datetime.config` | `timeZone` |
 
 `timeZone` is `auto` (the device's zone, given by the browser) or an IANA
 identifier (`America/Toronto`, `Europe/Paris`, `UTC`). An unknown name counts as

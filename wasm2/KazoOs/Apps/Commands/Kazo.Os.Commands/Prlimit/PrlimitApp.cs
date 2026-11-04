@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Prlimit;
 public sealed class PrlimitApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.prlimit";
+    public override string Id => "org.kazoos.commands.prlimit";
 
     /// <inheritdoc />
     public override string Name => "prlimit";
@@ -22,7 +22,7 @@ public sealed class PrlimitApp : AppDefinition
     public override Type EntryPoint => typeof(PrlimitCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Get and set the resource limits of a process";

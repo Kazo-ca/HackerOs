@@ -5,7 +5,7 @@
   <PropertyGroup>
     <PackageId>Kazo.Os.Apps.IconViewer</PackageId>
     <Description>The base Kazo OS icon viewer app, to include in an OS host (ProjectReference or PackageReference, optionally IsSystemApp).</Description>
-    <PackageTags>hackeros;app</PackageTags>
+    <PackageTags>kazoos;app</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup>

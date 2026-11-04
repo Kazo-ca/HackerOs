@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Kazo.Os.Server;
 using Kazo.Os.Server.Data;
+using Kazo.Os.Server.Contracts.Hosting;
 using Kazo.Os.Server.Endpoints;
 using Kazo.Os.Server.LocalServer;
 using Kazo.Os.Server.Services;
@@ -8,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
 // =============================================================================
-// HackerOs Optional Server
+// Kazo OS Optional Server
 //
 // This process is entirely optional. The browser PWA continues to function
 // fully when this server is not reachable. The server provides:
@@ -20,7 +21,7 @@ using Scalar.AspNetCore;
 //   3. Network relay — server-side validated HTTP requests (with their bodies), a single-port
 //      TCP probe, and TCP/UDP streams over WebSockets, for apps the server grants
 //      network.real.access to (ADR 0035, ADR 0102). Its policy and quotas are the
-//      HackerOs:Proxy section of appsettings.json; risky settings are logged at startup.
+//      KazoOs:Proxy section of appsettings.json; risky settings are logged at startup.
 //
 // Security: The server never trusts any client-side claims. It validates
 // every request against its own stored device policy and capability grants.
@@ -50,17 +51,24 @@ builder.Services.AddSystemd();
 // ── Configuration ─────────────────────────────────────────────────────────────
 // WebApplication.CreateBuilder already loads appsettings.json, the environment
 // variant, standard environment variables, and command-line arguments. Add only
-// the documented HACKEROS_ override layer so deployments can use scoped variables
+// the documented KAZOOS_ override layer so deployments can use scoped variables
 // without re-adding JSON sources after host/test configuration.
-// ADR 0191 §3: before it, hackeros-server.json, written by the install scripts next to the program
+// ADR 0191 §3: before it, kazoos-server.json, written by the install scripts next to the program
 // (listening address, AllowedHosts, origins, data folders, certificate); absent elsewhere.
+// ADR 0228 §2: a server installed before the rename has hackeros-server.json and HACKEROS_
+// variables; both are still read, and the new names win (they are added after).
 builder.Configuration.AddJsonFile(
     Path.Combine(builder.Environment.ContentRootPath, "hackeros-server.json"), optional: true, reloadOnChange: false);
-builder.Configuration.AddEnvironmentVariables(prefix: "HACKEROS_");
+builder.Configuration.AddJsonFile(
+    Path.Combine(builder.Environment.ContentRootPath, "kazoos-server.json"), optional: true, reloadOnChange: false);
+builder.Configuration.AddEnvironmentVariables(prefix: KazoOsConfigurationNames.LegacyEnvironmentPrefix);
+builder.Configuration.AddEnvironmentVariables(prefix: KazoOsConfigurationNames.EnvironmentPrefix);
+// The old section HackerOs and connection string HackerOsDb answer under KazoOs and KazoOsDb.
+builder.Configuration.AddInMemoryCollection(KazoOsConfigurationNames.MapLegacySettings(builder.Configuration.AsEnumerable()));
 
 // ── Database ──────────────────────────────────────────────────────────────────
-var connectionString = builder.Configuration.GetConnectionString("HackerOsDb")
-    ?? "Data Source=hackeros.db";
+var connectionString = builder.Configuration.GetConnectionString(KazoOsConfigurationNames.ConnectionStringName)
+    ?? "Data Source=kazoos.db";
 builder.Services.AddDbContext<KazoOsServerDbContext>(options =>
     options.UseSqlite(connectionString));
 
@@ -85,7 +93,7 @@ builder.Services.AddScoped<IProxyGrantAuthority, ProxyGrantAuthority>();
 builder.Services.AddLocalServer(builder.Configuration, builder.Environment.ContentRootPath);
 
 // ── Network relay policy (ADR 0102 §5) ────────────────────────────────────────
-// HackerOs:Proxy is read once at startup; ProxyRelayPolicy fills the defaults the binder cannot
+// KazoOs:Proxy is read once at startup; ProxyRelayPolicy fills the defaults the binder cannot
 // (it appends to lists initialized in code), and ProxyPolicyStartupReporter logs a warning per
 // setting that weakens them.
 builder.Services.AddOptions<ProxyOptions>().Bind(builder.Configuration.GetSection(ProxyOptions.SectionName));
@@ -152,7 +160,7 @@ var app = builder.Build();
 
 // ── Middleware pipeline ───────────────────────────────────────────────────────
 // ADR 0131, section 2: COOP/COEP on every response, so the OS's page and its Web Workers are
-// cross-origin isolated (HackerOs:CrossOriginIsolation: auto, on or off). The PWA's service worker
+// cross-origin isolated (KazoOs:CrossOriginIsolation: auto, on or off). The PWA's service worker
 // adds the same headers once it is installed; this covers the first load and a host without it.
 IReadOnlyList<KeyValuePair<string, string>> isolationHeaders = Kazo.Os.Platform.Core.Isolation.CrossOriginIsolationPolicy.ServerHeaders(
     Kazo.Os.Platform.Core.Isolation.CrossOriginIsolationPolicy.Parse(app.Configuration[Kazo.Os.Platform.Core.Isolation.CrossOriginIsolationPolicy.SettingKey]));
@@ -195,7 +203,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 // ADR 0130: the OS in WebAssembly. MapStaticAssets serves every file the Ecosystem publishes
 // (index.html with its fingerprinted references, _framework/, the service worker, the apps);
-// only its hackeros-host.json is answered by this server instead (ADR 0137).
+// only its kazoos-host.json is answered by this server instead (ADR 0137).
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
@@ -238,8 +246,8 @@ app.MapSyncEndpoints();       // POST /api/sync/pull, POST /api/sync/push, ...
 app.MapProxyEndpoints();      // POST /api/proxy/http, /tcp-probe; WS /api/proxy/tcp, /udp; GET /api/proxy/policy
 app.MapAdminEndpoints();      // GET /health, GET /api/account/data-summary, ...
 
-app.MapHostInfoEndpoints();   // GET /api/hackeros/host-info (ADR 0134)
-app.MapLocalServerEndpoints(); // POST /api/auth/pair, GET /api/hackeros/local-ca.crt (ADR 0191)
+app.MapHostInfoEndpoints();   // GET /api/kazoos/host-info (ADR 0134)
+app.MapLocalServerEndpoints(); // POST /api/auth/pair, GET /api/kazoos/local-ca.crt (ADR 0191)
 
 await app.RunAsync();
 return 0;

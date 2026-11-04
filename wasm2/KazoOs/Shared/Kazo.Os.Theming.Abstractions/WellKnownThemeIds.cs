@@ -4,7 +4,7 @@ namespace Kazo.Os.Theming.Abstractions;
 public static class WellKnownThemeIds
 {
     /// <summary>The native Kazo OS desktop theme.</summary>
-    public const string HackerOs = "hackeros";
+    public const string KazoOs = "kazoos";
 
     /// <summary>The Windows 98-inspired desktop theme.</summary>
     public const string Windows98 = "windows-98";

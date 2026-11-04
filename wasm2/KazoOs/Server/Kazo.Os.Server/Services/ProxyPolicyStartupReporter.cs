@@ -35,7 +35,7 @@ public sealed partial class ProxyPolicyStartupReporter(ProxyRelayPolicy policy, 
     /// <inheritdoc />
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
-    [LoggerMessage(EventId = 1020, Level = LogLevel.Information, Message = "Network relay disabled (HackerOs:Proxy:Enabled is false): apps have no route to the real network.")]
+    [LoggerMessage(EventId = 1020, Level = LogLevel.Information, Message = "Network relay disabled (KazoOs:Proxy:Enabled is false): apps have no route to the real network.")]
     private static partial void LogDisabled(ILogger logger);
 
     [LoggerMessage(EventId = 1021, Level = LogLevel.Warning, Message = "Network relay: {Warning}")]

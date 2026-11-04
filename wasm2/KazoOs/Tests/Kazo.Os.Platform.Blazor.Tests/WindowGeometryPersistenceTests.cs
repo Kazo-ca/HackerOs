@@ -9,14 +9,14 @@ namespace Kazo.Os.Platform.Blazor.Tests;
 
 public sealed class WindowGeometryPersistenceTests
 {
-    private const string AppId = "org.hackeros.files";
+    private const string AppId = "org.kazoos.files";
 
     [Fact]
     public void Geometry_lives_in_device_local_state_not_in_config()
     {
         OsSettingsFile file = WindowGeometrySettings.GetFile(AppId);
 
-        Assert.Equal("/home/alice/.local/state/hackeros/windows/org.hackeros.files.config", file.Resolve("/home/alice").Value);
+        Assert.Equal("/home/alice/.local/state/kazoos/windows/org.kazoos.files.config", file.Resolve("/home/alice").Value);
         Assert.Throws<ArgumentException>(() => WindowGeometrySettings.GetFile("../escape"));
     }
 
@@ -31,8 +31,8 @@ public sealed class WindowGeometryPersistenceTests
 
         Assert.Equal(new SavedWindowGeometry(640, 480, false), await persistence.RestoreAsync(AppId));
         Assert.Equal(
-            "# Window size of org.hackeros.files (ADR 0116, ADR 0122)\nwidth=640\nheight=480\nmaximized=false\n",
-            settings.Files["windows/org.hackeros.files.config"]);
+            "# Window size of org.kazoos.files (ADR 0116, ADR 0122)\nwidth=640\nheight=480\nmaximized=false\n",
+            settings.Files["windows/org.kazoos.files.config"]);
     }
 
     [Fact]

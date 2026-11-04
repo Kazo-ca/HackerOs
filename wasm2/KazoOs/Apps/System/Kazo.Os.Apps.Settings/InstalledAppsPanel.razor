@@ -5,8 +5,8 @@
     <h4>@(OnlyAppId is null ? L["Apps.Title"] : L["Apps.InstallationTitle"])</h4>
     <p class="setting-desc @(OnlyAppId is null ? "" : "is-hidden")">
         @LocalizedMarkup.Format(L["Apps.Description"],
-            LocalizedMarkup.Code("~/.config/hackeros/apps.config"),
-            LocalizedMarkup.Code("/etc/hackeros/apps.config"))
+            LocalizedMarkup.Code("~/.config/kazoos/apps.config"),
+            LocalizedMarkup.Code("/etc/kazoos/apps.config"))
     </p>
 
     @if (_apps is null)
@@ -84,7 +84,7 @@
                 @foreach (string siteId in WebSitesIn(_pending.UninstallClosure))
                 {
                     <p class="apps-site-data">
-                        @LocalizedMarkup.Format(L["Apps.Uninstall.SiteData"], NameOf(siteId), LocalizedMarkup.Code($"hackweb.{siteId}"))
+                        @LocalizedMarkup.Format(L["Apps.Uninstall.SiteData"], NameOf(siteId), LocalizedMarkup.Code($"kazoweb.{siteId}"))
                     </p>
                 }
 

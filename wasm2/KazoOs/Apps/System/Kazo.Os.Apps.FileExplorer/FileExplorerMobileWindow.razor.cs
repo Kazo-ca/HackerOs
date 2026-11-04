@@ -84,7 +84,7 @@ public partial class FileExplorerMobileWindow
     }
 
     /// <summary>The control is ready: in the selection mode, a tap adds or removes an item (ADR 0171 §2).</summary>
-    private async Task OnMobileControllerChangedAsync(IHackFileView? files)
+    private async Task OnMobileControllerChangedAsync(IKazoFileView? files)
     {
         await OnControllerChangedAsync(files);
         ApplyTapMode();

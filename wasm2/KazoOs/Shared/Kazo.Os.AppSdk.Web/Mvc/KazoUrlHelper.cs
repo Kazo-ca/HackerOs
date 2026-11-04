@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Kazo.Os.AppSdk.Web.Mvc;
 
 /// <summary>Builds URLs inside a request (ASP.NET's <c>IUrlHelper</c>); views (web/7) use it too.</summary>
-public interface IHackUrlHelper
+public interface IKazoUrlHelper
 {
     /// <summary>Gets the path of an action; the current action or controller when <see langword="null"/>.</summary>
     /// <param name="action">Action name.</param>
@@ -40,8 +40,8 @@ public interface IHackUrlHelper
     bool IsLocalUrl([NotNullWhen(true)] string? url);
 }
 
-/// <summary>The <see cref="IHackUrlHelper"/> of a request, over the site's <see cref="KazoLinkGenerator"/>.</summary>
-public sealed class KazoUrlHelper : IHackUrlHelper
+/// <summary>The <see cref="IKazoUrlHelper"/> of a request, over the site's <see cref="KazoLinkGenerator"/>.</summary>
+public sealed class KazoUrlHelper : IKazoUrlHelper
 {
     private readonly KazoActionContext _context;
 
@@ -84,7 +84,7 @@ public sealed class KazoUrlHelper : IHackUrlHelper
     }
 
     /// <inheritdoc />
-    bool IHackUrlHelper.IsLocalUrl([NotNullWhen(true)] string? url) => IsLocalUrl(url);
+    bool IKazoUrlHelper.IsLocalUrl([NotNullWhen(true)] string? url) => IsLocalUrl(url);
 
     /// <summary>
     /// Gets whether <paramref name="url"/> is a path of this site: it starts with <c>/</c> (not <c>//</c>

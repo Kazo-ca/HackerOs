@@ -16,7 +16,7 @@ public sealed class CodeEditorApp : AppDefinition
     public override IReadOnlyList<AssetManifest> Assets =>
         [new("icons/app.svg", AssetKind.Image, new string('0', 64), "app-icon")];
     /// <inheritdoc />
-    public override string Id => "org.hackeros.code-editor";
+    public override string Id => "org.kazoos.code-editor";
 
     /// <inheritdoc />
     public override string Name => "Code Editor";
@@ -31,7 +31,7 @@ public sealed class CodeEditorApp : AppDefinition
     public override Type? MobileEntryPoint => typeof(CodeEditorWindow);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description =>

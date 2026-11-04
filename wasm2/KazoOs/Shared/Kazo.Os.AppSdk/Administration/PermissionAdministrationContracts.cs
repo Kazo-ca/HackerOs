@@ -2,7 +2,7 @@ namespace Kazo.Os.AppSdk.Administration;
 
 /// <summary>
 /// What the OS does when a non-system app declares a dangerous capability: the
-/// <c>dangerousCapabilities</c> key of <c>/etc/hackeros/security.config</c> (ADR 0049, section 3).
+/// <c>dangerousCapabilities</c> key of <c>/etc/kazoos/security.config</c> (ADR 0049, section 3).
 /// </summary>
 public enum KazoDangerousCapabilityPolicy
 {
@@ -16,10 +16,10 @@ public enum KazoDangerousCapabilityPolicy
 /// <summary>A machine decision about one dangerous capability of one app (ADR 0049, section 4).</summary>
 public enum KazoPermissionDecision
 {
-    /// <summary>Write <c>allow</c> in <c>/etc/hackeros/app-permissions.config</c>.</summary>
+    /// <summary>Write <c>allow</c> in <c>/etc/kazoos/app-permissions.config</c>.</summary>
     Allow = 0,
 
-    /// <summary>Write <c>deny</c> in <c>/etc/hackeros/app-permissions.config</c>.</summary>
+    /// <summary>Write <c>deny</c> in <c>/etc/kazoos/app-permissions.config</c>.</summary>
     Deny = 1,
 
     /// <summary>Remove the machine line: the capability is pending again and the launch asks.</summary>
@@ -35,7 +35,7 @@ public enum KazoPermissionState
     /// <summary>An administrator allowed it for the machine and the user did not refuse it.</summary>
     Allowed = 1,
 
-    /// <summary>The session user refused it in <c>~/.config/hackeros/app-permissions.config</c>.</summary>
+    /// <summary>The session user refused it in <c>~/.config/kazoos/app-permissions.config</c>.</summary>
     DeniedByUser = 2,
 
     /// <summary>An administrator refused it for the machine.</summary>
@@ -82,7 +82,7 @@ public sealed record KazoAppPermissionInfo(
 /// </summary>
 public interface IAppPermissionAdministrationGateway
 {
-    /// <summary>Reads the effective policy of <c>/etc/hackeros/security.config</c>.</summary>
+    /// <summary>Reads the effective policy of <c>/etc/kazoos/security.config</c>.</summary>
     /// <param name="cancellationToken">Cancels the read.</param>
     ValueTask<KazoDangerousCapabilityPolicy> GetPolicyAsync(CancellationToken cancellationToken = default);
 

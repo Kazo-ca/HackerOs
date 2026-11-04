@@ -65,11 +65,11 @@ public sealed class ShellCommandResolverTests
     [Fact]
     public void Resolve_finds_terminal_apps_by_name_or_alias()
     {
-        AppCatalog catalog = BuildCatalog(Manifest("org.hackeros.echo", "echo", "Echoes", "echo [text]", aliases: ["print"]));
+        AppCatalog catalog = BuildCatalog(Manifest("org.kazoos.echo", "echo", "Echoes", "echo [text]", aliases: ["print"]));
         ShellCommandResolver resolver = new(catalog);
 
-        Assert.Equal("org.hackeros.echo", resolver.Resolve("echo", ["hello"])?.AppId);
-        Assert.Equal("org.hackeros.echo", resolver.Resolve("print", ["hello"])?.AppId);
+        Assert.Equal("org.kazoos.echo", resolver.Resolve("echo", ["hello"])?.AppId);
+        Assert.Equal("org.kazoos.echo", resolver.Resolve("print", ["hello"])?.AppId);
         Assert.Null(resolver.Resolve("nonexistent", []));
     }
 
@@ -97,7 +97,7 @@ public sealed class ShellCommandResolverTests
         Id = id,
         Name = name,
         Version = "1.0.0",
-        PublisherId = "pub.hackeros",
+        PublisherId = "pub.kazoos",
         Description = description,
         Kind = AppKind.Terminal,
         EntryPoint = new AppEntryPointManifest($"{name}.dll", $"{name}.Command"),

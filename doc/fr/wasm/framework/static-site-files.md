@@ -2,12 +2,12 @@
 
 # Fichiers de site statique (`.site`) et API `KazoWebSiteFile`
 
-Ce document décrit le format des fichiers `.site` qu'une app ou un outil écrit pour publier un dossier comme site web, et l'API du SDK qui les lit et les écrit. Le service `hackwebd` qui sert ces fichiers, ses journaux et Web Server Manager sont décrits dans [`dev/static-sites.md`](../dev/static-sites.md).
+Ce document décrit le format des fichiers `.site` qu'une app ou un outil écrit pour publier un dossier comme site web, et l'API du SDK qui les lit et les écrit. Le service `kazowebd` qui sert ces fichiers, ses journaux et Web Server Manager sont décrits dans [`dev/static-sites.md`](../dev/static-sites.md).
 
 ## Emplacements
 
-- `/etc/hackweb/sites/<nom>.site` : sites système, tous ports, servis avec les droits de `www-data`.
-- `~/.config/hackweb/sites/<nom>.site` : sites de l'utilisateur, ports 1024 et plus.
+- `/etc/kazoweb/sites/<nom>.site` : sites système, tous ports, servis avec les droits de `www-data`.
+- `~/.config/kazoweb/sites/<nom>.site` : sites de l'utilisateur, ports 1024 et plus.
 
 ## Types du SDK
 

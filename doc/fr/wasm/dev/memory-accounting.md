@@ -31,7 +31,7 @@ défaut**, de l'ADR 0126 (qui remplace l'ADR 0068 §3) et de l'ADR 0142
 ([`oom-killer.md`](oom-killer.md)) ; il n'agit que si la mémoire est mesurée.
 
 Mesure coupée (au build par `KazoOsMemoryAccounting=false`, ou par
-`HackerOs:ResourceAccounting:Memory:Enabled=false`) : comportement exact
+`KazoOs:ResourceAccounting:Memory:Enabled=false`) : comportement exact
 d'avant la phase 5 (`VmRSS` simulé, aucune ligne de couche, `meminfo` à trois
 lignes, `MemSource: simulated`).
 
@@ -131,7 +131,7 @@ le runtime de chaque worker. Voir [`worker-processes.md`](worker-processes.md).
 Quand la page est isolée (ADR 0131, 0143 §6), la mémoire du runtime d'un worker
 vient de `performance.measureUserAgentSpecificMemory()` (toutes les 20 s,
 valable trois périodes) au lieu du battement de cœur ; `MemSource` reste
-`measured`, et `/proc/hackeros/workers` dit `memory-measure: browser`.
+`measured`, et `/proc/kazoos/workers` dit `memory-measure: browser`.
 
 ## Constantes
 

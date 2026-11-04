@@ -32,14 +32,14 @@ public enum ThemePackParts
 }
 
 /// <summary>
-/// A verified theme pack (<c>.hacktheme</c>, ADR 0190, ADR 0213 §1): a zip archive holding
-/// <c>hackeros-theme-pack.json</c> and data files only, each listed with its SHA-256, each of an
+/// A verified theme pack (<c>.kazotheme</c>, ADR 0190, ADR 0213 §1): a zip archive holding
+/// <c>kazoos-theme-pack.json</c> and data files only, each listed with its SHA-256, each of an
 /// accepted format (checked from its first bytes, never its name) and within its size limit.
 /// Nothing in it is code: no SVG, no script, no remote address.
 /// </summary>
 public sealed class ThemePack
 {
-    /// <summary>Newest <c>schemaVersion</c> of <c>hackeros-theme-pack.json</c> this OS reads.</summary>
+    /// <summary>Newest <c>schemaVersion</c> of <c>kazoos-theme-pack.json</c> this OS reads.</summary>
     public const int SupportedSchemaVersion = 1;
 
     /// <summary>Largest archive accepted, and largest total once expanded, in bytes (30 MiB, ADR 0190 §3).</summary>
@@ -48,7 +48,7 @@ public sealed class ThemePack
     /// <summary>Most files in one pack.</summary>
     public const int MaximumFiles = 2_000;
 
-    /// <summary>Largest <c>hackeros-theme-pack.json</c>, in bytes.</summary>
+    /// <summary>Largest <c>kazoos-theme-pack.json</c>, in bytes.</summary>
     public const int MaximumManifestBytes = 256 * 1024;
 
     /// <summary>Largest wallpaper of a pack, in bytes (5 MiB, ADR 0190 §3).</summary>
@@ -98,7 +98,7 @@ public sealed class ThemePack
     /// <summary>Gets the parts it holds; never <see cref="ThemePackParts.None"/>.</summary>
     public ThemePackParts Parts { get; }
 
-    /// <summary>Gets every verified file by its archive path, <c>hackeros-theme-pack.json</c> included.</summary>
+    /// <summary>Gets every verified file by its archive path, <c>kazoos-theme-pack.json</c> included.</summary>
     public IReadOnlyDictionary<string, byte[]> Files { get; }
 
     /// <summary>Gets the total size of its files, shown in the approval window.</summary>
@@ -110,7 +110,7 @@ public sealed class ThemePack
         id is not null && AppPackageSource.IsValidAppId(id) && OsSoundEvents.IsValidThemeId(id);
 
     /// <summary>Reads and verifies a pack.</summary>
-    /// <param name="archive">The <c>.hacktheme</c> bytes.</param>
+    /// <param name="archive">The <c>.kazotheme</c> bytes.</param>
     /// <exception cref="AppPackageException">The pack is malformed, altered or holds a refused file; the code says why.</exception>
     public static ThemePack Read(byte[] archive)
     {
@@ -121,13 +121,15 @@ public sealed class ThemePack
         }
 
         Dictionary<string, byte[]> files = AppPackage.Extract(archive, MaximumBytes, MaximumFiles, "theme pack");
-        if (!files.TryGetValue(ThemePackLayout.ManifestFileName, out byte[]? manifestBytes))
+        // ADR 0228 §2: a pack made before the rename names its description hackeros-theme-pack.json.
+        if (!files.TryGetValue(ThemePackLayout.ManifestFileName, out byte[]? manifestBytes)
+            && !files.TryGetValue(ThemePackLayout.LegacyManifestFileName, out manifestBytes))
         {
             throw Refuse("no-description", $"The theme pack has no {ThemePackLayout.ManifestFileName}.");
         }
 
         Manifest manifest = ReadManifest(manifestBytes);
-        foreach (string path in files.Keys.Where(static path => path != ThemePackLayout.ManifestFileName))
+        foreach (string path in files.Keys.Where(static path => !IsManifestFile(path)))
         {
             if (!manifest.Files.ContainsKey(path))
             {
@@ -186,7 +188,7 @@ public sealed class ThemePack
 
             switch (segments[0])
             {
-                case ThemePackLayout.ManifestFileName when segments.Length == 1:
+                case ThemePackLayout.ManifestFileName or ThemePackLayout.LegacyManifestFileName when segments.Length == 1:
                     break;
                 case ThemePackLayout.PreviewFileName when segments.Length == 1:
                     RequirePng(path, bytes, MaximumPreviewBytes);
@@ -443,6 +445,9 @@ public sealed class ThemePack
         || text.Contains("url(", StringComparison.OrdinalIgnoreCase)
         || text.Contains("@import", StringComparison.OrdinalIgnoreCase);
 
+    private static bool IsManifestFile(string path) =>
+        path is ThemePackLayout.ManifestFileName or ThemePackLayout.LegacyManifestFileName;
+
     private static Manifest ReadManifest(byte[] bytes)
     {
         string text = ReadText(ThemePackLayout.ManifestFileName, bytes, MaximumManifestBytes);
@@ -469,7 +474,7 @@ public sealed class ThemePack
             foreach (JsonProperty file in root.GetProperty("files").EnumerateObject())
             {
                 string hash = file.Value.GetString() ?? string.Empty;
-                if (!AppPackage.IsSafeRelativePath(file.Name) || file.Name == ThemePackLayout.ManifestFileName || hash.Length != 64 || !hash.All(Uri.IsHexDigit))
+                if (!AppPackage.IsSafeRelativePath(file.Name) || IsManifestFile(file.Name) || hash.Length != 64 || !hash.All(Uri.IsHexDigit))
                 {
                     throw Refuse("bad-description", $"{ThemePackLayout.ManifestFileName} lists '{file.Name}' with an invalid path or SHA-256.");
                 }

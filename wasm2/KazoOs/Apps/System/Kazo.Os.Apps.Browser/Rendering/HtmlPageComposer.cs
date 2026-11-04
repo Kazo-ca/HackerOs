@@ -319,7 +319,7 @@ public sealed class HtmlPageComposer
         charset.SetAttribute("charset", "utf-8");
 
         IElement bridge = document.CreateElement("script");
-        bridge.SetAttribute("data-hackeros-bridge", string.Empty);
+        bridge.SetAttribute("data-kazoos-bridge", string.Empty);
         bridge.TextContent = $"({PageBridgeScript.Source})({JsonSerializer.Serialize(bootstrap, PageBridgeJsonContext.Default.PageBootstrap)});";
 
         // Order matters: <base> before the policy (base-uri 'none' only applies after it), the

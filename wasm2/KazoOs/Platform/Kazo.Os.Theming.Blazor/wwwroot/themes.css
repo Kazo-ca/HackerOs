@@ -233,41 +233,41 @@
     --hos-border-color: var(--hos-border);
     --hos-bg-surface-dim: var(--hos-bg-base);
     --hos-text-accent: var(--hos-accent);
-    --hackeros-bg: var(--hos-bg-base);
-    --hackeros-background: var(--hos-bg-base);
-    --hackeros-fg: var(--hos-text-primary);
-    --hackeros-text: var(--hos-text-primary);
-    --hackeros-text-primary: var(--hos-text-primary);
-    --hackeros-text-muted: var(--hos-text-muted);
-    --hackeros-surface: var(--hos-bg-surface);
-    --hackeros-surface-bg: var(--hos-bg-surface);
-    --hackeros-elevated-bg: var(--hos-bg-elevated);
-    --hackeros-border: var(--hos-border);
-    --hackeros-border-color: var(--hos-border);
-    --hackeros-accent: var(--hos-accent);
-    --hackeros-accent-color: var(--hos-accent);
-    --hackeros-accent-dim: var(--hos-accent-subtle);
-    --hackeros-accent-glow: var(--hos-accent-glow);
-    --hackeros-focus: var(--hos-focus-ring);
-    --hackeros-border-focus: var(--hos-focus-ring);
-    --hackeros-error: var(--hos-error);
-    --hackeros-warning: var(--hos-warning);
-    --hackeros-window-bg: var(--hos-window-background);
-    --hackeros-window-text: var(--hos-window-text);
-    --hackeros-window-border: var(--hos-window-focused-border);
-    --hackeros-header-bg: var(--hos-titlebar-background);
-    --hackeros-card-bg: var(--hos-bg-surface);
-    --hackeros-popover-bg: var(--hos-bg-elevated);
-    --hackeros-toolbar-bg: var(--hos-bg-base);
-    --hackeros-input-bg: var(--hos-bg-base);
-    --hackeros-button-bg: var(--hos-bg-surface);
-    --hackeros-hover-bg: var(--hos-bg-elevated);
-    --hackeros-font-mono: var(--hos-font-mono);
-    --hackeros-transition-fast: var(--hos-transition-fast);
+    --kazoos-bg: var(--hos-bg-base);
+    --kazoos-background: var(--hos-bg-base);
+    --kazoos-fg: var(--hos-text-primary);
+    --kazoos-text: var(--hos-text-primary);
+    --kazoos-text-primary: var(--hos-text-primary);
+    --kazoos-text-muted: var(--hos-text-muted);
+    --kazoos-surface: var(--hos-bg-surface);
+    --kazoos-surface-bg: var(--hos-bg-surface);
+    --kazoos-elevated-bg: var(--hos-bg-elevated);
+    --kazoos-border: var(--hos-border);
+    --kazoos-border-color: var(--hos-border);
+    --kazoos-accent: var(--hos-accent);
+    --kazoos-accent-color: var(--hos-accent);
+    --kazoos-accent-dim: var(--hos-accent-subtle);
+    --kazoos-accent-glow: var(--hos-accent-glow);
+    --kazoos-focus: var(--hos-focus-ring);
+    --kazoos-border-focus: var(--hos-focus-ring);
+    --kazoos-error: var(--hos-error);
+    --kazoos-warning: var(--hos-warning);
+    --kazoos-window-bg: var(--hos-window-background);
+    --kazoos-window-text: var(--hos-window-text);
+    --kazoos-window-border: var(--hos-window-focused-border);
+    --kazoos-header-bg: var(--hos-titlebar-background);
+    --kazoos-card-bg: var(--hos-bg-surface);
+    --kazoos-popover-bg: var(--hos-bg-elevated);
+    --kazoos-toolbar-bg: var(--hos-bg-base);
+    --kazoos-input-bg: var(--hos-bg-base);
+    --kazoos-button-bg: var(--hos-bg-surface);
+    --kazoos-hover-bg: var(--hos-bg-elevated);
+    --kazoos-font-mono: var(--hos-font-mono);
+    --kazoos-transition-fast: var(--hos-transition-fast);
 }
 
 /* Kazo OS: dark terminal chrome with a user-selectable neon accent. */
-:where([data-theme="hackeros"], [data-hos-theme="hackeros"]) {
+:where([data-theme="kazoos"], [data-hos-theme="kazoos"]) {
     --hos-color-scheme: dark;
     --hos-font-ui: "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
     --hos-font-mono: "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
@@ -325,7 +325,7 @@
     --hos-taskbar-launcher-color: #55d6a1;
 }
 
-:where([data-theme="hackeros"][data-accent="green"], [data-hos-theme="hackeros"][data-hos-accent="green"]) {
+:where([data-theme="kazoos"][data-accent="green"], [data-hos-theme="kazoos"][data-hos-accent="green"]) {
     --hos-accent: #55d6a1;
     --hos-accent-rgb: 85, 214, 161;
     --hos-accent-hover: #75e8ba;
@@ -338,7 +338,7 @@
     --hos-taskbar-launcher-color: #55d6a1;
 }
 
-:where([data-theme="hackeros"][data-accent="cyan"], [data-hos-theme="hackeros"][data-hos-accent="cyan"]) {
+:where([data-theme="kazoos"][data-accent="cyan"], [data-hos-theme="kazoos"][data-hos-accent="cyan"]) {
     --hos-accent: #45cfea;
     --hos-accent-rgb: 69, 207, 234;
     --hos-accent-hover: #78e6f6;
@@ -351,7 +351,7 @@
     --hos-taskbar-launcher-color: #45cfea;
 }
 
-:where([data-theme="hackeros"][data-accent="purple"], [data-hos-theme="hackeros"][data-hos-accent="purple"]) {
+:where([data-theme="kazoos"][data-accent="purple"], [data-hos-theme="kazoos"][data-hos-accent="purple"]) {
     --hos-accent: #b38cff;
     --hos-accent-rgb: 179, 140, 255;
     --hos-accent-hover: #ccb1ff;

@@ -12,11 +12,11 @@ namespace Kazo.Os.Apps.Settings;
 /// </summary>
 /// <remarks>
 /// <para>
-/// The choice is the <c>timeZone</c> key of <c>~/.config/hackeros/datetime.config</c>, written through
+/// The choice is the <c>timeZone</c> key of <c>~/.config/kazoos/datetime.config</c>, written through
 /// <see cref="KazoSettings.OpenSystemAsync(IAppExecutionContext, string, CancellationToken)"/>:
 /// <c>auto</c> (the device's zone, as the browser reports it) or an IANA identifier from
 /// <see cref="KazoTimeZone.Available"/>. The shell re-reads the file and the taskbar clock follows
-/// at once. The machine's default is <c>/etc/hackeros/datetime.config</c>, an administrator's file.
+/// at once. The machine's default is <c>/etc/kazoos/datetime.config</c>, an administrator's file.
 /// </para>
 /// <para>
 /// The readout shows the zone the choice resolves to, refreshed every second from the OS clock.
@@ -129,7 +129,7 @@ public sealed partial class DateTimePanel
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException)
         {
-            ShowError(L["DateTime.Error.CannotSave", "~/.config/hackeros/" + DocumentFileName, exception.Message]);
+            ShowError(L["DateTime.Error.CannotSave", "~/.config/kazoos/" + DocumentFileName, exception.Message]);
         }
         finally
         {
@@ -203,7 +203,7 @@ public sealed partial class DateTimePanel
             }));
     }
 
-    /// <summary>An external edit (<c>nano ~/.config/hackeros/datetime.config</c>) changed the file.</summary>
+    /// <summary>An external edit (<c>nano ~/.config/kazoos/datetime.config</c>) changed the file.</summary>
     private void OnDocumentChanged(object? sender, KazoSettingsChangedEventArgs args) =>
         _ = InvokeAsync(() =>
         {

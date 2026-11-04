@@ -61,7 +61,7 @@ public sealed record SyncFileConflict(
 /// <param name="RemoteText">Start of the other device's version, or <see langword="null"/> when deleted, unknown or not text.</param>
 public sealed record SyncConflictPreview(string? LocalText, string? RemoteText);
 
-/// <summary>On-disk shape of <c>~/.local/state/hackeros/sync-conflicts.json</c>.</summary>
+/// <summary>On-disk shape of <c>~/.local/state/kazoos/sync-conflicts.json</c>.</summary>
 /// <param name="SchemaVersion">Format version, 1.</param>
 /// <param name="Conflicts">Pending conflicts, oldest first.</param>
 internal sealed record SyncConflictFile(int SchemaVersion, IReadOnlyList<SyncFileConflict> Conflicts);
@@ -75,14 +75,14 @@ internal sealed record SyncConflictFile(int SchemaVersion, IReadOnlyList<SyncFil
 internal sealed partial class SyncConflictJsonContext : JsonSerializerContext;
 
 /// <summary>
-/// Pending conflicts of one user, kept in <c>~/.local/state/hackeros/sync-conflicts.json</c>:
+/// Pending conflicts of one user, kept in <c>~/.local/state/kazoos/sync-conflicts.json</c>:
 /// device-local state, never synchronized (ADR 0044 section 10), so they survive a reload and come
 /// back at the next login (ADR 0101 section 2).
 /// </summary>
 internal static class SyncConflictFileFormat
 {
     /// <summary>Home-relative path of the file.</summary>
-    public const string RelativePath = ".local/state/hackeros/sync-conflicts.json";
+    public const string RelativePath = ".local/state/kazoos/sync-conflicts.json";
 
     /// <summary>Parses the file; a missing, empty or damaged file gives no conflict.</summary>
     public static List<SyncFileConflict> Parse(byte[]? content)

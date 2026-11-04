@@ -10,7 +10,7 @@ namespace Kazo.Os.AppSdk.Web.Blazor.Sites;
 /// the root component and starts an auxiliary process under the tab's user; the browser renders the
 /// site with <see cref="KazoWebSiteView"/>.
 /// </summary>
-public interface IHackWebSiteHost
+public interface IKazoWebSiteHost
 {
     /// <summary>Starts the renderer of the site that serves <paramref name="request"/>'s page.</summary>
     /// <param name="request">The page, its boot manifest and the browser's context.</param>
@@ -25,16 +25,16 @@ public interface IHackWebSiteHost
 /// <param name="Browser">The browser window's context: the renderer is its child process.</param>
 public sealed record KazoWebSiteStartRequest(Uri PageUrl, KazoBlazorBootManifest Boot, IAppExecutionContext Browser);
 
-/// <summary>Outcome of <see cref="IHackWebSiteHost.StartAsync"/>.</summary>
+/// <summary>Outcome of <see cref="IKazoWebSiteHost.StartAsync"/>.</summary>
 /// <param name="Process">The renderer, when the site started.</param>
 /// <param name="Error">Why it did not, for the user and the developer tools console.</param>
-public sealed record KazoWebSiteStart(IHackWebSiteProcess? Process, string? Error)
+public sealed record KazoWebSiteStart(IKazoWebSiteProcess? Process, string? Error)
 {
     /// <summary>Gets whether the site started.</summary>
     public bool IsStarted => Process is not null;
 
     /// <summary>Creates a started outcome.</summary>
-    public static KazoWebSiteStart Started(IHackWebSiteProcess process) => new(process, null);
+    public static KazoWebSiteStart Started(IKazoWebSiteProcess process) => new(process, null);
 
     /// <summary>Creates a failed outcome.</summary>
     public static KazoWebSiteStart Failed(string error) => new(null, error);
@@ -44,7 +44,7 @@ public sealed record KazoWebSiteStart(IHackWebSiteProcess? Process, string? Erro
 /// The renderer process of a Blazor site (ADR 0084, section 3): what the site's components run as.
 /// It ends when the browser leaves the page, or when the OS stops it (task manager, <c>kill</c>).
 /// </summary>
-public interface IHackWebSiteProcess : IAsyncDisposable
+public interface IKazoWebSiteProcess : IAsyncDisposable
 {
     /// <summary>Gets the id of the web app.</summary>
     string AppId { get; }

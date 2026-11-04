@@ -13,7 +13,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$ServiceName = 'HackerOSServer'
+$ServiceName = 'KazoOSServer'
 
 $principal = [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()
 if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
@@ -32,7 +32,7 @@ if (Test-Path (Join-Path $InstallDir 'Kazo.Os.Server.exe')) {
 }
 
 if ($Purge) {
-    $caPath = Join-Path $DataDir 'certs\hackeros-local-ca.crt'
+    $caPath = Join-Path $DataDir 'certs\kazoos-local-ca.crt'
     if (Test-Path $caPath) {
         $ca = New-Object Security.Cryptography.X509Certificates.X509Certificate2 $caPath
         Remove-Item -Path "Cert:\LocalMachine\Root\$($ca.Thumbprint)" -ErrorAction SilentlyContinue

@@ -22,7 +22,7 @@ Terminal (fenêtre, PID 12)
 ## Usage
 
 ```csharp
-await using IHackShell shell = await KazoShell.StartAsync(new KazoShellOptions
+await using IKazoShell shell = await KazoShell.StartAsync(new KazoShellOptions
 {
     WorkingDirectory = "~/projets",       // facultatif ; absent ou illisible : répertoire de l'appelant
     CredentialPrompt = myTerminalPrompt,  // facultatif ; sans lui, sudo échoue
@@ -36,7 +36,7 @@ string line = completion.ApplyTo("ec", out int cursor);   // "echo "
 A Razor component that receives its app's context as a parameter uses
 `KazoShell.StartAsync(AppContext, options, ct)`.
 
-### `IHackShell`
+### `IKazoShell`
 
 | Member | Role |
 |---|---|
@@ -96,7 +96,7 @@ The questions the shell asks its terminal:
 The terminal **reads**; the OS **verifies**. `ShellHostPrompts` (Platform Core)
 passes the credentials to `IElevationService` (`SudoRoot` or
 `CapabilityApproval` token) or to `DangerousCapabilityApprovalRequest.ApproveAsync`,
-which writes `/etc/hackeros/app-permissions.config` and `/var/log/auth.log`.
+which writes `/etc/kazoos/app-permissions.config` and `/var/log/auth.log`.
 `KazoCredential.ToString()` masks the password.
 
 `TerminalCredentialPrompt` (`Kazo.Os.AppSdk.Terminal`) is the
@@ -125,11 +125,11 @@ approval.
 | Type | Project | Role |
 |---|---|---|
 | `KazoShell` | `Shared/Kazo.Os.AppSdk/Shell` | Facade; translates the capability refusal into `KazoUnauthorizedAccessException`. |
-| `IHackShell`, `KazoShellOptions`, `KazoShellExecution`, `KazoShellCompletion` | same | Public contracts. |
+| `IKazoShell`, `KazoShellOptions`, `KazoShellExecution`, `KazoShellCompletion` | same | Public contracts. |
 | `KazoCredentialPrompt` and its types | same | Questions to the terminal. |
 | `IAppShellHostGateway` | same | `IAppExecutionContext.ShellHost` gateway (default: "not supported"). |
 | `AppShellHostGateway` | `Platform/Kazo.Os.Platform.Core/Execution` | Checks `shell.host`, then calls the service. |
-| `ShellHostService` | `Platform/Kazo.Os.Platform.Core/Shell` | Creates the `hsh` process, its context and its `ShellSession`; implements `IHackShell`. |
+| `ShellHostService` | `Platform/Kazo.Os.Platform.Core/Shell` | Creates the `hsh` process, its context and its `ShellSession`; implements `IKazoShell`. |
 | `ShellHostPrompts` | same | Adapts `KazoCredentialPrompt` to the `ShellInterpreter` prompts and to `IDangerousCapabilityApprovalPrompt`. |
 | `ShellCompletion` | same | Command name completion. |
 | `TerminalPanel`, `TerminalCredentialPrompt` | `Shared/Kazo.Os.AppSdk.Terminal` | Terminal emulator on the SDK alone. |
@@ -138,7 +138,7 @@ approval.
 
 1. `AppShellHostGateway` checks `shell.host` through the app's
    capability checker.
-2. `ShellHostService` starts an `org.hackeros.hsh` process (`argv[0]` =
+2. `ShellHostService` starts an `org.kazoos.hsh` process (`argv[0]` =
    `hsh`, name `hsh` in `/proc/<pid>/status`), child of the app's process.
    The process manager copies the parent's directory and environment to it
    (ADR 0050).
@@ -184,7 +184,7 @@ throwing `KeyNotFoundException`.
   §1): two tabs of the code editor shared their directory. Each
   `TerminalPanel` now has its own. `ExecuteCommandIntent` keeps the detached
   shell or the caller's shell from ADR 0050 §7: it has no terminal.
-- **History and prompt in `IHackShell`**, in addition to the members listed by
+- **History and prompt in `IKazoShell`**, in addition to the members listed by
   the ADR: the history is the shell's (`IShellSession.History` gives it
   to commands), and the prompt depends on the shell's directory.
 - **`KazoCredentialPrompt` is an abstract class** with two optional
@@ -207,7 +207,7 @@ throwing `KeyNotFoundException`.
 ## Task list for work item `rebuild/4-sdk-shell-host`
 
 - [x] `shell.host` capability (dangerous) in `AppCapabilities`.
-- [x] `KazoShell`, `IHackShell`, `KazoShellOptions`, `KazoShellExecution`, `KazoShellCompletion`, `KazoCredentialPrompt`, `IAppShellHostGateway` in the SDK.
+- [x] `KazoShell`, `IKazoShell`, `KazoShellOptions`, `KazoShellExecution`, `KazoShellCompletion`, `KazoCredentialPrompt`, `IAppShellHostGateway` in the SDK.
 - [x] `ShellHostService`, `ShellHostPrompts`, `ShellCompletion`, `AppShellHostGateway`; gateway wired by `AppExecutionContextFactory`; registration in the Ecosystem.
 - [x] `ShellExecutionOptions.StandardInput`.
 - [x] `TerminalPanel` on the SDK alone, `TerminalCredentialPrompt` in place of `TerminalDangerousCapabilityApprovalPrompt`, `Platform.Core` reference removed, exemption removed.

@@ -196,7 +196,7 @@
     <value>pour moi</value>
   </data>
   <data name="Search.Label" xml:space="preserve">
-    <value>Rechercher dans le Hack Store</value>
+    <value>Rechercher dans le Kazo OS Store</value>
   </data>
   <data name="Search.None" xml:space="preserve">
     <value>Aucune app ne correspond à « {0} ».</value>

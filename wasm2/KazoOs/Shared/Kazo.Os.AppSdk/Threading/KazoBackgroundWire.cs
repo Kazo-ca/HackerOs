@@ -199,7 +199,7 @@ internal static class KazoBackgroundJobRunner
         if (target.MethodName is null)
         {
             if (type.IsAbstract || type.GetConstructor(Type.EmptyTypes) is null
-                || Activator.CreateInstance(type) is not IHackBackgroundJobInvoker job)
+                || Activator.CreateInstance(type) is not IKazoBackgroundJobInvoker job)
             {
                 throw new ArgumentException(
                     $"'{target.TypeName}' is not a non-abstract KazoBackgroundJob<TInput, TResult> with a public parameterless constructor.",

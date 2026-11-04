@@ -89,7 +89,7 @@ internal sealed class AppExecutionContext : IAppExecutionContext
         OneShotElevation = oneShotElevation ?? throw new ArgumentNullException(nameof(oneShotElevation));
         HomeDirectory = homeDirectory ?? $"/home/{userId}";
         Environment = environment
-            ?? new DetachedAppEnvironmentGateway(manifest.Id, HomeDirectory, userId, static () => "hackeros");
+            ?? new DetachedAppEnvironmentGateway(manifest.Id, HomeDirectory, userId, static () => "kazoos");
         IsRootElevated = isRootElevated;
         UserLoginName = userLoginName ?? Environment.UserName;
         UserDisplayName = userDisplayName ?? UserLoginName;
@@ -388,7 +388,7 @@ internal sealed class AppExecutionContext : IAppExecutionContext
     {
         public static readonly UnsupportedShellHostGateway Instance = new();
 
-        public Task<IHackShell> StartAsync(KazoShellOptions options, CancellationToken cancellationToken = default) =>
+        public Task<IKazoShell> StartAsync(KazoShellOptions options, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException("This execution context factory was not configured with a shell host service.");
     }
 

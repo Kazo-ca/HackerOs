@@ -339,7 +339,7 @@
     {
         try
         {
-            VirtualPath privatePath = VirtualPath.Parse("/etc/hackeros/protected.conf");
+            VirtualPath privatePath = VirtualPath.Parse("/etc/kazoos/protected.conf");
             FileSystemResult<FileSystemContentReadHandle> result = await AppContext.FileSystem.ReadAsync(new FileSystemReadRequest(privatePath));
 
             if (result.Succeeded)

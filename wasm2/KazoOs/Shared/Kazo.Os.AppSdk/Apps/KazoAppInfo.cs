@@ -7,7 +7,7 @@ namespace Kazo.Os.AppSdk.Apps;
 /// "Open with" list or a task manager shows. Like a <c>.desktop</c> file under
 /// <c>/usr/share/applications</c>, it carries no entry point and no .NET type.
 /// </summary>
-/// <param name="Id">Stable app identifier (<c>org.hackeros.text-editor</c>).</param>
+/// <param name="Id">Stable app identifier (<c>org.kazoos.text-editor</c>).</param>
 /// <param name="Name">Display name.</param>
 /// <param name="Description">One-line description.</param>
 /// <param name="Kind">Window, terminal command, or service.</param>

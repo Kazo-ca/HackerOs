@@ -10,7 +10,7 @@ namespace Kazo.Os.Samples.TerminalApp;
 public sealed class TerminalSampleApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.samples.terminal-app";
+    public override string Id => "org.kazoos.samples.terminal-app";
 
     /// <inheritdoc />
     public override string Name => "Sample Terminal App";
@@ -25,7 +25,7 @@ public sealed class TerminalSampleApp : AppDefinition
     public override AppLaunchVisibility LaunchVisibility => AppLaunchVisibility.Hidden;
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description =>

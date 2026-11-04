@@ -4,8 +4,8 @@
 
   <!--
     ADR 0007: no inline CSS/JS in Razor markup. A <script src="..."> reference without body is allowed
-    (ADR 0083 §6): an ASP.Hack layout links the site's own wwwroot/js files that way, as a web page does.
-    ASP.Hack .cshtml views (ADR 0086) follow the same rule: their CSS and JavaScript live in the site's wwwroot.
+    (ADR 0083 §6): an ASP.Kazo layout links the site's own wwwroot/js files that way, as a web page does.
+    ASP.Kazo .cshtml views (ADR 0086) follow the same rule: their CSS and JavaScript live in the site's wwwroot.
   -->
   <Target Name="ValidateKazoOsRazorAssets"
           BeforeTargets="CoreCompile"
@@ -18,6 +18,6 @@
     </ItemGroup>
 
     <Error Condition="'@(_KazoOsRazorViolation)' != ''"
-           Text="Kazo OS Razor components cannot contain inline CSS or JavaScript. Move assets to Component.razor.css or Component.razor.js (an ASP.Hack view: to the site's wwwroot). Files: @(_KazoOsRazorViolation, ', ')" />
+           Text="Kazo OS Razor components cannot contain inline CSS or JavaScript. Move assets to Component.razor.css or Component.razor.js (an ASP.Kazo view: to the site's wwwroot). Files: @(_KazoOsRazorViolation, ', ')" />
   </Target>
 </Project>

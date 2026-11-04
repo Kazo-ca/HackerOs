@@ -11,7 +11,7 @@ public sealed class NotificationTests
     private static Notification Create(DateTimeOffset? expiresAtUtc = null) => new(
         NotificationId.FromGuid(Guid.NewGuid()),
         UserId,
-        "com.hackeros.mailer",
+        "com.kazoos.mailer",
         NotificationSeverity.Information,
         "Title",
         "Message",
@@ -51,7 +51,7 @@ public sealed class InMemoryNotificationQueueTests
     private static Notification Create(LocalUserId userId, string title, DateTimeOffset? expiresAtUtc = null) => new(
         NotificationId.FromGuid(Guid.NewGuid()),
         userId,
-        "com.hackeros.mailer",
+        "com.kazoos.mailer",
         NotificationSeverity.Information,
         title,
         "Message",

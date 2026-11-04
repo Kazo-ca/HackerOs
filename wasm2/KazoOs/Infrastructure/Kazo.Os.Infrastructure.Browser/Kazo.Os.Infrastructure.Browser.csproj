@@ -5,7 +5,7 @@
   <PropertyGroup>
     <PackageId>Kazo.Os.Infrastructure.Browser</PackageId>
     <Description>Browser infrastructure of Kazo OS: IndexedDB storage, Web Worker runtime and the JavaScript they need.</Description>
-    <PackageTags>hackeros;browser;indexeddb</PackageTags>
+    <PackageTags>kazoos;browser;indexeddb</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup>

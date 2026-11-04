@@ -63,10 +63,10 @@ public sealed class AppSdkLifecycleTests
 
     private static AppManifest CreateManifest(AppKind kind) => new()
     {
-        Id = $"org.hackeros.test-{kind.ToString().ToLowerInvariant()}",
+        Id = $"org.kazoos.test-{kind.ToString().ToLowerInvariant()}",
         Name = $"Test {kind}",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "App SDK lifecycle test application.",
         Kind = kind,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.AppSdk.Tests", $"Test{kind}App"),

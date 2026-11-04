@@ -17,10 +17,10 @@ public sealed record AppPackageIndexEntry(SemanticVersion Version, string Path, 
 }
 
 /// <summary>
-/// <c>index.json</c> at the root of an app repository's <c>hackeros-packages</c> branch (ADR 0182 §2):
+/// <c>index.json</c> at the root of an app repository's <c>kazoos-packages</c> branch (ADR 0182 §2):
 /// <code>
 /// { "appId": "org.kazo.webamp",
-///   "versions": [ { "version": "1.0.0", "path": "1.0.0/org.kazo.webamp-1.0.0.hackapp", "sha256": "…", "signature": "…" } ] }
+///   "versions": [ { "version": "1.0.0", "path": "1.0.0/org.kazo.webamp-1.0.0.kazoapp", "sha256": "…", "signature": "…" } ] }
 /// </code>
 /// </summary>
 /// <param name="AppId">App the repository publishes.</param>
@@ -67,7 +67,7 @@ public sealed record AppPackageIndex(string AppId, IReadOnlyList<AppPackageIndex
                 string sha256 = item.GetProperty("sha256").GetString() ?? string.Empty;
                 if (!SemanticVersion.TryParse(versionText, out SemanticVersion version)
                     || !AppPackage.IsSafeRelativePath(path)
-                    || !path.EndsWith(AppPackage.Extension, StringComparison.Ordinal)
+                    || !AppPackage.HasPackageExtension(path)
                     || sha256.Length != 64
                     || !sha256.All(Uri.IsHexDigit))
                 {

@@ -28,7 +28,7 @@ public sealed class ContentBlobServiceTests : IDisposable
             .Options;
         _db = new KazoOsServerDbContext(options);
 
-        _blobRoot = Path.Combine(Path.GetTempPath(), "hackeros-blob-tests", Guid.NewGuid().ToString("N"));
+        _blobRoot = Path.Combine(Path.GetTempPath(), "kazoos-blob-tests", Guid.NewGuid().ToString("N"));
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?> { ["BlobStorage:Root"] = _blobRoot })
             .Build();

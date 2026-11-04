@@ -7,7 +7,7 @@
 Accepted on 2026-10-29 by Benoit, after two rounds of questions in the "Plan
 the Hack Store" thread (answers at the end). This ADR writes no code: it sets
 the target, and the work items are listed in
-[`../plans/hackeros-store.md`](../plans/hackeros-store.md). Complements
+[`../plans/kazoos-store.md`](../plans/kazoos-store.md). Complements
 [ADR 0182](0182-install-apps-from-github.md) (`.hackapp` packages, `hackpkg`)
 and [ADR 0176](0176-app-repository-template.md) (app repository template).
 Trust and install rights are in

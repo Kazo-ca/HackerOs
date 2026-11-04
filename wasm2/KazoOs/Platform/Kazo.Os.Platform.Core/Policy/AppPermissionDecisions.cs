@@ -16,8 +16,8 @@ public enum AppPermissionDecision
 
 /// <summary>
 /// Layout of the two <c>app-permissions.config</c> files (ADR 0049 section 4): the machine file
-/// <c>/etc/hackeros/app-permissions.config</c> (<c>system:system 0644</c>, the only source of an
-/// <c>allow</c>) and the user file <c>~/.config/hackeros/app-permissions.config</c> (only
+/// <c>/etc/kazoos/app-permissions.config</c> (<c>system:system 0644</c>, the only source of an
+/// <c>allow</c>) and the user file <c>~/.config/kazoos/app-permissions.config</c> (only
 /// <c>deny</c> lines, valid for that user alone).
 /// </summary>
 /// <remarks>
@@ -48,7 +48,7 @@ public static class AppPermissionsDocument
 
     /// <summary>Gets the commented machine file a fresh installation ships.</summary>
     public static string DefaultMachineContent { get; } =
-        "# /etc/hackeros/app-permissions.config\n"
+        "# /etc/kazoos/app-permissions.config\n"
         + "# Capacités dangereuses approuvées (allow) ou refusées (deny) par un administrateur\n"
         + "# pour toute la machine (ADR 0049). Une ligne par décision :\n"
         + "#   <appId>:<capacité>=allow|deny\n"
@@ -57,9 +57,9 @@ public static class AppPermissionsDocument
 
     /// <summary>Header written at the top of a new user file.</summary>
     public static string DefaultUserContent { get; } =
-        "# ~/.config/hackeros/app-permissions.config\n"
+        "# ~/.config/kazoos/app-permissions.config\n"
         + "# Capacités dangereuses que vous avez refusées (deny) ; elles valent pour vous seul.\n"
-        + "# Un allow ici est ignoré : seul /etc/hackeros/app-permissions.config peut autoriser.\n"
+        + "# Un allow ici est ignoré : seul /etc/kazoos/app-permissions.config peut autoriser.\n"
         + $"[{Section}]\n";
 
     /// <summary>Builds the key of one decision line.</summary>
@@ -138,8 +138,8 @@ public sealed class AppPermissionDecisions
     public static AppPermissionDecisions Parse(
         string? machineContent,
         string? userContent,
-        string machinePath = "/etc/hackeros/app-permissions.config",
-        string userPath = "~/.config/hackeros/app-permissions.config")
+        string machinePath = "/etc/kazoos/app-permissions.config",
+        string userPath = "~/.config/kazoos/app-permissions.config")
     {
         Dictionary<(string, string), AppPermissionDecision> machine = [];
         HashSet<(string, string)> userDenials = [];

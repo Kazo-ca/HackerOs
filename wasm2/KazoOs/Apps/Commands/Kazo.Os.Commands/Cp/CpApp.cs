@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Cp;
 public sealed class CpApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.cp";
+    public override string Id => "org.kazoos.commands.cp";
 
     /// <inheritdoc />
     public override string Name => "cp";
@@ -22,7 +22,7 @@ public sealed class CpApp : AppDefinition
     public override Type EntryPoint => typeof(CpCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Copy files and directories";

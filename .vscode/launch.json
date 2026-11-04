@@ -46,7 +46,7 @@
       "url": "https://localhost:7240",
       "presentation": {
         "hidden": false,
-        "group": "hackeros",
+        "group": "kazoos",
         "order": 1
       }
     },
@@ -72,7 +72,7 @@
       },
       "presentation": {
         "hidden": false,
-        "group": "hackeros",
+        "group": "kazoos",
         "order": 2
       }
     },
@@ -97,7 +97,7 @@
       },
       "presentation": {
         "hidden": false,
-        "group": "hackeros",
+        "group": "kazoos",
         "order": 3
       }
     }

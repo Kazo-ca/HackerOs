@@ -8,7 +8,7 @@
     <Nullable>enable</Nullable>
     <PackageId>Kazo.Os.Taskbar.Blazor</PackageId>
     <Description>A taskbar Razor component driven entirely by host-supplied contracts (window source, command dispatcher, launcher, status, notifications, session commands) -- each optional, each cleanly absent from render when not supplied.</Description>
-    <PackageTags>hackeros;windowing;blazor;desktop-shell</PackageTags>
+    <PackageTags>kazoos;windowing;blazor;desktop-shell</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

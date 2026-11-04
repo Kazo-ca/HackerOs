@@ -30,7 +30,7 @@ default**, from ADR 0126 (which replaces ADR 0068 §3) and ADR 0142
 ([`oom-killer.md`](oom-killer.md)); it only acts if memory is measured.
 
 Measurement off (at build by `KazoOsMemoryAccounting=false`, or by
-`HackerOs:ResourceAccounting:Memory:Enabled=false`): exact behavior from
+`KazoOs:ResourceAccounting:Memory:Enabled=false`): exact behavior from
 before phase 5 (simulated `VmRSS`, no layer line, three-line `meminfo`,
 `MemSource: simulated`).
 
@@ -129,7 +129,7 @@ the runtime of each worker. See [`worker-processes.md`](worker-processes.md).
 When the page is isolated (ADR 0131, 0143 §6), a worker's runtime memory comes
 from `performance.measureUserAgentSpecificMemory()` (every 20 s, valid for
 three periods) instead of the heartbeat; `MemSource` stays `measured`, and
-`/proc/hackeros/workers` says `memory-measure: browser`.
+`/proc/kazoos/workers` says `memory-measure: browser`.
 
 ## Constants
 

@@ -58,15 +58,15 @@ def write(name, samples):
     with wave.open(os.path.join(out, name + '.wav'), 'wb') as w:
         w.setnchannels(1); w.setsampwidth(2); w.setframerate(RATE); w.writeframes(data)
 
-os.makedirs(os.path.join(out, 'hackeros'), exist_ok=True)
+os.makedirs(os.path.join(out, 'kazoos'), exist_ok=True)
 os.makedirs(os.path.join(out, 'soft'), exist_ok=True)
 
 # "Kazo OS": short console bleeps.
-write('hackeros/message-new-instant', seq(note(square, 880, 0.06), note(square, 1320, 0.09), gap=0.02))
-write('hackeros/dialog-warning', seq(note(square, 660, 0.08), note(square, 660, 0.08), gap=0.05))
-write('hackeros/dialog-error', note(saw, 240, 0.32, glide=150))
-write('hackeros/desktop-login', seq(*[note(square, f, 0.07) for f in (440, 554, 659, 880)], gap=0.01))
-write('hackeros/desktop-logout', seq(*[note(square, f, 0.07) for f in (880, 659, 554, 440)], gap=0.01))
+write('kazoos/message-new-instant', seq(note(square, 880, 0.06), note(square, 1320, 0.09), gap=0.02))
+write('kazoos/dialog-warning', seq(note(square, 660, 0.08), note(square, 660, 0.08), gap=0.05))
+write('kazoos/dialog-error', note(saw, 240, 0.32, glide=150))
+write('kazoos/desktop-login', seq(*[note(square, f, 0.07) for f in (440, 554, 659, 880)], gap=0.01))
+write('kazoos/desktop-logout', seq(*[note(square, f, 0.07) for f in (880, 659, 554, 440)], gap=0.01))
 
 # "Soft": decaying sine chimes.
 def chime(f, d=0.9, vol=1.0):

@@ -17,7 +17,7 @@ namespace Kazo.Os.Infrastructure.Browser.Isolation;
 [SupportedOSPlatform("browser")]
 public static partial class BrowserCrossOriginIsolation
 {
-    private const string ModuleName = "hackeros-cross-origin-isolation";
+    private const string ModuleName = "kazoos-cross-origin-isolation";
     private const string ModulePath = "_content/Kazo.Os.Infrastructure.Browser/crossOriginIsolation.js";
 
     /// <summary>

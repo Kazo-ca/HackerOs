@@ -11,10 +11,10 @@
 #   --port <n>          local HTTP port (default 5888)
 #   --https-port <n>    local network HTTPS port (default 5889)
 #   --account <name>    server account the first pairing code is for (default admin)
-#   --prefix <dir>      install folder (default /opt/hackeros-server, macOS /usr/local/hackeros-server)
-#   --data <dir>        data folder (default /var/lib/hackeros-server, macOS /usr/local/var/hackeros-server)
+#   --prefix <dir>      install folder (default /opt/kazoos-server, macOS /usr/local/kazoos-server)
+#   --data <dir>        data folder (default /var/lib/kazoos-server, macOS /usr/local/var/kazoos-server)
 #   --no-service        install and configure only; do not register or start a service
-#   --reconfigure       rewrite hackeros-server.json even if it exists (an upgrade keeps it otherwise)
+#   --reconfigure       rewrite kazoos-server.json even if it exists (an upgrade keeps it otherwise)
 set -euo pipefail
 
 PORT=5888
@@ -26,8 +26,8 @@ DATA=""
 SERVICE=1
 RECONFIGURE=0
 PAGES_ORIGIN="https://kazo-ca.github.io"
-SERVICE_NAME="hackeros-server"
-LAUNCHD_LABEL="ca.kazo.hackeros-server"
+SERVICE_NAME="kazoos-server"
+LAUNCHD_LABEL="ca.kazo.kazoos-server"
 
 fail() { echo "install.sh: $*" >&2; exit 1; }
 
@@ -51,8 +51,8 @@ done
 
 SYSTEM="$(uname -s)"
 case "$SYSTEM" in
-  Linux) PREFIX="${PREFIX:-/opt/hackeros-server}"; DATA="${DATA:-/var/lib/hackeros-server}" ;;
-  Darwin) PREFIX="${PREFIX:-/usr/local/hackeros-server}"; DATA="${DATA:-/usr/local/var/hackeros-server}" ;;
+  Linux) PREFIX="${PREFIX:-/opt/kazoos-server}"; DATA="${DATA:-/var/lib/kazoos-server}" ;;
+  Darwin) PREFIX="${PREFIX:-/usr/local/kazoos-server}"; DATA="${DATA:-/usr/local/var/kazoos-server}" ;;
   *) fail "unsupported system '$SYSTEM' (Linux or macOS; Windows uses install.ps1)" ;;
 esac
 
@@ -67,7 +67,7 @@ SOURCE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RUN_USER="$(id -un)"
 if [[ $SERVICE -eq 1 ]]; then
   if [[ "$SYSTEM" == "Linux" ]]; then
-    RUN_USER="hackeros"
+    RUN_USER="kazoos"
     if ! id "$RUN_USER" > /dev/null 2>&1; then
       useradd --system --no-create-home --home-dir "$DATA" --shell /usr/sbin/nologin "$RUN_USER"
     fi
@@ -90,9 +90,9 @@ echo "Installing Kazo OS Server into $PREFIX (data: $DATA)"
 stop_service
 mkdir -p "$PREFIX" "$DATA/blobs" "$DATA/backups" "$DATA/pairing" "$DATA/logs"
 if [[ "$SOURCE" != "$(cd "$PREFIX" && pwd)" ]]; then
-  # The program files are replaced; hackeros-server.json (the configuration) is kept.
-  find "$PREFIX" -mindepth 1 -maxdepth 1 ! -name hackeros-server.json -exec rm -rf {} +
-  (cd "$SOURCE" && tar -cf - --exclude=./hackeros-server.json .) | (cd "$PREFIX" && tar -xf -)
+  # The program files are replaced; kazoos-server.json (the configuration) is kept.
+  find "$PREFIX" -mindepth 1 -maxdepth 1 ! -name kazoos-server.json -exec rm -rf {} +
+  (cd "$SOURCE" && tar -cf - --exclude=./kazoos-server.json .) | (cd "$PREFIX" && tar -xf -)
 fi
 chmod +x "$PREFIX/Kazo.Os.Server"
 
@@ -121,7 +121,7 @@ if [[ -n "$LAN" ]]; then
 
   echo "Generating the local certificate authority and the HTTPS certificate in $CERTS"
   openssl req -x509 -newkey rsa:3072 -sha256 -days 3650 -nodes \
-    -keyout "$CERTS/ca.key" -out "$CERTS/hackeros-local-ca.crt" \
+    -keyout "$CERTS/ca.key" -out "$CERTS/kazoos-local-ca.crt" \
     -subj "/CN=Kazo OS Local CA ($(hostname))" \
     -addext "basicConstraints=critical,CA:TRUE,pathlen:0" \
     -addext "keyUsage=critical,keyCertSign,cRLSign" 2> /dev/null
@@ -129,17 +129,17 @@ if [[ -n "$LAN" ]]; then
     -keyout "$CERTS/server.key" -out "$CERTS/server.csr" -subj "/CN=${LAN_NAMES[0]}" 2> /dev/null
   printf 'subjectAltName=%s\nbasicConstraints=CA:FALSE\nkeyUsage=critical,digitalSignature,keyEncipherment\nextendedKeyUsage=serverAuth\n' "$SAN" > "$CERTS/server.ext"
   # 825 days: the longest validity Apple platforms accept for a server certificate.
-  openssl x509 -req -in "$CERTS/server.csr" -CA "$CERTS/hackeros-local-ca.crt" -CAkey "$CERTS/ca.key" \
+  openssl x509 -req -in "$CERTS/server.csr" -CA "$CERTS/kazoos-local-ca.crt" -CAkey "$CERTS/ca.key" \
     -CAcreateserial -days 825 -sha256 -extfile "$CERTS/server.ext" -out "$CERTS/server.crt" 2> /dev/null
   # The authority signs this one certificate only: its key is deleted, so nothing else can ever be
   # signed with an authority the devices trust. Running --lan again makes a new authority.
-  rm -f "$CERTS/ca.key" "$CERTS/server.csr" "$CERTS/server.ext" "$CERTS/hackeros-local-ca.srl"
+  rm -f "$CERTS/ca.key" "$CERTS/server.csr" "$CERTS/server.ext" "$CERTS/kazoos-local-ca.srl"
   chmod 600 "$CERTS/server.key"
   RECONFIGURE=1
 fi
 
-# ── Configuration (hackeros-server.json, read after appsettings.json) ────────
-CONFIG="$PREFIX/hackeros-server.json"
+# ── Configuration (kazoos-server.json, read after appsettings.json) ────────
+CONFIG="$PREFIX/kazoos-server.json"
 if [[ ! -f "$CONFIG" || $RECONFIGURE -eq 1 ]]; then
   ORIGINS="\"$PAGES_ORIGIN\""
   ENDPOINTS="\"Local\": { \"Url\": \"http://localhost:$PORT\" }"
@@ -154,7 +154,7 @@ if [[ ! -f "$CONFIG" || $RECONFIGURE -eq 1 ]]; then
         \"Url\": \"https://*:$HTTPS_PORT\",
         \"Certificate\": { \"Path\": \"$DATA/certs/server.crt\", \"KeyPath\": \"$DATA/certs/server.key\" }
       }"
-    CA_SETTING="\"LocalServer\": { \"CaCertificatePath\": \"$DATA/certs/hackeros-local-ca.crt\" },"
+    CA_SETTING="\"LocalServer\": { \"CaCertificatePath\": \"$DATA/certs/kazoos-local-ca.crt\" },"
   fi
   cat > "$CONFIG" <<EOF
 {
@@ -165,10 +165,10 @@ if [[ ! -f "$CONFIG" || $RECONFIGURE -eq 1 ]]; then
     }
   },
   "Cors": { "AllowedOrigins": [ $ORIGINS ] },
-  "ConnectionStrings": { "HackerOsDb": "Data Source=$DATA/hackeros.db" },
+  "ConnectionStrings": { "KazoOsDb": "Data Source=$DATA/kazoos.db" },
   "BlobStorage": { "Root": "$DATA/blobs" },
   "ServerBackup": { "Root": "$DATA/backups" },
-  "HackerOs": {
+  "KazoOs": {
     $CA_SETTING
     "Pairing": { "Root": "$DATA/pairing" }
   }
@@ -228,8 +228,8 @@ EOF
   <key>UserName</key><string>$RUN_USER</string>
   <key>RunAtLoad</key><true/>
   <key>KeepAlive</key><true/>
-  <key>StandardOutPath</key><string>$DATA/logs/hackeros-server.log</string>
-  <key>StandardErrorPath</key><string>$DATA/logs/hackeros-server.log</string>
+  <key>StandardOutPath</key><string>$DATA/logs/kazoos-server.log</string>
+  <key>StandardErrorPath</key><string>$DATA/logs/kazoos-server.log</string>
 </dict>
 </plist>
 EOF
@@ -247,8 +247,8 @@ for name in ${LAN_NAMES[@]+"${LAN_NAMES[@]}"}; do
   echo "  Local network:      https://$host:$HTTPS_PORT"
 done
 if [[ ${#LAN_NAMES[@]} -gt 0 ]]; then
-  echo "  Certificate to approve on each other device: $DATA/certs/hackeros-local-ca.crt"
-  echo "  (also at http://localhost:$PORT/api/hackeros/local-ca.crt)"
+  echo "  Certificate to approve on each other device: $DATA/certs/kazoos-local-ca.crt"
+  echo "  (also at http://localhost:$PORT/api/kazoos/local-ca.crt)"
 fi
 if [[ $SERVICE -eq 0 ]]; then
   echo "  No service registered: start it with  cd $PREFIX && ./Kazo.Os.Server"

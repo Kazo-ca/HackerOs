@@ -8,14 +8,14 @@ namespace Kazo.Os.Apps.Settings;
 
 /// <summary>
 /// Settings &gt; Apps &gt; Sources and block list (ADR 0189 §1, §5 and §6): the catalogs and the
-/// repositories of <c>/etc/hackeros/app-sources.config</c> with their trust level, and the block list
-/// of <c>/etc/hackeros/app-policy.config</c>; an administrator adds or removes entries here.
+/// repositories of <c>/etc/kazoos/app-sources.config</c> with their trust level, and the block list
+/// of <c>/etc/kazoos/app-policy.config</c>; an administrator adds or removes entries here.
 /// </summary>
 /// <remarks>
 /// Uses only the public SDK, <see cref="KazoAppPackages"/> (capability <c>apps.manage</c>). Each
 /// change makes the OS ask an administrator to authenticate in its own window (or nothing under a
 /// root process); this panel never sees a password. The same files can be edited with
-/// <c>sudo nano</c> or <c>hackpkg sources</c> / <c>hackpkg policy</c>.
+/// <c>sudo nano</c> or <c>kazopkg sources</c> / <c>kazopkg policy</c>.
 /// </remarks>
 public partial class AppSourcesPanel
 {

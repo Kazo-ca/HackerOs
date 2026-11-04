@@ -68,7 +68,7 @@ public sealed class CursorThemePanelTests
         await using PanelHarness harness = await PanelHarness.RenderAsync(settings);
 
         string html = harness.Html();
-        Assert.Contains("id=\"cursor-theme-hackeros-neon\" aria-checked=\"false\" disabled", html, StringComparison.Ordinal);
+        Assert.Contains("id=\"cursor-theme-kazoos-neon\" aria-checked=\"false\" disabled", html, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -96,7 +96,7 @@ public sealed class CursorThemePanelTests
 
         public AppSystemSettingsDocumentInfo Describe(string documentId) =>
             documentId == CursorSettingsDocuments.Document.DocumentId
-                ? new(documentId, CursorSettingsDocuments.Schema, "/etc/hackeros/cursors.config", "/home/alice/.config/hackeros/cursors.config", false)
+                ? new(documentId, CursorSettingsDocuments.Schema, "/etc/kazoos/cursors.config", "/home/alice/.config/kazoos/cursors.config", false)
                 : throw new ArgumentException($"Unknown document '{documentId}'.", nameof(documentId));
 
         public ValueTask<LayeredConfigSnapshot> ReadAsync(string documentId, CancellationToken cancellationToken = default)

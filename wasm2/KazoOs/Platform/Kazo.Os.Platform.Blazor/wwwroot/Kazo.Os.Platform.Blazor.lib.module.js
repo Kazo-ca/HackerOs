@@ -17,7 +17,7 @@
 //
 // It also installs the stray drop guard (installStrayDropGuard, below).
 
-const REGISTRY_KEY = Symbol.for("hackeros.displaySurfaces.documentListeners");
+const REGISTRY_KEY = Symbol.for("kazoos.displaySurfaces.documentListeners");
 
 function installDocumentListenerRegistry() {
     if (window[REGISTRY_KEY]) {
@@ -129,7 +129,7 @@ function installDocumentListenerRegistry() {
 // own listener; these window listeners run last (bubble phase on the window) and only act when nobody
 // did: they refuse the drop (dropEffect "none", the "not allowed" cursor) and cancel the default action.
 // Text fields keep the browser's own text drop.
-const DROP_GUARD_KEY = Symbol.for("hackeros.strayDropGuard");
+const DROP_GUARD_KEY = Symbol.for("kazoos.strayDropGuard");
 
 function isEditableTarget(target) {
     const element = target instanceof Node && target.nodeType !== Node.ELEMENT_NODE ? target.parentElement : target;

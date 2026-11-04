@@ -18,10 +18,10 @@ public sealed class SampleTerminalAppTests
     private static readonly AppManifest Manifest = new()
     {
         SchemaVersion = 1,
-        Id = "org.hackeros.samples.terminal-app",
+        Id = "org.kazoos.samples.terminal-app",
         Name = "Sample Terminal App",
         Version = "1.0.0",
-        PublisherId = "pub.hackeros",
+        PublisherId = "pub.kazoos",
         Description = "Sample Terminal command application",
         Kind = AppKind.Terminal,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Samples.TerminalApp.dll", "Kazo.Os.Samples.TerminalApp.SampleTerminalApp"),

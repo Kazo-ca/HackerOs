@@ -5,7 +5,7 @@
   <PropertyGroup>
     <PackageId>Kazo.Os.Apps.SystemMonitor</PackageId>
     <Description>The base Kazo OS system monitor (task manager) app, to include in an OS host (ProjectReference or PackageReference, optionally IsSystemApp).</Description>
-    <PackageTags>hackeros;app</PackageTags>
+    <PackageTags>kazoos;app</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup>

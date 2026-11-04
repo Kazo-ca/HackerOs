@@ -42,7 +42,7 @@ public sealed record ContextMenuSession(
     ContextMenuOrigin Origin);
 
 /// <summary>
-/// The OS context menu service (contract <c>hackeros.context-menu</c>, ADR 0150): the menus each
+/// The OS context menu service (contract <c>kazoos.context-menu</c>, ADR 0150): the menus each
 /// window registered, the objects attached to its elements, and the single menu open at a time,
 /// which <see cref="ContextMenuOverlay"/> draws above every window.
 /// </summary>
@@ -323,10 +323,10 @@ public sealed class ContextMenuService
 
 /// <summary>
 /// The context menus of one window (ADR 0150 §4), given in cascade to its components as
-/// <see cref="IHackMenuHost"/>: its registered menus by name, and the objects attached to its
+/// <see cref="IKazoMenuHost"/>: its registered menus by name, and the objects attached to its
 /// elements by token. The objects never leave C#; the page only sees the opaque token.
 /// </summary>
-public sealed class ContextMenuScope : IHackMenuHost, IDisposable
+public sealed class ContextMenuScope : IKazoMenuHost, IDisposable
 {
     private readonly ContextMenuService _service;
     private readonly IAppExecutionContext? _context;

@@ -56,7 +56,7 @@ Contrats touchés :
 | `/proc/<pid>/environ` | fichier `0400` | paires `NOM=valeur` terminées par NUL (phase 3) ; vide sans entrée |
 | `/proc/<pid>/cwd` | lien `0777` | répertoire courant du processus (phase 3) ; `/home/<login>` sans entrée |
 | `/proc/<pid>/stat` | fichier `0444` | une ligne au format `proc(5)`, 52 champs ; `utime` et `stime` (14 et 15) en `USER_HZ`, mesurés quand la mesure CPU est active, sinon `utime` reconstruit depuis le simulateur (phase 5, ADR 0067, [`cpu-accounting.md`](cpu-accounting.md)) ; `priority` et `nice` (18 et 19) depuis la valeur `nice` du processus (ADR 0127, [`process-priority-and-unresponsive-windows.md`](process-priority-and-unresponsive-windows.md)) |
-| `/proc/<pid>/limits` | fichier `0444` | tableau de `proc(5)` limité aux quatre limites appliquées (`Max cpu time`, `Max resident set`, `Max processes`, `Max open files`), puis `# enforcement: strict (worker)`, `best-effort (main thread)` ou `off (HackerOs:ResourceLimits:Enabled=false)` et, sans mesure, `# cpu, rss: inactive (not measured)` (ADR 0125 et 0139, [`process-limits.md`](process-limits.md)) |
+| `/proc/<pid>/limits` | fichier `0444` | tableau de `proc(5)` limité aux quatre limites appliquées (`Max cpu time`, `Max resident set`, `Max processes`, `Max open files`), puis `# enforcement: strict (worker)`, `best-effort (main thread)` ou `off (KazoOs:ResourceLimits:Enabled=false)` et, sans mesure, `# cpu, rss: inactive (not measured)` (ADR 0125 et 0139, [`process-limits.md`](process-limits.md)) |
 | `/proc/<pid>/fd/` | dossier `0500` | un lien par descripteur ouvert : `0`, `1`, `2` vers `/dev/tty` (terminal) ou `/dev/null`, puis le fichier lu ou écrit (`exec/2`) |
 | `/proc/<pid>/oom_score` | fichier `0444` | `VmRSS × 1000 / MemTotal + oom_score_adj`, borné à `[0, 2000]` ; `0` pour un processus exempté (`oom_score_adj` = `-1000`) (ADR 0126, [`oom-killer.md`](oom-killer.md)) |
 | `/proc/<pid>/oom_score_adj` | fichier `0644` | `-1000` à `1000` ; le propriétaire monte la valeur, descendre sous le plancher demande `sudo` (ADR 0142 §2) |
@@ -82,7 +82,7 @@ State:	R (running)
 Pid:	42
 PPid:	7
 Uid:	aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-AppId:	org.hackeros.apps.code-editor-deluxe
+AppId:	org.kazoos.apps.code-editor-deluxe
 Kind:	window
 Session:	bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
 VmRSS:	3072 kB
@@ -185,13 +185,13 @@ proc /proc proc ro 0 0
   seconde simulée : `status`, `meminfo`, `uptime` et `loadavg` ne restent plus à
   zéro dans un hôte réel.
 
-- `/proc/hackeros/workers` (ADR 0071 §5) n'existe que si l'hôte a des Web
+- `/proc/kazoos/workers` (ADR 0071 §5) n'existe que si l'hôte a des Web
   Workers : d'abord l'isolation cross-origin de la page
   (`cross-origin-isolated: yes|no`, raison, réglage, COEP, tubes partagés,
   appels synchrones, mesure de la mémoire, résolution des minuteries ; ADR 0131
   §5, ADR 0143 §8), puis capacité, taille du pool, puis une ligne par worker (rôle, état,
   cœur, mémoire, âge du battement, temps occupé, PID visibles). Format :
-  [`worker-processes.md`](worker-processes.md#prochackerosworkers).
+  [`worker-processes.md`](worker-processes.md#prockazoosworkers).
 
 Visibilité : seuls les processus actifs apparaissent. L'appelant voit toujours
 son propre processus, et les autres avec `process.list` ou l'autorité `System`.

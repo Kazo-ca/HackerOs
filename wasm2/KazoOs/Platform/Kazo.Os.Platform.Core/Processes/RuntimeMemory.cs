@@ -7,7 +7,7 @@ namespace Kazo.Os.Platform.Core.Processes;
 /// Web Worker's.
 /// </summary>
 /// <param name="Id">Stable id: <c>main</c>, or <c>worker-&lt;n&gt;</c>.</param>
-/// <param name="Name">Name shown in <c>kern.log</c> and the notification, e.g. <c>hackeros-worker-2</c>.</param>
+/// <param name="Name">Name shown in <c>kern.log</c> and the notification, e.g. <c>kazoos-worker-2</c>.</param>
 /// <param name="UsedBytes">The runtime's managed heap: what it really holds, the part that can make its memory grow.</param>
 /// <param name="CeilingBytes">The most memory the runtime can ever have (its WebAssembly memory's maximum).</param>
 /// <param name="ProcessIds">
@@ -114,7 +114,7 @@ public sealed class BrowserRuntimeMemorySource : IRuntimeMemorySource
                 }
 
                 long used = worker.RuntimeHeapBytes > 0 ? worker.RuntimeHeapBytes : worker.RuntimeMemoryBytes;
-                readings.Add(new RuntimeMemoryReading($"worker-{worker.Id}", $"hackeros-worker-{worker.Id}", used, _ceiling, worker.ProcessIds));
+                readings.Add(new RuntimeMemoryReading($"worker-{worker.Id}", $"kazoos-worker-{worker.Id}", used, _ceiling, worker.ProcessIds));
             }
         }
 

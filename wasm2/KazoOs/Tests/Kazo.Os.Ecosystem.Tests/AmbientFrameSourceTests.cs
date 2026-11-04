@@ -35,7 +35,7 @@ public sealed partial class AmbientFrameSourceTests
         "KazoEmbeddableComponent",
         // The layout base of a Blazor site (ADR 0084) derives from KazoComponentBase in the SDK.
         "KazoSiteLayoutBase",
-        // ASP.Hack views (ADR 0083): rendered once to static HTML while the site serves a request, so
+        // ASP.Kazo views (ADR 0083): rendered once to static HTML while the site serves a request, so
         // they run in the frame of the site process and have no event handler.
         "KazoView",
         "KazoLayout"

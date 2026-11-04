@@ -16,19 +16,19 @@ public sealed class FileAssociationResolverTests
     public async Task An_explicit_valid_preferred_app_is_used_as_the_target()
     {
         Fixture fixture = new(NotepadManifest());
-        OpenFileIntent intent = new(VirtualPath.Parse("/home/alice/notes.txt"), FileIntentAction.Open, PreferredAppId: "org.hackeros.notepad");
+        OpenFileIntent intent = new(VirtualPath.Parse("/home/alice/notes.txt"), FileIntentAction.Open, PreferredAppId: "org.kazoos.notepad");
 
         FileHandlerResolution resolution = await fixture.Resolver.ResolveAsync(intent);
 
         Assert.Equal(FileHandlerResolutionStatus.ExplicitTarget, resolution.Status);
-        Assert.Equal("org.hackeros.notepad", resolution.AppId);
+        Assert.Equal("org.kazoos.notepad", resolution.AppId);
     }
 
     [Fact]
     public async Task An_explicit_preferred_app_that_cannot_handle_the_file_is_invalid()
     {
         Fixture fixture = new(NotepadManifest());
-        OpenFileIntent intent = new(VirtualPath.Parse("/home/alice/photo.png"), FileIntentAction.Open, PreferredAppId: "org.hackeros.notepad");
+        OpenFileIntent intent = new(VirtualPath.Parse("/home/alice/photo.png"), FileIntentAction.Open, PreferredAppId: "org.kazoos.notepad");
 
         FileHandlerResolution resolution = await fixture.Resolver.ResolveAsync(intent);
 
@@ -39,8 +39,8 @@ public sealed class FileAssociationResolverTests
     public async Task An_explicit_preferred_app_that_is_disabled_is_invalid()
     {
         Fixture fixture = new(NotepadManifest());
-        fixture.Disable("org.hackeros.notepad");
-        OpenFileIntent intent = new(VirtualPath.Parse("/home/alice/notes.txt"), FileIntentAction.Open, PreferredAppId: "org.hackeros.notepad");
+        fixture.Disable("org.kazoos.notepad");
+        OpenFileIntent intent = new(VirtualPath.Parse("/home/alice/notes.txt"), FileIntentAction.Open, PreferredAppId: "org.kazoos.notepad");
 
         FileHandlerResolution resolution = await fixture.Resolver.ResolveAsync(intent);
 
@@ -51,13 +51,13 @@ public sealed class FileAssociationResolverTests
     public async Task A_configured_default_from_the_association_document_is_preferred_over_candidates()
     {
         Fixture fixture = new(NotepadManifest(), TextEditorManifest());
-        await fixture.ConfigureDefaultAsync(".txt", "org.hackeros.texteditor");
+        await fixture.ConfigureDefaultAsync(".txt", "org.kazoos.texteditor");
         OpenFileIntent intent = new(VirtualPath.Parse("/home/alice/notes.txt"), FileIntentAction.Open);
 
         FileHandlerResolution resolution = await fixture.Resolver.ResolveAsync(intent);
 
         Assert.Equal(FileHandlerResolutionStatus.ConfiguredDefault, resolution.Status);
-        Assert.Equal("org.hackeros.texteditor", resolution.AppId);
+        Assert.Equal("org.kazoos.texteditor", resolution.AppId);
     }
 
     [Fact]
@@ -69,7 +69,7 @@ public sealed class FileAssociationResolverTests
         FileHandlerResolution resolution = await fixture.Resolver.ResolveAsync(intent);
 
         Assert.Equal(FileHandlerResolutionStatus.SoleCandidate, resolution.Status);
-        Assert.Equal("org.hackeros.notepad", resolution.AppId);
+        Assert.Equal("org.kazoos.notepad", resolution.AppId);
     }
 
     [Fact]
@@ -81,7 +81,7 @@ public sealed class FileAssociationResolverTests
         FileHandlerResolution resolution = await fixture.Resolver.ResolveAsync(intent);
 
         Assert.Equal(FileHandlerResolutionStatus.ChooserRequired, resolution.Status);
-        Assert.Equal(["org.hackeros.notepad", "org.hackeros.texteditor"], resolution.CandidateAppIds);
+        Assert.Equal(["org.kazoos.notepad", "org.kazoos.texteditor"], resolution.CandidateAppIds);
     }
 
     [Fact]
@@ -104,57 +104,57 @@ public sealed class FileAssociationResolverTests
     [Fact]
     public async Task An_explicit_valid_preferred_app_is_used_for_a_directory_target()
     {
-        Fixture fixture = new(DirectoryHandlerManifest("org.hackeros.file-explorer"));
+        Fixture fixture = new(DirectoryHandlerManifest("org.kazoos.file-explorer"));
         OpenFileIntent intent = new(
             VirtualPath.Parse("/home/alice/Documents"), FileIntentAction.Open,
-            PreferredAppId: "org.hackeros.file-explorer", MediaType: "inode/directory");
+            PreferredAppId: "org.kazoos.file-explorer", MediaType: "inode/directory");
 
         FileHandlerResolution resolution = await fixture.Resolver.ResolveAsync(intent);
 
         Assert.Equal(FileHandlerResolutionStatus.ExplicitTarget, resolution.Status);
-        Assert.Equal("org.hackeros.file-explorer", resolution.AppId);
+        Assert.Equal("org.kazoos.file-explorer", resolution.AppId);
     }
 
     [Fact]
     public async Task A_configured_media_type_default_is_preferred_over_directory_candidates()
     {
-        Fixture fixture = new(DirectoryHandlerManifest("org.hackeros.file-explorer"), DirectoryHandlerManifest("org.hackeros.archiver"));
-        await fixture.ConfigureMediaTypeDefaultAsync("inode/directory", "org.hackeros.file-explorer");
+        Fixture fixture = new(DirectoryHandlerManifest("org.kazoos.file-explorer"), DirectoryHandlerManifest("org.kazoos.archiver"));
+        await fixture.ConfigureMediaTypeDefaultAsync("inode/directory", "org.kazoos.file-explorer");
         OpenFileIntent intent = new(VirtualPath.Parse("/home/alice/Documents"), FileIntentAction.Open, MediaType: "inode/directory");
 
         FileHandlerResolution resolution = await fixture.Resolver.ResolveAsync(intent);
 
         Assert.Equal(FileHandlerResolutionStatus.ConfiguredDefault, resolution.Status);
-        Assert.Equal("org.hackeros.file-explorer", resolution.AppId);
+        Assert.Equal("org.kazoos.file-explorer", resolution.AppId);
     }
 
     [Fact]
     public async Task A_sole_directory_candidate_is_used_without_a_configured_default()
     {
-        // FileAssociationSettingsDocuments.DefaultContent seeds org.hackeros.file-explorer as the
+        // FileAssociationSettingsDocuments.DefaultContent seeds org.kazoos.file-explorer as the
         // inode/directory default (INT-009) — cleared here so this test genuinely exercises the
         // no-configured-default candidate path, not the configured-default path INT-009 itself covers.
-        Fixture fixture = new(DirectoryHandlerManifest("org.hackeros.file-explorer"));
+        Fixture fixture = new(DirectoryHandlerManifest("org.kazoos.file-explorer"));
         await fixture.ClearAssociationsAsync();
         OpenFileIntent intent = new(VirtualPath.Parse("/home/alice/Documents"), FileIntentAction.Open, MediaType: "inode/directory");
 
         FileHandlerResolution resolution = await fixture.Resolver.ResolveAsync(intent);
 
         Assert.Equal(FileHandlerResolutionStatus.SoleCandidate, resolution.Status);
-        Assert.Equal("org.hackeros.file-explorer", resolution.AppId);
+        Assert.Equal("org.kazoos.file-explorer", resolution.AppId);
     }
 
     [Fact]
     public async Task Multiple_directory_candidates_without_a_configured_default_require_a_chooser()
     {
-        Fixture fixture = new(DirectoryHandlerManifest("org.hackeros.file-explorer"), DirectoryHandlerManifest("org.hackeros.archiver"));
+        Fixture fixture = new(DirectoryHandlerManifest("org.kazoos.file-explorer"), DirectoryHandlerManifest("org.kazoos.archiver"));
         await fixture.ClearAssociationsAsync();
         OpenFileIntent intent = new(VirtualPath.Parse("/home/alice/Documents"), FileIntentAction.Open, MediaType: "inode/directory");
 
         FileHandlerResolution resolution = await fixture.Resolver.ResolveAsync(intent);
 
         Assert.Equal(FileHandlerResolutionStatus.ChooserRequired, resolution.Status);
-        Assert.Equal(["org.hackeros.archiver", "org.hackeros.file-explorer"], resolution.CandidateAppIds);
+        Assert.Equal(["org.kazoos.archiver", "org.kazoos.file-explorer"], resolution.CandidateAppIds);
     }
 
     private static AppManifest DirectoryHandlerManifest(string appId) => new()
@@ -162,7 +162,7 @@ public sealed class FileAssociationResolverTests
         Id = appId,
         Name = appId,
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "A directory-capable app for INT-007 tests.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", $"{appId}.EntryPoint"),
@@ -174,13 +174,13 @@ public sealed class FileAssociationResolverTests
 
     private static AppManifest NotepadManifest() => new()
     {
-        Id = "org.hackeros.notepad",
+        Id = "org.kazoos.notepad",
         Name = "Notepad",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "A simple text editor.",
         Kind = AppKind.Window,
-        EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", "org.hackeros.notepad.EntryPoint"),
+        EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", "org.kazoos.notepad.EntryPoint"),
         SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
@@ -189,13 +189,13 @@ public sealed class FileAssociationResolverTests
 
     private static AppManifest TextEditorManifest() => new()
     {
-        Id = "org.hackeros.texteditor",
+        Id = "org.kazoos.texteditor",
         Name = "Text Editor",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "An advanced text editor.",
         Kind = AppKind.Window,
-        EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", "org.hackeros.texteditor.EntryPoint"),
+        EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", "org.kazoos.texteditor.EntryPoint"),
         SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
@@ -220,7 +220,7 @@ public sealed class FileAssociationResolverTests
 
         internal void Disable(string appId) => _enablement.MarkDisabled([appId]);
 
-        // The associations are the administrator file /etc/hackeros/file-associations.json (ADR 0044).
+        // The associations are the administrator file /etc/kazoos/file-associations.json (ADR 0044).
         internal Task ConfigureDefaultAsync(string extension, string appId) => WriteAsync($$"""
             {"schemaVersion":1,"associations":[{"extension":"{{extension}}","appId":"{{appId}}","actions":["open","edit"]}]}
             """);

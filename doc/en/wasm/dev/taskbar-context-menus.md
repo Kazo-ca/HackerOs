@@ -20,7 +20,7 @@ every screen. A right click does not activate the window.
 
 - **New window** starts the app once more on the taskbar's screen. It is disabled for a
   `SingleInstancePerUser` app or one missing from the catalog.
-- **Task manager** opens the system monitor (`org.hackeros.system-monitor`) on the taskbar's
+- **Task manager** opens the system monitor (`org.kazoos.system-monitor`) on the taskbar's
   screen.
 - **Show the desktop** minimizes the windows of the taskbar's screen.
 - **Cascade** and **tile** arrange the windows of the taskbar's screen (section 3).

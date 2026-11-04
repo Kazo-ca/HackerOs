@@ -139,7 +139,7 @@ public sealed class LoginResourceLimitsProvider
     /// <summary>Reads as the kernel, like <c>pam_limits</c> running as root during login.</summary>
     private static AppOperationContext RootOperation() => new()
     {
-        AppId = "org.hackeros.kernel",
+        AppId = "org.kazoos.kernel",
         UserId = "system",
         UserAuthority = AppAuthority.System,
         GrantedCapabilities = new HashSet<string>(AppCapabilities.All, StringComparer.Ordinal),

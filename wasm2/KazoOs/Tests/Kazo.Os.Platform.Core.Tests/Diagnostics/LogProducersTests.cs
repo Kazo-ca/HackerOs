@@ -35,13 +35,13 @@ public sealed class LogProducersTests
         LogTestFileSystem fs = await LogTestFileSystem.CreateAsync();
         BoundedDiagnosticSink memory = new(10);
         LogFileWriter writer = new(fs.Clock, memory);
-        AppLoggingGateway gateway = new(memory, fs.Clock, "org.hackeros.text-editor", writer, processId: 42);
+        AppLoggingGateway gateway = new(memory, fs.Clock, "org.kazoos.text-editor", writer, processId: 42);
 
         gateway.Log(DiagnosticSeverity.Warning, "saved", new Dictionary<string, string> { ["token"] = "s3cret", ["file"] = "a.txt" });
         await writer.AttachAsync(fs.Service);
 
-        string line = Assert.Single(await fs.ReadLinesAsync("/var/log/apps/org.hackeros.text-editor.log"));
-        Assert.Equal("2026-10-10T03:11:42.123Z WARN  org.hackeros.text-editor[42]: saved {file=a.txt, token=***redacted***}", line);
+        string line = Assert.Single(await fs.ReadLinesAsync("/var/log/apps/org.kazoos.text-editor.log"));
+        Assert.Equal("2026-10-10T03:11:42.123Z WARN  org.kazoos.text-editor[42]: saved {file=a.txt, token=***redacted***}", line);
         Assert.DoesNotContain("s3cret", line, StringComparison.Ordinal);
         Assert.Null(await fs.StatAsync("/var/log/syslog"));
     }

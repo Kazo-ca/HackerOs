@@ -19,7 +19,7 @@ public sealed class RegisterFileContextMenuTests
             selection: MenuSelection.Each, after: KazoFileMenuItems.Open);
         context.Register("Menu.Convert", "convert", scope: FileMenuScope.File | FileMenuScope.Directory, afterGroup: KazoFileMenuItems.Copy);
         context.Register("Menu.ToPng", "to-png", intent: "com.example.zipper.to-png.v1", parent: "convert");
-        context.Register("Menu.Here", "here", target: "org.hackeros.terminal", intent: "org.hackeros.terminal.open-here.v1",
+        context.Register("Menu.Here", "here", target: "org.kazoos.terminal", intent: "org.kazoos.terminal.open-here.v1",
             scope: FileMenuScope.Background | FileMenuScope.Desktop, selection: MenuSelection.Single, first: true);
 
         IReadOnlyList<AppContextMenuEntryManifest> entries = context.Entries;

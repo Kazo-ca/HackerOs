@@ -4,14 +4,14 @@ using Kazo.Os.Simulation.Abstractions.Settings;
 namespace Kazo.Os.Platform.Core.Settings;
 
 /// <summary>
-/// One layered OS settings document (ADR 0044 section 8): <c>/etc/hackeros/&lt;id&gt;.config</c> as the
-/// system layer and <c>~/.config/hackeros/&lt;id&gt;.config</c> as the user layer.
+/// One layered OS settings document (ADR 0044 section 8): <c>/etc/kazoos/&lt;id&gt;.config</c> as the
+/// system layer and <c>~/.config/kazoos/&lt;id&gt;.config</c> as the user layer.
 /// </summary>
 /// <param name="DocumentId">File name without <c>.config</c>.</param>
 /// <param name="Schema">Declared keys, types and defaults.</param>
 /// <param name="SystemOnly">
 /// When <see langword="true"/> the user layer is never read nor written (for example the
-/// administrator policy): only <c>/etc/hackeros</c> applies.
+/// administrator policy): only <c>/etc/kazoos</c> applies.
 /// </param>
 /// <remarks>
 /// OS documents hold no sensitive keys (ADR 0100): <see cref="OsSettingsService"/> reads only the
@@ -28,27 +28,27 @@ public sealed record OsSettingsDocument(string DocumentId, SettingsSchema Schema
         : Schema;
 
     /// <summary>Directory of every OS system-layer file.</summary>
-    public const string SystemDirectory = "/etc/hackeros";
+    public const string SystemDirectory = "/etc/kazoos";
 
-    /// <summary>Gets the system layer path, <c>/etc/hackeros/&lt;id&gt;.config</c>.</summary>
+    /// <summary>Gets the system layer path, <c>/etc/kazoos/&lt;id&gt;.config</c>.</summary>
     public VirtualPath SystemPath => VirtualPath.Parse($"{SystemDirectory}/{DocumentId}.config");
 
     /// <summary>Gets the user layer path for one home directory.</summary>
     /// <param name="homeDirectory">Absolute home directory, e.g. <c>/home/alice</c>.</param>
     public VirtualPath GetUserPath(string homeDirectory) =>
-        VirtualPath.Parse($"{homeDirectory.TrimEnd('/')}/.config/hackeros/{DocumentId}.config");
+        VirtualPath.Parse($"{homeDirectory.TrimEnd('/')}/.config/kazoos/{DocumentId}.config");
 }
 
 /// <summary>Where a whole-file OS document lives.</summary>
 public enum OsSettingsLocation
 {
-    /// <summary><c>/etc/hackeros/</c>: machine-wide, written by an administrator.</summary>
+    /// <summary><c>/etc/kazoos/</c>: machine-wide, written by an administrator.</summary>
     System = 1,
 
-    /// <summary><c>~/.config/hackeros/</c>: the session user's own preferences, synchronized with the home.</summary>
+    /// <summary><c>~/.config/kazoos/</c>: the session user's own preferences, synchronized with the home.</summary>
     UserConfig = 2,
 
-    /// <summary><c>~/.local/state/hackeros/</c>: device-local user state, never synchronized (ADR 0044 section 10).</summary>
+    /// <summary><c>~/.local/state/kazoos/</c>: device-local user state, never synchronized (ADR 0044 section 10).</summary>
     UserState = 3,
 
     /// <summary>The session user's home, for documents whose location is defined relative to it.</summary>
@@ -70,8 +70,8 @@ public sealed record OsSettingsFile(OsSettingsLocation Location, string Relative
         string root = Location switch
         {
             OsSettingsLocation.System => OsSettingsDocument.SystemDirectory,
-            OsSettingsLocation.UserConfig => $"{RequireHome(homeDirectory)}/.config/hackeros",
-            OsSettingsLocation.UserState => $"{RequireHome(homeDirectory)}/.local/state/hackeros",
+            OsSettingsLocation.UserConfig => $"{RequireHome(homeDirectory)}/.config/kazoos",
+            OsSettingsLocation.UserState => $"{RequireHome(homeDirectory)}/.local/state/kazoos",
             OsSettingsLocation.UserHome => RequireHome(homeDirectory),
             _ => throw new ArgumentOutOfRangeException(nameof(Location), Location, "Unknown OS settings location.")
         };

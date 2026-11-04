@@ -42,20 +42,20 @@ these are free strings (no longer an enumeration, `schemaVersion` stays 2).
 1. A built-in theme of the right form factor: it applies.
 2. A user theme offered for that form factor: its base theme applies, then its
    tokens on top. If its base targets the other form factor (a theme based on
-   `hackeros` also offered on mobile), its tokens apply on the default theme of
+   `kazoos` also offered on mobile), its tokens apply on the default theme of
    the active form factor.
 3. Otherwise (unknown id, file deleted or rejected, wrong form factor): the
    form factor's default theme, as before.
 
 ## The theme editor
 
-System app `org.hackeros.theme-editor`, on the public SDK only (ADR 0055).
+System app `org.kazoos.theme-editor`, on the public SDK only (ADR 0055).
 Capabilities: home folder read and write, open and save dialogs, and
 `filesystem.system.read` (dangerous, granted to system apps) to list
-`/etc/hackeros/themes`. Window 1180 × 760, minimum 820 × 540 (ADR 0095).
+`/etc/kazoos/themes`. Window 1180 × 760, minimum 820 × 540 (ADR 0095).
 
 - **Toolbar**: *New from* (base theme), *Open…*, *Save* (to
-  `~/.config/hackeros/themes/<id>.theme`, folder created if needed), *Export…*
+  `~/.config/kazoos/themes/<id>.theme`, folder created if needed), *Export…*
   (anywhere through the dialog), *Use on desktop* / *Use on mobile* (writes the
   id in the user layer of `appearance` through `KazoSettings.OpenSystemAsync`).
 - **Left column**: name, id (follows the name as long as it is not edited by

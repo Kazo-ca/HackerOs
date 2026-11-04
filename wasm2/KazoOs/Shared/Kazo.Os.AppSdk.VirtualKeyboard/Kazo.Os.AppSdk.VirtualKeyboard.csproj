@@ -8,7 +8,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageId>Kazo.Os.AppSdk.VirtualKeyboard</PackageId>
     <Description>A reusable, host-agnostic on-screen keyboard and a keyboard-aware split container. Pushes typed key events to whatever target a host wires up; never fills a focused text field and never risks opening a native keyboard.</Description>
-    <PackageTags>hackeros;virtual-keyboard;mobile;blazor;app-sdk</PackageTags>
+    <PackageTags>kazoos;virtual-keyboard;mobile;blazor;app-sdk</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

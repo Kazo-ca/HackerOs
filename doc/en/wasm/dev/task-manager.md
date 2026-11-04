@@ -10,7 +10,7 @@ ADR 0057).
 
 ## Role
 
-The "System Monitor" app (`org.hackeros.system-monitor`) is Kazo OS's task
+The "System Monitor" app (`org.kazoos.system-monitor`) is Kazo OS's task
 manager. Like `top`, it rereads `/proc` every second; everything it displays, a
 third-party app or `ps` can read as well.
 
@@ -347,8 +347,8 @@ a culture stay invariant. The names and values read from `/proc` (fields of
 
 ## Work item `rebuild/5-worker-processes` (ADR 0070, 0071)
 
-- [x] `Metrics/ProcFiles.cs` reads `/proc/hackeros/workers` (`ProcWorkers`, `ProcWorker`, `ParseWorkers`); `ProcReader` reads it if it exists.
+- [x] `Metrics/ProcFiles.cs` reads `/proc/kazoos/workers` (`ProcWorkers`, `ProcWorker`, `ParseWorkers`); `ProcReader` reads it if it exists.
 - [x] Performance tab: "Workers" section (capacity, pool size, one card per worker with role, state, core, memory, processes); "Not responding" in red.
-  Since `exec/9` (ADR 0131, 0143), when the page is isolated, a card's memory is the one the browser measures for that worker (`memory-measure: browser` in `/proc/hackeros/workers`); the app has not changed.
+  Since `exec/9` (ADR 0131, 0143), when the page is isolated, a card's memory is the one the browser measures for that worker (`memory-measure: browser` in `/proc/kazoos/workers`); the app has not changed.
 - [x] "Not responding" visible while a command blocks in a worker; "Force kill" terminates the worker.
 - [x] Tests: `ProcFilesTests` (`ParseWorkers`).

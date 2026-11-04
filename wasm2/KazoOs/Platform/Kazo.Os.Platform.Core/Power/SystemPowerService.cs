@@ -87,7 +87,7 @@ public sealed class SystemPowerService
     /// </summary>
     /// <remarks>
     /// The host offers it only when its deployment allows it
-    /// (<c>HackerOs:SignIn:FactoryReset:Enabled</c>): anyone at the sign-in screen can erase the
+    /// (<c>KazoOs:SignIn:FactoryReset:Enabled</c>): anyone at the sign-in screen can erase the
     /// machine, as anyone at a real computer can reinstall it.
     /// </remarks>
     public async Task FactoryResetFromSignInAsync()

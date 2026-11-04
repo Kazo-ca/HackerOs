@@ -22,15 +22,15 @@ l'expérience de base ne change pas.
 
 | Fichier | Propriétaire | Contenu |
 |---|---|---|
-| `/etc/hackeros/security.config` | `system:system 0644`, document `SystemOnly` | `dangerousCapabilities=prompt` (défaut) ou `block` |
-| `/etc/hackeros/app-permissions.config` | `system:system 0644` | décisions machine `allow` / `deny` ; **seule source d'un `allow`** |
-| `~/.config/hackeros/app-permissions.config` | l'utilisateur | refus (`deny`) valables pour lui seul |
+| `/etc/kazoos/security.config` | `system:system 0644`, document `SystemOnly` | `dangerousCapabilities=prompt` (défaut) ou `block` |
+| `/etc/kazoos/app-permissions.config` | `system:system 0644` | décisions machine `allow` / `deny` ; **seule source d'un `allow`** |
+| `~/.config/kazoos/app-permissions.config` | l'utilisateur | refus (`deny`) valables pour lui seul |
 
 Les deux fichiers de `/etc` sont livrés commentés au premier démarrage
 (`SettingsStoreToFilesMigration.MigrateSystemAsync`).
 
 ```text
-# /etc/hackeros/app-permissions.config
+# /etc/kazoos/app-permissions.config
 [permissions]
 org.example.scanner:network.real.access=allow
 org.example.scanner:filesystem.system.read=deny
@@ -43,7 +43,7 @@ org.example.scanner:filesystem.system.read=deny
   utilisateur est ignoré avec un avertissement.
 - Une valeur invalide de `dangerousCapabilities` est ignorée (ADR 0044) :
   `prompt` s'applique.
-- `cat /etc/hackeros/app-permissions.config` montre ce qu'un administrateur a
+- `cat /etc/kazoos/app-permissions.config` montre ce qu'un administrateur a
   approuvé ; `sudo nano` permet de le modifier à la main.
 
 ## Table de décision

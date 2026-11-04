@@ -4,7 +4,7 @@ using Kazo.Os.Samples.Intranet.Models;
 namespace Kazo.Os.Samples.Intranet.Services;
 
 /// <summary>
-/// The notes of the site, kept in the site's browser database <c>hackweb.org.hackeros.samples.intranet</c>
+/// The notes of the site, kept in the site's browser database <c>kazoweb.org.kazoos.samples.intranet</c>
 /// (<see cref="KazoWebDb"/>, ADR 0088): an IndexedDB database of the host browser, outside the OS files.
 /// </summary>
 /// <remarks>
@@ -144,7 +144,7 @@ public sealed class NoteStore(KazoWebDb database, TimeProvider time)
                 DateTimeOffset now = time.GetUtcNow();
                 KazoWebDbTransaction seed = database.BeginTransaction(StoreName, MetaStore);
                 KazoWebDbTransactionStore<Note> notes = seed.Store<Note>(StoreName);
-                notes.Add(new Note { Title = "Welcome to the intranet", Body = "Notes are kept in the site's browser database (hackweb.org.hackeros.samples.intranet): they survive restarts.", Pinned = true, Author = "it-ops", UpdatedAt = now });
+                notes.Add(new Note { Title = "Welcome to the intranet", Body = "Notes are kept in the site's browser database (kazoweb.org.kazoos.samples.intranet): they survive restarts.", Pinned = true, Author = "it-ops", UpdatedAt = now });
                 notes.Add(new Note { Title = "VPN maintenance", Body = "The gateway at 10.0.0.1 reboots Friday at 22:00.", Author = "it-ops", UpdatedAt = now });
                 notes.Add(new Note { Title = "Coffee machine", Body = "Second floor machine fixed. Do not feed it tea bags.", Author = "facilities", UpdatedAt = now });
                 seed.Store<string>(MetaStore).Put(now.ToString("O", System.Globalization.CultureInfo.InvariantCulture), SeededKey);

@@ -116,7 +116,7 @@ public sealed class InstalledAppsBootTests
     {
         InstalledAppsBoot boot = new(BuildKnownLazyApps.Host);
         boot.Apply(new InstalledAppsImage([App("org.kazo.sample")], []), (path, _) => ValueTask.FromResult<byte[]?>(
-            path.Value == "/usr/lib/hackeros/apps/org.kazo.sample/1.0.0/wwwroot/data/x.txt" ? Encoding.UTF8.GetBytes("hello") : null));
+            path.Value == "/usr/lib/kazoos/apps/org.kazo.sample/1.0.0/wwwroot/data/x.txt" ? Encoding.UTF8.GetBytes("hello") : null));
         InstalledAppAssetSource source = new(NoAppAssetSource.Instance, boot);
 
         byte[]? bytes = await source.ReadAsync(Manifest("org.kazo.sample"), "data/x.txt");

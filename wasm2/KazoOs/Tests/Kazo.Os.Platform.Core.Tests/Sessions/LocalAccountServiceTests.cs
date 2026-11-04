@@ -53,7 +53,7 @@ public sealed class LocalAccountServiceTests
 
     [Theory]
     [InlineData("root")]
-    [InlineData("hackeros-svc")]
+    [InlineData("kazoos-svc")]
     [InlineData("administrators")]
     [InlineData("guest")]
     [InlineData("alice")]

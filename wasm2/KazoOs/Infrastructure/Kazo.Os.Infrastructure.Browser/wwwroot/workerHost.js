@@ -12,7 +12,7 @@
 // Cross-origin isolated page (ADR 0131, section 4): each worker also gets two shared rings and a
 // synchronous call slot (sharedRing.js). Messages then travel through the rings in both directions;
 // a message that arrives by postMessage is handed to .NET only after the ring is drained, so the
-// order never changes. The worker's URL carries its id (?hackeros-worker=N) so that
+// order never changes. The worker's URL carries its id (?kazoos-worker=N) so that
 // performance.measureUserAgentSpecificMemory() can attribute memory to it.
 
 import { ringsAvailable, createRingBuffer, createSyncBuffer, SharedRing, writeSyncAnswer } from './sharedRing.js';
@@ -53,7 +53,7 @@ export function whenIdle(timeoutMs) {
 export function startWorker(name, entryAssembly, entryType, onEvent) {
     const id = ++nextId;
     const bootstrapUrl = new URL(resolveAsset('_content/Kazo.Os.Infrastructure.Browser/workerBootstrap.js'));
-    bootstrapUrl.searchParams.set('hackeros-worker', String(id));
+    bootstrapUrl.searchParams.set('kazoos-worker', String(id));
     const worker = new Worker(bootstrapUrl.href, { type: 'module', name });
     // toWorker is used only once the worker said it reads its ring (its "ready" message).
     const entry = { worker, toWorker: null, fromWorker: null, sync: null, ringToWorker: null };
@@ -61,7 +61,7 @@ export function startWorker(name, entryAssembly, entryType, onEvent) {
     if (ringsAvailable()) {
         rings = { toOs: createRingBuffer(), fromOs: createRingBuffer(), sync: createSyncBuffer() };
         entry.fromWorker = new SharedRing(rings.toOs, () => { });
-        entry.ringToWorker = new SharedRing(rings.fromOs, () => worker.postMessage({ __hackeros: 'ring' }));
+        entry.ringToWorker = new SharedRing(rings.fromOs, () => worker.postMessage({ __kazoos: 'ring' }));
         entry.sync = rings.sync;
     }
     workers.set(id, entry);
@@ -71,12 +71,12 @@ export function startWorker(name, entryAssembly, entryType, onEvent) {
         if (typeof data === 'string') {
             entry.fromWorker?.drain(deliver);
             deliver(data);
-        } else if (data && data.__hackeros === 'ring') {
+        } else if (data && data.__kazoos === 'ring') {
             entry.fromWorker?.drain(deliver);
-        } else if (data && data.__hackeros === 'ready') {
+        } else if (data && data.__kazoos === 'ready') {
             entry.toWorker = data.rings === true ? entry.ringToWorker : null;
             onEvent('ready', '');
-        } else if (data && data.__hackeros === 'error') {
+        } else if (data && data.__kazoos === 'error') {
             onEvent('error', String(data.message));
         }
     };
@@ -85,7 +85,7 @@ export function startWorker(name, entryAssembly, entryType, onEvent) {
         onEvent('error', event.message || 'worker script error');
     };
     worker.postMessage({
-        __hackeros: 'boot',
+        __kazoos: 'boot',
         dotnetUrl: resolveAsset('_framework/dotnet.js'),
         ringUrl: resolveAsset('_content/Kazo.Os.Infrastructure.Browser/sharedRing.js'),
         rings,
@@ -141,7 +141,7 @@ export async function measureMemory() {
             if (attribution.scope !== 'DedicatedWorkerGlobalScope' || !attribution.url) {
                 continue;
             }
-            const workerId = new URL(attribution.url).searchParams.get('hackeros-worker');
+            const workerId = new URL(attribution.url).searchParams.get('kazoos-worker');
             if (workerId) {
                 perWorker[workerId] = (perWorker[workerId] || 0) + entry.bytes / attributions.length;
             }

@@ -18,13 +18,13 @@ public sealed class ProcessEnvironmentTests
     {
         InMemoryProcessManager manager = CreateManager();
 
-        ProcessRecord bare = manager.Start(Request("org.hackeros.terminal"));
+        ProcessRecord bare = manager.Start(Request("org.kazoos.terminal"));
         ProcessRecord explicitOne = manager.Start(Request(
-            "org.hackeros.commands.ls", arguments: ["ls", "-la"], directory: "/home/alice",
+            "org.kazoos.commands.ls", arguments: ["ls", "-la"], directory: "/home/alice",
             environment: new Dictionary<string, string>(StringComparer.Ordinal) { ["HOME"] = "/home/alice" }));
 
         ProcessEnvironmentSnapshot bareState = manager.Environments.Get(bare.Pid);
-        Assert.Equal(["org.hackeros.terminal"], bareState.Arguments);
+        Assert.Equal(["org.kazoos.terminal"], bareState.Arguments);
         Assert.Equal("/", bareState.WorkingDirectory);
         Assert.Empty(bareState.Variables);
 
@@ -39,11 +39,11 @@ public sealed class ProcessEnvironmentTests
     {
         InMemoryProcessManager manager = CreateManager();
         ProcessRecord shell = manager.Start(Request(
-            "org.hackeros.terminal", directory: "/home/alice",
+            "org.kazoos.terminal", directory: "/home/alice",
             environment: new Dictionary<string, string>(StringComparer.Ordinal) { ["PATH"] = "/bin", ["EDITOR"] = "nano" }));
 
         ProcessRecord child = manager.Start(Request(
-            "org.hackeros.commands.env", parent: shell.Pid,
+            "org.kazoos.commands.env", parent: shell.Pid,
             environment: new Dictionary<string, string>(StringComparer.Ordinal) { ["EDITOR"] = "vi" }));
 
         ProcessEnvironmentSnapshot childState = manager.Environments.Get(child.Pid);
@@ -66,7 +66,7 @@ public sealed class ProcessEnvironmentTests
     public void Snapshots_are_copies_that_later_changes_do_not_alter()
     {
         InMemoryProcessManager manager = CreateManager();
-        ProcessRecord process = manager.Start(Request("org.hackeros.terminal"));
+        ProcessRecord process = manager.Start(Request("org.kazoos.terminal"));
         ProcessEnvironmentSnapshot before = manager.Environments.Get(process.Pid);
 
         manager.Environments.SetVariable(process.Pid, "X", "1");
@@ -79,9 +79,9 @@ public sealed class ProcessEnvironmentTests
     public void The_entry_disappears_when_the_process_ends_including_killed_descendants()
     {
         InMemoryProcessManager manager = CreateManager();
-        ProcessRecord parent = manager.Start(Request("org.hackeros.terminal"));
-        ProcessRecord child = manager.Start(Request("org.hackeros.commands.sleep", parent: parent.Pid));
-        ProcessRecord other = manager.Start(Request("org.hackeros.commands.ls"));
+        ProcessRecord parent = manager.Start(Request("org.kazoos.terminal"));
+        ProcessRecord child = manager.Start(Request("org.kazoos.commands.sleep", parent: parent.Pid));
+        ProcessRecord other = manager.Start(Request("org.kazoos.commands.ls"));
         manager.MarkRunning(other.Pid);
         manager.Complete(other.Pid, 0);
 
@@ -100,18 +100,18 @@ public sealed class ProcessEnvironmentTests
     public void Invalid_names_are_rejected(string name)
     {
         InMemoryProcessManager manager = CreateManager();
-        ProcessRecord process = manager.Start(Request("org.hackeros.terminal"));
+        ProcessRecord process = manager.Start(Request("org.kazoos.terminal"));
 
         Assert.Throws<ArgumentException>(() => manager.Environments.SetVariable(process.Pid, name, "x"));
         Assert.Throws<ArgumentException>(() => manager.Start(Request(
-            "org.hackeros.terminal", environment: new Dictionary<string, string>(StringComparer.Ordinal) { [name] = "x" })));
+            "org.kazoos.terminal", environment: new Dictionary<string, string>(StringComparer.Ordinal) { [name] = "x" })));
     }
 
     [Fact]
     public void Values_containing_nul_are_rejected_but_empty_values_are_kept()
     {
         InMemoryProcessManager manager = CreateManager();
-        ProcessRecord process = manager.Start(Request("org.hackeros.terminal"));
+        ProcessRecord process = manager.Start(Request("org.kazoos.terminal"));
 
         Assert.Throws<ArgumentException>(() => manager.Environments.SetVariable(process.Pid, "X", "a\0b"));
         manager.Environments.SetVariable(process.Pid, "EMPTY", string.Empty);

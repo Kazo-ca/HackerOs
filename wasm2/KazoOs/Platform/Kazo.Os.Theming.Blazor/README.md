@@ -8,7 +8,7 @@ the root `ThemeScope`, and the token-driven `ThemePreview` used by appearance se
 @using Kazo.Os.Theming.Abstractions
 @using Kazo.Os.Theming.Blazor
 
-<ThemeScope ThemeId="@WellKnownThemeIds.HackerOs"
+<ThemeScope ThemeId="@WellKnownThemeIds.KazoOs"
             Platform="ThemePlatform.Desktop"
             AccentId="@WellKnownAccentIds.Green"
             AnimationsEnabled="true">

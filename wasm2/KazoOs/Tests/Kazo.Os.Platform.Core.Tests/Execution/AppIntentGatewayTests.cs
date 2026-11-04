@@ -37,7 +37,7 @@ public sealed class AppIntentGatewayTests
     {
         Fixture fixture = new(FileManagerManifest(), NotepadManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.filemanager", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.filemanager", principal, AppCapabilities.AppsLaunch);
         IAppExecutionContext caller = await fixture.LaunchCallerAsync(principal);
 
         AppIntentOpenFileResult result = await caller.Intents.OpenFileAsync(
@@ -51,7 +51,7 @@ public sealed class AppIntentGatewayTests
     {
         Fixture fixture = new(FileManagerManifest(), NotepadManifest(), TextEditorManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.filemanager", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.filemanager", principal, AppCapabilities.AppsLaunch);
         IAppExecutionContext caller = await fixture.LaunchCallerAsync(principal);
 
         AppIntentOpenFileResult result = await caller.Intents.OpenFileAsync(
@@ -66,7 +66,7 @@ public sealed class AppIntentGatewayTests
     {
         Fixture fixture = new(FileManagerManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.filemanager", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.filemanager", principal, AppCapabilities.AppsLaunch);
         IAppExecutionContext caller = await fixture.LaunchCallerAsync(principal);
 
         AppIntentOpenFileResult result = await caller.Intents.OpenFileAsync(
@@ -80,11 +80,11 @@ public sealed class AppIntentGatewayTests
     {
         Fixture fixture = new(FileManagerManifest(), NotepadManifest(), TextEditorManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        fixture.Grant("org.hackeros.filemanager", principal, AppCapabilities.AppsLaunch);
+        fixture.Grant("org.kazoos.filemanager", principal, AppCapabilities.AppsLaunch);
         IAppExecutionContext caller = await fixture.LaunchCallerAsync(principal);
 
         AppIntentLaunchResult result = await caller.Intents.LaunchAsync(
-            "org.hackeros.texteditor", ["/home/alice/notes.txt"]);
+            "org.kazoos.texteditor", ["/home/alice/notes.txt"]);
 
         Assert.Equal(AppIntentLaunchOutcome.Launched, result.Outcome);
     }
@@ -103,13 +103,13 @@ public sealed class AppIntentGatewayTests
 
     private static AppManifest FileManagerManifest() => new()
     {
-        Id = "org.hackeros.filemanager",
+        Id = "org.kazoos.filemanager",
         Name = "File Manager",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "Exercises IAppExecutionContext.Intents as a calling app.",
         Kind = AppKind.Window,
-        EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", "org.hackeros.filemanager.EntryPoint"),
+        EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", "org.kazoos.filemanager.EntryPoint"),
         SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Capabilities = [AppCapabilities.AppsLaunch],
@@ -118,13 +118,13 @@ public sealed class AppIntentGatewayTests
 
     private static AppManifest NotepadManifest() => new()
     {
-        Id = "org.hackeros.notepad",
+        Id = "org.kazoos.notepad",
         Name = "Notepad",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "A simple text editor.",
         Kind = AppKind.Window,
-        EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", "org.hackeros.notepad.EntryPoint"),
+        EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", "org.kazoos.notepad.EntryPoint"),
         SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,
@@ -133,13 +133,13 @@ public sealed class AppIntentGatewayTests
 
     private static AppManifest TextEditorManifest() => new()
     {
-        Id = "org.hackeros.texteditor",
+        Id = "org.kazoos.texteditor",
         Name = "Text Editor",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "An advanced text editor.",
         Kind = AppKind.Window,
-        EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", "org.hackeros.texteditor.EntryPoint"),
+        EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", "org.kazoos.texteditor.EntryPoint"),
         SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,

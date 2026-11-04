@@ -16,7 +16,7 @@ public sealed class BrowserApp : AppDefinition
     public override IReadOnlyList<AssetManifest> Assets =>
         [new("icons/app.svg", AssetKind.Image, new string('0', 64), "app-icon")];
     /// <inheritdoc />
-    public override string Id => "org.hackeros.browser";
+    public override string Id => "org.kazoos.browser";
 
     /// <inheritdoc />
     public override string Name => "Browser";
@@ -31,7 +31,7 @@ public sealed class BrowserApp : AppDefinition
     public override Type? MobileEntryPoint => typeof(BrowserWindow);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description =>
@@ -44,7 +44,7 @@ public sealed class BrowserApp : AppDefinition
     /// <remarks>
     /// Files (ADR 0075 §4 and §5): <c>file://</c> pages are read in the user's home with the user's
     /// rights; downloads go to <c>~/Downloads</c> and <c>localStorage</c> to
-    /// <c>~/.local/share/hackeros/browser/storage</c>. The browser does not ask for
+    /// <c>~/.local/share/kazoos/browser/storage</c>. The browser does not ask for
     /// <c>filesystem.system.read</c>: a <c>file://</c> URL outside the home answers <c>ERR_ACCESS_DENIED</c>.
     /// Real sites (ADR 0210 §1): <c>network.real.access</c> lets the OS relay a host unknown to the
     /// simulated network through the optional server; the host makes the browser a system app so this

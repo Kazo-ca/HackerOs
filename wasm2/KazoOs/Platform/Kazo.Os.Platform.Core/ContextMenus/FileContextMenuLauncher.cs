@@ -19,7 +19,7 @@ namespace Kazo.Os.Platform.Core.ContextMenus;
 public sealed class FileContextMenuLauncher
 {
     /// <summary>The sender of the intents the OS hands for a menu entry.</summary>
-    public const string ShellAppId = "org.hackeros.shell";
+    public const string ShellAppId = "org.kazoos.shell";
 
     private readonly AppCatalog _catalog;
     private readonly IAppEnablementRegistry _enablement;

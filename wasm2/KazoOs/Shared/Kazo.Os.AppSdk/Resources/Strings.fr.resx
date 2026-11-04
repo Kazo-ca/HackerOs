@@ -43,7 +43,7 @@
     <value>la liaison « {0} » figure deux fois</value>
   </data>
   <data name="Site.HttpsBinding" xml:space="preserve">
-    <value>« {0} » : une liaison https a besoin d'un certificat de serveur, que hackwebd n'a pas encore</value>
+    <value>« {0} » : une liaison https a besoin d'un certificat de serveur, que kazowebd n'a pas encore</value>
   </data>
   <data name="Site.InvalidBinding" xml:space="preserve">
     <value>« {0} » n'est pas une liaison valable : {1}</value>

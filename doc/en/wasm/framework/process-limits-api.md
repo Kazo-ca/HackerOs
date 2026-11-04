@@ -45,7 +45,7 @@ Max open files            1024                 524288               files
 ```
 
 The `# enforcement:` line is `strict (worker)`, `best-effort (main thread)`
-or `off (HackerOs:ResourceLimits:Enabled=false)`. `/proc/<pid>/fd/` (folder
+or `off (KazoOs:ResourceLimits:Enabled=false)`. `/proc/<pid>/fd/` (folder
 `0500`) lists the open descriptors as links.
 
 ## SDK API

@@ -34,7 +34,7 @@ public sealed class WindowAppRenderValidatorTests
     [Fact]
     public void Validate_rejects_mismatched_app_identity()
     {
-        RenderFixture fixture = new(windowAppId: "org.hackeros.other");
+        RenderFixture fixture = new(windowAppId: "org.kazoos.other");
 
         Assert.Throws<InvalidOperationException>(() =>
             WindowAppRenderValidator.Validate(fixture.Window, fixture.Descriptor, fixture.Context));
@@ -82,10 +82,10 @@ public sealed class WindowAppRenderValidatorTests
 
         private static AppManifest CreateManifest() => new()
         {
-            Id = "org.hackeros.test-window-renderer",
+            Id = "org.kazoos.test-window-renderer",
             Name = "Renderer Test",
             Version = "1.0.0",
-            PublisherId = "org.hackeros",
+            PublisherId = "org.kazoos",
             Description = "Valid Window app renderer test manifest.",
             Kind = AppKind.Window,
             EntryPoint = new AppEntryPointManifest(

@@ -15,7 +15,7 @@ namespace Kazo.Os.Infrastructure.Browser.Schema;
 public static class KazoOsIndexedDbSchema
 {
     /// <summary>Gets the single IndexedDB database name used by Kazo OS.</summary>
-    public const string DatabaseName = "hackeros";
+    public const string DatabaseName = "kazoos";
 
     /// <summary>Gets the current schema version passed to <c>indexedDB.open</c>.</summary>
     /// <remarks>

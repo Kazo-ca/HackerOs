@@ -30,11 +30,11 @@ Les seize chantiers sont fusionnés dans `v3/base` (PR #152 à #167) :
 | `v3/8-settings-security` | #155 | ADR 0100 | [`sensitive-settings.md`](../sensitive-settings.md) |
 | `v3/9-sync` | #156 | ADR 0101 | [`synchronization.md`](../synchronization.md) |
 | `v3/10-server-proxy` | #158 | ADR 0102, 0108 | [`server-network-relay.md`](../server-network-relay.md) |
-| `v3/11-apps` | #162 | ADR 0103 | [`hack-paint.md`](../hack-paint.md), [`theme-editor.md`](../theme-editor.md) |
+| `v3/11-apps` | #162 | ADR 0103 | [`kazo-paint.md`](../kazo-paint.md), [`theme-editor.md`](../theme-editor.md) |
 | `v3/12-localization` | #164 | ADR 0104, 0111 | [`localization.md`](../../framework/localization.md) |
 | `v3/13-accessibility` | #165 | ADR 0105, 0112 | [`accessibility.md`](../accessibility.md) |
 | `v3/14-trimming` | #166 | ADR 0106, 0113 | [`trimmed-publish.md`](../trimmed-publish.md) |
-| `v3/15-sdk-freeze` | #167 | ADR 0098 §8, 0114 | [`building-on-hackeros.md`](../../framework/building-on-hackeros.md) |
+| `v3/15-sdk-freeze` | #167 | ADR 0098 §8, 0114 | [`building-on-kazoos.md`](../../framework/building-on-kazoos.md) |
 | `v3/16-final` | ce chantier | aucune | ce document |
 
 En chiffres, sur `v3/base` : 14 apps fenêtrées système, 68 commandes du
@@ -117,11 +117,11 @@ plus bas).
 | ~~La géométrie des fenêtres est enregistrée mais jamais relue : une fenêtre ne rouvre pas à sa dernière position.~~ Corrigé par `v3.1/2-window-geometry` (ADR 0116 et 0122 : taille et état agrandi, pas la position ; [`window-geometry.md`](../window-geometry.md)). | `v3/3` | Écart avec l'ADR 0095, résolu. |
 | Une touche pressée dans une iframe (navigateur, sites) reste dans l'iframe ; les raccourcis de l'OS n'y marchent pas. | `v3/3` | Choix d'implémentation, non validé. |
 | ~~Pas de couche utilisateur pour les associations de fichiers et de schémas.~~ Comblée par `v3/4b` (ADR 0121, [`user-file-associations.md`](../user-file-associations.md)). « Afficher dans le dossier » demande la capacité `apps.launch`. | `v3/4` | Fermée pour les associations. |
-| `hackwebd` démarre à la connexion, pas au boot. | `v3/5` | Question ouverte ; un passage au boot demande son ADR. |
-| `hackbackup` exige `sudo` ; une restauration en mode fusion redémarre aussi la machine ; pas de fixture IndexedDB v1 (jamais commitée). | `v3/7` | Documenté dans [`system-backup.md`](../system-backup.md). |
+| `kazowebd` démarre à la connexion, pas au boot. | `v3/5` | Question ouverte ; un passage au boot demande son ADR. |
+| `kazobackup` exige `sudo` ; une restauration en mode fusion redémarre aussi la machine ; pas de fixture IndexedDB v1 (jamais commitée). | `v3/7` | Documenté dans [`system-backup.md`](../system-backup.md). |
 | ~~Pas de commande `passwd` ni de réinitialisation d'un mot de passe par un administrateur.~~ Comblée par `v3/8` (PR #172, ADR 0120, [`sensitive-settings.md`](../sensitive-settings.md)). | `v3/8` | Fermée. |
 | Sur un même appareil, le curseur de synchronisation est commun à tous les utilisateurs. | `v3/9` | Documenté dans [`synchronization.md`](../synchronization.md). |
-| Le SDK n'a pas d'API pour changer le titre d'une fenêtre ; Hack Paint affiche le nom du fichier dans l'app. | `v3/11` | Corrigé par `v3.1/3-window-title` (ADR 0117, 0123) : `SetWindowTitleAsync`, publié dans le SDK 1.1.0 par `v3.1/4-sdk-1-1`. Fermée. |
+| Le SDK n'a pas d'API pour changer le titre d'une fenêtre ; Kazo Paint affiche le nom du fichier dans l'app. | `v3/11` | Corrigé par `v3.1/3-window-title` (ADR 0117, 0123) : `SetWindowTitleAsync`, publié dans le SDK 1.1.0 par `v3.1/4-sdk-1-1`. Fermée. |
 | Les menus internes de Monaco (Code Editor) restent en anglais. | `v3/12` | Question ouverte (défaut : anglais). |
 | Une app compilée contre `0.9.0-preview` est refusée par l'OS 1.0. | `v3/15` | Voulu (autre version majeure) ; une app d'un autre dépôt se reconstruit contre 1.0.0. |
 | Installation d'apps au runtime. | plan, question 1 | Reportée à un plan à part. |
@@ -134,8 +134,8 @@ donnent dans le fil du chantier.
 | Chantier | Question | Défaut appliqué |
 |---|---|---|
 | ~~`v3/4`~~ | ~~Ajouter des associations de fichiers propres à chaque utilisateur ?~~ Répondue par Benoit : faites (PR #171, ADR 0121). | — |
-| `v3/5` | `hackwebd` doit-il démarrer au boot ? (Garder à la connexion / Boot + recharge des sites utilisateur / Boot + seconde instance sous l'utilisateur) | Garder à la connexion |
-| `v3/5` | Comment créer le compte de service `hackeros-svc` ? (Compte intégré / Magasin d'utilisateurs IndexedDB / Magasin + `/etc/passwd` généré) | Compte intégré (ADR 0107) |
+| `v3/5` | `kazowebd` doit-il démarrer au boot ? (Garder à la connexion / Boot + recharge des sites utilisateur / Boot + seconde instance sous l'utilisateur) | Garder à la connexion |
+| `v3/5` | Comment créer le compte de service `kazoos-svc` ? (Compte intégré / Magasin d'utilisateurs IndexedDB / Magasin + `/etc/passwd` généré) | Compte intégré (ADR 0107) |
 | ~~`v3/8`~~ | ~~Ajouter `passwd` et la réinitialisation par un administrateur ?~~ Répondue par Benoit : faits (PR #172, ADR 0120). | — |
 | `v3/10` | D'où le serveur tient-il l'accord `network.real.access` d'une app ? (Liste du serveur / Accords poussés par l'OS / Vrai réseau coupé pour toutes les apps) | Liste du serveur (`Proxy:GrantedApps`) |
 | `v3/12` | 1. Nom français « Gestionnaire de serveur web » (garder / nom anglais) ; 2. boutons d'accès d'un site au stockage (suivent la langue / forcer le français) ; 3. menus de Monaco (anglais / pack de langue, plusieurs centaines de Kio) ; 4. noms des thèmes intégrés (anglais / traduits) | 1A 2A 3A 4A |

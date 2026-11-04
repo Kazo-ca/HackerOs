@@ -196,9 +196,9 @@ public sealed class RemoteEventsTests
         using IDisposable subscription = os.TopicBus.Subscribe<Kazo.Os.Samples.ServiceApp.SampleTickerEvent>(
             ticked, new PublisherIdentity("org.test.listener", "listener", "1"), ticks.Enqueue);
 
-        await os.RunAsync("systemctl start org.hackeros.samples.service-app").WaitAsync(TimeSpan.FromSeconds(10));
-        await OsFixture.WaitUntilAsync(() => os.FindPid("org.hackeros.samples.service-app") is not null);
-        long pid = os.FindPid("org.hackeros.samples.service-app")!.Value;
+        await os.RunAsync("systemctl start org.kazoos.samples.service-app").WaitAsync(TimeSpan.FromSeconds(10));
+        await OsFixture.WaitUntilAsync(() => os.FindPid("org.kazoos.samples.service-app") is not null);
+        long pid = os.FindPid("org.kazoos.samples.service-app")!.Value;
         await OsFixture.WaitUntilAsync(() => os.Pool!.GetWorkers().Any(w => w.Role == WorkerRole.Dedicated && w.ProcessIds.Contains(pid)));
         for (int second = 0; second < 100 && ticks.Count < 2; second++)
         {
@@ -207,7 +207,7 @@ public sealed class RemoteEventsTests
         }
 
         Assert.True(ticks.Count >= 2, "two ticks reached the main thread");
-        Assert.All(ticks, tick => Assert.Equal("org.hackeros.samples.service-app", tick.PublisherAppId));
+        Assert.All(ticks, tick => Assert.Equal("org.kazoos.samples.service-app", tick.PublisherAppId));
         Assert.Equal(1, ticks.First().Payload.TickCount);
         Assert.StartsWith("OK - Tick #1", ticks.First().Payload.Status, StringComparison.Ordinal);
     }

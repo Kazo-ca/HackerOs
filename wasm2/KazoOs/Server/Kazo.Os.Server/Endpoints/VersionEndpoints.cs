@@ -8,7 +8,7 @@ namespace Kazo.Os.Server.Endpoints;
 /// Versioning endpoints — P5-SRV-001.
 /// GET  /api/version         → current and supported API versions.
 /// POST /api/version/check   → compatibility check for a specific client.
-/// GET  /api/hackeros/host-info and GET /hackeros-host.json → host discovery (ADR 0134, ADR 0137).
+/// GET  /api/kazoos/host-info and GET /kazoos-host.json → host discovery (ADR 0134, ADR 0137).
 /// </summary>
 public static class VersionEndpoints
 {
@@ -45,7 +45,7 @@ public static class VersionEndpoints
         return app;
     }
 
-    /// <summary>Registers <c>GET /api/hackeros/host-info</c> (ADR 0134 §1).</summary>
+    /// <summary>Registers <c>GET /api/kazoos/host-info</c> (ADR 0134 §1).</summary>
     public static IEndpointRouteBuilder MapHostInfoEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapGet(HostInfoRoutes.ApiPath, GetHostInfo)
@@ -57,7 +57,7 @@ public static class VersionEndpoints
     }
 
     /// <summary>
-    /// Answers <c>/hackeros-host.json</c> as this server (ADR 0137). The OS served from here reads that
+    /// Answers <c>/kazoos-host.json</c> as this server (ADR 0137). The OS served from here reads that
     /// file next to its <c>index.html</c> to learn that a Kazo OS server delivered it. The Ecosystem
     /// PWA ships a static file at the same path (<c>isServer: false</c>) that MapStaticAssets also
     /// maps, so the answer is given by a middleware that runs before any endpoint: a static host

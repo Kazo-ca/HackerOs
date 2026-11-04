@@ -76,7 +76,7 @@
     <value>Zoom -</value>
   </data>
   <data name="Canvas.AriaLabel" xml:space="preserve">
-    <value>Hack Paint drawing canvas</value>
+    <value>Kazo Paint drawing canvas</value>
   </data>
   <data name="Dialog.Open.Title" xml:space="preserve">
     <value>Open Image</value>
@@ -103,13 +103,13 @@
     <value>The encoded image is larger than {0} MiB.</value>
   </data>
   <data name="Error.FileTooLarge" xml:space="preserve">
-    <value>The file is too large ({0} MiB). Hack Paint opens images up to {1} MiB.</value>
+    <value>The file is too large ({0} MiB). Kazo Paint opens images up to {1} MiB.</value>
   </data>
   <data name="Error.FileTooLargeUnknownSize" xml:space="preserve">
-    <value>The file is too large. Hack Paint opens images up to {0} MiB.</value>
+    <value>The file is too large. Kazo Paint opens images up to {0} MiB.</value>
   </data>
   <data name="Error.ImageTooLarge" xml:space="preserve">
-    <value>The image is {0} × {1} pixels. Hack Paint edits images up to {2} × {2}.</value>
+    <value>The image is {0} × {1} pixels. Kazo Paint edits images up to {2} × {2}.</value>
   </data>
   <data name="Error.NotAnImage" xml:space="preserve">
     <value>This is not a PNG, JPEG, BMP, GIF or WebP image, or the file is damaged.</value>
@@ -190,7 +190,7 @@
     <value>Pan</value>
   </data>
   <data name="Toolbar.AriaLabel" xml:space="preserve">
-    <value>Hack Paint tools</value>
+    <value>Kazo Paint tools</value>
   </data>
   <data name="Viewport.AriaLabel" xml:space="preserve">
     <value>Canvas viewport</value>

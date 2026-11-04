@@ -61,7 +61,7 @@ public sealed class FileSystemServiceTests
         ServiceFixture fixture = await ServiceFixture.CreateAsync();
         FileSystemSelectedResourceHandle handle = new(
             Guid.Parse("d9428888-122b-11e1-b85c-61cd3cbb3210"),
-            "org.hackeros.test",
+            "org.kazoos.test",
             "user",
             VirtualPath.Parse("/home/user/file.txt"),
             FileSystemHandleAccess.Read,
@@ -202,7 +202,7 @@ public sealed class FileSystemServiceTests
         {
             AppOperationContext operation = new()
             {
-                AppId = "org.hackeros.test",
+                AppId = "org.kazoos.test",
                 UserId = userId,
                 UserAuthority = authority,
                 GrantedCapabilities = new HashSet<string>(capabilities, StringComparer.Ordinal),

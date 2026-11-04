@@ -12,7 +12,7 @@ public sealed partial class Wave4NetworkTests
     {
         SocketLedger ledger = new();
         AppNetworkGateway gateway = new(
-            _network, new GrantAllCapabilityChecker(), "org.hackeros.cmd.ping", pid: ProcessId.FromInt64(9), kernelMemory: ledger);
+            _network, new GrantAllCapabilityChecker(), "org.kazoos.cmd.ping", pid: ProcessId.FromInt64(9), kernelMemory: ledger);
 
         await gateway.ResolveAsync("hackersearch.net");
 
@@ -23,7 +23,7 @@ public sealed partial class Wave4NetworkTests
     [Fact]
     public async Task A_gateway_without_a_tracking_ledger_charges_nothing()
     {
-        AppNetworkGateway gateway = new(_network, new GrantAllCapabilityChecker(), "org.hackeros.cmd.ping", pid: ProcessId.FromInt64(9));
+        AppNetworkGateway gateway = new(_network, new GrantAllCapabilityChecker(), "org.kazoos.cmd.ping", pid: ProcessId.FromInt64(9));
 
         await gateway.ResolveAsync("hackersearch.net");
     }

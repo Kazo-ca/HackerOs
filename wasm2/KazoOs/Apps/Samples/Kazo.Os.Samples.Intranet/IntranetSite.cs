@@ -10,8 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Kazo.Os.Samples.Intranet;
 
 /// <summary>
-/// Manifest and startup of "Intranet", the sample of the ASP.Hack web phase
-/// (<c>doc/en/wasm/framework/asp-hack-developer-guide.md</c>): one web app at <c>http://intranet.hack/</c> that the OS
+/// Manifest and startup of "Intranet", the sample of the ASP.Kazo web phase
+/// (<c>doc/en/wasm/framework/asp-kazo-developer-guide.md</c>): one web app at <c>http://intranet.hack/</c> that the OS
 /// starts on the first request (ADR 0073, 0074).
 /// </summary>
 /// <remarks>
@@ -33,17 +33,17 @@ public sealed partial class IntranetSite : WebAppDefinition
     public const string Address = "http://intranet.hack/";
 
     /// <inheritdoc />
-    public override string Id => "org.hackeros.samples.intranet";
+    public override string Id => "org.kazoos.samples.intranet";
 
     /// <inheritdoc />
     public override string Name => "Intranet";
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description =>
-        "Sample ASP.Hack intranet: MVC pages in .cshtml and .razor, a REST API, JavaScript, a cookie session and a Blazor task board";
+        "Sample ASP.Kazo intranet: MVC pages in .cshtml and .razor, a REST API, JavaScript, a cookie session and a Blazor task board";
 
     /// <inheritdoc />
     public override IReadOnlyList<string> Urls => [Address];
@@ -58,7 +58,7 @@ public sealed partial class IntranetSite : WebAppDefinition
     /// <summary>
     /// Runs in the site process at every start (in the shared web worker when the host has one):
     /// services, then the middleware pipeline in order, then the endpoints. The Blazor host page,
-    /// <c>_framework/blazor.hack.js</c> and <c>blazor.boot.json</c> are added after this method, as a
+    /// <c>_framework/blazor.kazo.js</c> and <c>blazor.boot.json</c> are added after this method, as a
     /// fallback behind every route declared here.
     /// </summary>
     /// <param name="builder">The site's builder.</param>
@@ -67,7 +67,7 @@ public sealed partial class IntranetSite : WebAppDefinition
         ArgumentNullException.ThrowIfNull(builder);
 
         // Services: singletons live as long as the site process; controllers get them by constructor.
-        // The notes live in the site's browser database hackweb.<id> (ADR 0088), not in the OS files.
+        // The notes live in the site's browser database kazoweb.<id> (ADR 0088), not in the OS files.
         builder.Services.AddKazoWebDb(NoteStore.Configure);
         builder.Services.AddSingleton<NoteStore>();
         builder.Services.AddSingleton<TaskBoard>();
@@ -75,7 +75,7 @@ public sealed partial class IntranetSite : WebAppDefinition
         builder.Services.AddSingleton<AnnouncementFeed>();
         builder.Json.SerializerOptions.TypeInfoResolverChain.Insert(0, IntranetJsonContext.Default);
 
-        // Debug log /var/log/hackweb/org.hackeros.samples.intranet.log: requests, ILogger<T> lines, errors.
+        // Debug log /var/log/kazoweb/org.kazoos.samples.intranet.log: requests, ILogger<T> lines, errors.
         builder.Logging.EnableDebugLog();
 
         KazoWebApplication app = builder.Build();
@@ -86,7 +86,7 @@ public sealed partial class IntranetSite : WebAppDefinition
         app.UseCookieSession();
         app.Use(async (context, next) =>
         {
-            context.Response.Headers["X-Powered-By"] = "ASP.Hack";
+            context.Response.Headers["X-Powered-By"] = "ASP.Kazo";
             await next();
         });
 

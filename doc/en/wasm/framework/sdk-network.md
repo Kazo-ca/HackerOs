@@ -42,7 +42,7 @@ network, `Network` throws `NotSupportedException`; without a server or proxy, th
 fallback is simply absent.
 
 Since `web/3-listener-dns`, `AppNetworkGateway` first goes through the
-local `hackdns` resolver (`/etc/hosts`, loopback, web apps, hosted sites):
+local `kazodns` resolver (`/etc/hosts`, loopback, web apps, hosted sites):
 a local target is served by the OS port table, on `lo`, and a `.hack`
 name is never relayed to the real network. See
 [`listening-ports-and-dns.md`](listening-ports-and-dns.md).

@@ -18,14 +18,14 @@ public sealed class IconPackLibraryTests
         {
             ["/usr/share/icons/neon/icon-pack.json"] = Manifest("neon", "Neon"),
             ["/usr/share/icons/hicolor/index.theme"] = [1],
-            ["/usr/share/hackeros/theme-packs/retro/icons/icon-pack.json"] = Manifest("retro"),
+            ["/usr/share/kazoos/theme-packs/retro/icons/icon-pack.json"] = Manifest("retro"),
             ["/home/alice/.local/share/icons/mine/icon-pack.json"] = Manifest("mine"),
         };
 
         IconPackListResult result = await IconPackLibrary.ListAsync(files.Access, "/home/alice");
 
         Assert.Equal(["neon", "retro", "mine"], result.Packs.Select(pack => pack.Id));
-        Assert.Equal("/usr/share/hackeros/theme-packs/retro/icons", result.Packs[1].RootPath);
+        Assert.Equal("/usr/share/kazoos/theme-packs/retro/icons", result.Packs[1].RootPath);
         Assert.Equal(IconPackOrigin.User, result.Packs[2].Origin);
         Assert.Equal("Neon", result.Find("neon")!.Name);
         // hicolor has no icon-pack.json: not a pack, and not a warning.
@@ -66,7 +66,7 @@ public sealed class IconPackLibraryTests
         MemoryFiles files = new()
         {
             ["/usr/share/icons/p/icon-pack.json"] = Manifest("p"),
-            ["/usr/share/icons/p/apps/org.hackeros.terminal.png"] = Png,
+            ["/usr/share/icons/p/apps/org.kazoos.terminal.png"] = Png,
             ["/usr/share/icons/p/files/folder.png"] = Png,
             ["/usr/share/icons/p/files/evil.svg"] = Encoding.UTF8.GetBytes("<svg><script/></svg>"),
             ["/usr/share/icons/p/files/fake.png"] = Encoding.UTF8.GetBytes("not a png"),
@@ -77,8 +77,8 @@ public sealed class IconPackLibraryTests
 
         IconPackLoadResult loaded = await IconPackLibrary.LoadAsync(info, files.Access);
 
-        Assert.Equal(["apps/org.hackeros.terminal.png", "files/folder.png"], loaded.Pack.Images.Keys.Order(StringComparer.Ordinal));
-        Assert.StartsWith("data:image/png;base64,", loaded.Pack.FindApp("org.hackeros.terminal"), StringComparison.Ordinal);
+        Assert.Equal(["apps/org.kazoos.terminal.png", "files/folder.png"], loaded.Pack.Images.Keys.Order(StringComparer.Ordinal));
+        Assert.StartsWith("data:image/png;base64,", loaded.Pack.FindApp("org.kazoos.terminal"), StringComparison.Ordinal);
         Assert.Equal(4, loaded.Diagnostics.Count);
     }
 
@@ -89,15 +89,15 @@ public sealed class IconPackLibraryTests
             new IconPackInfo("p", "P", null, null, null, "/usr/share/icons/p", IconPackOrigin.System),
             new Dictionary<string, string>
             {
-                ["apps/org.hackeros.terminal.png"] = "data:app",
+                ["apps/org.kazoos.terminal.png"] = "data:app",
                 ["categories/system.png"] = "data:category",
                 ["files/folder.png"] = "data:folder",
                 ["files/file.png"] = "data:file",
                 ["files/txt.png"] = "data:txt",
             });
 
-        Assert.Equal("data:app", pack.FindApp("org.hackeros.terminal", "utilities"));
-        Assert.Equal("data:category", pack.FindApp("org.hackeros.settings", "System"));
+        Assert.Equal("data:app", pack.FindApp("org.kazoos.terminal", "utilities"));
+        Assert.Equal("data:category", pack.FindApp("org.kazoos.settings", "System"));
         Assert.Null(pack.FindApp("org.other", "graphics"));
         Assert.Equal("data:folder", pack.FindFile(isDirectory: true, ".txt"));
         Assert.Equal("data:txt", pack.FindFile(isDirectory: false, ".TXT"));

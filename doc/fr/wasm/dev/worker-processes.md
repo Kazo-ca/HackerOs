@@ -22,7 +22,7 @@ navigateur, les commandes du shell et les services tournent maintenant dans des
 
 - une boucle infinie (`stress`) ne gèle plus le bureau ; `echo` répond en
   ~300 ms pendant qu'elle tourne ;
-- le gestionnaire de tâches, `ps` et `/proc/hackeros/workers` montrent
+- le gestionnaire de tâches, `ps` et `/proc/kazoos/workers` montrent
   « Not responding » **pendant** le blocage ;
 - `kill -9` (et `kill` après le délai de grâce) termine le worker bloqué et le
   remplace aussitôt ;
@@ -41,13 +41,13 @@ coupé par défaut, est le seul à démarrer un processus `start` `k = 3`.
 Les 74 commandes de `Kazo.Os.Commands` : 56 en `pool`, 18 en `mainThread`
 avec la raison en commentaire dans leur définition (`cd`, `exit`, `export`,
 `unset`, `jobs`, `read`, `help`, `which`, `kill` pilotent le shell ; `sudo`
-demande un mot de passe à l'agent d'authentification ; `passwd` lit le terminal sans écho ; `hackbackup` ouvre
+demande un mot de passe à l'agent d'authentification ; `passwd` lit le terminal sans écho ; `kazobackup` ouvre
 le sélecteur de fichiers du navigateur, qui exige le geste de l'utilisateur ; `nano`, `top`, `htop`,
 `watch` utilisent l'écran alternatif du terminal ; `nice` lance sa commande
 par le shell appelant (`RunNicedAsync`) et `renice` change une priorité, ce
 qu'aucune passerelle d'un worker n'offre, ADR 0127) ; les 16 premières raisons ont été
 relues par `exec/1-remote-gateways` et tiennent toujours (ADR 0138 §9). Le
-service d'exemple et `hackwebd` tournent en worker dédié depuis que `KazoEvents`
+service d'exemple et `kazowebd` tournent en worker dédié depuis que `KazoEvents`
 et `Watch` traversent la frontière (ADR 0124).
 
 Les trois hôtes ont les workers : `test/test` exécute côté navigateur le
@@ -76,7 +76,7 @@ worker, a été retiré). Un hôte composé sans `IWebWorkerRuntime` écrit dans
 |---|---|
 | `Shared/Kazo.Os.App.Abstractions` | `AppExecutionHost`, `AppExecutionHosts` (`DefaultFor`, `Resolve`, `Of`, `IsWorker`), `AppManifestAttribute.Execution`, `AppManifest.Execution`. |
 | `Shared/Kazo.Os.Simulation.Abstractions/Workers` | `IWebWorkerRuntime`, `IWebWorker`, `WebWorkerStartOptions` ; `IWorkerPoolStatus`, `WorkerSnapshot`, `WorkerRole`, `WorkerState`. |
-| `Platform/Kazo.Os.Platform.Core` | `IRemoteProcessHost`, `RemoteProcessLaunch`, `RemoteProcessExit`, `IRemoteService`, `ExecutionPlacement` (groupe d'un pipeline), `SystemStartupSignal` ; `AppLifecycleOrchestrator` lance à distance ce que `ShouldRunRemotely` accepte ; `/proc/hackeros/workers`. |
+| `Platform/Kazo.Os.Platform.Core` | `IRemoteProcessHost`, `RemoteProcessLaunch`, `RemoteProcessExit`, `IRemoteService`, `ExecutionPlacement` (groupe d'un pipeline), `SystemStartupSignal` ; `AppLifecycleOrchestrator` lance à distance ce que `ShouldRunRemotely` accepte ; `/proc/kazoos/workers`. |
 | `Platform/Kazo.Os.Platform.WorkerHost` | **Protocole** : `WorkerMessages`, `WireCodec` (encodage explicite, sans réflexion), `RemoteErrors`, `RemoteOps`. **Côté worker** : `WorkerProcessHost`, `RemoteAppExecutionContext`, passerelles distantes (`RemoteGateways`, `RemoteFileSystemGateway`, `RemoteStandardStreams`), `WorkerCpuMeter`, `WorkerAssemblyLoader`, `BrowserWorkerEntryPoint`. **Côté OS** : `WorkerPool`, `WorkerConnection`, `RemoteProcessSession`, `WorkerRemoteProcessHost`, `WorkerAwareCpuTimeAccountant`, `WorkerAwareMemoryAccountant`, `AddKazoOsWorkerProcesses`. **Tests** : `LoopbackWebWorkerRuntime`. |
 | `Infrastructure/Kazo.Os.Infrastructure.Browser` | `wwwroot/workerHost.js` (création, `postMessage`, `terminate`, `hardwareConcurrency`, `requestIdleCallback`), `wwwroot/workerBootstrap.js` (runtime .NET du worker), `Workers/BrowserWebWorkerRuntime`. Aucun hôte ne les référence : ils sont importés par le C# (`_content/Kazo.Os.Infrastructure.Browser/…`). |
 | `OS/Kazo.Os.Ecosystem.Host` | `AddKazoOsBrowserHost` (appelé par le `Program.cs` de l'Ecosystem) enregistre `BrowserWebWorkerRuntime` et les workers **dans le navigateur seulement** (`OperatingSystem.IsBrowser()`), en préchargeant `Kazo.Os.Commands.dll` et avec `KnownAssemblies` = les assemblies paresseuses du catalogue (ADR 0124 §4) ; `EcosystemBootCoordinator.MarkSystemStarted` donne le signal de fin de boot. |
@@ -87,7 +87,7 @@ worker, a été retiré). Un hôte composé sans `IWebWorkerRuntime` écrit dans
 `workerBootstrap.js` pose `globalThis.dotnetSidecar = true` avant d'importer
 `dotnet.js` (sinon le runtime se prend pour un thread `pthread` et attend
 indéfiniment), crée le runtime (~0,7 s), branche l'import
-`hackeros-worker.post` et appelle `BrowserWorkerEntryPoint.Start`. Le worker
+`kazoos-worker.post` et appelle `BrowserWorkerEntryPoint.Start`. Le worker
 charge ensuite les assemblies demandées (`INTERNAL.loadLazyAssembly`), répond
 `hello` et commence son battement de cœur.
 
@@ -238,7 +238,7 @@ WebAssembly ne rétrécit jamais (ADR 0142 §5, [`oom-killer.md`](oom-killer.md)
   la commande tuée), comme les données d'un tube restent lisibles après un
   `SIGKILL`.
 
-### `/proc/hackeros/workers`
+### `/proc/kazoos/workers`
 
 Présent seulement quand l'hôte a des workers. Les premières lignes disent si
 la page est isolée (ADR 0131 §5, ADR 0143 §8), puis vient le pool :
@@ -280,14 +280,14 @@ Quand la page est isolée (`crossOriginIsolated`), les workers gagnent :
   le fil principal n'attend jamais ;
 - **la mémoire mesurée par le navigateur** : `IWebWorkerMemoryMeter`, toutes
   les 20 s (`WorkerPoolOptions.MemoryMeasurePeriod`), attribuée par
-  `?hackeros-worker=N` dans l'URL du worker, valable trois périodes ;
+  `?kazoos-worker=N` dans l'URL du worker, valable trois périodes ;
 - **des minuteries de 5 µs** (`performance.now()`), sans code à brancher.
 
 Sans isolation, tout reste comme avant : messages seulement, membres
 synchrones refusés avec le même message, mémoire du battement de cœur.
 
 Qui pose les en-têtes : le service worker de l'Ecosystem (selon
-`HackerOs:CrossOriginIsolation` de `appsettings.json`, repli `require-corp`
+`KazoOs:CrossOriginIsolation` de `appsettings.json`, repli `require-corp`
 avec un rechargement unique), l'intergiciel de `test/test` et de
 `Kazo.Os.Server`. L'Ecosystem servi sur `localhost` ou `127.0.0.1` n'a pas de
 service worker, donc pas d'isolation (ADR 0143 §3) : on essaie sur
@@ -301,7 +301,7 @@ Chromium 140 sans écran, publication Release de l'Ecosystem servie sur
 
 | Surface | Vérification | Résultat |
 |---|---|---|
-| Rendu HTML du navigateur simulé et sites ASP.Hack | suite UI E2E sous isolation : `BrowserHtmlRenderingTests`, `BrowserBlazorSiteTests`, `BrowserIntranetTests`, `BrowserHomePageTests`, `BrowserSiteDataTests` ; les iframes `srcdoc` héritent de la COEP de la page | passe |
+| Rendu HTML du navigateur simulé et sites ASP.Kazo | suite UI E2E sous isolation : `BrowserHtmlRenderingTests`, `BrowserBlazorSiteTests`, `BrowserIntranetTests`, `BrowserHomePageTests`, `BrowserSiteDataTests` ; les iframes `srcdoc` héritent de la COEP de la page | passe |
 | Fenêtres détachées (`window.open`) | `BrowserDetachedWindowTests` sous isolation : la fenêtre est de même origine, COOP `same-origin` garde le lien | passe |
 | Repli sur le réseau réel, images externes | image et `fetch` `no-cors` d'une autre origine sans CORP : chargées avec `credentialless` | passe (bloquées seulement en `require-corp`, ADR 0143 question 3) |
 | Monaco (CodeEditor), xterm.js (Terminal) | nouveau fichier, saisie dans Monaco ; commandes dans le terminal | passe, aucune erreur de console |
@@ -370,13 +370,13 @@ seule réponse : son descripteur est rendu dès cette réponse (ADR 0139 §3).
 
 - `Tests/Kazo.Os.Platform.WorkerHost.Tests` (OS complet sans interface, workers
   en boucle locale) :
-  - `CommandParityTests` : **les 74 commandes intégrées** (`nslookup`, `ausearch`, `xdg-open`, `xdg-mime`, `passwd`, `hackbackup`, `dmesg`, `nice`, `renice` et `prlimit` comprises) exécutées dans les
+  - `CommandParityTests` : **les 74 commandes intégrées** (`nslookup`, `ausearch`, `xdg-open`, `xdg-mime`, `passwd`, `kazobackup`, `dmesg`, `nice`, `renice` et `prlimit` comprises) exécutées dans les
     deux modes (fil principal, worker) avec la même sortie, le même code et le
-    même arbre de fichiers (`HACKEROS_PARITY_DUMP` pour inspecter) ;
+    même arbre de fichiers (`KAZOOS_PARITY_DUMP` pour inspecter) ;
   - `WorkerPoolTests` : démarrage avant / après la fin du boot, worker prêt
     pris et remplacé, débordement et retour à la taille, plafond et syslog,
     pipeline sur un seul worker, commande qui boucle dès son lancement,
-    `/proc/hackeros/workers` ;
+    `/proc/kazoos/workers` ;
   - `EscalationTests` : `kill -9` d'une boucle (voisins tués, syslog, cœur
     remplacé), « Not responding » pendant le blocage, `SIGTERM` puis
     escalade, étape 3 sans terminer le worker, Ctrl+C, erreur dans un worker ;
@@ -390,7 +390,7 @@ seule réponse : son descripteur est rendu dès cette réponse (ADR 0139 §3).
   validateur, le sérialiseur et le schéma.
 - `Tests/Kazo.Os.HostSmoke.Tests` (`build/verify-hosts.sh`) : sur les trois
   hôtes (le serveur sert le même OS depuis l'ADR 0130), pipeline,
-  `/proc/hackeros/workers`, `echo` pendant `stress`, « not-responding »,
+  `/proc/kazoos/workers`, `echo` pendant `stress`, « not-responding »,
   `kill -9` et `kill`.
 
 ## Liste des tâches du chantier `rebuild/5-worker-processes`
@@ -402,7 +402,7 @@ seule réponse : son descripteur est rendu dès cette réponse (ADR 0139 §3).
 - [x] Pool par cœur virtuel, placement des pipelines, workers dédiés.
 - [x] Worker toujours prêt après le boot, débordement, retour à la taille, plafond et syslog (ADR 0071).
 - [x] Battement de cœur, mesures CPU et mémoire, « Not responding », étape 4 de l'escalade.
-- [x] `/proc/hackeros/workers` et section « Workers » du gestionnaire de tâches.
+- [x] `/proc/kazoos/workers` et section « Workers » du gestionnaire de tâches.
 - [x] Commandes : hôte déclaré ou défaut ; service d'exemple en `MainThread` (raison en commentaire) — en worker dédié depuis `exec/1-remote-gateways`.
 - [x] Serveur : ligne d'information ; `test/test` comme l'Ecosystem.
 - [x] Tests de parité des 63 commandes, tests du pool et de l'escalade.
@@ -416,7 +416,7 @@ seule réponse : son descripteur est rendu dès cette réponse (ADR 0139 §3).
 - [x] Opérations `ev.*`, `watch.open` et message `ev` ; crédit de 256 messages.
 - [x] Codecs intégrés et `KazoWireContextAttribute` (SDK 1.2 ; versé dans `PublicAPI.Shipped.txt` par `exec/10-final`, ADR 0132 §2).
 - [x] Désabonnement à la fin, au `kill` et à la mort du worker.
-- [x] Service d'exemple et `hackwebd` en worker dédié ; revue des 16 commandes en `mainThread`.
+- [x] Service d'exemple et `kazowebd` en worker dédié ; revue des 16 commandes en `mainThread`.
 - [x] `KnownAssemblies`, refus avec le code 127 ; `sample-cmd` dans l'Ecosystem et le test des hôtes.
 - [x] Tests de parité (`RemoteEventsTests`, `WireTopicMessageBusTests`).
 - [x] Documentation, ADR 0138, index.
@@ -436,13 +436,13 @@ seule réponse : son descripteur est rendu dès cette réponse (ADR 0139 §3).
 
 ## Liste des tâches du chantier `exec/9-cross-origin-isolation` (ADR 0131, ADR 0143)
 
-- [x] Réglage `HackerOs:CrossOriginIsolation`, constante d'audit et copie dans le service worker.
+- [x] Réglage `KazoOs:CrossOriginIsolation`, constante d'audit et copie dans le service worker.
 - [x] En-têtes : service worker de l'Ecosystem (repli `require-corp`), intergiciel de `test/test` et `Kazo.Os.Server`.
 - [x] Sonde de la page (`crossOriginIsolation.js`), raisons, ligne de `syslog`.
 - [x] Anneaux partagés (`sharedRing.js`) dans `workerHost.js` et `workerBootstrap.js`.
 - [x] Appels synchrones `ListProcesses`/`Kill`, opération `proc.list`, `sample-cmd --processes` et `--kill`.
 - [x] Mémoire par worker mesurée par le navigateur (`IWebWorkerMemoryMeter`).
-- [x] Lignes d'isolation de `/proc/hackeros/workers`, badge de Diagnostic.
+- [x] Lignes d'isolation de `/proc/kazoos/workers`, badge de Diagnostic.
 - [x] Suite (ADR 0146, choix C de Benoit) : `KazoCrossOriginIsolation` dans le SDK, sans capacité, opération `coi.get` ; Diagnostic ne déclare plus `filesystem.system.read` ; `sample-cmd --isolation`.
 - [x] Audit dans Chromium, `AuditPassed = true`.
 - [x] Tests : sonde et réglage, appels synchrones en bouclage, anneaux sous Node, `HostSmoke` et parcours `ecosystem-isolated`/`ecosystem-isolation-off`.

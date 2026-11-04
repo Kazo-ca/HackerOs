@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://hackeros.org/schema/app-manifest/1/manifest.schema.json",
+  "$id": "https://kazoos.org/schema/app-manifest/1/manifest.schema.json",
   "title": "Kazo OS Application Manifest",
   "description": "Canonical app.manifest.json schema, per ADR 0010. Schema version 1.",
   "type": "object",

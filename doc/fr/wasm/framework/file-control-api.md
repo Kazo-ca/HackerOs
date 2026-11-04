@@ -10,10 +10,10 @@ Toute app l'affiche par `KazoFileView` du SDK (`Kazo.Os.AppSdk.Blazor.Files`)
 et l'explorateur aussi : sa fenêtre rend `<KazoFileView>` et garde le chrome
 (barres, Emplacements, Corbeille, barre d'état). Les boutons Renommer,
 Supprimer, Couper, Copier, Coller, Propriétés et Ouvrir avec appellent
-`IHackFileView.ExecuteAsync` avec l'identifiant de l'entrée de menu
+`IKazoFileView.ExecuteAsync` avec l'identifiant de l'entrée de menu
 correspondante, donc font la même chose que le menu. Nouveau dossier/fichier
 par nom, envoi, téléchargement, compression, extraction et dépôt sur la
-Corbeille restent dans la fenêtre ; ils passent eux aussi par `IHackFileView`
+Corbeille restent dans la fenêtre ; ils passent eux aussi par `IKazoFileView`
 (dossier courant, sélection, `RefreshAsync`). Seuls le fil d'Ariane et les
 dépôts sur Home et Trash utilisent l'implémentation interne (`FileView`) : si
 un administrateur choisit un autre fournisseur (ADR 0156, code dans un chantier

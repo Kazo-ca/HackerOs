@@ -13,7 +13,7 @@ namespace Kazo.Os.Platform.Core.Administration;
 /// </summary>
 /// <remarks>
 /// Every call requires <c>apps.manage</c>. The choice is the session user's own preference
-/// (<c>~/.config/hackeros/context-menus.config</c>), so no administrator is asked.
+/// (<c>~/.config/kazoos/context-menus.config</c>), so no administrator is asked.
 /// </remarks>
 internal sealed class AppFileMenuEntryAdministrationGateway : IAppFileMenuEntryAdministrationGateway
 {

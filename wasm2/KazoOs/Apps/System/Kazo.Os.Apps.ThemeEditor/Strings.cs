@@ -25,7 +25,7 @@ internal sealed class Strings
     /// <param name="count">The number counted.</param>
     internal static string Plural(IStringLocalizer text, string key, int count)
     {
-        CultureInfo culture = text is KazoStringLocalizer hack ? hack.Culture : KazoLocale.DefaultLanguage;
+        CultureInfo culture = text is KazoStringLocalizer kazo ? kazo.Culture : KazoLocale.DefaultLanguage;
         bool one = culture.TwoLetterISOLanguageName == "fr" ? count is 0 or 1 : count == 1;
         return text[one ? key + ".One" : key + ".Many", count];
     }
@@ -47,7 +47,7 @@ internal sealed class Strings
     /// instead of a localizer; <see langword="null"/> (English) for any other localizer.
     /// </summary>
     /// <param name="text">The localizer of the window or component.</param>
-    internal static CultureInfo? CultureOf(IStringLocalizer text) => text is KazoStringLocalizer hack ? hack.Culture : null;
+    internal static CultureInfo? CultureOf(IStringLocalizer text) => text is KazoStringLocalizer kazo ? kazo.Culture : null;
 
     /// <summary>The name of a token group (tab title, documentation heading); an unknown group keeps its enum name.</summary>
     /// <param name="text">The localizer to read from.</param>

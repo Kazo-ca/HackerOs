@@ -1,7 +1,7 @@
 namespace Kazo.Os.AppSdk.Apps;
 
 /// <summary>
-/// Opens web pages in the Kazo OS Browser (ASP.Hack phase, ADR 0078 §3), as
+/// Opens web pages in the Kazo OS Browser (ASP.Kazo phase, ADR 0078 §3), as
 /// <c>xdg-open</c> or <c>Process.Start(url)</c> hand a URL to the default browser.
 /// </summary>
 /// <remarks>
@@ -12,7 +12,7 @@ namespace Kazo.Os.AppSdk.Apps;
 public static class KazoBrowser
 {
     /// <summary>App ID of the Kazo OS Browser.</summary>
-    public const string AppId = "org.hackeros.browser";
+    public const string AppId = "org.kazoos.browser";
 
     /// <summary>Launch argument that makes the Browser show its page in a detached window.</summary>
     public const string DetachedArgument = "--detached";

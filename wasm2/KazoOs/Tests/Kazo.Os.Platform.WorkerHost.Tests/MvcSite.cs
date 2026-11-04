@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Kazo.Os.Platform.WorkerHost.Tests;
 
 /// <summary>
-/// An ASP.Hack MVC site (ADR 0076) run as a real web app: the route generator compiled
+/// An ASP.Kazo MVC site (ADR 0076) run as a real web app: the route generator compiled
 /// <see cref="MvcSiteWebHost"/>, the entry point of its manifest in <see cref="TestCommands"/>.
 /// </summary>
 public sealed partial class MvcSite : WebAppDefinition
@@ -45,10 +45,10 @@ public sealed class MvcCounter
 public sealed class ItemsController(MvcCounter counter) : KazoApiController
 {
     [HttpGet("{id:int}")]
-    public IHackActionResult Get(int id) => id == 0 ? NotFound() : Content($"item {id} #{counter.Next()}");
+    public IKazoActionResult Get(int id) => id == 0 ? NotFound() : Content($"item {id} #{counter.Next()}");
 
     [HttpPost]
-    public IHackActionResult Create([FromForm] string name) => Created($"/api/items/{name.Length}", null);
+    public IKazoActionResult Create([FromForm] string name) => Created($"/api/items/{name.Length}", null);
 }
 
 /// <summary>A page controller on the default conventional route.</summary>
@@ -56,7 +56,7 @@ public sealed class HomeController : KazoController
 {
     public string Index() => $"home in={(KazoExecutionContext.Current.GetType().Name == "RemoteAppExecutionContext" ? "worker" : "main")}";
 
-    public IHackActionResult Visits()
+    public IKazoActionResult Visits()
     {
         int visits = (HttpContext.Session.GetInt32("visits") ?? 0) + 1;
         HttpContext.Session.SetInt32("visits", visits);
@@ -64,16 +64,16 @@ public sealed class HomeController : KazoController
     }
 
     [ValidateAntiForgeryToken]
-    public IHackActionResult Go() => RedirectToAction(nameof(Index));
+    public IKazoActionResult Go() => RedirectToAction(nameof(Index));
 
     /// <summary>A Razor view with its layout (web/7, ADR 0083).</summary>
-    public IHackActionResult Page(string? who) => View(new Greeting(who ?? "stranger"));
+    public IKazoActionResult Page(string? who) => View(new Greeting(who ?? "stranger"));
 
     /// <summary>A .cshtml view with its _ViewStart and .cshtml layout (web/8, ADR 0086).</summary>
-    public IHackActionResult Classic(string? who) => View(new Greeting(who ?? "stranger"));
+    public IKazoActionResult Classic(string? who) => View(new Greeting(who ?? "stranger"));
 
     /// <summary>Counts a first visit then redirects to <see cref="Visits"/>: the second hop carries the session cookie.</summary>
-    public IHackActionResult Enter()
+    public IKazoActionResult Enter()
     {
         HttpContext.Session.SetInt32("visits", 1);
         return RedirectToAction(nameof(Visits));

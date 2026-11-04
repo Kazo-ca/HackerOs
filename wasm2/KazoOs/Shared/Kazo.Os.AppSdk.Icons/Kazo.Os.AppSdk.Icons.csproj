@@ -8,7 +8,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageId>Kazo.Os.AppSdk.Icons</PackageId>
     <Description>Framework-independent icon catalog and native Blazor SVG renderer used by Kazo OS apps and reusable shell packages.</Description>
-    <PackageTags>hackeros;icons;svg;blazor;app-sdk</PackageTags>
+    <PackageTags>kazoos;icons;svg;blazor;app-sdk</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

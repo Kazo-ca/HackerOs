@@ -107,9 +107,9 @@ réservée à root, garde tout.
 | --- | --- |
 | Fichier | `~/.local/share/keyrings/login.keyring` (`0600`, dossier `0700`) |
 | Chiffrement | AES-256-GCM, nonce de 12 octets neuf à chaque écriture |
-| Clé | Clé maîtresse aléatoire de 32 octets, enveloppée (AES-256-GCM) dans des emplacements : un emplacement mot de passe (PBKDF2-SHA-256, 210 000 itérations, sel de 16 octets) et un emplacement par clé d'accès PRF (SHA-256 de `hackeros-keyring-prf-v1` et de la sortie PRF, ADR 0168) |
+| Clé | Clé maîtresse aléatoire de 32 octets, enveloppée (AES-256-GCM) dans des emplacements : un emplacement mot de passe (PBKDF2-SHA-256, 210 000 itérations, sel de 16 octets) et un emplacement par clé d'accès PRF (SHA-256 de `kazoos-keyring-prf-v1` et de la sortie PRF, ADR 0168) |
 | Moteur | Web Crypto (`cryptoHasher.js`, `WebCryptoKeyringCipher`) dans l'hôte, `ManagedKeyringCipher` (.NET) dans les tests |
-| Format | JSON `hackeros-keyring` v2 : `cipher`, `slots` (`kind` `password` avec `kdf`, `iterations`, `salt` ; ou `passkey` avec `credentialId` ; puis `nonce`, `wrappedKey`), `nonce`, `ciphertext` (base64). Un fichier v1 (entrées scellées directement sous la clé du mot de passe) est lu et réécrit en v2 à la prochaine connexion par mot de passe (`keyring.upgrade`) |
+| Format | JSON `kazoos-keyring` v2 : `cipher`, `slots` (`kind` `password` avec `kdf`, `iterations`, `salt` ; ou `passkey` avec `credentialId` ; puis `nonce`, `wrappedKey`), `nonce`, `ciphertext` (base64). Un fichier v1 (entrées scellées directement sous la clé du mot de passe) est lu et réécrit en v2 à la prochaine connexion par mot de passe (`keyring.upgrade`) |
 
 ### Cycle de vie (`UserKeyringService`)
 
@@ -176,7 +176,7 @@ une ligne est mise en file pour l'écrivain unique de journaux (ADR 0045) vers
 `LogFileTarget.AuditLog` : `/var/log/audit.log`, `0600`, rotation 1 Mio × 5.
 
 ```
-type=PATH msg=audit(1792218000.123:42): op=write path="/etc/hosts" uid=0 auid=1000 pid=231 comm="nano" app="org.hackeros.commands.nano" res=success UID="root" AUID="alice"
+type=PATH msg=audit(1792218000.123:42): op=write path="/etc/hosts" uid=0 auid=1000 pid=231 comm="nano" app="org.kazoos.commands.nano" res=success UID="root" AUID="alice"
 ```
 
 - `uid` : l'identité qui écrit (`root` pour une opération système ou élevée par
@@ -192,7 +192,7 @@ type=PATH msg=audit(1792218000.123:42): op=write path="/etc/hosts" uid=0 auid=10
 
 ### Lecture
 
-- **`ausearch`** (`org.hackeros.commands.ausearch`, avec `sudo`) : `-f chemin`
+- **`ausearch`** (`org.kazoos.commands.ausearch`, avec `sudo`) : `-f chemin`
   (le chemin, un fichier dessous, ou un nom de fichier), `-ua`, `-ui`, `-ul`
   (utilisateur, `uid`, `auid`), `-c comm`, `--success yes|no` (`-sv`),
   `-if fichier`, `-i` (accepté). Lit les archives `.5` à `.1` puis le journal ;

@@ -347,7 +347,7 @@ public interface IDialogService : IFileDialogService
         ValueTask.FromResult(new AppChooserDialogResult(AppChooserStatus.Cancelled, null, false));
 
     /// <summary>
-    /// Displays the "Open with" dialog of the file dialogs contract (<c>hackeros.file-dialogs</c>,
+    /// Displays the "Open with" dialog of the file dialogs contract (<c>kazoos.file-dialogs</c>,
     /// ADR 0155 §5), provided by the File Explorer, modal to the requesting app's window and with its
     /// rights. The default answers "unavailable", for hosts written before the contract.
     /// </summary>
@@ -358,7 +358,7 @@ public interface IDialogService : IFileDialogService
         ValueTask.FromResult(new Files.OpenWithDialogResult(Files.OpenWithDialogStatus.Unavailable, null, false));
 
     /// <summary>
-    /// Displays the properties of a file or folder (<c>hackeros.file-dialogs</c>, ADR 0155 §5). The
+    /// Displays the properties of a file or folder (<c>kazoos.file-dialogs</c>, ADR 0155 §5). The
     /// default answers "unavailable".
     /// </summary>
     ValueTask<Files.FilePropertiesDialogResult> ShowFilePropertiesAsync(
@@ -368,7 +368,7 @@ public interface IDialogService : IFileDialogService
         ValueTask.FromResult(new Files.FilePropertiesDialogResult(Files.FilePropertiesDialogStatus.Unavailable));
 
     /// <summary>
-    /// Asks how to settle a name conflict of a move or a copy (<c>hackeros.file-dialogs</c>,
+    /// Asks how to settle a name conflict of a move or a copy (<c>kazoos.file-dialogs</c>,
     /// ADR 0155 §5). The default skips the item.
     /// </summary>
     ValueTask<Files.FileConflictDialogResult> ResolveFileConflictAsync(

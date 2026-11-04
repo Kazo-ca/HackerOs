@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Alias;
 public sealed class AliasApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.alias";
+    public override string Id => "org.kazoos.commands.alias";
 
     /// <inheritdoc />
     public override string Name => "alias";
@@ -22,7 +22,7 @@ public sealed class AliasApp : AppDefinition
     public override Type EntryPoint => typeof(AliasCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Define or display command aliases";

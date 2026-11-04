@@ -93,7 +93,7 @@ public sealed record WindowOptions
     /// (a calculator, a wizard) sets it to <see langword="false"/>.
     /// </summary>
     /// <remarks>
-    /// The geometry is device-local state in <c>~/.local/state/hackeros/windows/&lt;appId&gt;.config</c>,
+    /// The geometry is device-local state in <c>~/.local/state/kazoos/windows/&lt;appId&gt;.config</c>,
     /// written by the window manager, never by the app. Added in SDK 1.1.
     /// </remarks>
     [JsonIgnore]

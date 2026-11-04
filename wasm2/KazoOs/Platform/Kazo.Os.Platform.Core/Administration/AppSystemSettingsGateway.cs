@@ -15,10 +15,10 @@ namespace Kazo.Os.Platform.Core.Administration;
 /// No capability is checked: the files' permissions decide (decision D16). The OS reads both
 /// layers (everybody may read them) and writes the user layer as the session user, so an app
 /// without <c>filesystem.user-home.write</c> can still change the user's own
-/// <c>~/.config/hackeros</c> preferences, as any process of that user could.
+/// <c>~/.config/kazoos</c> preferences, as any process of that user could.
 /// </para>
 /// <para>
-/// The system layer is written with the calling app's own filesystem gateway: <c>/etc/hackeros</c>
+/// The system layer is written with the calling app's own filesystem gateway: <c>/etc/kazoos</c>
 /// belongs to root, so the write needs <c>sudo</c> or the administrator approval of ADR 0042, and
 /// is otherwise refused with <see cref="UnauthorizedAccessException"/>. Writing through
 /// <see cref="IOsSettingsService"/> also raises its change notification, so the platform (for

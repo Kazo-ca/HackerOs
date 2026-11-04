@@ -48,7 +48,7 @@ public sealed class GuestConversionTests
         Assert.Equal("alice", (await _harness.StatAsync("/home/alice/Documents/notes.txt"))!.OwnerId);
         Assert.Equal(
             "wallpaper=/home/alice/Pictures/sky.png\nother=/home/guests/x\n",
-            await _harness.ReadAsync("/home/alice/.config/hackeros/desktop.conf"));
+            await _harness.ReadAsync("/home/alice/.config/kazoos/desktop.conf"));
         Assert.Contains(_harness.Audit.Entries, entry => entry.Action == "users.guest-migrate" && entry.Outcome == AuditOutcome.Success);
 
         // The new account signs in with its password, and the keyring opens with it.
@@ -140,7 +140,7 @@ public sealed class GuestConversionTests
         LocalUser guest = await _guests.CreateAsync("Guest");
         await _harness.Session.LoginAsync(guest.LoginName, password: null);
         await _harness.WriteAsUserAsync("/home/guest/Documents/notes.txt", "my notes");
-        await _harness.WriteAsUserAsync("/home/guest/.config/hackeros/desktop.conf", "wallpaper=/home/guest/Pictures/sky.png\nother=/home/guests/x\n");
+        await _harness.WriteAsUserAsync("/home/guest/.config/kazoos/desktop.conf", "wallpaper=/home/guest/Pictures/sky.png\nother=/home/guests/x\n");
         await _harness.Session.LogoutAsync();
         return guest;
     }

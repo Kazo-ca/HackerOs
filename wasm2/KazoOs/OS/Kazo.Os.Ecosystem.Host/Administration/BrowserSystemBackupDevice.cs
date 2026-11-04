@@ -18,7 +18,7 @@ namespace Kazo.Os.Ecosystem.Administration;
 internal sealed class BrowserSystemBackupDevice(IJSRuntime runtime) : ISystemBackupDevice
 {
     /// <summary><c>localStorage</c> key of the restore record kept across the restart.</summary>
-    internal const string RestoreRecordKey = "hackeros.backup.restore-record";
+    internal const string RestoreRecordKey = "kazoos.backup.restore-record";
 
     /// <inheritdoc />
     public async Task<SystemBackupArchive> ExportAsync(CancellationToken cancellationToken = default)

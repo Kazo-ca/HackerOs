@@ -6,7 +6,7 @@
 
 Accepted on 2026-10-16, with the `web/9-blazor-sites` work item.
 
-- **Plan phase:** web phase ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Plan phase:** web phase ([`asp-kazo-plan.md`](../plans/asp-kazo-plan.md)).
 - **Completes:** ADR 0073 §1 and §4 (Blazor site of a `Web` app), ADR 0075 §5
   (choice of view according to the response), ADR 0081 §2 (Blazor content in a
   detached window). Replaces no decision.

@@ -6,7 +6,7 @@ namespace Kazo.Os.Platform.Core.Globalization;
 
 /// <summary>
 /// The session's time zone (ADR 0193 section 3): the layered <c>datetime.config</c> (the session
-/// user's <c>~/.config/hackeros/</c> over the machine's <c>/etc/hackeros/</c>), resolved to a zone.
+/// user's <c>~/.config/kazoos/</c> over the machine's <c>/etc/kazoos/</c>), resolved to a zone.
 /// The taskbar clock, the clock panel and every app process without its own <c>TZ</c> read it.
 /// </summary>
 /// <remarks>

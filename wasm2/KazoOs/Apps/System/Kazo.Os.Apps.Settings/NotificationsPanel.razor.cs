@@ -12,7 +12,7 @@ namespace Kazo.Os.Apps.Settings;
 /// notification shows no bubble and plays no sound, but still goes to the clock panel.
 /// </summary>
 /// <remarks>
-/// The switch is the <c>doNotDisturb</c> key of <c>~/.config/hackeros/notifications.config</c>,
+/// The switch is the <c>doNotDisturb</c> key of <c>~/.config/kazoos/notifications.config</c>,
 /// written through <see cref="KazoSettings.OpenSystemAsync(IAppExecutionContext, string, CancellationToken)"/>.
 /// The shell's <c>DoNotDisturbService</c> watches the file, so the change applies at once, and the
 /// clock panel's switch shows it. Uses only the public SDK.
@@ -93,7 +93,7 @@ public sealed partial class NotificationsPanel
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException)
         {
-            ShowError(L["Notifications.Error.CannotSave", "~/.config/hackeros/" + DocumentFileName, exception.Message]);
+            ShowError(L["Notifications.Error.CannotSave", "~/.config/kazoos/" + DocumentFileName, exception.Message]);
         }
         finally
         {

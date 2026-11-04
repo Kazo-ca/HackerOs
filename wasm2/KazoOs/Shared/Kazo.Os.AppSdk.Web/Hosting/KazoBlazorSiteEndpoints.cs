@@ -47,7 +47,7 @@ public static class KazoBlazorSiteEndpoints
         application.MapFallback(
             "/" + KazoBlazorBootManifest.ScriptPath,
             context => WriteAsync(context, "text/javascript; charset=utf-8", script),
-            "GET blazor.hack.js (Blazor site)");
+            "GET blazor.kazo.js (Blazor site)");
         application.MapFallback(
             "/{**path}",
             context =>
@@ -106,7 +106,7 @@ public static class KazoBlazorSiteEndpoints
     /// client that runs it only learns that the site needs the Kazo OS browser.
     /// </summary>
     private const string LoaderScript = """
-        // blazor.hack.js: the loader of an interactive Blazor site of Kazo OS (ADR 0084).
+        // blazor.kazo.js: the loader of an interactive Blazor site of Kazo OS (ADR 0084).
         // The Kazo OS browser recognises this script, reads _framework/blazor.boot.json and draws the
         // site's root component itself; a page that runs this script is outside that browser.
         (function () {

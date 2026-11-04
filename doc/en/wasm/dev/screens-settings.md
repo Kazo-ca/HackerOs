@@ -18,7 +18,7 @@ page reads and writes `screens.config` and drives the open screens through `Kazo
 | Remembered screens | Screen 1 (this browser tab), then each screen 2 to 9 listed in `open` or with a valid place: state "open, or offered at the next sign-in" or "closed", place `width × height at (left, top)`. A **Forget** button on a closed screen that has a place. | Removes the numbered line from the user layer |
 | Open and move screens | The other commands: Other screen ▸ New screen (right-click on the icon or on Maximize), `Super+Shift+←/→` shortcuts, the **Restore screens** card, the `⤢` button. | — |
 
-The file is `~/.config/hackeros/screens.config`; `/etc/hackeros/screens.config` gives the system
+The file is `~/.config/kazoos/screens.config`; `/etc/kazoos/screens.config` gives the system
 defaults (an administrator writes it, for instance with `sudo nano`).
 
 ## 2. The screen buttons: `KazoScreens`

@@ -25,7 +25,7 @@ The task manager ([`task-manager.md`](task-manager.md), work item
 | `/proc/net/dev` | bytes and packets of `lo` and `eth0` | **counted**: apps' network gateway |
 | `/proc/mounts` | mount table | mount router |
 | `KazoDriveInfo` | size and free space of `/` | hardware profile, stored content, browser quota |
-| `/proc/hackeros/workers` | cross-origin isolation of the page (ADR 0131, 0143), then the OS's Web Workers: role, state, core, runtime memory, heartbeat age, busy time, processes (ADR 0070) | **measured**: heartbeat of each worker, every 250 ms; isolated page, memory of each worker measured by the browser (`performance.measureUserAgentSpecificMemory()`, every 20 s, `memory-measure: browser`) ([`worker-processes.md`](worker-processes.md)); absent when the host has no workers |
+| `/proc/kazoos/workers` | cross-origin isolation of the page (ADR 0131, 0143), then the OS's Web Workers: role, state, core, runtime memory, heartbeat age, busy time, processes (ADR 0070) | **measured**: heartbeat of each worker, every 250 ms; isolated page, memory of each worker measured by the browser (`performance.measureUserAgentSpecificMemory()`, every 20 s, `memory-measure: browser`) ([`worker-processes.md`](worker-processes.md)); absent when the host has no workers |
 
 A `cat` of a large file raises the process's `rchar` and the sectors read of
 `hda`; a page loaded by the browser raises `eth0`. The browser does not measure
@@ -37,7 +37,7 @@ CPU per app: since phase 5, the OS times it itself at each context switch
 
 | Source | When | Indicator |
 | --- | --- | --- |
-| **simulated**: `IResourceSimulator`, the app's `ResourceProfile` profile | accounting switched off at build (`KazoOsCpuAccounting`, `KazoOsMemoryAccounting`) or in `appsettings.json` (`HackerOs:ResourceAccounting`), accounting not yet implemented, simulated process without code | `CpuSource: simulated`, `MemSource: simulated`; "estimated" mention in the task manager |
+| **simulated**: `IResourceSimulator`, the app's `ResourceProfile` profile | accounting switched off at build (`KazoOsCpuAccounting`, `KazoOsMemoryAccounting`) or in `appsettings.json` (`KazoOs:ResourceAccounting`), accounting not yet implemented, simulated process without code | `CpuSource: simulated`, `MemSource: simulated`; "estimated" mention in the task manager |
 | **measured**: `ICpuTimeAccountant`, `IMemoryAccountant` fed by the context-switch hook | accounting delivered and enabled, and the accountant answers for this process | `CpuSource: measured`, `MemSource: measured` |
 
 The `/proc` provider receives the two accountants through `ProcMetricsSources`
@@ -71,7 +71,7 @@ hardware profile and adds `AnonPages`, `Mapped` (each assembly counted once) and
 itself). These measured figures are also the ones enforced by a process's `rss`
 limit (`ulimit -m`, ADR 0125, [`process-limits.md`](process-limits.md)) and by
 the OOM killer, **disabled by default** and enabled in
-`/etc/hackeros/memory.config` (ADR 0126, 0142, [`oom-killer.md`](oom-killer.md)):
+`/etc/kazoos/memory.config` (ADR 0126, 0142, [`oom-killer.md`](oom-killer.md)):
 neither acts on simulated memory.
 
 In an isolated page (ADR 0131, ADR 0143 §6), the runtime memory of each Web
@@ -235,7 +235,7 @@ A packet is a request or a reply (ADR 0057). A host not found, unreachable, a
 timeout or a refused connection count the request and a receive error (`errs`).
 A call refused for lack of capability does not go out: nothing is counted.
 Since `web/3-listener-dns`, an exchange with a local port (target resolved to
-loopback by `hackdns`) is counted on `lo` and not on `eth0`
+loopback by `kazodns`) is counted on `lo` and not on `eth0`
 ([`listening-ports-and-dns.md`](../framework/listening-ports-and-dns.md)).
 
 ### Mounts (`/proc/mounts`)

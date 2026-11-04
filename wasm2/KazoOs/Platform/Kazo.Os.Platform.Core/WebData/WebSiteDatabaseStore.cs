@@ -12,13 +12,13 @@ namespace Kazo.Os.Platform.Core.WebData;
 public interface IWebSiteDatabaseStore
 {
     /// <summary>Opens a site database at the schema's version and remembers the schema, to reopen it after a deletion.</summary>
-    /// <param name="databaseName">A <c>hackweb.*</c> name.</param>
+    /// <param name="databaseName">A <c>kazoweb.*</c> name.</param>
     /// <param name="schema">The site's schema.</param>
     /// <param name="cancellationToken">Cancels the call.</param>
     ValueTask OpenAsync(string databaseName, KazoWebDbSchemaDefinition schema, CancellationToken cancellationToken = default);
 
     /// <summary>Runs one batch in one transaction.</summary>
-    /// <param name="databaseName">A <c>hackweb.*</c> name.</param>
+    /// <param name="databaseName">A <c>kazoweb.*</c> name.</param>
     /// <param name="request">The batch.</param>
     /// <param name="cancellationToken">Cancels the call.</param>
     ValueTask<IReadOnlyList<string?>> ExecuteAsync(string databaseName, KazoWebDbRequest request, CancellationToken cancellationToken = default);
@@ -28,7 +28,7 @@ public interface IWebSiteDatabaseStore
     ValueTask<IReadOnlyList<KazoWebSiteDatabaseInfo>> ListAsync(CancellationToken cancellationToken = default);
 
     /// <summary>Deletes a site database (no error when it does not exist).</summary>
-    /// <param name="databaseName">A <c>hackweb.*</c> name.</param>
+    /// <param name="databaseName">A <c>kazoweb.*</c> name.</param>
     /// <param name="cancellationToken">Cancels the deletion.</param>
     ValueTask DeleteAsync(string databaseName, CancellationToken cancellationToken = default);
 }
@@ -36,7 +36,7 @@ public interface IWebSiteDatabaseStore
 /// <summary>Checks site database names.</summary>
 public static class WebSiteDatabaseNames
 {
-    /// <summary>Throws when <paramref name="databaseName"/> is not <c>hackweb.&lt;something&gt;</c>.</summary>
+    /// <summary>Throws when <paramref name="databaseName"/> is not <c>kazoweb.&lt;something&gt;</c>.</summary>
     /// <param name="databaseName">The name to check.</param>
     /// <exception cref="ArgumentException">Not a site database name.</exception>
     public static void Require(string databaseName)

@@ -30,7 +30,7 @@ implements [ADR 0216](adr/0216-do-not-disturb.md) (section 5).
 | `NotificationToasts.razor` (+ `.razor.cs`, `.razor.css`) | Draws the stack in an `aria-live="polite"` region. Parameters: `Placement` (`AboveTaskbar` or `TopOfScreen`) and `IsPanelOpen`. |
 | `NotificationActionRunner` (internal) | Runs an action for the panel and for the bubbles: first `ShellNotificationActions`, then `NotificationAction.LaunchApp`. Dismisses the notification once the action ran. |
 | `ShellNotificationActions` (public, session scope) | Registry of the actions the OS runs itself: `Register(actionId, handler)` returns a handle that removes the registration. Registered in `EcosystemServiceCollectionExtensions`. |
-| `UpdateReadyNotification` (public) | Posts "Update ready" (source `org.hackeros.update`, no expiry, action `hackeros.update.restart`) once per user and text, and registers "Restart". |
+| `UpdateReadyNotification` (public) | Posts "Update ready" (source `org.kazoos.update`, no expiry, action `kazoos.update.restart`) once per user and text, and registers "Restart". |
 | `App.razor` (Ecosystem.Host) | Creates `UpdateReadyNotification` with `RestartForUpdateAsync`. After each render of the desktop, calls `Show` for the signed-in user, in their language. Shows the `update-notice` only outside a session. |
 | `DesktopShell.razor` / `MobileShell.razor` | Place `<NotificationToasts>`: above the taskbar of screen 1 with `IsPanelOpen = _clockPanel.IsOpen`, or at the top with `IsPanelOpen = _isShadeOpen`. |
 
@@ -63,8 +63,8 @@ and `prefers-reduced-motion: no-preference`.
   the panel and the unread dot lights up. A moon shows in the notification area (a click
   opens the panel) and on the phone's shade handle.
 - **File**: key `doNotDisturb` (boolean) of the layered `notifications` document,
-  `/etc/hackeros/notifications.config` (the machine's value, `false` at install) and
-  `~/.config/hackeros/notifications.config` (the user's choice). Editing the file with
+  `/etc/kazoos/notifications.config` (the machine's value, `false` at install) and
+  `~/.config/kazoos/notifications.config` (the user's choice). Editing the file with
   `nano` applies at once.
 
 | Element | Role |

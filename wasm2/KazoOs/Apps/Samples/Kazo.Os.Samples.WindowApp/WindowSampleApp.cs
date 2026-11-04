@@ -10,7 +10,7 @@ namespace Kazo.Os.Samples.WindowApp;
 public sealed class WindowSampleApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.samples.window-app";
+    public override string Id => "org.kazoos.samples.window-app";
 
     /// <inheritdoc />
     public override string Name => "Sample Window App";
@@ -22,7 +22,7 @@ public sealed class WindowSampleApp : AppDefinition
     public override Type EntryPoint => typeof(SampleWindow);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description =>

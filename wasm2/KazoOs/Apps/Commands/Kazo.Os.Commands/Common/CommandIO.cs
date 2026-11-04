@@ -9,7 +9,7 @@ namespace Kazo.Os.Commands.Common;
 /// <summary>
 /// Helpers shared by the text commands (ADR 0064): read the named files or standard input like
 /// coreutils (<c>-</c> is standard input), report errors as <c>cmd: file: reason</c>, and print
-/// sizes the way <c>df -h</c> and <c>du -h</c> do. Paths go through the <c>Hack*</c> API, so they
+/// sizes the way <c>df -h</c> and <c>du -h</c> do. Paths go through the <c>Kazo*</c> API, so they
 /// resolve against the command's working directory with its own permissions.
 /// </summary>
 internal static class CommandIO
@@ -87,7 +87,7 @@ internal static class CommandIO
     /// Reads one input through the instance's own filesystem gateway, resolved against
     /// <see cref="TerminalExecutionContext.WorkingDirectory"/> (<c>-</c> is standard input): the
     /// path older commands (<c>head</c>, <c>tail</c>, <c>sort</c>) take, which works without an
-    /// ambient <c>Hack*</c> context. Prints <c>cmd: file: reason</c> and returns null on failure.
+    /// ambient <c>Kazo*</c> context. Prints <c>cmd: file: reason</c> and returns null on failure.
     /// </summary>
     public static async Task<string?> ReadTextAsync(TerminalExecutionContext context, string file, string command, CancellationToken cancellationToken)
     {

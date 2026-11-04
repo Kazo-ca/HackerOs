@@ -21,7 +21,7 @@ namespace Kazo.Os.AppSdk.Threading;
 /// </para>
 /// <para>
 /// Each task is a process: it appears in <c>ps</c>, <c>top</c> and the task manager under the app
-/// (<c>hackpaint:Blur</c>), can be killed there without closing the window, ends when the app
+/// (<c>kazopaint:Blur</c>), can be killed there without closing the window, ends when the app
 /// closes, and is subject to the limits of ADR 0125. Without workers (tests, the server host), it
 /// runs on the main thread with the same serialization: <see cref="KazoBackgroundContext.CheckpointAsync"/>
 /// keeps the desktop alive there.

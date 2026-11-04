@@ -37,7 +37,7 @@ without losing its state.
 | --- | --- | --- |
 | Display surfaces | `IDisplaySurfaceService`, `DisplaySurfaceContent` portal, styles and theme copied, size and focus events, end states | ADR 0078, 0081, [`detached-display-windows.md`](../detached-display-windows.md) |
 | Window manager | One `WorkArea` (`ChangeViewportCommand`); maximize and snap refer to it | `Platform/Kazo.Os.Windowing.Core/WindowRuntime.cs` |
-| Desktop | One `DesktopArea` in `DesktopShell`, desktop app (`org.hackeros.desktop`) as background | `Platform/Kazo.Os.Platform.Blazor/Shell/` |
+| Desktop | One `DesktopArea` in `DesktopShell`, desktop app (`org.kazoos.desktop`) as background | `Platform/Kazo.Os.Platform.Blazor/Shell/` |
 | Taskbar | One instance, every window | `Platform/Kazo.Os.Taskbar.Blazor` |
 | Window menu | Single-level list in `WindowManagerOverlays`; right click on the icon, `Alt+Space` | ADR 0095, 0164 |
 | OS context menu | Multi-level, keyboard | ADR 0150 |

@@ -78,7 +78,7 @@ Dans une série, chaque PR de chantier vers `<série>/base` ajoute son entrée :
 ## Dans l'OS : `/whats-new.json`
 
 Au build de `OS/Kazo.Os.Ecosystem`, l'outil `Tools/Kazo.Os.Tools.ChangeList` lit `changes/` et
-écrit `obj/…/hackeros-whats-new/whats-new.json`, servi à la racine du site comme `/version.json`
+écrit `obj/…/kazoos-whats-new/whats-new.json`, servi à la racine du site comme `/version.json`
 (ADR 0186 §4.1). Il ne garde que les entrées dont le public contient `user`, groupées par
 version, la plus récente en haut ; les entrées de `unreleased/` forment le premier groupe
 (`"version": null`, `"since": "<KazoOsVersion>"`). Dans un groupe, les entrées sont triées par
@@ -96,7 +96,7 @@ Côté OS :
 
 - `WhatsNewService` (Platform.Core, `Kazo.Os.Platform.Core.WhatsNew`) lit le fichier une fois par
   page (un nouveau déploiement recharge la page) et garde, pour chaque compte, les IDs déjà vus
-  dans `~/.local/state/hackeros/whats-new.json` : `{ "seen": [ "<id>", … ] }`. Un ID qui sort de
+  dans `~/.local/state/kazoos/whats-new.json` : `{ "seen": [ "<id>", … ] }`. Un ID qui sort de
   la liste reste dans le fichier : une entrée ne redevient jamais nouvelle.
 - **Nouveau compte** (ADR 0186 §5) : quand ce fichier n'existe pas encore (ou ne se lit pas), tout
   est marqué vu sauf les entrées de la dernière version publiée et celles de la prochaine version

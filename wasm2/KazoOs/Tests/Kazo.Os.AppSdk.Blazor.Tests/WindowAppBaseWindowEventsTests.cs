@@ -221,10 +221,10 @@ public sealed class WindowAppBaseWindowEventsTests
     {
         public AppManifest Manifest { get; } = new()
         {
-            Id = "org.hackeros.window-events",
+            Id = "org.kazoos.window-events",
             Name = "Window Events",
             Version = "1.0.0",
-            PublisherId = "org.hackeros",
+            PublisherId = "org.kazoos",
             Description = "Window events test app.",
             Kind = AppKind.Window,
             EntryPoint = new AppEntryPointManifest("Kazo.Os.AppSdk.Blazor.Tests", "EventApp"),
@@ -272,6 +272,6 @@ public sealed class WindowAppBaseWindowEventsTests
         public OneShotElevationGrantSet OneShotElevation { get; } = new();
 
         public IAppEnvironmentGateway Environment { get; } =
-            new Kazo.Os.Tests.Support.FakeAppEnvironmentGateway("/home/user", arguments: ["org.hackeros.window-events"]);
+            new Kazo.Os.Tests.Support.FakeAppEnvironmentGateway("/home/user", arguments: ["org.kazoos.window-events"]);
     }
 }

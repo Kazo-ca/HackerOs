@@ -3,7 +3,7 @@
 
 @*
     Settings > Memory (ADR 0126): the OOM killer's switch and threshold, written to the system layer
-    of /etc/hackeros/memory.config (an administrator approves the write, ADR 0042), and a readout of
+    of /etc/kazoos/memory.config (an administrator approves the write, ADR 0042), and a readout of
     /proc/meminfo and /proc/vmstat.
 *@
 <div class="setting-group mem-panel">
@@ -62,7 +62,7 @@ else
                 </button>
             }
         </div>
-        <p class="setting-desc mem-note">@LocalizedMarkup.Format(L["Memory.AdminNote"], LocalizedMarkup.Code("/etc/hackeros/" + DocumentFileName))</p>
+        <p class="setting-desc mem-note">@LocalizedMarkup.Format(L["Memory.AdminNote"], LocalizedMarkup.Code("/etc/kazoos/" + DocumentFileName))</p>
     </div>
 }
 

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <!--
-    ASP.Hack route generator (ADR 0082): a Roslyn incremental source generator that writes, at build
+    ASP.Kazo route generator (ADR 0082): a Roslyn incremental source generator that writes, at build
     time, the controller route table of a web app (KazoWebGeneratedRoutes) and the entry point of each
     partial WebAppDefinition. No reflection at run time: trimming-safe, and route conflicts are build
     errors (HOSWEBnnnn). Apps get it as an analyzer through build/Kazo.Os.Apps.targets. The route

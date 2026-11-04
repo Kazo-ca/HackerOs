@@ -48,7 +48,7 @@ namespace Kazo.Os.Apps.Browser;
 /// </para>
 /// <para>
 /// A Blazor site (ADR 0084) is recognised by its host page: the browser reads its
-/// <c>blazor.boot.json</c>, asks the OS for a renderer process (<see cref="IHackWebSiteHost"/>) and
+/// <c>blazor.boot.json</c>, asks the OS for a renderer process (<see cref="IKazoWebSiteHost"/>) and
 /// draws the site's root component in the page area with <see cref="KazoWebSiteView"/>. Links
 /// within the site change the address without a request; back and forward between two addresses
 /// of the site stay in the site; the address bar and Reload make a real request.
@@ -98,7 +98,7 @@ public sealed partial class BrowserWindow : WindowAppBase, IAsyncDisposable
     private FrameSource? _frameSource;
 
     // ── Blazor site (ADR 0084) ───────────────────────────────────────────
-    private IHackWebSiteProcess? _site;
+    private IKazoWebSiteProcess? _site;
     private Uri? _siteUrl;
     private KazoWebSiteView? _siteView;
 
@@ -164,7 +164,7 @@ public sealed partial class BrowserWindow : WindowAppBase, IAsyncDisposable
 
     /// <summary>Starts the renderer of a Blazor site (ADR 0084); part of the Blazor SDK contracts.</summary>
     [Inject]
-    private IHackWebSiteHost SiteHost { get; set; } = default!;
+    private IKazoWebSiteHost SiteHost { get; set; } = default!;
 
     // ── Lifecycle ─────────────────────────────────────────────────────────
 
@@ -373,7 +373,7 @@ public sealed partial class BrowserWindow : WindowAppBase, IAsyncDisposable
 
         if (_currentBody.Kind == ResponseBodyKind.Html)
         {
-            // The host page of a Blazor site loads blazor.hack.js: the site is drawn, not the page (ADR 0084 §3).
+            // The host page of a Blazor site loads blazor.kazo.js: the site is drawn, not the page (ADR 0084 §3).
             if (KazoBlazorSiteEndpoints.IsHostPage(_currentBody.Text) && await TryStartSiteAsync(response.Url, cancellationToken))
             {
                 return;

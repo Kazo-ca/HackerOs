@@ -2,7 +2,7 @@
 @inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
 
 @*
-    Settings > Desktop (ADR 0160 §8): the [view] group of ~/.config/hackeros/desktop.config. The desktop
+    Settings > Desktop (ADR 0160 §8): the [view] group of ~/.config/kazoos/desktop.config. The desktop
     follows the file and redraws its icons as soon as it changes. Behavior lives in DesktopPanel.razor.cs.
 *@
 @if (!_loaded)
@@ -14,7 +14,7 @@ else
     <div class="setting-group desk-panel">
         <h4 id="desk-size-title">@L["Desktop.IconSize.Title"]</h4>
         <p class="setting-desc">
-            @LocalizedMarkup.Format(L["Desktop.Description"], LocalizedMarkup.Code("~/Desktop"), LocalizedMarkup.Code("~/.config/hackeros/desktop.config"))
+            @LocalizedMarkup.Format(L["Desktop.Description"], LocalizedMarkup.Code("~/Desktop"), LocalizedMarkup.Code("~/.config/kazoos/desktop.config"))
         </p>
         <div class="desk-options" role="radiogroup" aria-labelledby="desk-size-title">
             @foreach (KazoDesktopIconSize size in IconSizes)

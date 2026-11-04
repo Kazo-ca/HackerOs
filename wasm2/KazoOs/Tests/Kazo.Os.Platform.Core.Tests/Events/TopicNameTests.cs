@@ -12,9 +12,9 @@ public sealed class TopicNameTests
     [Fact]
     public void ForApp_builds_the_expected_prefixed_path()
     {
-        TopicName topic = TopicNames.ForApp("org.hackeros.samples.service-app").Segment("ticked").Build();
+        TopicName topic = TopicNames.ForApp("org.kazoos.samples.service-app").Segment("ticked").Build();
 
-        Assert.Equal("app/org.hackeros.samples.service-app/ticked", topic.Value);
+        Assert.Equal("app/org.kazoos.samples.service-app/ticked", topic.Value);
     }
 
     [Fact]
@@ -28,9 +28,9 @@ public sealed class TopicNameTests
     [Fact]
     public void Multiple_segments_are_joined_in_order()
     {
-        TopicName topic = TopicNames.ForApp("org.hackeros.app").Segment("a").Segment("b").Segment("c").Build();
+        TopicName topic = TopicNames.ForApp("org.kazoos.app").Segment("a").Segment("b").Segment("c").Build();
 
-        Assert.Equal("app/org.hackeros.app/a/b/c", topic.Value);
+        Assert.Equal("app/org.kazoos.app/a/b/c", topic.Value);
     }
 
     [Theory]
@@ -46,23 +46,23 @@ public sealed class TopicNameTests
     [InlineData("dot.not.allowed")]
     public void Segment_rejects_invalid_shapes(string segment)
     {
-        Assert.Throws<ArgumentException>(() => TopicNames.ForApp("org.hackeros.app").Segment(segment));
+        Assert.Throws<ArgumentException>(() => TopicNames.ForApp("org.kazoos.app").Segment(segment));
     }
 
     [Fact]
     public void Segment_accepts_lowercase_kebab_case()
     {
-        TopicNameBuilder builder = TopicNames.ForApp("org.hackeros.app").Segment("a-valid-segment-123");
+        TopicNameBuilder builder = TopicNames.ForApp("org.kazoos.app").Segment("a-valid-segment-123");
 
         TopicName topic = builder.Build();
 
-        Assert.Equal("app/org.hackeros.app/a-valid-segment-123", topic.Value);
+        Assert.Equal("app/org.kazoos.app/a-valid-segment-123", topic.Value);
     }
 
     [Fact]
     public void Build_without_a_segment_throws()
     {
-        Assert.Throws<InvalidOperationException>(() => TopicNames.ForApp("org.hackeros.app").Build());
+        Assert.Throws<InvalidOperationException>(() => TopicNames.ForApp("org.kazoos.app").Build());
     }
 
     [Theory]

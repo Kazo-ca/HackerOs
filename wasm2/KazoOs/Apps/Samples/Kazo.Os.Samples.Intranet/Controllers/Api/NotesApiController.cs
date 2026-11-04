@@ -35,14 +35,14 @@ public sealed class NotesApiController(NoteStore store) : KazoApiController
     /// <param name="id">The identifier.</param>
     /// <param name="cancellationToken">Aborted with the request.</param>
     [HttpGet("{id:int}", Name = "GetNote")]
-    public async Task<IHackActionResult> Get(int id, CancellationToken cancellationToken) =>
+    public async Task<IKazoActionResult> Get(int id, CancellationToken cancellationToken) =>
         await store.FindAsync(id, cancellationToken) is Note note ? Ok(note) : NotFound();
 
     /// <summary><c>POST /api/notes</c>: <c>201 Created</c> with the <c>Location</c> of the new note.</summary>
     /// <param name="note">The note (JSON body); the identifier is given by the store.</param>
     /// <param name="cancellationToken">Aborted with the request.</param>
     [HttpPost]
-    public async Task<IHackActionResult> Create(Note note, CancellationToken cancellationToken)
+    public async Task<IKazoActionResult> Create(Note note, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(note.Author))
         {
@@ -58,7 +58,7 @@ public sealed class NotesApiController(NoteStore store) : KazoApiController
     /// <param name="note">The new content (JSON body).</param>
     /// <param name="cancellationToken">Aborted with the request.</param>
     [HttpPut("{id:int}")]
-    public async Task<IHackActionResult> Replace(int id, Note note, CancellationToken cancellationToken)
+    public async Task<IKazoActionResult> Replace(int id, Note note, CancellationToken cancellationToken)
     {
         note.Id = id;
         return await store.UpdateAsync(note, cancellationToken) is Note saved ? Ok(saved) : NotFound();
@@ -69,7 +69,7 @@ public sealed class NotesApiController(NoteStore store) : KazoApiController
     /// <param name="patch">The fields to change (JSON body).</param>
     /// <param name="cancellationToken">Aborted with the request.</param>
     [HttpPatch("{id:int}")]
-    public async Task<IHackActionResult> Patch(int id, NotePatch patch, CancellationToken cancellationToken)
+    public async Task<IKazoActionResult> Patch(int id, NotePatch patch, CancellationToken cancellationToken)
     {
         if (await store.FindAsync(id, cancellationToken) is not Note note)
         {
@@ -93,6 +93,6 @@ public sealed class NotesApiController(NoteStore store) : KazoApiController
     /// <param name="id">The identifier.</param>
     /// <param name="cancellationToken">Aborted with the request.</param>
     [HttpDelete("{id:int}")]
-    public async Task<IHackActionResult> Delete(int id, CancellationToken cancellationToken) =>
+    public async Task<IKazoActionResult> Delete(int id, CancellationToken cancellationToken) =>
         await store.RemoveAsync(id, cancellationToken) ? NoContent() : NotFound();
 }

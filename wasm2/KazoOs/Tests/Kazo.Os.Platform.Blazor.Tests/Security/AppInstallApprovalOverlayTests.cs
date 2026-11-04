@@ -125,10 +125,10 @@ public sealed class AppInstallApprovalOverlayTests
     {
         AppManifest store = new()
         {
-            Id = "org.hackeros.commands.hackpkg",
-            Name = "hackpkg",
+            Id = "org.kazoos.commands.kazopkg",
+            Name = "kazopkg",
             Version = "1.0.0",
-            PublisherId = "pub.hackeros",
+            PublisherId = "pub.kazoos",
             Description = "Overlay fixture.",
             Kind = AppKind.Terminal,
             SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),

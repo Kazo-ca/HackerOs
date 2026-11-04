@@ -32,10 +32,10 @@ namespace Kazo.Os.Platform.Core.Storage;
 public sealed class StorageSpaceMonitor : IStorageSpaceGuard, IAsyncDisposable
 {
     /// <summary>Source app id of the low-space notification.</summary>
-    public const string NotificationSourceAppId = "org.hackeros.storage";
+    public const string NotificationSourceAppId = "org.kazoos.storage";
 
     /// <summary>App the low-space notification opens.</summary>
-    public const string DiagnosticAppId = "org.hackeros.diagnostic";
+    public const string DiagnosticAppId = "org.kazoos.diagnostic";
 
     /// <summary>Interval between two periodic measures.</summary>
     public static readonly TimeSpan PollInterval = TimeSpan.FromSeconds(30);

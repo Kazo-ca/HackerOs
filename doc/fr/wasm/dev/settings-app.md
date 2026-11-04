@@ -1,13 +1,13 @@
 > [English version](../../../en/wasm/dev/settings-app.md)
 
-# App Paramètres (`org.hackeros.settings`)
+# App Paramètres (`org.kazoos.settings`)
 
 ## Objet
 
 Décrit l'app système `Apps/System/Kazo.Os.Apps.Settings` : le panneau de
 configuration de l'OS. Elle ne possède aucune donnée : chaque page lit et
 écrit des fichiers de l'OS (paramètres en fichiers, ADR 0044) ou appelle une
-façade `Hack*` du SDK. Les décisions qui l'ont façonnée sont l'ADR 0047
+façade `Kazo*` du SDK. Les décisions qui l'ont façonnée sont l'ADR 0047
 (manifeste), l'ADR 0048 (app système), l'ADR 0096 (arguments `--app=`), les
 ADR 0105, 0120, 0121, 0160, 0170 (menu latéral) et les sections 8 à 11 de l'ADR 0056.
 
@@ -42,7 +42,7 @@ Synchronisation), Système (Utilisateurs, Mémoire, Sauvegarde, Nouveautés, À 
 
 | Page (identifiant) | Panneau | Contenu principal |
 |---|---|---|
-| Apparence (`appearance`) | (dans `SettingsWindow.razor`) | Couche d'écriture (utilisateur ou système), thème du bureau et du mobile, accent, animations, thèmes utilisateur (`/etc/hackeros/themes` et `~/.config/hackeros/themes`, `UserThemeLibrary`), fond d'écran (`WallpaperPanel`, ADR 0202) ; écrit `appearance.config`. |
+| Apparence (`appearance`) | (dans `SettingsWindow.razor`) | Couche d'écriture (utilisateur ou système), thème du bureau et du mobile, accent, animations, thèmes utilisateur (`/etc/kazoos/themes` et `~/.config/kazoos/themes`, `UserThemeLibrary`), fond d'écran (`WallpaperPanel`, ADR 0202) ; écrit `appearance.config`. |
 | Bureau (`desktop`) | `DesktopPanel` | Options et disposition du bureau (`desktop.config`, ADR 0160). |
 | Écrans (`screens`) | `ScreensPanel` | Écrans ouverts par `KazoScreens` (Identifier, Nouvel écran, Restaurer, Fermer, Plein écran, permission ; ADR 0184) ; `screens.config` : choix de `primary-taskbar`, écrans retenus et Oublier (ADR 0179 §7, [`screens-settings.md`](screens-settings.md)). |
 | Accessibilité (`accessibility`) | `AccessibilityPanel` | Contraste élevé, taille du texte, mouvement réduit (ADR 0105). |
@@ -56,7 +56,7 @@ Synchronisation), Système (Utilisateurs, Mémoire, Sauvegarde, Nouveautés, À 
 | Connexion au serveur (`server`) | `ServerRelayPolicyPanel` (+ la fenêtre) | Serveur optionnel, relais réseau (ADR 0102, 0134). Visible dans tous les cas, l'état vient de `KazoServerConnection`. Sans connexion, `LocalServerPanel` liste les téléchargements du serveur installable, teste une adresse et appaire l'appareil par code ([`installable-server.md`](installable-server.md), ADR 0191). |
 | Synchronisation (`sync`) | (dans la fenêtre) | État de la synchro et conflits (ADR 0101). |
 | Utilisateurs (`users`) | `UsersPanel` (+ `PasskeysPanel`) | Comptes, mots de passe, ajout et suppression de comptes par un administrateur, clés d'accès de la session (ADR 0120, 0168, 0169 ; voir [Page Utilisateurs](#page-utilisateurs)). |
-| Mémoire (`memory`) | `MemoryPanel` | Fichier `/etc/hackeros/memory.config`, section `[oom-killer]` (ADR 0126). |
+| Mémoire (`memory`) | `MemoryPanel` | Fichier `/etc/kazoos/memory.config`, section `[oom-killer]` (ADR 0126). |
 | Sauvegarde (`backup`) | `BackupPanel` | Présent seulement si `KazoSystemBackup.IsSupportedFor` le permet (ADR 0099). |
 | Nouveautés (`whats-new`) | `WhatsNewPanel` | Liste des changements de l'OS par version, la prochaine en premier, avec un badge **Nouveau** sur ce qui n'a pas été vu ; tout devient vu à la fermeture de la page (`KazoWhatsNew`, ADR 0186). La notification après connexion l'ouvre avec `--page=whats-new`. |
 | À propos (`about`) | (dans la fenêtre) | Autorité, redémarrage (`KazoSystem.RebootAsync`), zone de danger : réinitialisation d'usine (`KazoSystem.FactoryResetAsync`), confirmée par la saisie de `RESET`, qui efface tout ce que l'OS garde dans le navigateur ([ADR 0227](adr/0227-factory-reset-erases-everything.md)). Un bouton **Quoi de neuf ?** à côté de la version ouvre la page Nouveautés. |

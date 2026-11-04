@@ -17,8 +17,8 @@ namespace Kazo.Os.Platform.Core.Appearance;
 
 /// <summary>
 /// The shell's live catalog of user themes (ADR 0103 §2.2): the <c>.theme</c> files of
-/// <c>/etc/hackeros/themes/</c>, read as the system, and of the session user's
-/// <c>~/.config/hackeros/themes/</c>, read as that user so the files' mode bits decide. Both folders
+/// <c>/etc/kazoos/themes/</c>, read as the system, and of the session user's
+/// <c>~/.config/kazoos/themes/</c>, read as that user so the files' mode bits decide. Both folders
 /// are watched, so a theme saved by the Theme Editor, copied with <c>cp</c> or edited with
 /// <c>nano</c> applies at once; a session change re-reads the new user's folder. The
 /// <c>themes/</c> folders of the installed theme packs are read too, and the two pack folders are
@@ -103,7 +103,7 @@ public sealed class UserThemeCatalogService : IAsyncDisposable
     private void OnSettingsChanged(object? sender, OsSettingsChangedEventArgs args)
     {
         // A null document id is the settings service's "session changed" signal: another user's
-        // ~/.config/hackeros/themes now applies.
+        // ~/.config/kazoos/themes now applies.
         if (_initialized && args.DocumentId is null)
         {
             _ = RefreshInBackgroundAsync();

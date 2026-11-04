@@ -16,7 +16,7 @@ namespace Kazo.Os.Platform.Core.Tests.Lifecycle;
 /// </summary>
 public sealed partial class AppLifecycleOrchestratorTests
 {
-    private const string StateServiceId = "org.hackeros.statesvc";
+    private const string StateServiceId = "org.kazoos.statesvc";
 
     [Fact]
     public async Task A_service_is_activating_until_its_start_returns_then_active_and_healthy()
@@ -80,17 +80,17 @@ public sealed partial class AppLifecycleOrchestratorTests
         Fixture fixture = new(WaiterManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
 
-        AppLaunchResult first = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.waiter", principal, []));
-        await WaitUntilAsync(() => fixture.Orchestrator.GetServiceStatus("org.hackeros.waiter").ActiveState == ServiceActiveState.Active);
+        AppLaunchResult first = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.waiter", principal, []));
+        await WaitUntilAsync(() => fixture.Orchestrator.GetServiceStatus("org.kazoos.waiter").ActiveState == ServiceActiveState.Active);
         fixture.Manager.Kill(first.Process!.Pid);
-        await WaitUntilAsync(() => fixture.Orchestrator.GetServiceStatus("org.hackeros.waiter").ActiveState == ServiceActiveState.Failed);
-        ServiceStatusSnapshot killed = fixture.Orchestrator.GetServiceStatus("org.hackeros.waiter");
+        await WaitUntilAsync(() => fixture.Orchestrator.GetServiceStatus("org.kazoos.waiter").ActiveState == ServiceActiveState.Failed);
+        ServiceStatusSnapshot killed = fixture.Orchestrator.GetServiceStatus("org.kazoos.waiter");
 
-        await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.waiter", principal, []));
-        await WaitUntilAsync(() => fixture.Orchestrator.GetServiceStatus("org.hackeros.waiter").ActiveState == ServiceActiveState.Active);
+        await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.waiter", principal, []));
+        await WaitUntilAsync(() => fixture.Orchestrator.GetServiceStatus("org.kazoos.waiter").ActiveState == ServiceActiveState.Active);
 
         Assert.Equal(ServiceRunResult.Killed, killed.Result);
-        Assert.Equal(ServiceRunResult.Success, fixture.Orchestrator.GetServiceStatus("org.hackeros.waiter").Result);
+        Assert.Equal(ServiceRunResult.Success, fixture.Orchestrator.GetServiceStatus("org.kazoos.waiter").Result);
     }
 
     [Fact]
@@ -99,12 +99,12 @@ public sealed partial class AppLifecycleOrchestratorTests
         Fixture fixture = new(WaiterManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
 
-        await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.waiter", principal, []));
-        await WaitUntilAsync(() => fixture.Orchestrator.GetServiceStatus("org.hackeros.waiter").ActiveState == ServiceActiveState.Active);
-        await fixture.Orchestrator.StopServiceAsync("org.hackeros.waiter");
-        await WaitUntilAsync(() => fixture.Orchestrator.GetServiceStatus("org.hackeros.waiter").ActiveState != ServiceActiveState.Deactivating);
+        await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.waiter", principal, []));
+        await WaitUntilAsync(() => fixture.Orchestrator.GetServiceStatus("org.kazoos.waiter").ActiveState == ServiceActiveState.Active);
+        await fixture.Orchestrator.StopServiceAsync("org.kazoos.waiter");
+        await WaitUntilAsync(() => fixture.Orchestrator.GetServiceStatus("org.kazoos.waiter").ActiveState != ServiceActiveState.Deactivating);
 
-        ServiceStatusSnapshot stopped = fixture.Orchestrator.GetServiceStatus("org.hackeros.waiter");
+        ServiceStatusSnapshot stopped = fixture.Orchestrator.GetServiceStatus("org.kazoos.waiter");
         Assert.Equal(ServiceActiveState.Inactive, stopped.ActiveState);
         Assert.Equal(ServiceRunResult.Success, stopped.Result);
     }
@@ -144,7 +144,7 @@ public sealed partial class AppLifecycleOrchestratorTests
     {
         Fixture fixture = new(WaiterManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        AppLaunchResult launch = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.waiter", principal, []));
+        AppLaunchResult launch = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.waiter", principal, []));
 
         int stopped = await fixture.Orchestrator.StopSessionServicesAsync(principal.SessionId);
 
@@ -159,7 +159,7 @@ public sealed partial class AppLifecycleOrchestratorTests
         // Services are covered above; a window app is stopped as well, so no window outlives its session.
         Fixture fixture = new(SingletonWindowManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        AppLaunchResult window = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.notes", principal, []));
+        AppLaunchResult window = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.notes", principal, []));
 
         Assert.Equal(0, await fixture.Orchestrator.StopSessionServicesAsync(principal.SessionId));
         int stopped = await fixture.Orchestrator.StopSessionAppsAsync(principal.SessionId);
@@ -173,7 +173,7 @@ public sealed partial class AppLifecycleOrchestratorTests
     public async Task A_system_service_starts_at_boot_as_the_service_account_and_survives_the_logout()
     {
         AppManifest boot = WaiterManifest() with { ServiceStartup = AppServiceStartup.Boot, AutoStart = true };
-        Fixture fixture = new(["org.hackeros.waiter"], boot);
+        Fixture fixture = new(["org.kazoos.waiter"], boot);
         AuthenticatedPrincipal account = ServiceAccount.CreatePrincipal(
             InstallationId.FromGuid(Guid.NewGuid()), DeviceId.FromGuid(Guid.NewGuid()), fixture.Clock.UtcNow);
 
@@ -189,7 +189,7 @@ public sealed partial class AppLifecycleOrchestratorTests
         Assert.Equal(ServiceAccount.UserId, result.Process!.UserId);
         Assert.Empty(atLogin);
         Assert.True(fixture.Manager.TryGetActive(result.Process.Pid, out _));
-        Assert.Equal(ServiceActiveState.Active, fixture.Orchestrator.GetServiceStatus("org.hackeros.waiter").ActiveState);
+        Assert.Equal(ServiceActiveState.Active, fixture.Orchestrator.GetServiceStatus("org.kazoos.waiter").ActiveState);
 
         fixture.Manager.CancelSystemScope();
         await WaitUntilAsync(() => !fixture.Manager.TryGetActive(result.Process.Pid, out _));
@@ -220,7 +220,7 @@ public sealed partial class AppLifecycleOrchestratorTests
 
         AuthenticatedPrincipal alice = await fixture.LoginAsync();
         await startup.LastEventWork.WaitAsync(TimeSpan.FromSeconds(10));
-        Assert.True(fixture.Manager.TryGetSingleton("org.hackeros.waiter", out ProcessRecord running));
+        Assert.True(fixture.Manager.TryGetSingleton("org.kazoos.waiter", out ProcessRecord running));
         Assert.Equal(alice.UserId, running.UserId);
 
         await fixture.Session.LogoutAsync();

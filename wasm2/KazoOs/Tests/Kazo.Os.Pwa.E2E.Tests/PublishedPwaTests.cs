@@ -53,7 +53,7 @@ public sealed class PublishedPwaTests(PwaPublishFixture fixture)
         failures.Clear();
 
         string version = await PwaTestSupport.GetAssetsManifestVersionAsync(page);
-        await PwaTestSupport.AssertOnlyReleaseCacheAsync(page, $"hackeros-cache-{version}");
+        await PwaTestSupport.AssertOnlyReleaseCacheAsync(page, $"kazoos-cache-{version}");
 
         Assert.Empty(failures);
     }
@@ -161,7 +161,7 @@ public sealed class PublishedPwaTests(PwaPublishFixture fixture)
         await page.EvaluateAsync("""
             () => {
                 window.__pwaUpdateAvailable = false;
-                window.addEventListener('hackeros-pwa-update-available', () => { window.__pwaUpdateAvailable = true; });
+                window.addEventListener('kazoos-pwa-update-available', () => { window.__pwaUpdateAvailable = true; });
             }
             """);
         await page.EvaluateAsync(
@@ -197,7 +197,7 @@ public sealed class PublishedPwaTests(PwaPublishFixture fixture)
 
         string v2Version = await PwaTestSupport.GetAssetsManifestVersionAsync(page);
         Assert.NotEqual(v1Version, v2Version);
-        await PwaTestSupport.AssertOnlyReleaseCacheAsync(page, $"hackeros-cache-{v2Version}");
+        await PwaTestSupport.AssertOnlyReleaseCacheAsync(page, $"kazoos-cache-{v2Version}");
 
         await PwaTestSupport.AssertFileContentAsync(page, directory, "update-proof.txt", content);
 
@@ -228,7 +228,7 @@ public sealed class PublishedPwaTests(PwaPublishFixture fixture)
         await PwaTestSupport.NavigateWhenReadyAsync(page, host.Address);
         await PwaTestSupport.WaitForServiceWorkerControllerAsync(page);
         await PwaTestSupport.WaitForOnboardingAsync(page);
-        string cacheName = $"hackeros-cache-{await PwaTestSupport.GetAssetsManifestVersionAsync(page)}";
+        string cacheName = $"kazoos-cache-{await PwaTestSupport.GetAssetsManifestVersionAsync(page)}";
         string damagedUrl = await PwaTestSupport.CorruptCachedBootResourceAsync(page, cacheName);
 
         int loads = 0;
@@ -249,7 +249,7 @@ public sealed class PublishedPwaTests(PwaPublishFixture fixture)
         Assert.True(await PwaTestSupport.GetCachedLengthAsync(page, cacheName, damagedUrl) > PwaTestSupport.CorruptedBody.Length);
         await PwaTestSupport.AssertOnlyReleaseCacheAsync(page, cacheName);
         // A successful boot clears the one-reload guard again.
-        Assert.Null(await page.EvaluateAsync<string?>("() => sessionStorage.getItem('hackeros.bootRecovery')"));
+        Assert.Null(await page.EvaluateAsync<string?>("() => sessionStorage.getItem('kazoos.bootRecovery')"));
     }
 
     /// <summary>
@@ -276,14 +276,14 @@ public sealed class PublishedPwaTests(PwaPublishFixture fixture)
         await PwaTestSupport.NavigateWhenReadyAsync(page, host.Address);
         await PwaTestSupport.WaitForServiceWorkerControllerAsync(page);
         await PwaTestSupport.WaitForOnboardingAsync(page);
-        string cacheName = $"hackeros-cache-{await PwaTestSupport.GetAssetsManifestVersionAsync(page)}";
+        string cacheName = $"kazoos-cache-{await PwaTestSupport.GetAssetsManifestVersionAsync(page)}";
         string damagedUrl = await PwaTestSupport.CorruptCachedBootResourceAsync(page, cacheName);
 
         await context.SetOfflineAsync(true);
         await host.StopAsync();
         await page.ReloadAsync(new PageReloadOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
 
-        ILocator bootError = page.Locator("#hackeros-boot-error[data-state='offline']");
+        ILocator bootError = page.Locator("#kazoos-boot-error[data-state='offline']");
         await bootError.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 60000 });
         await Assertions.Expect(bootError.Locator(".boot-error-offline")).ToBeVisibleAsync();
         await Assertions.Expect(bootError.Locator(".boot-error-offline")).ToContainTextAsync("Reconnect");

@@ -68,8 +68,8 @@
                         <h4>@L["Appearance.Layer.Title"]</h4>
                         <p class="setting-desc">
                             @LocalizedMarkup.Format(L["Appearance.Layer.Description"],
-                                LocalizedMarkup.Code("~/.config/hackeros/appearance.config"),
-                                LocalizedMarkup.Code("/etc/hackeros/appearance.config"))
+                                LocalizedMarkup.Code("~/.config/kazoos/appearance.config"),
+                                LocalizedMarkup.Code("/etc/kazoos/appearance.config"))
                         </p>
                         <div class="layer-options" role="radiogroup" aria-label="@L["Appearance.Layer.AriaLabel"]">
                             <button type="button" role="radio" class="@LayerOptionClass(SettingLayer.User)"
@@ -170,8 +170,8 @@
                         <h4>@L["Appearance.UserThemes.Title"]</h4>
                         <p class="setting-desc">
                             @LocalizedMarkup.Format(L["Appearance.UserThemes.Description"],
-                                LocalizedMarkup.Code("~/.config/hackeros/themes/"),
-                                LocalizedMarkup.Code("/etc/hackeros/themes/"))
+                                LocalizedMarkup.Code("~/.config/kazoos/themes/"),
+                                LocalizedMarkup.Code("/etc/kazoos/themes/"))
                         </p>
                         @if (_userThemes.Diagnostics.Count > 0)
                         {
@@ -179,7 +179,7 @@
                         }
                         <button type="button" class="btn-secondary" id="settings-open-theme-editor" @onclick="() => OpenThemeEditorAsync(null)">@L["Appearance.OpenThemeEditor"]</button>
                 </div>
-                    @* ADR 0205: cursor themes, chosen in ~/.config/hackeros/cursors.config. *@
+                    @* ADR 0205: cursor themes, chosen in ~/.config/kazoos/cursors.config. *@
                     <CursorThemePanel />
                     @* ADR 0203: the icon pack of icons.config. *@
                     <IconPackPanel TargetLayer="_targetLayer" />
@@ -217,7 +217,7 @@
                 </div>
                 break;
 
-                @* ADR 0160 §8: icon size, layout and sort of the desktop (~/.config/hackeros/desktop.config). *@
+                @* ADR 0160 §8: icon size, layout and sort of the desktop (~/.config/kazoos/desktop.config). *@
             case "desktop":
                 <div class="settings-page">
                     <DesktopPanel />
@@ -237,21 +237,21 @@
                 </div>
                 break;
 
-                @* ADR 0193 §7: the user's time zone (~/.config/hackeros/datetime.config). *@
+                @* ADR 0193 §7: the user's time zone (~/.config/kazoos/datetime.config). *@
             case "datetime":
                 <div class="settings-page">
                     <DateTimePanel />
                 </div>
                 break;
 
-                @* ADR 0204 §6: event sounds, volume and sound theme (~/.config/hackeros/sound.config). *@
+                @* ADR 0204 §6: event sounds, volume and sound theme (~/.config/kazoos/sound.config). *@
             case "sound":
                 <div class="settings-page">
                     <SoundPanel />
                 </div>
                 break;
 
-                @* ADR 0216 §2: "Do not disturb" (~/.config/hackeros/notifications.config). *@
+                @* ADR 0216 §2: "Do not disturb" (~/.config/kazoos/notifications.config). *@
             case "notifications":
                 <div class="settings-page">
                     <NotificationsPanel />
@@ -471,7 +471,7 @@
                 </div>
                 break;
 
-                @* ADR 0126: the OOM killer of /etc/hackeros/memory.config. *@
+                @* ADR 0126: the OOM killer of /etc/kazoos/memory.config. *@
             case "memory":
                 <div class="settings-page">
                     <MemoryPanel />

@@ -63,8 +63,8 @@ folders.
   [Trash Info]
   Path=/home/alice/note.txt
   DeletionDate=2026-10-17T08:00:00
-  X-HackerOS-Origin=deleted-on-another-device
-  X-HackerOS-Device=<identifiant de l'appareil qui a supprimé>
+  X-KazoOS-Origin=deleted-on-another-device
+  X-KazoOS-Device=<identifiant de l'appareil qui a supprimé>
   ```
 
   These copies are specific to the device: they are never sent back
@@ -97,7 +97,7 @@ A conflict arises when:
   or the deletion of a file modified locally;
 - two different files were created at the same path.
 
-Pending conflicts are in `~/.local/state/hackeros/sync-conflicts.json` (local
+Pending conflicts are in `~/.local/state/kazoos/sync-conflicts.json` (local
 state, never synchronized), so they are kept after a reload. As long as a file
 is in it, it is neither sent nor replaced; the other device's version is only
 retained for the dialog. A conflict resolves itself when both sides deleted the
@@ -138,10 +138,10 @@ writes a line to `/var/log/syslog` (sent, received, conflicts), plus a line
 when the server becomes reachable again or a pass fails.
 
 ```ini
-# /etc/hackeros/sync.config (administrateur ; l'intervalle n'est lu que là)
+# /etc/kazoos/sync.config (administrateur ; l'intervalle n'est lu que là)
 intervalMinutes = 5
 
-# ~/.config/hackeros/sync.config (utilisateur)
+# ~/.config/kazoos/sync.config (utilisateur)
 paused = true
 ```
 

@@ -12,11 +12,11 @@ commandes qui agissent sur le shell (`cd`, `export`, `sudo`…) dans
 [`shell-commands.md`](shell-commands.md).
 
 ```text
-alice@hackeros:~$ cut -d, -f1 users.csv | sort | uniq -c | sort -rn | head -3
-alice@hackeros:~$ zip -r backup.zip projets && unzip -l backup.zip
-alice@hackeros:~$ chmod +x deploy.sh && ./deploy.sh
-alice@hackeros:~$ sleep 30 & jobs; kill %1
-alice@hackeros:~$ watch -n 1 'ps | wc -l'
+alice@kazoos:~$ cut -d, -f1 users.csv | sort | uniq -c | sort -rn | head -3
+alice@kazoos:~$ zip -r backup.zip projets && unzip -l backup.zip
+alice@kazoos:~$ chmod +x deploy.sh && ./deploy.sh
+alice@kazoos:~$ sleep 30 & jobs; kill %1
+alice@kazoos:~$ watch -n 1 'ps | wc -l'
 ```
 
 ## Principes
@@ -25,7 +25,7 @@ alice@hackeros:~$ watch -n 1 'ps | wc -l'
   procps, iproute2, net-tools, Info-ZIP et systemd ; chaque valeur affichée
   vient d'une vraie source de l'OS (`/proc`, `KazoDriveInfo`,
   `KazoServiceController`, réseau simulé) ou est documentée comme simulée.
-- Les fichiers passent par l'API `Hack*` (ou la passerelle de fichiers pour
+- Les fichiers passent par l'API `Kazo*` (ou la passerelle de fichiers pour
   les commandes plus anciennes) : chemins relatifs au répertoire de la
   commande, permissions et capacités de la commande.
 - Une commande plein écran (`top`, `htop`, `watch`, `nano`) n'a l'écran
@@ -77,7 +77,7 @@ alice@hackeros:~$ watch -n 1 'ps | wc -l'
 | `zip` | `-r -q -j -d -0…-9` | Vraie archive deflate lisible par tout outil zip ; met à jour une archive existante ; les modes Unix sont stockés dans les attributs externes. |
 | `unzip` | `-l -t -p -o -n -q -j`, `-d DOSSIER`, `[MOTIFS]` | Restaure les modes (`+x`) ; refuse une entrée qui sortirait du dossier (`../`, « zip slip ») ; ne remplace pas un fichier sans `-o`. |
 | `xdg-open` | `FICHIER`, `DOSSIER` ou `URI` (un seul argument) | Comme freedesktop (ADR 0096 §3) : un chemin s'ouvre avec son association (un dossier dans le gestionnaire de fichiers, `inode/directory`), une URI avec le gestionnaire de son schéma (`x-scheme-handler/<schéma>`, le navigateur pour `http`/`https`, le fichier pour `file://`). Rend la main dès l'envoi. Codes de `xdg-open` : 0 envoyé, 1 ligne de commande, 3 aucune app, 4 fichier absent ou échec ; plusieurs apps sans défaut donnent 4 et la liste des candidates (un terminal n'a pas de sélecteur et l'OS ne devine pas). `apps.launch`. |
-| `xdg-mime` | `query default TYPE`, `query filetype FICHIER`, `default APP TYPE…` | Comme freedesktop (ADR 0121 §5) : `query default` affiche l'app qui ouvre ce type pour cet utilisateur (rien sans défaut) ; `default` écrit le choix de l'utilisateur dans `~/.config/hackeros/file-associations.json` (un `.desktop` final est ignoré ; l'app doit déclarer le type) ; `query filetype` donne `inode/directory`, le type de média déclaré pour l'extension, l'extension, ou `application/octet-stream`. Seule l'action `open`. Codes : 0, 1 ligne de commande ou cible invalide, 2 fichier absent, 4 refus. `file-associations.read`, `filesystem.user-home.write`. |
+| `xdg-mime` | `query default TYPE`, `query filetype FICHIER`, `default APP TYPE…` | Comme freedesktop (ADR 0121 §5) : `query default` affiche l'app qui ouvre ce type pour cet utilisateur (rien sans défaut) ; `default` écrit le choix de l'utilisateur dans `~/.config/kazoos/file-associations.json` (un `.desktop` final est ignoré ; l'app doit déclarer le type) ; `query filetype` donne `inode/directory`, le type de média déclaré pour l'extension, l'extension, ou `application/octet-stream`. Seule l'action `open`. Codes : 0, 1 ligne de commande ou cible invalide, 2 fichier absent, 4 refus. `file-associations.read`, `filesystem.user-home.write`. |
 
 ## Processus et services
 
@@ -111,8 +111,8 @@ alice@hackeros:~$ watch -n 1 'ps | wc -l'
 | Commande | Options | Notes |
 |---|---|---|
 | `localectl` | `status` (défaut), `list-locales`, `set-locale [VARIABLE=]LOCALE…` | Locale du système dans `/etc/locale.conf` (ADR 0104) : `status` affiche `System Locale: LANG=…` ; `list-locales` liste les 8 locales connues (`C.UTF-8`, `en_CA/GB/US`, `fr_BE/CA/CH/FR`, toutes `.UTF-8`) ; `set-locale` remplace le fichier, seulement en root (`sudo localectl set-locale LANG=fr_CA.UTF-8`), sinon `Access denied (try sudo)` et code 1. Prend effet à l'écran de connexion au prochain démarrage et, pour les utilisateurs sans `~/.config/locale.conf`, à leur prochaine connexion ([`localization.md`](../framework/localization.md)). |
-| `hackbackup` | `create`, `restore [--merge\|--replace]`, `-h` | Sauvegarde de toute la machine (ADR 0099 §1) : doit tourner en root (`sudo hackbackup create`), sinon `must be run as root` et code 1. `create` télécharge `hackeros-AAAAMMJJ-HHMMSSZ.hosbak` sur l'ordinateur hôte ; `restore` ouvre le sélecteur de fichiers du navigateur (Entrée compte comme geste), fusion par défaut, puis la machine redémarre ; sélecteur fermé ou archive refusée : code 1 ; usage invalide : code 2 ([`system-backup.md`](system-backup.md)). |
-| `hackpkg` | `install <appId\|dépôt>[@version] [--user\|--system]`, `remove <appId> [--user\|--system]`, `update [<appId>]`, `list`, `info <appId\|dépôt>`, `sources [add <source> [--trusted] \| remove <source>]`, `policy [block\|unblock app\|category\|capability <valeur>]`, `rollback <appId> [--user\|--system]`, `repair [--system]`, `-h` | Apps installées depuis leur dépôt GitHub (ADR 0182, ADR 0189, [`app-installation.md`](app-installation.md#apps-installées-depuis-un-dépôt-github)). `<dépôt>` : `github:owner/repo`, `owner/repo`, `https://github.com/owner/repo` ou `catalog:<nom>/<appId>` ; un `<appId>` seul est cherché dans les catalogues de `[catalogs]` ; listé par plusieurs, il est refusé et le message donne les `catalog:<nom>/<appId>` à choisir (ADR 0212, ADR 0215). Sans option, une app d'une source de confiance s'installe pour soi (`~/.local/share/hackeros/apps`), sans administrateur ; `--system` l'installe pour tous. Une installation pour tous, une source non fiable ou une app de la liste noire demande à chaque fois, même sous `sudo`, une connexion administrateur puis la fenêtre de validation. `update` garde chaque copie là où elle est ; `list` affiche `system` ou `user`. `sources add|remove` et `policy block|unblock` modifient `/etc/hackeros/app-sources.config` et `/etc/hackeros/app-policy.config` (un administrateur, rien sous `sudo`). Après une installation : « available now », ou « restart Kazo OS to finish » si l'app était déjà chargée dans la page (ADR 0214) ; « signature verified » pour un paquet signé. `rollback` remet la version gardée par la dernière mise à jour ; `repair` finit ou annule une installation interrompue (`--system` : aussi celles du système, avec un administrateur) ; `info` montre si la source exige une signature. `list` marque `(restart pending)` une app pas encore au catalogue et `(previous: <version>)` la version gardée. Paquet refusé : son motif et code 1 ; usage invalide : code 2. |
+| `kazobackup` | `create`, `restore [--merge\|--replace]`, `-h` | Sauvegarde de toute la machine (ADR 0099 §1) : doit tourner en root (`sudo kazobackup create`), sinon `must be run as root` et code 1. `create` télécharge `kazoos-AAAAMMJJ-HHMMSSZ.hosbak` sur l'ordinateur hôte ; `restore` ouvre le sélecteur de fichiers du navigateur (Entrée compte comme geste), fusion par défaut, puis la machine redémarre ; sélecteur fermé ou archive refusée : code 1 ; usage invalide : code 2 ([`system-backup.md`](system-backup.md)). |
+| `kazopkg` | `install <appId\|dépôt>[@version] [--user\|--system]`, `remove <appId> [--user\|--system]`, `update [<appId>]`, `list`, `info <appId\|dépôt>`, `sources [add <source> [--trusted] \| remove <source>]`, `policy [block\|unblock app\|category\|capability <valeur>]`, `rollback <appId> [--user\|--system]`, `repair [--system]`, `-h` | Apps installées depuis leur dépôt GitHub (ADR 0182, ADR 0189, [`app-installation.md`](app-installation.md#apps-installées-depuis-un-dépôt-github)). `<dépôt>` : `github:owner/repo`, `owner/repo`, `https://github.com/owner/repo` ou `catalog:<nom>/<appId>` ; un `<appId>` seul est cherché dans les catalogues de `[catalogs]` ; listé par plusieurs, il est refusé et le message donne les `catalog:<nom>/<appId>` à choisir (ADR 0212, ADR 0215). Sans option, une app d'une source de confiance s'installe pour soi (`~/.local/share/kazoos/apps`), sans administrateur ; `--system` l'installe pour tous. Une installation pour tous, une source non fiable ou une app de la liste noire demande à chaque fois, même sous `sudo`, une connexion administrateur puis la fenêtre de validation. `update` garde chaque copie là où elle est ; `list` affiche `system` ou `user`. `sources add|remove` et `policy block|unblock` modifient `/etc/kazoos/app-sources.config` et `/etc/kazoos/app-policy.config` (un administrateur, rien sous `sudo`). Après une installation : « available now », ou « restart Kazo OS to finish » si l'app était déjà chargée dans la page (ADR 0214) ; « signature verified » pour un paquet signé. `rollback` remet la version gardée par la dernière mise à jour ; `repair` finit ou annule une installation interrompue (`--system` : aussi celles du système, avec un administrateur) ; `info` montre si la source exige une signature. `list` marque `(restart pending)` une app pas encore au catalogue et `(previous: <version>)` la version gardée. Paquet refusé : son motif et code 1 ; usage invalide : code 2. |
 | `passwd` | `[NOM]`, `-d NOM`, `-S [NOM]`, `-h` | Change le mot de passe (ADR 0120, [`sensitive-settings.md`](sensitive-settings.md)) : `Current password:`, `New password:`, `Retype new password:`, lus écho coupé ; `passwd: password updated successfully`. Mauvais mot de passe courant : `Authentication token manipulation error`, code 10 ; confirmation différente : `Sorry, passwords do not match.`, code 10 ; moins de 8 caractères : `BAD PASSWORD`, code 1. Un autre compte ou `-d` exige `sudo` (`You may not view or modify password information for NOM.`), sans demander l'ancien mot de passe ; le trousseau du compte est mis de côté. `sudo passwd` sans nom refuse (pas de mot de passe root). `-S` affiche `NOM P\|NP\|L AAAA-MM-JJ 0 99999 7 -1`. Sur le fil principal (saisie du terminal). |
 
 Plus de place : une écriture refusée affiche `No space left on device`
@@ -126,7 +126,7 @@ Plus de place : une écriture refusée affiche `No space left on device`
 | `wget` | `-O FICHIER` (`-O -` = sortie), `-P DOSSIER`, `-q`, `-S`, `--spider` | Ne remplace jamais : `fichier.1`, `fichier.2`… ; progression sur la sortie d'erreur. |
 | `ip` (`ifconfig`) | `addr`, `link`, `route`, `neigh`, `-br`, `-s`, `dev NOM` | `lo` 127.0.0.1/8 et `eth0` 192.168.1.100/24 derrière le routeur 192.168.1.1 du réseau simulé, MAC stable dérivée du nom de la machine ; compteurs réels de `/proc/net/dev`. |
 | `netstat` (`ss`) | `-t -u -l -n -a -p`, `-i`, `-r`, `-s` | Les ports à l'écoute viennent de la table des ports de l'OS (`KazoIPGlobalProperties`, depuis `web/3`) : démons simulés de `localhost` et sockets des apps ; `-p` montre `PID/programme` pour root ou le même utilisateur, sinon `-` et la note de net-tools ; `-i` et `-s` lisent `/proc/net/dev`. |
-| `nslookup` | `<nom>` ou `<adresse>` | Interroge `hackdns` (`web/3`) : indique la source (`/etc/hosts`, loopback, app web, site hébergé ou réseau simulé) ; `NXDOMAIN` et code 1 si le nom est inconnu ([`listening-ports-and-dns.md`](../framework/listening-ports-and-dns.md)). |
+| `nslookup` | `<nom>` ou `<adresse>` | Interroge `kazodns` (`web/3`) : indique la source (`/etc/hosts`, loopback, app web, site hébergé ou réseau simulé) ; `NXDOMAIN` et code 1 si le nom est inconnu ([`listening-ports-and-dns.md`](../framework/listening-ports-and-dns.md)). |
 
 ## Scripts
 
@@ -146,9 +146,9 @@ Plus de place : une écriture refusée affiche `No space left on device`
   `du`, `locate`, `jobs` et `kill %1`, `kill PID` et `kill -9 PID` sur un vrai
   processus, `grep -r`, `ip`, `top -b`.
 - `Tests/Kazo.Os.Commands.Wave5.Tests` : `chmod`, `kill`, `sort`, `head`,
-  `tail`, `mkdir` (`-p`, `-v`, dossier existant, fichier sur le chemin, `..`), `hackbackup` et `hackpkg` avec les passerelles factices.
+  `tail`, `mkdir` (`-p`, `-v`, dossier existant, fichier sur le chemin, `..`), `kazobackup` et `kazopkg` avec les passerelles factices.
 - `Tests/Kazo.Os.Commands.Tests/XdgOpenCommandTests.cs` : chemin relatif, dossier, fichier absent, aucune app, plusieurs apps, URI, schéma inconnu, ligne de commande, refus (`v3/4`). Le scénario de parité (`CommandParityTests`) compare la commande dans un Web Worker et sur le fil principal.
-- `Tests/Kazo.Os.Ecosystem.Tests` : 94 apps intégrées dont 75 commandes (`stress` ajoutée par `rebuild/5-worker-processes`, `nslookup` par `web/3`, `ausearch` par `v3/8-settings-security`, `xdg-open` par `v3/4`, `hackbackup` par `v3/7`, `localectl` par `v3/12`, `xdg-mime` par `v3/4b`, `passwd` par `v3/8`, `prlimit` par `exec/2`, `nice` et `renice` par `exec/4`, `dmesg` par `exec/3`, `hackpkg` par l'ADR 0182).
+- `Tests/Kazo.Os.Ecosystem.Tests` : 94 apps intégrées dont 75 commandes (`stress` ajoutée par `rebuild/5-worker-processes`, `nslookup` par `web/3`, `ausearch` par `v3/8-settings-security`, `xdg-open` par `v3/4`, `kazobackup` par `v3/7`, `localectl` par `v3/12`, `xdg-mime` par `v3/4b`, `passwd` par `v3/8`, `prlimit` par `exec/2`, `nice` et `renice` par `exec/4`, `dmesg` par `exec/3`, `kazopkg` par l'ADR 0182).
 - `Tests/Kazo.Os.Commands.Tests` : filtres d'`ausearch` ; `LocalizedCommandsTests` et `LocalizedCommandsMzTests` exécutent des commandes avec `LANG=fr_FR.UTF-8` (`mkdir`, `rm`, `seq`, `sleep`, `printf`, `test`, `sudo`, `xdg-open`…), vérifient les mêmes clés en anglais et en français et la description et l'usage français des 75 commandes générés dans `localization/`. `NanoCommandTests` dessine les barres de `nano` en français, `LocalizationShellTests` (WorkerHost) passe par le vrai shell.
 
 ## Liste des tâches
@@ -169,10 +169,10 @@ Plus de place : une écriture refusée affiche `No space left on device`
 - [x] `xdg-mime` (`v3/4b`, ADR 0121).
 - [x] Tests et documentation.
 - [x] ADR 0069 (`rebuild/5-graceful-stop`) : `find`, `grep` (et `grep -r`), `du`, `zip`, `unzip`, `locate` appellent `KazoProcess.CheckpointAsync` dans leurs boucles ; `kill` envoie `Terminated`.
-- [x] `hackbackup` et messages `ENOSPC`/`EFBIG` (`v3/7-storage-backup`, ADR 0099).
-- [x] `hackpkg` : installer des apps depuis leur dépôt GitHub (ADR 0182).
-- [x] `hackpkg` : `--user`, `--system`, `sources add/remove`, `policy`, retrait de `--allow-untrusted` (ADR 0189, ADR 0208).
-- [x] `hackpkg` : `rollback`, `repair`, « available now », signature (ADR 0214).
+- [x] `kazobackup` et messages `ENOSPC`/`EFBIG` (`v3/7-storage-backup`, ADR 0099).
+- [x] `kazopkg` : installer des apps depuis leur dépôt GitHub (ADR 0182).
+- [x] `kazopkg` : `--user`, `--system`, `sources add/remove`, `policy`, retrait de `--allow-untrusted` (ADR 0189, ADR 0208).
+- [x] `kazopkg` : `rollback`, `repair`, « available now », signature (ADR 0214).
 - [x] `prlimit` et built-in `ulimit` ; `cat`, `grep` et `wc` disent « Too many open files » sur `EMFILE` (`exec/2-process-limits`, ADR 0125 et 0139).
 - [x] `dmesg` et `stress --vm`/`--vm-bytes`/`--vm-keep` (`exec/3-oom-killer`, ADR 0126 et 0142, [`oom-killer.md`](oom-killer.md)).
 - [x] `nice`, `renice`, `ps -l`/`-o`, colonnes `PR`/`NI` de `top` et `htop` (`exec/4-not-responding-ui`, ADR 0127, [`process-priority-and-unresponsive-windows.md`](process-priority-and-unresponsive-windows.md)).

@@ -37,7 +37,7 @@ public static class ProcReader
         string? diskStats = await TryReadAsync("/proc/diskstats", cancellationToken);
         string? netDev = await TryReadAsync("/proc/net/dev", cancellationToken);
         // ADR 0071, section 5: the Web Workers, shown with the cores; absent on a host without workers.
-        string? workers = await TryReadAsync("/proc/hackeros/workers", cancellationToken);
+        string? workers = await TryReadAsync("/proc/kazoos/workers", cancellationToken);
 
         Dictionary<long, ProcessIoSample> io = [];
         foreach (KazoProcess process in processes)

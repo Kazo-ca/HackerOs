@@ -4,7 +4,7 @@ namespace Kazo.Os.AppSdk.WebData;
 
 /// <summary>
 /// The browser database of a web site (ADR 0073 §3, ADR 0088 §1): one IndexedDB database of the host
-/// browser, named <c>hackweb.&lt;app id&gt;</c> by the OS. Behind <c>KazoWebDb</c> of the web SDK; only an
+/// browser, named <c>kazoweb.&lt;app id&gt;</c> by the OS. Behind <c>KazoWebDb</c> of the web SDK; only an
 /// app of kind <c>Web</c> receives a working one.
 /// </summary>
 /// <remarks>
@@ -14,7 +14,7 @@ namespace Kazo.Os.AppSdk.WebData;
 /// </remarks>
 public interface IAppWebDatabaseGateway
 {
-    /// <summary>Gets the name of the database, <c>hackweb.&lt;app id&gt;</c>.</summary>
+    /// <summary>Gets the name of the database, <c>kazoweb.&lt;app id&gt;</c>.</summary>
     string DatabaseName { get; }
 
     /// <summary>
@@ -41,9 +41,9 @@ public interface IAppWebDatabaseGateway
 public static class KazoWebDbNames
 {
     /// <summary>The prefix every site database has; the OS opens no other name for a site.</summary>
-    public const string Prefix = "hackweb.";
+    public const string Prefix = "kazoweb.";
 
-    /// <summary>Returns the database name of an app: <c>hackweb.&lt;appId&gt;</c>.</summary>
+    /// <summary>Returns the database name of an app: <c>kazoweb.&lt;appId&gt;</c>.</summary>
     /// <param name="appId">The app id.</param>
     public static string ForApp(string appId)
     {

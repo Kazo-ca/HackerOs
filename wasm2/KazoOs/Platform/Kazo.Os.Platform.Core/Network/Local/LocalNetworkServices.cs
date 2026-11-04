@@ -5,7 +5,7 @@ namespace Kazo.Os.Platform.Core.Network.Local;
 
 /// <summary>
 /// The local half of the OS network stack (ADR 0074), shared by every network gateway of a session:
-/// the table of listening ports, the resolver <c>hackdns</c> and on-demand activation of web apps.
+/// the table of listening ports, the resolver <c>kazodns</c> and on-demand activation of web apps.
 /// </summary>
 /// <param name="Ports">Listening ports.</param>
 /// <param name="Resolver">The resolver.</param>

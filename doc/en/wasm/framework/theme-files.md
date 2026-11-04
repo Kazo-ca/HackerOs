@@ -13,7 +13,7 @@ Settings format (ADR 0044), two sections:
 [theme]
 id = neon-crypt
 name = Neon Crypt
-base = hackeros
+base = kazoos
 platforms = desktop, mobile
 
 [tokens]
@@ -30,17 +30,17 @@ platforms = desktop, mobile
 - **Tolerant reading** (ADR 0044 §5): an unknown token, an invalid value or
   a malformed line is ignored with a warning, the rest applies.
   Only an invalid identity (`id`, `name`, `base`) rejects the whole theme.
-- Media type `text/x-hackeros-theme`: the explorer opens a `.theme` in
+- Media type `text/x-kazoos-theme`: the explorer opens a `.theme` in
   the theme editor.
 
 ### Locations
 
 | Folder | Read as | For |
 |---|---|---|
-| `/etc/hackeros/themes/` | the system | the administrator, for the whole machine |
-| `~/.config/hackeros/themes/` | the session user (the mode bits decide) | the user |
-| `/usr/share/hackeros/theme-packs/<pack>/themes/` | the system | Hack Store packs installed for everyone ([ADR 0213](../dev/adr/0213-theme-packs-build.md)) |
-| `~/.local/share/hackeros/theme-packs/<pack>/themes/` | the session user | packs installed for oneself |
+| `/etc/kazoos/themes/` | the system | the administrator, for the whole machine |
+| `~/.config/kazoos/themes/` | the session user (the mode bits decide) | the user |
+| `/usr/share/kazoos/theme-packs/<pack>/themes/` | the system | Kazo OS Store packs installed for everyone ([ADR 0213](../dev/adr/0213-theme-packs-build.md)) |
+| `~/.local/share/kazoos/theme-packs/<pack>/themes/` | the session user | packs installed for oneself |
 
 No masking: a file whose `id` reuses a built-in theme, or an `id`
 already taken by another file (the one in `/etc` wins), is refused with an
@@ -81,7 +81,7 @@ write `rgba(var(--hos-accent-rgb), .2)`.
 ## Reading API
 
 - `ThemeFile.Parse(text, origin, path)` reads a `.theme` file tolerantly and returns `ThemeFileParseResult` (theme and diagnostics); `ThemeFile.Serialize(UserTheme)` writes it.
-- `ThemeFile.IsValidId`, `ThemeFile.Extension` (`.theme`), `ThemeFile.MediaType` (`text/x-hackeros-theme`), `ThemeFile.MaxFileBytes` (64 KiB).
+- `ThemeFile.IsValidId`, `ThemeFile.Extension` (`.theme`), `ThemeFile.MediaType` (`text/x-kazoos-theme`), `ThemeFile.MaxFileBytes` (64 KiB).
 - `ThemeTokenCatalog` lists the tokens; `ThemeTokenValidator.TryValidate(type, value, culture, out normalized, out error)` checks a value.
 - `UserThemeLibrary.LoadAsync` reads the theme folders through delegates.
 

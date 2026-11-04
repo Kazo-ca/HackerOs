@@ -6,7 +6,7 @@ namespace Kazo.Os.Platform.WorkerHost.Tests;
 /// <summary>
 /// ADR 0071 ("toujours un worker prêt") and ADR 0070, sections 2 and 3: taking the ready worker,
 /// its replacement, overflow while every core is busy, return to size, ceiling, a request before the
-/// system is started, dedicated workers and <c>/proc/hackeros/workers</c>.
+/// system is started, dedicated workers and <c>/proc/kazoos/workers</c>.
 /// </summary>
 public sealed class WorkerPoolTests
 {
@@ -132,11 +132,11 @@ public sealed class WorkerPoolTests
     }
 
     [Fact]
-    public async Task Proc_hackeros_workers_lists_every_worker_with_its_role_and_processes()
+    public async Task Proc_kazoos_workers_lists_every_worker_with_its_role_and_processes()
     {
         await using OsFixture os = await StartedAsync();
 
-        ShellRun run = await os.RunAsync("cat /proc/hackeros/workers").WaitAsync(TimeSpan.FromSeconds(10));
+        ShellRun run = await os.RunAsync("cat /proc/kazoos/workers").WaitAsync(TimeSpan.FromSeconds(10));
 
         string[] lines = run.Stdout.Split('\n', StringSplitOptions.RemoveEmptyEntries);
         // ADR 0131, section 5: the file starts with the cross-origin isolation of the page (none here).
@@ -146,21 +146,21 @@ public sealed class WorkerPoolTests
         Assert.True(capacity > 0, run.Stdout);
         Assert.Equal("pool_size 1", lines[capacity + 1]);
         Assert.StartsWith("worker role", lines[capacity + 2], StringComparison.Ordinal);
-        long catPid = os.Manager.GetHistory().Last(p => p.AppId == "org.hackeros.cmd.cat").Pid.Value;
+        long catPid = os.Manager.GetHistory().Last(p => p.AppId == "org.kazoos.cmd.cat").Pid.Value;
         Assert.Contains(lines, line => line.Contains(" pool ", StringComparison.Ordinal) && line.Contains("running", StringComparison.Ordinal) && line.EndsWith($" {catPid}", StringComparison.Ordinal));
         Assert.Contains(lines, line => line.Contains(" ready ", StringComparison.Ordinal) && line.Contains("idle", StringComparison.Ordinal));
-        Assert.Contains("hackeros", (await os.RunAsync("ls /proc")).Stdout, StringComparison.Ordinal);
+        Assert.Contains("kazoos", (await os.RunAsync("ls /proc")).Stdout, StringComparison.Ordinal);
     }
 
     [Fact]
-    public async Task Without_a_worker_pool_proc_has_no_hackeros_directory()
+    public async Task Without_a_worker_pool_proc_has_no_kazoos_directory()
     {
         await using OsFixture os = await OsFixture.CreateAsync(workers: false);
 
-        ShellRun run = await os.RunAsync("cat /proc/hackeros/workers");
+        ShellRun run = await os.RunAsync("cat /proc/kazoos/workers");
 
         Assert.NotEqual(0, run.ExitCode);
-        Assert.DoesNotContain("hackeros", (await os.RunAsync("ls /proc")).Stdout, StringComparison.Ordinal);
+        Assert.DoesNotContain("kazoos", (await os.RunAsync("ls /proc")).Stdout, StringComparison.Ordinal);
     }
 
     private static int Ready(OsFixture os) => os.Pool!.GetWorkers().Count(w => w.Role == WorkerRole.Ready && w.State == WorkerState.Idle);

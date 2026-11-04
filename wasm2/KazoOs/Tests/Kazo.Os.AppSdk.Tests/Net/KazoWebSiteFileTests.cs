@@ -2,10 +2,10 @@ using Kazo.Os.AppSdk.Net.Hosting;
 
 namespace Kazo.Os.AppSdk.Tests.Net;
 
-/// <summary>The <c>.site</c> format shared by hackwebd, Web Server Manager and the resolver (ADR 0077, section 1).</summary>
+/// <summary>The <c>.site</c> format shared by kazowebd, Web Server Manager and the resolver (ADR 0077, section 1).</summary>
 public sealed class KazoWebSiteFileTests
 {
-    private const string UserPath = "/home/alice/.config/hackweb/sites/docs.site";
+    private const string UserPath = "/home/alice/.config/kazoweb/sites/docs.site";
 
     [Fact]
     public void A_minimal_file_gets_the_defaults()
@@ -40,7 +40,7 @@ public sealed class KazoWebSiteFileTests
         };
 
         string json = KazoWebSiteFile.Serialize(site);
-        KazoWebSiteDeclaration back = KazoWebSiteFile.Parse("/etc/hackweb/sites/intranet.site", json, KazoWebSiteScope.System);
+        KazoWebSiteDeclaration back = KazoWebSiteFile.Parse("/etc/kazoweb/sites/intranet.site", json, KazoWebSiteScope.System);
 
         Assert.Contains("\"directoryBrowsing\": true", json, StringComparison.Ordinal);
         Assert.EndsWith("\n", json, StringComparison.Ordinal);
@@ -114,7 +114,7 @@ public sealed class KazoWebSiteFileTests
     [Fact]
     public void Directories_follow_the_linux_convention()
     {
-        Assert.Equal("/home/alice/.config/hackweb/sites", KazoWebSiteFile.GetUserSitesDirectory("/home/alice/"));
-        Assert.Equal("/etc/hackweb/sites/docs.site", KazoWebSiteFile.GetPath(KazoWebSiteFile.SystemSitesDirectory, "docs"));
+        Assert.Equal("/home/alice/.config/kazoweb/sites", KazoWebSiteFile.GetUserSitesDirectory("/home/alice/"));
+        Assert.Equal("/etc/kazoweb/sites/docs.site", KazoWebSiteFile.GetPath(KazoWebSiteFile.SystemSitesDirectory, "docs"));
     }
 }

@@ -33,10 +33,10 @@ public enum AppInstallApprovalOperation
 /// <param name="Trust">Trust level of the source (ADR 0189 §2).</param>
 /// <param name="Capabilities">Capabilities the app declares; dangerous ones are shown first (ADR 0049).</param>
 /// <param name="Operation">Install, update or removal.</param>
-/// <param name="SystemWide">Whether it is for every user (<c>/usr/lib/hackeros/apps</c>) or for the requesting user only.</param>
+/// <param name="SystemWide">Whether it is for every user (<c>/usr/lib/kazoos/apps</c>) or for the requesting user only.</param>
 /// <param name="AdministratorLogin">The administrator who signed in at step 1.</param>
 /// <param name="RequestedBy">Session user who asked, or <see langword="null"/>.</param>
-/// <param name="Caller">App that asked (the Store, <c>hackpkg</c>, Settings).</param>
+/// <param name="Caller">App that asked (the Store, <c>kazopkg</c>, Settings).</param>
 public sealed record AppInstallApprovalRequest(
     string AppId,
     string Name,
@@ -77,7 +77,7 @@ public enum AppInstallApprovalOutcome
 
 /// <summary>
 /// The window of step 2 (ADR 0189 §4), drawn by the platform shell above every window like the
-/// authentication prompt (ADR 0055 §5); shared by the Store, <c>hackpkg</c> and Settings.
+/// authentication prompt (ADR 0055 §5); shared by the Store, <c>kazopkg</c> and Settings.
 /// </summary>
 public interface IAppInstallApprovalPrompt
 {

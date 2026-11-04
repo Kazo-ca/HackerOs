@@ -7,7 +7,7 @@ using Xunit.Abstractions;
 namespace Kazo.Os.UI.E2E.Tests;
 
 /// <summary>
-/// Boots the current OS over a <c>hackeros</c> IndexedDB database left by an older build and
+/// Boots the current OS over a <c>kazoos</c> IndexedDB database left by an older build and
 /// checks that the schema upgrade keeps files, accounts and settings (ADR 0099 section 4).
 /// </summary>
 /// <remarks>
@@ -22,7 +22,7 @@ namespace Kazo.Os.UI.E2E.Tests;
 /// <para>
 /// Then it signs in with the fixture's administrator password (the account and its credential
 /// survived), reads the fixture's file back with <c>cat</c> in the Terminal (filesystem entries,
-/// links and content chunks survived), reads <c>/etc/hackeros/appearance.config</c> (the setting
+/// links and content chunks survived), reads <c>/etc/kazoos/appearance.config</c> (the setting
 /// stored in the retired <c>settings</c> store was carried over by the settings-to-files
 /// migration, ADR 0044) and checks the database is now at version 4.
 /// </para>
@@ -214,12 +214,12 @@ public sealed partial class IndexedDbUpgradeFixtureTests(ITestOutputHelper outpu
             await WaitForTerminalTextAsync(rows, text => OutputFinished(text, fileContent), $"the content of {filePath}");
             output.WriteLine($"[test] {filePath} kept its content.");
 
-            await RunCommandAsync(page, screen, "cat /etc/hackeros/appearance.config");
+            await RunCommandAsync(page, screen, "cat /etc/kazoos/appearance.config");
             Regex setting = new($@"^\s*{Regex.Escape(settingKey)}\s*=\s*{Regex.Escape(settingValue)}\s*$", RegexOptions.Multiline);
             await WaitForTerminalTextAsync(
                 rows,
                 text => setting.IsMatch(text) && OutputFinished(text, settingValue),
-                $"{settingKey}={settingValue} in /etc/hackeros/appearance.config");
+                $"{settingKey}={settingValue} in /etc/kazoos/appearance.config");
             output.WriteLine($"[test] the appearance setting {settingKey}={settingValue} survived.");
 
             Assert.Empty(consoleErrors);

@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "org.hackeros.samples.platform-app",
+  "id": "org.kazoos.samples.platform-app",
   "name": "Platform Demo",
   "version": "1.0.0",
-  "publisherId": "pub.hackeros",
+  "publisherId": "pub.kazoos",
   "description": "Demonstrates a manifest with multiple platform entry points.",
   "kind": "window",
   "platform": {

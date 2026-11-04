@@ -6,18 +6,18 @@ namespace Kazo.Os.Server.LocalServer;
 /// <summary>
 /// Endpoints of the installable server (ADR 0191, <c>doc/en/wasm/dev/installable-server.md</c>).
 /// POST /api/auth/pair               → links a new device with a one-time pairing code (§6)
-/// GET  /api/hackeros/local-ca.crt   → the local certificate authority to approve on each device (§2)
+/// GET  /api/kazoos/local-ca.crt   → the local certificate authority to approve on each device (§2)
 /// </summary>
 public static class LocalServerEndpoints
 {
     /// <summary>Path of the local certificate authority.</summary>
-    public const string LocalCaPath = "/api/hackeros/local-ca.crt";
+    public const string LocalCaPath = "/api/kazoos/local-ca.crt";
 
     /// <summary>
     /// Configuration key of the local certificate authority file (PEM), written by the installer
     /// when the server listens on the local network in HTTPS.
     /// </summary>
-    public const string LocalCaSettingKey = "HackerOs:LocalServer:CaCertificatePath";
+    public const string LocalCaSettingKey = "KazoOs:LocalServer:CaCertificatePath";
 
     /// <summary>Registers the endpoints.</summary>
     /// <param name="app">The application.</param>
@@ -82,7 +82,7 @@ public static class LocalServerEndpoints
 
         string path = Path.IsPathRooted(configured) ? configured : Path.Combine(environment.ContentRootPath, configured);
         return File.Exists(path)
-            ? Results.File(path, "application/x-x509-ca-cert", "hackeros-local-ca.crt")
+            ? Results.File(path, "application/x-x509-ca-cert", "kazoos-local-ca.crt")
             : Results.NotFound();
     }
 }

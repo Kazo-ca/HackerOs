@@ -734,8 +734,8 @@ Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckResponse.VersionSunset.ini
 Kazo.Os.Server.Contracts.Versioning.VersioningContractsJsonContext
 Kazo.Os.Server.Contracts.Versioning.VersioningContractsJsonContext.VersioningContractsJsonContext() -> void
 Kazo.Os.Server.Contracts.Versioning.VersioningContractsJsonContext.VersioningContractsJsonContext(System.Text.Json.JsonSerializerOptions! options) -> void
-const Kazo.Os.Server.Contracts.Hosting.HostInfoRoutes.ApiPath = "/api/hackeros/host-info" -> string!
-const Kazo.Os.Server.Contracts.Hosting.HostInfoRoutes.DiscoveryFile = "hackeros-host.json" -> string!
+const Kazo.Os.Server.Contracts.Hosting.HostInfoRoutes.ApiPath = "/api/kazoos/host-info" -> string!
+const Kazo.Os.Server.Contracts.Hosting.HostInfoRoutes.DiscoveryFile = "kazoos-host.json" -> string!
 const Kazo.Os.Server.Contracts.Hosting.HostInfoRoutes.ServerProduct = "Kazo OS Server" -> string!
 const Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode.BlockedAddress = "BLOCKED_ADDRESS" -> string!
 const Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode.BlockedPort = "BLOCKED_PORT" -> string!

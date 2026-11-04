@@ -30,7 +30,7 @@ public sealed class PsCommandTests
     public async Task ExecuteAsync_ListsRealProcesses_WithoutHardcodedRows()
     {
         ProcessTable processes = new(ProcessRecordFactory.Running(
-            7, "org.hackeros.text-editor", CurrentSession, Now.AddMinutes(-5), Now.AddMinutes(-5)));
+            7, "org.kazoos.text-editor", CurrentSession, Now.AddMinutes(-5), Now.AddMinutes(-5)));
         TerminalExecutionContext context = CreateContext(processes);
 
         int exitCode = await new PsCommand(AppDefinitionMapper.ToManifest(new PsApp()))
@@ -39,8 +39,8 @@ public sealed class PsCommandTests
         string output = context.StandardOutput.ToString()!;
         Assert.Equal(0, exitCode);
         Assert.DoesNotContain("init", output);
-        Assert.DoesNotContain("hackeros-shell", output);
-        Assert.Contains("org.hackeros.text-editor", output);
+        Assert.DoesNotContain("kazoos-shell", output);
+        Assert.Contains("org.kazoos.text-editor", output);
         Assert.Contains("00:05:00", output);
         Assert.Contains("    7 R ", output);
     }
@@ -71,7 +71,7 @@ public sealed class PsCommandTests
     public async Task ExecuteAsync_WithoutProcessList_SeesOnlyItsOwnProcess()
     {
         ProcessTable processes = new(
-            ProcessRecordFactory.Running(1, "org.hackeros.commands.ps", CurrentSession, Now, Now),
+            ProcessRecordFactory.Running(1, "org.kazoos.commands.ps", CurrentSession, Now, Now),
             ProcessRecordFactory.Running(2, "someone-else", CurrentSession, Now, Now));
         TerminalExecutionContext context = CreateContext(
             processes, [AppCapabilities.FileSystemSystemRead], "-a");
@@ -79,7 +79,7 @@ public sealed class PsCommandTests
         await new PsCommand(AppDefinitionMapper.ToManifest(new PsApp())).ExecuteAsync(context, CancellationToken.None);
 
         string output = context.StandardOutput.ToString()!;
-        Assert.Contains("org.hackeros.commands.ps", output);
+        Assert.Contains("org.kazoos.commands.ps", output);
         Assert.DoesNotContain("someone-else", output);
     }
 
@@ -88,7 +88,7 @@ public sealed class PsCommandTests
     {
         LocalUserId owner = LocalUserId.FromGuid(Guid.NewGuid());
         ProcessTable processes = new(
-            ProcessRecordFactory.Running(3, "org.hackeros.calculator", CurrentSession, Now, Now, owner));
+            ProcessRecordFactory.Running(3, "org.kazoos.calculator", CurrentSession, Now, Now, owner));
         TerminalExecutionContext context = CreateContext(processes, "-u");
 
         await new PsCommand(AppDefinitionMapper.ToManifest(new PsApp())).ExecuteAsync(context, CancellationToken.None);
@@ -101,7 +101,7 @@ public sealed class PsCommandTests
     [Fact]
     public async Task ExecuteAsync_LongFormat_ShowsPriorityAndNiceness()
     {
-        ProcessRecord process = ProcessRecordFactory.Running(9, "org.hackeros.commands.sleep", CurrentSession, Now, Now);
+        ProcessRecord process = ProcessRecordFactory.Running(9, "org.kazoos.commands.sleep", CurrentSession, Now, Now);
         ProcessTable processes = new(process);
         processes.Nice[process.Pid] = 5;
         TerminalExecutionContext context = CreateContext(processes, "-l");
@@ -120,7 +120,7 @@ public sealed class PsCommandTests
     [Fact]
     public async Task ExecuteAsync_OutputFormat_PrintsTheRequestedColumns()
     {
-        ProcessRecord process = ProcessRecordFactory.Running(9, "org.hackeros.commands.sleep", CurrentSession, Now, Now);
+        ProcessRecord process = ProcessRecordFactory.Running(9, "org.kazoos.commands.sleep", CurrentSession, Now, Now);
         ProcessTable processes = new(process);
         processes.Nice[process.Pid] = -4;
         TerminalExecutionContext context = CreateContext(processes, "-o", "pid,ni,comm");

@@ -13,7 +13,7 @@ namespace Kazo.Os.AppSdk.Files;
 /// [Desktop Entry]
 /// Type=Application
 /// Name=Text Editor
-/// Exec=org.hackeros.text-editor /home/alice/notes.txt
+/// Exec=org.kazoos.text-editor /home/alice/notes.txt
 /// </code>
 /// <para>
 /// <c>Exec</c> starts with the app id, then its arguments, quoted as the specification says (an
@@ -199,7 +199,7 @@ public sealed record KazoDesktopEntry(string Name, string AppId, IReadOnlyList<s
         }
     }
 
-    /// <summary>Gets whether <paramref name="value"/> looks like an app id (<c>org.hackeros.text-editor</c>).</summary>
+    /// <summary>Gets whether <paramref name="value"/> looks like an app id (<c>org.kazoos.text-editor</c>).</summary>
     /// <param name="value">The first word of <c>Exec</c>.</param>
     public static bool IsAppId(string? value) =>
         !string.IsNullOrEmpty(value)

@@ -38,7 +38,7 @@ $ renice -n 5 -p 42
 42 (process ID) old priority 0, new priority 5
 $ ps -l
 F S UID   PID  PPID  C PRI  NI     TIME CMD
-0 R alice   1     0  0  80   0 00:00:00 org.hackeros.terminal
+0 R alice   1     0  0  80   0 00:00:00 org.kazoos.terminal
 $ ps -o pid,ni,comm
 ```
 
@@ -106,7 +106,7 @@ The "(Not responding)" suffix, the grayed content, the "Wait | End application" 
 ### Setting
 
 ```ini
-# /etc/hackeros/window-manager.config (et ~/.config/hackeros/window-manager.config)
+# /etc/kazoos/window-manager.config (et ~/.config/kazoos/window-manager.config)
 [unresponsive]
 dialog = true
 ```
@@ -115,7 +115,7 @@ dialog = true
 gray remain, and the close button still opens the box. The system file is created
 at first startup with the value commented out; an administrator can lock the
 key with `[locked]` (ADR 0044). The threshold remains that of the CPU measurement
-(`HackerOs:ResourceAccounting:Cpu:UnresponsiveThresholdMs`).
+(`KazoOs:ResourceAccounting:Cpu:UnresponsiveThresholdMs`).
 
 ### Architecture
 

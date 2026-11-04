@@ -211,7 +211,7 @@ public sealed class AppManifestValidatorTests
     {
         AppManifest manifest = CreateValidManifest() with
         {
-            Capabilities = ["topic-publish:app/org.hackeros.file-explorer/change-directory"]
+            Capabilities = ["topic-publish:app/org.kazoos.file-explorer/change-directory"]
         };
 
         ManifestValidationResult result = AppManifestValidator.Validate(manifest);
@@ -227,7 +227,7 @@ public sealed class AppManifestValidatorTests
             DeclaredTopicPermissions =
             [
                 new TopicPermissionDeclarationManifest(
-                    "topic-publish:app/org.hackeros.text-editor/change-directory",
+                    "topic-publish:app/org.kazoos.text-editor/change-directory",
                     "Allows another app to change this window's current directory.")
             ]
         };
@@ -245,7 +245,7 @@ public sealed class AppManifestValidatorTests
             DeclaredTopicPermissions =
             [
                 new TopicPermissionDeclarationManifest(
-                    "topic-publish:app/org.hackeros.some-other-app/change-directory",
+                    "topic-publish:app/org.kazoos.some-other-app/change-directory",
                     "Attempts to declare a permission for a different app's namespace.")
             ]
         };
@@ -276,16 +276,16 @@ public sealed class AppManifestValidatorTests
     {
         AppManifest manifest = CreateValidManifest() with
         {
-            Components = [new AppComponentManifest("hackeros.terminal", "Kazo.Os.Apps.TextEditor", "Kazo.Os.Apps.TextEditor.Embed")]
+            Components = [new AppComponentManifest("kazoos.terminal", "Kazo.Os.Apps.TextEditor", "Kazo.Os.Apps.TextEditor.Embed")]
         };
 
         Assert.True(AppManifestValidator.Validate(manifest).IsValid);
     }
 
     [Theory]
-    [InlineData(AppKind.Service, "hackeros.terminal", "Kazo.Os.Apps.TextEditor", "manifest.components.forbidden")]
+    [InlineData(AppKind.Service, "kazoos.terminal", "Kazo.Os.Apps.TextEditor", "manifest.components.forbidden")]
     [InlineData(AppKind.Window, "Terminal", "Kazo.Os.Apps.TextEditor", "manifest.component.contract.invalid")]
-    [InlineData(AppKind.Window, "hackeros.terminal", "Other.Assembly", "manifest.component.assembly.invalid")]
+    [InlineData(AppKind.Window, "kazoos.terminal", "Other.Assembly", "manifest.component.assembly.invalid")]
     public void Validate_rejects_invalid_components(AppKind kind, string contract, string assembly, string code)
     {
         AppManifest manifest = CreateValidManifest() with
@@ -326,7 +326,7 @@ public sealed class AppManifestValidatorTests
     [Fact]
     public void Validate_rejects_a_contract_registered_twice()
     {
-        var component = new AppComponentManifest("hackeros.terminal", "Kazo.Os.Apps.TextEditor", "Kazo.Os.Apps.TextEditor.Embed");
+        var component = new AppComponentManifest("kazoos.terminal", "Kazo.Os.Apps.TextEditor", "Kazo.Os.Apps.TextEditor.Embed");
         AppManifest manifest = CreateValidManifest() with { Components = [component, component with { Type = "Other" }] };
 
         Assert.False(AppManifestValidator.Validate(manifest).IsValid);
@@ -434,7 +434,7 @@ public sealed class AppManifestValidatorTests
 
     private static AppManifest CreateWebManifest() => CreateValidManifest() with
     {
-        Id = "org.hackeros.intranet",
+        Id = "org.kazoos.intranet",
         Name = "Intranet",
         Kind = AppKind.Web,
         Execution = AppExecutionHost.Web,
@@ -445,10 +445,10 @@ public sealed class AppManifestValidatorTests
 
     private static AppManifest CreateValidManifest() => new()
     {
-        Id = "org.hackeros.text-editor",
+        Id = "org.kazoos.text-editor",
         Name = "Text Editor",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "Edits text files in the Kazo OS virtual filesystem.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Apps.TextEditor", "Kazo.Os.Apps.TextEditor.TextEditorApp"),

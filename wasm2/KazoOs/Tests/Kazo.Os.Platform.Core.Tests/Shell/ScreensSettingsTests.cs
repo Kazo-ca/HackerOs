@@ -37,7 +37,7 @@ public sealed class ScreensSettingsTests
         await harness.BootAsync();
         await harness.LoginAsync(harness.Alice);
         await harness.WriteAsRootAsync(
-            "/home/alice/.config/hackeros/screens.config",
+            "/home/alice/.config/kazoos/screens.config",
             "[screens]\nopen = 3, 2, 3, 1, 12, x\n2 = 1920,0,1920,1080\n3 = 0,0,10,10\n");
 
         LayeredConfigSnapshot snapshot = await harness.Settings.ReadAsync(ScreensSettingsDocuments.Document);
@@ -62,7 +62,7 @@ public sealed class ScreensSettingsTests
                 new(ScreensSettingsDocuments.GeometryQualifiedKey(4), new ScreenGeometry(-1280, 0, 1280, 1024).ToString()),
             ]);
 
-        string? content = await harness.ReadAsync("/home/alice/.config/hackeros/screens.config");
+        string? content = await harness.ReadAsync("/home/alice/.config/kazoos/screens.config");
         Assert.NotNull(content);
         Assert.Contains("[screens]", content, StringComparison.Ordinal);
         LayeredConfigSnapshot snapshot = await harness.Settings.ReadAsync(ScreensSettingsDocuments.Document);
@@ -101,7 +101,7 @@ public sealed class ScreensSettingsTests
         await harness.BootAsync();
         await harness.LoginAsync(harness.Alice);
         await harness.WriteAsRootAsync(
-            "/home/alice/.config/hackeros/screens.config",
+            "/home/alice/.config/kazoos/screens.config",
             $"[taskbar]\nprimary-taskbar = {value}\n");
 
         LayeredConfigSnapshot snapshot = await harness.Settings.ReadAsync(ScreensSettingsDocuments.Document);
@@ -120,7 +120,7 @@ public sealed class ScreensSettingsTests
             ScreensSettingsDocuments.Document,
             [new(ScreensSettingsDocuments.PrimaryTaskbarQualifiedKey, ScreensSettingsDocuments.FormatPrimaryTaskbar(PrimaryTaskbarMode.Own))]);
 
-        string? content = await harness.ReadAsync("/home/alice/.config/hackeros/screens.config");
+        string? content = await harness.ReadAsync("/home/alice/.config/kazoos/screens.config");
         Assert.NotNull(content);
         Assert.Contains("[taskbar]", content, StringComparison.Ordinal);
         Assert.Contains("primary-taskbar", content, StringComparison.Ordinal);

@@ -18,7 +18,7 @@ page lit et écrit `screens.config` et pilote les écrans ouverts par `KazoScree
 | Écrans retenus | L'écran 1 (cet onglet du navigateur), puis chaque écran 2 à 9 listé dans `open` ou ayant une place valide : état « ouvert, ou proposé à la prochaine connexion » ou « fermé », place `largeur × hauteur à (gauche, haut)`. Bouton **Oublier** sur un écran fermé qui a une place. | Retire la ligne numérotée de la couche utilisateur |
 | Ouvrir et déplacer les écrans | Les autres commandes : Autre écran ▸ Nouvel écran (clic droit sur l'icône ou sur Agrandir), raccourcis `Super+Shift+←/→`, carte **Restaurer les écrans**, bouton `⤢`. | — |
 
-Le fichier est `~/.config/hackeros/screens.config` ; `/etc/hackeros/screens.config` donne les
+Le fichier est `~/.config/kazoos/screens.config` ; `/etc/kazoos/screens.config` donne les
 valeurs par défaut du système (un administrateur l'écrit, par exemple avec `sudo nano`).
 
 ## 2. Les boutons d'écran : `KazoScreens`

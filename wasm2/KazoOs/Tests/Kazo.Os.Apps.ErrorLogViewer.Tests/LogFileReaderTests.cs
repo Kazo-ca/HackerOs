@@ -46,7 +46,7 @@ public sealed class LogFileReaderTests
         await fixture.Writer.AttachAsync(fixture.Service);
         string refused = AuditLineFormat.Format(new AuditRecord(
             new DateTimeOffset(2026, 10, 17, 8, 30, 0, TimeSpan.Zero), 9, "write", "/etc/hosts", null,
-            "alice", "alice", 12, "nano", "org.hackeros.commands.nano", false, "PermissionDenied"));
+            "alice", "alice", 12, "nano", "org.kazoos.commands.nano", false, "PermissionDenied"));
         await fixture.WriteSystemFileAsync("/var/log/audit.log", refused + "\n");
 
         IReadOnlyList<LogSource> plain = await fixture.Reader.ListSourcesAsync(includeArchives: false);
@@ -58,7 +58,7 @@ public sealed class LogFileReaderTests
 
         LogRow row = Assert.Single(LogFileReader.Parse(audit, refused + "\n").Rows);
         Assert.Equal(DiagnosticSeverity.Warning, row.Line.Severity);
-        Assert.Equal("org.hackeros.commands.nano", row.Line.Source);
+        Assert.Equal("org.kazoos.commands.nano", row.Line.Source);
         Assert.Contains("/etc/hosts", row.Line.Message, StringComparison.Ordinal);
     }
 
@@ -139,7 +139,7 @@ public sealed class LogFileReaderTests
             Writer = new LogFileWriter(Clock);
             Operation = new AppOperationContext
             {
-                AppId = "org.hackeros.error-log-viewer",
+                AppId = "org.kazoos.error-log-viewer",
                 UserId = "alice",
                 UserName = "alice",
                 UserAuthority = AppAuthority.User,
@@ -175,7 +175,7 @@ public sealed class LogFileReaderTests
             FileSystemAuthorizationContext system = new(
                 new AppOperationContext
                 {
-                    AppId = "org.hackeros.kernel",
+                    AppId = "org.kazoos.kernel",
                     UserId = "system",
                     UserAuthority = AppAuthority.System,
                     GrantedCapabilities = new HashSet<string>(AppCapabilities.All, StringComparer.Ordinal),

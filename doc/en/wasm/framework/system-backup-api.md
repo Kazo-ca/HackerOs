@@ -16,7 +16,7 @@ refused **before** any write, with a message that names both versions:
 This backup uses database schema version 3; this Kazo OS uses version 4. It cannot be restored here.
 ```
 
-Name: `hackeros-AAAAMMJJ-HHMMSSZ.hosbak` (UTC time of the export).
+Name: `kazoos-AAAAMMJJ-HHMMSSZ.hosbak` (UTC time of the export).
 
 ## SDK API
 

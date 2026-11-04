@@ -13,7 +13,7 @@ public sealed class DoNotDisturbServiceTests
     public void Notifications_config_is_an_os_document_apps_may_open()
     {
         Assert.True(OsSettingsDocumentRegistry.TryGet("notifications", out OsSettingsDocument document));
-        Assert.Equal("/etc/hackeros/notifications.config", document.SystemPath.Value);
+        Assert.Equal("/etc/kazoos/notifications.config", document.SystemPath.Value);
     }
 
     [Fact]
@@ -22,7 +22,7 @@ public sealed class DoNotDisturbServiceTests
         SettingsFilesHarness harness = new();
         await harness.BootAsync();
 
-        string? system = await harness.ReadAsync("/etc/hackeros/notifications.config");
+        string? system = await harness.ReadAsync("/etc/kazoos/notifications.config");
         Assert.NotNull(system);
         Assert.Contains("doNotDisturb", system, StringComparison.Ordinal);
 
@@ -47,7 +47,7 @@ public sealed class DoNotDisturbServiceTests
 
         Assert.True(service.IsEnabled);
         Assert.True(Volatile.Read(ref changes) >= 1);
-        string? user = await harness.ReadAsync("/home/alice/.config/hackeros/notifications.config");
+        string? user = await harness.ReadAsync("/home/alice/.config/kazoos/notifications.config");
         Assert.Contains("doNotDisturb=true", user, StringComparison.Ordinal);
 
         await service.SetAsync(false);
@@ -65,7 +65,7 @@ public sealed class DoNotDisturbServiceTests
         TaskCompletionSource changed = new(TaskCreationOptions.RunContinuationsAsynchronously);
         service.Changed += () => changed.TrySetResult();
 
-        await harness.WriteAsUserAsync("/home/alice/.config/hackeros/notifications.config", "doNotDisturb=true\n");
+        await harness.WriteAsUserAsync("/home/alice/.config/kazoos/notifications.config", "doNotDisturb=true\n");
 
         await changed.Task.WaitAsync(Patience);
         Assert.True(service.IsEnabled);
@@ -97,7 +97,7 @@ public sealed class DoNotDisturbServiceTests
     {
         SettingsFilesHarness harness = new();
         await harness.BootAsync();
-        await harness.WriteAsRootAsync("/etc/hackeros/notifications.config", content);
+        await harness.WriteAsRootAsync("/etc/kazoos/notifications.config", content);
         using DoNotDisturbService service = new(harness.Settings);
 
         await service.InitializeAsync();

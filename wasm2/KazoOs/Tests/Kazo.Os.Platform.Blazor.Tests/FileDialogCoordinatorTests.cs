@@ -186,10 +186,10 @@ public sealed class FileDialogCoordinatorTests
     {
         public AppManifest Manifest { get; } = new()
         {
-            Id = "org.hackeros.dialog-test",
+            Id = "org.kazoos.dialog-test",
             Name = "Dialog Test",
             Version = "1.0.0",
-            PublisherId = "org.hackeros",
+            PublisherId = "org.kazoos",
             Description = "Dialog coordinator test app.",
             Kind = AppKind.Window,
             EntryPoint = new AppEntryPointManifest("Tests", "DialogTest"),

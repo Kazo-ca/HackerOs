@@ -5,8 +5,8 @@
   "identity": "Kazo.Os.Templates.Solution",
   "groupIdentity": "Kazo.Os.Templates.Solution",
   "name": "Kazo OS app solution",
-  "description": "A repository for a Kazo OS app: the app, a host that runs it in the OS, its tests, the Kazo OS submodule (sources in Debug, packages in Release), CI and the Hack Store publishing workflow.",
-  "shortName": "hackeros-solution",
+  "description": "A repository for a Kazo OS app: the app, a host that runs it in the OS, its tests, the Kazo OS submodule (sources in Debug, packages in Release), CI and the Kazo OS Store publishing workflow.",
+  "shortName": "kazoos-solution",
   "sourceName": "Kazo.Os.Template.Solution",
   "preferNameDirectory": true,
   "tags": { "language": "C#", "type": "solution" },
@@ -35,7 +35,7 @@
     "repository": {
       "type": "parameter",
       "datatype": "text",
-      "description": "GitHub repository of the app (owner/name), written in store/store.json for the Hack Store.",
+      "description": "GitHub repository of the app (owner/name), written in store/store.json for the Kazo OS Store.",
       "defaultValue": "example/Os-App-MyApp",
       "replaces": "example/Os-App-Template"
     }

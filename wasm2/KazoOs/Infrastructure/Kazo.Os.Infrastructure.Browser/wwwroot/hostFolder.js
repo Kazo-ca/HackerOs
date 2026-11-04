@@ -3,18 +3,18 @@
 // a computer) and mounted as network drives.
 //
 // - pick() opens showDirectoryPicker in read-write mode; the browser needs a recent user gesture;
-// - the chosen FileSystemDirectoryHandle is kept in the IndexedDB database "hackeros-host-folders"
+// - the chosen FileSystemDirectoryHandle is kept in the IndexedDB database "kazoos-host-folders"
 //   (a handle can be stored, but is not JSON), so load() finds it again after a reload; the browser
 //   then asks for its permission again (queryPermission answers "prompt") unless the user chose
 //   "Allow on every visit";
 // - .NET holds a number per open folder; paths are arrays of names below the folder.
 //
 // Errors are thrown as Error("hostfolder:<Kind>:<message>"), Kind being a HostFolderErrorKind.
-// Tests replace the dialog with globalThis.__hackerOsPickHostFolder, a function that resolves with
+// Tests replace the dialog with globalThis.__kazoOsPickHostFolder, a function that resolves with
 // a directory handle (an origin private folder of navigator.storage.getDirectory(), which has the same
 // interface and needs no dialog).
 
-const databaseName = 'hackeros-host-folders';
+const databaseName = 'kazoos-host-folders';
 const storeName = 'handles';
 const folders = new Map();
 let nextId = 1;
@@ -126,7 +126,7 @@ async function describe(handle) {
 }
 
 export function isSupported() {
-    return typeof globalThis.__hackerOsPickHostFolder === 'function'
+    return typeof globalThis.__kazoOsPickHostFolder === 'function'
         || typeof globalThis.showDirectoryPicker === 'function';
 }
 
@@ -136,15 +136,15 @@ export async function pick() {
         throw fail('Failure', 'notsupported');
     }
 
-    if (navigator.userActivation && !navigator.userActivation.isActive && !globalThis.__hackerOsPickHostFolder) {
+    if (navigator.userActivation && !navigator.userActivation.isActive && !globalThis.__kazoOsPickHostFolder) {
         throw fail('Failure', 'user activation required');
     }
 
     let handle;
     try {
-        handle = globalThis.__hackerOsPickHostFolder
-            ? await globalThis.__hackerOsPickHostFolder()
-            : await globalThis.showDirectoryPicker({ id: 'hackeros-network-drive', mode: 'readwrite' });
+        handle = globalThis.__kazoOsPickHostFolder
+            ? await globalThis.__kazoOsPickHostFolder()
+            : await globalThis.showDirectoryPicker({ id: 'kazoos-network-drive', mode: 'readwrite' });
     } catch (error) {
         if (error && error.name === 'AbortError') {
             return null;

@@ -5,7 +5,7 @@
   <PropertyGroup>
     <PackageId>Kazo.Os.Platform.RemoteRendering</PackageId>
     <Description>Trial of Kazo OS window apps rendered in a Web Worker (ADR 0129, ADR 0133): a Blazor renderer in the worker, DOM changes applied by the window's host on the page.</Description>
-    <PackageTags>hackeros;platform;blazor;web-workers</PackageTags>
+    <PackageTags>kazoos;platform;blazor;web-workers</PackageTags>
   </PropertyGroup>
 
   <!--

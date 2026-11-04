@@ -203,7 +203,7 @@ deleting anything.
 Outside this ADR. A future "HackerOs Store" system app, in the style of the Play
 Store or Microsoft Store, will read the list in the
 `Kazo-ca/Os-AppMarketPlace` repository and install through the same
-service as `hackpkg`. Note in [`../plans/hackeros-store.md`](../plans/hackeros-store.md),
+service as `hackpkg`. Note in [`../plans/kazoos-store.md`](../plans/kazoos-store.md),
 to pick up once apps are published.
 
 ## Answers

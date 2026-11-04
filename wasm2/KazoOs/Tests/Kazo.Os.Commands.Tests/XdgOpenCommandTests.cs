@@ -56,12 +56,12 @@ public sealed class XdgOpenCommandTests
     {
         FakeAppIntentGateway intents = new FakeAppIntentGateway()
             .WithOpenResult("/home/alice/notes.txt", new AppIntentOpenFileResult(
-                AppIntentOpenFileOutcome.ChooserRequired, ["org.hackeros.text-editor", "org.hackeros.code-editor"]));
+                AppIntentOpenFileOutcome.ChooserRequired, ["org.kazoos.text-editor", "org.kazoos.code-editor"]));
 
         Run run = await RunAsync(intents, "notes.txt");
 
         Assert.Equal(4, run.ExitCode);
-        Assert.Contains("org.hackeros.text-editor, org.hackeros.code-editor", run.Stderr, StringComparison.Ordinal);
+        Assert.Contains("org.kazoos.text-editor, org.kazoos.code-editor", run.Stderr, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -69,10 +69,10 @@ public sealed class XdgOpenCommandTests
     {
         FakeAppIntentGateway intents = new();
 
-        Run run = await RunAsync(intents, "https://example.hackeros/page");
+        Run run = await RunAsync(intents, "https://example.kazoos/page");
 
         Assert.Equal(0, run.ExitCode);
-        Assert.Equal("uri:https://example.hackeros/page", Assert.Single(intents.IntentRequests));
+        Assert.Equal("uri:https://example.kazoos/page", Assert.Single(intents.IntentRequests));
         Assert.Empty(intents.OpenFileRequests);
     }
 
@@ -81,7 +81,7 @@ public sealed class XdgOpenCommandTests
     {
         FakeAppIntentGateway intents = new() { NextIntentResult = new AppIntentResult(AppIntentOutcome.NoHandler) };
 
-        Run run = await RunAsync(intents, "gopher://hole.hackeros/");
+        Run run = await RunAsync(intents, "gopher://hole.kazoos/");
 
         Assert.Equal(3, run.ExitCode);
         Assert.Contains("'gopher:'", run.Stderr, StringComparison.Ordinal);
@@ -103,7 +103,7 @@ public sealed class XdgOpenCommandTests
     {
         FakeAppIntentGateway intents = new() { NextIntentResult = new AppIntentResult(AppIntentOutcome.AccessDenied, ErrorCode: "intent.capability-denied") };
 
-        Run run = await RunAsync(intents, "https://example.hackeros/");
+        Run run = await RunAsync(intents, "https://example.kazoos/");
 
         Assert.Equal(4, run.ExitCode);
         Assert.Contains("intent.capability-denied", run.Stderr, StringComparison.Ordinal);

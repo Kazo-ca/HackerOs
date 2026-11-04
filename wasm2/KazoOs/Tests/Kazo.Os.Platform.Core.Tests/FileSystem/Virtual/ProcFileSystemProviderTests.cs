@@ -38,7 +38,7 @@ public sealed class ProcFileSystemProviderTests
     public async Task Oom_files_and_vmstat_read_the_oom_score_and_the_kill_counter()
     {
         VirtualFileSystemFixture fixture = await CreateSeededAsync();
-        fixture.Processes.Active.Add(Process(42, "org.hackeros.apps.terminal"));
+        fixture.Processes.Active.Add(Process(42, "org.kazoos.apps.terminal"));
         FileSystemAuthorizationContext context = fixture.AppContext(42, Read);
 
         // ADR 0126: no table wired, every process reads 0; the score is VmRSS per mille of MemTotal.
@@ -53,7 +53,7 @@ public sealed class ProcFileSystemProviderTests
     public async Task Proc_listing_holds_visible_pids_and_system_files()
     {
         VirtualFileSystemFixture fixture = await CreateSeededAsync();
-        fixture.Processes.Active.Add(Process(42, "org.hackeros.apps.terminal"));
+        fixture.Processes.Active.Add(Process(42, "org.kazoos.apps.terminal"));
 
         FileSystemResult<FileSystemDirectorySnapshot> listing = await fixture.Service.EnumerateAsync(
             new FileSystemEnumerateRequest(VirtualPath.Parse("/proc")), fixture.AppContext(42, Read));
@@ -68,7 +68,7 @@ public sealed class ProcFileSystemProviderTests
     public async Task Status_has_the_exact_documented_format()
     {
         VirtualFileSystemFixture fixture = await CreateSeededAsync();
-        ProcessRecord process = Process(42, "org.hackeros.apps.code-editor-deluxe", parentPid: 7, kind: AppKind.Window);
+        ProcessRecord process = Process(42, "org.kazoos.apps.code-editor-deluxe", parentPid: 7, kind: AppKind.Window);
         fixture.Processes.Active.Add(process);
         fixture.Resources.ProcessSamples[process.Pid] =
         [
@@ -84,7 +84,7 @@ public sealed class ProcFileSystemProviderTests
             "Pid:\t42\n" +
             "PPid:\t7\n" +
             $"Uid:\t{Alice}\n" +
-            "AppId:\torg.hackeros.apps.code-editor-deluxe\n" +
+            "AppId:\torg.kazoos.apps.code-editor-deluxe\n" +
             "Kind:\twindow\n" +
             $"Session:\t{Session}\n" +
             "VmRSS:\t3072 kB\n" +
@@ -99,7 +99,7 @@ public sealed class ProcFileSystemProviderTests
     {
         // ADR 0066, section 4: a measurement that is off (null accountant) changes nothing but the source.
         VirtualFileSystemFixture fixture = await CreateSeededAsync(NullCpuTimeAccountant.Instance, NullMemoryAccountant.Instance);
-        ProcessRecord process = Process(42, "org.hackeros.apps.code-editor", kind: AppKind.Window);
+        ProcessRecord process = Process(42, "org.kazoos.apps.code-editor", kind: AppKind.Window);
         fixture.Processes.Active.Add(process);
         fixture.Resources.ProcessSamples[process.Pid] = [new ProcessResourceSample(process.Pid, 1, BootUtc, 0.25, 2048, 0, 0)];
 
@@ -120,7 +120,7 @@ public sealed class ProcFileSystemProviderTests
         VirtualFileSystemFixture fixture = await CreateSeededAsync(
             new FixedCpuAccountant(cpuMeasured, 0.5),
             new FixedMemoryAccountant(memoryMeasured, new ProcessMemoryUsage(0, 0, 8 * 1024 * 1024, 0, 0)));
-        ProcessRecord process = Process(42, "org.hackeros.apps.code-editor", kind: AppKind.Window);
+        ProcessRecord process = Process(42, "org.kazoos.apps.code-editor", kind: AppKind.Window);
         fixture.Processes.Active.Add(process);
         fixture.Resources.ProcessSamples[process.Pid] = [new ProcessResourceSample(process.Pid, 1, BootUtc, 0.125, 1024 * 1024, 0, 0)];
 
@@ -137,7 +137,7 @@ public sealed class ProcFileSystemProviderTests
     {
         VirtualFileSystemFixture fixture = new(
             new FixedCpuAccountant(true, 0.5, new ProcessCpuTimes(TimeSpan.FromSeconds(1.5), TimeSpan.FromSeconds(0.25), 3, TimeSpan.FromSeconds(6), false, 17)));
-        ProcessRecord process = Process(42, "org.hackeros.apps.code-editor", kind: AppKind.Window);
+        ProcessRecord process = Process(42, "org.kazoos.apps.code-editor", kind: AppKind.Window);
         fixture.Processes.Active.Add(process);
 
         string status = await fixture.ReadTextAsync("/proc/42/status", fixture.AppContext(42, Read));
@@ -152,7 +152,7 @@ public sealed class ProcFileSystemProviderTests
     public async Task Simulated_status_keeps_the_phase_four_layout()
     {
         VirtualFileSystemFixture fixture = new();
-        ProcessRecord process = Process(42, "org.hackeros.apps.code-editor", kind: AppKind.Window);
+        ProcessRecord process = Process(42, "org.kazoos.apps.code-editor", kind: AppKind.Window);
         fixture.Processes.Active.Add(process);
 
         string status = await fixture.ReadTextAsync("/proc/42/status", fixture.AppContext(42, Read));
@@ -166,7 +166,7 @@ public sealed class ProcFileSystemProviderTests
     {
         VirtualFileSystemFixture fixture = new(
             new FixedCpuAccountant(true, 0.5, new ProcessCpuTimes(TimeSpan.FromSeconds(1.5), TimeSpan.FromSeconds(0.25), 0, TimeSpan.Zero, true)));
-        ProcessRecord process = Process(42, "org.hackeros.apps.code-editor", kind: AppKind.Window);
+        ProcessRecord process = Process(42, "org.kazoos.apps.code-editor", kind: AppKind.Window);
         fixture.Processes.Active.Add(process);
         fixture.Resources.ProcessSamples[process.Pid] = [new ProcessResourceSample(process.Pid, 1, BootUtc, 0.125, 10_000, 0, 0)];
 
@@ -186,7 +186,7 @@ public sealed class ProcFileSystemProviderTests
     public async Task Stat_reports_the_priority_and_niceness_of_the_process()
     {
         VirtualFileSystemFixture fixture = new();
-        ProcessRecord process = Process(42, "org.hackeros.apps.code-editor", kind: AppKind.Window);
+        ProcessRecord process = Process(42, "org.kazoos.apps.code-editor", kind: AppKind.Window);
         fixture.Processes.Active.Add(process);
         fixture.Processes.Nice[process.Pid] = 5;
 
@@ -200,7 +200,7 @@ public sealed class ProcFileSystemProviderTests
     public async Task Simulated_stat_rebuilds_utime_from_the_simulator_history()
     {
         VirtualFileSystemFixture fixture = new();
-        ProcessRecord process = Process(42, "org.hackeros.apps.code-editor", kind: AppKind.Window);
+        ProcessRecord process = Process(42, "org.kazoos.apps.code-editor", kind: AppKind.Window);
         fixture.Processes.Active.Add(process);
         fixture.Resources.ProcessSamples[process.Pid] =
         [
@@ -244,7 +244,7 @@ public sealed class ProcFileSystemProviderTests
         VirtualFileSystemFixture fixture = await CreateSeededAsync(
             memoryAccountant: new FixedMemoryAccountant(true, new ProcessMemoryUsage(
                 ImageBytes: 40 * 1024, FileBytes: 1200 * 1024, AnonymousBytes: 3000 * 1024, KernelBytes: 512 * 1024, AllocatedBytes: 123_456_789)));
-        ProcessRecord process = Process(42, "org.hackeros.text-editor", kind: AppKind.Window);
+        ProcessRecord process = Process(42, "org.kazoos.text-editor", kind: AppKind.Window);
         fixture.Processes.Active.Add(process);
 
         string status = await fixture.ReadTextAsync("/proc/42/status", fixture.AppContext(42, Read));
@@ -281,7 +281,7 @@ public sealed class ProcFileSystemProviderTests
     {
         // ADR 0068, section 2: MemTotal from the hardware; used = measured (images once, OS heap
         // included) + the simulated memory of processes that stay simulated.
-        ProcessRecord measured = Process(42, "org.hackeros.text-editor", kind: AppKind.Window);
+        ProcessRecord measured = Process(42, "org.kazoos.text-editor", kind: AppKind.Window);
         ProcessRecord simulated = Process(43, "org.game.daemon");
         VirtualFileSystemFixture fixture = await CreateSeededAsync(
             memoryAccountant: new FixedMemoryAccountant(
@@ -347,10 +347,10 @@ public sealed class ProcFileSystemProviderTests
     public async Task Cmdline_environ_and_cwd_fall_back_when_the_process_has_no_environment_entry()
     {
         VirtualFileSystemFixture fixture = await CreateSeededAsync();
-        fixture.Processes.Active.Add(Process(42, "org.hackeros.commands.ps"));
+        fixture.Processes.Active.Add(Process(42, "org.kazoos.commands.ps"));
         FileSystemAuthorizationContext alice = fixture.AppContext(42, Read);
 
-        Assert.Equal("org.hackeros.commands.ps\0", await fixture.ReadTextAsync("/proc/42/cmdline", alice));
+        Assert.Equal("org.kazoos.commands.ps\0", await fixture.ReadTextAsync("/proc/42/cmdline", alice));
         Assert.Equal(string.Empty, await fixture.ReadTextAsync("/proc/42/environ", alice));
 
         FileSystemResult<FileSystemEntrySnapshot> cwd = await fixture.Service.StatAsync(
@@ -368,10 +368,10 @@ public sealed class ProcFileSystemProviderTests
     public async Task Cmdline_environ_and_cwd_expose_the_process_environment()
     {
         VirtualFileSystemFixture fixture = await CreateSeededAsync();
-        fixture.Processes.Active.Add(Process(42, "org.hackeros.commands.grep"));
+        fixture.Processes.Active.Add(Process(42, "org.kazoos.commands.grep"));
         fixture.Environments.Create(
             new ProcessStartRequest(
-                null, "org.hackeros.commands.grep", AppInstanceId.FromGuid(Guid.NewGuid()), AppKind.Terminal,
+                null, "org.kazoos.commands.grep", AppInstanceId.FromGuid(Guid.NewGuid()), AppKind.Terminal,
                 Alice, Session, ResourceProfile.None,
                 ["grep", "-i", "two words"],
                 VirtualPath.Parse("/home/alice/Documents"),

@@ -172,7 +172,7 @@
     <value>Could not write apps.config: {0}</value>
   </data>
   <data name="Apps.Error.NoAdmin" xml:space="preserve">
-    <value>No administrator authenticated: /etc/hackeros/apps.config was not changed.</value>
+    <value>No administrator authenticated: /etc/kazoos/apps.config was not changed.</value>
   </data>
   <data name="Apps.Error.NotAllowed" xml:space="preserve">
     <value>Settings is not allowed to manage apps (capability apps.manage).</value>
@@ -1045,10 +1045,10 @@
     <value>That app does not declare {0}.</value>
   </data>
   <data name="FileAssociations.Error.FileInvalid" xml:space="preserve">
-    <value>~/.config/hackeros/file-associations.json is not valid: fix or remove it, then try again.</value>
+    <value>~/.config/kazoos/file-associations.json is not valid: fix or remove it, then try again.</value>
   </data>
   <data name="FileAssociations.Error.WriteFailed" xml:space="preserve">
-    <value>~/.config/hackeros/file-associations.json could not be written.</value>
+    <value>~/.config/kazoos/file-associations.json could not be written.</value>
   </data>
   <data name="Tab.Memory" xml:space="preserve">
     <value>Memory</value>
@@ -1878,7 +1878,7 @@
   <data name="Cursors.Theme.system" xml:space="preserve">
     <value>System</value>
   </data>
-  <data name="Cursors.Theme.hackeros-neon" xml:space="preserve">
+  <data name="Cursors.Theme.kazoos-neon" xml:space="preserve">
     <value>Kazo OS Neon</value>
   </data>
   <data name="Cursors.Theme.gothic-crimson" xml:space="preserve">

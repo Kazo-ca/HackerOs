@@ -62,10 +62,10 @@ public sealed class FileViewLocalizationTests
 
     private static AppManifest Manifest() => new()
     {
-        Id = "org.hackeros.test-fileview-localization",
+        Id = "org.kazoos.test-fileview-localization",
         Name = "File View Localization",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "File view localization test.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Apps.FileExplorer.FileControl.Tests", "Probe"),

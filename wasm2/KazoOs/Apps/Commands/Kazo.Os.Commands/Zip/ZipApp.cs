@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Zip;
 public sealed class ZipApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.zip";
+    public override string Id => "org.kazoos.commands.zip";
 
     /// <inheritdoc />
     public override string Name => "zip";
@@ -22,7 +22,7 @@ public sealed class ZipApp : AppDefinition
     public override Type EntryPoint => typeof(ZipCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Package and compress files into a zip archive";

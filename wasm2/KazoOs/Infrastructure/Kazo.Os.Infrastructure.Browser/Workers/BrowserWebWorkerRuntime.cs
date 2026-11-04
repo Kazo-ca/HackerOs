@@ -25,7 +25,7 @@ namespace Kazo.Os.Infrastructure.Browser.Workers;
 [SupportedOSPlatform("browser")]
 public sealed partial class BrowserWebWorkerRuntime : IWebWorkerRuntime, IWebWorkerMemoryMeter
 {
-    private const string ModuleName = "hackeros-worker-host";
+    private const string ModuleName = "kazoos-worker-host";
     private const string ModulePath = "_content/Kazo.Os.Infrastructure.Browser/workerHost.js";
 
     private readonly Lazy<Task> _import = new(ImportModuleAsync);

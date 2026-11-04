@@ -22,7 +22,7 @@ implementations, in the host's composition.
 |---|---|
 | `Schema/` | `KazoOsIndexedDbSchema` (database name, version, stores and indexes), schema model, content storage policy (`FileContentStoragePolicy`). |
 | `FileSystem/` | File system provider (`IndexedDbFileSystemProvider`), reader and writer, mutation planner, seeding, maintenance, chunked content. |
-| `Sessions/`, `Policy/`, `Catalog/`, `Settings/`, `ServerConnection/`, `Sync/`, `WebData/` | One IndexedDB repository per domain (users, groups, grants, app catalog, legacy settings, server connection, sync cursors and states, ASP.Hack site databases). |
+| `Sessions/`, `Policy/`, `Catalog/`, `Settings/`, `ServerConnection/`, `Sync/`, `WebData/` | One IndexedDB repository per domain (users, groups, grants, app catalog, legacy settings, server connection, sync cursors and states, ASP.Kazo site databases). |
 | `Diagnostics/` | Persisted diagnostic and audit log, storage inspector. |
 | `Backup/` | Storage backup and restore (`IndexedDbBackupService`). |
 | `Recovery/` | `BrowserStorageRecoveryClassifier`: translates a browser error into a recovery state (ADR 0018, `StorageRecoveryState`). |
@@ -35,13 +35,13 @@ implementations, in the host's composition.
 
 ## IndexedDB database
 
-- Name: `hackeros`. Current version: **4** (`KazoOsIndexedDbSchema.CurrentVersion`).
+- Name: `kazoos`. Current version: **4** (`KazoOsIndexedDbSchema.CurrentVersion`).
   Changing the version is the only way to add, remove or modify a
   store or an index; each upgrade has its migration step.
 - Main stores: `users`, `groups`, `sessions`, `settings`, `fsEntries`
   (metadata: files, folders, links), `fsLinks`, `fsContent` (chunks),
   `catalog`, `grants`, `audit`, `diagnostics`, `syncMetadata`, `serverConnection`,
-  `syncCursors`, `syncRecordState`, and one database per ASP.Hack site (`hackweb.<appId>`).
+  `syncCursors`, `syncRecordState`, and one database per ASP.Kazo site (`kazoweb.<appId>`).
 - File content: split into chunks addressed by SHA-256, of at most 256 KiB
   by default (`FileContentStoragePolicy.DefaultMaxChunkSizeBytes`); an identical chunk
   is stored only once.
@@ -77,5 +77,5 @@ in [`system-backup.md`](system-backup.md).
 ## Links
 
 - Decisions: [ADR 0015](adr/0015-browser-storage-and-indexeddb-adapter.md), [ADR 0018](adr/0018-indexeddb-failure-and-recovery-policy.md), [ADR 0099](adr/0099-os-backup-and-low-storage.md), [ADR 0131](adr/0131-cross-origin-isolation.md).
-- File system: [`virtual-proc-and-dev.md`](virtual-proc-and-dev.md), [`../framework/hack-file-api.md`](../framework/hack-file-api.md).
+- File system: [`virtual-proc-and-dev.md`](virtual-proc-and-dev.md), [`../framework/kazo-file-api.md`](../framework/kazo-file-api.md).
 - Host and build: [`building-and-testing.md`](building-and-testing.md).

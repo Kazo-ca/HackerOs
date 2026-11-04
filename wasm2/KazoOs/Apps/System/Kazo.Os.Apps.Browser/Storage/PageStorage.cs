@@ -16,7 +16,7 @@ public interface IBrowserStorageFiles
 /// <summary>
 /// The Web Storage of the browser (ADR 0075 §3, questionnaire 8): an opaque-origin frame may not use
 /// the host's <c>localStorage</c>, so the bridge keeps a copy and the browser stores it, per site, in
-/// the user's files: <c>~/.local/share/hackeros/browser/storage/&lt;site&gt;/local-storage.json</c>,
+/// the user's files: <c>~/.local/share/kazoos/browser/storage/&lt;site&gt;/local-storage.json</c>,
 /// next to the cookies, as a real browser keeps its profile. <c>sessionStorage</c> lives in memory,
 /// for the life of the tab.
 /// </summary>
@@ -50,9 +50,9 @@ public sealed class PageStorage
         _onError = onError;
     }
 
-    /// <summary>Gets the storage directory of the current user: <c>~/.local/share/hackeros/browser/storage</c>.</summary>
+    /// <summary>Gets the storage directory of the current user: <c>~/.local/share/kazoos/browser/storage</c>.</summary>
     public static string GetRoot(string homeDirectory) =>
-        $"{homeDirectory.TrimEnd('/')}/.local/share/hackeros/browser/storage";
+        $"{homeDirectory.TrimEnd('/')}/.local/share/kazoos/browser/storage";
 
     /// <summary>Gets the file holding the <c>localStorage</c> of <paramref name="siteKey"/>.</summary>
     public string GetLocalStoragePath(string siteKey) => $"{_root}/{siteKey}/{LocalStorageFileName}";

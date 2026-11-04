@@ -5,20 +5,20 @@ using Microsoft.AspNetCore.Components;
 namespace Kazo.Os.Platform.Blazor.ContextMenus;
 
 /// <summary>
-/// The platform's provider of the contract <c>hackeros.context-menu</c> (ADR 0150 §1), rendered in
+/// The platform's provider of the contract <c>kazoos.context-menu</c> (ADR 0150 §1), rendered in
 /// place of an app's <see cref="KazoContextMenu"/>. It draws nothing there: it registers the app's
 /// menu with its window's menus and hands back the controller; the menu itself is drawn by the
 /// shell's <see cref="ContextMenuOverlay"/>, above every window.
 /// </summary>
-public sealed class PlatformContextMenu : KazoEmbeddableComponent, IHackContextMenu, IDisposable
+public sealed class PlatformContextMenu : KazoEmbeddableComponent, IKazoContextMenu, IDisposable
 {
     private IDisposable? _registration;
     private string? _registeredName;
-    private IHackMenuHost? _registeredHost;
+    private IKazoMenuHost? _registeredHost;
     private bool _controllerSent;
 
     [CascadingParameter]
-    private IHackMenuHost? Host { get; set; }
+    private IKazoMenuHost? Host { get; set; }
 
     /// <summary>Gets or sets the menu's name in its window.</summary>
     [Parameter]
@@ -37,7 +37,7 @@ public sealed class PlatformContextMenu : KazoEmbeddableComponent, IHackContextM
     public EventCallback<KazoMenuOpeningEventArgs> Opening { get; set; }
 
     /// <inheritdoc />
-    string IHackContextMenu.Name => Name;
+    string IKazoContextMenu.Name => Name;
 
     /// <inheritdoc />
     protected override void OnParametersSet()

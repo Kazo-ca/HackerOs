@@ -89,7 +89,7 @@ public sealed class ThemeComponentRenderTests
     }
 
     [Theory]
-    [InlineData(WellKnownThemeIds.HackerOs, "desktop", "preview-taskbar")]
+    [InlineData(WellKnownThemeIds.KazoOs, "desktop", "preview-taskbar")]
     [InlineData(WellKnownThemeIds.Ios, "mobile", "preview-mobile-navigation")]
     public async Task ThemePreview_renders_the_catalog_form_factor_chrome(
         string themeId,

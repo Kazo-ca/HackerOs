@@ -2189,11 +2189,11 @@ Kazo.Os.Platform.Core.Metrics.ProcessIoAccounting.RecordWrite(Kazo.Os.Simulation
 Kazo.Os.Platform.Core.Metrics.ProcessIoAccounting.Retain(System.Collections.Generic.IReadOnlyCollection<Kazo.Os.Simulation.Abstractions.Processes.ProcessId>! livePids) -> void
 Kazo.Os.Platform.Core.Network.AppNetworkGateway
 Kazo.Os.Platform.Core.Network.AppNetworkGateway.AppNetworkGateway(Kazo.Os.Simulation.Abstractions.Network.ISimulatedNetworkService! network, Kazo.Os.Simulation.Abstractions.Gateways.ICapabilityChecker! capabilities, string! appId, Kazo.Os.Platform.Core.ServerConnection.IServerConnectionService? serverConnection = null, Kazo.Os.Platform.Core.ServerConnection.IProxyClient? proxy = null, Kazo.Os.Simulation.Abstractions.Metrics.INetworkInterfaceStatistics? statistics = null, Kazo.Os.Simulation.Abstractions.Metrics.IProcessIoAccounting? processIo = null, Kazo.Os.Simulation.Abstractions.Processes.ProcessId? pid = null, Kazo.Os.Simulation.Abstractions.Processes.IKernelMemoryLedger? kernelMemory = null, Kazo.Os.Platform.Core.Network.Local.LocalNetworkCaller? local = null) -> void
-Kazo.Os.Platform.Core.Network.AppNetworkGateway.ConnectTcpAsync(string! hostNameOrAddress, int port, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<Kazo.Os.AppSdk.Net.IHackSocket!>!>
-Kazo.Os.Platform.Core.Network.AppNetworkGateway.ConnectUdpAsync(string! hostNameOrAddress, int port, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<Kazo.Os.AppSdk.Net.IHackSocket!>!>
+Kazo.Os.Platform.Core.Network.AppNetworkGateway.ConnectTcpAsync(string! hostNameOrAddress, int port, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<Kazo.Os.AppSdk.Net.IKazoSocket!>!>
+Kazo.Os.Platform.Core.Network.AppNetworkGateway.ConnectUdpAsync(string! hostNameOrAddress, int port, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<Kazo.Os.AppSdk.Net.IKazoSocket!>!>
 Kazo.Os.Platform.Core.Network.AppNetworkGateway.DetectOperatingSystemAsync(string! hostNameOrAddress, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<Kazo.Os.AppSdk.Net.KazoOsFingerprint?>!>
 Kazo.Os.Platform.Core.Network.AppNetworkGateway.GetTcpListenersAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Net.KazoTcpListenerInfo!>!>
-Kazo.Os.Platform.Core.Network.AppNetworkGateway.ListenHttpAsync(System.Collections.Generic.IReadOnlyList<string!>! prefixes, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<Kazo.Os.AppSdk.Net.IHackHttpListenerSocket!>!>
+Kazo.Os.Platform.Core.Network.AppNetworkGateway.ListenHttpAsync(System.Collections.Generic.IReadOnlyList<string!>! prefixes, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<Kazo.Os.AppSdk.Net.IKazoHttpListenerSocket!>!>
 Kazo.Os.Platform.Core.Network.AppNetworkGateway.PingAsync(string! hostNameOrAddress, System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<Kazo.Os.AppSdk.Net.KazoPingReply!>!>
 Kazo.Os.Platform.Core.Network.AppNetworkGateway.ProbeTcpAsync(string! hostNameOrAddress, int firstPort, int lastPort, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Net.KazoPortProbeResult!>!>!>
 Kazo.Os.Platform.Core.Network.AppNetworkGateway.ResolveAsync(string! hostName, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<Kazo.Os.AppSdk.Net.KazoHostEntry!>!>
@@ -2271,7 +2271,7 @@ Kazo.Os.Platform.Core.Network.Local.ListeningPortTable.ListeningPortTable(System
 Kazo.Os.Platform.Core.Network.Local.ListeningPortTable.ResponseTimeout.get -> System.TimeSpan
 Kazo.Os.Platform.Core.Network.Local.ListeningPortTable.ResponseTimeout.init -> void
 Kazo.Os.Platform.Core.Network.Local.ListeningPortTable.Snapshot() -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Platform.Core.Network.Local.ListeningSocketRow!>!
-Kazo.Os.Platform.Core.Network.Local.ListeningPortTable.TryOpen(Kazo.Os.Platform.Core.Network.Local.ListeningSocketOwner! owner, System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.WebBinding>! bindings, out string? conflict) -> Kazo.Os.AppSdk.Net.IHackHttpListenerSocket?
+Kazo.Os.Platform.Core.Network.Local.ListeningPortTable.TryOpen(Kazo.Os.Platform.Core.Network.Local.ListeningSocketOwner! owner, System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.WebBinding>! bindings, out string? conflict) -> Kazo.Os.AppSdk.Net.IKazoHttpListenerSocket?
 Kazo.Os.Platform.Core.Network.Local.ListeningSocketOwner
 Kazo.Os.Platform.Core.Network.Local.ListeningSocketOwner.<Clone>$() -> Kazo.Os.Platform.Core.Network.Local.ListeningSocketOwner!
 Kazo.Os.Platform.Core.Network.Local.ListeningSocketOwner.AppId.get -> string!
@@ -3491,7 +3491,7 @@ Kazo.Os.Platform.Core.Shell.ShellGroupCommand.Subshell.get -> bool
 Kazo.Os.Platform.Core.Shell.ShellGroupCommand.Subshell.init -> void
 Kazo.Os.Platform.Core.Shell.ShellHostService
 Kazo.Os.Platform.Core.Shell.ShellHostService.ShellHostService(Kazo.Os.Platform.Core.Shell.ShellInterpreter! interpreter, Kazo.Os.Simulation.Abstractions.Processes.IProcessManager! processes, Kazo.Os.App.Abstractions.Policy.IElevationService! elevation) -> void
-Kazo.Os.Platform.Core.Shell.ShellHostService.StartAsync(Kazo.Os.AppSdk.IAppExecutionContext! caller, Kazo.Os.Simulation.Abstractions.Sessions.AuthenticatedPrincipal! principal, System.Func<Kazo.Os.Simulation.Abstractions.Processes.ProcessRecord!, Kazo.Os.AppSdk.IAppExecutionContext!>! createShellContext, Kazo.Os.AppSdk.Shell.KazoShellOptions! options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Shell.IHackShell!>!
+Kazo.Os.Platform.Core.Shell.ShellHostService.StartAsync(Kazo.Os.AppSdk.IAppExecutionContext! caller, Kazo.Os.Simulation.Abstractions.Sessions.AuthenticatedPrincipal! principal, System.Func<Kazo.Os.Simulation.Abstractions.Processes.ProcessRecord!, Kazo.Os.AppSdk.IAppExecutionContext!>! createShellContext, Kazo.Os.AppSdk.Shell.KazoShellOptions! options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Shell.IKazoShell!>!
 Kazo.Os.Platform.Core.Shell.ShellIfBranch
 Kazo.Os.Platform.Core.Shell.ShellIfBranch.<Clone>$() -> Kazo.Os.Platform.Core.Shell.ShellIfBranch!
 Kazo.Os.Platform.Core.Shell.ShellIfBranch.Body.get -> Kazo.Os.Platform.Core.Shell.ShellCommandList!
@@ -3979,24 +3979,24 @@ const Kazo.Os.Platform.Core.Appearance.AppearanceSettingsDocuments.MobileWallpap
 const Kazo.Os.Platform.Core.Appearance.AppearanceSettingsDocuments.WallpaperFitKey = "wallpaperFit" -> string!
 const Kazo.Os.Platform.Core.Appearance.AppearanceSettingsDocuments.WallpaperKey = "wallpaper" -> string!
 const Kazo.Os.Platform.Core.Appearance.CursorSettingsDocuments.ThemeKey = "theme" -> string!
-const Kazo.Os.Platform.Core.Apps.AppEnablementToFilesMigration.MarkerPath = "/var/lib/hackeros/migrations/app-enablement-to-files" -> string!
+const Kazo.Os.Platform.Core.Apps.AppEnablementToFilesMigration.MarkerPath = "/var/lib/kazoos/migrations/app-enablement-to-files" -> string!
 const Kazo.Os.Platform.Core.Apps.AppsConfigDocument.FileName = "apps.config" -> string!
 const Kazo.Os.Platform.Core.Apps.AppsConfigDocument.InstalledSection = "installed" -> string!
-const Kazo.Os.Platform.Core.Apps.AppsConfigDocument.MachineDefaultContent = "# Apps uninstalled for every user of this machine (ADR 0048).\n# One app ID per line under [uninstalled], set to true. Remove the line (or set it to false)\n# to reinstall. System apps cannot be uninstalled: their lines are ignored. No data is deleted.\n# Users uninstall apps for themselves in ~/.config/hackeros/apps.config.\n[uninstalled]\n" -> string!
+const Kazo.Os.Platform.Core.Apps.AppsConfigDocument.MachineDefaultContent = "# Apps uninstalled for every user of this machine (ADR 0048).\n# One app ID per line under [uninstalled], set to true. Remove the line (or set it to false)\n# to reinstall. System apps cannot be uninstalled: their lines are ignored. No data is deleted.\n# Users uninstall apps for themselves in ~/.config/kazoos/apps.config.\n[uninstalled]\n" -> string!
 const Kazo.Os.Platform.Core.Apps.AppsConfigDocument.Section = "uninstalled" -> string!
-const Kazo.Os.Platform.Core.Apps.AppsConfigDocument.UserDefaultContent = "# Apps you uninstalled for yourself (ADR 0048). Same format as /etc/hackeros/apps.config.\n[uninstalled]\n" -> string!
+const Kazo.Os.Platform.Core.Apps.AppsConfigDocument.UserDefaultContent = "# Apps you uninstalled for yourself (ADR 0048). Same format as /etc/kazoos/apps.config.\n[uninstalled]\n" -> string!
 const Kazo.Os.Platform.Core.Apps.Packages.AppCatalogDocument.AppKind = "app" -> string!
 const Kazo.Os.Platform.Core.Apps.Packages.AppCatalogDocument.MaximumBytes = 8388608 -> int
 const Kazo.Os.Platform.Core.Apps.Packages.AppCatalogDocument.SupportedSchemaVersion = 1 -> int
 const Kazo.Os.Platform.Core.Apps.Packages.AppCatalogDocument.ThemePackKind = "theme-pack" -> string!
-const Kazo.Os.Platform.Core.Apps.Packages.AppDataGuard.BackupsUnderHome = ".local/share/hackeros/app-backups" -> string!
+const Kazo.Os.Platform.Core.Apps.Packages.AppDataGuard.BackupsUnderHome = ".local/share/kazoos/app-backups" -> string!
 const Kazo.Os.Platform.Core.Apps.Packages.AppDataGuard.MaximumBackups = 2 -> int
-const Kazo.Os.Platform.Core.Apps.Packages.AppDataGuard.PreviousVersionVariable = "HACKEROS_PREVIOUS_VERSION" -> string!
-const Kazo.Os.Platform.Core.Apps.Packages.AppDataGuard.VersionsConfigUnderHome = ".config/hackeros/app-data-versions.config" -> string!
+const Kazo.Os.Platform.Core.Apps.Packages.AppDataGuard.PreviousVersionVariable = "KAZOOS_PREVIOUS_VERSION" -> string!
+const Kazo.Os.Platform.Core.Apps.Packages.AppDataGuard.VersionsConfigUnderHome = ".config/kazoos/app-data-versions.config" -> string!
 const Kazo.Os.Platform.Core.Apps.Packages.AppDataGuard.VersionsSection = "versions" -> string!
 const Kazo.Os.Platform.Core.Apps.Packages.AppPackage.AssetFolder = "wwwroot/" -> string!
-const Kazo.Os.Platform.Core.Apps.Packages.AppPackage.DescriptionFileName = "hackeros-package.json" -> string!
-const Kazo.Os.Platform.Core.Apps.Packages.AppPackage.Extension = ".hackapp" -> string!
+const Kazo.Os.Platform.Core.Apps.Packages.AppPackage.DescriptionFileName = "kazoos-package.json" -> string!
+const Kazo.Os.Platform.Core.Apps.Packages.AppPackage.Extension = ".kazoapp" -> string!
 const Kazo.Os.Platform.Core.Apps.Packages.AppPackage.LibraryFolder = "lib/" -> string!
 const Kazo.Os.Platform.Core.Apps.Packages.AppPackage.ManifestFileName = "manifest.json" -> string!
 const Kazo.Os.Platform.Core.Apps.Packages.AppPackage.MaximumArchiveBytes = 67108864 -> long
@@ -4008,7 +4008,7 @@ const Kazo.Os.Platform.Core.Apps.Packages.AppPackageDefaults.MetadataPrefix = "K
 const Kazo.Os.Platform.Core.Apps.Packages.AppPackageDefaults.OfficialCatalogAddress = "https://raw.githubusercontent.com/Kazo-ca/Os-AppMarketPlace/packages/catalog.json" -> string!
 const Kazo.Os.Platform.Core.Apps.Packages.AppPackageDefaults.OfficialCatalogSigningKey = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAETFtnNlpmUlpSvnqWeaHkF7t5v51wpoZrHW06ziYPigF0jJUnyQkd09C7Vxbl37RTq9Qg+sd1u16gtx2soqK0/g==" -> string!
 const Kazo.Os.Platform.Core.Apps.Packages.AppPackageIndex.MaximumBytes = 1048576 -> int
-const Kazo.Os.Platform.Core.Apps.Packages.AppPackageInstaller.InstallRecordFileName = ".hackeros-install" -> string!
+const Kazo.Os.Platform.Core.Apps.Packages.AppPackageInstaller.InstallRecordFileName = ".kazoos-install" -> string!
 const Kazo.Os.Platform.Core.Apps.Packages.AppPackageInstaller.MaximumCatalogTextBytes = 65536 -> int
 const Kazo.Os.Platform.Core.Apps.Packages.AppPackageInstaller.PartialSuffix = ".partial" -> string!
 const Kazo.Os.Platform.Core.Apps.Packages.AppPackageInstaller.TransactionFileName = ".transaction" -> string!
@@ -4018,7 +4018,7 @@ const Kazo.Os.Platform.Core.Apps.Packages.AppPackageSignature.SignatureLength = 
 const Kazo.Os.Platform.Core.Apps.Packages.AppPackageSource.CatalogScheme = "catalog:" -> string!
 const Kazo.Os.Platform.Core.Apps.Packages.AppPackageSource.GitHubScheme = "github:" -> string!
 const Kazo.Os.Platform.Core.Apps.Packages.AppPackageSource.IndexFileName = "index.json" -> string!
-const Kazo.Os.Platform.Core.Apps.Packages.AppPackageSource.PackagesBranch = "hackeros-packages" -> string!
+const Kazo.Os.Platform.Core.Apps.Packages.AppPackageSource.PackagesBranch = "kazoos-packages" -> string!
 const Kazo.Os.Platform.Core.Apps.Packages.AppPolicyConfigDocument.AppsSection = "blocked-apps" -> string!
 const Kazo.Os.Platform.Core.Apps.Packages.AppPolicyConfigDocument.CapabilitiesSection = "blocked-capabilities" -> string!
 const Kazo.Os.Platform.Core.Apps.Packages.AppPolicyConfigDocument.CategoriesSection = "blocked-categories" -> string!
@@ -4035,13 +4035,13 @@ const Kazo.Os.Platform.Core.Apps.Packages.AppSourcesConfigDocument.IntervalHours
 const Kazo.Os.Platform.Core.Apps.Packages.AppSourcesConfigDocument.SigningKeysSection = "signing-keys" -> string!
 const Kazo.Os.Platform.Core.Apps.Packages.AppSourcesConfigDocument.TrustedSection = "trusted" -> string!
 const Kazo.Os.Platform.Core.Apps.Packages.AppSourcesConfigDocument.UpdatesSection = "updates" -> string!
-const Kazo.Os.Platform.Core.Apps.Packages.AppUpdateMonitor.StoreAppId = "org.hackeros.store" -> string!
+const Kazo.Os.Platform.Core.Apps.Packages.AppUpdateMonitor.StoreAppId = "org.kazoos.store" -> string!
 const Kazo.Os.Platform.Core.Apps.Packages.AppUpdateMonitor.UpdatesPageArgument = "--page=installed" -> string!
 const Kazo.Os.Platform.Core.Apps.Packages.InstalledAppsLayout.HomesRoot = "/home" -> string!
-const Kazo.Os.Platform.Core.Apps.Packages.InstalledAppsLayout.PersonalConfigDefaultContent = "# Apps you installed for yourself (ADR 0189 section 3), read when your session opens.\n# Use hackpkg install --user | remove --user to change this list.\n[installed]\n" -> string!
-const Kazo.Os.Platform.Core.Apps.Packages.InstalledAppsLayout.PersonalConfigUnderHome = ".config/hackeros/installed-apps.config" -> string!
-const Kazo.Os.Platform.Core.Apps.Packages.InstalledAppsLayout.PersonalRootUnderHome = ".local/share/hackeros/apps" -> string!
-const Kazo.Os.Platform.Core.Apps.Packages.InstalledAppsLayout.Root = "/usr/lib/hackeros/apps" -> string!
+const Kazo.Os.Platform.Core.Apps.Packages.InstalledAppsLayout.PersonalConfigDefaultContent = "# Apps you installed for yourself (ADR 0189 section 3), read when your session opens.\n# Use kazopkg install --user | remove --user to change this list.\n[installed]\n" -> string!
+const Kazo.Os.Platform.Core.Apps.Packages.InstalledAppsLayout.PersonalConfigUnderHome = ".config/kazoos/installed-apps.config" -> string!
+const Kazo.Os.Platform.Core.Apps.Packages.InstalledAppsLayout.PersonalRootUnderHome = ".local/share/kazoos/apps" -> string!
+const Kazo.Os.Platform.Core.Apps.Packages.InstalledAppsLayout.Root = "/usr/lib/kazoos/apps" -> string!
 const Kazo.Os.Platform.Core.Apps.ThemePacks.ThemePack.MaximumBytes = 31457280 -> long
 const Kazo.Os.Platform.Core.Apps.ThemePacks.ThemePack.MaximumFiles = 2000 -> int
 const Kazo.Os.Platform.Core.Apps.ThemePacks.ThemePack.MaximumManifestBytes = 262144 -> int
@@ -4053,18 +4053,18 @@ const Kazo.Os.Platform.Core.Apps.ThemePacks.ThemePack.SupportedSchemaVersion = 1
 const Kazo.Os.Platform.Core.Backup.SystemBackupService.CreateAction = "system.backup.create" -> string!
 const Kazo.Os.Platform.Core.Backup.SystemBackupService.RestoreAction = "system.backup.restore" -> string!
 const Kazo.Os.Platform.Core.Clipboard.ClipboardSettingsDocuments.SharingKey = "sharing" -> string!
-const Kazo.Os.Platform.Core.Clipboard.HostClipboardBridge.HostFilesMediaType = "application/x-hackeros-host-files" -> string!
+const Kazo.Os.Platform.Core.Clipboard.HostClipboardBridge.HostFilesMediaType = "application/x-kazoos-host-files" -> string!
 const Kazo.Os.Platform.Core.Clipboard.SystemClipboard.TextMediaType = "text/plain" -> string!
 const Kazo.Os.Platform.Core.ComponentProviders.ComponentProviderService.AuditAction = "component.provider" -> string!
 const Kazo.Os.Platform.Core.ComponentProviders.ComponentProvidersDocument.FileName = "components.config" -> string!
 const Kazo.Os.Platform.Core.ComponentProviders.ComponentProvidersDocument.ProvidersGroup = "providers" -> string!
-const Kazo.Os.Platform.Core.ComponentProviders.ComponentProvidersDocument.SystemPath = "/etc/hackeros/components.config" -> string!
-const Kazo.Os.Platform.Core.ContextMenus.FileContextMenuLauncher.ShellAppId = "org.hackeros.shell" -> string!
+const Kazo.Os.Platform.Core.ComponentProviders.ComponentProvidersDocument.SystemPath = "/etc/kazoos/components.config" -> string!
+const Kazo.Os.Platform.Core.ContextMenus.FileContextMenuLauncher.ShellAppId = "org.kazoos.shell" -> string!
 const Kazo.Os.Platform.Core.ContextMenus.FileContextMenuMatcher.DirectoryMediaType = "inode/directory" -> string!
 const Kazo.Os.Platform.Core.ContextMenus.FileContextMenuPreferences.FileName = "context-menus.config" -> string!
-const Kazo.Os.Platform.Core.ContextMenus.FileContextMenuPreferences.Header = "# ~/.config/hackeros/context-menus.config\n# File menu entries added by apps that you hid (ADR 0151). One '<app id>.<entry>=true' line\n# per hidden entry; change it in Settings > File menus.\n" -> string!
+const Kazo.Os.Platform.Core.ContextMenus.FileContextMenuPreferences.Header = "# ~/.config/kazoos/context-menus.config\n# File menu entries added by apps that you hid (ADR 0151). One '<app id>.<entry>=true' line\n# per hidden entry; change it in Settings > File menus.\n" -> string!
 const Kazo.Os.Platform.Core.ContextMenus.FileContextMenuPreferences.HiddenGroup = "hidden" -> string!
-const Kazo.Os.Platform.Core.ContextMenus.FileContextMenuRegistry.DirectoryPath = "/etc/hackeros/context-menus.d" -> string!
+const Kazo.Os.Platform.Core.ContextMenus.FileContextMenuRegistry.DirectoryPath = "/etc/kazoos/context-menus.d" -> string!
 const Kazo.Os.Platform.Core.Diagnostics.FileAuditLog.RecentEntryCapacity = 512 -> int
 const Kazo.Os.Platform.Core.Diagnostics.KernelLog.Capacity = 1024 -> int
 const Kazo.Os.Platform.Core.Diagnostics.KernelLog.Source = "kernel" -> string!
@@ -4079,7 +4079,7 @@ const Kazo.Os.Platform.Core.Events.KernelPublisherIdentity.AppId = "kernel" -> s
 const Kazo.Os.Platform.Core.Execution.BackgroundJobService.MaxPayloadBytes = 16777216 -> int
 const Kazo.Os.Platform.Core.FileSystem.HostFolders.HostFolderFileSystemProvider.FileSystemType = "hostfs" -> string!
 const Kazo.Os.Platform.Core.FileSystem.HostFolders.HostFolderFileSystemProvider.ProviderIdPrefix = "hostfs:" -> string!
-const Kazo.Os.Platform.Core.FileSystem.HostFolders.NetworkDriveService.TableRelativePath = ".local/state/hackeros/network-drives.json" -> string!
+const Kazo.Os.Platform.Core.FileSystem.HostFolders.NetworkDriveService.TableRelativePath = ".local/state/kazoos/network-drives.json" -> string!
 const Kazo.Os.Platform.Core.FileSystem.TestDemoFixtureSeeder.AlphaContent = "Alpha fixture file for Kazo OS E2E tests.\n" -> string!
 const Kazo.Os.Platform.Core.FileSystem.TestDemoFixtureSeeder.AlphaFileName = "alpha.txt" -> string!
 const Kazo.Os.Platform.Core.FileSystem.TestDemoFixtureSeeder.EditableFileName = "editable.txt" -> string!
@@ -4091,7 +4091,7 @@ const Kazo.Os.Platform.Core.FileSystem.TestDemoFixtureSeeder.NestedFileName = "b
 const Kazo.Os.Platform.Core.FileSystem.TestDemoFixtureSeeder.SiteAboutContent = "<!DOCTYPE html><html><head><title>About</title></head><body><h1 id=\"about\">About page</h1></body></html>\n" -> string!
 const Kazo.Os.Platform.Core.FileSystem.TestDemoFixtureSeeder.SiteDirectoryName = "e2e-site" -> string!
 const Kazo.Os.Platform.Core.FileSystem.TestDemoFixtureSeeder.SiteIndexContent = "<!DOCTYPE html>\n<html>\n<head><meta charset=\"utf-8\"><title>E2E local site</title><link rel=\"stylesheet\" href=\"style.css\"></head>\n<body>\n<h1 id=\"title\">Local site</h1>\n<p id=\"script-status\">script not run</p>\n<p id=\"storage-status\"></p>\n<p id=\"fetch-status\">fetch pending</p>\n<a id=\"about-link\" href=\"about.html\">About</a>\n<script src=\"app.js\"></script>\n</body>\n</html>" -> string!
-const Kazo.Os.Platform.Core.FileSystem.TestDemoFixtureSeeder.SiteScriptContent = "document.getElementById(\"script-status\").textContent = \"script ran\";\nconsole.log(\"e2e-site-loaded\");\nconst visits = Number(localStorage.getItem(\"visits\") || \"0\") + 1;\nlocalStorage.setItem(\"visits\", String(visits));\ndocument.getElementById(\"storage-status\").textContent = \"visits=\" + visits;\nfetch(\"https://example.hackeros/api/ping\")\n    .then((response) => response.json())\n    .then((body) => { document.getElementById(\"fetch-status\").textContent = body.pong ? \"pong\" : \"no pong\"; })\n    .catch((error) => { document.getElementById(\"fetch-status\").textContent = \"fetch failed: \" + error; });" -> string!
+const Kazo.Os.Platform.Core.FileSystem.TestDemoFixtureSeeder.SiteScriptContent = "document.getElementById(\"script-status\").textContent = \"script ran\";\nconsole.log(\"e2e-site-loaded\");\nconst visits = Number(localStorage.getItem(\"visits\") || \"0\") + 1;\nlocalStorage.setItem(\"visits\", String(visits));\ndocument.getElementById(\"storage-status\").textContent = \"visits=\" + visits;\nfetch(\"https://example.kazoos/api/ping\")\n    .then((response) => response.json())\n    .then((body) => { document.getElementById(\"fetch-status\").textContent = body.pong ? \"pong\" : \"no pong\"; })\n    .catch((error) => { document.getElementById(\"fetch-status\").textContent = \"fetch failed: \" + error; });" -> string!
 const Kazo.Os.Platform.Core.FileSystem.TestDemoFixtureSeeder.SiteStyleContent = "#title { color: rgb(255, 0, 0); }\n" -> string!
 const Kazo.Os.Platform.Core.FileSystem.Virtual.MountDescription.IndexedDbType = "idbfs" -> string!
 const Kazo.Os.Platform.Core.FileSystem.Virtual.VirtualFileSystemProvider.SystemPrincipal = "system" -> string!
@@ -4099,26 +4099,26 @@ const Kazo.Os.Platform.Core.Globalization.TimeZoneSettingsDocuments.TimeZoneKey 
 const Kazo.Os.Platform.Core.Intents.AppIntentDispatcher.DirectoryMediaType = "inode/directory" -> string!
 const Kazo.Os.Platform.Core.Intents.AppIntentDispatcher.SelectArgumentPrefix = "--select=" -> string!
 const Kazo.Os.Platform.Core.Intents.AppIntentDispatcher.SettingsAppArgumentPrefix = "--app=" -> string!
-const Kazo.Os.Platform.Core.Intents.AppIntentDispatcher.SettingsAppId = "org.hackeros.settings" -> string!
+const Kazo.Os.Platform.Core.Intents.AppIntentDispatcher.SettingsAppId = "org.kazoos.settings" -> string!
 const Kazo.Os.Platform.Core.Intents.AppIntentDispatcher.ShowSettingsArgument = "--show-settings" -> string!
-const Kazo.Os.Platform.Core.Intents.FileAssociationSettingsDocuments.DefaultContent = "{\"schemaVersion\":1,\"associations\":[{\"mediaType\":\"inode/directory\",\"appId\":\"org.hackeros.file-explorer\",\"actions\":[\"open\"]},{\"mediaType\":\"x-scheme-handler/http\",\"appId\":\"org.hackeros.browser\",\"actions\":[\"open\"]},{\"mediaType\":\"x-scheme-handler/https\",\"appId\":\"org.hackeros.browser\",\"actions\":[\"open\"]},{\"extension\":\".png\",\"appId\":\"org.hackeros.hack-paint\",\"actions\":[\"edit\"]},{\"extension\":\".jpg\",\"appId\":\"org.hackeros.hack-paint\",\"actions\":[\"edit\"]},{\"extension\":\".jpeg\",\"appId\":\"org.hackeros.hack-paint\",\"actions\":[\"edit\"]},{\"extension\":\".bmp\",\"appId\":\"org.hackeros.hack-paint\",\"actions\":[\"edit\"]},{\"extension\":\".gif\",\"appId\":\"org.hackeros.hack-paint\",\"actions\":[\"edit\"]},{\"extension\":\".webp\",\"appId\":\"org.hackeros.hack-paint\",\"actions\":[\"edit\"]}]}" -> string!
+const Kazo.Os.Platform.Core.Intents.FileAssociationSettingsDocuments.DefaultContent = "{\"schemaVersion\":1,\"associations\":[{\"mediaType\":\"inode/directory\",\"appId\":\"org.kazoos.file-explorer\",\"actions\":[\"open\"]},{\"mediaType\":\"x-scheme-handler/http\",\"appId\":\"org.kazoos.browser\",\"actions\":[\"open\"]},{\"mediaType\":\"x-scheme-handler/https\",\"appId\":\"org.kazoos.browser\",\"actions\":[\"open\"]},{\"extension\":\".png\",\"appId\":\"org.kazoos.kazo-paint\",\"actions\":[\"edit\"]},{\"extension\":\".jpg\",\"appId\":\"org.kazoos.kazo-paint\",\"actions\":[\"edit\"]},{\"extension\":\".jpeg\",\"appId\":\"org.kazoos.kazo-paint\",\"actions\":[\"edit\"]},{\"extension\":\".bmp\",\"appId\":\"org.kazoos.kazo-paint\",\"actions\":[\"edit\"]},{\"extension\":\".gif\",\"appId\":\"org.kazoos.kazo-paint\",\"actions\":[\"edit\"]},{\"extension\":\".webp\",\"appId\":\"org.kazoos.kazo-paint\",\"actions\":[\"edit\"]}]}" -> string!
 const Kazo.Os.Platform.Core.Isolation.CrossOriginIsolationPolicy.AuditPassed = true -> bool
 const Kazo.Os.Platform.Core.Isolation.CrossOriginIsolationPolicy.EmbedderPolicy = "credentialless" -> string!
 const Kazo.Os.Platform.Core.Isolation.CrossOriginIsolationPolicy.EmbedderPolicyHeader = "Cross-Origin-Embedder-Policy" -> string!
 const Kazo.Os.Platform.Core.Isolation.CrossOriginIsolationPolicy.OpenerPolicy = "same-origin" -> string!
 const Kazo.Os.Platform.Core.Isolation.CrossOriginIsolationPolicy.OpenerPolicyHeader = "Cross-Origin-Opener-Policy" -> string!
-const Kazo.Os.Platform.Core.Isolation.CrossOriginIsolationPolicy.SettingKey = "HackerOs:CrossOriginIsolation" -> string!
+const Kazo.Os.Platform.Core.Isolation.CrossOriginIsolationPolicy.SettingKey = "KazoOs:CrossOriginIsolation" -> string!
 const Kazo.Os.Platform.Core.Isolation.CrossOriginIsolationPolicy.StrictEmbedderPolicy = "require-corp" -> string!
 const Kazo.Os.Platform.Core.Keyring.ManagedKeyringCipher.TagLength = 16 -> int
 const Kazo.Os.Platform.Core.Keyring.UserKeyringService.DefaultIterations = 210000 -> int
 const Kazo.Os.Platform.Core.Keyring.UserKeyringService.KeyringDirectory = ".local/share/keyrings" -> string!
 const Kazo.Os.Platform.Core.Keyring.UserKeyringService.LoginKeyringName = "login.keyring" -> string!
-const Kazo.Os.Platform.Core.Keyring.UserKeyringService.PrfKeyPrefix = "hackeros-keyring-prf-v1" -> string!
+const Kazo.Os.Platform.Core.Keyring.UserKeyringService.PrfKeyPrefix = "kazoos-keyring-prf-v1" -> string!
 const Kazo.Os.Platform.Core.Lifecycle.AppLifecycleOrchestrator.ProcessLimitErrorCode = "lifecycle.process.eagain" -> string!
 const Kazo.Os.Platform.Core.Metrics.BlockDeviceStatistics.SectorSize = 512 -> int
 const Kazo.Os.Platform.Core.Metrics.CpuTimeAccounting.UserHz = 100 -> int
 const Kazo.Os.Platform.Core.Network.AppNetworkGateway.SocketBufferBytes = 147456 -> long
-const Kazo.Os.Platform.Core.Network.Local.KazoDnsResolver.DefaultHostsFileContent = "# /etc/hosts: static table of host names, read first by hackdns (ADR 0074).\n# <address> <canonical name> [aliases...]; edit as root, the change applies at once.\n127.0.0.1\tlocalhost\n127.0.1.1\thackeros\n" -> string!
+const Kazo.Os.Platform.Core.Network.Local.KazoDnsResolver.DefaultHostsFileContent = "# /etc/hosts: static table of host names, read first by kazodns (ADR 0074).\n# <address> <canonical name> [aliases...]; edit as root, the change applies at once.\n127.0.0.1\tlocalhost\n127.0.1.1\tkazoos\n" -> string!
 const Kazo.Os.Platform.Core.Notifications.NotificationSettingsDocuments.DoNotDisturbKey = "doNotDisturb" -> string!
 const Kazo.Os.Platform.Core.Notifications.NotificationSettingsDocuments.DocumentId = "notifications" -> string!
 const Kazo.Os.Platform.Core.Policy.AppPermissionsDocument.AllowValue = "allow" -> string!
@@ -4139,7 +4139,7 @@ const Kazo.Os.Platform.Core.Processes.InMemoryProcessManager.CpuLimitExitCode = 
 const Kazo.Os.Platform.Core.Processes.InMemoryProcessOomScoreTable.Exempt = -1000 -> int
 const Kazo.Os.Platform.Core.Processes.InMemoryProcessOomScoreTable.Maximum = 1000 -> int
 const Kazo.Os.Platform.Core.Processes.LoginEnvironment.DefaultEnvironmentFileContent = "# /etc/environment: system-wide environment of every login session (ADR 0050).\n# One NAME=value per line; HOME, USER and LOGNAME cannot be overridden here.\n" -> string!
-const Kazo.Os.Platform.Core.Processes.LoginEnvironment.DefaultHostName = "hackeros" -> string!
+const Kazo.Os.Platform.Core.Processes.LoginEnvironment.DefaultHostName = "kazoos" -> string!
 const Kazo.Os.Platform.Core.Processes.LoginEnvironment.DefaultLanguage = "en_US.UTF-8" -> string!
 const Kazo.Os.Platform.Core.Processes.LoginEnvironment.DefaultPath = "/bin:/usr/bin" -> string!
 const Kazo.Os.Platform.Core.Processes.LoginEnvironment.DefaultShell = "/bin/hsh" -> string!
@@ -4151,7 +4151,7 @@ const Kazo.Os.Platform.Core.Processes.MemorySettingsDocuments.EnabledKey = "enab
 const Kazo.Os.Platform.Core.Processes.MemorySettingsDocuments.MaximumMinFreePercent = 50 -> int
 const Kazo.Os.Platform.Core.Processes.MemorySettingsDocuments.MinFreePercentKey = "min-free-percent" -> string!
 const Kazo.Os.Platform.Core.Processes.MemorySettingsDocuments.OomKillerGroup = "oom-killer" -> string!
-const Kazo.Os.Platform.Core.Processes.NotificationQueueOomNotifier.SourceAppId = "org.hackeros.kernel" -> string!
+const Kazo.Os.Platform.Core.Processes.NotificationQueueOomNotifier.SourceAppId = "org.kazoos.kernel" -> string!
 const Kazo.Os.Platform.Core.Processes.OomKiller.BrowserGuardRatio = 0.8 -> double
 const Kazo.Os.Platform.Core.Processes.OomKiller.SamplesBeforeKill = 2 -> int
 const Kazo.Os.Platform.Core.Processes.ResourceLimitsConfiguration.DefaultLimitsFileContent = "# /etc/security/limits.conf\n#\n# Limits applied to each login session (ADR 0125), read like pam_limits when the session\n# starts. Changes take effect at the next login. Drop-in files: /etc/security/limits.d/*.conf.\n#\n# Format: <domain> <type> <item> <value>\n#   <domain>  a login name, @group, or * for everybody\n#   <type>    soft (the value that applies), hard (its ceiling), or - for both\n#   <item>    cpu    - max CPU time (MIN)\n#             rss    - max resident set size (KB)\n#             nofile - max number of open file descriptors\n#             nproc  - max number of processes\n#   <value>   a number, or unlimited\n#\n# Without any rule, a session gets the kernel's values (ulimit -a):\n#   cpu unlimited, rss unlimited, nofile 1024 (hard 524288), nproc 4096.\n#\n#<domain>      <type>  <item>         <value>\n#\n#*               soft    nofile          4096\n#@students       hard    nproc           200\n#alice           -       cpu             60\n\n# End of file\n" -> string!
@@ -4167,13 +4167,13 @@ const Kazo.Os.Platform.Core.Sessions.LocalAccountService.AdministratorsGroupName
 const Kazo.Os.Platform.Core.Sessions.LocalAccountService.MaximumDisplayNameLength = 128 -> int
 const Kazo.Os.Platform.Core.Sessions.LocalPasswordHasher.KdfIdentifier = "pbkdf2-sha256-v1" -> string!
 const Kazo.Os.Platform.Core.Sessions.PasskeyService.RelyingPartyName = "Kazo OS" -> string!
-const Kazo.Os.Platform.Core.Sessions.ServiceAccount.HomePath = "/var/lib/hackeros-svc" -> string!
-const Kazo.Os.Platform.Core.Sessions.ServiceAccount.LoginName = "hackeros-svc" -> string!
+const Kazo.Os.Platform.Core.Sessions.ServiceAccount.HomePath = "/var/lib/kazoos-svc" -> string!
+const Kazo.Os.Platform.Core.Sessions.ServiceAccount.LoginName = "kazoos-svc" -> string!
 const Kazo.Os.Platform.Core.Sessions.ServiceAccount.Shell = "/usr/sbin/nologin" -> string!
-const Kazo.Os.Platform.Core.Settings.OsSettingsDocument.SystemDirectory = "/etc/hackeros" -> string!
-const Kazo.Os.Platform.Core.Settings.OsSettingsService.ShellAppId = "org.hackeros.shell" -> string!
-const Kazo.Os.Platform.Core.Settings.SettingsStoreToFilesMigration.SystemMarkerPath = "/var/lib/hackeros/migrations/settings-to-files" -> string!
-const Kazo.Os.Platform.Core.Settings.SettingsStoreToFilesMigration.UserMarkerRelativePath = ".local/state/hackeros/migrations/settings-to-files" -> string!
+const Kazo.Os.Platform.Core.Settings.OsSettingsDocument.SystemDirectory = "/etc/kazoos" -> string!
+const Kazo.Os.Platform.Core.Settings.OsSettingsService.ShellAppId = "org.kazoos.shell" -> string!
+const Kazo.Os.Platform.Core.Settings.SettingsStoreToFilesMigration.SystemMarkerPath = "/var/lib/kazoos/migrations/settings-to-files" -> string!
+const Kazo.Os.Platform.Core.Settings.SettingsStoreToFilesMigration.UserMarkerRelativePath = ".local/state/kazoos/migrations/settings-to-files" -> string!
 const Kazo.Os.Platform.Core.Shell.MobileSettingsDocuments.MouseHelpersKey = "mouseHelpers" -> string!
 const Kazo.Os.Platform.Core.Shell.PlatformEnvironmentPolicy.NarrowViewportThreshold = 600 -> int
 const Kazo.Os.Platform.Core.Shell.ScreenGeometry.MinimumHeight = 150 -> int
@@ -4186,8 +4186,8 @@ const Kazo.Os.Platform.Core.Shell.ScreensSettingsDocuments.PrimaryTaskbarKey = "
 const Kazo.Os.Platform.Core.Shell.ScreensSettingsDocuments.PrimaryTaskbarOwn = "own" -> string!
 const Kazo.Os.Platform.Core.Shell.ScreensSettingsDocuments.ScreensGroup = "screens" -> string!
 const Kazo.Os.Platform.Core.Shell.ScreensSettingsDocuments.TaskbarGroup = "taskbar" -> string!
-const Kazo.Os.Platform.Core.Shell.ShellHostService.ShellAppId = "org.hackeros.hsh" -> string!
-const Kazo.Os.Platform.Core.Shell.ShellInterpreter.AliasFileRelativePath = ".hackeros/aliases" -> string!
+const Kazo.Os.Platform.Core.Shell.ShellHostService.ShellAppId = "org.kazoos.hsh" -> string!
+const Kazo.Os.Platform.Core.Shell.ShellInterpreter.AliasFileRelativePath = ".kazoos/aliases" -> string!
 const Kazo.Os.Platform.Core.Shell.ShellInterpreter.BrokenPipeExitCode = 141 -> int
 const Kazo.Os.Platform.Core.Shell.ShellInterpreter.CommandNotFoundExitCode = 127 -> int
 const Kazo.Os.Platform.Core.Shell.ShellInterpreter.InterruptedExitCode = 130 -> int
@@ -4220,11 +4220,11 @@ const Kazo.Os.Platform.Core.Sounds.SoundSettingsDocuments.DocumentId = "sound" -
 const Kazo.Os.Platform.Core.Sounds.SoundSettingsDocuments.EnabledKey = "enabled" -> string!
 const Kazo.Os.Platform.Core.Sounds.SoundSettingsDocuments.ThemeKey = "theme" -> string!
 const Kazo.Os.Platform.Core.Sounds.SoundSettingsDocuments.VolumeKey = "volume" -> string!
-const Kazo.Os.Platform.Core.Storage.StorageSpaceMonitor.DiagnosticAppId = "org.hackeros.diagnostic" -> string!
-const Kazo.Os.Platform.Core.Storage.StorageSpaceMonitor.NotificationSourceAppId = "org.hackeros.storage" -> string!
+const Kazo.Os.Platform.Core.Storage.StorageSpaceMonitor.DiagnosticAppId = "org.kazoos.diagnostic" -> string!
+const Kazo.Os.Platform.Core.Storage.StorageSpaceMonitor.NotificationSourceAppId = "org.kazoos.storage" -> string!
 const Kazo.Os.Platform.Core.Time.SimulationClockDriver.DefaultMaxTicksPerBeat = 50 -> int
-const Kazo.Os.Platform.Core.WhatsNew.WhatsNewService.NotificationSourceAppId = "org.hackeros.whats-new" -> string!
-const Kazo.Os.Platform.Core.WhatsNew.WhatsNewService.SettingsAppId = "org.hackeros.settings" -> string!
+const Kazo.Os.Platform.Core.WhatsNew.WhatsNewService.NotificationSourceAppId = "org.kazoos.whats-new" -> string!
+const Kazo.Os.Platform.Core.WhatsNew.WhatsNewService.SettingsAppId = "org.kazoos.settings" -> string!
 const Kazo.Os.Platform.Core.WhatsNew.WhatsNewService.SettingsPageArgument = "--page=whats-new" -> string!
 override Kazo.Os.Platform.Core.Administration.ServerConnectionGatewayServices.Equals(object? obj) -> bool
 override Kazo.Os.Platform.Core.Administration.ServerConnectionGatewayServices.GetHashCode() -> int
@@ -5127,7 +5127,7 @@ static Kazo.Os.Platform.Core.Notifications.NotificationSettingsDocuments.Schema.
 static Kazo.Os.Platform.Core.Policy.AppPermissionAdministrationResult.operator !=(Kazo.Os.Platform.Core.Policy.AppPermissionAdministrationResult? left, Kazo.Os.Platform.Core.Policy.AppPermissionAdministrationResult? right) -> bool
 static Kazo.Os.Platform.Core.Policy.AppPermissionAdministrationResult.operator ==(Kazo.Os.Platform.Core.Policy.AppPermissionAdministrationResult? left, Kazo.Os.Platform.Core.Policy.AppPermissionAdministrationResult? right) -> bool
 static Kazo.Os.Platform.Core.Policy.AppPermissionDecisions.Empty.get -> Kazo.Os.Platform.Core.Policy.AppPermissionDecisions!
-static Kazo.Os.Platform.Core.Policy.AppPermissionDecisions.Parse(string? machineContent, string? userContent, string! machinePath = "/etc/hackeros/app-permissions.config", string! userPath = "~/.config/hackeros/app-permissions.config") -> Kazo.Os.Platform.Core.Policy.AppPermissionDecisions!
+static Kazo.Os.Platform.Core.Policy.AppPermissionDecisions.Parse(string? machineContent, string? userContent, string! machinePath = "/etc/kazoos/app-permissions.config", string! userPath = "~/.config/kazoos/app-permissions.config") -> Kazo.Os.Platform.Core.Policy.AppPermissionDecisions!
 static Kazo.Os.Platform.Core.Policy.AppPermissionOverview.operator !=(Kazo.Os.Platform.Core.Policy.AppPermissionOverview? left, Kazo.Os.Platform.Core.Policy.AppPermissionOverview? right) -> bool
 static Kazo.Os.Platform.Core.Policy.AppPermissionOverview.operator ==(Kazo.Os.Platform.Core.Policy.AppPermissionOverview? left, Kazo.Os.Platform.Core.Policy.AppPermissionOverview? right) -> bool
 static Kazo.Os.Platform.Core.Policy.AppPermissionsDocument.DefaultMachineContent.get -> string!

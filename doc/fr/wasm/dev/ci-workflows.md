@@ -44,7 +44,7 @@ fois. Les workflows passent `-RetryFailedTests 1` :
 
 Les résultats du premier passage restent dans
 `artifacts/test-results/<suite>/<projet>/`, ceux du nouvel essai dans
-`retry-1/` à côté ; l'artefact `hackeros-verification-<essai>` les contient.
+`retry-1/` à côté ; l'artefact `kazoos-verification-<essai>` les contient.
 
 Sans le paramètre (par défaut en local), le script garde son comportement
 strict : un échec est un échec. Les tests instables connus sont listés dans
@@ -57,7 +57,7 @@ mérite d'être stabilisé.
 1. Ouvrir le job `verify` et chercher `Test projects failed:` : le message
    nomme les projets en échec. Le résumé du job liste aussi les échecs et les
    tests instables.
-2. Télécharger l'artefact `hackeros-verification-<essai>` pour les `.trx`.
+2. Télécharger l'artefact `kazoos-verification-<essai>` pour les `.trx`.
 3. Reproduire en local avec la même commande
    (`./build/run-test-suite.ps1 -Suite NonBrowser`) après un build Release.
 
@@ -81,7 +81,7 @@ PR. Le workflow `verify-browser-tests.yml` a trois jobs :
 2. **`browser-tests`** : build Release, Chromium de Playwright, puis
    `run-test-suite.ps1 -Suite Browser -RetryFailedTests 1` (un test qui passe
    au second essai est signalé « Flaky test », voir plus haut). L'artefact
-   `hackeros-browser-tests-<essai>` garde les `.trx` et les traces 14 jours.
+   `kazoos-browser-tests-<essai>` garde les `.trx` et les traces 14 jours.
 3. **`report`** (seulement sur `main`) : un échec ouvre l'issue « Les tests
    navigateur de la nuit échouent sur main », ou y ajoute un commentaire si
    elle est déjà ouverte (lien du lancement et commit). Le premier lancement

@@ -15,17 +15,17 @@ sign-out. Decision: [ADR 0204](adr/0204-os-event-sounds.md), issue
   a sound before that gesture (a guest session opened by itself) is dropped.
 - On a new installation, the first sign-in sound plays a few seconds after the
   desktop appears, once the built-in themes are written.
-- Built-in themes: **Kazo OS** (`hackeros`, console bleeps, the default) and
+- Built-in themes: **Kazo OS** (`kazoos`, console bleeps, the default) and
   **Soft** (`soft`, chimes).
 
 ## The `sound.config` setting
 
-`/etc/hackeros/sound.config` (machine, shipped by a fresh installation) then
-`~/.config/hackeros/sound.config` (user):
+`/etc/kazoos/sound.config` (machine, shipped by a fresh installation) then
+`~/.config/kazoos/sound.config` (user):
 
 ```ini
 enabled=true     # false turns every sound off
-theme=hackeros   # a folder name of /usr/share/sounds or ~/.local/share/sounds
+theme=kazoos   # a folder name of /usr/share/sounds or ~/.local/share/sounds
 volume=60        # 0 to 100
 ```
 
@@ -60,7 +60,7 @@ Directories=stereo
 - `<id>`: lowercase letters, digits, `-`, `_`, `.`.
 - Formats: `.oga`, `.ogg` (Ogg Vorbis or Opus) and `.mp3`, **1 MB** at most per
   file. A bigger file is ignored.
-- A missing sound is taken from the `hackeros` theme.
+- A missing sound is taken from the `kazoos` theme.
 - A user folder named like a system theme is ignored.
 
 At the terminal:
@@ -77,18 +77,18 @@ nano ~/.local/share/sounds/retro/index.theme
 | --- | --- | --- |
 | `OsSoundEvent`, `OsSoundEvents`, `SoundThemeIndex` | Simulation Abstractions | Events, sound names, paths, 1 MB limit, reading `index.theme`. |
 | `SoundSettingsDocuments` | Platform Core | The `sound.config` document (schema, defaults, `SoundPreferences`). |
-| `BuiltInSoundThemes` | Platform Core | Built-in themes, embedded (`Sounds/Themes/<id>/*.oga`), written to `/usr/share/sounds` by `FileSystemSeeder.InstallSoundThemesAsync`, which `OsSoundService` runs once in the background after the first sign-in (not during the login, which it made 2 s slower). `/var/lib/hackeros/installed/sound-themes.list` records the installed files, like dpkg's `.list` files: a boot whose list matches skips the install. |
+| `BuiltInSoundThemes` | Platform Core | Built-in themes, embedded (`Sounds/Themes/<id>/*.oga`), written to `/usr/share/sounds` by `FileSystemSeeder.InstallSoundThemesAsync`, which `OsSoundService` runs once in the background after the first sign-in (not during the login, which it made 2 s slower). `/var/lib/kazoos/installed/sound-themes.list` records the installed files, like dpkg's `.list` files: a boot whose list matches skips the install. |
 | `OsSoundService` | Platform Core | Reads and watches `sound.config`, listens to notifications (`INotificationFeed`) and sessions (`IEventBus`), picks the file, plays through `IOsSoundOutput`. Plays no notification sound during "Do not disturb" (`DoNotDisturb`, ADR 0216). |
 | `IOsSoundOutput` / `BrowserSoundOutput` | Platform Core / Platform Blazor | "Sound card": Web Audio in `wwwroot/osSounds.js`, decoded buffers kept by path and revision. |
 | `DialogCoordinator` | Platform Blazor | Plays warning or error for a message box with that icon. |
 | `SoundPanel` | Settings app | The Settings ▸ Sound page, public SDK only. |
 
 Search order of a sound: `/usr/share/sounds/<theme>`,
-`/usr/share/hackeros/theme-packs/<theme>/sounds`, `~/.local/share/sounds/<theme>`,
-then `~/.local/share/hackeros/theme-packs/<theme>/sounds` (the sound theme of a
-Hack Store pack has the pack's id, [ADR 0213](adr/0213-theme-packs-build.md)); in the folder found, each folder of
+`/usr/share/kazoos/theme-packs/<theme>/sounds`, `~/.local/share/sounds/<theme>`,
+then `~/.local/share/kazoos/theme-packs/<theme>/sounds` (the sound theme of a
+Kazo OS Store pack has the pack's id, [ADR 0213](adr/0213-theme-packs-build.md)); in the folder found, each folder of
 `Directories=` then the folder itself, for `<name>.oga`, `.ogg`, `.mp3`;
-otherwise the `hackeros` theme. The same event twice within 150 ms sounds once.
+otherwise the `kazoos` theme. The same event twice within 150 ms sounds once.
 
 ## Rebuilding the built-in sounds
 
@@ -98,7 +98,7 @@ The sounds are computed, with no sample from elsewhere:
 cd wasm2/KazoOs
 python3 build/tools/generate-system-sounds.py /tmp/sounds
 for f in /tmp/sounds/*/*.wav; do ffmpeg -y -i "$f" -c:a libvorbis -q:a 2 -ar 22050 -ac 1 "${f%.wav}.oga"; done
-cp /tmp/sounds/hackeros/*.oga Platform/Kazo.Os.Platform.Core/Sounds/Themes/hackeros/
+cp /tmp/sounds/kazoos/*.oga Platform/Kazo.Os.Platform.Core/Sounds/Themes/kazoos/
 cp /tmp/sounds/soft/*.oga Platform/Kazo.Os.Platform.Core/Sounds/Themes/soft/
 ```
 

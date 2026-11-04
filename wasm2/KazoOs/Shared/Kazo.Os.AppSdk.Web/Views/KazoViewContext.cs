@@ -49,7 +49,7 @@ public sealed class KazoViewContext
     private readonly KazoViewEngine _engine;
     private readonly Dictionary<string, KazoViewSection> _sections;
     private readonly HashSet<string> _renderedSections;
-    private IHackUrlHelper? _url;
+    private IKazoUrlHelper? _url;
 
     internal KazoViewContext(
         KazoActionContext actionContext,
@@ -108,7 +108,7 @@ public sealed class KazoViewContext
     public bool IsPartial { get; }
 
     /// <summary>Gets the URL helper.</summary>
-    public IHackUrlHelper Url => _url ??= new KazoUrlHelper(ActionContext);
+    public IKazoUrlHelper Url => _url ??= new KazoUrlHelper(ActionContext);
 
     /// <summary>
     /// Gets or sets the layout applied once the view (or the current layout) rendered: the

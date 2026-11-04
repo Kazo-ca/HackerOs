@@ -6,7 +6,7 @@
 
 Accepté le 2026-10-17, avec le chantier `web/14-cookie-header`.
 
-- **Phase du plan :** phase web, suite ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Phase du plan :** phase web, suite ([`asp-kazo-plan.md`](../plans/asp-kazo-plan.md)).
 - **Complète :** ADR 0074 §1 et §2 (échanges HTTP de la passerelle réseau,
   livraison au processus à l'écoute) et ADR 0056 §6 (`HackHttpClient` et son
   `HackCookieContainer`). Ne remplace aucune décision.
@@ -18,7 +18,7 @@ cookies du conteneur du client (`HackHttpRequest.Cookies`, le « pot à cookies 
 Un en-tête `Cookie` que l'app écrivait elle-même, par exemple
 `curl -H 'Cookie: .HackSession=…'`, était retiré avant la livraison au site
 local et n'atteignait jamais les contrôleurs du réseau simulé, qui ne lisent que
-`SimulatedHttpRequest.Cookies`. Constaté par `web/6` (`docs/asp-hack-mvc.md`),
+`SimulatedHttpRequest.Cookies`. Constaté par `web/6` (`docs/asp-kazo-mvc.md`),
 la limite empêchait de rejouer une session ou un jeton d'anti-falsification à la
 main depuis le terminal, ce que fait tout `curl` réel.
 

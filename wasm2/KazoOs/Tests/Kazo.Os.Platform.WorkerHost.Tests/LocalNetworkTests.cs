@@ -79,7 +79,7 @@ public sealed class LocalNetworkTests
         WorkerSnapshot web = Assert.Single(os.Pool!.GetWorkers(), worker => worker.Role == WorkerRole.Web);
         Assert.Contains(intranet, web.ProcessIds);
         Assert.Contains(wiki, web.ProcessIds);
-        ShellRun workersFile = await os.RunAsync("cat /proc/hackeros/workers").WaitAsync(TimeSpan.FromSeconds(10));
+        ShellRun workersFile = await os.RunAsync("cat /proc/kazoos/workers").WaitAsync(TimeSpan.FromSeconds(10));
         Assert.Contains(" web ", workersFile.Stdout, StringComparison.Ordinal);
 
         await StopAsync(os, intranet);
@@ -164,13 +164,13 @@ public sealed class LocalNetworkTests
         await using OsFixture os = await StartAsync(workers);
 
         ShellRun webApp = await os.RunAsync("nslookup intranet.hack").WaitAsync(TimeSpan.FromSeconds(10));
-        ShellRun simulated = await os.RunAsync("nslookup example.hackeros").WaitAsync(TimeSpan.FromSeconds(10));
+        ShellRun simulated = await os.RunAsync("nslookup example.kazoos").WaitAsync(TimeSpan.FromSeconds(10));
         ShellRun unknown = await os.RunAsync("nslookup nowhere.hack").WaitAsync(TimeSpan.FromSeconds(10));
         await WriteHostsAsync(os.FileSystem, "127.0.0.1\tlocalhost\n10.0.0.10\tintranet.hack corp\n");
         ShellRun hosts = await os.RunAsync("nslookup intranet.hack").WaitAsync(TimeSpan.FromSeconds(10));
 
         Assert.Contains(";; source: web app org.test.intranet (web.urls, this machine)\nName:\tintranet.hack\nAddress: 127.0.0.1\n", webApp.Stdout, StringComparison.Ordinal);
-        Assert.Contains("Non-authoritative answer:\nName:\texample.hackeros\nAddress: 10.0.0.10\n", simulated.Stdout, StringComparison.Ordinal);
+        Assert.Contains("Non-authoritative answer:\nName:\texample.kazoos\nAddress: 10.0.0.10\n", simulated.Stdout, StringComparison.Ordinal);
         Assert.Equal(1, unknown.ExitCode);
         Assert.Contains("** server can't find nowhere.hack: NXDOMAIN", unknown.Stdout, StringComparison.Ordinal);
         Assert.Contains(";; source: /etc/hosts:2 (static table)\nName:\tintranet.hack\nAddress: 10.0.0.10\n", hosts.Stdout, StringComparison.Ordinal);
@@ -185,7 +185,7 @@ public sealed class LocalNetworkTests
 
         ShellRun alias = await os.RunAsync("curl http://shortcut.hack/").WaitAsync(TimeSpan.FromSeconds(10));
         ShellRun unknown = await os.RunAsync("curl http://nowhere.hack/").WaitAsync(TimeSpan.FromSeconds(10));
-        ShellRun direct = await os.RunAsync("curl http://example.hackeros/").WaitAsync(TimeSpan.FromSeconds(10));
+        ShellRun direct = await os.RunAsync("curl http://example.kazoos/").WaitAsync(TimeSpan.FromSeconds(10));
 
         Assert.True(alias.ExitCode == 0, alias.Stderr);
         Assert.Equal(direct.Stdout, alias.Stdout);
@@ -224,7 +224,7 @@ public sealed class LocalNetworkTests
     {
         AppOperationContext root = new()
         {
-            AppId = "org.hackeros.kernel",
+            AppId = "org.kazoos.kernel",
             UserId = "system",
             UserAuthority = AppAuthority.System,
             GrantedCapabilities = new HashSet<string>(AppCapabilities.All, StringComparer.Ordinal),

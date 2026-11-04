@@ -27,10 +27,10 @@ public sealed class SettingsLocalizationTests
     {
         // The project declares two apps since ADR 0218 (Settings and « Set as wallpaper »): one folder per app.
         string directory = FindProjectDirectory();
-        using JsonDocument french = JsonDocument.Parse(File.ReadAllText(Path.Combine(directory, "localization", "org.hackeros.settings", "fr.json")));
+        using JsonDocument french = JsonDocument.Parse(File.ReadAllText(Path.Combine(directory, "localization", "org.kazoos.settings", "fr.json")));
         Assert.Equal("Paramètres", french.RootElement.GetProperty("name").GetString());
 
-        AppManifest manifest = AppManifestJsonSerializer.DeserializeStrict(File.ReadAllText(Path.Combine(directory, "manifests", "org.hackeros.settings.json")));
+        AppManifest manifest = AppManifestJsonSerializer.DeserializeStrict(File.ReadAllText(Path.Combine(directory, "manifests", "org.kazoos.settings.json")));
         Assert.Contains(manifest.Localizations, localization => localization.Culture == "fr");
     }
 
@@ -55,7 +55,7 @@ public sealed class SettingsLocalizationTests
         for (DirectoryInfo? directory = new(System.AppContext.BaseDirectory); directory is not null; directory = directory.Parent)
         {
             string candidate = Path.Combine(directory.FullName, "Apps", "System", "Kazo.Os.Apps.Settings");
-            if (File.Exists(Path.Combine(candidate, "manifests", "org.hackeros.settings.json")))
+            if (File.Exists(Path.Combine(candidate, "manifests", "org.kazoos.settings.json")))
             {
                 return candidate;
             }

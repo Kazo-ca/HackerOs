@@ -303,7 +303,7 @@ public sealed partial class ShellInterpreterTests
     {
         Fixture fixture = await Fixture.CreateAsync();
         fixture.Grant(AppCapabilities.ShellHost);
-        await using Kazo.Os.AppSdk.Shell.IHackShell shell = await Kazo.Os.AppSdk.Shell.KazoShell.StartAsync(fixture.Host);
+        await using Kazo.Os.AppSdk.Shell.IKazoShell shell = await Kazo.Os.AppSdk.Shell.KazoShell.StartAsync(fixture.Host);
 
         Assert.Equal(unfinished, shell.NeedsMoreInput(text));
     }

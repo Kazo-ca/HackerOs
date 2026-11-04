@@ -12,7 +12,7 @@ namespace Kazo.Os.Apps.Settings;
 /// </summary>
 /// <remarks>
 /// Uses only <see cref="KazoFileMenuEntries"/> (capability <c>apps.manage</c>). The choice is written
-/// to the user's <c>~/.config/hackeros/context-menus.config</c> and applies to the next menu opened.
+/// to the user's <c>~/.config/kazoos/context-menus.config</c> and applies to the next menu opened.
 /// A submenu entry whose parent is hidden is shown greyed: hiding the parent hides the whole submenu.
 /// </remarks>
 public sealed partial class FileMenuEntriesPanel

@@ -41,10 +41,10 @@ public sealed class FileExplorerLaunchArgumentsTests
     [Fact]
     public void Select_alone_opens_the_parent_of_the_item()
     {
-        (VirtualPath? folder, VirtualPath? select) = FileExplorerWindow.ParseLaunchArguments(["--select=/etc/hackeros/os.conf"]);
+        (VirtualPath? folder, VirtualPath? select) = FileExplorerWindow.ParseLaunchArguments(["--select=/etc/kazoos/os.conf"]);
 
-        Assert.Equal("/etc/hackeros", folder?.Value);
-        Assert.Equal("/etc/hackeros/os.conf", select?.Value);
+        Assert.Equal("/etc/kazoos", folder?.Value);
+        Assert.Equal("/etc/kazoos/os.conf", select?.Value);
     }
 
     [Theory]

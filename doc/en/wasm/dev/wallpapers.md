@@ -22,7 +22,7 @@ same panel); without an image, it keeps its mobile theme's background
 
 ## Settings
 
-In `appearance.config` (`/etc/hackeros/` then `~/.config/hackeros/`):
+In `appearance.config` (`/etc/kazoos/` then `~/.config/kazoos/`):
 
 ```ini
 wallpaper = /home/alice/Pictures/beach.webp
@@ -40,16 +40,16 @@ mobileWallpaperFit = fill
 | `mobileWallpaper` | same shape as `wallpaper`, for the mobile home screen; empty = mobile theme's background |
 | `mobileWallpaperFit` | fit on mobile, same values as `wallpaperFit` |
 
-A `nano ~/.config/hackeros/appearance.config` changes the wallpaper on save.
+A `nano ~/.config/kazoos/appearance.config` changes the wallpaper on save.
 
 ## Image sources
 
 | Source | Location |
 | --- | --- |
 | Shipped with the OS | `builtin:hacker-grid`, `builtin:circuit`, `builtin:aurora`, `builtin:nebula` (static files `_content/Kazo.Os.Theming.Blazor/wallpapers/*.webp`) |
-| System | `/usr/share/hackeros/wallpapers/` |
-| User | `~/.local/share/hackeros/wallpapers/` |
-| Installed packs | `/usr/share/hackeros/theme-packs/<pack>/wallpapers/`, `~/.local/share/hackeros/theme-packs/<pack>/wallpapers/` (ADR 0190) |
+| System | `/usr/share/kazoos/wallpapers/` |
+| User | `~/.local/share/kazoos/wallpapers/` |
+| Installed packs | `/usr/share/kazoos/theme-packs/<pack>/wallpapers/`, `~/.local/share/kazoos/theme-packs/<pack>/wallpapers/` (ADR 0190) |
 | Any other file | picked with "Browse…", path kept as it is |
 
 ## Architecture
@@ -73,7 +73,7 @@ offers "Set as wallpaper" right after "Open with" (ADR 0218):
 - with several screens, a submenu "Screen 1 and the others", then
   "Screen 2"… for each open secondary screen (`wallpaperScreen<n>`).
 
-The entries belong to `org.hackeros.settings.wallpaper` (`SetWallpaperApp`), a
+The entries belong to `org.kazoos.settings.wallpaper` (`SetWallpaperApp`), a
 hidden service declared by the Settings project and run on the main thread.
 `SetWallpaperService` reads the file as the session user, checks its bytes and
 its size like the shell, writes the user layer of `appearance.config`, posts a

@@ -4,7 +4,7 @@ namespace Kazo.Os.Infrastructure.Browser.WebData;
 
 /// <summary>
 /// The browser side of the web sites' databases (ADR 0088): owns <c>webSiteDatabases.js</c>, which opens
-/// <c>hackweb.*</c> IndexedDB databases only. Schemas, transactions and results cross as JSON text;
+/// <c>kazoweb.*</c> IndexedDB databases only. Schemas, transactions and results cross as JSON text;
 /// errors arrive as <see cref="JSException"/> whose message starts with the IndexedDB error name.
 /// </summary>
 public sealed class WebSiteDatabaseInterop : IAsyncDisposable

@@ -10,7 +10,7 @@ public sealed class UserThemeTests
         [theme]
         id = neon
         name = Neon Night
-        base = hackeros
+        base = kazoos
         platforms = desktop, mobile
 
         [tokens]
@@ -23,13 +23,13 @@ public sealed class UserThemeTests
     [Fact]
     public void Parse_reads_identity_platforms_and_tokens()
     {
-        ThemeFileParseResult result = ThemeFile.Parse(Neon, ThemeOrigin.User, "/home/alice/.config/hackeros/themes/neon.theme");
+        ThemeFileParseResult result = ThemeFile.Parse(Neon, ThemeOrigin.User, "/home/alice/.config/kazoos/themes/neon.theme");
 
         UserTheme theme = Assert.IsType<UserTheme>(result.Theme);
         Assert.Empty(result.Diagnostics);
         Assert.Equal("neon", theme.Id);
         Assert.Equal("Neon Night", theme.Name);
-        Assert.Equal(WellKnownThemeIds.HackerOs, theme.BaseThemeId);
+        Assert.Equal(WellKnownThemeIds.KazoOs, theme.BaseThemeId);
         Assert.Equal([ThemePlatform.Desktop, ThemePlatform.Mobile], theme.Platforms);
         Assert.Equal("#ff00ff", theme.Tokens.Single(pair => pair.Key == "--hos-accent").Value);
     }
@@ -53,7 +53,7 @@ public sealed class UserThemeTests
 
     [Theory]
     [InlineData("id = neon", "id = Neon!")]
-    [InlineData("base = hackeros", "base = solarized")]
+    [InlineData("base = kazoos", "base = solarized")]
     [InlineData("name = Neon Night", "name = ")]
     public void Parse_refuses_a_theme_with_an_invalid_identity(string original, string replacement)
     {
@@ -138,9 +138,9 @@ public sealed class UserThemeTests
     {
         UserThemeLibraryResult result = UserThemeLibrary.Build(
         [
-            new ThemeFileSource("/etc/hackeros/themes/neon.theme", ThemeOrigin.System, Neon),
-            new ThemeFileSource("/home/alice/.config/hackeros/themes/neon.theme", ThemeOrigin.User, Neon.Replace("Neon Night", "Mine", StringComparison.Ordinal)),
-            new ThemeFileSource("/home/alice/.config/hackeros/themes/ubuntu.theme", ThemeOrigin.User, Neon.Replace("id = neon", "id = ubuntu", StringComparison.Ordinal)),
+            new ThemeFileSource("/etc/kazoos/themes/neon.theme", ThemeOrigin.System, Neon),
+            new ThemeFileSource("/home/alice/.config/kazoos/themes/neon.theme", ThemeOrigin.User, Neon.Replace("Neon Night", "Mine", StringComparison.Ordinal)),
+            new ThemeFileSource("/home/alice/.config/kazoos/themes/ubuntu.theme", ThemeOrigin.User, Neon.Replace("id = neon", "id = ubuntu", StringComparison.Ordinal)),
         ]);
 
         UserTheme theme = Assert.Single(result.Themes);
@@ -160,7 +160,7 @@ public sealed class UserThemeTests
         ResolvedTheme missing = ResolvedTheme.Resolve("deleted-theme", ThemePlatform.Desktop, themes);
         ResolvedTheme builtIn = ResolvedTheme.Resolve(WellKnownThemeIds.Ubuntu, ThemePlatform.Desktop, themes);
 
-        Assert.Equal(new ResolvedTheme(WellKnownThemeIds.HackerOs, neon, false), desktop);
+        Assert.Equal(new ResolvedTheme(WellKnownThemeIds.KazoOs, neon, false), desktop);
         // A desktop-based theme offered on mobile skins the mobile default theme.
         Assert.Equal(ThemePreferences.Default.MobileThemeId, mobile.BaseThemeId);
         Assert.Same(neon, mobile.UserTheme);

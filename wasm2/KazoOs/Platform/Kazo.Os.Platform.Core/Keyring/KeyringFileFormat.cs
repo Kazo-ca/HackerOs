@@ -42,7 +42,7 @@ internal sealed record KeyringEnvelopeV2(IReadOnlyList<KeyringSlot> Slots, byte[
 /// </summary>
 internal static class KeyringFileFormat
 {
-    public const string FormatName = "hackeros-keyring";
+    public const string FormatName = "kazoos-keyring";
 
     public const int Version = 1;
 

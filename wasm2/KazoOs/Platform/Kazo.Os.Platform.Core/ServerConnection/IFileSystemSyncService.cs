@@ -41,7 +41,7 @@ public sealed record SyncPassResult(int Sent, int Received, int Conflicts)
 /// <para>
 /// A file changed on both sides is a conflict (ADR 0101 section 2): it is frozen (kept as is, neither
 /// sent nor replaced) until the user picks a version with <see cref="ResolveConflictAsync"/>. Pending
-/// conflicts live in <c>~/.local/state/hackeros/sync-conflicts.json</c>.
+/// conflicts live in <c>~/.local/state/kazoos/sync-conflicts.json</c>.
 /// </para>
 /// </remarks>
 public interface IFileSystemSyncService
@@ -1353,7 +1353,7 @@ public sealed class FileSystemSyncService : IFileSystemSyncService
         // FileSystemAuthorizer's owner-match rule), so no elevated authority is needed or wanted.
         AppOperationContext operation = new()
         {
-            AppId = "org.hackeros.sync",
+            AppId = "org.kazoos.sync",
             UserId = principal.LoginName.Value,
             UserAuthority = principal.Authority,
             GrantedCapabilities = new HashSet<string>(AppCapabilities.All, StringComparer.Ordinal),

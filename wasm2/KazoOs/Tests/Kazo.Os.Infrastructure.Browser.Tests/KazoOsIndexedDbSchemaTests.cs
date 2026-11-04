@@ -11,7 +11,7 @@ public sealed class KazoOsIndexedDbSchemaTests
     [Fact]
     public void DatabaseIdentity_MatchesAdr0015()
     {
-        Assert.Equal("hackeros", KazoOsIndexedDbSchema.DatabaseName);
+        Assert.Equal("kazoos", KazoOsIndexedDbSchema.DatabaseName);
         Assert.Equal(4, KazoOsIndexedDbSchema.CurrentVersion);
     }
 

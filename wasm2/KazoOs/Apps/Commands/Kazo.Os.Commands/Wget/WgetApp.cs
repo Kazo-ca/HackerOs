@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Wget;
 public sealed class WgetApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.wget";
+    public override string Id => "org.kazoos.commands.wget";
 
     /// <inheritdoc />
     public override string Name => "wget";
@@ -22,7 +22,7 @@ public sealed class WgetApp : AppDefinition
     public override Type EntryPoint => typeof(WgetCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Download files from the network";

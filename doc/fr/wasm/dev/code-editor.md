@@ -2,7 +2,7 @@
 
 # Éditeur de code
 
-`Apps/System/Kazo.Os.Apps.CodeEditor` (`org.hackeros.code-editor`) : éditeur
+`Apps/System/Kazo.Os.Apps.CodeEditor` (`org.kazoos.code-editor`) : éditeur
 de code façon VS Code, sur Monaco 0.55 (ADR 0020) et disposé en atelier
 (ADR 0062), avec un dock en bas (ADR 0063). Il ouvre des fichiers et des
 dossiers du système de fichiers virtuel, cherche dans tout un dossier, et
@@ -23,7 +23,7 @@ est archivée dans [`old/code-editor.md`](old/code-editor.md).
 | Édition | Tout Monaco : rechercher/remplacer dans le fichier (Ctrl+F, Ctrl+H), aller à la ligne (Ctrl+G), commenter (Ctrl+/), formater, palette de commandes de Monaco (F1), multicurseur, mini-carte. View › Word Wrap (Alt+Z), Show/Hide Minimap. |
 | Enregistrement | Ctrl+S, Ctrl+Maj+S (Save As), File › Save All. Les fichiers du dossier ouvert passent par l'accès accordé au dossier. Le contenu non enregistré est sauvegardé pour récupération et restauré au prochain lancement. |
 | Dock du bas | Ctrl+J l'affiche ou le cache (il est caché, pas détruit : les shells continuent). Onglets **Status** (dossier, fichier, langage, onglets ouverts et non enregistrés, terminaux, puis journal horodaté des messages, effaçable), **Terminal** et **Problems** (vide pour l'instant). |
-| Terminal | Ctrl+` ou l'icône du bas de la barre d'activité : onglet Terminal du dock. C'est le terminal de l'app Terminal, embarqué par le contrat `hackeros.terminal` (ADR 0063) : un `hsh` par onglet (« + »), démarré dans le dossier ouvert, titre = commande en cours ou dossier, effacer, tuer. « Open in Integrated Terminal » fait un `cd` visible dans le terminal actif s'il est libre, sinon ouvre un nouveau terminal. `exit` ferme l'onglet ; le dernier cache le dock. Sans app Terminal installée, l'onglet dit pourquoi. |
+| Terminal | Ctrl+` ou l'icône du bas de la barre d'activité : onglet Terminal du dock. C'est le terminal de l'app Terminal, embarqué par le contrat `kazoos.terminal` (ADR 0063) : un `hsh` par onglet (« + »), démarré dans le dossier ouvert, titre = commande en cours ou dossier, effacer, tuer. « Open in Integrated Terminal » fait un `cd` visible dans le terminal actif s'il est libre, sinon ouvre un nouveau terminal. `exit` ferme l'onglet ; le dernier cache le dock. Sans app Terminal installée, l'onglet dit pourquoi. |
 | Disposition | Barre latérale (Ctrl+B) et dock redimensionnables par glissement ; la zone Monaco prend toujours tout l'espace restant ; barre d'état avec le dernier message (un clic ouvre Status), Ln/Col, sélection, encodage, fin de ligne et langage (modifiable). Les erreurs restent aussi au-dessus de l'éditeur jusqu'à ce qu'on les ferme. |
 
 Hors périmètre (ADR 0062) : compilation, exécution, « aller à la définition »,
@@ -33,9 +33,9 @@ IntelliSense entre fichiers, contrôle de source, débogueur, extensions.
 
 | Élément | Rôle |
 | --- | --- |
-| `CodeEditorWindow.razor` / `.razor.cs` / `.razor.css` | Atelier : menus, barre d'activité, barre latérale, onglets, fil d'Ariane, zone Monaco, filigrane, dock du bas (Status, Terminal par `KazoEmbeddedComponent<IHackTerminal>`, Problems), barre d'état. Possède la session, l'espace de travail, la récupération et le garde de fermeture. |
+| `CodeEditorWindow.razor` / `.razor.cs` / `.razor.css` | Atelier : menus, barre d'activité, barre latérale, onglets, fil d'Ariane, zone Monaco, filigrane, dock du bas (Status, Terminal par `KazoEmbeddedComponent<IKazoTerminal>`, Problems), barre d'état. Possède la session, l'espace de travail, la récupération et le garde de fermeture. |
 | `CodeEditorWindow.razor.js` | Module collocé : `createEditor` (Monaco + nom accessible), `attachWorkbench` (raccourcis capturés avant le navigateur et Monaco, puis `OnShortcut(nom)` ; poignées de redimensionnement qui posent `--sidebar-width` et `--panel-height` sur la racine). |
-| `CodeEditor.monaco.entry.js` → `wwwroot/monaco/monaco.bundle.js` | Thème `hackeros-dark` et `createCodeEditor` : un modèle par onglet (`showDocument`, `closeDocument`), `setLanguage`, `reveal`, `runAction`, `getSelectedText`, `setOptions`, `flush`, `markSaved`, `layout`, `focus`, `destroy` ; renvoie `OnDirtyChanged(id, modifié)` à chaque bascule, `OnEditorChanged(id, contenu)` après 400 ms sans frappe, et `OnCursorChanged(ligne, colonne, sélection)` après 60 ms. |
+| `CodeEditor.monaco.entry.js` → `wwwroot/monaco/monaco.bundle.js` | Thème `kazoos-dark` et `createCodeEditor` : un modèle par onglet (`showDocument`, `closeDocument`), `setLanguage`, `reveal`, `runAction`, `getSelectedText`, `setOptions`, `flush`, `markSaved`, `layout`, `focus`, `destroy` ; renvoie `OnDirtyChanged(id, modifié)` à chaque bascule, `OnEditorChanged(id, contenu)` après 400 ms sans frappe, et `OnCursorChanged(ligne, colonne, sélection)` après 60 ms. |
 | `CodeEditorSession`, `CodeEditorDocument` | Onglets et contenu en C# ; `RelocatePaths` suit un renommage de fichier ou de dossier. |
 | `CodeEditorWorkspace` | Dossier ouvert : liste des fichiers (exclusions `.git`, `.svn`, `.hg`, `node_modules`, `bin`, `obj` ; au plus 5 000), création de fichiers et de dossiers, chemins relatifs. |
 | `CodeEditorSearch.cs` | `CodeEditorTextSearch` (ligne par ligne, 1 000 occurrences par fichier, aperçu coupé autour de l'occurrence), `CodeEditorGlob`, `CodeEditorWorkspaceSearch` (5 000 occurrences au total, fichiers de plus de 1 Mio ignorés), `CodeEditorQuickOpen` (classement flou). |
@@ -122,7 +122,7 @@ versionner `wwwroot/monaco/`. Le build .NET n'exécute pas npm.
 - [x] Reproduire les défauts (zone d'édition réduite à une ligne, pas de
   création dans l'arbre, onglets qui perdent leur état).
 - [x] Monaco : un modèle par onglet, curseur, `reveal`, actions, options,
-  thème `hackeros-dark`.
+  thème `kazoos-dark`.
 - [x] `CodeEditorWorkspace` : liste des fichiers, création, chemins relatifs.
 - [x] Recherche dans le dossier (casse, mot entier, regex, globs, contenu non
   enregistré) et ouverture rapide floue.

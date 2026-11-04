@@ -47,14 +47,14 @@
     <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.KazoPaint\Kazo.Os.Apps.KazoPaint.csproj" />
     <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.IconViewer\Kazo.Os.Apps.IconViewer.csproj" />
     <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.Settings\Kazo.Os.Apps.Settings.csproj" IsSystemApp="true" />
-    <!-- ADR 0188/0212: the Hack Store (system app, cannot be uninstalled). -->
+    <!-- ADR 0188/0212: the Kazo OS Store (system app, cannot be uninstalled). -->
     <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.Store\Kazo.Os.Apps.Store.csproj" IsSystemApp="true" />
     <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.SystemMonitor\Kazo.Os.Apps.SystemMonitor.csproj" IsSystemApp="true" />
     <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.Terminal\Kazo.Os.Apps.Terminal.csproj" IsSystemApp="true" />
     <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.TextEditor\Kazo.Os.Apps.TextEditor.csproj" IsSystemApp="true" />
     <!-- ADR 0103 §2.1: the Theme Editor (system app on the public SDK). -->
     <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.ThemeEditor\Kazo.Os.Apps.ThemeEditor.csproj" IsSystemApp="true" />
-    <!-- ADR 0077/0080: hackwebd and Web Server Manager (system apps: hackwebd needs network.listen.privileged). -->
+    <!-- ADR 0077/0080: kazowebd and Web Server Manager (system apps: kazowebd needs network.listen.privileged). -->
     <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.WebServer\Kazo.Os.Apps.WebServer.csproj" IsSystemApp="true" />
     <!-- ADR 0084: the sample Blazor site (http://blazor-sample.hack/), drawn by the browser's page area. -->
     <ProjectReference Include="..\..\Apps\Samples\Kazo.Os.Samples.BlazorSite\Kazo.Os.Samples.BlazorSite.csproj" />
@@ -81,7 +81,7 @@
   -->
   <Target Name="WriteKazoOsVersionFile" BeforeTargets="ResolveProjectStaticWebAssets">
     <PropertyGroup>
-      <_KazoOsVersionFile>$(IntermediateOutputPath)hackeros-version/version.json</_KazoOsVersionFile>
+      <_KazoOsVersionFile>$(IntermediateOutputPath)kazoos-version/version.json</_KazoOsVersionFile>
     </PropertyGroup>
     <WriteLinesToFile File="$(_KazoOsVersionFile)"
                       Lines="{ &quot;product&quot;: &quot;Kazo OS&quot;, &quot;version&quot;: &quot;$(KazoOsVersion)&quot; }"
@@ -111,7 +111,7 @@
 
   <Target Name="_KazoOsResolveChangeListTool">
     <PropertyGroup>
-      <_KazoOsWhatsNewFile>$(IntermediateOutputPath)hackeros-whats-new/whats-new.json</_KazoOsWhatsNewFile>
+      <_KazoOsWhatsNewFile>$(IntermediateOutputPath)kazoos-whats-new/whats-new.json</_KazoOsWhatsNewFile>
     </PropertyGroup>
     <MSBuild Projects="..\..\Tools\Kazo.Os.Tools.ChangeList\Kazo.Os.Tools.ChangeList.csproj"
              Targets="GetTargetPath"

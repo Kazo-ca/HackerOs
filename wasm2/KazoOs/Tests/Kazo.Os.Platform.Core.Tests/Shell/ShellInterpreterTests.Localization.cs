@@ -90,7 +90,7 @@ public sealed partial class ShellInterpreterTests
         Fixture fixture = await Fixture.CreateAsync();
         fixture.Grant(AppCapabilities.ShellHost);
         RecordingPrompt prompt = new() { Credential = new KazoCredential("admin", "wrong") };
-        await using IHackShell shell = await KazoShell.StartAsync(fixture.Host, new KazoShellOptions { CredentialPrompt = prompt });
+        await using IKazoShell shell = await KazoShell.StartAsync(fixture.Host, new KazoShellOptions { CredentialPrompt = prompt });
 
         await RunHostedAsync(shell, "LANG=fr_FR.UTF-8");
         (int status, _, string error) = await RunHostedAsync(shell, "sudo amroot");

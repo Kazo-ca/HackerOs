@@ -11,7 +11,7 @@
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.JSInterop
 @implements IAsyncDisposable
-@implements IHackTerminal
+@implements IKazoTerminal
 @inject IJSRuntime JavaScript
 @inject IDialogService Dialogs
 
@@ -28,7 +28,7 @@
     readline-like editing of the prompt line (TerminalLineEditor), the decoding of key sequences
     (TerminalInputDecoder), and the alternate screen of full-screen commands such as nano.
     See Apps/System/Kazo.Os.Apps.Terminal for the thin standalone host, and
-    The Terminal app registers it with the OS for other apps (IHackTerminal, ADR 0063): a host
+    The Terminal app registers it with the OS for other apps (IKazoTerminal, ADR 0063): a host
     drives it as a person at the keyboard would (RunCommandAsync shows the line at the prompt),
     and reads back the text it showed without control sequences.
 *@
@@ -52,7 +52,7 @@
     /// <see cref="AppContext"/>'s own process, which already identifies the host.
     /// </summary>
     [Parameter]
-    public string CallerAppId { get; set; } = "org.hackeros.terminal";
+    public string CallerAppId { get; set; } = "org.kazoos.terminal";
 
     /// <summary>Gets or sets the username shown in the prompt until the shell has started.</summary>
     [Parameter]
@@ -144,7 +144,7 @@
         """;
 
     private ElementReference _surfaceRef;
-    private IHackShell? _shell;
+    private IKazoShell? _shell;
     private TerminalCredentialPrompt? _credentialPrompt;
     private string? _lastCompletionLine;
     private readonly TerminalLineEditor _editor = new();

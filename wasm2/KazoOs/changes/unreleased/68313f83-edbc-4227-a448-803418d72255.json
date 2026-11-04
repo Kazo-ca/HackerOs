@@ -5,8 +5,8 @@
     "developer"
   ],
   "title": {
-    "en": "The hackeros-solution template names its app project for the Hack Store",
-    "fr": "Le modèle hackeros-solution indique son projet d'app au Hack Store"
+    "en": "The kazoos-solution template names its app project for the Kazo OS Store",
+    "fr": "Le modèle kazoos-solution indique son projet d'app au Kazo OS Store"
   },
   "description": {
     "en": "store/store.json of a new app repository has a project field, so the catalog builds the app's project instead of the whole solution, whose tests project has no KazoOsPack target.",

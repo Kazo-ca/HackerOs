@@ -17,7 +17,7 @@ public sealed class IntranetPagesTests
 
         Assert.Equal(200, home.StatusCode);
         Assert.StartsWith("text/html", home.ContentType);
-        Assert.Equal("ASP.Hack", IntranetClient.Header(home, "X-Powered-By"));
+        Assert.Equal("ASP.Kazo", IntranetClient.Header(home, "X-Powered-By"));
         string html = home.ReadAsString();
         Assert.Contains("<title>Home - Intranet</title>", html);
         Assert.Contains("Welcome, stranger", html);

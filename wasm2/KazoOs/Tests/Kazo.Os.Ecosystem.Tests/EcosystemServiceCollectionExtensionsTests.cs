@@ -80,7 +80,7 @@ public sealed class EcosystemServiceCollectionExtensionsTests
         // ADR 0150 §1: the platform itself provides the OS context menu, without loading an app.
         Assert.NotNull(provider.GetRequiredService<Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuService>());
         Kazo.Os.AppSdk.Blazor.Components.KazoComponentResolution menu = await provider
-            .GetRequiredService<Kazo.Os.AppSdk.Blazor.Components.IHackComponentHost>()
+            .GetRequiredService<Kazo.Os.AppSdk.Blazor.Components.IKazoComponentHost>()
             .ResolveAsync(Kazo.Os.AppSdk.Components.KazoComponentContracts.ContextMenu);
         Assert.Equal(typeof(Kazo.Os.Platform.Blazor.ContextMenus.PlatformContextMenu), menu.ComponentType);
         Assert.Equal(Kazo.Os.AppSdk.Blazor.Components.KazoComponentResolution.PlatformProviderId, menu.ProviderAppId);
@@ -97,7 +97,7 @@ public sealed class EcosystemServiceCollectionExtensionsTests
     [InlineData("nonsense", true)]
     public void Resource_limits_are_on_unless_the_host_turns_them_off(string? value, bool enabled)
     {
-        Dictionary<string, string?> values = value is null ? [] : new() { ["HackerOs:ResourceLimits:Enabled"] = value };
+        Dictionary<string, string?> values = value is null ? [] : new() { ["KazoOs:ResourceLimits:Enabled"] = value };
         Microsoft.Extensions.Configuration.IConfiguration configuration =
             new Microsoft.Extensions.Configuration.ConfigurationBuilder().AddInMemoryCollection(values).Build();
 
@@ -113,7 +113,7 @@ public sealed class EcosystemServiceCollectionExtensionsTests
         services.AddSingleton<NavigationManager, TestNavigationManager>();
         services.AddSingleton<IJSRuntime, NonInvokedJsRuntime>();
         services.AddKazoOsResourceLimits(new Microsoft.Extensions.Configuration.ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string?> { ["HackerOs:ResourceLimits:Enabled"] = enabled.ToString() }).Build());
+            .AddInMemoryCollection(new Dictionary<string, string?> { ["KazoOs:ResourceLimits:Enabled"] = enabled.ToString() }).Build());
         services.AddKazoOsEcosystem();
         services.RemoveAll<Microsoft.Extensions.Logging.ILoggerProvider>();
         await using ServiceProvider rootProvider = services.BuildServiceProvider(

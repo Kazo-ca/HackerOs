@@ -4,7 +4,7 @@
 
 @*
     Settings > Notifications (ADR 0216 §2): the "Do not disturb" switch, written to
-    ~/.config/hackeros/notifications.config. The shell hides the bubbles and mutes the
+    ~/.config/kazoos/notifications.config. The shell hides the bubbles and mutes the
     notification sounds at once; the clock panel has the same switch.
 *@
 @if (!_loaded)
@@ -26,7 +26,7 @@ else
             <span class="notifications-switch-label">@L["Notifications.Dnd.Enabled"]</span>
         </label>
         <p class="setting-desc notifications-file">
-            @LocalizedMarkup.Format(L["Notifications.Dnd.File"], LocalizedMarkup.Code("~/.config/hackeros/" + DocumentFileName))
+            @LocalizedMarkup.Format(L["Notifications.Dnd.File"], LocalizedMarkup.Code("~/.config/kazoos/" + DocumentFileName))
         </p>
     </div>
 }

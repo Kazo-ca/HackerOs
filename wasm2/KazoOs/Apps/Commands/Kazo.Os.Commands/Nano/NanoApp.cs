@@ -11,7 +11,7 @@ namespace Kazo.Os.Commands.Nano;
 public sealed class NanoApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.nano";
+    public override string Id => "org.kazoos.commands.nano";
 
     /// <inheritdoc />
     public override string Name => "nano";
@@ -23,7 +23,7 @@ public sealed class NanoApp : AppDefinition
     public override Type EntryPoint => typeof(NanoCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Terminal interactive text editor command";

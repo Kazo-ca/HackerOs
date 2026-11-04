@@ -23,11 +23,11 @@ public sealed class AppWindowGatewayFactoryTests
         AppWindowGatewayFactory factory = new(runtime, coordinator);
         IAppWindowGateway first = factory.Create(windows[0].Id, manifest);
 
-        string shown = await first.SetTitleAsync("photo.png — Hack Paint");
+        string shown = await first.SetTitleAsync("photo.png — Kazo Paint");
 
-        Assert.Equal("photo.png — Hack Paint", shown);
-        Assert.Equal("photo.png — Hack Paint", first.Title);
-        Assert.Equal("photo.png — Hack Paint", runtime.Windows.Single(window => window.Id == windows[0].Id).Title);
+        Assert.Equal("photo.png — Kazo Paint", shown);
+        Assert.Equal("photo.png — Kazo Paint", first.Title);
+        Assert.Equal("photo.png — Kazo Paint", runtime.Windows.Single(window => window.Id == windows[0].Id).Title);
         Assert.Equal("Test Window", runtime.Windows.Single(window => window.Id == windows[1].Id).Title);
     }
 
@@ -59,10 +59,10 @@ public sealed class AppWindowGatewayFactoryTests
         IAppWindowGateway gateway = new AppWindowGatewayFactory(runtime).Create(windowId, manifest);
         runtime.Apply(new ForceWindowCloseCommand(windowId));
 
-        string shown = await gateway.SetTitleAsync("late.png — Hack Paint");
+        string shown = await gateway.SetTitleAsync("late.png — Kazo Paint");
 
-        Assert.Equal("late.png — Hack Paint", shown);
-        Assert.Equal("late.png — Hack Paint", gateway.Title);
+        Assert.Equal("late.png — Kazo Paint", shown);
+        Assert.Equal("late.png — Kazo Paint", gateway.Title);
         Assert.Empty(runtime.Windows);
     }
 
@@ -84,10 +84,10 @@ public sealed class AppWindowGatewayFactoryTests
 
     private static AppManifest CreateManifest() => new()
     {
-        Id = "org.hackeros.test-window",
+        Id = "org.kazoos.test-window",
         Name = "Test Window",
         Version = "1.0.0",
-        PublisherId = "pub.hackeros",
+        PublisherId = "pub.kazoos",
         Description = "Window gateway test app.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Test.dll", "Test.Window"),
@@ -102,7 +102,7 @@ public sealed class AppWindowGatewayFactoryTests
         return new ProcessRecord(
             ProcessId.FromInt64(42),
             parentPid: null,
-            "org.hackeros.test-window",
+            "org.kazoos.test-window",
             AppInstanceId.FromGuid(Guid.NewGuid()),
             AppKind.Window,
             LocalUserId.FromGuid(Guid.NewGuid()),

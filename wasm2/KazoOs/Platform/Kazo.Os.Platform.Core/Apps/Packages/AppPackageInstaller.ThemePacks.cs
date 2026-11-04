@@ -33,15 +33,15 @@ public sealed record ThemePackPlan(AppPackageSource Source, ThemePack Pack, AppS
 /// <param name="Name">Its name.</param>
 /// <param name="Version">Installed version.</param>
 /// <param name="Source">Where it came from, such as <c>catalog:official/org.example.neon@1.0.0</c>.</param>
-/// <param name="SystemWide">Whether it is in <c>/usr/share/hackeros/theme-packs</c>.</param>
+/// <param name="SystemWide">Whether it is in <c>/usr/share/kazoos/theme-packs</c>.</param>
 /// <param name="Parts">What it holds.</param>
 public sealed record InstalledThemePack(string Id, string Name, SemanticVersion Version, string Source, bool SystemWide, ThemePackParts Parts);
 
 /// <summary>
-/// Theme packs of the Hack Store (ADR 0190, ADR 0213): a <c>.hacktheme</c> listed with
+/// Theme packs of the Kazo OS Store (ADR 0190, ADR 0213): a <c>.kazotheme</c> listed with
 /// <c>kind: "theme-pack"</c> in a catalog is downloaded, checked against the SHA-256 of the
 /// catalog, verified file by file (<see cref="ThemePack.Read"/>), then unpacked as it is in
-/// <see cref="ThemePackLayout.SystemDirectory"/> or the user's <c>~/.local/share/hackeros/theme-packs</c>.
+/// <see cref="ThemePackLayout.SystemDirectory"/> or the user's <c>~/.local/share/kazoos/theme-packs</c>.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -58,7 +58,7 @@ public sealed record InstalledThemePack(string Id, string Name, SemanticVersion 
 public sealed partial class AppPackageInstaller
 {
     /// <summary>Name of the install record written in each installed pack folder.</summary>
-    public const string InstallRecordFileName = ".hackeros-install";
+    public const string InstallRecordFileName = ".kazoos-install";
 
     private const string StagingSuffix = ".partial";
 
@@ -334,7 +334,7 @@ public sealed partial class AppPackageInstaller
 
     /// <summary>Writes the install record of a pack (INI-like <c>key=value</c> lines).</summary>
     internal static string FormatInstallRecord(ThemePack pack, AppPackageSource source, string by) =>
-        "# Written by the Hack Store when it installed this theme pack (ADR 0213). Removing the pack removes this folder.\n"
+        "# Written by the Kazo OS Store when it installed this theme pack (ADR 0213). Removing the pack removes this folder.\n"
         + $"id={pack.Id}\n"
         + $"name={OneLine(pack.Name)}\n"
         + $"version={pack.Version}\n"

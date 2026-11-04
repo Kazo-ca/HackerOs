@@ -1,6 +1,6 @@
 namespace Kazo.Os.Simulation.Abstractions.Workers;
 
-/// <summary>What a worker is for (ADR 0071, section 5): the <c>role</c> column of <c>/proc/hackeros/workers</c>.</summary>
+/// <summary>What a worker is for (ADR 0071, section 5): the <c>role</c> column of <c>/proc/kazoos/workers</c>.</summary>
 public enum WorkerRole
 {
     /// <summary>One of the virtual cores: runs commands and pipelines (ADR 0070, section 2).</summary>
@@ -22,7 +22,7 @@ public enum WorkerRole
     Web
 }
 
-/// <summary>Life-cycle state of one worker, the <c>state</c> column of <c>/proc/hackeros/workers</c>.</summary>
+/// <summary>Life-cycle state of one worker, the <c>state</c> column of <c>/proc/kazoos/workers</c>.</summary>
 public enum WorkerState
 {
     /// <summary>The runtime is loading (cold start).</summary>
@@ -44,7 +44,7 @@ public enum WorkerState
     Terminated
 }
 
-/// <summary>One line of <c>/proc/hackeros/workers</c> (ADR 0071, section 5).</summary>
+/// <summary>One line of <c>/proc/kazoos/workers</c> (ADR 0071, section 5).</summary>
 /// <param name="Id">Worker number, stable for its life.</param>
 /// <param name="Role">What it is for.</param>
 /// <param name="State">Where it is in its life cycle.</param>

@@ -394,7 +394,7 @@ public sealed partial class GuestAccountService
     private FileSystemAuthorizationContext OwnerContext(string loginName, LocalGroupId groupId) => new(
         new AppOperationContext
         {
-            AppId = "org.hackeros.accounts",
+            AppId = "org.kazoos.accounts",
             UserId = loginName,
             UserAuthority = AppAuthority.System,
             GrantedCapabilities = new HashSet<string>(AppCapabilities.All, StringComparer.Ordinal),
@@ -406,7 +406,7 @@ public sealed partial class GuestAccountService
     private FileSystemAuthorizationContext SystemContext() => new(
         new AppOperationContext
         {
-            AppId = "org.hackeros.accounts",
+            AppId = "org.kazoos.accounts",
             UserId = "system",
             UserName = "system",
             UserAuthority = AppAuthority.System,

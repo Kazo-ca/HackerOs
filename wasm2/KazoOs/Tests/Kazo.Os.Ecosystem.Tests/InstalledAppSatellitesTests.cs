@@ -43,8 +43,8 @@ public sealed class InstalledAppSatellitesTests
         Assert.Empty(found);
         Assert.Equal(
             [
-                "/usr/lib/hackeros/apps/org.kazo.sample/1.0.0/lib/fr/Kazo.Sample.resources.dll",
-                "/usr/lib/hackeros/apps/org.kazo.sample/1.0.0/lib/de/Kazo.Sample.resources.dll",
+                "/usr/lib/kazoos/apps/org.kazo.sample/1.0.0/lib/fr/Kazo.Sample.resources.dll",
+                "/usr/lib/kazoos/apps/org.kazo.sample/1.0.0/lib/de/Kazo.Sample.resources.dll",
             ],
             asked);
     }
@@ -62,7 +62,7 @@ public sealed class InstalledAppSatellitesTests
         InstalledApp app = App() with { FilesHome = "/home/alice" };
 
         Assert.Equal(
-            "/home/alice/.local/share/hackeros/apps/org.kazo.sample/1.0.0/lib/fr/Kazo.Sample.resources.dll",
+            "/home/alice/.local/share/kazoos/apps/org.kazo.sample/1.0.0/lib/fr/Kazo.Sample.resources.dll",
             app.GetSatellitePath("fr", "Kazo.Sample.dll").Value);
     }
 }

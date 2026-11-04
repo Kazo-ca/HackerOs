@@ -36,16 +36,16 @@
   <data name="Admin.ComponentProvider.Set" xml:space="preserve">
     <value>Make '{0}' ({1}) the provider of {2} for the whole machine</value>
   </data>
-  <data name="Capability.hackeros.file-dialogs.Risk" xml:space="preserve">
+  <data name="Capability.kazoos.file-dialogs.Risk" xml:space="preserve">
     <value>This app's code will run inside every app that opens or saves files, with that app's rights.</value>
   </data>
-  <data name="Capability.hackeros.file-dialogs.Title" xml:space="preserve">
+  <data name="Capability.kazoos.file-dialogs.Title" xml:space="preserve">
     <value>Provide the OS file dialogs</value>
   </data>
-  <data name="Capability.hackeros.file-view.Risk" xml:space="preserve">
+  <data name="Capability.kazoos.file-view.Risk" xml:space="preserve">
     <value>This app's code will run inside every app that shows files, with that app's rights.</value>
   </data>
-  <data name="Capability.hackeros.file-view.Title" xml:space="preserve">
+  <data name="Capability.kazoos.file-view.Title" xml:space="preserve">
     <value>Provide the OS file view</value>
   </data>
   <data name="Admin.Decision.Allow" xml:space="preserve">
@@ -439,13 +439,13 @@ Cancel: decide at the next launch.</value>
     <value>Administrator Authorization Required</value>
   </data>
   <data name="Relay.Warning.AllowAllPorts" xml:space="preserve">
-    <value>HackerOs:Proxy:AllowAllPorts is on: the relay reaches every TCP and UDP port.</value>
+    <value>KazoOs:Proxy:AllowAllPorts is on: the relay reaches every TCP and UDP port.</value>
   </data>
   <data name="Relay.Warning.AllowPrivateNetworks" xml:space="preserve">
-    <value>HackerOs:Proxy:AllowPrivateNetworks is on: the relay reaches the private networks of the server's machine (loopback and cloud metadata stay blocked).</value>
+    <value>KazoOs:Proxy:AllowPrivateNetworks is on: the relay reaches the private networks of the server's machine (loopback and cloud metadata stay blocked).</value>
   </data>
   <data name="Relay.Warning.QuotasDisabled" xml:space="preserve">
-    <value>HackerOs:Proxy:Quotas:Enabled is off: no size, concurrency, stream or idle limit applies.</value>
+    <value>KazoOs:Proxy:Quotas:Enabled is off: no size, concurrency, stream or idle limit applies.</value>
   </data>
   <data name="Shell.AliasNotSimple" xml:space="preserve">
     <value>alias {0}: only a simple command can be aliased</value>
@@ -467,6 +467,9 @@ Cancel: decide at the next launch.</value>
   </data>
   <data name="Shell.CommandNotFound" xml:space="preserve">
     <value>{0}: command not found</value>
+  </data>
+  <data name="Shell.DeprecatedCommand" xml:space="preserve">
+    <value>{0}: this name is deprecated, use {1}</value>
   </data>
   <data name="Shell.CurrentJob" xml:space="preserve">
     <value>current</value>
@@ -712,10 +715,10 @@ Cancel: decide at the next launch.</value>
     <value>App updates</value>
   </data>
   <data name="AppUpdates.Notification.One" xml:space="preserve">
-    <value>1 app can be updated in the Hack Store.</value>
+    <value>1 app can be updated in the Kazo OS Store.</value>
   </data>
   <data name="AppUpdates.Notification.Many" xml:space="preserve">
-    <value>{0} apps can be updated in the Hack Store.</value>
+    <value>{0} apps can be updated in the Kazo OS Store.</value>
   </data>
   <data name="AppUpdates.Notification.View" xml:space="preserve">
     <value>View</value>

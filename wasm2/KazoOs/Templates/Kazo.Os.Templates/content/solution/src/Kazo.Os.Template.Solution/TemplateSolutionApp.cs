@@ -16,8 +16,8 @@ public sealed class TemplateSolutionApp : AppDefinition
     public override string Name => "Kazo.Os.Template.Solution";
 
     /// <summary>
-    /// The app's version. A tag v&lt;version&gt; publishes it to the Hack Store
-    /// (.github/workflows/publish-to-hack-store.yml): change it here, then tag.
+    /// The app's version. A tag v&lt;version&gt; publishes it to the Kazo OS Store
+    /// (.github/workflows/publish-to-kazoos-store.yml): change it here, then tag.
     /// </summary>
     public override string Version => "1.0.0";
 

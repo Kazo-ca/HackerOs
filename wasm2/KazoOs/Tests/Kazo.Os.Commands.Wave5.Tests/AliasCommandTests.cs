@@ -53,7 +53,7 @@ public sealed class AliasCommandTests
         Assert.Equal(0, removeExitCode);
 
         string listing = await RunCapturingOutput(fs, []);
-        Assert.DoesNotContain("ll=", fs.ContentOf("/home/user/.hackeros/aliases"));
+        Assert.DoesNotContain("ll=", fs.ContentOf("/home/user/.kazoos/aliases"));
         Assert.Equal(string.Empty, listing);
     }
 
@@ -75,7 +75,7 @@ public sealed class AliasCommandTests
         FakeAppFileSystemGateway fs = new FakeAppFileSystemGateway().WithDirectory("/home/user");
         await Run(fs, "ll=ls -la");
 
-        RaceOnNextMutationFileSystemGateway racing = new(fs, "/home/user/.hackeros/aliases");
+        RaceOnNextMutationFileSystemGateway racing = new(fs, "/home/user/.kazoos/aliases");
         TerminalExecutionContext context = new(
             new MinimalAppExecutionContext(AppDefinitionMapper.ToManifest(new AliasApp()), fileSystem: racing),
             ["ll=ls -la --color"],

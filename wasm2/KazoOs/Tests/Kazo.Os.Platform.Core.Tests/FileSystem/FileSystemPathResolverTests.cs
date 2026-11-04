@@ -14,10 +14,10 @@ public sealed class FileSystemPathResolverTests
         root.AddDirectory("/home");
         root.AddDirectory("/home/user");
         root.AddDirectory("/etc");
-        root.AddLink("/home/user/config", "/etc/hackeros/settings.json");
+        root.AddLink("/home/user/config", "/etc/kazoos/settings.json");
         mounted.AddDirectory("/etc");
-        mounted.AddDirectory("/etc/hackeros");
-        mounted.AddFile("/etc/hackeros/settings.json");
+        mounted.AddDirectory("/etc/kazoos");
+        mounted.AddFile("/etc/kazoos/settings.json");
         FileSystemPathResolver resolver = CreateResolver(root, mounted);
 
         FileSystemResult<FileSystemPathResolution> result = await resolver.ResolveAsync(
@@ -27,9 +27,9 @@ public sealed class FileSystemPathResolverTests
             CreateContext());
 
         Assert.True(result.Succeeded);
-        Assert.Equal("/etc/hackeros/settings.json", result.Value?.Path.Value);
+        Assert.Equal("/etc/kazoos/settings.json", result.Value?.Path.Value);
         Assert.Equal(1, result.Value?.FollowedSymbolicLinks);
-        Assert.Contains("/etc/hackeros/settings.json", mounted.StatPaths);
+        Assert.Contains("/etc/kazoos/settings.json", mounted.StatPaths);
     }
 
     [Fact]
@@ -134,19 +134,19 @@ public sealed class FileSystemPathResolverTests
         root.AddDirectory("/home");
         root.AddDirectory("/home/user");
         root.AddDirectory("/home/user/.config");
-        root.AddDirectory("/home/user/.config/hackeros");
-        root.AddFile("/home/user/.config/hackeros/ui-platform.config");
+        root.AddDirectory("/home/user/.config/kazoos");
+        root.AddFile("/home/user/.config/kazoos/ui-platform.config");
         FileSystemPathResolver resolver = CreateResolver(root);
 
         FileSystemResult<FileSystemPathResolution> result = await resolver.ResolveAsync(
-            VirtualPath.Parse("/home/user/.config/hackeros/ui-platform.config"),
+            VirtualPath.Parse("/home/user/.config/kazoos/ui-platform.config"),
             FileSystemLinkBehavior.Follow,
             FileSystemOperation.Write,
             CreateContext());
 
         Assert.True(result.Succeeded);
-        Assert.Equal("/home/user/.config/hackeros/ui-platform.config", result.Value?.Path.Value);
-        Assert.Equal(["/home/user/.config/hackeros/ui-platform.config"], root.WalkPaths);
+        Assert.Equal("/home/user/.config/kazoos/ui-platform.config", result.Value?.Path.Value);
+        Assert.Equal(["/home/user/.config/kazoos/ui-platform.config"], root.WalkPaths);
         Assert.Empty(root.StatPaths);
     }
 
@@ -204,12 +204,12 @@ public sealed class FileSystemPathResolverTests
         WalkingMetadataProvider root = new("root");
         MetadataProvider mounted = new("mounted");
         root.AddDirectory("/etc");
-        mounted.AddDirectory("/etc/hackeros");
-        mounted.AddFile("/etc/hackeros/settings.json");
+        mounted.AddDirectory("/etc/kazoos");
+        mounted.AddFile("/etc/kazoos/settings.json");
         FileSystemPathResolver resolver = CreateResolver(root, mounted);
 
         FileSystemResult<FileSystemPathResolution> result = await resolver.ResolveAsync(
-            VirtualPath.Parse("/etc/hackeros/settings.json"),
+            VirtualPath.Parse("/etc/kazoos/settings.json"),
             FileSystemLinkBehavior.Follow,
             FileSystemOperation.Read,
             CreateContext());
@@ -236,13 +236,13 @@ public sealed class FileSystemPathResolverTests
             root,
             mounted is null
                 ? null
-                : [new FileSystemMount(VirtualPath.Parse("/etc/hackeros"), mounted)]));
+                : [new FileSystemMount(VirtualPath.Parse("/etc/kazoos"), mounted)]));
 
     private static FileSystemAuthorizationContext CreateContext()
     {
         AppOperationContext operationContext = new()
         {
-            AppId = "org.hackeros.test",
+            AppId = "org.kazoos.test",
             UserId = "user",
             UserAuthority = AppAuthority.User,
             GrantedCapabilities = new HashSet<string>(StringComparer.Ordinal)

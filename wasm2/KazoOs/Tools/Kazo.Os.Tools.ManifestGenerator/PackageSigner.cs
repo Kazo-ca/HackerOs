@@ -5,7 +5,7 @@ namespace Kazo.Os.Tools.ManifestGenerator;
 
 /// <summary>
 /// Signatures of an app author's packages (ADR 0219, format of ADR 0214 §2): ECDSA P-256 with SHA-256
-/// over the bytes of the <c>.hackapp</c>, IEEE P1363 (<c>r||s</c>, 64 bytes) as base64 in the
+/// over the bytes of the <c>.kazoapp</c>, IEEE P1363 (<c>r||s</c>, 64 bytes) as base64 in the
 /// <c>signature</c> field of <c>index.json</c>. The OS checks it against the keys that
 /// <c>[signing-keys]</c> lists for <c>github.com/&lt;owner&gt;</c> or <c>github.com/&lt;owner&gt;/&lt;repo&gt;</c>.
 /// </summary>
@@ -37,7 +37,7 @@ public static class PackageSigner
     }
 
     /// <summary>Signs a package and checks the result with the public key before returning it.</summary>
-    /// <param name="package">Bytes of the <c>.hackapp</c>.</param>
+    /// <param name="package">Bytes of the <c>.kazoapp</c>.</param>
     /// <param name="privateKeyPem">PKCS#8 PEM of a P-256 key.</param>
     /// <returns>The 64-byte signature.</returns>
     /// <exception cref="ArgumentException">The key is not a P-256 private key.</exception>
@@ -55,7 +55,7 @@ public static class PackageSigner
     }
 
     /// <summary>Checks a signature the way the OS does (shape of the key included).</summary>
-    /// <param name="package">Bytes of the <c>.hackapp</c>.</param>
+    /// <param name="package">Bytes of the <c>.kazoapp</c>.</param>
     /// <param name="signature">The 64-byte signature.</param>
     /// <param name="publicKey">The base64 SubjectPublicKeyInfo.</param>
     public static bool Verify(byte[] package, byte[] signature, string publicKey)

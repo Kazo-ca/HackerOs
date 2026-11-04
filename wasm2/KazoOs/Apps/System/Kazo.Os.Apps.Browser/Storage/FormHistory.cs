@@ -6,7 +6,7 @@ namespace Kazo.Os.Apps.Browser.Storage;
 /// <summary>
 /// The browser's form history (ADR 0073 §3, ADR 0088 §6), like Firefox's <c>formhistory.sqlite</c>: what
 /// the user typed in submitted form fields, by field name, for every site, kept in the user's files at
-/// <c>~/.local/share/hackeros/browser/form-history.json</c>. The page bridge offers it back as a
+/// <c>~/.local/share/kazoos/browser/form-history.json</c>. The page bridge offers it back as a
 /// <c>&lt;datalist&gt;</c> when a field of the same name gets the focus.
 /// </summary>
 /// <remarks>
@@ -57,9 +57,9 @@ public sealed class FormHistory
     /// <summary>Gets the history file.</summary>
     public string Path { get; }
 
-    /// <summary>Gets the history file of a user: <c>~/.local/share/hackeros/browser/form-history.json</c>.</summary>
+    /// <summary>Gets the history file of a user: <c>~/.local/share/kazoos/browser/form-history.json</c>.</summary>
     /// <param name="homeDirectory">The user's home directory.</param>
-    public static string GetPath(string homeDirectory) => $"{homeDirectory.TrimEnd('/')}/.local/share/hackeros/browser/{FileName}";
+    public static string GetPath(string homeDirectory) => $"{homeDirectory.TrimEnd('/')}/.local/share/kazoos/browser/{FileName}";
 
     /// <summary>
     /// Whether a submitted value may be kept: not empty, not too long, and not a payment card number

@@ -10,10 +10,10 @@ internal static class TestContexts
     public static IAppExecutionContext Process(long pid) => new MinimalAppExecutionContext(
         new AppManifest
         {
-            Id = $"org.hackeros.test-{pid}",
+            Id = $"org.kazoos.test-{pid}",
             Name = $"Test {pid}",
             Version = "1.0.0",
-            PublisherId = "org.hackeros",
+            PublisherId = "org.kazoos",
             Description = "Resource accounting test process.",
             Kind = AppKind.Terminal,
             EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.ResourceAccounting.Tests", "Test"),

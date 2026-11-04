@@ -7,7 +7,7 @@
 Accepted on 2026-10-16 (proposed the same day, then validated by Benoit with the
 questionnaire of section 4 of the plan).
 
-- **Plan phase:** web phase ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Plan phase:** web phase ([`asp-kazo-plan.md`](../plans/asp-kazo-plan.md)).
 - **Completes:** ADR 0047 (manifest as a C# class), ADR 0049 (capabilities),
   ADR 0070 (execution host).
 

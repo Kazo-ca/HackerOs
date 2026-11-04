@@ -74,8 +74,8 @@
 
                         <fieldset class="wsm-field wsm-scope">
                             <legend>@L["Form.DeclaredIn"]</legend>
-                            <label><input type="radio" name="scope" checked="@(editor.Scope == KazoWebSiteScope.User)" @onchange="() => SetScopeAsync(KazoWebSiteScope.User)" /> @L["Form.Scope.User"] <code>~/.config/hackweb/sites</code> @L["Form.Scope.User.Hint"]</label>
-                            <label><input type="radio" name="scope" checked="@(editor.Scope == KazoWebSiteScope.System)" @onchange="() => SetScopeAsync(KazoWebSiteScope.System)" /> @L["Form.Scope.System"] <code>/etc/hackweb/sites</code> @L["Form.Scope.System.Hint"]</label>
+                            <label><input type="radio" name="scope" checked="@(editor.Scope == KazoWebSiteScope.User)" @onchange="() => SetScopeAsync(KazoWebSiteScope.User)" /> @L["Form.Scope.User"] <code>~/.config/kazoweb/sites</code> @L["Form.Scope.User.Hint"]</label>
+                            <label><input type="radio" name="scope" checked="@(editor.Scope == KazoWebSiteScope.System)" @onchange="() => SetScopeAsync(KazoWebSiteScope.System)" /> @L["Form.Scope.System"] <code>/etc/kazoweb/sites</code> @L["Form.Scope.System.Hint"]</label>
                         </fieldset>
 
                         <label class="wsm-field">
@@ -139,9 +139,9 @@
                 else
                 {
                     <div class="wsm-logs">
-                        <h3>@L["Logs.Access"] <code>/var/log/hackweb/@(editor.Name).access.log</code></h3>
+                        <h3>@L["Logs.Access"] <code>/var/log/kazoweb/@(editor.Name).access.log</code></h3>
                         <pre class="wsm-log">@(_accessLines.Count == 0 ? L["Logs.NoRequest"] : string.Join('\n', _accessLines))</pre>
-                        <h3>@L["Logs.Errors"] <code>/var/log/hackweb/error.log</code></h3>
+                        <h3>@L["Logs.Errors"] <code>/var/log/kazoweb/error.log</code></h3>
                         <pre class="wsm-log wsm-log-errors">@(_errorLines.Count == 0 ? L["Logs.NoErrors"] : string.Join('\n', _errorLines))</pre>
                     </div>
                 }
@@ -164,7 +164,7 @@
             {
                 <div class="wsm-placeholder">
                     <p>@L["Placeholder.Pick"] <strong>@L["Toolbar.NewSite"]</strong>@L["Placeholder.PickEnd"]</p>
-                    <p class="wsm-muted">@L["Placeholder.PlainFiles"] <code>cat /etc/hackweb/sites/*.site</code>, <code>systemctl status hackwebd</code>, <code>netstat -tlnp</code>.</p>
+                    <p class="wsm-muted">@L["Placeholder.PlainFiles"] <code>cat /etc/kazoweb/sites/*.site</code>, <code>systemctl status kazowebd</code>, <code>netstat -tlnp</code>.</p>
                 </div>
             }
         </section>

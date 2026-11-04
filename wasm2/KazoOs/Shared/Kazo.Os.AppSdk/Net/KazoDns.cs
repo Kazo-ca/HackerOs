@@ -9,7 +9,7 @@ namespace Kazo.Os.AppSdk.Net;
 public sealed record KazoHostEntry(string HostName, IReadOnlyList<IPAddress> AddressList, IReadOnlyList<string> Aliases)
 {
     /// <summary>
-    /// Gets where the OS resolver (<c>hackdns</c>, ADR 0074 section 4) found the answer, as
+    /// Gets where the OS resolver (<c>kazodns</c>, ADR 0074 section 4) found the answer, as
     /// <c>nslookup</c> shows it; <see cref="KazoDnsSource.Unknown"/> for a reverse lookup.
     /// </summary>
     public KazoDnsSource Source { get; init; }
@@ -22,7 +22,7 @@ public sealed record KazoHostEntry(string HostName, IReadOnlyList<IPAddress> Add
 }
 
 /// <summary>
-/// The sources of the OS resolver <c>hackdns</c>, in the order it asks them (ADR 0074, section 4).
+/// The sources of the OS resolver <c>kazodns</c>, in the order it asks them (ADR 0074, section 4).
 /// </summary>
 public enum KazoDnsSource
 {
@@ -50,7 +50,7 @@ public enum KazoDnsSource
 /// <c>network.simulated.read</c>.
 /// </summary>
 /// <remarks>
-/// Resolution asks the OS resolver <c>hackdns</c> (ADR 0074, section 4): <c>/etc/hosts</c>, then
+/// Resolution asks the OS resolver <c>kazodns</c> (ADR 0074, section 4): <c>/etc/hosts</c>, then
 /// <c>localhost</c>, the URLs of installed web apps, hosted sites and the simulated network; the
 /// answer's <see cref="KazoHostEntry.Source"/> says which one answered. A name it does not know throws a
 /// <see cref="System.Net.Sockets.SocketException"/> with <see cref="System.Net.Sockets.SocketError.HostNotFound"/>, as

@@ -5,7 +5,7 @@
   <PropertyGroup>
     <PackageId>Kazo.Os.Platform.ResourceAccounting</PackageId>
     <Description>Optional measured CPU time and process memory for Kazo OS (ADR 0066). Referenced by a host only when accounting is compiled in.</Description>
-    <PackageTags>hackeros;platform;accounting</PackageTags>
+    <PackageTags>kazoos;platform;accounting</PackageTags>
   </PropertyGroup>
 
   <!--

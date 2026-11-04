@@ -14,7 +14,7 @@ namespace Kazo.Os.AppSdk.Apps;
 /// raises <see cref="KazoUnauthorizedAccessException"/>.
 /// </para>
 /// <para>
-/// <see cref="KazoInstallScope.Machine"/> writes <c>/etc/hackeros/apps.config</c> for every user. Like
+/// <see cref="KazoInstallScope.Machine"/> writes <c>/etc/kazoos/apps.config</c> for every user. Like
 /// <c>pkexec</c>, the OS then asks an administrator for their password in its own secure window
 /// (ADR 0055, section 5): the app never sees the password. A refusal or a cancellation raises
 /// <see cref="KazoUnauthorizedAccessException"/>. A process already running as root through

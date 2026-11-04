@@ -70,7 +70,7 @@ function languageFor(mode) {
 
 // Kazo OS's own dark theme: the window's background and accent instead of vs-dark's grey, so
 // the editor reads as part of the desktop. Token colours stay close to VS Code's Dark+.
-monaco.editor.defineTheme("hackeros-dark", {
+monaco.editor.defineTheme("kazoos-dark", {
   base: "vs-dark",
   inherit: true,
   rules: [
@@ -108,7 +108,7 @@ monaco.editor.defineTheme("hackeros-dark", {
 
 // ADR 0105: Kazo OS's high-contrast editor theme, over Monaco's own hc-black (black background,
 // white text, yellow focus and cursor), matching the shell's high-contrast layer.
-monaco.editor.defineTheme("hackeros-high-contrast", {
+monaco.editor.defineTheme("kazoos-high-contrast", {
   base: "hc-black",
   inherit: true,
   rules: [
@@ -135,7 +135,7 @@ function accessibilityOptions(options) {
   const scale = options?.textScale > 0 ? options.textScale : 1;
   const reduced = !!options?.reducedMotion;
   return {
-    theme: options?.highContrast ? "hackeros-high-contrast" : "hackeros-dark",
+    theme: options?.highContrast ? "kazoos-high-contrast" : "kazoos-dark",
     fontSize: Math.round((options?.fontSize ?? 14) * scale),
     lineHeight: Math.round(21 * scale),
     smoothScrolling: !reduced,

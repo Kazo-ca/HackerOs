@@ -36,7 +36,7 @@ l'éliminer des mémoires, de la documentation et le remplacer par une mention
 ## Conséquences
 
 - Documents courants nettoyés dans le même changement (`project-overview.md`,
-  `building-on-hackeros.md`, `sdk-packages.md`, `ecosystem-rebuild-plan.md`,
+  `building-on-kazoos.md`, `sdk-packages.md`, `ecosystem-rebuild-plan.md`,
   `wasm-v3-completion-plan.md`, `wasm-v3-final-status.md`,
   `execution-followups-plan.md`, documents des mesures, `README.md` de
   `wasm2/KazoOs` et index) ; quelques commentaires de code aussi.

@@ -52,9 +52,9 @@ Sur `web/base` au 2026-10-17 (phase 5 et phase web fusionnées) :
 | Mesures | CPU (`utime`/`stime`, compositeur) et mémoire en quatre couches, optionnelles au build et dans `appsettings.json`. Compteurs en mémoire, remis à zéro au démarrage. | ADR 0066 à 0068, [`cpu-accounting.md`](../cpu-accounting.md), [`memory-accounting.md`](../memory-accounting.md) |
 | Arrêt | `StopRequested`, `CheckpointAsync`, escalade en quatre étapes ; l'étape 4 (terminer le worker) n'existe que dans un worker. Sur le fil principal, un processus bloqué gèle encore l'OS. | ADR 0069, ADR 0072 §5 |
 | Workers | Commandes en pool (49 sur 63) et services en worker dédié, chacun avec son runtime .NET (~15 à 40 Mo par worker). Le pool ne précharge que `Kazo.Os.Commands.dll`. | ADR 0070 à 0072, [`worker-processes.md`](../worker-processes.md) |
-| Ce qu'un worker n'offre pas | `KazoEvents`, `Watch`, hôte de shell, administration et page HTTP du navigateur simulé lèvent `NotSupportedException`. Le service d'exemple et `hackwebd` restent donc en `MainThread`. | ADR 0072 §3 |
+| Ce qu'un worker n'offre pas | `KazoEvents`, `Watch`, hôte de shell, administration et page HTTP du navigateur simulé lèvent `NotSupportedException`. Le service d'exemple et `kazowebd` restent donc en `MainThread`. | ADR 0072 §3 |
 | Apps à fenêtre | Toujours sur le fil principal (pas de DOM dans un worker). Une boucle dans une fenêtre gèle le bureau ; « Not responding » ne s'affiche qu'après la fin de la tranche. | ADR 0070 §1, ADR 0067 §4 |
-| `Kazo.Os.Server` | Mesures coupées par défaut, pas de worker : `AppExecutionHost` est ignoré, une ligne dans `/var/log/syslog`, pas de `/proc/hackeros`. | ADR 0066 §3, ADR 0067 §6, ADR 0070 §6, ADR 0072 §7 |
+| `Kazo.Os.Server` | Mesures coupées par défaut, pas de worker : `AppExecutionHost` est ignoré, une ligne dans `/var/log/syslog`, pas de `/proc/kazoos`. | ADR 0066 §3, ADR 0067 §6, ADR 0070 §6, ADR 0072 §7 |
 | Cross-origin | Aucun hôte n'envoie `Cross-Origin-Opener-Policy` ni `Cross-Origin-Embedder-Policy` ; `crossOriginIsolated` est faux, donc pas de `SharedArrayBuffer`, pas de `performance.measureUserAgentSpecificMemory()`, `performance.now()` arrondi. Les échanges avec les workers passent par `postMessage` (crédit de 64 Kio par flux). | ADR 0072 §2 |
 | Trimming | `PublishTrimmed=False` : le coût d'un worker en dépend. Le point appartient à la migration wasm v3, pas à ce plan. Fait par `v3/14` (2026-10-17, [`trimmed-publish.md`](../trimmed-publish.md)) : 50,9 → 26,5 Mio de WebAssembly. | `/mnt/project-files/wasm-v3/wasm-v3-remaining-work.md` n° 12 |
 
@@ -106,14 +106,14 @@ de l'écriture (section 7).
 
 | # | Décision | Question |
 |---|---|---|
-| 1 | Passerelles distantes pour `KazoEvents` et `Watch` ; le service d'exemple et `hackwebd` passent en worker ; le pool charge à la demande l'assembly de n'importe quelle commande ou service, plus seulement `Kazo.Os.Commands.dll`. | — |
+| 1 | Passerelles distantes pour `KazoEvents` et `Watch` ; le service d'exemple et `kazowebd` passent en worker ; le pool charge à la demande l'assembly de n'importe quelle commande ou service, plus seulement `Kazo.Os.Commands.dll`. | — |
 | 2 | Limites par processus façon `setrlimit` : `RLIMIT_CPU` (`SIGXCPU` puis `SIGKILL`), une limite mémoire sur `VmRSS` mesuré, `RLIMIT_NOFILE`, `RLIMIT_NPROC`. Commande `ulimit` (intégrée au shell), `prlimit`, `/proc/<pid>/limits`, `/etc/security/limits.conf`. Héritées par les enfants. | Q1 |
 | 3 | OOM killer : quand la mémoire disponible du système simulé passe sous un seuil, l'OS choisit la victime par `oom_score` (résident + `oom_score_adj`), la tue et l'écrit dans le journal du noyau. **Désactivé par défaut** : il s'active dans `/etc` (réglage de l'OS simulé) et seulement si la mémoire est mesurée. `MemTotal` reste la valeur **simulée** du profil matériel ; l'occupation est mesurée, ou estimée au plus juste quand une mesure exacte manque (mémoire réelle par worker avec l'isolation de la décision 9). | Q2, Q3 |
 | 4 | Garde du vrai navigateur : quand le tas du runtime principal ou d'un worker approche la limite réelle de la page, l'OS avertit (journal, notification) ; si l'OOM killer est activé, il agit même si `MemTotal` simulé n'est pas atteint. | Q2, Q3 |
 | 5 | Pas de quantum imposé ; `nice` et `renice` règlent seulement l'ordre de la file du pool et le choix du worker. | Q4 |
 | 6 | Fenêtre sans réponse, comme dans un navigateur : titre « (Not responding) », fenêtre grisée et boîte **« L'application ne répond pas : Attendre \| Terminer l'application »**, dès que le bureau peut se redessiner (fenêtre dont la logique est en worker, ou fin d'une longue tranche). « Terminer l'application » suit l'escalade de l'ADR 0069. | Q3 |
 | 7 | Apps à fenêtre, en deux étapes. **Étape 1** (idée de Benoit, l'inverse de `Invoke` de WinForms) : une fonction du SDK exécute la charge lourde dans un worker, par exemple `await KazoBackground.RunAsync(MyJobs.Compress, input, progress, ct)`. Le worker ayant sa propre mémoire, la tâche est une méthode **statique** (ou une classe de tâche) de l'assembly de l'app, avec une entrée et un résultat sérialisables, une progression et un jeton d'annulation ; un analyseur refuse au build une lambda qui capture des variables. La tâche a l'utilisateur et les droits de la fenêtre, apparaît dans `ps` comme enfant de l'app et peut être tuée sans fermer la fenêtre. **Étape 2** : essai de rendu Blazor dans un worker, lots de rendu appliqués par le fil principal façon serveur d'affichage ; rien n'est livré aux apps si l'essai échoue. | Q5 |
-| 8 | `Kazo.Os.Server` sert l'OS **en WebAssembly** (comme `test/test`) et garde côté serveur seulement son API (relais, synchronisation, authentification, ADR 0028) ; le mode Interactive Server de l'ADR 0027 et l'injection directe de l'ADR 0036 sont retirés. Les workers, les mesures et `/proc/hackeros` y deviennent ceux de l'Ecosystem. | Q7 |
+| 8 | `Kazo.Os.Server` sert l'OS **en WebAssembly** (comme `test/test`) et garde côté serveur seulement son API (relais, synchronisation, authentification, ADR 0028) ; le mode Interactive Server de l'ADR 0027 et l'injection directe de l'ADR 0036 sont retirés. Les workers, les mesures et `/proc/kazoos` y deviennent ceux de l'Ecosystem. | Q7 |
 | 9 | Isolation cross-origin optionnelle, **active par défaut si l'audit passe** : en-têtes COOP/COEP envoyés par les hôtes et par le service worker de la PWA (donc hors ligne et sur un hébergement statique), `COEP: credentialless` là où le navigateur le permet, sinon `require-corp`, détection par `crossOriginIsolated`, repli exact sur le comportement actuel. | Q6 |
 | 10 | Avec l'isolation : tubes en anneaux de `SharedArrayBuffer` entre workers et fil principal, appels synchrones du worker vers l'OS (`Atomics.wait` dans le worker seulement), mémoire réelle par worker par `measureUserAgentSpecificMemory()`, minuteries à 5 µs. **Pas de threads .NET WebAssembly** (`WasmEnableThreads`). | Q6, Q8 |
 
@@ -130,15 +130,15 @@ phases précédentes.
 | Branche | Contenu | Dépend de |
 |---|---|---|
 | `exec/0-adr` | **Fait** (branche `exec/1-adr`, 2026-10-18) : ADR 0124 à 0132 des décisions 1 à 10, mise à jour de ce plan et de l'index. | fin de la migration wasm v3 |
-| `exec/1-remote-gateways` | Décision 1 : passerelles distantes `KazoEvents` (abonnement côté worker, livraison par message, désabonnement à la fin du processus) et `Watch` ; tests de parité pour ces deux passerelles ; service d'exemple et `hackwebd` en worker ; chargement à la demande de toute assembly d'app dans le pool ; une commande d'un projet d'exemple tiers exécutée en worker. | `0` |
+| `exec/1-remote-gateways` | Décision 1 : passerelles distantes `KazoEvents` (abonnement côté worker, livraison par message, désabonnement à la fin du processus) et `Watch` ; tests de parité pour ces deux passerelles ; service d'exemple et `kazowebd` en worker ; chargement à la demande de toute assembly d'app dans le pool ; une commande d'un projet d'exemple tiers exécutée en worker. | `0` |
 | `exec/2-process-limits` | Décision 2 : contrat de limites dans Simulation Abstractions, lecture de `/etc/security/limits.conf` (et `limits.d/`), héritage au `fork`, `ulimit` et `prlimit`, `/proc/<pid>/limits`, `SIGXCPU`, application stricte en worker et au mieux sur le fil principal, sortie 152 (`SIGXCPU`) et 137 ; erreur `EMFILE`/`EAGAIN` pour `NOFILE`/`NPROC` par les passerelles. | `0` |
 | `exec/3-oom-killer` | Décisions 3 et 4 : réglage d'activation dans `/etc` (désactivé par défaut), seuil de mémoire disponible, `oom_score`, `oom_score_adj` (fichier modifiable, `-1000` exempte, réservé à l'administrateur pour baisser), choix et mise à mort, ligne du noyau dans `/var/log/kern.log` et `syslog`, `dmesg`, notification à l'utilisateur pour une fenêtre tuée, garde du vrai navigateur, compteur `oom_kill` dans `/proc/vmstat`. | `2` |
 | `exec/4-not-responding-ui` | **Fait** (2026-10-18, [`process-priority-and-unresponsive-windows.md`](../process-priority-and-unresponsive-windows.md)). Décisions 5 et 6 : fenêtre « (Not responding) » et boîte « L'application ne répond pas : Attendre \| Terminer l'application », `nice`/`renice` et colonne « NI » de `ps`/`top`, ordre de la file du pool. | `0` |
 | `exec/5-background-jobs` | Décision 7, étape 1 : `KazoBackground.RunAsync` (méthode statique ou classe de tâche, entrée et résultat sérialisables, progression, annulation), analyseur qui refuse une lambda qui capture, processus enfant de l'app avec son identité et ses droits, repli sur le fil principal quand il n'y a pas de worker (tests, hôte sans workers), exemple dans `Apps/Samples`, migration des traitements longs des apps de base, guide et référence du SDK. | `1` |
 | `exec/6-remote-renderer-poc` | Décision 7, étape 2 : preuve de faisabilité d'un `Renderer` Blazor dans un worker, lots de rendu sérialisés vers le fil principal, événements du DOM renvoyés au worker ; mesure du coût. Résultat : un ADR « on y va » ou « on s'arrête ». Rien n'est livré aux apps si la preuve échoue. | `5` |
 | `exec/7-window-workers` | Seulement si `6` réussit : `AppExecutionHost.Dedicated` permis pour une fenêtre sans interop JavaScript propre, gestion du clavier, du focus et des dialogues, tests sur la Calculatrice. **Retiré** : l'[ADR 0133](../adr/0133-window-rendering-in-worker-verdict.md) conclut « on s'arrête ». | `6` |
-| `exec/8-server-wasm` | **Fait** (2026-10-18, [`server-hosting.md`](../server-hosting.md), [ADR 0137](../adr/0137-server-hosting-implementation-adjustments.md)) : fichiers publiés de l'Ecosystem servis tels quels. Décision 8 : `Kazo.Os.Server` sert l'OS en WebAssembly (rendu `InteractiveWebAssembly` ou fichiers publiés de l'Ecosystem, selon l'ADR), retrait du mode Interactive Server et de l'injection directe, l'OS appelle l'API du serveur par HTTP comme l'Ecosystem, connexion automatique au serveur qui a servi l'OS et icône d'état dans la zone de notification (ADR 0134), `build/verify-hosts.sh` et `Kazo.Os.HostSmoke.Tests` adaptés (workers et `/proc/hackeros` présents sur cet hôte), docs d'hébergement à jour. | `0` |
-| `exec/9-cross-origin-isolation` | Décisions 9 et 10 : audit de compatibilité (iframes des sites ASP.Hack et du navigateur, fenêtres détachées, repli sur le réseau réel, workers de Monaco, téléchargements, PWA), en-têtes dans les trois hôtes et le service worker, repli, puis tubes partagés, appels synchrones, mémoire réelle par worker et minuteries. | `3`, `5` |
+| `exec/8-server-wasm` | **Fait** (2026-10-18, [`server-hosting.md`](../server-hosting.md), [ADR 0137](../adr/0137-server-hosting-implementation-adjustments.md)) : fichiers publiés de l'Ecosystem servis tels quels. Décision 8 : `Kazo.Os.Server` sert l'OS en WebAssembly (rendu `InteractiveWebAssembly` ou fichiers publiés de l'Ecosystem, selon l'ADR), retrait du mode Interactive Server et de l'injection directe, l'OS appelle l'API du serveur par HTTP comme l'Ecosystem, connexion automatique au serveur qui a servi l'OS et icône d'état dans la zone de notification (ADR 0134), `build/verify-hosts.sh` et `Kazo.Os.HostSmoke.Tests` adaptés (workers et `/proc/kazoos` présents sur cet hôte), docs d'hébergement à jour. | `0` |
+| `exec/9-cross-origin-isolation` | Décisions 9 et 10 : audit de compatibilité (iframes des sites ASP.Kazo et du navigateur, fenêtres détachées, repli sur le réseau réel, workers de Monaco, téléchargements, PWA), en-têtes dans les trois hôtes et le service worker, repli, puis tubes partagés, appels synchrones, mémoire réelle par worker et minuteries. | `3`, `5` |
 | `exec/10-final` | Publication du SDK 1.2 (ADR 0132), app de compatibilité 1.1 ; vérification de bout en bout, documents à jour (`system-metrics.md`, `task-manager.md`, `worker-processes.md`, `app-sdk.md`, `sdk-reference.md`, `linux-commands.md`, `virtual-proc-and-dev.md`, `building-and-testing.md`), index, cette liste. | tous |
 
 Ordre :
@@ -156,11 +156,11 @@ Ordre :
 
 | Chantier | Migration des apps existantes |
 |---|---|
-| `exec/1-remote-gateways` | Revoir chaque app en `MainThread` pour cause de passerelle manquante (service d'exemple, `hackwebd`) et la passer en worker quand la raison disparaît ; mettre à jour le commentaire de raison des autres. |
+| `exec/1-remote-gateways` | Revoir chaque app en `MainThread` pour cause de passerelle manquante (service d'exemple, `kazowebd`) et la passer en worker quand la raison disparaît ; mettre à jour le commentaire de raison des autres. |
 | `exec/2-process-limits` | Chaque commande et service traite `EMFILE`/`EAGAIN` comme une erreur d'E/S ordinaire (message et code de sortie). Les commandes longues ont déjà `CheckpointAsync` (phase 5) : vérifier qu'une limite CPU les arrête proprement. |
 | `exec/3-oom-killer` | Les apps qui gardent un état (éditeurs, CodeEditor, explorateur, Paramètres) gardent leur brouillon de récupération quand elles sont tuées par l'OOM killer comme par « Force kill » ; les services système critiques reçoivent un `oom_score_adj` négatif dans leur définition. |
 | `exec/4-not-responding-ui` | Aucune modification d'app ; le gestionnaire de tâches et `top` affichent « NI ». |
-| `exec/5-background-jobs` | Inventaire des traitements longs des apps à fenêtre (recherche du CodeEditor, zip et copies de l'explorateur, calculs de Hack Paint) ; chacun passe par `KazoBackground.RunAsync` ou garde sa place avec la raison écrite. |
+| `exec/5-background-jobs` | Inventaire des traitements longs des apps à fenêtre (recherche du CodeEditor, zip et copies de l'explorateur, calculs de Kazo Paint) ; chacun passe par `KazoBackground.RunAsync` ou garde sa place avec la raison écrite. |
 | `exec/7-window-workers` | Inventaire des apps à fenêtre sans interop JavaScript propre ; celles qui passent les tests en worker changent d'`AppExecutionHost`, les autres gardent `MainThread` avec la raison. |
 | `exec/8-server-wasm` | Aucune modification d'app ; les apps qui utilisaient l'injection directe des services du serveur (ADR 0036) passent par l'API HTTP. |
 | `exec/9-cross-origin-isolation` | Chaque app qui charge une ressource externe (navigateur, CodeEditor) est vérifiée avec l'isolation activée ; ce qui casse est corrigé dans le chantier ou empêche d'activer l'isolation par défaut. |
@@ -171,7 +171,7 @@ Ordre :
 
 - un parcours avec des limites basses (`ulimit -t 1` puis `stress`, sortie 152) ;
 - un parcours de l'OOM killer avec une `MemTotal` simulée réduite ;
-- sur l'hôte Server servi en WebAssembly, `/proc/hackeros/workers` présent et `kill -9` d'une boucle ;
+- sur l'hôte Server servi en WebAssembly, `/proc/kazoos/workers` présent et `kill -9` d'une boucle ;
 - un parcours de l'Ecosystem publié avec et sans isolation cross-origin, avec
   `crossOriginIsolated` vérifié dans la page.
 
@@ -235,7 +235,7 @@ et les conséquences de chaque choix ; réponses du 2026-10-18 (ADR 0134).
 
 ### Passerelles distantes
 - [x] `KazoEvents` et `Watch` en worker, tests de parité (`exec/1-remote-gateways`, ADR 0138).
-- [x] Service d'exemple et `hackwebd` en worker (`exec/1-remote-gateways`, ADR 0138).
+- [x] Service d'exemple et `kazowebd` en worker (`exec/1-remote-gateways`, ADR 0138).
 - [x] Pool ouvert à toute assembly de commande ou de service (`exec/1-remote-gateways`, ADR 0138).
 
 ### Limites et OOM killer
@@ -303,7 +303,7 @@ barre est la suite locale de l'ADR 0132 §4 (.NET 10, `NuGetAudit=false`,
 | Tests unitaires et de composants (42 projets) | 3761 réussis, 0 échec (dont `Kazo.Os.SdkCompatibility.Tests` 10/10 : apps 1.0.0 et 1.1.0) |
 | `Kazo.Os.E2E.Tests` | 18/18 |
 | `Kazo.Os.UI.E2E.Tests` | 27/27 ; `WindowKeyboardCommandsTests` a échoué une fois, le hôte `test/test` n'ayant pas répondu dans le délai du harnais (instabilité connue sous charge), puis réussi seul deux fois |
-| `Kazo.Os.Pwa.E2E.Tests` | 6/6 après correction de trois tests : depuis `exec/9`, le service worker garde le cache `hackeros-isolation`, indépendant des versions (ADR 0143), que les tests ne connaissaient pas |
+| `Kazo.Os.Pwa.E2E.Tests` | 6/6 après correction de trois tests : depuis `exec/9`, le service worker garde le cache `kazoos-isolation`, indépendant des versions (ADR 0143), que les tests ne connaissaient pas |
 | `Kazo.Os.Templates.E2E.Tests` | 6/6, dont l'hôte généré avec les apps de compatibilité 1.0.0 et 1.1.0 dans Chromium |
 | `build/publish-trimmed.sh` | PASS (136 fichiers `.wasm`, 27,2 Mio, 8,2 Mio en Brotli) |
 | `build/verify-hosts.sh` | PASS sur les 9 parcours : `ecosystem`, `ecosystem-build-off`, `ecosystem-settings-off`, `ecosystem-limits-off`, `ecosystem-oom`, `ecosystem-isolated`, `ecosystem-isolation-off`, `test-host`, `server` |
@@ -312,7 +312,7 @@ Documents relus et mis à jour : `system-metrics.md`, `task-manager.md`,
 `worker-processes.md`, `app-sdk.md`, `sdk-reference.md`,
 `sdk-developer-guide.md`, `app-model.md`, `linux-commands.md`,
 `virtual-proc-and-dev.md`, `building-and-testing.md`, `sdk-packages.md`,
-`building-on-hackeros.md`, `project-overview.md`, index `README.md`.
+`building-on-kazoos.md`, `project-overview.md`, index `README.md`.
 
 Restent ouvertes, avec le choix recommandé appliqué en attendant Benoit : les
 cartes des fils « Exec 1 » (publication depuis un worker), « Exec 4 »

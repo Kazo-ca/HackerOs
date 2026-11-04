@@ -7,7 +7,7 @@ namespace Kazo.Os.Platform.Blazor.Windows;
 /// Remembers the geometry of app windows (ADR 0116 §3), the way a window manager such as KWin or
 /// Mutter keeps per-application placement: it listens to the facts of <see cref="WindowRuntime"/>,
 /// keeps each tracked window's last <em>normal</em> bounds and maximized state in memory, and writes
-/// them to <c>~/.local/state/hackeros/windows/&lt;appId&gt;.config</c> through
+/// them to <c>~/.local/state/kazoos/windows/&lt;appId&gt;.config</c> through
 /// <see cref="WindowGeometryPersistence"/>.
 /// </summary>
 /// <remarks>

@@ -407,7 +407,7 @@ public sealed class IndexedDbFileSystemProviderTests
     {
         AppOperationContext operation = new()
         {
-            AppId = "org.hackeros.test",
+            AppId = "org.kazoos.test",
             UserId = "user",
             UserAuthority = AppAuthority.Administrator,
             GrantedCapabilities = new HashSet<string>(AppCapabilities.All, StringComparer.Ordinal),

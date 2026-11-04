@@ -4,8 +4,8 @@ using Kazo.Os.Simulation.Abstractions.Settings;
 namespace Kazo.Os.Platform.Core.Notifications;
 
 /// <summary>
-/// Defines the layered notification document (ADR 0216 §3): <c>/etc/hackeros/notifications.config</c>
-/// holds the machine's default, and each user overrides it in <c>~/.config/hackeros/notifications.config</c>.
+/// Defines the layered notification document (ADR 0216 §3): <c>/etc/kazoos/notifications.config</c>
+/// holds the machine's default, and each user overrides it in <c>~/.config/kazoos/notifications.config</c>.
 /// </summary>
 public static class NotificationSettingsDocuments
 {

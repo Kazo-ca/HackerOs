@@ -65,7 +65,7 @@ Les cases vont de haut en bas, puis de gauche à droite.
 [Desktop Entry]
 Type=Application
 Name=Text Editor
-Exec=org.hackeros.text-editor "/home/alice/My notes.txt"
+Exec=org.kazoos.text-editor "/home/alice/My notes.txt"
 Icon=file-text
 ```
 
@@ -125,6 +125,6 @@ Paramètres s'ouvre directement sur un onglet avec `--page=appearance` ou
 `--page=desktop`.
 
 
-« Envoyer vers ▸ Bureau (créer un raccourci) » passe par l'intent `org.hackeros.desktop.create-shortcut.v1`, et le fichier est écrit avec les droits de l'app Bureau.
+« Envoyer vers ▸ Bureau (créer un raccourci) » passe par l'intent `org.kazoos.desktop.create-shortcut.v1`, et le fichier est écrit avec les droits de l'app Bureau.
 
 Les entrées `background` et `desktop` des apps (ADR 0159) s'ajoutent au menu du fond ; voir [`context-menu.md`](context-menu.md).

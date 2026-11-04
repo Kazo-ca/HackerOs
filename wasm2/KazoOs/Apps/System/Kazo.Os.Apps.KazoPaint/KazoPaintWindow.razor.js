@@ -82,7 +82,7 @@ export async function encodeImage(width, height, pixels, mediaType, quality) {
 }
 
 /**
- * Keeps the browser from taking Hack Paint's shortcuts (Ctrl+S "save page", Ctrl+O, Ctrl+N new
+ * Keeps the browser from taking Kazo Paint's shortcuts (Ctrl+S "save page", Ctrl+O, Ctrl+N new
  * window) while the focus is inside the window. The C# keydown handler runs the command.
  * @param {HTMLElement} root The app's root element.
  */

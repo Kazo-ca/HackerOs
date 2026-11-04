@@ -12,8 +12,8 @@ namespace Kazo.Os.Platform.Core.Tests.Diagnostics;
 public sealed class DaemonLogFileTests
 {
     [Theory]
-    [InlineData("hackweb/error.log", "/var/log/hackweb/error.log")]
-    [InlineData("hackweb/docs.access.log", "/var/log/hackweb/docs.access.log")]
+    [InlineData("kazoweb/error.log", "/var/log/kazoweb/error.log")]
+    [InlineData("kazoweb/docs.access.log", "/var/log/kazoweb/docs.access.log")]
     public void ForDaemon_maps_a_relative_path_under_var_log(string relative, string expected)
     {
         LogFileTarget target = LogFileTarget.ForDaemon(relative);
@@ -24,12 +24,12 @@ public sealed class DaemonLogFileTests
 
     [Theory]
     [InlineData("error.log")]
-    [InlineData("hackweb/sub/error.log")]
-    [InlineData("hackweb/error.txt")]
-    [InlineData("apps/org.hackeros.browser.log")]
+    [InlineData("kazoweb/sub/error.log")]
+    [InlineData("kazoweb/error.txt")]
+    [InlineData("apps/org.kazoos.browser.log")]
     [InlineData("../etc/passwd.log")]
-    [InlineData("hackweb/../x.log")]
-    [InlineData("/hackweb/error.log")]
+    [InlineData("kazoweb/../x.log")]
+    [InlineData("/kazoweb/error.log")]
     public void ForDaemon_refuses_paths_outside_one_daemon_directory(string relative)
     {
         Assert.ThrowsAny<ArgumentException>(() => LogFileTarget.ForDaemon(relative));
@@ -41,7 +41,7 @@ public sealed class DaemonLogFileTests
         LogTestFileSystemClock clock = new();
         AppLoggingGateway gateway = new(new BoundedDiagnosticSink(10), clock.Clock, "org.example.notes");
 
-        Assert.Throws<UnauthorizedAccessException>(() => gateway.AppendToLogFile("hackweb/error.log", "hello"));
+        Assert.Throws<UnauthorizedAccessException>(() => gateway.AppendToLogFile("kazoweb/error.log", "hello"));
     }
 
     [Fact]
@@ -50,15 +50,15 @@ public sealed class DaemonLogFileTests
         LogTestFileSystem fs = await LogTestFileSystem.CreateAsync();
         BoundedDiagnosticSink memory = new(10);
         LogFileWriter writer = new(fs.Clock, memory);
-        AppLoggingGateway gateway = new(memory, fs.Clock, "org.hackeros.hackwebd", writer, processId: 7, isSystemApp: true);
+        AppLoggingGateway gateway = new(memory, fs.Clock, "org.kazoos.kazowebd", writer, processId: 7, isSystemApp: true);
 
-        gateway.AppendToLogFile("hackweb/error.log", "first");
-        gateway.AppendToLogFile("hackweb/error.log", "forged\r\n2026/10/16 [notice] fake");
+        gateway.AppendToLogFile("kazoweb/error.log", "first");
+        gateway.AppendToLogFile("kazoweb/error.log", "forged\r\n2026/10/16 [notice] fake");
         await writer.AttachAsync(fs.Service);
 
-        string[] lines = await fs.ReadLinesAsync("/var/log/hackweb/error.log");
+        string[] lines = await fs.ReadLinesAsync("/var/log/kazoweb/error.log");
         Assert.Equal(["first", "forged\\n2026/10/16 [notice] fake"], lines);
-        Assert.Null(await fs.StatAsync("/var/log/apps/org.hackeros.hackwebd.log"));
+        Assert.Null(await fs.StatAsync("/var/log/apps/org.kazoos.kazowebd.log"));
     }
 
     [Fact]
@@ -66,12 +66,12 @@ public sealed class DaemonLogFileTests
     {
         LogTestFileSystemClock clock = new();
         BoundedDiagnosticSink memory = new(10);
-        AppLoggingGateway gateway = new(memory, clock.Clock, "org.hackeros.hackwebd", isSystemApp: true);
+        AppLoggingGateway gateway = new(memory, clock.Clock, "org.kazoos.kazowebd", isSystemApp: true);
 
-        gateway.AppendToLogFile("hackweb/docs.access.log", "127.0.0.1 - - GET /");
+        gateway.AppendToLogFile("kazoweb/docs.access.log", "127.0.0.1 - - GET /");
 
         DiagnosticEntry entry = Assert.Single(memory.Entries);
-        Assert.Equal("/var/log/hackweb/docs.access.log", entry.Category);
+        Assert.Equal("/var/log/kazoweb/docs.access.log", entry.Category);
         Assert.Equal("127.0.0.1 - - GET /", entry.Message);
     }
 

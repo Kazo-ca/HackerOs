@@ -98,13 +98,13 @@ npm run build:prod -- --output-public-path /legacy/
 dotnet publish wasm2/KazoOs/OS/Kazo.Os.Ecosystem/Kazo.Os.Ecosystem.csproj -c Release -m:1 -o wasm2/KazoOs/artifacts/pages-publish
 ./wasm2/KazoOs/build/assemble-pages.ps1
 
-$env:HACKEROS_PAGES_ROOT = (Resolve-Path wasm2/KazoOs/artifacts/pages).Path
+$env:KAZOOS_PAGES_ROOT = (Resolve-Path wasm2/KazoOs/artifacts/pages).Path
 dotnet test wasm2/KazoOs/Tests/Kazo.Os.Pwa.E2E.Tests/Kazo.Os.Pwa.E2E.Tests.csproj --filter FullyQualifiedName~PublishedPagesTests
 ```
 
 The test serves the static artifact, enables the real service worker, creates
 an account, checks About, opens the legacy and its About screen, then reloads
-it. Without `HACKEROS_PAGES_ROOT`, this specific test is ignored during
+it. Without `KAZOOS_PAGES_ROOT`, this specific test is ignored during
 ordinary test runs. `ProjectInformationTests` covers the allowed and refused
 domains, and `ResourceParityTests` verifies the English/French translations.
 

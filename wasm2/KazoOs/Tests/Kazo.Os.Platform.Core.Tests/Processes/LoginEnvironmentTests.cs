@@ -53,8 +53,8 @@ public sealed class LoginEnvironmentTests
     }
 
     [Theory]
-    [InlineData(null, "hackeros")]
-    [InlineData("", "hackeros")]
+    [InlineData(null, "kazoos")]
+    [InlineData("", "kazoos")]
     [InlineData("\n# comment\n  black-ice  \nignored\n", "black-ice")]
     public void The_host_name_is_the_first_meaningful_line(string? content, string expected) =>
         Assert.Equal(expected, LoginEnvironment.ParseHostName(content));
@@ -64,7 +64,7 @@ public sealed class LoginEnvironmentTests
     {
         VirtualFileSystemFixture fixture = await VirtualFileSystemFixture.CreateSeededAsync();
 
-        Assert.Equal("hackeros\n", await fixture.ReadTextAsync("/etc/hostname", fixture.AppContext(null, AppCapabilities.FileSystemSystemRead)));
+        Assert.Equal("kazoos\n", await fixture.ReadTextAsync("/etc/hostname", fixture.AppContext(null, AppCapabilities.FileSystemSystemRead)));
         Assert.StartsWith("# /etc/environment", await fixture.ReadTextAsync("/etc/environment", fixture.AppContext(null, AppCapabilities.FileSystemSystemRead)));
         foreach (string path in new[] { "/etc/hostname", "/etc/environment" })
         {

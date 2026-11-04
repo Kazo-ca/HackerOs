@@ -12,7 +12,7 @@ namespace Kazo.Os.Server.Tests;
 
 /// <summary>
 /// Serializes tests that configure the server host via process-wide
-/// <c>HACKEROS_*</c> environment variables (read once at <see cref="Program"/>
+/// <c>KAZOOS_*</c> environment variables (read once at <see cref="Program"/>
 /// startup) — xUnit runs different test classes concurrently by default, and
 /// two such tests racing would each observe the other's connection string.
 /// </summary>
@@ -31,20 +31,20 @@ public sealed class ServerStartupIntegrationTests : IAsyncLifetime
 {
     private readonly string _databasePath = Path.Combine(
         Path.GetTempPath(),
-        $"hackeros-server-integration-{Guid.NewGuid():N}.db");
+        $"kazoos-server-integration-{Guid.NewGuid():N}.db");
     private readonly string _backupRoot = Path.Combine(
         Path.GetTempPath(),
-        $"hackeros-server-backups-{Guid.NewGuid():N}");
+        $"kazoos-server-backups-{Guid.NewGuid():N}");
     private string? _previousConnectionString;
     private string? _previousBackupRoot;
     private ServerApplicationFactory? _factory;
 
     public Task InitializeAsync()
     {
-        _previousConnectionString = Environment.GetEnvironmentVariable("HACKEROS_ConnectionStrings__HackerOsDb");
-        _previousBackupRoot = Environment.GetEnvironmentVariable("HACKEROS_ServerBackup__Root");
-        Environment.SetEnvironmentVariable("HACKEROS_ConnectionStrings__HackerOsDb", $"Data Source={_databasePath}");
-        Environment.SetEnvironmentVariable("HACKEROS_ServerBackup__Root", _backupRoot);
+        _previousConnectionString = Environment.GetEnvironmentVariable("KAZOOS_ConnectionStrings__KazoOsDb");
+        _previousBackupRoot = Environment.GetEnvironmentVariable("KAZOOS_ServerBackup__Root");
+        Environment.SetEnvironmentVariable("KAZOOS_ConnectionStrings__KazoOsDb", $"Data Source={_databasePath}");
+        Environment.SetEnvironmentVariable("KAZOOS_ServerBackup__Root", _backupRoot);
         _factory = new ServerApplicationFactory();
         return Task.CompletedTask;
     }
@@ -56,8 +56,8 @@ public sealed class ServerStartupIntegrationTests : IAsyncLifetime
             await _factory.DisposeAsync();
         }
 
-        Environment.SetEnvironmentVariable("HACKEROS_ConnectionStrings__HackerOsDb", _previousConnectionString);
-        Environment.SetEnvironmentVariable("HACKEROS_ServerBackup__Root", _previousBackupRoot);
+        Environment.SetEnvironmentVariable("KAZOOS_ConnectionStrings__KazoOsDb", _previousConnectionString);
+        Environment.SetEnvironmentVariable("KAZOOS_ServerBackup__Root", _previousBackupRoot);
 
         // SQLite can retain a pooled handle briefly after the test host disposes.
         // The uniquely named OS-temp database is deliberately left for the OS temp

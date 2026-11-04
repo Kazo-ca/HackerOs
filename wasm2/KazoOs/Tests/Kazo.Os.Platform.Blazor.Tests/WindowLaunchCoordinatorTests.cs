@@ -256,7 +256,7 @@ public sealed class WindowLaunchCoordinatorTests
         }
 
         // The scope ended: a second process (a command, another app) follows the focused window.
-        await coordinator.PresentAsync(manifest with { Id = "org.hackeros.other" }, CreateProcess());
+        await coordinator.PresentAsync(manifest with { Id = "org.kazoos.other" }, CreateProcess());
 
         Assert.All(runtime.Windows, window => Assert.Equal(screen2, window.DisplayId));
     }
@@ -278,10 +278,10 @@ public sealed class WindowLaunchCoordinatorTests
 
     private static AppManifest CreateManifest() => new()
     {
-        Id = "org.hackeros.test-window",
+        Id = "org.kazoos.test-window",
         Name = "Test Window",
         Version = "1.0.0",
-        PublisherId = "pub.hackeros",
+        PublisherId = "pub.kazoos",
         Description = "Window launch coordinator test app.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Test.dll", "Test.Window"),
@@ -297,7 +297,7 @@ public sealed class WindowLaunchCoordinatorTests
         return new ProcessRecord(
             ProcessId.FromInt64(42),
             parentPid: null,
-            "org.hackeros.test-window",
+            "org.kazoos.test-window",
             AppInstanceId.FromGuid(Guid.NewGuid()),
             AppKind.Window,
             LocalUserId.FromGuid(Guid.NewGuid()),

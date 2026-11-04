@@ -6,14 +6,14 @@
 
 Accepted on 2026-10-16, with the `web/7-razor-views` work item.
 
-- **Plan phase:** web phase ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Plan phase:** web phase ([`asp-kazo-plan.md`](../plans/asp-kazo-plan.md)).
 - **Completes:** [ADR 0076](0076-asp-hack-mvc.md) §5 (`View`, `PartialView`), §6
   (anti-forgery token) and §7 (`.razor` views); [ADR 0073](0073-web-apps.md)
   §2 (project `wwwroot`, read-only); [ADR 0082](0082-asp-hack-route-source-generator.md)
   (the generator also produces the view table).
 - **Amends:** [ADR 0007](0007-enforce-collocated-razor-assets.md): the build check
   admits a `<script src="...">` reference without a body (§6).
-- **Documentation:** [`asp-hack-razor-views.md`](../../framework/asp-hack-razor-views.md).
+- **Documentation:** [`asp-kazo-razor-views.md`](../../framework/asp-kazo-razor-views.md).
 
 ## Context
 

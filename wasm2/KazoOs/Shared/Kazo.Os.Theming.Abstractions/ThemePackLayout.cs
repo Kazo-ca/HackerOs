@@ -2,24 +2,34 @@ namespace Kazo.Os.Theming.Abstractions;
 
 /// <summary>
 /// Where installed theme packs live and how their folders are named (ADR 0190 §1, §2; ADR 0213).
-/// A pack installed from the Hack Store is unpacked as it is in
-/// <c>/usr/share/hackeros/theme-packs/&lt;packId&gt;/</c> (every user) or
-/// <c>~/.local/share/hackeros/theme-packs/&lt;packId&gt;/</c> (one user); the catalogs of themes,
+/// A pack installed from the Kazo OS Store is unpacked as it is in
+/// <c>/usr/share/kazoos/theme-packs/&lt;packId&gt;/</c> (every user) or
+/// <c>~/.local/share/kazoos/theme-packs/&lt;packId&gt;/</c> (one user); the catalogs of themes,
 /// wallpapers, icons, sounds and cursors read its sub-folders in place, so removing a pack is
 /// removing one folder.
 /// </summary>
 public static class ThemePackLayout
 {
     /// <summary>Extension of a theme pack archive.</summary>
-    public const string Extension = ".hacktheme";
+    public const string Extension = ".kazotheme";
+
+    /// <summary>
+    /// Extension of the theme packs published before the rename (ADR 0228 §2): still read, never written.
+    /// </summary>
+    public const string LegacyExtension = ".hacktheme";
 
     /// <summary>Folder of the theme packs installed for every user.</summary>
-    public const string SystemDirectory = "/usr/share/hackeros/theme-packs";
+    public const string SystemDirectory = "/usr/share/kazoos/theme-packs";
 
     /// <summary>Name of the pack description at the root of the archive and of the installed folder.</summary>
-    public const string ManifestFileName = "hackeros-theme-pack.json";
+    public const string ManifestFileName = "kazoos-theme-pack.json";
 
-    /// <summary>Name of the preview image the Hack Store shows.</summary>
+    /// <summary>
+    /// Name of the pack description in a pack made before the rename (ADR 0228 §2): still read, never written.
+    /// </summary>
+    public const string LegacyManifestFileName = "hackeros-theme-pack.json";
+
+    /// <summary>Name of the preview image the Kazo OS Store shows.</summary>
     public const string PreviewFileName = "preview.png";
 
     /// <summary>Sub-folder of the <c>.theme</c> files (ADR 0103).</summary>
@@ -42,7 +52,7 @@ public static class ThemePackLayout
     public static string GetUserDirectory(string homeDirectory)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(homeDirectory);
-        return $"{homeDirectory.TrimEnd('/')}/.local/share/hackeros/theme-packs";
+        return $"{homeDirectory.TrimEnd('/')}/.local/share/kazoos/theme-packs";
     }
 
     /// <summary>

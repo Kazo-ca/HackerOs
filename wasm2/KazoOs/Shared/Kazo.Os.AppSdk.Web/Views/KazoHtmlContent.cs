@@ -7,7 +7,7 @@ namespace Kazo.Os.AppSdk.Web.Views;
 /// HTML that a <c>.cshtml</c> page writes as is, without encoding (ASP.NET's <c>IHtmlContent</c>, ADR 0086 §3):
 /// what <c>Html.Raw</c>, <c>RenderBody()</c>, <c>RenderSection</c> and the HTML helpers return.
 /// </summary>
-public interface IHackHtmlContent
+public interface IKazoHtmlContent
 {
     /// <summary>Writes the HTML.</summary>
     /// <param name="writer">The page output.</param>
@@ -16,7 +16,7 @@ public interface IHackHtmlContent
 
 /// <summary>An HTML string written without encoding (ASP.NET's <c>HtmlString</c>).</summary>
 /// <param name="value">The HTML; <see langword="null"/> writes nothing.</param>
-public sealed class KazoHtmlString(string? value) : IHackHtmlContent
+public sealed class KazoHtmlString(string? value) : IKazoHtmlContent
 {
     /// <summary>The empty HTML.</summary>
     public static KazoHtmlString Empty { get; } = new(string.Empty);
@@ -41,7 +41,7 @@ public sealed class KazoHtmlString(string? value) : IHackHtmlContent
 /// this class (ADR 0086 §2).
 /// </summary>
 /// <param name="asyncAction">Writes the template to the given writer.</param>
-public class KazoHelperResult(Func<TextWriter, Task> asyncAction) : IHackHtmlContent
+public class KazoHelperResult(Func<TextWriter, Task> asyncAction) : IKazoHtmlContent
 {
     private readonly Func<TextWriter, Task> _asyncAction = asyncAction ?? throw new ArgumentNullException(nameof(asyncAction));
 
@@ -81,7 +81,7 @@ internal static class KazoHtml
         {
             case null:
                 return;
-            case IHackHtmlContent html:
+            case IKazoHtmlContent html:
                 html.WriteTo(writer);
                 return;
             case Microsoft.AspNetCore.Components.MarkupString markup:

@@ -11,13 +11,13 @@ using Kazo.Os.Simulation.Abstractions.Sessions;
 
 namespace Kazo.Os.Platform.Core.Tests.ComponentProviders;
 
-/// <summary>ADR 0156: /etc/hackeros/components.config, its approval and its clean-up.</summary>
+/// <summary>ADR 0156: /etc/kazoos/components.config, its approval and its clean-up.</summary>
 public sealed class ComponentProviderServiceTests
 {
-    private const string ExplorerId = "org.hackeros.file-explorer";
+    private const string ExplorerId = "org.kazoos.file-explorer";
     private const string FilesId = "com.example.files";
     private const string ViewerId = "com.example.viewer";
-    private const string ConfigPath = "/etc/hackeros/components.config";
+    private const string ConfigPath = "/etc/kazoos/components.config";
     private const string AdminPassword = "s3cret-admin";
 
     private static readonly string[] Both = [AppComponentContracts.FileView, AppComponentContracts.FileDialogs];
@@ -31,11 +31,11 @@ public sealed class ComponentProviderServiceTests
             """
             # comment
             [providers]
-            hackeros.file-view=com.example.files
-            hackeros.context-menu=com.example.menu
-            hackeros.terminal=com.example.term
+            kazoos.file-view=com.example.files
+            kazoos.context-menu=com.example.menu
+            kazoos.terminal=com.example.term
             [other]
-            hackeros.file-dialogs=com.example.ignored
+            kazoos.file-dialogs=com.example.ignored
             """);
 
         Assert.Equal(FilesId, Assert.Single(choices).Value);
@@ -47,13 +47,13 @@ public sealed class ComponentProviderServiceTests
     public void Edit_keeps_comments_and_removes_a_line_to_go_back_to_the_default()
     {
         string written = ComponentProvidersDocument.Edit(null, AppComponentContracts.FileView, FilesId)!;
-        Assert.StartsWith("# /etc/hackeros/components.config", written, StringComparison.Ordinal);
+        Assert.StartsWith("# /etc/kazoos/components.config", written, StringComparison.Ordinal);
         Assert.Contains("[providers]", written, StringComparison.Ordinal);
-        Assert.Contains("hackeros.file-view=com.example.files", written, StringComparison.Ordinal);
+        Assert.Contains("kazoos.file-view=com.example.files", written, StringComparison.Ordinal);
 
         string removed = ComponentProvidersDocument.Edit(written, AppComponentContracts.FileView, null)!;
         Assert.Empty(ComponentProvidersDocument.Parse(removed));
-        Assert.StartsWith("# /etc/hackeros/components.config", removed, StringComparison.Ordinal);
+        Assert.StartsWith("# /etc/kazoos/components.config", removed, StringComparison.Ordinal);
         Assert.Null(ComponentProvidersDocument.Edit(null, AppComponentContracts.FileView, null));
     }
 
@@ -76,11 +76,11 @@ public sealed class ComponentProviderServiceTests
     public async Task A_hand_edited_file_applies_at_the_next_read()
     {
         Harness harness = await Harness.CreateAsync();
-        await harness.Files.WriteAsRootAsync(ConfigPath, "[providers]\nhackeros.file-dialogs=com.example.files\n");
+        await harness.Files.WriteAsRootAsync(ConfigPath, "[providers]\nkazoos.file-dialogs=com.example.files\n");
 
         Assert.Equal(FilesId, await harness.Service.GetSelectedProviderAsync(AppComponentContracts.FileDialogs));
         Assert.Null(await harness.Service.GetSelectedProviderAsync(AppComponentContracts.FileView));
-        Assert.Null(await harness.Service.GetSelectedProviderAsync("hackeros.terminal"));
+        Assert.Null(await harness.Service.GetSelectedProviderAsync("kazoos.terminal"));
     }
 
     // ---- Validation (§1, §3) ----
@@ -91,7 +91,7 @@ public sealed class ComponentProviderServiceTests
         Harness harness = await Harness.CreateAsync();
 
         Assert.Throws<ArgumentException>(() => harness.Service.ValidateChoice([AppComponentContracts.ContextMenu], FilesId));
-        Assert.Throws<ArgumentException>(() => harness.Service.ValidateChoice(["hackeros.terminal"], FilesId));
+        Assert.Throws<ArgumentException>(() => harness.Service.ValidateChoice(["kazoos.terminal"], FilesId));
         // The viewer provides the file view only.
         Assert.Throws<ArgumentException>(() => harness.Service.ValidateChoice(Both, ViewerId));
         Assert.Throws<ArgumentException>(() => harness.Service.ValidateChoice([], FilesId));
@@ -177,7 +177,7 @@ public sealed class ComponentProviderServiceTests
     public async Task Going_back_to_the_default_removes_the_line()
     {
         Harness harness = await Harness.CreateAsync();
-        await harness.Files.WriteAsRootAsync(ConfigPath, "# kept\n[providers]\nhackeros.file-view=com.example.files\n");
+        await harness.Files.WriteAsRootAsync(ConfigPath, "# kept\n[providers]\nkazoos.file-view=com.example.files\n");
 
         await harness.Service.ApplyAsync([AppComponentContracts.FileView], null, "admin", harness.Principal);
 
@@ -198,7 +198,7 @@ public sealed class ComponentProviderServiceTests
         List<string> syslog = [];
         harness.Service = harness.CreateService(syslog.Add);
         await harness.Files.WriteAsRootAsync(
-            ConfigPath, "[providers]\nhackeros.file-view=com.example.viewer\nhackeros.file-dialogs=com.example.files\n");
+            ConfigPath, "[providers]\nkazoos.file-view=com.example.viewer\nkazoos.file-dialogs=com.example.files\n");
 
         IReadOnlyList<string> untouched = await harness.Service.RemoveUninstalledAsync(appId => appId == "org.example.other");
         IReadOnlyList<string> removed = await harness.Service.RemoveUninstalledAsync(appId => appId == ViewerId);
@@ -215,7 +215,7 @@ public sealed class ComponentProviderServiceTests
         Id = id,
         Name = name,
         Version = "1.0.0",
-        PublisherId = id.StartsWith("org.hackeros", StringComparison.Ordinal) ? "pub.hackeros" : "com.example",
+        PublisherId = id.StartsWith("org.kazoos", StringComparison.Ordinal) ? "pub.kazoos" : "com.example",
         Description = "Component provider fixture.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Apps.Sample", "Kazo.Os.Apps.Sample.SampleApp"),

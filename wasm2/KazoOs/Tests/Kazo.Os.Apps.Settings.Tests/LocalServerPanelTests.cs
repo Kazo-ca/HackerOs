@@ -26,12 +26,12 @@ public sealed class LocalServerPanelTests
 
         Assert.Equal(
             [
-                "hackeros-server-2.2.0-win-x64.zip",
-                "hackeros-server-2.2.0-win-arm64.zip",
-                "hackeros-server-2.2.0-osx-arm64.tar.gz",
-                "hackeros-server-2.2.0-osx-x64.tar.gz",
-                "hackeros-server-2.2.0-linux-x64.tar.gz",
-                "hackeros-server-2.2.0-linux-arm64.tar.gz",
+                "kazoos-server-2.2.0-win-x64.zip",
+                "kazoos-server-2.2.0-win-arm64.zip",
+                "kazoos-server-2.2.0-osx-arm64.tar.gz",
+                "kazoos-server-2.2.0-osx-x64.tar.gz",
+                "kazoos-server-2.2.0-linux-x64.tar.gz",
+                "kazoos-server-2.2.0-linux-arm64.tar.gz",
             ],
             downloads.Select(static download => download.FileName));
     }
@@ -43,8 +43,8 @@ public sealed class LocalServerPanelTests
         await using PanelHarness harness = await PanelHarness.RenderAsync(gateway);
 
         string html = harness.Html();
-        Assert.Contains($"hackeros-server-{KazoOsSdk.Version}-win-x64.zip", html, StringComparison.Ordinal);
-        Assert.Contains("ghcr.io/kazo-ca/hackeros-server", html, StringComparison.Ordinal);
+        Assert.Contains($"kazoos-server-{KazoOsSdk.Version}-win-x64.zip", html, StringComparison.Ordinal);
+        Assert.Contains("ghcr.io/kazo-ca/kazoos-server", html, StringComparison.Ordinal);
         Assert.Contains("href=\"https://github.com/Kazo-ca/Os/releases/latest\"", html, StringComparison.Ordinal);
         Assert.Contains("value=\"http://localhost:5888\"", html, StringComparison.Ordinal);
         Assert.Equal(0, gateway.Calls);

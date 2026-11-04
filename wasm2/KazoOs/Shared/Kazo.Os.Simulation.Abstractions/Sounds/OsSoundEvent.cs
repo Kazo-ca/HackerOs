@@ -38,7 +38,7 @@ public static class OsSoundEvents
     public const string IndexFileName = "index.theme";
 
     /// <summary>Identifier of the default theme, used for an event a theme does not provide.</summary>
-    public const string DefaultThemeId = "hackeros";
+    public const string DefaultThemeId = "kazoos";
 
     /// <summary>Largest sound file played, in bytes (1 MiB, ADR 0190 section 3).</summary>
     public const long MaxSoundFileBytes = 1024 * 1024;

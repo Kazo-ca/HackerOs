@@ -7,7 +7,7 @@ namespace Kazo.Os.Tools.ManifestGenerator.Tests;
 public sealed class ContextMenuRegistrationTests : IDisposable
 {
     private static readonly Assembly Fixtures = typeof(MenuApp).Assembly;
-    private readonly string _project = Directory.CreateTempSubdirectory("hackeros-menu-").FullName;
+    private readonly string _project = Directory.CreateTempSubdirectory("kazoos-menu-").FullName;
 
     public void Dispose() => Directory.Delete(_project, recursive: true);
 
@@ -60,16 +60,16 @@ public sealed class ContextMenuRegistrationTests : IDisposable
             Name = "view",
             Title = "View",
             Titles = [new("en", "View")],
-            Target = "org.hackeros.tests.viewer",
-            Intent = "org.hackeros.tests.viewer.view.v1"
+            Target = "org.kazoos.tests.viewer",
+            Intent = "org.kazoos.tests.viewer.view.v1"
         };
-        AppManifest owner = Manifest("org.hackeros.tests.owner") with { ContextMenus = [entry] };
-        AppManifest viewer = Manifest("org.hackeros.tests.viewer");
+        AppManifest owner = Manifest("org.kazoos.tests.owner") with { ContextMenus = [entry] };
+        AppManifest viewer = Manifest("org.kazoos.tests.viewer");
 
         Assert.Equal(GeneratorCodes.ContextMenuTarget, Assert.Single(BuiltInApplicationsAggregator.FindInvalidContextMenuTargets([owner])).Code);
         Assert.Equal(GeneratorCodes.ContextMenuTarget, Assert.Single(BuiltInApplicationsAggregator.FindInvalidContextMenuTargets([owner, viewer])).Code);
         Assert.Empty(BuiltInApplicationsAggregator.FindInvalidContextMenuTargets(
-            [owner, viewer with { Intents = [new AppIntentDeclarationManifest("org.hackeros.tests.viewer.view.v1")] }]));
+            [owner, viewer with { Intents = [new AppIntentDeclarationManifest("org.kazoos.tests.viewer.view.v1")] }]));
     }
 
     private void WriteResources(string file, params (string Key, string Value)[] values)

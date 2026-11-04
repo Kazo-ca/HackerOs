@@ -36,7 +36,7 @@ public sealed class BrowserDetachedWindowTests(ITestOutputHelper output)
 
             ILocator addressInput = page.Locator("#browser-address-input");
             await addressInput.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible });
-            await addressInput.FillAsync("example.hackeros/page.html");
+            await addressInput.FillAsync("example.kazoos/page.html");
             await addressInput.PressAsync("Enter");
             await Assertions.Expect(page.FrameLocator(".page-frame").Locator("#script-status"))
                 .ToHaveTextAsync("script ran", new() { Timeout = 20000 });
@@ -47,19 +47,19 @@ public sealed class BrowserDetachedWindowTests(ITestOutputHelper output)
             IFrameLocator detachedFrame = popup.FrameLocator(".page-frame");
             await Assertions.Expect(detachedFrame.Locator("#script-status")).ToHaveTextAsync("script ran", new() { Timeout = 20000 });
             await Assertions.Expect(detachedFrame.Locator("#fetch-status")).ToHaveTextAsync("pong", new() { Timeout = 20000 });
-            await Assertions.Expect(popup.Locator("#surface-address")).ToContainTextAsync("example.hackeros/page.html");
+            await Assertions.Expect(popup.Locator("#surface-address")).ToContainTextAsync("example.kazoos/page.html");
             await Assertions.Expect(page.Locator(".browser-detached")).ToBeVisibleAsync();
             Assert.Equal(0, await page.Locator(".page-frame").CountAsync());
-            Assert.True(await popup.Locator("link[data-hackeros-mirrored]").CountAsync() > 0, "The desktop's style sheets were not mirrored.");
+            Assert.True(await popup.Locator("link[data-kazoos-mirrored]").CountAsync() > 0, "The desktop's style sheets were not mirrored.");
             output.WriteLine("[test] page detached: the frame runs in the second window with its bridge.");
 
             // --- The OS window still drives the tab: a navigation shows up in the detached window ---
-            await addressInput.FillAsync("example.hackeros/form.html");
+            await addressInput.FillAsync("example.kazoos/form.html");
             await addressInput.PressAsync("Enter");
             await Assertions.Expect(detachedFrame.Locator("#xhr-status")).ToHaveTextAsync("200 xhr pong", new() { Timeout = 20000 });
             await detachedFrame.Locator("#send").ClickAsync();
             await Assertions.Expect(detachedFrame.Locator("#echo")).ToHaveTextAsync("msg=hello bridge", new() { Timeout = 20000 });
-            await Assertions.Expect(addressInput).ToHaveValueAsync("https://example.hackeros/echo");
+            await Assertions.Expect(addressInput).ToHaveValueAsync("https://example.kazoos/echo");
             await Assertions.Expect(popup).ToHaveTitleAsync(new System.Text.RegularExpressions.Regex(".+"));
 
             // --- A Blazor button inside the detached window: Reattach (ADR 0078 §4 proof) ---

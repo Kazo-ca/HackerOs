@@ -22,7 +22,7 @@ namespace Kazo.Os.Server.Tests;
 [Collection(ServerEnvironmentCollection.Name)]
 public sealed class ProxyStreamEndpointTests : IAsyncLifetime
 {
-    private readonly string _databasePath = Path.Combine(Path.GetTempPath(), $"hackeros-relay-{Guid.NewGuid():N}.db");
+    private readonly string _databasePath = Path.Combine(Path.GetTempPath(), $"kazoos-relay-{Guid.NewGuid():N}.db");
     private readonly TcpEchoServer _tcpEcho = new();
     private readonly UdpEchoServer _udpEcho = new();
     private string? _previousConnectionString;
@@ -31,8 +31,8 @@ public sealed class ProxyStreamEndpointTests : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
-        _previousConnectionString = Environment.GetEnvironmentVariable("HACKEROS_ConnectionStrings__HackerOsDb");
-        Environment.SetEnvironmentVariable("HACKEROS_ConnectionStrings__HackerOsDb", $"Data Source={_databasePath}");
+        _previousConnectionString = Environment.GetEnvironmentVariable("KAZOOS_ConnectionStrings__KazoOsDb");
+        Environment.SetEnvironmentVariable("KAZOOS_ConnectionStrings__KazoOsDb", $"Data Source={_databasePath}");
         _factory = new RelayApplicationFactory(_tcpEcho.Port, _udpEcho.Port);
 
         await using AsyncServiceScope scope = _factory.Services.CreateAsyncScope();
@@ -54,14 +54,14 @@ public sealed class ProxyStreamEndpointTests : IAsyncLifetime
 
         _tcpEcho.Dispose();
         _udpEcho.Dispose();
-        Environment.SetEnvironmentVariable("HACKEROS_ConnectionStrings__HackerOsDb", _previousConnectionString);
+        Environment.SetEnvironmentVariable("KAZOOS_ConnectionStrings__KazoOsDb", _previousConnectionString);
     }
 
     [Fact]
     public async Task TcpStream_OverTheWebSocket_RoundTripsBytes()
     {
         await using IProxyStreamChannel channel = await Client().OpenStreamAsync(
-            ServerUrl, _accessToken, ProxyProtocol.Tcp, new ProxyStreamRequest("echo.example.com", 7, "org.hackeros.test"));
+            ServerUrl, _accessToken, ProxyProtocol.Tcp, new ProxyStreamRequest("echo.example.com", 7, "org.kazoos.test"));
 
         await channel.SendAsync(Encoding.ASCII.GetBytes("GET / HTTP/1.0\r\n\r\n"));
         byte[]? echoed = await channel.ReceiveAsync().AsTask().WaitAsync(TimeSpan.FromSeconds(10));
@@ -74,7 +74,7 @@ public sealed class ProxyStreamEndpointTests : IAsyncLifetime
     public async Task UdpStream_OverTheWebSocket_RoundTripsOneDatagram()
     {
         await using IProxyStreamChannel channel = await Client().OpenStreamAsync(
-            ServerUrl, _accessToken, ProxyProtocol.Udp, new ProxyStreamRequest("dns.example.com", 53, "org.hackeros.test"));
+            ServerUrl, _accessToken, ProxyProtocol.Udp, new ProxyStreamRequest("dns.example.com", 53, "org.kazoos.test"));
 
         await channel.SendAsync(Encoding.ASCII.GetBytes("dns?"));
         byte[]? datagram = await channel.ReceiveAsync().AsTask().WaitAsync(TimeSpan.FromSeconds(10));
@@ -88,7 +88,7 @@ public sealed class ProxyStreamEndpointTests : IAsyncLifetime
         var ungranted = await Assert.ThrowsAsync<ProxyStreamException>(() => Client().OpenStreamAsync(
             ServerUrl, _accessToken, ProxyProtocol.Tcp, new ProxyStreamRequest("echo.example.com", 7, "org.example.unknown")));
         var blockedPort = await Assert.ThrowsAsync<ProxyStreamException>(() => Client().OpenStreamAsync(
-            ServerUrl, _accessToken, ProxyProtocol.Tcp, new ProxyStreamRequest("echo.example.com", 22, "org.hackeros.test")));
+            ServerUrl, _accessToken, ProxyProtocol.Tcp, new ProxyStreamRequest("echo.example.com", 22, "org.kazoos.test")));
 
         Assert.Equal(ProxyErrorCode.GrantMissing, ungranted.ErrorCode);
         Assert.Equal(ProxyErrorCode.BlockedPort, blockedPort.ErrorCode);
@@ -118,7 +118,7 @@ public sealed class ProxyStreamEndpointTests : IAsyncLifetime
 
         Assert.True(policy.Enabled);
         Assert.Equal([7], policy.TcpPorts!);
-        Assert.Contains("org.hackeros.test", policy.GrantedApps!);
+        Assert.Contains("org.kazoos.test", policy.GrantedApps!);
     }
 
     private static Uri ServerUrl => new("http://localhost/");
@@ -141,7 +141,7 @@ public sealed class ProxyStreamEndpointTests : IAsyncLifetime
                 services.RemoveAll<ProxyRelayPolicy>();
                 services.AddSingleton(ProxyRelayPolicy.From(new ProxyOptions
                 {
-                    GrantedApps = ["org.hackeros.test"],
+                    GrantedApps = ["org.kazoos.test"],
                     Tcp = new ProxyPortOptions { AllowedPorts = [7] },
                     Udp = new ProxyPortOptions { AllowedPorts = [53] }
                 }));

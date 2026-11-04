@@ -14,14 +14,14 @@ public partial class ThemePreview : ComponentBase, IAsyncDisposable
     private IReadOnlyDictionary<string, string> _tokenProperties = ThemeTokenApplier.Build(null, animationsEnabled: true);
 
     private ThemeRenderState _renderState = ThemeRenderState.Create(
-        WellKnownThemeIds.HackerOs,
+        WellKnownThemeIds.KazoOs,
         ThemePlatform.Desktop,
         WellKnownAccentIds.Green,
         animationsEnabled: true);
 
     /// <summary>Gets or sets the exact built-in theme identifier to preview.</summary>
     [Parameter]
-    public string ThemeId { get; set; } = WellKnownThemeIds.HackerOs;
+    public string ThemeId { get; set; } = WellKnownThemeIds.KazoOs;
 
     /// <summary>Gets or sets the validated accent identifier; only Kazo OS consumes its color.</summary>
     [Parameter]

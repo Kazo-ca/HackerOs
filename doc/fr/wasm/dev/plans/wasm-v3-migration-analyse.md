@@ -235,7 +235,7 @@ that gives apps unrestricted access to every implementation.
 ### 7.1 Canonical app identity
 
 Every app has a stable, globally unique app ID, preferably reverse-domain style,
-for example `org.hackeros.terminal`. The app ID is immutable after release and is
+for example `org.kazoos.terminal`. The app ID is immutable after release and is
 used for:
 
 - registry identity;
@@ -590,7 +590,7 @@ the signed build profile/installed package policy identifies trusted system apps
 
 Authorization evaluates both the app capability and the acting user authority.
 A system app does not lend its System authority to the normal user operating its
-UI. For example, a user editing `/etc/hackeros/file-associations.json` in the
+UI. For example, a user editing `/etc/kazoos/file-associations.json` in the
 system Text Editor still requires Administrator elevation. System authority is
 used only for explicit OS-owned operations running in a separate, audited system
 execution context. This prevents a trusted system UI from becoming an ambient
@@ -620,10 +620,10 @@ persisted representation.
 Recommended virtual paths are:
 
 ```text
-/etc/hackeros/                         # Protected OS/admin settings
-/etc/hackeros/file-associations.json   # Canonical file-association policy
-/etc/hackeros/apps/                    # Protected system app policy/defaults
-/home/{user}/.config/hackeros/         # User-writable OS preferences
+/etc/kazoos/                         # Protected OS/admin settings
+/etc/kazoos/file-associations.json   # Canonical file-association policy
+/etc/kazoos/apps/                    # Protected system app policy/defaults
+/home/{user}/.config/kazoos/         # User-writable OS preferences
 /home/{user}/.config/apps/{appId}/     # App/user settings
 ```
 
@@ -644,7 +644,7 @@ Requirements:
 7. Sensitive values may be redacted or represented by protected references;
   making settings file-accessible does not require exposing secrets as text.
 
-File associations and all OS/admin documents under `/etc/hackeros/` require
+File associations and all OS/admin documents under `/etc/kazoos/` require
 Administrator or System authority to modify. Users and apps with read permission
 may inspect them with a text editor. User-editable preferences remain under the
 current user's `.config` tree.
@@ -726,7 +726,7 @@ Only window apps may declare file handlers. The resolver:
 Associations should use MIME/media type when known and normalized extensions as
 a fallback. Manifests declare available handlers, while the canonical association
 and default policy is stored in the settings system and exposed at
-`/etc/hackeros/file-associations.json`. Installing an app cannot silently replace
+`/etc/kazoos/file-associations.json`. Installing an app cannot silently replace
 an existing default. Changing the policy requires Administrator or System
 authority. Disabling or uninstalling an app invalidates its configured defaults
 and the resolver falls back to another enabled handler or **Open With**.
@@ -917,7 +917,7 @@ for later apps.
 10. An app denied broad filesystem permission cannot obtain a broad filesystem
     handle through the normal SDK.
 11. A normal user can read but cannot modify
-  `/etc/hackeros/file-associations.json`; an Administrator or System app can
+  `/etc/kazoos/file-associations.json`; an Administrator or System app can
   edit it through a text editor, and valid changes update resolution without a
   reload while invalid changes are rejected atomically.
 12. File-open, file-save, and folder-selection helpers enforce filters,

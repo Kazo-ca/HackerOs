@@ -3,7 +3,7 @@
    mirrored next to it. */
 
 html,
-body.hackeros-surface {
+body.kazoos-surface {
     height: 100%;
     margin: 0;
     overflow: hidden;
@@ -12,7 +12,7 @@ body.hackeros-surface {
     color-scheme: dark;
 }
 
-.hackeros-surface-root {
+.kazoos-surface-root {
     display: flex;
     flex-direction: column;
     width: 100%;

@@ -59,7 +59,7 @@ public sealed class ProxyServiceTests : IDisposable
 
     /// <summary>The default policy, with the test app granted network.real.access (ADR 0102 §4).</summary>
     internal static ProxyRelayPolicy TestPolicy { get; } =
-        ProxyRelayPolicy.From(new ProxyOptions { GrantedApps = ["org.hackeros.test"] });
+        ProxyRelayPolicy.From(new ProxyOptions { GrantedApps = ["org.kazoos.test"] });
 
     public void Dispose() => _db.Dispose();
 
@@ -91,9 +91,9 @@ public sealed class ProxyServiceTests : IDisposable
     }
 
     [Theory]
-    [InlineData("http://example.hackeros.local/")]
+    [InlineData("http://example.kazoos.local/")]
     [InlineData("http://bank.sim/")]
-    [InlineData("http://target.hackeros/")]
+    [InlineData("http://target.kazoos/")]
     public async Task SimulatedDomain_Throws_WithSimulatedDomainBlockedCode(string url)
     {
         var request = BuildRequest(url);
@@ -280,9 +280,9 @@ public sealed class ProxyServiceTests : IDisposable
     }
 
     [Theory]
-    [InlineData("example.hackeros.local")]
+    [InlineData("example.kazoos.local")]
     [InlineData("bank.sim")]
-    [InlineData("target.hackeros")]
+    [InlineData("target.kazoos")]
     public async Task TcpProbe_SimulatedDomain_ThrowsSimulatedDomainBlockedCode(string host)
     {
         var ex = await Assert.ThrowsAsync<ProxyRequestException>(() =>
@@ -334,7 +334,7 @@ public sealed class ProxyServiceTests : IDisposable
             BodyHash: null,
             BodyBytes: 0,
             TimeoutSeconds: 10,
-            AppId: "org.hackeros.test",
+            AppId: "org.kazoos.test",
             IncludeBody: includeBody);
 
     private static ProxyTcpProbeRequest BuildTcpProbeRequest(string host, int port) =>
@@ -343,7 +343,7 @@ public sealed class ProxyServiceTests : IDisposable
             Host: host,
             Port: port,
             TimeoutSeconds: 5,
-            AppId: "org.hackeros.test");
+            AppId: "org.kazoos.test");
 }
 
 /// <summary>Fake TCP connector that returns a scripted outcome without touching real sockets.</summary>

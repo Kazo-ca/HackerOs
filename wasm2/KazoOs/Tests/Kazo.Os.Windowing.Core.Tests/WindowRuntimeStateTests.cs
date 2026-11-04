@@ -17,7 +17,7 @@ public sealed class WindowRuntimeStateTests
         WindowOwnerId ownerInstanceId = WindowOwnerId.FromGuid(Guid.Parse("20000000-0000-0000-0000-000000000001"));
         WindowRuntimeState state = new(
             id,
-            "org.hackeros.terminal",
+            "org.kazoos.terminal",
             ownerInstanceId,
             "Terminal",
             "icons/terminal.svg",
@@ -31,7 +31,7 @@ public sealed class WindowRuntimeStateTests
             true);
 
         Assert.Equal(id, state.Id);
-        Assert.Equal("org.hackeros.terminal", state.AppId);
+        Assert.Equal("org.kazoos.terminal", state.AppId);
         Assert.Equal(ownerInstanceId, state.OwnerInstanceId);
         Assert.Equal("Terminal", state.Title);
         Assert.Equal(bounds, state.Bounds);
@@ -81,7 +81,7 @@ public sealed class WindowRuntimeStateTests
     {
         WindowRuntimeState state = new(
             WindowId.FromGuid(Guid.NewGuid()),
-            "org.hackeros.settings",
+            "org.kazoos.settings",
             WindowOwnerId.FromGuid(Guid.NewGuid()),
             "Settings",
             null,
@@ -122,7 +122,7 @@ public sealed class WindowRuntimeStateTests
     private static WindowRuntimeState CreateState(WindowId id, WindowModality modality, WindowId? ownerId) =>
         new(
             id,
-            "org.hackeros.settings",
+            "org.kazoos.settings",
             WindowOwnerId.FromGuid(Guid.NewGuid()),
             "Settings",
             null,

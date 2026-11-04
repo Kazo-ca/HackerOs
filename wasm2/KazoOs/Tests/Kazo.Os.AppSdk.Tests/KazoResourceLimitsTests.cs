@@ -33,7 +33,7 @@ public sealed class KazoResourceLimitsTests
     public void Parse_reads_limits_turned_off_by_the_host()
     {
         KazoResourceLimits limits = KazoResourceLimits.Parse(
-            "Max open files            unlimited            unlimited            files     \n# enforcement: off (HackerOs:ResourceLimits:Enabled=false)\n");
+            "Max open files            unlimited            unlimited            files     \n# enforcement: off (KazoOs:ResourceLimits:Enabled=false)\n");
 
         Assert.Equal(KazoResourceLimitEnforcement.Off, limits.Enforcement);
         Assert.Equal(ResourceLimit.Infinite, limits.NoFile);

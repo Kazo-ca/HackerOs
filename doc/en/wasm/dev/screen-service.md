@@ -16,7 +16,7 @@ writes `screens.config`. This work item shows the "Restore screens" offer.
 ```
 Main tab (screen 1)                                 Window of a secondary screen (window.open)
 ───────────────────                                 ──────────────────────────────────────────
-DesktopShell                                         <body class="hackeros-surface">
+DesktopShell                                         <body class="kazoos-surface">
  └─ ScreenLayer                                       └─ .secondary-screen[data-display=2]
      ├─ one <DisplaySurfaceContent> per screen ─ moves ►  ├─ the screen's desktop (chantier 4; its number meanwhile)
      └─ "Restore screens" card                            ├─ "main tab hidden" banner
@@ -26,7 +26,7 @@ ScreenService ── AddDisplay / ChangeViewport / RemoveDisplay ──► Windo
  │                                                     └─ screens.js prepare / settle
  └─ screens.js: permission, getScreenDetails, screenschange, place read every second,
                 full screen, the main tab's visibilitychange
-~/.config/hackeros/screens.config [screens]: open = 2,3 ; 2 = left,top,width,height
+~/.config/kazoos/screens.config [screens]: open = 2,3 ; 2 = left,top,width,height
 ```
 
 | File | Role |

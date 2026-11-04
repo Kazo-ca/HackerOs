@@ -272,10 +272,10 @@ public sealed class LocalSessionServiceTests
         CapabilityGrantRepository grants = new();
         AppManifest manifest = new()
         {
-            Id = "org.hackeros.text-editor",
+            Id = "org.kazoos.text-editor",
             Name = "Text Editor",
             Version = "1.0.0",
-            PublisherId = "org.hackeros",
+            PublisherId = "org.kazoos",
             Description = "Test Editor",
             Kind = AppKind.Window,
             EntryPoint = new AppEntryPointManifest("Kazo.Os.Apps.TextEditor", "Kazo.Os.Apps.TextEditor.TextEditorWindow"),
@@ -300,9 +300,9 @@ public sealed class LocalSessionServiceTests
         AuthenticatedPrincipal principal = await service.LoginAsync(fixture.AliceLoginName, "hunter2");
 
         CapabilityPolicyEvaluation fileSave = grants.Evaluate(
-            "org.hackeros.text-editor", principal.UserId.ToString(), AppCapabilities.DialogFileSave, AppAuthority.User, AppAuthority.User);
+            "org.kazoos.text-editor", principal.UserId.ToString(), AppCapabilities.DialogFileSave, AppAuthority.User, AppAuthority.User);
         CapabilityPolicyEvaluation homeRead = grants.Evaluate(
-            "org.hackeros.text-editor", principal.UserId.ToString(), AppCapabilities.FileSystemUserHomeRead, AppAuthority.User, AppAuthority.User);
+            "org.kazoos.text-editor", principal.UserId.ToString(), AppCapabilities.FileSystemUserHomeRead, AppAuthority.User, AppAuthority.User);
 
         Assert.True(fileSave.Granted);
         Assert.True(homeRead.Granted);
@@ -366,7 +366,7 @@ public sealed class LocalSessionServiceTests
         {
             AppOperationContext operation = new()
             {
-                AppId = "org.hackeros.kernel",
+                AppId = "org.kazoos.kernel",
                 UserId = "system",
                 UserAuthority = AppAuthority.System,
                 GrantedCapabilities = new HashSet<string>(AppCapabilities.All, StringComparer.Ordinal),

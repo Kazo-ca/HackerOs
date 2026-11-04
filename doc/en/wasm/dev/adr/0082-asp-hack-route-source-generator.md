@@ -6,13 +6,13 @@
 
 Accepted on 2026-10-16, with the `web/6-mvc-core` work item.
 
-- **Plan phase:** web phase ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Plan phase:** web phase ([`asp-kazo-plan.md`](../plans/asp-kazo-plan.md)).
 - **Supersedes:** the sentence of [ADR 0076](0076-asp-hack-mvc.md) §3 "the route table is
   generated at build time *by the manifest generator*". The rest of
   ADR 0076 §3 (table generated at build time, no reflection at startup, conflicts
   as `HOSWEB0001` errors...) is kept.
 - **Completes:** ADR 0076 §1, §3, §4 and §5 on the points listed below.
-- **Documentation:** [`asp-hack-mvc.md`](../../framework/asp-hack-mvc.md).
+- **Documentation:** [`asp-kazo-mvc.md`](../../framework/asp-kazo-mvc.md).
 
 ## Context
 

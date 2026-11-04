@@ -13,7 +13,7 @@ namespace Kazo.Os.Platform.Core.Policy;
 /// <item>A declared dangerous capability (<see cref="AppCapabilities.IsDangerous"/>) of a system app
 /// (ADR 0048) is granted, sourced as <see cref="CapabilityGrantSource.SystemPolicy"/>.</item>
 /// <item>A declared dangerous capability of a non-system app is withheld: it needs an administrator
-/// approval recorded in <c>/etc/hackeros/app-permissions.config</c>, which the launch gate of
+/// approval recorded in <c>/etc/kazoos/app-permissions.config</c>, which the launch gate of
 /// ADR 0049 section 5 grants as <see cref="CapabilityGrantSource.AdministratorApproval"/>.</item>
 /// </list>
 /// Seeding never infers additional access from app kind, acting authority, or related

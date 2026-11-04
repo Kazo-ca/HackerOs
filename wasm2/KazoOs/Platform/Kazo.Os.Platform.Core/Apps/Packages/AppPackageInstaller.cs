@@ -13,10 +13,10 @@ public enum AppPackageScope
     /// <summary>For oneself when allowed (trusted source, not blocked, not installed for the system), otherwise for the system.</summary>
     Auto = 0,
 
-    /// <summary>For the session user only, in <c>~/.local/share/hackeros/apps</c>.</summary>
+    /// <summary>For the session user only, in <c>~/.local/share/kazoos/apps</c>.</summary>
     User = 1,
 
-    /// <summary>For every user, in <c>/usr/lib/hackeros/apps</c>, after the two-step approval.</summary>
+    /// <summary>For every user, in <c>/usr/lib/kazoos/apps</c>, after the two-step approval.</summary>
     System = 2
 }
 
@@ -73,7 +73,7 @@ public sealed record AppPackageUpdateReport(IReadOnlyList<AppPackageUpdate> Upda
 /// <param name="Scope">For whom the caller asked.</param>
 /// <param name="Home">The session user's home, or <see langword="null"/> without a session.</param>
 /// <param name="Catalog">The running catalog: built-in apps and the apps installed at boot.</param>
-/// <param name="SystemInstalled">The <c>[installed]</c> section of <c>/etc/hackeros/apps.config</c>.</param>
+/// <param name="SystemInstalled">The <c>[installed]</c> section of <c>/etc/kazoos/apps.config</c>.</param>
 /// <param name="PersonalInstalled">The session user's <c>[installed]</c> section.</param>
 public sealed record AppPackageInstallContext(
     AppSourcesConfig Sources,
@@ -91,8 +91,8 @@ public sealed record AppPackageInstallContext(
 /// <summary>
 /// Installs and removes apps from their GitHub repository (ADR 0182 §5, ADR 0189): reads the
 /// sources and the block list, downloads and verifies the package, then writes it for the whole
-/// system (<see cref="InstalledAppsLayout.Root"/>, <c>[installed]</c> of <c>/etc/hackeros/apps.config</c>)
-/// or for one user (<c>~/.local/share/hackeros/apps</c>, <c>~/.config/hackeros/installed-apps.config</c>).
+/// system (<see cref="InstalledAppsLayout.Root"/>, <c>[installed]</c> of <c>/etc/kazoos/apps.config</c>)
+/// or for one user (<c>~/.local/share/kazoos/apps</c>, <c>~/.config/kazoos/installed-apps.config</c>).
 /// The app joins the catalog at the next start of the OS (Q5 answer C).
 /// </summary>
 /// <remarks>
@@ -148,7 +148,7 @@ public sealed partial class AppPackageInstaller
     /// <summary>Gets the sources and block list the host was built with (ADR 0189 §1, §5).</summary>
     public AppPackageDefaults Defaults { get; }
 
-    /// <summary>Reads <c>/etc/hackeros/app-sources.config</c>; the host's defaults when it does not exist.</summary>
+    /// <summary>Reads <c>/etc/kazoos/app-sources.config</c>; the host's defaults when it does not exist.</summary>
     /// <param name="fileSystem">Any reader: the file is <c>0644</c>.</param>
     /// <param name="cancellationToken">Cancels the read.</param>
     public async ValueTask<AppSourcesConfig> ReadSourcesAsync(IAppFileSystemGateway fileSystem, CancellationToken cancellationToken = default)
@@ -160,7 +160,7 @@ public sealed partial class AppPackageInstaller
         return AppSourcesConfigDocument.Read(file.Content, Defaults);
     }
 
-    /// <summary>Reads <c>/etc/hackeros/app-policy.config</c>; the host's defaults when it does not exist.</summary>
+    /// <summary>Reads <c>/etc/kazoos/app-policy.config</c>; the host's defaults when it does not exist.</summary>
     /// <param name="fileSystem">Any reader: the file is <c>0644</c>.</param>
     /// <param name="cancellationToken">Cancels the read.</param>
     public async ValueTask<AppPolicy> ReadPolicyAsync(IAppFileSystemGateway fileSystem, CancellationToken cancellationToken = default)
@@ -172,7 +172,7 @@ public sealed partial class AppPackageInstaller
         return AppPolicyConfigDocument.Read(file.Content, Defaults);
     }
 
-    /// <summary>Reads <c>[installed]</c> of <c>/etc/hackeros/apps.config</c>.</summary>
+    /// <summary>Reads <c>[installed]</c> of <c>/etc/kazoos/apps.config</c>.</summary>
     /// <param name="fileSystem">Any reader: the file is <c>0644</c>.</param>
     /// <param name="cancellationToken">Cancels the read.</param>
     public async ValueTask<InstalledAppsReadResult> ReadInstalledAsync(IAppFileSystemGateway fileSystem, CancellationToken cancellationToken = default)
@@ -184,7 +184,7 @@ public sealed partial class AppPackageInstaller
         return AppsConfigDocument.ReadInstalled(file.Content, AppsConfigDocument.MachinePath);
     }
 
-    /// <summary>Reads <c>[installed]</c> of one user's <c>~/.config/hackeros/installed-apps.config</c>.</summary>
+    /// <summary>Reads <c>[installed]</c> of one user's <c>~/.config/kazoos/installed-apps.config</c>.</summary>
     /// <param name="fileSystem">The user's own reader, or the system's.</param>
     /// <param name="homeDirectory">The user's home.</param>
     /// <param name="cancellationToken">Cancels the read.</param>
@@ -413,7 +413,7 @@ public sealed partial class AppPackageInstaller
     }
 
     /// <summary>
-    /// Finds the catalog that publishes <paramref name="appId"/> (<c>hackpkg install &lt;appId&gt;</c>,
+    /// Finds the catalog that publishes <paramref name="appId"/> (<c>kazopkg install &lt;appId&gt;</c>,
     /// ADR 0188 §8). ADR 0215 §2 (Benoit, Q4 B): when several catalogs list it, nothing is chosen
     /// for the user; the error names each <c>catalog:&lt;name&gt;/&lt;appId&gt;</c> to type instead.
     /// A catalog that cannot be downloaded is skipped.

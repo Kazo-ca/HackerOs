@@ -6,7 +6,7 @@ namespace Kazo.Os.UI.E2E.Tests;
 
 /// <summary>
 /// The screen service (ADR 0178 §4, ADR 0180) in a real Chromium: a screen listed in
-/// <c>~/.config/hackeros/screens.config</c> is offered after a reload, « Restore screens » opens it
+/// <c>~/.config/kazoos/screens.config</c> is offered after a reload, « Restore screens » opens it
 /// as a second window that shows screen 2 with its taskbar (ADR 0179 §1), and a screen the user closes is not offered again.
 /// Headless Chromium has no second monitor: the window opens at its remembered place (fallback).
 /// </summary>
@@ -37,11 +37,11 @@ public sealed class ScreenServiceTests(ITestOutputHelper output)
             ILocator rows = page.Locator("[data-terminal-panel] .xterm-rows").First;
             await WaitForTextAsync(rows, text => text.Contains('$', StringComparison.Ordinal), "the shell prompt");
             await page.Locator("[data-terminal-panel] .xterm-screen").First.ClickAsync();
-            await RunAsync(page, rows, "mkdir -p ~/.config/hackeros");
-            await RunAsync(page, rows, "echo '[screens]' > ~/.config/hackeros/screens.config");
-            await RunAsync(page, rows, "echo 'open = 2' >> ~/.config/hackeros/screens.config");
-            await RunAsync(page, rows, "echo '2 = 40,40,900,700' >> ~/.config/hackeros/screens.config");
-            await RunAsync(page, rows, "cat ~/.config/hackeros/screens.config");
+            await RunAsync(page, rows, "mkdir -p ~/.config/kazoos");
+            await RunAsync(page, rows, "echo '[screens]' > ~/.config/kazoos/screens.config");
+            await RunAsync(page, rows, "echo 'open = 2' >> ~/.config/kazoos/screens.config");
+            await RunAsync(page, rows, "echo '2 = 40,40,900,700' >> ~/.config/kazoos/screens.config");
+            await RunAsync(page, rows, "cat ~/.config/kazoos/screens.config");
             // Typed once in the command and once in cat's output.
             await WaitForTextAsync(rows, text => Count(text, "2 = 40,40,900,700") >= 2, "the screens file");
 
@@ -182,7 +182,7 @@ public sealed class ScreenServiceTests(ITestOutputHelper output)
             await Assertions.Expect(maximizeMenu).ToBeVisibleAsync();
             Assert.Equal(
                 ["Snap left", "Snap right", "Full screen (Linux keys)", "Other screen"],
-                await maximizeMenu.Locator(".hack-context-menu-title").AllInnerTextsAsync());
+                await maximizeMenu.Locator(".kazo-context-menu-title").AllInnerTextsAsync());
             await page.Keyboard.PressAsync("Escape");
             await Assertions.Expect(maximizeMenu).ToHaveCountAsync(0);
 
@@ -195,7 +195,7 @@ public sealed class ScreenServiceTests(ITestOutputHelper output)
             await Assertions.Expect(screens).ToBeVisibleAsync();
             Assert.Equal(
                 ["Screen 1", "Screen 2", "New screen"],
-                await screens.Locator(".hack-context-menu-title").AllInnerTextsAsync());
+                await screens.Locator(".kazo-context-menu-title").AllInnerTextsAsync());
             await Assertions.Expect(screens.Locator("[data-menu-item='window.screen.1']")).ToHaveAttributeAsync("aria-disabled", "true");
             await screens.Locator("[data-menu-item='window.screen.2']").HoverAsync();
             ILocator veil = screen.Locator(".screen-identify-veil[data-screen-identify='2']");
@@ -313,8 +313,8 @@ public sealed class ScreenServiceTests(ITestOutputHelper output)
             ILocator rows = page.Locator("[data-terminal-panel] .xterm-rows").First;
             await WaitForTextAsync(rows, text => text.Contains('$', StringComparison.Ordinal), "the shell prompt");
             await page.Locator("[data-terminal-panel] .xterm-screen").First.ClickAsync();
-            await RunAsync(page, rows, "echo '[taskbar]' >> ~/.config/hackeros/screens.config");
-            await RunAsync(page, rows, "echo 'primary-taskbar = own' >> ~/.config/hackeros/screens.config");
+            await RunAsync(page, rows, "echo '[taskbar]' >> ~/.config/kazoos/screens.config");
+            await RunAsync(page, rows, "echo 'primary-taskbar = own' >> ~/.config/kazoos/screens.config");
             await Assertions.Expect(primaryItems).ToHaveCountAsync(1, new() { Timeout = 15000 });
             await Assertions.Expect(primaryItems.First).ToContainTextAsync("Terminal");
             await Assertions.Expect(taskbar.Locator(".taskbar-item")).ToHaveCountAsync(1);
@@ -516,11 +516,11 @@ public sealed class ScreenServiceTests(ITestOutputHelper output)
         ILocator rows = page.Locator("[data-terminal-panel] .xterm-rows").First;
         await WaitForTextAsync(rows, text => text.Contains('$', StringComparison.Ordinal), "the shell prompt");
         await page.Locator("[data-terminal-panel] .xterm-screen").First.ClickAsync();
-        await RunAsync(page, rows, "mkdir -p ~/.config/hackeros");
-        await RunAsync(page, rows, "echo '[screens]' > ~/.config/hackeros/screens.config");
-        await RunAsync(page, rows, "echo 'open = 2' >> ~/.config/hackeros/screens.config");
-        await RunAsync(page, rows, "echo '2 = 40,40,900,700' >> ~/.config/hackeros/screens.config");
-        await RunAsync(page, rows, "cat ~/.config/hackeros/screens.config");
+        await RunAsync(page, rows, "mkdir -p ~/.config/kazoos");
+        await RunAsync(page, rows, "echo '[screens]' > ~/.config/kazoos/screens.config");
+        await RunAsync(page, rows, "echo 'open = 2' >> ~/.config/kazoos/screens.config");
+        await RunAsync(page, rows, "echo '2 = 40,40,900,700' >> ~/.config/kazoos/screens.config");
+        await RunAsync(page, rows, "cat ~/.config/kazoos/screens.config");
         await WaitForTextAsync(rows, text => Count(text, "2 = 40,40,900,700") >= 2, "the screens file");
 
         await SignInAgainAsync(page);

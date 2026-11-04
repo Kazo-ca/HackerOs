@@ -6,7 +6,7 @@
 
 Accepted on 2026-10-16, with the `web/4-browser-html` work item.
 
-- **Plan phase:** web phase ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Plan phase:** web phase ([`asp-kazo-plan.md`](../plans/asp-kazo-plan.md)).
 - **Completes:** [ADR 0075](0075-browser-html-rendering.md), without changing its
   decisions (iframe without same origin, subresources loaded in C#, bridge).
 - **Documentation:** [`browser-html-rendering.md`](../browser-html-rendering.md).

@@ -162,10 +162,10 @@ Kazo.Os.Ecosystem.WebAssemblyLazyAssemblyTransport.WebAssemblyLazyAssemblyTransp
 Kazo.Os.Ecosystem._Imports
 Kazo.Os.Ecosystem._Imports.Execute() -> void
 Kazo.Os.Ecosystem._Imports._Imports() -> void
-const Kazo.Os.Ecosystem.HardwareServiceCollectionExtensions.SectionName = "HackerOs:Hardware" -> string!
+const Kazo.Os.Ecosystem.HardwareServiceCollectionExtensions.SectionName = "KazoOs:Hardware" -> string!
 const Kazo.Os.Ecosystem.InstalledAppAssetContentTypes.Default = "application/octet-stream" -> string!
-const Kazo.Os.Ecosystem.ResourceAccountingServiceCollectionExtensions.SectionName = "HackerOs:ResourceAccounting" -> string!
-const Kazo.Os.Ecosystem.ResourceLimitsServiceCollectionExtensions.SectionName = "HackerOs:ResourceLimits" -> string!
+const Kazo.Os.Ecosystem.ResourceAccountingServiceCollectionExtensions.SectionName = "KazoOs:ResourceAccounting" -> string!
+const Kazo.Os.Ecosystem.ResourceLimitsServiceCollectionExtensions.SectionName = "KazoOs:ResourceLimits" -> string!
 override Kazo.Os.Ecosystem.App.OnAfterRender(bool firstRender) -> void
 override Kazo.Os.Ecosystem.App.OnInitializedAsync() -> System.Threading.Tasks.Task!
 override Kazo.Os.Ecosystem.CpuAccountingRegistration.Equals(object? obj) -> bool

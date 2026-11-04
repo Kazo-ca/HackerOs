@@ -24,7 +24,7 @@ public sealed record CursorThemeLibraryResult(IReadOnlyList<CursorTheme> Themes,
 
 /// <summary>
 /// The cursor themes of the files (ADR 0205 §1): one folder per theme in
-/// <c>/etc/hackeros/cursors/</c> (administrator, every user) and <c>~/.config/hackeros/cursors/</c>
+/// <c>/etc/kazoos/cursors/</c> (administrator, every user) and <c>~/.config/kazoos/cursors/</c>
 /// (the user), each with a <c>cursor.theme</c> index and its PNG images, and the <c>cursors/</c>
 /// folder of every installed theme pack (ADR 0213 §3). Like the <c>.theme</c>
 /// files (ADR 0103 §2.2), an id that repeats a built-in theme or an <c>/etc</c> theme is refused.
@@ -32,14 +32,14 @@ public sealed record CursorThemeLibraryResult(IReadOnlyList<CursorTheme> Themes,
 public static class CursorThemeLibrary
 {
     /// <summary>Folder of the cursor themes installed for every user.</summary>
-    public const string SystemDirectory = "/etc/hackeros/cursors";
+    public const string SystemDirectory = "/etc/kazoos/cursors";
 
     /// <summary>Gets the folder of a user's own cursor themes.</summary>
     /// <param name="homeDirectory">The user's home, such as <c>/home/alice</c>.</param>
     public static string GetUserDirectory(string homeDirectory)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(homeDirectory);
-        return $"{homeDirectory.TrimEnd('/')}/.config/hackeros/cursors";
+        return $"{homeDirectory.TrimEnd('/')}/.config/kazoos/cursors";
     }
 
     /// <summary>

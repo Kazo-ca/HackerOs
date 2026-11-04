@@ -36,7 +36,7 @@ public sealed class PageStorageTests
         storage.Apply("https_intranet.hack", new BridgeStorageEvent("local", "remove", "theme", null));
         await storage.FlushAsync();
 
-        Assert.Equal("/home/neo/.local/share/hackeros/browser/storage", root);
+        Assert.Equal("/home/neo/.local/share/kazoos/browser/storage", root);
         Assert.Equal("dark", loaded["theme"]);
         Assert.Equal("{\"lang\":\"fr\"}", files.Files[$"{root}/https_intranet.hack/local-storage.json"]);
         Assert.Equal("fr", (await storage.GetLocalAsync("https_intranet.hack"))["lang"]);
@@ -46,7 +46,7 @@ public sealed class PageStorageTests
     public async Task Session_storage_stays_in_memory_and_clear_empties_an_area()
     {
         MemoryFiles files = new();
-        PageStorage storage = new(files, "/home/neo/.local/share/hackeros/browser/storage");
+        PageStorage storage = new(files, "/home/neo/.local/share/kazoos/browser/storage");
 
         storage.Apply("file", new BridgeStorageEvent("session", "set", "step", "2"));
         Assert.Equal("2", storage.GetSession("file")["step"]);

@@ -14,7 +14,7 @@ namespace Kazo.Os.Platform.Blazor.Shell;
 /// </summary>
 public partial class AppLauncher : IAsyncDisposable
 {
-    private const string AppMenuName = "hackeros.start-menu.app";
+    private const string AppMenuName = "kazoos.start-menu.app";
 
     private ContextMenuScope? _menus;
     private IDisposable? _menuRegistration;

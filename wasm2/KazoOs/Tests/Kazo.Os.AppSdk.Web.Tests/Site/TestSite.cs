@@ -32,7 +32,7 @@ public sealed partial class TestSite : WebAppDefinition
         app.UseStaticFiles();
         app.Use(async (context, next) =>
         {
-            context.Response.Headers["X-Powered-By"] = "ASP.Hack";
+            context.Response.Headers["X-Powered-By"] = "ASP.Kazo";
             context.Items["endpoint"] = context.Endpoint?.DisplayName;
             await next();
         });
@@ -46,7 +46,7 @@ public sealed partial class TestSite : WebAppDefinition
         app.MapControllers();
     }
 
-    private static IHackActionResult Boom() => throw new InvalidOperationException("kaboom");
+    private static IKazoActionResult Boom() => throw new InvalidOperationException("kaboom");
 }
 
 /// <summary>A note of the API.</summary>
@@ -137,17 +137,17 @@ public sealed class NotesController(NoteStore store, RequestCounter counter) : K
 
     [HttpGet("{id:int}", Name = "GetNote")]
     [TraceFilter("action")]
-    public IHackActionResult Get(int id) => store.Find(id) is Note note ? Ok(note) : NotFound();
+    public IKazoActionResult Get(int id) => store.Find(id) is Note note ? Ok(note) : NotFound();
 
     [HttpPost]
-    public IHackActionResult Create(Note note)
+    public IKazoActionResult Create(Note note)
     {
         Note created = store.Add(note);
         return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
     }
 
     [HttpPatch("{id:int}")]
-    public async Task<IHackActionResult> PatchAsync(int id, [FromBody] NotePatch patch, CancellationToken cancellationToken)
+    public async Task<IKazoActionResult> PatchAsync(int id, [FromBody] NotePatch patch, CancellationToken cancellationToken)
     {
         await Task.Yield();
         cancellationToken.ThrowIfCancellationRequested();
@@ -163,7 +163,7 @@ public sealed class NotesController(NoteStore store, RequestCounter counter) : K
 
     [HttpDelete("{id:int}")]
     [DenyFilter]
-    public IHackActionResult Delete(int id) => store.Remove(id) ? NoContent() : NotFound();
+    public IKazoActionResult Delete(int id) => store.Remove(id) ? NoContent() : NotFound();
 
     [HttpGet("search")]
     public object Search([Range(1, 10)] int page, string term, [FromHeader(Name = "X-Client")] string? client, Priority priority = Priority.Normal, int[]? ids = null) =>
@@ -208,14 +208,14 @@ public sealed class HomeController : KazoController
 {
     public string Index() => "home";
 
-    public IHackActionResult Details(int id) => Content($"<h1>Note {id}</h1>", "text/html; charset=utf-8");
+    public IKazoActionResult Details(int id) => Content($"<h1>Note {id}</h1>", "text/html; charset=utf-8");
 
     [HttpGet]
     public string Contact() => "contact form";
 
     [HttpPost]
     [ActionName("Contact")]
-    public IHackActionResult ContactPost(ContactForm form)
+    public IKazoActionResult ContactPost(ContactForm form)
     {
         if (!ModelState.IsValid)
         {
@@ -227,20 +227,20 @@ public sealed class HomeController : KazoController
 
     public string Thanks(string name, int tags, bool subscribe) => $"thanks {name} ({tags} tags, subscribe={subscribe})";
 
-    public IHackActionResult Visits()
+    public IKazoActionResult Visits()
     {
         int visits = (HttpContext.Session.GetInt32("visits") ?? 0) + 1;
         HttpContext.Session.SetInt32("visits", visits);
         return Content($"visits={visits}");
     }
 
-    public IHackActionResult Link() => Content(Url.Action(nameof(Details), "Home", new { id = 7, sort = "asc" }) ?? "none");
+    public IKazoActionResult Link() => Content(Url.Action(nameof(Details), "Home", new { id = 7, sort = "asc" }) ?? "none");
 
-    public IHackActionResult NoteLink() => Content(Url.RouteUrl("GetNote", new { id = 3 }) ?? "none");
+    public IKazoActionResult NoteLink() => Content(Url.RouteUrl("GetNote", new { id = 3 }) ?? "none");
 
-    public IHackActionResult Download() => File("hello"u8.ToArray(), "text/plain", "hello.txt");
+    public IKazoActionResult Download() => File("hello"u8.ToArray(), "text/plain", "hello.txt");
 
-    public IHackActionResult Away() => LocalRedirect("https://evil.example/");
+    public IKazoActionResult Away() => LocalRedirect("https://evil.example/");
 
     public override void OnActionExecuting(KazoActionExecutingContext context)
     {
@@ -254,16 +254,16 @@ public sealed class HomeController : KazoController
 /// <summary>A controller of pages rendered by Razor views (web/7, ADR 0083).</summary>
 public sealed class PagesController(NoteStore store) : KazoController
 {
-    public IHackActionResult Index() => View(store);
+    public IKazoActionResult Index() => View(store);
 
-    public IHackActionResult Details(int id) => store.Find(id) is Note note ? View(note) : NotFound();
+    public IKazoActionResult Details(int id) => store.Find(id) is Note note ? View(note) : NotFound();
 
     [HttpGet]
-    public IHackActionResult Edit() => View(new ContactForm { Name = "Ada", Age = 36 });
+    public IKazoActionResult Edit() => View(new ContactForm { Name = "Ada", Age = 36 });
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IHackActionResult Edit(ContactForm form)
+    public IKazoActionResult Edit(ContactForm form)
     {
         if (!ModelState.IsValid)
         {
@@ -279,44 +279,44 @@ public sealed class PagesController(NoteStore store) : KazoController
     [IgnoreAntiforgeryToken]
     public string Open() => "open";
 
-    public IHackActionResult Plain() => View();
+    public IKazoActionResult Plain() => View();
 
-    public IHackActionResult PlainModel() => View("Plain", "model");
+    public IKazoActionResult PlainModel() => View("Plain", "model");
 
-    public IHackActionResult Partial(int id) => PartialView("_NoteCard", store.Find(id));
+    public IKazoActionResult Partial(int id) => PartialView("_NoteCard", store.Find(id));
 
-    public IHackActionResult Typed() => View<Loose>();
+    public IKazoActionResult Typed() => View<Loose>();
 
-    public IHackActionResult Shared() => View("Error");
+    public IKazoActionResult Shared() => View("Error");
 
-    public IHackActionResult Absolute() => View("~/Views/Shared/Error.razor");
+    public IKazoActionResult Absolute() => View("~/Views/Shared/Error.razor");
 
-    public IHackActionResult Missing() => View("Nowhere");
+    public IKazoActionResult Missing() => View("Nowhere");
 
-    public IHackActionResult WrongModel() => View("Details", "not a note");
+    public IKazoActionResult WrongModel() => View("Details", "not a note");
 
-    public IHackActionResult Broken() => View();
+    public IKazoActionResult Broken() => View();
 
-    public IHackActionResult NoBody() => View();
+    public IKazoActionResult NoBody() => View();
 
-    public IHackActionResult Injected() => View();
+    public IKazoActionResult Injected() => View();
 
-    public IHackActionResult Status() => new KazoViewResult { ViewName = "Plain", StatusCode = 418 };
+    public IKazoActionResult Status() => new KazoViewResult { ViewName = "Plain", StatusCode = 418 };
 }
 
 /// <summary>A controller of pages rendered by .cshtml views (web/8, ADR 0086).</summary>
 public sealed class CshtmlController(NoteStore store) : KazoController
 {
-    public IHackActionResult Index() => View(store);
+    public IKazoActionResult Index() => View(store);
 
-    public IHackActionResult Details(int id) => store.Find(id) is Note note ? View(note) : NotFound();
+    public IKazoActionResult Details(int id) => store.Find(id) is Note note ? View(note) : NotFound();
 
     [HttpGet]
-    public IHackActionResult Edit() => View(new ContactForm { Name = "Ada", Age = 36 });
+    public IKazoActionResult Edit() => View(new ContactForm { Name = "Ada", Age = 36 });
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IHackActionResult Edit(ContactForm form)
+    public IKazoActionResult Edit(ContactForm form)
     {
         if (!ModelState.IsValid)
         {
@@ -327,23 +327,23 @@ public sealed class CshtmlController(NoteStore store) : KazoController
         return RedirectToAction(nameof(Index));
     }
 
-    public IHackActionResult WithRazorLayout() => View();
+    public IKazoActionResult WithRazorLayout() => View();
 
-    public IHackActionResult FromRazor() => View();
+    public IKazoActionResult FromRazor() => View();
 
-    public IHackActionResult NoLayout() => View();
+    public IKazoActionResult NoLayout() => View();
 
-    public IHackActionResult Card(int id) => PartialView("_CshtmlCard", store.Find(id));
+    public IKazoActionResult Card(int id) => PartialView("_CshtmlCard", store.Find(id));
 
-    public IHackActionResult WrongModel() => View("Details", "not a note");
+    public IKazoActionResult WrongModel() => View("Details", "not a note");
 
-    public IHackActionResult NoBody() => View();
+    public IKazoActionResult NoBody() => View();
 
-    public IHackActionResult MissingSection() => View();
+    public IKazoActionResult MissingSection() => View();
 
-    public IHackActionResult Orphan() => View();
+    public IKazoActionResult Orphan() => View();
 
-    public IHackActionResult Absolute() => View("~/Views/Cshtml/NoLayout.cshtml");
+    public IKazoActionResult Absolute() => View("~/Views/Cshtml/NoLayout.cshtml");
 }
 
 /// <summary>A site without exception page nor controllers: a failure is a bare <c>500</c>.</summary>

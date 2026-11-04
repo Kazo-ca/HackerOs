@@ -10,9 +10,9 @@ public sealed class StoreManifestTests
     {
         AppManifest manifest = AppDefinitionMapper.ToManifest(new StoreApp());
 
-        Assert.Equal("org.hackeros.store", manifest.Id);
+        Assert.Equal("org.kazoos.store", manifest.Id);
         Assert.Equal(AppKind.Window, manifest.Kind);
-        Assert.Equal("Hack Store", manifest.Name);
+        Assert.Equal("Kazo OS Store", manifest.Name);
         Assert.True(manifest.SingleInstancePerUser);
         Assert.Contains("desktop", manifest.Platform!.Supported);
         Assert.Contains("mobile", manifest.Platform!.Supported);

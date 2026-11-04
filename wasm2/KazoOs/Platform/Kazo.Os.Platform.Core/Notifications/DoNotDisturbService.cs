@@ -66,7 +66,7 @@ public sealed class DoNotDisturbService : IDisposable
         }
     }
 
-    /// <summary>Turns the mode on or off for the session user, in <c>~/.config/hackeros/notifications.config</c>.</summary>
+    /// <summary>Turns the mode on or off for the session user, in <c>~/.config/kazoos/notifications.config</c>.</summary>
     /// <param name="enabled">The new state.</param>
     /// <param name="cancellationToken">Cancels the write.</param>
     /// <exception cref="InvalidOperationException">No user is signed in, or an administrator locked the key.</exception>

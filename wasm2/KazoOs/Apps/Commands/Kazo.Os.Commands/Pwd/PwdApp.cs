@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Pwd;
 public sealed class PwdApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.cmd.pwd";
+    public override string Id => "org.kazoos.cmd.pwd";
 
     /// <inheritdoc />
     public override string Name => "pwd";
@@ -22,7 +22,7 @@ public sealed class PwdApp : AppDefinition
     public override Type EntryPoint => typeof(PwdCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Print name of current/working directory";

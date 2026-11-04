@@ -56,7 +56,7 @@ public sealed class KazoRenamedEventArgs : KazoFileSystemEventArgs
 /// Configure <see cref="Path"/>, <see cref="Filter"/> and the events, then call <see cref="StartAsync"/>;
 /// dispose with <c>await using</c> to stop. Handlers run on the watcher's delivery loop, which
 /// inherits the ambient app context of the <see cref="StartAsync"/> caller, so they can use the
-/// <c>Hack*</c> API directly.
+/// <c>Kazo*</c> API directly.
 /// </para>
 /// <para>
 /// The engine currently watches a directory's immediate children only (MSG-013):

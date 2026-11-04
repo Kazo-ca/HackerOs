@@ -6,8 +6,8 @@ namespace Kazo.Os.Platform.Core.Globalization;
 
 /// <summary>
 /// Defines the layered date and time document (ADR 0193 section 2):
-/// <c>/etc/hackeros/datetime.config</c> holds the machine's time zone (also used by the sign-in
-/// screen), and each user overrides it in <c>~/.config/hackeros/datetime.config</c>.
+/// <c>/etc/kazoos/datetime.config</c> holds the machine's time zone (also used by the sign-in
+/// screen), and each user overrides it in <c>~/.config/kazoos/datetime.config</c>.
 /// </summary>
 public static class TimeZoneSettingsDocuments
 {

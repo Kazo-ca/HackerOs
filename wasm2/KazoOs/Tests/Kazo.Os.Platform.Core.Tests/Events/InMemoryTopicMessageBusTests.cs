@@ -13,8 +13,8 @@ namespace Kazo.Os.Platform.Core.Tests.Events;
 /// </summary>
 public sealed class InMemoryTopicMessageBusTests
 {
-    private const string OwnerAppId = "org.hackeros.owner-app";
-    private const string OtherAppId = "org.hackeros.other-app";
+    private const string OwnerAppId = "org.kazoos.owner-app";
+    private const string OtherAppId = "org.kazoos.other-app";
     private const string SharedCapability = AppCapabilities.NotificationsPost;
 
     private static PublisherIdentity Identity(string appId, string userId = "user-1", string processId = "1") =>

@@ -95,17 +95,17 @@ public sealed class WallpaperPanelTests
     public async Task The_library_lists_the_system_user_and_pack_images_and_skips_what_is_not_an_image()
     {
         FakeAppFileSystemGateway files = new FakeAppFileSystemGateway()
-            .WithFile("/usr/share/hackeros/wallpapers/city.webp", WebpHeader)
-            .WithFile("/usr/share/hackeros/wallpapers/readme.txt", "hello")
-            .WithFile("/home/alice/.local/share/hackeros/wallpapers/cat.png", "not really a png")
-            .WithFile("/home/alice/.local/share/hackeros/wallpapers/dog.webp", WebpHeader)
-            .WithFile("/home/alice/.local/share/hackeros/theme-packs/neon/wallpapers/neon.webp", WebpHeader);
+            .WithFile("/usr/share/kazoos/wallpapers/city.webp", WebpHeader)
+            .WithFile("/usr/share/kazoos/wallpapers/readme.txt", "hello")
+            .WithFile("/home/alice/.local/share/kazoos/wallpapers/cat.png", "not really a png")
+            .WithFile("/home/alice/.local/share/kazoos/wallpapers/dog.webp", WebpHeader)
+            .WithFile("/home/alice/.local/share/kazoos/theme-packs/neon/wallpapers/neon.webp", WebpHeader);
         await using PanelHarness harness = await PanelHarness.RenderAsync(new FakeAppearance(), files);
 
         Assert.Equal(
-            [("/usr/share/hackeros/wallpapers/city.webp", "system"),
-             ("/home/alice/.local/share/hackeros/wallpapers/dog.webp", "user"),
-             ("/home/alice/.local/share/hackeros/theme-packs/neon/wallpapers/neon.webp", "pack")],
+            [("/usr/share/kazoos/wallpapers/city.webp", "system"),
+             ("/home/alice/.local/share/kazoos/wallpapers/dog.webp", "user"),
+             ("/home/alice/.local/share/kazoos/theme-packs/neon/wallpapers/neon.webp", "pack")],
             harness.Panel.Library.Select(static image => (image.Path, image.Origin)));
         Assert.All(harness.Panel.Library, static image => Assert.Equal("image/webp", image.MediaType));
     }
@@ -187,7 +187,7 @@ public sealed class WallpaperPanelTests
 
         public AppSystemSettingsDocumentInfo Describe(string documentId) =>
             documentId == AppearanceSettingsDocuments.Document.DocumentId
-                ? new(documentId, AppearanceSettingsDocuments.Schema, "/etc/hackeros/appearance.config", "/home/alice/.config/hackeros/appearance.config", false)
+                ? new(documentId, AppearanceSettingsDocuments.Schema, "/etc/kazoos/appearance.config", "/home/alice/.config/kazoos/appearance.config", false)
                 : throw new ArgumentException($"Unknown document '{documentId}'.", nameof(documentId));
 
         public ValueTask<LayeredConfigSnapshot> ReadAsync(string documentId, CancellationToken cancellationToken = default)

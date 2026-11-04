@@ -17,7 +17,7 @@ public sealed class TerminalApp : AppDefinition
     public override IReadOnlyList<AssetManifest> Assets =>
         [new("icons/app.svg", AssetKind.Image, new string('0', 64), "app-icon")];
     /// <inheritdoc />
-    public override string Id => "org.hackeros.terminal";
+    public override string Id => "org.kazoos.terminal";
 
     /// <inheritdoc />
     public override string Name => "Terminal";
@@ -32,7 +32,7 @@ public sealed class TerminalApp : AppDefinition
     public override Type? MobileEntryPoint => typeof(TerminalWindow);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Command line interface and interactive shell for Kazo OS";
@@ -46,7 +46,7 @@ public sealed class TerminalApp : AppDefinition
 
     /// <summary>
     /// The terminal other apps embed (ADR 0063), e.g. the Code Editor's panel: the same panel as
-    /// this window, controlled through <c>IHackTerminal</c>.
+    /// this window, controlled through <c>IKazoTerminal</c>.
     /// </summary>
     public override IReadOnlyList<AppComponent> Components =>
         [new(KazoComponentContracts.Terminal, typeof(TerminalEmbed))];

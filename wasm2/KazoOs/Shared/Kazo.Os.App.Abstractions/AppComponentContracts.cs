@@ -2,7 +2,7 @@ namespace Kazo.Os.App.Abstractions;
 
 /// <summary>
 /// Who may provide a component contract and how the provider is chosen (ADR 0148 §3.3, ADR 0156).
-/// Most contracts are open to any app, like <c>hackeros.terminal</c> (ADR 0063). The file view and
+/// Most contracts are open to any app, like <c>kazoos.terminal</c> (ADR 0063). The file view and
 /// the file dialogs are open too, but an administrator chooses which app provides them for the
 /// whole machine. The context menu stays the platform's own.
 /// </summary>
@@ -13,7 +13,7 @@ public enum AppComponentProviderScope
 
     /// <summary>
     /// Any window app may register it (ADR 0156 §1), but the OS uses the one an administrator chose
-    /// in <c>/etc/hackeros/components.config</c>, the File Explorer when none is chosen, and falls
+    /// in <c>/etc/kazoos/components.config</c>, the File Explorer when none is chosen, and falls
     /// back to the next provider, with a <c>component.fallback</c> warning, when the chosen one does
     /// not load. These are the OS's own controls: no working provider at all is an OS error.
     /// </summary>
@@ -30,14 +30,14 @@ public enum AppComponentProviderScope
 /// </summary>
 public static class AppComponentContracts
 {
-    /// <summary>The shared file view (<c>IHackFileView</c>), provided by the File Explorer unless an administrator chose another app (ADR 0156).</summary>
-    public const string FileView = "hackeros.file-view";
+    /// <summary>The shared file view (<c>IKazoFileView</c>), provided by the File Explorer unless an administrator chose another app (ADR 0156).</summary>
+    public const string FileView = "kazoos.file-view";
 
     /// <summary>The shared file dialogs (Open with, Properties, name conflicts, file pickers), provided by the File Explorer unless an administrator chose another app (ADR 0156).</summary>
-    public const string FileDialogs = "hackeros.file-dialogs";
+    public const string FileDialogs = "kazoos.file-dialogs";
 
-    /// <summary>The OS context menu (<c>IHackContextMenu</c>, ADR 0150), provided by the platform itself.</summary>
-    public const string ContextMenu = "hackeros.context-menu";
+    /// <summary>The OS context menu (<c>IKazoContextMenu</c>, ADR 0150), provided by the platform itself.</summary>
+    public const string ContextMenu = "kazoos.context-menu";
 
     /// <summary>Gets who may provide <paramref name="contract"/> (ordinal comparison).</summary>
     /// <param name="contract">Contract name.</param>

@@ -26,7 +26,7 @@ namespace Kazo.Os.Platform.Core.Shell;
 public sealed partial class ShellInterpreter
 {
     /// <summary>Per-user alias file read for the first word of each command (unchanged location).</summary>
-    public const string AliasFileRelativePath = ".hackeros/aliases";
+    public const string AliasFileRelativePath = ".kazoos/aliases";
 
     /// <summary>Exit code of a command that could not be found.</summary>
     public const int CommandNotFoundExitCode = 127;

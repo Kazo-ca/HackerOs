@@ -14,7 +14,7 @@ This document covers the implementation of process limits: tables, controller, r
 | `ResourceLimitKind`, `ResourceLimit`, `ProcessResourceLimits`, `ResourceLimitChangeResult`, `ProcessLimitExceededException` | Simulation Abstractions | Contract. `ResourceLimit.Unlimited` equals `long.MaxValue`. |
 | `IProcessResourceLimitTable` / `InMemoryProcessResourceLimitTable` | Abstractions / Platform.Core | Limits of each live process, next to `ProcessRecord` (ADR 0139 §1). `setrlimit` rules: lowering is always allowed, raising the soft limit up to the hard limit, raising the hard limit for elevated root only. Disabled by the host setting. |
 | `IProcessFileDescriptorTable` / `InMemoryProcessFileDescriptorTable` | Abstractions / Platform.Core | Open descriptors: 0, 1, 2 reserved, lowest free number from 3, `EMFILE` at the soft limit. |
-| `InMemoryProcessManager` | Platform.Core | Creates the entry at `Start` (parent, then session, then kernel), checks `NPROC` (`EAGAIN`), removes entries at exit. Exempt: `ResourceLimitExempt` (elevated root) and the system scope (`hackeros-svc`). |
+| `InMemoryProcessManager` | Platform.Core | Creates the entry at `Start` (parent, then session, then kernel), checks `NPROC` (`EAGAIN`), removes entries at exit. Exempt: `ResourceLimitExempt` (elevated root) and the system scope (`kazoos-svc`). |
 | `ResourceLimitEnforcer` | Platform.Core | Every quarter of a simulated second: hard CPU limit → `SIGKILL`, soft → `SIGXCPU` (stop request from ADR 0069, reason `CpuLimitExceeded`), memory → `SIGKILL` (`MemoryLimitExceeded`). |
 | `ResourceLimitsConfiguration` / `LoginResourceLimitsProvider` | Platform.Core | `pam_limits`-style reading of `limits.conf` and `limits.d/*.conf`, at the first root process of the session. Invalid lines go to `/var/log/auth.log`. |
 | `AppFileSystemGateway` (`OpenDescriptorAsync`, reads) and `AppProcessGateway.SetResourceLimitAsync` | Platform.Core | Take a descriptor per read or write stream; change a limit (`process.manage` for another process). |
@@ -23,23 +23,23 @@ This document covers the implementation of process limits: tables, controller, r
 | `ulimit` (built-in) | Platform.Core, `ShellInterpreter.Ulimit.cs` | Reads and changes the limits of the shell's process. |
 | `prlimit` | Commands | Reads and changes the limits of a process. |
 | `KazoProcess.GetResourceLimitsAsync` / `SetResourceLimitAsync`, `KazoResourceLimits` | AppSdk | Public API (SDK 1.2, `PublicAPI.Unshipped.txt`). |
-| `AddKazoOsResourceLimits(configuration)` | Ecosystem.Host | Reads `HackerOs:ResourceLimits:Enabled` for the host. |
+| `AddKazoOsResourceLimits(configuration)` | Ecosystem.Host | Reads `KazoOs:ResourceLimits:Enabled` for the host. |
 
 ## Usage
 
 ### Shell
 
 ```text
-alice@hackeros:~$ ulimit -a
+alice@kazoos:~$ ulimit -a
 file size                   (blocks, -f) unlimited
 max memory size             (kbytes, -m) unlimited
 open files                          (-n) 1024
 cpu time                   (seconds, -t) unlimited
 max user processes                  (-u) 4096
-alice@hackeros:~$ ulimit -S -n 512      # souple seulement
-alice@hackeros:~$ ulimit -Hn 600000
+alice@kazoos:~$ ulimit -S -n 512      # souple seulement
+alice@kazoos:~$ ulimit -Hn 600000
 hsh: ulimit: open files: cannot modify limit: Operation not permitted
-alice@hackeros:~$ sh -c 'ulimit -S -t 1; stress --yield'; echo "exit=$?"
+alice@kazoos:~$ sh -c 'ulimit -S -t 1; stress --yield'; echo "exit=$?"
 CPU time limit exceeded
 exit=152
 ```
@@ -53,10 +53,10 @@ exit=152
 ### `prlimit`
 
 ```text
-alice@hackeros:~$ prlimit --pid 7 --nofile
+alice@kazoos:~$ prlimit --pid 7 --nofile
 RESOURCE DESCRIPTION              SOFT   HARD UNITS
 NOFILE   max number of open files 1024 524288 files
-alice@hackeros:~$ prlimit --pid 7 --nofile=100:200 --nproc=50
+alice@kazoos:~$ prlimit --pid 7 --nofile=100:200 --nproc=50
 ```
 
 Options: `--pid`/`-p`, `--cpu`/`-t`, `--rss`/`-m`, `--nofile`/`-n`,
@@ -84,7 +84,7 @@ alice      hard  cpu      60
 ### Host
 
 ```json
-{ "HackerOs": { "ResourceLimits": { "Enabled": true } } }
+{ "KazoOs": { "ResourceLimits": { "Enabled": true } } }
 ```
 
 `false` turns off all limits: `ulimit` no longer changes anything
@@ -96,7 +96,7 @@ alice      hard  cpu      60
 - A single `SIGXCPU`, then the grace period from ADR 0069; the hard limit
   is checked first, so `ulimit -t 1` gives `SIGKILL` as on Linux.
 - `NPROC` checked by the manager at launch; elevated root and
-  `hackeros-svc` exempt.
+  `kazoos-svc` exempt.
 - `limits.conf` read once per session.
 
 Details: ADR 0139.
@@ -126,5 +126,5 @@ Details: ADR 0139.
 - [x] Built-in `ulimit`, `prlimit` command, messages in English and French.
 - [x] Worker operations (`fs.fdopen`, `fs.fdclose`, `proc.rlimit`).
 - [x] SDK API (`PublicAPI.Unshipped.txt`).
-- [x] Setting `HackerOs:ResourceLimits:Enabled` on the three hosts.
+- [x] Setting `KazoOs:ResourceLimits:Enabled` on the three hosts.
 - [x] Tests, `verify-hosts.sh`, ADR 0139, documentation and index.

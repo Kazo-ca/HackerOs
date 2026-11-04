@@ -3,7 +3,7 @@ using Kazo.Os.AppSdk.Blazor;
 
 namespace Kazo.Os.Apps.Store.Tests;
 
-/// <summary>ADR 0220 §4: the mouse's Back button and the phone's Back in the Hack Store.</summary>
+/// <summary>ADR 0220 §4: the mouse's Back button and the phone's Back in the Kazo OS Store.</summary>
 public sealed class StoreHardwareNavigationTests
 {
     [Fact]

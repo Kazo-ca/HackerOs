@@ -20,7 +20,7 @@ public sealed class FileExplorerApp : AppDefinition
     public override IReadOnlyList<AssetManifest> Assets =>
         [new("icons/app.svg", AssetKind.Image, new string('0', 64), "app-icon")];
     /// <inheritdoc />
-    public override string Id => "org.hackeros.file-explorer";
+    public override string Id => "org.kazoos.file-explorer";
 
     /// <inheritdoc />
     public override string Name => "File Explorer";
@@ -35,7 +35,7 @@ public sealed class FileExplorerApp : AppDefinition
     public override Type? MobileEntryPoint => typeof(FileExplorerMobileWindow);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Graphical virtual file manager and directory browser";

@@ -14,11 +14,11 @@ internal static class KazoTestHost
 
     public static AppManifest Manifest { get; } = new()
     {
-        Id = "org.hackeros.test-io",
+        Id = "org.kazoos.test-io",
         Name = "Test IO",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
-        Description = "Hack* file API contract test application.",
+        PublisherId = "org.kazoos",
+        Description = "Kazo* file API contract test application.",
         Kind = AppKind.Terminal,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.AppSdk.Tests", "TestIoApp"),
         SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),

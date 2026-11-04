@@ -219,7 +219,7 @@ public sealed class WindowResponsivenessMonitorTests
             WindowRuntime = new WindowRuntime(new WindowBounds(0, 0, 1280, 720));
             AppInstanceId instance = AppInstanceId.FromGuid(Guid.NewGuid());
             Process = new ProcessRecord(
-                ProcessId.FromInt64(42), parentPid: null, "org.hackeros.calculator", instance, AppKind.Window,
+                ProcessId.FromInt64(42), parentPid: null, "org.kazoos.calculator", instance, AppKind.Window,
                 LocalUserId.FromGuid(Guid.NewGuid()), SessionId.FromGuid(Guid.NewGuid()), ProcessState.Running,
                 ResourceProfile.None, serviceHealth: null, _time.GetUtcNow(), _time.GetUtcNow(),
                 stoppedAtUtc: null, exitCode: null, exitReason: null);
@@ -228,7 +228,7 @@ public sealed class WindowResponsivenessMonitorTests
             WindowId = WindowId.FromGuid(Guid.NewGuid());
             WindowRuntime.Apply(new CreateWindowCommand(new WindowRuntimeState(
                 WindowId,
-                "org.hackeros.calculator",
+                "org.kazoos.calculator",
                 WindowOwnerId.FromGuid(instance.Value),
                 "Calculatrice",
                 null,

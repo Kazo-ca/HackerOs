@@ -131,10 +131,10 @@ public sealed class CleanProfileCapabilityGrantSeederTests
 
     private static AppManifest CreateManifest(IReadOnlyList<string> capabilities) => new()
     {
-        Id = "org.hackeros.sample-app",
+        Id = "org.kazoos.sample-app",
         Name = "Sample App",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "A manifest fixture for clean-profile default grant tests.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Apps.Sample", "Kazo.Os.Apps.Sample.SampleApp"),

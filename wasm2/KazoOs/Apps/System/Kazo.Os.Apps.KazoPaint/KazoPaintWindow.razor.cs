@@ -13,7 +13,7 @@ using Microsoft.JSInterop;
 namespace Kazo.Os.Apps.KazoPaint;
 
 /// <summary>
-/// Hack Paint's window: an RGBA canvas editor that opens and saves real image files of the OS
+/// Kazo Paint's window: an RGBA canvas editor that opens and saves real image files of the OS
 /// (ADR 0103 §1). Files are read and written in C# through the app's gateway (<see cref="PaintFileStore"/>);
 /// the collocated JS module only decodes and encodes pixels with the browser's codecs.
 /// </summary>
@@ -40,10 +40,10 @@ public partial class KazoPaintWindow : WindowAppBase, IAsyncDisposable, IWindowC
     private int _jpegQuality = 92;
     private IStringLocalizer<Strings>? _localizer;
 
-    /// <summary>Hack Paint's texts in its own process's language (ADR 0104).</summary>
+    /// <summary>Kazo Paint's texts in its own process's language (ADR 0104).</summary>
     private IStringLocalizer<Strings> L => _localizer ??= AppContext.GetLocalizer<Strings>();
 
-    /// <summary>The "Images" filter of the Open dialog: every format Hack Paint decodes.</summary>
+    /// <summary>The "Images" filter of the Open dialog: every format Kazo Paint decodes.</summary>
     private FileDialogFilter ImageFilter => new(
         L["Filter.Images"], [.. ImageFileFormat.OpenExtensions], ["image/png", "image/jpeg", "image/bmp", "image/gif", "image/webp"]);
 
@@ -54,7 +54,7 @@ public partial class KazoPaintWindow : WindowAppBase, IAsyncDisposable, IWindowC
     private IJSRuntime JsRuntime { get; set; } = default!;
 
     /// <summary>
-    /// Gets the window title (ADR 0103 §1, ADR 0117 §4): <c>name.png — Hack Paint</c>, prefixed with
+    /// Gets the window title (ADR 0103 §1, ADR 0117 §4): <c>name.png — Kazo Paint</c>, prefixed with
     /// <c>*</c> while unsaved. Shown by the window manager, not inside the app.
     /// </summary>
     internal string DocumentTitle => PaintTitle.Format(_path?.Value, _state.IsDirty, Untitled);
@@ -92,7 +92,7 @@ public partial class KazoPaintWindow : WindowAppBase, IAsyncDisposable, IWindowC
 
         if (!_launchFileHandled)
         {
-            // "Open with", a double-click in the File Explorer or `hack-paint <file>` passes the path
+            // "Open with", a double-click in the File Explorer or `kazo-paint <file>` passes the path
             // as the first argument (ADR 0050); decoding needs the module, hence after the first render.
             _launchFileHandled = true;
             if (LaunchFile is { } launchFile)
@@ -462,7 +462,7 @@ public partial class KazoPaintWindow : WindowAppBase, IAsyncDisposable, IWindowC
     private sealed record DecodedImage(int Width, int Height, byte[]? Pixels, string? Error);
 }
 
-/// <summary>Formats Hack Paint's window title from the document path and its saved state.</summary>
+/// <summary>Formats Kazo Paint's window title from the document path and its saved state.</summary>
 internal static class PaintTitle
 {
     /// <summary>Gets the file name of a path, or <paramref name="untitled"/>.</summary>
@@ -471,10 +471,10 @@ internal static class PaintTitle
     public static string FileName(string? path, string untitled = "Untitled") =>
         string.IsNullOrEmpty(path) ? untitled : path[(path.LastIndexOf('/') + 1)..];
 
-    /// <summary>Builds <c>[*]name — Hack Paint</c> (the product name is not translated).</summary>
+    /// <summary>Builds <c>[*]name — Kazo Paint</c> (the product name is not translated).</summary>
     /// <param name="path">Document path or <see langword="null"/>.</param>
     /// <param name="dirty">Whether the image has unsaved changes.</param>
     /// <param name="untitled">The name of a document without a file, in the app's language.</param>
     public static string Format(string? path, bool dirty, string untitled = "Untitled") =>
-        $"{(dirty ? "*" : string.Empty)}{FileName(path, untitled)} — Hack Paint";
+        $"{(dirty ? "*" : string.Empty)}{FileName(path, untitled)} — Kazo Paint";
 }

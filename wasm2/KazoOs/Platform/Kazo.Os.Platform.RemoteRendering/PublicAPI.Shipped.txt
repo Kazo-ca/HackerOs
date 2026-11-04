@@ -18,7 +18,7 @@ Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.Enabled.init 
 Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.Equals(Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions? other) -> bool
 Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.RemoteWindowRenderingOptions() -> void
 Kazo.Os.Platform.RemoteRendering.RemoteWindowRenderingServiceCollectionExtensions
-const Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.SectionName = "HackerOs:RemoteWindowRendering" -> string!
+const Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.SectionName = "KazoOs:RemoteWindowRendering" -> string!
 override Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.Equals(object? obj) -> bool
 override Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.GetHashCode() -> int
 override Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.ToString() -> string!

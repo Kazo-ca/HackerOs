@@ -76,7 +76,7 @@ them all.
 ## In the OS: `/whats-new.json`
 
 When `OS/Kazo.Os.Ecosystem` builds, the `Tools/Kazo.Os.Tools.ChangeList` tool reads `changes/`
-and writes `obj/…/hackeros-whats-new/whats-new.json`, served at the root of the site like
+and writes `obj/…/kazoos-whats-new/whats-new.json`, served at the root of the site like
 `/version.json` (ADR 0186 §4.1). It keeps only the entries whose audience contains `user`,
 grouped by version, the most recent first; the entries of `unreleased/` make the first group
 (`"version": null`, `"since": "<KazoOsVersion>"`). In a group, entries are sorted by category
@@ -94,7 +94,7 @@ In the OS:
 
 - `WhatsNewService` (Platform.Core, `Kazo.Os.Platform.Core.WhatsNew`) reads the file once per
   page (a new deployment reloads the page) and keeps, for each account, the IDs already seen in
-  `~/.local/state/hackeros/whats-new.json`: `{ "seen": [ "<id>", … ] }`. An ID that leaves the
+  `~/.local/state/kazoos/whats-new.json`: `{ "seen": [ "<id>", … ] }`. An ID that leaves the
   list stays in the file: an entry never becomes new again.
 - **New account** (ADR 0186 §5): when that file does not exist yet (or cannot be read), everything
   is marked seen except the entries of the latest published version and those of the next version

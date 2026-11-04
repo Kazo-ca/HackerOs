@@ -14,7 +14,7 @@ every version merged into `main` is also published to nuget.org and to the
 GitHub Releases ([`releases.md`](../dev/releases.md)).
 
 The step-by-step guide for a third-party repository (layout, host, tests, version
-upgrade) is [`building-on-hackeros.md`](building-on-hackeros.md).
+upgrade) is [`building-on-kazoos.md`](building-on-kazoos.md).
 
 The checks done at load time (SDK version, duplicate commands,
 resource fingerprints, ADR 0098 §3 to §5) are described in
@@ -67,7 +67,7 @@ from the global NuGet cache: without that, a new package of the same version wou
 masked by the old one.
 
 In the other repository, `build/nuget.config.sample` serves as a template: a
-`hackeros-local` source pointing to this folder, nuget.org for the rest, and a
+`kazoos-local` source pointing to this folder, nuget.org for the rest, and a
 `packageSourceMapping` that only takes `Kazo.Os.*` from the local feed.
 
 ### `Kazo.Os.App.Build`
@@ -78,10 +78,10 @@ A package without an assembly (`Tools/Kazo.Os.App.Build`), to be referenced with
 | Path in the package | Role |
 |---|---|
 | `buildTransitive/Kazo.Os.App.Build.targets` | sets `KazoOsBuildFromPackage=true` and imports the next file |
-| `hackeros-build/Kazo.Os.Apps.targets` | **the same file** as the repository's `build/Kazo.Os.Apps.targets` (outside `build/`, where NuGet only expects `Kazo.Os.App.Build.targets`) |
-| `hackeros-build/asp-hack/` | `_ViewImports.cshtml` and compatibility types for ASP.Hack `.cshtml` views (ADR 0086) |
+| `kazoos-build/Kazo.Os.Apps.targets` | **the same file** as the repository's `build/Kazo.Os.Apps.targets` (outside `build/`, where NuGet only expects `Kazo.Os.App.Build.targets`) |
+| `kazoos-build/asp-kazo/` | `_ViewImports.cshtml` and compatibility types for ASP.Kazo `.cshtml` views (ADR 0086) |
 | `tools/generator/` | the manifest generator, launched by `dotnet <dll>` (without the native executable) |
-| `analyzers/dotnet/cs/` | the ASP.Hack route generator (ADR 0082) |
+| `analyzers/dotnet/cs/` | the ASP.Kazo route generator (ADR 0082) |
 
 In **package mode**, a project that references `Kazo.Os.App.Build` is an app,
 unless it declares `KazoOsAppHost=true` (a host). Differences with the repository:
@@ -100,14 +100,14 @@ unless it declares `KazoOsAppHost=true` (a host). Differences with the repositor
 When an app project is packaged, the `_KazoOsPackageAppManifests` target
 (hooked onto `TargetsForTfmSpecificContentInPackage`) adds:
 
-- its generated manifests under `hackeros/manifests/` and their translations
-  (`localization/<culture>.json`, ADR 0104) under `hackeros/localization/` (added
+- its generated manifests under `kazoos/manifests/` and their translations
+  (`localization/<culture>.json`, ADR 0104) under `kazoos/localization/` (added
   by `v3/14`: without them, a host using packages failed with `HOSAPP0040`);
 - `buildTransitive/<PackageId>.targets`, which declares them as
   `KazoOsPackagedApp` items:
 
 ```xml
-<KazoOsPackagedApp Include="$(MSBuildThisFileDirectory)../hackeros/manifests/manifest.json"
+<KazoOsPackagedApp Include="$(MSBuildThisFileDirectory)../kazoos/manifests/manifest.json"
                      PackageId="Kazo.Os.Apps.Calculator"
                      AssemblyFileName="Kazo.Os.Apps.Calculator.dll"
                      AssemblyPath="$(MSBuildThisFileDirectory)../lib/net10.0/Kazo.Os.Apps.Calculator.dll" />
@@ -162,14 +162,14 @@ The package is produced with both resource measurements compiled in
 
 | Template | Creates | Packages |
 |---|---|---|
-| `hackeros-window` | windowed app (`WindowAppBase`, isolated CSS, `_Imports.razor`) | `Kazo.Os.AppSdk`, `.Blazor`, `Kazo.Os.App.Build` |
-| `hackeros-command` | `hello` shell command (`TerminalAppBase`) | `Kazo.Os.AppSdk`, `Kazo.Os.App.Build` |
-| `hackeros-service` | service started at sign-in (`ServiceAppBase`, simulated clock) | same |
-| `hackeros-site` | ASP.Hack site (`WebAppDefinition`, embedded `wwwroot/`) | `Kazo.Os.AppSdk.Web`, `Kazo.Os.App.Build` |
-| `hackeros-host` | Blazor WebAssembly host: `Program.cs`, `index.html`, `appsettings.json`, the base apps as packages (system apps as in the Ecosystem) | `Kazo.Os.Ecosystem.Host`, `Kazo.Os.App.Build`, `Kazo.Os.Apps.*`, `Kazo.Os.Commands` |
-| `hackeros-solution` | a whole app repository: app, host, tests, Kazo OS submodule (sources in `Debug`, packages in `Release`), CI, publishing to the Hack Store ([`app-repository.md`](app-repository.md), ADR 0207) | those of the app and the host, at the submodule's version |
+| `kazoos-window` | windowed app (`WindowAppBase`, isolated CSS, `_Imports.razor`) | `Kazo.Os.AppSdk`, `.Blazor`, `Kazo.Os.App.Build` |
+| `kazoos-command` | `hello` shell command (`TerminalAppBase`) | `Kazo.Os.AppSdk`, `Kazo.Os.App.Build` |
+| `kazoos-service` | service started at sign-in (`ServiceAppBase`, simulated clock) | same |
+| `kazoos-site` | ASP.Kazo site (`WebAppDefinition`, embedded `wwwroot/`) | `Kazo.Os.AppSdk.Web`, `Kazo.Os.App.Build` |
+| `kazoos-host` | Blazor WebAssembly host: `Program.cs`, `index.html`, `appsettings.json`, the base apps as packages (system apps as in the Ecosystem) | `Kazo.Os.Ecosystem.Host`, `Kazo.Os.App.Build`, `Kazo.Os.Apps.*`, `Kazo.Os.Commands` |
+| `kazoos-solution` | a whole app repository: app, host, tests, Kazo OS submodule (sources in `Debug`, packages in `Release`), CI, publishing to the Kazo OS Store ([`app-repository.md`](app-repository.md), ADR 0207) | those of the app and the host, at the submodule's version |
 
-App templates start with `IsTrimmable=true`; `hackeros-host` publishes as a
+App templates start with `IsTrimmable=true`; `kazoos-host` publishes as a
 trimmed Release (`PublishTrimmed=true`, `TrimMode=partial`) and
 `Kazo.Os.App.Build` keeps the `Kazo.Os.*` packages and each installed
 app whole, and enables trimming analysis in an app project that
@@ -177,7 +177,7 @@ does not set it (ADR 0106 §4, ADR 0113, [`trimmed-publish.md`](../dev/trimmed-p
 
 App template parameters: `--appId` (default `com.example.my-app`) and
 `--publisherId` (default `pub.example`); the project name (`-n`) becomes
-the namespace and the display name. `hackeros-solution` also takes
+the namespace and the display name. `kazoos-solution` also takes
 `--repository` (`owner/name`). Every template has a
 `.template.config/ide.host.json` (icon, parameter labels) for Visual Studio and
 Rider (ADR 0176 §7), and the app templates declare `KazoOsAppProject=true`
@@ -231,7 +231,7 @@ app is affected: these types are not part of the SDK.
 | 1.1.0 | `Kazo.Os.Platform.Blazor` | `WindowLaunchCoordinator.Present(...)` (two overloads) replaced by `PresentAsync(...)`; the constructor now takes the geometry recorder | call `PresentAsync`; let dependency injection build the coordinator (`AddKazoOsBrowserHost`) |
 | 1.2.0 | `Kazo.Os.Ecosystem.Host` | the `EcosystemBootCoordinator` constructor takes three more optional parameters (`OomKiller? oomKiller`, `IOsSettingsService? settings`, `CrossOriginIsolationProbe? isolation`, ADR 0126, 0131): binary break, the source code still compiles | recompile the host; let dependency injection build the coordinator (`AddKazoOsEcosystem`) |
 | 2.0.0 | `Kazo.Os.Ecosystem.Host` | no longer registers `IShellIconProvider` (ADR 0161 §1) | nothing: the file control keeps its default icons |
-| 2.0.0 | `Kazo.Os.Apps.FileExplorer` | the types of the old `FileView` are in `Kazo.Os.Apps.FileExplorer.FileControl` and derive from `KazoComponentBase`; `FileConflictDialog`, `FilePropertiesDialog`, `OpenWithDialog`, `FileExplorerDialogBase`, `PublishSiteContextMenuProvider`, `ZipFileContextMenuProvider` and `FileExplorerState.ViewMode` are removed (desk/3 to desk/5) | go through the `hackeros.file-view` and `hackeros.file-dialogs` contracts |
+| 2.0.0 | `Kazo.Os.Apps.FileExplorer` | the types of the old `FileView` are in `Kazo.Os.Apps.FileExplorer.FileControl` and derive from `KazoComponentBase`; `FileConflictDialog`, `FilePropertiesDialog`, `OpenWithDialog`, `FileExplorerDialogBase`, `PublishSiteContextMenuProvider`, `ZipFileContextMenuProvider` and `FileExplorerState.ViewMode` are removed (desk/3 to desk/5) | go through the `kazoos.file-view` and `kazoos.file-dialogs` contracts |
 | 2.0.0 | `Kazo.Os.Apps.CodeEditor` | `CodeEditorExplorer` loses `OnDeleteRequested`, `OwnerAppId`, `Watch` and `Dispose`; the public constructor of `CodeEditorWorkspace` is removed (desk/3) | use `KazoFileView` |
 
 ## SDK 1.1
@@ -307,7 +307,7 @@ The `Kazo.Os.AppSdk.FileView` package no longer exists. Its code (view, tree,
 details, icons, breadcrumb, drop zone, `IFileViewContextMenuProvider` menus,
 `ShellIcon`, `IShellIconProvider`) is the internal implementation of the file
 explorer (`Apps/System/Kazo.Os.Apps.FileExplorer/FileControl/`), which provides
-the control to other apps through the `hackeros.file-view` contract (ADR 0148). The
+the control to other apps through the `kazoos.file-view` contract (ADR 0148). The
 other SDK libraries lose no member: the major comes from this single removal.
 
 An app compiled against 1.x carries `sdkCompatibility.minimumVersion: 1.x`. A
@@ -321,11 +321,11 @@ against the 2.x packages (2.2.2 today).
 
 | In 1.x | In 2.0 |
 |---|---|
-| `<FileView …/>` (`Kazo.Os.AppSdk.FileView`) | `<KazoFileView InitialDirectory="…" …/>` (`Kazo.Os.AppSdk.Blazor.Files`) and its controller `IHackFileView` ([`file-explorer.md`](../dev/file-explorer.md)) |
+| `<FileView …/>` (`Kazo.Os.AppSdk.FileView`) | `<KazoFileView InitialDirectory="…" …/>` (`Kazo.Os.AppSdk.Blazor.Files`) and its controller `IKazoFileView` ([`file-explorer.md`](../dev/file-explorer.md)) |
 | `IFileViewContextMenuProvider`, `FileViewMenuItemCollection` | `ContextMenuOpening` of `KazoFileView`, or an entry registered by `[RegisterFileContextMenu]` ([`context-menu.md`](context-menu.md)) |
 | `FileTransfer.CopyAsync` / `MoveAsync` / `TransferAsync` / `ImportAsync` / `MoveToTrashAsync` / `GetCopyName` | the same methods of `KazoFileOperations` (`Kazo.Os.AppSdk.IO`) |
 | `FileTransferResult`, `FileTransferMode`, `FileConflictChoice`, `FileConflictResolution`, `FileTransferConflict`, `FileConflictResolver`, `FileTransferFailure`, `FileTransferItemResult`, `FileTransferHostFile` | `KazoFileTransferResult`, `KazoFileTransferMode`, `KazoFileConflictChoice`, `KazoFileConflictResolution`, `KazoFileTransferConflict`, `KazoFileConflictResolver`, `KazoFileTransferFailure`, `KazoFileTransferItemResult`, `KazoHostFile` |
-| a conflict resolver written by the app | `Dialogs.AsFileConflictResolver(AppContext)`: the "Replace / Keep both / Skip" dialog of the `hackeros.file-dialogs` provider |
+| a conflict resolver written by the app | `Dialogs.AsFileConflictResolver(AppContext)`: the "Replace / Keep both / Skip" dialog of the `kazoos.file-dialogs` provider |
 | `ShellIcon`, `ShellIconDescriptor` | `KazoIcons.Vector(…)` / `KazoIcons.FromImage(…)` (`Kazo.Os.AppSdk.Icons`) to describe an icon; rendering belongs to the OS |
 
 Then set `KazoOsVersion` to `2.2.2` (or the latest published 2.x) and recompile.
@@ -337,8 +337,8 @@ All the other SDK changes are additions:
 | Library | Addition | Decision |
 |---|---|---|
 | `Kazo.Os.AppSdk.Blazor` | `KazoContractComponent<TController>`, `KazoComponentResolution`: host of a contract provided by an app | ADR 0148, 0153 |
-| `Kazo.Os.AppSdk.Blazor` | `KazoContextMenu`, `IHackContextMenu`, `KazoMenus` (`Menus.Attach`, `Menus.Define`, `OpenAsync`), `KazoMenuBuilder`, `KazoMenuDefinition`, `KazoMenuItem`, `KazoMenuGroup`, `KazoMenuOpeningEventArgs`, `IHackMenuHost` | ADR 0150, 0154 |
-| `Kazo.Os.AppSdk.Blazor` | `KazoFileView`, `IHackFileView`, `KazoFileViewItem`, `KazoFileViewMode`, `KazoFileViewFeatures`, their events, `KazoFileMenuOpeningEventArgs`, `KazoFileMenuContext` | ADR 0148, 0155, 0160 |
+| `Kazo.Os.AppSdk.Blazor` | `KazoContextMenu`, `IKazoContextMenu`, `KazoMenus` (`Menus.Attach`, `Menus.Define`, `OpenAsync`), `KazoMenuBuilder`, `KazoMenuDefinition`, `KazoMenuItem`, `KazoMenuGroup`, `KazoMenuOpeningEventArgs`, `IKazoMenuHost` | ADR 0150, 0154 |
+| `Kazo.Os.AppSdk.Blazor` | `KazoFileView`, `IKazoFileView`, `KazoFileViewItem`, `KazoFileViewMode`, `KazoFileViewFeatures`, their events, `KazoFileMenuOpeningEventArgs`, `KazoFileMenuContext` | ADR 0148, 0155, 0160 |
 | `Kazo.Os.AppSdk.Blazor` | `IDialogService.OpenWithAsync`, `ShowFilePropertiesAsync`, `ResolveFileConflictAsync` and their types, `KazoFileDialogs`, `KazoFileOperationDialogs.AsFileConflictResolver` | ADR 0155, 0157, 0161 |
 | `Kazo.Os.AppSdk.Blazor` | `[RegisterFileContextMenu]`, `RegisterFileContextMenuContext` | ADR 0151, 0159 |
 | `Kazo.Os.AppSdk` | `KazoFileOperations` and its types (`KazoFileTransferResult`..., `KazoHostFile`) | ADR 0161 §2 |
@@ -378,13 +378,13 @@ Release and nuget.org. `build/tools/ship-public-api.sh` folded 3020 lines of
 `*REMOVED*` lines touch `Kazo.Os.Apps.Browser` (the `BrowserResponse`
 constructor receives the source of the response, ADR 0210), a base app and not
 an SDK library: a minor version under SemVer, a 2.x app runs without being
-recompiled. The `hackeros-solution` template needs this version for its
+recompiled. The `kazoos-solution` template needs this version for its
 `Release` profile (ADR 0207 §11).
 
 | Library | Addition | Decision |
 |---|---|---|
 | `Kazo.Os.AppSdk` | `KazoAppPackages`, `KazoPackageSources`, `KazoPackagePolicy`, `KazoPackageTrust`, `KazoPackageScope`, `KazoInstalledPackage`, `KazoPackageInstallReport`, `KazoPackageException`: install an app for oneself or for everyone, trusted sources, block list | ADR 0182, 0208 |
-| `Kazo.Os.AppSdk` | `KazoAppCatalog`, `KazoCatalogApp`, `KazoCatalogAppVersion`, `KazoCatalogCategory`, `KazoCatalogItemKind`, `KazoPackageCatalog`, `KazoPackageUpdate`: Hack Store catalogs and updates | ADR 0189, 0212 |
+| `Kazo.Os.AppSdk` | `KazoAppCatalog`, `KazoCatalogApp`, `KazoCatalogAppVersion`, `KazoCatalogCategory`, `KazoCatalogItemKind`, `KazoPackageCatalog`, `KazoPackageUpdate`: Kazo OS Store catalogs and updates | ADR 0189, 0212 |
 | `Kazo.Os.AppSdk` | `KazoInstalledThemePack`, `KazoThemePackInstallReport`, `KazoThemePackParts`: theme packs | ADR 0213 |
 | `Kazo.Os.AppSdk` | `KazoWhatsNew`, `KazoChangeList`, `KazoChangeGroup`, `KazoChangeEntry`, `KazoChangeCategory`: the change list | ADR 0186 |
 | `Kazo.Os.AppSdk` | `KazoScreens`, `KazoScreenInfo` and their types: screens of the extended desktop | ADR 0184 |
@@ -401,7 +401,7 @@ number although the public API grows: `build/tools/ship-public-api.sh` folded
 190 lines of `PublicAPI.Unshipped.txt` into `PublicAPI.Shipped.txt`. The only
 `*REMOVED*` lines touch `Kazo.Os.Apps.FileExplorer` (Back moves from the mobile
 window to the window, ADR 0220), a base app and not an SDK library: a 2.x app
-runs without being recompiled. It brings to app authors what the Hack Store
+runs without being recompiled. It brings to app authors what the Kazo OS Store
 needs: every static resource of an app in its package and an installed app's
 scoped CSS (ADR 0221), the satellite assemblies of installed apps (ADR 0222)
 and the signing tool (ADR 0219).
@@ -419,7 +419,7 @@ Prepared on 2026-11-01 (branch `release/2.2.2`), published by the
 `Release Kazo OS` workflow when its PR lands in `main`. A patch: no SDK change.
 The only API lines are the new value of
 `AppPackageDefaults.OfficialCatalogSigningKey` (`Kazo.Os.Platform.Core`, not an
-SDK library): the official catalog's public key, so every Hack Store package
+SDK library): the official catalog's public key, so every Kazo OS Store package
 must carry the catalog's signature (ADR 0214 §2).
 
 ## SDK 3.0
@@ -443,11 +443,45 @@ packages.
 | `HackIcon` record (an icon described for an OS menu, made by `HackIcons`) | `KazoSurfaceIcon` (made by `KazoIcons`): the name `KazoIcon` is taken by the component |
 | host methods `AddHackerOs*` (`AddHackerOsEcosystem`, `AddHackerOsBrowserHost`...) | `AddKazoOs*` |
 
-Kept for now (work item 5 of ADR 0228): the commands (`hackpkg`, `hackweb`),
-the file extensions, the OS paths (`/etc/hackeros`...), the app ids
-`org.hackeros.*`, the short names of the `dotnet new` templates
-(`hackeros-window`...), the `hackeros/` folder of app packages and the name
-"Hack Store".
+### System names (work item 5)
+
+Work item `rename/5-system-names` renames every name the OS shows, writes or
+stores (Benoit, 2026-11-04: "what is written on disk changes too"). Kazo OS
+**writes only the new names**. It **still reads** the old names that come from
+outside the machine (packages, configuration, commands typed by habit); the
+data already stored in the browser under the old names is rewritten by the
+migration of work item 6.
+
+| Before | After | Old name still read |
+|---|---|---|
+| commands `hackpkg`, `hackbackup` (app ids `org.hackeros.commands.hackpkg`...) | `kazopkg`, `kazobackup` (`org.kazoos.commands.kazopkg`...) | yes: an alias that writes `hackpkg: this name is deprecated, use kazopkg` on standard error, then runs the new command (`DeprecatedCommandNames`, one minor version) |
+| app packages `.hackapp`, theme packs `.hacktheme` | `.kazoapp`, `.kazotheme` | yes: `index.json` and `catalog.json` accept both extensions (`AppPackage.LegacyExtension`, `ThemePackLayout.LegacyExtension`) |
+| description `hackeros-package.json`, `hackeros-theme-pack.json` | `kazoos-package.json`, `kazoos-theme-pack.json` | yes (`AppPackage.LegacyDescriptionFileName`, `ThemePackLayout.LegacyManifestFileName`) |
+| folder `hackeros/manifests/` (and `hackeros/localization/`) of app NuGet packages | `kazoos/manifests/`, `kazoos/localization/` | yes: a 2.x package keeps its own `buildTransitive/*.targets`, which point to its folder |
+| configuration section `HackerOs` (`HackerOs:Proxy`...) | `KazoOs` | yes: a `HackerOs:*` key answers under `KazoOs:*` when the new section lacks it (`KazoOsConfigurationNames.MapLegacySettings`, server, PWA and service worker) |
+| server environment variables `HACKEROS_*` | `KAZOOS_*` | yes: both prefixes are read, the new one wins |
+| connection string `HackerOsDb`, file `hackeros-server.json`, default database `hackeros.db` | `KazoOsDb`, `kazoos-server.json`, `kazoos.db` | yes for the connection string and the file (an installed server keeps the database its configuration names) |
+| key `X-HackerOS-Origin` of `.trashinfo` files | `X-KazoOS-Origin` | yes |
+| variable `HACKEROS_PREVIOUS_VERSION` handed to an updated app | `KAZOOS_PREVIOUS_VERSION` | yes: both are handed |
+| service worker caches `hackeros-cache-*` | `kazoos-cache-*` | deleted on activation |
+| app ids `org.hackeros.*`, publisher `pub.hackeros`, capabilities, contracts and intents `hackeros.*` (`hackeros.file-view`...) | `org.kazoos.*`, `pub.kazoos`, `kazoos.*` | no: work item 6 |
+| IndexedDB databases `hackeros*`, `hackweb.*`, `localStorage` / `sessionStorage` keys, theme ids (`hackeros`, `hackeros-neon`...), sound theme `hackeros` | `kazoos*`, `kazoweb.*`, `kazoos...` | no: work item 6 |
+| paths `/etc/hackeros`, `~/.config/hackeros`, `~/.local/share/hackeros`, `~/.local/state/hackeros`, `/usr/share/hackeros`, `/usr/lib/hackeros`, `/var/lib/hackeros`, `/proc/hackeros`, `/etc/hackweb`, `/var/log/hackweb`, `~/.config/hackweb`, `~/.hackeros/aliases` | `/etc/kazoos`, `~/.config/kazoos`... `/proc/kazoos`, `/etc/kazoweb`, `/var/log/kazoweb`, `~/.config/kazoweb`, `~/.kazoos/aliases` | no: work item 6 moves the existing files |
+| service `hackwebd`, resolver `hackdns`, default host name `hackeros`, service account `hackeros-svc` | `kazowebd`, `kazodns`, `kazoos`, `kazoos-svc` | no (an `/etc/hostname` already written is kept) |
+| CSS variables `--hackeros-*`, attributes `data-hack-menu*`, sites' script `_framework/blazor.hack.js`, C# names `IHack*` / `Hack*` / `Hacker*` left by work item 3 | `--kazoos-*`, `data-kazo-menu*`, `_framework/blazor.kazo.js`, `IKazo*` / `Kazo*` | no |
+| ASP.Hack, Hack Store, Hack Paint | ASP.Kazo (folder `build/asp-kazo/`, header `X-Powered-By: ASP.Kazo`), Kazo OS Store, Kazo Paint | — |
+| installable server `hackeros-server`, Windows service `HackerOSServer`, Unix account `hackeros`, image `ghcr.io/kazo-ca/hackeros-server`, route `/api/hackeros/*`, `hackeros-host.json` | `kazoos-server`, `KazoOSServer`, `kazoos`, `ghcr.io/kazo-ca/kazoos-server`, `/api/kazoos/*`, `kazoos-host.json` | no: a new install goes next to the old one |
+| `dotnet new` templates `hackeros-window`, `-command`, `-service`, `-site`, `-host`, `-solution`; branch `hackeros-packages` of app repositories; submodule `external/HackerOs` | `kazoos-window`... `kazoos-solution`; `kazoos-packages`; `external/KazoOs` | no: an app repository publishes on `kazoos-packages` from its next release |
+
+Kept on purpose: the simulated `.hack` domain and the simulated sites
+(`hackersearch.net`, `hackmail.com`, `hackerz.forum`), the `hacker-grid`
+wallpaper and the "hacker console" look (a style, not the name of the OS), the
+old address `hackos.kazo.ca` and its redirect worker, the names of accepted
+ADRs and of past branches, the recorded fixtures (`Tests/fixtures/indexeddb`,
+`Tests/fixtures/sdk-compat`), the salt `hackeros-server-account` (it derives
+passwords already stored), and the GitHub secrets `HACKEROS_APP_SIGNING_KEY`,
+`HACK_STORE_TOKEN`, `HACK_STORE_SIGNING_KEY` (renaming them would make every
+repository recreate its secret).
 
 ### Compatibility app
 
@@ -475,8 +509,8 @@ Tests/fixtures/sdk-compat/produce-fixture.sh --project Contoso.Sdk3Compat   # ag
 
 | Where | What |
 |---|---|
-| `Tests/Kazo.Os.Templates.E2E.Tests` | packages everything (`pack-local`, or the `HACKEROS_LOCAL_FEED` feed), installs the templates in an isolated `DOTNET_CLI_HOME`, generates and compiles each app template outside the repository with an isolated NuGet cache (manifest, kind, minimum SDK version checked); then generates a host, adds a generated windowed app and a command to it, compiles it (aggregated catalog checked), launches it, creates the profile in Chromium, opens the app (`Clicked 0 times` then `1`) and runs `hello Morpheus` in the terminal (`Hello, Morpheus!`). |
-| `Tests/Kazo.Os.Templates.E2E.Tests` (`A_host_runs_SDK_2_app_packages_and_refuses_SDK_1_x_packages`) | a generated host with `PackageReference` to the 1.0.0 and 1.1.0 compatibility apps (source `hackeros-sdk-fixtures`) does not build (`HOSAPP0021` for each of the four apps); with the 2.0.0 app instead, it starts in Chromium, the 2.0 window displays the OS file control and `sdk2-compat still binds` runs in the terminal (ADR 0149 §5, ADR 0161 §3) |
+| `Tests/Kazo.Os.Templates.E2E.Tests` | packages everything (`pack-local`, or the `KAZOOS_LOCAL_FEED` feed), installs the templates in an isolated `DOTNET_CLI_HOME`, generates and compiles each app template outside the repository with an isolated NuGet cache (manifest, kind, minimum SDK version checked); then generates a host, adds a generated windowed app and a command to it, compiles it (aggregated catalog checked), launches it, creates the profile in Chromium, opens the app (`Clicked 0 times` then `1`) and runs `hello Morpheus` in the terminal (`Hello, Morpheus!`). |
+| `Tests/Kazo.Os.Templates.E2E.Tests` (`A_host_runs_SDK_2_app_packages_and_refuses_SDK_1_x_packages`) | a generated host with `PackageReference` to the 1.0.0 and 1.1.0 compatibility apps (source `kazoos-sdk-fixtures`) does not build (`HOSAPP0021` for each of the four apps); with the 2.0.0 app instead, it starts in Chromium, the 2.0 window displays the OS file control and `sdk2-compat still binds` runs in the terminal (ADR 0149 §5, ADR 0161 §3) |
 | `Tests/Kazo.Os.SdkCompatibility.Tests` | the 2.0.0 compatibility app: admitted by the current catalog, menu entry registered and `KazoFileView` referenced, every Kazo OS type and member it references exists, every method compiles against the current SDK (JIT), the command runs; the 1.0.0 and 1.1.0 apps: refused (`catalog.sdk.incompatible`) (ADR 0149 §5, ADR 0161 §3) |
 | `Tests/Kazo.Os.App.Abstractions.Tests` (`KazoOsSdkTests`) | version reading, range compatibility |
 | `Tests/Kazo.Os.Tools.ManifestGenerator.Tests` | SDK version read from the reference, fingerprints and `HOSAPP0023`, `HOSAPP0022`, app newer than the host's SDK (`HOSAPP0021`) |
@@ -517,7 +551,7 @@ Also checked by hand: an app that adds the reference
 - [x] `Kazo.Os.Ecosystem.Host` extracted, `AddKazoOsBrowserHost`, `HostAppCatalog`, design tokens moved, three hosts updated.
 - [x] `build/pack-local.sh` / `.ps1`, `build/nuget.config.sample`.
 - [x] Five templates and their end-to-end test.
-- [x] SDK 1.0 freeze (`v3/15`, ADR 0114): everything in `Shipped`, version `1.0.0`, obsolete APIs removed, compatibility app and its tests, guide [`building-on-hackeros.md`](building-on-hackeros.md).
+- [x] SDK 1.0 freeze (`v3/15`, ADR 0114): everything in `Shipped`, version `1.0.0`, obsolete APIs removed, compatibility app and its tests, guide [`building-on-kazoos.md`](building-on-kazoos.md).
 - [x] SDK 1.1 (`v3.1/4-sdk-1-1`, ADR 0117 §5): `Unshipped` merged into `Shipped`, version `1.1.0`, breaks outside the SDK listed, 1.0 compatibility app still loaded.
 - [x] SDK 1.2 (`exec/10-final`, ADR 0132 §2): `build/tools/ship-public-api.sh`, `Unshipped` merged into `Shipped`, version `1.2.0`, break outside the SDK listed, 1.1.0 compatibility app added, 1.0.0 and 1.1.0 loaded.
 - [x] SDK 2.0 (`desk/6-sdk-2`, ADR 0149, ADR 0161): `Kazo.Os.AppSdk.FileView` removed from the SDK (code in the explorer), `KazoFileOperations`, `Unshipped` merged into `Shipped`, version `2.0.0`, breaks outside the SDK listed, 2.0.0 compatibility app added, 1.x apps refused.

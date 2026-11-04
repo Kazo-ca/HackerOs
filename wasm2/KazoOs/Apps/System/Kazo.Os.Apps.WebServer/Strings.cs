@@ -7,7 +7,7 @@ namespace Kazo.Os.Apps.WebServer;
 /// Names the Web Server Manager's texts (ADR 0104): <c>Resources/Strings.resx</c> in English and
 /// <c>Resources/Strings.fr.resx</c> in French. The window reads them with
 /// <c>AppContext.GetLocalizer&lt;Strings&gt;()</c>, <see cref="Manager.WebSiteStore"/> with
-/// <see cref="Ambient"/>. What <c>hackwebd</c> writes (its logs, the pages and listings it serves) is
+/// <see cref="Ambient"/>. What <c>kazowebd</c> writes (its logs, the pages and listings it serves) is
 /// not translated: logs stay English for tools, served pages are the site's content.
 /// </summary>
 internal sealed class Strings

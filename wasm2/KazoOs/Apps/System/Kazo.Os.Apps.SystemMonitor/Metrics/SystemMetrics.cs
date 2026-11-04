@@ -58,7 +58,7 @@ public readonly record struct ProcessIoRate(double ReadPerSecond, double WritePe
 /// <param name="Disks"><c>/proc/diskstats</c>.</param>
 /// <param name="Network"><c>/proc/net/dev</c>.</param>
 /// <param name="ProcessIo">Storage counters per PID, for the processes whose <c>io</c> was readable.</param>
-/// <param name="Workers"><c>/proc/hackeros/workers</c>; <see langword="null"/> on a host without Web Workers (ADR 0071).</param>
+/// <param name="Workers"><c>/proc/kazoos/workers</c>; <see langword="null"/> on a host without Web Workers (ADR 0071).</param>
 public sealed record MetricsReading(
     double TimestampSeconds,
     ProcStat? Stat,

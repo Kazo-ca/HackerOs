@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Kazo.Os.Apps.KazoPaint.Tests;
 
-/// <summary>Header sniffing and size limits of the formats Hack Paint opens (ADR 0103 §1).</summary>
+/// <summary>Header sniffing and size limits of the formats Kazo Paint opens (ADR 0103 §1).</summary>
 public sealed class ImageFileFormatTests
 {
     internal static byte[] Png(int width, int height)

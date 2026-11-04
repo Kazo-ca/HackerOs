@@ -4,8 +4,8 @@
 
   <PropertyGroup>
     <PackageId>Kazo.Os.Apps.Store</PackageId>
-    <Description>The Hack Store, the Kazo OS system app that installs, updates and removes apps from the catalogs (ADR 0188), to include in an OS host as a system app.</Description>
-    <PackageTags>hackeros;app</PackageTags>
+    <Description>The Kazo OS Store, the Kazo OS system app that installs, updates and removes apps from the catalogs (ADR 0188), to include in an OS host as a system app.</Description>
+    <PackageTags>kazoos;app</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup>

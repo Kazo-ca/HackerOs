@@ -37,7 +37,7 @@ public sealed class BuildKnownLazyAppDescriptorRegistryTests
         var assemblies = new BuildKnownAssemblyLoaderRegistry([manifest.EntryPoint!.Assembly], transport);
         var registry = new BuildKnownLazyAppDescriptorRegistry(catalog, assemblies);
 
-        AppDescriptorLoadResult result = await registry.EnsureAvailableAsync("org.hackeros.unknown", CancellationToken.None);
+        AppDescriptorLoadResult result = await registry.EnsureAvailableAsync("org.kazoos.unknown", CancellationToken.None);
 
         Assert.Equal(AppDescriptorLoadStatus.NotDeclared, result.Status);
         Assert.Equal(0, transport.CallCount);
@@ -47,7 +47,7 @@ public sealed class BuildKnownLazyAppDescriptorRegistryTests
     public async Task Known_app_is_discovered_without_requiring_other_lazy_catalog_assemblies()
     {
         AppManifest requested = CreateManifest();
-        AppManifest deferred = CreateManifest() with { Id = "org.hackeros.deferred-test" };
+        AppManifest deferred = CreateManifest() with { Id = "org.kazoos.deferred-test" };
         AppCatalog catalog = Assert.IsType<AppCatalog>(AppCatalog.Build([requested, deferred]).Catalog);
         var transport = new RecordingTransport(typeof(TestWindow).Assembly);
         var assemblies = new BuildKnownAssemblyLoaderRegistry([requested.EntryPoint!.Assembly], transport);
@@ -64,10 +64,10 @@ public sealed class BuildKnownLazyAppDescriptorRegistryTests
 
     private static AppManifest CreateManifest() => new()
     {
-        Id = "org.hackeros.lazy-test",
+        Id = "org.kazoos.lazy-test",
         Name = "Lazy test",
         Version = "1.0.0",
-        PublisherId = "pub.hackeros",
+        PublisherId = "pub.kazoos",
         Description = "Validates build-known lazy descriptor discovery.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest($"{typeof(TestWindow).Assembly.GetName().Name}.dll", typeof(TestWindow).FullName!),

@@ -30,11 +30,11 @@ The sixteen work items are merged into `v3/base` (PRs #152 to #167):
 | `v3/8-settings-security` | #155 | ADR 0100 | [`sensitive-settings.md`](../sensitive-settings.md) |
 | `v3/9-sync` | #156 | ADR 0101 | [`synchronization.md`](../synchronization.md) |
 | `v3/10-server-proxy` | #158 | ADR 0102, 0108 | [`server-network-relay.md`](../server-network-relay.md) |
-| `v3/11-apps` | #162 | ADR 0103 | [`hack-paint.md`](../hack-paint.md), [`theme-editor.md`](../theme-editor.md) |
+| `v3/11-apps` | #162 | ADR 0103 | [`kazo-paint.md`](../kazo-paint.md), [`theme-editor.md`](../theme-editor.md) |
 | `v3/12-localization` | #164 | ADR 0104, 0111 | [`localization.md`](../../framework/localization.md) |
 | `v3/13-accessibility` | #165 | ADR 0105, 0112 | [`accessibility.md`](../accessibility.md) |
 | `v3/14-trimming` | #166 | ADR 0106, 0113 | [`trimmed-publish.md`](../trimmed-publish.md) |
-| `v3/15-sdk-freeze` | #167 | ADR 0098 §8, 0114 | [`building-on-hackeros.md`](../../framework/building-on-hackeros.md) |
+| `v3/15-sdk-freeze` | #167 | ADR 0098 §8, 0114 | [`building-on-kazoos.md`](../../framework/building-on-kazoos.md) |
 | `v3/16-final` | this work item | none | this document |
 
 In numbers, on `v3/base`: 14 system window apps, 68 shell
@@ -117,11 +117,11 @@ above).
 | ~~Window geometry is saved but never read back: a window does not reopen at its last position.~~ Fixed by `v3.1/2-window-geometry` (ADR 0116 and 0122: size and maximized state, not the position; [`window-geometry.md`](../window-geometry.md)). | `v3/3` | Deviation from ADR 0095, resolved. |
 | A key pressed in an iframe (browser, sites) stays in the iframe; the OS shortcuts do not work there. | `v3/3` | Implementation choice, not validated. |
 | ~~No user layer for file and scheme associations.~~ Filled by `v3/4b` (ADR 0121, [`user-file-associations.md`](../user-file-associations.md)). "Show in folder" requires the `apps.launch` capability. | `v3/4` | Closed for associations. |
-| `hackwebd` starts at login, not at boot. | `v3/5` | Open question; moving it to boot needs its own ADR. |
-| `hackbackup` requires `sudo`; a restore in merge mode also restarts the machine; no IndexedDB v1 fixture (never committed). | `v3/7` | Documented in [`system-backup.md`](../system-backup.md). |
+| `kazowebd` starts at login, not at boot. | `v3/5` | Open question; moving it to boot needs its own ADR. |
+| `kazobackup` requires `sudo`; a restore in merge mode also restarts the machine; no IndexedDB v1 fixture (never committed). | `v3/7` | Documented in [`system-backup.md`](../system-backup.md). |
 | ~~No `passwd` command and no reset of a password by an administrator.~~ Filled by `v3/8` (PR #172, ADR 0120, [`sensitive-settings.md`](../sensitive-settings.md)). | `v3/8` | Closed. |
 | On a single device, the synchronization cursor is shared by all users. | `v3/9` | Documented in [`synchronization.md`](../synchronization.md). |
-| The SDK has no API to change a window's title; Hack Paint displays the file name in the app. | `v3/11` | Fixed by `v3.1/3-window-title` (ADR 0117, 0123): `SetWindowTitleAsync`, published in SDK 1.1.0 by `v3.1/4-sdk-1-1`. Closed. |
+| The SDK has no API to change a window's title; Kazo Paint displays the file name in the app. | `v3/11` | Fixed by `v3.1/3-window-title` (ADR 0117, 0123): `SetWindowTitleAsync`, published in SDK 1.1.0 by `v3.1/4-sdk-1-1`. Closed. |
 | Monaco's internal menus (Code Editor) stay in English. | `v3/12` | Open question (default: English). |
 | An app compiled against `0.9.0-preview` is refused by OS 1.0. | `v3/15` | Intended (different major version); an app from another repository is rebuilt against 1.0.0. |
 | Installation of apps at runtime. | plan, question 1 | Postponed to a separate plan. |
@@ -134,8 +134,8 @@ given in the work item's thread.
 | Work item | Question | Default applied |
 |---|---|---|
 | ~~`v3/4`~~ | ~~Add per-user file associations?~~ Answered by Benoit: do it (PR #171, ADR 0121). | n/a |
-| `v3/5` | Should `hackwebd` start at boot? (Keep at login / Boot + reload of user sites / Boot + second instance under the user) | Keep at login |
-| `v3/5` | How should the `hackeros-svc` service account be created? (Built-in account / IndexedDB user store / Store + generated `/etc/passwd`) | Built-in account (ADR 0107) |
+| `v3/5` | Should `kazowebd` start at boot? (Keep at login / Boot + reload of user sites / Boot + second instance under the user) | Keep at login |
+| `v3/5` | How should the `kazoos-svc` service account be created? (Built-in account / IndexedDB user store / Store + generated `/etc/passwd`) | Built-in account (ADR 0107) |
 | ~~`v3/8`~~ | ~~Add `passwd` and reset by an administrator?~~ Answered by Benoit: done (PR #172, ADR 0120). | n/a |
 | `v3/10` | Where does the server get an app's `network.real.access` grant from? (Server list / Grants pushed by the OS / Real network turned off for all apps) | Server list (`Proxy:GrantedApps`) |
 | `v3/12` | 1. French name "Gestionnaire de serveur web" (keep / English name); 2. a site's storage access buttons (follow the language / force French); 3. Monaco menus (English / language pack, several hundred KiB); 4. names of the built-in themes (English / translated) | 1A 2A 3A 4A |

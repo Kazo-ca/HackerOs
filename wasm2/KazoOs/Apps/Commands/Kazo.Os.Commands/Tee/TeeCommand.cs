@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Tee;
 /// <c>tee [-a] [FILE...]</c> (ADR 0064): copies standard input to standard output and to every
 /// file as it arrives (<c>-a</c> appends). A file that cannot be opened is reported and the
 /// others still get the copy, exit status 1. Files are published when input ends, as the
-/// <c>Hack*</c> streams write atomically on close.
+/// <c>Kazo*</c> streams write atomically on close.
 /// </summary>
 public sealed class TeeCommand(AppManifest manifest) : TerminalAppBase(manifest)
 {

@@ -174,7 +174,7 @@ KazoBackground.RunAsync ──► IAppExecutionContext.Background
   `TryGetJob` for `/proc` and the task manager.
 - **Workers** (`Platform/Kazo.Os.Platform.WorkerHost`): `start` with `k = 2`,
   `bg.progress`, `bg.run` and `bgp` for a task launched from a worker
-  ([`worker-processes.md`](../dev/worker-processes.md#hackbackground-tasks-adr-0128-adr-0140)).
+  ([`worker-processes.md`](../dev/worker-processes.md#kazobackground-tasks-adr-0128-adr-0140)).
 - **`/proc/<pid>/status`**: `Name:` carries the task name (15 characters),
   then `Job:` and `Host: MainThread|Worker`.
 
@@ -202,7 +202,7 @@ KazoBackground.RunAsync ──► IAppExecutionContext.Background
 | Search in the CodeEditor folder | Task `code-editor:search` ([`code-editor.md`](../dev/code-editor.md)). |
 | Compress, Extract, "UnZip Here…" of the explorer | Tasks `file-explorer:compress` and `file-explorer:extract` ([`file-explorer.md`](../dev/file-explorer.md)). |
 | Copy, move, paste; download as `.zip` | Stay in the window: OS calls awaited with checkpoints, conflict question in the window; download bytes destined for the window (ADR 0140 §9). |
-| Hack Paint | No filter; rotation and cropping remain (buffer up to 64 MiB, beyond the 16 MiB limit) ([`hack-paint.md`](../dev/hack-paint.md)). |
+| Kazo Paint | No filter; rotation and cropping remain (buffer up to 64 MiB, beyond the 16 MiB limit) ([`kazo-paint.md`](../dev/kazo-paint.md)). |
 
 ## Example
 
@@ -235,7 +235,7 @@ the window stays open and shows `killed`).
 - [x] `/proc/<pid>/status` (`Name`, `Job`, `Host`) and `ps`.
 - [x] An app manages its descendants without `process.manage` (ADR 0140 §7).
 - [x] Analyzer `HOSBG0001` to `HOSBG0004`, shipped in the SDK package and wired to the repository's apps.
-- [x] CodeEditor search, explorer compression and extraction as tasks; reason written down for copies, download and Hack Paint.
+- [x] CodeEditor search, explorer compression and extraction as tasks; reason written down for copies, download and Kazo Paint.
 - [x] Example in the sample window.
 - [x] SDK, analyzer, OS and worker tests, apps.
 - [x] Documentation, ADR 0140, index.

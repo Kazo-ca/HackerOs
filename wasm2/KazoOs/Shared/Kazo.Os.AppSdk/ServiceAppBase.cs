@@ -62,7 +62,7 @@ public abstract class ServiceAppBase : AppBase
     /// <returns>A task representing the active service session.</returns>
     /// <remarks>
     /// The service runs inside a <see cref="KazoExecutionContext"/> scope for <paramref name="context"/>
-    /// (working directory: the user's home), so the <c>Hack*</c> file API works without passing the
+    /// (working directory: the user's home), so the <c>Kazo*</c> file API works without passing the
     /// context around (ADR 0043).
     /// </remarks>
     public Task RunAsync(IAppExecutionContext context, CancellationToken sessionCancellationToken)

@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Cat;
 public sealed class CatApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.cmd.cat";
+    public override string Id => "org.kazoos.cmd.cat";
 
     /// <inheritdoc />
     public override string Name => "cat";
@@ -22,7 +22,7 @@ public sealed class CatApp : AppDefinition
     public override Type EntryPoint => typeof(CatCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Concatenate files and print on the standard output";

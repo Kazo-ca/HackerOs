@@ -4,7 +4,7 @@ using Kazo.Os.Simulation.Abstractions.Sounds;
 namespace Kazo.Os.Platform.Core.Sounds;
 
 /// <summary>
-/// The sound themes Kazo OS ships (ADR 0204 section 4): <c>hackeros</c> (console bleeps, the
+/// The sound themes Kazo OS ships (ADR 0204 section 4): <c>kazoos</c> (console bleeps, the
 /// default) and <c>soft</c> (chimes). <see cref="FileSystem.FileSystemSeeder"/> installs them as real
 /// files in <c>/usr/share/sounds/&lt;id&gt;/</c>, like a distribution package would, so they can be
 /// listed, played and copied like any user theme.

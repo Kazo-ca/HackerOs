@@ -38,7 +38,7 @@ public sealed class WallpaperTests
     [InlineData("builtin:aurora", true)]
     [InlineData("builtin:unknown", false)]
     [InlineData("/home/alice/Pictures/beach.JPG", true)]
-    [InlineData("/usr/share/hackeros/wallpapers/city.webp", true)]
+    [InlineData("/usr/share/kazoos/wallpapers/city.webp", true)]
     [InlineData("/home/alice/Pictures/logo.svg", false)]
     [InlineData("Pictures/beach.png", false)]
     [InlineData("https://example.com/a.png", false)]
@@ -60,8 +60,8 @@ public sealed class WallpaperTests
         Assert.Equal(["fill", "fit", "stretch", "center", "tile"], WallpaperCatalog.FitValues);
         Assert.All(Enum.GetValues<WallpaperFit>(), static fit => Assert.Equal(fit, WallpaperCatalog.ParseFit(WallpaperCatalog.FormatFit(fit))));
         Assert.Equal(WallpaperFit.Fill, WallpaperCatalog.ParseFit("FILL!"));
-        Assert.Equal("/home/alice/.local/share/hackeros/wallpapers", WallpaperCatalog.GetUserDirectory("/home/alice/"));
-        Assert.Equal("/home/alice/.local/share/hackeros/theme-packs", WallpaperCatalog.GetUserThemePacksDirectory("/home/alice"));
+        Assert.Equal("/home/alice/.local/share/kazoos/wallpapers", WallpaperCatalog.GetUserDirectory("/home/alice/"));
+        Assert.Equal("/home/alice/.local/share/kazoos/theme-packs", WallpaperCatalog.GetUserThemePacksDirectory("/home/alice"));
     }
 
     [Fact]

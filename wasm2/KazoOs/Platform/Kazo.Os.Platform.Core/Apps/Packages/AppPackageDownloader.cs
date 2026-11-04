@@ -2,7 +2,7 @@ namespace Kazo.Os.Platform.Core.Apps.Packages;
 
 /// <summary>
 /// Downloads the files of an app package source (ADR 0182 §2): <c>index.json</c> and the
-/// <c>.hackapp</c> package, from a host listed in <c>[hosts]</c> of <c>app-sources.config</c>.
+/// <c>.kazoapp</c> package, from a host listed in <c>[hosts]</c> of <c>app-sources.config</c>.
 /// </summary>
 public interface IAppPackageDownloader
 {

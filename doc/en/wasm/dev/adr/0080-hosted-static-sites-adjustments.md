@@ -6,7 +6,7 @@
 
 Accepted on 2026-10-16, with the `web/5-static-sites` work item.
 
-- **Plan phase:** web phase ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Plan phase:** web phase ([`asp-kazo-plan.md`](../plans/asp-kazo-plan.md)).
 - **Completes:** [ADR 0077](0077-hosted-static-sites.md). Sections 1 and 2
   below replace two bullets of ADR 0077 §2 and its consequence on the
   `www-data` account; the rest of ADR 0077 (`.site` files, two

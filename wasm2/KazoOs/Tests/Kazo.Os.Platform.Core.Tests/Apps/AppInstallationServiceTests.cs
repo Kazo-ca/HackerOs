@@ -39,7 +39,7 @@ public sealed class AppInstallationServiceTests
         AppInstallationResult result = await harness.Installation.UninstallAsync(Calc, AppInstallationScope.User);
 
         Assert.True(result.Success);
-        Assert.Contains($"{Calc}=true", await harness.Settings.ReadAsync("/home/alice/.config/hackeros/apps.config"));
+        Assert.Contains($"{Calc}=true", await harness.Settings.ReadAsync("/home/alice/.config/kazoos/apps.config"));
         Assert.Equal(AppInstallationState.UninstalledForUser, harness.Installation.GetState(Calc));
         Assert.False(harness.Enablement.IsEnabled(Calc));
         Assert.False(harness.Processes.TryGetActive(running.Process!.Pid, out _));
@@ -85,8 +85,8 @@ public sealed class AppInstallationServiceTests
         Assert.True(calc.Success);
         Assert.True(site.Success);
         Kazo.Os.AppSdk.Administration.KazoWebSiteDatabaseInfo left = Assert.Single(await harness.WebDatabases.ListAsync());
-        Assert.Equal("hackweb.org.test.other-site", left.Name);
-        Assert.Contains(harness.Log.Lines, line => line == $"apps: {Site} browser database hackweb.{Site} deleted");
+        Assert.Equal("kazoweb.org.test.other-site", left.Name);
+        Assert.Contains(harness.Log.Lines, line => line == $"apps: {Site} browser database kazoweb.{Site} deleted");
     }
 
     [Fact]
@@ -100,7 +100,7 @@ public sealed class AppInstallationServiceTests
 
         Assert.True(result.Success);
         Assert.Equal(AppInstallationState.Installed, harness.Installation.GetState(Calc));
-        Assert.DoesNotContain(Calc, await harness.Settings.ReadAsync("/home/alice/.config/hackeros/apps.config"));
+        Assert.DoesNotContain(Calc, await harness.Settings.ReadAsync("/home/alice/.config/kazoos/apps.config"));
         Assert.Equal(AppLaunchStatus.Launched, (await harness.Orchestrator.LaunchAsync(new AppLaunchRequest(Calc, alice, []))).Status);
     }
 
@@ -136,7 +136,7 @@ public sealed class AppInstallationServiceTests
     {
         Harness harness = await Harness.CreateAsync();
         await harness.Settings.WriteAsRootAsync(
-            "/etc/hackeros/apps.config",
+            "/etc/kazoos/apps.config",
             $"[uninstalled]\n{Term}=true\n{Kernel}=true\n{Viewer}=maybe\n{Unknown}=true\n{Calc}=true\n");
 
         await harness.Installation.ReloadAsync();
@@ -165,7 +165,7 @@ public sealed class AppInstallationServiceTests
         AppInstallationResult approved = await harness.Installation.UninstallAsync(
             Calc, AppInstallationScope.Machine, harness.Settings.CreateRootGateway());
         Assert.True(approved.Success);
-        Assert.Contains($"{Calc}=true", await harness.Settings.ReadAsync("/etc/hackeros/apps.config"));
+        Assert.Contains($"{Calc}=true", await harness.Settings.ReadAsync("/etc/kazoos/apps.config"));
         Assert.Equal(AppInstallationState.UninstalledForMachine, harness.Installation.GetState(Calc));
 
         await harness.Settings.Session.LogoutAsync();
@@ -178,7 +178,7 @@ public sealed class AppInstallationServiceTests
     public async Task A_user_cannot_reinstall_for_themselves_an_app_uninstalled_for_the_machine()
     {
         Harness harness = await Harness.CreateAsync();
-        await harness.Settings.WriteAsRootAsync("/etc/hackeros/apps.config", $"[uninstalled]\n{Calc}=true\n");
+        await harness.Settings.WriteAsRootAsync("/etc/kazoos/apps.config", $"[uninstalled]\n{Calc}=true\n");
         await harness.LoginAsync(harness.Settings.Alice);
 
         AppInstallationResult result = await harness.Installation.ReinstallAsync(Calc, AppInstallationScope.User);
@@ -192,7 +192,7 @@ public sealed class AppInstallationServiceTests
     public async Task The_effective_state_is_machine_or_user_and_logout_drops_the_user_layer()
     {
         Harness harness = await Harness.CreateAsync();
-        await harness.Settings.WriteAsRootAsync("/etc/hackeros/apps.config", $"[uninstalled]\n{Calc}=true\n");
+        await harness.Settings.WriteAsRootAsync("/etc/kazoos/apps.config", $"[uninstalled]\n{Calc}=true\n");
         await harness.LoginAsync(harness.Settings.Alice);
         await harness.Installation.UninstallAsync(Viewer, AppInstallationScope.User);
 
@@ -230,11 +230,11 @@ public sealed class AppInstallationServiceTests
         Harness harness = await Harness.CreateAsync();
         await harness.LoginAsync(harness.Settings.Alice);
 
-        // Like `nano ~/.config/hackeros/apps.config`: no call to the service.
-        await harness.Settings.WriteAsUserAsync("/home/alice/.config/hackeros/apps.config", $"[uninstalled]\n{Calc}=true\n");
+        // Like `nano ~/.config/kazoos/apps.config`: no call to the service.
+        await harness.Settings.WriteAsUserAsync("/home/alice/.config/kazoos/apps.config", $"[uninstalled]\n{Calc}=true\n");
         await WaitUntilAsync(() => !harness.Enablement.IsEnabled(Calc));
 
-        await harness.Settings.WriteAsUserAsync("/home/alice/.config/hackeros/apps.config", "[uninstalled]\n");
+        await harness.Settings.WriteAsUserAsync("/home/alice/.config/kazoos/apps.config", "[uninstalled]\n");
         await WaitUntilAsync(() => harness.Enablement.IsEnabled(Calc));
     }
 
@@ -244,13 +244,13 @@ public sealed class AppInstallationServiceTests
         Harness harness = await Harness.CreateAsync();
         await harness.LoginAsync(harness.Settings.Alice);
         await harness.Settings.WriteAsUserAsync(
-            "/home/alice/.config/hackeros/apps.config", $"# mine\n[uninstalled]\n{Unknown}=true\n");
+            "/home/alice/.config/kazoos/apps.config", $"# mine\n[uninstalled]\n{Unknown}=true\n");
 
         await harness.Installation.UninstallAsync(Calc, AppInstallationScope.User);
 
         Assert.Equal(
             $"# mine\n[uninstalled]\n{Unknown}=true\n{Calc}=true\n",
-            await harness.Settings.ReadAsync("/home/alice/.config/hackeros/apps.config"));
+            await harness.Settings.ReadAsync("/home/alice/.config/kazoos/apps.config"));
     }
 
     [Fact]
@@ -267,12 +267,12 @@ public sealed class AppInstallationServiceTests
         ]);
         await migration.MigrateAsync([new PersistedAppCatalogEntry(harness.Catalog.Manifests[Viewer], IsEnabled: false)]);
 
-        string content = (await harness.Settings.ReadAsync("/etc/hackeros/apps.config"))!;
+        string content = (await harness.Settings.ReadAsync("/etc/kazoos/apps.config"))!;
         Assert.Contains($"{Calc}=true", content);
         Assert.DoesNotContain(Term, content);
         Assert.DoesNotContain(Viewer, content);
         Assert.NotNull(await harness.Settings.ReadAsync(AppEnablementToFilesMigration.MarkerPath));
-        Assert.Equal("system", (await harness.Settings.StatAsync("/etc/hackeros/apps.config"))!.OwnerId);
+        Assert.Equal("system", (await harness.Settings.StatAsync("/etc/kazoos/apps.config"))!.OwnerId);
     }
 
     private static async Task WaitUntilAsync(Func<bool> condition)

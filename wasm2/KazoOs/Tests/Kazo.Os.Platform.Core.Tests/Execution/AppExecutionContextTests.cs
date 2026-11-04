@@ -119,7 +119,7 @@ public sealed class AppExecutionContextTests
     {
         Fixture fixture = new();
         IAppExecutionContext context = await fixture.CreateContextAsync([]);
-        ProcessRecord other = fixture.Manager.Start(fixture.RequestFor("com.hackeros.other"));
+        ProcessRecord other = fixture.Manager.Start(fixture.RequestFor("com.kazoos.other"));
 
         AppGatewayAccessDeniedException exception = Assert.Throws<AppGatewayAccessDeniedException>(
             () => context.Processes.Kill(other.Pid));
@@ -133,7 +133,7 @@ public sealed class AppExecutionContextTests
     {
         Fixture fixture = new();
         IAppExecutionContext context = await fixture.CreateContextAsync([AppCapabilities.ProcessManage]);
-        ProcessRecord other = fixture.Manager.Start(fixture.RequestFor("com.hackeros.other"));
+        ProcessRecord other = fixture.Manager.Start(fixture.RequestFor("com.kazoos.other"));
 
         ProcessRecord killed = context.Processes.Kill(other.Pid);
 
@@ -145,7 +145,7 @@ public sealed class AppExecutionContextTests
     {
         Fixture fixture = new();
         IAppExecutionContext context = await fixture.CreateContextAsync([]);
-        fixture.Manager.Start(fixture.RequestFor("com.hackeros.other"));
+        fixture.Manager.Start(fixture.RequestFor("com.kazoos.other"));
 
         IReadOnlyList<ProcessRecord> visible = context.Processes.ListProcesses();
 
@@ -158,7 +158,7 @@ public sealed class AppExecutionContextTests
     {
         Fixture fixture = new();
         IAppExecutionContext context = await fixture.CreateContextAsync([AppCapabilities.ProcessList]);
-        fixture.Manager.Start(fixture.RequestFor("com.hackeros.other"));
+        fixture.Manager.Start(fixture.RequestFor("com.kazoos.other"));
 
         IReadOnlyList<ProcessRecord> visible = context.Processes.ListProcesses();
 
@@ -355,7 +355,7 @@ public sealed class AppExecutionContextTests
                 Id = AppId,
                 Name = "Test App",
                 Version = "1.0.0",
-                PublisherId = "org.hackeros",
+                PublisherId = "org.kazoos",
                 Description = "Execution context test application.",
                 Kind = AppKind.Terminal,
                 EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", "TestApp"),
@@ -365,7 +365,7 @@ public sealed class AppExecutionContextTests
             };
         }
 
-        internal string AppId => "org.hackeros.test-app";
+        internal string AppId => "org.kazoos.test-app";
         internal string AliceUserId { get; private set; } = string.Empty;
 
         internal FileSystemService FileSystem { get; }

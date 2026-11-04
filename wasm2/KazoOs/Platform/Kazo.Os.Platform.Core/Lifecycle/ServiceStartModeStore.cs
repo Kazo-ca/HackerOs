@@ -144,7 +144,7 @@ internal static class ServiceStartModeStore
     private static Location SystemLocation(string appId) => new(
         VirtualPath.Parse($"/etc/{appId}"),
         GetSystemConfigPath(appId),
-        // Like /etc/hackeros/apps.config: the OS writes it as root, everyone may read it.
+        // Like /etc/kazoos/apps.config: the OS writes it as root, everyone may read it.
         new FileSystemAuthorizationContext(Settings.OsSettingsService.CreateSystemOperation(), ["system"], DateTimeOffset.UtcNow),
         0b111_101_101,
         0b110_100_100);

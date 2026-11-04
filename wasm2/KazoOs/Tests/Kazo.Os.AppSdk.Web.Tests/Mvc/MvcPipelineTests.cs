@@ -40,7 +40,7 @@ public sealed class MvcPipelineTests : IAsyncLifetime
 
         Assert.Equal(200, response.StatusCode);
         Assert.Equal("up", response.ReadAsString());
-        Assert.Equal("ASP.Hack", response.GetHeader("X-Powered-By"));
+        Assert.Equal("ASP.Kazo", response.GetHeader("X-Powered-By"));
     }
 
     [Fact]

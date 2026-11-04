@@ -15,7 +15,7 @@ Ce document décrit comment une app ouvre une surface, dessine son contenu dedan
 ## Ouvrir une surface
 
 `IDisplaySurfaceService.OpenAsync(new DisplaySurfaceOptions(titre, largeur, hauteur))`
-appelle `window.open("", "hackeros-surface-<n>", "popup=yes,…")`. Le navigateur
+appelle `window.open("", "kazoos-surface-<n>", "popup=yes,…")`. Le navigateur
 hôte n'ouvre une fenêtre qu'après un geste de l'utilisateur (environ cinq
 secondes après un clic ou une touche) : l'appel vient d'un gestionnaire de
 clic, ou juste après le lancement qu'un clic a déclenché.

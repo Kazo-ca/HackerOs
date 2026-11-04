@@ -17,7 +17,7 @@ recommended answer while awaiting it.
   for one version, `[Obsolete]`, then will be removed") and by ADR 0056 §12
   (`Get/SetFileReferencesAsync` forms).
 - **Document:** [`sdk-packages.md`](../../framework/sdk-packages.md),
-  [`building-on-hackeros.md`](../../framework/building-on-hackeros.md).
+  [`building-on-kazoos.md`](../../framework/building-on-kazoos.md).
 
 ## Context
 
@@ -110,7 +110,7 @@ preview apps (context). 1.0 contains no `[Obsolete]` API.
 
 ### 5. Third-party repository guide
 
-[`building-on-hackeros.md`](../../framework/building-on-hackeros.md) describes a repository that
+[`building-on-kazoos.md`](../../framework/building-on-kazoos.md) describes a repository that
 builds apps and a host on HackerOS: local feed, `nuget.config`,
 pinned version, templates, apps and host, app packages, trimmed publish,
 tests, version upgrade and what the promise covers.

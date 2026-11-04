@@ -113,10 +113,10 @@ public sealed class WindowAppRenderer : ComponentBase, IDisposable
         }
 
         // ADR 0150 §4: Menus.Attach and KazoContextMenu find the window's menus in cascade.
-        builder.OpenComponent<CascadingValue<IHackMenuHost>>(0);
-        builder.AddComponentParameter(1, nameof(CascadingValue<IHackMenuHost>.Value), _menus);
-        builder.AddComponentParameter(2, nameof(CascadingValue<IHackMenuHost>.IsFixed), true);
-        builder.AddComponentParameter(3, nameof(CascadingValue<IHackMenuHost>.ChildContent), (RenderFragment)RenderWithGateway);
+        builder.OpenComponent<CascadingValue<IKazoMenuHost>>(0);
+        builder.AddComponentParameter(1, nameof(CascadingValue<IKazoMenuHost>.Value), _menus);
+        builder.AddComponentParameter(2, nameof(CascadingValue<IKazoMenuHost>.IsFixed), true);
+        builder.AddComponentParameter(3, nameof(CascadingValue<IKazoMenuHost>.ChildContent), (RenderFragment)RenderWithGateway);
         builder.CloseComponent();
     }
 

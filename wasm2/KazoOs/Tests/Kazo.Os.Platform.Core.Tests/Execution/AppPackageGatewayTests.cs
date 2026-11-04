@@ -24,10 +24,10 @@ public sealed partial class AppPackageGatewayTests
 {
     private const string Trusted = "Kazo-ca/Os-App-Sample";
     private const string Untrusted = "someone/sample";
-    private const string Folder = "/usr/lib/hackeros/apps/org.kazo.sample";
-    private const string PersonalFolder = "/home/alice/.local/share/hackeros/apps/org.kazo.sample";
+    private const string Folder = "/usr/lib/kazoos/apps/org.kazo.sample";
+    private const string PersonalFolder = "/home/alice/.local/share/kazoos/apps/org.kazo.sample";
     private const string MirrorCatalog = "https://raw.githubusercontent.com/someone/mirror/packages/catalog.json";
-    private const string PersonalConfig = "/home/alice/.config/hackeros/installed-apps.config";
+    private const string PersonalConfig = "/home/alice/.config/kazoos/installed-apps.config";
 
     [Fact]
     public async Task A_trusted_app_is_installed_for_the_user_without_an_administrator()
@@ -78,7 +78,7 @@ public sealed partial class AppPackageGatewayTests
         Assert.Equal(0b110_100_100, (await harness.Settings.StatAsync($"{Folder}/1.0.0/lib/Kazo.Sample.dll"))!.Permissions.Mode);
         Assert.Contains(
             "org.kazo.sample=github:Kazo-ca/Os-App-Sample@1.0.0",
-            await harness.Settings.ReadAsync("/etc/hackeros/apps.config"),
+            await harness.Settings.ReadAsync("/etc/kazoos/apps.config"),
             StringComparison.Ordinal);
     }
 
@@ -206,7 +206,7 @@ public sealed partial class AppPackageGatewayTests
         Assert.Equal("1.0.0", info.InstalledVersion);
         Assert.True(info.InstalledSystemWide);
         Assert.Equal("1.0.0", report.PreviousVersion);
-        // ADR 0214 §4.1: the replaced version stays on disk for hackpkg rollback.
+        // ADR 0214 §4.1: the replaced version stays on disk for kazopkg rollback.
         Assert.NotNull(await harness.Settings.StatAsync($"{Folder}/1.0.0/manifest.json"));
         Assert.NotNull(await harness.Settings.StatAsync($"{Folder}/1.1.0/manifest.json"));
         Assert.Null(await harness.Settings.StatAsync($"{Folder}/{AppPackageInstaller.TransactionFileName}"));
@@ -247,7 +247,7 @@ public sealed partial class AppPackageGatewayTests
         Assert.True(removed.SystemWide);
         Assert.Equal(AppInstallApprovalOperation.Remove, approval.Requests[^1].Operation);
         Assert.Null(await harness.Settings.StatAsync(Folder));
-        Assert.DoesNotContain("org.kazo.sample=", await harness.Settings.ReadAsync("/etc/hackeros/apps.config"), StringComparison.Ordinal);
+        Assert.DoesNotContain("org.kazo.sample=", await harness.Settings.ReadAsync("/etc/kazoos/apps.config"), StringComparison.Ordinal);
         Assert.Equal(
             "apps.package.not-installed",
             (await Assert.ThrowsAsync<KazoPackageException>(() => gateway.RemovePackageAsync("org.kazo.sample").AsTask())).Code);
@@ -605,7 +605,7 @@ public sealed partial class AppPackageGatewayTests
         public bool HasField(string assemblyName, string typeName, string fieldName) => present;
     }
 
-    /// <summary>Serves the files of the <c>hackeros-packages</c> branches the tests publish.</summary>
+    /// <summary>Serves the files of the <c>kazoos-packages</c> branches the tests publish.</summary>
     private sealed class FakeDownloader : IAppPackageDownloader
     {
         public Dictionary<Uri, byte[]> Files { get; } = [];
@@ -717,10 +717,10 @@ public sealed partial class AppPackageGatewayTests
                 files["lib/Kazo.Sample.dll"] = File.ReadAllBytes(typeof(AppManifest).Assembly.Location);
                 byte[] package = AppPackageTests.Build(files, version: version);
                 string folder = $"packages/{AppPackageTests.AppId}/{version}";
-                _downloader.Files[new Uri($"{root}{folder}/{AppPackageTests.AppId}-{version}.hackapp")] = package;
+                _downloader.Files[new Uri($"{root}{folder}/{AppPackageTests.AppId}-{version}.kazoapp")] = package;
                 _downloader.Files[new Uri($"{root}{folder}/description.en.md")] = Encoding.UTF8.GetBytes($"# Sample {version}");
                 versions.Add($$$"""
-                    {"version":"{{{version}}}","commit":"abc","package":"{{{folder}}}/{{{AppPackageTests.AppId}}}-{{{version}}}.hackapp",
+                    {"version":"{{{version}}}","commit":"abc","package":"{{{folder}}}/{{{AppPackageTests.AppId}}}-{{{version}}}.kazoapp",
                      "sha256":"{{{AppPackage.Sha256(package)}}}","size":{{{package.Length}}},"publishedAt":"2026-10-30T00:00:00Z",{{{Signature(package, signed)}}}
                      "capabilities":[],"sdkCompatibility":{"minimumVersion":"2.0.0"},"icon":"{{{folder}}}/icon.svg",
                      "screenshots":["{{{folder}}}/screenshots/1.png"],"descriptions":{"en":"{{{folder}}}/description.en.md"}}
@@ -741,7 +741,7 @@ public sealed partial class AppPackageGatewayTests
 
         internal void Publish(string repository, string latest, bool corruptIndexHash, params string[] older)
         {
-            string root = $"https://raw.githubusercontent.com/{repository}/hackeros-packages/";
+            string root = $"https://raw.githubusercontent.com/{repository}/kazoos-packages/";
             List<string> entries = [];
             foreach (string version in older.Prepend(latest))
             {
@@ -749,7 +749,7 @@ public sealed partial class AppPackageGatewayTests
                 // A real assembly: the reference check reads its metadata.
                 files["lib/Kazo.Sample.dll"] = File.ReadAllBytes(typeof(AppManifest).Assembly.Location);
                 byte[] package = AppPackageTests.Build(files, version: version);
-                string path = $"{version}/org.kazo.sample-{version}.hackapp";
+                string path = $"{version}/org.kazo.sample-{version}.kazoapp";
                 _downloader.Files[new Uri(root + path)] = package;
                 string sha = corruptIndexHash ? new string('0', 64) : AppPackage.Sha256(package);
                 entries.Add($"{{\"version\":\"{version}\",\"path\":\"{path}\",\"sha256\":\"{sha}\"}}");

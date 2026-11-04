@@ -262,7 +262,7 @@ public sealed class InstalledAppsActivator(
 }
 
 /// <summary>
-/// Loads an installed app's assemblies from <c>/usr/lib/hackeros/apps</c> (ADR 0182 §5) and every
+/// Loads an installed app's assemblies from <c>/usr/lib/kazoos/apps</c> (ADR 0182 §5) and every
 /// other declared assembly through the host's lazy loader. Before an installed app's code loads, its
 /// <c>wwwroot/</c> files are published at <c>_content/&lt;assembly&gt;/</c> (ADR 0206) and its
 /// satellite assemblies are loaded (ADR 0222 §2).
@@ -342,8 +342,8 @@ public sealed class InstalledAppAssetSource(IAppAssetSource inner, InstalledApps
 public static class InstalledAppsBootExtensions
 {
     /// <summary>
-    /// Reads <c>[installed]</c> of <c>/etc/hackeros/apps.config</c>, of every user's
-    /// <c>~/.config/hackeros/installed-apps.config</c> (ADR 0189 §3) and each app's manifest straight
+    /// Reads <c>[installed]</c> of <c>/etc/kazoos/apps.config</c>, of every user's
+    /// <c>~/.config/kazoos/installed-apps.config</c> (ADR 0189 §3) and each app's manifest straight
     /// from IndexedDB, then joins those apps to the catalog. Call between <c>Build()</c> and
     /// <c>RunAsync()</c>; any failure leaves the built-in apps only.
     /// </summary>

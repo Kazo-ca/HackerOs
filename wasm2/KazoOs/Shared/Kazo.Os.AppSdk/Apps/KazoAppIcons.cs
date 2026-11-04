@@ -13,8 +13,8 @@ public static class KazoAppIcons
     /// <returns>A Lucide icon name, <c>app-window</c> when nothing more precise applies.</returns>
     public static string LucideName(string appId, string? category) => appId switch
     {
-        "org.hackeros.file-explorer" => "folder",
-        "org.hackeros.settings" => "settings",
+        "org.kazoos.file-explorer" => "folder",
+        "org.kazoos.settings" => "settings",
         _ => (category ?? string.Empty).ToLowerInvariant() switch
         {
             "developer" => "code-2",

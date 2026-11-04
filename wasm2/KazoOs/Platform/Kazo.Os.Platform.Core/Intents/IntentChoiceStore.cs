@@ -7,7 +7,7 @@ namespace Kazo.Os.Platform.Core.Intents;
 
 /// <summary>
 /// Reads and writes the user's "always use" choices for app-defined intents (ADR 0096, section 5):
-/// <c>~/.config/hackeros/intents.config</c>, one <c>&lt;intentId&gt;=&lt;appId&gt;</c> line per intent,
+/// <c>~/.config/kazoos/intents.config</c>, one <c>&lt;intentId&gt;=&lt;appId&gt;</c> line per intent,
 /// like the <c>[Default Applications]</c> section of freedesktop's <c>mimeapps.list</c>.
 /// </summary>
 /// <remarks>
@@ -20,7 +20,7 @@ internal static class IntentChoiceStore
     /// <summary>Gets the file of one user.</summary>
     /// <param name="loginName">Login name; the home is <c>/home/&lt;login&gt;</c>.</param>
     public static VirtualPath GetPath(string loginName) =>
-        VirtualPath.Parse($"/home/{loginName}/.config/hackeros/{FileName}");
+        VirtualPath.Parse($"/home/{loginName}/.config/kazoos/{FileName}");
 
     private const string FileName = "intents.config";
 
@@ -47,7 +47,7 @@ internal static class IntentChoiceStore
 
     /// <summary>
     /// Remembers <paramref name="appId"/> for <paramref name="intentId"/>, replacing an earlier
-    /// choice and keeping every other line. Creates <c>~/.config/hackeros</c> and the file (0600) if needed.
+    /// choice and keeping every other line. Creates <c>~/.config/kazoos</c> and the file (0600) if needed.
     /// </summary>
     /// <returns><see langword="false"/> when the user's permissions refuse the write.</returns>
     public static async ValueTask<bool> WriteAsync(

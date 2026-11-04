@@ -6,7 +6,7 @@
 
 Accepted on 2026-10-16, with the `web/10-detached-window` work item.
 
-- **Plan phase:** web phase ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Plan phase:** web phase ([`asp-kazo-plan.md`](../plans/asp-kazo-plan.md)).
 - **Completes:** ADR 0078 (detached display windows). Replaces none
   of its decisions; clarifies where the contracts live and settles the proof of its
   §4.

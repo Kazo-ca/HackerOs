@@ -53,7 +53,7 @@ public abstract partial class WindowAppBase
     /// <summary>
     /// Replaces this window's title (ADR 0117 §2). The app gives the whole title; the convention of
     /// the base apps is <c>document — App</c>, with <c>*</c> in front while the document has unsaved
-    /// changes (<c>*photo.png — Hack Paint</c>). <see langword="null"/>, empty or blank restores the
+    /// changes (<c>*photo.png — Kazo Paint</c>). <see langword="null"/>, empty or blank restores the
     /// app's localized name. Only this app instance's window changes, never another window of the
     /// same app, and no capability is needed. Detached surfaces followed with
     /// <see cref="TrackDisplaySurface"/> take the same title on their browser window.

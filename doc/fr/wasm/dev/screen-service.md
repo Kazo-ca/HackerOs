@@ -16,7 +16,7 @@ seulement `screens.config`. Ce chantier montre l'offre « Restaurer les écrans 
 ```
 Onglet principal (écran 1)                          Fenêtre d'un écran secondaire (window.open)
 ──────────────────────────                          ───────────────────────────────────────────
-DesktopShell                                         <body class="hackeros-surface">
+DesktopShell                                         <body class="kazoos-surface">
  └─ ScreenLayer                                       └─ .secondary-screen[data-display=2]
      ├─ <DisplaySurfaceContent> par écran ─ déplace ►     ├─ bureau de l'écran (chantier 4 ; numéro en attendant)
      └─ carte « Restaurer les écrans »                    ├─ bandeau « onglet principal caché »
@@ -26,7 +26,7 @@ ScreenService ── AddDisplay / ChangeViewport / RemoveDisplay ──► Windo
  │                                                     └─ screens.js prepare / settle
  └─ screens.js : permission, getScreenDetails, screenschange, place lue chaque seconde,
                  plein écran, visibilitychange de l'onglet principal
-~/.config/hackeros/screens.config [screens] : open = 2,3 ; 2 = left,top,width,height
+~/.config/kazoos/screens.config [screens] : open = 2,3 ; 2 = left,top,width,height
 ```
 
 | Fichier | Rôle |

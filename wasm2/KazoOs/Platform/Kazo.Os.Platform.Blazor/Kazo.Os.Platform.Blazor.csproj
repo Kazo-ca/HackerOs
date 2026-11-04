@@ -8,7 +8,7 @@
   <PropertyGroup>
     <PackageId>Kazo.Os.Platform.Blazor</PackageId>
     <Description>Kazo OS Blazor shell: desktop, launcher, window launching, dialogs and lazy app loading. For composing an OS host.</Description>
-    <PackageTags>hackeros;platform;blazor</PackageTags>
+    <PackageTags>kazoos;platform;blazor</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -28,7 +28,7 @@
     <ProjectReference Include="..\Kazo.Os.Taskbar.Blazor\Kazo.Os.Taskbar.Blazor.csproj" />
     <ProjectReference Include="..\Kazo.Os.MobileShell.Blazor\Kazo.Os.MobileShell.Blazor.csproj" />
     <ProjectReference Include="..\..\Shared\Kazo.Os.AppSdk.Blazor\Kazo.Os.AppSdk.Blazor.csproj" />
-    <!-- ADR 0084: the OS side of Blazor sites (IHackWebSiteHost). -->
+    <!-- ADR 0084: the OS side of Blazor sites (IKazoWebSiteHost). -->
     <ProjectReference Include="..\..\Shared\Kazo.Os.AppSdk.Web.Blazor\Kazo.Os.AppSdk.Web.Blazor.csproj" />
     <ProjectReference Include="..\..\Shared\Kazo.Os.AppSdk.Icons\Kazo.Os.AppSdk.Icons.csproj" />
     <ProjectReference Include="..\..\Shared\Kazo.Os.Simulation.Abstractions\Kazo.Os.Simulation.Abstractions.csproj" />

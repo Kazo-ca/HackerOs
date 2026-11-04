@@ -135,7 +135,7 @@ public sealed class SessionLocaleService
     /// <summary>Reads as the kernel, like a display manager running as root.</summary>
     private static AppOperationContext RootOperation() => new()
     {
-        AppId = "org.hackeros.kernel",
+        AppId = "org.kazoos.kernel",
         UserId = "system",
         UserAuthority = AppAuthority.System,
         GrantedCapabilities = new HashSet<string>(AppCapabilities.All, StringComparer.Ordinal),

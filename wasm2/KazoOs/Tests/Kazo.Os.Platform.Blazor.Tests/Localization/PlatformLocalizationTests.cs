@@ -131,7 +131,7 @@ public sealed class PlatformLocalizationTests
     private static WindowRuntimeState Window() =>
         new(
             WindowId.FromGuid(Guid.Parse("70000000-0000-0000-0000-000000000001")),
-            "org.hackeros.notes",
+            "org.kazoos.notes",
             WindowOwnerId.FromGuid(Guid.Parse("80000000-0000-0000-0000-000000000001")),
             "Notes",
             null,

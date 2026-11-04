@@ -9,10 +9,10 @@ public enum KazoPackageScope
     /// </summary>
     Auto = 0,
 
-    /// <summary>For the session user only (<c>~/.local/share/hackeros/apps</c>), without an administrator from a trusted source.</summary>
+    /// <summary>For the session user only (<c>~/.local/share/kazoos/apps</c>), without an administrator from a trusted source.</summary>
     User = 1,
 
-    /// <summary>For every user (<c>/usr/lib/hackeros/apps</c>), after an administrator's two-step approval, every time.</summary>
+    /// <summary>For every user (<c>/usr/lib/kazoos/apps</c>), after an administrator's two-step approval, every time.</summary>
     System = 2
 }
 
@@ -29,7 +29,7 @@ public enum KazoPackageTrust
     Untrusted = 2
 }
 
-/// <summary>Kind of block-list rule of <c>/etc/hackeros/app-policy.config</c> (ADR 0189 §5).</summary>
+/// <summary>Kind of block-list rule of <c>/etc/kazoos/app-policy.config</c> (ADR 0189 §5).</summary>
 public enum KazoPackageBlockKind
 {
     /// <summary>One app, by its ID (<c>[blocked-apps]</c>).</summary>
@@ -55,7 +55,7 @@ public sealed record KazoPackageCatalog(string Name, string Address, KazoPackage
 /// Trusted sources: <c>catalog:&lt;name&gt;</c>, <c>github.com/&lt;owner&gt;</c> or
 /// <c>github.com/&lt;owner&gt;/&lt;repo&gt;</c>.
 /// </param>
-/// <param name="Warnings">Lines of <c>/etc/hackeros/app-sources.config</c> that were ignored.</param>
+/// <param name="Warnings">Lines of <c>/etc/kazoos/app-sources.config</c> that were ignored.</param>
 public sealed record KazoPackageSources(string GitHubHost, IReadOnlyList<string> TrustedSources, IReadOnlyList<string> Warnings)
 {
     /// <summary>Gets the catalogs, in name order.</summary>
@@ -71,7 +71,7 @@ public sealed record KazoPackageSources(string GitHubHost, IReadOnlyList<string>
     public int UpdateIntervalHours { get; init; }
 }
 
-/// <summary>The administrator's block list, <c>/etc/hackeros/app-policy.config</c> (ADR 0189 §5).</summary>
+/// <summary>The administrator's block list, <c>/etc/kazoos/app-policy.config</c> (ADR 0189 §5).</summary>
 /// <param name="BlockedApps">Blocked app IDs.</param>
 /// <param name="BlockedCategories">Blocked categories.</param>
 /// <param name="BlockedCapabilities">Blocked capabilities.</param>

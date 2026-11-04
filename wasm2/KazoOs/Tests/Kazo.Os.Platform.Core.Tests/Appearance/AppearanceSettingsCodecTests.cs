@@ -13,7 +13,7 @@ public sealed class AppearanceSettingsCodecTests
             out ThemePreferences preferences);
 
         Assert.True(decoded);
-        Assert.Equal(WellKnownThemeIds.HackerOs, preferences.DesktopThemeId);
+        Assert.Equal(WellKnownThemeIds.KazoOs, preferences.DesktopThemeId);
         Assert.Equal(WellKnownThemeIds.Android, preferences.MobileThemeId);
         Assert.Equal(WellKnownAccentIds.Purple, preferences.AccentId);
         Assert.False(preferences.AnimationsEnabled);

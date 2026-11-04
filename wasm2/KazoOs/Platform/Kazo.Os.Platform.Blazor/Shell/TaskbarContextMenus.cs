@@ -42,10 +42,10 @@ internal sealed class TaskbarContextMenus : IDisposable
     internal const string SettingsItemId = "taskbar.settings";
 
     /// <summary>The app « Gestionnaire des tâches » opens.</summary>
-    internal const string TaskManagerAppId = "org.hackeros.system-monitor";
+    internal const string TaskManagerAppId = "org.kazoos.system-monitor";
 
     /// <summary>The app « Paramètres de la barre des tâches » opens.</summary>
-    internal const string SettingsAppId = "org.hackeros.settings";
+    internal const string SettingsAppId = "org.kazoos.settings";
 
     /// <summary>The Settings page that holds the taskbar's setting (<c>primary-taskbar</c>, ADR 0179 §7).</summary>
     internal const string SettingsPageArgument = "--page=screens";

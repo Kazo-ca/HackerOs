@@ -9,7 +9,7 @@ using Kazo.Os.Simulation.Abstractions.Network;
 
 namespace Kazo.Os.Apps.WebServer.Daemon;
 
-/// <summary>One site as <c>hackwebd</c> serves it on one binding.</summary>
+/// <summary>One site as <c>kazowebd</c> serves it on one binding.</summary>
 /// <param name="Declaration">The site's <c>.site</c> file.</param>
 /// <param name="Binding">The binding the request came in on (its path is the site's base path).</param>
 public sealed record ServedSite(KazoWebSiteDeclaration Declaration, WebBinding Binding)
@@ -283,7 +283,7 @@ public static class StaticFileHandler
         return new StaticFileResult(status, body.Length);
     }
 
-    /// <summary>The error page nginx prints, signed by <c>hackwebd</c>.</summary>
+    /// <summary>The error page nginx prints, signed by <c>kazowebd</c>.</summary>
     /// <param name="status">The status code.</param>
     /// <param name="reason">Its reason phrase.</param>
     public static string StatusPage(int status, string reason) =>

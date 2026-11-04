@@ -18,10 +18,10 @@ coûte (ADR 0129). Le sujet est la Calculatrice, inchangée.
 Dans `OS/Kazo.Os.Ecosystem/wwwroot/appsettings.json` :
 
 ```json
-"HackerOs": {
+"KazoOs": {
   "RemoteWindowRendering": {
     "Enabled": true,
-    "Apps": [ "org.hackeros.calculator" ]
+    "Apps": [ "org.kazoos.calculator" ]
   }
 }
 ```
@@ -58,7 +58,7 @@ WindowAppRenderer                                  WorkerProcessHost
 | `Platform/Kazo.Os.Platform.Blazor` | `IRemoteWindowRendering` (`GetHostComponent`) ; `WindowAppRenderer` le consulte s'il est enregistré. |
 | `Platform/Kazo.Os.Platform.WorkerHost` | Messages `ui` (worker → OS) et `uin` (OS → worker) ; `start` avec `k = 3`, `ra`/`rt` (le runner) ; côté worker `IWorkerWindowRunner`, `WorkerWindowRun` ; côté OS `WorkerRemoteProcessHost.StartWindowAsync`, `RemoteWindowProcess`, `RemoteProcessSession.UiReceiver`. |
 | `Platform/Kazo.Os.Platform.RemoteRendering` (nouveau) | **Worker/** : `WorkerWindowRunner`, `WorkerWindowRenderer`, `WorkerWindowRoot`, `DomPatchWriter`, `DomEventArgsReader`, `RemoteDialogService`. **Host/** : `RemoteWindowHost` (+ `.razor.cs`, `.razor.css`, `.razor.js`), `RemoteWindowRendering`, `RemoteWindowRenderingOptions`. `AddKazoOsRemoteWindowRendering`. |
-| `OS/Kazo.Os.Ecosystem.Host` | Lit la section `HackerOs:RemoteWindowRendering` et appelle `AddKazoOsRemoteWindowRendering`. |
+| `OS/Kazo.Os.Ecosystem.Host` | Lit la section `KazoOs:RemoteWindowRendering` et appelle `AddKazoOsRemoteWindowRendering`. |
 
 ### Processus
 
@@ -119,7 +119,7 @@ Pour les refaire :
 ```bash
 build/publish-trimmed.sh   # ou dotnet publish OS/Kazo.Os.Ecosystem -c Release -o artifacts/publish-trimmed/publish
 python3 -m http.server 8601 --bind 127.0.0.1 -d artifacts/publish-trimmed/publish/wwwroot &
-HACKEROS_TRIMMED_URL=http://127.0.0.1:8601 HACKEROS_TRIMMED_ARTIFACTS=$PWD/artifacts/publish-trimmed/remote \
+KAZOOS_TRIMMED_URL=http://127.0.0.1:8601 KAZOOS_TRIMMED_ARTIFACTS=$PWD/artifacts/publish-trimmed/remote \
   dotnet test Tests/Kazo.Os.TrimmedPublish.E2E.Tests -c Release --filter "FullyQualifiedName~calculator"
 ```
 
@@ -158,7 +158,7 @@ Le test active l'essai en réécrivant `appsettings.json` à la volée et écrit
 - [x] Hôte de fenêtre de la page et exécuteur JavaScript collocalisé.
 - [x] Événements (souris, pointeur, molette, clavier, saisie, focus) et `@bind`.
 - [x] Dialogues du SDK relayés (message, saisie) ; identifiants et fichiers refusés.
-- [x] Réglage `HackerOs:RemoteWindowRendering`, coupé par défaut.
+- [x] Réglage `KazoOs:RemoteWindowRendering`, coupé par défaut.
 - [x] Test E2E sur la publication trimmée et mesures automatisées.
 - [x] Tests unitaires du traducteur, des événements et des dialogues.
 - [x] ADR 0133 : verdict « on s'arrête » ; carte de décision à Benoit.

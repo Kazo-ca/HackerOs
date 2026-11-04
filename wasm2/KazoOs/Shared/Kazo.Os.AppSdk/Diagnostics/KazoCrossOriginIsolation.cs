@@ -1,6 +1,6 @@
 namespace Kazo.Os.AppSdk.Diagnostics;
 
-/// <summary>The <c>HackerOs:CrossOriginIsolation</c> setting of the host (ADR 0131, section 1).</summary>
+/// <summary>The <c>KazoOs:CrossOriginIsolation</c> setting of the host (ADR 0131, section 1).</summary>
 public enum KazoCrossOriginIsolationSetting
 {
     /// <summary>On when this build passed the isolation audit, off otherwise. The default.</summary>
@@ -37,7 +37,7 @@ public enum KazoCrossOriginIsolationReason
 
 /// <summary>
 /// The page's cross-origin isolation as the OS decided it at boot (ADR 0131; ADR 0146), the same
-/// facts as the first lines of <c>/proc/hackeros/workers</c>.
+/// facts as the first lines of <c>/proc/kazoos/workers</c>.
 /// </summary>
 /// <param name="IsIsolated">The page's <c>crossOriginIsolated</c>.</param>
 /// <param name="Reason">Why it is not, or <see cref="KazoCrossOriginIsolationReason.None"/>.</param>
@@ -71,7 +71,7 @@ public interface IAppCrossOriginIsolationGateway
 /// <summary>
 /// Whether the page that runs Kazo OS is cross-origin isolated, and what that turns on (ADR 0131,
 /// ADR 0146). Like <c>uname</c> or <c>/proc/cpuinfo</c> under Linux, it describes the machine, not
-/// another app, so no capability is needed; <c>/proc/hackeros/workers</c> holds the same facts for
+/// another app, so no capability is needed; <c>/proc/kazoos/workers</c> holds the same facts for
 /// apps that may read <c>/proc</c>.
 /// </summary>
 /// <example>

@@ -9,16 +9,16 @@ public sealed class AppCatalogTests
     public void Build_orders_dependencies_deterministically_and_deactivation_in_reverse()
     {
         AppManifest shell = CreateManifest(
-            "org.hackeros.shell",
-            dependencies: [new AppDependencyManifest("org.hackeros.kernel", "1.0.0")]);
-        AppManifest files = CreateManifest("org.hackeros.files");
-        AppManifest kernel = CreateManifest("org.hackeros.kernel");
+            "org.kazoos.shell",
+            dependencies: [new AppDependencyManifest("org.kazoos.kernel", "1.0.0")]);
+        AppManifest files = CreateManifest("org.kazoos.files");
+        AppManifest kernel = CreateManifest("org.kazoos.kernel");
 
         AppCatalogBuildResult result = AppCatalog.Build([shell, files, kernel]);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(
-            ["org.hackeros.files", "org.hackeros.kernel", "org.hackeros.shell"],
+            ["org.kazoos.files", "org.kazoos.kernel", "org.kazoos.shell"],
             result.Catalog!.ActivationOrder);
         Assert.Equal(result.Catalog.ActivationOrder.Reverse(), result.Catalog.DeactivationOrder);
     }
@@ -27,8 +27,8 @@ public sealed class AppCatalogTests
     public void Build_rejects_missing_required_dependency()
     {
         AppManifest app = CreateManifest(
-            "org.hackeros.editor",
-            dependencies: [new AppDependencyManifest("org.hackeros.files", "1.0.0")]);
+            "org.kazoos.editor",
+            dependencies: [new AppDependencyManifest("org.kazoos.files", "1.0.0")]);
 
         AppCatalogBuildResult result = AppCatalog.Build([app]);
 
@@ -39,8 +39,8 @@ public sealed class AppCatalogTests
     public void Build_allows_missing_optional_dependency()
     {
         AppManifest app = CreateManifest(
-            "org.hackeros.editor",
-            dependencies: [new AppDependencyManifest("org.hackeros.preview", "1.0.0", Optional: true)]);
+            "org.kazoos.editor",
+            dependencies: [new AppDependencyManifest("org.kazoos.preview", "1.0.0", Optional: true)]);
 
         AppCatalogBuildResult result = AppCatalog.Build([app]);
 
@@ -50,10 +50,10 @@ public sealed class AppCatalogTests
     [Fact]
     public void Build_rejects_incompatible_dependency_prerelease()
     {
-        AppManifest dependency = CreateManifest("org.hackeros.files", "2.0.0-beta.1");
+        AppManifest dependency = CreateManifest("org.kazoos.files", "2.0.0-beta.1");
         AppManifest app = CreateManifest(
-            "org.hackeros.editor",
-            dependencies: [new AppDependencyManifest("org.hackeros.files", "2.0.0")]);
+            "org.kazoos.editor",
+            dependencies: [new AppDependencyManifest("org.kazoos.files", "2.0.0")]);
 
         AppCatalogBuildResult result = AppCatalog.Build([dependency, app]);
 
@@ -64,11 +64,11 @@ public sealed class AppCatalogTests
     public void Build_rejects_dependency_cycles()
     {
         AppManifest first = CreateManifest(
-            "org.hackeros.first",
-            dependencies: [new AppDependencyManifest("org.hackeros.second", "1.0.0")]);
+            "org.kazoos.first",
+            dependencies: [new AppDependencyManifest("org.kazoos.second", "1.0.0")]);
         AppManifest second = CreateManifest(
-            "org.hackeros.second",
-            dependencies: [new AppDependencyManifest("org.hackeros.first", "1.0.0")]);
+            "org.kazoos.second",
+            dependencies: [new AppDependencyManifest("org.kazoos.first", "1.0.0")]);
 
         AppCatalogBuildResult result = AppCatalog.Build([first, second]);
 
@@ -78,8 +78,8 @@ public sealed class AppCatalogTests
     [Fact]
     public void Build_rejects_duplicate_app_ids()
     {
-        AppManifest first = CreateManifest("org.hackeros.files");
-        AppManifest second = CreateManifest("org.hackeros.files");
+        AppManifest first = CreateManifest("org.kazoos.files");
+        AppManifest second = CreateManifest("org.kazoos.files");
 
         AppCatalogBuildResult result = AppCatalog.Build([first, second]);
 
@@ -89,37 +89,37 @@ public sealed class AppCatalogTests
     [Fact]
     public void Build_without_system_ids_has_no_system_app()
     {
-        AppCatalog catalog = AppCatalog.Build([CreateManifest("org.hackeros.files")]).Catalog!;
+        AppCatalog catalog = AppCatalog.Build([CreateManifest("org.kazoos.files")]).Catalog!;
 
         Assert.Empty(catalog.SystemAppIds);
-        Assert.False(catalog.IsSystemApp("org.hackeros.files"));
+        Assert.False(catalog.IsSystemApp("org.kazoos.files"));
     }
 
     [Fact]
     public void Build_exposes_host_declared_system_apps()
     {
         AppCatalogBuildResult result = AppCatalog.Build(
-            [CreateManifest("org.hackeros.files"), CreateManifest("org.hackeros.paint")],
-            ["org.hackeros.files", "org.hackeros.files"]);
+            [CreateManifest("org.kazoos.files"), CreateManifest("org.kazoos.paint")],
+            ["org.kazoos.files", "org.kazoos.files"]);
 
         Assert.True(result.IsSuccess);
-        Assert.Equal(["org.hackeros.files"], result.Catalog!.SystemAppIds);
-        Assert.True(result.Catalog.IsSystemApp("org.hackeros.files"));
-        Assert.False(result.Catalog.IsSystemApp("org.hackeros.paint"));
+        Assert.Equal(["org.kazoos.files"], result.Catalog!.SystemAppIds);
+        Assert.True(result.Catalog.IsSystemApp("org.kazoos.files"));
+        Assert.False(result.Catalog.IsSystemApp("org.kazoos.paint"));
         // Ordinal: the flag is bound to the exact immutable id.
-        Assert.False(result.Catalog.IsSystemApp("ORG.HACKEROS.FILES"));
-        Assert.False(result.Catalog.IsSystemApp("org.hackeros.unknown"));
+        Assert.False(result.Catalog.IsSystemApp("ORG.KAZOOS.FILES"));
+        Assert.False(result.Catalog.IsSystemApp("org.kazoos.unknown"));
     }
 
     [Fact]
     public void Build_rejects_system_id_outside_the_catalog()
     {
-        AppCatalogBuildResult result = AppCatalog.Build([CreateManifest("org.hackeros.files")], ["org.hackeros.termnial"]);
+        AppCatalogBuildResult result = AppCatalog.Build([CreateManifest("org.kazoos.files")], ["org.kazoos.termnial"]);
 
         Assert.False(result.IsSuccess);
         AppCatalogError error = Assert.Single(result.Errors);
         Assert.Equal("catalog.system-app.unknown", error.Code);
-        Assert.Equal("org.hackeros.termnial", error.AppId);
+        Assert.Equal("org.kazoos.termnial", error.AppId);
     }
 
     [Fact]
@@ -127,27 +127,27 @@ public sealed class AppCatalogTests
     {
         AppCatalogBuildResult result = AppCatalog.BuildFromBuiltInApplications(
         [
-            new BuiltInApplication(IsSystemApp: true, CreateManifest("org.hackeros.terminal")),
-            new BuiltInApplication(IsSystemApp: false, CreateManifest("org.hackeros.paint")),
+            new BuiltInApplication(IsSystemApp: true, CreateManifest("org.kazoos.terminal")),
+            new BuiltInApplication(IsSystemApp: false, CreateManifest("org.kazoos.paint")),
         ]);
 
         Assert.True(result.IsSuccess);
-        Assert.Equal(["org.hackeros.terminal"], result.Catalog!.SystemAppIds);
-        Assert.Equal(["org.hackeros.paint", "org.hackeros.terminal"], result.Catalog.ActivationOrder);
+        Assert.Equal(["org.kazoos.terminal"], result.Catalog!.SystemAppIds);
+        Assert.Equal(["org.kazoos.paint", "org.kazoos.terminal"], result.Catalog.ActivationOrder);
     }
 
     [Fact]
     public void Build_moves_an_app_built_for_another_sdk_to_rejected_without_failing()
     {
-        AppManifest current = CreateManifest("org.hackeros.files") with { SdkCompatibility = new AppSdkCompatibilityManifest("1.0.0") };
-        AppManifest newer = CreateManifest("org.hackeros.newer") with { SdkCompatibility = new AppSdkCompatibilityManifest("1.9.0") };
-        AppManifest otherMajor = CreateManifest("org.hackeros.legacy") with { SdkCompatibility = new AppSdkCompatibilityManifest("0.9.0-preview.1") };
+        AppManifest current = CreateManifest("org.kazoos.files") with { SdkCompatibility = new AppSdkCompatibilityManifest("1.0.0") };
+        AppManifest newer = CreateManifest("org.kazoos.newer") with { SdkCompatibility = new AppSdkCompatibilityManifest("1.9.0") };
+        AppManifest otherMajor = CreateManifest("org.kazoos.legacy") with { SdkCompatibility = new AppSdkCompatibilityManifest("0.9.0-preview.1") };
 
         AppCatalogBuildResult result = AppCatalog.Build([current, newer, otherMajor], [], SemanticVersion.Parse("1.2.0"));
 
         Assert.True(result.IsSuccess, string.Join("; ", result.Errors));
-        Assert.Equal(["org.hackeros.files"], result.Catalog!.Manifests.Keys);
-        Assert.Equal(["org.hackeros.legacy", "org.hackeros.newer"], result.Catalog.Rejected.Select(item => item.AppId));
+        Assert.Equal(["org.kazoos.files"], result.Catalog!.Manifests.Keys);
+        Assert.Equal(["org.kazoos.legacy", "org.kazoos.newer"], result.Catalog.Rejected.Select(item => item.AppId));
         Assert.All(result.Catalog.Rejected, item => Assert.Equal("catalog.sdk.incompatible", item.Code));
         Assert.Contains("1.9.0", result.Catalog.Rejected[1].Message);
     }
@@ -156,51 +156,51 @@ public sealed class AppCatalogTests
     public void Build_rejects_the_dependents_of_a_refused_app_and_keeps_optional_ones()
     {
         AppSdkCompatibilityManifest sdk1 = new("1.0.0");
-        AppManifest newer = CreateManifest("org.hackeros.newer") with { SdkCompatibility = new AppSdkCompatibilityManifest("1.9.0") };
-        AppManifest needs = CreateManifest("org.hackeros.needs", dependencies: [new AppDependencyManifest("org.hackeros.newer", "1.0.0")]) with { SdkCompatibility = sdk1 };
-        AppManifest needsNeeds = CreateManifest("org.hackeros.needs-needs", dependencies: [new AppDependencyManifest("org.hackeros.needs", "1.0.0")]) with { SdkCompatibility = sdk1 };
-        AppManifest optional = CreateManifest("org.hackeros.optional", dependencies: [new AppDependencyManifest("org.hackeros.newer", "1.0.0", Optional: true)]) with { SdkCompatibility = sdk1 };
+        AppManifest newer = CreateManifest("org.kazoos.newer") with { SdkCompatibility = new AppSdkCompatibilityManifest("1.9.0") };
+        AppManifest needs = CreateManifest("org.kazoos.needs", dependencies: [new AppDependencyManifest("org.kazoos.newer", "1.0.0")]) with { SdkCompatibility = sdk1 };
+        AppManifest needsNeeds = CreateManifest("org.kazoos.needs-needs", dependencies: [new AppDependencyManifest("org.kazoos.needs", "1.0.0")]) with { SdkCompatibility = sdk1 };
+        AppManifest optional = CreateManifest("org.kazoos.optional", dependencies: [new AppDependencyManifest("org.kazoos.newer", "1.0.0", Optional: true)]) with { SdkCompatibility = sdk1 };
 
-        AppCatalogBuildResult result = AppCatalog.Build([newer, needs, needsNeeds, optional], ["org.hackeros.needs"], SemanticVersion.Parse("1.2.0"));
+        AppCatalogBuildResult result = AppCatalog.Build([newer, needs, needsNeeds, optional], ["org.kazoos.needs"], SemanticVersion.Parse("1.2.0"));
 
         Assert.True(result.IsSuccess, string.Join("; ", result.Errors));
-        Assert.Equal(["org.hackeros.optional"], result.Catalog!.Manifests.Keys);
+        Assert.Equal(["org.kazoos.optional"], result.Catalog!.Manifests.Keys);
         Assert.Equal(
-            [("org.hackeros.needs", "catalog.dependency.unavailable"), ("org.hackeros.needs-needs", "catalog.dependency.unavailable"), ("org.hackeros.newer", "catalog.sdk.incompatible")],
+            [("org.kazoos.needs", "catalog.dependency.unavailable"), ("org.kazoos.needs-needs", "catalog.dependency.unavailable"), ("org.kazoos.newer", "catalog.sdk.incompatible")],
             result.Catalog.Rejected.Select(item => (item.AppId, item.Code)));
         // The host's system flag is kept for display: Settings shows a refused system app as such.
-        Assert.True(result.Catalog.IsSystemApp("org.hackeros.needs"));
+        Assert.True(result.Catalog.IsSystemApp("org.kazoos.needs"));
     }
 
     [Fact]
     public void Build_gives_a_duplicate_command_to_the_system_app_then_to_the_first_activated()
     {
-        AppManifest first = CreateCommand("org.hackeros.a-tool", "tool", ["t"]);
-        AppManifest second = CreateCommand("org.hackeros.b-tool", "tool", ["bt"]);
-        AppManifest system = CreateCommand("org.hackeros.z-tool", "t", []);
+        AppManifest first = CreateCommand("org.kazoos.a-tool", "tool", ["t"]);
+        AppManifest second = CreateCommand("org.kazoos.b-tool", "tool", ["bt"]);
+        AppManifest system = CreateCommand("org.kazoos.z-tool", "t", []);
 
-        AppCatalogBuildResult result = AppCatalog.Build([first, second, system], ["org.hackeros.z-tool"]);
+        AppCatalogBuildResult result = AppCatalog.Build([first, second, system], ["org.kazoos.z-tool"]);
 
         AppCatalog catalog = result.Catalog!;
-        Assert.Equal("org.hackeros.a-tool", catalog.FindCommandOwner("TOOL"));
-        Assert.Equal("org.hackeros.z-tool", catalog.FindCommandOwner("t"));
-        Assert.Equal("org.hackeros.b-tool", catalog.FindCommandOwner("bt"));
+        Assert.Equal("org.kazoos.a-tool", catalog.FindCommandOwner("TOOL"));
+        Assert.Equal("org.kazoos.z-tool", catalog.FindCommandOwner("t"));
+        Assert.Equal("org.kazoos.b-tool", catalog.FindCommandOwner("bt"));
         Assert.Equal(3, catalog.Manifests.Count);
         Assert.Equal(
-            [("org.hackeros.a-tool", "catalog.command.duplicate"), ("org.hackeros.b-tool", "catalog.command.duplicate")],
+            [("org.kazoos.a-tool", "catalog.command.duplicate"), ("org.kazoos.b-tool", "catalog.command.duplicate")],
             catalog.Warnings.Select(warning => (warning.AppId, warning.Code)));
     }
 
     [Fact]
     public void Build_registers_component_providers_system_apps_first()
     {
-        AppManifest alpha = CreateProvider("org.example.alpha", "hackeros.terminal");
-        AppManifest zeta = CreateProvider("org.hackeros.zeta", "hackeros.terminal");
+        AppManifest alpha = CreateProvider("org.example.alpha", "kazoos.terminal");
+        AppManifest zeta = CreateProvider("org.kazoos.zeta", "kazoos.terminal");
 
-        AppCatalog catalog = AppCatalog.Build([alpha, zeta], ["org.hackeros.zeta"]).Catalog!;
+        AppCatalog catalog = AppCatalog.Build([alpha, zeta], ["org.kazoos.zeta"]).Catalog!;
 
-        Assert.Equal(["org.hackeros.zeta", "org.example.alpha"], catalog.GetComponentProviders("hackeros.terminal").Select(provider => provider.AppId));
-        Assert.Empty(catalog.GetComponentProviders("hackeros.unknown"));
+        Assert.Equal(["org.kazoos.zeta", "org.example.alpha"], catalog.GetComponentProviders("kazoos.terminal").Select(provider => provider.AppId));
+        Assert.Empty(catalog.GetComponentProviders("kazoos.unknown"));
         Assert.Empty(catalog.Warnings);
     }
 
@@ -208,13 +208,13 @@ public sealed class AppCatalogTests
     public void Build_registers_a_third_party_provider_of_the_file_view_after_the_system_app()
     {
         // ADR 0156 §1: the file view is open to any window app; the system app stays first.
-        AppManifest explorer = CreateProvider("org.hackeros.explorer", AppComponentContracts.FileView);
+        AppManifest explorer = CreateProvider("org.kazoos.explorer", AppComponentContracts.FileView);
         AppManifest files = CreateProvider("org.example.files", AppComponentContracts.FileView);
 
-        AppCatalog catalog = AppCatalog.Build([explorer, files], ["org.hackeros.explorer"]).Catalog!;
+        AppCatalog catalog = AppCatalog.Build([explorer, files], ["org.kazoos.explorer"]).Catalog!;
 
         Assert.Equal(
-            ["org.hackeros.explorer", "org.example.files"],
+            ["org.kazoos.explorer", "org.example.files"],
             catalog.GetComponentProviders(AppComponentContracts.FileView).Select(provider => provider.AppId));
         Assert.Empty(catalog.Warnings);
     }
@@ -267,7 +267,7 @@ public sealed class AppCatalogTests
         Id = appId,
         Name = appId,
         Version = version,
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = $"Test manifest for {appId}.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.TestApps", $"TestApps.{appId.Replace('.', '_')}"),

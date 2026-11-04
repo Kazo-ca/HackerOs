@@ -52,7 +52,7 @@
     <value>&lt;code&gt;id&lt;/code&gt; : lettres minuscules, chiffres et tirets ; il ne peut pas reprendre un thème intégré ni un thème de &lt;code&gt;/etc&lt;/code&gt;.</value>
   </data>
   <data name="Docs.Files.Intro" xml:space="preserve">
-    <value>Un thème est un fichier texte qui se termine par &lt;code&gt;.theme&lt;/code&gt;. Enregistrez-le dans &lt;code&gt;~/.config/hackeros/themes/&lt;/code&gt; pour vous ; un administrateur peut le copier dans &lt;code&gt;/etc/hackeros/themes/&lt;/code&gt; pour tous les utilisateurs. Le fichier est aussi l'export : copiez-le, envoyez-le, ouvrez-le ici.</value>
+    <value>Un thème est un fichier texte qui se termine par &lt;code&gt;.theme&lt;/code&gt;. Enregistrez-le dans &lt;code&gt;~/.config/kazoos/themes/&lt;/code&gt; pour vous ; un administrateur peut le copier dans &lt;code&gt;/etc/kazoos/themes/&lt;/code&gt; pour tous les utilisateurs. Le fichier est aussi l'export : copiez-le, envoyez-le, ouvrez-le ici.</value>
   </data>
   <data name="Docs.Files.Platforms" xml:space="preserve">
     <value>&lt;code&gt;platforms&lt;/code&gt; : &lt;code&gt;desktop&lt;/code&gt;, &lt;code&gt;mobile&lt;/code&gt; ou les deux. Sur un format que le thème de base n'habille pas, les jetons s'appliquent au thème par défaut de ce format.</value>
@@ -289,7 +289,7 @@
     <value>Thèmes installés</value>
   </data>
   <data name="Sidebar.NoThemes" xml:space="preserve">
-    <value>Aucun thème dans ~/.config/hackeros/themes ni dans /etc/hackeros/themes pour l'instant.</value>
+    <value>Aucun thème dans ~/.config/kazoos/themes ni dans /etc/kazoos/themes pour l'instant.</value>
   </data>
   <data name="Sidebar.NotSaved" xml:space="preserve">
     <value>Non enregistré</value>

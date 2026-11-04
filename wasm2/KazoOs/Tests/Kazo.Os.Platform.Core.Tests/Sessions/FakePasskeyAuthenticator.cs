@@ -26,8 +26,8 @@ public enum PasskeyTamper
 /// </summary>
 internal sealed class FakePasskeyAuthenticator : IPasskeyAuthenticator, IDisposable
 {
-    internal const string Origin = "https://hackeros.test";
-    internal const string RpId = "hackeros.test";
+    internal const string Origin = "https://kazoos.test";
+    internal const string RpId = "kazoos.test";
 
     private const string CreateType = "webauthn.create";
     private const string AssertionType = "webauthn.get";

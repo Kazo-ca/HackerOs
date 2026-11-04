@@ -3,10 +3,10 @@ namespace Kazo.Os.Theming.Abstractions.IconPacks;
 /// <summary>Where an icon pack was found (ADR 0203 §2): the machine's folders come before the user's.</summary>
 public enum IconPackOrigin
 {
-    /// <summary><c>/usr/share/icons/</c> or <c>/usr/share/hackeros/theme-packs/*/icons/</c>, for every user.</summary>
+    /// <summary><c>/usr/share/icons/</c> or <c>/usr/share/kazoos/theme-packs/*/icons/</c>, for every user.</summary>
     System,
 
-    /// <summary><c>~/.local/share/icons/</c> or <c>~/.local/share/hackeros/theme-packs/*/icons/</c>, for one user.</summary>
+    /// <summary><c>~/.local/share/icons/</c> or <c>~/.local/share/kazoos/theme-packs/*/icons/</c>, for one user.</summary>
     User
 }
 

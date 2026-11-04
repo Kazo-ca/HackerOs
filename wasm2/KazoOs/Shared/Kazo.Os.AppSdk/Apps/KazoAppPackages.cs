@@ -4,9 +4,9 @@ using Kazo.Os.Simulation.Abstractions.Gateways;
 namespace Kazo.Os.AppSdk.Apps;
 
 /// <summary>
-/// Installs apps from their GitHub repository (ADR 0182), as <c>hackpkg</c> does: a repository
-/// publishes <c>.hackapp</c> packages on its <c>hackeros-packages</c> branch, and the OS downloads
-/// them itself from a host of <c>/etc/hackeros/app-sources.config</c>.
+/// Installs apps from their GitHub repository (ADR 0182), as <c>kazopkg</c> does: a repository
+/// publishes <c>.kazoapp</c> packages on its <c>kazoos-packages</c> branch, and the OS downloads
+/// them itself from a host of <c>/etc/kazoos/app-sources.config</c>.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -168,7 +168,7 @@ public static class KazoAppPackages
     }
 
     /// <summary>
-    /// Reads every catalog of <c>/etc/hackeros/app-sources.config</c> (ADR 0188 §6): its categories
+    /// Reads every catalog of <c>/etc/kazoos/app-sources.config</c> (ADR 0188 §6): its categories
     /// and apps, with the trust level of the catalog. A catalog that cannot be read is listed with
     /// <see cref="KazoAppCatalog.Error"/> and no app. A copy is reused for five minutes.
     /// </summary>
@@ -199,7 +199,7 @@ public static class KazoAppPackages
     /// <summary>
     /// Lists the installed apps whose source publishes a newer version (ADR 0188 §3). The OS also
     /// checks by itself at sign-in and every <c>[updates] interval-hours</c>, and shows the count on
-    /// the Hack Store's icon.
+    /// the Kazo OS Store's icon.
     /// </summary>
     /// <param name="cancellationToken">Cancels the downloads.</param>
     /// <exception cref="KazoUnauthorizedAccessException">This app lacks <c>apps.manage</c>.</exception>

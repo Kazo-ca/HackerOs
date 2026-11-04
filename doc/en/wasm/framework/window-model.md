@@ -40,7 +40,7 @@ Guaranteed order:
 - when the app is rendered in a window that is already maximized or already in the foreground, it receives
   `OnWindowStateChanged(Normal, current state)` then `OnWindowActivated`;
 - the synchronous version is called before the `Async` version, on the component's dispatcher, in
-  the app's ambient context (the `Hack*` facades work); a new render follows.
+  the app's ambient context (the `Kazo*` facades work); a new render follows.
 
 A hook that throws an exception is written to the app's log
 (`/var/log/apps/<appId>.log`, level `Error`, prefix `window:`); the window's transition
@@ -135,7 +135,7 @@ public override WindowOptions? Window => new()
   the keyboard commands resize, maximize and snap do nothing.
 - Remembered size (ADR 0116 and 0122, [`window-geometry.md`](../dev/window-geometry.md)): the size and
   maximized state of each app window, not its position, are written to
-  `~/.local/state/hackeros/windows/<appId>.config` and reread by
+  `~/.local/state/kazoos/windows/<appId>.config` and reread by
   `WindowLaunchCoordinator.PresentAsync`, which corrects the size for the screen and the current
   declared sizes; the window always opens at its cascade position (`InitialBounds`).
   `WindowOptions.RememberGeometry = false` refuses.
@@ -146,8 +146,8 @@ public override WindowOptions? Window => new()
 ### `keybindings.config` file
 
 Read by `WindowKeyboardCommands` with the usual layers
-([`settings-files.md`](settings-files.md)): `/etc/hackeros/keybindings.config` (written at
-first startup, all commented out), then `~/.config/hackeros/keybindings.config`. A
+([`settings-files.md`](settings-files.md)): `/etc/kazoos/keybindings.config` (written at
+first startup, all commented out), then `~/.config/kazoos/keybindings.config`. A
 change to the file applies immediately. Several combinations separated by commas;
 an empty value removes the key.
 
@@ -287,7 +287,7 @@ the mobile desktop's recents and the frame's accessible name (`aria-labelledby`)
 
 | App | Title |
 | --- | --- |
-| Hack Paint | `photo.png — Hack Paint`, `*` if the image is modified; the name leaves the toolbar. |
+| Kazo Paint | `photo.png — Kazo Paint`, `*` if the image is modified; the name leaves the toolbar. |
 | Text Editor | `*notes.txt — Text Editor`; the app's banner keeps its display. |
 | Code Editor | Active tab, then open folder: `*Program.cs — src — Code Editor`. |
 | Theme Editor | `*Name — Theme Editor` (also in its toolbar). |
@@ -313,7 +313,7 @@ the mobile desktop's recents and the frame's accessible name (`aria-labelledby`)
 - **`KazoWindowSize.DisplaySurfaceId`**: distinguishes the resizing of a detached window from
   that of the desktop window.
 - **Measured size** in the browser, estimated only as a fallback (tests, server rendering).
-- **`/etc/hackeros/keybindings.config` shipped as comments**: active values come from
+- **`/etc/kazoos/keybindings.config` shipped as comments**: active values come from
   the code as long as nobody writes the file, like the other OS documents.
 - **Snapping keeps the earlier geometry** (ADR 0177, replaces "Snapping keeps no restore
   geometry"): the snapped window stays `Normal`, with `IsSnapped` and `RestoreBounds`. The saved
@@ -349,7 +349,7 @@ the mobile desktop's recents and the frame's accessible name (`aria-labelledby`)
 - `WindowAppBaseWindowTitleTests` (Blazor SDK), `WindowTitleTests` (Windowing.Core),
   `AppWindowGatewayFactoryTests` (Platform.Blazor): title set before the first render, same title
   ignored, cleaning, return to the app name, a single window targeted, closed window, surfaces.
-- E2E `KazoPaintWindowTitleTests` (UI.E2E): `Untitled — Hack Paint`, `*` after a stroke, file
+- E2E `KazoPaintWindowTitleTests` (UI.E2E): `Untitled — Kazo Paint`, `*` after a stroke, file
   name after "Save As" in the title bar and the taskbar.
 - E2E `WindowKeyboardCommandsTests` (UI.E2E): `` Alt+` `` switches window and `Alt+Q` closes the
   active window in a Chromium tab.
@@ -378,6 +378,6 @@ the mobile desktop's recents and the frame's accessible name (`aria-labelledby`)
 - [x] `SetWindowTitleCommand` command, `WindowTitleChangedEvent` event, `WindowTitles.Sanitize`.
 - [x] `IAppWindowGateway`, `AppWindowGatewayFactory`, cascade in `WindowAppRenderer` (desktop and mobile).
 - [x] `WindowTitle`, `SetWindowTitleAsync`, `FormatWindowTitle` in `WindowAppBase`; detached surfaces followed.
-- [x] Hack Paint, text editor, code editor, theme editor, explorer.
+- [x] Kazo Paint, text editor, code editor, theme editor, explorer.
 - [x] Unit and E2E tests.
 - [x] ADR 0123, documentation, SDK reference and index.

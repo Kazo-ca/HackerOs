@@ -29,8 +29,8 @@ ADR de la section 10 sont écrits avant le code de chaque chantier.
 | Menu de `FileView` | Portées fond / dossier / fichier / type, identifiants stables (`open`, `cut`, `copy`, `paste`, `paste-into`, `rename`, `delete`, `delete-permanently`, `new-folder`, `refresh`), `InsertAfter`/`InsertBefore`, **un seul niveau**, fournisseurs **propres à l'instance** (`MudMenu`) | `ContextMenu/FileViewContextMenuContracts.cs` |
 | Entrées ajoutées | « UnZip Here » et « Publish as a web site… », codées dans l'explorateur | `ZipFileContextMenuProvider`, `PublishSiteContextMenuProvider` |
 | « Ouvrir avec » | Boîte de l'explorateur (barre d'outils), « Toujours utiliser » | `OpenWithDialog`, ADR 0121 |
-| Composants intégrables | Contrat `hackeros.terminal` fourni par l'app Terminal, affiché par `KazoEmbeddedComponent<T>` | ADR 0063, [`embedded-components.md`](../../framework/embedded-components.md) |
-| Dialogues de l'OS | Contrats `IDialogService`/`IFileDialogService` dans le SDK, mis en œuvre par la plateforme (`VirtualFolderBrowser` pour Ouvrir/Enregistrer ; depuis `desk/3b`, le contrôle `hackeros.file-view`, ADR 0157) | `Kazo.Os.AppSdk.Blazor`, `Platform.Blazor/Dialogs` |
+| Composants intégrables | Contrat `kazoos.terminal` fourni par l'app Terminal, affiché par `KazoEmbeddedComponent<T>` | ADR 0063, [`embedded-components.md`](../../framework/embedded-components.md) |
+| Dialogues de l'OS | Contrats `IDialogService`/`IFileDialogService` dans le SDK, mis en œuvre par la plateforme (`VirtualFolderBrowser` pour Ouvrir/Enregistrer ; depuis `desk/3b`, le contrôle `kazoos.file-view`, ADR 0157) | `Kazo.Os.AppSdk.Blazor`, `Platform.Blazor/Dialogs` |
 | Bureau | `~/Desktop` créé pour chaque utilisateur ; emplacement `DesktopArea.BackgroundContent` prévu mais vide | `FileSystemSeeder`, `DesktopArea.razor` |
 | Intents | Intents définis par les apps, `IntentReceived` pour une instance ouverte | ADR 0096, [`app-intents.md`](../../framework/app-intents.md) |
 
@@ -71,21 +71,21 @@ emplacements des fichiers (§5, §8), Touche Menu et Maj+F10 (§6.3).
 ```text
 App (SDK 2.0 : contrats seulement)
   <KazoFileView Options=… OnOpened=… />   <button @attributes="Menus.Attach("row", item)">
-        │ contrat hackeros.file-view                │ contrat hackeros.context-menu
+        │ contrat kazoos.file-view                │ contrat kazoos.context-menu
         ▼                                           ▼
 OS (Platform.Blazor) ── registre des fournisseurs ── KazoComponentHost
         │ lu au démarrage depuis les manifestes      │
         ▼                                           ▼
 Explorateur de fichiers (app système)          Plateforme (shell)
   FileViewProvider, dialogues de fichiers        ContextMenuProvider, ContextMenuRegistry
-  (chargé au premier usage)                      (/etc/hackeros/context-menus.d/*.json)
+  (chargé au premier usage)                      (/etc/kazoos/context-menus.d/*.json)
 ```
 
 - **Composant hôte générique.** `KazoEmbeddedComponent<T>` (ADR 0063)
   devient la base : le SDK expose pour chaque contrat un composant typé
   (`KazoFileView`, `KazoContextMenu`) avec des paramètres et des
   `EventCallback` ordinaires ; à l'exécution, l'OS lui donne le
-  `RenderFragment` du fournisseur inscrit et le contrôleur (`IHackFileView`).
+  `RenderFragment` du fournisseur inscrit et le contrôleur (`IKazoFileView`).
 - **Inscription.** Un fournisseur se déclare dans son `[AppManifest]`
   (`Components`, comme le terminal). L'OS lit les manifestes au démarrage et
   connaît donc tous les fournisseurs ; le code d'une app n'est chargé qu'au
@@ -94,12 +94,12 @@ Explorateur de fichiers (app système)          Plateforme (shell)
 
 | Contrat | Contrôleur et composant du SDK | Fournisseur |
 |---|---|---|
-| `hackeros.file-view` | `IHackFileView`, `KazoFileView` | Explorateur |
-| `hackeros.file-dialogs` | dialogues Ouvrir avec, Propriétés, conflit de noms, et la vue de fichiers des dialogues Ouvrir / Enregistrer / Choisir un dossier (finalement le contrôle `hackeros.file-view` dans le dialogue de la plateforme, [ADR 0157](../adr/0157-file-dialogs-show-the-file-control.md)) | Explorateur |
-| `hackeros.context-menu` | `IHackContextMenu`, `KazoContextMenu`, `Menus.Attach` | Plateforme |
+| `kazoos.file-view` | `IKazoFileView`, `KazoFileView` | Explorateur |
+| `kazoos.file-dialogs` | dialogues Ouvrir avec, Propriétés, conflit de noms, et la vue de fichiers des dialogues Ouvrir / Enregistrer / Choisir un dossier (finalement le contrôle `kazoos.file-view` dans le dialogue de la plateforme, [ADR 0157](../adr/0157-file-dialogs-show-the-file-control.md)) | Explorateur |
+| `kazoos.context-menu` | `IKazoContextMenu`, `KazoContextMenu`, `Menus.Attach` | Plateforme |
 
-- **Fournisseur remplaçable.** Une app tierce peut fournir `hackeros.file-view`
-  et `hackeros.file-dialogs` à la place de l'explorateur, si un administrateur
+- **Fournisseur remplaçable.** Une app tierce peut fournir `kazoos.file-view`
+  et `kazoos.file-dialogs` à la place de l'explorateur, si un administrateur
   la choisit dans Paramètres ([ADR 0156](../adr/0156-replaceable-file-control-provider.md)).
 - **Droits.** Le rendu fourni tourne avec **les droits de l'app hôte** :
   le fournisseur reçoit les passerelles de l'hôte (`HostContext`), jamais les
@@ -113,7 +113,7 @@ Explorateur de fichiers (app système)          Plateforme (shell)
 
 > Mis en œuvre par le chantier 5 : voir [`desktop.md`](../desktop.md) et
 > l'[ADR 0160](../adr/0160-desktop-implementation-adjustments.md) (le bureau est
-> l'app système `org.hackeros.desktop`, `desktop.config` est un fichier de
+> l'app système `org.kazoos.desktop`, `desktop.config` est un fichier de
 > l'utilisateur seulement).
 
 - `DesktopShell` remplit `DesktopArea.BackgroundContent` avec `KazoFileView`
@@ -125,7 +125,7 @@ Explorateur de fichiers (app système)          Plateforme (shell)
 - **Mode Bureau** du contrôle : grille de cellules, icône à la case choisie,
   glisser pour déplacer (aimanté), sélection au lasso, renommage en place,
   glisser-déposer avec l'explorateur et entre fenêtres (ADR 0037 §4).
-- **Positions** dans `~/.config/hackeros/desktop.config`
+- **Positions** dans `~/.config/kazoos/desktop.config`
   (`[positions]` `nom=colonne,ligne`, `[view]` `auto-arrange`,
   `icon-size`, `show-home`, `show-trash`) ; un fichier nouveau prend la
   première case libre ; un nom absent est oublié au prochain
@@ -139,7 +139,7 @@ Explorateur de fichiers (app système)          Plateforme (shell)
   désinstallée s'affiche grisé.
 - **Mobile** : pas d'icônes ; le lanceur mobile reste tel quel.
 
-## 6. Menu contextuel générique (`hackeros.context-menu`)
+## 6. Menu contextuel générique (`kazoos.context-menu`)
 
 ### 6.1 Modèle
 
@@ -175,7 +175,7 @@ avec » est seul dans son groupe ; s'il est masqué, son séparateur disparaît.
 - Le même menu se construit aussi en C# (`Menus.Define("files", builder =>
   …)`).
 - `Menus.Attach(name, objet)` renvoie les attributs à poser
-  (`data-hack-menu`, jeton) ; l'objet reste côté C# dans une table de
+  (`data-kazo-menu`, jeton) ; l'objet reste côté C# dans une table de
   l'instance, vidée quand l'élément quitte le rendu. Un petit script de la
   plateforme capte `contextmenu`, l'appui long au doigt, la Touche Menu et
   Maj+F10, et rend la main au C# avec le jeton.
@@ -278,7 +278,7 @@ public sealed class SuperApp : AppDefinition
   `BuiltInApplications.json`. Pour une app installée plus tard, l'OS exécute
   la méthode **une fois à l'installation**, dans un contexte qui ne fait
   qu'enregistrer les appels.
-- L'OS écrit `/etc/hackeros/context-menus.d/<appId>.json` (`root 0644`),
+- L'OS écrit `/etc/kazoos/context-menus.d/<appId>.json` (`root 0644`),
   avec le rang d'installation ; les apps intégrées y sont écrites au premier
   démarrage et à chaque mise à jour de l'OS. Le démarrage lit ce dossier :
   aucun code d'app ne tourne pour construire un menu.
@@ -287,7 +287,7 @@ public sealed class SuperApp : AppDefinition
 - **Capacité** `shell.context-menu` (normale) exigée pour inscrire des
   entrées ; sans elle, le générateur produit un diagnostic et l'OS ignore les
   entrées. Paramètres ▸ Applications liste les entrées de chaque app et
-  permet de les masquer, dans `~/.config/hackeros/context-menus.config`
+  permet de les masquer, dans `~/.config/kazoos/context-menus.config`
   (`[hidden]` `<appId>.<name>=true`).
   *Mis en œuvre (ADR 0159) : la méthode tourne au build pour toutes les apps
   (il n'y a pas d'installation de paquet à l'exécution), les titres viennent
@@ -334,9 +334,9 @@ public sealed class SuperApp : AppDefinition
   `ShellIcon`…) ; ses types publics passent en `*REMOVED*`. Son code
   devient l'implémentation interne de l'explorateur.
 - `FileTransfer` (copie, déplacement, conflits Nautilus) reste utile aux
-  apps : il passe dans le SDK comme contrat (`IHackFileOperations`) mis en
+  apps : il passe dans le SDK comme contrat (`IKazoFileOperations`) mis en
   œuvre par l'explorateur, pour que ses règles ne vivent qu'à un endroit.
-- **Ajouté** : contrats `IHackFileView`, `KazoFileView`, `KazoContextMenu`,
+- **Ajouté** : contrats `IKazoFileView`, `KazoFileView`, `KazoContextMenu`,
   `Menus.Attach`, `[RegisterFileContextMenu]`,
   `RegisterFileContextMenuContext`, `KazoFileMenuItems`, `KazoIcons`.
 - Les ajouts en attente pour la 1.3 (`PublishAsync`, ADR 0145 ;
@@ -368,8 +368,8 @@ documentation et l'index [`README.md`](../../README.md).
 |---|---|---|---|
 | 0 | ADR | ADR 0148 à 0152 | — |
 | 1 | Hôte de contrats générique | Composant hôte typé, registre des fournisseurs lu au démarrage, passage des droits de l'hôte | 0 |
-| 2 | Menu contextuel de l'OS | `hackeros.context-menu`, rendu natif multi-niveaux, `Menus.Attach`, script de la plateforme, clavier, appui long | 1 |
-| 3 | Contrôle de fichiers fourni par l'explorateur | `hackeros.file-view`, `IHackFileView`, menus par défaut (§7) sur le menu de l'OS, « Ouvrir avec » en sous-menu, dialogues fournis, explorateur et éditeur de code migrés | 1, 2 |
+| 2 | Menu contextuel de l'OS | `kazoos.context-menu`, rendu natif multi-niveaux, `Menus.Attach`, script de la plateforme, clavier, appui long | 1 |
+| 3 | Contrôle de fichiers fourni par l'explorateur | `kazoos.file-view`, `IKazoFileView`, menus par défaut (§7) sur le menu de l'OS, « Ouvrir avec » en sous-menu, dialogues fournis, explorateur et éditeur de code migrés | 1, 2 |
 | 4 | Entrées inscrites par les apps | Générateur, `context-menus.d`, placement, capacité, Paramètres, « Extraire ici » et « Publier comme site web » inscrits | 2, 3 |
 | 5 | Bureau | Mode Bureau, positions, icônes système, `.desktop`, menu `Desktop`, Paramètres ▸ Bureau | 3, 4 |
 | 6 | SDK 2.0 | Retrait de `FileView`, `PublicAPI`, fixtures, `sdk-packages.md`, publication 2.0.0, vérification finale | 3, 4, 5 |
@@ -382,11 +382,11 @@ documentation et l'index [`README.md`](../../README.md).
 - [x] Chantier 0 : ADR 0148 à 0152 ([0148](../adr/0148-sdk-contracts-and-os-provided-controls.md), [0149](../adr/0149-sdk-2-0-file-view-removal.md), [0150](../adr/0150-os-context-menu.md), [0151](../adr/0151-app-registered-file-menu-entries.md), [0152](../adr/0152-desktop-icons.md)).
 - [x] Chantier 1 : hôte de contrats générique (`KazoContractComponent<T>`, registre dans `AppCatalog`, contrats réservés et `HOSAPP0025`, fournisseurs de la plateforme, erreur au journal ; [ADR 0153](../adr/0153-contract-host-implementation-adjustments.md), [`embedded-components.md`](../../framework/embedded-components.md)).
 - [x] Chantier 2 : menu contextuel de l'OS (`KazoContextMenu`, `Menus.Attach`/`Define`/`OpenAsync`, fournisseur de la plateforme, rendu natif multi-niveaux et feuille mobile, script du clic droit, de l'appui long, de la Touche Menu et de Maj+F10, clavier et ARIA ; [ADR 0154](../adr/0154-context-menu-implementation-adjustments.md), [`context-menu.md`](../../framework/context-menu.md)).
-- [x] Chantier 3 : contrôle de fichiers fourni par l'explorateur (`KazoFileView`, `IHackFileView`, `ExplorerFileView` lié au menu de l'OS, menus du §7 avec « Ouvrir avec » en sous-menu, dialogues fournis par `IDialogService`, explorateur et éditeur de code migrés ; [ADR 0155](../adr/0155-file-control-implementation-adjustments.md), [`file-explorer.md`](../file-explorer.md)). La vue des dialogues Ouvrir / Enregistrer est le chantier `desk/3b`, séparé (choix de Benoit, ADR 0155 §6).
-- [x] Chantier 3b : les dialogues Ouvrir / Enregistrer / Choisir un dossier montrent le contrôle `hackeros.file-view` avec les droits de l'app qui demande (`FileDialogBrowser`, repli sur `VirtualFolderBrowser` sans fournisseur ; [ADR 0157](../adr/0157-file-dialogs-show-the-file-control.md)).
-- [x] Chantier 3c : fournisseur du contrôle de fichiers remplaçable (contrats ouverts à toute app fenêtrée, `HOSAPP0025` retiré, `/etc/hackeros/components.config`, choix de l'administrateur après approbation, repli `component.fallback`, onglet « Composants de l'OS » ; [ADR 0156](../adr/0156-replaceable-file-control-provider.md), [ADR 0158](../adr/0158-replaceable-file-provider-implementation-adjustments.md)).
-- [x] Chantier 4 : entrées inscrites par les apps (`[RegisterFileContextMenu]` exécutée au build pour toutes les apps, `contextMenus` du manifeste, `/etc/hackeros/context-menus.d` aligné au démarrage, filtres, placement, lancement par intent ou arguments, capacité `shell.context-menu`, `HOSAPP0026` à `HOSAPP0028`, Paramètres ▸ Menus des fichiers et `KazoFileMenuEntries`, « Extraire ici » et « Publier comme site web… » inscrits ; [ADR 0159](../adr/0159-app-menu-entries-implementation-adjustments.md), [`context-menu.md`](../../framework/context-menu.md#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4)).
-- [x] Chantier 5 : bureau (app système `org.hackeros.desktop` rendue par la coquille sous les fenêtres, mode Bureau du contrôle de fichiers, grille `KazoDesktopLayout`, `~/.config/hackeros/desktop.config` par `KazoDesktopSettings`, Dossier perso et Corbeille, raccourcis `.desktop` par glisser depuis le menu Démarrer et « Envoyer vers ▸ Bureau », menus Affichage et Trier par, Paramètres ▸ Bureau ; [ADR 0160](../adr/0160-desktop-implementation-adjustments.md), [`desktop.md`](../desktop.md)).
+- [x] Chantier 3 : contrôle de fichiers fourni par l'explorateur (`KazoFileView`, `IKazoFileView`, `ExplorerFileView` lié au menu de l'OS, menus du §7 avec « Ouvrir avec » en sous-menu, dialogues fournis par `IDialogService`, explorateur et éditeur de code migrés ; [ADR 0155](../adr/0155-file-control-implementation-adjustments.md), [`file-explorer.md`](../file-explorer.md)). La vue des dialogues Ouvrir / Enregistrer est le chantier `desk/3b`, séparé (choix de Benoit, ADR 0155 §6).
+- [x] Chantier 3b : les dialogues Ouvrir / Enregistrer / Choisir un dossier montrent le contrôle `kazoos.file-view` avec les droits de l'app qui demande (`FileDialogBrowser`, repli sur `VirtualFolderBrowser` sans fournisseur ; [ADR 0157](../adr/0157-file-dialogs-show-the-file-control.md)).
+- [x] Chantier 3c : fournisseur du contrôle de fichiers remplaçable (contrats ouverts à toute app fenêtrée, `HOSAPP0025` retiré, `/etc/kazoos/components.config`, choix de l'administrateur après approbation, repli `component.fallback`, onglet « Composants de l'OS » ; [ADR 0156](../adr/0156-replaceable-file-control-provider.md), [ADR 0158](../adr/0158-replaceable-file-provider-implementation-adjustments.md)).
+- [x] Chantier 4 : entrées inscrites par les apps (`[RegisterFileContextMenu]` exécutée au build pour toutes les apps, `contextMenus` du manifeste, `/etc/kazoos/context-menus.d` aligné au démarrage, filtres, placement, lancement par intent ou arguments, capacité `shell.context-menu`, `HOSAPP0026` à `HOSAPP0028`, Paramètres ▸ Menus des fichiers et `KazoFileMenuEntries`, « Extraire ici » et « Publier comme site web… » inscrits ; [ADR 0159](../adr/0159-app-menu-entries-implementation-adjustments.md), [`context-menu.md`](../../framework/context-menu.md#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4)).
+- [x] Chantier 5 : bureau (app système `org.kazoos.desktop` rendue par la coquille sous les fenêtres, mode Bureau du contrôle de fichiers, grille `KazoDesktopLayout`, `~/.config/kazoos/desktop.config` par `KazoDesktopSettings`, Dossier perso et Corbeille, raccourcis `.desktop` par glisser depuis le menu Démarrer et « Envoyer vers ▸ Bureau », menus Affichage et Trier par, Paramètres ▸ Bureau ; [ADR 0160](../adr/0160-desktop-implementation-adjustments.md), [`desktop.md`](../desktop.md)).
 - [x] Chantier 6 : SDK 2.0 (`Kazo.Os.AppSdk.FileView` retiré, son code dans l'explorateur sous `FileControl/`, règles de copie `KazoFileOperations` dans le SDK, `PublicAPI` publié, version `2.0.0`, apps 1.x refusées au catalogue et au build de l'hôte, fixture `Contoso.Sdk2Compat.2.0.0`, migration dans [`sdk-packages.md`](../../framework/sdk-packages.md#sdk-20) ; [ADR 0161](../adr/0161-sdk-2-0-implementation-adjustments.md)) et vérification finale (§13).
 
 ## 13. Vérification finale

@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Trash;
 public sealed class TrashApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.trash";
+    public override string Id => "org.kazoos.commands.trash";
 
     /// <inheritdoc />
     public override string Name => "trash";
@@ -22,7 +22,7 @@ public sealed class TrashApp : AppDefinition
     public override Type EntryPoint => typeof(TrashCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Manage the trash: put, list, restore, rm, empty";

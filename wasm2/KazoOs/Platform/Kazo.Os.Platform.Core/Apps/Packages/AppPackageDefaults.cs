@@ -5,7 +5,7 @@ namespace Kazo.Os.Platform.Core.Apps.Packages;
 
 /// <summary>
 /// The app sources and the block list a host is built with (ADR 0189 §1 and §5): written to
-/// <c>/etc/hackeros/app-sources.config</c> and <c>/etc/hackeros/app-policy.config</c> when those
+/// <c>/etc/kazoos/app-sources.config</c> and <c>/etc/kazoos/app-policy.config</c> when those
 /// files do not exist, and always trusted as "built in".
 /// </summary>
 /// <remarks>

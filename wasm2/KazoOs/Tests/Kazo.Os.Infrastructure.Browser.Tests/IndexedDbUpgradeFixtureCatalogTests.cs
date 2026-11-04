@@ -22,6 +22,13 @@ public sealed class IndexedDbUpgradeFixtureCatalogTests
     /// </summary>
     private const int FirstReleasedVersion = 2;
 
+    /// <summary>
+    /// TODO work item 6 (rename/6, migration): the dumps were recorded before the rename (ADR 0228), under
+    /// the database name <c>hackeros</c>. Work item 6 migrates that database to
+    /// <see cref="KazoOsIndexedDbSchema.DatabaseName"/>; until then a dump may name either one.
+    /// </summary>
+    private const string DatabaseNameBeforeRename = "hackeros";
+
     /// <summary>Every released version below the current one has its dump.</summary>
     [Fact]
     public void Every_previous_released_schema_version_has_a_fixture()
@@ -48,7 +55,7 @@ public sealed class IndexedDbUpgradeFixtureCatalogTests
             File.ReadAllText(Path.Combine(FixtureDirectory(), $"hackeros-v{version}.json")));
         JsonElement root = document.RootElement;
 
-        Assert.Equal(KazoOsIndexedDbSchema.DatabaseName, root.GetProperty("databaseName").GetString());
+        Assert.Contains(root.GetProperty("databaseName").GetString(), new[] { KazoOsIndexedDbSchema.DatabaseName, DatabaseNameBeforeRename });
         Assert.Equal(version, root.GetProperty("version").GetInt32());
         Assert.True(root.GetProperty("producedFrom").GetProperty("commit").GetString() is { Length: > 0 });
 

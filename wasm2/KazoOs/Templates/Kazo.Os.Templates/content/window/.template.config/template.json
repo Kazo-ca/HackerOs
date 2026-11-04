@@ -6,7 +6,7 @@
   "groupIdentity": "Kazo.Os.Templates.Window",
   "name": "Kazo OS window app",
   "description": "A Kazo OS app with a window (Blazor component over WindowAppBase), built with Kazo.Os.App.Build.",
-  "shortName": "hackeros-window",
+  "shortName": "kazoos-window",
   "sourceName": "Kazo.Os.Template.Window",
   "preferNameDirectory": true,
   "tags": { "language": "C#", "type": "project" },

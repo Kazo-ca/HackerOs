@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Mkdir;
 public sealed class MkdirApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.mkdir";
+    public override string Id => "org.kazoos.commands.mkdir";
 
     /// <inheritdoc />
     public override string Name => "mkdir";
@@ -22,7 +22,7 @@ public sealed class MkdirApp : AppDefinition
     public override Type EntryPoint => typeof(MkdirCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Create virtual filesystem directories";

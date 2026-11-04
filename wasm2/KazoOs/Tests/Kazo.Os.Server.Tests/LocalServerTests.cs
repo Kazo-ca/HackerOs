@@ -16,7 +16,7 @@ namespace Kazo.Os.Server.Tests;
 /// </summary>
 public sealed class PairingCodeStoreTests : IDisposable
 {
-    private readonly string _root = Path.Combine(Path.GetTempPath(), $"hackeros-pairing-{Guid.NewGuid():N}");
+    private readonly string _root = Path.Combine(Path.GetTempPath(), $"kazoos-pairing-{Guid.NewGuid():N}");
     private readonly ManualClock _time = new(new DateTimeOffset(2026, 10, 30, 12, 0, 0, TimeSpan.Zero));
 
     public void Dispose()
@@ -155,27 +155,27 @@ public sealed class LocalServerIntegrationTests : IAsyncLifetime
 {
     private static readonly string[] Variables =
     [
-        "HACKEROS_ConnectionStrings__HackerOsDb",
-        "HACKEROS_HackerOs__Pairing__Root",
-        "HACKEROS_AllowedHosts",
-        "HACKEROS_HackerOs__LocalServer__CaCertificatePath",
+        "KAZOOS_ConnectionStrings__KazoOsDb",
+        "KAZOOS_KazoOs__Pairing__Root",
+        "KAZOOS_AllowedHosts",
+        "KAZOOS_KazoOs__LocalServer__CaCertificatePath",
     ];
 
-    private readonly string _folder = Path.Combine(Path.GetTempPath(), $"hackeros-local-server-{Guid.NewGuid():N}");
+    private readonly string _folder = Path.Combine(Path.GetTempPath(), $"kazoos-local-server-{Guid.NewGuid():N}");
     private readonly Dictionary<string, string?> _previous = [];
     private WebApplicationFactory<Program>? _factory;
 
     public Task InitializeAsync()
     {
         Directory.CreateDirectory(_folder);
-        string ca = Path.Combine(_folder, "hackeros-local-ca.crt");
+        string ca = Path.Combine(_folder, "kazoos-local-ca.crt");
         File.WriteAllText(ca, "-----BEGIN CERTIFICATE-----\nTEST\n-----END CERTIFICATE-----\n");
         foreach (string name in Variables)
         {
             _previous[name] = Environment.GetEnvironmentVariable(name);
         }
 
-        Environment.SetEnvironmentVariable(Variables[0], $"Data Source={Path.Combine(_folder, "hackeros.db")}");
+        Environment.SetEnvironmentVariable(Variables[0], $"Data Source={Path.Combine(_folder, "kazoos.db")}");
         Environment.SetEnvironmentVariable(Variables[1], Path.Combine(_folder, "pairing"));
         Environment.SetEnvironmentVariable(Variables[2], "localhost;127.0.0.1;[::1]");
         Environment.SetEnvironmentVariable(Variables[3], ca);

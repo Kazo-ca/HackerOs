@@ -18,7 +18,7 @@ public sealed class InMemoryProcessResourceLimitTable : IProcessResourceLimitTab
 
     /// <summary>Initializes the table.</summary>
     /// <param name="enabled">
-    /// <c>HackerOs:ResourceLimits:Enabled</c>: <see langword="false"/> turns every limit off, every
+    /// <c>KazoOs:ResourceLimits:Enabled</c>: <see langword="false"/> turns every limit off, every
     /// process reading <see cref="ProcessResourceLimits.None"/>.
     /// </param>
     /// <param name="kernelDefaults">The limits of a root process started without any; <see cref="ProcessResourceLimits.KernelDefaults"/> when omitted.</param>

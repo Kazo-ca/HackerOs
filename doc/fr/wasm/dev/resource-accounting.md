@@ -39,7 +39,7 @@ nul.
 | `KazoExecutionContext` (`InstallContextSwitchHook`, interne) | `Shared/Kazo.Os.AppSdk` | remplace le frame ambiant par un `AsyncLocal<T>(valueChangedHandler)` ; visible seulement du projet de mesure (`InternalsVisibleTo`) |
 | `ContextSwitchHook`, `ContextSwitchDispatcher`, `ResourceAccountingFeatures` | `Platform/Kazo.Os.Platform.ResourceAccounting` (nouveau) | installation du crochet, diffusion aux mesures (changements de processus, et de mode aux observateurs qui les veulent), interrupteurs `[FeatureSwitchDefinition]` |
 | `MeasuredCpuTimeAccountant` | idem | mesure du CPU (ADR 0067), inscrite sur le diffuseur quand `plan.CpuActive` |
-| `ResourceAccountingServiceCollectionExtensions` | `OS/Kazo.Os.Ecosystem.Host` | lecture de `HackerOs:ResourceAccounting`, composition, `#if HACKEROS_RESOURCE_ACCOUNTING` |
+| `ResourceAccountingServiceCollectionExtensions` | `OS/Kazo.Os.Ecosystem.Host` | lecture de `KazoOs:ResourceAccounting`, composition, `#if KAZOOS_RESOURCE_ACCOUNTING` |
 | `build/Kazo.Os.ResourceAccounting.targets` | `build/` | propriétés MSBuild, `RuntimeHostConfigurationOption`, référence conditionnelle |
 
 ### Le crochet
@@ -83,7 +83,7 @@ Les deux valent `true` par défaut. Les trois hôtes importent
 
 | Propriétés | Effet |
 |---|---|
-| une au moins à `true` | référence vers `Kazo.Os.Platform.ResourceAccounting`, constante `HACKEROS_RESOURCE_ACCOUNTING` ; chaque propriété devient l'option d'exécution `Kazo.Os.ResourceAccounting.{Cpu,Memory}.IsSupported` |
+| une au moins à `true` | référence vers `Kazo.Os.Platform.ResourceAccounting`, constante `KAZOOS_RESOURCE_ACCOUNTING` ; chaque propriété devient l'option d'exécution `Kazo.Os.ResourceAccounting.{Cpu,Memory}.IsSupported` |
 | les deux à `false` | pas de référence : le code de mesure n'est **pas dans le binaire** ; la composition compile sa branche `#else` |
 
 La composition vit dans `Kazo.Os.Ecosystem.Host` (qui importe aussi ces cibles),
@@ -100,7 +100,7 @@ ligne syslog) mais la DLL arrive encore par `Kazo.Os.Ecosystem.Host`.
 
 ```json
 {
-  "HackerOs": {
+  "KazoOs": {
     "ResourceAccounting": {
       "Cpu":    { "Enabled": true, "UnresponsiveThresholdMs": 5000 },
       "Memory": { "Enabled": true }

@@ -22,13 +22,13 @@ namespace Kazo.Os.AppSdk.Net;
 /// </remarks>
 public sealed class KazoNetworkStream : Stream
 {
-    private readonly IHackSocket _socket;
+    private readonly IKazoSocket _socket;
     private byte[] _pending = [];
     private int _pendingOffset;
     private bool _endOfStream;
     private bool _disposed;
 
-    internal KazoNetworkStream(IHackSocket socket) => _socket = socket;
+    internal KazoNetworkStream(IKazoSocket socket) => _socket = socket;
 
     /// <summary>Gets the address and port of the other end, as <c>Socket.RemoteEndPoint</c>.</summary>
     public IPEndPoint RemoteEndPoint => _socket.RemoteEndPoint;

@@ -13,7 +13,7 @@ public sealed class DeterministicResourceSimulatorTests
     private static ProcessRecord CreateRunningProcess(long pid, ResourceProfile profile) => new(
         ProcessId.FromInt64(pid),
         parentPid: null,
-        "com.hackeros.worker",
+        "com.kazoos.worker",
         AppInstanceId.FromGuid(Guid.NewGuid()),
         AppKind.Service,
         LocalUserId.FromGuid(Guid.NewGuid()),
@@ -30,7 +30,7 @@ public sealed class DeterministicResourceSimulatorTests
     private static ProcessRecord CreateStoppedProcess(long pid, ResourceProfile profile) => new(
         ProcessId.FromInt64(pid),
         parentPid: null,
-        "com.hackeros.worker",
+        "com.kazoos.worker",
         AppInstanceId.FromGuid(Guid.NewGuid()),
         AppKind.Service,
         LocalUserId.FromGuid(Guid.NewGuid()),

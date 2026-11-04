@@ -316,7 +316,7 @@ internal sealed class AppSettingsDocumentStore : ISettingsDocumentStore
 }
 
 /// <summary>
-/// The layers of an OS document, <c>/etc/hackeros/</c> and <c>~/.config/hackeros/</c>, through
+/// The layers of an OS document, <c>/etc/kazoos/</c> and <c>~/.config/kazoos/</c>, through
 /// <see cref="IAppSystemSettingsGateway"/> (ADR 0056, section 8). The OS logs file problems itself.
 /// </summary>
 internal sealed class SystemSettingsDocumentStore(IAppSystemSettingsGateway gateway, AppSystemSettingsDocumentInfo info)

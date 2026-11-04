@@ -5,13 +5,13 @@ using Kazo.Os.Simulation.Abstractions.Settings;
 
 namespace Kazo.Os.AppSdk.Files;
 
-/// <summary>What <c>~/.config/hackeros/desktop.config</c> holds (ADR 0160 §4).</summary>
+/// <summary>What <c>~/.config/kazoos/desktop.config</c> holds (ADR 0160 §4).</summary>
 /// <param name="Options">The <c>[view]</c> group.</param>
 /// <param name="Positions">The <c>[positions]</c> group: the cell of each icon, by file name or system key.</param>
 public sealed record KazoDesktopSettingsDocument(KazoDesktopOptions Options, IReadOnlyDictionary<string, KazoDesktopCell> Positions);
 
 /// <summary>
-/// Reads and writes the desktop's settings file, <c>~/.config/hackeros/desktop.config</c> (ADR 0152 §3,
+/// Reads and writes the desktop's settings file, <c>~/.config/kazoos/desktop.config</c> (ADR 0152 §3,
 /// ADR 0160 §4), like a desktop's <c>~/.config/</c> file: a plain <c>.config</c> document the user may
 /// edit by hand, where the desktop app writes the positions and Settings ▸ Desktop the view.
 /// </summary>
@@ -53,7 +53,7 @@ public static class KazoDesktopSettings
     public static string GetPath(string homeDirectory)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(homeDirectory);
-        return homeDirectory.TrimEnd('/') + "/.config/hackeros/desktop.config";
+        return homeDirectory.TrimEnd('/') + "/.config/kazoos/desktop.config";
     }
 
     /// <summary>Reads a document's text; anything missing or malformed takes its default.</summary>

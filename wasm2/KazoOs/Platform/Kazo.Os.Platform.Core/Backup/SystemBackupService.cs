@@ -148,10 +148,10 @@ public sealed class SystemBackupService
         _clock = clock ?? (() => DateTimeOffset.UtcNow);
     }
 
-    /// <summary>Gets the archive name for a backup made at <paramref name="atUtc"/>: <c>hackeros-20261017-071200Z.hosbak</c>.</summary>
+    /// <summary>Gets the archive name for a backup made at <paramref name="atUtc"/>: <c>kazoos-20261017-071200Z.hosbak</c>.</summary>
     /// <param name="atUtc">Export time.</param>
     public static string FileNameFor(DateTimeOffset atUtc) =>
-        string.Create(CultureInfo.InvariantCulture, $"hackeros-{atUtc.ToUniversalTime():yyyyMMdd-HHmmss}Z.hosbak");
+        string.Create(CultureInfo.InvariantCulture, $"kazoos-{atUtc.ToUniversalTime():yyyyMMdd-HHmmss}Z.hosbak");
 
     /// <summary>Exports the machine, hands the archive to the host and audits it.</summary>
     /// <param name="administratorLogin">Administrator who authorized it.</param>

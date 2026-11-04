@@ -35,8 +35,8 @@ public sealed class PaintDocumentTests
     }
 
     [Theory]
-    [InlineData(null, false, "Untitled — Hack Paint")]
-    [InlineData("/home/alice/Pictures/cat.png", true, "*cat.png — Hack Paint")]
+    [InlineData(null, false, "Untitled — Kazo Paint")]
+    [InlineData("/home/alice/Pictures/cat.png", true, "*cat.png — Kazo Paint")]
     public void Title_shows_the_file_name_and_unsaved_marker(string? path, bool dirty, string expected) =>
         Assert.Equal(expected, PaintTitle.Format(path, dirty));
 }

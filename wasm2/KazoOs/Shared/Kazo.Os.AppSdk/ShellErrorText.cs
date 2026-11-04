@@ -5,7 +5,7 @@ using Kazo.Os.Simulation.Abstractions.FileSystem;
 namespace Kazo.Os.AppSdk;
 
 /// <summary>
-/// Turns a <c>Hack*</c> file API failure into the short reason a Linux shell prints after
+/// Turns a <c>Kazo*</c> file API failure into the short reason a Linux shell prints after
 /// <c>hsh: &lt;path&gt;: </c> (the <c>strerror</c> text of the matching <c>errno</c>).
 /// </summary>
 /// <remarks>

@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Date;
 public sealed class DateApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.date";
+    public override string Id => "org.kazoos.commands.date";
 
     /// <inheritdoc />
     public override string Name => "date";
@@ -22,7 +22,7 @@ public sealed class DateApp : AppDefinition
     public override Type EntryPoint => typeof(DateCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Print the current date and time in the time zone of the process";

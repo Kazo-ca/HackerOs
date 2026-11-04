@@ -30,12 +30,12 @@ namespace Kazo.Os.Platform.Core.Tests.Administration;
 public sealed class SystemAdministrationGatewayTests
 {
     private const string ScannerId = "org.example.scanner";
-    private const string SettingsId = "org.hackeros.settings";
-    private const string SystemToolId = "org.hackeros.system-tool";
-    private const string AppearanceSystemFile = "/etc/hackeros/appearance.config";
-    private const string AppearanceUserFile = "/home/alice/.config/hackeros/appearance.config";
-    private const string MachinePermissionsFile = "/etc/hackeros/app-permissions.config";
-    private const string SecurityFile = "/etc/hackeros/security.config";
+    private const string SettingsId = "org.kazoos.settings";
+    private const string SystemToolId = "org.kazoos.system-tool";
+    private const string AppearanceSystemFile = "/etc/kazoos/appearance.config";
+    private const string AppearanceUserFile = "/home/alice/.config/kazoos/appearance.config";
+    private const string MachinePermissionsFile = "/etc/kazoos/app-permissions.config";
+    private const string SecurityFile = "/etc/kazoos/security.config";
 
     // ---- KazoSettings.OpenSystemAsync (section 8) ----
 
@@ -267,7 +267,7 @@ public sealed class SystemAdministrationGatewayTests
     [Fact]
     public async Task Storage_inspection_requires_its_capability()
     {
-        KazoStorageSnapshot snapshot = new(DateTimeOffset.UnixEpoch, "hackeros", 3, [], new Dictionary<string, string>(), 0);
+        KazoStorageSnapshot snapshot = new(DateTimeOffset.UnixEpoch, "kazoos", 3, [], new Dictionary<string, string>(), 0);
         AppStorageDiagnosticsGateway denied = new(() => new FixedInspector(snapshot), new FixedCapabilities());
         AppStorageDiagnosticsGateway granted = new(() => new FixedInspector(snapshot), new FixedCapabilities(AppCapabilities.SystemStorageInspect));
         AppStorageDiagnosticsGateway absent = new(null, new FixedCapabilities(AppCapabilities.SystemStorageInspect));
@@ -303,8 +303,8 @@ public sealed class SystemAdministrationGatewayTests
         KazoBackupInfo info = await harness.CreateBackupGateway(device, agent, AppCapabilities.SystemBackup).CreateAsync();
 
         Assert.Equal(SystemBackupService.CreateAction, agent.LastRequest!.Action);
-        Assert.Equal("hackeros-20261017-071200Z.hosbak", info.FileName);
-        Assert.Equal(["export", "save:hackeros-20261017-071200Z.hosbak"], device.Calls);
+        Assert.Equal("kazoos-20261017-071200Z.hosbak", info.FileName);
+        Assert.Equal(["export", "save:kazoos-20261017-071200Z.hosbak"], device.Calls);
         AuditEntry entry = Assert.Single(harness.Audit.Entries, audit => audit.Action == SystemBackupService.CreateAction);
         Assert.Equal("admin", entry.Properties["admin"]);
         Assert.Equal("alice", entry.Properties["requestedBy"]);
@@ -384,7 +384,7 @@ public sealed class SystemAdministrationGatewayTests
         Id = id,
         Name = id,
         Version = "1.0.0",
-        PublisherId = id.StartsWith("org.hackeros", StringComparison.Ordinal) ? "pub.hackeros" : "org.example",
+        PublisherId = id.StartsWith("org.kazoos", StringComparison.Ordinal) ? "pub.kazoos" : "org.example",
         Description = "System-administration fixture.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Apps.Sample", "Kazo.Os.Apps.Sample.SampleApp"),

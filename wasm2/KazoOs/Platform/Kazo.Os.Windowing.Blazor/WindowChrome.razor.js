@@ -8,7 +8,7 @@
 // (screenX - clientX), else from its position and borders. A screen is a window layer with a
 // `data-display` number: screen 1 in the main tab, the others in their display surfaces.
 
-const REGISTRY_KEY = Symbol.for("hackeros.displaySurfaces.documentListeners");
+const REGISTRY_KEY = Symbol.for("kazoos.displaySurfaces.documentListeners");
 const LAYER = ".window-layer[data-display]";
 const PREVIEW_CLASS = "window-drop-preview";
 const LEARNED_FROM = ["pointermove", "pointerdown", "pointerover"];

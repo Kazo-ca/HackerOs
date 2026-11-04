@@ -5,7 +5,7 @@
   <PropertyGroup>
     <PackageId>Kazo.Os.Apps.ThemeEditor</PackageId>
     <Description>The base Kazo OS Theme Editor app, to include in an OS host (ProjectReference or PackageReference, optionally IsSystemApp).</Description>
-    <PackageTags>hackeros;app</PackageTags>
+    <PackageTags>kazoos;app</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup>

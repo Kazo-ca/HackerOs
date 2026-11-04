@@ -20,7 +20,7 @@ chaque écran. Le clic droit n'active pas la fenêtre.
 
 - **Nouvelle fenêtre** lance l'app une nouvelle fois sur l'écran de la barre. Elle est désactivée
   pour une app `SingleInstancePerUser` ou absente du catalogue.
-- **Gestionnaire des tâches** ouvre le moniteur système (`org.hackeros.system-monitor`) sur
+- **Gestionnaire des tâches** ouvre le moniteur système (`org.kazoos.system-monitor`) sur
   l'écran de la barre.
 - **Afficher le bureau** minimise les fenêtres de l'écran de la barre.
 - **Cascade** et **mosaïque** rangent les fenêtres de l'écran de la barre (section 3).

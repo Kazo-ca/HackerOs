@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Rm;
 public sealed class RmApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.rm";
+    public override string Id => "org.kazoos.commands.rm";
 
     /// <inheritdoc />
     public override string Name => "rm";
@@ -22,7 +22,7 @@ public sealed class RmApp : AppDefinition
     public override Type EntryPoint => typeof(RmCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Move files or directories to the trash, or remove them permanently";

@@ -69,7 +69,7 @@ public static partial class ThemeFile
     public const string Extension = ".theme";
 
     /// <summary>Media type used for theme files in file associations.</summary>
-    public const string MediaType = "text/x-hackeros-theme";
+    public const string MediaType = "text/x-kazoos-theme";
 
     /// <summary>Largest theme file accepted, in bytes (64 KiB): a theme is a short list of values.</summary>
     public const int MaxFileBytes = 64 * 1024;
@@ -201,7 +201,7 @@ public static partial class ThemeFile
         {
             return baseThemeId is null
                 ? Fail("File.MissingBase")
-                : Fail("File.UnknownBase", baseThemeId, WellKnownThemeIds.HackerOs);
+                : Fail("File.UnknownBase", baseThemeId, WellKnownThemeIds.KazoOs);
         }
 
         List<ThemePlatform> platforms = [];

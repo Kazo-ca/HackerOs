@@ -1,0 +1,19 @@
+{
+  "id": "45cc28a0-4d24-4108-b74c-275d955df807",
+  "category": "improved",
+  "audience": [
+    "user",
+    "developer"
+  ],
+  "title": {
+    "en": "Commands, files, app ids and settings take the Kazo OS names",
+    "fr": "Les commandes, les fichiers, les identifiants d'apps et les réglages prennent les noms de Kazo OS"
+  },
+  "description": {
+    "en": "hackpkg becomes kazopkg and hackbackup becomes kazobackup (the old names still work and print a warning), app packages and theme packs use .kazoapp and .kazotheme (the old .hackapp and .hacktheme are still read), the OS files move to /etc/kazoos, ~/.config/kazoos and /etc/kazoweb, the store is called Kazo OS Store, ASP.Hack becomes ASP.Kazo and Hack Paint becomes Kazo Paint. The server and the PWA read the KazoOs configuration section and KAZOOS_ variables, and still read HackerOs and HACKEROS_. The dotnet new templates are now kazoos-window, kazoos-solution... App ids become org.kazoos.*, capabilities kazoos.*, and the browser databases, theme ids and caches take the kazoos and kazoweb names.",
+    "fr": "hackpkg devient kazopkg et hackbackup devient kazobackup (les anciens noms marchent encore et écrivent un avertissement), les paquets d'apps et de thèmes utilisent .kazoapp et .kazotheme (les anciens .hackapp et .hacktheme restent lus), les fichiers de l'OS passent dans /etc/kazoos, ~/.config/kazoos et /etc/kazoweb, le magasin s'appelle Kazo OS Store, ASP.Hack devient ASP.Kazo et Hack Paint devient Kazo Paint. Le serveur et la PWA lisent la section de configuration KazoOs et les variables KAZOOS_, et lisent encore HackerOs et HACKEROS_. Les modèles dotnet new s'appellent maintenant kazoos-window, kazoos-solution... Les identifiants d'apps deviennent org.kazoos.*, les capacités kazoos.*, et les bases du navigateur, les identifiants de thèmes et les caches prennent les noms kazoos et kazoweb."
+  },
+  "links": [
+    "doc/en/wasm/framework/sdk-packages.md"
+  ]
+}

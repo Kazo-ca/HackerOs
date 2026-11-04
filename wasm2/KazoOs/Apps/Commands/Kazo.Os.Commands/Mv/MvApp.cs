@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Mv;
 public sealed class MvApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.mv";
+    public override string Id => "org.kazoos.commands.mv";
 
     /// <inheritdoc />
     public override string Name => "mv";
@@ -22,7 +22,7 @@ public sealed class MvApp : AppDefinition
     public override Type EntryPoint => typeof(MvCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Move or rename files and directories";

@@ -9,7 +9,7 @@
 //   current entry. navigator.clipboard.readText is never called: it would prompt for permission;
 // - native copies inside Kazo OS (a text field, the terminal) are reported too (OnNativeCopy).
 //
-// The directions come from /etc/hackeros/clipboard.config (setDirections). They are decided here,
+// The directions come from /etc/kazoos/clipboard.config (setDirections). They are decided here,
 // synchronously inside the event, because a paste or copy can only be changed while it is dispatched:
 // - host to guest refused, or the host text is stale: a paste into a Kazo OS text field inserts the
 //   Kazo OS clipboard text instead of the host's;
@@ -72,7 +72,7 @@ function onPaste(e) {
     }
 
     // Tells a FileView (FileView.razor.js) whether to import the pasted files.
-    e.hackerOsHostFiles = hostToGuest && key !== null && hostFilesCurrent && key === lastHostFilesKey;
+    e.kazoOsHostFiles = hostToGuest && key !== null && hostFilesCurrent && key === lastHostFilesKey;
 
     if (isEditable(e.target) && text !== (guestText ?? '')) {
         // The field would receive host text Kazo OS does not hold (sharing refused, or stale host

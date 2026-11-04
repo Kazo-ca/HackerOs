@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.XdgMime;
 public sealed class XdgMimeApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.xdg-mime";
+    public override string Id => "org.kazoos.commands.xdg-mime";
 
     /// <inheritdoc />
     public override string Name => "xdg-mime";
@@ -22,7 +22,7 @@ public sealed class XdgMimeApp : AppDefinition
     public override Type EntryPoint => typeof(XdgMimeCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Query and set the user's default applications for file types and URI schemes";

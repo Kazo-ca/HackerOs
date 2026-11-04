@@ -16,8 +16,8 @@ namespace Kazo.Os.Platform.Blazor.Shell;
 /// </summary>
 public partial class AppLauncher : ComponentBase, IDisposable
 {
-    internal const string FileExplorerAppId = "org.hackeros.file-explorer";
-    internal const string SettingsAppId = "org.hackeros.settings";
+    internal const string FileExplorerAppId = "org.kazoos.file-explorer";
+    internal const string SettingsAppId = "org.kazoos.settings";
 
     private ElementReference _searchInputRef;
     private AuthenticatedPrincipal? _principal;

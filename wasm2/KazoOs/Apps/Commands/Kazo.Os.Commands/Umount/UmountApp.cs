@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Umount;
 public sealed class UmountApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.umount";
+    public override string Id => "org.kazoos.commands.umount";
 
     /// <inheritdoc />
     public override string Name => "umount";
@@ -22,7 +22,7 @@ public sealed class UmountApp : AppDefinition
     public override Type EntryPoint => typeof(UmountCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Unmount a network drive";

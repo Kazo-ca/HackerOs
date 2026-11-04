@@ -27,7 +27,7 @@ public sealed class CoreCommandsTests
     [Fact]
     public async Task PwdCommand_writes_working_directory_and_returns_zero()
     {
-        PwdCommand command = new(CreateManifest("pwd", "org.hackeros.cmd.pwd"));
+        PwdCommand command = new(CreateManifest("pwd", "org.kazoos.cmd.pwd"));
         using StringWriter stdout = new();
         using StringWriter stderr = new();
         using StringReader stdin = new(string.Empty);
@@ -48,7 +48,7 @@ public sealed class CoreCommandsTests
     [Fact]
     public async Task EchoCommand_writes_joined_arguments_and_returns_zero()
     {
-        EchoCommand command = new(CreateManifest("echo", "org.hackeros.cmd.echo"));
+        EchoCommand command = new(CreateManifest("echo", "org.kazoos.cmd.echo"));
         using StringWriter stdout = new();
         using StringWriter stderr = new();
         using StringReader stdin = new(string.Empty);
@@ -69,7 +69,7 @@ public sealed class CoreCommandsTests
     [Fact]
     public async Task CdCommand_changes_the_calling_shell_directory()
     {
-        CdCommand command = new(CreateManifest("cd", "org.hackeros.cmd.cd"));
+        CdCommand command = new(CreateManifest("cd", "org.kazoos.cmd.cd"));
         FakeShellSession shell = new(workingDirectory: "/");
         using StringWriter stdout = new();
         using StringWriter stderr = new();
@@ -92,7 +92,7 @@ public sealed class CoreCommandsTests
     [InlineData(new[] { "abc" }, 2, 2, "exit: abc: numeric argument required")]
     public async Task ExitCommand_asks_the_shell_to_exit(string[] arguments, int expectedStatus, int expectedRequest, string error)
     {
-        ExitCommand command = new(CreateManifest("exit", "org.hackeros.commands.exit"));
+        ExitCommand command = new(CreateManifest("exit", "org.kazoos.commands.exit"));
         // A bare `exit` keeps $?: here 6.
         FakeShellSession shell = new() { LastExitStatus = arguments.Length == 0 ? 6 : 0 };
         using StringWriter stdout = new();
@@ -109,7 +109,7 @@ public sealed class CoreCommandsTests
     [Fact]
     public async Task ExitCommand_with_too_many_arguments_keeps_the_shell()
     {
-        ExitCommand command = new(CreateManifest("exit", "org.hackeros.commands.exit"));
+        ExitCommand command = new(CreateManifest("exit", "org.kazoos.commands.exit"));
         FakeShellSession shell = new();
         using StringWriter stdout = new();
         using StringWriter stderr = new();
@@ -125,7 +125,7 @@ public sealed class CoreCommandsTests
     [Fact]
     public async Task CdCommand_without_a_shell_fails()
     {
-        CdCommand command = new(CreateManifest("cd", "org.hackeros.cmd.cd"));
+        CdCommand command = new(CreateManifest("cd", "org.kazoos.cmd.cd"));
         using StringWriter stdout = new();
         using StringWriter stderr = new();
         using StringReader stdin = new(string.Empty);
@@ -139,7 +139,7 @@ public sealed class CoreCommandsTests
     [Fact]
     public async Task DmesgCommand_prints_the_kernel_ring_buffer_with_linux_stamps_levels_and_filters()
     {
-        DmesgCommand command = new(CreateManifest("dmesg", "org.hackeros.cmd.dmesg"));
+        DmesgCommand command = new(CreateManifest("dmesg", "org.kazoos.cmd.dmesg"));
         const string kmsg =
             "6,0,1200000,-;oom-killer: enabled, min-free-percent=5\n"
             + "6,1,12500000,-;oom-kill:constraint=CONSTRAINT_NONE,task=stress,pid=42,uid=1000\n"
@@ -181,7 +181,7 @@ public sealed class CoreCommandsTests
     [Fact]
     public async Task CatCommand_outputs_file_content_or_error_for_missing_file()
     {
-        CatCommand command = new(CreateManifest("cat", "org.hackeros.cmd.cat"));
+        CatCommand command = new(CreateManifest("cat", "org.kazoos.cmd.cat"));
         using StringWriter stdout = new();
         using StringWriter stderr = new();
         using StringReader stdin = new(string.Empty);
@@ -214,7 +214,7 @@ public sealed class CoreCommandsTests
     [Fact]
     public async Task LsCommand_lists_directory_entries_with_sorting_and_flags()
     {
-        LsCommand command = new(CreateManifest("ls", "org.hackeros.cmd.ls"));
+        LsCommand command = new(CreateManifest("ls", "org.kazoos.cmd.ls"));
         using StringWriter stdout = new();
         using StringWriter stderr = new();
         using StringReader stdin = new(string.Empty);
@@ -237,7 +237,7 @@ public sealed class CoreCommandsTests
     public async Task LsCommand_long_listing_shows_the_modification_time_in_the_process_time_zone()
     {
         // ADR 0193: ls -l converts the UTC timestamp to the process's zone (TZ, else the session's).
-        LsCommand command = new(CreateManifest("ls", "org.hackeros.cmd.ls"));
+        LsCommand command = new(CreateManifest("ls", "org.kazoos.cmd.ls"));
         DateTimeOffset modified = new(2026, 10, 29, 14, 5, 0, TimeSpan.Zero);
         using StringWriter stdout = new();
         using StringWriter stderr = new();
@@ -287,7 +287,7 @@ public sealed class CoreCommandsTests
 
     private static async Task<(int Code, string Out, string Err)> RunDateAsync(string[] arguments, string zone)
     {
-        DateCommand command = new(CreateManifest("date", "org.hackeros.commands.date"));
+        DateCommand command = new(CreateManifest("date", "org.kazoos.commands.date"));
         using StringWriter stdout = new();
         using StringWriter stderr = new();
         using StringReader stdin = new(string.Empty);
@@ -306,10 +306,10 @@ public sealed class CoreCommandsTests
         // ADR 0100 section 3: ausearch reads auditd-style records from /var/log/audit.log.
         DateTimeOffset at = new(2026, 10, 17, 8, 30, 0, TimeSpan.Zero);
         string hosts = AuditLineFormat.Format(new AuditRecord(
-            at, 1, "write", "/etc/hosts", null, "root", "alice", 42, "nano", "org.hackeros.commands.nano", true, null));
+            at, 1, "write", "/etc/hosts", null, "root", "alice", 42, "nano", "org.kazoos.commands.nano", true, null));
         string refused = AuditLineFormat.Format(new AuditRecord(
-            at, 2, "create", "/etc/hackeros/apps.config", null, "bob", "bob", 43, "settings", "org.hackeros.settings", false, "PermissionDenied"));
-        AusearchCommand command = new(CreateManifest("ausearch", "org.hackeros.commands.ausearch"));
+            at, 2, "create", "/etc/kazoos/apps.config", null, "bob", "bob", 43, "settings", "org.kazoos.settings", false, "PermissionDenied"));
+        AusearchCommand command = new(CreateManifest("ausearch", "org.kazoos.commands.ausearch"));
         void Seed(TestAppFileSystemGateway fs)
         {
             fs.AddDirectory("/var");
@@ -354,7 +354,7 @@ public sealed class CoreCommandsTests
         TimeZoneInfo? timeZone = null,
         DateTimeOffset? now = null)
     {
-        AppManifest manifest = CreateManifest("cmd", "org.hackeros.cmd.test");
+        AppManifest manifest = CreateManifest("cmd", "org.kazoos.cmd.test");
         LocalUserId userId = LocalUserId.FromGuid(Guid.NewGuid());
 
         TestAppFileSystemGateway fileSystem = new(userId);
@@ -384,7 +384,7 @@ public sealed class CoreCommandsTests
             Id = id,
             Name = name,
             Version = "1.0.0",
-            PublisherId = "pub.hackeros",
+            PublisherId = "pub.kazoos",
             Description = "Command line tool",
             Kind = AppKind.Terminal,
             EntryPoint = new AppEntryPointManifest("Assembly.dll", "Type"),

@@ -8,7 +8,7 @@
     <Nullable>enable</Nullable>
     <PackageId>Kazo.Os.Windowing.Core</PackageId>
     <Description>Headless, renderer-independent window manager engine: applies Kazo.Os.Windowing.Abstractions commands to authoritative window state (focus, z-order, geometry, modality, lifecycle) and emits deterministic events.</Description>
-    <PackageTags>hackeros;windowing;blazor;desktop-shell</PackageTags>
+    <PackageTags>kazoos;windowing;blazor;desktop-shell</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

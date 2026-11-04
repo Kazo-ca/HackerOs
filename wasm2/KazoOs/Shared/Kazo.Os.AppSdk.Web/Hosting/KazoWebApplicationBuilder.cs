@@ -88,7 +88,7 @@ public sealed class KazoWebApplicationBuilder
 
     /// <summary>
     /// Gets the logging settings (ADR 0088 §5): <c>ILogger&lt;T&gt;</c> is always injectable;
-    /// <c>builder.Logging.EnableDebugLog()</c> writes it to <c>/var/log/hackweb/&lt;app id&gt;.log</c>.
+    /// <c>builder.Logging.EnableDebugLog()</c> writes it to <c>/var/log/kazoweb/&lt;app id&gt;.log</c>.
     /// </summary>
     public KazoWebLoggingOptions Logging { get; } = new();
 
@@ -129,7 +129,7 @@ public sealed class KazoWebApplicationBuilder
             if (Logging.DebugLogEnabled)
             {
                 logging.Services.AddSingleton<ILoggerProvider>(provider => new KazoWebDebugLogProvider(
-                    provider.GetService<IHackWebDebugLogSink>()
+                    provider.GetService<IKazoWebDebugLogSink>()
                         ?? (process is null ? new KazoWebDebugLogMemorySink() : new KazoWebDebugLogGatewaySink(process)),
                     provider.GetRequiredService<TimeProvider>()));
             }

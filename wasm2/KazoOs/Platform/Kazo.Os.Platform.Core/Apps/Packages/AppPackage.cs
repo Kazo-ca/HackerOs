@@ -10,7 +10,7 @@ public sealed class AppPackageException : Exception
 {
     /// <summary>Creates the exception.</summary>
     /// <param name="code">Stable reason, e.g. <c>apps.package.hash-mismatch</c>.</param>
-    /// <param name="message">Human-readable reason shown by <c>hackpkg</c>.</param>
+    /// <param name="message">Human-readable reason shown by <c>kazopkg</c>.</param>
     public AppPackageException(string code, string message)
         : base(message) =>
         Code = code;
@@ -20,18 +20,28 @@ public sealed class AppPackageException : Exception
 }
 
 /// <summary>
-/// A verified Kazo OS app package (<c>.hackapp</c>, ADR 0182 §1): a zip archive holding
-/// <c>hackeros-package.json</c>, <c>manifest.json</c>, <c>lib/*.dll</c>, the satellite assemblies
+/// A verified Kazo OS app package (<c>.kazoapp</c>, ADR 0182 §1): a zip archive holding
+/// <c>kazoos-package.json</c>, <c>manifest.json</c>, <c>lib/*.dll</c>, the satellite assemblies
 /// <c>lib/&lt;culture&gt;/&lt;assembly&gt;.resources.dll</c> of those assemblies (ADR 0222) and
 /// <c>wwwroot/...</c>, where every file matches the SHA-256 the package lists.
 /// </summary>
 public sealed class AppPackage
 {
     /// <summary>File extension of a package.</summary>
-    public const string Extension = ".hackapp";
+    public const string Extension = ".kazoapp";
+
+    /// <summary>
+    /// Extension of the packages published before the rename (ADR 0228 §2): still read, never written.
+    /// </summary>
+    public const string LegacyExtension = ".hackapp";
 
     /// <summary>Name of the package description at the archive root.</summary>
-    public const string DescriptionFileName = "hackeros-package.json";
+    public const string DescriptionFileName = "kazoos-package.json";
+
+    /// <summary>
+    /// Name of the description in a package made before the rename (ADR 0228 §2): still read, never written.
+    /// </summary>
+    public const string LegacyDescriptionFileName = "hackeros-package.json";
 
     /// <summary>Name of the app manifest at the archive root.</summary>
     public const string ManifestFileName = "manifest.json";
@@ -125,8 +135,19 @@ public sealed class AppPackage
         && !name.EndsWith('-')
         && !name.Contains("--", StringComparison.Ordinal);
 
+    /// <summary>
+    /// Gets whether a path names a package file: <see cref="Extension"/>, or
+    /// <see cref="LegacyExtension"/> for a package published before the rename (ADR 0228 §2).
+    /// </summary>
+    /// <param name="path">A file name or path, such as <c>1.0.0/org.x.y-1.0.0.kazoapp</c>.</param>
+    public static bool HasPackageExtension(string path) =>
+        path is not null
+        && (path.EndsWith(Extension, StringComparison.Ordinal) || path.EndsWith(LegacyExtension, StringComparison.Ordinal));
+
+    private static bool IsDescriptionFile(string path) => path is DescriptionFileName or LegacyDescriptionFileName;
+
     /// <summary>Reads and verifies a package.</summary>
-    /// <param name="archive">The <c>.hackapp</c> bytes.</param>
+    /// <param name="archive">The <c>.kazoapp</c> bytes.</param>
     /// <exception cref="AppPackageException">The package is malformed, incomplete, or altered.</exception>
     public static AppPackage Read(byte[] archive)
     {
@@ -137,13 +158,15 @@ public sealed class AppPackage
         }
 
         Dictionary<string, byte[]> files = Extract(archive);
-        if (!files.TryGetValue(DescriptionFileName, out byte[]? descriptionBytes))
+        // ADR 0228 §2: a package made before the rename names its description hackeros-package.json.
+        if (!files.TryGetValue(DescriptionFileName, out byte[]? descriptionBytes)
+            && !files.TryGetValue(LegacyDescriptionFileName, out descriptionBytes))
         {
             throw new AppPackageException("apps.package.no-description", $"The package has no {DescriptionFileName}.");
         }
 
         PackageDescription description = ReadDescription(descriptionBytes);
-        foreach (string path in files.Keys.Where(static path => path != DescriptionFileName))
+        foreach (string path in files.Keys.Where(static path => !IsDescriptionFile(path)))
         {
             if (!description.Files.ContainsKey(path))
             {
@@ -196,8 +219,8 @@ public sealed class AppPackage
     /// <summary>
     /// Unzips an archive into memory with the checks every Kazo OS archive gets: safe relative
     /// paths only, at most <paramref name="maximumFiles"/> files and <paramref name="maximumBytes"/>
-    /// bytes once expanded, consistent sizes, no duplicate. Shared by <c>.hackapp</c> and
-    /// <c>.hacktheme</c> (ADR 0213 §1).
+    /// bytes once expanded, consistent sizes, no duplicate. Shared by <c>.kazoapp</c> and
+    /// <c>.kazotheme</c> (ADR 0213 §1).
     /// </summary>
     /// <param name="archive">The zip bytes.</param>
     /// <param name="maximumBytes">Largest total of the expanded files.</param>
@@ -273,7 +296,7 @@ public sealed class AppPackage
             foreach (JsonProperty file in root.GetProperty("files").EnumerateObject())
             {
                 string hash = file.Value.GetString() ?? string.Empty;
-                if (!IsSafeRelativePath(file.Name) || file.Name == DescriptionFileName || hash.Length != 64 || !hash.All(Uri.IsHexDigit))
+                if (!IsSafeRelativePath(file.Name) || IsDescriptionFile(file.Name) || hash.Length != 64 || !hash.All(Uri.IsHexDigit))
                 {
                     throw new AppPackageException("apps.package.bad-description", $"{DescriptionFileName} lists '{file.Name}' with an invalid path or SHA-256.");
                 }
@@ -320,7 +343,7 @@ public sealed class AppPackage
         {
             // ADR 0222 §1: a satellite translates one of the app's own assemblies, never the SDK's
             // (the OS brings those) nor another package's.
-            bool known = path is DescriptionFileName or ManifestFileName
+            bool known = path is DescriptionFileName or LegacyDescriptionFileName or ManifestFileName
                 || (path.StartsWith(LibraryFolder, StringComparison.Ordinal) && path.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) && path.Count(static c => c == '/') == 1)
                 || (TryParseSatellitePath(path, out _, out string translated) && declared.Contains(translated))
                 || path.StartsWith(AssetFolder, StringComparison.Ordinal);

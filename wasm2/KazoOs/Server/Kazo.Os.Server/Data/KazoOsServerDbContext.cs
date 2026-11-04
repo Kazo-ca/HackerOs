@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Kazo.Os.Server.Data;
 
 /// <summary>
-/// Entity Framework Core database context for the optional HackerOs server.
+/// Entity Framework Core database context for the optional Kazo OS server.
 /// Uses SQLite by default; connection string is injected through configuration.
 /// </summary>
 public sealed class KazoOsServerDbContext : DbContext

@@ -8,7 +8,7 @@ using Kazo.Os.Simulation.Abstractions.Diagnostics;
 namespace Kazo.Os.AppSdk.Web.Hosting;
 
 /// <summary>
-/// The process of an ASP.Hack site (ADR 0076 §1): a <see cref="WebServerAppBase"/> that listens on the
+/// The process of an ASP.Kazo site (ADR 0076 §1): a <see cref="WebServerAppBase"/> that listens on the
 /// site's URLs, builds the <see cref="KazoWebApplication"/> from the definition's
 /// <see cref="WebAppDefinition.Configure"/> once the socket is open, and passes every request to it.
 /// </summary>

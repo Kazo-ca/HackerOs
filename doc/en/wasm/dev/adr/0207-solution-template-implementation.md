@@ -118,5 +118,5 @@ by `dotnet new`, and the details of the workflow.
 - [x] `hackeros-solution` template (submodule, profiles, CI, publishing workflow, `store/`).
 - [x] `ide.host.json` and icon of the six templates; `HackerOsAppProject=true` in the app templates.
 - [x] Test of both profiles in `Kazo.Os.Templates.E2E.Tests`.
-- [x] `building-on-hackeros.md` fixed (packages on nuget.org), [`app-repository.md`](../../framework/app-repository.md).
+- [x] `building-on-kazoos.md` fixed (packages on nuget.org), [`app-repository.md`](../../framework/app-repository.md).
 - [ ] Template repository: draft PR, finished after the release that contains this work item; "Template repository" ticked by Benoit.

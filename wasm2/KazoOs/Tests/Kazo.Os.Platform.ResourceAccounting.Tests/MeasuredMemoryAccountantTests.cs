@@ -7,9 +7,9 @@ namespace Kazo.Os.Platform.ResourceAccounting.Tests;
 /// <summary>The four layers of ADR 0068 and the documented constants behind them.</summary>
 public sealed class MeasuredMemoryAccountantTests
 {
-    private const string Editor = "org.hackeros.text-editor";
-    private const string Ls = "org.hackeros.cmd.ls";
-    private const string Cat = "org.hackeros.cmd.cat";
+    private const string Editor = "org.kazoos.text-editor";
+    private const string Ls = "org.kazoos.cmd.ls";
+    private const string Cat = "org.kazoos.cmd.cat";
 
     private static readonly IReadOnlyDictionary<string, AppImage> Images = new Dictionary<string, AppImage>(StringComparer.Ordinal)
     {
@@ -174,7 +174,7 @@ public sealed class MeasuredMemoryAccountantTests
     [Fact]
     public void A_process_that_ran_code_is_measured_even_without_an_image()
     {
-        ProcessRecord shell = MemoryRecords.Process(21, "org.hackeros.shell");
+        ProcessRecord shell = MemoryRecords.Process(21, "org.kazoos.shell");
         _allocations.Run(_probe, 21, 500);
 
         Assert.True(_accountant.TryGetProcessMemory(shell, [shell], out ProcessMemoryUsage usage));
@@ -185,7 +185,7 @@ public sealed class MeasuredMemoryAccountantTests
     [Fact]
     public void Dead_processes_are_forgotten()
     {
-        ProcessRecord shell = MemoryRecords.Process(21, "org.hackeros.shell");
+        ProcessRecord shell = MemoryRecords.Process(21, "org.kazoos.shell");
         _allocations.Run(_probe, 21, 500);
         using KernelMemoryCharge pipe = _kernel.Charge(shell.Pid, KernelMemoryKind.Pipe, 100);
 
@@ -194,6 +194,6 @@ public sealed class MeasuredMemoryAccountantTests
         Assert.False(_allocations.HasRun(shell.Pid));
         Assert.Equal(0, _kernel.GetBytes(shell.Pid));
         Assert.Equal(0, system.MeasuredProcesses);
-        Assert.False(_accountant.TryGetProcessMemory(MemoryRecords.Process(21, "org.hackeros.shell", stopped: true), [], out _));
+        Assert.False(_accountant.TryGetProcessMemory(MemoryRecords.Process(21, "org.kazoos.shell", stopped: true), [], out _));
     }
 }

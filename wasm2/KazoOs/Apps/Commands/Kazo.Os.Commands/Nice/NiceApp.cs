@@ -11,7 +11,7 @@ namespace Kazo.Os.Commands.Nice;
 public sealed class NiceApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.nice";
+    public override string Id => "org.kazoos.commands.nice";
 
     /// <inheritdoc />
     public override string Name => "nice";
@@ -23,7 +23,7 @@ public sealed class NiceApp : AppDefinition
     public override Type EntryPoint => typeof(NiceCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Run a command with modified scheduling priority";

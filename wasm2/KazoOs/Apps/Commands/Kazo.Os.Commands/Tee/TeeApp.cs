@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Tee;
 public sealed class TeeApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.tee";
+    public override string Id => "org.kazoos.commands.tee";
 
     /// <inheritdoc />
     public override string Name => "tee";
@@ -22,7 +22,7 @@ public sealed class TeeApp : AppDefinition
     public override Type EntryPoint => typeof(TeeCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Copy standard input to standard output and to files";

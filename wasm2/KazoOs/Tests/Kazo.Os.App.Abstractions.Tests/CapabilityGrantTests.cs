@@ -74,7 +74,7 @@ public sealed class CapabilityGrantTests
         ];
         CapabilityGrant grant = new(
             CapabilityGrantId.FromGuid(Guid.Parse("d9428888-122b-11e1-b85c-61cd3cbb3210")),
-            "org.hackeros.browser",
+            "org.kazoos.browser",
             "user-1",
             AppCapabilities.FileSystemUserHomeRead,
             7,
@@ -82,7 +82,7 @@ public sealed class CapabilityGrantTests
             constraints);
         constraints[0] = new VirtualPathCapabilityConstraint(VirtualPath.Parse("/"), true);
 
-        Assert.Equal("org.hackeros.browser", grant.AppId);
+        Assert.Equal("org.kazoos.browser", grant.AppId);
         Assert.Equal("user-1", grant.UserId);
         Assert.Equal(7, grant.PolicyRevision);
         Assert.Equal("/home/user", Assert.IsType<VirtualPathCapabilityConstraint>(grant.Constraints[0]).Path.Value);
@@ -105,7 +105,7 @@ public sealed class CapabilityGrantTests
     {
         Assert.Throws<ArgumentException>(() => new CapabilityGrant(
             CapabilityGrantId.FromGuid(Guid.NewGuid()),
-            "org.hackeros.test",
+            "org.kazoos.test",
             "user",
             "filesystem.*",
             1,
@@ -117,7 +117,7 @@ public sealed class CapabilityGrantTests
     {
         Assert.Throws<ArgumentException>(() => new CapabilityGrant(
             CapabilityGrantId.FromGuid(Guid.NewGuid()),
-            "org.hackeros.test",
+            "org.kazoos.test",
             "user",
             AppCapabilities.FileSystemUserHomeRead,
             1,
@@ -138,7 +138,7 @@ public sealed class CapabilityGrantTests
 
     private static CapabilityGrant CreateGrant() => new(
         CapabilityGrantId.FromGuid(Guid.Parse("d9428888-122b-11e1-b85c-61cd3cbb3210")),
-        "org.hackeros.browser",
+        "org.kazoos.browser",
         "user-1",
         AppCapabilities.FileSystemUserHomeRead,
         7,

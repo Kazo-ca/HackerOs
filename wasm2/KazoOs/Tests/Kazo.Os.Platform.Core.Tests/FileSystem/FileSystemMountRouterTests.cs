@@ -14,15 +14,15 @@ public sealed class FileSystemMountRouterTests
         StubProvider apps = new("app-settings");
         FileSystemMountRouter router = new(root,
         [
-            new FileSystemMount(VirtualPath.Parse("/etc/hackeros"), settings),
-            new FileSystemMount(VirtualPath.Parse("/etc/hackeros/apps"), apps)
+            new FileSystemMount(VirtualPath.Parse("/etc/kazoos"), settings),
+            new FileSystemMount(VirtualPath.Parse("/etc/kazoos/apps"), apps)
         ]);
 
         FileSystemMountResolution resolution = router.Resolve(
-            VirtualPath.Parse("/etc/hackeros/apps/editor.json"));
+            VirtualPath.Parse("/etc/kazoos/apps/editor.json"));
 
         Assert.Same(apps, resolution.Mount.Provider);
-        Assert.Equal("/etc/hackeros/apps", resolution.Mount.Path.Value);
+        Assert.Equal("/etc/kazoos/apps", resolution.Mount.Path.Value);
     }
 
     [Fact]
@@ -32,11 +32,11 @@ public sealed class FileSystemMountRouterTests
         StubProvider settings = new("settings");
         FileSystemMountRouter router = new(root,
         [
-            new FileSystemMount(VirtualPath.Parse("/etc/hackeros"), settings)
+            new FileSystemMount(VirtualPath.Parse("/etc/kazoos"), settings)
         ]);
 
         FileSystemMountResolution resolution = router.Resolve(
-            VirtualPath.Parse("/etc/hackeros-backup/file.json"));
+            VirtualPath.Parse("/etc/kazoos-backup/file.json"));
 
         Assert.Same(root, resolution.Mount.Provider);
     }
@@ -61,8 +61,8 @@ public sealed class FileSystemMountRouterTests
 
         Assert.Throws<ArgumentException>(() => new FileSystemMountRouter(root,
         [
-            new FileSystemMount(VirtualPath.Parse("/etc/hackeros"), new StubProvider("one")),
-            new FileSystemMount(VirtualPath.Parse("/etc/hackeros"), new StubProvider("two"))
+            new FileSystemMount(VirtualPath.Parse("/etc/kazoos"), new StubProvider("one")),
+            new FileSystemMount(VirtualPath.Parse("/etc/kazoos"), new StubProvider("two"))
         ]));
     }
 

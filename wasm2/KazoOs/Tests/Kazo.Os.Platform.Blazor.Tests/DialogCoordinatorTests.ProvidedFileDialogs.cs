@@ -25,11 +25,11 @@ public sealed partial class DialogCoordinatorTests
         Assert.Same(request, active.Request);
         Assert.Same(context, active.Context);
 
-        Assert.True(coordinator.CompleteProvided(active.Id, new OpenWithDialogResult(OpenWithDialogStatus.Selected, "org.hackeros.text-editor", AlwaysUse: true)));
+        Assert.True(coordinator.CompleteProvided(active.Id, new OpenWithDialogResult(OpenWithDialogStatus.Selected, "org.kazoos.text-editor", AlwaysUse: true)));
 
         OpenWithDialogResult result = await pending;
         Assert.Equal(OpenWithDialogStatus.Selected, result.Status);
-        Assert.Equal("org.hackeros.text-editor", result.AppId);
+        Assert.Equal("org.kazoos.text-editor", result.AppId);
         Assert.True(result.AlwaysUse);
         Assert.Null(coordinator.ActiveRequest);
     }

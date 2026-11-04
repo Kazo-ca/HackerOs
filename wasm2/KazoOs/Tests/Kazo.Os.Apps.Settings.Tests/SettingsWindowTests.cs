@@ -25,7 +25,7 @@ public sealed class SettingsAppArgumentTests
     [Fact]
     public void The_app_argument_names_the_page_to_show()
     {
-        Assert.Equal("org.hackeros.notepad", SettingsWindow.ReadAppArgument(["--app=org.hackeros.notepad"]));
+        Assert.Equal("org.kazoos.notepad", SettingsWindow.ReadAppArgument(["--app=org.kazoos.notepad"]));
     }
 
     [Fact]

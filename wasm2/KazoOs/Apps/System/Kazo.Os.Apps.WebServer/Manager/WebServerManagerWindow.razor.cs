@@ -15,7 +15,7 @@ namespace Kazo.Os.Apps.WebServer.Manager;
 /// It lists the system sites, the user's sites and the external sites of web apps; it creates a site
 /// from a folder, edits its bindings and default documents, starts and stops it, opens it in the
 /// browser and shows its logs. Every change is a write of a <c>.site</c> file, which
-/// <c>hackwebd</c> applies at once; the service itself is driven like <c>systemctl</c>.
+/// <c>kazowebd</c> applies at once; the service itself is driven like <c>systemctl</c>.
 /// </summary>
 /// <remarks>
 /// Launched with a folder path as first argument (File Explorer's "Publish as a web site…"), it opens
@@ -51,8 +51,8 @@ public partial class WebServerManagerWindow
         get
         {
             IReadOnlyList<WebSiteRow> rows = _snapshot?.Rows ?? [];
-            yield return (L["Group.System"], "/etc/hackweb/sites", [.. rows.Where(static row => row.Declaration?.Scope == KazoWebSiteScope.System)]);
-            yield return (L["Group.User"], "~/.config/hackweb/sites", [.. rows.Where(static row => row.Declaration?.Scope == KazoWebSiteScope.User)]);
+            yield return (L["Group.System"], "/etc/kazoweb/sites", [.. rows.Where(static row => row.Declaration?.Scope == KazoWebSiteScope.System)]);
+            yield return (L["Group.User"], "~/.config/kazoweb/sites", [.. rows.Where(static row => row.Declaration?.Scope == KazoWebSiteScope.User)]);
             yield return (L["Group.External"], L["Group.External.Hint"], [.. rows.Where(static row => row.State == WebSiteState.External)]);
         }
     }
@@ -64,7 +64,7 @@ public partial class WebServerManagerWindow
         _ => L["Daemon.Stopped"]
     };
 
-    private string DaemonTitle => _snapshot?.Daemon?.StartType is { } mode ? L["Daemon.StartType", mode] : "systemctl status hackwebd";
+    private string DaemonTitle => _snapshot?.Daemon?.StartType is { } mode ? L["Daemon.StartType", mode] : "systemctl status kazowebd";
 
     private string DaemonClass => _snapshot?.Daemon?.ProcessId is null ? "wsm-daemon-down" : "wsm-daemon-up";
 
@@ -302,7 +302,7 @@ public partial class WebServerManagerWindow
 
         try
         {
-            await KazoApps.LaunchAsync("org.hackeros.browser", [url], _lifetime.Token);
+            await KazoApps.LaunchAsync("org.kazoos.browser", [url], _lifetime.Token);
         }
         catch (Exception exception) when (exception is KazoAppLaunchException or UnauthorizedAccessException)
         {

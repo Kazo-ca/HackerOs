@@ -19,12 +19,12 @@ namespace Kazo.Os.Platform.Core.Execution;
 /// <para>
 /// Every call requires <c>apps.manage</c>. A <see cref="KazoInstallScope.Machine"/> change then asks
 /// the OS authentication agent (ADR 0055, section 5); once an administrator authenticated, the OS
-/// writes <c>/etc/hackeros/apps.config</c> itself in an audited system context, as
+/// writes <c>/etc/kazoos/apps.config</c> itself in an audited system context, as
 /// <c>pkexec</c> runs the helper as root. The app's own filesystem rights are never widened.
 /// </para>
 /// <para>
 /// A <see cref="KazoInstallScope.User"/> change is written as the session user, in their own
-/// <c>~/.config/hackeros/apps.config</c>.
+/// <c>~/.config/kazoos/apps.config</c>.
 /// </para>
 /// </remarks>
 internal sealed partial class AppManagementGateway : IAppManagementGateway
@@ -52,7 +52,7 @@ internal sealed partial class AppManagementGateway : IAppManagementGateway
     /// <param name="caller">Manifest of the app asking.</param>
     /// <param name="principal">Session user running the app.</param>
     /// <param name="isRootElevated">Whether the app runs as root through <c>sudo</c>.</param>
-    /// <param name="fileSystem">Filesystem engine the OS writes <c>/etc/hackeros/apps.config</c> with.</param>
+    /// <param name="fileSystem">Filesystem engine the OS writes <c>/etc/kazoos/apps.config</c> with.</param>
     /// <param name="clock">Simulation clock.</param>
     /// <param name="language">
     /// Language of the calling process (ADR 0104) for the operation shown in the administrator

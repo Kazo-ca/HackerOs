@@ -134,7 +134,7 @@ public sealed class AppCatalog
     /// ADR 0148 §3.3).
     /// </summary>
     /// <remarks>
-    /// Installed state and the administrator's choice of provider (<c>/etc/hackeros/components.config</c>,
+    /// Installed state and the administrator's choice of provider (<c>/etc/kazoos/components.config</c>,
     /// ADR 0156 §2) are not applied here: the component host applies both when it resolves.
     /// </remarks>
     public IReadOnlyDictionary<string, IReadOnlyList<AppComponentProvider>> ComponentProviders => State.ComponentProviders;

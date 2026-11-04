@@ -16,7 +16,7 @@ namespace Kazo.Os.Apps.Settings;
 /// </summary>
 /// <remarks>
 /// <para>
-/// The choices are the keys of <c>~/.config/hackeros/sound.config</c>, written through
+/// The choices are the keys of <c>~/.config/kazoos/sound.config</c>, written through
 /// <see cref="KazoSettings.OpenSystemAsync(IAppExecutionContext, string, CancellationToken)"/>. The shell's
 /// sound service re-reads the file at once and plays the notification sound of the new choice, so the
 /// user hears it without a "test" button.
@@ -159,7 +159,7 @@ public sealed partial class SoundPanel
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException)
         {
-            ShowError(L["Sound.Error.CannotSave", "~/.config/hackeros/" + DocumentFileName, exception.Message]);
+            ShowError(L["Sound.Error.CannotSave", "~/.config/kazoos/" + DocumentFileName, exception.Message]);
         }
         finally
         {
@@ -237,7 +237,7 @@ public sealed partial class SoundPanel
         _volume = (int)Math.Clamp(_document.Get<long>(VolumeKey), 0, 100);
     }
 
-    /// <summary>An external edit (<c>nano ~/.config/hackeros/sound.config</c>) changed the file.</summary>
+    /// <summary>An external edit (<c>nano ~/.config/kazoos/sound.config</c>) changed the file.</summary>
     private void OnDocumentChanged(object? sender, KazoSettingsChangedEventArgs args) =>
         _ = InvokeAsync(() =>
         {

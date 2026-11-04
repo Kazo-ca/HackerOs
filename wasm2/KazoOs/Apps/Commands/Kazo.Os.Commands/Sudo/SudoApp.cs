@@ -11,7 +11,7 @@ namespace Kazo.Os.Commands.Sudo;
 public sealed class SudoApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.sudo";
+    public override string Id => "org.kazoos.commands.sudo";
 
     /// <inheritdoc />
     public override string Name => "sudo";
@@ -23,7 +23,7 @@ public sealed class SudoApp : AppDefinition
     public override Type EntryPoint => typeof(SudoCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Execute a command as the superuser";

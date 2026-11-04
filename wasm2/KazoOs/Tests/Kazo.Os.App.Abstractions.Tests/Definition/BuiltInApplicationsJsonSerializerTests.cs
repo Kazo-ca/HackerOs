@@ -13,18 +13,18 @@ public sealed class BuiltInApplicationsJsonSerializerTests
     {
         string json = BuiltInApplicationsJsonSerializer.SerializeCanonical(
         [
-            new BuiltInApplication(false, Manifest("org.hackeros.tests.zeta")),
-            new BuiltInApplication(true, Manifest("org.hackeros.tests.alpha"))
+            new BuiltInApplication(false, Manifest("org.kazoos.tests.zeta")),
+            new BuiltInApplication(true, Manifest("org.kazoos.tests.alpha"))
         ]);
 
-        Assert.StartsWith("{\"schemaVersion\":1,\"applications\":[{\"isSystemApp\":true,\"manifest\":{\"schemaVersion\":1,\"id\":\"org.hackeros.tests.alpha\"", json, StringComparison.Ordinal);
+        Assert.StartsWith("{\"schemaVersion\":1,\"applications\":[{\"isSystemApp\":true,\"manifest\":{\"schemaVersion\":1,\"id\":\"org.kazoos.tests.alpha\"", json, StringComparison.Ordinal);
         Assert.EndsWith("}]}\n", json, StringComparison.Ordinal);
 
         IReadOnlyList<BuiltInApplication> read = BuiltInApplicationsJsonSerializer.DeserializeStrict(json);
-        Assert.Equal(["org.hackeros.tests.alpha", "org.hackeros.tests.zeta"], read.Select(item => item.Manifest.Id));
+        Assert.Equal(["org.kazoos.tests.alpha", "org.kazoos.tests.zeta"], read.Select(item => item.Manifest.Id));
         Assert.Equal([true, false], read.Select(item => item.IsSystemApp));
         Assert.Equal(
-            AppManifestJsonSerializer.SerializeCanonical(Manifest("org.hackeros.tests.alpha")),
+            AppManifestJsonSerializer.SerializeCanonical(Manifest("org.kazoos.tests.alpha")),
             AppManifestJsonSerializer.SerializeCanonical(read[0].Manifest));
         Assert.Equal(json, BuiltInApplicationsJsonSerializer.SerializeCanonical(read));
     }
@@ -36,8 +36,8 @@ public sealed class BuiltInApplicationsJsonSerializerTests
         AppImage image = new([new("Zeta.dll", 10, Shared: true), new("App.dll", 2_048, Shared: false)]);
         string json = BuiltInApplicationsJsonSerializer.SerializeCanonical(
         [
-            new BuiltInApplication(false, Manifest("org.hackeros.tests.alpha"), image),
-            new BuiltInApplication(false, Manifest("org.hackeros.tests.beta"))
+            new BuiltInApplication(false, Manifest("org.kazoos.tests.alpha"), image),
+            new BuiltInApplication(false, Manifest("org.kazoos.tests.beta"))
         ]);
 
         Assert.Contains("\"image\":{\"assemblies\":[{\"name\":\"App.dll\",\"bytes\":2048,\"shared\":false},{\"name\":\"Zeta.dll\",\"bytes\":10,\"shared\":true}]}", json, StringComparison.Ordinal);
@@ -57,7 +57,7 @@ public sealed class BuiltInApplicationsJsonSerializerTests
     [InlineData("""{"files":[]}""")]
     public void A_malformed_image_is_rejected(string image)
     {
-        string valid = BuiltInApplicationsJsonSerializer.SerializeCanonical([new BuiltInApplication(false, Manifest("org.hackeros.tests.alpha"))]);
+        string valid = BuiltInApplicationsJsonSerializer.SerializeCanonical([new BuiltInApplication(false, Manifest("org.kazoos.tests.alpha"))]);
         string json = valid.Replace("}}]}", "}," + "\"image\":" + image + "}]}", StringComparison.Ordinal);
 
         Assert.Throws<JsonException>(() => BuiltInApplicationsJsonSerializer.DeserializeStrict(json));
@@ -70,8 +70,8 @@ public sealed class BuiltInApplicationsJsonSerializerTests
         Dictionary<string, AppManifestText> localized = new() { ["fr"] = new("Calculatrice", "Calculatrice de bureau") };
         string json = BuiltInApplicationsJsonSerializer.SerializeCanonical(
         [
-            new BuiltInApplication(true, Manifest("org.hackeros.tests.alpha"), Localized: localized),
-            new BuiltInApplication(true, Manifest("org.hackeros.tests.beta"))
+            new BuiltInApplication(true, Manifest("org.kazoos.tests.alpha"), Localized: localized),
+            new BuiltInApplication(true, Manifest("org.kazoos.tests.beta"))
         ]);
 
         Assert.Contains("\"localized\":{\"fr\":{\"name\":\"Calculatrice\",\"description\":\"Calculatrice de bureau\"}}", json, StringComparison.Ordinal);
@@ -91,7 +91,7 @@ public sealed class BuiltInApplicationsJsonSerializerTests
     [Fact]
     public void Omitted_manifest_collections_are_normalized()
     {
-        const string json = """{"schemaVersion":1,"applications":[{"isSystemApp":false,"manifest":{"schemaVersion":1,"id":"org.hackeros.tests.a","name":"a","version":"1.0.0","publisherId":"pub.local","description":"a","kind":"window","entryPoint":{"assembly":"A.dll","type":"A.W"},"sdkCompatibility":{"minimumVersion":"1.0.0"},"presentation":{"category":"utilities","launchVisibility":"visible","iconAssetPaths":[]},"resources":{"baselineCpuWeight":0,"burstCpuWeight":0,"baselineMemoryWeight":0,"burstMemoryWeight":0,"baselineStorageIoWeight":0,"burstStorageIoWeight":0,"baselineNetworkIoWeight":0,"burstNetworkIoWeight":0}}}]}""";
+        const string json = """{"schemaVersion":1,"applications":[{"isSystemApp":false,"manifest":{"schemaVersion":1,"id":"org.kazoos.tests.a","name":"a","version":"1.0.0","publisherId":"pub.local","description":"a","kind":"window","entryPoint":{"assembly":"A.dll","type":"A.W"},"sdkCompatibility":{"minimumVersion":"1.0.0"},"presentation":{"category":"utilities","launchVisibility":"visible","iconAssetPaths":[]},"resources":{"baselineCpuWeight":0,"burstCpuWeight":0,"baselineMemoryWeight":0,"burstMemoryWeight":0,"baselineStorageIoWeight":0,"burstStorageIoWeight":0,"baselineNetworkIoWeight":0,"burstNetworkIoWeight":0}}}]}""";
 
         AppManifest manifest = Assert.Single(BuiltInApplicationsJsonSerializer.DeserializeStrict(json)).Manifest;
 

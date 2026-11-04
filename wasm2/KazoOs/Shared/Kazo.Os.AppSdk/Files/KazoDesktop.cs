@@ -109,7 +109,7 @@ public static class KazoDesktopItems
     /// The intent the shell sends to the running desktop app for "Send to ▸ Desktop" (ADR 0160 §6), with
     /// <c>{"appId":"…"}</c>: the desktop writes a shortcut to that app in <c>~/Desktop</c>.
     /// </summary>
-    public const string CreateShortcutIntent = "org.hackeros.desktop.create-shortcut.v1";
+    public const string CreateShortcutIntent = "org.kazoos.desktop.create-shortcut.v1";
 }
 
 /// <summary>One item to order for the desktop (<see cref="KazoDesktopLayout.Order"/>).</summary>

@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Seq;
 public sealed class SeqApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.seq";
+    public override string Id => "org.kazoos.commands.seq";
 
     /// <inheritdoc />
     public override string Name => "seq";
@@ -22,7 +22,7 @@ public sealed class SeqApp : AppDefinition
     public override Type EntryPoint => typeof(SeqCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Print a sequence of numbers";

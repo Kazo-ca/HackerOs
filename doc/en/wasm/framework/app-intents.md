@@ -16,11 +16,11 @@ an app always gave `intent.unknown`. The work item adds:
 
 | Intent | Identifier | What the OS does |
 |---|---|---|
-| `RevealFileIntent(Path)` | `org.hackeros.intent.reveal-file.v1` | Launches the folder handler (`inode/directory`) on the parent folder with `--select=<path>`; the explorer selects the item and scrolls to it. This is `org.freedesktop.FileManager1.ShowItems` reduced to one argument. |
-| `EditFileIntent(Path, MediaType, PreferredAppId)` | `org.hackeros.intent.edit-file.v1` | Chooses among the apps whose handler declares the `edit` action; with none, falls back to `open` (like `xdg-open`, which has no "edit" verb) and reports it (`FellBackToOpen`). |
-| `OpenUriIntent(Uri, PreferredAppId)` | `org.hackeros.intent.open-uri.v1` | `file://` becomes an `OpenFileIntent`; any other scheme resolves like the media type `x-scheme-handler/<scheme>`, and the app receives the URI as an argument. |
-| `ShowAppSettingsIntent(TargetAppId)` | `org.hackeros.intent.show-app-settings.v1` | The target app with `--show-settings` if it declares this intent (it has its own page), otherwise Settings on the app's card (`--app=<id>`). |
-| `CustomIntent(IntentId, PayloadJson, TargetAppId, RememberChoice)` | free identifier `reversed.domain.name.vN` | Launches or activates the app that declares the identifier in `Intents`; several: the user chooses in the "Open with" picker, with "Always use this app" remembered in `~/.config/hackeros/intents.config`. |
+| `RevealFileIntent(Path)` | `org.kazoos.intent.reveal-file.v1` | Launches the folder handler (`inode/directory`) on the parent folder with `--select=<path>`; the explorer selects the item and scrolls to it. This is `org.freedesktop.FileManager1.ShowItems` reduced to one argument. |
+| `EditFileIntent(Path, MediaType, PreferredAppId)` | `org.kazoos.intent.edit-file.v1` | Chooses among the apps whose handler declares the `edit` action; with none, falls back to `open` (like `xdg-open`, which has no "edit" verb) and reports it (`FellBackToOpen`). |
+| `OpenUriIntent(Uri, PreferredAppId)` | `org.kazoos.intent.open-uri.v1` | `file://` becomes an `OpenFileIntent`; any other scheme resolves like the media type `x-scheme-handler/<scheme>`, and the app receives the URI as an argument. |
+| `ShowAppSettingsIntent(TargetAppId)` | `org.kazoos.intent.show-app-settings.v1` | The target app with `--show-settings` if it declares this intent (it has its own page), otherwise Settings on the app's card (`--app=<id>`). |
+| `CustomIntent(IntentId, PayloadJson, TargetAppId, RememberChoice)` | free identifier `reversed.domain.name.vN` | Launches or activates the app that declares the identifier in `Intents`; several: the user chooses in the "Open with" picker, with "Always use this app" remembered in `~/.config/kazoos/intents.config`. |
 
 And the command `xdg-open <file|folder|URI>`.
 
@@ -28,10 +28,10 @@ And the command `xdg-open <file|folder|URI>`.
 
 ```text
 App ──KazoApps.*Async──► IAppIntentGateway ──► AppIntentDispatcher ──► FileAssociationResolver
- │                       (AppIntentGateway,      (capacités, accès,       (/etc/hackeros/
+ │                       (AppIntentGateway,      (capacités, accès,       (/etc/kazoos/
  │                        ou RemoteIntentGateway  erreurs intent.*)        file-associations.json,
  │                        dans un Web Worker)            │                 FileHandlers des manifestes ;
- │                                                       │                 ~/.config/hackeros d'abord,
+ │                                                       │                 ~/.config/kazoos d'abord,
  │                                                       │                 ADR 0121)
  │                                                       ▼
  └◄── AppContext.Intent / IntentReceived ◄── AppLifecycleOrchestrator.LaunchAsync(AppLaunchRequest.Intent)
@@ -164,8 +164,8 @@ give 4 and the list of candidates.
   which an untyped send would bypass.
 - **The default choice for a scheme lives in `file-associations.json`**, like
   that of a file type: the user's
-  (`~/.config/hackeros/file-associations.json`) takes precedence over the machine's
-  (`/etc/hackeros/file-associations.json`) since work item `v3/4b`
+  (`~/.config/kazoos/file-associations.json`) takes precedence over the machine's
+  (`/etc/kazoos/file-associations.json`) since work item `v3/4b`
   ([ADR 0121](../dev/adr/0121-user-file-associations.md),
   [`user-file-associations.md`](../dev/user-file-associations.md)).
 - **A terminal has no picker**: `xdg-open` with several apps and

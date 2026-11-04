@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Sort;
 public sealed class SortApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.sort";
+    public override string Id => "org.kazoos.commands.sort";
 
     /// <inheritdoc />
     public override string Name => "sort";
@@ -22,7 +22,7 @@ public sealed class SortApp : AppDefinition
     public override Type EntryPoint => typeof(SortCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Sort lines of text files";

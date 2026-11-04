@@ -5,7 +5,7 @@
   <PropertyGroup>
     <PackageId>Kazo.Os.Apps.Browser</PackageId>
     <Description>The base Kazo OS web browser app, to include in an OS host (ProjectReference or PackageReference, optionally IsSystemApp).</Description>
-    <PackageTags>hackeros;app</PackageTags>
+    <PackageTags>kazoos;app</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -30,7 +30,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Shared\Kazo.Os.App.Abstractions\Kazo.Os.App.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Shared\Kazo.Os.AppSdk.Blazor\Kazo.Os.AppSdk.Blazor.csproj" />
-    <!-- ADR 0084: Blazor sites drawn in the page area (KazoWebSiteView, IHackWebSiteHost). -->
+    <!-- ADR 0084: Blazor sites drawn in the page area (KazoWebSiteView, IKazoWebSiteHost). -->
     <ProjectReference Include="..\..\..\Shared\Kazo.Os.AppSdk.Web.Blazor\Kazo.Os.AppSdk.Web.Blazor.csproj" />
   </ItemGroup>
 

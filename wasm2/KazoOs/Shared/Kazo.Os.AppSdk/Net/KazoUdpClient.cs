@@ -27,10 +27,10 @@ public readonly record struct KazoUdpReceiveResult(byte[] Buffer, IPEndPoint Rem
 /// </remarks>
 public sealed class KazoUdpClient : IDisposable, IAsyncDisposable
 {
-    private readonly IHackSocket _socket;
+    private readonly IKazoSocket _socket;
     private bool _disposed;
 
-    private KazoUdpClient(IHackSocket socket) => _socket = socket;
+    private KazoUdpClient(IKazoSocket socket) => _socket = socket;
 
     /// <summary>Gets the connected destination.</summary>
     public IPEndPoint RemoteEndPoint => _socket.RemoteEndPoint;
@@ -49,7 +49,7 @@ public sealed class KazoUdpClient : IDisposable, IAsyncDisposable
         ArgumentOutOfRangeException.ThrowIfLessThan(port, 1);
         ArgumentOutOfRangeException.ThrowIfGreaterThan(port, 65535);
 
-        KazoNetworkResult<IHackSocket> result = await KazoNetworkErrorTranslator
+        KazoNetworkResult<IKazoSocket> result = await KazoNetworkErrorTranslator
             .CallAsync(gateway => gateway.ConnectUdpAsync(hostNameOrAddress, port, cancellationToken))
             .ConfigureAwait(false);
         return new KazoUdpClient(KazoNetworkErrorTranslator.UnwrapSocket(result));

@@ -9,7 +9,7 @@
       reports here, at build, any reflection the trimmer could not follow.
     -->
     <IsTrimmable>true</IsTrimmable>
-    <!-- A Kazo OS app; also read by the Debug profile of a hackeros-solution repository (ADR 0207). -->
+    <!-- A Kazo OS app; also read by the Debug profile of a kazoos-solution repository (ADR 0207). -->
     <KazoOsAppProject>true</KazoOsAppProject>
     <!-- One version for every Kazo OS package (ADR 0098 §1). -->
     <KazoOsVersion>0.0.0-dev</KazoOsVersion>
@@ -19,7 +19,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.14" />
     <PackageReference Include="Kazo.Os.AppSdk.Web" Version="$(KazoOsVersion)" />
     <!--
-      Generates manifest.json, the route table and the site's entry point (ASP.Hack route generator),
+      Generates manifest.json, the route table and the site's entry point (ASP.Kazo route generator),
       and embeds wwwroot/ in the assembly (served by UseStaticFiles).
     -->
     <PackageReference Include="Kazo.Os.App.Build" Version="$(KazoOsVersion)" PrivateAssets="all" />

@@ -10,8 +10,8 @@ public sealed class LauncherAppProjectionTests
     [Fact]
     public void Create_derives_dynamic_categories_and_sorts_all_programs_by_name()
     {
-        AppManifest terminal = CreateManifest("org.hackeros.terminal", "Terminal", "system");
-        AppManifest files = CreateManifest("org.hackeros.files", "File Explorer", "utilities");
+        AppManifest terminal = CreateManifest("org.kazoos.terminal", "Terminal", "system");
+        AppManifest files = CreateManifest("org.kazoos.files", "File Explorer", "utilities");
 
         LauncherAppProjectionResult result = LauncherAppProjection.Create(
             [terminal, files],
@@ -25,8 +25,8 @@ public sealed class LauncherAppProjectionTests
     [Fact]
     public void Create_filters_by_the_manifest_presentation_category()
     {
-        AppManifest terminal = CreateManifest("org.hackeros.terminal", "Terminal", "system");
-        AppManifest files = CreateManifest("org.hackeros.files", "File Explorer", "utilities");
+        AppManifest terminal = CreateManifest("org.kazoos.terminal", "Terminal", "system");
+        AppManifest files = CreateManifest("org.kazoos.files", "File Explorer", "utilities");
 
         LauncherAppProjectionResult result = LauncherAppProjection.Create(
             [terminal, files],
@@ -41,17 +41,17 @@ public sealed class LauncherAppProjectionTests
     [Fact]
     public void Create_excludes_hidden_disabled_non_window_and_non_desktop_apps()
     {
-        AppManifest eligible = CreateManifest("org.hackeros.eligible", "Eligible", "system");
-        AppManifest hidden = CreateManifest("org.hackeros.hidden", "Hidden", "system") with
+        AppManifest eligible = CreateManifest("org.kazoos.eligible", "Eligible", "system");
+        AppManifest hidden = CreateManifest("org.kazoos.hidden", "Hidden", "system") with
         {
             Presentation = new PresentationManifest("system", AppLaunchVisibility.Hidden, [])
         };
-        AppManifest disabled = CreateManifest("org.hackeros.disabled", "Disabled", "system");
-        AppManifest terminal = CreateManifest("org.hackeros.command", "Command", "system") with
+        AppManifest disabled = CreateManifest("org.kazoos.disabled", "Disabled", "system");
+        AppManifest terminal = CreateManifest("org.kazoos.command", "Command", "system") with
         {
             Kind = AppKind.Terminal
         };
-        AppManifest mobile = CreateMobileManifest("org.hackeros.mobile", "Mobile only", "system");
+        AppManifest mobile = CreateMobileManifest("org.kazoos.mobile", "Mobile only", "system");
 
         LauncherAppProjectionResult result = LauncherAppProjection.Create(
             [eligible, hidden, disabled, terminal, mobile],
@@ -63,19 +63,19 @@ public sealed class LauncherAppProjectionTests
     }
 
     [Theory]
-    [InlineData("canvas", "org.hackeros.paint")]
-    [InlineData("raster", "org.hackeros.paint")]
-    [InlineData("hackeros.paint", "org.hackeros.paint")]
-    [InlineData("graphics", "org.hackeros.paint")]
+    [InlineData("canvas", "org.kazoos.paint")]
+    [InlineData("raster", "org.kazoos.paint")]
+    [InlineData("kazoos.paint", "org.kazoos.paint")]
+    [InlineData("graphics", "org.kazoos.paint")]
     public void Create_searches_name_description_id_and_category_globally(string query, string expectedAppId)
     {
         AppManifest paint = CreateManifest(
-            "org.hackeros.paint",
+            "org.kazoos.paint",
             "Canvas",
             "graphics",
             "A raster image editor.");
         AppManifest settings = CreateManifest(
-            "org.hackeros.settings",
+            "org.kazoos.settings",
             "Settings",
             "system",
             "Configure Kazo OS.");
@@ -94,15 +94,15 @@ public sealed class LauncherAppProjectionTests
     [Fact]
     public void Create_preserves_persisted_pin_order_while_masking_unavailable_ids()
     {
-        AppManifest alpha = CreateManifest("org.hackeros.alpha", "Alpha", "utilities");
-        AppManifest beta = CreateManifest("org.hackeros.beta", "Beta", "utilities");
-        AppManifest disabled = CreateManifest("org.hackeros.disabled", "Disabled", "utilities");
-        AppManifest mobile = CreateMobileManifest("org.hackeros.mobile", "Mobile", "utilities");
+        AppManifest alpha = CreateManifest("org.kazoos.alpha", "Alpha", "utilities");
+        AppManifest beta = CreateManifest("org.kazoos.beta", "Beta", "utilities");
+        AppManifest disabled = CreateManifest("org.kazoos.disabled", "Disabled", "utilities");
+        AppManifest mobile = CreateMobileManifest("org.kazoos.mobile", "Mobile", "utilities");
 
         LauncherAppProjectionResult result = LauncherAppProjection.Create(
             [alpha, beta, disabled, mobile],
             new TestEnablementRegistry(disabled.Id),
-            ["org.hackeros.missing", beta.Id, disabled.Id, mobile.Id, alpha.Id, beta.Id]);
+            ["org.kazoos.missing", beta.Id, disabled.Id, mobile.Id, alpha.Id, beta.Id]);
 
         Assert.Equal([beta.Id, alpha.Id], result.PinnedApps.Select(app => app.Id));
     }
@@ -116,7 +116,7 @@ public sealed class LauncherAppProjectionTests
         Id = id,
         Name = name,
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = description,
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.TestApp", "Kazo.Os.TestApp.TestWindow"),

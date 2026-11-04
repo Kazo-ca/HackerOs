@@ -6,8 +6,8 @@ namespace Kazo.Os.Platform.Core.Appearance;
 
 /// <summary>
 /// Defines the layered appearance document (ADR 0044 section 8):
-/// <c>/etc/hackeros/appearance.config</c> holds the machine default, and each user overrides it in
-/// <c>~/.config/hackeros/appearance.config</c>. Desktop and mobile themes are kept separately so
+/// <c>/etc/kazoos/appearance.config</c> holds the machine default, and each user overrides it in
+/// <c>~/.config/kazoos/appearance.config</c>. Desktop and mobile themes are kept separately so
 /// changing form factor does not discard either selection.
 /// </summary>
 public static class AppearanceSettingsDocuments
@@ -53,8 +53,8 @@ public static class AppearanceSettingsDocuments
         schemaVersion: 2,
         fields:
         [
-            // Theme ids are open strings since ADR 0103: a user theme of /etc/hackeros/themes or
-            // ~/.config/hackeros/themes may be selected by its id. The shell resolves an id that
+            // Theme ids are open strings since ADR 0103: a user theme of /etc/kazoos/themes or
+            // ~/.config/kazoos/themes may be selected by its id. The shell resolves an id that
             // names no theme (or a theme of the other form factor) to the default theme
             // (ResolvedTheme.Resolve), as a desktop does with a deleted theme.
             new SettingFieldDeclaration(

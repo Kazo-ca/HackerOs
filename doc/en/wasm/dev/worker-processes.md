@@ -22,7 +22,7 @@ runtime:
 
 - an infinite loop (`stress`) no longer freezes the desktop; `echo` answers in
   ~300 ms while it runs;
-- the task manager, `ps` and `/proc/hackeros/workers` show "Not responding"
+- the task manager, `ps` and `/proc/kazoos/workers` show "Not responding"
   **during** the blockage;
 - `kill -9` (and `kill` after the grace period) terminates the blocked worker
   and replaces it right away;
@@ -41,13 +41,13 @@ switched off by default, is the only one to start a `start` process with `k = 3`
 The 74 commands of `Kazo.Os.Commands`: 56 in `pool`, 18 in `mainThread`
 with the reason in a comment in their definition (`cd`, `exit`, `export`,
 `unset`, `jobs`, `read`, `help`, `which`, `kill` drive the shell; `sudo`
-asks the authentication agent for a password; `passwd` reads the terminal without echo; `hackbackup` opens
+asks the authentication agent for a password; `passwd` reads the terminal without echo; `kazobackup` opens
 the browser's file picker, which requires the user's gesture; `nano`, `top`, `htop`,
 `watch` use the terminal's alternate screen; `nice` launches its command
 through the calling shell (`RunNicedAsync`) and `renice` changes a priority,
 which no worker gateway offers, ADR 0127); the first 16 reasons were
 reviewed by `exec/1-remote-gateways` and still hold (ADR 0138 §9). The sample
-service and `hackwebd` run in a dedicated worker since `KazoEvents`
+service and `kazowebd` run in a dedicated worker since `KazoEvents`
 and `Watch` cross the boundary (ADR 0124).
 
 All three hosts have workers: `test/test` runs the Ecosystem's `Program.cs` on
@@ -76,7 +76,7 @@ workers, was removed). A host composed without `IWebWorkerRuntime` writes to
 |---|---|
 | `Shared/Kazo.Os.App.Abstractions` | `AppExecutionHost`, `AppExecutionHosts` (`DefaultFor`, `Resolve`, `Of`, `IsWorker`), `AppManifestAttribute.Execution`, `AppManifest.Execution`. |
 | `Shared/Kazo.Os.Simulation.Abstractions/Workers` | `IWebWorkerRuntime`, `IWebWorker`, `WebWorkerStartOptions`; `IWorkerPoolStatus`, `WorkerSnapshot`, `WorkerRole`, `WorkerState`. |
-| `Platform/Kazo.Os.Platform.Core` | `IRemoteProcessHost`, `RemoteProcessLaunch`, `RemoteProcessExit`, `IRemoteService`, `ExecutionPlacement` (pipeline group), `SystemStartupSignal`; `AppLifecycleOrchestrator` launches remotely what `ShouldRunRemotely` accepts; `/proc/hackeros/workers`. |
+| `Platform/Kazo.Os.Platform.Core` | `IRemoteProcessHost`, `RemoteProcessLaunch`, `RemoteProcessExit`, `IRemoteService`, `ExecutionPlacement` (pipeline group), `SystemStartupSignal`; `AppLifecycleOrchestrator` launches remotely what `ShouldRunRemotely` accepts; `/proc/kazoos/workers`. |
 | `Platform/Kazo.Os.Platform.WorkerHost` | **Protocol**: `WorkerMessages`, `WireCodec` (explicit encoding, no reflection), `RemoteErrors`, `RemoteOps`. **Worker side**: `WorkerProcessHost`, `RemoteAppExecutionContext`, remote gateways (`RemoteGateways`, `RemoteFileSystemGateway`, `RemoteStandardStreams`), `WorkerCpuMeter`, `WorkerAssemblyLoader`, `BrowserWorkerEntryPoint`. **OS side**: `WorkerPool`, `WorkerConnection`, `RemoteProcessSession`, `WorkerRemoteProcessHost`, `WorkerAwareCpuTimeAccountant`, `WorkerAwareMemoryAccountant`, `AddKazoOsWorkerProcesses`. **Tests**: `LoopbackWebWorkerRuntime`. |
 | `Infrastructure/Kazo.Os.Infrastructure.Browser` | `wwwroot/workerHost.js` (creation, `postMessage`, `terminate`, `hardwareConcurrency`, `requestIdleCallback`), `wwwroot/workerBootstrap.js` (the worker's .NET runtime), `Workers/BrowserWebWorkerRuntime`. No host references them: they are imported by the C# (`_content/Kazo.Os.Infrastructure.Browser/…`). |
 | `OS/Kazo.Os.Ecosystem.Host` | `AddKazoOsBrowserHost` (called by the Ecosystem's `Program.cs`) registers `BrowserWebWorkerRuntime` and the workers **in the browser only** (`OperatingSystem.IsBrowser()`), preloading `Kazo.Os.Commands.dll` and with `KnownAssemblies` = the catalog's lazy assemblies (ADR 0124 §4); `EcosystemBootCoordinator.MarkSystemStarted` gives the end-of-boot signal. |
@@ -87,7 +87,7 @@ workers, was removed). A host composed without `IWebWorkerRuntime` writes to
 `workerBootstrap.js` sets `globalThis.dotnetSidecar = true` before importing
 `dotnet.js` (otherwise the runtime takes itself for a `pthread` thread and waits
 indefinitely), creates the runtime (~0.7 s), wires the
-`hackeros-worker.post` import and calls `BrowserWorkerEntryPoint.Start`. The
+`kazoos-worker.post` import and calls `BrowserWorkerEntryPoint.Start`. The
 worker then loads the requested assemblies (`INTERNAL.loadLazyAssembly`),
 answers `hello` and starts its heartbeat.
 
@@ -236,7 +236,7 @@ never shrinks (ADR 0142 §5, [`oom-killer.md`](oom-killer.md)).
   its caller (at most 1 s for an abandoned session, at most 3 s for the killed
   command), the way a pipe's data stays readable after a `SIGKILL`.
 
-### `/proc/hackeros/workers`
+### `/proc/kazoos/workers`
 
 Present only when the host has workers. The first lines say whether the page is
 isolated (ADR 0131 §5, ADR 0143 §8), then comes the pool:
@@ -278,14 +278,14 @@ When the page is isolated (`crossOriginIsolated`), workers gain:
   the main thread never waits;
 - **memory measured by the browser**: `IWebWorkerMemoryMeter`, every
   20 s (`WorkerPoolOptions.MemoryMeasurePeriod`), attributed through
-  `?hackeros-worker=N` in the worker's URL, valid for three periods;
+  `?kazoos-worker=N` in the worker's URL, valid for three periods;
 - **5 µs timers** (`performance.now()`), with no code to wire.
 
 Without isolation, everything stays as before: messages only, synchronous
 members refused with the same message, memory from the heartbeat.
 
 Who sets the headers: the Ecosystem's service worker (according to
-`HackerOs:CrossOriginIsolation` in `appsettings.json`, fallback `require-corp`
+`KazoOs:CrossOriginIsolation` in `appsettings.json`, fallback `require-corp`
 with a single reload), the middleware of `test/test` and
 `Kazo.Os.Server`. The Ecosystem served on `localhost` or `127.0.0.1` has no
 service worker, hence no isolation (ADR 0143 §3): try it on
@@ -299,7 +299,7 @@ Headless Chromium 140, Release publication of the Ecosystem served on
 
 | Surface | Check | Result |
 |---|---|---|
-| HTML rendering of the simulated browser and ASP.Hack sites | UI E2E suite under isolation: `BrowserHtmlRenderingTests`, `BrowserBlazorSiteTests`, `BrowserIntranetTests`, `BrowserHomePageTests`, `BrowserSiteDataTests`; `srcdoc` iframes inherit the page's COEP | passes |
+| HTML rendering of the simulated browser and ASP.Kazo sites | UI E2E suite under isolation: `BrowserHtmlRenderingTests`, `BrowserBlazorSiteTests`, `BrowserIntranetTests`, `BrowserHomePageTests`, `BrowserSiteDataTests`; `srcdoc` iframes inherit the page's COEP | passes |
 | Detached windows (`window.open`) | `BrowserDetachedWindowTests` under isolation: the window is same-origin, COOP `same-origin` keeps the link | passes |
 | Fallback to the real network, external images | image and `no-cors` `fetch` from another origin without CORP: loaded with `credentialless` | passes (blocked only in `require-corp`, ADR 0143 question 3) |
 | Monaco (CodeEditor), xterm.js (Terminal) | new file, typing in Monaco; commands in the terminal | passes, no console error |
@@ -366,13 +366,13 @@ its descriptor is returned as soon as this answer arrives (ADR 0139 §3).
 
 - `Tests/Kazo.Os.Platform.WorkerHost.Tests` (full OS without an interface,
   workers in local loopback):
-  - `CommandParityTests`: **the 74 built-in commands** (`nslookup`, `ausearch`, `xdg-open`, `xdg-mime`, `passwd`, `hackbackup`, `dmesg`, `nice`, `renice` and `prlimit` included) run in both
+  - `CommandParityTests`: **the 74 built-in commands** (`nslookup`, `ausearch`, `xdg-open`, `xdg-mime`, `passwd`, `kazobackup`, `dmesg`, `nice`, `renice` and `prlimit` included) run in both
     modes (main thread, worker) with the same output, the same code and the
-    same file tree (`HACKEROS_PARITY_DUMP` to inspect);
+    same file tree (`KAZOOS_PARITY_DUMP` to inspect);
   - `WorkerPoolTests`: start before / after the end of boot, ready worker
     taken and replaced, overflow and return to size, ceiling and syslog,
     pipeline on a single worker, command that loops as soon as it is launched,
-    `/proc/hackeros/workers`;
+    `/proc/kazoos/workers`;
   - `EscalationTests`: `kill -9` of a loop (neighbors killed, syslog, core
     replaced), "Not responding" during the blockage, `SIGTERM` then
     escalation, step 3 without terminating the worker, Ctrl+C, error in a
@@ -387,7 +387,7 @@ its descriptor is returned as soon as this answer arrives (ADR 0139 §3).
   validator, the serializer and the schema.
 - `Tests/Kazo.Os.HostSmoke.Tests` (`build/verify-hosts.sh`): on the three
   hosts (the server serves the same OS since ADR 0130), pipeline,
-  `/proc/hackeros/workers`, `echo` during `stress`, "not-responding",
+  `/proc/kazoos/workers`, `echo` during `stress`, "not-responding",
   `kill -9` and `kill`.
 
 ## Task list for work item `rebuild/5-worker-processes`
@@ -399,7 +399,7 @@ its descriptor is returned as soon as this answer arrives (ADR 0139 §3).
 - [x] Pool per virtual core, pipeline placement, dedicated workers.
 - [x] Worker always ready after boot, overflow, return to size, ceiling and syslog (ADR 0071).
 - [x] Heartbeat, CPU and memory measurements, "Not responding", step 4 of the escalation.
-- [x] `/proc/hackeros/workers` and "Workers" section of the task manager.
+- [x] `/proc/kazoos/workers` and "Workers" section of the task manager.
 - [x] Commands: declared or default host; sample service in `MainThread` (reason in a comment), in a dedicated worker since `exec/1-remote-gateways`.
 - [x] Server: information line; `test/test` like the Ecosystem.
 - [x] Parity tests of the 63 commands, pool and escalation tests.
@@ -413,7 +413,7 @@ its descriptor is returned as soon as this answer arrives (ADR 0139 §3).
 - [x] Operations `ev.*`, `watch.open` and `ev` message; credit of 256 messages.
 - [x] Built-in codecs and `KazoWireContextAttribute` (SDK 1.2; moved to `PublicAPI.Shipped.txt` by `exec/10-final`, ADR 0132 §2).
 - [x] Unsubscribe at the end, at `kill` and at the worker's death.
-- [x] Sample service and `hackwebd` in a dedicated worker; review of the 16 `mainThread` commands.
+- [x] Sample service and `kazowebd` in a dedicated worker; review of the 16 `mainThread` commands.
 - [x] `KnownAssemblies`, refusal with code 127; `sample-cmd` in the Ecosystem and the hosts test.
 - [x] Parity tests (`RemoteEventsTests`, `WireTopicMessageBusTests`).
 - [x] Documentation, ADR 0138, index.
@@ -433,13 +433,13 @@ its descriptor is returned as soon as this answer arrives (ADR 0139 §3).
 
 ## Task list for work item `exec/9-cross-origin-isolation` (ADR 0131, ADR 0143)
 
-- [x] Setting `HackerOs:CrossOriginIsolation`, audit constant and copy in the service worker.
+- [x] Setting `KazoOs:CrossOriginIsolation`, audit constant and copy in the service worker.
 - [x] Headers: the Ecosystem's service worker (fallback `require-corp`), middleware of `test/test` and `Kazo.Os.Server`.
 - [x] Page probe (`crossOriginIsolation.js`), reasons, `syslog` line.
 - [x] Shared rings (`sharedRing.js`) in `workerHost.js` and `workerBootstrap.js`.
 - [x] Synchronous calls `ListProcesses`/`Kill`, operation `proc.list`, `sample-cmd --processes` and `--kill`.
 - [x] Per-worker memory measured by the browser (`IWebWorkerMemoryMeter`).
-- [x] Isolation lines of `/proc/hackeros/workers`, Diagnostic badge.
+- [x] Isolation lines of `/proc/kazoos/workers`, Diagnostic badge.
 - [x] Follow-up (ADR 0146, Benoit's choice C): `KazoCrossOriginIsolation` in the SDK, without a capability, operation `coi.get`; Diagnostic no longer declares `filesystem.system.read`; `sample-cmd --isolation`.
 - [x] Audit in Chromium, `AuditPassed = true`.
 - [x] Tests: probe and setting, synchronous calls in loopback, rings under Node, `HostSmoke` and `ecosystem-isolated`/`ecosystem-isolation-off` journeys.

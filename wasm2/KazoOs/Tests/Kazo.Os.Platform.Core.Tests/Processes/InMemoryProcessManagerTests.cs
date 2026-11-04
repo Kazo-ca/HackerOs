@@ -20,7 +20,7 @@ public sealed partial class InMemoryProcessManagerTests
     public void Starting_a_process_allocates_a_positive_pid_and_links_the_session_token()
     {
         Fixture fixture = new();
-        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.hackeros.terminal"));
+        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.kazoos.terminal"));
 
         Assert.True(process.Pid.Value > 0);
         Assert.Equal(ProcessState.Starting, process.State);
@@ -31,9 +31,9 @@ public sealed partial class InMemoryProcessManagerTests
     public void Pids_are_never_reused_even_after_history_eviction()
     {
         Fixture fixture = new(maxHistory: 1);
-        ProcessRecord first = fixture.Manager.Start(fixture.RequestFor("com.hackeros.terminal"));
+        ProcessRecord first = fixture.Manager.Start(fixture.RequestFor("com.kazoos.terminal"));
         fixture.Manager.Kill(first.Pid);
-        ProcessRecord second = fixture.Manager.Start(fixture.RequestFor("com.hackeros.terminal"));
+        ProcessRecord second = fixture.Manager.Start(fixture.RequestFor("com.kazoos.terminal"));
 
         Assert.NotEqual(first.Pid, second.Pid);
         Assert.True(second.Pid.Value > first.Pid.Value);
@@ -43,18 +43,18 @@ public sealed partial class InMemoryProcessManagerTests
     public void Starting_a_child_with_an_inactive_parent_throws()
     {
         Fixture fixture = new();
-        ProcessRecord parent = fixture.Manager.Start(fixture.RequestFor("com.hackeros.terminal"));
+        ProcessRecord parent = fixture.Manager.Start(fixture.RequestFor("com.kazoos.terminal"));
         fixture.Manager.Kill(parent.Pid);
 
         Assert.Throws<InvalidOperationException>(
-            () => fixture.Manager.Start(fixture.RequestFor("com.hackeros.child", parent.Pid)));
+            () => fixture.Manager.Start(fixture.RequestFor("com.kazoos.child", parent.Pid)));
     }
 
     [Fact]
     public void MarkRunning_sets_the_start_timestamp_and_transitions_to_running()
     {
         Fixture fixture = new();
-        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.hackeros.terminal"));
+        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.kazoos.terminal"));
 
         ProcessRecord running = fixture.Manager.MarkRunning(process.Pid);
 
@@ -66,7 +66,7 @@ public sealed partial class InMemoryProcessManagerTests
     public void MarkRunning_on_a_non_starting_process_throws()
     {
         Fixture fixture = new();
-        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.hackeros.terminal"));
+        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.kazoos.terminal"));
         fixture.Manager.MarkRunning(process.Pid);
 
         Assert.Throws<InvalidOperationException>(() => fixture.Manager.MarkRunning(process.Pid));
@@ -76,7 +76,7 @@ public sealed partial class InMemoryProcessManagerTests
     public void Complete_moves_an_active_process_to_history_with_the_exit_code()
     {
         Fixture fixture = new();
-        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.hackeros.terminal"));
+        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.kazoos.terminal"));
         fixture.Manager.MarkRunning(process.Pid);
 
         ProcessRecord completed = fixture.Manager.Complete(process.Pid, exitCode: 0);
@@ -92,7 +92,7 @@ public sealed partial class InMemoryProcessManagerTests
     public void Fault_moves_an_active_process_to_the_faulted_terminal_state()
     {
         Fixture fixture = new();
-        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.hackeros.terminal"));
+        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.kazoos.terminal"));
 
         ProcessRecord faulted = fixture.Manager.Fault(process.Pid);
 
@@ -105,7 +105,7 @@ public sealed partial class InMemoryProcessManagerTests
     public void Kill_cancels_the_process_token_and_force_stops_it()
     {
         Fixture fixture = new();
-        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.hackeros.terminal"));
+        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.kazoos.terminal"));
         CancellationToken token = fixture.Manager.GetCancellationToken(process.Pid);
 
         ProcessRecord killed = fixture.Manager.Kill(process.Pid);
@@ -119,12 +119,12 @@ public sealed partial class InMemoryProcessManagerTests
     public async Task A_child_with_a_parent_exit_grace_period_gets_a_stop_request_then_a_kill()
     {
         Fixture fixture = new();
-        ProcessRecord parent = fixture.Manager.Start(fixture.RequestFor("com.hackeros.app"));
-        ProcessRecord child = fixture.Manager.Start(fixture.RequestFor("com.hackeros.app", parent.Pid) with
+        ProcessRecord parent = fixture.Manager.Start(fixture.RequestFor("com.kazoos.app"));
+        ProcessRecord child = fixture.Manager.Start(fixture.RequestFor("com.kazoos.app", parent.Pid) with
         {
             ParentExitGracePeriod = TimeSpan.FromSeconds(5),
         });
-        ProcessRecord grandchild = fixture.Manager.Start(fixture.RequestFor("com.hackeros.helper", child.Pid));
+        ProcessRecord grandchild = fixture.Manager.Start(fixture.RequestFor("com.kazoos.helper", child.Pid));
         fixture.Manager.MarkRunning(child.Pid);
         CancellationToken token = fixture.Manager.GetCancellationToken(child.Pid);
 
@@ -148,8 +148,8 @@ public sealed partial class InMemoryProcessManagerTests
     public void A_sigkill_of_the_parent_ends_a_child_with_a_grace_period_at_once()
     {
         Fixture fixture = new();
-        ProcessRecord parent = fixture.Manager.Start(fixture.RequestFor("com.hackeros.app"));
-        ProcessRecord child = fixture.Manager.Start(fixture.RequestFor("com.hackeros.app", parent.Pid) with
+        ProcessRecord parent = fixture.Manager.Start(fixture.RequestFor("com.kazoos.app"));
+        ProcessRecord child = fixture.Manager.Start(fixture.RequestFor("com.kazoos.app", parent.Pid) with
         {
             ParentExitGracePeriod = TimeSpan.FromSeconds(5),
         });
@@ -174,9 +174,9 @@ public sealed partial class InMemoryProcessManagerTests
     public void Killing_a_parent_cascades_to_active_descendants_as_dependency_stop()
     {
         Fixture fixture = new();
-        ProcessRecord parent = fixture.Manager.Start(fixture.RequestFor("com.hackeros.shell"));
-        ProcessRecord child = fixture.Manager.Start(fixture.RequestFor("com.hackeros.child", parent.Pid));
-        ProcessRecord grandchild = fixture.Manager.Start(fixture.RequestFor("com.hackeros.grandchild", child.Pid));
+        ProcessRecord parent = fixture.Manager.Start(fixture.RequestFor("com.kazoos.shell"));
+        ProcessRecord child = fixture.Manager.Start(fixture.RequestFor("com.kazoos.child", parent.Pid));
+        ProcessRecord grandchild = fixture.Manager.Start(fixture.RequestFor("com.kazoos.grandchild", child.Pid));
 
         fixture.Manager.Kill(parent.Pid);
 
@@ -192,7 +192,7 @@ public sealed partial class InMemoryProcessManagerTests
     public async Task StopAsync_completes_immediately_when_the_process_reports_completion_in_time()
     {
         Fixture fixture = new();
-        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.hackeros.terminal"));
+        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.kazoos.terminal"));
         fixture.Manager.MarkRunning(process.Pid);
 
         Task<ProcessRecord> stopTask = fixture.Manager.StopAsync(process.Pid, TimeSpan.FromSeconds(5));
@@ -207,7 +207,7 @@ public sealed partial class InMemoryProcessManagerTests
     public async Task StopAsync_force_stops_with_timeout_when_the_deadline_elapses()
     {
         Fixture fixture = new();
-        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.hackeros.terminal"));
+        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.kazoos.terminal"));
         fixture.Manager.MarkRunning(process.Pid);
 
         Task<ProcessRecord> stopTask = fixture.Manager.StopAsync(process.Pid, TimeSpan.FromSeconds(1));
@@ -222,22 +222,22 @@ public sealed partial class InMemoryProcessManagerTests
     public void TryGetSingleton_finds_the_active_process_for_an_app_id()
     {
         Fixture fixture = new();
-        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.hackeros.settings"));
+        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.kazoos.settings"));
 
-        Assert.True(fixture.Manager.TryGetSingleton("com.hackeros.settings", out ProcessRecord found));
+        Assert.True(fixture.Manager.TryGetSingleton("com.kazoos.settings", out ProcessRecord found));
         Assert.Equal(process.Pid, found.Pid);
-        Assert.False(fixture.Manager.TryGetSingleton("com.hackeros.unknown", out _));
+        Assert.False(fixture.Manager.TryGetSingleton("com.kazoos.unknown", out _));
     }
 
     [Fact]
     public void History_retention_is_bounded_and_evicts_the_oldest_entry()
     {
         Fixture fixture = new(maxHistory: 2);
-        ProcessRecord first = fixture.Manager.Start(fixture.RequestFor("com.hackeros.a"));
+        ProcessRecord first = fixture.Manager.Start(fixture.RequestFor("com.kazoos.a"));
         fixture.Manager.Kill(first.Pid);
-        ProcessRecord second = fixture.Manager.Start(fixture.RequestFor("com.hackeros.b"));
+        ProcessRecord second = fixture.Manager.Start(fixture.RequestFor("com.kazoos.b"));
         fixture.Manager.Kill(second.Pid);
-        ProcessRecord third = fixture.Manager.Start(fixture.RequestFor("com.hackeros.c"));
+        ProcessRecord third = fixture.Manager.Start(fixture.RequestFor("com.kazoos.c"));
         fixture.Manager.Kill(third.Pid);
 
         IReadOnlyList<ProcessRecord> history = fixture.Manager.GetHistory();
@@ -251,7 +251,7 @@ public sealed partial class InMemoryProcessManagerTests
     public async Task Session_logout_cancels_every_active_process_token()
     {
         Fixture fixture = new();
-        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.hackeros.terminal"));
+        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.kazoos.terminal"));
         CancellationToken token = fixture.Manager.GetCancellationToken(process.Pid);
 
         await fixture.Session.LogoutAsync();
@@ -266,7 +266,7 @@ public sealed partial class InMemoryProcessManagerTests
         List<ProcessStateChangedEvent> events = [];
         using IDisposable subscription = fixture.EventBus.Subscribe<ProcessStateChangedEvent>(events.Add);
 
-        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.hackeros.terminal"));
+        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.kazoos.terminal"));
         fixture.Manager.MarkRunning(process.Pid);
         fixture.Manager.Complete(process.Pid, exitCode: 0);
 

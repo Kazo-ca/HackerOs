@@ -13,7 +13,7 @@ Kazo.Os.Apps.Store.StoreWindow.StoreWindow() -> void
 Kazo.Os.Apps.Store._Imports
 Kazo.Os.Apps.Store._Imports.Execute() -> void
 Kazo.Os.Apps.Store._Imports._Imports() -> void
-const Kazo.Os.Apps.Store.StoreApp.AppId = "org.hackeros.store" -> string!
+const Kazo.Os.Apps.Store.StoreApp.AppId = "org.kazoos.store" -> string!
 override Kazo.Os.Apps.Store.StoreApp.Assets.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AssetManifest!>!
 override Kazo.Os.Apps.Store.StoreApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
 override Kazo.Os.Apps.Store.StoreApp.Category.get -> string!

@@ -50,7 +50,7 @@
                         if (installingWorker) {
                             installingWorker.onstatechange = () => {
                                 if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                    window.dispatchEvent(new CustomEvent('hackeros-pwa-update-available', {
+                                    window.dispatchEvent(new CustomEvent('kazoos-pwa-update-available', {
                                         detail: { registration }
                                     }));
                                 }

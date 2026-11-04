@@ -6,13 +6,13 @@
 @*
     Settings > File Associations (ADR 0121, section 4): one row per file type or URI scheme an
     installed app declares, with the app that opens it for this user. A choice is written to
-    ~/.config/hackeros/file-associations.json and comes before the administrator's default
-    (/etc/hackeros/file-associations.json), for this user only.
+    ~/.config/kazoos/file-associations.json and comes before the administrator's default
+    (/etc/kazoos/file-associations.json), for this user only.
 *@
 <div class="setting-group associations-panel">
     <h4>@L["FileAssociations.Title"]</h4>
     <p class="setting-desc">
-        @LocalizedMarkup.Format(L["FileAssociations.Description"], LocalizedMarkup.Code("~/.config/hackeros/file-associations.json"), LocalizedMarkup.Code("/etc/hackeros/file-associations.json"))
+        @LocalizedMarkup.Format(L["FileAssociations.Description"], LocalizedMarkup.Code("~/.config/kazoos/file-associations.json"), LocalizedMarkup.Code("/etc/kazoos/file-associations.json"))
     </p>
 
     @if (!_loaded)

@@ -11,12 +11,12 @@ public sealed class IndexedDbLegacySettingsStoreTests
     public void TryRead_maps_a_stored_app_user_record()
     {
         using JsonDocument json = JsonDocument.Parse(
-            """{"id":"x","scope":1,"appId":"org.hackeros.terminal","userId":"u-1","installationId":null,"documentId":"settings","content":"fontSize=14\n","revision":3}""");
+            """{"id":"x","scope":1,"appId":"org.kazoos.terminal","userId":"u-1","installationId":null,"documentId":"settings","content":"fontSize=14\n","revision":3}""");
 
         Assert.True(IndexedDbLegacySettingsStore.TryRead(json.RootElement, out LegacySettingsRecord? record));
 
         Assert.Equal(
-            new LegacySettingsRecord(SettingsScope.AppUser, "org.hackeros.terminal", "u-1", "settings", "fontSize=14\n"),
+            new LegacySettingsRecord(SettingsScope.AppUser, "org.kazoos.terminal", "u-1", "settings", "fontSize=14\n"),
             record);
     }
 

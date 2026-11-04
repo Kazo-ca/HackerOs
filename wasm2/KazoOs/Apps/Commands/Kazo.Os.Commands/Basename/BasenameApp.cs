@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Basename;
 public sealed class BasenameApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.basename";
+    public override string Id => "org.kazoos.commands.basename";
 
     /// <inheritdoc />
     public override string Name => "basename";
@@ -22,7 +22,7 @@ public sealed class BasenameApp : AppDefinition
     public override Type EntryPoint => typeof(BasenameCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Strip directory and suffix from file names";

@@ -207,7 +207,7 @@ intégrée sans rien effacer.
 Hors de cette ADR. Une future app système « HackerOs Store », façon Play Store
 ou Microsoft Store, lira la liste du dépôt `Kazo-ca/Os-AppMarketPlace` et
 installera par le même service que `hackpkg`. Note dans
-[`../plans/hackeros-store.md`](../plans/hackeros-store.md), à reprendre quand des
+[`../plans/kazoos-store.md`](../plans/kazoos-store.md), à reprendre quand des
 apps seront publiées.
 
 ## Réponses

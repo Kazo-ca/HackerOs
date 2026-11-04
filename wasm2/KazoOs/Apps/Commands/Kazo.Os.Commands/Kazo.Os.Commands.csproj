@@ -5,7 +5,7 @@
   <PropertyGroup>
     <PackageId>Kazo.Os.Commands</PackageId>
     <Description>The built-in Kazo OS terminal commands (ls, cat, grep, curl, nano...), one lazy-loaded assembly.</Description>
-    <PackageTags>hackeros;app;commands</PackageTags>
+    <PackageTags>kazoos;app;commands</PackageTags>
   </PropertyGroup>
 
   <!--

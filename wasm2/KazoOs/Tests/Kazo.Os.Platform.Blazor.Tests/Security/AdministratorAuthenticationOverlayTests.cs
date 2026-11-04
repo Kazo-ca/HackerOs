@@ -27,7 +27,7 @@ public sealed class AdministratorAuthenticationOverlayTests
         Assert.Contains("Administrator authentication", text, StringComparison.Ordinal);
         Assert.Contains("Administrator name", text, StringComparison.Ordinal);
         Assert.Contains("Uninstall Calculator for all users", text, StringComparison.Ordinal);
-        Assert.Contains("org.hackeros.settings", html, StringComparison.Ordinal);
+        Assert.Contains("org.kazoos.settings", html, StringComparison.Ordinal);
         Assert.Contains("value=\"admin\"", html, StringComparison.Ordinal);
         Assert.Matches("<button type=\"submit\" class=\"aaa-authenticate\" disabled", html);
         Assert.Contains("/var/log/auth.log", html, StringComparison.Ordinal);
@@ -150,10 +150,10 @@ public sealed class AdministratorAuthenticationOverlayTests
         new(
             new AppManifest
             {
-                Id = "org.hackeros.settings",
+                Id = "org.kazoos.settings",
                 Name = "Settings",
                 Version = "1.0.0",
-                PublisherId = "pub.hackeros",
+                PublisherId = "pub.kazoos",
                 Description = "Overlay fixture.",
                 Kind = AppKind.Window,
                 SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),

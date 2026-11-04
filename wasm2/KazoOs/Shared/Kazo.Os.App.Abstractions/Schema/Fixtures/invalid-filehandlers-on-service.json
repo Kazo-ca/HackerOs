@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "org.hackeros.notification-daemon",
+  "id": "org.kazoos.notification-daemon",
   "name": "Notification Daemon",
   "version": "2.1.0",
-  "publisherId": "org.hackeros",
+  "publisherId": "org.kazoos",
   "description": "Background service that dispatches OS notifications to subscribed apps.",
   "kind": "service",
   "entryPoint": {

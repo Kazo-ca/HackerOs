@@ -11,7 +11,7 @@ namespace Kazo.Os.Commands.Unset;
 public sealed class UnsetApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.unset";
+    public override string Id => "org.kazoos.commands.unset";
 
     /// <inheritdoc />
     public override string Name => "unset";
@@ -23,7 +23,7 @@ public sealed class UnsetApp : AppDefinition
     public override Type EntryPoint => typeof(UnsetCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Remove environment variables from the shell";

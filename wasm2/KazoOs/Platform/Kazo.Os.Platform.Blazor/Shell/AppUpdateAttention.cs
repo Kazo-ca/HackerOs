@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Kazo.Os.Platform.Blazor.Shell;
 
 /// <summary>
-/// What the desktop and mobile shells do with the Hack Store's update check (ADR 0188 §3,
+/// What the desktop and mobile shells do with the Kazo OS Store's update check (ADR 0188 §3,
 /// ADR 0215 §1): start it once the desktop shows and stop it with the shell. Updates are shown by
 /// a notification only (Benoit, Q3 C): no badge. Does nothing on a host without
 /// <see cref="AppUpdateMonitor"/>.

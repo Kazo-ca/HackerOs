@@ -34,7 +34,7 @@ public sealed partial class AppPackageInstaller
     /// §3.5): when <c>[installed]</c> already names the new version, the clean-up is finished;
     /// otherwise the partly written version is deleted and the previous one stays.
     /// </summary>
-    /// <param name="writer">A writer of the scope (the system writer for <c>/usr/lib/hackeros/apps</c>).</param>
+    /// <param name="writer">A writer of the scope (the system writer for <c>/usr/lib/kazoos/apps</c>).</param>
     /// <param name="appId">The app whose journal is read.</param>
     /// <param name="cancellationToken">Cancels the writes.</param>
     /// <param name="home">The user's home for a personal app, or <see langword="null"/> for the system.</param>
@@ -91,7 +91,7 @@ public sealed partial class AppPackageInstaller
     }
 
     /// <summary>
-    /// <c>hackpkg repair</c> (ADR 0214 §3.5): runs <see cref="RecoverAsync"/> on every app of the
+    /// <c>kazopkg repair</c> (ADR 0214 §3.5): runs <see cref="RecoverAsync"/> on every app of the
     /// scope, then deletes the <c>.partial</c> folders and the folders of apps no
     /// <c>[installed]</c> line names any more.
     /// </summary>
@@ -168,7 +168,7 @@ public sealed partial class AppPackageInstaller
     }
 
     /// <summary>
-    /// <c>hackpkg rollback</c> (ADR 0214 §4.1): puts the kept version back in <c>[installed]</c>
+    /// <c>kazopkg rollback</c> (ADR 0214 §4.1): puts the kept version back in <c>[installed]</c>
     /// and keeps the version it leaves, so a second rollback undoes the first.
     /// </summary>
     /// <param name="writer">The system writer after the two-step approval, or the user's own writer for a personal app.</param>

@@ -60,7 +60,7 @@ public sealed class EcosystemBootCoordinator
     /// queued since startup reach <c>/var/log</c> (ADR 0045). Optional for headless tests.
     /// </param>
     /// <param name="fileSystem">Mounted filesystem the log writer is attached to.</param>
-    /// <param name="appsMigration">Installs <c>/etc/hackeros/apps.config</c> and copies the retired enablement flags into it (ADR 0048).</param>
+    /// <param name="appsMigration">Installs <c>/etc/kazoos/apps.config</c> and copies the retired enablement flags into it (ADR 0048).</param>
     /// <param name="clockDriver">Driver started at boot so simulated time advances (ADR 0012).</param>
     /// <param name="installation">
     /// Installation service started once the machine file exists, so an app uninstalled in
@@ -93,7 +93,7 @@ public sealed class EcosystemBootCoordinator
     /// <c>/var/log/auth.log</c> at boot (ADR 0099, section 1). Optional for headless tests.
     /// </param>
     /// <param name="oomKiller">
-    /// The OOM killer of ADR 0126, configured from <c>/etc/hackeros/memory.config</c> once the
+    /// The OOM killer of ADR 0126, configured from <c>/etc/kazoos/memory.config</c> once the
     /// settings files exist, then started. Optional for headless tests.
     /// </param>
     /// <param name="settings">The settings service <paramref name="oomKiller"/> reads and watches.</param>
@@ -192,7 +192,7 @@ public sealed class EcosystemBootCoordinator
 
         // After the canonical database/root is ready, these subsystem checks use
         // independent object-store transactions and can safely progress together.
-        // Settings are files (ADR 0044): ensure /etc/hackeros exists, copy the retired IndexedDB
+        // Settings are files (ADR 0044): ensure /etc/kazoos exists, copy the retired IndexedDB
         // settings store once, and write the commented installation defaults when absent.
         Task settingsTask = _settingsMigration.MigrateSystemAsync(cancellationToken).AsTask();
         Task<long> policyRevisionTask = _grants.GetCurrentPolicyRevisionAsync(cancellationToken).AsTask();
@@ -223,7 +223,7 @@ public sealed class EcosystemBootCoordinator
         // ADR 0126: memory.config exists now; the OOM killer reads it, watches it, and samples.
         await StartOomKillerAsync(cancellationToken).ConfigureAwait(false);
 
-        // Uninstalls are files since ADR 0048: install /etc/hackeros/apps.config (copying the retired
+        // Uninstalls are files since ADR 0048: install /etc/kazoos/apps.config (copying the retired
         // IsEnabled flags once), then enforce it before any login so an uninstalled app is blocked
         // from the first launch attempt. The user layer is applied at each login.
         await _appsMigration.MigrateAsync(catalog, cancellationToken).ConfigureAwait(false);
@@ -238,7 +238,7 @@ public sealed class EcosystemBootCoordinator
             "kernel",
             $"boot: storage ready, policy revision {policyRevision}, {catalog.Count} apps in catalog, {users.Count} local users");
 
-        // ADR 0097 section 4: the system services start before the login screen, as hackeros-svc.
+        // ADR 0097 section 4: the system services start before the login screen, as kazoos-svc.
         // A failure is logged and never blocks the boot.
         if (_serviceStartup is not null)
         {

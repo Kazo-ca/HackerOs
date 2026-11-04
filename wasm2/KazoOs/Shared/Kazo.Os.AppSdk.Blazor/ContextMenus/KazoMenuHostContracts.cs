@@ -9,16 +9,16 @@ namespace Kazo.Os.AppSdk.Blazor.ContextMenus;
 public static class KazoMenuAttributes
 {
     /// <summary>The menu's name.</summary>
-    public const string Menu = "data-hack-menu";
+    public const string Menu = "data-kazo-menu";
 
     /// <summary>The opaque token naming the attached object, kept on the C# side.</summary>
-    public const string Token = "data-hack-menu-token";
+    public const string Token = "data-kazo-menu-token";
 
     /// <summary>
     /// Marks an OS area that has its own menu (desktop, taskbar): the browser's menu is not shown
     /// there even where no entry is attached.
     /// </summary>
-    public const string Suppress = "data-hack-menu-suppress";
+    public const string Suppress = "data-kazo-menu-suppress";
 }
 
 /// <summary>A menu registered in a window, under its name.</summary>
@@ -35,7 +35,7 @@ public sealed record KazoMenuRegistration(
 /// the window's components in cascade. Apps use it through <see cref="KazoMenus"/>
 /// (<c>Menus</c> on <see cref="KazoComponentBase"/> and <see cref="WindowAppBase"/>).
 /// </summary>
-public interface IHackMenuHost
+public interface IKazoMenuHost
 {
     /// <summary>
     /// Returns the attributes that make an element open the menu <paramref name="name"/> for
@@ -64,10 +64,10 @@ public interface IHackMenuHost
 }
 
 /// <summary>
-/// The controller of the contract <c>hackeros.context-menu</c> (ADR 0150 §1), handed by the OS once
+/// The controller of the contract <c>kazoos.context-menu</c> (ADR 0150 §1), handed by the OS once
 /// a <see cref="KazoContextMenu"/> is registered.
 /// </summary>
-public interface IHackContextMenu
+public interface IKazoContextMenu
 {
     /// <summary>Gets the menu's name.</summary>
     string Name { get; }
@@ -96,20 +96,20 @@ public interface IHackContextMenu
 public sealed class KazoMenus
 {
     private static readonly IReadOnlyDictionary<string, object> NoAttributes = new Dictionary<string, object>();
-    private readonly IHackMenuHost? _host;
+    private readonly IKazoMenuHost? _host;
     private readonly object? _receiver;
 
     /// <summary>Initializes the view of a window's menus for one component.</summary>
     /// <param name="host">The window's menus, or <see langword="null"/> outside a window.</param>
     /// <param name="receiver">The component that owns callbacks defined through <see cref="Define"/>.</param>
-    public KazoMenus(IHackMenuHost? host, object? receiver)
+    public KazoMenus(IKazoMenuHost? host, object? receiver)
     {
         _host = host;
         _receiver = receiver;
     }
 
     /// <summary>Gets the window's menus this view uses.</summary>
-    internal IHackMenuHost? Host => _host;
+    internal IKazoMenuHost? Host => _host;
 
     /// <summary>Gets whether the OS menus are reachable (inside a Kazo OS window).</summary>
     public bool IsAvailable => _host is not null;

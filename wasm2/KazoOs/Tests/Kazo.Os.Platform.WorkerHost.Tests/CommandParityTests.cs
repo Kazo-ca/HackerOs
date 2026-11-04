@@ -22,12 +22,12 @@ public sealed class CommandParityTests
         new("chmod", ["chmod 600 notes.txt", "chmod -R go-w docs", "chmod 777 /etc/hostname"]),
         new("clear", ["clear"]),
         new("cp", ["cp notes.txt copy.txt", "cp -r docs docs2", "cp missing.txt x"]),
-        new("curl", ["curl http://example.hackeros/", "curl -I http://example.hackeros/", "curl http://nowhere.invalid/"]),
+        new("curl", ["curl http://example.kazoos/", "curl -I http://example.kazoos/", "curl http://nowhere.invalid/"]),
         new("cut", ["cut -d, -f2 table.csv", "cut -c1-3 notes.txt"]),
         new("df", ["df", "df -h -T"]),
         new("localectl", ["localectl", "localectl list-locales", "localectl set-locale LANG=xx_YY.UTF-8", "localectl set-locale LANG=fr_FR.UTF-8", "localectl bogus"]),
-        new("hackbackup", ["hackbackup", "hackbackup create", "hackbackup restore --bogus"]),
-        new("hackpkg", ["hackpkg", "hackpkg bogus", "hackpkg install --bogus", "hackpkg list --user"]),
+        new("kazobackup", ["kazobackup", "kazobackup create", "kazobackup restore --bogus"]),
+        new("kazopkg", ["kazopkg", "kazopkg bogus", "kazopkg install --bogus", "kazopkg list --user"]),
         new("diff", ["diff notes.txt notes.txt", "diff -u notes.txt numbers.txt"]),
         new("date", ["date -u +%Y", "date --bogus", "date 1200"]),
         new("dmesg", ["dmesg -l emerg", "dmesg -l nosuch", "dmesg --bogus"]),
@@ -56,10 +56,10 @@ public sealed class CommandParityTests
         new("nano", ["nano notes.txt"]),
         new("netstat", ["netstat", "netstat -i"]),
         new("nice", ["nice", "nice -n 5 echo hi", "nice -n 5 nice", "nice -n 5 ps -o ni,comm", "nice -n bogus echo hi", "nice -n -5 echo hi"]),
-        new("nslookup", ["nslookup example.hackeros", "nslookup nowhere.invalid", "nslookup"]),
-        new("nmap", ["nmap example.hackeros", "nmap -p 80-443 -sV 10.0.0.10"]),
+        new("nslookup", ["nslookup example.kazoos", "nslookup nowhere.invalid", "nslookup"]),
+        new("nmap", ["nmap example.kazoos", "nmap -p 80-443 -sV 10.0.0.10"]),
         new("passwd", ["passwd -S", "passwd bob", "passwd -x"]),
-        new("ping", ["ping example.hackeros", "ping nowhere.invalid"]),
+        new("ping", ["ping example.kazoos", "ping nowhere.invalid"]),
         new("prlimit", ["prlimit --nofile --nproc", "prlimit --nofile=512:1024 --nofile", "prlimit --pid 99999", "prlimit --bogus"]),
         new("printf", ["printf '%s-%d\\n' a 1 b 2"]),
         new("ps", ["ps", "ps -a -u", "ps -o pid,ni,comm", "ps -o bogus"]),
@@ -86,7 +86,7 @@ public sealed class CommandParityTests
         new("unzip", ["zip -r -q archive.zip docs", "unzip -l archive.zip", "unzip -o -d extracted archive.zip", "unzip -t archive.zip"]),
         new("watch", ["watch -e -n 1 cat missing.txt", "watch -e false"]),
         new("wc", ["wc notes.txt", "cat notes.txt | wc -l", "wc -w words.txt numbers.txt"]),
-        new("wget", ["wget -q -O page.html http://example.hackeros/", "wget --spider http://example.hackeros/", "wget http://nowhere.invalid/"]),
+        new("wget", ["wget -q -O page.html http://example.kazoos/", "wget --spider http://example.kazoos/", "wget http://nowhere.invalid/"]),
         new("which", ["which ls", "which -a cd nope"]),
         new("whoami", ["whoami"]),
         new("xdg-open", ["xdg-open missing.txt", "xdg-open", "xdg-open notes.txt", "xdg-open docs", "xdg-open nope://thing"]),
@@ -141,7 +141,7 @@ public sealed class CommandParityTests
         Transcript inWorker = await RunAsync(scenario, workers: true);
 
         Assert.DoesNotContain("command not found", inProcess.Text, StringComparison.Ordinal);
-        if (Environment.GetEnvironmentVariable("HACKEROS_PARITY_DUMP") is { Length: > 0 } dump)
+        if (Environment.GetEnvironmentVariable("KAZOOS_PARITY_DUMP") is { Length: > 0 } dump)
         {
             Directory.CreateDirectory(dump);
             await File.WriteAllTextAsync(Path.Combine(dump, $"{command}.txt"), inWorker.Text);

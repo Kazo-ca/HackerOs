@@ -95,7 +95,7 @@ public sealed class TaskbarWindowPreviewsTests
     }
 
     private static WindowRuntimeState Window(WindowId id, int zOrder, WindowId? owner = null) => new(
-        id, "org.hackeros.test", WindowOwnerId.FromGuid(Guid.NewGuid()),
+        id, "org.kazoos.test", WindowOwnerId.FromGuid(Guid.NewGuid()),
         "Test window", null, new WindowBounds(40, 40, 640, 480), null, zOrder,
         WindowVisualState.Normal, new WindowConstraints(true, 320, 240), ownerId: owner);
 

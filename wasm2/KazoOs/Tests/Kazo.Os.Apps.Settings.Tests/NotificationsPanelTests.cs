@@ -42,7 +42,7 @@ public sealed class NotificationsPanelTests
         Assert.False(harness.Panel.DoNotDisturb);
         string html = harness.Html();
         Assert.Contains("Do not disturb", html, StringComparison.Ordinal);
-        Assert.Contains("~/.config/hackeros/notifications.config", html, StringComparison.Ordinal);
+        Assert.Contains("~/.config/kazoos/notifications.config", html, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -79,7 +79,7 @@ public sealed class NotificationsPanelTests
 
         public AppSystemSettingsDocumentInfo Describe(string documentId) =>
             documentId == NotificationSettingsDocuments.DocumentId
-                ? new(documentId, NotificationSettingsDocuments.Schema, "/etc/hackeros/notifications.config", "/home/alice/.config/hackeros/notifications.config", false)
+                ? new(documentId, NotificationSettingsDocuments.Schema, "/etc/kazoos/notifications.config", "/home/alice/.config/kazoos/notifications.config", false)
                 : throw new ArgumentException($"Unknown document '{documentId}'.", nameof(documentId));
 
         public ValueTask<LayeredConfigSnapshot> ReadAsync(string documentId, CancellationToken cancellationToken = default)

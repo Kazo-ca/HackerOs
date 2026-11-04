@@ -13,12 +13,12 @@ public sealed class LogLineFormatTests
         string line = LogLineFormat.Format(
             Timestamp,
             DiagnosticSeverity.Warning,
-            "org.hackeros.text-editor",
+            "org.kazoos.text-editor",
             42,
-            "settings: /etc/org.hackeros.text-editor/settings.config:12: invalid value for 'tab-size' (expected int64), using default");
+            "settings: /etc/org.kazoos.text-editor/settings.config:12: invalid value for 'tab-size' (expected int64), using default");
 
         Assert.Equal(
-            "2026-10-10T03:11:42.123Z WARN  org.hackeros.text-editor[42]: settings: /etc/org.hackeros.text-editor/settings.config:12: invalid value for 'tab-size' (expected int64), using default",
+            "2026-10-10T03:11:42.123Z WARN  org.kazoos.text-editor[42]: settings: /etc/org.kazoos.text-editor/settings.config:12: invalid value for 'tab-size' (expected int64), using default",
             line);
     }
 

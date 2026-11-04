@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Localectl;
 public sealed class LocalectlApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.localectl";
+    public override string Id => "org.kazoos.commands.localectl";
 
     /// <inheritdoc />
     public override string Name => "localectl";
@@ -22,7 +22,7 @@ public sealed class LocalectlApp : AppDefinition
     public override Type EntryPoint => typeof(LocalectlCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Query or change the system locale";

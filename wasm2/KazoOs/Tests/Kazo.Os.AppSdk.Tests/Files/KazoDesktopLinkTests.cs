@@ -22,7 +22,7 @@ public sealed class KazoDesktopLinkTests
     }
 
     [Theory]
-    [InlineData("[Desktop Entry]\nType=Application\nName=X\nExec=org.hackeros.calculator\n")]
+    [InlineData("[Desktop Entry]\nType=Application\nName=X\nExec=org.kazoos.calculator\n")]
     [InlineData("[Desktop Entry]\nType=Link\nName=X\nURL=https://example.com/\n")]
     [InlineData("[Desktop Entry]\nType=Link\nName=X\nURL=file://server/share\n")]
     [InlineData("[Desktop Entry]\nType=Link\nURL=file:///tmp\n")]

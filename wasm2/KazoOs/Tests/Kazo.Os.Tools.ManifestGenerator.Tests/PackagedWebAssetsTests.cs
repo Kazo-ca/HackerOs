@@ -25,7 +25,7 @@ public sealed class PackagedWebAssetsTests
             { "Identity": "/src/Contoso.Notes/wwwroot/icons/app.svg", "SourceId": "Contoso.Notes", "SourceType": "Discovered", "RelativePath": "icons/app#[.{fingerprint}]?.svg", "AssetKind": "All", "AssetRole": "Primary", "AssetTraitName": "", "AssetTraitValue": "" },
             { "Identity": "/src/Contoso.Notes/wwwroot/data/odd..name.txt", "SourceId": "Contoso.Notes", "SourceType": "Discovered", "RelativePath": "data/odd..name#[.{fingerprint}]?.txt", "AssetKind": "All", "AssetRole": "Primary", "AssetTraitName": "", "AssetTraitValue": "" },
             { "Identity": "/src/Contoso.Notes/wwwroot/publish-only.json", "SourceId": "Contoso.Notes", "SourceType": "Discovered", "RelativePath": "publish-only.json", "AssetKind": "Publish", "AssetRole": "Primary", "AssetTraitName": "", "AssetTraitValue": "" },
-            { "Identity": "/nuget/hackeros.appsdk.blazor/2.2.0/staticwebassets/download.js", "SourceId": "Kazo.Os.AppSdk.Blazor", "SourceType": "Package", "RelativePath": "download.js", "AssetKind": "All", "AssetRole": "Primary", "AssetTraitName": "", "AssetTraitValue": "" },
+            { "Identity": "/nuget/kazoos.appsdk.blazor/2.2.0/staticwebassets/download.js", "SourceId": "Kazo.Os.AppSdk.Blazor", "SourceType": "Package", "RelativePath": "download.js", "AssetKind": "All", "AssetRole": "Primary", "AssetTraitName": "", "AssetTraitValue": "" },
             { "Identity": "/src/Shared/Shared.Widgets/wwwroot/widget.js", "SourceId": "Shared.Widgets", "SourceType": "Project", "RelativePath": "widget#[.{fingerprint}]?.js", "AssetKind": "All", "AssetRole": "Primary", "AssetTraitName": "", "AssetTraitValue": "" }
           ]
         }

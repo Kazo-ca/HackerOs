@@ -93,7 +93,7 @@ public sealed class AppDataGuardTests
         await harness.BootAsync();
         AuthenticatedPrincipal alice = await harness.LoginAsync(harness.Alice);
         IAppFileSystemGateway user = harness.CreateAppGateway(
-            alice, "org.hackeros.shell", AppCapabilities.FileSystemUserHomeRead, AppCapabilities.FileSystemUserHomeWrite);
+            alice, "org.kazoos.shell", AppCapabilities.FileSystemUserHomeRead, AppCapabilities.FileSystemUserHomeWrite);
         InstalledPackageCatalog packages = new();
         packages.Apply([new InstalledApp(AppPackageSource.ForCatalog("official", AppPackageTests.AppId, SemanticVersion.Parse("1.0.0")), Manifest("1.0.0"))]);
         return (harness, user, new AppDataGuard(() => packages));

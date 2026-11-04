@@ -9,14 +9,14 @@ using Kazo.Os.Simulation.Abstractions.Sessions;
 namespace Kazo.Os.Platform.Core.Tests.Intents;
 
 /// <summary>
-/// The user layer of the file associations (ADR 0121): <c>~/.config/hackeros/file-associations.json</c>
-/// comes before <c>/etc/hackeros/file-associations.json</c>, for the user an intent runs as only.
+/// The user layer of the file associations (ADR 0121): <c>~/.config/kazoos/file-associations.json</c>
+/// comes before <c>/etc/kazoos/file-associations.json</c>, for the user an intent runs as only.
 /// </summary>
 public sealed class UserFileAssociationTests
 {
-    private const string Notepad = "org.hackeros.notepad";
-    private const string TextEditor = "org.hackeros.texteditor";
-    private const string Browser = "org.hackeros.browser";
+    private const string Notepad = "org.kazoos.notepad";
+    private const string TextEditor = "org.kazoos.texteditor";
+    private const string Browser = "org.kazoos.browser";
     private const string OtherBrowser = "com.example.browser";
     private static readonly VirtualPath Notes = VirtualPath.Parse("/home/alice/notes.txt");
 
@@ -177,14 +177,14 @@ public sealed class UserFileAssociationTests
         Assert.DoesNotContain(rows, row => row.Layer == FileAssociationLayer.User && row.Action == "edit");
     }
 
-    private const string UserFile = "/home/alice/.config/hackeros/file-associations.json";
+    private const string UserFile = "/home/alice/.config/kazoos/file-associations.json";
 
     private static AppManifest Manifest(string id, params FileHandlerManifest[] handlers) => new()
     {
         Id = id,
         Name = id,
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "An app for ADR 0121 tests.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", $"{id}.EntryPoint"),

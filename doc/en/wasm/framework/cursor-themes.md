@@ -14,11 +14,11 @@ their own.
 
 ## Creating a theme
 
-1. Create a folder in `~/.config/hackeros/cursors/` (for you) or, as an
-   administrator, in `/etc/hackeros/cursors/` (for everyone):
+1. Create a folder in `~/.config/kazoos/cursors/` (for you) or, as an
+   administrator, in `/etc/kazoos/cursors/` (for everyone):
 
    ```sh
-   mkdir -p ~/.config/hackeros/cursors/neon-crypt
+   mkdir -p ~/.config/kazoos/cursors/neon-crypt
    ```
 
 2. Copy your PNG images into it (at most 128 × 128 pixels and 64 KiB each;
@@ -41,13 +41,13 @@ their own.
    ```
 
 4. Open Settings ▸ Appearance: the theme shows under **Cursors**; choose it.
-   The choice is written to `~/.config/hackeros/cursors.config`
+   The choice is written to `~/.config/kazoos/cursors.config`
    (`theme=neon-crypt`) and applies at once.
 
-A Hack Store theme pack brings its cursor theme in its `cursors/` folder; it
+A Kazo OS Store theme pack brings its cursor theme in its `cursors/` folder; it
 is read where the pack is installed
-(`/usr/share/hackeros/theme-packs/<pack>/cursors/` then
-`~/.local/share/hackeros/theme-packs/<pack>/cursors/`,
+(`/usr/share/kazoos/theme-packs/<pack>/cursors/` then
+`~/.local/share/kazoos/theme-packs/<pack>/cursors/`,
 [ADR 0213](../dev/adr/0213-theme-packs-build.md)), with no copy.
 
 Rules:

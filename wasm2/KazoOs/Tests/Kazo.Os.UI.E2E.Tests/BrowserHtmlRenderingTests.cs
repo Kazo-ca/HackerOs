@@ -38,7 +38,7 @@ public sealed class BrowserHtmlRenderingTests(ITestOutputHelper output)
             await addressInput.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible });
 
             // --- A web page of the simulated network: CSS, script, same-origin fetch, cookie ---
-            await addressInput.FillAsync("example.hackeros/page.html");
+            await addressInput.FillAsync("example.kazoos/page.html");
             await addressInput.PressAsync("Enter");
 
             IFrameLocator frame = page.FrameLocator(".page-frame");
@@ -68,12 +68,12 @@ public sealed class BrowserHtmlRenderingTests(ITestOutputHelper output)
             await Assertions.Expect(frame.Locator("#script-status")).ToHaveTextAsync("script ran", new() { Timeout = 20000 });
 
             // --- XMLHttpRequest and a form POST go through the bridge ---
-            await addressInput.FillAsync("example.hackeros/form.html");
+            await addressInput.FillAsync("example.kazoos/form.html");
             await addressInput.PressAsync("Enter");
             await Assertions.Expect(frame.Locator("#xhr-status")).ToHaveTextAsync("200 xhr pong", new() { Timeout = 20000 });
             await frame.Locator("#send").ClickAsync();
             await Assertions.Expect(frame.Locator("#echo")).ToHaveTextAsync("msg=hello bridge", new() { Timeout = 20000 });
-            await Assertions.Expect(addressInput).ToHaveValueAsync("https://example.hackeros/echo");
+            await Assertions.Expect(addressInput).ToHaveValueAsync("https://example.kazoos/echo");
 
             // --- A local file: file:// with relative files, localStorage, a link, back ---
             string siteUrl = $"file://{E2ESupport.HomePath}/Documents/{TestDemoFixtureSeeder.SiteDirectoryName}/index.html";

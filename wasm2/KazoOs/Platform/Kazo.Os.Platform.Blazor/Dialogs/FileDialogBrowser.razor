@@ -12,7 +12,7 @@
 
 @*
     The file view of the Open / Save / Choose folder dialogs (ADR 0157): the OS file control
-    (hackeros.file-view) shown with the requesting app's rights, under a breadcrumb the dialog owns.
+    (kazoos.file-view) shown with the requesting app's rights, under a breadcrumb the dialog owns.
     Without a provider of the contract (no File Explorer, a test host), the platform's own
     VirtualFolderBrowser takes its place, so the dialogs always work.
 *@
@@ -89,7 +89,7 @@
             <CascadingValue TValue="IAppExecutionContext" Value="Context" IsFixed="true">
                 @if (_menus is not null)
                 {
-                    <CascadingValue TValue="IHackMenuHost" Value="_menus" IsFixed="true">
+                    <CascadingValue TValue="IKazoMenuHost" Value="_menus" IsFixed="true">
                         @FileView
                     </CascadingValue>
                 }

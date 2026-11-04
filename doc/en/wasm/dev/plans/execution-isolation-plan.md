@@ -64,7 +64,7 @@ exclusion from its section 9. The decisions are in ADRs 0066 to 0071.
 | 4 | Memory in four layers: image, OS resources, allocations per slice, real heap distributed after each GC; no limit. Marshaling counting is dropped. | 0068 |
 | 5 | `StopRequested` (reason, deadline), `CheckpointAsync`, `TerminateAsync`, `ProcessExitReason.Terminated`; four-step escalation; "End task" becomes `SIGTERM`, "Force kill" is added. | 0069 |
 | 6 | Hybrid model: window apps on the main thread, commands in a pool of one worker per virtual core, services in a dedicated worker with a reserve; remote gateways; heartbeat; only a silent worker is terminated. | 0070 |
-| 7 | Once the system has started, always at least one ready worker; it serves dedicated processes and pool overflow when no worker is free; cap `navigator.hardwareConcurrency`; `/proc/hackeros/workers`. | 0071 |
+| 7 | Once the system has started, always at least one ready worker; it serves dedicated processes and pool overflow when no worker is free; cap `navigator.hardwareConcurrency`; `/proc/kazoos/workers`. | 0071 |
 | 8 | `Kazo.Os.Server`: measurements off by default, no worker, until an ADR specific to this host. | 0066, 0067, 0070 |
 
 ## 5. Work items
@@ -77,7 +77,7 @@ Each branch starts from `rebuild/base` and its PR targets `rebuild/base`.
 | `rebuild/5-cpu-accounting` | ADR 0067: `utime`/`stime` counting, compositor, `/proc/<pid>/stat`, real `/proc/stat`, `KazoProcess.*ProcessorTime`, long tasks, "Not responding" and `Responding:`, overhead test (< 5%). | `5-accounting-switches` |
 | `rebuild/5-memory-accounting` | ADR 0068: four layers, fields of `/proc/<pid>/status`, `/proc/meminfo`, `PrivateMemorySize64`. | `5-accounting-switches` |
 | `rebuild/5-graceful-stop` | ADR 0069: `StopRequested`, `CheckpointAsync`, `TerminateAsync`, `Terminated`, per-process scheduler and `KazoProcessKilledException`, polite "End task" and "Force kill", `CheckpointAsync` in long commands. | n/a |
-| `rebuild/5-worker-processes` | ADR 0070 and 0071: always-ready worker after boot, overflow and cap, `/proc/hackeros/workers`, `AppExecutionHost` in the manifest, `Kazo.Os.Platform.WorkerHost`, remote gateways and parity tests, pool and reserve, heartbeat, step 4 escalation, first for `Kazo.Os.Commands`. | the other four |
+| `rebuild/5-worker-processes` | ADR 0070 and 0071: always-ready worker after boot, overflow and cap, `/proc/kazoos/workers`, `AppExecutionHost` in the manifest, `Kazo.Os.Platform.WorkerHost`, remote gateways and parity tests, pool and reserve, heartbeat, step 4 escalation, first for `Kazo.Os.Commands`. | the other four |
 | `rebuild/5-host-smoke` | Section 5.2: `build/verify-hosts.sh`, Playwright startup test of the three hosts with fallback to the container's Chromium, combinations of measurements; also fixes the launching of existing E2E suites in a container. | n/a |
 | `rebuild/5-final` | End-to-end verification, `system-metrics.md`, `task-manager.md`, `app-sdk.md`, `sdk-reference.md`, index, this list up to date. | all |
 
@@ -179,7 +179,7 @@ Implementation details (`rebuild/5-graceful-stop`, detail in
 - [x] Process host in a worker and remote gateways, parity tests. (`5-worker-processes`, [`worker-processes.md`](../worker-processes.md))
 - [x] Pool (one worker per virtual core), dedicated reserve, pipeline placement. (`5-worker-processes`, [`worker-processes.md`](../worker-processes.md))
 - [x] Heartbeat, "Not responding" during blocking, worker termination. (`5-worker-processes`, [`worker-processes.md`](../worker-processes.md))
-- [x] Always-ready worker after boot, pool overflow, cap, `/proc/hackeros/workers` (ADR 0071). (`5-worker-processes`, [`worker-processes.md`](../worker-processes.md))
+- [x] Always-ready worker after boot, pool overflow, cap, `/proc/kazoos/workers` (ADR 0071). (`5-worker-processes`, [`worker-processes.md`](../worker-processes.md))
 
 ### Existing apps (section 5.1)
 - [x] All apps in `Apps/` run their code in an ambient frame (test `AmbientFrameSourceTests`, `5-accounting-switches`).

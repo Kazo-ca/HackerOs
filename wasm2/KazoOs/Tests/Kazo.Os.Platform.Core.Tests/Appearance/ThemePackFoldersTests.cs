@@ -7,8 +7,8 @@ namespace Kazo.Os.Platform.Core.Tests.Appearance;
 public sealed class ThemePackFoldersTests
 {
     private const string Home = "/home/alice";
-    private const string SystemPack = "/usr/share/hackeros/theme-packs/org.example.neon";
-    private const string UserPack = "/home/alice/.local/share/hackeros/theme-packs/org.example.dusk";
+    private const string SystemPack = "/usr/share/kazoos/theme-packs/org.example.neon";
+    private const string UserPack = "/home/alice/.local/share/kazoos/theme-packs/org.example.dusk";
 
     [Fact]
     public async Task The_themes_of_the_installed_packs_are_listed_with_their_origin()
@@ -17,7 +17,7 @@ public sealed class ThemePackFoldersTests
         {
             [$"{SystemPack}/themes/neon-night.theme"] = Theme("neon-night"),
             [$"{UserPack}/themes/dusk.theme"] = Theme("dusk"),
-            ["/home/alice/.config/hackeros/themes/mine.theme"] = Theme("mine"),
+            ["/home/alice/.config/kazoos/themes/mine.theme"] = Theme("mine"),
         };
 
         UserThemeLibraryResult result = await UserThemeLibrary.LoadAsync(files.ListFilesAsync, files.ListDirectoriesAsync, files.ReadTextAsync, Home);
@@ -42,13 +42,13 @@ public sealed class ThemePackFoldersTests
     {
         FakeFiles files = new()
         {
-            ["/etc/hackeros/themes/neon-night.theme"] = Theme("neon-night"),
+            ["/etc/kazoos/themes/neon-night.theme"] = Theme("neon-night"),
             [$"{UserPack}/themes/neon-night.theme"] = Theme("neon-night"),
         };
 
         UserThemeLibraryResult result = await UserThemeLibrary.LoadAsync(files.ListFilesAsync, files.ListDirectoriesAsync, files.ReadTextAsync, Home);
 
-        Assert.Equal("/etc/hackeros/themes/neon-night.theme", Assert.Single(result.Themes).SourcePath);
+        Assert.Equal("/etc/kazoos/themes/neon-night.theme", Assert.Single(result.Themes).SourcePath);
         Assert.Contains(result.Diagnostics, diagnostic => diagnostic.IsError);
     }
 
@@ -60,8 +60,8 @@ public sealed class ThemePackFoldersTests
             [$"{SystemPack}/cursors/cursor.theme"] = Cursor("neon-crypt"),
             [$"{SystemPack}/cursors/arrow.png"] = CursorThemeFileTests.Png(32, 32),
             [$"{UserPack}/themes/dusk.theme"] = Theme("dusk"),
-            ["/home/alice/.config/hackeros/cursors/mine/cursor.theme"] = Cursor("mine"),
-            ["/home/alice/.config/hackeros/cursors/mine/arrow.png"] = CursorThemeFileTests.Png(32, 32),
+            ["/home/alice/.config/kazoos/cursors/mine/cursor.theme"] = Cursor("mine"),
+            ["/home/alice/.config/kazoos/cursors/mine/arrow.png"] = CursorThemeFileTests.Png(32, 32),
         };
 
         CursorThemeLibraryResult result = await CursorThemeLibrary.LoadAsync(files.ListDirectoriesAsync, files.ReadTextAsync, files.ReadBytesAsync, Home);
@@ -74,7 +74,7 @@ public sealed class ThemePackFoldersTests
     }
 
     private static byte[] Theme(string id) =>
-        Encoding.UTF8.GetBytes($"[theme]\nid = {id}\nname = {id}\nbase = hackeros\n\n[tokens]\n--hos-accent = #ff00ff\n");
+        Encoding.UTF8.GetBytes($"[theme]\nid = {id}\nname = {id}\nbase = kazoos\n\n[tokens]\n--hos-accent = #ff00ff\n");
 
     private static byte[] Cursor(string id) =>
         Encoding.UTF8.GetBytes($"[cursor-theme]\nid = {id}\nname = {id}\n\n[cursors]\ndefault = arrow.png 2 1\n");

@@ -7,7 +7,7 @@
 // ignored it. When the browser ignored COEP "credentialless", the page asks the worker for
 // "require-corp" and reloads once (ADR 0131, section 2).
 
-const strictGuardKey = 'hackeros.isolationStrictReload';
+const strictGuardKey = 'kazoos.isolationStrictReload';
 
 /** Asks the controlling service worker one question on a MessageChannel; null after timeoutMs. */
 function askServiceWorker(type, timeoutMs) {

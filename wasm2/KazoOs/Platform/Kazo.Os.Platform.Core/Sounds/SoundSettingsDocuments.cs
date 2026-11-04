@@ -6,8 +6,8 @@ using Kazo.Os.Simulation.Abstractions.Sounds;
 namespace Kazo.Os.Platform.Core.Sounds;
 
 /// <summary>
-/// Defines the layered sound document (ADR 0204 section 3): <c>/etc/hackeros/sound.config</c> holds
-/// the machine's defaults, and each user overrides them in <c>~/.config/hackeros/sound.config</c>.
+/// Defines the layered sound document (ADR 0204 section 3): <c>/etc/kazoos/sound.config</c> holds
+/// the machine's defaults, and each user overrides them in <c>~/.config/kazoos/sound.config</c>.
 /// </summary>
 public static class SoundSettingsDocuments
 {

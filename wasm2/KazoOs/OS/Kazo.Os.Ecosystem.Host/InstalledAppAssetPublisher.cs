@@ -51,7 +51,7 @@ public interface IInstalledAppAssetCache
 /// Like a package manager unpacking files where the web server finds them, the copy is made once
 /// per session per app, at its first launch. The first publication also drops every cached address
 /// no installed app declares any more, neither in this page nor on disk (an app removed by
-/// <c>hackpkg remove</c> or updated before the restart; ADR 0225 §2 for an app another tab installed).
+/// <c>kazopkg remove</c> or updated before the restart; ADR 0225 §2 for an app another tab installed).
 /// Without a service worker controlling the page, nothing is copied and the next launch asks again
 /// (ADR 0225 §1). A damaged or missing file is left out, with a <c>/var/log/syslog</c> line; the launch
 /// goes on, as with a built-in app's missing file. Once its files are copied, the app's scoped CSS

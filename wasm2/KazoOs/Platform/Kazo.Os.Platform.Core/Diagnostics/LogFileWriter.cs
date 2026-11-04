@@ -68,7 +68,7 @@ public sealed class LogFileWriter : IAsyncDisposable
     /// <summary>Category used for the writer's own messages (dropped lines, write failures).</summary>
     public const string LoggingCategory = "logging";
 
-    private const string KernelAppId = "org.hackeros.kernel";
+    private const string KernelAppId = "org.kazoos.kernel";
     private const string SystemPrincipal = "system";
     private const ushort DirectoryMode = 0b111_101_101;
 

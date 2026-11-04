@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.True;
 public sealed class TrueApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.true";
+    public override string Id => "org.kazoos.commands.true";
 
     /// <inheritdoc />
     public override string Name => "true";
@@ -22,7 +22,7 @@ public sealed class TrueApp : AppDefinition
     public override Type EntryPoint => typeof(TrueCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Do nothing, successfully";

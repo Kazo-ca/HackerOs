@@ -19,10 +19,10 @@ le gestionnaire de fenêtres place la fenêtre. Kazo OS tient la géométrie en 
 ## Fichier d'état
 
 Un fichier par app et par utilisateur, propre à l'appareil, jamais synchronisé :
-`~/.local/state/hackeros/windows/<appId>.config`.
+`~/.local/state/kazoos/windows/<appId>.config`.
 
 ```ini
-# Window size of org.hackeros.text-editor (ADR 0116, ADR 0122)
+# Window size of org.kazoos.text-editor (ADR 0116, ADR 0122)
 width=900
 height=640
 maximized=false
@@ -36,7 +36,7 @@ maximized=false
   sa taille déclarée.
 - Un fichier écrit avant l'ADR 0122 (avec `x=` et `y=`) garde sa taille ; sa
   position est ignorée, et la prochaine écriture le réécrit sans ces clés.
-- Oublier la taille d'une app : `rm ~/.local/state/hackeros/windows/<appId>.config`.
+- Oublier la taille d'une app : `rm ~/.local/state/kazoos/windows/<appId>.config`.
 
 ## Architecture
 

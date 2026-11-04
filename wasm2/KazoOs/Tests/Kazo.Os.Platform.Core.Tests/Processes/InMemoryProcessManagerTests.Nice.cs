@@ -14,7 +14,7 @@ public sealed partial class InMemoryProcessManagerTests
     public void A_new_process_starts_at_niceness_zero()
     {
         Fixture fixture = new();
-        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.hackeros.terminal"));
+        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.kazoos.terminal"));
 
         Assert.Equal(ProcessNice.Default, fixture.Manager.GetNice(process.Pid));
     }
@@ -23,11 +23,11 @@ public sealed partial class InMemoryProcessManagerTests
     public void A_child_inherits_the_niceness_of_its_parent_unless_the_request_sets_one()
     {
         Fixture fixture = new();
-        ProcessRecord parent = fixture.Manager.Start(fixture.RequestFor("com.hackeros.terminal"));
+        ProcessRecord parent = fixture.Manager.Start(fixture.RequestFor("com.kazoos.terminal"));
         fixture.Manager.SetNice(parent.Pid, 7);
 
-        ProcessRecord inherited = fixture.Manager.Start(fixture.RequestFor("com.hackeros.ls", parent.Pid));
-        ProcessRecord explicitNice = fixture.Manager.Start(fixture.RequestFor("com.hackeros.ls", parent.Pid) with { Nice = -3 });
+        ProcessRecord inherited = fixture.Manager.Start(fixture.RequestFor("com.kazoos.ls", parent.Pid));
+        ProcessRecord explicitNice = fixture.Manager.Start(fixture.RequestFor("com.kazoos.ls", parent.Pid) with { Nice = -3 });
 
         Assert.Equal(7, fixture.Manager.GetNice(inherited.Pid));
         Assert.Equal(-3, fixture.Manager.GetNice(explicitNice.Pid));
@@ -41,7 +41,7 @@ public sealed partial class InMemoryProcessManagerTests
     public void Niceness_is_clamped_to_the_linux_range(int requested, int expected)
     {
         Fixture fixture = new();
-        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.hackeros.terminal") with { Nice = requested });
+        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.kazoos.terminal") with { Nice = requested });
 
         Assert.Equal(expected, fixture.Manager.GetNice(process.Pid));
         Assert.Equal(expected, fixture.Manager.SetNice(process.Pid, requested));
@@ -52,7 +52,7 @@ public sealed partial class InMemoryProcessManagerTests
     public void Niceness_of_an_ended_process_is_unknown()
     {
         Fixture fixture = new();
-        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.hackeros.terminal"));
+        ProcessRecord process = fixture.Manager.Start(fixture.RequestFor("com.kazoos.terminal"));
         fixture.Manager.MarkRunning(process.Pid);
         fixture.Manager.Complete(process.Pid, exitCode: 0);
 
@@ -64,8 +64,8 @@ public sealed partial class InMemoryProcessManagerTests
     public void A_user_may_raise_the_niceness_of_their_own_process_but_not_lower_it()
     {
         Fixture fixture = new();
-        ProcessRecord shell = fixture.Manager.Start(fixture.RequestFor("com.hackeros.terminal"));
-        ProcessRecord job = fixture.Manager.Start(fixture.RequestFor("com.hackeros.ls", shell.Pid));
+        ProcessRecord shell = fixture.Manager.Start(fixture.RequestFor("com.kazoos.terminal"));
+        ProcessRecord job = fixture.Manager.Start(fixture.RequestFor("com.kazoos.ls", shell.Pid));
         AppProcessGateway gateway = new(fixture.Manager, new FixedCapabilities(AppCapabilities.ProcessList, AppCapabilities.ProcessManage), shell.Pid);
 
         Assert.Equal(10, gateway.SetNice(job.Pid, 10));
@@ -79,8 +79,8 @@ public sealed partial class InMemoryProcessManagerTests
     public void Root_may_lower_a_niceness_and_renice_another_users_process()
     {
         Fixture fixture = new();
-        ProcessRecord shell = fixture.Manager.Start(fixture.RequestFor("com.hackeros.terminal"));
-        ProcessRecord other = fixture.Manager.Start(fixture.RequestFor("com.hackeros.ls") with { UserId = LocalUserId.FromGuid(Guid.NewGuid()) });
+        ProcessRecord shell = fixture.Manager.Start(fixture.RequestFor("com.kazoos.terminal"));
+        ProcessRecord other = fixture.Manager.Start(fixture.RequestFor("com.kazoos.ls") with { UserId = LocalUserId.FromGuid(Guid.NewGuid()) });
         FixedCapabilities capabilities = new(AppCapabilities.ProcessList, AppCapabilities.ProcessManage);
         AppProcessGateway user = new(fixture.Manager, capabilities, shell.Pid);
         AppProcessGateway root = new(fixture.Manager, capabilities, shell.Pid) { IsRootElevated = true };
@@ -94,9 +94,9 @@ public sealed partial class InMemoryProcessManagerTests
     public void Reading_or_changing_another_process_needs_the_process_capabilities()
     {
         Fixture fixture = new();
-        ProcessRecord shell = fixture.Manager.Start(fixture.RequestFor("com.hackeros.terminal"));
-        ProcessRecord child = fixture.Manager.Start(fixture.RequestFor("com.hackeros.ls", shell.Pid));
-        ProcessRecord other = fixture.Manager.Start(fixture.RequestFor("com.hackeros.ls"));
+        ProcessRecord shell = fixture.Manager.Start(fixture.RequestFor("com.kazoos.terminal"));
+        ProcessRecord child = fixture.Manager.Start(fixture.RequestFor("com.kazoos.ls", shell.Pid));
+        ProcessRecord other = fixture.Manager.Start(fixture.RequestFor("com.kazoos.ls"));
         AppProcessGateway gateway = new(fixture.Manager, new FixedCapabilities(), shell.Pid);
 
         Assert.Equal(0, gateway.GetNice(shell.Pid));

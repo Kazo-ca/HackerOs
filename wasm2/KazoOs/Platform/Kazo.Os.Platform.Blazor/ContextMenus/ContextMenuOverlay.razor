@@ -7,15 +7,15 @@
    ContextMenuService; keys and pointer go through ContextMenuNavigator; the script places the
    panels and catches the requests. *@
 
-<div @ref="_layer" class="hack-context-menu-layer @(IsSheet ? "is-sheet" : null)" data-context-menu-layer="">
+<div @ref="_layer" class="kazo-context-menu-layer @(IsSheet ? "is-sheet" : null)" data-context-menu-layer="">
     @if (_session is { } session && _navigator is { } navigator)
     {
         @if (IsSheet)
         {
             int active = navigator.Levels.Count - 1;
-            <div class="hack-context-menu-backdrop" @onclick="DismissAsync"></div>
+            <div class="kazo-context-menu-backdrop" @onclick="DismissAsync"></div>
             <div @ref="_panels[active]"
-                 class="hack-context-menu-panel hack-context-menu-sheet"
+                 class="kazo-context-menu-panel kazo-context-menu-sheet"
                  role="menu"
                  tabindex="-1"
                  aria-label="@MenuLabel(session)"
@@ -28,17 +28,17 @@
                  @oncontextmenu:preventDefault="true">
                 @if (active > 0)
                 {
-                    <div class="hack-context-menu-item hack-context-menu-back"
+                    <div class="kazo-context-menu-item kazo-context-menu-back"
                          role="menuitem"
                          tabindex="-1"
                          aria-disabled="false"
                          @onclick="Back">
-                        <span class="hack-context-menu-icon" aria-hidden="true">
+                        <span class="kazo-context-menu-icon" aria-hidden="true">
                             <KazoIcon Library="IconLibrary.Lucide" Name="chevron-left" Size="16" />
                         </span>
-                        <span class="hack-context-menu-title">@L["ContextMenu.Back"]</span>
+                        <span class="kazo-context-menu-title">@L["ContextMenu.Back"]</span>
                     </div>
-                    <div class="hack-context-menu-separator" role="separator"></div>
+                    <div class="kazo-context-menu-separator" role="separator"></div>
                 }
                 @{ RenderRows(__builder, active); }
             </div>
@@ -50,7 +50,7 @@
                 int level = index;
                 ContextMenuNavigator.OpenLevel open = navigator.Levels[level];
                 <div @ref="_panels[level]"
-                     class="hack-context-menu-panel"
+                     class="kazo-context-menu-panel"
                      role="menu"
                      tabindex="-1"
                      aria-label="@(level == 0 ? MenuLabel(session) : navigator.Levels[level - 1].Level.Rows[open.ParentRow].Item!.Title)"
@@ -81,13 +81,13 @@
             ContextMenuRow menuRow = open.Level.Rows[row];
             if (menuRow.Item is not { } item)
             {
-                <div class="hack-context-menu-separator" role="separator"></div>
+                <div class="kazo-context-menu-separator" role="separator"></div>
                 continue;
             }
 
             bool expanded = hasSubmenuOpen && _navigator.Levels[level + 1].ParentRow == row;
             <div id="@RowId(level, row)"
-                 class="hack-context-menu-item @(row == open.Highlight ? "is-highlighted" : null) @(item.IsDisabled ? "is-disabled" : null)"
+                 class="kazo-context-menu-item @(row == open.Highlight ? "is-highlighted" : null) @(item.IsDisabled ? "is-disabled" : null)"
                  role="menuitem"
                  tabindex="-1"
                  aria-disabled="@(item.IsDisabled ? "true" : "false")"
@@ -97,7 +97,7 @@
                  @onpointerenter="() => Hover(level, row)"
                  @onpointerleave="() => Unhover(level, row)"
                  @onclick="() => ClickAsync(level, row)">
-                <span class="hack-context-menu-icon" aria-hidden="true">
+                <span class="kazo-context-menu-icon" aria-hidden="true">
                     @if (item.Icon is { Kind: KazoIconKind.Vector } vector)
                     {
                         <KazoIcon Library="vector.Library" Name="@vector.Source" Size="16" />
@@ -107,14 +107,14 @@
                         <img src="@image.Source" alt="" />
                     }
                 </span>
-                <span class="hack-context-menu-title">@item.Title</span>
+                <span class="kazo-context-menu-title">@item.Title</span>
                 @if (item.Shortcut is { Length: > 0 } shortcut)
                 {
-                    <kbd class="hack-context-menu-shortcut">@shortcut</kbd>
+                    <kbd class="kazo-context-menu-shortcut">@shortcut</kbd>
                 }
                 @if (menuRow.Submenu is not null)
                 {
-                    <span class="hack-context-menu-chevron" aria-hidden="true">
+                    <span class="kazo-context-menu-chevron" aria-hidden="true">
                         <KazoIcon Library="IconLibrary.Lucide" Name="chevron-right" Size="14" />
                     </span>
                 }

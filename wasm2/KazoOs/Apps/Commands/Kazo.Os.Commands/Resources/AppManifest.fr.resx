@@ -12,472 +12,472 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="org.hackeros.cmd.cat.Description" xml:space="preserve">
+  <data name="org.kazoos.cmd.cat.Description" xml:space="preserve">
     <value>Concatène des fichiers et les affiche sur la sortie standard</value>
   </data>
-  <data name="org.hackeros.cmd.cat.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.cmd.cat.Terminal.Usage" xml:space="preserve">
     <value>cat [fichier ...]</value>
   </data>
-  <data name="org.hackeros.cmd.cd.Description" xml:space="preserve">
+  <data name="org.kazoos.cmd.cd.Description" xml:space="preserve">
     <value>Change le dossier de travail</value>
   </data>
-  <data name="org.hackeros.cmd.cd.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.cmd.cd.Terminal.Usage" xml:space="preserve">
     <value>cd [dossier|-]</value>
   </data>
-  <data name="org.hackeros.cmd.echo.Description" xml:space="preserve">
+  <data name="org.kazoos.cmd.echo.Description" xml:space="preserve">
     <value>Écrit les arguments sur la sortie standard</value>
   </data>
-  <data name="org.hackeros.cmd.echo.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.cmd.echo.Terminal.Usage" xml:space="preserve">
     <value>echo [chaîne ...]</value>
   </data>
-  <data name="org.hackeros.cmd.ls.Description" xml:space="preserve">
+  <data name="org.kazoos.cmd.ls.Description" xml:space="preserve">
     <value>Liste le contenu des dossiers</value>
   </data>
-  <data name="org.hackeros.cmd.ls.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.cmd.ls.Terminal.Usage" xml:space="preserve">
     <value>ls [-a] [-l] [chemin ...]</value>
   </data>
-  <data name="org.hackeros.cmd.pwd.Description" xml:space="preserve">
+  <data name="org.kazoos.cmd.pwd.Description" xml:space="preserve">
     <value>Affiche le nom du dossier de travail courant</value>
   </data>
-  <data name="org.hackeros.cmd.pwd.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.cmd.pwd.Terminal.Usage" xml:space="preserve">
     <value>pwd</value>
   </data>
-  <data name="org.hackeros.commands.alias.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.alias.Description" xml:space="preserve">
     <value>Définit ou affiche les alias de commandes</value>
   </data>
-  <data name="org.hackeros.commands.alias.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.alias.Terminal.Usage" xml:space="preserve">
     <value>alias [nom[=valeur]]</value>
   </data>
-  <data name="org.hackeros.commands.ausearch.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.ausearch.Description" xml:space="preserve">
     <value>Recherche dans le journal d'audit du système de fichiers</value>
   </data>
-  <data name="org.hackeros.commands.ausearch.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.ausearch.Terminal.Usage" xml:space="preserve">
     <value>ausearch [-f chemin] [-ua utilisateur] [-c comm] [--success yes|no] [-if fichier]</value>
   </data>
-  <data name="org.hackeros.commands.basename.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.basename.Description" xml:space="preserve">
     <value>Retire le dossier et le suffixe des noms de fichiers</value>
   </data>
-  <data name="org.hackeros.commands.basename.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.basename.Terminal.Usage" xml:space="preserve">
     <value>basename nom [suffixe] | basename -a [-s suffixe] nom...</value>
   </data>
-  <data name="org.hackeros.commands.chmod.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.chmod.Description" xml:space="preserve">
     <value>Change les bits de mode des permissions de fichiers</value>
   </data>
-  <data name="org.hackeros.commands.chmod.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.chmod.Terminal.Usage" xml:space="preserve">
     <value>chmod [-Rvcf] &lt;mode&gt; &lt;fichier...&gt;   (mode : 755, +x, u+x, go-w, a=r, ...)</value>
   </data>
-  <data name="org.hackeros.commands.clear.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.clear.Description" xml:space="preserve">
     <value>Efface l'écran du terminal</value>
   </data>
-  <data name="org.hackeros.commands.clear.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.clear.Terminal.Usage" xml:space="preserve">
     <value>clear</value>
   </data>
-  <data name="org.hackeros.commands.cp.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.cp.Description" xml:space="preserve">
     <value>Copie des fichiers et des dossiers</value>
   </data>
-  <data name="org.hackeros.commands.cp.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.cp.Terminal.Usage" xml:space="preserve">
     <value>cp [-r|-R] &lt;source...&gt; &lt;destination&gt;</value>
   </data>
-  <data name="org.hackeros.commands.curl.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.curl.Description" xml:space="preserve">
     <value>Transfert de données par URL simulé : récupère le contenu des sites web simulés</value>
   </data>
-  <data name="org.hackeros.commands.curl.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.curl.Terminal.Usage" xml:space="preserve">
     <value>curl [-I] [-v] [-L] [-s] [-f] [-o fichier|-O] [-H en-tête] [-X &lt;méthode&gt;] [-d &lt;données&gt;] &lt;url&gt;</value>
   </data>
-  <data name="org.hackeros.commands.cut.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.cut.Description" xml:space="preserve">
     <value>Retire des parties de chaque ligne des fichiers</value>
   </data>
-  <data name="org.hackeros.commands.cut.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.cut.Terminal.Usage" xml:space="preserve">
     <value>cut -f liste [-d délim] [-s] | -c liste | -b liste [--complement] [fichier...]</value>
   </data>
-  <data name="org.hackeros.commands.date.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.date.Description" xml:space="preserve">
     <value>Affiche la date et l'heure actuelles dans le fuseau horaire du processus</value>
   </data>
-  <data name="org.hackeros.commands.date.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.date.Terminal.Usage" xml:space="preserve">
     <value>date [-u] [-I|-R] [+FORMAT]</value>
   </data>
-  <data name="org.hackeros.commands.df.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.df.Description" xml:space="preserve">
     <value>Indique l'espace disque utilisé par les systèmes de fichiers</value>
   </data>
-  <data name="org.hackeros.commands.df.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.df.Terminal.Usage" xml:space="preserve">
     <value>df [-h] [-k] [-T] [-i]</value>
   </data>
-  <data name="org.hackeros.commands.diff.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.diff.Description" xml:space="preserve">
     <value>Compare des fichiers ligne par ligne</value>
   </data>
-  <data name="org.hackeros.commands.diff.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.diff.Terminal.Usage" xml:space="preserve">
     <value>diff [-u] &lt;fichier1&gt; &lt;fichier2&gt;</value>
   </data>
-  <data name="org.hackeros.commands.dirname.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.dirname.Description" xml:space="preserve">
     <value>Retire le dernier composant des noms de fichiers</value>
   </data>
-  <data name="org.hackeros.commands.dirname.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.dirname.Terminal.Usage" xml:space="preserve">
     <value>dirname nom...</value>
   </data>
-  <data name="org.hackeros.commands.dmesg.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.dmesg.Description" xml:space="preserve">
     <value>Affiche le tampon circulaire du noyau</value>
   </data>
-  <data name="org.hackeros.commands.dmesg.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.dmesg.Terminal.Usage" xml:space="preserve">
     <value>dmesg [-T] [-x] [-l NIVEAU[,NIVEAU...]]</value>
   </data>
-  <data name="org.hackeros.commands.du.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.du.Description" xml:space="preserve">
     <value>Estime l'espace occupé par les fichiers</value>
   </data>
-  <data name="org.hackeros.commands.du.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.du.Terminal.Usage" xml:space="preserve">
     <value>du [-a] [-s] [-h] [-c] [-d profondeur] [chemin...]</value>
   </data>
-  <data name="org.hackeros.commands.env.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.env.Description" xml:space="preserve">
     <value>Affiche l'environnement</value>
   </data>
-  <data name="org.hackeros.commands.env.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.env.Terminal.Usage" xml:space="preserve">
     <value>env</value>
   </data>
-  <data name="org.hackeros.commands.exit.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.exit.Description" xml:space="preserve">
     <value>Quitte le shell</value>
   </data>
-  <data name="org.hackeros.commands.exit.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.exit.Terminal.Usage" xml:space="preserve">
     <value>exit [n]</value>
   </data>
-  <data name="org.hackeros.commands.export.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.export.Description" xml:space="preserve">
     <value>Définit les variables d'environnement du shell</value>
   </data>
-  <data name="org.hackeros.commands.export.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.export.Terminal.Usage" xml:space="preserve">
     <value>export [NOM=valeur...]</value>
   </data>
-  <data name="org.hackeros.commands.false.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.false.Description" xml:space="preserve">
     <value>Ne fait rien, avec un code d'échec</value>
   </data>
-  <data name="org.hackeros.commands.false.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.false.Terminal.Usage" xml:space="preserve">
     <value>false</value>
   </data>
-  <data name="org.hackeros.commands.find.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.find.Description" xml:space="preserve">
     <value>Recherche des fichiers dans une arborescence de dossiers</value>
   </data>
-  <data name="org.hackeros.commands.find.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.find.Terminal.Usage" xml:space="preserve">
     <value>find [chemin] [-name motif] [-type f|d]</value>
   </data>
-  <data name="org.hackeros.commands.grep.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.grep.Description" xml:space="preserve">
     <value>Affiche les lignes correspondant à un motif dans l'entrée standard ou des fichiers virtuels</value>
   </data>
-  <data name="org.hackeros.commands.grep.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.grep.Terminal.Usage" xml:space="preserve">
     <value>grep [-i] [-n] [-v] [-r] &lt;motif&gt; [fichier...]</value>
   </data>
-  <data name="org.hackeros.commands.hackbackup.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.kazobackup.Description" xml:space="preserve">
     <value>Sauvegarde toute la machine sur l'ordinateur hôte, ou la restaure</value>
   </data>
-  <data name="org.hackeros.commands.hackbackup.Terminal.Usage" xml:space="preserve">
-    <value>hackbackup create | restore [--merge|--replace]</value>
+  <data name="org.kazoos.commands.kazobackup.Terminal.Usage" xml:space="preserve">
+    <value>kazobackup create | restore [--merge|--replace]</value>
   </data>
-  <data name="org.hackeros.commands.hackpkg.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.kazopkg.Description" xml:space="preserve">
     <value>Installe, met à jour et retire des apps depuis leur dépôt GitHub</value>
   </data>
-  <data name="org.hackeros.commands.hackpkg.Terminal.Usage" xml:space="preserve">
-    <value>hackpkg install &lt;dépôt&gt;[@version] [--user|--system] | remove &lt;appId&gt; [--user|--system] | update [&lt;appId&gt;] | list | info &lt;dépôt&gt; | sources [add|remove &lt;source&gt;] | policy</value>
+  <data name="org.kazoos.commands.kazopkg.Terminal.Usage" xml:space="preserve">
+    <value>kazopkg install &lt;dépôt&gt;[@version] [--user|--system] | remove &lt;appId&gt; [--user|--system] | update [&lt;appId&gt;] | list | info &lt;dépôt&gt; | sources [add|remove &lt;source&gt;] | policy</value>
   </data>
-  <data name="org.hackeros.commands.head.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.head.Description" xml:space="preserve">
     <value>Affiche le début des fichiers</value>
   </data>
-  <data name="org.hackeros.commands.head.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.head.Terminal.Usage" xml:space="preserve">
     <value>head [-n [-]nombre | -nombre] [-c octets] [-qv] [fichier...]</value>
   </data>
-  <data name="org.hackeros.commands.help.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.help.Description" xml:space="preserve">
     <value>Affiche l'aide et les pages de manuel des commandes</value>
   </data>
-  <data name="org.hackeros.commands.help.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.help.Terminal.Usage" xml:space="preserve">
     <value>help [commande]</value>
   </data>
-  <data name="org.hackeros.commands.htop.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.htop.Description" xml:space="preserve">
     <value>Visionneuse interactive de processus avec jauges, tri et kill</value>
   </data>
-  <data name="org.hackeros.commands.htop.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.htop.Terminal.Usage" xml:space="preserve">
     <value>htop [-d dixièmes] [-u utilisateur]</value>
   </data>
-  <data name="org.hackeros.commands.ip.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.ip.Description" xml:space="preserve">
     <value>Affiche les interfaces, adresses et routes réseau</value>
   </data>
-  <data name="org.hackeros.commands.ip.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.ip.Terminal.Usage" xml:space="preserve">
     <value>ip [-4] [-br] {addr|link|route|neigh} [show]</value>
   </data>
-  <data name="org.hackeros.commands.jobs.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.jobs.Description" xml:space="preserve">
     <value>Liste les tâches d'arrière-plan du shell</value>
   </data>
-  <data name="org.hackeros.commands.jobs.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.jobs.Terminal.Usage" xml:space="preserve">
     <value>jobs [-l] [-p] [-r] [-s]</value>
   </data>
-  <data name="org.hackeros.commands.kill.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.kill.Description" xml:space="preserve">
     <value>Envoie un signal à un processus ou le termine</value>
   </data>
-  <data name="org.hackeros.commands.kill.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.kill.Terminal.Usage" xml:space="preserve">
     <value>kill [-s sig | -SIG] &lt;pid|%tâche...&gt; | kill -l</value>
   </data>
-  <data name="org.hackeros.commands.launch.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.launch.Description" xml:space="preserve">
     <value>Lance une application par son ID</value>
   </data>
-  <data name="org.hackeros.commands.launch.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.launch.Terminal.Usage" xml:space="preserve">
     <value>launch &lt;id-app&gt;</value>
   </data>
-  <data name="org.hackeros.commands.ln.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.ln.Description" xml:space="preserve">
     <value>Crée des liens entre fichiers</value>
   </data>
-  <data name="org.hackeros.commands.ln.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.ln.Terminal.Usage" xml:space="preserve">
     <value>ln [-s] [-f] [-n] [-v] cible [nom_du_lien] | ln -s cible... dossier</value>
   </data>
-  <data name="org.hackeros.commands.localectl.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.localectl.Description" xml:space="preserve">
     <value>Consulte ou modifie la locale du système</value>
   </data>
-  <data name="org.hackeros.commands.localectl.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.localectl.Terminal.Usage" xml:space="preserve">
     <value>localectl [status | list-locales | set-locale VARIABLE=LOCALE...]</value>
   </data>
-  <data name="org.hackeros.commands.locate.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.locate.Description" xml:space="preserve">
     <value>Trouve des fichiers par leur nom dans tout le système de fichiers</value>
   </data>
-  <data name="org.hackeros.commands.locate.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.locate.Terminal.Usage" xml:space="preserve">
     <value>locate [-i] [-b] [-c] [-l nombre] motif...</value>
   </data>
-  <data name="org.hackeros.commands.mkdir.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.mkdir.Description" xml:space="preserve">
     <value>Crée des dossiers dans le système de fichiers virtuel</value>
   </data>
-  <data name="org.hackeros.commands.mkdir.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.mkdir.Terminal.Usage" xml:space="preserve">
     <value>mkdir [-pv] &lt;dossier...&gt;</value>
   </data>
-  <data name="org.hackeros.commands.mount.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.mount.Description" xml:space="preserve">
     <value>Monte un dossier de l'ordinateur comme lecteur réseau</value>
   </data>
-  <data name="org.hackeros.commands.mount.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.mount.Terminal.Usage" xml:space="preserve">
     <value>mount [-l] | mount -t hostfs [/mnt/nom] | mount -o remount /mnt/nom</value>
   </data>
-  <data name="org.hackeros.commands.mv.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.mv.Description" xml:space="preserve">
     <value>Déplace ou renomme des fichiers et des dossiers</value>
   </data>
-  <data name="org.hackeros.commands.mv.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.mv.Terminal.Usage" xml:space="preserve">
     <value>mv &lt;source...&gt; &lt;destination&gt;</value>
   </data>
-  <data name="org.hackeros.commands.nano.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.nano.Description" xml:space="preserve">
     <value>Éditeur de texte interactif du terminal</value>
   </data>
-  <data name="org.hackeros.commands.nano.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.nano.Terminal.Usage" xml:space="preserve">
     <value>nano [fichier]</value>
   </data>
-  <data name="org.hackeros.commands.netstat.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.netstat.Description" xml:space="preserve">
     <value>Affiche les connexions réseau, les tables de routage et les statistiques des interfaces</value>
   </data>
-  <data name="org.hackeros.commands.netstat.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.netstat.Terminal.Usage" xml:space="preserve">
     <value>netstat [-tulnap] [-i] [-r] [-s]</value>
   </data>
-  <data name="org.hackeros.commands.nice.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.nice.Description" xml:space="preserve">
     <value>Exécute une commande avec une priorité modifiée</value>
   </data>
-  <data name="org.hackeros.commands.nice.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.nice.Terminal.Usage" xml:space="preserve">
     <value>nice [-n N] [commande [arguments...]]</value>
   </data>
-  <data name="org.hackeros.commands.nmap.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.nmap.Description" xml:space="preserve">
     <value>Cartographe réseau simulé : analyse les ports des hôtes simulés</value>
   </data>
-  <data name="org.hackeros.commands.nmap.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.nmap.Terminal.Usage" xml:space="preserve">
     <value>nmap [-p &lt;plage&gt;] [-sV] [-O] &lt;cible&gt;</value>
   </data>
-  <data name="org.hackeros.commands.nslookup.Description" xml:space="preserve">
-    <value>Interroge le résolveur hackdns sur un nom d'hôte ou une adresse, et indique la source qui a répondu</value>
+  <data name="org.kazoos.commands.nslookup.Description" xml:space="preserve">
+    <value>Interroge le résolveur kazodns sur un nom d'hôte ou une adresse, et indique la source qui a répondu</value>
   </data>
-  <data name="org.hackeros.commands.nslookup.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.nslookup.Terminal.Usage" xml:space="preserve">
     <value>nslookup &lt;nom|adresse&gt;</value>
   </data>
-  <data name="org.hackeros.commands.passwd.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.passwd.Description" xml:space="preserve">
     <value>Change le mot de passe d'un utilisateur</value>
   </data>
-  <data name="org.hackeros.commands.passwd.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.passwd.Terminal.Usage" xml:space="preserve">
     <value>passwd [-d] [-S] [utilisateur]</value>
   </data>
-  <data name="org.hackeros.commands.ping.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.ping.Description" xml:space="preserve">
     <value>Commande ping réseau simulée : teste si un hôte simulé est joignable</value>
   </data>
-  <data name="org.hackeros.commands.ping.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.ping.Terminal.Usage" xml:space="preserve">
     <value>ping &lt;nom-d-hôte|ip&gt;</value>
   </data>
-  <data name="org.hackeros.commands.printf.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.printf.Description" xml:space="preserve">
     <value>Formate et affiche des données</value>
   </data>
-  <data name="org.hackeros.commands.printf.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.printf.Terminal.Usage" xml:space="preserve">
     <value>printf format [argument...]</value>
   </data>
-  <data name="org.hackeros.commands.prlimit.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.prlimit.Description" xml:space="preserve">
     <value>Obtient et définit les limites de ressources d’un processus</value>
   </data>
-  <data name="org.hackeros.commands.prlimit.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.prlimit.Terminal.Usage" xml:space="preserve">
     <value>prlimit [--pid &lt;pid&gt;] [--cpu[=souple:stricte]] [--rss[=]] [--nofile[=]] [--nproc[=]] [--noheadings]</value>
   </data>
-  <data name="org.hackeros.commands.ps.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.ps.Description" xml:space="preserve">
     <value>Affiche un instantané des processus en cours</value>
   </data>
-  <data name="org.hackeros.commands.ps.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.ps.Terminal.Usage" xml:space="preserve">
     <value>ps [-a] [-u] [-l] [-o champ,...]</value>
   </data>
-  <data name="org.hackeros.commands.read.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.read.Description" xml:space="preserve">
     <value>Lit une ligne de l'entrée standard dans des variables du shell</value>
   </data>
-  <data name="org.hackeros.commands.read.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.read.Terminal.Usage" xml:space="preserve">
     <value>read [-r] [-p invite] [-s] [-n nombre] [-t secondes] [-d délim] [nom...]</value>
   </data>
-  <data name="org.hackeros.commands.renice.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.renice.Description" xml:space="preserve">
     <value>Modifie la priorité de processus en cours</value>
   </data>
-  <data name="org.hackeros.commands.renice.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.renice.Terminal.Usage" xml:space="preserve">
     <value>renice [-n] N [-p] pid...</value>
   </data>
-  <data name="org.hackeros.commands.rm.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.rm.Description" xml:space="preserve">
     <value>Déplace des fichiers ou des dossiers vers la Corbeille, ou les supprime définitivement</value>
   </data>
-  <data name="org.hackeros.commands.rm.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.rm.Terminal.Usage" xml:space="preserve">
     <value>rm [-r|-R] [-f] [--permanent] &lt;fichier...&gt;</value>
   </data>
-  <data name="org.hackeros.commands.seq.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.seq.Description" xml:space="preserve">
     <value>Affiche une suite de nombres</value>
   </data>
-  <data name="org.hackeros.commands.seq.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.seq.Terminal.Usage" xml:space="preserve">
     <value>seq [-s sép] [-w] [premier [incrément]] dernier</value>
   </data>
-  <data name="org.hackeros.commands.sleep.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.sleep.Description" xml:space="preserve">
     <value>Attend pendant une durée donnée</value>
   </data>
-  <data name="org.hackeros.commands.sleep.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.sleep.Terminal.Usage" xml:space="preserve">
     <value>sleep nombre[s|m|h|d]...</value>
   </data>
-  <data name="org.hackeros.commands.sort.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.sort.Description" xml:space="preserve">
     <value>Trie les lignes de fichiers texte</value>
   </data>
-  <data name="org.hackeros.commands.sort.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.sort.Terminal.Usage" xml:space="preserve">
     <value>sort [-rnhVfbuc] [-k N[,M]] [-t sép] [-o fichier] [fichier...]</value>
   </data>
-  <data name="org.hackeros.commands.stress.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.stress.Description" xml:space="preserve">
     <value>Impose une charge CPU ou mémoire au système</value>
   </data>
-  <data name="org.hackeros.commands.stress.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.stress.Terminal.Usage" xml:space="preserve">
     <value>stress [-c N] [-m N] [--vm-bytes B] [--vm-keep] [-t SECONDES] [--yield]</value>
   </data>
-  <data name="org.hackeros.commands.sudo.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.sudo.Description" xml:space="preserve">
     <value>Exécute une commande en tant que superutilisateur</value>
   </data>
-  <data name="org.hackeros.commands.sudo.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.sudo.Terminal.Usage" xml:space="preserve">
     <value>sudo &lt;commande&gt; [arguments...]</value>
   </data>
-  <data name="org.hackeros.commands.systemctl.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.systemctl.Description" xml:space="preserve">
     <value>Consulte et contrôle les services du système</value>
   </data>
-  <data name="org.hackeros.commands.systemctl.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.systemctl.Terminal.Usage" xml:space="preserve">
     <value>systemctl [list-units|status|start|stop|restart|enable|disable|is-active|is-enabled] [service...]</value>
   </data>
-  <data name="org.hackeros.commands.tail.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.tail.Description" xml:space="preserve">
     <value>Affiche la fin des fichiers</value>
   </data>
-  <data name="org.hackeros.commands.tail.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.tail.Terminal.Usage" xml:space="preserve">
     <value>tail [-n [+]nombre | -nombre] [-c octets] [-f] [-qv] [fichier...]</value>
   </data>
-  <data name="org.hackeros.commands.tee.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.tee.Description" xml:space="preserve">
     <value>Copie l'entrée standard sur la sortie standard et dans des fichiers</value>
   </data>
-  <data name="org.hackeros.commands.tee.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.tee.Terminal.Usage" xml:space="preserve">
     <value>tee [-a] [fichier...]</value>
   </data>
-  <data name="org.hackeros.commands.test.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.test.Description" xml:space="preserve">
     <value>Évalue une expression conditionnelle (aussi [ … ])</value>
   </data>
-  <data name="org.hackeros.commands.test.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.test.Terminal.Usage" xml:space="preserve">
     <value>test expression | [ expression ]</value>
   </data>
-  <data name="org.hackeros.commands.top.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.top.Description" xml:space="preserve">
     <value>Affiche les processus qui utilisent le plus de CPU, actualisés en direct</value>
   </data>
-  <data name="org.hackeros.commands.top.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.top.Terminal.Usage" xml:space="preserve">
     <value>top [-b] [-n itérations] [-d secondes] [-u utilisateur]</value>
   </data>
-  <data name="org.hackeros.commands.touch.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.touch.Description" xml:space="preserve">
     <value>Change l'horodatage des fichiers ou crée des fichiers vides</value>
   </data>
-  <data name="org.hackeros.commands.touch.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.touch.Terminal.Usage" xml:space="preserve">
     <value>touch &lt;fichier...&gt;</value>
   </data>
-  <data name="org.hackeros.commands.trash.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.trash.Description" xml:space="preserve">
     <value>Gère la Corbeille : put, list, restore, rm, empty</value>
   </data>
-  <data name="org.hackeros.commands.trash.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.trash.Terminal.Usage" xml:space="preserve">
     <value>trash put|list|restore|rm|empty [arguments...]</value>
   </data>
-  <data name="org.hackeros.commands.true.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.true.Description" xml:space="preserve">
     <value>Ne fait rien, avec succès</value>
   </data>
-  <data name="org.hackeros.commands.true.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.true.Terminal.Usage" xml:space="preserve">
     <value>true</value>
   </data>
-  <data name="org.hackeros.commands.umount.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.umount.Description" xml:space="preserve">
     <value>Démonte un lecteur réseau</value>
   </data>
-  <data name="org.hackeros.commands.umount.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.umount.Terminal.Usage" xml:space="preserve">
     <value>umount /mnt/nom</value>
   </data>
-  <data name="org.hackeros.commands.uniq.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.uniq.Description" xml:space="preserve">
     <value>Signale ou omet les lignes répétées</value>
   </data>
-  <data name="org.hackeros.commands.uniq.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.uniq.Terminal.Usage" xml:space="preserve">
     <value>uniq [-c] [-d] [-u] [-i] [entrée [sortie]]</value>
   </data>
-  <data name="org.hackeros.commands.unset.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.unset.Description" xml:space="preserve">
     <value>Retire des variables d'environnement du shell</value>
   </data>
-  <data name="org.hackeros.commands.unset.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.unset.Terminal.Usage" xml:space="preserve">
     <value>unset NOM...</value>
   </data>
-  <data name="org.hackeros.commands.unzip.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.unzip.Description" xml:space="preserve">
     <value>Liste, teste et extrait les fichiers d'une archive zip</value>
   </data>
-  <data name="org.hackeros.commands.unzip.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.unzip.Terminal.Usage" xml:space="preserve">
     <value>unzip [-l] [-t] [-o] [-q] [-p] [-d dossier] archive.zip [fichier...]</value>
   </data>
-  <data name="org.hackeros.commands.watch.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.watch.Description" xml:space="preserve">
     <value>Exécute une commande à intervalles réguliers et affiche sa sortie en plein écran</value>
   </data>
-  <data name="org.hackeros.commands.watch.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.watch.Terminal.Usage" xml:space="preserve">
     <value>watch [-n secondes] [-t] [-g] [-e] commande</value>
   </data>
-  <data name="org.hackeros.commands.wc.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.wc.Description" xml:space="preserve">
     <value>Compte les lignes, les mots et les octets des fichiers</value>
   </data>
-  <data name="org.hackeros.commands.wc.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.wc.Terminal.Usage" xml:space="preserve">
     <value>wc [-l] [-w] [-c] [fichier...]</value>
   </data>
-  <data name="org.hackeros.commands.wget.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.wget.Description" xml:space="preserve">
     <value>Télécharge des fichiers depuis le réseau</value>
   </data>
-  <data name="org.hackeros.commands.wget.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.wget.Terminal.Usage" xml:space="preserve">
     <value>wget [-O fichier] [-P dossier] [-q] [-S] [--spider] url...</value>
   </data>
-  <data name="org.hackeros.commands.which.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.which.Description" xml:space="preserve">
     <value>Localise une commande</value>
   </data>
-  <data name="org.hackeros.commands.which.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.which.Terminal.Usage" xml:space="preserve">
     <value>which [-a] nom...</value>
   </data>
-  <data name="org.hackeros.commands.whoami.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.whoami.Description" xml:space="preserve">
     <value>Affiche le nom de l'utilisateur effectif</value>
   </data>
-  <data name="org.hackeros.commands.whoami.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.whoami.Terminal.Usage" xml:space="preserve">
     <value>whoami</value>
   </data>
-  <data name="org.hackeros.commands.xdg-mime.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.xdg-mime.Description" xml:space="preserve">
     <value>Consulte et choisit les applications par défaut de l'utilisateur pour les types de fichiers et les schémas d'URI</value>
   </data>
-  <data name="org.hackeros.commands.xdg-mime.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.xdg-mime.Terminal.Usage" xml:space="preserve">
     <value>xdg-mime query { default &lt;type&gt; | filetype &lt;fichier&gt; } | default &lt;id-app&gt; &lt;type&gt;...</value>
   </data>
-  <data name="org.hackeros.commands.xdg-open.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.xdg-open.Description" xml:space="preserve">
     <value>Ouvre un fichier, un dossier ou une URI dans l'application préférée de l'utilisateur</value>
   </data>
-  <data name="org.hackeros.commands.xdg-open.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.xdg-open.Terminal.Usage" xml:space="preserve">
     <value>xdg-open &lt;fichier|dossier|URI&gt;</value>
   </data>
-  <data name="org.hackeros.commands.zip.Description" xml:space="preserve">
+  <data name="org.kazoos.commands.zip.Description" xml:space="preserve">
     <value>Regroupe et compresse des fichiers dans une archive zip</value>
   </data>
-  <data name="org.hackeros.commands.zip.Terminal.Usage" xml:space="preserve">
+  <data name="org.kazoos.commands.zip.Terminal.Usage" xml:space="preserve">
     <value>zip [-r] [-q] [-j] [-d] archive.zip fichier...</value>
   </data>
 </root>

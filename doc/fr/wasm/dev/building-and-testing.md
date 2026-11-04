@@ -46,7 +46,7 @@ Le workflow de vérification installe explicitement `ripgrep` avant le scan
 supplémentaire des sources Razor ; cet outil n'est pas garanti sur les runners
 GitHub Ubuntu.
 Ce scan exclut le document de démarrage de l'hôte et autorise uniquement les
-trois lignes existantes de références de scripts ASP.Hack, à leurs chemins
+trois lignes existantes de références de scripts ASP.Kazo, à leurs chemins
 exacts. Les autres lignes de ces vues et toutes les références de scripts
 des composants ordinaires restent contrôlées.
 
@@ -75,7 +75,7 @@ dotnet build Kazo.Os.sln -p:KazoOsCpuAccounting=false -p:KazoOsMemoryAccounting=
 En ligne de commande (ou dans un `Directory.Build.props`), la propriété vaut
 pour tout le graphe ; dans le seul `.csproj` de `test/test` ou du serveur, elle
 ne coupe que l'option d'exécution de cet hôte. Au démarrage, la section
-`HackerOs:ResourceAccounting` de `appsettings.json` coupe une mesure sans
+`KazoOs:ResourceAccounting` de `appsettings.json` coupe une mesure sans
 recompiler : voir [`resource-accounting.md`](resource-accounting.md).
 
 ### Conteneur Linux : contournements connus
@@ -137,7 +137,7 @@ Déroulé :
    son propre groupe de processus : Ecosystem publié derrière un serveur
    statique Python, les deux autres par `dotnet run --no-build`. La base, les
    blobs et les sauvegardes du serveur vont dans un dossier jetable : le
-   `Server/Kazo.Os.Server/hackeros.db` suivi par git n'est jamais modifié.
+   `Server/Kazo.Os.Server/kazoos.db` suivi par git n'est jamais modifié.
 3. `Tests/Kazo.Os.HostSmoke.Tests` ouvre l'hôte dans Chromium (contexte
    neuf) : création du profil, rechargement et écran « Sign in », bureau
    (styles scopés appliqués à la barre des tâches, puis au cadre des fenêtres :
@@ -177,16 +177,16 @@ RESULT: PASS
 | `ecosystem` | PWA publiée | build et réglage par défaut | `measured` |
 | `ecosystem-build-off` | PWA publiée avec `-p:KazoOsCpuAccounting=false -p:KazoOsMemoryAccounting=false` | coupées au build ; aucun `Kazo.Os.Platform.ResourceAccounting*` ne doit être publié | `simulated` |
 | `ecosystem-settings-off` | même publication que `ecosystem`, `wwwroot/appsettings.json` réécrit avec `Enabled: false` pour `Cpu` et `Memory` | coupées au démarrage | `simulated` |
-| `ecosystem-limits-off` | même publication que `ecosystem`, `wwwroot/appsettings.json` réécrit avec `HackerOs:ResourceLimits:Enabled: false` (ADR 0125) | build et réglage par défaut | `measured` |
-| `ecosystem-oom` | même publication que `ecosystem`, `wwwroot/appsettings.json` réécrit avec `HackerOs:Hardware:MemoryMiB` = `${OOM_MEMORY_MIB:-512}` (ADR 0142 §11) | build et réglage par défaut | `measured` |
+| `ecosystem-limits-off` | même publication que `ecosystem`, `wwwroot/appsettings.json` réécrit avec `KazoOs:ResourceLimits:Enabled: false` (ADR 0125) | build et réglage par défaut | `measured` |
+| `ecosystem-oom` | même publication que `ecosystem`, `wwwroot/appsettings.json` réécrit avec `KazoOs:Hardware:MemoryMiB` = `${OOM_MEMORY_MIB:-512}` (ADR 0142 §11) | build et réglage par défaut | `measured` |
 | `ecosystem-isolated` | même publication que `ecosystem`, servie sur `127.0.0.2` : le service worker s'enregistre et pose COOP/COEP (ADR 0131, 0143) | build et réglage par défaut | `measured` |
-| `ecosystem-isolation-off` | idem, `wwwroot/appsettings.json` réécrit avec `HackerOs:CrossOriginIsolation` = `off` | build et réglage par défaut | `measured` |
+| `ecosystem-isolation-off` | idem, `wwwroot/appsettings.json` réécrit avec `KazoOs:CrossOriginIsolation` = `off` | build et réglage par défaut | `measured` |
 | `test-host` | `test/test` | réglage de l'hôte (activées) | `measured` |
 | `server` | `Kazo.Os.Server` (sert l'OS de l'Ecosystem en WebAssembly, ADR 0130) | `appsettings.json` de l'Ecosystem (activées) | `measured` |
 
 Sur un arbre sans les interrupteurs de l'ADR 0066
 (`build/Kazo.Os.ResourceAccounting.targets`, section
-`HackerOs:ResourceAccounting` d'`appsettings.json`), les deux parcours `-off`
+`KazoOs:ResourceAccounting` d'`appsettings.json`), les deux parcours `-off`
 sont marqués `SKIP` et les sources ne sont pas vérifiées.
 
 Chaque parcours vérifie aussi les limites de processus (`exec/2`,
@@ -199,7 +199,7 @@ répondre « cannot modify limit ».
 Chaque parcours vérifie l'isolation cross-origin (`exec/9`,
 [`worker-processes.md`](worker-processes.md#isolation-cross-origin-adr-0131-adr-0143)) :
 `crossOriginIsolated` dans la page, la ligne `cross-origin-isolated:` de
-`/proc/hackeros/workers`, `sample-cmd --processes` (réponse synchrone si la
+`/proc/kazoos/workers`, `sample-cmd --processes` (réponse synchrone si la
 page est isolée, refus sinon) et `seq 30000 | wc -l`. Isolés : `ecosystem-isolated`,
 `test-host` et `server` (intergiciel). Non isolés : les parcours de l'Ecosystem
 sur `127.0.0.1` (pas de service worker sur cette adresse) et
@@ -208,33 +208,33 @@ son empreinte dans `service-worker-assets.js`, sinon l'installation du service
 worker échoue sur `127.0.0.2`.
 
 Le parcours `ecosystem-oom` (`exec/3`, [`oom-killer.md`](oom-killer.md))
-active l'OOM killer par `sudo tee /etc/hackeros/memory.config`, lance
+active l'OOM killer par `sudo tee /etc/kazoos/memory.config`, lance
 `stress --vm 1 --vm-bytes` calculé depuis `/proc/meminfo`, attend la sortie
 137 et « Killed », puis vérifie la ligne `Out of memory: Killed process` de
 `dmesg` et `oom_kill 1` dans `/proc/vmstat`.
 
 Journaux, publications et captures d'écran des échecs :
-`artifacts/verify-hosts/` (ignoré par git). Sans `HACKEROS_SMOKE_URL`, que
+`artifacts/verify-hosts/` (ignoré par git). Sans `KAZOOS_SMOKE_URL`, que
 pose le script, le test de démarrage est marqué « skipped » : un
 `dotnet test Kazo.Os.sln` n'en dépend pas. Pour le lancer contre un hôte
 démarré à la main :
 
 ```bash
-HACKEROS_SMOKE_URL=http://127.0.0.1:5000 dotnet test Tests/Kazo.Os.HostSmoke.Tests \
+KAZOOS_SMOKE_URL=http://127.0.0.1:5000 dotnet test Tests/Kazo.Os.HostSmoke.Tests \
   --logger "console;verbosity=detailed"
 ```
 
-Variables facultatives : `HACKEROS_SMOKE_HOST` (nom affiché),
-`HACKEROS_SMOKE_EXPECT_CPU_SOURCE` / `HACKEROS_SMOKE_EXPECT_MEM_SOURCE`
-(valeur attendue dans `/proc/self/status`), `HACKEROS_SMOKE_ARTIFACTS`
-(dossier des captures), `HACKEROS_SMOKE_EXPECT_ISOLATION` (`yes` ou `no`).
+Variables facultatives : `KAZOOS_SMOKE_HOST` (nom affiché),
+`KAZOOS_SMOKE_EXPECT_CPU_SOURCE` / `KAZOOS_SMOKE_EXPECT_MEM_SOURCE`
+(valeur attendue dans `/proc/self/status`), `KAZOOS_SMOKE_ARTIFACTS`
+(dossier des captures), `KAZOOS_SMOKE_EXPECT_ISOLATION` (`yes` ou `no`).
 
 Chaque PR `rebuild/5-*` colle la sortie de `build/verify-hosts.sh`.
 
 ## Hébergement et en-têtes d'isolation
 
 L'OS se sert de l'isolation cross-origin quand la page l'a (ADR 0131, 0143) et
-marche sans. `HackerOs:CrossOriginIsolation` (`auto`, `on`, `off`) dans
+marche sans. `KazoOs:CrossOriginIsolation` (`auto`, `on`, `off`) dans
 `appsettings.json` de chaque hôte ; `auto` vaut `on` depuis l'audit d'`exec/9`.
 
 - **Ecosystem sur un hébergement statique** : rien à configurer. Le service
@@ -245,7 +245,7 @@ marche sans. `HackerOs:CrossOriginIsolation` (`auto`, `on`, `off`) dans
   `localhost`/`127.0.0.1`, sur lesquelles `index.html` n'enregistre pas le
   service worker) : en local, servir la publication sur `127.0.0.2`.
 - Un hébergeur qui pose déjà ces en-têtes convient aussi ; un proxy qui les
-  retire donne le repli exact (`/proc/hackeros/workers` dit pourquoi).
+  retire donne le repli exact (`/proc/kazoos/workers` dit pourquoi).
 - **`test/test` et `Kazo.Os.Server`** posent les en-têtes eux-mêmes (intergiciel
   dans `Program.cs`).
 - Après une modification de `wwwroot/appsettings.json` d'une publication,
@@ -272,8 +272,8 @@ build/publish-trimmed.sh --skip-build
 
 Le script échoue sur toute alerte `IL…`, sert la publication sur `127.0.0.1`
 et sur `127.0.0.2` (pour le service worker) et lance
-`Tests/Kazo.Os.TrimmedPublish.E2E.Tests` (six tests, environ 4 min, dont un paquet de test installé par `hackpkg`, ADR 0206). C'est une porte de
-fusion locale depuis `v3/14`. Sans `HACKEROS_TRIMMED_URL`, la suite est ignorée
+`Tests/Kazo.Os.TrimmedPublish.E2E.Tests` (six tests, environ 4 min, dont un paquet de test installé par `kazopkg`, ADR 0206). C'est une porte de
+fusion locale depuis `v3/14`. Sans `KAZOOS_TRIMMED_URL`, la suite est ignorée
 par `dotnet test Kazo.Os.sln`.
 
 Piège : la conversion WebCIL du SDK est incrémentale par dates de fichiers ; une
@@ -335,14 +335,14 @@ dotnet test Kazo.Os.sln
 | Suites | Contenu |
 |---|---|
 | `Tests/*.Tests` (hors E2E) | Tests unitaires et de composants (xUnit, bUnit), un projet par projet de code. Rapides, sans navigateur. |
-| `Tests/Kazo.Os.AppSdk.Web.Tests` | ASP.Hack : routeur, pipeline d'un site compilé avec le générateur de routes, générateur piloté sur des extraits (`HOSWEB*`), page hôte et `blazor.boot.json` d'un site Blazor. |
+| `Tests/Kazo.Os.AppSdk.Web.Tests` | ASP.Kazo : routeur, pipeline d'un site compilé avec le générateur de routes, générateur piloté sur des extraits (`HOSWEB*`), page hôte et `blazor.boot.json` d'un site Blazor. |
 | `Tests/Kazo.Os.AppSdk.Web.Blazor.Tests` | Sites Blazor : routeur (`KazoSiteRouter`), gestionnaire de navigation de l'onglet, `KazoWebSite`. |
 | `Tests/Kazo.Os.Samples.Intranet.Tests` | Exemple Intranet en mémoire (`KazoWebHost.CreateApplication`) : vues `.cshtml` et `.razor`, `wwwroot`, session, anti-falsification, CRUD par formulaires, API REST, page hôte du tableau Blazor. Le parcours dans Chromium est `BrowserIntranetTests` (UI E2E). |
 | `Tests/Kazo.Os.Tools.ManifestGenerator.Tests` | Builds MSBuild réels des projets `Tests/ManifestGenerator.Fixtures.*` : génération, agrégation, frontière du SDK. Plus lents. |
 | `Tests/Kazo.Os.E2E.Tests`, `Kazo.Os.UI.E2E.Tests`, `Kazo.Os.Pwa.E2E.Tests` | Playwright contre l'OS lancé dans Chromium. Pièges connus : [`old/common-pitfalls.md`](old/common-pitfalls.md) §4 à §6. |
-| `Tests/Kazo.Os.Templates.E2E.Tests` | Modèles `dotnet new` (ADR 0098 §6) : empaquette tout avec `build/pack-local.sh` (ou prend le flux de `HACKEROS_LOCAL_FEED`), génère et compile chaque modèle hors du dépôt avec un cache NuGet isolé, puis lance l'hôte généré dans Chromium avec une app fenêtrée et une commande générées, et un autre qui vérifie qu'un hôte référençant les apps compilées contre les SDK 1.0.0 et 1.1.0 ne se construit pas (`HOSAPP0021`), puis qu'avec l'app compilée contre le SDK 2.0.0 il démarre, montre `KazoFileView` dans sa fenêtre et exécute sa commande (ADR 0114, ADR 0132 §1, ADR 0161 §3). |
+| `Tests/Kazo.Os.Templates.E2E.Tests` | Modèles `dotnet new` (ADR 0098 §6) : empaquette tout avec `build/pack-local.sh` (ou prend le flux de `KAZOOS_LOCAL_FEED`), génère et compile chaque modèle hors du dépôt avec un cache NuGet isolé, puis lance l'hôte généré dans Chromium avec une app fenêtrée et une commande générées, et un autre qui vérifie qu'un hôte référençant les apps compilées contre les SDK 1.0.0 et 1.1.0 ne se construit pas (`HOSAPP0021`), puis qu'avec l'app compilée contre le SDK 2.0.0 il démarre, montre `KazoFileView` dans sa fenêtre et exécute sa commande (ADR 0114, ADR 0132 §1, ADR 0161 §3). |
 | `Tests/Kazo.Os.SdkCompatibility.Tests` | Apps compilées contre les SDK 1.0.0, 1.1.0 et 2.0.0, gardées dans `Tests/fixtures/sdk-compat` (ADR 0114 §4, ADR 0132 §1, ADR 0161 §3) : le catalogue refuse les apps 1.x (`catalog.sdk.incompatible`) et admet l'app 2.0 ; pour celle-ci, références, compilation JIT de chaque méthode et exécution de la commande contre le SDK courant (`build/Versions.props`). Sans navigateur, lancé par `dotnet test Kazo.Os.sln`. |
-| `Tests/Kazo.Os.HostSmoke.Tests` | Démarrage d'un hôte déjà lancé, piloté par `build/verify-hosts.sh` (voir plus haut) ; « skipped » sans `HACKEROS_SMOKE_URL`. |
+| `Tests/Kazo.Os.HostSmoke.Tests` | Démarrage d'un hôte déjà lancé, piloté par `build/verify-hosts.sh` (voir plus haut) ; « skipped » sans `KAZOOS_SMOKE_URL`. |
 
 Tester un seul projet ou un seul test :
 
@@ -357,7 +357,7 @@ Chaque version de `Microsoft.Playwright` attend une révision précise de
 Chromium (ou Google Chrome pour `Channel = "chrome"`). Toutes les suites
 lancent le navigateur par `ChromiumLauncher` (`Tests/Kazo.Os.E2E.Support`) :
 
-1. `HACKEROS_CHROMIUM_EXECUTABLE`, s'il est posé, est utilisé tel quel ;
+1. `KAZOOS_CHROMIUM_EXECUTABLE`, s'il est posé, est utilisé tel quel ;
 2. sinon, le lancement prévu par le test ;
 3. s'il échoue, nouvel essai avec `$PLAYWRIGHT_BROWSERS_PATH/chromium` puis
    `/opt/pw-browsers/chromium` (le lien des conteneurs cloud), sans canal.
@@ -373,7 +373,7 @@ journaux, processus, intentions, environnement, shell). Exemple : voir le
 ### Fixtures de montée de version IndexedDB
 
 ADR 0099 §4. `Tests/fixtures/indexeddb/` contient un vidage de la base
-`hackeros` par version de schéma déjà publiée. `IndexedDbUpgradeFixtureTests`
+`kazoos` par version de schéma déjà publiée. `IndexedDbUpgradeFixtureTests`
 (`Kazo.Os.UI.E2E.Tests`) recrée chaque base à son ancienne version avec
 `indexedDB.open(nom, ancienneVersion)`, depuis une page de la même origine
 qui ne démarre pas l'OS (servie par Playwright lui-même ; l'attente de l'hôte
@@ -383,7 +383,7 @@ démarre l'OS courant et vérifie :
 - l'écran « Sign in » (pas l'accueil « Create administrator ») et la connexion
   avec le mot de passe de l'administrateur du vidage : le compte a survécu ;
 - `cat` du fichier du vidage dans le Terminal : entrées, liens et contenu ;
-- `cat /etc/hackeros/appearance.config` contient `accent=cyan` : le réglage
+- `cat /etc/kazoos/appearance.config` contient `accent=cyan` : le réglage
   rangé dans l'ancien magasin `settings` a été repris par la migration vers les
   fichiers (ADR 0044) ;
 - la base est en version 4 avec `serverConnection`, `syncCursors` et
@@ -421,7 +421,7 @@ un magasin sans chemin de clé ; aucun pour l'instant).
    `dotnet build test/test/test.csproj -c Release`, puis
    `ASPNETCORE_ENVIRONMENT=Development dotnet run --no-build -c Release --project test/test/test.csproj --urls http://127.0.0.1:5301`.
    Le SDK .NET 10 courant suffit (même `global.json`).
-4. `node Tests/fixtures/indexeddb/produce-fixture.js http://127.0.0.1:5301/ <version> <commit> Tests/fixtures/indexeddb/hackeros-v<version>.json <préfixe-captures>`
+4. `node Tests/fixtures/indexeddb/produce-fixture.js http://127.0.0.1:5301/ <version> <commit> Tests/fixtures/indexeddb/kazoos-v<version>.json <préfixe-captures>`
    (`PLAYWRIGHT_MODULE=/opt/node22/lib/node_modules/playwright` et
    `CHROMIUM=/opt/pw-browsers/chromium` dans un conteneur cloud). Le script,
    dans un contexte Chromium vierge, crée l'administrateur `admin` (mot de
@@ -450,7 +450,7 @@ violation sérieuse ou critique fait échouer, et chaque surface laisse une capt
 `artifacts/playwright/accessibility/` :
 
 - `AccessibilityAndVisualCoverageTests` : bureau, lanceur, explorateur, Paramètres, Code Editor,
-  Hack Paint, et un écran mobile ;
+  Kazo Paint, et un écran mobile ;
 - `AccessibilityPreferencesTests` (`v3/13`) : Terminal, navigateur, calculatrice, moniteur
   système, Theme Editor, Paramètres > Sauvegarde et > Accessibilité, chacun sans puis avec le
   contraste élevé ; un parcours au clavier seul (lanceur, `` Alt+` ``, `Alt+F7`, `Alt+Q`, focus
@@ -484,7 +484,7 @@ dotnet test Tests/Kazo.Os.UI.E2E.Tests -c Release --no-build --filter "FullyQual
     ARIA écrits en `"true"`/`"false"`, voir
     [`old/common-pitfalls.md`](old/common-pitfalls.md) §8 ; le test du choix
     Mobile attend la bascule avant de recharger, car l'écriture du réglage
-    dans `~/.config/hackeros` n'est pas instantanée : environ 2 s avant
+    dans `~/.config/kazoos` n'est pas instantanée : environ 2 s avant
     `web/15`, 235 ms depuis, voir
     [`filesystem-path-lookup.md`](filesystem-path-lookup.md)) ;
   - `Kazo.Os.Pwa.E2E.Tests` : la suite se lie à `[::1]` (le service worker

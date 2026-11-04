@@ -14,7 +14,7 @@ namespace Kazo.Os.Platform.Core.Lifecycle;
 /// like systemd's <c>multi-user.target</c> and per-user <c>systemd --user</c> instance:
 /// <list type="bullet">
 /// <item>at the end of the boot (<see cref="StartBootServicesAsync"/>), the system services
-/// (<see cref="Kazo.Os.App.Abstractions.AppServiceStartup.Boot"/>) start as <c>hackeros-svc</c>,
+/// (<see cref="Kazo.Os.App.Abstractions.AppServiceStartup.Boot"/>) start as <c>kazoos-svc</c>,
 /// before the login screen;</item>
 /// <item>after each login (<see cref="SessionActivatedEvent"/>), the user's automatic services
 /// start as that user, once the user's <c>apps.config</c> is applied;</item>

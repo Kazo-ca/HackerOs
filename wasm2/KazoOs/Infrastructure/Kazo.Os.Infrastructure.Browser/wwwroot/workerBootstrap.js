@@ -33,9 +33,9 @@ self.onmessage = event => {
     if (typeof data === 'string') {
         fromOs?.drain(deliver);
         deliver(data);
-    } else if (data && data.__hackeros === 'ring') {
+    } else if (data && data.__kazoos === 'ring') {
         fromOs?.drain(deliver);
-    } else if (data && typeof data === 'object' && data.__hackeros === 'boot') {
+    } else if (data && typeof data === 'object' && data.__kazoos === 'boot') {
         boot(data);
     }
 };
@@ -52,7 +52,7 @@ async function boot({ dotnetUrl, entryAssembly, entryType, ringUrl, rings }) {
         if (rings && ringUrl && globalThis.crossOriginIsolated === true) {
             try {
                 const ring = await import(ringUrl);
-                toOs = new ring.SharedRing(rings.toOs, () => self.postMessage({ __hackeros: 'ring' }));
+                toOs = new ring.SharedRing(rings.toOs, () => self.postMessage({ __kazoos: 'ring' }));
                 fromOs = new ring.SharedRing(rings.fromOs, () => { });
                 syncBuffer = rings.sync;
                 waitForSyncAnswer = ring.waitForSyncAnswer;
@@ -65,7 +65,7 @@ async function boot({ dotnetUrl, entryAssembly, entryType, ringUrl, rings }) {
         globalThis.dotnetSidecar = true;
         const { dotnet } = await import(dotnetUrl);
         const runtime = await dotnet.create();
-        runtime.setModuleImports('hackeros-worker', {
+        runtime.setModuleImports('kazoos-worker', {
             post,
             // ADR 0131, section 4: true when callSync may block this worker for an answer.
             syncAvailable: () => syncBuffer !== null,
@@ -79,13 +79,13 @@ async function boot({ dotnetUrl, entryAssembly, entryType, ringUrl, rings }) {
         }
 
         entryPoint.Start();
-        self.postMessage({ __hackeros: 'ready', rings: fromOs !== null });
+        self.postMessage({ __kazoos: 'ready', rings: fromOs !== null });
         // What arrived during the boot first, in its order, then what is still in the ring.
         for (const message of pending.splice(0)) {
             entryPoint.Receive(message);
         }
         fromOs?.drain(deliver);
     } catch (error) {
-        self.postMessage({ __hackeros: 'error', message: String(error?.stack ?? error) });
+        self.postMessage({ __kazoos: 'error', message: String(error?.stack ?? error) });
     }
 }

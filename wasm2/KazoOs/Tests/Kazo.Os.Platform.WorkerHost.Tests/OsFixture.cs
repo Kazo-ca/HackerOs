@@ -42,7 +42,7 @@ namespace Kazo.Os.Platform.WorkerHost.Tests;
 /// </summary>
 internal sealed class OsFixture : IAsyncDisposable
 {
-    public const string HostAppId = "org.hackeros.terminal";
+    public const string HostAppId = "org.kazoos.terminal";
 
     private static readonly DateTimeOffset Now = new(2026, 10, 16, 12, 0, 0, TimeSpan.Zero);
     private static readonly string[] HostCapabilities =
@@ -104,14 +104,14 @@ internal sealed class OsFixture : IAsyncDisposable
         Manager = new InMemoryProcessManager(Clock, _sessions, EventBus);
         Log = new LogFileWriter(Clock, new BoundedDiagnosticSink(maxEntries: 1000), EventBus);
 
-        // ADR 0077/0080: hackwebd, a system app of the host as in the Ecosystem build.
-        AppManifest hackwebd = AppDefinitionMapper.ToManifest(new Kazo.Os.Apps.WebServer.KazoWebdApp());
+        // ADR 0077/0080: kazowebd, a system app of the host as in the Ecosystem build.
+        AppManifest kazowebd = AppDefinitionMapper.ToManifest(new Kazo.Os.Apps.WebServer.KazoWebdApp());
         // ADR 0124: two sample projects of their own assemblies, a command and a service, run in workers.
         AppManifest sampleCommand = AppDefinitionMapper.ToManifest(new Kazo.Os.Samples.TerminalApp.TerminalSampleApp());
         AppManifest sampleService = AppDefinitionMapper.ToManifest(new Kazo.Os.Samples.ServiceApp.ServiceSampleApp());
-        AppManifest[] commands = [.. BuiltInCommands.Select(AppDefinitionMapper.ToManifest), .. TestCommands.Manifests, hackwebd, sampleCommand, sampleService];
+        AppManifest[] commands = [.. BuiltInCommands.Select(AppDefinitionMapper.ToManifest), .. TestCommands.Manifests, kazowebd, sampleCommand, sampleService];
         AppManifest host = HostManifest();
-        Catalog = AppCatalog.Build([host, .. commands], [hackwebd.Id]).Catalog!;
+        Catalog = AppCatalog.Build([host, .. commands], [kazowebd.Id]).Catalog!;
         AppDiscoveryResult discovery = AppEntryPointDiscovery.Discover(
             AppCatalog.Build(commands).Catalog!,
             new Dictionary<string, Assembly>(StringComparer.Ordinal)
@@ -254,7 +254,7 @@ internal sealed class OsFixture : IAsyncDisposable
     /// <summary>Gets the table of listening ports (ADR 0074).</summary>
     public ListeningPortTable Ports { get; }
 
-    /// <summary>Gets the resolver hackdns.</summary>
+    /// <summary>Gets the resolver kazodns.</summary>
     public KazoDnsResolver Resolver { get; }
 
     public SystemStartupSignal Startup { get; } = new();
@@ -440,10 +440,10 @@ internal sealed class OsFixture : IAsyncDisposable
         Id = HostAppId,
         Name = "Terminal",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "Hosts the shell.",
         Kind = AppKind.Window,
-        EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.WorkerHost.Tests", "org.hackeros.terminal.EntryPoint"),
+        EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.WorkerHost.Tests", "org.kazoos.terminal.EntryPoint"),
         SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
         Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
         Resources = AppResourceProfileManifest.None,

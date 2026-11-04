@@ -57,7 +57,7 @@
 **Location:** `wasm2/KazoOs/Infrastructure/Kazo.Os.Infrastructure.Browser/Schema/`
 
 - **KazoOsIndexedDbSchema** (static class)
-  - Constants: DatabaseName = "hackeros", CurrentVersion = 1
+  - Constants: DatabaseName = "kazoos", CurrentVersion = 1
   - Object stores:
     - `fsEntries`: `[id]` ← entry metadata
     - `fsLinks`: `[parentId, name]` ← directory structure

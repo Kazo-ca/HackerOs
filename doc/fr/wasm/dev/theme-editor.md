@@ -42,21 +42,21 @@ ce sont des chaînes libres (plus une énumération, `schemaVersion` reste 2).
 1. Un thème intégré de la bonne forme : il s'applique.
 2. Un thème utilisateur proposé sur cette forme : son thème de base s'applique,
    puis ses jetons par-dessus. Si sa base vise l'autre forme (un thème basé sur
-   `hackeros` proposé aussi sur mobile), ses jetons s'appliquent sur le thème
+   `kazoos` proposé aussi sur mobile), ses jetons s'appliquent sur le thème
    par défaut de la forme active.
 3. Sinon (id inconnu, fichier supprimé ou refusé, mauvaise forme) : le thème par
    défaut de la forme, comme avant.
 
 ## L'éditeur de thèmes
 
-App système `org.hackeros.theme-editor`, sur le SDK public seulement (ADR 0055).
+App système `org.kazoos.theme-editor`, sur le SDK public seulement (ADR 0055).
 Capacités : dossier personnel en lecture et écriture, dialogues ouvrir et
 enregistrer, et `filesystem.system.read` (dangereuse, accordée aux apps
-système) pour lister `/etc/hackeros/themes`. Fenêtre 1180 × 760, minimum
+système) pour lister `/etc/kazoos/themes`. Fenêtre 1180 × 760, minimum
 820 × 540 (ADR 0095).
 
 - **Barre d'outils** : *New from* (thème de base), *Open…*, *Save* (vers
-  `~/.config/hackeros/themes/<id>.theme`, dossier créé au besoin), *Export…*
+  `~/.config/kazoos/themes/<id>.theme`, dossier créé au besoin), *Export…*
   (n'importe où par le dialogue), *Use on desktop* / *Use on mobile* (écrit
   l'id dans la couche utilisateur de `appearance` par
   `KazoSettings.OpenSystemAsync`).

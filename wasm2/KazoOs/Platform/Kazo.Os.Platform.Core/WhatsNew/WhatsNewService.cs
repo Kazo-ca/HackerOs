@@ -10,7 +10,7 @@ namespace Kazo.Os.Platform.Core.WhatsNew;
 
 /// <summary>
 /// What changed since the session user's last visit (ADR 0186 §4, §5): the served change list and,
-/// per account, the ids already seen, kept in <c>~/.local/state/hackeros/whats-new.json</c>.
+/// per account, the ids already seen, kept in <c>~/.local/state/kazoos/whats-new.json</c>.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -32,14 +32,14 @@ namespace Kazo.Os.Platform.Core.WhatsNew;
 /// </remarks>
 public sealed class WhatsNewService
 {
-    /// <summary>The account's state file: <c>~/.local/state/hackeros/whats-new.json</c>.</summary>
+    /// <summary>The account's state file: <c>~/.local/state/kazoos/whats-new.json</c>.</summary>
     public static readonly OsSettingsFile StateFile = new(OsSettingsLocation.UserState, "whats-new.json");
 
     /// <summary>Source app id of the sign-in notification.</summary>
-    public const string NotificationSourceAppId = "org.hackeros.whats-new";
+    public const string NotificationSourceAppId = "org.kazoos.whats-new";
 
     /// <summary>App the notification opens.</summary>
-    public const string SettingsAppId = "org.hackeros.settings";
+    public const string SettingsAppId = "org.kazoos.settings";
 
     /// <summary>Argument that opens the What's new page of Settings.</summary>
     public const string SettingsPageArgument = "--page=whats-new";

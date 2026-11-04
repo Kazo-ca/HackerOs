@@ -430,7 +430,7 @@ internal sealed class RemoteNetworkGateway(RemoteProcessChannel channel) : IAppN
     /// Opens the socket in the OS (its table of listening ports), then receives its requests as
     /// <c>hreq</c> messages (ADR 0074, section 2): the site runs in the worker, the port lives in the OS.
     /// </summary>
-    public async ValueTask<KazoNetworkResult<IHackHttpListenerSocket>> ListenHttpAsync(
+    public async ValueTask<KazoNetworkResult<IKazoHttpListenerSocket>> ListenHttpAsync(
         IReadOnlyList<string> prefixes, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(prefixes);
@@ -439,12 +439,12 @@ internal sealed class RemoteNetworkGateway(RemoteProcessChannel channel) : IAppN
         KazoNetworkError error = (KazoNetworkError)answer.GetInt32("ne");
         if (error != KazoNetworkError.None)
         {
-            return KazoNetworkResult<IHackHttpListenerSocket>.Failure(error, answer.GetOptionalString("nm"));
+            return KazoNetworkResult<IKazoHttpListenerSocket>.Failure(error, answer.GetOptionalString("nm"));
         }
 
         RemoteHttpListenerSocket socket = new(channel, answer.GetInt32("sk"), WireCodec.ReadStrings(answer, "px"));
         channel.Listeners.Add(socket);
-        return KazoNetworkResult<IHackHttpListenerSocket>.Success(socket);
+        return KazoNetworkResult<IKazoHttpListenerSocket>.Success(socket);
     }
 
     public async ValueTask<IReadOnlyList<KazoTcpListenerInfo>> GetTcpListenersAsync(CancellationToken cancellationToken = default) =>
@@ -538,7 +538,7 @@ internal sealed class RemoteListenerTable
 }
 
 /// <summary>A listening socket seen from a worker: requests arrive as messages, replies leave as <c>hres</c>.</summary>
-internal sealed class RemoteHttpListenerSocket(RemoteProcessChannel channel, int id, IReadOnlyList<string> prefixes) : IHackHttpListenerSocket
+internal sealed class RemoteHttpListenerSocket(RemoteProcessChannel channel, int id, IReadOnlyList<string> prefixes) : IKazoHttpListenerSocket
 {
     private readonly System.Threading.Channels.Channel<KazoHttpListenerExchange> _queue =
         System.Threading.Channels.Channel.CreateUnbounded<KazoHttpListenerExchange>();
@@ -786,7 +786,7 @@ internal sealed class RemoteIntentGateway(RemoteProcessChannel channel) : IAppIn
 
 /// <summary>
 /// <see cref="Kazo.Os.AppSdk.WebData.IAppWebDatabaseGateway"/> in a worker (ADR 0088, section 1): the schema
-/// and each batch travel as JSON to the OS, which opens <c>hackweb.&lt;app id&gt;</c> on the main thread.
+/// and each batch travel as JSON to the OS, which opens <c>kazoweb.&lt;app id&gt;</c> on the main thread.
 /// </summary>
 internal sealed class RemoteWebDatabaseGateway(RemoteProcessChannel channel, string appId) : Kazo.Os.AppSdk.WebData.IAppWebDatabaseGateway
 {

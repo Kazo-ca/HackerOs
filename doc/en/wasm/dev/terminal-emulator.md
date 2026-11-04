@@ -2,7 +2,7 @@
 
 # Terminal emulator (xterm.js)
 
-The contract on the side of apps and commands (`TerminalPanel`, `IHackTerminal`, password reading without echo, full-screen mode) is in [`terminal-api.md`](../framework/terminal-api.md).
+The contract on the side of apps and commands (`TerminalPanel`, `IKazoTerminal`, password reading without echo, full-screen mode) is in [`terminal-api.md`](../framework/terminal-api.md).
 
 ## Purpose
 
@@ -13,7 +13,7 @@ and the rendering looks like a Linux terminal.
 
 The console (`Apps/System/Kazo.Os.Apps.Terminal`) uses `TerminalTabs`. The code
 editor no longer uses `TerminalPanel` directly: it embeds the terminal that the
-Terminal app registers for the `hackeros.terminal` contract (`TerminalEmbed`,
+Terminal app registers for the `kazoos.terminal` contract (`TerminalEmbed`,
 ADR 0063, [`embedded-components.md`](../framework/embedded-components.md)).
 
 ## Architecture
@@ -23,7 +23,7 @@ clavier ─▶ xterm.js ──onData("\x1b[A")──▶ TerminalPanel.OnTerminal
                                           └─ TerminalInputDecoder → TerminalKeyEvent
                                               ├─ commande plein écran active → TerminalFullScreenSession
                                               ├─ Ctrl+C pendant une commande → annulation, « ^C »
-                                              └─ file de frappe → TerminalLineEditor / IHackShell
+                                              └─ file de frappe → TerminalLineEditor / IKazoShell
 commande ─▶ TerminalOutputWriter ─▶ TerminalPanel.Write ("\n" → "\r\n") ─▶ xterm.js.write
 ```
 
@@ -70,7 +70,7 @@ reduced motion, the cursor does not blink. `applyAccessibility` (object returned
 Copy raises a real `copy` event (`document.execCommand("copy")`) instead of
 writing `navigator.clipboard`: the OS clipboard bridge receives it as a native
 copy (origin `GuestNative`) and sends it to the real machine only if
-`/etc/hackeros/clipboard.config` allows it ([`clipboard.md`](clipboard.md),
+`/etc/kazoos/clipboard.config` allows it ([`clipboard.md`](clipboard.md),
 ADR 0065).
 
 Chrome reserves Ctrl+W, Ctrl+N and Ctrl+T (close tab, new window, new tab)
@@ -87,7 +87,7 @@ during the wait runs `ls` afterwards, as on Linux.
 
 An unfinished command (`for f in *; do` + Enter, open quote, trailing `|`,
 here-document) displays bash's continuation prompt `>` (`PS2`): the terminal
-asks the shell through `IHackShell.NeedsMoreInput`, accumulates the lines, then
+asks the shell through `IKazoShell.NeedsMoreInput`, accumulates the lines, then
 executes them together; Ctrl+C abandons. The history keeps a single line
 (`TerminalHistory.ToSingleLine`: `for f in *; do echo $f; done`).
 
@@ -106,7 +106,7 @@ command, and a resize sends `TerminalKey.Resize`.
 ## Decisions
 
 - **xterm.js is only a screen and a keyboard.** Line editing, completion and
-  history stay in C#: the shell and its contract (`IHackShell`) do not change,
+  history stay in C#: the shell and its contract (`IKazoShell`) do not change,
   and the behavior is tested without a browser.
 - **Versioned bundle**, like Monaco: no npm in the .NET build.
   `package.json` and `package-lock.json` are removed from the published content

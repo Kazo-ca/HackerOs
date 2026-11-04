@@ -14,8 +14,8 @@ name: Release Kazo OS
 # (packages already there are skipped), for a release made before NuGet was configured.
 #
 # ADR 0191 §5: once the release exists, the "server" jobs attach the installable Kazo OS server
-# (hackeros-server-<version>-<rid>.zip|tar.gz, build/publish-server.sh) to the same release and
-# push its image ghcr.io/kazo-ca/hackeros-server (:<version> and, for a stable version, :latest).
+# (kazoos-server-<version>-<rid>.zip|tar.gz, build/publish-server.sh) to the same release and
+# push its image ghcr.io/kazo-ca/kazoos-server (:<version> and, for a stable version, :latest).
 on:
   workflow_run:
     workflows: [ "Verify Kazo OS WASM" ]
@@ -31,17 +31,17 @@ on:
 permissions:
   contents: write  # tag and GitHub Release
   id-token: write  # nuget.org Trusted Publishing (NuGet/login)
-  packages: write  # ghcr.io/kazo-ca/hackeros-server (ADR 0191)
+  packages: write  # ghcr.io/kazo-ca/kazoos-server (ADR 0191)
 
 # Never two releases at once, and never cancel one halfway through a push.
 concurrency:
-  group: release-hackeros
+  group: release-kazoos
   cancel-in-progress: false
 
 env:
   DOTNET_NOLOGO: "true"
   DOTNET_CLI_TELEMETRY_OPTOUT: "true"
-  HACKEROS_SOLUTION_DIR: wasm2/KazoOs
+  KAZOOS_SOLUTION_DIR: wasm2/KazoOs
   RELEASE_DIR: wasm2/KazoOs/artifacts/release
   NUGET_SOURCE: https://api.nuget.org/v3/index.json
 
@@ -73,7 +73,7 @@ jobs:
         env:
           REPUBLISH: ${{ github.event.inputs.republish || 'false' }}
         run: |
-          version="$(sed -n 's:.*<KazoOsVersion>\(.*\)</KazoOsVersion>.*:\1:p' "$HACKEROS_SOLUTION_DIR/build/Versions.props")"
+          version="$(sed -n 's:.*<KazoOsVersion>\(.*\)</KazoOsVersion>.*:\1:p' "$KAZOOS_SOLUTION_DIR/build/Versions.props")"
           if ! [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
             echo "::error title=Version::build/Versions.props has no valid KazoOsVersion ('$version')."
             exit 1
@@ -114,7 +114,7 @@ jobs:
 
       - name: Pack the published libraries
         if: steps.plan.outputs.mode != 'none'
-        working-directory: ${{ env.HACKEROS_SOLUTION_DIR }}
+        working-directory: ${{ env.KAZOOS_SOLUTION_DIR }}
         run: build/pack-local.sh --configuration Release --output artifacts/release/nupkg --ci
 
       # Only Kazo.Os.* packages of this version leave the runner (never a test fixture).
@@ -139,7 +139,7 @@ jobs:
 
       - name: Publish the WASM site
         if: steps.plan.outputs.mode == 'release'
-        working-directory: ${{ env.HACKEROS_SOLUTION_DIR }}
+        working-directory: ${{ env.KAZOOS_SOLUTION_DIR }}
         run: >-
           dotnet publish OS/Kazo.Os.Ecosystem/Kazo.Os.Ecosystem.csproj
           --configuration Release
@@ -151,7 +151,7 @@ jobs:
         env:
           VERSION: ${{ steps.plan.outputs.version }}
         run: |
-          archive="$PWD/$RELEASE_DIR/assets/hackeros-wasm-$VERSION.zip"
+          archive="$PWD/$RELEASE_DIR/assets/kazoos-wasm-$VERSION.zip"
           (cd "$RELEASE_DIR/publish/wwwroot" && zip -q -r "$archive" .)
 
       # Trusted Publishing when the NUGET_USER variable is set (short-lived key, no secret
@@ -198,9 +198,9 @@ jobs:
           # ADR 0186 §7: the text comes from changes/<version>.json (every entry, in English);
           # GitHub's generated notes only for a version released before the change list existed.
           notes="$RELEASE_DIR/release-notes.md"
-          if [[ -f "$HACKEROS_SOLUTION_DIR/changes/$VERSION.json" ]]; then
-            dotnet run --project "$HACKEROS_SOLUTION_DIR/Tools/Kazo.Os.Tools.ChangeList/Kazo.Os.Tools.ChangeList.csproj" -c Release -- \
-              notes --changes "$HACKEROS_SOLUTION_DIR/changes" --version "$VERSION" --kind release \
+          if [[ -f "$KAZOOS_SOLUTION_DIR/changes/$VERSION.json" ]]; then
+            dotnet run --project "$KAZOOS_SOLUTION_DIR/Tools/Kazo.Os.Tools.ChangeList/Kazo.Os.Tools.ChangeList.csproj" -c Release -- \
+              notes --changes "$KAZOOS_SOLUTION_DIR/changes" --version "$VERSION" --kind release \
               --repository "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" --output "$notes"
             flags=(--title "Kazo OS $VERSION" --target "$SHA" --notes-file "$notes")
           else
@@ -235,7 +235,7 @@ jobs:
 
       - name: Publish and pack the server
         id: pack
-        working-directory: ${{ env.HACKEROS_SOLUTION_DIR }}
+        working-directory: ${{ env.KAZOOS_SOLUTION_DIR }}
         env:
           VERSION: ${{ needs.release.outputs.version }}
         run: |
@@ -258,7 +258,7 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: server-${{ matrix.rid }}
-          path: ${{ env.HACKEROS_SOLUTION_DIR }}/artifacts/server/staging/
+          path: ${{ env.KAZOOS_SOLUTION_DIR }}/artifacts/server/staging/
           retention-days: 1
 
   server-image:
@@ -284,8 +284,8 @@ jobs:
           VERSION: ${{ needs.release.outputs.version }}
         run: |
           mkdir -p image/amd64 image/arm64
-          cp -a "image-staging/server-linux-x64/hackeros-server-$VERSION-linux-x64/." image/amd64/
-          cp -a "image-staging/server-linux-arm64/hackeros-server-$VERSION-linux-arm64/." image/arm64/
+          cp -a "image-staging/server-linux-x64/kazoos-server-$VERSION-linux-x64/." image/amd64/
+          cp -a "image-staging/server-linux-arm64/kazoos-server-$VERSION-linux-arm64/." image/arm64/
 
       - uses: docker/setup-qemu-action@v3
       - uses: docker/setup-buildx-action@v3
@@ -295,17 +295,17 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ github.token }}
 
-      - name: Build and push ghcr.io/kazo-ca/hackeros-server
+      - name: Build and push ghcr.io/kazo-ca/kazoos-server
         shell: bash
         env:
           VERSION: ${{ needs.release.outputs.version }}
           PRERELEASE: ${{ needs.release.outputs.prerelease }}
         run: |
-          image="ghcr.io/kazo-ca/hackeros-server"
+          image="ghcr.io/kazo-ca/kazoos-server"
           tags=(--tag "$image:$VERSION")
           [[ "$PRERELEASE" == "true" ]] || tags+=(--tag "$image:latest")
           docker buildx build --platform linux/amd64,linux/arm64 \
-            --file "$HACKEROS_SOLUTION_DIR/Server/Kazo.Os.Server/packaging/Dockerfile" \
+            --file "$KAZOOS_SOLUTION_DIR/Server/Kazo.Os.Server/packaging/Dockerfile" \
             --label "org.opencontainers.image.source=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" \
             --label "org.opencontainers.image.version=$VERSION" \
             "${tags[@]}" --push image

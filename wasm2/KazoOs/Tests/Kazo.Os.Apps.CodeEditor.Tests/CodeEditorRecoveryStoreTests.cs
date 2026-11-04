@@ -47,7 +47,7 @@ public sealed class CodeEditorRecoveryStoreTests
         CodeEditorRecoveryResult saved = await store.SaveAsync(session.CaptureRecovery());
 
         Assert.Equal(CodeEditorRecoveryStatus.Success, saved.Status);
-        Assert.Equal("/home/user/.local/state/hackeros/code-editor/session.json", store.RecoveryPath.Value);
+        Assert.Equal("/home/user/.local/state/kazoos/code-editor/session.json", store.RecoveryPath.Value);
     }
 
     [Fact]
@@ -79,7 +79,7 @@ public sealed class CodeEditorRecoveryStoreTests
 
         Assert.Equal(CodeEditorRecoveryStatus.Success, cleared.Status);
         Assert.Equal(CodeEditorRecoveryStatus.Missing, (await store.LoadAsync()).Status);
-        Assert.True(gateway.DirectoryExists("/home/user/.local/state/hackeros/code-editor"));
+        Assert.True(gateway.DirectoryExists("/home/user/.local/state/kazoos/code-editor"));
     }
 
     [Fact]

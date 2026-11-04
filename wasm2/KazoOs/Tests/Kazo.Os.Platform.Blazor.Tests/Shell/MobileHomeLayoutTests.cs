@@ -22,7 +22,7 @@ public sealed class MobileHomeLayoutTests
     public void Pages_and_dock_preserve_order_and_unavailable_app_ids()
     {
         MobileHomeLayout layout = MobileHomeLayout.Default();
-        layout.Pages.Add(["com.example.uninstalled", "org.hackeros.calculator"]);
+        layout.Pages.Add(["com.example.uninstalled", "org.kazoos.calculator"]);
         layout.Dock.Reverse();
         MobileHomeLayout restored = MobileHomeLayout.Decode(layout.Encode())!;
         Assert.Equal(layout.Encode(), restored.Encode());

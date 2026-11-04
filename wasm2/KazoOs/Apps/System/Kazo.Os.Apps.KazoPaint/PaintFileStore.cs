@@ -13,7 +13,7 @@ namespace Kazo.Os.Apps.KazoPaint;
 public sealed record PaintFileReadResult(byte[]? Bytes, ImageFileHeader? Header, string? Error);
 
 /// <summary>
-/// Reads and writes image files for Hack Paint through the app's filesystem gateway (ADR 0103 §1):
+/// Reads and writes image files for Kazo Paint through the app's filesystem gateway (ADR 0103 §1):
 /// the C# side owns every file access, the canvas module only decodes and encodes pixels. The
 /// gateway is the app's own (home folder) or one carrying the handle a file dialog issued for a
 /// file outside it, exactly as the Text Editor does. Its messages are in the language of the process

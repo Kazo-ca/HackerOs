@@ -67,7 +67,7 @@ public sealed class ZipArchiveFolderTests(ITestOutputHelper output)
 
             // Read-only: the menu of an entry has no Rename, Delete or Cut.
             await helloRow.ClickAsync(new() { Button = MouseButton.Right });
-            ILocator items = page.Locator(".hack-context-menu-panel [role=menuitem] .hack-context-menu-title");
+            ILocator items = page.Locator(".kazo-context-menu-panel [role=menuitem] .kazo-context-menu-title");
             await Assertions.Expect(items.Filter(new() { HasText = "Open" }).First).ToBeVisibleAsync(new() { Timeout = 10000 });
             IReadOnlyList<string> titles = await items.AllInnerTextsAsync();
             output.WriteLine($"[test] entry menu: {string.Join(" | ", titles)}");

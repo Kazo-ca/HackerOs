@@ -24,15 +24,15 @@ public sealed partial class KazoWebSiteView : IAsyncDisposable
     private IJSObjectReference? _links;
     private DotNetObjectReference<KazoWebSiteView>? _self;
     private KazoWebSite? _site;
-    private IHackWebSiteProcess? _boundProcess;
+    private IKazoWebSiteProcess? _boundProcess;
     private bool _faulted;
 
     [Inject]
     private IJSRuntime JavaScript { get; set; } = default!;
 
-    /// <summary>Gets or sets the renderer process started for the page (<see cref="IHackWebSiteHost"/>).</summary>
+    /// <summary>Gets or sets the renderer process started for the page (<see cref="IKazoWebSiteHost"/>).</summary>
     [Parameter, EditorRequired]
-    public IHackWebSiteProcess Process { get; set; } = default!;
+    public IKazoWebSiteProcess Process { get; set; } = default!;
 
     /// <summary>Gets or sets the tab's address; the browser changes it on back/forward within the site.</summary>
     [Parameter, EditorRequired]
@@ -79,7 +79,7 @@ public sealed partial class KazoWebSiteView : IAsyncDisposable
         }
     }
 
-    private void Bind(IHackWebSiteProcess process)
+    private void Bind(IKazoWebSiteProcess process)
     {
         Unbind();
         _boundProcess = process;

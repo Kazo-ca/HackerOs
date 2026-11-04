@@ -11,7 +11,7 @@ namespace Kazo.Os.Commands.Jobs;
 public sealed class JobsApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.jobs";
+    public override string Id => "org.kazoos.commands.jobs";
 
     /// <inheritdoc />
     public override string Name => "jobs";
@@ -23,7 +23,7 @@ public sealed class JobsApp : AppDefinition
     public override Type EntryPoint => typeof(JobsCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "List the shell's background jobs";

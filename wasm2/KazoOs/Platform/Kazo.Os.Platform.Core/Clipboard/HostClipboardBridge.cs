@@ -20,7 +20,7 @@ namespace Kazo.Os.Platform.Core.Clipboard;
 /// the paste (the File Explorer), like a drop from the host;</item>
 /// <item>native copies inside Kazo OS (a text field, the terminal) also become the current entry.</item>
 /// </list>
-/// The direction is the <c>sharing</c> key of <c>/etc/hackeros/clipboard.config</c>
+/// The direction is the <c>sharing</c> key of <c>/etc/kazoos/clipboard.config</c>
 /// (<see cref="ClipboardSettingsDocuments"/>), re-read whenever the file or the session changes.
 /// </summary>
 /// <remarks>
@@ -34,7 +34,7 @@ public sealed class HostClipboardBridge : IHostClipboardSink, IAsyncDisposable
     /// Target recording the names of host files a paste carried (one per line). The files themselves
     /// stay in the page and are imported by the app that received the paste.
     /// </summary>
-    public const string HostFilesMediaType = "application/x-hackeros-host-files";
+    public const string HostFilesMediaType = "application/x-kazoos-host-files";
 
     private readonly SystemClipboard _clipboard;
     private readonly ISessionService _sessions;

@@ -284,7 +284,7 @@ public sealed class FileMenuEntriesTests
         ContextMenus = menus
     };
 
-    /// <summary>Two apps whose files are already in <c>/etc/hackeros/context-menus.d</c>.</summary>
+    /// <summary>Two apps whose files are already in <c>/etc/kazoos/context-menus.d</c>.</summary>
     private sealed class Fixture
     {
         internal List<(string Owner, AppContextMenuEntryManifest Entry, string Scope, IReadOnlyList<string> Paths)> Launches { get; } = [];

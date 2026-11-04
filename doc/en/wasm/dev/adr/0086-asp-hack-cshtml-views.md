@@ -6,14 +6,14 @@
 
 Accepted on 2026-10-16, with the `web/8-cshtml-views` work item.
 
-- **Plan phase:** web phase ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Plan phase:** web phase ([`asp-kazo-plan.md`](../plans/asp-kazo-plan.md)).
 - **Completes:** [ADR 0076](0076-asp-hack-mvc.md) §8 (the feasibility proof succeeded:
   the fallback interpreted engine is not built); [ADR 0083](0083-asp-hack-razor-views.md)
   (same view engine, same generated table, same sections).
 - **Amends:** [ADR 0007](0007-enforce-collocated-razor-assets.md): the build check
   also covers `.cshtml` files (§6); [ADR 0083](0083-asp-hack-razor-views.md): a missing key
   of `ViewData` reads as `null`, as in ASP.NET (§3).
-- **Documentation:** [`asp-hack-cshtml-views.md`](../../framework/asp-hack-cshtml-views.md).
+- **Documentation:** [`asp-kazo-cshtml-views.md`](../../framework/asp-kazo-cshtml-views.md).
 
 ## Context
 

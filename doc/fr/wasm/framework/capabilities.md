@@ -49,7 +49,7 @@ classement.
 | `server.connection.manage` | **dangereuse** (`KazoServerConnection`, ADR 0056 §10 ; déclarée par Paramètres) |
 | `system.power` | **dangereuse** (`KazoSystem` : redémarrage, réinitialisation, ADR 0056 §11 ; déclarée par Paramètres) |
 | `system.storage.inspect` | **dangereuse** (`KazoStorageDiagnostics`, ADR 0056 §11 ; déclarée par Diagnostic, seule app non système de la base à demander une approbation au premier lancement) |
-| `system.backup` | **dangereuse** (`KazoSystemBackup` : sauvegarder et restaurer toute la machine, ADR 0099 §1 ; déclarée par Paramètres, et par `hackbackup` qui exige `sudo`, voir [`system-backup.md`](../dev/system-backup.md)) |
+| `system.backup` | **dangereuse** (`KazoSystemBackup` : sauvegarder et restaurer toute la machine, ADR 0099 §1 ; déclarée par Paramètres, et par `kazobackup` qui exige `sudo`, voir [`system-backup.md`](../dev/system-backup.md)) |
 | `shell.host` | **dangereuse** (ADR 0056 §7 : héberger un shell dont les commandes agissent avec leurs propres droits, voir [`shell-host.md`](shell-host.md)) |
 | `users.manage` | **dangereuse** (ADR 0120 : réinitialiser ou retirer le mot de passe d'un autre compte par `KazoUserAccounts`, avec un administrateur ; déclarée par Paramètres et `passwd` ; voir [`sensitive-settings.md`](../dev/sensitive-settings.md)). Phrase de risque : « Réinitialiser ou retirer le mot de passe d'un autre compte, et donc ouvrir sa session. » Changer son propre mot de passe n'en demande aucune. |
 | `keyring.read-all` | **dangereuse** (ADR 0100 §2 : lire les entrées du trousseau de toutes les apps, pour un gestionnaire de mots de passe ; voir [`sensitive-settings.md`](../dev/sensitive-settings.md)). Phrase de risque : « Lire les mots de passe, jetons et clés que toutes vos applications ont enregistrés. » |
@@ -102,7 +102,7 @@ dangereuse : l'expérience de base ne change pas.
 ## Politique `policy.config`
 
 La clé `capabilityGrantsLocked`, jamais évaluée, est retirée du schéma de
-`/etc/hackeros/policy.config`. Il n'y reste que `allowRuntimePackageInstall`.
+`/etc/kazoos/policy.config`. Il n'y reste que `allowRuntimePackageInstall`.
 Une ancienne ligne `capabilityGrantsLocked=…` dans le fichier est désormais une
 clé inconnue.
 

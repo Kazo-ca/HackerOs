@@ -54,7 +54,7 @@ base apps (file explorer, console, task manager, text editor). Other apps, the s
 | File API | Writing a string requires `CreateAsync` with mode bits, then `WriteAsync` with the expected revision, then a home-made `IFileSystemContentSource` class. | `Apps/System/Kazo.Os.Apps.TextEditor/TextEditorWindow.razor` (≈ l. 364-460) |
 | Manifest | Defined twice: `app.manifest.json` and a C# copy `StaticManifest` (32 apps). | `Apps/**/app.manifest.json` |
 | Adding an app | A project, plus three entries in `Kazo.Os.Ecosystem.csproj` (`ProjectReference`, `BlazorWebAssemblyLazyLoad`, `EmbeddedResource`). | `OS/Kazo.Os.Ecosystem/Kazo.Os.Ecosystem.csproj`, `BuildKnownLazyApps.cs` |
-| Settings | The `/etc/hackeros` mount is never wired into the real OS: the router is created with the IndexedDB provider alone. `SettingsFileSystemProvider` exists only in tests. Settings live in a separate store, and security comes from the settings service, not from file permissions. | `OS/Kazo.Os.Ecosystem/EcosystemServiceCollectionExtensions.cs` (≈ l. 157) |
+| Settings | The `/etc/kazoos` mount is never wired into the real OS: the router is created with the IndexedDB provider alone. `SettingsFileSystemProvider` exists only in tests. Settings live in a separate store, and security comes from the settings service, not from file permissions. | `OS/Kazo.Os.Ecosystem/EcosystemServiceCollectionExtensions.cs` (≈ l. 157) |
 | Logs | `/var/log` is created but stays empty. Logs go to an IndexedDB store read only by Error Log Viewer. | `Platform.Core/Diagnostics/` |
 | Shell | No pipes, redirections, `&&` or environment variables. The legacy had pipes and `env`. | `Shared/Kazo.Os.AppSdk.Terminal/ShellParser.cs`, `adr/0014-shell-grammar-boundary.md` |
 | Commands | 28 projects, one per command. `cd`, `pwd`, `clear` and `help` are hard-coded in the terminal. | `Apps/Commands/`, comment in `Kazo.Os.Ecosystem.csproj` |
@@ -90,7 +90,7 @@ Decisions made with Benoit during the discussion of 2026-10-10.
 |---|---|---|
 | D1 | Goal | Simplicity for the developer and quality for the user, on equal footing. |
 | D2 | File engine | We keep it and add a simple facade in the SDK. |
-| D3 | File API | `System.IO`-style API, with the prefix `Hack` on each type: `KazoFile`, `KazoDirectory`, `KazoPath`, `KazoFileInfo`, `KazoDirectoryInfo`, `KazoFileStream`… |
+| D3 | File API | `System.IO`-style API, with the prefix `Kazo` on each type: `KazoFile`, `KazoDirectory`, `KazoPath`, `KazoFileInfo`, `KazoDirectoryInfo`, `KazoFileStream`… |
 | D4 | API form | Static, like `System.IO`. The calling app is identified by an ambient execution context, invisible to the developer. Asynchronous methods only (IndexedDB is asynchronous and the browser has only one thread). |
 | D5 | File errors | Exceptions, like `System.IO`: `KazoFileNotFoundException`, `KazoDirectoryNotFoundException`, `KazoUnauthorizedAccessException`, `KazoIOException`… |
 | D6 | Manifest | A C# class marked `[AppManifest]`, separate from the window, that inherits from an abstract base. Essential properties `abstract` (required), the others `virtual` with a default value. |
@@ -119,7 +119,7 @@ Decisions made with Benoit during the discussion of 2026-10-10.
 
 ## 5. Phase 1: Files
 
-### 5.1 `System.IO`-style `Hack*` API
+### 5.1 `System.IO`-style `Kazo*` API
 
 New public namespace in the SDK (proposed: `Kazo.Os.AppSdk.IO`), with no
 dependency on Blazor, usable by window, terminal and service apps.
@@ -148,7 +148,7 @@ dependency on Blazor, usable by window, terminal and service apps.
   revision and retries once if it changed. An advanced API remains
   available for whoever wants strict conflict control (the text
   editor, for example).
-- `FileSystemErrorCode` codes are translated into `Hack*` exceptions, in
+- `FileSystemErrorCode` codes are translated into `Kazo*` exceptions, in
   the spirit of `System.IO` exceptions.
 - No synchronous methods: impossible without blocking the browser's single
   thread.
@@ -161,7 +161,7 @@ Implementation: [`settings-files.md`](../../framework/settings-files.md).
   disappears for app and system settings. A migration copies the existing
   values into files at first startup.
 - **Locations:**
-  - system: `/etc/<app>/<document>.config` (and `/etc/hackeros/` for the OS);
+  - system: `/etc/<app>/<document>.config` (and `/etc/kazoos/` for the OS);
   - user: `~/.config/<app>/<document>.config`.
 - **Layers:** default value declared by the app, then `/etc`, then
   `~/.config`. A key that the administrator locks in `/etc` cannot
@@ -211,7 +211,7 @@ Implementation: [`settings-files.md`](../../framework/settings-files.md).
 [AppManifest]
 public sealed class TextEditorApp : AppDefinition
 {
-    public override string Id => "org.hackeros.text-editor";
+    public override string Id => "org.kazoos.text-editor";
     public override string Name => "Text Editor";
     public override AppKind Kind => AppKind.Window;
     public override Type EntryPoint => typeof(TextEditorWindow);
@@ -261,8 +261,8 @@ public sealed class TextEditorApp : AppDefinition
   deleted.
 - **Reinstall** from Settings > Installed apps.
 - **Scope:**
-  - administrator: for the whole machine (state in `/etc/hackeros/apps.config`);
-  - user: for their profile (state in `~/.config/hackeros/apps.config`).
+  - administrator: for the whole machine (state in `/etc/kazoos/apps.config`);
+  - user: for their profile (state in `~/.config/kazoos/apps.config`).
 - System apps do not offer an uninstall button.
 - The existing activation mechanism (ADR 0032) is reused and extended.
 
@@ -281,7 +281,7 @@ public sealed class TextEditorApp : AppDefinition
   dialogs (warning banner, list of requested permissions and
   their risks). It requires an administrator's password, like
   `sudo`. Each decision is written to `/var/log/auth.log`.
-- **Policy:** administrator setting in `/etc/hackeros/security.config`,
+- **Policy:** administrator setting in `/etc/kazoos/security.config`,
   with two values: "allow with approval" (default) and "always
   block".
 
@@ -387,7 +387,7 @@ not modified.
 
 | New ADR | Replaces | Content |
 |---|---|---|
-| [0043](../adr/0043-hack-file-api-and-ambient-context.md) `Hack*` file API and ambient context | n/a | D3, D4, D5, section 5.1 |
+| [0043](../adr/0043-hack-file-api-and-ambient-context.md) `Kazo*` file API and ambient context | n/a | D3, D4, D5, section 5.1 |
 | [0044](../adr/0044-settings-as-files.md) Settings as files | 0004, 0011 (partially), 0029 | D16 to D18, section 5.2, lock syntax |
 | [0045](../adr/0045-logs-as-files.md) Logs as files | n/a | D19, section 5.3, rotation sizes |
 | [0046](../adr/0046-virtual-proc-and-dev-filesystems.md) Virtual file systems `/proc` and `/dev` | completes 0008 | D20, section 5.4 |
@@ -431,8 +431,8 @@ the corresponding ADR, with the value proposed below by default.
 
 ### Phase 1: Files
 - [x] Create the types `KazoFile`, `KazoDirectory`, `KazoPath`, `KazoFileInfo`, `KazoDirectoryInfo`, `KazoFileStream`, `KazoFileSystemWatcher`.
-- [x] Create the `Hack*` exceptions and the translation from `FileSystemErrorCode`.
-- [x] Set up the ambient execution context set by the OS. See [`hack-file-api.md`](../../framework/hack-file-api.md).
+- [x] Create the `Kazo*` exceptions and the translation from `FileSystemErrorCode`.
+- [x] Set up the ambient execution context set by the OS. See [`kazo-file-api.md`](../../framework/kazo-file-api.md).
 - [x] Replace the separate settings store with files, with migration of existing values ([`settings-files.md`](../../framework/settings-files.md)).
 - [x] Implement the `/etc` then `~/.config` layers, the administrator lock and tolerance for invalid files ([`settings-files.md`](../../framework/settings-files.md)).
 - [x] Create the typed settings API and adapt the Settings app ([`settings-files.md`](../../framework/settings-files.md)).
@@ -476,7 +476,7 @@ the corresponding ADR, with the value proposed below by default.
 
 ### After phase 4 (outside the initial plan, ADR 0061 to 0065)
 - [x] Terminal on xterm.js, line discipline in C#, alternate screen (`rebuild/terminal-xterm`, PR #115, ADR 0061, [`terminal-emulator.md`](../terminal-emulator.md)).
-- [x] VS Code-style workspace code editor (`rebuild/code-editor-workspace` and `rebuild/code-editor-dock`, PRs #117 to #119, ADR 0062, [`code-editor.md`](../code-editor.md)) and embeddable app components, terminal embedded through `IHackTerminal` (ADR 0063, [`embedded-components.md`](../../framework/embedded-components.md)).
+- [x] VS Code-style workspace code editor (`rebuild/code-editor-workspace` and `rebuild/code-editor-dock`, PRs #117 to #119, ADR 0062, [`code-editor.md`](../code-editor.md)) and embeddable app components, terminal embedded through `IKazoTerminal` (ADR 0063, [`embedded-components.md`](../../framework/embedded-components.md)).
 - [x] POSIX shell, scripts, jobs, apps launched by name, Linux commands, `nano` (PRs #120 and #121, ADR 0064, [`shell-interpreter.md`](../shell-interpreter.md), [`linux-commands.md`](../linux-commands.md)).
 - [x] OS clipboard shared with the host (PR #122, ADR 0065, [`clipboard.md`](../clipboard.md)), see phase 4 above.
 

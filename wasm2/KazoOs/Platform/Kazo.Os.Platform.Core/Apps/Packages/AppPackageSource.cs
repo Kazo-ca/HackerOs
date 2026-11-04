@@ -18,7 +18,7 @@ public sealed record AppPackageSource(string Owner, string Repository, SemanticV
     public const string GitHubScheme = "github:";
 
     /// <summary>Branch of the app repository that holds <c>index.json</c> and the packages (ADR 0182 §2).</summary>
-    public const string PackagesBranch = "hackeros-packages";
+    public const string PackagesBranch = "kazoos-packages";
 
     /// <summary>Name of the version list at the root of <see cref="PackagesBranch"/>.</summary>
     public const string IndexFileName = "index.json";
@@ -75,7 +75,7 @@ public sealed record AppPackageSource(string Owner, string Repository, SemanticV
 
     /// <summary>Gets the URL of a file of <see cref="PackagesBranch"/>, relative to its root.</summary>
     /// <param name="host">Download host listed in <c>[hosts]</c>.</param>
-    /// <param name="relativePath">Path from <c>index.json</c>, e.g. <c>1.0.0/org.kazo.webamp-1.0.0.hackapp</c>.</param>
+    /// <param name="relativePath">Path from <c>index.json</c>, e.g. <c>1.0.0/org.kazo.webamp-1.0.0.kazoapp</c>.</param>
     /// <exception cref="InvalidOperationException">This is a catalog app: its files are next to the catalog's <c>catalog.json</c>.</exception>
     public Uri GetFileUri(string host, string relativePath)
     {

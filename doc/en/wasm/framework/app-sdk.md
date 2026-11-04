@@ -25,7 +25,7 @@ public APIs, the [SDK reference](sdk-reference.md).
 
 | Project | Content |
 |---|---|
-| `Shared/Kazo.Os.AppSdk` | `IAppExecutionContext` and its gateways, static `Hack*` facades, entry point base classes (`TerminalAppBase`…). |
+| `Shared/Kazo.Os.AppSdk` | `IAppExecutionContext` and its gateways, static `Kazo*` facades, entry point base classes (`TerminalAppBase`…). |
 | `Shared/Kazo.Os.AppSdk.Blazor` | Blazor components and services for windowed apps (window, download, charts, embeddable components `KazoEmbeddedComponent<T>`…). |
 | `Shared/Kazo.Os.AppSdk.Icons` | Icon catalog. |
 | `Shared/Kazo.Os.AppSdk.Terminal` | xterm.js terminal (`TerminalPanel`, ADR 0061), which hosts a shell through `KazoShell`, and tabbed console (`TerminalTabs`). |
@@ -159,7 +159,7 @@ Only through the SDK:
   checks the required capability at each call. A new gateway is a
   member of the interface with a default "not supported" implementation, so that existing implementations still compile; the
   trusted factory of Platform Core provides the real one;
-- a static `Hack*` **facade** that reads the ambient context (ADR 0043) and
+- a static `Kazo*` **facade** that reads the ambient context (ADR 0043) and
   calls the gateway. This is the recommended form.
 
 A missing capability throws `KazoUnauthorizedAccessException` and goes through
@@ -171,8 +171,8 @@ Static facades that existed at the start of phase 4:
 
 | Facade | Role | Document |
 |---|---|---|
-| `KazoFile`, `KazoDirectory`, `KazoPath` | files | [`hack-file-api.md`](hack-file-api.md) |
-| `KazoExecutionContext` | ambient context | [`hack-file-api.md`](hack-file-api.md) |
+| `KazoFile`, `KazoDirectory`, `KazoPath` | files | [`kazo-file-api.md`](kazo-file-api.md) |
+| `KazoExecutionContext` | ambient context | [`kazo-file-api.md`](kazo-file-api.md) |
 | `KazoEnvironment` | arguments, current directory, variables | [`process-environment.md`](../dev/process-environment.md) |
 | `KazoSettings` | settings as files | [`settings-files.md`](settings-files.md) |
 | `KazoTrash` | trash | [`trash.md`](../dev/trash.md), [`trash-api.md`](trash-api.md) |
@@ -225,7 +225,7 @@ KazoUserInfo cached = KazoUser.Describe(AppContext);   // sans contexte ambiant 
 ```csharp
 IReadOnlyList<KazoAppInfo> apps = await KazoApps.GetInstalledAsync();
 IReadOnlyList<KazoAppInfo> editors = await KazoApps.GetHandlersAsync("~/notes.md");
-await KazoApps.LaunchAsync("org.hackeros.text-editor", ["/home/benoit/notes.md"]);
+await KazoApps.LaunchAsync("org.kazoos.text-editor", ["/home/benoit/notes.md"]);
 KazoOpenFileResult opened = await KazoApps.OpenFileAsync("~/notes.md");   // Opened, ChooserRequired (+ CandidateAppIds), NoHandler
 ```
 
@@ -237,8 +237,8 @@ KazoOpenFileResult opened = await KazoApps.OpenFileAsync("~/notes.md");   // Ope
   an uninstalled app (ADR 0048) is not listed. **No capability.**
 - `GetHandlersAsync`: installed windowed apps that declare the extension or
   MIME type; the default first: the user's
-  (`~/.config/hackeros/file-associations.json`), otherwise that of
-  `/etc/hackeros/file-associations.json` (ADR 0121).
+  (`~/.config/kazoos/file-associations.json`), otherwise that of
+  `/etc/kazoos/file-associations.json` (ADR 0121).
 - `GetDefaultHandlersAsync`, `SetDefaultHandlerAsync(target, appId, action)` and
   `ResetDefaultHandlerAsync(target, action)` (ADR 0121, work item `v3/4b`):
   user and machine defaults, per-user choice
@@ -260,8 +260,8 @@ KazoOpenFileResult opened = await KazoApps.OpenFileAsync("~/notes.md");   // Ope
 
 ```csharp
 IReadOnlyList<KazoAppInstallInfo> all = await KazoAppManagement.GetAllAsync();   // App, State, UninstallClosure
-IReadOnlyList<string> removed = await KazoAppManagement.UninstallAsync("org.hackeros.calculator", KazoInstallScope.User);
-await KazoAppManagement.ReinstallAsync("org.hackeros.calculator", KazoInstallScope.Machine);
+IReadOnlyList<string> removed = await KazoAppManagement.UninstallAsync("org.kazoos.calculator", KazoInstallScope.User);
+await KazoAppManagement.ReinstallAsync("org.kazoos.calculator", KazoInstallScope.Machine);
 ```
 
 - **Capability `apps.manage`** (dangerous) for all members. Settings now
@@ -273,7 +273,7 @@ await KazoAppManagement.ReinstallAsync("org.hackeros.calculator", KazoInstallSco
   then gives the reason, displayed by Settings.
 - `Machine` scope: the OS authentication agent asks for an
   administrator ([`admin-authentication-agent.md`](../dev/admin-authentication-agent.md)),
-  then the OS writes `/etc/hackeros/apps.config` itself. Refusal or cancellation:
+  then the OS writes `/etc/kazoos/apps.config` itself. Refusal or cancellation:
   `KazoUnauthorizedAccessException`.
 - System app, or a closure that contains one: `InvalidOperationException`,
   before any password prompt. Reinstalling for oneself an app
@@ -452,7 +452,7 @@ string? text = await KazoClipboard.GetTextAsync();
 - Gateway: `IAppClipboardGateway Clipboard` (`AppClipboardGateway`, Platform Core).
 - **Sharing with the real machine** (ADR 0065): text copied by an app also goes
   to the host's clipboard, and a paste from the host becomes the current
-  entry, according to the `sharing` key of `/etc/hackeros/clipboard.config`.
+  entry, according to the `sharing` key of `/etc/kazoos/clipboard.config`.
   An app never talks to `navigator.clipboard`; `BrowserClipboard` was
   removed at the SDK 1.0 freeze (ADR 0114 §3). See [`clipboard.md`](../dev/clipboard.md), [`clipboard-api.md`](clipboard-api.md).
 - `KazoDirectory.CopyAsync` (recursive copy) and `KazoFileOperations`
@@ -491,7 +491,7 @@ KazoStorageSnapshot snapshot = await KazoStorageDiagnostics.GetSnapshotAsync();
 
 | API | Gateway | Capability | Replaces | Document |
 |---|---|---|---|---|
-| `KazoShell.StartAsync`, `IHackShell` (`ExecuteAsync`, `CompleteAsync`, `GetInstalledCommands`, `WorkingDirectory`, `ExitStatus`, `Prompt`, history), `KazoShellOptions`, `KazoShellCompletion`, `KazoCredentialPrompt` | `IAppExecutionContext.ShellHost` (`IAppShellHostGateway`) | `shell.host` (dangerous) | `ShellInterpreter`, `ISessionService`, `IElevationService` in `TerminalPanel` | [`shell-host.md`](shell-host.md) |
+| `KazoShell.StartAsync`, `IKazoShell` (`ExecuteAsync`, `CompleteAsync`, `GetInstalledCommands`, `WorkingDirectory`, `ExitStatus`, `Prompt`, history), `KazoShellOptions`, `KazoShellCompletion`, `KazoCredentialPrompt` | `IAppExecutionContext.ShellHost` (`IAppShellHostGateway`) | `shell.host` (dangerous) | `ShellInterpreter`, `ISessionService`, `IElevationService` in `TerminalPanel` | [`shell-host.md`](shell-host.md) |
 
 `4-terminal` adds path completion, `KazoShellCompletion.DisplayCandidates`,
 `IShellSession.Exit` (command `exit`) and the `TerminalTabs` tabs component
@@ -550,7 +550,7 @@ is the `Kazo.Os.AppSdk.FileView` package; the migration table is in
 
 | API | Role | Capability | Document |
 |---|---|---|---|
-| `KazoFileView`, `IHackFileView` (`Kazo.Os.AppSdk.Blazor.Files`) | File control provided by the OS (the default explorer), with the rights of the app that displays it | those of the files shown | [`embedded-components.md`](embedded-components.md), [`file-explorer.md`](../dev/file-explorer.md), [`file-control-api.md`](file-control-api.md) |
+| `KazoFileView`, `IKazoFileView` (`Kazo.Os.AppSdk.Blazor.Files`) | File control provided by the OS (the default explorer), with the rights of the app that displays it | those of the files shown | [`embedded-components.md`](embedded-components.md), [`file-explorer.md`](../dev/file-explorer.md), [`file-control-api.md`](file-control-api.md) |
 | `Menus.Attach`, `Menus.Define`, `KazoContextMenu`, `KazoMenuDefinition` | OS context menu, multi-level, keyboard and long press | none | [`context-menu.md`](context-menu.md) |
 | `[RegisterFileContextMenu]`, `RegisterFileContextMenuContext`, `KazoFileMenuItems` | Entries of an app in file menus, registered at build time | `shell.context-menu` | [`context-menu.md`](context-menu.md#app-entries-in-the-file-menus-work-item-4) |
 | `KazoFileOperations`, `IDialogService.AsFileConflictResolver` | Copy, move, import, trash, Nautilus-style conflicts (formerly `FileTransfer`) | those of the files | [`file-explorer.md`](../dev/file-explorer.md), [`file-operations-api.md`](file-operations-api.md) |
@@ -567,10 +567,10 @@ the `[AppManifest]`); their details are in the
 | API | Role | Capability | Document |
 |---|---|---|---|
 | `KazoConsole`, gateway `IAppExecutionContext.Console` (`IAppConsoleGateway`) | Standard streams of an instance: those of the shell that launched it by name, `/dev/null` from the desktop | none | [`shell-interpreter.md`](../dev/shell-interpreter.md#apps-launched-by-name) |
-| `IShellSession`: `GetVariable`, `AssignVariable`, `RunAsync`, `Jobs`, `KillJob`; `IHackShell.NeedsMoreInput` | Built-ins `read`, `watch`, `jobs`, `kill %n` written as ordinary commands; continuation prompt | `shell.control`; `shell.host` | [`shell-commands.md`](../dev/shell-commands.md), [`shell-host.md`](shell-host.md) |
+| `IShellSession`: `GetVariable`, `AssignVariable`, `RunAsync`, `Jobs`, `KillJob`; `IKazoShell.NeedsMoreInput` | Built-ins `read`, `watch`, `jobs`, `kill %n` written as ordinary commands; continuation prompt | `shell.control`; `shell.host` | [`shell-commands.md`](../dev/shell-commands.md), [`shell-host.md`](shell-host.md) |
 | `IFullScreenTerminalSession` (`TerminalExecutionContext.FullScreen`), `TerminalInputReader` | Alternate screen (`nano`, `top`, `htop`) and the terminal's standard input | none | [`terminal-emulator.md`](../dev/terminal-emulator.md), [`terminal-api.md`](terminal-api.md) |
-| `KazoFile.CreateSymbolicLinkAsync` | `ln -s` | path rights | [`hack-file-api.md`](hack-file-api.md) |
-| `AppDefinition.Components` (`AppComponent`), `KazoEmbeddedComponent<T>`, `KazoContractComponent<T>`, `KazoEmbeddableComponent`, `KazoComponentContracts`, `IHackTerminal` | Component of one app displayed by another, by contract (`hackeros.terminal`) | those of the app that displays the component (CodeEditor declares `shell.host` for the embedded terminal) | [`embedded-components.md`](embedded-components.md) |
+| `KazoFile.CreateSymbolicLinkAsync` | `ln -s` | path rights | [`kazo-file-api.md`](kazo-file-api.md) |
+| `AppDefinition.Components` (`AppComponent`), `KazoEmbeddedComponent<T>`, `KazoContractComponent<T>`, `KazoEmbeddableComponent`, `KazoComponentContracts`, `IKazoTerminal` | Component of one app displayed by another, by contract (`kazoos.terminal`) | those of the app that displays the component (CodeEditor declares `shell.host` for the embedded terminal) | [`embedded-components.md`](embedded-components.md) |
 | `KazoClipboard` shared with the host (`BrowserClipboard` removed in 1.0) | Copied text goes to the real machine according to `clipboard.config` | `clipboard.read`, `clipboard.write` | [`clipboard.md`](../dev/clipboard.md) |
 
 None of these APIs gives access to an internal service: the apps that

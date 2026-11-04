@@ -9,15 +9,15 @@ using Kazo.Os.Platform.Core.Tests.Apps.ThemePacks;
 namespace Kazo.Os.Platform.Core.Tests.Execution;
 
 /// <summary>
-/// Theme packs of the Hack Store through <c>KazoAppPackages</c>' gateway (ADR 0213): unpacked as
+/// Theme packs of the Kazo OS Store through <c>KazoAppPackages</c>' gateway (ADR 0213): unpacked as
 /// they are in <c>theme-packs/&lt;id&gt;/</c>, for the session user without an administrator or
 /// for every user with ADR 0189's two-step approval.
 /// </summary>
 public sealed partial class AppPackageGatewayTests
 {
     private const string Pack = ThemePackTests.PackId;
-    private const string PersonalPack = "/home/alice/.local/share/hackeros/theme-packs/" + Pack;
-    private const string SystemPack = "/usr/share/hackeros/theme-packs/" + Pack;
+    private const string PersonalPack = "/home/alice/.local/share/kazoos/theme-packs/" + Pack;
+    private const string SystemPack = "/usr/share/kazoos/theme-packs/" + Pack;
 
     [Fact]
     public async Task A_theme_pack_of_the_official_catalog_is_installed_for_the_user_without_an_administrator()
@@ -109,7 +109,7 @@ public sealed partial class AppPackageGatewayTests
         // Version 1.1.0 dropped its wallpaper: the old file must not stay behind.
         Assert.Null(await harness.Settings.StatAsync($"{PersonalPack}/wallpapers/grid.png"));
         Assert.Equal("1.1.0", Assert.Single(await gateway.GetInstalledThemePacksAsync()).Version);
-        Assert.Null(await harness.Settings.StatAsync("/home/alice/.local/share/hackeros/theme-packs.partial/" + Pack));
+        Assert.Null(await harness.Settings.StatAsync("/home/alice/.local/share/kazoos/theme-packs.partial/" + Pack));
     }
 
     [Fact]
@@ -196,10 +196,10 @@ public sealed partial class AppPackageGatewayTests
 
                 byte[] pack = ThemePackTests.Build(files, version: version);
                 string folder = $"packages/{Pack}/{version}";
-                _downloader.Files[new Uri($"{root}{folder}/{Pack}-{version}.hacktheme")] = pack;
+                _downloader.Files[new Uri($"{root}{folder}/{Pack}-{version}.kazotheme")] = pack;
                 string sha = corruptHash ? new string('0', 64) : AppPackage.Sha256(pack);
                 versions.Add($$$"""
-                    {"version":"{{{version}}}","commit":"abc","package":"{{{folder}}}/{{{Pack}}}-{{{version}}}.hacktheme",
+                    {"version":"{{{version}}}","commit":"abc","package":"{{{folder}}}/{{{Pack}}}-{{{version}}}.kazotheme",
                      "sha256":"{{{sha}}}","size":{{{pack.Length}}},"publishedAt":"2026-10-31T00:00:00Z",
                      "icon":"{{{folder}}}/preview.png","descriptions":{}}
                     """);

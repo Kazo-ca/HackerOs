@@ -87,7 +87,7 @@ public sealed class CodeEditorRecoveryStore
 
     /// <summary>Gets the app-private VFS recovery file path for the current user.</summary>
     public VirtualPath RecoveryPath => VirtualPath.Parse(
-        $"{_homePath}/.local/state/hackeros/code-editor/session.json");
+        $"{_homePath}/.local/state/kazoos/code-editor/session.json");
 
     /// <summary>Loads and validates the most recent recovery snapshot.</summary>
     public async ValueTask<CodeEditorRecoveryResult> LoadAsync(CancellationToken cancellationToken = default)
@@ -247,7 +247,7 @@ public sealed class CodeEditorRecoveryStore
 
     private async ValueTask<CodeEditorRecoveryResult> EnsureParentDirectoriesAsync(CancellationToken cancellationToken)
     {
-        string[] segments = [".local", "state", "hackeros", "code-editor"];
+        string[] segments = [".local", "state", "kazoos", "code-editor"];
         VirtualPath current = VirtualPath.Parse(_homePath);
         foreach (string segment in segments)
         {

@@ -696,13 +696,13 @@ internal sealed partial class KazoWebDbKeyJsonContext : System.Text.Json.Seriali
 
 /// <summary>
 /// A site database kept in memory, as a stand-in for <see cref="IAppWebDatabaseGateway"/>: a site's tests
-/// register it in the site's services (<c>builder.Services.AddSingleton&lt;IAppWebDatabaseGateway&gt;(new KazoWebDbInMemoryBackend("hackweb.test"))</c>)
+/// register it in the site's services (<c>builder.Services.AddSingleton&lt;IAppWebDatabaseGateway&gt;(new KazoWebDbInMemoryBackend("kazoweb.test"))</c>)
 /// so <c>KazoWebDb</c> runs without the OS.
 /// </summary>
 public sealed class KazoWebDbInMemoryBackend : IAppWebDatabaseGateway
 {
     /// <summary>Initializes an empty database.</summary>
-    /// <param name="databaseName">The database name, <c>hackweb.&lt;app id&gt;</c>.</param>
+    /// <param name="databaseName">The database name, <c>kazoweb.&lt;app id&gt;</c>.</param>
     public KazoWebDbInMemoryBackend(string databaseName)
     {
         Database = new InMemoryWebDatabase(databaseName);

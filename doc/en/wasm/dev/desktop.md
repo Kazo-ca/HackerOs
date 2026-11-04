@@ -20,7 +20,7 @@ The desktop background shows the files of `~/Desktop` as an icon grid, with
 the **Home** and **Trash** system icons, like the Windows or Xfce desktop:
 
 - each icon keeps its cell, remembered in
-  `~/.config/hackeros/desktop.config`; a new file takes the first free cell;
+  `~/.config/kazoos/desktop.config`; a new file takes the first free cell;
   "Auto-arrange" lines everything up with no gaps;
 - drag to move (snapped to the grid), lasso selection, Ctrl and Shift to
   extend, arrows, Enter, F2 and Delete;
@@ -39,7 +39,7 @@ On mobile, there are no desktop icons (ADR 0152 §7).
 
 ```text
 DesktopShell ──► DesktopArea.BackgroundContent (BackgroundInteractive)
-                   └─ DesktopSurfaceHost ── launches org.hackeros.desktop (real process)
+                   └─ DesktopSurfaceHost ── launches org.kazoos.desktop (real process)
                         └─ DesktopSurface (Desktop app, rights from its manifest)
                              └─ KazoFileView Mode=Desktop ──► registry ──► ExplorerFileView
                                                                 └─ FileView ─► FileViewDesktop (grid)
@@ -49,10 +49,10 @@ DesktopShell ──► DesktopArea.BackgroundContent (BackgroundInteractive)
 | --- | --- | --- |
 | `DesktopSurfaceHost` | `Platform.Blazor` (`Shell/`) | Reserves the app as the shell surface (`WindowLaunchCoordinator.ReserveShellSurface`), launches it for the session user, renders its entry component outside a window with the app context and a menu scope, relaunches it once if it crashes. `CreateShortcutAsync(appId)` sends the shortcut intent. |
 | `DesktopArea.BackgroundInteractive` | `Windowing.Blazor` | Renders the background layer clickable and readable; the windows layer lets the pointer through outside the windows. |
-| **Desktop** app (`org.hackeros.desktop`) | `Apps/System/Kazo.Os.Apps.Desktop` | Hidden, single-instance system app, public SDK only. Creates `~/Desktop` if missing, reads and writes `desktop.config`, tracks `~/.config/hackeros`, completes the background menu, receives the shortcut intent. |
+| **Desktop** app (`org.kazoos.desktop`) | `Apps/System/Kazo.Os.Apps.Desktop` | Hidden, single-instance system app, public SDK only. Creates `~/Desktop` if missing, reads and writes `desktop.config`, tracks `~/.config/kazoos`, completes the background menu, receives the shortcut intent. |
 | `FileViewDesktop` | explorer, `FileControl/` (`AppSdk.FileView` before SDK 2.0) | The Desktop mode of the internal control: measured grid (`ResizeObserver`), selection, lasso, keyboard, drag and drop, system icons. Collocated script `FileViewDesktop.razor.js`. |
 | `ExplorerFileView` (`ExplorerFileView.Desktop.cs`) | `Apps.FileExplorer` | The provider: menus and actions for Home and Trash, full or empty Trash state, shortcut decoration (app name and icon, grayed out if the app is missing), launching a shortcut, creating shortcuts on an app drop. |
-| Start menu (`AppLauncher.Menu.cs`, `AppLauncher.razor.js`) | `Platform.Blazor` | OS menu on each app (Open, Pin, Send to ▸ Desktop) and dragging an app (`application/vnd.hackeros.app+json`). |
+| Start menu (`AppLauncher.Menu.cs`, `AppLauncher.razor.js`) | `Platform.Blazor` | OS menu on each app (Open, Pin, Send to ▸ Desktop) and dragging an app (`application/vnd.kazoos.app+json`). |
 | `DesktopPanel` | `Apps.Settings` | The Settings ▸ Desktop tab. |
 
 Since the desktop is a process, it appears in `ps` and the task manager;
@@ -93,7 +93,7 @@ Page after Appearance: icon size, auto-arrange, alignment, system icons, sort,
   `[positions]`; every provider and Settings use the same code.
 - **Cells, not pixels**: a cell remains correct when the icon size changes.
 - **Shortcut written by the desktop**: "Send to ▸ Desktop" goes through the
-  `org.hackeros.desktop.create-shortcut.v1` intent, and the file is written
+  `org.kazoos.desktop.create-shortcut.v1` intent, and the file is written
   with the rights of the Desktop app, not of the shell.
 
 ## Tests

@@ -64,7 +64,7 @@ public sealed record ServerPresence(
 /// </para>
 /// <para>
 /// An administrator turns the automatic connection off with <c>auto-connect=false</c> in
-/// <c>/etc/hackeros/server.config</c>; the OS then only uses a server linked by hand in Settings.
+/// <c>/etc/kazoos/server.config</c>; the OS then only uses a server linked by hand in Settings.
 /// </para>
 /// </remarks>
 public sealed class ServerPresenceService : IAsyncDisposable
@@ -98,7 +98,7 @@ public sealed class ServerPresenceService : IAsyncDisposable
     /// <param name="connection">The device's server account link (ADR 0028).</param>
     /// <param name="hostInfo">Host discovery and server check.</param>
     /// <param name="readConfig">
-    /// Reads <c>/etc/hackeros/server.config</c> (<see cref="ConfigFile"/>, through the OS settings
+    /// Reads <c>/etc/kazoos/server.config</c> (<see cref="ConfigFile"/>, through the OS settings
     /// files); <see langword="null"/> means automatic connection on.
     /// </param>
     /// <param name="logger">Receives one line per state change.</param>
@@ -344,14 +344,14 @@ public sealed class ServerPresenceService : IAsyncDisposable
         }
         catch (Exception exception) when (exception is not OperationCanceledException)
         {
-            _logger.LogWarning(exception, "server: /etc/hackeros/server.config could not be read; automatic connection stays on");
+            _logger.LogWarning(exception, "server: /etc/kazoos/server.config could not be read; automatic connection stays on");
             return true;
         }
 
         return ParseAutoConnect(content);
     }
 
-    /// <summary>Parses <c>/etc/hackeros/server.config</c>: only <c>false</c>, <c>no</c>, <c>off</c> or <c>0</c> turn it off.</summary>
+    /// <summary>Parses <c>/etc/kazoos/server.config</c>: only <c>false</c>, <c>no</c>, <c>off</c> or <c>0</c> turn it off.</summary>
     /// <param name="content">File content, or <see langword="null"/> when absent.</param>
     public static bool ParseAutoConnect(string? content)
     {

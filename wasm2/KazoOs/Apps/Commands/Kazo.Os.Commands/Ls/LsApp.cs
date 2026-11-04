@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Ls;
 public sealed class LsApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.cmd.ls";
+    public override string Id => "org.kazoos.cmd.ls";
 
     /// <inheritdoc />
     public override string Name => "ls";
@@ -22,7 +22,7 @@ public sealed class LsApp : AppDefinition
     public override Type EntryPoint => typeof(LsCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "List directory contents";

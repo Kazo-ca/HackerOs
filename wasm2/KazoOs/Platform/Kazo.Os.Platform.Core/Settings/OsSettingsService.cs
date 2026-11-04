@@ -14,8 +14,8 @@ using Microsoft.Extensions.Logging.Abstractions;
 namespace Kazo.Os.Platform.Core.Settings;
 
 /// <summary>
-/// Reads and writes the OS's own settings files (<c>/etc/hackeros</c>, <c>~/.config/hackeros</c>,
-/// <c>~/.local/state/hackeros</c>) with the same layering engine as the SDK's <c>KazoSettings</c>
+/// Reads and writes the OS's own settings files (<c>/etc/kazoos</c>, <c>~/.config/kazoos</c>,
+/// <c>~/.local/state/kazoos</c>) with the same layering engine as the SDK's <c>KazoSettings</c>
 /// (ADR 0044 section 8).
 /// </summary>
 public interface IOsSettingsService
@@ -123,7 +123,7 @@ public interface IOsSettingsService
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Starts watching a document's files so external edits (<c>nano /etc/hackeros/…</c>) raise
+    /// Starts watching a document's files so external edits (<c>nano /etc/kazoos/…</c>) raise
     /// <see cref="DocumentChanged"/>. Idempotent per document; watches follow session changes.
     /// </summary>
     /// <param name="document">Document to watch.</param>
@@ -139,7 +139,7 @@ public interface IOsSettingsService
 public sealed class OsSettingsService : IOsSettingsService, IAsyncDisposable
 {
     /// <summary>App identity used for the OS's own settings operations.</summary>
-    public const string ShellAppId = "org.hackeros.shell";
+    public const string ShellAppId = "org.kazoos.shell";
 
     private readonly IFileSystemService _fileSystem;
     private readonly ISessionService _session;

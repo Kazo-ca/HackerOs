@@ -152,7 +152,7 @@ public sealed class NotificationToastFeedTests
         _queue.Enqueue(new Notification(
             id,
             user,
-            "org.hackeros.test",
+            "org.kazoos.test",
             NotificationSeverity.Information,
             "Title",
             "Message",

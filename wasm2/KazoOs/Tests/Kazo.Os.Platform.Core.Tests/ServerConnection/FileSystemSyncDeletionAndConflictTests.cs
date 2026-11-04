@@ -49,7 +49,7 @@ public sealed class FileSystemSyncDeletionAndConflictTests
         Assert.Equal("hello", await b.ReadAsync(".local/share/Trash/files/note.txt"));
         string info = await b.ReadAsync(".local/share/Trash/info/note.txt.trashinfo");
         Assert.Contains("Path=/home/alice/note.txt", info, StringComparison.Ordinal);
-        Assert.Contains("X-HackerOS-Origin=deleted-on-another-device", info, StringComparison.Ordinal);
+        Assert.Contains("X-KazoOS-Origin=deleted-on-another-device", info, StringComparison.Ordinal);
 
         // The copy the sync trashed on B is local only: it never comes back to A.
         await b.SyncAsync();
@@ -137,7 +137,7 @@ public sealed class FileSystemSyncDeletionAndConflictTests
         Assert.Equal("note.txt", conflict.RelativePath);
         Assert.NotNull(conflict.Remote);
         Assert.Equal("from B", await b.ReadAsync("note.txt"));
-        Assert.True(await b.ExistsAsync(".local/state/hackeros/sync-conflicts.json"));
+        Assert.True(await b.ExistsAsync(".local/state/kazoos/sync-conflicts.json"));
 
         // Frozen: a new local edit is not sent, a new remote edit is not applied.
         await b.WriteAsync("note.txt", "from B again");

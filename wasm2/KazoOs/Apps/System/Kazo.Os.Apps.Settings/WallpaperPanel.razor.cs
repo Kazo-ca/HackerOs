@@ -22,7 +22,7 @@ namespace Kazo.Os.Apps.Settings;
 /// </summary>
 /// <remarks>
 /// The choices are the theme's background, the built-in wallpapers, the images of
-/// <c>/usr/share/hackeros/wallpapers</c>, of <c>~/.local/share/hackeros/wallpapers</c> and of the
+/// <c>/usr/share/kazoos/wallpapers</c>, of <c>~/.local/share/kazoos/wallpapers</c> and of the
 /// installed theme packs, and any PNG, JPEG or WebP file picked with « Browse… », whose path is kept
 /// as it is (ADR 0202 §2).
 /// </remarks>
@@ -241,7 +241,7 @@ public sealed partial class WallpaperPanel : IAsyncDisposable
         _message = null;
         try
         {
-            // /etc/hackeros belongs to root: a system write uses this app's own rights, so a denial
+            // /etc/kazoos belongs to root: a system write uses this app's own rights, so a denial
             // raises the administrator approval of ADR 0042.
             await _document.SetAsync(key, value, TargetLayer, CancellationToken.None);
             if (key == SelectedFitKey)

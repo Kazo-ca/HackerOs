@@ -21,7 +21,7 @@ internal sealed class FileViewTestFixture
     private int _entryId = 1;
     private int _transactionId = 100;
     private readonly DateTimeOffset _now = new(2026, 8, 1, 12, 0, 0, TimeSpan.Zero);
-    private const string AppId = "org.hackeros.test-app";
+    private const string AppId = "org.kazoos.test-app";
 
     private FileViewTestFixture()
     {

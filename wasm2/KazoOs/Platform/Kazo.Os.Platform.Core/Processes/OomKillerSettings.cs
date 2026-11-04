@@ -6,7 +6,7 @@ namespace Kazo.Os.Platform.Core.Processes;
 
 /// <summary>
 /// The OOM killer's settings (ADR 0126, section 1), read from the <c>[oom-killer]</c> section of
-/// <c>/etc/hackeros/memory.config</c>.
+/// <c>/etc/kazoos/memory.config</c>.
 /// </summary>
 /// <param name="Enabled"><c>enabled</c>: off by default; on, it still acts only where memory is measured.</param>
 /// <param name="MinFreePercent">
@@ -20,7 +20,7 @@ public sealed record OomKillerSettings(bool Enabled, int MinFreePercent)
 }
 
 /// <summary>
-/// Defines the memory document <c>/etc/hackeros/memory.config</c> (ADR 0126, section 1), system
+/// Defines the memory document <c>/etc/kazoos/memory.config</c> (ADR 0126, section 1), system
 /// layer only like <c>security.config</c>: it belongs to <c>system:system</c> with mode <c>0644</c>,
 /// so only an administrator changes it (<c>sudo nano</c>, the approval prompt of ADR 0042, or
 /// Settings &gt; Memory). An invalid value is ignored with a warning in <c>/var/log/syslog</c>.
@@ -73,7 +73,7 @@ public static class MemorySettingsDocuments
     /// <see cref="SettingsStoreToFilesMigration.MigrateSystemAsync"/>).
     /// </summary>
     public static string DefaultContent { get; } =
-        "# /etc/hackeros/memory.config\n"
+        "# /etc/kazoos/memory.config\n"
         + "# OOM killer (ADR 0126). When MemAvailable stays under min-free-percent of MemTotal\n"
         + "# for two seconds, the process with the highest /proc/<pid>/oom_score is killed and\n"
         + "# the kill is written to /var/log/kern.log (see dmesg). It also acts when a runtime\n"

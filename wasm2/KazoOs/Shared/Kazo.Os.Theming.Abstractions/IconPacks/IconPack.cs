@@ -8,7 +8,7 @@ namespace Kazo.Os.Theming.Abstractions.IconPacks;
 /// <remarks>
 /// The images are named by convention, as in a freedesktop icon theme:
 /// <list type="bullet">
-/// <item><c>apps/&lt;appId&gt;.png</c>: one app (<c>apps/org.hackeros.terminal.png</c>);</item>
+/// <item><c>apps/&lt;appId&gt;.png</c>: one app (<c>apps/org.kazoos.terminal.png</c>);</item>
 /// <item><c>categories/&lt;category&gt;.png</c>: every app of a category without its own image (<c>categories/developer.png</c>);</item>
 /// <item><c>files/folder.png</c>, <c>files/file.png</c> and <c>files/&lt;extension&gt;.png</c> (<c>files/txt.png</c>).</item>
 /// </list>
@@ -34,7 +34,7 @@ public sealed class IconPack
 
     /// <summary>Creates a pack from its images.</summary>
     /// <param name="info">The pack's identity.</param>
-    /// <param name="images">Relative path (<c>apps/org.hackeros.terminal.png</c>) to <c>data:</c> URL.</param>
+    /// <param name="images">Relative path (<c>apps/org.kazoos.terminal.png</c>) to <c>data:</c> URL.</param>
     public IconPack(IconPackInfo info, IReadOnlyDictionary<string, string> images)
     {
         Info = info ?? throw new ArgumentNullException(nameof(info));

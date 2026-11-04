@@ -66,8 +66,8 @@ dossiers parents.
   [Trash Info]
   Path=/home/alice/note.txt
   DeletionDate=2026-10-17T08:00:00
-  X-HackerOS-Origin=deleted-on-another-device
-  X-HackerOS-Device=<identifiant de l'appareil qui a supprimé>
+  X-KazoOS-Origin=deleted-on-another-device
+  X-KazoOS-Device=<identifiant de l'appareil qui a supprimé>
   ```
 
   Ces copies sont propres à l'appareil : elles ne sont jamais renvoyées
@@ -100,7 +100,7 @@ Un conflit naît quand :
   la dernière synchro, ou la suppression d'un fichier modifié localement ;
 - deux fichiers différents ont été créés au même chemin.
 
-Les conflits en attente sont dans `~/.local/state/hackeros/sync-conflicts.json`
+Les conflits en attente sont dans `~/.local/state/kazoos/sync-conflicts.json`
 (état local, jamais synchronisé), donc gardés après un rechargement. Tant
 qu'un fichier y est, il n'est ni envoyé ni remplacé ; la version de l'autre
 appareil est seulement retenue pour le dialogue. Un conflit se résout seul
@@ -142,10 +142,10 @@ passage écrit une ligne dans `/var/log/syslog` (envoyés, reçus, conflits), pl
 une ligne quand le serveur redevient joignable ou qu'un passage échoue.
 
 ```ini
-# /etc/hackeros/sync.config (administrateur ; l'intervalle n'est lu que là)
+# /etc/kazoos/sync.config (administrateur ; l'intervalle n'est lu que là)
 intervalMinutes = 5
 
-# ~/.config/hackeros/sync.config (utilisateur)
+# ~/.config/kazoos/sync.config (utilisateur)
 paused = true
 ```
 

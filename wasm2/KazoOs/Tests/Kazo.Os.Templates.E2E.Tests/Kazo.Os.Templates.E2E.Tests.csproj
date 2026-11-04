@@ -5,7 +5,7 @@
     local package feed, outside this repository (so no Directory.Build.* of the repo applies), with an
     isolated NuGet cache. The host test also boots the generated host in Chromium and runs the
     generated window app and command in it. Slow (it packs every package first unless
-    HACKEROS_LOCAL_FEED names a feed already packed), so it is an E2E suite.
+    KAZOOS_LOCAL_FEED names a feed already packed), so it is an E2E suite.
   -->
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>

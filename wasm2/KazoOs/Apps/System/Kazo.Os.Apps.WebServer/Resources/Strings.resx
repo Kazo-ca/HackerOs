@@ -16,19 +16,19 @@
     <value>Web Server Manager</value>
   </data>
   <data name="Daemon.NotInstalled" xml:space="preserve">
-    <value>hackwebd not installed</value>
+    <value>kazowebd not installed</value>
   </data>
   <data name="Daemon.Running" xml:space="preserve">
-    <value>hackwebd running · pid {0}</value>
+    <value>kazowebd running · pid {0}</value>
   </data>
   <data name="Daemon.StartType" xml:space="preserve">
     <value>start type: {0}</value>
   </data>
   <data name="Daemon.Stopped" xml:space="preserve">
-    <value>hackwebd stopped</value>
+    <value>kazowebd stopped</value>
   </data>
   <data name="Dialog.Delete.Message" xml:space="preserve">
-    <value>Delete {0}? hackwebd stops serving '{1}' at once. The site's files are kept.</value>
+    <value>Delete {0}? kazowebd stops serving '{1}' at once. The site's files are kept.</value>
   </data>
   <data name="Dialog.Delete.Title" xml:space="preserve">
     <value>Delete site</value>
@@ -37,7 +37,7 @@
     <value>Site root folder</value>
   </data>
   <data name="External.After" xml:space="preserve">
-    <value>) served by its own process, not by hackwebd. The OS starts it on the first request to one of its addresses. Its files belong to the app: they are read-only here.</value>
+    <value>) served by its own process, not by kazowebd. The OS starts it on the first request to one of its addresses. Its files belong to the app: they are read-only here.</value>
   </data>
   <data name="External.Before" xml:space="preserve">
     <value>A web app (</value>
@@ -73,7 +73,7 @@
     <value>Directory browsing ("Index of" when no default document)</value>
   </data>
   <data name="Form.Enabled" xml:space="preserve">
-    <value>Enabled (hackwebd serves the site)</value>
+    <value>Enabled (kazowebd serves the site)</value>
   </data>
   <data name="Form.File" xml:space="preserve">
     <value>file:</value>
@@ -139,16 +139,16 @@
     <value>Cannot open the browser: {0}</value>
   </data>
   <data name="Message.Daemon.Failed" xml:space="preserve">
-    <value>hackwebd: {0}</value>
+    <value>kazowebd: {0}</value>
   </data>
   <data name="Message.Daemon.Restarted" xml:space="preserve">
-    <value>hackwebd restarted.</value>
+    <value>kazowebd restarted.</value>
   </data>
   <data name="Message.Daemon.Started" xml:space="preserve">
-    <value>hackwebd started.</value>
+    <value>kazowebd started.</value>
   </data>
   <data name="Message.Daemon.Stopped" xml:space="preserve">
-    <value>hackwebd stopped.</value>
+    <value>kazowebd stopped.</value>
   </data>
   <data name="Message.DeleteFailed" xml:space="preserve">
     <value>Cannot delete: {0}</value>
@@ -172,10 +172,10 @@
     <value>Cannot save: {0}</value>
   </data>
   <data name="Message.SaveNeedsAdmin" xml:space="preserve">
-    <value>Writing /etc/hackweb/sites needs an administrator. Once one has approved the action, press Save again.</value>
+    <value>Writing /etc/kazoweb/sites needs an administrator. Once one has approved the action, press Save again.</value>
   </data>
   <data name="Message.Saved" xml:space="preserve">
-    <value>Saved {0}. hackwebd applies it now.</value>
+    <value>Saved {0}. kazowebd applies it now.</value>
   </data>
   <data name="Placeholder.Pick" xml:space="preserve">
     <value>Pick a site, or publish a folder with</value>
@@ -259,7 +259,7 @@
     <value>Restart</value>
   </data>
   <data name="Toolbar.StartDaemon" xml:space="preserve">
-    <value>Start hackwebd</value>
+    <value>Start kazowebd</value>
   </data>
   <data name="Toolbar.Stop" xml:space="preserve">
     <value>Stop</value>

@@ -14,12 +14,12 @@ public sealed class HomeController(AnnouncementFeed feed, NoteStore notes, TaskB
 {
     /// <summary><c>GET /</c>: news, counters and the visitor's name.</summary>
     /// <param name="cancellationToken">Aborted with the request.</param>
-    public async Task<IHackActionResult> Index(CancellationToken cancellationToken) =>
+    public async Task<IKazoActionResult> Index(CancellationToken cancellationToken) =>
         View(new HomeViewModel(feed.Latest, await notes.CountAsync(cancellationToken), board.Count, IntranetSession.DisplayName(HttpContext)));
 
     /// <summary><c>GET /Home/Profile</c>: the form that chooses a display name.</summary>
     [HttpGet]
-    public IHackActionResult Profile() =>
+    public IKazoActionResult Profile() =>
         View(new ProfileForm { Name = IntranetSession.DisplayName(HttpContext) ?? string.Empty });
 
     /// <summary>
@@ -30,7 +30,7 @@ public sealed class HomeController(AnnouncementFeed feed, NoteStore notes, TaskB
     /// <param name="form">The posted form.</param>
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IHackActionResult Profile(ProfileForm form)
+    public IKazoActionResult Profile(ProfileForm form)
     {
         if (!ModelState.IsValid)
         {
@@ -44,7 +44,7 @@ public sealed class HomeController(AnnouncementFeed feed, NoteStore notes, TaskB
     /// <summary><c>POST /Home/SignOut</c>: forgets the session's values.</summary>
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IHackActionResult SignOut()
+    public IKazoActionResult SignOut()
     {
         HttpContext.Session.Clear();
         return RedirectToAction(nameof(Index));

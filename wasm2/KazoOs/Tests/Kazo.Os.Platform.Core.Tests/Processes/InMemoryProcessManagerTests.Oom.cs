@@ -21,7 +21,7 @@ public sealed partial class InMemoryProcessManagerTests
     {
         Fixture fixture = new();
         InMemoryProcessOomScoreTable table = fixture.Manager.OomScores;
-        ProcessRecord shell = fixture.Manager.Start(fixture.RequestFor("com.hackeros.terminal"));
+        ProcessRecord shell = fixture.Manager.Start(fixture.RequestFor("com.kazoos.terminal"));
         Assert.Equal(0, table.GetOrDefault(shell.Pid));
 
         // The owner may raise its own value, and go back down to where it started (the floor).
@@ -33,11 +33,11 @@ public sealed partial class InMemoryProcessManagerTests
         Assert.Equal(ResourceLimitChangeResult.NoSuchProcess, table.TrySet(ProcessId.FromInt64(99999), 0, privileged: true));
         Assert.Equal(ResourceLimitChangeResult.Applied, table.TrySet(shell.Pid, 200, privileged: false));
 
-        ProcessRecord child = fixture.Manager.Start(fixture.RequestFor("com.hackeros.child", shell.Pid));
+        ProcessRecord child = fixture.Manager.Start(fixture.RequestFor("com.kazoos.child", shell.Pid));
         Assert.Equal(200, table.GetOrDefault(child.Pid));
 
         // A declared value (a system service's -500) replaces the parent's.
-        ProcessRecord service = fixture.Manager.Start(fixture.RequestFor("com.hackeros.svc", shell.Pid) with { OomScoreAdjust = -500 });
+        ProcessRecord service = fixture.Manager.Start(fixture.RequestFor("com.kazoos.svc", shell.Pid) with { OomScoreAdjust = -500 });
         Assert.Equal(-500, table.GetOrDefault(service.Pid));
         Assert.Equal(ResourceLimitChangeResult.PermissionDenied, table.TrySet(service.Pid, -600, privileged: false));
         Assert.Equal(ResourceLimitChangeResult.Applied, table.TrySet(service.Pid, -600, privileged: true));
@@ -62,7 +62,7 @@ public sealed partial class InMemoryProcessManagerTests
     public void Off_by_default_the_oom_killer_never_kills()
     {
         OomHarness harness = new(totalMiB: 1000);
-        ProcessRecord hog = harness.Start("org.hackeros.commands.stress", residentMiB: 990);
+        ProcessRecord hog = harness.Start("org.kazoos.commands.stress", residentMiB: 990);
 
         Assert.False(harness.Killer.IsActive);
         Assert.Null(harness.Killer.CheckNow());
@@ -75,8 +75,8 @@ public sealed partial class InMemoryProcessManagerTests
     public void Two_low_samples_in_a_row_kill_the_highest_oom_score_and_leave_linux_s_traces()
     {
         OomHarness harness = new(totalMiB: 1000);
-        ProcessRecord editor = harness.Start("org.hackeros.text-editor", residentMiB: 100, kind: AppKind.Window);
-        ProcessRecord hog = harness.Start("org.hackeros.commands.stress", residentMiB: 880);
+        ProcessRecord editor = harness.Start("org.kazoos.text-editor", residentMiB: 100, kind: AppKind.Window);
+        ProcessRecord hog = harness.Start("org.kazoos.commands.stress", residentMiB: 880);
         harness.Killer.Configure(new OomKillerSettings(true, 5));
         Assert.Contains(harness.Log.ReadAll(), static entry => entry.Message == "oom-killer: enabled, min-free-percent=5");
 
@@ -105,8 +105,8 @@ public sealed partial class InMemoryProcessManagerTests
     public void Oom_score_adj_steers_the_choice_and_minus_1000_is_never_chosen()
     {
         OomHarness harness = new(totalMiB: 1000);
-        ProcessRecord big = harness.Start("org.hackeros.daemon", residentMiB: 700);
-        ProcessRecord small = harness.Start("org.hackeros.hack-paint", residentMiB: 280, kind: AppKind.Window);
+        ProcessRecord big = harness.Start("org.kazoos.daemon", residentMiB: 700);
+        ProcessRecord small = harness.Start("org.kazoos.kazo-paint", residentMiB: 280, kind: AppKind.Window);
         harness.Fixture.Manager.OomScores.TrySet(big.Pid, -1000, privileged: true);
         harness.Fixture.Manager.OomScores.TrySet(small.Pid, 100, privileged: false);
         harness.Killer.Configure(new OomKillerSettings(true, 5));
@@ -124,7 +124,7 @@ public sealed partial class InMemoryProcessManagerTests
     public void Memory_coming_back_between_two_samples_resets_the_count()
     {
         OomHarness harness = new(totalMiB: 1000);
-        ProcessRecord hog = harness.Start("org.hackeros.commands.stress", residentMiB: 980);
+        ProcessRecord hog = harness.Start("org.kazoos.commands.stress", residentMiB: 980);
         harness.Killer.Configure(new OomKillerSettings(true, 5));
 
         Assert.Null(harness.Killer.CheckNow());
@@ -139,7 +139,7 @@ public sealed partial class InMemoryProcessManagerTests
     public void Enabled_where_memory_is_not_measured_it_says_so_once_and_never_kills()
     {
         OomHarness harness = new(totalMiB: 1000, measuring: false);
-        harness.Start("org.hackeros.commands.stress", residentMiB: 990);
+        harness.Start("org.kazoos.commands.stress", residentMiB: 990);
 
         harness.Killer.Configure(new OomKillerSettings(true, 5));
         harness.Killer.Configure(new OomKillerSettings(true, 10));
@@ -154,14 +154,14 @@ public sealed partial class InMemoryProcessManagerTests
     public void The_browser_guard_warns_once_per_runtime_and_kills_only_in_that_runtime_when_active()
     {
         OomHarness harness = new(totalMiB: 4000);
-        ProcessRecord main = harness.Start("org.hackeros.text-editor", residentMiB: 900, kind: AppKind.Window);
-        ProcessRecord inWorker = harness.Start("org.hackeros.commands.stress", residentMiB: 300);
-        harness.Runtimes.Readings.Add(new RuntimeMemoryReading("worker-2", "hackeros-worker-2", 1700 * MiB, 2048 * MiB, [inWorker.Pid.Value]));
+        ProcessRecord main = harness.Start("org.kazoos.text-editor", residentMiB: 900, kind: AppKind.Window);
+        ProcessRecord inWorker = harness.Start("org.kazoos.commands.stress", residentMiB: 300);
+        harness.Runtimes.Readings.Add(new RuntimeMemoryReading("worker-2", "kazoos-worker-2", 1700 * MiB, 2048 * MiB, [inWorker.Pid.Value]));
 
         // Off: the warning only, once.
         Assert.Null(harness.Killer.CheckNow());
         Assert.Null(harness.Killer.CheckNow());
-        Assert.Single(harness.Log.ReadAll(), static entry => entry.Message.StartsWith("hackeros-worker-2: memory", StringComparison.Ordinal));
+        Assert.Single(harness.Log.ReadAll(), static entry => entry.Message.StartsWith("kazoos-worker-2: memory", StringComparison.Ordinal));
         Assert.Single(harness.Notifier.NearLimit);
 
         harness.Killer.Configure(new OomKillerSettings(true, 5));

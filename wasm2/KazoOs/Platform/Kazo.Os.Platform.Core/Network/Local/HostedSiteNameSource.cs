@@ -9,15 +9,15 @@ using Kazo.Os.Simulation.Abstractions.Time;
 namespace Kazo.Os.Platform.Core.Network.Local;
 
 /// <summary>
-/// Source 4 of <c>hackdns</c> (ADR 0074, section 4; ADR 0080, section 4): the host names bound by the
-/// hosted static sites. It reads the same <c>.site</c> files as <c>hackwebd</c>, as root, like a
-/// resolver reading a zone file: <c>/etc/hackweb/sites/*.site</c> and every user's
-/// <c>~/.config/hackweb/sites/*.site</c>.
+/// Source 4 of <c>kazodns</c> (ADR 0074, section 4; ADR 0080, section 4): the host names bound by the
+/// hosted static sites. It reads the same <c>.site</c> files as <c>kazowebd</c>, as root, like a
+/// resolver reading a zone file: <c>/etc/kazoweb/sites/*.site</c> and every user's
+/// <c>~/.config/kazoweb/sites/*.site</c>.
 /// </summary>
 /// <remarks>
 /// <para>
 /// Only valid, enabled sites publish their names; <c>localhost</c>, wildcard hosts (<c>+</c>,
-/// <c>*</c>) and IPv4 literals publish nothing. A name stays published while <c>hackwebd</c> is
+/// <c>*</c>) and IPv4 literals publish nothing. A name stays published while <c>kazowebd</c> is
 /// stopped: the request then meets a closed port (connection refused), as on a machine whose
 /// <c>/etc/hosts</c> still lists a site whose server is down.
 /// </para>

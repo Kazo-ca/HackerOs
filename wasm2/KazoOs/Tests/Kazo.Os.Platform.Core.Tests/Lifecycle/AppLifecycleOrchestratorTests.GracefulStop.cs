@@ -18,10 +18,10 @@ public sealed partial class AppLifecycleOrchestratorTests
     public async Task A_terminated_command_hears_the_request_with_its_deadline_before_its_token_and_ends_by_itself()
     {
         StopProbe.Reset();
-        Fixture fixture = new(ProbeManifest("org.hackeros.polite", typeof(PoliteTerminalApp)));
+        Fixture fixture = new(ProbeManifest("org.kazoos.polite", typeof(PoliteTerminalApp)));
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
 
-        Task<AppLaunchResult> launch = fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.polite", principal, []));
+        Task<AppLaunchResult> launch = fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.polite", principal, []));
         await StopProbe.Started.Task.WaitAsync(TimeSpan.FromSeconds(10));
         DateTimeOffset requestedAt = fixture.Clock.UtcNow;
         ProcessRecord stopped = await fixture.Manager.StopAsync(StopProbe.Pid, TimeSpan.FromSeconds(5), ProcessExitReason.Terminated);
@@ -47,10 +47,10 @@ public sealed partial class AppLifecycleOrchestratorTests
     private static async Task BusyLoopStopsOnSigtermAsync()
     {
         StopProbe.Reset();
-        Fixture fixture = new(ProbeManifest("org.hackeros.cruncher", typeof(CheckpointingTerminalApp)));
+        Fixture fixture = new(ProbeManifest("org.kazoos.cruncher", typeof(CheckpointingTerminalApp)));
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
 
-        Task<AppLaunchResult> launch = fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.cruncher", principal, []));
+        Task<AppLaunchResult> launch = fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.cruncher", principal, []));
         await StopProbe.Started.Task.WaitAsync(TimeSpan.FromSeconds(10));
         // The loop never awaits anything but checkpoints: the test only gets here because they yield.
         await WaitUntilAsync(() => Volatile.Read(ref StopProbe.Yields) > 0);
@@ -66,10 +66,10 @@ public sealed partial class AppLifecycleOrchestratorTests
     public async Task A_command_that_ignores_its_token_is_killed_at_the_deadline_and_cut_off_from_the_os()
     {
         StopProbe.Reset();
-        Fixture fixture = new(ProbeManifest("org.hackeros.stubborn", typeof(StubbornTerminalApp)));
+        Fixture fixture = new(ProbeManifest("org.kazoos.stubborn", typeof(StubbornTerminalApp)));
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
 
-        Task<AppLaunchResult> launch = fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.stubborn", principal, []));
+        Task<AppLaunchResult> launch = fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.stubborn", principal, []));
         await StopProbe.Started.Task.WaitAsync(TimeSpan.FromSeconds(10));
         Task<ProcessRecord> stop = fixture.Manager.StopAsync(StopProbe.Pid, TimeSpan.FromSeconds(5), ProcessExitReason.Terminated);
         fixture.Clock.Advance(4);
@@ -97,10 +97,10 @@ public sealed partial class AppLifecycleOrchestratorTests
     public async Task Sigkill_skips_the_stop_request_and_ends_the_command_at_once()
     {
         StopProbe.Reset();
-        Fixture fixture = new(ProbeManifest("org.hackeros.stubborn", typeof(StubbornTerminalApp)));
+        Fixture fixture = new(ProbeManifest("org.kazoos.stubborn", typeof(StubbornTerminalApp)));
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
 
-        Task<AppLaunchResult> launch = fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.stubborn", principal, []));
+        Task<AppLaunchResult> launch = fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.stubborn", principal, []));
         await StopProbe.Started.Task.WaitAsync(TimeSpan.FromSeconds(10));
         fixture.Manager.Kill(StopProbe.Pid);
         AppLaunchResult result = await launch.WaitAsync(TimeSpan.FromSeconds(10));
@@ -119,11 +119,11 @@ public sealed partial class AppLifecycleOrchestratorTests
         StopProbe.Reset();
         Fixture fixture = new(WaiterManifest() with
         {
-            Id = "org.hackeros.listening-service",
+            Id = "org.kazoos.listening-service",
             EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", typeof(ListeningServiceApp).FullName!)
         });
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.listening-service", principal, []));
+        await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.listening-service", principal, []));
         await StopProbe.Started.Task.WaitAsync(TimeSpan.FromSeconds(10));
         DateTimeOffset now = fixture.Clock.UtcNow;
 
@@ -144,11 +144,11 @@ public sealed partial class AppLifecycleOrchestratorTests
         StopProbe.Reset();
         Fixture fixture = new(WaiterManifest() with
         {
-            Id = "org.hackeros.listening-service",
+            Id = "org.kazoos.listening-service",
             EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Core.Tests", typeof(ListeningServiceApp).FullName!)
         });
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.listening-service", principal, []));
+        await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.listening-service", principal, []));
         await StopProbe.Started.Task.WaitAsync(TimeSpan.FromSeconds(10));
 
         ProcessRecord stopped = await fixture.Manager.StopAsync(StopProbe.Pid, TimeSpan.FromSeconds(5), ProcessExitReason.Terminated)
@@ -163,7 +163,7 @@ public sealed partial class AppLifecycleOrchestratorTests
     {
         Fixture fixture = new(SingletonWindowManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        AppLaunchResult window = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.notes", principal, []));
+        AppLaunchResult window = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.notes", principal, []));
         TaskCompletionSource draftWritten = new(TaskCreationOptions.RunContinuationsAsynchronously);
         window.Context!.StopRequested += (_, e) => e.Defer(draftWritten.Task);
 
@@ -184,7 +184,7 @@ public sealed partial class AppLifecycleOrchestratorTests
     {
         Fixture fixture = new(SingletonWindowManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        AppLaunchResult window = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.notes", principal, []));
+        AppLaunchResult window = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.notes", principal, []));
         window.Context!.StopRequested += (_, e) => e.Defer(new TaskCompletionSource().Task);
 
         Task<ProcessRecord> stop = fixture.Manager.StopAsync(window.Process!.Pid, TimeSpan.FromSeconds(5), ProcessExitReason.Terminated);
@@ -200,12 +200,12 @@ public sealed partial class AppLifecycleOrchestratorTests
     {
         Fixture fixture = new(SingletonWindowManifest());
         AuthenticatedPrincipal principal = await fixture.LoginAsync();
-        AppLaunchResult closed = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.notes", principal, []));
+        AppLaunchResult closed = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.notes", principal, []));
         List<ProcessExitReason> heardByClosed = [];
         closed.Context!.StopRequested += (_, e) => heardByClosed.Add(e.Reason);
         await fixture.Orchestrator.StopAsync(closed.Process!.Pid, ProcessExitReason.CloseRequested);
 
-        AppLaunchResult open = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.hackeros.notes", principal, []));
+        AppLaunchResult open = await fixture.Orchestrator.LaunchAsync(new AppLaunchRequest("org.kazoos.notes", principal, []));
         List<ProcessExitReason> heardByOpen = [];
         open.Context!.StopRequested += (_, e) => heardByOpen.Add(e.Reason);
         await fixture.Orchestrator.StopAllAsync(ProcessExitReason.Logout);

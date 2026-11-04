@@ -9,7 +9,7 @@ public sealed class ThemeCatalogTests
     {
         Assert.Equal(
             [
-                WellKnownThemeIds.HackerOs,
+                WellKnownThemeIds.KazoOs,
                 WellKnownThemeIds.Windows98,
                 WellKnownThemeIds.WindowsXp,
                 WellKnownThemeIds.Windows7,

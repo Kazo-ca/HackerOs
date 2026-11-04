@@ -11,7 +11,7 @@ public sealed class DoNotDisturbTests(ITestOutputHelper output)
 
     /// <summary>
     /// ADR 0216: the clock panel's "Do not disturb" switch shows a moon in the taskbar's
-    /// notification area, the choice survives a reload (it is a file in ~/.config/hackeros), the
+    /// notification area, the choice survives a reload (it is a file in ~/.config/kazoos), the
     /// moon opens the clock panel, and turning the switch off removes the moon.
     /// </summary>
     [Fact]

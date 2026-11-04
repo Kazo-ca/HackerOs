@@ -1071,10 +1071,10 @@ Kazo.Os.Platform.Blazor._Imports.Execute() -> void
 Kazo.Os.Platform.Blazor._Imports._Imports() -> void
 abstract Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation.<Clone>$() -> Kazo.Os.Platform.Blazor.Dialogs.DialogPresentation!
 abstract Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation.<Clone>$() -> Kazo.Os.Platform.Blazor.Dialogs.FileDialogPresentation!
-const Kazo.Os.Platform.Blazor.Display.DisplaySurfaceService.NotificationSource = "org.hackeros.display" -> string!
-const Kazo.Os.Platform.Blazor.Shell.DesktopSurfaceHost.DesktopAppId = "org.hackeros.desktop" -> string!
-const Kazo.Os.Platform.Blazor.Shell.UpdateReadyNotification.RestartActionId = "hackeros.update.restart" -> string!
-const Kazo.Os.Platform.Blazor.Shell.UpdateReadyNotification.SourceAppId = "org.hackeros.update" -> string!
+const Kazo.Os.Platform.Blazor.Display.DisplaySurfaceService.NotificationSource = "org.kazoos.display" -> string!
+const Kazo.Os.Platform.Blazor.Shell.DesktopSurfaceHost.DesktopAppId = "org.kazoos.desktop" -> string!
+const Kazo.Os.Platform.Blazor.Shell.UpdateReadyNotification.RestartActionId = "kazoos.update.restart" -> string!
+const Kazo.Os.Platform.Blazor.Shell.UpdateReadyNotification.SourceAppId = "org.kazoos.update" -> string!
 const Kazo.Os.Platform.Blazor.Sites.KazoWebSiteHost.RendererArgument = "--type=renderer" -> string!
 const Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.FineKeyboardStep = 1 -> double
 const Kazo.Os.Platform.Blazor.Windows.WindowKeyboardCommands.KeyboardStep = 10 -> double

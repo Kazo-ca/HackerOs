@@ -36,7 +36,7 @@ public sealed class KazoStaticFileOptions
 /// case-sensitively as a Linux web root; the names are read once at start-up, so no reflection runs
 /// per request and nothing but the embedded files can be reached (<c>..</c> never matches a name).
 /// </remarks>
-public sealed class KazoStaticFileMiddleware : IHackMiddleware
+public sealed class KazoStaticFileMiddleware : IKazoMiddleware
 {
     private readonly KazoStaticFileOptions _options;
     private readonly Assembly _assembly;

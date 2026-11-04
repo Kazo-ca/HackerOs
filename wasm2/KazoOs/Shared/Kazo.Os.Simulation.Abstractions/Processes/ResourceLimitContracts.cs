@@ -139,7 +139,7 @@ public enum ResourceLimitChangeResult
 public interface IProcessResourceLimitTable
 {
     /// <summary>
-    /// Gets whether limits apply on this host (<c>HackerOs:ResourceLimits:Enabled</c>). When
+    /// Gets whether limits apply on this host (<c>KazoOs:ResourceLimits:Enabled</c>). When
     /// <see langword="false"/>, every process reads <see cref="ProcessResourceLimits.None"/> and no
     /// change is accepted.
     /// </summary>

@@ -49,7 +49,7 @@ classification.
 | `server.connection.manage` | **dangerous** (`KazoServerConnection`, ADR 0056 §10; declared by Settings) |
 | `system.power` | **dangerous** (`KazoSystem`: restart, reset, ADR 0056 §11; declared by Settings) |
 | `system.storage.inspect` | **dangerous** (`KazoStorageDiagnostics`, ADR 0056 §11; declared by Diagnostics, the only non-system app in the base to request an approval at first launch) |
-| `system.backup` | **dangerous** (`KazoSystemBackup`: back up and restore the whole machine, ADR 0099 §1; declared by Settings, and by `hackbackup` which requires `sudo`, see [`system-backup.md`](../dev/system-backup.md)) |
+| `system.backup` | **dangerous** (`KazoSystemBackup`: back up and restore the whole machine, ADR 0099 §1; declared by Settings, and by `kazobackup` which requires `sudo`, see [`system-backup.md`](../dev/system-backup.md)) |
 | `shell.host` | **dangerous** (ADR 0056 §7: host a shell whose commands act with their own rights, see [`shell-host.md`](shell-host.md)) |
 | `users.manage` | **dangerous** (ADR 0120: reset or remove another account's password through `KazoUserAccounts`, with an administrator; declared by Settings and `passwd`; see [`sensitive-settings.md`](../dev/sensitive-settings.md)). Risk sentence: "Reset or remove the password of another account, and therefore open its session." Changing one's own password requires none. |
 | `keyring.read-all` | **dangerous** (ADR 0100 §2: read the keyring entries of all apps, for a password manager; see [`sensitive-settings.md`](../dev/sensitive-settings.md)). Risk sentence: "Read the passwords, tokens and keys that all your applications have saved." |
@@ -102,7 +102,7 @@ capability: the base experience does not change.
 ## `policy.config` policy
 
 The `capabilityGrantsLocked` key, never evaluated, is removed from the schema of
-`/etc/hackeros/policy.config`. Only `allowRuntimePackageInstall` remains.
+`/etc/kazoos/policy.config`. Only `allowRuntimePackageInstall` remains.
 An old `capabilityGrantsLocked=…` line in the file is now an
 unknown key.
 

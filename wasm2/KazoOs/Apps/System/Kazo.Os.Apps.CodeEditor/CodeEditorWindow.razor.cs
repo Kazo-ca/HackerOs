@@ -839,7 +839,7 @@ public partial class CodeEditorWindow
     /// The Terminal app's component handed its controller: follow its title, close the tab when
     /// its shell exits (<c>exit</c>, Ctrl+D).
     /// </summary>
-    private void OnTerminalReady(TerminalTab tab, IHackTerminal? terminal)
+    private void OnTerminalReady(TerminalTab tab, IKazoTerminal? terminal)
     {
         tab.Attach(terminal,
             onChanged: () => InvokeAsync(StateHasChanged),
@@ -867,7 +867,7 @@ public partial class CodeEditorWindow
         AddTerminalTab(folder.Value);
     }
 
-    private async Task ChangeTerminalDirectoryAsync(IHackTerminal terminal, string directory)
+    private async Task ChangeTerminalDirectoryAsync(IKazoTerminal terminal, string directory)
     {
         try
         {
@@ -913,12 +913,12 @@ public partial class CodeEditorWindow
         /// <summary>Gets the options, created once so the embedded terminal is not re-created.</summary>
         public KazoTerminalOptions Options { get; } = options;
 
-        public IHackTerminal? Terminal { get; private set; }
+        public IKazoTerminal? Terminal { get; private set; }
 
         /// <summary>Gets the tab label: the running command or the directory's name, as VS Code's.</summary>
         public string Label => Terminal is { } terminal ? terminal.Title : "hsh";
 
-        public void Attach(IHackTerminal? terminal, Action onChanged, Action onExited)
+        public void Attach(IKazoTerminal? terminal, Action onChanged, Action onExited)
         {
             Detach();
             Terminal = terminal;

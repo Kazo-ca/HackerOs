@@ -18,7 +18,7 @@ public sealed partial class AppLifecycleOrchestratorTests
 
         Assert.Equal(-500, fixture.Manager.OomScores.GetOrDefault(launch.Process!.Pid));
 
-        AppManifest shielded = WaiterManifest() with { Id = "org.hackeros.shielded", OomScoreAdj = -1000 };
+        AppManifest shielded = WaiterManifest() with { Id = "org.kazoos.shielded", OomScoreAdj = -1000 };
         Fixture declared = new([shielded.Id], shielded);
         AuthenticatedPrincipal other = await declared.LoginAsync();
         AppLaunchResult exempt = await declared.Orchestrator.LaunchAsync(new AppLaunchRequest(shielded.Id, other, []));
@@ -35,7 +35,7 @@ public sealed partial class AppLifecycleOrchestratorTests
         // A manifest the build did not check: the negative value is ignored.
         Assert.Equal(0, fixture.Manager.OomScores.GetOrDefault(launch.Process!.Pid));
 
-        AppManifest volunteer = WaiterManifest() with { Id = "org.hackeros.volunteer", OomScoreAdj = 300 };
+        AppManifest volunteer = WaiterManifest() with { Id = "org.kazoos.volunteer", OomScoreAdj = 300 };
         Fixture second = new(volunteer);
         AuthenticatedPrincipal user = await second.LoginAsync();
         AppLaunchResult first = await second.Orchestrator.LaunchAsync(new AppLaunchRequest(volunteer.Id, user, []));

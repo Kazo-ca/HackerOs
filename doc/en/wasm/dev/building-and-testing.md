@@ -44,7 +44,7 @@ forbidden, regenerated manifests, SDK boundary): see
 The verification workflow explicitly installs `ripgrep` before the additional
 Razor source scan; this tool is not guaranteed on GitHub Ubuntu runners.
 This scan excludes the host's startup document and only allows the three
-existing ASP.Hack script reference lines, at their exact paths. The other
+existing ASP.Kazo script reference lines, at their exact paths. The other
 lines of these views and all script references of ordinary components remain
 checked.
 
@@ -73,7 +73,7 @@ dotnet build Kazo.Os.sln -p:KazoOsCpuAccounting=false -p:KazoOsMemoryAccounting=
 On the command line (or in a `Directory.Build.props`), the property applies to
 the whole graph; in the `.csproj` of `test/test` or of the server alone, it
 only turns off that host's runtime option. At startup, the
-`HackerOs:ResourceAccounting` section of `appsettings.json` turns a
+`KazoOs:ResourceAccounting` section of `appsettings.json` turns a
 measurement off without recompiling: see
 [`resource-accounting.md`](resource-accounting.md).
 
@@ -135,7 +135,7 @@ Sequence:
    (`127.0.0.2` for the two isolation flows) in its own process group:
    published Ecosystem behind a Python static server, the other two through
    `dotnet run --no-build`. The server's database, blobs and backups go to a
-   disposable folder: the `Server/Kazo.Os.Server/hackeros.db` tracked by git
+   disposable folder: the `Server/Kazo.Os.Server/kazoos.db` tracked by git
    is never modified.
 3. `Tests/Kazo.Os.HostSmoke.Tests` opens the host in Chromium (fresh
    context): profile creation, reload and "Sign in" screen, desktop (scoped
@@ -176,15 +176,15 @@ RESULT: PASS
 | `ecosystem` | published PWA | build and default setting | `measured` |
 | `ecosystem-build-off` | PWA published with `-p:KazoOsCpuAccounting=false -p:KazoOsMemoryAccounting=false` | off at build; no `Kazo.Os.Platform.ResourceAccounting*` must be published | `simulated` |
 | `ecosystem-settings-off` | same publication as `ecosystem`, `wwwroot/appsettings.json` rewritten with `Enabled: false` for `Cpu` and `Memory` | off at startup | `simulated` |
-| `ecosystem-limits-off` | same publication as `ecosystem`, `wwwroot/appsettings.json` rewritten with `HackerOs:ResourceLimits:Enabled: false` (ADR 0125) | build and default setting | `measured` |
-| `ecosystem-oom` | same publication as `ecosystem`, `wwwroot/appsettings.json` rewritten with `HackerOs:Hardware:MemoryMiB` = `${OOM_MEMORY_MIB:-512}` (ADR 0142 §11) | build and default setting | `measured` |
+| `ecosystem-limits-off` | same publication as `ecosystem`, `wwwroot/appsettings.json` rewritten with `KazoOs:ResourceLimits:Enabled: false` (ADR 0125) | build and default setting | `measured` |
+| `ecosystem-oom` | same publication as `ecosystem`, `wwwroot/appsettings.json` rewritten with `KazoOs:Hardware:MemoryMiB` = `${OOM_MEMORY_MIB:-512}` (ADR 0142 §11) | build and default setting | `measured` |
 | `ecosystem-isolated` | same publication as `ecosystem`, served on `127.0.0.2`: the service worker registers and sets COOP/COEP (ADR 0131, 0143) | build and default setting | `measured` |
-| `ecosystem-isolation-off` | same, `wwwroot/appsettings.json` rewritten with `HackerOs:CrossOriginIsolation` = `off` | build and default setting | `measured` |
+| `ecosystem-isolation-off` | same, `wwwroot/appsettings.json` rewritten with `KazoOs:CrossOriginIsolation` = `off` | build and default setting | `measured` |
 | `test-host` | `test/test` | host setting (on) | `measured` |
 | `server` | `Kazo.Os.Server` (serves the Ecosystem OS in WebAssembly, ADR 0130) | Ecosystem `appsettings.json` (on) | `measured` |
 
 On a tree without the switches of ADR 0066
-(`build/Kazo.Os.ResourceAccounting.targets`, `HackerOs:ResourceAccounting`
+(`build/Kazo.Os.ResourceAccounting.targets`, `KazoOs:ResourceAccounting`
 section of `appsettings.json`), the two `-off` flows are marked `SKIP` and the
 sources are not verified.
 
@@ -198,7 +198,7 @@ normally elsewhere. In `ecosystem-limits-off`, `ulimit -n 100` must answer
 Each flow verifies cross-origin isolation (`exec/9`,
 [`worker-processes.md`](worker-processes.md#cross-origin-isolation-adr-0131-adr-0143)):
 `crossOriginIsolated` in the page, the `cross-origin-isolated:` line of
-`/proc/hackeros/workers`, `sample-cmd --processes` (synchronous answer if the
+`/proc/kazoos/workers`, `sample-cmd --processes` (synchronous answer if the
 page is isolated, refusal otherwise) and `seq 30000 | wc -l`. Isolated:
 `ecosystem-isolated`, `test-host` and `server` (middleware). Not isolated: the
 Ecosystem flows on `127.0.0.1` (no service worker on this address) and
@@ -207,33 +207,33 @@ its fingerprint in `service-worker-assets.js`, otherwise the service worker
 installation fails on `127.0.0.2`.
 
 The `ecosystem-oom` flow (`exec/3`, [`oom-killer.md`](oom-killer.md))
-enables the OOM killer through `sudo tee /etc/hackeros/memory.config`,
+enables the OOM killer through `sudo tee /etc/kazoos/memory.config`,
 launches `stress --vm 1 --vm-bytes` computed from `/proc/meminfo`, waits for
 exit 137 and "Killed", then verifies the `Out of memory: Killed process` line
 of `dmesg` and `oom_kill 1` in `/proc/vmstat`.
 
 Logs, publications and screenshots of failures:
-`artifacts/verify-hosts/` (ignored by git). Without `HACKEROS_SMOKE_URL`,
+`artifacts/verify-hosts/` (ignored by git). Without `KAZOOS_SMOKE_URL`,
 which the script sets, the startup test is marked "skipped": a
 `dotnet test Kazo.Os.sln` does not depend on it. To run it against a host
 started by hand:
 
 ```bash
-HACKEROS_SMOKE_URL=http://127.0.0.1:5000 dotnet test Tests/Kazo.Os.HostSmoke.Tests \
+KAZOOS_SMOKE_URL=http://127.0.0.1:5000 dotnet test Tests/Kazo.Os.HostSmoke.Tests \
   --logger "console;verbosity=detailed"
 ```
 
-Optional variables: `HACKEROS_SMOKE_HOST` (displayed name),
-`HACKEROS_SMOKE_EXPECT_CPU_SOURCE` / `HACKEROS_SMOKE_EXPECT_MEM_SOURCE`
-(value expected in `/proc/self/status`), `HACKEROS_SMOKE_ARTIFACTS`
-(screenshot folder), `HACKEROS_SMOKE_EXPECT_ISOLATION` (`yes` or `no`).
+Optional variables: `KAZOOS_SMOKE_HOST` (displayed name),
+`KAZOOS_SMOKE_EXPECT_CPU_SOURCE` / `KAZOOS_SMOKE_EXPECT_MEM_SOURCE`
+(value expected in `/proc/self/status`), `KAZOOS_SMOKE_ARTIFACTS`
+(screenshot folder), `KAZOOS_SMOKE_EXPECT_ISOLATION` (`yes` or `no`).
 
 Each `rebuild/5-*` PR pastes the output of `build/verify-hosts.sh`.
 
 ## Hosting and isolation headers
 
 The OS uses cross-origin isolation when the page has it (ADR 0131, 0143) and
-works without it. `HackerOs:CrossOriginIsolation` (`auto`, `on`, `off`) in
+works without it. `KazoOs:CrossOriginIsolation` (`auto`, `on`, `off`) in
 each host's `appsettings.json`; `auto` equals `on` since the `exec/9` audit.
 
 - **Ecosystem on static hosting**: nothing to configure. The PWA's service
@@ -244,7 +244,7 @@ each host's `appsettings.json`; `auto` equals `on` since the `exec/9` audit.
   on which `index.html` does not register the service worker): locally, serve
   the publication on `127.0.0.2`.
 - A host that already sets these headers also works; a proxy that strips them
-  gives the exact fallback (`/proc/hackeros/workers` says why).
+  gives the exact fallback (`/proc/kazoos/workers` says why).
 - **`test/test` and `Kazo.Os.Server`** set the headers themselves (middleware
   in `Program.cs`).
 - After modifying a publication's `wwwroot/appsettings.json`, recompute its
@@ -271,8 +271,8 @@ build/publish-trimmed.sh --skip-build
 
 The script fails on any `IL…` warning, serves the publication on `127.0.0.1`
 and on `127.0.0.2` (for the service worker) and runs
-`Tests/Kazo.Os.TrimmedPublish.E2E.Tests` (six tests, about 4 min, including a test package installed by `hackpkg`, ADR 0206). It is a
-local merge gate since `v3/14`. Without `HACKEROS_TRIMMED_URL`, the suite is
+`Tests/Kazo.Os.TrimmedPublish.E2E.Tests` (six tests, about 4 min, including a test package installed by `kazopkg`, ADR 0206). It is a
+local merge gate since `v3/14`. Without `KAZOOS_TRIMMED_URL`, the suite is
 ignored by `dotnet test Kazo.Os.sln`.
 
 Pitfall: the SDK's WebCIL conversion is incremental by file dates; a
@@ -334,14 +334,14 @@ dotnet test Kazo.Os.sln
 | Suites | Content |
 |---|---|
 | `Tests/*.Tests` (non-E2E) | Unit and component tests (xUnit, bUnit), one project per code project. Fast, no browser. |
-| `Tests/Kazo.Os.AppSdk.Web.Tests` | ASP.Hack: router, pipeline of a site compiled with the route generator, generator driven on snippets (`HOSWEB*`), host page and `blazor.boot.json` of a Blazor site. |
+| `Tests/Kazo.Os.AppSdk.Web.Tests` | ASP.Kazo: router, pipeline of a site compiled with the route generator, generator driven on snippets (`HOSWEB*`), host page and `blazor.boot.json` of a Blazor site. |
 | `Tests/Kazo.Os.AppSdk.Web.Blazor.Tests` | Blazor sites: router (`KazoSiteRouter`), tab navigation manager, `KazoWebSite`. |
 | `Tests/Kazo.Os.Samples.Intranet.Tests` | In-memory Intranet sample (`KazoWebHost.CreateApplication`): `.cshtml` and `.razor` views, `wwwroot`, session, anti-forgery, form CRUD, REST API, host page of the Blazor dashboard. The flow in Chromium is `BrowserIntranetTests` (UI E2E). |
 | `Tests/Kazo.Os.Tools.ManifestGenerator.Tests` | Real MSBuild builds of the `Tests/ManifestGenerator.Fixtures.*` projects: generation, aggregation, SDK boundary. Slower. |
 | `Tests/Kazo.Os.E2E.Tests`, `Kazo.Os.UI.E2E.Tests`, `Kazo.Os.Pwa.E2E.Tests` | Playwright against the OS launched in Chromium. Known pitfalls: [`old/common-pitfalls.md`](old/common-pitfalls.md) §4 to §6. |
-| `Tests/Kazo.Os.Templates.E2E.Tests` | `dotnet new` templates (ADR 0098 §6): packs everything with `build/pack-local.sh` (or takes the feed from `HACKEROS_LOCAL_FEED`), generates and builds each template outside the repository with an isolated NuGet cache, then launches the generated host in Chromium with a generated windowed app and command, and another that verifies that a host referencing the apps built against SDKs 1.0.0 and 1.1.0 does not build (`HOSAPP0021`), then that with the app built against SDK 2.0.0 it starts, shows `KazoFileView` in its window and runs its command (ADR 0114, ADR 0132 §1, ADR 0161 §3). |
+| `Tests/Kazo.Os.Templates.E2E.Tests` | `dotnet new` templates (ADR 0098 §6): packs everything with `build/pack-local.sh` (or takes the feed from `KAZOOS_LOCAL_FEED`), generates and builds each template outside the repository with an isolated NuGet cache, then launches the generated host in Chromium with a generated windowed app and command, and another that verifies that a host referencing the apps built against SDKs 1.0.0 and 1.1.0 does not build (`HOSAPP0021`), then that with the app built against SDK 2.0.0 it starts, shows `KazoFileView` in its window and runs its command (ADR 0114, ADR 0132 §1, ADR 0161 §3). |
 | `Tests/Kazo.Os.SdkCompatibility.Tests` | Apps built against SDKs 1.0.0, 1.1.0 and 2.0.0, kept in `Tests/fixtures/sdk-compat` (ADR 0114 §4, ADR 0132 §1, ADR 0161 §3): the catalog refuses the 1.x apps (`catalog.sdk.incompatible`) and admits the 2.0 app; for the latter, references, JIT compilation of each method and execution of the command against the current SDK (`build/Versions.props`). No browser, run by `dotnet test Kazo.Os.sln`. |
-| `Tests/Kazo.Os.HostSmoke.Tests` | Startup of an already launched host, driven by `build/verify-hosts.sh` (see above); "skipped" without `HACKEROS_SMOKE_URL`. |
+| `Tests/Kazo.Os.HostSmoke.Tests` | Startup of an already launched host, driven by `build/verify-hosts.sh` (see above); "skipped" without `KAZOOS_SMOKE_URL`. |
 
 Test a single project or a single test:
 
@@ -356,7 +356,7 @@ Each version of `Microsoft.Playwright` expects a specific revision of
 Chromium (or Google Chrome for `Channel = "chrome"`). All suites launch the
 browser through `ChromiumLauncher` (`Tests/Kazo.Os.E2E.Support`):
 
-1. `HACKEROS_CHROMIUM_EXECUTABLE`, if set, is used as is;
+1. `KAZOOS_CHROMIUM_EXECUTABLE`, if set, is used as is;
 2. otherwise, the launch planned by the test;
 3. if it fails, retry with `$PLAYWRIGHT_BROWSERS_PATH/chromium` then
    `/opt/pw-browsers/chromium` (the cloud containers' link), without a channel.
@@ -371,7 +371,7 @@ intents, environment, shell). Example: see the
 
 ### IndexedDB version upgrade fixtures
 
-ADR 0099 §4. `Tests/fixtures/indexeddb/` contains a dump of the `hackeros`
+ADR 0099 §4. `Tests/fixtures/indexeddb/` contains a dump of the `kazoos`
 database for each schema version already published.
 `IndexedDbUpgradeFixtureTests` (`Kazo.Os.UI.E2E.Tests`) recreates each
 database at its old version with `indexedDB.open(name, oldVersion)`, from a
@@ -382,7 +382,7 @@ would create a fresh v4 database), then starts the current OS and verifies:
 - the "Sign in" screen (not the "Create administrator" welcome) and login with
   the administrator password from the dump: the account survived;
 - `cat` of the dump's file in the Terminal: entries, links and content;
-- `cat /etc/hackeros/appearance.config` contains `accent=cyan`: the setting
+- `cat /etc/kazoos/appearance.config` contains `accent=cyan`: the setting
   stored in the old `settings` store was picked up by the migration to files
   (ADR 0044);
 - the database is at version 4 with `serverConnection`, `syncCursors` and
@@ -420,7 +420,7 @@ key path; none for now).
    `dotnet build test/test/test.csproj -c Release`, then
    `ASPNETCORE_ENVIRONMENT=Development dotnet run --no-build -c Release --project test/test/test.csproj --urls http://127.0.0.1:5301`.
    The current .NET 10 SDK is enough (same `global.json`).
-4. `node Tests/fixtures/indexeddb/produce-fixture.js http://127.0.0.1:5301/ <version> <commit> Tests/fixtures/indexeddb/hackeros-v<version>.json <screenshot-prefix>`
+4. `node Tests/fixtures/indexeddb/produce-fixture.js http://127.0.0.1:5301/ <version> <commit> Tests/fixtures/indexeddb/kazoos-v<version>.json <screenshot-prefix>`
    (`PLAYWRIGHT_MODULE=/opt/node22/lib/node_modules/playwright` and
    `CHROMIUM=/opt/pw-browsers/chromium` in a cloud container). The script, in a
    blank Chromium context, creates the `admin` administrator (password
@@ -448,7 +448,7 @@ a serious or critical violation fails, and each surface leaves a screenshot in
 `artifacts/playwright/accessibility/`:
 
 - `AccessibilityAndVisualCoverageTests`: desktop, launcher, explorer, Settings, Code Editor,
-  Hack Paint, and a mobile screen;
+  Kazo Paint, and a mobile screen;
 - `AccessibilityPreferencesTests` (`v3/13`): Terminal, browser, calculator, system
   monitor, Theme Editor, Settings > Backup and > Accessibility, each without then with
   high contrast; a keyboard-only flow (launcher, `` Alt+` ``, `Alt+F7`, `Alt+Q`, visible
@@ -482,7 +482,7 @@ dotnet test Tests/Kazo.Os.UI.E2E.Tests -c Release --no-build --filter "FullyQual
     states written as `"true"`/`"false"`, see
     [`old/common-pitfalls.md`](old/common-pitfalls.md) §8; the Mobile choice
     test waits for the switch before reloading, because writing the setting to
-    `~/.config/hackeros` is not instantaneous: about 2 s before `web/15`,
+    `~/.config/kazoos` is not instantaneous: about 2 s before `web/15`,
     235 ms since, see
     [`filesystem-path-lookup.md`](filesystem-path-lookup.md));
   - `Kazo.Os.Pwa.E2E.Tests`: the suite binds to `[::1]` (the service worker

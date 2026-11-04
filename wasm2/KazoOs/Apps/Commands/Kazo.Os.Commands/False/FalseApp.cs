@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.False;
 public sealed class FalseApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.false";
+    public override string Id => "org.kazoos.commands.false";
 
     /// <inheritdoc />
     public override string Name => "false";
@@ -22,7 +22,7 @@ public sealed class FalseApp : AppDefinition
     public override Type EntryPoint => typeof(FalseCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Do nothing, unsuccessfully";

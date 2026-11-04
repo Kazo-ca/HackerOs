@@ -150,12 +150,12 @@ public static class SettingsDocumentPathFactory
         SettingsScope.AppUser => VirtualPath.Parse(
             $"/home/{key.UserId}/.config/apps/{key.AppId}/{key.DocumentId}.config"),
         SettingsScope.AppDevice => VirtualPath.Parse(
-            $"/var/lib/hackeros/devices/{key.InstallationId}/apps/{key.AppId}/{key.DocumentId}.config"),
+            $"/var/lib/kazoos/devices/{key.InstallationId}/apps/{key.AppId}/{key.DocumentId}.config"),
         SettingsScope.AppUserDevice => VirtualPath.Parse(
-            $"/var/lib/hackeros/devices/{key.InstallationId}/users/{key.UserId}/apps/{key.AppId}/{key.DocumentId}.config"),
+            $"/var/lib/kazoos/devices/{key.InstallationId}/users/{key.UserId}/apps/{key.AppId}/{key.DocumentId}.config"),
         SettingsScope.AppRoamingUser => VirtualPath.Parse(
             $"/home/{key.UserId}/.config/apps/{key.AppId}/roaming/{key.DocumentId}.config"),
-        SettingsScope.OsAdmin => VirtualPath.Parse($"/etc/hackeros/{key.DocumentId}.config"),
+        SettingsScope.OsAdmin => VirtualPath.Parse($"/etc/kazoos/{key.DocumentId}.config"),
         _ => throw new ArgumentOutOfRangeException(nameof(key), key.Scope, "Unknown settings scope.")
     };
 }

@@ -2,7 +2,7 @@ using System.Buffers.Binary;
 
 namespace Kazo.Os.Apps.KazoPaint;
 
-/// <summary>Image container formats Hack Paint reads (ADR 0103 §1).</summary>
+/// <summary>Image container formats Kazo Paint reads (ADR 0103 §1).</summary>
 public enum ImageFileKind
 {
     /// <summary>Not a supported image.</summary>
@@ -36,18 +36,18 @@ public sealed record ImageFileHeader(ImageFileKind Kind, int Width, int Height)
 
 /// <summary>
 /// Reads the format and size of an image from its first bytes, the way <c>file(1)</c> and image
-/// libraries do, so Hack Paint can refuse an oversized image <em>before</em> handing it to the
+/// libraries do, so Kazo Paint can refuse an oversized image <em>before</em> handing it to the
 /// browser's decoder (ADR 0103 §1: at most 4 096 × 4 096 pixels and 16 MiB per file).
 /// </summary>
 public static class ImageFileFormat
 {
-    /// <summary>Largest width or height Hack Paint edits, in pixels.</summary>
+    /// <summary>Largest width or height Kazo Paint edits, in pixels.</summary>
     public const int MaxDimension = 4096;
 
-    /// <summary>Largest image file Hack Paint opens, in bytes (16 MiB, the OS file size limit of ADR 0094).</summary>
+    /// <summary>Largest image file Kazo Paint opens, in bytes (16 MiB, the OS file size limit of ADR 0094).</summary>
     public const int MaxFileBytes = 16 * 1024 * 1024;
 
-    /// <summary>Extensions Hack Paint opens, for dialogs and file associations.</summary>
+    /// <summary>Extensions Kazo Paint opens, for dialogs and file associations.</summary>
     public static IReadOnlyList<string> OpenExtensions { get; } = [".png", ".jpg", ".jpeg", ".bmp", ".gif", ".webp"];
 
     /// <summary>Gets the media type of a format.</summary>
@@ -62,7 +62,7 @@ public static class ImageFileFormat
         _ => "application/octet-stream"
     };
 
-    /// <summary>Gets the format Hack Paint writes for a file name: JPEG for <c>.jpg</c>/<c>.jpeg</c>, PNG otherwise.</summary>
+    /// <summary>Gets the format Kazo Paint writes for a file name: JPEG for <c>.jpg</c>/<c>.jpeg</c>, PNG otherwise.</summary>
     /// <param name="fileName">Target file name or path.</param>
     public static ImageFileKind SaveKindFor(string fileName) =>
         fileName.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase)

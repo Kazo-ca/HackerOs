@@ -5,7 +5,7 @@ using Kazo.Os.Simulation.Abstractions.Settings;
 namespace Kazo.Os.Platform.Core.ComponentProviders;
 
 /// <summary>
-/// The file <c>/etc/hackeros/components.config</c> (ADR 0156 §2): which app provides each component
+/// The file <c>/etc/kazoos/components.config</c> (ADR 0156 §2): which app provides each component
 /// contract an administrator chooses, such as the file view and the file dialogs.
 /// </summary>
 /// <remarks>
@@ -14,13 +14,13 @@ namespace Kazo.Os.Platform.Core.ComponentProviders;
 /// </para>
 /// <code>
 /// [providers]
-/// hackeros.file-view=com.example.files
-/// hackeros.file-dialogs=com.example.files
+/// kazoos.file-view=com.example.files
+/// kazoos.file-dialogs=com.example.files
 /// </code>
 /// <para>
 /// A missing key means the File Explorer (or the order of ADR 0063 §3 when it is missing); a fresh
 /// installation has no key and may have no file. The file belongs to <c>system:system</c> like every
-/// document of <c>/etc/hackeros</c>, so only an administrator changes it. The contract names contain
+/// document of <c>/etc/kazoos</c>, so only an administrator changes it. The contract names contain
 /// dots, so the file is read line by line (<see cref="ConfigDocumentLines"/>) rather than through a
 /// declared schema; a key that is not a contract an administrator chooses is ignored, and so is an
 /// app the catalog does not know, when the OS resolves the contract.
@@ -28,7 +28,7 @@ namespace Kazo.Os.Platform.Core.ComponentProviders;
 /// </remarks>
 public static class ComponentProvidersDocument
 {
-    /// <summary>The file name under <c>/etc/hackeros</c>.</summary>
+    /// <summary>The file name under <c>/etc/kazoos</c>.</summary>
     public const string FileName = "components.config";
 
     /// <summary>The section holding the choices.</summary>
@@ -42,7 +42,7 @@ public static class ComponentProvidersDocument
 
     /// <summary>The comment a new file starts with, written the first time an administrator chooses.</summary>
     public static string Header { get; } =
-        "# /etc/hackeros/components.config\n"
+        "# /etc/kazoos/components.config\n"
         + "# Which app provides the OS's file view and file dialogs (ADR 0156). A missing key means\n"
         + "# the File Explorer. Choose in Settings > OS components: a third-party app needs an\n"
         + "# administrator's approval, since its code then runs inside every app that shows files.\n";

@@ -13,7 +13,7 @@ public sealed class PublishedPagesTests
     [PagesArtifactFact]
     public async Task Wasm_and_legacy_load_independently_after_the_service_worker_takes_control()
     {
-        string directory = Environment.GetEnvironmentVariable("HACKEROS_PAGES_ROOT")!;
+        string directory = Environment.GetEnvironmentVariable("KAZOOS_PAGES_ROOT")!;
         await using PublishedAppHost host = new();
         await host.StartAsync(directory, PublishedAppHost.ReservePort());
         using IPlaywright playwright = await Playwright.CreateAsync();
@@ -55,7 +55,7 @@ public sealed class PagesArtifactFactAttribute : FactAttribute
     /// <summary>Marks normal solution test runs as skipped; deployment validation opts in explicitly.</summary>
     public PagesArtifactFactAttribute()
     {
-        if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("HACKEROS_PAGES_ROOT")))
-            Skip = "Set HACKEROS_PAGES_ROOT to the assembled Pages artifact to exercise both releases.";
+        if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("KAZOOS_PAGES_ROOT")))
+            Skip = "Set KAZOOS_PAGES_ROOT to the assembled Pages artifact to exercise both releases.";
     }
 }

@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Find;
 public sealed class FindApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.find";
+    public override string Id => "org.kazoos.commands.find";
 
     /// <inheritdoc />
     public override string Name => "find";
@@ -22,7 +22,7 @@ public sealed class FindApp : AppDefinition
     public override Type EntryPoint => typeof(FindCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Search for files in a directory hierarchy";

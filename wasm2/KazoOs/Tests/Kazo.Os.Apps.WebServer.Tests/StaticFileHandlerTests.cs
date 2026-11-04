@@ -4,14 +4,14 @@ using Kazo.Os.Apps.WebServer.Daemon;
 
 namespace Kazo.Os.Apps.WebServer.Tests;
 
-/// <summary>URL to file mapping of hackwebd: never outside the root, whatever the URL says.</summary>
+/// <summary>URL to file mapping of kazowebd: never outside the root, whatever the URL says.</summary>
 public sealed class StaticFileHandlerTests
 {
     private static ServedSite Site(string binding = "http://docs.hack:8080/", string root = "/home/alice/www")
     {
         Assert.True(WebAppUrls.TryParse(binding, allowWildcardHost: true, out WebBinding parsed, out _));
         KazoWebSite site = new() { Name = "docs", Root = root, Bindings = [binding] };
-        return new ServedSite(new KazoWebSiteDeclaration("/home/alice/.config/hackweb/sites/docs.site", KazoWebSiteScope.User, "alice", site, []), parsed);
+        return new ServedSite(new KazoWebSiteDeclaration("/home/alice/.config/kazoweb/sites/docs.site", KazoWebSiteScope.User, "alice", site, []), parsed);
     }
 
     [Theory]
@@ -59,7 +59,7 @@ public sealed class StaticFileHandlerTests
         string page = StaticFileHandler.StatusPage(404, "Not Found");
 
         Assert.Contains("<title>404 Not Found</title>", page, StringComparison.Ordinal);
-        Assert.Contains("<hr><center>hackwebd/1.0</center>", page, StringComparison.Ordinal);
+        Assert.Contains("<hr><center>kazowebd/1.0</center>", page, StringComparison.Ordinal);
     }
 
     [Fact]

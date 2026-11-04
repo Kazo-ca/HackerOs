@@ -94,7 +94,7 @@ public sealed class SecondaryScreen
 /// it, or where the user put it last time otherwise. It registers each screen in
 /// <see cref="WindowRuntime"/> (<see cref="AddDisplayCommand"/>, <see cref="RemoveDisplayCommand"/>;
 /// the screen's desktop then sends its <see cref="ChangeViewportCommand"/>), remembers the screens of the session in
-/// <c>~/.config/hackeros/screens.config</c> to offer « Restaurer les écrans » after a reload,
+/// <c>~/.config/kazoos/screens.config</c> to offer « Restaurer les écrans » after a reload,
 /// follows unplugged monitors, and tells the screens when the main tab is hidden.
 /// </summary>
 /// <remarks>

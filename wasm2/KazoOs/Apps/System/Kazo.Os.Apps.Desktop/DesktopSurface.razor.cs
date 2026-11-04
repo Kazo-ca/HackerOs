@@ -30,7 +30,7 @@ namespace Kazo.Os.Apps.Desktop;
 public partial class DesktopSurface : IAsyncDisposable
 {
     /// <summary>Settings opens its "Appearance" page for "Change background…".</summary>
-    private const string SettingsAppId = "org.hackeros.settings";
+    private const string SettingsAppId = "org.kazoos.settings";
 
     private string? _desktopDirectory;
     private KazoDesktopSettingsDocument _settings = new(KazoDesktopOptions.Default, new Dictionary<string, KazoDesktopCell>());
@@ -71,7 +71,7 @@ public partial class DesktopSurface : IAsyncDisposable
         await WatchSettingsAsync(home);
     }
 
-    /// <summary>Follows <c>~/.config/hackeros</c>: a change of <c>desktop.config</c> is read again.</summary>
+    /// <summary>Follows <c>~/.config/kazoos</c>: a change of <c>desktop.config</c> is read again.</summary>
     private async Task WatchSettingsAsync(string home)
     {
         string path = KazoDesktopSettings.GetPath(home);

@@ -4,7 +4,7 @@ using Kazo.Os.Platform.Core.Tests.Settings;
 
 namespace Kazo.Os.Platform.Core.Tests.Clipboard;
 
-/// <summary>The <c>sharing</c> key of <c>/etc/hackeros/clipboard.config</c> (ADR 0065, ADR 0044).</summary>
+/// <summary>The <c>sharing</c> key of <c>/etc/kazoos/clipboard.config</c> (ADR 0065, ADR 0044).</summary>
 public sealed class ClipboardSettingsDocumentsTests
 {
     [Theory]
@@ -27,7 +27,7 @@ public sealed class ClipboardSettingsDocumentsTests
         await harness.BootAsync();
         await harness.LoginAsync(harness.Alice);
 
-        string? content = await harness.ReadAsync("/etc/hackeros/clipboard.config");
+        string? content = await harness.ReadAsync("/etc/kazoos/clipboard.config");
         Assert.NotNull(content);
         Assert.Contains("sharing", content);
         Assert.Equal(
@@ -42,13 +42,13 @@ public sealed class ClipboardSettingsDocumentsTests
         SettingsFilesHarness harness = new();
         await harness.BootAsync();
         await harness.LoginAsync(harness.Alice);
-        await harness.WriteAsRootAsync("/home/alice/.config/hackeros/clipboard.config", "sharing=disabled\n");
+        await harness.WriteAsRootAsync("/home/alice/.config/kazoos/clipboard.config", "sharing=disabled\n");
 
         Assert.Equal(
             ClipboardSharingMode.Disabled,
             ClipboardSettingsDocuments.ToMode(await harness.Settings.ReadAsync(ClipboardSettingsDocuments.Document)));
 
-        await harness.WriteAsRootAsync("/etc/hackeros/clipboard.config", "sharing=guest-to-host\n[locked]\nsharing=true\n");
+        await harness.WriteAsRootAsync("/etc/kazoos/clipboard.config", "sharing=guest-to-host\n[locked]\nsharing=true\n");
 
         Assert.Equal(
             ClipboardSharingMode.GuestToHost,

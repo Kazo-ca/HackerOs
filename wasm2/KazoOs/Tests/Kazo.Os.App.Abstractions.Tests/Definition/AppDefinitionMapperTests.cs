@@ -11,7 +11,7 @@ public sealed class AppDefinitionMapperTests
         AppManifest manifest = AppDefinitionMapper.ToManifest(new MinimalWindowApp(), "1.0.0");
 
         Assert.Equal(1, manifest.SchemaVersion);
-        Assert.Equal("org.hackeros.tests.minimal", manifest.Id);
+        Assert.Equal("org.kazoos.tests.minimal", manifest.Id);
         Assert.Equal("Minimal", manifest.Name);
         Assert.Equal(AppKind.Window, manifest.Kind);
         Assert.Equal("1.0.0", manifest.Version);
@@ -62,7 +62,7 @@ public sealed class AppDefinitionMapperTests
         AppManifest manifest = AppDefinitionMapper.ToManifest(new ComponentApp(), "1.0.0");
 
         AppComponentManifest component = Assert.Single(manifest.Components!);
-        Assert.Equal(new AppComponentManifest("hackeros.tests-view", "Kazo.Os.App.Abstractions.Tests.dll", typeof(FakeEmbed).FullName!), component);
+        Assert.Equal(new AppComponentManifest("kazoos.tests-view", "Kazo.Os.App.Abstractions.Tests.dll", typeof(FakeEmbed).FullName!), component);
         Assert.True(AppManifestValidator.Validate(manifest).IsValid);
     }
 
@@ -136,7 +136,7 @@ public sealed class AppDefinitionMapperTests
         Assert.Equal(["open", "edit"], handler.Actions);
         Assert.Equal(5, handler.Priority);
         Assert.Equal("1.2.3", manifest.Version);
-        Assert.Equal("pub.hackeros", manifest.PublisherId);
+        Assert.Equal("pub.kazoos", manifest.PublisherId);
         Assert.Equal("Edits text.", manifest.Description);
         Assert.Equal("productivity", manifest.Presentation.Category);
         Assert.Equal(AppLaunchVisibility.Hidden, manifest.Presentation.LaunchVisibility);
@@ -196,7 +196,7 @@ public sealed class AppDefinitionMapperTests
 
     private sealed class SizedWindowApp : AppDefinition
     {
-        public override string Id => "org.hackeros.tests.sized";
+        public override string Id => "org.kazoos.tests.sized";
         public override string Name => "Sized";
         public override AppKind Kind => AppKind.Window;
         public override Type EntryPoint => typeof(FakeWindow);
@@ -213,16 +213,16 @@ public sealed class AppDefinitionMapperTests
 
     private sealed class ComponentApp : AppDefinition
     {
-        public override string Id => "org.hackeros.tests.component";
+        public override string Id => "org.kazoos.tests.component";
         public override string Name => "Component";
         public override AppKind Kind => AppKind.Window;
         public override Type EntryPoint => typeof(FakeWindow);
-        public override IReadOnlyList<AppComponent> Components => [new("hackeros.tests-view", typeof(FakeEmbed))];
+        public override IReadOnlyList<AppComponent> Components => [new("kazoos.tests-view", typeof(FakeEmbed))];
     }
 
     private class MvcSiteApp : AppDefinition
     {
-        public override string Id => "org.hackeros.tests.site";
+        public override string Id => "org.kazoos.tests.site";
         public override string Name => "Site";
         public override AppKind Kind => AppKind.Web;
         public override Type EntryPoint => typeof(FakeCommand);
@@ -237,7 +237,7 @@ public sealed class AppDefinitionMapperTests
     [AppManifest]
     private sealed class UnmarkedServiceApp : AppDefinition
     {
-        public override string Id => "org.hackeros.tests.service";
+        public override string Id => "org.kazoos.tests.service";
         public override string Name => "Service";
         public override AppKind Kind => AppKind.Service;
         public override Type EntryPoint => typeof(FakeCommand);
@@ -246,7 +246,7 @@ public sealed class AppDefinitionMapperTests
     [AppManifest]
     private sealed class DefaultCommandApp : AppDefinition
     {
-        public override string Id => "org.hackeros.tests.default-cmd";
+        public override string Id => "org.kazoos.tests.default-cmd";
         public override string Name => "default-cmd";
         public override AppKind Kind => AppKind.Terminal;
         public override Type EntryPoint => typeof(FakeCommand);
@@ -256,7 +256,7 @@ public sealed class AppDefinitionMapperTests
     [AppManifest(Execution = AppExecutionHost.MainThread)]
     private sealed class MainThreadCommandApp : AppDefinition
     {
-        public override string Id => "org.hackeros.tests.main-cmd";
+        public override string Id => "org.kazoos.tests.main-cmd";
         public override string Name => "main-cmd";
         public override AppKind Kind => AppKind.Terminal;
         public override Type EntryPoint => typeof(FakeCommand);
@@ -266,7 +266,7 @@ public sealed class AppDefinitionMapperTests
     [AppManifest(Execution = AppExecutionHost.Dedicated)]
     private sealed class DedicatedCommandApp : AppDefinition
     {
-        public override string Id => "org.hackeros.tests.dedicated-cmd";
+        public override string Id => "org.kazoos.tests.dedicated-cmd";
         public override string Name => "dedicated-cmd";
         public override AppKind Kind => AppKind.Terminal;
         public override Type EntryPoint => typeof(FakeCommand);
@@ -275,7 +275,7 @@ public sealed class AppDefinitionMapperTests
 
     private sealed class MinimalWindowApp : AppDefinition
     {
-        public override string Id => "org.hackeros.tests.minimal";
+        public override string Id => "org.kazoos.tests.minimal";
         public override string Name => "Minimal";
         public override AppKind Kind => AppKind.Window;
         public override Type EntryPoint => typeof(FakeWindow);
@@ -283,7 +283,7 @@ public sealed class AppDefinitionMapperTests
 
     private sealed class RangedApp : AppDefinition
     {
-        public override string Id => "org.hackeros.tests.ranged";
+        public override string Id => "org.kazoos.tests.ranged";
         public override string Name => "Ranged";
         public override AppKind Kind => AppKind.Window;
         public override Type EntryPoint => typeof(FakeWindow);
@@ -292,7 +292,7 @@ public sealed class AppDefinitionMapperTests
 
     private sealed class SharedMobileApp : AppDefinition
     {
-        public override string Id => "org.hackeros.tests.shared-mobile";
+        public override string Id => "org.kazoos.tests.shared-mobile";
         public override string Name => "Shared";
         public override AppKind Kind => AppKind.Window;
         public override Type EntryPoint => typeof(FakeWindow);
@@ -301,7 +301,7 @@ public sealed class AppDefinitionMapperTests
 
     private sealed class DistinctMobileApp : AppDefinition
     {
-        public override string Id => "org.hackeros.tests.distinct-mobile";
+        public override string Id => "org.kazoos.tests.distinct-mobile";
         public override string Name => "Distinct";
         public override AppKind Kind => AppKind.Window;
         public override Type EntryPoint => typeof(FakeWindow);
@@ -310,13 +310,13 @@ public sealed class AppDefinitionMapperTests
 
     private sealed class FullWindowApp : AppDefinition
     {
-        public override string Id => "org.hackeros.tests.full";
+        public override string Id => "org.kazoos.tests.full";
         public override string Name => "Full";
         public override AppKind Kind => AppKind.Window;
         public override Type EntryPoint => typeof(FakeWindow);
         public override string Version => "1.2.3";
         public override string Description => "Edits text.";
-        public override string PublisherId => "pub.hackeros";
+        public override string PublisherId => "pub.kazoos";
         public override string Category => "productivity";
         public override AppLaunchVisibility LaunchVisibility => AppLaunchVisibility.Hidden;
         public override IReadOnlyList<string> Capabilities => [AppCapabilities.FileSystemUserHomeRead];
@@ -326,7 +326,7 @@ public sealed class AppDefinitionMapperTests
 
     private sealed class EchoLikeCommand : AppDefinition
     {
-        public override string Id => "org.hackeros.tests.echo";
+        public override string Id => "org.kazoos.tests.echo";
         public override string Name => "echo";
         public override AppKind Kind => AppKind.Terminal;
         public override Type EntryPoint => typeof(FakeCommand);

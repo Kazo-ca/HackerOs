@@ -4,7 +4,7 @@ using Kazo.Os.AppSdk.Web.Mvc;
 namespace Kazo.Os.Platform.WorkerHost.Tests;
 
 /// <summary>
-/// An ASP.Hack site with a Blazor root (ADR 0084) run as a real web app: besides its API it serves
+/// An ASP.Kazo site with a Blazor root (ADR 0084) run as a real web app: besides its API it serves
 /// the host page, the loader script and the boot manifest, as <c>curl</c> sees them. Any type stands
 /// for the root component here: the browser is not part of these tests.
 /// </summary>

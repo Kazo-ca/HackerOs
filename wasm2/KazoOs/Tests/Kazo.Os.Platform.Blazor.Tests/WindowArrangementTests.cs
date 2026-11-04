@@ -146,7 +146,7 @@ public sealed class WindowArrangementTests
         WindowId id = WindowId.FromGuid(Guid.Parse($"a1000000-0000-0000-0000-00000000000{number}"));
         WindowRuntimeState state = new(
             id,
-            "org.hackeros.test",
+            "org.kazoos.test",
             WindowOwnerId.FromGuid(Guid.Parse($"b1000000-0000-0000-0000-00000000000{number}")),
             $"Window {number}",
             null,

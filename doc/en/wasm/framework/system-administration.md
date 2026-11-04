@@ -45,15 +45,15 @@ await appearance.SetAsync("accent", "cyan");                               // co
 await appearance.SetManyAsync(values, SettingLayer.System);                // /etc : une seule approbation
 ```
 
-See [`settings-files.md`](settings-files.md#os-documents-hacksettingsopensystemasync-adr-0056-8).
+See [`settings-files.md`](settings-files.md#os-documents-kazosettingsopensystemasync-adr-0056-8).
 
 ### Permissions (`permissions.manage`)
 
 | Method | Effect | Administrator |
 |---|---|---|
 | `GetPolicyAsync`, `GetOverviewAsync` | policy and state of each dangerous capability of each app | no |
-| `SetPolicyAsync(Prompt / Block)` | writes `/etc/hackeros/security.config`, log `capability.policy` | yes (`permissions.policy`) |
-| `SetMachineDecisionAsync(app, capability, Allow / Deny / Ask)` | writes `/etc/hackeros/app-permissions.config`, log `capability.approve` / `capability.revoke` | yes (`permissions.machine-decision`) |
+| `SetPolicyAsync(Prompt / Block)` | writes `/etc/kazoos/security.config`, log `capability.policy` | yes (`permissions.policy`) |
+| `SetMachineDecisionAsync(app, capability, Allow / Deny / Ask)` | writes `/etc/kazoos/app-permissions.config`, log `capability.approve` / `capability.revoke` | yes (`permissions.machine-decision`) |
 | `RemoveOwnDenialAsync(app, capability)` | removes the user's denial, the question comes back at launch | no |
 
 A system app or a capability not declared by the app is refused **before**
@@ -74,12 +74,12 @@ apps, warnings), or `null` without a server; Settings displays it
 in its server section ([`server-network-relay.md`](../dev/server-network-relay.md)).
 
 ADR 0101 (work item `v3/9-sync`): `GetConflictsAsync` reads the pending conflicts
-recorded in `~/.local/state/hackeros/sync-conflicts.json`
+recorded in `~/.local/state/kazoos/sync-conflicts.json`
 (`KazoSyncConflict` carries `DetectedAt`); `ShowConflictsAsync` opens the OS
 conflict dialog; `GetSyncStatusAsync` returns a `KazoSyncStatus`
 (periodic sync active, paused, online, last run, sent,
 received, last error, interval); `SetSyncPausedAsync` pauses or resumes
-the user's sync (`~/.config/hackeros/sync.config`);
+the user's sync (`~/.config/kazoos/sync.config`);
 `SyncNowAsync` launches a full run. Deletions, conflicts and
 periodic sync are described in
 [`synchronization.md`](../dev/synchronization.md).
@@ -104,10 +104,10 @@ an administrator (`system.reboot`, `system.factory-reset`). Sequence of
 why Diagnostics, a non-system app, asks for an administrator on its first
 launch.
 
-`GetWebSiteDatabasesAsync` lists the sites' IndexedDB databases (`hackweb.<id>`:
+`GetWebSiteDatabasesAsync` lists the sites' IndexedDB databases (`kazoweb.<id>`:
 version, stores, record count, estimated size) and
 `DeleteWebSiteDatabaseAsync(name)` deletes one, with the same capability
-(ADR 0088 §4, [`asp-hack-site-data.md`](asp-hack-site-data.md)). Diagnostics shows them
+(ADR 0088 §4, [`asp-kazo-site-data.md`](asp-kazo-site-data.md)). Diagnostics shows them
 under *Website databases*.
 
 ### Backup (`system.backup`)

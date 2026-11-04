@@ -43,9 +43,9 @@ public sealed record HostAccessibilitySignals(bool PrefersMoreContrast, bool For
 
 /// <summary>
 /// Defines the layered accessibility document (ADR 0105 section 1):
-/// <c>/etc/hackeros/accessibility.config</c> holds the machine default (also used by the sign-in
+/// <c>/etc/kazoos/accessibility.config</c> holds the machine default (also used by the sign-in
 /// screen, before any user is known), and each user overrides it in
-/// <c>~/.config/hackeros/accessibility.config</c>.
+/// <c>~/.config/kazoos/accessibility.config</c>.
 /// </summary>
 public static class AccessibilitySettingsDocuments
 {

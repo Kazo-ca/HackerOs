@@ -457,8 +457,8 @@ wasm2/KazoOs/BlazorWindowManager/BlazorWindowManager.Test/obj/Debug/net9.0/Blazo
 wasm2/KazoOs/BlazorWindowManager/BlazorWindowManager.Test/obj/Debug/net9.0/BlazorWindowManager.Test.csproj.AssemblyReference.cache
 wasm2/KazoOs/BlazorWindowManager/BlazorWindowManager.Test/obj/Debug/net9.0/BlazorWindowManager.Test.GeneratedMSBuildEditorConfig.editorconfig
 wasm2/KazoOs/BlazorWindowManager/BlazorWindowManager.Test/obj/Debug/net9.0/rpswa.dswa.cache.json
-wasm2/KazoOs/HackerOs/obj/HackerOs.csproj.nuget.dgspec.json
-wasm2/KazoOs/HackerOs/obj/HackerOs.csproj.nuget.g.props
-wasm2/KazoOs/HackerOs/obj/HackerOs.csproj.nuget.g.targets
-wasm2/KazoOs/HackerOs/obj/project.assets.json
-wasm2/KazoOs/HackerOs/obj/project.nuget.cache
+wasm2/KazoOs/KazoOs/obj/KazoOs.csproj.nuget.dgspec.json
+wasm2/KazoOs/KazoOs/obj/KazoOs.csproj.nuget.g.props
+wasm2/KazoOs/KazoOs/obj/KazoOs.csproj.nuget.g.targets
+wasm2/KazoOs/KazoOs/obj/project.assets.json
+wasm2/KazoOs/KazoOs/obj/project.nuget.cache

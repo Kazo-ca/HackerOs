@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "org.hackeros.text-editor",
+  "id": "org.kazoos.text-editor",
   "name": "Text Editor",
   "version": "1.4.0",
-  "publisherId": "org.hackeros",
+  "publisherId": "org.kazoos",
   "description": "A plain text and source code editor window application.",
   "kind": "window",
   "entryPoint": {
@@ -74,7 +74,7 @@
   },
   "intents": [
     {
-      "intentId": "org.hackeros.intent.openFile",
+      "intentId": "org.kazoos.intent.openFile",
       "payloadSchemaAssetPath": "assets/intents/open-file.schema.json"
     }
   ],

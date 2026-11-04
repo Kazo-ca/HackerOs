@@ -2,10 +2,10 @@
 // dispatches dragstart, so the rows (marked data-app-drag-id) are handled here rather than in C#. While
 // a row is dragged, the menu lets the pointer through, so the desktop under it receives the drop.
 
-const appMimeType = 'application/vnd.hackeros.app+json';
+const appMimeType = 'application/vnd.kazoos.app+json';
 
 export function attachAppDrag(overlay, callbacks) {
-    if (!overlay || overlay.__hackerOsAppDrag) {
+    if (!overlay || overlay.__kazoOsAppDrag) {
         return;
     }
 
@@ -28,5 +28,5 @@ export function attachAppDrag(overlay, callbacks) {
         callbacks.invokeMethodAsync('OnAppDragEnded', dropped);
     });
 
-    overlay.__hackerOsAppDrag = true;
+    overlay.__kazoOsAppDrag = true;
 }

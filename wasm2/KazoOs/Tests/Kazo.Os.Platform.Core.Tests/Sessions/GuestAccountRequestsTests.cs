@@ -74,10 +74,10 @@ public sealed class GuestAccountRequestsTests
     {
         AppManifest manifest = new()
         {
-            Id = "org.hackeros.settings",
+            Id = "org.kazoos.settings",
             Name = "Settings",
             Version = "1.0.0",
-            PublisherId = "pub.hackeros",
+            PublisherId = "pub.kazoos",
             Description = "Guest fixture.",
             Kind = AppKind.Window,
             EntryPoint = new AppEntryPointManifest("Kazo.Os.Apps.Sample", "Kazo.Os.Apps.Sample.SampleApp"),

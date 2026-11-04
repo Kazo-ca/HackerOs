@@ -5,7 +5,7 @@ internal sealed class ChangeFolderFixture : IDisposable
 {
     public ChangeFolderFixture()
     {
-        Path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "hackeros-changes-" + Guid.NewGuid().ToString("N"));
+        Path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "kazoos-changes-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(System.IO.Path.Combine(Path, "unreleased"));
     }
 

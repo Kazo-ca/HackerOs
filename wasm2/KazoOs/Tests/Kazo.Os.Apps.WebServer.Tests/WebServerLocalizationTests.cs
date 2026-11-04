@@ -17,11 +17,11 @@ public sealed class WebServerLocalizationTests
         KazoStringLocalizer french = new(Resources, static () => CultureInfo.GetCultureInfo("fr"));
         KazoStringLocalizer english = new(Resources, static () => KazoLocale.DefaultLanguage);
 
-        Assert.Equal("hackwebd en cours d'exécution · pid 42", french["Daemon.Running", 42].Value);
-        Assert.Equal("hackwebd running · pid 42", english["Daemon.Running", 42].Value);
+        Assert.Equal("kazowebd en cours d'exécution · pid 42", french["Daemon.Running", 42].Value);
+        Assert.Equal("kazowebd running · pid 42", english["Daemon.Running", 42].Value);
         Assert.Equal("+ Nouveau site", french["Toolbar.NewSite"].Value);
-        Assert.Equal("Supprimer /etc/hackweb/sites/docs.site ? hackwebd cesse immédiatement de servir « docs ». Les fichiers du site sont conservés.",
-            french["Dialog.Delete.Message", "/etc/hackweb/sites/docs.site", "docs"].Value);
+        Assert.Equal("Supprimer /etc/kazoweb/sites/docs.site ? kazowebd cesse immédiatement de servir « docs ». Les fichiers du site sont conservés.",
+            french["Dialog.Delete.Message", "/etc/kazoweb/sites/docs.site", "docs"].Value);
     }
 
     [Fact]

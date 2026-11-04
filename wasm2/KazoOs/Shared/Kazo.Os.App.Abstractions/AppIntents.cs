@@ -18,25 +18,25 @@ public interface IAppIntent
 public static partial class AppIntentIds
 {
     /// <summary>Launch an application directly.</summary>
-    public const string LaunchApp = "org.hackeros.intent.launch-app.v1";
+    public const string LaunchApp = "org.kazoos.intent.launch-app.v1";
 
     /// <summary>Open or edit a virtual file through association resolution.</summary>
-    public const string OpenFile = "org.hackeros.intent.open-file.v1";
+    public const string OpenFile = "org.kazoos.intent.open-file.v1";
 
     /// <summary>Reveal a virtual file in its containing folder.</summary>
-    public const string RevealFile = "org.hackeros.intent.reveal-file.v1";
+    public const string RevealFile = "org.kazoos.intent.reveal-file.v1";
 
     /// <summary>Execute a command through an available terminal session.</summary>
-    public const string ExecuteCommand = "org.hackeros.intent.execute-command.v1";
+    public const string ExecuteCommand = "org.kazoos.intent.execute-command.v1";
 
     /// <summary>Show an app's settings or status surface.</summary>
-    public const string ShowAppSettings = "org.hackeros.intent.show-app-settings.v1";
+    public const string ShowAppSettings = "org.kazoos.intent.show-app-settings.v1";
 
     /// <summary>Edit a virtual file with a handler declaring the <c>edit</c> action (ADR 0096, section 2).</summary>
-    public const string EditFile = "org.hackeros.intent.edit-file.v1";
+    public const string EditFile = "org.kazoos.intent.edit-file.v1";
 
     /// <summary>Open a URI with the handler of its scheme, <c>x-scheme-handler/&lt;scheme&gt;</c> (ADR 0096, section 3).</summary>
-    public const string OpenUri = "org.hackeros.intent.open-uri.v1";
+    public const string OpenUri = "org.kazoos.intent.open-uri.v1";
 
     /// <summary>
     /// Prefix of the media type that names the handler of one URI scheme, as under freedesktop
@@ -185,7 +185,7 @@ public sealed record OpenUriIntent(Uri Uri, string? PreferredAppId = null) : IAp
 /// <param name="TargetAppId">The app to deliver to, when the caller already chose one (after a chooser).</param>
 /// <param name="RememberChoice">
 /// With <paramref name="TargetAppId"/>: remember it as the handler of this intent in
-/// <c>~/.config/hackeros/intents.config</c> ("always use", ADR 0096 section 5).
+/// <c>~/.config/kazoos/intents.config</c> ("always use", ADR 0096 section 5).
 /// </param>
 public sealed record CustomIntent(
     string IntentId,

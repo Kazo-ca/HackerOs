@@ -65,7 +65,7 @@ public sealed class KazoPathTests
     [InlineData("~/docs/../notes.txt", "/home/alice/notes.txt")]
     [InlineData("notes.txt", "/var/log/notes.txt")]
     [InlineData("../tmp/./x", "/var/tmp/x")]
-    [InlineData("/etc//hackeros/", "/etc/hackeros")]
+    [InlineData("/etc//kazoos/", "/etc/kazoos")]
     [InlineData("~other", "/var/log/~other")]
     public void GetFullPath_expands_home_and_resolves_against_the_working_directory(string path, string expected)
     {

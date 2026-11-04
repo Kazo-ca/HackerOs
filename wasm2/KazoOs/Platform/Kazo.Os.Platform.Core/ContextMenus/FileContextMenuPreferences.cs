@@ -5,12 +5,12 @@ namespace Kazo.Os.Platform.Core.ContextMenus;
 
 /// <summary>
 /// The entries a user hid from the file menus (ADR 0151 §6), in
-/// <c>~/.config/hackeros/context-menus.config</c>:
+/// <c>~/.config/kazoos/context-menus.config</c>:
 /// </summary>
 /// <remarks>
 /// <code>
 /// [hidden]
-/// org.hackeros.file-explorer.extract-here=true
+/// org.kazoos.file-explorer.extract-here=true
 /// </code>
 /// <para>
 /// One key per hidden entry, <c>&lt;appId&gt;.&lt;name&gt;</c>. Keys contain dots, so the file is read
@@ -21,7 +21,7 @@ namespace Kazo.Os.Platform.Core.ContextMenus;
 /// </remarks>
 public sealed class FileContextMenuPreferences
 {
-    /// <summary>The file name under <c>~/.config/hackeros</c>.</summary>
+    /// <summary>The file name under <c>~/.config/kazoos</c>.</summary>
     public const string FileName = "context-menus.config";
 
     /// <summary>The section of the hidden entries.</summary>
@@ -29,7 +29,7 @@ public sealed class FileContextMenuPreferences
 
     /// <summary>The comment a new file starts with.</summary>
     public const string Header =
-        "# ~/.config/hackeros/context-menus.config\n"
+        "# ~/.config/kazoos/context-menus.config\n"
         + "# File menu entries added by apps that you hid (ADR 0151). One '<app id>.<entry>=true' line\n"
         + "# per hidden entry; change it in Settings > File menus.\n";
 

@@ -6,7 +6,7 @@ namespace Kazo.Os.Tools.ManifestGenerator.Tests;
 /// </summary>
 public sealed class PackagedSatellitesTests : IDisposable
 {
-    private readonly string _bin = Path.Combine(Path.GetTempPath(), "hackeros-satellites-" + Guid.NewGuid().ToString("N"));
+    private readonly string _bin = Path.Combine(Path.GetTempPath(), "kazoos-satellites-" + Guid.NewGuid().ToString("N"));
 
     public PackagedSatellitesTests()
     {

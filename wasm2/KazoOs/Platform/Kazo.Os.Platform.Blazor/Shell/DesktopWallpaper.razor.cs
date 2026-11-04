@@ -9,7 +9,7 @@ namespace Kazo.Os.Platform.Blazor.Shell;
 /// The wallpaper of one screen (ADR 0202 §4), given to <c>DesktopArea.WallpaperContent</c> by the
 /// desktop shell for screen 1 and for every secondary screen, and placed behind the mobile home
 /// screen by <c>MobileShell</c> with <see cref="Mobile"/> (ADR 0217 §2). It follows <see cref="WallpaperService"/>:
-/// a change in Settings, a <c>nano ~/.config/hackeros/appearance.config</c> or a new session shows the
+/// a change in Settings, a <c>nano ~/.config/kazoos/appearance.config</c> or a new session shows the
 /// new image at once.
 /// </summary>
 public sealed partial class DesktopWallpaper : IAsyncDisposable

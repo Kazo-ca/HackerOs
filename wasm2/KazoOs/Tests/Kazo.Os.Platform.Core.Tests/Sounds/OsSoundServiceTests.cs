@@ -18,7 +18,7 @@ public sealed class OsSoundServiceTests
     public void Sound_config_is_an_os_document_apps_may_open()
     {
         Assert.True(OsSettingsDocumentRegistry.TryGet("sound", out OsSettingsDocument document));
-        Assert.Equal("/etc/hackeros/sound.config", document.SystemPath.Value);
+        Assert.Equal("/etc/kazoos/sound.config", document.SystemPath.Value);
     }
 
     [Fact]
@@ -27,7 +27,7 @@ public sealed class OsSoundServiceTests
         SettingsFilesHarness harness = new();
         await harness.BootAsync();
 
-        string? system = await harness.ReadAsync("/etc/hackeros/sound.config");
+        string? system = await harness.ReadAsync("/etc/kazoos/sound.config");
         Assert.NotNull(system);
         Assert.Contains("theme", system, StringComparison.Ordinal);
 
@@ -73,7 +73,7 @@ public sealed class OsSoundServiceTests
         await harness.LoginAsync(harness.Alice);
 
         (OsSoundClip clip, double volume) = await output.NextAsync();
-        Assert.StartsWith("/usr/share/sounds/hackeros/stereo/desktop-login.oga#", clip.Key, StringComparison.Ordinal);
+        Assert.StartsWith("/usr/share/sounds/kazoos/stereo/desktop-login.oga#", clip.Key, StringComparison.Ordinal);
         Assert.Equal("audio/ogg", clip.MediaType);
         Assert.Equal(0.6, volume, 3);
         Assert.Equal("OggS", Encoding.ASCII.GetString(await clip.LoadAsync(CancellationToken.None), 0, 4));
@@ -84,7 +84,7 @@ public sealed class OsSoundServiceTests
     {
         SettingsFilesHarness harness = new();
         await harness.BootAsync();
-        await harness.WriteAsRootAsync("/etc/hackeros/sound.config", "enabled=false\n");
+        await harness.WriteAsRootAsync("/etc/kazoos/sound.config", "enabled=false\n");
         await harness.LoginAsync(harness.Alice);
         RecordingOutput output = new();
         using OsSoundService service = Create(harness, output);
@@ -156,7 +156,7 @@ public sealed class OsSoundServiceTests
         await harness.LoginAsync(harness.Alice);
         await harness.WriteAsUserAsync("/home/alice/.local/share/sounds/retro/index.theme", "[Sound Theme]\nName=Retro\n");
         await harness.WriteAsUserAsync("/home/alice/.local/share/sounds/retro/dialog-error.mp3", "ID3 fake");
-        await harness.WriteAsUserAsync("/home/alice/.config/hackeros/sound.config", "theme=retro\nvolume=100\n");
+        await harness.WriteAsUserAsync("/home/alice/.config/kazoos/sound.config", "theme=retro\nvolume=100\n");
         RecordingOutput output = new();
         using OsSoundService service = Create(harness, output);
         await service.InstallBuiltInThemesAsync();
@@ -168,7 +168,7 @@ public sealed class OsSoundServiceTests
         Assert.StartsWith("/home/alice/.local/share/sounds/retro/dialog-error.mp3#", output.Played[0].Clip.Key, StringComparison.Ordinal);
         Assert.Equal("audio/mpeg", output.Played[0].Clip.MediaType);
         Assert.Equal(1.0, output.Played[0].Volume, 3);
-        Assert.StartsWith("/usr/share/sounds/hackeros/", output.Played[1].Clip.Key, StringComparison.Ordinal);
+        Assert.StartsWith("/usr/share/sounds/kazoos/", output.Played[1].Clip.Key, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -177,7 +177,7 @@ public sealed class OsSoundServiceTests
         SettingsFilesHarness harness = new();
         await harness.BootAsync();
         await harness.LoginAsync(harness.Alice);
-        const string pack = "/home/alice/.local/share/hackeros/theme-packs/org.example.neon/sounds";
+        const string pack = "/home/alice/.local/share/kazoos/theme-packs/org.example.neon/sounds";
         await harness.WriteAsUserAsync($"{pack}/index.theme", "[Sound Theme]\nName=Neon\n");
         await harness.WriteAsUserAsync($"{pack}/dialog-error.ogg", "OggS fake");
         using OsSoundService service = Create(harness, new RecordingOutput());
@@ -204,7 +204,7 @@ public sealed class OsSoundServiceTests
 
         OsSoundClip? clip = await service.ResolveAsync("big", OsSoundEvent.Error);
 
-        Assert.StartsWith("/usr/share/sounds/hackeros/", clip!.Key, StringComparison.Ordinal);
+        Assert.StartsWith("/usr/share/sounds/kazoos/", clip!.Key, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -269,7 +269,7 @@ public sealed class OsSoundServiceTests
     {
         SettingsFilesHarness harness = new();
         await harness.BootAsync();
-        await harness.WriteAsRootAsync("/etc/hackeros/sound.config", content);
+        await harness.WriteAsRootAsync("/etc/kazoos/sound.config", content);
         using OsSoundService service = Create(harness, new RecordingOutput());
 
         await service.InitializeAsync();
@@ -286,7 +286,7 @@ public sealed class OsSoundServiceTests
         new(
             NotificationId.FromGuid(Guid.NewGuid()),
             user,
-            "org.hackeros.test",
+            "org.kazoos.test",
             severity,
             "Title",
             "Message",

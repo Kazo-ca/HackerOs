@@ -20,7 +20,7 @@ section exécuté contre le code de `rebuild/base` (2026-10-11).
 | `Window` | composant Razor dérivé de `WindowAppBase` | Text Editor, File Explorer, Calculator |
 | `Terminal` | classe dérivée de `TerminalAppBase`, lancée par le shell | `ls`, `cat`, `grep`, `nano` |
 | `Service` | classe dérivée de `ServiceAppBase`, sans interface, liée à la session | services démarrés à la connexion |
-| `Web` | classe dérivée de `WebServerAppBase`, URL dans `Urls` (`web.urls`), démarrée à la première requête dans le worker `web` partagé ; avec ASP.Hack, une `WebAppDefinition` | sites internes `.hack` : [guide ASP.Hack](asp-hack-developer-guide.md), exemple Intranet |
+| `Web` | classe dérivée de `WebServerAppBase`, URL dans `Urls` (`web.urls`), démarrée à la première requête dans le worker `web` partagé ; avec ASP.Kazo, une `WebAppDefinition` | sites internes `.hack` : [guide ASP.Kazo](asp-kazo-developer-guide.md), exemple Intranet |
 
 Une app est décrite par une classe `[AppManifest]` dérivée d'`AppDefinition`.
 Le build en tire `manifest.json` ; l'OS ne lit que ce fichier, jamais la classe.
@@ -77,17 +77,17 @@ projet :
 
 ```bash
 dotnet new install <Kazo OS>/artifacts/local-nupkg/Kazo.Os.Templates.2.2.2.nupkg
-dotnet new hackeros-window -n Contoso.Notes --appId com.contoso.notes
-dotnet new hackeros-host -n Contoso.Os          # un hôte qui lance tout l'OS
+dotnet new kazoos-window -n Contoso.Notes --appId com.contoso.notes
+dotnet new kazoos-host -n Contoso.Os          # un hôte qui lance tout l'OS
 ```
 
 Le projet référence `Kazo.Os.AppSdk*` et `Kazo.Os.App.Build`
 (`PrivateAssets="all"`), qui apporte la génération du manifeste, le générateur
-de routes ASP.Hack et la règle de frontière sur les paquets (`HOSAPP0030`).
+de routes ASP.Kazo et la règle de frontière sur les paquets (`HOSAPP0030`).
 Un hôte ajoute l'app par une `ProjectReference` ou une `PackageReference`.
 Le guide complet d'un dépôt tiers (disposition, version épinglée, hôte, tests,
 publication, montée de version, ce que la promesse du SDK 1.0 couvre) est
-[`building-on-hackeros.md`](building-on-hackeros.md).
+[`building-on-kazoos.md`](building-on-kazoos.md).
 
 ## 2. Décrire l'app : `AppDefinition`
 
@@ -354,11 +354,11 @@ lancée du bureau, l'app écrit dans `/dev/null`. Voir
 
 ### Contexte ambiant et composants enfants
 
-Les façades `Hack*` savent quelle app les appelle grâce à un contexte ambiant
+Les façades `Kazo*` savent quelle app les appelle grâce à un contexte ambiant
 que l'OS ouvre autour du cycle de vie, des gestionnaires d'événements
 (`@onclick`…) et du rendu de `WindowAppBase`. **Tout composant enfant** hérite
 de `KazoComponentBase` : il reçoit le même contexte en cascade. Depuis la
-phase 5, c'est vrai même s'il n'appelle pas `Hack*` : le temps du code exécuté
+phase 5, c'est vrai même s'il n'appelle pas `Kazo*` : le temps du code exécuté
 hors contexte est compté au compositeur, pas à l'app (ADR 0067), et un test
 (`AmbientFrameSourceTests`) le vérifie pour les apps de `Apps/`. Un dialogue
 MudBlazor, rendu hors de la fenêtre, reçoit le contexte de la fenêtre en
@@ -553,7 +553,7 @@ Démarrage automatique (`AutoStart => true`, mode `Automatic`) : après chaque
 connexion, sous l'utilisateur ; arrêté à la déconnexion. Une **app système**
 peut déclarer `public override AppServiceStartup? ServiceStartup =>
 AppServiceStartup.Boot;` : elle démarre alors à la fin du boot, avant l'écran
-de connexion, sous le compte `hackeros-svc` (maison `/var/lib/hackeros-svc`),
+de connexion, sous le compte `kazoos-svc` (maison `/var/lib/kazoos-svc`),
 continue après la déconnexion et ne s'arrête qu'à l'extinction. Une autre app
 qui demande `Boot` démarre à la connexion, avec un avertissement dans
 `/var/log/syslog`.
@@ -570,7 +570,7 @@ voir [`app-sdk.md`](app-sdk.md#processus-dans-des-web-workers-adr-0070-et-0071).
 ## 6. Utiliser les services de l'OS
 
 Une app n'obtient un service de l'OS que par le SDK : une **façade statique**
-`Hack*` (forme recommandée, elle lit le contexte ambiant) ou une **passerelle**
+`Kazo*` (forme recommandée, elle lit le contexte ambiant) ou une **passerelle**
 de `AppContext`. L'injection d'un service de la plateforme est refusée au
 build (`HOSAPP0031`). Les tâches courantes :
 
@@ -579,7 +579,7 @@ build (`HOSAPP0031`). Les tâches courantes :
 | Lire, écrire, copier, déplacer des fichiers | `KazoFile`, `KazoDirectory`, `KazoPath`, `KazoFileInfo` | `filesystem.user-home.*` pour `~`, `filesystem.system.*` (dangereuses) ailleurs |
 | Copier ou déplacer comme l'explorateur (conflits de noms, « (copie) », annulation) | `KazoFileOperations.CopyAsync`, `MoveAsync`, `ImportAsync` ; `IDialogService.AsFileConflictResolver(AppContext)` pose la question (SDK 2.0, ADR 0161 §2) | celles des fichiers |
 | Mettre à la corbeille | `KazoTrash.MoveToTrashAsync` | celles du fichier |
-| Afficher des fichiers dans sa fenêtre (liste, icônes, arbre) | `<KazoFileView>` (contrat `hackeros.file-view`, fourni par l'explorateur ou l'app choisie par l'administrateur, [`embedded-components.md`](embedded-components.md)) | celles du dossier |
+| Afficher des fichiers dans sa fenêtre (liste, icônes, arbre) | `<KazoFileView>` (contrat `kazoos.file-view`, fourni par l'explorateur ou l'app choisie par l'administrateur, [`embedded-components.md`](embedded-components.md)) | celles du dossier |
 | Surveiller un dossier | `KazoFileSystemWatcher` | celles du dossier |
 | Paramètres de l'app | `KazoSettings.OpenAsync`, `GetAsync`, `SetAsync` | `filesystem.private.read` / `.write` |
 | Garder un mot de passe ou un jeton | `KazoKeyring.SetAsync`, `GetAsync`, ou une clé `SecretReference` avec `KazoSettingsDocument.SetSecretAsync` ([`sensitive-settings.md`](../dev/sensitive-settings.md)) | aucune pour ses propres entrées |
@@ -612,7 +612,7 @@ de la limite `nofile` du processus lève `KazoIOException` avec
 échoue avec « Resource temporarily unavailable » (`EAGAIN`)
 ([`process-limits.md`](../dev/process-limits.md)).
 
-Exemples détaillés par domaine : [`hack-file-api.md`](hack-file-api.md),
+Exemples détaillés par domaine : [`kazo-file-api.md`](kazo-file-api.md),
 [`settings-files.md`](settings-files.md), [`logging.md`](../dev/logging.md),
 [`trash.md`](../dev/trash.md), [`process-environment.md`](../dev/process-environment.md),
 [`sdk-network.md`](sdk-network.md), [`task-manager.md`](../dev/task-manager.md),
@@ -779,7 +779,7 @@ en anglais. Le guide complet est [`localization.md`](localization.md).
 - [ ] L'app fonctionne avec le seul hôte Ecosystem, sans serveur.
 - [ ] Un document décrit l'app sous `docs/`, ajouté à l'index [`README.md`](../README.md).
 
-Un hôte d'un autre dépôt (modèle `hackeros-host`) installe une app de la même
+Un hôte d'un autre dépôt (modèle `kazoos-host`) installe une app de la même
 façon : `ProjectReference` ou `PackageReference` (paquet d'app produit par
 `dotnet pack`, qui embarque ses manifestes), avec la même métadonnée
 `IsSystemApp`.
@@ -796,7 +796,7 @@ façon : `ProjectReference` ou `PackageReference` (paquet d'app produit par
 - [x] Installation dans l'hôte et test unitaire d'une commande.
 - [x] Compiler les exemples et exécuter le test contre `rebuild/base`.
 - [x] Construire une app ou un hôte depuis un autre dépôt avec les paquets locaux et les modèles (v3/6).
-- [x] Guide complet du dépôt tiers, SDK 1.0 (`v3/15`, ADR 0114) : [`building-on-hackeros.md`](building-on-hackeros.md).
+- [x] Guide complet du dépôt tiers, SDK 1.0 (`v3/15`, ADR 0114) : [`building-on-kazoos.md`](building-on-kazoos.md).
 - [x] Sauvegarde de la machine et erreurs `NoSpace`/`FileTooLarge` (`v3/7-storage-backup`).
 - [x] Traduire son app : ressources, `GetLocalizer<T>`, `AppManifest.fr.resx` (`v3/12`, ADR 0104).
 - [x] Calculs lourds hors de la fenêtre avec `KazoBackground` (`exec/5`, ADR 0128 et 0140).

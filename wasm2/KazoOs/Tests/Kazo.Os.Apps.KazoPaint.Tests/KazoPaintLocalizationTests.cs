@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Kazo.Os.Apps.KazoPaint.Tests;
 
-/// <summary>Hack Paint speaks the language of its process (ADR 0104).</summary>
+/// <summary>Kazo Paint speaks the language of its process (ADR 0104).</summary>
 public sealed class KazoPaintLocalizationTests
 {
     [Fact]
@@ -16,7 +16,7 @@ public sealed class KazoPaintLocalizationTests
 
         Assert.Equal("Enregistrer sous…", french["Button.SaveAs"]);
         Assert.Equal("Save As…", english["Button.SaveAs"]);
-        Assert.Equal("Sans titre — Hack Paint", PaintTitle.Format(null, dirty: false, french["Title.Untitled"]));
+        Assert.Equal("Sans titre — Kazo Paint", PaintTitle.Format(null, dirty: false, french["Title.Untitled"]));
     }
 
     [Fact]

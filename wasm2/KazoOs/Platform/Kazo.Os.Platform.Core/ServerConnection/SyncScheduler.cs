@@ -12,7 +12,7 @@ namespace Kazo.Os.Platform.Core.ServerConnection;
 
 /// <summary>State of the periodic synchronization, for the Settings page.</summary>
 /// <param name="IsActive">A session is open and the scheduler runs.</param>
-/// <param name="IsPaused">The user paused their synchronization (<c>~/.config/hackeros/sync.config</c>).</param>
+/// <param name="IsPaused">The user paused their synchronization (<c>~/.config/kazoos/sync.config</c>).</param>
 /// <param name="IsOnline">The last pass reached the server (or none failed yet).</param>
 /// <param name="LastPassAtUtc">End of the last completed pass, or <see langword="null"/>.</param>
 /// <param name="LastResult">What the last completed pass moved, or <see langword="null"/>.</param>
@@ -29,7 +29,7 @@ public sealed record SyncSchedulerStatus(
 
 /// <summary>
 /// Synchronizes in the background while a user is logged in and the device is linked to a server
-/// (ADR 0101 section 4): every <c>intervalMinutes</c> of <c>/etc/hackeros/sync.config</c> (5 by
+/// (ADR 0101 section 4): every <c>intervalMinutes</c> of <c>/etc/kazoos/sync.config</c> (5 by
 /// default), at login and at each reconnection, and <see cref="ChangeDebounce"/> after the last
 /// change of a synchronized file, like a sync daemon batching inotify events.
 /// </summary>
@@ -434,7 +434,7 @@ public sealed class SyncScheduler : IAsyncDisposable
         }
 
         IReadOnlyList<VirtualPath> directories = await _fileSystemSync.ListSynchronizedDirectoriesAsync(cancellationToken).ConfigureAwait(false);
-        PublisherIdentity subscriber = new("org.hackeros.sync", principal.LoginName.Value, "sync");
+        PublisherIdentity subscriber = new("org.kazoos.sync", principal.LoginName.Value, "sync");
         ClearWatches();
         lock (_sync)
         {

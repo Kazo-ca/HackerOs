@@ -10,7 +10,7 @@ namespace Kazo.Os.Server.LocalServer;
 /// </summary>
 /// <remarks>
 /// The command runs against the same configuration as the server (its folder's
-/// <c>appsettings.json</c> and <c>hackeros-server.json</c>), so it reaches the same database and
+/// <c>appsettings.json</c> and <c>kazoos-server.json</c>), so it reaches the same database and
 /// pairing folder while the server keeps running as a service.
 /// </remarks>
 public sealed class LocalServerCommand
@@ -101,7 +101,7 @@ public sealed class LocalServerCommand
 public static class LocalServerServiceCollectionExtensions
 {
     /// <summary>
-    /// Adds the <see cref="PairingCodeStore"/>, over <c>HackerOs:Pairing:Root</c> (default
+    /// Adds the <see cref="PairingCodeStore"/>, over <c>KazoOs:Pairing:Root</c> (default
     /// <c>pairing</c>, relative to the content root).
     /// </summary>
     /// <param name="services">The services.</param>

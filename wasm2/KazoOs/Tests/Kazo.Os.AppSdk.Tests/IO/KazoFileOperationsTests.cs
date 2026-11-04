@@ -231,10 +231,10 @@ public sealed class KazoFileOperationsTests
         MinimalAppExecutionContext context = new(
             new AppManifest
             {
-                Id = "org.hackeros.test-transfer",
+                Id = "org.kazoos.test-transfer",
                 Name = "Transfer test",
                 Version = "1.0.0",
-                PublisherId = "org.hackeros",
+                PublisherId = "org.kazoos",
                 Description = "KazoFileOperations contract test application.",
                 Kind = AppKind.Window,
                 EntryPoint = new AppEntryPointManifest("Test", "Test.Window"),

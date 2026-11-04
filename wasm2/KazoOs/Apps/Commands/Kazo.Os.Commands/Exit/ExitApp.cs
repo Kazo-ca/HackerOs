@@ -11,7 +11,7 @@ namespace Kazo.Os.Commands.Exit;
 public sealed class ExitApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.exit";
+    public override string Id => "org.kazoos.commands.exit";
 
     /// <inheritdoc />
     public override string Name => "exit";
@@ -23,7 +23,7 @@ public sealed class ExitApp : AppDefinition
     public override Type EntryPoint => typeof(ExitCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Exit the shell";

@@ -17,7 +17,7 @@
       GetKazoOsAppManifests       query target used by hosts: the manifest files of this project,
                                     the name and path of its assembly and its dependency list.
 
-    Packages (ADR 0098 §2): this file ships in the Kazo.Os.App.Build package (hackeros-build/), imported by its
+    Packages (ADR 0098 §2): this file ships in the Kazo.Os.App.Build package (kazoos-build/), imported by its
     buildTransitive/Kazo.Os.App.Build.targets with $(KazoOsBuildFromPackage) == true. A project
     outside this repository then gets the same manifest generation, SDK boundary and host
     aggregation: the generator runs from the package's tools/ folder, a project referencing the
@@ -26,7 +26,7 @@
     KazoOsPackagedApp items) with the same IsSystemApp metadata as a ProjectReference.
     _KazoOsPackageAppManifests puts an app's manifests and that file in its own package.
 
-    External source (ADR 0176 §5, ADR 0207 §3): a repository made with the hackeros-solution template
+    External source (ADR 0176 §5, ADR 0207 §3): a repository made with the kazoos-solution template
     imports this file from its Kazo OS submodule through Kazo.Os.ExternalSource.targets
     ($(KazoOsExternalSource) == true), in Debug. The repository rules then apply with the
     submodule as the Kazo OS root: the generator and analyzers are the submodule's projects, and
@@ -107,7 +107,7 @@
 
   <!--
     Build-time defaults of the app sources and the block list (ADR 0189 §1, §5, ADR 0208): a host
-    sets these properties to change what /etc/hackeros/app-sources.config and app-policy.config are
+    sets these properties to change what /etc/kazoos/app-sources.config and app-policy.config are
     seeded with. Values are separated by commas; a property left empty keeps the standard value
     (official catalog, github.com/Kazo-ca trusted, nothing blocked, 6 hours). Catalogs are written
     name=https://.../catalog.json. Signing keys (ADR 0214 §2) are written source=base64 public key,
@@ -125,7 +125,7 @@
   </ItemGroup>
 
   <!--
-    ASP.Hack route generator (ADR 0082): a Roslyn source generator every app compiles with. It only
+    ASP.Kazo route generator (ADR 0082): a Roslyn source generator every app compiles with. It only
     writes code when the app references Kazo.Os.AppSdk.Web (controllers, WebAppDefinition); for other
     apps it does nothing. Analyzer only: never a runtime dependency of the app.
   -->
@@ -157,7 +157,7 @@
   </ItemGroup>
 
   <!--
-    ASP.Hack wwwroot (ADR 0073 §2, ADR 0083 §6): a site's wwwroot/ is embedded in its assembly as resources
+    ASP.Kazo wwwroot (ADR 0073 §2, ADR 0083 §6): a site's wwwroot/ is embedded in its assembly as resources
     named "wwwroot/<relative path>" and served read-only by UseStaticFiles; it is never a static web asset
     of the host (an app's wwwroot would otherwise land under _content/). On by default for a project that
     references Kazo.Os.AppSdk.Web; set KazoOsEmbedWebRoot to true/false to decide yourself.
@@ -180,7 +180,7 @@
   </Target>
 
   <!--
-    ASP.Hack .cshtml views (ADR 0086 §2): the Razor compiler of the SDK compiles a .cshtml in MVC mode, whose
+    ASP.Kazo .cshtml views (ADR 0086 §2): the Razor compiler of the SDK compiles a .cshtml in MVC mode, whose
     generated C# names a few ASP.NET MVC types. For a project that references Kazo.Os.AppSdk.Web and has
     .cshtml files, this target adds a root _ViewImports.cshtml (base class KazoRazorPage<TModel> and the
     helpers in place of MVC's implicit @inject) and a C# file of internal compatibility types with the names
@@ -189,22 +189,22 @@
   -->
   <PropertyGroup>
     <MSBuildWarningsAsMessages>$(MSBuildWarningsAsMessages);RAZORSDK1004</MSBuildWarningsAsMessages>
-    <_KazoOsAspHackRazorDir>$(MSBuildThisFileDirectory)asp-hack/</_KazoOsAspHackRazorDir>
+    <_KazoOsAspKazoRazorDir>$(MSBuildThisFileDirectory)asp-kazo/</_KazoOsAspKazoRazorDir>
   </PropertyGroup>
 
-  <Target Name="_KazoOsAspHackRazorViews" BeforeTargets="AssignRazorGenerateTargetPaths;CoreCompile" Condition="'@(RazorGenerate)' != ''">
+  <Target Name="_KazoOsAspKazoRazorViews" BeforeTargets="AssignRazorGenerateTargetPaths;CoreCompile" Condition="'@(RazorGenerate)' != ''">
     <PropertyGroup>
       <_KazoOsCshtmlSite Condition="'%(ProjectReference.Filename)' == 'Kazo.Os.AppSdk.Web' and '@(RazorGenerate->WithMetadataValue('Extension', '.cshtml')->Count())' != '0'">true</_KazoOsCshtmlSite>
       <_KazoOsCshtmlSite Condition="'%(PackageReference.Identity)' == 'Kazo.Os.AppSdk.Web' and '@(RazorGenerate->WithMetadataValue('Extension', '.cshtml')->Count())' != '0'">true</_KazoOsCshtmlSite>
     </PropertyGroup>
-    <Error Condition="'$(_KazoOsCshtmlSite)' == 'true' and '$(_KazoOsAspHackRazorAdded)' != 'true' and Exists('$(MSBuildProjectDirectory)/_ViewImports.cshtml')"
-           Text="ASP.Hack provides the root _ViewImports.cshtml of a site (ADR 0086). Move this project's _ViewImports.cshtml to Views/_ViewImports.cshtml." />
-    <ItemGroup Condition="'$(_KazoOsCshtmlSite)' == 'true' and '$(_KazoOsAspHackRazorAdded)' != 'true'">
-      <RazorGenerate Include="$(_KazoOsAspHackRazorDir)_ViewImports.cshtml" Link="_ViewImports.cshtml" />
-      <Compile Include="$(_KazoOsAspHackRazorDir)KazoRazorCompat.cs" Link="obj/KazoRazorCompat.cs" />
+    <Error Condition="'$(_KazoOsCshtmlSite)' == 'true' and '$(_KazoOsAspKazoRazorAdded)' != 'true' and Exists('$(MSBuildProjectDirectory)/_ViewImports.cshtml')"
+           Text="ASP.Kazo provides the root _ViewImports.cshtml of a site (ADR 0086). Move this project's _ViewImports.cshtml to Views/_ViewImports.cshtml." />
+    <ItemGroup Condition="'$(_KazoOsCshtmlSite)' == 'true' and '$(_KazoOsAspKazoRazorAdded)' != 'true'">
+      <RazorGenerate Include="$(_KazoOsAspKazoRazorDir)_ViewImports.cshtml" Link="_ViewImports.cshtml" />
+      <Compile Include="$(_KazoOsAspKazoRazorDir)KazoRazorCompat.cs" Link="obj/KazoRazorCompat.cs" />
     </ItemGroup>
     <PropertyGroup Condition="'$(_KazoOsCshtmlSite)' == 'true'">
-      <_KazoOsAspHackRazorAdded>true</_KazoOsAspHackRazorAdded>
+      <_KazoOsAspKazoRazorAdded>true</_KazoOsAspKazoRazorAdded>
     </PropertyGroup>
   </Target>
 
@@ -226,8 +226,8 @@
   <!-- Paths are computed inside targets so that IntermediateOutputPath is final. -->
   <Target Name="_KazoOsAppManifestPaths">
     <PropertyGroup>
-      <_KazoOsManifestStamp>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(IntermediateOutputPath)', 'hackeros-app-manifests.txt'))</_KazoOsManifestStamp>
-      <_KazoOsManifestDependencies>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(IntermediateOutputPath)', 'hackeros-app-dependencies.txt'))</_KazoOsManifestDependencies>
+      <_KazoOsManifestStamp>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(IntermediateOutputPath)', 'kazoos-app-manifests.txt'))</_KazoOsManifestStamp>
+      <_KazoOsManifestDependencies>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(IntermediateOutputPath)', 'kazoos-app-dependencies.txt'))</_KazoOsManifestDependencies>
     </PropertyGroup>
   </Target>
 
@@ -308,8 +308,8 @@
 
   <!--
     KazoOsPack (ADR 0182 §1, §2): "dotnet build -c Release -t:KazoOsPack" writes every app of the
-    project as <version>/<appId>-<version>.hackapp and adds it to index.json in KazoOsPackageOutput,
-    the content of the repository's hackeros-packages branch (default: bin/hackeros-packages/).
+    project as <version>/<appId>-<version>.kazoapp and adds it to index.json in KazoOsPackageOutput,
+    the content of the repository's kazoos-packages branch (default: bin/kazoos-packages/).
     The package holds every static web resource of the project, declared or not (ADR 0221 §1), and
     the satellite assemblies of the app's own assemblies, lib/<culture>/<assembly>.resources.dll
     (ADR 0222).
@@ -322,7 +322,7 @@
     repository), the public key is printed for [signing-keys]. No default path, on purpose.
   -->
   <PropertyGroup>
-    <KazoOsPackageOutput Condition="'$(KazoOsPackageOutput)' == ''">$(MSBuildProjectDirectory)/bin/hackeros-packages</KazoOsPackageOutput>
+    <KazoOsPackageOutput Condition="'$(KazoOsPackageOutput)' == ''">$(MSBuildProjectDirectory)/bin/kazoos-packages</KazoOsPackageOutput>
   </PropertyGroup>
 
   <Target Name="KazoOsPack"
@@ -521,7 +521,7 @@
           Condition="'$(KazoOsAppHost)' == 'true'">
     <PropertyGroup>
       <_KazoOsBuiltInApplicationsFile>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(IntermediateOutputPath)', 'BuiltInApplications.json'))</_KazoOsBuiltInApplicationsFile>
-      <_KazoOsBuiltInApplicationsList>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(IntermediateOutputPath)', 'hackeros-builtin-applications.txt'))</_KazoOsBuiltInApplicationsList>
+      <_KazoOsBuiltInApplicationsList>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(IntermediateOutputPath)', 'kazoos-builtin-applications.txt'))</_KazoOsBuiltInApplicationsList>
       <_KazoOsTrimmerRootsFile>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(IntermediateOutputPath)', 'Kazo.Os.TrimmerRoots.xml'))</_KazoOsTrimmerRootsFile>
     </PropertyGroup>
     <ItemGroup>
@@ -589,7 +589,7 @@
   <!-- ===================================================================================== -->
 
   <!--
-    An app project that is packed carries its generated manifests under hackeros/manifests/ and a
+    An app project that is packed carries its generated manifests under kazoos/manifests/ and a
     buildTransitive/<PackageId>.targets that declares them as KazoOsPackagedApp items, so a host
     referencing the package aggregates the app exactly as it would a ProjectReference.
   -->
@@ -605,26 +605,26 @@
            Code="HOSAPP0099"
            Text="[$(MSBuildProjectName)] No generated manifest to pack: build the app before packing it." />
     <PropertyGroup>
-      <_KazoOsPackageTargetsFile>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(IntermediateOutputPath)', 'hackeros-package', '$(PackageId).targets'))</_KazoOsPackageTargetsFile>
+      <_KazoOsPackageTargetsFile>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(IntermediateOutputPath)', 'kazoos-package', '$(PackageId).targets'))</_KazoOsPackageTargetsFile>
     </PropertyGroup>
     <ItemGroup>
       <_KazoOsPackageTargetsLine Include="&lt;Project&gt;" />
       <_KazoOsPackageTargetsLine Include="  &lt;!-- Generated by Kazo OS (ADR 0098 §2): the apps of package $(PackageId). --&gt;" />
       <_KazoOsPackageTargetsLine Include="  &lt;ItemGroup&gt;" />
-      <_KazoOsPackageTargetsLine Include="@(_KazoOsPackManifest->'    &lt;KazoOsPackagedApp Include=&quot;%24(MSBuildThisFileDirectory)../hackeros/manifests/%(Filename)%(Extension)&quot; PackageId=&quot;$(PackageId)&quot; AssemblyFileName=&quot;$(TargetFileName)&quot; AssemblyPath=&quot;%24(MSBuildThisFileDirectory)../lib/$(TargetFramework)/$(TargetFileName)&quot; /&gt;')" />
+      <_KazoOsPackageTargetsLine Include="@(_KazoOsPackManifest->'    &lt;KazoOsPackagedApp Include=&quot;%24(MSBuildThisFileDirectory)../kazoos/manifests/%(Filename)%(Extension)&quot; PackageId=&quot;$(PackageId)&quot; AssemblyFileName=&quot;$(TargetFileName)&quot; AssemblyPath=&quot;%24(MSBuildThisFileDirectory)../lib/$(TargetFramework)/$(TargetFileName)&quot; /&gt;')" />
       <_KazoOsPackageTargetsLine Include="  &lt;/ItemGroup&gt;" />
       <_KazoOsPackageTargetsLine Include="&lt;/Project&gt;" />
     </ItemGroup>
     <WriteLinesToFile File="$(_KazoOsPackageTargetsFile)" Lines="@(_KazoOsPackageTargetsLine)" Overwrite="true" WriteOnlyWhenDifferent="true" />
     <ItemGroup>
       <FileWrites Include="$(_KazoOsPackageTargetsFile)" />
-      <TfmSpecificPackageFile Include="@(_KazoOsPackManifest)" PackagePath="hackeros/manifests/%(Filename)%(Extension)" />
+      <TfmSpecificPackageFile Include="@(_KazoOsPackManifest)" PackagePath="kazoos/manifests/%(Filename)%(Extension)" />
       <!--
         ADR 0104/0111: the translated manifest texts (localization/<culture>.json, resolved next to
         manifests/ by the host's aggregation) travel with the manifests.
       -->
       <_KazoOsPackLocalization Include="$(MSBuildProjectDirectory)/localization/**/*.json" />
-      <TfmSpecificPackageFile Include="@(_KazoOsPackLocalization)" PackagePath="hackeros/localization/%(RecursiveDir)%(Filename)%(Extension)" />
+      <TfmSpecificPackageFile Include="@(_KazoOsPackLocalization)" PackagePath="kazoos/localization/%(RecursiveDir)%(Filename)%(Extension)" />
       <TfmSpecificPackageFile Include="$(_KazoOsPackageTargetsFile)" PackagePath="buildTransitive/$(PackageId).targets" />
     </ItemGroup>
   </Target>

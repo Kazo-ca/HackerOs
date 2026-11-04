@@ -104,7 +104,7 @@ public static class GeneratorCodes
     /// </summary>
     public const string NegativeOomScoreAdjust = "HOSAPP0024";
 
-    // HOSAPP0025 (a non-system app registering hackeros.file-view or hackeros.file-dialogs, ADR 0153
+    // HOSAPP0025 (a non-system app registering kazoos.file-view or kazoos.file-dialogs, ADR 0153
     // §4) is retired: ADR 0156 opens both contracts to any window app. The code is not reused.
 
     /// <summary>

@@ -21,7 +21,7 @@ namespace Kazo.Os.Platform.Blazor.Tests.ContextMenus;
 
 /// <summary>
 /// ADR 0150 §4 to §6: each window's menus and attached objects, the one menu open in the OS, and the
-/// platform provider of <c>hackeros.context-menu</c>.
+/// platform provider of <c>kazoos.context-menu</c>.
 /// </summary>
 public sealed class ContextMenuServiceTests
 {
@@ -152,7 +152,7 @@ public sealed class ContextMenuServiceTests
     [Fact]
     public async Task An_entry_runs_once_the_menu_closed_in_the_app_context_with_the_attached_object()
     {
-        MinimalAppExecutionContext context = new(Manifest("org.hackeros.tests.menu-app"));
+        MinimalAppExecutionContext context = new(Manifest("org.kazoos.tests.menu-app"));
         ContextMenuService service = new();
         using ContextMenuScope scope = service.CreateScope(context);
         object? received = null;
@@ -188,7 +188,7 @@ public sealed class ContextMenuServiceTests
     [Fact]
     public async Task The_platform_provides_the_contract_and_registers_the_markup_menu_with_the_window()
     {
-        MinimalAppExecutionContext context = new(Manifest("org.hackeros.tests.menu-app"));
+        MinimalAppExecutionContext context = new(Manifest("org.kazoos.tests.menu-app"));
         ContextMenuService service = new();
         using ContextMenuScope scope = service.CreateScope(context);
         AppCatalog catalog = Assert.IsType<AppCatalog>(AppCatalog.Build([], []).Catalog);
@@ -203,7 +203,7 @@ public sealed class ContextMenuServiceTests
         MenuWindow window = await renderer.RenderAsync(context, scope);
         await renderer.WaitUntilAsync(() => window.Menu?.Controller is not null);
 
-        IHackContextMenu controller = window.Menu!.Controller!;
+        IKazoContextMenu controller = window.Menu!.Controller!;
         Assert.IsType<PlatformContextMenu>(controller);
         Assert.Equal("rows", controller.Name);
         Assert.True(await renderer.Dispatcher.InvokeAsync(() => controller.OpenAsync("row 1", 10, 20)));
@@ -236,7 +236,7 @@ public sealed class ContextMenuServiceTests
         Id = id,
         Name = "Menu App",
         Version = "1.0.0",
-        PublisherId = "org.hackeros",
+        PublisherId = "org.kazoos",
         Description = "Context menu test.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("Kazo.Os.Platform.Blazor.Tests", "MenuWindow"),
@@ -303,7 +303,7 @@ public sealed class ContextMenuServiceTests
         public IAppExecutionContext Context { get; set; } = null!;
 
         [Parameter]
-        public IHackMenuHost Menus { get; set; } = null!;
+        public IKazoMenuHost Menus { get; set; } = null!;
 
         public MenuWindow? Window { get; private set; }
 
@@ -314,7 +314,7 @@ public sealed class ContextMenuServiceTests
             builder.AddComponentParameter(2, "IsFixed", true);
             builder.AddComponentParameter(3, "ChildContent", (RenderFragment)(inner =>
             {
-                inner.OpenComponent<CascadingValue<IHackMenuHost>>(0);
+                inner.OpenComponent<CascadingValue<IKazoMenuHost>>(0);
                 inner.AddComponentParameter(1, "Value", Menus);
                 inner.AddComponentParameter(2, "IsFixed", true);
                 inner.AddComponentParameter(3, "ChildContent", (RenderFragment)(content =>
@@ -330,11 +330,11 @@ public sealed class ContextMenuServiceTests
         }
     }
 
-    private sealed class MenuRenderer(IHackComponentHost host) : Renderer(new Services(host), NullLoggerFactory.Instance)
+    private sealed class MenuRenderer(IKazoComponentHost host) : Renderer(new Services(host), NullLoggerFactory.Instance)
     {
         public override Dispatcher Dispatcher { get; } = Dispatcher.CreateDefault();
 
-        public async Task<MenuWindow> RenderAsync(IAppExecutionContext context, IHackMenuHost menus)
+        public async Task<MenuWindow> RenderAsync(IAppExecutionContext context, IKazoMenuHost menus)
         {
             WindowFrame frame = new();
             await Dispatcher.InvokeAsync(async () =>
@@ -364,10 +364,10 @@ public sealed class ContextMenuServiceTests
         protected override Task UpdateDisplayAsync(in RenderBatch renderBatch) => Task.CompletedTask;
     }
 
-    private sealed class Services(IHackComponentHost host) : IServiceProvider
+    private sealed class Services(IKazoComponentHost host) : IServiceProvider
     {
         public object? GetService(Type serviceType) =>
-            serviceType == typeof(IHackComponentHost) ? host
+            serviceType == typeof(IKazoComponentHost) ? host
             : serviceType == typeof(IServiceProvider) ? this
             : null;
     }

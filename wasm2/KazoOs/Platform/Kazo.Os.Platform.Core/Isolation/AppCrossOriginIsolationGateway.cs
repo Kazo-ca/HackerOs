@@ -5,7 +5,7 @@ namespace Kazo.Os.Platform.Core.Isolation;
 /// <summary>
 /// Trusted <see cref="IAppCrossOriginIsolationGateway"/> behind <see cref="KazoCrossOriginIsolation"/>
 /// (ADR 0146): the status the boot probe recorded in <see cref="CrossOriginIsolationState"/>, the same
-/// one <c>/proc/hackeros/workers</c> prints. No capability is checked: like <c>uname</c>, it describes
+/// one <c>/proc/kazoos/workers</c> prints. No capability is checked: like <c>uname</c>, it describes
 /// the machine, not another app.
 /// </summary>
 public sealed class AppCrossOriginIsolationGateway : IAppCrossOriginIsolationGateway

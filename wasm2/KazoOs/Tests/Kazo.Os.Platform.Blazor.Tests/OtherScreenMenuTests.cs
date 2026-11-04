@@ -169,7 +169,7 @@ public sealed class OtherScreenMenuTests
 
         WindowRuntimeState state = new(
             WindowId.FromGuid(Guid.Parse("70000000-0000-0000-0000-000000000001")),
-            "org.hackeros.test",
+            "org.kazoos.test",
             WindowOwnerId.FromGuid(Guid.Parse("80000000-0000-0000-0000-000000000001")),
             "Test",
             null,

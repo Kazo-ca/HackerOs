@@ -34,7 +34,7 @@ public sealed record SettingsFileReadResult(string? Content, long? Revision, Fil
 /// (<c>OsSettingsService</c>, the migration).
 /// </summary>
 /// <remarks>
-/// Writes follow the same rule as the <c>Hack*</c> file API of ADR 0043: read the current revision,
+/// Writes follow the same rule as the <c>Kazo*</c> file API of ADR 0043: read the current revision,
 /// apply the edit to the current content, write with that revision as precondition, and retry
 /// exactly once on a revision conflict. Because the edit is re-applied to fresh content, a
 /// concurrent <c>nano</c> change to another key is never lost.

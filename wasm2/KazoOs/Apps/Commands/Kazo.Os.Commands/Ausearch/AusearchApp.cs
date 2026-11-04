@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Ausearch;
 public sealed class AusearchApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.ausearch";
+    public override string Id => "org.kazoos.commands.ausearch";
 
     /// <inheritdoc />
     public override string Name => "ausearch";
@@ -22,7 +22,7 @@ public sealed class AusearchApp : AppDefinition
     public override Type EntryPoint => typeof(AusearchCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Search the filesystem audit log";

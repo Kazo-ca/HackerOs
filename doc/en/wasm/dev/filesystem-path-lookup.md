@@ -4,7 +4,7 @@
 
 ## Goal
 
-Finding the entry for a path (`/home/<user>/.config/hackeros/<doc>.config`)
+Finding the entry for a path (`/home/<user>/.config/kazoos/<doc>.config`)
 cost dozens of round trips to IndexedDB: writing a setting took about 2
 seconds on a slow device. This document describes how a path is now looked up
 in one request, and how to measure it. Decision:
@@ -14,7 +14,7 @@ in one request, and how to measure it. Decision:
 
 Ecosystem host published in Release, served statically, headless Chromium,
 fresh profile, click on "Mobile" in the clock panel (the choice is written to
-`~/.config/hackeros/ui-platform-preference.config`, file creation included),
+`~/.config/kazoos/ui-platform-preference.config`, file creation included),
 until the mobile shell's "Back" button appears. Three runs, 2026-10-17:
 
 | | IndexedDB transactions | Duration | CPU throttled ×4 (CDP) |

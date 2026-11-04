@@ -150,7 +150,7 @@ public sealed class WindowMenuContextMenuTests
             Harness harness = new(services.BuildServiceProvider());
             WindowRuntimeState state = new(
                 WindowId.FromGuid(Guid.Parse("71000000-0000-0000-0000-000000000001")),
-                "org.hackeros.test",
+                "org.kazoos.test",
                 WindowOwnerId.FromGuid(Guid.Parse("81000000-0000-0000-0000-000000000001")),
                 "Test",
                 null,

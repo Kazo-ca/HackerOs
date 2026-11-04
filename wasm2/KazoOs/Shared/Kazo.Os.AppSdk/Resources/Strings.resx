@@ -43,7 +43,7 @@
     <value>the binding '{0}' is listed twice</value>
   </data>
   <data name="Site.HttpsBinding" xml:space="preserve">
-    <value>'{0}': an https binding needs a server certificate, which hackwebd does not have yet</value>
+    <value>'{0}': an https binding needs a server certificate, which kazowebd does not have yet</value>
   </data>
   <data name="Site.InvalidBinding" xml:space="preserve">
     <value>'{0}' is not a valid binding: {1}</value>

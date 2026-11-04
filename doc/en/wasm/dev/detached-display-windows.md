@@ -4,7 +4,7 @@
 
 The surface contract for apps (`IDisplaySurfaceService`, `DisplaySurfaceContent`, events, `KazoBrowser.OpenDetachedAsync`) is in [`display-surface-api.md`](../framework/display-surface-api.md).
 
-**Web phase, work item `web/10-detached-window`** ([`asp-hack-plan.md`](plans/asp-hack-plan.md),
+**Web phase, work item `web/10-detached-window`** ([`asp-kazo-plan.md`](plans/asp-kazo-plan.md),
 section 5). Decision: [ADR 0078](adr/0078-detached-display-windows.md),
 refined by [ADR 0081](adr/0081-detached-display-windows-adjustments.md).
 
@@ -27,8 +27,8 @@ later: a desktop drawn in a surface.
 ```
 OS window (main tab)                                  Detached window (window.open, same origin)
 ──────────────────────────────────                    ─────────────────────────────────────────────
-BrowserWindow                                          <body class="hackeros-surface">
- ├─ placeholder "page open in a window"                 └─ .hackeros-surface-root
+BrowserWindow                                          <body class="kazoos-surface">
+ ├─ placeholder "page open in a window"                 └─ .kazoos-surface-root
  └─ <DisplaySurfaceContent Surface=…> ── moves ──►         └─ .surface-content (rendered by the main
       window bar + page area                                   instance: bar, page, isolated iframe)
            │                                                       │ clicks, keys (relayed listeners)

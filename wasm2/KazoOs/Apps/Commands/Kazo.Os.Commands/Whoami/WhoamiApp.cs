@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Whoami;
 public sealed class WhoamiApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.whoami";
+    public override string Id => "org.kazoos.commands.whoami";
 
     /// <inheritdoc />
     public override string Name => "whoami";
@@ -22,7 +22,7 @@ public sealed class WhoamiApp : AppDefinition
     public override Type EntryPoint => typeof(WhoamiCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Print the effective user name";

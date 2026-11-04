@@ -101,7 +101,7 @@ public sealed class AppLoggingGateway : IAppLoggingGateway
 
     /// <inheritdoc />
     /// <remarks>
-    /// <c>/var/log/hackweb/&lt;app id&gt;.log</c>, through <see cref="LogFileWriter"/> like
+    /// <c>/var/log/kazoweb/&lt;app id&gt;.log</c>, through <see cref="LogFileWriter"/> like
     /// <see cref="AppendToLogFile"/>; without a writer the line stays in the in-memory buffer.
     /// </remarks>
     public void AppendToSiteDebugLog(string line)
@@ -112,7 +112,7 @@ public sealed class AppLoggingGateway : IAppLoggingGateway
         }
 
         ArgumentNullException.ThrowIfNull(line);
-        LogFileTarget target = LogFileTarget.ForDaemon($"hackweb/{_appId}.log");
+        LogFileTarget target = LogFileTarget.ForDaemon($"kazoweb/{_appId}.log");
         string escaped = line.Replace("\r", string.Empty, StringComparison.Ordinal).Replace("\n", "\\n", StringComparison.Ordinal);
         if (_writer is not null)
         {

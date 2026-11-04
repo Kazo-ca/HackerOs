@@ -31,7 +31,7 @@ public sealed class KazoWebDbTests
     {
         KazoWebDbSchemaBuilder builder = new();
         schema(builder);
-        return new KazoWebDb(gateway ?? new KazoWebDbInMemoryBackend("hackweb.test"), builder, Json());
+        return new KazoWebDb(gateway ?? new KazoWebDbInMemoryBackend("kazoweb.test"), builder, Json());
     }
 
     /// <summary>The site's JSON options, with its source-generated context as a site registers it.</summary>
@@ -156,7 +156,7 @@ public sealed class KazoWebDbTests
     [Fact]
     public async Task A_new_version_migrates_the_data_kept_by_the_previous_one()
     {
-        KazoWebDbInMemoryBackend backend = new("hackweb.test");
+        KazoWebDbInMemoryBackend backend = new("kazoweb.test");
         KazoWebDb v1 = Create(schema => schema.Version(1, version => version.CreateStore("notes", keyPath: "id", autoIncrement: true)), backend);
         await v1.Store<Contact>("notes").AddAsync(new Contact { Name = "kept", Email = "kept@hack" });
 
@@ -193,7 +193,7 @@ public sealed class KazoWebDbTests
     }
 
     [Fact]
-    public async Task A_site_built_outside_HackerOS_gets_an_in_memory_database()
+    public async Task A_site_built_outside_KazoOS_gets_an_in_memory_database()
     {
         ServiceCollection services = new();
         services.AddSingleton(Json());
@@ -219,7 +219,7 @@ public sealed class KazoWebDbTests
 
         KazoWebDb db = provider.GetRequiredService<KazoWebDb>();
 
-        Assert.Equal("hackweb.com.example.site", db.Name);
+        Assert.Equal("kazoweb.com.example.site", db.Name);
         Assert.Equal("com.example.site", KazoWebDbNames.AppIdOf(db.Name));
     }
 }

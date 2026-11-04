@@ -32,12 +32,12 @@ Les appels de passerelle exécutés par l'OS pour un processus du worker gardent
 
 Une app lit l'état sans capacité par `KazoCrossOriginIsolation.GetStatusAsync()`
 (SDK, espace `Diagnostics`, ADR 0146) : mêmes faits que les premières lignes de
-`/proc/hackeros/workers`. Dans un worker, c'est l'appel asynchrone `coi.get`.
+`/proc/kazoos/workers`. Dans un worker, c'est l'appel asynchrone `coi.get`.
 Diagnostic s'en sert pour son badge.
 
 ## Tâches `KazoBackground`
 
-Une tâche `KazoBackground` lancée par une app (`KazoBackground.RunAsync`) tourne dans un worker du pool quand l'hôte en a, ou sur le fil principal sans worker, avec la même sérialisation. Détails : [`dev/worker-processes.md`](../dev/worker-processes.md#tâches-hackbackground-adr-0128-adr-0140) et [`background-jobs.md`](background-jobs.md).
+Une tâche `KazoBackground` lancée par une app (`KazoBackground.RunAsync`) tourne dans un worker du pool quand l'hôte en a, ou sur le fil principal sans worker, avec la même sérialisation. Détails : [`dev/worker-processes.md`](../dev/worker-processes.md#tâches-kazobackground-adr-0128-adr-0140) et [`background-jobs.md`](background-jobs.md).
 
 ## Voir aussi
 

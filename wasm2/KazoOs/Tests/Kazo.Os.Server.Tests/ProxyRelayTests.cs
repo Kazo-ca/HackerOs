@@ -20,7 +20,7 @@ namespace Kazo.Os.Server.Tests;
 
 public sealed class ProxyRelayTests : IDisposable
 {
-    private const string TestApp = "org.hackeros.test";
+    private const string TestApp = "org.kazoos.test";
     private readonly KazoOsServerDbContext _db;
     private readonly AuditService _audit;
     private readonly ProxyConnectionPinAccessor _pin = new();
@@ -153,7 +153,7 @@ public sealed class ProxyRelayTests : IDisposable
             new FakeProxyAddressResolver(IPAddress.Parse("93.184.216.34")), _pin, new FakeProxyTcpConnector());
 
         var response = await proxy.ExecuteHttpRequestAsync(_accountId, device,
-            Get("https://example.com/") with { AppId = "org.hackeros.browser" }, CancellationToken.None);
+            Get("https://example.com/") with { AppId = "org.kazoos.browser" }, CancellationToken.None);
 
         Assert.Equal(200, response.StatusCode);
     }
@@ -181,7 +181,7 @@ public sealed class ProxyRelayTests : IDisposable
             new FakeProxyAddressResolver(IPAddress.Parse("93.184.216.34")), _pin, new FakeProxyTcpConnector());
 
         var response = await proxy.ExecuteHttpRequestAsync(_accountId, device,
-            Get("https://example.com/") with { AppId = "org.hackeros.commands.curl" }, CancellationToken.None);
+            Get("https://example.com/") with { AppId = "org.kazoos.commands.curl" }, CancellationToken.None);
 
         Assert.Equal(200, response.StatusCode);
     }

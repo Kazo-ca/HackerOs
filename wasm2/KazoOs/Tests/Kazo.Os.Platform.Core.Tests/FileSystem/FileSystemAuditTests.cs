@@ -16,7 +16,7 @@ public sealed class FileSystemAuditTests
     [Fact]
     public void Audit_policy_watches_etc_bin_and_var_but_not_var_log_or_home()
     {
-        Assert.True(FileSystemAuditPolicy.IsAudited(VirtualPath.Parse("/etc/hackeros/apps.config")));
+        Assert.True(FileSystemAuditPolicy.IsAudited(VirtualPath.Parse("/etc/kazoos/apps.config")));
         Assert.True(FileSystemAuditPolicy.IsAudited(VirtualPath.Parse("/bin")));
         Assert.True(FileSystemAuditPolicy.IsAudited(VirtualPath.Parse("/var/lib/x")));
         Assert.False(FileSystemAuditPolicy.IsAudited(VirtualPath.Parse("/var/log/audit.log")));
@@ -28,13 +28,13 @@ public sealed class FileSystemAuditTests
     public void Audit_lines_follow_the_auditd_layout_and_parse_back()
     {
         AuditRecord record = new(
-            DateTimeOffset.FromUnixTimeMilliseconds(1_792_218_000_123), 42, "write", "/etc/hackeros/apps.config", null,
-            "root", "benoit", 231, "settings", "org.hackeros.settings", true, null);
+            DateTimeOffset.FromUnixTimeMilliseconds(1_792_218_000_123), 42, "write", "/etc/kazoos/apps.config", null,
+            "root", "benoit", 231, "settings", "org.kazoos.settings", true, null);
 
         string line = AuditLineFormat.Format(record);
 
         Assert.Equal(
-            "type=PATH msg=audit(1792218000.123:42): op=write path=\"/etc/hackeros/apps.config\" uid=0 auid=1000 pid=231 comm=\"settings\" app=\"org.hackeros.settings\" res=success UID=\"root\" AUID=\"benoit\"",
+            "type=PATH msg=audit(1792218000.123:42): op=write path=\"/etc/kazoos/apps.config\" uid=0 auid=1000 pid=231 comm=\"settings\" app=\"org.kazoos.settings\" res=success UID=\"root\" AUID=\"benoit\"",
             line);
         Assert.True(AuditLineFormat.TryParse(line, out AuditRecord? parsed));
         Assert.Equal(record, parsed);

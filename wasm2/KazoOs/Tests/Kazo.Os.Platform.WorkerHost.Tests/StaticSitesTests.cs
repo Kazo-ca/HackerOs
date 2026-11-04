@@ -7,11 +7,11 @@ using Kazo.Os.Simulation.Abstractions.FileSystem;
 namespace Kazo.Os.Platform.WorkerHost.Tests;
 
 /// <summary>
-/// ADR 0077 and ADR 0080 through a whole OS and the real commands: <c>hackwebd</c> started with
+/// ADR 0077 and ADR 0080 through a whole OS and the real commands: <c>kazowebd</c> started with
 /// <c>systemctl</c>, user and system <c>.site</c> files, static files with their types, default
-/// documents, <c>404</c>/<c>403</c>/<c>304</c>, hot reload, <c>hackdns</c> publishing a bound name,
+/// documents, <c>404</c>/<c>403</c>/<c>304</c>, hot reload, <c>kazodns</c> publishing a bound name,
 /// the <c>www-data</c> rule, the privileged-port rule of user sites and the logs in
-/// <c>/var/log/hackweb</c>. With workers, the clients (<c>curl</c>, <c>nslookup</c>) run in Web Workers.
+/// <c>/var/log/kazoweb</c>. With workers, the clients (<c>curl</c>, <c>nslookup</c>) run in Web Workers.
 /// </summary>
 public sealed class StaticSitesTests
 {
@@ -25,7 +25,7 @@ public sealed class StaticSitesTests
     {
         await using OsFixture os = await StartAsync(workers);
         await WriteUserSiteAsync(os, "docs", """["http://localhost:8080/", "http://docs.hack:8080/"]""");
-        await StartHackwebdAsync(os, 8080, bindings: 2);
+        await StartKazowebdAsync(os, 8080, bindings: 2);
 
         ShellRun index = await os.RunAsync("curl -i http://localhost:8080/").WaitAsync(TimeSpan.FromSeconds(20));
         ShellRun css = await os.RunAsync("curl -i http://localhost:8080/css/site.css").WaitAsync(TimeSpan.FromSeconds(20));
@@ -36,13 +36,13 @@ public sealed class StaticSitesTests
         Assert.True(index.ExitCode == 0, index.Stderr);
         Assert.Contains("HTTP/1.1 200", index.Stdout, StringComparison.Ordinal);
         Assert.Contains("Content-Type: text/html; charset=utf-8", index.Stdout, StringComparison.OrdinalIgnoreCase);
-        Assert.Contains("Server: hackwebd/1.0", index.Stdout, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("Server: kazowebd/1.0", index.Stdout, StringComparison.OrdinalIgnoreCase);
         Assert.EndsWith(Index, index.Stdout, StringComparison.Ordinal);
         Assert.Contains("Content-Type: text/css; charset=utf-8", css.Stdout, StringComparison.OrdinalIgnoreCase);
         Assert.EndsWith("h1 { color: lime; }\n", css.Stdout, StringComparison.Ordinal);
         Assert.Equal(Index, byName.Stdout);
         Assert.Contains("HTTP/1.1 404", missing.Stdout, StringComparison.Ordinal);
-        Assert.Contains("<center>hackwebd/1.0</center>", missing.Stdout, StringComparison.Ordinal);
+        Assert.Contains("<center>kazowebd/1.0</center>", missing.Stdout, StringComparison.Ordinal);
         Assert.Contains(";; source: hosted site docs (this machine)\nName:\tdocs.hack\nAddress: 127.0.0.1\n", lookup.Stdout, StringComparison.Ordinal);
     }
 
@@ -52,7 +52,7 @@ public sealed class StaticSitesTests
     {
         await using OsFixture os = await StartAsync(workers);
         await WriteUserSiteAsync(os, "docs", """["http://localhost:8080/"]""");
-        await StartHackwebdAsync(os, 8080);
+        await StartKazowebdAsync(os, 8080);
 
         ShellRun first = await os.RunAsync("curl -i http://localhost:8080/index.html").WaitAsync(TimeSpan.FromSeconds(20));
         string etag = Regex.Match(first.Stdout, "^ETag: (\"[^\"]+\")", RegexOptions.Multiline | RegexOptions.IgnoreCase).Groups[1].Value;
@@ -76,20 +76,20 @@ public sealed class StaticSitesTests
         await using OsFixture os = await StartAsync(workers);
         await os.Log.AttachAsync(os.FileSystem);
         await WriteUserSiteAsync(os, "docs", """["http://localhost:8080/"]""");
-        await StartHackwebdAsync(os, 8080);
+        await StartKazowebdAsync(os, 8080);
 
-        // A second site, written while hackwebd runs, is served without a restart.
+        // A second site, written while kazowebd runs, is served without a restart.
         await WriteUserSiteAsync(os, "blog", """["http://localhost:8081/"]""");
-        await OsFixture.WaitUntilAsync(() => os.Ports.Snapshot().Any(row => row.Port == 8081), because: "hackwebd binds the new site");
+        await OsFixture.WaitUntilAsync(() => os.Ports.Snapshot().Any(row => row.Port == 8081), because: "kazowebd binds the new site");
         // Disabled: its socket closes.
         await WriteUserSiteAsync(os, "blog", """["http://localhost:8081/"]""", enabled: false);
         await OsFixture.WaitUntilAsync(() => os.Ports.Snapshot().All(row => row.Port != 8081), because: "a disabled site closes its socket");
         // A user site on port 80 is refused.
         await WriteUserSiteAsync(os, "intra", """["http://intra.hack/"]""");
-        ShellRun refused = await WaitForAsync(os, "cat /var/log/hackweb/error.log", run => run.Stdout.Contains("intra:", StringComparison.Ordinal), flush: true);
+        ShellRun refused = await WaitForAsync(os, "cat /var/log/kazoweb/error.log", run => run.Stdout.Contains("intra:", StringComparison.Ordinal), flush: true);
 
         await os.RunAsync("curl http://localhost:8080/").WaitAsync(TimeSpan.FromSeconds(20));
-        ShellRun access = await WaitForAsync(os, "cat /var/log/hackweb/docs.access.log", run => run.Stdout.Contains("\"GET / HTTP/1.1\" 200", StringComparison.Ordinal), flush: true);
+        ShellRun access = await WaitForAsync(os, "cat /var/log/kazoweb/docs.access.log", run => run.Stdout.Contains("\"GET / HTTP/1.1\" 200", StringComparison.Ordinal), flush: true);
 
         Assert.DoesNotContain(os.Ports.Snapshot(), row => row.Port == 80);
         Assert.Contains("port 80 of 'http://intra.hack/' is privileged", refused.Stdout, StringComparison.Ordinal);
@@ -107,10 +107,10 @@ public sealed class StaticSitesTests
         await RootWriteAsync(os.FileSystem, "/var/www/html/index.html", "<h1>intranet</h1>\n", 0b110_100_100);
         await RootWriteAsync(os.FileSystem, "/var/www/html/secret.txt", "root only\n", 0b110_000_000);
         await WriteUserFilesAsync(os);
-        await RootWriteAsync(os.FileSystem, "/etc/hackweb/sites/intranet.site", SiteJson("intranet", "/var/www/html", """["http://intranet.hack/"]"""), 0b110_100_100);
+        await RootWriteAsync(os.FileSystem, "/etc/kazoweb/sites/intranet.site", SiteJson("intranet", "/var/www/html", """["http://intranet.hack/"]"""), 0b110_100_100);
         // An administrator's site rooted in a 0700 home: www-data cannot enter it.
-        await RootWriteAsync(os.FileSystem, "/etc/hackweb/sites/homedocs.site", SiteJson("homedocs", "/home/alice/www", """["http://homedocs.hack/"]"""), 0b110_100_100);
-        await StartHackwebdAsync(os, 80, bindings: 2);
+        await RootWriteAsync(os.FileSystem, "/etc/kazoweb/sites/homedocs.site", SiteJson("homedocs", "/home/alice/www", """["http://homedocs.hack/"]"""), 0b110_100_100);
+        await StartKazowebdAsync(os, 80, bindings: 2);
 
         ShellRun page = await os.RunAsync("curl http://intranet.hack/").WaitAsync(TimeSpan.FromSeconds(20));
         ShellRun secret = await os.RunAsync("curl -i http://intranet.hack/secret.txt").WaitAsync(TimeSpan.FromSeconds(20));
@@ -120,7 +120,7 @@ public sealed class StaticSitesTests
         Assert.Equal("<h1>intranet</h1>\n", page.Stdout);
         Assert.Contains("HTTP/1.1 403", secret.Stdout, StringComparison.Ordinal);
         Assert.Contains("HTTP/1.1 403", home.Stdout, StringComparison.Ordinal);
-        Assert.Contains($"0.0.0.0:80              0.0.0.0:*               LISTEN      {os.FindPid(Kazo.Os.Apps.WebServer.KazoWebdApp.AppId)}/hackwebd", netstat.Stdout, StringComparison.Ordinal);
+        Assert.Contains($"0.0.0.0:80              0.0.0.0:*               LISTEN      {os.FindPid(Kazo.Os.Apps.WebServer.KazoWebdApp.AppId)}/kazowebd", netstat.Stdout, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -128,9 +128,9 @@ public sealed class StaticSitesTests
     {
         await using OsFixture os = await StartAsync(workers: false);
         await WriteUserSiteAsync(os, "docs", """["http://docs.hack:8080/"]""");
-        await StartHackwebdAsync(os, 8080);
+        await StartKazowebdAsync(os, 8080);
 
-        Task<ShellRun> stopping = os.RunAsync("systemctl stop hackwebd");
+        Task<ShellRun> stopping = os.RunAsync("systemctl stop kazowebd");
         for (int second = 0; second < 20 && !stopping.IsCompleted; second++)
         {
             await Task.WhenAny(stopping, Task.Delay(50));
@@ -158,24 +158,24 @@ public sealed class StaticSitesTests
     }
 
     /// <summary>
-    /// Starts hackwebd like an administrator would, and waits until it listens on <paramref name="port"/>
+    /// Starts kazowebd like an administrator would, and waits until it listens on <paramref name="port"/>
     /// with its <paramref name="bindings"/> prefixes: it opens them one by one, and a request for a
     /// host not bound yet would go elsewhere (a web app of the fixture named <c>intranet.hack</c>).
     /// </summary>
-    private static async Task StartHackwebdAsync(OsFixture os, int port, int bindings = 1)
+    private static async Task StartKazowebdAsync(OsFixture os, int port, int bindings = 1)
     {
-        ShellRun start = await os.RunAsync("systemctl start hackwebd").WaitAsync(TimeSpan.FromSeconds(10));
+        ShellRun start = await os.RunAsync("systemctl start kazowebd").WaitAsync(TimeSpan.FromSeconds(10));
         Assert.True(start.ExitCode == 0, start.Stderr);
         await OsFixture.WaitUntilAsync(
             () => os.Ports.Snapshot().Where(row => row.Port == port).Sum(row => row.Prefixes.Count) >= bindings,
-            because: $"hackwebd listens on {port} with {bindings} prefixes");
+            because: $"kazowebd listens on {port} with {bindings} prefixes");
     }
 
     /// <summary>Writes the site files in <c>~/www</c> and a user site file pointing at them.</summary>
     private static async Task WriteUserSiteAsync(OsFixture os, string name, string bindings, bool directoryBrowsing = false, bool enabled = true)
     {
         await WriteUserFilesAsync(os);
-        await os.WriteFileAsync($"/home/alice/.config/hackweb/sites/{name}.site", SiteJson(name, "/home/alice/www", bindings, directoryBrowsing, enabled));
+        await os.WriteFileAsync($"/home/alice/.config/kazoweb/sites/{name}.site", SiteJson(name, "/home/alice/www", bindings, directoryBrowsing, enabled));
     }
 
     private static async Task WriteUserFilesAsync(OsFixture os)
@@ -219,7 +219,7 @@ public sealed class StaticSitesTests
 
     private static AppOperationContext Root() => new()
     {
-        AppId = "org.hackeros.kernel",
+        AppId = "org.kazoos.kernel",
         UserId = "system",
         UserAuthority = AppAuthority.System,
         GrantedCapabilities = new HashSet<string>(AppCapabilities.All, StringComparer.Ordinal),

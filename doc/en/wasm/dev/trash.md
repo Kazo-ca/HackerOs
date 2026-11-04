@@ -22,8 +22,8 @@ works and the permissions are those of the files.
   and the error bubbles up.
 - An item deleted on another device arrives here through synchronization
   (ADR 0101 §1, [`synchronization.md`](synchronization.md)): its `.trashinfo`
-  carries the extension keys `X-HackerOS-Origin=deleted-on-another-device` and
-  `X-HackerOS-Device=<appareil>`, which other implementations ignore.
+  carries the extension keys `X-KazoOS-Origin=deleted-on-another-device` and
+  `X-KazoOS-Device=<appareil>`, which other implementations ignore.
   `KazoTrashItem.DeletedOnAnotherDevice` tells apps. Moving to the trash is a
   synchronized rename; emptying the trash sends the deletions to the other
   devices. Items moved to the trash by the sync stay on this device.
@@ -62,7 +62,7 @@ In `Apps/Commands/Kazo.Os.Commands` (ADR 0051).
 ### `trash`
 
 New system command (`Trash/TrashCommand.cs`, id
-`org.hackeros.commands.trash`), inspired by `trash-cli`:
+`org.kazoos.commands.trash`), inspired by `trash-cli`:
 
 | Subcommand | Effect |
 | --- | --- |
@@ -140,4 +140,4 @@ of the plan).
 - [x] `FileView.DeleteRequested`, Shift+Delete, "Delete permanently" entry.
 - [x] Explorer: trash by default, confirmation for permanent deletion, "Places" panel, `TrashView`.
 - [x] SDK, command, FileView tests and ecosystem counters.
-- [x] Documentation (this file, index, plan, `hack-file-api.md`).
+- [x] Documentation (this file, index, plan, `kazo-file-api.md`).

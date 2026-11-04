@@ -2,7 +2,7 @@
 
 # Text editor
 
-System app `Kazo.Os.Apps.TextEditor` (`org.hackeros.text-editor`). This document
+System app `Kazo.Os.Apps.TextEditor` (`org.kazoos.text-editor`). This document
 describes how it currently works and the search with replacement added by the
 `rebuild/4-text-editor` work item (phase 4, [ADR 0058](adr/0058-base-app-features.md) §3).
 
@@ -104,7 +104,7 @@ substring, case-insensitive.
 When the OS asks the editor to stop (logout, `kill`, "End task") while the
 document is modified, `OnAppStopRequestedAsync` writes the text into a
 `KazoRecoveryDraft` draft
-(`~/.local/state/org.hackeros.text-editor/recovery/draft.json`, folder
+(`~/.local/state/org.kazoos.text-editor/recovery/draft.json`, folder
 `0700`) with the path of the original file; the OS waits for this write before
 closing the window. At the next launch without a file, the draft is taken back
 (`TakeAsync`) as a **new** modified buffer, titled

@@ -15,7 +15,7 @@ public sealed class NoopCommand(AppManifest manifest) : TerminalAppBase(manifest
 [AppManifest]
 public sealed class AlphaApp : AppDefinition
 {
-    public override string Id => "org.hackeros.fixtures.alpha";
+    public override string Id => "org.kazoos.fixtures.alpha";
     public override string Name => "alpha";
     public override AppKind Kind => AppKind.Terminal;
     public override Type EntryPoint => typeof(NoopCommand);
@@ -27,7 +27,7 @@ public sealed class AlphaApp : AppDefinition
 [AppManifest]
 public sealed class BetaApp : AppDefinition
 {
-    public override string Id => "org.hackeros.fixtures.beta";
+    public override string Id => "org.kazoos.fixtures.beta";
     public override string Name => "beta";
     public override AppKind Kind => AppKind.Terminal;
     public override Type EntryPoint => typeof(NoopCommand);

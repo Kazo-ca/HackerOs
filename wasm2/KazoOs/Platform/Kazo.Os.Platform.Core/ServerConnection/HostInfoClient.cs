@@ -10,7 +10,7 @@ namespace Kazo.Os.Platform.Core.ServerConnection;
 public interface IHostInfoClient
 {
     /// <summary>
-    /// Reads <c>hackeros-host.json</c> next to the OS's own <c>index.html</c>. Returns the
+    /// Reads <c>kazoos-host.json</c> next to the OS's own <c>index.html</c>. Returns the
     /// address of the origin when a Kazo OS server served the OS, and <see langword="null"/> on a
     /// static host, offline, on any error, or when the host has no own origin (tests, a server
     /// process). Never throws except on cancellation.
@@ -18,7 +18,7 @@ public interface IHostInfoClient
     /// <param name="cancellationToken">Cancels the read.</param>
     Task<Uri?> FindServingServerAsync(CancellationToken cancellationToken = default);
 
-    /// <summary>Calls <c>GET /api/hackeros/host-info</c> on a server.</summary>
+    /// <summary>Calls <c>GET /api/kazoos/host-info</c> on a server.</summary>
     /// <param name="serverBaseUrl">The server's base URL.</param>
     /// <param name="cancellationToken">Cancels the request.</param>
     /// <returns>What the server says about itself.</returns>

@@ -152,7 +152,7 @@ public sealed partial class HostBootSmokeTests(ITestOutputHelper output)
 
     /// <summary>
     /// ADR 0070/0071 (plan section 5.2): on every host, commands run in Web Workers — a pipeline
-    /// works, <c>/proc/hackeros/workers</c> lists the pool, and a command stuck in a loop
+    /// works, <c>/proc/kazoos/workers</c> lists the pool, and a command stuck in a loop
     /// (<c>stress</c>) leaves the desktop responsive, shows "not-responding" and dies on
     /// <c>kill -9</c> and on <c>kill</c> (escalation after the grace period). A host without
     /// workers (none since ADR 0130) has no such file and commands still run.
@@ -169,7 +169,7 @@ public sealed partial class HostBootSmokeTests(ITestOutputHelper output)
         await WaitForTerminalTextAsync(rows, text => Regex.IsMatch(text, @"^loaded-on-demand\s*$", RegexOptions.Multiline), "the sample command's output");
         Log("sample-cmd ran from its own assembly.");
 
-        await RunCommandAsync(page, screen, "clear; cat /proc/hackeros/workers");
+        await RunCommandAsync(page, screen, "clear; cat /proc/kazoos/workers");
         if (!settings.ExpectsWorkers)
         {
             await WaitForTerminalTextAsync(rows, text => text.Contains("No such file", StringComparison.Ordinal), "no worker on this host");
@@ -179,7 +179,7 @@ public sealed partial class HostBootSmokeTests(ITestOutputHelper output)
 
         string workers = await WaitForTerminalTextAsync(
             rows, text => text.Contains("pool_size", StringComparison.Ordinal) && Regex.IsMatch(text, @"^\d+\s+pool\s", RegexOptions.Multiline),
-            "/proc/hackeros/workers with a pool worker");
+            "/proc/kazoos/workers with a pool worker");
         Log($"workers:\n{workers.Trim()}");
 
         // A command that never yields, in the background: the desktop must keep answering.
@@ -190,7 +190,7 @@ public sealed partial class HostBootSmokeTests(ITestOutputHelper output)
         await WaitForTerminalTextAsync(rows, text => Regex.IsMatch(text, @"^still-responsive\s*$", RegexOptions.Multiline), "an echo while stress spins");
         Log($"echo answered in {answered.ElapsedMilliseconds} ms while stress spins.");
         await Task.Delay(6_500); // past the 5 s unresponsive threshold
-        await RunCommandAsync(page, screen, "clear; cat /proc/hackeros/workers");
+        await RunCommandAsync(page, screen, "clear; cat /proc/kazoos/workers");
         await WaitForTerminalTextAsync(rows, text => text.Contains("not-responding", StringComparison.Ordinal), "a not-responding worker");
         await RunCommandAsync(page, screen, "clear; kill -9 %1");
         await WaitForTerminalTextAsync(rows, text => text.Contains("Killed", StringComparison.Ordinal), "Killed after kill -9");
@@ -208,7 +208,7 @@ public sealed partial class HostBootSmokeTests(ITestOutputHelper output)
 
     /// <summary>
     /// ADR 0131 (adjusted by ADR 0143): the page is cross-origin isolated exactly when the run expects
-    /// it, <c>/proc/hackeros/workers</c> says so on its first line, and what isolation adds follows:
+    /// it, <c>/proc/kazoos/workers</c> says so on its first line, and what isolation adds follows:
     /// isolated, a command in a worker lists processes synchronously and a long pipe through the
     /// shared rings keeps every line; not isolated, the synchronous call is refused and the pipe
     /// still works over messages.
@@ -223,8 +223,8 @@ public sealed partial class HostBootSmokeTests(ITestOutputHelper output)
         bool isolated = await page.EvaluateAsync<bool>("() => globalThis.crossOriginIsolated === true");
         Assert.True(isolated == expected, $"crossOriginIsolated is {isolated}, the run expects {expected}.");
         string answer = expected ? "yes" : "no";
-        await RunCommandAsync(page, screen, "clear; head -3 /proc/hackeros/workers");
-        string header = await WaitForTerminalTextAsync(rows, text => OutputFinished(text, "isolation-setting:"), "the isolation lines of /proc/hackeros/workers");
+        await RunCommandAsync(page, screen, "clear; head -3 /proc/kazoos/workers");
+        string header = await WaitForTerminalTextAsync(rows, text => OutputFinished(text, "isolation-setting:"), "the isolation lines of /proc/kazoos/workers");
         Assert.Contains($"cross-origin-isolated: {answer}", header, StringComparison.Ordinal);
         Log($"isolation:\n{header.Trim()}");
 
@@ -299,14 +299,14 @@ public sealed partial class HostBootSmokeTests(ITestOutputHelper output)
 
     /// <summary>
     /// ADR 0126: on a machine with a small simulated <c>MemTotal</c>, an administrator turns the OOM
-    /// killer on (<c>sudo tee /etc/hackeros/memory.config</c>), <c>stress --vm</c> allocates more than
+    /// killer on (<c>sudo tee /etc/kazoos/memory.config</c>), <c>stress --vm</c> allocates more than
     /// the free memory, and the kernel kills it: the shell prints <c>Killed</c> (exit 137),
     /// <c>dmesg</c> shows the <c>Out of memory</c> line and <c>/proc/vmstat</c> counts the kill.
     /// </summary>
     private async Task CheckOomKillerAsync(IPage page, ILocator screen, ILocator rows)
     {
         await RunCommandAsync(page, screen,
-            "clear; printf 'schemaVersion=1\\n[oom-killer]\\nenabled=true\\nmin-free-percent=5\\n' | sudo tee /etc/hackeros/memory.config");
+            "clear; printf 'schemaVersion=1\\n[oom-killer]\\nenabled=true\\nmin-free-percent=5\\n' | sudo tee /etc/kazoos/memory.config");
         ILocator dialog = page.Locator(".credential-prompt-dialog");
         await dialog.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible });
         await dialog.Locator("input[type=text]").FillAsync(LoginName);

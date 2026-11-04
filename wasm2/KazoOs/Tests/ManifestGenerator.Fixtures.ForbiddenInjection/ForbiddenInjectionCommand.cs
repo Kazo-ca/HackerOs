@@ -16,7 +16,7 @@ public sealed class ForbiddenInjectionCommand(AppManifest manifest, ISessionServ
 [AppManifest]
 public sealed class ForbiddenInjectionApp : AppDefinition
 {
-    public override string Id => "org.hackeros.fixtures.forbidden-injection";
+    public override string Id => "org.kazoos.fixtures.forbidden-injection";
     public override string Name => "forbidden-injection";
     public override AppKind Kind => AppKind.Terminal;
     public override Type EntryPoint => typeof(ForbiddenInjectionCommand);

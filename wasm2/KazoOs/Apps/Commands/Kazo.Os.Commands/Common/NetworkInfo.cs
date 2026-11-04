@@ -79,7 +79,7 @@ internal static class NetworkInfo
     /// <summary>A stable, locally administered MAC address (<c>02:…</c>) derived from the host name.</summary>
     public static string MacAddress()
     {
-        string host = KazoExecutionContext.CurrentOrNull is null ? "hackeros" : KazoEnvironment.MachineName;
+        string host = KazoExecutionContext.CurrentOrNull is null ? "kazoos" : KazoEnvironment.MachineName;
         uint hash = 2166136261;
         foreach (char ch in host)
         {

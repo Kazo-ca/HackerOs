@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Env;
 public sealed class EnvApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.env";
+    public override string Id => "org.kazoos.commands.env";
 
     /// <inheritdoc />
     public override string Name => "env";
@@ -22,7 +22,7 @@ public sealed class EnvApp : AppDefinition
     public override Type EntryPoint => typeof(EnvCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Print the environment";

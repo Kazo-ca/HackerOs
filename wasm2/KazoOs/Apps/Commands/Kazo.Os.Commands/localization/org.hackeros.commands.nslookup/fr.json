@@ -1,5 +1,0 @@
-{
-  "name": "nslookup",
-  "description": "Interroge le résolveur hackdns sur un nom d'hôte ou une adresse, et indique la source qui a répondu",
-  "terminalUsage": "nslookup <nom|adresse>"
-}

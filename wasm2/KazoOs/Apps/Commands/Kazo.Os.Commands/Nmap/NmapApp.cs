@@ -10,7 +10,7 @@ namespace Kazo.Os.Commands.Nmap;
 public sealed class NmapApp : AppDefinition
 {
     /// <inheritdoc />
-    public override string Id => "org.hackeros.commands.nmap";
+    public override string Id => "org.kazoos.commands.nmap";
 
     /// <inheritdoc />
     public override string Name => "nmap";
@@ -22,7 +22,7 @@ public sealed class NmapApp : AppDefinition
     public override Type EntryPoint => typeof(NmapCommand);
 
     /// <inheritdoc />
-    public override string PublisherId => "pub.hackeros";
+    public override string PublisherId => "pub.kazoos";
 
     /// <inheritdoc />
     public override string Description => "Simulated network mapper — scans ports on simulated hosts";

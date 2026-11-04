@@ -8,7 +8,7 @@ namespace Kazo.Os.Tools.ManifestGenerator.Tests;
 /// </summary>
 public sealed class ManifestLocalizationGeneratorTests : IDisposable
 {
-    private readonly string _directory = Directory.CreateTempSubdirectory("hackeros-manifest-l10n-").FullName;
+    private readonly string _directory = Directory.CreateTempSubdirectory("kazoos-manifest-l10n-").FullName;
 
     public void Dispose() => Directory.Delete(_directory, recursive: true);
 
@@ -60,7 +60,7 @@ public sealed class ManifestLocalizationGeneratorTests : IDisposable
     [Fact]
     public void Several_apps_use_prefixed_keys_and_one_folder_per_app()
     {
-        WriteResx("fr", ("org.hackeros.tests.second.Description", "Deuxième"), ("org.hackeros.tests.valid.Terminal.Usage", "valid [fichier]"));
+        WriteResx("fr", ("org.kazoos.tests.second.Description", "Deuxième"), ("org.kazoos.tests.valid.Terminal.Usage", "valid [fichier]"));
 
         ManifestLocalizationGenerator.Result result = ManifestLocalizationGenerator.Apply(
             _directory, Generate(typeof(ValidCommandApp), typeof(SecondCommandApp)));
@@ -68,8 +68,8 @@ public sealed class ManifestLocalizationGeneratorTests : IDisposable
         Assert.Empty(result.Diagnostics);
         Assert.Equal(
             [
-                Path.Combine(_directory, "localization", "org.hackeros.tests.second", "fr.json"),
-                Path.Combine(_directory, "localization", "org.hackeros.tests.valid", "fr.json")
+                Path.Combine(_directory, "localization", "org.kazoos.tests.second", "fr.json"),
+                Path.Combine(_directory, "localization", "org.kazoos.tests.valid", "fr.json")
             ],
             result.Files);
         Assert.All(result.Manifests, generated => Assert.Equal(
@@ -79,7 +79,7 @@ public sealed class ManifestLocalizationGeneratorTests : IDisposable
 
     [Theory]
     [InlineData("Title")]
-    [InlineData("org.hackeros.tests.other.Name")]
+    [InlineData("org.kazoos.tests.other.Name")]
     public void An_unknown_key_fails_with_HOSAPP0040_and_writes_nothing(string key)
     {
         WriteResx("fr", (key, "x"));

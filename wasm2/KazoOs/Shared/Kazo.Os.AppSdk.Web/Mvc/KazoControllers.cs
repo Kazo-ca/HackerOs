@@ -18,7 +18,7 @@ public sealed class KazoControllerContext : KazoActionContext
 }
 
 /// <summary>
-/// Base of every ASP.Hack controller (ASP.NET's <c>ControllerBase</c>, ADR 0076 §3): the request,
+/// Base of every ASP.Kazo controller (ASP.NET's <c>ControllerBase</c>, ADR 0076 §3): the request,
 /// the model state, URL helpers and the methods that build results (<see cref="Ok()"/>,
 /// <see cref="NotFound()"/>, <see cref="CreatedAtAction{TValues}(string, TValues, object)"/>...). Derive from <see cref="KazoController"/>
 /// for pages or <see cref="KazoApiController"/> for an HTTP API.
@@ -31,7 +31,7 @@ public sealed class KazoControllerContext : KazoActionContext
 public abstract class KazoControllerBase
 {
     private KazoControllerContext? _context;
-    private IHackUrlHelper? _url;
+    private IKazoUrlHelper? _url;
 
     /// <summary>Gets the controller context (set by the framework before the action runs).</summary>
     public KazoControllerContext ControllerContext
@@ -56,7 +56,7 @@ public abstract class KazoControllerBase
     public KazoModelStateDictionary ModelState => ControllerContext.ModelState;
 
     /// <summary>Gets the URL helper (links to actions and routes).</summary>
-    public IHackUrlHelper Url
+    public IKazoUrlHelper Url
     {
         get => _url ??= new KazoUrlHelper(ControllerContext);
         set => _url = value;
@@ -298,7 +298,7 @@ public abstract class KazoControllerBase
 /// <see cref="ViewData"/>, <see cref="Json(object?)"/>, and filter hooks <see cref="OnActionExecuting"/> /
 /// <see cref="OnActionExecuted"/>. Complex parameters are bound from the form (and route, query).
 /// </summary>
-public abstract class KazoController : KazoControllerBase, IHackActionFilter
+public abstract class KazoController : KazoControllerBase, IKazoActionFilter
 {
     private KazoViewDataDictionary? _viewData;
 

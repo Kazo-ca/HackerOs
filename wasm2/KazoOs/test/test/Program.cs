@@ -26,11 +26,11 @@ builder.Services.AddSingleton(provider => new BuildKnownAssemblyLoaderRegistry(
 builder.Services.AddSingleton(provider => new BuildKnownLazyAppDescriptorRegistry(
     BuildKnownLazyApps.Catalog,
     provider.GetRequiredService<BuildKnownAssemblyLoaderRegistry>()));
-// ADR 0066: optional measured CPU/memory, decided once from HackerOs:ResourceAccounting in
+// ADR 0066: optional measured CPU/memory, decided once from KazoOs:ResourceAccounting in
 // appsettings.json and what the build compiled in. Must precede AddKazoOsEcosystem, and runs before
 // any app code so the context-switch hook can be installed.
 builder.Services.AddKazoOsResourceAccounting(builder.Configuration, BuildKnownLazyApps.Images);
-// ADR 0125: process limits (ulimit, limits.conf), on unless HackerOs:ResourceLimits:Enabled is false.
+// ADR 0125: process limits (ulimit, limits.conf), on unless KazoOs:ResourceLimits:Enabled is false.
 builder.Services.AddKazoOsResourceLimits(builder.Configuration);
 builder.Services.AddKazoOsHardware(builder.Configuration);
 builder.Services.AddKazoOsEcosystem(
@@ -41,7 +41,7 @@ builder.Services.AddKazoOsEcosystem(
 var app = builder.Build();
 
 // ADR 0131, section 2: COOP/COEP on every response, so the OS's page and its Web Workers are
-// cross-origin isolated (HackerOs:CrossOriginIsolation: auto, on or off). The PWA's service worker
+// cross-origin isolated (KazoOs:CrossOriginIsolation: auto, on or off). The PWA's service worker
 // adds the same headers once it is installed; this covers the first load and a host without it.
 IReadOnlyList<KeyValuePair<string, string>> isolationHeaders = Kazo.Os.Platform.Core.Isolation.CrossOriginIsolationPolicy.ServerHeaders(
     Kazo.Os.Platform.Core.Isolation.CrossOriginIsolationPolicy.Parse(app.Configuration[Kazo.Os.Platform.Core.Isolation.CrossOriginIsolationPolicy.SettingKey]));

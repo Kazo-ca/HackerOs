@@ -114,7 +114,7 @@ public sealed class WindowPointerGeometryTests
     }
 
     private static WindowRuntimeState Window(WindowVisualState state = WindowVisualState.Normal) => new(
-        WindowId.FromGuid(Guid.NewGuid()), "org.hackeros.test", WindowOwnerId.FromGuid(Guid.NewGuid()),
+        WindowId.FromGuid(Guid.NewGuid()), "org.kazoos.test", WindowOwnerId.FromGuid(Guid.NewGuid()),
         "Test window", null, new WindowBounds(48.25, 42.5, 640.75, 480.5), null, 1,
         state, new WindowConstraints(true, 320, 240));
 

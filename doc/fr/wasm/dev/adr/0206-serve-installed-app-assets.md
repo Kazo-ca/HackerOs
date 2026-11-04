@@ -7,7 +7,7 @@
 Accepté le 2026-10-30 ; Benoit a confirmé le choix A de la question Q1 le
 2026-10-31. Issue
 [#247](https://github.com/Kazo-ca/Os/issues/247), chantier 2 du
-[plan du Hack Store](../plans/hackeros-store.md), série `todo/base`.
+[plan du Hack Store](../plans/kazoos-store.md), série `todo/base`.
 
 - **Lève :** la première limite de l'[ADR 0182](0182-install-apps-from-github.md)
   (« les ressources `wwwroot/` d'une app installée ne sont pas servies »).

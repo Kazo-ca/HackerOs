@@ -28,7 +28,7 @@ class RemoteSurface {
         this.events = new Map();
         // Diagnostics read by the trial's measurements (ADR 0133): batches, bytes, encode time.
         this.stats = { batches: 0, bytes: 0, firstBytes: 0, operations: 0, workerMicroseconds: 0, nodes: 0, lastAppliedAt: 0 };
-        surface.__hackerosRemoteWindow = this.stats;
+        surface.__kazoosRemoteWindow = this.stats;
     }
 
     apply(json) {
@@ -203,7 +203,7 @@ class RemoteSurface {
         this.nodes.clear();
         this.events.clear();
         this.surface.replaceChildren();
-        delete this.surface.__hackerosRemoteWindow;
+        delete this.surface.__kazoosRemoteWindow;
     }
 }
 
