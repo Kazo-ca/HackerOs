@@ -1,5 +1,14 @@
 > [Version française](readme-fr.md)
 
+[![Release Kazo OS](https://github.com/Kazo-ca/Os/actions/workflows/release.yml/badge.svg)](https://github.com/Kazo-ca/Os/actions/workflows/release.yml)
+[![Verify WASM](https://github.com/Kazo-ca/Os/actions/workflows/deploy-wasm.yml/badge.svg?branch=main)](https://github.com/Kazo-ca/Os/actions/workflows/deploy-wasm.yml)
+[![Latest release](https://img.shields.io/github/v/release/Kazo-ca/Os?label=release)](https://github.com/Kazo-ca/Os/releases/latest)
+[![NuGet SDK](https://img.shields.io/nuget/v/Kazo.Os.AppSdk?label=NuGet%20SDK)](https://www.nuget.org/packages/Kazo.Os.AppSdk)
+[![NuGet SDK downloads](https://img.shields.io/nuget/dt/Kazo.Os.AppSdk?label=SDK%20downloads)](https://www.nuget.org/packages/Kazo.Os.AppSdk)
+[![NuGet templates downloads](https://img.shields.io/nuget/dt/Kazo.Os.Templates?label=templates%20downloads)](https://www.nuget.org/packages/Kazo.Os.Templates)
+[![Last commit](https://img.shields.io/github/last-commit/Kazo-ca/Os)](https://github.com/Kazo-ca/Os/commits/main)
+[![License: CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE.md)
+
 # Kazo OS
 
 Kazo OS is a **simulated operating system that runs in the browser**, written
@@ -88,6 +97,10 @@ in both languages, folder indexes, working with the maintainer: questions,
 `TODO` issues, branches, merges). Claude Code reads them through
 [`CLAUDE.md`](CLAUDE.md); the project's state and memory are in
 [`doc/en/wasm/memory/`](doc/en/wasm/memory/README.md).
+
+## Repository activity
+
+![Repository activity](https://repobeats.axiom.co/api/embed/b0f0139bc9926c01d0d3e1df65a930041bba0d8c.svg "Repobeats analytics image")
 
 ## License
 
