@@ -34,7 +34,7 @@ public sealed class ResourceAccountingCompositionTests
         ServiceCollection services = new();
         List<IExecutionContextSwitchObserver> installed = [];
 
-        ResourceAccountingPlan plan = services.AddHackerOsResourceAccounting(
+        ResourceAccountingPlan plan = services.AddKazoOsResourceAccounting(
             ResourceAccountingSettings.Default with { CpuEnabled = enabledCpu, MemoryEnabled = enabledMemory },
             new ResourceAccountingBuildSupport(buildCpu, buildMemory),
             observer =>
@@ -77,7 +77,7 @@ public sealed class ResourceAccountingCompositionTests
             ["HackerOs:ResourceAccounting:Memory:Enabled"] = "false"
         });
 
-        ResourceAccountingPlan plan = services.AddHackerOsResourceAccounting(configuration);
+        ResourceAccountingPlan plan = services.AddKazoOsResourceAccounting(configuration);
 
         Assert.False(plan.RequiresContextSwitchHook);
         Assert.False(ContextSwitchHook.IsInstalled);
@@ -89,7 +89,7 @@ public sealed class ResourceAccountingCompositionTests
     public void A_host_without_accounting_gets_the_null_accountants_and_the_disabled_plan()
     {
         ServiceCollection services = new();
-        services.AddHackerOsEcosystem();
+        services.AddKazoOsEcosystem();
 
         using ServiceProvider provider = services.BuildServiceProvider();
 
@@ -103,11 +103,11 @@ public sealed class ResourceAccountingCompositionTests
     public void Composition_before_the_ecosystem_keeps_its_plan()
     {
         ServiceCollection services = new();
-        ResourceAccountingPlan plan = services.AddHackerOsResourceAccounting(
+        ResourceAccountingPlan plan = services.AddKazoOsResourceAccounting(
             ResourceAccountingSettings.Default with { CpuEnabled = false, MemoryEnabled = false },
             new ResourceAccountingBuildSupport(true, true),
             hookInstaller: null);
-        services.AddHackerOsEcosystem();
+        services.AddKazoOsEcosystem();
 
         using ServiceProvider provider = services.BuildServiceProvider();
 
@@ -118,11 +118,11 @@ public sealed class ResourceAccountingCompositionTests
     public void The_cpu_measurement_takes_the_configured_threshold_and_feeds_proc_stat()
     {
         ServiceCollection services = new();
-        services.AddHackerOsResourceAccounting(
+        services.AddKazoOsResourceAccounting(
             ResourceAccountingSettings.Default with { MemoryEnabled = false, UnresponsiveThreshold = TimeSpan.FromMilliseconds(1234) },
             new ResourceAccountingBuildSupport(true, false),
             _ => new NoopDisposable());
-        services.AddHackerOsEcosystem();
+        services.AddKazoOsEcosystem();
 
         using ServiceProvider provider = services.BuildServiceProvider();
         using IServiceScope scope = provider.CreateScope();

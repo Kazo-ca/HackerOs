@@ -401,7 +401,7 @@ and no Blazor event; CSS and JavaScript come from the `wwwroot`.
 
 | Type | Role |
 |---|---|
-| `AddHackWebDb(services, schema)` | Registers `KazoWebDb`, the site's `hackweb.<appId>` database, with its versions; in memory (`hackweb.in-memory`) outside the OS |
+| `AddKazoWebDb(services, schema)` | Registers `KazoWebDb`, the site's `hackweb.<appId>` database, with its versions; in memory (`hackweb.in-memory`) outside the OS |
 | `KazoWebDbSchemaBuilder`, `KazoWebDbVersionBuilder` | `Version(n, v => ...)`; `CreateStore(name, keyPath, autoIncrement)`, `DeleteStore`, `CreateIndex(store, name, keyPath, unique, multiEntry)`, `DeleteIndex` |
 | `KazoWebDb` | `Name`, `Version`, `Store<T>(name)`, `BeginTransaction(stores)`, `OpenAsync` |
 | `KazoWebDbStore<T>`, `KazoWebDbIndex<T>` | `GetAsync`, `GetAllAsync`, `GetAllKeysAsync`, `CountAsync`; store: `AddAsync`, `PutAsync`, `DeleteAsync`, `ClearAsync`, `Index(name)` |

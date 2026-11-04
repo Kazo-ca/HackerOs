@@ -54,7 +54,7 @@ public sealed class KazoMenuBuilder
         string id,
         string title,
         Func<object?, Task> onClick,
-        KazoIcon? icon = null,
+        KazoSurfaceIcon? icon = null,
         string? shortcut = null,
         bool isDisabled = false)
     {
@@ -76,7 +76,7 @@ public sealed class KazoMenuBuilder
     /// <param name="icon">The icon, or <see langword="null"/>.</param>
     /// <returns>This builder.</returns>
     /// <exception cref="InvalidOperationException">The submenu would be deeper than <see cref="KazoMenuDefinition.MaxDepth"/>.</exception>
-    public KazoMenuBuilder Submenu(string id, string title, Action<KazoMenuBuilder> children, KazoIcon? icon = null)
+    public KazoMenuBuilder Submenu(string id, string title, Action<KazoMenuBuilder> children, KazoSurfaceIcon? icon = null)
     {
         ArgumentNullException.ThrowIfNull(children);
         if (_depth >= KazoMenuDefinition.MaxDepth)

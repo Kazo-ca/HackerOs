@@ -12,7 +12,7 @@ namespace Kazo.Os.Tools.ManifestGenerator;
 /// <remarks>
 /// <para>
 /// References are read from the assembly metadata (no code is loaded) and resolved by name against
-/// the app project's dependency list, the file the <c>GenerateHackerOsAppManifests</c> target writes
+/// the app project's dependency list, the file the <c>GenerateKazoOsAppManifests</c> target writes
 /// (copy-local assemblies first, then compile references).
 /// </para>
 /// <para>

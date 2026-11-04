@@ -12,7 +12,7 @@ jamais `IJSRuntime` directement : il passe par les contrats de
 `Shared/Kazo.Os.Simulation.Abstractions` que cette couche implémente.
 
 La plateforme (`Platform/Kazo.Os.Platform.Core`) ne dépend pas de ce projet
-([`platform-core.md`](platform-core.md)). C'est `AddHackerOsEcosystem`
+([`platform-core.md`](platform-core.md)). C'est `AddKazoOsEcosystem`
 (`OS/Kazo.Os.Ecosystem.Host`) qui enregistre les implémentations
 navigateur, dans la composition de l'hôte.
 

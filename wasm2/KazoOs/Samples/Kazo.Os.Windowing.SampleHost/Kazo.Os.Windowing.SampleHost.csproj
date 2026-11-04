@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <!-- Development uses source projects. CI sets this property to true to prove that the same
          host restores, builds, and publishes from the isolated local NuGet feed only. -->
-    <UseLocalHackerOsPackages Condition="'$(UseLocalHackerOsPackages)' == ''">false</UseLocalHackerOsPackages>
+    <UseLocalKazoOsPackages Condition="'$(UseLocalKazoOsPackages)' == ''">false</UseLocalKazoOsPackages>
     <KazoOsLocalPackageVersion Condition="'$(KazoOsLocalPackageVersion)' == ''">$(KazoOsVersion)</KazoOsLocalPackageVersion>
   </PropertyGroup>
 
@@ -15,7 +15,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.13" PrivateAssets="all" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(UseLocalHackerOsPackages)' != 'true'">
+  <ItemGroup Condition="'$(UseLocalKazoOsPackages)' != 'true'">
     <!--
       Deliberately only the seven projects in the desktop package dependency closure. No
       Kazo.Os.Ecosystem, app projects, Platform.Core, or Simulation.Abstractions: this project
@@ -31,7 +31,7 @@
     <ProjectReference Include="..\..\Platform\Kazo.Os.Taskbar.Blazor\Kazo.Os.Taskbar.Blazor.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(UseLocalHackerOsPackages)' == 'true'">
+  <ItemGroup Condition="'$(UseLocalKazoOsPackages)' == 'true'">
     <!-- Keep every directly consumed package explicit. This catches missing packages and incorrect
          transitive versions instead of allowing a ProjectReference to hide packaging defects. -->
     <PackageReference Include="Kazo.Os.Theming.Abstractions" Version="$(KazoOsLocalPackageVersion)" />

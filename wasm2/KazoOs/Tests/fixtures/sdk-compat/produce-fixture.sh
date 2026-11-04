@@ -3,13 +3,14 @@
 # of src/) against the Kazo OS packages of a local feed, the way another repository would, and
 # writes its package to packages/. Run once per published SDK version that gets a fixture (1.0.0:
 # Contoso.Sdk1Compat; 1.1.0: Contoso.Sdk11Compat, packed from the v3.1/base tip; 2.0.0:
-# Contoso.Sdk2Compat, packed from the desk/6-sdk-2 tip); the committed package is never rebuilt, so
+# Contoso.Sdk2Compat, packed from the desk/6-sdk-2 tip; 3.0.0: Contoso.Sdk3Compat, packed from the
+# rename/3-namespaces tip, ADR 0228); the committed package is never rebuilt, so
 # the tests keep loading an app compiled against the old SDK into the current OS (or, for an
 # earlier major, check that the OS refuses it).
 #
 #   Tests/fixtures/sdk-compat/produce-fixture.sh [--project <name>] [--version <x.y.z>] [--feed <dir>]
 #     --project  a folder of src/ (default: Contoso.Sdk1Compat)
-#     --version  the SDK version of the feed's packages (default: HackerOsVersion of build/Versions.props)
+#     --version  the SDK version of the feed's packages (default: KazoOsVersion of build/Versions.props)
 #     --feed     the folder of Kazo OS packages (default: artifacts/local-nupkg)
 set -euo pipefail
 
@@ -28,9 +29,10 @@ while [[ $# -gt 0 ]]; do
 done
 
 [[ -d "$here/src/$project" ]] || { echo "No project src/$project." >&2; exit 2; }
-[[ -n "$version" ]] || version="$(sed -n 's:.*<HackerOsVersion>\(.*\)</HackerOsVersion>.*:\1:p' "$root/build/Versions.props")"
+[[ -n "$version" ]] || version="$(sed -n 's:.*<KazoOsVersion>\(.*\)</KazoOsVersion>.*:\1:p' "$root/build/Versions.props")"
 [[ -f "$feed/Kazo.Os.AppSdk.$version.nupkg" ]] || { echo "No Kazo.Os.AppSdk.$version.nupkg in $feed: run build/pack-local.sh first." >&2; exit 1; }
 
+# HackerOsVersion: the projects of the SDK 1.x and 2.x fixtures still name the version that way.
 # Built outside the repository: no Directory.Build.* of Kazo OS, an isolated NuGet cache.
 work="$(mktemp -d)"
 trap 'rm -rf "$work"' EXIT
@@ -41,11 +43,11 @@ cat > "$work/nuget.config" <<XML
   <config><add key="globalPackagesFolder" value="$work/packages" /></config>
   <packageSources>
     <clear />
-    <add key="hackeros-local" value="$feed" />
+    <add key="kazoos-local" value="$feed" />
     <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
   </packageSources>
   <packageSourceMapping>
-    <packageSource key="hackeros-local"><package pattern="Kazo.Os.*" /></packageSource>
+    <packageSource key="kazoos-local"><package pattern="Kazo.Os.*" /></packageSource>
     <packageSource key="nuget.org"><package pattern="*" /></packageSource>
   </packageSourceMapping>
 </configuration>
@@ -53,5 +55,5 @@ XML
 
 mkdir -p "$here/packages"
 MSBUILDDISABLENODEREUSE=1 dotnet pack "$work/$project/$project.csproj" -c Release \
-  -p:HackerOsVersion="$version" -p:ContinuousIntegrationBuild=true -o "$here/packages"
+  -p:KazoOsVersion="$version" -p:HackerOsVersion="$version" -p:ContinuousIntegrationBuild=true -o "$here/packages"
 echo "Fixture: $here/packages/$project.$version.nupkg"

@@ -7,7 +7,7 @@
     (ADR 0083 §6): an ASP.Hack layout links the site's own wwwroot/js files that way, as a web page does.
     ASP.Hack .cshtml views (ADR 0086) follow the same rule: their CSS and JavaScript live in the site's wwwroot.
   -->
-  <Target Name="ValidateHackerOsRazorAssets"
+  <Target Name="ValidateKazoOsRazorAssets"
           BeforeTargets="CoreCompile"
           Condition="'$(UsingMicrosoftNETSdkRazor)' == 'true'">
     <ItemGroup>

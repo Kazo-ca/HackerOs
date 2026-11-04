@@ -27,13 +27,13 @@ builder.Services.AddSingleton(provider => new BuildKnownLazyAppDescriptorRegistr
     BuildKnownLazyApps.Catalog,
     provider.GetRequiredService<BuildKnownAssemblyLoaderRegistry>()));
 // ADR 0066: optional measured CPU/memory, decided once from HackerOs:ResourceAccounting in
-// appsettings.json and what the build compiled in. Must precede AddHackerOsEcosystem, and runs before
+// appsettings.json and what the build compiled in. Must precede AddKazoOsEcosystem, and runs before
 // any app code so the context-switch hook can be installed.
-builder.Services.AddHackerOsResourceAccounting(builder.Configuration, BuildKnownLazyApps.Images);
+builder.Services.AddKazoOsResourceAccounting(builder.Configuration, BuildKnownLazyApps.Images);
 // ADR 0125: process limits (ulimit, limits.conf), on unless HackerOs:ResourceLimits:Enabled is false.
-builder.Services.AddHackerOsResourceLimits(builder.Configuration);
-builder.Services.AddHackerOsHardware(builder.Configuration);
-builder.Services.AddHackerOsEcosystem(
+builder.Services.AddKazoOsResourceLimits(builder.Configuration);
+builder.Services.AddKazoOsHardware(builder.Configuration);
+builder.Services.AddKazoOsEcosystem(
     BuildKnownLazyApps.Catalog,
     provider => provider.GetRequiredService<BuildKnownLazyAppDescriptorRegistry>().Descriptors,
     provider => provider.GetRequiredService<BuildKnownLazyAppDescriptorRegistry>());

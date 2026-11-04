@@ -53,11 +53,11 @@ lignes, `MemSource: simulated`).
 ### Image
 
 Le build de l'hôte mesure l'image de chaque app pendant l'agrégation
-(`CollectHackerOsBuiltInApplications`, [`app-model.md`](../framework/app-model.md)) :
+(`CollectKazoOsBuiltInApplications`, [`app-model.md`](../framework/app-model.md)) :
 
-- `GetHackerOsAppManifests` renvoie aussi le chemin de l'assembly de l'app
+- `GetKazoOsAppManifests` renvoie aussi le chemin de l'assembly de l'app
   (`AssemblyPath`) et sa liste de dépendances (`DependenciesFile`, le fichier
-  que `GenerateHackerOsAppManifests` écrit déjà) ;
+  que `GenerateKazoOsAppManifests` écrit déjà) ;
 - `AppImageInspector` prend la taille de l'assembly de l'app (non partagée),
   suit ses références, directes ou non, et mesure celles qu'elle trouve dans
   la liste (partagées) ;
@@ -160,15 +160,15 @@ buffer.Resize(bufferedChars * sizeof(char));   // à chaque changement
 
 ### Composition
 
-`AddHackerOsResourceAccounting` (`Kazo.Os.Ecosystem.Host`) compose la mesure quand
+`AddKazoOsResourceAccounting` (`Kazo.Os.Ecosystem.Host`) compose la mesure quand
 `plan.MemoryActive` et `ResourceAccountingFeatures.IsMemoryAccountingSupported`
 : `AllocationTracker` inscrit sur le diffuseur, `KernelMemoryLedger`
 (`IKernelMemoryLedger`), `MeasuredMemoryAccountant` (`IMemoryAccountant`), avec
-les images que l'hôte lui passe (`AddHackerOsResourceAccounting(configuration,
-images)` ; `AddHackerOsBrowserHost` passe `HostAppCatalog.Images`, le serveur et
+les images que l'hôte lui passe (`AddKazoOsResourceAccounting(configuration,
+images)` ; `AddKazoOsBrowserHost` passe `HostAppCatalog.Images`, le serveur et
 `test/test` passent `BuildKnownLazyApps.Images` ; sans images, aucune app n'a de
 couche image). Sinon, les implémentations nulles
-sont enregistrées. `AddHackerOsEcosystem` passe le registre au presse-papiers,
+sont enregistrées. `AddKazoOsEcosystem` passe le registre au presse-papiers,
 au shell, aux passerelles de fichiers et de réseau.
 
 ## Décisions

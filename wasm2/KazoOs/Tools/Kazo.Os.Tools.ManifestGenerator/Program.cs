@@ -7,9 +7,9 @@ namespace Kazo.Os.Tools.ManifestGenerator;
 /// <summary>
 /// Entry point of the Kazo OS manifest generator (ADR 0047). Commands:
 /// <list type="bullet">
-/// <item><c>generate</c>: run by the <c>GenerateHackerOsAppManifests</c> MSBuild target after an app
+/// <item><c>generate</c>: run by the <c>GenerateKazoOsAppManifests</c> MSBuild target after an app
 /// project compiles; writes its <c>manifest.json</c>.</item>
-/// <item><c>aggregate</c>: run by the <c>CollectHackerOsBuiltInApplications</c> MSBuild target of a
+/// <item><c>aggregate</c>: run by the <c>CollectKazoOsBuiltInApplications</c> MSBuild target of a
 /// host; writes its <c>BuiltInApplications.json</c>.</item>
 /// <item><c>pack</c>: run by the <c>KazoOsPack</c> MSBuild target of an app project; writes its
 /// <c>.hackapp</c> package and adds it to <c>index.json</c> (ADR 0182 §1, §2), signed when the author's

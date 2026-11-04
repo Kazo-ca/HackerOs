@@ -89,7 +89,7 @@ unless it declares `KazoOsAppHost=true` (a host). Differences with the repositor
 - the generator comes from the package instead of a `ProjectReference`;
 - the boundary rule on `ProjectReference` (written in repository paths)
   does not apply; the one on packages does
-  (`_ValidateHackerOsPackageBoundary`, `HOSAPP0030`, see
+  (`_ValidateKazoOsPackageBoundary`, `HOSAPP0030`, see
   [`app-sdk.md`](app-sdk.md#verification)): every compile reference
   coming from a `Kazo.Os.*` package, direct or transitive, must be allowed;
 - injection inspection (`HOSAPP0031`), the `HOSAPP*` codes and the resource
@@ -129,7 +129,7 @@ The `OS/Kazo.Os.Ecosystem` executable contained the whole OS. It is split in two
 
 | Project | Content |
 |---|---|
-| `OS/Kazo.Os.Ecosystem.Host` (Razor library, published) | `App.razor`, `LoginProgressScreen`, `EcosystemBootCoordinator`, `EcosystemHostState`, `AddHackerOsEcosystem`, `AddHackerOsResourceAccounting`, `AddHackerOsBrowserHost`, `HostAppCatalog`, WebAssembly adapters (lazy transport, environment), `Administration/`, `WebData/`, `wwwroot/css/app.css` |
+| `OS/Kazo.Os.Ecosystem.Host` (Razor library, published) | `App.razor`, `LoginProgressScreen`, `EcosystemBootCoordinator`, `EcosystemHostState`, `AddKazoOsEcosystem`, `AddKazoOsResourceAccounting`, `AddKazoOsBrowserHost`, `HostAppCatalog`, WebAssembly adapters (lazy transport, environment), `Administration/`, `WebData/`, `wwwroot/css/app.css` |
 | `OS/Kazo.Os.Ecosystem` (this repository's PWA) | `wwwroot/` (page, service worker, web manifest, icons), the app references, `BuildKnownLazyApps` and `BuildKnownLazyAssemblies` (facades over its `HostAppCatalog`), a three-line `Program.cs` |
 
 The namespace remains `Kazo.Os.Ecosystem`: `Kazo.Os.Ecosystem.App` now lives
@@ -141,11 +141,11 @@ library transitively. The design tokens are served at
 ```csharp
 // Program.cs d'un hôte WebAssembly
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
-builder.AddHackerOsBrowserHost(HostAppCatalog.Load(typeof(Program).Assembly));
+builder.AddKazoOsBrowserHost(HostAppCatalog.Load(typeof(Program).Assembly));
 await builder.Build().RunAsync();
 ```
 
-`AddHackerOsBrowserHost(apps, options)` registers the root component (only
+`AddKazoOsBrowserHost(apps, options)` registers the root component (only
 if the `#app` element, `RootSelector`, exists: a WebAssembly island of a Blazor
 Web App has none), the lazy loader limited to the catalog's assemblies, the
 app resource source (`StaticWebAssetAppAssetSource` over
@@ -228,8 +228,8 @@ app is affected: these types are not part of the SDK.
 |---|---|---|---|
 | 1.1.0 | `Kazo.Os.Platform.Blazor` | `WindowGeometryPersistence.RestoreAsync` returns `SavedWindowGeometry?` instead of `WindowBounds?`; `SaveAsync` takes `SavedWindowGeometry` instead of `(WindowBounds, isEligible)` (ADR 0116, 0122: only the size and maximized state are remembered) | go through `SavedWindowGeometry`, or through `WindowGeometryRecorder` |
 | 1.1.0 | `Kazo.Os.Platform.Blazor` | `WindowGeometrySettings.Parse` returns `SavedWindowGeometry?`; `Serialize(WindowBounds)` becomes `Serialize(appId, SavedWindowGeometry)` | adapt the call |
-| 1.1.0 | `Kazo.Os.Platform.Blazor` | `WindowLaunchCoordinator.Present(...)` (two overloads) replaced by `PresentAsync(...)`; the constructor now takes the geometry recorder | call `PresentAsync`; let dependency injection build the coordinator (`AddHackerOsBrowserHost`) |
-| 1.2.0 | `Kazo.Os.Ecosystem.Host` | the `EcosystemBootCoordinator` constructor takes three more optional parameters (`OomKiller? oomKiller`, `IOsSettingsService? settings`, `CrossOriginIsolationProbe? isolation`, ADR 0126, 0131): binary break, the source code still compiles | recompile the host; let dependency injection build the coordinator (`AddHackerOsEcosystem`) |
+| 1.1.0 | `Kazo.Os.Platform.Blazor` | `WindowLaunchCoordinator.Present(...)` (two overloads) replaced by `PresentAsync(...)`; the constructor now takes the geometry recorder | call `PresentAsync`; let dependency injection build the coordinator (`AddKazoOsBrowserHost`) |
+| 1.2.0 | `Kazo.Os.Ecosystem.Host` | the `EcosystemBootCoordinator` constructor takes three more optional parameters (`OomKiller? oomKiller`, `IOsSettingsService? settings`, `CrossOriginIsolationProbe? isolation`, ADR 0126, 0131): binary break, the source code still compiles | recompile the host; let dependency injection build the coordinator (`AddKazoOsEcosystem`) |
 | 2.0.0 | `Kazo.Os.Ecosystem.Host` | no longer registers `IShellIconProvider` (ADR 0161 §1) | nothing: the file control keeps its default icons |
 | 2.0.0 | `Kazo.Os.Apps.FileExplorer` | the types of the old `FileView` are in `Kazo.Os.Apps.FileExplorer.FileControl` and derive from `KazoComponentBase`; `FileConflictDialog`, `FilePropertiesDialog`, `OpenWithDialog`, `FileExplorerDialogBase`, `PublishSiteContextMenuProvider`, `ZipFileContextMenuProvider` and `FileExplorerState.ViewMode` are removed (desk/3 to desk/5) | go through the `hackeros.file-view` and `hackeros.file-dialogs` contracts |
 | 2.0.0 | `Kazo.Os.Apps.CodeEditor` | `CodeEditorExplorer` loses `OnDeleteRequested`, `OwnerAppId`, `Watch` and `Dispose`; the public constructor of `CodeEditorWorkspace` is removed (desk/3) | use `KazoFileView` |
@@ -346,7 +346,7 @@ All the other SDK changes are additions:
 | `Kazo.Os.AppSdk` | `KazoComponentProviders`, `KazoComponentContractInfo`, `KazoComponentProviderInfo` (provider choice by the administrator) | ADR 0156, 0158 |
 | `Kazo.Os.AppSdk` | `KazoDesktopSettings`, `KazoDesktopSettingsDocument`, `KazoDesktopOptions`, `KazoDesktopLayout`, `KazoDesktopCell`, `KazoDesktopEntry`, `KazoDesktopItems`, `KazoDesktopSort`, `KazoDesktopIconSize`, `KazoDesktopArrangement`, `KazoAppIcons` | ADR 0152, 0160 |
 | `Kazo.Os.AppSdk` | `KazoCrossOriginIsolation` and its types, `IAppCrossOriginIsolationGateway` | ADR 0146 |
-| `Kazo.Os.AppSdk.Icons` | `KazoIcons` (`Vector`, `FromImage`), `KazoIcon`, `KazoIconKind` | ADR 0150, 0151 |
+| `Kazo.Os.AppSdk.Icons` | `KazoIcons` (`Vector`, `FromImage`), `KazoSurfaceIcon`, `KazoIconKind` | ADR 0150, 0151 |
 | `Kazo.Os.App.Abstractions` | `AppManifest.ContextMenus`, `AppContextMenuEntryManifest` and its titles and icons, `AppContextMenus`, `AppComponentContracts`, `AppComponentProviderScope`, capability `shell.context-menu` | ADR 0151, 0153, 0156 |
 | `Kazo.Os.Simulation.Abstractions` | `IAppEventGateway.PublishAsync` | ADR 0145 |
 
@@ -422,6 +422,33 @@ The only API lines are the new value of
 SDK library): the official catalog's public key, so every Hack Store package
 must carry the catalog's signature (ADR 0214 §2).
 
+## SDK 3.0
+
+Series `rename/base` ([ADR 0228](../dev/adr/0228-rename-to-kazoos.md),
+[ADR 0229](../dev/adr/0229-kazo-os-display-name-and-new-address.md)):
+HackerOS becomes Kazo OS, and `build/Versions.props` moves to `3.0.0`. No
+feature changes: only names change, but every assembly name changes, so an app
+compiled against 2.x is **refused** and must be rebuilt against the new
+packages.
+
+### Migrating a 2.x app
+
+| In 2.x | In 3.0 |
+|---|---|
+| `HackerOs.*` packages (`HackerOs.AppSdk`, `HackerOs.App.Build`, `HackerOs.Templates`...) | `Kazo.Os.*` packages (`Kazo.Os.AppSdk`, `Kazo.Os.App.Build`, `Kazo.Os.Templates`...) |
+| `HackerOs.*` namespaces | `Kazo.Os.*` namespaces |
+| `Hack*` types (`HackFile`, `HackDirectory`, `HackPath`, `HackProcess`...) | `Kazo*` types (`KazoFile`, `KazoDirectory`, `KazoPath`, `KazoProcess`...) |
+| `HackerOsSdk`, MSBuild property `HackerOsVersion` | `KazoOsSdk`, `KazoOsVersion` |
+| `HackerIcon` component | `KazoIcon` component |
+| `HackIcon` record (an icon described for an OS menu, made by `HackIcons`) | `KazoSurfaceIcon` (made by `KazoIcons`): the name `KazoIcon` is taken by the component |
+| host methods `AddHackerOs*` (`AddHackerOsEcosystem`, `AddHackerOsBrowserHost`...) | `AddKazoOs*` |
+
+Kept for now (work item 5 of ADR 0228): the commands (`hackpkg`, `hackweb`),
+the file extensions, the OS paths (`/etc/hackeros`...), the app ids
+`org.hackeros.*`, the short names of the `dotnet new` templates
+(`hackeros-window`...), the `hackeros/` folder of app packages and the name
+"Hack Store".
+
 ### Compatibility app
 
 `Tests/fixtures/sdk-compat/packages` keeps one app per published version that
@@ -432,16 +459,16 @@ repository, against the packages of its version, and **never rebuilt**:
 |---|---|---|
 | `Contoso.Sdk1Compat.1.0.0.nupkg` | 1.0.0 (`v3/15`) | window `com.contoso.sdk1-window` (saves and rereads a file), command `sdk1-compat` |
 | `Contoso.Sdk11Compat.1.1.0.nupkg` | 1.1.0, packages from the top of `v3.1/base` (`exec/10-final`, ADR 0132 §1) | window `com.contoso.sdk11-window` that names itself with `SetWindowTitleAsync` and `FormatWindowTitle` (`note.txt — SDK 1.1 Window`), `rememberGeometry: false`; command `sdk11-compat` that also calls `KazoUserAccounts.ValidateNewPassword` |
-
 | `Contoso.Sdk2Compat.2.0.0.nupkg` | 2.0.0, packages from the top of `desk/6-sdk-2` (ADR 0161 §3) | window `com.contoso.sdk2-window` that displays the OS file control (`KazoFileView`) and registers the entry "Inspect with SDK 2.0" in the file menu (`[RegisterFileContextMenu]`, intent `com.contoso.sdk2.inspect.v1`); command `sdk2-compat` that copies a file through `KazoFileOperations.CopyAsync` (`sdk2-compat (copy).txt`) |
+| `Contoso.Sdk3Compat.3.0.0.nupkg` | 3.0.0, `Kazo.Os.*` packages from the top of `rename/3-namespaces` (ADR 0228) | the same app as 2.0.0 under the new names: window `com.contoso.sdk3-window` (`KazoFileView`, entry "Inspect with SDK 3.0", intent `com.contoso.sdk3.inspect.v1`); command `sdk3-compat` (`KazoFileOperations.CopyAsync`) |
 
-The tests load the current major's app (2.0.0) into the OS; those of
-1.x remain as proof of the **refusal** of an app from another major
-(ADR 0149 §5).
+The tests load the current major's app (3.0.0) into the OS; those of
+1.x and 2.x remain as proof of the **refusal** of an app from another major
+(ADR 0149 §5, ADR 0228).
 
 ```bash
 build/pack-local.sh
-Tests/fixtures/sdk-compat/produce-fixture.sh --project Contoso.Sdk2Compat   # contre le flux 2.0.0
+Tests/fixtures/sdk-compat/produce-fixture.sh --project Contoso.Sdk3Compat   # against the 3.0.0 feed
 ```
 
 ## Tests
@@ -487,7 +514,7 @@ Also checked by hand: an app that adds the reference
 - [x] Resource fingerprints (`HOSAPP0023`, `AppAssetStore`, "damaged" state).
 - [x] Removal of `BuildProfileManifest`, its validator and its serializer.
 - [x] `Kazo.Os.App.Build` package and package mode of `Kazo.Os.Apps.targets` (package boundary, aggregation of apps as packages, manifests in app packages).
-- [x] `Kazo.Os.Ecosystem.Host` extracted, `AddHackerOsBrowserHost`, `HostAppCatalog`, design tokens moved, three hosts updated.
+- [x] `Kazo.Os.Ecosystem.Host` extracted, `AddKazoOsBrowserHost`, `HostAppCatalog`, design tokens moved, three hosts updated.
 - [x] `build/pack-local.sh` / `.ps1`, `build/nuget.config.sample`.
 - [x] Five templates and their end-to-end test.
 - [x] SDK 1.0 freeze (`v3/15`, ADR 0114): everything in `Shipped`, version `1.0.0`, obsolete APIs removed, compatibility app and its tests, guide [`building-on-hackeros.md`](building-on-hackeros.md).

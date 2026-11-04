@@ -59,7 +59,7 @@ function crc32(buf) {
     return (crc ^ 0xFFFFFFFF) >>> 0;
 }
 
-function drawHackerOsLogo(buffer, width, height) {
+function drawKazoOsLogo(buffer, width, height) {
     const cx = width / 2;
     const cy = height / 2;
     const radius = width * 0.45;
@@ -115,6 +115,6 @@ if (!fs.existsSync(outDir)) {
     fs.mkdirSync(outDir, { recursive: true });
 }
 
-fs.writeFileSync(path.join(outDir, 'icon-192.png'), createPng(192, 192, drawHackerOsLogo));
-fs.writeFileSync(path.join(outDir, 'icon-512.png'), createPng(512, 512, drawHackerOsLogo));
+fs.writeFileSync(path.join(outDir, 'icon-192.png'), createPng(192, 192, drawKazoOsLogo));
+fs.writeFileSync(path.join(outDir, 'icon-512.png'), createPng(512, 512, drawKazoOsLogo));
 console.log('Successfully generated icon-192.png and icon-512.png');

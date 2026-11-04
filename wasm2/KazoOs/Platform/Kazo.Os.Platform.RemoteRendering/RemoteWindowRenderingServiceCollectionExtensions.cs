@@ -10,12 +10,12 @@ public static class RemoteWindowRenderingServiceCollectionExtensions
     /// <summary>
     /// Registers the trial: when <see cref="RemoteWindowRenderingOptions.Enabled"/> is
     /// <see langword="true"/>, the listed apps' windows render in a worker. Needs the Web Worker pool
-    /// (<c>AddHackerOsWorkerProcesses</c>); with the trial off nothing changes.
+    /// (<c>AddKazoOsWorkerProcesses</c>); with the trial off nothing changes.
     /// </summary>
     /// <param name="services">The host's services.</param>
     /// <param name="options">The trial's settings.</param>
     /// <returns>The same services.</returns>
-    public static IServiceCollection AddHackerOsRemoteWindowRendering(this IServiceCollection services, RemoteWindowRenderingOptions options)
+    public static IServiceCollection AddKazoOsRemoteWindowRendering(this IServiceCollection services, RemoteWindowRenderingOptions options)
     {
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(options);

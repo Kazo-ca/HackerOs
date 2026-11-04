@@ -68,7 +68,7 @@ public sealed partial class IntranetSite : WebAppDefinition
 
         // Services: singletons live as long as the site process; controllers get them by constructor.
         // The notes live in the site's browser database hackweb.<id> (ADR 0088), not in the OS files.
-        builder.Services.AddHackWebDb(NoteStore.Configure);
+        builder.Services.AddKazoWebDb(NoteStore.Configure);
         builder.Services.AddSingleton<NoteStore>();
         builder.Services.AddSingleton<TaskBoard>();
         builder.Services.AddSingleton<StaffDirectory>();

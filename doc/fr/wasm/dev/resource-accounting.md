@@ -115,13 +115,13 @@ ligne syslog) mais la DLL arrive encore par `Kazo.Os.Ecosystem.Host`.
 | `test/test` | `appsettings.json` (composition côté serveur, pré-rendu) | les deux activées |
 | `Server/Kazo.Os.Server` | aucun : il sert l'OS de l'Ecosystem et son `wwwroot/appsettings.json` (ADR 0130) | comme l'Ecosystem (activées) |
 
-Chaque hôte appelle, avant `AddHackerOsEcosystem` :
+Chaque hôte appelle, avant `AddKazoOsEcosystem` :
 
 ```csharp
-builder.Services.AddHackerOsResourceAccounting(builder.Configuration, BuildKnownLazyApps.Images);
+builder.Services.AddKazoOsResourceAccounting(builder.Configuration, BuildKnownLazyApps.Images);
 ```
 
-(`AddHackerOsBrowserHost` le fait pour un hôte WebAssembly, avec les images de son
+(`AddKazoOsBrowserHost` le fait pour un hôte WebAssembly, avec les images de son
 `HostAppCatalog` ; voir [`sdk-packages.md`](../framework/sdk-packages.md).)
 
 - La section est lue **une fois** ; la changer demande de recharger la page.
@@ -132,7 +132,7 @@ builder.Services.AddHackerOsResourceAccounting(builder.Configuration, BuildKnown
   `EcosystemBootCoordinator` dès que le journal est attaché), suivi d'une
   ligne de résumé, par exemple
   `resource accounting: cpu off (not built), memory on`.
-- Un hôte ou un test qui n'appelle pas `AddHackerOsResourceAccounting` reçoit
+- Un hôte ou un test qui n'appelle pas `AddKazoOsResourceAccounting` reçoit
   `ResourceAccountingPlan.Disabled` et les comptables nuls.
 
 ### Inscrire une mesure
@@ -142,14 +142,14 @@ d'app) ; la mesure de la mémoire inscrit son `AllocationTracker` de la même
 façon :
 
 ```csharp
-// Dans AddHackerOsResourceAccounting, quand plan.CpuActive :
+// Dans AddKazoOsResourceAccounting, quand plan.CpuActive :
 MeasuredCpuTimeAccountant cpu = new(plan.Settings.UnresponsiveThreshold);
 services.AddSingleton(new CpuAccountingRegistration(dispatcher.Register(cpu)));
 services.AddSingleton(cpu);
 services.AddSingleton<ICpuTimeAccountant>(cpu);
 ```
 
-`AddHackerOsResourceAccounting` enregistre les comptables nuls (et
+`AddKazoOsResourceAccounting` enregistre les comptables nuls (et
 `NullKernelMemoryLedger`) par `TryAddSingleton` : une mesure enregistrée avant
 eux les remplace. La mémoire le fait déjà (`AddMeasuredMemory`, sous
 `ResourceAccountingFeatures.IsMemoryAccountingSupported`).

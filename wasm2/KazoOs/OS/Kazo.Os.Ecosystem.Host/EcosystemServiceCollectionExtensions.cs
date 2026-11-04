@@ -87,7 +87,7 @@ public static class EcosystemServiceCollectionExtensions
     /// Adds persistent browser infrastructure and the process-wide simulation services.
     /// Asynchronous storage reconciliation and session startup remain boot responsibilities.
     /// </summary>
-    public static IServiceCollection AddHackerOsEcosystem(
+    public static IServiceCollection AddKazoOsEcosystem(
         this IServiceCollection services,
         AppCatalog? catalog = null,
         Func<IServiceProvider, IReadOnlyDictionary<string, AppDescriptor>>? descriptorProvider = null,
@@ -187,11 +187,11 @@ public static class EcosystemServiceCollectionExtensions
         // measured when the ADR 0067 accountant is active, simulated otherwise (fed by
         // ResourceSamplingService); disk and network bytes are really counted by
         // the persistence, the filesystem service and each app's network gateway.
-        // Optional measured CPU and memory (ADR 0066): AddHackerOsResourceAccounting, called by the
+        // Optional measured CPU and memory (ADR 0066): AddKazoOsResourceAccounting, called by the
         // host before this method, may already have registered them. Otherwise both measurements are
         // off and every per-process figure stays simulated, exactly as before phase 5.
         // The simulated machine (ADR 0057): HackerOs:Hardware, registered by the host's
-        // AddHackerOsHardware; a host that does not gets the default profile.
+        // AddKazoOsHardware; a host that does not gets the default profile.
         services.TryAddSingleton(VirtualHardwareProfile.Default);
         services.TryAddSingleton(ResourceAccountingPlan.Disabled);
         services.TryAddSingleton<ICpuTimeAccountant>(NullCpuTimeAccountant.Instance);
@@ -339,7 +339,7 @@ public static class EcosystemServiceCollectionExtensions
 
         // ADR 0134: automatic connection to the server that served the OS, and the state the
         // notification-area icon shows. A browser host registers the client with its own origin
-        // first (AddHackerOsBrowserHost); without one, only a server linked in Settings is used.
+        // first (AddKazoOsBrowserHost); without one, only a server linked in Settings is used.
         services.TryAddScoped<IHostInfoClient>(provider => new HttpHostInfoClient(provider.GetRequiredService<HttpClient>(), ownOrigin: null));
         services.AddScoped<ServerPresenceService>(provider => new ServerPresenceService(
             provider.GetRequiredService<IServerConnectionService>(),
@@ -671,7 +671,7 @@ public static class EcosystemServiceCollectionExtensions
             provider.GetService<ILogger<LoginEnvironmentProvider>>()));
         // ADR 0104: the platform's language (sign-in screens: /etc/locale.conf; desktop: the
         // user's login environment) and the IStringLocalizer<T> every platform component injects.
-        services.AddHackerOsPlatformLocalization();
+        services.AddKazoOsPlatformLocalization();
         services.AddSingleton<IResourceSimulator>(provider => new DeterministicResourceSimulator(
             provider.GetRequiredService<ISimulationClock>(),
             provider.GetRequiredService<ISimulationRandom>(),

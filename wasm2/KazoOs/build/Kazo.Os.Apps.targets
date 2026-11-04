@@ -3,18 +3,18 @@
     Kazo OS app model build integration (ADR 0047).
 
     App projects ($(KazoOsAppProject) == true):
-      GenerateHackerOsAppManifests  runs ManifestGenerator after the build output is copied and
+      GenerateKazoOsAppManifests  runs ManifestGenerator after the build output is copied and
                                     writes manifest.json (or manifests/<appId>.json) from the
                                     project's [AppManifest] classes. Errors are HOSAPPnnnn. It also
                                     checks the SDK boundary injection rule (HOSAPP0031, ADR 0055 §3).
 
     App projects and SDK libraries ($(KazoOsSdkLibrary) == true):
-      ValidateHackerOsSdkBoundary   before project references are resolved, fails the build when a
+      ValidateKazoOsSdkBoundary   before project references are resolved, fails the build when a
                                     ProjectReference leaves the SDK boundary (ADR 0055 §2):
                                     HOSAPP0030 for an app, HOSSDK0001 for an SDK library. There is
                                     no exemption: the temporary list of ADR 0055 §6 was removed by
                                     the 4-sdk-boundary-final chantier.
-      GetHackerOsAppManifests       query target used by hosts: the manifest files of this project,
+      GetKazoOsAppManifests       query target used by hosts: the manifest files of this project,
                                     the name and path of its assembly and its dependency list.
 
     Packages (ADR 0098 §2): this file ships in the Kazo.Os.App.Build package (hackeros-build/), imported by its
@@ -35,7 +35,7 @@
     in package mode.
 
     Host projects ($(KazoOsAppHost) == true, today only OS/Kazo.Os.Ecosystem):
-      CollectHackerOsBuiltInApplications
+      CollectKazoOsBuiltInApplications
                                     after ResolveProjectReferences, asks every direct ProjectReference
                                     for its manifests, aggregates them (with the reference's
                                     IsSystemApp metadata) into BuiltInApplications.json, embeds it as
@@ -268,7 +268,7 @@
     Incremental: reruns when the compiled assembly, the generator, or a manifest file (edited by
     hand) is newer than the stamp. The tool only rewrites a manifest when its bytes change.
   -->
-  <Target Name="GenerateHackerOsAppManifests"
+  <Target Name="GenerateKazoOsAppManifests"
           AfterTargets="CopyFilesToOutputDirectory"
           DependsOnTargets="_KazoOsResolveManifestGenerator"
           Condition="'$(KazoOsAppProject)' == 'true'"
@@ -291,7 +291,7 @@
   </Target>
 
   <!-- Query target for hosts (ADR 0047 §2): manifest files produced by this app project. -->
-  <Target Name="GetHackerOsAppManifests" DependsOnTargets="_KazoOsAppManifestPaths" Returns="@(_KazoOsAppManifestOutput)">
+  <Target Name="GetKazoOsAppManifests" DependsOnTargets="_KazoOsAppManifestPaths" Returns="@(_KazoOsAppManifestOutput)">
     <ReadLinesFromFile File="$(_KazoOsManifestStamp)"
                        Condition="'$(KazoOsAppProject)' == 'true' and Exists('$(_KazoOsManifestStamp)')">
       <Output TaskParameter="Lines" ItemName="_KazoOsAppManifestLine" />
@@ -373,7 +373,7 @@
     <_KazoOsSdkAllowedReferencePattern>(?i)^Shared/Kazo\.Os\.((App|Simulation|Theming)\.Abstractions|AppSdk(\.[^/]+)?)/[^/]+\.csproj$</_KazoOsSdkAllowedReferencePattern>
   </PropertyGroup>
 
-  <!-- Evaluation-time snapshot of this project's own ProjectReference items (see ValidateHackerOsSdkBoundary). -->
+  <!-- Evaluation-time snapshot of this project's own ProjectReference items (see ValidateKazoOsSdkBoundary). -->
   <ItemGroup Condition="'$(KazoOsAppProject)' == 'true' or '$(KazoOsSdkLibrary)' == 'true'">
     <_KazoOsDirectProjectReference Include="@(ProjectReference)" />
   </ItemGroup>
@@ -381,9 +381,9 @@
   <!--
     Repository mode only: the rule is written in paths under the HackerOs root. In package mode a
     project's own ProjectReference items are its repository's business; what crosses the boundary
-    there is a Kazo OS package, checked by _ValidateHackerOsPackageBoundary below.
+    there is a Kazo OS package, checked by _ValidateKazoOsPackageBoundary below.
   -->
-  <Target Name="ValidateHackerOsSdkBoundary"
+  <Target Name="ValidateKazoOsSdkBoundary"
           BeforeTargets="ResolveProjectReferences"
           Condition="'$(KazoOsBuildFromPackage)' != 'true' and ('$(KazoOsAppProject)' == 'true' or '$(KazoOsSdkLibrary)' == 'true')">
     <PropertyGroup>
@@ -429,7 +429,7 @@
     <_KazoOsSdkAllowedPackagePattern>(?i)^Kazo\.Os\.((App|Simulation|Theming)\.Abstractions|AppSdk(\..+)?)$</_KazoOsSdkAllowedPackagePattern>
   </PropertyGroup>
 
-  <Target Name="_ValidateHackerOsPackageBoundary"
+  <Target Name="_ValidateKazoOsPackageBoundary"
           AfterTargets="ResolveAssemblyReferences"
           Condition="'$(KazoOsAppProject)' == 'true' or '$(KazoOsSdkLibrary)' == 'true'">
     <PropertyGroup>
@@ -469,7 +469,7 @@
           DependsOnTargets="_KazoOsSelectAppReferences"
           Outputs="%(_KazoOsAppReference.Identity)">
     <MSBuild Projects="@(_KazoOsAppReference)"
-             Targets="GetHackerOsAppManifests"
+             Targets="GetKazoOsAppManifests"
              BuildInParallel="$(BuildInParallel)"
              Properties="%(_KazoOsAppReference.SetConfiguration); %(_KazoOsAppReference.SetPlatform); %(_KazoOsAppReference.SetTargetFramework)"
              RemoveProperties="%(_KazoOsAppReference.GlobalPropertiesToRemove)$(_GlobalPropertiesToRemoveFromProjectReferences)"
@@ -504,7 +504,7 @@
     </ItemGroup>
   </Target>
 
-  <Target Name="CollectHackerOsBuiltInApplications"
+  <Target Name="CollectKazoOsBuiltInApplications"
           AfterTargets="ResolveProjectReferences"
           DependsOnTargets="_KazoOsResolveManifestGeneratorPath;_KazoOsCollectAppManifestsFromReference;_KazoOsCollectPackagedAppManifests"
           Condition="'$(KazoOsAppHost)' == 'true'">
@@ -563,7 +563,7 @@
     parameter names only serialization reads, with no build warning, for under 1 MB.
     The apps of other names are kept whole by Kazo.Os.TrimmerRoots.xml.
   -->
-  <Target Name="_KazoOsRootHackerOsAssemblies"
+  <Target Name="_KazoOsRootKazoOsAssemblies"
           BeforeTargets="PrepareForILLink"
           DependsOnTargets="_ComputeManagedAssemblyToLink"
           Condition="'$(KazoOsAppHost)' == 'true' and '$(PublishTrimmed)' == 'true'">

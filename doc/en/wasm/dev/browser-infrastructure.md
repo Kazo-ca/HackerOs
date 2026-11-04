@@ -12,7 +12,7 @@ WebCrypto, cross-origin isolation, Web Workers. The rest of the OS never calls
 `Shared/Kazo.Os.Simulation.Abstractions` that this layer implements.
 
 The platform (`Platform/Kazo.Os.Platform.Core`) does not depend on this project
-([`platform-core.md`](platform-core.md)). It is `AddHackerOsEcosystem`
+([`platform-core.md`](platform-core.md)). It is `AddKazoOsEcosystem`
 (`OS/Kazo.Os.Ecosystem.Host`) that registers the browser
 implementations, in the host's composition.
 

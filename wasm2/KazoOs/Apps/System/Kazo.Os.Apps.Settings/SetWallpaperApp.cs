@@ -93,7 +93,7 @@ public sealed class SetWallpaperApp : AppDefinition
     public static void RegisterFileContextMenu(RegisterFileContextMenuContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
-        KazoIcon icon = KazoIcons.Vector(IconLibrary.Lucide, "image");
+        KazoSurfaceIcon icon = KazoIcons.Vector(IconLibrary.Lucide, "image");
         context.Register(
             title: "Menu.SetWallpaper",
             name: SingleEntry,

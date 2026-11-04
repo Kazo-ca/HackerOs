@@ -227,8 +227,8 @@ main est écrasée au build suivant.
 | --- | --- |
 | `$(KazoOsAppProject)` | `true` par défaut sous `Apps/` ; un projet ailleurs la positionne lui-même. Il n'y a pas d'exception : un projet sous `Apps/` sans classe `[AppManifest]` échoue avec `HOSAPP0001`. |
 | `ProjectReference` vers le générateur | Ajoutée automatiquement aux projets d'app pour l'ordre de build (`ReferenceOutputAssembly=false`, `PrivateAssets=all` : l'outil n'entre jamais dans le graphe d'un hôte WebAssembly). |
-| Cible `GenerateHackerOsAppManifests` | Après `CopyFilesToOutputDirectory`. Incrémentale : entrées = assembly compilée, outil, liste des dépendances, manifestes existants ; sortie = fichier témoin. |
-| Cible `GetHackerOsAppManifests` | Cible de requête pour l'hôte : les manifestes du projet, avec les métadonnées `AssemblyName`, `AssemblyFileName` et `AppProject`. Vide pour un projet qui n'est pas une app. |
+| Cible `GenerateKazoOsAppManifests` | Après `CopyFilesToOutputDirectory`. Incrémentale : entrées = assembly compilée, outil, liste des dépendances, manifestes existants ; sortie = fichier témoin. |
+| Cible `GetKazoOsAppManifests` | Cible de requête pour l'hôte : les manifestes du projet, avec les métadonnées `AssemblyName`, `AssemblyFileName` et `AppProject`. Vide pour un projet qui n'est pas une app. |
 
 ### Codes d'erreur
 
@@ -254,7 +254,7 @@ avec le nom complet de la classe en cause : `App.csproj : error HOSAPP0005: [Ns.
 | `HOSAPP0023` | Génération : ressource déclarée dans `Assets` absente de `wwwroot/` du projet ; son SHA-256 ne peut pas être calculé (ADR 0098 §5). |
 | `HOSAPP0024` | Agrégation : app non système qui déclare `OomScoreAdjust` négatif (ADR 0126 §4, ADR 0142 §6, [`oom-killer.md`](../dev/oom-killer.md)). |
 | `HOSAPP0025` | Retiré, jamais réutilisé : refusait à une app non système `hackeros.file-view` et `hackeros.file-dialogs` (ADR 0153 §4), que l'ADR 0156 ouvre à toute app fenêtrée (ADR 0158 §1). |
-| `HOSAPP0030` | Frontière du SDK : `ProjectReference` interdite dans un projet d'app (ADR 0055 §2, numéro fixé par l'ADR 0059). Émis par la cible `ValidateHackerOsSdkBoundary`. Voir [`app-sdk.md`](app-sdk.md). |
+| `HOSAPP0030` | Frontière du SDK : `ProjectReference` interdite dans un projet d'app (ADR 0055 §2, numéro fixé par l'ADR 0059). Émis par la cible `ValidateKazoOsSdkBoundary`. Voir [`app-sdk.md`](app-sdk.md). |
 | `HOSAPP0031` | Frontière du SDK : service injecté qui n'est ni un type du SDK, ni MudBlazor, ni `IJSRuntime` (ADR 0055 §3, ADR 0059). Voir [`app-sdk.md`](app-sdk.md). |
 | `HOSAPP0040` | Traductions du manifeste (ADR 0104 §4) : `Resources/AppManifest.<culture>.resx` illisible, nom de culture invalide, clé autre que `Name`, `Description`, `Terminal.Usage` (préfixées de l'id dans un projet à plusieurs apps), `Terminal.Usage` pour une app qui n'est pas une commande, ou fichier `localization/` référencé illisible à l'agrégation. Voir [`localization.md`](localization.md). |
 | `HOSAPP0090` | Arguments de l'outil invalides. |
@@ -360,13 +360,13 @@ comprises (ADR 0130). Hors du dépôt, un hôte référence le paquet
 `Kazo.Os.App.Build` et déclare la même propriété (modèle `hackeros-host`, voir
 [`sdk-packages.md`](sdk-packages.md)).
 
-### Cible `CollectHackerOsBuiltInApplications`
+### Cible `CollectKazoOsBuiltInApplications`
 
 Dans `build/Kazo.Os.Apps.targets`, après `ResolveProjectReferences` (donc avant
 la préparation des ressources et avant les cibles Blazor) :
 
 1. pour chaque `ProjectReference` directe (hors références à
-   `ReferenceOutputAssembly=false`), appelle `GetHackerOsAppManifests` avec les
+   `ReferenceOutputAssembly=false`), appelle `GetKazoOsAppManifests` avec les
    mêmes propriétés globales que `ResolveProjectReferences` ; un projet qui
    n'est pas une app ne renvoie rien et est ignoré ;
 2. associe à chaque manifeste la métadonnée `IsSystemApp` de sa `ProjectReference`
@@ -377,7 +377,7 @@ la préparation des ressources et avant les cibles Blazor) :
    `obj/<config>/<tfm>/BuiltInApplications.json` seulement si ses octets changent
    (pas de recompilation inutile) ; elle y mesure aussi l'**image** de chaque
    app (ADR 0068) à partir du chemin de son assembly et de sa liste de
-   dépendances, que `GetHackerOsAppManifests` renvoie (`AssemblyPath`,
+   dépendances, que `GetKazoOsAppManifests` renvoie (`AssemblyPath`,
    `DependenciesFile`) ; enfin elle recopie les textes traduits que référence
    `localizations` dans la propriété facultative `localized` de chaque entrée
    (`{"fr":{"name":…}}`, ADR 0104), que `AppCatalog.Localize` applique ;
@@ -551,8 +551,8 @@ dangereuses accordées d'office arrivent avec l'ADR 0049.
 - [x] `rebuild/2-app-definition` : `AppDefinition`, `[AppManifest]`,
   `FileHandler`, `TerminalCommand`, `AppDefinitionMapper`, tests du mappeur
   (`Tests/Kazo.Os.App.Abstractions.Tests/Definition`).
-- [x] `rebuild/2-manifest-generator` : `Tools/Kazo.Os.Tools.ManifestGenerator` (`generate`, `validate`), `build/Kazo.Os.Apps.targets`, cibles `GenerateHackerOsAppManifests` et `GetHackerOsAppManifests`, erreurs `HOSAPP*`, projets de test, Calculator migrée en exemple.
-- [x] `rebuild/2-builtin-applications` : cible `CollectHackerOsBuiltInApplications`, `BuiltInApplications.json` embarqué, lazy load automatique, `BuildKnownLazyApps` lit le nouveau fichier, `IsSystemApp` transporté.
+- [x] `rebuild/2-manifest-generator` : `Tools/Kazo.Os.Tools.ManifestGenerator` (`generate`, `validate`), `build/Kazo.Os.Apps.targets`, cibles `GenerateKazoOsAppManifests` et `GetKazoOsAppManifests`, erreurs `HOSAPP*`, projets de test, Calculator migrée en exemple.
+- [x] `rebuild/2-builtin-applications` : cible `CollectKazoOsBuiltInApplications`, `BuiltInApplications.json` embarqué, lazy load automatique, `BuildKnownLazyApps` lit le nouveau fichier, `IsSystemApp` transporté.
 - [x] `rebuild/2-system-apps` (ADR 0048) : `AppCatalog.SystemAppIds` et `IsSystemApp`, `AppCatalog.Build(manifests, systemAppIds)` et `BuildFromBuiltInApplications`, `IsSystemApp="true"` posé sur les `ProjectReference` de l'Ecosystem, pont de transition `_KazoOsMarkLegacySystemManifests`, tests.
 - [x] `rebuild/2-app-uninstall` (ADR 0048 §2-6) : désinstallation par `apps.config`, voir [`app-installation.md`](../dev/app-installation.md).
 - [x] `rebuild/5-worker-processes` (ADR 0070) : `AppManifestAttribute.Execution`, `AppExecutionHost`, champ `execution` (schéma, liste blanche, validateur, fixture canonique), défauts par genre dans le mappeur, chaque commande et service déclare son hôte ou reçoit le défaut.

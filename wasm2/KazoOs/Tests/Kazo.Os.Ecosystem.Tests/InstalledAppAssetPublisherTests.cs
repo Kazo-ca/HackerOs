@@ -21,7 +21,7 @@ public sealed class InstalledAppAssetPublisherTests
     private static AppManifest ManifestOf(string appId, string assembly, params AssetManifest[] assets) => AppManifestJsonSerializer.NormalizeOptionalCollections(AppManifestJsonSerializer.DeserializeStrict(
         "{\"schemaVersion\":1,\"id\":\"" + appId + "\",\"name\":\"Sample\",\"version\":\"1.0.0\",\"publisherId\":\"pub.kazo\","
         + "\"description\":\"A sample.\",\"kind\":\"window\",\"platform\":{\"supported\":[\"desktop\"],\"entryPoints\":[{\"platforms\":[\"desktop\"],"
-        + "\"assembly\":\"" + assembly + ".dll\",\"type\":\"" + assembly + ".SampleWindow\"}]},\"sdkCompatibility\":{\"minimumVersion\":\"2.0.0\"},"
+        + "\"assembly\":\"" + assembly + ".dll\",\"type\":\"" + assembly + ".SampleWindow\"}]},\"sdkCompatibility\":{\"minimumVersion\":\"3.0.0\"},"
         + "\"presentation\":{\"category\":\"utilities\",\"launchVisibility\":\"visible\",\"iconAssetPaths\":[]},\"localizations\":[],\"capabilities\":[],"
         + "\"declaredTopicPermissions\":[],\"resources\":{\"baselineCpuWeight\":0,\"burstCpuWeight\":0,\"baselineMemoryWeight\":0,\"burstMemoryWeight\":0,"
         + "\"baselineStorageIoWeight\":0,\"burstStorageIoWeight\":0,\"baselineNetworkIoWeight\":0,\"burstNetworkIoWeight\":0},\"intents\":[],\"dependencies\":[],"

@@ -40,7 +40,7 @@ mkdir: cannot create directory 'projets': No space left on device
 | Ecosystem host | `Administration/BrowserSystemBackupDevice.cs`, `EcosystemServiceCollectionExtensions.cs` (registrations), `EcosystemBootCoordinator.cs` (space monitoring, audit entry of a restore) |
 | Apps | `Apps/System/Kazo.Os.Apps.Settings/BackupPanel.razor` (*Backup* tab), `Apps/Commands/Kazo.Os.Commands/Hackbackup/`; `Platform/Kazo.Os.Platform.Blazor/Shell/ClockPanel.razor` (notification action buttons) |
 
-The three hosts call `AddHackerOsEcosystem`. Backup is wired only in a browser
+The three hosts call `AddKazoOsEcosystem`. Backup is wired only in a browser
 (`OperatingSystem.IsBrowser()`): the Server host with server-side rendering has
 no IndexedDB, `KazoSystemBackup.IsSupported` is `false` there and the tab is
 hidden (ADR 0099, consequences).

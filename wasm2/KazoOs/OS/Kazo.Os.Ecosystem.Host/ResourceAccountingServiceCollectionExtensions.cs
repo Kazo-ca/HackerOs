@@ -18,8 +18,8 @@ namespace Kazo.Os.Ecosystem;
 /// and installs the common context-switch hook only when at least one measurement is active.
 /// </summary>
 /// <remarks>
-/// Each host calls <see cref="AddHackerOsResourceAccounting(IServiceCollection, IConfiguration?, IReadOnlyDictionary{string, AppImage}?)"/>
-/// before <see cref="EcosystemServiceCollectionExtensions.AddHackerOsEcosystem"/>. A host (or a test)
+/// Each host calls <see cref="AddKazoOsResourceAccounting(IServiceCollection, IConfiguration?, IReadOnlyDictionary{string, AppImage}?)"/>
+/// before <see cref="EcosystemServiceCollectionExtensions.AddKazoOsEcosystem"/>. A host (or a test)
 /// that never calls it gets the null accountants and <see cref="ResourceAccountingPlan.Disabled"/>:
 /// exactly the simulated behavior of phases 1 to 4.
 /// </remarks>
@@ -50,9 +50,9 @@ public static class ResourceAccountingServiceCollectionExtensions
     /// <see cref="HostAppCatalog.Images"/>; <see langword="null"/> gives no app an image layer.
     /// </param>
     /// <returns>The resolved plan, also registered as a singleton.</returns>
-    public static ResourceAccountingPlan AddHackerOsResourceAccounting(
+    public static ResourceAccountingPlan AddKazoOsResourceAccounting(
         this IServiceCollection services, IConfiguration? configuration, IReadOnlyDictionary<string, AppImage>? images = null) =>
-        services.AddHackerOsResourceAccounting(ReadSettings(configuration), CompiledSupport, hookInstaller: null, images);
+        services.AddKazoOsResourceAccounting(ReadSettings(configuration), CompiledSupport, hookInstaller: null, images);
 
     /// <summary>
     /// Composes the accounting for explicit settings and build support. Tests use it to cover every
@@ -72,7 +72,7 @@ public static class ResourceAccountingServiceCollectionExtensions
     /// </param>
     /// <returns>The resolved plan, also registered as a singleton.</returns>
     /// <exception cref="InvalidOperationException">A measurement is active but this assembly was built without the accounting project.</exception>
-    public static ResourceAccountingPlan AddHackerOsResourceAccounting(
+    public static ResourceAccountingPlan AddKazoOsResourceAccounting(
         this IServiceCollection services,
         ResourceAccountingSettings settings,
         ResourceAccountingBuildSupport build,

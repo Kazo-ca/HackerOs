@@ -34,11 +34,14 @@
     2.2.2 (2026-11-01): the official catalog's public key compiled into the OS
     (AppPackageDefaults.OfficialCatalogSigningKey): every Hack Store package must carry the
     catalog's signature. No SDK change: only that Platform.Core constant moves in the API files.
+    3.0.0 (series rename/base, ADR 0228, ADR 0229): HackerOS becomes Kazo OS. Every package moves
+    from HackerOs.* to Kazo.Os.* and every SDK type from Hack* to Kazo* (HackFile -> KazoFile...);
+    an app built on 2.x is refused and must be rebuilt against Kazo.Os.AppSdk.
 
     The App SDK version an app is compiled against comes from this number (KazoOsSdk.Version), and
     the manifest generator writes it as the app's sdkCompatibility.minimumVersion (ADR 0098 §3).
   -->
   <PropertyGroup>
-    <KazoOsVersion>2.2.2</KazoOsVersion>
+    <KazoOsVersion>3.0.0</KazoOsVersion>
   </PropertyGroup>
 </Project>

@@ -47,9 +47,9 @@ Environ 240 fichiers C# (51 000 lignes) ; le dossier se lit par sous-système.
   instance (fenêtre, service, commande) à partir des singletons de la plateforme
   et des capacités accordées. Chaque passerelle vérifie la capacité qu'elle
   exige avant d'agir (`AppCapabilityChecker`).
-- Les services sont enregistrés par `AddHackerOsEcosystem`
+- Les services sont enregistrés par `AddKazoOsEcosystem`
   (`OS/Kazo.Os.Ecosystem.Host`), qui déclare les services de cette couche ;
-  `AddHackerOsPlatformLocalization` (`Globalization/`) en fait partie.
+  `AddKazoOsPlatformLocalization` (`Globalization/`) en fait partie.
 - Plusieurs services ont une implémentation `InMemory*` (tests, mode sans
   navigateur) ; la persistance réelle vient de l'infrastructure navigateur.
 

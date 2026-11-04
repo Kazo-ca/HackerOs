@@ -68,8 +68,8 @@ languages.
   ambient context.
 - `SessionStringLocalizer<T>` (Platform.Core): what
   `@inject IStringLocalizer<T>` receives in a platform component, bound to
-  `SessionLocaleService.Culture`. `AddHackerOsPlatformLocalization()` declares
-  it (called by `AddHackerOsEcosystem`, hence for the three hosts).
+  `SessionLocaleService.Culture`. `AddKazoOsPlatformLocalization()` declares
+  it (called by `AddKazoOsEcosystem`, hence for the three hosts).
 - `EnglishStringLocalizer<T>` (AppSdk): always English, for component
   tests: `services.AddSingleton(typeof(IStringLocalizer<>), typeof(EnglishStringLocalizer<>))`.
 
@@ -191,7 +191,7 @@ their texts travel in `BuiltInApplications.json`.
 - [x] `LoginEnvironment`: `/etc/locale.conf` and `~/.config/locale.conf`; seeder.
 - [x] `IAppExecutionContext.Culture` / `.FormatCulture`, `KazoEnvironment`.
 - [x] `KazoStringLocalizer`, `GetLocalizer<T>`, `EnglishStringLocalizer<T>`.
-- [x] `SessionLocaleService`, `SessionStringLocalizer<T>`, `AddHackerOsPlatformLocalization`.
+- [x] `SessionLocaleService`, `SessionStringLocalizer<T>`, `AddKazoOsPlatformLocalization`.
 - [x] `fr` satellites loaded in the browser (main thread and workers).
 - [x] Generator: `AppManifest.<culture>.resx` → `localization/`, `HOSAPP0040`; `localized` aggregator.
 - [x] Catalog, launcher, window titles, `IAppCatalogGateway` localized.

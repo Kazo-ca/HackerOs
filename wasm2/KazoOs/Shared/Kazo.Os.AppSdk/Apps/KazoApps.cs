@@ -245,7 +245,7 @@ public static class KazoApps
         }
 
         AppIntentResult result = await Call(intents => intents.OpenUriAsync(uri, appId, cancellationToken)).ConfigureAwait(false);
-        return ToHackResult(result, uri.OriginalString);
+        return ToKazoResult(result, uri.OriginalString);
     }
 
     /// <summary>Opens a URI written as text; see <see cref="OpenUriAsync(Uri, string?, CancellationToken)"/>.</summary>
@@ -307,10 +307,10 @@ public static class KazoApps
             throw new ArgumentException($"The intent '{intentId}' was refused ({result.ErrorCode}).", nameof(intentId));
         }
 
-        return ToHackResult(result, intentId);
+        return ToKazoResult(result, intentId);
     }
 
-    private static KazoIntentResult ToHackResult(AppIntentResult result, string what) => result.Outcome switch
+    private static KazoIntentResult ToKazoResult(AppIntentResult result, string what) => result.Outcome switch
     {
         AppIntentOutcome.Dispatched => new KazoIntentResult(KazoIntentStatus.Delivered, []),
         AppIntentOutcome.ChooserRequired => new KazoIntentResult(KazoIntentStatus.ChooserRequired, result.CandidateAppIds ?? []),

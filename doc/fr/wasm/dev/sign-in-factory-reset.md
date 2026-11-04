@@ -56,7 +56,7 @@ avant `dotnet publish`).
 
 | Élément | Rôle |
 | --- | --- |
-| `SignInFactoryResetSettings` (`Ecosystem.Host`) | Lit `HackerOs:SignIn:FactoryReset:Enabled` une fois au démarrage ; enregistré par `AddHackerOsBrowserHost`. |
+| `SignInFactoryResetSettings` (`Ecosystem.Host`) | Lit `HackerOs:SignIn:FactoryReset:Enabled` une fois au démarrage ; enregistré par `AddKazoOsBrowserHost`. |
 | `SignInFactoryReset` (`Ecosystem.Host`) | `IsOffered` (clé de déploiement, `true` si l'hôte n'a rien enregistré) et `RunAsync`, qui revérifie la clé puis appelle le service d'alimentation. |
 | `SignInFactoryResetPrompt` (`.razor`, `.razor.cs`, `.razor.css`) | Lien et boîte de confirmation ; `IsConfirmationTyped` compare le mot tapé sans tenir compte de la casse ni des espaces autour. |
 | `SystemPowerService.FactoryResetFromSignInAsync` (`Platform.Core`) | Même séquence que `FactoryResetAsync` (journaux vidés, session fermée, base IndexedDB supprimée, page rechargée) ; audit `system.factory-reset` avec `origin = sign-in`. |

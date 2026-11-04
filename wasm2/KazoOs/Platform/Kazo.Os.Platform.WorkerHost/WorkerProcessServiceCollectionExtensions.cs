@@ -32,7 +32,7 @@ public static class WorkerProcessServiceCollectionExtensions
     /// <param name="services">The host's services.</param>
     /// <param name="configure">Adjusts the defaults (sizes, timings, preloaded assemblies).</param>
     /// <returns>The same services.</returns>
-    public static IServiceCollection AddHackerOsWorkerProcesses(
+    public static IServiceCollection AddKazoOsWorkerProcesses(
         this IServiceCollection services,
         Func<WorkerPoolOptions, WorkerPoolOptions>? configure = null)
     {

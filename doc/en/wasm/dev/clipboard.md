@@ -36,7 +36,7 @@ App ──► KazoClipboard ──► IAppClipboardGateway ──► AppClipboar
 | `hostClipboard.js` | `Infrastructure/Kazo.Os.Infrastructure.Browser/wwwroot/` | Listens to `paste` (capture, document), `copy` and `cut` (bubble, window); calls `writeText`. |
 | `FileView.attachPasteTarget` | `Apps/System/Kazo.Os.Apps.FileExplorer/FileControl/FileView.razor.js` | Ctrl+V through the `paste` event; host files imported like a drop. |
 
-The bridge is registered by `AddHackerOsEcosystem` (circuit scope, like
+The bridge is registered by `AddKazoOsEcosystem` (circuit scope, like
 everything that depends on `IJSRuntime`) and started by `App.razor` after the
 preferences are loaded; a failure never prevents startup.
 
@@ -119,7 +119,7 @@ convention.
 - [x] `clipboard.config` document (`sharing` key, `[locked]`), installed at first startup, listed by `OsSettingsDocumentRegistry`.
 - [x] `HostClipboardBridge` and `IHostClipboardChannel` contract.
 - [x] `BrowserHostClipboardChannel` and `hostClipboard.js` in Infrastructure.Browser.
-- [x] Registration in `AddHackerOsEcosystem`, startup in `App.razor`.
+- [x] Registration in `AddKazoOsEcosystem`, startup in `App.razor`.
 - [x] `FileView`: Ctrl+V through `paste`, pasted host files imported like a drop.
 - [x] Copy diagnostic through `KazoClipboard` (`clipboard.write`); `BrowserClipboard` `[Obsolete]`, then removed in 1.0 (ADR 0114).
 - [x] Tests and documentation.

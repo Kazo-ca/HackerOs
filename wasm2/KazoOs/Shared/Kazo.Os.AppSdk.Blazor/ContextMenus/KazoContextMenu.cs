@@ -118,7 +118,7 @@ public sealed class KazoMenuItem : ComponentBase, IHackMenuNode, IDisposable
 
     /// <summary>Gets or sets the icon (<see cref="KazoIcons"/>).</summary>
     [Parameter]
-    public KazoIcon? Icon { get; set; }
+    public KazoSurfaceIcon? Icon { get; set; }
 
     /// <summary>Gets or sets whether the entry is shown but cannot be chosen.</summary>
     [Parameter]

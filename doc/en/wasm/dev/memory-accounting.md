@@ -52,11 +52,11 @@ before phase 5 (simulated `VmRSS`, no layer line, three-line `meminfo`,
 ### Image
 
 The host build measures each app's image during aggregation
-(`CollectHackerOsBuiltInApplications`, [`app-model.md`](../framework/app-model.md)):
+(`CollectKazoOsBuiltInApplications`, [`app-model.md`](../framework/app-model.md)):
 
-- `GetHackerOsAppManifests` also returns the path of the app's assembly
+- `GetKazoOsAppManifests` also returns the path of the app's assembly
   (`AssemblyPath`) and its dependency list (`DependenciesFile`, the file that
-  `GenerateHackerOsAppManifests` already writes);
+  `GenerateKazoOsAppManifests` already writes);
 - `AppImageInspector` takes the size of the app's assembly (unshared),
   follows its references, direct or not, and measures those it finds in the
   list (shared);
@@ -158,16 +158,16 @@ buffer.Resize(bufferedChars * sizeof(char));   // on each change
 
 ### Composition
 
-`AddHackerOsResourceAccounting` (`Kazo.Os.Ecosystem.Host`) composes the
+`AddKazoOsResourceAccounting` (`Kazo.Os.Ecosystem.Host`) composes the
 measurement when `plan.MemoryActive` and
 `ResourceAccountingFeatures.IsMemoryAccountingSupported`: `AllocationTracker`
 registered on the dispatcher, `KernelMemoryLedger` (`IKernelMemoryLedger`),
 `MeasuredMemoryAccountant` (`IMemoryAccountant`), with the images the host
-passes to it (`AddHackerOsResourceAccounting(configuration, images)`;
-`AddHackerOsBrowserHost` passes `HostAppCatalog.Images`, the server and
+passes to it (`AddKazoOsResourceAccounting(configuration, images)`;
+`AddKazoOsBrowserHost` passes `HostAppCatalog.Images`, the server and
 `test/test` pass `BuildKnownLazyApps.Images`; without images, no app has an
 image layer). Otherwise, the null implementations are registered.
-`AddHackerOsEcosystem` passes the ledger to the clipboard, the shell, and the
+`AddKazoOsEcosystem` passes the ledger to the clipboard, the shell, and the
 file and network gateways.
 
 ## Decisions

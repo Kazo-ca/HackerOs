@@ -77,9 +77,9 @@ workers, was removed). A host composed without `IWebWorkerRuntime` writes to
 | `Shared/Kazo.Os.App.Abstractions` | `AppExecutionHost`, `AppExecutionHosts` (`DefaultFor`, `Resolve`, `Of`, `IsWorker`), `AppManifestAttribute.Execution`, `AppManifest.Execution`. |
 | `Shared/Kazo.Os.Simulation.Abstractions/Workers` | `IWebWorkerRuntime`, `IWebWorker`, `WebWorkerStartOptions`; `IWorkerPoolStatus`, `WorkerSnapshot`, `WorkerRole`, `WorkerState`. |
 | `Platform/Kazo.Os.Platform.Core` | `IRemoteProcessHost`, `RemoteProcessLaunch`, `RemoteProcessExit`, `IRemoteService`, `ExecutionPlacement` (pipeline group), `SystemStartupSignal`; `AppLifecycleOrchestrator` launches remotely what `ShouldRunRemotely` accepts; `/proc/hackeros/workers`. |
-| `Platform/Kazo.Os.Platform.WorkerHost` | **Protocol**: `WorkerMessages`, `WireCodec` (explicit encoding, no reflection), `RemoteErrors`, `RemoteOps`. **Worker side**: `WorkerProcessHost`, `RemoteAppExecutionContext`, remote gateways (`RemoteGateways`, `RemoteFileSystemGateway`, `RemoteStandardStreams`), `WorkerCpuMeter`, `WorkerAssemblyLoader`, `BrowserWorkerEntryPoint`. **OS side**: `WorkerPool`, `WorkerConnection`, `RemoteProcessSession`, `WorkerRemoteProcessHost`, `WorkerAwareCpuTimeAccountant`, `WorkerAwareMemoryAccountant`, `AddHackerOsWorkerProcesses`. **Tests**: `LoopbackWebWorkerRuntime`. |
+| `Platform/Kazo.Os.Platform.WorkerHost` | **Protocol**: `WorkerMessages`, `WireCodec` (explicit encoding, no reflection), `RemoteErrors`, `RemoteOps`. **Worker side**: `WorkerProcessHost`, `RemoteAppExecutionContext`, remote gateways (`RemoteGateways`, `RemoteFileSystemGateway`, `RemoteStandardStreams`), `WorkerCpuMeter`, `WorkerAssemblyLoader`, `BrowserWorkerEntryPoint`. **OS side**: `WorkerPool`, `WorkerConnection`, `RemoteProcessSession`, `WorkerRemoteProcessHost`, `WorkerAwareCpuTimeAccountant`, `WorkerAwareMemoryAccountant`, `AddKazoOsWorkerProcesses`. **Tests**: `LoopbackWebWorkerRuntime`. |
 | `Infrastructure/Kazo.Os.Infrastructure.Browser` | `wwwroot/workerHost.js` (creation, `postMessage`, `terminate`, `hardwareConcurrency`, `requestIdleCallback`), `wwwroot/workerBootstrap.js` (the worker's .NET runtime), `Workers/BrowserWebWorkerRuntime`. No host references them: they are imported by the C# (`_content/Kazo.Os.Infrastructure.Browser/…`). |
-| `OS/Kazo.Os.Ecosystem.Host` | `AddHackerOsBrowserHost` (called by the Ecosystem's `Program.cs`) registers `BrowserWebWorkerRuntime` and the workers **in the browser only** (`OperatingSystem.IsBrowser()`), preloading `Kazo.Os.Commands.dll` and with `KnownAssemblies` = the catalog's lazy assemblies (ADR 0124 §4); `EcosystemBootCoordinator.MarkSystemStarted` gives the end-of-boot signal. |
+| `OS/Kazo.Os.Ecosystem.Host` | `AddKazoOsBrowserHost` (called by the Ecosystem's `Program.cs`) registers `BrowserWebWorkerRuntime` and the workers **in the browser only** (`OperatingSystem.IsBrowser()`), preloading `Kazo.Os.Commands.dll` and with `KnownAssemblies` = the catalog's lazy assemblies (ADR 0124 §4); `EcosystemBootCoordinator.MarkSystemStarted` gives the end-of-boot signal. |
 | `Apps/System/Kazo.Os.Apps.SystemMonitor` | `ProcWorkers`/`ParseWorkers`, "Workers" section of the Performance tab. |
 
 ### Starting a worker
@@ -317,7 +317,7 @@ Host side:
 if (OperatingSystem.IsBrowser())
 {
     builder.Services.AddSingleton<IWebWorkerRuntime, BrowserWebWorkerRuntime>();
-    builder.Services.AddHackerOsWorkerProcesses(o => o with { PreloadAssemblies = ["Kazo.Os.Commands.dll"] });
+    builder.Services.AddKazoOsWorkerProcesses(o => o with { PreloadAssemblies = ["Kazo.Os.Commands.dll"] });
 }
 ```
 

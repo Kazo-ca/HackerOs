@@ -193,7 +193,7 @@ public static class BuiltInApplicationsAggregator
     }
 
     /// <summary>
-    /// Parses the list file written by the <c>CollectHackerOsBuiltInApplications</c> target: one
+    /// Parses the list file written by the <c>CollectKazoOsBuiltInApplications</c> target: one
     /// <c>&lt;isSystemApp&gt;|&lt;manifest path&gt;[|&lt;assembly path&gt;|&lt;dependency list&gt;]</c>
     /// line per manifest (an empty flag means <c>false</c>; the last two fields, for the image layer of
     /// ADR 0068, are optional). Duplicate paths (a project referenced twice) collapse to one entry,

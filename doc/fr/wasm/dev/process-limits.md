@@ -23,7 +23,7 @@ Ce document couvre la mise en œuvre des limites de processus : tables, contrôl
 | `ulimit` (built-in) | Platform.Core, `ShellInterpreter.Ulimit.cs` | Lit et change les limites du processus du shell. |
 | `prlimit` | Commands | Lit et change les limites d'un processus. |
 | `KazoProcess.GetResourceLimitsAsync` / `SetResourceLimitAsync`, `KazoResourceLimits` | AppSdk | API publique (SDK 1.2, `PublicAPI.Unshipped.txt`). |
-| `AddHackerOsResourceLimits(configuration)` | Ecosystem.Host | Lit `HackerOs:ResourceLimits:Enabled` pour l'hôte. |
+| `AddKazoOsResourceLimits(configuration)` | Ecosystem.Host | Lit `HackerOs:ResourceLimits:Enabled` pour l'hôte. |
 
 ## Usage
 

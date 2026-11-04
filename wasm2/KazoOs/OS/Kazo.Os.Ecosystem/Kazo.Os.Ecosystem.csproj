@@ -79,7 +79,7 @@
     its origin now serves another version. Written into obj/ at every build and served as a static
     web asset, never kept in the source tree.
   -->
-  <Target Name="WriteHackerOsVersionFile" BeforeTargets="ResolveProjectStaticWebAssets">
+  <Target Name="WriteKazoOsVersionFile" BeforeTargets="ResolveProjectStaticWebAssets">
     <PropertyGroup>
       <_KazoOsVersionFile>$(IntermediateOutputPath)hackeros-version/version.json</_KazoOsVersionFile>
     </PropertyGroup>
@@ -134,7 +134,7 @@
     <Touch Files="$(_KazoOsWhatsNewFile)" />
   </Target>
 
-  <Target Name="WriteHackerOsWhatsNewFile" BeforeTargets="ResolveProjectStaticWebAssets" DependsOnTargets="_KazoOsGenerateWhatsNewFile">
+  <Target Name="WriteKazoOsWhatsNewFile" BeforeTargets="ResolveProjectStaticWebAssets" DependsOnTargets="_KazoOsGenerateWhatsNewFile">
     <ItemGroup>
       <Content Include="$(_KazoOsWhatsNewFile)" Link="wwwroot/whats-new.json" />
       <FileWrites Include="$(_KazoOsWhatsNewFile)" />

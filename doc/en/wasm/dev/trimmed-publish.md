@@ -23,12 +23,12 @@ Measured on 2026-10-17 with `build/publish-trimmed.sh --compare` (files of the
 ```
 Ecosystem.csproj            PublishTrimmed=true, TrimMode=partial
         │
-        ├─ CollectHackerOsBuiltInApplications (build/Kazo.Os.Apps.targets)
+        ├─ CollectKazoOsBuiltInApplications (build/Kazo.Os.Apps.targets)
         │     ManifestGenerator aggregate --trimmer-roots
         │       → obj/.../BuiltInApplications.json
         │       → obj/.../Kazo.Os.TrimmerRoots.xml  ──► TrimmerRootDescriptor
         │
-        └─ _KazoOsRootHackerOsAssemblies (avant PrepareForILLink)
+        └─ _KazoOsRootKazoOsAssemblies (avant PrepareForILLink)
               chaque Kazo.Os.*.dll publiée ──► TrimmerRootAssembly
                                     │
                               ILLink (publish)

@@ -51,7 +51,7 @@ one another without gaps, and the OS applies the missing ones in order.
 ```csharp
 public override void Configure(KazoWebApplicationBuilder builder)
 {
-    builder.Services.AddHackWebDb(db => db
+    builder.Services.AddKazoWebDb(db => db
         .Version(1, v => v
             .CreateStore("notes", keyPath: "id", autoIncrement: true)
             .CreateIndex("notes", "byAuthor", "author")
@@ -63,7 +63,7 @@ public override void Configure(KazoWebApplicationBuilder builder)
 }
 ```
 
-`AddHackWebDb` checks the versions when the site starts. The database opens on the first request.
+`AddKazoWebDb` checks the versions when the site starts. The database opens on the first request.
 
 ### Reading and writing
 
@@ -123,7 +123,7 @@ context: the stored type must appear in it (`[JsonSerializable(typeof(Note))]`).
 
 - `KazoWebHost.CreateApplication` without an OS: the database is in memory (`hackweb.in-memory`), specific to
   the application. The Intranet tests run this way without any configuration.
-- To inspect a test's database, register the gateway before `AddHackWebDb`:
+- To inspect a test's database, register the gateway before `AddKazoWebDb`:
   `services.AddSingleton<IAppWebDatabaseGateway>(new KazoWebDbInMemoryBackend("hackweb.test"))`,
   then read `backend.Database.Describe()`.
 

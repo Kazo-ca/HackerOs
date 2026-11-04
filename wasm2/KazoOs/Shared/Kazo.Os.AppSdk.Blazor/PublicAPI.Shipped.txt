@@ -167,8 +167,8 @@ Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuAttributes
 Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuBuilder
 Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuBuilder.Group(System.Action<Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuBuilder!>! group) -> Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuBuilder!
 Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuBuilder.KazoMenuBuilder(Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuDefinition! menu, object? receiver) -> void
-Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuBuilder.Item(string! id, string! title, System.Func<object?, System.Threading.Tasks.Task!>! onClick, Kazo.Os.AppSdk.Icons.KazoIcon? icon = null, string? shortcut = null, bool isDisabled = false) -> Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuBuilder!
-Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuBuilder.Submenu(string! id, string! title, System.Action<Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuBuilder!>! children, Kazo.Os.AppSdk.Icons.KazoIcon? icon = null) -> Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuBuilder!
+Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuBuilder.Item(string! id, string! title, System.Func<object?, System.Threading.Tasks.Task!>! onClick, Kazo.Os.AppSdk.Icons.KazoSurfaceIcon? icon = null, string? shortcut = null, bool isDisabled = false) -> Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuBuilder!
+Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuBuilder.Submenu(string! id, string! title, System.Action<Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuBuilder!>! children, Kazo.Os.AppSdk.Icons.KazoSurfaceIcon? icon = null) -> Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuBuilder!
 Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuDefinition
 Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuDefinition.AddGroup() -> Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuGroupDefinition!
 Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuDefinition.Clone() -> Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuDefinition!
@@ -198,7 +198,7 @@ Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItem.ChildContent.get -> Microsoft.As
 Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItem.ChildContent.set -> void
 Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItem.Dispose() -> void
 Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItem.KazoMenuItem() -> void
-Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItem.Icon.get -> Kazo.Os.AppSdk.Icons.KazoIcon?
+Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItem.Icon.get -> Kazo.Os.AppSdk.Icons.KazoSurfaceIcon?
 Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItem.Icon.set -> void
 Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItem.Id.get -> string!
 Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItem.Id.set -> void
@@ -216,7 +216,7 @@ Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItemDefinition
 Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItemDefinition.Children.get -> System.Collections.Generic.IList<Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuGroupDefinition!>!
 Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItemDefinition.Clone() -> Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItemDefinition!
 Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItemDefinition.KazoMenuItemDefinition(string! id, string! title) -> void
-Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItemDefinition.Icon.get -> Kazo.Os.AppSdk.Icons.KazoIcon?
+Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItemDefinition.Icon.get -> Kazo.Os.AppSdk.Icons.KazoSurfaceIcon?
 Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItemDefinition.Icon.set -> void
 Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItemDefinition.Id.get -> string!
 Kazo.Os.AppSdk.Blazor.ContextMenus.KazoMenuItemDefinition.IsDisabled.get -> bool
@@ -554,7 +554,7 @@ Kazo.Os.AppSdk.Blazor.Files.RegisterFileContextMenuAttribute
 Kazo.Os.AppSdk.Blazor.Files.RegisterFileContextMenuAttribute.RegisterFileContextMenuAttribute() -> void
 Kazo.Os.AppSdk.Blazor.Files.RegisterFileContextMenuContext
 Kazo.Os.AppSdk.Blazor.Files.RegisterFileContextMenuContext.Entries.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppContextMenuEntryManifest!>!
-Kazo.Os.AppSdk.Blazor.Files.RegisterFileContextMenuContext.Register(string! title, string! name, string! target = "self", string? intent = null, Kazo.Os.AppSdk.Icons.KazoIcon? icon = null, Kazo.Os.AppSdk.Files.FileMenuScope scope = Kazo.Os.AppSdk.Files.FileMenuScope.None, System.Collections.Generic.IReadOnlyList<string!>? types = null, Kazo.Os.AppSdk.Files.MenuSelection selection = Kazo.Os.AppSdk.Files.MenuSelection.All, bool first = false, string? after = null, string? afterGroup = null, string? parent = null) -> void
+Kazo.Os.AppSdk.Blazor.Files.RegisterFileContextMenuContext.Register(string! title, string! name, string! target = "self", string? intent = null, Kazo.Os.AppSdk.Icons.KazoSurfaceIcon? icon = null, Kazo.Os.AppSdk.Files.FileMenuScope scope = Kazo.Os.AppSdk.Files.FileMenuScope.None, System.Collections.Generic.IReadOnlyList<string!>? types = null, Kazo.Os.AppSdk.Files.MenuSelection selection = Kazo.Os.AppSdk.Files.MenuSelection.All, bool first = false, string? after = null, string? afterGroup = null, string? parent = null) -> void
 Kazo.Os.AppSdk.Blazor.Files.RegisterFileContextMenuContext.RegisterFileContextMenuContext() -> void
 Kazo.Os.AppSdk.Blazor.Files.RegisterFileContextMenuContext.RestrictToScreen(string! name, int screen) -> void
 Kazo.Os.AppSdk.Blazor.Files.RegisterFileContextMenuContext.RestrictToScreens(string! name, Kazo.Os.AppSdk.Files.MenuScreens screens) -> void

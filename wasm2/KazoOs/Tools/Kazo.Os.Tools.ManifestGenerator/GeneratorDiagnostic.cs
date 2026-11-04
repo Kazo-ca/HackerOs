@@ -56,7 +56,7 @@ public static class GeneratorCodes
 
     /// <summary>
     /// The app project references a project outside the SDK boundary (ADR 0055 §2). Emitted by the
-    /// <c>ValidateHackerOsSdkBoundary</c> MSBuild target, not by this tool; listed here so the catalog
+    /// <c>ValidateKazoOsSdkBoundary</c> MSBuild target, not by this tool; listed here so the catalog
     /// of codes stays in one place. ADR 0059 gives it this number (ADR 0055 said HOSAPP0002, already taken).
     /// </summary>
     public const string ForbiddenReference = "HOSAPP0030";

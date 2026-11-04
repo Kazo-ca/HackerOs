@@ -20,8 +20,8 @@ public sealed record ResourceLimitsSettings(bool Enabled)
 
 /// <summary>Reads <see cref="ResourceLimitsSettings"/> from the host configuration (ADR 0125, section 6).</summary>
 /// <remarks>
-/// Each host calls <see cref="AddHackerOsResourceLimits"/> before
-/// <see cref="EcosystemServiceCollectionExtensions.AddHackerOsEcosystem"/>; a host or a test that does
+/// Each host calls <see cref="AddKazoOsResourceLimits"/> before
+/// <see cref="EcosystemServiceCollectionExtensions.AddKazoOsEcosystem"/>; a host or a test that does
 /// not gets <see cref="ResourceLimitsSettings.Default"/>.
 /// </remarks>
 public static class ResourceLimitsServiceCollectionExtensions
@@ -42,7 +42,7 @@ public static class ResourceLimitsServiceCollectionExtensions
     /// <param name="services">The host's service collection.</param>
     /// <param name="configuration">The host configuration (<c>appsettings.json</c>).</param>
     /// <returns>The settings, also registered as a singleton.</returns>
-    public static ResourceLimitsSettings AddHackerOsResourceLimits(this IServiceCollection services, IConfiguration? configuration)
+    public static ResourceLimitsSettings AddKazoOsResourceLimits(this IServiceCollection services, IConfiguration? configuration)
     {
         ArgumentNullException.ThrowIfNull(services);
         ResourceLimitsSettings settings = ReadSettings(configuration);

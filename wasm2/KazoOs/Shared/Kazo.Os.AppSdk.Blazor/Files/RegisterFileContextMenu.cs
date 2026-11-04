@@ -72,7 +72,7 @@ public sealed class RegisterFileContextMenuContext
         string name,
         string target = AppContextMenus.SelfTarget,
         string? intent = null,
-        KazoIcon? icon = null,
+        KazoSurfaceIcon? icon = null,
         FileMenuScope scope = FileMenuScope.None,
         IReadOnlyList<string>? types = null,
         MenuSelection selection = MenuSelection.All,
@@ -193,7 +193,7 @@ public sealed class RegisterFileContextMenuContext
             : entry.Scopes;
     }
 
-    private static AppContextMenuIconManifest ToManifest(KazoIcon icon) => icon.Kind == KazoIconKind.Vector
+    private static AppContextMenuIconManifest ToManifest(KazoSurfaceIcon icon) => icon.Kind == KazoIconKind.Vector
         ? new AppContextMenuIconManifest(AppContextMenus.VectorIcon, icon.Source, icon.Library.ToString().ToLowerInvariant())
         : new AppContextMenuIconManifest(AppContextMenus.ImageIcon, icon.Source);
 }

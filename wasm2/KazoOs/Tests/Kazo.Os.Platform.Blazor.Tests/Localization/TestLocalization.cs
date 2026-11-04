@@ -25,7 +25,7 @@ internal static class TestLocalization
 
     /// <summary>
     /// Registers <paramref name="locale"/> and binds every injected <see cref="IStringLocalizer{T}"/>
-    /// to it, as <c>AddHackerOsPlatformLocalization</c> does in the hosts.
+    /// to it, as <c>AddKazoOsPlatformLocalization</c> does in the hosts.
     /// </summary>
     public static IServiceCollection AddSessionLocalizer(this IServiceCollection services, SessionLocaleService locale)
     {

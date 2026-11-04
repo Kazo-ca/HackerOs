@@ -203,7 +203,7 @@ de passe ne sont jamais journalisés.
 
 ## Composition (hôtes)
 
-`AddHackerOsEcosystem` (Ecosystem, `test/test` et le serveur) enregistre, en
+`AddKazoOsEcosystem` (Ecosystem, `test/test` et le serveur) enregistre, en
 `Scoped` : `IAppPermissionStore`, `DangerousCapabilityApprovalBroker` (aussi
 comme `IDangerousCapabilityApprovalPrompt`), `IDangerousCapabilityGate`,
 `AppPermissionAdministration`, et passe la passerelle à

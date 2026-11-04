@@ -125,7 +125,7 @@ jobs:
           dotnet restore "$SAMPLE_PROJECT"
           --configfile Samples/Kazo.Os.Windowing.SampleHost/nuget.config
           --force-evaluate --no-cache
-          -p:UseLocalHackerOsPackages=true
+          -p:UseLocalKazoOsPackages=true
 
       - name: Verify restored dependency kinds and versions
         shell: bash
@@ -152,14 +152,14 @@ jobs:
         run: >-
           dotnet build "$SAMPLE_PROJECT"
           --configuration Release --no-restore
-          -p:UseLocalHackerOsPackages=true
+          -p:UseLocalKazoOsPackages=true
 
       - name: Publish package-only sample
         run: >-
           dotnet publish "$SAMPLE_PROJECT"
           --configuration Release --no-restore
           --output "$SAMPLE_PUBLISH_OUTPUT"
-          -p:UseLocalHackerOsPackages=true
+          -p:UseLocalKazoOsPackages=true
 
       - name: Verify packaged theme static asset
         shell: bash

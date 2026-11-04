@@ -115,13 +115,13 @@ syslog line) but the DLL still arrives through `Kazo.Os.Ecosystem.Host`.
 | `test/test` | `appsettings.json` (server-side composition, prerendering) | both enabled |
 | `Server/Kazo.Os.Server` | none: it serves the Ecosystem's OS and its `wwwroot/appsettings.json` (ADR 0130) | as the Ecosystem (enabled) |
 
-Each host calls, before `AddHackerOsEcosystem`:
+Each host calls, before `AddKazoOsEcosystem`:
 
 ```csharp
-builder.Services.AddHackerOsResourceAccounting(builder.Configuration, BuildKnownLazyApps.Images);
+builder.Services.AddKazoOsResourceAccounting(builder.Configuration, BuildKnownLazyApps.Images);
 ```
 
-(`AddHackerOsBrowserHost` does it for a WebAssembly host, with the images of its
+(`AddKazoOsBrowserHost` does it for a WebAssembly host, with the images of its
 `HostAppCatalog`; see [`sdk-packages.md`](../framework/sdk-packages.md).)
 
 - The section is read **once**; changing it requires reloading the page.
@@ -132,7 +132,7 @@ builder.Services.AddHackerOsResourceAccounting(builder.Configuration, BuildKnown
   `EcosystemBootCoordinator` as soon as the log is attached), followed by a
   summary line, for example
   `resource accounting: cpu off (not built), memory on`.
-- A host or a test that does not call `AddHackerOsResourceAccounting` receives
+- A host or a test that does not call `AddKazoOsResourceAccounting` receives
   `ResourceAccountingPlan.Disabled` and the null accountants.
 
 ### Registering a measurement
@@ -142,14 +142,14 @@ code); the memory measurement registers its `AllocationTracker` the same
 way:
 
 ```csharp
-// Dans AddHackerOsResourceAccounting, quand plan.CpuActive :
+// Dans AddKazoOsResourceAccounting, quand plan.CpuActive :
 MeasuredCpuTimeAccountant cpu = new(plan.Settings.UnresponsiveThreshold);
 services.AddSingleton(new CpuAccountingRegistration(dispatcher.Register(cpu)));
 services.AddSingleton(cpu);
 services.AddSingleton<ICpuTimeAccountant>(cpu);
 ```
 
-`AddHackerOsResourceAccounting` registers the null accountants (and
+`AddKazoOsResourceAccounting` registers the null accountants (and
 `NullKernelMemoryLedger`) with `TryAddSingleton`: a measurement registered before
 them replaces them. Memory already does this (`AddMeasuredMemory`, under
 `ResourceAccountingFeatures.IsMemoryAccountingSupported`).

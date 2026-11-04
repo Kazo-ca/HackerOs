@@ -41,7 +41,7 @@ mkdir: cannot create directory 'projets': No space left on device
 | Hôte Ecosystem | `Administration/BrowserSystemBackupDevice.cs`, `EcosystemServiceCollectionExtensions.cs` (enregistrements), `EcosystemBootCoordinator.cs` (surveillance de l'espace, entrée d'audit d'une restauration) |
 | Apps | `Apps/System/Kazo.Os.Apps.Settings/BackupPanel.razor` (onglet *Backup*), `Apps/Commands/Kazo.Os.Commands/Hackbackup/` ; `Platform/Kazo.Os.Platform.Blazor/Shell/ClockPanel.razor` (boutons d'action des notifications) |
 
-Les trois hôtes appellent `AddHackerOsEcosystem`. La sauvegarde n'est branchée
+Les trois hôtes appellent `AddKazoOsEcosystem`. La sauvegarde n'est branchée
 que dans un navigateur (`OperatingSystem.IsBrowser()`) : l'hôte Server en rendu
 serveur n'a pas IndexedDB, `KazoSystemBackup.IsSupported` y vaut `false` et
 l'onglet est masqué (ADR 0099, conséquences).

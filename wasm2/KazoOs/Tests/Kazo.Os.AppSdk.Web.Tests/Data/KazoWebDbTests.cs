@@ -177,8 +177,8 @@ public sealed class KazoWebDbTests
     [Fact]
     public void Versions_must_follow_each_other()
     {
-        // AddHackWebDb checks the versions at start-up, not at the first request.
-        Assert.ThrowsAny<Exception>(() => new ServiceCollection().AddHackWebDb(builder =>
+        // AddKazoWebDb checks the versions at start-up, not at the first request.
+        Assert.ThrowsAny<Exception>(() => new ServiceCollection().AddKazoWebDb(builder =>
             builder.Version(1, version => version.CreateStore("a")).Version(3, version => version.CreateStore("b"))));
     }
 
@@ -197,7 +197,7 @@ public sealed class KazoWebDbTests
     {
         ServiceCollection services = new();
         services.AddSingleton(Json());
-        services.AddHackWebDb(Contacts);
+        services.AddKazoWebDb(Contacts);
         await using ServiceProvider provider = services.BuildServiceProvider();
 
         KazoWebDb db = provider.GetRequiredService<KazoWebDb>();
@@ -214,7 +214,7 @@ public sealed class KazoWebDbTests
         KazoWebDbInMemoryBackend backend = new(KazoWebDbNames.ForApp("com.example.site"));
         services.AddSingleton<IAppWebDatabaseGateway>(backend);
         services.AddSingleton(Json());
-        services.AddHackWebDb(Contacts);
+        services.AddKazoWebDb(Contacts);
         await using ServiceProvider provider = services.BuildServiceProvider();
 
         KazoWebDb db = provider.GetRequiredService<KazoWebDb>();

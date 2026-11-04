@@ -3794,11 +3794,11 @@ virtual Kazo.Os.AppSdk.WebServerAppBase.OnListeningAsync(Kazo.Os.AppSdk.Net.Kazo
 ~Kazo.Os.AppSdk.WebData.KazoWebDbJsonContext.KazoWebDbRequest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.AppSdk.WebData.KazoWebDbRequest>
 ~Kazo.Os.AppSdk.WebData.KazoWebDbJsonContext.KazoWebDbSchemaDefinition.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.AppSdk.WebData.KazoWebDbSchemaDefinition>
 ~Kazo.Os.AppSdk.WebData.KazoWebDbJsonContext.KazoWebDbStoreDefinition.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.AppSdk.WebData.KazoWebDbStoreDefinition>
-~Kazo.Os.AppSdk.WebData.KazoWebDbJsonContext.IReadOnlyListHackWebDbIndexChange.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.WebData.KazoWebDbIndexChange>>
-~Kazo.Os.AppSdk.WebData.KazoWebDbJsonContext.IReadOnlyListHackWebDbIndexDefinition.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.WebData.KazoWebDbIndexDefinition>>
-~Kazo.Os.AppSdk.WebData.KazoWebDbJsonContext.IReadOnlyListHackWebDbMigrationStep.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.WebData.KazoWebDbMigrationStep>>
-~Kazo.Os.AppSdk.WebData.KazoWebDbJsonContext.IReadOnlyListHackWebDbOperation.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.WebData.KazoWebDbOperation>>
-~Kazo.Os.AppSdk.WebData.KazoWebDbJsonContext.IReadOnlyListHackWebDbStoreDefinition.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.WebData.KazoWebDbStoreDefinition>>
+~Kazo.Os.AppSdk.WebData.KazoWebDbJsonContext.IReadOnlyListKazoWebDbIndexChange.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.WebData.KazoWebDbIndexChange>>
+~Kazo.Os.AppSdk.WebData.KazoWebDbJsonContext.IReadOnlyListKazoWebDbIndexDefinition.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.WebData.KazoWebDbIndexDefinition>>
+~Kazo.Os.AppSdk.WebData.KazoWebDbJsonContext.IReadOnlyListKazoWebDbMigrationStep.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.WebData.KazoWebDbMigrationStep>>
+~Kazo.Os.AppSdk.WebData.KazoWebDbJsonContext.IReadOnlyListKazoWebDbOperation.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.WebData.KazoWebDbOperation>>
+~Kazo.Os.AppSdk.WebData.KazoWebDbJsonContext.IReadOnlyListKazoWebDbStoreDefinition.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.WebData.KazoWebDbStoreDefinition>>
 ~Kazo.Os.AppSdk.WebData.KazoWebDbJsonContext.IReadOnlyListString.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<string>>
 ~Kazo.Os.AppSdk.WebData.KazoWebDbJsonContext.Int32.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<int>
 ~Kazo.Os.AppSdk.WebData.KazoWebDbJsonContext.ListString.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.List<string>>

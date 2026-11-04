@@ -1,0 +1,42 @@
+.compat-window {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: var(--hos-surface, #0d1117);
+    color: var(--hos-text, #c9d1d9);
+    font-family: 'Consolas', 'Courier New', monospace;
+}
+
+.compat-header {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--hos-border, #30363d);
+    color: var(--hos-accent, #42d392);
+    font-weight: bold;
+}
+
+.compat-body {
+    flex: 1;
+    padding: 14px;
+}
+
+.compat-button {
+    background: #161b22;
+    color: inherit;
+    border: 1px solid var(--hos-border, #30363d);
+    border-radius: 4px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.compat-button:hover {
+    border-color: var(--hos-accent, #42d392);
+}
+
+.compat-files {
+    height: 220px;
+    margin: 10px 0;
+    border: 1px solid var(--hos-border, #30363d);
+    border-radius: 4px;
+    overflow: hidden;
+}

@@ -9,7 +9,7 @@ namespace Kazo.Os.Ecosystem.Tests;
 /// <summary>Installed apps join the host's catalog at boot (ADR 0182 §5, Q5 answer C), then without a restart (ADR 0214 §1).</summary>
 public sealed class InstalledAppsBootTests
 {
-    private static AppManifest Manifest(string id, string minimumSdk = "2.0.0", string version = "1.0.0") => AppManifestJsonSerializer.NormalizeOptionalCollections(AppManifestJsonSerializer.DeserializeStrict(
+    private static AppManifest Manifest(string id, string minimumSdk = "3.0.0", string version = "1.0.0") => AppManifestJsonSerializer.NormalizeOptionalCollections(AppManifestJsonSerializer.DeserializeStrict(
         "{\"schemaVersion\":1,\"id\":\"" + id + "\",\"name\":\"Sample\",\"version\":\"" + version + "\",\"publisherId\":\"pub.kazo\","
         + "\"description\":\"A sample.\",\"kind\":\"window\",\"platform\":{\"supported\":[\"desktop\"],\"entryPoints\":[{\"platforms\":[\"desktop\"],"
         + "\"assembly\":\"Kazo.Sample.dll\",\"type\":\"Kazo.Sample.SampleWindow\"}]},\"sdkCompatibility\":{\"minimumVersion\":\"" + minimumSdk + "\"},"
@@ -18,7 +18,7 @@ public sealed class InstalledAppsBootTests
         + "\"baselineStorageIoWeight\":0,\"burstStorageIoWeight\":0,\"baselineNetworkIoWeight\":0,\"burstNetworkIoWeight\":0},\"intents\":[],\"dependencies\":[],"
         + "\"assets\":[],\"fileHandlers\":[],\"singleInstancePerUser\":false,\"autoStart\":false,\"supportsBack\":false,\"execution\":\"mainThread\"}"));
 
-    private static InstalledApp App(string id, string minimumSdk = "2.0.0", string version = "1.0.0") =>
+    private static InstalledApp App(string id, string minimumSdk = "3.0.0", string version = "1.0.0") =>
         new(new AppPackageSource("Kazo-ca", "Sample", SemanticVersion.Parse(version)), Manifest(id, minimumSdk, version));
 
     private static InstalledAppsBoot Boot(params InstalledApp[] apps)

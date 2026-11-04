@@ -37,7 +37,7 @@ App ──► KazoClipboard ──► IAppClipboardGateway ──► AppClipboar
 | `hostClipboard.js` | `Infrastructure/Kazo.Os.Infrastructure.Browser/wwwroot/` | Écoute `paste` (capture, document), `copy` et `cut` (bulle, window) ; appelle `writeText`. |
 | `FileView.attachPasteTarget` | `Apps/System/Kazo.Os.Apps.FileExplorer/FileControl/FileView.razor.js` | Ctrl+V par l'événement `paste` ; fichiers de l'hôte importés comme un dépôt. |
 
-Le pont est enregistré par `AddHackerOsEcosystem` (portée par circuit, comme
+Le pont est enregistré par `AddKazoOsEcosystem` (portée par circuit, comme
 tout ce qui dépend d'`IJSRuntime`) et démarré par `App.razor` après le
 chargement des préférences ; un échec n'empêche jamais le démarrage.
 
@@ -120,7 +120,7 @@ la convention de l'ADR 0044.
 - [x] Document `clipboard.config` (clé `sharing`, `[locked]`), installé au premier démarrage, listé par `OsSettingsDocumentRegistry`.
 - [x] `HostClipboardBridge` et contrat `IHostClipboardChannel`.
 - [x] `BrowserHostClipboardChannel` et `hostClipboard.js` dans Infrastructure.Browser.
-- [x] Enregistrement dans `AddHackerOsEcosystem`, démarrage dans `App.razor`.
+- [x] Enregistrement dans `AddKazoOsEcosystem`, démarrage dans `App.razor`.
 - [x] `FileView` : Ctrl+V par `paste`, fichiers de l'hôte collés importés comme un dépôt.
 - [x] Diagnostic copie par `KazoClipboard` (`clipboard.write`) ; `BrowserClipboard` `[Obsolete]`, puis retiré en 1.0 (ADR 0114).
 - [x] Tests et documentation.

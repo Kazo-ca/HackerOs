@@ -116,8 +116,8 @@ capacités dangereuses. Liste et règles : [`app-model.md`](../framework/app-mod
 
 | Projet | Rôle |
 |---|---|
-| `OS/Kazo.Os.Ecosystem` | **L'hôte livré** : PWA Blazor WebAssembly autonome (`wwwroot/index.html`, service worker), sans serveur. Il référence `Kazo.Os.Ecosystem.Host` et les apps, agrège leurs manifestes dans `BuiltInApplications.json` au build, et son `Program.cs` appelle `AddHackerOsBrowserHost`. Tout doit fonctionner avec lui seul, hors ligne. |
-| `OS/Kazo.Os.Ecosystem.Host` | **L'OS lui-même**, en bibliothèque Razor publiée en paquet (ADR 0098 §2) : bureau (`App.razor`), écran de progression, `EcosystemBootCoordinator`, composition des services (`AddHackerOsEcosystem`, `AddHackerOsBrowserHost`), mesure des ressources, adaptateurs du navigateur, jetons de design (`_content/Kazo.Os.Ecosystem.Host/css/app.css`), `HostAppCatalog`. Un hôte d'un autre dépôt le référence ([`sdk-packages.md`](../framework/sdk-packages.md)). |
+| `OS/Kazo.Os.Ecosystem` | **L'hôte livré** : PWA Blazor WebAssembly autonome (`wwwroot/index.html`, service worker), sans serveur. Il référence `Kazo.Os.Ecosystem.Host` et les apps, agrège leurs manifestes dans `BuiltInApplications.json` au build, et son `Program.cs` appelle `AddKazoOsBrowserHost`. Tout doit fonctionner avec lui seul, hors ligne. |
+| `OS/Kazo.Os.Ecosystem.Host` | **L'OS lui-même**, en bibliothèque Razor publiée en paquet (ADR 0098 §2) : bureau (`App.razor`), écran de progression, `EcosystemBootCoordinator`, composition des services (`AddKazoOsEcosystem`, `AddKazoOsBrowserHost`), mesure des ressources, adaptateurs du navigateur, jetons de design (`_content/Kazo.Os.Ecosystem.Host/css/app.css`), `HostAppCatalog`. Un hôte d'un autre dépôt le référence ([`sdk-packages.md`](../framework/sdk-packages.md)). |
 | `test/test` | Blazor Web App de débogage : rend le même arbre de composants en `InteractiveWebAssembly` pour profiter du débogueur. Pas une cible de distribution. |
 | `Server/Kazo.Os.Server` | Serveur ASP.NET Core **optionnel** : synchronisation, comptes, relais HTTP/TCP/UDP vers le vrai réseau ([`server-network-relay.md`](server-network-relay.md), politique et quotas dans `appsettings.json`). Il sert aussi l'OS de l'Ecosystem tel quel, exécuté en WebAssembly dans le navigateur comme la PWA ; cet OS s'y connecte tout seul et montre l'état dans la zone de notification (ADR 0130, 0134, [`server-hosting.md`](server-hosting.md)). Aucune app ne doit en dépendre. |
 | `Server/Kazo.Os.Server.Contracts` | Contrats partagés entre le serveur et le client. |
@@ -191,8 +191,8 @@ Documents : [`hack-file-api.md`](../framework/hack-file-api.md),
 
 ### Démarrage
 
-1. `Program.cs` de l'hôte appelle `AddHackerOsBrowserHost`, qui enregistre les
-   services (`AddHackerOsEcosystem`) et le catalogue lu dans
+1. `Program.cs` de l'hôte appelle `AddKazoOsBrowserHost`, qui enregistre les
+   services (`AddKazoOsEcosystem`) et le catalogue lu dans
    `BuiltInApplications.json` (`HostAppCatalog`, `BuildKnownLazyApps` dans l'Ecosystem).
 2. `EcosystemBootCoordinator` monte le stockage, attache l'écrivain de journaux
    à `/var/log`, installe `/etc/hackeros/apps.config`, démarre l'horloge
@@ -210,7 +210,7 @@ Documents : [`hack-file-api.md`](../framework/hack-file-api.md),
 |---|---|---|
 | Avertissements traités comme erreurs, analyse de compatibilité avec le *trimming* | `Directory.Build.props` | — |
 | Publication Release trimmée de l'hôte : racines générées depuis les manifestes, assemblies `Kazo.Os.*` entières (ADR 0106, 0113) | `build/Kazo.Os.Apps.targets`, testée par `build/publish-trimmed.sh` | [`trimmed-publish.md`](trimmed-publish.md) |
-| Pas de CSS ni de JavaScript en ligne dans un `.razor` (ADR 0007) | cible `ValidateHackerOsRazorAssets`, `Directory.Build.targets` | [`AGENTS.md`](../../../../AGENTS.md) |
+| Pas de CSS ni de JavaScript en ligne dans un `.razor` (ADR 0007) | cible `ValidateKazoOsRazorAssets`, `Directory.Build.targets` | [`AGENTS.md`](../../../../AGENTS.md) |
 | Chaque projet sous `Apps/` a une classe `[AppManifest]` valide ; `manifest.json` est régénéré (`HOSAPP0001`…) | `build/Kazo.Os.Apps.targets` | [`app-model.md`](../framework/app-model.md) |
 | Une app n'utilise que le SDK (`HOSAPP0030`, `HOSAPP0031`, `HOSSDK0001`) | `build/Kazo.Os.Apps.targets` et générateur | [`app-sdk.md`](../framework/app-sdk.md) |
 | La surface publique du SDK ne change pas sans trace : `PublicAPI.Shipped.txt`/`Unshipped.txt` (RS0016, RS0017) ; une app compilée contre la majeure courante (2.x) est admise, une app 1.x refusée (ADR 0114, ADR 0149) | analyseur d'API publique, `Tests/Kazo.Os.SdkCompatibility.Tests` | [`sdk-packages.md`](../framework/sdk-packages.md) |

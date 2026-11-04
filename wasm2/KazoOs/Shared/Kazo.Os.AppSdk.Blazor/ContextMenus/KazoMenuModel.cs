@@ -204,7 +204,7 @@ public sealed class KazoMenuItemDefinition
     public string Title { get; set; }
 
     /// <summary>Gets or sets the icon drawn before the title.</summary>
-    public KazoIcon? Icon { get; set; }
+    public KazoSurfaceIcon? Icon { get; set; }
 
     /// <summary>Gets or sets whether the entry is shown but cannot be chosen.</summary>
     public bool IsDisabled { get; set; }

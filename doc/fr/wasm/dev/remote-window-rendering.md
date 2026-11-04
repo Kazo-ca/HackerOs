@@ -31,7 +31,7 @@ Dans `OS/Kazo.Os.Ecosystem/wwwroot/appsettings.json` :
 - `Apps` : identifiants des apps à fenêtre rendues dans un worker. Une app
   avec de l'interop JavaScript propre ne marchera pas (pas d'`IJSRuntime`
   dans le worker).
-- Seulement dans le navigateur, avec les workers (`AddHackerOsWorkerProcesses`).
+- Seulement dans le navigateur, avec les workers (`AddKazoOsWorkerProcesses`).
   Si l'hôte des processus distants n'est pas celui des workers (tests, Server
   en mode interactif), la fenêtre se rend sur la page comme avant.
 
@@ -57,8 +57,8 @@ WindowAppRenderer                                  WorkerProcessHost
 |---|---|
 | `Platform/Kazo.Os.Platform.Blazor` | `IRemoteWindowRendering` (`GetHostComponent`) ; `WindowAppRenderer` le consulte s'il est enregistré. |
 | `Platform/Kazo.Os.Platform.WorkerHost` | Messages `ui` (worker → OS) et `uin` (OS → worker) ; `start` avec `k = 3`, `ra`/`rt` (le runner) ; côté worker `IWorkerWindowRunner`, `WorkerWindowRun` ; côté OS `WorkerRemoteProcessHost.StartWindowAsync`, `RemoteWindowProcess`, `RemoteProcessSession.UiReceiver`. |
-| `Platform/Kazo.Os.Platform.RemoteRendering` (nouveau) | **Worker/** : `WorkerWindowRunner`, `WorkerWindowRenderer`, `WorkerWindowRoot`, `DomPatchWriter`, `DomEventArgsReader`, `RemoteDialogService`. **Host/** : `RemoteWindowHost` (+ `.razor.cs`, `.razor.css`, `.razor.js`), `RemoteWindowRendering`, `RemoteWindowRenderingOptions`. `AddHackerOsRemoteWindowRendering`. |
-| `OS/Kazo.Os.Ecosystem.Host` | Lit la section `HackerOs:RemoteWindowRendering` et appelle `AddHackerOsRemoteWindowRendering`. |
+| `Platform/Kazo.Os.Platform.RemoteRendering` (nouveau) | **Worker/** : `WorkerWindowRunner`, `WorkerWindowRenderer`, `WorkerWindowRoot`, `DomPatchWriter`, `DomEventArgsReader`, `RemoteDialogService`. **Host/** : `RemoteWindowHost` (+ `.razor.cs`, `.razor.css`, `.razor.js`), `RemoteWindowRendering`, `RemoteWindowRenderingOptions`. `AddKazoOsRemoteWindowRendering`. |
+| `OS/Kazo.Os.Ecosystem.Host` | Lit la section `HackerOs:RemoteWindowRendering` et appelle `AddKazoOsRemoteWindowRendering`. |
 
 ### Processus
 

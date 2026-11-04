@@ -650,7 +650,7 @@ Kazo.Os.App.Abstractions.PersistedAppCatalogEntry.Manifest.init -> void
 Kazo.Os.App.Abstractions.PersistedAppCatalogEntry.PersistedAppCatalogEntry(Kazo.Os.App.Abstractions.AppManifest! Manifest, bool IsEnabled) -> void
 Kazo.Os.App.Abstractions.PlatformKeyboardStrategy
 Kazo.Os.App.Abstractions.PlatformKeyboardStrategy.PhysicalOnly = 0 -> Kazo.Os.App.Abstractions.PlatformKeyboardStrategy
-Kazo.Os.App.Abstractions.PlatformKeyboardStrategy.VirtualHackerOsKeyboard = 1 -> Kazo.Os.App.Abstractions.PlatformKeyboardStrategy
+Kazo.Os.App.Abstractions.PlatformKeyboardStrategy.VirtualKazoOsKeyboard = 1 -> Kazo.Os.App.Abstractions.PlatformKeyboardStrategy
 Kazo.Os.App.Abstractions.PlatformSystemNavigationKind
 Kazo.Os.App.Abstractions.PlatformSystemNavigationKind.AndroidStyleSystemBar = 2 -> Kazo.Os.App.Abstractions.PlatformSystemNavigationKind
 Kazo.Os.App.Abstractions.PlatformSystemNavigationKind.DesktopTaskbar = 1 -> Kazo.Os.App.Abstractions.PlatformSystemNavigationKind

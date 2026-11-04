@@ -32,12 +32,12 @@ namespace Kazo.Os.Ecosystem.Tests;
 public sealed class EcosystemServiceCollectionExtensionsTests
 {
     [Fact]
-    public async Task AddHackerOsEcosystem_resolves_complete_synchronous_graph()
+    public async Task AddKazoOsEcosystem_resolves_complete_synchronous_graph()
     {
         ServiceCollection services = new();
         services.AddSingleton<NavigationManager, TestNavigationManager>();
         services.AddSingleton<IJSRuntime, NonInvokedJsRuntime>();
-        services.AddHackerOsEcosystem();
+        services.AddKazoOsEcosystem();
         // The settings services take an ILogger<T> (ADR 0044 warnings). Strip the WASM-only
         // diagnostic ILoggerProvider (the former server-rendered host did the same, ADR 0027):
         // its singleton-over-scoped edge is accepted in WASM but rejected by scope validation.
@@ -107,14 +107,14 @@ public sealed class EcosystemServiceCollectionExtensionsTests
     [Theory]
     [InlineData(true)]
     [InlineData(false)]
-    public async Task AddHackerOsEcosystem_composes_the_resource_limits_of_ADR_0125(bool enabled)
+    public async Task AddKazoOsEcosystem_composes_the_resource_limits_of_ADR_0125(bool enabled)
     {
         ServiceCollection services = new();
         services.AddSingleton<NavigationManager, TestNavigationManager>();
         services.AddSingleton<IJSRuntime, NonInvokedJsRuntime>();
-        services.AddHackerOsResourceLimits(new Microsoft.Extensions.Configuration.ConfigurationBuilder()
+        services.AddKazoOsResourceLimits(new Microsoft.Extensions.Configuration.ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?> { ["HackerOs:ResourceLimits:Enabled"] = enabled.ToString() }).Build());
-        services.AddHackerOsEcosystem();
+        services.AddKazoOsEcosystem();
         services.RemoveAll<Microsoft.Extensions.Logging.ILoggerProvider>();
         await using ServiceProvider rootProvider = services.BuildServiceProvider(
             new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });

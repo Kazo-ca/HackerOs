@@ -52,7 +52,7 @@ change to apply everywhere, make it before the first deployment (or in
 
 | Element | Role |
 | --- | --- |
-| `SignInFactoryResetSettings` (`Ecosystem.Host`) | Reads `HackerOs:SignIn:FactoryReset:Enabled` once at boot; registered by `AddHackerOsBrowserHost`. |
+| `SignInFactoryResetSettings` (`Ecosystem.Host`) | Reads `HackerOs:SignIn:FactoryReset:Enabled` once at boot; registered by `AddKazoOsBrowserHost`. |
 | `SignInFactoryReset` (`Ecosystem.Host`) | `IsOffered` (deployment key, `true` when the host registered nothing) and `RunAsync`, which checks the key again then calls the power service. |
 | `SignInFactoryResetPrompt` (`.razor`, `.razor.cs`, `.razor.css`) | Link and confirmation box; `IsConfirmationTyped` compares the typed word ignoring case and surrounding spaces. |
 | `SystemPowerService.FactoryResetFromSignInAsync` (`Platform.Core`) | Same sequence as `FactoryResetAsync` (logs flushed, session ended, IndexedDB database deleted, page reloaded); `system.factory-reset` audit with `origin = sign-in`. |

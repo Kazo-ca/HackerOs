@@ -41,7 +41,7 @@ public sealed partial class BrowserWebWorkerRuntime : IWebWorkerRuntime, IWebWor
     {
         get
         {
-            // The module is imported at startup (AddHackerOsWorkerProcesses); before that, the
+            // The module is imported at startup (AddKazoOsWorkerProcesses); before that, the
             // global navigator answers directly.
             double count = _import.IsValueCreated && _import.Value.IsCompletedSuccessfully
                 ? GetHardwareConcurrency()

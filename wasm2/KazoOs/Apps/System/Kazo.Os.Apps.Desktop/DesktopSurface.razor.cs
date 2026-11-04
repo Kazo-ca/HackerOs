@@ -249,7 +249,7 @@ public partial class DesktopSurface : IAsyncDisposable
 
     private EventCallback<object?> Click(Func<Task> run) => EventCallback.Factory.Create<object?>(this, _ => run());
 
-    private static KazoIcon Icon(string name) => KazoIcons.Vector(IconLibrary.Lucide, name);
+    private static KazoSurfaceIcon Icon(string name) => KazoIcons.Vector(IconLibrary.Lucide, name);
 
     private async Task OpenSettingsAsync(string page)
     {

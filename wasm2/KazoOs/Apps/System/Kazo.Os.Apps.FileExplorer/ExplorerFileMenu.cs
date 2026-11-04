@@ -167,7 +167,7 @@ internal static class ExplorerFileMenu
         entry.OnClick = command(id);
     }
 
-    private static KazoIcon Icon(string name) => KazoIcons.Vector(IconLibrary.Lucide, name);
+    private static KazoSurfaceIcon Icon(string name) => KazoIcons.Vector(IconLibrary.Lucide, name);
 
     private static bool Has(ExplorerFileMenuState state, KazoFileViewFeatures feature) => (state.Features & feature) == feature;
 }

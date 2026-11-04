@@ -22,7 +22,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Kazo.Os.Ecosystem;
 
-/// <summary>Options of <see cref="KazoOsBrowserHostExtensions.AddHackerOsBrowserHost"/>.</summary>
+/// <summary>Options of <see cref="KazoOsBrowserHostExtensions.AddKazoOsBrowserHost"/>.</summary>
 public sealed record KazoOsBrowserHostOptions
 {
     /// <summary>
@@ -46,7 +46,7 @@ public sealed record KazoOsBrowserHostOptions
 /// <c>Program.cs</c> is then:
 /// <code>
 /// var builder = WebAssemblyHostBuilder.CreateDefault(args);
-/// builder.AddHackerOsBrowserHost(HostAppCatalog.Load(typeof(Program).Assembly));
+/// builder.AddKazoOsBrowserHost(HostAppCatalog.Load(typeof(Program).Assembly));
 /// await builder.Build().RunAsync();
 /// </code>
 /// </summary>
@@ -55,14 +55,14 @@ public static partial class KazoOsBrowserHostExtensions
     /// <summary>
     /// Registers the desktop root component, the lazy app loader over the host's catalog, resource
     /// accounting (from <c>HackerOs:ResourceAccounting</c> in <c>appsettings.json</c>), every OS
-    /// service (<see cref="EcosystemServiceCollectionExtensions.AddHackerOsEcosystem"/>), app asset
+    /// service (<see cref="EcosystemServiceCollectionExtensions.AddKazoOsEcosystem"/>), app asset
     /// integrity checks over the page's <c>_content/</c> (ADR 0098 §5) and the Web Worker pool.
     /// </summary>
     /// <param name="builder">The WebAssembly host builder.</param>
     /// <param name="apps">The apps the host was built with (<see cref="HostAppCatalog.Load"/>).</param>
     /// <param name="options">Optional settings; <see langword="null"/> uses the defaults.</param>
     /// <returns>The same builder.</returns>
-    public static WebAssemblyHostBuilder AddHackerOsBrowserHost(
+    public static WebAssemblyHostBuilder AddKazoOsBrowserHost(
         this WebAssemblyHostBuilder builder, HostAppCatalog apps, KazoOsBrowserHostOptions? options = null)
     {
         ArgumentNullException.ThrowIfNull(builder);
@@ -141,15 +141,15 @@ public static partial class KazoOsBrowserHostExtensions
         Uri ownOrigin = new(builder.HostEnvironment.BaseAddress);
         builder.Services.AddScoped<IHostInfoClient>(provider => new HttpHostInfoClient(provider.GetRequiredService<HttpClient>(), ownOrigin));
         // ADR 0066: decided once from appsettings.json and what the build compiled in. Must precede
-        // AddHackerOsEcosystem, and runs before any app code so the context-switch hook can be installed.
-        builder.Services.AddHackerOsResourceAccounting(builder.Configuration, apps.Images);
+        // AddKazoOsEcosystem, and runs before any app code so the context-switch hook can be installed.
+        builder.Services.AddKazoOsResourceAccounting(builder.Configuration, apps.Images);
         // ADR 0125: process limits (ulimit, limits.conf), on unless HackerOs:ResourceLimits:Enabled is false.
-        builder.Services.AddHackerOsResourceLimits(builder.Configuration);
-        builder.Services.AddHackerOsHardware(builder.Configuration);
+        builder.Services.AddKazoOsResourceLimits(builder.Configuration);
+        builder.Services.AddKazoOsHardware(builder.Configuration);
         // ADR 0226: « Forgot password? » on the sign-in screen, on unless
         // HackerOs:SignIn:FactoryReset:Enabled is false in appsettings.json.
         builder.Services.AddSingleton(SignInFactoryResetSettings.Read(builder.Configuration));
-        builder.Services.AddHackerOsEcosystem(
+        builder.Services.AddKazoOsEcosystem(
             apps.Catalog,
             provider => provider.GetRequiredService<BuildKnownLazyAppDescriptorRegistry>().Descriptors,
             provider => provider.GetRequiredService<BuildKnownLazyAppDescriptorRegistry>());
@@ -175,14 +175,14 @@ public static partial class KazoOsBrowserHostExtensions
                     : Task.FromResult(CrossOriginIsolationStatus.NotBrowser)));
             builder.Services.AddSingleton<IWebWorkerRuntime, BrowserWebWorkerRuntime>();
             // ADR 0124, section 4: a worker loads any app assembly known to this build on demand.
-            builder.Services.AddHackerOsWorkerProcesses(workerOptions => workerOptions with
+            builder.Services.AddKazoOsWorkerProcesses(workerOptions => workerOptions with
             {
                 PreloadAssemblies = [.. preload],
                 KnownAssemblies = [.. apps.LazyAssemblyNames]
             });
             // ADR 0129 trial, ADR 0133: window apps rendered in a worker, off unless
             // HackerOs:RemoteWindowRendering:Enabled is true in appsettings.json.
-            builder.Services.AddHackerOsRemoteWindowRendering(ReadRemoteWindowRendering(builder.Configuration));
+            builder.Services.AddKazoOsRemoteWindowRendering(ReadRemoteWindowRendering(builder.Configuration));
         }
 
         return builder;

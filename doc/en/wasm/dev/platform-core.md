@@ -47,9 +47,9 @@ About 240 C# files (51,000 lines); the folder is read by subsystem.
   instance (window, service, command) from the platform singletons
   and the granted capabilities. Each gateway checks the capability it
   requires before acting (`AppCapabilityChecker`).
-- Services are registered by `AddHackerOsEcosystem`
+- Services are registered by `AddKazoOsEcosystem`
   (`OS/Kazo.Os.Ecosystem.Host`), which declares the services of this layer;
-  `AddHackerOsPlatformLocalization` (`Globalization/`) is part of it.
+  `AddKazoOsPlatformLocalization` (`Globalization/`) is part of it.
 - Several services have an `InMemory*` implementation (tests, mode without a
   browser); real persistence comes from the browser infrastructure.
 

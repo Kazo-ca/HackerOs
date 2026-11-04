@@ -29,7 +29,7 @@ public enum PlatformKeyboardStrategy
     PhysicalOnly,
 
     /// <summary>The shell can present a Kazo OS-owned virtual keyboard instead of the native one.</summary>
-    VirtualHackerOsKeyboard
+    VirtualKazoOsKeyboard
 }
 
 /// <summary>
@@ -214,6 +214,6 @@ public static class WellKnownAppPlatformCapabilities
         supportsMaximize: false,
         systemNavigation: PlatformSystemNavigationKind.AndroidStyleSystemBar,
         hasApplicationBar: false,
-        keyboardStrategy: PlatformKeyboardStrategy.VirtualHackerOsKeyboard,
+        keyboardStrategy: PlatformKeyboardStrategy.VirtualKazoOsKeyboard,
         requiresSafeAreaInsets: true);
 }

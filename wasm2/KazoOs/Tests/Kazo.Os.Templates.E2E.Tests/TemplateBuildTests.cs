@@ -62,7 +62,7 @@ public sealed class TemplateBuildTests(TemplateWorkspace workspace)
         await workspace.RunCheckedAsync(directory, "build", "-c", "Debug", sourceRoot);
         await workspace.RunCheckedAsync(directory, "test", "-c", "Debug", "--no-build", sourceRoot);
         string host = Path.Combine(directory, "src", "Contoso.Board.Os");
-        AssertHackerOsReferences(Path.Combine(host, "obj", "source", "project.assets.json"), "project");
+        AssertKazoOsReferences(Path.Combine(host, "obj", "source", "project.assets.json"), "project");
         string debugCatalog = File.ReadAllText(Path.Combine(host, "obj", "source", "Debug", "net10.0", "BuiltInApplications.json"));
         Assert.Contains("\"com.contoso.board\"", debugCatalog, StringComparison.Ordinal);
         Assert.Contains("\"org.hackeros.terminal\"", debugCatalog, StringComparison.Ordinal);
@@ -76,7 +76,7 @@ public sealed class TemplateBuildTests(TemplateWorkspace workspace)
         // Release: the packages, at the submodule's version.
         await workspace.RunCheckedAsync(directory, "build", "-c", "Release", sourceRoot);
         await workspace.RunCheckedAsync(directory, "test", "-c", "Release", "--no-build", sourceRoot);
-        AssertHackerOsReferences(Path.Combine(host, "obj", "project.assets.json"), "package");
+        AssertKazoOsReferences(Path.Combine(host, "obj", "project.assets.json"), "package");
         string releaseCatalog = File.ReadAllText(Path.Combine(host, "obj", "Release", "net10.0", "BuiltInApplications.json"));
         Assert.Contains("\"com.contoso.board\"", releaseCatalog, StringComparison.Ordinal);
 
@@ -86,11 +86,11 @@ public sealed class TemplateBuildTests(TemplateWorkspace workspace)
     }
 
     /// <summary>Every Kazo OS library of a restore output has the expected type (<c>project</c> or <c>package</c>).</summary>
-    private static void AssertHackerOsReferences(string assetsFile, string expectedType)
+    private static void AssertKazoOsReferences(string assetsFile, string expectedType)
     {
         using JsonDocument assets = JsonDocument.Parse(File.ReadAllText(assetsFile));
         JsonProperty[] hackerOs = assets.RootElement.GetProperty("libraries").EnumerateObject()
-            .Where(library => library.Name.StartsWith("HackerOs.", StringComparison.Ordinal))
+            .Where(library => library.Name.StartsWith("Kazo.Os.", StringComparison.Ordinal))
             .ToArray();
         Assert.Contains(hackerOs, library => library.Name.StartsWith("Kazo.Os.AppSdk/", StringComparison.Ordinal));
         Assert.Contains(hackerOs, library => library.Name.StartsWith("Kazo.Os.Ecosystem.Host/", StringComparison.Ordinal));
@@ -160,15 +160,15 @@ public sealed class TemplateBuildTests(TemplateWorkspace workspace)
     }
 
     /// <summary>
-    /// ADR 0098 §3 and §8, ADR 0114, ADR 0149 §5, ADR 0161 §3: the app packages of
+    /// ADR 0098 §3 and §8, ADR 0114, ADR 0149 §5, ADR 0161 §3, ADR 0228: the app packages of
     /// <c>Tests/fixtures/sdk-compat</c> in a host made by the template. A host that references the
-    /// apps compiled against SDK 1.0.0 and 1.1.0 does not build (<c>HOSAPP0021</c>, another major:
-    /// they must be rebuilt). With the app compiled against SDK 2.0.0 instead, the host boots, the
-    /// window shows the OS file control in a third-party app and the command copies a file with the
-    /// SDK 2.0 copy rules.
+    /// apps compiled against SDK 1.0.0, 1.1.0 and 2.0.0 does not build (<c>HOSAPP0021</c>, another
+    /// major: they must be rebuilt). With the app compiled against SDK 3.0.0 instead, the host boots,
+    /// the window shows the OS file control in a third-party app and the command copies a file with
+    /// the SDK copy rules.
     /// </summary>
     [Fact]
-    public async Task A_host_runs_SDK_2_app_packages_and_refuses_SDK_1_x_packages()
+    public async Task A_host_runs_SDK_3_app_packages_and_refuses_SDK_1_x_and_2_x_packages()
     {
         string root = Path.Combine(workspace.Root, "sdk-compat-scenario");
         Directory.CreateDirectory(root);
@@ -177,22 +177,25 @@ public sealed class TemplateBuildTests(TemplateWorkspace workspace)
 
         await workspace.RunCheckedAsync(host, "add", "package", "Contoso.Sdk1Compat", "--version", "1.0.0");
         await workspace.RunCheckedAsync(host, "add", "package", "Contoso.Sdk11Compat", "--version", "1.1.0");
+        await workspace.RunCheckedAsync(host, "add", "package", "Contoso.Sdk2Compat", "--version", "2.0.0");
         (int exitCode, string output) = await workspace.RunAsync(host, "build");
         Assert.NotEqual(0, exitCode);
-        foreach (string appId in new[] { "com.contoso.sdk1-window", "com.contoso.sdk1-command", "com.contoso.sdk11-window", "com.contoso.sdk11-command" })
+        foreach (string appId in new[] { "com.contoso.sdk1-window", "com.contoso.sdk1-command", "com.contoso.sdk11-window", "com.contoso.sdk11-command", "com.contoso.sdk2-window", "com.contoso.sdk2-command" })
         {
             Assert.Contains($"error HOSAPP0021: [{appId}]", output, StringComparison.Ordinal);
         }
 
         await workspace.RunCheckedAsync(host, "remove", "package", "Contoso.Sdk1Compat");
         await workspace.RunCheckedAsync(host, "remove", "package", "Contoso.Sdk11Compat");
-        await workspace.RunCheckedAsync(host, "add", "package", "Contoso.Sdk2Compat", "--version", "2.0.0");
+        await workspace.RunCheckedAsync(host, "remove", "package", "Contoso.Sdk2Compat");
+        await workspace.RunCheckedAsync(host, "add", "package", "Contoso.Sdk3Compat", "--version", "3.0.0");
         await workspace.RunCheckedAsync(host, "build");
 
         string aggregated = File.ReadAllText(Path.Combine(host, "obj", "Debug", "net10.0", "BuiltInApplications.json"));
-        Assert.Contains("\"com.contoso.sdk2-window\"", aggregated, StringComparison.Ordinal);
-        Assert.Contains("\"com.contoso.sdk2-command\"", aggregated, StringComparison.Ordinal);
+        Assert.Contains("\"com.contoso.sdk3-window\"", aggregated, StringComparison.Ordinal);
+        Assert.Contains("\"com.contoso.sdk3-command\"", aggregated, StringComparison.Ordinal);
         Assert.DoesNotContain("\"com.contoso.sdk1-window\"", aggregated, StringComparison.Ordinal);
+        Assert.DoesNotContain("\"com.contoso.sdk2-window\"", aggregated, StringComparison.Ordinal);
 
         int port = FreePort();
         using System.Diagnostics.Process server = workspace.Start(host, "run", "--no-build", "--urls", $"http://127.0.0.1:{port}");
@@ -213,20 +216,20 @@ public sealed class TemplateBuildTests(TemplateWorkspace workspace)
             await inputs.Nth(3).FillAsync("matrix123");
             await page.GetByRole(AriaRole.Button, new PageGetByRoleOptions { Name = "Create local profile" }).ClickAsync();
 
-            // The window app of SDK 2.0.0, lazy-loaded from its package, shows the OS file control
+            // The window app of SDK 3.0.0, lazy-loaded from its package, shows the OS file control
             // (KazoFileView, provided by the File Explorer).
             await page.GetByText("Applications", new PageGetByTextOptions { Exact = true }).ClickAsync(new LocatorClickOptions { Timeout = 60_000 });
-            await page.GetByText("SDK 2.0 Window", new PageGetByTextOptions { Exact = true }).First.ClickAsync();
-            await page.GetByText("Compiled against SDK 2.0.0").WaitForAsync(new LocatorWaitForOptions { Timeout = 30_000 });
+            await page.GetByText("SDK 3.0 Window", new PageGetByTextOptions { Exact = true }).First.ClickAsync();
+            await page.GetByText("Compiled against SDK 3.0.0").WaitForAsync(new LocatorWaitForOptions { Timeout = 30_000 });
             await page.Locator(".compat-files table.file-view-details").WaitForAsync(new LocatorWaitForOptions { Timeout = 30_000 });
 
             // Its command, run from the Terminal, copies a file with KazoFileOperations.
             await page.GetByText("Applications", new PageGetByTextOptions { Exact = true }).ClickAsync();
             await page.GetByText("Terminal", new PageGetByTextOptions { Exact = true }).First.ClickAsync();
             await page.GetByText("Type 'help'").WaitForAsync(new LocatorWaitForOptions { Timeout = 30_000 });
-            await page.Keyboard.TypeAsync("sdk2-compat still binds");
+            await page.Keyboard.TypeAsync("sdk3-compat still binds");
             await page.Keyboard.PressAsync("Enter");
-            await page.GetByText($"sdk2-compat: still binds [sdk2-compat (copy).txt] (compiled against 2.0.0, running on {workspace.Version})")
+            await page.GetByText($"sdk3-compat: still binds [sdk3-compat (copy).txt] (compiled against 3.0.0, running on {workspace.Version})")
                 .WaitForAsync(new LocatorWaitForOptions { Timeout = 30_000 });
         }
         finally

@@ -1203,7 +1203,7 @@ static Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.operator !=(Kazo.Os.P
 static Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow.operator ==(Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow? left, Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuRow? right) -> bool
 static Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.operator !=(Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession? left, Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession? right) -> bool
 static Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession.operator ==(Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession? left, Kazo.Os.Platform.Blazor.ContextMenus.ContextMenuSession? right) -> bool
-static Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntries.IconOf(string? assembly, Kazo.Os.App.Abstractions.AppContextMenuIconManifest? icon) -> Kazo.Os.AppSdk.Icons.KazoIcon?
+static Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntries.IconOf(string? assembly, Kazo.Os.App.Abstractions.AppContextMenuIconManifest? icon) -> Kazo.Os.AppSdk.Icons.KazoSurfaceIcon?
 static Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntries.IdOf(string! appId, string! name) -> string!
 static Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntries.ScopeName(Kazo.Os.AppSdk.Files.FileMenuScope scope) -> string!
 static Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate.operator !=(Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate? left, Kazo.Os.Platform.Blazor.ContextMenus.FileMenuEntryPlacement.Candidate? right) -> bool

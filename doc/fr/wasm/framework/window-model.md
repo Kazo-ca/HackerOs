@@ -277,7 +277,7 @@ les récents du bureau mobile et le nom accessible du cadre (`aria-labelledby`).
   nettoie le titre avec `WindowTitles.Sanitize` (Windowing.Abstractions) et publie
   `WindowTitleChangedEvent` ; un titre inchangé ne produit rien. Les surfaces relisent
   `WindowRuntimeState.Title` à chaque `StateChanged`.
-- `AppWindowGatewayFactory` (Platform.Blazor, enregistrée par `AddHackerOsEcosystem`) crée une
+- `AppWindowGatewayFactory` (Platform.Blazor, enregistrée par `AddKazoOsEcosystem`) crée une
   `IAppWindowGateway` par fenêtre, liée à son `WindowId`. `WindowAppRenderer` la reçoit
   (`WindowGateways`, passé par `DesktopShell` et `MobileShell`) et la donne à l'app par un
   `CascadingValue` fixe : l'app ne peut atteindre que sa propre fenêtre.

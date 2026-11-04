@@ -31,7 +31,7 @@ In `OS/Kazo.Os.Ecosystem/wwwroot/appsettings.json`:
 - `Apps`: identifiers of the window apps rendered in a worker. An app
   with its own JavaScript interop will not work (no `IJSRuntime`
   in the worker).
-- Only in the browser, with workers (`AddHackerOsWorkerProcesses`).
+- Only in the browser, with workers (`AddKazoOsWorkerProcesses`).
   If the remote process host is not the workers one (tests, Server
   in interactive mode), the window renders on the page as before.
 
@@ -57,8 +57,8 @@ WindowAppRenderer                                  WorkerProcessHost
 |---|---|
 | `Platform/Kazo.Os.Platform.Blazor` | `IRemoteWindowRendering` (`GetHostComponent`); `WindowAppRenderer` consults it if it is registered. |
 | `Platform/Kazo.Os.Platform.WorkerHost` | `ui` (worker → OS) and `uin` (OS → worker) messages; `start` with `k = 3`, `ra`/`rt` (the runner); on the worker side `IWorkerWindowRunner`, `WorkerWindowRun`; on the OS side `WorkerRemoteProcessHost.StartWindowAsync`, `RemoteWindowProcess`, `RemoteProcessSession.UiReceiver`. |
-| `Platform/Kazo.Os.Platform.RemoteRendering` (new) | **Worker/**: `WorkerWindowRunner`, `WorkerWindowRenderer`, `WorkerWindowRoot`, `DomPatchWriter`, `DomEventArgsReader`, `RemoteDialogService`. **Host/**: `RemoteWindowHost` (+ `.razor.cs`, `.razor.css`, `.razor.js`), `RemoteWindowRendering`, `RemoteWindowRenderingOptions`. `AddHackerOsRemoteWindowRendering`. |
-| `OS/Kazo.Os.Ecosystem.Host` | Reads the `HackerOs:RemoteWindowRendering` section and calls `AddHackerOsRemoteWindowRendering`. |
+| `Platform/Kazo.Os.Platform.RemoteRendering` (new) | **Worker/**: `WorkerWindowRunner`, `WorkerWindowRenderer`, `WorkerWindowRoot`, `DomPatchWriter`, `DomEventArgsReader`, `RemoteDialogService`. **Host/**: `RemoteWindowHost` (+ `.razor.cs`, `.razor.css`, `.razor.js`), `RemoteWindowRendering`, `RemoteWindowRenderingOptions`. `AddKazoOsRemoteWindowRendering`. |
+| `OS/Kazo.Os.Ecosystem.Host` | Reads the `HackerOs:RemoteWindowRendering` section and calls `AddKazoOsRemoteWindowRendering`. |
 
 ### Process
 

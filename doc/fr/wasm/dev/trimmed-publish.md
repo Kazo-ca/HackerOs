@@ -23,12 +23,12 @@ satellites `fr/` compris). L'AOT est hors périmètre.
 ```
 Ecosystem.csproj            PublishTrimmed=true, TrimMode=partial
         │
-        ├─ CollectHackerOsBuiltInApplications (build/Kazo.Os.Apps.targets)
+        ├─ CollectKazoOsBuiltInApplications (build/Kazo.Os.Apps.targets)
         │     ManifestGenerator aggregate --trimmer-roots
         │       → obj/.../BuiltInApplications.json
         │       → obj/.../Kazo.Os.TrimmerRoots.xml  ──► TrimmerRootDescriptor
         │
-        └─ _KazoOsRootHackerOsAssemblies (avant PrepareForILLink)
+        └─ _KazoOsRootKazoOsAssemblies (avant PrepareForILLink)
               chaque Kazo.Os.*.dll publiée ──► TrimmerRootAssembly
                                     │
                               ILLink (publish)

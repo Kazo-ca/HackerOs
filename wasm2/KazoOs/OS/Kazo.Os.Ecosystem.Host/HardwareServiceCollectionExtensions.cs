@@ -10,8 +10,8 @@ namespace Kazo.Os.Ecosystem;
 /// machine <c>/proc/meminfo</c> reports and the OOM killer of ADR 0126 measures against.
 /// </summary>
 /// <remarks>
-/// Each host calls <see cref="AddHackerOsHardware"/> before
-/// <see cref="EcosystemServiceCollectionExtensions.AddHackerOsEcosystem"/>; a host or a test that does
+/// Each host calls <see cref="AddKazoOsHardware"/> before
+/// <see cref="EcosystemServiceCollectionExtensions.AddKazoOsEcosystem"/>; a host or a test that does
 /// not gets <see cref="VirtualHardwareProfile.Default"/> (one core, 2 GiB). <c>build/verify-hosts.sh</c>
 /// lowers <c>MemoryMiB</c> to drive the OOM killer in its <c>ecosystem-oom</c> run.
 /// </remarks>
@@ -45,7 +45,7 @@ public static class HardwareServiceCollectionExtensions
     /// <param name="services">The host's service collection.</param>
     /// <param name="configuration">The host configuration (<c>appsettings.json</c>).</param>
     /// <returns>The profile, also registered as a singleton.</returns>
-    public static VirtualHardwareProfile AddHackerOsHardware(this IServiceCollection services, IConfiguration? configuration)
+    public static VirtualHardwareProfile AddKazoOsHardware(this IServiceCollection services, IConfiguration? configuration)
     {
         ArgumentNullException.ThrowIfNull(services);
         VirtualHardwareProfile profile = ReadProfile(configuration);

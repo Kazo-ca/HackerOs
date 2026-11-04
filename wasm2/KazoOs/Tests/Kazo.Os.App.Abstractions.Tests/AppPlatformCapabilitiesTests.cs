@@ -35,7 +35,7 @@ public sealed class AppPlatformCapabilitiesTests
             supportsMaximize: false,
             systemNavigation: PlatformSystemNavigationKind.AndroidStyleSystemBar,
             hasApplicationBar: false,
-            keyboardStrategy: PlatformKeyboardStrategy.VirtualHackerOsKeyboard));
+            keyboardStrategy: PlatformKeyboardStrategy.VirtualKazoOsKeyboard));
     }
 
     [Fact]
@@ -52,7 +52,7 @@ public sealed class AppPlatformCapabilitiesTests
             supportsMaximize: false,
             systemNavigation: PlatformSystemNavigationKind.AndroidStyleSystemBar,
             hasApplicationBar: false,
-            keyboardStrategy: PlatformKeyboardStrategy.VirtualHackerOsKeyboard,
+            keyboardStrategy: PlatformKeyboardStrategy.VirtualKazoOsKeyboard,
             minimumViewportWidth: -1));
     }
 
@@ -88,7 +88,7 @@ public sealed class AppPlatformCapabilitiesTests
         Assert.False(mobile.SupportsMaximize);
         Assert.Equal(PlatformSystemNavigationKind.AndroidStyleSystemBar, mobile.SystemNavigation);
         Assert.False(mobile.HasApplicationBar);
-        Assert.Equal(PlatformKeyboardStrategy.VirtualHackerOsKeyboard, mobile.KeyboardStrategy);
+        Assert.Equal(PlatformKeyboardStrategy.VirtualKazoOsKeyboard, mobile.KeyboardStrategy);
         Assert.True(mobile.RequiresSafeAreaInsets);
     }
 

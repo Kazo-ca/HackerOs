@@ -31,7 +31,7 @@ public static class PlatformLocalizationServiceCollectionExtensions
     /// use these: they ask their own context (<c>AppContext.GetLocalizer&lt;T&gt;()</c>).
     /// </summary>
     /// <param name="services">The host's services; <see cref="Processes.LoginEnvironmentProvider"/> must be registered.</param>
-    public static IServiceCollection AddHackerOsPlatformLocalization(this IServiceCollection services)
+    public static IServiceCollection AddKazoOsPlatformLocalization(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
         services.TryAddScoped<SessionLocaleService>();

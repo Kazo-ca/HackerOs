@@ -24,7 +24,7 @@ ENV HACKEROS_Kestrel__Endpoints__Http__Url=http://+:8080 \
     HACKEROS_ConnectionStrings__HackerOsDb="Data Source=/data/hackeros.db" \
     HACKEROS_BlobStorage__Root=/data/blobs \
     HACKEROS_ServerBackup__Root=/data/backups \
-    HACKEROS_KazoOs__Pairing__Root=/data/pairing
+    HACKEROS_HackerOs__Pairing__Root=/data/pairing
 
 RUN mkdir -p /data && chown app:app /data && chmod +x /app/Kazo.Os.Server
 USER app

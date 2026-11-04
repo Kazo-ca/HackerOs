@@ -128,7 +128,7 @@ public sealed class FileMenuEntries : IFileMenuEntrySource
     /// <summary>Converts a registered icon to the menu's description.</summary>
     /// <param name="assembly">The app's entry-point assembly, whose static assets (<c>_content/&lt;assembly&gt;/</c>) an image path is relative to.</param>
     /// <param name="icon">The registered icon.</param>
-    public static KazoIcon? IconOf(string? assembly, AppContextMenuIconManifest? icon)
+    public static KazoSurfaceIcon? IconOf(string? assembly, AppContextMenuIconManifest? icon)
     {
         if (icon is null)
         {

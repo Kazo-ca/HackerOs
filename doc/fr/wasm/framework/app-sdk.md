@@ -94,9 +94,9 @@ permis : c'est le code du SDK qui fait l'appel.
 
 | Règle | Où | Quand | Code |
 |---|---|---|---|
-| Références d'une app | cible `ValidateHackerOsSdkBoundary` de `build/Kazo.Os.Apps.targets` | avant `ResolveProjectReferences`, donc avant la compilation | `HOSAPP0030` |
+| Références d'une app | cible `ValidateKazoOsSdkBoundary` de `build/Kazo.Os.Apps.targets` | avant `ResolveProjectReferences`, donc avant la compilation | `HOSAPP0030` |
 | Références d'une bibliothèque SDK | même cible | idem | `HOSSDK0001` |
-| Paquets `Kazo.Os.*` d'une app ou d'une bibliothèque SDK (ADR 0098 §2), directs ou transitifs | cible `_ValidateHackerOsPackageBoundary` | après `ResolveAssemblyReferences` : chaque référence de compilation venue d'un paquet `Kazo.Os.*` doit être permise (app : `*.Abstractions`, `Kazo.Os.AppSdk*`, `Kazo.Os.Theming.Blazor`, `Kazo.Os.App.Build`, `Kazo.Os.Apps.*`, `Kazo.Os.Commands` ; bibliothèque SDK : `*.Abstractions` et SDK) | `HOSAPP0030` / `HOSSDK0001` |
+| Paquets `Kazo.Os.*` d'une app ou d'une bibliothèque SDK (ADR 0098 §2), directs ou transitifs | cible `_ValidateKazoOsPackageBoundary` | après `ResolveAssemblyReferences` : chaque référence de compilation venue d'un paquet `Kazo.Os.*` doit être permise (app : `*.Abstractions`, `Kazo.Os.AppSdk*`, `Kazo.Os.Theming.Blazor`, `Kazo.Os.App.Build`, `Kazo.Os.Apps.*`, `Kazo.Os.Commands` ; bibliothèque SDK : `*.Abstractions` et SDK) | `HOSAPP0030` / `HOSSDK0001` |
 | Injection | `SdkBoundaryInspector` du générateur de manifeste (`Tools/Kazo.Os.Tools.ManifestGenerator`) | après la compilation, avec la génération de `manifest.json` ; en cas d'erreur, rien n'est écrit | `HOSAPP0031` |
 | `IJSRuntime` | test de sources `SdkBoundarySourceTests` (`Tests/Kazo.Os.Ecosystem.Tests`) | `dotnet test` | échec du test |
 
@@ -142,7 +142,7 @@ chaque chantier de la phase 4 a retiré les siens :
 `4-sdk-boundary-final` (2026-10-11) a supprimé le mécanisme : l'élément
 `KazoOsSdkBoundaryExemption`, la cible `_KazoOsResolveSdkBoundaryExemption`
 et sa propriété `_KazoOsSdkBoundaryExempt`, l'avertissement `HOSAPP0030` /
-`HOSSDK0001` de la cible `ValidateHackerOsSdkBoundary`, l'option
+`HOSSDK0001` de la cible `ValidateKazoOsSdkBoundary`, l'option
 `--boundary-exempt` du générateur et le paramètre `severity` de
 `GeneratorDiagnostic.ToMsBuildLine`. Toutes les apps de `Apps/` et toutes les
 bibliothèques `Kazo.Os.AppSdk*` compilent sans aucun diagnostic de frontière.
@@ -635,7 +635,7 @@ commandes Linux, presse-papiers partagé avec l'hôte) :
 
 ## Liste des tâches du chantier `rebuild/4-sdk-boundary`
 
-- [x] Cible MSBuild `ValidateHackerOsSdkBoundary` (`HOSAPP0030`, `HOSSDK0001`), références directes seulement.
+- [x] Cible MSBuild `ValidateKazoOsSdkBoundary` (`HOSAPP0030`, `HOSSDK0001`), références directes seulement.
 - [x] Propriété `KazoOsSdkLibrary` pour les bibliothèques SDK.
 - [x] `SdkBoundaryInspector` dans le générateur (`HOSAPP0031`), option `--boundary-exempt`.
 - [x] Liste `KazoOsSdkBoundaryExemption` (9 projets) et test qui l'empêche de grandir.

@@ -9,7 +9,7 @@ namespace Kazo.Os.AppSdk.Web.Data;
 /// </summary>
 /// <example>
 /// <code>
-/// builder.Services.AddHackWebDb(db => db
+/// builder.Services.AddKazoWebDb(db => db
 ///     .Version(1, v => v.CreateStore("notes", keyPath: "id", autoIncrement: true))
 ///     .Version(2, v => v.CreateIndex("notes", "byAuthor", "author")));
 /// </code>

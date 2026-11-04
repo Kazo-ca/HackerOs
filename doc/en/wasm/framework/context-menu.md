@@ -52,7 +52,7 @@ apps register: see [App entries](#app-entries-in-the-file-menus-work-item-4).
 }
 
 @code {
-    private static readonly KazoIcon OpenIcon = KazoIcons.Vector(IconLibrary.Lucide, "folder-open");
+    private static readonly KazoSurfaceIcon OpenIcon = KazoIcons.Vector(IconLibrary.Lucide, "folder-open");
 
     // Avant chaque ouverture, pour l'objet attaché : masquer, désactiver, ajouter, annuler.
     private void OnRowsMenuOpening(KazoMenuOpeningEventArgs args)
@@ -126,7 +126,7 @@ The full example is in the sample app `Kazo.Os.Samples.WindowApp`
 | `KazoMenuItemDefinition` | An entry: `Id`, `Title` (already translated), `Icon`, `IsDisabled`, `IsVisible`, `Shortcut` (text only), `OnClick`, `Children` (submenu, groups) |
 | `KazoMenuBuilder` | Construction in C#: `Item`, `Submenu`, `Group` |
 | `KazoMenuOpeningEventArgs` | `Menu` (copy for this opening), `Item`, `Cancel` |
-| `KazoIcons.Vector(library, name)`, `KazoIcons.FromImage(path)` | Described icon (`KazoIcon`), drawn by the OS (`Kazo.Os.AppSdk.Icons`) |
+| `KazoIcons.Vector(library, name)`, `KazoIcons.FromImage(path)` | Described icon (`KazoSurfaceIcon`), drawn by the OS (`Kazo.Os.AppSdk.Icons`) |
 | `KazoMenus` | A component's `Menus`: `Attach`, `Define`, `OpenAsync`, `Close`, `IsAvailable` |
 | `IHackMenuHost` | OS side of a window's menus (implemented by the platform, passed as a cascading value) |
 | `IHackContextMenu` | Contract controller: `Name`, `OpenAsync`, `Close` |

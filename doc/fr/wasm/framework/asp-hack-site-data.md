@@ -51,7 +51,7 @@ suivent sans trou, et l'OS applique celles qui manquent dans l'ordre.
 ```csharp
 public override void Configure(KazoWebApplicationBuilder builder)
 {
-    builder.Services.AddHackWebDb(db => db
+    builder.Services.AddKazoWebDb(db => db
         .Version(1, v => v
             .CreateStore("notes", keyPath: "id", autoIncrement: true)
             .CreateIndex("notes", "byAuthor", "author")
@@ -63,7 +63,7 @@ public override void Configure(KazoWebApplicationBuilder builder)
 }
 ```
 
-`AddHackWebDb` vérifie les versions au démarrage du site. La base s'ouvre à la première requête.
+`AddKazoWebDb` vérifie les versions au démarrage du site. La base s'ouvre à la première requête.
 
 ### Lire et écrire
 
@@ -123,7 +123,7 @@ généré : le type rangé doit y figurer (`[JsonSerializable(typeof(Note))]`). 
 
 - `KazoWebHost.CreateApplication` sans OS : la base est en mémoire (`hackweb.in-memory`), propre à
   l'application. Les tests de l'Intranet tournent ainsi sans rien configurer.
-- Pour inspecter la base d'un test, enregistrer la passerelle avant `AddHackWebDb` :
+- Pour inspecter la base d'un test, enregistrer la passerelle avant `AddKazoWebDb` :
   `services.AddSingleton<IAppWebDatabaseGateway>(new KazoWebDbInMemoryBackend("hackweb.test"))`,
   puis lire `backend.Database.Describe()`.
 

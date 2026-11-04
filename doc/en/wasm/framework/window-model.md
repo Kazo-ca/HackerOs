@@ -277,7 +277,7 @@ the mobile desktop's recents and the frame's accessible name (`aria-labelledby`)
   cleans the title with `WindowTitles.Sanitize` (Windowing.Abstractions) and publishes
   `WindowTitleChangedEvent`; an unchanged title produces nothing. Surfaces reread
   `WindowRuntimeState.Title` on each `StateChanged`.
-- `AppWindowGatewayFactory` (Platform.Blazor, registered by `AddHackerOsEcosystem`) creates one
+- `AppWindowGatewayFactory` (Platform.Blazor, registered by `AddKazoOsEcosystem`) creates one
   `IAppWindowGateway` per window, bound to its `WindowId`. `WindowAppRenderer` receives it
   (`WindowGateways`, passed by `DesktopShell` and `MobileShell`) and gives it to the app through a fixed
   `CascadingValue`: the app can only reach its own window.

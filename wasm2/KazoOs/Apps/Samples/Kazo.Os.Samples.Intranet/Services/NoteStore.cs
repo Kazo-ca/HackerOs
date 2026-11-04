@@ -31,7 +31,7 @@ public sealed class NoteStore(KazoWebDb database, TimeProvider time)
     private KazoWebDbStore<Note> Notes => database.Store<Note>(StoreName);
 
     /// <summary>Declares the database versions, in the site's <c>Configure</c>.</summary>
-    /// <param name="schema">The schema builder of <c>AddHackWebDb</c>.</param>
+    /// <param name="schema">The schema builder of <c>AddKazoWebDb</c>.</param>
     public static void Configure(KazoWebDbSchemaBuilder schema)
     {
         ArgumentNullException.ThrowIfNull(schema);

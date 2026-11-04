@@ -11,7 +11,7 @@ namespace Kazo.Os.AppSdk.Web.Data;
 /// The database of a site (ADR 0073 §3, ADR 0088): the IndexedDB database <c>hackweb.&lt;app id&gt;</c> of the
 /// host browser, which the OS opens for the site. Its data never lands in the OS files, survives the
 /// site's restarts and is deleted when the site is uninstalled. Registered by
-/// <see cref="KazoWebDbServiceCollectionExtensions.AddHackWebDb"/>; a singleton of the site.
+/// <see cref="KazoWebDbServiceCollectionExtensions.AddKazoWebDb"/>; a singleton of the site.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -408,7 +408,7 @@ public static class KazoWebDbServiceCollectionExtensions
     /// </summary>
     /// <param name="services">The site's services.</param>
     /// <param name="schema">Declares the versions (<see cref="KazoWebDbSchemaBuilder.Version"/>).</param>
-    public static IServiceCollection AddHackWebDb(this IServiceCollection services, Action<KazoWebDbSchemaBuilder> schema)
+    public static IServiceCollection AddKazoWebDb(this IServiceCollection services, Action<KazoWebDbSchemaBuilder> schema)
     {
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(schema);

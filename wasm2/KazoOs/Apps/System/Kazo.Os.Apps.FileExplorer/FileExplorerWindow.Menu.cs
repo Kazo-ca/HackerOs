@@ -243,5 +243,5 @@ public partial class FileExplorerWindow
         entry.OnClick = onClick;
     }
 
-    private static KazoIcon Icon(string name) => KazoIcons.Vector(IconLibrary.Lucide, name);
+    private static KazoSurfaceIcon Icon(string name) => KazoIcons.Vector(IconLibrary.Lucide, name);
 }

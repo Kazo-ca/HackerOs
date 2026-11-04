@@ -109,9 +109,9 @@
 
     // ADR 0150: the notes of the context menu demo, and a second menu defined in C#.
     private const string NotesAreaMenu = "sample-notes-area";
-    private static readonly KazoIcon FileIcon = KazoIcons.Vector(IconLibrary.Lucide, "file-text");
-    private static readonly KazoIcon TagIcon = KazoIcons.Vector(IconLibrary.Lucide, "tag");
-    private static readonly KazoIcon TrashIcon = KazoIcons.Vector(IconLibrary.Lucide, "trash-2");
+    private static readonly KazoSurfaceIcon FileIcon = KazoIcons.Vector(IconLibrary.Lucide, "file-text");
+    private static readonly KazoSurfaceIcon TagIcon = KazoIcons.Vector(IconLibrary.Lucide, "tag");
+    private static readonly KazoSurfaceIcon TrashIcon = KazoIcons.Vector(IconLibrary.Lucide, "trash-2");
     private readonly List<SampleNote> _notes = [new("readme.md"), new("todo.txt"), new("ideas.txt")];
     private string _menuStatus = "Right-click a note, or the empty area below the notes.";
     private int _created;

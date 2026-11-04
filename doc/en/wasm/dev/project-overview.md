@@ -116,8 +116,8 @@ dangerous capabilities. List and rules: [`app-model.md`](../framework/app-model.
 
 | Project | Role |
 |---|---|
-| `OS/Kazo.Os.Ecosystem` | **The shipped host**: standalone Blazor WebAssembly PWA (`wwwroot/index.html`, service worker), no server. It references `Kazo.Os.Ecosystem.Host` and the apps, aggregates their manifests into `BuiltInApplications.json` at build, and its `Program.cs` calls `AddHackerOsBrowserHost`. Everything must work with it alone, offline. |
-| `OS/Kazo.Os.Ecosystem.Host` | **The OS itself**, as a Razor library published as a package (ADR 0098 §2): desktop (`App.razor`), progress screen, `EcosystemBootCoordinator`, service composition (`AddHackerOsEcosystem`, `AddHackerOsBrowserHost`), resource measurement, browser adapters, design tokens (`_content/Kazo.Os.Ecosystem.Host/css/app.css`), `HostAppCatalog`. A host from another repository references it ([`sdk-packages.md`](../framework/sdk-packages.md)). |
+| `OS/Kazo.Os.Ecosystem` | **The shipped host**: standalone Blazor WebAssembly PWA (`wwwroot/index.html`, service worker), no server. It references `Kazo.Os.Ecosystem.Host` and the apps, aggregates their manifests into `BuiltInApplications.json` at build, and its `Program.cs` calls `AddKazoOsBrowserHost`. Everything must work with it alone, offline. |
+| `OS/Kazo.Os.Ecosystem.Host` | **The OS itself**, as a Razor library published as a package (ADR 0098 §2): desktop (`App.razor`), progress screen, `EcosystemBootCoordinator`, service composition (`AddKazoOsEcosystem`, `AddKazoOsBrowserHost`), resource measurement, browser adapters, design tokens (`_content/Kazo.Os.Ecosystem.Host/css/app.css`), `HostAppCatalog`. A host from another repository references it ([`sdk-packages.md`](../framework/sdk-packages.md)). |
 | `test/test` | Debug Blazor Web App: renders the same component tree in `InteractiveWebAssembly` to benefit from the debugger. Not a distribution target. |
 | `Server/Kazo.Os.Server` | **Optional** ASP.NET Core server: synchronization, accounts, HTTP/TCP/UDP relay to the real network ([`server-network-relay.md`](server-network-relay.md), policy and quotas in `appsettings.json`). It also serves the Ecosystem's OS as is, run in WebAssembly in the browser like the PWA; this OS connects to it on its own and shows the state in the notification area (ADR 0130, 0134, [`server-hosting.md`](server-hosting.md)). No app must depend on it. |
 | `Server/Kazo.Os.Server.Contracts` | Contracts shared between the server and the client. |
@@ -191,8 +191,8 @@ Documents: [`hack-file-api.md`](../framework/hack-file-api.md),
 
 ### Startup
 
-1. The host's `Program.cs` calls `AddHackerOsBrowserHost`, which registers the
-   services (`AddHackerOsEcosystem`) and the catalog read from
+1. The host's `Program.cs` calls `AddKazoOsBrowserHost`, which registers the
+   services (`AddKazoOsEcosystem`) and the catalog read from
    `BuiltInApplications.json` (`HostAppCatalog`, `BuildKnownLazyApps` in the Ecosystem).
 2. `EcosystemBootCoordinator` mounts storage, attaches the log writer
    to `/var/log`, installs `/etc/hackeros/apps.config`, starts the simulated
@@ -210,7 +210,7 @@ Documents: [`hack-file-api.md`](../framework/hack-file-api.md),
 |---|---|---|
 | Warnings treated as errors, trimming compatibility analysis | `Directory.Build.props` | n/a |
 | Trimmed Release publication of the host: roots generated from the manifests, whole `Kazo.Os.*` assemblies (ADR 0106, 0113) | `build/Kazo.Os.Apps.targets`, tested by `build/publish-trimmed.sh` | [`trimmed-publish.md`](trimmed-publish.md) |
-| No inline CSS or JavaScript in a `.razor` (ADR 0007) | target `ValidateHackerOsRazorAssets`, `Directory.Build.targets` | [`AGENTS.md`](../../../../AGENTS.md) |
+| No inline CSS or JavaScript in a `.razor` (ADR 0007) | target `ValidateKazoOsRazorAssets`, `Directory.Build.targets` | [`AGENTS.md`](../../../../AGENTS.md) |
 | Each project under `Apps/` has a valid `[AppManifest]` class; `manifest.json` is regenerated (`HOSAPP0001`…) | `build/Kazo.Os.Apps.targets` | [`app-model.md`](../framework/app-model.md) |
 | An app uses only the SDK (`HOSAPP0030`, `HOSAPP0031`, `HOSSDK0001`) | `build/Kazo.Os.Apps.targets` and generator | [`app-sdk.md`](../framework/app-sdk.md) |
 | The SDK's public surface does not change without a trace: `PublicAPI.Shipped.txt`/`Unshipped.txt` (RS0016, RS0017); an app compiled against the current major (2.x) is admitted, a 1.x app refused (ADR 0114, ADR 0149) | public API analyzer, `Tests/Kazo.Os.SdkCompatibility.Tests` | [`sdk-packages.md`](../framework/sdk-packages.md) |

@@ -205,7 +205,7 @@ never logged.
 
 ## Composition (hosts)
 
-`AddHackerOsEcosystem` (Ecosystem, `test/test` and the server) registers, as
+`AddKazoOsEcosystem` (Ecosystem, `test/test` and the server) registers, as
 `Scoped`: `IAppPermissionStore`, `DangerousCapabilityApprovalBroker` (also as
 `IDangerousCapabilityApprovalPrompt`), `IDangerousCapabilityGate`,
 `AppPermissionAdministration`, and passes the gate to
