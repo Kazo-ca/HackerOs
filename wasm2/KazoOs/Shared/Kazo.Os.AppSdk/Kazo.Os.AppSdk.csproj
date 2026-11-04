@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <!-- ADR 0104: IStringLocalizer, the contract KazoStringLocalizer implements. -->
-    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="10.0.13" />
+    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="10.0.14" />
   </ItemGroup>
 
   <ItemGroup>

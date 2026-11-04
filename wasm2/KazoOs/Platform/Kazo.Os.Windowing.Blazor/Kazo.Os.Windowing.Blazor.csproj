@@ -18,7 +18,7 @@
   <ItemGroup>
     <!-- Native Blazor/Pointer Events only. No MudBlazor: the exported chrome must render
          without it, per the windowing/taskbar export plan (EXT-WIN-006). -->
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.13" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.14" />
   </ItemGroup>
 
   <ItemGroup>

@@ -18,7 +18,7 @@
     become the submodule's projects (ADR 0176 §4).
   -->
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.13" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.14" />
     <PackageReference Include="Kazo.Os.AppSdk" Version="$(KazoOsVersion)" />
     <PackageReference Include="Kazo.Os.AppSdk.Blazor" Version="$(KazoOsVersion)" />
     <!-- Generates manifest.json after the build and checks the SDK boundary (HOSAPP0030). -->

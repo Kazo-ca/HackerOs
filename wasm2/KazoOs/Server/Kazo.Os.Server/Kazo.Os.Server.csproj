@@ -37,8 +37,8 @@
 
   <ItemGroup>
     <!-- SQLite for portable single-file server deployment; can be swapped for PostgreSQL. -->
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.13" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.13">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.14" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.14">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <!-- Pin a patched native SQLite build instead of the vulnerable transitive floor. -->
@@ -46,13 +46,13 @@
     <!-- Scalar for OpenAPI documentation UI. -->
     <PackageReference Include="Scalar.AspNetCore" Version="2.18.2" />
     <!-- OpenAPI document generation (required for AddOpenApi/MapOpenApi). -->
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.13" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.14" />
     <PackageReference Include="Microsoft.OpenApi" Version="2.13.0" />
     <!-- Hosts the Blazor WebAssembly client (ADR 0130): MIME types and debugging proxy of _framework/. -->
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.13" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.14" />
     <!-- ADR 0191 §4: the installable server runs as a Windows service or a systemd unit. -->
-    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="10.0.13" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="10.0.13" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="10.0.14" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="10.0.14" />
   </ItemGroup>
 
 </Project>
