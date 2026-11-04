@@ -38,5 +38,5 @@ $legacyOutput = Join-Path $outputRoot 'legacy'
 New-Item -ItemType Directory -Path $legacyOutput | Out-Null
 Get-ChildItem -LiteralPath $legacyRoot -Force | Copy-Item -Destination $legacyOutput -Recurse -Force
 [IO.File]::WriteAllText((Join-Path $outputRoot '.nojekyll'), '')
-[IO.File]::WriteAllText((Join-Path $outputRoot 'CNAME'), "hackos.kazo.ca`n")
+[IO.File]::WriteAllText((Join-Path $outputRoot 'CNAME'), "os.kazo.ca`n")
 Write-Output "Pages artifact: $outputRoot (WASM /, legacy /legacy/)"

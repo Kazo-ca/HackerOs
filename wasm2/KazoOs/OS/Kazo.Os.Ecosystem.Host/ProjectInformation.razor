@@ -15,7 +15,7 @@
     </span>
     @if (ShowLegacyNotice && IsPublicDomain)
     {
-        <p class="legacy-notice">@L["Project.LegacyMoved"] <a href="https://hackos.kazo.ca/legacy/">https://hackos.kazo.ca/legacy</a></p>
+        <p class="legacy-notice">@L["Project.LegacyMoved"] <a href="https://os.kazo.ca/legacy/">https://os.kazo.ca/legacy</a></p>
     }
 </footer>
 
@@ -24,5 +24,5 @@
     [Parameter] public bool ShowLegacyNotice { get; set; } = true;
 
     // Compare the actual host, never a substring: a query string or lookalike domain is insufficient.
-    private bool IsPublicDomain => string.Equals(new Uri(Navigation.Uri).Host, "hackos.kazo.ca", StringComparison.OrdinalIgnoreCase);
+    private bool IsPublicDomain => string.Equals(new Uri(Navigation.Uri).Host, "os.kazo.ca", StringComparison.OrdinalIgnoreCase);
 }

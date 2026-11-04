@@ -18,7 +18,7 @@ provides (windows, files, network, security, themes, languages, mobile) and
 focus on their application.
 
 Kazo OS is written in C# with Blazor WebAssembly (.NET 10). The current
-version is **2.2.2**. Try it at <https://hackos.kazo.ca/>.
+version is **2.2.2**. Try it at <https://os.kazo.ca/>.
 
 ## The goal of the ecosystem
 
@@ -69,7 +69,7 @@ The ecosystem is made of:
 
 | Use | For whom | Description |
 | --- | --- | --- |
-| **Online** | Everyone | Open <https://hackos.kazo.ca/>. Kazo OS installs like an app (PWA) and then works offline. |
+| **Online** | Everyone | Open <https://os.kazo.ca/>. Kazo OS installs like an app (PWA) and then works offline. |
 | **Self-hosted static site** | Organizations, teachers | Each version publishes a `kazoos-wasm-<version>.zip` archive in the [GitHub Releases](https://github.com/Kazo-ca/Os/releases). It can be dropped on any static hosting (GitHub Pages, web server). See [`github-pages-deployment.md`](dev/github-pages-deployment.md). |
 | **With the Kazo OS server** | Organizations, advanced users | The optional ASP.NET Core server serves the OS and adds accounts synchronized across devices and a relay to the real network. See [`server-hosting.md`](dev/server-hosting.md). |
 | **Embedded in your own product** | Developers, companies | The NuGet packages and the `dotnet new kazoos-host` template let you compose your own host with your own applications. See [`building-on-kazoos.md`](framework/building-on-kazoos.md). |

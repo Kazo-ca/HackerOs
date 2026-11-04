@@ -6,8 +6,11 @@
 
 Le dépôt public est [Kazo-ca/Os](https://github.com/Kazo-ca/Os).
 La version WebAssembly autonome **2.2.2** est publiée à la racine de
-`https://hackos.kazo.ca/` ; la version TypeScript d'origine est conservée sous
-`https://hackos.kazo.ca/legacy/`. Voir l'[ADR 0167](adr/0167-combined-pages-deployment.md).
+`https://os.kazo.ca/` ; la version TypeScript d'origine est conservée sous
+`https://os.kazo.ca/legacy/`. Voir l'[ADR 0167](adr/0167-combined-pages-deployment.md).
+L'ancienne adresse `hackos.kazo.ca` n'est plus servie par Pages : un Worker
+Cloudflare la redirige vers `os.kazo.ca` ([`cloudflare-redirect.md`](cloudflare-redirect.md),
+[ADR 0229](adr/0229-kazo-os-display-name-and-new-address.md)).
 
 ## Workflow et builds indépendants
 
@@ -58,7 +61,7 @@ conserve ses diagnostics et n'effectue aucun déploiement. Voir
 
 `build/assemble-pages.ps1` copie la publication WASM sans la modifier dans
 `artifacts/pages/`, puis le bundle legacy dans `artifacts/pages/legacy/`. Il
-ajoute `.nojekyll` et le `CNAME` `hackos.kazo.ca`. Le dossier de destination
+ajoute `.nojekyll` et le `CNAME` `os.kazo.ca`. Le dossier de destination
 doit être vide ; une entrée requise absente interrompt la publication.
 
 La base HTML du WASM reste `/`. Le bundle legacy utilise le public path
@@ -76,8 +79,8 @@ d'isolation au legacy. Les autres chemins gardent la stratégie offline existant
 - Connexion et création du premier compte : version du build, « Auteur : Benoit Robin »
   (lien vers https://kazo.ca) et « Projet GitHub : [icône] Kazo-ca/Os » (lien vers
   le dépôt), libellés dans la langue du système ([ADR 0187](adr/0187-guest-start-and-sign-in-credits.md)).
-  Si le nom d'hôte est exactement `hackos.kazo.ca`, un message indique le
-  déplacement de l'original vers `https://hackos.kazo.ca/legacy`. Les ports
+  Si le nom d'hôte est exactement `os.kazo.ca`, un message indique le
+  déplacement de l'original vers `https://os.kazo.ca/legacy`. Les ports
   n'affectent pas ce test ; les sous-domaines ressemblants et les paramètres
   d'URL ne l'activent pas.
 - Récupération et erreurs fatales du WASM : mêmes crédits et même version.

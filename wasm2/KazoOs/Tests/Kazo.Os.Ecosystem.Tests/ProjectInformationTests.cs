@@ -15,11 +15,12 @@ namespace Kazo.Os.Ecosystem.Tests;
 public sealed class ProjectInformationTests
 {
     [Theory]
-    [InlineData("https://hackos.kazo.ca/", true, true)]
-    [InlineData("https://HACKOS.KAZO.CA/login", true, true)]
-    [InlineData("https://hackos.kazo.ca/", false, false)]
-    [InlineData("https://hackos.kazo.ca.example.com/", true, false)]
-    [InlineData("http://localhost:7240/?host=hackos.kazo.ca", true, false)]
+    [InlineData("https://os.kazo.ca/", true, true)]
+    [InlineData("https://OS.KAZO.CA/login", true, true)]
+    [InlineData("https://os.kazo.ca/", false, false)]
+    [InlineData("https://os.kazo.ca.example.com/", true, false)]
+    [InlineData("https://hackos.kazo.ca/", true, false)]
+    [InlineData("http://localhost:7240/?host=os.kazo.ca", true, false)]
     [InlineData("https://kazo-ca.github.io/HackerOs/", true, false)]
     public async Task Migration_notice_is_only_shown_on_the_public_authentication_pages(string url, bool enabled, bool visible)
     {
@@ -35,7 +36,7 @@ public sealed class ProjectInformationTests
                 new Dictionary<string, object?> { [nameof(ProjectInformation.ShowLegacyNotice)] = enabled }));
             return result.ToHtmlString();
         });
-        Assert.Equal(visible, html.Contains("https://hackos.kazo.ca/legacy/", StringComparison.Ordinal));
+        Assert.Equal(visible, html.Contains("https://os.kazo.ca/legacy/", StringComparison.Ordinal));
         Assert.Contains("https://github.com/Kazo-ca/Os", html);
         Assert.Contains($"Kazo OS {KazoOsSdk.Version}", html);
     }
