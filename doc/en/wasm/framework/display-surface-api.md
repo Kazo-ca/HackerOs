@@ -41,7 +41,7 @@ launch that a click triggered.
 The content remains an ordinary piece of the app's window: same cascading
 parameters, same execution context, same event handlers. Only its DOM lives in
 the surface. It keeps the appearance of the place where it is rendered: the
-module copies the custom CSS properties (`--hos-*`, theme) and the anchor's
+module copies the custom CSS properties (`--kos-*`, theme) and the anchor's
 text style onto the surface root.
 
 ## Surface events

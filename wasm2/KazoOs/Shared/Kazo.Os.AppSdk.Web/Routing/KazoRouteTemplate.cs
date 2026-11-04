@@ -120,7 +120,7 @@ public sealed class KazoRouteTemplate
     /// <summary>
     /// Gets a key that two templates matching the same URLs share: literals in lower case, parameters
     /// without their names (<c>api/notes/{:int}</c>). The build reports two routes with the same key
-    /// and an HTTP method in common as a conflict (<c>HOSWEB0001</c>).
+    /// and an HTTP method in common as a conflict (<c>KOSWEB0001</c>).
     /// </summary>
     public string GetConflictKey()
     {

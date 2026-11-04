@@ -53,7 +53,7 @@ public sealed class KazobackupCommandTests
         (int exit, string stdout, _) = await RunAsync(root: true, new FakeBackup(), "create");
 
         Assert.Equal(0, exit);
-        Assert.Contains("kazoos-20261017-071200Z.hosbak", stdout, StringComparison.Ordinal);
+        Assert.Contains("kazoos-20261017-071200Z.kosbak", stdout, StringComparison.Ordinal);
         Assert.Contains("12 records", stdout, StringComparison.Ordinal);
     }
 
@@ -125,7 +125,7 @@ public sealed class KazobackupCommandTests
         {
             Calls++;
             return ValueTask.FromResult(new KazoBackupInfo(
-                "kazoos-20261017-071200Z.hosbak", 4096, 12, new DateTimeOffset(2026, 10, 17, 7, 12, 0, TimeSpan.Zero)));
+                "kazoos-20261017-071200Z.kosbak", 4096, 12, new DateTimeOffset(2026, 10, 17, 7, 12, 0, TimeSpan.Zero)));
         }
 
         public ValueTask<KazoBackupInfo?> RestoreAsync(KazoBackupRestoreMode mode, CancellationToken cancellationToken = default)
@@ -134,7 +134,7 @@ public sealed class KazobackupCommandTests
             LastMode = mode;
             return Invalid
                 ? throw new KazoBackupInvalidException("not a backup")
-                : ValueTask.FromResult<KazoBackupInfo?>(PickNothing ? null : new KazoBackupInfo("old.hosbak", 10, 1, DateTimeOffset.UnixEpoch));
+                : ValueTask.FromResult<KazoBackupInfo?>(PickNothing ? null : new KazoBackupInfo("old.kosbak", 10, 1, DateTimeOffset.UnixEpoch));
         }
     }
 

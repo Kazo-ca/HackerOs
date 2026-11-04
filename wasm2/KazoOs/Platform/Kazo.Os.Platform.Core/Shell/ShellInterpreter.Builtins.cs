@@ -25,7 +25,7 @@ public sealed partial class ShellInterpreter
     /// <summary>
     /// Gets every name the shell runs itself, never looked up in the catalog: the special built-ins
     /// and the shell's own names. The host build refuses an app command or alias with one of these
-    /// names (<c>HOSAPP0022</c>, ADR 0098 §4).
+    /// names (<c>KOSAPP0022</c>, ADR 0098 §4).
     /// </summary>
     public static IReadOnlySet<string> ReservedNames { get; } = new HashSet<string>(SpecialBuiltins.Concat(ShellNames), StringComparer.Ordinal);
 

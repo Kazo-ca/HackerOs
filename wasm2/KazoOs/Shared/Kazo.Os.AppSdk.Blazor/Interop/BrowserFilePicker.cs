@@ -25,7 +25,7 @@ public sealed class BrowserFilePicker : IAsyncDisposable
     }
 
     /// <summary>Opens the picker and reads the chosen file.</summary>
-    /// <param name="accept">File types offered, as the <c>accept</c> attribute (<c>.hosbak,.json</c>); <see langword="null"/> for any.</param>
+    /// <param name="accept">File types offered, as the <c>accept</c> attribute (<c>.kosbak,.json</c>); <see langword="null"/> for any.</param>
     /// <param name="cancellationToken">Stops waiting for the user.</param>
     /// <returns>The file, or <see langword="null"/> when the user closed the picker.</returns>
     /// <exception cref="InvalidOperationException">No recent user gesture: the browser would not open the picker.</exception>

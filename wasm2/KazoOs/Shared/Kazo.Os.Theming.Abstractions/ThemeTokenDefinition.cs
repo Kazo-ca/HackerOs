@@ -47,7 +47,7 @@ public enum ThemeTokenGroup
 }
 
 /// <summary>Describes one CSS custom property a user theme may set (ADR 0103 §2.3).</summary>
-/// <param name="Name">CSS custom property name, such as <c>--hos-accent</c>.</param>
+/// <param name="Name">CSS custom property name, such as <c>--kos-accent</c>.</param>
 /// <param name="Type">Value grammar enforced when a theme file is read.</param>
 /// <param name="Group">Editor group.</param>
 /// <param name="Label">Short human-readable label, in English; <see cref="GetLabel"/> translates it.</param>
@@ -85,7 +85,7 @@ public sealed record ThemeTokenDefinition(
         culture is null ? Description : Strings.Get($"{ResourceKey}.Description", culture) ?? Description;
 
     /// <summary>
-    /// Gets the resource key prefix of the token: <c>--hos-bg-base</c> becomes <c>Token.BgBase</c>.
+    /// Gets the resource key prefix of the token: <c>--kos-bg-base</c> becomes <c>Token.BgBase</c>.
     /// The CSS name itself is never translated.
     /// </summary>
     internal string ResourceKey => GetResourceKey(Name);
@@ -94,7 +94,7 @@ public sealed record ThemeTokenDefinition(
     /// <param name="name">CSS custom property name.</param>
     internal static string GetResourceKey(string name)
     {
-        string bare = name.StartsWith("--hos-", StringComparison.Ordinal) ? name[6..] : name.TrimStart('-');
+        string bare = name.StartsWith("--kos-", StringComparison.Ordinal) ? name[6..] : name.TrimStart('-');
         return "Token." + string.Concat(bare
             .Split('-', StringSplitOptions.RemoveEmptyEntries)
             .Select(static part => char.ToUpperInvariant(part[0]) + part[1..]));

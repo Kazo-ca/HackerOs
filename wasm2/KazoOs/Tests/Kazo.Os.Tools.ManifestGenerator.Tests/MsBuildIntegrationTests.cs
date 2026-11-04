@@ -40,8 +40,8 @@ public sealed class MsBuildIntegrationTests
         (int exitCode, string output) = await BuildFixtureAsync("NoDefinition");
 
         Assert.NotEqual(0, exitCode);
-        Assert.Contains("error HOSAPP0001", output, StringComparison.Ordinal);
-        Assert.DoesNotContain("HOSAPP0099", output, StringComparison.Ordinal);
+        Assert.Contains("error KOSAPP0001", output, StringComparison.Ordinal);
+        Assert.DoesNotContain("KOSAPP0099", output, StringComparison.Ordinal);
         Assert.False(File.Exists(Path.Combine(FixtureDirectory("NoDefinition"), "manifest.json")));
     }
 
@@ -51,7 +51,7 @@ public sealed class MsBuildIntegrationTests
         (int exitCode, string output) = await BuildFixtureAsync("ForbiddenReference");
 
         Assert.NotEqual(0, exitCode);
-        Assert.Contains("error HOSAPP0030", output, StringComparison.Ordinal);
+        Assert.Contains("error KOSAPP0030", output, StringComparison.Ordinal);
         Assert.Contains("Platform/Kazo.Os.Platform.Core/Kazo.Os.Platform.Core.csproj", output, StringComparison.Ordinal);
         // Allowed references (App Abstractions, AppSdk) and the generator's build-order reference are not reported.
         Assert.DoesNotContain("Kazo.Os.AppSdk.csproj' ", output, StringComparison.Ordinal);
@@ -64,9 +64,9 @@ public sealed class MsBuildIntegrationTests
         (int exitCode, string output) = await BuildFixtureAsync("ForbiddenInjection");
 
         Assert.NotEqual(0, exitCode);
-        Assert.Contains("error HOSAPP0031", output, StringComparison.Ordinal);
+        Assert.Contains("error KOSAPP0031", output, StringComparison.Ordinal);
         Assert.Contains("ISessionService", output, StringComparison.Ordinal);
-        Assert.DoesNotContain("HOSAPP0099", output, StringComparison.Ordinal);
+        Assert.DoesNotContain("KOSAPP0099", output, StringComparison.Ordinal);
         Assert.False(File.Exists(Path.Combine(FixtureDirectory("ForbiddenInjection"), "manifest.json")));
     }
 
@@ -130,7 +130,7 @@ public sealed class MsBuildIntegrationTests
         (int exitCode, string output) = await BuildFixtureAsync("SingleApp", null, "-t:KazoOsKeyGen");
 
         Assert.NotEqual(0, exitCode);
-        Assert.Contains("error HOSAPP0061", output, StringComparison.Ordinal);
+        Assert.Contains("error KOSAPP0061", output, StringComparison.Ordinal);
     }
 
     private static string FixtureDirectory(string name) =>

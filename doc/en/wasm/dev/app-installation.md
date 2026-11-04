@@ -441,11 +441,11 @@ completes the Kazo OS Store.
   republish with it, then replace the constant.
 - **Signing by an app's author** ([ADR 0219](adr/0219-app-authors-signing-tool.md),
   issue #321): `dotnet build -t:KazoOsKeyGen -p:KazoOsSigningKeyFile=<file.pem>`
-  creates the pair (private key in a new file, public key printed, `HOSAPP0061`
+  creates the pair (private key in a new file, public key printed, `KOSAPP0061`
   without the property); `KazoOsPack` signs each package with the
   `HACKEROS_APP_SIGNING_KEY` variable (secret of the app repository) or
   `KazoOsSigningKeyFile`, and checks the signature before writing it. Without
-  a key, the package is published unsigned with warning `HOSAPP0063`.
+  a key, the package is published unsigned with warning `KOSAPP0063`.
   `index.json` keeps the signatures of the versions already published. Generator
   commands: `keygen --private-key <file.pem>`, `sign --package <file.kazoapp>`.
   To require an author's signature, an administrator adds their public key with

@@ -70,7 +70,7 @@ function cssValue(style, name, fallback) {
 
 function themeFor(host, highContrast) {
   const style = getComputedStyle(host);
-  const accent = cssValue(style, "--hos-accent", "#42d392");
+  const accent = cssValue(style, "--kos-accent", "#42d392");
   if (highContrast) {
     return {
       ...HIGH_CONTRAST_PALETTE,
@@ -88,10 +88,10 @@ function themeFor(host, highContrast) {
 
   return {
     ...ANSI_PALETTE,
-    background: cssValue(style, "--hos-bg-base", "#0d1114"),
-    foreground: cssValue(style, "--hos-text-primary", "#f4f7f8"),
+    background: cssValue(style, "--kos-bg-base", "#0d1114"),
+    foreground: cssValue(style, "--kos-text-primary", "#f4f7f8"),
     cursor: accent,
-    cursorAccent: cssValue(style, "--hos-bg-base", "#0d1114"),
+    cursorAccent: cssValue(style, "--kos-bg-base", "#0d1114"),
     selectionBackground: "rgba(66, 211, 146, 0.3)",
     // xterm.js draws its own scrollbar: tint its slider with the accent.
     scrollbarSliderBackground: "rgba(66, 211, 146, 0.25)",

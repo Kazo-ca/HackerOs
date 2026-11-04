@@ -53,7 +53,7 @@ son navigateur :
    charge lui-même les sous-ressources d'une page.
 2. **SDK public seulement.** ASP.Kazo est une bibliothèque du SDK
    (`KazoOsSdkLibrary`) ; un site ne référence ni Platform Core ni les
-   services internes (ADR 0055, codes `HOSAPP0030/0031`).
+   services internes (ADR 0055, codes `KOSAPP0030/0031`).
 3. **Ressembler à ASP.NET sans le recopier.** Mêmes idées et mêmes noms
    d'attributs (`[HttpGet]`, `[Route]`, `[FromBody]`), classes de base préfixées
    `Kazo` (`KazoController`, `KazoHttpContext`) ; seulement le sous-ensemble

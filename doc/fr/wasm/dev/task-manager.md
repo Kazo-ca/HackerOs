@@ -253,7 +253,7 @@ await sync.SetStartTypeAsync(ServiceStartMode.Automatic);
   `Size` (`Small`, `Medium`, `Large`), `Class`.
 - La valeur la plus récente est au bord droit ; les coordonnées SVG sont
   écrites en culture invariante.
-- Couleurs : `--hos-chart-series-0` à `--hos-chart-series-7`, avec repli sur
+- Couleurs : `--kos-chart-series-0` à `--kos-chart-series-7`, avec repli sur
   l'accent et les couleurs d'état du thème.
 
 ## Décisions clés et précisions par rapport aux ADR 0056 et 0058

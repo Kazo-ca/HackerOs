@@ -1,5 +1,5 @@
 .store-markdown {
-    color: var(--hos-text-primary, #e6edf3);
+    color: var(--kos-text-primary, #e6edf3);
     line-height: 1.55;
     font-size: 0.92rem;
 }
@@ -8,7 +8,7 @@
 .store-markdown h4,
 .store-markdown h5 {
     margin: 1rem 0 0.4rem;
-    color: var(--hos-accent, #5eead4);
+    color: var(--kos-accent, #5eead4);
     font-weight: 600;
 }
 
@@ -28,7 +28,7 @@
 }
 
 .store-markdown code {
-    font-family: var(--hos-font-mono, ui-monospace, monospace);
+    font-family: var(--kos-font-mono, ui-monospace, monospace);
     font-size: 0.85em;
     padding: 0.05rem 0.3rem;
     border-radius: 4px;
@@ -49,5 +49,5 @@
 }
 
 .store-markdown a {
-    color: var(--hos-accent, #5eead4);
+    color: var(--kos-accent, #5eead4);
 }

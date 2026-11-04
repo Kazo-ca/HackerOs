@@ -303,7 +303,7 @@ Headless Chromium 140, Release publication of the Ecosystem served on
 | Detached windows (`window.open`) | `BrowserDetachedWindowTests` under isolation: the window is same-origin, COOP `same-origin` keeps the link | passes |
 | Fallback to the real network, external images | image and `no-cors` `fetch` from another origin without CORP: loaded with `credentialless` | passes (blocked only in `require-corp`, ADR 0143 question 3) |
 | Monaco (CodeEditor), xterm.js (Terminal) | new file, typing in Monaco; commands in the terminal | passes, no console error |
-| Downloads (`download.js`), `.hosbak` | `blob:` link with `download`: the download starts; `FileExplorerDownloadTests` under isolation | passes |
+| Downloads (`download.js`), `.kosbak` | `blob:` link with `download`: the download starts; `FileExplorerDownloadTests` under isolation | passes |
 | PWA installation, service worker update | first load on `127.0.0.2`: installation, single reload (`controllerchange`), isolated page; `HostSmoke` `ecosystem-isolated` | passes |
 
 With isolation, `seq 30000 | wc -l` gives `30000` through the rings,

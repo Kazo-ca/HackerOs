@@ -8,7 +8,7 @@ namespace Kazo.Os.Platform.Core.Tests.Appearance;
 public sealed class UserThemeCatalogServiceTests
 {
     private static string ThemeText(string id, string name, string accent) =>
-        $"[theme]\nid = {id}\nname = {name}\nbase = kazoos\n\n[tokens]\n--hos-accent = {accent}\n";
+        $"[theme]\nid = {id}\nname = {name}\nbase = kazoos\n\n[tokens]\n--kos-accent = {accent}\n";
 
     [Fact]
     public async Task Reads_etc_and_the_user_folder_and_survives_a_reload()

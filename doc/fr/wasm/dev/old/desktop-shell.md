@@ -39,7 +39,7 @@ The shell is implemented using collocated Blazor components and scoped CSS files
 
 ## Theme & Accessibility
 
-- Semantic design tokens (`--hos-*`) inherited from the root
+- Semantic design tokens (`--kos-*`) inherited from the root
   `Kazo.Os.Theming.Blazor.ThemeScope` supply the selected desktop palette,
   typography, shape, taskbar, launcher, and window treatment. See
   [`theming.md`](theming.md); host `app.css` is not a second theme definition.

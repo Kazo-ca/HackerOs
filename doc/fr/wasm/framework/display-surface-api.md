@@ -42,7 +42,7 @@ Le contenu reste un morceau ordinaire de la fenêtre de l'app : mêmes
 paramètres en cascade, même contexte d'exécution, mêmes gestionnaires
 d'événements. Seul son DOM vit dans la surface. Il garde l'apparence de
 l'endroit où il est rendu : le module recopie sur la racine de la surface les
-propriétés CSS personnalisées (`--hos-*`, thème) et le style de texte de
+propriétés CSS personnalisées (`--kos-*`, thème) et le style de texte de
 l'ancre.
 
 ## Événements d'une surface

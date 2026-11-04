@@ -170,7 +170,7 @@ public sealed record AppManifest
     /// Gets the <c>oom_score_adj</c> the app's processes start with (ADR 0126, section 4), from
     /// <c>-1000</c> (never chosen by the OOM killer) to <c>1000</c> (chosen first), or
     /// <see langword="null"/> (omitted from <c>manifest.json</c>) for the OS default. A negative value
-    /// is honored only for a system app: the generator refuses it for any other (<c>HOSAPP0024</c>)
+    /// is honored only for a system app: the generator refuses it for any other (<c>KOSAPP0024</c>)
     /// and the catalog ignores it at run time.
     /// </summary>
     public int? OomScoreAdj { get; init; }

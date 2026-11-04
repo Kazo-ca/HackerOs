@@ -7,7 +7,7 @@
   <Target Name="_KazoOsRequireSubmodule"
           BeforeTargets="_GenerateRestoreProjectSpec;CollectPackageReferences;PrepareForBuild"
           Condition="!Exists('$(KazoOsSourceRoot)build/Versions.props')">
-    <Error Code="HOSAPP0070"
+    <Error Code="KOSAPP0070"
            Text="The Kazo OS submodule is missing ($(KazoOsSourceRoot)build/Versions.props not found). Run: git submodule update --init" />
   </Target>
 </Project>

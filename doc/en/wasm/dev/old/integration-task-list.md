@@ -1227,7 +1227,7 @@ UI, no server requirement, no root DI exposure, and no runtime package loader.
   - **Completed: 2026-08-02** — `App.razor` and `App.razor.css` render boot-critical recovery actions (Retry, Export, Reset) directly using typed `StorageRecoveryPresentation` contracts without depending on first-party apps like Settings or Terminal.
 - [x] `P2-HOST-009` Ensure global CSS contains only shell-level resets/tokens;
   component styles remain scoped and no inline assets pass the build.
-  - **Completed: 2026-08-02** — `wwwroot/css/app.css` audited and updated to provide `:root` Gothic/Hacker CSS custom property design tokens (`--hos-*`) and global HTML resets. Component styling remains encapsulated in `.razor.css` files.
+  - **Completed: 2026-08-02** — `wwwroot/css/app.css` audited and updated to provide `:root` Gothic/Hacker CSS custom property design tokens (`--kos-*`) and global HTML resets. Component styling remains encapsulated in `.razor.css` files.
 - [x] `P2-HOST-010` Run Debug, Release, trimming analyzer, and published static
   host smoke tests before adding first-party apps.
   - **Completed: 2026-08-02** — Solution builds with `TreatWarningsAsErrors=true` and trim analyzer enabled in both Debug and Release modes with 0 warnings and 0 errors. All test suites pass cleanly.

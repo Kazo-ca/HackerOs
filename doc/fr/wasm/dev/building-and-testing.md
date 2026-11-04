@@ -335,12 +335,12 @@ dotnet test Kazo.Os.sln
 | Suites | Contenu |
 |---|---|
 | `Tests/*.Tests` (hors E2E) | Tests unitaires et de composants (xUnit, bUnit), un projet par projet de code. Rapides, sans navigateur. |
-| `Tests/Kazo.Os.AppSdk.Web.Tests` | ASP.Kazo : routeur, pipeline d'un site compilé avec le générateur de routes, générateur piloté sur des extraits (`HOSWEB*`), page hôte et `blazor.boot.json` d'un site Blazor. |
+| `Tests/Kazo.Os.AppSdk.Web.Tests` | ASP.Kazo : routeur, pipeline d'un site compilé avec le générateur de routes, générateur piloté sur des extraits (`KOSWEB*`), page hôte et `blazor.boot.json` d'un site Blazor. |
 | `Tests/Kazo.Os.AppSdk.Web.Blazor.Tests` | Sites Blazor : routeur (`KazoSiteRouter`), gestionnaire de navigation de l'onglet, `KazoWebSite`. |
 | `Tests/Kazo.Os.Samples.Intranet.Tests` | Exemple Intranet en mémoire (`KazoWebHost.CreateApplication`) : vues `.cshtml` et `.razor`, `wwwroot`, session, anti-falsification, CRUD par formulaires, API REST, page hôte du tableau Blazor. Le parcours dans Chromium est `BrowserIntranetTests` (UI E2E). |
 | `Tests/Kazo.Os.Tools.ManifestGenerator.Tests` | Builds MSBuild réels des projets `Tests/ManifestGenerator.Fixtures.*` : génération, agrégation, frontière du SDK. Plus lents. |
 | `Tests/Kazo.Os.E2E.Tests`, `Kazo.Os.UI.E2E.Tests`, `Kazo.Os.Pwa.E2E.Tests` | Playwright contre l'OS lancé dans Chromium. Pièges connus : [`old/common-pitfalls.md`](old/common-pitfalls.md) §4 à §6. |
-| `Tests/Kazo.Os.Templates.E2E.Tests` | Modèles `dotnet new` (ADR 0098 §6) : empaquette tout avec `build/pack-local.sh` (ou prend le flux de `KAZOOS_LOCAL_FEED`), génère et compile chaque modèle hors du dépôt avec un cache NuGet isolé, puis lance l'hôte généré dans Chromium avec une app fenêtrée et une commande générées, et un autre qui vérifie qu'un hôte référençant les apps compilées contre les SDK 1.0.0 et 1.1.0 ne se construit pas (`HOSAPP0021`), puis qu'avec l'app compilée contre le SDK 2.0.0 il démarre, montre `KazoFileView` dans sa fenêtre et exécute sa commande (ADR 0114, ADR 0132 §1, ADR 0161 §3). |
+| `Tests/Kazo.Os.Templates.E2E.Tests` | Modèles `dotnet new` (ADR 0098 §6) : empaquette tout avec `build/pack-local.sh` (ou prend le flux de `KAZOOS_LOCAL_FEED`), génère et compile chaque modèle hors du dépôt avec un cache NuGet isolé, puis lance l'hôte généré dans Chromium avec une app fenêtrée et une commande générées, et un autre qui vérifie qu'un hôte référençant les apps compilées contre les SDK 1.0.0 et 1.1.0 ne se construit pas (`KOSAPP0021`), puis qu'avec l'app compilée contre le SDK 2.0.0 il démarre, montre `KazoFileView` dans sa fenêtre et exécute sa commande (ADR 0114, ADR 0132 §1, ADR 0161 §3). |
 | `Tests/Kazo.Os.SdkCompatibility.Tests` | Apps compilées contre les SDK 1.0.0, 1.1.0 et 2.0.0, gardées dans `Tests/fixtures/sdk-compat` (ADR 0114 §4, ADR 0132 §1, ADR 0161 §3) : le catalogue refuse les apps 1.x (`catalog.sdk.incompatible`) et admet l'app 2.0 ; pour celle-ci, références, compilation JIT de chaque méthode et exécution de la commande contre le SDK courant (`build/Versions.props`). Sans navigateur, lancé par `dotnet test Kazo.Os.sln`. |
 | `Tests/Kazo.Os.HostSmoke.Tests` | Démarrage d'un hôte déjà lancé, piloté par `build/verify-hosts.sh` (voir plus haut) ; « skipped » sans `KAZOOS_SMOKE_URL`. |
 
@@ -485,7 +485,7 @@ dotnet test Tests/Kazo.Os.UI.E2E.Tests -c Release --no-build --filter "FullyQual
     `v3/7` sur `v3/3` avec `LowStorageSpaceTests` (quota de Chromium abaissé,
     [`system-backup.md`](system-backup.md)), 24/24 avec les trois tests
     d'accessibilité (`v3/13`, 2026-10-17, environ 16 min 30 s)
-    (2026-10-16 : contraste de `--hos-text-muted` du thème Kazo OS, états
+    (2026-10-16 : contraste de `--kos-text-muted` du thème Kazo OS, états
     ARIA écrits en `"true"`/`"false"`, voir
     [`old/common-pitfalls.md`](old/common-pitfalls.md) §8 ; le test du choix
     Mobile attend la bascule avant de recharger, car l'écriture du réglage

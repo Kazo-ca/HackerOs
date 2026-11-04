@@ -314,8 +314,8 @@ manifeste écrit `screens: "single" | "multiple"` ou `screen: 2..9`.
 La méthode **n'enregistre que les appels** :
 elle s'exécute au build, deux fois, et doit donner le même résultat. Le
 générateur écrit les entrées dans `manifest.json` (`contextMenus`) et signale
-une erreur par `HOSAPP0026` (règle, exception, titre anglais manquant),
-`HOSAPP0027` (capacité absente) ou `HOSAPP0028` (cible absente de l'hôte ou
+une erreur par `KOSAPP0026` (règle, exception, titre anglais manquant),
+`KOSAPP0027` (capacité absente) ou `KOSAPP0028` (cible absente de l'hôte ou
 qui ne déclare pas l'intent).
 
 ### Recevoir le clic
@@ -392,7 +392,7 @@ app système le fait par l'API publique `KazoFileMenuEntries`
   `Register`, charge utile, identifiants par défaut identiques dans le SDK et le
   validateur.
 - `Tests/Kazo.Os.Tools.ManifestGenerator.Tests/ContextMenuRegistrationTests.cs` :
-  titres par culture, `HOSAPP0026` à `HOSAPP0028`, déterminisme.
+  titres par culture, `KOSAPP0026` à `KOSAPP0028`, déterminisme.
 - `Tests/Kazo.Os.Platform.Core.Tests/ContextMenus/FileContextMenuTests.cs` :
   dossier `context-menus.d` (rang, réécriture, retrait, fichiers invalides),
   filtres, préférences, lancements, `KazoFileMenuEntries`.
@@ -408,7 +408,7 @@ app système le fait par l'API publique `KazoFileMenuEntries`
 
 - [x] Contrat du manifeste `contextMenus`, schéma, sérialiseur, validateur, capacité `shell.context-menu`.
 - [x] SDK : `[RegisterFileContextMenu]`, `RegisterFileContextMenuContext`, `MenuSelection`, `KazoFileMenuIntent`, `KazoMenuDefinition.FileMenu`.
-- [x] Générateur : exécution de la méthode, titres EN/FR, `HOSAPP0026` à `HOSAPP0028`.
+- [x] Générateur : exécution de la méthode, titres EN/FR, `KOSAPP0026` à `KOSAPP0028`.
 - [x] OS : `context-menus.d`, filtres, placement, lancement, entrées masquées.
 - [x] Migration de « Extraire ici » et « Publier comme site web… ».
 - [x] Paramètres ▸ Menus des fichiers et `KazoFileMenuEntries`.

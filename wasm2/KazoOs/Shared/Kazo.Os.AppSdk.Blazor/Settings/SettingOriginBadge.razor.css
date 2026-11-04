@@ -5,29 +5,29 @@
     margin-left: 8px;
     padding: 1px 8px;
     border-radius: 999px;
-    border: 1px solid var(--hos-border, #3a4b53);
-    font-family: var(--hos-font-mono, ui-monospace, monospace);
+    border: 1px solid var(--kos-border, #3a4b53);
+    font-family: var(--kos-font-mono, ui-monospace, monospace);
     font-size: 0.7rem;
     font-weight: normal;
     letter-spacing: 0.04em;
     text-transform: uppercase;
     vertical-align: middle;
-    color: var(--hos-text-secondary, #a9b6bc);
+    color: var(--kos-text-secondary, #a9b6bc);
 }
 
 .setting-origin.is-user {
-    border-color: var(--hos-accent, #42d392);
-    color: var(--hos-accent, #42d392);
+    border-color: var(--kos-accent, #42d392);
+    color: var(--kos-accent, #42d392);
 }
 
 .setting-origin.is-system {
-    border-color: var(--hos-info, #5fa8d3);
-    color: var(--hos-info, #5fa8d3);
+    border-color: var(--kos-info, #5fa8d3);
+    color: var(--kos-info, #5fa8d3);
 }
 
 .setting-origin.is-locked {
-    border-color: var(--hos-warning, #e0a43a);
-    color: var(--hos-warning, #e0a43a);
+    border-color: var(--kos-warning, #e0a43a);
+    color: var(--kos-warning, #e0a43a);
 }
 
 .origin-lock {

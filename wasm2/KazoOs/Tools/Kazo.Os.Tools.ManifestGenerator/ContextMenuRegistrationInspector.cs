@@ -32,7 +32,7 @@ public static class ContextMenuRegistrationInspector
     /// </summary>
     /// <param name="type">The <c>[AppManifest]</c> class.</param>
     /// <param name="subject">The class name for diagnostics.</param>
-    /// <param name="diagnostics">Receives <c>HOSAPP0026</c> on a bad method, a throw or two different runs.</param>
+    /// <param name="diagnostics">Receives <c>KOSAPP0026</c> on a bad method, a throw or two different runs.</param>
     /// <returns>The entries in declaration order, or <see langword="null"/>.</returns>
     public static IReadOnlyList<AppContextMenuEntryManifest>? Run(Type type, string subject, List<GeneratorDiagnostic> diagnostics)
     {
@@ -90,7 +90,7 @@ public static class ContextMenuRegistrationInspector
     /// <param name="appId">The app.</param>
     /// <param name="multi">Whether the project declares several apps.</param>
     /// <param name="subject">The class name for diagnostics.</param>
-    /// <param name="diagnostics">Receives <c>HOSAPP0026</c> for a key missing from the English resources, <c>HOSAPP0040</c> for an unreadable file.</param>
+    /// <param name="diagnostics">Receives <c>KOSAPP0026</c> for a key missing from the English resources, <c>KOSAPP0040</c> for an unreadable file.</param>
     /// <returns>The entries with their titles.</returns>
     public static IReadOnlyList<AppContextMenuEntryManifest> ResolveTitles(
         IReadOnlyList<AppContextMenuEntryManifest> entries,

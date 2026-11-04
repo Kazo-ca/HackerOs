@@ -72,7 +72,7 @@ public sealed class BuiltInApplicationsAggregatorTests : IDisposable
 
         AggregationResult refused = BuiltInApplicationsAggregator.Aggregate([new(manifest, IsSystemApp: false)]);
         GeneratorDiagnostic diagnostic = Assert.Single(refused.Diagnostics);
-        Assert.Equal("HOSAPP0024", diagnostic.Code);
+        Assert.Equal("KOSAPP0024", diagnostic.Code);
         Assert.Equal("org.kazoos.tests.shielded", diagnostic.Subject);
         Assert.Contains("oomScoreAdj -300", diagnostic.Message, StringComparison.Ordinal);
         Assert.Null(refused.Json);
@@ -85,7 +85,7 @@ public sealed class BuiltInApplicationsAggregatorTests : IDisposable
     [Fact]
     public void A_non_system_app_may_register_the_file_view_and_the_file_dialogs()
     {
-        // ADR 0156 §1: both contracts are open to any window app; HOSAPP0025 is retired.
+        // ADR 0156 §1: both contracts are open to any window app; KOSAPP0025 is retired.
         AppManifest manifest = new()
         {
             Id = "org.example.files",

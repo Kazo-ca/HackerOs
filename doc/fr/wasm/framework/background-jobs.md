@@ -138,10 +138,10 @@ L'analyseur `Kazo.Os.Tools.BackgroundAnalyzer` est livré dans le paquet
 
 | Code | Refus |
 |---|---|
-| `HOSBG0001` | La tâche n'est pas un groupe de méthode statique : lambda (même `static`), méthode anonyme, méthode d'instance, fonction locale non `static`, délégué passé par une variable. |
-| `HOSBG0002` | Le type d'entrée ou de résultat n'est pas atteint depuis un `[JsonSerializable]` d'un contexte déclaré par `[assembly: KazoWireContext(...)]`. Un type atteint par un tableau, un argument générique ou une propriété publique d'une racine est accepté, comme `GetTypeInfo` le trouve. |
-| `HOSBG0003` | La méthode ou la classe de tâche est dans une autre assembly que l'app. |
-| `HOSBG0004` | La méthode est générique, ou appartient à un type générique. |
+| `KOSBG0001` | La tâche n'est pas un groupe de méthode statique : lambda (même `static`), méthode anonyme, méthode d'instance, fonction locale non `static`, délégué passé par une variable. |
+| `KOSBG0002` | Le type d'entrée ou de résultat n'est pas atteint depuis un `[JsonSerializable]` d'un contexte déclaré par `[assembly: KazoWireContext(...)]`. Un type atteint par un tableau, un argument générique ou une propriété publique d'une racine est accepté, comme `GetTypeInfo` le trouve. |
+| `KOSBG0003` | La méthode ou la classe de tâche est dans une autre assembly que l'app. |
+| `KOSBG0004` | La méthode est générique, ou appartient à un type générique. |
 
 L'OS refait les vérifications à l'exécution (un appel par réflexion ne passe
 pas l'analyseur) et lève `ArgumentException`.
@@ -217,7 +217,7 @@ tâche ; la fenêtre reste ouverte et affiche `killed`).
   ligne, lambda refusée, type non déclaré, faute, annulation, limitation de la
   progression.
 - `Tests/Kazo.Os.AppSdk.Tests/Threading/KazoBackgroundAnalyzerTests.cs` : les
-  quatre règles `HOSBG`.
+  quatre règles `KOSBG`.
 - `Tests/Kazo.Os.Platform.WorkerHost.Tests/BackgroundJobTests.cs` : chaque cas
   sur le fil principal **et** en worker (résultat, processus enfant,
   progression, classe de tâche, faute, annulation, `kill -9` sans fermer l'app,
@@ -234,7 +234,7 @@ tâche ; la fenêtre reste ouverte et affiche `killed`).
 - [x] Workers : `start` `k = 2`, `bg.progress`, `bg.run`, `bgp`, erreurs `bgfault` et raison `rs`.
 - [x] `/proc/<pid>/status` (`Name`, `Job`, `Host`) et `ps`.
 - [x] Une app gère ses descendants sans `process.manage` (ADR 0140 §7).
-- [x] Analyseur `HOSBG0001` à `HOSBG0004`, livré dans le paquet du SDK et branché sur les apps du dépôt.
+- [x] Analyseur `KOSBG0001` à `KOSBG0004`, livré dans le paquet du SDK et branché sur les apps du dépôt.
 - [x] Recherche du CodeEditor, compression et extraction de l'explorateur en tâches ; raison écrite pour les copies, le téléchargement et Kazo Paint.
 - [x] Exemple dans la fenêtre d'exemple.
 - [x] Tests SDK, analyseur, OS et worker, apps.

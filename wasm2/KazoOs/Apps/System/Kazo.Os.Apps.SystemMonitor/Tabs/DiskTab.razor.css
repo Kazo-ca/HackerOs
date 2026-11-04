@@ -9,7 +9,7 @@ h3 {
     font-size: 0.8125rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--hos-accent, #42d392);
+    color: var(--kos-accent, #42d392);
 }
 
 .disk-drives {
@@ -32,7 +32,7 @@ h3 {
 
 .disk-drive-format {
     font-size: 0.75rem;
-    color: var(--hos-text-muted, #6e7681);
+    color: var(--kos-text-muted, #6e7681);
 }
 
 .disk-bar {
@@ -45,19 +45,19 @@ h3 {
 }
 
 .disk-bar-track {
-    fill: var(--hos-bg-base, #0d1117);
+    fill: var(--kos-bg-base, #0d1117);
 }
 
 .disk-bar-fill {
-    fill: var(--hos-accent, #42d392);
+    fill: var(--kos-accent, #42d392);
 }
 
 .disk-bar-fill.warning {
-    fill: var(--hos-warning, #d29922);
+    fill: var(--kos-warning, #d29922);
 }
 
 .disk-bar-fill.critical {
-    fill: var(--hos-error, #ff7b72);
+    fill: var(--kos-error, #ff7b72);
 }
 
 .disk-drive-numbers {
@@ -66,7 +66,7 @@ h3 {
     flex-wrap: wrap;
     gap: 4px 12px;
     font-size: 0.75rem;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
 }
 
 .disk-activity {

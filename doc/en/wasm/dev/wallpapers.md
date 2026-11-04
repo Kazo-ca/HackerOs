@@ -14,11 +14,11 @@ menu of images). Issues [#254](https://github.com/Kazo-ca/Os/issues/254),
 The user chooses a PNG, JPEG or WebP image as the desktop background, for every
 screen or for one secondary screen, in Settings ▸ Appearance ▸ Wallpaper.
 Without an image, the desktop keeps its theme's background
-(`--hos-desktop-background` and the grid).
+(`--kos-desktop-background` and the grid).
 
 The mobile home screen has its own image and fit (the "Mobile" choice of the
 same panel); without an image, it keeps its mobile theme's background
-(`--hos-mobile-surface-background`).
+(`--kos-mobile-surface-background`).
 
 ## Settings
 
@@ -103,6 +103,6 @@ not an image), then stops. No window opens; the path is kept as it is.
 
 ## Outside this work item
 
-The mobile app drawer stays opaque, except on a theme that sets `--hos-mobile-drawer-background` and `--hos-mobile-drawer-backdrop-filter` (iOS: frosted glass, ADR 0217 §3). "Set as wallpaper" writes the
+The mobile app drawer stays opaque, except on a theme that sets `--kos-mobile-drawer-background` and `--kos-mobile-drawer-backdrop-filter` (iOS: frosted glass, ADR 0217 §3). "Set as wallpaper" writes the
 desktop keys only: the mobile image is chosen in Settings (the SDK does not tell
 an app which interface is active).

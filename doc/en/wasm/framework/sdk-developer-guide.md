@@ -64,7 +64,7 @@ boundary.
 - Allowed references: the four `Shared/*.Abstractions`, the
   `Shared/Kazo.Os.AppSdk*` libraries, `Platform/Kazo.Os.Theming.Blazor` and other
   projects under `Apps/`. Any other project reference fails the build
-  (`HOSAPP0030`). `PackageReference`s (MudBlazor for example) are free.
+  (`KOSAPP0030`). `PackageReference`s (MudBlazor for example) are free.
 - Add the project to `Kazo.Os.sln` (`dotnet sln add`).
 
 ### From another repository (local packages)
@@ -83,7 +83,7 @@ dotnet new kazoos-host -n Contoso.Os          # un hôte qui lance tout l'OS
 
 The project references `Kazo.Os.AppSdk*` and `Kazo.Os.App.Build`
 (`PrivateAssets="all"`), which brings manifest generation, the ASP.Kazo route
-generator and the boundary rule on packages (`HOSAPP0030`).
+generator and the boundary rule on packages (`KOSAPP0030`).
 A host adds the app through a `ProjectReference` or a `PackageReference`.
 The complete guide for a third-party repository (layout, pinned version, host, tests,
 publishing, version upgrade, what the SDK 1.0 promise covers) is
@@ -148,7 +148,7 @@ useful members:
 | `LaunchVisibility` | `Hidden` to not appear in the Start menu (commands, services). |
 | `Icons` | Images relative to `wwwroot/`, also declared in `Assets`; the first appears in the title bar and the taskbar (ADR 0164). macOS hides the title one. The build computes the asset's fingerprint. |
 | `Category`, `Version` | Presentation and classification of the app. |
-| `OomScoreAdjust` | Starting `oom_score_adj` (SDK 1.2); a negative value, which protects from the OOM killer, is reserved for system apps (`HOSAPP0024`, [`oom-killer.md`](../dev/oom-killer.md)). |
+| `OomScoreAdjust` | Starting `oom_score_adj` (SDK 1.2); a negative value, which protects from the OOM killer, is reserved for system apps (`KOSAPP0024`, [`oom-killer.md`](../dev/oom-killer.md)). |
 
 Rules enforced by the generator: public, non-abstract class, with a
 parameterless constructor; pure getters (the generator instantiates the class
@@ -252,7 +252,7 @@ public partial class NotesWindow
 }
 ```
 
-`NotesWindow.razor.css` uses the theme tokens (`--hos-*`), to follow
+`NotesWindow.razor.css` uses the theme tokens (`--kos-*`), to follow
 the theme chosen by the user:
 
 ```css
@@ -260,17 +260,17 @@ the theme chosen by the user:
     display: flex;
     flex-direction: column;
     height: 100%;
-    background: var(--hos-bg-base);
-    color: var(--hos-text-primary);
-    font-family: var(--hos-font-ui);
+    background: var(--kos-bg-base);
+    color: var(--kos-text-primary);
+    font-family: var(--kos-font-ui);
 }
 
 .notes-text {
     flex: 1;
-    font-family: var(--hos-font-mono);
-    background: var(--hos-input-bg);
-    color: var(--hos-input-color);
-    border: 1px solid var(--hos-border);
+    font-family: var(--kos-font-mono);
+    background: var(--kos-input-bg);
+    color: var(--kos-input-color);
+    border: 1px solid var(--kos-border);
 }
 ```
 
@@ -382,7 +382,7 @@ falls back to a system identity.
 
 To be used only for a browser API not reachable from C#. The module is
 a `MyComponent.razor.js` file next to the component (or under the project's
-`wwwroot/`), imported like this and only like this (checked at build, `HOSAPP0031`):
+`wwwroot/`), imported like this and only like this (checked at build, `KOSAPP0031`):
 
 ```csharp
 [Inject] private IJSRuntime JS { get; set; } = default!;
@@ -572,7 +572,7 @@ see [`app-sdk.md`](app-sdk.md#processes-in-web-workers-adr-0070-and-0071).
 An app only gets an OS service through the SDK: a **static `Kazo*` facade**
 (recommended form, it reads the ambient context) or a **gateway**
 of `AppContext`. Injecting a platform service is refused at
-build (`HOSAPP0031`). Common tasks:
+build (`KOSAPP0031`). Common tasks:
 
 | Need | API | Capability |
 |---|---|---|
@@ -647,7 +647,7 @@ PrimeCountResult result = await KazoBackground.RunAsync<PrimeCountInput, PrimeCo
 The job is a **static method** of the app (no lambda: it cannot
 capture the window's objects) and its types go through JSON via a
 `KazoWireContext` context. The SDK analyzer checks this at build
-(`HOSBG0001` to `HOSBG0004`). Cancellation: `OperationCanceledException`; job
+(`KOSBG0001` to `KOSBG0004`). Cancellation: `OperationCanceledException`; job
 killed from `kill` or the task manager: `KazoProcessKilledException`
 (to be caught **before** cancellation); exception from the job:
 `KazoBackgroundJobException`. When the app closes, the job sees its token
@@ -771,7 +771,7 @@ in English. The complete guide is [`localization.md`](localization.md).
 - [ ] The project is under `Apps/`, in `Kazo.Os.sln`, and only references the SDK.
 - [ ] The `[AppManifest]` class only requests the necessary capabilities.
 - [ ] The regenerated `manifest.json` (or `manifests/*.json`) is committed.
-- [ ] No inline CSS or JavaScript; styles use the `--hos-*` tokens.
+- [ ] No inline CSS or JavaScript; styles use the `--kos-*` tokens.
 - [ ] Permission and file errors are handled and displayed.
 - [ ] A stop request loses nothing silently (`OnAppStopRequestedAsync`, `OnStoppingAsync`) and long loops call `KazoProcess.CheckpointAsync` (ADR 0069).
 - [ ] Tests cover the app's logic.

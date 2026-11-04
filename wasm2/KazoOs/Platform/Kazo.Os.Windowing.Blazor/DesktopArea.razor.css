@@ -4,18 +4,18 @@
     height: 100%;
     min-height: 20rem;
     overflow: hidden;
-    color: var(--hos-window-text, var(--kazoos-window-text, #e7f7f1));
-    background: var(--hos-desktop-background, #07100f);
-    font-family: var(--hos-font-ui, system-ui, sans-serif);
+    color: var(--kos-window-text, var(--kazoos-window-text, #e7f7f1));
+    background: var(--kos-desktop-background, #07100f);
+    font-family: var(--kos-font-ui, system-ui, sans-serif);
     isolation: isolate;
 }
 
 .desktop-grid {
     position: absolute;
     inset: 0;
-    background-image: var(--hos-desktop-grid-image, none);
-    background-size: var(--hos-desktop-grid-size, 1.5rem 1.5rem);
-    opacity: var(--hos-desktop-grid-opacity, 1);
+    background-image: var(--kos-desktop-grid-image, none);
+    background-size: var(--kos-desktop-grid-size, 1.5rem 1.5rem);
+    opacity: var(--kos-desktop-grid-opacity, 1);
     pointer-events: none;
 }
 
@@ -57,9 +57,9 @@
     width: var(--window-drop-width, 0);
     height: var(--window-drop-height, 0);
     box-sizing: border-box;
-    border: 2px solid var(--hos-accent, #42d392);
-    border-radius: var(--hos-window-radius, 6px);
-    background: color-mix(in srgb, var(--hos-accent, #42d392) 15%, transparent);
+    border: 2px solid var(--kos-accent, #42d392);
+    border-radius: var(--kos-window-radius, 6px);
+    background: color-mix(in srgb, var(--kos-accent, #42d392) 15%, transparent);
     pointer-events: none;
     z-index: 2147483000;
 }

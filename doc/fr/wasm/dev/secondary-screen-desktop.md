@@ -21,7 +21,7 @@ le portail des fenêtres ([`window-portal.md`](window-portal.md)) et sur le serv
 | `OnGesture` | Le gestionnaire de `DesktopShell` : la zone envoie la taille de l'écran (`ChangeViewportCommand(zone, écran)`). |
 
 - **Fond d'écran seulement** (réponse de Benoit du 2026-10-28) : pas de `BackgroundContent`, donc
-  pas d'icônes. Le fond vient des variables du thème (`--hos-desktop-background`, grille), que la
+  pas d'icônes. Le fond vient des variables du thème (`--kos-desktop-background`, grille), que la
   surface hérite de l'onglet principal.
 - Les fenêtres restent rendues par la zone de l'écran 1, avec ses rappels (focus, fermeture,
   menu de fenêtre) : la zone d'un écran secondaire n'en rend aucune.

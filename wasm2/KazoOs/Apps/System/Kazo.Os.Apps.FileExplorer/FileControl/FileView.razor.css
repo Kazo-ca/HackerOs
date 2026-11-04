@@ -13,9 +13,9 @@
 /* A folder (or the whole view) under a drag: FileView.razor.js toggles this class on [data-drop-target]. */
 .file-view ::deep .file-view-drop-hover,
 .file-view.file-view-drop-hover {
-    outline: 1px dashed var(--hos-accent, #42d392);
+    outline: 1px dashed var(--kos-accent, #42d392);
     outline-offset: -2px;
-    background: color-mix(in srgb, var(--hos-accent, #42d392) 12%, transparent);
+    background: color-mix(in srgb, var(--kos-accent, #42d392) 12%, transparent);
 }
 
 /* Cut items wait for a paste: dimmed, like Nautilus. */
@@ -45,10 +45,10 @@
     z-index: 20;
     max-width: 320px;
     padding: 0.45rem 0.6rem;
-    border: 1px solid var(--hos-border, #30363d);
-    border-radius: var(--hos-radius-sm, 4px);
-    background: var(--hos-bg-elevated, #1c2128);
-    color: var(--hos-text-primary, #f0f6fc);
+    border: 1px solid var(--kos-border, #30363d);
+    border-radius: var(--kos-radius-sm, 4px);
+    background: var(--kos-bg-elevated, #1c2128);
+    color: var(--kos-text-primary, #f0f6fc);
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
     font-size: 0.78rem;
     line-height: 1.35;
@@ -62,5 +62,5 @@
 }
 
 .file-view ::deep .file-view-tooltip-line {
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
 }

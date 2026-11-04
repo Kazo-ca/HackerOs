@@ -49,7 +49,7 @@ Dependencies always go from top to bottom. An app sees only the SDK.
 The platform implements the contracts; the SDK knows only their
 interfaces. Apps receive an `IAppExecutionContext` built by the
 platform and never reference `Platform.*` or `Infrastructure.*`
-(errors `HOSAPP0030`, `HOSAPP0031`, `HOSSDK0001`, see
+(errors `KOSAPP0030`, `KOSAPP0031`, `KOSSDK0001`, see
 [`app-sdk.md`](../framework/app-sdk.md)).
 
 ## Solution projects
@@ -130,7 +130,7 @@ More details on the hosts in [`old/hosting-model.md`](old/hosting-model.md)
 | Folder | Content |
 |---|---|
 | `Tools/Kazo.Os.Tools.ManifestGenerator` | Generates `manifest.json` from each app's `[AppManifest]` class, checks the SDK boundary and aggregates `BuiltInApplications.json` in the host ([`app-model.md`](../framework/app-model.md)). |
-| `Tools/Kazo.Os.Tools.WebRouteGenerator` | Roslyn source generator wired into each app: route table of ASP.Kazo controllers and site entry, `HOSWEB*` errors (ADR 0082, [`asp-kazo-mvc.md`](../framework/asp-kazo-mvc.md)). |
+| `Tools/Kazo.Os.Tools.WebRouteGenerator` | Roslyn source generator wired into each app: route table of ASP.Kazo controllers and site entry, `KOSWEB*` errors (ADR 0082, [`asp-kazo-mvc.md`](../framework/asp-kazo-mvc.md)). |
 | `Tools/Kazo.Os.App.Build` | Build integration package for another repository: `build/Kazo.Os.Apps.targets`, manifest generator, route generator ([`sdk-packages.md`](../framework/sdk-packages.md)). |
 | `Templates/Kazo.Os.Templates` | `dotnet new` templates: `kazoos-window`, `-command`, `-service`, `-site`, `-host` (ADR 0098 §6). |
 | `Tools/Kazo.Os.Tools.BackgroundAnalyzer` | Roslyn analyzer for calls to `KazoBackground.RunAsync`: checks each call against the rules for background tasks (ADR 0128). |
@@ -211,8 +211,8 @@ Documents: [`kazo-file-api.md`](../framework/kazo-file-api.md),
 | Warnings treated as errors, trimming compatibility analysis | `Directory.Build.props` | n/a |
 | Trimmed Release publication of the host: roots generated from the manifests, whole `Kazo.Os.*` assemblies (ADR 0106, 0113) | `build/Kazo.Os.Apps.targets`, tested by `build/publish-trimmed.sh` | [`trimmed-publish.md`](trimmed-publish.md) |
 | No inline CSS or JavaScript in a `.razor` (ADR 0007) | target `ValidateKazoOsRazorAssets`, `Directory.Build.targets` | [`AGENTS.md`](../../../../AGENTS.md) |
-| Each project under `Apps/` has a valid `[AppManifest]` class; `manifest.json` is regenerated (`HOSAPP0001`…) | `build/Kazo.Os.Apps.targets` | [`app-model.md`](../framework/app-model.md) |
-| An app uses only the SDK (`HOSAPP0030`, `HOSAPP0031`, `HOSSDK0001`) | `build/Kazo.Os.Apps.targets` and generator | [`app-sdk.md`](../framework/app-sdk.md) |
+| Each project under `Apps/` has a valid `[AppManifest]` class; `manifest.json` is regenerated (`KOSAPP0001`…) | `build/Kazo.Os.Apps.targets` | [`app-model.md`](../framework/app-model.md) |
+| An app uses only the SDK (`KOSAPP0030`, `KOSAPP0031`, `KOSSDK0001`) | `build/Kazo.Os.Apps.targets` and generator | [`app-sdk.md`](../framework/app-sdk.md) |
 | The SDK's public surface does not change without a trace: `PublicAPI.Shipped.txt`/`Unshipped.txt` (RS0016, RS0017); an app compiled against the current major (2.x) is admitted, a 1.x app refused (ADR 0114, ADR 0149) | public API analyzer, `Tests/Kazo.Os.SdkCompatibility.Tests` | [`sdk-packages.md`](../framework/sdk-packages.md) |
 
 ## Work organization

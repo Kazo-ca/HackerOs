@@ -401,7 +401,7 @@ not modified.
 | [0056](../adr/0056-sdk-apis-for-system-apps.md) SDK APIs that replace internal services | completes 0044, 0048, 0049 | section 8.1: one API and one capability per need of system apps |
 | [0057](../adr/0057-proc-metrics-for-task-manager.md) System metrics in `/proc` and `KazoDriveInfo` | completes 0046 | section 8.2, task manager |
 | [0058](../adr/0058-base-app-features.md) Base app features | n/a | D22, section 8.2, work items `rebuild/4-*` |
-| [0059](../adr/0059-sdk-boundary-diagnostic-codes.md) SDK boundary diagnostic codes | 0055 (code numbers) | `HOSAPP0030` and `HOSAPP0031`, the numbers of ADR 0055 being already taken |
+| [0059](../adr/0059-sdk-boundary-diagnostic-codes.md) SDK boundary diagnostic codes | 0055 (code numbers) | `KOSAPP0030` and `KOSAPP0031`, the numbers of ADR 0055 being already taken |
 | [0060](../adr/0060-system-administration-sdk-adjustments.md) Adjustments to the system administration API | 0056 (sections 8, 9 and 11, in part) | section 8.1: `SystemPower`, `KazoPermissionDecision`, writing OS documents, host clipboard for Diagnostic |
 
 ## 11. Details to settle in the ADRs
@@ -486,8 +486,8 @@ Re-run of `rebuild/4-sdk-boundary-final` on `rebuild/base` after PRs #115
 to #122, before the merge of phases 1 to 4 into `main` (PR #114):
 
 - [x] SDK boundary: the solution compiles with no warning or
-  diagnostic `HOSAPP0002`, `HOSAPP0003`, `HOSAPP0030`, `HOSAPP0031` or
-  `HOSSDK0001`; no reference from `Apps/` or the SDK to `Platform.*`,
+  diagnostic `KOSAPP0002`, `KOSAPP0003`, `KOSAPP0030`, `KOSAPP0031` or
+  `KOSSDK0001`; no reference from `Apps/` or the SDK to `Platform.*`,
   `Infrastructure.*` or `Server.*`; no more exemption mechanism;
   `SdkBoundarySourceTests` covers all apps, new ones included.
 - [x] Apps and components added since #113: public SDK only, capabilities

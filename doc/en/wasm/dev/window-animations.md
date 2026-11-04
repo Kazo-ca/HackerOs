@@ -51,9 +51,9 @@ Everything is in `Platform/Kazo.Os.Windowing.Blazor`:
 
 | Variable | Default | Where to change it |
 | --- | --- | --- |
-| `--hos-window-anim-duration` | `180ms` | theme editor (Animations), theme, pack |
-| `--hos-window-anim-easing` | `cubic-bezier(0.2, 0, 0, 1)` | theme sheet or pack |
-| `--hos-window-anim-scale` | `0.95` | theme sheet or pack |
+| `--kos-window-anim-duration` | `180ms` | theme editor (Animations), theme, pack |
+| `--kos-window-anim-easing` | `cubic-bezier(0.2, 0, 0, 1)` | theme sheet or pack |
+| `--kos-window-anim-scale` | `0.95` | theme sheet or pack |
 
 `themes.css` sets the duration to `0ms` under `data-motion="reduced"` and
 `prefers-reduced-motion: reduce`. A zero duration, or a missing variable with
@@ -74,7 +74,7 @@ replaced by the default curve.
 - `Tests/Kazo.Os.Platform.Blazor.Tests/WindowAnimationTests.cs`: rendering of
   `WindowHost` (`is-opening` class, `hidden` after the minimize ends, animation passed to
   the script).
-- `Tests/Kazo.Os.Apps.ThemeEditor.Tests`: the `--hos-window-anim-duration` token is translated.
+- `Tests/Kazo.Os.Apps.ThemeEditor.Tests`: the `--kos-window-anim-duration` token is translated.
 - `Tests/Kazo.Os.UI.E2E.Tests/WindowAnimationTests.cs`: in Chromium, each animation ends with the window opaque and untransformed, the close copy is an inert `div` with no `data-window-id` that leaves the page, and nothing is animated with `prefers-reduced-motion: reduce`. `WindowTitleBarTests` waits for the animation to end before measuring the buttons.
 
 ## 6. Task list

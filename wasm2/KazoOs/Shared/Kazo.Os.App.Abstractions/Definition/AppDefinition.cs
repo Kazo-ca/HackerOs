@@ -83,7 +83,7 @@ public abstract class AppDefinition
     /// <c>-1000</c> to <c>1000</c>, or <see langword="null"/> for the OS default (<c>0</c>, <c>-500</c>
     /// for a system service). A higher value makes the app the OOM killer's first choice. A negative
     /// value shields it and is reserved to system apps: the build of a host that references a
-    /// non-system app declaring one fails with <c>HOSAPP0024</c>. Added in App SDK 1.2.
+    /// non-system app declaring one fails with <c>KOSAPP0024</c>. Added in App SDK 1.2.
     /// </summary>
     public virtual int? OomScoreAdjust => null;
 

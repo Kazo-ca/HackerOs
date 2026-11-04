@@ -2,9 +2,9 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    background-color: var(--hos-window-content-background, var(--hos-bg-base, #0b0e14));
-    color: var(--hos-text-primary, #e6edf3);
-    font-family: var(--hos-font-mono, 'Cascadia Mono', Consolas, monospace);
+    background-color: var(--kos-window-content-background, var(--kos-bg-base, #0b0e14));
+    color: var(--kos-text-primary, #e6edf3);
+    font-family: var(--kos-font-mono, 'Cascadia Mono', Consolas, monospace);
     font-size: 0.8125rem;
     box-sizing: border-box;
     overflow: hidden;
@@ -15,8 +15,8 @@
     align-items: center;
     justify-content: space-between;
     padding: 10px 16px;
-    background-color: var(--hos-toolbar-bg, var(--hos-bg-surface, #161b22));
-    border-bottom: var(--hos-toolbar-border, 1px solid var(--hos-border-subtle, #30363d));
+    background-color: var(--kos-toolbar-bg, var(--kos-bg-surface, #161b22));
+    border-bottom: var(--kos-toolbar-border, 1px solid var(--kos-border-subtle, #30363d));
 }
 
 .diag-title-area {
@@ -28,33 +28,33 @@
 .diag-title {
     font-size: 1rem;
     font-weight: 700;
-    color: var(--hos-accent, #58a6ff);
+    color: var(--kos-accent, #58a6ff);
     letter-spacing: 0.5px;
 }
 
 .diag-badge {
     padding: 2px 8px;
-    border-radius: var(--hos-radius-pill, 12px);
+    border-radius: var(--kos-radius-pill, 12px);
     font-size: 0.6875rem;
     font-weight: 600;
-    background-color: var(--hos-success, #238636);
-    color: var(--hos-text-inverse, #ffffff);
+    background-color: var(--kos-success, #238636);
+    color: var(--kos-text-inverse, #ffffff);
 }
 
 .diag-badge-info {
-    background-color: var(--hos-info, #1f6feb);
+    background-color: var(--kos-info, #1f6feb);
 }
 
 /* Cross-origin isolation (ADR 0131): accent when isolated, muted with its reason when not. */
 .diag-badge-isolated {
-    background-color: var(--hos-accent, #2ea043);
-    box-shadow: 0 0 6px color-mix(in srgb, var(--hos-accent, #2ea043) 60%, transparent);
+    background-color: var(--kos-accent, #2ea043);
+    box-shadow: 0 0 6px color-mix(in srgb, var(--kos-accent, #2ea043) 60%, transparent);
 }
 
 .diag-badge-muted {
-    background-color: var(--hos-surface-raised, #30363d);
-    color: var(--hos-text-secondary, #c9d1d9);
-    border: 1px solid var(--hos-border, #484f58);
+    background-color: var(--kos-surface-raised, #30363d);
+    color: var(--kos-text-secondary, #c9d1d9);
+    border: 1px solid var(--kos-border, #484f58);
 }
 
 .diag-actions {
@@ -66,45 +66,45 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: var(--hos-btn-padding, 6px 12px);
-    border: var(--hos-btn-border, 1px solid var(--hos-border, #30363d));
-    border-radius: var(--hos-btn-radius, var(--hos-radius-sm, 6px));
-    box-shadow: var(--hos-btn-shadow, none);
-    background-color: var(--hos-btn-bg, #21262d);
-    color: var(--hos-btn-color, var(--hos-text-primary, #c9d1d9));
+    padding: var(--kos-btn-padding, 6px 12px);
+    border: var(--kos-btn-border, 1px solid var(--kos-border, #30363d));
+    border-radius: var(--kos-btn-radius, var(--kos-radius-sm, 6px));
+    box-shadow: var(--kos-btn-shadow, none);
+    background-color: var(--kos-btn-bg, #21262d);
+    color: var(--kos-btn-color, var(--kos-text-primary, #c9d1d9));
     font-size: 0.75rem;
     font-family: inherit;
-    font-weight: var(--hos-btn-font-weight, 600);
+    font-weight: var(--kos-btn-font-weight, 600);
     cursor: pointer;
-    transition: all var(--hos-transition-fast, 0.15s ease-in-out);
+    transition: all var(--kos-transition-fast, 0.15s ease-in-out);
 }
 
 .diag-btn:hover:not(:disabled) {
-    background-color: var(--hos-btn-hover-bg, var(--hos-bg-elevated, #30363d));
-    border-color: var(--hos-btn-hover-border, var(--hos-accent, #8b949e));
-    color: var(--hos-btn-hover-color, var(--hos-text-primary, #ffffff));
+    background-color: var(--kos-btn-hover-bg, var(--kos-bg-elevated, #30363d));
+    border-color: var(--kos-btn-hover-border, var(--kos-accent, #8b949e));
+    color: var(--kos-btn-hover-color, var(--kos-text-primary, #ffffff));
 }
 
 .diag-btn:active:not(:disabled) {
-    background-color: var(--hos-btn-active-bg, var(--hos-accent-subtle, #123a2b));
-    border-color: var(--hos-btn-active-border, var(--hos-accent, #55d6a1));
-    box-shadow: var(--hos-btn-active-shadow, none);
+    background-color: var(--kos-btn-active-bg, var(--kos-accent-subtle, #123a2b));
+    border-color: var(--kos-btn-active-border, var(--kos-accent, #55d6a1));
+    box-shadow: var(--kos-btn-active-shadow, none);
 }
 
 .diag-btn-primary {
-    background-color: var(--hos-btn-primary-bg, var(--hos-accent, #238636));
-    border-color: var(--hos-btn-primary-border, var(--hos-accent, #2ea043));
-    color: var(--hos-btn-primary-color, var(--hos-text-inverse, #ffffff));
-    box-shadow: var(--hos-btn-primary-shadow, none);
+    background-color: var(--kos-btn-primary-bg, var(--kos-accent, #238636));
+    border-color: var(--kos-btn-primary-border, var(--kos-accent, #2ea043));
+    color: var(--kos-btn-primary-color, var(--kos-text-inverse, #ffffff));
+    box-shadow: var(--kos-btn-primary-shadow, none);
 }
 
 .diag-btn-primary:hover:not(:disabled) {
-    background-color: var(--hos-btn-primary-hover-bg, var(--hos-accent-hover, #2ea043));
+    background-color: var(--kos-btn-primary-hover-bg, var(--kos-accent-hover, #2ea043));
 }
 
 .diag-btn-accent {
-    background-color: var(--hos-info, #1f6feb);
-    border-color: var(--hos-info, #388bfd);
+    background-color: var(--kos-info, #1f6feb);
+    border-color: var(--kos-info, #388bfd);
     color: #ffffff;
 }
 
@@ -119,15 +119,15 @@
 
 .diag-notice-banner {
     padding: 10px 16px;
-    background-color: var(--hos-bg-surface, #161b22);
-    border-bottom: 1px solid var(--hos-border-subtle, #30363d);
+    background-color: var(--kos-bg-surface, #161b22);
+    border-bottom: 1px solid var(--kos-border-subtle, #30363d);
     font-size: 0.75rem;
     line-height: 1.5;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
 }
 
 .diag-notice-highlight {
-    color: var(--hos-success, #7ee787);
+    color: var(--kos-success, #7ee787);
     font-weight: 600;
 }
 
@@ -139,8 +139,8 @@
 
 .diag-sidebar {
     width: 220px;
-    background-color: var(--hos-bg-base, #0d1117);
-    border-right: 1px solid var(--hos-border-subtle, #30363d);
+    background-color: var(--kos-bg-base, #0d1117);
+    border-right: 1px solid var(--kos-border-subtle, #30363d);
     display: flex;
     flex-direction: column;
     overflow-y: auto;
@@ -153,33 +153,33 @@
     padding: 10px 14px;
     background: transparent;
     border: none;
-    border-bottom: 1px solid var(--hos-border-subtle, #21262d);
-    color: var(--hos-text-secondary, #8b949e);
+    border-bottom: 1px solid var(--kos-border-subtle, #21262d);
+    color: var(--kos-text-secondary, #8b949e);
     font-size: 0.75rem;
     font-family: inherit;
     text-align: left;
     cursor: pointer;
-    transition: background-color var(--hos-transition-fast, 0.15s ease);
+    transition: background-color var(--kos-transition-fast, 0.15s ease);
 }
 
 .diag-store-item:hover {
-    background-color: var(--hos-bg-surface, #161b22);
-    color: var(--hos-text-primary, #c9d1d9);
+    background-color: var(--kos-bg-surface, #161b22);
+    color: var(--kos-text-primary, #c9d1d9);
 }
 
 .diag-store-item.active {
-    background-color: var(--hos-accent-subtle, rgba(31, 111, 235, 0.15));
-    border-left: 3px solid var(--hos-accent, #58a6ff);
-    color: var(--hos-accent, #58a6ff);
+    background-color: var(--kos-accent-subtle, rgba(31, 111, 235, 0.15));
+    border-left: 3px solid var(--kos-accent, #58a6ff);
+    color: var(--kos-accent, #58a6ff);
     font-weight: 600;
 }
 
 .diag-store-count {
     padding: 2px 6px;
-    border-radius: var(--hos-radius-pill, 10px);
-    background-color: var(--hos-badge-bg, var(--hos-bg-elevated, #21262d));
+    border-radius: var(--kos-radius-pill, 10px);
+    background-color: var(--kos-badge-bg, var(--kos-bg-elevated, #21262d));
     font-size: 0.625rem;
-    color: var(--hos-badge-color, var(--hos-text-secondary, #8b949e));
+    color: var(--kos-badge-color, var(--kos-text-secondary, #8b949e));
 }
 
 .diag-content {
@@ -197,12 +197,12 @@
 .diag-store-name {
     font-size: 0.9375rem;
     font-weight: 700;
-    color: var(--hos-text-primary, #f0f6fc);
+    color: var(--kos-text-primary, #f0f6fc);
 }
 
 .diag-store-purpose {
     font-size: 0.6875rem;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
     margin-top: 4px;
 }
 
@@ -214,28 +214,28 @@
 
 .diag-search-input {
     flex: 1;
-    padding: var(--hos-input-padding, 6px 12px);
-    background-color: var(--hos-input-bg, #161b22);
-    border: var(--hos-input-border, 1px solid var(--hos-border, #30363d));
-    border-radius: var(--hos-input-radius, var(--hos-radius-sm, 6px));
-    box-shadow: var(--hos-input-shadow, none);
-    color: var(--hos-input-color, var(--hos-text-primary, #f0f6fc));
+    padding: var(--kos-input-padding, 6px 12px);
+    background-color: var(--kos-input-bg, #161b22);
+    border: var(--kos-input-border, 1px solid var(--kos-border, #30363d));
+    border-radius: var(--kos-input-radius, var(--kos-radius-sm, 6px));
+    box-shadow: var(--kos-input-shadow, none);
+    color: var(--kos-input-color, var(--kos-text-primary, #f0f6fc));
     font-family: inherit;
     font-size: 0.75rem;
 }
 
 .diag-search-input:focus {
     outline: none;
-    border-color: var(--hos-input-focus-border, var(--hos-accent, #58a6ff));
-    box-shadow: var(--hos-input-focus-ring, 0 0 0 1px var(--hos-accent, #58a6ff));
+    border-color: var(--kos-input-focus-border, var(--kos-accent, #58a6ff));
+    box-shadow: var(--kos-input-focus-ring, 0 0 0 1px var(--kos-accent, #58a6ff));
 }
 
 .diag-table-wrapper {
     flex: 1;
     overflow: auto;
-    border: var(--hos-table-border, 1px solid var(--hos-border-subtle, #30363d));
-    border-radius: var(--hos-radius-sm, 6px);
-    background-color: var(--hos-bg-base, #0d1117);
+    border: var(--kos-table-border, 1px solid var(--kos-border-subtle, #30363d));
+    border-radius: var(--kos-radius-sm, 6px);
+    background-color: var(--kos-bg-base, #0d1117);
 }
 
 .diag-table {
@@ -248,18 +248,18 @@
 .diag-table th {
     position: sticky;
     top: 0;
-    background-color: var(--hos-table-header-bg, var(--hos-bg-surface, #161b22));
-    color: var(--hos-table-header-color, var(--hos-text-secondary, #8b949e));
+    background-color: var(--kos-table-header-bg, var(--kos-bg-surface, #161b22));
+    color: var(--kos-table-header-color, var(--kos-text-secondary, #8b949e));
     font-weight: 600;
     padding: 8px 12px;
-    border-bottom: var(--hos-table-border, 1px solid var(--hos-border, #30363d));
+    border-bottom: var(--kos-table-border, 1px solid var(--kos-border, #30363d));
     z-index: 1;
 }
 
 .diag-table td {
     padding: 8px 12px;
-    border-bottom: 1px solid var(--hos-border-subtle, #21262d);
-    color: var(--hos-text-primary, #c9d1d9);
+    border-bottom: 1px solid var(--kos-border-subtle, #21262d);
+    color: var(--kos-text-primary, #c9d1d9);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -267,31 +267,31 @@
 }
 
 .diag-table tr:hover {
-    background-color: var(--hos-table-row-hover-bg, var(--hos-bg-surface, #161b22));
+    background-color: var(--kos-table-row-hover-bg, var(--kos-bg-surface, #161b22));
 }
 
 .diag-path-highlight {
-    color: var(--hos-accent, #7ee787);
+    color: var(--kos-accent, #7ee787);
     font-weight: 600;
 }
 
 .diag-json-preview {
-    font-family: var(--hos-font-mono, Consolas, monospace);
+    font-family: var(--kos-font-mono, Consolas, monospace);
     font-size: 0.6875rem;
-    color: var(--hos-info, #a5d6ff);
+    color: var(--kos-info, #a5d6ff);
 }
 
 .diag-json-viewer {
     flex: 1;
     padding: 12px;
-    background-color: var(--hos-bg-base, #0d1117);
-    border: 1px solid var(--hos-border-subtle, #30363d);
-    border-radius: var(--hos-radius-sm, 6px);
+    background-color: var(--kos-bg-base, #0d1117);
+    border: 1px solid var(--kos-border-subtle, #30363d);
+    border-radius: var(--kos-radius-sm, 6px);
     overflow: auto;
     white-space: pre-wrap;
     word-break: break-all;
-    color: var(--hos-info, #79c0ff);
-    font-family: var(--hos-font-mono, Consolas, monospace);
+    color: var(--kos-info, #79c0ff);
+    font-family: var(--kos-font-mono, Consolas, monospace);
     font-size: 0.6875rem;
 }
 
@@ -300,11 +300,11 @@
     bottom: 20px;
     right: 20px;
     padding: 10px 16px;
-    background-color: var(--hos-success, #238636);
-    color: var(--hos-text-inverse, #ffffff);
-    border-radius: var(--hos-radius-sm, 6px);
+    background-color: var(--kos-success, #238636);
+    color: var(--kos-text-inverse, #ffffff);
+    border-radius: var(--kos-radius-sm, 6px);
     font-weight: 600;
-    box-shadow: var(--hos-shadow-md, 0 4px 12px rgba(0,0,0,0.5));
+    box-shadow: var(--kos-shadow-md, 0 4px 12px rgba(0,0,0,0.5));
     z-index: 100;
 }
 
@@ -320,14 +320,14 @@
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--hos-text-muted, #8b949e);
-    border-top: 1px solid var(--hos-border-subtle, #30363d);
+    color: var(--kos-text-muted, #8b949e);
+    border-top: 1px solid var(--kos-border-subtle, #30363d);
 }
 
 .diag-sidebar-empty {
     padding: 6px 14px 12px;
     font-size: 0.6875rem;
-    color: var(--hos-text-muted, #8b949e);
+    color: var(--kos-text-muted, #8b949e);
 }
 
 .diag-site-item span:first-child {
@@ -343,17 +343,17 @@
     align-items: center;
     gap: 10px;
     padding: 14px 16px;
-    border-top: 1px solid var(--hos-border-subtle, #30363d);
+    border-top: 1px solid var(--kos-border-subtle, #30363d);
 }
 
 .diag-site-warning {
     font-size: 0.75rem;
-    color: var(--hos-warning, #d29922);
+    color: var(--kos-warning, #d29922);
 }
 
 .diag-btn-danger {
-    border-color: var(--hos-danger, #f85149);
-    color: var(--hos-danger, #f85149);
+    border-color: var(--kos-danger, #f85149);
+    color: var(--kos-danger, #f85149);
 }
 
 .diag-btn-danger:hover:not(:disabled) {

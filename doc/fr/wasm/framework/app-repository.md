@@ -33,7 +33,7 @@ Deux façons, même résultat :
   ```
 
   `dotnet new` ne sait pas créer le lien du sous-module ; sans lui, le build
-  s'arrête sur `HOSAPP0070` avec la commande à lancer. Dans Visual Studio
+  s'arrête sur `KOSAPP0070` avec la commande à lancer. Dans Visual Studio
   (Nouveau projet) ou Rider, le modèle s'appelle « Kazo OS app solution ».
 
 ## Ce qui est généré
@@ -89,7 +89,7 @@ depuis le sous-module. Il :
    générateur de manifeste, mêmes analyseurs, même agrégation dans l'hôte que
    dans le dépôt Kazo OS (`KazoOsExternalSource=true`).
 
-La frontière du SDK (`HOSAPP0030`) vérifie les références qui entrent dans le
+La frontière du SDK (`KOSAPP0030`) vérifie les références qui entrent dans le
 sous-module ; un projet de votre dépôt peut en référencer un autre. Une app
 ajoutée avec `dotnet new kazoos-window` (ou `-command`, `-service`, `-site`)
 déclare déjà `KazoOsAppProject=true` ; ajoutez-la à l'hôte par

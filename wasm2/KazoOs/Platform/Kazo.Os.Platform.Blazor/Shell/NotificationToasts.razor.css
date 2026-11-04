@@ -13,7 +13,7 @@
 
 .notification-toasts.is-above-taskbar {
     right: 1rem;
-    bottom: calc(var(--hos-taskbar-height, 2.75rem) + 0.75rem);
+    bottom: calc(var(--kos-taskbar-height, 2.75rem) + 0.75rem);
 }
 
 .notification-toasts.is-top {
@@ -27,27 +27,27 @@
 
 .notification-toast {
     padding: 0.65rem 0.75rem;
-    border: 1px solid var(--hos-border, #34444c);
-    border-left: 3px solid var(--hos-accent, #42d392);
+    border: 1px solid var(--kos-border, #34444c);
+    border-left: 3px solid var(--kos-accent, #42d392);
     border-radius: 6px;
-    background: var(--hos-bg-surface, #151c20);
-    box-shadow: var(--hos-shadow-md, 0 12px 28px rgb(0 0 0 / 38%));
-    color: var(--hos-text-primary, #f4f7f8);
-    font-family: var(--hos-font-mono, "Cascadia Mono", Consolas, monospace);
+    background: var(--kos-bg-surface, #151c20);
+    box-shadow: var(--kos-shadow-md, 0 12px 28px rgb(0 0 0 / 38%));
+    color: var(--kos-text-primary, #f4f7f8);
+    font-family: var(--kos-font-mono, "Cascadia Mono", Consolas, monospace);
     font-size: 0.82rem;
     pointer-events: auto;
 }
 
 .notification-toast.is-success {
-    border-left-color: var(--hos-success, #42d392);
+    border-left-color: var(--kos-success, #42d392);
 }
 
 .notification-toast.is-warning {
-    border-left-color: var(--hos-warning, #d5a84f);
+    border-left-color: var(--kos-warning, #d5a84f);
 }
 
 .notification-toast.is-error {
-    border-left-color: var(--hos-error, #ff9a91);
+    border-left-color: var(--kos-error, #ff9a91);
 }
 
 .notification-toast-header {
@@ -59,7 +59,7 @@
 
 .notification-toast-source {
     overflow: hidden;
-    color: var(--hos-text-muted, #6a7e88);
+    color: var(--kos-text-muted, #6a7e88);
     font-size: 0.72rem;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -71,7 +71,7 @@
     padding: 0 0.2rem;
     border: none;
     background: transparent;
-    color: var(--hos-text-muted, #6a7e88);
+    color: var(--kos-text-muted, #6a7e88);
     font-size: 1rem;
     line-height: 1;
     cursor: pointer;
@@ -79,7 +79,7 @@
 
 .notification-toast-close:hover,
 .notification-toast-close:focus-visible {
-    color: var(--hos-text-primary, #f4f7f8);
+    color: var(--kos-text-primary, #f4f7f8);
 }
 
 .notification-toast-title {
@@ -103,10 +103,10 @@
 .notification-toast-action {
     min-height: 1.75rem;
     padding: 0.2rem 0.6rem;
-    border: 1px solid var(--hos-accent, #42d392);
+    border: 1px solid var(--kos-accent, #42d392);
     border-radius: 4px;
     background: transparent;
-    color: var(--hos-accent, #42d392);
+    color: var(--kos-accent, #42d392);
     font: inherit;
     font-size: 0.74rem;
     cursor: pointer;
@@ -114,7 +114,7 @@
 
 .notification-toast-action:hover,
 .notification-toast-action:focus-visible {
-    background: var(--hos-accent-subtle, #173b2c);
+    background: var(--kos-accent-subtle, #173b2c);
 }
 
 /* A short slide and fade in, cut by « Réduire les animations » (ADR 0105). */

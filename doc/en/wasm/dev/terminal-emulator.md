@@ -29,7 +29,7 @@ commande ─▶ TerminalOutputWriter ─▶ TerminalPanel.Write ("\n" → "\r\n"
 
 | File | Role |
 |---|---|
-| `TerminalPanel.xterm.entry.js` | Bundle entry point: creates the `Terminal`, the `FitAddon`, the theme (`--hos-*` tokens), the key handler (copy, paste, tab shortcuts) and the size observer. |
+| `TerminalPanel.xterm.entry.js` | Bundle entry point: creates the `Terminal`, the `FitAddon`, the theme (`--kos-*` tokens), the key handler (copy, paste, tab shortcuts) and the size observer. |
 | `build.mjs`, `package.json`, `package-lock.json` | Build `wwwroot/xterm/xterm.bundle.{js,css,LICENSE.txt}`. |
 | `TerminalPanel.razor.js` | Component module: `mountTerminal(host, dotNet, options)` returns `write`, `focus`, `dimensions`, `dispose`. |
 | `TerminalPanel.razor` | Line discipline: key routing, line execution, prompt, outputs, alternate screen. |
@@ -40,8 +40,8 @@ commande ─▶ TerminalOutputWriter ─▶ TerminalPanel.Write ("\n" → "\r\n"
 ### Theme
 
 The background, text and cursor come from the design tokens read on the host
-element (`--hos-bg-base`, `--hos-text-primary`, `--hos-accent`); the font comes
-from `--hos-font-mono` (`0.875rem`, 14 px at 100 %). The 16-color ANSI palette is
+element (`--kos-bg-base`, `--kos-text-primary`, `--kos-accent`); the font comes
+from `--kos-font-mono` (`0.875rem`, 14 px at 100 %). The 16-color ANSI palette is
 the legacy one, with Kazo OS's accent green. The frame style is in
 `TerminalPanel.razor.css`; the grid itself is drawn by xterm.js.
 

@@ -6,8 +6,8 @@
     height: 100%;
     padding: 1.25rem;
     box-sizing: border-box;
-    color: var(--hos-text-primary, #d4f8e8);
-    background: var(--hos-window-content-background, #0d1819);
+    color: var(--kos-text-primary, #d4f8e8);
+    background: var(--kos-window-content-background, #0d1819);
 }
 
 .dialog-prompt,
@@ -23,20 +23,20 @@
     margin: 0;
     font-size: 1.05rem;
     font-weight: 600;
-    color: var(--hos-accent, #55d6a1);
+    color: var(--kos-accent, #55d6a1);
     word-break: break-all;
 }
 
 .dialog-status {
-    color: var(--hos-text-secondary, #9ac3b2);
+    color: var(--kos-text-secondary, #9ac3b2);
 }
 
 .dialog-warning {
-    color: var(--hos-danger, #ff6b6b);
+    color: var(--kos-danger, #ff6b6b);
 }
 
 .mono {
-    font-family: var(--hos-font-mono, "JetBrains Mono", ui-monospace, monospace);
+    font-family: var(--kos-font-mono, "JetBrains Mono", ui-monospace, monospace);
     font-size: 0.82rem;
     word-break: break-all;
 }
@@ -61,14 +61,14 @@ button.app-option {
 }
 
 button.app-option.selected {
-    border-color: var(--hos-accent, #55d6a1);
-    background: var(--hos-accent-subtle, #123a2b);
+    border-color: var(--kos-accent, #55d6a1);
+    background: var(--kos-accent-subtle, #123a2b);
 }
 
 .app-mark {
     grid-area: mark;
-    color: var(--hos-accent, #55d6a1);
-    font-family: var(--hos-font-mono, monospace);
+    color: var(--kos-accent, #55d6a1);
+    font-family: var(--kos-font-mono, monospace);
 }
 
 .app-name {
@@ -79,8 +79,8 @@ button.app-option.selected {
 .app-id {
     grid-area: id;
     font-size: 0.75rem;
-    font-family: var(--hos-font-mono, monospace);
-    color: var(--hos-text-muted, #6e9485);
+    font-family: var(--kos-font-mono, monospace);
+    color: var(--kos-text-muted, #6e9485);
 }
 
 .property-list {
@@ -94,7 +94,7 @@ button.app-option.selected {
 }
 
 .property-list dt {
-    color: var(--hos-text-secondary, #9ac3b2);
+    color: var(--kos-text-secondary, #9ac3b2);
 }
 
 .property-list dd {
@@ -118,24 +118,24 @@ button.app-option.selected {
 
 button {
     min-width: 5rem;
-    min-height: var(--hos-btn-min-height, 2.25rem);
-    padding: var(--hos-btn-padding, 0.4rem 0.9rem);
+    min-height: var(--kos-btn-min-height, 2.25rem);
+    padding: var(--kos-btn-padding, 0.4rem 0.9rem);
     font-size: 0.88rem;
     font-family: inherit;
-    font-weight: var(--hos-btn-font-weight, 500);
-    color: var(--hos-btn-color, var(--hos-text-primary, #d4f8e8));
-    background: var(--hos-btn-bg, #132522);
-    border: var(--hos-btn-border, 1px solid var(--hos-border, #315249));
-    border-radius: var(--hos-btn-radius, var(--hos-radius-sm, 0.25rem));
+    font-weight: var(--kos-btn-font-weight, 500);
+    color: var(--kos-btn-color, var(--kos-text-primary, #d4f8e8));
+    background: var(--kos-btn-bg, #132522);
+    border: var(--kos-btn-border, 1px solid var(--kos-border, #315249));
+    border-radius: var(--kos-btn-radius, var(--kos-radius-sm, 0.25rem));
     cursor: pointer;
-    transition: background var(--hos-transition-fast, 120ms ease),
-                border-color var(--hos-transition-fast, 120ms ease);
+    transition: background var(--kos-transition-fast, 120ms ease),
+                border-color var(--kos-transition-fast, 120ms ease);
 }
 
 button:hover:not(:disabled),
 button:focus-visible {
-    background: var(--hos-btn-hover-bg, var(--hos-bg-elevated, #182825));
-    border-color: var(--hos-btn-hover-border, var(--hos-accent, #55d6a1));
+    background: var(--kos-btn-hover-bg, var(--kos-bg-elevated, #182825));
+    border-color: var(--kos-btn-hover-border, var(--kos-accent, #55d6a1));
 }
 
 button:disabled {
@@ -144,17 +144,17 @@ button:disabled {
 }
 
 button.primary {
-    color: var(--hos-btn-primary-color, var(--hos-text-inverse, #07100d));
-    background: var(--hos-btn-primary-bg, var(--hos-accent, #55d6a1));
-    border-color: var(--hos-accent, #55d6a1);
+    color: var(--kos-btn-primary-color, var(--kos-text-inverse, #07100d));
+    background: var(--kos-btn-primary-bg, var(--kos-accent, #55d6a1));
+    border-color: var(--kos-accent, #55d6a1);
 }
 
 button.primary:hover:not(:disabled) {
-    color: var(--hos-btn-primary-color, var(--hos-text-inverse, #07100d));
-    background: var(--hos-accent-hover, #6fe3b4);
+    color: var(--kos-btn-primary-color, var(--kos-text-inverse, #07100d));
+    background: var(--kos-accent-hover, #6fe3b4);
 }
 
 button.danger {
-    color: var(--hos-danger, #ff6b6b);
-    border-color: var(--hos-danger, #ff6b6b);
+    color: var(--kos-danger, #ff6b6b);
+    border-color: var(--kos-danger, #ff6b6b);
 }

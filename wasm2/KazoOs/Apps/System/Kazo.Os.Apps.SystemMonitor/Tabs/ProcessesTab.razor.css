@@ -16,29 +16,29 @@
 .proc-filter {
     flex: 1 1 220px;
     min-width: 160px;
-    padding: var(--hos-input-padding, 6px 10px);
-    background: var(--hos-input-bg, var(--hos-bg-base, #0d1117));
-    color: var(--hos-input-color, var(--hos-text-primary, #c9d1d9));
-    border: 1px solid var(--hos-input-border, var(--hos-border, #30363d));
-    border-radius: var(--hos-input-radius, var(--hos-radius-sm, 4px));
+    padding: var(--kos-input-padding, 6px 10px);
+    background: var(--kos-input-bg, var(--kos-bg-base, #0d1117));
+    color: var(--kos-input-color, var(--kos-text-primary, #c9d1d9));
+    border: 1px solid var(--kos-input-border, var(--kos-border, #30363d));
+    border-radius: var(--kos-input-radius, var(--kos-radius-sm, 4px));
     font-family: inherit;
     font-size: 0.8125rem;
 }
 
 .proc-filter:focus {
     outline: none;
-    border-color: var(--hos-input-focus-border, var(--hos-accent, #42d392));
-    box-shadow: var(--hos-input-focus-ring, 0 0 0 2px color-mix(in srgb, var(--hos-accent, #42d392) 30%, transparent));
+    border-color: var(--kos-input-focus-border, var(--kos-accent, #42d392));
+    box-shadow: var(--kos-input-focus-ring, 0 0 0 2px color-mix(in srgb, var(--kos-accent, #42d392) 30%, transparent));
 }
 
 .proc-count {
     font-size: 0.75rem;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
     white-space: nowrap;
 }
 
 .proc-count-selected {
-    color: var(--hos-accent, #42d392);
+    color: var(--kos-accent, #42d392);
 }
 
 .proc-report {
@@ -47,24 +47,24 @@
     justify-content: space-between;
     gap: 8px;
     padding: 8px 12px;
-    border-radius: var(--hos-radius-sm, 4px);
+    border-radius: var(--kos-radius-sm, 4px);
     font-size: 0.8125rem;
 }
 
 .proc-report.ok {
-    border: 1px solid color-mix(in srgb, var(--hos-accent, #42d392) 50%, transparent);
-    background: color-mix(in srgb, var(--hos-accent, #42d392) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--kos-accent, #42d392) 50%, transparent);
+    background: color-mix(in srgb, var(--kos-accent, #42d392) 10%, transparent);
 }
 
 .proc-report.has-failures {
-    border: 1px solid color-mix(in srgb, var(--hos-error, #ff7b72) 60%, transparent);
-    background: color-mix(in srgb, var(--hos-error, #ff7b72) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--kos-error, #ff7b72) 60%, transparent);
+    background: color-mix(in srgb, var(--kos-error, #ff7b72) 10%, transparent);
 }
 
 .proc-report-failures {
     margin: 4px 0 0;
     padding-left: 18px;
-    color: var(--hos-error, #ff7b72);
+    color: var(--kos-error, #ff7b72);
 }
 
 .proc-content {
@@ -82,14 +82,14 @@
 .proc-table-wrapper {
     overflow: auto;
     min-height: 0;
-    border: 1px solid var(--hos-border-subtle, #30363d);
-    border-radius: var(--hos-radius-sm, 4px);
+    border: 1px solid var(--kos-border-subtle, #30363d);
+    border-radius: var(--kos-radius-sm, 4px);
     user-select: none;
 }
 
 .proc-table-wrapper:focus-visible {
     outline: none;
-    border-color: var(--hos-accent, #42d392);
+    border-color: var(--kos-accent, #42d392);
 }
 
 .proc-table th.sortable {
@@ -97,7 +97,7 @@
 }
 
 .proc-table th.sorted {
-    color: var(--hos-accent, #42d392);
+    color: var(--kos-accent, #42d392);
 }
 
 .sort-indicator {
@@ -108,28 +108,28 @@
 .est-tag {
     margin-left: 6px;
     padding: 0 4px;
-    font-family: var(--hos-font-mono, ui-monospace, monospace);
+    font-family: var(--kos-font-mono, ui-monospace, monospace);
     font-size: 0.5625rem;
     font-weight: 400;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     vertical-align: middle;
-    color: var(--hos-text-secondary, #8b949e);
-    border: 1px dashed color-mix(in srgb, var(--hos-text-secondary, #8b949e) 55%, transparent);
-    border-radius: var(--hos-radius-sm, 4px);
+    color: var(--kos-text-secondary, #8b949e);
+    border: 1px dashed color-mix(in srgb, var(--kos-text-secondary, #8b949e) 55%, transparent);
+    border-radius: var(--kos-radius-sm, 4px);
     opacity: 0.75;
     cursor: help;
 }
 
 .proc-name {
     display: block;
-    color: var(--hos-text-primary, #c9d1d9);
+    color: var(--kos-text-primary, #c9d1d9);
 }
 
 .proc-app {
     display: block;
     font-size: 0.6875rem;
-    color: var(--hos-text-muted, #6e7681);
+    color: var(--kos-text-muted, #6e7681);
 }
 
 .proc-user {
@@ -147,23 +147,23 @@
     border: 1px solid currentColor;
 }
 
-.state-R { color: var(--hos-accent, #42d392); }
-.state-S, .state-I { color: var(--hos-info, #58a6ff); }
-.state-T { color: var(--hos-warning, #d29922); }
-.state-Z, .state-X { color: var(--hos-error, #ff7b72); }
+.state-R { color: var(--kos-accent, #42d392); }
+.state-S, .state-I { color: var(--kos-info, #58a6ff); }
+.state-T { color: var(--kos-warning, #d29922); }
+.state-Z, .state-X { color: var(--kos-error, #ff7b72); }
 
 /* ADR 0067: "Not responding" is a verdict, not a scheduler state: louder, like a frozen window title. */
 .state-not-responding {
-    color: var(--hos-error, #ff7b72);
+    color: var(--kos-error, #ff7b72);
     font-weight: 600;
     letter-spacing: 0.02em;
-    text-shadow: 0 0 6px color-mix(in srgb, var(--hos-error, #ff7b72) 45%, transparent);
+    text-shadow: 0 0 6px color-mix(in srgb, var(--kos-error, #ff7b72) 45%, transparent);
 }
 
 .proc-empty td {
     text-align: center;
     padding: 24px;
-    color: var(--hos-text-muted, #6e7681);
+    color: var(--kos-text-muted, #6e7681);
 }
 
 @media (max-width: 720px) {
@@ -182,13 +182,13 @@
 }
 
 .proc-menu-key {
-    font-family: var(--hos-font-mono, monospace);
+    font-family: var(--kos-font-mono, monospace);
     font-size: 0.75em;
     opacity: 0.6;
 }
 
 .proc-menu-danger {
-    color: var(--hos-error, #ff8f87);
+    color: var(--kos-error, #ff8f87);
 }
 
 /* The row menu's activator is only a positioning anchor (opened at the cursor on right click):

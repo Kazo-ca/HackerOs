@@ -58,7 +58,7 @@ public static class Program
     /// <summary>
     /// <c>generate --assembly &lt;dll&gt; --project &lt;csproj&gt; --dependencies &lt;list file&gt; --stamp &lt;file&gt;</c>.
     /// The dependency list file holds one path per line, in resolution priority order. An SDK
-    /// boundary violation (<c>HOSAPP0031</c>, ADR 0055 §3) always fails: there is no exemption.
+    /// boundary violation (<c>KOSAPP0031</c>, ADR 0055 §3) always fails: there is no exemption.
     /// </summary>
     private static int Generate(IReadOnlyDictionary<string, string> options)
     {

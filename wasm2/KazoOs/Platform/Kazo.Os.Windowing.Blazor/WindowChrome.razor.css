@@ -5,27 +5,27 @@
 .window-chrome {
     display: flex;
     align-items: center;
-    min-height: var(--hos-titlebar-height, 2.35rem);
-    padding: var(--hos-titlebar-padding, 0.25rem 0.35rem 0.25rem 0.65rem);
+    min-height: var(--kos-titlebar-height, 2.35rem);
+    padding: var(--kos-titlebar-padding, 0.25rem 0.35rem 0.25rem 0.65rem);
     gap: 0.65rem;
     overflow: hidden;
-    border-bottom: var(--hos-titlebar-border, 1px solid #29463f);
-    background: var(--hos-titlebar-background, #111e1e);
-    color: var(--hos-titlebar-text, #b9ccc6);
+    border-bottom: var(--kos-titlebar-border, 1px solid #29463f);
+    background: var(--kos-titlebar-background, #111e1e);
+    color: var(--kos-titlebar-text, #b9ccc6);
     user-select: none;
     touch-action: none;
     transition:
-        background var(--hos-transition-fast, 120ms ease),
-        color var(--hos-transition-fast, 120ms ease);
+        background var(--kos-transition-fast, 120ms ease),
+        color var(--kos-transition-fast, 120ms ease);
 }
 
 .window-chrome.is-focused {
-    background: var(--hos-titlebar-focused-background, var(--hos-titlebar-background, #111e1e));
-    color: var(--hos-titlebar-focused-text, var(--hos-titlebar-text, #e7f7f1));
+    background: var(--kos-titlebar-focused-background, var(--kos-titlebar-background, #111e1e));
+    color: var(--kos-titlebar-focused-text, var(--kos-titlebar-text, #e7f7f1));
 }
 
 .window-identity {
-    order: var(--hos-window-identity-order, 0);
+    order: var(--kos-window-identity-order, 0);
     display: flex;
     flex: 1 1 auto;
     align-items: center;
@@ -38,95 +38,95 @@
     margin: 0;
     overflow: hidden;
     color: currentColor;
-    font-family: var(--hos-font-ui, system-ui, sans-serif);
-    font-size: var(--hos-titlebar-font-size, 0.86rem);
-    font-weight: var(--hos-titlebar-font-weight, 650);
+    font-family: var(--kos-font-ui, system-ui, sans-serif);
+    font-size: var(--kos-titlebar-font-size, 0.86rem);
+    font-weight: var(--kos-titlebar-font-weight, 650);
     letter-spacing: 0;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
 .window-icon {
-    display: var(--hos-window-icon-display, block);
+    display: var(--kos-window-icon-display, block);
     width: 1.15rem;
     height: 1.15rem;
     flex: 0 0 auto;
     box-sizing: border-box;
     padding: 0.08rem;
-    border: var(--hos-window-icon-border, 1px solid #35554c);
-    border-radius: var(--hos-window-icon-radius, 0.2rem);
-    background: var(--hos-window-icon-background, #0a1213);
+    border: var(--kos-window-icon-border, 1px solid #35554c);
+    border-radius: var(--kos-window-icon-radius, 0.2rem);
+    background: var(--kos-window-icon-background, #0a1213);
     object-fit: contain;
 }
 
 .window-actions {
-    order: var(--hos-window-actions-order, 1);
+    order: var(--kos-window-actions-order, 1);
     /* Above the resize handles (z-index 2): a click on a button never starts a resize (ADR 0177). */
     position: relative;
     z-index: 3;
     display: flex;
-    flex-direction: var(--hos-window-actions-direction, row);
+    flex-direction: var(--kos-window-actions-direction, row);
     flex: 0 0 auto;
     align-items: center;
     gap: 0.15rem;
-    margin-inline-start: var(--hos-window-actions-margin-inline-start, auto);
+    margin-inline-start: var(--kos-window-actions-margin-inline-start, auto);
 }
 
 .chrome-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: var(--hos-window-control-width, var(--hos-window-control-size, 1.7rem));
-    height: var(--hos-window-control-height, var(--hos-window-control-size, 1.7rem));
+    width: var(--kos-window-control-width, var(--kos-window-control-size, 1.7rem));
+    height: var(--kos-window-control-height, var(--kos-window-control-size, 1.7rem));
     padding: 0;
-    border: var(--hos-window-control-border, 1px solid #35554c);
-    border-radius: var(--hos-window-control-radius, 0.2rem);
-    background: var(--hos-window-control-background, #111e1f);
-    color: var(--hos-window-control-color, #b9ccc6);
-    box-shadow: var(--hos-window-control-shadow, none);
+    border: var(--kos-window-control-border, 1px solid #35554c);
+    border-radius: var(--kos-window-control-radius, 0.2rem);
+    background: var(--kos-window-control-background, #111e1f);
+    color: var(--kos-window-control-color, #b9ccc6);
+    box-shadow: var(--kos-window-control-shadow, none);
     cursor: pointer;
     transition:
-        background var(--hos-transition-fast, 120ms ease),
-        color var(--hos-transition-fast, 120ms ease),
-        border-color var(--hos-transition-fast, 120ms ease);
+        background var(--kos-transition-fast, 120ms ease),
+        color var(--kos-transition-fast, 120ms ease),
+        border-color var(--kos-transition-fast, 120ms ease);
 }
 
 .chrome-button:hover,
 .chrome-button:focus-visible {
-    background: var(--hos-window-control-hover-background, #1a302b);
-    color: var(--hos-window-control-hover-color, #f4fff9);
+    background: var(--kos-window-control-hover-background, #1a302b);
+    color: var(--kos-window-control-hover-color, #f4fff9);
 }
 
 .chrome-button:focus-visible {
-    outline: 2px solid var(--hos-focus-ring, #55d6a1);
+    outline: 2px solid var(--kos-focus-ring, #55d6a1);
     outline-offset: -2px;
 }
 
 .chrome-button-minimize {
-    order: var(--hos-window-minimize-order, 0);
+    order: var(--kos-window-minimize-order, 0);
 }
 
 .chrome-button-maximize {
-    order: var(--hos-window-maximize-order, 1);
-    background: var(--hos-window-maximize-background, var(--hos-window-control-background, #111e1f));
+    order: var(--kos-window-maximize-order, 1);
+    background: var(--kos-window-maximize-background, var(--kos-window-control-background, #111e1f));
 }
 
 .chrome-button-maximize:hover,
 .chrome-button-maximize:focus-visible {
-    background: var(--hos-window-maximize-hover-background, var(--hos-window-control-hover-background, #1a302b));
+    background: var(--kos-window-maximize-hover-background, var(--kos-window-control-hover-background, #1a302b));
 }
 
 .chrome-button-close {
-    order: var(--hos-window-close-order, 2);
-    border: var(--hos-window-close-border, var(--hos-window-control-border, 1px solid #35554c));
-    background: var(--hos-window-close-background, #281719);
-    color: var(--hos-window-close-color, #ffb3ad);
+    order: var(--kos-window-close-order, 2);
+    border: var(--kos-window-close-border, var(--kos-window-control-border, 1px solid #35554c));
+    background: var(--kos-window-close-background, #281719);
+    color: var(--kos-window-close-color, #ffb3ad);
 }
 
 .chrome-button-close:hover,
 .chrome-button-close:focus-visible {
-    background: var(--hos-window-close-hover-background, #8f2932);
-    color: var(--hos-window-close-hover-color, var(--hos-window-close-color, #ffb3ad));
+    background: var(--kos-window-close-hover-background, #8f2932);
+    color: var(--kos-window-close-hover-color, var(--kos-window-close-color, #ffb3ad));
 }
 
 .chrome-button-back svg {
@@ -145,7 +145,7 @@
     stroke: currentColor;
     stroke-width: 1.3;
     stroke-linecap: round;
-    opacity: var(--hos-window-control-icon-opacity, 1);
+    opacity: var(--kos-window-control-icon-opacity, 1);
 }
 
 .chrome-button svg rect {
@@ -154,7 +154,7 @@
 }
 
 .chrome-button svg rect.chrome-icon-overlay {
-    fill: var(--hos-window-background, #0c1516);
+    fill: var(--kos-window-background, #0c1516);
     stroke: currentColor;
     stroke-width: 1;
 }
@@ -208,7 +208,7 @@
 
 /* The icon's context menu stays separate from left-click activation and dragging the title. */
 .chrome-button-menu {
-    display: var(--hos-window-icon-display, inline-flex);
+    display: var(--kos-window-icon-display, inline-flex);
     width: auto;
     min-width: 1.35rem;
     height: 1.35rem;

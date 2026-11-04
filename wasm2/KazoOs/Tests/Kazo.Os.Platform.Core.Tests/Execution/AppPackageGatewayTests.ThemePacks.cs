@@ -37,7 +37,7 @@ public sealed partial class AppPackageGatewayTests
         Assert.Equal(KazoPackageTrust.Verified, report.Trust);
         Assert.Equal($"catalog:official/{Pack}@1.0.0", report.Source);
         Assert.Equal(KazoThemePackParts.Themes | KazoThemePackParts.Wallpapers | KazoThemePackParts.Icons | KazoThemePackParts.Sounds | KazoThemePackParts.Cursors, report.Parts);
-        Assert.Contains("--hos-accent", await harness.Settings.ReadAsync($"{PersonalPack}/themes/neon-night.theme"), StringComparison.Ordinal);
+        Assert.Contains("--kos-accent", await harness.Settings.ReadAsync($"{PersonalPack}/themes/neon-night.theme"), StringComparison.Ordinal);
         Assert.Contains("version=1.0.0", await harness.Settings.ReadAsync($"{PersonalPack}/{AppPackageInstaller.InstallRecordFileName}"), StringComparison.Ordinal);
         Assert.Null(await harness.Settings.StatAsync(SystemPack));
         KazoInstalledThemePack installed = Assert.Single(await gateway.GetInstalledThemePacksAsync());

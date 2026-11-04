@@ -5,8 +5,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--hos-bg-overlay, rgb(4 8 10 / 72%));
-    backdrop-filter: var(--hos-taskbar-backdrop-filter, none);
+    background: var(--kos-bg-overlay, rgb(4 8 10 / 72%));
+    backdrop-filter: var(--kos-taskbar-backdrop-filter, none);
 }
 
 .logout-dialog {
@@ -15,12 +15,12 @@
     flex-direction: column;
     gap: 1rem;
     padding: 1.25rem;
-    border: 1px solid var(--hos-border, #34444c);
-    border-radius: var(--hos-radius-md, 0.45rem);
-    background: var(--hos-bg-surface, #151c20);
-    box-shadow: var(--hos-shadow-lg, 0 20px 48px rgb(0 0 0 / 52%));
-    color: var(--hos-text-primary, #f4f7f8);
-    font-family: var(--hos-font-mono, "Cascadia Mono", Consolas, monospace);
+    border: 1px solid var(--kos-border, #34444c);
+    border-radius: var(--kos-radius-md, 0.45rem);
+    background: var(--kos-bg-surface, #151c20);
+    box-shadow: var(--kos-shadow-lg, 0 20px 48px rgb(0 0 0 / 52%));
+    color: var(--kos-text-primary, #f4f7f8);
+    font-family: var(--kos-font-mono, "Cascadia Mono", Consolas, monospace);
 }
 
 .dialog-header {
@@ -31,7 +31,7 @@
 
 .logout-mark {
     font-size: 1.5rem;
-    color: var(--hos-error, #ff9a91);
+    color: var(--kos-error, #ff9a91);
 }
 
 h2 {
@@ -42,7 +42,7 @@ h2 {
 
 .dialog-body p {
     margin: 0 0 0.75rem;
-    color: var(--hos-text-secondary, #a8bac4);
+    color: var(--kos-text-secondary, #a8bac4);
     font-size: 0.88rem;
     line-height: 1.5;
 }
@@ -56,7 +56,7 @@ h2 {
 
 .section-label {
     font-size: 0.76rem;
-    color: var(--hos-warning, #d5a84f);
+    color: var(--kos-warning, #d5a84f);
     text-transform: uppercase;
 }
 
@@ -66,9 +66,9 @@ h2 {
     list-style: none;
     max-height: 8rem;
     overflow-y: auto;
-    border: 1px solid var(--hos-border-subtle, #212c32);
-    border-radius: var(--hos-radius-sm, 4px);
-    background: var(--hos-bg-base, #101417);
+    border: 1px solid var(--kos-border-subtle, #212c32);
+    border-radius: var(--kos-radius-sm, 4px);
+    background: var(--kos-bg-base, #101417);
 }
 
 .process-list li {
@@ -76,7 +76,7 @@ h2 {
     align-items: center;
     justify-content: space-between;
     padding: 0.35rem 0.65rem;
-    border-bottom: 1px solid var(--hos-border-subtle, #212c32);
+    border-bottom: 1px solid var(--kos-border-subtle, #212c32);
     font-size: 0.8rem;
 }
 
@@ -85,16 +85,16 @@ h2 {
 }
 
 .proc-name {
-    color: var(--hos-text-primary, #f4f7f8);
+    color: var(--kos-text-primary, #f4f7f8);
 }
 
 .proc-pid {
-    color: var(--hos-text-muted, #6a7e88);
+    color: var(--kos-text-muted, #6a7e88);
     font-size: 0.75rem;
 }
 
 .dialog-error {
-    color: var(--hos-error, #ff9a91);
+    color: var(--kos-error, #ff9a91);
     font-size: 0.82rem;
 }
 
@@ -107,39 +107,39 @@ h2 {
 
 .btn-secondary,
 .btn-danger {
-    min-height: var(--hos-btn-min-height, 2.25rem);
-    padding: var(--hos-btn-padding, 0.4rem 0.9rem);
-    border: var(--hos-btn-border, 1px solid var(--hos-border, #34444c));
-    border-radius: var(--hos-btn-radius, var(--hos-radius-sm, 4px));
-    box-shadow: var(--hos-btn-shadow, none);
+    min-height: var(--kos-btn-min-height, 2.25rem);
+    padding: var(--kos-btn-padding, 0.4rem 0.9rem);
+    border: var(--kos-btn-border, 1px solid var(--kos-border, #34444c));
+    border-radius: var(--kos-btn-radius, var(--kos-radius-sm, 4px));
+    box-shadow: var(--kos-btn-shadow, none);
     font-family: inherit;
     font-size: 0.85rem;
-    font-weight: var(--hos-btn-font-weight, 500);
+    font-weight: var(--kos-btn-font-weight, 500);
     cursor: pointer;
-    transition: background var(--hos-transition-fast, 120ms ease),
-                border-color var(--hos-transition-fast, 120ms ease),
-                color var(--hos-transition-fast, 120ms ease);
+    transition: background var(--kos-transition-fast, 120ms ease),
+                border-color var(--kos-transition-fast, 120ms ease),
+                color var(--kos-transition-fast, 120ms ease);
 }
 
 .btn-secondary {
-    background: var(--hos-btn-bg, var(--hos-bg-base, #101417));
-    color: var(--hos-btn-color, var(--hos-text-secondary, #a8bac4));
+    background: var(--kos-btn-bg, var(--kos-bg-base, #101417));
+    color: var(--kos-btn-color, var(--kos-text-secondary, #a8bac4));
 }
 
 .btn-secondary:hover:not(:disabled) {
-    background: var(--hos-btn-hover-bg, var(--hos-bg-elevated, #172025));
-    border-color: var(--hos-btn-hover-border, var(--hos-accent, #55d6a1));
-    color: var(--hos-btn-hover-color, var(--hos-text-primary, #f4f7f8));
+    background: var(--kos-btn-hover-bg, var(--kos-bg-elevated, #172025));
+    border-color: var(--kos-btn-hover-border, var(--kos-accent, #55d6a1));
+    color: var(--kos-btn-hover-color, var(--kos-text-primary, #f4f7f8));
 }
 
 .btn-danger {
-    border-color: var(--hos-btn-danger-border, var(--hos-error, #ff9a91));
-    background: var(--hos-btn-danger-bg, color-mix(in srgb, var(--hos-error, #ff8f87) 18%, var(--hos-bg-base, #101417)));
-    color: var(--hos-btn-danger-color, var(--hos-error, #ff8f87));
+    border-color: var(--kos-btn-danger-border, var(--kos-error, #ff9a91));
+    background: var(--kos-btn-danger-bg, color-mix(in srgb, var(--kos-error, #ff8f87) 18%, var(--kos-bg-base, #101417)));
+    color: var(--kos-btn-danger-color, var(--kos-error, #ff8f87));
 }
 
 .btn-danger:hover:not(:disabled) {
-    background: var(--hos-btn-danger-hover-bg, color-mix(in srgb, var(--hos-error, #ff8f87) 28%, var(--hos-bg-base, #101417)));
+    background: var(--kos-btn-danger-hover-bg, color-mix(in srgb, var(--kos-error, #ff8f87) 28%, var(--kos-bg-base, #101417)));
 }
 
 .btn-secondary:disabled,
@@ -161,6 +161,6 @@ h2 {
 
 @media (prefers-reduced-motion: no-preference) {
     [data-motion="enabled"] .logout-dialog {
-        animation: dialog-pop var(--hos-transition-normal, 160ms ease-out) both;
+        animation: dialog-pop var(--kos-transition-normal, 160ms ease-out) both;
     }
 }

@@ -10,9 +10,9 @@
        Recent backdrops already anchor themselves the same way. */
     position: fixed;
     inset: 0;
-    background: var(--hos-mobile-surface-background, var(--hos-desktop-background, #07100f));
-    color: var(--hos-text-primary, #e7f7f1);
-    font-family: var(--hos-font-ui, system-ui, sans-serif);
+    background: var(--kos-mobile-surface-background, var(--kos-desktop-background, #07100f));
+    color: var(--kos-text-primary, #e7f7f1);
+    font-family: var(--kos-font-ui, system-ui, sans-serif);
 }
 
 .mobile-shell-workspace {
@@ -32,7 +32,7 @@
     text-shadow: 0 1px 3px rgb(0 0 0 / 85%), 0 0 1px rgb(0 0 0 / 90%);
 }
 .mobile-home-layer[hidden], .mobile-app-layer[hidden] { display: none; }
-.mobile-launch-error { position: absolute; bottom: 1rem; left: 1rem; right: 1rem; z-index: 1050; padding: .8rem; border-radius: .8rem; color: var(--hos-error, #fda4af); background: var(--hos-bg-surface, #151c20); }
+.mobile-launch-error { position: absolute; bottom: 1rem; left: 1rem; right: 1rem; z-index: 1050; padding: .8rem; border-radius: .8rem; color: var(--kos-error, #fda4af); background: var(--kos-bg-surface, #151c20); }
 
 .mobile-shade-handle {
     position: absolute;
@@ -56,8 +56,8 @@
     width: 2.5rem;
     height: 0.25rem;
     border-radius: 999px;
-    background: var(--hos-mobile-shade-grabber, rgb(231 247 241 / 45%));
-    transition: background var(--hos-transition-fast, 120ms ease);
+    background: var(--kos-mobile-shade-grabber, rgb(231 247 241 / 45%));
+    transition: background var(--kos-transition-fast, 120ms ease);
 }
 
 /* ADR 0196: notifications the user has not looked at yet, right of the grabber. */
@@ -68,8 +68,8 @@
     width: 0.5rem;
     height: 0.5rem;
     border-radius: 50%;
-    background: var(--hos-taskbar-attention, var(--hos-warning, #d5a84f));
-    box-shadow: 0 0 0 2px var(--hos-mobile-shade-attention-ring, rgb(7 16 15 / 70%));
+    background: var(--kos-taskbar-attention, var(--kos-warning, #d5a84f));
+    box-shadow: 0 0 0 2px var(--kos-mobile-shade-attention-ring, rgb(7 16 15 / 70%));
 }
 
 /* ADR 0216 §5: the moon of "Do not disturb", beside the grabber. */
@@ -77,12 +77,12 @@
     display: inline-flex;
     margin-left: 0.4rem;
     margin-top: 0.1rem;
-    color: var(--hos-info, #5fb4e6);
+    color: var(--kos-info, #5fb4e6);
 }
 
 .mobile-shade-handle:hover .mobile-shade-grabber,
 .mobile-shade-handle:focus-visible .mobile-shade-grabber {
-    background: var(--hos-mobile-shade-grabber-hover, rgb(231 247 241 / 75%));
+    background: var(--kos-mobile-shade-grabber-hover, rgb(231 247 241 / 75%));
 }
 
 .mobile-shade-backdrop {
@@ -92,8 +92,8 @@
     display: flex;
     justify-content: center;
     padding: calc(1rem + env(safe-area-inset-top)) 1rem 1rem;
-    background: var(--hos-mobile-shade-backdrop, rgb(7 16 15 / 55%));
-    animation: mobile-shade-fade-in var(--hos-transition-fast, 120ms ease-out);
+    background: var(--kos-mobile-shade-backdrop, rgb(7 16 15 / 55%));
+    animation: mobile-shade-fade-in var(--kos-transition-fast, 120ms ease-out);
 }
 
 .mobile-shade-panel {
@@ -101,12 +101,12 @@
     max-width: 24rem;
     max-height: 100%;
     overflow: hidden;
-    border: 1px solid var(--hos-border, #315249);
-    border-radius: var(--hos-mobile-shade-panel-radius, 1rem);
-    background: var(--hos-mobile-shade-panel-background, var(--hos-bg-surface, #151c20));
-    box-shadow: var(--hos-shadow-lg, 0 20px 48px rgb(0 0 0 / 52%));
-    backdrop-filter: var(--hos-taskbar-backdrop-filter, none);
-    animation: mobile-shade-slide-down var(--hos-transition-normal, 160ms ease-out);
+    border: 1px solid var(--kos-border, #315249);
+    border-radius: var(--kos-mobile-shade-panel-radius, 1rem);
+    background: var(--kos-mobile-shade-panel-background, var(--kos-bg-surface, #151c20));
+    box-shadow: var(--kos-shadow-lg, 0 20px 48px rgb(0 0 0 / 52%));
+    backdrop-filter: var(--kos-taskbar-backdrop-filter, none);
+    animation: mobile-shade-slide-down var(--kos-transition-normal, 160ms ease-out);
 }
 
 @keyframes mobile-shade-fade-in {

@@ -4,7 +4,7 @@ namespace Kazo.Os.Tools.ManifestGenerator.Tests;
 
 /// <summary>
 /// <c>Resources/AppManifest.&lt;culture&gt;.resx</c> → <c>localization/</c> files, manifest entries,
-/// <c>HOSAPP0040</c> and the aggregated <c>localized</c> texts (ADR 0104, section 4).
+/// <c>KOSAPP0040</c> and the aggregated <c>localized</c> texts (ADR 0104, section 4).
 /// </summary>
 public sealed class ManifestLocalizationGeneratorTests : IDisposable
 {
@@ -87,7 +87,7 @@ public sealed class ManifestLocalizationGeneratorTests : IDisposable
         ManifestLocalizationGenerator.Result result = ManifestLocalizationGenerator.Apply(_directory, Generate(typeof(ValidCommandApp)));
 
         GeneratorDiagnostic diagnostic = Assert.Single(result.Diagnostics);
-        Assert.Equal("HOSAPP0040", diagnostic.Code);
+        Assert.Equal("KOSAPP0040", diagnostic.Code);
         Assert.Empty(result.Files);
         Assert.False(Directory.Exists(Path.Combine(_directory, "localization")));
     }

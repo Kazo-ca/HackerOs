@@ -129,7 +129,7 @@ Règles du validateur et du générateur :
 | `manifest.web.url.invalid` | URL absolue `http`/`https`, nom d'hôte valide (pas de joker), chemin finissant par `/`, sans requête ni fragment |
 | `manifest.web.url.duplicate` | deux URL identiques après normalisation |
 | `manifest.web.forbidden` | `web` sur une app qui n'est pas `web` |
-| `manifest.web.filesystem`, `HOSAPP0050` | un site ne demande aucune capacité `filesystem.*` (ses données vont dans l'IndexedDB du navigateur, ADR 0073 §3) |
+| `manifest.web.filesystem`, `KOSAPP0050` | un site ne demande aucune capacité `filesystem.*` (ses données vont dans l'IndexedDB du navigateur, ADR 0073 §3) |
 | `manifest.execution.web` | une app `web` tourne dans le worker `web` ou sur le thread principal |
 | `manifest.execution.web-only` | seule une app `web` tourne dans le worker `web` |
 | `catalog.web.url-conflict` | deux apps installées ne déclarent pas le même nom d'hôte |
@@ -249,7 +249,7 @@ détection d'OS) sur `lo` au lieu d'`eth0`. Un ping local répond en ~0,04 ms.
 
 ## Liste des tâches du chantier `web/3-listener-dns`
 
-- [x] Genre `web`, hôte `web`, `web.urls` (abstractions, validateur, schéma, sérialiseur, mappeur, générateur `HOSAPP0050`, conflit du catalogue).
+- [x] Genre `web`, hôte `web`, `web.urls` (abstractions, validateur, schéma, sérialiseur, mappeur, générateur `KOSAPP0050`, conflit du catalogue).
 - [x] Capacités `network.listen` (normale) et `network.listen.privileged` (dangereuse).
 - [x] `KazoHttpListener`, `WebServerAppBase`, `KazoIPGlobalProperties`, contrat de passerelle.
 - [x] `ListeningPortTable` : liaison, `EADDRINUSE`, routage `http.sys`, démons de `localhost`, nettoyage.

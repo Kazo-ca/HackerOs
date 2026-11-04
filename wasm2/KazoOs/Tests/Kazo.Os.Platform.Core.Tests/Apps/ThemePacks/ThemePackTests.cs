@@ -13,7 +13,7 @@ public sealed class ThemePackTests
     internal const string PackId = "org.example.neon";
 
     internal static string ThemeText(string id = "neon-night") =>
-        $"[theme]\nid = {id}\nname = Neon Night\nbase = kazoos\n\n[tokens]\n--hos-accent = #ff00ff\n";
+        $"[theme]\nid = {id}\nname = Neon Night\nbase = kazoos\n\n[tokens]\n--kos-accent = #ff00ff\n";
 
     /// <summary>A pack with every part: one theme, one wallpaper, an icon pack, a sound theme and a cursor theme.</summary>
     internal static Dictionary<string, byte[]> FullPack(string themeId = "neon-night") => new(StringComparer.Ordinal)
@@ -94,7 +94,7 @@ public sealed class ThemePackTests
         { "themes.pack.unexpected-file", "scripts/run.js", Encoding.UTF8.GetBytes("alert(1)") },
         { "themes.pack.unexpected-file", "themes/nested/deep.theme", Encoding.UTF8.GetBytes(ThemeText("deep")) },
         { "themes.pack.bad-file", "wallpapers/fake.png", Encoding.UTF8.GetBytes("<svg/>") },
-        { "themes.pack.remote-address", "themes/remote.theme", Encoding.UTF8.GetBytes(ThemeText("remote") + "--hos-wallpaper = url(https://evil.example/x.png)\n") },
+        { "themes.pack.remote-address", "themes/remote.theme", Encoding.UTF8.GetBytes(ThemeText("remote") + "--kos-wallpaper = url(https://evil.example/x.png)\n") },
         { "themes.pack.bad-file", "themes/broken.theme", Encoding.UTF8.GetBytes("[theme]\nid = broken\n") },
         { "themes.pack.unexpected-file", "Themes/Upper.theme", Encoding.UTF8.GetBytes(ThemeText("upper")) },
     };

@@ -9,7 +9,7 @@
 // An empty theme restores every rule and removes the style element. Cross-origin sheets, inline
 // style attributes and iframes keep the host's cursors.
 
-const styleElementId = "hos-cursor-theme";
+const styleElementId = "kos-cursor-theme";
 const rewritten = []; // { rule, value, priority }
 let cursors = null; // name -> CSS value
 let observer = null;

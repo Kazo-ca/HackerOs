@@ -1,7 +1,7 @@
 .theme-docs {
     display: grid;
     gap: 1.25rem;
-    color: var(--hos-text-primary, #f4f7f8);
+    color: var(--kos-text-primary, #f4f7f8);
     font-size: 0.86rem;
     line-height: 1.5;
 }
@@ -9,27 +9,27 @@
 .theme-docs h3 {
     margin: 0 0 0.4rem;
     font-size: 0.95rem;
-    color: var(--hos-accent, #42d392);
+    color: var(--kos-accent, #42d392);
     letter-spacing: 0.04em;
     text-transform: uppercase;
 }
 
 /* ::deep: the documentation sentences are resource markup, rendered without the scope attribute. */
 .theme-docs ::deep code {
-    font-family: var(--hos-font-mono, monospace);
+    font-family: var(--kos-font-mono, monospace);
     font-size: 0.8rem;
-    color: var(--hos-accent-hover, #62e4aa);
+    color: var(--kos-accent-hover, #62e4aa);
 }
 
 .docs-sample {
     margin: 0.5rem 0;
     padding: 0.75rem;
-    border: 1px solid var(--hos-border-subtle, #27343a);
-    border-radius: var(--hos-radius-sm, 0.25rem);
-    background: var(--hos-bg-base, #101417);
-    font-family: var(--hos-font-mono, monospace);
+    border: 1px solid var(--kos-border-subtle, #27343a);
+    border-radius: var(--kos-radius-sm, 0.25rem);
+    background: var(--kos-bg-base, #101417);
+    font-family: var(--kos-font-mono, monospace);
     font-size: 0.8rem;
-    color: var(--hos-text-secondary, #a8bac4);
+    color: var(--kos-text-secondary, #a8bac4);
     overflow-x: auto;
 }
 
@@ -46,7 +46,7 @@
 
 .docs-types dd {
     margin: 0;
-    color: var(--hos-text-secondary, #a8bac4);
+    color: var(--kos-text-secondary, #a8bac4);
 }
 
 .docs-table {
@@ -57,20 +57,20 @@
 .docs-table th,
 .docs-table td {
     padding: 0.4rem 0.5rem;
-    border-bottom: 1px solid var(--hos-border-subtle, #27343a);
+    border-bottom: 1px solid var(--kos-border-subtle, #27343a);
     text-align: left;
     vertical-align: top;
 }
 
 .docs-table th {
-    background: var(--hos-bg-elevated, #1b252a);
-    color: var(--hos-text-secondary, #a8bac4);
+    background: var(--kos-bg-elevated, #1b252a);
+    color: var(--kos-text-secondary, #a8bac4);
     font-weight: 600;
 }
 
 .docs-label,
 .docs-companion {
     display: block;
-    color: var(--hos-text-muted, #6f838d);
+    color: var(--kos-text-muted, #6f838d);
     font-size: 0.76rem;
 }

@@ -3,9 +3,9 @@
     flex-direction: column;
     height: 38%;
     min-height: 120px;
-    border-top: 2px solid var(--hos-accent, #1f6feb);
-    background: var(--hos-bg-base, #0d1117);
-    color: var(--hos-text-primary, #c9d1d9);
+    border-top: 2px solid var(--kos-accent, #1f6feb);
+    background: var(--kos-bg-base, #0d1117);
+    color: var(--kos-text-primary, #c9d1d9);
     font: 0.75rem/1.4 'Cascadia Code', Consolas, monospace;
 }
 
@@ -14,15 +14,15 @@
     align-items: stretch;
     gap: 2px;
     padding: 0 6px;
-    background: var(--hos-bg-surface, #161b22);
-    border-bottom: 1px solid var(--hos-border-subtle, #30363d);
+    background: var(--kos-bg-surface, #161b22);
+    border-bottom: 1px solid var(--kos-border-subtle, #30363d);
 }
 
 .devtools-tab {
     background: transparent;
     border: none;
     border-bottom: 2px solid transparent;
-    color: var(--hos-text-muted, #8b949e);
+    color: var(--kos-text-muted, #8b949e);
     padding: 6px 10px;
     cursor: pointer;
     font: inherit;
@@ -35,12 +35,12 @@
 }
 
 .devtools-tab.active {
-    color: var(--hos-accent, #39ff14);
-    border-bottom-color: var(--hos-accent, #39ff14);
+    color: var(--kos-accent, #39ff14);
+    border-bottom-color: var(--kos-accent, #39ff14);
 }
 
 .devtools-count {
-    color: var(--hos-text-muted, #8b949e);
+    color: var(--kos-text-muted, #8b949e);
     margin-left: 4px;
 }
 
@@ -59,7 +59,7 @@
 .devtools-action {
     background: transparent;
     border: none;
-    color: var(--hos-text-muted, #8b949e);
+    color: var(--kos-text-muted, #8b949e);
     cursor: pointer;
     padding: 0 8px;
     font-size: 0.875rem;
@@ -67,7 +67,7 @@
 
 .devtools-action:hover,
 .devtools-action:focus-visible {
-    color: var(--hos-danger, #ff7b72);
+    color: var(--kos-danger, #ff7b72);
     outline: none;
 }
 
@@ -78,7 +78,7 @@
 
 .devtools-empty {
     margin: 12px;
-    color: var(--hos-text-muted, #8b949e);
+    color: var(--kos-text-muted, #8b949e);
 }
 
 .network-table {
@@ -89,22 +89,22 @@
 .network-table th {
     position: sticky;
     top: 0;
-    background: var(--hos-bg-surface, #161b22);
-    color: var(--hos-text-muted, #8b949e);
+    background: var(--kos-bg-surface, #161b22);
+    color: var(--kos-text-muted, #8b949e);
     font-weight: normal;
     text-align: left;
     padding: 3px 8px;
-    border-bottom: 1px solid var(--hos-border-subtle, #30363d);
+    border-bottom: 1px solid var(--kos-border-subtle, #30363d);
 }
 
 .network-table td {
     padding: 2px 8px;
-    border-bottom: 1px solid var(--hos-border-subtle, #21262d);
+    border-bottom: 1px solid var(--kos-border-subtle, #21262d);
     white-space: nowrap;
 }
 
 .network-table tr.failed td {
-    color: var(--hos-danger, #ff7b72);
+    color: var(--kos-danger, #ff7b72);
 }
 
 .network-name {
@@ -117,7 +117,7 @@
     display: flex;
     gap: 12px;
     padding: 2px 10px;
-    border-bottom: 1px solid var(--hos-border-subtle, #21262d);
+    border-bottom: 1px solid var(--kos-border-subtle, #21262d);
     white-space: pre-wrap;
     word-break: break-word;
 }
@@ -127,11 +127,11 @@
 }
 
 .console-source {
-    color: var(--hos-text-muted, #8b949e);
+    color: var(--kos-text-muted, #8b949e);
 }
 
 .console-line.level-debug {
-    color: var(--hos-text-muted, #8b949e);
+    color: var(--kos-text-muted, #8b949e);
 }
 
 .console-line.level-warning {
@@ -141,5 +141,5 @@
 
 .console-line.level-error {
     background: #2d1214;
-    color: var(--hos-danger, #ff7b72);
+    color: var(--kos-danger, #ff7b72);
 }

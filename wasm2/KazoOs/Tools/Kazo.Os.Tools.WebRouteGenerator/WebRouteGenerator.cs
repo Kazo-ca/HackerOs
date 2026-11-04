@@ -23,7 +23,7 @@ namespace Kazo.Os.Tools.WebRouteGenerator;
 /// <c>&lt;Name&gt;WebHost</c> process class and the <c>EntryPoint</c> override that names it.</item>
 /// </list>
 /// Nothing is read by reflection at run time, so trimming keeps working; conflicts, malformed
-/// templates and parameters that cannot be bound are build errors (<c>HOSWEB0001</c>...).
+/// templates and parameters that cannot be bound are build errors (<c>KOSWEB0001</c>...).
 /// </summary>
 [Generator(LanguageNames.CSharp)]
 public sealed class WebRouteGenerator : IIncrementalGenerator
@@ -643,7 +643,7 @@ internal sealed class SiteAnalyzer
     }
 
     // ------------------------------------------------------------------------------------------
-    // Conflicts (HOSWEB0001, HOSWEB0003)
+    // Conflicts (KOSWEB0001, KOSWEB0003)
     // ------------------------------------------------------------------------------------------
 
     private void CheckConflicts(List<ActionModel> actions)

@@ -64,7 +64,7 @@ frontière du SDK.
 - Références permises : les quatre `Shared/*.Abstractions`, les bibliothèques
   `Shared/Kazo.Os.AppSdk*`, `Platform/Kazo.Os.Theming.Blazor` et d'autres
   projets sous `Apps/`. Toute autre référence de projet échoue au build
-  (`HOSAPP0030`). Les `PackageReference` (MudBlazor par exemple) sont libres.
+  (`KOSAPP0030`). Les `PackageReference` (MudBlazor par exemple) sont libres.
 - Ajouter le projet à `Kazo.Os.sln` (`dotnet sln add`).
 
 ### Depuis un autre dépôt (paquets locaux)
@@ -83,7 +83,7 @@ dotnet new kazoos-host -n Contoso.Os          # un hôte qui lance tout l'OS
 
 Le projet référence `Kazo.Os.AppSdk*` et `Kazo.Os.App.Build`
 (`PrivateAssets="all"`), qui apporte la génération du manifeste, le générateur
-de routes ASP.Kazo et la règle de frontière sur les paquets (`HOSAPP0030`).
+de routes ASP.Kazo et la règle de frontière sur les paquets (`KOSAPP0030`).
 Un hôte ajoute l'app par une `ProjectReference` ou une `PackageReference`.
 Le guide complet d'un dépôt tiers (disposition, version épinglée, hôte, tests,
 publication, montée de version, ce que la promesse du SDK 1.0 couvre) est
@@ -148,7 +148,7 @@ plus utiles :
 | `LaunchVisibility` | `Hidden` pour ne pas apparaître dans le menu Démarrer (commandes, services). |
 | `Icons` | Images relatives à `wwwroot/`, aussi déclarées dans `Assets` ; la première apparaît dans la barre de titre et la taskbar (ADR 0164). macOS masque celle du titre. Le build calcule l'empreinte de l'asset. |
 | `Category`, `Version` | Présentation et classement de l'app. |
-| `OomScoreAdjust` | `oom_score_adj` de départ (SDK 1.2) ; une valeur négative, qui protège de l'OOM killer, est réservée aux apps système (`HOSAPP0024`, [`oom-killer.md`](../dev/oom-killer.md)). |
+| `OomScoreAdjust` | `oom_score_adj` de départ (SDK 1.2) ; une valeur négative, qui protège de l'OOM killer, est réservée aux apps système (`KOSAPP0024`, [`oom-killer.md`](../dev/oom-killer.md)). |
 
 Règles imposées par le générateur : classe publique, non abstraite, avec un
 constructeur sans paramètre ; getters purs (le générateur instancie la classe
@@ -252,7 +252,7 @@ public partial class NotesWindow
 }
 ```
 
-`NotesWindow.razor.css` utilise les jetons du thème (`--hos-*`), pour suivre
+`NotesWindow.razor.css` utilise les jetons du thème (`--kos-*`), pour suivre
 le thème choisi par l'utilisateur :
 
 ```css
@@ -260,17 +260,17 @@ le thème choisi par l'utilisateur :
     display: flex;
     flex-direction: column;
     height: 100%;
-    background: var(--hos-bg-base);
-    color: var(--hos-text-primary);
-    font-family: var(--hos-font-ui);
+    background: var(--kos-bg-base);
+    color: var(--kos-text-primary);
+    font-family: var(--kos-font-ui);
 }
 
 .notes-text {
     flex: 1;
-    font-family: var(--hos-font-mono);
-    background: var(--hos-input-bg);
-    color: var(--hos-input-color);
-    border: 1px solid var(--hos-border);
+    font-family: var(--kos-font-mono);
+    background: var(--kos-input-bg);
+    color: var(--kos-input-color);
+    border: 1px solid var(--kos-border);
 }
 ```
 
@@ -382,7 +382,7 @@ retombe jamais sur une identité système.
 
 À n'utiliser que pour une API du navigateur inaccessible en C#. Le module est
 un fichier `MonComposant.razor.js` à côté du composant (ou sous `wwwroot/` du
-projet), importé ainsi et uniquement ainsi (vérifié au build, `HOSAPP0031`) :
+projet), importé ainsi et uniquement ainsi (vérifié au build, `KOSAPP0031`) :
 
 ```csharp
 [Inject] private IJSRuntime JS { get; set; } = default!;
@@ -572,7 +572,7 @@ voir [`app-sdk.md`](app-sdk.md#processus-dans-des-web-workers-adr-0070-et-0071).
 Une app n'obtient un service de l'OS que par le SDK : une **façade statique**
 `Kazo*` (forme recommandée, elle lit le contexte ambiant) ou une **passerelle**
 de `AppContext`. L'injection d'un service de la plateforme est refusée au
-build (`HOSAPP0031`). Les tâches courantes :
+build (`KOSAPP0031`). Les tâches courantes :
 
 | Besoin | API | Capacité |
 |---|---|---|
@@ -647,7 +647,7 @@ PrimeCountResult result = await KazoBackground.RunAsync<PrimeCountInput, PrimeCo
 La tâche est une **méthode statique** de l'app (pas de lambda : elle ne peut pas
 capturer les objets de la fenêtre) et ses types passent en JSON par un
 contexte `KazoWireContext`. L'analyseur du SDK le vérifie au build
-(`HOSBG0001` à `HOSBG0004`). Annulation : `OperationCanceledException` ; tâche
+(`KOSBG0001` à `KOSBG0004`). Annulation : `OperationCanceledException` ; tâche
 tuée depuis `kill` ou le gestionnaire de tâches : `KazoProcessKilledException`
 (à attraper **avant** l'annulation) ; exception de la tâche :
 `KazoBackgroundJobException`. Quand l'app se ferme, la tâche voit son jeton
@@ -771,7 +771,7 @@ en anglais. Le guide complet est [`localization.md`](localization.md).
 - [ ] Le projet est sous `Apps/`, dans `Kazo.Os.sln`, et ne référence que le SDK.
 - [ ] La classe `[AppManifest]` ne demande que les capacités nécessaires.
 - [ ] `manifest.json` (ou `manifests/*.json`) régénéré est committé.
-- [ ] Pas de CSS ni de JavaScript en ligne ; styles sur les jetons `--hos-*`.
+- [ ] Pas de CSS ni de JavaScript en ligne ; styles sur les jetons `--kos-*`.
 - [ ] Les erreurs de permission et de fichier sont gérées et affichées.
 - [ ] Une demande d'arrêt ne perd rien en silence (`OnAppStopRequestedAsync`, `OnStoppingAsync`) et les boucles longues appellent `KazoProcess.CheckpointAsync` (ADR 0069).
 - [ ] Des tests couvrent la logique de l'app.

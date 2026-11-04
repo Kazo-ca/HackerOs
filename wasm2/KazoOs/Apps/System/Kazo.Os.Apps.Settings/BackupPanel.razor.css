@@ -2,9 +2,9 @@
    cards for merge/replace, and the danger tint on the restore panel. */
 
 .setting-group {
-    background-color: var(--hos-bg-surface, #151c20);
-    border: 1px solid var(--hos-border, #3a4b53);
-    border-radius: var(--hos-radius-md, 0.45rem);
+    background-color: var(--kos-bg-surface, #151c20);
+    border: 1px solid var(--kos-border, #3a4b53);
+    border-radius: var(--kos-radius-md, 0.45rem);
     padding: 14px;
     margin-bottom: 16px;
 }
@@ -12,30 +12,30 @@
 .setting-group h4 {
     margin-top: 0;
     margin-bottom: 6px;
-    color: color-mix(in srgb, var(--hos-accent, #42d392) 68%, var(--hos-text-primary, #f4f7f8));
+    color: color-mix(in srgb, var(--kos-accent, #42d392) 68%, var(--kos-text-primary, #f4f7f8));
 }
 
 .setting-group.danger-zone {
-    border-color: color-mix(in srgb, var(--hos-error, #ff8f87) 45%, var(--hos-border, #3a4b53));
+    border-color: color-mix(in srgb, var(--kos-error, #ff8f87) 45%, var(--kos-border, #3a4b53));
 }
 
 .setting-desc {
     font-size: 0.75rem;
-    color: var(--hos-text-secondary, #a8bac4);
+    color: var(--kos-text-secondary, #a8bac4);
     margin-bottom: 12px;
     line-height: 1.5;
 }
 
 .setting-desc code,
 .backup-result code {
-    font-family: var(--hos-font-mono, ui-monospace, monospace);
-    color: var(--hos-accent, #42d392);
+    font-family: var(--kos-font-mono, ui-monospace, monospace);
+    color: var(--kos-accent, #42d392);
 }
 
 .backup-result {
     margin: 10px 0 0;
     font-size: 0.75rem;
-    color: var(--hos-text-primary, #f4f7f8);
+    color: var(--kos-text-primary, #f4f7f8);
 }
 
 .restore-modes {
@@ -52,21 +52,21 @@
     padding: 10px 12px;
     text-align: left;
     font: inherit;
-    border: 1px solid var(--hos-border, #3a4b53);
-    border-radius: var(--hos-radius-sm, 0.25rem);
-    background-color: var(--hos-bg-base, #101417);
-    color: var(--hos-text-secondary, #a8bac4);
+    border: 1px solid var(--kos-border, #3a4b53);
+    border-radius: var(--kos-radius-sm, 0.25rem);
+    background-color: var(--kos-bg-base, #101417);
+    color: var(--kos-text-secondary, #a8bac4);
     cursor: pointer;
 }
 
 .restore-mode:hover:not(:disabled) {
-    border-color: var(--hos-accent, #42d392);
+    border-color: var(--kos-accent, #42d392);
 }
 
 .restore-mode.is-selected {
-    border-color: var(--hos-accent, #42d392);
-    background-color: color-mix(in srgb, var(--hos-accent, #42d392) 12%, var(--hos-bg-base, #101417));
-    color: var(--hos-text-primary, #f4f7f8);
+    border-color: var(--kos-accent, #42d392);
+    background-color: color-mix(in srgb, var(--kos-accent, #42d392) 12%, var(--kos-bg-base, #101417));
+    color: var(--kos-text-primary, #f4f7f8);
 }
 
 .restore-mode-title {
@@ -81,35 +81,35 @@
 
 .btn-danger,
 .btn-secondary {
-    min-height: var(--hos-btn-min-height, 2.25rem);
-    padding: var(--hos-btn-padding, 6px 14px);
-    border-radius: var(--hos-btn-radius, var(--hos-radius-sm, 0.25rem));
-    box-shadow: var(--hos-btn-shadow, none);
+    min-height: var(--kos-btn-min-height, 2.25rem);
+    padding: var(--kos-btn-padding, 6px 14px);
+    border-radius: var(--kos-btn-radius, var(--kos-radius-sm, 0.25rem));
+    box-shadow: var(--kos-btn-shadow, none);
     font-family: inherit;
     font-size: 0.85rem;
     cursor: pointer;
 }
 
 .btn-danger {
-    border: var(--hos-btn-danger-border, 1px solid var(--hos-error, #ff8f87));
-    background-color: var(--hos-btn-danger-bg, color-mix(in srgb, var(--hos-error, #ff8f87) 18%, var(--hos-bg-base, #101417)));
-    color: var(--hos-btn-danger-color, var(--hos-error, #ff8f87));
+    border: var(--kos-btn-danger-border, 1px solid var(--kos-error, #ff8f87));
+    background-color: var(--kos-btn-danger-bg, color-mix(in srgb, var(--kos-error, #ff8f87) 18%, var(--kos-bg-base, #101417)));
+    color: var(--kos-btn-danger-color, var(--kos-error, #ff8f87));
 }
 
 .btn-danger:hover:not(:disabled) {
-    background-color: var(--hos-btn-danger-hover-bg, color-mix(in srgb, var(--hos-error, #ff8f87) 28%, var(--hos-bg-base, #101417)));
+    background-color: var(--kos-btn-danger-hover-bg, color-mix(in srgb, var(--kos-error, #ff8f87) 28%, var(--kos-bg-base, #101417)));
 }
 
 .btn-secondary {
-    border: var(--hos-btn-border, 1px solid var(--hos-border, #3a4b53));
-    background-color: var(--hos-btn-bg, var(--hos-bg-base, #101417));
-    color: var(--hos-btn-color, var(--hos-text-secondary, #a8bac4));
+    border: var(--kos-btn-border, 1px solid var(--kos-border, #3a4b53));
+    background-color: var(--kos-btn-bg, var(--kos-bg-base, #101417));
+    color: var(--kos-btn-color, var(--kos-text-secondary, #a8bac4));
 }
 
 .btn-secondary:hover:not(:disabled) {
-    border-color: var(--hos-btn-hover-border, var(--hos-accent, #42d392));
-    background-color: var(--hos-btn-hover-bg, var(--hos-bg-elevated, #1b252a));
-    color: var(--hos-btn-hover-color, var(--hos-text-primary, #f4f7f8));
+    border-color: var(--kos-btn-hover-border, var(--kos-accent, #42d392));
+    background-color: var(--kos-btn-hover-bg, var(--kos-bg-elevated, #1b252a));
+    color: var(--kos-btn-hover-color, var(--kos-text-primary, #f4f7f8));
 }
 
 .btn-danger:disabled,
@@ -122,5 +122,5 @@
 .dialog-error {
     margin: 0;
     font-size: 0.75rem;
-    color: var(--hos-error, #ff8f87);
+    color: var(--kos-error, #ff8f87);
 }

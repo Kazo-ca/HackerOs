@@ -18,7 +18,7 @@ namespace Kazo.Os.Tools.ManifestGenerator;
 /// </para>
 /// <para>
 /// A missing key keeps the English text of the <c>AppDefinition</c>. A key naming no app, an
-/// unknown suffix or a malformed file fails the build (<c>HOSAPP0040</c>). The English texts stay in
+/// unknown suffix or a malformed file fails the build (<c>KOSAPP0040</c>). The English texts stay in
 /// C#. The one exception is the titles of the file menu entries (ADR 0159 §3): their English text is
 /// in <c>Resources/AppManifest.resx</c>, their translations here, and
 /// <see cref="ContextMenuRegistrationInspector"/> copies both into the manifest.

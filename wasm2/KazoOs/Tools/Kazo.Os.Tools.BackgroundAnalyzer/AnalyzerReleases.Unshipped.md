@@ -5,7 +5,7 @@
 
 Rule ID | Category | Severity | Notes
 --------|----------|----------|-------
-HOSBG0001 | Kazo.Os.Background | Error | BackgroundDiagnostics
-HOSBG0002 | Kazo.Os.Background | Error | BackgroundDiagnostics
-HOSBG0003 | Kazo.Os.Background | Error | BackgroundDiagnostics
-HOSBG0004 | Kazo.Os.Background | Error | BackgroundDiagnostics
+KOSBG0001 | Kazo.Os.Background | Error | BackgroundDiagnostics
+KOSBG0002 | Kazo.Os.Background | Error | BackgroundDiagnostics
+KOSBG0003 | Kazo.Os.Background | Error | BackgroundDiagnostics
+KOSBG0004 | Kazo.Os.Background | Error | BackgroundDiagnostics

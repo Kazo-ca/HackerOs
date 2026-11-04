@@ -8,8 +8,8 @@ A Kazo OS app, system or third-party, obtains OS services only through the
 public SDK (plan principle 3, ADR 0055). This document describes:
 
 - what makes up the SDK and what an app may reference and inject;
-- how the build checks these rules (codes `HOSAPP0030`, `HOSAPP0031`,
-  `HOSSDK0001`, ADR 0059);
+- how the build checks these rules (codes `KOSAPP0030`, `KOSAPP0031`,
+  `KOSSDK0001`, ADR 0059);
 - the end of phase 4's temporary exemption list;
 - the SDK APIs, as the `rebuild/4-*` work items
   add them (ADR 0056).
@@ -42,8 +42,8 @@ one: only the location under `Shared/` counts.
 
 | Project | May reference | Otherwise |
 |---|---|---|
-| App project (`KazoOsAppProject=true`, any project under `Apps/`) | `Shared/Kazo.Os.{App,Simulation,Theming}.Abstractions`, the SDK libraries, `Platform/Kazo.Os.Theming.Blazor`, another project under `Apps/` | `HOSAPP0030` |
-| SDK library | the three `*.Abstractions` above, another SDK library | `HOSSDK0001` |
+| App project (`KazoOsAppProject=true`, any project under `Apps/`) | `Shared/Kazo.Os.{App,Simulation,Theming}.Abstractions`, the SDK libraries, `Platform/Kazo.Os.Theming.Blazor`, another project under `Apps/` | `KOSAPP0030` |
+| SDK library | the three `*.Abstractions` above, another SDK library | `KOSSDK0001` |
 
 Only **direct** references of the project count: a transitive reference
 is checked in the project that declares it. `PackageReference`s
@@ -94,18 +94,18 @@ allowed: it is the SDK's code that makes the call.
 
 | Rule | Where | When | Code |
 |---|---|---|---|
-| An app's references | target `ValidateKazoOsSdkBoundary` of `build/Kazo.Os.Apps.targets` | before `ResolveProjectReferences`, so before compilation | `HOSAPP0030` |
-| An SDK library's references | same target | same | `HOSSDK0001` |
-| `Kazo.Os.*` packages of an app or SDK library (ADR 0098 §2), direct or transitive | target `_ValidateKazoOsPackageBoundary` | after `ResolveAssemblyReferences`: each compile reference coming from a `Kazo.Os.*` package must be allowed (app: `*.Abstractions`, `Kazo.Os.AppSdk*`, `Kazo.Os.Theming.Blazor`, `Kazo.Os.App.Build`, `Kazo.Os.Apps.*`, `Kazo.Os.Commands`; SDK library: `*.Abstractions` and SDK) | `HOSAPP0030` / `HOSSDK0001` |
-| Injection | `SdkBoundaryInspector` of the manifest generator (`Tools/Kazo.Os.Tools.ManifestGenerator`) | after compilation, with the generation of `manifest.json`; on error, nothing is written | `HOSAPP0031` |
+| An app's references | target `ValidateKazoOsSdkBoundary` of `build/Kazo.Os.Apps.targets` | before `ResolveProjectReferences`, so before compilation | `KOSAPP0030` |
+| An SDK library's references | same target | same | `KOSSDK0001` |
+| `Kazo.Os.*` packages of an app or SDK library (ADR 0098 §2), direct or transitive | target `_ValidateKazoOsPackageBoundary` | after `ResolveAssemblyReferences`: each compile reference coming from a `Kazo.Os.*` package must be allowed (app: `*.Abstractions`, `Kazo.Os.AppSdk*`, `Kazo.Os.Theming.Blazor`, `Kazo.Os.App.Build`, `Kazo.Os.Apps.*`, `Kazo.Os.Commands`; SDK library: `*.Abstractions` and SDK) | `KOSAPP0030` / `KOSSDK0001` |
+| Injection | `SdkBoundaryInspector` of the manifest generator (`Tools/Kazo.Os.Tools.ManifestGenerator`) | after compilation, with the generation of `manifest.json`; on error, nothing is written | `KOSAPP0031` |
 | `IJSRuntime` | source test `SdkBoundarySourceTests` (`Tests/Kazo.Os.Ecosystem.Tests`) | `dotnet test` | test failure |
 
 The messages name the project, reference or type at fault, and the
 ADR rule:
 
 ```text
-App.csproj : error HOSAPP0030: [My.App] Forbidden project reference 'Platform/Kazo.Os.Platform.Core/Kazo.Os.Platform.Core.csproj'. …
-App.csproj : error HOSAPP0031: [My.App.MyWindow] [Inject] property 'Sessions' injects 'Kazo.Os.Simulation.Abstractions.Sessions.ISessionService' …
+App.csproj : error KOSAPP0030: [My.App] Forbidden project reference 'Platform/Kazo.Os.Platform.Core/Kazo.Os.Platform.Core.csproj'. …
+App.csproj : error KOSAPP0031: [My.App.MyWindow] [Inject] property 'Sessions' injects 'Kazo.Os.Simulation.Abstractions.Sessions.ISessionService' …
 ```
 
 The generator reruns the inspection when `Kazo.Os.Apps.targets` changes.
@@ -113,7 +113,7 @@ The generator reruns the inspection when `Kazo.Os.Apps.targets` changes.
 Outside the repository (package `Kazo.Os.App.Build`, see [`sdk-packages.md`](sdk-packages.md)),
 the `ProjectReference` rule does not apply (it is written in repository
 paths); it is the package rule that protects the boundary, and the injection
-inspection (`HOSAPP0031`) runs the same way.
+inspection (`KOSAPP0031`) runs the same way.
 
 These three checks are always **errors**: no project can
 downgrade them to warnings. A project's role comes from its location
@@ -141,8 +141,8 @@ each phase 4 work item removed its own:
 
 `4-sdk-boundary-final` (2026-10-11) removed the mechanism: the
 `KazoOsSdkBoundaryExemption` item, the target `_KazoOsResolveSdkBoundaryExemption`
-and its property `_KazoOsSdkBoundaryExempt`, the `HOSAPP0030` /
-`HOSSDK0001` warning of the target `ValidateKazoOsSdkBoundary`, the generator's
+and its property `_KazoOsSdkBoundaryExempt`, the `KOSAPP0030` /
+`KOSSDK0001` warning of the target `ValidateKazoOsSdkBoundary`, the generator's
 `--boundary-exempt` option and the `severity` parameter of
 `GeneratorDiagnostic.ToMsBuildLine`. All apps in `Apps/` and all
 `Kazo.Os.AppSdk*` libraries compile without any boundary diagnostic.
@@ -430,7 +430,7 @@ are always asynchronous in a worker.
 `KazoLineChart` (`Kazo.Os.AppSdk.Blazor.Charts`) draws one or more
 `KazoChartSeries` in native SVG, the most recent value on the right, with a
 legend and an automatic scale; no library or JavaScript. Colors
-come from the theme (`--hos-chart-series-0` to `7`). See
+come from the theme (`--kos-chart-series-0` to `7`). See
 [`task-manager.md`](../dev/task-manager.md).
 
 ### Clipboard (ADR 0056 §12)
@@ -538,9 +538,9 @@ in the [SDK reference](sdk-reference.md).
 |---|---|---|---|
 | `[assembly: KazoWireContext(typeof(…))]` (`KazoWireContextAttribute`) | Types of an app that cross a worker's boundary: `KazoEvents` payloads, inputs and results of `KazoBackground` | none | [above](#processes-in-web-workers-adr-0070-and-0071), [ADR 0124](../dev/adr/0124-remote-event-and-watch-gateways.md) |
 | `KazoProcess.GetResourceLimitsAsync` → `KazoResourceLimits`, `SetResourceLimitAsync`; `ProcessLimitExceededException` (`EAGAIN`), `FileSystemErrorCode.TooManyOpenFiles` (`EMFILE`), `ProcessExitReason.CpuLimitExceeded`, `MemoryLimitExceeded` | `setrlimit`-style limits of a process | `process.manage` for another process | [`process-limits.md`](../dev/process-limits.md) |
-| `AppDefinition.OomScoreAdjust` (manifest `oomScoreAdj`), `ProcessExitReason.OutOfMemory` | starting `oom_score_adj`, negative for a system app only (`HOSAPP0024`); exit reason of an OOM killer victim | none | [`oom-killer.md`](../dev/oom-killer.md) |
+| `AppDefinition.OomScoreAdjust` (manifest `oomScoreAdj`), `ProcessExitReason.OutOfMemory` | starting `oom_score_adj`, negative for a system app only (`KOSAPP0024`); exit reason of an OOM killer victim | none | [`oom-killer.md`](../dev/oom-killer.md) |
 | `KazoProcess.Nice`, `BasePriority`, `IShellSession.RunNicedAsync`, `ProcessNice` | `nice` priority of a process; launch a command with an adjustment | `process.manage` outside one's own process and its children; `shell.control` | [`process-priority-and-unresponsive-windows.md`](../dev/process-priority-and-unresponsive-windows.md) |
-| `KazoBackground.RunAsync`, `KazoBackgroundJob<TInput, TResult>`, `KazoBackgroundContext`, `IAppExecutionContext.Background`; analyzer `HOSBG0001` to `HOSBG0004` | Long computation in a child process of the app, placed in a worker; static method checked at build time | none | [`background-jobs.md`](background-jobs.md) |
+| `KazoBackground.RunAsync`, `KazoBackgroundJob<TInput, TResult>`, `KazoBackgroundContext`, `IAppExecutionContext.Background`; analyzer `KOSBG0001` to `KOSBG0004` | Long computation in a child process of the app, placed in a worker; static method checked at build time | none | [`background-jobs.md`](background-jobs.md) |
 
 ### SDK 2.0 API (desktop series, ADR 0148 to 0161)
 
@@ -580,7 +580,7 @@ pass the boundary check without exception (see
 
 ## Decisions
 
-- Codes `HOSAPP0030` and `HOSAPP0031` instead of `HOSAPP0002` and `HOSAPP0003`,
+- Codes `KOSAPP0030` and `KOSAPP0031` instead of `KOSAPP0002` and `KOSAPP0003`,
   already taken by ADR 0047 (ADR 0059).
 - Exemption per project, not per reference: simpler to remove, and a
   work item fixes a whole project (history: the mechanism was removed
@@ -611,7 +611,7 @@ to #122 (xterm.js, code editor, embeddable components, POSIX shell and
 Linux commands, clipboard shared with the host):
 
 - `dotnet build Kazo.Os.sln`: 0 warnings, 0 errors, no diagnostic
-  `HOSAPP0002`, `HOSAPP0003`, `HOSAPP0030`, `HOSAPP0031` or `HOSSDK0001`.
+  `KOSAPP0002`, `KOSAPP0003`, `KOSAPP0030`, `KOSAPP0031` or `KOSSDK0001`.
 - No `Apps/` project or `Kazo.Os.AppSdk*` library references
   `Platform.Core`, `Platform.Blazor`, `Infrastructure.*` or `Server.*`. No
   remnant of the exemption mechanism outside the documents' history.
@@ -634,9 +634,9 @@ Linux commands, clipboard shared with the host):
 
 ## Task list of work item `rebuild/4-sdk-boundary`
 
-- [x] MSBuild target `ValidateKazoOsSdkBoundary` (`HOSAPP0030`, `HOSSDK0001`), direct references only.
+- [x] MSBuild target `ValidateKazoOsSdkBoundary` (`KOSAPP0030`, `KOSSDK0001`), direct references only.
 - [x] Property `KazoOsSdkLibrary` for SDK libraries.
-- [x] `SdkBoundaryInspector` in the generator (`HOSAPP0031`), `--boundary-exempt` option.
+- [x] `SdkBoundaryInspector` in the generator (`KOSAPP0031`), `--boundary-exempt` option.
 - [x] `KazoOsSdkBoundaryExemption` list (9 projects) and a test that keeps it from growing.
 - [x] `IJSRuntime` source test in `Kazo.Os.Ecosystem.Tests`.
 - [x] Removal of unused `Platform.Core` references (Calculator, KazoPaint, IconViewer, TextEditor, Browser).
@@ -672,7 +672,7 @@ Linux commands, clipboard shared with the host):
 
 ## Task list of work item `rebuild/4-sdk-boundary-final`
 
-- [x] Verify that the exemption list is empty and that the solution compiles without any `HOSAPP0030`, `HOSAPP0031` or `HOSSDK0001` diagnostic.
+- [x] Verify that the exemption list is empty and that the solution compiles without any `KOSAPP0030`, `KOSAPP0031` or `KOSSDK0001` diagnostic.
 - [x] Remove the mechanism from `build/Kazo.Os.Apps.targets` (item, target `_KazoOsResolveSdkBoundaryExemption`, property, warning).
 - [x] Remove the generator's `--boundary-exempt` option and the `warning` severity of `GeneratorDiagnostic`.
 - [x] Replace the list's tests with `Build_targets_have_no_exemption_mechanism` and `No_app_or_sdk_project_overrides_its_boundary_role`; the `IJSRuntime` test covers all apps.

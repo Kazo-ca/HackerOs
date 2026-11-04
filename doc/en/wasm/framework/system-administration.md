@@ -112,7 +112,7 @@ under *Website databases*.
 
 ### Backup (`system.backup`)
 
-`KazoSystemBackup.CreateAsync` downloads a `.hosbak` archive of the whole
+`KazoSystemBackup.CreateAsync` downloads a `.kosbak` archive of the whole
 machine to the host computer; `RestoreAsync(Merge | Replace)` opens the
 host's picker, validates the archive, **then** asks for an administrator,
 closes the session, restores and restarts. Creation and restoration are logged in

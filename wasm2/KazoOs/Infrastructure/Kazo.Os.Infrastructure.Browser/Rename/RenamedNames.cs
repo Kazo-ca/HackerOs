@@ -14,7 +14,9 @@ namespace Kazo.Os.Infrastructure.Browser.Rename;
 /// table), reduced to what can be found in stored data, in the same order: the display name
 /// first (<c>HackerOS</c> → <c>Kazo OS</c>), then the package prefix (<c>HackerOs.</c> →
 /// <c>Kazo.Os.</c>), the <c>Hack*</c>/<c>Hacker*</c> type names, and last the lowercase names
-/// (<c>hackeros</c> → <c>kazoos</c>, <c>hackweb</c> → <c>kazoweb</c>...).
+/// (<c>hackeros</c> → <c>kazoos</c>, <c>hackweb</c> → <c>kazoweb</c>...), then the short
+/// names of work item 9 (<c>--hos-*</c> → <c>--kos-*</c>, <c>data-hos-*</c>, <c>hos-*</c> classes,
+/// <c>.hosbak</c>), so a theme or a setting saved with a design-system token keeps working.
 /// </para>
 /// <para>
 /// Every rule is idempotent: a text already rewritten holds no old name, so a second pass
@@ -60,6 +62,12 @@ internal static partial class RenamedNames
         // File extensions of packages and theme packs (.hackapp, .hacktheme).
         (new Regex(@"\.hackapp\b", RegexOptions.CultureInvariant), ".kazoapp"),
         (new Regex(@"\.hacktheme\b", RegexOptions.CultureInvariant), ".kazotheme"),
+        // Short names (rename work item 9): CSS custom properties, data attributes and classes of the
+        // design system (--hos-accent, data-hos-theme, hos-chart), and the backup extension.
+        (new Regex("--hos-", RegexOptions.CultureInvariant), "--kos-"),
+        (new Regex(@"\bdata-hos-", RegexOptions.CultureInvariant), "data-kos-"),
+        (ShortClassPrefix(), "kos-"),
+        (new Regex(@"\.hosbak\b", RegexOptions.CultureInvariant), ".kosbak"),
     ];
 
     /// <summary>Gets whether <paramref name="value"/> holds a name the rename replaced.</summary>
@@ -117,8 +125,12 @@ internal static partial class RenamedNames
     }
 
     /// <summary>Any old name, whatever its case: what <see cref="ContainsOldName"/> looks for.</summary>
-    [GeneratedRegex(@"hacker ?os|hackweb|hack-?paint|hack-store|\bhackpkg\b|\bhackbackup\b|hackfileview|hackbackground|hacksettings|\.hackapp\b|\.hacktheme\b|(?-i:\bI?Hack(?=[A-Z][a-z]))", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+    [GeneratedRegex(@"hacker ?os|hackweb|hack-?paint|hack-store|\bhackpkg\b|\bhackbackup\b|hackfileview|hackbackground|hacksettings|\.hackapp\b|\.hacktheme\b|(?-i:--hos-|\bdata-hos-|(?<![\w-])hos-(?=[a-z])|\.hosbak\b)|(?-i:\bI?Hack(?=[A-Z][a-z]))", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
     private static partial Regex OldName();
+
+    /// <summary>A design-system class or element id, such as <c>hos-chart</c> or <c>.hos-chart-line</c>.</summary>
+    [GeneratedRegex(@"(?<![\w-])hos-(?=[a-z])", RegexOptions.CultureInvariant)]
+    private static partial Regex ShortClassPrefix();
 
     [GeneratedRegex(@"\bHackerOS\b", RegexOptions.CultureInvariant)]
     private static partial Regex DisplayName();

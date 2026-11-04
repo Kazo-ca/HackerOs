@@ -3,9 +3,9 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
-    color: var(--hos-window-text, var(--kazoos-window-text, #e7f7f1));
-    background: var(--hos-mobile-surface-background, var(--hos-desktop-background, #07100f));
-    font-family: var(--hos-font-ui, system-ui, sans-serif);
+    color: var(--kos-window-text, var(--kazoos-window-text, #e7f7f1));
+    background: var(--kos-mobile-surface-background, var(--kos-desktop-background, #07100f));
+    font-family: var(--kos-font-ui, system-ui, sans-serif);
     isolation: isolate;
 }
 

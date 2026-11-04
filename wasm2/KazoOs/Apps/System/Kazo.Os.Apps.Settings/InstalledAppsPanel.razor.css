@@ -2,9 +2,9 @@
    for uninstall. Tokens match SettingsWindow.razor.css so the tab reads as one panel. */
 
 .setting-group {
-    background-color: var(--hos-bg-surface, #151c20);
-    border: 1px solid var(--hos-border, #3a4b53);
-    border-radius: var(--hos-radius-md, 0.45rem);
+    background-color: var(--kos-bg-surface, #151c20);
+    border: 1px solid var(--kos-border, #3a4b53);
+    border-radius: var(--kos-radius-md, 0.45rem);
     padding: 14px;
     margin-bottom: 16px;
 }
@@ -12,18 +12,18 @@
 .setting-group h4 {
     margin-top: 0;
     margin-bottom: 6px;
-    color: color-mix(in srgb, var(--hos-accent, #42d392) 68%, var(--hos-text-primary, #f4f7f8));
+    color: color-mix(in srgb, var(--kos-accent, #42d392) 68%, var(--kos-text-primary, #f4f7f8));
 }
 
 .setting-desc {
     font-size: 0.75rem;
-    color: var(--hos-text-secondary, #a8bac4);
+    color: var(--kos-text-secondary, #a8bac4);
     margin-bottom: 12px;
 }
 
 .setting-desc code {
-    font-family: var(--hos-font-mono, ui-monospace, monospace);
-    color: var(--hos-accent, #42d392);
+    font-family: var(--kos-font-mono, ui-monospace, monospace);
+    color: var(--kos-accent, #42d392);
 }
 
 .apps-list {
@@ -38,22 +38,22 @@
     justify-content: space-between;
     gap: 12px;
     padding: 8px 12px;
-    background-color: var(--hos-bg-base, #101417);
-    border: 1px solid var(--hos-border-subtle, #27343a);
-    border-left: 3px solid var(--hos-border-subtle, #27343a);
-    border-radius: var(--hos-radius-sm, 0.25rem);
+    background-color: var(--kos-bg-base, #101417);
+    border: 1px solid var(--kos-border-subtle, #27343a);
+    border-left: 3px solid var(--kos-border-subtle, #27343a);
+    border-radius: var(--kos-radius-sm, 0.25rem);
 }
 
 .app-row.is-installed {
-    border-left-color: var(--hos-accent, #42d392);
+    border-left-color: var(--kos-accent, #42d392);
 }
 
 .app-row.is-system {
-    border-left-color: var(--hos-info, #64b5f6);
+    border-left-color: var(--kos-info, #64b5f6);
 }
 
 .app-row.is-uninstalled {
-    border-left-color: var(--hos-warning, #e0ad50);
+    border-left-color: var(--kos-warning, #e0ad50);
     opacity: 0.8;
 }
 
@@ -64,14 +64,14 @@
 }
 
 .app-name {
-    color: var(--hos-text-primary, #f4f7f8);
+    color: var(--kos-text-primary, #f4f7f8);
     font-weight: 600;
 }
 
 .app-meta {
-    font-family: var(--hos-font-mono, ui-monospace, monospace);
+    font-family: var(--kos-font-mono, ui-monospace, monospace);
     font-size: 0.72rem;
-    color: var(--hos-text-secondary, #a8bac4);
+    color: var(--kos-text-secondary, #a8bac4);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -86,17 +86,17 @@
 
 .app-badge {
     padding: 2px 8px;
-    border: 1px solid var(--hos-warning, #e0ad50);
+    border: 1px solid var(--kos-warning, #e0ad50);
     border-radius: 999px;
     font-size: 0.72rem;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: var(--hos-warning, #e0ad50);
+    color: var(--kos-warning, #e0ad50);
 }
 
 .app-badge-system {
-    border-color: var(--hos-info, #64b5f6);
-    color: var(--hos-info, #64b5f6);
+    border-color: var(--kos-info, #64b5f6);
+    color: var(--kos-info, #64b5f6);
 }
 
 .app-badge-locked {
@@ -106,19 +106,19 @@
 /* ADR 0098 §3 and §5: refused (wrong SDK) or altered apps. */
 .app-row.is-incompatible,
 .app-row.is-damaged {
-    border-left-color: var(--hos-error, #ff6b70);
+    border-left-color: var(--kos-error, #ff6b70);
 }
 
 .app-badge-incompatible,
 .app-badge-damaged {
-    border-color: var(--hos-error, #ff6b70);
-    color: var(--hos-error, #ff9a91);
+    border-color: var(--kos-error, #ff6b70);
+    color: var(--kos-error, #ff9a91);
 }
 
 .app-problem {
-    font-family: var(--hos-font-mono, ui-monospace, monospace);
+    font-family: var(--kos-font-mono, ui-monospace, monospace);
     font-size: 0.72rem;
-    color: var(--hos-error, #ff9a91);
+    color: var(--kos-error, #ff9a91);
     white-space: normal;
 }
 
@@ -129,47 +129,47 @@
 .commands-group summary {
     margin-bottom: 8px;
     font-size: 0.82rem;
-    color: var(--hos-text-secondary, #a8bac4);
+    color: var(--kos-text-secondary, #a8bac4);
     cursor: pointer;
 }
 
 .apps-message {
     margin-top: 10px;
     font-size: 0.85rem;
-    color: var(--hos-warning, #e0a43a);
+    color: var(--kos-warning, #e0a43a);
 }
 
 .apps-btn {
-    min-height: var(--hos-btn-min-height, 2rem);
-    padding: var(--hos-btn-padding, 4px 12px);
-    border: var(--hos-btn-border, 1px solid var(--hos-border, #3a4b53));
-    border-radius: var(--hos-btn-radius, var(--hos-radius-sm, 0.25rem));
-    background-color: var(--hos-btn-bg, var(--hos-bg-base, #101417));
-    color: var(--hos-btn-color, var(--hos-text-secondary, #a8bac4));
+    min-height: var(--kos-btn-min-height, 2rem);
+    padding: var(--kos-btn-padding, 4px 12px);
+    border: var(--kos-btn-border, 1px solid var(--kos-border, #3a4b53));
+    border-radius: var(--kos-btn-radius, var(--kos-radius-sm, 0.25rem));
+    background-color: var(--kos-btn-bg, var(--kos-bg-base, #101417));
+    color: var(--kos-btn-color, var(--kos-text-secondary, #a8bac4));
     font-family: inherit;
     font-size: 0.8rem;
-    font-weight: var(--hos-btn-font-weight, bold);
+    font-weight: var(--kos-btn-font-weight, bold);
     cursor: pointer;
-    transition: background var(--hos-transition-fast, 120ms ease),
-                border-color var(--hos-transition-fast, 120ms ease),
-                color var(--hos-transition-fast, 120ms ease);
+    transition: background var(--kos-transition-fast, 120ms ease),
+                border-color var(--kos-transition-fast, 120ms ease),
+                color var(--kos-transition-fast, 120ms ease);
 }
 
 .apps-btn:hover:not(:disabled) {
-    border-color: var(--hos-btn-hover-border, var(--hos-accent, #42d392));
-    color: var(--hos-btn-hover-color, var(--hos-text-primary, #f4f7f8));
+    border-color: var(--kos-btn-hover-border, var(--kos-accent, #42d392));
+    color: var(--kos-btn-hover-color, var(--kos-text-primary, #f4f7f8));
 }
 
 .apps-btn-danger {
-    border: var(--hos-btn-danger-border, 1px solid var(--hos-error, #ff8f87));
-    background-color: var(--hos-btn-danger-bg, color-mix(in srgb, var(--hos-error, #ff8f87) 18%, var(--hos-bg-base, #101417)));
-    color: var(--hos-btn-danger-color, var(--hos-error, #ff8f87));
+    border: var(--kos-btn-danger-border, 1px solid var(--kos-error, #ff8f87));
+    background-color: var(--kos-btn-danger-bg, color-mix(in srgb, var(--kos-error, #ff8f87) 18%, var(--kos-bg-base, #101417)));
+    color: var(--kos-btn-danger-color, var(--kos-error, #ff8f87));
 }
 
 .apps-btn-danger:hover:not(:disabled) {
-    border-color: var(--hos-error, #ff8f87);
-    background-color: var(--hos-btn-danger-hover-bg, color-mix(in srgb, var(--hos-error, #ff8f87) 28%, var(--hos-bg-base, #101417)));
-    color: var(--hos-btn-danger-color, var(--hos-error, #ff8f87));
+    border-color: var(--kos-error, #ff8f87);
+    background-color: var(--kos-btn-danger-hover-bg, color-mix(in srgb, var(--kos-error, #ff8f87) 28%, var(--kos-bg-base, #101417)));
+    color: var(--kos-btn-danger-color, var(--kos-error, #ff8f87));
 }
 
 .apps-btn:disabled {
@@ -184,7 +184,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--hos-bg-overlay, rgb(4 8 10 / 72%));
+    background: var(--kos-bg-overlay, rgb(4 8 10 / 72%));
     backdrop-filter: blur(4px);
 }
 
@@ -194,12 +194,12 @@
     flex-direction: column;
     gap: 1rem;
     padding: 1.25rem;
-    border: 1px solid var(--hos-border, #3a4b53);
-    border-radius: var(--hos-radius-md, 0.45rem);
-    background-color: var(--hos-bg-elevated, #1b252a);
-    box-shadow: var(--hos-shadow-lg, 0 20px 48px rgb(0 0 0 / 52%));
-    color: var(--hos-text-primary, #f4f7f8);
-    font-family: var(--hos-font-ui, system-ui, sans-serif);
+    border: 1px solid var(--kos-border, #3a4b53);
+    border-radius: var(--kos-radius-md, 0.45rem);
+    background-color: var(--kos-bg-elevated, #1b252a);
+    box-shadow: var(--kos-shadow-lg, 0 20px 48px rgb(0 0 0 / 52%));
+    color: var(--kos-text-primary, #f4f7f8);
+    font-family: var(--kos-font-ui, system-ui, sans-serif);
 }
 
 .apps-dialog-header {
@@ -215,47 +215,47 @@
 
 .apps-dialog-mark {
     font-size: 1.4rem;
-    color: var(--hos-error, #ff8f87);
+    color: var(--kos-error, #ff8f87);
 }
 
 .apps-dialog-body p {
     margin: 0 0 0.6rem;
     font-size: 0.85rem;
     line-height: 1.5;
-    color: var(--hos-text-secondary, #a8bac4);
+    color: var(--kos-text-secondary, #a8bac4);
 }
 
 .closure-list {
     margin: 0 0 0.75rem;
     padding-left: 1.25rem;
     font-size: 0.82rem;
-    color: var(--hos-warning, #e0ad50);
+    color: var(--kos-warning, #e0ad50);
 }
 
 .process-list {
     margin: 0 0 0.75rem;
     padding: 6px 10px 6px 1.75rem;
     font-size: 0.82rem;
-    font-family: var(--hos-font-mono, ui-monospace, monospace);
-    color: var(--hos-error, #ff7b72);
-    border-left: 3px solid var(--hos-error, #ff7b72);
+    font-family: var(--kos-font-mono, ui-monospace, monospace);
+    color: var(--kos-error, #ff7b72);
+    border-left: 3px solid var(--kos-error, #ff7b72);
     background: rgba(255, 123, 114, 0.06);
 }
 
 .process-pid {
     display: inline-block;
     min-width: 3.5em;
-    color: var(--hos-text-muted, #8b949e);
+    color: var(--kos-text-muted, #8b949e);
 }
 
 .process-user {
-    color: var(--hos-text-muted, #8b949e);
+    color: var(--kos-text-muted, #8b949e);
 }
 
 .scope-options {
     display: inline-flex;
-    border: 1px solid var(--hos-border, #3a4b53);
-    border-radius: var(--hos-radius-md, 0.45rem);
+    border: 1px solid var(--kos-border, #3a4b53);
+    border-radius: var(--kos-radius-md, 0.45rem);
     overflow: hidden;
 }
 
@@ -263,18 +263,18 @@
     padding: 6px 14px;
     border: none;
     background: transparent;
-    color: var(--hos-text-secondary, #a9b6bc);
+    color: var(--kos-text-secondary, #a9b6bc);
     font: inherit;
     cursor: pointer;
 }
 
 .scope-option + .scope-option {
-    border-left: 1px solid var(--hos-border, #3a4b53);
+    border-left: 1px solid var(--kos-border, #3a4b53);
 }
 
 .scope-option.is-selected {
-    background-color: color-mix(in srgb, var(--hos-accent, #42d392) 22%, transparent);
-    color: var(--hos-text-primary, #f4f7f8);
+    background-color: color-mix(in srgb, var(--kos-accent, #42d392) 22%, transparent);
+    color: var(--kos-text-primary, #f4f7f8);
 }
 
 .apps-dialog-footer {
@@ -293,7 +293,7 @@
 /* ADR 0088: the one thing an uninstall deletes, a web site's browser database. */
 .apps-site-data {
     padding: 8px 10px;
-    border-left: 3px solid var(--hos-warning, #d29922);
+    border-left: 3px solid var(--kos-warning, #d29922);
     background: rgba(210, 153, 34, 0.08);
 }
 

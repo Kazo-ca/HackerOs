@@ -34,7 +34,7 @@ public sealed class TemplateBuildTests(TemplateWorkspace workspace)
     /// replaced by this repository (<c>KazoOsSourceRoot</c>), builds and tests both profiles. Debug
     /// compiles Kazo OS from the sources (every Kazo OS reference is a project, the host aggregates
     /// the app with the base apps, system apps included); Release takes the packages of the local
-    /// feed. Without the submodule the build stops with HOSAPP0070.
+    /// feed. Without the submodule the build stops with KOSAPP0070.
     /// </summary>
     [Fact]
     public async Task The_solution_template_builds_and_tests_both_profiles()
@@ -56,7 +56,7 @@ public sealed class TemplateBuildTests(TemplateWorkspace workspace)
 
         (int missingExit, string missingOutput) = await workspace.RunAsync(directory, "build", "-c", "Release");
         Assert.NotEqual(0, missingExit);
-        Assert.Contains("HOSAPP0070", missingOutput, StringComparison.Ordinal);
+        Assert.Contains("KOSAPP0070", missingOutput, StringComparison.Ordinal);
 
         // Debug: the sources of the submodule.
         await workspace.RunCheckedAsync(directory, "build", "-c", "Debug", sourceRoot);
@@ -162,7 +162,7 @@ public sealed class TemplateBuildTests(TemplateWorkspace workspace)
     /// <summary>
     /// ADR 0098 §3 and §8, ADR 0114, ADR 0149 §5, ADR 0161 §3, ADR 0228: the app packages of
     /// <c>Tests/fixtures/sdk-compat</c> in a host made by the template. A host that references the
-    /// apps compiled against SDK 1.0.0, 1.1.0 and 2.0.0 does not build (<c>HOSAPP0021</c>, another
+    /// apps compiled against SDK 1.0.0, 1.1.0 and 2.0.0 does not build (<c>KOSAPP0021</c>, another
     /// major: they must be rebuilt). With the app compiled against SDK 3.0.0 instead, the host boots,
     /// the window shows the OS file control in a third-party app and the command copies a file with
     /// the SDK copy rules.
@@ -182,7 +182,7 @@ public sealed class TemplateBuildTests(TemplateWorkspace workspace)
         Assert.NotEqual(0, exitCode);
         foreach (string appId in new[] { "com.contoso.sdk1-window", "com.contoso.sdk1-command", "com.contoso.sdk11-window", "com.contoso.sdk11-command", "com.contoso.sdk2-window", "com.contoso.sdk2-command" })
         {
-            Assert.Contains($"error HOSAPP0021: [{appId}]", output, StringComparison.Ordinal);
+            Assert.Contains($"error KOSAPP0021: [{appId}]", output, StringComparison.Ordinal);
         }
 
         await workspace.RunCheckedAsync(host, "remove", "package", "Contoso.Sdk1Compat");

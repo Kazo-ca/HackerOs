@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <PackageReference Include="Kazo.Os.AppSdk" Version="$(KazoOsVersion)" />
-    <!-- Generates manifest.json after the build and checks the SDK boundary (HOSAPP0030). -->
+    <!-- Generates manifest.json after the build and checks the SDK boundary (KOSAPP0030). -->
     <PackageReference Include="Kazo.Os.App.Build" Version="$(KazoOsVersion)" PrivateAssets="all" />
   </ItemGroup>
 

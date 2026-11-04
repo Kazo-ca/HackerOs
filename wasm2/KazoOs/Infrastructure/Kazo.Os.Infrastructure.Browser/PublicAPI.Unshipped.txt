@@ -24,3 +24,4 @@ override Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.Get
 override Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.ToString() -> string!
 static Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.operator !=(Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult? left, Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult? right) -> bool
 static Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.operator ==(Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult? left, Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult? right) -> bool
+const Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupService.LegacyArchiveExtension = ".hosbak" -> string!

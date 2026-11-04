@@ -229,7 +229,7 @@ apps each provide their `icons/app.svg`; the build computes the asset's
 fingerprint. Without a declaration, a window symbol serves as a fallback.
 
 All desktop themes display the title icon except macOS, which hides
-the icon and its context button with `--hos-window-icon-display: none`.
+the icon and its context button with `--kos-window-icon-display: none`.
 The macOS dock keeps the app icons. The menu remains accessible from the keyboard.
 The Lucide choice of the launcher and shortcuts remains independent of the chrome images.
 See [ADR 0164](../dev/adr/0164-app-icons-and-window-icon-context-menu.md).

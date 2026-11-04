@@ -8,12 +8,12 @@
     height: 100%;
     min-height: 3rem;
     padding: 0.75rem;
-    color: var(--hos-text-secondary, #8b949e);
-    font: 0.8rem var(--hos-font-mono, "JetBrains Mono", ui-monospace, monospace);
+    color: var(--kos-text-secondary, #8b949e);
+    font: 0.8rem var(--kos-font-mono, "JetBrains Mono", ui-monospace, monospace);
     text-align: center;
 }
 
 .embedded-unavailable-title {
-    color: var(--hos-accent, #42d392);
+    color: var(--kos-accent, #42d392);
     letter-spacing: 0.04em;
 }

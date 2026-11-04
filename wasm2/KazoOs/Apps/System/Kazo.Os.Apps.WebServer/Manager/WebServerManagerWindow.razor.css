@@ -4,9 +4,9 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    background-color: var(--hos-window-content-background, var(--hos-bg-base, #0b0f14));
-    color: var(--hos-text-primary, #c9d1d9);
-    font-family: var(--hos-font-mono, 'Cascadia Mono', Consolas, monospace);
+    background-color: var(--kos-window-content-background, var(--kos-bg-base, #0b0f14));
+    color: var(--kos-text-primary, #c9d1d9);
+    font-family: var(--kos-font-mono, 'Cascadia Mono', Consolas, monospace);
     font-size: 0.8125rem;
 }
 
@@ -16,8 +16,8 @@
     align-items: center;
     gap: 12px;
     padding: 10px 14px;
-    background: linear-gradient(90deg, var(--hos-bg-surface, #11161d), var(--hos-accent-subtle, #0f2a20));
-    border-bottom: 1px solid var(--hos-border-subtle, #30363d);
+    background: linear-gradient(90deg, var(--kos-bg-surface, #11161d), var(--kos-accent-subtle, #0f2a20));
+    border-bottom: 1px solid var(--kos-border-subtle, #30363d);
 }
 
 .wsm-brand {
@@ -28,15 +28,15 @@
 }
 
 .wsm-glyph {
-    color: var(--hos-accent, #42d392);
+    color: var(--kos-accent, #42d392);
     font-size: 1.125rem;
-    text-shadow: 0 0 8px var(--hos-accent, #42d392);
+    text-shadow: 0 0 8px var(--kos-accent, #42d392);
 }
 
 .wsm-title {
     font-weight: 700;
     letter-spacing: 0.04em;
-    color: var(--hos-accent, #42d392);
+    color: var(--kos-accent, #42d392);
 }
 
 .wsm-daemon {
@@ -47,11 +47,11 @@
 }
 
 .wsm-daemon-up {
-    color: var(--hos-accent, #42d392);
+    color: var(--kos-accent, #42d392);
 }
 
 .wsm-daemon-down {
-    color: var(--hos-danger, #f85149);
+    color: var(--kos-danger, #f85149);
 }
 
 .wsm-actions,
@@ -68,20 +68,20 @@
 }
 
 .wsm-btn {
-    background-color: var(--hos-btn-bg, #21262d);
-    color: var(--hos-btn-color, var(--hos-text-primary, #c9d1d9));
-    border: var(--hos-btn-border, 1px solid var(--hos-border, #30363d));
-    border-radius: var(--hos-btn-radius, var(--hos-radius-sm, 4px));
-    padding: var(--hos-btn-padding, 4px 12px);
+    background-color: var(--kos-btn-bg, #21262d);
+    color: var(--kos-btn-color, var(--kos-text-primary, #c9d1d9));
+    border: var(--kos-btn-border, 1px solid var(--kos-border, #30363d));
+    border-radius: var(--kos-btn-radius, var(--kos-radius-sm, 4px));
+    padding: var(--kos-btn-padding, 4px 12px);
     font-family: inherit;
     font-size: 0.75rem;
     cursor: pointer;
-    transition: background var(--hos-transition-fast, 120ms ease), border-color var(--hos-transition-fast, 120ms ease);
+    transition: background var(--kos-transition-fast, 120ms ease), border-color var(--kos-transition-fast, 120ms ease);
 }
 
 .wsm-btn:hover:not(:disabled) {
-    background-color: var(--hos-btn-hover-bg, var(--hos-bg-elevated, #30363d));
-    border-color: var(--hos-accent, #42d392);
+    background-color: var(--kos-btn-hover-bg, var(--kos-bg-elevated, #30363d));
+    border-color: var(--kos-accent, #42d392);
 }
 
 .wsm-btn:disabled {
@@ -90,27 +90,27 @@
 }
 
 .wsm-btn-accent {
-    border-color: var(--hos-accent, #42d392);
-    color: var(--hos-accent, #42d392);
+    border-color: var(--kos-accent, #42d392);
+    color: var(--kos-accent, #42d392);
 }
 
 .wsm-btn-danger {
-    border-color: var(--hos-danger, #f85149);
-    color: var(--hos-danger, #f85149);
+    border-color: var(--kos-danger, #f85149);
+    color: var(--kos-danger, #f85149);
 }
 
 .wsm-banner {
     padding: 6px 14px;
-    border-bottom: 1px solid var(--hos-border-subtle, #30363d);
+    border-bottom: 1px solid var(--kos-border-subtle, #30363d);
 }
 
 .wsm-banner-info {
-    background-color: var(--hos-accent-subtle, #0f2a20);
+    background-color: var(--kos-accent-subtle, #0f2a20);
 }
 
 .wsm-banner-error {
     background-color: rgba(248, 81, 73, 0.15);
-    color: var(--hos-danger, #f85149);
+    color: var(--kos-danger, #f85149);
 }
 
 .wsm-body {
@@ -122,8 +122,8 @@
 
 .wsm-sites {
     overflow-y: auto;
-    border-right: 1px solid var(--hos-border-subtle, #30363d);
-    background-color: var(--hos-bg-surface, #0f141a);
+    border-right: 1px solid var(--kos-border-subtle, #30363d);
+    background-color: var(--kos-bg-surface, #0f141a);
     padding: 8px 0;
 }
 
@@ -136,7 +136,7 @@
     font-size: 0.6875rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
 }
 
 .wsm-group-hint {
@@ -147,7 +147,7 @@
 
 .wsm-empty {
     padding: 2px 24px;
-    color: var(--hos-text-muted, #8b949e);
+    color: var(--kos-text-muted, #8b949e);
     font-style: italic;
 }
 
@@ -168,12 +168,12 @@
 }
 
 .wsm-site:hover {
-    background-color: var(--hos-bg-elevated, #161b22);
+    background-color: var(--kos-bg-elevated, #161b22);
 }
 
 .wsm-site-selected {
-    background-color: var(--hos-accent-subtle, #0f2a20);
-    border-left-color: var(--hos-accent, #42d392);
+    background-color: var(--kos-accent-subtle, #0f2a20);
+    border-left-color: var(--kos-accent, #42d392);
 }
 
 .wsm-dot {
@@ -182,25 +182,25 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background-color: var(--hos-text-muted, #8b949e);
+    background-color: var(--kos-text-muted, #8b949e);
 }
 
 .wsm-state-running {
-    background-color: var(--hos-accent, #42d392);
-    box-shadow: 0 0 6px var(--hos-accent, #42d392);
+    background-color: var(--kos-accent, #42d392);
+    box-shadow: 0 0 6px var(--kos-accent, #42d392);
 }
 
 .wsm-state-partial {
-    background-color: var(--hos-warning, #d29922);
+    background-color: var(--kos-warning, #d29922);
 }
 
 .wsm-state-down,
 .wsm-state-invalid {
-    background-color: var(--hos-danger, #f85149);
+    background-color: var(--kos-danger, #f85149);
 }
 
 .wsm-state-external {
-    background-color: var(--hos-info, #58a6ff);
+    background-color: var(--kos-info, #58a6ff);
 }
 
 .wsm-site-name {
@@ -213,13 +213,13 @@
 .wsm-site-state {
     grid-area: state;
     font-size: 0.6875rem;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
 }
 
 .wsm-site-url {
     grid-area: url;
     font-size: 0.6875rem;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -233,7 +233,7 @@
 .wsm-tabs {
     display: flex;
     gap: 4px;
-    border-bottom: 1px solid var(--hos-border-subtle, #30363d);
+    border-bottom: 1px solid var(--kos-border-subtle, #30363d);
     margin-bottom: 12px;
 }
 
@@ -242,14 +242,14 @@
     border: none;
     border-bottom: 2px solid transparent;
     padding: 6px 12px;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
     font: inherit;
     cursor: pointer;
 }
 
 .wsm-tab-active {
-    color: var(--hos-accent, #42d392);
-    border-bottom-color: var(--hos-accent, #42d392);
+    color: var(--kos-accent, #42d392);
+    border-bottom-color: var(--kos-accent, #42d392);
 }
 
 .wsm-form {
@@ -270,7 +270,7 @@
 
 .wsm-field > span,
 .wsm-field > legend {
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
     font-size: 0.75rem;
 }
 
@@ -284,18 +284,18 @@
 }
 
 .wsm-input {
-    background-color: var(--hos-input-bg, #0d1117);
-    color: var(--hos-text-primary, #c9d1d9);
-    border: 1px solid var(--hos-border, #30363d);
-    border-radius: var(--hos-radius-sm, 4px);
+    background-color: var(--kos-input-bg, #0d1117);
+    color: var(--kos-text-primary, #c9d1d9);
+    border: 1px solid var(--kos-border, #30363d);
+    border-radius: var(--kos-radius-sm, 4px);
     padding: 5px 8px;
     font: inherit;
 }
 
 .wsm-input:focus {
     outline: none;
-    border-color: var(--hos-accent, #42d392);
-    box-shadow: 0 0 0 1px var(--hos-accent, #42d392);
+    border-color: var(--kos-accent, #42d392);
+    box-shadow: 0 0 0 1px var(--kos-accent, #42d392);
 }
 
 .wsm-textarea {
@@ -311,28 +311,28 @@
 .wsm-errors {
     margin: 0;
     padding: 8px 8px 8px 24px;
-    border-left: 3px solid var(--hos-danger, #f85149);
+    border-left: 3px solid var(--kos-danger, #f85149);
     background-color: rgba(248, 81, 73, 0.08);
-    color: var(--hos-danger, #f85149);
+    color: var(--kos-danger, #f85149);
 }
 
 .wsm-warning {
     margin: 0;
     padding: 8px;
-    border-left: 3px solid var(--hos-warning, #d29922);
+    border-left: 3px solid var(--kos-warning, #d29922);
     background-color: rgba(210, 153, 34, 0.1);
 }
 
 .wsm-file,
 .wsm-muted {
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
     font-size: 0.75rem;
 }
 
 .wsm-logs h3 {
     margin: 12px 0 6px;
     font-size: 0.75rem;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
 }
 
 .wsm-log {
@@ -341,23 +341,23 @@
     overflow: auto;
     padding: 8px;
     background-color: #05080b;
-    border: 1px solid var(--hos-border-subtle, #30363d);
-    border-radius: var(--hos-radius-sm, 4px);
-    color: var(--hos-accent, #42d392);
+    border: 1px solid var(--kos-border-subtle, #30363d);
+    border-radius: var(--kos-radius-sm, 4px);
+    color: var(--kos-accent, #42d392);
     font-size: 0.75rem;
     white-space: pre;
 }
 
 .wsm-log-errors {
-    color: var(--hos-warning, #d29922);
+    color: var(--kos-warning, #d29922);
 }
 
 .wsm-tag {
     font-size: 0.6875rem;
     padding: 1px 6px;
-    border: 1px solid var(--hos-info, #58a6ff);
+    border: 1px solid var(--kos-info, #58a6ff);
     border-radius: 999px;
-    color: var(--hos-info, #58a6ff);
+    color: var(--kos-info, #58a6ff);
     vertical-align: middle;
 }
 
@@ -368,13 +368,13 @@
     justify-content: center;
     height: 100%;
     text-align: center;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
 }
 
 .wsm-status {
     padding: 4px 14px;
     font-size: 0.6875rem;
-    color: var(--hos-text-secondary, #8b949e);
-    border-top: 1px solid var(--hos-border-subtle, #30363d);
-    background-color: var(--hos-bg-surface, #0f141a);
+    color: var(--kos-text-secondary, #8b949e);
+    border-top: 1px solid var(--kos-border-subtle, #30363d);
+    background-color: var(--kos-bg-surface, #0f141a);
 }

@@ -11,7 +11,7 @@
         repeating-linear-gradient(135deg, rgb(255 60 60 / 4%) 0 12px, transparent 12px 24px),
         rgb(2 4 6 / 86%);
     backdrop-filter: blur(6px) grayscale(0.7);
-    font-family: var(--hos-font-mono, "Cascadia Mono", Consolas, monospace);
+    font-family: var(--kos-font-mono, "Cascadia Mono", Consolas, monospace);
     user-select: none;
 }
 

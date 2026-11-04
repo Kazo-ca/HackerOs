@@ -67,12 +67,12 @@ réglage « Animations » de la page Apparence a disparu : « Réduire les anima
   utilisateur ne peut pas l'enlever. `:focus-visible` reçoit un contour jaune de 3 px.
 - **Taille du texte** : les tailles de texte sont en `rem` ;
   `:root:has(.theme-scope[data-text-scale="150"])` met la police racine à 150 %. Les cadres en
-  `px` ne bougent pas. `--hos-text-scale` vaut le facteur.
+  `px` ne bougent pas. `--kos-text-scale` vaut le facteur.
 - **Mouvement réduit** : `data-motion="reduced"` met les jetons de transition à 0 et ramène toute
   durée d'animation ou de transition à 0,01 ms.
 
 Nouvelle feuille : écrire les tailles de texte en `rem`, jamais en `px`, et les couleurs avec les
-jetons `--hos-*`.
+jetons `--kos-*`.
 
 ### Apps qui dessinent elles-mêmes
 

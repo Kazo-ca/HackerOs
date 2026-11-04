@@ -53,7 +53,7 @@ its browser:
    itself loads the subresources of a page.
 2. **Public SDK only.** ASP.Kazo is a library of the SDK
    (`KazoOsSdkLibrary`); a site references neither Platform Core nor the
-   internal services (ADR 0055, codes `HOSAPP0030/0031`).
+   internal services (ADR 0055, codes `KOSAPP0030/0031`).
 3. **Resemble ASP.NET without copying it.** Same ideas and same attribute
    names (`[HttpGet]`, `[Route]`, `[FromBody]`), base classes prefixed
    `Kazo` (`KazoController`, `KazoHttpContext`); only the useful subset

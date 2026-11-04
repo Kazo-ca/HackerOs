@@ -13,13 +13,13 @@
 
 .wn-entry {
     padding: 0.6rem 0.75rem;
-    border: 1px solid var(--hos-border-subtle, #212c32);
+    border: 1px solid var(--kos-border-subtle, #212c32);
     border-radius: 0.35rem;
-    background: var(--hos-bg-base, #101417);
+    background: var(--kos-bg-base, #101417);
 }
 
 .wn-entry.is-new {
-    border-color: var(--hos-accent, #42d392);
+    border-color: var(--kos-accent, #42d392);
 }
 
 .wn-entry-head {
@@ -39,17 +39,17 @@
 }
 
 .wn-category {
-    border: 1px solid var(--hos-border, #34444c);
-    color: var(--hos-text-secondary, #b8c4c9);
+    border: 1px solid var(--kos-border, #34444c);
+    color: var(--kos-text-secondary, #b8c4c9);
 }
 
-.wn-category-new { color: var(--hos-accent, #42d392); }
-.wn-category-improved { color: var(--hos-info, #64b5f6); }
-.wn-category-fixed { color: var(--hos-warning, #d5a84f); }
+.wn-category-new { color: var(--kos-accent, #42d392); }
+.wn-category-improved { color: var(--kos-info, #64b5f6); }
+.wn-category-fixed { color: var(--kos-warning, #d5a84f); }
 
 .wn-badge {
-    background: var(--hos-accent, #42d392);
-    color: var(--hos-accent-contrast, #0b1210);
+    background: var(--kos-accent, #42d392);
+    color: var(--kos-accent-contrast, #0b1210);
 }
 
 .wn-title {
@@ -59,7 +59,7 @@
 
 .wn-description {
     margin: 0.35rem 0 0;
-    color: var(--hos-text-secondary, #b8c4c9);
+    color: var(--kos-text-secondary, #b8c4c9);
 }
 
 .wn-links {

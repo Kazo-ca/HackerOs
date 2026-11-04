@@ -133,8 +133,8 @@ by displaying another app's control.
 | Contract | Provider allowed | Refusal |
 | --- | --- | --- |
 | `kazoos.terminal` | any windowed app | none |
-| `kazoos.file-view`, `kazoos.file-dialogs` | any windowed app (`AdministratorSelected`); the administrator chooses the one in service, the explorer by default (ADR 0156) | none (`HOSAPP0025` is removed, ADR 0158 §1) |
-| `kazoos.context-menu` | platform | `manifest.component.contract.platform` (`HOSAPP0009` at the app's build) |
+| `kazoos.file-view`, `kazoos.file-dialogs` | any windowed app (`AdministratorSelected`); the administrator chooses the one in service, the explorer by default (ADR 0156) | none (`KOSAPP0025` is removed, ADR 0158 §1) |
+| `kazoos.context-menu` | platform | `manifest.component.contract.platform` (`KOSAPP0009` at the app's build) |
 
 - **Unavailable.** An OS contract (files or menu) with no
   provider that loads is an OS error: `component.unavailable` is written in `/var/log/syslog`
@@ -236,12 +236,12 @@ The shell is a child of the host's process: the host must request
   cleanup.
 - [x] Work item 1 of the desktop plan (ADR 0148, ADR 0153): typed component
   `KazoContractComponent<T>` and `Parameters`, `UnmatchedParameters`, registry
-  in `AppCatalog`, reserved contracts (`HOSAPP0025`,
+  in `AppCatalog`, reserved contracts (`KOSAPP0025`,
   `catalog.component.reserved`, `manifest.component.contract.platform`),
   `KazoPlatformComponent`, `component.unavailable` in the log; tests of the
   validator, the catalog, aggregation, the registry and the typed component.
 - [x] Work item 3c of the desktop plan (ADR 0156, ADR 0158): file
-  contracts open to any windowed app (`HOSAPP0025` removed),
+  contracts open to any windowed app (`KOSAPP0025` removed),
   `/etc/kazoos/components.config`, administrator's choice tried
   first, `component.fallback` fallback, `KazoComponentProviders` and the
   "OS components" tab with the approval window, `component.provider`

@@ -1,19 +1,19 @@
 /* A live chart in the hacker-console style: dark plot, phosphor grid, glowing lines. */
-.hos-chart {
+.kos-chart {
     display: flex;
     flex-direction: column;
     gap: 4px;
     margin: 0;
     padding: 10px 12px;
     min-width: 0;
-    background: var(--hos-card-bg, color-mix(in srgb, var(--hos-bg-surface, #161b22) 85%, transparent));
-    border: var(--hos-card-border, 1px solid var(--hos-border-subtle, #30363d));
-    border-radius: var(--hos-card-radius, var(--hos-radius-sm, 6px));
-    font-family: var(--hos-font-mono, 'Cascadia Mono', Consolas, monospace);
-    color: var(--hos-text-primary, #c9d1d9);
+    background: var(--kos-card-bg, color-mix(in srgb, var(--kos-bg-surface, #161b22) 85%, transparent));
+    border: var(--kos-card-border, 1px solid var(--kos-border-subtle, #30363d));
+    border-radius: var(--kos-card-radius, var(--kos-radius-sm, 6px));
+    font-family: var(--kos-font-mono, 'Cascadia Mono', Consolas, monospace);
+    color: var(--kos-text-primary, #c9d1d9);
 }
 
-.hos-chart-header {
+.kos-chart-header {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
@@ -21,45 +21,45 @@
     font-size: 0.75rem;
 }
 
-.hos-chart-title {
+.kos-chart-title {
     font-weight: 600;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
 }
 
-.hos-chart-scale {
-    color: var(--hos-text-muted, #6e7681);
+.kos-chart-scale {
+    color: var(--kos-text-muted, #6e7681);
     font-variant-numeric: tabular-nums;
 }
 
-.hos-chart-plot {
+.kos-chart-plot {
     position: relative;
-    border: 1px solid var(--hos-border-subtle, #30363d);
+    border: 1px solid var(--kos-border-subtle, #30363d);
     background:
-        linear-gradient(180deg, color-mix(in srgb, var(--hos-accent, #42d392) 6%, transparent), transparent 70%),
-        var(--hos-bg-base, #0d1117);
+        linear-gradient(180deg, color-mix(in srgb, var(--kos-accent, #42d392) 6%, transparent), transparent 70%),
+        var(--kos-bg-base, #0d1117);
     border-radius: 3px;
     overflow: hidden;
 }
 
-.hos-chart-small .hos-chart-plot { height: 48px; }
-.hos-chart-medium .hos-chart-plot { height: 120px; }
-.hos-chart-large .hos-chart-plot { height: 200px; }
+.kos-chart-small .kos-chart-plot { height: 48px; }
+.kos-chart-medium .kos-chart-plot { height: 120px; }
+.kos-chart-large .kos-chart-plot { height: 200px; }
 
-.hos-chart-svg {
+.kos-chart-svg {
     display: block;
     width: 100%;
     height: 100%;
 }
 
-.hos-chart-grid {
-    stroke: color-mix(in srgb, var(--hos-accent, #42d392) 12%, transparent);
+.kos-chart-grid {
+    stroke: color-mix(in srgb, var(--kos-accent, #42d392) 12%, transparent);
     stroke-width: 1;
     vector-effect: non-scaling-stroke;
 }
 
-.hos-chart-line {
+.kos-chart-line {
     fill: none;
     stroke-width: 1.6;
     stroke-linejoin: round;
@@ -68,19 +68,19 @@
     filter: drop-shadow(0 0 2px currentColor);
 }
 
-.hos-chart-area {
+.kos-chart-area {
     stroke: none;
     opacity: 0.18;
 }
 
-.hos-chart-axis {
+.kos-chart-axis {
     display: flex;
     justify-content: space-between;
     font-size: 0.625rem;
-    color: var(--hos-text-muted, #6e7681);
+    color: var(--kos-text-muted, #6e7681);
 }
 
-.hos-chart-legend {
+.kos-chart-legend {
     display: flex;
     flex-wrap: wrap;
     gap: 4px 14px;
@@ -90,48 +90,48 @@
     font-size: 0.75rem;
 }
 
-.hos-chart-legend-item {
+.kos-chart-legend-item {
     display: inline-flex;
     align-items: center;
     gap: 6px;
 }
 
-.hos-chart-swatch {
+.kos-chart-swatch {
     width: 10px;
     height: 3px;
     border-radius: 2px;
     box-shadow: 0 0 4px currentColor;
 }
 
-.hos-chart-legend-name {
-    color: var(--hos-text-secondary, #8b949e);
+.kos-chart-legend-name {
+    color: var(--kos-text-secondary, #8b949e);
 }
 
-.hos-chart-legend-value {
+.kos-chart-legend-value {
     font-variant-numeric: tabular-nums;
 }
 
-/* Theme slots: --hos-chart-series-N, falling back to the accent and status colors. */
-.series-0 { color: var(--hos-chart-series-0, var(--hos-accent, #42d392)); }
-.series-1 { color: var(--hos-chart-series-1, var(--hos-info, #58a6ff)); }
-.series-2 { color: var(--hos-chart-series-2, var(--hos-warning, #d29922)); }
-.series-3 { color: var(--hos-chart-series-3, var(--hos-error, #ff7b72)); }
-.series-4 { color: var(--hos-chart-series-4, #bc8cff); }
-.series-5 { color: var(--hos-chart-series-5, #39c5cf); }
-.series-6 { color: var(--hos-chart-series-6, #f778ba); }
-.series-7 { color: var(--hos-chart-series-7, #a5d6ff); }
+/* Theme slots: --kos-chart-series-N, falling back to the accent and status colors. */
+.series-0 { color: var(--kos-chart-series-0, var(--kos-accent, #42d392)); }
+.series-1 { color: var(--kos-chart-series-1, var(--kos-info, #58a6ff)); }
+.series-2 { color: var(--kos-chart-series-2, var(--kos-warning, #d29922)); }
+.series-3 { color: var(--kos-chart-series-3, var(--kos-error, #ff7b72)); }
+.series-4 { color: var(--kos-chart-series-4, #bc8cff); }
+.series-5 { color: var(--kos-chart-series-5, #39c5cf); }
+.series-6 { color: var(--kos-chart-series-6, #f778ba); }
+.series-7 { color: var(--kos-chart-series-7, #a5d6ff); }
 
-.hos-chart-line.series-0, .hos-chart-line.series-1, .hos-chart-line.series-2, .hos-chart-line.series-3,
-.hos-chart-line.series-4, .hos-chart-line.series-5, .hos-chart-line.series-6, .hos-chart-line.series-7 {
+.kos-chart-line.series-0, .kos-chart-line.series-1, .kos-chart-line.series-2, .kos-chart-line.series-3,
+.kos-chart-line.series-4, .kos-chart-line.series-5, .kos-chart-line.series-6, .kos-chart-line.series-7 {
     stroke: currentColor;
 }
 
-.hos-chart-area.series-0, .hos-chart-area.series-1, .hos-chart-area.series-2, .hos-chart-area.series-3,
-.hos-chart-area.series-4, .hos-chart-area.series-5, .hos-chart-area.series-6, .hos-chart-area.series-7 {
+.kos-chart-area.series-0, .kos-chart-area.series-1, .kos-chart-area.series-2, .kos-chart-area.series-3,
+.kos-chart-area.series-4, .kos-chart-area.series-5, .kos-chart-area.series-6, .kos-chart-area.series-7 {
     fill: currentColor;
 }
 
-.hos-chart-swatch.series-0, .hos-chart-swatch.series-1, .hos-chart-swatch.series-2, .hos-chart-swatch.series-3,
-.hos-chart-swatch.series-4, .hos-chart-swatch.series-5, .hos-chart-swatch.series-6, .hos-chart-swatch.series-7 {
+.kos-chart-swatch.series-0, .kos-chart-swatch.series-1, .kos-chart-swatch.series-2, .kos-chart-swatch.series-3,
+.kos-chart-swatch.series-4, .kos-chart-swatch.series-5, .kos-chart-swatch.series-6, .kos-chart-swatch.series-7 {
     background: currentColor;
 }

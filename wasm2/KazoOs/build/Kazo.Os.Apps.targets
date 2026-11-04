@@ -5,13 +5,13 @@
     App projects ($(KazoOsAppProject) == true):
       GenerateKazoOsAppManifests  runs ManifestGenerator after the build output is copied and
                                     writes manifest.json (or manifests/<appId>.json) from the
-                                    project's [AppManifest] classes. Errors are HOSAPPnnnn. It also
-                                    checks the SDK boundary injection rule (HOSAPP0031, ADR 0055 §3).
+                                    project's [AppManifest] classes. Errors are KOSAPPnnnn. It also
+                                    checks the SDK boundary injection rule (KOSAPP0031, ADR 0055 §3).
 
     App projects and SDK libraries ($(KazoOsSdkLibrary) == true):
       ValidateKazoOsSdkBoundary   before project references are resolved, fails the build when a
                                     ProjectReference leaves the SDK boundary (ADR 0055 §2):
-                                    HOSAPP0030 for an app, HOSSDK0001 for an SDK library. There is
+                                    KOSAPP0030 for an app, KOSSDK0001 for an SDK library. There is
                                     no exemption: the temporary list of ADR 0055 §6 was removed by
                                     the 4-sdk-boundary-final chantier.
       GetKazoOsAppManifests       query target used by hosts: the manifest files of this project,
@@ -142,7 +142,7 @@
   </ItemGroup>
 
   <!--
-    KazoBackground analyzer (ADR 0128 §2, ADR 0140): every app compiles with the HOSBG rules. In
+    KazoBackground analyzer (ADR 0128 §2, ADR 0140): every app compiles with the KOSBG rules. In
     package mode it is the Kazo.Os.AppSdk package's analyzer (analyzers/dotnet/cs).
   -->
   <PropertyGroup Condition="'$(KazoOsBuildFromPackage)' != 'true'">
@@ -279,9 +279,9 @@
           IgnoreExitCode="true">
       <Output TaskParameter="ExitCode" PropertyName="_KazoOsManifestGeneratorExitCode" />
     </Exec>
-    <!-- Exit code 1 = HOSAPP diagnostics already printed in canonical format (and logged as errors). -->
+    <!-- Exit code 1 = KOSAPP diagnostics already printed in canonical format (and logged as errors). -->
     <Error Condition="'$(_KazoOsManifestGeneratorExitCode)' != '0' and '$(_KazoOsManifestGeneratorExitCode)' != '1'"
-           Code="HOSAPP0099"
+           Code="KOSAPP0099"
            Text="The Kazo OS manifest generator failed with exit code $(_KazoOsManifestGeneratorExitCode) without reporting a diagnostic." />
     <!-- The tool keeps the stamp's bytes stable; touch it so the next build sees it as up to date. -->
     <Touch Files="$(_KazoOsManifestStamp)" Condition="'$(_KazoOsManifestGeneratorExitCode)' == '0'" />
@@ -315,7 +315,7 @@
     (ADR 0222).
     ADR 0219: each package is signed with the author's key, read from the HACKEROS_APP_SIGNING_KEY
     environment variable (a workflow secret) or from the KazoOsSigningKeyFile PEM file; without
-    either it is published unsigned with warning HOSAPP0063. The key never goes on a command line.
+    either it is published unsigned with warning KOSAPP0063. The key never goes on a command line.
 
     KazoOsKeyGen (ADR 0219 §1): "dotnet build -t:KazoOsKeyGen -p:KazoOsSigningKeyFile=<file.pem>"
     creates the author's key pair: the private key goes to that new file (keep it out of the
@@ -331,7 +331,7 @@
     <ReadLinesFromFile File="$(_KazoOsManifestStamp)" Condition="Exists('$(_KazoOsManifestStamp)')">
       <Output TaskParameter="Lines" ItemName="_KazoOsPackManifest" />
     </ReadLinesFromFile>
-    <Error Condition="'@(_KazoOsPackManifest)' == ''" Code="HOSAPP0060" Text="No Kazo OS manifest was generated for $(MSBuildProjectName): nothing to pack." />
+    <Error Condition="'@(_KazoOsPackManifest)' == ''" Code="KOSAPP0060" Text="No Kazo OS manifest was generated for $(MSBuildProjectName): nothing to pack." />
     <PropertyGroup>
       <_KazoOsPackBin>$(TargetDir.TrimEnd('/\'))</_KazoOsPackBin>
       <_KazoOsPackOutput>$(KazoOsPackageOutput.TrimEnd('/\'))</_KazoOsPackOutput>
@@ -352,7 +352,7 @@
 
   <Target Name="_KazoOsRequireSigningKeyFile">
     <Error Condition="'$(KazoOsSigningKeyFile)' == ''"
-           Code="HOSAPP0061"
+           Code="KOSAPP0061"
            Text="KazoOsKeyGen needs the file of the new private key, outside the repository: dotnet build -t:KazoOsKeyGen -p:KazoOsSigningKeyFile=&lt;file.pem&gt; (ADR 0219)." />
   </Target>
 
@@ -389,8 +389,8 @@
     <PropertyGroup>
       <_KazoOsBoundaryPattern Condition="'$(KazoOsAppProject)' == 'true'">$(_KazoOsAppAllowedReferencePattern)</_KazoOsBoundaryPattern>
       <_KazoOsBoundaryPattern Condition="'$(KazoOsAppProject)' != 'true'">$(_KazoOsSdkAllowedReferencePattern)</_KazoOsBoundaryPattern>
-      <_KazoOsBoundaryCode Condition="'$(KazoOsAppProject)' == 'true'">HOSAPP0030</_KazoOsBoundaryCode>
-      <_KazoOsBoundaryCode Condition="'$(KazoOsAppProject)' != 'true'">HOSSDK0001</_KazoOsBoundaryCode>
+      <_KazoOsBoundaryCode Condition="'$(KazoOsAppProject)' == 'true'">KOSAPP0030</_KazoOsBoundaryCode>
+      <_KazoOsBoundaryCode Condition="'$(KazoOsAppProject)' != 'true'">KOSSDK0001</_KazoOsBoundaryCode>
       <_KazoOsBoundaryRule Condition="'$(KazoOsAppProject)' == 'true'">An app may only reference the four *.Abstractions projects, the SDK (Kazo.Os.AppSdk*), Kazo.Os.Theming.Blazor or another project under Apps/</_KazoOsBoundaryRule>
       <_KazoOsBoundaryRule Condition="'$(KazoOsAppProject)' != 'true'">An SDK library may only reference the four *.Abstractions projects or another SDK library</_KazoOsBoundaryRule>
     </PropertyGroup>
@@ -435,8 +435,8 @@
     <PropertyGroup>
       <_KazoOsPackagePattern Condition="'$(KazoOsAppProject)' == 'true'">$(_KazoOsAppAllowedPackagePattern)</_KazoOsPackagePattern>
       <_KazoOsPackagePattern Condition="'$(KazoOsAppProject)' != 'true'">$(_KazoOsSdkAllowedPackagePattern)</_KazoOsPackagePattern>
-      <_KazoOsPackageCode Condition="'$(KazoOsAppProject)' == 'true'">HOSAPP0030</_KazoOsPackageCode>
-      <_KazoOsPackageCode Condition="'$(KazoOsAppProject)' != 'true'">HOSSDK0001</_KazoOsPackageCode>
+      <_KazoOsPackageCode Condition="'$(KazoOsAppProject)' == 'true'">KOSAPP0030</_KazoOsPackageCode>
+      <_KazoOsPackageCode Condition="'$(KazoOsAppProject)' != 'true'">KOSSDK0001</_KazoOsPackageCode>
     </PropertyGroup>
     <ItemGroup>
       <_KazoOsReferencedPackage Include="@(ReferencePath->'%(NuGetPackageId)'->Distinct())"
@@ -492,7 +492,7 @@
   -->
   <!--
     ADR 0228: a package built before SDK 3.0 declares its apps as HackerOsPackagedApp items. They are
-    collected like the others, so the SDK check refuses them by name (HOSAPP0021, another major)
+    collected like the others, so the SDK check refuses them by name (KOSAPP0021, another major)
     instead of the host silently leaving them out.
   -->
   <Target Name="_KazoOsCollectPreRenamePackagedApps" Condition="'@(HackerOsPackagedApp)' != ''">
@@ -544,7 +544,7 @@
       <Output TaskParameter="ExitCode" PropertyName="_KazoOsAggregateExitCode" />
     </Exec>
     <Error Condition="'$(_KazoOsAggregateExitCode)' != '' and '$(_KazoOsAggregateExitCode)' != '0' and '$(_KazoOsAggregateExitCode)' != '1'"
-           Code="HOSAPP0099"
+           Code="KOSAPP0099"
            Text="The Kazo OS manifest generator failed with exit code $(_KazoOsAggregateExitCode) without reporting a diagnostic." />
 
     <ItemGroup>
@@ -602,7 +602,7 @@
       <Output TaskParameter="Lines" ItemName="_KazoOsPackManifest" />
     </ReadLinesFromFile>
     <Error Condition="'@(_KazoOsPackManifest)' == ''"
-           Code="HOSAPP0099"
+           Code="KOSAPP0099"
            Text="[$(MSBuildProjectName)] No generated manifest to pack: build the app before packing it." />
     <PropertyGroup>
       <_KazoOsPackageTargetsFile>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(IntermediateOutputPath)', 'kazoos-package', '$(PackageId).targets'))</_KazoOsPackageTargetsFile>

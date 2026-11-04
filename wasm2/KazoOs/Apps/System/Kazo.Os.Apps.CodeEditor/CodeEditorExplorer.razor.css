@@ -8,7 +8,7 @@
 .view-title {
     flex: 0 0 auto;
     padding: 0.55rem 0.8rem 0.4rem;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
     font-size: 0.68rem;
     font-weight: 600;
     letter-spacing: 0.08em;
@@ -20,7 +20,7 @@
     flex-direction: column;
     gap: 0.7rem;
     padding: 0.4rem 0.9rem;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
     font-size: 0.8rem;
     line-height: 1.4;
 }
@@ -37,9 +37,9 @@
 .primary-button {
     padding: 0.4rem 0.8rem;
     color: #06140d;
-    border: 1px solid var(--hos-accent, #42d392);
-    border-radius: var(--hos-radius-sm, 0.3rem);
-    background: var(--hos-accent, #42d392);
+    border: 1px solid var(--kos-accent, #42d392);
+    border-radius: var(--kos-radius-sm, 0.3rem);
+    background: var(--kos-accent, #42d392);
     font-family: inherit;
     font-size: 0.8rem;
     font-weight: 600;
@@ -58,14 +58,14 @@
     gap: 0.3rem;
     min-width: 0;
     padding: 0.2rem 0.3rem 0.2rem 0.8rem;
-    border-top: 1px solid var(--hos-border-subtle, #30363d);
+    border-top: 1px solid var(--kos-border-subtle, #30363d);
 }
 
 .folder-name {
     flex: 1 1 auto;
     min-width: 0;
     overflow: hidden;
-    color: var(--hos-text-primary, #c9d1d9);
+    color: var(--kos-text-primary, #c9d1d9);
     font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.05em;
@@ -87,17 +87,17 @@
     width: 1.6rem;
     height: 1.6rem;
     padding: 0;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
     border: none;
-    border-radius: var(--hos-radius-sm, 0.3rem);
+    border-radius: var(--kos-radius-sm, 0.3rem);
     background: transparent;
     cursor: pointer;
 }
 
 .icon-button:hover,
 .icon-button:focus-visible {
-    color: var(--hos-text-primary, #ffffff);
-    background: var(--hos-bg-elevated, #2a3038);
+    color: var(--kos-text-primary, #ffffff);
+    background: var(--kos-bg-elevated, #2a3038);
 }
 
 .create-row {
@@ -106,31 +106,31 @@
     flex: 0 0 auto;
     gap: 0.35rem;
     padding: 0.2rem 0.6rem 0.1rem 1rem;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
 }
 
 .create-input {
     flex: 1 1 auto;
     min-width: 0;
     padding: 0.2rem 0.35rem;
-    color: var(--hos-text-primary, #c9d1d9);
-    border: 1px solid var(--hos-accent, #42d392);
+    color: var(--kos-text-primary, #c9d1d9);
+    border: 1px solid var(--kos-accent, #42d392);
     border-radius: 2px;
     outline: none;
-    background: var(--hos-input-bg, #0b1012);
+    background: var(--kos-input-bg, #0b1012);
     font-family: inherit;
     font-size: 0.8rem;
 }
 
 .create-input.has-error {
-    border-color: var(--hos-error, #ff8f87);
+    border-color: var(--kos-error, #ff8f87);
 }
 
 .create-target {
     flex: 0 0 auto;
     padding: 0 0.6rem 0.25rem 2.3rem;
     overflow: hidden;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
     font-size: 0.68rem;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -140,9 +140,9 @@
     flex: 0 0 auto;
     margin: 0 0.6rem 0.3rem 1rem;
     padding: 0.3rem 0.45rem;
-    color: var(--hos-error, #ffb3ad);
-    border: 1px solid var(--hos-error, #ff8f87);
-    background: color-mix(in srgb, var(--hos-error, #ff8f87) 18%, transparent);
+    color: var(--kos-error, #ffb3ad);
+    border: 1px solid var(--kos-error, #ff8f87);
+    background: color-mix(in srgb, var(--kos-error, #ff8f87) 18%, transparent);
     font-size: 0.72rem;
 }
 

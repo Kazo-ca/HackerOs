@@ -13,6 +13,6 @@
 .explorer-sidebar-resizer:hover,
 .explorer-sidebar-resizer.dragging,
 .explorer-sidebar-resizer:focus-visible {
-    background: var(--hos-accent, #42d392);
+    background: var(--kos-accent, #42d392);
     outline: none;
 }

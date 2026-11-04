@@ -29,7 +29,7 @@ public enum KazoChartSize
 /// </code>
 /// </example>
 /// <remarks>
-/// Colors come from the theme: series <c>N</c> uses <c>--hos-chart-series-N</c> (0 to 7), falling
+/// Colors come from the theme: series <c>N</c> uses <c>--kos-chart-series-N</c> (0 to 7), falling
 /// back to the accent and status colors, so a theme can restyle every chart of every app.
 /// </remarks>
 public partial class KazoLineChart
@@ -126,9 +126,9 @@ public partial class KazoLineChart
 
     private string SizeClass => Size switch
     {
-        KazoChartSize.Small => "hos-chart-small",
-        KazoChartSize.Large => "hos-chart-large",
-        _ => "hos-chart-medium"
+        KazoChartSize.Small => "kos-chart-small",
+        KazoChartSize.Large => "kos-chart-large",
+        _ => "kos-chart-medium"
     };
 
     private string AccessibleLabel

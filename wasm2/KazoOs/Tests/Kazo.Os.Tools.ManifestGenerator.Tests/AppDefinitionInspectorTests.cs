@@ -3,7 +3,7 @@ using Kazo.Os.App.Abstractions;
 
 namespace Kazo.Os.Tools.ManifestGenerator.Tests;
 
-/// <summary>One test per HOSAPP rule of ADR 0047 §1, run in-process on fixture types.</summary>
+/// <summary>One test per KOSAPP rule of ADR 0047 §1, run in-process on fixture types.</summary>
 public sealed class AppDefinitionInspectorTests
 {
     private static readonly Assembly Fixtures = typeof(ValidCommandApp).Assembly;
@@ -41,42 +41,42 @@ public sealed class AppDefinitionInspectorTests
     }
 
     [Fact]
-    public void HOSAPP0001_no_definition() =>
+    public void KOSAPP0001_no_definition() =>
         Assert.Equal(GeneratorCodes.NoDefinition, Assert.Single(Inspect().Diagnostics).Code);
 
     [Fact]
-    public void HOSAPP0002_not_public() => AssertSingleCode(Inspect(typeof(InternalApp)), GeneratorCodes.NotPublic, typeof(InternalApp));
+    public void KOSAPP0002_not_public() => AssertSingleCode(Inspect(typeof(InternalApp)), GeneratorCodes.NotPublic, typeof(InternalApp));
 
     [Fact]
-    public void HOSAPP0003_abstract() => AssertSingleCode(Inspect(typeof(AbstractApp)), GeneratorCodes.Abstract, typeof(AbstractApp));
+    public void KOSAPP0003_abstract() => AssertSingleCode(Inspect(typeof(AbstractApp)), GeneratorCodes.Abstract, typeof(AbstractApp));
 
     [Fact]
-    public void HOSAPP0004_not_an_app_definition() =>
+    public void KOSAPP0004_not_an_app_definition() =>
         AssertSingleCode(Inspect(typeof(NotADefinition)), GeneratorCodes.NotAnAppDefinition, typeof(NotADefinition));
 
     [Fact]
-    public void HOSAPP0005_no_parameterless_constructor() =>
+    public void KOSAPP0005_no_parameterless_constructor() =>
         AssertSingleCode(Inspect(typeof(NoDefaultConstructorApp)), GeneratorCodes.NoParameterlessConstructor, typeof(NoDefaultConstructorApp));
 
     [Fact]
-    public void HOSAPP0006_getter_throws() => AssertSingleCode(Inspect(typeof(ThrowingApp)), GeneratorCodes.DefinitionThrew, typeof(ThrowingApp));
+    public void KOSAPP0006_getter_throws() => AssertSingleCode(Inspect(typeof(ThrowingApp)), GeneratorCodes.DefinitionThrew, typeof(ThrowingApp));
 
     [Fact]
-    public void HOSAPP0007_entry_point_in_another_assembly() =>
+    public void KOSAPP0007_entry_point_in_another_assembly() =>
         AssertSingleCode(Inspect(typeof(ForeignEntryPointApp)), GeneratorCodes.EntryPointAssembly, typeof(ForeignEntryPointApp));
 
     [Fact]
-    public void HOSAPP0008_non_deterministic_getter() => AssertSingleCode(Inspect(typeof(ClockApp)), GeneratorCodes.NonDeterministic, typeof(ClockApp));
+    public void KOSAPP0008_non_deterministic_getter() => AssertSingleCode(Inspect(typeof(ClockApp)), GeneratorCodes.NonDeterministic, typeof(ClockApp));
 
     [Fact]
-    public void HOSAPP0009_validator_rejects_manifest() => AssertSingleCode(Inspect(typeof(InvalidIdApp)), GeneratorCodes.InvalidManifest, typeof(InvalidIdApp));
+    public void KOSAPP0009_validator_rejects_manifest() => AssertSingleCode(Inspect(typeof(InvalidIdApp)), GeneratorCodes.InvalidManifest, typeof(InvalidIdApp));
 
     [Fact]
-    public void HOSAPP0010_entry_point_breaks_discovery_rules() =>
+    public void KOSAPP0010_entry_point_breaks_discovery_rules() =>
         AssertSingleCode(Inspect(typeof(WrongKindApp)), GeneratorCodes.EntryPointKind, typeof(WrongKindApp));
 
     [Fact]
-    public void HOSAPP0011_duplicate_id_in_one_assembly()
+    public void KOSAPP0011_duplicate_id_in_one_assembly()
     {
         InspectionResult result = Inspect(typeof(ValidCommandApp), typeof(DuplicateIdApp));
 
@@ -149,6 +149,6 @@ public sealed class AppDefinitionInspectorTests
     [Fact]
     public void Diagnostic_uses_msbuild_canonical_error_format() =>
         Assert.Equal(
-            "/src/App.csproj : error HOSAPP0005: [Ns.App] message",
-            new GeneratorDiagnostic("HOSAPP0005", "Ns.App", "message").ToMsBuildLine("/src/App.csproj"));
+            "/src/App.csproj : error KOSAPP0005: [Ns.App] message",
+            new GeneratorDiagnostic("KOSAPP0005", "Ns.App", "message").ToMsBuildLine("/src/App.csproj"));
 }

@@ -1,6 +1,6 @@
 /* ==========================================================================
    BrowserWindow.razor.css — scoped styles for the simulated browser app.
-   All colours use the Kazo OS semantic tokens (--hos-*) so the browser
+   All colours use the Kazo OS semantic tokens (--kos-*) so the browser
    inherits the active shell theme automatically.
    ========================================================================== */
 
@@ -11,9 +11,9 @@
     flex-direction: column;
     height: 100%;
     overflow: hidden;
-    font-family: var(--hos-font-mono, "Cascadia Mono", Consolas, monospace);
-    background: var(--hos-bg-base, #0d0d0d);
-    color: var(--hos-text-primary, #33ff33);
+    font-family: var(--kos-font-mono, "Cascadia Mono", Consolas, monospace);
+    background: var(--kos-bg-base, #0d0d0d);
+    color: var(--kos-text-primary, #33ff33);
 }
 
 /* ── Toolbar ─────────────────────────────────────────────────────────────── */
@@ -23,8 +23,8 @@
     align-items: center;
     gap: 6px;
     padding: 6px 10px;
-    background: var(--hos-toolbar-bg, var(--hos-bg-surface, #111));
-    border-bottom: var(--hos-toolbar-border, 1px solid var(--hos-border-subtle, #2a2a2a));
+    background: var(--kos-toolbar-bg, var(--kos-bg-surface, #111));
+    border-bottom: var(--kos-toolbar-border, 1px solid var(--kos-border-subtle, #2a2a2a));
     flex-shrink: 0;
 }
 
@@ -34,32 +34,32 @@
 }
 
 .nav-btn {
-    background: var(--hos-btn-bg, transparent);
-    border: var(--hos-btn-border, 1px solid var(--hos-border, #315249));
-    border-radius: var(--hos-btn-radius, var(--hos-radius-sm, 3px));
-    box-shadow: var(--hos-btn-shadow, none);
-    color: var(--hos-btn-color, var(--hos-text-primary, #33ff33));
+    background: var(--kos-btn-bg, transparent);
+    border: var(--kos-btn-border, 1px solid var(--kos-border, #315249));
+    border-radius: var(--kos-btn-radius, var(--kos-radius-sm, 3px));
+    box-shadow: var(--kos-btn-shadow, none);
+    color: var(--kos-btn-color, var(--kos-text-primary, #33ff33));
     cursor: pointer;
     padding: 4px 10px;
     font-size: 0.8125rem;
     font-family: inherit;
-    font-weight: var(--hos-btn-font-weight, 500);
-    transition: background var(--hos-transition-fast, 0.15s),
-                border-color var(--hos-transition-fast, 0.15s),
-                color var(--hos-transition-fast, 0.15s);
+    font-weight: var(--kos-btn-font-weight, 500);
+    transition: background var(--kos-transition-fast, 0.15s),
+                border-color var(--kos-transition-fast, 0.15s),
+                color var(--kos-transition-fast, 0.15s);
     min-width: 28px;
 }
 
 .nav-btn:hover:not(:disabled) {
-    background: var(--hos-btn-hover-bg, var(--hos-bg-elevated, #1a1a1a));
-    border-color: var(--hos-btn-hover-border, var(--hos-accent, #33ff33));
-    color: var(--hos-btn-hover-color, var(--hos-text-primary, #ffffff));
+    background: var(--kos-btn-hover-bg, var(--kos-bg-elevated, #1a1a1a));
+    border-color: var(--kos-btn-hover-border, var(--kos-accent, #33ff33));
+    color: var(--kos-btn-hover-color, var(--kos-text-primary, #ffffff));
 }
 
 .nav-btn:active:not(:disabled) {
-    background: var(--hos-btn-active-bg, var(--hos-accent-subtle, #123a2b));
-    border-color: var(--hos-btn-active-border, var(--hos-accent, #33ff33));
-    box-shadow: var(--hos-btn-active-shadow, none);
+    background: var(--kos-btn-active-bg, var(--kos-accent-subtle, #123a2b));
+    border-color: var(--kos-btn-active-border, var(--kos-accent, #33ff33));
+    box-shadow: var(--kos-btn-active-shadow, none);
 }
 
 .nav-btn:disabled {
@@ -74,39 +74,39 @@
 
 .address-input {
     width: 100%;
-    background: var(--hos-input-bg, #0a0a0a);
-    border: var(--hos-input-border, 1px solid var(--hos-border, #2a2a2a));
-    color: var(--hos-input-color, var(--hos-text-primary, #33ff33));
-    padding: var(--hos-input-padding, 4px 8px);
+    background: var(--kos-input-bg, #0a0a0a);
+    border: var(--kos-input-border, 1px solid var(--kos-border, #2a2a2a));
+    color: var(--kos-input-color, var(--kos-text-primary, #33ff33));
+    padding: var(--kos-input-padding, 4px 8px);
     font-family: inherit;
     font-size: 0.75rem;
-    border-radius: var(--hos-input-radius, var(--hos-radius-sm, 3px));
-    box-shadow: var(--hos-input-shadow, none);
+    border-radius: var(--kos-input-radius, var(--kos-radius-sm, 3px));
+    box-shadow: var(--kos-input-shadow, none);
     outline: none;
-    transition: border-color var(--hos-transition-fast, 0.15s);
+    transition: border-color var(--kos-transition-fast, 0.15s);
 }
 
 .address-input:focus {
-    border-color: var(--hos-input-focus-border, var(--hos-accent, #33ff33));
-    box-shadow: var(--hos-input-focus-ring, 0 0 0 1px var(--hos-accent, #33ff33));
+    border-color: var(--kos-input-focus-border, var(--kos-accent, #33ff33));
+    box-shadow: var(--kos-input-focus-ring, 0 0 0 1px var(--kos-accent, #33ff33));
 }
 
 .go-btn {
-    background: var(--hos-btn-primary-bg, var(--hos-accent, #33ff33));
-    color: var(--hos-btn-primary-color, var(--hos-text-inverse, #0d0d0d));
-    border: var(--hos-btn-primary-border, none);
-    box-shadow: var(--hos-btn-primary-shadow, none);
+    background: var(--kos-btn-primary-bg, var(--kos-accent, #33ff33));
+    color: var(--kos-btn-primary-color, var(--kos-text-inverse, #0d0d0d));
+    border: var(--kos-btn-primary-border, none);
+    box-shadow: var(--kos-btn-primary-shadow, none);
     cursor: pointer;
     padding: 4px 12px;
     font-family: inherit;
     font-size: 0.75rem;
     font-weight: 700;
-    border-radius: var(--hos-btn-radius, var(--hos-radius-sm, 3px));
-    transition: filter var(--hos-transition-fast, 0.15s);
+    border-radius: var(--kos-btn-radius, var(--kos-radius-sm, 3px));
+    transition: filter var(--kos-transition-fast, 0.15s);
 }
 
 .go-btn:hover {
-    background: var(--hos-btn-primary-hover-bg, var(--hos-accent-hover, #75e8ba));
+    background: var(--kos-btn-primary-hover-bg, var(--kos-accent-hover, #75e8ba));
 }
 
 /* ── Content pane ─────────────────────────────────────────────────────────── */
@@ -117,7 +117,7 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    background: var(--hos-window-content-background, var(--hos-bg-base, #0d0d0d));
+    background: var(--kos-window-content-background, var(--kos-bg-base, #0d0d0d));
 }
 
 /* The page area; the developer tools stay docked below it. */
@@ -157,11 +157,11 @@
     align-items: center;
     padding: 0 6px;
     font-size: 0.75rem;
-    color: var(--hos-text-muted, #8fbf8f);
+    color: var(--kos-text-muted, #8fbf8f);
 }
 
 .address-scheme.http {
-    color: var(--hos-warning, #e3b341);
+    color: var(--kos-warning, #e3b341);
 }
 
 /* ADR 0210 §4: where the page came from. */
@@ -170,15 +170,15 @@
     align-items: center;
     padding: 0 4px 0 6px;
     font-size: 0.8rem;
-    color: var(--hos-text-muted, #8fbf8f);
+    color: var(--kos-text-muted, #8fbf8f);
 }
 
 .address-source.source-real {
-    color: var(--hos-accent, #33ff33);
+    color: var(--kos-accent, #33ff33);
 }
 
 .address-source.source-local {
-    color: var(--hos-info, #58a6ff);
+    color: var(--kos-info, #58a6ff);
 }
 
 .address-not-secure {
@@ -187,13 +187,13 @@
     padding-right: 6px;
     font-size: 0.75rem;
     white-space: nowrap;
-    color: var(--hos-warning, #e3b341);
+    color: var(--kos-warning, #e3b341);
 }
 
 .nav-btn.toggled {
-    border-color: var(--hos-accent, #33ff33);
-    color: var(--hos-accent, #33ff33);
-    background: var(--hos-accent-subtle, #123a2b);
+    border-color: var(--kos-accent, #33ff33);
+    color: var(--kos-accent, #33ff33);
+    background: var(--kos-accent-subtle, #123a2b);
 }
 
 .devtools-toggle {
@@ -207,7 +207,7 @@
     min-width: 16px;
     padding: 0 4px;
     border-radius: 8px;
-    background: var(--hos-danger, #ff5555);
+    background: var(--kos-danger, #ff5555);
     color: #ffffff;
     font-size: 0.625rem;
     line-height: 16px;
@@ -220,13 +220,13 @@
     align-items: center;
     gap: 12px;
     padding: 8px 12px;
-    background: var(--hos-bg-elevated, #1a1a1a);
-    border-bottom: 1px solid var(--hos-accent, #33ff33);
+    background: var(--kos-bg-elevated, #1a1a1a);
+    border-bottom: 1px solid var(--kos-accent, #33ff33);
     flex-shrink: 0;
 }
 
 .page-alert-origin {
-    color: var(--hos-text-muted, #8fbf8f);
+    color: var(--kos-text-muted, #8fbf8f);
     white-space: nowrap;
 }
 
@@ -237,7 +237,7 @@
 
 .error-hints {
     text-align: left;
-    color: var(--hos-text-muted, #8fbf8f);
+    color: var(--kos-text-muted, #8fbf8f);
     margin: 0 auto 12px;
     max-width: 520px;
 }
@@ -251,7 +251,7 @@
     justify-content: center;
     height: 100%;
     gap: 16px;
-    color: var(--hos-text-secondary, #a8bac4);
+    color: var(--kos-text-secondary, #a8bac4);
 }
 
 .loading-label {
@@ -273,13 +273,13 @@
 
 .error-icon {
     font-size: 4rem;
-    color: var(--hos-error, #ff3333);
+    color: var(--kos-error, #ff3333);
 }
 
 .error-title {
     font-size: 1.5rem;
     margin: 0;
-    color: var(--hos-text-primary, #33ff33);
+    color: var(--kos-text-primary, #33ff33);
 }
 
 .error-url {
@@ -287,38 +287,38 @@
     opacity: 0.6;
     word-break: break-all;
     max-width: 480px;
-    color: var(--hos-text-secondary, #a8bac4);
+    color: var(--kos-text-secondary, #a8bac4);
 }
 
 .error-code {
     font-size: 0.75rem;
-    color: var(--hos-error, #ff3333);
-    font-family: var(--hos-font-mono, monospace);
+    color: var(--kos-error, #ff3333);
+    font-family: var(--kos-font-mono, monospace);
 }
 
 .error-hint {
     font-size: 0.8125rem;
     opacity: 0.5;
     max-width: 400px;
-    color: var(--hos-text-muted, #6f838d);
+    color: var(--kos-text-muted, #6f838d);
 }
 
 .action-btn {
-    background: var(--hos-btn-primary-bg, var(--hos-accent, #33ff33));
-    color: var(--hos-btn-primary-color, var(--hos-text-inverse, #0d0d0d));
-    border: var(--hos-btn-primary-border, none);
-    box-shadow: var(--hos-btn-primary-shadow, none);
+    background: var(--kos-btn-primary-bg, var(--kos-accent, #33ff33));
+    color: var(--kos-btn-primary-color, var(--kos-text-inverse, #0d0d0d));
+    border: var(--kos-btn-primary-border, none);
+    box-shadow: var(--kos-btn-primary-shadow, none);
     cursor: pointer;
     padding: 8px 20px;
     font-family: inherit;
     font-size: 0.8125rem;
     font-weight: 700;
-    border-radius: var(--hos-btn-radius, var(--hos-radius-sm, 3px));
-    transition: filter var(--hos-transition-fast, 0.15s);
+    border-radius: var(--kos-btn-radius, var(--kos-radius-sm, 3px));
+    transition: filter var(--kos-transition-fast, 0.15s);
 }
 
 .action-btn:hover {
-    background: var(--hos-btn-primary-hover-bg, var(--hos-accent-hover, #75e8ba));
+    background: var(--kos-btn-primary-hover-bg, var(--kos-accent-hover, #75e8ba));
 }
 
 /* ── New-tab / home page ─────────────────────────────────────────────────── */
@@ -337,13 +337,13 @@
     font-size: 2rem;
     margin: 0;
     letter-spacing: 2px;
-    color: var(--hos-accent, #33ff33);
-    text-shadow: 0 0 8px var(--hos-accent-glow, rgba(51,255,51,0.4));
+    color: var(--kos-accent, #33ff33);
+    text-shadow: 0 0 8px var(--kos-accent-glow, rgba(51,255,51,0.4));
 }
 
 .new-tab-subtitle {
     font-size: 0.8125rem;
-    color: var(--hos-text-secondary, #a8bac4);
+    color: var(--kos-text-secondary, #a8bac4);
     opacity: 0.7;
 }
 
@@ -356,23 +356,23 @@
 }
 
 .bookmark-chip {
-    background: var(--hos-btn-bg, transparent);
-    border: var(--hos-btn-border, 1px solid var(--hos-accent, #33ff33));
-    border-radius: var(--hos-btn-radius, var(--hos-radius-sm, 3px));
-    box-shadow: var(--hos-btn-shadow, none);
-    color: var(--hos-accent, #33ff33);
+    background: var(--kos-btn-bg, transparent);
+    border: var(--kos-btn-border, 1px solid var(--kos-accent, #33ff33));
+    border-radius: var(--kos-btn-radius, var(--kos-radius-sm, 3px));
+    box-shadow: var(--kos-btn-shadow, none);
+    color: var(--kos-accent, #33ff33);
     cursor: pointer;
     padding: 6px 16px;
     font-family: inherit;
     font-size: 0.75rem;
-    font-weight: var(--hos-btn-font-weight, 500);
-    transition: background var(--hos-transition-fast, 0.15s),
-                color var(--hos-transition-fast, 0.15s);
+    font-weight: var(--kos-btn-font-weight, 500);
+    transition: background var(--kos-transition-fast, 0.15s),
+                color var(--kos-transition-fast, 0.15s);
 }
 
 .bookmark-chip:hover {
-    background: var(--hos-accent-subtle, rgba(51,255,51,0.1));
-    border-color: var(--hos-btn-hover-border, var(--hos-accent, #33ff33));
+    background: var(--kos-accent-subtle, rgba(51,255,51,0.1));
+    border-color: var(--kos-btn-hover-border, var(--kos-accent, #33ff33));
 }
 
 /* ── Status bar ──────────────────────────────────────────────────────────── */
@@ -381,16 +381,16 @@
     flex-shrink: 0;
     padding: 4px 8px;
     font-size: 0.6875rem;
-    background: var(--hos-toolbar-bg, var(--hos-bg-surface, #111));
-    border-top: var(--hos-toolbar-border, 1px solid var(--hos-border-subtle, #2a2a2a));
-    color: var(--hos-text-secondary, #a8bac4);
+    background: var(--kos-toolbar-bg, var(--kos-bg-surface, #111));
+    border-top: var(--kos-toolbar-border, 1px solid var(--kos-border-subtle, #2a2a2a));
+    color: var(--kos-text-secondary, #a8bac4);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .status-error {
-    color: var(--hos-error, #ff3333);
+    color: var(--kos-error, #ff3333);
 }
 
 /* ── Detached window (ADR 0078 §3) ──────────────────────────────────────────
@@ -398,7 +398,7 @@
    by this component, shown in the host browser's other window). */
 
 .detach-alert {
-    border-bottom-color: var(--hos-warning, #ffb000);
+    border-bottom-color: var(--kos-warning, #ffb000);
 }
 
 .browser-detached {
@@ -414,19 +414,19 @@
         repeating-linear-gradient(
             -45deg,
             transparent 0 14px,
-            color-mix(in srgb, var(--hos-accent, #33ff33) 6%, transparent) 14px 15px);
+            color-mix(in srgb, var(--kos-accent, #33ff33) 6%, transparent) 14px 15px);
 }
 
 .detached-icon {
     font-size: 3.5rem;
-    color: var(--hos-accent, #33ff33);
-    text-shadow: 0 0 18px color-mix(in srgb, var(--hos-accent, #33ff33) 60%, transparent);
+    color: var(--kos-accent, #33ff33);
+    text-shadow: 0 0 18px color-mix(in srgb, var(--kos-accent, #33ff33) 60%, transparent);
 }
 
 .detached-title {
     margin: 0;
     font-size: 1.125rem;
-    color: var(--hos-text-primary, #33ff33);
+    color: var(--kos-text-primary, #33ff33);
 }
 
 .detached-url {
@@ -435,7 +435,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    color: var(--hos-text-muted, #8fbf8f);
+    color: var(--kos-text-muted, #8fbf8f);
     font-size: 0.75rem;
 }
 
@@ -456,8 +456,8 @@
     align-items: center;
     gap: 8px;
     padding: 4px 10px;
-    background: var(--hos-toolbar-bg, var(--hos-bg-surface, #111));
-    border-bottom: 1px solid var(--hos-accent, #33ff33);
+    background: var(--kos-toolbar-bg, var(--kos-bg-surface, #111));
+    border-bottom: 1px solid var(--kos-accent, #33ff33);
     flex-shrink: 0;
 }
 
@@ -473,14 +473,14 @@
 }
 
 .surface-title {
-    color: var(--hos-text-primary, #33ff33);
+    color: var(--kos-text-primary, #33ff33);
     font-weight: 600;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .surface-url {
-    color: var(--hos-text-muted, #8fbf8f);
+    color: var(--kos-text-muted, #8fbf8f);
     overflow: hidden;
     text-overflow: ellipsis;
 }

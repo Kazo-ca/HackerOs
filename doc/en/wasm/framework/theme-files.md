@@ -17,9 +17,9 @@ base = kazoos
 platforms = desktop, mobile
 
 [tokens]
---hos-bg-base = #0b0f0b
---hos-accent = #39ff14
---hos-font-mono = "JetBrains Mono", monospace
+--kos-bg-base = #0b0f0b
+--kos-accent = #39ff14
+--kos-font-mono = "JetBrains Mono", monospace
 ```
 
 - `id`: 1 to 64 lowercase letters, digits and hyphens; it is also the file name
@@ -66,17 +66,17 @@ Everything else is refused, in particular `url(`, `var(`, `calc(`,
 
 | Group | Tokens |
 |---|---|
-| Colors | `--hos-bg-base`, `-surface`, `-elevated`, `-overlay`; `--hos-text-primary`, `-secondary`, `-muted`, `-inverse`; `--hos-border-subtle`, `--hos-border`, `--hos-border-strong`, `--hos-focus-ring`; `--hos-accent`, `-hover`, `-subtle`, `-glow`; `--hos-success`, `--hos-warning`, `--hos-error`, `--hos-info`; `--hos-desktop-background`, `--hos-desktop-grid-opacity` |
-| Typography | `--hos-font-ui`, `--hos-font-mono`, `--hos-titlebar-font-size`, `--hos-titlebar-font-weight`, `--hos-taskbar-font-size`, `--hos-btn-font-weight` |
-| Spacing | `--hos-radius-sm`, `-md`, `-lg`, `--hos-btn-radius`, `--hos-input-radius`, `--hos-control-height` |
-| Windows | `--hos-window-background`, `-content-background`, `-text`, `-focused-border`, `-radius`; `--hos-titlebar-height`, `-background`, `-focused-background`, `-text`, `-focused-text`; `--hos-window-control-size`, `-radius`, `-background`, `-hover-background`, `-color`; `--hos-window-close-background`, `-hover-background`, `-color` |
-| Taskbar | `--hos-taskbar-height`, `-gap`, `-background`, `-button-background`, `-button-hover-background`, `-button-active-background`, `-button-color`, `-button-active-color`, `-button-radius`, `-active-indicator`, `-launcher-background`, `-launcher-color`; `--hos-launcher-background`, `--hos-launcher-sidebar-background` |
-| Animations | `--hos-transition-fast`, `--hos-transition-normal` (ignored when animations are turned off) |
+| Colors | `--kos-bg-base`, `-surface`, `-elevated`, `-overlay`; `--kos-text-primary`, `-secondary`, `-muted`, `-inverse`; `--kos-border-subtle`, `--kos-border`, `--kos-border-strong`, `--kos-focus-ring`; `--kos-accent`, `-hover`, `-subtle`, `-glow`; `--kos-success`, `--kos-warning`, `--kos-error`, `--kos-info`; `--kos-desktop-background`, `--kos-desktop-grid-opacity` |
+| Typography | `--kos-font-ui`, `--kos-font-mono`, `--kos-titlebar-font-size`, `--kos-titlebar-font-weight`, `--kos-taskbar-font-size`, `--kos-btn-font-weight` |
+| Spacing | `--kos-radius-sm`, `-md`, `-lg`, `--kos-btn-radius`, `--kos-input-radius`, `--kos-control-height` |
+| Windows | `--kos-window-background`, `-content-background`, `-text`, `-focused-border`, `-radius`; `--kos-titlebar-height`, `-background`, `-focused-background`, `-text`, `-focused-text`; `--kos-window-control-size`, `-radius`, `-background`, `-hover-background`, `-color`; `--kos-window-close-background`, `-hover-background`, `-color` |
+| Taskbar | `--kos-taskbar-height`, `-gap`, `-background`, `-button-background`, `-button-hover-background`, `-button-active-background`, `-button-color`, `-button-active-color`, `-button-radius`, `-active-indicator`, `-launcher-background`, `-launcher-color`; `--kos-launcher-background`, `--kos-launcher-sidebar-background` |
+| Animations | `--kos-transition-fast`, `--kos-transition-normal` (ignored when animations are turned off) |
 
 The colors `accent`, `text-primary`, `text-secondary`, `text-muted`,
 `border`, `success`, `warning`, `error` and `info` also receive their
-computed `--hos-…-rgb` companion ("r, g, b"), used by styles that
-write `rgba(var(--hos-accent-rgb), .2)`.
+computed `--kos-…-rgb` companion ("r, g, b"), used by styles that
+write `rgba(var(--kos-accent-rgb), .2)`.
 
 ## Reading API
 
@@ -96,7 +96,7 @@ The `Label`, `Description` and `Message` properties stay in English; the
 translations go through:
 
 - `ThemeTokenDefinition.GetLabel(culture)` / `GetDescription(culture)` (key
-  `Token.BgBase.Label` for `--hos-bg-base`);
+  `Token.BgBase.Label` for `--kos-bg-base`);
 - `ThemeTokenValidator.TryValidate(type, value, culture, out normalized, out error)`;
 - `ThemeFileDiagnostic.GetMessage(culture)` and `ToString(culture)`
   (`path:line: warning: …`). A diagnostic produced by `ThemeFile` or

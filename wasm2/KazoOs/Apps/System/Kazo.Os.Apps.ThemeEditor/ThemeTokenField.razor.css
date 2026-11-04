@@ -2,18 +2,18 @@
     display: grid;
     gap: 0.3rem;
     padding: 0.6rem 0.75rem;
-    border: 1px solid var(--hos-border-subtle, #27343a);
-    border-left: 3px solid var(--hos-border-subtle, #27343a);
-    border-radius: var(--hos-radius-sm, 0.25rem);
-    background: var(--hos-bg-surface, #151c20);
+    border: 1px solid var(--kos-border-subtle, #27343a);
+    border-left: 3px solid var(--kos-border-subtle, #27343a);
+    border-radius: var(--kos-radius-sm, 0.25rem);
+    background: var(--kos-bg-surface, #151c20);
 }
 
 .token-field.is-set {
-    border-left-color: var(--hos-accent, #42d392);
+    border-left-color: var(--kos-accent, #42d392);
 }
 
 .token-field.has-error {
-    border-left-color: var(--hos-error, #ff8f87);
+    border-left-color: var(--kos-error, #ff8f87);
 }
 
 .token-head {
@@ -25,13 +25,13 @@
 
 .token-label {
     font-weight: 600;
-    color: var(--hos-text-primary, #f4f7f8);
+    color: var(--kos-text-primary, #f4f7f8);
 }
 
 .token-name {
-    font-family: var(--hos-font-mono, monospace);
+    font-family: var(--kos-font-mono, monospace);
     font-size: 0.78rem;
-    color: var(--hos-accent, #42d392);
+    color: var(--kos-accent, #42d392);
 }
 
 .token-type {
@@ -39,7 +39,7 @@
     font-size: 0.7rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--hos-text-muted, #6f838d);
+    color: var(--kos-text-muted, #6f838d);
 }
 
 .token-inputs {
@@ -52,9 +52,9 @@
     width: 2.2rem;
     height: 2rem;
     padding: 0.1rem;
-    border: 1px solid var(--hos-border, #3a4b53);
-    border-radius: var(--hos-radius-sm, 0.25rem);
-    background: var(--hos-bg-base, #101417);
+    border: 1px solid var(--kos-border, #3a4b53);
+    border-radius: var(--kos-radius-sm, 0.25rem);
+    background: var(--kos-bg-base, #101417);
     cursor: pointer;
 }
 
@@ -63,32 +63,32 @@
     min-width: 0;
     height: 2rem;
     padding: 0 0.55rem;
-    border: 1px solid var(--hos-border, #3a4b53);
-    border-radius: var(--hos-radius-sm, 0.25rem);
-    background: var(--hos-bg-base, #101417);
-    color: var(--hos-text-primary, #f4f7f8);
-    font-family: var(--hos-font-mono, monospace);
+    border: 1px solid var(--kos-border, #3a4b53);
+    border-radius: var(--kos-radius-sm, 0.25rem);
+    background: var(--kos-bg-base, #101417);
+    color: var(--kos-text-primary, #f4f7f8);
+    font-family: var(--kos-font-mono, monospace);
     font-size: 0.82rem;
 }
 
 .token-input:focus-visible,
 .token-swatch:focus-visible,
 .token-reset:focus-visible {
-    outline: 2px solid var(--hos-focus-ring, #42d392);
+    outline: 2px solid var(--kos-focus-ring, #42d392);
     outline-offset: 1px;
 }
 
 .has-error .token-input {
-    border-color: var(--hos-error, #ff8f87);
+    border-color: var(--kos-error, #ff8f87);
 }
 
 .token-reset {
     height: 2rem;
     padding: 0 0.6rem;
-    border: 1px solid var(--hos-border, #3a4b53);
-    border-radius: var(--hos-radius-sm, 0.25rem);
-    background: var(--hos-bg-elevated, #1b252a);
-    color: var(--hos-text-secondary, #a8bac4);
+    border: 1px solid var(--kos-border, #3a4b53);
+    border-radius: var(--kos-radius-sm, 0.25rem);
+    background: var(--kos-bg-elevated, #1b252a);
+    color: var(--kos-text-secondary, #a8bac4);
     cursor: pointer;
 }
 
@@ -100,9 +100,9 @@
 .token-help {
     margin: 0;
     font-size: 0.78rem;
-    color: var(--hos-text-secondary, #a8bac4);
+    color: var(--kos-text-secondary, #a8bac4);
 }
 
 .token-error {
-    color: var(--hos-error, #ff8f87);
+    color: var(--kos-error, #ff8f87);
 }

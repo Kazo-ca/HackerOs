@@ -313,8 +313,8 @@ manifest writes `screens: "single" | "multiple"` or `screen: 2..9`.
 The method **only records the calls**:
 it runs at build time, twice, and must give the same result. The
 generator writes the entries to `manifest.json` (`contextMenus`) and reports
-an error through `HOSAPP0026` (rule, exception, missing English title),
-`HOSAPP0027` (missing capability) or `HOSAPP0028` (target absent from the host or
+an error through `KOSAPP0026` (rule, exception, missing English title),
+`KOSAPP0027` (missing capability) or `KOSAPP0028` (target absent from the host or
 that does not declare the intent).
 
 ### Receiving the click
@@ -390,7 +390,7 @@ app does this through the public API `KazoFileMenuEntries`
   `Register`, payload, default identifiers identical in the SDK and the
   validator.
 - `Tests/Kazo.Os.Tools.ManifestGenerator.Tests/ContextMenuRegistrationTests.cs`:
-  titles per culture, `HOSAPP0026` to `HOSAPP0028`, determinism.
+  titles per culture, `KOSAPP0026` to `KOSAPP0028`, determinism.
 - `Tests/Kazo.Os.Platform.Core.Tests/ContextMenus/FileContextMenuTests.cs`:
   `context-menus.d` folder (rank, rewrite, removal, invalid files),
   filters, preferences, launches, `KazoFileMenuEntries`.
@@ -406,7 +406,7 @@ app does this through the public API `KazoFileMenuEntries`
 
 - [x] `contextMenus` manifest contract, schema, serializer, validator, `shell.context-menu` capability.
 - [x] SDK: `[RegisterFileContextMenu]`, `RegisterFileContextMenuContext`, `MenuSelection`, `KazoFileMenuIntent`, `KazoMenuDefinition.FileMenu`.
-- [x] Generator: method execution, EN/FR titles, `HOSAPP0026` to `HOSAPP0028`.
+- [x] Generator: method execution, EN/FR titles, `KOSAPP0026` to `KOSAPP0028`.
 - [x] OS: `context-menus.d`, filters, placement, launch, hidden entries.
 - [x] Migration of "Extract here" and "Publish as website...".
 - [x] Settings ▸ File menus and `KazoFileMenuEntries`.

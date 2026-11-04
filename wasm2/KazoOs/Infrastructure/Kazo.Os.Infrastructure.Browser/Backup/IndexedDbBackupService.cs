@@ -26,7 +26,13 @@ namespace Kazo.Os.Infrastructure.Browser.Backup;
 public sealed class IndexedDbBackupService : IAsyncDisposable
 {
     /// <summary>File extension of a compressed OS backup (ADR 0099 section 1).</summary>
-    public const string ArchiveExtension = ".hosbak";
+    public const string ArchiveExtension = ".kosbak";
+
+    /// <summary>
+    /// Extension of the backups made before the rename of the short names (ADR 0230): still offered
+    /// when a backup is picked, never written. The archive is recognized by its content, not its name.
+    /// </summary>
+    public const string LegacyArchiveExtension = ".hosbak";
 
     private const int FormatVersion = 1;
     private const string TransactionBoundary = "BackupRestore";
@@ -66,7 +72,7 @@ public sealed class IndexedDbBackupService : IAsyncDisposable
 
     /// <summary>
     /// Exports the database like <see cref="ExportAsync"/> and compresses the JSON with gzip, the
-    /// <c>.hosbak</c> archive downloaded to the host (ADR 0099 section 1).
+    /// <c>.kosbak</c> archive downloaded to the host (ADR 0099 section 1).
     /// </summary>
     public async ValueTask<byte[]> ExportArchiveAsync(CancellationToken cancellationToken = default)
     {
@@ -82,7 +88,7 @@ public sealed class IndexedDbBackupService : IAsyncDisposable
     }
 
     /// <summary>
-    /// Reads the backup JSON out of an archive: a gzip <c>.hosbak</c> is decompressed, anything
+    /// Reads the backup JSON out of an archive: a gzip <c>.kosbak</c> is decompressed, anything
     /// else is read as the plain UTF-8 JSON of <see cref="ExportAsync"/>.
     /// </summary>
     /// <param name="archive">Bytes of the file the user picked.</param>

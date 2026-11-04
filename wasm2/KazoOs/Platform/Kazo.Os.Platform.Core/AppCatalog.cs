@@ -337,7 +337,7 @@ public sealed class AppCatalog
     /// ADR 0098 §4, at load: gives each terminal command name and alias to one app. System apps
     /// choose first, then the others, each group in activation order; a name already taken produces
     /// one <c>catalog.command.duplicate</c> warning for the app that loses it. (The host build
-    /// already refuses duplicates among its own apps with <c>HOSAPP0022</c>; this covers apps that
+    /// already refuses duplicates among its own apps with <c>KOSAPP0022</c>; this covers apps that
     /// reach the catalog another way.)
     /// </summary>
     private static IReadOnlyDictionary<string, string> AssignCommands(

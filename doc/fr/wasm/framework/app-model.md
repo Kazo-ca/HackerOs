@@ -39,7 +39,7 @@ Valeurs par défaut des membres facultatifs :
 | `Components` | liste vide ; `components` est alors omis du manifeste (ADR 0063, [`embedded-components.md`](embedded-components.md)) ; `kazoos.context-menu` est refusé (plateforme) ; `kazoos.file-view` et `kazoos.file-dialogs` sont ouverts à toute app fenêtrée, un administrateur choisit celle en service (ADR 0156, ADR 0158) |
 | `SingleInstancePerUser`, `AutoStart`, `SupportsBack` | `false` |
 | `ServiceStartup` | `null` (= `Login`) ; `serviceStartup` est alors omis du manifeste. `Boot` ne vaut que pour une app système de genre `Service` (ADR 0097 §4, ADR 0107) |
-| `OomScoreAdjust` | `null` (hérite ; `-500` pour un service système) ; `oomScoreAdj` est alors omis du manifeste. Négatif seulement pour une app système (`HOSAPP0024`, ADR 0126 §4, ADR 0142, [`oom-killer.md`](../dev/oom-killer.md)) |
+| `OomScoreAdjust` | `null` (hérite ; `-500` pour un service système) ; `oomScoreAdj` est alors omis du manifeste. Négatif seulement pour une app système (`KOSAPP0024`, ADR 0126 §4, ADR 0142, [`oom-killer.md`](../dev/oom-killer.md)) |
 | `Resources` | `AppResourceProfileManifest.None` |
 | `Window` | `null` : la fenêtre prend `WindowOptions.Default` (800×560, minimum 360×240) ; l'objet `window` est alors omis du manifeste (ADR 0095, [`window-model.md`](window-model.md)). Déclaré seulement par une app de genre `Window` (`manifest.window.*`). |
 
@@ -225,7 +225,7 @@ main est écrasée au build suivant.
 
 | Élément | Rôle |
 | --- | --- |
-| `$(KazoOsAppProject)` | `true` par défaut sous `Apps/` ; un projet ailleurs la positionne lui-même. Il n'y a pas d'exception : un projet sous `Apps/` sans classe `[AppManifest]` échoue avec `HOSAPP0001`. |
+| `$(KazoOsAppProject)` | `true` par défaut sous `Apps/` ; un projet ailleurs la positionne lui-même. Il n'y a pas d'exception : un projet sous `Apps/` sans classe `[AppManifest]` échoue avec `KOSAPP0001`. |
 | `ProjectReference` vers le générateur | Ajoutée automatiquement aux projets d'app pour l'ordre de build (`ReferenceOutputAssembly=false`, `PrivateAssets=all` : l'outil n'entre jamais dans le graphe d'un hôte WebAssembly). |
 | Cible `GenerateKazoOsAppManifests` | Après `CopyFilesToOutputDirectory`. Incrémentale : entrées = assembly compilée, outil, liste des dépendances, manifestes existants ; sortie = fichier témoin. |
 | Cible `GetKazoOsAppManifests` | Cible de requête pour l'hôte : les manifestes du projet, avec les métadonnées `AssemblyName`, `AssemblyFileName` et `AppProject`. Vide pour un projet qui n'est pas une app. |
@@ -233,33 +233,33 @@ main est écrasée au build suivant.
 ### Codes d'erreur
 
 Chaque erreur est une erreur MSBuild au format canonique, attribuée au `.csproj`,
-avec le nom complet de la classe en cause : `App.csproj : error HOSAPP0005: [Ns.MyApp] ...`.
+avec le nom complet de la classe en cause : `App.csproj : error KOSAPP0005: [Ns.MyApp] ...`.
 
 | Code | Règle |
 | --- | --- |
-| `HOSAPP0001` | Aucune classe `[AppManifest]` dans le projet d'app. |
-| `HOSAPP0002` | Classe non publique. |
-| `HOSAPP0003` | Classe abstraite. |
-| `HOSAPP0004` | Ne dérive pas de `AppDefinition`. |
-| `HOSAPP0005` | Pas de constructeur public sans paramètre. |
-| `HOSAPP0006` | Le constructeur ou un getter lève une exception. |
-| `HOSAPP0007` | `EntryPoint`/`MobileEntryPoint` nul ou dans une autre assembly. |
-| `HOSAPP0008` | Getters non déterministes (deux instances, deux manifestes). |
-| `HOSAPP0009` | `AppManifestValidator` refuse le manifeste (le code du validateur est rappelé). |
-| `HOSAPP0010` | Règles de `AppEntryPointDiscovery` : type concret, classe de base selon le genre, `IAppBackHandler` si `SupportsBack` ; vérifiées pour chaque plateforme déclarée. |
-| `HOSAPP0011` | Deux classes de la même assembly déclarent le même identifiant. |
-| `HOSAPP0020` | Agrégation : fichier manifeste absent ou JSON non strict. |
-| `HOSAPP0021` | Agrégation : catalogue invalide (identifiant en double, dépendance manquante ou cyclique) ou app que le SDK de l'hôte refuserait (`catalog.sdk.incompatible`, ADR 0098 §3). |
-| `HOSAPP0022` | Agrégation : nom de commande ou alias déclaré par deux apps de l'hôte (comparaison sans casse), ou nom que le shell exécute lui-même (`ShellInterpreter.ReservedNames`) (ADR 0098 §4). |
-| `HOSAPP0023` | Génération : ressource déclarée dans `Assets` absente de `wwwroot/` du projet ; son SHA-256 ne peut pas être calculé (ADR 0098 §5). |
-| `HOSAPP0024` | Agrégation : app non système qui déclare `OomScoreAdjust` négatif (ADR 0126 §4, ADR 0142 §6, [`oom-killer.md`](../dev/oom-killer.md)). |
-| `HOSAPP0025` | Retiré, jamais réutilisé : refusait à une app non système `kazoos.file-view` et `kazoos.file-dialogs` (ADR 0153 §4), que l'ADR 0156 ouvre à toute app fenêtrée (ADR 0158 §1). |
-| `HOSAPP0030` | Frontière du SDK : `ProjectReference` interdite dans un projet d'app (ADR 0055 §2, numéro fixé par l'ADR 0059). Émis par la cible `ValidateKazoOsSdkBoundary`. Voir [`app-sdk.md`](app-sdk.md). |
-| `HOSAPP0031` | Frontière du SDK : service injecté qui n'est ni un type du SDK, ni MudBlazor, ni `IJSRuntime` (ADR 0055 §3, ADR 0059). Voir [`app-sdk.md`](app-sdk.md). |
-| `HOSAPP0040` | Traductions du manifeste (ADR 0104 §4) : `Resources/AppManifest.<culture>.resx` illisible, nom de culture invalide, clé autre que `Name`, `Description`, `Terminal.Usage` (préfixées de l'id dans un projet à plusieurs apps), `Terminal.Usage` pour une app qui n'est pas une commande, ou fichier `localization/` référencé illisible à l'agrégation. Voir [`localization.md`](localization.md). |
-| `HOSAPP0090` | Arguments de l'outil invalides. |
-| `HOSAPP0091` | Assembly de l'app impossible à charger. |
-| `HOSAPP0099` | L'outil a échoué sans diagnostic (plantage). |
+| `KOSAPP0001` | Aucune classe `[AppManifest]` dans le projet d'app. |
+| `KOSAPP0002` | Classe non publique. |
+| `KOSAPP0003` | Classe abstraite. |
+| `KOSAPP0004` | Ne dérive pas de `AppDefinition`. |
+| `KOSAPP0005` | Pas de constructeur public sans paramètre. |
+| `KOSAPP0006` | Le constructeur ou un getter lève une exception. |
+| `KOSAPP0007` | `EntryPoint`/`MobileEntryPoint` nul ou dans une autre assembly. |
+| `KOSAPP0008` | Getters non déterministes (deux instances, deux manifestes). |
+| `KOSAPP0009` | `AppManifestValidator` refuse le manifeste (le code du validateur est rappelé). |
+| `KOSAPP0010` | Règles de `AppEntryPointDiscovery` : type concret, classe de base selon le genre, `IAppBackHandler` si `SupportsBack` ; vérifiées pour chaque plateforme déclarée. |
+| `KOSAPP0011` | Deux classes de la même assembly déclarent le même identifiant. |
+| `KOSAPP0020` | Agrégation : fichier manifeste absent ou JSON non strict. |
+| `KOSAPP0021` | Agrégation : catalogue invalide (identifiant en double, dépendance manquante ou cyclique) ou app que le SDK de l'hôte refuserait (`catalog.sdk.incompatible`, ADR 0098 §3). |
+| `KOSAPP0022` | Agrégation : nom de commande ou alias déclaré par deux apps de l'hôte (comparaison sans casse), ou nom que le shell exécute lui-même (`ShellInterpreter.ReservedNames`) (ADR 0098 §4). |
+| `KOSAPP0023` | Génération : ressource déclarée dans `Assets` absente de `wwwroot/` du projet ; son SHA-256 ne peut pas être calculé (ADR 0098 §5). |
+| `KOSAPP0024` | Agrégation : app non système qui déclare `OomScoreAdjust` négatif (ADR 0126 §4, ADR 0142 §6, [`oom-killer.md`](../dev/oom-killer.md)). |
+| `KOSAPP0025` | Retiré, jamais réutilisé : refusait à une app non système `kazoos.file-view` et `kazoos.file-dialogs` (ADR 0153 §4), que l'ADR 0156 ouvre à toute app fenêtrée (ADR 0158 §1). |
+| `KOSAPP0030` | Frontière du SDK : `ProjectReference` interdite dans un projet d'app (ADR 0055 §2, numéro fixé par l'ADR 0059). Émis par la cible `ValidateKazoOsSdkBoundary`. Voir [`app-sdk.md`](app-sdk.md). |
+| `KOSAPP0031` | Frontière du SDK : service injecté qui n'est ni un type du SDK, ni MudBlazor, ni `IJSRuntime` (ADR 0055 §3, ADR 0059). Voir [`app-sdk.md`](app-sdk.md). |
+| `KOSAPP0040` | Traductions du manifeste (ADR 0104 §4) : `Resources/AppManifest.<culture>.resx` illisible, nom de culture invalide, clé autre que `Name`, `Description`, `Terminal.Usage` (préfixées de l'id dans un projet à plusieurs apps), `Terminal.Usage` pour une app qui n'est pas une commande, ou fichier `localization/` référencé illisible à l'agrégation. Voir [`localization.md`](localization.md). |
+| `KOSAPP0090` | Arguments de l'outil invalides. |
+| `KOSAPP0091` | Assembly de l'app impossible à charger. |
+| `KOSAPP0099` | L'outil a échoué sans diagnostic (plantage). |
 
 Les dépendances entre apps ne sont pas vérifiées à la génération (une seule app
 est connue) : elles le sont à l'agrégation dans l'hôte.
@@ -325,13 +325,13 @@ déclarent la capacité `shell.control`. Une commande tierce reste un projet à 
 
 `Tests/Kazo.Os.Tools.ManifestGenerator.Tests` :
 
-- `AppDefinitionInspectorTests` : un test par code `HOSAPP0001` à `HOSAPP0011`
+- `AppDefinitionInspectorTests` : un test par code `KOSAPP0001` à `KOSAPP0011`
   sur des définitions de test ;
 - `ManifestWriterTests` : formes un/plusieurs fichiers, pas de réécriture si
   identique, écrasement d'une modification à la main ;
 - `MsBuildIntegrationTests` : build réel des projets hors solution
   `Tests/ManifestGenerator.Fixtures.SingleApp`, `.MultiApp` et `.NoDefinition`
-  (`HOSAPP0001`).
+  (`KOSAPP0001`).
 
 ### Traductions du manifeste (ADR 0104 §4)
 
@@ -345,7 +345,7 @@ anglais. Il écrit `localization/<culture>.json` (une app) ou
 `localizations: [{"culture":"fr","resourcePath":"localization/fr.json"}]` et
 supprime les fichiers périmés. Ces `.resx` ne sont pas compilés dans
 l'assembly ; les fichiers générés sont committés comme `manifest.json` et ne
-sont pas déclarés comme assets. Erreur : `HOSAPP0040`. Voir
+sont pas déclarés comme assets. Erreur : `KOSAPP0040`. Voir
 [`localization.md`](localization.md).
 
 ## Agrégation dans l'hôte : `BuiltInApplications.json`
@@ -373,7 +373,7 @@ la préparation des ressources et avant les cibles Blazor) :
    (vide = `false`, sens fixé par l'ADR 0048) ;
 3. appelle `ManifestGenerator aggregate`, qui relit chaque manifeste en mode strict,
    le valide, construit le catalogue avec `AppCatalog.Build` (identifiant en
-   double, dépendance manquante ou cyclique = `HOSAPP0021`) et écrit
+   double, dépendance manquante ou cyclique = `KOSAPP0021`) et écrit
    `obj/<config>/<tfm>/BuiltInApplications.json` seulement si ses octets changent
    (pas de recompilation inutile) ; elle y mesure aussi l'**image** de chaque
    app (ADR 0068) à partir du chemin de son assembly et de sa liste de
@@ -460,7 +460,7 @@ système. Rien d'autre.
 - `BuiltInApplicationsJsonSerializerTests` (`Kazo.Os.App.Abstractions.Tests`) :
   tri et aller-retour canonique, document vide, normalisation, rejets stricts.
 - `BuiltInApplicationsAggregatorTests` : `IsSystemApp` reporté, identifiant en
-  double refusé (`HOSAPP0021`), manifeste absent ou invalide (`HOSAPP0020`),
+  double refusé (`KOSAPP0021`), manifeste absent ou invalide (`KOSAPP0020`),
   analyse de la liste.
 - `MsBuildIntegrationTests.Host_embeds_BuiltInApplications_...` : build réel de
   `Tests/ManifestGenerator.Fixtures.Host` (une app système, un projet à deux apps,
@@ -478,14 +478,14 @@ système. Rien d'autre.
   lieu d'échouer : l'OS démarre sans elles, le démarrage l'écrit dans
   `/var/log/syslog` (catégorie `catalog`) et Paramètres les liste comme
   incompatibles avec la raison (`KazoAppInstallState.Incompatible`, `Problem`).
-- **Commandes en double** : refusées au build (`HOSAPP0022`). Au chargement, si deux
+- **Commandes en double** : refusées au build (`KOSAPP0022`). Au chargement, si deux
   apps déclarent quand même le même nom, une app système l'emporte, sinon la
   première activée ; l'autre perd ce nom (`AppCatalog.FindCommandOwner`,
   `CommandOwners`), un avertissement `catalog.command.duplicate` va dans
   `/var/log/syslog`, et `ShellCommandResolver` ne résout que le propriétaire.
 - **Intégrité des ressources** : pour chaque entrée de `Assets`, le générateur calcule
   le SHA-256 du fichier `wwwroot/<chemin>` du projet et l'écrit dans le manifeste
-  (`HOSAPP0023` s'il manque) ; le générateur relance quand un fichier de
+  (`KOSAPP0023` s'il manque) ; le générateur relance quand un fichier de
   `wwwroot/` change. Au runtime, `AppAssetStore` (Platform.Core) lit une ressource
   par sa source (`IAppAssetSource` ; dans le navigateur
   `StaticWebAssetAppAssetSource`, `_content/<assembly>/<chemin>`) et vérifie son
@@ -551,14 +551,14 @@ dangereuses accordées d'office arrivent avec l'ADR 0049.
 - [x] `rebuild/2-app-definition` : `AppDefinition`, `[AppManifest]`,
   `FileHandler`, `TerminalCommand`, `AppDefinitionMapper`, tests du mappeur
   (`Tests/Kazo.Os.App.Abstractions.Tests/Definition`).
-- [x] `rebuild/2-manifest-generator` : `Tools/Kazo.Os.Tools.ManifestGenerator` (`generate`, `validate`), `build/Kazo.Os.Apps.targets`, cibles `GenerateKazoOsAppManifests` et `GetKazoOsAppManifests`, erreurs `HOSAPP*`, projets de test, Calculator migrée en exemple.
+- [x] `rebuild/2-manifest-generator` : `Tools/Kazo.Os.Tools.ManifestGenerator` (`generate`, `validate`), `build/Kazo.Os.Apps.targets`, cibles `GenerateKazoOsAppManifests` et `GetKazoOsAppManifests`, erreurs `KOSAPP*`, projets de test, Calculator migrée en exemple.
 - [x] `rebuild/2-builtin-applications` : cible `CollectKazoOsBuiltInApplications`, `BuiltInApplications.json` embarqué, lazy load automatique, `BuildKnownLazyApps` lit le nouveau fichier, `IsSystemApp` transporté.
 - [x] `rebuild/2-system-apps` (ADR 0048) : `AppCatalog.SystemAppIds` et `IsSystemApp`, `AppCatalog.Build(manifests, systemAppIds)` et `BuildFromBuiltInApplications`, `IsSystemApp="true"` posé sur les `ProjectReference` de l'Ecosystem, pont de transition `_KazoOsMarkLegacySystemManifests`, tests.
 - [x] `rebuild/2-app-uninstall` (ADR 0048 §2-6) : désinstallation par `apps.config`, voir [`app-installation.md`](../dev/app-installation.md).
 - [x] `rebuild/5-worker-processes` (ADR 0070) : `AppManifestAttribute.Execution`, `AppExecutionHost`, champ `execution` (schéma, liste blanche, validateur, fixture canonique), défauts par genre dans le mappeur, chaque commande et service déclare son hôte ou reçoit le défaut.
-- [x] `v3/6-sdk-versioning` (ADR 0098) : version du SDK écrite par le générateur et vérifiée au chargement, `HOSAPP0022`/`HOSAPP0023`, propriétaire unique d'une commande, empreintes des ressources et `AppAssetStore`, agrégation des apps en paquet, `HostAppCatalog`.
+- [x] `v3/6-sdk-versioning` (ADR 0098) : version du SDK écrite par le générateur et vérifiée au chargement, `KOSAPP0022`/`KOSAPP0023`, propriétaire unique d'une commande, empreintes des ressources et `AppAssetStore`, agrégation des apps en paquet, `HostAppCatalog`.
 - [x] `v3/4-intents` (ADR 0096) : intents déclarés reçus par l'app, schémas d'URI `x-scheme-handler/<schéma>`, commande `xdg-open`.
 - [x] `v3/4b` (ADR 0121) : associations de fichiers et de schémas propres à chaque utilisateur, commande `xdg-mime`.
-- [x] `v3/12-localization` (ADR 0104) : `AppManifest.<culture>.resx` → `localization/`, `HOSAPP0040`, propriété `localized` de `BuiltInApplications.json`, `AppCatalog.Localize`.
-- [x] `exec/3-oom-killer` (ADR 0126, ADR 0142) : `AppDefinition.OomScoreAdjust` (SDK 1.2), champ `oomScoreAdj`, `HOSAPP0024`.
+- [x] `v3/12-localization` (ADR 0104) : `AppManifest.<culture>.resx` → `localization/`, `KOSAPP0040`, propriété `localized` de `BuiltInApplications.json`, `AppCatalog.Localize`.
+- [x] `exec/3-oom-killer` (ADR 0126, ADR 0142) : `AppDefinition.OomScoreAdjust` (SDK 1.2), champ `oomScoreAdj`, `KOSAPP0024`.
 - [x] `rebuild/2-app-migration` : classes `[AppManifest]` pour les 43 autres apps, test d'égalité avec les anciens JSON, suppression des `app.manifest.json`, `StaticManifest`, des listes manuelles de l'hôte et de la cible `_KazoOsMarkLegacySystemManifests`, de la règle `Content Update` de `Directory.Build.targets` et des exceptions « transition ».

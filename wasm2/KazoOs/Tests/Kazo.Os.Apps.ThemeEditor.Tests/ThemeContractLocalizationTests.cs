@@ -43,7 +43,7 @@ public sealed class ThemeContractLocalizationTests
             Assert.NotEqual(token.Description, token.GetDescription(French));
         }
 
-        Assert.True(ThemeTokenCatalog.TryGet("--hos-bg-base", out ThemeTokenDefinition? baseBackground));
+        Assert.True(ThemeTokenCatalog.TryGet("--kos-bg-base", out ThemeTokenDefinition? baseBackground));
         Assert.Equal("Arrière-plan de base", baseBackground.GetLabel(French));
         Assert.Equal("Base background", baseBackground.Label);
     }
@@ -67,17 +67,17 @@ public sealed class ThemeContractLocalizationTests
     public void FileDiagnostics_ReadInTheReadersLanguage_AndLogInEnglish()
     {
         ThemeFileParseResult result = ThemeFile.Parse(
-            "[theme]\nid = neon\nname = Neon\nbase = kazoos\n\n[tokens]\n--hos-accent = url(evil)\n",
+            "[theme]\nid = neon\nname = Neon\nbase = kazoos\n\n[tokens]\n--kos-accent = url(evil)\n",
             path: "/home/alice/.config/kazoos/themes/neon.theme");
 
         ThemeFileDiagnostic diagnostic = Assert.Single(result.Diagnostics);
-        Assert.Equal("Expected a color such as #39ff14, rgb(57 255 20) or a color name. Token '--hos-accent' ignored.", diagnostic.Message);
+        Assert.Equal("Expected a color such as #39ff14, rgb(57 255 20) or a color name. Token '--kos-accent' ignored.", diagnostic.Message);
         Assert.Equal(diagnostic.Message, diagnostic.GetMessage(English));
         Assert.Equal(
-            "Couleur attendue, par exemple #39ff14, rgb(57 255 20) ou un nom de couleur. Jeton « --hos-accent » ignoré.",
+            "Couleur attendue, par exemple #39ff14, rgb(57 255 20) ou un nom de couleur. Jeton « --kos-accent » ignoré.",
             diagnostic.GetMessage(French));
         Assert.Equal(
-            "/home/alice/.config/kazoos/themes/neon.theme:7: avertissement: Couleur attendue, par exemple #39ff14, rgb(57 255 20) ou un nom de couleur. Jeton « --hos-accent » ignoré.",
+            "/home/alice/.config/kazoos/themes/neon.theme:7: avertissement: Couleur attendue, par exemple #39ff14, rgb(57 255 20) ou un nom de couleur. Jeton « --kos-accent » ignoré.",
             diagnostic.ToString(French));
         Assert.StartsWith("/home/alice/.config/kazoos/themes/neon.theme:7: warning: Expected a color", diagnostic.ToString(), StringComparison.Ordinal);
     }
@@ -113,8 +113,8 @@ public sealed class ThemeContractLocalizationTests
     {
         ThemeEditorDocument document = new(new LocaleTestContext("fr_FR.UTF-8").GetLocalizer<Strings>());
 
-        document.SetValue("--hos-radius-sm", "big");
+        document.SetValue("--kos-radius-sm", "big");
 
-        Assert.Equal("Longueur attendue, par exemple 0.5rem, 12px ou 50%.", document.GetError("--hos-radius-sm"));
+        Assert.Equal("Longueur attendue, par exemple 0.5rem, 12px ou 50%.", document.GetError("--kos-radius-sm"));
     }
 }

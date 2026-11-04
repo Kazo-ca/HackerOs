@@ -112,7 +112,7 @@ The OOM killer is disabled by default and only acts if memory is measured (`MemS
 ```csharp
 public sealed class MyServiceDefinition : AppDefinition
 {
-    // Seule une app système peut déclarer une valeur négative (HOSAPP0024).
+    // Seule une app système peut déclarer une valeur négative (KOSAPP0024).
     public override int? OomScoreAdjust => -200;
 }
 ```

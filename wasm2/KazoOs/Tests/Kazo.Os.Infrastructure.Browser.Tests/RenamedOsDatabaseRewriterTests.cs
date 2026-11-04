@@ -11,7 +11,7 @@ namespace Kazo.Os.Infrastructure.Browser.Tests;
 public sealed partial class RenamedOsDatabaseRewriterTests
 {
     private const string Root = "00000000000000000000000000000001";
-    private const string ConfigText = "# HackerOS apps\n[installed]\norg.hackeros.demo\ntheme=HackerOs\nassembly=HackerOs.Apps.Demo.dll\n";
+    private const string ConfigText = "# HackerOS apps\n[installed]\norg.hackeros.demo\ntheme=HackerOs\nassembly=HackerOs.Apps.Demo.dll\n[tokens]\n--hos-accent = #ff0066\n";
     private const string DocumentText = "HackerOS notes, my own words.";
 
     [Theory]
@@ -60,7 +60,7 @@ public sealed partial class RenamedOsDatabaseRewriterTests
         RenamedOsDatabase result = RenamedOsDatabaseRewriter.Rewrite(SmallDatabase());
 
         JsonObject config = Entry(result, "config");
-        string expected = "# Kazo OS apps\n[installed]\norg.kazoos.demo\ntheme=KazoOs\nassembly=Kazo.Os.Apps.Demo.dll\n";
+        string expected = "# Kazo OS apps\n[installed]\norg.kazoos.demo\ntheme=KazoOs\nassembly=Kazo.Os.Apps.Demo.dll\n[tokens]\n--kos-accent = #ff0066\n";
         Assert.Equal(Hash(expected), (string?)config["contentHash"]);
         Assert.Equal(Encoding.UTF8.GetByteCount(expected), (int?)config["length"]);
         Assert.Equal(expected, Content(result, Hash(expected)));

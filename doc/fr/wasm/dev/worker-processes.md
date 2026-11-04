@@ -305,7 +305,7 @@ Chromium 140 sans écran, publication Release de l'Ecosystem servie sur
 | Fenêtres détachées (`window.open`) | `BrowserDetachedWindowTests` sous isolation : la fenêtre est de même origine, COOP `same-origin` garde le lien | passe |
 | Repli sur le réseau réel, images externes | image et `fetch` `no-cors` d'une autre origine sans CORP : chargées avec `credentialless` | passe (bloquées seulement en `require-corp`, ADR 0143 question 3) |
 | Monaco (CodeEditor), xterm.js (Terminal) | nouveau fichier, saisie dans Monaco ; commandes dans le terminal | passe, aucune erreur de console |
-| Téléchargements (`download.js`), `.hosbak` | lien `blob:` avec `download` : le téléchargement part ; `FileExplorerDownloadTests` sous isolation | passe |
+| Téléchargements (`download.js`), `.kosbak` | lien `blob:` avec `download` : le téléchargement part ; `FileExplorerDownloadTests` sous isolation | passe |
 | Installation de la PWA, mise à jour du service worker | premier chargement sur `127.0.0.2` : installation, rechargement unique (`controllerchange`), page isolée ; `HostSmoke` `ecosystem-isolated` | passe |
 
 Avec l'isolation, `seq 30000 | wc -l` donne `30000` par les anneaux,

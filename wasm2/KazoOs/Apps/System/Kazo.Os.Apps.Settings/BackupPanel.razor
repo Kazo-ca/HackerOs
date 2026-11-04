@@ -7,7 +7,7 @@
         @LocalizedMarkup.Format(L["Backup.Create.Description"],
             LocalizedMarkup.Strong(L["Backup.Create.Everything"]),
             LocalizedMarkup.Code("/etc"),
-            LocalizedMarkup.Code(".hosbak"),
+            LocalizedMarkup.Code(".kosbak"),
             LocalizedMarkup.Code("sudo kazobackup create"))
     </p>
     <button type="button" class="btn-secondary" disabled="@IsBusy" @onclick="CreateAsync">
@@ -28,7 +28,7 @@
     <h4>@L["Backup.Restore.Title"]</h4>
     <p class="setting-desc">
         @LocalizedMarkup.Format(L["Backup.Restore.Description"],
-            LocalizedMarkup.Code(".hosbak"),
+            LocalizedMarkup.Code(".kosbak"),
             LocalizedMarkup.Code("sudo kazobackup restore --merge"),
             LocalizedMarkup.Code("--replace"))
     </p>

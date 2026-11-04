@@ -4,9 +4,9 @@
     flex-direction: column;
     min-width: 0;
     min-height: 0;
-    color: var(--hos-text-primary, #d4f8e8);
-    background: var(--hos-bg-base, #0b1415);
-    border: var(--hos-table-border, 1px solid var(--hos-border, #315249));
+    color: var(--kos-text-primary, #d4f8e8);
+    background: var(--kos-bg-base, #0b1415);
+    border: var(--kos-table-border, 1px solid var(--kos-border, #315249));
 }
 
 .file-dialog-toolbar {
@@ -15,8 +15,8 @@
     gap: 0.4rem;
     min-width: 0;
     padding: 0.45rem 0.5rem;
-    background: var(--hos-toolbar-bg, var(--hos-bg-surface, #132522));
-    border-bottom: var(--hos-toolbar-border, 1px solid var(--hos-border-subtle, #315249));
+    background: var(--kos-toolbar-bg, var(--kos-bg-surface, #132522));
+    border-bottom: var(--kos-toolbar-border, 1px solid var(--kos-border-subtle, #315249));
 }
 
 .breadcrumbs {
@@ -41,13 +41,13 @@
     padding: 0.3rem 0.55rem;
     font-family: inherit;
     white-space: nowrap;
-    color: var(--hos-btn-color, var(--hos-text-primary, #d4f8e8));
-    background: var(--hos-btn-bg, #132522);
-    border: var(--hos-btn-border, 1px solid var(--hos-border, #315249));
-    border-radius: var(--hos-btn-radius, var(--hos-radius-sm, 0.25rem));
+    color: var(--kos-btn-color, var(--kos-text-primary, #d4f8e8));
+    background: var(--kos-btn-bg, #132522);
+    border: var(--kos-btn-border, 1px solid var(--kos-border, #315249));
+    border-radius: var(--kos-btn-radius, var(--kos-radius-sm, 0.25rem));
     cursor: pointer;
-    transition: background var(--hos-transition-fast, 120ms ease),
-                border-color var(--hos-transition-fast, 120ms ease);
+    transition: background var(--kos-transition-fast, 120ms ease),
+                border-color var(--kos-transition-fast, 120ms ease);
 }
 
 .toolbar-button {
@@ -73,13 +73,13 @@
 
 .breadcrumb:hover:not(:disabled),
 .toolbar-button:hover:not(:disabled) {
-    background: var(--hos-btn-hover-bg, var(--hos-bg-elevated, #182825));
-    border-color: var(--hos-btn-hover-border, var(--hos-accent, #55d6a1));
+    background: var(--kos-btn-hover-bg, var(--kos-bg-elevated, #182825));
+    border-color: var(--kos-btn-hover-border, var(--kos-accent, #55d6a1));
 }
 
 .breadcrumb:disabled {
-    color: var(--hos-text-secondary, #8fc8ae);
-    border-color: var(--hos-accent, #55d6a1);
+    color: var(--kos-text-secondary, #8fc8ae);
+    border-color: var(--kos-accent, #55d6a1);
     opacity: 0.8;
     cursor: default;
 }
@@ -90,14 +90,14 @@
 }
 
 .toolbar-button[aria-pressed="true"] {
-    color: var(--hos-btn-primary-color, var(--hos-text-inverse, #07100d));
-    background: var(--hos-btn-primary-bg, var(--hos-accent, #55d6a1));
-    border-color: var(--hos-accent, #55d6a1);
+    color: var(--kos-btn-primary-color, var(--kos-text-inverse, #07100d));
+    background: var(--kos-btn-primary-bg, var(--kos-accent, #55d6a1));
+    border-color: var(--kos-accent, #55d6a1);
 }
 
 .breadcrumb:focus-visible,
 .toolbar-button:focus-visible {
-    outline: 2px solid var(--hos-focus-ring, #55d6a1);
+    outline: 2px solid var(--kos-focus-ring, #55d6a1);
     outline-offset: 2px;
 }
 
@@ -106,9 +106,9 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.45rem 0.6rem;
-    color: var(--hos-error, #f1a7a7);
-    background: var(--hos-error-subtle, rgba(241, 167, 167, 0.08));
-    border-bottom: 1px solid var(--hos-error, #f1a7a7);
+    color: var(--kos-error, #f1a7a7);
+    background: var(--kos-error-subtle, rgba(241, 167, 167, 0.08));
+    border-bottom: 1px solid var(--kos-error, #f1a7a7);
 }
 
 .file-dialog-view {

@@ -17,7 +17,7 @@ namespace Kazo.Os.AppSdk.Threading;
 /// <see cref="KazoBackgroundJob{TInput, TResult}"/> class) of the app's assembly, and its input and
 /// result are <b>serializable</b> by a <c>JsonSerializerContext</c> the app declares with
 /// <see cref="KazoWireContextAttribute"/>. The Kazo OS analyzer refuses anything else at build time
-/// (<c>HOSBG0001</c> and following); the OS checks again at run time.
+/// (<c>KOSBG0001</c> and following); the OS checks again at run time.
 /// </para>
 /// <para>
 /// Each task is a process: it appears in <c>ps</c>, <c>top</c> and the task manager under the app

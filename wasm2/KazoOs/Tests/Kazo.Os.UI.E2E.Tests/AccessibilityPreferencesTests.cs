@@ -36,7 +36,7 @@ public sealed class AccessibilityPreferencesTests(ITestOutputHelper output)
                 .WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Attached, Timeout = 15000 });
             // The layer really repaints the desktop: the focus ring token is the high-contrast yellow.
             string focusRing = await page.EvaluateAsync<string>(
-                "() => getComputedStyle(document.querySelector('.theme-scope')).getPropertyValue('--hos-focus-ring').trim()");
+                "() => getComputedStyle(document.querySelector('.theme-scope')).getPropertyValue('--kos-focus-ring').trim()");
             Assert.Equal("#ffff00", focusRing);
             await CloseFocusedWindowAsync(page);
 

@@ -1,0 +1,19 @@
+{
+  "id": "857613da-e2d3-4d14-9f57-042f3b4bd2a8",
+  "category": "improved",
+  "audience": [
+    "user",
+    "developer"
+  ],
+  "title": {
+    "en": "Backups end in .kosbak, design tokens are --kos-*, diagnostics are KOS*",
+    "fr": "Les sauvegardes finissent par .kosbak, les jetons de design sont --kos-*, les diagnostics sont KOS*"
+  },
+  "description": {
+    "en": "The last short HOS names become KOS. New backups are .kosbak files; an older .hosbak backup can still be restored. The CSS variables of the design system are now --kos-* (with data-kos-* attributes and kos-* classes): a theme file or theme pack written with --hos-* is still read, and saved themes and settings are updated at the first start. Build diagnostics are now KOSAPP, KOSSDK, KOSWEB, KOSBG and KOSCHG, with the same numbers: update NoWarn and pragma lists.",
+    "fr": "Les derniers noms courts HOS deviennent KOS. Les nouvelles sauvegardes sont des fichiers .kosbak ; une ancienne sauvegarde .hosbak peut encore être restaurée. Les variables CSS du système de design sont maintenant --kos-* (avec les attributs data-kos-* et les classes kos-*) : un fichier de thème ou un pack de thèmes écrit en --hos-* est encore lu, et les thèmes et réglages enregistrés sont mis à jour au premier démarrage. Les diagnostics de build sont maintenant KOSAPP, KOSSDK, KOSWEB, KOSBG et KOSCHG, avec les mêmes numéros : mettez à jour vos listes NoWarn et pragma."
+  },
+  "links": [
+    "doc/en/wasm/framework/sdk-packages.md"
+  ]
+}

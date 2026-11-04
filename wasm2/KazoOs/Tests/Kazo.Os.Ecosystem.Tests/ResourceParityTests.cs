@@ -6,7 +6,7 @@ namespace Kazo.Os.Ecosystem.Tests;
 /// <summary>
 /// ADR 0104 section 6: every English <c>.resx</c> of the solution has a French twin with exactly
 /// the same keys and the same format placeholders, and no text is empty. The manifest sources
-/// (<c>AppManifest.&lt;culture&gt;.resx</c>) are checked by the generator instead (<c>HOSAPP0040</c>).
+/// (<c>AppManifest.&lt;culture&gt;.resx</c>) are checked by the generator instead (<c>KOSAPP0040</c>).
 /// </summary>
 public sealed partial class ResourceParityTests
 {
