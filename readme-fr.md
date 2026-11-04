@@ -18,7 +18,7 @@ fichiers persistant, processus, shell POSIX et commandes Linux, réseau simulé,
 sites web internes, et un **SDK public** (paquets NuGet) pour créer ses propres
 apps, commandes, services et sites.
 
-- **Essayer** : <https://hackos.kazo.ca/> (PWA, fonctionne hors ligne).
+- **Essayer** : <https://os.kazo.ca/> (PWA, fonctionne hors ligne).
 - **Fonctionnalités** : [présentation et fonctionnalités de Kazo OS](doc/fr/wasm/features.md) : ce que Kazo OS offre aujourd'hui, le but de l'écosystème, les façons de le déployer et ce qui est en cours de développement.
 - **Code** : [`wasm2/KazoOs/`](wasm2/KazoOs/readme-fr.md).
 - **Documentation** : [`doc/fr/wasm/README.md`](doc/fr/wasm/README.md) (en anglais : [`doc/en/wasm/README.md`](doc/en/wasm/README.md)).
@@ -65,7 +65,7 @@ l'exécution des tests E2E sont décrits dans
 ## Version legacy (TypeScript)
 
 La première version, en TypeScript et Webpack, reste dans [`src/`](src/readme-fr.md)
-et est publiée sur <https://hackos.kazo.ca/legacy/>. Elle ne reçoit plus de
+et est publiée sur <https://os.kazo.ca/legacy/>. Elle ne reçoit plus de
 nouvelles fonctionnalités. Sa documentation (compilation avec Node.js 20,
 structure, fonctionnalités) est dans [`src/README.md`](src/readme-fr.md).
 

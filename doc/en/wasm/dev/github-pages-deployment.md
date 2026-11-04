@@ -6,8 +6,11 @@
 
 The public repository is [Kazo-ca/Os](https://github.com/Kazo-ca/Os).
 The standalone WebAssembly version **2.2.2** is published at the root of
-`https://hackos.kazo.ca/`; the original TypeScript version is kept under
-`https://hackos.kazo.ca/legacy/`. See [ADR 0167](adr/0167-combined-pages-deployment.md).
+`https://os.kazo.ca/`; the original TypeScript version is kept under
+`https://os.kazo.ca/legacy/`. See [ADR 0167](adr/0167-combined-pages-deployment.md).
+The old address `hackos.kazo.ca` is no longer served by Pages: a Cloudflare
+Worker redirects it to `os.kazo.ca` ([`cloudflare-redirect.md`](cloudflare-redirect.md),
+[ADR 0229](adr/0229-kazo-os-display-name-and-new-address.md)).
 
 ## Workflow and independent builds
 
@@ -58,7 +61,7 @@ workflow keeps its diagnostics and performs no deployment. See
 
 `build/assemble-pages.ps1` copies the WASM publication unmodified into
 `artifacts/pages/`, then the legacy bundle into `artifacts/pages/legacy/`. It
-adds `.nojekyll` and the `CNAME` `hackos.kazo.ca`. The destination folder
+adds `.nojekyll` and the `CNAME` `os.kazo.ca`. The destination folder
 must be empty; a missing required entry aborts the publication.
 
 The HTML base of the WASM remains `/`. The legacy bundle uses the Webpack
@@ -78,8 +81,8 @@ strategy.
   https://kazo.ca) and "GitHub project: [icon] Kazo-ca/Os" (link to the
   repository), labels in the system language
   ([ADR 0187](adr/0187-guest-start-and-sign-in-credits.md)). If the host
-  name is exactly `hackos.kazo.ca`, a message indicates the move of the
-  original to `https://hackos.kazo.ca/legacy`. Ports do not affect this test;
+  name is exactly `os.kazo.ca`, a message indicates the move of the
+  original to `https://os.kazo.ca/legacy`. Ports do not affect this test;
   look-alike subdomains and URL parameters do not enable it.
 - WASM recovery and fatal errors: same credits and the same version.
 - Settings, About: current version through `KazoOsSdk.Version`, author (kazo.ca

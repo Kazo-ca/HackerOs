@@ -18,7 +18,7 @@ system, processes, a POSIX shell and Linux commands, a simulated network,
 internal web sites, and a **public SDK** (NuGet packages) to create your own
 apps, commands, services and sites.
 
-- **Try it**: <https://hackos.kazo.ca/> (PWA, works offline).
+- **Try it**: <https://os.kazo.ca/> (PWA, works offline).
 - **Features**: [Kazo OS overview and features](doc/en/wasm/features.md): what Kazo OS offers today, the goal of the ecosystem, ways to deploy it, and what is in development.
 - **Code**: [`wasm2/KazoOs/`](wasm2/KazoOs/README.md).
 - **Documentation**: [`doc/en/wasm/README.md`](doc/en/wasm/README.md) (French: [`doc/fr/wasm/README.md`](doc/fr/wasm/README.md)).
@@ -65,7 +65,7 @@ tests are described in
 ## Legacy version (TypeScript)
 
 The first version, written in TypeScript with Webpack, stays in
-[`src/`](src/README.md) and is published at <https://hackos.kazo.ca/legacy/>. It
+[`src/`](src/README.md) and is published at <https://os.kazo.ca/legacy/>. It
 no longer gets new features. Its documentation (building with Node.js 20,
 layout, features) is in [`src/README.md`](src/README.md).
 
