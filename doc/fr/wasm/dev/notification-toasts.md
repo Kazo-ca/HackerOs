@@ -11,7 +11,7 @@ en œuvre l'[ADR 0216](adr/0216-do-not-disturb.md) (section 5).
 
 - Chaque nouvelle notification de l'OS ou d'une app apparaît en **bulle** : en bas à
   droite, au-dessus de la barre de l'écran 1 sur ordinateur, en haut de l'écran sur
-  téléphone. Elle porte le nom de l'app (ou « KazoOS »), le titre, le texte, les
+  téléphone. Elle porte le nom de l'app (ou « Kazo OS »), le titre, le texte, les
   boutons d'action et un « × ».
 - Une bulle part après **6 s**. La souris ou le focus clavier sur la bulle la retient ;
   elle repart pour 6 s quand ils la quittent. 3 bulles au plus : la plus ancienne laisse
@@ -20,7 +20,7 @@ en œuvre l'[ADR 0216](adr/0216-do-not-disturb.md) (section 5).
   sur téléphone). La fermer dans le panneau retire aussi sa bulle.
 - Pas de bulle pendant que le panneau est ouvert : la notification arrive dans la liste.
 - **Ne pas déranger** : ni bulle ni son de notification tant qu'il est activé (voir la section 5).
-- **Mise à jour prête** : une fois connecté, « KazoOS x.y.z est disponible. Les apps
+- **Mise à jour prête** : une fois connecté, « Kazo OS x.y.z est disponible. Les apps
   ouvertes seront fermées. » arrive en bulle et reste dans le panneau avec le bouton
   « Redémarrer pour mettre à jour ». Sur l'écran de connexion, l'encadré du coin en bas
   reste, avec le même bouton.

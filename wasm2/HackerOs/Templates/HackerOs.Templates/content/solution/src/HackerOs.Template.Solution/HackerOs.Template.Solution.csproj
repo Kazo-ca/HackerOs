@@ -9,7 +9,7 @@
       reports here, at build, any reflection the trimmer could not follow.
     -->
     <IsTrimmable>true</IsTrimmable>
-    <!-- A KazoOS app: its manifest.json is generated after the build, in both profiles. -->
+    <!-- A Kazo OS app: its manifest.json is generated after the build, in both profiles. -->
     <HackerOsAppProject>true</HackerOsAppProject>
   </PropertyGroup>
 

@@ -212,7 +212,7 @@ On `rebuild/base` at `47de11c` (after #129), in a cloud container:
   (`OutputFinished`). Two full runs afterwards:
 
 ```text
-== KazoOS host verification (47de11c) ==
+== Kazo OS host verification (47de11c) ==
 build HackerOs.Ecosystem         PASS
 build test                       PASS
 build HackerOs.Server            PASS

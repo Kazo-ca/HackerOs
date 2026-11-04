@@ -9,7 +9,7 @@ using Microsoft.JSInterop;
 
 namespace HackerOs.Infrastructure.Browser.Backup;
 
-/// <summary>Exports and atomically restores validated KazoOS IndexedDB backups.</summary>
+/// <summary>Exports and atomically restores validated Kazo OS IndexedDB backups.</summary>
 /// <remarks>
 /// The backup is the whole OS database as one JSON document (<c>formatVersion: 1</c>, schema
 /// version, every store, SHA-256 of the payload). ADR 0099 section 1 ships it as a gzip archive
@@ -159,7 +159,7 @@ public sealed class IndexedDbBackupService : IAsyncDisposable
         ArgumentNullException.ThrowIfNull(backupJson);
         if (string.IsNullOrWhiteSpace(backupJson))
         {
-            throw new IndexedDbBackupValidationException("The file is empty or is not a KazoOS backup.");
+            throw new IndexedDbBackupValidationException("The file is empty or is not a Kazo OS backup.");
         }
 
         JsonObject envelope;
@@ -182,7 +182,7 @@ public sealed class IndexedDbBackupService : IAsyncDisposable
         {
             // ADR 0099 section 1: a backup of another schema version is refused with a clear message.
             throw new IndexedDbBackupValidationException(
-                $"This backup uses database schema version {schemaVersion}; this KazoOS uses version {HackerOsIndexedDbSchema.CurrentVersion}. It cannot be restored here.");
+                $"This backup uses database schema version {schemaVersion}; this Kazo OS uses version {HackerOsIndexedDbSchema.CurrentVersion}. It cannot be restored here.");
         }
 
         if (formatVersion != FormatVersion

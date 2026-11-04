@@ -78,7 +78,7 @@ public sealed class HostBuildUpdateMonitor
     }
 }
 
-/// <summary>Extracts a build identity from the markup of a KazoOS page (ADR 0162).</summary>
+/// <summary>Extracts a build identity from the markup of a Kazo OS page (ADR 0162).</summary>
 public static partial class HostBuildIdentity
 {
     /// <summary>

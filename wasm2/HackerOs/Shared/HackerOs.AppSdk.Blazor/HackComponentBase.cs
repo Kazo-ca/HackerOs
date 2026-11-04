@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components;
 namespace HackerOs.AppSdk.Blazor;
 
 /// <summary>
-/// Base class for a child component of a KazoOS window app. It receives the window's
+/// Base class for a child component of a Kazo OS window app. It receives the window's
 /// <see cref="IAppExecutionContext"/> through a cascading value (set by the window host) and runs its
 /// lifecycle methods, event handlers and after-render work inside that app's
 /// <see cref="HackExecutionContext"/> scope, so it can call the <c>Hack*</c> file API directly

@@ -14,7 +14,7 @@ public sealed record AddressBarIndicator(string SourceIcon, string SourceClass, 
 /// <summary>
 /// Builds the indicators at the start of the address bar (ADR 0210 §4): an icon telling where the
 /// page came from (simulated network, a site of this machine, a local file, or the real Internet
-/// through the KazoOS proxy) and, for <c>http:</c>, Chromium's "Not secure" label next to the
+/// through the Kazo OS proxy) and, for <c>http:</c>, Chromium's "Not secure" label next to the
 /// scheme icon. The server's address and token are never shown (ADR 0056 §6).
 /// </summary>
 public static class AddressBarIndicators

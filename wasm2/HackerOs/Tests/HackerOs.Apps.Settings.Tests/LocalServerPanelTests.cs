@@ -59,7 +59,7 @@ public sealed class LocalServerPanelTests
         await harness.InvokeAsync(() => harness.Panel.TestAsync());
 
         Assert.Equal(new Uri("http://localhost:5888/"), gateway.TestedUrl);
-        Assert.Contains("A KazoOS server answers (version 2.1.0).", harness.Html(), StringComparison.Ordinal);
+        Assert.Contains("A Kazo OS server answers (version 2.1.0).", harness.Html(), StringComparison.Ordinal);
     }
 
     [Fact]

@@ -9,7 +9,7 @@ de routes produite par un générateur de sources). Plan :
 
 ## Objet
 
-`Shared/HackerOs.AppSdk.Web` permet d'écrire un site interne de KazoOS comme
+`Shared/HackerOs.AppSdk.Web` permet d'écrire un site interne de Kazo OS comme
 un site ASP.NET Core MVC : une classe de démarrage, des middlewares, des
 contrôleurs avec `[HttpGet]`/`[HttpPost]`/`[HttpPut]`/`[HttpPatch]`/`[HttpDelete]`,
 la liaison de modèle, la validation `DataAnnotations`, des résultats JSON, texte,

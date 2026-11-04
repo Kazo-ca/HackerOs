@@ -28,7 +28,7 @@
     <value>impossible de démarrer le shell : {0}</value>
   </data>
   <data name="Panel.Welcome" xml:space="preserve">
-    <value>KazoOS Terminal v1.0.0 — Tapez « help » pour la liste des commandes.</value>
+    <value>Kazo OS Terminal v1.0.0 — Tapez « help » pour la liste des commandes.</value>
   </data>
   <data name="Screen.Label" xml:space="preserve">
     <value>Commande du terminal en plein écran</value>

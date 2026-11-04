@@ -46,7 +46,7 @@ public static class ServiceAccount
         SystemSessionId,
         UserId,
         LocalLoginName.Parse(LoginName),
-        "KazoOS system services",
+        "Kazo OS system services",
         AppAuthority.User,
         GroupId,
         [GroupId],

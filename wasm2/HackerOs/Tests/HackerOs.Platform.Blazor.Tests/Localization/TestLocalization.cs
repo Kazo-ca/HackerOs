@@ -12,7 +12,7 @@ using Microsoft.Extensions.Localization;
 namespace HackerOs.Platform.Blazor.Tests.Localization;
 
 /// <summary>
-/// Localization for component tests (ADR 0104): English texts like a fresh KazoOS, or the
+/// Localization for component tests (ADR 0104): English texts like a fresh Kazo OS, or the
 /// session language of a real <see cref="SessionLocaleService"/> set with <c>Apply</c>.
 /// </summary>
 internal static class TestLocalization

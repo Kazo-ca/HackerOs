@@ -8,9 +8,9 @@ public sealed class HostReleaseMonitorTests
     private const string Running = "2.1.0";
 
     [Theory]
-    [InlineData("""{ "product": "KazoOS", "version": "2.2.0" }""", "2.2.0")]
+    [InlineData("""{ "product": "Kazo OS", "version": "2.2.0" }""", "2.2.0")]
     [InlineData("""{ "version": " 3.0.0-preview.1 " }""", "3.0.0-preview.1")]
-    [InlineData("""{ "product": "KazoOS" }""", null)]
+    [InlineData("""{ "product": "Kazo OS" }""", null)]
     [InlineData("""{ "version": 2 }""", null)]
     [InlineData("""[ "2.2.0" ]""", null)]
     [InlineData("<!DOCTYPE html>", null)]

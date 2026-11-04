@@ -3,12 +3,12 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace HackerOs.Theming.Abstractions;
 
-/// <summary>Exposes the deterministic, framework-neutral catalog of built-in KazoOS themes and accents.</summary>
+/// <summary>Exposes the deterministic, framework-neutral catalog of built-in Kazo OS themes and accents.</summary>
 public static class ThemeCatalog
 {
     private static readonly ReadOnlyCollection<ThemeDefinition> DesktopThemeItems = Array.AsReadOnly<ThemeDefinition>(
     [
-        new(WellKnownThemeIds.HackerOs, "KazoOS", ThemePlatform.Desktop, supportsAccentColor: true),
+        new(WellKnownThemeIds.HackerOs, "Kazo OS", ThemePlatform.Desktop, supportsAccentColor: true),
         new(WellKnownThemeIds.Windows98, "Windows 98", ThemePlatform.Desktop),
         new(WellKnownThemeIds.WindowsXp, "Windows XP", ThemePlatform.Desktop),
         new(WellKnownThemeIds.Windows7, "Windows 7", ThemePlatform.Desktop),

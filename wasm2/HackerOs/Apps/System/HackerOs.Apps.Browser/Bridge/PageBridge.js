@@ -1,11 +1,11 @@
-// KazoOS page bridge (ADR 0075 §3).
+// Kazo OS page bridge (ADR 0075 §3).
 //
 // Injected first in <head> of every page the Browser app writes into its isolated frame
 // (sandbox="allow-scripts allow-forms", opaque origin, CSP connect-src 'none'). It is the page's
 // only way out: fetch, XMLHttpRequest, links, forms, cookies, storage and dynamically added
 // resources become messages to BrowserPageView.razor.js, which hands them to C#. The C# side
 // sends them through the simulated network with HackHttpClient, so a site's JavaScript never
-// reaches KazoOS nor the real Internet.
+// reaches Kazo OS nor the real Internet.
 //
 // Not a host script: it cannot be served from _content/ because the frame may load nothing but
 // data: URLs, so HtmlPageComposer embeds it as text (see doc/en/wasm/dev/browser-html-rendering.md).
@@ -154,7 +154,7 @@ function (boot) {
                 return;
             }
             log("error",
-                "Refused to load '" + blocked + "' (" + event.effectiveDirective + "): KazoOS Browser pages reach the network through the browser only.",
+                "Refused to load '" + blocked + "' (" + event.effectiveDirective + "): Kazo OS Browser pages reach the network through the browser only.",
                 sourceOf(event.sourceFile, event.lineNumber));
         }, 50);
     });
@@ -396,7 +396,7 @@ function (boot) {
 
         open(method, url, async) {
             if (async === false) {
-                throw new DOMException("Synchronous XMLHttpRequest is not supported by KazoOS Browser.", "InvalidAccessError");
+                throw new DOMException("Synchronous XMLHttpRequest is not supported by Kazo OS Browser.", "InvalidAccessError");
             }
             this._generation++;
             this._method = String(method).toUpperCase();
@@ -739,7 +739,7 @@ function (boot) {
 
     function refuse(name) {
         return function () {
-            const message = name + " is not supported by KazoOS Browser yet (ADR 0075).";
+            const message = name + " is not supported by Kazo OS Browser yet (ADR 0075).";
             log("error", message);
             throw new DOMException(message, "NotSupportedError");
         };
@@ -748,12 +748,12 @@ function (boot) {
     window.WebSocket = refuse("WebSocket");
     window.EventSource = refuse("EventSource");
     window.open = function () {
-        log("error", "window.open() is blocked by KazoOS Browser (ADR 0075).");
+        log("error", "window.open() is blocked by Kazo OS Browser (ADR 0075).");
         return null;
     };
     if (navigator.geolocation) {
         const deny = (success, error) => {
-            log("warning", "Geolocation is not available in KazoOS Browser.");
+            log("warning", "Geolocation is not available in Kazo OS Browser.");
             if (typeof error === "function") {
                 error({ code: 1, message: "User denied Geolocation", PERMISSION_DENIED: 1, POSITION_UNAVAILABLE: 2, TIMEOUT: 3 });
             }
@@ -763,7 +763,7 @@ function (boot) {
         navigator.geolocation.watchPosition = deny;
     }
 
-    // Modal dialogs would freeze KazoOS with the page: alert() shows a banner, the others answer "no".
+    // Modal dialogs would freeze Kazo OS with the page: alert() shows a banner, the others answer "no".
     window.alert = function (message) {
         emit("dialog", { kind: "alert", message: message === undefined ? "" : String(message) });
     };

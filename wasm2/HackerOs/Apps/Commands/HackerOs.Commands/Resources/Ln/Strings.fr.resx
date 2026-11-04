@@ -16,7 +16,7 @@
     <value>ln : impossible de créer le lien physique « {0} » =&gt; « {1} » : {2}</value>
   </data>
   <data name="HardLinkHint" xml:space="preserve">
-    <value>ln : astuce : le système de fichiers de KazoOS n'a pas de liens physiques ; utilisez « ln -s » pour un lien symbolique</value>
+    <value>ln : astuce : le système de fichiers de Kazo OS n'a pas de liens physiques ; utilisez « ln -s » pour un lien symbolique</value>
   </data>
   <data name="InvalidOption" xml:space="preserve">
     <value>ln : option non valide -- « {0} »</value>

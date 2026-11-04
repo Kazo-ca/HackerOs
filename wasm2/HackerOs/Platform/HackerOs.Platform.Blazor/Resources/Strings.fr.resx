@@ -400,7 +400,7 @@
     <value>Paramètres</value>
   </data>
   <data name="Launcher.SettingsHint" xml:space="preserve">
-    <value>Personnaliser KazoOS</value>
+    <value>Personnaliser Kazo OS</value>
   </data>
   <data name="Launcher.Title" xml:space="preserve">
     <value>Menu Démarrer</value>
@@ -421,10 +421,10 @@
     <value>Redémarrer</value>
   </data>
   <data name="Logout.Restart.Body" xml:space="preserve">
-    <value>Le redémarrage ferme votre session comme une déconnexion, puis recharge KazoOS depuis le serveur.</value>
+    <value>Le redémarrage ferme votre session comme une déconnexion, puis recharge Kazo OS depuis le serveur.</value>
   </data>
   <data name="Logout.Restart.Title" xml:space="preserve">
-    <value>Redémarrer KazoOS</value>
+    <value>Redémarrer Kazo OS</value>
   </data>
   <data name="Logout.Restarting" xml:space="preserve">
     <value>Redémarrage...</value>
@@ -436,7 +436,7 @@
     <value>Déconnexion...</value>
   </data>
   <data name="Logout.Title" xml:space="preserve">
-    <value>Se déconnecter de KazoOS</value>
+    <value>Se déconnecter de Kazo OS</value>
   </data>
   <data name="Mobile.Shade" xml:space="preserve">
     <value>Notifications, calendrier et mode de la plateforme</value>
@@ -496,7 +496,7 @@
     <value>Non identifié</value>
   </data>
   <data name="Server.Panel" xml:space="preserve">
-    <value>Serveur KazoOS</value>
+    <value>Serveur Kazo OS</value>
   </data>
   <data name="Server.Password" xml:space="preserve">
     <value>Mot de passe</value>
@@ -526,7 +526,7 @@
     <value>Hors ligne (serveur injoignable)</value>
   </data>
   <data name="Server.Tooltip" xml:space="preserve">
-    <value>Serveur KazoOS {0} : {1}</value>
+    <value>Serveur Kazo OS {0} : {1}</value>
   </data>
   <data name="Shell.LaunchFailed" xml:space="preserve">
     <value>L'application facultative n'a pas pu être chargée.</value>
@@ -741,7 +741,7 @@
     <value>Ce navigateur ne peut pas utiliser de clé d’accès ici. Essais restants : {0}.</value>
   </data>
   <data name="Screens.WindowTitle" xml:space="preserve">
-    <value>KazoOS — Écran {0}</value>
+    <value>Kazo OS — Écran {0}</value>
   </data>
   <data name="Screens.FullScreen" xml:space="preserve">
     <value>Plein écran</value>
@@ -750,7 +750,7 @@
     <value>Quitter le plein écran</value>
   </data>
   <data name="Screens.PrimaryHidden" xml:space="preserve">
-    <value>L'onglet principal de KazoOS est caché : le navigateur ralentit alors tout l'OS. Gardez-le visible.</value>
+    <value>L'onglet principal de Kazo OS est caché : le navigateur ralentit alors tout l'OS. Gardez-le visible.</value>
   </data>
   <data name="Screens.Restore.Message" xml:space="preserve">
     <value>Les écrans de votre dernière session sont fermés.</value>
@@ -891,7 +891,7 @@
     <value>Retirer</value>
   </data>
   <data name="InstallApproval.Footer" xml:space="preserve">
-    <value>KazoOS demande cette validation à chaque fois (ADR 0189). Une app ne peut pas dessiner par-dessus cette fenêtre.</value>
+    <value>Kazo OS demande cette validation à chaque fois (ADR 0189). Une app ne peut pas dessiner par-dessus cette fenêtre.</value>
   </data>
   <data name="InstallApproval.Bytes" xml:space="preserve">
     <value>{0} octets</value>

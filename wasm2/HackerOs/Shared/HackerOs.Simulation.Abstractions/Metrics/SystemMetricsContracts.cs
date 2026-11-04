@@ -122,7 +122,7 @@ public interface IBlockDeviceStatistics
     BlockDeviceCounters GetCounters();
 }
 
-/// <summary>Names of the network interfaces KazoOS exposes (ADR 0057 section 5).</summary>
+/// <summary>Names of the network interfaces Kazo OS exposes (ADR 0057 section 5).</summary>
 public static class NetworkInterfaceNames
 {
     /// <summary>The loopback interface; reserved, always zero in this phase.</summary>

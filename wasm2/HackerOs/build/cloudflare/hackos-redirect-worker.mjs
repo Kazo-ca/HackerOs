@@ -1,5 +1,5 @@
 /**
- * Cloudflare Worker: moves hackos.kazo.ca to os.kazo.ca (KazoOS, ADR 0228).
+ * Cloudflare Worker: moves hackos.kazo.ca to os.kazo.ca (Kazo OS, ADR 0228).
  *
  * - /service-worker.js (with or without a query string, such as
  *   ?mode=installed-apps) answers 200 with a script that replaces the cached

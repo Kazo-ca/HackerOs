@@ -197,7 +197,7 @@ public sealed class AppManifestJsonSerializerTests
         Name = "Text Editor",
         Version = "1.0.0",
         PublisherId = "org.hackeros",
-        Description = "Edits text files in the KazoOS virtual filesystem.",
+        Description = "Edits text files in the Kazo OS virtual filesystem.",
         Kind = AppKind.Window,
         EntryPoint = new AppEntryPointManifest("HackerOs.Apps.TextEditor", "HackerOs.Apps.TextEditor.TextEditorApp"),
         SdkCompatibility = new AppSdkCompatibilityManifest("1.0.0"),

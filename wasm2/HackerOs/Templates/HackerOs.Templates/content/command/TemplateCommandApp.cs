@@ -26,7 +26,7 @@ public sealed class TemplateCommandApp : AppDefinition
     public override string PublisherId => "pub.template";
 
     /// <inheritdoc />
-    public override string Description => "A KazoOS terminal command.";
+    public override string Description => "A Kazo OS terminal command.";
 
     /// <inheritdoc />
     public override TerminalCommand? Terminal => new("hello", "Prints a greeting", []);

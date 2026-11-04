@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <!--
-    HackerOs.App.Build (ADR 0098 §2): the build integration of KazoOS apps for a project outside
+    HackerOs.App.Build (ADR 0098 §2): the build integration of Kazo OS apps for a project outside
     this repository. It carries no assembly, only:
 
       buildTransitive/HackerOs.App.Build.targets  sets HackerOsBuildFromPackage, imports hackeros-build/
@@ -20,7 +20,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <PackageId>HackerOs.App.Build</PackageId>
-    <Description>Build integration of KazoOS apps: generated manifest.json, SDK boundary checks, ASP.Hack route generator and host aggregation of app packages.</Description>
+    <Description>Build integration of Kazo OS apps: generated manifest.json, SDK boundary checks, ASP.Hack route generator and host aggregation of app packages.</Description>
     <PackageTags>hackeros;msbuild;build;app-manifest</PackageTags>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <IncludeSymbols>false</IncludeSymbols>

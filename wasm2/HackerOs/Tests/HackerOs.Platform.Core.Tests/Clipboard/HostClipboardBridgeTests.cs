@@ -97,7 +97,7 @@ public sealed class HostClipboardBridgeTests
         bridge.OnHostPaste("host text", ["file.bin"]);
 
         Assert.Equal((toHost, toGuest), channel.Directions);
-        // The page always learns the guest text (it pastes it into KazoOS fields); only the host write depends on the mode.
+        // The page always learns the guest text (it pastes it into Kazo OS fields); only the host write depends on the mode.
         Assert.Equal([("guest text", toHost)], channel.Syncs);
         Assert.Equal(toGuest ? "host text" : "guest text", clipboard.Get(session, SystemClipboard.TextMediaType));
     }

@@ -1,6 +1,6 @@
 > [Version française](readme-fr.md)
 
-# KazoOS
+# Kazo OS
 
 A simulation of a Linux-like operating system in the browser, in C# and Blazor
 WebAssembly, meant as an environment to develop applications in. **No game in

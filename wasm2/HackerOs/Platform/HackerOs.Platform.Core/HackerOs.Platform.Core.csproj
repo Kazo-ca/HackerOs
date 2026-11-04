@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <PackageId>HackerOs.Platform.Core</PackageId>
-    <Description>KazoOS platform core: app catalog, process manager, policy, shell, settings and logs as files, gateways behind the SDK. For composing an OS host.</Description>
+    <Description>Kazo OS platform core: app catalog, process manager, policy, shell, settings and logs as files, gateways behind the SDK. For composing an OS host.</Description>
     <PackageTags>hackeros;platform</PackageTags>
   </PropertyGroup>
 

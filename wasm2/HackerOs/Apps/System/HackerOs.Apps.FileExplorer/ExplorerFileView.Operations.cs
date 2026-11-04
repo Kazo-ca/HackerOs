@@ -417,7 +417,7 @@ public sealed partial class ExplorerFileView
         e.Destination is { } destination ? TransferDropAsync(e, destination) : Task.CompletedTask;
 
     /// <summary>
-    /// A drop into <paramref name="destination"/>: KazoOS entries are moved (copied with Ctrl), with the
+    /// A drop into <paramref name="destination"/>: Kazo OS entries are moved (copied with Ctrl), with the
     /// conflict dialog; files from the host system are imported; apps from the Start menu become
     /// <c>.desktop</c> shortcuts (ADR 0160 §6). One summary covers the transfers.
     /// </summary>

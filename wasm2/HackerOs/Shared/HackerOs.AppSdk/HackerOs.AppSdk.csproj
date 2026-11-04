@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <PackageId>HackerOs.AppSdk</PackageId>
-    <Description>KazoOS App SDK: the Hack* APIs an app uses (HackFile, HackStream, HackDirectory, HackProcess, HackApps, HackUser...) through its execution context.</Description>
+    <Description>Kazo OS App SDK: the Hack* APIs an app uses (HackFile, HackStream, HackDirectory, HackProcess, HackApps, HackUser...) through its execution context.</Description>
     <PackageTags>hackeros;app-sdk</PackageTags>
   </PropertyGroup>
 

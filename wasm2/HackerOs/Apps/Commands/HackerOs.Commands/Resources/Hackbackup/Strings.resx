@@ -40,7 +40,7 @@
     <value>hackbackup: unknown command '{0}'</value>
   </data>
   <data name="Unsupported" xml:space="preserve">
-    <value>hackbackup: this KazoOS host cannot back up the machine</value>
+    <value>hackbackup: this Kazo OS host cannot back up the machine</value>
   </data>
   <data name="Usage" xml:space="preserve">
     <value>usage: hackbackup create | restore [--merge|--replace]</value>

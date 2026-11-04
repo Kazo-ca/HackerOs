@@ -7,17 +7,17 @@
     <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
     <!--
       ADR 0106, ADR 0113: Release publish trims the framework and the other trimmable libraries; the
-      KazoOS packages and every app are kept whole (roots added by HackerOs.App.Build).
+      Kazo OS packages and every app are kept whole (roots added by HackerOs.App.Build).
     -->
     <PublishTrimmed>true</PublishTrimmed>
     <TrimMode>partial</TrimMode>
     <!--
-      KazoOS host (ADR 0047, ADR 0098 §2): the build aggregates the manifests of every app package
+      Kazo OS host (ADR 0047, ADR 0098 §2): the build aggregates the manifests of every app package
       below into this assembly, read back by HostAppCatalog.Load, and lazy-loads their assemblies.
       IsSystemApp="true" makes an app a system app (not uninstallable, dangerous capabilities granted).
     -->
     <HackerOsAppHost>true</HackerOsAppHost>
-    <!-- One version for every KazoOS package (ADR 0098 §1). -->
+    <!-- One version for every Kazo OS package (ADR 0098 §1). -->
     <HackerOsVersion>0.0.0-dev</HackerOsVersion>
   </PropertyGroup>
 

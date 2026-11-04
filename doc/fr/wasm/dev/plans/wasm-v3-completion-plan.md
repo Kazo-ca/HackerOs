@@ -91,7 +91,7 @@ fusionné dans `main` sans Benoit.
 | `v3/12-localization` | `IStringLocalizer` dans les apps et la plateforme, ressources `.resx` ; langue de l'utilisateur dans `~/.config/locale.conf`, langue du système dans `/etc/locale.conf`, variable `LANG` dans l'environnement des processus (ADR 0050) ; passerelle de langue dans `IAppExecutionContext` ; `Localizations` du manifeste utilisé (nom des apps dans le lanceur) ; traduction des apps de base et de la plateforme ; correction de `docs/old/localization.md`, qui décrit un état inexistant. | R10 | `3`, `4`, `5`, `7`, `11` |
 | `v3/13-accessibility` | Préférences d'accessibilité en fichiers (contraste élevé, taille du texte, mouvement réduit) lues par le thème et exposées par le SDK ; scans axe ajoutés pour Terminal, Browser, Calculator, System Monitor et les apps des chantiers 7 et 11 ; parcours au clavier testé en E2E. | R11 | `3`, `12` |
 | `v3/14-trimming` | `PublishTrimmed=True` dans l'Ecosystem, avertissements de trimming corrigés dans tous les projets livrés, publication Release trimmée testée en E2E (boot, apps, sites). AOT hors périmètre. | R12 | `2` à `13` |
-| `v3/15-sdk-freeze` | `PublicAPI.Shipped.txt` pour toutes les bibliothèques du SDK ; gel du SDK 1.0 ; test d'une app compilée contre une version antérieure du SDK ; guide « construire sur KazoOS depuis un autre dépôt ». | R21 | `14` |
+| `v3/15-sdk-freeze` | `PublicAPI.Shipped.txt` pour toutes les bibliothèques du SDK ; gel du SDK 1.0 ; test d'une app compilée contre une version antérieure du SDK ; guide « construire sur Kazo OS depuis un autre dépôt ». | R21 | `14` |
 | `v3/16-final` | Vérification finale (trois hôtes, toutes les suites), statut ajouté à `doc/fr/wasm/dev/plans/wasm-v3-migration-analyse.md`, mise à jour de `docs/old/implementation-status.md`, `project-overview.md`, `sdk-reference.md`. | — | tous |
 
 ### Ordre et parallélisme
@@ -202,6 +202,6 @@ Réponses de Benoit du 2026-10-17 05:52Z.
 - [x] `v3/11-apps` ([`hack-paint.md`](../hack-paint.md), [`theme-editor.md`](../theme-editor.md))
 - [x] `v3/12-localization` (ADR 0104, ADR 0111, [`localization.md`](../../framework/localization.md))
 - [x] `v3/13-accessibility` ([`accessibility.md`](../accessibility.md), ADR 0112)
-- [x] `v3/14-trimming` ([`trimmed-publish.md`](../trimmed-publish.md), ADR 0113 ; assemblies KazoOS gardées entières)
+- [x] `v3/14-trimming` ([`trimmed-publish.md`](../trimmed-publish.md), ADR 0113 ; assemblies Kazo OS gardées entières)
 - [x] `v3/15-sdk-freeze` (ADR 0114, [`building-on-hackeros.md`](../../framework/building-on-hackeros.md))
 - [x] `v3/16-final` (bilan : [`wasm-v3-final-status.md`](wasm-v3-final-status.md))

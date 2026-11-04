@@ -53,7 +53,7 @@ public sealed class ScreenServiceTests(ITestOutputHelper output)
             IPage screen = await page.RunAndWaitForPopupAsync(() => restore.ClickAsync());
             E2ESupport.AttachDiagnostics(screen, output);
             await Assertions.Expect(screen.Locator(".secondary-screen[data-display='2']")).ToBeVisibleAsync(new() { Timeout = 20000 });
-            await Assertions.Expect(screen).ToHaveTitleAsync("KazoOS — Screen 2");
+            await Assertions.Expect(screen).ToHaveTitleAsync("Kazo OS — Screen 2");
             await Assertions.Expect(screen.Locator(".secondary-screen-fullscreen")).ToBeVisibleAsync();
             await Assertions.Expect(restore).ToHaveCountAsync(0);
             int[] size = await screen.EvaluateAsync<int[]>("() => [innerWidth, innerHeight]");

@@ -14,7 +14,7 @@ namespace HackerOs.Platform.Core.Processes;
 /// <item><b>Domain</b>: a login name, <c>@group</c>, or <c>*</c>.</item>
 /// <item><b>Type</b>: <c>soft</c>, <c>hard</c>, or <c>-</c> (both).</item>
 /// <item><b>Item</b>: <c>cpu</c> (minutes, as in <c>limits.conf(5)</c>), <c>rss</c> (KiB),
-/// <c>nofile</c>, <c>nproc</c>. The other items of Linux are accepted and ignored: KazoOS has no
+/// <c>nofile</c>, <c>nproc</c>. The other items of Linux are accepted and ignored: Kazo OS has no
 /// such limit.</item>
 /// <item><b>Value</b>: a non-negative integer, or <c>unlimited</c>, <c>infinity</c> or <c>-1</c>.</item>
 /// </list>
@@ -60,7 +60,7 @@ public static class ResourceLimitsConfiguration
         "\n" +
         "# End of file\n";
 
-    /// <summary>The <c>limits.d</c> items KazoOS knows but does not apply (Linux's other <c>RLIMIT_*</c>).</summary>
+    /// <summary>The <c>limits.d</c> items Kazo OS knows but does not apply (Linux's other <c>RLIMIT_*</c>).</summary>
     private static readonly HashSet<string> IgnoredItems = new(StringComparer.Ordinal)
     {
         "core", "data", "fsize", "memlock", "stack", "as", "maxlogins", "maxsyslogins", "nonewprivs",

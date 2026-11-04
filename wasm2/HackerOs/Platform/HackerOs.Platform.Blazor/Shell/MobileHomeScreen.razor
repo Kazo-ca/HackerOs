@@ -4,7 +4,7 @@
 <section class="mobile-home-screen @(_editing ? "is-editing" : null) @(_mouseHelpers ? "has-mouse-helpers" : null)" @ref="_root" aria-label="@L["MobileHome.Label"]" @onkeydown="HandleKeys">
     <div class="mobile-home-content" inert="@IsDrawerOpen">
     <header class="mobile-home-heading">
-        <div><span class="mobile-home-eyebrow">KazoOS</span><h1>@L["MobileHome.Title"]</h1></div>
+        <div><span class="mobile-home-eyebrow">Kazo OS</span><h1>@L["MobileHome.Title"]</h1></div>
         <button type="button" class="mobile-home-tool" aria-pressed="@(_editing ? "true" : "false")" @onclick="ToggleEdit">@L[_editing ? "MobileHome.Done" : "MobileHome.Edit"]</button>
     </header>
     <div class="mobile-home-pages" data-home-gesture="pages" aria-label="@L["MobileHome.Page", _page + 1]">

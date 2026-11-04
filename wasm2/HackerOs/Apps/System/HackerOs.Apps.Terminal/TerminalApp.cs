@@ -35,7 +35,7 @@ public sealed class TerminalApp : AppDefinition
     public override string PublisherId => "pub.hackeros";
 
     /// <inheritdoc />
-    public override string Description => "Command line interface and interactive shell for KazoOS";
+    public override string Description => "Command line interface and interactive shell for Kazo OS";
 
     /// <inheritdoc />
     public override IReadOnlyList<string> Capabilities =>

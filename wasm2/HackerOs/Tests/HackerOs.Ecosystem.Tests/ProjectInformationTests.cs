@@ -37,7 +37,7 @@ public sealed class ProjectInformationTests
         });
         Assert.Equal(visible, html.Contains("https://hackos.kazo.ca/legacy/", StringComparison.Ordinal));
         Assert.Contains("https://github.com/Kazo-ca/HackerOs", html);
-        Assert.Contains($"KazoOS {HackerOsSdk.Version}", html);
+        Assert.Contains($"Kazo OS {HackerOsSdk.Version}", html);
     }
 
     [Theory]

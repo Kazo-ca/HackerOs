@@ -7,7 +7,7 @@ namespace HackerOs.AppSdk.Web.Diagnostics;
 /// <summary>
 /// The detailed error page of <c>UseExceptionPage</c> (ASP.NET's developer exception page): the
 /// exception chain with stacks, the request line, query, headers, cookies and route values, in the
-/// KazoOS console style. Content negotiation as ASP.NET: a client that does not accept HTML gets text.
+/// Kazo OS console style. Content negotiation as ASP.NET: a client that does not accept HTML gets text.
 /// </summary>
 internal static class HackExceptionPage
 {

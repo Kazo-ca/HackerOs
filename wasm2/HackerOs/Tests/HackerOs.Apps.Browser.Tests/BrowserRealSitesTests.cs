@@ -20,7 +20,7 @@ public sealed class BrowserRealSitesTests
 
         Assert.Equal("⇄", indicator.SourceIcon);
         Assert.Equal("source-real", indicator.SourceClass);
-        Assert.Equal("Real site, through the KazoOS server's proxy", indicator.SourceTitle);
+        Assert.Equal("Real site, through the Kazo OS server's proxy", indicator.SourceTitle);
         Assert.Null(indicator.NotSecureLabel);
     }
 
@@ -29,7 +29,7 @@ public sealed class BrowserRealSitesTests
     {
         AddressBarIndicator indicator = AddressBarIndicators.For(new Uri("http://example.com/"), BrowserResponseSource.RealNetwork, French);
 
-        Assert.Equal("Vrai site, par le proxy du serveur KazoOS", indicator.SourceTitle);
+        Assert.Equal("Vrai site, par le proxy du serveur Kazo OS", indicator.SourceTitle);
         Assert.Equal("Non sécurisé", indicator.NotSecureLabel);
     }
 
@@ -67,7 +67,7 @@ public sealed class BrowserRealSitesTests
     {
         BrowserErrorView view = BrowserErrorPages.ForNetworkError("ERR_NAME_NOT_RESOLVED", new Uri("https://example.com/"));
 
-        Assert.Contains(view.Hints, hint => hint.Contains("KazoOS server", StringComparison.Ordinal));
+        Assert.Contains(view.Hints, hint => hint.Contains("Kazo OS server", StringComparison.Ordinal));
     }
 
     [Fact]

@@ -1,8 +1,8 @@
 > [Version française](readme-fr.md)
 
-# KazoOS
+# Kazo OS
 
-KazoOS is a **simulated operating system that runs in the browser**, written
+Kazo OS is a **simulated operating system that runs in the browser**, written
 in C# with Blazor WebAssembly (.NET 10). It provides a complete environment for
 building and running applications: desktop and windows, a persistent file
 system, processes, a POSIX shell and Linux commands, a simulated network,
@@ -10,7 +10,7 @@ internal web sites, and a **public SDK** (NuGet packages) to create your own
 apps, commands, services and sites.
 
 - **Try it**: <https://hackos.kazo.ca/> (PWA, works offline).
-- **Features**: [KazoOS overview and features](doc/en/wasm/features.md): what KazoOS offers today, the goal of the ecosystem, ways to deploy it, and what is in development.
+- **Features**: [Kazo OS overview and features](doc/en/wasm/features.md): what Kazo OS offers today, the goal of the ecosystem, ways to deploy it, and what is in development.
 - **Code**: [`wasm2/HackerOs/`](wasm2/HackerOs/README.md).
 - **Documentation**: [`doc/en/wasm/README.md`](doc/en/wasm/README.md) (French: [`doc/fr/wasm/README.md`](doc/fr/wasm/README.md)).
 - Source repository: [Kazo-ca/HackerOs](https://github.com/Kazo-ca/HackerOs).
@@ -34,10 +34,10 @@ tests are described in
 
 | To… | Read |
 | --- | --- |
-| Discover what KazoOS offers and what is coming | [`features.md`](doc/en/wasm/features.md) |
+| Discover what Kazo OS offers and what is coming | [`features.md`](doc/en/wasm/features.md) |
 | Understand the OS code | [`project-overview.md`](doc/en/wasm/dev/project-overview.md), then [`doc/en/wasm/dev/`](doc/en/wasm/dev/README.md) |
 | Write an app, a command or a service | [`sdk-developer-guide.md`](doc/en/wasm/framework/sdk-developer-guide.md) and [`sdk-reference.md`](doc/en/wasm/framework/sdk-reference.md) |
-| Build on KazoOS from another repository | [`building-on-hackeros.md`](doc/en/wasm/framework/building-on-hackeros.md) |
+| Build on Kazo OS from another repository | [`building-on-hackeros.md`](doc/en/wasm/framework/building-on-hackeros.md) |
 | Create an internal web site (ASP.Hack, Blazor) | [`asp-hack-developer-guide.md`](doc/en/wasm/framework/asp-hack-developer-guide.md) |
 | Avoid problems already met | [`pitfalls.md`](doc/en/wasm/dev/pitfalls.md) |
 | Know the project state and its conventions | [`doc/en/wasm/memory/`](doc/en/wasm/memory/README.md) |
@@ -47,7 +47,7 @@ tests are described in
 
 | Folder | Contents |
 | --- | --- |
-| [`wasm2/HackerOs/`](wasm2/HackerOs/README.md) | **Active version**: the KazoOS solution (OS, SDK, apps, hosts, tests). |
+| [`wasm2/HackerOs/`](wasm2/HackerOs/README.md) | **Active version**: the Kazo OS solution (OS, SDK, apps, hosts, tests). |
 | [`doc/`](doc/README.md) | Documentation, in English ([`doc/en/`](doc/en/README.md)) and French ([`doc/fr/`](doc/fr/README.md)). |
 | [`src/`](src/README.md) | Legacy TypeScript version, kept read-only as a reference. |
 | [`.github/workflows/`](.github/workflows/) | Verification and GitHub Pages publishing. |

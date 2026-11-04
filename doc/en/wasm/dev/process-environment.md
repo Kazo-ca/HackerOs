@@ -7,7 +7,7 @@ and 6, clarified by ADR 0053.
 
 ## Goal
 
-Each KazoOS process now carries, as on Linux:
+Each Kazo OS process now carries, as on Linux:
 
 - its **arguments** (`argv`, including the command name);
 - its **current directory**, a canonical absolute path;

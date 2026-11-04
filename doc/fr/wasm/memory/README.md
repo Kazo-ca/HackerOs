@@ -1,6 +1,6 @@
 > [English version](../../../en/wasm/memory/README.md)
 
-# Mémoire du projet KazoOS
+# Mémoire du projet Kazo OS
 
 État du projet et conventions de travail au **2026-10-31**. Ce dossier sert de
 point de reprise : un nouveau contributeur (humain ou agent) y trouve ce qui
@@ -12,7 +12,7 @@ jour à la fin de chaque série ou quand une convention change.
 - **Code actif** : `wasm2/HackerOs/` (OS simulé en Blazor WebAssembly, .NET 10,
   solution `HackerOs.sln`). `src/` est l'ancienne version, gardée comme
   référence.
-- **Version** : KazoOS et le SDK passent en **2.2.2** (`build/Versions.props`),
+- **Version** : Kazo OS et le SDK passent en **2.2.2** (`build/Versions.props`),
   préparée le 2026-11-01 dans la PR `release/2.2.2` vers `main` ; elle est
   publiée (tag `v2.2.2`, GitHub Release, nuget.org) quand cette PR arrive dans
   `main`. Elle compile la clé publique du catalogue officiel dans l'OS
@@ -77,7 +77,7 @@ jour à la fin de chaque série ou quand une convention change.
 - **Thèmes de curseurs** (ADR 0205, série `todo/base`, chantier
   `todo/9-cursor-themes`, issue #257) : dossiers `cursor.theme` de PNG dans
   `/etc/hackeros/cursors/` et `~/.config/hackeros/cursors/`, `cursors.config`,
-  thèmes intégrés Système (défaut), KazoOS Néon et Gothique Pourpre,
+  thèmes intégrés Système (défaut), Kazo OS Néon et Gothique Pourpre,
   appliqués à toute la surface par `cursorTheme.js`, apps comprises. Fusionné
   dans `todo/base` (PR #301) ; Benoit a confirmé le 2026-10-31 le thème par
   défaut Système et la portée partout.
@@ -166,8 +166,8 @@ jour à la fin de chaque série ou quand une convention change.
   0193 heure locale, 0194 menus de la barre des tâches, 0195 bouton
   Marche/arrêt du menu Démarrer, 0196 point des notifications non lues ; série `todo/base` : 0197 bulles de
   notification, 0201 « Changer d'utilisateur » reste grisé, 0203 packs d'icônes, 0207 modèle `hackeros-solution`, 0208 sources de confiance du Hack Store, 0212 app Hack Store, 0213 packs de thèmes, 0214 Hack Store sans redémarrage, signature et transactions, 0215 réponses du Hack Store (pas de badge, appId ambigu refusé) (les
-  autres numéros jusqu'à 0211 sont réservés par ses chantiers ; 0216 à 0219 par le lot 3 : 0216 mode « Ne pas déranger », 0217 fond d'écran de l'accueil mobile, 0218 « Définir comme fond d'écran » dans le menu des images, 0219 outil de signature des auteurs d'apps) ; 0220 boutons Précédent et Suivant de la souris, série `mouse-back/base` ; 0221 toutes les ressources statiques d'une app dans son paquet et CSS isolé d'une app installée (branche `app-assets/static-web-assets`) ; 0222 traductions des apps installées, assemblages satellites (#337, branche `app-assets/satellite-assemblies`) ; 0223 redémarrer sur la nouvelle version (série `version-cache/base`) ; 0224 réessayer le démarrage après une erreur du serveur (branche `boot/retry-server-errors`) ; 0225 servir les fichiers des apps installées à chaque page (branche `installed-apps/serve-uncontrolled-page`) ; 0226 mot de passe oublié, réinitialiser depuis la connexion (branche `login/forgot-password-factory-reset`) ; 0227 la réinitialisation efface tout le navigateur (branche `login/factory-reset-erase-everything`) ; 0228 HackerOS devient KazoOS (série `rename/base`). **Prochain numéro libre :
-  0229.** Avant d'en
+  autres numéros jusqu'à 0211 sont réservés par ses chantiers ; 0216 à 0219 par le lot 3 : 0216 mode « Ne pas déranger », 0217 fond d'écran de l'accueil mobile, 0218 « Définir comme fond d'écran » dans le menu des images, 0219 outil de signature des auteurs d'apps) ; 0220 boutons Précédent et Suivant de la souris, série `mouse-back/base` ; 0221 toutes les ressources statiques d'une app dans son paquet et CSS isolé d'une app installée (branche `app-assets/static-web-assets`) ; 0222 traductions des apps installées, assemblages satellites (#337, branche `app-assets/satellite-assemblies`) ; 0223 redémarrer sur la nouvelle version (série `version-cache/base`) ; 0224 réessayer le démarrage après une erreur du serveur (branche `boot/retry-server-errors`) ; 0225 servir les fichiers des apps installées à chaque page (branche `installed-apps/serve-uncontrolled-page`) ; 0226 mot de passe oublié, réinitialiser depuis la connexion (branche `login/forgot-password-factory-reset`) ; 0227 la réinitialisation efface tout le navigateur (branche `login/factory-reset-erase-everything`) ; 0228 HackerOS devient Kazo OS (série `rename/base`) ; 0229 « Kazo OS » avec une espace, dépôts `Kazo.Os.App.*`, redirection vers os.kazo.ca. **Prochain numéro libre :
+  0230.** Avant d'en
   prendre un, vérifier `dev/adr/` sur `main` et les PR ouvertes.
 
 ## Conventions de travail
@@ -206,7 +206,7 @@ section **IV** de [`AGENTS.md`](../../../../AGENTS.md), que Claude Code lit par
   `PublicAPI.Unshipped.txt` ; un ajout passe par `Unshipped` jusqu'à la
   publication suivante (`build/tools/ship-public-api.sh`).
 - **Publier** : changer `HackerOsVersion` dans `build/Versions.props` et
-  fusionner dans `main` ; le workflow `Release KazoOS` crée le tag, la
+  fusionner dans `main` ; le workflow `Release Kazo OS` crée le tag, la
   Release GitHub et pousse sur nuget.org ([`releases.md`](../dev/releases.md),
   ADR 0173).
 
@@ -215,7 +215,7 @@ section **IV** de [`AGENTS.md`](../../../../AGENTS.md), que Claude Code lit par
 | Note | Contenu |
 | --- | --- |
 | [`decisions-not-built.md`](decisions-not-built.md) | Décisions prises par Benoit en discussion et pas encore codées ni écrites ailleurs : fenêtres et barre des tâches (chantiers restants de #242), vrais sites dans le navigateur (#266 : proxy public et Wayback restants), apps tierces portées, apps hébergées par le serveur, idées tirées de daedalOS, éditeurs. |
-| Renommage (2026-11-04) | HackerOS devient KazoOS ([ADR 0228](../dev/adr/0228-rename-to-kazoos.md)) : série `rename/base` en cours, chantiers 2 à 8 listés dans l'ADR. Benoit renomme lui-même le dépôt en `Kazo-ca/Os`. Le site passe à `os.kazo.ca` ; `hackos.kazo.ca` reste ouvert pour récupérer les données par une sauvegarde (chantier 7). |
+| Renommage (2026-11-04) | HackerOS devient Kazo OS ([ADR 0228](../dev/adr/0228-rename-to-kazoos.md), [ADR 0229](../dev/adr/0229-kazo-os-display-name-and-new-address.md)) : série `rename/base` en cours, chantiers 2 à 8 listés dans l'ADR. Benoit renomme lui-même le dépôt en `Kazo-ca/Os`. Dépôts d'apps renommés `Kazo.Os.App.*`. Le site passe à `os.kazo.ca` ; `hackos.kazo.ca` est redirigé par un Worker Cloudflare (PR #362), sans récupération des données. |
 | [`known-test-failures.md`](known-test-failures.md) | Échecs de tests préexistants connus (à nommer dans une PR, pas à cacher) et astuces d'environnement récentes. |
 
 ## Environnement et pièges

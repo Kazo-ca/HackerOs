@@ -115,7 +115,7 @@ public sealed class PsCommand : TerminalAppBase
         proc.Status.TryGetValue("Job", out string? job) ? job : proc.Field("AppId");
 
     /// <summary>
-    /// The <c>-o</c> fields procps knows that KazoOS can fill, with their headers (ADR 0127 adds
+    /// The <c>-o</c> fields procps knows that Kazo OS can fill, with their headers (ADR 0127 adds
     /// <c>ni</c> and <c>pri</c>). <c>pri</c> is procps's <c>PRI</c> of <c>ps -l</c>: <c>80 + nice</c>.
     /// </summary>
     private static readonly Dictionary<string, Column> Columns = new(StringComparer.Ordinal)

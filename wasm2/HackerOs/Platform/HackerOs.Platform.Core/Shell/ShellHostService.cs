@@ -43,7 +43,7 @@ public sealed class ShellHostService
         Name = "hsh",
         Version = "1.0.0",
         PublisherId = "pub.hackeros",
-        Description = "KazoOS shell",
+        Description = "Kazo OS shell",
         Kind = AppKind.Terminal,
         SdkCompatibility = new AppSdkCompatibilityManifest(HackerOsSdk.Version),
         Presentation = new PresentationManifest("system", AppLaunchVisibility.Hidden, []),

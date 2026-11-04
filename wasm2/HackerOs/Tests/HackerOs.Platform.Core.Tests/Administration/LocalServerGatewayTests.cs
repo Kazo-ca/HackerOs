@@ -59,7 +59,7 @@ public sealed class LocalServerGatewayTests
         AppServerConnectionGateway denied = new(
             new ServerConnectionGatewayServices(() => new ServerConnectionService(new Repository(), new AccountClient()))
             {
-                HostInfo = () => new HostInfo(new HostInfoResponse("KazoOS Server", true, "2.1.0", "1.0"))
+                HostInfo = () => new HostInfo(new HostInfoResponse("Kazo OS Server", true, "2.1.0", "1.0"))
             },
             new Capabilities());
 
@@ -74,13 +74,13 @@ public sealed class LocalServerGatewayTests
             new ServerConnectionGatewayServices(() => throw new InvalidOperationException()) { HostInfo = () => hostInfo },
             new Capabilities(AppCapabilities.ServerConnectionManage));
 
-        HackServerProbe found = await With(new HostInfo(new HostInfoResponse("KazoOS Server", true, "2.1.0", "1.0"))).TestAsync(Server);
-        HackServerProbe other = await With(new HostInfo(new ServerConnectionException("answered 404: not a KazoOS server"))).TestAsync(Server);
+        HackServerProbe found = await With(new HostInfo(new HostInfoResponse("Kazo OS Server", true, "2.1.0", "1.0"))).TestAsync(Server);
+        HackServerProbe other = await With(new HostInfo(new ServerConnectionException("answered 404: not a Kazo OS server"))).TestAsync(Server);
         HackServerProbe offline = await With(new HostInfo(new HttpRequestException("Connection refused"))).TestAsync(Server);
 
         Assert.Equal(new HackServerProbe(true, "2.1.0", "1.0", null), found);
         Assert.False(other.IsServer);
-        Assert.Contains("not a KazoOS server", other.Error, StringComparison.Ordinal);
+        Assert.Contains("not a Kazo OS server", other.Error, StringComparison.Ordinal);
         Assert.False(offline.IsServer);
         Assert.Contains("could not be reached", offline.Error, StringComparison.Ordinal);
     }

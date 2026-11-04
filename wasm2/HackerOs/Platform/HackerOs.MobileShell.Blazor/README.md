@@ -27,7 +27,7 @@ labels, mirroring `TaskbarOptions`.
 
 This package supplies the navigation controls and Recent surface. The host owns
 Back's ordered semantics (overlay → app handler → navigation history → Home).
-KazoOS also recognizes an upward gesture starting on the Home control to open
+Kazo OS also recognizes an upward gesture starting on the Home control to open
 its application drawer. Home pages, the pinned app dock and mouse assistance
 belong to Platform Blazor; see [mobile Home](../../../../doc/en/wasm/dev/mobile-home-screen.md)
 and [ADR 0165](../../../../doc/en/wasm/dev/adr/0165-mobile-home-drawer-and-mouse-controls.md).
@@ -37,7 +37,7 @@ and [ADR 0165](../../../../doc/en/wasm/dev/adr/0165-mobile-home-drawer-and-mouse
 The package's texts (accessible labels, Back/Home/Recent, the Recent surface) live in `Resources/Strings.resx`
 (English) and `Resources/Strings.fr.resx` (French), read through
 `HackerOs.Theming.Blazor.Localization.PackageStringLocalizer` (ADR 0104): a host that
-registers an `IStringLocalizer<T>` (KazoOS registers its session-language
+registers an `IStringLocalizer<T>` (Kazo OS registers its session-language
 `SessionStringLocalizer<T>`) gets its language; a host without localization gets English.
 
 Every label of `MobileSystemNavigationBarOptions` and `MobileRecentSurfaceOptions` is now

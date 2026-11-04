@@ -46,7 +46,7 @@ public sealed class StoreApp : AppDefinition
     public override string PublisherId => "pub.hackeros";
 
     /// <inheritdoc />
-    public override string Description => "Find, install, update and remove apps from the reviewed KazoOS catalogs";
+    public override string Description => "Find, install, update and remove apps from the reviewed Kazo OS catalogs";
 
     /// <inheritdoc />
     public override string Category => "system";

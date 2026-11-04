@@ -1,7 +1,7 @@
-name: Release KazoOS
+name: Release Kazo OS
 
-# ADR 0173: wasm2/HackerOs/build/Versions.props is the only version of KazoOS. When a
-# commit of main carries a version that has no v<version> tag yet, and "Verify KazoOS
+# ADR 0173: wasm2/HackerOs/build/Versions.props is the only version of Kazo OS. When a
+# commit of main carries a version that has no v<version> tag yet, and "Verify Kazo OS
 # WASM" passed on that commit, this workflow packs every published library, pushes the
 # packages to nuget.org (when publishing is configured), then tags the commit and creates
 # the GitHub Release with the packages and the WASM site attached.
@@ -13,12 +13,12 @@ name: Release KazoOS
 # yet; with "republish" checked, packs the tagged version again and pushes it to nuget.org
 # (packages already there are skipped), for a release made before NuGet was configured.
 #
-# ADR 0191 §5: once the release exists, the "server" jobs attach the installable KazoOS server
+# ADR 0191 §5: once the release exists, the "server" jobs attach the installable Kazo OS server
 # (hackeros-server-<version>-<rid>.zip|tar.gz, build/publish-server.sh) to the same release and
 # push its image ghcr.io/kazo-ca/hackeros-server (:<version> and, for a stable version, :latest).
 on:
   workflow_run:
-    workflows: [ "Verify KazoOS WASM" ]
+    workflows: [ "Verify Kazo OS WASM" ]
     types: [ completed ]
     branches: [ main ]
   workflow_dispatch:
@@ -99,9 +99,9 @@ jobs:
             echo "sha=$(git rev-parse HEAD)"
           } >> "$GITHUB_OUTPUT"
           case "$mode" in
-            none) echo "### KazoOS $version is already released ($tag): nothing to do." >> "$GITHUB_STEP_SUMMARY" ;;
-            release) echo "### Releasing KazoOS $version ($tag)" >> "$GITHUB_STEP_SUMMARY" ;;
-            republish) echo "### Pushing the packages of KazoOS $version ($tag) to nuget.org again" >> "$GITHUB_STEP_SUMMARY" ;;
+            none) echo "### Kazo OS $version is already released ($tag): nothing to do." >> "$GITHUB_STEP_SUMMARY" ;;
+            release) echo "### Releasing Kazo OS $version ($tag)" >> "$GITHUB_STEP_SUMMARY" ;;
+            republish) echo "### Pushing the packages of Kazo OS $version ($tag) to nuget.org again" >> "$GITHUB_STEP_SUMMARY" ;;
           esac
 
       - name: Setup .NET 10
@@ -202,10 +202,10 @@ jobs:
             dotnet run --project "$HACKEROS_SOLUTION_DIR/Tools/HackerOs.Tools.ChangeList/HackerOs.Tools.ChangeList.csproj" -c Release -- \
               notes --changes "$HACKEROS_SOLUTION_DIR/changes" --version "$VERSION" --kind release \
               --repository "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" --output "$notes"
-            flags=(--title "KazoOS $VERSION" --target "$SHA" --notes-file "$notes")
+            flags=(--title "Kazo OS $VERSION" --target "$SHA" --notes-file "$notes")
           else
             echo "::warning title=Release notes::changes/$VERSION.json is missing (build/tools/collect-changes.sh): GitHub generates the notes."
-            flags=(--title "KazoOS $VERSION" --target "$SHA" --generate-notes)
+            flags=(--title "Kazo OS $VERSION" --target "$SHA" --generate-notes)
           fi
           if [[ "$PRERELEASE" == "true" ]]; then flags+=(--prerelease); else flags+=(--latest); fi
           gh release create "$TAG" "${flags[@]}" "$RELEASE_DIR"/assets/*

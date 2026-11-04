@@ -3,7 +3,7 @@ using System.Text;
 namespace HackerOs.App.Abstractions;
 
 /// <summary>
-/// Represents a canonical absolute path in the KazoOS virtual filesystem.
+/// Represents a canonical absolute path in the Kazo OS virtual filesystem.
 /// </summary>
 public readonly record struct VirtualPath
 {

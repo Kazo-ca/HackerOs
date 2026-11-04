@@ -120,7 +120,7 @@ public sealed partial class HostBootSmokeTests(ITestOutputHelper output)
     /// <summary>
     /// ADR 0134: the OS served by <c>HackerOs.Server</c> connects to it without any question, and
     /// the notification-area icon says so ("Connected, not identified"); identifying from the icon's
-    /// panel (a new account) turns it to "Connected". A host that is not a KazoOS server shows no
+    /// panel (a new account) turns it to "Connected". A host that is not a Kazo OS server shows no
     /// server icon at all.
     /// </summary>
     private async Task CheckServerConnectionAsync(IPage page, HostSmokeSettings settings)

@@ -1,6 +1,6 @@
 {
-  "name": "KazoOS",
-  "short_name": "KazoOS",
+  "name": "Kazo OS",
+  "short_name": "Kazo OS",
   "description": "Blazor WebAssembly Computer Simulation Operating System",
   "id": "./",
   "start_url": "./",

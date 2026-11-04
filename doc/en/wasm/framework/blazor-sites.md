@@ -13,7 +13,7 @@ detached window.
 ## Purpose
 
 An internal site can be **interactive**: its pages are Blazor components
-drawn by the KazoOS browser directly in the page area, like
+drawn by the Kazo OS browser directly in the page area, like
 a Blazor WebAssembly site in a real browser.
 
 - The site remains an ordinary `Web` app (ADR 0073): it listens, serves its MVC

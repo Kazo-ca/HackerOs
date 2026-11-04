@@ -17,7 +17,7 @@ namespace HackerOs.Platform.Blazor.Windows;
 /// </summary>
 /// <remarks>
 /// <para>
-/// Every process of KazoOS that renders a window runs on the browser's main thread, which it
+/// Every process of Kazo OS that renders a window runs on the browser's main thread, which it
 /// shares with the window manager itself (ADR 0067). While an app holds that thread nothing else
 /// runs, not even this monitor: the verdict is therefore reached as soon as the thread is given
 /// back, from what the CPU accountant measured and from how long the user's inputs waited. A window

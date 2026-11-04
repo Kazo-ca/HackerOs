@@ -10,7 +10,7 @@ public static class CursorThemeCatalog
     /// <summary>The host's own cursors: no image, nothing changed on the surface.</summary>
     public const string SystemId = "system";
 
-    /// <summary>Green neon outline on black, matching the KazoOS theme.</summary>
+    /// <summary>Green neon outline on black, matching the Kazo OS theme.</summary>
     public const string NeonId = "hackeros-neon";
 
     /// <summary>Crimson outline on black with bone details, for the gothic themes.</summary>
@@ -43,7 +43,7 @@ public static class CursorThemeCatalog
     public static IReadOnlyList<CursorTheme> Themes { get; } =
     [
         new(SystemId, "System", null, null, new Dictionary<string, CursorImage>(StringComparer.Ordinal)),
-        Drawn(NeonId, "KazoOS Neon"),
+        Drawn(NeonId, "Kazo OS Neon"),
         Drawn(CrimsonId, "Gothic Crimson")
     ];
 

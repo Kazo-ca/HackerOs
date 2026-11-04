@@ -343,7 +343,7 @@ public static class AppSourcesConfigDocument
 /// <summary>Trust level of a source as the Store and <c>hackpkg</c> show it (ADR 0189 §2).</summary>
 public enum AppSourceTrust
 {
-    /// <summary>An app of the official catalog, reviewed and compiled by the KazoOS team.</summary>
+    /// <summary>An app of the official catalog, reviewed and compiled by the Kazo OS team.</summary>
     Verified = 0,
 
     /// <summary>Another source compiled into the OS, or marked trusted by an administrator.</summary>

@@ -60,7 +60,7 @@ de compatibilité pour les autres apps.
 `~/Desktop/.mobile/layout.conf` :
 
 ```ini
-# KazoOS mobile Home layout
+# Kazo OS mobile Home layout
 version=1
 
 [dock]

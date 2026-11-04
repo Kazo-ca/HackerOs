@@ -1,10 +1,10 @@
 ---
-description: "Continue the KazoOS v3 (Blazor WASM/C#) migration by implementing the next unblocked task(s) from the integration task list, with full test/doc/ADR/task-list maintenance."
+description: "Continue the Kazo OS v3 (Blazor WASM/C#) migration by implementing the next unblocked task(s) from the integration task list, with full test/doc/ADR/task-list maintenance."
 name: "Continue Migration"
 argument-hint: "Optional task ID (e.g. P1-BLD-001) or section number; omit to auto-select the next unblocked task"
 agent: "agent"
 ---
-Continue the KazoOS v3 migration described in
+Continue the Kazo OS v3 migration described in
 [integration-task-list.md](../../doc/en/wasm/dev/old/integration-task-list.md),
 following the project rules in [AGENTS.md](../../AGENTS.md).
 

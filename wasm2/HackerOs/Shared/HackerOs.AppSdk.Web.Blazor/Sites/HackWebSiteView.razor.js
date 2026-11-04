@@ -36,7 +36,7 @@ class SiteLinks {
         const target = anchor.getAttribute("target");
         const forceLoad = !!target && target !== "_self";
 
-        // The OS's Blazor router must never see a site link: it would navigate KazoOS itself.
+        // The OS's Blazor router must never see a site link: it would navigate Kazo OS itself.
         event.preventDefault();
         event.stopPropagation();
         event.stopImmediatePropagation();

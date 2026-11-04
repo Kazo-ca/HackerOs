@@ -5,7 +5,7 @@ using HackerOs.Platform.WorkerHost.Worker;
 namespace HackerOs.Platform.WorkerHost.Browser;
 
 /// <summary>
-/// The .NET entry point of a KazoOS Web Worker (ADR 0070, section 4), called by
+/// The .NET entry point of a Kazo OS Web Worker (ADR 0070, section 4), called by
 /// <c>workerBootstrap.js</c> (in <c>HackerOs.Infrastructure.Browser/wwwroot</c>) once the worker's own
 /// runtime is loaded: <see cref="Start"/>, then <see cref="Receive"/> for every message from the OS.
 /// </summary>

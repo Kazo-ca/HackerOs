@@ -9,7 +9,7 @@ namespace HackerOs.Simulation.Abstractions.Network;
 /// </summary>
 public static class SimulatedFileTypes
 {
-    // Text types carry "charset=utf-8": KazoOS writes text files as UTF-8.
+    // Text types carry "charset=utf-8": Kazo OS writes text files as UTF-8.
     private static readonly FrozenDictionary<string, string> ContentTypes = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
     {
         [".html"] = "text/html; charset=utf-8",

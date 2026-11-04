@@ -69,7 +69,7 @@ public interface IAppCrossOriginIsolationGateway
 }
 
 /// <summary>
-/// Whether the page that runs KazoOS is cross-origin isolated, and what that turns on (ADR 0131,
+/// Whether the page that runs Kazo OS is cross-origin isolated, and what that turns on (ADR 0131,
 /// ADR 0146). Like <c>uname</c> or <c>/proc/cpuinfo</c> under Linux, it describes the machine, not
 /// another app, so no capability is needed; <c>/proc/hackeros/workers</c> holds the same facts for
 /// apps that may read <c>/proc</c>.

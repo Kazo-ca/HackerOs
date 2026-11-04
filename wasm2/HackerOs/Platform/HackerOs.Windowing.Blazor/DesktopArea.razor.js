@@ -1,5 +1,5 @@
 /**
- * KazoOS DesktopArea Resize Observer Interop
+ * Kazo OS DesktopArea Resize Observer Interop
  *
  * The area of a secondary screen (ADR 0178 §1) is moved into another window's document right after
  * its first render. A ResizeObserver only follows layout in its own window, so the area is observed

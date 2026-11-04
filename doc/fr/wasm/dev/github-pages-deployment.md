@@ -42,7 +42,7 @@ déploiement de `main`. Vue d'ensemble : [`ci-workflows.md`](ci-workflows.md).
 Playwright n'est exécuté ni par Pages, ni par les vérifications automatiques
 sur `main`. Les six projets de tests navigateur restent disponibles dans
 `.github/workflows/verify-browser-tests.yml`, lancé chaque nuit sur `main`
-quand `main` a changé, ou par **Actions → Verify KazoOS browser tests → Run
+quand `main` a changé, ou par **Actions → Verify Kazo OS browser tests → Run
 workflow** ([`ci-workflows.md`](ci-workflows.md#tests-navigateur-chaque-nuit)). Ce workflow
 conserve ses diagnostics et n'effectue aucun déploiement. Voir
 [les suites de tests](building-and-testing.md#tester) pour les commandes locales.

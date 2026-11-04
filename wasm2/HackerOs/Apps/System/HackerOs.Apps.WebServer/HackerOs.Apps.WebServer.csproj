@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <PackageId>HackerOs.Apps.WebServer</PackageId>
-    <Description>The base KazoOS hackwebd web server and Web Server Manager app, to include in an OS host (ProjectReference or PackageReference, optionally IsSystemApp).</Description>
+    <Description>The base Kazo OS hackwebd web server and Web Server Manager app, to include in an OS host (ProjectReference or PackageReference, optionally IsSystemApp).</Description>
     <PackageTags>hackeros;app</PackageTags>
   </PropertyGroup>
 

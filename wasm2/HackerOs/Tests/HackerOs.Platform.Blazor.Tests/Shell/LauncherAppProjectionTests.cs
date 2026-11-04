@@ -78,7 +78,7 @@ public sealed class LauncherAppProjectionTests
             "org.hackeros.settings",
             "Settings",
             "system",
-            "Configure KazoOS.");
+            "Configure Kazo OS.");
 
         LauncherAppProjectionResult result = LauncherAppProjection.Create(
             [paint, settings],

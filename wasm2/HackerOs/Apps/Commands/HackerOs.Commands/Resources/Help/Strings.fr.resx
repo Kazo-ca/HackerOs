@@ -19,7 +19,7 @@
     <value>Tapez « help &lt;commande&gt; » pour son utilisation.</value>
   </data>
   <data name="Header" xml:space="preserve">
-    <value>Shell KazoOS (hsh). Commandes installées :</value>
+    <value>Shell Kazo OS (hsh). Commandes installées :</value>
   </data>
   <data name="NoMatch" xml:space="preserve">
     <value>help : aucune rubrique d'aide ne correspond à « {0} »</value>

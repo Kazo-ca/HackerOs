@@ -225,5 +225,6 @@ prochain numéro libre est indiqué dans
 | [`0226-forgot-password-factory-reset.md`](0226-forgot-password-factory-reset.md) | ADR 0226 : réinitialiser l'OS depuis l'écran de connexion (mot de passe oublié) : lien « Mot de passe oublié ? », confirmation par le mot `EFFACER`, même effacement que Paramètres, clé de déploiement `HackerOs:SignIn:FactoryReset:Enabled` (activée par défaut) ; complète l'ADR 0056 §11 |
 | [`0227-factory-reset-erases-everything.md`](0227-factory-reset-erases-everything.md) | ADR 0227 : la réinitialisation efface tout ce que HackerOS garde dans le navigateur (toutes les bases IndexedDB, Cache Storage, localStorage, sessionStorage, OPFS, cookies, service worker) ; complète les ADR 0056 §11 et 0226 |
 | [`0228-rename-to-kazoos.md`](0228-rename-to-kazoos.md) | ADR 0228 : HackerOS devient KazoOS (espaces de noms et paquets `Kazo.Os.*`, préfixe `Kazo` au lieu de `Hack`, SDK 3.0.0, migration des données du navigateur, série `rename/base`) |
+| [`0229-kazo-os-display-name-and-new-address.md`](0229-kazo-os-display-name-and-new-address.md) | ADR 0229 : nom affiché « Kazo OS » avec une espace, dépôts d'apps `Kazo.Os.App.*`, `hackos.kazo.ca` redirigé vers `os.kazo.ca` par Cloudflare sans récupération des données ; complète l'ADR 0228 et remplace son nom affiché et son chantier 7 |
 
 Index du dossier parent : [`../README.md`](../README.md).

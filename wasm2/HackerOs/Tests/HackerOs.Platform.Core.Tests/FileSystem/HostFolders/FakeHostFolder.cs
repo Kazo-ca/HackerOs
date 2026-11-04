@@ -110,7 +110,7 @@ internal sealed class FakeHostFolder(string name) : IHostFolder
         return ValueTask.CompletedTask;
     }
 
-    /// <summary>Adds a file the user put in the folder outside KazoOS.</summary>
+    /// <summary>Adds a file the user put in the folder outside Kazo OS.</summary>
     public void Put(string text, params string[] path)
     {
         Node parent = _root;

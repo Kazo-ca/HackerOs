@@ -25,7 +25,7 @@ public sealed class TemplateWindowApp : AppDefinition
     public override string PublisherId => "pub.template";
 
     /// <inheritdoc />
-    public override string Description => "A KazoOS window app.";
+    public override string Description => "A Kazo OS window app.";
 
     /// <inheritdoc />
     public override IReadOnlyList<string> Capabilities => [AppCapabilities.FileSystemUserHomeRead];

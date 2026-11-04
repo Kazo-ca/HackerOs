@@ -1,5 +1,5 @@
 name: "Demande de fonctionnalité / Feature request"
-description: "Proposer une nouvelle fonctionnalité pour KazoOS. / Suggest a new feature for KazoOS."
+description: "Proposer une nouvelle fonctionnalité pour Kazo OS. / Suggest a new feature for Kazo OS."
 labels: ["enhancement"]
 body:
   - type: markdown
@@ -19,7 +19,7 @@ body:
     id: need
     attributes:
       label: "Besoin / Need"
-      description: "Ce que vous voulez faire dans KazoOS et pourquoi. / What you want to do in KazoOS and why."
+      description: "Ce que vous voulez faire dans Kazo OS et pourquoi. / What you want to do in Kazo OS and why."
       placeholder: "En tant qu'utilisateur, je veux… pour… / As a user, I want… so that…"
     validations:
       required: true

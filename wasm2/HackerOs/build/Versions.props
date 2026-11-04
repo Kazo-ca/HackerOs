@@ -1,6 +1,6 @@
 <Project>
   <!--
-    ADR 0098 §1: the single version of everything KazoOS publishes (SDK, platform, base apps,
+    ADR 0098 §1: the single version of everything Kazo OS publishes (SDK, platform, base apps,
     HackerOs.App.Build, HackerOs.Ecosystem.Host, templates). Imported by Directory.Build.props, so
     every project of the solution carries it; Platform/Packaging.props inherits it.
 
@@ -17,7 +17,7 @@
     desktop settings) and HackFileOperations; an app built on 1.x is refused and must be rebuilt.
     2.1.0 (ADR 0173, first automatic release): additions since 2.0 (passkeys, user administration,
     HackFileView.OpenOnTap, ParentExitGracePeriod...) folded into PublicAPI.Shipped.txt. Since ADR
-    0173, changing this number and merging into main is the whole release: the Release KazoOS
+    0173, changing this number and merging into main is the whole release: the Release Kazo OS
     workflow tags the commit, creates the GitHub Release and pushes the packages to nuget.org.
     2.2.0 (series todo/base, Hack Store ADR 0206 to 0208, 0212, 0213): hackeros-solution template
     and its external-source build (HackerOs.ExternalSource.targets), installed-app wwwroot served by

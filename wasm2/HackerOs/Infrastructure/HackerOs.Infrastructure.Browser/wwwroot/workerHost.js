@@ -1,4 +1,4 @@
-// Web Workers of KazoOS (ADR 0070, 0071), the page half of Workers/BrowserWebWorkerRuntime.cs,
+// Web Workers of Kazo OS (ADR 0070, 0071), the page half of Workers/BrowserWebWorkerRuntime.cs,
 // imported by that class through JSHost.ImportAsync. Never referenced by a host (AGENTS.md).
 //
 // Each worker is a module worker running workerBootstrap.js, which starts its own .NET runtime from

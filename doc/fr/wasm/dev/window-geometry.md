@@ -13,7 +13,7 @@ réponse de Benoit), dans la série [`v3-1-series-plan.md`](plans/v3-1-series-pl
 C'est le §10 de l'[ADR 0044](adr/0044-settings-as-files.md).
 
 C'est le modèle de GNOME : une app GTK retient sa taille et son état agrandi,
-le gestionnaire de fenêtres place la fenêtre. KazoOS tient la géométrie en C#
+le gestionnaire de fenêtres place la fenêtre. Kazo OS tient la géométrie en C#
 (ADR 0009) ; il écrit donc lui-même cette taille, pour toutes les apps.
 
 ## Fichier d'état

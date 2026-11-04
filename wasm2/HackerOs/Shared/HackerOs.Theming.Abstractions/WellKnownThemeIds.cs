@@ -1,9 +1,9 @@
 namespace HackerOs.Theming.Abstractions;
 
-/// <summary>Provides stable identifiers for every theme shipped with KazoOS.</summary>
+/// <summary>Provides stable identifiers for every theme shipped with Kazo OS.</summary>
 public static class WellKnownThemeIds
 {
-    /// <summary>The native KazoOS desktop theme.</summary>
+    /// <summary>The native Kazo OS desktop theme.</summary>
     public const string HackerOs = "hackeros";
 
     /// <summary>The Windows 98-inspired desktop theme.</summary>

@@ -57,7 +57,7 @@ internal sealed class AppStorageDiagnosticsGateway : IAppStorageDiagnosticsGatew
     {
         _capabilities.Require(AppCapabilities.SystemStorageInspect);
         IStorageInspector inspector = _inspector?.Invoke()
-            ?? throw new NotSupportedException("This KazoOS host has no persistent storage to inspect.");
+            ?? throw new NotSupportedException("This Kazo OS host has no persistent storage to inspect.");
         // ADR 0100: private settings files and keyrings are masked in every report and export.
         return StorageSnapshotRedactor.Redact(await inspector.CaptureAsync(cancellationToken).ConfigureAwait(false));
     }

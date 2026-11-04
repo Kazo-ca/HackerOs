@@ -5,7 +5,7 @@ using HackerOs.Platform.Core.Apps.Packages;
 namespace HackerOs.Tools.ManifestGenerator;
 
 /// <summary>
-/// Entry point of the KazoOS manifest generator (ADR 0047). Commands:
+/// Entry point of the Kazo OS manifest generator (ADR 0047). Commands:
 /// <list type="bullet">
 /// <item><c>generate</c>: run by the <c>GenerateHackerOsAppManifests</c> MSBuild target after an app
 /// project compiles; writes its <c>manifest.json</c>.</item>
@@ -116,7 +116,7 @@ public static class Program
             ManifestWriter.WriteIfChanged(stamp, string.Join('\n', files) + "\n");
             foreach (GeneratedManifest manifest in localized.Manifests)
             {
-                Console.WriteLine($"KazoOS manifest: {manifest.Manifest.Id} <- {manifest.DefinitionType}");
+                Console.WriteLine($"Kazo OS manifest: {manifest.Manifest.Id} <- {manifest.DefinitionType}");
             }
 
             return 0;
@@ -153,7 +153,7 @@ public static class Program
             ManifestWriter.WriteIfChanged(Path.GetFullPath(trimmerRoots), result.TrimmerRoots!);
         }
 
-        Console.WriteLine($"KazoOS built-in applications: {inputs.Count} app(s) -> {output}");
+        Console.WriteLine($"Kazo OS built-in applications: {inputs.Count} app(s) -> {output}");
         return 0;
     }
 
@@ -207,10 +207,10 @@ public static class Program
                 read.AppId,
                 new AppPackageIndexEntry(read.Version, relativePath, AppPackage.Sha256(package)) { Signature = signature });
             File.WriteAllBytes(indexPath, index);
-            Console.WriteLine($"KazoOS package: {read.AppId} {read.Version} -> {packagePath}");
+            Console.WriteLine($"Kazo OS package: {read.AppId} {read.Version} -> {packagePath}");
             Console.WriteLine(signingKey is null
                 ? $"{manifestPath} : warning {GeneratorCodes.UnsignedPackage}: [{read.AppId}] {read.Version} is not signed (no --private-key and no {PackageSigner.KeyVariable}); sources that list a key for this repository will refuse it."
-                : $"KazoOS package signed by {PackageSigner.GetPublicKey(signingKey)}");
+                : $"Kazo OS package signed by {PackageSigner.GetPublicKey(signingKey)}");
             return 0;
         }
         catch (Exception exception) when (exception is AppPackageException or IOException or UnauthorizedAccessException or System.Text.Json.JsonException or System.Security.Cryptography.CryptographicException)
@@ -355,7 +355,7 @@ public static class Program
 
     private static void PrintUsage()
     {
-        Console.WriteLine("KazoOS manifest generator (ADR 0047)");
+        Console.WriteLine("Kazo OS manifest generator (ADR 0047)");
         Console.WriteLine("  generate --assembly <app.dll> --project <app.csproj> --stamp <file> [--dependencies <list file>]");
         Console.WriteLine("  aggregate --project <host.csproj> --apps <list file> --output <BuiltInApplications.json> [--trimmer-roots <roots.xml>]");
         Console.WriteLine("  pack --manifest <manifest.json> --bin <output dir> --webroot <wwwroot> --output <packages dir> [--web-assets <staticwebassets.build.json>] [--private-key <file.pem>]");

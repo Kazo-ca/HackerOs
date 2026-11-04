@@ -1,6 +1,6 @@
 # HackerOs.Samples.ServiceApp
 
-Sample session service application for KazoOS demonstrating non-visual background service execution,
+Sample session service application for Kazo OS demonstrating non-visual background service execution,
 event publishing, session cancellation handling, and bounded cleanup.
 
 ## Features

@@ -3,7 +3,7 @@ using HackerOs.App.Abstractions;
 namespace HackerOs.AppSdk;
 
 /// <summary>
-/// Base class for a command executable hosted by a KazoOS terminal session.
+/// Base class for a command executable hosted by a Kazo OS terminal session.
 /// </summary>
 public abstract class TerminalAppBase : AppBase
 {

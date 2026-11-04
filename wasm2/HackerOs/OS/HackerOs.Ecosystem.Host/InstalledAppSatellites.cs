@@ -9,7 +9,7 @@ namespace HackerOs.Ecosystem;
 /// <summary>
 /// Loads the satellite assemblies of an installed app (ADR 0222 §2): before its assembly's code
 /// runs, the OS reads <c>lib/&lt;culture&gt;/&lt;assembly&gt;.resources.dll</c> from the app's folder for
-/// each language KazoOS speaks and loads it into the page's runtime, where the app's
+/// each language Kazo OS speaks and loads it into the page's runtime, where the app's
 /// <c>ResourceManager</c> (and <c>IStringLocalizer</c>) finds it.
 /// </summary>
 /// <remarks>

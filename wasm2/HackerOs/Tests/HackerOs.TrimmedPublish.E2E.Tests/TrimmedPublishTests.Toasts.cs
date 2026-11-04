@@ -24,7 +24,7 @@ public sealed partial class TrimmedPublishTests
             ILocator stack = page.GetByRole(AriaRole.Region, new() { Name = "New notifications" });
             ILocator bubble = stack.Locator("article.notification-toast");
             await Assertions.Expect(bubble).ToHaveCountAsync(1, new() { Timeout = StepTimeoutMs });
-            await Assertions.Expect(bubble.Locator(".notification-toast-source")).ToHaveTextAsync("KazoOS");
+            await Assertions.Expect(bubble.Locator(".notification-toast-source")).ToHaveTextAsync("Kazo OS");
             await Assertions.Expect(bubble.GetByRole(AriaRole.Heading, new() { Name = "What's new" })).ToBeVisibleAsync();
             await Assertions.Expect(bubble.GetByRole(AriaRole.Button, new() { Name = "View" })).ToBeVisibleAsync();
 

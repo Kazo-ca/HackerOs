@@ -2,7 +2,7 @@
 
 # Journal des changements
 
-Les changements de KazoOS, par version. Ce fichier est généré à partir de `wasm2/HackerOs/changes/` par
+Les changements de Kazo OS, par version. Ce fichier est généré à partir de `wasm2/HackerOs/changes/` par
 `wasm2/HackerOs/build/tools/collect-changes.sh` (ADR 0186) : ne pas le modifier à la main. Les changements
 déjà déployés mais pas encore publiés sont dans la page Paramètres ▸ Nouveautés de l'OS.
 

@@ -28,7 +28,7 @@ public sealed class ServiceSampleApp : AppDefinition
 
     /// <inheritdoc />
     public override string Description =>
-        "Deterministic status and ticker background service for KazoOS sessions";
+        "Deterministic status and ticker background service for Kazo OS sessions";
 
     /// <inheritdoc />
     public override AppLaunchVisibility LaunchVisibility => AppLaunchVisibility.Hidden;

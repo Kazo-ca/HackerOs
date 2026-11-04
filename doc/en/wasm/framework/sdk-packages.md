@@ -4,7 +4,7 @@
 
 ## Purpose
 
-Allow another repository to build KazoOS apps
+Allow another repository to build Kazo OS apps
 **and** a complete OS host with its own apps, without copying this repository
 ([ADR 0098](../dev/adr/0098-sdk-versions-packages-and-manifest-checks.md) §1, §2, §6).
 Everything published carries a single version, comes out as NuGet packages in a
@@ -167,7 +167,7 @@ The package is produced with both resource measurements compiled in
 | `hackeros-service` | service started at sign-in (`ServiceAppBase`, simulated clock) | same |
 | `hackeros-site` | ASP.Hack site (`WebAppDefinition`, embedded `wwwroot/`) | `HackerOs.AppSdk.Web`, `HackerOs.App.Build` |
 | `hackeros-host` | Blazor WebAssembly host: `Program.cs`, `index.html`, `appsettings.json`, the base apps as packages (system apps as in the Ecosystem) | `HackerOs.Ecosystem.Host`, `HackerOs.App.Build`, `HackerOs.Apps.*`, `HackerOs.Commands` |
-| `hackeros-solution` | a whole app repository: app, host, tests, KazoOS submodule (sources in `Debug`, packages in `Release`), CI, publishing to the Hack Store ([`app-repository.md`](app-repository.md), ADR 0207) | those of the app and the host, at the submodule's version |
+| `hackeros-solution` | a whole app repository: app, host, tests, Kazo OS submodule (sources in `Debug`, packages in `Release`), CI, publishing to the Hack Store ([`app-repository.md`](app-repository.md), ADR 0207) | those of the app and the host, at the submodule's version |
 
 App templates start with `IsTrimmable=true`; `hackeros-host` publishes as a
 trimmed Release (`PublishTrimmed=true`, `TrimMode=partial`) and
@@ -352,7 +352,7 @@ All the other SDK changes are additions:
 
 ### SDK 2.1
 
-Published on 2026-10-26, the first version released by the `Release KazoOS`
+Published on 2026-10-26, the first version released by the `Release Kazo OS`
 workflow ([ADR 0173](../dev/adr/0173-automatic-releases-from-the-version-file.md),
 [`releases.md`](../dev/releases.md)): `v2.1.0` tag, GitHub Release and nuget.org.
 `build/tools/ship-public-api.sh` folded 5880 lines of `PublicAPI.Unshipped.txt`
@@ -371,7 +371,7 @@ under SemVer, a 2.0 app runs without being recompiled.
 ### SDK 2.2
 
 Prepared on 2026-10-31 (branch `release/2.2.0`), published by the
-`Release KazoOS` workflow when its PR lands in `main`: `v2.2.0` tag, GitHub
+`Release Kazo OS` workflow when its PR lands in `main`: `v2.2.0` tag, GitHub
 Release and nuget.org. `build/tools/ship-public-api.sh` folded 3020 lines of
 `PublicAPI.Unshipped.txt` into `PublicAPI.Shipped.txt`: the additions of the
 `todo/base` series and those that reached `main` since 2.1.0. The only
@@ -396,7 +396,7 @@ recompiled. The `hackeros-solution` template needs this version for its
 ### SDK 2.2.1
 
 Prepared on 2026-11-01 (branch `release/2.2.1`), published by the
-`Release KazoOS` workflow when its PR lands in `main`. Benoit chose a patch
+`Release Kazo OS` workflow when its PR lands in `main`. Benoit chose a patch
 number although the public API grows: `build/tools/ship-public-api.sh` folded
 190 lines of `PublicAPI.Unshipped.txt` into `PublicAPI.Shipped.txt`. The only
 `*REMOVED*` lines touch `HackerOs.Apps.FileExplorer` (Back moves from the mobile
@@ -416,7 +416,7 @@ and the signing tool (ADR 0219).
 ### SDK 2.2.2
 
 Prepared on 2026-11-01 (branch `release/2.2.2`), published by the
-`Release KazoOS` workflow when its PR lands in `main`. A patch: no SDK change.
+`Release Kazo OS` workflow when its PR lands in `main`. A patch: no SDK change.
 The only API lines are the new value of
 `AppPackageDefaults.OfficialCatalogSigningKey` (`HackerOs.Platform.Core`, not an
 SDK library): the official catalog's public key, so every Hack Store package
@@ -450,7 +450,7 @@ Tests/fixtures/sdk-compat/produce-fixture.sh --project Contoso.Sdk2Compat   # co
 |---|---|
 | `Tests/HackerOs.Templates.E2E.Tests` | packages everything (`pack-local`, or the `HACKEROS_LOCAL_FEED` feed), installs the templates in an isolated `DOTNET_CLI_HOME`, generates and compiles each app template outside the repository with an isolated NuGet cache (manifest, kind, minimum SDK version checked); then generates a host, adds a generated windowed app and a command to it, compiles it (aggregated catalog checked), launches it, creates the profile in Chromium, opens the app (`Clicked 0 times` then `1`) and runs `hello Morpheus` in the terminal (`Hello, Morpheus!`). |
 | `Tests/HackerOs.Templates.E2E.Tests` (`A_host_runs_SDK_2_app_packages_and_refuses_SDK_1_x_packages`) | a generated host with `PackageReference` to the 1.0.0 and 1.1.0 compatibility apps (source `hackeros-sdk-fixtures`) does not build (`HOSAPP0021` for each of the four apps); with the 2.0.0 app instead, it starts in Chromium, the 2.0 window displays the OS file control and `sdk2-compat still binds` runs in the terminal (ADR 0149 §5, ADR 0161 §3) |
-| `Tests/HackerOs.SdkCompatibility.Tests` | the 2.0.0 compatibility app: admitted by the current catalog, menu entry registered and `HackFileView` referenced, every KazoOS type and member it references exists, every method compiles against the current SDK (JIT), the command runs; the 1.0.0 and 1.1.0 apps: refused (`catalog.sdk.incompatible`) (ADR 0149 §5, ADR 0161 §3) |
+| `Tests/HackerOs.SdkCompatibility.Tests` | the 2.0.0 compatibility app: admitted by the current catalog, menu entry registered and `HackFileView` referenced, every Kazo OS type and member it references exists, every method compiles against the current SDK (JIT), the command runs; the 1.0.0 and 1.1.0 apps: refused (`catalog.sdk.incompatible`) (ADR 0149 §5, ADR 0161 §3) |
 | `Tests/HackerOs.App.Abstractions.Tests` (`HackerOsSdkTests`) | version reading, range compatibility |
 | `Tests/HackerOs.Tools.ManifestGenerator.Tests` | SDK version read from the reference, fingerprints and `HOSAPP0023`, `HOSAPP0022`, app newer than the host's SDK (`HOSAPP0021`) |
 | `Tests/HackerOs.Platform.Core.Tests` | `AppCatalog` (refusal, dependency cascade, command owner), `AppAssetStore`, `ShellCommandResolver` |

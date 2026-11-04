@@ -8,7 +8,7 @@ namespace HackerOs.Commands.Systemctl;
 
 /// <summary>
 /// <c>systemctl [list-units|status|start|stop|restart|enable|disable|mask|is-active|is-enabled|is-failed|reset-failed] [UNIT...]</c>
-/// (ADR 0064, ADR 0097): the KazoOS services (the catalog's <c>Service</c> apps, through
+/// (ADR 0064, ADR 0097): the Kazo OS services (the catalog's <c>Service</c> apps, through
 /// <see cref="HackServiceController"/>) shown and driven as systemd units. A unit is named by its
 /// app id or short name, with or without <c>.service</c> (<c>sync</c>, <c>sync.service</c>,
 /// <c>org.hackeros.sync</c>). Start types map to systemd states: automatic = <c>enabled</c>,

@@ -372,7 +372,7 @@ ensuite, voir la section suivante.
   `MeasureAsync` pour un dossier), puis le contenu est lu ou compressé dans un blob de la page
   (`prepareDownload`, un seul à la fois). Au-delà d'environ 50 Mo rien n'est préparé et le glisser
   affiche une bulle « Trop gros pour glisser hors du navigateur (taille) : utilisez Télécharger » ; le
-  glisser vers un dossier de KazoOS reste possible. Valable pour toutes les vues du contrôle partagé,
+  glisser vers un dossier de Kazo OS reste possible. Valable pour toutes les vues du contrôle partagé,
   bureau compris ; pas au toucher. Si le glisser commence avant la fin de la préparation (gros dossier),
   il reste interne. Code dans `FileView.ExternalDrag.cs`. Tests : `FileViewExternalDragTests`.
 - [x] `explorer/network-drives-sidebar-alignment` (après la série, demande de Benoit du 2026-10-29) :
@@ -400,7 +400,7 @@ l'explorateur sur l'archive (le manifeste déclare `application/zip`, `.zip` dan
 - `Archives/ZipArchiveIndex.cs` : la table des matières d'un `.zip`, lue une fois depuis ses octets
   (`System.IO.Compression`). Les dossiers que le zip sous-entend (`a/b/c.txt` sans entrée `a/`) sont
   ajoutés. Les noms sont nettoyés comme à l'extraction ; une entrée qui remonte (`..`, « zip slip ») ou
-  dont le nom n'est pas un chemin KazoOS valide est ignorée.
+  dont le nom n'est pas un chemin Kazo OS valide est ignorée.
 - `Archives/ZipArchiveBrowser.cs` : trouve l'archive d'un chemin (le premier segment `*.zip` qui est un
   fichier ; un dossier nommé `x.zip` reste un dossier ; un chemin sans segment `.zip` ne coûte aucune
   lecture), garde en cache les 4 dernières archives tant que leur révision ne change pas, et extrait

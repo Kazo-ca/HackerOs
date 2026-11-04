@@ -48,7 +48,7 @@ public sealed class BrowserHtmlRenderingTests(ITestOutputHelper output)
             await Assertions.Expect(frame.Locator("#title")).ToHaveCSSAsync("color", "rgb(255, 0, 0)");
             output.WriteLine("[test] web page rendered with its style sheet, script, fetch and cookie.");
 
-            // The frame is sandboxed without allow-same-origin: the page cannot reach KazoOS.
+            // The frame is sandboxed without allow-same-origin: the page cannot reach Kazo OS.
             string? sandbox = await page.Locator(".page-frame").GetAttributeAsync("sandbox");
             Assert.Equal("allow-scripts allow-forms", sandbox);
 

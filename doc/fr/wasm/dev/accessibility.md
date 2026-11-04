@@ -9,7 +9,7 @@ checklist manuelle, écartée par Benoit).
 
 ## Objet
 
-Trois préférences, en fichiers comme tout réglage de KazoOS, appliquées par le thème à tout le
+Trois préférences, en fichiers comme tout réglage de Kazo OS, appliquées par le thème à tout le
 bureau et lues par les apps qui dessinent elles-mêmes :
 
 - **Contraste élevé** : surfaces noires, texte blanc (21:1, et au moins 7:1 pour le texte le plus

@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <PackageId>HackerOs.Apps.CodeEditor</PackageId>
-    <Description>The base KazoOS code editor workbench app, to include in an OS host (ProjectReference or PackageReference, optionally IsSystemApp).</Description>
+    <Description>The base Kazo OS code editor workbench app, to include in an OS host (ProjectReference or PackageReference, optionally IsSystemApp).</Description>
     <PackageTags>hackeros;app</PackageTags>
   </PropertyGroup>
 

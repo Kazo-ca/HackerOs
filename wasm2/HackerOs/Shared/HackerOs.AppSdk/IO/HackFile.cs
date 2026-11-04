@@ -6,7 +6,7 @@ using HackerOs.Simulation.Abstractions.Gateways;
 namespace HackerOs.AppSdk.IO;
 
 /// <summary>
-/// Static file operations on the KazoOS virtual filesystem, shaped like <see cref="File"/>
+/// Static file operations on the Kazo OS virtual filesystem, shaped like <see cref="File"/>
 /// (ADR 0043). Paths may be absolute, relative to <see cref="HackExecutionContext.WorkingDirectory"/>,
 /// or start with <c>~</c>. Every call runs as the ambient app (<see cref="HackExecutionContext.Current"/>)
 /// through its capability-checked gateway.

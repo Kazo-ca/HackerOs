@@ -13,7 +13,7 @@ annonçait ce plan à part pour le magasin d'apps de
 
 Une app système **Hack Store**, façon Play Store ou Microsoft Store, épinglée
 par défaut dans le menu Démarrer, qui liste les apps qu'on peut installer dans
-KazoOS, montre leur fiche, et les installe, met à jour ou retire en un clic.
+Kazo OS, montre leur fiche, et les installe, met à jour ou retire en un clic.
 Les apps viennent d'un catalogue relu (`Kazo-ca/HackerOs-AppMarketPlace`), où
 chaque version est compilée par nous depuis son code source. En v2, le Store
 propose aussi des packs de thèmes.

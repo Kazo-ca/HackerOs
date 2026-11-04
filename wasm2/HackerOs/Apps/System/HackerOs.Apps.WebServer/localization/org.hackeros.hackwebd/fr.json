@@ -1,4 +1,4 @@
 {
   "name": "hackwebd",
-  "description": "Serveur web de KazoOS : sert les sites statiques déclarés dans /etc/hackweb/sites et ~/.config/hackweb/sites"
+  "description": "Serveur web de Kazo OS : sert les sites statiques déclarés dans /etc/hackweb/sites et ~/.config/hackweb/sites"
 }

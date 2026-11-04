@@ -163,7 +163,7 @@ public partial class FileView : IAsyncDisposable
     /// When supplied, every drop (on a folder, the background, a tree node, a <see cref="FileViewBreadcrumb"/>
     /// segment or a <see cref="FileViewDropZone"/>), including files dragged from the host system, is
     /// handed to the host, which runs the transfer with its conflict rules (ADR 0058, section 1).
-    /// Without it, a KazoOS drag onto a folder or the background is moved (or copied with Ctrl) by
+    /// Without it, a Kazo OS drag onto a folder or the background is moved (or copied with Ctrl) by
     /// the control itself, and host files are ignored.
     /// </summary>
     [Parameter]
@@ -976,7 +976,7 @@ public partial class FileView : IAsyncDisposable
 
     /// <summary>
     /// Completes a drop onto <paramref name="destination"/> (a folder, the background, a tree node or a
-    /// breadcrumb segment; ADR 0058, section 1). With <see cref="DropRequested"/>, the dropped KazoOS
+    /// breadcrumb segment; ADR 0058, section 1). With <see cref="DropRequested"/>, the dropped Kazo OS
     /// entries and host files go to the host; otherwise Ctrl held routes through
     /// <see cref="CopyItemsAsync"/> and a plain drop through <see cref="MoveItemsAsync"/>, both raising the
     /// cancelable <see cref="Moving"/>/<see cref="Copying"/> events, and host files are ignored.
@@ -1035,7 +1035,7 @@ public partial class FileView : IAsyncDisposable
     }
 
     /// <summary>
-    /// Reads what was dropped (the stash of <c>FileView.razor.js</c>): the KazoOS drag payload, whose
+    /// Reads what was dropped (the stash of <c>FileView.razor.js</c>): the Kazo OS drag payload, whose
     /// entries are checked to exist and never include <paramref name="destination"/> itself, and the
     /// files of a drop from the host system. <see langword="null"/> when nothing usable was dropped.
     /// </summary>

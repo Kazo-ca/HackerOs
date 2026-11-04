@@ -12,7 +12,7 @@ namespace HackerOs.Apps.FileExplorer.FileControl;
 /// a URL written during <c>dragstart</c>, so it is prepared when the mouse button is pressed on an item
 /// (the view's script reports the press): the size the OS gives decides first, then the content is read
 /// or compressed into a blob of the page. Beyond <see cref="ExternalDragLimit"/> (about 50 MB) nothing is prepared and
-/// the drag shows a bubble that points to Download; the drag into a KazoOS folder works as before.
+/// the drag shows a bubble that points to Download; the drag into a Kazo OS folder works as before.
 /// </summary>
 public partial class FileView
 {
@@ -194,7 +194,7 @@ public partial class FileView
         }
         catch (Exception exception) when (exception is InvalidOperationException or UnauthorizedAccessException or IOException or NotSupportedException or InvalidDataException)
         {
-            // Not readable now: the drag stays inside KazoOS.
+            // Not readable now: the drag stays inside Kazo OS.
             return null;
         }
     }

@@ -47,7 +47,7 @@ public sealed class UpdateReadyNotification : IDisposable
     /// the previous notification.
     /// </summary>
     /// <param name="user">The signed-in user.</param>
-    /// <param name="title">The title, such as « KazoOS 2.2.0 est disponible. ».</param>
+    /// <param name="title">The title, such as « Kazo OS 2.2.0 est disponible. ».</param>
     /// <param name="message">The body, such as « Les apps ouvertes seront fermées. ».</param>
     /// <param name="restartLabel">The label of « Redémarrer ».</param>
     /// <returns><see langword="true"/> when a notification was posted.</returns>
@@ -89,7 +89,7 @@ public sealed class UpdateReadyNotification : IDisposable
     /// « Redémarrer » again to retry; nothing was closed.
     /// </summary>
     /// <param name="user">The signed-in user.</param>
-    /// <param name="title">The title, such as « KazoOS 2.2.0 est disponible. ».</param>
+    /// <param name="title">The title, such as « Kazo OS 2.2.0 est disponible. ».</param>
     /// <param name="message">Why nothing restarted.</param>
     /// <param name="restartLabel">The label of « Redémarrer ».</param>
     public void ShowDownloadFailed(LocalUserId user, string title, string message, string restartLabel)

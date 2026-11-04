@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# verify-hosts.sh — boot smoke test of the three KazoOS hosts (execution-isolation-plan.md §5.2).
+# verify-hosts.sh — boot smoke test of the three Kazo OS hosts (execution-isolation-plan.md §5.2).
 #
 # One command, run from anywhere:
 #
@@ -426,7 +426,7 @@ fi
 # 3. Summary
 # --------------------------------------------------------------------------------------------------
 echo
-echo "== KazoOS host verification ($(git -C "$ROOT" rev-parse --short HEAD 2>/dev/null || echo '?')) =="
+echo "== Kazo OS host verification ($(git -C "$ROOT" rev-parse --short HEAD 2>/dev/null || echo '?')) =="
 printf '%s\n' "${SUMMARY[@]}"
 if [[ $FAILED -ne 0 ]]; then
     echo "RESULT: FAIL (logs in ${OUT#"$ROOT/"})"

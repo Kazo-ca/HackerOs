@@ -1,10 +1,10 @@
 > [Version française](../../../fr/wasm/framework/building-on-hackeros.md)
 
-# Building on KazoOS from another repository
+# Building on Kazo OS from another repository
 
 ## Purpose
 
-The guide for a repository that **uses** KazoOS without copying its code: any
+The guide for a repository that **uses** Kazo OS without copying its code: any
 project that wants its own apps and its own OS host. **No game in this repository** ([ADR 0135](../dev/adr/0135-no-game-in-this-repository.md)). It starts from SDK 1.0, frozen by work item `v3/15`
 ([ADR 0114](../dev/adr/0114-sdk-1-0-freeze.md)); the current version is **2.1.0**
 (desktop and context menu series, [ADR 0149](../dev/adr/0149-sdk-2-0-file-view-removal.md)
@@ -22,7 +22,7 @@ Details of the packages and of the package mode of `HackerOs.App.Build`:
 For an app in its own repository, start from the solution template
 ([ADR 0176](../dev/adr/0176-app-repository-template.md),
 [ADR 0207](../dev/adr/0207-solution-template-implementation.md)): app, host,
-tests, a KazoOS submodule that sets the version, the OS sources in `Debug`,
+tests, a Kazo OS submodule that sets the version, the OS sources in `Debug`,
 packages in `Release`, CI and publishing to the Hack Store with a tag.
 Everything is in [`app-repository.md`](app-repository.md). The rest of this
 guide describes the assembly by hand, useful for a repository with several apps
@@ -41,13 +41,13 @@ built as `0.9.0-preview.*` must be rebuilt against 1.0.
 
 ## 2. Getting the packages
 
-Since 2.1.0, every release publishes all KazoOS packages (SDK, platform,
+Since 2.1.0, every release publishes all Kazo OS packages (SDK, platform,
 base apps, `HackerOs.App.Build`, `HackerOs.Ecosystem.Host`,
 `HackerOs.Templates`) to **nuget.org**, with their symbols and Source Link
 ([ADR 0173](../dev/adr/0173-automatic-releases-from-the-version-file.md)): a
 `PackageReference` at the desired version is enough, with no `nuget.config`.
 
-The **local** feed is for trying a version not published yet. In a KazoOS
+The **local** feed is for trying a version not published yet. In a Kazo OS
 clone, on the desired branch:
 
 ```bash
@@ -92,7 +92,7 @@ there:
 </configuration>
 ```
 
-`Directory.Build.props`: a single version for all KazoOS packages
+`Directory.Build.props`: a single version for all Kazo OS packages
 (they are published together, ADR 0098 §1). The templates write
 `<HackerOsVersion>` in each project; remove it from the projects to keep
 only this one:
@@ -156,7 +156,7 @@ from `HackerOs.Ecosystem.Host`, the apps are its references.
 `dotnet pack` of an app project produces a package that embeds its manifests
 (`hackeros/manifests/`), their translations and a `buildTransitive` that
 declares them to the host: a host never needs its source code. Give the
-package a `PackageId` outside the `HackerOs.*` space, reserved to the KazoOS feed
+package a `PackageId` outside the `HackerOs.*` space, reserved to the Kazo OS feed
 by the `packageSourceMapping`.
 
 ## 7. Testing
@@ -170,7 +170,7 @@ by the `packageSourceMapping`.
   the host, then Playwright (administrator creation, Applications menu,
   Terminal).
 - To verify that a version upgrade does not break your already published apps,
-  keep, as KazoOS does, an app package compiled against the old version and
+  keep, as Kazo OS does, an app package compiled against the old version and
   load it in the current host (`Tests/fixtures/sdk-compat`, ADR 0114 §4).
 
 ## 8. Publishing the host
@@ -180,7 +180,7 @@ dotnet publish src/Contoso.Os -c Release
 ```
 
 The host template enables `PublishTrimmed` in `partial` mode: the framework is
-trimmed, the KazoOS assemblies and all the apps remain whole (roots
+trimmed, the Kazo OS assemblies and all the apps remain whole (roots
 added by `HackerOs.App.Build`, ADR 0113). The `wwwroot` output is a static
 site; the service worker registers only outside `localhost`. See
 [`trimmed-publish.md`](../dev/trimmed-publish.md).
@@ -288,7 +288,7 @@ The exact list and the breaks outside the SDK for a host (three changes of
   for a version not published yet.
 - **The `hackeros-solution` template** (ADR 0176, ADR 0207) is the
   recommended start for an app in its own repository.
-- **Version pinned once** in the third-party repository: KazoOS packages
+- **Version pinned once** in the third-party repository: Kazo OS packages
   go together, mixing two versions is not supported.
 
 ## Tasks

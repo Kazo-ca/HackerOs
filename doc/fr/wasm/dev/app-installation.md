@@ -310,7 +310,7 @@ validation en deux étapes :
   `hackpkg update` garde chaque copie là où elle est.
 - **Sans redémarrage** ([ADR 0214](adr/0214-hack-store-hot-add-signing-transactions.md)) :
   l'app apparaît tout de suite. Seule la mise à jour, le retrait ou le retour
-  arrière d'une app déjà chargée dans la page attend un redémarrage de KazoOS ;
+  arrière d'une app déjà chargée dans la page attend un redémarrage de Kazo OS ;
   `hackpkg list` affiche `(restart pending)` d'ici là.
 - **Capacités dangereuses** : demandées au premier lancement, comme pour toute
   app non système.
@@ -346,7 +346,7 @@ validation en deux étapes :
   feuille `styles.css` de l'hôte le fait pour une app compilée.
 - **Traductions** ([ADR 0222](adr/0222-installed-app-satellite-assemblies.md)) :
   avant de charger un assemblage de l'app, l'OS lit son satellite
-  `lib/<culture>/<assemblage>.resources.dll` pour chaque langue de KazoOS
+  `lib/<culture>/<assemblage>.resources.dll` pour chaque langue de Kazo OS
   (`InstalledAppSatellites`) et le charge : `IStringLocalizer` et
   `ResourceManager` trouvent ses textes traduits, quel que soit le `LANG` du
   processus. `AppPackage` refuse un satellite qui ne traduit aucun assemblage

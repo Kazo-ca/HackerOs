@@ -6,7 +6,7 @@ using HackerOs.Simulation.Abstractions.Gateways;
 namespace HackerOs.AppSdk.IO;
 
 /// <summary>
-/// Static directory operations on the KazoOS virtual filesystem, shaped like <see cref="Directory"/>
+/// Static directory operations on the Kazo OS virtual filesystem, shaped like <see cref="Directory"/>
 /// (ADR 0043). Runs as the ambient app (<see cref="HackExecutionContext.Current"/>).
 /// </summary>
 /// <remarks>
@@ -137,7 +137,7 @@ public static class HackDirectory
     /// Copies a directory and everything under it (like <c>cp -r</c>) to a destination that must not
     /// exist; permission bits are kept, symbolic links are copied as links. The engine copies the whole
     /// subtree in one transaction when it can; across two mounts the facade recreates it entry by entry.
-    /// .NET has no <c>Directory.Copy</c>: this member is a KazoOS addition (ADR 0058, section 1).
+    /// .NET has no <c>Directory.Copy</c>: this member is a Kazo OS addition (ADR 0058, section 1).
     /// </summary>
     /// <exception cref="HackDirectoryNotFoundException">The source does not exist.</exception>
     /// <exception cref="HackIOException">The destination exists, or is the source or inside it.</exception>

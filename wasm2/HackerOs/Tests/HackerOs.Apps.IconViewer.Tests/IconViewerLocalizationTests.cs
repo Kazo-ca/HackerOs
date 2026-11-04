@@ -13,9 +13,9 @@ public sealed class IconViewerLocalizationTests
         IStringLocalizer<Strings> french = new LocaleTestContext("fr_FR.UTF-8").GetLocalizer<Strings>();
         IStringLocalizer<Strings> english = new LocaleTestContext("en_US.UTF-8").GetLocalizer<Strings>();
 
-        Assert.Equal("Bibliothèque d'icônes KazoOS", french["Header.Title"]);
+        Assert.Equal("Bibliothèque d'icônes Kazo OS", french["Header.Title"]);
         Assert.Equal("Aucune icône ne correspond à « zz ».", french["Empty", "zz"]);
-        Assert.Equal("KazoOS Icon Library", english["Header.Title"]);
+        Assert.Equal("Kazo OS Icon Library", english["Header.Title"]);
     }
 
     [Theory]

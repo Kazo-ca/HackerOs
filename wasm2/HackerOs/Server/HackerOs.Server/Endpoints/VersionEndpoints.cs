@@ -51,14 +51,14 @@ public static class VersionEndpoints
         app.MapGet(HostInfoRoutes.ApiPath, GetHostInfo)
             .WithName("GetHostInfo")
             .WithTags("Versioning")
-            .WithSummary("Says that this origin is a KazoOS server (OS host discovery).")
+            .WithSummary("Says that this origin is a Kazo OS server (OS host discovery).")
             .AllowAnonymous();
         return app;
     }
 
     /// <summary>
     /// Answers <c>/hackeros-host.json</c> as this server (ADR 0137). The OS served from here reads that
-    /// file next to its <c>index.html</c> to learn that a KazoOS server delivered it. The Ecosystem
+    /// file next to its <c>index.html</c> to learn that a Kazo OS server delivered it. The Ecosystem
     /// PWA ships a static file at the same path (<c>isServer: false</c>) that MapStaticAssets also
     /// maps, so the answer is given by a middleware that runs before any endpoint: a static host
     /// says "no server" and this server says "server", both without a failing request.

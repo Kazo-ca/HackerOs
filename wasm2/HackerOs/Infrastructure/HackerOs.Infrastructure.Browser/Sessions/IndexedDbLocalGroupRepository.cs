@@ -7,7 +7,7 @@ using Microsoft.JSInterop;
 
 namespace HackerOs.Infrastructure.Browser.Sessions;
 
-/// <summary>Persists local groups in the canonical KazoOS IndexedDB database.</summary>
+/// <summary>Persists local groups in the canonical Kazo OS IndexedDB database.</summary>
 public sealed class IndexedDbLocalGroupRepository : ILocalGroupRepository, IAsyncDisposable
 {
     private const string TransactionBoundary = "GroupWrite";

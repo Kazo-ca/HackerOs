@@ -16,8 +16,8 @@ builder.Services.AddMudServices();
 // on first render, which leaves the page stuck on index.html's "Loading..." placeholder
 // forever instead of surfacing an error - see HackerOs.Ecosystem's own AddSingleton<IIconCatalog>.
 builder.Services.AddSingleton<IIconCatalog, IconCatalog>();
-// ADR 0104: the platform dialogs inject IStringLocalizer<Strings>; this harness has no KazoOS
-// session, so they speak English, as KazoOS does before anyone changes the language.
+// ADR 0104: the platform dialogs inject IStringLocalizer<Strings>; this harness has no Kazo OS
+// session, so they speak English, as Kazo OS does before anyone changes the language.
 builder.Services.AddSingleton(typeof(IStringLocalizer<>), typeof(EnglishStringLocalizer<>));
 
 // ADR 0127: the "unresponsive" scenario's window, scripted process and real monitor.

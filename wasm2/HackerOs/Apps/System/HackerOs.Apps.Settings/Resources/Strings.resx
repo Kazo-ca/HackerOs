@@ -73,7 +73,7 @@
     <value>Saved. The desktop applies it now.</value>
   </data>
   <data name="Accessibility.State.Description" xml:space="preserve">
-    <value>Your choices are saved in {0}, over the machine's defaults in {1}. "Auto" follows the settings of the computer KazoOS runs on.</value>
+    <value>Your choices are saved in {0}, over the machine's defaults in {1}. "Auto" follows the settings of the computer Kazo OS runs on.</value>
   </data>
   <data name="Accessibility.State.Off" xml:space="preserve">
     <value>off</value>
@@ -91,13 +91,13 @@
     <value>Text size</value>
   </data>
   <data name="Appearance.Accent.AriaLabel" xml:space="preserve">
-    <value>KazoOS accent colors</value>
+    <value>Kazo OS accent colors</value>
   </data>
   <data name="Appearance.Accent.Description" xml:space="preserve">
-    <value>Accent colors are intentionally available only for the KazoOS theme.</value>
+    <value>Accent colors are intentionally available only for the Kazo OS theme.</value>
   </data>
   <data name="Appearance.Accent.Title" xml:space="preserve">
-    <value>KazoOS accent</value>
+    <value>Kazo OS accent</value>
   </data>
   <data name="Appearance.DesktopTheme.AriaLabel" xml:space="preserve">
     <value>Desktop themes</value>
@@ -256,7 +256,7 @@
     <value>Create a backup</value>
   </data>
   <data name="Backup.Create.Description" xml:space="preserve">
-    <value>A backup holds {0}: the files of every user, {1}, the accounts and their password hashes. It is downloaded to your computer as one {2} archive, never kept inside KazoOS, like a backup on an external disk. An administrator must confirm with their password. From a terminal: {3}.</value>
+    <value>A backup holds {0}: the files of every user, {1}, the accounts and their password hashes. It is downloaded to your computer as one {2} archive, never kept inside Kazo OS, like a backup on an external disk. An administrator must confirm with their password. From a terminal: {3}.</value>
   </data>
   <data name="Backup.Create.Everything" xml:space="preserve">
     <value>everything</value>
@@ -295,7 +295,7 @@
     <value>Restore...</value>
   </data>
   <data name="Backup.Restore.Description" xml:space="preserve">
-    <value>Pick a {0} archive on your computer. KazoOS checks it first; an archive from another database version or a damaged one is refused and nothing changes. Then an administrator confirms, every process stops, the backup is written and KazoOS restarts. From a terminal: {1} or {2}.</value>
+    <value>Pick a {0} archive on your computer. Kazo OS checks it first; an archive from another database version or a damaged one is refused and nothing changes. Then an administrator confirms, every process stops, the backup is written and Kazo OS restarts. From a terminal: {1} or {2}.</value>
   </data>
   <data name="Backup.Restore.Title" xml:space="preserve">
     <value>Restore from a backup</value>
@@ -376,7 +376,7 @@
     <value>Loading...</value>
   </data>
   <data name="Danger.Description" xml:space="preserve">
-    <value>Reset KazoOS to its factory state. This permanently clears the local database — all accounts, files, sessions, and settings — and restores your account to its default configuration. This action cannot be undone. An administrator must confirm with their password.</value>
+    <value>Reset Kazo OS to its factory state. This permanently clears the local database — all accounts, files, sessions, and settings — and restores your account to its default configuration. This action cannot be undone. An administrator must confirm with their password.</value>
   </data>
   <data name="Danger.Title" xml:space="preserve">
     <value>Danger Zone</value>
@@ -490,7 +490,7 @@
     <value>Granted Application Capabilities</value>
   </data>
   <data name="Header.Title" xml:space="preserve">
-    <value>KazoOS System Settings</value>
+    <value>Kazo OS System Settings</value>
   </data>
   <data name="Language.Choice.AriaLabel" xml:space="preserve">
     <value>Language of your sessions</value>
@@ -535,7 +535,7 @@
     <value>Saved: {0}.</value>
   </data>
   <data name="Language.Session.Description" xml:space="preserve">
-    <value>KazoOS speaks the language of your locale, like Linux: the {0} variable every process inherits when you sign in. Your choice below is saved in {1} and applies to the desktop and to every app at your next sign-in.</value>
+    <value>Kazo OS speaks the language of your locale, like Linux: the {0} variable every process inherits when you sign in. Your choice below is saved in {1} and applies to the desktop and to every app at your next sign-in.</value>
   </data>
   <data name="Language.Session.Formats" xml:space="preserve">
     <value>Formats</value>
@@ -697,10 +697,10 @@
     <value>All capability grants and audit history</value>
   </data>
   <data name="Reset.Dialog.Intro" xml:space="preserve">
-    <value>This will permanently delete the entire local KazoOS database, including:</value>
+    <value>This will permanently delete the entire local Kazo OS database, including:</value>
   </data>
   <data name="Reset.Dialog.Restart" xml:space="preserve">
-    <value>KazoOS will restart afterward as if freshly installed.</value>
+    <value>Kazo OS will restart afterward as if freshly installed.</value>
   </data>
   <data name="Reset.Dialog.Settings" xml:space="preserve">
     <value>All application and account settings (restored to defaults)</value>
@@ -715,10 +715,10 @@
     <value>Resetting...</value>
   </data>
   <data name="Restart.Button" xml:space="preserve">
-    <value>Restart KazoOS</value>
+    <value>Restart Kazo OS</value>
   </data>
   <data name="Restart.Description" xml:space="preserve">
-    <value>Flush the logs, end every process and restart KazoOS, like {0}. An administrator must confirm with their password.</value>
+    <value>Flush the logs, end every process and restart Kazo OS, like {0}. An administrator must confirm with their password.</value>
   </data>
   <data name="Restart.Error.NotConfirmed" xml:space="preserve">
     <value>No administrator confirmed the restart: nothing was done.</value>
@@ -745,7 +745,7 @@
     <value>Create Account</value>
   </data>
   <data name="Server.Description" xml:space="preserve">
-    <value>Connecting a device to an optional KazoOS server enables real network access for apps like Terminal's {0}/{1}, through the server's relay. Local storage remains the source of truth either way — connecting is never required for normal use.</value>
+    <value>Connecting a device to an optional Kazo OS server enables real network access for apps like Terminal's {0}/{1}, through the server's relay. Local storage remains the source of truth either way — connecting is never required for normal use.</value>
   </data>
   <data name="Server.Disconnect" xml:space="preserve">
     <value>Disconnect</value>
@@ -1297,7 +1297,7 @@
     <value>My passkeys</value>
   </data>
   <data name="Passkeys.Description" xml:space="preserve">
-    <value>A passkey signs you in with your fingerprint, your face, a PIN or a security key, without typing your password. The browser keeps the key; KazoOS only stores its public half. A passkey that supports the PRF extension also opens your keyring.</value>
+    <value>A passkey signs you in with your fingerprint, your face, a PIN or a security key, without typing your password. The browser keeps the key; Kazo OS only stores its public half. A passkey that supports the PRF extension also opens your keyring.</value>
   </data>
   <data name="Passkeys.Empty" xml:space="preserve">
     <value>No passkey yet.</value>
@@ -1372,7 +1372,7 @@
     <value>Remembered screens</value>
   </data>
   <data name="Screens.List.Description" xml:space="preserve">
-    <value>Each secondary screen opens in its own browser window. KazoOS remembers where it was in {0}, even after it closes.</value>
+    <value>Each secondary screen opens in its own browser window. Kazo OS remembers where it was in {0}, even after it closes.</value>
   </data>
   <data name="Screens.List.Screen" xml:space="preserve">
     <value>Screen {0}</value>
@@ -1417,7 +1417,7 @@
     <value>Full screen: the ⤢ button at the top right of each secondary screen; Esc leaves it.</value>
   </data>
   <data name="Screens.Help.Permission" xml:space="preserve">
-    <value>In Chrome and Edge, allow window management when the browser asks: each new screen then goes to a free monitor. Elsewhere, place the window yourself; KazoOS remembers its place.</value>
+    <value>In Chrome and Edge, allow window management when the browser asks: each new screen then goes to a free monitor. Elsewhere, place the window yourself; Kazo OS remembers its place.</value>
   </data>
   <data name="Screens.Saved" xml:space="preserve">
     <value>Saved.</value>
@@ -1465,7 +1465,7 @@
     <value>Monitor name not available</value>
   </data>
   <data name="Screens.Open.Blocked" xml:space="preserve">
-    <value>The browser blocked the window. Allow pop-ups for KazoOS, then try again.</value>
+    <value>The browser blocked the window. Allow pop-ups for Kazo OS, then try again.</value>
   </data>
   <data name="Screens.Open.LimitReached" xml:space="preserve">
     <value>Screens 2 to 9 are all open.</value>
@@ -1711,7 +1711,7 @@
     <value>Local server</value>
   </data>
   <data name="LocalServer.Description" xml:space="preserve">
-    <value>Install the KazoOS server on this computer or on another machine of your local network, without exposing it to the internet: apps then reach the real network through its relay. The installer prints a one-time pairing code; type it here with the server's address.</value>
+    <value>Install the Kazo OS server on this computer or on another machine of your local network, without exposing it to the internet: apps then reach the real network through its relay. The installer prints a one-time pairing code; type it here with the server's address.</value>
   </data>
   <data name="LocalServer.Download" xml:space="preserve">
     <value>Download the server</value>
@@ -1756,10 +1756,10 @@
     <value>Testing…</value>
   </data>
   <data name="LocalServer.Found" xml:space="preserve">
-    <value>A KazoOS server answers (version {0}).</value>
+    <value>A Kazo OS server answers (version {0}).</value>
   </data>
   <data name="LocalServer.NotFound" xml:space="preserve">
-    <value>No KazoOS server here: {0}</value>
+    <value>No Kazo OS server here: {0}</value>
   </data>
   <data name="LocalServer.Code" xml:space="preserve">
     <value>Pairing code</value>
@@ -1828,7 +1828,7 @@
     <value>Events</value>
   </data>
   <data name="Sound.Events.Description" xml:space="preserve">
-    <value>The file each event plays in a theme (freedesktop.org sound names). A sound missing from a theme plays the KazoOS theme's.</value>
+    <value>The file each event plays in a theme (freedesktop.org sound names). A sound missing from a theme plays the Kazo OS theme's.</value>
   </data>
   <data name="Sound.Event.Notification" xml:space="preserve">
     <value>Notification</value>
@@ -1879,7 +1879,7 @@
     <value>System</value>
   </data>
   <data name="Cursors.Theme.hackeros-neon" xml:space="preserve">
-    <value>KazoOS Neon</value>
+    <value>Kazo OS Neon</value>
   </data>
   <data name="Cursors.Theme.gothic-crimson" xml:space="preserve">
     <value>Gothic Crimson</value>
@@ -1921,7 +1921,7 @@
     <value>Built in</value>
   </data>
   <data name="Sources.BuiltIn.Title" xml:space="preserve">
-    <value>KazoOS was built with this source</value>
+    <value>Kazo OS was built with this source</value>
   </data>
   <data name="Sources.Trust.Verified" xml:space="preserve">
     <value>Verified</value>
@@ -1948,7 +1948,7 @@
     <value>A trusted source lets every user install its apps without an administrator. Leave it untrusted to approve each install.</value>
   </data>
   <data name="Sources.Error.Unsupported" xml:space="preserve">
-    <value>This KazoOS host cannot install apps from a repository.</value>
+    <value>This Kazo OS host cannot install apps from a repository.</value>
   </data>
   <data name="Policy.Title" xml:space="preserve">
     <value>Block list</value>

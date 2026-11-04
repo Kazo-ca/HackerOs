@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 namespace HackerOs.AppSdk.Net.Hosting;
 
 /// <summary>
-/// What a Blazor site tells the KazoOS browser about itself (ADR 0084, section 2): the content of
+/// What a Blazor site tells the Kazo OS browser about itself (ADR 0084, section 2): the content of
 /// <c>/_framework/blazor.boot.json</c>, the counterpart of a real Blazor WebAssembly site's
 /// <c>blazor.boot.json</c>. The browser reads it after the host page loaded
 /// <c>_framework/blazor.hack.js</c>, then asks the OS to start the site's renderer (section 3).

@@ -46,7 +46,7 @@ public sealed class StartMenuPowerTests(ITestOutputHelper output)
 
             menu = await OpenPowerMenuAsync(page);
             await menu.GetByRole(AriaRole.Menuitem, new() { Name = "Sign out" }).ClickAsync();
-            ILocator dialog = page.GetByRole(AriaRole.Dialog, new() { Name = "Sign out of KazoOS" });
+            ILocator dialog = page.GetByRole(AriaRole.Dialog, new() { Name = "Sign out of Kazo OS" });
             await dialog.GetByRole(AriaRole.Button, new() { Name = "Sign out" }).ClickAsync();
             await SignInAgainAsync(page);
             output.WriteLine("[test] sign-out from the Power menu reached the sign-in screen.");
@@ -56,7 +56,7 @@ public sealed class StartMenuPowerTests(ITestOutputHelper output)
             await page.EvaluateAsync("() => { window.__beforeRestart = true; }");
             menu = await OpenPowerMenuAsync(page);
             await menu.GetByRole(AriaRole.Menuitem, new() { Name = "Restart" }).ClickAsync();
-            dialog = page.GetByRole(AriaRole.Dialog, new() { Name = "Restart KazoOS" });
+            dialog = page.GetByRole(AriaRole.Dialog, new() { Name = "Restart Kazo OS" });
             await dialog.GetByRole(AriaRole.Button, new() { Name = "Restart" }).ClickAsync();
             await page.WaitForFunctionAsync("() => window.__beforeRestart === undefined", null, new() { Timeout = 30000 });
             await SignInAgainAsync(page);

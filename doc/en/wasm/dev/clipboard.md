@@ -7,7 +7,7 @@ The clipboard API for apps (`HackClipboard`, file lists, GNOME format) is in [`c
 ## Purpose
 
 Implementation of [ADR 0065](adr/0065-os-clipboard-and-host-bridge.md), which
-completes ADR 0056 §12. KazoOS has **a single clipboard**, held by the OS
+completes ADR 0056 §12. Kazo OS has **a single clipboard**, held by the OS
 and shared by all apps of the session; a bridge copies its text to the real
 machine's clipboard and picks up what the user pastes there, like VirtualBox
 Guest Additions. Clipboard use in the explorer (cut, copy, paste, name

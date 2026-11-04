@@ -205,7 +205,7 @@ public sealed class ScreensPanelTests
 
         await harness.RunAsync(panel => panel.OpenScreenAsync());
         Assert.True(harness.Panel.MessageIsError);
-        Assert.Contains("Allow pop-ups for KazoOS", harness.Panel.Message, StringComparison.Ordinal);
+        Assert.Contains("Allow pop-ups for Kazo OS", harness.Panel.Message, StringComparison.Ordinal);
 
         await harness.RunAsync(panel => panel.ToggleFullScreenAsync());
         Assert.Equal("The browser refused full screen.", harness.Panel.Message);

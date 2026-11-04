@@ -4,7 +4,7 @@
 
 ## Objet
 
-Décrit la connexion par clé d'accès de KazoOS : une vraie clé WebAuthn
+Décrit la connexion par clé d'accès de Kazo OS : une vraie clé WebAuthn
 (empreinte, visage, NIP de l'appareil, téléphone ou clé de sécurité USB),
 vérifiée par l'OS lui-même avec la clé publique gardée dans le compte, qui
 peut aussi ouvrir le trousseau. Décision : [ADR 0168](adr/0168-passkey-sign-in.md).

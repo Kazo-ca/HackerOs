@@ -113,7 +113,7 @@ public interface ITaskbarClockPanelSource
 
 /// <summary>
 /// Supplies optional session-level commands. No session control renders when none is supplied.
-/// The KazoOS desktop supplies none: its Power button is in the Start menu (ADR 0195).
+/// The Kazo OS desktop supplies none: its Power button is in the Start menu (ADR 0195).
 /// </summary>
 public interface ITaskbarSessionCommands
 {
@@ -159,7 +159,7 @@ public interface ITaskbarWindowPreviews
 }
 
 /// <summary>
-/// Host-supplied labels for taskbar chrome that would otherwise hardcode KazoOS branding.
+/// Host-supplied labels for taskbar chrome that would otherwise hardcode Kazo OS branding.
 /// Zone visibility is controlled by which source parameters the host supplies, not by options.
 /// </summary>
 public sealed record TaskbarOptions

@@ -5,20 +5,20 @@ using System.Xml.Linq;
 namespace HackerOs.Templates.E2E.Tests;
 
 /// <summary>
-/// A workspace outside the repository that consumes KazoOS the way another repository would
+/// A workspace outside the repository that consumes Kazo OS the way another repository would
 /// (ADR 0098 §2, §6): the local package feed through a <c>nuget.config</c>, an isolated NuGet cache
 /// (a re-packed version is never served stale) and an isolated <c>dotnet new</c> home with
 /// HackerOs.Templates installed.
 /// </summary>
 public sealed class TemplateWorkspace : IAsyncLifetime
 {
-    /// <summary>Gets the KazoOS root (the folder of <c>HackerOs.sln</c>).</summary>
+    /// <summary>Gets the Kazo OS root (the folder of <c>HackerOs.sln</c>).</summary>
     public string RepositoryRoot { get; } = FindRepositoryRoot();
 
     /// <summary>Gets the workspace folder the projects are generated in.</summary>
     public string Root { get; } = Path.Combine(Path.GetTempPath(), "hackeros-templates-" + Guid.NewGuid().ToString("N")[..8]);
 
-    /// <summary>Gets the version every KazoOS package carries (<c>build/Versions.props</c>).</summary>
+    /// <summary>Gets the version every Kazo OS package carries (<c>build/Versions.props</c>).</summary>
     public string Version { get; private set; } = string.Empty;
 
     /// <summary>Gets the local feed.</summary>
@@ -131,7 +131,7 @@ public sealed class TemplateWorkspace : IAsyncLifetime
         return start;
     }
 
-    /// <summary>Packs every KazoOS package with build/pack-local into a feed of this workspace.</summary>
+    /// <summary>Packs every Kazo OS package with build/pack-local into a feed of this workspace.</summary>
     private async Task<string> PackAsync()
     {
         string feed = Path.Combine(Root, "feed");

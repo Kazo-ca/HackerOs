@@ -119,7 +119,7 @@ Values are serialized with the site's options (`builder.Json`), so by its genera
 context: the stored type must appear in it (`[JsonSerializable(typeof(Note))]`). `string`, `int`,
 `long`, `double` and `bool` work without it.
 
-### Outside KazoOS and in tests
+### Outside Kazo OS and in tests
 
 - `HackWebHost.CreateApplication` without an OS: the database is in memory (`hackweb.in-memory`), specific to
   the application. The Intranet tests run this way without any configuration.

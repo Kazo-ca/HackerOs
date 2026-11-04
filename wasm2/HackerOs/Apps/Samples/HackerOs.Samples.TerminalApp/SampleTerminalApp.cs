@@ -71,7 +71,7 @@ public class SampleTerminalApp : TerminalAppBase
         }
 
         bool verbose = context.Arguments.Contains("--verbose", StringComparer.OrdinalIgnoreCase);
-        string message = context.Arguments.FirstOrDefault(arg => !arg.StartsWith('-')) ?? "KazoOS SDK 1.0 Sample Command Executed.";
+        string message = context.Arguments.FirstOrDefault(arg => !arg.StartsWith('-')) ?? "Kazo OS SDK 1.0 Sample Command Executed.";
 
         if (verbose)
         {

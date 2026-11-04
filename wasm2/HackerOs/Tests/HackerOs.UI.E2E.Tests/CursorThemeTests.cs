@@ -41,7 +41,7 @@ public sealed class CursorThemeTests(ITestOutputHelper output)
             ILocator cursors = page.GetByRole(AriaRole.Radiogroup, new() { Name = "Cursors" });
             await cursors.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 15000 });
 
-            await ChooseAsync(cursors, "KazoOS Neon");
+            await ChooseAsync(cursors, "Kazo OS Neon");
             await page.WaitForFunctionAsync(
                 "() => getComputedStyle(document.documentElement).cursor.includes('/cursors/hackeros-neon/default.png')",
                 null, new PageWaitForFunctionOptions { Timeout = 15000 });

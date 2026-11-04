@@ -114,7 +114,7 @@ public static class Program
 
     private static void PrintUsage() =>
         Console.WriteLine("""
-            KazoOS change list tool (ADR 0186)
+            Kazo OS change list tool (ADR 0186)
               site --changes <dir> --version <v> --output <file> [--repository <url>]
               collect --changes <dir> --version <v> --date <yyyy-MM-dd>
               notes --changes <dir> --version <v> --kind release|package --output <file> [--repository <url>]

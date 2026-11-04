@@ -9,7 +9,7 @@ namespace HackerOs.Platform.ResourceAccounting;
 /// </summary>
 /// <remarks>
 /// The guards are marked <see cref="FeatureSwitchDefinitionAttribute"/>. The Ecosystem host publishes
-/// trimmed (ADR 0106), but ADR 0113 keeps every KazoOS assembly whole, so a switched-off
+/// trimmed (ADR 0106), but ADR 0113 keeps every Kazo OS assembly whole, so a switched-off
 /// measurement's code stays in this assembly while the other one keeps it in the binary; with both
 /// switched off, the build leaves the assembly out entirely. A switch that is absent (unit tests,
 /// a host that does not import the targets) reads as <see langword="true"/>: the code is present.

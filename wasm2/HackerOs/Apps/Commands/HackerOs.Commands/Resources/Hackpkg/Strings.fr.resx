@@ -61,7 +61,7 @@
     <value>hackpkg : {0} {1} retirée ; les réglages de ses utilisateurs sont gardés</value>
   </data>
   <data name="RestartRequired" xml:space="preserve">
-    <value>hackpkg : redémarrez KazoOS pour terminer : cette app était déjà chargée, sa nouvelle version démarre après le redémarrage</value>
+    <value>hackpkg : redémarrez Kazo OS pour terminer : cette app était déjà chargée, sa nouvelle version démarre après le redémarrage</value>
   </data>
   <data name="SourcesHost" xml:space="preserve">
     <value>hôte :         {0}</value>
@@ -73,7 +73,7 @@
     <value>hackpkg : commande inconnue « {0} »</value>
   </data>
   <data name="Unsupported" xml:space="preserve">
-    <value>hackpkg : cet hôte KazoOS ne peut pas installer d'apps depuis un dépôt</value>
+    <value>hackpkg : cet hôte Kazo OS ne peut pas installer d'apps depuis un dépôt</value>
   </data>
   <data name="Untrusted" xml:space="preserve">
     <value>hackpkg : attention : {0} n'est pas une source de confiance ; son code a les mêmes droits que l'OS</value>
@@ -160,7 +160,7 @@
     <value>hackpkg : signature vérifiée</value>
   </data>
   <data name="RemovedRestart" xml:space="preserve">
-    <value>hackpkg : {0} {1} retirée ; les réglages de ses utilisateurs sont gardés. Elle était chargée : redémarrez KazoOS pour terminer</value>
+    <value>hackpkg : {0} {1} retirée ; les réglages de ses utilisateurs sont gardés. Elle était chargée : redémarrez Kazo OS pour terminer</value>
   </data>
   <data name="RolledBack" xml:space="preserve">
     <value>hackpkg : {0} est revenue de {1} à {2}</value>

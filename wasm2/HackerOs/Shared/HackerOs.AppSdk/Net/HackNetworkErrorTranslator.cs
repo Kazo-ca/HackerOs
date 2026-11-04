@@ -6,7 +6,7 @@ namespace HackerOs.AppSdk.Net;
 
 /// <summary>
 /// Turns gateway outcomes into the exceptions the matching <c>System.Net</c> API throws, so code
-/// written for .NET reads the same against KazoOS.
+/// written for .NET reads the same against Kazo OS.
 /// </summary>
 internal static class HackNetworkErrorTranslator
 {

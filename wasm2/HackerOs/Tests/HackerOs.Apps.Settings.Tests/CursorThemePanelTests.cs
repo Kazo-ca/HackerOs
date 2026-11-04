@@ -44,7 +44,7 @@ public sealed class CursorThemePanelTests
             harness.Panel.Themes.Select(theme => theme.Id));
         string html = harness.Html();
         Assert.Contains("id=\"cursor-theme-system\" aria-checked=\"true\"", html, StringComparison.Ordinal);
-        Assert.Contains("KazoOS Neon", html, StringComparison.Ordinal);
+        Assert.Contains("Kazo OS Neon", html, StringComparison.Ordinal);
         Assert.Contains("_content/HackerOs.Theming.Blazor/cursors/gothic-crimson/pointer.png", html, StringComparison.Ordinal);
     }
 

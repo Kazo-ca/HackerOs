@@ -1,4 +1,4 @@
-name: Verify KazoOS WASM
+name: Verify Kazo OS WASM
 
 # Every pull request (to main and to the <series>/base integration branches) and
 # every push to those branches. The docs folder under wasm2/HackerOs only holds a
@@ -99,7 +99,7 @@ jobs:
         shell: pwsh
         run: ./build/run-test-suite.ps1 -Suite NonBrowser -RetryFailedTests 1
 
-      - name: Publish KazoOS PWA
+      - name: Publish Kazo OS PWA
         working-directory: ${{ env.HACKEROS_SOLUTION_DIR }}
         run: >-
           dotnet publish OS/HackerOs.Ecosystem/HackerOs.Ecosystem.csproj

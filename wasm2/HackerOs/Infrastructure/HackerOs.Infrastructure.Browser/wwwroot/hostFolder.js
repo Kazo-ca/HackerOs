@@ -1,4 +1,4 @@
-// Host folders of KazoOS (ADR 0181), the page half of Interop/BrowserHostFolderAccess.cs: folders of
+// Host folders of Kazo OS (ADR 0181), the page half of Interop/BrowserHostFolderAccess.cs: folders of
 // the real computer, chosen in the browser's folder dialog (File System Access API, Chrome and Edge on
 // a computer) and mounted as network drives.
 //

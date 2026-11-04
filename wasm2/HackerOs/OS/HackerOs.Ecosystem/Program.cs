@@ -1,7 +1,7 @@
 using HackerOs.Ecosystem;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
-// The standalone KazoOS PWA (ADR 0098 §2): the whole OS comes from HackerOs.Ecosystem.Host; this
+// The standalone Kazo OS PWA (ADR 0098 §2): the whole OS comes from HackerOs.Ecosystem.Host; this
 // project only adds its page (wwwroot/index.html, service worker) and its apps (ProjectReference
 // items aggregated into this assembly by the build, read back by BuildKnownLazyApps).
 var builder = WebAssemblyHostBuilder.CreateDefault(args);

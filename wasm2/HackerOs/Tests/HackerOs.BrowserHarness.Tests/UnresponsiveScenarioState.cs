@@ -11,7 +11,7 @@ namespace HackerOs.BrowserHarness.Tests;
 /// <summary>
 /// One app window ("Calculatrice") whose process the "unresponsive" scenario can hang, freeze or
 /// recover, behind the real <see cref="WindowResponsivenessMonitor"/> (ADR 0127). The CPU accountant
-/// and the process table are scripted: this harness has no KazoOS kernel.
+/// and the process table are scripted: this harness has no Kazo OS kernel.
 /// </summary>
 public sealed class UnresponsiveScenarioState
 {

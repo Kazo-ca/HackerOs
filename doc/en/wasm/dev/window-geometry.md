@@ -13,7 +13,7 @@ Benoit's answer), in the [`v3-1-series-plan.md`](plans/v3-1-series-plan.md)
 series. It is §10 of [ADR 0044](adr/0044-settings-as-files.md).
 
 This is GNOME's model: a GTK app remembers its size and maximized state, the
-window manager places the window. KazoOS holds the geometry in C# (ADR 0009);
+window manager places the window. Kazo OS holds the geometry in C# (ADR 0009);
 it therefore writes this size itself, for all apps.
 
 ## State file

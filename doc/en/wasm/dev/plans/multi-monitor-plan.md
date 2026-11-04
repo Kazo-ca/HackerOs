@@ -14,7 +14,7 @@ Benoit's approval. ADRs written:
 
 ## 1. Purpose
 
-Give KazoOS an **extended desktop across several screens**. Each additional
+Give Kazo OS an **extended desktop across several screens**. Each additional
 screen is a display surface (`window.open` of the same instance) that holds its
 own desktop, taskbar and windows. A window moves from one screen to another
 without losing its state.
