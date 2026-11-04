@@ -1,0 +1,18 @@
+{
+  "id": "121bb8fb-fb5f-475d-bfb1-fe3df5dcf98b",
+  "category": "improved",
+  "audience": [
+    "user"
+  ],
+  "title": {
+    "en": "hackos.kazo.ca now leads to os.kazo.ca",
+    "fr": "hackos.kazo.ca mène maintenant à os.kazo.ca"
+  },
+  "description": {
+    "en": "Every address on hackos.kazo.ca is redirected to the same address on os.kazo.ca. An app installed from hackos.kazo.ca clears its cache on its next opening and goes to os.kazo.ca, where it can be installed again.",
+    "fr": "Chaque adresse de hackos.kazo.ca est redirigée vers la même adresse sur os.kazo.ca. Une application installée depuis hackos.kazo.ca vide son cache à sa prochaine ouverture et part vers os.kazo.ca, où on peut l'installer de nouveau."
+  },
+  "links": [
+    "doc/en/wasm/dev/cloudflare-redirect.md"
+  ]
+}
