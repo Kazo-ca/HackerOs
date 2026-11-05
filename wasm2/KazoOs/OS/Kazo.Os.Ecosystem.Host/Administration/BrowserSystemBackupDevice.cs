@@ -42,7 +42,7 @@ internal sealed class BrowserSystemBackupDevice(IJSRuntime runtime) : ISystemBac
     {
         await using BrowserFilePicker picker = new(runtime);
         BrowserPickedFile? file = await picker.PickAsync(
-            IndexedDbBackupService.ArchiveExtension + ",.json,application/json,application/gzip",
+            IndexedDbBackupService.ArchiveExtension + "," + IndexedDbBackupService.LegacyArchiveExtension + ",.json,application/json,application/gzip",
             cancellationToken).ConfigureAwait(false);
         return file is null ? null : new SystemBackupFile(file.Name, file.Content);
     }

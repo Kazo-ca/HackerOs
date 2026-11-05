@@ -129,33 +129,33 @@ change user preferences.
 
 ## Semantic token contract
 
-Layout CSS uses semantic `--hos-*` properties. Theme definitions assign values;
+Layout CSS uses semantic `--kos-*` properties. Theme definitions assign values;
 components must not branch on a theme ID when a token can express the
 difference. The base selector in `themes.css` defines a safe value for every
 token, and theme selectors override the relevant groups:
 
 | Group | Representative tokens |
 | --- | --- |
-| Core surfaces | `--hos-bg-base`, `--hos-bg-surface`, `--hos-bg-elevated`, `--hos-bg-overlay` |
-| Text and state | `--hos-text-primary`, `--hos-text-secondary`, `--hos-text-muted`, `--hos-text-inverse`, `--hos-error`, `--hos-warning`, `--hos-success`, `--hos-info` |
-| Accent/focus | `--hos-accent`, `--hos-accent-hover`, `--hos-accent-subtle`, `--hos-accent-glow`, `--hos-focus-ring` |
-| Shape/motion | `--hos-radius-*`, `--hos-shadow-*`, `--hos-transition-fast`, `--hos-transition-normal` |
-| Buttons & controls | `--hos-btn-bg`, `--hos-btn-color`, `--hos-btn-border`, `--hos-btn-radius`, `--hos-btn-shadow`, `--hos-btn-hover-*`, `--hos-btn-active-*`, `--hos-btn-primary-*`, `--hos-btn-danger-*` |
-| Inputs & forms | `--hos-input-bg`, `--hos-input-color`, `--hos-input-border`, `--hos-input-radius`, `--hos-input-shadow`, `--hos-input-focus-border`, `--hos-input-focus-ring` |
-| Toolbars & cards | `--hos-toolbar-bg`, `--hos-toolbar-border`, `--hos-card-bg`, `--hos-card-border`, `--hos-card-radius`, `--hos-card-shadow`, `--hos-badge-*` |
-| Tables & lists | `--hos-table-header-bg`, `--hos-table-header-color`, `--hos-table-border`, `--hos-table-row-hover-bg`, `--hos-table-row-selected-bg`, `--hos-table-row-selected-color` |
-| Desktop/window | `--hos-desktop-background`, `--hos-window-*`, `--hos-titlebar-*`, `--hos-window-control-*` |
-| Taskbar/launcher | `--hos-taskbar-*`, `--hos-taskbar-button-*`, `--hos-launcher-*` |
-| Mobile shell | `--hos-mobile-surface-background`, `--hos-mobile-nav-*`, `--hos-mobile-shade-*` |
+| Core surfaces | `--kos-bg-base`, `--kos-bg-surface`, `--kos-bg-elevated`, `--kos-bg-overlay` |
+| Text and state | `--kos-text-primary`, `--kos-text-secondary`, `--kos-text-muted`, `--kos-text-inverse`, `--kos-error`, `--kos-warning`, `--kos-success`, `--kos-info` |
+| Accent/focus | `--kos-accent`, `--kos-accent-hover`, `--kos-accent-subtle`, `--kos-accent-glow`, `--kos-focus-ring` |
+| Shape/motion | `--kos-radius-*`, `--kos-shadow-*`, `--kos-transition-fast`, `--kos-transition-normal` |
+| Buttons & controls | `--kos-btn-bg`, `--kos-btn-color`, `--kos-btn-border`, `--kos-btn-radius`, `--kos-btn-shadow`, `--kos-btn-hover-*`, `--kos-btn-active-*`, `--kos-btn-primary-*`, `--kos-btn-danger-*` |
+| Inputs & forms | `--kos-input-bg`, `--kos-input-color`, `--kos-input-border`, `--kos-input-radius`, `--kos-input-shadow`, `--kos-input-focus-border`, `--kos-input-focus-ring` |
+| Toolbars & cards | `--kos-toolbar-bg`, `--kos-toolbar-border`, `--kos-card-bg`, `--kos-card-border`, `--kos-card-radius`, `--kos-card-shadow`, `--kos-badge-*` |
+| Tables & lists | `--kos-table-header-bg`, `--kos-table-header-color`, `--kos-table-border`, `--kos-table-row-hover-bg`, `--kos-table-row-selected-bg`, `--kos-table-row-selected-color` |
+| Desktop/window | `--kos-desktop-background`, `--kos-window-*`, `--kos-titlebar-*`, `--kos-window-control-*` |
+| Taskbar/launcher | `--kos-taskbar-*`, `--kos-taskbar-button-*`, `--kos-launcher-*` |
+| Mobile shell | `--kos-mobile-surface-background`, `--kos-mobile-nav-*`, `--kos-mobile-shade-*` |
 
-Compatibility aliases for older `--hackeros-*` and transitional `--hos-*`
+Compatibility aliases for older `--hackeros-*` and transitional `--kos-*`
 names live in the shared base selector. New code uses the semantic names above;
 do not add another alias dialect in an app.
 
 Theme-specific structure is also expressed as bounded values. For example,
 macOS changes window identity/action ordering and control order through
-`--hos-window-identity-order`, `--hos-window-actions-order`, and
-`--hos-window-*-order`; it does not query or rearrange the DOM with JavaScript.
+`--kos-window-identity-order`, `--kos-window-actions-order`, and
+`--kos-window-*-order`; it does not query or rearrange the DOM with JavaScript.
 
 ## Creating a new built-in theme
 
@@ -172,15 +172,15 @@ Follow every step; a catalog-only entry or CSS-only selector is incomplete.
    forms:
 
    ```css
-   :where([data-theme="my-theme"], [data-hos-theme="my-theme"]) {
-       --hos-color-scheme: dark;
-       --hos-bg-base: #101214;
-       --hos-bg-surface: #181b1f;
-       --hos-text-primary: #f4f6f8;
-       --hos-text-secondary: #b5bdc6;
-       --hos-border: #46515c;
-       --hos-accent: #62b4ff;
-       --hos-focus-ring: #62b4ff;
+   :where([data-theme="my-theme"], [data-kos-theme="my-theme"]) {
+       --kos-color-scheme: dark;
+       --kos-bg-base: #101214;
+       --kos-bg-surface: #181b1f;
+       --kos-text-primary: #f4f6f8;
+       --kos-text-secondary: #b5bdc6;
+       --kos-border: #46515c;
+       --kos-accent: #62b4ff;
+       --kos-focus-ring: #62b4ff;
        /* Override window/taskbar/mobile groups needed for a distinct treatment. */
    }
    ```

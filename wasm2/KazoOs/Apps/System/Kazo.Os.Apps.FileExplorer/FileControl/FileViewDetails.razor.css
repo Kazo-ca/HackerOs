@@ -11,10 +11,10 @@
     padding: 0.45rem 0.6rem;
     position: sticky;
     top: 0;
-    background: var(--hos-table-header-bg, var(--hos-bg-surface, #161b22));
-    border-bottom: 2px solid var(--hos-table-border, var(--hos-border, #30363d));
-    border-right: 1px solid var(--hos-border-subtle, #21262d);
-    color: var(--hos-table-header-color, var(--hos-text-secondary, #8b949e));
+    background: var(--kos-table-header-bg, var(--kos-bg-surface, #161b22));
+    border-bottom: 2px solid var(--kos-table-border, var(--kos-border, #30363d));
+    border-right: 1px solid var(--kos-border-subtle, #21262d);
+    color: var(--kos-table-header-color, var(--kos-text-secondary, #8b949e));
     font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -27,7 +27,7 @@
 }
 
 .file-view-details thead th:hover {
-    color: var(--hos-text-primary, #f0f6fc);
+    color: var(--kos-text-primary, #f0f6fc);
 }
 
 .file-view-details thead th span {
@@ -36,7 +36,7 @@
 
 .file-view-details tbody tr {
     cursor: default;
-    border-bottom: 1px solid var(--hos-border-subtle, #21262d);
+    border-bottom: 1px solid var(--kos-border-subtle, #21262d);
 }
 
 .file-view-details tbody .file-view-details-column-name ::deep .shell-icon {
@@ -44,27 +44,27 @@
 }
 
 .file-view-details tbody tr:hover {
-    background: var(--hos-table-row-hover-bg, var(--hos-bg-elevated, #21262d));
+    background: var(--kos-table-row-hover-bg, var(--kos-bg-elevated, #21262d));
 }
 
 .file-view-details tbody tr:focus-visible {
-    outline: 2px solid var(--hos-focus-ring, var(--hos-accent, #42d392));
+    outline: 2px solid var(--kos-focus-ring, var(--kos-accent, #42d392));
     outline-offset: -2px;
 }
 
 .file-view-details tbody tr.selected {
-    background: var(--hos-table-row-selected-bg, var(--hos-accent-subtle, rgba(66, 211, 146, 0.16)));
-    color: var(--hos-table-row-selected-color, var(--hos-text-primary, inherit));
+    background: var(--kos-table-row-selected-bg, var(--kos-accent-subtle, rgba(66, 211, 146, 0.16)));
+    color: var(--kos-table-row-selected-color, var(--kos-text-primary, inherit));
 }
 
 .file-view-details tbody tr.selected:hover {
-    background: var(--hos-table-row-selected-bg, var(--hos-accent-subtle, rgba(66, 211, 146, 0.24)));
+    background: var(--kos-table-row-selected-bg, var(--kos-accent-subtle, rgba(66, 211, 146, 0.24)));
 }
 
 .file-view-details td {
     padding: 0.3rem 0.6rem;
     vertical-align: middle;
-    border-right: 1px solid var(--hos-border-subtle, #21262d);
+    border-right: 1px solid var(--kos-border-subtle, #21262d);
 }
 
 .file-view-details td:last-child {
@@ -74,9 +74,9 @@
 .file-view-rename-input {
     font: inherit;
     color: inherit;
-    background: var(--hos-input-bg, transparent);
-    border: var(--hos-input-border, 1px solid currentColor);
-    border-radius: var(--hos-input-radius, 2px);
+    background: var(--kos-input-bg, transparent);
+    border: var(--kos-input-border, 1px solid currentColor);
+    border-radius: var(--kos-input-radius, 2px);
     padding: 0 0.25rem;
     width: 100%;
 }
@@ -92,6 +92,6 @@
     padding: 1.5rem 0.6rem;
     text-align: center;
     border-right: none;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
     font-style: italic;
 }

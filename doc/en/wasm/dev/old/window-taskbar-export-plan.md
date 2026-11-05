@@ -119,7 +119,7 @@ It must contain:
 - no host theme model. Since the update of 2026-08-19, the
   framework-neutral catalog lives in `Kazo.Os.Theming.Abstractions` and the
   visual/static asset vocabulary in `Kazo.Os.Theming.Blazor`; the chrome packages
-  consume only the `--hos-*` tokens, never arbitrary CSS.
+  consume only the `--kos-*` tokens, never arbitrary CSS.
 
 The `Shared/Kazo.Os.AppSdk.Icons` project already exists and provides a render-independent
 icon identity model; the window and taskbar icon contracts

@@ -67,12 +67,12 @@ The host's `App.razor` initializes the service after appearance and passes to `T
   user theme cannot remove it. `:focus-visible` gets a 3 px yellow outline.
 - **Text size**: text sizes are in `rem`;
   `:root:has(.theme-scope[data-text-scale="150"])` sets the root font to 150%. Frames in
-  `px` do not move. `--hos-text-scale` holds the factor.
+  `px` do not move. `--kos-text-scale` holds the factor.
 - **Reduced motion**: `data-motion="reduced"` sets transition tokens to 0 and brings every
   animation or transition duration down to 0.01 ms.
 
 New stylesheet: write text sizes in `rem`, never in `px`, and colors with the
-`--hos-*` tokens.
+`--kos-*` tokens.
 
 ### Apps that draw their own content
 

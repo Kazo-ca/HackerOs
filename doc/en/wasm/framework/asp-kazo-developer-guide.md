@@ -143,7 +143,7 @@ public sealed partial class IntranetSite : WebAppDefinition   // partial : le bu
   port < 1024 is granted automatically on its own `Urls`).
 - **Capabilities**: `network.listen` to listen; `network.simulated.*` if the
   Blazor pages call the site's API. Never `filesystem.*`: the generator
-  refuses it (`HOSAPP0050`), a site's data does not go into the OS
+  refuses it (`KOSAPP0050`), a site's data does not go into the OS
   files (ADR 0073 §3).
 - `Kind` (`Web`), the category (`internet`) and the visibility (`Hidden`: a site
   is not opened from the launcher) are fixed by `WebAppDefinition`.
@@ -226,7 +226,7 @@ public sealed class NotesController(NoteStore store, ILogger<NotesController> lo
 `KazoApiController` (ASP.NET's `[ApiController]`): JSON body by default,
 automatic `400` with an RFC 9457 problem if `ModelState` is invalid, and
 error statuses without a body turned into problems. An API action must have
-an attribute route (`HOSWEB0007`).
+an attribute route (`KOSWEB0007`).
 
 ```csharp
 [Route("api/notes")]

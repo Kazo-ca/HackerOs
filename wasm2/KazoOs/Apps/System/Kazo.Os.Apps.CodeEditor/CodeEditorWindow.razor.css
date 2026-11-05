@@ -8,17 +8,17 @@
     --panel-height: 38%;
     --workbench-bg: #0b1012;
     --workbench-chrome: #0f1518;
-    --workbench-border: var(--hos-border-subtle, #1f2a2f);
-    --workbench-accent: var(--hos-accent, #42d392);
+    --workbench-border: var(--kos-border-subtle, #1f2a2f);
+    --workbench-accent: var(--kos-accent, #42d392);
     display: flex;
     flex-direction: column;
     width: 100%;
     height: 100%;
     min-height: 0;
     overflow: hidden;
-    color: var(--hos-text-primary, #c9d1d9);
+    color: var(--kos-text-primary, #c9d1d9);
     background: var(--workbench-bg);
-    font-family: var(--hos-font-ui, Inter, system-ui, sans-serif);
+    font-family: var(--kos-font-ui, Inter, system-ui, sans-serif);
 }
 
 .code-editor.is-resizing {
@@ -49,7 +49,7 @@
 .menu-title {
     display: inline-block;
     padding: 0.2rem 0.55rem;
-    color: var(--hos-text-secondary, #a5adb6);
+    color: var(--kos-text-secondary, #a5adb6);
     border: none;
     border-radius: 3px;
     background: transparent;
@@ -61,8 +61,8 @@
 
 .menu-title:hover,
 .menu-title:focus-visible {
-    color: var(--hos-text-primary, #ffffff);
-    background: var(--hos-bg-elevated, #20292e);
+    color: var(--kos-text-primary, #ffffff);
+    background: var(--kos-bg-elevated, #20292e);
 }
 
 .menubar-title {
@@ -70,7 +70,7 @@
     min-width: 0;
     overflow: hidden;
     padding-right: 4rem;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
     font-size: 0.75rem;
     text-align: center;
     text-overflow: ellipsis;
@@ -87,7 +87,7 @@
 }
 
 .menu-entry kbd {
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
     font-family: inherit;
     font-size: 0.72rem;
 }
@@ -115,7 +115,7 @@
     align-items: center;
     justify-content: center;
     height: 2.9rem;
-    color: var(--hos-text-secondary, #6e7a83);
+    color: var(--kos-text-secondary, #6e7a83);
     border: none;
     border-left: 2px solid transparent;
     background: transparent;
@@ -124,11 +124,11 @@
 
 .activity-button:hover,
 .activity-button:focus-visible {
-    color: var(--hos-text-primary, #ffffff);
+    color: var(--kos-text-primary, #ffffff);
 }
 
 .activity-button.is-active {
-    color: var(--hos-text-primary, #ffffff);
+    color: var(--kos-text-primary, #ffffff);
     border-left-color: var(--workbench-accent);
 }
 
@@ -142,7 +142,7 @@
     min-width: 0;
     min-height: 0;
     overflow: hidden;
-    background: var(--hos-bg-surface, #0f1619);
+    background: var(--kos-bg-surface, #0f1619);
 }
 
 .side-bar.is-hidden,
@@ -164,7 +164,7 @@
 .panel-splitter {
     flex: 0 0 auto;
     background: var(--workbench-border);
-    transition: background var(--hos-transition-fast, 120ms ease);
+    transition: background var(--kos-transition-fast, 120ms ease);
     touch-action: none;
 }
 
@@ -249,12 +249,12 @@
     gap: 0.4rem;
     min-width: 0;
     padding: 0.45rem 0.25rem 0.45rem 0.7rem;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
     font-size: 0.8rem;
 }
 
 .tab-shell.is-active .tab-select {
-    color: var(--hos-text-primary, #ffffff);
+    color: var(--kos-text-primary, #ffffff);
 }
 
 .tab-name {
@@ -265,7 +265,7 @@
 
 .tab-hint {
     overflow: hidden;
-    color: var(--hos-text-secondary, #6e7a83);
+    color: var(--kos-text-secondary, #6e7a83);
     font-size: 0.7rem;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -276,7 +276,7 @@
     width: 1.5rem;
     height: 1.5rem;
     margin-right: 0.3rem;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
     border-radius: 3px;
     font-size: 1rem;
     line-height: 1;
@@ -294,7 +294,7 @@
 
 .tab-close .dirty-dot {
     display: none;
-    color: var(--hos-text-primary, #ffffff);
+    color: var(--kos-text-primary, #ffffff);
     font-size: 0.7rem;
 }
 
@@ -317,8 +317,8 @@
 
 .tab-close:hover,
 .tab-close:focus-visible {
-    color: var(--hos-text-primary, #ffffff);
-    background: var(--hos-bg-elevated, #20292e);
+    color: var(--kos-text-primary, #ffffff);
+    background: var(--kos-bg-elevated, #20292e);
 }
 
 .breadcrumbs {
@@ -329,7 +329,7 @@
     min-width: 0;
     padding: 0.15rem 0.9rem;
     overflow: hidden;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
     background: var(--workbench-bg);
     font-size: 0.74rem;
     white-space: nowrap;
@@ -342,7 +342,7 @@
 }
 
 .crumb:last-child {
-    color: var(--hos-text-primary, #c9d1d9);
+    color: var(--kos-text-primary, #c9d1d9);
 }
 
 .editor-message {
@@ -356,13 +356,13 @@
 }
 
 .editor-message.is-error {
-    color: var(--hos-error, #ffb3ad);
-    background: color-mix(in srgb, var(--hos-error, #ff8f87) 18%, var(--workbench-bg));
+    color: var(--kos-error, #ffb3ad);
+    background: color-mix(in srgb, var(--kos-error, #ff8f87) 18%, var(--workbench-bg));
 }
 
 .editor-message.is-information {
-    color: var(--hos-success, #aff5b4);
-    background: color-mix(in srgb, var(--hos-success, #42d392) 14%, var(--workbench-bg));
+    color: var(--kos-success, #aff5b4);
+    background: color-mix(in srgb, var(--kos-success, #42d392) 14%, var(--workbench-bg));
 }
 
 .message-close {
@@ -402,13 +402,13 @@
     gap: 1.4rem;
     padding: 1rem;
     overflow: auto;
-    color: var(--hos-text-secondary, #6e7a83);
+    color: var(--kos-text-secondary, #6e7a83);
     font-size: 0.8rem;
 }
 
 .watermark-logo {
     color: color-mix(in srgb, var(--workbench-accent) 35%, transparent);
-    font-family: var(--hos-font-mono, "Cascadia Mono", Consolas, monospace);
+    font-family: var(--kos-font-mono, "Cascadia Mono", Consolas, monospace);
     font-size: 4.5rem;
     font-weight: 700;
     text-shadow: 0 0 24px color-mix(in srgb, var(--workbench-accent) 25%, transparent);
@@ -431,7 +431,7 @@
 
 .watermark kbd {
     padding: 0.05rem 0.35rem;
-    color: var(--hos-text-primary, #c9d1d9);
+    color: var(--kos-text-primary, #c9d1d9);
     border: 1px solid var(--workbench-border);
     border-bottom-width: 2px;
     border-radius: 3px;
@@ -514,7 +514,7 @@
     align-items: center;
     gap: 0.35rem;
     padding: 0.45rem 0.5rem 0.35rem;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
     border: none;
     border-bottom: 1px solid transparent;
     background: transparent;
@@ -527,20 +527,20 @@
 }
 
 .dock-tab:hover {
-    color: var(--hos-text-primary, #ffffff);
+    color: var(--kos-text-primary, #ffffff);
 }
 
 .dock-tab.is-active {
-    color: var(--hos-text-primary, #ffffff);
+    color: var(--kos-text-primary, #ffffff);
     border-bottom-color: var(--workbench-accent);
 }
 
 .dock-badge {
     min-width: 1.1rem;
     padding: 0 0.3rem;
-    color: var(--hos-text-primary, #ffffff);
+    color: var(--kos-text-primary, #ffffff);
     border-radius: 0.6rem;
-    background: var(--hos-bg-elevated, #20292e);
+    background: var(--kos-bg-elevated, #20292e);
     font-size: 0.62rem;
     letter-spacing: 0;
     text-align: center;
@@ -548,7 +548,7 @@
 
 .dock-badge.is-error {
     color: #1a0705;
-    background: var(--hos-error, #ff8f87);
+    background: var(--kos-error, #ff8f87);
 }
 
 .terminal-tabs {
@@ -567,7 +567,7 @@
 }
 
 .terminal-tab-shell.is-active {
-    background: var(--hos-bg-elevated, #18222a);
+    background: var(--kos-bg-elevated, #18222a);
 }
 
 .terminal-tab-select,
@@ -576,7 +576,7 @@
     border: none;
     background: transparent;
     cursor: pointer;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
     font-family: inherit;
 }
 
@@ -593,7 +593,7 @@
 }
 
 .terminal-tab-shell.is-active .terminal-tab-select {
-    color: var(--hos-text-primary, #ffffff);
+    color: var(--kos-text-primary, #ffffff);
 }
 
 .terminal-tab-close {
@@ -607,7 +607,7 @@
 }
 
 .terminal-tab-close:hover {
-    color: var(--hos-error, #ff8f87);
+    color: var(--kos-error, #ff8f87);
 }
 
 .panel-actions {
@@ -628,8 +628,8 @@
 }
 
 .panel-button:hover {
-    color: var(--hos-text-primary, #ffffff);
-    background: var(--hos-bg-elevated, #20292e);
+    color: var(--kos-text-primary, #ffffff);
+    background: var(--kos-bg-elevated, #20292e);
 }
 
 .dock-view {
@@ -663,7 +663,7 @@
     gap: 1rem;
     padding: 0.5rem 0.9rem;
     overflow: hidden;
-    font: 0.75rem var(--hos-font-mono, "JetBrains Mono", ui-monospace, monospace);
+    font: 0.75rem var(--kos-font-mono, "JetBrains Mono", ui-monospace, monospace);
 }
 
 .status-facts {
@@ -678,13 +678,13 @@
 }
 
 .status-facts dt {
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
 }
 
 .status-facts dd {
     margin: 0;
     overflow: hidden;
-    color: var(--hos-text-primary, #c9d1d9);
+    color: var(--kos-text-primary, #c9d1d9);
     white-space: nowrap;
     text-overflow: ellipsis;
 }
@@ -703,16 +703,16 @@
     display: flex;
     gap: 0.6rem;
     padding: 0.1rem 0;
-    color: var(--hos-text-primary, #c9d1d9);
+    color: var(--kos-text-primary, #c9d1d9);
 }
 
 .status-empty {
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
 }
 
 .status-entry time {
     flex: 0 0 auto;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
 }
 
 .status-level {
@@ -722,7 +722,7 @@
 
 .status-entry.is-error .status-level,
 .status-entry.is-error span:last-child {
-    color: var(--hos-error, #ff8f87);
+    color: var(--kos-error, #ff8f87);
 }
 
 .dock-problems {
@@ -731,7 +731,7 @@
 
 .problems-empty {
     margin: 0;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
     font-size: 0.78rem;
 }
 
@@ -796,7 +796,7 @@
 }
 
 .language-select option {
-    color: var(--hos-text-primary, #c9d1d9);
+    color: var(--kos-text-primary, #c9d1d9);
     background: var(--workbench-chrome);
 }
 

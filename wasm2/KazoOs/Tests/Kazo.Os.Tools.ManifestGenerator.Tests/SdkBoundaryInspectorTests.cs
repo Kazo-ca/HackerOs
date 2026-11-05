@@ -6,7 +6,7 @@ using Microsoft.JSInterop;
 
 namespace Kazo.Os.Tools.ManifestGenerator.Tests;
 
-/// <summary>Injection rule of the SDK boundary (ADR 0055 §3, HOSAPP0031 per ADR 0059).</summary>
+/// <summary>Injection rule of the SDK boundary (ADR 0055 §3, KOSAPP0031 per ADR 0059).</summary>
 public sealed class SdkBoundaryInspectorTests
 {
     [Fact]
@@ -23,7 +23,7 @@ public sealed class SdkBoundaryInspectorTests
         IReadOnlyList<GeneratorDiagnostic> diagnostics = SdkBoundaryInspector.Inspect([typeof(ForbiddenComponent)], []);
 
         GeneratorDiagnostic diagnostic = Assert.Single(diagnostics);
-        Assert.Equal("HOSAPP0031", diagnostic.Code);
+        Assert.Equal("KOSAPP0031", diagnostic.Code);
         Assert.Equal(typeof(ForbiddenComponent).FullName, diagnostic.Subject);
         Assert.Contains("'Sessions'", diagnostic.Message, StringComparison.Ordinal);
         Assert.Contains(typeof(ISessionService).FullName!, diagnostic.Message, StringComparison.Ordinal);

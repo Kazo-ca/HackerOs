@@ -403,7 +403,7 @@ pas modifié.
 | [0056](../adr/0056-sdk-apis-for-system-apps.md) API du SDK qui remplacent les services internes | complète 0044, 0048, 0049 | section 8.1 : une API et une capacité par besoin des apps système |
 | [0057](../adr/0057-proc-metrics-for-task-manager.md) Mesures système dans `/proc` et `KazoDriveInfo` | complète 0046 | section 8.2, gestionnaire de tâches |
 | [0058](../adr/0058-base-app-features.md) Fonctionnalités des apps de base | — | D22, section 8.2, chantiers `rebuild/4-*` |
-| [0059](../adr/0059-sdk-boundary-diagnostic-codes.md) Codes des diagnostics de la frontière du SDK | 0055 (numéros des codes) | `HOSAPP0030` et `HOSAPP0031`, les numéros de l'ADR 0055 étant déjà pris |
+| [0059](../adr/0059-sdk-boundary-diagnostic-codes.md) Codes des diagnostics de la frontière du SDK | 0055 (numéros des codes) | `KOSAPP0030` et `KOSAPP0031`, les numéros de l'ADR 0055 étant déjà pris |
 | [0060](../adr/0060-system-administration-sdk-adjustments.md) Ajustements de l'API d'administration du système | 0056 (sections 8, 9 et 11, en partie) | section 8.1 : `SystemPower`, `KazoPermissionDecision`, écriture des documents de l'OS, presse-papiers de l'hôte pour Diagnostic |
 
 ## 11. Points de détail à fixer dans les ADR
@@ -488,8 +488,8 @@ Repasse de `rebuild/4-sdk-boundary-final` sur `rebuild/base` après les PR #115
 à #122, avant la fusion des phases 1 à 4 dans `main` (PR #114) :
 
 - [x] Frontière du SDK : la solution compile sans aucun avertissement ni
-  diagnostic `HOSAPP0002`, `HOSAPP0003`, `HOSAPP0030`, `HOSAPP0031` ou
-  `HOSSDK0001` ; aucune référence de `Apps/` ou du SDK vers `Platform.*`,
+  diagnostic `KOSAPP0002`, `KOSAPP0003`, `KOSAPP0030`, `KOSAPP0031` ou
+  `KOSSDK0001` ; aucune référence de `Apps/` ou du SDK vers `Platform.*`,
   `Infrastructure.*` ou `Server.*` ; plus de mécanisme d'exemption ;
   `SdkBoundarySourceTests` couvre toutes les apps, nouvelles comprises.
 - [x] Apps et composants ajoutés depuis #113 : SDK public seulement, capacités

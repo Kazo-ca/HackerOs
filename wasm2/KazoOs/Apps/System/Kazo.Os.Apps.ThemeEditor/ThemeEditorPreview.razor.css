@@ -10,11 +10,11 @@
     grid-template-rows: 1fr auto;
     min-height: 22rem;
     overflow: hidden;
-    border: 1px solid var(--hos-border, #3a4b53);
-    border-radius: var(--hos-radius-md, 0.45rem);
-    background: var(--hos-desktop-background, #07100f);
-    color: var(--hos-text-primary, #f4f7f8);
-    font-family: var(--hos-font-ui, system-ui, sans-serif);
+    border: 1px solid var(--kos-border, #3a4b53);
+    border-radius: var(--kos-radius-md, 0.45rem);
+    background: var(--kos-desktop-background, #07100f);
+    color: var(--kos-text-primary, #f4f7f8);
+    font-family: var(--kos-font-ui, system-ui, sans-serif);
 }
 
 .sample-desktop.is-mobile {
@@ -27,23 +27,23 @@
     margin: 1rem;
     align-self: start;
     overflow: hidden;
-    border: var(--hos-window-border, 1px solid #315249);
-    border-color: var(--hos-window-focused-border, #55d6a1);
-    border-radius: var(--hos-window-radius, 0.35rem);
-    background: var(--hos-window-background, #0c1516);
-    box-shadow: var(--hos-window-focused-shadow, 0 18px 42px rgb(0 0 0 / 52%));
-    color: var(--hos-window-text, #e7f7f1);
+    border: var(--kos-window-border, 1px solid #315249);
+    border-color: var(--kos-window-focused-border, #55d6a1);
+    border-radius: var(--kos-window-radius, 0.35rem);
+    background: var(--kos-window-background, #0c1516);
+    box-shadow: var(--kos-window-focused-shadow, 0 18px 42px rgb(0 0 0 / 52%));
+    color: var(--kos-window-text, #e7f7f1);
 }
 
 .sample-titlebar {
     display: flex;
     align-items: center;
-    min-height: var(--hos-titlebar-height, 2.35rem);
+    min-height: var(--kos-titlebar-height, 2.35rem);
     padding: 0 0.4rem 0 0.7rem;
-    background: var(--hos-titlebar-focused-background, #153128);
-    color: var(--hos-titlebar-focused-text, #ecfff8);
-    font-size: var(--hos-titlebar-font-size, 0.86rem);
-    font-weight: var(--hos-titlebar-font-weight, 650);
+    background: var(--kos-titlebar-focused-background, #153128);
+    color: var(--kos-titlebar-focused-text, #ecfff8);
+    font-size: var(--kos-titlebar-font-size, 0.86rem);
+    font-weight: var(--kos-titlebar-font-weight, 650);
 }
 
 .sample-title {
@@ -61,30 +61,30 @@
 .sample-control {
     display: grid;
     place-items: center;
-    width: var(--hos-window-control-size, 1.7rem);
-    height: var(--hos-window-control-size, 1.7rem);
-    border-radius: var(--hos-window-control-radius, 0.2rem);
-    background: var(--hos-window-control-background, #111e1f);
-    color: var(--hos-window-control-color, #b9ccc6);
+    width: var(--kos-window-control-size, 1.7rem);
+    height: var(--kos-window-control-size, 1.7rem);
+    border-radius: var(--kos-window-control-radius, 0.2rem);
+    background: var(--kos-window-control-background, #111e1f);
+    color: var(--kos-window-control-color, #b9ccc6);
     font-size: 0.75rem;
 }
 
 .sample-control.sample-close {
-    background: var(--hos-window-close-background, #281719);
-    color: var(--hos-window-close-color, #ffb3ad);
+    background: var(--kos-window-close-background, #281719);
+    color: var(--kos-window-close-color, #ffb3ad);
 }
 
 .sample-content {
     display: grid;
     gap: 0.55rem;
     padding: 0.85rem;
-    background: var(--hos-window-content-background, #0c1516);
+    background: var(--kos-window-content-background, #0c1516);
 }
 
 .sample-heading {
     margin: 0;
     font-size: 1rem;
-    color: var(--hos-text-primary, #f4f7f8);
+    color: var(--kos-text-primary, #f4f7f8);
 }
 
 .sample-secondary,
@@ -93,8 +93,8 @@
     font-size: 0.82rem;
 }
 
-.sample-secondary { color: var(--hos-text-secondary, #a8bac4); }
-.sample-muted { color: var(--hos-text-muted, #6f838d); }
+.sample-secondary { color: var(--kos-text-secondary, #a8bac4); }
+.sample-muted { color: var(--kos-text-muted, #6f838d); }
 
 .sample-row {
     display: flex;
@@ -103,46 +103,46 @@
 }
 
 .sample-button {
-    min-height: var(--hos-control-height, 2.25rem);
+    min-height: var(--kos-control-height, 2.25rem);
     padding: 0 0.8rem;
-    border: var(--hos-btn-border, 1px solid #3a4b53);
-    border-radius: var(--hos-btn-radius, 0.25rem);
-    background: var(--hos-btn-bg, #151c20);
-    color: var(--hos-btn-color, #f4f7f8);
-    font-weight: var(--hos-btn-font-weight, 500);
-    transition: background var(--hos-transition-fast, 120ms ease);
+    border: var(--kos-btn-border, 1px solid #3a4b53);
+    border-radius: var(--kos-btn-radius, 0.25rem);
+    background: var(--kos-btn-bg, #151c20);
+    color: var(--kos-btn-color, #f4f7f8);
+    font-weight: var(--kos-btn-font-weight, 500);
+    transition: background var(--kos-transition-fast, 120ms ease);
 }
 
-.sample-button:hover { background: var(--hos-btn-hover-bg, #1b252a); }
+.sample-button:hover { background: var(--kos-btn-hover-bg, #1b252a); }
 
 .sample-button.is-primary {
-    border: var(--hos-btn-primary-border, 1px solid #42d392);
-    background: var(--hos-btn-primary-bg, #42d392);
-    color: var(--hos-btn-primary-color, #07100f);
+    border: var(--kos-btn-primary-border, 1px solid #42d392);
+    background: var(--kos-btn-primary-bg, #42d392);
+    color: var(--kos-btn-primary-color, #07100f);
 }
 
 .sample-button.is-danger {
-    border: var(--hos-btn-danger-border, 1px solid #ff8f87);
-    background: var(--hos-btn-danger-bg, #2b1a1a);
-    color: var(--hos-btn-danger-color, #ff8f87);
+    border: var(--kos-btn-danger-border, 1px solid #ff8f87);
+    background: var(--kos-btn-danger-bg, #2b1a1a);
+    color: var(--kos-btn-danger-color, #ff8f87);
 }
 
 .sample-input {
-    min-height: var(--hos-control-height, 2.25rem);
+    min-height: var(--kos-control-height, 2.25rem);
     padding: 0 0.6rem;
-    border: var(--hos-input-border, 1px solid #3a4b53);
-    border-radius: var(--hos-input-radius, 0.25rem);
-    background: var(--hos-input-bg, #101417);
-    color: var(--hos-input-color, #f4f7f8);
-    font-family: var(--hos-font-mono, monospace);
+    border: var(--kos-input-border, 1px solid #3a4b53);
+    border-radius: var(--kos-input-radius, 0.25rem);
+    background: var(--kos-input-bg, #101417);
+    color: var(--kos-input-color, #f4f7f8);
+    font-family: var(--kos-font-mono, monospace);
 }
 
 .sample-list {
     margin: 0;
     padding: 0;
     list-style: none;
-    border: var(--hos-table-border, 1px solid #27343a);
-    border-radius: var(--hos-radius-sm, 0.25rem);
+    border: var(--kos-table-border, 1px solid #27343a);
+    border-radius: var(--kos-radius-sm, 0.25rem);
 }
 
 .sample-list li {
@@ -151,8 +151,8 @@
 }
 
 .sample-list li.is-selected {
-    background: var(--hos-table-row-selected-bg, #173b2c);
-    color: var(--hos-table-row-selected-color, #f4f7f8);
+    background: var(--kos-table-row-selected-bg, #173b2c);
+    color: var(--kos-table-row-selected-color, #f4f7f8);
 }
 
 .sample-badge {
@@ -162,29 +162,29 @@
     font-weight: 600;
 }
 
-.sample-badge.is-success { color: var(--hos-success, #42d392); background: color-mix(in srgb, var(--hos-success, #42d392) 16%, transparent); }
-.sample-badge.is-warning { color: var(--hos-warning, #e0ad50); background: color-mix(in srgb, var(--hos-warning, #e0ad50) 16%, transparent); }
-.sample-badge.is-error { color: var(--hos-error, #ff8f87); background: color-mix(in srgb, var(--hos-error, #ff8f87) 16%, transparent); }
-.sample-badge.is-info { color: var(--hos-info, #64b5f6); background: color-mix(in srgb, var(--hos-info, #64b5f6) 16%, transparent); }
+.sample-badge.is-success { color: var(--kos-success, #42d392); background: color-mix(in srgb, var(--kos-success, #42d392) 16%, transparent); }
+.sample-badge.is-warning { color: var(--kos-warning, #e0ad50); background: color-mix(in srgb, var(--kos-warning, #e0ad50) 16%, transparent); }
+.sample-badge.is-error { color: var(--kos-error, #ff8f87); background: color-mix(in srgb, var(--kos-error, #ff8f87) 16%, transparent); }
+.sample-badge.is-info { color: var(--kos-info, #64b5f6); background: color-mix(in srgb, var(--kos-info, #64b5f6) 16%, transparent); }
 
 .sample-mono {
     margin: 0;
     padding: 0.45rem 0.6rem;
-    border-radius: var(--hos-radius-sm, 0.25rem);
-    background: var(--hos-bg-base, #101417);
-    color: var(--hos-accent, #42d392);
-    font-family: var(--hos-font-mono, monospace);
+    border-radius: var(--kos-radius-sm, 0.25rem);
+    background: var(--kos-bg-base, #101417);
+    color: var(--kos-accent, #42d392);
+    font-family: var(--kos-font-mono, monospace);
     font-size: 0.78rem;
 }
 
 .sample-taskbar {
     display: flex;
     align-items: center;
-    gap: var(--hos-taskbar-gap, 0.5rem);
-    min-height: var(--hos-taskbar-height, 2.75rem);
+    gap: var(--kos-taskbar-gap, 0.5rem);
+    min-height: var(--kos-taskbar-height, 2.75rem);
     padding: 0 0.5rem;
-    background: var(--hos-taskbar-background, #11191c);
-    font-size: var(--hos-taskbar-font-size, 0.85rem);
+    background: var(--kos-taskbar-background, #11191c);
+    font-size: var(--kos-taskbar-font-size, 0.85rem);
 }
 
 .sample-launcher {
@@ -192,30 +192,30 @@
     place-items: center;
     min-width: 2rem;
     height: 2rem;
-    border-radius: var(--hos-taskbar-button-radius, 0.25rem);
-    background: var(--hos-taskbar-launcher-background, #0d1417);
-    color: var(--hos-taskbar-launcher-color, #42d392);
-    font-family: var(--hos-font-mono, monospace);
+    border-radius: var(--kos-taskbar-button-radius, 0.25rem);
+    background: var(--kos-taskbar-launcher-background, #0d1417);
+    color: var(--kos-taskbar-launcher-color, #42d392);
+    font-family: var(--kos-font-mono, monospace);
     font-weight: 700;
 }
 
 .sample-task {
     padding: 0.3rem 0.7rem;
-    border-radius: var(--hos-taskbar-button-radius, 0.25rem);
-    background: var(--hos-taskbar-button-background, #0d1417);
-    color: var(--hos-taskbar-button-color, #a8bac4);
+    border-radius: var(--kos-taskbar-button-radius, 0.25rem);
+    background: var(--kos-taskbar-button-background, #0d1417);
+    color: var(--kos-taskbar-button-color, #a8bac4);
 }
 
 .sample-task.is-active {
-    background: var(--hos-taskbar-button-active-background, #173b2c);
-    color: var(--hos-taskbar-button-active-color, #f4f7f8);
-    box-shadow: inset 0 -2px 0 var(--hos-taskbar-active-indicator, #42d392);
+    background: var(--kos-taskbar-button-active-background, #173b2c);
+    color: var(--kos-taskbar-button-active-color, #f4f7f8);
+    box-shadow: inset 0 -2px 0 var(--kos-taskbar-active-indicator, #42d392);
 }
 
 .sample-clock {
     margin-left: auto;
-    color: var(--hos-taskbar-button-color, #a8bac4);
-    font-family: var(--hos-font-mono, monospace);
+    color: var(--kos-taskbar-button-color, #a8bac4);
+    font-family: var(--kos-font-mono, monospace);
 }
 
 .preview-card {
@@ -225,5 +225,5 @@
 .preview-note {
     margin: 0;
     font-size: 0.78rem;
-    color: var(--hos-text-secondary, #a8bac4);
+    color: var(--kos-text-secondary, #a8bac4);
 }

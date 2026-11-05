@@ -20,7 +20,7 @@ namespace Kazo.Os.Commands.Kazobackup;
 /// opening the graphical administrator prompt, the way <c>apt</c> answers "are you root?".
 /// </para>
 /// <para>
-/// <c>create</c> downloads the <c>.hosbak</c> archive to the host computer. <c>restore</c> opens
+/// <c>create</c> downloads the <c>.kosbak</c> archive to the host computer. <c>restore</c> opens
 /// the browser's file picker (Enter counts as the user's gesture); the default mode is
 /// <c>--merge</c>. If the browser refuses to open its picker, the command points to Settings.
 /// </para>

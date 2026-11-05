@@ -138,10 +138,10 @@ The `Kazo.Os.Tools.BackgroundAnalyzer` analyzer is shipped in the
 
 | Code | Refusal |
 |---|---|
-| `HOSBG0001` | The task is not a static method group: lambda (even `static`), anonymous method, instance method, non-`static` local function, delegate passed through a variable. |
-| `HOSBG0002` | The input or result type is not reached from a `[JsonSerializable]` of a context declared by `[assembly: KazoWireContext(...)]`. A type reached through an array, a generic argument or a public property of a root is accepted, as `GetTypeInfo` finds it. |
-| `HOSBG0003` | The task method or class is in an assembly other than the app's. |
-| `HOSBG0004` | The method is generic, or belongs to a generic type. |
+| `KOSBG0001` | The task is not a static method group: lambda (even `static`), anonymous method, instance method, non-`static` local function, delegate passed through a variable. |
+| `KOSBG0002` | The input or result type is not reached from a `[JsonSerializable]` of a context declared by `[assembly: KazoWireContext(...)]`. A type reached through an array, a generic argument or a public property of a root is accepted, as `GetTypeInfo` finds it. |
+| `KOSBG0003` | The task method or class is in an assembly other than the app's. |
+| `KOSBG0004` | The method is generic, or belongs to a generic type. |
 
 The OS redoes the checks at run time (a call through reflection does not pass
 the analyzer) and throws `ArgumentException`.
@@ -217,7 +217,7 @@ the window stays open and shows `killed`).
   lambda refused, undeclared type, fault, cancellation, progress
   throttling.
 - `Tests/Kazo.Os.AppSdk.Tests/Threading/KazoBackgroundAnalyzerTests.cs`: the
-  four `HOSBG` rules.
+  four `KOSBG` rules.
 - `Tests/Kazo.Os.Platform.WorkerHost.Tests/BackgroundJobTests.cs`: each case
   on the main thread **and** in a worker (result, child process,
   progress, task class, fault, cancellation, `kill -9` without closing the app,
@@ -234,7 +234,7 @@ the window stays open and shows `killed`).
 - [x] Workers: `start` `k = 2`, `bg.progress`, `bg.run`, `bgp`, `bgfault` errors and `rs` reason.
 - [x] `/proc/<pid>/status` (`Name`, `Job`, `Host`) and `ps`.
 - [x] An app manages its descendants without `process.manage` (ADR 0140 §7).
-- [x] Analyzer `HOSBG0001` to `HOSBG0004`, shipped in the SDK package and wired to the repository's apps.
+- [x] Analyzer `KOSBG0001` to `KOSBG0004`, shipped in the SDK package and wired to the repository's apps.
 - [x] CodeEditor search, explorer compression and extraction as tasks; reason written down for copies, download and Kazo Paint.
 - [x] Example in the sample window.
 - [x] SDK, analyzer, OS and worker tests, apps.

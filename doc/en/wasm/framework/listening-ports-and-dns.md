@@ -129,7 +129,7 @@ Validator and generator rules:
 | `manifest.web.url.invalid` | absolute `http`/`https` URL, valid host name (no wildcard), path ending with `/`, no query or fragment |
 | `manifest.web.url.duplicate` | two identical URLs after normalization |
 | `manifest.web.forbidden` | `web` on an app that is not `web` |
-| `manifest.web.filesystem`, `HOSAPP0050` | a site requests no `filesystem.*` capability (its data goes into the browser's IndexedDB, ADR 0073 §3) |
+| `manifest.web.filesystem`, `KOSAPP0050` | a site requests no `filesystem.*` capability (its data goes into the browser's IndexedDB, ADR 0073 §3) |
 | `manifest.execution.web` | a `web` app runs in the `web` worker or on the main thread |
 | `manifest.execution.web-only` | only a `web` app runs in the `web` worker |
 | `catalog.web.url-conflict` | two installed apps do not declare the same host name |
@@ -249,7 +249,7 @@ OS detection) on `lo` instead of `eth0`. A local ping answers in ~0.04 ms.
 
 ## Task list for work item `web/3-listener-dns`
 
-- [x] `web` kind, `web` host, `web.urls` (abstractions, validator, schema, serializer, mapper, generator `HOSAPP0050`, catalog conflict).
+- [x] `web` kind, `web` host, `web.urls` (abstractions, validator, schema, serializer, mapper, generator `KOSAPP0050`, catalog conflict).
 - [x] Capabilities `network.listen` (normal) and `network.listen.privileged` (dangerous).
 - [x] `KazoHttpListener`, `WebServerAppBase`, `KazoIPGlobalProperties`, gateway contract.
 - [x] `ListeningPortTable`: binding, `EADDRINUSE`, `http.sys` routing, `localhost` daemons, cleanup.

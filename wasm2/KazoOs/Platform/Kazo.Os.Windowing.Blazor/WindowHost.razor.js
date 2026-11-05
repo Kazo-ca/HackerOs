@@ -80,7 +80,7 @@ const defaultDurationMs = 180;
 const defaultEasing = "cubic-bezier(0.2, 0, 0, 1)";
 const defaultScale = 0.95;
 const reducedMotionSelector = ["reduced", "disabled", "off"]
-    .flatMap(mode => [`[data-motion="${mode}"]`, `[data-hos-motion="${mode}"]`])
+    .flatMap(mode => [`[data-motion="${mode}"]`, `[data-kos-motion="${mode}"]`])
     .join(",");
 
 function motionOf(element) {
@@ -90,7 +90,7 @@ function motionOf(element) {
     }
     const view = element.ownerDocument.defaultView;
     const style = view.getComputedStyle(element);
-    const [durationText, ...curve] = style.getPropertyValue("--hos-window-anim-duration").trim().split(/\s+/);
+    const [durationText, ...curve] = style.getPropertyValue("--kos-window-anim-duration").trim().split(/\s+/);
     // No theme sheet (a sample host): the default, unless the browser asks for less motion.
     if (!durationText && view.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
         return null;
@@ -99,8 +99,8 @@ function motionOf(element) {
     if (!(duration > 0)) {
         return null;
     }
-    const easing = curve.join(" ") || style.getPropertyValue("--hos-window-anim-easing").trim() || defaultEasing;
-    const scale = Number.parseFloat(style.getPropertyValue("--hos-window-anim-scale"));
+    const easing = curve.join(" ") || style.getPropertyValue("--kos-window-anim-easing").trim() || defaultEasing;
+    const scale = Number.parseFloat(style.getPropertyValue("--kos-window-anim-scale"));
     return { duration, easing, scale: scale > 0 && scale <= 1 ? scale : defaultScale };
 }
 

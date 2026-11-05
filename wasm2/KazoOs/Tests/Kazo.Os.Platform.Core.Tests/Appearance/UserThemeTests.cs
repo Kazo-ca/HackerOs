@@ -14,10 +14,10 @@ public sealed class UserThemeTests
         platforms = desktop, mobile
 
         [tokens]
-        --hos-accent = #ff00ff
-        --hos-bg-base = rgb(5 5 10)
-        --hos-radius-md = 6px
-        --hos-transition-fast = 90ms ease-out
+        --kos-accent = #ff00ff
+        --kos-bg-base = rgb(5 5 10)
+        --kos-radius-md = 6px
+        --kos-transition-fast = 90ms ease-out
         """;
 
     [Fact]
@@ -31,13 +31,27 @@ public sealed class UserThemeTests
         Assert.Equal("Neon Night", theme.Name);
         Assert.Equal(WellKnownThemeIds.KazoOs, theme.BaseThemeId);
         Assert.Equal([ThemePlatform.Desktop, ThemePlatform.Mobile], theme.Platforms);
-        Assert.Equal("#ff00ff", theme.Tokens.Single(pair => pair.Key == "--hos-accent").Value);
+        Assert.Equal("#ff00ff", theme.Tokens.Single(pair => pair.Key == "--kos-accent").Value);
+    }
+
+    [Fact]
+    public void Parse_reads_legacy_hos_tokens_under_their_kos_names()
+    {
+        string legacy = Neon.Replace("--kos-", "--hos-", StringComparison.Ordinal);
+
+        ThemeFileParseResult result = ThemeFile.Parse(legacy);
+
+        UserTheme theme = Assert.IsType<UserTheme>(result.Theme);
+        Assert.Empty(result.Diagnostics);
+        Assert.Equal("#ff00ff", theme.Tokens.Single(pair => pair.Key == "--kos-accent").Value);
+        Assert.All(theme.Tokens, pair => Assert.StartsWith("--kos-", pair.Key, StringComparison.Ordinal));
+        Assert.DoesNotContain("--hos-", ThemeFile.Serialize(theme), StringComparison.Ordinal);
     }
 
     [Theory]
-    [InlineData("--hos-accent = red; background: url(http://x)")]
-    [InlineData("--hos-accent = expression(alert(1))")]
-    [InlineData("--hos-not-a-token = #fff")]
+    [InlineData("--kos-accent = red; background: url(http://x)")]
+    [InlineData("--kos-accent = expression(alert(1))")]
+    [InlineData("--kos-not-a-token = #fff")]
     [InlineData("color = #fff")]
     [InlineData("not a key value line")]
     public void Parse_ignores_an_invalid_token_line_and_keeps_the_rest(string badLine)
@@ -119,10 +133,10 @@ public sealed class UserThemeTests
         IReadOnlyDictionary<string, string> animated = theme.ToCssProperties(animationsEnabled: true);
         IReadOnlyDictionary<string, string> still = theme.ToCssProperties(animationsEnabled: false);
 
-        Assert.Equal("255, 0, 255", animated["--hos-accent-rgb"]);
-        Assert.Equal("90ms ease-out", animated["--hos-transition-fast"]);
-        Assert.False(still.ContainsKey("--hos-transition-fast"));
-        Assert.Equal("#ff00ff", still["--hos-accent"]);
+        Assert.Equal("255, 0, 255", animated["--kos-accent-rgb"]);
+        Assert.Equal("90ms ease-out", animated["--kos-transition-fast"]);
+        Assert.False(still.ContainsKey("--kos-transition-fast"));
+        Assert.Equal("#ff00ff", still["--kos-accent"]);
     }
 
     [Fact]

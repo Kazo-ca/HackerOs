@@ -17,9 +17,9 @@ base = kazoos
 platforms = desktop, mobile
 
 [tokens]
---hos-bg-base = #0b0f0b
---hos-accent = #39ff14
---hos-font-mono = "JetBrains Mono", monospace
+--kos-bg-base = #0b0f0b
+--kos-accent = #39ff14
+--kos-font-mono = "JetBrains Mono", monospace
 ```
 
 - `id` : 1 à 64 minuscules, chiffres et tirets ; c'est aussi le nom du fichier
@@ -66,17 +66,17 @@ Tout le reste est refusé, en particulier `url(`, `var(`, `calc(`,
 
 | Groupe | Jetons |
 |---|---|
-| Couleurs | `--hos-bg-base`, `-surface`, `-elevated`, `-overlay` ; `--hos-text-primary`, `-secondary`, `-muted`, `-inverse` ; `--hos-border-subtle`, `--hos-border`, `--hos-border-strong`, `--hos-focus-ring` ; `--hos-accent`, `-hover`, `-subtle`, `-glow` ; `--hos-success`, `--hos-warning`, `--hos-error`, `--hos-info` ; `--hos-desktop-background`, `--hos-desktop-grid-opacity` |
-| Typographie | `--hos-font-ui`, `--hos-font-mono`, `--hos-titlebar-font-size`, `--hos-titlebar-font-weight`, `--hos-taskbar-font-size`, `--hos-btn-font-weight` |
-| Espacements | `--hos-radius-sm`, `-md`, `-lg`, `--hos-btn-radius`, `--hos-input-radius`, `--hos-control-height` |
-| Fenêtres | `--hos-window-background`, `-content-background`, `-text`, `-focused-border`, `-radius` ; `--hos-titlebar-height`, `-background`, `-focused-background`, `-text`, `-focused-text` ; `--hos-window-control-size`, `-radius`, `-background`, `-hover-background`, `-color` ; `--hos-window-close-background`, `-hover-background`, `-color` |
-| Barre des tâches | `--hos-taskbar-height`, `-gap`, `-background`, `-button-background`, `-button-hover-background`, `-button-active-background`, `-button-color`, `-button-active-color`, `-button-radius`, `-active-indicator`, `-launcher-background`, `-launcher-color` ; `--hos-launcher-background`, `--hos-launcher-sidebar-background` |
-| Animations | `--hos-transition-fast`, `--hos-transition-normal` (ignorés quand les animations sont coupées) |
+| Couleurs | `--kos-bg-base`, `-surface`, `-elevated`, `-overlay` ; `--kos-text-primary`, `-secondary`, `-muted`, `-inverse` ; `--kos-border-subtle`, `--kos-border`, `--kos-border-strong`, `--kos-focus-ring` ; `--kos-accent`, `-hover`, `-subtle`, `-glow` ; `--kos-success`, `--kos-warning`, `--kos-error`, `--kos-info` ; `--kos-desktop-background`, `--kos-desktop-grid-opacity` |
+| Typographie | `--kos-font-ui`, `--kos-font-mono`, `--kos-titlebar-font-size`, `--kos-titlebar-font-weight`, `--kos-taskbar-font-size`, `--kos-btn-font-weight` |
+| Espacements | `--kos-radius-sm`, `-md`, `-lg`, `--kos-btn-radius`, `--kos-input-radius`, `--kos-control-height` |
+| Fenêtres | `--kos-window-background`, `-content-background`, `-text`, `-focused-border`, `-radius` ; `--kos-titlebar-height`, `-background`, `-focused-background`, `-text`, `-focused-text` ; `--kos-window-control-size`, `-radius`, `-background`, `-hover-background`, `-color` ; `--kos-window-close-background`, `-hover-background`, `-color` |
+| Barre des tâches | `--kos-taskbar-height`, `-gap`, `-background`, `-button-background`, `-button-hover-background`, `-button-active-background`, `-button-color`, `-button-active-color`, `-button-radius`, `-active-indicator`, `-launcher-background`, `-launcher-color` ; `--kos-launcher-background`, `--kos-launcher-sidebar-background` |
+| Animations | `--kos-transition-fast`, `--kos-transition-normal` (ignorés quand les animations sont coupées) |
 
 Les couleurs `accent`, `text-primary`, `text-secondary`, `text-muted`,
 `border`, `success`, `warning`, `error` et `info` reçoivent aussi leur
-compagnon `--hos-…-rgb` (« r, g, b ») calculé, utilisé par les styles qui
-écrivent `rgba(var(--hos-accent-rgb), .2)`.
+compagnon `--kos-…-rgb` (« r, g, b ») calculé, utilisé par les styles qui
+écrivent `rgba(var(--kos-accent-rgb), .2)`.
 
 ## API de lecture
 
@@ -96,7 +96,7 @@ Les propriétés `Label`, `Description` et `Message` restent en anglais ; les
 traductions passent par :
 
 - `ThemeTokenDefinition.GetLabel(culture)` / `GetDescription(culture)` (clé
-  `Token.BgBase.Label` pour `--hos-bg-base`) ;
+  `Token.BgBase.Label` pour `--kos-bg-base`) ;
 - `ThemeTokenValidator.TryValidate(type, valeur, culture, out normalisée, out erreur)` ;
 - `ThemeFileDiagnostic.GetMessage(culture)` et `ToString(culture)`
   (`chemin:ligne: avertissement: …`). Un diagnostic produit par `ThemeFile` ou

@@ -11,7 +11,7 @@ old app's free CSS (`customCss`).
 ## Purpose
 
 The user creates their own themes: a `.theme` file that starts from a built-in
-theme (`base`) and overrides a few validated CSS **tokens** (`--hos-*`). The
+theme (`base`) and overrides a few validated CSS **tokens** (`--kos-*`). The
 file is a real OS file: it is created with the theme editor, or with `nano`,
 copied with `cp`, sent, opened through the explorer. Settings offers it next to
 the built-in themes.
@@ -28,7 +28,7 @@ The format of the `.theme` file (sections, locations, tolerant reading, media) a
 | `ThemeFile` | same | `Parse` (tolerant) and `Serialize` of the `.theme` format |
 | `UserTheme`, `UserThemeLibrary` | same | theme read; reading of the two folders through delegates (`LoadAsync`), non-shadowing rules (`Build`) |
 | `ResolvedTheme.Resolve` | same | theme actually drawn for an id and a form factor (desktop or mobile) |
-| `ThemeScope`, `ThemePreview` (`Tokens` parameter) | `Platform/Kazo.Os.Theming.Blazor` | apply the tokens through `style.setProperty` on their root element, via `wwwroot/themeTokens.js` (only `--hos-*` properties are touched, and only the differences) |
+| `ThemeScope`, `ThemePreview` (`Tokens` parameter) | `Platform/Kazo.Os.Theming.Blazor` | apply the tokens through `style.setProperty` on their root element, via `wwwroot/themeTokens.js` (only `--kos-*` properties are touched, and only the differences) |
 | `UserThemeCatalogService` | `Platform/Kazo.Os.Platform.Core/Appearance` | the shell's live catalog: reads `/etc` as the system and `~` as the user, watches the two folders (`SettingsFilesWatcher.ForDirectories`), rereads on session change, logs each warning once |
 | `App.razor` | `OS/Kazo.Os.Ecosystem` | `ThemeScope ThemeId=@ActiveTheme.BaseThemeId Tokens=@ActiveTheme.UserTheme?.Tokens` |
 | Theme Editor | `Apps/System/Kazo.Os.Apps.ThemeEditor` | the app |

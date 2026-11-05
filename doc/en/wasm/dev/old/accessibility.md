@@ -19,7 +19,7 @@ HackerOS targets **WCAG 2.2 Level AA**. This document records the intended contr
 - **Focus Indicators:** All focusable elements show a distinct, high-contrast focus ring:
   ```css
   :focus-visible {
-    outline: 2px solid var(--hos-focus-ring, #42d392);
+    outline: 2px solid var(--kos-focus-ring, #42d392);
     outline-offset: 2px;
   }
   ```
@@ -41,8 +41,8 @@ HackerOS targets **WCAG 2.2 Level AA**. This document records the intended contr
   ```css
   @media (prefers-reduced-motion: reduce) {
     [data-theme] {
-      --hos-transition-fast: 0ms;
-      --hos-transition-normal: 0ms;
+      --kos-transition-fast: 0ms;
+      --kos-transition-normal: 0ms;
     }
   }
   ```

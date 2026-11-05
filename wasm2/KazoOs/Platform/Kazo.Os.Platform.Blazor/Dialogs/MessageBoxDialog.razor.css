@@ -6,10 +6,10 @@
     height: 100%;
     padding: 1.25rem;
     box-sizing: border-box;
-    color: var(--hos-text-primary, #d4f8e8);
-    background: var(--hos-window-content-background, #0d1819);
-    border: var(--hos-window-border, 1px solid var(--hos-border, #315249));
-    box-shadow: var(--hos-shadow-lg, 0 1.25rem 4rem rgba(0, 0, 0, 0.7));
+    color: var(--kos-text-primary, #d4f8e8);
+    background: var(--kos-window-content-background, #0d1819);
+    border: var(--kos-window-border, 1px solid var(--kos-border, #315249));
+    box-shadow: var(--kos-shadow-lg, 0 1.25rem 4rem rgba(0, 0, 0, 0.7));
 }
 
 .message-box-body {
@@ -23,30 +23,30 @@
 .message-box-icon {
     display: inline-flex;
     flex-shrink: 0;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
 }
 
 .message-box-icon.information {
-    color: var(--hos-info, #58a6ff);
+    color: var(--kos-info, #58a6ff);
 }
 
 .message-box-icon.warning {
-    color: var(--hos-warning, #d29922);
+    color: var(--kos-warning, #d29922);
 }
 
 .message-box-icon.error {
-    color: var(--hos-danger, #f85149);
+    color: var(--kos-danger, #f85149);
 }
 
 .message-box-icon.question {
-    color: var(--hos-accent, #42d392);
+    color: var(--kos-accent, #42d392);
 }
 
 .message-box-content {
     margin: 0;
     font-size: 0.95rem;
     line-height: 1.5;
-    color: var(--hos-text-primary, #d4f8e8);
+    color: var(--kos-text-primary, #d4f8e8);
     white-space: pre-wrap;
     word-break: break-word;
 }
@@ -61,48 +61,48 @@
 
 button {
     min-width: 5rem;
-    min-height: var(--hos-btn-min-height, 2.25rem);
-    padding: var(--hos-btn-padding, 0.4rem 0.9rem);
+    min-height: var(--kos-btn-min-height, 2.25rem);
+    padding: var(--kos-btn-padding, 0.4rem 0.9rem);
     font-size: 0.88rem;
     font-family: inherit;
-    font-weight: var(--hos-btn-font-weight, 500);
-    color: var(--hos-btn-color, var(--hos-text-primary, #d4f8e8));
-    background: var(--hos-btn-bg, #132522);
-    border: var(--hos-btn-border, 1px solid var(--hos-border, #315249));
-    border-radius: var(--hos-btn-radius, var(--hos-radius-sm, 0.25rem));
-    box-shadow: var(--hos-btn-shadow, none);
+    font-weight: var(--kos-btn-font-weight, 500);
+    color: var(--kos-btn-color, var(--kos-text-primary, #d4f8e8));
+    background: var(--kos-btn-bg, #132522);
+    border: var(--kos-btn-border, 1px solid var(--kos-border, #315249));
+    border-radius: var(--kos-btn-radius, var(--kos-radius-sm, 0.25rem));
+    box-shadow: var(--kos-btn-shadow, none);
     cursor: pointer;
-    transition: background var(--hos-transition-fast, 120ms ease),
-                border-color var(--hos-transition-fast, 120ms ease),
-                color var(--hos-transition-fast, 120ms ease);
+    transition: background var(--kos-transition-fast, 120ms ease),
+                border-color var(--kos-transition-fast, 120ms ease),
+                color var(--kos-transition-fast, 120ms ease);
 }
 
 button:hover:not(:disabled) {
-    background: var(--hos-btn-hover-bg, var(--hos-bg-elevated, #182825));
-    border-color: var(--hos-btn-hover-border, var(--hos-accent, #55d6a1));
-    color: var(--hos-btn-hover-color, var(--hos-text-primary, #ffffff));
+    background: var(--kos-btn-hover-bg, var(--kos-bg-elevated, #182825));
+    border-color: var(--kos-btn-hover-border, var(--kos-accent, #55d6a1));
+    color: var(--kos-btn-hover-color, var(--kos-text-primary, #ffffff));
 }
 
 button:active:not(:disabled) {
-    background: var(--hos-btn-active-bg, var(--hos-accent-subtle, #123a2b));
-    border-color: var(--hos-btn-active-border, var(--hos-accent, #55d6a1));
-    box-shadow: var(--hos-btn-active-shadow, none);
+    background: var(--kos-btn-active-bg, var(--kos-accent-subtle, #123a2b));
+    border-color: var(--kos-btn-active-border, var(--kos-accent, #55d6a1));
+    box-shadow: var(--kos-btn-active-shadow, none);
 }
 
 button.primary {
-    color: var(--hos-btn-primary-color, var(--hos-text-inverse, #07100d));
-    background: var(--hos-btn-primary-bg, var(--hos-accent, #55d6a1));
-    border: var(--hos-btn-primary-border, 1px solid var(--hos-accent, #55d6a1));
-    box-shadow: var(--hos-btn-primary-shadow, none);
+    color: var(--kos-btn-primary-color, var(--kos-text-inverse, #07100d));
+    background: var(--kos-btn-primary-bg, var(--kos-accent, #55d6a1));
+    border: var(--kos-btn-primary-border, 1px solid var(--kos-accent, #55d6a1));
+    box-shadow: var(--kos-btn-primary-shadow, none);
 }
 
 button.primary:hover:not(:disabled) {
-    background: var(--hos-btn-primary-hover-bg, var(--hos-accent-hover, #75e8ba));
-    border-color: var(--hos-btn-primary-hover-border, var(--hos-accent-hover, #75e8ba));
+    background: var(--kos-btn-primary-hover-bg, var(--kos-accent-hover, #75e8ba));
+    border-color: var(--kos-btn-primary-hover-border, var(--kos-accent-hover, #75e8ba));
 }
 
 button:focus-visible {
-    outline: 2px solid var(--hos-focus-ring, #55d6a1);
+    outline: 2px solid var(--kos-focus-ring, #55d6a1);
     outline-offset: 2px;
 }
 

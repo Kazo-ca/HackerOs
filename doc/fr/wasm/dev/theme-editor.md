@@ -11,7 +11,7 @@ libre (`customCss`) de l'ancienne app.
 ## Objet
 
 L'utilisateur crée ses propres thèmes : un fichier `.theme` qui part d'un thème
-intégré (`base`) et remplace quelques **jetons** CSS vérifiés (`--hos-*`). Le
+intégré (`base`) et remplace quelques **jetons** CSS vérifiés (`--kos-*`). Le
 fichier est un vrai fichier de l'OS : on le crée avec l'éditeur de thèmes, ou
 avec `nano`, on le copie avec `cp`, on l'envoie, on l'ouvre par l'explorateur.
 Paramètres le propose à côté des thèmes intégrés.
@@ -28,7 +28,7 @@ Le format du fichier `.theme` (sections, emplacements, lecture tolérante, médi
 | `ThemeFile` | idem | `Parse` (tolérant) et `Serialize` du format `.theme` |
 | `UserTheme`, `UserThemeLibrary` | idem | thème lu ; lecture des deux dossiers par délégués (`LoadAsync`), règles de non-masquage (`Build`) |
 | `ResolvedTheme.Resolve` | idem | thème réellement dessiné pour un id et une forme (bureau ou mobile) |
-| `ThemeScope`, `ThemePreview` (paramètre `Tokens`) | `Platform/Kazo.Os.Theming.Blazor` | appliquent les jetons par `style.setProperty` sur leur élément racine, via `wwwroot/themeTokens.js` (seules les propriétés `--hos-*` sont touchées, et seulement les différences) |
+| `ThemeScope`, `ThemePreview` (paramètre `Tokens`) | `Platform/Kazo.Os.Theming.Blazor` | appliquent les jetons par `style.setProperty` sur leur élément racine, via `wwwroot/themeTokens.js` (seules les propriétés `--kos-*` sont touchées, et seulement les différences) |
 | `UserThemeCatalogService` | `Platform/Kazo.Os.Platform.Core/Appearance` | catalogue vivant du shell : lit `/etc` comme le système et `~` comme l'utilisateur, surveille les deux dossiers (`SettingsFilesWatcher.ForDirectories`), relit au changement de session, journalise chaque avertissement une fois |
 | `App.razor` | `OS/Kazo.Os.Ecosystem` | `ThemeScope ThemeId=@ActiveTheme.BaseThemeId Tokens=@ActiveTheme.UserTheme?.Tokens` |
 | Theme Editor | `Apps/System/Kazo.Os.Apps.ThemeEditor` | l'app |

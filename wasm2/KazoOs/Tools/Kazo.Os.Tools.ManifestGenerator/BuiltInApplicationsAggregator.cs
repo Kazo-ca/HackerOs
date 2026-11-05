@@ -94,7 +94,7 @@ public static class BuiltInApplicationsAggregator
     /// ADR 0098 §4, at build: every terminal command name and alias of the host's apps must be
     /// unique (case-insensitive) and must not be a name the shell runs itself
     /// (<see cref="Kazo.Os.Platform.Core.Shell.ShellInterpreter.ReservedNames"/>). One
-    /// <c>HOSAPP0022</c> per offending app and name, in app id order.
+    /// <c>KOSAPP0022</c> per offending app and name, in app id order.
     /// </summary>
     /// <param name="manifests">The host's manifests.</param>
     /// <returns>The diagnostics, empty when every name is unique.</returns>
@@ -123,7 +123,7 @@ public static class BuiltInApplicationsAggregator
 
     /// <summary>
     /// ADR 0126, section 4, at build: a negative <c>oomScoreAdj</c> shields an app from the OOM killer,
-    /// a right reserved to system apps. One <c>HOSAPP0024</c> per non-system app declaring one, in
+    /// a right reserved to system apps. One <c>KOSAPP0024</c> per non-system app declaring one, in
     /// app id order.
     /// </summary>
     /// <param name="applications">The host's apps with their system flag.</param>
@@ -142,7 +142,7 @@ public static class BuiltInApplicationsAggregator
 
     /// <summary>
     /// ADR 0151 §5, at build: a file menu entry that targets another app needs that app in the host,
-    /// declaring the entry's intent. One <c>HOSAPP0028</c> per offending entry, in app id order.
+    /// declaring the entry's intent. One <c>KOSAPP0028</c> per offending entry, in app id order.
     /// </summary>
     /// <param name="manifests">The host's manifests.</param>
     /// <returns>The diagnostics, empty when every target is valid.</returns>

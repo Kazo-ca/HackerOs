@@ -2,14 +2,14 @@
 
 # Sauvegarde de la machine et espace de stockage
 
-Ce document couvre la mise en œuvre de la sauvegarde et de l'espace de stockage. Ce qu'une app voit (API `KazoSystemBackup`, archive `.hosbak`, codes `NoSpace` et `FileTooLarge`) est dans [`../framework/system-backup-api.md`](../framework/system-backup-api.md).
+Ce document couvre la mise en œuvre de la sauvegarde et de l'espace de stockage. Ce qu'une app voit (API `KazoSystemBackup`, archive `.kosbak`, codes `NoSpace` et `FileTooLarge`) est dans [`../framework/system-backup-api.md`](../framework/system-backup-api.md).
 
 ## Objet
 
 Chantier `v3/7-storage-backup`, d'après l'[ADR 0099](adr/0099-os-backup-and-low-storage.md) :
 
 - **Sauvegarde et restauration** de toute la machine (fichiers de tous les
-  utilisateurs, `/etc`, comptes) dans une archive `.hosbak` téléchargée sur
+  utilisateurs, `/etc`, comptes) dans une archive `.kosbak` téléchargée sur
   l'ordinateur hôte, depuis Paramètres ou la commande `kazobackup`.
 - **Espace faible** : une notification par session, `df` avec les vrais
   chiffres du navigateur, une réserve pour root comme les blocs réservés
@@ -24,7 +24,7 @@ Chantier `v3/7-storage-backup`, d'après l'[ADR 0099](adr/0099-os-backup-and-low
 ```text
 alice@kazoos:~$ sudo kazobackup create
 kazobackup: exporting the whole machine...
-kazobackup: kazoos-20261017-071200Z.hosbak (1.2M, 3481 records) downloaded to the host computer
+kazobackup: kazoos-20261017-071200Z.kosbak (1.2M, 3481 records) downloaded to the host computer
 alice@kazoos:~$ mkdir projets   # le libre est passé sous la réserve de root
 mkdir: cannot create directory 'projets': No space left on device
 ```
@@ -199,7 +199,7 @@ Vidages des versions 2 et 3 dans `Tests/fixtures/indexeddb/` (la version 1 n'a j
 
 - [x] Codes `NoSpace` et `FileTooLarge`, traduits dans le SDK et le shell.
 - [x] `QuotaExceededError` et contenu de plus de 16 Mio traduits par le fournisseur IndexedDB.
-- [x] Archive `.hosbak` (gzip), validation complète, fusion par écrasement.
+- [x] Archive `.kosbak` (gzip), validation complète, fusion par écrasement.
 - [x] `StorageSpaceMonitor` : mesure, notification unique, réserve de root.
 - [x] Réserve appliquée par `FileSystemService` ; `df` avec les vrais chiffres.
 - [x] `LogFileWriter` : lignes perdues comptées puis signalées.

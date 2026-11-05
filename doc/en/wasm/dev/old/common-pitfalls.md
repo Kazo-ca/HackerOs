@@ -37,7 +37,7 @@ fallbacks). This is exactly what happened: `test/test` and
 `Server/Kazo.Os.Server` each carried their own unmodified scaffold
 `wwwroot/app.css`, so `@Assets["app.css"]` "worked" and matched the decoy file
 for the life of both hosts, and neither host ever rendered the real
-`--hos-*` design tokens. See `webassembly-debugging.md` for the full writeup
+`--kos-*` design tokens. See `webassembly-debugging.md` for the full writeup
 and the fix.
 
 **Rule:** never give a host project (`test/test`, `Server/Kazo.Os.Server`) its

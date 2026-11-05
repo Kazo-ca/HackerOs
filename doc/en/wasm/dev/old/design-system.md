@@ -16,7 +16,7 @@ runtime scope, persistence contract, and extension instructions.
 ## 1. Core Color Palette & Design Tokens
 
 Colors, surfaces, typography, borders, status, shape, motion, window chrome,
-taskbar/launcher, and mobile navigation are controlled by semantic `--hos-*`
+taskbar/launcher, and mobile navigation are controlled by semantic `--kos-*`
 custom properties declared once in
 `Platform/Kazo.Os.Theming.Blazor/wwwroot/themes.css`. Component CSS consumes
 those properties with a safe fallback; it does not redefine a theme palette or

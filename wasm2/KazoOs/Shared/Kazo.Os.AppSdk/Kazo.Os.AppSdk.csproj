@@ -37,7 +37,7 @@
   </ItemGroup>
 
   <!--
-    ADR 0128 section 2 / ADR 0140: the KazoBackground analyzer (HOSBG rules) ships in this package,
+    ADR 0128 section 2 / ADR 0140: the KazoBackground analyzer (KOSBG rules) ships in this package,
     so every app that references the SDK package builds with it. Build order only here: the
     analyzer is packed from its output folder into analyzers/dotnet/cs. In-repo apps get it through
     build/Kazo.Os.Apps.targets.

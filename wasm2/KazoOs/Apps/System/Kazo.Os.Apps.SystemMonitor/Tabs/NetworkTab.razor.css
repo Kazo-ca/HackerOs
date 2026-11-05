@@ -9,14 +9,14 @@ h3 {
     font-size: 0.8125rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--hos-accent, #42d392);
+    color: var(--kos-accent, #42d392);
 }
 
 .net-note {
     font-size: 0.6875rem;
     text-transform: none;
     letter-spacing: 0;
-    color: var(--hos-text-muted, #6e7681);
+    color: var(--kos-text-muted, #6e7681);
 }
 
 .net-counters {
@@ -25,5 +25,5 @@ h3 {
 }
 
 .net-bad {
-    color: var(--hos-error, #ff7b72);
+    color: var(--kos-error, #ff7b72);
 }

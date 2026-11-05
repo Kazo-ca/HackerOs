@@ -21,6 +21,11 @@ public sealed class RenamedNamesTests
     [InlineData("HACKEROS_PROXY", "KAZOOS_PROXY")]
     [InlineData("theme=HackerOs", "theme=KazoOs")]
     [InlineData("demo.hackapp", "demo.kazoapp")]
+    [InlineData("--hos-accent = #ff0066", "--kos-accent = #ff0066")]
+    [InlineData("background: var(--hos-bg-base, #000)", "background: var(--kos-bg-base, #000)")]
+    [InlineData("[data-hos-theme=\"dark\"] .hos-chart-line", "[data-kos-theme=\"dark\"] .kos-chart-line")]
+    [InlineData("class=\"hos-chart hos-chart-small\"", "class=\"kos-chart kos-chart-small\"")]
+    [InlineData("kazoos-20261017-071200Z.hosbak", "kazoos-20261017-071200Z.kosbak")]
     public void Old_names_become_their_Kazo_OS_names_by_context(string before, string after)
     {
         Assert.True(RenamedNames.ContainsOldName(before));
@@ -34,6 +39,8 @@ public sealed class RenamedNamesTests
     [InlineData("Kazo OS")]
     [InlineData("a hacker types fast")]
     [InlineData("hacking")]
+    [InlineData("ghost-host: whos-there")]
+    [InlineData("--kos-accent")]
     [InlineData("")]
     public void Text_without_an_old_name_is_returned_unchanged(string text)
     {

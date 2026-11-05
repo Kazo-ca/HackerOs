@@ -77,6 +77,12 @@ public static partial class ThemeFile
     /// <summary>Longest display name, in characters.</summary>
     public const int MaxNameLength = 80;
 
+    /// <summary>Prefix of every design-system token.</summary>
+    private const string TokenPrefix = "--kos-";
+
+    /// <summary>Prefix of the tokens before the short names were renamed (rename work item 9).</summary>
+    private const string LegacyTokenPrefix = "--hos-";
+
     private const string ThemeSection = "theme";
     private const string TokensSection = "tokens";
 
@@ -163,6 +169,10 @@ public static partial class ThemeFile
 
                     break;
                 case TokensSection:
+                    // A theme written before the short names were renamed (theme packs published
+                    // with --hos-* tokens): read under the --kos-* names, never written back.
+                    key = UpgradeLegacyTokenName(key);
+                    value = value.Replace(LegacyTokenPrefix, TokenPrefix, StringComparison.Ordinal);
                     if (!ThemeTokenValidator.Check(key, value, out string normalized, out ThemeText? error))
                     {
                         Warn(lineNumber, "File.TokenIgnored", error, key);
@@ -266,6 +276,13 @@ public static partial class ThemeFile
     /// <summary>Gets the lowercase name of a platform as written in <c>platforms</c>.</summary>
     /// <param name="platform">Platform.</param>
     public static string FormatPlatform(ThemePlatform platform) => platform == ThemePlatform.Mobile ? "mobile" : "desktop";
+
+    /// <summary>Gets the current name of a token written with the legacy <c>--hos-</c> prefix.</summary>
+    /// <param name="name">A token name as written in a file.</param>
+    private static string UpgradeLegacyTokenName(string name) =>
+        name.StartsWith(LegacyTokenPrefix, StringComparison.Ordinal)
+            ? TokenPrefix + name[LegacyTokenPrefix.Length..]
+            : name;
 
     [GeneratedRegex("^[a-z0-9](?:[a-z0-9-]{0,62}[a-z0-9])?$")]
     private static partial Regex IdPattern();

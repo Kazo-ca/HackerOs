@@ -181,7 +181,7 @@ KazoViewKind, KazoViewDescriptor.Kind, KazoViewTable.Find(Type)   KazoViewTable.
   `Layout = typeof(AspNetCoreGeneratedDocument.Views_Shared__Layout)` ; ses
   `<KazoSection>` sont rendues en HTML avant le layout.
 - `<KazoPartial Name="_Card" />` dans un `.razor` rend aussi un partial `.cshtml`.
-- Un `.razor` et un `.cshtml` au même chemin sont l'erreur de build `HOSWEB0008`.
+- Un `.razor` et un `.cshtml` au même chemin sont l'erreur de build `KOSWEB0008`.
 
 ## Tests
 
@@ -195,7 +195,7 @@ KazoViewKind, KazoViewDescriptor.Kind, KazoViewTable.Find(Type)   KazoViewTable.
   section orpheline, mauvais modèle), emplacements cherchés.
 - `Generator/WebRouteGeneratorTests` : noms des classes `.cshtml` (`@namespace`
   du fichier et d'un `_ViewImports.cshtml` avec les dossiers, caractères
-  spéciaux), imports exclus, `HOSWEB0008`.
+  spéciaux), imports exclus, `KOSWEB0008`.
 - `Tests/Kazo.Os.Platform.WorkerHost.Tests/MvcSiteTests` : une vue `.cshtml`
   avec `_ViewStart`, layout `.cshtml`, formulaire et section servie par `curl`
   dans un OS complet, sur le fil principal et dans le worker `web`.
@@ -219,7 +219,7 @@ KazoViewKind, KazoViewDescriptor.Kind, KazoViewTable.Find(Type)   KazoViewTable.
 - [x] `KazoRazorPage`/`KazoRazorPage<TModel>` : écriture, attributs, modèles en ligne, sections, corps, activation des `@inject`.
 - [x] Helpers `Html`, `Json`, `Component`, `ModelExpressionProvider`.
 - [x] Moteur : genres `Component`/`RazorPage`, `_ViewStart`, layouts `.cshtml`, mélange, partials des deux genres, `ViewData` sans clé → `null`.
-- [x] Générateur : vues `.cshtml` dans la table, `HOSWEB0008`.
+- [x] Générateur : vues `.cshtml` dans la table, `KOSWEB0008`.
 - [x] Règle de l'ADR 0007 étendue aux `.cshtml`.
 - [x] Tests (pipeline, générateur, bout en bout dans les deux modes).
 - [x] ADR 0086, ce document, index, plan, `asp-kazo-mvc.md`, `asp-kazo-razor-views.md`.

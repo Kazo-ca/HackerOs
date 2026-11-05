@@ -447,10 +447,10 @@ termine le Kazo OS Store.
 - **Signature par l'auteur d'une app** ([ADR 0219](adr/0219-app-authors-signing-tool.md),
   issue #321) : `dotnet build -t:KazoOsKeyGen -p:KazoOsSigningKeyFile=<fichier.pem>`
   crée la paire (clé privée dans un nouveau fichier, clé publique affichée,
-  `HOSAPP0061` sans la propriété) ; `KazoOsPack` signe chaque paquet avec la
+  `KOSAPP0061` sans la propriété) ; `KazoOsPack` signe chaque paquet avec la
   variable `HACKEROS_APP_SIGNING_KEY` (secret du dépôt de l'app) ou
   `KazoOsSigningKeyFile`, et vérifie la signature avant de l'écrire. Sans clé,
-  le paquet est publié non signé avec l'avertissement `HOSAPP0063`.
+  le paquet est publié non signé avec l'avertissement `KOSAPP0063`.
   `index.json` garde les signatures des versions déjà publiées. Commandes du
   générateur : `keygen --private-key <fichier.pem>`, `sign --package <fichier.kazoapp>`.
   Pour exiger la signature d'un auteur, un administrateur ajoute sa clé

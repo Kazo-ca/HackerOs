@@ -50,12 +50,12 @@ module's `showPreview`. Rest on the card → `Peek(id)` → `TaskbarWindowPrevie
 
 ## 4. Themes
 
-Added tokens: `--hos-taskbar-preview-width`, `--hos-taskbar-preview-height`,
-`--hos-taskbar-preview-background`, `--hos-taskbar-preview-border`,
-`--hos-taskbar-preview-radius`, `--hos-taskbar-preview-shadow`,
-`--hos-taskbar-preview-duration`, `--hos-taskbar-preview-close-hover-border`,
-`--hos-taskbar-preview-close-hover-background`, `--hos-window-peek-outline`, `--hos-window-peek-glass` and
-`--hos-window-peek-z`. The appearance is turned off by "Reduce animations" (`data-motion`) and
+Added tokens: `--kos-taskbar-preview-width`, `--kos-taskbar-preview-height`,
+`--kos-taskbar-preview-background`, `--kos-taskbar-preview-border`,
+`--kos-taskbar-preview-radius`, `--kos-taskbar-preview-shadow`,
+`--kos-taskbar-preview-duration`, `--kos-taskbar-preview-close-hover-border`,
+`--kos-taskbar-preview-close-hover-background`, `--kos-window-peek-outline`, `--kos-window-peek-glass` and
+`--kos-window-peek-z`. The appearance is turned off by "Reduce animations" (`data-motion`) and
 `prefers-reduced-motion`.
 
 ## 5. Tests

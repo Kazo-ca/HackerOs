@@ -1,9 +1,9 @@
 .relay-policy {
     margin-top: 0.9rem;
     padding: 0.75rem 0.9rem;
-    border: 1px solid var(--hos-border, #34444c);
-    border-radius: var(--hos-radius-sm, 0.3rem);
-    background: var(--hos-bg-surface, #151c20);
+    border: 1px solid var(--kos-border, #34444c);
+    border-radius: var(--kos-radius-sm, 0.3rem);
+    background: var(--kos-bg-surface, #151c20);
 }
 
 .relay-policy h5 {
@@ -11,7 +11,7 @@
     font-size: 0.85rem;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--hos-accent, #3ee6a8);
+    color: var(--kos-accent, #3ee6a8);
 }
 
 .relay-grid {
@@ -23,13 +23,13 @@
 }
 
 .relay-grid dt {
-    color: var(--hos-text-secondary, #9fb0b8);
+    color: var(--kos-text-secondary, #9fb0b8);
 }
 
 .relay-grid dd {
     margin: 0;
-    color: var(--hos-text-primary, #f4f7f8);
-    font-family: var(--hos-font-mono, ui-monospace, monospace);
+    color: var(--kos-text-primary, #f4f7f8);
+    font-family: var(--kos-font-mono, ui-monospace, monospace);
     word-break: break-word;
 }
 
@@ -38,11 +38,11 @@
 .relay-off {
     margin: 0.5rem 0 0;
     padding: 0.4rem 0.6rem;
-    border-left: 3px solid var(--hos-warning, #f2b84b);
+    border-left: 3px solid var(--kos-warning, #f2b84b);
     font-size: 0.8rem;
-    color: var(--hos-text-primary, #f4f7f8);
+    color: var(--kos-text-primary, #f4f7f8);
 }
 
 .relay-error {
-    border-left-color: var(--hos-error, #ff8f87);
+    border-left-color: var(--kos-error, #ff8f87);
 }

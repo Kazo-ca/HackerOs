@@ -42,7 +42,7 @@ public class MenuApp : AppDefinition
     }
 }
 
-/// <summary>The same entries without the capability (HOSAPP0027).</summary>
+/// <summary>The same entries without the capability (KOSAPP0027).</summary>
 public sealed class MenuWithoutCapabilityApp : MenuApp
 {
     public override string Id => "org.kazoos.tests.menu-no-capability";
@@ -54,7 +54,7 @@ public sealed class MenuWithoutCapabilityApp : MenuApp
         context.Register("Run", "run", intent: ExtractIntent);
 }
 
-/// <summary>A registration breaking a rule of ADR 0151 §5 (HOSAPP0026).</summary>
+/// <summary>A registration breaking a rule of ADR 0151 §5 (KOSAPP0026).</summary>
 public sealed class BrokenMenuApp : MenuApp
 {
     public override string Id => "org.kazoos.tests.menu-broken";
@@ -64,7 +64,7 @@ public sealed class BrokenMenuApp : MenuApp
         context.Register("Nowhere", "nowhere", intent: ExtractIntent, after: "not-a-menu-entry");
 }
 
-/// <summary>A registration that throws (HOSAPP0026: nothing is registered).</summary>
+/// <summary>A registration that throws (KOSAPP0026: nothing is registered).</summary>
 public sealed class ThrowingMenuApp : MenuApp
 {
     public override string Id => "org.kazoos.tests.menu-throws";
@@ -77,7 +77,7 @@ public sealed class ThrowingMenuApp : MenuApp
     }
 }
 
-/// <summary>A registration that changes between two runs (HOSAPP0026).</summary>
+/// <summary>A registration that changes between two runs (KOSAPP0026).</summary>
 public sealed class UnstableMenuApp : MenuApp
 {
     private static int s_runs;
@@ -89,7 +89,7 @@ public sealed class UnstableMenuApp : MenuApp
         context.Register("Run", $"run-{Interlocked.Increment(ref s_runs)}", intent: ExtractIntent);
 }
 
-/// <summary>A registration method with the wrong signature (HOSAPP0026).</summary>
+/// <summary>A registration method with the wrong signature (KOSAPP0026).</summary>
 public sealed class WrongSignatureMenuApp : MenuApp
 {
     public override string Id => "org.kazoos.tests.menu-signature";

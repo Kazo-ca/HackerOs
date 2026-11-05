@@ -51,12 +51,12 @@ appelle `showPreview` du module. Repos sur la carte → `Peek(id)` → `TaskbarW
 
 ## 4. Thèmes
 
-Jetons ajoutés : `--hos-taskbar-preview-width`, `--hos-taskbar-preview-height`,
-`--hos-taskbar-preview-background`, `--hos-taskbar-preview-border`,
-`--hos-taskbar-preview-radius`, `--hos-taskbar-preview-shadow`,
-`--hos-taskbar-preview-duration`, `--hos-taskbar-preview-close-hover-border`,
-`--hos-taskbar-preview-close-hover-background`, `--hos-window-peek-outline`, `--hos-window-peek-glass` et
-`--hos-window-peek-z`. L'apparition est coupée par « Réduire les animations »
+Jetons ajoutés : `--kos-taskbar-preview-width`, `--kos-taskbar-preview-height`,
+`--kos-taskbar-preview-background`, `--kos-taskbar-preview-border`,
+`--kos-taskbar-preview-radius`, `--kos-taskbar-preview-shadow`,
+`--kos-taskbar-preview-duration`, `--kos-taskbar-preview-close-hover-border`,
+`--kos-taskbar-preview-close-hover-background`, `--kos-window-peek-outline`, `--kos-window-peek-glass` et
+`--kos-window-peek-z`. L'apparition est coupée par « Réduire les animations »
 (`data-motion`) et `prefers-reduced-motion`.
 
 ## 5. Tests

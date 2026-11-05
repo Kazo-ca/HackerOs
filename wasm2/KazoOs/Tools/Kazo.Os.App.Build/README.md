@@ -1,7 +1,7 @@
 # Kazo.Os.App.Build
 
 Intégration de build des applications Kazo OS pour un projet hors du dépôt Kazo OS (ADR 0098 §2) :
-génération du `manifest.json`, règles de frontière du SDK (HOSAPP0030), générateur de routes ASP.Kazo
+génération du `manifest.json`, règles de frontière du SDK (KOSAPP0030), générateur de routes ASP.Kazo
 et agrégation des paquets d'applications par un hôte.
 
 ```xml

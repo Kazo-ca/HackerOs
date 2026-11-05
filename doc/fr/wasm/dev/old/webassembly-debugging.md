@@ -28,7 +28,7 @@ This document describes how WebAssembly debugging, Razor Class Library static we
      earlier layout.
    - **HackerOS Global CSS:** Links `href="css/app.css"` directly (not via `@Assets["app.css"]`), the static
      web asset route exposed by the `Kazo.Os.Ecosystem.csproj` ProjectReference for its own
-     `wwwroot/css/app.css`. This is the single source of truth for the `--hos-*` design tokens; `test/test`
+     `wwwroot/css/app.css`. This is the single source of truth for the `--kos-*` design tokens; `test/test`
      and `Server/Kazo.Os.Server` must never keep their own `wwwroot/app.css` copy. Note the route is
      `css/app.css`, not `app.css` — `Kazo.Os.Ecosystem` is itself a `Microsoft.NET.Sdk.BlazorWebAssembly`
      app (not a Razor Class Library), so when referenced by another app project its static web assets keep

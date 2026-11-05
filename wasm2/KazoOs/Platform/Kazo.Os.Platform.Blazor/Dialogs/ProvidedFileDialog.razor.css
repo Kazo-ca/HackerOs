@@ -4,8 +4,8 @@
     width: 100%;
     height: 100%;
     box-sizing: border-box;
-    color: var(--hos-text-primary, #d4f8e8);
-    background: var(--hos-window-content-background, #0d1819);
+    color: var(--kos-text-primary, #d4f8e8);
+    background: var(--kos-window-content-background, #0d1819);
 }
 
 .provided-file-dialog-unavailable {
@@ -21,22 +21,22 @@
 }
 
 .provided-file-dialog-reason {
-    color: var(--hos-text-secondary, #8b949e);
-    font: 0.8rem var(--hos-font-mono, "JetBrains Mono", ui-monospace, monospace);
+    color: var(--kos-text-secondary, #8b949e);
+    font: 0.8rem var(--kos-font-mono, "JetBrains Mono", ui-monospace, monospace);
 }
 
 .provided-file-dialog-unavailable button {
     margin-top: auto;
     align-self: flex-end;
     padding: 0.35rem 1rem;
-    color: var(--hos-text-primary, #d4f8e8);
+    color: var(--kos-text-primary, #d4f8e8);
     background: transparent;
-    border: 1px solid var(--hos-border, #315249);
-    border-radius: var(--hos-radius-sm, 4px);
+    border: 1px solid var(--kos-border, #315249);
+    border-radius: var(--kos-radius-sm, 4px);
     cursor: pointer;
 }
 
 .provided-file-dialog-unavailable button:hover,
 .provided-file-dialog-unavailable button:focus-visible {
-    border-color: var(--hos-accent, #42d392);
+    border-color: var(--kos-accent, #42d392);
 }

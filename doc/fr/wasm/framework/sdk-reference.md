@@ -250,7 +250,7 @@ porte le code du moteur, et `ShellErrorText.Describe` donne le message Linux.
 | `KazoBackgroundProgress`, `KazoBackgroundOptions` | `Fraction`, `Message`, `ToString()` (`42% message`) ; `Name` (affiché dans `ps`), `Nice` | — | [`background-jobs.md`](background-jobs.md), [`app-responsiveness-api.md`](app-responsiveness-api.md) |
 | `KazoBackgroundJobException` | Exception de la tâche : `OriginalTypeName`, `Message`, `OriginalStackTrace` | — | [`background-jobs.md`](background-jobs.md) |
 | `IAppBackgroundGateway`, `KazoBackgroundJobRequest`, `KazoBackgroundJobTarget` | Contrat entre le SDK et l'OS : cible nommée (assembly, type, méthode, type d'entrée), entrée JSON, nom, `nice` | — | [`background-jobs.md`](background-jobs.md) |
-| Analyseur `HOSBG0001` à `HOSBG0004` | Livré dans le paquet `Kazo.Os.AppSdk` : groupe de méthode statique, types déclarés par `KazoWireContext`, assembly de l'app, pas de générique | — | [`background-jobs.md`](background-jobs.md#règles-vérifiées-au-build) |
+| Analyseur `KOSBG0001` à `KOSBG0004` | Livré dans le paquet `Kazo.Os.AppSdk` : groupe de méthode statique, types déclarés par `KazoWireContext`, assembly de l'app, pas de générique | — | [`background-jobs.md`](background-jobs.md#règles-vérifiées-au-build) |
 
 ### Réseau (`Kazo.Os.AppSdk.Net`)
 
@@ -356,7 +356,7 @@ qui suit l'exemple `Apps/Samples/Kazo.Os.Samples.Intranet`.
 
 | Type | Membres | Document |
 |---|---|---|
-| `WebAppDefinition` | `Urls`, `BlazorRoot`, `Capabilities` (jamais `filesystem.*`, `HOSAPP0050`), `Configure(builder)` ; `Kind` `Web`, `Category` `internet`, `LaunchVisibility` `Hidden` | [`asp-kazo-mvc.md`](asp-kazo-mvc.md) |
+| `WebAppDefinition` | `Urls`, `BlazorRoot`, `Capabilities` (jamais `filesystem.*`, `KOSAPP0050`), `Configure(builder)` ; `Kind` `Web`, `Category` `internet`, `LaunchVisibility` `Hidden` | [`asp-kazo-mvc.md`](asp-kazo-mvc.md) |
 | `KazoWebApplicationBuilder` | `Services`, `Json` (`SerializerOptions`, camelCase), `Mvc` (`Filters`), `Antiforgery`, `Logging` (`EnableDebugLog(level)`, `LogRequests`), `Build()` ; `ILogger<T>` injectable | [`asp-kazo-mvc.md`](asp-kazo-mvc.md), [`asp-kazo-site-data.md`](asp-kazo-site-data.md#journal-de-débogage) |
 | `KazoWebApplication` | `Use`, `UseMiddleware<T>`, `UseExceptionPage`, `UseStatusCodePages`, `UseCookieSession`, `UseStaticFiles(configure)`, `Map`, `MapMethods`, `MapGet`/`MapPost`/`MapPut`/`MapPatch`/`MapDelete`, `MapFallback`, `MapControllers`, `MapControllerRoute`, `MapDefaultControllerRoute`, `ProcessAsync(KazoWebRequestData)`, `UnhandledException` | [`asp-kazo-mvc.md`](asp-kazo-mvc.md) |
 | `KazoWebHost` | Classe d'entrée générée (`<Définition>WebHost`) ; `CreateApplication(definition, routes, urls, views)` construit le site sans OS (tests) | [guide §9](asp-kazo-developer-guide.md#9-tester-un-site) |
@@ -379,7 +379,7 @@ qui suit l'exemple `Apps/Samples/Kazo.Os.Samples.Intranet`.
 |---|---|
 | `KazoControllerBase` | `HttpContext`, `Request`, `Response`, `RouteValues`, `ModelState`, `Url` ; résultats `Ok`, `NoContent`, `StatusCode`, `Content`, `File`, `Redirect`, `RedirectPermanent`, `LocalRedirect`, `RedirectToAction`, `Created`, `CreatedAtAction`, `NotFound`, `BadRequest`, `Unauthorized`, `Forbid`, `Conflict`, `Problem`, `ValidationProblem` ; `TryValidateModel(model, prefix)` (ADR 0087 §3) |
 | `KazoController` | Pages : `View`, `PartialView`, `View<TView>`, `ViewData`, `Json`, `OnActionExecuting`/`OnActionExecuted` |
-| `KazoApiController` | API : corps JSON par défaut, `400` automatique, problèmes RFC 9457 ; route d'attribut obligatoire (`HOSWEB0007`) |
+| `KazoApiController` | API : corps JSON par défaut, `400` automatique, problèmes RFC 9457 ; route d'attribut obligatoire (`KOSWEB0007`) |
 | Attributs | `[Route]`, `[HttpGet]`/`[HttpPost]`/`[HttpPut]`/`[HttpPatch]`/`[HttpDelete]` (`Name`, `Order`), `[ActionName]`, `[NonAction]`, `[NonController]`, `[FromRoute]`, `[FromQuery]`, `[FromForm]`, `[FromHeader]`, `[FromBody]`, `[FromServices]` |
 | Filtres | `IKazoActionFilter`, `IKazoAsyncActionFilter`, `KazoActionFilterAttribute`, `KazoMvcOptions.Filters` |
 | `KazoResults` | Résultats des routes minimales : `Ok`, `Text`, `Json` (avec `JsonTypeInfo`), `StatusCode`, `NoContent`, `NotFound`, `BadRequest`, `Created`, `Redirect`, `File`, `Problem` |
@@ -435,7 +435,7 @@ annulation.
 
 | Type | Rôle | Document |
 |---|---|---|
-| `KazoLineChart` (`.Charts`) | Graphique SVG : `Series` (`KazoChartSeries(Name, Values)`), `Title`, `Capacity`, `Maximum`, `MinimumScale`, `ValueFormatter`, `Filled`, `ShowLegend`, `TimeSpanLabel`, `Size`, `Class` ; couleurs `--hos-chart-series-0..7` | [`task-manager.md`](../dev/task-manager.md) |
+| `KazoLineChart` (`.Charts`) | Graphique SVG : `Series` (`KazoChartSeries(Name, Values)`), `Title`, `Capacity`, `Maximum`, `MinimumScale`, `ValueFormatter`, `Filled`, `ShowLegend`, `TimeSpanLabel`, `Size`, `Class` ; couleurs `--kos-chart-series-0..7` | [`task-manager.md`](../dev/task-manager.md) |
 | `SettingOriginBadge` (`.Settings`) | Badge d'origine d'un paramètre (défaut, système, utilisateur, verrouillé) | [`settings-files.md`](settings-files.md) |
 | `BrowserFileDownloader` (`.Interop`) | `DownloadFileFromStreamAsync(fileName, stream)` : télécharger vers le vrai disque | [`file-explorer.md`](../dev/file-explorer.md) |
 | `BrowserFilePicker` (`.Interop`) | `PickAsync(accept)` → `BrowserPickedFile(Name, Content)` ou `null` : ouvrir un fichier du vrai disque ; seulement juste après un clic ou une touche (sinon `InvalidOperationException`) | [`system-backup.md`](../dev/system-backup.md) |
@@ -500,7 +500,7 @@ Pour lire ou écrire un thème utilisateur (ADR 0103, détail dans
 
 | Type | Membres |
 |---|---|
-| `ThemeTokenCatalog` | `All`, `InGroup(ThemeTokenGroup)`, `TryGet(name, out ThemeTokenDefinition)` : les 68 jetons `--hos-*` modifiables |
+| `ThemeTokenCatalog` | `All`, `InGroup(ThemeTokenGroup)`, `TryGet(name, out ThemeTokenDefinition)` : les 68 jetons `--kos-*` modifiables |
 | `ThemeTokenDefinition` | `Name`, `Type` (`Color`, `Length`, `Duration`, `FontFamily`, `Number`), `Group`, `Label`, `Description` (anglais), `GetLabel(culture)`, `GetDescription(culture)`, `Example`, `RgbCompanion` |
 | `ThemeTokenValidator` | `TryValidate(type ou nom, valeur, out normalisée, out erreur)`, `TryValidate(type, valeur, culture, out normalisée, out erreur)`, `TryGetRgbTriplet`, `ToHexColor` |
 | `ThemeFile` | `Parse(texte, origine, chemin)` → `ThemeFileParseResult` (thème + diagnostics), `Serialize(UserTheme)`, `IsValidId`, `Extension` (`.theme`), `MediaType` ; format du fichier et jetons : [`theme-files.md`](theme-files.md) |
@@ -534,7 +534,7 @@ paramètre `Tokens` appliqué par-dessus le thème de base.
 - [x] `KazoSystemBackup`, `BrowserFilePicker`, codes `NoSpace` et `FileTooLarge` (16 Mio) (`v3/7`).
 - [x] Localisation : `Culture`/`FormatCulture`, `KazoLocale`, `GetLocalizer<T>`, `IShellSession.GetCommands(culture)` (`v3/12`, ADR 0104).
 - [x] Titre de fenêtre : `WindowTitle`, `SetWindowTitleAsync`, `FormatWindowTitle`, `IAppWindowGateway` (`v3.1/3`, SDK 1.1, versé dans `PublicAPI.Shipped.txt` par `v3.1/4-sdk-1-1`).
-- [x] Tâches en arrière-plan : `KazoBackground`, `KazoBackgroundContext`, `IAppExecutionContext.Background`, `KazoProcessKilledException.Reason`, analyseur `HOSBG` (`exec/5`, ADR 0128 et 0140).
+- [x] Tâches en arrière-plan : `KazoBackground`, `KazoBackgroundContext`, `IAppExecutionContext.Background`, `KazoProcessKilledException.Reason`, analyseur `KOSBG` (`exec/5`, ADR 0128 et 0140).
 - [x] SDK 1.2 (ADR 0132) : `KazoWireContextAttribute` (`exec/1`), limites de processus et `TooManyOpenFiles` (`exec/2`), `OomScoreAdjust`/`OomScoreAdj` et `OutOfMemory` (`exec/3`), `nice` (`exec/4`), versés dans `PublicAPI.Shipped.txt` par `exec/10-final`.
 - [x] SDK 2.0 (`desk/6-sdk-2`, ADR 0149, ADR 0161) : `Kazo.Os.AppSdk.FileView` retiré, `KazoFileOperations`, contrôle de fichiers et menu contextuel de l'OS, versés dans `PublicAPI.Shipped.txt`.
 - [x] Relecture finale de la migration v3 (`v3/16-final`) : renvoi vers les fichiers `PublicAPI.Shipped.txt`, liste exhaustive de la surface 1.0.

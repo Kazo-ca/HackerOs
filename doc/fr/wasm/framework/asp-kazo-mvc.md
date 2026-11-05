@@ -94,7 +94,7 @@ UseExceptionPage : toute exception du pipeline → page d'erreur (sinon « 500 I
 | `Mvc/` | Attributs, `KazoControllerBase` / `KazoController` / `KazoApiController`, `KazoModelBinder`, `KazoModelStateDictionary`, filtres, résultats, `KazoUrlHelper`, `KazoActionInvoker`, `KazoResults`, contrat `KazoControllerActionDescriptor`. |
 | `Sessions/` | `KazoSession`, `KazoSessionOptions`, `KazoSessionStore`. |
 | `Diagnostics/` | `KazoExceptionPage` (page d'erreur au style console). |
-| `Tools/Kazo.Os.Tools.WebRouteGenerator` | Générateur de sources Roslyn (ADR 0082) : table de routes et `<Nom>WebHost`, erreurs `HOSWEB0001` à `HOSWEB0007` (`HOSWEB0008` : vue `.razor` et `.cshtml` au même chemin, ADR 0086). |
+| `Tools/Kazo.Os.Tools.WebRouteGenerator` | Générateur de sources Roslyn (ADR 0082) : table de routes et `<Nom>WebHost`, erreurs `KOSWEB0001` à `KOSWEB0007` (`KOSWEB0008` : vue `.razor` et `.cshtml` au même chemin, ADR 0086). |
 
 ## Démarrage
 
@@ -147,7 +147,7 @@ Routes d'attribut : `[Route]` sur le contrôleur (préfixe) et sur l'action,
 `[area]`, gabarit absolu `/...` ou `~/...` qui ignore le préfixe. Une action
 sans route d'attribut d'un contrôleur à vues suit les routes conventionnelles
 (`controller` et `action` en valeurs requises). Une action d'un
-`KazoApiController` doit avoir une route d'attribut (`HOSWEB0007`).
+`KazoApiController` doit avoir une route d'attribut (`KOSWEB0007`).
 
 Génération d'URL : `Url.Action(action, controller, values)`,
 `Url.RouteUrl(name, values)`, `Url.Content("~/...")`, `Url.IsLocalUrl` ; les
@@ -248,7 +248,7 @@ le contrat reste la référence de `web/9`.
   `400` automatique, `415`, filtres, routes conventionnelles, formulaires,
   redirections, liens, session, fichiers, page d'erreur, DI par requête),
   générateur piloté sur des extraits de code (`WebRouteGeneratorTests` :
-  `HOSWEB0001` à `HOSWEB0007`, table et entrée produites).
+  `KOSWEB0001` à `KOSWEB0007`, table et entrée produites).
 - `Tests/Kazo.Os.Platform.WorkerHost.Tests/MvcSiteTests` : un site MVC démarré
   par `curl` dans un OS complet, sur le fil principal et dans le worker `web`.
 
@@ -268,7 +268,7 @@ le contrat reste la référence de `web/9`.
 - [x] Bibliothèque `Kazo.Os.AppSdk.Web` : projet, solution, frontière du SDK.
 - [x] HTTP : contexte, requête, réponse, en-têtes, cookies, formulaire, échange indépendant du transport.
 - [x] Routage : gabarits, contraintes, préséance, `405`/`OPTIONS`/`HEAD`, génération d'URL.
-- [x] Générateur de sources (ADR 0082) branché sur les apps, erreurs `HOSWEB0001` à `HOSWEB0007`.
+- [x] Générateur de sources (ADR 0082) branché sur les apps, erreurs `KOSWEB0001` à `KOSWEB0007`.
 - [x] Contrôleurs, actions, filtres, `OnActionExecuting`.
 - [x] Liaison de modèle, `DataAnnotations`, `ModelState`, `400` automatique, `415`.
 - [x] Résultats JSON, Content, File, Redirect (dont `LocalRedirect`, `RedirectToAction`), `Created*`, problèmes RFC 9457.

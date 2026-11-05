@@ -11,7 +11,7 @@
     justify-content: space-between;
     flex: 0 0 auto;
     padding: 0.35rem 0.3rem 0.3rem 0.8rem;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
     font-size: 0.68rem;
     font-weight: 600;
     letter-spacing: 0.08em;
@@ -30,17 +30,17 @@
     width: 1.6rem;
     height: 1.6rem;
     padding: 0;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
     border: none;
-    border-radius: var(--hos-radius-sm, 0.3rem);
+    border-radius: var(--kos-radius-sm, 0.3rem);
     background: transparent;
     cursor: pointer;
 }
 
 .icon-button:hover:not(:disabled),
 .icon-button:focus-visible {
-    color: var(--hos-text-primary, #ffffff);
-    background: var(--hos-bg-elevated, #2a3038);
+    color: var(--kos-text-primary, #ffffff);
+    background: var(--kos-bg-elevated, #2a3038);
 }
 
 .icon-button:disabled {
@@ -53,7 +53,7 @@
     flex-direction: column;
     gap: 0.7rem;
     padding: 0.4rem 0.9rem;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
     font-size: 0.8rem;
 }
 
@@ -64,9 +64,9 @@
 .primary-button {
     padding: 0.4rem 0.8rem;
     color: #06140d;
-    border: 1px solid var(--hos-accent, #42d392);
-    border-radius: var(--hos-radius-sm, 0.3rem);
-    background: var(--hos-accent, #42d392);
+    border: 1px solid var(--kos-accent, #42d392);
+    border-radius: var(--kos-radius-sm, 0.3rem);
+    background: var(--kos-accent, #42d392);
     font-family: inherit;
     font-size: 0.8rem;
     font-weight: 600;
@@ -84,20 +84,20 @@
 .search-box {
     display: flex;
     align-items: center;
-    border: 1px solid var(--hos-border, #30363d);
+    border: 1px solid var(--kos-border, #30363d);
     border-radius: 2px;
-    background: var(--hos-input-bg, #0b1012);
+    background: var(--kos-input-bg, #0b1012);
 }
 
 .search-box:focus-within {
-    border-color: var(--hos-accent, #42d392);
+    border-color: var(--kos-accent, #42d392);
 }
 
 .search-input,
 .glob-input {
     min-width: 0;
     padding: 0.3rem 0.4rem;
-    color: var(--hos-text-primary, #c9d1d9);
+    color: var(--kos-text-primary, #c9d1d9);
     border: none;
     outline: none;
     background: transparent;
@@ -123,7 +123,7 @@
     width: 1.35rem;
     height: 1.35rem;
     padding: 0;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
     border: 1px solid transparent;
     border-radius: 3px;
     background: transparent;
@@ -131,20 +131,20 @@
 }
 
 .toggle:hover {
-    color: var(--hos-text-primary, #ffffff);
-    background: var(--hos-bg-elevated, #2a3038);
+    color: var(--kos-text-primary, #ffffff);
+    background: var(--kos-bg-elevated, #2a3038);
 }
 
 .toggle.is-on {
-    color: var(--hos-text-primary, #ffffff);
-    border-color: var(--hos-accent, #42d392);
-    background: color-mix(in srgb, var(--hos-accent, #42d392) 25%, transparent);
+    color: var(--kos-text-primary, #ffffff);
+    border-color: var(--kos-accent, #42d392);
+    background: color-mix(in srgb, var(--kos-accent, #42d392) 25%, transparent);
 }
 
 .details-toggle {
     align-self: flex-end;
     padding: 0;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
     border: none;
     background: transparent;
     font-family: inherit;
@@ -153,31 +153,31 @@
 }
 
 .details-toggle:hover {
-    color: var(--hos-accent, #42d392);
+    color: var(--kos-accent, #42d392);
 }
 
 .glob-label {
     display: flex;
     flex-direction: column;
     gap: 0.2rem;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
     font-size: 0.7rem;
 }
 
 .glob-input {
-    border: 1px solid var(--hos-border, #30363d);
+    border: 1px solid var(--kos-border, #30363d);
     border-radius: 2px;
-    background: var(--hos-input-bg, #0b1012);
+    background: var(--kos-input-bg, #0b1012);
 }
 
 .glob-input:focus {
-    border-color: var(--hos-accent, #42d392);
+    border-color: var(--kos-accent, #42d392);
 }
 
 .search-summary {
     flex: 0 0 auto;
     padding: 0 0.8rem 0.35rem;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
     font-size: 0.72rem;
 }
 
@@ -189,9 +189,9 @@
     flex: 0 0 auto;
     margin: 0 0.6rem 0.4rem 0.8rem;
     padding: 0.3rem 0.45rem;
-    color: var(--hos-error, #ffb3ad);
-    border: 1px solid var(--hos-error, #ff8f87);
-    background: color-mix(in srgb, var(--hos-error, #ff8f87) 18%, transparent);
+    color: var(--kos-error, #ffb3ad);
+    border: 1px solid var(--kos-error, #ff8f87);
+    background: color-mix(in srgb, var(--kos-error, #ff8f87) 18%, transparent);
     font-size: 0.72rem;
 }
 
@@ -209,7 +209,7 @@
     width: 100%;
     min-width: 0;
     gap: 0.3rem;
-    color: var(--hos-text-primary, #c9d1d9);
+    color: var(--kos-text-primary, #c9d1d9);
     border: none;
     background: transparent;
     font-family: inherit;
@@ -226,12 +226,12 @@
 .match-row:hover,
 .file-row:focus-visible,
 .match-row:focus-visible {
-    background: var(--hos-bg-elevated, #20262d);
+    background: var(--kos-bg-elevated, #20262d);
     outline: none;
 }
 
 .match-row:focus-visible {
-    box-shadow: inset 0 0 0 1px var(--hos-accent, #42d392);
+    box-shadow: inset 0 0 0 1px var(--kos-accent, #42d392);
 }
 
 .file-name {
@@ -243,7 +243,7 @@
     flex: 1 1 auto;
     min-width: 0;
     overflow: hidden;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
     font-size: 0.7rem;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -253,9 +253,9 @@
     flex: 0 0 auto;
     min-width: 1.2rem;
     padding: 0 0.35rem;
-    color: var(--hos-text-primary, #c9d1d9);
+    color: var(--kos-text-primary, #c9d1d9);
     border-radius: 0.6rem;
-    background: var(--hos-bg-elevated, #2a3038);
+    background: var(--kos-bg-elevated, #2a3038);
     font-size: 0.68rem;
     text-align: center;
 }
@@ -264,15 +264,15 @@
     display: block;
     padding: 0.12rem 0.6rem 0.12rem 2.4rem;
     overflow: hidden;
-    color: var(--hos-text-secondary, #a5adb6);
-    font-family: var(--hos-font-mono, "Cascadia Mono", Consolas, monospace);
+    color: var(--kos-text-secondary, #a5adb6);
+    font-family: var(--kos-font-mono, "Cascadia Mono", Consolas, monospace);
     font-size: 0.74rem;
     text-overflow: ellipsis;
     white-space: pre;
 }
 
 .match-text {
-    color: var(--hos-text-primary, #ffffff);
+    color: var(--kos-text-primary, #ffffff);
     border-radius: 2px;
     background: color-mix(in srgb, #f2cc60 40%, transparent);
 }

@@ -6,7 +6,7 @@
     z-index: 9000;
     display: grid;
     place-items: center;
-    background: color-mix(in srgb, var(--hos-bg-base, #070b0c) 35%, transparent);
+    background: color-mix(in srgb, var(--kos-bg-base, #070b0c) 35%, transparent);
     pointer-events: none;
 }
 
@@ -17,13 +17,13 @@
     gap: 0.6rem;
     max-width: min(54rem, calc(100vw - 2rem));
     padding: 0.9rem;
-    border: 1px solid var(--hos-window-focused-border, #55d6a1);
-    border-radius: var(--hos-radius-md, 0.45rem);
-    background: color-mix(in srgb, var(--hos-bg-elevated, #0f1a1b) 94%, transparent);
+    border: 1px solid var(--kos-window-focused-border, #55d6a1);
+    border-radius: var(--kos-radius-md, 0.45rem);
+    background: color-mix(in srgb, var(--kos-bg-elevated, #0f1a1b) 94%, transparent);
     box-shadow:
         0 0 0 1px rgb(0 0 0 / 40%),
-        0 0 2.2rem color-mix(in srgb, var(--hos-window-focused-border, #55d6a1) 22%, transparent);
-    font-family: var(--hos-font-ui, system-ui, sans-serif);
+        0 0 2.2rem color-mix(in srgb, var(--kos-window-focused-border, #55d6a1) 22%, transparent);
+    font-family: var(--kos-font-ui, system-ui, sans-serif);
 }
 
 .window-switcher-item {
@@ -33,14 +33,14 @@
     width: 7.5rem;
     padding: 0.7rem 0.5rem 0.55rem;
     border: 1px solid transparent;
-    border-radius: var(--hos-radius-sm, 0.3rem);
-    color: var(--hos-text-secondary, #9fb7b0);
+    border-radius: var(--kos-radius-sm, 0.3rem);
+    color: var(--kos-text-secondary, #9fb7b0);
 }
 
 .window-switcher-item.is-selected {
-    border-color: var(--hos-window-focused-border, #55d6a1);
-    background: color-mix(in srgb, var(--hos-window-focused-border, #55d6a1) 14%, transparent);
-    color: var(--hos-text-primary, #f4f7f8);
+    border-color: var(--kos-window-focused-border, #55d6a1);
+    background: color-mix(in srgb, var(--kos-window-focused-border, #55d6a1) 14%, transparent);
+    color: var(--kos-text-primary, #f4f7f8);
 }
 
 .window-switcher-item.is-minimized .window-switcher-glyph {
@@ -52,11 +52,11 @@
     place-items: center;
     width: 3rem;
     height: 3rem;
-    border: 1px solid var(--hos-window-border-color, #315249);
-    border-radius: var(--hos-radius-sm, 0.3rem);
-    background: var(--hos-window-background, #0c1516);
-    color: var(--hos-accent, #55d6a1);
-    font-family: var(--hos-font-mono, ui-monospace, monospace);
+    border: 1px solid var(--kos-window-border-color, #315249);
+    border-radius: var(--kos-radius-sm, 0.3rem);
+    background: var(--kos-window-background, #0c1516);
+    color: var(--kos-accent, #55d6a1);
+    font-family: var(--kos-font-mono, ui-monospace, monospace);
     font-size: 1.35rem;
     font-weight: 700;
 }
@@ -85,17 +85,17 @@
     align-items: baseline;
     padding: 0.45rem 0.85rem;
     transform: translateX(-50%);
-    border: 1px solid var(--hos-window-focused-border, #55d6a1);
-    border-radius: var(--hos-radius-sm, 0.3rem);
-    background: var(--hos-bg-elevated, #0f1a1b);
-    color: var(--hos-text-primary, #f4f7f8);
-    font-family: var(--hos-font-mono, ui-monospace, monospace);
+    border: 1px solid var(--kos-window-focused-border, #55d6a1);
+    border-radius: var(--kos-radius-sm, 0.3rem);
+    background: var(--kos-bg-elevated, #0f1a1b);
+    color: var(--kos-text-primary, #f4f7f8);
+    font-family: var(--kos-font-mono, ui-monospace, monospace);
     font-size: 0.78rem;
-    box-shadow: 0 0 1.2rem color-mix(in srgb, var(--hos-window-focused-border, #55d6a1) 20%, transparent);
+    box-shadow: 0 0 1.2rem color-mix(in srgb, var(--kos-window-focused-border, #55d6a1) 20%, transparent);
 }
 
 .window-mode-banner strong {
-    color: var(--hos-accent, #55d6a1);
+    color: var(--kos-accent, #55d6a1);
     text-transform: uppercase;
     letter-spacing: 0.06em;
 }

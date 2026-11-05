@@ -47,7 +47,7 @@ bibliothèque liste sa surface dans `PublicAPI.Shipped.txt` (la 1.0, gelée) et
 
 | Paquets | Contenu |
 |---|---|
-| `Kazo.Os.App.Abstractions`, `Kazo.Os.Simulation.Abstractions`, `Kazo.Os.Theming.Abstractions`, `Kazo.Os.AppSdk`, `.Blazor`, `.Terminal`, `.Web`, `.Web.Blazor`, `.Icons`, `.VirtualKeyboard` | le SDK public, ce qu'une app référence (`.FileView` n'en fait plus partie depuis la 2.0 : son code est dans l'explorateur de fichiers) ; `Kazo.Os.AppSdk` porte aussi l'analyseur `HOSBG` de `KazoBackground` dans `analyzers/dotnet/cs/` (ADR 0140, [`background-jobs.md`](background-jobs.md)) |
+| `Kazo.Os.App.Abstractions`, `Kazo.Os.Simulation.Abstractions`, `Kazo.Os.Theming.Abstractions`, `Kazo.Os.AppSdk`, `.Blazor`, `.Terminal`, `.Web`, `.Web.Blazor`, `.Icons`, `.VirtualKeyboard` | le SDK public, ce qu'une app référence (`.FileView` n'en fait plus partie depuis la 2.0 : son code est dans l'explorateur de fichiers) ; `Kazo.Os.AppSdk` porte aussi l'analyseur `KOSBG` de `KazoBackground` dans `analyzers/dotnet/cs/` (ADR 0140, [`background-jobs.md`](background-jobs.md)) |
 | `Kazo.Os.App.Build` | l'intégration de build (voir plus bas) |
 | `Kazo.Os.Platform.Core`, `.Blazor`, `.ResourceAccounting`, `.WorkerHost`, `Kazo.Os.Infrastructure.Browser`, `Kazo.Os.Windowing.Abstractions`, `.Core`, `.Blazor`, `Kazo.Os.Taskbar.Blazor`, `Kazo.Os.Theming.Blazor`, `Kazo.Os.MobileShell.Blazor`, `Kazo.Os.Server.Contracts` | la plateforme, ce qu'un hôte compose (`Server.Contracts` est une dépendance de `Platform.Core`) |
 | `Kazo.Os.Ecosystem.Host` | l'OS lui-même : bureau, démarrage, services, adaptateurs du navigateur, jetons de design |
@@ -89,10 +89,10 @@ sauf s'il déclare `KazoOsAppHost=true` (un hôte). Différences avec le dépôt
 - le générateur vient du paquet au lieu d'une `ProjectReference` ;
 - la règle de frontière sur les `ProjectReference` (écrite en chemins du dépôt)
   ne s'applique pas ; celle sur les paquets, si
-  (`_ValidateKazoOsPackageBoundary`, `HOSAPP0030`, voir
+  (`_ValidateKazoOsPackageBoundary`, `KOSAPP0030`, voir
   [`app-sdk.md`](app-sdk.md#vérification)) : toute référence de compilation
   issue d'un paquet `Kazo.Os.*`, directe ou transitive, doit être permise ;
-- l'inspection de l'injection (`HOSAPP0031`), les codes `HOSAPP*` et les
+- l'inspection de l'injection (`KOSAPP0031`), les codes `KOSAPP*` et les
   empreintes des ressources sont identiques.
 
 ### Paquets d'apps
@@ -102,7 +102,7 @@ Quand un projet d'app est empaqueté, la cible `_KazoOsPackageAppManifests`
 
 - ses manifestes générés sous `kazoos/manifests/` et leurs traductions
   (`localization/<culture>.json`, ADR 0104) sous `kazoos/localization/` (ajouté
-  par `v3/14` : sans elles, un hôte en paquets échouait en `HOSAPP0040`) ;
+  par `v3/14` : sans elles, un hôte en paquets échouait en `KOSAPP0040`) ;
 - `buildTransitive/<PackageId>.targets`, qui les déclare en éléments
   `KazoOsPackagedApp` :
 
@@ -270,7 +270,7 @@ d'énumération prend un nombre à la fin) :
 | `Kazo.Os.AppSdk` | `KazoWireContextAttribute` (`[assembly: KazoWireContext(typeof(...))]`), pour les passerelles d'événements et de surveillance appelées depuis un worker | ADR 0124, 0138 |
 | `Kazo.Os.AppSdk` | `KazoProcess.GetResourceLimitsAsync`, `SetResourceLimitAsync`, `KazoResourceLimits`, `KazoResourceLimitEnforcement`, `KazoProcessKilledException.Reason` et son constructeur à raison | ADR 0125, 0139 |
 | `Kazo.Os.AppSdk` | `KazoProcess.Nice`, `BasePriority`, `ParseStatNice` ; `IShellSession.RunNicedAsync` | ADR 0127 |
-| `Kazo.Os.AppSdk` | `KazoBackground.RunAsync` (cinq surcharges), `KazoBackgroundJob<TInput, TResult>`, `KazoBackgroundContext`, `KazoBackgroundOptions`, `KazoBackgroundProgress`, `KazoBackgroundJobException`, `IAppBackgroundGateway`, `IAppExecutionContext.Background` ; analyseur `HOSBG0001` à `HOSBG0004` dans le paquet | ADR 0128, 0140 |
+| `Kazo.Os.AppSdk` | `KazoBackground.RunAsync` (cinq surcharges), `KazoBackgroundJob<TInput, TResult>`, `KazoBackgroundContext`, `KazoBackgroundOptions`, `KazoBackgroundProgress`, `KazoBackgroundJobException`, `IAppBackgroundGateway`, `IAppExecutionContext.Background` ; analyseur `KOSBG0001` à `KOSBG0004` dans le paquet | ADR 0128, 0140 |
 | `Kazo.Os.App.Abstractions` | `AppDefinition.OomScoreAdjust`, `AppManifest.OomScoreAdj` (`oomScoreAdj` du manifeste) | ADR 0126, 0142 |
 | `Kazo.Os.Simulation.Abstractions` | `ResourceLimit`, `ResourceLimitKind`, `ProcessResourceLimits`, `ResourceLimitChangeResult`, `ProcessLimitExceededException`, `IProcessResourceLimitTable`, `IProcessFileDescriptorTable`, `ProcessFileDescriptor`, `NoDescriptor`, `IAppFileSystemGateway.OpenDescriptorAsync`, `IAppProcessGateway.SetResourceLimitAsync`, `ProcessStartRequest.ResourceLimits` et `ResourceLimitExempt`, `FileSystemErrorCode.TooManyOpenFiles`, `ProcessExitReason.CpuLimitExceeded`, `MemoryLimitExceeded`, `OutOfMemory` | ADR 0125, 0126, 0139 |
 | `Kazo.Os.Simulation.Abstractions` | `ProcessNice`, `IProcessManager.GetNice`/`SetNice`, `IAppProcessGateway.GetNice`/`SetNice`, `ProcessStartRequest.Nice` et `OomScoreAdjust` | ADR 0126, 0127 |
@@ -312,7 +312,7 @@ autres bibliothèques du SDK ne perdent aucun membre : la majeure vient de ce
 seul retrait.
 
 Une app compilée contre 1.x porte `sdkCompatibility.minimumVersion: 1.x`. Un
-hôte qui la référence ne se construit plus (`HOSAPP0021`, la même règle que le
+hôte qui la référence ne se construit plus (`KOSAPP0021`, la même règle que le
 catalogue appliquée au build) ; un OS 2.0 qui la trouve à son catalogue la refuse
 au démarrage (`catalog.sdk.incompatible`), ne la charge pas, et Paramètres ▸
 Applications installées l'affiche « Incompatible ». Elle doit être recompilée
@@ -487,6 +487,21 @@ les secrets GitHub `HACKEROS_APP_SIGNING_KEY`, `HACK_STORE_TOKEN`,
 `HACK_STORE_SIGNING_KEY` (les renommer obligerait chaque dépôt à recréer son
 secret).
 
+### Noms courts (chantier 9)
+
+Le chantier `rename/9-kos-short-names` (Benoit, 2026-11-04) remplace les
+préfixes courts « HOS » restants par « KOS ». Le renommage est fait par un
+script (`git grep -l` puis `perl`), sauf les ADR acceptés, les listes de
+changements déjà publiées et les fixtures enregistrées.
+
+| Avant | Après | Ancien nom encore lu |
+|---|---|---|
+| sauvegardes `.hosbak` | `.kosbak` | oui : le sélecteur de fichier propose encore `.hosbak` (`IndexedDbBackupService.LegacyArchiveExtension`) ; l'archive est reconnue par son contenu, pas par son nom |
+| codes de diagnostic `HOSAPP*`, `HOSSDK*`, `HOSWEB*`, `HOSBG*`, `HOSCHG*` (générateur de manifestes, analyseurs, cibles MSBuild, outil de liste de changements) | `KOSAPP*`, `KOSSDK*`, `KOSWEB*`, `KOSBG*`, `KOSCHG*` (mêmes numéros) | non : un `NoWarn`, `WarningsAsErrors` ou `#pragma warning disable` d'une app nomme le nouveau code |
+| variables CSS `--hos-*` (jetons du système de design) | `--kos-*` | oui dans un fichier `.theme` (un pack de thèmes publié avec `--hos-*` est lu sous les noms `--kos-*`) ; les thèmes et réglages enregistrés sont réécrits par la migration d'avant 3.0 (`RenamedNames`) ; non dans le CSS d'une app : elle doit être reconstruite |
+| attributs `data-hos-*` (`data-hos-theme`, `data-hos-motion`, `data-hos-accent`) | `data-kos-*` | non |
+| classes et identifiants `hos-*` (`hos-chart*` de `KazoLineChart`, `hos-cursor-theme`) | `kos-*` | non |
+
 ### App de compatibilité
 
 `Tests/fixtures/sdk-compat/packages` garde une app par version publiée qui en
@@ -514,15 +529,15 @@ Tests/fixtures/sdk-compat/produce-fixture.sh --project Contoso.Sdk3Compat   # co
 | Où | Quoi |
 |---|---|
 | `Tests/Kazo.Os.Templates.E2E.Tests` | empaquette tout (`pack-local`, ou le flux de `KAZOOS_LOCAL_FEED`), installe les modèles dans un `DOTNET_CLI_HOME` isolé, génère et compile chaque modèle d'app hors du dépôt avec un cache NuGet isolé (manifeste, genre, version minimale du SDK vérifiés) ; puis génère un hôte, y ajoute une app fenêtrée et une commande générées, le compile (catalogue agrégé vérifié), le lance, crée le profil dans Chromium, ouvre l'app (`Clicked 0 times` puis `1`) et exécute `hello Morpheus` dans le terminal (`Hello, Morpheus!`). |
-| `Tests/Kazo.Os.Templates.E2E.Tests` (`A_host_runs_SDK_2_app_packages_and_refuses_SDK_1_x_packages`) | un hôte généré avec `PackageReference` vers les apps de compatibilité 1.0.0 et 1.1.0 (source `kazoos-sdk-fixtures`) ne se construit pas (`HOSAPP0021` pour chacune des quatre apps) ; avec l'app 2.0.0 à la place, il démarre dans Chromium, la fenêtre 2.0 affiche le contrôle de fichiers de l'OS et `sdk2-compat still binds` s'exécute dans le terminal (ADR 0149 §5, ADR 0161 §3) |
+| `Tests/Kazo.Os.Templates.E2E.Tests` (`A_host_runs_SDK_2_app_packages_and_refuses_SDK_1_x_packages`) | un hôte généré avec `PackageReference` vers les apps de compatibilité 1.0.0 et 1.1.0 (source `kazoos-sdk-fixtures`) ne se construit pas (`KOSAPP0021` pour chacune des quatre apps) ; avec l'app 2.0.0 à la place, il démarre dans Chromium, la fenêtre 2.0 affiche le contrôle de fichiers de l'OS et `sdk2-compat still binds` s'exécute dans le terminal (ADR 0149 §5, ADR 0161 §3) |
 | `Tests/Kazo.Os.SdkCompatibility.Tests` | l'app de compatibilité 2.0.0 : admise par le catalogue courant, entrée de menu inscrite et `KazoFileView` référencé, chaque type et membre Kazo OS qu'elle référence existe, chaque méthode compile contre le SDK courant (JIT), la commande tourne ; les apps 1.0.0 et 1.1.0 : refusées (`catalog.sdk.incompatible`) (ADR 0149 §5, ADR 0161 §3) |
 | `Tests/Kazo.Os.App.Abstractions.Tests` (`KazoOsSdkTests`) | lecture de la version, compatibilité des plages |
-| `Tests/Kazo.Os.Tools.ManifestGenerator.Tests` | version du SDK lue dans la référence, empreintes et `HOSAPP0023`, `HOSAPP0022`, app plus récente que le SDK de l'hôte (`HOSAPP0021`) |
+| `Tests/Kazo.Os.Tools.ManifestGenerator.Tests` | version du SDK lue dans la référence, empreintes et `KOSAPP0023`, `KOSAPP0022`, app plus récente que le SDK de l'hôte (`KOSAPP0021`) |
 | `Tests/Kazo.Os.Platform.Core.Tests` | `AppCatalog` (refus, cascade des dépendances, propriétaire des commandes), `AppAssetStore`, `ShellCommandResolver` |
 | `build/verify-hosts.sh` | les trois hôtes démarrent après l'extraction de `Kazo.Os.Ecosystem.Host` |
 
 Vérifié à la main aussi : une app qui ajoute la référence
-`Kazo.Os.Platform.Core` échoue avec `HOSAPP0030 Forbidden package`.
+`Kazo.Os.Platform.Core` échoue avec `KOSAPP0030 Forbidden package`.
 
 ## Décisions
 
@@ -548,8 +563,8 @@ Vérifié à la main aussi : une app qui ajoute la référence
 - [x] 37 bibliothèques publiées avec métadonnées, analyseur d'API publique et listes `PublicAPI.*.txt` générées.
 - [x] Documentation XML de chaque membre public (≈ 300 avertissements corrigés, aucune suppression).
 - [x] `KazoOsSdk`, minimum écrit par le générateur, refus au chargement, état « incompatible » dans Paramètres.
-- [x] `HOSAPP0022` et propriétaire unique d'une commande au chargement.
-- [x] Empreintes des ressources (`HOSAPP0023`, `AppAssetStore`, état « endommagée »).
+- [x] `KOSAPP0022` et propriétaire unique d'une commande au chargement.
+- [x] Empreintes des ressources (`KOSAPP0023`, `AppAssetStore`, état « endommagée »).
 - [x] Retrait de `BuildProfileManifest`, de son validateur et de son sérialiseur.
 - [x] Paquet `Kazo.Os.App.Build` et mode paquet de `Kazo.Os.Apps.targets` (frontière des paquets, agrégation des apps en paquet, manifestes dans les paquets d'apps).
 - [x] `Kazo.Os.Ecosystem.Host` extrait, `AddKazoOsBrowserHost`, `HostAppCatalog`, jetons de design déplacés, trois hôtes mis à jour.

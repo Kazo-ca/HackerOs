@@ -36,7 +36,7 @@ public interface IWindowClientAreaProbe
 /// </remarks>
 public sealed class WindowAppEventDispatcher : IDisposable
 {
-    /// <summary>Height of the default title bar (<c>--hos-titlebar-height</c>, 2.35rem) in CSS pixels.</summary>
+    /// <summary>Height of the default title bar (<c>--kos-titlebar-height</c>, 2.35rem) in CSS pixels.</summary>
     private const double EstimatedTitleBarHeight = 37.6;
 
     /// <summary>Border of the window frame plus the title bar's bottom border, in CSS pixels.</summary>

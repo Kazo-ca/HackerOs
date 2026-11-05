@@ -39,9 +39,9 @@ notification posted through `notifications.post` makes a bubble.
 
 ## 3. Styles
 
-`NotificationToasts.razor.css` reuses the panel's tokens (`--hos-bg-surface`,
-`--hos-border`, `--hos-accent`, `--hos-warning`, `--hos-error`, `--hos-success`,
-`--hos-font-mono`). The stack sits at `z-index: 5000`, above the windows and the taskbar,
+`NotificationToasts.razor.css` reuses the panel's tokens (`--kos-bg-surface`,
+`--kos-border`, `--kos-accent`, `--kos-warning`, `--kos-error`, `--kos-success`,
+`--kos-font-mono`). The stack sits at `z-index: 5000`, above the windows and the taskbar,
 below the window menus and screen veils (9000). It lets clicks through; only the bubbles
 take them. The entrance (slide + fade, 180 ms) only plays under `[data-motion="enabled"]`
 and `prefers-reduced-motion: no-preference`.

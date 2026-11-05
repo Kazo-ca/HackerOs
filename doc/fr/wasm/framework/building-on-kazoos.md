@@ -121,8 +121,8 @@ dotnet sln add src/*/*.csproj
 Chaque projet d'app référence `Kazo.Os.AppSdk*` et `Kazo.Os.App.Build`
 (`PrivateAssets="all"`). Au build, `Kazo.Os.App.Build` écrit `manifest.json`
 depuis la classe `[AppManifest]`, avec la version du SDK comme minimum, et
-refuse une référence hors du SDK (`HOSAPP0030`) ou une injection d'un service
-de la plateforme (`HOSAPP0031`).
+refuse une référence hors du SDK (`KOSAPP0030`) ou une injection d'un service
+de la plateforme (`KOSAPP0031`).
 
 ## 5. Composer l'hôte
 
@@ -198,7 +198,7 @@ statique ; le service worker ne s'enregistre que hors de `localhost`. Voir
 ### Passer à la 2.0
 
 Une majeure : l'OS 2.0 refuse une app compilée contre 1.x, et un hôte qui en
-référence une ne se construit plus (`HOSAPP0021`). Toute app doit être
+référence une ne se construit plus (`KOSAPP0021`). Toute app doit être
 recompilée contre les paquets 2.x (2.2.2 aujourd'hui ; vérifié par `Tests/fixtures/sdk-compat`,
 où les apps 1.0.0 et 1.1.0 sont refusées et l'app 2.0.0 tourne).
 
@@ -233,8 +233,8 @@ sur l'OS 1.2. Ses ajouts font partie de la 2.0.
 - **Tâches lourdes hors de la fenêtre** : `KazoBackground.RunAsync` avec une
   méthode statique et des arguments sérialisables, ou une classe
   `KazoBackgroundJob<TInput, TResult>` ; progression, annulation et
-  `CheckpointAsync` par `KazoBackgroundContext`. L'analyseur `HOSBG0001` à
-  `HOSBG0004`, livré dans `Kazo.Os.AppSdk`, refuse une lambda qui capture
+  `CheckpointAsync` par `KazoBackgroundContext`. L'analyseur `KOSBG0001` à
+  `KOSBG0004`, livré dans `Kazo.Os.AppSdk`, refuse une lambda qui capture
   (ADR 0128, 0140, [`background-jobs.md`](background-jobs.md)).
 - **Limites par processus** : `KazoProcess.GetResourceLimitsAsync`,
   `SetResourceLimitAsync`, `KazoResourceLimits` ; `EMFILE`

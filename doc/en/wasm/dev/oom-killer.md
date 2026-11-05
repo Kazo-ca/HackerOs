@@ -107,7 +107,7 @@ The files `/proc/<pid>/oom_score`, `oom_score_adj`, `/proc/vmstat` and `/dev/kms
 - [x] `/proc/vmstat` with `oom_kill`.
 - [x] Notification for a killed app with a window (English, French).
 - [x] Guard of the real browser, worker replacement.
-- [x] `AppDefinition.OomScoreAdjust`, `oomScoreAdj` of the manifest, `HOSAPP0024`, `-500` for system services.
+- [x] `AppDefinition.OomScoreAdjust`, `oomScoreAdj` of the manifest, `KOSAPP0024`, `-500` for system services.
 - [x] Memory tab of Settings.
 - [x] `stress --vm`.
 - [x] `ecosystem-oom` scenario of `build/verify-hosts.sh`.

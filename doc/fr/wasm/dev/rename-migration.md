@@ -7,7 +7,7 @@
 Le chantier 5 du renommage ([ADR 0228](adr/0228-rename-to-kazoos.md)) a aussi
 renommé ce que l'OS écrit sur le disque : bases IndexedDB, clés de stockage,
 ids d'apps, chemins de configuration. Un navigateur qui a fait tourner une
-version d'avant 3.0.0, ou une sauvegarde `.hosbak` faite avant 3.0.0, contient
+version d'avant 3.0.0, ou une sauvegarde `.kosbak` faite avant 3.0.0, contient
 donc encore les anciens noms. [ADR 0230](adr/0230-rename-migration-by-previous-version.md)
 décide de les migrer : au démarrage, avant que l'OS ouvre sa base, et à la
 restauration d'une sauvegarde, avant de l'écrire. Après la migration, plus
@@ -20,7 +20,7 @@ Tout est dans `Infrastructure/Kazo.Os.Infrastructure.Browser/Rename/` :
 
 | Élément | Rôle |
 |---|---|
-| `RenamedNames` | La table des noms (règles du chantier 5, dans le même ordre) : « HackerOS » → « Kazo OS », `HackerOs.` → `Kazo.Os.`, `Hack*`/`Hacker*` → `Kazo*`, `hackeros` → `kazoos`, `hackweb` → `kazoweb`, `hack-paint` → `kazo-paint`, `hackpkg` → `kazopkg`, `.hackapp` → `.kazoapp`... Chaque règle est idempotente. Dit aussi si une base est ancienne (`hackeros`, `hackeros-*`, `hackweb.*`) et si une version précède 3.0.0. |
+| `RenamedNames` | La table des noms (règles du chantier 5, dans le même ordre) : « HackerOS » → « Kazo OS », `HackerOs.` → `Kazo.Os.`, `Hack*`/`Hacker*` → `Kazo*`, `hackeros` → `kazoos`, `hackweb` → `kazoweb`, `hack-paint` → `kazo-paint`, `hackpkg` → `kazopkg`, `.hackapp` → `.kazoapp`..., puis les noms courts du chantier 9 : `--hos-*` → `--kos-*`, `data-hos-*` → `data-kos-*`, classes `hos-*` → `kos-*`, `.hosbak` → `.kosbak` (un thème ou un réglage enregistré avec un jeton du système de design reste valable). Chaque règle est idempotente. Dit aussi si une base est ancienne (`hackeros`, `hackeros-*`, `hackweb.*`) et si une version précède 3.0.0. |
 | `RenamedOsDatabaseRewriter` | Réécrit les enregistrements de la base de l'OS (fonction pure, sur du JSON) et liste les écritures à faire. |
 | `RenamedStorageMigration` | Le déroulé au démarrage, sur une interface `IRenamedStorageBrowser` (un faux dans les tests). |
 | `BrowserRenamedStorage` + `wwwroot/renamedStorage.js` | Le navigateur : liste et copie des bases, clés `localStorage`/`sessionStorage`, caches. Le JavaScript ne fait que ce que C# ne peut pas atteindre ; les décisions sont en C#. |

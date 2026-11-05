@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace Kazo.Os.AppSdk.Tests.Threading;
 
-/// <summary>The HOSBG rules of the KazoBackground analyzer (ADR 0128 section 2, ADR 0140).</summary>
+/// <summary>The KOSBG rules of the KazoBackground analyzer (ADR 0128 section 2, ADR 0140).</summary>
 public sealed class KazoBackgroundAnalyzerTests
 {
     private const string Prelude = """
@@ -113,7 +113,7 @@ public sealed class KazoBackgroundAnalyzerTests
             }
             """);
 
-        Assert.Equal(["HOSBG0001", "HOSBG0001", "HOSBG0001", "HOSBG0001"], diagnostics.Select(static d => d.Id));
+        Assert.Equal(["KOSBG0001", "KOSBG0001", "KOSBG0001", "KOSBG0001"], diagnostics.Select(static d => d.Id));
         Assert.Contains("(a lambda)", diagnostics[0].GetMessage(), StringComparison.Ordinal);
         Assert.Contains("App.Caller.Instance", diagnostics[1].GetMessage(), StringComparison.Ordinal);
     }
@@ -129,7 +129,7 @@ public sealed class KazoBackgroundAnalyzerTests
             """);
 
         Diagnostic only = Assert.Single(diagnostics);
-        Assert.Equal("HOSBG0002", only.Id);
+        Assert.Equal("KOSBG0002", only.Id);
         Assert.Contains("input type 'Stranger'", only.GetMessage(), StringComparison.Ordinal);
     }
 
@@ -149,7 +149,7 @@ public sealed class KazoBackgroundAnalyzerTests
             """,
             prelude: false);
 
-        Assert.Equal(["HOSBG0002", "HOSBG0002"], diagnostics.Select(static d => d.Id));
+        Assert.Equal(["KOSBG0002", "KOSBG0002"], diagnostics.Select(static d => d.Id));
     }
 
     [Fact]
@@ -162,7 +162,7 @@ public sealed class KazoBackgroundAnalyzerTests
             }
             """);
 
-        Assert.Contains(diagnostics, static d => d.Id == "HOSBG0003" && d.GetMessage().Contains("System.Console.WriteLine", StringComparison.Ordinal));
+        Assert.Contains(diagnostics, static d => d.Id == "KOSBG0003" && d.GetMessage().Contains("System.Console.WriteLine", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -179,7 +179,7 @@ public sealed class KazoBackgroundAnalyzerTests
             }
             """);
 
-        Assert.Equal(["HOSBG0004", "HOSBG0004"], diagnostics.Select(static d => d.Id));
+        Assert.Equal(["KOSBG0004", "KOSBG0004"], diagnostics.Select(static d => d.Id));
     }
 
     private static async Task<ImmutableArray<Diagnostic>> AnalyzeAsync(string source, bool prelude = true)

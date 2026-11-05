@@ -111,7 +111,7 @@ public sealed class WebRouteGeneratorTests
     [Fact]
     public void Two_actions_on_the_same_route_and_method_conflict()
     {
-        Assert.Contains("HOSWEB0001", Ids("""
+        Assert.Contains("KOSWEB0001", Ids("""
             [Route("api/notes")]
             public sealed class NotesController : KazoApiController
             {
@@ -137,7 +137,7 @@ public sealed class WebRouteGeneratorTests
     [Fact]
     public void An_invalid_template_is_reported()
     {
-        Assert.Contains("HOSWEB0002", Ids("""
+        Assert.Contains("KOSWEB0002", Ids("""
             public sealed class NotesController : KazoApiController
             {
                 [HttpGet("notes/{id")] public string Get(int id) => "a";
@@ -148,7 +148,7 @@ public sealed class WebRouteGeneratorTests
     [Fact]
     public void A_duplicate_route_name_is_reported()
     {
-        Assert.Contains("HOSWEB0003", Ids("""
+        Assert.Contains("KOSWEB0003", Ids("""
             public sealed class NotesController : KazoApiController
             {
                 [HttpGet("a", Name = "same")] public string A() => "a";
@@ -160,7 +160,7 @@ public sealed class WebRouteGeneratorTests
     [Fact]
     public void A_parameter_that_cannot_be_bound_is_reported()
     {
-        Assert.Contains("HOSWEB0004", Ids("""
+        Assert.Contains("KOSWEB0004", Ids("""
             public sealed class NotesController : KazoController
             {
                 public string Get(System.IO.Stream stream) => "a";
@@ -171,7 +171,7 @@ public sealed class WebRouteGeneratorTests
     [Fact]
     public void A_controller_without_public_constructor_is_reported()
     {
-        Assert.Contains("HOSWEB0005", Ids("""
+        Assert.Contains("KOSWEB0005", Ids("""
             public sealed class NotesController : KazoController
             {
                 private NotesController() { }
@@ -183,7 +183,7 @@ public sealed class WebRouteGeneratorTests
     [Fact]
     public void A_definition_that_is_not_partial_is_reported()
     {
-        Assert.Contains("HOSWEB0006", Ids("""
+        Assert.Contains("KOSWEB0006", Ids("""
             [AppManifest]
             public sealed class Intranet : WebAppDefinition
             {
@@ -197,7 +197,7 @@ public sealed class WebRouteGeneratorTests
     [Fact]
     public void An_api_action_without_attribute_route_is_reported()
     {
-        Assert.Contains("HOSWEB0007", Ids("""
+        Assert.Contains("KOSWEB0007", Ids("""
             public sealed class NotesController : KazoApiController
             {
                 public string List() => "a";
@@ -295,7 +295,7 @@ public sealed class WebRouteGeneratorTests
             new RazorFile("Views/Home/Index.cshtml"),
             new RazorFile("Views/Home/Index.razor"));
 
-        Diagnostic duplicate = Assert.Single(diagnostics, diagnostic => diagnostic.Id == "HOSWEB0008");
+        Diagnostic duplicate = Assert.Single(diagnostics, diagnostic => diagnostic.Id == "KOSWEB0008");
         Assert.Contains("Views/Home/Index", duplicate.GetMessage(System.Globalization.CultureInfo.InvariantCulture));
     }
 }

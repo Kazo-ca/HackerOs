@@ -64,7 +64,7 @@
     align-self: center;
     margin-top: 2rem;
     text-align: center;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
     font-style: italic;
     pointer-events: none;
 }
@@ -83,9 +83,9 @@
     grid-template-columns: repeat(2, 11px);
     gap: 1px;
     padding: 2px;
-    border: 1px solid var(--hos-border, #30363d);
-    border-radius: var(--hos-radius-sm, 4px);
-    background: var(--hos-bg-elevated, #1c2128);
+    border: 1px solid var(--kos-border, #30363d);
+    border-radius: var(--kos-radius-sm, 4px);
+    background: var(--kos-bg-elevated, #1c2128);
     pointer-events: none;
 }
 

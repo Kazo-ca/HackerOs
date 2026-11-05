@@ -12,7 +12,7 @@ internal static class WebDiagnostics
 
     /// <summary>Two attribute routes match the same URLs for a common method.</summary>
     public static readonly DiagnosticDescriptor RouteConflict = new(
-        "HOSWEB0001",
+        "KOSWEB0001",
         "Conflicting routes",
         "The route '{0}' of {1} conflicts with {2}: both match the same URLs for {3}",
         Category,
@@ -21,7 +21,7 @@ internal static class WebDiagnostics
 
     /// <summary>A route template is malformed (syntax, unknown constraint, complex segment...).</summary>
     public static readonly DiagnosticDescriptor InvalidTemplate = new(
-        "HOSWEB0002",
+        "KOSWEB0002",
         "Invalid route template",
         "Invalid route template on {0}: {1}",
         Category,
@@ -30,7 +30,7 @@ internal static class WebDiagnostics
 
     /// <summary>One route name is used for different templates.</summary>
     public static readonly DiagnosticDescriptor DuplicateRouteName = new(
-        "HOSWEB0003",
+        "KOSWEB0003",
         "Duplicate route name",
         "The route name '{0}' is used by {1} ('{2}') and {3} ('{4}'); route names must be unique",
         Category,
@@ -39,7 +39,7 @@ internal static class WebDiagnostics
 
     /// <summary>An action parameter cannot be bound from a request.</summary>
     public static readonly DiagnosticDescriptor UnbindableParameter = new(
-        "HOSWEB0004",
+        "KOSWEB0004",
         "Parameter cannot be bound",
         "The parameter '{0}' of {1} cannot be bound: {2}",
         Category,
@@ -48,7 +48,7 @@ internal static class WebDiagnostics
 
     /// <summary>A controller has no public constructor the generated code can call.</summary>
     public static readonly DiagnosticDescriptor ControllerNotCreatable = new(
-        "HOSWEB0005",
+        "KOSWEB0005",
         "Controller cannot be created",
         "The controller {0} cannot be created: {1}",
         Category,
@@ -57,7 +57,7 @@ internal static class WebDiagnostics
 
     /// <summary>A web app definition without entry point is not partial (or is nested).</summary>
     public static readonly DiagnosticDescriptor DefinitionNotPartial = new(
-        "HOSWEB0006",
+        "KOSWEB0006",
         "Web app definition needs an entry point",
         "The web app definition {0} must be a top-level partial class so the build can supply its entry point, or override EntryPoint itself",
         Category,
@@ -66,7 +66,7 @@ internal static class WebDiagnostics
 
     /// <summary>An action uses an attribute the generator cannot honour.</summary>
     public static readonly DiagnosticDescriptor UnsupportedAction = new(
-        "HOSWEB0007",
+        "KOSWEB0007",
         "Unsupported action declaration",
         "The action {0} cannot be routed: {1}",
         Category,
@@ -75,7 +75,7 @@ internal static class WebDiagnostics
 
     /// <summary>A <c>.razor</c> and a <c>.cshtml</c> view have the same path under <c>Views/</c> (ADR 0086 §4).</summary>
     public static readonly DiagnosticDescriptor DuplicateView = new(
-        "HOSWEB0008",
+        "KOSWEB0008",
         "Duplicate view",
         "The view 'Views/{0}' exists as both .razor and .cshtml; View() could not tell them apart: rename or remove one",
         Category,

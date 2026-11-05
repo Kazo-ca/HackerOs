@@ -303,8 +303,8 @@ public sealed class SystemAdministrationGatewayTests
         KazoBackupInfo info = await harness.CreateBackupGateway(device, agent, AppCapabilities.SystemBackup).CreateAsync();
 
         Assert.Equal(SystemBackupService.CreateAction, agent.LastRequest!.Action);
-        Assert.Equal("kazoos-20261017-071200Z.hosbak", info.FileName);
-        Assert.Equal(["export", "save:kazoos-20261017-071200Z.hosbak"], device.Calls);
+        Assert.Equal("kazoos-20261017-071200Z.kosbak", info.FileName);
+        Assert.Equal(["export", "save:kazoos-20261017-071200Z.kosbak"], device.Calls);
         AuditEntry entry = Assert.Single(harness.Audit.Entries, audit => audit.Action == SystemBackupService.CreateAction);
         Assert.Equal("admin", entry.Properties["admin"]);
         Assert.Equal("alice", entry.Properties["requestedBy"]);
@@ -352,7 +352,7 @@ public sealed class SystemAdministrationGatewayTests
         KazoBackupInfo? info = await harness.CreateBackupGateway(device, agent, AppCapabilities.SystemBackup)
             .RestoreAsync(KazoBackupRestoreMode.Replace);
 
-        Assert.Equal("old.hosbak", info!.FileName);
+        Assert.Equal("old.kosbak", info!.FileName);
         Assert.Equal(SystemBackupService.RestoreAction, agent.LastRequest!.Action);
         Assert.Contains("Replace", agent.LastRequest.Operation, StringComparison.Ordinal);
         Assert.Equal(["pick", "record:started", "restore:Replace", "record:success", "restart"], device.Calls);
@@ -493,7 +493,7 @@ public sealed class SystemAdministrationGatewayTests
 
         public List<string> Calls { get; } = [];
 
-        public SystemBackupFile? Picked { get; init; } = new("old.hosbak", [1, 2, 3]);
+        public SystemBackupFile? Picked { get; init; } = new("old.kosbak", [1, 2, 3]);
 
         public bool Invalid { get; init; }
 

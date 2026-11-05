@@ -33,7 +33,7 @@ Two ways, same result:
   ```
 
   `dotnet new` cannot create the submodule link; without it, the build stops
-  on `HOSAPP0070` with the command to run. In Visual Studio (New project) or
+  on `KOSAPP0070` with the command to run. In Visual Studio (New project) or
   Rider, the template is called "Kazo OS app solution".
 
 ## What is generated
@@ -88,7 +88,7 @@ imported from the submodule. It:
    manifest generator, analyzers and host aggregation as in the Kazo OS
    repository (`KazoOsExternalSource=true`).
 
-The SDK boundary (`HOSAPP0030`) checks the references that enter the
+The SDK boundary (`KOSAPP0030`) checks the references that enter the
 submodule; a project of your repository may reference another one. An app
 added with `dotnet new kazoos-window` (or `-command`, `-service`, `-site`)
 already declares `KazoOsAppProject=true`; add it to the host with

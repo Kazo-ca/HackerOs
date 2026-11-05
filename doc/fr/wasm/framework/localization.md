@@ -108,7 +108,7 @@ l'id : `org.kazoos.commands.ls.Description`.
 
 Les titres des entrées de menu de fichiers (ADR 0159 §3) vivent aussi dans ces
 fichiers, mais à part : l'anglais dans le fichier **neutre**
-`Resources/AppManifest.resx` (obligatoire, `HOSAPP0026` sinon), les traductions
+`Resources/AppManifest.resx` (obligatoire, `KOSAPP0026` sinon), les traductions
 dans `AppManifest.<culture>.resx`. Le générateur les copie dans `contextMenus`
 du manifeste (`titles`) et non dans `localization/<culture>.json`.
 
@@ -116,7 +116,7 @@ Il écrit `localization/<culture>.json` (une app) ou
 `localization/<appId>/<culture>.json` (plusieurs apps), au format strict
 `{"name","description","terminalUsage"?}`, ajoute l'entrée
 `localizations: [{"culture":"fr","resourcePath":"localization/fr.json"}]` et
-supprime les fichiers périmés. Erreur : `HOSAPP0040`. L'agrégateur recopie ces
+supprime les fichiers périmés. Erreur : `KOSAPP0040`. L'agrégateur recopie ces
 textes dans `BuiltInApplications.json` (propriété facultative `localized`), et
 `AppCatalog.Localize(manifest, culture)` les applique. Le lanceur, le titre des
 fenêtres, `help` et `IAppCatalogGateway` affichent ainsi le nom traduit.
@@ -193,7 +193,7 @@ leurs textes voyagent dans `BuiltInApplications.json`.
 - [x] `KazoStringLocalizer`, `GetLocalizer<T>`, `EnglishStringLocalizer<T>`.
 - [x] `SessionLocaleService`, `SessionStringLocalizer<T>`, `AddKazoOsPlatformLocalization`.
 - [x] Satellites `fr` chargés dans le navigateur (fil principal et workers).
-- [x] Générateur : `AppManifest.<culture>.resx` → `localization/`, `HOSAPP0040` ; agrégateur `localized`.
+- [x] Générateur : `AppManifest.<culture>.resx` → `localization/`, `KOSAPP0040` ; agrégateur `localized`.
 - [x] Catalogue, lanceur, titre des fenêtres, `IAppCatalogGateway` localisés.
 - [x] Shell : builtins et `help` dans la langue du processus.
 - [x] Commande `localectl`.

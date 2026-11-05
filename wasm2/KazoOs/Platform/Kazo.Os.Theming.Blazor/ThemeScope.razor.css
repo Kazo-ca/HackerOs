@@ -7,74 +7,74 @@
        theme into an embedding host. These declarations also override MudBlazor's generated
        derived states with the same semantic tokens used by native Kazo OS components.
     */
-    --mud-palette-black: var(--hos-bg-base, #101417);
-    --mud-palette-background: var(--hos-bg-base, #101417);
-    --mud-palette-background-gray: var(--hos-bg-surface, #151c20);
-    --mud-palette-surface: var(--hos-bg-elevated, #1b252a);
-    --mud-palette-overlay-dark: var(--hos-bg-overlay, rgb(4 8 10 / 72%));
-    --mud-palette-overlay-light: color-mix(in srgb, var(--hos-bg-overlay, rgb(4 8 10 / 72%)) 72%, transparent);
-    --mud-palette-drawer-background: var(--hos-bg-surface, #151c20);
-    --mud-palette-drawer-text: var(--hos-text-secondary, #a8bac4);
-    --mud-palette-drawer-icon: var(--hos-text-secondary, #a8bac4);
-    --mud-palette-appbar-background: var(--hos-bg-surface, #151c20);
-    --mud-palette-appbar-text: var(--hos-text-primary, #f4f7f8);
-    --mud-theme-on-surface: var(--hos-text-primary, #f4f7f8);
-    --mud-theme-default-hover: var(--hos-accent-subtle, #173b2c);
+    --mud-palette-black: var(--kos-bg-base, #101417);
+    --mud-palette-background: var(--kos-bg-base, #101417);
+    --mud-palette-background-gray: var(--kos-bg-surface, #151c20);
+    --mud-palette-surface: var(--kos-bg-elevated, #1b252a);
+    --mud-palette-overlay-dark: var(--kos-bg-overlay, rgb(4 8 10 / 72%));
+    --mud-palette-overlay-light: color-mix(in srgb, var(--kos-bg-overlay, rgb(4 8 10 / 72%)) 72%, transparent);
+    --mud-palette-drawer-background: var(--kos-bg-surface, #151c20);
+    --mud-palette-drawer-text: var(--kos-text-secondary, #a8bac4);
+    --mud-palette-drawer-icon: var(--kos-text-secondary, #a8bac4);
+    --mud-palette-appbar-background: var(--kos-bg-surface, #151c20);
+    --mud-palette-appbar-text: var(--kos-text-primary, #f4f7f8);
+    --mud-theme-on-surface: var(--kos-text-primary, #f4f7f8);
+    --mud-theme-default-hover: var(--kos-accent-subtle, #173b2c);
 
-    --mud-palette-text-primary: var(--hos-text-primary, #f4f7f8);
-    --mud-palette-text-primary-rgb: var(--hos-text-primary-rgb, 244, 247, 248);
-    --mud-palette-text-secondary: var(--hos-text-secondary, #a8bac4);
-    --mud-palette-text-secondary-rgb: var(--hos-text-secondary-rgb, 168, 186, 196);
-    --mud-palette-text-disabled: var(--hos-text-muted, #6f838d);
-    --mud-palette-action-default: var(--hos-text-secondary, #a8bac4);
-    --mud-palette-action-default-rgb: var(--hos-text-secondary-rgb, 168, 186, 196);
-    --mud-palette-action-default-hover: var(--hos-accent-subtle, #173b2c);
-    --mud-palette-action-disabled: var(--hos-text-muted, #6f838d);
+    --mud-palette-text-primary: var(--kos-text-primary, #f4f7f8);
+    --mud-palette-text-primary-rgb: var(--kos-text-primary-rgb, 244, 247, 248);
+    --mud-palette-text-secondary: var(--kos-text-secondary, #a8bac4);
+    --mud-palette-text-secondary-rgb: var(--kos-text-secondary-rgb, 168, 186, 196);
+    --mud-palette-text-disabled: var(--kos-text-muted, #6f838d);
+    --mud-palette-action-default: var(--kos-text-secondary, #a8bac4);
+    --mud-palette-action-default-rgb: var(--kos-text-secondary-rgb, 168, 186, 196);
+    --mud-palette-action-default-hover: var(--kos-accent-subtle, #173b2c);
+    --mud-palette-action-disabled: var(--kos-text-muted, #6f838d);
     --mud-palette-action-disabled-background: color-mix(
         in srgb,
-        var(--hos-text-muted, #6f838d) 16%,
+        var(--kos-text-muted, #6f838d) 16%,
         transparent);
 
-    --mud-palette-primary: var(--hos-accent, #42d392);
-    --mud-palette-primary-rgb: var(--hos-accent-rgb, 66, 211, 146);
-    --mud-palette-primary-text: var(--hos-text-inverse, #07100f);
-    --mud-palette-primary-darken: var(--hos-accent, #42d392);
-    --mud-palette-primary-lighten: var(--hos-accent-hover, #62e4aa);
-    --mud-palette-primary-hover: var(--hos-accent-glow, rgb(66 211 146 / 24%));
+    --mud-palette-primary: var(--kos-accent, #42d392);
+    --mud-palette-primary-rgb: var(--kos-accent-rgb, 66, 211, 146);
+    --mud-palette-primary-text: var(--kos-text-inverse, #07100f);
+    --mud-palette-primary-darken: var(--kos-accent, #42d392);
+    --mud-palette-primary-lighten: var(--kos-accent-hover, #62e4aa);
+    --mud-palette-primary-hover: var(--kos-accent-glow, rgb(66 211 146 / 24%));
 
-    --mud-palette-success: var(--hos-success, #42d392);
-    --mud-palette-success-rgb: var(--hos-success-rgb, 66, 211, 146);
-    --mud-palette-success-text: var(--hos-text-inverse, #07100f);
-    --mud-palette-success-darken: color-mix(in srgb, var(--hos-success, #42d392) 82%, black);
-    --mud-palette-success-lighten: color-mix(in srgb, var(--hos-success, #42d392) 82%, white);
-    --mud-palette-success-hover: color-mix(in srgb, var(--hos-success, #42d392) 18%, transparent);
-    --mud-palette-warning: var(--hos-warning, #e0ad50);
-    --mud-palette-warning-rgb: var(--hos-warning-rgb, 224, 173, 80);
-    --mud-palette-warning-text: var(--hos-text-inverse, #07100f);
-    --mud-palette-warning-darken: color-mix(in srgb, var(--hos-warning, #e0ad50) 82%, black);
-    --mud-palette-warning-lighten: color-mix(in srgb, var(--hos-warning, #e0ad50) 82%, white);
-    --mud-palette-warning-hover: color-mix(in srgb, var(--hos-warning, #e0ad50) 18%, transparent);
-    --mud-palette-error: var(--hos-error, #ff8f87);
-    --mud-palette-error-rgb: var(--hos-error-rgb, 255, 143, 135);
-    --mud-palette-error-text: var(--hos-text-inverse, #07100f);
-    --mud-palette-error-darken: color-mix(in srgb, var(--hos-error, #ff8f87) 82%, black);
-    --mud-palette-error-lighten: color-mix(in srgb, var(--hos-error, #ff8f87) 82%, white);
-    --mud-palette-error-hover: color-mix(in srgb, var(--hos-error, #ff8f87) 18%, transparent);
-    --mud-palette-info: var(--hos-info, #64b5f6);
-    --mud-palette-info-rgb: var(--hos-info-rgb, 100, 181, 246);
-    --mud-palette-info-text: var(--hos-text-inverse, #07100f);
-    --mud-palette-info-darken: color-mix(in srgb, var(--hos-info, #64b5f6) 82%, black);
-    --mud-palette-info-lighten: color-mix(in srgb, var(--hos-info, #64b5f6) 82%, white);
-    --mud-palette-info-hover: color-mix(in srgb, var(--hos-info, #64b5f6) 18%, transparent);
+    --mud-palette-success: var(--kos-success, #42d392);
+    --mud-palette-success-rgb: var(--kos-success-rgb, 66, 211, 146);
+    --mud-palette-success-text: var(--kos-text-inverse, #07100f);
+    --mud-palette-success-darken: color-mix(in srgb, var(--kos-success, #42d392) 82%, black);
+    --mud-palette-success-lighten: color-mix(in srgb, var(--kos-success, #42d392) 82%, white);
+    --mud-palette-success-hover: color-mix(in srgb, var(--kos-success, #42d392) 18%, transparent);
+    --mud-palette-warning: var(--kos-warning, #e0ad50);
+    --mud-palette-warning-rgb: var(--kos-warning-rgb, 224, 173, 80);
+    --mud-palette-warning-text: var(--kos-text-inverse, #07100f);
+    --mud-palette-warning-darken: color-mix(in srgb, var(--kos-warning, #e0ad50) 82%, black);
+    --mud-palette-warning-lighten: color-mix(in srgb, var(--kos-warning, #e0ad50) 82%, white);
+    --mud-palette-warning-hover: color-mix(in srgb, var(--kos-warning, #e0ad50) 18%, transparent);
+    --mud-palette-error: var(--kos-error, #ff8f87);
+    --mud-palette-error-rgb: var(--kos-error-rgb, 255, 143, 135);
+    --mud-palette-error-text: var(--kos-text-inverse, #07100f);
+    --mud-palette-error-darken: color-mix(in srgb, var(--kos-error, #ff8f87) 82%, black);
+    --mud-palette-error-lighten: color-mix(in srgb, var(--kos-error, #ff8f87) 82%, white);
+    --mud-palette-error-hover: color-mix(in srgb, var(--kos-error, #ff8f87) 18%, transparent);
+    --mud-palette-info: var(--kos-info, #64b5f6);
+    --mud-palette-info-rgb: var(--kos-info-rgb, 100, 181, 246);
+    --mud-palette-info-text: var(--kos-text-inverse, #07100f);
+    --mud-palette-info-darken: color-mix(in srgb, var(--kos-info, #64b5f6) 82%, black);
+    --mud-palette-info-lighten: color-mix(in srgb, var(--kos-info, #64b5f6) 82%, white);
+    --mud-palette-info-hover: color-mix(in srgb, var(--kos-info, #64b5f6) 18%, transparent);
 
-    --mud-palette-lines-default: var(--hos-border, #3a4b53);
-    --mud-palette-lines-inputs: var(--hos-border, #3a4b53);
-    --mud-palette-table-lines: var(--hos-border, #3a4b53);
-    --mud-palette-table-hover: color-mix(in srgb, var(--hos-accent, #42d392) 10%, transparent);
-    --mud-palette-table-striped: color-mix(in srgb, var(--hos-text-primary, #f4f7f8) 4%, transparent);
-    --mud-palette-divider: var(--hos-border, #3a4b53);
-    --mud-palette-divider-rgb: var(--hos-border-rgb, 58, 75, 83);
-    --mud-palette-divider-light: var(--hos-border-subtle, #27343a);
-    --mud-palette-skeleton: color-mix(in srgb, var(--hos-text-muted, #6f838d) 22%, transparent);
-    --mud-ripple-color: var(--hos-accent, #42d392);
+    --mud-palette-lines-default: var(--kos-border, #3a4b53);
+    --mud-palette-lines-inputs: var(--kos-border, #3a4b53);
+    --mud-palette-table-lines: var(--kos-border, #3a4b53);
+    --mud-palette-table-hover: color-mix(in srgb, var(--kos-accent, #42d392) 10%, transparent);
+    --mud-palette-table-striped: color-mix(in srgb, var(--kos-text-primary, #f4f7f8) 4%, transparent);
+    --mud-palette-divider: var(--kos-border, #3a4b53);
+    --mud-palette-divider-rgb: var(--kos-border-rgb, 58, 75, 83);
+    --mud-palette-divider-light: var(--kos-border-subtle, #27343a);
+    --mud-palette-skeleton: color-mix(in srgb, var(--kos-text-muted, #6f838d) 22%, transparent);
+    --mud-ripple-color: var(--kos-accent, #42d392);
 }

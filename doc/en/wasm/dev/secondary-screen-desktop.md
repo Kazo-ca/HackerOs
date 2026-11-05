@@ -21,7 +21,7 @@ the screen where the user acts, secure dialogs on screen 1). It builds on the wi
 | `OnGesture` | `DesktopShell`'s handler: the area sends the screen's size (`ChangeViewportCommand(area, screen)`). |
 
 - **Wallpaper only** (Benoit's answer of 2026-10-28): no `BackgroundContent`, so no icons. The
-  wallpaper comes from the theme variables (`--hos-desktop-background`, grid), which the surface
+  wallpaper comes from the theme variables (`--kos-desktop-background`, grid), which the surface
   inherits from the main tab.
 - Windows stay rendered by screen 1's area, with its callbacks (focus, close, window menu): a
   secondary screen's area renders none.

@@ -4,7 +4,7 @@ using Kazo.Os.AppSdk.Threading;
 using Kazo.Os.Samples.WindowApp;
 
 // ADR 0128 section 2: the inputs and results of this app's background tasks cross as JSON, through
-// this context. The HOSBG analyzer refuses a task whose types it does not declare.
+// this context. The KOSBG analyzer refuses a task whose types it does not declare.
 [assembly: KazoWireContext(typeof(SampleJobsJsonContext))]
 
 namespace Kazo.Os.Samples.WindowApp;

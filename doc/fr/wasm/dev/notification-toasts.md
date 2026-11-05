@@ -42,9 +42,9 @@ notification publiée par `notifications.post` fait une bulle.
 
 ## 3. Styles
 
-`NotificationToasts.razor.css` reprend les jetons du panneau (`--hos-bg-surface`,
-`--hos-border`, `--hos-accent`, `--hos-warning`, `--hos-error`, `--hos-success`,
-`--hos-font-mono`). La pile est en `z-index: 5000`, au-dessus des fenêtres et de la barre,
+`NotificationToasts.razor.css` reprend les jetons du panneau (`--kos-bg-surface`,
+`--kos-border`, `--kos-accent`, `--kos-warning`, `--kos-error`, `--kos-success`,
+`--kos-font-mono`). La pile est en `z-index: 5000`, au-dessus des fenêtres et de la barre,
 sous les menus de fenêtre et les voiles d'écran (9000). Elle laisse passer les clics ;
 seules les bulles les prennent. L'entrée (glissé + fondu, 180 ms) ne joue que sous
 `[data-motion="enabled"]` et `prefers-reduced-motion: no-preference`.

@@ -133,8 +133,8 @@ en affichant le contrôle d'une autre.
 | Contrat | Fournisseur admis | Refus |
 | --- | --- | --- |
 | `kazoos.terminal` | toute app fenêtrée | — |
-| `kazoos.file-view`, `kazoos.file-dialogs` | toute app fenêtrée (`AdministratorSelected`) ; l'administrateur choisit celle en service, l'explorateur par défaut (ADR 0156) | — (`HOSAPP0025` est retiré, ADR 0158 §1) |
-| `kazoos.context-menu` | plateforme | `manifest.component.contract.platform` (`HOSAPP0009` au build de l'app) |
+| `kazoos.file-view`, `kazoos.file-dialogs` | toute app fenêtrée (`AdministratorSelected`) ; l'administrateur choisit celle en service, l'explorateur par défaut (ADR 0156) | — (`KOSAPP0025` est retiré, ADR 0158 §1) |
+| `kazoos.context-menu` | plateforme | `manifest.component.contract.platform` (`KOSAPP0009` au build de l'app) |
 
 - **Indisponible.** Un contrat de l'OS (fichiers ou menu) sans aucun
   fournisseur qui se charge est une erreur de l'OS : `component.unavailable` est écrit dans `/var/log/syslog`
@@ -236,12 +236,12 @@ Le shell est un enfant du processus de l'hôte : l'hôte doit demander
   séquences.
 - [x] Chantier 1 du plan du bureau (ADR 0148, ADR 0153) : composant typé
   `KazoContractComponent<T>` et `Parameters`, `UnmatchedParameters`, registre
-  dans `AppCatalog`, contrats réservés (`HOSAPP0025`,
+  dans `AppCatalog`, contrats réservés (`KOSAPP0025`,
   `catalog.component.reserved`, `manifest.component.contract.platform`),
   `KazoPlatformComponent`, `component.unavailable` au journal ; tests du
   validateur, du catalogue, de l'agrégation, du registre et du composant typé.
 - [x] Chantier 3c du plan du bureau (ADR 0156, ADR 0158) : contrats du
-  fichier ouverts à toute app fenêtrée (`HOSAPP0025` retiré),
+  fichier ouverts à toute app fenêtrée (`KOSAPP0025` retiré),
   `/etc/kazoos/components.config`, choix de l'administrateur essayé en
   premier, repli `component.fallback`, `KazoComponentProviders` et onglet
   « Composants de l'OS » avec la fenêtre d'approbation, `component.provider`

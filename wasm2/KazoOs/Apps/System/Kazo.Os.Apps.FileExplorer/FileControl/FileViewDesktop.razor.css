@@ -11,7 +11,7 @@
     padding: 0;
     overflow: hidden;
     user-select: none;
-    color: var(--hos-desktop-icon-text, #f4f7ff);
+    color: var(--kos-desktop-icon-text, #f4f7ff);
 }
 
 .desktop-tile {
@@ -30,17 +30,17 @@
 }
 
 .desktop-tile:hover {
-    background: color-mix(in srgb, var(--hos-accent, #39ff88) 12%, transparent);
+    background: color-mix(in srgb, var(--kos-accent, #39ff88) 12%, transparent);
 }
 
 .desktop-tile:focus-visible {
-    outline: 2px solid var(--hos-accent, #39ff88);
+    outline: 2px solid var(--kos-accent, #39ff88);
     outline-offset: -2px;
 }
 
 .desktop-tile.selected {
-    background: color-mix(in srgb, var(--hos-accent, #39ff88) 26%, transparent);
-    border-color: color-mix(in srgb, var(--hos-accent, #39ff88) 60%, transparent);
+    background: color-mix(in srgb, var(--kos-accent, #39ff88) 26%, transparent);
+    border-color: color-mix(in srgb, var(--kos-accent, #39ff88) 60%, transparent);
 }
 
 .desktop-tile.cut,
@@ -53,8 +53,8 @@
 }
 
 .desktop-tile.file-view-drop-hover {
-    border-color: var(--hos-accent, #39ff88);
-    background: color-mix(in srgb, var(--hos-accent, #39ff88) 20%, transparent);
+    border-color: var(--kos-accent, #39ff88);
+    background: color-mix(in srgb, var(--kos-accent, #39ff88) 20%, transparent);
 }
 
 .desktop-tile-icon {
@@ -91,13 +91,13 @@
     text-align: center;
     color: #fff;
     background: rgb(0 0 0 / 0.75);
-    border: 1px solid var(--hos-accent, #39ff88);
+    border: 1px solid var(--kos-accent, #39ff88);
     border-radius: 3px;
 }
 
 .file-view-marquee {
     position: absolute;
-    border: 1px dashed var(--hos-accent, #39ff88);
-    background: color-mix(in srgb, var(--hos-accent, #39ff88) 12%, transparent);
+    border: 1px dashed var(--kos-accent, #39ff88);
+    background: color-mix(in srgb, var(--kos-accent, #39ff88) 12%, transparent);
     pointer-events: none;
 }

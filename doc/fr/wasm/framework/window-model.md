@@ -229,7 +229,7 @@ fenêtrées fournissent chacune leur `icons/app.svg` ; le build calcule l'emprei
 de l'asset. Sans déclaration, un symbole de fenêtre sert de repli.
 
 Tous les thèmes de bureau affichent l'icône de titre sauf macOS, qui masque
-l'icône et son bouton contextuel avec `--hos-window-icon-display: none`.
+l'icône et son bouton contextuel avec `--kos-window-icon-display: none`.
 Le dock macOS garde les icônes d'apps. Le menu demeure accessible au clavier.
 Le choix Lucide du lanceur et des raccourcis reste indépendant des images du chrome.
 Voir l'[ADR 0164](../dev/adr/0164-app-icons-and-window-icon-context-menu.md).

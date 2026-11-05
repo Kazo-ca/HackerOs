@@ -108,7 +108,7 @@ public static class Program
 
     private static int Fail(string message)
     {
-        Console.Error.WriteLine($"ChangeList : error HOSCHG0001: {message}");
+        Console.Error.WriteLine($"ChangeList : error KOSCHG0001: {message}");
         return 1;
     }
 

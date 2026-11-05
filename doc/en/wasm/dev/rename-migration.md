@@ -6,7 +6,7 @@
 
 Work item 5 of the rename ([ADR 0228](adr/0228-rename-to-kazoos.md)) also
 renamed what the OS writes on disk: IndexedDB databases, storage keys, app ids,
-configuration paths. A browser that ran a version before 3.0.0, or a `.hosbak`
+configuration paths. A browser that ran a version before 3.0.0, or a `.kosbak`
 backup made before 3.0.0, still holds the old names.
 [ADR 0230](adr/0230-rename-migration-by-previous-version.md) decides to migrate
 them: at boot, before the OS opens its database, and when a backup is restored,
@@ -19,7 +19,7 @@ Everything is in `Infrastructure/Kazo.Os.Infrastructure.Browser/Rename/`:
 
 | Element | Role |
 |---|---|
-| `RenamedNames` | The name table (rules of work item 5, in the same order): "HackerOS" → "Kazo OS", `HackerOs.` → `Kazo.Os.`, `Hack*`/`Hacker*` → `Kazo*`, `hackeros` → `kazoos`, `hackweb` → `kazoweb`, `hack-paint` → `kazo-paint`, `hackpkg` → `kazopkg`, `.hackapp` → `.kazoapp`... Every rule is idempotent. Also tells whether a database is old (`hackeros`, `hackeros-*`, `hackweb.*`) and whether a version predates 3.0.0. |
+| `RenamedNames` | The name table (rules of work item 5, in the same order): "HackerOS" → "Kazo OS", `HackerOs.` → `Kazo.Os.`, `Hack*`/`Hacker*` → `Kazo*`, `hackeros` → `kazoos`, `hackweb` → `kazoweb`, `hack-paint` → `kazo-paint`, `hackpkg` → `kazopkg`, `.hackapp` → `.kazoapp`..., then the short names of work item 9: `--hos-*` → `--kos-*`, `data-hos-*` → `data-kos-*`, `hos-*` classes → `kos-*`, `.hosbak` → `.kosbak` (a theme or setting stored with a design-system token stays valid). Every rule is idempotent. Also tells whether a database is old (`hackeros`, `hackeros-*`, `hackweb.*`) and whether a version predates 3.0.0. |
 | `RenamedOsDatabaseRewriter` | Rewrites the records of the OS database (a pure function over JSON) and lists the writes to make. |
 | `RenamedStorageMigration` | The boot sequence, over an `IRenamedStorageBrowser` interface (a fake in the tests). |
 | `BrowserRenamedStorage` + `wwwroot/renamedStorage.js` | The browser: list and copy of databases, `localStorage`/`sessionStorage` keys, caches. The JavaScript only does what C# cannot reach; the decisions are in C#. |

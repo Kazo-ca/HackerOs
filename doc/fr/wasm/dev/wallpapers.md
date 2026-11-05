@@ -15,11 +15,11 @@ d'écran » dans le menu des images). Issues
 L'utilisateur choisit une image PNG, JPEG ou WebP comme fond du bureau, pour
 tous les écrans ou pour un écran secondaire, dans Paramètres ▸ Apparence ▸
 Fond d'écran. Sans image, le bureau garde le fond de son thème
-(`--hos-desktop-background` et la grille).
+(`--kos-desktop-background` et la grille).
 
 L'écran d'accueil mobile a sa propre image et son propre ajustement (choix
 « Mobile » du même panneau) ; sans image, il garde le fond de son thème mobile
-(`--hos-mobile-surface-background`).
+(`--kos-mobile-surface-background`).
 
 ## Réglages
 
@@ -107,6 +107,6 @@ quel.
 
 ## Hors de ce chantier
 
-Le tiroir d'apps mobile reste opaque, sauf sur un thème qui règle `--hos-mobile-drawer-background` et `--hos-mobile-drawer-backdrop-filter` (iOS : verre flouté, ADR 0217 §3). « Définir comme fond
+Le tiroir d'apps mobile reste opaque, sauf sur un thème qui règle `--kos-mobile-drawer-background` et `--kos-mobile-drawer-backdrop-filter` (iOS : verre flouté, ADR 0217 §3). « Définir comme fond
 d'écran » n'écrit que les clés du bureau : l'image du mobile se choisit dans
 Paramètres (le SDK ne dit pas à une app quelle interface est active).

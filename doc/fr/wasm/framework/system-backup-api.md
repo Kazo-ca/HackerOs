@@ -2,9 +2,9 @@
 
 # Sauvegarde système côté apps
 
-Ce document décrit ce qu'une app voit de la sauvegarde de la machine : l'API `KazoSystemBackup`, l'archive `.hosbak`, la capacité `system.backup` et les codes d'erreur d'espace. La mise en œuvre (séquence, espace de stockage, cache PWA, montées de version IndexedDB, tests) est dans [`../dev/system-backup.md`](../dev/system-backup.md).
+Ce document décrit ce qu'une app voit de la sauvegarde de la machine : l'API `KazoSystemBackup`, l'archive `.kosbak`, la capacité `system.backup` et les codes d'erreur d'espace. La mise en œuvre (séquence, espace de stockage, cache PWA, montées de version IndexedDB, tests) est dans [`../dev/system-backup.md`](../dev/system-backup.md).
 
-## Archive `.hosbak`
+## Archive `.kosbak`
 
 Le JSON `formatVersion: 1` de `IndexedDbBackupService` (version du schéma,
 tous les magasins, SHA-256), compressé en gzip. `ReadArchive` reconnaît le gzip
@@ -16,7 +16,9 @@ refusée **avant** toute écriture, avec un message qui nomme les deux versions 
 This backup uses database schema version 3; this Kazo OS uses version 4. It cannot be restored here.
 ```
 
-Nom : `kazoos-AAAAMMJJ-HHMMSSZ.hosbak` (heure UTC de l'export).
+Nom : `kazoos-AAAAMMJJ-HHMMSSZ.kosbak` (heure UTC de l'export).
+Avant 3.0.0, l'extension était `.hosbak` : le sélecteur la propose encore, et
+une telle archive se restaure comme les autres (elle est reconnue par son contenu).
 
 Depuis 3.0.0, le JSON nomme aussi la version de Kazo OS qui l'a fait
 (`osVersion`, couverte par le SHA-256). Une sauvegarde faite avant 3.0.0 (base

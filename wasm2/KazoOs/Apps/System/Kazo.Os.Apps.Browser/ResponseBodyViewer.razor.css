@@ -5,7 +5,7 @@
     flex-direction: column;
     height: 100%;
     min-height: 0;
-    background: var(--hos-bg-base, #0d0d0d);
+    background: var(--kos-bg-base, #0d0d0d);
 }
 
 .body-viewer-bar {
@@ -14,18 +14,18 @@
     align-items: center;
     padding: 4px 12px;
     font-size: 0.75rem;
-    color: var(--hos-text-muted, #8fbf8f);
-    border-bottom: 1px solid var(--hos-border-subtle, #2a2a2a);
+    color: var(--kos-text-muted, #8fbf8f);
+    border-bottom: 1px solid var(--kos-border-subtle, #2a2a2a);
     flex-shrink: 0;
 }
 
 .body-viewer-type {
-    color: var(--hos-accent, #00e5ff);
+    color: var(--kos-accent, #00e5ff);
 }
 
 .body-viewer-status {
     margin-left: auto;
-    color: var(--hos-danger, #ff5555);
+    color: var(--kos-danger, #ff5555);
 }
 
 .body-viewer-text {
@@ -35,14 +35,14 @@
     overflow: auto;
     white-space: pre-wrap;
     word-break: break-word;
-    font-family: var(--hos-font-mono, "Cascadia Mono", Consolas, monospace);
+    font-family: var(--kos-font-mono, "Cascadia Mono", Consolas, monospace);
     font-size: 0.85rem;
     line-height: 1.45;
-    color: var(--hos-text-primary, #33ff33);
+    color: var(--kos-text-primary, #33ff33);
 }
 
 .body-viewer[data-kind="json"] .body-viewer-text {
-    color: var(--hos-accent, #00e5ff);
+    color: var(--kos-accent, #00e5ff);
 }
 
 .body-viewer-image {
@@ -70,7 +70,7 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    color: var(--hos-text-muted, #8fbf8f);
+    color: var(--kos-text-muted, #8fbf8f);
 }
 
 .binary-icon {
@@ -78,7 +78,7 @@
 }
 
 .binary-hint code {
-    color: var(--hos-accent, #00e5ff);
+    color: var(--kos-accent, #00e5ff);
 }
 
 .body-viewer-pdf {
@@ -89,5 +89,5 @@
 }
 
 .download-path {
-    color: var(--hos-accent, #00e5ff);
+    color: var(--kos-accent, #00e5ff);
 }

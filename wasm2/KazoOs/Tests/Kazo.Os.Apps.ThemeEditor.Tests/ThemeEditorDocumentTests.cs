@@ -29,15 +29,15 @@ public sealed class ThemeEditorDocumentTests
     public void Invalid_values_are_kept_but_block_saving_and_stay_out_of_the_preview()
     {
         ThemeEditorDocument document = new();
-        document.SetValue("--hos-accent", "#ff00ff");
-        document.SetValue("--hos-bg-base", "url(http://evil)");
+        document.SetValue("--kos-accent", "#ff00ff");
+        document.SetValue("--kos-bg-base", "url(http://evil)");
 
-        Assert.Equal("url(http://evil)", document.GetValue("--hos-bg-base"));
-        Assert.NotNull(document.GetError("--hos-bg-base"));
-        Assert.Equal(["--hos-accent"], document.ValidTokens.Select(pair => pair.Key));
-        Assert.Contains(document.GetProblems(), problem => problem.Contains("--hos-bg-base", StringComparison.Ordinal));
+        Assert.Equal("url(http://evil)", document.GetValue("--kos-bg-base"));
+        Assert.NotNull(document.GetError("--kos-bg-base"));
+        Assert.Equal(["--kos-accent"], document.ValidTokens.Select(pair => pair.Key));
+        Assert.Contains(document.GetProblems(), problem => problem.Contains("--kos-bg-base", StringComparison.Ordinal));
 
-        document.SetValue("--hos-bg-base", "");
+        document.SetValue("--kos-bg-base", "");
         Assert.Empty(document.GetProblems());
     }
 
@@ -56,12 +56,12 @@ public sealed class ThemeEditorDocumentTests
     [Fact]
     public void Dirty_tracking_follows_load_edit_and_save()
     {
-        UserTheme theme = ThemeFile.Parse("[theme]\nid = neon\nname = Neon\nbase = kazoos\n[tokens]\n--hos-accent = #ff00ff\n").Theme!;
+        UserTheme theme = ThemeFile.Parse("[theme]\nid = neon\nname = Neon\nbase = kazoos\n[tokens]\n--kos-accent = #ff00ff\n").Theme!;
         ThemeEditorDocument document = new();
         document.Load(theme, "/home/alice/.config/kazoos/themes/neon.theme");
         Assert.False(document.IsDirty);
 
-        document.SetValue("--hos-accent", "#00ffff");
+        document.SetValue("--kos-accent", "#00ffff");
         Assert.True(document.IsDirty);
 
         UserTheme saved = document.ToUserTheme();

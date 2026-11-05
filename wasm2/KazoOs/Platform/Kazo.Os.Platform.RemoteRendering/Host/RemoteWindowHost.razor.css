@@ -6,10 +6,10 @@
 .remote-window-failure {
     margin: 1rem;
     padding: 0.75rem 1rem;
-    border: 1px solid var(--hos-danger, #ff4d6d);
+    border: 1px solid var(--kos-danger, #ff4d6d);
     border-radius: 6px;
-    background: color-mix(in srgb, var(--hos-danger, #ff4d6d) 12%, transparent);
-    color: var(--hos-text, #e6edf3);
-    font-family: var(--hos-font-mono, ui-monospace, monospace);
+    background: color-mix(in srgb, var(--kos-danger, #ff4d6d) 12%, transparent);
+    color: var(--kos-text, #e6edf3);
+    font-family: var(--kos-font-mono, ui-monospace, monospace);
     font-size: 0.85rem;
 }

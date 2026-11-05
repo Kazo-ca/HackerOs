@@ -6,7 +6,7 @@ namespace Kazo.Os.AppSdk.Administration;
 /// <summary>
 /// Backs up the whole machine to the host computer and restores it (ADR 0099, section 1): every
 /// user's files, <c>/etc</c>, the accounts and their password hashes, in one gzip archive with the
-/// <c>.hosbak</c> extension.
+/// <c>.kosbak</c> extension.
 /// </summary>
 /// <remarks>
 /// <para>

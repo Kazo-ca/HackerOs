@@ -14,7 +14,7 @@ namespace Kazo.Os.Platform.Core.Backup;
 /// </summary>
 public interface ISystemBackupDevice
 {
-    /// <summary>Exports the whole OS database as a compressed <c>.hosbak</c> archive.</summary>
+    /// <summary>Exports the whole OS database as a compressed <c>.kosbak</c> archive.</summary>
     /// <param name="cancellationToken">Cancels the export.</param>
     Task<SystemBackupArchive> ExportAsync(CancellationToken cancellationToken = default);
 
@@ -53,7 +53,7 @@ public interface ISystemBackupDevice
 }
 
 /// <summary>An exported archive and what it holds.</summary>
-/// <param name="Bytes">The <c>.hosbak</c> bytes.</param>
+/// <param name="Bytes">The <c>.kosbak</c> bytes.</param>
 /// <param name="Summary">What the archive holds.</param>
 public sealed record SystemBackupArchive(byte[] Bytes, SystemBackupSummary Summary);
 
@@ -148,10 +148,10 @@ public sealed class SystemBackupService
         _clock = clock ?? (() => DateTimeOffset.UtcNow);
     }
 
-    /// <summary>Gets the archive name for a backup made at <paramref name="atUtc"/>: <c>kazoos-20261017-071200Z.hosbak</c>.</summary>
+    /// <summary>Gets the archive name for a backup made at <paramref name="atUtc"/>: <c>kazoos-20261017-071200Z.kosbak</c>.</summary>
     /// <param name="atUtc">Export time.</param>
     public static string FileNameFor(DateTimeOffset atUtc) =>
-        string.Create(CultureInfo.InvariantCulture, $"kazoos-{atUtc.ToUniversalTime():yyyyMMdd-HHmmss}Z.hosbak");
+        string.Create(CultureInfo.InvariantCulture, $"kazoos-{atUtc.ToUniversalTime():yyyyMMdd-HHmmss}Z.kosbak");
 
     /// <summary>Exports the machine, hands the archive to the host and audits it.</summary>
     /// <param name="administratorLogin">Administrator who authorized it.</param>

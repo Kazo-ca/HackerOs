@@ -5,11 +5,11 @@
 
 Rule ID | Category | Severity | Notes
 --------|----------|----------|-------
-HOSWEB0001 | Kazo.Os.Web | Error | WebDiagnostics
-HOSWEB0002 | Kazo.Os.Web | Error | WebDiagnostics
-HOSWEB0003 | Kazo.Os.Web | Error | WebDiagnostics
-HOSWEB0004 | Kazo.Os.Web | Error | WebDiagnostics
-HOSWEB0005 | Kazo.Os.Web | Error | WebDiagnostics
-HOSWEB0006 | Kazo.Os.Web | Error | WebDiagnostics
-HOSWEB0007 | Kazo.Os.Web | Error | WebDiagnostics
-HOSWEB0008 | Kazo.Os.Web | Error | WebDiagnostics
+KOSWEB0001 | Kazo.Os.Web | Error | WebDiagnostics
+KOSWEB0002 | Kazo.Os.Web | Error | WebDiagnostics
+KOSWEB0003 | Kazo.Os.Web | Error | WebDiagnostics
+KOSWEB0004 | Kazo.Os.Web | Error | WebDiagnostics
+KOSWEB0005 | Kazo.Os.Web | Error | WebDiagnostics
+KOSWEB0006 | Kazo.Os.Web | Error | WebDiagnostics
+KOSWEB0007 | Kazo.Os.Web | Error | WebDiagnostics
+KOSWEB0008 | Kazo.Os.Web | Error | WebDiagnostics

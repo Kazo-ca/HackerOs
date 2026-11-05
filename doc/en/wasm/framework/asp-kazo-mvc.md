@@ -94,7 +94,7 @@ UseExceptionPage : toute exception du pipeline → page d'erreur (sinon « 500 I
 | `Mvc/` | Attributes, `KazoControllerBase` / `KazoController` / `KazoApiController`, `KazoModelBinder`, `KazoModelStateDictionary`, filters, results, `KazoUrlHelper`, `KazoActionInvoker`, `KazoResults`, `KazoControllerActionDescriptor` contract. |
 | `Sessions/` | `KazoSession`, `KazoSessionOptions`, `KazoSessionStore`. |
 | `Diagnostics/` | `KazoExceptionPage` (console-style error page). |
-| `Tools/Kazo.Os.Tools.WebRouteGenerator` | Roslyn source generator (ADR 0082): route table and `<Name>WebHost`, errors `HOSWEB0001` to `HOSWEB0007` (`HOSWEB0008`: `.razor` and `.cshtml` view at the same path, ADR 0086). |
+| `Tools/Kazo.Os.Tools.WebRouteGenerator` | Roslyn source generator (ADR 0082): route table and `<Name>WebHost`, errors `KOSWEB0001` to `KOSWEB0007` (`KOSWEB0008`: `.razor` and `.cshtml` view at the same path, ADR 0086). |
 
 ## Startup
 
@@ -147,7 +147,7 @@ Attribute routes: `[Route]` on the controller (prefix) and on the action,
 `[area]`, absolute template `/...` or `~/...` which ignores the prefix. An action
 without an attribute route in a view controller follows the conventional routes
 (`controller` and `action` as required values). An action of a
-`KazoApiController` must have an attribute route (`HOSWEB0007`).
+`KazoApiController` must have an attribute route (`KOSWEB0007`).
 
 URL generation: `Url.Action(action, controller, values)`,
 `Url.RouteUrl(name, values)`, `Url.Content("~/...")`, `Url.IsLocalUrl`; default
@@ -248,7 +248,7 @@ the contract remains the reference for `web/9`.
   automatic `400`, `415`, filters, conventional routes, forms,
   redirects, links, session, files, error page, per-request DI),
   generator driven on code snippets (`WebRouteGeneratorTests`:
-  `HOSWEB0001` to `HOSWEB0007`, table and entry produced).
+  `KOSWEB0001` to `KOSWEB0007`, table and entry produced).
 - `Tests/Kazo.Os.Platform.WorkerHost.Tests/MvcSiteTests`: an MVC site started
   by `curl` in a full OS, on the main thread and in the `web` worker.
 
@@ -268,7 +268,7 @@ the contract remains the reference for `web/9`.
 - [x] `Kazo.Os.AppSdk.Web` library: project, solution, SDK boundary.
 - [x] HTTP: context, request, response, headers, cookies, form, transport-independent exchange.
 - [x] Routing: templates, constraints, precedence, `405`/`OPTIONS`/`HEAD`, URL generation.
-- [x] Source generator (ADR 0082) wired to the apps, errors `HOSWEB0001` to `HOSWEB0007`.
+- [x] Source generator (ADR 0082) wired to the apps, errors `KOSWEB0001` to `KOSWEB0007`.
 - [x] Controllers, actions, filters, `OnActionExecuting`.
 - [x] Model binding, `DataAnnotations`, `ModelState`, automatic `400`, `415`.
 - [x] JSON, Content, File, Redirect results (including `LocalRedirect`, `RedirectToAction`), `Created*`, RFC 9457 problems.

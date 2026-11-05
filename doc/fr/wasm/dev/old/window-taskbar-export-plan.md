@@ -119,7 +119,7 @@ Elle doit contenir :
 - aucun modèle de thème hôte. Depuis la mise à jour du 2026-08-19, le catalogue
   framework-neutral vit dans `Kazo.Os.Theming.Abstractions` et le vocabulaire
   visuel/static asset dans `Kazo.Os.Theming.Blazor`; les packages de chrome
-  consomment uniquement les tokens `--hos-*`, jamais du CSS arbitraire.
+  consomment uniquement les tokens `--kos-*`, jamais du CSS arbitraire.
 
 Le projet `Shared/Kazo.Os.AppSdk.Icons` existe déjà et fournit un modèle d’identité
 d’icône indépendant du rendu ; les contrats d’icônes de fenêtre et de barre des tâches

@@ -7,9 +7,9 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    background: var(--hos-window-content-background, var(--hos-bg-base, #0d0d0d));
-    color: var(--hos-text-primary, #33ff33);
-    font-family: var(--hos-font-mono, "Cascadia Mono", Consolas, monospace);
+    background: var(--kos-window-content-background, var(--kos-bg-base, #0d0d0d));
+    color: var(--kos-text-primary, #33ff33);
+    font-family: var(--kos-font-mono, "Cascadia Mono", Consolas, monospace);
     padding: 12px;
     box-sizing: border-box;
     gap: 12px;
@@ -17,10 +17,10 @@
 }
 
 .calculator-display {
-    background: var(--hos-input-bg, #050505);
-    border: var(--hos-input-border, 1px solid var(--hos-border, #222));
-    border-radius: var(--hos-input-radius, var(--hos-radius-sm, 4px));
-    box-shadow: var(--hos-input-shadow, inset 0 0 8px rgba(0,0,0,0.8));
+    background: var(--kos-input-bg, #050505);
+    border: var(--kos-input-border, 1px solid var(--kos-border, #222));
+    border-radius: var(--kos-input-radius, var(--kos-radius-sm, 4px));
+    box-shadow: var(--kos-input-shadow, inset 0 0 8px rgba(0,0,0,0.8));
     padding: 12px 16px;
     display: flex;
     flex-direction: column;
@@ -31,7 +31,7 @@
 
 .calculator-previous-operand {
     font-size: 0.75rem;
-    color: var(--hos-text-muted, #6f838d);
+    color: var(--kos-text-muted, #6f838d);
     opacity: 0.8;
     min-height: 16px;
     letter-spacing: 0.5px;
@@ -41,8 +41,8 @@
     font-size: 1.75rem;
     font-weight: 700;
     letter-spacing: 1px;
-    color: var(--hos-accent, #33ff33);
-    text-shadow: 0 0 6px var(--hos-accent-glow, rgba(51,255,51,0.3));
+    color: var(--kos-accent, #33ff33);
+    text-shadow: 0 0 6px var(--kos-accent-glow, rgba(51,255,51,0.3));
     word-break: break-all;
 }
 
@@ -54,60 +54,60 @@
 }
 
 .calc-btn {
-    background: var(--hos-btn-bg, #161616);
-    border: var(--hos-btn-border, 1px solid var(--hos-border, #2a2a2a));
-    border-radius: var(--hos-btn-radius, var(--hos-radius-sm, 4px));
-    box-shadow: var(--hos-btn-shadow, none);
-    color: var(--hos-btn-color, var(--hos-text-primary, #33ff33));
+    background: var(--kos-btn-bg, #161616);
+    border: var(--kos-btn-border, 1px solid var(--kos-border, #2a2a2a));
+    border-radius: var(--kos-btn-radius, var(--kos-radius-sm, 4px));
+    box-shadow: var(--kos-btn-shadow, none);
+    color: var(--kos-btn-color, var(--kos-text-primary, #33ff33));
     font-family: inherit;
     font-size: 0.875rem;
-    font-weight: var(--hos-btn-font-weight, 600);
+    font-weight: var(--kos-btn-font-weight, 600);
     cursor: pointer;
-    transition: background var(--hos-transition-fast, 0.12s),
-                border-color var(--hos-transition-fast, 0.12s),
-                transform var(--hos-transition-fast, 0.05s);
+    transition: background var(--kos-transition-fast, 0.12s),
+                border-color var(--kos-transition-fast, 0.12s),
+                transform var(--kos-transition-fast, 0.05s);
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .calc-btn:hover {
-    background: var(--hos-btn-hover-bg, var(--hos-bg-elevated, #222));
-    border-color: var(--hos-btn-hover-border, var(--hos-accent, #33ff33));
-    color: var(--hos-btn-hover-color, var(--hos-text-primary, #fff));
+    background: var(--kos-btn-hover-bg, var(--kos-bg-elevated, #222));
+    border-color: var(--kos-btn-hover-border, var(--kos-accent, #33ff33));
+    color: var(--kos-btn-hover-color, var(--kos-text-primary, #fff));
 }
 
 .calc-btn:active {
-    background: var(--hos-btn-active-bg, var(--hos-accent-subtle, #173b2c));
-    border-color: var(--hos-btn-active-border, var(--hos-accent, #33ff33));
-    box-shadow: var(--hos-btn-active-shadow, none);
+    background: var(--kos-btn-active-bg, var(--kos-accent-subtle, #173b2c));
+    border-color: var(--kos-btn-active-border, var(--kos-accent, #33ff33));
+    box-shadow: var(--kos-btn-active-shadow, none);
     transform: scale(0.96);
 }
 
 .calc-btn.op {
-    color: var(--hos-warning, #ff9900);
-    border-color: var(--hos-border, rgba(255, 153, 0, 0.3));
+    color: var(--kos-warning, #ff9900);
+    border-color: var(--kos-border, rgba(255, 153, 0, 0.3));
 }
 
 .calc-btn.func {
-    color: var(--hos-info, #00aaff);
-    border-color: var(--hos-border, rgba(0, 170, 255, 0.3));
+    color: var(--kos-info, #00aaff);
+    border-color: var(--kos-border, rgba(0, 170, 255, 0.3));
 }
 
 .calc-btn.clear {
-    color: var(--hos-error, #ff4444);
-    border-color: var(--hos-border, rgba(255, 68, 68, 0.3));
+    color: var(--kos-error, #ff4444);
+    border-color: var(--kos-border, rgba(255, 68, 68, 0.3));
 }
 
 .calc-btn.equals {
-    background: var(--hos-btn-primary-bg, var(--hos-accent, #33ff33));
-    color: var(--hos-btn-primary-color, var(--hos-text-inverse, #0d0d0d));
-    border: var(--hos-btn-primary-border, 1px solid var(--hos-accent, #33ff33));
-    box-shadow: var(--hos-btn-primary-shadow, none);
+    background: var(--kos-btn-primary-bg, var(--kos-accent, #33ff33));
+    color: var(--kos-btn-primary-color, var(--kos-text-inverse, #0d0d0d));
+    border: var(--kos-btn-primary-border, 1px solid var(--kos-accent, #33ff33));
+    box-shadow: var(--kos-btn-primary-shadow, none);
     font-weight: 900;
     grid-column: span 2;
 }
 
 .calc-btn.equals:hover {
-    background: var(--hos-btn-primary-hover-bg, var(--hos-accent-hover, #62e4aa));
+    background: var(--kos-btn-primary-hover-bg, var(--kos-accent-hover, #62e4aa));
 }

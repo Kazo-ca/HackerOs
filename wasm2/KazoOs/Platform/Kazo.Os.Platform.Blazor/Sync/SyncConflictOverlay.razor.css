@@ -11,7 +11,7 @@
         repeating-linear-gradient(90deg, rgb(64 224 208 / 3%) 0 1px, transparent 1px 6px),
         rgb(2 6 8 / 78%);
     backdrop-filter: blur(4px);
-    font-family: var(--hos-font-mono, "Cascadia Mono", Consolas, monospace);
+    font-family: var(--kos-font-mono, "Cascadia Mono", Consolas, monospace);
 }
 
 .scd-window {

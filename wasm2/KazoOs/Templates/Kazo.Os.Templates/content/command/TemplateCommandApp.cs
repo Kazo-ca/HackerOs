@@ -5,7 +5,7 @@ namespace Kazo.Os.Template.Command;
 /// <summary>
 /// The command's manifest. The build generates <c>manifest.json</c> from this class
 /// (Kazo.Os.App.Build); it is never instantiated at run time. The command name must be unique in
-/// the host and must not be a shell built-in (HOSAPP0022).
+/// the host and must not be a shell built-in (KOSAPP0022).
 /// </summary>
 [AppManifest]
 public sealed class TemplateCommandApp : AppDefinition

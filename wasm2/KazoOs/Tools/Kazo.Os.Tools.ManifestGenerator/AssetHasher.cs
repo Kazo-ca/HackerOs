@@ -19,7 +19,7 @@ public static class AssetHasher
 
     /// <summary>
     /// Returns <paramref name="manifest"/> with each asset's hash computed from
-    /// <c><paramref name="assetRoot"/>/&lt;path&gt;</c>. A missing file adds one <c>HOSAPP0023</c>
+    /// <c><paramref name="assetRoot"/>/&lt;path&gt;</c>. A missing file adds one <c>KOSAPP0023</c>
     /// and keeps the declared hash.
     /// </summary>
     /// <param name="manifest">The produced manifest.</param>

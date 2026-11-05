@@ -74,7 +74,7 @@ public sealed class ThemePackFoldersTests
     }
 
     private static byte[] Theme(string id) =>
-        Encoding.UTF8.GetBytes($"[theme]\nid = {id}\nname = {id}\nbase = kazoos\n\n[tokens]\n--hos-accent = #ff00ff\n");
+        Encoding.UTF8.GetBytes($"[theme]\nid = {id}\nname = {id}\nbase = kazoos\n\n[tokens]\n--kos-accent = #ff00ff\n");
 
     private static byte[] Cursor(string id) =>
         Encoding.UTF8.GetBytes($"[cursor-theme]\nid = {id}\nname = {id}\n\n[cursors]\ndefault = arrow.png 2 1\n");

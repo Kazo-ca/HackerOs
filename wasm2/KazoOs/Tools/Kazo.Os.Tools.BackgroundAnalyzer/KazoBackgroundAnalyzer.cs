@@ -91,7 +91,7 @@ public sealed class KazoBackgroundAnalyzer : DiagnosticAnalyzer
         CheckType(context, wire, result, "result", location);
     }
 
-    /// <summary>HOSBG0001, 0003 and 0004 for the delegate form.</summary>
+    /// <summary>KOSBG0001, 0003 and 0004 for the delegate form.</summary>
     /// <returns>Whether the task is a method group worth checking further.</returns>
     private static bool CheckDelegate(OperationAnalysisContext context, IOperation value, IAssemblySymbol app)
     {
@@ -121,7 +121,7 @@ public sealed class KazoBackgroundAnalyzer : DiagnosticAnalyzer
         return true;
     }
 
-    /// <summary>HOSBG0003: the task's code is the calling app's.</summary>
+    /// <summary>KOSBG0003: the task's code is the calling app's.</summary>
     private static void CheckOwner(OperationAnalysisContext context, INamedTypeSymbol owner, string name, IAssemblySymbol app, Location location)
     {
         if (!SymbolEqualityComparer.Default.Equals(owner.ContainingAssembly, app))
@@ -131,7 +131,7 @@ public sealed class KazoBackgroundAnalyzer : DiagnosticAnalyzer
         }
     }
 
-    /// <summary>HOSBG0002: a concrete input or result type the app's contexts can serialize.</summary>
+    /// <summary>KOSBG0002: a concrete input or result type the app's contexts can serialize.</summary>
     private static void CheckType(OperationAnalysisContext context, WireTypes wire, ITypeSymbol? type, string role, Location location)
     {
         if (type is null || type is ITypeParameterSymbol || wire.Contains(type))

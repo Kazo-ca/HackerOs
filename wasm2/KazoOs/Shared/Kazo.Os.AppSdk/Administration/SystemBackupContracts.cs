@@ -16,7 +16,7 @@ public interface IAppSystemBackupGateway
     /// <summary>Gets whether this host can back up and restore the machine (the browser hosts can; the server-rendered host cannot).</summary>
     bool IsSupported { get; }
 
-    /// <summary>Exports the whole machine and downloads the <c>.hosbak</c> archive to the host computer.</summary>
+    /// <summary>Exports the whole machine and downloads the <c>.kosbak</c> archive to the host computer.</summary>
     /// <param name="cancellationToken">Cancels the authentication or the export.</param>
     /// <returns>What was downloaded.</returns>
     ValueTask<KazoBackupInfo> CreateAsync(CancellationToken cancellationToken = default);
@@ -42,7 +42,7 @@ public enum KazoBackupRestoreMode
 }
 
 /// <summary>One backup archive.</summary>
-/// <param name="FileName">Name of the archive on the host, such as <c>kazoos-2026-10-17T0712Z.hosbak</c>.</param>
+/// <param name="FileName">Name of the archive on the host, such as <c>kazoos-2026-10-17T0712Z.kosbak</c>.</param>
 /// <param name="SizeBytes">Size of the archive, compressed.</param>
 /// <param name="RecordCount">Database records it holds.</param>
 /// <param name="CreatedAtUtc">When it was exported.</param>

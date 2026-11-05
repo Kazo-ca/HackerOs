@@ -3,7 +3,7 @@ using System.Reflection;
 namespace Kazo.Os.Tools.ManifestGenerator;
 
 /// <summary>
-/// Injection rule of the SDK boundary (ADR 0055 §3, code <c>HOSAPP0031</c> per ADR 0059): an app may
+/// Injection rule of the SDK boundary (ADR 0055 §3, code <c>KOSAPP0031</c> per ADR 0059): an app may
 /// only obtain a service whose type is defined by an SDK library (<c>Kazo.Os.AppSdk</c>,
 /// <c>Kazo.Os.AppSdk.*</c>), a MudBlazor service, or <c>IJSRuntime</c> (to import its own module —
 /// how it is called is checked by a source test, not here).

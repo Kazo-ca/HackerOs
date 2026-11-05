@@ -3,9 +3,9 @@
     grid-template-rows: auto auto 1fr;
     height: 100%;
     min-height: 0;
-    background: var(--hos-bg-base, #101417);
-    color: var(--hos-text-primary, #f4f7f8);
-    font-family: var(--hos-font-ui, system-ui, sans-serif);
+    background: var(--kos-bg-base, #101417);
+    color: var(--kos-text-primary, #f4f7f8);
+    font-family: var(--kos-font-ui, system-ui, sans-serif);
 }
 
 /* Toolbar */
@@ -15,8 +15,8 @@
     align-items: center;
     gap: 0.75rem 1.25rem;
     padding: 0.55rem 0.85rem;
-    border-bottom: 1px solid var(--hos-border-subtle, #27343a);
-    background: linear-gradient(90deg, var(--hos-bg-surface, #151c20), var(--hos-bg-base, #101417));
+    border-bottom: 1px solid var(--kos-border-subtle, #27343a);
+    background: linear-gradient(90deg, var(--kos-bg-surface, #151c20), var(--kos-bg-base, #101417));
 }
 
 .editor-title {
@@ -25,9 +25,9 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    font-family: var(--hos-font-mono, monospace);
+    font-family: var(--kos-font-mono, monospace);
     font-size: 0.85rem;
-    color: var(--hos-accent, #42d392);
+    color: var(--kos-accent, #42d392);
 }
 
 .toolbar-group {
@@ -38,44 +38,44 @@
 
 .toolbar-label {
     font-size: 0.78rem;
-    color: var(--hos-text-secondary, #a8bac4);
+    color: var(--kos-text-secondary, #a8bac4);
 }
 
 .toolbar-select,
 .field {
     height: 2rem;
     padding: 0 0.5rem;
-    border: 1px solid var(--hos-border, #3a4b53);
-    border-radius: var(--hos-radius-sm, 0.25rem);
-    background: var(--hos-bg-base, #101417);
-    color: var(--hos-text-primary, #f4f7f8);
+    border: 1px solid var(--kos-border, #3a4b53);
+    border-radius: var(--kos-radius-sm, 0.25rem);
+    background: var(--kos-bg-base, #101417);
+    color: var(--kos-text-primary, #f4f7f8);
 }
 
 .toolbar-button {
     height: 2rem;
     padding: 0 0.75rem;
-    border: 1px solid var(--hos-border, #3a4b53);
-    border-radius: var(--hos-radius-sm, 0.25rem);
-    background: var(--hos-bg-elevated, #1b252a);
-    color: var(--hos-text-primary, #f4f7f8);
+    border: 1px solid var(--kos-border, #3a4b53);
+    border-radius: var(--kos-radius-sm, 0.25rem);
+    background: var(--kos-bg-elevated, #1b252a);
+    color: var(--kos-text-primary, #f4f7f8);
     cursor: pointer;
-    transition: background var(--hos-transition-fast, 120ms ease), border-color var(--hos-transition-fast, 120ms ease);
+    transition: background var(--kos-transition-fast, 120ms ease), border-color var(--kos-transition-fast, 120ms ease);
 }
 
 .toolbar-button:hover:not(:disabled) {
-    border-color: var(--hos-accent, #42d392);
+    border-color: var(--kos-accent, #42d392);
 }
 
 .toolbar-button.is-primary {
-    border-color: var(--hos-accent, #42d392);
-    background: var(--hos-accent, #42d392);
-    color: var(--hos-text-inverse, #07100f);
+    border-color: var(--kos-accent, #42d392);
+    background: var(--kos-accent, #42d392);
+    color: var(--kos-text-inverse, #07100f);
     font-weight: 600;
 }
 
 .toolbar-button.is-active {
-    border-color: var(--hos-accent, #42d392);
-    background: var(--hos-accent-subtle, #173b2c);
+    border-color: var(--kos-accent, #42d392);
+    background: var(--kos-accent-subtle, #173b2c);
 }
 
 .toolbar-button:disabled {
@@ -88,7 +88,7 @@
 .field:focus-visible,
 .theme-entry:focus-visible,
 .link-button:focus-visible {
-    outline: 2px solid var(--hos-focus-ring, #42d392);
+    outline: 2px solid var(--kos-focus-ring, #42d392);
     outline-offset: 1px;
 }
 
@@ -99,16 +99,16 @@
     gap: 1rem;
     padding: 0.4rem 0.85rem;
     font-size: 0.82rem;
-    border-bottom: 1px solid var(--hos-border-subtle, #27343a);
+    border-bottom: 1px solid var(--kos-border-subtle, #27343a);
 }
 
 .editor-message.is-info {
-    background: color-mix(in srgb, var(--hos-accent, #42d392) 12%, var(--hos-bg-base, #101417));
+    background: color-mix(in srgb, var(--kos-accent, #42d392) 12%, var(--kos-bg-base, #101417));
 }
 
 .editor-message.is-error {
-    background: color-mix(in srgb, var(--hos-error, #ff8f87) 14%, var(--hos-bg-base, #101417));
-    color: var(--hos-error, #ff8f87);
+    background: color-mix(in srgb, var(--kos-error, #ff8f87) 14%, var(--kos-bg-base, #101417));
+    color: var(--kos-error, #ff8f87);
 }
 
 .link-button {
@@ -133,15 +133,15 @@
     gap: 1rem;
     padding: 0.85rem;
     overflow-y: auto;
-    background: var(--hos-bg-surface, #151c20);
+    background: var(--kos-bg-surface, #151c20);
 }
 
 .editor-sidebar {
-    border-right: 1px solid var(--hos-border-subtle, #27343a);
+    border-right: 1px solid var(--kos-border-subtle, #27343a);
 }
 
 .editor-preview {
-    border-left: 1px solid var(--hos-border-subtle, #27343a);
+    border-left: 1px solid var(--kos-border-subtle, #27343a);
 }
 
 .sidebar-section {
@@ -154,12 +154,12 @@
     font-size: 0.78rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--hos-accent, #42d392);
+    color: var(--kos-accent, #42d392);
 }
 
 .sidebar-section label {
     font-size: 0.78rem;
-    color: var(--hos-text-secondary, #a8bac4);
+    color: var(--kos-text-secondary, #a8bac4);
 }
 
 .platforms {
@@ -167,25 +167,25 @@
     gap: 0.75rem;
     margin: 0.25rem 0 0;
     padding: 0.4rem 0.5rem;
-    border: 1px solid var(--hos-border-subtle, #27343a);
-    border-radius: var(--hos-radius-sm, 0.25rem);
+    border: 1px solid var(--kos-border-subtle, #27343a);
+    border-radius: var(--kos-radius-sm, 0.25rem);
 }
 
 .platforms legend {
     padding: 0 0.25rem;
     font-size: 0.72rem;
-    color: var(--hos-text-muted, #6f838d);
+    color: var(--kos-text-muted, #6f838d);
 }
 
 .sidebar-hint {
     margin: 0;
     font-size: 0.75rem;
-    color: var(--hos-text-muted, #6f838d);
+    color: var(--kos-text-muted, #6f838d);
     overflow-wrap: anywhere;
 }
 
 .mono {
-    font-family: var(--hos-font-mono, monospace);
+    font-family: var(--kos-font-mono, monospace);
 }
 
 .theme-list {
@@ -200,27 +200,27 @@
     display: grid;
     width: 100%;
     padding: 0.4rem 0.55rem;
-    border: 1px solid var(--hos-border-subtle, #27343a);
-    border-radius: var(--hos-radius-sm, 0.25rem);
-    background: var(--hos-bg-base, #101417);
-    color: var(--hos-text-primary, #f4f7f8);
+    border: 1px solid var(--kos-border-subtle, #27343a);
+    border-radius: var(--kos-radius-sm, 0.25rem);
+    background: var(--kos-bg-base, #101417);
+    color: var(--kos-text-primary, #f4f7f8);
     text-align: left;
     cursor: pointer;
 }
 
 .theme-entry.is-current {
-    border-color: var(--hos-accent, #42d392);
+    border-color: var(--kos-accent, #42d392);
 }
 
 .theme-entry-meta {
     font-size: 0.72rem;
-    color: var(--hos-text-muted, #6f838d);
-    font-family: var(--hos-font-mono, monospace);
+    color: var(--kos-text-muted, #6f838d);
+    font-family: var(--kos-font-mono, monospace);
 }
 
 .diagnostics {
     font-size: 0.74rem;
-    color: var(--hos-warning, #e0ad50);
+    color: var(--kos-warning, #e0ad50);
 }
 
 .diagnostics ul {
@@ -239,7 +239,7 @@
 .group-intro {
     margin: 0.5rem 0 0.75rem;
     font-size: 0.82rem;
-    color: var(--hos-text-secondary, #a8bac4);
+    color: var(--kos-text-secondary, #a8bac4);
 }
 
 .token-grid {
@@ -261,6 +261,6 @@
     .editor-preview {
         grid-column: 1 / -1;
         border-left: 0;
-        border-top: 1px solid var(--hos-border-subtle, #27343a);
+        border-top: 1px solid var(--kos-border-subtle, #27343a);
     }
 }

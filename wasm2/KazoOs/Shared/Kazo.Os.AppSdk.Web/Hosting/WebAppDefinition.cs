@@ -32,7 +32,7 @@ namespace Kazo.Os.AppSdk.Web.Hosting;
 /// </code>
 /// <para>
 /// A site runs in the shared web worker (ADR 0073 §1) and has no <c>filesystem.*</c> capability
-/// (<c>HOSAPP0050</c>).
+/// (<c>KOSAPP0050</c>).
 /// </para>
 /// </remarks>
 public abstract class WebAppDefinition : AppDefinition

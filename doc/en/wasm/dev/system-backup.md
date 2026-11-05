@@ -2,14 +2,14 @@
 
 # Machine backup and storage space
 
-This document covers the implementation of backup and storage space. What an app sees (the `KazoSystemBackup` API, the `.hosbak` archive, the `NoSpace` and `FileTooLarge` codes) is in [`../framework/system-backup-api.md`](../framework/system-backup-api.md).
+This document covers the implementation of backup and storage space. What an app sees (the `KazoSystemBackup` API, the `.kosbak` archive, the `NoSpace` and `FileTooLarge` codes) is in [`../framework/system-backup-api.md`](../framework/system-backup-api.md).
 
 ## Purpose
 
 Work item `v3/7-storage-backup`, following [ADR 0099](adr/0099-os-backup-and-low-storage.md):
 
 - **Backup and restore** of the whole machine (files of all users, `/etc`,
-  accounts) in a `.hosbak` archive downloaded to the host computer, from
+  accounts) in a `.kosbak` archive downloaded to the host computer, from
   Settings or the `kazobackup` command.
 - **Low space**: one notification per session, `df` with the browser's real
   figures, a reserve for root like ext4's reserved blocks.
@@ -23,7 +23,7 @@ Work item `v3/7-storage-backup`, following [ADR 0099](adr/0099-os-backup-and-low
 ```text
 alice@kazoos:~$ sudo kazobackup create
 kazobackup: exporting the whole machine...
-kazobackup: kazoos-20261017-071200Z.hosbak (1.2M, 3481 records) downloaded to the host computer
+kazobackup: kazoos-20261017-071200Z.kosbak (1.2M, 3481 records) downloaded to the host computer
 alice@kazoos:~$ mkdir projets   # le libre est passé sous la réserve de root
 mkdir: cannot create directory 'projets': No space left on device
 ```
@@ -195,7 +195,7 @@ Dumps of versions 2 and 3 in `Tests/fixtures/indexeddb/` (version 1 was never co
 
 - [x] `NoSpace` and `FileTooLarge` codes, translated in the SDK and the shell.
 - [x] `QuotaExceededError` and content over 16 MiB translated by the IndexedDB provider.
-- [x] `.hosbak` archive (gzip), full validation, merge by overwriting.
+- [x] `.kosbak` archive (gzip), full validation, merge by overwriting.
 - [x] `StorageSpaceMonitor`: measurement, single notification, root reserve.
 - [x] Reserve enforced by `FileSystemService`; `df` with the real figures.
 - [x] `LogFileWriter`: lost lines counted then reported.

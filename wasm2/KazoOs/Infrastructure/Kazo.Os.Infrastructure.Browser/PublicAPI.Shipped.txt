@@ -285,7 +285,7 @@ Kazo.Os.Infrastructure.Browser.Workers.BrowserWebWorkerRuntime.InitializeAsync()
 Kazo.Os.Infrastructure.Browser.Workers.BrowserWebWorkerRuntime.MeasureWorkersAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<int, long>?>!
 Kazo.Os.Infrastructure.Browser.Workers.BrowserWebWorkerRuntime.StartAsync(Kazo.Os.Simulation.Abstractions.Workers.WebWorkerStartOptions! options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Simulation.Abstractions.Workers.IWebWorker!>!
 Kazo.Os.Infrastructure.Browser.Workers.BrowserWebWorkerRuntime.WhenIdleAsync(System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
-const Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupService.ArchiveExtension = ".hosbak" -> string!
+const Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupService.ArchiveExtension = ".kosbak" -> string!
 const Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.DefaultContentHashAlgorithm = "SHA-256" -> string!
 const Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.DefaultDeduplicateChunks = true -> bool
 const Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.DefaultMaxChunkSizeBytes = 262144 -> long

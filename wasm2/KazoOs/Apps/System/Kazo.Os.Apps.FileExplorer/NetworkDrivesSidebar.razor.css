@@ -5,7 +5,7 @@
     font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--hos-text-muted, #6e7681);
+    color: var(--kos-text-muted, #6e7681);
 }
 
 .network-heading {
@@ -37,27 +37,27 @@
     gap: 0.5rem;
     padding: 0.35rem 0.5rem;
     border: 1px solid transparent;
-    border-radius: var(--hos-radius-sm, 6px);
+    border-radius: var(--kos-radius-sm, 6px);
     background: transparent;
-    color: var(--hos-text-secondary, #8b949e);
+    color: var(--kos-text-secondary, #8b949e);
     font-family: inherit;
     font-size: 0.82rem;
     text-align: left;
     white-space: nowrap;
     cursor: pointer;
-    transition: background var(--hos-transition-fast, 120ms ease),
-                color var(--hos-transition-fast, 120ms ease);
+    transition: background var(--kos-transition-fast, 120ms ease),
+                color var(--kos-transition-fast, 120ms ease);
 }
 
 .sidebar-entry:hover {
-    color: var(--hos-text-primary, #f0f6fc);
-    background: var(--hos-list-hover-bg, rgba(66, 211, 146, 0.06));
+    color: var(--kos-text-primary, #f0f6fc);
+    background: var(--kos-list-hover-bg, rgba(66, 211, 146, 0.06));
 }
 
 .sidebar-entry.active {
-    color: var(--hos-accent, #42d392);
-    border-color: var(--hos-accent-subtle, #123a2b);
-    background: var(--hos-list-selected-bg, var(--hos-accent-subtle, #123a2b));
+    color: var(--kos-accent, #42d392);
+    border-color: var(--kos-accent-subtle, #123a2b);
+    background: var(--kos-list-selected-bg, var(--kos-accent-subtle, #123a2b));
 }
 
 .sidebar-entry.disconnected {
@@ -71,16 +71,16 @@
     justify-content: center;
     padding: 0.3rem;
     border: none;
-    border-radius: var(--hos-radius-sm, 6px);
+    border-radius: var(--kos-radius-sm, 6px);
     background: transparent;
-    color: var(--hos-text-muted, #6e7681);
+    color: var(--kos-text-muted, #6e7681);
     cursor: pointer;
 }
 
 .network-eject:hover,
 .network-eject:focus-visible {
-    color: var(--hos-danger, #f85149);
-    background: var(--hos-list-hover-bg, rgba(66, 211, 146, 0.06));
+    color: var(--kos-danger, #f85149);
+    background: var(--kos-list-hover-bg, rgba(66, 211, 146, 0.06));
 }
 
 .sidebar-entry:disabled,
