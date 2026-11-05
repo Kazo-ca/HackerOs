@@ -1,0 +1,18 @@
+{
+  "id": "47d8bccd-4a31-4abe-b65d-4e4176ea66fc",
+  "category": "developer",
+  "audience": [
+    "developer"
+  ],
+  "title": {
+    "en": "The store workflow of the kazoos-solution template finds an existing fork",
+    "fr": "Le workflow du store du modèle kazoos-solution retrouve un fork existant"
+  },
+  "description": {
+    "en": "publish-to-kazoos-store.yml guessed the fork as <author>/Os-AppMarketPlace. A fork made before the catalog was renamed keeps its old name, so the clone failed. The workflow now asks GitHub for the author's fork of the catalog.",
+    "fr": "publish-to-kazoos-store.yml devinait le fork sous le nom <auteur>/Os-AppMarketPlace. Un fork créé avant le renommage du catalogue garde son ancien nom, donc le clonage échouait. Le workflow demande maintenant à GitHub le fork du catalogue de l'auteur."
+  },
+  "links": [
+    "doc/en/wasm/framework/app-repository.md"
+  ]
+}

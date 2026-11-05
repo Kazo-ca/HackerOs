@@ -85,7 +85,10 @@ jobs:
           user="$(gh api user --jq .login)"
           # No --remote: gh refuses it when a repository is named (nothing is cloned here anyway).
           gh repo fork "$MARKETPLACE" --clone=false
-          fork="$user/${MARKETPLACE#*/}"
+          # An existing fork keeps its own name (for example one made before the catalog was renamed),
+          # so ask GitHub for the author's fork instead of guessing it from the catalog name.
+          fork="$(gh api "repos/$MARKETPLACE/forks" --paginate --jq ".[] | select(.owner.login == \"$user\") | .full_name" | head -n 1)"
+          fork="${fork:-$user/${MARKETPLACE#*/}}"
           # GitHub creates a fork in the background: retry the clone for up to a minute.
           for attempt in 1 2 3 4 5 6; do
             if git clone --depth 1 "https://x-access-token:$GH_TOKEN@github.com/$fork.git" marketplace; then
