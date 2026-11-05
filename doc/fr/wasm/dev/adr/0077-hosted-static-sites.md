@@ -7,7 +7,7 @@
 Accepté le 2026-10-16 (proposé le même jour, puis validé par Benoit avec le
 questionnaire de la section 4 du plan).
 
-- **Phase du plan :** phase web ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Phase du plan :** phase web ([`asp-kazo-plan.md`](../plans/asp-kazo-plan.md)).
 - **Dépend de :** ADR 0074 (ports, résolveur), ADR 0075 (rendu HTML).
 - **Suit :** ADR 0044 (paramètres en fichiers).
 

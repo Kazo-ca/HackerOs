@@ -1,0 +1,6 @@
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
+@implements IAsyncDisposable
+@* The isolated frame of an HTML page (ADR 0075 §1). The <iframe> itself is created by
+   BrowserPageView.razor.js so each document gets a fresh browsing context. *@
+
+<div class="page-view" @ref="_host"></div>

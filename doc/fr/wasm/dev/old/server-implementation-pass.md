@@ -5,7 +5,7 @@
 ## Purpose
 
 This is the standing checklist for what remains to connect HackerOS's browser-local
-runtime to the optional `Server/HackerOs.Server` backend. Read this first before
+runtime to the optional `Server/Kazo.Os.Server` backend. Read this first before
 starting any new server-integration work — it tracks what has shipped and exactly
 what the next pass is, so scope doesn't need to be re-derived from scratch each
 time. **Update this doc at the end of every pass that touches server integration**:
@@ -25,7 +25,7 @@ requirement for normal operation. See `docs/hosting-model.md`.
 ## Done
 
 - **Third UI host** (ADR 0027, `docs/adr/0027-server-hosted-blazor-ui.md`) —
-  `Server/HackerOs.Server` hosts the same `HackerOs.Ecosystem.App` component tree
+  `Server/Kazo.Os.Server` hosts the same `Kazo.Os.Ecosystem.App` component tree
   as the two WASM hosts, via Interactive Server render mode, single-tenant/
   single-active-circuit only for this phase. Existing sync/identity/proxy API
   endpoints unchanged.
@@ -33,7 +33,7 @@ requirement for normal operation. See `docs/hosting-model.md`.
   `docs/adr/0028-client-side-server-connection.md`) — per-device opt-in
   connection to the optional server (`IServerConnectionRepository`,
   `IAccountClient`, `IProxyClient`, `IServerConnectionService`, in
-  `Platform/HackerOs.Platform.Core/ServerConnection/`, browser-independent by
+  `Platform/Kazo.Os.Platform.Core/ServerConnection/`, browser-independent by
   construction), a Settings UI panel to connect/disconnect, and a real-network
   fallback wired into `ping` only (an unknown host now attempts an HTTP HEAD
   proxy round-trip through the connected server before reporting unreachable).
@@ -55,7 +55,7 @@ requirement for normal operation. See `docs/hosting-model.md`.
   content download was completely broken — now content-addressed and
   session-free (`GET /api/sync/content/download/{contentHash}/chunks/{index}`),
   covered by the first server-side content-blob tests
-  (`Tests/HackerOs.Server.Tests/ContentBlobServiceTests.cs`). New
+  (`Tests/Kazo.Os.Server.Tests/ContentBlobServiceTests.cs`). New
   `IContentTransferClient`/`HttpContentTransferClient` (chunked upload/download,
   browser-independent, mirrors `ISyncClient`'s placement) and
   `IFileSystemSyncService`/`FileSystemSyncService` (the domain adapter —
@@ -128,7 +128,7 @@ as separate, deferred decisions.
   discovered while starting Pass N+1a below: verifying `ping`'s "proven
   end-to-end" real-network fallback against a real app launch (not just direct
   unit-test construction) surfaced that none of the 28 `Apps/Commands/*`
-  projects were referenced by `HackerOs.Ecosystem.csproj` at all — the entire
+  projects were referenced by `Kazo.Os.Ecosystem.csproj` at all — the entire
   terminal command suite (including plain `ls`/`cat`/`mkdir`, not just
   curl/nmap/ping) was invisible to every host. Fixed three compounding gaps:
   wired 24 of the 28 command projects into the shared catalog (excluding
@@ -163,7 +163,7 @@ as separate, deferred decisions.
   Normal (non-`-I`) `curl` against an unrecognized host is untouched — still
   reports "Could not resolve host" — since full-body fetching needs the
   server-side proxy body-transfer gap closed first (see below). Regression
-  and new-path coverage added in `Tests/HackerOs.Network.Tests/Wave4NetworkTests.cs`
+  and new-path coverage added in `Tests/Kazo.Os.Network.Tests/Wave4NetworkTests.cs`
   (`CurlCommand_HeadersOnly_UnknownHost_With/WithoutServerConnection_*`);
   live-verified in the browser for both the simulated-host and
   disconnected-unknown-host cases.
@@ -171,7 +171,7 @@ as separate, deferred decisions.
   a provider failure** (found during ADR 0034 live verification) — `cat`
   couldn't read a file `touch` just created: `touch` only calls `CreateAsync`
   (never `WriteAsync`), so the persisted entry has `ContentHash == null`, and
-  `ReadAsync` (`Infrastructure/HackerOs.Infrastructure.Browser/FileSystem/IndexedDbFileSystemProvider.cs`)
+  `ReadAsync` (`Infrastructure/Kazo.Os.Infrastructure.Browser/FileSystem/IndexedDbFileSystemProvider.cs`)
   treated that as `FileSystemErrorCode.ProviderFailure` instead of a
   legitimate empty file — `StatAsync`/`EnumerateAsync` both succeeded on the
   same path (they only read metadata, not content), so the file visibly
@@ -184,7 +184,7 @@ as separate, deferred decisions.
   Binary descriptor) instead of failing when `ContentHash` is null, matching
   `FromMetadata`'s own defaults and the in-memory provider's behavior.
   Regression test added in
-  `Tests/HackerOs.Infrastructure.Browser.Tests/IndexedDbFileSystemProviderTests.cs`
+  `Tests/Kazo.Os.Infrastructure.Browser.Tests/IndexedDbFileSystemProviderTests.cs`
   (`ReadAsync_FileCreatedButNeverWritten_ReturnsEmptyContentNotFailure`);
   live-verified: `touch hello.txt` then `cat hello.txt` now succeeds with
   empty output instead of "No such file or directory".
@@ -249,12 +249,12 @@ as separate, deferred decisions.
   to the same real-network `IncludeBody` GET `CurlCommand` uses, with
   identical messaging. That formatter (`page → plain text`, ~150 lines of
   section-type rendering) was extracted from `CurlCommand.cs` into
-  `Shared/HackerOs.Simulation.Abstractions/Network/SimulatedPageTextFormatter.cs`
+  `Shared/Kazo.Os.Simulation.Abstractions/Network/SimulatedPageTextFormatter.cs`
   once `cat` became a second consumer, rather than duplicated — the first
   duplication (curl only) was fine as one-off logic; a second identical
   consumer crossed into genuine shared domain logic worth not drifting apart.
-  `CatCommand.cs` needed new `HackerOs.Simulation.Abstractions`/
-  `HackerOs.Platform.Core` project references it didn't have before (it was
+  `CatCommand.cs` needed new `Kazo.Os.Simulation.Abstractions`/
+  `Kazo.Os.Platform.Core` project references it didn't have before (it was
   the one command project with zero network capability). Tests added in
   `CoreCommandsTests.cs` (VFS-only fixture, updated constructor, a
   `NullSimulatedNetworkService` fake proving VFS args never touch the
@@ -276,7 +276,7 @@ out of scope, by design, not by omission: `nmap` range/multi-port scanning
 
 ADR 0027's other explicitly deferred item. Once `IAccountClient`/`IProxyClient`
 (and the `ISyncClient` sibling this roadmap implies once Pass N+1 exists) are
-proven over HTTP, give `Server/HackerOs.Server`'s own circuits a
+proven over HTTP, give `Server/Kazo.Os.Server`'s own circuits a
 direct-injection implementation of the same interfaces that calls
 `IAccountService`/`ISyncService`/`IProxyService` in-process instead of over
 HTTP — the interfaces were deliberately kept ASP.NET-free in ADR 0028 so this
@@ -288,7 +288,7 @@ implementation, per ADR 0027 Consequences.
 
 ADR 0027's other explicitly deferred item — converting the shared composition
 root's per-process singletons to per-circuit scoped lifetimes so
-`Server/HackerOs.Server` could serve multiple simultaneous browser users with
+`Server/Kazo.Os.Server` could serve multiple simultaneous browser users with
 correct isolation. **Only revisit this if the product actually needs live
 concurrent server-hosted UI sessions.** Per the direction set in ADR 0028,
 browser-local IndexedDB remains the permanent source of truth and the

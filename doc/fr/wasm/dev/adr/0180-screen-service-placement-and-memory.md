@@ -26,7 +26,7 @@ Mise en œuvre : [`screen-service.md`](../screen-service.md).
 
 ## Décision
 
-1. **Service.** `ScreenService` (`HackerOs.Platform.Blazor.Display`) est un service
+1. **Service.** `ScreenService` (`Kazo.Os.Platform.Blazor.Display`) est un service
    de l'OS, une instance par session comme `WindowRuntime`. Ses types sont publics
    pour les assemblys de l'OS (`PublicAPI.Unshipped.txt`), mais aucune API du SDK
    des apps ne les expose (réponse de Benoit du 2026-10-28 : plus tard). Il ouvre
@@ -94,14 +94,14 @@ Mise en œuvre : [`screen-service.md`](../screen-service.md).
 
 ## Vérification
 
-- `Tests/HackerOs.Platform.Blazor.Tests/Display/ScreenServiceTests.cs` : écran 2
+- `Tests/Kazo.Os.Platform.Blazor.Tests/Display/ScreenServiceTests.cs` : écran 2
   enregistré avec sa taille, zone suivie au redimensionnement, écran fermé par
   l'utilisateur, par l'OS, moniteur débranché, restauration dans l'ordre à la place
   retenue, fenêtre bloquée, offre ignorée, place écrite après une pause, états
   (onglet caché, plein écran, permission), hôte sans JavaScript.
-- `Tests/HackerOs.Platform.Core.Tests/Shell/ScreensSettingsTests.cs` : lecture et
+- `Tests/Kazo.Os.Platform.Core.Tests/Shell/ScreensSettingsTests.cs` : lecture et
   écriture de `[screens]`.
-- `Tests/HackerOs.UI.E2E.Tests/ScreenServiceTests.cs` (Chromium réel, repli) :
+- `Tests/Kazo.Os.UI.E2E.Tests/ScreenServiceTests.cs` (Chromium réel, repli) :
   offre après rechargement, écran 2 ouvert à sa taille retenue, écran fermé à la
   main non proposé ensuite.
 

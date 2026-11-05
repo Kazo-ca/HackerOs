@@ -8,7 +8,7 @@ Accepted on 2026-08-17.
 
 ## Context
 
-ADR 0027 shipped `Server/HackerOs.Server` as a third UI host reusing
+ADR 0027 shipped `Server/Kazo.Os.Server` as a third UI host reusing
 `AddHackerOsEcosystem` completely unmodified, and explicitly deferred one
 piece of it (Decision 4 / Consequences): the server-hosted UI's own
 `IAccountClient`/`IProxyClient`/`ISyncClient` are the same `HttpClient`-backed
@@ -17,7 +17,7 @@ Settings panel connects to "the optional server" (`SettingsWindow.razor` →
 `IServerConnectionService.ConnectWithNewAccountAsync`/`ConnectWithExistingAccountAsync`),
 or when a terminal command's real-network fallback fires (`curl`, `nmap`,
 `cat`), the server-hosted circuit makes a real HTTP round-trip **to its own
-process** — `Server/HackerOs.Server` calling itself over its own Kestrel
+process** — `Server/Kazo.Os.Server` calling itself over its own Kestrel
 listener. This works, but is wasteful and adds a needless network hop and
 failure mode (DNS/port/TLS issues reaching yourself) for a request that could
 be a plain in-process method call. ADR 0027 gates fixing this behind "its own
@@ -25,7 +25,7 @@ ADR for the composition-root wiring (how a request picks HTTP vs. direct
 implementation)" — this is that ADR.
 
 `IAccountClient`/`IProxyClient`/`ISyncClient` were deliberately designed in
-ADR 0028 to speak only in `HackerOs.Server.Contracts` DTOs and primitives —
+ADR 0028 to speak only in `Kazo.Os.Server.Contracts` DTOs and primitives —
 no `HttpClient`, no ASP.NET-specific types — specifically so a second,
 direct-injection implementation would be possible without redesigning the
 interfaces. That design intent holds up: no interface changes were needed.
@@ -37,10 +37,10 @@ assumed, shaped the wiring:
    in the shared composition root (`EcosystemServiceCollectionExtensions.cs`),
    used by all three hosts.
 2. `IAccountService`/`ISyncService`/`IProxyService` are registered
-   `AddScoped` in `Server/HackerOs.Server/Program.cs`, and (per `ProxyService`'s
+   `AddScoped` in `Server/Kazo.Os.Server/Program.cs`, and (per `ProxyService`'s
    own constructor) transitively hold `HackerOsServerDbContext` — an EF Core
    `DbContext`, itself `AddScoped` by `AddDbContext`, which is not safe to
-   reuse across unrelated concurrent operations. `Server/HackerOs.Server/Program.cs`
+   reuse across unrelated concurrent operations. `Server/Kazo.Os.Server/Program.cs`
    already disables DI scope validation (`ValidateScopes = false`,
    `ValidateOnBuild = false`) for the unrelated single-tenant
    `IndexedDb*`-repository captive-dependency shape ADR 0027 documents — that
@@ -56,19 +56,19 @@ assumed, shaped the wiring:
 
 `EcosystemServiceCollectionExtensions.cs`'s three registrations changed from
 `AddSingleton<TClient, HttpXClient>()` to `TryAddSingleton<TClient, HttpXClient>()`.
-`Server/HackerOs.Server/Program.cs` registers its own direct implementations
+`Server/Kazo.Os.Server/Program.cs` registers its own direct implementations
 *before* calling `AddHackerOsEcosystem`, so `TryAddSingleton` finds the
 service type already registered and no-ops — the exact same "each host
 registers its own implementation first" pattern ADR 0027 already established
 for `IEcosystemHostEnvironment` and `IBuildKnownAssemblyTransport`. Neither
-`OS/HackerOs.Ecosystem` nor `test/test` change: nothing registers these
+`OS/Kazo.Os.Ecosystem` nor `test/test` change: nothing registers these
 service types before their calls to `AddHackerOsEcosystem`, so `TryAddSingleton`
 installs the same `Http*Client` defaults they already had.
 
 ### 2. Direct clients resolve their Scoped dependency through a fresh `IServiceScope` per call
 
 `DirectAccountClient`/`DirectProxyClient`/`DirectSyncClient`
-(`Server/HackerOs.Server/ServerConnection/DirectServerConnectionClients.cs`)
+(`Server/Kazo.Os.Server/ServerConnection/DirectServerConnectionClients.cs`)
 are registered `AddSingleton`, matching the interfaces' existing lifetime, but
 never construct-inject `IAccountService`/`ISyncService`/`IProxyService`
 directly. Each method instead takes an `IServiceScopeFactory`, creates a
@@ -124,7 +124,7 @@ straightforward future work if wanted, not a redesign.
 - The server-hosted UI's Settings panel (connect/disconnect) and every
   terminal command's real-network fallback (`curl`, `nmap`, `cat`) now call
   `IAccountService`/`ISyncService`/`IProxyService` in-process when running on
-  `Server/HackerOs.Server`, instead of looping back through HTTP to itself.
+  `Server/Kazo.Os.Server`, instead of looping back through HTTP to itself.
   Both WASM hosts are completely unaffected — same `Http*Client`s, same
   behavior, verified by the two hosts' `AddHackerOsEcosystem` call sites
   needing zero changes.

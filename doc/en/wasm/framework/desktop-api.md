@@ -2,17 +2,17 @@
 
 # Desktop: API for apps
 
-This document describes what an app uses for the desktop: the `HackDesktop*` SDK types, the `desktop.config` file, `.desktop` shortcuts, the Desktop mode of the file control and the shortcut-creation intent. The Desktop app, the shell, the menus and the OS surfaces are described in [`dev/desktop.md`](../dev/desktop.md).
+This document describes what an app uses for the desktop: the `KazoDesktop*` SDK types, the `desktop.config` file, `.desktop` shortcuts, the Desktop mode of the file control and the shortcut-creation intent. The Desktop app, the shell, the menus and the OS surfaces are described in [`dev/desktop.md`](../dev/desktop.md).
 
 ## SDK types
 
 | Item | Project | Role |
 | --- | --- | --- |
-| `HackDesktopLayout`, `HackDesktopCell`, `HackDesktopOptions`, `HackDesktopItems` | `AppSdk` (`Files/HackDesktop.cs`) | The grid as pure functions, shared by every provider. |
-| `HackDesktopEntry` | `AppSdk` (`Files/HackDesktopEntry.cs`) | Reading and writing `.desktop` files, `CreateShortcutAsync`. |
-| `HackDesktopLink` | `AppSdk` (`Files/HackDesktopLink.cs`) | Shortcut to a file or a folder (`Type=Link`), `CreateLinkAsync` (ADR 0185 §13). |
-| `HackDesktopSettings` | `AppSdk` (`Files/HackDesktopSettings.cs`) | Reading and writing `desktop.config`. |
-| `HackAppIcons.LucideName` | `AppSdk` (`Apps/`) | The Lucide icon of an app (the one in the Start menu), reused by shortcuts. |
+| `KazoDesktopLayout`, `KazoDesktopCell`, `KazoDesktopOptions`, `KazoDesktopItems` | `AppSdk` (`Files/KazoDesktop.cs`) | The grid as pure functions, shared by every provider. |
+| `KazoDesktopEntry` | `AppSdk` (`Files/KazoDesktopEntry.cs`) | Reading and writing `.desktop` files, `CreateShortcutAsync`. |
+| `KazoDesktopLink` | `AppSdk` (`Files/KazoDesktopLink.cs`) | Shortcut to a file or a folder (`Type=Link`), `CreateLinkAsync` (ADR 0185 §13). |
+| `KazoDesktopSettings` | `AppSdk` (`Files/KazoDesktopSettings.cs`) | Reading and writing `desktop.config`. |
+| `KazoAppIcons.LucideName` | `AppSdk` (`Apps/`) | The Lucide icon of an app (the one in the Start menu), reused by shortcuts. |
 
 ## `desktop.config` file
 
@@ -41,11 +41,11 @@ notes.txt=1,0
   the icons.
 
 ```csharp
-HackDesktopSettingsDocument settings = await HackDesktopSettings.ReadAsync();
-await HackDesktopSettings.SaveOptionsAsync(settings.Options with { IconSize = HackDesktopIconSize.Large });
+KazoDesktopSettingsDocument settings = await KazoDesktopSettings.ReadAsync();
+await KazoDesktopSettings.SaveOptionsAsync(settings.Options with { IconSize = KazoDesktopIconSize.Large });
 ```
 
-## Grid (`HackDesktopLayout`)
+## Grid (`KazoDesktopLayout`)
 
 
 | Member | Role |
@@ -59,13 +59,13 @@ await HackDesktopSettings.SaveOptionsAsync(settings.Options with { IconSize = Ha
 
 Cells run from top to bottom, then from left to right.
 
-## Shortcuts (`HackDesktopEntry`)
+## Shortcuts (`KazoDesktopEntry`)
 
 ```ini
 [Desktop Entry]
 Type=Application
 Name=Text Editor
-Exec=org.hackeros.text-editor "/home/alice/My notes.txt"
+Exec=org.kazoos.text-editor "/home/alice/My notes.txt"
 Icon=file-text
 ```
 
@@ -78,7 +78,7 @@ In every file control provided by the explorer, a shortcut shows the app's
 name and icon, without an extension; opening it launches the app with its
 arguments; a missing app greys out the icon and opening it explains why.
 
-## Shortcuts to a file or a folder (`HackDesktopLink`)
+## Shortcuts to a file or a folder (`KazoDesktopLink`)
 
 The explorer's "Send to ▸ Desktop" writes a shortcut of type `Link` (ADR 0185
 §13), in the freedesktop.org format:
@@ -105,8 +105,8 @@ not follow a moved target.
 ## File control in Desktop mode
 
 ```razor
-<HackFileView InitialDirectory="@desktop"
-              Mode="HackFileViewMode.Desktop"
+<KazoFileView InitialDirectory="@desktop"
+              Mode="KazoFileViewMode.Desktop"
               DesktopOptions="@_options"
               DesktopPositions="@_positions"
               DesktopPositionsChanged="SavePositionsAsync"
@@ -124,6 +124,6 @@ Settings opens directly on a tab with `--page=appearance` or
 `--page=desktop`.
 
 
-"Send to ▸ Desktop (create shortcut)" goes through the `org.hackeros.desktop.create-shortcut.v1` intent, and the file is written with the rights of the Desktop app.
+"Send to ▸ Desktop (create shortcut)" goes through the `org.kazoos.desktop.create-shortcut.v1` intent, and the file is written with the rights of the Desktop app.
 
 The `background` and `desktop` entries of apps (ADR 0159) are added to the background menu; see [`context-menu.md`](context-menu.md).

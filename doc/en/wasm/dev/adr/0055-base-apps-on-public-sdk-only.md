@@ -12,7 +12,7 @@ Accepted on 2026-10-10.
 - **Complements:** ADR 0019. Its rules 1 and 2 (an app only consumes the public
   SDK, Platform Core and the browser infrastructure stay hidden from it)
   were never verified: ten projects under `Apps/` reference
-  `HackerOs.Platform.Core`. This ADR makes them verifiable at build time, extends the
+  `Kazo.Os.Platform.Core`. This ADR makes them verifiable at build time, extends the
   list of permitted references to the SDK libraries that have appeared since, and
   adds the rule on injection. The rest of ADR 0019 (versioning,
   deprecation) does not change.
@@ -32,18 +32,18 @@ app. Today, that is false on three levels.
 
 | Project | Forbidden reference | Used for |
 |---|---|---|
-| `HackerOs.Apps.Settings` | `Platform.Core`, `Infrastructure.Browser` | catalog, uninstall, permissions, theme, server and synchronization, clearing IndexedDB |
-| `HackerOs.Apps.SystemMonitor` | `Platform.Core` | `AppCatalog`, `AppLifecycleOrchestrator` |
-| `HackerOs.Apps.FileExplorer` | `Platform.Core` | `AppCatalog`, `IAppEnablementRegistry` |
-| `HackerOs.Apps.Diagnostic` | `Platform.Core`, `Infrastructure.Browser` | IndexedDB inspector |
-| `HackerOs.Apps.Browser` | `Platform.Core` | none (only an unused `using`) |
-| `HackerOs.Apps.Calculator`, `HackPaint`, `IconViewer`, `TextEditor` | `Platform.Core` | none |
-| `HackerOs.Commands` | `Platform.Core`, `Server.Contracts` | `ShellErrorText` (`cd`), `IServerConnectionService` and `IProxyClient` (`ping`, `curl`, `cat`, `nmap`) |
-| `HackerOs.AppSdk.Terminal` (SDK library) | `Platform.Core` | `ShellInterpreter`, `IElevationService` |
+| `Kazo.Os.Apps.Settings` | `Platform.Core`, `Infrastructure.Browser` | catalog, uninstall, permissions, theme, server and synchronization, clearing IndexedDB |
+| `Kazo.Os.Apps.SystemMonitor` | `Platform.Core` | `AppCatalog`, `AppLifecycleOrchestrator` |
+| `Kazo.Os.Apps.FileExplorer` | `Platform.Core` | `AppCatalog`, `IAppEnablementRegistry` |
+| `Kazo.Os.Apps.Diagnostic` | `Platform.Core`, `Infrastructure.Browser` | IndexedDB inspector |
+| `Kazo.Os.Apps.Browser` | `Platform.Core` | none (only an unused `using`) |
+| `Kazo.Os.Apps.Calculator`, `HackPaint`, `IconViewer`, `TextEditor` | `Platform.Core` | none |
+| `Kazo.Os.Commands` | `Platform.Core`, `Server.Contracts` | `ShellErrorText` (`cd`), `IServerConnectionService` and `IProxyClient` (`ping`, `curl`, `cat`, `nmap`) |
+| `Kazo.Os.AppSdk.Terminal` (SDK library) | `Platform.Core` | `ShellInterpreter`, `IElevationService` |
 
 **Injection.** Even without a forbidden reference, an app can inject a raw
 OS service, because their interfaces live in shared projects
-(`HackerOs.Simulation.Abstractions`, `HackerOs.App.Abstractions`). These
+(`Kazo.Os.Simulation.Abstractions`, `Kazo.Os.App.Abstractions`). These
 services check no capability:
 
 | Injected service | Interface project | Apps |
@@ -67,8 +67,8 @@ The rules apply:
 
 - to every app project, that is, every project whose `HackerOsAppProject` is
   `true` (projects under `Apps/`, ADR 0047);
-- to the SDK libraries: `Shared/HackerOs.AppSdk` and
-  `Shared/HackerOs.AppSdk.*`. An app must not be able to reach the OS through
+- to the SDK libraries: `Shared/Kazo.Os.AppSdk` and
+  `Shared/Kazo.Os.AppSdk.*`. An app must not be able to reach the OS through
   an SDK library that would do it on its behalf.
 
 The hosts (`OS/`, `test/`, `Server/`), `Platform/`, `Infrastructure/` and the
@@ -80,12 +80,12 @@ An app project can only reference:
 
 | Project | Role |
 |---|---|
-| `Shared/HackerOs.App.Abstractions` | manifest, `AppDefinition`, capabilities, `VirtualPath` |
-| `Shared/HackerOs.Simulation.Abstractions` | data types (processes, paths, simulated network...) |
-| `Shared/HackerOs.Theming.Abstractions` | theme tokens and definitions |
-| `Shared/HackerOs.Game.Abstractions` | game content |
-| `Shared/HackerOs.AppSdk` and `Shared/HackerOs.AppSdk.*` | the SDK |
-| `Platform/HackerOs.Theming.Blazor` | theme components (catalog, preview); it only depends on `Theming.Abstractions` |
+| `Shared/Kazo.Os.App.Abstractions` | manifest, `AppDefinition`, capabilities, `VirtualPath` |
+| `Shared/Kazo.Os.Simulation.Abstractions` | data types (processes, paths, simulated network...) |
+| `Shared/Kazo.Os.Theming.Abstractions` | theme tokens and definitions |
+| `Shared/Kazo.Os.Game.Abstractions` | game content |
+| `Shared/Kazo.Os.AppSdk` and `Shared/Kazo.Os.AppSdk.*` | the SDK |
+| `Platform/Kazo.Os.Theming.Blazor` | theme components (catalog, preview); it only depends on `Theming.Abstractions` |
 | another project under `Apps/` | code sharing between apps |
 
 Any other `ProjectReference` fails the build with **`HOSAPP0002`**, which
@@ -99,7 +99,7 @@ An SDK library can only reference the four `*.Abstractions` projects
 above and other SDK libraries. Any other reference
 fails with **`HOSSDK0001`**.
 
-The check is an MSBuild target in `build/HackerOs.Apps.targets`,
+The check is an MSBuild target in `build/Kazo.Os.Apps.targets`,
 run before compilation, next to manifest generation.
 
 ### 3. Permitted injection
@@ -109,7 +109,7 @@ In an app project, a service can only be obtained by injection
 built by `ActivatorUtilities`, ADR 0034 section 2) if its
 type is:
 
-1. defined in an SDK library (`HackerOs.AppSdk`, `HackerOs.AppSdk.*`);
+1. defined in an SDK library (`Kazo.Os.AppSdk`, `Kazo.Os.AppSdk.*`);
 2. a MudBlazor service (ADR 0016), for example `MudBlazor.IDialogService`;
 3. `Microsoft.JSInterop.IJSRuntime`, **only** to import a JavaScript module
    of the app itself
@@ -118,7 +118,7 @@ type is:
    of another project) is forbidden.
 
 Everything else is forbidden, in particular: the types of
-`HackerOs.Simulation.Abstractions` and `HackerOs.App.Abstractions`
+`Kazo.Os.Simulation.Abstractions` and `Kazo.Os.App.Abstractions`
 (`ISessionService`, `IProcessManager`, `IEventBus`,
 `ISimulatedNetworkService`, `IElevationService`, `IAppCatalogRepository`...),
 `IServiceProvider`, `ILogger<T>` (logging goes through
@@ -134,7 +134,7 @@ Checks:
   assembly (ADR 0047). It additionally walks all its types and reports
   each `[Inject]` property and each constructor parameter of an entry class
   whose type is not permitted. The build fails.
-- **Source test** (`HackerOs.Ecosystem.Tests`): for each
+- **Source test** (`Kazo.Os.Ecosystem.Tests`): for each
   `.razor` and `.cs` file under `Apps/`, each `Invoke*Async` call on an
   `IJSRuntime` must have the identifier `"import"` and the path
   `./_content/<project name>/`. A call on the `IJSObjectReference` of the imported
@@ -197,7 +197,7 @@ optional server account, for example) are not concerned.
 
 The violations listed in the context will not disappear in a single
 change. The MSBuild target therefore reads a temporary exemption list,
-`HackerOsSdkBoundaryExemption`, declared in `build/HackerOs.Apps.targets`:
+`HackerOsSdkBoundaryExemption`, declared in `build/Kazo.Os.Apps.targets`:
 one item per project still in violation, with the ADR and the work item that
 will fix it. An exempted project produces a warning instead of an error.
 
@@ -248,5 +248,5 @@ that this phase entails are decided by ADR 0056.
 - [`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), sections 3 and 8.1.
 - ADRs 0016, 0019, 0034, 0042, 0043, 0047, 0048, 0049; ADR 0056 (APIs),
   ADR 0058 (work items).
-- `build/HackerOs.Apps.targets`, `Tools/HackerOs.Tools.ManifestGenerator`,
-  `Shared/HackerOs.AppSdk/IAppExecutionContext.cs`.
+- `build/Kazo.Os.Apps.targets`, `Tools/Kazo.Os.Tools.ManifestGenerator`,
+  `Shared/Kazo.Os.AppSdk/IAppExecutionContext.cs`.

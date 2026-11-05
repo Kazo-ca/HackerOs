@@ -1,0 +1,54 @@
+.mobile-nav-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-shrink: 0;
+    /* Above the shade/Recent backdrops (z-index 1100): the system navigation bar must stay
+       reachable so Back can dismiss an open overlay (MOB-011 §7.3 step 0), matching real Android
+       where the system nav bar always sits above any app-drawn sheet. */
+    position: relative;
+    z-index: 1200;
+    min-height: var(--kos-mobile-nav-height, 3.5rem);
+    border-top: var(--kos-mobile-nav-border, 1px solid #315249);
+    background: var(--kos-mobile-nav-background, #0c1516);
+    color: var(--kos-mobile-nav-color, #e7f7f1);
+    box-shadow: var(--kos-taskbar-shadow, none);
+    backdrop-filter: var(--kos-taskbar-backdrop-filter, none);
+    padding: 0.375rem calc(1rem + env(safe-area-inset-left)) calc(0.375rem + env(safe-area-inset-bottom)) calc(1rem + env(safe-area-inset-right));
+    font-family: var(--kos-font-ui, system-ui, sans-serif);
+}
+
+.mobile-nav-button {
+    touch-action: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: var(--kos-mobile-nav-button-size, 2.75rem);
+    min-height: var(--kos-mobile-nav-button-size, 2.75rem);
+    padding: 0;
+    border: none;
+    border-radius: var(--kos-mobile-nav-button-radius, 999px);
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    transition: background var(--kos-transition-fast, 120ms ease), color var(--kos-transition-fast, 120ms ease);
+}
+
+.mobile-nav-button:hover,
+.mobile-nav-button:focus-visible {
+    background: var(--kos-mobile-nav-hover-background, rgb(85 214 161 / 14%));
+    outline-color: var(--kos-focus-ring, #55d6a1);
+}
+
+.mobile-nav-button svg {
+    width: var(--kos-mobile-nav-icon-size, 1.25rem);
+    height: var(--kos-mobile-nav-icon-size, 1.25rem);
+    fill: currentColor;
+}
+
+.mobile-nav-button[data-shell-gesture="drawer"] svg { display: var(--kos-mobile-home-icon-display, block); }
+.mobile-home-indicator { display: var(--kos-mobile-home-indicator-display, none); width: 4.5rem; height: .25rem; border-radius: 999px; background: currentColor; }
+
+/* ADR 0186 §4.5: changes the user has not seen yet. */
+.mobile-nav-button[data-shell-gesture="drawer"] { position: relative; }
+.mobile-nav-attention { position: absolute; top: .35rem; right: .35rem; width: .5rem; height: .5rem; border-radius: 50%; background: var(--kos-mobile-nav-attention, var(--kos-warning, #d5a84f)); }

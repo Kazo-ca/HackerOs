@@ -6,7 +6,7 @@
 
 Accepted on 2026-10-31; Benoit chose the recommendations (see "Questions
 asked to Benoit"). Issue
-[#298](https://github.com/Kazo-ca/HackerOs/issues/298), `todo/base` series
+[#298](https://github.com/Kazo-ca/Os/issues/298), `todo/base` series
 (branch `todo/24-set-as-wallpaper`).
 
 - **Completes:** [ADR 0202](0202-desktop-wallpaper-images.md) §6 (entry left
@@ -31,7 +31,7 @@ asked to Benoit"). Issue
 
 ### 1. A small service app declared by Settings
 
-The `HackerOs.Apps.Settings` project declares a second app,
+The `Kazo.Os.Apps.Settings` project declares a second app,
 `org.hackeros.settings.wallpaper` ("Wallpaper"), of kind `Service`, hidden
 from the launcher (`LaunchVisibility.Hidden`), run on the main thread (a
 task of an instant per click: a worker would start a .NET runtime each time).

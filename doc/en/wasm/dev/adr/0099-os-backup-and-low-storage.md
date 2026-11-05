@@ -14,7 +14,7 @@ Accepted on 2026-10-17 (work item `v3/1-adr`, for the work item `v3/7-storage-ba
 
 ## Context
 
-- `IndexedDbBackupService` (`Infrastructure/HackerOs.Infrastructure.Browser/Backup/`)
+- `IndexedDbBackupService` (`Infrastructure/Kazo.Os.Infrastructure.Browser/Backup/`)
   exports the whole database as one JSON (`formatVersion: 1`, schema version,
   stores, SHA-256) and restores it as a merge or a replacement. It is tested
   but registered nowhere.

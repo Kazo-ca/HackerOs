@@ -12,12 +12,12 @@ et l'[ADR 0173](0173-automatic-releases-from-the-version-file.md).
 
 ## Décision
 
-1. **`version.json`** : le build de `OS/HackerOs.Ecosystem` écrit
+1. **`version.json`** : le build de `OS/Kazo.Os.Ecosystem` écrit
    `{ "product": "HackerOS", "version": "<HackerOsVersion>" }` dans `obj/` et le
    sert comme ressource web statique à la racine du site (`/version.json`). Il
    suit `build/Versions.props` : rien à modifier à la main, rien dans les
    sources.
-2. **`HostReleaseMonitor`** (`HackerOs.Platform.Blazor`, à côté de
+2. **`HostReleaseMonitor`** (`Kazo.Os.Platform.Blazor`, à côté de
    `HostBuildUpdateMonitor`) lit ce fichier toutes les **5 minutes**
    (`DefaultInterval`) par `IHostReleaseProbe`. L'hôte navigateur
    (`BrowserHostReleaseProbe`) le demande avec `?t=<millisecondes>`, pour que
@@ -35,7 +35,7 @@ et l'[ADR 0173](0173-automatic-releases-from-the-version-file.md).
 
 ## Conséquences
 
-- Fonctionne pour tout site qui sert la PWA (GitHub Pages, `HackerOs.Server`,
+- Fonctionne pour tout site qui sert la PWA (GitHub Pages, `Kazo.Os.Server`,
   autre hôte statique) ; un hôte d'un autre dépôt sans `version.json` ne voit
   qu'un 404, donc aucune annonce.
 - Une requête de quelques octets toutes les 5 minutes par session ouverte.

@@ -6,7 +6,7 @@
 
 Accepted on 2026-10-16, with the `web/10-detached-window` work item.
 
-- **Plan phase:** web phase ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Plan phase:** web phase ([`asp-kazo-plan.md`](../plans/asp-kazo-plan.md)).
 - **Completes:** ADR 0078 (detached display windows). Replaces none
   of its decisions; clarifies where the contracts live and settles the proof of its
   §4.
@@ -26,9 +26,9 @@ Blazor finds elements, and the bridge of the isolated pages of ADR 0075.
 The browser is a base app: it gets OS services only through
 the SDK (ADR 0055, diagnostic `HOSAPP0031`). The contract (`IDisplaySurfaceService`,
 `IDisplaySurface`, `DisplaySurfaceOptions`, `DisplaySurfaceOpenResult`) and the
-`DisplaySurfaceContent` component therefore go into `HackerOs.AppSdk.Blazor`
+`DisplaySurfaceContent` component therefore go into `Kazo.Os.AppSdk.Blazor`
 (namespace `.Display`), like `IDialogService`. The implementation
-`DisplaySurfaceService` stays in `HackerOs.Platform.Blazor` and
+`DisplaySurfaceService` stays in `Kazo.Os.Platform.Blazor` and
 `AddHackerOsEcosystem` registers it (session scope, one circuit on the
 server). The desktop is the implicit main surface; the service manages
 only the others.
@@ -40,7 +40,7 @@ then its element is moved into the detached window
 (`DisplaySurfaceContent`). The engine keeps its references to the nodes and keeps
 updating them wherever they are. Two Blazor mechanisms
 nevertheless assume a single document; a JS initializer of the library
-(`HackerOs.Platform.Blazor.lib.module.js`, supported by the three hosts
+(`Kazo.Os.Platform.Blazor.lib.module.js`, supported by the three hosts
 without manual reference) extends them before Blazor starts:
 
 - **Events.** Blazor delegates all events through listeners placed

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Busy.Opening" xml:space="preserve">
+    <value>Ouverture de {0}…</value>
+  </data>
+  <data name="Busy.Saving" xml:space="preserve">
+    <value>Enregistrement de {0}…</value>
+  </data>
+  <data name="Button.Crop" xml:space="preserve">
+    <value>Rogner</value>
+  </data>
+  <data name="Button.Dismiss" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="Button.Grid" xml:space="preserve">
+    <value>Grille</value>
+  </data>
+  <data name="Button.New" xml:space="preserve">
+    <value>Nouveau</value>
+  </data>
+  <data name="Button.New.Tooltip" xml:space="preserve">
+    <value>Nouveau (Ctrl+N)</value>
+  </data>
+  <data name="Button.Open" xml:space="preserve">
+    <value>Ouvrir…</value>
+  </data>
+  <data name="Button.Open.Tooltip" xml:space="preserve">
+    <value>Ouvrir (Ctrl+O)</value>
+  </data>
+  <data name="Button.Pan" xml:space="preserve">
+    <value>Déplacer</value>
+  </data>
+  <data name="Button.Redo" xml:space="preserve">
+    <value>Rétablir</value>
+  </data>
+  <data name="Button.Redo.Tooltip" xml:space="preserve">
+    <value>Rétablir (Ctrl+Y)</value>
+  </data>
+  <data name="Button.Rotate" xml:space="preserve">
+    <value>Pivoter de 90°</value>
+  </data>
+  <data name="Button.Save" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="Button.Save.Tooltip" xml:space="preserve">
+    <value>Enregistrer (Ctrl+S)</value>
+  </data>
+  <data name="Button.SaveAs" xml:space="preserve">
+    <value>Enregistrer sous…</value>
+  </data>
+  <data name="Button.SaveAs.Tooltip" xml:space="preserve">
+    <value>Enregistrer sous (Ctrl+Maj+S)</value>
+  </data>
+  <data name="Button.Undo" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="Button.Undo.Tooltip" xml:space="preserve">
+    <value>Annuler (Ctrl+Z)</value>
+  </data>
+  <data name="Button.ZoomIn" xml:space="preserve">
+    <value>Zoom +</value>
+  </data>
+  <data name="Button.ZoomOut" xml:space="preserve">
+    <value>Zoom -</value>
+  </data>
+  <data name="Canvas.AriaLabel" xml:space="preserve">
+    <value>Canevas de dessin de Kazo Paint</value>
+  </data>
+  <data name="Dialog.Open.Title" xml:space="preserve">
+    <value>Ouvrir une image</value>
+  </data>
+  <data name="Dialog.Save.Title" xml:space="preserve">
+    <value>Enregistrer l'image</value>
+  </data>
+  <data name="Dialog.Unsaved.Close" xml:space="preserve">
+    <value>Fermer {0} et abandonner les modifications ?</value>
+  </data>
+  <data name="Dialog.Unsaved.Discard" xml:space="preserve">
+    <value>Abandonner les modifications de {0} ?</value>
+  </data>
+  <data name="Dialog.Unsaved.Title" xml:space="preserve">
+    <value>Image non enregistrée</value>
+  </data>
+  <data name="Error.DecodeFailed" xml:space="preserve">
+    <value>Le navigateur n'a pas pu décoder cette image ; le fichier est peut-être endommagé.</value>
+  </data>
+  <data name="Error.DecodedTooLarge" xml:space="preserve">
+    <value>L'image mesure {0} × {1} pixels ; la limite est de {2} × {2}.</value>
+  </data>
+  <data name="Error.EncodedTooLarge" xml:space="preserve">
+    <value>L'image encodée dépasse {0} Mio.</value>
+  </data>
+  <data name="Error.FileTooLarge" xml:space="preserve">
+    <value>Le fichier est trop volumineux ({0} Mio). Kazo Paint ouvre les images jusqu'à {1} Mio.</value>
+  </data>
+  <data name="Error.FileTooLargeUnknownSize" xml:space="preserve">
+    <value>Le fichier est trop volumineux. Kazo Paint ouvre les images jusqu'à {0} Mio.</value>
+  </data>
+  <data name="Error.ImageTooLarge" xml:space="preserve">
+    <value>L'image mesure {0} × {1} pixels. Kazo Paint modifie les images jusqu'à {2} × {2}.</value>
+  </data>
+  <data name="Error.NotAnImage" xml:space="preserve">
+    <value>Ce n'est pas une image PNG, JPEG, BMP, GIF ou WebP, ou le fichier est endommagé.</value>
+  </data>
+  <data name="Error.NotFile" xml:space="preserve">
+    <value>Le chemin n'est pas un fichier ordinaire.</value>
+  </data>
+  <data name="Error.NotFound" xml:space="preserve">
+    <value>Fichier introuvable.</value>
+  </data>
+  <data name="Error.Open" xml:space="preserve">
+    <value>Impossible d'ouvrir {0} : {1}</value>
+  </data>
+  <data name="Error.PermissionDenied" xml:space="preserve">
+    <value>Permission refusée.</value>
+  </data>
+  <data name="Error.Save" xml:space="preserve">
+    <value>Impossible d'enregistrer {0} : {1}</value>
+  </data>
+  <data name="Error.Unknown" xml:space="preserve">
+    <value>Erreur inconnue.</value>
+  </data>
+  <data name="Filter.AllFiles" xml:space="preserve">
+    <value>Tous les fichiers</value>
+  </data>
+  <data name="Filter.Images" xml:space="preserve">
+    <value>Images</value>
+  </data>
+  <data name="Filter.Jpeg" xml:space="preserve">
+    <value>Image JPEG</value>
+  </data>
+  <data name="Filter.Png" xml:space="preserve">
+    <value>Image PNG</value>
+  </data>
+  <data name="Group.Brush" xml:space="preserve">
+    <value>Pinceau</value>
+  </data>
+  <data name="Group.File" xml:space="preserve">
+    <value>Fichier</value>
+  </data>
+  <data name="Group.History" xml:space="preserve">
+    <value>Historique</value>
+  </data>
+  <data name="Group.Image" xml:space="preserve">
+    <value>Image</value>
+  </data>
+  <data name="Group.Zoom" xml:space="preserve">
+    <value>Zoom</value>
+  </data>
+  <data name="Label.Color" xml:space="preserve">
+    <value>Couleur :</value>
+  </data>
+  <data name="Label.JpegQuality" xml:space="preserve">
+    <value>Qualité JPEG :</value>
+  </data>
+  <data name="Label.Size" xml:space="preserve">
+    <value>Taille :</value>
+  </data>
+  <data name="Status.Canvas" xml:space="preserve">
+    <value>Canevas : {0} × {1} px</value>
+  </data>
+  <data name="Status.NotSaved" xml:space="preserve">
+    <value>Non enregistré</value>
+  </data>
+  <data name="Status.Tool" xml:space="preserve">
+    <value>Outil : {0}</value>
+  </data>
+  <data name="Title.Untitled" xml:space="preserve">
+    <value>Sans titre</value>
+  </data>
+  <data name="Tool.Brush" xml:space="preserve">
+    <value>Pinceau</value>
+  </data>
+  <data name="Tool.Crop" xml:space="preserve">
+    <value>Rogner</value>
+  </data>
+  <data name="Tool.Pan" xml:space="preserve">
+    <value>Déplacer</value>
+  </data>
+  <data name="Toolbar.AriaLabel" xml:space="preserve">
+    <value>Outils de Kazo Paint</value>
+  </data>
+  <data name="Viewport.AriaLabel" xml:space="preserve">
+    <value>Zone d'affichage du canevas</value>
+  </data>
+</root>

@@ -19,7 +19,7 @@ Accepted on 2026-10-17 (work item `v3/1-adr`, for the work item `v3/12-localizat
 
 - No `.resx`, no `IStringLocalizer`: strings are hard-coded, in
   English and French mixed.
-- `LoginEnvironment` (`Platform/HackerOs.Platform.Core/Processes/LoginEnvironment.cs`)
+- `LoginEnvironment` (`Platform/Kazo.Os.Platform.Core/Processes/LoginEnvironment.cs`)
   sets `LANG=en_US.UTF-8`, then applies `/etc/environment`. Nothing reads `LANG`.
 - `AppManifest.Localizations` (`LocalizationManifest(Culture, ResourcePath)`)
   exists and is empty everywhere.

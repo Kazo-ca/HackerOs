@@ -1,0 +1,229 @@
+.chrome-interaction-layer {
+    display: contents;
+}
+
+.window-chrome {
+    display: flex;
+    align-items: center;
+    min-height: var(--kos-titlebar-height, 2.35rem);
+    padding: var(--kos-titlebar-padding, 0.25rem 0.35rem 0.25rem 0.65rem);
+    gap: 0.65rem;
+    overflow: hidden;
+    border-bottom: var(--kos-titlebar-border, 1px solid #29463f);
+    background: var(--kos-titlebar-background, #111e1e);
+    color: var(--kos-titlebar-text, #b9ccc6);
+    user-select: none;
+    touch-action: none;
+    transition:
+        background var(--kos-transition-fast, 120ms ease),
+        color var(--kos-transition-fast, 120ms ease);
+}
+
+.window-chrome.is-focused {
+    background: var(--kos-titlebar-focused-background, var(--kos-titlebar-background, #111e1e));
+    color: var(--kos-titlebar-focused-text, var(--kos-titlebar-text, #e7f7f1));
+}
+
+.window-identity {
+    order: var(--kos-window-identity-order, 0);
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    min-width: 0;
+    gap: 0.5rem;
+}
+
+.window-identity h2 {
+    min-width: 0;
+    margin: 0;
+    overflow: hidden;
+    color: currentColor;
+    font-family: var(--kos-font-ui, system-ui, sans-serif);
+    font-size: var(--kos-titlebar-font-size, 0.86rem);
+    font-weight: var(--kos-titlebar-font-weight, 650);
+    letter-spacing: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.window-icon {
+    display: var(--kos-window-icon-display, block);
+    width: 1.15rem;
+    height: 1.15rem;
+    flex: 0 0 auto;
+    box-sizing: border-box;
+    padding: 0.08rem;
+    border: var(--kos-window-icon-border, 1px solid #35554c);
+    border-radius: var(--kos-window-icon-radius, 0.2rem);
+    background: var(--kos-window-icon-background, #0a1213);
+    object-fit: contain;
+}
+
+.window-actions {
+    order: var(--kos-window-actions-order, 1);
+    /* Above the resize handles (z-index 2): a click on a button never starts a resize (ADR 0177). */
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: var(--kos-window-actions-direction, row);
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 0.15rem;
+    margin-inline-start: var(--kos-window-actions-margin-inline-start, auto);
+}
+
+.chrome-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--kos-window-control-width, var(--kos-window-control-size, 1.7rem));
+    height: var(--kos-window-control-height, var(--kos-window-control-size, 1.7rem));
+    padding: 0;
+    border: var(--kos-window-control-border, 1px solid #35554c);
+    border-radius: var(--kos-window-control-radius, 0.2rem);
+    background: var(--kos-window-control-background, #111e1f);
+    color: var(--kos-window-control-color, #b9ccc6);
+    box-shadow: var(--kos-window-control-shadow, none);
+    cursor: pointer;
+    transition:
+        background var(--kos-transition-fast, 120ms ease),
+        color var(--kos-transition-fast, 120ms ease),
+        border-color var(--kos-transition-fast, 120ms ease);
+}
+
+.chrome-button:hover,
+.chrome-button:focus-visible {
+    background: var(--kos-window-control-hover-background, #1a302b);
+    color: var(--kos-window-control-hover-color, #f4fff9);
+}
+
+.chrome-button:focus-visible {
+    outline: 2px solid var(--kos-focus-ring, #55d6a1);
+    outline-offset: -2px;
+}
+
+.chrome-button-minimize {
+    order: var(--kos-window-minimize-order, 0);
+}
+
+.chrome-button-maximize {
+    order: var(--kos-window-maximize-order, 1);
+    background: var(--kos-window-maximize-background, var(--kos-window-control-background, #111e1f));
+}
+
+.chrome-button-maximize:hover,
+.chrome-button-maximize:focus-visible {
+    background: var(--kos-window-maximize-hover-background, var(--kos-window-control-hover-background, #1a302b));
+}
+
+.chrome-button-close {
+    order: var(--kos-window-close-order, 2);
+    border: var(--kos-window-close-border, var(--kos-window-control-border, 1px solid #35554c));
+    background: var(--kos-window-close-background, #281719);
+    color: var(--kos-window-close-color, #ffb3ad);
+}
+
+.chrome-button-close:hover,
+.chrome-button-close:focus-visible {
+    background: var(--kos-window-close-hover-background, #8f2932);
+    color: var(--kos-window-close-hover-color, var(--kos-window-close-color, #ffb3ad));
+}
+
+.chrome-button-back svg {
+    fill: none;
+    stroke: currentColor;
+}
+
+.chrome-button-back svg polyline {
+    fill: none;
+}
+
+.chrome-button svg {
+    width: 0.7rem;
+    height: 0.7rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.3;
+    stroke-linecap: round;
+    opacity: var(--kos-window-control-icon-opacity, 1);
+}
+
+.chrome-button svg rect {
+    fill: currentColor;
+    stroke: none;
+}
+
+.chrome-button svg rect.chrome-icon-overlay {
+    fill: var(--kos-window-background, #0c1516);
+    stroke: currentColor;
+    stroke-width: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .window-chrome,
+    .window-actions {
+        scroll-behavior: auto;
+    }
+}
+
+.resize-handle {
+    position: absolute;
+    z-index: 2;
+    touch-action: none;
+}
+
+.resize-top,
+.resize-bottom {
+    right: 0.5rem;
+    left: 0.5rem;
+    height: 0.45rem;
+    cursor: ns-resize;
+}
+
+.resize-left,
+.resize-right {
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 0.45rem;
+    cursor: ew-resize;
+}
+
+.resize-top { top: 0; }
+.resize-right { right: 0; }
+.resize-bottom { bottom: 0; }
+.resize-left { left: 0; }
+
+.resize-top-left,
+.resize-top-right,
+.resize-bottom-right,
+.resize-bottom-left {
+    width: 0.8rem;
+    height: 0.8rem;
+}
+
+.resize-top-left { top: 0; left: 0; cursor: nwse-resize; }
+.resize-top-right { top: 0; right: 0; cursor: nesw-resize; }
+.resize-bottom-right { right: 0; bottom: 0; cursor: nwse-resize; }
+.resize-bottom-left { bottom: 0; left: 0; cursor: nesw-resize; }
+
+/* The icon's context menu stays separate from left-click activation and dragging the title. */
+.chrome-button-menu {
+    display: var(--kos-window-icon-display, inline-flex);
+    width: auto;
+    min-width: 1.35rem;
+    height: 1.35rem;
+    padding: 0.05rem;
+    border-color: transparent;
+    background: transparent;
+    cursor: default;
+}
+
+.chrome-button-menu .window-icon {
+    pointer-events: none;
+}
+
+/* ADR 0127 §3: the "(Not responding)" suffix shown after an unresponsive window's title. */
+.window-title-state {
+    font-weight: 500;
+    opacity: 0.85;
+}

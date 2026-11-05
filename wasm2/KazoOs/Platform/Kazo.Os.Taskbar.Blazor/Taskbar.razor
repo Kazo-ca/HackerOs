@@ -1,0 +1,424 @@
+@namespace Kazo.Os.Taskbar.Blazor
+@implements IDisposable
+@implements IAsyncDisposable
+@inject IServiceProvider LocalizationServices
+
+<footer class="taskbar-container" role="contentinfo" aria-label="@L["Taskbar.Label"]" @attributes="ContextMenus?.TaskbarAttributes">
+    <div class="taskbar-start">
+        @if (Launcher is not null)
+        {
+            <button type="button"
+                    class="launcher-trigger @(Launcher.IsOpen ? "is-active" : "")"
+                    aria-label="@(Launcher.HasAttention ? L["Taskbar.LauncherWithNews"] : L["Taskbar.Launcher"])"
+                    aria-haspopup="dialog"
+                    aria-expanded="@Launcher.IsOpen.ToString().ToLowerInvariant()"
+                    @onclick="HandleLauncherToggleClick">
+                <span class="launcher-mark" aria-hidden="true">@Options.LauncherMark</span>
+                <span class="launcher-label">@(Options.LauncherLabel ?? L["Taskbar.LauncherLabel"])</span>
+                @if (Launcher.HasAttention)
+                {
+                    <span class="launcher-attention" aria-hidden="true"></span>
+                }
+            </button>
+        }
+    </div>
+
+    <nav class="taskbar-center" aria-label="@L["Taskbar.RunningApps"]">
+        @if (WindowSource is not null)
+        {
+            @foreach (TaskbarWindowItem window in WindowSource.Windows)
+            {
+                bool isFocused = window.IsFocused && !window.IsMinimized;
+                <button type="button"
+                        @attributes="ContextMenus?.WindowItemAttributes(window.Id)"
+                        key="@window.Id.Value"
+                        data-taskbar-window-id="@window.Id"
+                        class="taskbar-item @(isFocused ? "is-active" : "") @(window.IsMinimized ? "is-minimized" : "")"
+                        aria-label="@L[isFocused ? "Taskbar.Item.Focused" : window.IsMinimized ? "Taskbar.Item.Minimized" : "Taskbar.Item.Background", window.Title]"
+                        @onclick="() => HandleWindowItemClick(window)"
+                        @onpointerenter="args => _previewController?.EnterItem(window.Id, args.PointerType)"
+                        @onpointerleave="() => _previewController?.LeaveItem()">
+                    <span class="item-icon" aria-hidden="true">
+                        @if (!string.IsNullOrWhiteSpace(window.IconAssetPath))
+                        {
+                            <img class="item-icon-image" src="@window.IconAssetPath" alt="" />
+                        }
+                        else
+                        {
+                            <KazoIcon Library="IconLibrary.Lucide" Name="app-window" Size="18" Title="" />
+                        }
+                    </span>
+                    <span class="item-title">@window.Title</span>
+                </button>
+            }
+        }
+    </nav>
+
+    @if (ShownPreview is { } preview)
+    {
+        @* ADR 0199: the hover preview of one window button, above the taskbar. A click shows the
+           window, × closes it, a rest on it peeks; right-click opens the button's menu (ADR 0194). *@
+        <div class="taskbar-preview"
+             @ref="_previewElement"
+             role="group"
+             aria-label="@L["Taskbar.Preview.Label", preview.Title]"
+             @attributes="ContextMenus?.WindowItemAttributes(preview.Id)"
+             @onpointerenter="() => _previewController?.EnterPreview()"
+             @onpointerleave="() => _previewController?.LeavePreview()">
+            <div class="taskbar-preview-header">
+                <span class="taskbar-preview-icon" aria-hidden="true">
+                    @if (!string.IsNullOrWhiteSpace(preview.IconAssetPath))
+                    {
+                        <img class="item-icon-image" src="@preview.IconAssetPath" alt="" />
+                    }
+                    else
+                    {
+                        <KazoIcon Library="IconLibrary.Lucide" Name="app-window" Size="14" Title="" />
+                    }
+                </span>
+                <span class="taskbar-preview-title">@preview.Title</span>
+                <button type="button"
+                        class="taskbar-preview-close"
+                        aria-label="@L["Taskbar.Preview.Close", preview.Title]"
+                        @onclick="() => HandlePreviewClose(preview)">
+                    <KazoIcon Library="IconLibrary.Lucide" Name="x" Size="14" Title="" />
+                </button>
+            </div>
+            <div class="taskbar-preview-thumbnail" @onclick="() => HandlePreviewClick(preview)">
+                <span class="taskbar-preview-fallback" aria-hidden="true">
+                    @if (!string.IsNullOrWhiteSpace(preview.IconAssetPath))
+                    {
+                        <img class="taskbar-preview-fallback-image" src="@preview.IconAssetPath" alt="" />
+                    }
+                    else
+                    {
+                        <KazoIcon Library="IconLibrary.Lucide" Name="app-window" Size="40" Title="" />
+                    }
+                    <span class="taskbar-preview-fallback-title">@preview.Title</span>
+                </span>
+                <div class="taskbar-preview-live" aria-hidden="true" inert></div>
+            </div>
+        </div>
+    }
+
+    <div class="taskbar-end">
+        @if (NotificationAreaContent is not null)
+        {
+            <div class="taskbar-notification-area" role="group" aria-label="@L["Taskbar.NotificationArea"]">
+                @NotificationAreaContent
+            </div>
+        }
+
+        @if (StatusSource is not null)
+        {
+            <div class="taskbar-clock-region">
+                <button type="button"
+                        class="taskbar-clock @(ClockPanelSource?.IsOpen == true ? "is-active" : "")"
+                        aria-label="@ClockName"
+                        title="@ClockName"
+                        aria-expanded="@((ClockPanelSource?.IsOpen ?? false).ToString().ToLowerInvariant())"
+                        @onclick="HandleClockPanelToggleClick">
+                    <span class="clock-icon" aria-hidden="true">
+                        <KazoIcon Library="IconLibrary.Lucide" Name="clock" Size="17" Title="" />
+                    </span>
+                    <span class="clock-text">@FormattedTime</span>
+                    @if (UnreadCount > 0)
+                    {
+                        <span class="clock-attention" aria-hidden="true"></span>
+                    }
+                </button>
+                @if (ClockPanelSource?.IsOpen == true && ClockPanelContent is not null)
+                {
+                    <div class="clock-panel-container">
+                        @ClockPanelContent
+                    </div>
+                }
+            </div>
+        }
+
+        @if (SessionCommands is not null)
+        {
+            <button type="button"
+                    class="logout-trigger"
+                    aria-label="@L["Taskbar.Session"]"
+                    @onclick="() => SessionCommands.RequestLogout()">
+                <span class="logout-icon" aria-hidden="true">
+                    <KazoIcon Library="IconLibrary.Lucide" Name="power" Size="17" Title="" />
+                </span>
+            </button>
+        }
+    </div>
+</footer>
+
+@code {
+    /// <summary>Gets or sets the running-windows source. Hides the center region when null.</summary>
+    [Parameter]
+    public ITaskbarWindowSource? WindowSource { get; set; }
+
+    /// <summary>Gets or sets the dispatcher for taskbar-initiated window commands.</summary>
+    [Parameter]
+    public ITaskbarCommandDispatcher? Commands { get; set; }
+
+    /// <summary>Gets or sets the host-provided launcher. Hides the launcher trigger when null.</summary>
+    [Parameter]
+    public ITaskbarLauncher? Launcher { get; set; }
+
+    /// <summary>Gets or sets the status source backing the clock region. Hides it when null.</summary>
+    [Parameter]
+    public ITaskbarStatusSource? StatusSource { get; set; }
+
+    /// <summary>Gets or sets the clock panel's open/closed state. The clock is inert when null.</summary>
+    [Parameter]
+    public ITaskbarClockPanelSource? ClockPanelSource { get; set; }
+
+    /// <summary>
+    /// Gets or sets the clock panel's content, rendered inside a container this component owns for
+    /// anchoring only — the taskbar never inspects or depends on what this fragment contains, so
+    /// the panel's design lives entirely with the host, outside this package.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ClockPanelContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets the notification area ("system tray") left of the clock: small status icons the
+    /// host supplies, such as the server connection (ADR 0134 §2). Hidden when null. The taskbar only
+    /// lays the fragment out; each icon owns its own behavior and panel.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? NotificationAreaContent { get; set; }
+
+    /// <summary>Gets or sets the optional session commands. Hides the session control when null.</summary>
+    [Parameter]
+    public ITaskbarSessionCommands? SessionCommands { get; set; }
+
+    /// <summary>
+    /// Gets or sets the host's context menus (ADR 0194): attributes set on the taskbar and on each
+    /// window button. The browser's menu stays when null.
+    /// </summary>
+    [Parameter]
+    public ITaskbarContextMenus? ContextMenus { get; set; }
+
+    /// <summary>
+    /// Gets or sets the host's window previews (ADR 0199): a reduced live copy of a window above its
+    /// button after a short hover, and the peek. No preview shows when null.
+    /// </summary>
+    [Parameter]
+    public ITaskbarWindowPreviews? Previews { get; set; }
+
+    /// <summary>Gets or sets host-supplied labels for chrome that would otherwise hardcode branding.</summary>
+    [Parameter]
+    public TaskbarOptions Options { get; set; } = new();
+
+    /// <summary>
+    /// The clock text in the source's time zone (ADR 0193) and in the long time pattern of its
+    /// culture (ADR 0104): 24-hour <c>HH:mm:ss</c> for French or a non-localizing host,
+    /// <c>h:mm:ss AM</c> for American English.
+    /// </summary>
+    private string FormattedTime => StatusSource is { } status
+        ? TimeZoneInfo.ConvertTime(status.UtcNow, status.TimeZone).ToString("T", status.FormatCulture)
+        : string.Empty;
+
+    /// <summary>Gets the notifications the user has not looked at yet (ADR 0196); 0 without a clock panel.</summary>
+    private int UnreadCount => ClockPanelSource?.UnreadCount ?? 0;
+
+    /// <summary>Gets the clock's name and tooltip: it says how many notifications are unread (ADR 0196).</summary>
+    private string ClockName => UnreadCount switch
+    {
+        0 => L["Taskbar.Clock"],
+        1 => L["Taskbar.ClockWithOneUnread"],
+        int count => L["Taskbar.ClockWithUnread", count],
+    };
+
+    /// <summary>Gets the taskbar's texts: the host's session language, or English without localization.</summary>
+    private IStringLocalizer L => _localizer ??= PackageStringLocalizer.Resolve<Strings>(LocalizationServices);
+    private IStringLocalizer? _localizer;
+
+    private void HandleLauncherToggleClick() => Launcher?.Toggle();
+
+    private void HandleClockPanelToggleClick() => ClockPanelSource?.Toggle();
+
+    /// <inheritdoc />
+    protected override void OnInitialized()
+    {
+        if (Previews is not null)
+        {
+            _previewController = new TaskbarPreviewController(Previews, SchedulePreviewStep, StateHasChanged);
+        }
+
+        if (WindowSource is not null)
+        {
+            WindowSource.Changed += OnSourceChanged;
+        }
+
+        if (Launcher is not null)
+        {
+            Launcher.Changed += OnSourceChanged;
+        }
+
+        if (StatusSource is not null)
+        {
+            StatusSource.Changed += OnSourceChanged;
+        }
+
+        if (ClockPanelSource is not null)
+        {
+            ClockPanelSource.Changed += OnSourceChanged;
+        }
+    }
+
+    private void OnSourceChanged() => InvokeAsync(() =>
+    {
+        if (WindowSource is not null)
+        {
+            _previewController?.Sync(WindowSource.Windows);
+        }
+
+        StateHasChanged();
+    });
+
+    private TaskbarPreviewController? _previewController;
+    private ElementReference _previewElement;
+    private IJSObjectReference? _module;
+
+    /// <summary>The window whose preview the last render showed, to fill the preview only when it changes.</summary>
+    private WindowId? _filledPreview;
+
+    /// <summary>The window of the open preview, while it is still listed by this taskbar.</summary>
+    private TaskbarWindowItem? ShownPreview => _previewController?.Shown is { } id
+        ? WindowSource?.Windows.FirstOrDefault(window => window.Id == id)
+        : null;
+
+    /// <summary>Runs one preview step after its delay, back on the renderer's dispatcher, unless cancelled in between.</summary>
+    private IDisposable SchedulePreviewStep(TimeSpan delay, Action step)
+    {
+        ScheduledPreviewStep scheduled = new();
+        scheduled.Timer = new Timer(
+            _ => InvokeAsync(() =>
+            {
+                if (!scheduled.IsCancelled)
+                {
+                    step();
+                }
+            }),
+            null,
+            delay,
+            Timeout.InfiniteTimeSpan);
+        return scheduled;
+    }
+
+    /// <summary>
+    /// Fills the open preview with the window's live copy and places it above its button, once per
+    /// window shown: the module then refreshes the copy by itself while the preview stays.
+    /// </summary>
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        TaskbarWindowItem? preview = ShownPreview;
+        if (preview?.Id == _filledPreview)
+        {
+            return;
+        }
+
+        _filledPreview = preview?.Id;
+        // Resolved here, not injected: a host that renders the taskbar without previews (or a
+        // static render) needs no JavaScript runtime at all.
+        if (preview is null || Previews is null || LocalizationServices.GetService(typeof(IJSRuntime)) is not IJSRuntime jsRuntime)
+        {
+            return;
+        }
+
+        try
+        {
+            _module ??= await jsRuntime.InvokeAsync<IJSObjectReference>(
+                "import",
+                "./_content/Kazo.Os.Taskbar.Blazor/Taskbar.razor.js");
+            await _module.InvokeVoidAsync("showPreview", _previewElement, preview.Id.ToString(), Previews.LiveCopySelector(preview.Id));
+        }
+        catch (JSException ex)
+        {
+            // The preview keeps the icon and title: a missing live copy must not break the taskbar.
+            Console.Error.WriteLine($"[Taskbar] Failed to fill the window preview: {ex.Message}");
+        }
+    }
+
+    private void HandlePreviewClick(TaskbarWindowItem window)
+    {
+        _previewController?.Dismiss();
+        if (Commands is not null)
+        {
+            TaskbarWindowInteraction.Show(window, Commands);
+        }
+    }
+
+    private void HandlePreviewClose(TaskbarWindowItem window)
+    {
+        _previewController?.Dismiss();
+        Commands?.Close(window.Id);
+    }
+
+    /// <summary>A delayed preview step that can be cancelled until it runs.</summary>
+    private sealed class ScheduledPreviewStep : IDisposable
+    {
+        public Timer? Timer { get; set; }
+
+        public bool IsCancelled { get; private set; }
+
+        public void Dispose()
+        {
+            IsCancelled = true;
+            Timer?.Dispose();
+        }
+    }
+
+    private void HandleWindowItemClick(TaskbarWindowItem window)
+    {
+        _previewController?.Dismiss();
+        if (Commands is not null)
+        {
+            TaskbarWindowInteraction.HandleClick(window, Commands);
+        }
+    }
+
+    /// <inheritdoc />
+    public async ValueTask DisposeAsync()
+    {
+        Dispose();
+        if (_module is not null)
+        {
+            try
+            {
+                await _module.DisposeAsync();
+            }
+            catch (JSDisconnectedException)
+            {
+                // The page is going away: the module goes with it.
+            }
+
+            _module = null;
+        }
+    }
+
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        _previewController?.Dispose();
+        if (WindowSource is not null)
+        {
+            WindowSource.Changed -= OnSourceChanged;
+        }
+
+        if (Launcher is not null)
+        {
+            Launcher.Changed -= OnSourceChanged;
+        }
+
+        if (StatusSource is not null)
+        {
+            StatusSource.Changed -= OnSourceChanged;
+        }
+
+        if (ClockPanelSource is not null)
+        {
+            ClockPanelSource.Changed -= OnSourceChanged;
+        }
+    }
+}

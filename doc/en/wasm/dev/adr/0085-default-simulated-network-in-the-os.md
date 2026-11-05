@@ -56,7 +56,7 @@ as a known problem.
   the catalog's hosts.
 - The hosts and addresses are those of `src/core/network.ts` (`192.168.1.x`), with no
   collision with the `10.0.0.x` of the test set.
-- The test `Tests/HackerOs.UI.E2E.Tests/BrowserHomePageTests.cs` opens the
+- The test `Tests/Kazo.Os.UI.E2E.Tests/BrowserHomePageTests.cs` opens the
   browser outside demo mode and verifies the home page then a search.
 - A future content pack (ADR 0023) could add hosts to the same
   registry; this is not settled here.

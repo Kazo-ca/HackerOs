@@ -4,7 +4,7 @@
 
 ## Purpose
 
-`Apps/System/HackerOs.Apps.IconViewer/` lets a user or developer browse, search, and
+`Apps/System/Kazo.Os.Apps.IconViewer/` lets a user or developer browse, search, and
 copy a ready-to-use snippet for every icon bundled with HackerOS: Bootstrap Icons,
 Font Awesome (solid/regular/brands), Lucide, and Simple Icons, via the shared
 `IIconCatalog` (see [`../icon-library.md`](../icon-library.md) and ADR
@@ -47,13 +47,13 @@ today. See ADR [0026](../../adr/0026-icon-library-support.md) for the full reaso
 
 ## Completed Task Checklist
 
-- [x] Create project file `HackerOs.Apps.IconViewer.csproj` referencing
-  `HackerOs.AppSdk.Icons`.
+- [x] Create project file `Kazo.Os.Apps.IconViewer.csproj` referencing
+  `Kazo.Os.AppSdk.Icons`.
 - [x] Create manifest `app.manifest.json` declaring reverse-domain ID
   `org.hackeros.icon-viewer`.
 - [x] Implement `IconViewerWindow.razor` & `IconViewerWindow.razor.css` with the
   search/filter/grid/detail UI in the Gothic/Hacker dark theme.
-- [x] Register `HackerOs.Apps.IconViewer` in `HackerOs.Ecosystem.csproj` (project
+- [x] Register `Kazo.Os.Apps.IconViewer` in `Kazo.Os.Ecosystem.csproj` (project
   reference, lazy-load declaration, embedded manifest).
 - [x] Verify project compilation, manifest validation
-  (`HackerOs.Tools.ManifestValidator`), and test suite execution.
+  (`Kazo.Os.Tools.ManifestValidator`), and test suite execution.

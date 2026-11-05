@@ -1,0 +1,104 @@
+#nullable enable
+Kazo.Os.Apps.TextEditor.TextEditorApp
+Kazo.Os.Apps.TextEditor.TextEditorApp.TextEditorApp() -> void
+Kazo.Os.Apps.TextEditor.TextEditorDocument
+Kazo.Os.Apps.TextEditor.TextEditorDocument.BeginLoading(Kazo.Os.App.Abstractions.VirtualPath path) -> void
+Kazo.Os.Apps.TextEditor.TextEditorDocument.CompleteLoading(string! content, string! mediaType, long revision) -> void
+Kazo.Os.Apps.TextEditor.TextEditorDocument.CompleteSave(Kazo.Os.App.Abstractions.VirtualPath path, long newRevision) -> void
+Kazo.Os.Apps.TextEditor.TextEditorDocument.Content.get -> string!
+Kazo.Os.Apps.TextEditor.TextEditorDocument.Edit(string! newContent) -> void
+Kazo.Os.Apps.TextEditor.TextEditorDocument.ErrorMessage.get -> string?
+Kazo.Os.Apps.TextEditor.TextEditorDocument.FailLoading(string! errorMessage) -> void
+Kazo.Os.Apps.TextEditor.TextEditorDocument.GetWindowTitle() -> string!
+Kazo.Os.Apps.TextEditor.TextEditorDocument.IsDirty.get -> bool
+Kazo.Os.Apps.TextEditor.TextEditorDocument.LoadState.get -> Kazo.Os.Apps.TextEditor.TextEditorLoadState
+Kazo.Os.Apps.TextEditor.TextEditorDocument.LoadedRevision.get -> long?
+Kazo.Os.Apps.TextEditor.TextEditorDocument.MediaType.get -> string!
+Kazo.Os.Apps.TextEditor.TextEditorDocument.Path.get -> Kazo.Os.App.Abstractions.VirtualPath?
+Kazo.Os.Apps.TextEditor.TextEditorDocument.ResetToNew() -> void
+Kazo.Os.Apps.TextEditor.TextEditorDocument.RestoreDraft(string! content, string? originalPath) -> void
+Kazo.Os.Apps.TextEditor.TextEditorDocument.TextEditorDocument(Microsoft.Extensions.Localization.IStringLocalizer? text = null) -> void
+Kazo.Os.Apps.TextEditor.TextEditorDocument.Title.get -> string!
+Kazo.Os.Apps.TextEditor.TextEditorFindEngine
+Kazo.Os.Apps.TextEditor.TextEditorFindOptions
+Kazo.Os.Apps.TextEditor.TextEditorFindOptions.Deconstruct(out bool MatchCase, out bool WholeWord) -> void
+Kazo.Os.Apps.TextEditor.TextEditorFindOptions.Equals(Kazo.Os.Apps.TextEditor.TextEditorFindOptions other) -> bool
+Kazo.Os.Apps.TextEditor.TextEditorFindOptions.MatchCase.get -> bool
+Kazo.Os.Apps.TextEditor.TextEditorFindOptions.MatchCase.init -> void
+Kazo.Os.Apps.TextEditor.TextEditorFindOptions.TextEditorFindOptions() -> void
+Kazo.Os.Apps.TextEditor.TextEditorFindOptions.TextEditorFindOptions(bool MatchCase = false, bool WholeWord = false) -> void
+Kazo.Os.Apps.TextEditor.TextEditorFindOptions.WholeWord.get -> bool
+Kazo.Os.Apps.TextEditor.TextEditorFindOptions.WholeWord.init -> void
+Kazo.Os.Apps.TextEditor.TextEditorLoadState
+Kazo.Os.Apps.TextEditor.TextEditorLoadState.Error = 3 -> Kazo.Os.Apps.TextEditor.TextEditorLoadState
+Kazo.Os.Apps.TextEditor.TextEditorLoadState.Loaded = 1 -> Kazo.Os.Apps.TextEditor.TextEditorLoadState
+Kazo.Os.Apps.TextEditor.TextEditorLoadState.Loading = 2 -> Kazo.Os.Apps.TextEditor.TextEditorLoadState
+Kazo.Os.Apps.TextEditor.TextEditorLoadState.New = 0 -> Kazo.Os.Apps.TextEditor.TextEditorLoadState
+Kazo.Os.Apps.TextEditor.TextEditorReplaceAllResult
+Kazo.Os.Apps.TextEditor.TextEditorReplaceAllResult.Content.get -> string!
+Kazo.Os.Apps.TextEditor.TextEditorReplaceAllResult.Content.init -> void
+Kazo.Os.Apps.TextEditor.TextEditorReplaceAllResult.Count.get -> int
+Kazo.Os.Apps.TextEditor.TextEditorReplaceAllResult.Count.init -> void
+Kazo.Os.Apps.TextEditor.TextEditorReplaceAllResult.Deconstruct(out string! Content, out int Count) -> void
+Kazo.Os.Apps.TextEditor.TextEditorReplaceAllResult.Equals(Kazo.Os.Apps.TextEditor.TextEditorReplaceAllResult other) -> bool
+Kazo.Os.Apps.TextEditor.TextEditorReplaceAllResult.TextEditorReplaceAllResult() -> void
+Kazo.Os.Apps.TextEditor.TextEditorReplaceAllResult.TextEditorReplaceAllResult(string! Content, int Count) -> void
+Kazo.Os.Apps.TextEditor.TextEditorReplaceResult
+Kazo.Os.Apps.TextEditor.TextEditorReplaceResult.Content.get -> string!
+Kazo.Os.Apps.TextEditor.TextEditorReplaceResult.Content.init -> void
+Kazo.Os.Apps.TextEditor.TextEditorReplaceResult.Deconstruct(out string! Content, out bool Replaced, out int NextMatchStart) -> void
+Kazo.Os.Apps.TextEditor.TextEditorReplaceResult.Equals(Kazo.Os.Apps.TextEditor.TextEditorReplaceResult other) -> bool
+Kazo.Os.Apps.TextEditor.TextEditorReplaceResult.NextMatchStart.get -> int
+Kazo.Os.Apps.TextEditor.TextEditorReplaceResult.NextMatchStart.init -> void
+Kazo.Os.Apps.TextEditor.TextEditorReplaceResult.Replaced.get -> bool
+Kazo.Os.Apps.TextEditor.TextEditorReplaceResult.Replaced.init -> void
+Kazo.Os.Apps.TextEditor.TextEditorReplaceResult.TextEditorReplaceResult() -> void
+Kazo.Os.Apps.TextEditor.TextEditorReplaceResult.TextEditorReplaceResult(string! Content, bool Replaced, int NextMatchStart) -> void
+Kazo.Os.Apps.TextEditor.TextEditorWindow
+Kazo.Os.Apps.TextEditor.TextEditorWindow.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Apps.TextEditor.TextEditorWindow.LaunchFilePath.get -> string?
+Kazo.Os.Apps.TextEditor.TextEditorWindow.LaunchFilePath.set -> void
+Kazo.Os.Apps.TextEditor.TextEditorWindow.TextEditorWindow() -> void
+Kazo.Os.Apps.TextEditor._Imports
+Kazo.Os.Apps.TextEditor._Imports.Execute() -> void
+Kazo.Os.Apps.TextEditor._Imports._Imports() -> void
+override Kazo.Os.Apps.TextEditor.TextEditorApp.Assets.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AssetManifest!>!
+override Kazo.Os.Apps.TextEditor.TextEditorApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Apps.TextEditor.TextEditorApp.Description.get -> string!
+override Kazo.Os.Apps.TextEditor.TextEditorApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Apps.TextEditor.TextEditorApp.FileHandlers.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.FileHandler!>!
+override Kazo.Os.Apps.TextEditor.TextEditorApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Apps.TextEditor.TextEditorApp.Id.get -> string!
+override Kazo.Os.Apps.TextEditor.TextEditorApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Apps.TextEditor.TextEditorApp.MobileEntryPoint.get -> System.Type?
+override Kazo.Os.Apps.TextEditor.TextEditorApp.Name.get -> string!
+override Kazo.Os.Apps.TextEditor.TextEditorApp.PublisherId.get -> string!
+override Kazo.Os.Apps.TextEditor.TextEditorApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Apps.TextEditor.TextEditorFindOptions.GetHashCode() -> int
+override Kazo.Os.Apps.TextEditor.TextEditorReplaceAllResult.GetHashCode() -> int
+override Kazo.Os.Apps.TextEditor.TextEditorReplaceResult.GetHashCode() -> int
+override Kazo.Os.Apps.TextEditor.TextEditorWindow.OnAppAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.TextEditor.TextEditorWindow.OnAppInitializedAsync() -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.TextEditor.TextEditorWindow.OnAppStopRequestedAsync(Kazo.Os.AppSdk.Diagnostics.KazoStopRequestedEventArgs! e) -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.TextEditor.TextEditorWindow.OnPermissionErrorRaised(Kazo.Os.Simulation.Abstractions.Gateways.AppPermissionErrorEventArgs! e) -> void
+static Kazo.Os.Apps.TextEditor.TextEditorFindEngine.DescribeReplacementCount(int count, Microsoft.Extensions.Localization.IStringLocalizer? text = null) -> string!
+static Kazo.Os.Apps.TextEditor.TextEditorFindEngine.FindMatches(string! content, string! query) -> System.Collections.Generic.List<int>!
+static Kazo.Os.Apps.TextEditor.TextEditorFindEngine.FindMatches(string! content, string! query, Kazo.Os.Apps.TextEditor.TextEditorFindOptions options) -> System.Collections.Generic.List<int>!
+static Kazo.Os.Apps.TextEditor.TextEditorFindEngine.FindNextFrom(string! content, string! query, int fromOffset, Kazo.Os.Apps.TextEditor.TextEditorFindOptions options = default(Kazo.Os.Apps.TextEditor.TextEditorFindOptions)) -> int
+static Kazo.Os.Apps.TextEditor.TextEditorFindEngine.Next(int currentIndex, int matchCount) -> int
+static Kazo.Os.Apps.TextEditor.TextEditorFindEngine.Previous(int currentIndex, int matchCount) -> int
+static Kazo.Os.Apps.TextEditor.TextEditorFindEngine.Replace(string! content, string! query, string! replacement, int selectionStart, int selectionLength, Kazo.Os.Apps.TextEditor.TextEditorFindOptions options = default(Kazo.Os.Apps.TextEditor.TextEditorFindOptions)) -> Kazo.Os.Apps.TextEditor.TextEditorReplaceResult
+static Kazo.Os.Apps.TextEditor.TextEditorFindEngine.ReplaceAll(string! content, string! query, string! replacement, Kazo.Os.Apps.TextEditor.TextEditorFindOptions options = default(Kazo.Os.Apps.TextEditor.TextEditorFindOptions)) -> Kazo.Os.Apps.TextEditor.TextEditorReplaceAllResult
+static Kazo.Os.Apps.TextEditor.TextEditorFindOptions.operator !=(Kazo.Os.Apps.TextEditor.TextEditorFindOptions left, Kazo.Os.Apps.TextEditor.TextEditorFindOptions right) -> bool
+static Kazo.Os.Apps.TextEditor.TextEditorFindOptions.operator ==(Kazo.Os.Apps.TextEditor.TextEditorFindOptions left, Kazo.Os.Apps.TextEditor.TextEditorFindOptions right) -> bool
+static Kazo.Os.Apps.TextEditor.TextEditorReplaceAllResult.operator !=(Kazo.Os.Apps.TextEditor.TextEditorReplaceAllResult left, Kazo.Os.Apps.TextEditor.TextEditorReplaceAllResult right) -> bool
+static Kazo.Os.Apps.TextEditor.TextEditorReplaceAllResult.operator ==(Kazo.Os.Apps.TextEditor.TextEditorReplaceAllResult left, Kazo.Os.Apps.TextEditor.TextEditorReplaceAllResult right) -> bool
+static Kazo.Os.Apps.TextEditor.TextEditorReplaceResult.operator !=(Kazo.Os.Apps.TextEditor.TextEditorReplaceResult left, Kazo.Os.Apps.TextEditor.TextEditorReplaceResult right) -> bool
+static Kazo.Os.Apps.TextEditor.TextEditorReplaceResult.operator ==(Kazo.Os.Apps.TextEditor.TextEditorReplaceResult left, Kazo.Os.Apps.TextEditor.TextEditorReplaceResult right) -> bool
+~override Kazo.Os.Apps.TextEditor.TextEditorFindOptions.Equals(object obj) -> bool
+~override Kazo.Os.Apps.TextEditor.TextEditorFindOptions.ToString() -> string
+~override Kazo.Os.Apps.TextEditor.TextEditorReplaceAllResult.Equals(object obj) -> bool
+~override Kazo.Os.Apps.TextEditor.TextEditorReplaceAllResult.ToString() -> string
+~override Kazo.Os.Apps.TextEditor.TextEditorReplaceResult.Equals(object obj) -> bool
+~override Kazo.Os.Apps.TextEditor.TextEditorReplaceResult.ToString() -> string
+~override Kazo.Os.Apps.TextEditor.TextEditorWindow.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

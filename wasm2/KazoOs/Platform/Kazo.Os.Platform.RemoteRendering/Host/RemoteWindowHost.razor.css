@@ -1,0 +1,15 @@
+/* The window's content as the worker draws it: it fills the window body like an app component would. */
+.remote-window-host {
+    display: contents;
+}
+
+.remote-window-failure {
+    margin: 1rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--kos-danger, #ff4d6d);
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--kos-danger, #ff4d6d) 12%, transparent);
+    color: var(--kos-text, #e6edf3);
+    font-family: var(--kos-font-mono, ui-monospace, monospace);
+    font-size: 0.85rem;
+}

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Column.ChildEntryId" xml:space="preserve">
+    <value>Child Entry ID</value>
+  </data>
+  <data name="Column.ChildName" xml:space="preserve">
+    <value>Child Name</value>
+  </data>
+  <data name="Column.ContentHash" xml:space="preserve">
+    <value>Content Hash</value>
+  </data>
+  <data name="Column.EntryId" xml:space="preserve">
+    <value>Entry ID</value>
+  </data>
+  <data name="Column.Kind" xml:space="preserve">
+    <value>Kind</value>
+  </data>
+  <data name="Column.ObjectStore" xml:space="preserve">
+    <value>Object store</value>
+  </data>
+  <data name="Column.OwnerId" xml:space="preserve">
+    <value>Owner ID</value>
+  </data>
+  <data name="Column.ParentId" xml:space="preserve">
+    <value>Parent Directory ID</value>
+  </data>
+  <data name="Column.Records" xml:space="preserve">
+    <value>Records</value>
+  </data>
+  <data name="Column.ResolvedPath" xml:space="preserve">
+    <value>Resolved Virtual Path</value>
+  </data>
+  <data name="Common.Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Dialog.ExportTitle" xml:space="preserve">
+    <value>Export IndexedDB JSON Dump</value>
+  </data>
+  <data name="Dialog.JsonFilter" xml:space="preserve">
+    <value>JSON Files</value>
+  </data>
+  <data name="Error.LoadFailed" xml:space="preserve">
+    <value>Failed to load IndexedDB: {0}</value>
+  </data>
+  <data name="Error.NotGranted" xml:space="preserve">
+    <value>This app was not granted system.storage.inspect: an administrator must approve it.</value>
+  </data>
+  <data name="Error.SitesUnavailable" xml:space="preserve">
+    <value>Website databases unavailable: {0}</value>
+  </data>
+  <data name="Header.Database" xml:space="preserve">
+    <value>DB: {0} v{1}</value>
+  </data>
+  <data name="Header.ResolvedPaths" xml:space="preserve">
+    <value>{0} Virtual Paths Resolved</value>
+  </data>
+  <data name="Header.Title" xml:space="preserve">
+    <value>IndexedDB Diagnostic Inspector</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Loading IndexedDB snapshot...</value>
+  </data>
+  <data name="Notice.Text" xml:space="preserve">
+    <value>File metadata is stored in {0} (inodes) while directory hierarchy links mapping {1} to {2} reside in {3}. Absolute {4} is dynamically resolved below by traversing directory link trees.</value>
+  </data>
+  <data name="Notice.Title" xml:space="preserve">
+    <value>Kazo OS Architecture Note:</value>
+  </data>
+  <data name="Search.AriaLabel" xml:space="preserve">
+    <value>Search store records</value>
+  </data>
+  <data name="Search.Placeholder" xml:space="preserve">
+    <value>Search records...</value>
+  </data>
+  <data name="Site.Clear" xml:space="preserve">
+    <value>Clear this database</value>
+  </data>
+  <data name="Site.ConfirmDelete" xml:space="preserve">
+    <value>Delete every record of {0}? The site starts again with an empty database.</value>
+  </data>
+  <data name="Site.Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Site.Name" xml:space="preserve">
+    <value>{0} (version {1})</value>
+  </data>
+  <data name="Site.Purpose" xml:space="preserve">
+    <value>Browser database of the web site {0} (ADR 0088): IndexedDB of the host browser, not stored in the Kazo OS files. {1} records, about {2}.</value>
+  </data>
+  <data name="Sites.Empty" xml:space="preserve">
+    <value>No site has a database yet.</value>
+  </data>
+  <data name="Sites.Heading" xml:space="preserve">
+    <value>Website databases</value>
+  </data>
+  <data name="Sites.Heading.Title" xml:space="preserve">
+    <value>Browser databases of web sites (kazoweb.*), outside the OS database and files</value>
+  </data>
+  <data name="Size.Bytes" xml:space="preserve">
+    <value>{0} B</value>
+  </data>
+  <data name="Size.KB" xml:space="preserve">
+    <value>{0} KB</value>
+  </data>
+  <data name="Size.MB" xml:space="preserve">
+    <value>{0} MB</value>
+  </data>
+  <data name="Store.Header" xml:space="preserve">
+    <value>{0} ({1} records)</value>
+  </data>
+  <data name="Toast.Copied" xml:space="preserve">
+    <value>IndexedDB JSON Dump copied to Clipboard!</value>
+  </data>
+  <data name="Toast.CopyFailed" xml:space="preserve">
+    <value>Copy failed: {0}</value>
+  </data>
+  <data name="Toast.DeleteFailed" xml:space="preserve">
+    <value>Delete failed: {0}</value>
+  </data>
+  <data name="Toast.Deleted" xml:space="preserve">
+    <value>{0} deleted.</value>
+  </data>
+  <data name="Toast.Downloaded" xml:space="preserve">
+    <value>IndexedDB JSON Dump downloaded.</value>
+  </data>
+  <data name="Toast.ExportFailed" xml:space="preserve">
+    <value>Export failed: {0}</value>
+  </data>
+  <data name="Toast.Exported" xml:space="preserve">
+    <value>Exported JSON to {0}</value>
+  </data>
+  <data name="Toolbar.Copy" xml:space="preserve">
+    <value>Copy JSON to Clipboard</value>
+  </data>
+  <data name="Toolbar.Download" xml:space="preserve">
+    <value>Download JSON</value>
+  </data>
+  <data name="Toolbar.Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="Toolbar.Save" xml:space="preserve">
+    <value>Save JSON File</value>
+  </data>
+  <data name="View.Raw" xml:space="preserve">
+    <value>Raw JSON</value>
+  </data>
+  <data name="View.Table" xml:space="preserve">
+    <value>Table View</value>
+  </data>
+  <data name="Isolation.Yes" xml:space="preserve">
+    <value>Cross-origin isolated</value>
+  </data>
+  <data name="Isolation.No" xml:space="preserve">
+    <value>Not isolated: {0}</value>
+  </data>
+  <data name="Isolation.Reason.Setting" xml:space="preserve">
+    <value>turned off by the setting</value>
+  </data>
+  <data name="Isolation.Reason.MissingHeaders" xml:space="preserve">
+    <value>headers missing</value>
+  </data>
+  <data name="Isolation.Reason.InsecureContext" xml:space="preserve">
+    <value>not a secure context</value>
+  </data>
+  <data name="Isolation.Reason.Browser" xml:space="preserve">
+    <value>browser refused</value>
+  </data>
+  <data name="Isolation.Reason.NotBrowser" xml:space="preserve">
+    <value>outside a browser</value>
+  </data>
+</root>

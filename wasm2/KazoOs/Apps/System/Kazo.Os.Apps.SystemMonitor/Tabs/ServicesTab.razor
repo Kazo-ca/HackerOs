@@ -1,0 +1,99 @@
+@namespace Kazo.Os.Apps.SystemMonitor.Tabs
+@inherits KazoComponentBase
+
+<div class="svc">
+    <div class="svc-toolbar">
+        <span class="sysmon-muted">@L["Services.Count", _services.Count]</span>
+        <button class="sysmon-btn" @onclick="LoadAsync" disabled="@_busy">@L["Services.Reload"]</button>
+    </div>
+
+    @if (_message is not null)
+    {
+        <div class="svc-message" role="alert">
+            <span>@_message</span>
+            <button class="sysmon-btn sysmon-btn-ghost" @onclick="() => _message = null" aria-label="@L["Common.Dismiss"]">&#x2715;</button>
+        </div>
+    }
+
+    <div class="svc-table-wrapper">
+        <table class="sysmon-table">
+            <thead>
+                <tr>
+                    <th>@L["Services.Column.Service"]</th>
+                    <th class="num">@L["Column.Pid"]</th>
+                    <th>@L["Services.Column.Status"]</th>
+                    <th>@L["Services.Column.Health"]</th>
+                    <th>@L["Services.Column.StartType"]</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (KazoServiceController service in _services)
+                {
+                    KazoServiceController current = service;
+                    KazoServiceActiveState state = LiveState(current);
+                    <tr class="@(state == KazoServiceActiveState.Failed ? "svc-row-failed" : null)">
+                        <td>
+                            <span class="svc-name">@current.DisplayName</span>
+                            <span class="svc-id">@current.ServiceName</span>
+                        </td>
+                        <td class="num mono">@(LivePid(current)?.ToString() ?? "—")</td>
+                        <td>
+                            <span class="svc-status svc-@state" title="@StateTitle(current, state)">@StateText(current, state)</span>
+                        </td>
+                        <td>
+                            @if (state is KazoServiceActiveState.Active or KazoServiceActiveState.Activating or KazoServiceActiveState.Deactivating || current.StatusText is not null)
+                            {
+                                <span class="svc-health svc-health-@current.Health">@HealthText(current.Health)</span>
+                                @if (current.StatusText is { Length: > 0 } text)
+                                {
+                                    <span class="svc-status-text">@text</span>
+                                }
+                            }
+                            else
+                            {
+                                <span class="sysmon-muted">—</span>
+                            }
+                        </td>
+                        <td>
+                            @if (current.StartType is { } startType)
+                            {
+                                <select class="svc-select" value="@startType" disabled="@_busy" aria-label="@L["Services.StartTypeOf", current.DisplayName]"
+                                        @onchange="e => SetStartTypeAsync(current, e.Value)">
+                                    @foreach (ServiceStartMode mode in Enum.GetValues<ServiceStartMode>())
+                                    {
+                                        <option value="@mode">@StartModeLabel(mode)</option>
+                                    }
+                                </select>
+                            }
+                            else
+                            {
+                                <span class="sysmon-muted" title="@L["Services.Unknown.Title"]">@L["Services.Unknown"]</span>
+                            }
+                        </td>
+                        <td class="svc-actions">
+                            @if (state is KazoServiceActiveState.Active or KazoServiceActiveState.Activating)
+                            {
+                                <button class="sysmon-btn btn-danger" disabled="@_busy" @onclick='() => RunAsync(current, current.StopAsync, "Services.Error.Stop")'>@L["Services.Stop"]</button>
+                            }
+                            else
+                            {
+                                @if (state == KazoServiceActiveState.Failed)
+                                {
+                                    <button class="sysmon-btn sysmon-btn-ghost" disabled="@_busy" title="@L["Services.Reset.Title"]"
+                                            @onclick='() => RunAsync(current, current.ResetFailedAsync, "Services.Error.Reset")'>@L["Services.Reset"]</button>
+                                }
+                                <button class="sysmon-btn" disabled="@(_busy || current.StartType == ServiceStartMode.Disabled)"
+                                        @onclick='() => RunAsync(current, current.StartAsync, "Services.Error.Start")'>@L["Services.Start"]</button>
+                            }
+                        </td>
+                    </tr>
+                }
+                @if (_services.Count == 0 && !_busy)
+                {
+                    <tr class="svc-empty"><td colspan="6">@L["Services.Empty"]</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

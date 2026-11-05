@@ -21,10 +21,10 @@ is missing compared to the legacy (`src/apps/`). State observed on `rebuild/base
 
 | App | Exists | Missing |
 |---|---|---|
-| Explorer (`HackerOs.Apps.FileExplorer`) | navigation, history, creation, renaming, trash (ADR 0052), zip, properties, "open with", upload and download; drag and drop of an item **onto a folder** in the view (`FileView.OnItemDropAsync`: move, Ctrl to copy) | cut, copy, paste; drop onto the view background, the tree or the breadcrumb; drop of files coming from the host system |
-| Task manager (`HackerOs.Apps.SystemMonitor`) | Overview, Processes, Services, Hardware tabs; kill; service start mode | performance with charts, disk, network (legacy tabs: `performance`, `disk`, `network`), per-process detail, filter, multiple selection |
-| Text editor (`HackerOs.Apps.TextEditor`) | open, save, save as, search (`TextEditorFindEngine`), conflict detection | replace, replace all (the legacy had them) |
-| Console (`HackerOs.Apps.Terminal`, `TerminalPanel`) | history, current directory, Tab completion of **command names** (phase 3) | path completion, multiple tabs |
+| Explorer (`Kazo.Os.Apps.FileExplorer`) | navigation, history, creation, renaming, trash (ADR 0052), zip, properties, "open with", upload and download; drag and drop of an item **onto a folder** in the view (`FileView.OnItemDropAsync`: move, Ctrl to copy) | cut, copy, paste; drop onto the view background, the tree or the breadcrumb; drop of files coming from the host system |
+| Task manager (`Kazo.Os.Apps.SystemMonitor`) | Overview, Processes, Services, Hardware tabs; kill; service start mode | performance with charts, disk, network (legacy tabs: `performance`, `disk`, `network`), per-process detail, filter, multiple selection |
+| Text editor (`Kazo.Os.Apps.TextEditor`) | open, save, save as, search (`TextEditorFindEngine`), conflict detection | replace, replace all (the legacy had them) |
+| Console (`Kazo.Os.Apps.Terminal`, `TerminalPanel`) | history, current directory, Tab completion of **command names** (phase 3) | path completion, multiple tabs |
 
 ## Decision
 
@@ -73,7 +73,7 @@ uses only the SDK (ADR 0055).
 - **Host system files** (dragged from the user's real
   desktop): uploaded into the target folder through the existing
   upload path. Name conflicts as for paste.
-- These additions live in `HackerOs.AppSdk.FileView` when they concern the
+- These additions live in `Kazo.Os.AppSdk.FileView` when they concern the
   view (background, tree), so that any app that displays a `FileView` benefits.
 
 ### 2. Task manager
@@ -187,8 +187,8 @@ change, and documents its APIs in `docs/app-sdk.md` (created by
 |---|---|---|
 | `rebuild/4-sdk-boundary` | ADR 0055 sections 1 to 3 and 6: MSBuild target `HOSAPP0002` / `HOSSDK0001`, check `HOSAPP0003` in the manifest generator, `IJSRuntime` source test, exemption list of the projects in violation, removal of unused `Platform.Core` references (Calculator, HackPaint, IconViewer, TextEditor, Browser). Creation of `docs/app-sdk.md`. | - |
 | `rebuild/4-sdk-user-and-apps` | ADR 0056 sections 1 to 3 and ADR 0055 section 5: `HackUser`, `HackEnvironment.GetFolderPath`, `HackApps`, `HackAppManagement`, OS authentication agent. Migration of FileExplorer, TextEditor, CodeEditor (user) and of the "Installed Apps" tab of Settings. | `4-sdk-boundary` |
-| `rebuild/4-sdk-network` | ADR 0056 section 6: `IAppNetworkGateway`, `HackDns`, `HackPing`, `HackHttpClient`, `HackTcpClient`, real fallback in Platform Core, `ShellErrorText` in the SDK. Migration of Browser, `ping`, `curl`, `cat`, `nmap`; `HackerOs.Commands` without `Platform.Core` or `Server.Contracts`. | `4-sdk-boundary` |
-| `rebuild/4-sdk-shell-host` | ADR 0056 section 7: capability `shell.host`, `HackShell`, `IHackShell` (without path completion), `HackCredentialPrompt`; `TerminalPanel` and `HackerOs.AppSdk.Terminal` without `Platform.Core`; `IsSystemApp="true"` for CodeEditor. | `4-sdk-boundary` |
+| `rebuild/4-sdk-network` | ADR 0056 section 6: `IAppNetworkGateway`, `HackDns`, `HackPing`, `HackHttpClient`, `HackTcpClient`, real fallback in Platform Core, `ShellErrorText` in the SDK. Migration of Browser, `ping`, `curl`, `cat`, `nmap`; `Kazo.Os.Commands` without `Platform.Core` or `Server.Contracts`. | `4-sdk-boundary` |
+| `rebuild/4-sdk-shell-host` | ADR 0056 section 7: capability `shell.host`, `HackShell`, `IHackShell` (without path completion), `HackCredentialPrompt`; `TerminalPanel` and `Kazo.Os.AppSdk.Terminal` without `Platform.Core`; `IsSystemApp="true"` for CodeEditor. | `4-sdk-boundary` |
 | `rebuild/4-sdk-system-admin` | ADR 0056 sections 8 to 11: `HackSettings.OpenSystemAsync`, `HackPermissionAdministration`, `HackServerConnection`, `HackSystem`, `HackStorageDiagnostics`, capabilities `permissions.manage`, `server.connection.manage`, `system.power`, `system.storage.inspect`. Migration of the rest of Settings and of Diagnostic. | `4-sdk-user-and-apps` |
 | `rebuild/4-proc-metrics` | ADR 0057: counting in the file gateway, the persistence and the network gateway; `/proc/stat`, `/proc/<pid>/io`, `/proc/diskstats`, `/proc/net/dev`, `/proc/mounts`; `StorageCapacityBytes`; `HackDriveInfo`. Update of `virtual-proc-and-dev.md`. | `4-sdk-network` |
 | `rebuild/4-file-explorer` | ADR 0056 section 12 and ADR 0058 section 1: `HackClipboard` and cut/copy operation, cut-copy-paste, name conflicts, drag and drop onto the background, the tree, the breadcrumb, the trash and from the host. | `4-sdk-user-and-apps` |
@@ -214,6 +214,6 @@ Order:
 - Legacy: `src/apps/file-explorer.ts`, `src/apps/system-monitor.ts`,
   `src/apps/text-editor.ts`, `src/apps/terminal.ts`.
 - ADR 0016, 0050, 0051, 0052, 0055, 0056, 0057.
-- `Shared/HackerOs.AppSdk.FileView/FileView.razor.cs`,
-  `Apps/System/HackerOs.Apps.TextEditor/TextEditorFindEngine.cs`,
-  `Shared/HackerOs.AppSdk.Terminal/TerminalPanel.razor`.
+- `Shared/Kazo.Os.AppSdk.FileView/FileView.razor.cs`,
+  `Apps/System/Kazo.Os.Apps.TextEditor/TextEditorFindEngine.cs`,
+  `Shared/Kazo.Os.AppSdk.Terminal/TerminalPanel.razor`.

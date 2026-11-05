@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../../../Platform/Packaging.props" />
+
+  <PropertyGroup>
+    <PackageId>Kazo.Os.Commands</PackageId>
+    <Description>The built-in Kazo OS terminal commands (ls, cat, grep, curl, nano...), one lazy-loaded assembly.</Description>
+    <PackageTags>kazoos;app;commands</PackageTags>
+  </PropertyGroup>
+
+  <!--
+    ADR 0051: every built-in terminal command lives in this single project, one folder per command
+    (Cat/CatApp.cs + Cat/CatCommand.cs, namespace Kazo.Os.Commands.Cat). Each [AppManifest] class
+    produces manifests/<appId>.json (ADR 0047); the host references this project once, with
+    IsSystemApp="true", and lazy-loads the whole assembly on first use.
+    ADR 0055/0056: only abstractions and the SDK; the network commands go through KazoDns,
+    KazoPing, KazoHttpClient and KazoTcpClient, never Platform Core or the server contracts.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\Kazo.Os.App.Abstractions\Kazo.Os.App.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Kazo.Os.AppSdk\Kazo.Os.AppSdk.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Kazo.Os.Simulation.Abstractions\Kazo.Os.Simulation.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

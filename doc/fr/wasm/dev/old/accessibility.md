@@ -19,7 +19,7 @@ HackerOS targets **WCAG 2.2 Level AA**. This document records the intended contr
 - **Focus Indicators:** All focusable elements show a distinct, high-contrast focus ring:
   ```css
   :focus-visible {
-    outline: 2px solid var(--hos-focus-ring, #42d392);
+    outline: 2px solid var(--kos-focus-ring, #42d392);
     outline-offset: 2px;
   }
   ```
@@ -41,8 +41,8 @@ HackerOS targets **WCAG 2.2 Level AA**. This document records the intended contr
   ```css
   @media (prefers-reduced-motion: reduce) {
     [data-theme] {
-      --hos-transition-fast: 0ms;
-      --hos-transition-normal: 0ms;
+      --kos-transition-fast: 0ms;
+      --kos-transition-normal: 0ms;
     }
   }
   ```
@@ -52,7 +52,7 @@ HackerOS targets **WCAG 2.2 Level AA**. This document records the intended contr
 ## 2. Automated & Manual Accessibility Testing
 
 1. **Automated representative check:** `IndexedDbBrowserContractTests.Representative_platform_surfaces_have_no_axe_violations` uses `Deque.AxeCore.Playwright` 4.12.0 and currently verifies that the idle desktop, a window, a dialog, the full-screen Terminal renderer, the local Monaco Code Editor surface, and the Hack Paint canvas surface contain no serious or critical axe findings. Moderate findings are still reported by axe and are not treated as resolved.
-2. **Automated real-app check (desktop + mobile):** `HackerOs.UI.E2E.Tests.AccessibilityAndVisualCoverageTests.Representative_real_app_surfaces_have_no_axe_violations_and_no_mobile_overflow` scans the real desktop shell, App Launcher, File Explorer, Settings, Code Editor, and Hack Paint windows — not the isolated harness — at both 1280×800 and a representative 375×812 mobile check, persists a screenshot per surface/viewport to `artifacts/playwright/accessibility/`, and exercises a live HackerOS → Windows 7 → HackerOS theme change through Settings. This scan found and drove fixes for real serious/critical violations: a missing `<title>` on two of the three Blazor hosts (`test/test` and `HackerOs.Server` were never loading the app's own dark-theme CSS at all — see `docs/pwa-release.md` and the `HackerOs.Windowing.Blazor` `WindowHost.razor` fix below), a MudMenu context-menu activator with no accessible name, a broken `aria-labelledby` on every window (`WindowHost.razor` passed the literal string `"TitleId"` instead of `@TitleId` to `WindowChrome`, so no window dialog ever had a working accessible name), unlabeled File Explorer row checkboxes, a CodeMirror content region with no accessible name, an ARIA-prohibited `aria-label` on a plain `role`-less div, a Code Editor tab strip that misused `role="tablist"`/`role="tab"` without the required structure, an unfocusable scrollable Hack Paint canvas viewport, and insufficient color contrast (File Explorer loading text, Settings' unthemed MudTabs header). All are fixed; this test passes as of the fixes.
+2. **Automated real-app check (desktop + mobile):** `Kazo.Os.UI.E2E.Tests.AccessibilityAndVisualCoverageTests.Representative_real_app_surfaces_have_no_axe_violations_and_no_mobile_overflow` scans the real desktop shell, App Launcher, File Explorer, Settings, Code Editor, and Hack Paint windows — not the isolated harness — at both 1280×800 and a representative 375×812 mobile check, persists a screenshot per surface/viewport to `artifacts/playwright/accessibility/`, and exercises a live HackerOS → Windows 7 → HackerOS theme change through Settings. This scan found and drove fixes for real serious/critical violations: a missing `<title>` on two of the three Blazor hosts (`test/test` and `Kazo.Os.Server` were never loading the app's own dark-theme CSS at all — see `docs/pwa-release.md` and the `Kazo.Os.Windowing.Blazor` `WindowHost.razor` fix below), a MudMenu context-menu activator with no accessible name, a broken `aria-labelledby` on every window (`WindowHost.razor` passed the literal string `"TitleId"` instead of `@TitleId` to `WindowChrome`, so no window dialog ever had a working accessible name), unlabeled File Explorer row checkboxes, a CodeMirror content region with no accessible name, an ARIA-prohibited `aria-label` on a plain `role`-less div, a Code Editor tab strip that misused `role="tablist"`/`role="tab"` without the required structure, an unfocusable scrollable Hack Paint canvas viewport, and insufficient color contrast (File Explorer loading text, Settings' unthemed MudTabs header). All are fixed; this test passes as of the fixes.
 3. **Still-required expanded automation:** the complete Terminal window and taskbar still need dedicated scans (only the full-screen Terminal *renderer* and an isolated taskbar scenario are covered so far). Keyboard order/traps/restoration, Escape behavior, 200% zoom, long text, reduced motion, and RTL also still require executable coverage — none of that exists yet, automated or manual.
 4. **Human evidence checklist:** these items remain unchecked until a person performs the steps and records the browser/OS/assistive-technology versions and artifacts. Full instructions (what to run, exact steps, where to record results): `docs/Human-test-needed-p2-GATE-003.md`.
    - [ ] Launch Terminal from the Start menu using only `Tab`, arrow keys, and `Enter`.

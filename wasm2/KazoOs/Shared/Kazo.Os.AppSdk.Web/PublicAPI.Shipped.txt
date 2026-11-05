@@ -1,0 +1,1148 @@
+#nullable enable
+Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgery
+Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgery.GetAndStoreTokens(Kazo.Os.AppSdk.Web.Http.KazoHttpContext! context) -> Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryTokenSet!
+Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgery.KazoAntiforgery(Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryOptions! options) -> void
+Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgery.IsRequestValid(Kazo.Os.AppSdk.Web.Http.KazoHttpContext! context, out string? reason) -> bool
+Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgery.Options.get -> Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryOptions!
+Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryOptions
+Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryOptions.CookieName.get -> string!
+Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryOptions.CookieName.set -> void
+Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryOptions.FormFieldName.get -> string!
+Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryOptions.FormFieldName.set -> void
+Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryOptions.KazoAntiforgeryOptions() -> void
+Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryOptions.HeaderName.get -> string!
+Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryOptions.HeaderName.set -> void
+Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryTokenSet
+Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryTokenSet.<Clone>$() -> Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryTokenSet!
+Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryTokenSet.Deconstruct(out string! RequestToken, out string! FormFieldName, out string! HeaderName) -> void
+Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryTokenSet.Equals(Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryTokenSet? other) -> bool
+Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryTokenSet.FormFieldName.get -> string!
+Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryTokenSet.FormFieldName.init -> void
+Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryTokenSet.KazoAntiforgeryTokenSet(string! RequestToken, string! FormFieldName, string! HeaderName) -> void
+Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryTokenSet.HeaderName.get -> string!
+Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryTokenSet.HeaderName.init -> void
+Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryTokenSet.RequestToken.get -> string!
+Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryTokenSet.RequestToken.init -> void
+Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryValidationFailedResult
+Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryValidationFailedResult.KazoAntiforgeryValidationFailedResult(string! reason) -> void
+Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryValidationFailedResult.Reason.get -> string!
+Kazo.Os.AppSdk.Web.Antiforgery.IgnoreAntiforgeryTokenAttribute
+Kazo.Os.AppSdk.Web.Antiforgery.IgnoreAntiforgeryTokenAttribute.IgnoreAntiforgeryTokenAttribute() -> void
+Kazo.Os.AppSdk.Web.Antiforgery.ValidateAntiForgeryTokenAttribute
+Kazo.Os.AppSdk.Web.Antiforgery.ValidateAntiForgeryTokenAttribute.ValidateAntiForgeryTokenAttribute() -> void
+Kazo.Os.AppSdk.Web.Data.KazoWebDb
+Kazo.Os.AppSdk.Web.Data.KazoWebDb.BeginTransaction(params string![]! stores) -> Kazo.Os.AppSdk.Web.Data.KazoWebDbTransaction!
+Kazo.Os.AppSdk.Web.Data.KazoWebDb.KazoWebDb(Kazo.Os.AppSdk.WebData.IAppWebDatabaseGateway! gateway, Kazo.Os.AppSdk.Web.Data.KazoWebDbSchemaBuilder! schema, Kazo.Os.AppSdk.Web.Hosting.KazoWebJsonOptions! json) -> void
+Kazo.Os.AppSdk.Web.Data.KazoWebDb.Name.get -> string!
+Kazo.Os.AppSdk.Web.Data.KazoWebDb.OpenAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Web.Data.KazoWebDb.Store<T>(string! name) -> Kazo.Os.AppSdk.Web.Data.KazoWebDbStore<T>!
+Kazo.Os.AppSdk.Web.Data.KazoWebDb.Version.get -> int
+Kazo.Os.AppSdk.Web.Data.KazoWebDbIndex<T>
+Kazo.Os.AppSdk.Web.Data.KazoWebDbIndex<T>.CountAsync(Kazo.Os.AppSdk.Web.Data.KazoWebDbKeyRange? range = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<int>!
+Kazo.Os.AppSdk.Web.Data.KazoWebDbIndex<T>.GetAllAsync(Kazo.Os.AppSdk.Web.Data.KazoWebDbKey key, int? count = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<T>!>!
+Kazo.Os.AppSdk.Web.Data.KazoWebDbIndex<T>.GetAllAsync(Kazo.Os.AppSdk.Web.Data.KazoWebDbKeyRange? range = null, int? count = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<T>!>!
+Kazo.Os.AppSdk.Web.Data.KazoWebDbIndex<T>.GetAllKeysAsync(Kazo.Os.AppSdk.Web.Data.KazoWebDbKeyRange? range = null, int? count = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Web.Data.KazoWebDbKey>!>!
+Kazo.Os.AppSdk.Web.Data.KazoWebDbIndex<T>.GetAsync(Kazo.Os.AppSdk.Web.Data.KazoWebDbKey key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<T?>!
+Kazo.Os.AppSdk.Web.Data.KazoWebDbIndex<T>.Name.get -> string!
+Kazo.Os.AppSdk.Web.Data.KazoWebDbKey
+Kazo.Os.AppSdk.Web.Data.KazoWebDbKey.AsInt64() -> long
+Kazo.Os.AppSdk.Web.Data.KazoWebDbKey.AsString() -> string!
+Kazo.Os.AppSdk.Web.Data.KazoWebDbKey.Equals(Kazo.Os.AppSdk.Web.Data.KazoWebDbKey other) -> bool
+Kazo.Os.AppSdk.Web.Data.KazoWebDbKey.KazoWebDbKey() -> void
+Kazo.Os.AppSdk.Web.Data.KazoWebDbKey.Json.get -> string!
+Kazo.Os.AppSdk.Web.Data.KazoWebDbKeyRange
+Kazo.Os.AppSdk.Web.Data.KazoWebDbSchemaBuilder
+Kazo.Os.AppSdk.Web.Data.KazoWebDbSchemaBuilder.KazoWebDbSchemaBuilder() -> void
+Kazo.Os.AppSdk.Web.Data.KazoWebDbSchemaBuilder.Version(int version, System.Action<Kazo.Os.AppSdk.Web.Data.KazoWebDbVersionBuilder!>! upgrade) -> Kazo.Os.AppSdk.Web.Data.KazoWebDbSchemaBuilder!
+Kazo.Os.AppSdk.Web.Data.KazoWebDbServiceCollectionExtensions
+Kazo.Os.AppSdk.Web.Data.KazoWebDbStore<T>
+Kazo.Os.AppSdk.Web.Data.KazoWebDbStore<T>.AddAsync(T value, Kazo.Os.AppSdk.Web.Data.KazoWebDbKey? key = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Web.Data.KazoWebDbKey>!
+Kazo.Os.AppSdk.Web.Data.KazoWebDbStore<T>.ClearAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Web.Data.KazoWebDbStore<T>.CountAsync(Kazo.Os.AppSdk.Web.Data.KazoWebDbKeyRange? range = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<int>!
+Kazo.Os.AppSdk.Web.Data.KazoWebDbStore<T>.DeleteAsync(Kazo.Os.AppSdk.Web.Data.KazoWebDbKey key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Web.Data.KazoWebDbStore<T>.DeleteAsync(Kazo.Os.AppSdk.Web.Data.KazoWebDbKeyRange! range, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Web.Data.KazoWebDbStore<T>.GetAllAsync(Kazo.Os.AppSdk.Web.Data.KazoWebDbKeyRange? range = null, int? count = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<T>!>!
+Kazo.Os.AppSdk.Web.Data.KazoWebDbStore<T>.GetAllKeysAsync(Kazo.Os.AppSdk.Web.Data.KazoWebDbKeyRange? range = null, int? count = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Web.Data.KazoWebDbKey>!>!
+Kazo.Os.AppSdk.Web.Data.KazoWebDbStore<T>.GetAsync(Kazo.Os.AppSdk.Web.Data.KazoWebDbKey key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<T?>!
+Kazo.Os.AppSdk.Web.Data.KazoWebDbStore<T>.Index(string! name) -> Kazo.Os.AppSdk.Web.Data.KazoWebDbIndex<T>!
+Kazo.Os.AppSdk.Web.Data.KazoWebDbStore<T>.Name.get -> string!
+Kazo.Os.AppSdk.Web.Data.KazoWebDbStore<T>.PutAsync(T value, Kazo.Os.AppSdk.Web.Data.KazoWebDbKey? key = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Web.Data.KazoWebDbKey>!
+Kazo.Os.AppSdk.Web.Data.KazoWebDbTransaction
+Kazo.Os.AppSdk.Web.Data.KazoWebDbTransaction.CommitAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Web.Data.KazoWebDbKey?>!>!
+Kazo.Os.AppSdk.Web.Data.KazoWebDbTransaction.Count.get -> int
+Kazo.Os.AppSdk.Web.Data.KazoWebDbTransaction.Store<T>(string! name) -> Kazo.Os.AppSdk.Web.Data.KazoWebDbTransactionStore<T>!
+Kazo.Os.AppSdk.Web.Data.KazoWebDbTransactionStore<T>
+Kazo.Os.AppSdk.Web.Data.KazoWebDbTransactionStore<T>.Add(T value, Kazo.Os.AppSdk.Web.Data.KazoWebDbKey? key = null) -> Kazo.Os.AppSdk.Web.Data.KazoWebDbTransactionStore<T>!
+Kazo.Os.AppSdk.Web.Data.KazoWebDbTransactionStore<T>.Clear() -> Kazo.Os.AppSdk.Web.Data.KazoWebDbTransactionStore<T>!
+Kazo.Os.AppSdk.Web.Data.KazoWebDbTransactionStore<T>.Delete(Kazo.Os.AppSdk.Web.Data.KazoWebDbKey key) -> Kazo.Os.AppSdk.Web.Data.KazoWebDbTransactionStore<T>!
+Kazo.Os.AppSdk.Web.Data.KazoWebDbTransactionStore<T>.Put(T value, Kazo.Os.AppSdk.Web.Data.KazoWebDbKey? key = null) -> Kazo.Os.AppSdk.Web.Data.KazoWebDbTransactionStore<T>!
+Kazo.Os.AppSdk.Web.Data.KazoWebDbVersionBuilder
+Kazo.Os.AppSdk.Web.Data.KazoWebDbVersionBuilder.CreateIndex(string! store, string! name, string! keyPath, bool unique = false, bool multiEntry = false) -> Kazo.Os.AppSdk.Web.Data.KazoWebDbVersionBuilder!
+Kazo.Os.AppSdk.Web.Data.KazoWebDbVersionBuilder.CreateStore(string! name, string? keyPath = null, bool autoIncrement = false) -> Kazo.Os.AppSdk.Web.Data.KazoWebDbVersionBuilder!
+Kazo.Os.AppSdk.Web.Data.KazoWebDbVersionBuilder.DeleteIndex(string! store, string! name) -> Kazo.Os.AppSdk.Web.Data.KazoWebDbVersionBuilder!
+Kazo.Os.AppSdk.Web.Data.KazoWebDbVersionBuilder.DeleteStore(string! name) -> Kazo.Os.AppSdk.Web.Data.KazoWebDbVersionBuilder!
+Kazo.Os.AppSdk.Web.Data.KazoWebDbVersionBuilder.KazoWebDbVersionBuilder() -> void
+Kazo.Os.AppSdk.Web.Hosting.KazoBlazorSiteEndpoints
+Kazo.Os.AppSdk.Web.Hosting.KazoStaticFileMiddleware
+Kazo.Os.AppSdk.Web.Hosting.KazoStaticFileMiddleware.Files.get -> System.Collections.Generic.IReadOnlyCollection<string!>!
+Kazo.Os.AppSdk.Web.Hosting.KazoStaticFileMiddleware.KazoStaticFileMiddleware(Kazo.Os.AppSdk.Web.Hosting.KazoStaticFileOptions! options) -> void
+Kazo.Os.AppSdk.Web.Hosting.KazoStaticFileMiddleware.InvokeAsync(Kazo.Os.AppSdk.Web.Http.KazoHttpContext! context, Kazo.Os.AppSdk.Web.Routing.KazoRequestDelegate! next) -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Web.Hosting.KazoStaticFileMiddleware.TryResolve(string! requestPath) -> string?
+Kazo.Os.AppSdk.Web.Hosting.KazoStaticFileOptions
+Kazo.Os.AppSdk.Web.Hosting.KazoStaticFileOptions.Assembly.get -> System.Reflection.Assembly?
+Kazo.Os.AppSdk.Web.Hosting.KazoStaticFileOptions.Assembly.set -> void
+Kazo.Os.AppSdk.Web.Hosting.KazoStaticFileOptions.CacheControl.get -> string?
+Kazo.Os.AppSdk.Web.Hosting.KazoStaticFileOptions.CacheControl.set -> void
+Kazo.Os.AppSdk.Web.Hosting.KazoStaticFileOptions.DefaultFileNames.get -> System.Collections.Generic.IList<string!>!
+Kazo.Os.AppSdk.Web.Hosting.KazoStaticFileOptions.KazoStaticFileOptions() -> void
+Kazo.Os.AppSdk.Web.Hosting.KazoStaticFileOptions.RequestPath.get -> string!
+Kazo.Os.AppSdk.Web.Hosting.KazoStaticFileOptions.RequestPath.set -> void
+Kazo.Os.AppSdk.Web.Hosting.KazoStaticFileOptions.ResourcePrefix.get -> string!
+Kazo.Os.AppSdk.Web.Hosting.KazoStaticFileOptions.ResourcePrefix.set -> void
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.ApplicationId.get -> string!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.Endpoints.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Web.Routing.KazoEndpoint!>!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.Map(string! pattern, Kazo.Os.AppSdk.Web.Routing.KazoRequestDelegate! handler) -> Kazo.Os.AppSdk.Web.Routing.KazoEndpoint!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.MapControllerRoute(string! name, string! pattern) -> Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.MapControllerRoute<TDefaults>(string! name, string! pattern, TDefaults defaults) -> Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.MapControllers() -> Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.MapDefaultControllerRoute() -> Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.MapDelete(string! pattern, System.Func<Kazo.Os.AppSdk.Web.Http.KazoHttpContext!, Kazo.Os.AppSdk.Web.Mvc.IKazoActionResult!>! handler) -> Kazo.Os.AppSdk.Web.Routing.KazoEndpoint!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.MapDelete(string! pattern, System.Func<Kazo.Os.AppSdk.Web.Http.KazoHttpContext!, System.Threading.Tasks.Task<Kazo.Os.AppSdk.Web.Mvc.IKazoActionResult!>!>! handler) -> Kazo.Os.AppSdk.Web.Routing.KazoEndpoint!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.MapFallback(string! pattern, Kazo.Os.AppSdk.Web.Routing.KazoRequestDelegate! handler, string? displayName = null) -> Kazo.Os.AppSdk.Web.Routing.KazoEndpoint!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.MapGet(string! pattern, Kazo.Os.AppSdk.Web.Routing.KazoRequestDelegate! handler) -> Kazo.Os.AppSdk.Web.Routing.KazoEndpoint!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.MapGet(string! pattern, System.Func<Kazo.Os.AppSdk.Web.Http.KazoHttpContext!, Kazo.Os.AppSdk.Web.Mvc.IKazoActionResult!>! handler) -> Kazo.Os.AppSdk.Web.Routing.KazoEndpoint!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.MapGet(string! pattern, System.Func<Kazo.Os.AppSdk.Web.Http.KazoHttpContext!, System.Threading.Tasks.Task<Kazo.Os.AppSdk.Web.Mvc.IKazoActionResult!>!>! handler) -> Kazo.Os.AppSdk.Web.Routing.KazoEndpoint!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.MapGet(string! pattern, System.Func<Kazo.Os.AppSdk.Web.Mvc.IKazoActionResult!>! handler) -> Kazo.Os.AppSdk.Web.Routing.KazoEndpoint!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.MapMethods(string! pattern, System.Collections.Generic.IReadOnlyList<string!>! httpMethods, Kazo.Os.AppSdk.Web.Routing.KazoRequestDelegate! handler) -> Kazo.Os.AppSdk.Web.Routing.KazoEndpoint!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.MapPatch(string! pattern, System.Func<Kazo.Os.AppSdk.Web.Http.KazoHttpContext!, System.Threading.Tasks.Task<Kazo.Os.AppSdk.Web.Mvc.IKazoActionResult!>!>! handler) -> Kazo.Os.AppSdk.Web.Routing.KazoEndpoint!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.MapPost(string! pattern, Kazo.Os.AppSdk.Web.Routing.KazoRequestDelegate! handler) -> Kazo.Os.AppSdk.Web.Routing.KazoEndpoint!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.MapPost(string! pattern, System.Func<Kazo.Os.AppSdk.Web.Http.KazoHttpContext!, Kazo.Os.AppSdk.Web.Mvc.IKazoActionResult!>! handler) -> Kazo.Os.AppSdk.Web.Routing.KazoEndpoint!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.MapPost(string! pattern, System.Func<Kazo.Os.AppSdk.Web.Http.KazoHttpContext!, System.Threading.Tasks.Task<Kazo.Os.AppSdk.Web.Mvc.IKazoActionResult!>!>! handler) -> Kazo.Os.AppSdk.Web.Routing.KazoEndpoint!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.MapPut(string! pattern, System.Func<Kazo.Os.AppSdk.Web.Http.KazoHttpContext!, System.Threading.Tasks.Task<Kazo.Os.AppSdk.Web.Mvc.IKazoActionResult!>!>! handler) -> Kazo.Os.AppSdk.Web.Routing.KazoEndpoint!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.ProcessAsync(Kazo.Os.AppSdk.Web.Http.KazoWebRequestData! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Web.Http.KazoWebResponseData!>!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.Services.get -> System.IServiceProvider!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.UnhandledException -> System.Action<Kazo.Os.AppSdk.Web.Http.KazoHttpContext!, System.Exception!>?
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.Urls.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.Use(System.Func<Kazo.Os.AppSdk.Web.Http.KazoHttpContext!, System.Func<System.Threading.Tasks.Task!>!, System.Threading.Tasks.Task!>! middleware) -> Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.Use(System.Func<Kazo.Os.AppSdk.Web.Routing.KazoRequestDelegate!, Kazo.Os.AppSdk.Web.Routing.KazoRequestDelegate!>! middleware) -> Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.UseCookieSession(System.Action<Kazo.Os.AppSdk.Web.Sessions.KazoSessionOptions!>? configure = null) -> Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.UseExceptionPage() -> Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.UseMiddleware<T>() -> Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.UseStaticFiles(System.Action<Kazo.Os.AppSdk.Web.Hosting.KazoStaticFileOptions!>? configure = null) -> Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication.UseStatusCodePages() -> Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplicationBuilder
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplicationBuilder.Antiforgery.get -> Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryOptions!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplicationBuilder.ApplicationId.get -> string!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplicationBuilder.ApplicationName.get -> string!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplicationBuilder.Build() -> Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplicationBuilder.DefinitionType.get -> System.Type?
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplicationBuilder.KazoWebApplicationBuilder(string! applicationId, string! applicationName, System.Collections.Generic.IReadOnlyList<string!>! urls, Kazo.Os.AppSdk.Web.Mvc.KazoControllerRouteTable! routes) -> void
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplicationBuilder.KazoWebApplicationBuilder(string! applicationId, string! applicationName, System.Collections.Generic.IReadOnlyList<string!>! urls, Kazo.Os.AppSdk.Web.Mvc.KazoControllerRouteTable! routes, Kazo.Os.AppSdk.Web.Views.KazoViewTable! views, System.Type? definitionType) -> void
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplicationBuilder.Json.get -> Kazo.Os.AppSdk.Web.Hosting.KazoWebJsonOptions!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplicationBuilder.Logging.get -> Kazo.Os.AppSdk.Web.Logging.KazoWebLoggingOptions!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplicationBuilder.Mvc.get -> Kazo.Os.AppSdk.Web.Mvc.KazoMvcOptions!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplicationBuilder.Routes.get -> Kazo.Os.AppSdk.Web.Mvc.KazoControllerRouteTable!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplicationBuilder.Services.get -> Microsoft.Extensions.DependencyInjection.IServiceCollection!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplicationBuilder.Urls.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebApplicationBuilder.Views.get -> Kazo.Os.AppSdk.Web.Views.KazoViewTable!
+Kazo.Os.AppSdk.Web.Hosting.KazoWebHost
+Kazo.Os.AppSdk.Web.Hosting.KazoWebHost.Application.get -> Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication?
+Kazo.Os.AppSdk.Web.Hosting.KazoWebHost.KazoWebHost(Kazo.Os.App.Abstractions.AppManifest! manifest, Kazo.Os.AppSdk.Web.Hosting.WebAppDefinition! definition, Kazo.Os.AppSdk.Web.Mvc.KazoControllerRouteTable! routes) -> void
+Kazo.Os.AppSdk.Web.Hosting.KazoWebHost.KazoWebHost(Kazo.Os.App.Abstractions.AppManifest! manifest, Kazo.Os.AppSdk.Web.Hosting.WebAppDefinition! definition, Kazo.Os.AppSdk.Web.Mvc.KazoControllerRouteTable! routes, Kazo.Os.AppSdk.Web.Views.KazoViewTable! views) -> void
+Kazo.Os.AppSdk.Web.Hosting.KazoWebJsonOptions
+Kazo.Os.AppSdk.Web.Hosting.KazoWebJsonOptions.KazoWebJsonOptions() -> void
+Kazo.Os.AppSdk.Web.Hosting.KazoWebJsonOptions.SerializerOptions.get -> System.Text.Json.JsonSerializerOptions!
+Kazo.Os.AppSdk.Web.Hosting.IKazoMiddleware
+Kazo.Os.AppSdk.Web.Hosting.IKazoMiddleware.InvokeAsync(Kazo.Os.AppSdk.Web.Http.KazoHttpContext! context, Kazo.Os.AppSdk.Web.Routing.KazoRequestDelegate! next) -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Web.Hosting.WebAppDefinition
+Kazo.Os.AppSdk.Web.Hosting.WebAppDefinition.WebAppDefinition() -> void
+Kazo.Os.AppSdk.Web.Http.KazoConnectionInfo
+Kazo.Os.AppSdk.Web.Http.KazoConnectionInfo.<Clone>$() -> Kazo.Os.AppSdk.Web.Http.KazoConnectionInfo!
+Kazo.Os.AppSdk.Web.Http.KazoConnectionInfo.Deconstruct(out string! Id, out System.Net.IPEndPoint! RemoteEndPoint, out System.Net.IPEndPoint! LocalEndPoint) -> void
+Kazo.Os.AppSdk.Web.Http.KazoConnectionInfo.Equals(Kazo.Os.AppSdk.Web.Http.KazoConnectionInfo? other) -> bool
+Kazo.Os.AppSdk.Web.Http.KazoConnectionInfo.KazoConnectionInfo(string! Id, System.Net.IPEndPoint! RemoteEndPoint, System.Net.IPEndPoint! LocalEndPoint) -> void
+Kazo.Os.AppSdk.Web.Http.KazoConnectionInfo.Id.get -> string!
+Kazo.Os.AppSdk.Web.Http.KazoConnectionInfo.Id.init -> void
+Kazo.Os.AppSdk.Web.Http.KazoConnectionInfo.LocalEndPoint.get -> System.Net.IPEndPoint!
+Kazo.Os.AppSdk.Web.Http.KazoConnectionInfo.LocalEndPoint.init -> void
+Kazo.Os.AppSdk.Web.Http.KazoConnectionInfo.RemoteEndPoint.get -> System.Net.IPEndPoint!
+Kazo.Os.AppSdk.Web.Http.KazoConnectionInfo.RemoteEndPoint.init -> void
+Kazo.Os.AppSdk.Web.Http.KazoCookieOptions
+Kazo.Os.AppSdk.Web.Http.KazoCookieOptions.Domain.get -> string?
+Kazo.Os.AppSdk.Web.Http.KazoCookieOptions.Domain.set -> void
+Kazo.Os.AppSdk.Web.Http.KazoCookieOptions.Expires.get -> System.DateTimeOffset?
+Kazo.Os.AppSdk.Web.Http.KazoCookieOptions.Expires.set -> void
+Kazo.Os.AppSdk.Web.Http.KazoCookieOptions.KazoCookieOptions() -> void
+Kazo.Os.AppSdk.Web.Http.KazoCookieOptions.HttpOnly.get -> bool
+Kazo.Os.AppSdk.Web.Http.KazoCookieOptions.HttpOnly.set -> void
+Kazo.Os.AppSdk.Web.Http.KazoCookieOptions.MaxAge.get -> System.TimeSpan?
+Kazo.Os.AppSdk.Web.Http.KazoCookieOptions.MaxAge.set -> void
+Kazo.Os.AppSdk.Web.Http.KazoCookieOptions.Path.get -> string?
+Kazo.Os.AppSdk.Web.Http.KazoCookieOptions.Path.set -> void
+Kazo.Os.AppSdk.Web.Http.KazoCookieOptions.SameSite.get -> string?
+Kazo.Os.AppSdk.Web.Http.KazoCookieOptions.SameSite.set -> void
+Kazo.Os.AppSdk.Web.Http.KazoCookieOptions.Secure.get -> bool
+Kazo.Os.AppSdk.Web.Http.KazoCookieOptions.Secure.set -> void
+Kazo.Os.AppSdk.Web.Http.KazoHeaderDictionary
+Kazo.Os.AppSdk.Web.Http.KazoHeaderDictionary.Append(string! name, string! value) -> void
+Kazo.Os.AppSdk.Web.Http.KazoHeaderDictionary.Clear() -> void
+Kazo.Os.AppSdk.Web.Http.KazoHeaderDictionary.ContainsKey(string! name) -> bool
+Kazo.Os.AppSdk.Web.Http.KazoHeaderDictionary.Count.get -> int
+Kazo.Os.AppSdk.Web.Http.KazoHeaderDictionary.GetEnumerator() -> System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<string!, System.Collections.Generic.IReadOnlyList<string!>!>>!
+Kazo.Os.AppSdk.Web.Http.KazoHeaderDictionary.GetValues(string! name) -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.AppSdk.Web.Http.KazoHeaderDictionary.KazoHeaderDictionary() -> void
+Kazo.Os.AppSdk.Web.Http.KazoHeaderDictionary.Remove(string! name) -> bool
+Kazo.Os.AppSdk.Web.Http.KazoHeaderDictionary.this[string! name].get -> string?
+Kazo.Os.AppSdk.Web.Http.KazoHeaderDictionary.this[string! name].set -> void
+Kazo.Os.AppSdk.Web.Http.KazoHttpContext
+Kazo.Os.AppSdk.Web.Http.KazoHttpContext.Connection.get -> Kazo.Os.AppSdk.Web.Http.KazoConnectionInfo!
+Kazo.Os.AppSdk.Web.Http.KazoHttpContext.Endpoint.get -> Kazo.Os.AppSdk.Web.Routing.KazoEndpoint?
+Kazo.Os.AppSdk.Web.Http.KazoHttpContext.HasSession.get -> bool
+Kazo.Os.AppSdk.Web.Http.KazoHttpContext.Items.get -> System.Collections.Generic.IDictionary<object!, object?>!
+Kazo.Os.AppSdk.Web.Http.KazoHttpContext.Request.get -> Kazo.Os.AppSdk.Web.Http.KazoHttpRequest!
+Kazo.Os.AppSdk.Web.Http.KazoHttpContext.RequestAborted.get -> System.Threading.CancellationToken
+Kazo.Os.AppSdk.Web.Http.KazoHttpContext.RequestServices.get -> System.IServiceProvider!
+Kazo.Os.AppSdk.Web.Http.KazoHttpContext.Response.get -> Kazo.Os.AppSdk.Web.Http.KazoHttpResponse!
+Kazo.Os.AppSdk.Web.Http.KazoHttpContext.Session.get -> Kazo.Os.AppSdk.Web.Sessions.KazoSession!
+Kazo.Os.AppSdk.Web.Http.KazoHttpContext.TraceIdentifier.get -> string!
+Kazo.Os.AppSdk.Web.Http.KazoHttpRequest
+Kazo.Os.AppSdk.Web.Http.KazoHttpRequest.Body.get -> System.IO.Stream!
+Kazo.Os.AppSdk.Web.Http.KazoHttpRequest.BodyBytes.get -> System.ReadOnlyMemory<byte>
+Kazo.Os.AppSdk.Web.Http.KazoHttpRequest.ContentLength.get -> long
+Kazo.Os.AppSdk.Web.Http.KazoHttpRequest.ContentType.get -> string?
+Kazo.Os.AppSdk.Web.Http.KazoHttpRequest.Cookies.get -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
+Kazo.Os.AppSdk.Web.Http.KazoHttpRequest.Form.get -> Kazo.Os.AppSdk.Web.Http.KazoValueCollection!
+Kazo.Os.AppSdk.Web.Http.KazoHttpRequest.HasFormContentType.get -> bool
+Kazo.Os.AppSdk.Web.Http.KazoHttpRequest.HasJsonContentType.get -> bool
+Kazo.Os.AppSdk.Web.Http.KazoHttpRequest.Headers.get -> Kazo.Os.AppSdk.Web.Http.KazoHeaderDictionary!
+Kazo.Os.AppSdk.Web.Http.KazoHttpRequest.Host.get -> string!
+Kazo.Os.AppSdk.Web.Http.KazoHttpRequest.IsHttps.get -> bool
+Kazo.Os.AppSdk.Web.Http.KazoHttpRequest.Method.get -> string!
+Kazo.Os.AppSdk.Web.Http.KazoHttpRequest.Path.get -> string!
+Kazo.Os.AppSdk.Web.Http.KazoHttpRequest.PathAndQuery.get -> string!
+Kazo.Os.AppSdk.Web.Http.KazoHttpRequest.Query.get -> Kazo.Os.AppSdk.Web.Http.KazoValueCollection!
+Kazo.Os.AppSdk.Web.Http.KazoHttpRequest.QueryString.get -> string!
+Kazo.Os.AppSdk.Web.Http.KazoHttpRequest.ReadBodyAsString() -> string!
+Kazo.Os.AppSdk.Web.Http.KazoHttpRequest.ReadFromJson<T>(System.Text.Json.Serialization.Metadata.JsonTypeInfo<T>! jsonTypeInfo) -> T?
+Kazo.Os.AppSdk.Web.Http.KazoHttpRequest.RouteValues.get -> Kazo.Os.AppSdk.Web.Routing.KazoRouteValueDictionary!
+Kazo.Os.AppSdk.Web.Http.KazoHttpRequest.Scheme.get -> string!
+Kazo.Os.AppSdk.Web.Http.KazoHttpRequest.Url.get -> System.Uri!
+Kazo.Os.AppSdk.Web.Http.KazoHttpResponse
+Kazo.Os.AppSdk.Web.Http.KazoHttpResponse.Body.get -> System.IO.Stream!
+Kazo.Os.AppSdk.Web.Http.KazoHttpResponse.Clear() -> void
+Kazo.Os.AppSdk.Web.Http.KazoHttpResponse.ClearBody() -> void
+Kazo.Os.AppSdk.Web.Http.KazoHttpResponse.ContentLength.get -> long
+Kazo.Os.AppSdk.Web.Http.KazoHttpResponse.ContentType.get -> string?
+Kazo.Os.AppSdk.Web.Http.KazoHttpResponse.ContentType.set -> void
+Kazo.Os.AppSdk.Web.Http.KazoHttpResponse.Cookies.get -> Kazo.Os.AppSdk.Web.Http.KazoResponseCookies!
+Kazo.Os.AppSdk.Web.Http.KazoHttpResponse.GetBodyBytes() -> byte[]!
+Kazo.Os.AppSdk.Web.Http.KazoHttpResponse.Headers.get -> Kazo.Os.AppSdk.Web.Http.KazoHeaderDictionary!
+Kazo.Os.AppSdk.Web.Http.KazoHttpResponse.ReasonPhrase.get -> string?
+Kazo.Os.AppSdk.Web.Http.KazoHttpResponse.ReasonPhrase.set -> void
+Kazo.Os.AppSdk.Web.Http.KazoHttpResponse.Redirect(string! location, bool permanent = false) -> void
+Kazo.Os.AppSdk.Web.Http.KazoHttpResponse.StatusCode.get -> int
+Kazo.Os.AppSdk.Web.Http.KazoHttpResponse.StatusCode.set -> void
+Kazo.Os.AppSdk.Web.Http.KazoHttpResponse.WriteAsJsonAsync<T>(T value, System.Text.Json.Serialization.Metadata.JsonTypeInfo<T>! jsonTypeInfo, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Web.Http.KazoHttpResponse.WriteAsync(string! text, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Web.Http.KazoResponseCookies
+Kazo.Os.AppSdk.Web.Http.KazoResponseCookies.Append(string! name, string! value, Kazo.Os.AppSdk.Web.Http.KazoCookieOptions? options = null) -> void
+Kazo.Os.AppSdk.Web.Http.KazoResponseCookies.Delete(string! name, string! path = "/") -> void
+Kazo.Os.AppSdk.Web.Http.KazoValueCollection
+Kazo.Os.AppSdk.Web.Http.KazoValueCollection.ContainsKey(string! name) -> bool
+Kazo.Os.AppSdk.Web.Http.KazoValueCollection.Count.get -> int
+Kazo.Os.AppSdk.Web.Http.KazoValueCollection.GetEnumerator() -> System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<string!, System.Collections.Generic.IReadOnlyList<string!>!>>!
+Kazo.Os.AppSdk.Web.Http.KazoValueCollection.GetValues(string! name) -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.AppSdk.Web.Http.KazoValueCollection.KazoValueCollection() -> void
+Kazo.Os.AppSdk.Web.Http.KazoValueCollection.Keys.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.AppSdk.Web.Http.KazoValueCollection.this[string! name].get -> string?
+Kazo.Os.AppSdk.Web.Http.KazoWebRequestData
+Kazo.Os.AppSdk.Web.Http.KazoWebRequestData.<Clone>$() -> Kazo.Os.AppSdk.Web.Http.KazoWebRequestData!
+Kazo.Os.AppSdk.Web.Http.KazoWebRequestData.Body.get -> System.ReadOnlyMemory<byte>
+Kazo.Os.AppSdk.Web.Http.KazoWebRequestData.Body.init -> void
+Kazo.Os.AppSdk.Web.Http.KazoWebRequestData.ContentType.get -> string?
+Kazo.Os.AppSdk.Web.Http.KazoWebRequestData.ContentType.init -> void
+Kazo.Os.AppSdk.Web.Http.KazoWebRequestData.Deconstruct(out string! Method, out System.Uri! Url, out System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>! Headers, out string? ContentType, out System.ReadOnlyMemory<byte> Body) -> void
+Kazo.Os.AppSdk.Web.Http.KazoWebRequestData.Equals(Kazo.Os.AppSdk.Web.Http.KazoWebRequestData? other) -> bool
+Kazo.Os.AppSdk.Web.Http.KazoWebRequestData.KazoWebRequestData(string! Method, System.Uri! Url, System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>! Headers, string? ContentType, System.ReadOnlyMemory<byte> Body) -> void
+Kazo.Os.AppSdk.Web.Http.KazoWebRequestData.Headers.get -> System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>!
+Kazo.Os.AppSdk.Web.Http.KazoWebRequestData.Headers.init -> void
+Kazo.Os.AppSdk.Web.Http.KazoWebRequestData.LocalEndPoint.get -> System.Net.IPEndPoint?
+Kazo.Os.AppSdk.Web.Http.KazoWebRequestData.LocalEndPoint.init -> void
+Kazo.Os.AppSdk.Web.Http.KazoWebRequestData.Method.get -> string!
+Kazo.Os.AppSdk.Web.Http.KazoWebRequestData.Method.init -> void
+Kazo.Os.AppSdk.Web.Http.KazoWebRequestData.RemoteEndPoint.get -> System.Net.IPEndPoint!
+Kazo.Os.AppSdk.Web.Http.KazoWebRequestData.RemoteEndPoint.init -> void
+Kazo.Os.AppSdk.Web.Http.KazoWebRequestData.Url.get -> System.Uri!
+Kazo.Os.AppSdk.Web.Http.KazoWebRequestData.Url.init -> void
+Kazo.Os.AppSdk.Web.Http.KazoWebResponseData
+Kazo.Os.AppSdk.Web.Http.KazoWebResponseData.<Clone>$() -> Kazo.Os.AppSdk.Web.Http.KazoWebResponseData!
+Kazo.Os.AppSdk.Web.Http.KazoWebResponseData.Body.get -> byte[]!
+Kazo.Os.AppSdk.Web.Http.KazoWebResponseData.Body.init -> void
+Kazo.Os.AppSdk.Web.Http.KazoWebResponseData.ContentType.get -> string?
+Kazo.Os.AppSdk.Web.Http.KazoWebResponseData.ContentType.init -> void
+Kazo.Os.AppSdk.Web.Http.KazoWebResponseData.Deconstruct(out int StatusCode, out string? ReasonPhrase, out System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>! Headers, out string? ContentType, out byte[]! Body) -> void
+Kazo.Os.AppSdk.Web.Http.KazoWebResponseData.Equals(Kazo.Os.AppSdk.Web.Http.KazoWebResponseData? other) -> bool
+Kazo.Os.AppSdk.Web.Http.KazoWebResponseData.GetHeader(string! name) -> string?
+Kazo.Os.AppSdk.Web.Http.KazoWebResponseData.KazoWebResponseData(int StatusCode, string? ReasonPhrase, System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>! Headers, string? ContentType, byte[]! Body) -> void
+Kazo.Os.AppSdk.Web.Http.KazoWebResponseData.Headers.get -> System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>!
+Kazo.Os.AppSdk.Web.Http.KazoWebResponseData.Headers.init -> void
+Kazo.Os.AppSdk.Web.Http.KazoWebResponseData.ReadAsString() -> string!
+Kazo.Os.AppSdk.Web.Http.KazoWebResponseData.ReasonPhrase.get -> string?
+Kazo.Os.AppSdk.Web.Http.KazoWebResponseData.ReasonPhrase.init -> void
+Kazo.Os.AppSdk.Web.Http.KazoWebResponseData.StatusCode.get -> int
+Kazo.Os.AppSdk.Web.Http.KazoWebResponseData.StatusCode.init -> void
+Kazo.Os.AppSdk.Web.Logging.KazoWebDebugLogGatewaySink
+Kazo.Os.AppSdk.Web.Logging.KazoWebDebugLogGatewaySink.KazoWebDebugLogGatewaySink(Kazo.Os.AppSdk.IAppExecutionContext! context) -> void
+Kazo.Os.AppSdk.Web.Logging.KazoWebDebugLogGatewaySink.Write(string! line) -> void
+Kazo.Os.AppSdk.Web.Logging.KazoWebDebugLogMemorySink
+Kazo.Os.AppSdk.Web.Logging.KazoWebDebugLogMemorySink.KazoWebDebugLogMemorySink() -> void
+Kazo.Os.AppSdk.Web.Logging.KazoWebDebugLogMemorySink.Lines.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.AppSdk.Web.Logging.KazoWebDebugLogMemorySink.Write(string! line) -> void
+Kazo.Os.AppSdk.Web.Logging.KazoWebLoggingOptions
+Kazo.Os.AppSdk.Web.Logging.KazoWebLoggingOptions.DebugLogEnabled.get -> bool
+Kazo.Os.AppSdk.Web.Logging.KazoWebLoggingOptions.EnableDebugLog(Microsoft.Extensions.Logging.LogLevel minimumLevel = Microsoft.Extensions.Logging.LogLevel.Debug) -> Kazo.Os.AppSdk.Web.Logging.KazoWebLoggingOptions!
+Kazo.Os.AppSdk.Web.Logging.KazoWebLoggingOptions.KazoWebLoggingOptions() -> void
+Kazo.Os.AppSdk.Web.Logging.KazoWebLoggingOptions.LogRequests.get -> bool
+Kazo.Os.AppSdk.Web.Logging.KazoWebLoggingOptions.LogRequests.set -> void
+Kazo.Os.AppSdk.Web.Logging.KazoWebLoggingOptions.MinimumLevel.get -> Microsoft.Extensions.Logging.LogLevel
+Kazo.Os.AppSdk.Web.Logging.IKazoWebDebugLogSink
+Kazo.Os.AppSdk.Web.Logging.IKazoWebDebugLogSink.Write(string! line) -> void
+Kazo.Os.AppSdk.Web.Mvc.ActionNameAttribute
+Kazo.Os.AppSdk.Web.Mvc.ActionNameAttribute.ActionNameAttribute(string! name) -> void
+Kazo.Os.AppSdk.Web.Mvc.ActionNameAttribute.Name.get -> string!
+Kazo.Os.AppSdk.Web.Mvc.FromBodyAttribute
+Kazo.Os.AppSdk.Web.Mvc.FromBodyAttribute.FromBodyAttribute() -> void
+Kazo.Os.AppSdk.Web.Mvc.FromFormAttribute
+Kazo.Os.AppSdk.Web.Mvc.FromFormAttribute.FromFormAttribute() -> void
+Kazo.Os.AppSdk.Web.Mvc.FromFormAttribute.Name.get -> string?
+Kazo.Os.AppSdk.Web.Mvc.FromFormAttribute.Name.set -> void
+Kazo.Os.AppSdk.Web.Mvc.FromHeaderAttribute
+Kazo.Os.AppSdk.Web.Mvc.FromHeaderAttribute.FromHeaderAttribute() -> void
+Kazo.Os.AppSdk.Web.Mvc.FromHeaderAttribute.Name.get -> string?
+Kazo.Os.AppSdk.Web.Mvc.FromHeaderAttribute.Name.set -> void
+Kazo.Os.AppSdk.Web.Mvc.FromQueryAttribute
+Kazo.Os.AppSdk.Web.Mvc.FromQueryAttribute.FromQueryAttribute() -> void
+Kazo.Os.AppSdk.Web.Mvc.FromQueryAttribute.Name.get -> string?
+Kazo.Os.AppSdk.Web.Mvc.FromQueryAttribute.Name.set -> void
+Kazo.Os.AppSdk.Web.Mvc.FromRouteAttribute
+Kazo.Os.AppSdk.Web.Mvc.FromRouteAttribute.FromRouteAttribute() -> void
+Kazo.Os.AppSdk.Web.Mvc.FromRouteAttribute.Name.get -> string?
+Kazo.Os.AppSdk.Web.Mvc.FromRouteAttribute.Name.set -> void
+Kazo.Os.AppSdk.Web.Mvc.FromServicesAttribute
+Kazo.Os.AppSdk.Web.Mvc.FromServicesAttribute.FromServicesAttribute() -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoActionContext
+Kazo.Os.AppSdk.Web.Mvc.KazoActionContext.ActionDescriptor.get -> Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor?
+Kazo.Os.AppSdk.Web.Mvc.KazoActionContext.KazoActionContext(Kazo.Os.AppSdk.Web.Http.KazoHttpContext! httpContext, Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor? actionDescriptor = null, Kazo.Os.AppSdk.Web.Mvc.KazoModelStateDictionary? modelState = null) -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoActionContext.KazoActionContext(Kazo.Os.AppSdk.Web.Mvc.KazoActionContext! other) -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoActionContext.HttpContext.get -> Kazo.Os.AppSdk.Web.Http.KazoHttpContext!
+Kazo.Os.AppSdk.Web.Mvc.KazoActionContext.ModelState.get -> Kazo.Os.AppSdk.Web.Mvc.KazoModelStateDictionary!
+Kazo.Os.AppSdk.Web.Mvc.KazoActionContext.RouteValues.get -> Kazo.Os.AppSdk.Web.Routing.KazoRouteValueDictionary!
+Kazo.Os.AppSdk.Web.Mvc.KazoActionExecutedContext
+Kazo.Os.AppSdk.Web.Mvc.KazoActionExecutedContext.Canceled.get -> bool
+Kazo.Os.AppSdk.Web.Mvc.KazoActionExecutedContext.Controller.get -> Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase!
+Kazo.Os.AppSdk.Web.Mvc.KazoActionExecutedContext.Exception.get -> System.Exception?
+Kazo.Os.AppSdk.Web.Mvc.KazoActionExecutedContext.Exception.set -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoActionExecutedContext.ExceptionHandled.get -> bool
+Kazo.Os.AppSdk.Web.Mvc.KazoActionExecutedContext.ExceptionHandled.set -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoActionExecutedContext.Result.get -> Kazo.Os.AppSdk.Web.Mvc.IKazoActionResult?
+Kazo.Os.AppSdk.Web.Mvc.KazoActionExecutedContext.Result.set -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoActionExecutingContext
+Kazo.Os.AppSdk.Web.Mvc.KazoActionExecutingContext.ActionArguments.get -> System.Collections.Generic.IDictionary<string!, object?>!
+Kazo.Os.AppSdk.Web.Mvc.KazoActionExecutingContext.Controller.get -> Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase!
+Kazo.Os.AppSdk.Web.Mvc.KazoActionExecutingContext.Result.get -> Kazo.Os.AppSdk.Web.Mvc.IKazoActionResult?
+Kazo.Os.AppSdk.Web.Mvc.KazoActionExecutingContext.Result.set -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoActionExecutionDelegate
+Kazo.Os.AppSdk.Web.Mvc.KazoActionFilterAttribute
+Kazo.Os.AppSdk.Web.Mvc.KazoActionFilterAttribute.KazoActionFilterAttribute() -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoActionFilterAttribute.Order.get -> int
+Kazo.Os.AppSdk.Web.Mvc.KazoActionFilterAttribute.Order.set -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoActionParameterDescriptor
+Kazo.Os.AppSdk.Web.Mvc.KazoActionParameterDescriptor.<Clone>$() -> Kazo.Os.AppSdk.Web.Mvc.KazoActionParameterDescriptor!
+Kazo.Os.AppSdk.Web.Mvc.KazoActionParameterDescriptor.Deconstruct(out string! Name, out System.Type! ParameterType, out Kazo.Os.AppSdk.Web.Mvc.KazoBindingSource Source) -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoActionParameterDescriptor.Equals(Kazo.Os.AppSdk.Web.Mvc.KazoActionParameterDescriptor? other) -> bool
+Kazo.Os.AppSdk.Web.Mvc.KazoActionParameterDescriptor.KazoActionParameterDescriptor(string! Name, System.Type! ParameterType, Kazo.Os.AppSdk.Web.Mvc.KazoBindingSource Source) -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoActionParameterDescriptor.Name.get -> string!
+Kazo.Os.AppSdk.Web.Mvc.KazoActionParameterDescriptor.Name.init -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoActionParameterDescriptor.ParameterType.get -> System.Type!
+Kazo.Os.AppSdk.Web.Mvc.KazoActionParameterDescriptor.ParameterType.init -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoActionParameterDescriptor.Source.get -> Kazo.Os.AppSdk.Web.Mvc.KazoBindingSource
+Kazo.Os.AppSdk.Web.Mvc.KazoActionParameterDescriptor.Source.init -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoApiController
+Kazo.Os.AppSdk.Web.Mvc.KazoApiController.KazoApiController() -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoAttributeRouteInfo
+Kazo.Os.AppSdk.Web.Mvc.KazoAttributeRouteInfo.<Clone>$() -> Kazo.Os.AppSdk.Web.Mvc.KazoAttributeRouteInfo!
+Kazo.Os.AppSdk.Web.Mvc.KazoAttributeRouteInfo.Deconstruct(out string! Template, out System.Collections.Generic.IReadOnlyList<string!>! HttpMethods, out int Order, out string? Name) -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoAttributeRouteInfo.Equals(Kazo.Os.AppSdk.Web.Mvc.KazoAttributeRouteInfo? other) -> bool
+Kazo.Os.AppSdk.Web.Mvc.KazoAttributeRouteInfo.KazoAttributeRouteInfo(string! Template, System.Collections.Generic.IReadOnlyList<string!>! HttpMethods, int Order = 0, string? Name = null) -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoAttributeRouteInfo.HttpMethods.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.AppSdk.Web.Mvc.KazoAttributeRouteInfo.HttpMethods.init -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoAttributeRouteInfo.Name.get -> string?
+Kazo.Os.AppSdk.Web.Mvc.KazoAttributeRouteInfo.Name.init -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoAttributeRouteInfo.Order.get -> int
+Kazo.Os.AppSdk.Web.Mvc.KazoAttributeRouteInfo.Order.init -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoAttributeRouteInfo.Template.get -> string!
+Kazo.Os.AppSdk.Web.Mvc.KazoAttributeRouteInfo.Template.init -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoBindingSource
+Kazo.Os.AppSdk.Web.Mvc.KazoBindingSource.Body = 5 -> Kazo.Os.AppSdk.Web.Mvc.KazoBindingSource
+Kazo.Os.AppSdk.Web.Mvc.KazoBindingSource.Form = 3 -> Kazo.Os.AppSdk.Web.Mvc.KazoBindingSource
+Kazo.Os.AppSdk.Web.Mvc.KazoBindingSource.Header = 4 -> Kazo.Os.AppSdk.Web.Mvc.KazoBindingSource
+Kazo.Os.AppSdk.Web.Mvc.KazoBindingSource.Model = 6 -> Kazo.Os.AppSdk.Web.Mvc.KazoBindingSource
+Kazo.Os.AppSdk.Web.Mvc.KazoBindingSource.Query = 2 -> Kazo.Os.AppSdk.Web.Mvc.KazoBindingSource
+Kazo.Os.AppSdk.Web.Mvc.KazoBindingSource.Route = 1 -> Kazo.Os.AppSdk.Web.Mvc.KazoBindingSource
+Kazo.Os.AppSdk.Web.Mvc.KazoBindingSource.Services = 7 -> Kazo.Os.AppSdk.Web.Mvc.KazoBindingSource
+Kazo.Os.AppSdk.Web.Mvc.KazoBindingSource.Special = 8 -> Kazo.Os.AppSdk.Web.Mvc.KazoBindingSource
+Kazo.Os.AppSdk.Web.Mvc.KazoBindingSource.Value = 0 -> Kazo.Os.AppSdk.Web.Mvc.KazoBindingSource
+Kazo.Os.AppSdk.Web.Mvc.KazoContentResult
+Kazo.Os.AppSdk.Web.Mvc.KazoContentResult.Content.get -> string?
+Kazo.Os.AppSdk.Web.Mvc.KazoContentResult.Content.init -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoContentResult.ContentType.get -> string?
+Kazo.Os.AppSdk.Web.Mvc.KazoContentResult.ContentType.init -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoContentResult.ExecuteResultAsync(Kazo.Os.AppSdk.Web.Mvc.KazoActionContext! context) -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Web.Mvc.KazoContentResult.KazoContentResult() -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoContentResult.StatusCode.get -> int?
+Kazo.Os.AppSdk.Web.Mvc.KazoContentResult.StatusCode.init -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoController
+Kazo.Os.AppSdk.Web.Mvc.KazoController.KazoController() -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoController.ViewData.get -> Kazo.Os.AppSdk.Web.Views.KazoViewDataDictionary!
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor.ActionName.get -> string!
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor.ActionName.init -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor.AttributeRoutes.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Web.Mvc.KazoAttributeRouteInfo!>!
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor.AttributeRoutes.init -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor.BindArguments.get -> System.Func<Kazo.Os.AppSdk.Web.Mvc.KazoModelBinder!, object?[]!>!
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor.BindArguments.init -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor.ControllerName.get -> string!
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor.ControllerName.init -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor.ControllerType.get -> System.Type!
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor.ControllerType.init -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor.CreateController.get -> System.Func<System.IServiceProvider!, Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase!>!
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor.CreateController.init -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor.DeclaredResultType.get -> System.Type?
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor.DeclaredResultType.init -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor.DisplayName.get -> string!
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor.Filters.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Web.Mvc.IKazoFilterMetadata!>!
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor.Filters.init -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor.KazoControllerActionDescriptor() -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor.HttpMethods.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor.HttpMethods.init -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor.Invoke.get -> System.Func<Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase!, object?[]!, System.Threading.Tasks.ValueTask<object?>>!
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor.Invoke.init -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor.IsApiController.get -> bool
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor.IsApiController.init -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor.MethodName.get -> string!
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor.MethodName.init -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor.Parameters.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Web.Mvc.KazoActionParameterDescriptor!>!
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor.Parameters.init -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.ControllerContext.get -> Kazo.Os.AppSdk.Web.Mvc.KazoControllerContext!
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.KazoControllerBase() -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.HttpContext.get -> Kazo.Os.AppSdk.Web.Http.KazoHttpContext!
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.ModelState.get -> Kazo.Os.AppSdk.Web.Mvc.KazoModelStateDictionary!
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.Request.get -> Kazo.Os.AppSdk.Web.Http.KazoHttpRequest!
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.Response.get -> Kazo.Os.AppSdk.Web.Http.KazoHttpResponse!
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.RouteValues.get -> Kazo.Os.AppSdk.Web.Routing.KazoRouteValueDictionary!
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.Url.get -> Kazo.Os.AppSdk.Web.Mvc.IKazoUrlHelper!
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.Url.set -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerContext
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerRouteTable
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerRouteTable.<Clone>$() -> Kazo.Os.AppSdk.Web.Mvc.KazoControllerRouteTable!
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerRouteTable.Actions.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor!>!
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerRouteTable.Actions.init -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerRouteTable.Deconstruct(out System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor!>! Actions) -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerRouteTable.Equals(Kazo.Os.AppSdk.Web.Mvc.KazoControllerRouteTable? other) -> bool
+Kazo.Os.AppSdk.Web.Mvc.KazoControllerRouteTable.KazoControllerRouteTable(System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor!>! Actions) -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoCreatedAtActionResult
+Kazo.Os.AppSdk.Web.Mvc.KazoCreatedAtActionResult.ActionName.get -> string?
+Kazo.Os.AppSdk.Web.Mvc.KazoCreatedAtActionResult.ControllerName.get -> string?
+Kazo.Os.AppSdk.Web.Mvc.KazoCreatedAtActionResult.KazoCreatedAtActionResult(string? actionName, string? controllerName, Kazo.Os.AppSdk.Web.Routing.KazoRouteValueDictionary? routeValues, object? value) -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoCreatedAtActionResult.RouteValues.get -> Kazo.Os.AppSdk.Web.Routing.KazoRouteValueDictionary!
+Kazo.Os.AppSdk.Web.Mvc.KazoCreatedResult
+Kazo.Os.AppSdk.Web.Mvc.KazoCreatedResult.KazoCreatedResult(string? location, object? value) -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoCreatedResult.Location.get -> string?
+Kazo.Os.AppSdk.Web.Mvc.KazoEmptyResult
+Kazo.Os.AppSdk.Web.Mvc.KazoEmptyResult.ExecuteResultAsync(Kazo.Os.AppSdk.Web.Mvc.KazoActionContext! context) -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Web.Mvc.KazoEmptyResult.KazoEmptyResult() -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoFileResult
+Kazo.Os.AppSdk.Web.Mvc.KazoFileResult.ContentType.get -> string!
+Kazo.Os.AppSdk.Web.Mvc.KazoFileResult.Contents.get -> byte[]!
+Kazo.Os.AppSdk.Web.Mvc.KazoFileResult.ExecuteResultAsync(Kazo.Os.AppSdk.Web.Mvc.KazoActionContext! context) -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Web.Mvc.KazoFileResult.FileDownloadName.get -> string?
+Kazo.Os.AppSdk.Web.Mvc.KazoFileResult.FileDownloadName.init -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoFileResult.KazoFileResult(byte[]! contents, string! contentType) -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoJsonResult
+Kazo.Os.AppSdk.Web.Mvc.KazoJsonResult.ExecuteResultAsync(Kazo.Os.AppSdk.Web.Mvc.KazoActionContext! context) -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Web.Mvc.KazoJsonResult.KazoJsonResult(object? value) -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoJsonResult.KazoJsonResult(object? value, System.Text.Json.Serialization.Metadata.JsonTypeInfo! typeInfo) -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoJsonResult.StatusCode.get -> int?
+Kazo.Os.AppSdk.Web.Mvc.KazoJsonResult.StatusCode.init -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoJsonResult.Value.get -> object?
+Kazo.Os.AppSdk.Web.Mvc.KazoLocalRedirectResult
+Kazo.Os.AppSdk.Web.Mvc.KazoLocalRedirectResult.KazoLocalRedirectResult(string! localUrl, bool permanent = false, bool preserveMethod = false) -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoModelBinder
+Kazo.Os.AppSdk.Web.Mvc.KazoModelBinder.BindArray<T>(string! name, Kazo.Os.AppSdk.Web.Mvc.KazoValueSources sources, Kazo.Os.AppSdk.Web.Mvc.KazoValueParser<T>! parser) -> T[]!
+Kazo.Os.AppSdk.Web.Mvc.KazoModelBinder.BindBody<T>(string! name, bool isRequired) -> T?
+Kazo.Os.AppSdk.Web.Mvc.KazoModelBinder.BindService<T>() -> T
+Kazo.Os.AppSdk.Web.Mvc.KazoModelBinder.BindValue<T>(string! name, Kazo.Os.AppSdk.Web.Mvc.KazoValueSources sources, Kazo.Os.AppSdk.Web.Mvc.KazoValueParser<T>! parser, bool isRequired, T defaultValue) -> T
+Kazo.Os.AppSdk.Web.Mvc.KazoModelBinder.Context.get -> Kazo.Os.AppSdk.Web.Mvc.KazoActionContext!
+Kazo.Os.AppSdk.Web.Mvc.KazoModelBinder.HttpContext.get -> Kazo.Os.AppSdk.Web.Http.KazoHttpContext!
+Kazo.Os.AppSdk.Web.Mvc.KazoModelBinder.ModelState.get -> Kazo.Os.AppSdk.Web.Mvc.KazoModelStateDictionary!
+Kazo.Os.AppSdk.Web.Mvc.KazoModelBinder.TryBindProperty<T>(string! name, Kazo.Os.AppSdk.Web.Mvc.KazoValueSources sources, Kazo.Os.AppSdk.Web.Mvc.KazoValueParser<T>! parser, out T value) -> bool
+Kazo.Os.AppSdk.Web.Mvc.KazoModelBinder.TryGetRawValue(string! name, Kazo.Os.AppSdk.Web.Mvc.KazoValueSources sources, out string? text) -> bool
+Kazo.Os.AppSdk.Web.Mvc.KazoModelBinder.UnsupportedMediaType.get -> bool
+Kazo.Os.AppSdk.Web.Mvc.KazoModelBinder.Validate<T>(T? value) -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoModelBinder.ValidateValue(string! name, object? value, params System.ComponentModel.DataAnnotations.ValidationAttribute![]! attributes) -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoModelStateDictionary
+Kazo.Os.AppSdk.Web.Mvc.KazoModelStateDictionary.AddModelError(string! key, string! errorMessage) -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoModelStateDictionary.Clear() -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoModelStateDictionary.ErrorCount.get -> int
+Kazo.Os.AppSdk.Web.Mvc.KazoModelStateDictionary.KazoModelStateDictionary() -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoModelStateDictionary.IsValid.get -> bool
+Kazo.Os.AppSdk.Web.Mvc.KazoModelStateDictionary.Keys.get -> System.Collections.Generic.IEnumerable<string!>!
+Kazo.Os.AppSdk.Web.Mvc.KazoModelStateDictionary.Remove(string! key) -> bool
+Kazo.Os.AppSdk.Web.Mvc.KazoModelStateDictionary.SetAttemptedValue(string! key, string? attemptedValue) -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoModelStateDictionary.ToErrorDictionary() -> System.Collections.Generic.Dictionary<string!, string![]!>!
+Kazo.Os.AppSdk.Web.Mvc.KazoModelStateDictionary.TryGetValue(string! key, out Kazo.Os.AppSdk.Web.Mvc.KazoModelStateEntry? entry) -> bool
+Kazo.Os.AppSdk.Web.Mvc.KazoModelStateDictionary.this[string! key].get -> Kazo.Os.AppSdk.Web.Mvc.KazoModelStateEntry?
+Kazo.Os.AppSdk.Web.Mvc.KazoModelStateEntry
+Kazo.Os.AppSdk.Web.Mvc.KazoModelStateEntry.AttemptedValue.get -> string?
+Kazo.Os.AppSdk.Web.Mvc.KazoModelStateEntry.Errors.get -> System.Collections.Generic.List<string!>!
+Kazo.Os.AppSdk.Web.Mvc.KazoModelStateEntry.KazoModelStateEntry() -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoMvcOptions
+Kazo.Os.AppSdk.Web.Mvc.KazoMvcOptions.Filters.get -> System.Collections.Generic.IList<Kazo.Os.AppSdk.Web.Mvc.IKazoFilterMetadata!>!
+Kazo.Os.AppSdk.Web.Mvc.KazoMvcOptions.KazoMvcOptions() -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoObjectResult
+Kazo.Os.AppSdk.Web.Mvc.KazoObjectResult.ContentType.get -> string?
+Kazo.Os.AppSdk.Web.Mvc.KazoObjectResult.ContentType.init -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoObjectResult.DeclaredType.get -> System.Type?
+Kazo.Os.AppSdk.Web.Mvc.KazoObjectResult.DeclaredType.init -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoObjectResult.KazoObjectResult(object? value, int? statusCode = null) -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoObjectResult.StatusCode.get -> int?
+Kazo.Os.AppSdk.Web.Mvc.KazoObjectResult.Value.get -> object?
+Kazo.Os.AppSdk.Web.Mvc.KazoProblemDetails
+Kazo.Os.AppSdk.Web.Mvc.KazoProblemDetails.Detail.get -> string?
+Kazo.Os.AppSdk.Web.Mvc.KazoProblemDetails.Detail.set -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoProblemDetails.Extensions.get -> System.Collections.Generic.IDictionary<string!, object?>!
+Kazo.Os.AppSdk.Web.Mvc.KazoProblemDetails.KazoProblemDetails() -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoProblemDetails.Instance.get -> string?
+Kazo.Os.AppSdk.Web.Mvc.KazoProblemDetails.Instance.set -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoProblemDetails.Status.get -> int?
+Kazo.Os.AppSdk.Web.Mvc.KazoProblemDetails.Status.set -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoProblemDetails.Title.get -> string?
+Kazo.Os.AppSdk.Web.Mvc.KazoProblemDetails.Title.set -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoProblemDetails.Type.get -> string?
+Kazo.Os.AppSdk.Web.Mvc.KazoProblemDetails.Type.set -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoProblemResult
+Kazo.Os.AppSdk.Web.Mvc.KazoProblemResult.ExecuteResultAsync(Kazo.Os.AppSdk.Web.Mvc.KazoActionContext! context) -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Web.Mvc.KazoProblemResult.KazoProblemResult(Kazo.Os.AppSdk.Web.Mvc.KazoProblemDetails! problem) -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoProblemResult.Problem.get -> Kazo.Os.AppSdk.Web.Mvc.KazoProblemDetails!
+Kazo.Os.AppSdk.Web.Mvc.KazoRedirectResult
+Kazo.Os.AppSdk.Web.Mvc.KazoRedirectResult.KazoRedirectResult(string! url, bool permanent = false, bool preserveMethod = false) -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoRedirectResult.Permanent.get -> bool
+Kazo.Os.AppSdk.Web.Mvc.KazoRedirectResult.PreserveMethod.get -> bool
+Kazo.Os.AppSdk.Web.Mvc.KazoRedirectResult.Url.get -> string!
+Kazo.Os.AppSdk.Web.Mvc.KazoRedirectToActionResult
+Kazo.Os.AppSdk.Web.Mvc.KazoRedirectToActionResult.ActionName.get -> string?
+Kazo.Os.AppSdk.Web.Mvc.KazoRedirectToActionResult.ControllerName.get -> string?
+Kazo.Os.AppSdk.Web.Mvc.KazoRedirectToActionResult.KazoRedirectToActionResult(string? actionName, string? controllerName, Kazo.Os.AppSdk.Web.Routing.KazoRouteValueDictionary? routeValues, bool permanent = false) -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoRedirectToActionResult.RouteValues.get -> Kazo.Os.AppSdk.Web.Routing.KazoRouteValueDictionary!
+Kazo.Os.AppSdk.Web.Mvc.KazoResults
+Kazo.Os.AppSdk.Web.Mvc.KazoStatusCodeResult
+Kazo.Os.AppSdk.Web.Mvc.KazoStatusCodeResult.KazoStatusCodeResult(int statusCode) -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoStatusCodeResult.StatusCode.get -> int
+Kazo.Os.AppSdk.Web.Mvc.KazoUrlHelper
+Kazo.Os.AppSdk.Web.Mvc.KazoUrlHelper.Action(string? action = null, string? controller = null) -> string?
+Kazo.Os.AppSdk.Web.Mvc.KazoUrlHelper.Action<TValues>(string? action, string? controller, TValues values) -> string?
+Kazo.Os.AppSdk.Web.Mvc.KazoUrlHelper.Content(string! contentPath) -> string!
+Kazo.Os.AppSdk.Web.Mvc.KazoUrlHelper.KazoUrlHelper(Kazo.Os.AppSdk.Web.Mvc.KazoActionContext! context) -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoUrlHelper.RouteUrl(string! routeName) -> string?
+Kazo.Os.AppSdk.Web.Mvc.KazoUrlHelper.RouteUrl<TValues>(string! routeName, TValues values) -> string?
+Kazo.Os.AppSdk.Web.Mvc.KazoValidationProblemDetails
+Kazo.Os.AppSdk.Web.Mvc.KazoValidationProblemDetails.Errors.get -> System.Collections.Generic.IDictionary<string!, string![]!>!
+Kazo.Os.AppSdk.Web.Mvc.KazoValidationProblemDetails.KazoValidationProblemDetails() -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoValidationProblemDetails.KazoValidationProblemDetails(Kazo.Os.AppSdk.Web.Mvc.KazoModelStateDictionary! modelState) -> void
+Kazo.Os.AppSdk.Web.Mvc.KazoValueParser<T>
+Kazo.Os.AppSdk.Web.Mvc.KazoValueParsers
+Kazo.Os.AppSdk.Web.Mvc.KazoValueSources
+Kazo.Os.AppSdk.Web.Mvc.KazoValueSources.Default = Kazo.Os.AppSdk.Web.Mvc.KazoValueSources.Form | Kazo.Os.AppSdk.Web.Mvc.KazoValueSources.Route | Kazo.Os.AppSdk.Web.Mvc.KazoValueSources.Query -> Kazo.Os.AppSdk.Web.Mvc.KazoValueSources
+Kazo.Os.AppSdk.Web.Mvc.KazoValueSources.Form = 1 -> Kazo.Os.AppSdk.Web.Mvc.KazoValueSources
+Kazo.Os.AppSdk.Web.Mvc.KazoValueSources.Header = 8 -> Kazo.Os.AppSdk.Web.Mvc.KazoValueSources
+Kazo.Os.AppSdk.Web.Mvc.KazoValueSources.None = 0 -> Kazo.Os.AppSdk.Web.Mvc.KazoValueSources
+Kazo.Os.AppSdk.Web.Mvc.KazoValueSources.Query = 4 -> Kazo.Os.AppSdk.Web.Mvc.KazoValueSources
+Kazo.Os.AppSdk.Web.Mvc.KazoValueSources.Route = 2 -> Kazo.Os.AppSdk.Web.Mvc.KazoValueSources
+Kazo.Os.AppSdk.Web.Mvc.HttpDeleteAttribute
+Kazo.Os.AppSdk.Web.Mvc.HttpDeleteAttribute.HttpDeleteAttribute() -> void
+Kazo.Os.AppSdk.Web.Mvc.HttpDeleteAttribute.HttpDeleteAttribute(string! template) -> void
+Kazo.Os.AppSdk.Web.Mvc.HttpGetAttribute
+Kazo.Os.AppSdk.Web.Mvc.HttpGetAttribute.HttpGetAttribute() -> void
+Kazo.Os.AppSdk.Web.Mvc.HttpGetAttribute.HttpGetAttribute(string! template) -> void
+Kazo.Os.AppSdk.Web.Mvc.HttpHeadAttribute
+Kazo.Os.AppSdk.Web.Mvc.HttpHeadAttribute.HttpHeadAttribute() -> void
+Kazo.Os.AppSdk.Web.Mvc.HttpHeadAttribute.HttpHeadAttribute(string! template) -> void
+Kazo.Os.AppSdk.Web.Mvc.HttpMethodAttribute
+Kazo.Os.AppSdk.Web.Mvc.HttpMethodAttribute.HttpMethodAttribute(System.Collections.Generic.IReadOnlyList<string!>! httpMethods, string? template) -> void
+Kazo.Os.AppSdk.Web.Mvc.HttpMethodAttribute.HttpMethods.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.AppSdk.Web.Mvc.HttpMethodAttribute.Name.get -> string?
+Kazo.Os.AppSdk.Web.Mvc.HttpMethodAttribute.Name.set -> void
+Kazo.Os.AppSdk.Web.Mvc.HttpMethodAttribute.Order.get -> int
+Kazo.Os.AppSdk.Web.Mvc.HttpMethodAttribute.Order.set -> void
+Kazo.Os.AppSdk.Web.Mvc.HttpMethodAttribute.Template.get -> string?
+Kazo.Os.AppSdk.Web.Mvc.HttpOptionsAttribute
+Kazo.Os.AppSdk.Web.Mvc.HttpOptionsAttribute.HttpOptionsAttribute() -> void
+Kazo.Os.AppSdk.Web.Mvc.HttpOptionsAttribute.HttpOptionsAttribute(string! template) -> void
+Kazo.Os.AppSdk.Web.Mvc.HttpPatchAttribute
+Kazo.Os.AppSdk.Web.Mvc.HttpPatchAttribute.HttpPatchAttribute() -> void
+Kazo.Os.AppSdk.Web.Mvc.HttpPatchAttribute.HttpPatchAttribute(string! template) -> void
+Kazo.Os.AppSdk.Web.Mvc.HttpPostAttribute
+Kazo.Os.AppSdk.Web.Mvc.HttpPostAttribute.HttpPostAttribute() -> void
+Kazo.Os.AppSdk.Web.Mvc.HttpPostAttribute.HttpPostAttribute(string! template) -> void
+Kazo.Os.AppSdk.Web.Mvc.HttpPutAttribute
+Kazo.Os.AppSdk.Web.Mvc.HttpPutAttribute.HttpPutAttribute() -> void
+Kazo.Os.AppSdk.Web.Mvc.HttpPutAttribute.HttpPutAttribute(string! template) -> void
+Kazo.Os.AppSdk.Web.Mvc.IKazoActionFilter
+Kazo.Os.AppSdk.Web.Mvc.IKazoActionFilter.OnActionExecuted(Kazo.Os.AppSdk.Web.Mvc.KazoActionExecutedContext! context) -> void
+Kazo.Os.AppSdk.Web.Mvc.IKazoActionFilter.OnActionExecuting(Kazo.Os.AppSdk.Web.Mvc.KazoActionExecutingContext! context) -> void
+Kazo.Os.AppSdk.Web.Mvc.IKazoActionResult
+Kazo.Os.AppSdk.Web.Mvc.IKazoActionResult.ExecuteResultAsync(Kazo.Os.AppSdk.Web.Mvc.KazoActionContext! context) -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Web.Mvc.IKazoAsyncActionFilter
+Kazo.Os.AppSdk.Web.Mvc.IKazoAsyncActionFilter.OnActionExecutionAsync(Kazo.Os.AppSdk.Web.Mvc.KazoActionExecutingContext! context, Kazo.Os.AppSdk.Web.Mvc.KazoActionExecutionDelegate! next) -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Web.Mvc.IKazoClientErrorResult
+Kazo.Os.AppSdk.Web.Mvc.IKazoClientErrorResult.StatusCode.get -> int
+Kazo.Os.AppSdk.Web.Mvc.IKazoFilterMetadata
+Kazo.Os.AppSdk.Web.Mvc.IKazoOrderedFilter
+Kazo.Os.AppSdk.Web.Mvc.IKazoOrderedFilter.Order.get -> int
+Kazo.Os.AppSdk.Web.Mvc.IKazoUrlHelper
+Kazo.Os.AppSdk.Web.Mvc.IKazoUrlHelper.Action(string? action = null, string? controller = null) -> string?
+Kazo.Os.AppSdk.Web.Mvc.IKazoUrlHelper.Action<TValues>(string? action, string? controller, TValues values) -> string?
+Kazo.Os.AppSdk.Web.Mvc.IKazoUrlHelper.Content(string! contentPath) -> string!
+Kazo.Os.AppSdk.Web.Mvc.IKazoUrlHelper.IsLocalUrl(string? url) -> bool
+Kazo.Os.AppSdk.Web.Mvc.IKazoUrlHelper.RouteUrl(string! routeName) -> string?
+Kazo.Os.AppSdk.Web.Mvc.IKazoUrlHelper.RouteUrl<TValues>(string! routeName, TValues values) -> string?
+Kazo.Os.AppSdk.Web.Mvc.NonActionAttribute
+Kazo.Os.AppSdk.Web.Mvc.NonActionAttribute.NonActionAttribute() -> void
+Kazo.Os.AppSdk.Web.Mvc.NonControllerAttribute
+Kazo.Os.AppSdk.Web.Mvc.NonControllerAttribute.NonControllerAttribute() -> void
+Kazo.Os.AppSdk.Web.Mvc.RouteAttribute
+Kazo.Os.AppSdk.Web.Mvc.RouteAttribute.Name.get -> string?
+Kazo.Os.AppSdk.Web.Mvc.RouteAttribute.Name.set -> void
+Kazo.Os.AppSdk.Web.Mvc.RouteAttribute.Order.get -> int
+Kazo.Os.AppSdk.Web.Mvc.RouteAttribute.Order.set -> void
+Kazo.Os.AppSdk.Web.Mvc.RouteAttribute.RouteAttribute(string! template) -> void
+Kazo.Os.AppSdk.Web.Mvc.RouteAttribute.Template.get -> string!
+Kazo.Os.AppSdk.Web.Routing.KazoAmbiguousRouteException
+Kazo.Os.AppSdk.Web.Routing.KazoAmbiguousRouteException.KazoAmbiguousRouteException(string! message) -> void
+Kazo.Os.AppSdk.Web.Routing.KazoEndpoint
+Kazo.Os.AppSdk.Web.Routing.KazoEndpoint.Accepts(string! method) -> bool
+Kazo.Os.AppSdk.Web.Routing.KazoEndpoint.DisplayName.get -> string!
+Kazo.Os.AppSdk.Web.Routing.KazoEndpoint.GetMetadata<T>() -> T?
+Kazo.Os.AppSdk.Web.Routing.KazoEndpoint.KazoEndpoint(Kazo.Os.AppSdk.Web.Routing.KazoRoutePattern! pattern, System.Collections.Generic.IReadOnlyList<string!>! httpMethods, Kazo.Os.AppSdk.Web.Routing.KazoRequestDelegate! handler, string! displayName, int order = 0, System.Collections.Generic.IReadOnlyList<object!>? metadata = null) -> void
+Kazo.Os.AppSdk.Web.Routing.KazoEndpoint.Handler.get -> Kazo.Os.AppSdk.Web.Routing.KazoRequestDelegate!
+Kazo.Os.AppSdk.Web.Routing.KazoEndpoint.HttpMethods.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.AppSdk.Web.Routing.KazoEndpoint.Metadata.get -> System.Collections.Generic.IReadOnlyList<object!>!
+Kazo.Os.AppSdk.Web.Routing.KazoEndpoint.Order.get -> int
+Kazo.Os.AppSdk.Web.Routing.KazoEndpoint.Pattern.get -> Kazo.Os.AppSdk.Web.Routing.KazoRoutePattern!
+Kazo.Os.AppSdk.Web.Routing.KazoEndpointDataSource
+Kazo.Os.AppSdk.Web.Routing.KazoEndpointDataSource.Add(Kazo.Os.AppSdk.Web.Routing.KazoEndpoint! endpoint) -> void
+Kazo.Os.AppSdk.Web.Routing.KazoEndpointDataSource.Endpoints.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Web.Routing.KazoEndpoint!>!
+Kazo.Os.AppSdk.Web.Routing.KazoEndpointDataSource.GetRouter() -> Kazo.Os.AppSdk.Web.Routing.KazoEndpointRouter!
+Kazo.Os.AppSdk.Web.Routing.KazoEndpointDataSource.KazoEndpointDataSource() -> void
+Kazo.Os.AppSdk.Web.Routing.KazoEndpointRouter
+Kazo.Os.AppSdk.Web.Routing.KazoEndpointRouter.Endpoints.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Web.Routing.KazoEndpoint!>!
+Kazo.Os.AppSdk.Web.Routing.KazoEndpointRouter.KazoEndpointRouter(System.Collections.Generic.IEnumerable<Kazo.Os.AppSdk.Web.Routing.KazoEndpoint!>! endpoints) -> void
+Kazo.Os.AppSdk.Web.Routing.KazoEndpointRouter.Match(string! method, string! path) -> Kazo.Os.AppSdk.Web.Routing.KazoRouteMatch!
+Kazo.Os.AppSdk.Web.Routing.KazoLinkGenerator
+Kazo.Os.AppSdk.Web.Routing.KazoLinkGenerator.GetPathByAction(string! action, string! controller, System.Collections.Generic.IReadOnlyDictionary<string!, object?>? values = null) -> string?
+Kazo.Os.AppSdk.Web.Routing.KazoLinkGenerator.GetPathByRouteName(string! routeName, System.Collections.Generic.IReadOnlyDictionary<string!, object?>? values = null) -> string?
+Kazo.Os.AppSdk.Web.Routing.KazoRequestDelegate
+Kazo.Os.AppSdk.Web.Routing.KazoRouteConstraint
+Kazo.Os.AppSdk.Web.Routing.KazoRouteConstraint.Argument.get -> string?
+Kazo.Os.AppSdk.Web.Routing.KazoRouteConstraint.Name.get -> string!
+Kazo.Os.AppSdk.Web.Routing.KazoRouteConstraint.Text.get -> string!
+Kazo.Os.AppSdk.Web.Routing.KazoRouteMatch
+Kazo.Os.AppSdk.Web.Routing.KazoRouteMatch.<Clone>$() -> Kazo.Os.AppSdk.Web.Routing.KazoRouteMatch!
+Kazo.Os.AppSdk.Web.Routing.KazoRouteMatch.AllowedMethods.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.AppSdk.Web.Routing.KazoRouteMatch.AllowedMethods.init -> void
+Kazo.Os.AppSdk.Web.Routing.KazoRouteMatch.Deconstruct(out Kazo.Os.AppSdk.Web.Routing.KazoRouteMatchKind Kind, out Kazo.Os.AppSdk.Web.Routing.KazoEndpoint? Endpoint, out Kazo.Os.AppSdk.Web.Routing.KazoRouteValueDictionary! Values, out System.Collections.Generic.IReadOnlyList<string!>! AllowedMethods) -> void
+Kazo.Os.AppSdk.Web.Routing.KazoRouteMatch.Endpoint.get -> Kazo.Os.AppSdk.Web.Routing.KazoEndpoint?
+Kazo.Os.AppSdk.Web.Routing.KazoRouteMatch.Endpoint.init -> void
+Kazo.Os.AppSdk.Web.Routing.KazoRouteMatch.Equals(Kazo.Os.AppSdk.Web.Routing.KazoRouteMatch? other) -> bool
+Kazo.Os.AppSdk.Web.Routing.KazoRouteMatch.KazoRouteMatch(Kazo.Os.AppSdk.Web.Routing.KazoRouteMatchKind Kind, Kazo.Os.AppSdk.Web.Routing.KazoEndpoint? Endpoint, Kazo.Os.AppSdk.Web.Routing.KazoRouteValueDictionary! Values, System.Collections.Generic.IReadOnlyList<string!>! AllowedMethods) -> void
+Kazo.Os.AppSdk.Web.Routing.KazoRouteMatch.Kind.get -> Kazo.Os.AppSdk.Web.Routing.KazoRouteMatchKind
+Kazo.Os.AppSdk.Web.Routing.KazoRouteMatch.Kind.init -> void
+Kazo.Os.AppSdk.Web.Routing.KazoRouteMatch.Values.get -> Kazo.Os.AppSdk.Web.Routing.KazoRouteValueDictionary!
+Kazo.Os.AppSdk.Web.Routing.KazoRouteMatch.Values.init -> void
+Kazo.Os.AppSdk.Web.Routing.KazoRouteMatchKind
+Kazo.Os.AppSdk.Web.Routing.KazoRouteMatchKind.Matched = 1 -> Kazo.Os.AppSdk.Web.Routing.KazoRouteMatchKind
+Kazo.Os.AppSdk.Web.Routing.KazoRouteMatchKind.MethodNotAllowed = 2 -> Kazo.Os.AppSdk.Web.Routing.KazoRouteMatchKind
+Kazo.Os.AppSdk.Web.Routing.KazoRouteMatchKind.NotFound = 0 -> Kazo.Os.AppSdk.Web.Routing.KazoRouteMatchKind
+Kazo.Os.AppSdk.Web.Routing.KazoRouteMatchKind.Options = 3 -> Kazo.Os.AppSdk.Web.Routing.KazoRouteMatchKind
+Kazo.Os.AppSdk.Web.Routing.KazoRouteNameMetadata
+Kazo.Os.AppSdk.Web.Routing.KazoRouteNameMetadata.<Clone>$() -> Kazo.Os.AppSdk.Web.Routing.KazoRouteNameMetadata!
+Kazo.Os.AppSdk.Web.Routing.KazoRouteNameMetadata.Deconstruct(out string! Name) -> void
+Kazo.Os.AppSdk.Web.Routing.KazoRouteNameMetadata.Equals(Kazo.Os.AppSdk.Web.Routing.KazoRouteNameMetadata? other) -> bool
+Kazo.Os.AppSdk.Web.Routing.KazoRouteNameMetadata.KazoRouteNameMetadata(string! Name) -> void
+Kazo.Os.AppSdk.Web.Routing.KazoRouteNameMetadata.Name.get -> string!
+Kazo.Os.AppSdk.Web.Routing.KazoRouteNameMetadata.Name.init -> void
+Kazo.Os.AppSdk.Web.Routing.KazoRouteParameter
+Kazo.Os.AppSdk.Web.Routing.KazoRouteParameter.Constraints.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Web.Routing.KazoRouteConstraint!>!
+Kazo.Os.AppSdk.Web.Routing.KazoRouteParameter.DefaultValue.get -> string?
+Kazo.Os.AppSdk.Web.Routing.KazoRouteParameter.IsCatchAll.get -> bool
+Kazo.Os.AppSdk.Web.Routing.KazoRouteParameter.IsOptional.get -> bool
+Kazo.Os.AppSdk.Web.Routing.KazoRouteParameter.Name.get -> string!
+Kazo.Os.AppSdk.Web.Routing.KazoRoutePattern
+Kazo.Os.AppSdk.Web.Routing.KazoRoutePattern.KazoRoutePattern(Kazo.Os.AppSdk.Web.Routing.KazoRouteTemplate! template, System.Collections.Generic.IReadOnlyDictionary<string!, string!>? requiredValues = null) -> void
+Kazo.Os.AppSdk.Web.Routing.KazoRoutePattern.Precedence.get -> System.Collections.Generic.IReadOnlyList<int>!
+Kazo.Os.AppSdk.Web.Routing.KazoRoutePattern.RawText.get -> string!
+Kazo.Os.AppSdk.Web.Routing.KazoRoutePattern.RequiredValues.get -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
+Kazo.Os.AppSdk.Web.Routing.KazoRoutePattern.Template.get -> Kazo.Os.AppSdk.Web.Routing.KazoRouteTemplate!
+Kazo.Os.AppSdk.Web.Routing.KazoRoutePattern.TryGeneratePath(System.Collections.Generic.IReadOnlyDictionary<string!, object?>! values, out string! path) -> bool
+Kazo.Os.AppSdk.Web.Routing.KazoRoutePattern.TryMatch(System.Collections.Generic.IReadOnlyList<string!>! segments, out Kazo.Os.AppSdk.Web.Routing.KazoRouteValueDictionary! values) -> bool
+Kazo.Os.AppSdk.Web.Routing.KazoRouteSegment
+Kazo.Os.AppSdk.Web.Routing.KazoRouteSegment.Literal.get -> string?
+Kazo.Os.AppSdk.Web.Routing.KazoRouteSegment.Parameter.get -> Kazo.Os.AppSdk.Web.Routing.KazoRouteParameter?
+Kazo.Os.AppSdk.Web.Routing.KazoRouteTemplate
+Kazo.Os.AppSdk.Web.Routing.KazoRouteTemplate.GetConflictKey() -> string!
+Kazo.Os.AppSdk.Web.Routing.KazoRouteTemplate.GetPrecedence() -> System.Collections.Generic.IReadOnlyList<int>!
+Kazo.Os.AppSdk.Web.Routing.KazoRouteTemplate.Segments.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Web.Routing.KazoRouteSegment!>!
+Kazo.Os.AppSdk.Web.Routing.KazoRouteTemplate.Text.get -> string!
+Kazo.Os.AppSdk.Web.Routing.KazoRouteValueDictionary
+Kazo.Os.AppSdk.Web.Routing.KazoRouteValueDictionary.GetString(string! key) -> string?
+Kazo.Os.AppSdk.Web.Routing.KazoRouteValueDictionary.KazoRouteValueDictionary() -> void
+Kazo.Os.AppSdk.Web.Routing.KazoRouteValueDictionary.KazoRouteValueDictionary(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string!, object?>>! values) -> void
+Kazo.Os.AppSdk.Web.Sessions.KazoSession
+Kazo.Os.AppSdk.Web.Sessions.KazoSession.Clear() -> void
+Kazo.Os.AppSdk.Web.Sessions.KazoSession.GetInt32(string! key) -> int?
+Kazo.Os.AppSdk.Web.Sessions.KazoSession.GetString(string! key) -> string?
+Kazo.Os.AppSdk.Web.Sessions.KazoSession.Id.get -> string!
+Kazo.Os.AppSdk.Web.Sessions.KazoSession.IsModified.get -> bool
+Kazo.Os.AppSdk.Web.Sessions.KazoSession.IsNew.get -> bool
+Kazo.Os.AppSdk.Web.Sessions.KazoSession.Keys.get -> System.Collections.Generic.IEnumerable<string!>!
+Kazo.Os.AppSdk.Web.Sessions.KazoSession.Remove(string! key) -> void
+Kazo.Os.AppSdk.Web.Sessions.KazoSession.Set(string! key, byte[]! value) -> void
+Kazo.Os.AppSdk.Web.Sessions.KazoSession.SetInt32(string! key, int value) -> void
+Kazo.Os.AppSdk.Web.Sessions.KazoSession.SetString(string! key, string! value) -> void
+Kazo.Os.AppSdk.Web.Sessions.KazoSession.TryGetValue(string! key, out byte[]? value) -> bool
+Kazo.Os.AppSdk.Web.Sessions.KazoSessionOptions
+Kazo.Os.AppSdk.Web.Sessions.KazoSessionOptions.CookieName.get -> string!
+Kazo.Os.AppSdk.Web.Sessions.KazoSessionOptions.CookieName.set -> void
+Kazo.Os.AppSdk.Web.Sessions.KazoSessionOptions.CookiePath.get -> string!
+Kazo.Os.AppSdk.Web.Sessions.KazoSessionOptions.CookiePath.set -> void
+Kazo.Os.AppSdk.Web.Sessions.KazoSessionOptions.KazoSessionOptions() -> void
+Kazo.Os.AppSdk.Web.Sessions.KazoSessionOptions.IdleTimeout.get -> System.TimeSpan
+Kazo.Os.AppSdk.Web.Sessions.KazoSessionOptions.IdleTimeout.set -> void
+Kazo.Os.AppSdk.Web.Sessions.KazoSessionStore
+Kazo.Os.AppSdk.Web.Sessions.KazoSessionStore.Count.get -> int
+Kazo.Os.AppSdk.Web.Sessions.KazoSessionStore.KazoSessionStore(System.TimeProvider! time) -> void
+Kazo.Os.AppSdk.Web.Views.KazoAntiforgeryToken
+Kazo.Os.AppSdk.Web.Views.KazoAntiforgeryToken.KazoAntiforgeryToken() -> void
+Kazo.Os.AppSdk.Web.Views.KazoForm
+Kazo.Os.AppSdk.Web.Views.KazoForm.Action.get -> string?
+Kazo.Os.AppSdk.Web.Views.KazoForm.Action.set -> void
+Kazo.Os.AppSdk.Web.Views.KazoForm.Antiforgery.get -> bool
+Kazo.Os.AppSdk.Web.Views.KazoForm.Antiforgery.set -> void
+Kazo.Os.AppSdk.Web.Views.KazoForm.ChildContent.get -> Microsoft.AspNetCore.Components.RenderFragment?
+Kazo.Os.AppSdk.Web.Views.KazoForm.ChildContent.set -> void
+Kazo.Os.AppSdk.Web.Views.KazoForm.Controller.get -> string?
+Kazo.Os.AppSdk.Web.Views.KazoForm.Controller.set -> void
+Kazo.Os.AppSdk.Web.Views.KazoForm.KazoForm() -> void
+Kazo.Os.AppSdk.Web.Views.KazoForm.Href.get -> string?
+Kazo.Os.AppSdk.Web.Views.KazoForm.Href.set -> void
+Kazo.Os.AppSdk.Web.Views.KazoForm.Method.get -> string!
+Kazo.Os.AppSdk.Web.Views.KazoForm.Method.set -> void
+Kazo.Os.AppSdk.Web.Views.KazoForm.Route.get -> string?
+Kazo.Os.AppSdk.Web.Views.KazoForm.Route.set -> void
+Kazo.Os.AppSdk.Web.Views.KazoForm.RouteValues.get -> System.Collections.Generic.IReadOnlyDictionary<string!, object?>?
+Kazo.Os.AppSdk.Web.Views.KazoForm.RouteValues.set -> void
+Kazo.Os.AppSdk.Web.Views.KazoHelperResult
+Kazo.Os.AppSdk.Web.Views.KazoHelperResult.KazoHelperResult(System.Func<System.IO.TextWriter!, System.Threading.Tasks.Task!>! asyncAction) -> void
+Kazo.Os.AppSdk.Web.Views.KazoHelperResult.WriteTo(System.IO.TextWriter! writer) -> void
+Kazo.Os.AppSdk.Web.Views.KazoHtmlForm
+Kazo.Os.AppSdk.Web.Views.KazoHtmlForm.Dispose() -> void
+Kazo.Os.AppSdk.Web.Views.KazoHtmlForm.EndForm() -> void
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>.ActionLink(string! linkText, string? actionName, string? controllerName = null, System.Collections.Generic.IReadOnlyDictionary<string!, object?>? htmlAttributes = null) -> Kazo.Os.AppSdk.Web.Views.KazoHtmlString!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>.ActionLink<TValues>(string! linkText, string? actionName, string? controllerName, TValues routeValues, System.Collections.Generic.IReadOnlyDictionary<string!, object?>? htmlAttributes = null) -> Kazo.Os.AppSdk.Web.Views.KazoHtmlString!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>.AntiForgeryToken() -> Kazo.Os.AppSdk.Web.Views.KazoHtmlString!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>.BeginForm(string? actionName = null, string? controllerName = null, string! method = "post", bool antiforgery = true, System.Collections.Generic.IReadOnlyDictionary<string!, object?>? htmlAttributes = null) -> Kazo.Os.AppSdk.Web.Views.KazoHtmlForm!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>.BeginForm<TValues>(string? actionName, string? controllerName, TValues routeValues, string! method = "post", bool antiforgery = true, System.Collections.Generic.IReadOnlyDictionary<string!, object?>? htmlAttributes = null) -> Kazo.Os.AppSdk.Web.Views.KazoHtmlForm!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>.CheckBox(string! name, bool isChecked = false, System.Collections.Generic.IReadOnlyDictionary<string!, object?>? htmlAttributes = null) -> Kazo.Os.AppSdk.Web.Views.KazoHtmlString!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>.CheckBoxFor(System.Linq.Expressions.Expression<System.Func<TModel, bool>!>! expression, System.Collections.Generic.IReadOnlyDictionary<string!, object?>? htmlAttributes = null) -> Kazo.Os.AppSdk.Web.Views.KazoHtmlString!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>.DisplayNameFor<TValue>(System.Linq.Expressions.Expression<System.Func<TModel, TValue>!>! expression) -> string!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>.Encode(object? value) -> string!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>.Hidden(string! name, object? value = null, System.Collections.Generic.IReadOnlyDictionary<string!, object?>? htmlAttributes = null) -> Kazo.Os.AppSdk.Web.Views.KazoHtmlString!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>.HiddenFor<TValue>(System.Linq.Expressions.Expression<System.Func<TModel, TValue>!>! expression, System.Collections.Generic.IReadOnlyDictionary<string!, object?>? htmlAttributes = null) -> Kazo.Os.AppSdk.Web.Views.KazoHtmlString!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>.IdFor<TValue>(System.Linq.Expressions.Expression<System.Func<TModel, TValue>!>! expression) -> string!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>.LabelFor<TValue>(System.Linq.Expressions.Expression<System.Func<TModel, TValue>!>! expression, string? labelText = null) -> Kazo.Os.AppSdk.Web.Views.KazoHtmlString!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>.NameFor<TValue>(System.Linq.Expressions.Expression<System.Func<TModel, TValue>!>! expression) -> string!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>.PartialAsync(string! partialViewName) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Web.Views.KazoHtmlString!>!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>.PartialAsync(string! partialViewName, object? model) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Web.Views.KazoHtmlString!>!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>.Password(string! name, System.Collections.Generic.IReadOnlyDictionary<string!, object?>? htmlAttributes = null) -> Kazo.Os.AppSdk.Web.Views.KazoHtmlString!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>.Raw(object? value) -> Kazo.Os.AppSdk.Web.Views.KazoHtmlString!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>.Raw(string? html) -> Kazo.Os.AppSdk.Web.Views.KazoHtmlString!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>.RenderPartialAsync(string! partialViewName, object? model = null) -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>.RouteLink<TValues>(string! linkText, string! routeName, TValues routeValues, System.Collections.Generic.IReadOnlyDictionary<string!, object?>? htmlAttributes = null) -> Kazo.Os.AppSdk.Web.Views.KazoHtmlString!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>.TextArea(string! name, string? value = null, System.Collections.Generic.IReadOnlyDictionary<string!, object?>? htmlAttributes = null) -> Kazo.Os.AppSdk.Web.Views.KazoHtmlString!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>.TextAreaFor<TValue>(System.Linq.Expressions.Expression<System.Func<TModel, TValue>!>! expression, System.Collections.Generic.IReadOnlyDictionary<string!, object?>? htmlAttributes = null) -> Kazo.Os.AppSdk.Web.Views.KazoHtmlString!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>.TextBox(string! name, object? value = null, System.Collections.Generic.IReadOnlyDictionary<string!, object?>? htmlAttributes = null) -> Kazo.Os.AppSdk.Web.Views.KazoHtmlString!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>.TextBoxFor<TValue>(System.Linq.Expressions.Expression<System.Func<TModel, TValue>!>! expression, System.Collections.Generic.IReadOnlyDictionary<string!, object?>? htmlAttributes = null) -> Kazo.Os.AppSdk.Web.Views.KazoHtmlString!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>.ValidationMessage(string! modelName, string? message = null) -> Kazo.Os.AppSdk.Web.Views.KazoHtmlString!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>.ValidationMessageFor<TValue>(System.Linq.Expressions.Expression<System.Func<TModel, TValue>!>! expression, string? message = null) -> Kazo.Os.AppSdk.Web.Views.KazoHtmlString!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>.ValidationSummary(bool excludePropertyErrors = false) -> Kazo.Os.AppSdk.Web.Views.KazoHtmlString!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>.ValueFor<TValue>(System.Linq.Expressions.Expression<System.Func<TModel, TValue>!>! expression) -> string!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>.ViewContext.get -> Kazo.Os.AppSdk.Web.Views.KazoViewContext!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel>.ViewData.get -> Kazo.Os.AppSdk.Web.Views.KazoViewDataDictionary!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlString
+Kazo.Os.AppSdk.Web.Views.KazoHtmlString.KazoHtmlString(string? value) -> void
+Kazo.Os.AppSdk.Web.Views.KazoHtmlString.Value.get -> string!
+Kazo.Os.AppSdk.Web.Views.KazoHtmlString.WriteTo(System.IO.TextWriter! writer) -> void
+Kazo.Os.AppSdk.Web.Views.KazoJsonHelper
+Kazo.Os.AppSdk.Web.Views.KazoJsonHelper.Serialize(object? value) -> Kazo.Os.AppSdk.Web.Views.KazoHtmlString!
+Kazo.Os.AppSdk.Web.Views.KazoLayout
+Kazo.Os.AppSdk.Web.Views.KazoLayout.Body.get -> Microsoft.AspNetCore.Components.RenderFragment?
+Kazo.Os.AppSdk.Web.Views.KazoLayout.Body.set -> void
+Kazo.Os.AppSdk.Web.Views.KazoLayout.KazoLayout() -> void
+Kazo.Os.AppSdk.Web.Views.KazoLayout.Model.get -> object?
+Kazo.Os.AppSdk.Web.Views.KazoLink
+Kazo.Os.AppSdk.Web.Views.KazoLink.Action.get -> string?
+Kazo.Os.AppSdk.Web.Views.KazoLink.Action.set -> void
+Kazo.Os.AppSdk.Web.Views.KazoLink.ChildContent.get -> Microsoft.AspNetCore.Components.RenderFragment?
+Kazo.Os.AppSdk.Web.Views.KazoLink.ChildContent.set -> void
+Kazo.Os.AppSdk.Web.Views.KazoLink.Controller.get -> string?
+Kazo.Os.AppSdk.Web.Views.KazoLink.Controller.set -> void
+Kazo.Os.AppSdk.Web.Views.KazoLink.KazoLink() -> void
+Kazo.Os.AppSdk.Web.Views.KazoLink.Href.get -> string?
+Kazo.Os.AppSdk.Web.Views.KazoLink.Href.set -> void
+Kazo.Os.AppSdk.Web.Views.KazoLink.Route.get -> string?
+Kazo.Os.AppSdk.Web.Views.KazoLink.Route.set -> void
+Kazo.Os.AppSdk.Web.Views.KazoLink.RouteValues.get -> System.Collections.Generic.IReadOnlyDictionary<string!, object?>?
+Kazo.Os.AppSdk.Web.Views.KazoLink.RouteValues.set -> void
+Kazo.Os.AppSdk.Web.Views.KazoModelExpressionProvider<TModel>
+Kazo.Os.AppSdk.Web.Views.KazoModelExpressionProvider<TModel>.GetExpressionText<TValue>(System.Linq.Expressions.Expression<System.Func<TModel, TValue>!>! expression) -> string!
+Kazo.Os.AppSdk.Web.Views.KazoModelExpressionProvider<TModel>.KazoModelExpressionProvider() -> void
+Kazo.Os.AppSdk.Web.Views.KazoPartial
+Kazo.Os.AppSdk.Web.Views.KazoPartial.KazoPartial() -> void
+Kazo.Os.AppSdk.Web.Views.KazoPartial.Model.get -> object?
+Kazo.Os.AppSdk.Web.Views.KazoPartial.Model.set -> void
+Kazo.Os.AppSdk.Web.Views.KazoPartial.Name.get -> string!
+Kazo.Os.AppSdk.Web.Views.KazoPartial.Name.set -> void
+Kazo.Os.AppSdk.Web.Views.KazoRazorPage
+Kazo.Os.AppSdk.Web.Views.KazoRazorPage.Context.get -> Kazo.Os.AppSdk.Web.Http.KazoHttpContext!
+Kazo.Os.AppSdk.Web.Views.KazoRazorPage.KazoRazorPage() -> void
+Kazo.Os.AppSdk.Web.Views.KazoRazorPage.IgnoreBody() -> void
+Kazo.Os.AppSdk.Web.Views.KazoRazorPage.IgnoreSection(string! name) -> void
+Kazo.Os.AppSdk.Web.Views.KazoRazorPage.IsLayout.get -> bool
+Kazo.Os.AppSdk.Web.Views.KazoRazorPage.IsSectionDefined(string! name) -> bool
+Kazo.Os.AppSdk.Web.Views.KazoRazorPage.Layout.get -> string?
+Kazo.Os.AppSdk.Web.Views.KazoRazorPage.Layout.set -> void
+Kazo.Os.AppSdk.Web.Views.KazoRazorPage.ModelState.get -> Kazo.Os.AppSdk.Web.Mvc.KazoModelStateDictionary!
+Kazo.Os.AppSdk.Web.Views.KazoRazorPage.Output.get -> System.IO.TextWriter!
+Kazo.Os.AppSdk.Web.Views.KazoRazorPage.Path.get -> string!
+Kazo.Os.AppSdk.Web.Views.KazoRazorPage.PopWriter() -> System.IO.TextWriter!
+Kazo.Os.AppSdk.Web.Views.KazoRazorPage.PushWriter(System.IO.TextWriter! writer) -> void
+Kazo.Os.AppSdk.Web.Views.KazoRazorPage.RenderBody() -> Kazo.Os.AppSdk.Web.Views.KazoHtmlString!
+Kazo.Os.AppSdk.Web.Views.KazoRazorPage.RenderSection(string! name) -> Kazo.Os.AppSdk.Web.Views.KazoHtmlString?
+Kazo.Os.AppSdk.Web.Views.KazoRazorPage.RenderSection(string! name, bool required) -> Kazo.Os.AppSdk.Web.Views.KazoHtmlString?
+Kazo.Os.AppSdk.Web.Views.KazoRazorPage.RenderSectionAsync(string! name) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Web.Views.KazoHtmlString?>!
+Kazo.Os.AppSdk.Web.Views.KazoRazorPage.RenderSectionAsync(string! name, bool required) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Web.Views.KazoHtmlString?>!
+Kazo.Os.AppSdk.Web.Views.KazoRazorPage.Request.get -> Kazo.Os.AppSdk.Web.Http.KazoHttpRequest!
+Kazo.Os.AppSdk.Web.Views.KazoRazorPage.ViewContext.get -> Kazo.Os.AppSdk.Web.Views.KazoViewContext!
+Kazo.Os.AppSdk.Web.Views.KazoRazorPage.ViewData.get -> Kazo.Os.AppSdk.Web.Views.KazoViewDataDictionary!
+Kazo.Os.AppSdk.Web.Views.KazoRazorPage<TModel>
+Kazo.Os.AppSdk.Web.Views.KazoRazorPage<TModel>.KazoRazorPage() -> void
+Kazo.Os.AppSdk.Web.Views.KazoRazorPage<TModel>.Model.get -> TModel
+Kazo.Os.AppSdk.Web.Views.KazoRenderSection
+Kazo.Os.AppSdk.Web.Views.KazoRenderSection.KazoRenderSection() -> void
+Kazo.Os.AppSdk.Web.Views.KazoRenderSection.Name.get -> string!
+Kazo.Os.AppSdk.Web.Views.KazoRenderSection.Name.set -> void
+Kazo.Os.AppSdk.Web.Views.KazoRenderSection.Required.get -> bool
+Kazo.Os.AppSdk.Web.Views.KazoRenderSection.Required.set -> void
+Kazo.Os.AppSdk.Web.Views.KazoRoute
+Kazo.Os.AppSdk.Web.Views.KazoSection
+Kazo.Os.AppSdk.Web.Views.KazoSection.ChildContent.get -> Microsoft.AspNetCore.Components.RenderFragment?
+Kazo.Os.AppSdk.Web.Views.KazoSection.ChildContent.set -> void
+Kazo.Os.AppSdk.Web.Views.KazoSection.KazoSection() -> void
+Kazo.Os.AppSdk.Web.Views.KazoSection.Name.get -> string!
+Kazo.Os.AppSdk.Web.Views.KazoSection.Name.set -> void
+Kazo.Os.AppSdk.Web.Views.KazoValidationMessage
+Kazo.Os.AppSdk.Web.Views.KazoValidationMessage.For.get -> string!
+Kazo.Os.AppSdk.Web.Views.KazoValidationMessage.For.set -> void
+Kazo.Os.AppSdk.Web.Views.KazoValidationMessage.KazoValidationMessage() -> void
+Kazo.Os.AppSdk.Web.Views.KazoValidationSummary
+Kazo.Os.AppSdk.Web.Views.KazoValidationSummary.KazoValidationSummary() -> void
+Kazo.Os.AppSdk.Web.Views.KazoValidationSummary.ModelOnly.get -> bool
+Kazo.Os.AppSdk.Web.Views.KazoValidationSummary.ModelOnly.set -> void
+Kazo.Os.AppSdk.Web.Views.KazoView
+Kazo.Os.AppSdk.Web.Views.KazoView.KazoView() -> void
+Kazo.Os.AppSdk.Web.Views.KazoView.Model.get -> object?
+Kazo.Os.AppSdk.Web.Views.KazoView<TModel>
+Kazo.Os.AppSdk.Web.Views.KazoView<TModel>.KazoView() -> void
+Kazo.Os.AppSdk.Web.Views.KazoView<TModel>.Model.get -> TModel
+Kazo.Os.AppSdk.Web.Views.KazoView<TModel>.Model.set -> void
+Kazo.Os.AppSdk.Web.Views.KazoViewBase
+Kazo.Os.AppSdk.Web.Views.KazoViewBase.KazoViewBase() -> void
+Kazo.Os.AppSdk.Web.Views.KazoViewBase.HasViewContext.get -> bool
+Kazo.Os.AppSdk.Web.Views.KazoViewBase.HttpContext.get -> Kazo.Os.AppSdk.Web.Http.KazoHttpContext!
+Kazo.Os.AppSdk.Web.Views.KazoViewBase.Layout.get -> System.Type?
+Kazo.Os.AppSdk.Web.Views.KazoViewBase.Layout.set -> void
+Kazo.Os.AppSdk.Web.Views.KazoViewBase.ModelState.get -> Kazo.Os.AppSdk.Web.Mvc.KazoModelStateDictionary!
+Kazo.Os.AppSdk.Web.Views.KazoViewBase.Request.get -> Kazo.Os.AppSdk.Web.Http.KazoHttpRequest!
+Kazo.Os.AppSdk.Web.Views.KazoViewBase.Url.get -> Kazo.Os.AppSdk.Web.Mvc.IKazoUrlHelper!
+Kazo.Os.AppSdk.Web.Views.KazoViewBase.ViewContext.get -> Kazo.Os.AppSdk.Web.Views.KazoViewContext!
+Kazo.Os.AppSdk.Web.Views.KazoViewBase.ViewContext.set -> void
+Kazo.Os.AppSdk.Web.Views.KazoViewBase.ViewData.get -> Kazo.Os.AppSdk.Web.Views.KazoViewDataDictionary!
+Kazo.Os.AppSdk.Web.Views.KazoViewComponentHelper
+Kazo.Os.AppSdk.Web.Views.KazoViewComponentHelper.InvokeAsync<TComponent>(System.Collections.Generic.IReadOnlyDictionary<string!, object?>? parameters = null) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Web.Views.KazoHtmlString!>!
+Kazo.Os.AppSdk.Web.Views.KazoViewContext
+Kazo.Os.AppSdk.Web.Views.KazoViewContext.ActionContext.get -> Kazo.Os.AppSdk.Web.Mvc.KazoActionContext!
+Kazo.Os.AppSdk.Web.Views.KazoViewContext.ActionDescriptor.get -> Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor?
+Kazo.Os.AppSdk.Web.Views.KazoViewContext.FindPartial(string! name) -> Kazo.Os.AppSdk.Web.Views.KazoViewDescriptor!
+Kazo.Os.AppSdk.Web.Views.KazoViewContext.ForPartial(object? model) -> Kazo.Os.AppSdk.Web.Views.KazoViewContext!
+Kazo.Os.AppSdk.Web.Views.KazoViewContext.GetAntiforgeryTokens() -> Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryTokenSet!
+Kazo.Os.AppSdk.Web.Views.KazoViewContext.HttpContext.get -> Kazo.Os.AppSdk.Web.Http.KazoHttpContext!
+Kazo.Os.AppSdk.Web.Views.KazoViewContext.IsPartial.get -> bool
+Kazo.Os.AppSdk.Web.Views.KazoViewContext.Layout.get -> System.Type?
+Kazo.Os.AppSdk.Web.Views.KazoViewContext.Layout.set -> void
+Kazo.Os.AppSdk.Web.Views.KazoViewContext.Model.get -> object?
+Kazo.Os.AppSdk.Web.Views.KazoViewContext.ModelState.get -> Kazo.Os.AppSdk.Web.Mvc.KazoModelStateDictionary!
+Kazo.Os.AppSdk.Web.Views.KazoViewContext.RouteValues.get -> Kazo.Os.AppSdk.Web.Routing.KazoRouteValueDictionary!
+Kazo.Os.AppSdk.Web.Views.KazoViewContext.Url.get -> Kazo.Os.AppSdk.Web.Mvc.IKazoUrlHelper!
+Kazo.Os.AppSdk.Web.Views.KazoViewContext.ViewData.get -> Kazo.Os.AppSdk.Web.Views.KazoViewDataDictionary!
+Kazo.Os.AppSdk.Web.Views.KazoViewDataDictionary
+Kazo.Os.AppSdk.Web.Views.KazoViewDataDictionary.KazoViewDataDictionary() -> void
+Kazo.Os.AppSdk.Web.Views.KazoViewDataDictionary.Title.get -> string?
+Kazo.Os.AppSdk.Web.Views.KazoViewDataDictionary.Title.set -> void
+Kazo.Os.AppSdk.Web.Views.KazoViewDataDictionary.this[string! key].get -> object?
+Kazo.Os.AppSdk.Web.Views.KazoViewDataDictionary.this[string! key].set -> void
+Kazo.Os.AppSdk.Web.Views.KazoViewDescriptor
+Kazo.Os.AppSdk.Web.Views.KazoViewDescriptor.KazoViewDescriptor(string! path, System.Type! viewType) -> void
+Kazo.Os.AppSdk.Web.Views.KazoViewDescriptor.Kind.get -> Kazo.Os.AppSdk.Web.Views.KazoViewKind
+Kazo.Os.AppSdk.Web.Views.KazoViewDescriptor.Path.get -> string!
+Kazo.Os.AppSdk.Web.Views.KazoViewDescriptor.ViewType.get -> System.Type!
+Kazo.Os.AppSdk.Web.Views.KazoViewEngine
+Kazo.Os.AppSdk.Web.Views.KazoViewEngine.FindView(Kazo.Os.AppSdk.Web.Mvc.KazoActionContext! context, string! name, out System.Collections.Generic.IReadOnlyList<string!>! searchedLocations) -> Kazo.Os.AppSdk.Web.Views.KazoViewDescriptor?
+Kazo.Os.AppSdk.Web.Views.KazoViewEngine.GetView(Kazo.Os.AppSdk.Web.Mvc.KazoActionContext! context, string! name) -> Kazo.Os.AppSdk.Web.Views.KazoViewDescriptor!
+Kazo.Os.AppSdk.Web.Views.KazoViewEngine.KazoViewEngine(Kazo.Os.AppSdk.Web.Views.KazoViewTable! views) -> void
+Kazo.Os.AppSdk.Web.Views.KazoViewEngine.RenderAsync(Kazo.Os.AppSdk.Web.Mvc.KazoActionContext! context, System.Type! viewType, object? model, Kazo.Os.AppSdk.Web.Views.KazoViewDataDictionary! viewData, bool isPartial) -> System.Threading.Tasks.Task<string!>!
+Kazo.Os.AppSdk.Web.Views.KazoViewEngine.Views.get -> Kazo.Os.AppSdk.Web.Views.KazoViewTable!
+Kazo.Os.AppSdk.Web.Views.KazoViewHelper
+Kazo.Os.AppSdk.Web.Views.KazoViewHelper.AdditionalAttributes.get -> System.Collections.Generic.IReadOnlyDictionary<string!, object!>?
+Kazo.Os.AppSdk.Web.Views.KazoViewHelper.AdditionalAttributes.set -> void
+Kazo.Os.AppSdk.Web.Views.KazoViewHelper.KazoViewHelper() -> void
+Kazo.Os.AppSdk.Web.Views.KazoViewHelper.ResolveUrl(string? href, string? route, string? action, string? controller, System.Collections.Generic.IReadOnlyDictionary<string!, object?>? routeValues) -> string!
+Kazo.Os.AppSdk.Web.Views.KazoViewHelper.Url.get -> Kazo.Os.AppSdk.Web.Mvc.IKazoUrlHelper!
+Kazo.Os.AppSdk.Web.Views.KazoViewHelper.ViewContext.get -> Kazo.Os.AppSdk.Web.Views.KazoViewContext!
+Kazo.Os.AppSdk.Web.Views.KazoViewHelper.ViewContext.set -> void
+Kazo.Os.AppSdk.Web.Views.KazoViewKind
+Kazo.Os.AppSdk.Web.Views.KazoViewKind.Component = 0 -> Kazo.Os.AppSdk.Web.Views.KazoViewKind
+Kazo.Os.AppSdk.Web.Views.KazoViewKind.RazorPage = 1 -> Kazo.Os.AppSdk.Web.Views.KazoViewKind
+Kazo.Os.AppSdk.Web.Views.KazoViewResult
+Kazo.Os.AppSdk.Web.Views.KazoViewResult.ContentType.get -> string?
+Kazo.Os.AppSdk.Web.Views.KazoViewResult.ContentType.init -> void
+Kazo.Os.AppSdk.Web.Views.KazoViewResult.ExecuteResultAsync(Kazo.Os.AppSdk.Web.Mvc.KazoActionContext! context) -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Web.Views.KazoViewResult.KazoViewResult() -> void
+Kazo.Os.AppSdk.Web.Views.KazoViewResult.IsPartial.get -> bool
+Kazo.Os.AppSdk.Web.Views.KazoViewResult.IsPartial.init -> void
+Kazo.Os.AppSdk.Web.Views.KazoViewResult.Model.get -> object?
+Kazo.Os.AppSdk.Web.Views.KazoViewResult.Model.init -> void
+Kazo.Os.AppSdk.Web.Views.KazoViewResult.StatusCode.get -> int?
+Kazo.Os.AppSdk.Web.Views.KazoViewResult.StatusCode.init -> void
+Kazo.Os.AppSdk.Web.Views.KazoViewResult.ViewData.get -> Kazo.Os.AppSdk.Web.Views.KazoViewDataDictionary?
+Kazo.Os.AppSdk.Web.Views.KazoViewResult.ViewData.init -> void
+Kazo.Os.AppSdk.Web.Views.KazoViewResult.ViewName.get -> string?
+Kazo.Os.AppSdk.Web.Views.KazoViewResult.ViewName.init -> void
+Kazo.Os.AppSdk.Web.Views.KazoViewResult.ViewType.get -> System.Type?
+Kazo.Os.AppSdk.Web.Views.KazoViewResult.ViewType.init -> void
+Kazo.Os.AppSdk.Web.Views.KazoViewTable
+Kazo.Os.AppSdk.Web.Views.KazoViewTable.Find(System.Type! viewType) -> Kazo.Os.AppSdk.Web.Views.KazoViewDescriptor?
+Kazo.Os.AppSdk.Web.Views.KazoViewTable.Find(string! path) -> Kazo.Os.AppSdk.Web.Views.KazoViewDescriptor?
+Kazo.Os.AppSdk.Web.Views.KazoViewTable.KazoViewTable(System.Collections.Generic.IEnumerable<Kazo.Os.AppSdk.Web.Views.KazoViewDescriptor!>! views) -> void
+Kazo.Os.AppSdk.Web.Views.KazoViewTable.Views.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Web.Views.KazoViewDescriptor!>!
+Kazo.Os.AppSdk.Web.Views.IKazoHtmlContent
+Kazo.Os.AppSdk.Web.Views.IKazoHtmlContent.WriteTo(System.IO.TextWriter! writer) -> void
+abstract Kazo.Os.AppSdk.Web.Views.KazoRazorPage.ExecuteAsync() -> System.Threading.Tasks.Task!
+const Kazo.Os.AppSdk.Web.Data.KazoWebDbServiceCollectionExtensions.InMemoryName = "kazoweb.in-memory" -> string!
+const Kazo.Os.AppSdk.Web.Hosting.KazoBlazorSiteEndpoints.FallbackOrder = 1000000 -> int
+override Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryTokenSet.Equals(object? obj) -> bool
+override Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryTokenSet.GetHashCode() -> int
+override Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryTokenSet.ToString() -> string!
+override Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryValidationFailedResult.ExecuteResultAsync(Kazo.Os.AppSdk.Web.Mvc.KazoActionContext! context) -> System.Threading.Tasks.Task!
+override Kazo.Os.AppSdk.Web.Antiforgery.IgnoreAntiforgeryTokenAttribute.OnActionExecuting(Kazo.Os.AppSdk.Web.Mvc.KazoActionExecutingContext! context) -> void
+override Kazo.Os.AppSdk.Web.Antiforgery.ValidateAntiForgeryTokenAttribute.OnActionExecuting(Kazo.Os.AppSdk.Web.Mvc.KazoActionExecutingContext! context) -> void
+override Kazo.Os.AppSdk.Web.Data.KazoWebDbKey.Equals(object? obj) -> bool
+override Kazo.Os.AppSdk.Web.Data.KazoWebDbKey.GetHashCode() -> int
+override Kazo.Os.AppSdk.Web.Data.KazoWebDbKey.ToString() -> string!
+override Kazo.Os.AppSdk.Web.Hosting.KazoWebHost.OnListeningAsync(Kazo.Os.AppSdk.Net.KazoHttpListener! listener, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task!
+override Kazo.Os.AppSdk.Web.Hosting.KazoWebHost.OnStoppingAsync(Kazo.Os.AppSdk.ServiceStopReason reason, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask
+override Kazo.Os.AppSdk.Web.Hosting.KazoWebHost.ProcessRequestAsync(Kazo.Os.AppSdk.Net.KazoHttpListenerContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task!
+override Kazo.Os.AppSdk.Web.Hosting.WebAppDefinition.Category.get -> string!
+override Kazo.Os.AppSdk.Web.Hosting.WebAppDefinition.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.AppSdk.Web.Http.KazoConnectionInfo.Equals(object? obj) -> bool
+override Kazo.Os.AppSdk.Web.Http.KazoConnectionInfo.GetHashCode() -> int
+override Kazo.Os.AppSdk.Web.Http.KazoConnectionInfo.ToString() -> string!
+override Kazo.Os.AppSdk.Web.Http.KazoHttpRequest.ToString() -> string!
+override Kazo.Os.AppSdk.Web.Http.KazoWebRequestData.Equals(object? obj) -> bool
+override Kazo.Os.AppSdk.Web.Http.KazoWebRequestData.GetHashCode() -> int
+override Kazo.Os.AppSdk.Web.Http.KazoWebRequestData.ToString() -> string!
+override Kazo.Os.AppSdk.Web.Http.KazoWebResponseData.Equals(object? obj) -> bool
+override Kazo.Os.AppSdk.Web.Http.KazoWebResponseData.GetHashCode() -> int
+override Kazo.Os.AppSdk.Web.Http.KazoWebResponseData.ToString() -> string!
+override Kazo.Os.AppSdk.Web.Mvc.KazoActionParameterDescriptor.Equals(object? obj) -> bool
+override Kazo.Os.AppSdk.Web.Mvc.KazoActionParameterDescriptor.GetHashCode() -> int
+override Kazo.Os.AppSdk.Web.Mvc.KazoActionParameterDescriptor.ToString() -> string!
+override Kazo.Os.AppSdk.Web.Mvc.KazoAttributeRouteInfo.Equals(object? obj) -> bool
+override Kazo.Os.AppSdk.Web.Mvc.KazoAttributeRouteInfo.GetHashCode() -> int
+override Kazo.Os.AppSdk.Web.Mvc.KazoAttributeRouteInfo.ToString() -> string!
+override Kazo.Os.AppSdk.Web.Mvc.KazoControllerActionDescriptor.ToString() -> string!
+override Kazo.Os.AppSdk.Web.Mvc.KazoControllerRouteTable.Equals(object? obj) -> bool
+override Kazo.Os.AppSdk.Web.Mvc.KazoControllerRouteTable.GetHashCode() -> int
+override Kazo.Os.AppSdk.Web.Mvc.KazoControllerRouteTable.ToString() -> string!
+override Kazo.Os.AppSdk.Web.Mvc.KazoCreatedAtActionResult.ExecuteResultAsync(Kazo.Os.AppSdk.Web.Mvc.KazoActionContext! context) -> System.Threading.Tasks.Task!
+override Kazo.Os.AppSdk.Web.Mvc.KazoCreatedResult.ExecuteResultAsync(Kazo.Os.AppSdk.Web.Mvc.KazoActionContext! context) -> System.Threading.Tasks.Task!
+override Kazo.Os.AppSdk.Web.Routing.KazoEndpoint.ToString() -> string!
+override Kazo.Os.AppSdk.Web.Routing.KazoRouteMatch.Equals(object? obj) -> bool
+override Kazo.Os.AppSdk.Web.Routing.KazoRouteMatch.GetHashCode() -> int
+override Kazo.Os.AppSdk.Web.Routing.KazoRouteMatch.ToString() -> string!
+override Kazo.Os.AppSdk.Web.Routing.KazoRouteNameMetadata.Equals(object? obj) -> bool
+override Kazo.Os.AppSdk.Web.Routing.KazoRouteNameMetadata.GetHashCode() -> int
+override Kazo.Os.AppSdk.Web.Routing.KazoRouteNameMetadata.ToString() -> string!
+override Kazo.Os.AppSdk.Web.Routing.KazoRoutePattern.ToString() -> string!
+override Kazo.Os.AppSdk.Web.Routing.KazoRouteTemplate.ToString() -> string!
+override Kazo.Os.AppSdk.Web.Views.KazoHelperResult.ToString() -> string!
+override Kazo.Os.AppSdk.Web.Views.KazoHtmlString.ToString() -> string!
+override Kazo.Os.AppSdk.Web.Views.KazoPartial.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView parameters) -> System.Threading.Tasks.Task!
+override Kazo.Os.AppSdk.Web.Views.KazoViewDescriptor.ToString() -> string!
+override abstract Kazo.Os.AppSdk.Web.Hosting.WebAppDefinition.Urls.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override sealed Kazo.Os.AppSdk.Web.Hosting.WebAppDefinition.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+static Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryTokenSet.operator !=(Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryTokenSet? left, Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryTokenSet? right) -> bool
+static Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryTokenSet.operator ==(Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryTokenSet? left, Kazo.Os.AppSdk.Web.Antiforgery.KazoAntiforgeryTokenSet? right) -> bool
+static Kazo.Os.AppSdk.Web.Data.KazoWebDbKey.Array(params Kazo.Os.AppSdk.Web.Data.KazoWebDbKey[]! parts) -> Kazo.Os.AppSdk.Web.Data.KazoWebDbKey
+static Kazo.Os.AppSdk.Web.Data.KazoWebDbKey.FromJson(string! json) -> Kazo.Os.AppSdk.Web.Data.KazoWebDbKey
+static Kazo.Os.AppSdk.Web.Data.KazoWebDbKey.implicit operator Kazo.Os.AppSdk.Web.Data.KazoWebDbKey(double value) -> Kazo.Os.AppSdk.Web.Data.KazoWebDbKey
+static Kazo.Os.AppSdk.Web.Data.KazoWebDbKey.implicit operator Kazo.Os.AppSdk.Web.Data.KazoWebDbKey(int value) -> Kazo.Os.AppSdk.Web.Data.KazoWebDbKey
+static Kazo.Os.AppSdk.Web.Data.KazoWebDbKey.implicit operator Kazo.Os.AppSdk.Web.Data.KazoWebDbKey(long value) -> Kazo.Os.AppSdk.Web.Data.KazoWebDbKey
+static Kazo.Os.AppSdk.Web.Data.KazoWebDbKey.implicit operator Kazo.Os.AppSdk.Web.Data.KazoWebDbKey(string! value) -> Kazo.Os.AppSdk.Web.Data.KazoWebDbKey
+static Kazo.Os.AppSdk.Web.Data.KazoWebDbKey.operator !=(Kazo.Os.AppSdk.Web.Data.KazoWebDbKey left, Kazo.Os.AppSdk.Web.Data.KazoWebDbKey right) -> bool
+static Kazo.Os.AppSdk.Web.Data.KazoWebDbKey.operator ==(Kazo.Os.AppSdk.Web.Data.KazoWebDbKey left, Kazo.Os.AppSdk.Web.Data.KazoWebDbKey right) -> bool
+static Kazo.Os.AppSdk.Web.Data.KazoWebDbKeyRange.Bound(Kazo.Os.AppSdk.Web.Data.KazoWebDbKey lower, Kazo.Os.AppSdk.Web.Data.KazoWebDbKey upper, bool lowerOpen = false, bool upperOpen = false) -> Kazo.Os.AppSdk.Web.Data.KazoWebDbKeyRange!
+static Kazo.Os.AppSdk.Web.Data.KazoWebDbKeyRange.LowerBound(Kazo.Os.AppSdk.Web.Data.KazoWebDbKey lower, bool open = false) -> Kazo.Os.AppSdk.Web.Data.KazoWebDbKeyRange!
+static Kazo.Os.AppSdk.Web.Data.KazoWebDbKeyRange.Only(Kazo.Os.AppSdk.Web.Data.KazoWebDbKey key) -> Kazo.Os.AppSdk.Web.Data.KazoWebDbKeyRange!
+static Kazo.Os.AppSdk.Web.Data.KazoWebDbKeyRange.UpperBound(Kazo.Os.AppSdk.Web.Data.KazoWebDbKey upper, bool open = false) -> Kazo.Os.AppSdk.Web.Data.KazoWebDbKeyRange!
+static Kazo.Os.AppSdk.Web.Data.KazoWebDbServiceCollectionExtensions.AddKazoWebDb(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services, System.Action<Kazo.Os.AppSdk.Web.Data.KazoWebDbSchemaBuilder!>! schema) -> Microsoft.Extensions.DependencyInjection.IServiceCollection!
+static Kazo.Os.AppSdk.Web.Hosting.KazoBlazorSiteEndpoints.IsHostPage(string! html) -> bool
+static Kazo.Os.AppSdk.Web.Hosting.KazoBlazorSiteEndpoints.Map(Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication! application, Kazo.Os.AppSdk.Web.Hosting.WebAppDefinition! definition) -> void
+static Kazo.Os.AppSdk.Web.Hosting.KazoWebHost.CreateApplication(Kazo.Os.AppSdk.Web.Hosting.WebAppDefinition! definition, Kazo.Os.AppSdk.Web.Mvc.KazoControllerRouteTable! routes, System.Collections.Generic.IReadOnlyList<string!>? urls = null, Kazo.Os.AppSdk.Web.Views.KazoViewTable? views = null) -> Kazo.Os.AppSdk.Web.Hosting.KazoWebApplication!
+static Kazo.Os.AppSdk.Web.Http.KazoConnectionInfo.operator !=(Kazo.Os.AppSdk.Web.Http.KazoConnectionInfo? left, Kazo.Os.AppSdk.Web.Http.KazoConnectionInfo? right) -> bool
+static Kazo.Os.AppSdk.Web.Http.KazoConnectionInfo.operator ==(Kazo.Os.AppSdk.Web.Http.KazoConnectionInfo? left, Kazo.Os.AppSdk.Web.Http.KazoConnectionInfo? right) -> bool
+static Kazo.Os.AppSdk.Web.Http.KazoValueCollection.Empty.get -> Kazo.Os.AppSdk.Web.Http.KazoValueCollection!
+static Kazo.Os.AppSdk.Web.Http.KazoValueCollection.From(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string!, string!>>! fields) -> Kazo.Os.AppSdk.Web.Http.KazoValueCollection!
+static Kazo.Os.AppSdk.Web.Http.KazoValueCollection.Parse(string? encoded) -> Kazo.Os.AppSdk.Web.Http.KazoValueCollection!
+static Kazo.Os.AppSdk.Web.Http.KazoWebRequestData.Create(string! method, string! url, params System.Collections.Generic.KeyValuePair<string!, string!>[]! headers) -> Kazo.Os.AppSdk.Web.Http.KazoWebRequestData!
+static Kazo.Os.AppSdk.Web.Http.KazoWebRequestData.Create(string! method, string! url, string! contentType, string! body, params System.Collections.Generic.KeyValuePair<string!, string!>[]! headers) -> Kazo.Os.AppSdk.Web.Http.KazoWebRequestData!
+static Kazo.Os.AppSdk.Web.Http.KazoWebRequestData.operator !=(Kazo.Os.AppSdk.Web.Http.KazoWebRequestData? left, Kazo.Os.AppSdk.Web.Http.KazoWebRequestData? right) -> bool
+static Kazo.Os.AppSdk.Web.Http.KazoWebRequestData.operator ==(Kazo.Os.AppSdk.Web.Http.KazoWebRequestData? left, Kazo.Os.AppSdk.Web.Http.KazoWebRequestData? right) -> bool
+static Kazo.Os.AppSdk.Web.Http.KazoWebResponseData.operator !=(Kazo.Os.AppSdk.Web.Http.KazoWebResponseData? left, Kazo.Os.AppSdk.Web.Http.KazoWebResponseData? right) -> bool
+static Kazo.Os.AppSdk.Web.Http.KazoWebResponseData.operator ==(Kazo.Os.AppSdk.Web.Http.KazoWebResponseData? left, Kazo.Os.AppSdk.Web.Http.KazoWebResponseData? right) -> bool
+static Kazo.Os.AppSdk.Web.Mvc.KazoActionParameterDescriptor.operator !=(Kazo.Os.AppSdk.Web.Mvc.KazoActionParameterDescriptor? left, Kazo.Os.AppSdk.Web.Mvc.KazoActionParameterDescriptor? right) -> bool
+static Kazo.Os.AppSdk.Web.Mvc.KazoActionParameterDescriptor.operator ==(Kazo.Os.AppSdk.Web.Mvc.KazoActionParameterDescriptor? left, Kazo.Os.AppSdk.Web.Mvc.KazoActionParameterDescriptor? right) -> bool
+static Kazo.Os.AppSdk.Web.Mvc.KazoAttributeRouteInfo.operator !=(Kazo.Os.AppSdk.Web.Mvc.KazoAttributeRouteInfo? left, Kazo.Os.AppSdk.Web.Mvc.KazoAttributeRouteInfo? right) -> bool
+static Kazo.Os.AppSdk.Web.Mvc.KazoAttributeRouteInfo.operator ==(Kazo.Os.AppSdk.Web.Mvc.KazoAttributeRouteInfo? left, Kazo.Os.AppSdk.Web.Mvc.KazoAttributeRouteInfo? right) -> bool
+static Kazo.Os.AppSdk.Web.Mvc.KazoControllerRouteTable.Empty.get -> Kazo.Os.AppSdk.Web.Mvc.KazoControllerRouteTable!
+static Kazo.Os.AppSdk.Web.Mvc.KazoControllerRouteTable.operator !=(Kazo.Os.AppSdk.Web.Mvc.KazoControllerRouteTable? left, Kazo.Os.AppSdk.Web.Mvc.KazoControllerRouteTable? right) -> bool
+static Kazo.Os.AppSdk.Web.Mvc.KazoControllerRouteTable.operator ==(Kazo.Os.AppSdk.Web.Mvc.KazoControllerRouteTable? left, Kazo.Os.AppSdk.Web.Mvc.KazoControllerRouteTable? right) -> bool
+static Kazo.Os.AppSdk.Web.Mvc.KazoEmptyResult.Instance.get -> Kazo.Os.AppSdk.Web.Mvc.KazoEmptyResult!
+static Kazo.Os.AppSdk.Web.Mvc.KazoResults.BadRequest() -> Kazo.Os.AppSdk.Web.Mvc.IKazoActionResult!
+static Kazo.Os.AppSdk.Web.Mvc.KazoResults.Created(string? uri, object? value) -> Kazo.Os.AppSdk.Web.Mvc.IKazoActionResult!
+static Kazo.Os.AppSdk.Web.Mvc.KazoResults.File(byte[]! contents, string! contentType, string? fileDownloadName = null) -> Kazo.Os.AppSdk.Web.Mvc.IKazoActionResult!
+static Kazo.Os.AppSdk.Web.Mvc.KazoResults.Json(object? value, System.Text.Json.Serialization.Metadata.JsonTypeInfo! typeInfo, int? statusCode = null) -> Kazo.Os.AppSdk.Web.Mvc.IKazoActionResult!
+static Kazo.Os.AppSdk.Web.Mvc.KazoResults.Json(object? value, int? statusCode = null) -> Kazo.Os.AppSdk.Web.Mvc.IKazoActionResult!
+static Kazo.Os.AppSdk.Web.Mvc.KazoResults.NoContent() -> Kazo.Os.AppSdk.Web.Mvc.IKazoActionResult!
+static Kazo.Os.AppSdk.Web.Mvc.KazoResults.NotFound() -> Kazo.Os.AppSdk.Web.Mvc.IKazoActionResult!
+static Kazo.Os.AppSdk.Web.Mvc.KazoResults.Ok() -> Kazo.Os.AppSdk.Web.Mvc.IKazoActionResult!
+static Kazo.Os.AppSdk.Web.Mvc.KazoResults.Ok(object? value) -> Kazo.Os.AppSdk.Web.Mvc.IKazoActionResult!
+static Kazo.Os.AppSdk.Web.Mvc.KazoResults.Problem(string? detail = null, int? statusCode = null, string? title = null) -> Kazo.Os.AppSdk.Web.Mvc.IKazoActionResult!
+static Kazo.Os.AppSdk.Web.Mvc.KazoResults.Redirect(string! url, bool permanent = false) -> Kazo.Os.AppSdk.Web.Mvc.IKazoActionResult!
+static Kazo.Os.AppSdk.Web.Mvc.KazoResults.StatusCode(int statusCode) -> Kazo.Os.AppSdk.Web.Mvc.IKazoActionResult!
+static Kazo.Os.AppSdk.Web.Mvc.KazoResults.Text(string! content, string? contentType = null, int? statusCode = null) -> Kazo.Os.AppSdk.Web.Mvc.IKazoActionResult!
+static Kazo.Os.AppSdk.Web.Mvc.KazoUrlHelper.IsLocalUrl(string? url) -> bool
+static Kazo.Os.AppSdk.Web.Mvc.KazoValueParsers.Enum<T>() -> Kazo.Os.AppSdk.Web.Mvc.KazoValueParser<T>!
+static Kazo.Os.AppSdk.Web.Mvc.KazoValueParsers.Nullable<T>(Kazo.Os.AppSdk.Web.Mvc.KazoValueParser<T>! inner) -> Kazo.Os.AppSdk.Web.Mvc.KazoValueParser<T?>!
+static Kazo.Os.AppSdk.Web.Mvc.KazoValueParsers.Parsable<T>() -> Kazo.Os.AppSdk.Web.Mvc.KazoValueParser<T>!
+static Kazo.Os.AppSdk.Web.Mvc.KazoValueParsers.String.get -> Kazo.Os.AppSdk.Web.Mvc.KazoValueParser<string!>!
+static Kazo.Os.AppSdk.Web.Routing.KazoRouteMatch.operator !=(Kazo.Os.AppSdk.Web.Routing.KazoRouteMatch? left, Kazo.Os.AppSdk.Web.Routing.KazoRouteMatch? right) -> bool
+static Kazo.Os.AppSdk.Web.Routing.KazoRouteMatch.operator ==(Kazo.Os.AppSdk.Web.Routing.KazoRouteMatch? left, Kazo.Os.AppSdk.Web.Routing.KazoRouteMatch? right) -> bool
+static Kazo.Os.AppSdk.Web.Routing.KazoRouteNameMetadata.operator !=(Kazo.Os.AppSdk.Web.Routing.KazoRouteNameMetadata? left, Kazo.Os.AppSdk.Web.Routing.KazoRouteNameMetadata? right) -> bool
+static Kazo.Os.AppSdk.Web.Routing.KazoRouteNameMetadata.operator ==(Kazo.Os.AppSdk.Web.Routing.KazoRouteNameMetadata? left, Kazo.Os.AppSdk.Web.Routing.KazoRouteNameMetadata? right) -> bool
+static Kazo.Os.AppSdk.Web.Routing.KazoRoutePattern.Parse(string! template, System.Collections.Generic.IReadOnlyDictionary<string!, string!>? requiredValues = null) -> Kazo.Os.AppSdk.Web.Routing.KazoRoutePattern!
+static Kazo.Os.AppSdk.Web.Routing.KazoRoutePattern.SplitPath(string! path) -> string![]!
+static Kazo.Os.AppSdk.Web.Routing.KazoRouteTemplate.Parse(string! template) -> Kazo.Os.AppSdk.Web.Routing.KazoRouteTemplate!
+static Kazo.Os.AppSdk.Web.Routing.KazoRouteValueDictionary.FormatValue(object? value) -> string?
+static Kazo.Os.AppSdk.Web.Routing.KazoRouteValueDictionary.FromObject<TValues>(TValues? values) -> Kazo.Os.AppSdk.Web.Routing.KazoRouteValueDictionary!
+static Kazo.Os.AppSdk.Web.Views.KazoHtmlString.Empty.get -> Kazo.Os.AppSdk.Web.Views.KazoHtmlString!
+static Kazo.Os.AppSdk.Web.Views.KazoRoute.Values<TValues>(TValues values) -> System.Collections.Generic.IReadOnlyDictionary<string!, object?>!
+static Kazo.Os.AppSdk.Web.Views.KazoViewEngine.EnsureModelType(System.Type! viewType, object? model) -> void
+static Kazo.Os.AppSdk.Web.Views.KazoViewTable.Empty.get -> Kazo.Os.AppSdk.Web.Views.KazoViewTable!
+virtual Kazo.Os.AppSdk.Web.Hosting.WebAppDefinition.Configure(Kazo.Os.AppSdk.Web.Hosting.KazoWebApplicationBuilder! builder) -> void
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoActionExecutionDelegate.Invoke() -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Web.Mvc.KazoActionExecutedContext!>!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoActionFilterAttribute.OnActionExecuted(Kazo.Os.AppSdk.Web.Mvc.KazoActionExecutedContext! context) -> void
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoActionFilterAttribute.OnActionExecuting(Kazo.Os.AppSdk.Web.Mvc.KazoActionExecutingContext! context) -> void
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoActionFilterAttribute.OnActionExecutionAsync(Kazo.Os.AppSdk.Web.Mvc.KazoActionExecutingContext! context, Kazo.Os.AppSdk.Web.Mvc.KazoActionExecutionDelegate! next) -> System.Threading.Tasks.Task!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoController.Json(object? data) -> Kazo.Os.AppSdk.Web.Mvc.KazoJsonResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoController.Json(object? data, System.Text.Json.Serialization.Metadata.JsonTypeInfo! typeInfo) -> Kazo.Os.AppSdk.Web.Mvc.KazoJsonResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoController.OnActionExecuted(Kazo.Os.AppSdk.Web.Mvc.KazoActionExecutedContext! context) -> void
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoController.OnActionExecuting(Kazo.Os.AppSdk.Web.Mvc.KazoActionExecutingContext! context) -> void
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoController.PartialView() -> Kazo.Os.AppSdk.Web.Views.KazoViewResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoController.PartialView(object? model) -> Kazo.Os.AppSdk.Web.Views.KazoViewResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoController.PartialView(string? viewName) -> Kazo.Os.AppSdk.Web.Views.KazoViewResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoController.PartialView(string? viewName, object? model) -> Kazo.Os.AppSdk.Web.Views.KazoViewResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoController.PartialView<TView>(object? model = null) -> Kazo.Os.AppSdk.Web.Views.KazoViewResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoController.View() -> Kazo.Os.AppSdk.Web.Views.KazoViewResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoController.View(object? model) -> Kazo.Os.AppSdk.Web.Views.KazoViewResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoController.View(string? viewName) -> Kazo.Os.AppSdk.Web.Views.KazoViewResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoController.View(string? viewName, object? model) -> Kazo.Os.AppSdk.Web.Views.KazoViewResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoController.View<TView>(object? model = null) -> Kazo.Os.AppSdk.Web.Views.KazoViewResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.BadRequest() -> Kazo.Os.AppSdk.Web.Mvc.KazoStatusCodeResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.BadRequest(Kazo.Os.AppSdk.Web.Mvc.KazoModelStateDictionary! modelState) -> Kazo.Os.AppSdk.Web.Mvc.KazoJsonResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.BadRequest(object? error) -> Kazo.Os.AppSdk.Web.Mvc.KazoObjectResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.Conflict() -> Kazo.Os.AppSdk.Web.Mvc.KazoStatusCodeResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.Conflict(object? error) -> Kazo.Os.AppSdk.Web.Mvc.KazoObjectResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.Content(string! content, string? contentType = null) -> Kazo.Os.AppSdk.Web.Mvc.KazoContentResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.Created(string? uri, object? value) -> Kazo.Os.AppSdk.Web.Mvc.KazoCreatedResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.CreatedAtAction<TValues>(string? actionName, TValues routeValues, object? value) -> Kazo.Os.AppSdk.Web.Mvc.KazoCreatedAtActionResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.CreatedAtAction<TValues>(string? actionName, string? controllerName, TValues routeValues, object? value) -> Kazo.Os.AppSdk.Web.Mvc.KazoCreatedAtActionResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.File(System.IO.Stream! fileStream, string! contentType, string? fileDownloadName = null) -> Kazo.Os.AppSdk.Web.Mvc.KazoFileResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.File(byte[]! fileContents, string! contentType, string? fileDownloadName = null) -> Kazo.Os.AppSdk.Web.Mvc.KazoFileResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.Forbid() -> Kazo.Os.AppSdk.Web.Mvc.KazoStatusCodeResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.LocalRedirect(string! localUrl) -> Kazo.Os.AppSdk.Web.Mvc.KazoLocalRedirectResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.NoContent() -> Kazo.Os.AppSdk.Web.Mvc.KazoStatusCodeResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.NotFound() -> Kazo.Os.AppSdk.Web.Mvc.KazoStatusCodeResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.NotFound(object? value) -> Kazo.Os.AppSdk.Web.Mvc.KazoObjectResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.Ok() -> Kazo.Os.AppSdk.Web.Mvc.KazoStatusCodeResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.Ok(object? value) -> Kazo.Os.AppSdk.Web.Mvc.KazoObjectResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.Problem(string? detail = null, string? instance = null, int? statusCode = null, string? title = null, string? type = null) -> Kazo.Os.AppSdk.Web.Mvc.KazoProblemResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.Redirect(string! url) -> Kazo.Os.AppSdk.Web.Mvc.KazoRedirectResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.RedirectPermanent(string! url) -> Kazo.Os.AppSdk.Web.Mvc.KazoRedirectResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.RedirectToAction(string! actionName) -> Kazo.Os.AppSdk.Web.Mvc.KazoRedirectToActionResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.RedirectToAction(string? actionName, string? controllerName) -> Kazo.Os.AppSdk.Web.Mvc.KazoRedirectToActionResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.RedirectToAction<TValues>(string? actionName, TValues routeValues) -> Kazo.Os.AppSdk.Web.Mvc.KazoRedirectToActionResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.RedirectToAction<TValues>(string? actionName, string? controllerName, TValues routeValues) -> Kazo.Os.AppSdk.Web.Mvc.KazoRedirectToActionResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.StatusCode(int statusCode) -> Kazo.Os.AppSdk.Web.Mvc.KazoStatusCodeResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.StatusCode(int statusCode, object? value) -> Kazo.Os.AppSdk.Web.Mvc.KazoObjectResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.TryValidateModel<TModel>(TModel model, string? prefix = null) -> bool
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.Unauthorized() -> Kazo.Os.AppSdk.Web.Mvc.KazoStatusCodeResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.ValidationProblem() -> Kazo.Os.AppSdk.Web.Mvc.KazoProblemResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoControllerBase.ValidationProblem(Kazo.Os.AppSdk.Web.Mvc.KazoModelStateDictionary! modelState) -> Kazo.Os.AppSdk.Web.Mvc.KazoProblemResult!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoObjectResult.ExecuteResultAsync(Kazo.Os.AppSdk.Web.Mvc.KazoActionContext! context) -> System.Threading.Tasks.Task!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoRedirectResult.ExecuteResultAsync(Kazo.Os.AppSdk.Web.Mvc.KazoActionContext! context) -> System.Threading.Tasks.Task!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoRedirectResult.ResolveUrl(Kazo.Os.AppSdk.Web.Mvc.KazoActionContext! context) -> string!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoStatusCodeResult.ExecuteResultAsync(Kazo.Os.AppSdk.Web.Mvc.KazoActionContext! context) -> System.Threading.Tasks.Task!
+virtual Kazo.Os.AppSdk.Web.Mvc.KazoValueParser<T>.Invoke(string! text, out T value) -> bool
+virtual Kazo.Os.AppSdk.Web.Routing.KazoRequestDelegate.Invoke(Kazo.Os.AppSdk.Web.Http.KazoHttpContext! context) -> System.Threading.Tasks.Task!
+virtual Kazo.Os.AppSdk.Web.Views.KazoRazorPage.BeginWriteAttribute(string! name, string! prefix, int prefixOffset, string! suffix, int suffixOffset, int attributeValuesCount) -> void
+virtual Kazo.Os.AppSdk.Web.Views.KazoRazorPage.DefineSection(string! name, System.Func<System.Threading.Tasks.Task!>! section) -> void
+virtual Kazo.Os.AppSdk.Web.Views.KazoRazorPage.EndWriteAttribute() -> void
+virtual Kazo.Os.AppSdk.Web.Views.KazoRazorPage.Write(object? value) -> void
+virtual Kazo.Os.AppSdk.Web.Views.KazoRazorPage.Write(string? value) -> void
+virtual Kazo.Os.AppSdk.Web.Views.KazoRazorPage.WriteAttributeValue(string! prefix, int prefixOffset, object? value, int valueOffset, int valueLength, bool isLiteral) -> void
+virtual Kazo.Os.AppSdk.Web.Views.KazoRazorPage.WriteLiteral(object? value) -> void
+virtual Kazo.Os.AppSdk.Web.Views.KazoRazorPage.WriteLiteral(string? value) -> void

@@ -29,7 +29,7 @@ nor `tail`, nor `grep` can access them.
 
 | File | Content | Owner and mode |
 |---|---|---|
-| `/var/log/syslog` | platform logs: all `ILogger` categories (`HackerOs.*`), startup, OS service errors, OS settings warnings (ADR 0044) | `system:system 0644` |
+| `/var/log/syslog` | platform logs: all `ILogger` categories (`Kazo.Os.*`), startup, OS service errors, OS settings warnings (ADR 0044) | `system:system 0644` |
 | `/var/log/auth.log` | all `IAuditLog` entries: existing actions `session.login` and `session.elevate` (`sudo`, ADR 0042), and later the permission approval decisions (phase 2 ADR) | `system:system 0600` (readable with `sudo` or an approval ticket) |
 | `/var/log/apps/<appId>.log` | entries of `IAppLoggingGateway.Log` for that app, and its settings warnings (ADR 0044) | `system:system 0644` |
 
@@ -68,7 +68,7 @@ Example:
 2026-10-10T03:11:42.123Z WARN  org.hackeros.text-editor[42]: settings: /etc/org.hackeros.text-editor/settings.config:12: invalid value for 'tab-size' (expected int64), using default
 ```
 
-The public type `LogLineFormat` (`Shared/HackerOs.Simulation.Abstractions/Diagnostics/LogLineFormat.cs`)
+The public type `LogLineFormat` (`Shared/Kazo.Os.Simulation.Abstractions/Diagnostics/LogLineFormat.cs`)
 contains `Format(...)` and `TryParse(string line, out LogLine entry)`. Error Log
 Viewer and the tests use it to re-read lines.
 
@@ -89,7 +89,7 @@ Viewer and the tests use it to re-read lines.
 
 ### 4. Batched background writing
 
-New service `LogFileWriter` (`Platform/HackerOs.Platform.Core/Diagnostics/LogFileWriter.cs`),
+New service `LogFileWriter` (`Platform/Kazo.Os.Platform.Core/Diagnostics/LogFileWriter.cs`),
 registered as a singleton:
 
 - `Enqueue(LogFileTarget target, string line)` is synchronous and never
@@ -134,13 +134,13 @@ registered as a singleton:
   `IAppExecutionContext.Diagnostics`. The `diagnostics.read` and
   `diagnostics.clear` capabilities are no longer evaluated. They remain in the catalog
   until the phase 2 ADR on permissions.
-- Both hosts (`OS/HackerOs.Ecosystem` and `test/test`) go through
+- Both hosts (`OS/Kazo.Os.Ecosystem` and `test/test`) go through
   `EcosystemServiceCollectionExtensions`. The server (ADR 0036) keeps its own
   composition, which is not modified.
 
 ### 6. Readers
 
-- **Error Log Viewer** (`Apps/System/HackerOs.Apps.ErrorLogViewer`) reads
+- **Error Log Viewer** (`Apps/System/Kazo.Os.Apps.ErrorLogViewer`) reads
   `/var/log/syslog` and `/var/log/apps/*.log` (and their `.1` to `.5` archives on
   demand) with `HackFile`, parses lines with `LogLineFormat.TryParse` and
   follows new entries with `HackFileSystemWatcher`. "Clear" becomes
@@ -167,4 +167,4 @@ registered as a singleton:
 - ADR 0043: `Hack*` API.
 - ADR 0044: invalid settings warnings.
 - [`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), sections 5.3 and 11.
-- `Platform/HackerOs.Platform.Core/Diagnostics/`, `Shared/HackerOs.Simulation.Abstractions/Diagnostics/DiagnosticsContracts.cs`.
+- `Platform/Kazo.Os.Platform.Core/Diagnostics/`, `Shared/Kazo.Os.Simulation.Abstractions/Diagnostics/DiagnosticsContracts.cs`.

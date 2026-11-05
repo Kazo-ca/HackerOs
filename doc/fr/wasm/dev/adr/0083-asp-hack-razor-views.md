@@ -6,14 +6,14 @@
 
 Accepté le 2026-10-16, avec le chantier `web/7-razor-views`.
 
-- **Phase du plan :** phase web ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Phase du plan :** phase web ([`asp-kazo-plan.md`](../plans/asp-kazo-plan.md)).
 - **Complète :** [ADR 0076](0076-asp-hack-mvc.md) §5 (`View`, `PartialView`), §6
   (jeton anti-falsification) et §7 (vues `.razor`) ; [ADR 0073](0073-web-apps.md)
   §2 (`wwwroot` du projet, lecture seule) ; [ADR 0082](0082-asp-hack-route-source-generator.md)
   (le générateur produit aussi la table des vues).
 - **Amende :** [ADR 0007](0007-enforce-collocated-razor-assets.md) : la vérification au build
   admet une référence `<script src="...">` sans corps (§6).
-- **Documentation :** [`asp-hack-razor-views.md`](../../framework/asp-hack-razor-views.md).
+- **Documentation :** [`asp-kazo-razor-views.md`](../../framework/asp-kazo-razor-views.md).
 
 ## Contexte
 
@@ -97,8 +97,8 @@ vérifiés) ; `[IgnoreAntiforgeryToken]` l'annule pour une action. `<HackForm>`
 
 ### 6. `wwwroot` embarqué, servi en lecture seule
 
-- `build/HackerOs.Apps.targets` embarque `wwwroot/**` d'un projet qui référence
-  `HackerOs.AppSdk.Web` comme ressources `wwwroot/<chemin>` (propriété
+- `build/Kazo.Os.Apps.targets` embarque `wwwroot/**` d'un projet qui référence
+  `Kazo.Os.AppSdk.Web` comme ressources `wwwroot/<chemin>` (propriété
   `HackerOsEmbedWebRoot` pour forcer ou interdire), et les retire des contenus :
   le `wwwroot` d'un site n'est jamais une ressource web statique de l'hôte
   (`_content/`). Le Razor class library d'une app à fenêtre garde son `wwwroot`
@@ -116,7 +116,7 @@ vérifiés) ; `[IgnoreAntiforgeryToken]` l'annule pour une action. `<HackForm>`
 
 ## Conséquences
 
-- `HackerOs.AppSdk.Web` référence `Microsoft.AspNetCore.Components.Web` (pour
+- `Kazo.Os.AppSdk.Web` référence `Microsoft.AspNetCore.Components.Web` (pour
   `HtmlRenderer` et les composants) ; les projets de test qui ont des vues
   passent au SDK `Microsoft.NET.Sdk.Razor`.
 - `HackWebApplicationBuilder` et `HackWebHost` gagnent une surcharge avec

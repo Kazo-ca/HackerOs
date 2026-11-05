@@ -21,7 +21,7 @@ le portail des fenêtres ([`window-portal.md`](window-portal.md)) et sur le serv
 | `OnGesture` | Le gestionnaire de `DesktopShell` : la zone envoie la taille de l'écran (`ChangeViewportCommand(zone, écran)`). |
 
 - **Fond d'écran seulement** (réponse de Benoit du 2026-10-28) : pas de `BackgroundContent`, donc
-  pas d'icônes. Le fond vient des variables du thème (`--hos-desktop-background`, grille), que la
+  pas d'icônes. Le fond vient des variables du thème (`--kos-desktop-background`, grille), que la
   surface hérite de l'onglet principal.
 - Les fenêtres restent rendues par la zone de l'écran 1, avec ses rappels (focus, fermeture,
   menu de fenêtre) : la zone d'un écran secondaire n'en rend aucune.
@@ -59,9 +59,9 @@ ScreenLayer ─ par écran ─► .secondary-screen
 
 | Fichier | Rôle |
 | --- | --- |
-| `Platform/HackerOs.Platform.Blazor/Display/ScreenOverlayHost.razor` | Conteneur des overlays ; branche `screenOverlays.js` au premier rendu. |
-| `Platform/HackerOs.Platform.Blazor/wwwroot/screenOverlays.js` | Écoute `pointerdown`, `contextmenu` et `keydown` en capture sur la fenêtre de chaque écran, et déplace le conteneur dans l'emplacement de cet écran **avant** que les overlays réagissent. |
-| `Platform/HackerOs.Platform.Blazor/wwwroot/HackerOs.Platform.Blazor.lib.module.js` | Le registre des surfaces a `watch(…)` : un module apprend l'ouverture (`attach`) et la fermeture (`detach`) de chaque surface. |
+| `Platform/Kazo.Os.Platform.Blazor/Display/ScreenOverlayHost.razor` | Conteneur des overlays ; branche `screenOverlays.js` au premier rendu. |
+| `Platform/Kazo.Os.Platform.Blazor/wwwroot/screenOverlays.js` | Écoute `pointerdown`, `contextmenu` et `keydown` en capture sur la fenêtre de chaque écran, et déplace le conteneur dans l'emplacement de cet écran **avant** que les overlays réagissent. |
+| `Platform/Kazo.Os.Platform.Blazor/wwwroot/Kazo.Os.Platform.Blazor.lib.module.js` | Le registre des surfaces a `watch(…)` : un module apprend l'ouverture (`attach`) et la fermeture (`detach`) de chaque surface. |
 
 Règles :
 
@@ -90,11 +90,11 @@ les clics.
 
 ## 5. Tests
 
-- `Tests/HackerOs.Platform.Blazor.Tests/Display/ScreenLayerTests.cs` : bureau et emplacement de
+- `Tests/Kazo.Os.Platform.Blazor.Tests/Display/ScreenLayerTests.cs` : bureau et emplacement de
   l'écran 2, voile pour une approbation en attente et pour une authentification en attente.
-- `Tests/HackerOs.Platform.Blazor.Tests/Display/ScreenServiceTests.cs` : la fenêtre redimensionnée
+- `Tests/Kazo.Os.Platform.Blazor.Tests/Display/ScreenServiceTests.cs` : la fenêtre redimensionnée
   ne change plus la zone de travail de l'écran.
-- `Tests/HackerOs.UI.E2E.Tests/ScreenServiceTests.cs`, Chromium réel : l'écran 2 restauré montre son
+- `Tests/Kazo.Os.UI.E2E.Tests/ScreenServiceTests.cs`, Chromium réel : l'écran 2 restauré montre son
   bureau (sans icônes, à la taille de la fenêtre) ; `Alt+`` pressé dans l'écran 2 ouvre le
   sélecteur dans l'écran 2 et pas dans l'onglet principal ; de retour sur l'écran 1, il s'ouvre
   dans l'onglet ; l'écran fermé rend les overlays à l'écran 1.

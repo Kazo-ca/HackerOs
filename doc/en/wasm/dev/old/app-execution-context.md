@@ -60,8 +60,8 @@ graph TD
 
 | Class | Location | Role |
 |---|---|---|
-| `IAppExecutionContext` | `Shared/HackerOs.AppSdk/IAppExecutionContext.cs` | App-facing contract; expanded in place (not moved to an `Execution/` subfolder). |
-| `ICapabilityChecker` / `AppCapabilityChecker` | `Shared/HackerOs.Simulation.Abstractions/Gateways/AppGatewayContracts.cs` / `Platform/HackerOs.Platform.Core/Execution/` | Evaluates/requires one capability for the bound app/user/authority, without exposing the grant repository. |
+| `IAppExecutionContext` | `Shared/Kazo.Os.AppSdk/IAppExecutionContext.cs` | App-facing contract; expanded in place (not moved to an `Execution/` subfolder). |
+| `ICapabilityChecker` / `AppCapabilityChecker` | `Shared/Kazo.Os.Simulation.Abstractions/Gateways/AppGatewayContracts.cs` / `Platform/Kazo.Os.Platform.Core/Execution/` | Evaluates/requires one capability for the bound app/user/authority, without exposing the grant repository. |
 | `IAppFileSystemGateway` / `AppFileSystemGateway` | same | Full FS CRUD surface; builds a fresh `FileSystemAuthorizationContext` per call; `WithSelectedHandle(...)` returns a scoped copy. |
 | `IAppSettingsGateway` / `AppSettingsGateway` | same | Thin `ISettingsDocumentService` wrapper bound to the app's `AppOperationContext`. |
 | `IAppEventGateway` / `AppEventGateway` | same | Two lanes, per [ADR 0038](../adr/0038-emitter-authorized-topic-messaging.md): kernel lane (`Subscribe<TEvent>` read-only pass-through to `IEventBus`; `Publish<TEvent>` denies every app-initiated publish) and app lane (`Subscribe`/`SubscribeChannel`/`Publish`/`RegisterSharedChannel` over named `TopicName`s via `ITopicMessageBus`, authorized by namespace ownership or shared-channel policy). |
@@ -69,9 +69,9 @@ graph TD
 | `IAppLoggingGateway` / `AppLoggingGateway` | same | Wraps `IDiagnosticSink`, stamping every entry with the app ID and a fresh correlation ID. |
 | `IAppClockGateway` / `AppClockGateway` | same | Read-only `ISimulationClock` wrapper (`UtcNow`, `CurrentTick`, `Schedule`, `DelayAsync`). |
 | `IAppProcessGateway` / `AppProcessGateway` | same | Own process always observable/stoppable/killable; managing or listing *other* processes requires `process.manage`/`process.list`. |
-| `IAppFileSystemWatchGateway` / `AppFileSystemWatchGateway` | `Shared/HackerOs.Simulation.Abstractions/FileSystem/FileSystemWatchContracts.cs` / `Platform/HackerOs.Platform.Core/Execution/` | `WatchAsync` reuses the caller's own filesystem-read authorization (a plain `StatAsync` call) before subscribing to `FileSystemTopics.ForDirectory` on the shared, kernel-owned `shared/filesystem/changed` channel; only `FileSystemWatchScope.ImmediateChildren` is implemented (`ThisEntry`/`Recursive` throw `NotSupportedException`). Default interface member on `IAppExecutionContext` (`Watch`), same unsupported-fallback pattern as `Intents`. |
+| `IAppFileSystemWatchGateway` / `AppFileSystemWatchGateway` | `Shared/Kazo.Os.Simulation.Abstractions/FileSystem/FileSystemWatchContracts.cs` / `Platform/Kazo.Os.Platform.Core/Execution/` | `WatchAsync` reuses the caller's own filesystem-read authorization (a plain `StatAsync` call) before subscribing to `FileSystemTopics.ForDirectory` on the shared, kernel-owned `shared/filesystem/changed` channel; only `FileSystemWatchScope.ImmediateChildren` is implemented (`ThisEntry`/`Recursive` throw `NotSupportedException`). Default interface member on `IAppExecutionContext` (`Watch`), same unsupported-fallback pattern as `Intents`. |
 | `IFileSystemSelectedResourceHandleRegistry` / `FileSystemSelectedResourceHandleRegistry` | `Shared/.../Gateways/FileSystemSelectedResourceHandleRegistryContracts.cs` / `Platform/.../Execution/` | Issues/tracks/revokes short-lived selected-resource handles (e.g. from a file-open dialog), auto-revoking on session logout, shutdown, or owning-process termination. |
-| `AppExecutionContextFactory` | `Platform/HackerOs.Platform.Core/Execution/` | The **sole** trusted constructor for `IAppExecutionContext`. |
+| `AppExecutionContextFactory` | `Platform/Kazo.Os.Platform.Core/Execution/` | The **sole** trusted constructor for `IAppExecutionContext`. |
 | `AppExecutionContext` | same | `internal sealed class`; unreachable from app code — only the factory can construct one. |
 
 ## Usage
@@ -135,10 +135,10 @@ context.Processes.Kill(otherPid); // throws unless granted
   internally, so `AppFileSystemGateway` only needs to construct that context
   per call — it would be redundant (and a second source of truth) to
   pre-check capabilities in the gateway itself.
-- **Project-reference topology:** `HackerOs.AppSdk` now references
-  `HackerOs.Simulation.Abstractions` (needed so `IAppExecutionContext` can
-  expose the `Gateways` types), and `HackerOs.Platform.Core` now references
-  `HackerOs.AppSdk` (needed so it can implement the interface). No circular
+- **Project-reference topology:** `Kazo.Os.AppSdk` now references
+  `Kazo.Os.Simulation.Abstractions` (needed so `IAppExecutionContext` can
+  expose the `Gateways` types), and `Kazo.Os.Platform.Core` now references
+  `Kazo.Os.AppSdk` (needed so it can implement the interface). No circular
   references result.
 - **Deferred, honestly:** the optional network gateway (no network contracts
   exist yet) and automatic handle revocation on app disable/uninstall or
@@ -154,8 +154,8 @@ context.Processes.Kill(otherPid); // throws unless granted
 - [x] `P1-EXEC-005` `FileSystemSelectedResourceHandle` registry contracts.
 - [x] `P1-EXEC-006` Expiry + explicit + event-driven auto-revocation (app disable/uninstall/policy-change revocation deferred).
 - [x] `P1-EXEC-007` `AppExecutionContextFactory` as sole trusted constructor.
-- [x] `P1-EXEC-008` 16 contract/security tests in `Tests/HackerOs.Platform.Core.Tests/Execution/AppExecutionContextTests.cs`.
+- [x] `P1-EXEC-008` 16 contract/security tests in `Tests/Kazo.Os.Platform.Core.Tests/Execution/AppExecutionContextTests.cs`.
 
 **Validation:** 293 solution tests pass with warnings as errors
-(`dotnet test HackerOs.sln --no-restore`), zero regressions from the 277-test
+(`dotnet test Kazo.Os.sln --no-restore`), zero regressions from the 277-test
 baseline prior to this section.

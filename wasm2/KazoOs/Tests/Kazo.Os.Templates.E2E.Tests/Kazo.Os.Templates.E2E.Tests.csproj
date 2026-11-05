@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    ADR 0098 §6: every dotnet new template of Kazo.Os.Templates is generated and built against the
+    local package feed, outside this repository (so no Directory.Build.* of the repo applies), with an
+    isolated NuGet cache. The host test also boots the generated host in Chromium and runs the
+    generated window app and command in it. Slow (it packs every package first unless
+    KAZOOS_LOCAL_FEED names a feed already packed), so it is an E2E suite.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
+    <PackageReference Include="Microsoft.Playwright" Version="1.64.0" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="4.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kazo.Os.E2E.Support\Kazo.Os.E2E.Support.csproj" />
+    <Using Include="Kazo.Os.E2E.Support" />
+  </ItemGroup>
+
+</Project>

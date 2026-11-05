@@ -4,7 +4,7 @@
 
 ## Statut
 
-Accepté le 2026-10-31, issue [#296](https://github.com/Kazo-ca/HackerOs/issues/296), fait
+Accepté le 2026-10-31, issue [#296](https://github.com/Kazo-ca/Os/issues/296), fait
 dans la série `todo/` (branche `todo/22-do-not-disturb`). Complète les bulles de
 notification ([ADR 0197](0197-notification-toasts.md)), le point des notifications non lues
 ([ADR 0196](0196-unread-notifications-dot.md)) et les sons de l'OS

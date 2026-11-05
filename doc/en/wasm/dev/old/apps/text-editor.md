@@ -17,8 +17,8 @@ features like syntax highlighting, Monaco integration, and script execution are 
 | `TextEditorWindow.razor.css` | Scoped CSS – gothic/hacker dark theme consistent with HackerOS visual style |
 | `TextEditorDocument.cs` | Pure state machine: `New → Loading → Loaded/Error`, dirty tracking, optimistic revision |
 | `app.manifest.json` | App manifest for `org.hackeros.text-editor` with `filesystem.user-home.{read,write}` capabilities |
-| `HackerOs.Apps.TextEditor.csproj` | Project referencing `HackerOs.AppSdk.Blazor`, `HackerOs.Platform.Core` |
-| `Tests/HackerOs.Apps.TextEditor.Tests/TextEditorDocumentTests.cs` | xUnit tests covering load, edit, dirty-close, conflict, reload round-trips |
+| `Kazo.Os.Apps.TextEditor.csproj` | Project referencing `Kazo.Os.AppSdk.Blazor`, `Kazo.Os.Platform.Core` |
+| `Tests/Kazo.Os.Apps.TextEditor.Tests/TextEditorDocumentTests.cs` | xUnit tests covering load, edit, dirty-close, conflict, reload round-trips |
 
 ### State Machine (TextEditorDocument)
 

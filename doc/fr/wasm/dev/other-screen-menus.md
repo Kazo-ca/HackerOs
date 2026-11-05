@@ -89,19 +89,19 @@ l'écran 1, dans chaque écran de `ScreenLayer` pour les autres.
 
 ## 5. Tests
 
-- `Tests/HackerOs.Platform.Blazor.Tests/OtherScreenMenuTests.cs` : entrées du menu d'Agrandir,
+- `Tests/Kazo.Os.Platform.Blazor.Tests/OtherScreenMenuTests.cs` : entrées du menu d'Agrandir,
   type et origine du menu ouvert, écrans du sous-menu (écran courant désactivé, un seul écran,
   français), déplacement et focus, raccourcis qui font le tour, raccourcis sans effet avec un
   écran, valeurs par défaut des raccourcis, Nouvel écran accepté puis refusé, lecture du numéro
   par le voile.
-- `Tests/HackerOs.Platform.Blazor.Tests/WindowMenuContextMenuTests.cs` : les deux menus ouverts
+- `Tests/Kazo.Os.Platform.Blazor.Tests/WindowMenuContextMenuTests.cs` : les deux menus ouverts
   dans `ContextMenuService` avec leur sous-menu, choix d'un écran, fermeture dans les deux sens,
   voile affiché sur chaque écran avec la cible marquée puis retiré à la fermeture.
-- `Tests/HackerOs.UI.E2E.Tests/ScreenServiceTests.cs`, Chromium réel avec l'écran 2 restauré :
+- `Tests/Kazo.Os.UI.E2E.Tests/ScreenServiceTests.cs`, Chromium réel avec l'écran 2 restauré :
   clic droit sur Agrandir ; survol de « Écran 2 » → voile sur l'écran 2 seulement, retiré quand le
   pointeur passe dessus et quand il quitte l'entrée ; « Écran 2 » déplace la fenêtre ;
   `Ctrl+Alt+Shift+Left` la ramène ; « Nouvel écran » ouvre l'écran 3 avec la fenêtre.
-- `Tests/HackerOs.UI.E2E.Tests/WindowAppIconTests.cs` : mêmes attentes qu'avant ; le menu se trouve
+- `Tests/Kazo.Os.UI.E2E.Tests/WindowAppIconTests.cs` : mêmes attentes qu'avant ; le menu se trouve
   maintenant par `[data-context-menu='window-menu']`.
 
 ## 6. Limites

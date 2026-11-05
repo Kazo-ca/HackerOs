@@ -10,12 +10,12 @@ is independent of the future HackerOS product host.
 
 ## Architecture
 
-`Tests/HackerOs.BrowserHarness.Tests` is a minimal Blazor WebAssembly executable.
+`Tests/Kazo.Os.BrowserHarness.Tests` is a minimal Blazor WebAssembly executable.
 It references Browser Infrastructure, loads its published
-`_content/HackerOs.Infrastructure.Browser/indexedDb.js` asset, and reports a
+`_content/Kazo.Os.Infrastructure.Browser/indexedDb.js` asset, and reports a
 machine-readable `running`, `passed`, or `failed` state in the DOM.
 
-`Tests/HackerOs.E2E.Tests` is an xUnit project using Microsoft Playwright. The
+`Tests/Kazo.Os.E2E.Tests` is an xUnit project using Microsoft Playwright. The
 test allocates a local port, starts the harness DevServer, launches installed
 Chrome headlessly, waits for the terminal contract state, and always terminates
 the server process. It requires Chrome and does not download a browser during a
@@ -53,10 +53,10 @@ did not enforce: inline-key writes incorrectly passed a separate `null` key to
 Run the browser contract directly:
 
 ```powershell
-dotnet test Tests/HackerOs.E2E.Tests/HackerOs.E2E.Tests.csproj
+dotnet test Tests/Kazo.Os.E2E.Tests/Kazo.Os.E2E.Tests.csproj
 ```
 
-The project is also part of `HackerOs.sln`, so the full solution test command
+The project is also part of `Kazo.Os.sln`, so the full solution test command
 includes the Chromium contract.
 
 ## Boundaries

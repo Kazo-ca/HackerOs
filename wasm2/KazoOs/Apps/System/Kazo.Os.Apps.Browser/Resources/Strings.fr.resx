@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Alert.Says" xml:space="preserve">
+    <value>{0} indique</value>
+  </data>
+  <data name="Alert.ThisPage" xml:space="preserve">
+    <value>Cette page</value>
+  </data>
+  <data name="Body.CannotDisplay" xml:space="preserve">
+    <value>Ce fichier ne peut pas être affiché dans le navigateur.</value>
+  </data>
+  <data name="Body.DownloadedTo" xml:space="preserve">
+    <value>Téléchargé dans</value>
+  </data>
+  <data name="Body.Empty" xml:space="preserve">
+    <value>Le serveur n'a renvoyé aucun contenu.</value>
+  </data>
+  <data name="Body.FromTerminal" xml:space="preserve">
+    <value>Depuis un terminal :</value>
+  </data>
+  <data name="Body.Or" xml:space="preserve">
+    <value>ou</value>
+  </data>
+  <data name="Body.Pdf.CannotDisplay" xml:space="preserve">
+    <value>Ce PDF ne peut pas être affiché ici.</value>
+  </data>
+  <data name="Body.Pdf.ToSave" xml:space="preserve">
+    <value>pour l'enregistrer.</value>
+  </data>
+  <data name="Body.Pdf.Use" xml:space="preserve">
+    <value>Utilisez</value>
+  </data>
+  <data name="Common.Ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Detach.Blocked" xml:space="preserve">
+    <value>La fenêtre détachée a été bloquée par votre navigateur. Autorisez les fenêtres pop-up pour Kazo OS, puis réessayez.</value>
+  </data>
+  <data name="Detach.Unsupported" xml:space="preserve">
+    <value>Cet hôte Kazo OS ne peut pas ouvrir de fenêtres détachées.</value>
+  </data>
+  <data name="Detached.BringBack" xml:space="preserve">
+    <value>Ramener la page ici</value>
+  </data>
+  <data name="Detached.Show" xml:space="preserve">
+    <value>Afficher la fenêtre</value>
+  </data>
+  <data name="Detached.Title" xml:space="preserve">
+    <value>Cette page est ouverte dans une fenêtre détachée</value>
+  </data>
+  <data name="DevTools.Clear" xml:space="preserve">
+    <value>Effacer</value>
+  </data>
+  <data name="DevTools.Close" xml:space="preserve">
+    <value>Fermer les outils de développement (F12)</value>
+  </data>
+  <data name="DevTools.Column.Method" xml:space="preserve">
+    <value>Méthode</value>
+  </data>
+  <data name="DevTools.Column.Name" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="DevTools.Column.Size" xml:space="preserve">
+    <value>Taille</value>
+  </data>
+  <data name="DevTools.Column.Status" xml:space="preserve">
+    <value>État</value>
+  </data>
+  <data name="DevTools.Column.Time" xml:space="preserve">
+    <value>Durée</value>
+  </data>
+  <data name="DevTools.Column.Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="DevTools.Console" xml:space="preserve">
+    <value>Console</value>
+  </data>
+  <data name="DevTools.Label" xml:space="preserve">
+    <value>Outils de développement</value>
+  </data>
+  <data name="DevTools.Network" xml:space="preserve">
+    <value>Réseau</value>
+  </data>
+  <data name="DevTools.NoMessages" xml:space="preserve">
+    <value>Aucun message.</value>
+  </data>
+  <data name="DevTools.Panels" xml:space="preserve">
+    <value>Panneaux des outils de développement</value>
+  </data>
+  <data name="DevTools.Recording" xml:space="preserve">
+    <value>Enregistrement de l'activité réseau… Actualisez la page pour voir ses requêtes.</value>
+  </data>
+  <data name="Error.AccessDenied.Hint" xml:space="preserve">
+    <value>Vérifiez les permissions du fichier avec ls -l.</value>
+  </data>
+  <data name="Error.AccessDenied.Message" xml:space="preserve">
+    <value>Vous n'avez pas l'autorisation de lire {0}.</value>
+  </data>
+  <data name="Error.AccessDenied.Title" xml:space="preserve">
+    <value>L'accès au fichier a été refusé</value>
+  </data>
+  <data name="Error.BlockedLocal.Message" xml:space="preserve">
+    <value>Une page Web ne peut pas ouvrir le fichier local {0}.</value>
+  </data>
+  <data name="Error.BlockedLocal.Title" xml:space="preserve">
+    <value>Cette page a été bloquée</value>
+  </data>
+  <data name="Error.ConnectionRefused.Hint.Listening" xml:space="preserve">
+    <value>Vérifiez qu'un processus écoute sur ce port (netstat -tlnp).</value>
+  </data>
+  <data name="Error.ConnectionRefused.Hint.Start" xml:space="preserve">
+    <value>Si le site est hébergé dans Kazo OS, démarrez son app ou son service.</value>
+  </data>
+  <data name="Error.ConnectionRefused.Message" xml:space="preserve">
+    <value>{0} n'autorise pas la connexion.</value>
+  </data>
+  <data name="Error.Crash.Hint.Console" xml:space="preserve">
+    <value>La console des outils de développement affiche l'exception.</value>
+  </data>
+  <data name="Error.Crash.Hint.Killed" xml:space="preserve">
+    <value>Le processus de rendu du site a été arrêté.</value>
+  </data>
+  <data name="Error.Crash.Message" xml:space="preserve">
+    <value>Un problème est survenu lors de l'affichage de cette page Web.</value>
+  </data>
+  <data name="Error.Crash.Title" xml:space="preserve">
+    <value>Aïe, aïe, aïe !</value>
+  </data>
+  <data name="Error.Failed.Message" xml:space="preserve">
+    <value>Il est possible que la page Web à l'adresse {0} soit temporairement inaccessible ou qu'elle ait été déplacée définitivement vers une nouvelle adresse Web.</value>
+  </data>
+  <data name="Error.FileNotFound.Hint.Folder" xml:space="preserve">
+    <value>Ouvrez le dossier (file:///…/) pour parcourir son contenu.</value>
+  </data>
+  <data name="Error.FileNotFound.Hint.Path" xml:space="preserve">
+    <value>Vérifiez le chemin avec ls.</value>
+  </data>
+  <data name="Error.FileNotFound.Message" xml:space="preserve">
+    <value>Il a peut-être été déplacé, modifié ou supprimé : {0}</value>
+  </data>
+  <data name="Error.FileNotFound.Title" xml:space="preserve">
+    <value>Impossible d'accéder à votre fichier</value>
+  </data>
+  <data name="Error.Hint.CheckConnection" xml:space="preserve">
+    <value>Vérifiez la connexion.</value>
+  </data>
+  <data name="Error.Hint.HostedInstalled" xml:space="preserve">
+    <value>Si le site est hébergé dans Kazo OS, vérifiez que son app ou son service est installé.</value>
+  </data>
+  <data name="Error.Hint.Reload" xml:space="preserve">
+    <value>Actualisez la page.</value>
+  </data>
+  <data name="Error.Hint.TryLater" xml:space="preserve">
+    <value>Réessayez plus tard.</value>
+  </data>
+  <data name="Error.HostUnreachable.Hint" xml:space="preserve">
+    <value>Vérifiez la connexion réseau (ip addr, ping).</value>
+  </data>
+  <data name="Error.HostUnreachable.Message" xml:space="preserve">
+    <value>{0} est injoignable.</value>
+  </data>
+  <data name="Error.Http.Denied.Hint" xml:space="preserve">
+    <value>Connectez-vous au site, puis réessayez.</value>
+  </data>
+  <data name="Error.Http.Denied.Message" xml:space="preserve">
+    <value>Vous n'êtes pas autorisé à consulter cette page.</value>
+  </data>
+  <data name="Error.Http.Denied.Title" xml:space="preserve">
+    <value>L'accès à {0} a été refusé</value>
+  </data>
+  <data name="Error.Http.NotFound.Hint" xml:space="preserve">
+    <value>Vérifiez que l'adresse ne contient pas de faute de frappe.</value>
+  </data>
+  <data name="Error.Http.NotFound.Message" xml:space="preserve">
+    <value>Aucune page Web n'a été trouvée à l'adresse : {0}</value>
+  </data>
+  <data name="Error.Http.NotFound.Title" xml:space="preserve">
+    <value>Cette page {0} est introuvable</value>
+  </data>
+  <data name="Error.Http.Other.Message" xml:space="preserve">
+    <value>{0} a répondu avec le statut {1}.</value>
+  </data>
+  <data name="Error.Http.Server.Hint" xml:space="preserve">
+    <value>Si vous gérez ce site, consultez ses journaux.</value>
+  </data>
+  <data name="Error.Http.Server.Message" xml:space="preserve">
+    <value>{0} ne parvient pas à traiter cette demande pour le moment.</value>
+  </data>
+  <data name="Error.InvalidUrl.Message" xml:space="preserve">
+    <value>L'adresse {0} n'est pas une URL valide.</value>
+  </data>
+  <data name="Error.NameNotResolved.Hint.Hosts" xml:space="preserve">
+    <value>Vérifiez /etc/hosts et le nom du site que l'app déclare.</value>
+  </data>
+  <data name="Error.NameNotResolved.Hint.Typo" xml:space="preserve">
+    <value>Vérifiez si l'adresse {0} contient une faute de frappe.</value>
+  </data>
+  <data name="Error.NameNotResolved.Message" xml:space="preserve">
+    <value>Impossible de trouver l'adresse IP du serveur de {0}.</value>
+  </data>
+  <data name="Error.NotWorking.Title" xml:space="preserve">
+    <value>Cette page ne fonctionne pas</value>
+  </data>
+  <data name="Error.ScriptNavigation.Hint" xml:space="preserve">
+    <value>Utilisez un lien ou un formulaire pour naviguer.</value>
+  </data>
+  <data name="Error.ScriptNavigation.Message" xml:space="preserve">
+    <value>La page a modifié window.location, ce que le Navigateur Kazo OS ne prend pas encore en charge : les liens, les formulaires et history.pushState fonctionnent.</value>
+  </data>
+  <data name="Error.ScriptNavigation.Title" xml:space="preserve">
+    <value>Cette page a navigué par script</value>
+  </data>
+  <data name="Error.SiteNotStarted.Fallback" xml:space="preserve">
+    <value>Le site n'a pas démarré.</value>
+  </data>
+  <data name="Error.SiteNotStarted.Hint" xml:space="preserve">
+    <value>Vérifiez que l'app du site est installée et que blazor.boot.json la nomme.</value>
+  </data>
+  <data name="Error.SiteNotStarted.Message" xml:space="preserve">
+    <value>{0} est un site Blazor, mais son processus de rendu n'a pas démarré : {1}</value>
+  </data>
+  <data name="Error.SiteNotStarted.Title" xml:space="preserve">
+    <value>Impossible d'afficher ce site</value>
+  </data>
+  <data name="Error.ThisSite" xml:space="preserve">
+    <value>Ce site</value>
+  </data>
+  <data name="Error.TimedOut.Message" xml:space="preserve">
+    <value>{0} a mis trop de temps à répondre.</value>
+  </data>
+  <data name="Error.TooManyRedirects.Hint" xml:space="preserve">
+    <value>Essayez d'effacer vos cookies : fermez la fenêtre, ils durent aussi longtemps que l'onglet.</value>
+  </data>
+  <data name="Error.TooManyRedirects.Message" xml:space="preserve">
+    <value>{0} vous a redirigé à de trop nombreuses reprises.</value>
+  </data>
+  <data name="Error.TryAgain" xml:space="preserve">
+    <value>Réessayer</value>
+  </data>
+  <data name="Error.UnknownScheme.Message" xml:space="preserve">
+    <value>La page Web à l'adresse {0} n'a pas pu être chargée, car le navigateur ne connaît pas son schéma.</value>
+  </data>
+  <data name="Error.UnknownScheme.Title" xml:space="preserve">
+    <value>Impossible de charger cette page</value>
+  </data>
+  <data name="Error.Unreachable.Title" xml:space="preserve">
+    <value>Ce site est inaccessible</value>
+  </data>
+  <data name="Listing.DateModified" xml:space="preserve">
+    <value>Date de modification</value>
+  </data>
+  <data name="Listing.Name" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="Listing.Parent" xml:space="preserve">
+    <value>[répertoire parent]</value>
+  </data>
+  <data name="Listing.Size" xml:space="preserve">
+    <value>Taille</value>
+  </data>
+  <data name="Listing.Title" xml:space="preserve">
+    <value>Index de {0}</value>
+  </data>
+  <data name="Loading.Label" xml:space="preserve">
+    <value>Chargement de {0}…</value>
+  </data>
+  <data name="NewTab.Subtitle" xml:space="preserve">
+    <value>Saisissez une URL ou un chemin (file:///home/…) dans la barre d'adresse pour commencer à naviguer.</value>
+  </data>
+  <data name="NewTab.Title" xml:space="preserve">
+    <value>Navigateur Kazo OS</value>
+  </data>
+  <data name="Notice.FormHistoryCleared" xml:space="preserve">
+    <value>Historique des formulaires effacé : les champs ne suggèrent plus ce que vous avez saisi auparavant.</value>
+  </data>
+  <data name="Page.Navigation" xml:space="preserve">
+    <value>Navigation de la page</value>
+  </data>
+  <data name="Page.UnknownSection" xml:space="preserve">
+    <value>[Type de section inconnu : {0}]</value>
+  </data>
+  <data name="Scheme.File" xml:space="preserve">
+    <value>Fichier local</value>
+  </data>
+  <data name="Scheme.NotSecure" xml:space="preserve">
+    <value>Non sécurisé</value>
+  </data>
+  <data name="Scheme.Secure" xml:space="preserve">
+    <value>Connexion sécurisée (simulée)</value>
+  </data>
+  <data name="Size.Bytes" xml:space="preserve">
+    <value>{0} o</value>
+  </data>
+  <data name="Size.KibiBytes" xml:space="preserve">
+    <value>{0} Ko</value>
+  </data>
+  <data name="Size.Kilobytes" xml:space="preserve">
+    <value>{0} ko</value>
+  </data>
+  <data name="Size.Megabytes" xml:space="preserve">
+    <value>{0} Mo</value>
+  </data>
+  <data name="Status.Connecting" xml:space="preserve">
+    <value>Connexion à {0}…</value>
+  </data>
+  <data name="Surface.Reattach" xml:space="preserve">
+    <value>Rattacher</value>
+  </data>
+  <data name="Surface.ReattachTitle" xml:space="preserve">
+    <value>Ramener la page dans Kazo OS</value>
+  </data>
+  <data name="Toolbar.AddressBar" xml:space="preserve">
+    <value>Barre d'adresse URL</value>
+  </data>
+  <data name="Toolbar.Back" xml:space="preserve">
+    <value>Précédente (Alt+Gauche)</value>
+  </data>
+  <data name="Toolbar.Bookmarks" xml:space="preserve">
+    <value>Favoris</value>
+  </data>
+  <data name="Toolbar.Detach" xml:space="preserve">
+    <value>Ouvrir dans une fenêtre détachée</value>
+  </data>
+  <data name="Toolbar.DevTools" xml:space="preserve">
+    <value>Outils de développement (F12)</value>
+  </data>
+  <data name="Toolbar.Forward" xml:space="preserve">
+    <value>Suivante (Alt+Droite)</value>
+  </data>
+  <data name="Toolbar.Go" xml:space="preserve">
+    <value>Aller</value>
+  </data>
+  <data name="Toolbar.Home" xml:space="preserve">
+    <value>Accueil</value>
+  </data>
+  <data name="Toolbar.Navigate" xml:space="preserve">
+    <value>Accéder à l'adresse</value>
+  </data>
+  <data name="Toolbar.Reattach" xml:space="preserve">
+    <value>Ramener la page dans cette fenêtre</value>
+  </data>
+  <data name="Toolbar.Refresh" xml:space="preserve">
+    <value>Actualiser (F5)</value>
+  </data>
+  <data name="Toolbar.ViewSource" xml:space="preserve">
+    <value>Afficher le code source de la page (Ctrl+U)</value>
+  </data>
+  <data name="Source.RealNetwork" xml:space="preserve">
+    <value>Vrai site, par le proxy du serveur Kazo OS</value>
+  </data>
+  <data name="Source.LocalSite" xml:space="preserve">
+    <value>Site de cette machine</value>
+  </data>
+  <data name="Source.Simulated" xml:space="preserve">
+    <value>Site du réseau simulé</value>
+  </data>
+  <data name="Error.Blocked.Title" xml:space="preserve">
+    <value>Ce site est inaccessible</value>
+  </data>
+  <data name="Error.Blocked.Message" xml:space="preserve">
+    <value>Votre administrateur a bloqué {0}.</value>
+  </data>
+  <data name="Error.Blocked.Hint" xml:space="preserve">
+    <value>L'opérateur du serveur Kazo OS n'autorise pas cette adresse, ce port ou cette app (réglages KazoOs:Proxy).</value>
+  </data>
+  <data name="Error.NameNotResolved.Hint.Server" xml:space="preserve">
+    <value>Pour ouvrir un vrai site, connectez cette machine à un serveur Kazo OS (Paramètres ▸ Réseau ▸ Serveur facultatif).</value>
+  </data>
+</root>

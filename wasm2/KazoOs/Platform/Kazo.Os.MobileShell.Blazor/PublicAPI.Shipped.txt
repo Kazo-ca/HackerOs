@@ -1,0 +1,78 @@
+#nullable enable
+Kazo.Os.MobileShell.Blazor.IMobileNavigationCommands
+Kazo.Os.MobileShell.Blazor.IMobileNavigationCommands.RequestBack() -> void
+Kazo.Os.MobileShell.Blazor.IMobileNavigationCommands.RequestHome() -> void
+Kazo.Os.MobileShell.Blazor.IMobileNavigationCommands.RequestRecent() -> void
+Kazo.Os.MobileShell.Blazor.MobileRecentItem
+Kazo.Os.MobileShell.Blazor.MobileRecentItem.<Clone>$() -> Kazo.Os.MobileShell.Blazor.MobileRecentItem!
+Kazo.Os.MobileShell.Blazor.MobileRecentItem.Deconstruct(out Kazo.Os.Windowing.Abstractions.WindowId Id, out string! Title, out string? IconAssetPath, out bool IsFocused) -> void
+Kazo.Os.MobileShell.Blazor.MobileRecentItem.Equals(Kazo.Os.MobileShell.Blazor.MobileRecentItem? other) -> bool
+Kazo.Os.MobileShell.Blazor.MobileRecentItem.IconAssetPath.get -> string?
+Kazo.Os.MobileShell.Blazor.MobileRecentItem.IconAssetPath.init -> void
+Kazo.Os.MobileShell.Blazor.MobileRecentItem.Id.get -> Kazo.Os.Windowing.Abstractions.WindowId
+Kazo.Os.MobileShell.Blazor.MobileRecentItem.Id.init -> void
+Kazo.Os.MobileShell.Blazor.MobileRecentItem.IsFocused.get -> bool
+Kazo.Os.MobileShell.Blazor.MobileRecentItem.IsFocused.init -> void
+Kazo.Os.MobileShell.Blazor.MobileRecentItem.MobileRecentItem(Kazo.Os.Windowing.Abstractions.WindowId Id, string! Title, string? IconAssetPath, bool IsFocused) -> void
+Kazo.Os.MobileShell.Blazor.MobileRecentItem.Title.get -> string!
+Kazo.Os.MobileShell.Blazor.MobileRecentItem.Title.init -> void
+Kazo.Os.MobileShell.Blazor.MobileRecentSurface
+Kazo.Os.MobileShell.Blazor.MobileRecentSurface.Items.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.MobileShell.Blazor.MobileRecentItem!>!
+Kazo.Os.MobileShell.Blazor.MobileRecentSurface.Items.set -> void
+Kazo.Os.MobileShell.Blazor.MobileRecentSurface.MobileRecentSurface() -> void
+Kazo.Os.MobileShell.Blazor.MobileRecentSurface.OnActivate.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Windowing.Abstractions.WindowId>
+Kazo.Os.MobileShell.Blazor.MobileRecentSurface.OnActivate.set -> void
+Kazo.Os.MobileShell.Blazor.MobileRecentSurface.OnClose.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Windowing.Abstractions.WindowId>
+Kazo.Os.MobileShell.Blazor.MobileRecentSurface.OnClose.set -> void
+Kazo.Os.MobileShell.Blazor.MobileRecentSurface.OnDismiss.get -> Microsoft.AspNetCore.Components.EventCallback
+Kazo.Os.MobileShell.Blazor.MobileRecentSurface.OnDismiss.set -> void
+Kazo.Os.MobileShell.Blazor.MobileRecentSurface.Options.get -> Kazo.Os.MobileShell.Blazor.MobileRecentSurfaceOptions!
+Kazo.Os.MobileShell.Blazor.MobileRecentSurface.Options.set -> void
+Kazo.Os.MobileShell.Blazor.MobileRecentSurfaceOptions
+Kazo.Os.MobileShell.Blazor.MobileRecentSurfaceOptions.<Clone>$() -> Kazo.Os.MobileShell.Blazor.MobileRecentSurfaceOptions!
+Kazo.Os.MobileShell.Blazor.MobileRecentSurfaceOptions.CloseLabelPrefix.get -> string?
+Kazo.Os.MobileShell.Blazor.MobileRecentSurfaceOptions.CloseLabelPrefix.init -> void
+Kazo.Os.MobileShell.Blazor.MobileRecentSurfaceOptions.EmptyMessage.get -> string?
+Kazo.Os.MobileShell.Blazor.MobileRecentSurfaceOptions.EmptyMessage.init -> void
+Kazo.Os.MobileShell.Blazor.MobileRecentSurfaceOptions.Equals(Kazo.Os.MobileShell.Blazor.MobileRecentSurfaceOptions? other) -> bool
+Kazo.Os.MobileShell.Blazor.MobileRecentSurfaceOptions.MobileRecentSurfaceOptions() -> void
+Kazo.Os.MobileShell.Blazor.MobileRecentSurfaceOptions.Title.get -> string?
+Kazo.Os.MobileShell.Blazor.MobileRecentSurfaceOptions.Title.init -> void
+Kazo.Os.MobileShell.Blazor.MobileSystemNavigationBar
+Kazo.Os.MobileShell.Blazor.MobileSystemNavigationBar.Commands.get -> Kazo.Os.MobileShell.Blazor.IMobileNavigationCommands!
+Kazo.Os.MobileShell.Blazor.MobileSystemNavigationBar.Commands.set -> void
+Kazo.Os.MobileShell.Blazor.MobileSystemNavigationBar.HomeHasAttention.get -> bool
+Kazo.Os.MobileShell.Blazor.MobileSystemNavigationBar.HomeHasAttention.set -> void
+Kazo.Os.MobileShell.Blazor.MobileSystemNavigationBar.MobileSystemNavigationBar() -> void
+Kazo.Os.MobileShell.Blazor.MobileSystemNavigationBar.Options.get -> Kazo.Os.MobileShell.Blazor.MobileSystemNavigationBarOptions!
+Kazo.Os.MobileShell.Blazor.MobileSystemNavigationBar.Options.set -> void
+Kazo.Os.MobileShell.Blazor.MobileSystemNavigationBarOptions
+Kazo.Os.MobileShell.Blazor.MobileSystemNavigationBarOptions.<Clone>$() -> Kazo.Os.MobileShell.Blazor.MobileSystemNavigationBarOptions!
+Kazo.Os.MobileShell.Blazor.MobileSystemNavigationBarOptions.BackLabel.get -> string?
+Kazo.Os.MobileShell.Blazor.MobileSystemNavigationBarOptions.BackLabel.init -> void
+Kazo.Os.MobileShell.Blazor.MobileSystemNavigationBarOptions.Equals(Kazo.Os.MobileShell.Blazor.MobileSystemNavigationBarOptions? other) -> bool
+Kazo.Os.MobileShell.Blazor.MobileSystemNavigationBarOptions.HomeLabel.get -> string?
+Kazo.Os.MobileShell.Blazor.MobileSystemNavigationBarOptions.HomeLabel.init -> void
+Kazo.Os.MobileShell.Blazor.MobileSystemNavigationBarOptions.MobileSystemNavigationBarOptions() -> void
+Kazo.Os.MobileShell.Blazor.MobileSystemNavigationBarOptions.RecentLabel.get -> string?
+Kazo.Os.MobileShell.Blazor.MobileSystemNavigationBarOptions.RecentLabel.init -> void
+Kazo.Os.MobileShell.Blazor._Imports
+Kazo.Os.MobileShell.Blazor._Imports.Execute() -> void
+Kazo.Os.MobileShell.Blazor._Imports._Imports() -> void
+override Kazo.Os.MobileShell.Blazor.MobileRecentItem.Equals(object? obj) -> bool
+override Kazo.Os.MobileShell.Blazor.MobileRecentItem.GetHashCode() -> int
+override Kazo.Os.MobileShell.Blazor.MobileRecentItem.ToString() -> string!
+override Kazo.Os.MobileShell.Blazor.MobileRecentSurfaceOptions.Equals(object? obj) -> bool
+override Kazo.Os.MobileShell.Blazor.MobileRecentSurfaceOptions.GetHashCode() -> int
+override Kazo.Os.MobileShell.Blazor.MobileRecentSurfaceOptions.ToString() -> string!
+override Kazo.Os.MobileShell.Blazor.MobileSystemNavigationBarOptions.Equals(object? obj) -> bool
+override Kazo.Os.MobileShell.Blazor.MobileSystemNavigationBarOptions.GetHashCode() -> int
+override Kazo.Os.MobileShell.Blazor.MobileSystemNavigationBarOptions.ToString() -> string!
+static Kazo.Os.MobileShell.Blazor.MobileRecentItem.operator !=(Kazo.Os.MobileShell.Blazor.MobileRecentItem? left, Kazo.Os.MobileShell.Blazor.MobileRecentItem? right) -> bool
+static Kazo.Os.MobileShell.Blazor.MobileRecentItem.operator ==(Kazo.Os.MobileShell.Blazor.MobileRecentItem? left, Kazo.Os.MobileShell.Blazor.MobileRecentItem? right) -> bool
+static Kazo.Os.MobileShell.Blazor.MobileRecentSurfaceOptions.operator !=(Kazo.Os.MobileShell.Blazor.MobileRecentSurfaceOptions? left, Kazo.Os.MobileShell.Blazor.MobileRecentSurfaceOptions? right) -> bool
+static Kazo.Os.MobileShell.Blazor.MobileRecentSurfaceOptions.operator ==(Kazo.Os.MobileShell.Blazor.MobileRecentSurfaceOptions? left, Kazo.Os.MobileShell.Blazor.MobileRecentSurfaceOptions? right) -> bool
+static Kazo.Os.MobileShell.Blazor.MobileSystemNavigationBarOptions.operator !=(Kazo.Os.MobileShell.Blazor.MobileSystemNavigationBarOptions? left, Kazo.Os.MobileShell.Blazor.MobileSystemNavigationBarOptions? right) -> bool
+static Kazo.Os.MobileShell.Blazor.MobileSystemNavigationBarOptions.operator ==(Kazo.Os.MobileShell.Blazor.MobileSystemNavigationBarOptions? left, Kazo.Os.MobileShell.Blazor.MobileSystemNavigationBarOptions? right) -> bool
+~override Kazo.Os.MobileShell.Blazor.MobileRecentSurface.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.MobileShell.Blazor.MobileSystemNavigationBar.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

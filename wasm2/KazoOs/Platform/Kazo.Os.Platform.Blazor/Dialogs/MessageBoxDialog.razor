@@ -1,0 +1,71 @@
+@using Kazo.Os.AppSdk.Blazor
+@using Kazo.Os.AppSdk.Icons
+@inject IStringLocalizer<Strings> L
+
+<div class="message-box-dialog" role="@(Presentation.Request.Icon == MessageBoxIcon.Error ? "alertdialog" : "dialog")" aria-modal="true">
+    <div class="message-box-body">
+        @if (IconName(Presentation.Request.Icon) is { } icon)
+        {
+            <span class="message-box-icon @Presentation.Request.Icon.ToString().ToLowerInvariant()" aria-hidden="true">
+                <KazoIcon Library="IconLibrary.Lucide" Name="@icon" Size="28" />
+            </span>
+        }
+        <p class="message-box-content">@Presentation.Request.Content</p>
+    </div>
+    <footer class="message-box-actions">
+        @switch (Presentation.Request.DialogType)
+        {
+            case MessageBoxType.Ok:
+                <button type="button" class="primary" @onclick="HandleOk">@L["Common.Ok"]</button>
+                break;
+            case MessageBoxType.OkCancel:
+                <button type="button" class="primary" @onclick="HandleOk">@L["Common.Ok"]</button>
+                <button type="button" @onclick="HandleCancel">@L["Common.Cancel"]</button>
+                break;
+            case MessageBoxType.YesNo:
+                <button type="button" class="primary" @onclick="HandleYes">@L["Common.Yes"]</button>
+                <button type="button" @onclick="HandleNo">@L["Common.No"]</button>
+                break;
+            case MessageBoxType.OkCancelRetry:
+                <button type="button" class="primary" @onclick="HandleOk">@L["Common.Ok"]</button>
+                <button type="button" @onclick="HandleRetry">@L["Common.Retry"]</button>
+                <button type="button" @onclick="HandleCancel">@L["Common.Cancel"]</button>
+                break;
+            case MessageBoxType.YesNoCancel:
+                <button type="button" class="primary" @onclick="HandleYes">@L["Common.Yes"]</button>
+                <button type="button" @onclick="HandleNo">@L["Common.No"]</button>
+                <button type="button" @onclick="HandleCancel">@L["Common.Cancel"]</button>
+                break;
+            case MessageBoxType.RetryCancel:
+                <button type="button" class="primary" @onclick="HandleRetry">@L["Common.Retry"]</button>
+                <button type="button" @onclick="HandleCancel">@L["Common.Cancel"]</button>
+                break;
+        }
+    </footer>
+</div>
+
+@code {
+    [Parameter]
+    [EditorRequired]
+    public MessageBoxPresentation Presentation { get; set; } = default!;
+
+    [Parameter]
+    [EditorRequired]
+    public DialogCoordinator Coordinator { get; set; } = default!;
+
+    /// <summary>The Lucide icon of a message box kind, or <see langword="null"/> for none.</summary>
+    internal static string? IconName(MessageBoxIcon icon) => icon switch
+    {
+        MessageBoxIcon.Information => "info",
+        MessageBoxIcon.Warning => "triangle-alert",
+        MessageBoxIcon.Error => "circle-x",
+        MessageBoxIcon.Question => "circle-help",
+        _ => null
+    };
+
+    private void HandleOk() => Coordinator.SelectMessageBox(Presentation.Id, MessageBoxResult.Ok);
+    private void HandleCancel() => Coordinator.SelectMessageBox(Presentation.Id, MessageBoxResult.Cancel);
+    private void HandleYes() => Coordinator.SelectMessageBox(Presentation.Id, MessageBoxResult.Yes);
+    private void HandleNo() => Coordinator.SelectMessageBox(Presentation.Id, MessageBoxResult.No);
+    private void HandleRetry() => Coordinator.SelectMessageBox(Presentation.Id, MessageBoxResult.Retry);
+}

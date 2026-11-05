@@ -2,7 +2,7 @@
 
 # Ressources d'un processus côté apps (CPU, mémoire, OOM killer)
 
-Ce document décrit ce qu'une app voit et peut faire avec le temps CPU, la mémoire et l'OOM killer d'un processus : `HackProcess`, `/proc/<pid>/stat`, `/proc/<pid>/status`, `/proc/meminfo` et `/proc/<pid>/oom_score_adj`. La mise en œuvre est dans [`../dev/cpu-accounting.md`](../dev/cpu-accounting.md), [`../dev/memory-accounting.md`](../dev/memory-accounting.md) et [`../dev/oom-killer.md`](../dev/oom-killer.md).
+Ce document décrit ce qu'une app voit et peut faire avec le temps CPU, la mémoire et l'OOM killer d'un processus : `KazoProcess`, `/proc/<pid>/stat`, `/proc/<pid>/status`, `/proc/meminfo` et `/proc/<pid>/oom_score_adj`. La mise en œuvre est dans [`../dev/cpu-accounting.md`](../dev/cpu-accounting.md), [`../dev/memory-accounting.md`](../dev/memory-accounting.md) et [`../dev/oom-killer.md`](../dev/oom-killer.md).
 
 ## Ce que la mesure change pour une app
 
@@ -21,7 +21,7 @@ cat /proc/stat
 ```
 
 ```csharp
-HackProcess editor = await HackProcess.GetProcessByIdAsync(42);
+KazoProcess editor = await KazoProcess.GetProcessByIdAsync(42);
 TimeSpan user = editor.UserProcessorTime;          // utime
 TimeSpan system = editor.PrivilegedProcessorTime;  // stime
 TimeSpan total = editor.TotalProcessorTime;
@@ -42,7 +42,7 @@ qui n'exécute pas de code) n'est pas mesuré : il garde ses valeurs simulées.
 - **Attention (ADR 0127 §4)** : une app fenêtrée tourne sur le fil principal.
   Une boucle longue sans `await` y gèle tout le bureau, souris comprise, et
   aucune boîte ne peut s'afficher pendant le gel. Un calcul lourd va dans
-  `HackBackground.RunAsync` (ADR 0128) ; une boucle longue qui doit rester sur
+  `KazoBackground.RunAsync` (ADR 0128) ; une boucle longue qui doit rester sur
   le fil appelle `CheckpointAsync` (ADR 0069) assez souvent pour rendre la main.
 
 Une fenêtre sans réponse est décrite dans [`app-responsiveness-api.md`](app-responsiveness-api.md).
@@ -71,7 +71,7 @@ RssAnon:	3000 kB
 RssFile:	1200 kB
 VmData:	512 kB
 VmExe:	40 kB
-HackAllocBytes:	123456789
+KazoAllocBytes:	123456789
 Cpu:	0.0
 CpuSource:	simulated
 MemSource:	measured
@@ -90,7 +90,7 @@ Slab:               4096 kB
 - `MemTotal` reste celui du `VirtualHardwareProfile`.
 - Mémoire utilisée = `AnonPages + Mapped + Slab` + mémoire simulée des
   processus restés simulés.
-- `HackProcess.WorkingSet64` lit `VmRSS` ; `HackProcess.PrivateMemorySize64`
+- `KazoProcess.WorkingSet64` lit `VmRSS` ; `KazoProcess.PrivateMemorySize64`
   lit `RssAnon` (et vaut `WorkingSet64` quand la mémoire est simulée), comme
   `System.Diagnostics.Process`.
 
@@ -112,7 +112,7 @@ L'OOM killer est désactivé par défaut et n'agit que si la mémoire est mesur�
 ```csharp
 public sealed class MyServiceDefinition : AppDefinition
 {
-    // Seule une app système peut déclarer une valeur négative (HOSAPP0024).
+    // Seule une app système peut déclarer une valeur négative (KOSAPP0024).
     public override int? OomScoreAdjust => -200;
 }
 ```

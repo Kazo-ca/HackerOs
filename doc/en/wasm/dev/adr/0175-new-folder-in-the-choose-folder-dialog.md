@@ -37,7 +37,7 @@ control) and [ADR 0171](0171-mobile-file-explorer-and-full-screen-dialogs.md)
    platform's list replaces the control (no provider of `hackeros.file-view`):
    that list only browses. `FileDialogBrowser` reports it with a new
    `FileControlChanged` parameter (`EventCallback<bool>`, public API of
-   `HackerOs.Platform.Blazor`, in `PublicAPI.Unshipped.txt`).
+   `Kazo.Os.Platform.Blazor`, in `PublicAPI.Unshipped.txt`).
 3. **The Save dialog** already allowed `CreateFolder`: it gets the same button.
 4. **Code Editor** passes `AllowCreateFolder = true` for "Open Folder": the folder
    of a new project can be created there.

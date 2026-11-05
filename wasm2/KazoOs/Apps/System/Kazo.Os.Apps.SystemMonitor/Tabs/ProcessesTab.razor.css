@@ -1,0 +1,206 @@
+.proc-tab {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    height: 100%;
+    min-height: 0;
+}
+
+.proc-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.proc-filter {
+    flex: 1 1 220px;
+    min-width: 160px;
+    padding: var(--kos-input-padding, 6px 10px);
+    background: var(--kos-input-bg, var(--kos-bg-base, #0d1117));
+    color: var(--kos-input-color, var(--kos-text-primary, #c9d1d9));
+    border: 1px solid var(--kos-input-border, var(--kos-border, #30363d));
+    border-radius: var(--kos-input-radius, var(--kos-radius-sm, 4px));
+    font-family: inherit;
+    font-size: 0.8125rem;
+}
+
+.proc-filter:focus {
+    outline: none;
+    border-color: var(--kos-input-focus-border, var(--kos-accent, #42d392));
+    box-shadow: var(--kos-input-focus-ring, 0 0 0 2px color-mix(in srgb, var(--kos-accent, #42d392) 30%, transparent));
+}
+
+.proc-count {
+    font-size: 0.75rem;
+    color: var(--kos-text-secondary, #8b949e);
+    white-space: nowrap;
+}
+
+.proc-count-selected {
+    color: var(--kos-accent, #42d392);
+}
+
+.proc-report {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: var(--kos-radius-sm, 4px);
+    font-size: 0.8125rem;
+}
+
+.proc-report.ok {
+    border: 1px solid color-mix(in srgb, var(--kos-accent, #42d392) 50%, transparent);
+    background: color-mix(in srgb, var(--kos-accent, #42d392) 10%, transparent);
+}
+
+.proc-report.has-failures {
+    border: 1px solid color-mix(in srgb, var(--kos-error, #ff7b72) 60%, transparent);
+    background: color-mix(in srgb, var(--kos-error, #ff7b72) 10%, transparent);
+}
+
+.proc-report-failures {
+    margin: 4px 0 0;
+    padding-left: 18px;
+    color: var(--kos-error, #ff7b72);
+}
+
+.proc-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    flex: 1;
+    min-height: 0;
+}
+
+.proc-content.with-detail {
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 38%);
+}
+
+.proc-table-wrapper {
+    overflow: auto;
+    min-height: 0;
+    border: 1px solid var(--kos-border-subtle, #30363d);
+    border-radius: var(--kos-radius-sm, 4px);
+    user-select: none;
+}
+
+.proc-table-wrapper:focus-visible {
+    outline: none;
+    border-color: var(--kos-accent, #42d392);
+}
+
+.proc-table th.sortable {
+    cursor: pointer;
+}
+
+.proc-table th.sorted {
+    color: var(--kos-accent, #42d392);
+}
+
+.sort-indicator {
+    font-size: 0.625rem;
+}
+
+/* ADR 0066: discreet mark on a column whose values are simulated, not measured. */
+.est-tag {
+    margin-left: 6px;
+    padding: 0 4px;
+    font-family: var(--kos-font-mono, ui-monospace, monospace);
+    font-size: 0.5625rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    vertical-align: middle;
+    color: var(--kos-text-secondary, #8b949e);
+    border: 1px dashed color-mix(in srgb, var(--kos-text-secondary, #8b949e) 55%, transparent);
+    border-radius: var(--kos-radius-sm, 4px);
+    opacity: 0.75;
+    cursor: help;
+}
+
+.proc-name {
+    display: block;
+    color: var(--kos-text-primary, #c9d1d9);
+}
+
+.proc-app {
+    display: block;
+    font-size: 0.6875rem;
+    color: var(--kos-text-muted, #6e7681);
+}
+
+.proc-user {
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.state {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 10px;
+    font-size: 0.6875rem;
+    border: 1px solid currentColor;
+}
+
+.state-R { color: var(--kos-accent, #42d392); }
+.state-S, .state-I { color: var(--kos-info, #58a6ff); }
+.state-T { color: var(--kos-warning, #d29922); }
+.state-Z, .state-X { color: var(--kos-error, #ff7b72); }
+
+/* ADR 0067: "Not responding" is a verdict, not a scheduler state: louder, like a frozen window title. */
+.state-not-responding {
+    color: var(--kos-error, #ff7b72);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-shadow: 0 0 6px color-mix(in srgb, var(--kos-error, #ff7b72) 45%, transparent);
+}
+
+.proc-empty td {
+    text-align: center;
+    padding: 24px;
+    color: var(--kos-text-muted, #6e7681);
+}
+
+@media (max-width: 720px) {
+    .proc-content.with-detail {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* Row menu (ADR 0069): "End task" is SIGTERM, "Force kill" SIGKILL. */
+.proc-menu-item {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.5rem;
+    min-width: 13rem;
+}
+
+.proc-menu-key {
+    font-family: var(--kos-font-mono, monospace);
+    font-size: 0.75em;
+    opacity: 0.6;
+}
+
+.proc-menu-danger {
+    color: var(--kos-error, #ff8f87);
+}
+
+/* The row menu's activator is only a positioning anchor (opened at the cursor on right click):
+   its accessible name stays for screen readers but takes no room on screen. */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}

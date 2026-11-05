@@ -1,0 +1,735 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Admin.App.InstallPackage" xml:space="preserve">
+    <value>Install {0} {1} from {2} for all users</value>
+  </data>
+  <data name="Admin.App.InstallUntrustedPackage" xml:space="preserve">
+    <value>Install {0} {1} from {2}, an untrusted source, for all users: its code will run with the same rights as the OS</value>
+  </data>
+  <data name="Admin.App.RemovePackage" xml:space="preserve">
+    <value>Remove {0}, installed from {1}, for all users</value>
+  </data>
+  <data name="Admin.App.Reinstall" xml:space="preserve">
+    <value>Reinstall {0} for all users</value>
+  </data>
+  <data name="Admin.App.Uninstall" xml:space="preserve">
+    <value>Uninstall {0} for all users</value>
+  </data>
+  <data name="Admin.Backup" xml:space="preserve">
+    <value>Back up this machine (every account, file and setting) to the host computer</value>
+  </data>
+  <data name="Admin.ComponentProvider.Default" xml:space="preserve">
+    <value>Go back to the default provider (the File Explorer) of {0} for the whole machine</value>
+  </data>
+  <data name="Admin.ComponentProvider.Set" xml:space="preserve">
+    <value>Make '{0}' ({1}) the provider of {2} for the whole machine</value>
+  </data>
+  <data name="Capability.kazoos.file-dialogs.Risk" xml:space="preserve">
+    <value>This app's code will run inside every app that opens or saves files, with that app's rights.</value>
+  </data>
+  <data name="Capability.kazoos.file-dialogs.Title" xml:space="preserve">
+    <value>Provide the OS file dialogs</value>
+  </data>
+  <data name="Capability.kazoos.file-view.Risk" xml:space="preserve">
+    <value>This app's code will run inside every app that shows files, with that app's rights.</value>
+  </data>
+  <data name="Capability.kazoos.file-view.Title" xml:space="preserve">
+    <value>Provide the OS file view</value>
+  </data>
+  <data name="Admin.Decision.Allow" xml:space="preserve">
+    <value>Allow '{0}' ({1}) for {2} on this machine</value>
+  </data>
+  <data name="Admin.Decision.Ask" xml:space="preserve">
+    <value>Ask again at launch for '{0}' ({1}) for {2} on this machine</value>
+  </data>
+  <data name="Admin.Decision.Deny" xml:space="preserve">
+    <value>Deny '{0}' ({1}) for {2} on this machine</value>
+  </data>
+  <data name="Admin.FactoryReset" xml:space="preserve">
+    <value>Erase this machine (every account, file and setting) and restart it</value>
+  </data>
+  <data name="Admin.Policy.Block" xml:space="preserve">
+    <value>Block every dangerous capability of non-system apps</value>
+  </data>
+  <data name="Admin.Policy.Prompt" xml:space="preserve">
+    <value>Let an administrator approve dangerous capabilities at launch</value>
+  </data>
+  <data name="Admin.Reboot" xml:space="preserve">
+    <value>Restart this machine</value>
+  </data>
+  <data name="Admin.RemovePassword" xml:space="preserve">
+    <value>Remove the password of account {0} (its keyring will be set aside)</value>
+  </data>
+  <data name="Admin.ResetPassword" xml:space="preserve">
+    <value>Reset the password of account {0} (its keyring will be set aside)</value>
+  </data>
+  <data name="Admin.RestoreMerge" xml:space="preserve">
+    <value>Merge the backup '{0}' into this machine and restart it</value>
+  </data>
+  <data name="Admin.RestoreReplace" xml:space="preserve">
+    <value>Replace this whole machine with the backup '{0}' and restart it</value>
+  </data>
+  <data name="Arithmetic.ColonExpected" xml:space="preserve">
+    <value>`:' expected for conditional expression</value>
+  </data>
+  <data name="Arithmetic.DivisionByZero" xml:space="preserve">
+    <value>division by 0 (error token is "0")</value>
+  </data>
+  <data name="Arithmetic.IncrementOperandExpected" xml:space="preserve">
+    <value>operand expected for increment</value>
+  </data>
+  <data name="Arithmetic.MissingParenthesis" xml:space="preserve">
+    <value>missing `)'</value>
+  </data>
+  <data name="Arithmetic.NegativeExponent" xml:space="preserve">
+    <value>exponent less than 0</value>
+  </data>
+  <data name="Arithmetic.OperandExpected" xml:space="preserve">
+    <value>syntax error: operand expected</value>
+  </data>
+  <data name="Arithmetic.OperandExpectedAt" xml:space="preserve">
+    <value>syntax error: operand expected (error token is "{0}")</value>
+  </data>
+  <data name="Arithmetic.SyntaxError" xml:space="preserve">
+    <value>syntax error in expression (error token is "{0}")</value>
+  </data>
+  <data name="Arithmetic.UnknownOperator" xml:space="preserve">
+    <value>unknown operator `{0}'</value>
+  </data>
+  <data name="Arithmetic.ValueTooGreat" xml:space="preserve">
+    <value>value too great for base (error token is "{0}")</value>
+  </data>
+  <data name="Builtin.:" xml:space="preserve">
+    <value>Do nothing, successfully (shell builtin)</value>
+  </data>
+  <data name="Builtin.bg" xml:space="preserve">
+    <value>Resume a job in the background (shell builtin)</value>
+  </data>
+  <data name="Builtin.break" xml:space="preserve">
+    <value>Leave the n-th enclosing loop (shell builtin)</value>
+  </data>
+  <data name="Builtin.command" xml:space="preserve">
+    <value>Run a command ignoring functions, or describe it (shell builtin)</value>
+  </data>
+  <data name="Builtin.continue" xml:space="preserve">
+    <value>Start the next iteration of the n-th enclosing loop (shell builtin)</value>
+  </data>
+  <data name="Builtin.eval" xml:space="preserve">
+    <value>Run the arguments as a shell command (shell builtin)</value>
+  </data>
+  <data name="Builtin.exec" xml:space="preserve">
+    <value>Replace the shell with a command (shell builtin)</value>
+  </data>
+  <data name="Builtin.fg" xml:space="preserve">
+    <value>Bring a background job to the foreground (shell builtin)</value>
+  </data>
+  <data name="Builtin.local" xml:space="preserve">
+    <value>Declare function-local variables (shell builtin)</value>
+  </data>
+  <data name="Builtin.return" xml:space="preserve">
+    <value>Return from a function or sourced script (shell builtin)</value>
+  </data>
+  <data name="Builtin.set" xml:space="preserve">
+    <value>Set shell options and positional parameters (shell builtin)</value>
+  </data>
+  <data name="Builtin.sh" xml:space="preserve">
+    <value>Run a shell script or a command string with hsh</value>
+  </data>
+  <data name="Builtin.shift" xml:space="preserve">
+    <value>Drop the first n positional parameters (shell builtin)</value>
+  </data>
+  <data name="Builtin.source" xml:space="preserve">
+    <value>Run a file in the current shell (shell builtin)</value>
+  </data>
+  <data name="Builtin.trap" xml:space="preserve">
+    <value>Run an action when the shell exits (shell builtin)</value>
+  </data>
+  <data name="Builtin.type" xml:space="preserve">
+    <value>Describe how a name would be run (shell builtin)</value>
+  </data>
+  <data name="Builtin.wait" xml:space="preserve">
+    <value>Wait for background jobs (shell builtin)</value>
+  </data>
+  <data name="Capability.apps.launch.Title" xml:space="preserve">
+    <value>Launch other applications</value>
+  </data>
+  <data name="Capability.apps.manage.Risk" xml:space="preserve">
+    <value>Install, uninstall or reinstall applications.</value>
+  </data>
+  <data name="Capability.apps.manage.Title" xml:space="preserve">
+    <value>Manage applications</value>
+  </data>
+  <data name="Capability.clipboard.read.Title" xml:space="preserve">
+    <value>Read the clipboard</value>
+  </data>
+  <data name="Capability.clipboard.write.Title" xml:space="preserve">
+    <value>Write to the clipboard</value>
+  </data>
+  <data name="Capability.dialogs.file-open.Title" xml:space="preserve">
+    <value>Show the Open File dialog</value>
+  </data>
+  <data name="Capability.dialogs.file-save.Title" xml:space="preserve">
+    <value>Show the Save As dialog</value>
+  </data>
+  <data name="Capability.dialogs.folder-select.Title" xml:space="preserve">
+    <value>Show the Choose Folder dialog</value>
+  </data>
+  <data name="Capability.file-associations.read.Title" xml:space="preserve">
+    <value>Read file associations</value>
+  </data>
+  <data name="Capability.file-associations.write.Risk" xml:space="preserve">
+    <value>Choose which app opens each file type for the whole machine.</value>
+  </data>
+  <data name="Capability.file-associations.write.Title" xml:space="preserve">
+    <value>Change file associations</value>
+  </data>
+  <data name="Capability.filesystem.private.read.Title" xml:space="preserve">
+    <value>Read its own private data</value>
+  </data>
+  <data name="Capability.filesystem.private.write.Title" xml:space="preserve">
+    <value>Write its own private data</value>
+  </data>
+  <data name="Capability.filesystem.system.read.Risk" xml:space="preserve">
+    <value>Read files outside the home folder, including the system configuration.</value>
+  </data>
+  <data name="Capability.filesystem.system.read.Title" xml:space="preserve">
+    <value>Read system files</value>
+  </data>
+  <data name="Capability.filesystem.system.write.Risk" xml:space="preserve">
+    <value>Modify system files, including /etc and the settings of every app.</value>
+  </data>
+  <data name="Capability.filesystem.system.write.Title" xml:space="preserve">
+    <value>Modify system files</value>
+  </data>
+  <data name="Capability.filesystem.user-home.read.Title" xml:space="preserve">
+    <value>Read the home folder</value>
+  </data>
+  <data name="Capability.filesystem.user-home.write.Title" xml:space="preserve">
+    <value>Write to the home folder</value>
+  </data>
+  <data name="Capability.filesystem.user-selected.read.Title" xml:space="preserve">
+    <value>Read files the user picks</value>
+  </data>
+  <data name="Capability.filesystem.user-selected.write.Title" xml:space="preserve">
+    <value>Write files the user picks</value>
+  </data>
+  <data name="Capability.keyring.read-all.Risk" xml:space="preserve">
+    <value>Read the passwords, tokens and keys that all your applications have saved.</value>
+  </data>
+  <data name="Capability.keyring.read-all.Title" xml:space="preserve">
+    <value>Read the whole keyring</value>
+  </data>
+  <data name="Capability.users.manage.Risk" xml:space="preserve">
+    <value>Reset or remove another account's password, and so open their session.</value>
+  </data>
+  <data name="Capability.users.manage.Title" xml:space="preserve">
+    <value>Manage account passwords</value>
+  </data>
+  <data name="Capability.network.listen.Title" xml:space="preserve">
+    <value>Listen on a network port</value>
+  </data>
+  <data name="Capability.network.listen.privileged.Risk" xml:space="preserve">
+    <value>Open a port below 1024, where the machine's real services are expected (web, SSH...).</value>
+  </data>
+  <data name="Capability.network.listen.privileged.Title" xml:space="preserve">
+    <value>Listen on a privileged port</value>
+  </data>
+  <data name="Capability.network.real.access.Risk" xml:space="preserve">
+    <value>Reach real servers on the Internet through the relay server.</value>
+  </data>
+  <data name="Capability.network.real.access.Title" xml:space="preserve">
+    <value>Access the real network</value>
+  </data>
+  <data name="Capability.network.simulated.read.Title" xml:space="preserve">
+    <value>View the simulated network</value>
+  </data>
+  <data name="Capability.network.simulated.write.Title" xml:space="preserve">
+    <value>Change the simulated network</value>
+  </data>
+  <data name="Capability.notifications.post.Title" xml:space="preserve">
+    <value>Show notifications</value>
+  </data>
+  <data name="Capability.permissions.manage.Risk" xml:space="preserve">
+    <value>Grant dangerous permissions to other apps, or take them back.</value>
+  </data>
+  <data name="Capability.permissions.manage.Title" xml:space="preserve">
+    <value>Administer permissions</value>
+  </data>
+  <data name="Capability.process.list.Title" xml:space="preserve">
+    <value>List processes</value>
+  </data>
+  <data name="Capability.process.manage.Risk" xml:space="preserve">
+    <value>Stop the processes of other applications.</value>
+  </data>
+  <data name="Capability.process.manage.Title" xml:space="preserve">
+    <value>Manage processes</value>
+  </data>
+  <data name="Capability.server.connection.manage.Risk" xml:space="preserve">
+    <value>Connect this machine to a server and send it your files and permissions.</value>
+  </data>
+  <data name="Capability.server.connection.manage.Title" xml:space="preserve">
+    <value>Manage the server connection</value>
+  </data>
+  <data name="Capability.services.manage.Risk" xml:space="preserve">
+    <value>Start, stop and configure system services.</value>
+  </data>
+  <data name="Capability.services.manage.Title" xml:space="preserve">
+    <value>Manage services</value>
+  </data>
+  <data name="Capability.shell.control.Title" xml:space="preserve">
+    <value>Act on the shell that started the command</value>
+  </data>
+  <data name="Capability.shell.context-menu.Title" xml:space="preserve">
+    <value>Add entries to the file menus</value>
+  </data>
+  <data name="Capability.screens.manage.Title" xml:space="preserve">
+    <value>Manage screens</value>
+  </data>
+  <data name="Capability.shell.host.Risk" xml:space="preserve">
+    <value>Run commands on your behalf, with the rights of those commands.</value>
+  </data>
+  <data name="Capability.shell.host.Title" xml:space="preserve">
+    <value>Host a shell</value>
+  </data>
+  <data name="Capability.system.backup.Risk" xml:space="preserve">
+    <value>Copy every file and account of the machine to the host computer, or replace them with a backup.</value>
+  </data>
+  <data name="Capability.system.backup.Title" xml:space="preserve">
+    <value>Back up and restore the machine</value>
+  </data>
+  <data name="Capability.system.power.Risk" xml:space="preserve">
+    <value>Restart this machine or erase it completely.</value>
+  </data>
+  <data name="Capability.system.power.Title" xml:space="preserve">
+    <value>Restart or reset the machine</value>
+  </data>
+  <data name="Capability.system.storage.inspect.Risk" xml:space="preserve">
+    <value>Read the machine's raw storage, including the files of every user.</value>
+  </data>
+  <data name="Capability.system.storage.inspect.Title" xml:space="preserve">
+    <value>Inspect raw storage</value>
+  </data>
+  <data name="Capability.windows.manage.Risk" xml:space="preserve">
+    <value>Read, move or close the windows of other applications.</value>
+  </data>
+  <data name="Capability.windows.manage.Title" xml:space="preserve">
+    <value>Manage windows</value>
+  </data>
+  <data name="Errno.FileTooLarge" xml:space="preserve">
+    <value>File too large</value>
+  </data>
+  <data name="Errno.InvalidPath" xml:space="preserve">
+    <value>Invalid path</value>
+  </data>
+  <data name="Errno.IsDirectory" xml:space="preserve">
+    <value>Is a directory</value>
+  </data>
+  <data name="Errno.TooManyOpenFiles" xml:space="preserve">
+    <value>Too many open files</value>
+  </data>
+  <data name="Errno.NoSpace" xml:space="preserve">
+    <value>No space left on device</value>
+  </data>
+  <data name="Errno.NoSuchFile" xml:space="preserve">
+    <value>No such file or directory</value>
+  </data>
+  <data name="Errno.NotDirectory" xml:space="preserve">
+    <value>Not a directory</value>
+  </data>
+  <data name="Errno.PermissionDenied" xml:space="preserve">
+    <value>Permission denied</value>
+  </data>
+  <data name="Job.Done" xml:space="preserve">
+    <value>Done</value>
+  </data>
+  <data name="Job.Exit" xml:space="preserve">
+    <value>Exit {0}</value>
+  </data>
+  <data name="Job.Running" xml:space="preserve">
+    <value>Running</value>
+  </data>
+  <data name="Job.Terminated" xml:space="preserve">
+    <value>Terminated</value>
+  </data>
+  <data name="LoginStep.EnsureDataIntegrity" xml:space="preserve">
+    <value>Ensure data integrity</value>
+  </data>
+  <data name="LoginStep.Initializing" xml:space="preserve">
+    <value>Initializing</value>
+  </data>
+  <data name="LoginStep.LoadingProfile" xml:space="preserve">
+    <value>Loading Profile</value>
+  </data>
+  <data name="LoginStep.SessionReady" xml:space="preserve">
+    <value>Session Ready</value>
+  </data>
+  <data name="LoginStep.StartingSession" xml:space="preserve">
+    <value>Starting Session</value>
+  </data>
+  <data name="Oom.BrowserLimit.Message" xml:space="preserve">
+    <value>The page is nearing the browser's memory limit ({0}: {1:0} MiB of {2:0} MiB).</value>
+  </data>
+  <data name="Oom.BrowserLimit.Title" xml:space="preserve">
+    <value>Browser memory limit near</value>
+  </data>
+  <data name="Oom.Killed.Message" xml:space="preserve">
+    <value>“{0}” was closed: out of memory.</value>
+  </data>
+  <data name="Oom.Killed.Title" xml:space="preserve">
+    <value>Application closed</value>
+  </data>
+  <data name="Nice.PermissionDenied" xml:space="preserve">
+    <value>cannot set niceness: Permission denied</value>
+  </data>
+  <data name="Prompt.Dangerous.Approved" xml:space="preserve">
+    <value>Capabilities allowed by an administrator.</value>
+  </data>
+  <data name="Prompt.Dangerous.AuditNotice" xml:space="preserve">
+    <value>This decision will be recorded in /var/log/auth.log.</value>
+  </data>
+  <data name="Prompt.Dangerous.Banner" xml:space="preserve">
+    <value>*** ADMINISTRATOR AUTHORIZATION REQUIRED ***</value>
+  </data>
+  <data name="Prompt.Dangerous.CredentialDescription" xml:space="preserve">
+    <value>Approve the dangerous capabilities of '{0}' for the whole machine.</value>
+  </data>
+  <data name="Prompt.Dangerous.Dismissed" xml:space="preserve">
+    <value>No decision: the command starts without these capabilities.</value>
+  </data>
+  <data name="Prompt.Dangerous.Question" xml:space="preserve">
+    <value>Allow '{0}' to use these capabilities?
+Yes: an administrator enters their name and password.
+No: refuse for you (you will not be asked again).
+Cancel: decide at the next launch.</value>
+  </data>
+  <data name="Prompt.Dangerous.Refused" xml:space="preserve">
+    <value>Capabilities refused for you.</value>
+  </data>
+  <data name="Prompt.Dangerous.Request" xml:space="preserve">
+    <value>The non-system command '{0}' ({1}, publisher {2}, version {3}) asks for:</value>
+  </data>
+  <data name="Prompt.Dangerous.Title" xml:space="preserve">
+    <value>Administrator authorization required</value>
+  </data>
+  <data name="Prompt.Dangerous.TooManyAttempts" xml:space="preserve">
+    <value>{0} incorrect attempts: request cancelled.</value>
+  </data>
+  <data name="Prompt.PermissionApproval.Description" xml:space="preserve">
+    <value>'{0}' was denied {1} on '{2}'. Approve this one operation?</value>
+  </data>
+  <data name="Prompt.PermissionApproval.Title" xml:space="preserve">
+    <value>Permission Denied — Request Approval?</value>
+  </data>
+  <data name="Prompt.SorryTryAgain" xml:space="preserve">
+    <value>Sorry, try again.</value>
+  </data>
+  <data name="Prompt.Sudo.Title" xml:space="preserve">
+    <value>Administrator Authorization Required</value>
+  </data>
+  <data name="Relay.Warning.AllowAllPorts" xml:space="preserve">
+    <value>KazoOs:Proxy:AllowAllPorts is on: the relay reaches every TCP and UDP port.</value>
+  </data>
+  <data name="Relay.Warning.AllowPrivateNetworks" xml:space="preserve">
+    <value>KazoOs:Proxy:AllowPrivateNetworks is on: the relay reaches the private networks of the server's machine (loopback and cloud metadata stay blocked).</value>
+  </data>
+  <data name="Relay.Warning.QuotasDisabled" xml:space="preserve">
+    <value>KazoOs:Proxy:Quotas:Enabled is off: no size, concurrency, stream or idle limit applies.</value>
+  </data>
+  <data name="Shell.AliasNotSimple" xml:space="preserve">
+    <value>alias {0}: only a simple command can be aliased</value>
+  </data>
+  <data name="Shell.AmbiguousRedirect" xml:space="preserve">
+    <value>{0}: ambiguous redirect</value>
+  </data>
+  <data name="Shell.BadFileDescriptor" xml:space="preserve">
+    <value>{0}: Bad file descriptor</value>
+  </data>
+  <data name="Shell.BadInterpreter" xml:space="preserve">
+    <value>{0}: {1}: bad interpreter: No such file or directory</value>
+  </data>
+  <data name="Shell.BinaryFile" xml:space="preserve">
+    <value>{0}: cannot execute binary file: Exec format error</value>
+  </data>
+  <data name="Shell.CannotAssign" xml:space="preserve">
+    <value>${0}: cannot assign in this way</value>
+  </data>
+  <data name="Shell.CommandNotFound" xml:space="preserve">
+    <value>{0}: command not found</value>
+  </data>
+  <data name="Shell.DeprecatedCommand" xml:space="preserve">
+    <value>{0}: this name is deprecated, use {1}</value>
+  </data>
+  <data name="Shell.CurrentJob" xml:space="preserve">
+    <value>current</value>
+  </data>
+  <data name="Shell.ElevationDenied" xml:space="preserve">
+    <value>{0}: elevation denied</value>
+  </data>
+  <data name="Shell.Error" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="Shell.FilenameArgumentRequired" xml:space="preserve">
+    <value>{0}: filename argument required</value>
+  </data>
+  <data name="Shell.FunctionNestingExceeded" xml:space="preserve">
+    <value>{0}: maximum function nesting level exceeded ({1})</value>
+  </data>
+  <data name="Shell.InvalidOption" xml:space="preserve">
+    <value>{0}: {1}: invalid option</value>
+  </data>
+  <data name="Shell.InvalidOptionName" xml:space="preserve">
+    <value>{0}: {1}: invalid option name</value>
+  </data>
+  <data name="Shell.JobAlreadyInBackground" xml:space="preserve">
+    <value>bg: job {0} already in background</value>
+  </data>
+  <data name="Shell.CpuLimitExceeded" xml:space="preserve">
+    <value>CPU time limit exceeded</value>
+  </data>
+  <data name="Shell.ForkFailed" xml:space="preserve">
+    <value>fork: Resource temporarily unavailable</value>
+  </data>
+  <data name="Shell.Killed" xml:space="preserve">
+    <value>Killed</value>
+  </data>
+  <data name="Shell.LocalOutsideFunction" xml:space="preserve">
+    <value>local: can only be used in a function</value>
+  </data>
+  <data name="Shell.LoopCountOutOfRange" xml:space="preserve">
+    <value>{0}: {1}: loop count out of range</value>
+  </data>
+  <data name="Shell.MaximumNestingLevel" xml:space="preserve">
+    <value>maximum nesting level exceeded</value>
+  </data>
+  <data name="Shell.NestingExceeded" xml:space="preserve">
+    <value>{0}: maximum nesting level exceeded</value>
+  </data>
+  <data name="Shell.NoCallingAppFiles" xml:space="preserve">
+    <value>{0}: cannot open files without a calling app</value>
+  </data>
+  <data name="Shell.NoCallingAppPrograms" xml:space="preserve">
+    <value>{0}: cannot run programs without a calling app</value>
+  </data>
+  <data name="Shell.NoCallingAppScripts" xml:space="preserve">
+    <value>{0}: cannot run scripts without a calling app</value>
+  </data>
+  <data name="Shell.NoSuchJob" xml:space="preserve">
+    <value>{0}: {1}: no such job</value>
+  </data>
+  <data name="Shell.NotExecutableHint" xml:space="preserve">
+    <value>hint: '{0}' is not executable. Make it executable with: chmod +x {1}  (or run it with: sh {1})</value>
+  </data>
+  <data name="Shell.NotFound" xml:space="preserve">
+    <value>{0}: {1}: not found</value>
+  </data>
+  <data name="Shell.NotValidIdentifier" xml:space="preserve">
+    <value>{0}: `{1}': not a valid identifier</value>
+  </data>
+  <data name="Shell.NumericArgumentRequired" xml:space="preserve">
+    <value>{0}: {1}: numeric argument required</value>
+  </data>
+  <data name="Shell.OnlyInLoop" xml:space="preserve">
+    <value>{0}: only meaningful in a `for', `while', or `until' loop</value>
+  </data>
+  <data name="Shell.OptionRequiresArgument" xml:space="preserve">
+    <value>{0}: {1}: option requires an argument</value>
+  </data>
+  <data name="Shell.ParameterNotSet" xml:space="preserve">
+    <value>{0}: parameter not set</value>
+  </data>
+  <data name="Shell.ParameterNullOrNotSet" xml:space="preserve">
+    <value>{0}: parameter null or not set</value>
+  </data>
+  <data name="Shell.ReturnOutsideFunction" xml:space="preserve">
+    <value>return: can only `return' from a function or sourced script</value>
+  </data>
+  <data name="Shell.ScriptLineError" xml:space="preserve">
+    <value>{0}: line {1}: {2}</value>
+  </data>
+  <data name="Shell.ShUsage" xml:space="preserve">
+    <value>usage: {0} [-exuf] [-c command [name [args...]]] [script [args...]]</value>
+  </data>
+  <data name="Shell.StartApp" xml:space="preserve">
+    <value>Start {0}</value>
+  </data>
+  <data name="Shell.TrapUsage" xml:space="preserve">
+    <value>trap: usage: trap [action] [EXIT|signal...]</value>
+  </data>
+  <data name="Shell.Type.Application" xml:space="preserve">
+    <value>{0} is the application {1} ({2})</value>
+  </data>
+  <data name="Shell.Type.Builtin" xml:space="preserve">
+    <value>{0} is a shell builtin</value>
+  </data>
+  <data name="Shell.Type.File" xml:space="preserve">
+    <value>{0} is {1}</value>
+  </data>
+  <data name="Shell.Type.Function" xml:space="preserve">
+    <value>{0} is a function</value>
+  </data>
+  <data name="Shell.Type.Keyword" xml:space="preserve">
+    <value>{0} is a shell keyword</value>
+  </data>
+  <data name="Shell.UnboundVariable" xml:space="preserve">
+    <value>{0}: unbound variable</value>
+  </data>
+  <data name="Storage.LowSpace.Message" xml:space="preserve">
+    <value>Only {0:0.#} MiB left of {1:0.#} MiB. Delete files or empty the trash; open Diagnostic to see what uses the space.</value>
+  </data>
+  <data name="Storage.LowSpace.OpenDiagnostic" xml:space="preserve">
+    <value>Open Diagnostic</value>
+  </data>
+  <data name="Storage.LowSpace.Title" xml:space="preserve">
+    <value>Low storage space</value>
+  </data>
+  <data name="Sudo.AuthenticationFailed" xml:space="preserve">
+    <value>authentication failed</value>
+  </data>
+  <data name="Sudo.RunAsRoot" xml:space="preserve">
+    <value>Run as root: {0}</value>
+  </data>
+  <data name="Sudo.ShellBuiltin" xml:space="preserve">
+    <value>{0}: shell builtin</value>
+  </data>
+  <data name="Sudo.TerminalRequired" xml:space="preserve">
+    <value>a terminal is required to read the password</value>
+  </data>
+  <data name="Syntax.BadFunctionName" xml:space="preserve">
+    <value>`{0}': not a valid function name</value>
+  </data>
+  <data name="Syntax.BadSubstitution" xml:space="preserve">
+    <value>{0}: bad substitution</value>
+  </data>
+  <data name="Syntax.HereDocumentBodyNotTerminated" xml:space="preserve">
+    <value>syntax error: here-document is not terminated</value>
+  </data>
+  <data name="Syntax.HereDocumentNotTerminated" xml:space="preserve">
+    <value>syntax error: here-document delimited by `{0}' is not terminated</value>
+  </data>
+  <data name="Syntax.MissingFileName" xml:space="preserve">
+    <value>syntax error: missing file name after `{0}'</value>
+  </data>
+  <data name="Syntax.MissingHereDocumentDelimiter" xml:space="preserve">
+    <value>syntax error: missing here-document delimiter after `{0}'</value>
+  </data>
+  <data name="Syntax.TrailingEscape" xml:space="preserve">
+    <value>syntax error: trailing escape character '\'</value>
+  </data>
+  <data name="Syntax.UnexpectedEnd" xml:space="preserve">
+    <value>syntax error: unexpected end of file</value>
+  </data>
+  <data name="Syntax.UnexpectedEndAfter" xml:space="preserve">
+    <value>syntax error: unexpected end of line after `{0}'</value>
+  </data>
+  <data name="Syntax.UnexpectedEndExpecting" xml:space="preserve">
+    <value>syntax error: unexpected end of file (expecting `{0}')</value>
+  </data>
+  <data name="Syntax.UnexpectedToken" xml:space="preserve">
+    <value>syntax error near unexpected token `{0}'</value>
+  </data>
+  <data name="Syntax.Unsupported" xml:space="preserve">
+    <value>syntax error: `{0}' is not supported (quote or escape it to pass it literally)</value>
+  </data>
+  <data name="Syntax.UnterminatedArithmetic" xml:space="preserve">
+    <value>syntax error: unterminated `$(('</value>
+  </data>
+  <data name="Syntax.UnterminatedBackquote" xml:space="preserve">
+    <value>syntax error: unterminated backquote</value>
+  </data>
+  <data name="Syntax.UnterminatedCommandSubstitution" xml:space="preserve">
+    <value>syntax error: unterminated `$('</value>
+  </data>
+  <data name="Syntax.UnterminatedDoubleQuote" xml:space="preserve">
+    <value>syntax error: unterminated double quote</value>
+  </data>
+  <data name="Syntax.UnterminatedSingleQuote" xml:space="preserve">
+    <value>syntax error: unterminated single quote</value>
+  </data>
+  <data name="Builtin.ulimit" xml:space="preserve">
+    <value>Show or change the resource limits of the shell (shell builtin)</value>
+  </data>
+  <data name="Shell.UlimitInvalidOption" xml:space="preserve">
+    <value>ulimit: {0}: invalid option</value>
+  </data>
+  <data name="Shell.UlimitUsage" xml:space="preserve">
+    <value>usage: ulimit [-SH] [-a | -f | -m | -n | -t | -u] [limit]</value>
+  </data>
+  <data name="Shell.UlimitInvalidNumber" xml:space="preserve">
+    <value>ulimit: {0}: invalid number</value>
+  </data>
+  <data name="Shell.UlimitCannotModify" xml:space="preserve">
+    <value>ulimit: {0}: cannot modify limit: {1}</value>
+  </data>
+  <data name="Shell.UlimitNoProcess" xml:space="preserve">
+    <value>ulimit: the shell has no process</value>
+  </data>
+  <data name="Errno.OperationNotPermitted" xml:space="preserve">
+    <value>Operation not permitted</value>
+  </data>
+  <data name="Errno.InvalidArgument" xml:space="preserve">
+    <value>Invalid argument</value>
+  </data>
+  <data name="Admin.AddUser" xml:space="preserve">
+    <value>Add the account {0}</value>
+  </data>
+  <data name="Admin.DeleteUser" xml:space="preserve">
+    <value>Delete the account {0} (its home folder is kept)</value>
+  </data>
+  <data name="Admin.DeleteUserAndHome" xml:space="preserve">
+    <value>Delete the account {0} and its home folder</value>
+  </data>
+  <data name="WhatsNew.Notification.Title" xml:space="preserve">
+    <value>What's new</value>
+  </data>
+  <data name="WhatsNew.Notification.One" xml:space="preserve">
+    <value>1 new change since your last visit.</value>
+  </data>
+  <data name="WhatsNew.Notification.Many" xml:space="preserve">
+    <value>{0} new changes since your last visit.</value>
+  </data>
+  <data name="WhatsNew.Notification.View" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="Admin.App.InstallUntrustedPackageForUser" xml:space="preserve">
+    <value>Install {0} {1} from {2}, an untrusted source, for {3} only: its code will run with the same rights as the OS</value>
+  </data>
+  <data name="Admin.App.EditAppSources" xml:space="preserve">
+    <value>Change the app sources: {0}</value>
+  </data>
+  <data name="Admin.App.EditAppPolicy" xml:space="preserve">
+    <value>Change the app block list: {0}</value>
+  </data>
+  <data name="AppUpdates.Notification.Title" xml:space="preserve">
+    <value>App updates</value>
+  </data>
+  <data name="AppUpdates.Notification.One" xml:space="preserve">
+    <value>1 app can be updated in the Kazo OS Store.</value>
+  </data>
+  <data name="AppUpdates.Notification.Many" xml:space="preserve">
+    <value>{0} apps can be updated in the Kazo OS Store.</value>
+  </data>
+  <data name="AppUpdates.Notification.View" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="Admin.App.RollbackPackage" xml:space="preserve">
+    <value>Go back to {0} {1}, installed from {2}, for all users</value>
+  </data>
+  <data name="Admin.App.RollbackPackageForUser" xml:space="preserve">
+    <value>Go back to {0} {1} from {2}, an untrusted source, for {3} only</value>
+  </data>
+  <data name="Admin.App.RepairPackages" xml:space="preserve">
+    <value>Repair the apps installed for all users</value>
+  </data>
+</root>

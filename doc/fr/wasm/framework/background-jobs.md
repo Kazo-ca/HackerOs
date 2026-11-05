@@ -1,6 +1,6 @@
 > [English version](../../../en/wasm/framework/background-jobs.md)
 
-# Tâches en arrière-plan (`HackBackground`)
+# Tâches en arrière-plan (`KazoBackground`)
 
 Chantier `exec/5-background-jobs`, [ADR 0128](../dev/adr/0128-background-jobs-hack-background.md)
 [ADR 0140](../dev/adr/0140-background-jobs-implementation-adjustments.md) et
@@ -11,7 +11,7 @@ SDK 1.2, publié à la fin de la série `exec` (ADR 0132).
 
 Une app à fenêtre tourne sur le fil principal du navigateur, celui qui dessine
 aussi le bureau. Un filtre d'image, une recherche dans un projet ou une
-compression y gèlent tout. `HackBackground.RunAsync` fait l'inverse de
+compression y gèlent tout. `KazoBackground.RunAsync` fait l'inverse de
 `Control.Invoke` de WinForms : la fenêtre confie la charge lourde à un autre
 « thread », ici un **processus enfant** de l'app, placé dans un Web Worker du
 pool quand l'hôte en a, et attend son résultat sans bloquer.
@@ -32,10 +32,10 @@ Comme sous Linux, la tâche est un vrai processus :
 
 ```csharp
 using System.Text.Json.Serialization;
-using HackerOs.AppSdk;
-using HackerOs.AppSdk.Threading;
+using Kazo.Os.AppSdk;
+using Kazo.Os.AppSdk.Threading;
 
-[assembly: HackWireContext(typeof(PaintJsonContext))]
+[assembly: KazoWireContext(typeof(PaintJsonContext))]
 
 public sealed record BlurInput(byte[] Pixels, int Width, int Height, int Radius);
 
@@ -45,7 +45,7 @@ internal sealed partial class PaintJsonContext : JsonSerializerContext;
 
 public static class ImageJobs
 {
-    public static async Task<byte[]> Blur(BlurInput input, HackBackgroundContext context)
+    public static async Task<byte[]> Blur(BlurInput input, KazoBackgroundContext context)
     {
         for (int row = 0; row < input.Height; row++)
         {
@@ -59,27 +59,27 @@ public static class ImageJobs
 }
 
 // Dans la fenêtre :
-byte[] blurred = await HackBackground.RunAsync<BlurInput, byte[]>(
+byte[] blurred = await KazoBackground.RunAsync<BlurInput, byte[]>(
     ImageJobs.Blur, new BlurInput(pixels, width, height, 3),
-    new Progress<HackBackgroundProgress>(report => { _progress = report; StateHasChanged(); }),
-    new HackBackgroundOptions { Name = "blur" },
+    new Progress<KazoBackgroundProgress>(report => { _progress = report; StateHasChanged(); }),
+    new KazoBackgroundOptions { Name = "blur" },
     cancellationToken);
 ```
 
-Formes acceptées (`HackerOs.AppSdk.Threading.HackBackground`) :
+Formes acceptées (`Kazo.Os.AppSdk.Threading.KazoBackground`) :
 
 | Forme | Tâche |
 |---|---|
-| `RunAsync<TInput, TResult>(job, input, …)` | `Func<TInput, HackBackgroundContext, Task<TResult>>` ou `Func<…, TResult>` |
-| `RunAsync<TInput>(job, input, …)` | `Func<TInput, HackBackgroundContext, Task>` ou `Action<TInput, HackBackgroundContext>` |
-| `RunAsync<TJob, TInput, TResult>(input, …)` | une classe `TJob : HackBackgroundJob<TInput, TResult>, new()` |
+| `RunAsync<TInput, TResult>(job, input, …)` | `Func<TInput, KazoBackgroundContext, Task<TResult>>` ou `Func<…, TResult>` |
+| `RunAsync<TInput>(job, input, …)` | `Func<TInput, KazoBackgroundContext, Task>` ou `Action<TInput, KazoBackgroundContext>` |
+| `RunAsync<TJob, TInput, TResult>(input, …)` | une classe `TJob : KazoBackgroundJob<TInput, TResult>, new()` |
 
-Chaque forme prend `IProgress<HackBackgroundProgress>? progress`,
-`HackBackgroundOptions? options` (`Name`, `Nice`) et `CancellationToken`.
+Chaque forme prend `IProgress<KazoBackgroundProgress>? progress`,
+`KazoBackgroundOptions? options` (`Name`, `Nice`) et `CancellationToken`.
 
 ### Le contexte de la tâche
 
-`HackBackgroundContext` :
+`KazoBackgroundContext` :
 
 | Membre | Rôle |
 |---|---|
@@ -88,8 +88,8 @@ Chaque forme prend `IProgress<HackBackgroundProgress>? progress`,
 | `Report(fraction, message)` | Progression de `0` à `1` (bornée) ; au plus 10 remontées par seconde, la dernière l'emporte, celle d'avant la fin est toujours livrée. `NaN` lève `ArgumentOutOfRangeException`. |
 | `CheckpointAsync()` | Point d'arrêt volontaire (ADR 0069) : lève si la tâche est annulée et rend le fil au-delà de 8 ms. Indispensable sur le fil principal, utile en worker. |
 
-Dans la tâche, le reste du SDK (`HackFile`, `HackDirectory`, `HackProcess`,
-`HackEnvironment`…) marche par le contexte ambiant du processus de la tâche :
+Dans la tâche, le reste du SDK (`KazoFile`, `KazoDirectory`, `KazoProcess`,
+`KazoEnvironment`…) marche par le contexte ambiant du processus de la tâche :
 même utilisateur, même session, mêmes capacités accordées que l'app.
 
 ### Résultat et erreurs
@@ -97,12 +97,12 @@ même utilisateur, même session, mêmes capacités accordées que l'app.
 | Cas | Ce que voit l'appelant | Code de sortie |
 |---|---|---|
 | Succès | Le résultat désérialisé | `0` |
-| Exception de la tâche | `HackBackgroundJobException` (`OriginalTypeName`, `Message`, `OriginalStackTrace`) : l'objet ne traverse pas | `1` |
+| Exception de la tâche | `KazoBackgroundJobException` (`OriginalTypeName`, `Message`, `OriginalStackTrace`) : l'objet ne traverse pas | `1` |
 | Annulation | `OperationCanceledException` | `130` |
-| Tuée (`kill -9`, gestionnaire de tâches, OOM) | `HackProcessKilledException` avec `Reason` | `137` |
+| Tuée (`kill -9`, gestionnaire de tâches, OOM) | `KazoProcessKilledException` avec `Reason` | `137` |
 | Refusée (méthode introuvable, type non déclaré, autre assembly, plus de 16 Mio) | `ArgumentException` | `127` |
 
-`HackProcessKilledException` dérive de `OperationCanceledException` : placer
+`KazoProcessKilledException` dérive de `OperationCanceledException` : placer
 son `catch` **avant** celui de l'annulation.
 
 ### Montrer et tuer une tâche depuis la fenêtre
@@ -117,7 +117,7 @@ await AppContext.Processes.KillAsync(ProcessId.FromInt64(pid));
 La tâche peut donner son PID dans sa progression (`$"pid {context.ProcessId} · …"`),
 comme le fait la fenêtre d'exemple.
 
-### Tester une app qui utilise `HackBackground`
+### Tester une app qui utilise `KazoBackground`
 
 Sans OS (contexte de test comme `MinimalAppExecutionContext`), la passerelle
 par défaut exécute la tâche **en ligne**, dans le processus du test, avec la
@@ -125,23 +125,23 @@ même sérialisation de l'entrée et du résultat et les mêmes erreurs. Un test
 passe ainsi passe à l'identique en worker.
 
 ```csharp
-using IDisposable scope = HackExecutionContext.Enter(new MinimalAppExecutionContext(manifest));
-PrimeCountResult result = await HackBackground.RunAsync<PrimeCountInput, PrimeCountResult>(
+using IDisposable scope = KazoExecutionContext.Enter(new MinimalAppExecutionContext(manifest));
+PrimeCountResult result = await KazoBackground.RunAsync<PrimeCountInput, PrimeCountResult>(
     SampleJobs.CountPrimes, new PrimeCountInput(100_000));
 ```
 
 ## Règles vérifiées au build
 
-L'analyseur `HackerOs.Tools.BackgroundAnalyzer` est livré dans le paquet
-`HackerOs.AppSdk` (`analyzers/dotnet/cs`) ; les apps du dépôt le reçoivent par
-`build/HackerOs.Apps.targets`. Toutes ses règles sont des erreurs.
+L'analyseur `Kazo.Os.Tools.BackgroundAnalyzer` est livré dans le paquet
+`Kazo.Os.AppSdk` (`analyzers/dotnet/cs`) ; les apps du dépôt le reçoivent par
+`build/Kazo.Os.Apps.targets`. Toutes ses règles sont des erreurs.
 
 | Code | Refus |
 |---|---|
-| `HOSBG0001` | La tâche n'est pas un groupe de méthode statique : lambda (même `static`), méthode anonyme, méthode d'instance, fonction locale non `static`, délégué passé par une variable. |
-| `HOSBG0002` | Le type d'entrée ou de résultat n'est pas atteint depuis un `[JsonSerializable]` d'un contexte déclaré par `[assembly: HackWireContext(...)]`. Un type atteint par un tableau, un argument générique ou une propriété publique d'une racine est accepté, comme `GetTypeInfo` le trouve. |
-| `HOSBG0003` | La méthode ou la classe de tâche est dans une autre assembly que l'app. |
-| `HOSBG0004` | La méthode est générique, ou appartient à un type générique. |
+| `KOSBG0001` | La tâche n'est pas un groupe de méthode statique : lambda (même `static`), méthode anonyme, méthode d'instance, fonction locale non `static`, délégué passé par une variable. |
+| `KOSBG0002` | Le type d'entrée ou de résultat n'est pas atteint depuis un `[JsonSerializable]` d'un contexte déclaré par `[assembly: KazoWireContext(...)]`. Un type atteint par un tableau, un argument générique ou une propriété publique d'une racine est accepté, comme `GetTypeInfo` le trouve. |
+| `KOSBG0003` | La méthode ou la classe de tâche est dans une autre assembly que l'app. |
+| `KOSBG0004` | La méthode est générique, ou appartient à un type générique. |
 
 L'OS refait les vérifications à l'exécution (un appel par réflexion ne passe
 pas l'analyseur) et lève `ArgumentException`.
@@ -150,9 +150,9 @@ pas l'analyseur) et lève `ArgumentException`.
 
 ```
 Fenêtre (fil principal)                       OS (fil principal)                         Web Worker du pool
-HackBackground.RunAsync ──► IAppExecutionContext.Background
+KazoBackground.RunAsync ──► IAppExecutionContext.Background
    sérialise l'entrée          AppBackgroundGateway ──► BackgroundJobService
-   (HackWireContext)                                    vérifie, crée le processus enfant,
+   (KazoWireContext)                                    vérifie, crée le processus enfant,
                                                         attend une place (par utilisateur et app)
                                                         ├─ pas de worker : la tâche sur le fil principal,
                                                         │  dans son processus (son planificateur)
@@ -162,19 +162,19 @@ HackBackground.RunAsync ──► IAppExecutionContext.Background
    ◄── résultat désérialisé, progression postée dans le contexte de la fenêtre
 ```
 
-- **SDK** (`Shared/HackerOs.AppSdk/Threading`) : `HackBackground`,
-  `HackBackgroundContext`, `HackBackgroundJob<,>`, `IAppBackgroundGateway`,
-  `HackBackgroundWire` (contextes `HackWireContext`, 16 Mio au plus),
-  `HackBackgroundJobRunner` (liaison d'une cible nommée), passerelle en ligne
+- **SDK** (`Shared/Kazo.Os.AppSdk/Threading`) : `KazoBackground`,
+  `KazoBackgroundContext`, `KazoBackgroundJob<,>`, `IAppBackgroundGateway`,
+  `KazoBackgroundWire` (contextes `KazoWireContext`, 16 Mio au plus),
+  `KazoBackgroundJobRunner` (liaison d'une cible nommée), passerelle en ligne
   par défaut.
-- **OS** (`Platform/HackerOs.Platform.Core/Execution/BackgroundJobService.cs`) :
+- **OS** (`Platform/Kazo.Os.Platform.Core/Execution/BackgroundJobService.cs`) :
   processus enfant (genre `Terminal`, `argv[0]` = nom), contexte de confiance
   de l'enfant par la fabrique, file par couple utilisateur et app
   (`MaxConcurrentJobsPerApp`, nombre de cœurs virtuels), `GetJobs` et
   `TryGetJob` pour `/proc` et le gestionnaire de tâches.
-- **Workers** (`Platform/HackerOs.Platform.WorkerHost`) : `start` avec `k = 2`,
+- **Workers** (`Platform/Kazo.Os.Platform.WorkerHost`) : `start` avec `k = 2`,
   `bg.progress`, `bg.run` et `bgp` pour une tâche lancée depuis un worker
-  ([`worker-processes.md`](../dev/worker-processes.md#tâches-hackbackground-adr-0128-adr-0140)).
+  ([`worker-processes.md`](../dev/worker-processes.md#tâches-kazobackground-adr-0128-adr-0140)).
 - **`/proc/<pid>/status`** : `Name:` porte le nom de la tâche (15 caractères),
   puis `Job:` et `Host: MainThread|Worker`.
 
@@ -202,23 +202,23 @@ HackBackground.RunAsync ──► IAppExecutionContext.Background
 | Recherche dans le dossier du CodeEditor | Tâche `code-editor:search` ([`code-editor.md`](../dev/code-editor.md)). |
 | Compresser, Extraire, « UnZip Here… » de l'explorateur | Tâches `file-explorer:compress` et `file-explorer:extract` ([`file-explorer.md`](../dev/file-explorer.md)). |
 | Copier, déplacer, coller ; téléchargement en `.zip` | Restent dans la fenêtre : appels à l'OS attendus avec des points d'arrêt, question de conflit dans la fenêtre ; octets du téléchargement destinés à la fenêtre (ADR 0140 §9). |
-| Hack Paint | Pas de filtre ; rotation et recadrage restent (tampon jusqu'à 64 Mio, au-delà de la limite de 16 Mio) ([`hack-paint.md`](../dev/hack-paint.md)). |
+| Kazo Paint | Pas de filtre ; rotation et recadrage restent (tampon jusqu'à 64 Mio, au-delà de la limite de 16 Mio) ([`kazo-paint.md`](../dev/kazo-paint.md)). |
 
 ## Exemple
 
-`Apps/Samples/HackerOs.Samples.WindowApp`, section « Background Task » :
+`Apps/Samples/Kazo.Os.Samples.WindowApp`, section « Background Task » :
 compte des nombres premiers (`SampleJobs.CountPrimes`) avec barre de
 progression, « Cancel » (annulation) et « Kill » (tue le processus de la
 tâche ; la fenêtre reste ouverte et affiche `killed`).
 
 ## Tests
 
-- `Tests/HackerOs.AppSdk.Tests/Threading/HackBackgroundTests.cs` : passerelle en
+- `Tests/Kazo.Os.AppSdk.Tests/Threading/KazoBackgroundTests.cs` : passerelle en
   ligne, lambda refusée, type non déclaré, faute, annulation, limitation de la
   progression.
-- `Tests/HackerOs.AppSdk.Tests/Threading/HackBackgroundAnalyzerTests.cs` : les
-  quatre règles `HOSBG`.
-- `Tests/HackerOs.Platform.WorkerHost.Tests/BackgroundJobTests.cs` : chaque cas
+- `Tests/Kazo.Os.AppSdk.Tests/Threading/KazoBackgroundAnalyzerTests.cs` : les
+  quatre règles `KOSBG`.
+- `Tests/Kazo.Os.Platform.WorkerHost.Tests/BackgroundJobTests.cs` : chaque cas
   sur le fil principal **et** en worker (résultat, processus enfant,
   progression, classe de tâche, faute, annulation, `kill -9` sans fermer l'app,
   l'app qui tue sa propre tâche, `kill -9` de l'app, fermeture de l'app avec
@@ -229,13 +229,13 @@ tâche ; la fenêtre reste ouverte et affiche `killed`).
 
 ## Liste des tâches du chantier `exec/5-background-jobs`
 
-- [x] API du SDK (`HackBackground`, contexte, classe de tâche, options, exception), passerelle en ligne par défaut.
+- [x] API du SDK (`KazoBackground`, contexte, classe de tâche, options, exception), passerelle en ligne par défaut.
 - [x] `BackgroundJobService` : processus enfant, contexte de confiance, file par utilisateur et app, codes de sortie.
 - [x] Workers : `start` `k = 2`, `bg.progress`, `bg.run`, `bgp`, erreurs `bgfault` et raison `rs`.
 - [x] `/proc/<pid>/status` (`Name`, `Job`, `Host`) et `ps`.
 - [x] Une app gère ses descendants sans `process.manage` (ADR 0140 §7).
-- [x] Analyseur `HOSBG0001` à `HOSBG0004`, livré dans le paquet du SDK et branché sur les apps du dépôt.
-- [x] Recherche du CodeEditor, compression et extraction de l'explorateur en tâches ; raison écrite pour les copies, le téléchargement et Hack Paint.
+- [x] Analyseur `KOSBG0001` à `KOSBG0004`, livré dans le paquet du SDK et branché sur les apps du dépôt.
+- [x] Recherche du CodeEditor, compression et extraction de l'explorateur en tâches ; raison écrite pour les copies, le téléchargement et Kazo Paint.
 - [x] Exemple dans la fenêtre d'exemple.
 - [x] Tests SDK, analyseur, OS et worker, apps.
 - [x] Documentation, ADR 0140, index.

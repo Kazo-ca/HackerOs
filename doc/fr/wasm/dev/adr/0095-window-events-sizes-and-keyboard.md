@@ -17,11 +17,11 @@ est verrouillé, plus un jeu de remplacement toujours actif.
 
 ## Contexte
 
-- `WindowRuntime` (`Platform/HackerOs.Windowing.Core/WindowRuntime.cs`) produit
+- `WindowRuntime` (`Platform/Kazo.Os.Windowing.Core/WindowRuntime.cs`) produit
   déjà les événements `WindowFocused`, `WindowResized`, `WindowVisualStateChanged`
   (Normal, Minimized, Maximized), mais seuls le bureau, la barre des tâches et la
   surface de fenêtre s'y abonnent, pour se redessiner. Aucune app ne les reçoit.
-- `WindowLaunchCoordinator` (`Platform/HackerOs.Platform.Blazor/Windows/WindowLaunchCoordinator.cs:73-77`)
+- `WindowLaunchCoordinator` (`Platform/Kazo.Os.Platform.Blazor/Windows/WindowLaunchCoordinator.cs:73-77`)
   ouvre toute fenêtre en 800×560 avec un minimum de 360×240, sans maximum. Ni
   `AppDefinition`, ni `AppManifest`, ni `manifest.schema.v1.json` n'ont de champ
   de taille.
@@ -48,7 +48,7 @@ la fenêtre :
 
 - `HackWindowState` (`Normal`, `Minimized`, `Maximized`) et `HackWindowSize`
   (largeur et hauteur de la zone cliente en pixels CSS) sont des types du SDK
-  (`HackerOs.AppSdk.Blazor`), jamais les types de `HackerOs.Windowing.*`
+  (`Kazo.Os.AppSdk.Blazor`), jamais les types de `Kazo.Os.Windowing.*`
   (ADR 0055).
 - Chaque crochet a sa variante `…Async`. Une exception dans un crochet est
   journalisée dans `/var/log/apps/<appId>.log` et n'empêche pas la transition :

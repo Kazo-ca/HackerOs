@@ -8,7 +8,7 @@ This is the entry point for a cross-cutting design spanning two related addition
 
 1. **`FileView`** — a single, reusable Razor control for displaying and manipulating virtual-filesystem
    contents (Tree / Details / Icons), shared by every host that needs to show files: today the
-   `HackerOs.Apps.FileExplorer` window app, and in a future phase the Desktop background itself.
+   `Kazo.Os.Apps.FileExplorer` window app, and in a future phase the Desktop background itself.
 2. **Topic messaging** — an extension of the existing `IEventBus`/`IAppEventGateway` pub/sub system to
    support named, namespaced topics; emitter authorization (closing the gap where any app can currently
    publish any event type); shared channels with optional per-channel security restrictions; and a
@@ -26,7 +26,7 @@ is built on the same typed-event conventions the messaging system formalizes.
 | --- | --- |
 | [`FileViewControl.md`](Global-FileView-And-MessagingSystem/FileViewControl.md) | Full functional and API specification of the `FileView` control: view modes, inline rename, drag & drop, shell icon abstraction, cancelable events, context-menu customization, external scripting surface. |
 | [`MessagingSystem.md`](Global-FileView-And-MessagingSystem/MessagingSystem.md) | Topic naming, emitter authorization, shared channels with capability-based security, and the filesystem-watch API built on top. |
-| [`integrationPlan.md`](Global-FileView-And-MessagingSystem/integrationPlan.md) | Phased, checklist-style implementation plan (matching this repo's `docs/integration-task-list.md` conventions), ending with migrating `HackerOs.Apps.FileExplorer` onto `FileView`, declaring directory-open file association, and adding a background `RenderFragment` slot to `DesktopArea`/`DesktopShell`. |
+| [`integrationPlan.md`](Global-FileView-And-MessagingSystem/integrationPlan.md) | Phased, checklist-style implementation plan (matching this repo's `docs/integration-task-list.md` conventions), ending with migrating `Kazo.Os.Apps.FileExplorer` onto `FileView`, declaring directory-open file association, and adding a background `RenderFragment` slot to `DesktopArea`/`DesktopShell`. |
 
 ## Motivating example
 
@@ -59,22 +59,22 @@ specified in [`FileViewControl.md`](Global-FileView-And-MessagingSystem/FileView
 
 Today (as of this writing):
 
-- `Apps/System/HackerOs.Apps.FileExplorer/FileExplorerWindow.razor` implements Details and Grid views,
+- `Apps/System/Kazo.Os.Apps.FileExplorer/FileExplorerWindow.razor` implements Details and Grid views,
   file operations, and its context menu **inline**, in one ~1000-line file, with no reusable control
   boundary. There is no Tree view. Renaming uses a boxed prompt/dialog flow, not inline label-to-textbox
   editing. Drag & drop is entirely unimplemented (only unused payload record types exist in
-  `Shared/HackerOs.AppSdk/DragDrop/VirtualFileDragPayload.cs`).
+  `Shared/Kazo.Os.AppSdk/DragDrop/VirtualFileDragPayload.cs`).
 - Icons are drawn per-extension in hardcoded `if`/`switch` logic against the vector icon system
-  (`HackerOs.AppSdk.Icons`); there is no injectable, per-host-replaceable icon resolution service.
+  (`Kazo.Os.AppSdk.Icons`); there is no injectable, per-host-replaceable icon resolution service.
 - There is no reusable `ContextMenu` component and no per-file-type menu extension point.
-- `Platform/HackerOs.Platform.Core/Events/InMemoryEventBus.cs` (`IEventBus`) lets **any** subscriber of
+- `Platform/Kazo.Os.Platform.Core/Events/InMemoryEventBus.cs` (`IEventBus`) lets **any** subscriber of
   `IAppEventGateway` publish **any** event type, including platform-trusted lifecycle events such as
   `SessionLoggedOutEvent` or `ProcessStateChangedEvent` — there is no ownership or authorization check on
   `Publish<TEvent>`. This was confirmed as a real concern to close, not just harden defensively.
 - The filesystem gateway (`IAppFileSystemGateway`) has no change-notification API at all; today
   `FileExplorerWindow` reloads its own directory listing after its own mutations and otherwise has no way
   to learn about changes made by another app or process.
-- `Platform/HackerOs.Windowing.Blazor/DesktopArea.razor` has no rendering slot above the background and
+- `Platform/Kazo.Os.Windowing.Blazor/DesktopArea.razor` has no rendering slot above the background and
   below the window layer; only `WindowContent` (per-window) exists today.
 
 ## Key decisions already made
@@ -91,7 +91,7 @@ design choice in them:
 3. **Icon retrieval "is the Shell's responsibility"**: means an injectable **Platform Shell icon
    service** (`IShellIconProvider`), not literal host-OS icon extraction — HackerOS has no such thing
    today and none is being added. The service must support both the existing vector icon system
-   (Lucide/Bootstrap/Font Awesome/Simple Icons via `HackerOs.AppSdk.Icons`) and PNG/raster images, behind
+   (Lucide/Bootstrap/Font Awesome/Simple Icons via `Kazo.Os.AppSdk.Icons`) and PNG/raster images, behind
    one `ShellIconDescriptor` type. See
    [`FileViewControl.md`](Global-FileView-And-MessagingSystem/FileViewControl.md#icon-resolution-ishelliconprovider).
 4. **`DesktopArea`/`DesktopShell` change is infrastructure only**: this task adds a generic

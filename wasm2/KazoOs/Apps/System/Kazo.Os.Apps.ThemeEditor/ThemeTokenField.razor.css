@@ -1,0 +1,108 @@
+.token-field {
+    display: grid;
+    gap: 0.3rem;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--kos-border-subtle, #27343a);
+    border-left: 3px solid var(--kos-border-subtle, #27343a);
+    border-radius: var(--kos-radius-sm, 0.25rem);
+    background: var(--kos-bg-surface, #151c20);
+}
+
+.token-field.is-set {
+    border-left-color: var(--kos-accent, #42d392);
+}
+
+.token-field.has-error {
+    border-left-color: var(--kos-error, #ff8f87);
+}
+
+.token-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+.token-label {
+    font-weight: 600;
+    color: var(--kos-text-primary, #f4f7f8);
+}
+
+.token-name {
+    font-family: var(--kos-font-mono, monospace);
+    font-size: 0.78rem;
+    color: var(--kos-accent, #42d392);
+}
+
+.token-type {
+    margin-left: auto;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--kos-text-muted, #6f838d);
+}
+
+.token-inputs {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+}
+
+.token-swatch {
+    width: 2.2rem;
+    height: 2rem;
+    padding: 0.1rem;
+    border: 1px solid var(--kos-border, #3a4b53);
+    border-radius: var(--kos-radius-sm, 0.25rem);
+    background: var(--kos-bg-base, #101417);
+    cursor: pointer;
+}
+
+.token-input {
+    flex: 1;
+    min-width: 0;
+    height: 2rem;
+    padding: 0 0.55rem;
+    border: 1px solid var(--kos-border, #3a4b53);
+    border-radius: var(--kos-radius-sm, 0.25rem);
+    background: var(--kos-bg-base, #101417);
+    color: var(--kos-text-primary, #f4f7f8);
+    font-family: var(--kos-font-mono, monospace);
+    font-size: 0.82rem;
+}
+
+.token-input:focus-visible,
+.token-swatch:focus-visible,
+.token-reset:focus-visible {
+    outline: 2px solid var(--kos-focus-ring, #42d392);
+    outline-offset: 1px;
+}
+
+.has-error .token-input {
+    border-color: var(--kos-error, #ff8f87);
+}
+
+.token-reset {
+    height: 2rem;
+    padding: 0 0.6rem;
+    border: 1px solid var(--kos-border, #3a4b53);
+    border-radius: var(--kos-radius-sm, 0.25rem);
+    background: var(--kos-bg-elevated, #1b252a);
+    color: var(--kos-text-secondary, #a8bac4);
+    cursor: pointer;
+}
+
+.token-reset:disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+.token-help {
+    margin: 0;
+    font-size: 0.78rem;
+    color: var(--kos-text-secondary, #a8bac4);
+}
+
+.token-error {
+    color: var(--kos-error, #ff8f87);
+}

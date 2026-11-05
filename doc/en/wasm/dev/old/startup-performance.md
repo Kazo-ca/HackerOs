@@ -53,13 +53,13 @@ builds.
 Use Debug when C# breakpoints are required:
 
 ```powershell
-dotnet run --project OS/HackerOs.Ecosystem/HackerOs.Ecosystem.csproj --configuration Debug --launch-profile http
+dotnet run --project OS/Kazo.Os.Ecosystem/Kazo.Os.Ecosystem.csproj --configuration Debug --launch-profile http
 ```
 
 Use Release when evaluating user-perceived startup performance:
 
 ```powershell
-dotnet run --project OS/HackerOs.Ecosystem/HackerOs.Ecosystem.csproj --configuration Release --launch-profile http
+dotnet run --project OS/Kazo.Os.Ecosystem/Kazo.Os.Ecosystem.csproj --configuration Release --launch-profile http
 ```
 
 Release publish trimming and compression make it the representative deployment

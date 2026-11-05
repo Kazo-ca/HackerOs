@@ -1,0 +1,15 @@
+@inherits KazoLayout
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@(ViewData.Title ?? "Test site")</title>
+    <link rel="stylesheet" href="@Url.Content("~/css/site.css")" />
+</head>
+<body>
+    <nav><KazoLink Action="Index" Controller="Pages" class="brand">Home</KazoLink></nav>
+    <main>@Body</main>
+    <footer>@Request.Path</footer>
+    <KazoRenderSection Name="Scripts" Required="false" />
+</body>
+</html>

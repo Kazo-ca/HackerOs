@@ -2,18 +2,18 @@
 
 # Terminal emulator (xterm.js)
 
-The contract on the side of apps and commands (`TerminalPanel`, `IHackTerminal`, password reading without echo, full-screen mode) is in [`terminal-api.md`](../framework/terminal-api.md).
+The contract on the side of apps and commands (`TerminalPanel`, `IKazoTerminal`, password reading without echo, full-screen mode) is in [`terminal-api.md`](../framework/terminal-api.md).
 
 ## Purpose
 
-`TerminalPanel` (`Shared/HackerOs.AppSdk.Terminal`) displays its shell in a real
+`TerminalPanel` (`Shared/Kazo.Os.AppSdk.Terminal`) displays its shell in a real
 character-grid terminal, xterm.js, the library of the legacy version
 (ADR 0061). Commands can write ANSI colors, `nano` uses the alternate screen,
 and the rendering looks like a Linux terminal.
 
-The console (`Apps/System/HackerOs.Apps.Terminal`) uses `TerminalTabs`. The code
+The console (`Apps/System/Kazo.Os.Apps.Terminal`) uses `TerminalTabs`. The code
 editor no longer uses `TerminalPanel` directly: it embeds the terminal that the
-Terminal app registers for the `hackeros.terminal` contract (`TerminalEmbed`,
+Terminal app registers for the `kazoos.terminal` contract (`TerminalEmbed`,
 ADR 0063, [`embedded-components.md`](../framework/embedded-components.md)).
 
 ## Architecture
@@ -23,13 +23,13 @@ clavier ─▶ xterm.js ──onData("\x1b[A")──▶ TerminalPanel.OnTerminal
                                           └─ TerminalInputDecoder → TerminalKeyEvent
                                               ├─ commande plein écran active → TerminalFullScreenSession
                                               ├─ Ctrl+C pendant une commande → annulation, « ^C »
-                                              └─ file de frappe → TerminalLineEditor / IHackShell
+                                              └─ file de frappe → TerminalLineEditor / IKazoShell
 commande ─▶ TerminalOutputWriter ─▶ TerminalPanel.Write ("\n" → "\r\n") ─▶ xterm.js.write
 ```
 
 | File | Role |
 |---|---|
-| `TerminalPanel.xterm.entry.js` | Bundle entry point: creates the `Terminal`, the `FitAddon`, the theme (`--hos-*` tokens), the key handler (copy, paste, tab shortcuts) and the size observer. |
+| `TerminalPanel.xterm.entry.js` | Bundle entry point: creates the `Terminal`, the `FitAddon`, the theme (`--kos-*` tokens), the key handler (copy, paste, tab shortcuts) and the size observer. |
 | `build.mjs`, `package.json`, `package-lock.json` | Build `wwwroot/xterm/xterm.bundle.{js,css,LICENSE.txt}`. |
 | `TerminalPanel.razor.js` | Component module: `mountTerminal(host, dotNet, options)` returns `write`, `focus`, `dimensions`, `dispose`. |
 | `TerminalPanel.razor` | Line discipline: key routing, line execution, prompt, outputs, alternate screen. |
@@ -40,9 +40,9 @@ commande ─▶ TerminalOutputWriter ─▶ TerminalPanel.Write ("\n" → "\r\n"
 ### Theme
 
 The background, text and cursor come from the design tokens read on the host
-element (`--hos-bg-base`, `--hos-text-primary`, `--hos-accent`); the font comes
-from `--hos-font-mono` (`0.875rem`, 14 px at 100 %). The 16-color ANSI palette is
-the legacy one, with HackerOS's accent green. The frame style is in
+element (`--kos-bg-base`, `--kos-text-primary`, `--kos-accent`); the font comes
+from `--kos-font-mono` (`0.875rem`, 14 px at 100 %). The 16-color ANSI palette is
+the legacy one, with Kazo OS's accent green. The frame style is in
 `TerminalPanel.razor.css`; the grid itself is drawn by xterm.js.
 
 Accessibility ([`accessibility.md`](accessibility.md), ADR 0105): `TerminalPanel` reads
@@ -70,11 +70,11 @@ reduced motion, the cursor does not blink. `applyAccessibility` (object returned
 Copy raises a real `copy` event (`document.execCommand("copy")`) instead of
 writing `navigator.clipboard`: the OS clipboard bridge receives it as a native
 copy (origin `GuestNative`) and sends it to the real machine only if
-`/etc/hackeros/clipboard.config` allows it ([`clipboard.md`](clipboard.md),
+`/etc/kazoos/clipboard.config` allows it ([`clipboard.md`](clipboard.md),
 ADR 0065).
 
 Chrome reserves Ctrl+W, Ctrl+N and Ctrl+T (close tab, new window, new tab)
-as long as HackerOS is not installed as a PWA: these keys then do not reach the
+as long as Kazo OS is not installed as a PWA: these keys then do not reach the
 terminal.
 
 While a line runs, keys go to the **standard input** of its commands
@@ -87,7 +87,7 @@ during the wait runs `ls` afterwards, as on Linux.
 
 An unfinished command (`for f in *; do` + Enter, open quote, trailing `|`,
 here-document) displays bash's continuation prompt `>` (`PS2`): the terminal
-asks the shell through `IHackShell.NeedsMoreInput`, accumulates the lines, then
+asks the shell through `IKazoShell.NeedsMoreInput`, accumulates the lines, then
 executes them together; Ctrl+C abandons. The history keeps a single line
 (`TerminalHistory.ToSingleLine`: `for f in *; do echo $f; done`).
 
@@ -106,7 +106,7 @@ command, and a resize sends `TerminalKey.Resize`.
 ## Decisions
 
 - **xterm.js is only a screen and a keyboard.** Line editing, completion and
-  history stay in C#: the shell and its contract (`IHackShell`) do not change,
+  history stay in C#: the shell and its contract (`IKazoShell`) do not change,
   and the behavior is tested without a browser.
 - **Versioned bundle**, like Monaco: no npm in the .NET build.
   `package.json` and `package-lock.json` are removed from the published content
@@ -128,7 +128,7 @@ command, and a resize sends `TerminalKey.Resize`.
 ## Updating xterm.js
 
 ```bash
-cd wasm2/HackerOs/Shared/HackerOs.AppSdk.Terminal
+cd wasm2/KazoOs/Shared/Kazo.Os.AppSdk.Terminal
 # modifier les versions dans package.json
 npm install && npm run build
 ```
@@ -137,11 +137,11 @@ Then commit `package-lock.json` and `wwwroot/xterm/`.
 
 ## Tests
 
-- `Tests/HackerOs.AppSdk.Terminal.Tests/TerminalInputDecoderTests.cs`
-- `Tests/HackerOs.AppSdk.Terminal.Tests/TerminalLineEditorTests.cs`
-- `Tests/HackerOs.AppSdk.Terminal.Tests/TerminalAnsiTests.cs`
-- `Tests/HackerOs.AppSdk.Terminal.Tests/TerminalInputReaderTests.cs` (standard input)
-- `Tests/HackerOs.Commands.Nano.Tests/NanoCommandTests.cs` (pre-filled Write Out, cut/paste, search, horizontal scrolling)
+- `Tests/Kazo.Os.AppSdk.Terminal.Tests/TerminalInputDecoderTests.cs`
+- `Tests/Kazo.Os.AppSdk.Terminal.Tests/TerminalLineEditorTests.cs`
+- `Tests/Kazo.Os.AppSdk.Terminal.Tests/TerminalAnsiTests.cs`
+- `Tests/Kazo.Os.AppSdk.Terminal.Tests/TerminalInputReaderTests.cs` (standard input)
+- `Tests/Kazo.Os.Commands.Nano.Tests/NanoCommandTests.cs` (pre-filled Write Out, cut/paste, search, horizontal scrolling)
 - `VirtualScreen.cs` (in the same project): a small character-grid screen that
   applies the written sequences, to check where the text and cursor end up
   (wrapping, return to the start of the prompt block, frames).

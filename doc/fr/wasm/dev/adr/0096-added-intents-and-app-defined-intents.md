@@ -14,7 +14,7 @@ Accepté le 2026-10-17 (chantier `v3/1-adr`, pour le chantier `v3/4-intents`).
 
 ## Contexte
 
-`AppIntentDispatcher` (`Platform/HackerOs.Platform.Core/Intents/AppIntentDispatcher.cs:160-169`)
+`AppIntentDispatcher` (`Platform/Kazo.Os.Platform.Core/Intents/AppIntentDispatcher.cs:160-169`)
 traite `LaunchApp`, `OpenFile` et `ExecuteCommand`. Deux intents existent mais ne
 font rien : `RevealFileIntent` (ligne 166) et `ShowAppSettingsIntent` (ligne 297,
 qui valide la cible et répond « envoyé »). Il n'y a pas d'intent pour modifier un
@@ -65,7 +65,7 @@ commande `xdg-open`.
 - `IAppIntentGateway.OpenUriAsync` et `HackApps.OpenUriAsync` l'exposent ;
   `HackBrowser.OpenAsync` reste, pour une app qui veut précisément le navigateur
   de HackerOS.
-- Nouvelle commande `xdg-open <chemin|uri>` dans `HackerOs.Commands` : un
+- Nouvelle commande `xdg-open <chemin|uri>` dans `Kazo.Os.Commands` : un
   chemin donne `OpenFile` (un dossier s'ouvre dans son gestionnaire, comme sous
   Linux), une URI donne `OpenUri`. Code de sortie 0 si
   l'intent est envoyé, 3 sans gestionnaire, 4 si le fichier n'existe pas (codes

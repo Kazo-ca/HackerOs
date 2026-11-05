@@ -7,7 +7,7 @@
 Accepted on 2026-10-16 (proposed the same day, then validated by Benoit with the
 questionnaire of section 4 of the plan).
 
-- **Plan phase:** web phase ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Plan phase:** web phase ([`asp-kazo-plan.md`](../plans/asp-kazo-plan.md)).
 - **Completes:** ADR 0055 and 0056 §6 (network through the SDK), ADR 0057 (`/proc/net`).
 
 ## Context
@@ -30,7 +30,7 @@ the text, `ContentBytes` the bytes. `curl` writes the raw body.
 ### 2. `HackHttpListener`
 
 Modeled on `System.Net.HttpListener` (`Prefixes`, `Start`, `GetContextAsync`,
-`HackHttpListenerContext.Request/Response`), in `HackerOs.AppSdk.Net`.
+`HackHttpListenerContext.Request/Response`), in `Kazo.Os.AppSdk.Net`.
 
 - Capability `network.listen` (normal). A port < 1024 requires
   `network.listen.privileged` (dangerous, administrator approval), like
@@ -83,5 +83,5 @@ of the answer.
   `hackdns` then the port table before the simulated network.
 - The byte counting of `/proc/net/dev` (ADR 0057) also counts local
   traffic, on `lo`.
-- The contracts of `HackerOs.Simulation.Abstractions` change: existing sites
+- The contracts of `Kazo.Os.Simulation.Abstractions` change: existing sites
   are adapted in the same work item.

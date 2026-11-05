@@ -19,10 +19,10 @@ son propre écran, la fenêtre se déplace comme d'habitude.
 
 | Fichier | Rôle |
 | --- | --- |
-| `Platform/HackerOs.Windowing.Blazor/WindowChrome.razor.js` | Apprend où la page de chaque fenêtre d'écran commence sur le bureau physique, trouve l'écran sous le pointeur à chaque mouvement d'un déplacement, dessine et retire le contour, et au relâchement appelle `ReportScreenDropAsync` au lieu du déplacement normal. Tout est dans ce seul module : des tests le chargent seul depuis une URL `data:`, où un import relatif échoue. |
-| `Platform/HackerOs.Windowing.Blazor/WindowChrome.razor` | `ReportScreenDropAsync(écran, x, y)` : `MoveWindowToDisplayCommand` puis `MoveWindowCommand`. |
-| `Platform/HackerOs.Windowing.Blazor/DesktopArea.razor.css` | Style du contour `.window-drop-preview`. |
-| `Platform/HackerOs.Platform.Blazor/Shell/DesktopShell.razor` | Ignore un dépôt sur un écran déjà fermé. |
+| `Platform/Kazo.Os.Windowing.Blazor/WindowChrome.razor.js` | Apprend où la page de chaque fenêtre d'écran commence sur le bureau physique, trouve l'écran sous le pointeur à chaque mouvement d'un déplacement, dessine et retire le contour, et au relâchement appelle `ReportScreenDropAsync` au lieu du déplacement normal. Tout est dans ce seul module : des tests le chargent seul depuis une URL `data:`, où un import relatif échoue. |
+| `Platform/Kazo.Os.Windowing.Blazor/WindowChrome.razor` | `ReportScreenDropAsync(écran, x, y)` : `MoveWindowToDisplayCommand` puis `MoveWindowCommand`. |
+| `Platform/Kazo.Os.Windowing.Blazor/DesktopArea.razor.css` | Style du contour `.window-drop-preview`. |
+| `Platform/Kazo.Os.Platform.Blazor/Shell/DesktopShell.razor` | Ignore un dépôt sur un écran déjà fermé. |
 
 ## 3. Trouver l'écran sous le pointeur
 
@@ -56,14 +56,14 @@ pointermove (capturé par la barre de titre, dans la fenêtre du navigateur d'or
 
 ## 5. Tests
 
-- `Tests/HackerOs.Platform.Blazor.Tests/WindowPointerGeometryTests.cs` : `ReportScreenDropAsync` envoie le
+- `Tests/Kazo.Os.Platform.Blazor.Tests/WindowPointerGeometryTests.cs` : `ReportScreenDropAsync` envoie le
   changement d'écran puis la position ; numéro d'écran invalide, valeur non finie ou fenêtre agrandie :
   aucune commande.
-- `Tests/HackerOs.E2E.Tests/IndexedDbBrowserContractTests.ScreenDrag.cs`, scénario
+- `Tests/Kazo.Os.E2E.Tests/IndexedDbBrowserContractTests.ScreenDrag.cs`, scénario
   `?scenario=screen-portal` : la fenêtre glissée sur l'écran 2 y passe sans être recréée, au point
   de dépôt (à 2 px près), reste vivante, ne change pas d'écran relâchée entre les écrans, et revient
   sur l'écran 1 de la même façon.
-- `Tests/HackerOs.UI.E2E.Tests/ScreenServiceTests.cs`, Chromium réel : l'écran 2 restauré, l'Éditeur
+- `Tests/Kazo.Os.UI.E2E.Tests/ScreenServiceTests.cs`, Chromium réel : l'écran 2 restauré, l'Éditeur
   de texte glissé hors de l'onglet principal vers un point de l'écran 2 ; l'écran 2 montre le contour
   pendant le geste, puis la fenêtre. Le test calcule le point à partir des origines des deux pages
   (en headless, les fenêtres se chevauchent : le point choisi est dans l'écran 2 et hors de l'onglet).

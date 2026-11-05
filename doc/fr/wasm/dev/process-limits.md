@@ -14,7 +14,7 @@ Ce document couvre la mise en œuvre des limites de processus : tables, contrôl
 | `ResourceLimitKind`, `ResourceLimit`, `ProcessResourceLimits`, `ResourceLimitChangeResult`, `ProcessLimitExceededException` | Simulation Abstractions | Contrat. `ResourceLimit.Unlimited` vaut `long.MaxValue`. |
 | `IProcessResourceLimitTable` / `InMemoryProcessResourceLimitTable` | Abstractions / Platform.Core | Limites de chaque processus vivant, à côté de `ProcessRecord` (ADR 0139 §1). Règles de `setrlimit` : baisser toujours, monter la souple jusqu'à la dure, monter la dure en root élevé seulement. Désactivée par le réglage de l'hôte. |
 | `IProcessFileDescriptorTable` / `InMemoryProcessFileDescriptorTable` | Abstractions / Platform.Core | Descripteurs ouverts : 0, 1, 2 réservés, plus petit numéro libre à partir de 3, `EMFILE` à la limite souple. |
-| `InMemoryProcessManager` | Platform.Core | Crée l'entrée au `Start` (parent, puis session, puis noyau), vérifie `NPROC` (`EAGAIN`), retire les entrées à la fin. Exemptés : `ResourceLimitExempt` (root élevé) et la portée système (`hackeros-svc`). |
+| `InMemoryProcessManager` | Platform.Core | Crée l'entrée au `Start` (parent, puis session, puis noyau), vérifie `NPROC` (`EAGAIN`), retire les entrées à la fin. Exemptés : `ResourceLimitExempt` (root élevé) et la portée système (`kazoos-svc`). |
 | `ResourceLimitEnforcer` | Platform.Core | Tous les quarts de seconde simulée : dure du CPU → `SIGKILL`, souple → `SIGXCPU` (demande d'arrêt de l'ADR 0069, raison `CpuLimitExceeded`), mémoire → `SIGKILL` (`MemoryLimitExceeded`). |
 | `ResourceLimitsConfiguration` / `LoginResourceLimitsProvider` | Platform.Core | Lecture façon `pam_limits` de `limits.conf` et `limits.d/*.conf`, au premier processus racine de la session. Lignes invalides dans `/var/log/auth.log`. |
 | `AppFileSystemGateway` (`OpenDescriptorAsync`, lectures) et `AppProcessGateway.SetResourceLimitAsync` | Platform.Core | Prennent un descripteur par lecture ou flux d'écriture ; changent une limite (`process.manage` pour un autre processus). |
@@ -22,24 +22,24 @@ Ce document couvre la mise en œuvre des limites de processus : tables, contrôl
 | Opérations `fs.fdopen`, `fs.fdclose`, `proc.rlimit` | WorkerHost | Les mêmes appels depuis un worker ([`worker-processes.md`](worker-processes.md)). |
 | `ulimit` (built-in) | Platform.Core, `ShellInterpreter.Ulimit.cs` | Lit et change les limites du processus du shell. |
 | `prlimit` | Commands | Lit et change les limites d'un processus. |
-| `HackProcess.GetResourceLimitsAsync` / `SetResourceLimitAsync`, `HackResourceLimits` | AppSdk | API publique (SDK 1.2, `PublicAPI.Unshipped.txt`). |
-| `AddHackerOsResourceLimits(configuration)` | Ecosystem.Host | Lit `HackerOs:ResourceLimits:Enabled` pour l'hôte. |
+| `KazoProcess.GetResourceLimitsAsync` / `SetResourceLimitAsync`, `KazoResourceLimits` | AppSdk | API publique (SDK 1.2, `PublicAPI.Unshipped.txt`). |
+| `AddKazoOsResourceLimits(configuration)` | Ecosystem.Host | Lit `KazoOs:ResourceLimits:Enabled` pour l'hôte. |
 
 ## Usage
 
 ### Shell
 
 ```text
-alice@hackeros:~$ ulimit -a
+alice@kazoos:~$ ulimit -a
 file size                   (blocks, -f) unlimited
 max memory size             (kbytes, -m) unlimited
 open files                          (-n) 1024
 cpu time                   (seconds, -t) unlimited
 max user processes                  (-u) 4096
-alice@hackeros:~$ ulimit -S -n 512      # souple seulement
-alice@hackeros:~$ ulimit -Hn 600000
+alice@kazoos:~$ ulimit -S -n 512      # souple seulement
+alice@kazoos:~$ ulimit -Hn 600000
 hsh: ulimit: open files: cannot modify limit: Operation not permitted
-alice@hackeros:~$ sh -c 'ulimit -S -t 1; stress --yield'; echo "exit=$?"
+alice@kazoos:~$ sh -c 'ulimit -S -t 1; stress --yield'; echo "exit=$?"
 CPU time limit exceeded
 exit=152
 ```
@@ -53,10 +53,10 @@ exit=152
 ### `prlimit`
 
 ```text
-alice@hackeros:~$ prlimit --pid 7 --nofile
+alice@kazoos:~$ prlimit --pid 7 --nofile
 RESOURCE DESCRIPTION              SOFT   HARD UNITS
 NOFILE   max number of open files 1024 524288 files
-alice@hackeros:~$ prlimit --pid 7 --nofile=100:200 --nproc=50
+alice@kazoos:~$ prlimit --pid 7 --nofile=100:200 --nproc=50
 ```
 
 Options : `--pid`/`-p`, `--cpu`/`-t`, `--rss`/`-m`, `--nofile`/`-n`,
@@ -84,7 +84,7 @@ alice      hard  cpu      60
 ### Hôte
 
 ```json
-{ "HackerOs": { "ResourceLimits": { "Enabled": true } } }
+{ "KazoOs": { "ResourceLimits": { "Enabled": true } } }
 ```
 
 `false` coupe toutes les limites : `ulimit` ne change plus rien
@@ -96,20 +96,20 @@ alice      hard  cpu      60
 - Un seul `SIGXCPU`, puis le délai de grâce de l'ADR 0069 ; la dure est
   vérifiée en premier, donc `ulimit -t 1` donne `SIGKILL` comme sous Linux.
 - `NPROC` vérifié par le gestionnaire au lancement ; root élevé et
-  `hackeros-svc` exemptés.
+  `kazoos-svc` exemptés.
 - `limits.conf` lu une fois par session.
 
 Détails : ADR 0139.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Processes/InMemoryProcessManagerTests.Limits.cs`
+- `Tests/Kazo.Os.Platform.Core.Tests/Processes/InMemoryProcessManagerTests.Limits.cs`
   et `ResourceLimitsConfigurationTests.cs` : tables, règles de `setrlimit`,
   limites coupées, exemptions, descripteurs, `pam_limits`, contrôleur.
-- `Tests/HackerOs.Platform.WorkerHost.Tests/ProcessLimitsTests.cs` : de bout en
+- `Tests/Kazo.Os.Platform.WorkerHost.Tests/ProcessLimitsTests.cs` : de bout en
   bout, sur le fil principal et en worker (`ulimit`, `prlimit`,
   `/proc/self/limits`, `EMFILE`, `EAGAIN`, sorties 152 et 137).
-- `Tests/HackerOs.AppSdk.Tests/HackResourceLimitsTests.cs` : lecture de
+- `Tests/Kazo.Os.AppSdk.Tests/KazoResourceLimitsTests.cs` : lecture de
   `/proc/<pid>/limits`.
 - `CommandParityTests` : `prlimit` en worker et sur le fil principal.
 - `build/verify-hosts.sh` : étape des limites sur les trois hôtes et passage
@@ -126,5 +126,5 @@ Détails : ADR 0139.
 - [x] Built-in `ulimit`, commande `prlimit`, messages en anglais et en français.
 - [x] Opérations du worker (`fs.fdopen`, `fs.fdclose`, `proc.rlimit`).
 - [x] API du SDK (`PublicAPI.Unshipped.txt`).
-- [x] Réglage `HackerOs:ResourceLimits:Enabled` sur les trois hôtes.
+- [x] Réglage `KazoOs:ResourceLimits:Enabled` sur les trois hôtes.
 - [x] Tests, `verify-hosts.sh`, ADR 0139, documentation et index.

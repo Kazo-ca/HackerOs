@@ -6,7 +6,7 @@
 
 Accepted on 2026-10-30. Benoit's request of 2026-10-30 (thread "Déplacer Power
 dans le menu Démarrer"). Tracking issue for "Switch user":
-[#290](https://github.com/Kazo-ca/HackerOs/issues/290).
+[#290](https://github.com/Kazo-ca/Os/issues/290).
 
 - **Complements:** [ADR 0187](0187-guest-start-and-sign-in-credits.md) (guest
   account and how the Start menu shows it),
@@ -39,7 +39,7 @@ dans le menu Démarrer"). Tracking issue for "Switch user":
   the button), then the Start menu.
 - On a small screen the button stays visible, across the whole column.
 - The HackerOS taskbar no longer has a session button. The
-  `HackerOs.Taskbar.Blazor` package keeps `ITaskbarSessionCommands` for other
+  `Kazo.Os.Taskbar.Blazor` package keeps `ITaskbarSessionCommands` for other
   hosts.
 - The user stays shown at the top of the Start menu, as before, for every
   account.
@@ -74,7 +74,7 @@ the session's apps, ends the session and opens the sign-in screen.
 - Doing it needs several sessions open at once, which the OS cannot do:
   `ISessionService`, windows, processes, the app lifecycle and the live
   preferences all assume a single session. The work is listed in issue
-  [#290](https://github.com/Kazo-ca/HackerOs/issues/290) (label `TODO`).
+  [#290](https://github.com/Kazo-ca/Os/issues/290) (label `TODO`).
 
 ### 5. Themes
 

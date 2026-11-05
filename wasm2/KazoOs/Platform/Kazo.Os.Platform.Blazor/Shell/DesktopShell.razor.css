@@ -1,0 +1,31 @@
+.desktop-shell {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    background: var(--kos-desktop-background, var(--kos-bg-base, #101417));
+    color: var(--kos-text-primary, #f4f7f8);
+    font-family: var(--kos-font-ui, system-ui, sans-serif);
+}
+
+.desktop-workspace {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+}
+
+.lazy-launch-error {
+    position: absolute;
+    right: 1rem;
+    bottom: calc(var(--kos-taskbar-height, 2.75rem) + 1.75rem);
+    z-index: 5000;
+    max-width: min(32rem, calc(100vw - 2rem));
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--kos-error, #ff8f87);
+    border-radius: var(--kos-radius-md, 0.45rem);
+    background: color-mix(in srgb, var(--kos-error, #ff8f87) 16%, var(--kos-bg-elevated, #1b252a));
+    color: var(--kos-text-primary, #f4f7f8);
+    box-shadow: 0 0 1.25rem color-mix(in srgb, var(--kos-error, #ff8f87) 24%, transparent);
+}

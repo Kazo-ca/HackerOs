@@ -1,0 +1,192 @@
+@using Kazo.Os.AppSdk.Blazor
+@using Kazo.Os.AppSdk.Blazor.Files
+@using Kazo.Os.AppSdk.Files
+@using Kazo.Os.AppSdk.Icons
+@using Kazo.Os.Apps.FileExplorer.FileControl
+@using Microsoft.AspNetCore.Components.Forms
+@inherits FileExplorerWindow
+
+@*
+    The File Explorer on a phone (ADR 0171): the same app, its state and its commands as FileExplorerWindow,
+    which it extends, with the layout of a phone's file manager. A top bar (back, folder name, search, menu),
+    the places as chips and the breadcrumb, the OS file control in a list or a grid where a tap opens, and at
+    the bottom either the actions on the selection, a "Paste here" bar or the "New" button. A long press
+    still opens the OS file menu as a sheet (ADR 0150 §6); the system Back button leaves the search, the
+    selection, then goes back to the previous folder.
+*@
+<div class="mobile-explorer @(_selecting ? "is-selecting" : null)">
+    <header class="mobile-appbar">
+        @if (_selecting)
+        {
+            <button type="button" class="appbar-btn" aria-label="@L["Mobile.EndSelection"]" title="@L["Mobile.EndSelection"]" @onclick="EndSelection">
+                <KazoIcon Library="IconLibrary.Lucide" Name="x" Size="22" />
+            </button>
+            <h1 class="appbar-title" aria-live="polite">@Strings.Plural(L, "Status.Selected", SelectedCount)</h1>
+            <button type="button" class="appbar-btn" aria-label="@L["Mobile.SelectAll"]" title="@L["Mobile.SelectAll"]" @onclick="SelectAll">
+                <KazoIcon Library="IconLibrary.Lucide" Name="list-checks" Size="22" />
+            </button>
+        }
+        else if (_searching)
+        {
+            <button type="button" class="appbar-btn" aria-label="@L["Mobile.CloseSearch"]" title="@L["Mobile.CloseSearch"]" @onclick="CloseSearch">
+                <KazoIcon Library="IconLibrary.Lucide" Name="arrow-left" Size="22" />
+            </button>
+            <input type="search" class="appbar-search" placeholder="@L["Search.Placeholder"]" aria-label="@L["Search.AriaLabel"]"
+                   @bind="_state.SearchQuery" @bind:event="oninput" @bind:after="OnSearchQueryChanged" />
+        }
+        else
+        {
+            <button type="button" class="appbar-btn" disabled="@(!CanGoBack)" aria-label="@L["Mobile.Back"]" title="@L["Mobile.Back"]" @onclick="GoBackAsync">
+                <KazoIcon Library="IconLibrary.Lucide" Name="arrow-left" Size="22" />
+            </button>
+            <h1 class="appbar-title">@FolderName</h1>
+            <button type="button" class="appbar-btn" disabled="@_showTrash" aria-label="@L["Mobile.Search"]" title="@L["Mobile.Search"]" @onclick="OpenSearch">
+                <KazoIcon Library="IconLibrary.Lucide" Name="search" Size="22" />
+            </button>
+            <button type="button" class="appbar-btn" aria-label="@L["Mobile.More"]" title="@L["Mobile.More"]"
+                    aria-expanded="@(_sheet == MobileSheet.Menu ? "true" : "false")" @onclick="() => OpenSheet(MobileSheet.Menu)">
+                <KazoIcon Library="IconLibrary.Lucide" Name="ellipsis-vertical" Size="22" />
+            </button>
+        }
+    </header>
+
+    <nav class="mobile-places" aria-label="@L["Mobile.Places"]">
+        <button type="button" class="place-chip @(!_showTrash && _state.CurrentPath == GetHomePath() ? "active" : null)" @onclick="NavigateHomeAsync">
+            <KazoIcon Library="IconLibrary.Lucide" Name="house" Size="16" /> <span>@L["Places.Home"]</span>
+        </button>
+        <button type="button" class="place-chip @(_showTrash ? "active" : null)" @onclick="ShowTrashAsync">
+            <KazoIcon Library="IconLibrary.Lucide" Name="trash-2" Size="16" /> <span>@L["Places.Trash"]</span>
+        </button>
+    </nav>
+
+    @if (_fileView is not null && !_showTrash)
+    {
+        <div class="mobile-breadcrumb">
+            <FileViewBreadcrumb Owner="_fileView" RootLabel="@L["Breadcrumb.Root"]" />
+        </div>
+    }
+
+    <main class="mobile-content">
+        @if (_showTrash)
+        {
+            <TrashView @ref="_trashView" Restored="OnTrashRestoredAsync" />
+        }
+
+        <div class="mobile-files @(_showTrash ? "hidden" : null)">
+            @* The explorer's own windows see inside the .zip files (ADR 0185 §6-9). *@
+            <CascadingValue Name="@ExplorerFileView.ArchiveBrowsingName" Value="true" IsFixed="true">
+                <KazoFileView InitialDirectory="@_initialDirectory.Value"
+                              Mode="ToContractMode(_state.ViewMode)"
+                              ModeChanged="OnModeChanged"
+                              OpenOnTap="true"
+                              Filter="_searchFilter"
+                              Navigated="OnMobileNavigated"
+                              SelectionChanged="OnMobileSelectionChanged"
+                              ContextMenuOpening="OnFileMenuOpeningAsync"
+                              ErrorOccurred="ReportError"
+                              ControllerChanged="OnMobileControllerChangedAsync" />
+            </CascadingValue>
+        </div>
+    </main>
+
+    @if (!_showTrash)
+    {
+        @if (SelectedCount > 0)
+        {
+            <footer class="mobile-actionbar">
+                <button type="button" class="action" disabled="@(!CanRun(KazoFileMenuItems.Copy))" @onclick="() => RunAsync(KazoFileMenuItems.Copy)">
+                    <KazoIcon Library="IconLibrary.Lucide" Name="copy" Size="20" /><span>@L["Toolbar.Copy"]</span>
+                </button>
+                <button type="button" class="action" disabled="@(!CanRun(KazoFileMenuItems.Cut))" @onclick="() => RunAsync(KazoFileMenuItems.Cut)">
+                    <KazoIcon Library="IconLibrary.Lucide" Name="scissors" Size="20" /><span>@L["Toolbar.Cut"]</span>
+                </button>
+                <button type="button" class="action" disabled="@(!CanRun(KazoFileMenuItems.Rename))" @onclick="() => RunAsync(KazoFileMenuItems.Rename)">
+                    <KazoIcon Library="IconLibrary.Lucide" Name="pencil" Size="20" /><span>@L["Toolbar.Rename"]</span>
+                </button>
+                <button type="button" class="action danger" disabled="@(!CanRun(KazoFileMenuItems.Delete))" @onclick="() => RunAsync(KazoFileMenuItems.Delete)">
+                    <KazoIcon Library="IconLibrary.Lucide" Name="trash-2" Size="20" /><span>@L["Toolbar.Delete"]</span>
+                </button>
+                <button type="button" class="action" aria-expanded="@(_sheet == MobileSheet.Selection ? "true" : "false")" @onclick="() => OpenSheet(MobileSheet.Selection)">
+                    <KazoIcon Library="IconLibrary.Lucide" Name="ellipsis" Size="20" /><span>@L["Mobile.More"]</span>
+                </button>
+            </footer>
+        }
+        else if (CanRun(KazoFileMenuItems.Paste))
+        {
+            <footer class="mobile-pastebar">
+                <button type="button" class="paste-btn" @onclick="() => RunAsync(KazoFileMenuItems.Paste)">
+                    <KazoIcon Library="IconLibrary.Lucide" Name="clipboard-paste" Size="20" /> <span>@L["Mobile.PasteHere"]</span>
+                </button>
+            </footer>
+        }
+        else
+        {
+            <button type="button" class="mobile-fab" aria-label="@L["Mobile.New"]" title="@L["Mobile.New"]"
+                    aria-expanded="@(_sheet == MobileSheet.New ? "true" : "false")" @onclick="() => OpenSheet(MobileSheet.New)">
+                <KazoIcon Library="IconLibrary.Lucide" Name="plus" Size="26" />
+            </button>
+        }
+    }
+
+    <InputFile id="@_uploadInputId" OnChange="UploadFilesAsync" multiple hidden />
+
+    @if (_sheet != MobileSheet.None)
+    {
+        <div class="mobile-sheet-backdrop" @onclick="CloseSheet">
+            <div class="mobile-sheet" role="menu" @onclick:stopPropagation="true">
+                <span class="sheet-grabber" aria-hidden="true"></span>
+                @switch (_sheet)
+                {
+                    case MobileSheet.New:
+                        <button type="button" role="menuitem" class="sheet-item" @onclick="() => FromSheetAsync(CreateFolderAsync)">
+                            <KazoIcon Library="IconLibrary.Lucide" Name="folder-plus" Size="20" /> <span>@L["Toolbar.NewFolder"]</span>
+                        </button>
+                        <button type="button" role="menuitem" class="sheet-item" @onclick="() => FromSheetAsync(CreateFileAsync)">
+                            <KazoIcon Library="IconLibrary.Lucide" Name="file-plus" Size="20" /> <span>@L["Toolbar.NewFile"]</span>
+                        </button>
+                        <label for="@_uploadInputId" role="menuitem" class="sheet-item" @onclick="CloseSheet">
+                            <KazoIcon Library="IconLibrary.Lucide" Name="upload" Size="20" /> <span>@L["Toolbar.Upload"]</span>
+                        </label>
+                        break;
+                    case MobileSheet.Selection:
+                        <button type="button" role="menuitem" class="sheet-item" disabled="@(SelectedCount != 1)" @onclick="() => FromSheetAsync(() => RunAsync(KazoFileMenuItems.Properties))">
+                            <KazoIcon Library="IconLibrary.Lucide" Name="info" Size="20" /> <span>@L["Toolbar.Properties"]</span>
+                        </button>
+                        <button type="button" role="menuitem" class="sheet-item" disabled="@(!CanRun(KazoFileMenuItems.OpenWithOther))" @onclick="() => FromSheetAsync(() => RunAsync(KazoFileMenuItems.OpenWithOther))">
+                            <KazoIcon Library="IconLibrary.Lucide" Name="external-link" Size="20" /> <span>@L["Toolbar.OpenWith"]</span>
+                        </button>
+                        <button type="button" role="menuitem" class="sheet-item" @onclick="() => FromSheetAsync(DownloadSelectedAsync)">
+                            <KazoIcon Library="IconLibrary.Lucide" Name="download" Size="20" /> <span>@L["Toolbar.Download"]</span>
+                        </button>
+                        <button type="button" role="menuitem" class="sheet-item" @onclick="() => FromSheetAsync(CompressSelectedAsync)">
+                            <KazoIcon Library="IconLibrary.Lucide" Name="archive" Size="20" /> <span>@L["Toolbar.Compress"]</span>
+                        </button>
+                        <button type="button" role="menuitem" class="sheet-item" disabled="@(!CanExtractSelection)" @onclick="() => FromSheetAsync(ExtractSelectedAsync)">
+                            <KazoIcon Library="IconLibrary.Lucide" Name="package-open" Size="20" /> <span>@L["Toolbar.Extract"]</span>
+                        </button>
+                        break;
+                    case MobileSheet.Menu:
+                        <button type="button" role="menuitem" class="sheet-item" @onclick="StartSelection">
+                            <KazoIcon Library="IconLibrary.Lucide" Name="square-check" Size="20" /> <span>@L["Mobile.Select"]</span>
+                        </button>
+                        <button type="button" role="menuitemradio" class="sheet-item @(_state.ViewMode != FileViewMode.Icons ? "active" : null)"
+                                aria-checked="@(_state.ViewMode != FileViewMode.Icons ? "true" : "false")" @onclick="() => ChooseViewMode(FileViewMode.Details)">
+                            <KazoIcon Library="IconLibrary.Lucide" Name="list" Size="20" /> <span>@L["Mobile.ViewList"]</span>
+                        </button>
+                        <button type="button" role="menuitemradio" class="sheet-item @(_state.ViewMode == FileViewMode.Icons ? "active" : null)"
+                                aria-checked="@(_state.ViewMode == FileViewMode.Icons ? "true" : "false")" @onclick="() => ChooseViewMode(FileViewMode.Icons)">
+                            <KazoIcon Library="IconLibrary.Lucide" Name="layout-grid" Size="20" /> <span>@L["Mobile.ViewGrid"]</span>
+                        </button>
+                        <button type="button" role="menuitemcheckbox" class="sheet-item @(_showHiddenFilesAndFolders ? "active" : null)"
+                                aria-checked="@(_showHiddenFilesAndFolders ? "true" : "false")" @onclick="ToggleHiddenFromSheet">
+                            <KazoIcon Library="IconLibrary.Lucide" Name="eye" Size="20" /> <span>@L["View.ShowHidden"]</span>
+                        </button>
+                        <button type="button" role="menuitem" class="sheet-item" @onclick="() => FromSheetAsync(RefreshAsync)">
+                            <KazoIcon Library="IconLibrary.Lucide" Name="refresh-cw" Size="20" /> <span>@L["Nav.Refresh"]</span>
+                        </button>
+                        break;
+                }
+            </div>
+        </div>
+    }
+</div>

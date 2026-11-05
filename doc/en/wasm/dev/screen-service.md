@@ -16,7 +16,7 @@ writes `screens.config`. This work item shows the "Restore screens" offer.
 ```
 Main tab (screen 1)                                 Window of a secondary screen (window.open)
 ───────────────────                                 ──────────────────────────────────────────
-DesktopShell                                         <body class="hackeros-surface">
+DesktopShell                                         <body class="kazoos-surface">
  └─ ScreenLayer                                       └─ .secondary-screen[data-display=2]
      ├─ one <DisplaySurfaceContent> per screen ─ moves ►  ├─ the screen's desktop (chantier 4; its number meanwhile)
      └─ "Restore screens" card                            ├─ "main tab hidden" banner
@@ -26,18 +26,18 @@ ScreenService ── AddDisplay / ChangeViewport / RemoveDisplay ──► Windo
  │                                                     └─ screens.js prepare / settle
  └─ screens.js: permission, getScreenDetails, screenschange, place read every second,
                 full screen, the main tab's visibilitychange
-~/.config/hackeros/screens.config [screens]: open = 2,3 ; 2 = left,top,width,height
+~/.config/kazoos/screens.config [screens]: open = 2,3 ; 2 = left,top,width,height
 ```
 
 | File | Role |
 | --- | --- |
-| `Platform/HackerOs.Platform.Blazor/Display/ScreenService.cs` | The service: numbers, opening, restoring, closing, full screen, memory, commands sent to `WindowRuntime`. |
-| `Platform/HackerOs.Platform.Blazor/Display/ScreenLayer.razor(.css)` | Renders the screens through the surface portal, banner, full-screen button, restore card. |
-| `Platform/HackerOs.Platform.Blazor/Display/DisplaySurfaceService.cs` | `OpenScreenSurfaceAsync` (internal): opening with a placement, optional blocked notification. |
-| `Platform/HackerOs.Platform.Blazor/wwwroot/screens.js` | Window Management API, choice of the free monitor, move after the permission, place, full screen, hidden tab. |
-| `Platform/HackerOs.Platform.Blazor/wwwroot/displaySurfaces.js` | `open` takes an optional placement and calls `screens.js` before and after `window.open`. |
-| `Platform/HackerOs.Platform.Core/Shell/ScreensSettings.cs` | `ScreenGeometry` and `ScreensSettingsDocuments`: the `[screens]` section of `screens.config`. |
-| `OS/HackerOs.Ecosystem.Host/EcosystemServiceCollectionExtensions.cs` | `DisplaySurfaceService` (also as `IDisplaySurfaceService`) and `ScreenService`, per session. |
+| `Platform/Kazo.Os.Platform.Blazor/Display/ScreenService.cs` | The service: numbers, opening, restoring, closing, full screen, memory, commands sent to `WindowRuntime`. |
+| `Platform/Kazo.Os.Platform.Blazor/Display/ScreenLayer.razor(.css)` | Renders the screens through the surface portal, banner, full-screen button, restore card. |
+| `Platform/Kazo.Os.Platform.Blazor/Display/DisplaySurfaceService.cs` | `OpenScreenSurfaceAsync` (internal): opening with a placement, optional blocked notification. |
+| `Platform/Kazo.Os.Platform.Blazor/wwwroot/screens.js` | Window Management API, choice of the free monitor, move after the permission, place, full screen, hidden tab. |
+| `Platform/Kazo.Os.Platform.Blazor/wwwroot/displaySurfaces.js` | `open` takes an optional placement and calls `screens.js` before and after `window.open`. |
+| `Platform/Kazo.Os.Platform.Core/Shell/ScreensSettings.cs` | `ScreenGeometry` and `ScreensSettingsDocuments`: the `[screens]` section of `screens.config`. |
+| `OS/Kazo.Os.Ecosystem.Host/EcosystemServiceCollectionExtensions.cs` | `DisplaySurfaceService` (also as `IDisplaySurfaceService`) and `ScreenService`, per session. |
 
 ## 2. Service API
 
@@ -52,7 +52,7 @@ ScreenService ── AddDisplay / ChangeViewport / RemoveDisplay ──► Windo
 | `TogglePrimaryFullScreenAsync()`, `IsPrimaryFullScreen` | Full screen for the main tab (screen 1), from a click (ADR 0184). |
 | `IdentifyAsync()`, `IsIdentifying` | Shows each screen's number for 3 s; a new call starts again (ADR 0184). |
 | `RequestPermissionAsync()` | Asks for the `window-management` permission during a click and returns the answer (ADR 0184). |
-| `IsStarted` | True after `StartAsync` and until disposal: `ScreenControl` derives `HackScreens.IsSupported` from it. |
+| `IsStarted` | True after `StartAsync` and until disposal: `ScreenControl` derives `KazoScreens.IsSupported` from it. |
 | `Screens`, `RestorableScreens`, `Permission`, `IsPrimaryHidden`, `CanOpenScreen`, `Changed` | State read by the UI. |
 | `PrimaryTaskbar`, `SetPrimaryTaskbarAsync(mode)` | `[taskbar]`'s `primary-taskbar` setting, followed during the session (work item 5, [`per-screen-taskbars.md`](per-screen-taskbars.md)). |
 
@@ -92,7 +92,7 @@ The screen's place stays in its numbered line.
   [`secondary-screen-desktop.md`](secondary-screen-desktop.md)); without it, the screen's number
   on the desktop colour.
 - **Full screen**: `⤢` button at the top right, `⤡` to leave (or `Esc`).
-- **Banner**: "The main HackerOS tab is hidden…" while the main tab is hidden
+- **Banner**: "The main Kazo OS tab is hidden…" while the main tab is hidden
   (`visibilitychange`).
 - **Work area**: the window's inner size on open, then the size of the screen's desktop,
   which measures it itself (work item 4); the service no longer changes it when the window
@@ -100,14 +100,14 @@ The screen's place stays in its numbered line.
 
 ## 6. Tests
 
-- `Tests/HackerOs.Platform.Blazor.Tests/Display/ScreenServiceTests.cs`: scripted JS
+- `Tests/Kazo.Os.Platform.Blazor.Tests/Display/ScreenServiceTests.cs`: scripted JS
   modules, real `WindowRuntime`, in-memory settings.
-- `Tests/HackerOs.Platform.Core.Tests/Shell/ScreensSettingsTests.cs`: reading and
+- `Tests/Kazo.Os.Platform.Core.Tests/Shell/ScreensSettingsTests.cs`: reading and
   writing `[screens]` on the virtual disk.
-- `Tests/HackerOs.UI.E2E.Tests/ScreenServiceTests.cs`: real Chromium; the file is
+- `Tests/Kazo.Os.UI.E2E.Tests/ScreenServiceTests.cs`: real Chromium; the file is
   written from the terminal, the OS is reloaded, **Restore screens** opens screen 2
   at 900 × 700, then the screen closed by hand is no longer offered.
-- `Tests/HackerOs.UI.E2E.Tests/BrowserDetachedWindowTests.cs` stays green: without a
+- `Tests/Kazo.Os.UI.E2E.Tests/BrowserDetachedWindowTests.cs` stays green: without a
   placement, `displaySurfaces.js` opens as before.
 
 ## 7. Limits

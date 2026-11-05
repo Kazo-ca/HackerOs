@@ -1,0 +1,5 @@
+{
+  "name": "kazopkg",
+  "description": "Installe, met à jour et retire des apps depuis leur dépôt GitHub",
+  "terminalUsage": "kazopkg install <dépôt>[@version] [--user|--system] | remove <appId> [--user|--system] | update [<appId>] | list | info <dépôt> | sources [add|remove <source>] | policy"
+}

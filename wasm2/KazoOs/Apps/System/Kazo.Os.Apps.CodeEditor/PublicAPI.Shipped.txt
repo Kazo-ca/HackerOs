@@ -1,0 +1,452 @@
+#nullable enable
+Kazo.Os.Apps.CodeEditor.CodeEditorApp
+Kazo.Os.Apps.CodeEditor.CodeEditorApp.CodeEditorApp() -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorCloseResult
+Kazo.Os.Apps.CodeEditor.CodeEditorCloseResult.Closed = 0 -> Kazo.Os.Apps.CodeEditor.CodeEditorCloseResult
+Kazo.Os.Apps.CodeEditor.CodeEditorCloseResult.ConfirmationRequired = 1 -> Kazo.Os.Apps.CodeEditor.CodeEditorCloseResult
+Kazo.Os.Apps.CodeEditor.CodeEditorCloseResult.NotFound = 2 -> Kazo.Os.Apps.CodeEditor.CodeEditorCloseResult
+Kazo.Os.Apps.CodeEditor.CodeEditorCreateResult
+Kazo.Os.Apps.CodeEditor.CodeEditorCreateResult.<Clone>$() -> Kazo.Os.Apps.CodeEditor.CodeEditorCreateResult!
+Kazo.Os.Apps.CodeEditor.CodeEditorCreateResult.CodeEditorCreateResult(bool Succeeded, Kazo.Os.App.Abstractions.VirtualPath? Path, string? Error = null) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorCreateResult.Deconstruct(out bool Succeeded, out Kazo.Os.App.Abstractions.VirtualPath? Path, out string? Error) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorCreateResult.Equals(Kazo.Os.Apps.CodeEditor.CodeEditorCreateResult? other) -> bool
+Kazo.Os.Apps.CodeEditor.CodeEditorCreateResult.Error.get -> string?
+Kazo.Os.Apps.CodeEditor.CodeEditorCreateResult.Error.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorCreateResult.Path.get -> Kazo.Os.App.Abstractions.VirtualPath?
+Kazo.Os.Apps.CodeEditor.CodeEditorCreateResult.Path.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorCreateResult.Succeeded.get -> bool
+Kazo.Os.Apps.CodeEditor.CodeEditorCreateResult.Succeeded.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorCursorStatus
+Kazo.Os.Apps.CodeEditor.CodeEditorCursorStatus.CodeEditorCursorStatus() -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorCursorStatus.Update(int line, int column, int selected) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorDocument
+Kazo.Os.Apps.CodeEditor.CodeEditorDocument.CaptureRecovery() -> Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery!
+Kazo.Os.Apps.CodeEditor.CodeEditorDocument.CompleteSave(Kazo.Os.App.Abstractions.VirtualPath path, long revision) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorDocument.Content.get -> string!
+Kazo.Os.Apps.CodeEditor.CodeEditorDocument.Id.get -> System.Guid
+Kazo.Os.Apps.CodeEditor.CodeEditorDocument.IsDirty.get -> bool
+Kazo.Os.Apps.CodeEditor.CodeEditorDocument.Path.get -> Kazo.Os.App.Abstractions.VirtualPath?
+Kazo.Os.Apps.CodeEditor.CodeEditorDocument.Relocate(Kazo.Os.App.Abstractions.VirtualPath path) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorDocument.Revision.get -> long?
+Kazo.Os.Apps.CodeEditor.CodeEditorDocument.SetSyntaxMode(Kazo.Os.Apps.CodeEditor.CodeEditorSyntaxMode syntaxMode) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorDocument.SyntaxMode.get -> Kazo.Os.Apps.CodeEditor.CodeEditorSyntaxMode
+Kazo.Os.Apps.CodeEditor.CodeEditorDocument.Title.get -> string!
+Kazo.Os.Apps.CodeEditor.CodeEditorDocument.TryEdit(string! content) -> Kazo.Os.Apps.CodeEditor.CodeEditorEditResult!
+Kazo.Os.Apps.CodeEditor.CodeEditorDocument.UntitledName.get -> string!
+Kazo.Os.Apps.CodeEditor.CodeEditorDocument.Utf8ByteCount.get -> int
+Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery
+Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery.<Clone>$() -> Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery!
+Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery.CodeEditorDocumentRecovery(System.Guid Id, string? Path, string! Content, string! SavedContent, long? Revision, Kazo.Os.Apps.CodeEditor.CodeEditorSyntaxMode SyntaxMode, string! UntitledName) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery.Content.get -> string!
+Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery.Content.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery.Deconstruct(out System.Guid Id, out string? Path, out string! Content, out string! SavedContent, out long? Revision, out Kazo.Os.Apps.CodeEditor.CodeEditorSyntaxMode SyntaxMode, out string! UntitledName) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery.Equals(Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery? other) -> bool
+Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery.Id.get -> System.Guid
+Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery.Id.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery.Path.get -> string?
+Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery.Path.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery.Revision.get -> long?
+Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery.Revision.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery.SavedContent.get -> string!
+Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery.SavedContent.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery.SyntaxMode.get -> Kazo.Os.Apps.CodeEditor.CodeEditorSyntaxMode
+Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery.SyntaxMode.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery.UntitledName.get -> string!
+Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery.UntitledName.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorEditResult
+Kazo.Os.Apps.CodeEditor.CodeEditorEditResult.<Clone>$() -> Kazo.Os.Apps.CodeEditor.CodeEditorEditResult!
+Kazo.Os.Apps.CodeEditor.CodeEditorEditResult.CodeEditorEditResult(bool Succeeded, string? Error = null) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorEditResult.Deconstruct(out bool Succeeded, out string? Error) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorEditResult.Equals(Kazo.Os.Apps.CodeEditor.CodeEditorEditResult? other) -> bool
+Kazo.Os.Apps.CodeEditor.CodeEditorEditResult.Error.get -> string?
+Kazo.Os.Apps.CodeEditor.CodeEditorEditResult.Error.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorEditResult.Succeeded.get -> bool
+Kazo.Os.Apps.CodeEditor.CodeEditorEditResult.Succeeded.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorExplorer
+Kazo.Os.Apps.CodeEditor.CodeEditorExplorer.BeginNewFile() -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorExplorer.CodeEditorExplorer() -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorExplorer.OnError.get -> Microsoft.AspNetCore.Components.EventCallback<string!>
+Kazo.Os.Apps.CodeEditor.CodeEditorExplorer.OnError.set -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorExplorer.OnFindInFolder.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.App.Abstractions.VirtualPath>
+Kazo.Os.Apps.CodeEditor.CodeEditorExplorer.OnFindInFolder.set -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorExplorer.OnOpenFile.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.App.Abstractions.VirtualPath>
+Kazo.Os.Apps.CodeEditor.CodeEditorExplorer.OnOpenFile.set -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorExplorer.OnOpenFolder.get -> Microsoft.AspNetCore.Components.EventCallback
+Kazo.Os.Apps.CodeEditor.CodeEditorExplorer.OnOpenFolder.set -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorExplorer.OnOpenInTerminal.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.App.Abstractions.VirtualPath>
+Kazo.Os.Apps.CodeEditor.CodeEditorExplorer.OnOpenInTerminal.set -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorExplorer.OnPreviewFile.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.App.Abstractions.VirtualPath>
+Kazo.Os.Apps.CodeEditor.CodeEditorExplorer.OnPreviewFile.set -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorExplorer.OnRenamed.get -> Microsoft.AspNetCore.Components.EventCallback<(Kazo.Os.App.Abstractions.VirtualPath OldPath, Kazo.Os.App.Abstractions.VirtualPath NewPath)>
+Kazo.Os.Apps.CodeEditor.CodeEditorExplorer.OnRenamed.set -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorExplorer.RefreshAsync() -> System.Threading.Tasks.Task!
+Kazo.Os.Apps.CodeEditor.CodeEditorExplorer.Workspace.get -> Kazo.Os.Apps.CodeEditor.CodeEditorWorkspace?
+Kazo.Os.Apps.CodeEditor.CodeEditorExplorer.Workspace.set -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorFileService
+Kazo.Os.Apps.CodeEditor.CodeEditorFileService.CodeEditorFileService(Kazo.Os.Simulation.Abstractions.Gateways.IAppFileSystemGateway! fileSystem) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorFileService.LoadAsync(Kazo.Os.App.Abstractions.VirtualPath path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Apps.CodeEditor.CodeEditorLoadResult!>
+Kazo.Os.Apps.CodeEditor.CodeEditorFileService.SaveAsync(Kazo.Os.Apps.CodeEditor.CodeEditorDocument! document, Kazo.Os.App.Abstractions.VirtualPath path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Apps.CodeEditor.CodeEditorSaveResult!>
+Kazo.Os.Apps.CodeEditor.CodeEditorFileStatus
+Kazo.Os.Apps.CodeEditor.CodeEditorFileStatus.Cancelled = 6 -> Kazo.Os.Apps.CodeEditor.CodeEditorFileStatus
+Kazo.Os.Apps.CodeEditor.CodeEditorFileStatus.Conflict = 5 -> Kazo.Os.Apps.CodeEditor.CodeEditorFileStatus
+Kazo.Os.Apps.CodeEditor.CodeEditorFileStatus.Denied = 1 -> Kazo.Os.Apps.CodeEditor.CodeEditorFileStatus
+Kazo.Os.Apps.CodeEditor.CodeEditorFileStatus.Failed = 7 -> Kazo.Os.Apps.CodeEditor.CodeEditorFileStatus
+Kazo.Os.Apps.CodeEditor.CodeEditorFileStatus.NotFound = 2 -> Kazo.Os.Apps.CodeEditor.CodeEditorFileStatus
+Kazo.Os.Apps.CodeEditor.CodeEditorFileStatus.Success = 0 -> Kazo.Os.Apps.CodeEditor.CodeEditorFileStatus
+Kazo.Os.Apps.CodeEditor.CodeEditorFileStatus.TooLarge = 4 -> Kazo.Os.Apps.CodeEditor.CodeEditorFileStatus
+Kazo.Os.Apps.CodeEditor.CodeEditorFileStatus.UnsupportedContent = 3 -> Kazo.Os.Apps.CodeEditor.CodeEditorFileStatus
+Kazo.Os.Apps.CodeEditor.CodeEditorGlob
+Kazo.Os.Apps.CodeEditor.CodeEditorGlob.IsEmpty.get -> bool
+Kazo.Os.Apps.CodeEditor.CodeEditorGlob.Matches(Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile! file) -> bool
+Kazo.Os.Apps.CodeEditor.CodeEditorLoadResult
+Kazo.Os.Apps.CodeEditor.CodeEditorLoadResult.<Clone>$() -> Kazo.Os.Apps.CodeEditor.CodeEditorLoadResult!
+Kazo.Os.Apps.CodeEditor.CodeEditorLoadResult.CodeEditorLoadResult(Kazo.Os.Apps.CodeEditor.CodeEditorFileStatus Status, Kazo.Os.App.Abstractions.VirtualPath Path, string? Content = null, long? Revision = null, string? Error = null) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorLoadResult.Content.get -> string?
+Kazo.Os.Apps.CodeEditor.CodeEditorLoadResult.Content.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorLoadResult.Deconstruct(out Kazo.Os.Apps.CodeEditor.CodeEditorFileStatus Status, out Kazo.Os.App.Abstractions.VirtualPath Path, out string? Content, out long? Revision, out string? Error) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorLoadResult.Equals(Kazo.Os.Apps.CodeEditor.CodeEditorLoadResult? other) -> bool
+Kazo.Os.Apps.CodeEditor.CodeEditorLoadResult.Error.get -> string?
+Kazo.Os.Apps.CodeEditor.CodeEditorLoadResult.Error.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorLoadResult.Path.get -> Kazo.Os.App.Abstractions.VirtualPath
+Kazo.Os.Apps.CodeEditor.CodeEditorLoadResult.Path.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorLoadResult.Revision.get -> long?
+Kazo.Os.Apps.CodeEditor.CodeEditorLoadResult.Revision.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorLoadResult.Status.get -> Kazo.Os.Apps.CodeEditor.CodeEditorFileStatus
+Kazo.Os.Apps.CodeEditor.CodeEditorLoadResult.Status.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorLoadResult.Succeeded.get -> bool
+Kazo.Os.Apps.CodeEditor.CodeEditorNavigation
+Kazo.Os.Apps.CodeEditor.CodeEditorNavigation.<Clone>$() -> Kazo.Os.Apps.CodeEditor.CodeEditorNavigation!
+Kazo.Os.Apps.CodeEditor.CodeEditorNavigation.CodeEditorNavigation(Kazo.Os.App.Abstractions.VirtualPath Path, int Line, int Column, int Length) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorNavigation.Column.get -> int
+Kazo.Os.Apps.CodeEditor.CodeEditorNavigation.Column.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorNavigation.Deconstruct(out Kazo.Os.App.Abstractions.VirtualPath Path, out int Line, out int Column, out int Length) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorNavigation.Equals(Kazo.Os.Apps.CodeEditor.CodeEditorNavigation? other) -> bool
+Kazo.Os.Apps.CodeEditor.CodeEditorNavigation.Length.get -> int
+Kazo.Os.Apps.CodeEditor.CodeEditorNavigation.Length.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorNavigation.Line.get -> int
+Kazo.Os.Apps.CodeEditor.CodeEditorNavigation.Line.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorNavigation.Path.get -> Kazo.Os.App.Abstractions.VirtualPath
+Kazo.Os.Apps.CodeEditor.CodeEditorNavigation.Path.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorQuickOpen
+Kazo.Os.Apps.CodeEditor.CodeEditorQuickOpenPalette
+Kazo.Os.Apps.CodeEditor.CodeEditorQuickOpenPalette.CloseAsync() -> System.Threading.Tasks.Task!
+Kazo.Os.Apps.CodeEditor.CodeEditorQuickOpenPalette.CodeEditorQuickOpenPalette() -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorQuickOpenPalette.Dispose() -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorQuickOpenPalette.IsOpen.get -> bool
+Kazo.Os.Apps.CodeEditor.CodeEditorQuickOpenPalette.OnClosed.get -> Microsoft.AspNetCore.Components.EventCallback
+Kazo.Os.Apps.CodeEditor.CodeEditorQuickOpenPalette.OnClosed.set -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorQuickOpenPalette.OnPick.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile!>
+Kazo.Os.Apps.CodeEditor.CodeEditorQuickOpenPalette.OnPick.set -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorQuickOpenPalette.OpenAsync() -> System.Threading.Tasks.Task!
+Kazo.Os.Apps.CodeEditor.CodeEditorQuickOpenPalette.Workspace.get -> Kazo.Os.Apps.CodeEditor.CodeEditorWorkspace?
+Kazo.Os.Apps.CodeEditor.CodeEditorQuickOpenPalette.Workspace.set -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryResult
+Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryResult.<Clone>$() -> Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryResult!
+Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryResult.CodeEditorRecoveryResult(Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryStatus Status, Kazo.Os.Apps.CodeEditor.CodeEditorSessionRecovery? Session = null, string? Error = null) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryResult.Deconstruct(out Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryStatus Status, out Kazo.Os.Apps.CodeEditor.CodeEditorSessionRecovery? Session, out string? Error) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryResult.Equals(Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryResult? other) -> bool
+Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryResult.Error.get -> string?
+Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryResult.Error.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryResult.HasSession.get -> bool
+Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryResult.Session.get -> Kazo.Os.Apps.CodeEditor.CodeEditorSessionRecovery?
+Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryResult.Session.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryResult.Status.get -> Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryStatus
+Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryResult.Status.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryStatus
+Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryStatus.Cancelled = 6 -> Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryStatus
+Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryStatus.Conflict = 5 -> Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryStatus
+Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryStatus.Denied = 2 -> Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryStatus
+Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryStatus.Failed = 7 -> Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryStatus
+Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryStatus.Invalid = 3 -> Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryStatus
+Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryStatus.Missing = 1 -> Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryStatus
+Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryStatus.Success = 0 -> Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryStatus
+Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryStatus.TooLarge = 4 -> Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryStatus
+Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryStore
+Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryStore.ClearAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryResult!>
+Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryStore.CodeEditorRecoveryStore(Kazo.Os.Simulation.Abstractions.Gateways.IAppFileSystemGateway! fileSystem, string! userId, string! homePath) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryStore.LoadAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryResult!>
+Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryStore.RecoveryPath.get -> Kazo.Os.App.Abstractions.VirtualPath
+Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryStore.SaveAsync(Kazo.Os.Apps.CodeEditor.CodeEditorSessionRecovery! session, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryResult!>
+Kazo.Os.Apps.CodeEditor.CodeEditorSaveResult
+Kazo.Os.Apps.CodeEditor.CodeEditorSaveResult.<Clone>$() -> Kazo.Os.Apps.CodeEditor.CodeEditorSaveResult!
+Kazo.Os.Apps.CodeEditor.CodeEditorSaveResult.CodeEditorSaveResult(Kazo.Os.Apps.CodeEditor.CodeEditorFileStatus Status, Kazo.Os.App.Abstractions.VirtualPath Path, long? Revision = null, string? Error = null) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSaveResult.Deconstruct(out Kazo.Os.Apps.CodeEditor.CodeEditorFileStatus Status, out Kazo.Os.App.Abstractions.VirtualPath Path, out long? Revision, out string? Error) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSaveResult.Equals(Kazo.Os.Apps.CodeEditor.CodeEditorSaveResult? other) -> bool
+Kazo.Os.Apps.CodeEditor.CodeEditorSaveResult.Error.get -> string?
+Kazo.Os.Apps.CodeEditor.CodeEditorSaveResult.Error.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSaveResult.Path.get -> Kazo.Os.App.Abstractions.VirtualPath
+Kazo.Os.Apps.CodeEditor.CodeEditorSaveResult.Path.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSaveResult.Revision.get -> long?
+Kazo.Os.Apps.CodeEditor.CodeEditorSaveResult.Revision.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSaveResult.Status.get -> Kazo.Os.Apps.CodeEditor.CodeEditorFileStatus
+Kazo.Os.Apps.CodeEditor.CodeEditorSaveResult.Status.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSaveResult.Succeeded.get -> bool
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchFileResult
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchFileResult.<Clone>$() -> Kazo.Os.Apps.CodeEditor.CodeEditorSearchFileResult!
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchFileResult.CodeEditorSearchFileResult(Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile! File, System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.CodeEditor.CodeEditorSearchMatch!>! Matches) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchFileResult.Deconstruct(out Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile! File, out System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.CodeEditor.CodeEditorSearchMatch!>! Matches) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchFileResult.Equals(Kazo.Os.Apps.CodeEditor.CodeEditorSearchFileResult? other) -> bool
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchFileResult.File.get -> Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile!
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchFileResult.File.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchFileResult.Matches.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.CodeEditor.CodeEditorSearchMatch!>!
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchFileResult.Matches.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchMatch
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchMatch.<Clone>$() -> Kazo.Os.Apps.CodeEditor.CodeEditorSearchMatch!
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchMatch.CodeEditorSearchMatch(int Line, int Column, int Length, string! LineText, int PreviewOffset) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchMatch.Column.get -> int
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchMatch.Column.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchMatch.Deconstruct(out int Line, out int Column, out int Length, out string! LineText, out int PreviewOffset) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchMatch.Equals(Kazo.Os.Apps.CodeEditor.CodeEditorSearchMatch? other) -> bool
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchMatch.Length.get -> int
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchMatch.Length.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchMatch.Line.get -> int
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchMatch.Line.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchMatch.LineText.get -> string!
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchMatch.LineText.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchMatch.PreviewOffset.get -> int
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchMatch.PreviewOffset.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchQuery
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchQuery.<Clone>$() -> Kazo.Os.Apps.CodeEditor.CodeEditorSearchQuery!
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchQuery.CodeEditorSearchQuery(string! Text, bool MatchCase = false, bool WholeWord = false, bool UseRegex = false, string? Include = null, string? Exclude = null) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchQuery.Deconstruct(out string! Text, out bool MatchCase, out bool WholeWord, out bool UseRegex, out string? Include, out string? Exclude) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchQuery.Equals(Kazo.Os.Apps.CodeEditor.CodeEditorSearchQuery? other) -> bool
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchQuery.Exclude.get -> string?
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchQuery.Exclude.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchQuery.Include.get -> string?
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchQuery.Include.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchQuery.MatchCase.get -> bool
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchQuery.MatchCase.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchQuery.Text.get -> string!
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchQuery.Text.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchQuery.UseRegex.get -> bool
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchQuery.UseRegex.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchQuery.WholeWord.get -> bool
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchQuery.WholeWord.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchResult
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchResult.<Clone>$() -> Kazo.Os.Apps.CodeEditor.CodeEditorSearchResult!
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchResult.CodeEditorSearchResult(System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.CodeEditor.CodeEditorSearchFileResult!>! Files, int MatchCount, int FilesSearched, bool Truncated, string? Error = null) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchResult.Deconstruct(out System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.CodeEditor.CodeEditorSearchFileResult!>! Files, out int MatchCount, out int FilesSearched, out bool Truncated, out string? Error) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchResult.Equals(Kazo.Os.Apps.CodeEditor.CodeEditorSearchResult? other) -> bool
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchResult.Error.get -> string?
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchResult.Error.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchResult.Files.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.CodeEditor.CodeEditorSearchFileResult!>!
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchResult.Files.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchResult.FilesSearched.get -> int
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchResult.FilesSearched.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchResult.MatchCount.get -> int
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchResult.MatchCount.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchResult.Truncated.get -> bool
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchResult.Truncated.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchView
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchView.BeforeSearch.get -> System.Func<System.Threading.Tasks.Task!>?
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchView.BeforeSearch.set -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchView.CodeEditorSearchView() -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchView.Dispose() -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchView.FocusAsync(string? text = null, string? include = null) -> System.Threading.Tasks.Task!
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchView.OnOpenFolder.get -> Microsoft.AspNetCore.Components.EventCallback
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchView.OnOpenFolder.set -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchView.OnOpenMatch.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.Apps.CodeEditor.CodeEditorNavigation!>
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchView.OnOpenMatch.set -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchView.OpenContent.get -> System.Func<Kazo.Os.App.Abstractions.VirtualPath, string?>?
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchView.OpenContent.set -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchView.Workspace.get -> Kazo.Os.Apps.CodeEditor.CodeEditorWorkspace?
+Kazo.Os.Apps.CodeEditor.CodeEditorSearchView.Workspace.set -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSession
+Kazo.Os.Apps.CodeEditor.CodeEditorSession.Activate(System.Guid documentId) -> bool
+Kazo.Os.Apps.CodeEditor.CodeEditorSession.ActiveDocument.get -> Kazo.Os.Apps.CodeEditor.CodeEditorDocument?
+Kazo.Os.Apps.CodeEditor.CodeEditorSession.ActiveDocumentId.get -> System.Guid?
+Kazo.Os.Apps.CodeEditor.CodeEditorSession.CaptureRecovery() -> Kazo.Os.Apps.CodeEditor.CodeEditorSessionRecovery!
+Kazo.Os.Apps.CodeEditor.CodeEditorSession.Close(System.Guid documentId, bool discardDirty = false) -> Kazo.Os.Apps.CodeEditor.CodeEditorCloseResult
+Kazo.Os.Apps.CodeEditor.CodeEditorSession.CodeEditorSession() -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSession.Documents.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.CodeEditor.CodeEditorDocument!>!
+Kazo.Os.Apps.CodeEditor.CodeEditorSession.NewDocument() -> Kazo.Os.Apps.CodeEditor.CodeEditorDocument!
+Kazo.Os.Apps.CodeEditor.CodeEditorSession.OpenDocument(Kazo.Os.App.Abstractions.VirtualPath path, string! content, long revision, Kazo.Os.Apps.CodeEditor.CodeEditorSyntaxMode? syntaxMode = null) -> Kazo.Os.Apps.CodeEditor.CodeEditorDocument!
+Kazo.Os.Apps.CodeEditor.CodeEditorSession.RelocatePaths(Kazo.Os.App.Abstractions.VirtualPath oldPath, Kazo.Os.App.Abstractions.VirtualPath newPath) -> int
+Kazo.Os.Apps.CodeEditor.CodeEditorSessionRecovery
+Kazo.Os.Apps.CodeEditor.CodeEditorSessionRecovery.<Clone>$() -> Kazo.Os.Apps.CodeEditor.CodeEditorSessionRecovery!
+Kazo.Os.Apps.CodeEditor.CodeEditorSessionRecovery.ActiveDocumentId.get -> System.Guid?
+Kazo.Os.Apps.CodeEditor.CodeEditorSessionRecovery.ActiveDocumentId.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSessionRecovery.CodeEditorSessionRecovery(System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery!>! Documents, System.Guid? ActiveDocumentId, int NextUntitledSequence) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSessionRecovery.Deconstruct(out System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery!>! Documents, out System.Guid? ActiveDocumentId, out int NextUntitledSequence) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSessionRecovery.Documents.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery!>!
+Kazo.Os.Apps.CodeEditor.CodeEditorSessionRecovery.Documents.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSessionRecovery.Equals(Kazo.Os.Apps.CodeEditor.CodeEditorSessionRecovery? other) -> bool
+Kazo.Os.Apps.CodeEditor.CodeEditorSessionRecovery.NextUntitledSequence.get -> int
+Kazo.Os.Apps.CodeEditor.CodeEditorSessionRecovery.NextUntitledSequence.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorSyntaxMode
+Kazo.Os.Apps.CodeEditor.CodeEditorSyntaxMode.CSharp = 1 -> Kazo.Os.Apps.CodeEditor.CodeEditorSyntaxMode
+Kazo.Os.Apps.CodeEditor.CodeEditorSyntaxMode.Css = 5 -> Kazo.Os.Apps.CodeEditor.CodeEditorSyntaxMode
+Kazo.Os.Apps.CodeEditor.CodeEditorSyntaxMode.Html = 4 -> Kazo.Os.Apps.CodeEditor.CodeEditorSyntaxMode
+Kazo.Os.Apps.CodeEditor.CodeEditorSyntaxMode.JavaScript = 2 -> Kazo.Os.Apps.CodeEditor.CodeEditorSyntaxMode
+Kazo.Os.Apps.CodeEditor.CodeEditorSyntaxMode.Json = 6 -> Kazo.Os.Apps.CodeEditor.CodeEditorSyntaxMode
+Kazo.Os.Apps.CodeEditor.CodeEditorSyntaxMode.Markdown = 7 -> Kazo.Os.Apps.CodeEditor.CodeEditorSyntaxMode
+Kazo.Os.Apps.CodeEditor.CodeEditorSyntaxMode.PlainText = 0 -> Kazo.Os.Apps.CodeEditor.CodeEditorSyntaxMode
+Kazo.Os.Apps.CodeEditor.CodeEditorSyntaxMode.TypeScript = 3 -> Kazo.Os.Apps.CodeEditor.CodeEditorSyntaxMode
+Kazo.Os.Apps.CodeEditor.CodeEditorSyntaxModeDetector
+Kazo.Os.Apps.CodeEditor.CodeEditorTextSearch
+Kazo.Os.Apps.CodeEditor.CodeEditorWindow
+Kazo.Os.Apps.CodeEditor.CodeEditorWindow.CodeEditorWindow() -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorWindow.ConfirmCloseAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.Apps.CodeEditor.CodeEditorWindow.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Apps.CodeEditor.CodeEditorWindow.LaunchFilePath.get -> string?
+Kazo.Os.Apps.CodeEditor.CodeEditorWindow.LaunchFilePath.set -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorWindow.OnCursorChanged(int line, int column, int selectedLength) -> System.Threading.Tasks.Task!
+Kazo.Os.Apps.CodeEditor.CodeEditorWindow.OnDirtyChanged(string! documentId, bool dirty) -> System.Threading.Tasks.Task!
+Kazo.Os.Apps.CodeEditor.CodeEditorWindow.OnEditorChanged(string! documentId, string! content) -> System.Threading.Tasks.Task!
+Kazo.Os.Apps.CodeEditor.CodeEditorWindow.OnShortcut(string! name) -> System.Threading.Tasks.Task!
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspace
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspace.CodeEditorWorkspace(Kazo.Os.App.Abstractions.VirtualPath root, Kazo.Os.Simulation.Abstractions.Gateways.IAppFileSystemGateway! fileSystem, Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemSelectedResourceHandle? selectedResource = null) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspace.Contains(Kazo.Os.App.Abstractions.VirtualPath path) -> bool
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspace.CreateDirectoryAsync(Kazo.Os.App.Abstractions.VirtualPath directory, string! name, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Apps.CodeEditor.CodeEditorCreateResult!>!
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspace.CreateFileAsync(Kazo.Os.App.Abstractions.VirtualPath directory, string! name, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Apps.CodeEditor.CodeEditorCreateResult!>!
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspace.FileSystem.get -> Kazo.Os.Simulation.Abstractions.Gateways.IAppFileSystemGateway!
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspace.ListFilesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceListing!>!
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspace.Name.get -> string!
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspace.RelativePathOf(Kazo.Os.App.Abstractions.VirtualPath path) -> string!
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspace.Root.get -> Kazo.Os.App.Abstractions.VirtualPath
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspace.SelectedResource.get -> Kazo.Os.Simulation.Abstractions.FileSystem.FileSystemSelectedResourceHandle?
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile.<Clone>$() -> Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile!
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile.CodeEditorWorkspaceFile(Kazo.Os.App.Abstractions.VirtualPath Path, string! RelativePath, long Length) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile.Deconstruct(out Kazo.Os.App.Abstractions.VirtualPath Path, out string! RelativePath, out long Length) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile.Directory.get -> string!
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile.Equals(Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile? other) -> bool
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile.Length.get -> long
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile.Length.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile.Name.get -> string!
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile.Path.get -> Kazo.Os.App.Abstractions.VirtualPath
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile.Path.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile.RelativePath.get -> string!
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile.RelativePath.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceListing
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceListing.<Clone>$() -> Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceListing!
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceListing.CodeEditorWorkspaceListing(System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile!>! Files, bool Truncated) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceListing.Deconstruct(out System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile!>! Files, out bool Truncated) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceListing.Equals(Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceListing? other) -> bool
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceListing.Files.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile!>!
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceListing.Files.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceListing.Truncated.get -> bool
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceListing.Truncated.init -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceSearch
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceSearch.CodeEditorWorkspaceSearch(Kazo.Os.Apps.CodeEditor.CodeEditorWorkspace! workspace) -> void
+Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceSearch.SearchAsync(Kazo.Os.Apps.CodeEditor.CodeEditorSearchQuery! query, System.Func<Kazo.Os.App.Abstractions.VirtualPath, string?>? openContent = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Apps.CodeEditor.CodeEditorSearchResult!>!
+Kazo.Os.Apps.CodeEditor._Imports
+Kazo.Os.Apps.CodeEditor._Imports.Execute() -> void
+Kazo.Os.Apps.CodeEditor._Imports._Imports() -> void
+const Kazo.Os.Apps.CodeEditor.CodeEditorDocument.MaxDocumentBytes = 1048576 -> int
+const Kazo.Os.Apps.CodeEditor.CodeEditorQuickOpen.MaxResults = 50 -> int
+const Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryStore.MaxRecoveryBytes = 8388608 -> int
+const Kazo.Os.Apps.CodeEditor.CodeEditorTextSearch.MaxMatchesPerFile = 1000 -> int
+const Kazo.Os.Apps.CodeEditor.CodeEditorTextSearch.MaxPreviewLength = 240 -> int
+const Kazo.Os.Apps.CodeEditor.CodeEditorWorkspace.MaxFiles = 5000 -> int
+const Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceSearch.MaxTotalMatches = 5000 -> int
+override Kazo.Os.Apps.CodeEditor.CodeEditorApp.Assets.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AssetManifest!>!
+override Kazo.Os.Apps.CodeEditor.CodeEditorApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Apps.CodeEditor.CodeEditorApp.Category.get -> string!
+override Kazo.Os.Apps.CodeEditor.CodeEditorApp.Description.get -> string!
+override Kazo.Os.Apps.CodeEditor.CodeEditorApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Apps.CodeEditor.CodeEditorApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Apps.CodeEditor.CodeEditorApp.Id.get -> string!
+override Kazo.Os.Apps.CodeEditor.CodeEditorApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Apps.CodeEditor.CodeEditorApp.MobileEntryPoint.get -> System.Type?
+override Kazo.Os.Apps.CodeEditor.CodeEditorApp.Name.get -> string!
+override Kazo.Os.Apps.CodeEditor.CodeEditorApp.PublisherId.get -> string!
+override Kazo.Os.Apps.CodeEditor.CodeEditorApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Apps.CodeEditor.CodeEditorCreateResult.Equals(object? obj) -> bool
+override Kazo.Os.Apps.CodeEditor.CodeEditorCreateResult.GetHashCode() -> int
+override Kazo.Os.Apps.CodeEditor.CodeEditorCreateResult.ToString() -> string!
+override Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery.Equals(object? obj) -> bool
+override Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery.GetHashCode() -> int
+override Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery.ToString() -> string!
+override Kazo.Os.Apps.CodeEditor.CodeEditorEditResult.Equals(object? obj) -> bool
+override Kazo.Os.Apps.CodeEditor.CodeEditorEditResult.GetHashCode() -> int
+override Kazo.Os.Apps.CodeEditor.CodeEditorEditResult.ToString() -> string!
+override Kazo.Os.Apps.CodeEditor.CodeEditorExplorer.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.CodeEditor.CodeEditorLoadResult.Equals(object? obj) -> bool
+override Kazo.Os.Apps.CodeEditor.CodeEditorLoadResult.GetHashCode() -> int
+override Kazo.Os.Apps.CodeEditor.CodeEditorLoadResult.ToString() -> string!
+override Kazo.Os.Apps.CodeEditor.CodeEditorNavigation.Equals(object? obj) -> bool
+override Kazo.Os.Apps.CodeEditor.CodeEditorNavigation.GetHashCode() -> int
+override Kazo.Os.Apps.CodeEditor.CodeEditorNavigation.ToString() -> string!
+override Kazo.Os.Apps.CodeEditor.CodeEditorQuickOpenPalette.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryResult.Equals(object? obj) -> bool
+override Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryResult.GetHashCode() -> int
+override Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryResult.ToString() -> string!
+override Kazo.Os.Apps.CodeEditor.CodeEditorSaveResult.Equals(object? obj) -> bool
+override Kazo.Os.Apps.CodeEditor.CodeEditorSaveResult.GetHashCode() -> int
+override Kazo.Os.Apps.CodeEditor.CodeEditorSaveResult.ToString() -> string!
+override Kazo.Os.Apps.CodeEditor.CodeEditorSearchFileResult.Equals(object? obj) -> bool
+override Kazo.Os.Apps.CodeEditor.CodeEditorSearchFileResult.GetHashCode() -> int
+override Kazo.Os.Apps.CodeEditor.CodeEditorSearchFileResult.ToString() -> string!
+override Kazo.Os.Apps.CodeEditor.CodeEditorSearchMatch.Equals(object? obj) -> bool
+override Kazo.Os.Apps.CodeEditor.CodeEditorSearchMatch.GetHashCode() -> int
+override Kazo.Os.Apps.CodeEditor.CodeEditorSearchMatch.ToString() -> string!
+override Kazo.Os.Apps.CodeEditor.CodeEditorSearchQuery.Equals(object? obj) -> bool
+override Kazo.Os.Apps.CodeEditor.CodeEditorSearchQuery.GetHashCode() -> int
+override Kazo.Os.Apps.CodeEditor.CodeEditorSearchQuery.ToString() -> string!
+override Kazo.Os.Apps.CodeEditor.CodeEditorSearchResult.Equals(object? obj) -> bool
+override Kazo.Os.Apps.CodeEditor.CodeEditorSearchResult.GetHashCode() -> int
+override Kazo.Os.Apps.CodeEditor.CodeEditorSearchResult.ToString() -> string!
+override Kazo.Os.Apps.CodeEditor.CodeEditorSearchView.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.CodeEditor.CodeEditorSearchView.OnParametersSet() -> void
+override Kazo.Os.Apps.CodeEditor.CodeEditorSessionRecovery.Equals(object? obj) -> bool
+override Kazo.Os.Apps.CodeEditor.CodeEditorSessionRecovery.GetHashCode() -> int
+override Kazo.Os.Apps.CodeEditor.CodeEditorSessionRecovery.ToString() -> string!
+override Kazo.Os.Apps.CodeEditor.CodeEditorWindow.OnAppAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.CodeEditor.CodeEditorWindow.OnAppInitialized() -> void
+override Kazo.Os.Apps.CodeEditor.CodeEditorWindow.OnAppInitializedAsync() -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.CodeEditor.CodeEditorWindow.OnAppStopRequestedAsync(Kazo.Os.AppSdk.Diagnostics.KazoStopRequestedEventArgs! e) -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile.Equals(object? obj) -> bool
+override Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile.GetHashCode() -> int
+override Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile.ToString() -> string!
+override Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceListing.Equals(object? obj) -> bool
+override Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceListing.GetHashCode() -> int
+override Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceListing.ToString() -> string!
+static Kazo.Os.Apps.CodeEditor.CodeEditorCreateResult.operator !=(Kazo.Os.Apps.CodeEditor.CodeEditorCreateResult? left, Kazo.Os.Apps.CodeEditor.CodeEditorCreateResult? right) -> bool
+static Kazo.Os.Apps.CodeEditor.CodeEditorCreateResult.operator ==(Kazo.Os.Apps.CodeEditor.CodeEditorCreateResult? left, Kazo.Os.Apps.CodeEditor.CodeEditorCreateResult? right) -> bool
+static Kazo.Os.Apps.CodeEditor.CodeEditorDocument.CreateLoaded(Kazo.Os.App.Abstractions.VirtualPath path, string! content, long revision, Kazo.Os.Apps.CodeEditor.CodeEditorSyntaxMode? syntaxMode = null) -> Kazo.Os.Apps.CodeEditor.CodeEditorDocument!
+static Kazo.Os.Apps.CodeEditor.CodeEditorDocument.CreateNew(int sequence) -> Kazo.Os.Apps.CodeEditor.CodeEditorDocument!
+static Kazo.Os.Apps.CodeEditor.CodeEditorDocument.Restore(Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery! recovery) -> Kazo.Os.Apps.CodeEditor.CodeEditorDocument!
+static Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery.operator !=(Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery? left, Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery? right) -> bool
+static Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery.operator ==(Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery? left, Kazo.Os.Apps.CodeEditor.CodeEditorDocumentRecovery? right) -> bool
+static Kazo.Os.Apps.CodeEditor.CodeEditorEditResult.operator !=(Kazo.Os.Apps.CodeEditor.CodeEditorEditResult? left, Kazo.Os.Apps.CodeEditor.CodeEditorEditResult? right) -> bool
+static Kazo.Os.Apps.CodeEditor.CodeEditorEditResult.operator ==(Kazo.Os.Apps.CodeEditor.CodeEditorEditResult? left, Kazo.Os.Apps.CodeEditor.CodeEditorEditResult? right) -> bool
+static Kazo.Os.Apps.CodeEditor.CodeEditorGlob.Parse(string? globs) -> Kazo.Os.Apps.CodeEditor.CodeEditorGlob!
+static Kazo.Os.Apps.CodeEditor.CodeEditorLoadResult.operator !=(Kazo.Os.Apps.CodeEditor.CodeEditorLoadResult? left, Kazo.Os.Apps.CodeEditor.CodeEditorLoadResult? right) -> bool
+static Kazo.Os.Apps.CodeEditor.CodeEditorLoadResult.operator ==(Kazo.Os.Apps.CodeEditor.CodeEditorLoadResult? left, Kazo.Os.Apps.CodeEditor.CodeEditorLoadResult? right) -> bool
+static Kazo.Os.Apps.CodeEditor.CodeEditorNavigation.operator !=(Kazo.Os.Apps.CodeEditor.CodeEditorNavigation? left, Kazo.Os.Apps.CodeEditor.CodeEditorNavigation? right) -> bool
+static Kazo.Os.Apps.CodeEditor.CodeEditorNavigation.operator ==(Kazo.Os.Apps.CodeEditor.CodeEditorNavigation? left, Kazo.Os.Apps.CodeEditor.CodeEditorNavigation? right) -> bool
+static Kazo.Os.Apps.CodeEditor.CodeEditorQuickOpen.Filter(System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile!>! files, string? text) -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile!>!
+static Kazo.Os.Apps.CodeEditor.CodeEditorQuickOpen.Score(Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile! file, string! query) -> int
+static Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryResult.operator !=(Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryResult? left, Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryResult? right) -> bool
+static Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryResult.operator ==(Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryResult? left, Kazo.Os.Apps.CodeEditor.CodeEditorRecoveryResult? right) -> bool
+static Kazo.Os.Apps.CodeEditor.CodeEditorSaveResult.operator !=(Kazo.Os.Apps.CodeEditor.CodeEditorSaveResult? left, Kazo.Os.Apps.CodeEditor.CodeEditorSaveResult? right) -> bool
+static Kazo.Os.Apps.CodeEditor.CodeEditorSaveResult.operator ==(Kazo.Os.Apps.CodeEditor.CodeEditorSaveResult? left, Kazo.Os.Apps.CodeEditor.CodeEditorSaveResult? right) -> bool
+static Kazo.Os.Apps.CodeEditor.CodeEditorSearchFileResult.operator !=(Kazo.Os.Apps.CodeEditor.CodeEditorSearchFileResult? left, Kazo.Os.Apps.CodeEditor.CodeEditorSearchFileResult? right) -> bool
+static Kazo.Os.Apps.CodeEditor.CodeEditorSearchFileResult.operator ==(Kazo.Os.Apps.CodeEditor.CodeEditorSearchFileResult? left, Kazo.Os.Apps.CodeEditor.CodeEditorSearchFileResult? right) -> bool
+static Kazo.Os.Apps.CodeEditor.CodeEditorSearchMatch.operator !=(Kazo.Os.Apps.CodeEditor.CodeEditorSearchMatch? left, Kazo.Os.Apps.CodeEditor.CodeEditorSearchMatch? right) -> bool
+static Kazo.Os.Apps.CodeEditor.CodeEditorSearchMatch.operator ==(Kazo.Os.Apps.CodeEditor.CodeEditorSearchMatch? left, Kazo.Os.Apps.CodeEditor.CodeEditorSearchMatch? right) -> bool
+static Kazo.Os.Apps.CodeEditor.CodeEditorSearchQuery.operator !=(Kazo.Os.Apps.CodeEditor.CodeEditorSearchQuery? left, Kazo.Os.Apps.CodeEditor.CodeEditorSearchQuery? right) -> bool
+static Kazo.Os.Apps.CodeEditor.CodeEditorSearchQuery.operator ==(Kazo.Os.Apps.CodeEditor.CodeEditorSearchQuery? left, Kazo.Os.Apps.CodeEditor.CodeEditorSearchQuery? right) -> bool
+static Kazo.Os.Apps.CodeEditor.CodeEditorSearchResult.Empty.get -> Kazo.Os.Apps.CodeEditor.CodeEditorSearchResult!
+static Kazo.Os.Apps.CodeEditor.CodeEditorSearchResult.operator !=(Kazo.Os.Apps.CodeEditor.CodeEditorSearchResult? left, Kazo.Os.Apps.CodeEditor.CodeEditorSearchResult? right) -> bool
+static Kazo.Os.Apps.CodeEditor.CodeEditorSearchResult.operator ==(Kazo.Os.Apps.CodeEditor.CodeEditorSearchResult? left, Kazo.Os.Apps.CodeEditor.CodeEditorSearchResult? right) -> bool
+static Kazo.Os.Apps.CodeEditor.CodeEditorSession.Restore(Kazo.Os.Apps.CodeEditor.CodeEditorSessionRecovery! recovery) -> Kazo.Os.Apps.CodeEditor.CodeEditorSession!
+static Kazo.Os.Apps.CodeEditor.CodeEditorSessionRecovery.operator !=(Kazo.Os.Apps.CodeEditor.CodeEditorSessionRecovery? left, Kazo.Os.Apps.CodeEditor.CodeEditorSessionRecovery? right) -> bool
+static Kazo.Os.Apps.CodeEditor.CodeEditorSessionRecovery.operator ==(Kazo.Os.Apps.CodeEditor.CodeEditorSessionRecovery? left, Kazo.Os.Apps.CodeEditor.CodeEditorSessionRecovery? right) -> bool
+static Kazo.Os.Apps.CodeEditor.CodeEditorSyntaxModeDetector.FromPath(Kazo.Os.App.Abstractions.VirtualPath path) -> Kazo.Os.Apps.CodeEditor.CodeEditorSyntaxMode
+static Kazo.Os.Apps.CodeEditor.CodeEditorTextSearch.BuildMatcher(Kazo.Os.Apps.CodeEditor.CodeEditorSearchQuery! query, out string? error) -> System.Text.RegularExpressions.Regex?
+static Kazo.Os.Apps.CodeEditor.CodeEditorTextSearch.Search(string! content, System.Text.RegularExpressions.Regex! matcher) -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.CodeEditor.CodeEditorSearchMatch!>!
+static Kazo.Os.Apps.CodeEditor.CodeEditorWorkspace.Combine(Kazo.Os.App.Abstractions.VirtualPath directory, string! name) -> Kazo.Os.App.Abstractions.VirtualPath
+static Kazo.Os.Apps.CodeEditor.CodeEditorWorkspace.ParentOf(Kazo.Os.App.Abstractions.VirtualPath path) -> Kazo.Os.App.Abstractions.VirtualPath
+static Kazo.Os.Apps.CodeEditor.CodeEditorWorkspace.ValidateName(string? name) -> string?
+static Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile.operator !=(Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile? left, Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile? right) -> bool
+static Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile.operator ==(Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile? left, Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceFile? right) -> bool
+static Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceListing.operator !=(Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceListing? left, Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceListing? right) -> bool
+static Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceListing.operator ==(Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceListing? left, Kazo.Os.Apps.CodeEditor.CodeEditorWorkspaceListing? right) -> bool
+static readonly Kazo.Os.Apps.CodeEditor.CodeEditorWorkspace.ExcludedDirectories -> System.Collections.Generic.IReadOnlySet<string!>!
+~override Kazo.Os.Apps.CodeEditor.CodeEditorCursorStatus.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.CodeEditor.CodeEditorExplorer.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.CodeEditor.CodeEditorQuickOpenPalette.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.CodeEditor.CodeEditorSearchView.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.CodeEditor.CodeEditorWindow.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

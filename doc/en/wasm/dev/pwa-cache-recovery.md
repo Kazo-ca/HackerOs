@@ -33,9 +33,9 @@ is rebuilt.
 | Piece | File | Role |
 |---|---|---|
 | Integrity check | Blazor (`dotnet.js`, SHA-256 fingerprints of the startup configuration) | Each startup resource is loaded with `integrity`: damaged bytes make the load fail ("SRI's integrity checks failed"), then startup fail ("Failed to start platform. Reason: … download '…' failed"). |
-| Startup guard | `OS/HackerOs.Ecosystem/wwwroot/index.html` (inline script, host bootstrap boundary) | Launches Blazor (`autostart="false"`, then `Blazor.start()`), detects the failure, decides on the repair, displays the error screen. |
-| Repair | `OS/HackerOs.Ecosystem/wwwroot/service-worker.published.js`, `RESET_CACHE` message | Empties the version's cache and fetches it again from the server, or keeps it intact if the server is unreachable. |
-| Error screen | `index.html` (`#hackeros-boot-error`) and `OS/HackerOs.Ecosystem.Host/wwwroot/css/app.css` (served under `_content/HackerOs.Ecosystem.Host/css/app.css`) | Three states (`data-state`): `repairing`, `retrying`, `offline`, `failed`. Dark console style; Blazor's loading ring and error bar are hidden (`html.hackeros-boot-failed`). |
+| Startup guard | `OS/Kazo.Os.Ecosystem/wwwroot/index.html` (inline script, host bootstrap boundary) | Launches Blazor (`autostart="false"`, then `Blazor.start()`), detects the failure, decides on the repair, displays the error screen. |
+| Repair | `OS/Kazo.Os.Ecosystem/wwwroot/service-worker.published.js`, `RESET_CACHE` message | Empties the version's cache and fetches it again from the server, or keeps it intact if the server is unreachable. |
+| Error screen | `index.html` (`#kazoos-boot-error`) and `OS/Kazo.Os.Ecosystem.Host/wwwroot/css/app.css` (served under `_content/Kazo.Os.Ecosystem.Host/css/app.css`) | Three states (`data-state`): `repairing`, `retrying`, `offline`, `failed`. Dark console style; Blazor's loading ring and error bar are hidden (`html.kazoos-boot-failed`). |
 
 ### Flow
 
@@ -50,14 +50,14 @@ is rebuilt.
    also listens to the "download '…' for … failed" rejection that escapes
    from the loader on its own.
 3. If no service worker controls the page (first visit, Ctrl+F5), or if the
-   guard `sessionStorage['hackeros.bootRecovery']` is already set (the page
+   guard `sessionStorage['kazoos.bootRecovery']` is already set (the page
    has already repaired and reloaded in this tab), the error often comes from
    the server and goes away: GitHub Pages sends `503` responses for a while
    after a deployment, and their body fails the integrity check
    ([ADR 0224](adr/0224-retry-the-boot-after-a-server-error.md)). The
    `retrying` screen counts 5, 15 then 30 seconds and reloads the page;
    "Retry" retries at once. After three attempts
-   (`sessionStorage['hackeros.bootRetries']`), or offline, the `failed` screen
+   (`sessionStorage['kazoos.bootRetries']`), or offline, the `failed` screen
    (or `offline` if a worker controls the page) is displayed.
 4. Otherwise the `repairing` screen is displayed and the page sends `RESET_CACHE` to the
    service worker over a `MessageChannel` (maximum delay 120 s). The service
@@ -66,7 +66,7 @@ is rebuilt.
      is unreachable, it answers `{ ok: false, reason: 'unreachable' }` without erasing
      anything, and the page displays the `offline` state;
    - otherwise it downloads all the manifest files again, with their
-     `integrity`, into a transit cache `hackeros-cache-<version>-repair`,
+     `integrity`, into a transit cache `kazoos-cache-<version>-repair`,
      empties the damaged cache, copies the transit cache into it, then deletes the transit cache;
    - if the server cannot provide a verified copy of this version
      (file damaged on the server, newer version deployed), it empties
@@ -75,7 +75,7 @@ is rebuilt.
    clears the guard: a later corruption in the same tab will be
    repaired again.
 
-The transit cache starts with `hackeros-cache-`: if it were left half
+The transit cache starts with `kazoos-cache-`: if it were left half
 written, the next activation of a version deletes it like any stale
 cache (ADR 0017).
 
@@ -97,7 +97,7 @@ cache (ADR 0017).
 
 ## Tests
 
-`Tests/HackerOs.Pwa.E2E.Tests/PublishedPwaTests.cs`, against a Release
+`Tests/Kazo.Os.Pwa.E2E.Tests/PublishedPwaTests.cs`, against a Release
 publication served statically (the test that checked that corrupted bytes
 were served as is has been replaced):
 

@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../Packaging.props" />
+
+  <PropertyGroup>
+    <PackageId>Kazo.Os.Platform.Core</PackageId>
+    <Description>Kazo OS platform core: app catalog, process manager, policy, shell, settings and logs as files, gateways behind the SDK. For composing an OS host.</Description>
+    <PackageTags>kazoos;platform</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Kazo.Os.App.Abstractions\Kazo.Os.App.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Shared\Kazo.Os.Simulation.Abstractions\Kazo.Os.Simulation.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Shared\Kazo.Os.Theming.Abstractions\Kazo.Os.Theming.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Shared\Kazo.Os.AppSdk\Kazo.Os.AppSdk.csproj" />
+    <!-- ADR 0028: the optional server's shared contracts are explicitly designed to be referenced
+         by any browser-independent client adapter, not just the ASP.NET Core server. -->
+    <ProjectReference Include="..\..\Server\Kazo.Os.Server.Contracts\Kazo.Os.Server.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- ADR 0203 §6: the sample icon pack copied to /usr/share/icons at boot (BuiltInIconPacks). -->
+    <EmbeddedResource Include="FileSystem\IconPacks\**\*" LogicalName="Kazo.Os.IconPacks/%(RecursiveDir)%(Filename)%(Extension)" />
+    <!-- ADR 0204: the built-in sound themes, installed in /usr/share/sounds by FileSystemSeeder. -->
+    <EmbeddedResource Include="Sounds\Themes\**\*.oga" LogicalName="Kazo.Os.Sounds.%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.14" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- ADR 0048: AppLifecycleOrchestrator.DisableAsync/EnableAsync are internal to the installation
+         service; the lifecycle tests still exercise their cascade rules directly. -->
+    <InternalsVisibleTo Include="Kazo.Os.Platform.Core.Tests" />
+    <!-- ADR 0070: the worker host serves a remote process through the same trusted context and
+         reports a closed pipe exactly like a local writer (ShellBrokenPipeException). -->
+    <InternalsVisibleTo Include="Kazo.Os.Platform.WorkerHost" />
+    <InternalsVisibleTo Include="Kazo.Os.Platform.WorkerHost.Tests" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

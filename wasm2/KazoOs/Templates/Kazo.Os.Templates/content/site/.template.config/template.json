@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Kazo OS",
+  "classifications": [ "Kazo OS", "Web", "App" ],
+  "identity": "Kazo.Os.Templates.Site",
+  "groupIdentity": "Kazo.Os.Templates.Site",
+  "name": "Kazo OS ASP.Kazo site",
+  "description": "A web site served inside Kazo OS by ASP.Kazo (WebAppDefinition), opened in the Kazo OS browser.",
+  "shortName": "kazoos-site",
+  "sourceName": "Kazo.Os.Template.Site",
+  "preferNameDirectory": true,
+  "tags": { "language": "C#", "type": "project" },
+  "symbols": {
+    "appId": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "Application id (reverse-DNS, lowercase), unique in the catalog.",
+      "defaultValue": "com.example.my-app",
+      "replaces": "com.example.template-app"
+    },
+    "publisherId": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "Publisher id written in the manifest.",
+      "defaultValue": "pub.example",
+      "replaces": "pub.template"
+    }
+  }
+}

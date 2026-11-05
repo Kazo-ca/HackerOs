@@ -13,16 +13,16 @@ réponse de Benoit), dans la série [`v3-1-series-plan.md`](plans/v3-1-series-pl
 C'est le §10 de l'[ADR 0044](adr/0044-settings-as-files.md).
 
 C'est le modèle de GNOME : une app GTK retient sa taille et son état agrandi,
-le gestionnaire de fenêtres place la fenêtre. HackerOS tient la géométrie en C#
+le gestionnaire de fenêtres place la fenêtre. Kazo OS tient la géométrie en C#
 (ADR 0009) ; il écrit donc lui-même cette taille, pour toutes les apps.
 
 ## Fichier d'état
 
 Un fichier par app et par utilisateur, propre à l'appareil, jamais synchronisé :
-`~/.local/state/hackeros/windows/<appId>.config`.
+`~/.local/state/kazoos/windows/<appId>.config`.
 
 ```ini
-# Window size of org.hackeros.text-editor (ADR 0116, ADR 0122)
+# Window size of org.kazoos.text-editor (ADR 0116, ADR 0122)
 width=900
 height=640
 maximized=false
@@ -36,7 +36,7 @@ maximized=false
   sa taille déclarée.
 - Un fichier écrit avant l'ADR 0122 (avec `x=` et `y=`) garde sa taille ; sa
   position est ignorée, et la prochaine écriture le réécrit sans ces clés.
-- Oublier la taille d'une app : `rm ~/.local/state/hackeros/windows/<appId>.config`.
+- Oublier la taille d'une app : `rm ~/.local/state/kazoos/windows/<appId>.config`.
 
 ## Architecture
 
@@ -99,7 +99,7 @@ public override WindowOptions? Window => new()
 ```
 
 `WindowOptions.RememberGeometry` est un ajout du SDK 1.1
-(`PublicAPI.Shipped.txt` de `HackerOs.App.Abstractions` depuis `v3.1/4-sdk-1-1`). Le générateur écrit
+(`PublicAPI.Shipped.txt` de `Kazo.Os.App.Abstractions` depuis `v3.1/4-sdk-1-1`). Le générateur écrit
 `window.rememberGeometry` dans `manifest.json` seulement quand il vaut `false` :
 les manifestes des apps qui gardent le défaut restent identiques octet pour
 octet. Le schéma v1 l'accepte comme champ facultatif, le désérialiseur strict

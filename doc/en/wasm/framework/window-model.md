@@ -27,10 +27,10 @@ implementation of [ADR 0095](../dev/adr/0095-window-events-sizes-and-keyboard.md
 | --- | --- |
 | `OnWindowActivated[Async]()` | The window receives focus. |
 | `OnWindowDeactivated[Async]()` | The window loses focus (another window, minimizing, no window left in the foreground). |
-| `OnWindowStateChanged[Async](previous, current)` | `HackWindowState`: `Normal`, `Minimized`, `Maximized`. |
-| `OnWindowResized[Async](HackWindowSize size)` | Size of the client area (without the title bar), in CSS pixels, **only once at the end** of a resize (mouse gesture, keyboard, maximizing, restoring, change of the work area). |
+| `OnWindowStateChanged[Async](previous, current)` | `KazoWindowState`: `Normal`, `Minimized`, `Maximized`. |
+| `OnWindowResized[Async](KazoWindowSize size)` | Size of the client area (without the title bar), in CSS pixels, **only once at the end** of a resize (mouse gesture, keyboard, maximizing, restoring, change of the work area). |
 | `IsWindowActive`, `WindowState`, `WindowSize` | Last known state, to be read in rendering. |
-| `TrackDisplaySurface(IDisplaySurface)` | Makes a detached window followed (ADR 0078/0081): its focus, loss of focus and size trigger the same hooks. `HackWindowSize.DisplaySurfaceId` then indicates the surface. The result is released when the surface is reattached. |
+| `TrackDisplaySurface(IDisplaySurface)` | Makes a detached window followed (ADR 0078/0081): its focus, loss of focus and size trigger the same hooks. `KazoWindowSize.DisplaySurfaceId` then indicates the surface. The result is released when the surface is reattached. |
 
 Guaranteed order:
 
@@ -40,7 +40,7 @@ Guaranteed order:
 - when the app is rendered in a window that is already maximized or already in the foreground, it receives
   `OnWindowStateChanged(Normal, current state)` then `OnWindowActivated`;
 - the synchronous version is called before the `Async` version, on the component's dispatcher, in
-  the app's ambient context (the `Hack*` facades work); a new render follows.
+  the app's ambient context (the `Kazo*` facades work); a new render follows.
 
 A hook that throws an exception is written to the app's log
 (`/var/log/apps/<appId>.log`, level `Error`, prefix `window:`); the window's transition
@@ -53,7 +53,7 @@ has already happened and continues.
 
 @code {
     protected override Task OnWindowDeactivatedAsync() => PauseAnimationAsync();
-    protected override void OnWindowResized(HackWindowSize size) => _columns = (int)(size.Width / 120);
+    protected override void OnWindowResized(KazoWindowSize size) => _columns = (int)(size.Width / 120);
 }
 ```
 
@@ -135,7 +135,7 @@ public override WindowOptions? Window => new()
   the keyboard commands resize, maximize and snap do nothing.
 - Remembered size (ADR 0116 and 0122, [`window-geometry.md`](../dev/window-geometry.md)): the size and
   maximized state of each app window, not its position, are written to
-  `~/.local/state/hackeros/windows/<appId>.config` and reread by
+  `~/.local/state/kazoos/windows/<appId>.config` and reread by
   `WindowLaunchCoordinator.PresentAsync`, which corrects the size for the screen and the current
   declared sizes; the window always opens at its cascade position (`InitialBounds`).
   `WindowOptions.RememberGeometry = false` refuses.
@@ -146,8 +146,8 @@ public override WindowOptions? Window => new()
 ### `keybindings.config` file
 
 Read by `WindowKeyboardCommands` with the usual layers
-([`settings-files.md`](settings-files.md)): `/etc/hackeros/keybindings.config` (written at
-first startup, all commented out), then `~/.config/hackeros/keybindings.config`. A
+([`settings-files.md`](settings-files.md)): `/etc/kazoos/keybindings.config` (written at
+first startup, all commented out), then `~/.config/kazoos/keybindings.config`. A
 change to the file applies immediately. Several combinations separated by commas;
 an empty value removes the key.
 
@@ -229,7 +229,7 @@ apps each provide their `icons/app.svg`; the build computes the asset's
 fingerprint. Without a declaration, a window symbol serves as a fallback.
 
 All desktop themes display the title icon except macOS, which hides
-the icon and its context button with `--hos-window-icon-display: none`.
+the icon and its context button with `--kos-window-icon-display: none`.
 The macOS dock keeps the app icons. The menu remains accessible from the keyboard.
 The Lucide choice of the launcher and shortcuts remains independent of the chrome images.
 See [ADR 0164](../dev/adr/0164-app-icons-and-window-icon-context-menu.md).
@@ -277,7 +277,7 @@ the mobile desktop's recents and the frame's accessible name (`aria-labelledby`)
   cleans the title with `WindowTitles.Sanitize` (Windowing.Abstractions) and publishes
   `WindowTitleChangedEvent`; an unchanged title produces nothing. Surfaces reread
   `WindowRuntimeState.Title` on each `StateChanged`.
-- `AppWindowGatewayFactory` (Platform.Blazor, registered by `AddHackerOsEcosystem`) creates one
+- `AppWindowGatewayFactory` (Platform.Blazor, registered by `AddKazoOsEcosystem`) creates one
   `IAppWindowGateway` per window, bound to its `WindowId`. `WindowAppRenderer` receives it
   (`WindowGateways`, passed by `DesktopShell` and `MobileShell`) and gives it to the app through a fixed
   `CascadingValue`: the app can only reach its own window.
@@ -287,7 +287,7 @@ the mobile desktop's recents and the frame's accessible name (`aria-labelledby`)
 
 | App | Title |
 | --- | --- |
-| Hack Paint | `photo.png — Hack Paint`, `*` if the image is modified; the name leaves the toolbar. |
+| Kazo Paint | `photo.png — Kazo Paint`, `*` if the image is modified; the name leaves the toolbar. |
 | Text Editor | `*notes.txt — Text Editor`; the app's banner keeps its display. |
 | Code Editor | Active tab, then open folder: `*Program.cs — src — Code Editor`. |
 | Theme Editor | `*Name — Theme Editor` (also in its toolbar). |
@@ -310,10 +310,10 @@ the mobile desktop's recents and the frame's accessible name (`aria-labelledby`)
 
 - **Full screen added** (`toggle-fullscreen`, `Alt+F11`, menu entry): keyboard
   locking only exists in full screen, so a way to enter it was needed.
-- **`HackWindowSize.DisplaySurfaceId`**: distinguishes the resizing of a detached window from
+- **`KazoWindowSize.DisplaySurfaceId`**: distinguishes the resizing of a detached window from
   that of the desktop window.
 - **Measured size** in the browser, estimated only as a fallback (tests, server rendering).
-- **`/etc/hackeros/keybindings.config` shipped as comments**: active values come from
+- **`/etc/kazoos/keybindings.config` shipped as comments**: active values come from
   the code as long as nobody writes the file, like the other OS documents.
 - **Snapping keeps the earlier geometry** (ADR 0177, replaces "Snapping keeps no restore
   geometry"): the snapped window stays `Normal`, with `IsSnapped` and `RestoreBounds`. The saved
@@ -349,7 +349,7 @@ the mobile desktop's recents and the frame's accessible name (`aria-labelledby`)
 - `WindowAppBaseWindowTitleTests` (Blazor SDK), `WindowTitleTests` (Windowing.Core),
   `AppWindowGatewayFactoryTests` (Platform.Blazor): title set before the first render, same title
   ignored, cleaning, return to the app name, a single window targeted, closed window, surfaces.
-- E2E `HackPaintWindowTitleTests` (UI.E2E): `Untitled — Hack Paint`, `*` after a stroke, file
+- E2E `KazoPaintWindowTitleTests` (UI.E2E): `Untitled — Kazo Paint`, `*` after a stroke, file
   name after "Save As" in the title bar and the taskbar.
 - E2E `WindowKeyboardCommandsTests` (UI.E2E): `` Alt+` `` switches window and `Alt+Q` closes the
   active window in a Chromium tab.
@@ -359,7 +359,7 @@ the mobile desktop's recents and the frame's accessible name (`aria-labelledby`)
 - [x] Fix the double move on release and the transition before/after projection.
 - [x] Cover intermediate frames in Chromium and in the OS restore scenario.
 
-- [x] Window hooks in `WindowAppBase` and SDK contracts (`HackWindowState`, `HackWindowSize`).
+- [x] Window hooks in `WindowAppBase` and SDK contracts (`KazoWindowState`, `KazoWindowSize`).
 - [x] Runtime facts: published batch, end of resize, fix for minimizing in the background.
 - [x] `WindowAppEventDispatcher` dispatcher and client area measurement.
 - [x] Detached windows followed (`TrackDisplaySurface`, browser).
@@ -378,6 +378,6 @@ the mobile desktop's recents and the frame's accessible name (`aria-labelledby`)
 - [x] `SetWindowTitleCommand` command, `WindowTitleChangedEvent` event, `WindowTitles.Sanitize`.
 - [x] `IAppWindowGateway`, `AppWindowGatewayFactory`, cascade in `WindowAppRenderer` (desktop and mobile).
 - [x] `WindowTitle`, `SetWindowTitleAsync`, `FormatWindowTitle` in `WindowAppBase`; detached surfaces followed.
-- [x] Hack Paint, text editor, code editor, theme editor, explorer.
+- [x] Kazo Paint, text editor, code editor, theme editor, explorer.
 - [x] Unit and E2E tests.
 - [x] ADR 0123, documentation, SDK reference and index.

@@ -33,7 +33,7 @@ Two apps remain on `MainThread` for this reason alone: the sample service
 (`ServiceSampleApp`, typed topic `SampleTickerEvent`) and `hackwebd`
 (`HackFileSystemWatcher` on its configuration folders, ADR 0080 §1).
 
-In addition, the pool preloads `HackerOs.Commands.dll` and loads the other
+In addition, the pool preloads `Kazo.Os.Commands.dll` and loads the other
 assemblies through `INTERNAL.loadLazyAssembly` at the first `start`; a command
 from another assembly (a sample project, an app packaged by NuGet in a
 host) has never been tested in a worker. Installing apps **at runtime**
@@ -94,7 +94,7 @@ overflow follow §1.
   (entry point validated by the OS discovery, ADR 0113), and keeps it
   loaded for this worker's subsequent requests.
 - `PreloadAssemblies` remains a host setting; it only contains
-  `HackerOs.Commands.dll` by default.
+  `Kazo.Os.Commands.dll` by default.
 - An assembly that is not in the list is rejected (`TypeLoadException`
   reported as a launch failure, exit code 127). Runtime installation
   does not change this rule until its own ADR exists.
@@ -130,4 +130,4 @@ with the reason in a comment (ADR 0070 §1).
 
 - ADR 0070, 0072, 0080, 0094, 0113, 0128, 0132.
 - [`worker-processes.md`](../worker-processes.md),
-  [`hack-file-api.md`](../../framework/hack-file-api.md).
+  [`kazo-file-api.md`](../../framework/kazo-file-api.md).

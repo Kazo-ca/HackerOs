@@ -1,0 +1,53 @@
+@using Kazo.Os.AppSdk.Blazor.Components
+@using Kazo.Os.AppSdk.Components
+@inject IStringLocalizer<Strings> L
+
+@*
+    A dialog of the file dialogs contract (kazoos.file-dialogs, ADR 0155 §5): the OS is only the
+    proxy. It shows the provider's component (the File Explorer's) in this owner-modal window, inside
+    the requesting app's context, so the dialog reads and writes with that app's rights (ADR 0148 §4),
+    and hands the provider's result back to the coordinator.
+*@
+<CascadingValue TValue="IAppExecutionContext" Value="Presentation.Context" IsFixed="true">
+    <section class="provided-file-dialog" aria-label="@Presentation.Dialog">
+        <KazoEmbeddedComponent TController="object"
+                               Contract="@KazoComponentContracts.FileDialogs"
+                               Parameters="_parameters">
+            <Unavailable Context="reason">
+                <div class="provided-file-dialog-unavailable" role="alert">
+                    <p>@L["Dialog.FileDialogsUnavailable"]</p>
+                    <p class="provided-file-dialog-reason">@reason</p>
+                    <button type="button" @onclick="Close">@L["Common.Close"]</button>
+                </div>
+            </Unavailable>
+        </KazoEmbeddedComponent>
+    </section>
+</CascadingValue>
+
+@code {
+    private IReadOnlyDictionary<string, object?> _parameters = new Dictionary<string, object?>();
+
+    /// <summary>Gets or sets the dialog to show.</summary>
+    [Parameter]
+    [EditorRequired]
+    public ProvidedFileDialogPresentation Presentation { get; set; } = default!;
+
+    /// <summary>Gets or sets the coordinator that waits for the dialog's result.</summary>
+    [Parameter]
+    [EditorRequired]
+    public DialogCoordinator Coordinator { get; set; } = default!;
+
+    /// <inheritdoc />
+    protected override void OnInitialized() =>
+        // Built once: the provider is not re-rendered by a new dictionary on each render.
+        _parameters = new Dictionary<string, object?>(StringComparer.Ordinal)
+        {
+            ["Dialog"] = Presentation.Dialog,
+            ["Request"] = Presentation.Request,
+            ["Completed"] = EventCallback.Factory.Create<object?>(this, Complete),
+        };
+
+    private void Complete(object? result) => Coordinator.CompleteProvided(Presentation.Id, result);
+
+    private void Close() => Coordinator.Cancel(Presentation.Id);
+}

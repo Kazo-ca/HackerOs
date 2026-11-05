@@ -16,22 +16,22 @@ an app always gave `intent.unknown`. The work item adds:
 
 | Intent | Identifier | What the OS does |
 |---|---|---|
-| `RevealFileIntent(Path)` | `org.hackeros.intent.reveal-file.v1` | Launches the folder handler (`inode/directory`) on the parent folder with `--select=<path>`; the explorer selects the item and scrolls to it. This is `org.freedesktop.FileManager1.ShowItems` reduced to one argument. |
-| `EditFileIntent(Path, MediaType, PreferredAppId)` | `org.hackeros.intent.edit-file.v1` | Chooses among the apps whose handler declares the `edit` action; with none, falls back to `open` (like `xdg-open`, which has no "edit" verb) and reports it (`FellBackToOpen`). |
-| `OpenUriIntent(Uri, PreferredAppId)` | `org.hackeros.intent.open-uri.v1` | `file://` becomes an `OpenFileIntent`; any other scheme resolves like the media type `x-scheme-handler/<scheme>`, and the app receives the URI as an argument. |
-| `ShowAppSettingsIntent(TargetAppId)` | `org.hackeros.intent.show-app-settings.v1` | The target app with `--show-settings` if it declares this intent (it has its own page), otherwise Settings on the app's card (`--app=<id>`). |
-| `CustomIntent(IntentId, PayloadJson, TargetAppId, RememberChoice)` | free identifier `reversed.domain.name.vN` | Launches or activates the app that declares the identifier in `Intents`; several: the user chooses in the "Open with" picker, with "Always use this app" remembered in `~/.config/hackeros/intents.config`. |
+| `RevealFileIntent(Path)` | `org.kazoos.intent.reveal-file.v1` | Launches the folder handler (`inode/directory`) on the parent folder with `--select=<path>`; the explorer selects the item and scrolls to it. This is `org.freedesktop.FileManager1.ShowItems` reduced to one argument. |
+| `EditFileIntent(Path, MediaType, PreferredAppId)` | `org.kazoos.intent.edit-file.v1` | Chooses among the apps whose handler declares the `edit` action; with none, falls back to `open` (like `xdg-open`, which has no "edit" verb) and reports it (`FellBackToOpen`). |
+| `OpenUriIntent(Uri, PreferredAppId)` | `org.kazoos.intent.open-uri.v1` | `file://` becomes an `OpenFileIntent`; any other scheme resolves like the media type `x-scheme-handler/<scheme>`, and the app receives the URI as an argument. |
+| `ShowAppSettingsIntent(TargetAppId)` | `org.kazoos.intent.show-app-settings.v1` | The target app with `--show-settings` if it declares this intent (it has its own page), otherwise Settings on the app's card (`--app=<id>`). |
+| `CustomIntent(IntentId, PayloadJson, TargetAppId, RememberChoice)` | free identifier `reversed.domain.name.vN` | Launches or activates the app that declares the identifier in `Intents`; several: the user chooses in the "Open with" picker, with "Always use this app" remembered in `~/.config/kazoos/intents.config`. |
 
 And the command `xdg-open <file|folder|URI>`.
 
 ## Architecture
 
 ```text
-App ──HackApps.*Async──► IAppIntentGateway ──► AppIntentDispatcher ──► FileAssociationResolver
- │                       (AppIntentGateway,      (capacités, accès,       (/etc/hackeros/
+App ──KazoApps.*Async──► IAppIntentGateway ──► AppIntentDispatcher ──► FileAssociationResolver
+ │                       (AppIntentGateway,      (capacités, accès,       (/etc/kazoos/
  │                        ou RemoteIntentGateway  erreurs intent.*)        file-associations.json,
  │                        dans un Web Worker)            │                 FileHandlers des manifestes ;
- │                                                       │                 ~/.config/hackeros d'abord,
+ │                                                       │                 ~/.config/kazoos d'abord,
  │                                                       │                 ADR 0121)
  │                                                       ▼
  └◄── AppContext.Intent / IntentReceived ◄── AppLifecycleOrchestrator.LaunchAsync(AppLaunchRequest.Intent)
@@ -70,21 +70,21 @@ App ──HackApps.*Async──► IAppIntentGateway ──► AppIntentDispatch
 ### Sending
 
 ```csharp
-await HackApps.RevealFileAsync("~/Documents/rapport.txt");      // « Afficher dans le dossier »
-HackOpenFileResult edit = await HackApps.EditFileAsync("notes.md");
-HackIntentResult web = await HackApps.OpenUriAsync("https://hackersearch.hack/?q=nmap");
-await HackApps.ShowSettingsAsync();                              // réglages de l'app courante
-HackIntentResult sent = await HackApps.SendIntentAsync(
+await KazoApps.RevealFileAsync("~/Documents/rapport.txt");      // « Afficher dans le dossier »
+KazoOpenFileResult edit = await KazoApps.EditFileAsync("notes.md");
+KazoIntentResult web = await KazoApps.OpenUriAsync("https://hackersearch.hack/?q=nmap");
+await KazoApps.ShowSettingsAsync();                              // réglages de l'app courante
+KazoIntentResult sent = await KazoApps.SendIntentAsync(
     "com.example.notes.share.v1", """{"text":"Bonjour"}""");
 ```
 
 | Member | Capability | Failures |
 |---|---|---|
-| `RevealFileAsync(path)` | `apps.launch` | `HackFileNotFoundException`, `HackUnauthorizedAccessException` (unreadable folder), `HackAppLaunchException` (no folder handler) |
-| `EditFileAsync(path)` | `apps.launch` | `HackOpenFileResult`: `Opened`, `ChooserRequired` (candidates), `NoHandler`; `FellBackToOpen` |
-| `OpenUriAsync(uri, appId)` | `apps.launch` | `ArgumentException` if the URI is not absolute; `HackIntentResult`: `Delivered`, `ChooserRequired`, `NoHandler` |
-| `ShowSettingsAsync(appId)` | none | `HackAppLaunchException` (unknown or disabled app) |
-| `SendIntentAsync(id, payload, targetAppId, rememberChoice)` | `apps.launch` | `ArgumentException` (malformed or reserved identifier, payload that is not a JSON object or exceeds 64 KiB, target that does not declare the intent); `HackIntentResult` |
+| `RevealFileAsync(path)` | `apps.launch` | `KazoFileNotFoundException`, `KazoUnauthorizedAccessException` (unreadable folder), `KazoAppLaunchException` (no folder handler) |
+| `EditFileAsync(path)` | `apps.launch` | `KazoOpenFileResult`: `Opened`, `ChooserRequired` (candidates), `NoHandler`; `FellBackToOpen` |
+| `OpenUriAsync(uri, appId)` | `apps.launch` | `ArgumentException` if the URI is not absolute; `KazoIntentResult`: `Delivered`, `ChooserRequired`, `NoHandler` |
+| `ShowSettingsAsync(appId)` | none | `KazoAppLaunchException` (unknown or disabled app) |
+| `SendIntentAsync(id, payload, targetAppId, rememberChoice)` | `apps.launch` | `ArgumentException` (malformed or reserved identifier, payload that is not a JSON object or exceeds 64 KiB, target that does not declare the intent); `KazoIntentResult` |
 
 A windowed app rather calls `WindowAppBase.SendIntentAsync(id, payload)`:
 if several apps answer, it displays the OS picker
@@ -145,9 +145,9 @@ give 4 and the list of candidates.
   [`file-explorer.md`](../dev/file-explorer.md#command-line-and-show-in-folder-adr-0039-adr-0096-1).
 - Settings: `--app=<id>` opens the "Application" tab (`AppDetailsPanel`):
   identity, requested capabilities with the state of dangerous capabilities
-  (`HackPermissionAdministration`), managed file types and schemes, service
+  (`KazoPermissionAdministration`), managed file types and schemes, service
   state, startup mode and Start/Stop buttons for a `Service` app
-  (`HackServiceController`, hence Settings' `services.manage` capability),
+  (`KazoServiceController`, hence Settings' `services.manage` capability),
   and uninstallation (the "Installed Apps" panel filtered on the app).
 
 ## Key decisions
@@ -164,8 +164,8 @@ give 4 and the list of candidates.
   which an untyped send would bypass.
 - **The default choice for a scheme lives in `file-associations.json`**, like
   that of a file type: the user's
-  (`~/.config/hackeros/file-associations.json`) takes precedence over the machine's
-  (`/etc/hackeros/file-associations.json`) since work item `v3/4b`
+  (`~/.config/kazoos/file-associations.json`) takes precedence over the machine's
+  (`/etc/kazoos/file-associations.json`) since work item `v3/4b`
   ([ADR 0121](../dev/adr/0121-user-file-associations.md),
   [`user-file-associations.md`](../dev/user-file-associations.md)).
 - **A terminal has no picker**: `xdg-open` with several apps and
@@ -175,17 +175,17 @@ give 4 and the list of candidates.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Intents/AppIntentDispatcherTests.cs`:
+- `Tests/Kazo.Os.Platform.Core.Tests/Intents/AppIntentDispatcherTests.cs`:
   each intent and each error code, arguments and `Intent` received by the launched
   app, choice remembered in `intents.config`, delivery to an open instance
   through `IntentReceived`, translation by `AppIntentGateway`.
-- `Tests/HackerOs.Commands.Tests/XdgOpenCommandTests.cs` and the
+- `Tests/Kazo.Os.Commands.Tests/XdgOpenCommandTests.cs` and the
   `xdg-open` scenario of `CommandParityTests` (worker and main thread).
-- `Tests/HackerOs.Apps.FileExplorer.Tests/FileExplorerLaunchArgumentsTests.cs`,
-  `Tests/HackerOs.Apps.Settings.Tests/SettingsWindowTests.cs` (`--app=`).
-- `Tests/HackerOs.Platform.Blazor.Tests/DialogCoordinatorTests.cs` (app
-  picker), `Tests/HackerOs.AppSdk.Tests/Apps/HackAppsIntentTests.cs` (facades),
-  `Tests/HackerOs.Platform.WorkerHost.Tests/WireCodecIntentTests.cs` (codec).
+- `Tests/Kazo.Os.Apps.FileExplorer.Tests/FileExplorerLaunchArgumentsTests.cs`,
+  `Tests/Kazo.Os.Apps.Settings.Tests/SettingsWindowTests.cs` (`--app=`).
+- `Tests/Kazo.Os.Platform.Blazor.Tests/DialogCoordinatorTests.cs` (app
+  picker), `Tests/Kazo.Os.AppSdk.Tests/Apps/KazoAppsIntentTests.cs` (facades),
+  `Tests/Kazo.Os.Platform.WorkerHost.Tests/WireCodecIntentTests.cs` (codec).
 
 ## Tasks
 
@@ -196,7 +196,7 @@ give 4 and the list of candidates.
 - [x] `intents.config` ("Always use this app").
 - [x] `IAppIntentGateway`: `EditFileAsync`, `RevealFileAsync`, `OpenUriAsync`, `ShowAppSettingsAsync`, `SendIntentAsync`.
 - [x] `IAppExecutionContext.Intent` and `IntentReceived`; second activation of an open instance.
-- [x] `HackApps`; `WindowAppBase` and `ServiceAppBase` (`OnIntentReceivedAsync`, `SendIntentAsync`, `ChooseAppAsync`).
+- [x] `KazoApps`; `WindowAppBase` and `ServiceAppBase` (`OnIntentReceivedAsync`, `SendIntentAsync`, `ChooseAppAsync`).
 - [x] OS app picker (`AppChooserDialog`).
 - [x] Web Workers: operations, `intent` message, codec.
 - [x] `xdg-open` command.

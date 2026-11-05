@@ -20,7 +20,7 @@ demander à chaque app de tout déclarer).
   `_content/<assemblage>/` : son `wwwroot/`, le JavaScript collocalisé d'un
   composant (`Composant.razor.js`, AGENTS.md II.2) et le bundle de son CSS
   isolé (`<assemblage>.bundle.scp.css`), que la feuille
-  `HackerOs.Ecosystem.styles.css` de l'hôte importe.
+  `Kazo.Os.Ecosystem.styles.css` de l'hôte importe.
 - Une app installée par `hackpkg` ou le Hack Store reçoit seulement les fichiers
   de son paquet. `HackerOsPack` n'y met que les `Assets` déclarés par
   `AppDefinition.Assets` (souvent les icônes), et l'ADR 0206 ne sert que ceux-là.
@@ -109,5 +109,5 @@ projet.
 - [x] Modèle `hackeros-solution` : `publish-to-hack-store.yml` copie le manifeste du paquet.
 - [x] `InstalledAppAssetPublisher` : lien vers le CSS isolé (`linkStyleSheet` dans `installedAppAssets.js`).
 - [x] Tests unitaires (`PackagedWebAssetsTests`, `InstalledAppAssetPublisherTests`).
-- [x] Paquet de test `Tests/fixtures/installed-app` : JavaScript collocalisé et fichier non déclaré ; tests de bout en bout (`HackerOs.TrimmedPublish.E2E.Tests`) : module collocalisé et CSS isolé.
+- [x] Paquet de test `Tests/fixtures/installed-app` : JavaScript collocalisé et fichier non déclaré ; tests de bout en bout (`Kazo.Os.TrimmedPublish.E2E.Tests`) : module collocalisé et CSS isolé.
 - [x] Docs : `app-installation.md`, `app-repository.md`, `features.md`, mémoire, entrée de changement.

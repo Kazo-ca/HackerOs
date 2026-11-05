@@ -2,7 +2,7 @@
 
 # Taskbar context menus
 
-Work item 4 of the taskbar series (issue [#242](https://github.com/Kazo-ca/HackerOs/issues/242)),
+Work item 4 of the taskbar series (issue [#242](https://github.com/Kazo-ca/Os/issues/242)),
 implementation of [ADR 0194](adr/0194-taskbar-context-menus.md). It builds on the OS context menu
 ([ADR 0150](adr/0150-os-context-menu.md)), the window menu and "Other screen ▸"
 ([`other-screen-menus.md`](other-screen-menus.md)) and the per-screen taskbars
@@ -20,7 +20,7 @@ every screen. A right click does not activate the window.
 
 - **New window** starts the app once more on the taskbar's screen. It is disabled for a
   `SingleInstancePerUser` app or one missing from the catalog.
-- **Task manager** opens the system monitor (`org.hackeros.system-monitor`) on the taskbar's
+- **Task manager** opens the system monitor (`org.kazoos.system-monitor`) on the taskbar's
   screen.
 - **Show the desktop** minimizes the windows of the taskbar's screen.
 - **Cascade** and **tile** arrange the windows of the taskbar's screen (section 3).
@@ -33,7 +33,7 @@ Entries with nothing to do are disabled.
 
 | Element | Role |
 | --- | --- |
-| `ITaskbarContextMenus` (package `HackerOs.Taskbar.Blazor`) | Gives the HTML attributes of the taskbar (`TaskbarAttributes`) and of each window button (`WindowItemAttributes(id)`). The `Taskbar.ContextMenus` parameter sets them with `@attributes`. Without it nothing changes. |
+| `ITaskbarContextMenus` (package `Kazo.Os.Taskbar.Blazor`) | Gives the HTML attributes of the taskbar (`TaskbarAttributes`) and of each window button (`WindowItemAttributes(id)`). The `Taskbar.ContextMenus` parameter sets them with `@attributes`. Without it nothing changes. |
 | `TaskbarContextMenus` (`Platform.Blazor/Shell`) | Creates a scope of the OS menu and registers `taskbar-window-menu` (attached object: the window and the taskbar's screen) and `taskbar-menu` (attached object: the screen). The menu is filled when it opens (`Opening`). `For(display)` gives each taskbar's object. |
 | `WindowMenuDefinitions` (`Platform.Blazor/Windows`) | Builds the window menu entries and "Other screen ▸", for the title bar (`WindowManagerOverlays`) and for the taskbar. |
 | `WindowArrangement` (`Platform.Blazor/Windows`) | `ShowDesktop`, `Cascade`, `Tile` and `ArrangeableWindows` over a `WindowRuntime` and a screen. |
@@ -59,10 +59,10 @@ not modal, and not blocked by a dialog. A fixed (non-movable) window stays where
 
 ## 4. Tests
 
-- `Tests/HackerOs.Taskbar.Blazor.Tests/TaskbarContextMenusTests.cs`: attributes set on the taskbar
+- `Tests/Kazo.Os.Taskbar.Blazor.Tests/TaskbarContextMenusTests.cs`: attributes set on the taskbar
   and the buttons, none without a host.
-- `Tests/HackerOs.Platform.Blazor.Tests/Shell/TaskbarContextMenusTests.cs`: entries and state of
+- `Tests/Kazo.Os.Platform.Blazor.Tests/Shell/TaskbarContextMenusTests.cs`: entries and state of
   both menus, launches on the taskbar's screen, disabled entries.
-- `Tests/HackerOs.Platform.Blazor.Tests/WindowArrangementTests.cs`: show the desktop, cascade, tile,
+- `Tests/Kazo.Os.Platform.Blazor.Tests/WindowArrangementTests.cs`: show the desktop, cascade, tile,
   maximized, snapped, fixed and minimized windows and dialogs.
 - `WindowMenuContextMenuTests` keeps the title bar's menu unchanged.

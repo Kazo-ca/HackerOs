@@ -6,7 +6,7 @@
 
 Accepté le 2026-10-17, avec le chantier `web/12-site-data`.
 
-- **Phase du plan :** phase web ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)), après la clôture
+- **Phase du plan :** phase web ([`asp-kazo-plan.md`](../plans/asp-kazo-plan.md)), après la clôture
   constatée par l'ADR 0087 §4.
 - **Réalise :** ADR 0073 §3 (base `hackweb.<id>`, journaux `/var/log/hackweb/<id>.log`, saisie
   semi-automatique du navigateur).
@@ -132,4 +132,4 @@ n'ont pas cette saisie semi-automatique.
 - Un id d'app qui finirait par `.access` ou `.error` partagerait un nom de fichier avec les
   journaux de `hackwebd` (ADR 0080 §3) pour un site hébergé du même nom ; le catalogue ne
   l'interdit pas, la collision est seulement improbable.
-- Guide : [`asp-hack-site-data.md`](../../framework/asp-hack-site-data.md).
+- Guide : [`asp-kazo-site-data.md`](../../framework/asp-kazo-site-data.md).

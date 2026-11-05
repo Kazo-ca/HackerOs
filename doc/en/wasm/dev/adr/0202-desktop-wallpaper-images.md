@@ -6,7 +6,7 @@
 
 Accepted on 2026-10-30. Work item 9 of the Hack Store plan, the OS system that
 [ADR 0190](0190-theme-packs.md) §4 asks for before the Store accepts wallpapers
-in a pack. Issue [#254](https://github.com/Kazo-ca/HackerOs/issues/254),
+in a pack. Issue [#254](https://github.com/Kazo-ca/Os/issues/254),
 `todo/base` series (branch `todo/6-wallpaper-images`).
 
 - **Completes:** [ADR 0044](0044-settings-as-files.md) §8 (layered
@@ -44,8 +44,8 @@ screens is the one of `screens.config` (ADR 0180).
 ### 2. Where images come from
 
 - **Shipped with the OS**: 4 WebP images (`hacker-grid`, `circuit`, `aurora`,
-  `nebula`) in `HackerOs.Theming.Blazor/wwwroot/wallpapers/`, served as static
-  files (`_content/HackerOs.Theming.Blazor/wallpapers/`). They take no room in
+  `nebula`) in `Kazo.Os.Theming.Blazor/wwwroot/wallpapers/`, served as static
+  files (`_content/Kazo.Os.Theming.Blazor/wallpapers/`). They take no room in
   the user's storage, as the built-in themes live in code.
 - **System**: `/usr/share/hackeros/wallpapers/`, placed by an administrator,
   offered to everyone.
@@ -100,16 +100,16 @@ screens is the one of `screens.config` (ADR 0180).
 ### 6. Outside this work item
 
 - **Mobile** (Q1): the mobile home screen keeps its theme's background.
-  `TODO` issue [#297](https://github.com/Kazo-ca/HackerOs/issues/297).
+  `TODO` issue [#297](https://github.com/Kazo-ca/Os/issues/297).
 - **"Set as wallpaper"** in the File Explorer's context menu of images (Q3):
-  `TODO` issue [#298](https://github.com/Kazo-ca/HackerOs/issues/298).
+  `TODO` issue [#298](https://github.com/Kazo-ca/Os/issues/298).
 
 ## Consequences
 
 - The Store can accept the `wallpapers/` part of a pack as soon as packs
   install (#253): the folders are already read.
-- `HackerOs.Theming.Abstractions` gains `WallpaperCatalog`, `WallpaperFit` and
-  `BuiltInWallpaper`; `HackerOs.Windowing.Blazor` gains
+- `Kazo.Os.Theming.Abstractions` gains `WallpaperCatalog`, `WallpaperFit` and
+  `BuiltInWallpaper`; `Kazo.Os.Windowing.Blazor` gains
   `DesktopArea.WallpaperContent`. No change to the apps' SDK.
 - A 16 MB image stays in memory while a screen shows it (one copy per file,
   shared between screens).

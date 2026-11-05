@@ -1,0 +1,27 @@
+#nullable enable
+Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowHost
+Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowHost.AppContext.get -> Kazo.Os.AppSdk.IAppExecutionContext!
+Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowHost.AppContext.set -> void
+Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowHost.Descriptor.get -> Kazo.Os.Platform.Core.Discovery.AppDescriptor!
+Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowHost.Descriptor.set -> void
+Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowHost.DispatchEvent(ulong handlerId, string! eventName, string! argumentsJson) -> void
+Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowHost.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowHost.RemoteWindowHost() -> void
+Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowHost.Window.get -> Kazo.Os.Windowing.Abstractions.WindowRuntimeState!
+Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowHost.Window.set -> void
+Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions
+Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.<Clone>$() -> Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions!
+Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.Apps.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.Apps.init -> void
+Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.Enabled.get -> bool
+Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.Enabled.init -> void
+Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.Equals(Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions? other) -> bool
+Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.RemoteWindowRenderingOptions() -> void
+Kazo.Os.Platform.RemoteRendering.RemoteWindowRenderingServiceCollectionExtensions
+const Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.SectionName = "KazoOs:RemoteWindowRendering" -> string!
+override Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.Equals(object? obj) -> bool
+override Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.GetHashCode() -> int
+override Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.ToString() -> string!
+static Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.operator !=(Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions? left, Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions? right) -> bool
+static Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions.operator ==(Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions? left, Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions? right) -> bool
+static Kazo.Os.Platform.RemoteRendering.RemoteWindowRenderingServiceCollectionExtensions.AddKazoOsRemoteWindowRendering(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services, Kazo.Os.Platform.RemoteRendering.Host.RemoteWindowRenderingOptions! options) -> Microsoft.Extensions.DependencyInjection.IServiceCollection!

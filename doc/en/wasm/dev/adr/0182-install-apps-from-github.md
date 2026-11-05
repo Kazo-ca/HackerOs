@@ -27,11 +27,11 @@ of system-wide installs replace the answer to Q4; §6 (Store) is described by
   `_framework` and are loaded on demand (`BlazorWebAssemblyLazyLoad`).
   "Install" and "uninstall" (ADR 0048) only turn on or remove an app already
   compiled into the host.
-- The `Kazo-ca/HackerOs-AppTemplate` template repository (ADR 0176) produces a
+- The `Kazo-ca/Os-AppTemplate` template repository (ADR 0176) produces a
   .NET solution: a windowed app, its `wwwroot/` resources declared in `Assets`
   (with their SHA-256), its generated `manifest.json`.
 - Each third-party app lives in its own GitHub repository (for example
-  `Kazo-ca/HackerOs-App-Webamp`, `Kazo-ca/HackerOs-App-IRC`). An app that wraps
+  `Kazo-ca/Os-App-Webamp`, `Kazo-ca/Os-App-IRC`). An app that wraps
   a JavaScript project does so as resources of a .NET app.
 - The OS runs without a server on GitHub Pages (`hackos.kazo.ca`). An app's real
   network goes through the optional server's proxy and the dangerous
@@ -78,7 +78,7 @@ SHA-256 values are lowercase hexadecimal, with no prefix. The target SDK is not
 repeated: it is the manifest's `sdkCompatibility`. `lib/` only holds the
 assemblies the manifest names (entry points and components).
 
-The `HackerOsPack` MSBuild target (`HackerOs.App.Build` package) produces the
+The `HackerOsPack` MSBuild target (`Kazo.Os.App.Build` package) produces the
 package: `dotnet build -c Release -t:HackerOsPack` writes
 `<version>/<appId>-<version>.hackapp` and updates `index.json` in
 `HackerOsPackageOutput` (by default `bin/hackeros-packages/`), the content of the
@@ -139,8 +139,8 @@ hackpkg info <source>
 hackpkg sources
 ```
 
-`<source>` accepts `github:Kazo-ca/HackerOs-App-Webamp`,
-`Kazo-ca/HackerOs-App-Webamp` and `https://github.com/Kazo-ca/HackerOs-App-Webamp`.
+`<source>` accepts `github:Kazo-ca/Os-App-Webamp`,
+`Kazo-ca/Os-App-Webamp` and `https://github.com/Kazo-ca/Os-App-Webamp`.
 Without a version, the newest one in `index.json`.
 
 Install, remove and update are **machine** operations: `sudo hackpkg install
@@ -172,7 +172,7 @@ Install, remove and update are **machine** operations: `sudo hackpkg install
 
    ```text
    [installed]
-   org.kazo.webamp=github:Kazo-ca/HackerOs-App-Webamp@1.0.0
+   org.kazo.webamp=github:Kazo-ca/Os-App-Webamp@1.0.0
    ```
 
 6. **(Q5)** Log to `/var/log/syslog` and offer to restart the OS ("Restart to
@@ -180,7 +180,7 @@ Install, remove and update are **machine** operations: `sudo hackpkg install
    "Open with" and the terminal after the restart. The catalog stays frozen
    during a session; immediate addition comes in a separate work item. Example
    line
-   (`apps: org.kazo.webamp 1.0.0 installed from github:Kazo-ca/HackerOs-App-Webamp (by=alice)`).
+   (`apps: org.kazo.webamp 1.0.0 installed from github:Kazo-ca/Os-App-Webamp (by=alice)`).
 
 At startup, before the catalog is used, the host reads `[installed]` and the
 manifests under `/usr/lib/hackeros/apps/` and builds the catalog with the
@@ -202,8 +202,8 @@ deleting anything.
 
 Outside this ADR. A future "HackerOs Store" system app, in the style of the Play
 Store or Microsoft Store, will read the list in the
-`Kazo-ca/HackerOs-AppMarketPlace` repository and install through the same
-service as `hackpkg`. Note in [`../plans/hackeros-store.md`](../plans/hackeros-store.md),
+`Kazo-ca/Os-AppMarketPlace` repository and install through the same
+service as `hackpkg`. Note in [`../plans/kazoos-store.md`](../plans/kazoos-store.md),
 to pick up once apps are published.
 
 ## Answers
@@ -268,8 +268,8 @@ Questions asked to Benoit on 2026-10-28; he chose **A** for the first four and *
 
 - [x] Benoit's answers to Q1 to Q5 (A for the first four, C for Q5, 2026-10-28).
 - [ ] Later: adding to the catalog without a restart (Q5 B).
-- [x] `HackerOsPack` target in `HackerOs.App.Build` (`pack` command of the manifest generator).
-- [ ] Publishing workflow in `hackeros-solution` (`Kazo-ca/HackerOs-AppTemplate` repository).
+- [x] `HackerOsPack` target in `Kazo.Os.App.Build` (`pack` command of the manifest generator).
+- [ ] Publishing workflow in `hackeros-solution` (`Kazo-ca/Os-AppTemplate` repository).
 - [x] `app-sources.config` (reading, creation at startup).
 - [x] `[installed]` section in `AppsConfigDocument`; registration in the catalog at startup.
 - [x] Loading an installed assembly from the file system, resources through `AppAssetStore`.

@@ -1,0 +1,2040 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="About.Architecture" xml:space="preserve">
+    <value>Architecture :</value>
+  </data>
+  <data name="About.ArchitectureValue" xml:space="preserve">
+    <value>Noyau C# / CSS isolé / MudBlazor</value>
+  </data>
+  <data name="About.Authority" xml:space="preserve">
+    <value>Autorité :</value>
+  </data>
+  <data name="About.Authority.Administrator" xml:space="preserve">
+    <value>Administrateur</value>
+  </data>
+  <data name="About.Authority.System" xml:space="preserve">
+    <value>Système</value>
+  </data>
+  <data name="About.Authority.User" xml:space="preserve">
+    <value>Utilisateur</value>
+  </data>
+  <data name="About.OsVersion" xml:space="preserve">
+    <value>Version du système :</value>
+  </data>
+  <data name="About.Runtime" xml:space="preserve">
+    <value>Environnement d'exécution :</value>
+  </data>
+  <data name="About.UserId" xml:space="preserve">
+    <value>Identifiant utilisateur :</value>
+  </data>
+  <data name="Accessibility.Error.CannotRead" xml:space="preserve">
+    <value>Impossible de lire {0} : {1}</value>
+  </data>
+  <data name="Accessibility.Error.CannotSave" xml:space="preserve">
+    <value>Impossible d'enregistrer {0} : {1}</value>
+  </data>
+  <data name="Accessibility.HighContrast.Description" xml:space="preserve">
+    <value>Surfaces noires, texte blanc et contour de focus jaune épais, par-dessus tous les thèmes, y compris les thèmes utilisateur.</value>
+  </data>
+  <data name="Accessibility.HighContrast.Title" xml:space="preserve">
+    <value>Contraste élevé</value>
+  </data>
+  <data name="Accessibility.Mode.Auto" xml:space="preserve">
+    <value>Auto</value>
+  </data>
+  <data name="Accessibility.Mode.Off" xml:space="preserve">
+    <value>Désactivé</value>
+  </data>
+  <data name="Accessibility.Mode.On" xml:space="preserve">
+    <value>Activé</value>
+  </data>
+  <data name="Accessibility.ReducedMotion.AnimationsLocked" xml:space="preserve">
+    <value>Un administrateur a fixé {0} et l'a verrouillé : les animations restent réduites, quel que soit votre choix.</value>
+  </data>
+  <data name="Accessibility.ReducedMotion.Description" xml:space="preserve">
+    <value>Arrête les transitions, les curseurs clignotants et le défilement animé.</value>
+  </data>
+  <data name="Accessibility.ReducedMotion.Title" xml:space="preserve">
+    <value>Réduire les animations</value>
+  </data>
+  <data name="Accessibility.Saved" xml:space="preserve">
+    <value>Enregistré. Le bureau l'applique maintenant.</value>
+  </data>
+  <data name="Accessibility.State.Description" xml:space="preserve">
+    <value>Vos choix sont enregistrés dans {0}, par-dessus les valeurs par défaut de la machine dans {1}. « Auto » suit les réglages de l'ordinateur sur lequel Kazo OS tourne.</value>
+  </data>
+  <data name="Accessibility.State.Off" xml:space="preserve">
+    <value>désactivé</value>
+  </data>
+  <data name="Accessibility.State.On" xml:space="preserve">
+    <value>activé</value>
+  </data>
+  <data name="Accessibility.State.Title" xml:space="preserve">
+    <value>Appliqué maintenant</value>
+  </data>
+  <data name="Accessibility.TextScale.Description" xml:space="preserve">
+    <value>Agrandit le texte du bureau et de toutes les apps ; le terminal et l'éditeur de code suivent.</value>
+  </data>
+  <data name="Accessibility.TextScale.Title" xml:space="preserve">
+    <value>Taille du texte</value>
+  </data>
+  <data name="Appearance.Accent.AriaLabel" xml:space="preserve">
+    <value>Couleurs d'accent Kazo OS</value>
+  </data>
+  <data name="Appearance.Accent.Description" xml:space="preserve">
+    <value>Les couleurs d'accent ne sont proposées, volontairement, que pour le thème Kazo OS.</value>
+  </data>
+  <data name="Appearance.Accent.Title" xml:space="preserve">
+    <value>Couleur d'accent Kazo OS</value>
+  </data>
+  <data name="Appearance.DesktopTheme.AriaLabel" xml:space="preserve">
+    <value>Thèmes du bureau</value>
+  </data>
+  <data name="Appearance.DesktopTheme.Description" xml:space="preserve">
+    <value>Appliqué au bureau, aux fenêtres, à la barre des tâches et au menu Démarrer.</value>
+  </data>
+  <data name="Appearance.DesktopTheme.Title" xml:space="preserve">
+    <value>Thème du bureau</value>
+  </data>
+  <data name="Appearance.EditTheme" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="Appearance.Error.AdminRequired" xml:space="preserve">
+    <value>Changer le défaut du système demande l'approbation d'un administrateur. Approuvez la demande, puis appliquez de nouveau.</value>
+  </data>
+  <data name="Appearance.Error.CannotRead" xml:space="preserve">
+    <value>Les réglages d'apparence ne peuvent pas être lus : {0}</value>
+  </data>
+  <data name="Appearance.Error.CannotSave" xml:space="preserve">
+    <value>Impossible d'enregistrer le fichier de réglages : {0}</value>
+  </data>
+  <data name="Appearance.Layer.AriaLabel" xml:space="preserve">
+    <value>Niveau des réglages</value>
+  </data>
+  <data name="Appearance.Layer.Description" xml:space="preserve">
+    <value>Vos choix sont enregistrés dans {0}. Le réglage par défaut de tous les utilisateurs se trouve dans {1} et demande l'approbation d'un administrateur.</value>
+  </data>
+  <data name="Appearance.Layer.System" xml:space="preserve">
+    <value>Tous les utilisateurs (défaut du système)</value>
+  </data>
+  <data name="Appearance.Layer.Title" xml:space="preserve">
+    <value>Appliquer les changements à</value>
+  </data>
+  <data name="Appearance.Layer.User" xml:space="preserve">
+    <value>Moi seulement</value>
+  </data>
+  <data name="Appearance.MobileTheme.AriaLabel" xml:space="preserve">
+    <value>Thèmes mobiles</value>
+  </data>
+  <data name="Appearance.MobileTheme.Description" xml:space="preserve">
+    <value>Enregistré séparément et appliqué quand l'interface mobile est active.</value>
+  </data>
+  <data name="Appearance.MobileTheme.Title" xml:space="preserve">
+    <value>Thème mobile</value>
+  </data>
+  <data name="Appearance.OpenThemeEditor" xml:space="preserve">
+    <value>Ouvrir l'Éditeur de thèmes</value>
+  </data>
+  <data name="Appearance.SaveAsSystemDefault" xml:space="preserve">
+    <value>Enregistrer l'apparence actuelle comme défaut du système</value>
+  </data>
+  <data name="Appearance.SavedAsSystemDefault" xml:space="preserve">
+    <value>Enregistré comme défaut pour tous les utilisateurs.</value>
+  </data>
+  <data name="Appearance.UserThemes.Description" xml:space="preserve">
+    <value>Thèmes faits de jetons de design vérifiés, enregistrés dans {0} (les vôtres) ou {1} (installés pour tous les utilisateurs). Ils apparaissent ci-dessus avec les thèmes intégrés.</value>
+  </data>
+  <data name="Appearance.UserThemes.Title" xml:space="preserve">
+    <value>Vos thèmes</value>
+  </data>
+  <data name="Appearance.UserThemes.Warnings" xml:space="preserve">
+    <value>{0} avertissement(s) dans les fichiers de thème ; ouvrez l'Éditeur de thèmes pour les détails.</value>
+  </data>
+  <data name="Apps.Commands" xml:space="preserve">
+    <value>Commandes du terminal ({0}) : elles font partie du système et sont toujours installées</value>
+  </data>
+  <data name="Apps.Description" xml:space="preserve">
+    <value>Désinstaller une app la masque partout, bloque tous les moyens de la lancer et ferme ses fenêtres ouvertes. Rien n'est supprimé : ses réglages et vos fichiers restent en place pour une réinstallation. Seul un site web perd sa base de données du navigateur. La liste se trouve dans {0} (pour vous) et {1} (pour tous les utilisateurs : un administrateur doit s'authentifier).</value>
+  </data>
+  <data name="Apps.Error.CannotWrite" xml:space="preserve">
+    <value>Impossible d'écrire apps.config : {0}</value>
+  </data>
+  <data name="Apps.Error.NoAdmin" xml:space="preserve">
+    <value>Aucun administrateur ne s'est authentifié : /etc/kazoos/apps.config n'a pas été modifié.</value>
+  </data>
+  <data name="Apps.Error.NotAllowed" xml:space="preserve">
+    <value>Paramètres n'a pas le droit de gérer les apps (capacité apps.manage).</value>
+  </data>
+  <data name="Apps.InstallationTitle" xml:space="preserve">
+    <value>Installation</value>
+  </data>
+  <data name="Apps.Loading" xml:space="preserve">
+    <value>Chargement des applications…</value>
+  </data>
+  <data name="Apps.ProcessItem" xml:space="preserve">
+    <value>{0} (PID {1})</value>
+  </data>
+  <data name="Apps.Reinstall" xml:space="preserve">
+    <value>Réinstaller</value>
+  </data>
+  <data name="Apps.Scope.Machine" xml:space="preserve">
+    <value>Pour tous les utilisateurs</value>
+  </data>
+  <data name="Apps.Scope.User" xml:space="preserve">
+    <value>Pour moi seulement</value>
+  </data>
+  <data name="Apps.Stopped" xml:space="preserve">
+    <value>Arrêtés : {0}.</value>
+  </data>
+  <data name="Apps.StoppedAndForced" xml:space="preserve">
+    <value>Arrêtés : {0}. Forcés après leur délai de grâce : {1}.</value>
+  </data>
+  <data name="Apps.SystemBadge" xml:space="preserve">
+    <value>Système</value>
+  </data>
+  <data name="Apps.SystemBadge.Title" xml:space="preserve">
+    <value>Les apps système ne peuvent pas être désinstallées</value>
+  </data>
+  <data name="Apps.Title" xml:space="preserve">
+    <value>Applications installées</value>
+  </data>
+  <data name="Apps.Uninstall" xml:space="preserve">
+    <value>Désinstaller</value>
+  </data>
+  <data name="Apps.Uninstall.AdminWillAuthenticate" xml:space="preserve">
+    <value>Le système demandera à un administrateur de s'authentifier.</value>
+  </data>
+  <data name="Apps.Uninstall.Dependents" xml:space="preserve">
+    <value>Ces apps en dépendent et seront aussi désinstallées :</value>
+  </data>
+  <data name="Apps.Uninstall.ForYouOnly" xml:space="preserve">
+    <value>La désinstallation ne concerne que vous.</value>
+  </data>
+  <data name="Apps.Uninstall.GracePeriod" xml:space="preserve">
+    <value>Chacun est prié de s'arrêter et dispose de quelques secondes pour enregistrer son travail avant d'être forcé. Les réglages et les fichiers sont conservés.</value>
+  </data>
+  <data name="Apps.Uninstall.NothingRunning" xml:space="preserve">
+    <value>Rien n'en est en cours d'exécution. Les réglages et les fichiers sont conservés.</value>
+  </data>
+  <data name="Apps.Uninstall.Processes" xml:space="preserve">
+    <value>Ces processus seront arrêtés :</value>
+  </data>
+  <data name="Apps.Uninstall.ScopeAriaLabel" xml:space="preserve">
+    <value>Désinstaller pour</value>
+  </data>
+  <data name="Apps.Uninstall.SiteData" xml:space="preserve">
+    <value>Les données du site web {0} (sa base de données du navigateur {1}) sont supprimées : elles ne sont pas dans vos fichiers et ne reviendront pas avec une réinstallation.</value>
+  </data>
+  <data name="Apps.Uninstall.Title" xml:space="preserve">
+    <value>Désinstaller {0} ?</value>
+  </data>
+  <data name="Apps.Uninstalled" xml:space="preserve">
+    <value>Désinstallée</value>
+  </data>
+  <data name="Apps.UninstalledByAdmin" xml:space="preserve">
+    <value>Désinstallée par l'administrateur</value>
+  </data>
+  <data name="Apps.UninstalledForAll" xml:space="preserve">
+    <value>Désinstallée pour tous les utilisateurs</value>
+  </data>
+  <data name="Apps.Uninstalling" xml:space="preserve">
+    <value>Désinstallation…</value>
+  </data>
+  <data name="Backup.Create" xml:space="preserve">
+    <value>Créer une sauvegarde</value>
+  </data>
+  <data name="Backup.Create.Description" xml:space="preserve">
+    <value>Une sauvegarde contient {0} : les fichiers de chaque utilisateur, {1}, les comptes et les empreintes de leurs mots de passe. Elle est téléchargée sur votre ordinateur sous la forme d'une seule archive {2}, jamais gardée dans Kazo OS, comme une sauvegarde sur un disque externe. Un administrateur doit confirmer avec son mot de passe. Depuis un terminal : {3}.</value>
+  </data>
+  <data name="Backup.Create.Everything" xml:space="preserve">
+    <value>tout</value>
+  </data>
+  <data name="Backup.Create.Title" xml:space="preserve">
+    <value>Sauvegarder cette machine</value>
+  </data>
+  <data name="Backup.Creating" xml:space="preserve">
+    <value>Sauvegarde…</value>
+  </data>
+  <data name="Backup.Error.Failed" xml:space="preserve">
+    <value>Échec de la sauvegarde : {0}</value>
+  </data>
+  <data name="Backup.Error.Invalid" xml:space="preserve">
+    <value>Ce fichier ne peut pas être restauré : {0}</value>
+  </data>
+  <data name="Backup.Error.RestoreFailed" xml:space="preserve">
+    <value>Échec de la restauration : {0}</value>
+  </data>
+  <data name="Backup.Mode.AriaLabel" xml:space="preserve">
+    <value>Mode de restauration</value>
+  </data>
+  <data name="Backup.Mode.Merge" xml:space="preserve">
+    <value>Fusionner</value>
+  </data>
+  <data name="Backup.Mode.Merge.Description" xml:space="preserve">
+    <value>Les enregistrements de la sauvegarde remplacent les mêmes ici ; tout le reste est conservé.</value>
+  </data>
+  <data name="Backup.Mode.Replace" xml:space="preserve">
+    <value>Remplacer</value>
+  </data>
+  <data name="Backup.Mode.Replace.Description" xml:space="preserve">
+    <value>Cette machine devient exactement la sauvegarde : tout ce qui est plus récent est perdu.</value>
+  </data>
+  <data name="Backup.Restore" xml:space="preserve">
+    <value>Restaurer…</value>
+  </data>
+  <data name="Backup.Restore.Description" xml:space="preserve">
+    <value>Choisissez une archive {0} sur votre ordinateur. Kazo OS la vérifie d'abord : une archive d'une autre version de la base de données, ou endommagée, est refusée et rien ne change. Ensuite, un administrateur confirme, tous les processus s'arrêtent, la sauvegarde est écrite et Kazo OS redémarre. Depuis un terminal : {1} ou {2}.</value>
+  </data>
+  <data name="Backup.Restore.Title" xml:space="preserve">
+    <value>Restaurer une sauvegarde</value>
+  </data>
+  <data name="Backup.Restoring" xml:space="preserve">
+    <value>Restauration…</value>
+  </data>
+  <data name="Backup.Result" xml:space="preserve">
+    <value>Téléchargé : {0} ({1}, {2} enregistrements).</value>
+  </data>
+  <data name="Backup.Size.Bytes" xml:space="preserve">
+    <value>{0} o</value>
+  </data>
+  <data name="Backup.Size.KiB" xml:space="preserve">
+    <value>{0} Kio</value>
+  </data>
+  <data name="Backup.Size.MiB" xml:space="preserve">
+    <value>{0} Mio</value>
+  </data>
+  <data name="Components.AlsoFor" xml:space="preserve">
+    <value>L'utiliser aussi pour : {0}</value>
+  </data>
+  <data name="Components.Apply" xml:space="preserve">
+    <value>Appliquer</value>
+  </data>
+  <data name="Components.Confirm.Default" xml:space="preserve">
+    <value>Revenir à l'explorateur de fichiers pour : {0}.</value>
+  </data>
+  <data name="Components.Confirm.Set" xml:space="preserve">
+    <value>Utiliser « {0} » pour : {1}, sur toute la machine.</value>
+  </data>
+  <data name="Components.Default" xml:space="preserve">
+    <value>Par défaut</value>
+  </data>
+  <data name="Components.Description" xml:space="preserve">
+    <value>Choisissez l'app qui affiche les fichiers et les dialogues de fichiers dans toutes les applications, pour toute la machine. Le choix est écrit dans {0} et demande un administrateur.</value>
+  </data>
+  <data name="Components.Error.CannotSave" xml:space="preserve">
+    <value>Le choix n'a pas pu être enregistré : {0}</value>
+  </data>
+  <data name="Components.FileDialogs.Description" xml:space="preserve">
+    <value>Ouvrir, Enregistrer, Choisir un dossier, Ouvrir avec, Propriétés et conflits de noms.</value>
+  </data>
+  <data name="Components.FileDialogs.Title" xml:space="preserve">
+    <value>Dialogues de fichiers</value>
+  </data>
+  <data name="Components.FileView.Description" xml:space="preserve">
+    <value>La liste de fichiers du bureau, de l'explorateur, de l'éditeur de code et de toute app qui affiche des fichiers.</value>
+  </data>
+  <data name="Components.FileView.Title" xml:space="preserve">
+    <value>Contrôle de fichiers</value>
+  </data>
+  <data name="Components.NotInstalled" xml:space="preserve">
+    <value>Non installée</value>
+  </data>
+  <data name="Components.ResetToDefault" xml:space="preserve">
+    <value>Revenir à l'explorateur de fichiers</value>
+  </data>
+  <data name="Components.Risk" xml:space="preserve">
+    <value>Cette app n'est pas une app système : son code s'exécutera dans toutes les applications qui affichent des fichiers, avec leurs droits. L'OS demandera l'approbation d'un administrateur.</value>
+  </data>
+  <data name="Components.Saved" xml:space="preserve">
+    <value>« {0} » est maintenant utilisée. Le choix s'applique au prochain contrôle ou dialogue affiché.</value>
+  </data>
+  <data name="Components.Saved.Default" xml:space="preserve">
+    <value>L'explorateur de fichiers est de nouveau utilisé.</value>
+  </data>
+  <data name="Components.SelectedMissing" xml:space="preserve">
+    <value>L'app choisie « {0} » n'est pas installée pour vous : l'explorateur de fichiers la remplace.</value>
+  </data>
+  <data name="Components.Unavailable" xml:space="preserve">
+    <value>Les composants de l'OS ne sont pas disponibles sur cet hôte.</value>
+  </data>
+  <data name="Common.Cancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="Common.Loading" xml:space="preserve">
+    <value>Chargement…</value>
+  </data>
+  <data name="Danger.Description" xml:space="preserve">
+    <value>Remet Kazo OS dans son état d'usine. La base de données locale est définitivement effacée (comptes, fichiers, sessions et réglages) et votre compte retrouve sa configuration par défaut. Cette action est irréversible. Un administrateur doit confirmer avec son mot de passe.</value>
+  </data>
+  <data name="Danger.Title" xml:space="preserve">
+    <value>Zone dangereuse</value>
+  </data>
+  <data name="Details.Capabilities" xml:space="preserve">
+    <value>Capacités</value>
+  </data>
+  <data name="Details.CapabilitiesDescription" xml:space="preserve">
+    <value>Déclarées dans son manifeste. Les capacités dangereuses demandent aussi la décision d'un administrateur (onglet Permissions).</value>
+  </data>
+  <data name="Details.FileTypes" xml:space="preserve">
+    <value>Types de fichiers et liens</value>
+  </data>
+  <data name="Details.Kind.Service" xml:space="preserve">
+    <value>service</value>
+  </data>
+  <data name="Details.Kind.Terminal" xml:space="preserve">
+    <value>commande</value>
+  </data>
+  <data name="Details.Kind.Web" xml:space="preserve">
+    <value>site web</value>
+  </data>
+  <data name="Details.Kind.Window" xml:space="preserve">
+    <value>app à fenêtre</value>
+  </data>
+  <data name="Details.Links" xml:space="preserve">
+    <value>liens {0}</value>
+  </data>
+  <data name="Details.NoCapability" xml:space="preserve">
+    <value>Cette app ne déclare aucune capacité.</value>
+  </data>
+  <data name="Details.NotFound" xml:space="preserve">
+    <value>Aucune app installée n'a l'identifiant « {0} ».</value>
+  </data>
+  <data name="Details.Permission.Allowed" xml:space="preserve">
+    <value>autorisée</value>
+  </data>
+  <data name="Details.Permission.Pending" xml:space="preserve">
+    <value>en attente</value>
+  </data>
+  <data name="Details.Permission.Refused" xml:space="preserve">
+    <value>refusée ({0})</value>
+  </data>
+  <data name="Details.Permission.System" xml:space="preserve">
+    <value>système</value>
+  </data>
+  <data name="Details.Pid" xml:space="preserve">
+    <value> (pid {0})</value>
+  </data>
+  <data name="Details.ReadingService" xml:space="preserve">
+    <value>Lecture de l'état du service…</value>
+  </data>
+  <data name="Details.Service" xml:space="preserve">
+    <value>Service</value>
+  </data>
+  <data name="Details.ServiceError" xml:space="preserve">
+    <value>L'état du service ne peut pas être lu : {0}</value>
+  </data>
+  <data name="Details.ServiceStarted" xml:space="preserve">
+    <value>Service démarré.</value>
+  </data>
+  <data name="Details.ServiceStatus.Running" xml:space="preserve">
+    <value>En marche</value>
+  </data>
+  <data name="Details.ServiceStatus.StartPending" xml:space="preserve">
+    <value>Démarrage</value>
+  </data>
+  <data name="Details.ServiceStatus.StopPending" xml:space="preserve">
+    <value>Arrêt en cours</value>
+  </data>
+  <data name="Details.ServiceStatus.Stopped" xml:space="preserve">
+    <value>Arrêté</value>
+  </data>
+  <data name="Details.ServiceStopped" xml:space="preserve">
+    <value>Service arrêté.</value>
+  </data>
+  <data name="Details.ServiceUnavailable" xml:space="preserve">
+    <value>Le service n'est pas disponible pour cet utilisateur.</value>
+  </data>
+  <data name="Details.Start" xml:space="preserve">
+    <value>Démarrer</value>
+  </data>
+  <data name="Details.StartMode" xml:space="preserve">
+    <value>Mode de démarrage</value>
+  </data>
+  <data name="Details.StartModeSet" xml:space="preserve">
+    <value>Mode de démarrage : {0}.</value>
+  </data>
+  <data name="Details.State" xml:space="preserve">
+    <value>État :</value>
+  </data>
+  <data name="Details.Stop" xml:space="preserve">
+    <value>Arrêter</value>
+  </data>
+  <data name="Details.Title" xml:space="preserve">
+    <value>Application</value>
+  </data>
+  <data name="FileAssociations.Description" xml:space="preserve">
+    <value>L'app qui ouvre chaque type de fichier et chaque lien pour vous. Votre choix est enregistré dans {0} et passe avant le défaut de la machine, dans {1}, pour vous seulement.</value>
+  </data>
+  <data name="FileAssociations.Empty" xml:space="preserve">
+    <value>Aucune app installée ne déclare de type de fichier.</value>
+  </data>
+  <data name="FileAssociations.Title" xml:space="preserve">
+    <value>Applications par défaut</value>
+  </data>
+  <data name="Grants.Description" xml:space="preserve">
+    <value>Autorisations de sécurité actives pour la session en cours.</value>
+  </data>
+  <data name="Grants.Title" xml:space="preserve">
+    <value>Capacités accordées à l'application</value>
+  </data>
+  <data name="Header.Title" xml:space="preserve">
+    <value>Paramètres système de Kazo OS</value>
+  </data>
+  <data name="Language.Choice.AriaLabel" xml:space="preserve">
+    <value>Langue de vos sessions</value>
+  </data>
+  <data name="Language.Choice.Description" xml:space="preserve">
+    <value>Choisissez la langue et les formats régionaux (dates, nombres) de vos sessions.</value>
+  </data>
+  <data name="Language.Choice.Title" xml:space="preserve">
+    <value>Votre langue</value>
+  </data>
+  <data name="Language.Error.CannotRead" xml:space="preserve">
+    <value>Impossible de lire {0} : {1}</value>
+  </data>
+  <data name="Language.Error.CannotRemove" xml:space="preserve">
+    <value>Impossible de supprimer {0} : {1}</value>
+  </data>
+  <data name="Language.Error.CannotSave" xml:space="preserve">
+    <value>Impossible d'enregistrer {0} : {1}</value>
+  </data>
+  <data name="Language.Error.Unknown" xml:space="preserve">
+    <value>Locale inconnue : {0}</value>
+  </data>
+  <data name="Language.FollowSystem" xml:space="preserve">
+    <value>Suivre la langue du système</value>
+  </data>
+  <data name="Language.FollowSystem.Detail" xml:space="preserve">
+    <value>Actuellement {0}</value>
+  </data>
+  <data name="Language.Locale.Posix" xml:space="preserve">
+    <value>POSIX (C), sans traduction</value>
+  </data>
+  <data name="Language.NextSignIn" xml:space="preserve">
+    <value>Le changement prendra effet à votre prochaine connexion.</value>
+  </data>
+  <data name="Language.Pending" xml:space="preserve">
+    <value>À votre prochaine connexion : {0}</value>
+  </data>
+  <data name="Language.Saved.FollowSystem" xml:space="preserve">
+    <value>Enregistré : vous suivez la langue du système ({0}).</value>
+  </data>
+  <data name="Language.Saved.Locale" xml:space="preserve">
+    <value>Enregistré : {0}.</value>
+  </data>
+  <data name="Language.Session.Description" xml:space="preserve">
+    <value>Kazo OS parle la langue de votre locale, comme Linux : la variable {0} dont chaque processus hérite à votre connexion. Votre choix ci-dessous est enregistré dans {1} et s'applique au bureau et à toutes les apps à votre prochaine connexion.</value>
+  </data>
+  <data name="Language.Session.Formats" xml:space="preserve">
+    <value>Formats</value>
+  </data>
+  <data name="Language.Session.Language" xml:space="preserve">
+    <value>Langue</value>
+  </data>
+  <data name="Language.Session.Title" xml:space="preserve">
+    <value>Cette session</value>
+  </data>
+  <data name="Language.System.Description" xml:space="preserve">
+    <value>Lue dans {0}. C'est la langue de l'écran de connexion et de tous les comptes qui n'ont pas fait leur propre choix. Seul un administrateur peut la changer, depuis un terminal : {1}.</value>
+  </data>
+  <data name="Language.System.Title" xml:space="preserve">
+    <value>Langue du système</value>
+  </data>
+  <data name="Language.System.Unset" xml:space="preserve">
+    <value>non définie ({0} par défaut)</value>
+  </data>
+  <data name="Language.Unset" xml:space="preserve">
+    <value>non définie</value>
+  </data>
+  <data name="Permissions.AllowMachine" xml:space="preserve">
+    <value>Autoriser pour la machine</value>
+  </data>
+  <data name="Permissions.AskAgain" xml:space="preserve">
+    <value>Redemander au lancement</value>
+  </data>
+  <data name="Permissions.Empty" xml:space="preserve">
+    <value>Aucune application installée ne déclare de capacité dangereuse.</value>
+  </data>
+  <data name="Permissions.Error.CannotSave" xml:space="preserve">
+    <value>La décision n'a pas pu être enregistrée : {0}</value>
+  </data>
+  <data name="Permissions.Error.NotConfirmed" xml:space="preserve">
+    <value>Aucun administrateur n'a confirmé : rien n'a été modifié.</value>
+  </data>
+  <data name="Permissions.Message.DecisionSaved" xml:space="preserve">
+    <value>{0} : décision enregistrée, effective au prochain lancement.</value>
+  </data>
+  <data name="Permissions.Message.DenialRemoved" xml:space="preserve">
+    <value>{0} : votre refus est retiré, la question reviendra au prochain lancement.</value>
+  </data>
+  <data name="Permissions.Message.PolicyBlock" xml:space="preserve">
+    <value>Politique : toujours bloquer.</value>
+  </data>
+  <data name="Permissions.Message.PolicyPrompt" xml:space="preserve">
+    <value>Politique : demander à un administrateur.</value>
+  </data>
+  <data name="Permissions.NonSystemApp" xml:space="preserve">
+    <value>App non système</value>
+  </data>
+  <data name="Permissions.Policy.AriaLabel" xml:space="preserve">
+    <value>Politique des capacités dangereuses</value>
+  </data>
+  <data name="Permissions.Policy.Block" xml:space="preserve">
+    <value>Toujours bloquer</value>
+  </data>
+  <data name="Permissions.Policy.Description" xml:space="preserve">
+    <value>Politique de {0}. Chaque changement demande un administrateur et prend effet au prochain lancement de l'app.</value>
+  </data>
+  <data name="Permissions.Policy.Prompt" xml:space="preserve">
+    <value>Demander à un administrateur</value>
+  </data>
+  <data name="Permissions.Policy.Title" xml:space="preserve">
+    <value>Capacités dangereuses des apps non système</value>
+  </data>
+  <data name="Permissions.RemoveDenial" xml:space="preserve">
+    <value>Retirer mon refus</value>
+  </data>
+  <data name="Permissions.Revoke" xml:space="preserve">
+    <value>Révoquer</value>
+  </data>
+  <data name="Permissions.State.Allowed" xml:space="preserve">
+    <value>Autorisée</value>
+  </data>
+  <data name="Permissions.State.BlockedByPolicy" xml:space="preserve">
+    <value>Bloquée par la politique</value>
+  </data>
+  <data name="Permissions.State.DeniedByAdministrator" xml:space="preserve">
+    <value>Refusée par l'administrateur</value>
+  </data>
+  <data name="Permissions.State.DeniedByUser" xml:space="preserve">
+    <value>Refusée par vous</value>
+  </data>
+  <data name="Permissions.State.Pending" xml:space="preserve">
+    <value>En attente</value>
+  </data>
+  <data name="Permissions.State.System" xml:space="preserve">
+    <value>Système</value>
+  </data>
+  <data name="Permissions.SystemApp" xml:space="preserve">
+    <value>App système</value>
+  </data>
+  <data name="Permissions.Unavailable" xml:space="preserve">
+    <value>Les permissions des applications ne sont pas disponibles sur cet hôte.</value>
+  </data>
+  <data name="Relay.AllPorts" xml:space="preserve">
+    <value>Tous les ports</value>
+  </data>
+  <data name="Relay.AriaLabel" xml:space="preserve">
+    <value>Politique du relais réseau</value>
+  </data>
+  <data name="Relay.Blocked" xml:space="preserve">
+    <value>Bloqués</value>
+  </data>
+  <data name="Relay.Disabled" xml:space="preserve">
+    <value>Désactivés</value>
+  </data>
+  <data name="Relay.GrantedApps" xml:space="preserve">
+    <value>Apps autorisées</value>
+  </data>
+  <data name="Relay.HttpPorts" xml:space="preserve">
+    <value>Ports HTTP</value>
+  </data>
+  <data name="Relay.Loading" xml:space="preserve">
+    <value>Lecture de la politique de relais du serveur…</value>
+  </data>
+  <data name="Relay.Off" xml:space="preserve">
+    <value>L'opérateur du serveur a désactivé le relais : les apps n'ont aucun accès au vrai réseau.</value>
+  </data>
+  <data name="Relay.PrivateNetworks" xml:space="preserve">
+    <value>Réseaux privés</value>
+  </data>
+  <data name="Relay.Quotas" xml:space="preserve">
+    <value>Quotas</value>
+  </data>
+  <data name="Relay.QuotasValue" xml:space="preserve">
+    <value>{0} requêtes, {1}/{2} sockets ouverts, corps jusqu'à {3} Mio, sockets inactifs fermés après {4} s</value>
+  </data>
+  <data name="Relay.Reachable" xml:space="preserve">
+    <value>Accessibles</value>
+  </data>
+  <data name="Relay.TcpPorts" xml:space="preserve">
+    <value>Ports TCP</value>
+  </data>
+  <data name="Relay.Title" xml:space="preserve">
+    <value>Relais réseau</value>
+  </data>
+  <data name="Relay.UdpPorts" xml:space="preserve">
+    <value>Ports UDP</value>
+  </data>
+  <data name="Relay.Unavailable" xml:space="preserve">
+    <value>La politique de relais n'est pas disponible sur cet hôte.</value>
+  </data>
+  <data name="Reset.Button" xml:space="preserve">
+    <value>Rétablir les paramètres d'usine</value>
+  </data>
+  <data name="Reset.Dialog.Accounts" xml:space="preserve">
+    <value>Tous les comptes et toutes les sessions des utilisateurs locaux</value>
+  </data>
+  <data name="Reset.Dialog.Confirm" xml:space="preserve">
+    <value>Tapez {0} pour confirmer :</value>
+  </data>
+  <data name="Reset.Dialog.Files" xml:space="preserve">
+    <value>Tous les fichiers et dossiers</value>
+  </data>
+  <data name="Reset.Dialog.Grants" xml:space="preserve">
+    <value>Toutes les capacités accordées et l'historique d'audit</value>
+  </data>
+  <data name="Reset.Dialog.Intro" xml:space="preserve">
+    <value>Toute la base de données locale de Kazo OS sera définitivement supprimée, dont :</value>
+  </data>
+  <data name="Reset.Dialog.Restart" xml:space="preserve">
+    <value>Kazo OS redémarrera ensuite comme s'il venait d'être installé.</value>
+  </data>
+  <data name="Reset.Dialog.Settings" xml:space="preserve">
+    <value>Tous les réglages des applications et des comptes (remis par défaut)</value>
+  </data>
+  <data name="Reset.Error.Failed" xml:space="preserve">
+    <value>Échec de la réinitialisation : {0}</value>
+  </data>
+  <data name="Reset.Error.NotConfirmed" xml:space="preserve">
+    <value>Aucun administrateur n'a confirmé la réinitialisation : rien n'a été effacé.</value>
+  </data>
+  <data name="Reset.Resetting" xml:space="preserve">
+    <value>Réinitialisation…</value>
+  </data>
+  <data name="Restart.Button" xml:space="preserve">
+    <value>Redémarrer Kazo OS</value>
+  </data>
+  <data name="Restart.Description" xml:space="preserve">
+    <value>Écrit les journaux sur le disque, arrête tous les processus et redémarre Kazo OS, comme {0}. Un administrateur doit confirmer avec son mot de passe.</value>
+  </data>
+  <data name="Restart.Error.NotConfirmed" xml:space="preserve">
+    <value>Aucun administrateur n'a confirmé le redémarrage : rien n'a été fait.</value>
+  </data>
+  <data name="Restart.Restarting" xml:space="preserve">
+    <value>Redémarrage…</value>
+  </data>
+  <data name="Restart.Title" xml:space="preserve">
+    <value>Redémarrer</value>
+  </data>
+  <data name="Server.Account" xml:space="preserve">
+    <value>Compte :</value>
+  </data>
+  <data name="Server.ConflictCount" xml:space="preserve">
+    <value>{0} fichier(s) en conflit de synchronisation non résolu</value>
+  </data>
+  <data name="Server.Connected" xml:space="preserve">
+    <value>Connecté</value>
+  </data>
+  <data name="Server.Connecting" xml:space="preserve">
+    <value>Connexion…</value>
+  </data>
+  <data name="Server.CreateAccount" xml:space="preserve">
+    <value>Créer un compte</value>
+  </data>
+  <data name="Server.Description" xml:space="preserve">
+    <value>Connecter un appareil à un serveur Kazo OS facultatif donne aux apps un vrai accès au réseau, comme {0}/{1} dans le Terminal, par le relais du serveur. Le stockage local reste la référence dans tous les cas : la connexion n'est jamais nécessaire pour un usage normal.</value>
+  </data>
+  <data name="Server.Disconnect" xml:space="preserve">
+    <value>Se déconnecter</value>
+  </data>
+  <data name="Server.Error.Unavailable" xml:space="preserve">
+    <value>La connexion au serveur n'est pas disponible : {0}</value>
+  </data>
+  <data name="Server.Files" xml:space="preserve">
+    <value>Fichiers :</value>
+  </data>
+  <data name="Server.LogIn" xml:space="preserve">
+    <value>Se connecter</value>
+  </data>
+  <data name="Server.NotConnected" xml:space="preserve">
+    <value>Non connecté</value>
+  </data>
+  <data name="Server.Password" xml:space="preserve">
+    <value>Mot de passe</value>
+  </data>
+  <data name="Server.Server" xml:space="preserve">
+    <value>Serveur :</value>
+  </data>
+  <data name="Server.Status" xml:space="preserve">
+    <value>État :</value>
+  </data>
+  <data name="Server.Sync" xml:space="preserve">
+    <value>Synchro :</value>
+  </data>
+  <data name="Server.Title" xml:space="preserve">
+    <value>Serveur facultatif</value>
+  </data>
+  <data name="Server.Url" xml:space="preserve">
+    <value>URL du serveur</value>
+  </data>
+  <data name="Server.Username" xml:space="preserve">
+    <value>Nom d'utilisateur</value>
+  </data>
+  <data name="StartMode.Automatic" xml:space="preserve">
+    <value>Automatique</value>
+  </data>
+  <data name="StartMode.Disabled" xml:space="preserve">
+    <value>Désactivé</value>
+  </data>
+  <data name="StartMode.Manual" xml:space="preserve">
+    <value>Manuel</value>
+  </data>
+  <data name="Sync.Automatic" xml:space="preserve">
+    <value>Synchro automatique :</value>
+  </data>
+  <data name="Sync.Conflicts.Description" xml:space="preserve">
+    <value>Ces fichiers ont changé ici et sur un autre appareil. Ils restent tels quels ici et ne sont ni envoyés ni remplacés tant que vous n'avez pas choisi la version à garder.</value>
+  </data>
+  <data name="Sync.Conflicts.None" xml:space="preserve">
+    <value>Aucun conflit : chaque fichier synchronisé est identique sur vos autres appareils.</value>
+  </data>
+  <data name="Sync.Conflicts.Resolve" xml:space="preserve">
+    <value>Résoudre…</value>
+  </data>
+  <data name="Sync.Conflicts.Since" xml:space="preserve">
+    <value>depuis le {0}</value>
+  </data>
+  <data name="Sync.Conflicts.Title" xml:space="preserve">
+    <value>Conflits</value>
+  </data>
+  <data name="Sync.Description" xml:space="preserve">
+    <value>Tant que cet appareil est connecté à un serveur, votre dossier personnel, vos associations de fichiers et vos capacités accordées se synchronisent d'eux-mêmes {0}, à votre connexion et quelques secondes après chaque modification d'un fichier. Un fichier supprimé sur un autre appareil arrive ici dans votre Corbeille, pour pouvoir être restauré.</value>
+  </data>
+  <data name="Sync.Error.CannotChange" xml:space="preserve">
+    <value>Impossible de modifier le réglage : {0}</value>
+  </data>
+  <data name="Sync.Interval.Minute" xml:space="preserve">
+    <value>chaque minute</value>
+  </data>
+  <data name="Sync.Interval.Minutes" xml:space="preserve">
+    <value>toutes les {0} minutes</value>
+  </data>
+  <data name="Sync.Last" xml:space="preserve">
+    <value>Dernière synchro :</value>
+  </data>
+  <data name="Sync.LastDetail" xml:space="preserve">
+    <value>{0} ({1} envoyé(s), {2} reçu(s))</value>
+  </data>
+  <data name="Sync.LastError" xml:space="preserve">
+    <value>Dernière erreur :</value>
+  </data>
+  <data name="Sync.LastSynced" xml:space="preserve">
+    <value>Dernière synchro à {0}</value>
+  </data>
+  <data name="Sync.LastSyncedWithConflicts" xml:space="preserve">
+    <value>Dernière synchro à {0} ({1} conflit(s) de fichier)</value>
+  </data>
+  <data name="Sync.Never" xml:space="preserve">
+    <value>jamais</value>
+  </data>
+  <data name="Sync.Now" xml:space="preserve">
+    <value>Synchroniser maintenant</value>
+  </data>
+  <data name="Sync.Pause" xml:space="preserve">
+    <value>Suspendre ma synchronisation sur cet appareil (la synchro manuelle fonctionne toujours)</value>
+  </data>
+  <data name="Sync.State.Inactive" xml:space="preserve">
+    <value>inactive</value>
+  </data>
+  <data name="Sync.State.Off" xml:space="preserve">
+    <value>désactivée (pas connecté à un serveur)</value>
+  </data>
+  <data name="Sync.State.Paused" xml:space="preserve">
+    <value>en pause</value>
+  </data>
+  <data name="Sync.State.Running" xml:space="preserve">
+    <value>en marche</value>
+  </data>
+  <data name="Sync.State.WaitingForServer" xml:space="preserve">
+    <value>en attente du serveur</value>
+  </data>
+  <data name="Sync.Syncing" xml:space="preserve">
+    <value>Synchronisation…</value>
+  </data>
+  <data name="Sync.Title" xml:space="preserve">
+    <value>Synchronisation</value>
+  </data>
+  <data name="Tab.About" xml:space="preserve">
+    <value>À propos du système</value>
+  </data>
+  <data name="Tab.Accessibility" xml:space="preserve">
+    <value>Accessibilité</value>
+  </data>
+  <data name="Tab.Appearance" xml:space="preserve">
+    <value>Apparence</value>
+  </data>
+  <data name="Tab.Application" xml:space="preserve">
+    <value>Application</value>
+  </data>
+  <data name="Tab.Backup" xml:space="preserve">
+    <value>Sauvegarde</value>
+  </data>
+  <data name="Tab.CapabilityGrants" xml:space="preserve">
+    <value>Capacités accordées</value>
+  </data>
+  <data name="Tab.FileAssociations" xml:space="preserve">
+    <value>Associations de fichiers</value>
+  </data>
+  <data name="Tab.OsComponents" xml:space="preserve">
+    <value>Composants de l'OS</value>
+  </data>
+  <data name="Tab.InstalledApps" xml:space="preserve">
+    <value>Applications installées</value>
+  </data>
+  <data name="Tab.Language" xml:space="preserve">
+    <value>Langue</value>
+  </data>
+  <data name="Tab.Permissions" xml:space="preserve">
+    <value>Permissions</value>
+  </data>
+  <data name="Tab.ServerConnection" xml:space="preserve">
+    <value>Connexion au serveur</value>
+  </data>
+  <data name="Tab.Synchronization" xml:space="preserve">
+    <value>Synchronisation</value>
+  </data>
+  <data name="Tab.Users" xml:space="preserve">
+    <value>Utilisateurs</value>
+  </data>
+  <data name="Users.List.Title" xml:space="preserve">
+    <value>Comptes</value>
+  </data>
+  <data name="Users.List.Description" xml:space="preserve">
+    <value>Les comptes locaux de cette machine. P : mot de passe défini, NP : aucun mot de passe, L : compte désactivé, comme les montre {0} -S. Dans le terminal, {0} change votre mot de passe et {1} celui d'un autre compte.</value>
+  </data>
+  <data name="Users.List.Empty" xml:space="preserve">
+    <value>Aucun compte à afficher.</value>
+  </data>
+  <data name="Users.Badge.Administrator" xml:space="preserve">
+    <value>administrateur</value>
+  </data>
+  <data name="Users.Badge.You" xml:space="preserve">
+    <value>vous</value>
+  </data>
+  <data name="Users.State.Password" xml:space="preserve">
+    <value>Mot de passe défini</value>
+  </data>
+  <data name="Users.State.NoPassword" xml:space="preserve">
+    <value>Aucun mot de passe</value>
+  </data>
+  <data name="Users.State.Locked" xml:space="preserve">
+    <value>Compte désactivé</value>
+  </data>
+  <data name="Users.Own.Title" xml:space="preserve">
+    <value>Changer mon mot de passe</value>
+  </data>
+  <data name="Users.Own.Description" xml:space="preserve">
+    <value>Votre trousseau est re-chiffré avec le nouveau mot de passe : les secrets enregistrés restent lisibles.</value>
+  </data>
+  <data name="Users.Own.Submit" xml:space="preserve">
+    <value>Changer le mot de passe</value>
+  </data>
+  <data name="Users.Own.Done" xml:space="preserve">
+    <value>Mot de passe mis à jour.</value>
+  </data>
+  <data name="Users.Field.Current" xml:space="preserve">
+    <value>Mot de passe actuel</value>
+  </data>
+  <data name="Users.Field.New" xml:space="preserve">
+    <value>Nouveau mot de passe</value>
+  </data>
+  <data name="Users.Field.Confirm" xml:space="preserve">
+    <value>Confirmer le nouveau mot de passe</value>
+  </data>
+  <data name="Users.Field.Account" xml:space="preserve">
+    <value>Compte</value>
+  </data>
+  <data name="Users.Reset.Title" xml:space="preserve">
+    <value>Réinitialiser le mot de passe d'un autre compte</value>
+  </data>
+  <data name="Users.Reset.Description" xml:space="preserve">
+    <value>Un administrateur confirme dans la fenêtre de l'OS (capacité {1}). Le trousseau du compte ne s'ouvre pas avec le nouveau mot de passe : il est mis de côté sous {0} et ses secrets enregistrés sont perdus pour ce compte.</value>
+  </data>
+  <data name="Users.Reset.Submit" xml:space="preserve">
+    <value>Réinitialiser le mot de passe</value>
+  </data>
+  <data name="Users.Reset.Remove" xml:space="preserve">
+    <value>Retirer le mot de passe</value>
+  </data>
+  <data name="Users.Reset.Done" xml:space="preserve">
+    <value>Mot de passe de {0} réinitialisé.</value>
+  </data>
+  <data name="Users.Reset.Removed" xml:space="preserve">
+    <value>Mot de passe de {0} retiré : le compte s'ouvre sans mot de passe.</value>
+  </data>
+  <data name="Users.Error.CannotList" xml:space="preserve">
+    <value>Impossible de lire les comptes : {0}</value>
+  </data>
+  <data name="Users.Error.WrongCurrent" xml:space="preserve">
+    <value>Le mot de passe actuel est faux. Mot de passe inchangé.</value>
+  </data>
+  <data name="Users.Error.Failed" xml:space="preserve">
+    <value>Mot de passe inchangé : {0}</value>
+  </data>
+  <data name="Users.Error.TooShort" xml:space="preserve">
+    <value>Le mot de passe doit avoir au moins {0} caractères.</value>
+  </data>
+  <data name="Users.Error.Mismatch" xml:space="preserve">
+    <value>Les deux mots de passe ne correspondent pas.</value>
+  </data>
+  <data name="FileAssociations.Filter" xml:space="preserve">
+    <value>Filtrer par type ou par app</value>
+  </data>
+  <data name="FileAssociations.Column.Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="FileAssociations.Column.Action" xml:space="preserve">
+    <value>Action</value>
+  </data>
+  <data name="FileAssociations.Column.App" xml:space="preserve">
+    <value>Application</value>
+  </data>
+  <data name="FileAssociations.Action.Open" xml:space="preserve">
+    <value>Ouvrir</value>
+  </data>
+  <data name="FileAssociations.Action.Edit" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="FileAssociations.ChooseFor" xml:space="preserve">
+    <value>Application pour {1} {0}</value>
+  </data>
+  <data name="FileAssociations.SystemDefault" xml:space="preserve">
+    <value>Défaut du système ({0})</value>
+  </data>
+  <data name="FileAssociations.OnlyApp" xml:space="preserve">
+    <value>Seule app ({0})</value>
+  </data>
+  <data name="FileAssociations.AskEachTime" xml:space="preserve">
+    <value>Demander à chaque fois</value>
+  </data>
+  <data name="FileAssociations.Saved" xml:space="preserve">
+    <value>{1} ouvre maintenant {0} pour vous.</value>
+  </data>
+  <data name="FileAssociations.Saved.Reset" xml:space="preserve">
+    <value>{0} suit de nouveau le défaut du système.</value>
+  </data>
+  <data name="FileAssociations.Error.Read" xml:space="preserve">
+    <value>Les applications par défaut n'ont pas pu être lues : {0}</value>
+  </data>
+  <data name="FileAssociations.Error.Write" xml:space="preserve">
+    <value>Votre choix n'a pas pu être enregistré : {0}</value>
+  </data>
+  <data name="FileAssociations.Error.InvalidTarget" xml:space="preserve">
+    <value>{0} n'est pas un type de fichier valide.</value>
+  </data>
+  <data name="FileAssociations.Error.InvalidAction" xml:space="preserve">
+    <value>Cette action n'est pas prise en charge pour {0}.</value>
+  </data>
+  <data name="FileAssociations.Error.AppNotFound" xml:space="preserve">
+    <value>Cette app n'est plus installée.</value>
+  </data>
+  <data name="FileAssociations.Error.AppCannotHandle" xml:space="preserve">
+    <value>Cette app ne déclare pas {0}.</value>
+  </data>
+  <data name="FileAssociations.Error.FileInvalid" xml:space="preserve">
+    <value>~/.config/kazoos/file-associations.json n'est pas valide : corrigez-le ou supprimez-le, puis réessayez.</value>
+  </data>
+  <data name="FileAssociations.Error.WriteFailed" xml:space="preserve">
+    <value>~/.config/kazoos/file-associations.json n'a pas pu être écrit.</value>
+  </data>
+  <data name="Tab.Memory" xml:space="preserve">
+    <value>Mémoire</value>
+  </data>
+  <data name="Memory.State.Title" xml:space="preserve">
+    <value>Mémoire maintenant</value>
+  </data>
+  <data name="Memory.State.Description" xml:space="preserve">
+    <value>Ce que disent {0} et {1}, les fichiers que lisent free et vmstat.</value>
+  </data>
+  <data name="Memory.State.Source" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="Memory.State.Measured" xml:space="preserve">
+    <value>mesurée</value>
+  </data>
+  <data name="Memory.State.Simulated" xml:space="preserve">
+    <value>simulée</value>
+  </data>
+  <data name="Memory.State.NotMeasured" xml:space="preserve">
+    <value>La mémoire est simulée sur cet hôte : l'OOM killer reste inactif même s'il est activé. Il ne tue jamais sur des chiffres simulés.</value>
+  </data>
+  <data name="Memory.OomKiller.Title" xml:space="preserve">
+    <value>OOM killer</value>
+  </data>
+  <data name="Memory.OomKiller.Description" xml:space="preserve">
+    <value>Quand la mémoire libre reste trop basse, le système ferme le processus au plus haut {0} et écrit pourquoi dans le journal du noyau ({1}). Il protège aussi la page de la vraie limite de mémoire du navigateur.</value>
+  </data>
+  <data name="Memory.OomKiller.On" xml:space="preserve">
+    <value>Activé</value>
+  </data>
+  <data name="Memory.OomKiller.Off" xml:space="preserve">
+    <value>Désactivé (par défaut)</value>
+  </data>
+  <data name="Memory.Threshold.Title" xml:space="preserve">
+    <value>Mémoire libre à garder</value>
+  </data>
+  <data name="Memory.Threshold.Description" xml:space="preserve">
+    <value>L'OOM killer agit quand MemAvailable reste sous cette part de MemTotal pendant deux secondes.</value>
+  </data>
+  <data name="Memory.AdminNote" xml:space="preserve">
+    <value>Enregistré dans {0}, un fichier système : un administrateur approuve le changement.</value>
+  </data>
+  <data name="Memory.Saved" xml:space="preserve">
+    <value>Enregistré. Le système applique le changement tout de suite.</value>
+  </data>
+  <data name="Memory.Error.AdminRequired" xml:space="preserve">
+    <value>Un administrateur doit approuver ce changement.</value>
+  </data>
+  <data name="Memory.Error.CannotRead" xml:space="preserve">
+    <value>Impossible de lire {0} : {1}</value>
+  </data>
+  <data name="Memory.Error.CannotSave" xml:space="preserve">
+    <value>Impossible d'enregistrer {0} : {1}</value>
+  </data>
+  <data name="Tab.FileMenus" xml:space="preserve">
+    <value>Menus des fichiers</value>
+  </data>
+  <data name="FileMenus.Unavailable" xml:space="preserve">
+    <value>Les entrées des menus des fichiers ne sont pas disponibles sur cet hôte.</value>
+  </data>
+  <data name="FileMenus.Description" xml:space="preserve">
+    <value>Entrées que les applications ajoutent aux menus des fichiers (explorateur, bureau, fenêtres de fichiers). Décochez une entrée pour la masquer de vos menus ; le choix est enregistré dans {0} et s'applique au prochain menu ouvert.</value>
+  </data>
+  <data name="FileMenus.Empty" xml:space="preserve">
+    <value>Aucune application installée n'ajoute d'entrée aux menus des fichiers.</value>
+  </data>
+  <data name="FileMenus.HiddenByParent" xml:space="preserve">
+    <value>Masquée avec son menu parent.</value>
+  </data>
+  <data name="FileMenus.Error.CannotSave" xml:space="preserve">
+    <value>Le choix n'a pas pu être enregistré : {0}</value>
+  </data>
+  <data name="FileMenus.Scope.File" xml:space="preserve">
+    <value>Fichiers</value>
+  </data>
+  <data name="FileMenus.Scope.Directory" xml:space="preserve">
+    <value>Dossiers</value>
+  </data>
+  <data name="FileMenus.Scope.Background" xml:space="preserve">
+    <value>Espace vide</value>
+  </data>
+  <data name="FileMenus.Scope.Desktop" xml:space="preserve">
+    <value>Bureau</value>
+  </data>
+  <data name="Tab.Desktop" xml:space="preserve">
+    <value>Bureau</value>
+  </data>
+  <data name="Nav.AriaLabel" xml:space="preserve">
+    <value>Pages des paramètres</value>
+  </data>
+  <data name="Nav.Collapse" xml:space="preserve">
+    <value>Réduire le menu</value>
+  </data>
+  <data name="Nav.Expand" xml:space="preserve">
+    <value>Développer le menu</value>
+  </data>
+  <data name="Nav.Group.Personalization" xml:space="preserve">
+    <value>Personnalisation</value>
+  </data>
+  <data name="Nav.Group.Applications" xml:space="preserve">
+    <value>Applications</value>
+  </data>
+  <data name="Nav.Group.Network" xml:space="preserve">
+    <value>Réseau</value>
+  </data>
+  <data name="Nav.Group.System" xml:space="preserve">
+    <value>Système</value>
+  </data>
+  <data name="Desktop.Description" xml:space="preserve">
+    <value>Le bureau affiche les fichiers de {0}. Ces options sont rangées dans {1} ; le bureau suit le fichier dès qu'il change.</value>
+  </data>
+  <data name="Desktop.IconSize.Title" xml:space="preserve">
+    <value>Taille des icônes</value>
+  </data>
+  <data name="Desktop.IconSize.Small" xml:space="preserve">
+    <value>Petites</value>
+  </data>
+  <data name="Desktop.IconSize.Medium" xml:space="preserve">
+    <value>Moyennes</value>
+  </data>
+  <data name="Desktop.IconSize.Large" xml:space="preserve">
+    <value>Grandes</value>
+  </data>
+  <data name="Desktop.Layout.Title" xml:space="preserve">
+    <value>Disposition</value>
+  </data>
+  <data name="Desktop.Layout.Description" xml:space="preserve">
+    <value>La réorganisation automatique range les icônes en colonnes ; sinon, chaque icône reste où vous la déposez.</value>
+  </data>
+  <data name="Desktop.AutoArrange" xml:space="preserve">
+    <value>Réorganiser automatiquement les icônes</value>
+  </data>
+  <data name="Desktop.AlignToGrid" xml:space="preserve">
+    <value>Aligner les icônes sur la grille</value>
+  </data>
+  <data name="Desktop.ShowHome" xml:space="preserve">
+    <value>Afficher l'icône Dossier personnel</value>
+  </data>
+  <data name="Desktop.ShowTrash" xml:space="preserve">
+    <value>Afficher l'icône Corbeille</value>
+  </data>
+  <data name="Desktop.Sort.Title" xml:space="preserve">
+    <value>Trier</value>
+  </data>
+  <data name="Desktop.Sort.Description" xml:space="preserve">
+    <value>Trier range une fois les icônes dans cet ordre et oublie les positions choisies.</value>
+  </data>
+  <data name="Desktop.Sort.Name" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="Desktop.Sort.Size" xml:space="preserve">
+    <value>Taille</value>
+  </data>
+  <data name="Desktop.Sort.Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Desktop.Sort.Date" xml:space="preserve">
+    <value>Date de modification</value>
+  </data>
+  <data name="Desktop.ResetPositions" xml:space="preserve">
+    <value>Oublier les positions des icônes</value>
+  </data>
+  <data name="Desktop.Saved" xml:space="preserve">
+    <value>Enregistré. Le bureau a été mis à jour.</value>
+  </data>
+  <data name="Desktop.SaveFailed" xml:space="preserve">
+    <value>Impossible d'enregistrer les réglages du bureau : {0}</value>
+  </data>
+  <data name="Desktop.On" xml:space="preserve">
+    <value>Activé</value>
+  </data>
+  <data name="Desktop.Off" xml:space="preserve">
+    <value>Désactivé</value>
+  </data>
+<data name="Mobile.HelpersTitle" xml:space="preserve"><value>Commandes souris du mode mobile</value></data>
+<data name="Mobile.HelpersDescription" xml:space="preserve"><value>Afficher les flèches de page et les indications de geste sur l’accueil mobile. Les gestes restent disponibles au toucher et à la souris.</value></data>
+<data name="Mobile.HelpersLabel" xml:space="preserve"><value>Afficher les aides souris du mode mobile</value></data>
+<data name="Mobile.HelpersError" xml:space="preserve"><value>Impossible de mettre à jour les aides souris mobiles.</value></data>
+  <data name="About.Repository" xml:space="preserve"><value>Projet GitHub :</value></data>
+  <data name="About.Author" xml:space="preserve"><value>Auteur :</value></data>
+  <data name="Users.Badge.Passkeys" xml:space="preserve">
+    <value>{0} clé(s) d'accès</value>
+  </data>
+  <data name="Users.Badge.PasskeysTitle" xml:space="preserve">
+    <value>Ce compte peut se connecter avec une clé d'accès.</value>
+  </data>
+  <data name="Users.Delete.Button" xml:space="preserve">
+    <value>Supprimer le compte {0}</value>
+  </data>
+  <data name="Users.Delete.Short" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="Users.Delete.Title" xml:space="preserve">
+    <value>Supprimer {0}</value>
+  </data>
+  <data name="Users.Delete.Description" xml:space="preserve">
+    <value>Supprimer le compte {0} ? Ses clés d'accès et son mot de passe disparaissent avec lui. Un administrateur confirme dans la fenêtre de l'OS.</value>
+  </data>
+  <data name="Users.Delete.RemoveHome" xml:space="preserve">
+    <value>Supprimer aussi son dossier personnel {0} et tous ses fichiers</value>
+  </data>
+  <data name="Users.Delete.Confirm" xml:space="preserve">
+    <value>Supprimer {0}</value>
+  </data>
+  <data name="Users.Delete.Cancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="Users.Delete.Done" xml:space="preserve">
+    <value>Compte {0} supprimé. Son dossier personnel est conservé.</value>
+  </data>
+  <data name="Users.Delete.DoneWithHome" xml:space="preserve">
+    <value>Compte {0} et son dossier personnel supprimés.</value>
+  </data>
+  <data name="Users.Add.Title" xml:space="preserve">
+    <value>Ajouter un compte</value>
+  </data>
+  <data name="Users.Add.Description" xml:space="preserve">
+    <value>Un nouveau compte local avec son propre groupe et un mot de passe. Un administrateur confirme dans la fenêtre de l'OS (capacité {0}). Le dossier personnel est créé à la première connexion.</value>
+  </data>
+  <data name="Users.Add.Submit" xml:space="preserve">
+    <value>Ajouter le compte</value>
+  </data>
+  <data name="Users.Add.Done" xml:space="preserve">
+    <value>Compte {0} ajouté.</value>
+  </data>
+  <data name="Users.Field.Login" xml:space="preserve">
+    <value>Nom de connexion (minuscules, chiffres, - et _)</value>
+  </data>
+  <data name="Users.Field.DisplayName" xml:space="preserve">
+    <value>Nom affiché</value>
+  </data>
+  <data name="Users.Field.Type" xml:space="preserve">
+    <value>Type de compte</value>
+  </data>
+  <data name="Users.Type.Standard" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="Users.Type.Administrator" xml:space="preserve">
+    <value>Administrateur</value>
+  </data>
+  <data name="Users.Field.InitialPassword" xml:space="preserve">
+    <value>Mot de passe initial</value>
+  </data>
+  <data name="Passkeys.Title" xml:space="preserve">
+    <value>Mes clés d'accès</value>
+  </data>
+  <data name="Passkeys.Description" xml:space="preserve">
+    <value>Une clé d'accès vous connecte avec votre empreinte, votre visage, un NIP ou une clé de sécurité, sans taper votre mot de passe. Le navigateur garde la clé ; Kazo OS n'en conserve que la moitié publique. Une clé qui prend en charge l'extension PRF ouvre aussi votre trousseau.</value>
+  </data>
+  <data name="Passkeys.Empty" xml:space="preserve">
+    <value>Aucune clé d'accès pour l'instant.</value>
+  </data>
+  <data name="Passkeys.Created" xml:space="preserve">
+    <value>ajoutée le {0}</value>
+  </data>
+  <data name="Passkeys.LastUsed" xml:space="preserve">
+    <value>dernière utilisation le {0}</value>
+  </data>
+  <data name="Passkeys.Keyring" xml:space="preserve">
+    <value>trousseau</value>
+  </data>
+  <data name="Passkeys.KeyringTitle" xml:space="preserve">
+    <value>Se connecter avec cette clé ouvre votre trousseau.</value>
+  </data>
+  <data name="Passkeys.NoKeyring" xml:space="preserve">
+    <value>sans trousseau</value>
+  </data>
+  <data name="Passkeys.NoKeyringTitle" xml:space="preserve">
+    <value>Cet authentificateur ne prend pas en charge PRF : après une connexion avec lui, votre trousseau reste verrouillé jusqu'à ce que vous donniez votre mot de passe.</value>
+  </data>
+  <data name="Passkeys.Remove" xml:space="preserve">
+    <value>Retirer</value>
+  </data>
+  <data name="Passkeys.RemoveLabel" xml:space="preserve">
+    <value>Retirer la clé d'accès {0}</value>
+  </data>
+  <data name="Passkeys.Field.Name" xml:space="preserve">
+    <value>Nom de la nouvelle clé (par exemple : Téléphone, YubiKey)</value>
+  </data>
+  <data name="Passkeys.Add" xml:space="preserve">
+    <value>Ajouter une clé d'accès</value>
+  </data>
+  <data name="Passkeys.Added" xml:space="preserve">
+    <value>Clé d'accès {0} ajoutée. Elle ouvre aussi votre trousseau.</value>
+  </data>
+  <data name="Passkeys.AddedNoKeyring" xml:space="preserve">
+    <value>Clé d'accès {0} ajoutée. Votre authentificateur ne prend pas en charge PRF : elle n'ouvrira pas votre trousseau.</value>
+  </data>
+  <data name="Passkeys.Removed" xml:space="preserve">
+    <value>Clé d'accès {0} retirée.</value>
+  </data>
+  <data name="Passkeys.Unsupported" xml:space="preserve">
+    <value>Ce navigateur ne peut pas utiliser de clé d'accès ici (WebAuthn exige un contexte sécurisé : https ou localhost).</value>
+  </data>
+  <data name="Passkeys.Error.NameRequired" xml:space="preserve">
+    <value>Donnez un nom à la clé d'accès.</value>
+  </data>
+  <data name="Passkeys.Error.Cancelled" xml:space="preserve">
+    <value>La demande du navigateur a été annulée ou a expiré.</value>
+  </data>
+  <data name="Passkeys.Error.NotFound" xml:space="preserve">
+    <value>La clé d'accès {0} n'existe plus.</value>
+  </data>
+  <data name="Tab.Screens" xml:space="preserve">
+    <value>Écrans</value>
+  </data>
+  <data name="Screens.Taskbar.Title" xml:space="preserve">
+    <value>Barre des tâches de l'écran 1</value>
+  </data>
+  <data name="Screens.Taskbar.Description" xml:space="preserve">
+    <value>Les barres des tâches des autres écrans montrent toujours les fenêtres de leur écran. Le changement s'applique tout de suite.</value>
+  </data>
+  <data name="Screens.Taskbar.All" xml:space="preserve">
+    <value>Toutes les fenêtres de tous les écrans</value>
+  </data>
+  <data name="Screens.Taskbar.Own" xml:space="preserve">
+    <value>Seulement les fenêtres de l'écran 1</value>
+  </data>
+  <data name="Screens.List.Title" xml:space="preserve">
+    <value>Écrans retenus</value>
+  </data>
+  <data name="Screens.List.Description" xml:space="preserve">
+    <value>Chaque écran secondaire s'ouvre dans sa propre fenêtre du navigateur. Kazo OS retient sa place dans {0}, même après sa fermeture.</value>
+  </data>
+  <data name="Screens.List.Screen" xml:space="preserve">
+    <value>Écran {0}</value>
+  </data>
+  <data name="Screens.List.Primary" xml:space="preserve">
+    <value>Cet onglet du navigateur</value>
+  </data>
+  <data name="Screens.List.Open" xml:space="preserve">
+    <value>Ouvert, ou proposé à la prochaine connexion</value>
+  </data>
+  <data name="Screens.List.Closed" xml:space="preserve">
+    <value>Fermé</value>
+  </data>
+  <data name="Screens.List.Place" xml:space="preserve">
+    <value>{0} × {1} à ({2}, {3})</value>
+  </data>
+  <data name="Screens.List.NoPlace" xml:space="preserve">
+    <value>Place pas encore retenue</value>
+  </data>
+  <data name="Screens.List.Forget" xml:space="preserve">
+    <value>Oublier</value>
+  </data>
+  <data name="Screens.List.ForgetLabel" xml:space="preserve">
+    <value>Oublier la place de l'écran {0}</value>
+  </data>
+  <data name="Screens.List.None" xml:space="preserve">
+    <value>Aucun écran secondaire pour l'instant.</value>
+  </data>
+  <data name="Screens.Help.Title" xml:space="preserve">
+    <value>Ouvrir et déplacer les écrans</value>
+  </data>
+  <data name="Screens.Help.New" xml:space="preserve">
+    <value>Nouvel écran : clic droit sur l'icône d'une fenêtre, ou sur son bouton Agrandir, puis Autre écran ▸ Nouvel écran.</value>
+  </data>
+  <data name="Screens.Help.Move" xml:space="preserve">
+    <value>Envoyez la fenêtre active vers l'écran précédent ou suivant avec {0} ou {1}, ou par Autre écran ▸ Écran N. Survoler un écran dans ce menu affiche son numéro sur chaque écran.</value>
+  </data>
+  <data name="Screens.Help.Restore" xml:space="preserve">
+    <value>Après la connexion, la carte Restaurer les écrans au-dessus de la barre des tâches rouvre les écrans de votre dernière session.</value>
+  </data>
+  <data name="Screens.Help.FullScreen" xml:space="preserve">
+    <value>Plein écran : le bouton ⤢ en haut à droite de chaque écran secondaire ; Échap en sort.</value>
+  </data>
+  <data name="Screens.Help.Permission" xml:space="preserve">
+    <value>Dans Chrome et Edge, autorisez la gestion des fenêtres quand le navigateur le demande : chaque nouvel écran va alors sur un moniteur libre. Ailleurs, placez la fenêtre vous-même ; Kazo OS retient sa place.</value>
+  </data>
+  <data name="Screens.Saved" xml:space="preserve">
+    <value>Enregistré.</value>
+  </data>
+  <data name="Screens.Error.CannotRead" xml:space="preserve">
+    <value>Impossible de lire screens.config : {0}</value>
+  </data>
+  <data name="Screens.Error.CannotSave" xml:space="preserve">
+    <value>Impossible d'enregistrer {0} : {1}</value>
+  </data>
+  <data name="Screens.Open.Title" xml:space="preserve">
+    <value>Écrans ouverts</value>
+  </data>
+  <data name="Screens.Open.Size" xml:space="preserve">
+    <value>{0} × {1}</value>
+  </data>
+  <data name="Screens.Open.IsFullScreen" xml:space="preserve">
+    <value>Plein écran</value>
+  </data>
+  <data name="Screens.Open.ThisWindow" xml:space="preserve">
+    <value>Cette fenêtre</value>
+  </data>
+  <data name="Screens.Open.Close" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="Screens.Open.CloseLabel" xml:space="preserve">
+    <value>Fermer l'écran {0}</value>
+  </data>
+  <data name="Screens.Open.Identify" xml:space="preserve">
+    <value>Identifier</value>
+  </data>
+  <data name="Screens.Open.New" xml:space="preserve">
+    <value>Nouvel écran</value>
+  </data>
+  <data name="Screens.Open.Restore" xml:space="preserve">
+    <value>Restaurer les écrans ({0})</value>
+  </data>
+  <data name="Screens.Open.FullScreen" xml:space="preserve">
+    <value>Plein écran</value>
+  </data>
+  <data name="Screens.Open.LeaveFullScreen" xml:space="preserve">
+    <value>Quitter le plein écran</value>
+  </data>
+  <data name="Screens.Open.NoMonitorName" xml:space="preserve">
+    <value>Nom du moniteur indisponible</value>
+  </data>
+  <data name="Screens.Open.Blocked" xml:space="preserve">
+    <value>Le navigateur a bloqué la fenêtre. Autorisez les fenêtres surgissantes pour Kazo OS, puis réessayez.</value>
+  </data>
+  <data name="Screens.Open.LimitReached" xml:space="preserve">
+    <value>Les écrans 2 à 9 sont tous ouverts.</value>
+  </data>
+  <data name="Screens.Open.Unavailable" xml:space="preserve">
+    <value>Cet hôte ne peut pas ouvrir d'écrans.</value>
+  </data>
+  <data name="Screens.Open.FullScreenRefused" xml:space="preserve">
+    <value>Le navigateur a refusé le plein écran.</value>
+  </data>
+  <data name="Screens.Permission.Granted" xml:space="preserve">
+    <value>Gestion des fenêtres autorisée : chaque nouvel écran va sur un moniteur libre.</value>
+  </data>
+  <data name="Screens.Permission.Denied" xml:space="preserve">
+    <value>Gestion des fenêtres refusée : placez vous-même la fenêtre de chaque écran. Changez-le dans les paramètres du site du navigateur.</value>
+  </data>
+  <data name="Screens.Permission.Prompt" xml:space="preserve">
+    <value>Gestion des fenêtres pas encore demandée : le navigateur la demande au prochain nouvel écran.</value>
+  </data>
+  <data name="Screens.Permission.Unsupported" xml:space="preserve">
+    <value>Ce navigateur ne place pas les fenêtres sur un moniteur : placez vous-même la fenêtre de chaque écran.</value>
+  </data>
+  <data name="Screens.Permission.Unknown" xml:space="preserve">
+    <value>Gestion des fenêtres : état inconnu.</value>
+  </data>
+  <data name="Screens.Permission.Ask" xml:space="preserve">
+    <value>Autoriser maintenant</value>
+  </data>
+  <data name="Screens.Error.Request" xml:space="preserve">
+    <value>La demande a échoué : {0}</value>
+  </data>
+  <data name="Tab.WhatsNew" xml:space="preserve">
+    <value>Nouveautés</value>
+  </data>
+  <data name="About.WhatsNew" xml:space="preserve">
+    <value>Quoi de neuf ?</value>
+  </data>
+  <data name="WhatsNew.Empty" xml:space="preserve">
+    <value>Aucun changement à montrer. La liste vient avec l'OS ; elle peut manquer quand l'OS est hors ligne.</value>
+  </data>
+  <data name="WhatsNew.Summary.None" xml:space="preserve">
+    <value>Vous avez vu tous les changements.</value>
+  </data>
+  <data name="WhatsNew.Summary.One" xml:space="preserve">
+    <value>1 nouveauté depuis votre dernière visite.</value>
+  </data>
+  <data name="WhatsNew.Summary.Many" xml:space="preserve">
+    <value>{0} nouveautés depuis votre dernière visite.</value>
+  </data>
+  <data name="WhatsNew.Group.Next" xml:space="preserve">
+    <value>Depuis {0} (prochaine version)</value>
+  </data>
+  <data name="WhatsNew.Group.Version" xml:space="preserve">
+    <value>Version {0}</value>
+  </data>
+  <data name="WhatsNew.Group.VersionWithDate" xml:space="preserve">
+    <value>Version {0} — {1}</value>
+  </data>
+  <data name="WhatsNew.Badge.New" xml:space="preserve">
+    <value>Nouveau</value>
+  </data>
+  <data name="WhatsNew.Category.New" xml:space="preserve">
+    <value>Fonctionnalité</value>
+  </data>
+  <data name="WhatsNew.Category.Improved" xml:space="preserve">
+    <value>Amélioré</value>
+  </data>
+  <data name="WhatsNew.Category.Fixed" xml:space="preserve">
+    <value>Corrigé</value>
+  </data>
+  <data name="WhatsNew.Category.Developer" xml:space="preserve">
+    <value>Développeurs</value>
+  </data>
+  <data name="WhatsNew.Link.More" xml:space="preserve">
+    <value>En savoir plus</value>
+  </data>
+  <data name="WhatsNew.Link.PullRequest" xml:space="preserve">
+    <value>Pull request</value>
+  </data>
+  <data name="Tab.DateTime" xml:space="preserve">
+    <value>Date et heure</value>
+  </data>
+  <data name="DateTime.State.Title" xml:space="preserve">
+    <value>Heure actuelle</value>
+  </data>
+  <data name="DateTime.State.Local" xml:space="preserve">
+    <value>Heure locale</value>
+  </data>
+  <data name="DateTime.State.Zone" xml:space="preserve">
+    <value>Fuseau horaire</value>
+  </data>
+  <data name="DateTime.Zone.Title" xml:space="preserve">
+    <value>Fuseau horaire</value>
+  </data>
+  <data name="DateTime.Zone.Description" xml:space="preserve">
+    <value>L'horloge de la barre des tâches, les dates des apps et celles de ls, date et dmesg utilisent ce fuseau. Le choix est enregistré dans {0} et s'applique tout de suite. Un processus qui a sa propre variable {1} garde ce fuseau.</value>
+  </data>
+  <data name="DateTime.Zone.Automatic" xml:space="preserve">
+    <value>Automatique</value>
+  </data>
+  <data name="DateTime.Zone.Automatic.Detail" xml:space="preserve">
+    <value>Fuseau de cet appareil : {0}</value>
+  </data>
+  <data name="DateTime.Zone.Manual" xml:space="preserve">
+    <value>Choisir dans la liste</value>
+  </data>
+  <data name="DateTime.Zone.Manual.Detail" xml:space="preserve">
+    <value>Choisissez une ville ou une région</value>
+  </data>
+  <data name="DateTime.Zone.Search" xml:space="preserve">
+    <value>Rechercher un fuseau horaire</value>
+  </data>
+  <data name="DateTime.Zone.Search.Placeholder" xml:space="preserve">
+    <value>Toronto, Europe/Paris…</value>
+  </data>
+  <data name="DateTime.Zone.List" xml:space="preserve">
+    <value>Fuseaux horaires</value>
+  </data>
+  <data name="DateTime.Zone.NoMatch" xml:space="preserve">
+    <value>Aucun fuseau ne correspond à « {0} ».</value>
+  </data>
+  <data name="DateTime.Saved.Automatic" xml:space="preserve">
+    <value>Enregistré : fuseau automatique ({0}).</value>
+  </data>
+  <data name="DateTime.Saved.Zone" xml:space="preserve">
+    <value>Enregistré : fuseau {0}.</value>
+  </data>
+  <data name="DateTime.Error.CannotRead" xml:space="preserve">
+    <value>Impossible de lire {0} : {1}</value>
+  </data>
+  <data name="DateTime.Error.CannotSave" xml:space="preserve">
+    <value>Impossible d'enregistrer {0} : {1}</value>
+  </data>
+  <data name="DateTime.Error.Unknown" xml:space="preserve">
+    <value>Fuseau horaire inconnu : {0}</value>
+  </data>
+  <data name="Users.Guest.Title" xml:space="preserve">
+    <value>Vous utilisez le compte invité</value>
+  </data>
+  <data name="Users.Guest.Description" xml:space="preserve">
+    <value>Le compte invité n'a pas de mot de passe. Créez votre propre compte pour protéger vos fichiers : vous pourrez garder les fichiers, les réglages et les applications de l'invité, ou repartir d'un compte vide.</value>
+  </data>
+  <data name="Users.Guest.SignOutNotice" xml:space="preserve">
+    <value>La session invité se ferme d'abord : enregistrez votre travail dans les applications ouvertes.</value>
+  </data>
+  <data name="Users.Guest.Create" xml:space="preserve">
+    <value>Créer mon compte</value>
+  </data>
+  <data name="Users.Guest.Unavailable" xml:space="preserve">
+    <value>Le formulaire de compte n'a pas pu s'ouvrir. Fermez la session, puis choisissez Créer mon compte sur l'écran de connexion.</value>
+  </data>
+  <data name="Wallpaper.Title" xml:space="preserve">
+    <value>Fond d'écran</value>
+  </data>
+  <data name="Wallpaper.Description" xml:space="preserve">
+    <value>Une image PNG, JPEG ou WebP par-dessus le fond du thème. Les images déposées dans {0} sont proposées à tous les utilisateurs, celles de {1} à vous seul ; « Parcourir… » choisit toute image que vous pouvez ouvrir.</value>
+  </data>
+  <data name="Wallpaper.Screens.AriaLabel" xml:space="preserve">
+    <value>Écran</value>
+  </data>
+  <data name="Wallpaper.Screens.Primary" xml:space="preserve">
+    <value>Écran 1 et les autres</value>
+  </data>
+  <data name="Wallpaper.Screens.Other" xml:space="preserve">
+    <value>Écran {0}</value>
+  </data>
+  <data name="Wallpaper.Screens.Mobile" xml:space="preserve">
+    <value>Mobile</value>
+  </data>
+  <data name="Wallpaper.Screens.Desktop" xml:space="preserve">
+    <value>Bureau</value>
+  </data>
+  <data name="Wallpaper.MobileTheme" xml:space="preserve">
+    <value>Fond du thème mobile</value>
+  </data>
+  <data name="Wallpaper.Theme" xml:space="preserve">
+    <value>Fond du thème</value>
+  </data>
+  <data name="Wallpaper.SameAsPrimary" xml:space="preserve">
+    <value>Comme l'écran 1</value>
+  </data>
+  <data name="Wallpaper.BuiltIn.hacker-grid" xml:space="preserve">
+    <value>Grille</value>
+  </data>
+  <data name="Wallpaper.BuiltIn.circuit" xml:space="preserve">
+    <value>Circuit</value>
+  </data>
+  <data name="Wallpaper.BuiltIn.aurora" xml:space="preserve">
+    <value>Aurore</value>
+  </data>
+  <data name="Wallpaper.BuiltIn.nebula" xml:space="preserve">
+    <value>Nébuleuse</value>
+  </data>
+  <data name="Wallpaper.Origin.system" xml:space="preserve">
+    <value>système</value>
+  </data>
+  <data name="Wallpaper.Origin.user" xml:space="preserve">
+    <value>à moi</value>
+  </data>
+  <data name="Wallpaper.Origin.pack" xml:space="preserve">
+    <value>pack</value>
+  </data>
+  <data name="Wallpaper.Origin.file" xml:space="preserve">
+    <value>fichier</value>
+  </data>
+  <data name="Wallpaper.Browse" xml:space="preserve">
+    <value>Parcourir…</value>
+  </data>
+  <data name="Wallpaper.Browse.Title" xml:space="preserve">
+    <value>Choisir un fond d'écran</value>
+  </data>
+  <data name="Wallpaper.Browse.Filter" xml:space="preserve">
+    <value>Images (PNG, JPEG, WebP)</value>
+  </data>
+  <data name="Wallpaper.Fit.Label" xml:space="preserve">
+    <value>Ajustement</value>
+  </data>
+  <data name="Wallpaper.Fit.fill" xml:space="preserve">
+    <value>Remplir</value>
+  </data>
+  <data name="Wallpaper.Fit.fit" xml:space="preserve">
+    <value>Ajuster</value>
+  </data>
+  <data name="Wallpaper.Fit.stretch" xml:space="preserve">
+    <value>Étirer</value>
+  </data>
+  <data name="Wallpaper.Fit.center" xml:space="preserve">
+    <value>Centrer</value>
+  </data>
+  <data name="Wallpaper.Fit.tile" xml:space="preserve">
+    <value>Mosaïque</value>
+  </data>
+  <data name="Wallpaper.Error.Format" xml:space="preserve">
+    <value>{0} n'est pas une image PNG, JPEG ou WebP.</value>
+  </data>
+  <data name="Wallpaper.Saved" xml:space="preserve">
+    <value>Fond d'écran enregistré.</value>
+  </data>
+  <data name="LocalServer.AriaLabel" xml:space="preserve">
+    <value>Serveur local</value>
+  </data>
+  <data name="LocalServer.Title" xml:space="preserve">
+    <value>Serveur local</value>
+  </data>
+  <data name="LocalServer.Description" xml:space="preserve">
+    <value>Installez le serveur Kazo OS sur cet ordinateur ou sur une autre machine de votre réseau local, sans l'exposer à internet : les applications atteignent alors le vrai réseau par son relais. L'installeur affiche un code d'appairage à usage unique ; saisissez-le ici avec l'adresse du serveur.</value>
+  </data>
+  <data name="LocalServer.Download" xml:space="preserve">
+    <value>Télécharger le serveur</value>
+  </data>
+  <data name="LocalServer.DownloadHelp" xml:space="preserve">
+    <value>Prenez le fichier de la machine qui fera tourner le serveur, dans la dernière version publiée (programmes non signés : Windows demande de confirmer, l'installeur macOS s'en charge). Docker fonctionne partout.</value>
+  </data>
+  <data name="LocalServer.System.WindowsX64" xml:space="preserve">
+    <value>Windows (x64)</value>
+  </data>
+  <data name="LocalServer.System.WindowsArm64" xml:space="preserve">
+    <value>Windows (ARM64)</value>
+  </data>
+  <data name="LocalServer.System.MacArm64" xml:space="preserve">
+    <value>macOS (Apple silicon)</value>
+  </data>
+  <data name="LocalServer.System.MacX64" xml:space="preserve">
+    <value>macOS (Intel)</value>
+  </data>
+  <data name="LocalServer.System.LinuxX64" xml:space="preserve">
+    <value>Linux (x64)</value>
+  </data>
+  <data name="LocalServer.System.LinuxArm64" xml:space="preserve">
+    <value>Linux (ARM64)</value>
+  </data>
+  <data name="LocalServer.OpenReleases" xml:space="preserve">
+    <value>Ouvrir la dernière version publiée</value>
+  </data>
+  <data name="LocalServer.OpenGuide" xml:space="preserve">
+    <value>Guide d'installation</value>
+  </data>
+  <data name="LocalServer.GuideUrl" xml:space="preserve">
+    <value>https://github.com/Kazo-ca/Os/blob/main/doc/fr/wasm/dev/installable-server.md</value>
+  </data>
+  <data name="LocalServer.Address" xml:space="preserve">
+    <value>Adresse du serveur</value>
+  </data>
+  <data name="LocalServer.Test" xml:space="preserve">
+    <value>Tester</value>
+  </data>
+  <data name="LocalServer.Testing" xml:space="preserve">
+    <value>Test en cours…</value>
+  </data>
+  <data name="LocalServer.Found" xml:space="preserve">
+    <value>Un serveur Kazo OS répond (version {0}).</value>
+  </data>
+  <data name="LocalServer.NotFound" xml:space="preserve">
+    <value>Aucun serveur Kazo OS ici : {0}</value>
+  </data>
+  <data name="LocalServer.Code" xml:space="preserve">
+    <value>Code d'appairage</value>
+  </data>
+  <data name="LocalServer.CodeHelp" xml:space="preserve">
+    <value>Affiché par l'installeur, ou par « Kazo.Os.Server pair admin » sur la machine du serveur. Valable une fois, 10 minutes.</value>
+  </data>
+  <data name="LocalServer.Pair" xml:space="preserve">
+    <value>Appairer cet appareil</value>
+  </data>
+  <data name="LocalServer.Pairing" xml:space="preserve">
+    <value>Appairage…</value>
+  </data>
+  <data name="LocalServer.PairFailed" xml:space="preserve">
+    <value>L'appairage a échoué : {0}</value>
+  </data>
+  <data name="IconPack.Title" xml:space="preserve">
+    <value>Pack d'icônes</value>
+  </data>
+  <data name="IconPack.Description" xml:space="preserve">
+    <value>Remplace les icônes des applications, des dossiers et des fichiers par les images PNG d'un pack. Installez un pack pour tous dans {0} (administrateur) ou pour vous dans {1} : un dossier qui contient icon-pack.json.</value>
+  </data>
+  <data name="IconPack.BuiltIn" xml:space="preserve">
+    <value>Icônes intégrées</value>
+  </data>
+  <data name="IconPack.BuiltIn.Description" xml:space="preserve">
+    <value>Les icônes vectorielles de l'OS</value>
+  </data>
+  <data name="IconPack.None" xml:space="preserve">
+    <value>Aucun pack d'icônes n'est encore installé.</value>
+  </data>
+  <data name="IconPack.Warnings" xml:space="preserve">
+    <value>{0} avertissement(s) dans les packs d'icônes : images ou dossiers refusés, écrits dans le journal système.</value>
+  </data>
+  <data name="IconPack.Saved" xml:space="preserve">
+    <value>Pack d'icônes appliqué.</value>
+  </data>
+  <data name="IconPack.Error.CannotRead" xml:space="preserve">
+    <value>Impossible de lire les packs d'icônes : {0}</value>
+  </data>
+  <data name="Tab.Sound" xml:space="preserve">
+    <value>Sons</value>
+  </data>
+  <data name="Sound.Output.Title" xml:space="preserve">
+    <value>Sons du système</value>
+  </data>
+  <data name="Sound.Output.Description" xml:space="preserve">
+    <value>Sons des évènements de l'OS : notifications, avertissements, erreurs, ouverture et fermeture de session. Le navigateur ne les joue qu'après un premier clic ou une première touche sur la page.</value>
+  </data>
+  <data name="Sound.Output.Enabled" xml:space="preserve">
+    <value>Jouer les sons du système</value>
+  </data>
+  <data name="Sound.Volume.Label" xml:space="preserve">
+    <value>Volume</value>
+  </data>
+  <data name="Sound.Theme.Title" xml:space="preserve">
+    <value>Jeu de sons</value>
+  </data>
+  <data name="Sound.Theme.Description" xml:space="preserve">
+    <value>Les jeux de {0} sont pour tous les utilisateurs ; mettez les vôtres dans {1}, un dossier par jeu avec un fichier index.theme et des fichiers .oga, .ogg ou .mp3 d'au plus 1 Mo nommés comme les évènements ci-dessous. Choisir un jeu joue son son de notification.</value>
+  </data>
+  <data name="Sound.Theme.None" xml:space="preserve">
+    <value>Aucun jeu de sons trouvé.</value>
+  </data>
+  <data name="Sound.Events.Title" xml:space="preserve">
+    <value>Évènements</value>
+  </data>
+  <data name="Sound.Events.Description" xml:space="preserve">
+    <value>Le fichier que chaque évènement joue dans un jeu (noms de sons freedesktop.org). Un son absent d'un jeu joue celui du jeu Kazo OS.</value>
+  </data>
+  <data name="Sound.Event.Notification" xml:space="preserve">
+    <value>Notification</value>
+  </data>
+  <data name="Sound.Event.Warning" xml:space="preserve">
+    <value>Avertissement</value>
+  </data>
+  <data name="Sound.Event.Error" xml:space="preserve">
+    <value>Erreur</value>
+  </data>
+  <data name="Sound.Event.SignIn" xml:space="preserve">
+    <value>Ouverture de session</value>
+  </data>
+  <data name="Sound.Event.SignOut" xml:space="preserve">
+    <value>Fermeture de session</value>
+  </data>
+  <data name="Sound.Saved.On" xml:space="preserve">
+    <value>Les sons du système sont activés.</value>
+  </data>
+  <data name="Sound.Saved.Off" xml:space="preserve">
+    <value>Les sons du système sont coupés.</value>
+  </data>
+  <data name="Sound.Saved.Volume" xml:space="preserve">
+    <value>Volume réglé à {0} %.</value>
+  </data>
+  <data name="Sound.Saved.Theme" xml:space="preserve">
+    <value>Jeu de sons : {0}.</value>
+  </data>
+  <data name="Sound.Error.CannotRead" xml:space="preserve">
+    <value>Impossible de lire {0} : {1}</value>
+  </data>
+  <data name="Sound.Error.CannotSave" xml:space="preserve">
+    <value>Impossible d'enregistrer {0} : {1}</value>
+  </data>
+  <data name="Sound.Error.UnknownTheme" xml:space="preserve">
+    <value>Il n'y a pas de jeu de sons « {0} ».</value>
+  </data>
+  <data name="Cursors.Title" xml:space="preserve">
+    <value>Curseurs</value>
+  </data>
+  <data name="Cursors.Description" xml:space="preserve">
+    <value>Le pointeur de tout l'OS. Ajoutez vos thèmes comme dossiers dans {0} (pour vous) ou {1} (pour tous les utilisateurs, en administrateur) : chaque dossier contient un fichier {2} qui liste ses curseurs PNG avec leur point actif.</value>
+  </data>
+  <data name="Cursors.SystemPreview" xml:space="preserve">
+    <value>curseurs de l'appareil</value>
+  </data>
+  <data name="Cursors.Theme.system" xml:space="preserve">
+    <value>Système</value>
+  </data>
+  <data name="Cursors.Theme.kazoos-neon" xml:space="preserve">
+    <value>Kazo OS Néon</value>
+  </data>
+  <data name="Cursors.Theme.gothic-crimson" xml:space="preserve">
+    <value>Gothique Pourpre</value>
+  </data>
+  <data name="Cursors.Saved" xml:space="preserve">
+    <value>Enregistré. Le bureau utilise ces curseurs maintenant.</value>
+  </data>
+  <data name="Cursors.Warnings" xml:space="preserve">
+    <value>{0} problème(s) dans les dossiers de thèmes de curseurs :</value>
+  </data>
+  <data name="Cursors.Error.CannotRead" xml:space="preserve">
+    <value>Impossible de lire cursors.config : {0}</value>
+  </data>
+  <data name="Cursors.Error.CannotSave" xml:space="preserve">
+    <value>Impossible d'enregistrer {0} : {1}</value>
+  </data>
+  <data name="Tab.AppSources" xml:space="preserve">
+    <value>Sources et liste noire</value>
+  </data>
+  <data name="Sources.Title" xml:space="preserve">
+    <value>Sources des apps</value>
+  </data>
+  <data name="Sources.Description" xml:space="preserve">
+    <value>D'où les apps sont installées, dans {0}. Chaque utilisateur peut installer pour lui-même une app d'une source de confiance ; toute autre source demande un administrateur à chaque fois.</value>
+  </data>
+  <data name="Sources.Loading" xml:space="preserve">
+    <value>Lecture des sources…</value>
+  </data>
+  <data name="Sources.Catalogs" xml:space="preserve">
+    <value>Catalogues</value>
+  </data>
+  <data name="Sources.Repositories" xml:space="preserve">
+    <value>Dépôts</value>
+  </data>
+  <data name="Sources.Remove" xml:space="preserve">
+    <value>Retirer</value>
+  </data>
+  <data name="Sources.BuiltIn" xml:space="preserve">
+    <value>Intégrée</value>
+  </data>
+  <data name="Sources.BuiltIn.Title" xml:space="preserve">
+    <value>Kazo OS a été compilé avec cette source</value>
+  </data>
+  <data name="Sources.Trust.Verified" xml:space="preserve">
+    <value>Vérifiée</value>
+  </data>
+  <data name="Sources.Trust.Trusted" xml:space="preserve">
+    <value>De confiance</value>
+  </data>
+  <data name="Sources.Trust.Untrusted" xml:space="preserve">
+    <value>Non fiable</value>
+  </data>
+  <data name="Sources.Interval" xml:space="preserve">
+    <value>Les mises à jour sont vérifiées toutes les {0} heures.</value>
+  </data>
+  <data name="Sources.Add.Label" xml:space="preserve">
+    <value>Nouvelle source</value>
+  </data>
+  <data name="Sources.Add.Trusted" xml:space="preserve">
+    <value>Lui faire confiance</value>
+  </data>
+  <data name="Sources.Add" xml:space="preserve">
+    <value>Ajouter</value>
+  </data>
+  <data name="Sources.Add.Hint" xml:space="preserve">
+    <value>Une source de confiance permet à chaque utilisateur d'installer ses apps sans administrateur. Laissez-la non fiable pour approuver chaque installation.</value>
+  </data>
+  <data name="Sources.Error.Unsupported" xml:space="preserve">
+    <value>Cet hôte Kazo OS ne peut pas installer d'apps depuis un dépôt.</value>
+  </data>
+  <data name="Policy.Title" xml:space="preserve">
+    <value>Liste noire</value>
+  </data>
+  <data name="Policy.Description" xml:space="preserve">
+    <value>Les apps, catégories et capacités de {0} ne peuvent pas être installées par un utilisateur pour lui-même : un administrateur doit les approuver pour tous.</value>
+  </data>
+  <data name="Policy.Apps" xml:space="preserve">
+    <value>Apps</value>
+  </data>
+  <data name="Policy.Categories" xml:space="preserve">
+    <value>Catégories</value>
+  </data>
+  <data name="Policy.Capabilities" xml:space="preserve">
+    <value>Capacités</value>
+  </data>
+  <data name="Policy.Empty" xml:space="preserve">
+    <value>Rien n'est bloqué.</value>
+  </data>
+  <data name="Policy.Unblock" xml:space="preserve">
+    <value>Débloquer</value>
+  </data>
+  <data name="Policy.Kind" xml:space="preserve">
+    <value>Règle</value>
+  </data>
+  <data name="Policy.Kind.App" xml:space="preserve">
+    <value>ID d'app</value>
+  </data>
+  <data name="Policy.Kind.Category" xml:space="preserve">
+    <value>Catégorie</value>
+  </data>
+  <data name="Policy.Kind.Capability" xml:space="preserve">
+    <value>Capacité</value>
+  </data>
+  <data name="Policy.Value" xml:space="preserve">
+    <value>Valeur</value>
+  </data>
+  <data name="Policy.Block" xml:space="preserve">
+    <value>Bloquer</value>
+  </data>
+  <data name="Tab.Notifications" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
+  <data name="Notifications.Dnd.Title" xml:space="preserve">
+    <value>Ne pas déranger</value>
+  </data>
+  <data name="Notifications.Dnd.Description" xml:space="preserve">
+    <value>Quand il est activé, les nouvelles notifications ne font ni bulle ni son, erreurs comprises. Elles vont quand même dans le panneau de l'horloge, et le point de l'horloge les signale toujours. Une lune dans la zone de notification indique que le mode est activé.</value>
+  </data>
+  <data name="Notifications.Dnd.Enabled" xml:space="preserve">
+    <value>Ne pas déranger</value>
+  </data>
+  <data name="Notifications.Dnd.File" xml:space="preserve">
+    <value>Enregistré pour vous dans {0} ; le panneau de l'horloge a le même interrupteur.</value>
+  </data>
+  <data name="Notifications.Saved.On" xml:space="preserve">
+    <value>Ne pas déranger est activé.</value>
+  </data>
+  <data name="Notifications.Saved.Off" xml:space="preserve">
+    <value>Ne pas déranger est désactivé.</value>
+  </data>
+  <data name="Notifications.Error.CannotRead" xml:space="preserve">
+    <value>Impossible de lire {0} : {1}</value>
+  </data>
+  <data name="Notifications.Error.CannotSave" xml:space="preserve">
+    <value>Impossible d'enregistrer {0} : {1}</value>
+  </data>
+  <data name="SetWallpaper.Done.Title" xml:space="preserve">
+    <value>Fond d'écran changé</value>
+  </data>
+  <data name="SetWallpaper.Done.Message" xml:space="preserve">
+    <value>{0} est maintenant le fond d'écran.</value>
+  </data>
+  <data name="SetWallpaper.Done.MessageScreen" xml:space="preserve">
+    <value>{0} est maintenant le fond d'écran de l'écran {1}.</value>
+  </data>
+  <data name="SetWallpaper.Error.Title" xml:space="preserve">
+    <value>Fond d'écran non changé</value>
+  </data>
+  <data name="SetWallpaper.Error.NotImage" xml:space="preserve">
+    <value>{0} n'est pas une image PNG, JPEG ou WebP de 16 Mo au plus.</value>
+  </data>
+  <data name="SetWallpaper.Error.Unreadable" xml:space="preserve">
+    <value>{0} ne peut pas être lu : {1}</value>
+  </data>
+  <data name="SetWallpaper.Error.NotSaved" xml:space="preserve">
+    <value>Le fond d'écran ne peut pas être enregistré : {0}</value>
+  </data>
+</root>

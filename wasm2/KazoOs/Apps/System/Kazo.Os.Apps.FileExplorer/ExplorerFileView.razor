@@ -1,0 +1,33 @@
+@using Kazo.Os.AppSdk.Blazor.Components
+@using Kazo.Os.AppSdk.Blazor.Files
+@using Kazo.Os.Apps.FileExplorer.FileControl
+@inherits KazoEmbeddableComponent
+@implements IAsyncDisposable
+
+@*
+    The OS file control (kazoos.file-view, ADR 0148), as the File Explorer provides it to every app
+    and shows it itself: FileView (the explorer's implementation, ADR 0155 §1) bound to the OS context
+    menu, with the explorer's own trash, clipboard, transfers and dialogs, all run with the rights of
+    the window that shows it (HostContext, ADR 0148 §4).
+*@
+<CascadingValue Value="_binding" IsFixed="true">
+    <FileView @ref="_view"
+              FileSystem="FileSystem"
+              Watch="WatchGateway"
+              Intents="HostContext.Intents"
+              InitialDirectory="_initialDirectory"
+              Mode="ViewMode"
+              ModeChanged="_modeChanged"
+              AllowMultiSelect="AllowMultiSelect"
+              AllowDragDrop="Has(KazoFileViewFeatures.DragDrop)"
+              Filter="_filter"
+              FolderActivation="FileViewFolderActivationMode.Custom"
+              OnCustomFolderActivate="_activateFolder"
+              DeleteRequested="_deleteRequested"
+              DropRequested="_dropRequested"
+              ClipboardRequested="ClipboardCallback"
+              CanPaste="_canPaste"
+              CutPaths="_cutPaths"
+              IconProvider="IconProvider"
+              OwnerAppId="@HostContext.Manifest.Id" />
+</CascadingValue>

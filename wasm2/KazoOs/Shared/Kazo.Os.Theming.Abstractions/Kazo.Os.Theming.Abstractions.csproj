@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\Platform\Packaging.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackageId>Kazo.Os.Theming.Abstractions</PackageId>
+    <Description>Framework-neutral Kazo OS theme catalog, identifiers, form factors, and persisted appearance preferences.</Description>
+    <PackageTags>kazoos;theming;contracts;blazor</PackageTags>
+  </PropertyGroup>
+
+</Project>

@@ -1,0 +1,4 @@
+[submodule "external/KazoOs"]
+	path = external/KazoOs
+	url = https://github.com/Kazo-ca/Os.git
+	shallow = true

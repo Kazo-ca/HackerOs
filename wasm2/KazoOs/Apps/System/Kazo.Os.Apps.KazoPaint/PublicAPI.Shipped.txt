@@ -1,0 +1,113 @@
+#nullable enable
+Kazo.Os.Apps.KazoPaint.KazoPaintApp
+Kazo.Os.Apps.KazoPaint.KazoPaintApp.KazoPaintApp() -> void
+Kazo.Os.Apps.KazoPaint.KazoPaintWindow
+Kazo.Os.Apps.KazoPaint.KazoPaintWindow.ConfirmCloseAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.Apps.KazoPaint.KazoPaintWindow.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Apps.KazoPaint.KazoPaintWindow.KazoPaintWindow() -> void
+Kazo.Os.Apps.KazoPaint.ImageFileFormat
+Kazo.Os.Apps.KazoPaint.ImageFileHeader
+Kazo.Os.Apps.KazoPaint.ImageFileHeader.<Clone>$() -> Kazo.Os.Apps.KazoPaint.ImageFileHeader!
+Kazo.Os.Apps.KazoPaint.ImageFileHeader.Deconstruct(out Kazo.Os.Apps.KazoPaint.ImageFileKind Kind, out int Width, out int Height) -> void
+Kazo.Os.Apps.KazoPaint.ImageFileHeader.Equals(Kazo.Os.Apps.KazoPaint.ImageFileHeader? other) -> bool
+Kazo.Os.Apps.KazoPaint.ImageFileHeader.Height.get -> int
+Kazo.Os.Apps.KazoPaint.ImageFileHeader.Height.init -> void
+Kazo.Os.Apps.KazoPaint.ImageFileHeader.ImageFileHeader(Kazo.Os.Apps.KazoPaint.ImageFileKind Kind, int Width, int Height) -> void
+Kazo.Os.Apps.KazoPaint.ImageFileHeader.Kind.get -> Kazo.Os.Apps.KazoPaint.ImageFileKind
+Kazo.Os.Apps.KazoPaint.ImageFileHeader.Kind.init -> void
+Kazo.Os.Apps.KazoPaint.ImageFileHeader.MediaType.get -> string!
+Kazo.Os.Apps.KazoPaint.ImageFileHeader.Width.get -> int
+Kazo.Os.Apps.KazoPaint.ImageFileHeader.Width.init -> void
+Kazo.Os.Apps.KazoPaint.ImageFileKind
+Kazo.Os.Apps.KazoPaint.ImageFileKind.Bmp = 3 -> Kazo.Os.Apps.KazoPaint.ImageFileKind
+Kazo.Os.Apps.KazoPaint.ImageFileKind.Gif = 4 -> Kazo.Os.Apps.KazoPaint.ImageFileKind
+Kazo.Os.Apps.KazoPaint.ImageFileKind.Jpeg = 2 -> Kazo.Os.Apps.KazoPaint.ImageFileKind
+Kazo.Os.Apps.KazoPaint.ImageFileKind.Png = 1 -> Kazo.Os.Apps.KazoPaint.ImageFileKind
+Kazo.Os.Apps.KazoPaint.ImageFileKind.Unknown = 0 -> Kazo.Os.Apps.KazoPaint.ImageFileKind
+Kazo.Os.Apps.KazoPaint.ImageFileKind.WebP = 5 -> Kazo.Os.Apps.KazoPaint.ImageFileKind
+Kazo.Os.Apps.KazoPaint.PaintCanvasState
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.ActiveColor.get -> string!
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.ActiveColor.set -> void
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.BrushSize.get -> int
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.BrushSize.set -> void
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.CanRedo.get -> bool
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.CanUndo.get -> bool
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.Crop(int x, int y, int width, int height) -> void
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.CropMode.get -> bool
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.DrawLine(int startX, int startY, int endX, int endY, string? color = null, int? size = null) -> void
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.GetCurrentBuffer() -> byte[]!
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.Height.get -> int
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.IsDirty.get -> bool
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.MarkSaved() -> void
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.NewDocument(int width, int height, byte r = 255, byte g = 255, byte b = 255, byte a = 255) -> void
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.PaintCanvasState() -> void
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.PanBy(int deltaX, int deltaY) -> void
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.PanMode.get -> bool
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.PanX.get -> int
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.PanY.get -> int
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.PushHistory(byte[]! pixelRgba) -> void
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.PushHistory(int width, int height, byte[]! pixelRgba) -> void
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.Redo() -> void
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.ReplaceDocument(int width, int height, byte[]! pixelRgba) -> void
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.Rotate90() -> void
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.Scale.get -> double
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.ShowGrid.get -> bool
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.ToggleCropMode() -> void
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.ToggleGrid() -> void
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.TogglePanMode() -> void
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.Undo() -> void
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.Width.get -> int
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.ZoomIn() -> void
+Kazo.Os.Apps.KazoPaint.PaintCanvasState.ZoomOut() -> void
+Kazo.Os.Apps.KazoPaint.PaintFileReadResult
+Kazo.Os.Apps.KazoPaint.PaintFileReadResult.<Clone>$() -> Kazo.Os.Apps.KazoPaint.PaintFileReadResult!
+Kazo.Os.Apps.KazoPaint.PaintFileReadResult.Bytes.get -> byte[]?
+Kazo.Os.Apps.KazoPaint.PaintFileReadResult.Bytes.init -> void
+Kazo.Os.Apps.KazoPaint.PaintFileReadResult.Deconstruct(out byte[]? Bytes, out Kazo.Os.Apps.KazoPaint.ImageFileHeader? Header, out string? Error) -> void
+Kazo.Os.Apps.KazoPaint.PaintFileReadResult.Equals(Kazo.Os.Apps.KazoPaint.PaintFileReadResult? other) -> bool
+Kazo.Os.Apps.KazoPaint.PaintFileReadResult.Error.get -> string?
+Kazo.Os.Apps.KazoPaint.PaintFileReadResult.Error.init -> void
+Kazo.Os.Apps.KazoPaint.PaintFileReadResult.Header.get -> Kazo.Os.Apps.KazoPaint.ImageFileHeader?
+Kazo.Os.Apps.KazoPaint.PaintFileReadResult.Header.init -> void
+Kazo.Os.Apps.KazoPaint.PaintFileReadResult.PaintFileReadResult(byte[]? Bytes, Kazo.Os.Apps.KazoPaint.ImageFileHeader? Header, string? Error) -> void
+Kazo.Os.Apps.KazoPaint.PaintFileStore
+Kazo.Os.Apps.KazoPaint._Imports
+Kazo.Os.Apps.KazoPaint._Imports.Execute() -> void
+Kazo.Os.Apps.KazoPaint._Imports._Imports() -> void
+const Kazo.Os.Apps.KazoPaint.ImageFileFormat.MaxDimension = 4096 -> int
+const Kazo.Os.Apps.KazoPaint.ImageFileFormat.MaxFileBytes = 16777216 -> int
+override Kazo.Os.Apps.KazoPaint.KazoPaintApp.Assets.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AssetManifest!>!
+override Kazo.Os.Apps.KazoPaint.KazoPaintApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Apps.KazoPaint.KazoPaintApp.Category.get -> string!
+override Kazo.Os.Apps.KazoPaint.KazoPaintApp.Description.get -> string!
+override Kazo.Os.Apps.KazoPaint.KazoPaintApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Apps.KazoPaint.KazoPaintApp.FileHandlers.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.FileHandler!>!
+override Kazo.Os.Apps.KazoPaint.KazoPaintApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Apps.KazoPaint.KazoPaintApp.Id.get -> string!
+override Kazo.Os.Apps.KazoPaint.KazoPaintApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Apps.KazoPaint.KazoPaintApp.MobileEntryPoint.get -> System.Type?
+override Kazo.Os.Apps.KazoPaint.KazoPaintApp.Name.get -> string!
+override Kazo.Os.Apps.KazoPaint.KazoPaintApp.PublisherId.get -> string!
+override Kazo.Os.Apps.KazoPaint.KazoPaintApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Apps.KazoPaint.KazoPaintApp.Window.get -> Kazo.Os.App.Abstractions.WindowOptions?
+override Kazo.Os.Apps.KazoPaint.KazoPaintWindow.OnAppAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.KazoPaint.KazoPaintWindow.OnAppInitializedAsync() -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.KazoPaint.ImageFileHeader.Equals(object? obj) -> bool
+override Kazo.Os.Apps.KazoPaint.ImageFileHeader.GetHashCode() -> int
+override Kazo.Os.Apps.KazoPaint.ImageFileHeader.ToString() -> string!
+override Kazo.Os.Apps.KazoPaint.PaintFileReadResult.Equals(object? obj) -> bool
+override Kazo.Os.Apps.KazoPaint.PaintFileReadResult.GetHashCode() -> int
+override Kazo.Os.Apps.KazoPaint.PaintFileReadResult.ToString() -> string!
+static Kazo.Os.Apps.KazoPaint.ImageFileFormat.MediaTypeOf(Kazo.Os.Apps.KazoPaint.ImageFileKind kind) -> string!
+static Kazo.Os.Apps.KazoPaint.ImageFileFormat.OpenExtensions.get -> System.Collections.Generic.IReadOnlyList<string!>!
+static Kazo.Os.Apps.KazoPaint.ImageFileFormat.SaveKindFor(string! fileName) -> Kazo.Os.Apps.KazoPaint.ImageFileKind
+static Kazo.Os.Apps.KazoPaint.ImageFileFormat.TryReadHeader(System.ReadOnlySpan<byte> data, out Kazo.Os.Apps.KazoPaint.ImageFileHeader! header) -> bool
+static Kazo.Os.Apps.KazoPaint.ImageFileHeader.operator !=(Kazo.Os.Apps.KazoPaint.ImageFileHeader? left, Kazo.Os.Apps.KazoPaint.ImageFileHeader? right) -> bool
+static Kazo.Os.Apps.KazoPaint.ImageFileHeader.operator ==(Kazo.Os.Apps.KazoPaint.ImageFileHeader? left, Kazo.Os.Apps.KazoPaint.ImageFileHeader? right) -> bool
+static Kazo.Os.Apps.KazoPaint.PaintCanvasState.CreateBlankBuffer(int width, int height, byte r, byte g, byte b, byte a) -> byte[]!
+static Kazo.Os.Apps.KazoPaint.PaintFileReadResult.operator !=(Kazo.Os.Apps.KazoPaint.PaintFileReadResult? left, Kazo.Os.Apps.KazoPaint.PaintFileReadResult? right) -> bool
+static Kazo.Os.Apps.KazoPaint.PaintFileReadResult.operator ==(Kazo.Os.Apps.KazoPaint.PaintFileReadResult? left, Kazo.Os.Apps.KazoPaint.PaintFileReadResult? right) -> bool
+static Kazo.Os.Apps.KazoPaint.PaintFileStore.Inspect(byte[]! bytes) -> Kazo.Os.Apps.KazoPaint.PaintFileReadResult!
+static Kazo.Os.Apps.KazoPaint.PaintFileStore.ReadAsync(Kazo.Os.Simulation.Abstractions.Gateways.IAppFileSystemGateway! fileSystem, Kazo.Os.App.Abstractions.VirtualPath path, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Kazo.Os.Apps.KazoPaint.PaintFileReadResult!>!
+static Kazo.Os.Apps.KazoPaint.PaintFileStore.WriteAsync(Kazo.Os.Simulation.Abstractions.Gateways.IAppFileSystemGateway! fileSystem, Kazo.Os.App.Abstractions.VirtualPath path, byte[]! bytes, string! mediaType, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<string?>!
+~override Kazo.Os.Apps.KazoPaint.KazoPaintWindow.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

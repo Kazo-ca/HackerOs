@@ -7,7 +7,7 @@
 Accepted on 2026-10-16 (proposed the same day, then validated by Benoit with the
 questionnaire of section 4 of the plan).
 
-- **Plan phase:** web phase ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Plan phase:** web phase ([`asp-kazo-plan.md`](../plans/asp-kazo-plan.md)).
 - **Depends on:** ADR 0074 §1 (real HTTP bodies).
 
 ## Context
@@ -83,6 +83,6 @@ through its absolute URLs.
 
 - New AngleSharp dependency in the Browser app only.
 - The JS code stays minimal and belongs to the Browser app; nothing is added to the
-  hosts. In `HackerOs.Server` (Interactive Server rendering), the bridge works
+  hosts. In `Kazo.Os.Server` (Interactive Server rendering), the bridge works
   the same way: the JS runs in the browser, the C# on the server.
 - The links and forms of `SimulatedPage` pages do not change.

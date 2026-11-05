@@ -70,8 +70,8 @@ Accepté le 2026-11-01 (issue #337) : Benoit a pris les choix recommandés
   SDK de la version qui apporte cette ADR, que son `sdkCompatibility` exige
   déjà (ADR 0098 §3) : il ne s'installerait pas non plus sur cet OS. Une app
   sans `.resx` par culture donne le même paquet qu'avant.
-- La CI du catalogue (`PackageCheck` du dépôt HackerOs-AppMarketPlace) lit les
-  paquets avec `HackerOs.Platform.Core` : elle doit passer à cette version pour
+- La CI du catalogue (`PackageCheck` du dépôt Os-AppMarketPlace) lit les
+  paquets avec `Kazo.Os.Platform.Core` : elle doit passer à cette version pour
   accepter les paquets traduits.
 - Chaque lancement de la première fenêtre d'une app installée lit un fichier de
   plus par langue (aujourd'hui `fr`), même absent ; le coût est une lecture
@@ -98,6 +98,6 @@ Posées à Benoit dans la conversation le 2026-10-31 ; réponses du 2026-11-01 :
 - [x] `AppPackageWriter.Write` : satellites ; outil `pack` : `PackagedSatellites`.
 - [x] `InstalledApp.GetSatellitePath`, `InstalledAppSatellites`, `InstalledAppAssemblyTransport.Satellites`.
 - [x] Tests unitaires (`AppPackageTests`, `AppPackageWriterTests`, `PackagedSatellitesTests`, `InstalledAppSatellitesTests`).
-- [x] Paquet de test `Tests/fixtures/installed-app` avec `Resources/ProbeStrings.fr.resx` ; test de bout en bout dans `HackerOs.TrimmedPublish.E2E.Tests`.
+- [x] Paquet de test `Tests/fixtures/installed-app` avec `Resources/ProbeStrings.fr.resx` ; test de bout en bout dans `Kazo.Os.TrimmedPublish.E2E.Tests`.
 - [x] Docs `app-installation.md`, `localization.md`, `app-repository.md`, `features.md`, entrée de changement.
-- [ ] HackerOs-AppMarketPlace : passer `PackageCheck` à la version qui apporte cette ADR (après sa sortie).
+- [ ] Os-AppMarketPlace : passer `PackageCheck` à la version qui apporte cette ADR (après sa sortie).

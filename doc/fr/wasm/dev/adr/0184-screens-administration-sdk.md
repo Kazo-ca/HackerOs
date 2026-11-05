@@ -17,10 +17,10 @@ fenêtre) reste à plus tard. Mise en œuvre : [`screens-settings.md`](../screen
   Écrans la liste des écrans ouverts avec le nom du moniteur, les boutons Identifier, Nouvel
   écran, Restaurer les écrans et Plein écran, et l'état de la permission `window-management`.
 - Paramètres est une app de base : elle passe seulement par le SDK public. `ScreenService`
-  (ADR 0180) est un service de l'OS dans `HackerOs.Platform.Blazor`, hors de sa portée. La
+  (ADR 0180) est un service de l'OS dans `Kazo.Os.Platform.Blazor`, hors de sa portée. La
   première version de la page (PR #233) lit et écrit seulement `screens.config`.
 - Les autres pages d'administration suivent un même modèle : une façade statique `Hack*` dans
-  `HackerOs.AppSdk.Administration`, une passerelle `IApp*Gateway` sur `IAppExecutionContext`
+  `Kazo.Os.AppSdk.Administration`, une passerelle `IApp*Gateway` sur `IAppExecutionContext`
   (non prise en charge par défaut), une passerelle de confiance dans Platform Core qui vérifie
   une capacité, et un service de l'OS derrière (ADR 0056 §8 à 11, ADR 0159 §8).
 - Le navigateur impose ses gestes : `window.open`, la demande de permission
@@ -29,7 +29,7 @@ fenêtre) reste à plus tard. Mise en œuvre : [`screens-settings.md`](../screen
 
 ## Décision
 
-1. **Façade.** `HackScreens` dans `HackerOs.AppSdk.Administration`, chaque membre avec une
+1. **Façade.** `HackScreens` dans `Kazo.Os.AppSdk.Administration`, chaque membre avec une
    surcharge à contexte explicite :
 
    | Membre | Rôle |

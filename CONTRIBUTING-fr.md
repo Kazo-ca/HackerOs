@@ -1,8 +1,8 @@
 > [English version](CONTRIBUTING.md)
 
-# Contribuer à HackerOS
+# Contribuer à Kazo OS
 
-Merci de votre intérêt pour HackerOS, un système d'exploitation simulé qui
+Merci de votre intérêt pour Kazo OS, un système d'exploitation simulé qui
 tourne dans le navigateur (C#, Blazor WebAssembly, .NET 10). Ce guide explique
 comment demander une fonctionnalité, signaler un bogue et proposer un
 changement.
@@ -27,11 +27,11 @@ acceptez de :
 1. Lisez la [présentation des fonctionnalités](doc/fr/wasm/features.md) : la
    fonctionnalité existe peut-être déjà, ou figure dans « En cours de
    développement ».
-2. Cherchez dans les [issues ouvertes](https://github.com/Kazo-ca/HackerOs/issues),
+2. Cherchez dans les [issues ouvertes](https://github.com/Kazo-ca/Os/issues),
    y compris celles avec l'étiquette `TODO` (la liste des choses à faire du
    mainteneur) : quelqu'un l'a peut-être déjà demandée. Dans ce cas, ajoutez
    votre cas d'usage en commentaire plutôt que d'ouvrir un doublon.
-3. Ouvrez une [nouvelle issue avec le formulaire **Demande de fonctionnalité**](https://github.com/Kazo-ca/HackerOs/issues/new?template=feature_request.yml).
+3. Ouvrez une [nouvelle issue avec le formulaire **Demande de fonctionnalité**](https://github.com/Kazo-ca/Os/issues/new?template=feature_request.yml).
    Décrivez d'abord le besoin (ce que vous voulez faire et pourquoi), puis la
    solution que vous imaginez, les parties de l'OS touchées et les
    solutions de rechange envisagées. Vous pouvez écrire en français ou en
@@ -42,27 +42,27 @@ acceptez de :
    code.
 
 Une fonctionnalité pour une app tierce (une app portée dans un dépôt
-`Kazo-ca/HackerOs-App-*`, le modèle d'app ou le magasin d'apps) se demande dans
+`Kazo-ca/Os-App-*`, le modèle d'app ou le magasin d'apps) se demande dans
 le dépôt de cette app.
 
 ## Signaler un bogue
 
 Ouvrez une issue avec le
-[formulaire **Rapport de bogue**](https://github.com/Kazo-ca/HackerOs/issues/new?template=bug_report.yml) :
+[formulaire **Rapport de bogue**](https://github.com/Kazo-ca/Os/issues/new?template=bug_report.yml) :
 étapes pour reproduire, ce que vous attendiez, ce qui s'est passé, la version
-de HackerOS (Paramètres ▸ À propos, ou la fenêtre « Nouveautés »), le
+de Kazo OS (Paramètres ▸ À propos, ou la fenêtre « Nouveautés »), le
 navigateur et l'appareil. Une capture d'écran ou la sortie de la console du
 navigateur aide beaucoup.
 
 ## Faire tourner le code
 
-Prérequis : le SDK .NET 10 (`wasm2/HackerOs/global.json`).
+Prérequis : le SDK .NET 10 (`wasm2/KazoOs/global.json`).
 
 ```bash
-cd wasm2/HackerOs
-dotnet build HackerOs.sln
-dotnet test HackerOs.sln
-dotnet run --project OS/HackerOs.Ecosystem     # l'OS en PWA autonome
+cd wasm2/KazoOs
+dotnet build Kazo.Os.sln
+dotnet test Kazo.Os.sln
+dotnet run --project OS/Kazo.Os.Ecosystem     # l'OS en PWA autonome
 ```
 
 Les hôtes de débogage, la publication trimmée, les tests E2E et les
@@ -73,17 +73,17 @@ vous repérer dans le code, et lisez [`pitfalls.md`](doc/fr/wasm/dev/pitfalls.md
 avant votre premier changement.
 
 Pour créer une app, une commande ou un site **en dehors** de ce dépôt, utilisez
-le [modèle d'app HackerOS](https://github.com/Kazo-ca/HackerOs-AppTemplate) et
-[`building-on-hackeros.md`](doc/fr/wasm/framework/building-on-hackeros.md).
+le [modèle d'app Kazo OS](https://github.com/Kazo-ca/Os-AppTemplate) et
+[`building-on-kazoos.md`](doc/fr/wasm/framework/building-on-kazoos.md).
 
 ## Où va le code
 
-- **Tout nouveau code va dans [`wasm2/HackerOs/`](wasm2/HackerOs/readme-fr.md).**
+- **Tout nouveau code va dans [`wasm2/KazoOs/`](wasm2/KazoOs/readme-fr.md).**
   [`src/`](src/readme-fr.md) est la version legacy en TypeScript, gardée en
   lecture seule comme référence de comportement : n'y ajoutez ni n'y modifiez
   jamais de code.
-- La PWA autonome (`OS/HackerOs.Ecosystem`) doit toujours fonctionner sans
-  serveur. `Server/HackerOs.Server` est optionnel : rien ne doit en dépendre.
+- La PWA autonome (`OS/Kazo.Os.Ecosystem`) doit toujours fonctionner sans
+  serveur. `Server/Kazo.Os.Server` est optionnel : rien ne doit en dépendre.
 - C# d'abord. Du JavaScript seulement pour les API du navigateur que C# ne
   peut pas atteindre, livré comme ressource du composant ou de la bibliothèque
   qui en a besoin, jamais comme nouveau `<script src>` dans un hôte.
@@ -123,8 +123,8 @@ le [modèle d'app HackerOS](https://github.com/Kazo-ca/HackerOs-AppTemplate) et
 - Une compilation et une exécution des tests vertes en local sont requises
   avant de demander une fusion. Lancez les suites E2E une à la fois.
 - Quand le changement les concerne, lancez aussi
-  `wasm2/HackerOs/build/publish-trimmed.sh` et le projet de compatibilité du SDK
-  `wasm2/HackerOs/Tests/fixtures/sdk-compat`.
+  `wasm2/KazoOs/build/publish-trimmed.sh` et le projet de compatibilité du SDK
+  `wasm2/KazoOs/Tests/fixtures/sdk-compat`.
 - Ne jamais sauter, désactiver ni mettre en quarantaine un test pour obtenir
   du vert. Les échecs déjà connus sont listés dans
   [`known-test-failures.md`](doc/fr/wasm/memory/known-test-failures.md) :
@@ -151,18 +151,18 @@ le [modèle d'app HackerOS](https://github.com/Kazo-ca/HackerOs-AppTemplate) et
 
 ### Entrées de changement
 
-Une PR vers `main` qui change des fichiers du produit sous `wasm2/HackerOs/`
+Une PR vers `main` qui change des fichiers du produit sous `wasm2/KazoOs/`
 (hors `Tests/`, `docs/`, `changes/` et fichiers `.md`) ajoute une entrée
-`wasm2/HackerOs/changes/unreleased/<guid>.json` avec un texte en anglais et en
+`wasm2/KazoOs/changes/unreleased/<guid>.json` avec un texte en anglais et en
 français, affichée dans la fenêtre « Nouveautés »
 ([ADR 0186](doc/fr/wasm/dev/adr/0186-whats-new-change-list.md),
 [`change-list.md`](doc/fr/wasm/dev/change-list.md)). Vérifiez-la en local après
-le commit avec `wasm2/HackerOs/build/tools/check-change-entry.sh`. Une PR sans
+le commit avec `wasm2/KazoOs/build/tools/check-change-entry.sh`. Une PR sans
 changement visible porte plutôt l'étiquette `no-changelog`.
 
 ## Versions
 
-La version est dans `wasm2/HackerOs/build/Versions.props`. Quand une PR qui la
+La version est dans `wasm2/KazoOs/build/Versions.props`. Quand une PR qui la
 change est fusionnée dans `main`, le workflow de release crée le tag, la
 GitHub Release et publie les paquets NuGet
 ([ADR 0173](doc/fr/wasm/dev/adr/0173-automatic-releases-from-the-version-file.md),
@@ -173,4 +173,4 @@ GitHub Release et publie les paquets NuGet
 Ouvrez une issue avec l'étiquette `question`, ou lisez
 l'[index de la documentation](doc/fr/wasm/README.md).
 
-Merci de contribuer à HackerOS !
+Merci de contribuer à Kazo OS !

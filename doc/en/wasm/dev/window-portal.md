@@ -20,7 +20,7 @@ the content of a display surface ([`detached-display-windows.md`](detached-displ
 
 | Part | Role |
 | --- | --- |
-| `WindowLayers` (`HackerOs.Windowing.Blazor`, public) | Window layers of each screen. Each `DesktopArea` given the same instance registers its layer after its first render and removes it when it goes away. `TryGetLayer(screen)`, `Displays`, `Changed` event. |
+| `WindowLayers` (`Kazo.Os.Windowing.Blazor`, public) | Window layers of each screen. Each `DesktopArea` given the same instance registers its layer after its first render and removes it when it goes away. `TryGetLayer(screen)`, `Displays`, `Changed` event. |
 | `DesktopArea.DisplayId` | Screen the area shows (screen 1 by default). Its size changes go to that screen's work area (`ChangeViewportCommand(area, screen)`). The screen must be added to the manager (`AddDisplayCommand`) before its area renders. |
 | `DesktopArea.Layers` | The shared layers. Screen 1's area then renders every window; the other areas render none and receive theirs through the portal. Without `Layers`, an area renders only the windows of its own screen (no portal: changing screen recreates the window). |
 | `WindowPortal` (public, used by `DesktopArea`) | Wraps each `WindowHost`. It leaves an empty anchor in the window list and moves the window's element into the target layer, or back under the anchor. |
@@ -48,8 +48,8 @@ each secondary screen, rendered in its surface (work item 4, [`secondary-screen-
 
 ## 4. Tests
 
-- `Tests/HackerOs.E2E.Tests/IndexedDbBrowserContractTests.ScreenPortal.cs`, scenario
-  `?scenario=screen-portal` of `HackerOs.BrowserHarness.Tests` (two screens side by side in one
+- `Tests/Kazo.Os.E2E.Tests/IndexedDbBrowserContractTests.ScreenPortal.cs`, scenario
+  `?scenario=screen-portal` of `Kazo.Os.BrowserHarness.Tests` (two screens side by side in one
   page): the window moves into screen 2's layer without being recreated (same instance number),
   keeps its counter, the typed text and the focus, still receives its clicks, comes back to
   screen 1, then comes back under its anchor when screen 2's area goes away and returns there

@@ -1,0 +1,13 @@
+@inherits KazoView<NoteStore>
+@layout _Layout
+@{ ViewData.Title = "Notes"; }
+<h1>@Model.All.Count notes</h1>
+<ul>
+    @foreach (Note note in Model.All)
+    {
+        <KazoPartial Name="_NoteCard" Model="note" />
+    }
+</ul>
+<KazoSection Name="Scripts">
+    <script src="@Url.Content("~/js/notes.js")"></script>
+</KazoSection>

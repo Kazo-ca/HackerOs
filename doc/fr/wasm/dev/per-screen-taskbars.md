@@ -32,7 +32,7 @@ primary-taskbar = own   ; all | own
 
 | Membre | Rôle |
 | --- | --- |
-| `PrimaryTaskbarMode` (`HackerOs.Platform.Core.Shell`) | `All` ou `Own`. |
+| `PrimaryTaskbarMode` (`Kazo.Os.Platform.Core.Shell`) | `All` ou `Own`. |
 | `ScreensSettingsDocuments.ReadPrimaryTaskbar(snapshot)` | `own` (sans tenir compte de la casse ni des espaces) donne `Own` ; toute autre valeur, ou pas de ligne, donne `All`. |
 | `ScreensSettingsDocuments.FormatPrimaryTaskbar(mode)` | `all` ou `own`. |
 | `ScreenService.PrimaryTaskbar` | Valeur lue au démarrage, puis suivie : le service surveille le fichier (`WatchAsync`) et relit **seulement** `primary-taskbar` à chaque changement. Les écrans à restaurer ne sont lus qu'au démarrage. |
@@ -84,27 +84,27 @@ d'elle-même, et une fenêtre agrandie s'arrête au-dessus de la barre.
 
 | Fichier | Rôle |
 | --- | --- |
-| `Platform/HackerOs.Platform.Blazor/Shell/TaskbarAdapters.cs` | `TaskbarScreenFilter.Lists`, liste filtrée de `TaskbarWindowSourceAdapter` (`Refresh`), vues par écran de `TaskbarLauncherAdapter`. |
-| `Platform/HackerOs.Platform.Blazor/Shell/DesktopShell.razor` | Barre de l'écran 1 filtrée, barre et menu Démarrer de chaque écran secondaire, écran du lancement. |
-| `Platform/HackerOs.Platform.Blazor/Display/ScreenLayer.razor` | Paramètre `ScreenTaskbar`, rendu sous le bureau de l'écran. |
-| `Platform/HackerOs.Platform.Blazor/Display/ScreenService.cs` | `PrimaryTaskbar`, `SetPrimaryTaskbarAsync`, surveillance de `screens.config`. |
-| `Platform/HackerOs.Platform.Blazor/Windows/WindowLaunchCoordinator.cs` | `OpenOnDisplay`, écran et zone de travail d'une nouvelle fenêtre. |
-| `Platform/HackerOs.Platform.Core/Shell/ScreensSettings.cs` | `PrimaryTaskbarMode`, section `[taskbar]`. |
+| `Platform/Kazo.Os.Platform.Blazor/Shell/TaskbarAdapters.cs` | `TaskbarScreenFilter.Lists`, liste filtrée de `TaskbarWindowSourceAdapter` (`Refresh`), vues par écran de `TaskbarLauncherAdapter`. |
+| `Platform/Kazo.Os.Platform.Blazor/Shell/DesktopShell.razor` | Barre de l'écran 1 filtrée, barre et menu Démarrer de chaque écran secondaire, écran du lancement. |
+| `Platform/Kazo.Os.Platform.Blazor/Display/ScreenLayer.razor` | Paramètre `ScreenTaskbar`, rendu sous le bureau de l'écran. |
+| `Platform/Kazo.Os.Platform.Blazor/Display/ScreenService.cs` | `PrimaryTaskbar`, `SetPrimaryTaskbarAsync`, surveillance de `screens.config`. |
+| `Platform/Kazo.Os.Platform.Blazor/Windows/WindowLaunchCoordinator.cs` | `OpenOnDisplay`, écran et zone de travail d'une nouvelle fenêtre. |
+| `Platform/Kazo.Os.Platform.Core/Shell/ScreensSettings.cs` | `PrimaryTaskbarMode`, section `[taskbar]`. |
 
-Le paquet `HackerOs.Taskbar.Blazor` ne change pas : le filtre vit dans l'adaptateur de l'OS.
+Le paquet `Kazo.Os.Taskbar.Blazor` ne change pas : le filtre vit dans l'adaptateur de l'OS.
 
 ## 6. Tests
 
-- `Tests/HackerOs.Platform.Blazor.Tests/Shell/ScreenTaskbarTests.cs` : filtre (`all` / `own`, écrans
+- `Tests/Kazo.Os.Platform.Blazor.Tests/Shell/ScreenTaskbarTests.cs` : filtre (`all` / `own`, écrans
   secondaires), listes qui suivent une fenêtre qui change d'écran, menu Démarrer par écran.
-- `Tests/HackerOs.Platform.Blazor.Tests/WindowLaunchCoordinatorTests.cs` : app du menu Démarrer d'un
+- `Tests/Kazo.Os.Platform.Blazor.Tests/WindowLaunchCoordinatorTests.cs` : app du menu Démarrer d'un
   écran ouverte sur cet écran ; autre lancement sur l'écran de la fenêtre active ; écran disparu.
-- `Tests/HackerOs.Platform.Blazor.Tests/Display/ScreenServiceTests.cs` : `primary-taskbar` lu au
+- `Tests/Kazo.Os.Platform.Blazor.Tests/Display/ScreenServiceTests.cs` : `primary-taskbar` lu au
   démarrage, suivi quand le fichier change, écrit dans le fichier de l'utilisateur.
-- `Tests/HackerOs.Platform.Blazor.Tests/Display/ScreenLayerTests.cs` : barre rendue sous le bureau.
-- `Tests/HackerOs.Platform.Core.Tests/Shell/ScreensSettingsTests.cs` : lecture et écriture de
+- `Tests/Kazo.Os.Platform.Blazor.Tests/Display/ScreenLayerTests.cs` : barre rendue sous le bureau.
+- `Tests/Kazo.Os.Platform.Core.Tests/Shell/ScreensSettingsTests.cs` : lecture et écriture de
   `[taskbar]` sur le disque virtuel.
-- `Tests/HackerOs.UI.E2E.Tests/ScreenServiceTests.cs`, Chromium réel : l'écran 2 a sa barre, sous son
+- `Tests/Kazo.Os.UI.E2E.Tests/ScreenServiceTests.cs`, Chromium réel : l'écran 2 a sa barre, sous son
   bureau, sans zone de notification ; son menu Démarrer s'ouvre chez lui et y ouvre son app ; le menu
   de l'écran 1 reste sur l'écran 1 ; la barre de l'écran 1 liste les deux fenêtres, puis seulement la
   sienne quand `primary-taskbar = own` est écrit au terminal.

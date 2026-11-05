@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "org.kazoos.echo",
+  "name": "Echo",
+  "version": "1.0.0",
+  "publisherId": "org.kazoos",
+  "description": "Prints its arguments back to the terminal.",
+  "kind": "terminal",
+  "entryPoint": {
+    "assembly": "Kazo.Os.Apps.Echo",
+    "type": "Kazo.Os.Apps.Echo.EchoCommand"
+  },
+  "sdkCompatibility": { "minimumVersion": "1.0.0" },
+  "presentation": {
+    "category": "utilities",
+    "launchVisibility": "hidden",
+    "iconAssetPaths": []
+  },
+  "terminal": {
+    "name": "echo",
+    "aliases": ["print"],
+    "usage": "echo [text...]"
+  }
+}

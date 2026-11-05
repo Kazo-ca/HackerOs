@@ -33,7 +33,7 @@ serializable.
 ### 1. API (SDK 1.2 addition, ADR 0132)
 
 ```csharp
-namespace HackerOs.AppSdk.Threading;
+namespace Kazo.Os.AppSdk.Threading;
 
 public static class HackBackground
 {
@@ -67,7 +67,7 @@ public static class HackBackground
 
 ### 2. Rules checked at build time
 
-A Roslyn analyzer shipped with `HackerOs.AppSdk` (codes `HOSBG0001` and
+A Roslyn analyzer shipped with `Kazo.Os.AppSdk` (codes `HOSBG0001` and
 following, chosen by the work item) rejects:
 
 - a delegate that is not a **static method group** (lambda, local method
@@ -124,7 +124,7 @@ above. This is the only child launch allowed from a worker
 
 ## Consequences
 
-- New analyzer library in the `HackerOs.AppSdk` package,
+- New analyzer library in the `Kazo.Os.AppSdk` package,
   tested like the ASP.Hack route generator (ADR 0082).
 - Compiled sample in `Apps/Samples` (a window that launches a long computation
   with progress, cancellation and `kill`).

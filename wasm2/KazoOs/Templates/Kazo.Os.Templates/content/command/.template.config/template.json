@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Kazo OS",
+  "classifications": [ "Kazo OS", "Console", "App" ],
+  "identity": "Kazo.Os.Templates.Command",
+  "groupIdentity": "Kazo.Os.Templates.Command",
+  "name": "Kazo OS terminal command",
+  "description": "A Kazo OS terminal command (TerminalAppBase), built with Kazo.Os.App.Build.",
+  "shortName": "kazoos-command",
+  "sourceName": "Kazo.Os.Template.Command",
+  "preferNameDirectory": true,
+  "tags": { "language": "C#", "type": "project" },
+  "symbols": {
+    "appId": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "Application id (reverse-DNS, lowercase), unique in the catalog.",
+      "defaultValue": "com.example.my-app",
+      "replaces": "com.example.template-app"
+    },
+    "publisherId": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "Publisher id written in the manifest.",
+      "defaultValue": "pub.example",
+      "replaces": "pub.template"
+    }
+  }
+}

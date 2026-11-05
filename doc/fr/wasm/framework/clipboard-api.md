@@ -2,31 +2,31 @@
 
 # Presse-papiers : API pour les apps
 
-Ce document décrit le presse-papiers tel qu'une app le voit : `HackClipboard` (texte et listes de fichiers), le format de liste de fichiers et ce qui sort vers la vraie machine. Le presse-papiers partagé de l'OS, le pont vers l'hôte et le réglage `clipboard.config` sont dans [`dev/clipboard.md`](../dev/clipboard.md).
+Ce document décrit le presse-papiers tel qu'une app le voit : `KazoClipboard` (texte et listes de fichiers), le format de liste de fichiers et ce qui sort vers la vraie machine. Le presse-papiers partagé de l'OS, le pont vers l'hôte et le réglage `clipboard.config` sont dans [`dev/clipboard.md`](../dev/clipboard.md).
 
 ## Apps
 
-Rien de nouveau : `HackClipboard` reste la seule porte (voir
+Rien de nouveau : `KazoClipboard` reste la seule porte (voir
 la section suivante).
 
 ```csharp
-await HackClipboard.SetTextAsync(json);                  // arrive aussi sur la vraie machine
-string? text = await HackClipboard.GetTextAsync();       // y compris un texte collé depuis la vraie machine
+await KazoClipboard.SetTextAsync(json);                  // arrive aussi sur la vraie machine
+string? text = await KazoClipboard.GetTextAsync();       // y compris un texte collé depuis la vraie machine
 ```
 
 Une app ne parle jamais à `navigator.clipboard`. `BrowserClipboard`
-(`HackerOs.AppSdk.Blazor`), qui contournait le réglage, a été retiré au gel du
+(`Kazo.Os.AppSdk.Blazor`), qui contournait le réglage, a été retiré au gel du
 SDK 1.0 (ADR 0114 §3).
 
-## Presse-papiers (`HackClipboard`)
+## Presse-papiers (`KazoClipboard`)
 
 ```csharp
-await HackClipboard.SetFileDropListAsync(["~/rapport.txt", "Documents"], HackClipboardFileOperation.Cut);
-HackClipboardFileList? files = await HackClipboard.GetFileDropListAsync();   // Operation + Paths absolus
-bool canPaste = await HackClipboard.ContainsFileDropListAsync();
-string? text = await HackClipboard.GetTextAsync();   // une liste de fichiers se lit comme ses chemins
-await HackClipboard.SetTextAsync("bonjour");
-await HackClipboard.ClearAsync();
+await KazoClipboard.SetFileDropListAsync(["~/rapport.txt", "Documents"], KazoClipboardFileOperation.Cut);
+KazoClipboardFileList? files = await KazoClipboard.GetFileDropListAsync();   // Operation + Paths absolus
+bool canPaste = await KazoClipboard.ContainsFileDropListAsync();
+string? text = await KazoClipboard.GetTextAsync();   // une liste de fichiers se lit comme ses chemins
+await KazoClipboard.SetTextAsync("bonjour");
+await KazoClipboard.ClearAsync();
 AppContext.Clipboard.Changed += OnClipboardChanged;   // une autre app a coupé ou copié
 ```
 

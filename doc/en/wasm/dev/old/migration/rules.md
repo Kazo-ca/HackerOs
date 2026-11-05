@@ -4,7 +4,7 @@
 
 ## Overview
 
-Phase 4 governs the systematic porting of legacy TypeScript/JavaScript features (`src/`) into the Blazor WASM C# architecture (`wasm2/HackerOs/`).
+Phase 4 governs the systematic porting of legacy TypeScript/JavaScript features (`src/`) into the Blazor WASM C# architecture (`wasm2/KazoOs/`).
 These rules apply to every feature, app, command, and domain service ported to the C# codebase.
 
 ---

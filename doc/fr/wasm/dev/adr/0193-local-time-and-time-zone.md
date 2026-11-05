@@ -6,7 +6,7 @@
 
 Accepté le 2026-10-29. Décisions 3 et 4 de Benoit du 2026-10-29 (fil « Améliorer
 fenêtres et barre des tâches »), chantier 2 de l'issue
-[#242](https://github.com/Kazo-ca/HackerOs/issues/242).
+[#242](https://github.com/Kazo-ca/Os/issues/242).
 
 - **Complète :** [ADR 0104](0104-localization.md) (langue et formats de la
   session), [ADR 0105](0105-accessibility-preferences.md) (même modèle de réglage
@@ -66,7 +66,7 @@ calendrier et les apps qui relisent l'heure passent au nouveau fuseau.
 - Sans `TZ`, un processus de l'OS suit le service de session (§3), donc le
   changement fait dans Paramètres. Un processus dans un web worker reçoit le
   fuseau de la session à son démarrage et le garde.
-- `HackTimeZone` (espace `HackerOs.AppSdk.Globalization`) donne `Current`,
+- `HackTimeZone` (espace `Kazo.Os.AppSdk.Globalization`) donne `Current`,
   `Now`, `ToLocal(...)`, `TryFind(...)`, `Resolve(...)`, `FormatOffset(...)` et
   la liste `Available` des fuseaux IANA. Les apps n'utilisent plus
   `ToLocalTime()` ni `TimeZoneInfo.Local`.

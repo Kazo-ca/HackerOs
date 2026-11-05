@@ -30,7 +30,7 @@ implementation:
 ### 1. "Wire" bus on the OS side
 
 `InMemoryTopicMessageBus` and `InMemoryEventBus` implement two internal
-contracts of `HackerOs.Platform.Core` (`IWireTopicMessageBus`,
+contracts of `Kazo.Os.Platform.Core` (`IWireTopicMessageBus`,
 `IWireEventBus`). They index a worker's subscriptions by **type name**
 (`"{FullName}, {AssemblyName}"`, `WirePayloadNames.Of`):
 
@@ -117,14 +117,14 @@ On the main thread, delivery remains synchronous as before.
   the worker writes the error to the process's error output and ends it
   with code **127** (like a shell for a command not found). An empty list
   (host that does not fill it) imposes no restriction.
-- The Ecosystem now references `HackerOs.Samples.TerminalApp`: its command
+- The Ecosystem now references `Kazo.Os.Samples.TerminalApp`: its command
   `sample-cmd` serves as a third-party command loaded on demand in the hosts
   test (`HostSmoke`). Like any command, it is hidden from the Start menu
   (`LaunchVisibility = Hidden`) and remains uninstallable. `test/test` is unchanged.
 
 ### 9. Review of `MainThread` apps
 
-The 16 `mainThread` commands of `HackerOs.Commands` were reviewed; their
+The 16 `mainThread` commands of `Kazo.Os.Commands` were reviewed; their
 reason still holds (shell built-ins, alternate screen, `sudo`,
 `passwd`, `hackbackup`). None depended on `HackEvents` or `Watch`.
 

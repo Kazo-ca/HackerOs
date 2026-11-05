@@ -47,7 +47,7 @@ thread; the recommendation applies until he picks something else.
 - Its accessible name and tooltip (`title`) give the count: "System clock,
   notifications, and calendar: 3 unread notifications". With nothing unread, the
   tooltip stays "System clock, notifications, and calendar".
-- Contract of the `HackerOs.Taskbar.Blazor` package:
+- Contract of the `Kazo.Os.Taskbar.Blazor` package:
   `ITaskbarClockPanelSource.UnreadCount` (0 by default, other hosts do not
   change). `TaskbarClockPanelSourceAdapter.SetUnreadCount` sets it.
 

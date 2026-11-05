@@ -1,0 +1,97 @@
+.file-view-details {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.file-view-details thead th {
+    text-align: left;
+    cursor: pointer;
+    user-select: none;
+    padding: 0.45rem 0.6rem;
+    position: sticky;
+    top: 0;
+    background: var(--kos-table-header-bg, var(--kos-bg-surface, #161b22));
+    border-bottom: 2px solid var(--kos-table-border, var(--kos-border, #30363d));
+    border-right: 1px solid var(--kos-border-subtle, #21262d);
+    color: var(--kos-table-header-color, var(--kos-text-secondary, #8b949e));
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+
+.file-view-details thead th:last-child {
+    border-right: none;
+}
+
+.file-view-details thead th:hover {
+    color: var(--kos-text-primary, #f0f6fc);
+}
+
+.file-view-details thead th span {
+    margin-left: 0.3rem;
+}
+
+.file-view-details tbody tr {
+    cursor: default;
+    border-bottom: 1px solid var(--kos-border-subtle, #21262d);
+}
+
+.file-view-details tbody .file-view-details-column-name ::deep .shell-icon {
+    margin-right: 4px;
+}
+
+.file-view-details tbody tr:hover {
+    background: var(--kos-table-row-hover-bg, var(--kos-bg-elevated, #21262d));
+}
+
+.file-view-details tbody tr:focus-visible {
+    outline: 2px solid var(--kos-focus-ring, var(--kos-accent, #42d392));
+    outline-offset: -2px;
+}
+
+.file-view-details tbody tr.selected {
+    background: var(--kos-table-row-selected-bg, var(--kos-accent-subtle, rgba(66, 211, 146, 0.16)));
+    color: var(--kos-table-row-selected-color, var(--kos-text-primary, inherit));
+}
+
+.file-view-details tbody tr.selected:hover {
+    background: var(--kos-table-row-selected-bg, var(--kos-accent-subtle, rgba(66, 211, 146, 0.24)));
+}
+
+.file-view-details td {
+    padding: 0.3rem 0.6rem;
+    vertical-align: middle;
+    border-right: 1px solid var(--kos-border-subtle, #21262d);
+}
+
+.file-view-details td:last-child {
+    border-right: none;
+}
+
+.file-view-rename-input {
+    font: inherit;
+    color: inherit;
+    background: var(--kos-input-bg, transparent);
+    border: var(--kos-input-border, 1px solid currentColor);
+    border-radius: var(--kos-input-radius, 2px);
+    padding: 0 0.25rem;
+    width: 100%;
+}
+
+/* ADR 0185 §2: the empty-folder or no-result message, a row under the headers. */
+.file-view-details tbody tr.file-view-empty-row,
+.file-view-details tbody tr.file-view-empty-row:hover {
+    border-bottom: none;
+    background: transparent;
+}
+
+.file-view-details td.file-view-empty {
+    padding: 1.5rem 0.6rem;
+    text-align: center;
+    border-right: none;
+    color: var(--kos-text-secondary, #8b949e);
+    font-style: italic;
+}

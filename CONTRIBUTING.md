@@ -1,8 +1,8 @@
 > [Version française](CONTRIBUTING-fr.md)
 
-# Contributing to HackerOS
+# Contributing to Kazo OS
 
-Thank you for your interest in HackerOS, a simulated operating system that runs
+Thank you for your interest in Kazo OS, a simulated operating system that runs
 in the browser (C#, Blazor WebAssembly, .NET 10). This guide explains how to
 ask for a feature, report a bug and send a change.
 
@@ -24,11 +24,11 @@ Please help keep this project open and inclusive. By taking part, you agree to:
 
 1. Read the [features overview](doc/en/wasm/features.md): the feature may
    already exist, or be listed under "In development".
-2. Search the [open issues](https://github.com/Kazo-ca/HackerOs/issues),
+2. Search the [open issues](https://github.com/Kazo-ca/Os/issues),
    including the ones labelled `TODO` (the maintainer's to-do list): someone
    may already have asked for it. If so, add your use case in a comment rather
    than opening a duplicate.
-3. Open a [new issue with the **Feature request** form](https://github.com/Kazo-ca/HackerOs/issues/new?template=feature_request.yml).
+3. Open a [new issue with the **Feature request** form](https://github.com/Kazo-ca/Os/issues/new?template=feature_request.yml).
    Describe the need first (what you want to do and why), then the solution
    you imagine, the parts of the OS it touches and the alternatives you
    considered. You may write in French or in English.
@@ -37,27 +37,27 @@ Please help keep this project open and inclusive. By taking part, you agree to:
    [`doc/en/wasm/dev/adr/`](doc/en/wasm/dev/adr/README.md) before any code is
    written.
 
-A feature for a third-party app (an app ported in a `Kazo-ca/HackerOs-App-*`
+A feature for a third-party app (an app ported in a `Kazo-ca/Os-App-*`
 repository, the app template or the app marketplace) is asked for in that
 app's repository.
 
 ## Reporting a bug
 
 Open an issue with the
-[**Bug report** form](https://github.com/Kazo-ca/HackerOs/issues/new?template=bug_report.yml):
-steps to reproduce, what you expected, what happened, the HackerOS version
+[**Bug report** form](https://github.com/Kazo-ca/Os/issues/new?template=bug_report.yml):
+steps to reproduce, what you expected, what happened, the Kazo OS version
 (Settings ▸ About, or the "What's new" window), the browser and the device.
 A screenshot or the browser console output helps a lot.
 
 ## Getting the code running
 
-Prerequisite: the .NET 10 SDK (`wasm2/HackerOs/global.json`).
+Prerequisite: the .NET 10 SDK (`wasm2/KazoOs/global.json`).
 
 ```bash
-cd wasm2/HackerOs
-dotnet build HackerOs.sln
-dotnet test HackerOs.sln
-dotnet run --project OS/HackerOs.Ecosystem     # the OS as a standalone PWA
+cd wasm2/KazoOs
+dotnet build Kazo.Os.sln
+dotnet test Kazo.Os.sln
+dotnet run --project OS/Kazo.Os.Ecosystem     # the OS as a standalone PWA
 ```
 
 Debug hosts, the trimmed publish, the E2E tests and known workarounds are in
@@ -67,16 +67,16 @@ in the code, and read [`pitfalls.md`](doc/en/wasm/dev/pitfalls.md) before your
 first change.
 
 To build an app, a command or a site **outside** this repository, use the
-[HackerOS app template](https://github.com/Kazo-ca/HackerOs-AppTemplate) and
-[`building-on-hackeros.md`](doc/en/wasm/framework/building-on-hackeros.md).
+[Kazo OS app template](https://github.com/Kazo-ca/Os-AppTemplate) and
+[`building-on-kazoos.md`](doc/en/wasm/framework/building-on-kazoos.md).
 
 ## Where the code goes
 
-- **All new code goes in [`wasm2/HackerOs/`](wasm2/HackerOs/README.md).**
+- **All new code goes in [`wasm2/KazoOs/`](wasm2/KazoOs/README.md).**
   [`src/`](src/README.md) is the legacy TypeScript version, kept read-only as a
   behavioral reference: never add or change code there.
-- The standalone PWA (`OS/HackerOs.Ecosystem`) must always work with no server.
-  `Server/HackerOs.Server` is optional: nothing may require it.
+- The standalone PWA (`OS/Kazo.Os.Ecosystem`) must always work with no server.
+  `Server/Kazo.Os.Server` is optional: nothing may require it.
 - C# first. JavaScript only for browser APIs C# cannot reach, shipped as an
   asset of the component or library that needs it, never as a new
   `<script src>` in a host.
@@ -113,8 +113,8 @@ To build an app, a command or a site **outside** this repository, use the
 - A green local build and test run is required before asking for a merge.
   Run the E2E suites one at a time.
 - When the change concerns them, also run
-  `wasm2/HackerOs/build/publish-trimmed.sh` and the SDK compatibility fixture
-  `wasm2/HackerOs/Tests/fixtures/sdk-compat`.
+  `wasm2/KazoOs/build/publish-trimmed.sh` and the SDK compatibility fixture
+  `wasm2/KazoOs/Tests/fixtures/sdk-compat`.
 - Never skip, disable or quarantine a test to get green. Failures already
   known are listed in
   [`known-test-failures.md`](doc/en/wasm/memory/known-test-failures.md): name
@@ -138,18 +138,18 @@ To build an app, a command or a site **outside** this repository, use the
 
 ### Change entries
 
-A PR to `main` that changes product files under `wasm2/HackerOs/` (outside
+A PR to `main` that changes product files under `wasm2/KazoOs/` (outside
 `Tests/`, `docs/`, `changes/` and `.md` files) adds an entry
-`wasm2/HackerOs/changes/unreleased/<guid>.json` with an English and a French
+`wasm2/KazoOs/changes/unreleased/<guid>.json` with an English and a French
 text, shown in the "What's new" window
 ([ADR 0186](doc/en/wasm/dev/adr/0186-whats-new-change-list.md),
 [`change-list.md`](doc/en/wasm/dev/change-list.md)). Check it locally after
-committing with `wasm2/HackerOs/build/tools/check-change-entry.sh`. A PR with
+committing with `wasm2/KazoOs/build/tools/check-change-entry.sh`. A PR with
 no user-visible change carries the `no-changelog` label instead.
 
 ## Releases
 
-The version lives in `wasm2/HackerOs/build/Versions.props`. When a PR that
+The version lives in `wasm2/KazoOs/build/Versions.props`. When a PR that
 changes it is merged into `main`, the release workflow creates the tag, the
 GitHub Release and publishes the NuGet packages
 ([ADR 0173](doc/en/wasm/dev/adr/0173-automatic-releases-from-the-version-file.md),
@@ -160,4 +160,4 @@ GitHub Release and publishes the NuGet packages
 Open an issue with the `question` label, or read the
 [documentation index](doc/en/wasm/README.md).
 
-Thank you for contributing to HackerOS!
+Thank you for contributing to Kazo OS!

@@ -55,7 +55,7 @@ not a sandbox against malicious managed assemblies.
 
 ## Grant repository and audit
 
-`CapabilityGrantRepository` (`HackerOs.Platform.Core.Policy`) stores active and
+`CapabilityGrantRepository` (`Kazo.Os.Platform.Core.Policy`) stores active and
 revoked grants in memory, evaluates `CapabilityPolicyEvaluation` against a
 candidate resource, and records a chronological `CapabilityGrantAuditEntry` log.
 
@@ -76,7 +76,7 @@ candidate resource, and records a chronological `CapabilityGrantAuditEntry` log.
 
 ## Settings scopes and protected policy document
 
-`SettingsScope` (`HackerOs.Simulation.Abstractions.Settings`) defines the four
+`SettingsScope` (`Kazo.Os.Simulation.Abstractions.Settings`) defines the four
 ADR 0011 scopes: `AppUser`, `AppDevice`, `AppRoamingUser`, and `OsAdmin`.
 `SettingsDocumentKey` is the structured repository identity for a canonical
 document; `SettingsDocumentPathFactory` derives its deterministic virtual
@@ -102,7 +102,7 @@ parallel storage mechanism.
 
 ## Capability catalog and manifest compatibility
 
-`AppCapabilities` (`HackerOs.App.Abstractions`) also defines process
+`AppCapabilities` (`Kazo.Os.App.Abstractions`) also defines process
 (`process.list`, `process.manage`), notification (`notifications.post`),
 window (`windows.manage`), clipboard (`clipboard.read`, `clipboard.write`), and
 service (`services.manage`) capabilities alongside the existing filesystem,
@@ -114,7 +114,7 @@ window-hosting app can own a modal dialog.
 
 ## Clean-profile default grants
 
-`CleanProfileCapabilityGrantSeeder` (`HackerOs.Platform.Core.Policy`) seeds a
+`CleanProfileCapabilityGrantSeeder` (`Kazo.Os.Platform.Core.Policy`) seeds a
 new profile by granting exactly the capabilities one validated manifest
 declares, sourced as `CapabilityGrantSource.BuildProfile`. Seeding never widens
 access beyond the manifest: an undeclared capability remains `Missing` on

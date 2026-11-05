@@ -1,0 +1,35 @@
+@namespace Kazo.Os.AppSdk.VirtualKeyboard
+
+@*
+    Reusable "SplitContainer"-like host: ChildContent occupies the content region, which shrinks
+    via ordinary CSS flex reflow when the keyboard docks below it -- no ResizeObserver/
+    visualViewport detection is needed, since this is a fully custom on-screen control, not a
+    detector for a native keyboard.
+*@
+<div class="virtual-keyboard-host">
+    <div class="vk-host-content">
+        @ChildContent
+    </div>
+    @if (IsKeyboardVisible)
+    {
+        <VirtualKeyboard Options="Options" OnKeyPressed="OnKeyPressed" />
+    }
+</div>
+
+@code {
+    /// <summary>Gets or sets the content that stays visible above the keyboard.</summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Gets or sets whether the keyboard is docked and visible.</summary>
+    [Parameter]
+    public bool IsKeyboardVisible { get; set; }
+
+    /// <summary>Gets or sets which key rows the docked keyboard renders.</summary>
+    [Parameter]
+    public VirtualKeyboardOptions Options { get; set; } = new();
+
+    /// <summary>Gets or sets the callback forwarded to the docked keyboard's key presses.</summary>
+    [Parameter]
+    public EventCallback<VirtualKeyPressedEvent> OnKeyPressed { get; set; }
+}

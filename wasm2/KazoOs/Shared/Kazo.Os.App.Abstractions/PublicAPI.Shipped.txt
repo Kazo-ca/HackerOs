@@ -1,0 +1,1588 @@
+#nullable enable
+Kazo.Os.App.Abstractions.AppAuthority
+Kazo.Os.App.Abstractions.AppAuthority.Administrator = 1 -> Kazo.Os.App.Abstractions.AppAuthority
+Kazo.Os.App.Abstractions.AppAuthority.System = 2 -> Kazo.Os.App.Abstractions.AppAuthority
+Kazo.Os.App.Abstractions.AppAuthority.User = 0 -> Kazo.Os.App.Abstractions.AppAuthority
+Kazo.Os.App.Abstractions.AppAuthorityPolicy
+Kazo.Os.App.Abstractions.AppCapabilities
+Kazo.Os.App.Abstractions.AppCapabilityPolicy
+Kazo.Os.App.Abstractions.AppComponent
+Kazo.Os.App.Abstractions.AppComponent.<Clone>$() -> Kazo.Os.App.Abstractions.AppComponent!
+Kazo.Os.App.Abstractions.AppComponent.AppComponent(string! Contract, System.Type! Type) -> void
+Kazo.Os.App.Abstractions.AppComponent.Contract.get -> string!
+Kazo.Os.App.Abstractions.AppComponent.Contract.init -> void
+Kazo.Os.App.Abstractions.AppComponent.Deconstruct(out string! Contract, out System.Type! Type) -> void
+Kazo.Os.App.Abstractions.AppComponent.Equals(Kazo.Os.App.Abstractions.AppComponent? other) -> bool
+Kazo.Os.App.Abstractions.AppComponent.Type.get -> System.Type!
+Kazo.Os.App.Abstractions.AppComponent.Type.init -> void
+Kazo.Os.App.Abstractions.AppComponentContracts
+Kazo.Os.App.Abstractions.AppComponentManifest
+Kazo.Os.App.Abstractions.AppComponentManifest.<Clone>$() -> Kazo.Os.App.Abstractions.AppComponentManifest!
+Kazo.Os.App.Abstractions.AppComponentManifest.AppComponentManifest(string! Contract, string! Assembly, string! Type) -> void
+Kazo.Os.App.Abstractions.AppComponentManifest.Assembly.get -> string!
+Kazo.Os.App.Abstractions.AppComponentManifest.Assembly.init -> void
+Kazo.Os.App.Abstractions.AppComponentManifest.Contract.get -> string!
+Kazo.Os.App.Abstractions.AppComponentManifest.Contract.init -> void
+Kazo.Os.App.Abstractions.AppComponentManifest.Deconstruct(out string! Contract, out string! Assembly, out string! Type) -> void
+Kazo.Os.App.Abstractions.AppComponentManifest.Equals(Kazo.Os.App.Abstractions.AppComponentManifest? other) -> bool
+Kazo.Os.App.Abstractions.AppComponentManifest.Type.get -> string!
+Kazo.Os.App.Abstractions.AppComponentManifest.Type.init -> void
+Kazo.Os.App.Abstractions.AppComponentProviderScope
+Kazo.Os.App.Abstractions.AppComponentProviderScope.AdministratorSelected = 1 -> Kazo.Os.App.Abstractions.AppComponentProviderScope
+Kazo.Os.App.Abstractions.AppComponentProviderScope.AnyApp = 0 -> Kazo.Os.App.Abstractions.AppComponentProviderScope
+Kazo.Os.App.Abstractions.AppComponentProviderScope.Platform = 2 -> Kazo.Os.App.Abstractions.AppComponentProviderScope
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.<Clone>$() -> Kazo.Os.App.Abstractions.AppContextMenuEntryManifest!
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.After.get -> string?
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.After.init -> void
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.AfterGroup.get -> string?
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.AfterGroup.init -> void
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.AppContextMenuEntryManifest() -> void
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.Equals(Kazo.Os.App.Abstractions.AppContextMenuEntryManifest? other) -> bool
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.First.get -> bool
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.First.init -> void
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.Icon.get -> Kazo.Os.App.Abstractions.AppContextMenuIconManifest?
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.Icon.init -> void
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.Intent.get -> string?
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.Intent.init -> void
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.Name.get -> string!
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.Name.init -> void
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.Parent.get -> string?
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.Parent.init -> void
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.Scopes.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.Scopes.init -> void
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.Screen.get -> int?
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.Screen.init -> void
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.Screens.get -> string?
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.Screens.init -> void
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.Selection.get -> string!
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.Selection.init -> void
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.Target.get -> string!
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.Target.init -> void
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.Title.get -> string!
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.Title.init -> void
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.Titles.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppContextMenuTitleManifest!>!
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.Titles.init -> void
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.Types.get -> System.Collections.Generic.IReadOnlyList<string!>?
+Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.Types.init -> void
+Kazo.Os.App.Abstractions.AppContextMenuIconManifest
+Kazo.Os.App.Abstractions.AppContextMenuIconManifest.<Clone>$() -> Kazo.Os.App.Abstractions.AppContextMenuIconManifest!
+Kazo.Os.App.Abstractions.AppContextMenuIconManifest.AppContextMenuIconManifest(string! Kind, string! Source, string? Library = null) -> void
+Kazo.Os.App.Abstractions.AppContextMenuIconManifest.Deconstruct(out string! Kind, out string! Source, out string? Library) -> void
+Kazo.Os.App.Abstractions.AppContextMenuIconManifest.Equals(Kazo.Os.App.Abstractions.AppContextMenuIconManifest? other) -> bool
+Kazo.Os.App.Abstractions.AppContextMenuIconManifest.Kind.get -> string!
+Kazo.Os.App.Abstractions.AppContextMenuIconManifest.Kind.init -> void
+Kazo.Os.App.Abstractions.AppContextMenuIconManifest.Library.get -> string?
+Kazo.Os.App.Abstractions.AppContextMenuIconManifest.Library.init -> void
+Kazo.Os.App.Abstractions.AppContextMenuIconManifest.Source.get -> string!
+Kazo.Os.App.Abstractions.AppContextMenuIconManifest.Source.init -> void
+Kazo.Os.App.Abstractions.AppContextMenuTitleManifest
+Kazo.Os.App.Abstractions.AppContextMenuTitleManifest.<Clone>$() -> Kazo.Os.App.Abstractions.AppContextMenuTitleManifest!
+Kazo.Os.App.Abstractions.AppContextMenuTitleManifest.AppContextMenuTitleManifest(string! Culture, string! Text) -> void
+Kazo.Os.App.Abstractions.AppContextMenuTitleManifest.Culture.get -> string!
+Kazo.Os.App.Abstractions.AppContextMenuTitleManifest.Culture.init -> void
+Kazo.Os.App.Abstractions.AppContextMenuTitleManifest.Deconstruct(out string! Culture, out string! Text) -> void
+Kazo.Os.App.Abstractions.AppContextMenuTitleManifest.Equals(Kazo.Os.App.Abstractions.AppContextMenuTitleManifest? other) -> bool
+Kazo.Os.App.Abstractions.AppContextMenuTitleManifest.Text.get -> string!
+Kazo.Os.App.Abstractions.AppContextMenuTitleManifest.Text.init -> void
+Kazo.Os.App.Abstractions.AppContextMenus
+Kazo.Os.App.Abstractions.AppDefinition
+Kazo.Os.App.Abstractions.AppDefinition.AppDefinition() -> void
+Kazo.Os.App.Abstractions.AppDefinitionMapper
+Kazo.Os.App.Abstractions.AppDependencyManifest
+Kazo.Os.App.Abstractions.AppDependencyManifest.<Clone>$() -> Kazo.Os.App.Abstractions.AppDependencyManifest!
+Kazo.Os.App.Abstractions.AppDependencyManifest.AppDependencyManifest(string! AppId, string! MinimumVersion, string? MaximumVersion = null, bool Optional = false) -> void
+Kazo.Os.App.Abstractions.AppDependencyManifest.AppId.get -> string!
+Kazo.Os.App.Abstractions.AppDependencyManifest.AppId.init -> void
+Kazo.Os.App.Abstractions.AppDependencyManifest.Deconstruct(out string! AppId, out string! MinimumVersion, out string? MaximumVersion, out bool Optional) -> void
+Kazo.Os.App.Abstractions.AppDependencyManifest.Equals(Kazo.Os.App.Abstractions.AppDependencyManifest? other) -> bool
+Kazo.Os.App.Abstractions.AppDependencyManifest.MaximumVersion.get -> string?
+Kazo.Os.App.Abstractions.AppDependencyManifest.MaximumVersion.init -> void
+Kazo.Os.App.Abstractions.AppDependencyManifest.MinimumVersion.get -> string!
+Kazo.Os.App.Abstractions.AppDependencyManifest.MinimumVersion.init -> void
+Kazo.Os.App.Abstractions.AppDependencyManifest.Optional.get -> bool
+Kazo.Os.App.Abstractions.AppDependencyManifest.Optional.init -> void
+Kazo.Os.App.Abstractions.AppEntryPointManifest
+Kazo.Os.App.Abstractions.AppEntryPointManifest.<Clone>$() -> Kazo.Os.App.Abstractions.AppEntryPointManifest!
+Kazo.Os.App.Abstractions.AppEntryPointManifest.AppEntryPointManifest(string! Assembly, string! Type) -> void
+Kazo.Os.App.Abstractions.AppEntryPointManifest.Assembly.get -> string!
+Kazo.Os.App.Abstractions.AppEntryPointManifest.Assembly.init -> void
+Kazo.Os.App.Abstractions.AppEntryPointManifest.Deconstruct(out string! Assembly, out string! Type) -> void
+Kazo.Os.App.Abstractions.AppEntryPointManifest.Equals(Kazo.Os.App.Abstractions.AppEntryPointManifest? other) -> bool
+Kazo.Os.App.Abstractions.AppEntryPointManifest.Type.get -> string!
+Kazo.Os.App.Abstractions.AppEntryPointManifest.Type.init -> void
+Kazo.Os.App.Abstractions.AppExecutionHost
+Kazo.Os.App.Abstractions.AppExecutionHost.Dedicated = 3 -> Kazo.Os.App.Abstractions.AppExecutionHost
+Kazo.Os.App.Abstractions.AppExecutionHost.Default = 0 -> Kazo.Os.App.Abstractions.AppExecutionHost
+Kazo.Os.App.Abstractions.AppExecutionHost.MainThread = 1 -> Kazo.Os.App.Abstractions.AppExecutionHost
+Kazo.Os.App.Abstractions.AppExecutionHost.Pool = 2 -> Kazo.Os.App.Abstractions.AppExecutionHost
+Kazo.Os.App.Abstractions.AppExecutionHost.Web = 4 -> Kazo.Os.App.Abstractions.AppExecutionHost
+Kazo.Os.App.Abstractions.AppExecutionHosts
+Kazo.Os.App.Abstractions.AppImage
+Kazo.Os.App.Abstractions.AppImage.<Clone>$() -> Kazo.Os.App.Abstractions.AppImage!
+Kazo.Os.App.Abstractions.AppImage.AppImage(System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppImageAssembly!>! Assemblies) -> void
+Kazo.Os.App.Abstractions.AppImage.Assemblies.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppImageAssembly!>!
+Kazo.Os.App.Abstractions.AppImage.Assemblies.init -> void
+Kazo.Os.App.Abstractions.AppImage.Deconstruct(out System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppImageAssembly!>! Assemblies) -> void
+Kazo.Os.App.Abstractions.AppImage.Equals(Kazo.Os.App.Abstractions.AppImage? other) -> bool
+Kazo.Os.App.Abstractions.AppImage.OwnBytes.get -> long
+Kazo.Os.App.Abstractions.AppImage.SharedBytes.get -> long
+Kazo.Os.App.Abstractions.AppImage.TotalBytes.get -> long
+Kazo.Os.App.Abstractions.AppImageAssembly
+Kazo.Os.App.Abstractions.AppImageAssembly.<Clone>$() -> Kazo.Os.App.Abstractions.AppImageAssembly!
+Kazo.Os.App.Abstractions.AppImageAssembly.AppImageAssembly(string! Name, long Bytes, bool Shared) -> void
+Kazo.Os.App.Abstractions.AppImageAssembly.Bytes.get -> long
+Kazo.Os.App.Abstractions.AppImageAssembly.Bytes.init -> void
+Kazo.Os.App.Abstractions.AppImageAssembly.Deconstruct(out string! Name, out long Bytes, out bool Shared) -> void
+Kazo.Os.App.Abstractions.AppImageAssembly.Equals(Kazo.Os.App.Abstractions.AppImageAssembly? other) -> bool
+Kazo.Os.App.Abstractions.AppImageAssembly.Name.get -> string!
+Kazo.Os.App.Abstractions.AppImageAssembly.Name.init -> void
+Kazo.Os.App.Abstractions.AppImageAssembly.Shared.get -> bool
+Kazo.Os.App.Abstractions.AppImageAssembly.Shared.init -> void
+Kazo.Os.App.Abstractions.AppIntentDeclarationManifest
+Kazo.Os.App.Abstractions.AppIntentDeclarationManifest.<Clone>$() -> Kazo.Os.App.Abstractions.AppIntentDeclarationManifest!
+Kazo.Os.App.Abstractions.AppIntentDeclarationManifest.AppIntentDeclarationManifest(string! IntentId, string? PayloadSchemaAssetPath = null) -> void
+Kazo.Os.App.Abstractions.AppIntentDeclarationManifest.Deconstruct(out string! IntentId, out string? PayloadSchemaAssetPath) -> void
+Kazo.Os.App.Abstractions.AppIntentDeclarationManifest.Equals(Kazo.Os.App.Abstractions.AppIntentDeclarationManifest? other) -> bool
+Kazo.Os.App.Abstractions.AppIntentDeclarationManifest.IntentId.get -> string!
+Kazo.Os.App.Abstractions.AppIntentDeclarationManifest.IntentId.init -> void
+Kazo.Os.App.Abstractions.AppIntentDeclarationManifest.PayloadSchemaAssetPath.get -> string?
+Kazo.Os.App.Abstractions.AppIntentDeclarationManifest.PayloadSchemaAssetPath.init -> void
+Kazo.Os.App.Abstractions.AppIntentDelivery
+Kazo.Os.App.Abstractions.AppIntentDelivery.<Clone>$() -> Kazo.Os.App.Abstractions.AppIntentDelivery!
+Kazo.Os.App.Abstractions.AppIntentDelivery.AppIntentDelivery(string! IntentId, string? PayloadJson = null, string? SenderAppId = null) -> void
+Kazo.Os.App.Abstractions.AppIntentDelivery.Arguments.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.App.Abstractions.AppIntentDelivery.Arguments.init -> void
+Kazo.Os.App.Abstractions.AppIntentDelivery.Deconstruct(out string! IntentId, out string? PayloadJson, out string? SenderAppId) -> void
+Kazo.Os.App.Abstractions.AppIntentDelivery.Equals(Kazo.Os.App.Abstractions.AppIntentDelivery? other) -> bool
+Kazo.Os.App.Abstractions.AppIntentDelivery.IntentId.get -> string!
+Kazo.Os.App.Abstractions.AppIntentDelivery.IntentId.init -> void
+Kazo.Os.App.Abstractions.AppIntentDelivery.PayloadJson.get -> string?
+Kazo.Os.App.Abstractions.AppIntentDelivery.PayloadJson.init -> void
+Kazo.Os.App.Abstractions.AppIntentDelivery.SenderAppId.get -> string?
+Kazo.Os.App.Abstractions.AppIntentDelivery.SenderAppId.init -> void
+Kazo.Os.App.Abstractions.AppIntentIds
+Kazo.Os.App.Abstractions.AppIntentRequest
+Kazo.Os.App.Abstractions.AppIntentRequest.<Clone>$() -> Kazo.Os.App.Abstractions.AppIntentRequest!
+Kazo.Os.App.Abstractions.AppIntentRequest.AppIntentRequest(System.Guid RequestId, string! CallerAppId, string! UserId, Kazo.Os.App.Abstractions.IAppIntent! Intent) -> void
+Kazo.Os.App.Abstractions.AppIntentRequest.CallerAppId.get -> string!
+Kazo.Os.App.Abstractions.AppIntentRequest.CallerAppId.init -> void
+Kazo.Os.App.Abstractions.AppIntentRequest.Deconstruct(out System.Guid RequestId, out string! CallerAppId, out string! UserId, out Kazo.Os.App.Abstractions.IAppIntent! Intent) -> void
+Kazo.Os.App.Abstractions.AppIntentRequest.Equals(Kazo.Os.App.Abstractions.AppIntentRequest? other) -> bool
+Kazo.Os.App.Abstractions.AppIntentRequest.Intent.get -> Kazo.Os.App.Abstractions.IAppIntent!
+Kazo.Os.App.Abstractions.AppIntentRequest.Intent.init -> void
+Kazo.Os.App.Abstractions.AppIntentRequest.RequestId.get -> System.Guid
+Kazo.Os.App.Abstractions.AppIntentRequest.RequestId.init -> void
+Kazo.Os.App.Abstractions.AppIntentRequest.UserId.get -> string!
+Kazo.Os.App.Abstractions.AppIntentRequest.UserId.init -> void
+Kazo.Os.App.Abstractions.AppKind
+Kazo.Os.App.Abstractions.AppKind.Service = 2 -> Kazo.Os.App.Abstractions.AppKind
+Kazo.Os.App.Abstractions.AppKind.Terminal = 1 -> Kazo.Os.App.Abstractions.AppKind
+Kazo.Os.App.Abstractions.AppKind.Web = 3 -> Kazo.Os.App.Abstractions.AppKind
+Kazo.Os.App.Abstractions.AppKind.Window = 0 -> Kazo.Os.App.Abstractions.AppKind
+Kazo.Os.App.Abstractions.AppLaunchVisibility
+Kazo.Os.App.Abstractions.AppLaunchVisibility.Hidden = 2 -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+Kazo.Os.App.Abstractions.AppLaunchVisibility.Visible = 1 -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+Kazo.Os.App.Abstractions.AppManifest
+Kazo.Os.App.Abstractions.AppManifest.<Clone>$() -> Kazo.Os.App.Abstractions.AppManifest!
+Kazo.Os.App.Abstractions.AppManifest.AppManifest() -> void
+Kazo.Os.App.Abstractions.AppManifest.Assets.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AssetManifest!>!
+Kazo.Os.App.Abstractions.AppManifest.Assets.init -> void
+Kazo.Os.App.Abstractions.AppManifest.AutoStart.get -> bool
+Kazo.Os.App.Abstractions.AppManifest.AutoStart.init -> void
+Kazo.Os.App.Abstractions.AppManifest.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.App.Abstractions.AppManifest.Capabilities.init -> void
+Kazo.Os.App.Abstractions.AppManifest.Components.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppComponentManifest!>?
+Kazo.Os.App.Abstractions.AppManifest.Components.init -> void
+Kazo.Os.App.Abstractions.AppManifest.ContextMenus.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppContextMenuEntryManifest!>?
+Kazo.Os.App.Abstractions.AppManifest.ContextMenus.init -> void
+Kazo.Os.App.Abstractions.AppManifest.DeclaredTopicPermissions.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.TopicPermissionDeclarationManifest!>!
+Kazo.Os.App.Abstractions.AppManifest.DeclaredTopicPermissions.init -> void
+Kazo.Os.App.Abstractions.AppManifest.Dependencies.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppDependencyManifest!>!
+Kazo.Os.App.Abstractions.AppManifest.Dependencies.init -> void
+Kazo.Os.App.Abstractions.AppManifest.Description.get -> string!
+Kazo.Os.App.Abstractions.AppManifest.Description.init -> void
+Kazo.Os.App.Abstractions.AppManifest.EntryPoint.get -> Kazo.Os.App.Abstractions.AppEntryPointManifest?
+Kazo.Os.App.Abstractions.AppManifest.EntryPoint.init -> void
+Kazo.Os.App.Abstractions.AppManifest.Equals(Kazo.Os.App.Abstractions.AppManifest? other) -> bool
+Kazo.Os.App.Abstractions.AppManifest.Execution.get -> Kazo.Os.App.Abstractions.AppExecutionHost?
+Kazo.Os.App.Abstractions.AppManifest.Execution.init -> void
+Kazo.Os.App.Abstractions.AppManifest.FileHandlers.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.FileHandlerManifest!>!
+Kazo.Os.App.Abstractions.AppManifest.FileHandlers.init -> void
+Kazo.Os.App.Abstractions.AppManifest.Id.get -> string!
+Kazo.Os.App.Abstractions.AppManifest.Id.init -> void
+Kazo.Os.App.Abstractions.AppManifest.Intents.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppIntentDeclarationManifest!>!
+Kazo.Os.App.Abstractions.AppManifest.Intents.init -> void
+Kazo.Os.App.Abstractions.AppManifest.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+Kazo.Os.App.Abstractions.AppManifest.Kind.init -> void
+Kazo.Os.App.Abstractions.AppManifest.Localizations.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.LocalizationManifest!>!
+Kazo.Os.App.Abstractions.AppManifest.Localizations.init -> void
+Kazo.Os.App.Abstractions.AppManifest.Name.get -> string!
+Kazo.Os.App.Abstractions.AppManifest.Name.init -> void
+Kazo.Os.App.Abstractions.AppManifest.OomScoreAdj.get -> int?
+Kazo.Os.App.Abstractions.AppManifest.OomScoreAdj.init -> void
+Kazo.Os.App.Abstractions.AppManifest.OsCompatibility.get -> Kazo.Os.App.Abstractions.OsCompatibilityManifest?
+Kazo.Os.App.Abstractions.AppManifest.OsCompatibility.init -> void
+Kazo.Os.App.Abstractions.AppManifest.Platform.get -> Kazo.Os.App.Abstractions.AppManifestPlatform?
+Kazo.Os.App.Abstractions.AppManifest.Platform.init -> void
+Kazo.Os.App.Abstractions.AppManifest.Presentation.get -> Kazo.Os.App.Abstractions.PresentationManifest!
+Kazo.Os.App.Abstractions.AppManifest.Presentation.init -> void
+Kazo.Os.App.Abstractions.AppManifest.PublisherId.get -> string!
+Kazo.Os.App.Abstractions.AppManifest.PublisherId.init -> void
+Kazo.Os.App.Abstractions.AppManifest.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+Kazo.Os.App.Abstractions.AppManifest.Resources.init -> void
+Kazo.Os.App.Abstractions.AppManifest.SchemaVersion.get -> int
+Kazo.Os.App.Abstractions.AppManifest.SchemaVersion.init -> void
+Kazo.Os.App.Abstractions.AppManifest.SdkCompatibility.get -> Kazo.Os.App.Abstractions.AppSdkCompatibilityManifest!
+Kazo.Os.App.Abstractions.AppManifest.SdkCompatibility.init -> void
+Kazo.Os.App.Abstractions.AppManifest.ServiceStartup.get -> Kazo.Os.App.Abstractions.AppServiceStartup?
+Kazo.Os.App.Abstractions.AppManifest.ServiceStartup.init -> void
+Kazo.Os.App.Abstractions.AppManifest.Settings.get -> Kazo.Os.App.Abstractions.AppSettingsSchemaManifest?
+Kazo.Os.App.Abstractions.AppManifest.Settings.init -> void
+Kazo.Os.App.Abstractions.AppManifest.SingleInstancePerUser.get -> bool
+Kazo.Os.App.Abstractions.AppManifest.SingleInstancePerUser.init -> void
+Kazo.Os.App.Abstractions.AppManifest.SupportsBack.get -> bool
+Kazo.Os.App.Abstractions.AppManifest.SupportsBack.init -> void
+Kazo.Os.App.Abstractions.AppManifest.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommandManifest?
+Kazo.Os.App.Abstractions.AppManifest.Terminal.init -> void
+Kazo.Os.App.Abstractions.AppManifest.Update.get -> Kazo.Os.App.Abstractions.UpdateManifest?
+Kazo.Os.App.Abstractions.AppManifest.Update.init -> void
+Kazo.Os.App.Abstractions.AppManifest.Version.get -> string!
+Kazo.Os.App.Abstractions.AppManifest.Version.init -> void
+Kazo.Os.App.Abstractions.AppManifest.Web.get -> Kazo.Os.App.Abstractions.WebAppManifest?
+Kazo.Os.App.Abstractions.AppManifest.Web.init -> void
+Kazo.Os.App.Abstractions.AppManifest.Window.get -> Kazo.Os.App.Abstractions.WindowOptions?
+Kazo.Os.App.Abstractions.AppManifest.Window.init -> void
+Kazo.Os.App.Abstractions.AppManifestAttribute
+Kazo.Os.App.Abstractions.AppManifestAttribute.AppManifestAttribute() -> void
+Kazo.Os.App.Abstractions.AppManifestAttribute.Execution.get -> Kazo.Os.App.Abstractions.AppExecutionHost
+Kazo.Os.App.Abstractions.AppManifestAttribute.Execution.set -> void
+Kazo.Os.App.Abstractions.AppManifestJsonSerializer
+Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext
+Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.AppManifestJsonSerializerContext() -> void
+Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.AppManifestJsonSerializerContext(System.Text.Json.JsonSerializerOptions! options) -> void
+Kazo.Os.App.Abstractions.AppManifestLocalization
+Kazo.Os.App.Abstractions.AppManifestPlatform
+Kazo.Os.App.Abstractions.AppManifestPlatform.<Clone>$() -> Kazo.Os.App.Abstractions.AppManifestPlatform!
+Kazo.Os.App.Abstractions.AppManifestPlatform.AppManifestPlatform(System.Collections.Generic.IReadOnlyList<string!>! Supported, System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppPlatformEntryPointManifest!>! EntryPoints) -> void
+Kazo.Os.App.Abstractions.AppManifestPlatform.Deconstruct(out System.Collections.Generic.IReadOnlyList<string!>! Supported, out System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppPlatformEntryPointManifest!>! EntryPoints) -> void
+Kazo.Os.App.Abstractions.AppManifestPlatform.EntryPoints.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppPlatformEntryPointManifest!>!
+Kazo.Os.App.Abstractions.AppManifestPlatform.EntryPoints.init -> void
+Kazo.Os.App.Abstractions.AppManifestPlatform.Equals(Kazo.Os.App.Abstractions.AppManifestPlatform? other) -> bool
+Kazo.Os.App.Abstractions.AppManifestPlatform.Supported.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.App.Abstractions.AppManifestPlatform.Supported.init -> void
+Kazo.Os.App.Abstractions.AppManifestPlatformResolution
+Kazo.Os.App.Abstractions.AppManifestPlatformResolution.<Clone>$() -> Kazo.Os.App.Abstractions.AppManifestPlatformResolution!
+Kazo.Os.App.Abstractions.AppManifestPlatformResolution.AppManifestPlatformResolution(System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppPlatformId>! SupportedPlatforms, System.Collections.Generic.IReadOnlyDictionary<Kazo.Os.App.Abstractions.AppPlatformId, Kazo.Os.App.Abstractions.AppEntryPointManifest!>! EntryPointsByPlatform) -> void
+Kazo.Os.App.Abstractions.AppManifestPlatformResolution.Deconstruct(out System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppPlatformId>! SupportedPlatforms, out System.Collections.Generic.IReadOnlyDictionary<Kazo.Os.App.Abstractions.AppPlatformId, Kazo.Os.App.Abstractions.AppEntryPointManifest!>! EntryPointsByPlatform) -> void
+Kazo.Os.App.Abstractions.AppManifestPlatformResolution.EntryPointsByPlatform.get -> System.Collections.Generic.IReadOnlyDictionary<Kazo.Os.App.Abstractions.AppPlatformId, Kazo.Os.App.Abstractions.AppEntryPointManifest!>!
+Kazo.Os.App.Abstractions.AppManifestPlatformResolution.EntryPointsByPlatform.init -> void
+Kazo.Os.App.Abstractions.AppManifestPlatformResolution.Equals(Kazo.Os.App.Abstractions.AppManifestPlatformResolution? other) -> bool
+Kazo.Os.App.Abstractions.AppManifestPlatformResolution.SupportedPlatforms.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppPlatformId>!
+Kazo.Os.App.Abstractions.AppManifestPlatformResolution.SupportedPlatforms.init -> void
+Kazo.Os.App.Abstractions.AppManifestPlatformSupport
+Kazo.Os.App.Abstractions.AppManifestText
+Kazo.Os.App.Abstractions.AppManifestText.<Clone>$() -> Kazo.Os.App.Abstractions.AppManifestText!
+Kazo.Os.App.Abstractions.AppManifestText.AppManifestText(string! Name, string! Description, string? TerminalUsage = null) -> void
+Kazo.Os.App.Abstractions.AppManifestText.Deconstruct(out string! Name, out string! Description, out string? TerminalUsage) -> void
+Kazo.Os.App.Abstractions.AppManifestText.Description.get -> string!
+Kazo.Os.App.Abstractions.AppManifestText.Description.init -> void
+Kazo.Os.App.Abstractions.AppManifestText.Equals(Kazo.Os.App.Abstractions.AppManifestText? other) -> bool
+Kazo.Os.App.Abstractions.AppManifestText.Name.get -> string!
+Kazo.Os.App.Abstractions.AppManifestText.Name.init -> void
+Kazo.Os.App.Abstractions.AppManifestText.TerminalUsage.get -> string?
+Kazo.Os.App.Abstractions.AppManifestText.TerminalUsage.init -> void
+Kazo.Os.App.Abstractions.AppManifestTextJsonSerializer
+Kazo.Os.App.Abstractions.AppManifestValidator
+Kazo.Os.App.Abstractions.AppOperationContext
+Kazo.Os.App.Abstractions.AppOperationContext.<Clone>$() -> Kazo.Os.App.Abstractions.AppOperationContext!
+Kazo.Os.App.Abstractions.AppOperationContext.AppId.get -> string!
+Kazo.Os.App.Abstractions.AppOperationContext.AppId.init -> void
+Kazo.Os.App.Abstractions.AppOperationContext.AppOperationContext() -> void
+Kazo.Os.App.Abstractions.AppOperationContext.EffectiveAuthority.get -> Kazo.Os.App.Abstractions.AppAuthority
+Kazo.Os.App.Abstractions.AppOperationContext.Equals(Kazo.Os.App.Abstractions.AppOperationContext? other) -> bool
+Kazo.Os.App.Abstractions.AppOperationContext.GrantedCapabilities.get -> System.Collections.Generic.IReadOnlySet<string!>!
+Kazo.Os.App.Abstractions.AppOperationContext.GrantedCapabilities.init -> void
+Kazo.Os.App.Abstractions.AppOperationContext.HasCapability(string! capability) -> bool
+Kazo.Os.App.Abstractions.AppOperationContext.IsRootElevated.get -> bool
+Kazo.Os.App.Abstractions.AppOperationContext.IsRootElevated.init -> void
+Kazo.Os.App.Abstractions.AppOperationContext.IsSystemOperation.get -> bool
+Kazo.Os.App.Abstractions.AppOperationContext.IsSystemOperation.init -> void
+Kazo.Os.App.Abstractions.AppOperationContext.OneShotElevation.get -> Kazo.Os.App.Abstractions.OneShotElevationGrantSet!
+Kazo.Os.App.Abstractions.AppOperationContext.OneShotElevation.init -> void
+Kazo.Os.App.Abstractions.AppOperationContext.ProcessId.get -> long?
+Kazo.Os.App.Abstractions.AppOperationContext.ProcessId.init -> void
+Kazo.Os.App.Abstractions.AppOperationContext.UserAuthority.get -> Kazo.Os.App.Abstractions.AppAuthority
+Kazo.Os.App.Abstractions.AppOperationContext.UserAuthority.init -> void
+Kazo.Os.App.Abstractions.AppOperationContext.UserId.get -> string!
+Kazo.Os.App.Abstractions.AppOperationContext.UserId.init -> void
+Kazo.Os.App.Abstractions.AppOperationContext.UserName.get -> string?
+Kazo.Os.App.Abstractions.AppOperationContext.UserName.init -> void
+Kazo.Os.App.Abstractions.AppPlatformCapabilities
+Kazo.Os.App.Abstractions.AppPlatformCapabilities.<Clone>$() -> Kazo.Os.App.Abstractions.AppPlatformCapabilities!
+Kazo.Os.App.Abstractions.AppPlatformCapabilities.AppPlatformCapabilities(Kazo.Os.App.Abstractions.AppPlatformId platformId, string! shellFamily, bool supportsFloatingWindows, int? maxVisiblePrimarySurfaces, bool supportsMove, bool supportsResize, bool supportsMinimize, bool supportsMaximize, Kazo.Os.App.Abstractions.PlatformSystemNavigationKind systemNavigation, bool hasApplicationBar, Kazo.Os.App.Abstractions.PlatformKeyboardStrategy keyboardStrategy, double? minimumViewportWidth = null, bool requiresSafeAreaInsets = false) -> void
+Kazo.Os.App.Abstractions.AppPlatformCapabilities.Equals(Kazo.Os.App.Abstractions.AppPlatformCapabilities? other) -> bool
+Kazo.Os.App.Abstractions.AppPlatformCapabilities.HasApplicationBar.get -> bool
+Kazo.Os.App.Abstractions.AppPlatformCapabilities.KeyboardStrategy.get -> Kazo.Os.App.Abstractions.PlatformKeyboardStrategy
+Kazo.Os.App.Abstractions.AppPlatformCapabilities.MaxVisiblePrimarySurfaces.get -> int?
+Kazo.Os.App.Abstractions.AppPlatformCapabilities.MinimumViewportWidth.get -> double?
+Kazo.Os.App.Abstractions.AppPlatformCapabilities.PlatformId.get -> Kazo.Os.App.Abstractions.AppPlatformId
+Kazo.Os.App.Abstractions.AppPlatformCapabilities.RequiresSafeAreaInsets.get -> bool
+Kazo.Os.App.Abstractions.AppPlatformCapabilities.ShellFamily.get -> string!
+Kazo.Os.App.Abstractions.AppPlatformCapabilities.SupportsFloatingWindows.get -> bool
+Kazo.Os.App.Abstractions.AppPlatformCapabilities.SupportsMaximize.get -> bool
+Kazo.Os.App.Abstractions.AppPlatformCapabilities.SupportsMinimize.get -> bool
+Kazo.Os.App.Abstractions.AppPlatformCapabilities.SupportsMove.get -> bool
+Kazo.Os.App.Abstractions.AppPlatformCapabilities.SupportsResize.get -> bool
+Kazo.Os.App.Abstractions.AppPlatformCapabilities.SystemNavigation.get -> Kazo.Os.App.Abstractions.PlatformSystemNavigationKind
+Kazo.Os.App.Abstractions.AppPlatformCapabilityRegistry
+Kazo.Os.App.Abstractions.AppPlatformCapabilityRegistry.AppPlatformCapabilityRegistry() -> void
+Kazo.Os.App.Abstractions.AppPlatformCapabilityRegistry.KnownPlatforms.get -> System.Collections.Generic.IReadOnlyCollection<Kazo.Os.App.Abstractions.AppPlatformId>!
+Kazo.Os.App.Abstractions.AppPlatformCapabilityRegistry.Register(Kazo.Os.App.Abstractions.AppPlatformCapabilities! capabilities) -> void
+Kazo.Os.App.Abstractions.AppPlatformCapabilityRegistry.TryGet(Kazo.Os.App.Abstractions.AppPlatformId platformId, out Kazo.Os.App.Abstractions.AppPlatformCapabilities? capabilities) -> bool
+Kazo.Os.App.Abstractions.AppPlatformEntryPointManifest
+Kazo.Os.App.Abstractions.AppPlatformEntryPointManifest.<Clone>$() -> Kazo.Os.App.Abstractions.AppPlatformEntryPointManifest!
+Kazo.Os.App.Abstractions.AppPlatformEntryPointManifest.AppPlatformEntryPointManifest(System.Collections.Generic.IReadOnlyList<string!>! Platforms, string! Assembly, string! Type) -> void
+Kazo.Os.App.Abstractions.AppPlatformEntryPointManifest.Assembly.get -> string!
+Kazo.Os.App.Abstractions.AppPlatformEntryPointManifest.Assembly.init -> void
+Kazo.Os.App.Abstractions.AppPlatformEntryPointManifest.Deconstruct(out System.Collections.Generic.IReadOnlyList<string!>! Platforms, out string! Assembly, out string! Type) -> void
+Kazo.Os.App.Abstractions.AppPlatformEntryPointManifest.Equals(Kazo.Os.App.Abstractions.AppPlatformEntryPointManifest? other) -> bool
+Kazo.Os.App.Abstractions.AppPlatformEntryPointManifest.Platforms.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.App.Abstractions.AppPlatformEntryPointManifest.Platforms.init -> void
+Kazo.Os.App.Abstractions.AppPlatformEntryPointManifest.Type.get -> string!
+Kazo.Os.App.Abstractions.AppPlatformEntryPointManifest.Type.init -> void
+Kazo.Os.App.Abstractions.AppPlatformId
+Kazo.Os.App.Abstractions.AppPlatformId.AppPlatformId() -> void
+Kazo.Os.App.Abstractions.AppPlatformId.Equals(Kazo.Os.App.Abstractions.AppPlatformId other) -> bool
+Kazo.Os.App.Abstractions.AppPlatformId.Value.get -> string!
+Kazo.Os.App.Abstractions.AppResourceProfileManifest
+Kazo.Os.App.Abstractions.AppResourceProfileManifest.<Clone>$() -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+Kazo.Os.App.Abstractions.AppResourceProfileManifest.AppResourceProfileManifest(double BaselineCpuWeight, double BurstCpuWeight, double BaselineMemoryWeight, double BurstMemoryWeight, double BaselineStorageIoWeight, double BurstStorageIoWeight, double BaselineNetworkIoWeight, double BurstNetworkIoWeight) -> void
+Kazo.Os.App.Abstractions.AppResourceProfileManifest.BaselineCpuWeight.get -> double
+Kazo.Os.App.Abstractions.AppResourceProfileManifest.BaselineCpuWeight.init -> void
+Kazo.Os.App.Abstractions.AppResourceProfileManifest.BaselineMemoryWeight.get -> double
+Kazo.Os.App.Abstractions.AppResourceProfileManifest.BaselineMemoryWeight.init -> void
+Kazo.Os.App.Abstractions.AppResourceProfileManifest.BaselineNetworkIoWeight.get -> double
+Kazo.Os.App.Abstractions.AppResourceProfileManifest.BaselineNetworkIoWeight.init -> void
+Kazo.Os.App.Abstractions.AppResourceProfileManifest.BaselineStorageIoWeight.get -> double
+Kazo.Os.App.Abstractions.AppResourceProfileManifest.BaselineStorageIoWeight.init -> void
+Kazo.Os.App.Abstractions.AppResourceProfileManifest.BurstCpuWeight.get -> double
+Kazo.Os.App.Abstractions.AppResourceProfileManifest.BurstCpuWeight.init -> void
+Kazo.Os.App.Abstractions.AppResourceProfileManifest.BurstMemoryWeight.get -> double
+Kazo.Os.App.Abstractions.AppResourceProfileManifest.BurstMemoryWeight.init -> void
+Kazo.Os.App.Abstractions.AppResourceProfileManifest.BurstNetworkIoWeight.get -> double
+Kazo.Os.App.Abstractions.AppResourceProfileManifest.BurstNetworkIoWeight.init -> void
+Kazo.Os.App.Abstractions.AppResourceProfileManifest.BurstStorageIoWeight.get -> double
+Kazo.Os.App.Abstractions.AppResourceProfileManifest.BurstStorageIoWeight.init -> void
+Kazo.Os.App.Abstractions.AppResourceProfileManifest.Deconstruct(out double BaselineCpuWeight, out double BurstCpuWeight, out double BaselineMemoryWeight, out double BurstMemoryWeight, out double BaselineStorageIoWeight, out double BurstStorageIoWeight, out double BaselineNetworkIoWeight, out double BurstNetworkIoWeight) -> void
+Kazo.Os.App.Abstractions.AppResourceProfileManifest.Equals(Kazo.Os.App.Abstractions.AppResourceProfileManifest? other) -> bool
+Kazo.Os.App.Abstractions.AppSdkCompatibilityManifest
+Kazo.Os.App.Abstractions.AppSdkCompatibilityManifest.<Clone>$() -> Kazo.Os.App.Abstractions.AppSdkCompatibilityManifest!
+Kazo.Os.App.Abstractions.AppSdkCompatibilityManifest.AppSdkCompatibilityManifest(string! MinimumVersion, string? MaximumVersion = null) -> void
+Kazo.Os.App.Abstractions.AppSdkCompatibilityManifest.Deconstruct(out string! MinimumVersion, out string? MaximumVersion) -> void
+Kazo.Os.App.Abstractions.AppSdkCompatibilityManifest.Equals(Kazo.Os.App.Abstractions.AppSdkCompatibilityManifest? other) -> bool
+Kazo.Os.App.Abstractions.AppSdkCompatibilityManifest.MaximumVersion.get -> string?
+Kazo.Os.App.Abstractions.AppSdkCompatibilityManifest.MaximumVersion.init -> void
+Kazo.Os.App.Abstractions.AppSdkCompatibilityManifest.MinimumVersion.get -> string!
+Kazo.Os.App.Abstractions.AppSdkCompatibilityManifest.MinimumVersion.init -> void
+Kazo.Os.App.Abstractions.AppServiceStartup
+Kazo.Os.App.Abstractions.AppServiceStartup.Boot = 1 -> Kazo.Os.App.Abstractions.AppServiceStartup
+Kazo.Os.App.Abstractions.AppServiceStartup.Login = 0 -> Kazo.Os.App.Abstractions.AppServiceStartup
+Kazo.Os.App.Abstractions.AppSettingFieldManifest
+Kazo.Os.App.Abstractions.AppSettingFieldManifest.<Clone>$() -> Kazo.Os.App.Abstractions.AppSettingFieldManifest!
+Kazo.Os.App.Abstractions.AppSettingFieldManifest.AllowedValues.get -> System.Collections.Generic.IReadOnlyList<string!>?
+Kazo.Os.App.Abstractions.AppSettingFieldManifest.AllowedValues.init -> void
+Kazo.Os.App.Abstractions.AppSettingFieldManifest.AppSettingFieldManifest(string! Key, Kazo.Os.App.Abstractions.AppSettingValueType ValueType, string! DefaultValue, Kazo.Os.App.Abstractions.AppSettingScope Scope, Kazo.Os.App.Abstractions.AppSettingSensitivity Sensitivity, System.Collections.Generic.IReadOnlyList<string!>? AllowedValues = null, string? Group = null) -> void
+Kazo.Os.App.Abstractions.AppSettingFieldManifest.Deconstruct(out string! Key, out Kazo.Os.App.Abstractions.AppSettingValueType ValueType, out string! DefaultValue, out Kazo.Os.App.Abstractions.AppSettingScope Scope, out Kazo.Os.App.Abstractions.AppSettingSensitivity Sensitivity, out System.Collections.Generic.IReadOnlyList<string!>? AllowedValues, out string? Group) -> void
+Kazo.Os.App.Abstractions.AppSettingFieldManifest.DefaultValue.get -> string!
+Kazo.Os.App.Abstractions.AppSettingFieldManifest.DefaultValue.init -> void
+Kazo.Os.App.Abstractions.AppSettingFieldManifest.Equals(Kazo.Os.App.Abstractions.AppSettingFieldManifest? other) -> bool
+Kazo.Os.App.Abstractions.AppSettingFieldManifest.Group.get -> string?
+Kazo.Os.App.Abstractions.AppSettingFieldManifest.Group.init -> void
+Kazo.Os.App.Abstractions.AppSettingFieldManifest.Key.get -> string!
+Kazo.Os.App.Abstractions.AppSettingFieldManifest.Key.init -> void
+Kazo.Os.App.Abstractions.AppSettingFieldManifest.Scope.get -> Kazo.Os.App.Abstractions.AppSettingScope
+Kazo.Os.App.Abstractions.AppSettingFieldManifest.Scope.init -> void
+Kazo.Os.App.Abstractions.AppSettingFieldManifest.Sensitivity.get -> Kazo.Os.App.Abstractions.AppSettingSensitivity
+Kazo.Os.App.Abstractions.AppSettingFieldManifest.Sensitivity.init -> void
+Kazo.Os.App.Abstractions.AppSettingFieldManifest.ValueType.get -> Kazo.Os.App.Abstractions.AppSettingValueType
+Kazo.Os.App.Abstractions.AppSettingFieldManifest.ValueType.init -> void
+Kazo.Os.App.Abstractions.AppSettingScope
+Kazo.Os.App.Abstractions.AppSettingScope.AppDevice = 2 -> Kazo.Os.App.Abstractions.AppSettingScope
+Kazo.Os.App.Abstractions.AppSettingScope.AppRoamingUser = 3 -> Kazo.Os.App.Abstractions.AppSettingScope
+Kazo.Os.App.Abstractions.AppSettingScope.AppUser = 1 -> Kazo.Os.App.Abstractions.AppSettingScope
+Kazo.Os.App.Abstractions.AppSettingScope.AppUserDevice = 5 -> Kazo.Os.App.Abstractions.AppSettingScope
+Kazo.Os.App.Abstractions.AppSettingScope.OsAdmin = 4 -> Kazo.Os.App.Abstractions.AppSettingScope
+Kazo.Os.App.Abstractions.AppSettingSensitivity
+Kazo.Os.App.Abstractions.AppSettingSensitivity.Private = 2 -> Kazo.Os.App.Abstractions.AppSettingSensitivity
+Kazo.Os.App.Abstractions.AppSettingSensitivity.Public = 1 -> Kazo.Os.App.Abstractions.AppSettingSensitivity
+Kazo.Os.App.Abstractions.AppSettingSensitivity.Restricted = 4 -> Kazo.Os.App.Abstractions.AppSettingSensitivity
+Kazo.Os.App.Abstractions.AppSettingSensitivity.SecretReference = 3 -> Kazo.Os.App.Abstractions.AppSettingSensitivity
+Kazo.Os.App.Abstractions.AppSettingValueType
+Kazo.Os.App.Abstractions.AppSettingValueType.Boolean = 3 -> Kazo.Os.App.Abstractions.AppSettingValueType
+Kazo.Os.App.Abstractions.AppSettingValueType.Enum = 4 -> Kazo.Os.App.Abstractions.AppSettingValueType
+Kazo.Os.App.Abstractions.AppSettingValueType.Integer = 2 -> Kazo.Os.App.Abstractions.AppSettingValueType
+Kazo.Os.App.Abstractions.AppSettingValueType.String = 1 -> Kazo.Os.App.Abstractions.AppSettingValueType
+Kazo.Os.App.Abstractions.AppSettingsSchemaManifest
+Kazo.Os.App.Abstractions.AppSettingsSchemaManifest.<Clone>$() -> Kazo.Os.App.Abstractions.AppSettingsSchemaManifest!
+Kazo.Os.App.Abstractions.AppSettingsSchemaManifest.AppSettingsSchemaManifest(int SchemaVersion, System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppSettingFieldManifest!>! Fields, System.Collections.Generic.IReadOnlyList<string!>? MigrationIds = null) -> void
+Kazo.Os.App.Abstractions.AppSettingsSchemaManifest.Deconstruct(out int SchemaVersion, out System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppSettingFieldManifest!>! Fields, out System.Collections.Generic.IReadOnlyList<string!>? MigrationIds) -> void
+Kazo.Os.App.Abstractions.AppSettingsSchemaManifest.Equals(Kazo.Os.App.Abstractions.AppSettingsSchemaManifest? other) -> bool
+Kazo.Os.App.Abstractions.AppSettingsSchemaManifest.Fields.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppSettingFieldManifest!>!
+Kazo.Os.App.Abstractions.AppSettingsSchemaManifest.Fields.init -> void
+Kazo.Os.App.Abstractions.AppSettingsSchemaManifest.MigrationIds.get -> System.Collections.Generic.IReadOnlyList<string!>?
+Kazo.Os.App.Abstractions.AppSettingsSchemaManifest.MigrationIds.init -> void
+Kazo.Os.App.Abstractions.AppSettingsSchemaManifest.SchemaVersion.get -> int
+Kazo.Os.App.Abstractions.AppSettingsSchemaManifest.SchemaVersion.init -> void
+Kazo.Os.App.Abstractions.AssetKind
+Kazo.Os.App.Abstractions.AssetKind.Css = 2 -> Kazo.Os.App.Abstractions.AssetKind
+Kazo.Os.App.Abstractions.AssetKind.Data = 5 -> Kazo.Os.App.Abstractions.AssetKind
+Kazo.Os.App.Abstractions.AssetKind.Image = 1 -> Kazo.Os.App.Abstractions.AssetKind
+Kazo.Os.App.Abstractions.AssetKind.JavaScriptModule = 3 -> Kazo.Os.App.Abstractions.AssetKind
+Kazo.Os.App.Abstractions.AssetKind.Localization = 4 -> Kazo.Os.App.Abstractions.AssetKind
+Kazo.Os.App.Abstractions.AssetManifest
+Kazo.Os.App.Abstractions.AssetManifest.<Clone>$() -> Kazo.Os.App.Abstractions.AssetManifest!
+Kazo.Os.App.Abstractions.AssetManifest.AssetManifest(string! Path, Kazo.Os.App.Abstractions.AssetKind Kind, string! Sha256, string? Role = null) -> void
+Kazo.Os.App.Abstractions.AssetManifest.Deconstruct(out string! Path, out Kazo.Os.App.Abstractions.AssetKind Kind, out string! Sha256, out string? Role) -> void
+Kazo.Os.App.Abstractions.AssetManifest.Equals(Kazo.Os.App.Abstractions.AssetManifest? other) -> bool
+Kazo.Os.App.Abstractions.AssetManifest.Kind.get -> Kazo.Os.App.Abstractions.AssetKind
+Kazo.Os.App.Abstractions.AssetManifest.Kind.init -> void
+Kazo.Os.App.Abstractions.AssetManifest.Path.get -> string!
+Kazo.Os.App.Abstractions.AssetManifest.Path.init -> void
+Kazo.Os.App.Abstractions.AssetManifest.Role.get -> string?
+Kazo.Os.App.Abstractions.AssetManifest.Role.init -> void
+Kazo.Os.App.Abstractions.AssetManifest.Sha256.get -> string!
+Kazo.Os.App.Abstractions.AssetManifest.Sha256.init -> void
+Kazo.Os.App.Abstractions.BuiltInApplication
+Kazo.Os.App.Abstractions.BuiltInApplication.<Clone>$() -> Kazo.Os.App.Abstractions.BuiltInApplication!
+Kazo.Os.App.Abstractions.BuiltInApplication.BuiltInApplication(bool IsSystemApp, Kazo.Os.App.Abstractions.AppManifest! Manifest, Kazo.Os.App.Abstractions.AppImage? Image = null, System.Collections.Generic.IReadOnlyDictionary<string!, Kazo.Os.App.Abstractions.AppManifestText!>? Localized = null) -> void
+Kazo.Os.App.Abstractions.BuiltInApplication.Deconstruct(out bool IsSystemApp, out Kazo.Os.App.Abstractions.AppManifest! Manifest, out Kazo.Os.App.Abstractions.AppImage? Image, out System.Collections.Generic.IReadOnlyDictionary<string!, Kazo.Os.App.Abstractions.AppManifestText!>? Localized) -> void
+Kazo.Os.App.Abstractions.BuiltInApplication.Equals(Kazo.Os.App.Abstractions.BuiltInApplication? other) -> bool
+Kazo.Os.App.Abstractions.BuiltInApplication.Image.get -> Kazo.Os.App.Abstractions.AppImage?
+Kazo.Os.App.Abstractions.BuiltInApplication.Image.init -> void
+Kazo.Os.App.Abstractions.BuiltInApplication.IsSystemApp.get -> bool
+Kazo.Os.App.Abstractions.BuiltInApplication.IsSystemApp.init -> void
+Kazo.Os.App.Abstractions.BuiltInApplication.Localized.get -> System.Collections.Generic.IReadOnlyDictionary<string!, Kazo.Os.App.Abstractions.AppManifestText!>?
+Kazo.Os.App.Abstractions.BuiltInApplication.Localized.init -> void
+Kazo.Os.App.Abstractions.BuiltInApplication.Manifest.get -> Kazo.Os.App.Abstractions.AppManifest!
+Kazo.Os.App.Abstractions.BuiltInApplication.Manifest.init -> void
+Kazo.Os.App.Abstractions.BuiltInApplicationsJsonSerializer
+Kazo.Os.App.Abstractions.CapabilityDescription
+Kazo.Os.App.Abstractions.CapabilityDescription.<Clone>$() -> Kazo.Os.App.Abstractions.CapabilityDescription!
+Kazo.Os.App.Abstractions.CapabilityDescription.Capability.get -> string!
+Kazo.Os.App.Abstractions.CapabilityDescription.Capability.init -> void
+Kazo.Os.App.Abstractions.CapabilityDescription.CapabilityDescription(string! Capability, string! Title, Kazo.Os.App.Abstractions.CapabilityRisk Risk, string? RiskDescription) -> void
+Kazo.Os.App.Abstractions.CapabilityDescription.Deconstruct(out string! Capability, out string! Title, out Kazo.Os.App.Abstractions.CapabilityRisk Risk, out string? RiskDescription) -> void
+Kazo.Os.App.Abstractions.CapabilityDescription.Equals(Kazo.Os.App.Abstractions.CapabilityDescription? other) -> bool
+Kazo.Os.App.Abstractions.CapabilityDescription.Risk.get -> Kazo.Os.App.Abstractions.CapabilityRisk
+Kazo.Os.App.Abstractions.CapabilityDescription.Risk.init -> void
+Kazo.Os.App.Abstractions.CapabilityDescription.RiskDescription.get -> string?
+Kazo.Os.App.Abstractions.CapabilityDescription.RiskDescription.init -> void
+Kazo.Os.App.Abstractions.CapabilityDescription.Title.get -> string!
+Kazo.Os.App.Abstractions.CapabilityDescription.Title.init -> void
+Kazo.Os.App.Abstractions.CapabilityRisk
+Kazo.Os.App.Abstractions.CapabilityRisk.Dangerous = 1 -> Kazo.Os.App.Abstractions.CapabilityRisk
+Kazo.Os.App.Abstractions.CapabilityRisk.Normal = 0 -> Kazo.Os.App.Abstractions.CapabilityRisk
+Kazo.Os.App.Abstractions.CustomIntent
+Kazo.Os.App.Abstractions.CustomIntent.<Clone>$() -> Kazo.Os.App.Abstractions.CustomIntent!
+Kazo.Os.App.Abstractions.CustomIntent.CustomIntent(string! IntentId, string? PayloadJson = null, string? TargetAppId = null, bool RememberChoice = false) -> void
+Kazo.Os.App.Abstractions.CustomIntent.Deconstruct(out string! IntentId, out string? PayloadJson, out string? TargetAppId, out bool RememberChoice) -> void
+Kazo.Os.App.Abstractions.CustomIntent.Equals(Kazo.Os.App.Abstractions.CustomIntent? other) -> bool
+Kazo.Os.App.Abstractions.CustomIntent.IntentId.get -> string!
+Kazo.Os.App.Abstractions.CustomIntent.IntentId.init -> void
+Kazo.Os.App.Abstractions.CustomIntent.PayloadJson.get -> string?
+Kazo.Os.App.Abstractions.CustomIntent.PayloadJson.init -> void
+Kazo.Os.App.Abstractions.CustomIntent.RememberChoice.get -> bool
+Kazo.Os.App.Abstractions.CustomIntent.RememberChoice.init -> void
+Kazo.Os.App.Abstractions.CustomIntent.TargetAppId.get -> string?
+Kazo.Os.App.Abstractions.CustomIntent.TargetAppId.init -> void
+Kazo.Os.App.Abstractions.EditFileIntent
+Kazo.Os.App.Abstractions.EditFileIntent.<Clone>$() -> Kazo.Os.App.Abstractions.EditFileIntent!
+Kazo.Os.App.Abstractions.EditFileIntent.Deconstruct(out Kazo.Os.App.Abstractions.VirtualPath Path, out string? MediaType, out string? PreferredAppId) -> void
+Kazo.Os.App.Abstractions.EditFileIntent.EditFileIntent(Kazo.Os.App.Abstractions.VirtualPath Path, string? MediaType = null, string? PreferredAppId = null) -> void
+Kazo.Os.App.Abstractions.EditFileIntent.Equals(Kazo.Os.App.Abstractions.EditFileIntent? other) -> bool
+Kazo.Os.App.Abstractions.EditFileIntent.IntentId.get -> string!
+Kazo.Os.App.Abstractions.EditFileIntent.MediaType.get -> string?
+Kazo.Os.App.Abstractions.EditFileIntent.MediaType.init -> void
+Kazo.Os.App.Abstractions.EditFileIntent.Path.get -> Kazo.Os.App.Abstractions.VirtualPath
+Kazo.Os.App.Abstractions.EditFileIntent.Path.init -> void
+Kazo.Os.App.Abstractions.EditFileIntent.PreferredAppId.get -> string?
+Kazo.Os.App.Abstractions.EditFileIntent.PreferredAppId.init -> void
+Kazo.Os.App.Abstractions.ExecuteCommandIntent
+Kazo.Os.App.Abstractions.ExecuteCommandIntent.<Clone>$() -> Kazo.Os.App.Abstractions.ExecuteCommandIntent!
+Kazo.Os.App.Abstractions.ExecuteCommandIntent.CommandLine.get -> string!
+Kazo.Os.App.Abstractions.ExecuteCommandIntent.CommandLine.init -> void
+Kazo.Os.App.Abstractions.ExecuteCommandIntent.Deconstruct(out string! CommandLine, out Kazo.Os.App.Abstractions.VirtualPath? WorkingDirectory, out System.Guid? ElevationToken, out Kazo.Os.App.Abstractions.Policy.ElevationScope? ElevationScope) -> void
+Kazo.Os.App.Abstractions.ExecuteCommandIntent.ElevationScope.get -> Kazo.Os.App.Abstractions.Policy.ElevationScope?
+Kazo.Os.App.Abstractions.ExecuteCommandIntent.ElevationScope.init -> void
+Kazo.Os.App.Abstractions.ExecuteCommandIntent.ElevationToken.get -> System.Guid?
+Kazo.Os.App.Abstractions.ExecuteCommandIntent.ElevationToken.init -> void
+Kazo.Os.App.Abstractions.ExecuteCommandIntent.Equals(Kazo.Os.App.Abstractions.ExecuteCommandIntent? other) -> bool
+Kazo.Os.App.Abstractions.ExecuteCommandIntent.ExecuteCommandIntent(string! CommandLine, Kazo.Os.App.Abstractions.VirtualPath? WorkingDirectory = null, System.Guid? ElevationToken = null, Kazo.Os.App.Abstractions.Policy.ElevationScope? ElevationScope = null) -> void
+Kazo.Os.App.Abstractions.ExecuteCommandIntent.IntentId.get -> string!
+Kazo.Os.App.Abstractions.ExecuteCommandIntent.WorkingDirectory.get -> Kazo.Os.App.Abstractions.VirtualPath?
+Kazo.Os.App.Abstractions.ExecuteCommandIntent.WorkingDirectory.init -> void
+Kazo.Os.App.Abstractions.FileHandler
+Kazo.Os.App.Abstractions.FileHandler.<Clone>$() -> Kazo.Os.App.Abstractions.FileHandler!
+Kazo.Os.App.Abstractions.FileHandler.Actions.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.App.Abstractions.FileHandler.Actions.init -> void
+Kazo.Os.App.Abstractions.FileHandler.Deconstruct(out string? MediaType, out System.Collections.Generic.IReadOnlyList<string!>! Extensions, out System.Collections.Generic.IReadOnlyList<string!>! Actions, out int Priority) -> void
+Kazo.Os.App.Abstractions.FileHandler.Equals(Kazo.Os.App.Abstractions.FileHandler? other) -> bool
+Kazo.Os.App.Abstractions.FileHandler.Extensions.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.App.Abstractions.FileHandler.Extensions.init -> void
+Kazo.Os.App.Abstractions.FileHandler.FileHandler(string? MediaType, System.Collections.Generic.IReadOnlyList<string!>! Extensions, System.Collections.Generic.IReadOnlyList<string!>! Actions, int Priority = 0) -> void
+Kazo.Os.App.Abstractions.FileHandler.MediaType.get -> string?
+Kazo.Os.App.Abstractions.FileHandler.MediaType.init -> void
+Kazo.Os.App.Abstractions.FileHandler.Priority.get -> int
+Kazo.Os.App.Abstractions.FileHandler.Priority.init -> void
+Kazo.Os.App.Abstractions.FileHandlerManifest
+Kazo.Os.App.Abstractions.FileHandlerManifest.<Clone>$() -> Kazo.Os.App.Abstractions.FileHandlerManifest!
+Kazo.Os.App.Abstractions.FileHandlerManifest.Actions.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.App.Abstractions.FileHandlerManifest.Actions.init -> void
+Kazo.Os.App.Abstractions.FileHandlerManifest.Deconstruct(out string? MediaType, out System.Collections.Generic.IReadOnlyList<string!>! Extensions, out System.Collections.Generic.IReadOnlyList<string!>! Actions, out int Priority) -> void
+Kazo.Os.App.Abstractions.FileHandlerManifest.Equals(Kazo.Os.App.Abstractions.FileHandlerManifest? other) -> bool
+Kazo.Os.App.Abstractions.FileHandlerManifest.Extensions.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.App.Abstractions.FileHandlerManifest.Extensions.init -> void
+Kazo.Os.App.Abstractions.FileHandlerManifest.FileHandlerManifest(string? MediaType, System.Collections.Generic.IReadOnlyList<string!>! Extensions, System.Collections.Generic.IReadOnlyList<string!>! Actions, int Priority = 0) -> void
+Kazo.Os.App.Abstractions.FileHandlerManifest.MediaType.get -> string?
+Kazo.Os.App.Abstractions.FileHandlerManifest.MediaType.init -> void
+Kazo.Os.App.Abstractions.FileHandlerManifest.Priority.get -> int
+Kazo.Os.App.Abstractions.FileHandlerManifest.Priority.init -> void
+Kazo.Os.App.Abstractions.FileIntentAction
+Kazo.Os.App.Abstractions.FileIntentAction.Edit = 1 -> Kazo.Os.App.Abstractions.FileIntentAction
+Kazo.Os.App.Abstractions.FileIntentAction.Open = 0 -> Kazo.Os.App.Abstractions.FileIntentAction
+Kazo.Os.App.Abstractions.KazoOsSdk
+Kazo.Os.App.Abstractions.IAppIntent
+Kazo.Os.App.Abstractions.IAppIntent.IntentId.get -> string!
+Kazo.Os.App.Abstractions.IAppPlatformCapabilityRegistry
+Kazo.Os.App.Abstractions.IAppPlatformCapabilityRegistry.KnownPlatforms.get -> System.Collections.Generic.IReadOnlyCollection<Kazo.Os.App.Abstractions.AppPlatformId>!
+Kazo.Os.App.Abstractions.IAppPlatformCapabilityRegistry.TryGet(Kazo.Os.App.Abstractions.AppPlatformId platformId, out Kazo.Os.App.Abstractions.AppPlatformCapabilities? capabilities) -> bool
+Kazo.Os.App.Abstractions.IPersistentAppCatalogRepository
+Kazo.Os.App.Abstractions.IPersistentAppCatalogRepository.ReadAllAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.PersistedAppCatalogEntry!>!>
+Kazo.Os.App.Abstractions.IPersistentAppCatalogRepository.ReconcileAsync(System.Collections.Generic.IEnumerable<Kazo.Os.App.Abstractions.AppManifest!>! selectedManifests, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.PersistedAppCatalogEntry!>!>
+Kazo.Os.App.Abstractions.IPersistentAppCatalogRepository.SetEnabledAsync(string! appId, bool enabled, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.App.Abstractions.LaunchAppIntent
+Kazo.Os.App.Abstractions.LaunchAppIntent.<Clone>$() -> Kazo.Os.App.Abstractions.LaunchAppIntent!
+Kazo.Os.App.Abstractions.LaunchAppIntent.Arguments.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.App.Abstractions.LaunchAppIntent.Arguments.init -> void
+Kazo.Os.App.Abstractions.LaunchAppIntent.Deconstruct(out string! TargetAppId, out System.Collections.Generic.IReadOnlyList<string!>! Arguments) -> void
+Kazo.Os.App.Abstractions.LaunchAppIntent.Equals(Kazo.Os.App.Abstractions.LaunchAppIntent? other) -> bool
+Kazo.Os.App.Abstractions.LaunchAppIntent.IntentId.get -> string!
+Kazo.Os.App.Abstractions.LaunchAppIntent.LaunchAppIntent(string! TargetAppId, System.Collections.Generic.IReadOnlyList<string!>! Arguments) -> void
+Kazo.Os.App.Abstractions.LaunchAppIntent.TargetAppId.get -> string!
+Kazo.Os.App.Abstractions.LaunchAppIntent.TargetAppId.init -> void
+Kazo.Os.App.Abstractions.LocalizationManifest
+Kazo.Os.App.Abstractions.LocalizationManifest.<Clone>$() -> Kazo.Os.App.Abstractions.LocalizationManifest!
+Kazo.Os.App.Abstractions.LocalizationManifest.Culture.get -> string!
+Kazo.Os.App.Abstractions.LocalizationManifest.Culture.init -> void
+Kazo.Os.App.Abstractions.LocalizationManifest.Deconstruct(out string! Culture, out string! ResourcePath) -> void
+Kazo.Os.App.Abstractions.LocalizationManifest.Equals(Kazo.Os.App.Abstractions.LocalizationManifest? other) -> bool
+Kazo.Os.App.Abstractions.LocalizationManifest.LocalizationManifest(string! Culture, string! ResourcePath) -> void
+Kazo.Os.App.Abstractions.LocalizationManifest.ResourcePath.get -> string!
+Kazo.Os.App.Abstractions.LocalizationManifest.ResourcePath.init -> void
+Kazo.Os.App.Abstractions.ManifestSchemaResource
+Kazo.Os.App.Abstractions.ManifestValidationError
+Kazo.Os.App.Abstractions.ManifestValidationError.<Clone>$() -> Kazo.Os.App.Abstractions.ManifestValidationError!
+Kazo.Os.App.Abstractions.ManifestValidationError.Code.get -> string!
+Kazo.Os.App.Abstractions.ManifestValidationError.Code.init -> void
+Kazo.Os.App.Abstractions.ManifestValidationError.Deconstruct(out string! Code, out string! Path, out string! Message) -> void
+Kazo.Os.App.Abstractions.ManifestValidationError.Equals(Kazo.Os.App.Abstractions.ManifestValidationError? other) -> bool
+Kazo.Os.App.Abstractions.ManifestValidationError.ManifestValidationError(string! Code, string! Path, string! Message) -> void
+Kazo.Os.App.Abstractions.ManifestValidationError.Message.get -> string!
+Kazo.Os.App.Abstractions.ManifestValidationError.Message.init -> void
+Kazo.Os.App.Abstractions.ManifestValidationError.Path.get -> string!
+Kazo.Os.App.Abstractions.ManifestValidationError.Path.init -> void
+Kazo.Os.App.Abstractions.ManifestValidationResult
+Kazo.Os.App.Abstractions.ManifestValidationResult.<Clone>$() -> Kazo.Os.App.Abstractions.ManifestValidationResult!
+Kazo.Os.App.Abstractions.ManifestValidationResult.Deconstruct(out System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.ManifestValidationError!>! Errors) -> void
+Kazo.Os.App.Abstractions.ManifestValidationResult.Equals(Kazo.Os.App.Abstractions.ManifestValidationResult? other) -> bool
+Kazo.Os.App.Abstractions.ManifestValidationResult.Errors.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.ManifestValidationError!>!
+Kazo.Os.App.Abstractions.ManifestValidationResult.Errors.init -> void
+Kazo.Os.App.Abstractions.ManifestValidationResult.IsValid.get -> bool
+Kazo.Os.App.Abstractions.ManifestValidationResult.ManifestValidationResult(System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.ManifestValidationError!>! Errors) -> void
+Kazo.Os.App.Abstractions.OneShotElevationGrantSet
+Kazo.Os.App.Abstractions.OneShotElevationGrantSet.Block(string! capability) -> void
+Kazo.Os.App.Abstractions.OneShotElevationGrantSet.Grant(string! capability, Kazo.Os.App.Abstractions.VirtualPath? path) -> void
+Kazo.Os.App.Abstractions.OneShotElevationGrantSet.IsBlocked(string! capability) -> bool
+Kazo.Os.App.Abstractions.OneShotElevationGrantSet.OneShotElevationGrantSet() -> void
+Kazo.Os.App.Abstractions.OneShotElevationGrantSet.TryConsume(string! capability, Kazo.Os.App.Abstractions.VirtualPath? path) -> bool
+Kazo.Os.App.Abstractions.OpenFileIntent
+Kazo.Os.App.Abstractions.OpenFileIntent.<Clone>$() -> Kazo.Os.App.Abstractions.OpenFileIntent!
+Kazo.Os.App.Abstractions.OpenFileIntent.Action.get -> Kazo.Os.App.Abstractions.FileIntentAction
+Kazo.Os.App.Abstractions.OpenFileIntent.Action.init -> void
+Kazo.Os.App.Abstractions.OpenFileIntent.Deconstruct(out Kazo.Os.App.Abstractions.VirtualPath Path, out Kazo.Os.App.Abstractions.FileIntentAction Action, out string? MediaType, out string? PreferredAppId) -> void
+Kazo.Os.App.Abstractions.OpenFileIntent.Equals(Kazo.Os.App.Abstractions.OpenFileIntent? other) -> bool
+Kazo.Os.App.Abstractions.OpenFileIntent.IntentId.get -> string!
+Kazo.Os.App.Abstractions.OpenFileIntent.MediaType.get -> string?
+Kazo.Os.App.Abstractions.OpenFileIntent.MediaType.init -> void
+Kazo.Os.App.Abstractions.OpenFileIntent.OpenFileIntent(Kazo.Os.App.Abstractions.VirtualPath Path, Kazo.Os.App.Abstractions.FileIntentAction Action, string? MediaType = null, string? PreferredAppId = null) -> void
+Kazo.Os.App.Abstractions.OpenFileIntent.Path.get -> Kazo.Os.App.Abstractions.VirtualPath
+Kazo.Os.App.Abstractions.OpenFileIntent.Path.init -> void
+Kazo.Os.App.Abstractions.OpenFileIntent.PreferredAppId.get -> string?
+Kazo.Os.App.Abstractions.OpenFileIntent.PreferredAppId.init -> void
+Kazo.Os.App.Abstractions.OpenUriIntent
+Kazo.Os.App.Abstractions.OpenUriIntent.<Clone>$() -> Kazo.Os.App.Abstractions.OpenUriIntent!
+Kazo.Os.App.Abstractions.OpenUriIntent.Deconstruct(out System.Uri! Uri, out string? PreferredAppId) -> void
+Kazo.Os.App.Abstractions.OpenUriIntent.Equals(Kazo.Os.App.Abstractions.OpenUriIntent? other) -> bool
+Kazo.Os.App.Abstractions.OpenUriIntent.IntentId.get -> string!
+Kazo.Os.App.Abstractions.OpenUriIntent.OpenUriIntent(System.Uri! Uri, string? PreferredAppId = null) -> void
+Kazo.Os.App.Abstractions.OpenUriIntent.PreferredAppId.get -> string?
+Kazo.Os.App.Abstractions.OpenUriIntent.PreferredAppId.init -> void
+Kazo.Os.App.Abstractions.OpenUriIntent.Uri.get -> System.Uri!
+Kazo.Os.App.Abstractions.OpenUriIntent.Uri.init -> void
+Kazo.Os.App.Abstractions.OsCompatibilityManifest
+Kazo.Os.App.Abstractions.OsCompatibilityManifest.<Clone>$() -> Kazo.Os.App.Abstractions.OsCompatibilityManifest!
+Kazo.Os.App.Abstractions.OsCompatibilityManifest.Deconstruct(out string! MinimumVersion, out string? MaximumVersion) -> void
+Kazo.Os.App.Abstractions.OsCompatibilityManifest.Equals(Kazo.Os.App.Abstractions.OsCompatibilityManifest? other) -> bool
+Kazo.Os.App.Abstractions.OsCompatibilityManifest.MaximumVersion.get -> string?
+Kazo.Os.App.Abstractions.OsCompatibilityManifest.MaximumVersion.init -> void
+Kazo.Os.App.Abstractions.OsCompatibilityManifest.MinimumVersion.get -> string!
+Kazo.Os.App.Abstractions.OsCompatibilityManifest.MinimumVersion.init -> void
+Kazo.Os.App.Abstractions.OsCompatibilityManifest.OsCompatibilityManifest(string! MinimumVersion, string? MaximumVersion = null) -> void
+Kazo.Os.App.Abstractions.PersistedAppCatalogEntry
+Kazo.Os.App.Abstractions.PersistedAppCatalogEntry.<Clone>$() -> Kazo.Os.App.Abstractions.PersistedAppCatalogEntry!
+Kazo.Os.App.Abstractions.PersistedAppCatalogEntry.Deconstruct(out Kazo.Os.App.Abstractions.AppManifest! Manifest, out bool IsEnabled) -> void
+Kazo.Os.App.Abstractions.PersistedAppCatalogEntry.Equals(Kazo.Os.App.Abstractions.PersistedAppCatalogEntry? other) -> bool
+Kazo.Os.App.Abstractions.PersistedAppCatalogEntry.IsEnabled.get -> bool
+Kazo.Os.App.Abstractions.PersistedAppCatalogEntry.IsEnabled.init -> void
+Kazo.Os.App.Abstractions.PersistedAppCatalogEntry.Manifest.get -> Kazo.Os.App.Abstractions.AppManifest!
+Kazo.Os.App.Abstractions.PersistedAppCatalogEntry.Manifest.init -> void
+Kazo.Os.App.Abstractions.PersistedAppCatalogEntry.PersistedAppCatalogEntry(Kazo.Os.App.Abstractions.AppManifest! Manifest, bool IsEnabled) -> void
+Kazo.Os.App.Abstractions.PlatformKeyboardStrategy
+Kazo.Os.App.Abstractions.PlatformKeyboardStrategy.PhysicalOnly = 0 -> Kazo.Os.App.Abstractions.PlatformKeyboardStrategy
+Kazo.Os.App.Abstractions.PlatformKeyboardStrategy.VirtualKazoOsKeyboard = 1 -> Kazo.Os.App.Abstractions.PlatformKeyboardStrategy
+Kazo.Os.App.Abstractions.PlatformSystemNavigationKind
+Kazo.Os.App.Abstractions.PlatformSystemNavigationKind.AndroidStyleSystemBar = 2 -> Kazo.Os.App.Abstractions.PlatformSystemNavigationKind
+Kazo.Os.App.Abstractions.PlatformSystemNavigationKind.DesktopTaskbar = 1 -> Kazo.Os.App.Abstractions.PlatformSystemNavigationKind
+Kazo.Os.App.Abstractions.PlatformSystemNavigationKind.None = 0 -> Kazo.Os.App.Abstractions.PlatformSystemNavigationKind
+Kazo.Os.App.Abstractions.Policy.AdminElevationVerificationResult
+Kazo.Os.App.Abstractions.Policy.AdminElevationVerificationResult.<Clone>$() -> Kazo.Os.App.Abstractions.Policy.AdminElevationVerificationResult!
+Kazo.Os.App.Abstractions.Policy.AdminElevationVerificationResult.AdminElevationVerificationResult(bool Success, string? UserId, string? LoginName, string? FailureReason) -> void
+Kazo.Os.App.Abstractions.Policy.AdminElevationVerificationResult.Deconstruct(out bool Success, out string? UserId, out string? LoginName, out string? FailureReason) -> void
+Kazo.Os.App.Abstractions.Policy.AdminElevationVerificationResult.Equals(Kazo.Os.App.Abstractions.Policy.AdminElevationVerificationResult? other) -> bool
+Kazo.Os.App.Abstractions.Policy.AdminElevationVerificationResult.FailureReason.get -> string?
+Kazo.Os.App.Abstractions.Policy.AdminElevationVerificationResult.FailureReason.init -> void
+Kazo.Os.App.Abstractions.Policy.AdminElevationVerificationResult.LoginName.get -> string?
+Kazo.Os.App.Abstractions.Policy.AdminElevationVerificationResult.LoginName.init -> void
+Kazo.Os.App.Abstractions.Policy.AdminElevationVerificationResult.Success.get -> bool
+Kazo.Os.App.Abstractions.Policy.AdminElevationVerificationResult.Success.init -> void
+Kazo.Os.App.Abstractions.Policy.AdminElevationVerificationResult.UserId.get -> string?
+Kazo.Os.App.Abstractions.Policy.AdminElevationVerificationResult.UserId.init -> void
+Kazo.Os.App.Abstractions.Policy.CapabilityConstraint
+Kazo.Os.App.Abstractions.Policy.CapabilityConstraint.CapabilityConstraint() -> void
+Kazo.Os.App.Abstractions.Policy.CapabilityConstraint.CapabilityConstraint(Kazo.Os.App.Abstractions.Policy.CapabilityConstraint! original) -> void
+Kazo.Os.App.Abstractions.Policy.CapabilityConstraintKind
+Kazo.Os.App.Abstractions.Policy.CapabilityConstraintKind.NetworkHost = 2 -> Kazo.Os.App.Abstractions.Policy.CapabilityConstraintKind
+Kazo.Os.App.Abstractions.Policy.CapabilityConstraintKind.NetworkPort = 3 -> Kazo.Os.App.Abstractions.Policy.CapabilityConstraintKind
+Kazo.Os.App.Abstractions.Policy.CapabilityConstraintKind.VirtualPath = 1 -> Kazo.Os.App.Abstractions.Policy.CapabilityConstraintKind
+Kazo.Os.App.Abstractions.Policy.CapabilityGrant
+Kazo.Os.App.Abstractions.Policy.CapabilityGrant.<Clone>$() -> Kazo.Os.App.Abstractions.Policy.CapabilityGrant!
+Kazo.Os.App.Abstractions.Policy.CapabilityGrant.AppId.get -> string!
+Kazo.Os.App.Abstractions.Policy.CapabilityGrant.Capability.get -> string!
+Kazo.Os.App.Abstractions.Policy.CapabilityGrant.CapabilityGrant(Kazo.Os.App.Abstractions.Policy.CapabilityGrantId id, string! appId, string! userId, string! capability, long policyRevision, Kazo.Os.App.Abstractions.Policy.CapabilityGrantSource source, System.Collections.Generic.IEnumerable<Kazo.Os.App.Abstractions.Policy.CapabilityConstraint!>? constraints = null) -> void
+Kazo.Os.App.Abstractions.Policy.CapabilityGrant.Constraints.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.Policy.CapabilityConstraint!>!
+Kazo.Os.App.Abstractions.Policy.CapabilityGrant.Equals(Kazo.Os.App.Abstractions.Policy.CapabilityGrant? other) -> bool
+Kazo.Os.App.Abstractions.Policy.CapabilityGrant.Id.get -> Kazo.Os.App.Abstractions.Policy.CapabilityGrantId
+Kazo.Os.App.Abstractions.Policy.CapabilityGrant.PolicyRevision.get -> long
+Kazo.Os.App.Abstractions.Policy.CapabilityGrant.Source.get -> Kazo.Os.App.Abstractions.Policy.CapabilityGrantSource
+Kazo.Os.App.Abstractions.Policy.CapabilityGrant.UserId.get -> string!
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditAction
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditAction.Expanded = 2 -> Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditAction
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditAction.Granted = 1 -> Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditAction
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditAction.Revoked = 3 -> Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditAction
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditEntry
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditEntry.<Clone>$() -> Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditEntry!
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditEntry.ActingAuthority.get -> Kazo.Os.App.Abstractions.AppAuthority
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditEntry.ActingAuthority.init -> void
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditEntry.Action.get -> Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditAction
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditEntry.Action.init -> void
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditEntry.CapabilityGrantAuditEntry(Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditAction Action, Kazo.Os.App.Abstractions.Policy.CapabilityGrant! Grant, long PolicyRevision, Kazo.Os.App.Abstractions.AppAuthority ActingAuthority, System.DateTimeOffset TimestampUtc) -> void
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditEntry.Deconstruct(out Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditAction Action, out Kazo.Os.App.Abstractions.Policy.CapabilityGrant! Grant, out long PolicyRevision, out Kazo.Os.App.Abstractions.AppAuthority ActingAuthority, out System.DateTimeOffset TimestampUtc) -> void
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditEntry.Equals(Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditEntry? other) -> bool
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditEntry.Grant.get -> Kazo.Os.App.Abstractions.Policy.CapabilityGrant!
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditEntry.Grant.init -> void
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditEntry.PolicyRevision.get -> long
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditEntry.PolicyRevision.init -> void
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditEntry.TimestampUtc.get -> System.DateTimeOffset
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditEntry.TimestampUtc.init -> void
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantConflictException
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantConflictException.CapabilityGrantConflictException(string! message, System.Exception? innerException = null) -> void
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantId
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantId.CapabilityGrantId() -> void
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantId.Equals(Kazo.Os.App.Abstractions.Policy.CapabilityGrantId other) -> bool
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantId.Value.get -> System.Guid
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationResult
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationResult.<Clone>$() -> Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationResult!
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationResult.CapabilityGrantMutationResult(Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationStatus Status, Kazo.Os.App.Abstractions.Policy.CapabilityGrant? Grant, long PolicyRevision) -> void
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationResult.Deconstruct(out Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationStatus Status, out Kazo.Os.App.Abstractions.Policy.CapabilityGrant? Grant, out long PolicyRevision) -> void
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationResult.Equals(Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationResult? other) -> bool
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationResult.Grant.get -> Kazo.Os.App.Abstractions.Policy.CapabilityGrant?
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationResult.Grant.init -> void
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationResult.PolicyRevision.get -> long
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationResult.PolicyRevision.init -> void
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationResult.Status.get -> Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationStatus
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationResult.Status.init -> void
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationStatus
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationStatus.AuthorityDenied = 5 -> Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationStatus
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationStatus.Expanded = 2 -> Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationStatus
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationStatus.Granted = 1 -> Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationStatus
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationStatus.NotFound = 4 -> Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationStatus
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationStatus.Revoked = 3 -> Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationStatus
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantSource
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantSource.AdministratorApproval = 3 -> Kazo.Os.App.Abstractions.Policy.CapabilityGrantSource
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantSource.BuildProfile = 1 -> Kazo.Os.App.Abstractions.Policy.CapabilityGrantSource
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantSource.SystemPolicy = 4 -> Kazo.Os.App.Abstractions.Policy.CapabilityGrantSource
+Kazo.Os.App.Abstractions.Policy.CapabilityGrantSource.UserApproval = 2 -> Kazo.Os.App.Abstractions.Policy.CapabilityGrantSource
+Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluation
+Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluation.CapabilityPolicyEvaluation() -> void
+Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluation.Equals(Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluation other) -> bool
+Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluation.GrantId.get -> Kazo.Os.App.Abstractions.Policy.CapabilityGrantId?
+Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluation.Granted.get -> bool
+Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluation.PolicyRevision.get -> long
+Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluation.Reason.get -> Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluationReason
+Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluationReason
+Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluationReason.AuthorityDenied = 4 -> Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluationReason
+Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluationReason.Constrained = 3 -> Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluationReason
+Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluationReason.Granted = 1 -> Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluationReason
+Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluationReason.Missing = 0 -> Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluationReason
+Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluationReason.Revoked = 2 -> Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluationReason
+Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidate
+Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidate.CapabilityResourceCandidate() -> void
+Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidate.CapabilityResourceCandidate(Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidate! original) -> void
+Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidateKind
+Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidateKind.NetworkHost = 2 -> Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidateKind
+Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidateKind.NetworkPort = 3 -> Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidateKind
+Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidateKind.VirtualPath = 1 -> Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidateKind
+Kazo.Os.App.Abstractions.Policy.ElevationRequestResult
+Kazo.Os.App.Abstractions.Policy.ElevationRequestResult.<Clone>$() -> Kazo.Os.App.Abstractions.Policy.ElevationRequestResult!
+Kazo.Os.App.Abstractions.Policy.ElevationRequestResult.AuthorizedByLoginName.get -> string?
+Kazo.Os.App.Abstractions.Policy.ElevationRequestResult.AuthorizedByLoginName.init -> void
+Kazo.Os.App.Abstractions.Policy.ElevationRequestResult.Deconstruct(out bool Success, out System.Guid? Token, out string? AuthorizedByLoginName, out string? FailureReason) -> void
+Kazo.Os.App.Abstractions.Policy.ElevationRequestResult.ElevationRequestResult(bool Success, System.Guid? Token, string? AuthorizedByLoginName, string? FailureReason) -> void
+Kazo.Os.App.Abstractions.Policy.ElevationRequestResult.Equals(Kazo.Os.App.Abstractions.Policy.ElevationRequestResult? other) -> bool
+Kazo.Os.App.Abstractions.Policy.ElevationRequestResult.FailureReason.get -> string?
+Kazo.Os.App.Abstractions.Policy.ElevationRequestResult.FailureReason.init -> void
+Kazo.Os.App.Abstractions.Policy.ElevationRequestResult.Success.get -> bool
+Kazo.Os.App.Abstractions.Policy.ElevationRequestResult.Success.init -> void
+Kazo.Os.App.Abstractions.Policy.ElevationRequestResult.Token.get -> System.Guid?
+Kazo.Os.App.Abstractions.Policy.ElevationRequestResult.Token.init -> void
+Kazo.Os.App.Abstractions.Policy.ElevationScope
+Kazo.Os.App.Abstractions.Policy.ElevationScope.CapabilityApproval = 1 -> Kazo.Os.App.Abstractions.Policy.ElevationScope
+Kazo.Os.App.Abstractions.Policy.ElevationScope.SudoRoot = 0 -> Kazo.Os.App.Abstractions.Policy.ElevationScope
+Kazo.Os.App.Abstractions.Policy.ElevationTicket
+Kazo.Os.App.Abstractions.Policy.ElevationTicket.<Clone>$() -> Kazo.Os.App.Abstractions.Policy.ElevationTicket!
+Kazo.Os.App.Abstractions.Policy.ElevationTicket.AuthorizedByLoginName.get -> string!
+Kazo.Os.App.Abstractions.Policy.ElevationTicket.AuthorizedByLoginName.init -> void
+Kazo.Os.App.Abstractions.Policy.ElevationTicket.AuthorizedByUserId.get -> string!
+Kazo.Os.App.Abstractions.Policy.ElevationTicket.AuthorizedByUserId.init -> void
+Kazo.Os.App.Abstractions.Policy.ElevationTicket.Capability.get -> string?
+Kazo.Os.App.Abstractions.Policy.ElevationTicket.Capability.init -> void
+Kazo.Os.App.Abstractions.Policy.ElevationTicket.Deconstruct(out System.Guid Token, out Kazo.Os.App.Abstractions.Policy.ElevationScope Scope, out string! AuthorizedByUserId, out string! AuthorizedByLoginName, out System.DateTimeOffset IssuedAtUtc, out string? Capability, out Kazo.Os.App.Abstractions.VirtualPath? Path) -> void
+Kazo.Os.App.Abstractions.Policy.ElevationTicket.ElevationTicket(System.Guid Token, Kazo.Os.App.Abstractions.Policy.ElevationScope Scope, string! AuthorizedByUserId, string! AuthorizedByLoginName, System.DateTimeOffset IssuedAtUtc, string? Capability = null, Kazo.Os.App.Abstractions.VirtualPath? Path = null) -> void
+Kazo.Os.App.Abstractions.Policy.ElevationTicket.Equals(Kazo.Os.App.Abstractions.Policy.ElevationTicket? other) -> bool
+Kazo.Os.App.Abstractions.Policy.ElevationTicket.IssuedAtUtc.get -> System.DateTimeOffset
+Kazo.Os.App.Abstractions.Policy.ElevationTicket.IssuedAtUtc.init -> void
+Kazo.Os.App.Abstractions.Policy.ElevationTicket.Path.get -> Kazo.Os.App.Abstractions.VirtualPath?
+Kazo.Os.App.Abstractions.Policy.ElevationTicket.Path.init -> void
+Kazo.Os.App.Abstractions.Policy.ElevationTicket.Scope.get -> Kazo.Os.App.Abstractions.Policy.ElevationScope
+Kazo.Os.App.Abstractions.Policy.ElevationTicket.Scope.init -> void
+Kazo.Os.App.Abstractions.Policy.ElevationTicket.Token.get -> System.Guid
+Kazo.Os.App.Abstractions.Policy.ElevationTicket.Token.init -> void
+Kazo.Os.App.Abstractions.Policy.IAdminElevationVerifier
+Kazo.Os.App.Abstractions.Policy.IAdminElevationVerifier.VerifyAsync(string! loginName, string! password, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.App.Abstractions.Policy.AdminElevationVerificationResult!>!
+Kazo.Os.App.Abstractions.Policy.ICapabilityGrantRepository
+Kazo.Os.App.Abstractions.Policy.ICapabilityGrantRepository.AuditLog.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditEntry!>!
+Kazo.Os.App.Abstractions.Policy.ICapabilityGrantRepository.CurrentPolicyRevision.get -> long
+Kazo.Os.App.Abstractions.Policy.ICapabilityGrantRepository.Evaluate(string! appId, string! userId, string! capability, Kazo.Os.App.Abstractions.AppAuthority actingAuthority, Kazo.Os.App.Abstractions.AppAuthority requiredAuthority, Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidate? resourceCandidate = null) -> Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluation
+Kazo.Os.App.Abstractions.Policy.ICapabilityGrantRepository.Grant(string! appId, string! userId, string! capability, Kazo.Os.App.Abstractions.Policy.CapabilityGrantSource source, Kazo.Os.App.Abstractions.AppAuthority actingAuthority, System.Collections.Generic.IEnumerable<Kazo.Os.App.Abstractions.Policy.CapabilityConstraint!>? constraints = null) -> Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationResult!
+Kazo.Os.App.Abstractions.Policy.ICapabilityGrantRepository.Revoke(Kazo.Os.App.Abstractions.Policy.CapabilityGrantId grantId, Kazo.Os.App.Abstractions.AppAuthority actingAuthority) -> Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationResult!
+Kazo.Os.App.Abstractions.Policy.IElevationService
+Kazo.Os.App.Abstractions.Policy.IElevationService.RequestCapabilityApprovalAsync(string! adminLoginName, string! password, string! capability, Kazo.Os.App.Abstractions.VirtualPath? path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.App.Abstractions.Policy.ElevationRequestResult!>!
+Kazo.Os.App.Abstractions.Policy.IElevationService.RequestSudoAsync(string! adminLoginName, string! password, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.App.Abstractions.Policy.ElevationRequestResult!>!
+Kazo.Os.App.Abstractions.Policy.IElevationTicketStore
+Kazo.Os.App.Abstractions.Policy.IElevationTicketStore.Issue(Kazo.Os.App.Abstractions.Policy.ElevationScope scope, string! authorizedByUserId, string! authorizedByLoginName, string? capability = null, Kazo.Os.App.Abstractions.VirtualPath? path = null) -> Kazo.Os.App.Abstractions.Policy.ElevationTicket!
+Kazo.Os.App.Abstractions.Policy.IElevationTicketStore.TryConsume(System.Guid token, Kazo.Os.App.Abstractions.Policy.ElevationScope expectedScope, out Kazo.Os.App.Abstractions.Policy.ElevationTicket? ticket) -> bool
+Kazo.Os.App.Abstractions.Policy.IPersistentCapabilityGrantRepository
+Kazo.Os.App.Abstractions.Policy.IPersistentCapabilityGrantRepository.EvaluateAsync(string! appId, string! userId, string! capability, Kazo.Os.App.Abstractions.AppAuthority actingAuthority, Kazo.Os.App.Abstractions.AppAuthority requiredAuthority, Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidate? resourceCandidate = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluation>
+Kazo.Os.App.Abstractions.Policy.IPersistentCapabilityGrantRepository.GetCurrentPolicyRevisionAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<long>
+Kazo.Os.App.Abstractions.Policy.IPersistentCapabilityGrantRepository.GrantAsync(string! appId, string! userId, string! capability, Kazo.Os.App.Abstractions.Policy.CapabilityGrantSource source, Kazo.Os.App.Abstractions.AppAuthority actingAuthority, System.Collections.Generic.IEnumerable<Kazo.Os.App.Abstractions.Policy.CapabilityConstraint!>? constraints = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationResult!>
+Kazo.Os.App.Abstractions.Policy.IPersistentCapabilityGrantRepository.ImportAsync(Kazo.Os.App.Abstractions.Policy.CapabilityGrantId id, string! appId, string! userId, string! capability, Kazo.Os.App.Abstractions.Policy.CapabilityGrantSource source, System.Collections.Generic.IEnumerable<Kazo.Os.App.Abstractions.Policy.CapabilityConstraint!>? constraints, bool isRevoked, Kazo.Os.App.Abstractions.AppAuthority actingAuthority, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationResult!>
+Kazo.Os.App.Abstractions.Policy.IPersistentCapabilityGrantRepository.RevokeAsync(Kazo.Os.App.Abstractions.Policy.CapabilityGrantId grantId, Kazo.Os.App.Abstractions.AppAuthority actingAuthority, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationResult!>
+Kazo.Os.App.Abstractions.Policy.NetworkHostCapabilityConstraint
+Kazo.Os.App.Abstractions.Policy.NetworkHostCapabilityConstraint.Equals(Kazo.Os.App.Abstractions.Policy.NetworkHostCapabilityConstraint? other) -> bool
+Kazo.Os.App.Abstractions.Policy.NetworkHostCapabilityConstraint.Host.get -> string!
+Kazo.Os.App.Abstractions.Policy.NetworkHostCapabilityConstraint.NetworkHostCapabilityConstraint(string! host) -> void
+Kazo.Os.App.Abstractions.Policy.NetworkHostResourceCandidate
+Kazo.Os.App.Abstractions.Policy.NetworkHostResourceCandidate.Deconstruct(out string! Host) -> void
+Kazo.Os.App.Abstractions.Policy.NetworkHostResourceCandidate.Equals(Kazo.Os.App.Abstractions.Policy.NetworkHostResourceCandidate? other) -> bool
+Kazo.Os.App.Abstractions.Policy.NetworkHostResourceCandidate.Host.get -> string!
+Kazo.Os.App.Abstractions.Policy.NetworkHostResourceCandidate.Host.init -> void
+Kazo.Os.App.Abstractions.Policy.NetworkHostResourceCandidate.NetworkHostResourceCandidate(string! Host) -> void
+Kazo.Os.App.Abstractions.Policy.NetworkPortCapabilityConstraint
+Kazo.Os.App.Abstractions.Policy.NetworkPortCapabilityConstraint.Equals(Kazo.Os.App.Abstractions.Policy.NetworkPortCapabilityConstraint? other) -> bool
+Kazo.Os.App.Abstractions.Policy.NetworkPortCapabilityConstraint.MaximumPort.get -> ushort
+Kazo.Os.App.Abstractions.Policy.NetworkPortCapabilityConstraint.MinimumPort.get -> ushort
+Kazo.Os.App.Abstractions.Policy.NetworkPortCapabilityConstraint.NetworkPortCapabilityConstraint(ushort minimumPort, ushort maximumPort) -> void
+Kazo.Os.App.Abstractions.Policy.NetworkPortResourceCandidate
+Kazo.Os.App.Abstractions.Policy.NetworkPortResourceCandidate.Deconstruct(out ushort Port) -> void
+Kazo.Os.App.Abstractions.Policy.NetworkPortResourceCandidate.Equals(Kazo.Os.App.Abstractions.Policy.NetworkPortResourceCandidate? other) -> bool
+Kazo.Os.App.Abstractions.Policy.NetworkPortResourceCandidate.NetworkPortResourceCandidate(ushort Port) -> void
+Kazo.Os.App.Abstractions.Policy.NetworkPortResourceCandidate.Port.get -> ushort
+Kazo.Os.App.Abstractions.Policy.NetworkPortResourceCandidate.Port.init -> void
+Kazo.Os.App.Abstractions.Policy.VirtualPathCapabilityConstraint
+Kazo.Os.App.Abstractions.Policy.VirtualPathCapabilityConstraint.Allows(Kazo.Os.App.Abstractions.VirtualPath candidate) -> bool
+Kazo.Os.App.Abstractions.Policy.VirtualPathCapabilityConstraint.Equals(Kazo.Os.App.Abstractions.Policy.VirtualPathCapabilityConstraint? other) -> bool
+Kazo.Os.App.Abstractions.Policy.VirtualPathCapabilityConstraint.IncludeDescendants.get -> bool
+Kazo.Os.App.Abstractions.Policy.VirtualPathCapabilityConstraint.Path.get -> Kazo.Os.App.Abstractions.VirtualPath
+Kazo.Os.App.Abstractions.Policy.VirtualPathCapabilityConstraint.VirtualPathCapabilityConstraint(Kazo.Os.App.Abstractions.VirtualPath path, bool includeDescendants) -> void
+Kazo.Os.App.Abstractions.Policy.VirtualPathResourceCandidate
+Kazo.Os.App.Abstractions.Policy.VirtualPathResourceCandidate.Deconstruct(out Kazo.Os.App.Abstractions.VirtualPath Path) -> void
+Kazo.Os.App.Abstractions.Policy.VirtualPathResourceCandidate.Equals(Kazo.Os.App.Abstractions.Policy.VirtualPathResourceCandidate? other) -> bool
+Kazo.Os.App.Abstractions.Policy.VirtualPathResourceCandidate.Path.get -> Kazo.Os.App.Abstractions.VirtualPath
+Kazo.Os.App.Abstractions.Policy.VirtualPathResourceCandidate.Path.init -> void
+Kazo.Os.App.Abstractions.Policy.VirtualPathResourceCandidate.VirtualPathResourceCandidate(Kazo.Os.App.Abstractions.VirtualPath Path) -> void
+Kazo.Os.App.Abstractions.PresentationManifest
+Kazo.Os.App.Abstractions.PresentationManifest.<Clone>$() -> Kazo.Os.App.Abstractions.PresentationManifest!
+Kazo.Os.App.Abstractions.PresentationManifest.Category.get -> string!
+Kazo.Os.App.Abstractions.PresentationManifest.Category.init -> void
+Kazo.Os.App.Abstractions.PresentationManifest.Deconstruct(out string! Category, out Kazo.Os.App.Abstractions.AppLaunchVisibility LaunchVisibility, out System.Collections.Generic.IReadOnlyList<string!>! IconAssetPaths) -> void
+Kazo.Os.App.Abstractions.PresentationManifest.Equals(Kazo.Os.App.Abstractions.PresentationManifest? other) -> bool
+Kazo.Os.App.Abstractions.PresentationManifest.IconAssetPaths.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.App.Abstractions.PresentationManifest.IconAssetPaths.init -> void
+Kazo.Os.App.Abstractions.PresentationManifest.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+Kazo.Os.App.Abstractions.PresentationManifest.LaunchVisibility.init -> void
+Kazo.Os.App.Abstractions.PresentationManifest.PresentationManifest(string! Category, Kazo.Os.App.Abstractions.AppLaunchVisibility LaunchVisibility, System.Collections.Generic.IReadOnlyList<string!>! IconAssetPaths) -> void
+Kazo.Os.App.Abstractions.RevealFileIntent
+Kazo.Os.App.Abstractions.RevealFileIntent.<Clone>$() -> Kazo.Os.App.Abstractions.RevealFileIntent!
+Kazo.Os.App.Abstractions.RevealFileIntent.Deconstruct(out Kazo.Os.App.Abstractions.VirtualPath Path) -> void
+Kazo.Os.App.Abstractions.RevealFileIntent.Equals(Kazo.Os.App.Abstractions.RevealFileIntent? other) -> bool
+Kazo.Os.App.Abstractions.RevealFileIntent.IntentId.get -> string!
+Kazo.Os.App.Abstractions.RevealFileIntent.Path.get -> Kazo.Os.App.Abstractions.VirtualPath
+Kazo.Os.App.Abstractions.RevealFileIntent.Path.init -> void
+Kazo.Os.App.Abstractions.RevealFileIntent.RevealFileIntent(Kazo.Os.App.Abstractions.VirtualPath Path) -> void
+Kazo.Os.App.Abstractions.SemanticVersion
+Kazo.Os.App.Abstractions.SemanticVersion.BuildMetadata.get -> string?
+Kazo.Os.App.Abstractions.SemanticVersion.CompareTo(Kazo.Os.App.Abstractions.SemanticVersion other) -> int
+Kazo.Os.App.Abstractions.SemanticVersion.Equals(Kazo.Os.App.Abstractions.SemanticVersion other) -> bool
+Kazo.Os.App.Abstractions.SemanticVersion.Major.get -> int
+Kazo.Os.App.Abstractions.SemanticVersion.Minor.get -> int
+Kazo.Os.App.Abstractions.SemanticVersion.Patch.get -> int
+Kazo.Os.App.Abstractions.SemanticVersion.PreRelease.get -> string?
+Kazo.Os.App.Abstractions.SemanticVersion.SemanticVersion() -> void
+Kazo.Os.App.Abstractions.ServiceStartMode
+Kazo.Os.App.Abstractions.ServiceStartMode.Automatic = 0 -> Kazo.Os.App.Abstractions.ServiceStartMode
+Kazo.Os.App.Abstractions.ServiceStartMode.Disabled = 2 -> Kazo.Os.App.Abstractions.ServiceStartMode
+Kazo.Os.App.Abstractions.ServiceStartMode.Manual = 1 -> Kazo.Os.App.Abstractions.ServiceStartMode
+Kazo.Os.App.Abstractions.ShowAppSettingsIntent
+Kazo.Os.App.Abstractions.ShowAppSettingsIntent.<Clone>$() -> Kazo.Os.App.Abstractions.ShowAppSettingsIntent!
+Kazo.Os.App.Abstractions.ShowAppSettingsIntent.Deconstruct(out string! TargetAppId) -> void
+Kazo.Os.App.Abstractions.ShowAppSettingsIntent.Equals(Kazo.Os.App.Abstractions.ShowAppSettingsIntent? other) -> bool
+Kazo.Os.App.Abstractions.ShowAppSettingsIntent.IntentId.get -> string!
+Kazo.Os.App.Abstractions.ShowAppSettingsIntent.ShowAppSettingsIntent(string! TargetAppId) -> void
+Kazo.Os.App.Abstractions.ShowAppSettingsIntent.TargetAppId.get -> string!
+Kazo.Os.App.Abstractions.ShowAppSettingsIntent.TargetAppId.init -> void
+Kazo.Os.App.Abstractions.TerminalCommand
+Kazo.Os.App.Abstractions.TerminalCommand.<Clone>$() -> Kazo.Os.App.Abstractions.TerminalCommand!
+Kazo.Os.App.Abstractions.TerminalCommand.Aliases.get -> System.Collections.Generic.IReadOnlyList<string!>?
+Kazo.Os.App.Abstractions.TerminalCommand.Aliases.init -> void
+Kazo.Os.App.Abstractions.TerminalCommand.Deconstruct(out string! Name, out string! Usage, out System.Collections.Generic.IReadOnlyList<string!>? Aliases) -> void
+Kazo.Os.App.Abstractions.TerminalCommand.Equals(Kazo.Os.App.Abstractions.TerminalCommand? other) -> bool
+Kazo.Os.App.Abstractions.TerminalCommand.Name.get -> string!
+Kazo.Os.App.Abstractions.TerminalCommand.Name.init -> void
+Kazo.Os.App.Abstractions.TerminalCommand.TerminalCommand(string! Name, string! Usage, System.Collections.Generic.IReadOnlyList<string!>? Aliases = null) -> void
+Kazo.Os.App.Abstractions.TerminalCommand.Usage.get -> string!
+Kazo.Os.App.Abstractions.TerminalCommand.Usage.init -> void
+Kazo.Os.App.Abstractions.TerminalCommandManifest
+Kazo.Os.App.Abstractions.TerminalCommandManifest.<Clone>$() -> Kazo.Os.App.Abstractions.TerminalCommandManifest!
+Kazo.Os.App.Abstractions.TerminalCommandManifest.Aliases.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.App.Abstractions.TerminalCommandManifest.Aliases.init -> void
+Kazo.Os.App.Abstractions.TerminalCommandManifest.Deconstruct(out string! Name, out System.Collections.Generic.IReadOnlyList<string!>! Aliases, out string! Usage) -> void
+Kazo.Os.App.Abstractions.TerminalCommandManifest.Equals(Kazo.Os.App.Abstractions.TerminalCommandManifest? other) -> bool
+Kazo.Os.App.Abstractions.TerminalCommandManifest.Name.get -> string!
+Kazo.Os.App.Abstractions.TerminalCommandManifest.Name.init -> void
+Kazo.Os.App.Abstractions.TerminalCommandManifest.TerminalCommandManifest(string! Name, System.Collections.Generic.IReadOnlyList<string!>! Aliases, string! Usage) -> void
+Kazo.Os.App.Abstractions.TerminalCommandManifest.Usage.get -> string!
+Kazo.Os.App.Abstractions.TerminalCommandManifest.Usage.init -> void
+Kazo.Os.App.Abstractions.TopicPermissionDeclarationManifest
+Kazo.Os.App.Abstractions.TopicPermissionDeclarationManifest.<Clone>$() -> Kazo.Os.App.Abstractions.TopicPermissionDeclarationManifest!
+Kazo.Os.App.Abstractions.TopicPermissionDeclarationManifest.Deconstruct(out string! Id, out string! Description) -> void
+Kazo.Os.App.Abstractions.TopicPermissionDeclarationManifest.Description.get -> string!
+Kazo.Os.App.Abstractions.TopicPermissionDeclarationManifest.Description.init -> void
+Kazo.Os.App.Abstractions.TopicPermissionDeclarationManifest.Equals(Kazo.Os.App.Abstractions.TopicPermissionDeclarationManifest? other) -> bool
+Kazo.Os.App.Abstractions.TopicPermissionDeclarationManifest.Id.get -> string!
+Kazo.Os.App.Abstractions.TopicPermissionDeclarationManifest.Id.init -> void
+Kazo.Os.App.Abstractions.TopicPermissionDeclarationManifest.TopicPermissionDeclarationManifest(string! Id, string! Description) -> void
+Kazo.Os.App.Abstractions.TopicPermissions
+Kazo.Os.App.Abstractions.UpdateManifest
+Kazo.Os.App.Abstractions.UpdateManifest.<Clone>$() -> Kazo.Os.App.Abstractions.UpdateManifest!
+Kazo.Os.App.Abstractions.UpdateManifest.Deconstruct(out System.Collections.Generic.IReadOnlyList<string!>! MigrationIds, out string? MinimumUpgradableVersion) -> void
+Kazo.Os.App.Abstractions.UpdateManifest.Equals(Kazo.Os.App.Abstractions.UpdateManifest? other) -> bool
+Kazo.Os.App.Abstractions.UpdateManifest.MigrationIds.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.App.Abstractions.UpdateManifest.MigrationIds.init -> void
+Kazo.Os.App.Abstractions.UpdateManifest.MinimumUpgradableVersion.get -> string?
+Kazo.Os.App.Abstractions.UpdateManifest.MinimumUpgradableVersion.init -> void
+Kazo.Os.App.Abstractions.UpdateManifest.UpdateManifest(System.Collections.Generic.IReadOnlyList<string!>! MigrationIds, string? MinimumUpgradableVersion = null) -> void
+Kazo.Os.App.Abstractions.VirtualPath
+Kazo.Os.App.Abstractions.VirtualPath.Equals(Kazo.Os.App.Abstractions.VirtualPath other) -> bool
+Kazo.Os.App.Abstractions.VirtualPath.Value.get -> string!
+Kazo.Os.App.Abstractions.VirtualPath.VirtualPath() -> void
+Kazo.Os.App.Abstractions.WebAppManifest
+Kazo.Os.App.Abstractions.WebAppManifest.<Clone>$() -> Kazo.Os.App.Abstractions.WebAppManifest!
+Kazo.Os.App.Abstractions.WebAppManifest.Blazor.get -> Kazo.Os.App.Abstractions.WebBlazorManifest?
+Kazo.Os.App.Abstractions.WebAppManifest.Blazor.init -> void
+Kazo.Os.App.Abstractions.WebAppManifest.Deconstruct(out System.Collections.Generic.IReadOnlyList<string!>! Urls, out Kazo.Os.App.Abstractions.WebBlazorManifest? Blazor) -> void
+Kazo.Os.App.Abstractions.WebAppManifest.Equals(Kazo.Os.App.Abstractions.WebAppManifest? other) -> bool
+Kazo.Os.App.Abstractions.WebAppManifest.Urls.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.App.Abstractions.WebAppManifest.Urls.init -> void
+Kazo.Os.App.Abstractions.WebAppManifest.WebAppManifest(System.Collections.Generic.IReadOnlyList<string!>! Urls, Kazo.Os.App.Abstractions.WebBlazorManifest? Blazor = null) -> void
+Kazo.Os.App.Abstractions.WebAppUrls
+Kazo.Os.App.Abstractions.WebBinding
+Kazo.Os.App.Abstractions.WebBinding.Deconstruct(out string! Scheme, out string! Host, out int Port, out string! Path) -> void
+Kazo.Os.App.Abstractions.WebBinding.Equals(Kazo.Os.App.Abstractions.WebBinding other) -> bool
+Kazo.Os.App.Abstractions.WebBinding.Host.get -> string!
+Kazo.Os.App.Abstractions.WebBinding.Host.init -> void
+Kazo.Os.App.Abstractions.WebBinding.IsLoopbackHost.get -> bool
+Kazo.Os.App.Abstractions.WebBinding.IsPrivilegedPort.get -> bool
+Kazo.Os.App.Abstractions.WebBinding.IsWildcard.get -> bool
+Kazo.Os.App.Abstractions.WebBinding.Path.get -> string!
+Kazo.Os.App.Abstractions.WebBinding.Path.init -> void
+Kazo.Os.App.Abstractions.WebBinding.Port.get -> int
+Kazo.Os.App.Abstractions.WebBinding.Port.init -> void
+Kazo.Os.App.Abstractions.WebBinding.Scheme.get -> string!
+Kazo.Os.App.Abstractions.WebBinding.Scheme.init -> void
+Kazo.Os.App.Abstractions.WebBinding.WebBinding() -> void
+Kazo.Os.App.Abstractions.WebBinding.WebBinding(string! Scheme, string! Host, int Port, string! Path) -> void
+Kazo.Os.App.Abstractions.WebBlazorManifest
+Kazo.Os.App.Abstractions.WebBlazorManifest.<Clone>$() -> Kazo.Os.App.Abstractions.WebBlazorManifest!
+Kazo.Os.App.Abstractions.WebBlazorManifest.Assembly.get -> string!
+Kazo.Os.App.Abstractions.WebBlazorManifest.Assembly.init -> void
+Kazo.Os.App.Abstractions.WebBlazorManifest.Deconstruct(out string! Assembly, out string! Type) -> void
+Kazo.Os.App.Abstractions.WebBlazorManifest.Equals(Kazo.Os.App.Abstractions.WebBlazorManifest? other) -> bool
+Kazo.Os.App.Abstractions.WebBlazorManifest.Type.get -> string!
+Kazo.Os.App.Abstractions.WebBlazorManifest.Type.init -> void
+Kazo.Os.App.Abstractions.WebBlazorManifest.WebBlazorManifest(string! Assembly, string! Type) -> void
+Kazo.Os.App.Abstractions.WellKnownAppPlatformCapabilities
+Kazo.Os.App.Abstractions.WellKnownAppPlatforms
+Kazo.Os.App.Abstractions.WindowOptions
+Kazo.Os.App.Abstractions.WindowOptions.<Clone>$() -> Kazo.Os.App.Abstractions.WindowOptions!
+Kazo.Os.App.Abstractions.WindowOptions.DefaultHeight.get -> int
+Kazo.Os.App.Abstractions.WindowOptions.DefaultHeight.init -> void
+Kazo.Os.App.Abstractions.WindowOptions.DefaultWidth.get -> int
+Kazo.Os.App.Abstractions.WindowOptions.DefaultWidth.init -> void
+Kazo.Os.App.Abstractions.WindowOptions.Equals(Kazo.Os.App.Abstractions.WindowOptions? other) -> bool
+Kazo.Os.App.Abstractions.WindowOptions.MaxHeight.get -> int?
+Kazo.Os.App.Abstractions.WindowOptions.MaxHeight.init -> void
+Kazo.Os.App.Abstractions.WindowOptions.MaxWidth.get -> int?
+Kazo.Os.App.Abstractions.WindowOptions.MaxWidth.init -> void
+Kazo.Os.App.Abstractions.WindowOptions.MinHeight.get -> int
+Kazo.Os.App.Abstractions.WindowOptions.MinHeight.init -> void
+Kazo.Os.App.Abstractions.WindowOptions.MinWidth.get -> int
+Kazo.Os.App.Abstractions.WindowOptions.MinWidth.init -> void
+Kazo.Os.App.Abstractions.WindowOptions.RememberGeometry.get -> bool
+Kazo.Os.App.Abstractions.WindowOptions.RememberGeometry.init -> void
+Kazo.Os.App.Abstractions.WindowOptions.Resizable.get -> bool
+Kazo.Os.App.Abstractions.WindowOptions.Resizable.init -> void
+Kazo.Os.App.Abstractions.WindowOptions.WindowOptions(int defaultWidth = 800, int defaultHeight = 560, int minWidth = 360, int minHeight = 240, int? maxWidth = null, int? maxHeight = null, bool resizable = true) -> void
+abstract Kazo.Os.App.Abstractions.AppDefinition.EntryPoint.get -> System.Type!
+abstract Kazo.Os.App.Abstractions.AppDefinition.Id.get -> string!
+abstract Kazo.Os.App.Abstractions.AppDefinition.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+abstract Kazo.Os.App.Abstractions.AppDefinition.Name.get -> string!
+abstract Kazo.Os.App.Abstractions.Policy.CapabilityConstraint.<Clone>$() -> Kazo.Os.App.Abstractions.Policy.CapabilityConstraint!
+abstract Kazo.Os.App.Abstractions.Policy.CapabilityConstraint.Kind.get -> Kazo.Os.App.Abstractions.Policy.CapabilityConstraintKind
+abstract Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidate.<Clone>$() -> Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidate!
+abstract Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidate.Kind.get -> Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidateKind
+const Kazo.Os.App.Abstractions.AppCapabilities.AppsLaunch = "apps.launch" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.AppsManage = "apps.manage" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.ClipboardRead = "clipboard.read" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.ClipboardWrite = "clipboard.write" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.DialogFileOpen = "dialogs.file-open" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.DialogFileSave = "dialogs.file-save" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.DialogFolderSelect = "dialogs.folder-select" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.FileAssociationsRead = "file-associations.read" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.FileAssociationsWrite = "file-associations.write" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.FileSystemPrivateRead = "filesystem.private.read" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.FileSystemPrivateWrite = "filesystem.private.write" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.FileSystemSystemRead = "filesystem.system.read" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.FileSystemSystemWrite = "filesystem.system.write" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.FileSystemUserHomeRead = "filesystem.user-home.read" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.FileSystemUserHomeWrite = "filesystem.user-home.write" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.FileSystemUserSelectedRead = "filesystem.user-selected.read" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.FileSystemUserSelectedWrite = "filesystem.user-selected.write" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.KeyringReadAll = "keyring.read-all" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.NetworkListen = "network.listen" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.NetworkListenPrivileged = "network.listen.privileged" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.NetworkRealAccess = "network.real.access" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.NetworkSimulatedRead = "network.simulated.read" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.NetworkSimulatedWrite = "network.simulated.write" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.NotificationsPost = "notifications.post" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.PermissionsManage = "permissions.manage" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.ProcessList = "process.list" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.ProcessManage = "process.manage" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.ScreensManage = "screens.manage" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.ServerConnectionManage = "server.connection.manage" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.ServicesManage = "services.manage" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.ShellContextMenu = "shell.context-menu" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.ShellControl = "shell.control" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.ShellHost = "shell.host" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.SystemBackup = "system.backup" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.SystemPower = "system.power" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.SystemStorageInspect = "system.storage.inspect" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.UsersManage = "users.manage" -> string!
+const Kazo.Os.App.Abstractions.AppCapabilities.WindowsManage = "windows.manage" -> string!
+const Kazo.Os.App.Abstractions.AppComponentContracts.ContextMenu = "kazoos.context-menu" -> string!
+const Kazo.Os.App.Abstractions.AppComponentContracts.FileDialogs = "kazoos.file-dialogs" -> string!
+const Kazo.Os.App.Abstractions.AppComponentContracts.FileView = "kazoos.file-view" -> string!
+const Kazo.Os.App.Abstractions.AppContextMenus.BackgroundScope = "background" -> string!
+const Kazo.Os.App.Abstractions.AppContextMenus.DesktopScope = "desktop" -> string!
+const Kazo.Os.App.Abstractions.AppContextMenus.DirectoryScope = "directory" -> string!
+const Kazo.Os.App.Abstractions.AppContextMenus.EnglishCulture = "en" -> string!
+const Kazo.Os.App.Abstractions.AppContextMenus.FileScope = "file" -> string!
+const Kazo.Os.App.Abstractions.AppContextMenus.ImageIcon = "image" -> string!
+const Kazo.Os.App.Abstractions.AppContextMenus.MaxDepth = 3 -> int
+const Kazo.Os.App.Abstractions.AppContextMenus.MaxScreenNumber = 9 -> int
+const Kazo.Os.App.Abstractions.AppContextMenus.MinScreenNumber = 2 -> int
+const Kazo.Os.App.Abstractions.AppContextMenus.ScreensMultiple = "multiple" -> string!
+const Kazo.Os.App.Abstractions.AppContextMenus.ScreensSingle = "single" -> string!
+const Kazo.Os.App.Abstractions.AppContextMenus.SelectionAll = "all" -> string!
+const Kazo.Os.App.Abstractions.AppContextMenus.SelectionEach = "each" -> string!
+const Kazo.Os.App.Abstractions.AppContextMenus.SelectionSingle = "single" -> string!
+const Kazo.Os.App.Abstractions.AppContextMenus.SelfTarget = "self" -> string!
+const Kazo.Os.App.Abstractions.AppContextMenus.VectorIcon = "vector" -> string!
+const Kazo.Os.App.Abstractions.AppIntentIds.EditFile = "org.kazoos.intent.edit-file.v1" -> string!
+const Kazo.Os.App.Abstractions.AppIntentIds.ExecuteCommand = "org.kazoos.intent.execute-command.v1" -> string!
+const Kazo.Os.App.Abstractions.AppIntentIds.LaunchApp = "org.kazoos.intent.launch-app.v1" -> string!
+const Kazo.Os.App.Abstractions.AppIntentIds.MaxCustomPayloadBytes = 65536 -> int
+const Kazo.Os.App.Abstractions.AppIntentIds.OpenFile = "org.kazoos.intent.open-file.v1" -> string!
+const Kazo.Os.App.Abstractions.AppIntentIds.OpenUri = "org.kazoos.intent.open-uri.v1" -> string!
+const Kazo.Os.App.Abstractions.AppIntentIds.RevealFile = "org.kazoos.intent.reveal-file.v1" -> string!
+const Kazo.Os.App.Abstractions.AppIntentIds.SchemeHandlerMediaTypePrefix = "x-scheme-handler/" -> string!
+const Kazo.Os.App.Abstractions.AppIntentIds.ShowAppSettings = "org.kazoos.intent.show-app-settings.v1" -> string!
+const Kazo.Os.App.Abstractions.AppPlatformId.MaximumLength = 32 -> int
+const Kazo.Os.App.Abstractions.BuiltInApplicationsJsonSerializer.ResourceName = "Kazo.Os.BuiltInApplications.json" -> string!
+const Kazo.Os.App.Abstractions.TopicPermissions.PublishPrefix = "topic-publish:" -> string!
+const Kazo.Os.App.Abstractions.TopicPermissions.SubscribePrefix = "topic-subscribe:" -> string!
+const Kazo.Os.App.Abstractions.VirtualPath.MaximumPathUtf8ByteLength = 4096 -> int
+const Kazo.Os.App.Abstractions.VirtualPath.MaximumSegmentUtf8ByteLength = 255 -> int
+const Kazo.Os.App.Abstractions.WebAppUrls.FirstUnprivilegedPort = 1024 -> int
+const Kazo.Os.App.Abstractions.WebAppUrls.InternalDomain = "hack" -> string!
+const Kazo.Os.App.Abstractions.WindowOptions.StandardHeight = 560 -> int
+const Kazo.Os.App.Abstractions.WindowOptions.StandardMinHeight = 240 -> int
+const Kazo.Os.App.Abstractions.WindowOptions.StandardMinWidth = 360 -> int
+const Kazo.Os.App.Abstractions.WindowOptions.StandardWidth = 800 -> int
+override Kazo.Os.App.Abstractions.AppComponent.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.AppComponent.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.AppComponent.ToString() -> string!
+override Kazo.Os.App.Abstractions.AppComponentManifest.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.AppComponentManifest.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.AppComponentManifest.ToString() -> string!
+override Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.ToString() -> string!
+override Kazo.Os.App.Abstractions.AppContextMenuIconManifest.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.AppContextMenuIconManifest.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.AppContextMenuIconManifest.ToString() -> string!
+override Kazo.Os.App.Abstractions.AppContextMenuTitleManifest.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.AppContextMenuTitleManifest.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.AppContextMenuTitleManifest.ToString() -> string!
+override Kazo.Os.App.Abstractions.AppDependencyManifest.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.AppDependencyManifest.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.AppDependencyManifest.ToString() -> string!
+override Kazo.Os.App.Abstractions.AppEntryPointManifest.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.AppEntryPointManifest.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.AppEntryPointManifest.ToString() -> string!
+override Kazo.Os.App.Abstractions.AppImage.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.AppImage.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.AppImage.ToString() -> string!
+override Kazo.Os.App.Abstractions.AppImageAssembly.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.AppImageAssembly.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.AppImageAssembly.ToString() -> string!
+override Kazo.Os.App.Abstractions.AppIntentDeclarationManifest.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.AppIntentDeclarationManifest.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.AppIntentDeclarationManifest.ToString() -> string!
+override Kazo.Os.App.Abstractions.AppIntentDelivery.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.AppIntentDelivery.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.AppIntentDelivery.ToString() -> string!
+override Kazo.Os.App.Abstractions.AppIntentRequest.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.AppIntentRequest.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.AppIntentRequest.ToString() -> string!
+override Kazo.Os.App.Abstractions.AppManifest.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.AppManifest.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.AppManifest.ToString() -> string!
+override Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.GetTypeInfo(System.Type! type) -> System.Text.Json.Serialization.Metadata.JsonTypeInfo?
+override Kazo.Os.App.Abstractions.AppManifestPlatform.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.AppManifestPlatform.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.AppManifestPlatform.ToString() -> string!
+override Kazo.Os.App.Abstractions.AppManifestPlatformResolution.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.AppManifestPlatformResolution.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.AppManifestPlatformResolution.ToString() -> string!
+override Kazo.Os.App.Abstractions.AppManifestText.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.AppManifestText.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.AppManifestText.ToString() -> string!
+override Kazo.Os.App.Abstractions.AppOperationContext.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.AppOperationContext.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.AppOperationContext.ToString() -> string!
+override Kazo.Os.App.Abstractions.AppPlatformCapabilities.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.AppPlatformCapabilities.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.AppPlatformCapabilities.ToString() -> string!
+override Kazo.Os.App.Abstractions.AppPlatformEntryPointManifest.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.AppPlatformEntryPointManifest.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.AppPlatformEntryPointManifest.ToString() -> string!
+override Kazo.Os.App.Abstractions.AppPlatformId.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.AppPlatformId.ToString() -> string!
+override Kazo.Os.App.Abstractions.AppResourceProfileManifest.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.AppResourceProfileManifest.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.AppResourceProfileManifest.ToString() -> string!
+override Kazo.Os.App.Abstractions.AppSdkCompatibilityManifest.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.AppSdkCompatibilityManifest.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.AppSdkCompatibilityManifest.ToString() -> string!
+override Kazo.Os.App.Abstractions.AppSettingFieldManifest.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.AppSettingFieldManifest.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.AppSettingFieldManifest.ToString() -> string!
+override Kazo.Os.App.Abstractions.AppSettingsSchemaManifest.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.AppSettingsSchemaManifest.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.AppSettingsSchemaManifest.ToString() -> string!
+override Kazo.Os.App.Abstractions.AssetManifest.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.AssetManifest.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.AssetManifest.ToString() -> string!
+override Kazo.Os.App.Abstractions.BuiltInApplication.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.BuiltInApplication.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.BuiltInApplication.ToString() -> string!
+override Kazo.Os.App.Abstractions.CapabilityDescription.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.CapabilityDescription.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.CapabilityDescription.ToString() -> string!
+override Kazo.Os.App.Abstractions.CustomIntent.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.CustomIntent.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.CustomIntent.ToString() -> string!
+override Kazo.Os.App.Abstractions.EditFileIntent.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.EditFileIntent.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.EditFileIntent.ToString() -> string!
+override Kazo.Os.App.Abstractions.ExecuteCommandIntent.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.ExecuteCommandIntent.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.ExecuteCommandIntent.ToString() -> string!
+override Kazo.Os.App.Abstractions.FileHandler.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.FileHandler.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.FileHandler.ToString() -> string!
+override Kazo.Os.App.Abstractions.FileHandlerManifest.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.FileHandlerManifest.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.FileHandlerManifest.ToString() -> string!
+override Kazo.Os.App.Abstractions.LaunchAppIntent.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.LaunchAppIntent.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.LaunchAppIntent.ToString() -> string!
+override Kazo.Os.App.Abstractions.LocalizationManifest.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.LocalizationManifest.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.LocalizationManifest.ToString() -> string!
+override Kazo.Os.App.Abstractions.ManifestValidationError.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.ManifestValidationError.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.ManifestValidationError.ToString() -> string!
+override Kazo.Os.App.Abstractions.ManifestValidationResult.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.ManifestValidationResult.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.ManifestValidationResult.ToString() -> string!
+override Kazo.Os.App.Abstractions.OpenFileIntent.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.OpenFileIntent.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.OpenFileIntent.ToString() -> string!
+override Kazo.Os.App.Abstractions.OpenUriIntent.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.OpenUriIntent.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.OpenUriIntent.ToString() -> string!
+override Kazo.Os.App.Abstractions.OsCompatibilityManifest.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.OsCompatibilityManifest.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.OsCompatibilityManifest.ToString() -> string!
+override Kazo.Os.App.Abstractions.PersistedAppCatalogEntry.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.PersistedAppCatalogEntry.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.PersistedAppCatalogEntry.ToString() -> string!
+override Kazo.Os.App.Abstractions.Policy.AdminElevationVerificationResult.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.Policy.AdminElevationVerificationResult.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.Policy.AdminElevationVerificationResult.ToString() -> string!
+override Kazo.Os.App.Abstractions.Policy.CapabilityConstraint.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.Policy.CapabilityConstraint.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.Policy.CapabilityConstraint.ToString() -> string!
+override Kazo.Os.App.Abstractions.Policy.CapabilityGrant.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.Policy.CapabilityGrant.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.Policy.CapabilityGrant.ToString() -> string!
+override Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditEntry.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditEntry.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditEntry.ToString() -> string!
+override Kazo.Os.App.Abstractions.Policy.CapabilityGrantId.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.Policy.CapabilityGrantId.ToString() -> string!
+override Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationResult.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationResult.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationResult.ToString() -> string!
+override Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluation.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidate.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidate.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidate.ToString() -> string!
+override Kazo.Os.App.Abstractions.Policy.ElevationRequestResult.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.Policy.ElevationRequestResult.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.Policy.ElevationRequestResult.ToString() -> string!
+override Kazo.Os.App.Abstractions.Policy.ElevationTicket.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.Policy.ElevationTicket.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.Policy.ElevationTicket.ToString() -> string!
+override Kazo.Os.App.Abstractions.Policy.NetworkHostCapabilityConstraint.<Clone>$() -> Kazo.Os.App.Abstractions.Policy.NetworkHostCapabilityConstraint!
+override Kazo.Os.App.Abstractions.Policy.NetworkHostCapabilityConstraint.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.Policy.NetworkHostCapabilityConstraint.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.Policy.NetworkHostCapabilityConstraint.Kind.get -> Kazo.Os.App.Abstractions.Policy.CapabilityConstraintKind
+override Kazo.Os.App.Abstractions.Policy.NetworkHostCapabilityConstraint.ToString() -> string!
+override Kazo.Os.App.Abstractions.Policy.NetworkHostResourceCandidate.<Clone>$() -> Kazo.Os.App.Abstractions.Policy.NetworkHostResourceCandidate!
+override Kazo.Os.App.Abstractions.Policy.NetworkHostResourceCandidate.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.Policy.NetworkHostResourceCandidate.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.Policy.NetworkHostResourceCandidate.Kind.get -> Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidateKind
+override Kazo.Os.App.Abstractions.Policy.NetworkHostResourceCandidate.ToString() -> string!
+override Kazo.Os.App.Abstractions.Policy.NetworkPortCapabilityConstraint.<Clone>$() -> Kazo.Os.App.Abstractions.Policy.NetworkPortCapabilityConstraint!
+override Kazo.Os.App.Abstractions.Policy.NetworkPortCapabilityConstraint.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.Policy.NetworkPortCapabilityConstraint.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.Policy.NetworkPortCapabilityConstraint.Kind.get -> Kazo.Os.App.Abstractions.Policy.CapabilityConstraintKind
+override Kazo.Os.App.Abstractions.Policy.NetworkPortCapabilityConstraint.ToString() -> string!
+override Kazo.Os.App.Abstractions.Policy.NetworkPortResourceCandidate.<Clone>$() -> Kazo.Os.App.Abstractions.Policy.NetworkPortResourceCandidate!
+override Kazo.Os.App.Abstractions.Policy.NetworkPortResourceCandidate.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.Policy.NetworkPortResourceCandidate.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.Policy.NetworkPortResourceCandidate.Kind.get -> Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidateKind
+override Kazo.Os.App.Abstractions.Policy.NetworkPortResourceCandidate.ToString() -> string!
+override Kazo.Os.App.Abstractions.Policy.VirtualPathCapabilityConstraint.<Clone>$() -> Kazo.Os.App.Abstractions.Policy.VirtualPathCapabilityConstraint!
+override Kazo.Os.App.Abstractions.Policy.VirtualPathCapabilityConstraint.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.Policy.VirtualPathCapabilityConstraint.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.Policy.VirtualPathCapabilityConstraint.Kind.get -> Kazo.Os.App.Abstractions.Policy.CapabilityConstraintKind
+override Kazo.Os.App.Abstractions.Policy.VirtualPathCapabilityConstraint.ToString() -> string!
+override Kazo.Os.App.Abstractions.Policy.VirtualPathResourceCandidate.<Clone>$() -> Kazo.Os.App.Abstractions.Policy.VirtualPathResourceCandidate!
+override Kazo.Os.App.Abstractions.Policy.VirtualPathResourceCandidate.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.Policy.VirtualPathResourceCandidate.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.Policy.VirtualPathResourceCandidate.Kind.get -> Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidateKind
+override Kazo.Os.App.Abstractions.Policy.VirtualPathResourceCandidate.ToString() -> string!
+override Kazo.Os.App.Abstractions.PresentationManifest.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.PresentationManifest.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.PresentationManifest.ToString() -> string!
+override Kazo.Os.App.Abstractions.RevealFileIntent.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.RevealFileIntent.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.RevealFileIntent.ToString() -> string!
+override Kazo.Os.App.Abstractions.SemanticVersion.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.SemanticVersion.ToString() -> string!
+override Kazo.Os.App.Abstractions.ShowAppSettingsIntent.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.ShowAppSettingsIntent.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.ShowAppSettingsIntent.ToString() -> string!
+override Kazo.Os.App.Abstractions.TerminalCommand.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.TerminalCommand.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.TerminalCommand.ToString() -> string!
+override Kazo.Os.App.Abstractions.TerminalCommandManifest.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.TerminalCommandManifest.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.TerminalCommandManifest.ToString() -> string!
+override Kazo.Os.App.Abstractions.TopicPermissionDeclarationManifest.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.TopicPermissionDeclarationManifest.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.TopicPermissionDeclarationManifest.ToString() -> string!
+override Kazo.Os.App.Abstractions.UpdateManifest.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.UpdateManifest.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.UpdateManifest.ToString() -> string!
+override Kazo.Os.App.Abstractions.VirtualPath.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.VirtualPath.ToString() -> string!
+override Kazo.Os.App.Abstractions.WebAppManifest.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.WebAppManifest.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.WebAppManifest.ToString() -> string!
+override Kazo.Os.App.Abstractions.WebBinding.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.WebBinding.ToString() -> string!
+override Kazo.Os.App.Abstractions.WebBlazorManifest.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.WebBlazorManifest.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.WebBlazorManifest.ToString() -> string!
+override Kazo.Os.App.Abstractions.WindowOptions.Equals(object? obj) -> bool
+override Kazo.Os.App.Abstractions.WindowOptions.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.WindowOptions.ToString() -> string!
+override sealed Kazo.Os.App.Abstractions.Policy.NetworkHostCapabilityConstraint.Equals(Kazo.Os.App.Abstractions.Policy.CapabilityConstraint? other) -> bool
+override sealed Kazo.Os.App.Abstractions.Policy.NetworkHostResourceCandidate.Equals(Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidate? other) -> bool
+override sealed Kazo.Os.App.Abstractions.Policy.NetworkPortCapabilityConstraint.Equals(Kazo.Os.App.Abstractions.Policy.CapabilityConstraint? other) -> bool
+override sealed Kazo.Os.App.Abstractions.Policy.NetworkPortResourceCandidate.Equals(Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidate? other) -> bool
+override sealed Kazo.Os.App.Abstractions.Policy.VirtualPathCapabilityConstraint.Equals(Kazo.Os.App.Abstractions.Policy.CapabilityConstraint? other) -> bool
+override sealed Kazo.Os.App.Abstractions.Policy.VirtualPathResourceCandidate.Equals(Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidate? other) -> bool
+static Kazo.Os.App.Abstractions.AppAuthorityPolicy.Satisfies(Kazo.Os.App.Abstractions.AppAuthority actual, Kazo.Os.App.Abstractions.AppAuthority required) -> bool
+static Kazo.Os.App.Abstractions.AppCapabilities.All.get -> System.Collections.Generic.IReadOnlySet<string!>!
+static Kazo.Os.App.Abstractions.AppCapabilities.Describe(string! capability) -> Kazo.Os.App.Abstractions.CapabilityDescription!
+static Kazo.Os.App.Abstractions.AppCapabilities.GetRisk(string! capability) -> Kazo.Os.App.Abstractions.CapabilityRisk
+static Kazo.Os.App.Abstractions.AppCapabilities.IsDangerous(string! capability) -> bool
+static Kazo.Os.App.Abstractions.AppCapabilities.IsKnown(string! capability) -> bool
+static Kazo.Os.App.Abstractions.AppCapabilities.RequiresWindowKind(string! capability) -> bool
+static Kazo.Os.App.Abstractions.AppCapabilityPolicy.IsGranted(System.Collections.Generic.IEnumerable<string!>! grantedCapabilities, string! requestedCapability) -> bool
+static Kazo.Os.App.Abstractions.AppComponent.operator !=(Kazo.Os.App.Abstractions.AppComponent? left, Kazo.Os.App.Abstractions.AppComponent? right) -> bool
+static Kazo.Os.App.Abstractions.AppComponent.operator ==(Kazo.Os.App.Abstractions.AppComponent? left, Kazo.Os.App.Abstractions.AppComponent? right) -> bool
+static Kazo.Os.App.Abstractions.AppComponentContracts.GetProviderScope(string! contract) -> Kazo.Os.App.Abstractions.AppComponentProviderScope
+static Kazo.Os.App.Abstractions.AppComponentManifest.operator !=(Kazo.Os.App.Abstractions.AppComponentManifest? left, Kazo.Os.App.Abstractions.AppComponentManifest? right) -> bool
+static Kazo.Os.App.Abstractions.AppComponentManifest.operator ==(Kazo.Os.App.Abstractions.AppComponentManifest? left, Kazo.Os.App.Abstractions.AppComponentManifest? right) -> bool
+static Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.operator !=(Kazo.Os.App.Abstractions.AppContextMenuEntryManifest? left, Kazo.Os.App.Abstractions.AppContextMenuEntryManifest? right) -> bool
+static Kazo.Os.App.Abstractions.AppContextMenuEntryManifest.operator ==(Kazo.Os.App.Abstractions.AppContextMenuEntryManifest? left, Kazo.Os.App.Abstractions.AppContextMenuEntryManifest? right) -> bool
+static Kazo.Os.App.Abstractions.AppContextMenuIconManifest.operator !=(Kazo.Os.App.Abstractions.AppContextMenuIconManifest? left, Kazo.Os.App.Abstractions.AppContextMenuIconManifest? right) -> bool
+static Kazo.Os.App.Abstractions.AppContextMenuIconManifest.operator ==(Kazo.Os.App.Abstractions.AppContextMenuIconManifest? left, Kazo.Os.App.Abstractions.AppContextMenuIconManifest? right) -> bool
+static Kazo.Os.App.Abstractions.AppContextMenuTitleManifest.operator !=(Kazo.Os.App.Abstractions.AppContextMenuTitleManifest? left, Kazo.Os.App.Abstractions.AppContextMenuTitleManifest? right) -> bool
+static Kazo.Os.App.Abstractions.AppContextMenuTitleManifest.operator ==(Kazo.Os.App.Abstractions.AppContextMenuTitleManifest? left, Kazo.Os.App.Abstractions.AppContextMenuTitleManifest? right) -> bool
+static Kazo.Os.App.Abstractions.AppContextMenus.DefaultItemIds.get -> System.Collections.Generic.IReadOnlySet<string!>!
+static Kazo.Os.App.Abstractions.AppContextMenus.Scopes.get -> System.Collections.Generic.IReadOnlyList<string!>!
+static Kazo.Os.App.Abstractions.AppContextMenus.Selections.get -> System.Collections.Generic.IReadOnlyList<string!>!
+static Kazo.Os.App.Abstractions.AppContextMenus.VectorLibraries.get -> System.Collections.Generic.IReadOnlyList<string!>!
+static Kazo.Os.App.Abstractions.AppDefinitionMapper.ToManifest(Kazo.Os.App.Abstractions.AppDefinition! definition) -> Kazo.Os.App.Abstractions.AppManifest!
+static Kazo.Os.App.Abstractions.AppDefinitionMapper.ToManifest(Kazo.Os.App.Abstractions.AppDefinition! definition, string! sdkMinimumVersion) -> Kazo.Os.App.Abstractions.AppManifest!
+static Kazo.Os.App.Abstractions.AppDependencyManifest.operator !=(Kazo.Os.App.Abstractions.AppDependencyManifest? left, Kazo.Os.App.Abstractions.AppDependencyManifest? right) -> bool
+static Kazo.Os.App.Abstractions.AppDependencyManifest.operator ==(Kazo.Os.App.Abstractions.AppDependencyManifest? left, Kazo.Os.App.Abstractions.AppDependencyManifest? right) -> bool
+static Kazo.Os.App.Abstractions.AppEntryPointManifest.operator !=(Kazo.Os.App.Abstractions.AppEntryPointManifest? left, Kazo.Os.App.Abstractions.AppEntryPointManifest? right) -> bool
+static Kazo.Os.App.Abstractions.AppEntryPointManifest.operator ==(Kazo.Os.App.Abstractions.AppEntryPointManifest? left, Kazo.Os.App.Abstractions.AppEntryPointManifest? right) -> bool
+static Kazo.Os.App.Abstractions.AppExecutionHosts.DefaultFor(Kazo.Os.App.Abstractions.AppKind kind) -> Kazo.Os.App.Abstractions.AppExecutionHost
+static Kazo.Os.App.Abstractions.AppExecutionHosts.IsWorker(Kazo.Os.App.Abstractions.AppExecutionHost host) -> bool
+static Kazo.Os.App.Abstractions.AppExecutionHosts.Of(Kazo.Os.App.Abstractions.AppManifest! manifest) -> Kazo.Os.App.Abstractions.AppExecutionHost
+static Kazo.Os.App.Abstractions.AppExecutionHosts.Resolve(Kazo.Os.App.Abstractions.AppKind kind, Kazo.Os.App.Abstractions.AppExecutionHost? declared) -> Kazo.Os.App.Abstractions.AppExecutionHost
+static Kazo.Os.App.Abstractions.AppImage.Empty.get -> Kazo.Os.App.Abstractions.AppImage!
+static Kazo.Os.App.Abstractions.AppImage.operator !=(Kazo.Os.App.Abstractions.AppImage? left, Kazo.Os.App.Abstractions.AppImage? right) -> bool
+static Kazo.Os.App.Abstractions.AppImage.operator ==(Kazo.Os.App.Abstractions.AppImage? left, Kazo.Os.App.Abstractions.AppImage? right) -> bool
+static Kazo.Os.App.Abstractions.AppImageAssembly.operator !=(Kazo.Os.App.Abstractions.AppImageAssembly? left, Kazo.Os.App.Abstractions.AppImageAssembly? right) -> bool
+static Kazo.Os.App.Abstractions.AppImageAssembly.operator ==(Kazo.Os.App.Abstractions.AppImageAssembly? left, Kazo.Os.App.Abstractions.AppImageAssembly? right) -> bool
+static Kazo.Os.App.Abstractions.AppIntentDeclarationManifest.operator !=(Kazo.Os.App.Abstractions.AppIntentDeclarationManifest? left, Kazo.Os.App.Abstractions.AppIntentDeclarationManifest? right) -> bool
+static Kazo.Os.App.Abstractions.AppIntentDeclarationManifest.operator ==(Kazo.Os.App.Abstractions.AppIntentDeclarationManifest? left, Kazo.Os.App.Abstractions.AppIntentDeclarationManifest? right) -> bool
+static Kazo.Os.App.Abstractions.AppIntentDelivery.operator !=(Kazo.Os.App.Abstractions.AppIntentDelivery? left, Kazo.Os.App.Abstractions.AppIntentDelivery? right) -> bool
+static Kazo.Os.App.Abstractions.AppIntentDelivery.operator ==(Kazo.Os.App.Abstractions.AppIntentDelivery? left, Kazo.Os.App.Abstractions.AppIntentDelivery? right) -> bool
+static Kazo.Os.App.Abstractions.AppIntentIds.IsBuiltIn(string! intentId) -> bool
+static Kazo.Os.App.Abstractions.AppIntentIds.IsWellFormed(string? intentId) -> bool
+static Kazo.Os.App.Abstractions.AppIntentRequest.operator !=(Kazo.Os.App.Abstractions.AppIntentRequest? left, Kazo.Os.App.Abstractions.AppIntentRequest? right) -> bool
+static Kazo.Os.App.Abstractions.AppIntentRequest.operator ==(Kazo.Os.App.Abstractions.AppIntentRequest? left, Kazo.Os.App.Abstractions.AppIntentRequest? right) -> bool
+static Kazo.Os.App.Abstractions.AppManifest.operator !=(Kazo.Os.App.Abstractions.AppManifest? left, Kazo.Os.App.Abstractions.AppManifest? right) -> bool
+static Kazo.Os.App.Abstractions.AppManifest.operator ==(Kazo.Os.App.Abstractions.AppManifest? left, Kazo.Os.App.Abstractions.AppManifest? right) -> bool
+static Kazo.Os.App.Abstractions.AppManifestJsonSerializer.DeserializeStrict(string! json) -> Kazo.Os.App.Abstractions.AppManifest!
+static Kazo.Os.App.Abstractions.AppManifestJsonSerializer.NormalizeOptionalCollections(Kazo.Os.App.Abstractions.AppManifest! manifest) -> Kazo.Os.App.Abstractions.AppManifest!
+static Kazo.Os.App.Abstractions.AppManifestJsonSerializer.SerializeCanonical(Kazo.Os.App.Abstractions.AppManifest! manifest) -> string!
+static Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.Default.get -> Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext!
+static Kazo.Os.App.Abstractions.AppManifestLocalization.Apply(Kazo.Os.App.Abstractions.AppManifest! manifest, System.Collections.Generic.IReadOnlyDictionary<string!, Kazo.Os.App.Abstractions.AppManifestText!>? localized, System.Globalization.CultureInfo! culture) -> Kazo.Os.App.Abstractions.AppManifest!
+static Kazo.Os.App.Abstractions.AppManifestLocalization.Find(System.Collections.Generic.IReadOnlyDictionary<string!, Kazo.Os.App.Abstractions.AppManifestText!>? localized, System.Globalization.CultureInfo! culture) -> Kazo.Os.App.Abstractions.AppManifestText?
+static Kazo.Os.App.Abstractions.AppManifestPlatform.operator !=(Kazo.Os.App.Abstractions.AppManifestPlatform? left, Kazo.Os.App.Abstractions.AppManifestPlatform? right) -> bool
+static Kazo.Os.App.Abstractions.AppManifestPlatform.operator ==(Kazo.Os.App.Abstractions.AppManifestPlatform? left, Kazo.Os.App.Abstractions.AppManifestPlatform? right) -> bool
+static Kazo.Os.App.Abstractions.AppManifestPlatformResolution.operator !=(Kazo.Os.App.Abstractions.AppManifestPlatformResolution? left, Kazo.Os.App.Abstractions.AppManifestPlatformResolution? right) -> bool
+static Kazo.Os.App.Abstractions.AppManifestPlatformResolution.operator ==(Kazo.Os.App.Abstractions.AppManifestPlatformResolution? left, Kazo.Os.App.Abstractions.AppManifestPlatformResolution? right) -> bool
+static Kazo.Os.App.Abstractions.AppManifestPlatformSupport.Resolve(Kazo.Os.App.Abstractions.AppManifest! manifest) -> Kazo.Os.App.Abstractions.AppManifestPlatformResolution?
+static Kazo.Os.App.Abstractions.AppManifestText.operator !=(Kazo.Os.App.Abstractions.AppManifestText? left, Kazo.Os.App.Abstractions.AppManifestText? right) -> bool
+static Kazo.Os.App.Abstractions.AppManifestText.operator ==(Kazo.Os.App.Abstractions.AppManifestText? left, Kazo.Os.App.Abstractions.AppManifestText? right) -> bool
+static Kazo.Os.App.Abstractions.AppManifestTextJsonSerializer.DeserializeStrict(string! json) -> Kazo.Os.App.Abstractions.AppManifestText!
+static Kazo.Os.App.Abstractions.AppManifestTextJsonSerializer.SerializeCanonical(Kazo.Os.App.Abstractions.AppManifestText! text) -> string!
+static Kazo.Os.App.Abstractions.AppManifestValidator.Validate(Kazo.Os.App.Abstractions.AppManifest! manifest) -> Kazo.Os.App.Abstractions.ManifestValidationResult!
+static Kazo.Os.App.Abstractions.AppOperationContext.operator !=(Kazo.Os.App.Abstractions.AppOperationContext? left, Kazo.Os.App.Abstractions.AppOperationContext? right) -> bool
+static Kazo.Os.App.Abstractions.AppOperationContext.operator ==(Kazo.Os.App.Abstractions.AppOperationContext? left, Kazo.Os.App.Abstractions.AppOperationContext? right) -> bool
+static Kazo.Os.App.Abstractions.AppPlatformCapabilities.operator !=(Kazo.Os.App.Abstractions.AppPlatformCapabilities? left, Kazo.Os.App.Abstractions.AppPlatformCapabilities? right) -> bool
+static Kazo.Os.App.Abstractions.AppPlatformCapabilities.operator ==(Kazo.Os.App.Abstractions.AppPlatformCapabilities? left, Kazo.Os.App.Abstractions.AppPlatformCapabilities? right) -> bool
+static Kazo.Os.App.Abstractions.AppPlatformCapabilityRegistry.CreateWithWellKnownPlatforms() -> Kazo.Os.App.Abstractions.AppPlatformCapabilityRegistry!
+static Kazo.Os.App.Abstractions.AppPlatformEntryPointManifest.operator !=(Kazo.Os.App.Abstractions.AppPlatformEntryPointManifest? left, Kazo.Os.App.Abstractions.AppPlatformEntryPointManifest? right) -> bool
+static Kazo.Os.App.Abstractions.AppPlatformEntryPointManifest.operator ==(Kazo.Os.App.Abstractions.AppPlatformEntryPointManifest? left, Kazo.Os.App.Abstractions.AppPlatformEntryPointManifest? right) -> bool
+static Kazo.Os.App.Abstractions.AppPlatformId.Parse(string! value) -> Kazo.Os.App.Abstractions.AppPlatformId
+static Kazo.Os.App.Abstractions.AppPlatformId.TryParse(string? value, out Kazo.Os.App.Abstractions.AppPlatformId platformId) -> bool
+static Kazo.Os.App.Abstractions.AppPlatformId.operator !=(Kazo.Os.App.Abstractions.AppPlatformId left, Kazo.Os.App.Abstractions.AppPlatformId right) -> bool
+static Kazo.Os.App.Abstractions.AppPlatformId.operator ==(Kazo.Os.App.Abstractions.AppPlatformId left, Kazo.Os.App.Abstractions.AppPlatformId right) -> bool
+static Kazo.Os.App.Abstractions.AppResourceProfileManifest.None.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+static Kazo.Os.App.Abstractions.AppResourceProfileManifest.operator !=(Kazo.Os.App.Abstractions.AppResourceProfileManifest? left, Kazo.Os.App.Abstractions.AppResourceProfileManifest? right) -> bool
+static Kazo.Os.App.Abstractions.AppResourceProfileManifest.operator ==(Kazo.Os.App.Abstractions.AppResourceProfileManifest? left, Kazo.Os.App.Abstractions.AppResourceProfileManifest? right) -> bool
+static Kazo.Os.App.Abstractions.AppSdkCompatibilityManifest.operator !=(Kazo.Os.App.Abstractions.AppSdkCompatibilityManifest? left, Kazo.Os.App.Abstractions.AppSdkCompatibilityManifest? right) -> bool
+static Kazo.Os.App.Abstractions.AppSdkCompatibilityManifest.operator ==(Kazo.Os.App.Abstractions.AppSdkCompatibilityManifest? left, Kazo.Os.App.Abstractions.AppSdkCompatibilityManifest? right) -> bool
+static Kazo.Os.App.Abstractions.AppSettingFieldManifest.operator !=(Kazo.Os.App.Abstractions.AppSettingFieldManifest? left, Kazo.Os.App.Abstractions.AppSettingFieldManifest? right) -> bool
+static Kazo.Os.App.Abstractions.AppSettingFieldManifest.operator ==(Kazo.Os.App.Abstractions.AppSettingFieldManifest? left, Kazo.Os.App.Abstractions.AppSettingFieldManifest? right) -> bool
+static Kazo.Os.App.Abstractions.AppSettingsSchemaManifest.operator !=(Kazo.Os.App.Abstractions.AppSettingsSchemaManifest? left, Kazo.Os.App.Abstractions.AppSettingsSchemaManifest? right) -> bool
+static Kazo.Os.App.Abstractions.AppSettingsSchemaManifest.operator ==(Kazo.Os.App.Abstractions.AppSettingsSchemaManifest? left, Kazo.Os.App.Abstractions.AppSettingsSchemaManifest? right) -> bool
+static Kazo.Os.App.Abstractions.AssetManifest.operator !=(Kazo.Os.App.Abstractions.AssetManifest? left, Kazo.Os.App.Abstractions.AssetManifest? right) -> bool
+static Kazo.Os.App.Abstractions.AssetManifest.operator ==(Kazo.Os.App.Abstractions.AssetManifest? left, Kazo.Os.App.Abstractions.AssetManifest? right) -> bool
+static Kazo.Os.App.Abstractions.BuiltInApplication.operator !=(Kazo.Os.App.Abstractions.BuiltInApplication? left, Kazo.Os.App.Abstractions.BuiltInApplication? right) -> bool
+static Kazo.Os.App.Abstractions.BuiltInApplication.operator ==(Kazo.Os.App.Abstractions.BuiltInApplication? left, Kazo.Os.App.Abstractions.BuiltInApplication? right) -> bool
+static Kazo.Os.App.Abstractions.BuiltInApplicationsJsonSerializer.DeserializeStrict(string! json) -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.BuiltInApplication!>!
+static Kazo.Os.App.Abstractions.BuiltInApplicationsJsonSerializer.SerializeCanonical(System.Collections.Generic.IEnumerable<Kazo.Os.App.Abstractions.BuiltInApplication!>! applications) -> string!
+static Kazo.Os.App.Abstractions.CapabilityDescription.operator !=(Kazo.Os.App.Abstractions.CapabilityDescription? left, Kazo.Os.App.Abstractions.CapabilityDescription? right) -> bool
+static Kazo.Os.App.Abstractions.CapabilityDescription.operator ==(Kazo.Os.App.Abstractions.CapabilityDescription? left, Kazo.Os.App.Abstractions.CapabilityDescription? right) -> bool
+static Kazo.Os.App.Abstractions.CustomIntent.operator !=(Kazo.Os.App.Abstractions.CustomIntent? left, Kazo.Os.App.Abstractions.CustomIntent? right) -> bool
+static Kazo.Os.App.Abstractions.CustomIntent.operator ==(Kazo.Os.App.Abstractions.CustomIntent? left, Kazo.Os.App.Abstractions.CustomIntent? right) -> bool
+static Kazo.Os.App.Abstractions.EditFileIntent.operator !=(Kazo.Os.App.Abstractions.EditFileIntent? left, Kazo.Os.App.Abstractions.EditFileIntent? right) -> bool
+static Kazo.Os.App.Abstractions.EditFileIntent.operator ==(Kazo.Os.App.Abstractions.EditFileIntent? left, Kazo.Os.App.Abstractions.EditFileIntent? right) -> bool
+static Kazo.Os.App.Abstractions.ExecuteCommandIntent.operator !=(Kazo.Os.App.Abstractions.ExecuteCommandIntent? left, Kazo.Os.App.Abstractions.ExecuteCommandIntent? right) -> bool
+static Kazo.Os.App.Abstractions.ExecuteCommandIntent.operator ==(Kazo.Os.App.Abstractions.ExecuteCommandIntent? left, Kazo.Os.App.Abstractions.ExecuteCommandIntent? right) -> bool
+static Kazo.Os.App.Abstractions.FileHandler.operator !=(Kazo.Os.App.Abstractions.FileHandler? left, Kazo.Os.App.Abstractions.FileHandler? right) -> bool
+static Kazo.Os.App.Abstractions.FileHandler.operator ==(Kazo.Os.App.Abstractions.FileHandler? left, Kazo.Os.App.Abstractions.FileHandler? right) -> bool
+static Kazo.Os.App.Abstractions.FileHandlerManifest.operator !=(Kazo.Os.App.Abstractions.FileHandlerManifest? left, Kazo.Os.App.Abstractions.FileHandlerManifest? right) -> bool
+static Kazo.Os.App.Abstractions.FileHandlerManifest.operator ==(Kazo.Os.App.Abstractions.FileHandlerManifest? left, Kazo.Os.App.Abstractions.FileHandlerManifest? right) -> bool
+static Kazo.Os.App.Abstractions.KazoOsSdk.IsCompatible(Kazo.Os.App.Abstractions.AppSdkCompatibilityManifest! range) -> bool
+static Kazo.Os.App.Abstractions.KazoOsSdk.IsCompatible(Kazo.Os.App.Abstractions.AppSdkCompatibilityManifest! range, Kazo.Os.App.Abstractions.SemanticVersion sdkVersion) -> bool
+static Kazo.Os.App.Abstractions.KazoOsSdk.NormalizeVersion(string? informationalVersion, System.Version? fallback) -> string!
+static Kazo.Os.App.Abstractions.KazoOsSdk.ReadVersion(System.Reflection.Assembly! assembly) -> string!
+static Kazo.Os.App.Abstractions.KazoOsSdk.SemanticVersion.get -> Kazo.Os.App.Abstractions.SemanticVersion
+static Kazo.Os.App.Abstractions.KazoOsSdk.Version.get -> string!
+static Kazo.Os.App.Abstractions.LaunchAppIntent.operator !=(Kazo.Os.App.Abstractions.LaunchAppIntent? left, Kazo.Os.App.Abstractions.LaunchAppIntent? right) -> bool
+static Kazo.Os.App.Abstractions.LaunchAppIntent.operator ==(Kazo.Os.App.Abstractions.LaunchAppIntent? left, Kazo.Os.App.Abstractions.LaunchAppIntent? right) -> bool
+static Kazo.Os.App.Abstractions.LocalizationManifest.operator !=(Kazo.Os.App.Abstractions.LocalizationManifest? left, Kazo.Os.App.Abstractions.LocalizationManifest? right) -> bool
+static Kazo.Os.App.Abstractions.LocalizationManifest.operator ==(Kazo.Os.App.Abstractions.LocalizationManifest? left, Kazo.Os.App.Abstractions.LocalizationManifest? right) -> bool
+static Kazo.Os.App.Abstractions.ManifestSchemaResource.LoadCurrentSchemaJson() -> string!
+static Kazo.Os.App.Abstractions.ManifestValidationError.operator !=(Kazo.Os.App.Abstractions.ManifestValidationError? left, Kazo.Os.App.Abstractions.ManifestValidationError? right) -> bool
+static Kazo.Os.App.Abstractions.ManifestValidationError.operator ==(Kazo.Os.App.Abstractions.ManifestValidationError? left, Kazo.Os.App.Abstractions.ManifestValidationError? right) -> bool
+static Kazo.Os.App.Abstractions.ManifestValidationResult.operator !=(Kazo.Os.App.Abstractions.ManifestValidationResult? left, Kazo.Os.App.Abstractions.ManifestValidationResult? right) -> bool
+static Kazo.Os.App.Abstractions.ManifestValidationResult.operator ==(Kazo.Os.App.Abstractions.ManifestValidationResult? left, Kazo.Os.App.Abstractions.ManifestValidationResult? right) -> bool
+static Kazo.Os.App.Abstractions.OpenFileIntent.operator !=(Kazo.Os.App.Abstractions.OpenFileIntent? left, Kazo.Os.App.Abstractions.OpenFileIntent? right) -> bool
+static Kazo.Os.App.Abstractions.OpenFileIntent.operator ==(Kazo.Os.App.Abstractions.OpenFileIntent? left, Kazo.Os.App.Abstractions.OpenFileIntent? right) -> bool
+static Kazo.Os.App.Abstractions.OpenUriIntent.operator !=(Kazo.Os.App.Abstractions.OpenUriIntent? left, Kazo.Os.App.Abstractions.OpenUriIntent? right) -> bool
+static Kazo.Os.App.Abstractions.OpenUriIntent.operator ==(Kazo.Os.App.Abstractions.OpenUriIntent? left, Kazo.Os.App.Abstractions.OpenUriIntent? right) -> bool
+static Kazo.Os.App.Abstractions.OsCompatibilityManifest.operator !=(Kazo.Os.App.Abstractions.OsCompatibilityManifest? left, Kazo.Os.App.Abstractions.OsCompatibilityManifest? right) -> bool
+static Kazo.Os.App.Abstractions.OsCompatibilityManifest.operator ==(Kazo.Os.App.Abstractions.OsCompatibilityManifest? left, Kazo.Os.App.Abstractions.OsCompatibilityManifest? right) -> bool
+static Kazo.Os.App.Abstractions.PersistedAppCatalogEntry.operator !=(Kazo.Os.App.Abstractions.PersistedAppCatalogEntry? left, Kazo.Os.App.Abstractions.PersistedAppCatalogEntry? right) -> bool
+static Kazo.Os.App.Abstractions.PersistedAppCatalogEntry.operator ==(Kazo.Os.App.Abstractions.PersistedAppCatalogEntry? left, Kazo.Os.App.Abstractions.PersistedAppCatalogEntry? right) -> bool
+static Kazo.Os.App.Abstractions.Policy.AdminElevationVerificationResult.Failed(string! reason) -> Kazo.Os.App.Abstractions.Policy.AdminElevationVerificationResult!
+static Kazo.Os.App.Abstractions.Policy.AdminElevationVerificationResult.operator !=(Kazo.Os.App.Abstractions.Policy.AdminElevationVerificationResult? left, Kazo.Os.App.Abstractions.Policy.AdminElevationVerificationResult? right) -> bool
+static Kazo.Os.App.Abstractions.Policy.AdminElevationVerificationResult.operator ==(Kazo.Os.App.Abstractions.Policy.AdminElevationVerificationResult? left, Kazo.Os.App.Abstractions.Policy.AdminElevationVerificationResult? right) -> bool
+static Kazo.Os.App.Abstractions.Policy.CapabilityConstraint.operator !=(Kazo.Os.App.Abstractions.Policy.CapabilityConstraint? left, Kazo.Os.App.Abstractions.Policy.CapabilityConstraint? right) -> bool
+static Kazo.Os.App.Abstractions.Policy.CapabilityConstraint.operator ==(Kazo.Os.App.Abstractions.Policy.CapabilityConstraint? left, Kazo.Os.App.Abstractions.Policy.CapabilityConstraint? right) -> bool
+static Kazo.Os.App.Abstractions.Policy.CapabilityGrant.operator !=(Kazo.Os.App.Abstractions.Policy.CapabilityGrant? left, Kazo.Os.App.Abstractions.Policy.CapabilityGrant? right) -> bool
+static Kazo.Os.App.Abstractions.Policy.CapabilityGrant.operator ==(Kazo.Os.App.Abstractions.Policy.CapabilityGrant? left, Kazo.Os.App.Abstractions.Policy.CapabilityGrant? right) -> bool
+static Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditEntry.operator !=(Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditEntry? left, Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditEntry? right) -> bool
+static Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditEntry.operator ==(Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditEntry? left, Kazo.Os.App.Abstractions.Policy.CapabilityGrantAuditEntry? right) -> bool
+static Kazo.Os.App.Abstractions.Policy.CapabilityGrantId.FromGuid(System.Guid value) -> Kazo.Os.App.Abstractions.Policy.CapabilityGrantId
+static Kazo.Os.App.Abstractions.Policy.CapabilityGrantId.operator !=(Kazo.Os.App.Abstractions.Policy.CapabilityGrantId left, Kazo.Os.App.Abstractions.Policy.CapabilityGrantId right) -> bool
+static Kazo.Os.App.Abstractions.Policy.CapabilityGrantId.operator ==(Kazo.Os.App.Abstractions.Policy.CapabilityGrantId left, Kazo.Os.App.Abstractions.Policy.CapabilityGrantId right) -> bool
+static Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationResult.operator !=(Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationResult? left, Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationResult? right) -> bool
+static Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationResult.operator ==(Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationResult? left, Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationResult? right) -> bool
+static Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluation.Deny(Kazo.Os.App.Abstractions.Policy.CapabilityGrant! grant, Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluationReason reason) -> Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluation
+static Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluation.DenyMissing(long policyRevision) -> Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluation
+static Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluation.Permit(Kazo.Os.App.Abstractions.Policy.CapabilityGrant! grant) -> Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluation
+static Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluation.operator !=(Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluation left, Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluation right) -> bool
+static Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluation.operator ==(Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluation left, Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluation right) -> bool
+static Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidate.operator !=(Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidate? left, Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidate? right) -> bool
+static Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidate.operator ==(Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidate? left, Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidate? right) -> bool
+static Kazo.Os.App.Abstractions.Policy.ElevationRequestResult.operator !=(Kazo.Os.App.Abstractions.Policy.ElevationRequestResult? left, Kazo.Os.App.Abstractions.Policy.ElevationRequestResult? right) -> bool
+static Kazo.Os.App.Abstractions.Policy.ElevationRequestResult.operator ==(Kazo.Os.App.Abstractions.Policy.ElevationRequestResult? left, Kazo.Os.App.Abstractions.Policy.ElevationRequestResult? right) -> bool
+static Kazo.Os.App.Abstractions.Policy.ElevationTicket.operator !=(Kazo.Os.App.Abstractions.Policy.ElevationTicket? left, Kazo.Os.App.Abstractions.Policy.ElevationTicket? right) -> bool
+static Kazo.Os.App.Abstractions.Policy.ElevationTicket.operator ==(Kazo.Os.App.Abstractions.Policy.ElevationTicket? left, Kazo.Os.App.Abstractions.Policy.ElevationTicket? right) -> bool
+static Kazo.Os.App.Abstractions.Policy.NetworkHostCapabilityConstraint.operator !=(Kazo.Os.App.Abstractions.Policy.NetworkHostCapabilityConstraint? left, Kazo.Os.App.Abstractions.Policy.NetworkHostCapabilityConstraint? right) -> bool
+static Kazo.Os.App.Abstractions.Policy.NetworkHostCapabilityConstraint.operator ==(Kazo.Os.App.Abstractions.Policy.NetworkHostCapabilityConstraint? left, Kazo.Os.App.Abstractions.Policy.NetworkHostCapabilityConstraint? right) -> bool
+static Kazo.Os.App.Abstractions.Policy.NetworkHostResourceCandidate.operator !=(Kazo.Os.App.Abstractions.Policy.NetworkHostResourceCandidate? left, Kazo.Os.App.Abstractions.Policy.NetworkHostResourceCandidate? right) -> bool
+static Kazo.Os.App.Abstractions.Policy.NetworkHostResourceCandidate.operator ==(Kazo.Os.App.Abstractions.Policy.NetworkHostResourceCandidate? left, Kazo.Os.App.Abstractions.Policy.NetworkHostResourceCandidate? right) -> bool
+static Kazo.Os.App.Abstractions.Policy.NetworkPortCapabilityConstraint.operator !=(Kazo.Os.App.Abstractions.Policy.NetworkPortCapabilityConstraint? left, Kazo.Os.App.Abstractions.Policy.NetworkPortCapabilityConstraint? right) -> bool
+static Kazo.Os.App.Abstractions.Policy.NetworkPortCapabilityConstraint.operator ==(Kazo.Os.App.Abstractions.Policy.NetworkPortCapabilityConstraint? left, Kazo.Os.App.Abstractions.Policy.NetworkPortCapabilityConstraint? right) -> bool
+static Kazo.Os.App.Abstractions.Policy.NetworkPortResourceCandidate.operator !=(Kazo.Os.App.Abstractions.Policy.NetworkPortResourceCandidate? left, Kazo.Os.App.Abstractions.Policy.NetworkPortResourceCandidate? right) -> bool
+static Kazo.Os.App.Abstractions.Policy.NetworkPortResourceCandidate.operator ==(Kazo.Os.App.Abstractions.Policy.NetworkPortResourceCandidate? left, Kazo.Os.App.Abstractions.Policy.NetworkPortResourceCandidate? right) -> bool
+static Kazo.Os.App.Abstractions.Policy.VirtualPathCapabilityConstraint.operator !=(Kazo.Os.App.Abstractions.Policy.VirtualPathCapabilityConstraint? left, Kazo.Os.App.Abstractions.Policy.VirtualPathCapabilityConstraint? right) -> bool
+static Kazo.Os.App.Abstractions.Policy.VirtualPathCapabilityConstraint.operator ==(Kazo.Os.App.Abstractions.Policy.VirtualPathCapabilityConstraint? left, Kazo.Os.App.Abstractions.Policy.VirtualPathCapabilityConstraint? right) -> bool
+static Kazo.Os.App.Abstractions.Policy.VirtualPathResourceCandidate.operator !=(Kazo.Os.App.Abstractions.Policy.VirtualPathResourceCandidate? left, Kazo.Os.App.Abstractions.Policy.VirtualPathResourceCandidate? right) -> bool
+static Kazo.Os.App.Abstractions.Policy.VirtualPathResourceCandidate.operator ==(Kazo.Os.App.Abstractions.Policy.VirtualPathResourceCandidate? left, Kazo.Os.App.Abstractions.Policy.VirtualPathResourceCandidate? right) -> bool
+static Kazo.Os.App.Abstractions.PresentationManifest.operator !=(Kazo.Os.App.Abstractions.PresentationManifest? left, Kazo.Os.App.Abstractions.PresentationManifest? right) -> bool
+static Kazo.Os.App.Abstractions.PresentationManifest.operator ==(Kazo.Os.App.Abstractions.PresentationManifest? left, Kazo.Os.App.Abstractions.PresentationManifest? right) -> bool
+static Kazo.Os.App.Abstractions.RevealFileIntent.operator !=(Kazo.Os.App.Abstractions.RevealFileIntent? left, Kazo.Os.App.Abstractions.RevealFileIntent? right) -> bool
+static Kazo.Os.App.Abstractions.RevealFileIntent.operator ==(Kazo.Os.App.Abstractions.RevealFileIntent? left, Kazo.Os.App.Abstractions.RevealFileIntent? right) -> bool
+static Kazo.Os.App.Abstractions.SemanticVersion.Parse(string! value) -> Kazo.Os.App.Abstractions.SemanticVersion
+static Kazo.Os.App.Abstractions.SemanticVersion.TryParse(string? value, out Kazo.Os.App.Abstractions.SemanticVersion version) -> bool
+static Kazo.Os.App.Abstractions.SemanticVersion.operator !=(Kazo.Os.App.Abstractions.SemanticVersion left, Kazo.Os.App.Abstractions.SemanticVersion right) -> bool
+static Kazo.Os.App.Abstractions.SemanticVersion.operator ==(Kazo.Os.App.Abstractions.SemanticVersion left, Kazo.Os.App.Abstractions.SemanticVersion right) -> bool
+static Kazo.Os.App.Abstractions.ShowAppSettingsIntent.operator !=(Kazo.Os.App.Abstractions.ShowAppSettingsIntent? left, Kazo.Os.App.Abstractions.ShowAppSettingsIntent? right) -> bool
+static Kazo.Os.App.Abstractions.ShowAppSettingsIntent.operator ==(Kazo.Os.App.Abstractions.ShowAppSettingsIntent? left, Kazo.Os.App.Abstractions.ShowAppSettingsIntent? right) -> bool
+static Kazo.Os.App.Abstractions.TerminalCommand.operator !=(Kazo.Os.App.Abstractions.TerminalCommand? left, Kazo.Os.App.Abstractions.TerminalCommand? right) -> bool
+static Kazo.Os.App.Abstractions.TerminalCommand.operator ==(Kazo.Os.App.Abstractions.TerminalCommand? left, Kazo.Os.App.Abstractions.TerminalCommand? right) -> bool
+static Kazo.Os.App.Abstractions.TerminalCommandManifest.operator !=(Kazo.Os.App.Abstractions.TerminalCommandManifest? left, Kazo.Os.App.Abstractions.TerminalCommandManifest? right) -> bool
+static Kazo.Os.App.Abstractions.TerminalCommandManifest.operator ==(Kazo.Os.App.Abstractions.TerminalCommandManifest? left, Kazo.Os.App.Abstractions.TerminalCommandManifest? right) -> bool
+static Kazo.Os.App.Abstractions.TopicPermissionDeclarationManifest.operator !=(Kazo.Os.App.Abstractions.TopicPermissionDeclarationManifest? left, Kazo.Os.App.Abstractions.TopicPermissionDeclarationManifest? right) -> bool
+static Kazo.Os.App.Abstractions.TopicPermissionDeclarationManifest.operator ==(Kazo.Os.App.Abstractions.TopicPermissionDeclarationManifest? left, Kazo.Os.App.Abstractions.TopicPermissionDeclarationManifest? right) -> bool
+static Kazo.Os.App.Abstractions.TopicPermissions.IsOwnedByApp(string! capability, string! appId) -> bool
+static Kazo.Os.App.Abstractions.TopicPermissions.IsWellFormed(string! capability) -> bool
+static Kazo.Os.App.Abstractions.UpdateManifest.operator !=(Kazo.Os.App.Abstractions.UpdateManifest? left, Kazo.Os.App.Abstractions.UpdateManifest? right) -> bool
+static Kazo.Os.App.Abstractions.UpdateManifest.operator ==(Kazo.Os.App.Abstractions.UpdateManifest? left, Kazo.Os.App.Abstractions.UpdateManifest? right) -> bool
+static Kazo.Os.App.Abstractions.VirtualPath.Parse(string! value) -> Kazo.Os.App.Abstractions.VirtualPath
+static Kazo.Os.App.Abstractions.VirtualPath.operator !=(Kazo.Os.App.Abstractions.VirtualPath left, Kazo.Os.App.Abstractions.VirtualPath right) -> bool
+static Kazo.Os.App.Abstractions.VirtualPath.operator ==(Kazo.Os.App.Abstractions.VirtualPath left, Kazo.Os.App.Abstractions.VirtualPath right) -> bool
+static Kazo.Os.App.Abstractions.WebAppManifest.operator !=(Kazo.Os.App.Abstractions.WebAppManifest? left, Kazo.Os.App.Abstractions.WebAppManifest? right) -> bool
+static Kazo.Os.App.Abstractions.WebAppManifest.operator ==(Kazo.Os.App.Abstractions.WebAppManifest? left, Kazo.Os.App.Abstractions.WebAppManifest? right) -> bool
+static Kazo.Os.App.Abstractions.WebAppUrls.DefaultPort(string! scheme) -> int
+static Kazo.Os.App.Abstractions.WebAppUrls.IsInternalDomain(string! host) -> bool
+static Kazo.Os.App.Abstractions.WebAppUrls.IsLoopbackName(string! host) -> bool
+static Kazo.Os.App.Abstractions.WebAppUrls.IsValidHostName(string! host) -> bool
+static Kazo.Os.App.Abstractions.WebAppUrls.Normalize(string! value) -> string!
+static Kazo.Os.App.Abstractions.WebAppUrls.Parse(string! value, bool allowWildcardHost) -> Kazo.Os.App.Abstractions.WebBinding
+static Kazo.Os.App.Abstractions.WebAppUrls.TryParse(string? value, bool allowWildcardHost, out Kazo.Os.App.Abstractions.WebBinding binding, out string? error) -> bool
+static Kazo.Os.App.Abstractions.WebBinding.operator !=(Kazo.Os.App.Abstractions.WebBinding left, Kazo.Os.App.Abstractions.WebBinding right) -> bool
+static Kazo.Os.App.Abstractions.WebBinding.operator ==(Kazo.Os.App.Abstractions.WebBinding left, Kazo.Os.App.Abstractions.WebBinding right) -> bool
+static Kazo.Os.App.Abstractions.WebBlazorManifest.operator !=(Kazo.Os.App.Abstractions.WebBlazorManifest? left, Kazo.Os.App.Abstractions.WebBlazorManifest? right) -> bool
+static Kazo.Os.App.Abstractions.WebBlazorManifest.operator ==(Kazo.Os.App.Abstractions.WebBlazorManifest? left, Kazo.Os.App.Abstractions.WebBlazorManifest? right) -> bool
+static Kazo.Os.App.Abstractions.WellKnownAppPlatformCapabilities.Desktop.get -> Kazo.Os.App.Abstractions.AppPlatformCapabilities!
+static Kazo.Os.App.Abstractions.WellKnownAppPlatformCapabilities.Mobile.get -> Kazo.Os.App.Abstractions.AppPlatformCapabilities!
+static Kazo.Os.App.Abstractions.WellKnownAppPlatforms.Desktop.get -> Kazo.Os.App.Abstractions.AppPlatformId
+static Kazo.Os.App.Abstractions.WellKnownAppPlatforms.Mobile.get -> Kazo.Os.App.Abstractions.AppPlatformId
+static Kazo.Os.App.Abstractions.WindowOptions.Default.get -> Kazo.Os.App.Abstractions.WindowOptions!
+static Kazo.Os.App.Abstractions.WindowOptions.operator !=(Kazo.Os.App.Abstractions.WindowOptions? left, Kazo.Os.App.Abstractions.WindowOptions? right) -> bool
+static Kazo.Os.App.Abstractions.WindowOptions.operator ==(Kazo.Os.App.Abstractions.WindowOptions? left, Kazo.Os.App.Abstractions.WindowOptions? right) -> bool
+virtual Kazo.Os.App.Abstractions.AppDefinition.Assets.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AssetManifest!>!
+virtual Kazo.Os.App.Abstractions.AppDefinition.AutoStart.get -> bool
+virtual Kazo.Os.App.Abstractions.AppDefinition.BlazorRoot.get -> System.Type?
+virtual Kazo.Os.App.Abstractions.AppDefinition.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+virtual Kazo.Os.App.Abstractions.AppDefinition.Category.get -> string!
+virtual Kazo.Os.App.Abstractions.AppDefinition.Components.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppComponent!>!
+virtual Kazo.Os.App.Abstractions.AppDefinition.DeclaredTopicPermissions.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.TopicPermissionDeclarationManifest!>!
+virtual Kazo.Os.App.Abstractions.AppDefinition.Dependencies.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppDependencyManifest!>!
+virtual Kazo.Os.App.Abstractions.AppDefinition.Description.get -> string!
+virtual Kazo.Os.App.Abstractions.AppDefinition.FileHandlers.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.FileHandler!>!
+virtual Kazo.Os.App.Abstractions.AppDefinition.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
+virtual Kazo.Os.App.Abstractions.AppDefinition.Intents.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppIntentDeclarationManifest!>!
+virtual Kazo.Os.App.Abstractions.AppDefinition.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+virtual Kazo.Os.App.Abstractions.AppDefinition.Localizations.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.LocalizationManifest!>!
+virtual Kazo.Os.App.Abstractions.AppDefinition.MobileEntryPoint.get -> System.Type?
+virtual Kazo.Os.App.Abstractions.AppDefinition.OomScoreAdjust.get -> int?
+virtual Kazo.Os.App.Abstractions.AppDefinition.PublisherId.get -> string!
+virtual Kazo.Os.App.Abstractions.AppDefinition.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+virtual Kazo.Os.App.Abstractions.AppDefinition.SdkCompatibility.get -> Kazo.Os.App.Abstractions.AppSdkCompatibilityManifest?
+virtual Kazo.Os.App.Abstractions.AppDefinition.ServiceStartup.get -> Kazo.Os.App.Abstractions.AppServiceStartup?
+virtual Kazo.Os.App.Abstractions.AppDefinition.Settings.get -> Kazo.Os.App.Abstractions.AppSettingsSchemaManifest?
+virtual Kazo.Os.App.Abstractions.AppDefinition.SingleInstancePerUser.get -> bool
+virtual Kazo.Os.App.Abstractions.AppDefinition.SupportsBack.get -> bool
+virtual Kazo.Os.App.Abstractions.AppDefinition.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+virtual Kazo.Os.App.Abstractions.AppDefinition.Urls.get -> System.Collections.Generic.IReadOnlyList<string!>!
+virtual Kazo.Os.App.Abstractions.AppDefinition.Version.get -> string!
+virtual Kazo.Os.App.Abstractions.AppDefinition.Window.get -> Kazo.Os.App.Abstractions.WindowOptions?
+virtual Kazo.Os.App.Abstractions.Policy.CapabilityConstraint.EqualityContract.get -> System.Type!
+virtual Kazo.Os.App.Abstractions.Policy.CapabilityConstraint.Equals(Kazo.Os.App.Abstractions.Policy.CapabilityConstraint? other) -> bool
+virtual Kazo.Os.App.Abstractions.Policy.CapabilityConstraint.PrintMembers(System.Text.StringBuilder! builder) -> bool
+virtual Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidate.EqualityContract.get -> System.Type!
+virtual Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidate.Equals(Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidate? other) -> bool
+virtual Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidate.PrintMembers(System.Text.StringBuilder! builder) -> bool
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.AppComponentManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.AppComponentManifest>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.AppContextMenuEntryManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.AppContextMenuEntryManifest>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.AppContextMenuIconManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.AppContextMenuIconManifest>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.AppContextMenuTitleManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.AppContextMenuTitleManifest>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.AppDependencyManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.AppDependencyManifest>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.AppEntryPointManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.AppEntryPointManifest>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.AppExecutionHost.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.AppExecutionHost>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.AppIntentDeclarationManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.AppIntentDeclarationManifest>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.AppKind.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.AppKind>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.AppLaunchVisibility.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.AppLaunchVisibility>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.AppManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.AppManifest>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.AppManifestPlatform.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.AppManifestPlatform>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.AppPlatformEntryPointManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.AppPlatformEntryPointManifest>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.AppResourceProfileManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.AppResourceProfileManifest>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.AppSdkCompatibilityManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.AppSdkCompatibilityManifest>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.AppServiceStartup.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.AppServiceStartup>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.AppSettingFieldManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.AppSettingFieldManifest>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.AppSettingScope.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.AppSettingScope>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.AppSettingSensitivity.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.AppSettingSensitivity>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.AppSettingValueType.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.AppSettingValueType>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.AppSettingsSchemaManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.AppSettingsSchemaManifest>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.AssetKind.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.AssetKind>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.AssetManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.AssetManifest>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.Boolean.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<bool>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.Double.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<double>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.FileHandlerManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.FileHandlerManifest>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.IReadOnlyListAppComponentManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppComponentManifest>>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.IReadOnlyListAppContextMenuEntryManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppContextMenuEntryManifest>>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.IReadOnlyListAppContextMenuTitleManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppContextMenuTitleManifest>>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.IReadOnlyListAppDependencyManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppDependencyManifest>>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.IReadOnlyListAppIntentDeclarationManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppIntentDeclarationManifest>>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.IReadOnlyListAppPlatformEntryPointManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppPlatformEntryPointManifest>>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.IReadOnlyListAppSettingFieldManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AppSettingFieldManifest>>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.IReadOnlyListAssetManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AssetManifest>>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.IReadOnlyListFileHandlerManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.FileHandlerManifest>>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.IReadOnlyListLocalizationManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.LocalizationManifest>>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.IReadOnlyListString.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<string>>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.IReadOnlyListTopicPermissionDeclarationManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.TopicPermissionDeclarationManifest>>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.Int32.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<int>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.LocalizationManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.LocalizationManifest>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.NullableAppExecutionHost.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.AppExecutionHost?>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.NullableAppServiceStartup.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.AppServiceStartup?>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.NullableBoolean.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<bool?>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.NullableInt32.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<int?>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.OsCompatibilityManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.OsCompatibilityManifest>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.PresentationManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.PresentationManifest>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.String.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<string>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.TerminalCommandManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.TerminalCommandManifest>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.TopicPermissionDeclarationManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.TopicPermissionDeclarationManifest>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.UpdateManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.UpdateManifest>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.WebAppManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.WebAppManifest>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.WebBlazorManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.WebBlazorManifest>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.WindowOptions.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.WindowOptions>
+~override Kazo.Os.App.Abstractions.AppPlatformId.Equals(object obj) -> bool
+~override Kazo.Os.App.Abstractions.Policy.CapabilityGrantId.Equals(object obj) -> bool
+~override Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluation.Equals(object obj) -> bool
+~override Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluation.ToString() -> string
+~override Kazo.Os.App.Abstractions.SemanticVersion.Equals(object obj) -> bool
+~override Kazo.Os.App.Abstractions.VirtualPath.Equals(object obj) -> bool
+~override Kazo.Os.App.Abstractions.WebBinding.Equals(object obj) -> bool

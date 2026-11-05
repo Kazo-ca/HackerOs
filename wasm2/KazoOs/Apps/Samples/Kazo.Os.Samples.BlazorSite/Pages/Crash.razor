@@ -1,0 +1,15 @@
+@namespace Kazo.Os.Samples.BlazorSite.Pages
+@page "/crash"
+@inherits KazoComponentBase
+@*
+    Throws from an event handler: the error boundary of the page area stops it, the renderer
+    process ends in fault and the browser shows "Aw, Snap!" (ADR 0084 §4).
+*@
+<KazoPageTitle Title="Crash - Blazor Sample Site" />
+<h1>Crash test</h1>
+<p>The button below throws an unhandled exception in this site's code. Kazo OS and the browser survive; only this page's renderer dies.</p>
+<p><button id="crash-button" class="site-button" @onclick="Boom">Crash the renderer</button></p>
+
+@code {
+    private static void Boom() => throw new InvalidOperationException("The sample site crashed on purpose.");
+}

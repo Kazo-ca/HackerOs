@@ -1,0 +1,97 @@
+#nullable enable
+Kazo.Os.Taskbar.Blazor.ITaskbarClockPanelSource
+Kazo.Os.Taskbar.Blazor.ITaskbarClockPanelSource.Changed -> System.Action?
+Kazo.Os.Taskbar.Blazor.ITaskbarClockPanelSource.IsOpen.get -> bool
+Kazo.Os.Taskbar.Blazor.ITaskbarClockPanelSource.Toggle() -> void
+Kazo.Os.Taskbar.Blazor.ITaskbarClockPanelSource.UnreadCount.get -> int
+Kazo.Os.Taskbar.Blazor.ITaskbarCommandDispatcher
+Kazo.Os.Taskbar.Blazor.ITaskbarCommandDispatcher.Activate(Kazo.Os.Windowing.Abstractions.WindowId id) -> void
+Kazo.Os.Taskbar.Blazor.ITaskbarCommandDispatcher.Close(Kazo.Os.Windowing.Abstractions.WindowId id) -> void
+Kazo.Os.Taskbar.Blazor.ITaskbarCommandDispatcher.Minimize(Kazo.Os.Windowing.Abstractions.WindowId id) -> void
+Kazo.Os.Taskbar.Blazor.ITaskbarCommandDispatcher.Restore(Kazo.Os.Windowing.Abstractions.WindowId id) -> void
+Kazo.Os.Taskbar.Blazor.ITaskbarContextMenus
+Kazo.Os.Taskbar.Blazor.ITaskbarContextMenus.TaskbarAttributes.get -> System.Collections.Generic.IReadOnlyDictionary<string!, object!>?
+Kazo.Os.Taskbar.Blazor.ITaskbarContextMenus.WindowItemAttributes(Kazo.Os.Windowing.Abstractions.WindowId id) -> System.Collections.Generic.IReadOnlyDictionary<string!, object!>?
+Kazo.Os.Taskbar.Blazor.ITaskbarLauncher
+Kazo.Os.Taskbar.Blazor.ITaskbarLauncher.Changed -> System.Action?
+Kazo.Os.Taskbar.Blazor.ITaskbarLauncher.HasAttention.get -> bool
+Kazo.Os.Taskbar.Blazor.ITaskbarLauncher.IsOpen.get -> bool
+Kazo.Os.Taskbar.Blazor.ITaskbarLauncher.Toggle() -> void
+Kazo.Os.Taskbar.Blazor.ITaskbarSessionCommands
+Kazo.Os.Taskbar.Blazor.ITaskbarSessionCommands.RequestLogout() -> void
+Kazo.Os.Taskbar.Blazor.ITaskbarStatusSource
+Kazo.Os.Taskbar.Blazor.ITaskbarStatusSource.Changed -> System.Action?
+Kazo.Os.Taskbar.Blazor.ITaskbarStatusSource.FormatCulture.get -> System.Globalization.CultureInfo!
+Kazo.Os.Taskbar.Blazor.ITaskbarStatusSource.TimeZone.get -> System.TimeZoneInfo!
+Kazo.Os.Taskbar.Blazor.ITaskbarStatusSource.UtcNow.get -> System.DateTimeOffset
+Kazo.Os.Taskbar.Blazor.ITaskbarWindowPreviews
+Kazo.Os.Taskbar.Blazor.ITaskbarWindowPreviews.LiveCopySelector(Kazo.Os.Windowing.Abstractions.WindowId id) -> string?
+Kazo.Os.Taskbar.Blazor.ITaskbarWindowPreviews.Peek(Kazo.Os.Windowing.Abstractions.WindowId? id) -> void
+Kazo.Os.Taskbar.Blazor.ITaskbarWindowSource
+Kazo.Os.Taskbar.Blazor.ITaskbarWindowSource.Changed -> System.Action?
+Kazo.Os.Taskbar.Blazor.ITaskbarWindowSource.Windows.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Taskbar.Blazor.TaskbarWindowItem!>!
+Kazo.Os.Taskbar.Blazor.Taskbar
+Kazo.Os.Taskbar.Blazor.Taskbar.ClockPanelContent.get -> Microsoft.AspNetCore.Components.RenderFragment?
+Kazo.Os.Taskbar.Blazor.Taskbar.ClockPanelContent.set -> void
+Kazo.Os.Taskbar.Blazor.Taskbar.ClockPanelSource.get -> Kazo.Os.Taskbar.Blazor.ITaskbarClockPanelSource?
+Kazo.Os.Taskbar.Blazor.Taskbar.ClockPanelSource.set -> void
+Kazo.Os.Taskbar.Blazor.Taskbar.Commands.get -> Kazo.Os.Taskbar.Blazor.ITaskbarCommandDispatcher?
+Kazo.Os.Taskbar.Blazor.Taskbar.Commands.set -> void
+Kazo.Os.Taskbar.Blazor.Taskbar.ContextMenus.get -> Kazo.Os.Taskbar.Blazor.ITaskbarContextMenus?
+Kazo.Os.Taskbar.Blazor.Taskbar.ContextMenus.set -> void
+Kazo.Os.Taskbar.Blazor.Taskbar.Dispose() -> void
+Kazo.Os.Taskbar.Blazor.Taskbar.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Taskbar.Blazor.Taskbar.Launcher.get -> Kazo.Os.Taskbar.Blazor.ITaskbarLauncher?
+Kazo.Os.Taskbar.Blazor.Taskbar.Launcher.set -> void
+Kazo.Os.Taskbar.Blazor.Taskbar.NotificationAreaContent.get -> Microsoft.AspNetCore.Components.RenderFragment?
+Kazo.Os.Taskbar.Blazor.Taskbar.NotificationAreaContent.set -> void
+Kazo.Os.Taskbar.Blazor.Taskbar.Options.get -> Kazo.Os.Taskbar.Blazor.TaskbarOptions!
+Kazo.Os.Taskbar.Blazor.Taskbar.Options.set -> void
+Kazo.Os.Taskbar.Blazor.Taskbar.Previews.get -> Kazo.Os.Taskbar.Blazor.ITaskbarWindowPreviews?
+Kazo.Os.Taskbar.Blazor.Taskbar.Previews.set -> void
+Kazo.Os.Taskbar.Blazor.Taskbar.SessionCommands.get -> Kazo.Os.Taskbar.Blazor.ITaskbarSessionCommands?
+Kazo.Os.Taskbar.Blazor.Taskbar.SessionCommands.set -> void
+Kazo.Os.Taskbar.Blazor.Taskbar.StatusSource.get -> Kazo.Os.Taskbar.Blazor.ITaskbarStatusSource?
+Kazo.Os.Taskbar.Blazor.Taskbar.StatusSource.set -> void
+Kazo.Os.Taskbar.Blazor.Taskbar.Taskbar() -> void
+Kazo.Os.Taskbar.Blazor.Taskbar.WindowSource.get -> Kazo.Os.Taskbar.Blazor.ITaskbarWindowSource?
+Kazo.Os.Taskbar.Blazor.Taskbar.WindowSource.set -> void
+Kazo.Os.Taskbar.Blazor.TaskbarOptions
+Kazo.Os.Taskbar.Blazor.TaskbarOptions.<Clone>$() -> Kazo.Os.Taskbar.Blazor.TaskbarOptions!
+Kazo.Os.Taskbar.Blazor.TaskbarOptions.Equals(Kazo.Os.Taskbar.Blazor.TaskbarOptions? other) -> bool
+Kazo.Os.Taskbar.Blazor.TaskbarOptions.LauncherLabel.get -> string?
+Kazo.Os.Taskbar.Blazor.TaskbarOptions.LauncherLabel.init -> void
+Kazo.Os.Taskbar.Blazor.TaskbarOptions.LauncherMark.get -> string!
+Kazo.Os.Taskbar.Blazor.TaskbarOptions.LauncherMark.init -> void
+Kazo.Os.Taskbar.Blazor.TaskbarOptions.TaskbarOptions() -> void
+Kazo.Os.Taskbar.Blazor.TaskbarWindowItem
+Kazo.Os.Taskbar.Blazor.TaskbarWindowItem.<Clone>$() -> Kazo.Os.Taskbar.Blazor.TaskbarWindowItem!
+Kazo.Os.Taskbar.Blazor.TaskbarWindowItem.Deconstruct(out Kazo.Os.Windowing.Abstractions.WindowId Id, out string! Title, out string? IconAssetPath, out bool IsFocused, out bool IsMinimized) -> void
+Kazo.Os.Taskbar.Blazor.TaskbarWindowItem.Equals(Kazo.Os.Taskbar.Blazor.TaskbarWindowItem? other) -> bool
+Kazo.Os.Taskbar.Blazor.TaskbarWindowItem.IconAssetPath.get -> string?
+Kazo.Os.Taskbar.Blazor.TaskbarWindowItem.IconAssetPath.init -> void
+Kazo.Os.Taskbar.Blazor.TaskbarWindowItem.Id.get -> Kazo.Os.Windowing.Abstractions.WindowId
+Kazo.Os.Taskbar.Blazor.TaskbarWindowItem.Id.init -> void
+Kazo.Os.Taskbar.Blazor.TaskbarWindowItem.IsFocused.get -> bool
+Kazo.Os.Taskbar.Blazor.TaskbarWindowItem.IsFocused.init -> void
+Kazo.Os.Taskbar.Blazor.TaskbarWindowItem.IsMinimized.get -> bool
+Kazo.Os.Taskbar.Blazor.TaskbarWindowItem.IsMinimized.init -> void
+Kazo.Os.Taskbar.Blazor.TaskbarWindowItem.TaskbarWindowItem(Kazo.Os.Windowing.Abstractions.WindowId Id, string! Title, string? IconAssetPath, bool IsFocused, bool IsMinimized) -> void
+Kazo.Os.Taskbar.Blazor.TaskbarWindowItem.Title.get -> string!
+Kazo.Os.Taskbar.Blazor.TaskbarWindowItem.Title.init -> void
+Kazo.Os.Taskbar.Blazor._Imports
+Kazo.Os.Taskbar.Blazor._Imports.Execute() -> void
+Kazo.Os.Taskbar.Blazor._Imports._Imports() -> void
+override Kazo.Os.Taskbar.Blazor.Taskbar.OnAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override Kazo.Os.Taskbar.Blazor.Taskbar.OnInitialized() -> void
+override Kazo.Os.Taskbar.Blazor.TaskbarOptions.Equals(object? obj) -> bool
+override Kazo.Os.Taskbar.Blazor.TaskbarOptions.GetHashCode() -> int
+override Kazo.Os.Taskbar.Blazor.TaskbarOptions.ToString() -> string!
+override Kazo.Os.Taskbar.Blazor.TaskbarWindowItem.Equals(object? obj) -> bool
+override Kazo.Os.Taskbar.Blazor.TaskbarWindowItem.GetHashCode() -> int
+override Kazo.Os.Taskbar.Blazor.TaskbarWindowItem.ToString() -> string!
+static Kazo.Os.Taskbar.Blazor.TaskbarOptions.operator !=(Kazo.Os.Taskbar.Blazor.TaskbarOptions? left, Kazo.Os.Taskbar.Blazor.TaskbarOptions? right) -> bool
+static Kazo.Os.Taskbar.Blazor.TaskbarOptions.operator ==(Kazo.Os.Taskbar.Blazor.TaskbarOptions? left, Kazo.Os.Taskbar.Blazor.TaskbarOptions? right) -> bool
+static Kazo.Os.Taskbar.Blazor.TaskbarWindowItem.operator !=(Kazo.Os.Taskbar.Blazor.TaskbarWindowItem? left, Kazo.Os.Taskbar.Blazor.TaskbarWindowItem? right) -> bool
+static Kazo.Os.Taskbar.Blazor.TaskbarWindowItem.operator ==(Kazo.Os.Taskbar.Blazor.TaskbarWindowItem? left, Kazo.Os.Taskbar.Blazor.TaskbarWindowItem? right) -> bool
+~override Kazo.Os.Taskbar.Blazor.Taskbar.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

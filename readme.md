@@ -3,36 +3,36 @@
 [![Release Kazo OS](https://github.com/Kazo-ca/Os/actions/workflows/release.yml/badge.svg)](https://github.com/Kazo-ca/Os/actions/workflows/release.yml)
 [![Verify WASM](https://github.com/Kazo-ca/Os/actions/workflows/deploy-wasm.yml/badge.svg?branch=main)](https://github.com/Kazo-ca/Os/actions/workflows/deploy-wasm.yml)
 [![Latest release](https://img.shields.io/github/v/release/Kazo-ca/Os?label=release)](https://github.com/Kazo-ca/Os/releases/latest)
-[![NuGet SDK](https://img.shields.io/nuget/v/HackerOs.AppSdk?label=NuGet%20SDK)](https://www.nuget.org/packages/HackerOs.AppSdk)
-[![NuGet SDK downloads](https://img.shields.io/nuget/dt/HackerOs.AppSdk?label=SDK%20downloads)](https://www.nuget.org/packages/HackerOs.AppSdk)
-[![NuGet templates downloads](https://img.shields.io/nuget/dt/HackerOs.Templates?label=templates%20downloads)](https://www.nuget.org/packages/HackerOs.Templates)
+[![NuGet SDK](https://img.shields.io/nuget/v/Kazo.Os.AppSdk?label=NuGet%20SDK)](https://www.nuget.org/packages/Kazo.Os.AppSdk)
+[![NuGet SDK downloads](https://img.shields.io/nuget/dt/Kazo.Os.AppSdk?label=SDK%20downloads)](https://www.nuget.org/packages/Kazo.Os.AppSdk)
+[![NuGet templates downloads](https://img.shields.io/nuget/dt/Kazo.Os.Templates?label=templates%20downloads)](https://www.nuget.org/packages/Kazo.Os.Templates)
 [![Last commit](https://img.shields.io/github/last-commit/Kazo-ca/Os)](https://github.com/Kazo-ca/Os/commits/main)
 [![License: CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE.md)
 
-# HackerOS
+# Kazo OS
 
-HackerOS is a **simulated operating system that runs in the browser**, written
+Kazo OS is a **simulated operating system that runs in the browser**, written
 in C# with Blazor WebAssembly (.NET 10). It provides a complete environment for
 building and running applications: desktop and windows, a persistent file
 system, processes, a POSIX shell and Linux commands, a simulated network,
 internal web sites, and a **public SDK** (NuGet packages) to create your own
 apps, commands, services and sites.
 
-- **Try it**: <https://hackos.kazo.ca/> (PWA, works offline).
-- **Features**: [HackerOS overview and features](doc/en/wasm/features.md): what HackerOS offers today, the goal of the ecosystem, ways to deploy it, and what is in development.
-- **Code**: [`wasm2/HackerOs/`](wasm2/HackerOs/README.md).
+- **Try it**: <https://os.kazo.ca/> (PWA, works offline).
+- **Features**: [Kazo OS overview and features](doc/en/wasm/features.md): what Kazo OS offers today, the goal of the ecosystem, ways to deploy it, and what is in development.
+- **Code**: [`wasm2/KazoOs/`](wasm2/KazoOs/README.md).
 - **Documentation**: [`doc/en/wasm/README.md`](doc/en/wasm/README.md) (French: [`doc/fr/wasm/README.md`](doc/fr/wasm/README.md)).
-- Source repository: [Kazo-ca/HackerOs](https://github.com/Kazo-ca/HackerOs).
+- Source repository: [Kazo-ca/Os](https://github.com/Kazo-ca/Os).
 
 ## Getting started
 
-Prerequisite: the .NET 10 SDK (`wasm2/HackerOs/global.json`).
+Prerequisite: the .NET 10 SDK (`wasm2/KazoOs/global.json`).
 
 ```bash
-cd wasm2/HackerOs
-dotnet build HackerOs.sln
-dotnet test HackerOs.sln
-dotnet run --project OS/HackerOs.Ecosystem     # the OS as a standalone PWA
+cd wasm2/KazoOs
+dotnet build Kazo.Os.sln
+dotnet test Kazo.Os.sln
+dotnet run --project OS/Kazo.Os.Ecosystem     # the OS as a standalone PWA
 ```
 
 Debug hosts, the trimmed publish, known workarounds and how to run the E2E
@@ -43,11 +43,11 @@ tests are described in
 
 | To… | Read |
 | --- | --- |
-| Discover what HackerOS offers and what is coming | [`features.md`](doc/en/wasm/features.md) |
+| Discover what Kazo OS offers and what is coming | [`features.md`](doc/en/wasm/features.md) |
 | Understand the OS code | [`project-overview.md`](doc/en/wasm/dev/project-overview.md), then [`doc/en/wasm/dev/`](doc/en/wasm/dev/README.md) |
 | Write an app, a command or a service | [`sdk-developer-guide.md`](doc/en/wasm/framework/sdk-developer-guide.md) and [`sdk-reference.md`](doc/en/wasm/framework/sdk-reference.md) |
-| Build on HackerOS from another repository | [`building-on-hackeros.md`](doc/en/wasm/framework/building-on-hackeros.md) |
-| Create an internal web site (ASP.Hack, Blazor) | [`asp-hack-developer-guide.md`](doc/en/wasm/framework/asp-hack-developer-guide.md) |
+| Build on Kazo OS from another repository | [`building-on-kazoos.md`](doc/en/wasm/framework/building-on-kazoos.md) |
+| Create an internal web site (ASP.Kazo, Blazor) | [`asp-kazo-developer-guide.md`](doc/en/wasm/framework/asp-kazo-developer-guide.md) |
 | Avoid problems already met | [`pitfalls.md`](doc/en/wasm/dev/pitfalls.md) |
 | Know the project state and its conventions | [`doc/en/wasm/memory/`](doc/en/wasm/memory/README.md) |
 | Architecture decisions | [`doc/en/wasm/dev/adr/`](doc/en/wasm/dev/adr/README.md) |
@@ -56,7 +56,7 @@ tests are described in
 
 | Folder | Contents |
 | --- | --- |
-| [`wasm2/HackerOs/`](wasm2/HackerOs/README.md) | **Active version**: the HackerOS solution (OS, SDK, apps, hosts, tests). |
+| [`wasm2/KazoOs/`](wasm2/KazoOs/README.md) | **Active version**: the Kazo OS solution (OS, SDK, apps, hosts, tests). |
 | [`doc/`](doc/README.md) | Documentation, in English ([`doc/en/`](doc/en/README.md)) and French ([`doc/fr/`](doc/fr/README.md)). |
 | [`src/`](src/README.md) | Legacy TypeScript version, kept read-only as a reference. |
 | [`.github/workflows/`](.github/workflows/) | Verification and GitHub Pages publishing. |
@@ -65,7 +65,7 @@ tests are described in
 ## Legacy version (TypeScript)
 
 The first version, written in TypeScript with Webpack, stays in
-[`src/`](src/README.md) and is published at <https://hackos.kazo.ca/legacy/>. It
+[`src/`](src/README.md) and is published at <https://os.kazo.ca/legacy/>. It
 no longer gets new features. Its documentation (building with Node.js 20,
 layout, features) is in [`src/README.md`](src/README.md).
 
@@ -77,14 +77,14 @@ Both versions are published by a single
 
 1. Check the [features overview](doc/en/wasm/features.md): the feature may
    already exist or be in development.
-2. Search the [open issues](https://github.com/Kazo-ca/HackerOs/issues): if
+2. Search the [open issues](https://github.com/Kazo-ca/Os/issues): if
    someone already asked for it, add your use case in a comment.
 3. Otherwise, open an issue with the
-   [**Feature request** form](https://github.com/Kazo-ca/HackerOs/issues/new?template=feature_request.yml):
+   [**Feature request** form](https://github.com/Kazo-ca/Os/issues/new?template=feature_request.yml):
    describe the need (what you want to do and why), the solution you imagine
    and the part of the OS it touches. French or English are both fine.
 4. The maintainer answers in the issue. To report a problem, use the
-   [**Bug report** form](https://github.com/Kazo-ca/HackerOs/issues/new?template=bug_report.yml)
+   [**Bug report** form](https://github.com/Kazo-ca/Os/issues/new?template=bug_report.yml)
    instead.
 
 Details are in [`CONTRIBUTING.md`](CONTRIBUTING.md#asking-for-a-feature).

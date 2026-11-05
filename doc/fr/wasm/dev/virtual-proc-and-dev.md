@@ -7,7 +7,7 @@ Mise en œuvre de la section 5.4 du [plan de refonte](plans/ecosystem-rebuild-pl
 
 ## Rôle
 
-HackerOS expose l'état du système comme Linux : `/proc` décrit les processus,
+Kazo OS expose l'état du système comme Linux : `/proc` décrit les processus,
 la mémoire, le CPU et la charge ; `/dev` offre les périphériques `null`, `zero`,
 `random` et `urandom`, plus `kmsg` quand l'hôte fournit le journal du noyau
 (ADR 0126). Les deux montages sont **calculés à chaque lecture** et
@@ -15,7 +15,7 @@ la mémoire, le CPU et la charge ; `/dev` offre les périphériques `null`, `zer
 
 ## Architecture
 
-Code : `Platform/HackerOs.Platform.Core/FileSystem/Virtual/`.
+Code : `Platform/Kazo.Os.Platform.Core/FileSystem/Virtual/`.
 
 | Type | Rôle |
 | --- | --- |
@@ -38,7 +38,7 @@ montre, puis le fournisseur virtuel les masque.
 Contrats touchés :
 
 - `FileSystemEntryKind.CharacterDevice` et `CharacterDeviceMetadata`
-  (`Shared/HackerOs.Simulation.Abstractions/FileSystem/FileSystemEntryMetadata.cs`).
+  (`Shared/Kazo.Os.Simulation.Abstractions/FileSystem/FileSystemEntryMetadata.cs`).
   Les fournisseurs IndexedDB et mémoire refusent de créer ce type
   (`UnsupportedOperation`). `ls -l` l'affiche avec `c` (et les liens avec `l`).
 - `AppOperationContext.ProcessId` (`long?`), renseigné par
@@ -56,7 +56,7 @@ Contrats touchés :
 | `/proc/<pid>/environ` | fichier `0400` | paires `NOM=valeur` terminées par NUL (phase 3) ; vide sans entrée |
 | `/proc/<pid>/cwd` | lien `0777` | répertoire courant du processus (phase 3) ; `/home/<login>` sans entrée |
 | `/proc/<pid>/stat` | fichier `0444` | une ligne au format `proc(5)`, 52 champs ; `utime` et `stime` (14 et 15) en `USER_HZ`, mesurés quand la mesure CPU est active, sinon `utime` reconstruit depuis le simulateur (phase 5, ADR 0067, [`cpu-accounting.md`](cpu-accounting.md)) ; `priority` et `nice` (18 et 19) depuis la valeur `nice` du processus (ADR 0127, [`process-priority-and-unresponsive-windows.md`](process-priority-and-unresponsive-windows.md)) |
-| `/proc/<pid>/limits` | fichier `0444` | tableau de `proc(5)` limité aux quatre limites appliquées (`Max cpu time`, `Max resident set`, `Max processes`, `Max open files`), puis `# enforcement: strict (worker)`, `best-effort (main thread)` ou `off (HackerOs:ResourceLimits:Enabled=false)` et, sans mesure, `# cpu, rss: inactive (not measured)` (ADR 0125 et 0139, [`process-limits.md`](process-limits.md)) |
+| `/proc/<pid>/limits` | fichier `0444` | tableau de `proc(5)` limité aux quatre limites appliquées (`Max cpu time`, `Max resident set`, `Max processes`, `Max open files`), puis `# enforcement: strict (worker)`, `best-effort (main thread)` ou `off (KazoOs:ResourceLimits:Enabled=false)` et, sans mesure, `# cpu, rss: inactive (not measured)` (ADR 0125 et 0139, [`process-limits.md`](process-limits.md)) |
 | `/proc/<pid>/fd/` | dossier `0500` | un lien par descripteur ouvert : `0`, `1`, `2` vers `/dev/tty` (terminal) ou `/dev/null`, puis le fichier lu ou écrit (`exec/2`) |
 | `/proc/<pid>/oom_score` | fichier `0444` | `VmRSS × 1000 / MemTotal + oom_score_adj`, borné à `[0, 2000]` ; `0` pour un processus exempté (`oom_score_adj` = `-1000`) (ADR 0126, [`oom-killer.md`](oom-killer.md)) |
 | `/proc/<pid>/oom_score_adj` | fichier `0644` | `-1000` à `1000` ; le propriétaire monte la valeur, descendre sous le plancher demande `sudo` (ADR 0142 §2) |
@@ -82,7 +82,7 @@ State:	R (running)
 Pid:	42
 PPid:	7
 Uid:	aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-AppId:	org.hackeros.apps.code-editor-deluxe
+AppId:	org.kazoos.apps.code-editor-deluxe
 Kind:	window
 Session:	bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
 VmRSS:	3072 kB
@@ -92,7 +92,7 @@ MemSource:	simulated
 ```
 
 `Name` est le dernier segment de l'`appId`, tronqué à 15 caractères. Pour une
-tâche `HackBackground` (ADR 0128, ADR 0140, [`background-jobs.md`](../framework/background-jobs.md)),
+tâche `KazoBackground` (ADR 0128, ADR 0140, [`background-jobs.md`](../framework/background-jobs.md)),
 `Name` est le nom de la tâche (`code-editor:sea`, tronqué de même) et deux
 lignes suivent `Session` : `Job:` (le nom entier, `code-editor:search`) et
 `Host:` (`MainThread` ou `Worker`). `Cpu` est
@@ -106,7 +106,7 @@ processus simulé sans code) ; voir
 Quand la mémoire d'un processus est mesurée (ADR 0068,
 [`memory-accounting.md`](memory-accounting.md)), cinq lignes suivent `VmRSS`,
 dans l'ordre de Linux : `RssAnon`, `RssFile`, `VmData` (part noyau), `VmExe`
-en kB, puis `HackAllocBytes` (octets alloués depuis le démarrage du processus,
+en kB, puis `KazoAllocBytes` (octets alloués depuis le démarrage du processus,
 sans unité). `VmRSS = RssAnon + RssFile + VmData`. Un processus simulé n'a
 aucune de ces lignes : le format est exactement celui d'avant la phase 5.
 
@@ -185,13 +185,13 @@ proc /proc proc ro 0 0
   seconde simulée : `status`, `meminfo`, `uptime` et `loadavg` ne restent plus à
   zéro dans un hôte réel.
 
-- `/proc/hackeros/workers` (ADR 0071 §5) n'existe que si l'hôte a des Web
+- `/proc/kazoos/workers` (ADR 0071 §5) n'existe que si l'hôte a des Web
   Workers : d'abord l'isolation cross-origin de la page
   (`cross-origin-isolated: yes|no`, raison, réglage, COEP, tubes partagés,
   appels synchrones, mesure de la mémoire, résolution des minuteries ; ADR 0131
   §5, ADR 0143 §8), puis capacité, taille du pool, puis une ligne par worker (rôle, état,
   cœur, mémoire, âge du battement, temps occupé, PID visibles). Format :
-  [`worker-processes.md`](worker-processes.md#prochackerosworkers).
+  [`worker-processes.md`](worker-processes.md#prockazoosworkers).
 
 Visibilité : seuls les processus actifs apparaissent. L'appelant voit toujours
 son propre processus, et les autres avec `process.list` ou l'autorité `System`.
@@ -230,7 +230,7 @@ pour agir.
   en phase 3. Elle est faite dès la phase 1, comme le demande la section 5.4 du
   plan, parce qu'elle ne dépend que de `/proc`. La refonte des commandes de la
   phase 3 la conserve. Le gestionnaire de tâches est passé à `/proc` en
-  phase 4 ([`task-manager.md`](task-manager.md), `HackProcess`).
+  phase 4 ([`task-manager.md`](task-manager.md), `KazoProcess`).
 - **Pas d'événements de changement** : le marqueur `IVirtualFileSystemProvider`
   est vérifié au seul endroit qui publie, `FileSystemService`.
 - **Mutations refusées par le fournisseur lui-même**, en plus des bits de mode :
@@ -242,14 +242,14 @@ pour agir.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/FileSystem/Virtual/` : listage de `/`,
+- `Tests/Kazo.Os.Platform.Core.Tests/FileSystem/Virtual/` : listage de `/`,
   formats exacts de `status`, `meminfo`, `cpuinfo`, `uptime` et `loadavg`,
   visibilité selon `process.list`, `/proc/self`, refus des mutations, `/dev/null`,
   lecture bornée de `/dev/zero`, annulation, refus de `CharacterDevice` par le
   stockage, et aucune écriture dans le dépôt racine.
-- `Tests/HackerOs.Commands.Wave5.Tests/PsCommandTests.cs` : `ps` contre le vrai
+- `Tests/Kazo.Os.Commands.Wave5.Tests/PsCommandTests.cs` : `ps` contre le vrai
   fournisseur `/proc`.
-- `Tests/HackerOs.Platform.Core.Tests/FileSystem/Virtual/ProcMetricsTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/FileSystem/Virtual/ProcMetricsTests.cs` :
   fichiers de mesure de la phase 4 (voir [`system-metrics.md`](system-metrics.md)).
 
 ## Liste des tâches

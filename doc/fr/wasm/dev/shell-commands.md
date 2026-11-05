@@ -26,27 +26,27 @@ shell lui-même (comme les built-ins de bash) le font par une interface du SDK,
 amélioré sans toucher au terminal.
 
 ```text
-alice@hackeros:~$ cd projets && export CIBLE=10.0.0.5 && env | grep CIBLE
+alice@kazoos:~$ cd projets && export CIBLE=10.0.0.5 && env | grep CIBLE
 CIBLE=10.0.0.5
-alice@hackeros:~/projets$ cd -
+alice@kazoos:~/projets$ cd -
 /home/alice
-alice@hackeros:~$ sudo cat /etc/shadow | wc -l
+alice@kazoos:~$ sudo cat /etc/shadow | wc -l
 ```
 
 ## Architecture
 
 | Élément | Emplacement | Rôle |
 |---|---|---|
-| `IShellSession`, `ShellCommandInfo`, `ShellJobInfo`, `ShellJobState` | `Shared/HackerOs.AppSdk/IShellSession.cs` | Accès au shell appelant : répertoire, environnement, historique, `ChangeDirectoryAsync`, `SetVariable`, `UnsetVariable`, `GetCommands`, `RunElevatedAsync` ; depuis l'ADR 0064 `GetVariable` (variables non exportées comprises), `AssignVariable` (`read`), `RunAsync` (une ligne dans un sous-shell, `watch`), `Jobs` et `KillJob` (`jobs`, `kill %n`). Membres par défaut : une implémentation existante compile toujours. |
-| `TerminalExecutionContext.Shell` | `Shared/HackerOs.AppSdk/` | Le shell, ou `null`. |
-| `AppCapabilities.ShellControl` | `Shared/HackerOs.App.Abstractions/` | `shell.control`, classée **normale** (ADR 0049). |
-| `ShellSessionAccess` | `Platform/HackerOs.Platform.Core/Shell/` | Implémentation interne d'`IShellSession`, créée par l'interpréteur pour une étape. |
+| `IShellSession`, `ShellCommandInfo`, `ShellJobInfo`, `ShellJobState` | `Shared/Kazo.Os.AppSdk/IShellSession.cs` | Accès au shell appelant : répertoire, environnement, historique, `ChangeDirectoryAsync`, `SetVariable`, `UnsetVariable`, `GetCommands`, `RunElevatedAsync` ; depuis l'ADR 0064 `GetVariable` (variables non exportées comprises), `AssignVariable` (`read`), `RunAsync` (une ligne dans un sous-shell, `watch`), `Jobs` et `KillJob` (`jobs`, `kill %n`). Membres par défaut : une implémentation existante compile toujours. |
+| `TerminalExecutionContext.Shell` | `Shared/Kazo.Os.AppSdk/` | Le shell, ou `null`. |
+| `AppCapabilities.ShellControl` | `Shared/Kazo.Os.App.Abstractions/` | `shell.control`, classée **normale** (ADR 0049). |
+| `ShellSessionAccess` | `Platform/Kazo.Os.Platform.Core/Shell/` | Implémentation interne d'`IShellSession`, créée par l'interpréteur pour une étape. |
 | `ShellSession.Fork()` | idem | Copie du shell pour une étape d'un tube (sous-shell). |
 | `ShellInterpreter.GetInstalledCommands()` / `RunElevatedAsync` | idem | Liste des commandes installées ; exécution élevée de `sudo`. |
 | `ShellExecutionOptions.CredentialPrompt` | idem | Fenêtre d'identifiants fournie par l'hôte du shell (le terminal). |
-| `AppLaunchRequest.Shell`, `CommandName` | `Platform/HackerOs.Platform.Core/Lifecycle/` | Shell transmis à la commande ; nom d'appel qui devient `argv[0]`. |
-| `TerminalControlSequenceDecoder` | `Shared/HackerOs.AppSdk.Terminal/` | Interprète les séquences ECMA-48 écrites par les commandes (effacement d'écran). |
-| Commandes | `Apps/Commands/HackerOs.Commands/{Cd,Pwd,Clear,Help,Sudo,Export,Unset,Env,Alias}/` | Commandes du catalogue. |
+| `AppLaunchRequest.Shell`, `CommandName` | `Platform/Kazo.Os.Platform.Core/Lifecycle/` | Shell transmis à la commande ; nom d'appel qui devient `argv[0]`. |
+| `TerminalControlSequenceDecoder` | `Shared/Kazo.Os.AppSdk.Terminal/` | Interprète les séquences ECMA-48 écrites par les commandes (effacement d'écran). |
+| Commandes | `Apps/Commands/Kazo.Os.Commands/{Cd,Pwd,Clear,Help,Sudo,Export,Unset,Env,Alias}/` | Commandes du catalogue. |
 
 ### Qui reçoit le shell
 
@@ -114,26 +114,26 @@ appelée** (`AppLaunchRequest.CommandName`), y compris un alias du manifeste,
 comme pour un binaire multi-appel. `alias` déclare `addalias`, `rmalias` et
 `unalias` ; appelé sous `rmalias` ou `unalias`, il se comporte comme
 `alias -r`. L'interpréteur ne réécrit plus ces noms. L'expansion des alias de
-l'utilisateur (`~/.hackeros/aliases`) reste dans le shell.
+l'utilisateur (`~/.kazoos/aliases`) reste dans le shell.
 
 ## Commandes
 
 | Commande | Identifiant d'app | Capacités | Comportement |
 |---|---|---|---|
-| `cd [dir\|-]` | `org.hackeros.cmd.cd` | `shell.control`, `filesystem.user-home.read`, `filesystem.system.read` | Sans argument : `HOME`. `-` : `OLDPWD`, affiché. Erreurs `No such file or directory`, `Not a directory`, `Permission denied`, code `1`. |
-| `pwd` | `org.hackeros.cmd.pwd` | — | Son propre répertoire, hérité du shell. |
-| `clear` (`cls`) | `org.hackeros.commands.clear` | — | Écrit `ESC[H ESC[2J ESC[3J`. |
-| `help [cmd…]` (`man`) | `org.hackeros.commands.help` | `shell.control` | Liste les commandes installées (`GetCommands`) ou l'usage et les alias d'une commande. Sans shell : code `1`. |
-| `export [NOM=valeur…]` | `org.hackeros.commands.export` | `shell.control` | Modifie l'environnement du shell. Sans argument (ou `-p`) : lignes `declare -x NOM="valeur"`. `export NOM` garde la valeur ou exporte une valeur vide. Nom invalide : ``export: `x': not a valid identifier``, code `1`. |
-| `unset NOM…` | `org.hackeros.commands.unset` | `shell.control` | Retire des variables du shell ; une variable absente n'est pas une erreur. |
-| `env` | `org.hackeros.commands.env` | — | Son propre environnement, une ligne `NOM=valeur` par variable, triée. `env NOM=v commande` n'est pas pris en charge (code `125`). |
-| `sudo cmd args…` | `org.hackeros.commands.sudo` | `shell.control` | Voir ci-dessus. |
-| `exit [n]` | `org.hackeros.commands.exit` | `shell.control` | `IShellSession.Exit` : le shell sort avec `n` (modulo 256) ou `$?` ; la suite de la ligne n'est pas exécutée ; argument non numérique : code `2` ; trop d'arguments : code `1`, le shell reste ([`terminal-console.md`](terminal-console.md)). |
-| `alias`, `addalias`, `rmalias`, `unalias` | `org.hackeros.commands.alias` | `filesystem.user-home.*` | `rmalias`/`unalias` = `alias -r`, choisi par `argv[0]`. |
-| `read [-r] [-p p] [nom…]` | `org.hackeros.commands.read` | `shell.control` | ADR 0064 : lit une ligne de l'entrée standard et affecte les champs par `AssignVariable` ([`linux-commands.md`](linux-commands.md)). |
-| `jobs [-lprs]` | `org.hackeros.commands.jobs` | `shell.control` | ADR 0064 : jobs du shell (`IShellSession.Jobs`). |
-| `kill [-SIG] pid\|%job` | `org.hackeros.commands.kill` | `process.manage`, `shell.control` | ADR 0064 : `%n` passe par `IShellSession.KillJob`. ADR 0069 : sans option (ou `-15`, `-TERM`), `SIGTERM` — la cible reçoit `StopRequested` (raison `Terminated`, échéance à 5 s simulées), puis son jeton est annulé, et elle est tuée si elle ne s'est pas terminée ; `-9`/`-KILL` tue tout de suite, sans `StopRequested`. Une commande tuée sort avec `137`, une commande qui s'arrête sur son jeton avec `130`. |
-| `which nom…`, `watch cmd` | `org.hackeros.commands.which`, `…watch` | `shell.control` | ADR 0064 : liste des commandes du shell ; `watch` relance la ligne par `IShellSession.RunAsync`. |
+| `cd [dir\|-]` | `org.kazoos.cmd.cd` | `shell.control`, `filesystem.user-home.read`, `filesystem.system.read` | Sans argument : `HOME`. `-` : `OLDPWD`, affiché. Erreurs `No such file or directory`, `Not a directory`, `Permission denied`, code `1`. |
+| `pwd` | `org.kazoos.cmd.pwd` | — | Son propre répertoire, hérité du shell. |
+| `clear` (`cls`) | `org.kazoos.commands.clear` | — | Écrit `ESC[H ESC[2J ESC[3J`. |
+| `help [cmd…]` (`man`) | `org.kazoos.commands.help` | `shell.control` | Liste les commandes installées (`GetCommands`) ou l'usage et les alias d'une commande. Sans shell : code `1`. |
+| `export [NOM=valeur…]` | `org.kazoos.commands.export` | `shell.control` | Modifie l'environnement du shell. Sans argument (ou `-p`) : lignes `declare -x NOM="valeur"`. `export NOM` garde la valeur ou exporte une valeur vide. Nom invalide : ``export: `x': not a valid identifier``, code `1`. |
+| `unset NOM…` | `org.kazoos.commands.unset` | `shell.control` | Retire des variables du shell ; une variable absente n'est pas une erreur. |
+| `env` | `org.kazoos.commands.env` | — | Son propre environnement, une ligne `NOM=valeur` par variable, triée. `env NOM=v commande` n'est pas pris en charge (code `125`). |
+| `sudo cmd args…` | `org.kazoos.commands.sudo` | `shell.control` | Voir ci-dessus. |
+| `exit [n]` | `org.kazoos.commands.exit` | `shell.control` | `IShellSession.Exit` : le shell sort avec `n` (modulo 256) ou `$?` ; la suite de la ligne n'est pas exécutée ; argument non numérique : code `2` ; trop d'arguments : code `1`, le shell reste ([`terminal-console.md`](terminal-console.md)). |
+| `alias`, `addalias`, `rmalias`, `unalias` | `org.kazoos.commands.alias` | `filesystem.user-home.*` | `rmalias`/`unalias` = `alias -r`, choisi par `argv[0]`. |
+| `read [-r] [-p p] [nom…]` | `org.kazoos.commands.read` | `shell.control` | ADR 0064 : lit une ligne de l'entrée standard et affecte les champs par `AssignVariable` ([`linux-commands.md`](linux-commands.md)). |
+| `jobs [-lprs]` | `org.kazoos.commands.jobs` | `shell.control` | ADR 0064 : jobs du shell (`IShellSession.Jobs`). |
+| `kill [-SIG] pid\|%job` | `org.kazoos.commands.kill` | `process.manage`, `shell.control` | ADR 0064 : `%n` passe par `IShellSession.KillJob`. ADR 0069 : sans option (ou `-15`, `-TERM`), `SIGTERM` — la cible reçoit `StopRequested` (raison `Terminated`, échéance à 5 s simulées), puis son jeton est annulé, et elle est tuée si elle ne s'est pas terminée ; `-9`/`-KILL` tue tout de suite, sans `StopRequested`. Une commande tuée sort avec `137`, une commande qui s'arrête sur son jeton avec `130`. |
+| `which nom…`, `watch cmd` | `org.kazoos.commands.which`, `…watch` | `shell.control` | ADR 0064 : liste des commandes du shell ; `watch` relance la ligne par `IShellSession.RunAsync`. |
 
 Ouvrir un fichier, un dossier ou une URI depuis le shell passe par
 `xdg-open` (ADR 0096 §3, [`linux-commands.md`](linux-commands.md)) : la
@@ -153,7 +153,7 @@ sinon.
 `TerminalPanel` ne garde que l'édition de ligne, l'affichage, la complétion et
 les fenêtres d'identifiants. La complétion par Tab propose les noms et alias
 des commandes **installées**, comme `help` ; depuis `4-sdk-shell-host`, c'est le
-shell qui la calcule (`IHackShell.CompleteAsync`, [`shell-host.md`](../framework/shell-host.md)), chemins compris depuis `4-terminal` ([`terminal-console.md`](terminal-console.md)). `TerminalBuiltins` et le crochet `IShellBuiltins` de l'interpréteur ont
+shell qui la calcule (`IKazoShell.CompleteAsync`, [`shell-host.md`](../framework/shell-host.md)), chemins compris depuis `4-terminal` ([`terminal-console.md`](terminal-console.md)). `TerminalBuiltins` et le crochet `IShellBuiltins` de l'interpréteur ont
 disparu.
 
 ## Décisions clés
@@ -170,22 +170,22 @@ disparu.
 - **Commande introuvable sous `sudo` : code `1`**, comme le vrai `sudo`, au
   lieu de `127` pour le shell.
 - **`cd` vérifie par un vrai `chdir`** du processus de la commande, puis le
-  défait : la vérification passe par l'API `Hack*` publique, avec les droits
+  défait : la vérification passe par l'API `Kazo*` publique, avec les droits
   de la commande, sans nouvelle API interne.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Shell/ShellInterpreterTests.cs` : bout en
+- `Tests/Kazo.Os.Platform.Core.Tests/Shell/ShellInterpreterTests.cs` : bout en
   bout avec les vraies commandes du catalogue (`cd` et `&&`, `cd -`, erreurs,
   copie dans un tube, `export`/`unset`/`env`, `help` qui suit les commandes
   installées, `clear` et sa redirection, `sudo` enfant de `sudo` avec ticket,
   refus de `sudo cd` et des identifiants, shell absent pour
   `ExecuteCommandIntent` et pour une commande sans `shell.control`, `unalias`).
-- `Tests/HackerOs.AppSdk.Terminal.Tests/TerminalControlSequenceDecoderTests.cs`.
-- `Tests/HackerOs.Commands.Tests/CoreCommandsTests.cs` et
-  `Tests/HackerOs.Commands.Wave5.Tests/Wave5Tests.cs` : `cd`, `clear`, `help`
-  avec `FakeShellSession` (`Tests/HackerOs.Tests.Support/`).
-- `Tests/HackerOs.Ecosystem.Tests` : 87 apps intégrées, 70 commandes (`stress` depuis `rebuild/5-worker-processes`, `ausearch` depuis `v3/8`, `xdg-open` depuis `v3/4`, `hackbackup` depuis `v3/7`, `localectl` depuis `v3/12`, `xdg-mime` depuis `v3/4b`, `passwd` depuis `v3/8`).
+- `Tests/Kazo.Os.AppSdk.Terminal.Tests/TerminalControlSequenceDecoderTests.cs`.
+- `Tests/Kazo.Os.Commands.Tests/CoreCommandsTests.cs` et
+  `Tests/Kazo.Os.Commands.Wave5.Tests/Wave5Tests.cs` : `cd`, `clear`, `help`
+  avec `FakeShellSession` (`Tests/Kazo.Os.Tests.Support/`).
+- `Tests/Kazo.Os.Ecosystem.Tests` : 87 apps intégrées, 70 commandes (`stress` depuis `rebuild/5-worker-processes`, `ausearch` depuis `v3/8`, `xdg-open` depuis `v3/4`, `kazobackup` depuis `v3/7`, `localectl` depuis `v3/12`, `xdg-mime` depuis `v3/4b`, `passwd` depuis `v3/8`).
 
 ## Liste des tâches
 

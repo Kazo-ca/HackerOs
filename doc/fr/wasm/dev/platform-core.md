@@ -1,18 +1,18 @@
 > [English version](../../../en/wasm/dev/platform-core.md)
 
-# Plateforme : `HackerOs.Platform.Core`
+# Plateforme : `Kazo.Os.Platform.Core`
 
 ## Objet
 
-`Platform/HackerOs.Platform.Core` contient les services de l'OS, sans interface
+`Platform/Kazo.Os.Platform.Core` contient les services de l'OS, sans interface
 graphique : ce qui fait le système simulé (fichiers, processus, shell, sessions,
 capacités, réseau simulé, journaux). Il implémente les passerelles que le SDK
-expose aux apps (`IAppExecutionContext`, `Hack*`) et ne doit jamais être
+expose aux apps (`IAppExecutionContext`, `Kazo*`) et ne doit jamais être
 référencé par une app (règle de la frontière, ADR 0055). Les contrats qu'il
-implémente sont dans `Shared/HackerOs.Simulation.Abstractions` et
-`Shared/HackerOs.App.Abstractions` ; l'interface graphique est dans
-`HackerOs.Platform.Blazor`, le stockage navigateur dans
-`HackerOs.Infrastructure.Browser` ([`browser-infrastructure.md`](browser-infrastructure.md)).
+implémente sont dans `Shared/Kazo.Os.Simulation.Abstractions` et
+`Shared/Kazo.Os.App.Abstractions` ; l'interface graphique est dans
+`Kazo.Os.Platform.Blazor`, le stockage navigateur dans
+`Kazo.Os.Infrastructure.Browser` ([`browser-infrastructure.md`](browser-infrastructure.md)).
 
 Vue d'ensemble des couches : [`project-overview.md`](project-overview.md).
 Environ 240 fichiers C# (51 000 lignes) ; le dossier se lit par sous-système.
@@ -21,7 +21,7 @@ Environ 240 fichiers C# (51 000 lignes) ; le dossier se lit par sous-système.
 
 | Dossier | Rôle | Documents |
 |---|---|---|
-| `FileSystem/` | Service de fichiers, routeur de montages, autorisation, audit, fournisseurs `/proc` et `/dev`, amorçage de l'arbre | [`virtual-proc-and-dev.md`](virtual-proc-and-dev.md), [`hack-file-api.md`](../framework/hack-file-api.md) |
+| `FileSystem/` | Service de fichiers, routeur de montages, autorisation, audit, fournisseurs `/proc` et `/dev`, amorçage de l'arbre | [`virtual-proc-and-dev.md`](virtual-proc-and-dev.md), [`kazo-file-api.md`](../framework/kazo-file-api.md) |
 | `Execution/` | Passerelles par instance (`AppFileSystemGateway`, `AppProcessGateway`…), `AppExecutionContextFactory`, tâches de fond (`BackgroundJobService`) | [`app-sdk.md`](../framework/app-sdk.md), [`background-jobs.md`](../framework/background-jobs.md) |
 | `Processes/` | Processus en mémoire (`InMemoryProcessManager`, blocs de contrôle), environnement, limites (`ResourceLimitEnforcer`), tueur de mémoire (`OomKiller`), échantillonnage | [`process-environment.md`](process-environment.md), [`process-limits.md`](process-limits.md), [`oom-killer.md`](oom-killer.md) |
 | `Lifecycle/` | Cycle de vie des apps : lancement, arrêt, services `AutoStart`, activation des apps (`AppLifecycleOrchestrator`) | [`app-installation.md`](app-installation.md) |
@@ -39,7 +39,7 @@ Environ 240 fichiers C# (51 000 lignes) ; le dossier se lit par sous-système.
 | `Backup/`, `Storage/` | Sauvegarde et restauration de la machine, surveillance de l'espace | [`system-backup.md`](system-backup.md) |
 | `Administration/` | Passerelles d'administration du SDK (paramètres système, alimentation, sauvegarde, diagnostics du stockage, comptes) | [`sdk-reference.md`](../framework/sdk-reference.md) |
 | `Clipboard/`, `Notifications/`, `Time/`, `Power/`, `Isolation/`, `Globalization/`, `Events/` | Presse-papiers, notifications, horloge simulée, arrêt, isolation cross-origin, langue de session, bus d'événements | [`clipboard.md`](clipboard.md), [`worker-processes.md`](worker-processes.md#isolation-cross-origin-adr-0131-adr-0143) |
-| `WebData/` | Base de données des sites ASP.Hack (`WebSiteDatabaseStore`) | [`asp-hack-site-data.md`](../framework/asp-hack-site-data.md) |
+| `WebData/` | Base de données des sites ASP.Kazo (`WebSiteDatabaseStore`) | [`asp-kazo-site-data.md`](../framework/asp-kazo-site-data.md) |
 
 ## Services et composition
 
@@ -47,9 +47,9 @@ Environ 240 fichiers C# (51 000 lignes) ; le dossier se lit par sous-système.
   instance (fenêtre, service, commande) à partir des singletons de la plateforme
   et des capacités accordées. Chaque passerelle vérifie la capacité qu'elle
   exige avant d'agir (`AppCapabilityChecker`).
-- Les services sont enregistrés par `AddHackerOsEcosystem`
-  (`OS/HackerOs.Ecosystem.Host`), qui déclare les services de cette couche ;
-  `AddHackerOsPlatformLocalization` (`Globalization/`) en fait partie.
+- Les services sont enregistrés par `AddKazoOsEcosystem`
+  (`OS/Kazo.Os.Ecosystem.Host`), qui déclare les services de cette couche ;
+  `AddKazoOsPlatformLocalization` (`Globalization/`) en fait partie.
 - Plusieurs services ont une implémentation `InMemory*` (tests, mode sans
   navigateur) ; la persistance réelle vient de l'infrastructure navigateur.
 
@@ -66,7 +66,7 @@ Environ 240 fichiers C# (51 000 lignes) ; le dossier se lit par sous-système.
 
 ## Tests
 
-`Tests/HackerOs.Platform.Core.Tests` couvre les sous-systèmes ci-dessus ; les
-tests par fonctionnalité sont dans les projets `Tests/HackerOs.Platform.*`,
-`Tests/HackerOs.Ecosystem.Tests` et `Tests/HackerOs.Commands.Tests`. Commandes :
+`Tests/Kazo.Os.Platform.Core.Tests` couvre les sous-systèmes ci-dessus ; les
+tests par fonctionnalité sont dans les projets `Tests/Kazo.Os.Platform.*`,
+`Tests/Kazo.Os.Ecosystem.Tests` et `Tests/Kazo.Os.Commands.Tests`. Commandes :
 [`building-and-testing.md`](building-and-testing.md).

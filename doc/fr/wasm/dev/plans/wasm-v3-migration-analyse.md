@@ -1,10 +1,10 @@
 > [English version](../../../../en/wasm/dev/plans/wasm-v3-migration-analyse.md)
 
-# HackerOS WebAssembly v3 Migration Analysis
+# Kazo OS WebAssembly v3 Migration Analysis
 
 > **Mise à jour du 2026-10-17 :** le jeu n'est plus dans ce dépôt. La phase
 > « gameplay systems » (vague 6) est retirée : le jeu vivra dans un autre dépôt
-> qui utilise l'écosystème HackerOS ([ADR 0092](../adr/0092-game-in-a-separate-repository.md)).
+> qui utilise l'écosystème Kazo OS ([ADR 0092](../adr/0092-game-in-a-separate-repository.md)).
 > Ce qui reste à faire de cette analyse est planifié dans
 > [`wasm-v3-completion-plan.md`](wasm-v3-completion-plan.md).
 >
@@ -23,7 +23,7 @@
 
 ## 1. Purpose
 
-HackerOS v3 will migrate the working TypeScript browser simulation in `src/` to
+Kazo OS v3 will migrate the working TypeScript browser simulation in `src/` to
 a modular Blazor WebAssembly ecosystem. The result must be both:
 
 - a usable base operating system with first-party system applications; and
@@ -64,7 +64,7 @@ that must be passed before the migration expands.
 
 ### 3.1 Product goals
 
-1. Ship a functional offline-first HackerOS base with a desktop, windows,
+1. Ship a functional offline-first Kazo OS base with a desktop, windows,
    taskbar, launcher, terminal, virtual files, settings, and application
    lifecycle.
 2. Make every non-boot-critical app replaceable and independently versioned.
@@ -148,42 +148,42 @@ implementation details.
 Use multiple shared projects with one-way dependencies:
 
 ```text
-wasm2/HackerOs/
-  HackerOs.sln
+wasm2/KazoOs/
+  Kazo.Os.sln
   OS/
-    HackerOs.Ecosystem/                 # Runnable Blazor WASM PWA host
+    Kazo.Os.Ecosystem/                 # Runnable Blazor WASM PWA host
   Shared/
-    HackerOs.App.Abstractions/           # Stable manifests, contracts, DTOs
-    HackerOs.AppSdk/                     # Lifecycle plus terminal/service bases
-    HackerOs.AppSdk.Blazor/              # Window base and shared app UI contracts
-    HackerOs.Simulation.Abstractions/     # Files, processes, network, clock contracts
+    Kazo.Os.App.Abstractions/           # Stable manifests, contracts, DTOs
+    Kazo.Os.AppSdk/                     # Lifecycle plus terminal/service bases
+    Kazo.Os.AppSdk.Blazor/              # Window base and shared app UI contracts
+    Kazo.Os.Simulation.Abstractions/     # Files, processes, network, clock contracts
   Platform/
-    HackerOs.Platform.Core/              # Registry, lifecycle, policies, associations
-    HackerOs.Platform.Blazor/            # Desktop, window shell, taskbar, launcher
-    HackerOs.Infrastructure.Browser/     # IndexedDB, PWA, browser interop adapters
+    Kazo.Os.Platform.Core/              # Registry, lifecycle, policies, associations
+    Kazo.Os.Platform.Blazor/            # Desktop, window shell, taskbar, launcher
+    Kazo.Os.Infrastructure.Browser/     # IndexedDB, PWA, browser interop adapters
   Apps/
     System/
-      HackerOs.Apps.Terminal/
-      HackerOs.Apps.FileExplorer/
-      HackerOs.Apps.Settings/
-      HackerOs.Apps.SystemMonitor/
+      Kazo.Os.Apps.Terminal/
+      Kazo.Os.Apps.FileExplorer/
+      Kazo.Os.Apps.Settings/
+      Kazo.Os.Apps.SystemMonitor/
       ...one project per independently versioned app...
     Commands/
-      HackerOs.Commands.Ls/
-      HackerOs.Commands.Cd/
+      Kazo.Os.Commands.Ls/
+      Kazo.Os.Commands.Cd/
       ...one project per independently versioned command app...
     Samples/
-      HackerOs.Samples.WindowApp/
-      HackerOs.Samples.TerminalApp/
-      HackerOs.Samples.ServiceApp/
+      Kazo.Os.Samples.WindowApp/
+      Kazo.Os.Samples.TerminalApp/
+      Kazo.Os.Samples.ServiceApp/
   Server/
-    HackerOs.Server/                     # Optional sync and network proxy
-    HackerOs.Server.Contracts/           # Versioned transport records
+    Kazo.Os.Server/                     # Optional sync and network proxy
+    Kazo.Os.Server.Contracts/           # Versioned transport records
   Tests/
-    HackerOs.AppSdk.Tests/
-    HackerOs.Platform.Tests/
-    HackerOs.Infrastructure.Tests/
-    HackerOs.E2E.Tests/
+    Kazo.Os.AppSdk.Tests/
+    Kazo.Os.Platform.Tests/
+    Kazo.Os.Infrastructure.Tests/
+    Kazo.Os.E2E.Tests/
 ```
 
 Names may change during scaffolding. The dependency rules are the important
@@ -192,7 +192,7 @@ part.
 ### 6.2 Dependency rules
 
 1. App projects reference only the SDK/abstraction projects they require.
-2. App projects never reference `HackerOs.Ecosystem`, browser infrastructure,
+2. App projects never reference `Kazo.Os.Ecosystem`, browser infrastructure,
    another app implementation, or the root service provider.
 3. Cross-app integration uses app IDs, intents, files, commands, or shared
    contracts. It does not call another app's concrete class.
@@ -210,7 +210,7 @@ part.
 
 ```mermaid
 flowchart TB
-    Host[HackerOs.Ecosystem PWA] --> Kernel[Ecosystem Kernel]
+    Host[Kazo.Os.Ecosystem PWA] --> Kernel[Ecosystem Kernel]
     Host --> Shell[Desktop and Window Shell]
     Kernel --> Registry[App Registry and Package Catalog]
     Kernel --> Policy[Capability and Enablement Policy]
@@ -235,7 +235,7 @@ that gives apps unrestricted access to every implementation.
 ### 7.1 Canonical app identity
 
 Every app has a stable, globally unique app ID, preferably reverse-domain style,
-for example `org.hackeros.terminal`. The app ID is immutable after release and is
+for example `org.kazoos.terminal`. The app ID is immutable after release and is
 used for:
 
 - registry identity;
@@ -405,7 +405,7 @@ Required semantics:
 - no guarantee of execution after the PWA/tab closes; and
 - no correctness dependency on asynchronous unload cleanup.
 
-When the user shuts down HackerOS, the OS cancels all service tokens and waits up
+When the user shuts down Kazo OS, the OS cancels all service tokens and waits up
 to a configured deadline. In-memory state is discarded. Data already committed
 through settings or filesystem services remains persistent, but there is no job
 checkpoint/resume contract. Abrupt browser termination may prevent graceful
@@ -467,7 +467,7 @@ build, including explicit declaration of their dependencies. This phase reduces
 initial download size and proves delayed registration while preserving a known
 publish graph.
 
-This is not yet runtime installation from HackerOS storage. The assembly and its
+This is not yet runtime installation from Kazo OS storage. The assembly and its
 assets are still known when the PWA is published.
 
 The build profile marks app packages as eager or lazy, and build tooling
@@ -590,7 +590,7 @@ the signed build profile/installed package policy identifies trusted system apps
 
 Authorization evaluates both the app capability and the acting user authority.
 A system app does not lend its System authority to the normal user operating its
-UI. For example, a user editing `/etc/hackeros/file-associations.json` in the
+UI. For example, a user editing `/etc/kazoos/file-associations.json` in the
 system Text Editor still requires Administrator elevation. System authority is
 used only for explicit OS-owned operations running in a separate, audited system
 execution context. This prevents a trusted system UI from becoming an ambient
@@ -620,10 +620,10 @@ persisted representation.
 Recommended virtual paths are:
 
 ```text
-/etc/hackeros/                         # Protected OS/admin settings
-/etc/hackeros/file-associations.json   # Canonical file-association policy
-/etc/hackeros/apps/                    # Protected system app policy/defaults
-/home/{user}/.config/hackeros/         # User-writable OS preferences
+/etc/kazoos/                         # Protected OS/admin settings
+/etc/kazoos/file-associations.json   # Canonical file-association policy
+/etc/kazoos/apps/                    # Protected system app policy/defaults
+/home/{user}/.config/kazoos/         # User-writable OS preferences
 /home/{user}/.config/apps/{appId}/     # App/user settings
 ```
 
@@ -644,7 +644,7 @@ Requirements:
 7. Sensitive values may be redacted or represented by protected references;
   making settings file-accessible does not require exposing secrets as text.
 
-File associations and all OS/admin documents under `/etc/hackeros/` require
+File associations and all OS/admin documents under `/etc/kazoos/` require
 Administrator or System authority to modify. Users and apps with read permission
 may inspect them with a text editor. User-editable preferences remain under the
 current user's `.config` tree.
@@ -726,7 +726,7 @@ Only window apps may declare file handlers. The resolver:
 Associations should use MIME/media type when known and normalized extensions as
 a fallback. Manifests declare available handlers, while the canonical association
 and default policy is stored in the settings system and exposed at
-`/etc/hackeros/file-associations.json`. Installing an app cannot silently replace
+`/etc/kazoos/file-associations.json`. Installing an app cannot silently replace
 an existing default. Changing the policy requires Administrator or System
 authority. Disabling or uninstalling an app invalidates its configured defaults
 and the resolver falls back to another enabled handler or **Open With**.
@@ -753,7 +753,7 @@ window modality. Cancellation returns a normal cancelled result rather than an
 exception. The dialog implementation is shared OS UI with scoped assets; apps do
 not reimplement file pickers.
 
-These dialogs select from the HackerOS virtual filesystem. Access to native
+These dialogs select from the Kazo OS virtual filesystem. Access to native
 browser/device files is a separate future capability and must not be implied by
 these helpers.
 
@@ -830,7 +830,7 @@ quotas, or disable audit logging. These are explicit operator choices with
 startup warnings; they are not default behavior.
 
 When offline or when the server edition is not configured, external proxy calls
-return a clear unavailable result. Simulated HackerOS networking continues to
+return a clear unavailable result. Simulated Kazo OS networking continues to
 work locally.
 
 ## 14. Build Profile and Runtime Policy
@@ -917,7 +917,7 @@ for later apps.
 10. An app denied broad filesystem permission cannot obtain a broad filesystem
     handle through the normal SDK.
 11. A normal user can read but cannot modify
-  `/etc/hackeros/file-associations.json`; an Administrator or System app can
+  `/etc/kazoos/file-associations.json`; an Administrator or System app can
   edit it through a text editor, and valid changes update resolution without a
   reload while invalid changes are rejected atomically.
 12. File-open, file-save, and folder-selection helpers enforce filters,

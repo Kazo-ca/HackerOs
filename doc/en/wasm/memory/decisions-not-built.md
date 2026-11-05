@@ -25,27 +25,27 @@ everywhere (ADR 0178 to 0184).
 
 ## Browser: showing real sites (issue #266)
 
-Analysis of 2026-10-29. The HackerOS server proxy is built
+Analysis of 2026-10-29. The Kazo OS server proxy is built
 ([ADR 0210](../dev/adr/0210-browser-real-sites-through-the-proxy.md), `todo/base`
 series): the Browser's right, cookies, redirects, source icon, "Not secure",
 errors. Decisions still to build:
 
-- Source order: simulated network → HackerOs server proxy (done) → public
+- Source order: simulated network → Kazo OS server proxy (done) → public
   third-party proxy (can be turned off) → Wayback Machine automatically as a
   last resort. One source icon per new source (public proxy, archive).
 - No direct iframe to the real site: everything goes through the isolated `srcdoc`.
 - Firefox and Safari: show "not supported" when a function needs
   Chrome/Edge.
 
-## Ported third-party apps (`Kazo-ca/HackerOs-App-*` repositories)
+## Ported third-party apps (`Kazo-ca/Os-App-*` repositories)
 
 Decided on 2026-10-28:
 
 - Each wrapped open-source project lives in its own repository
-  (`HackerOs-App-Webamp`, `HackerOs-App-IRC` with KiwiIRC,
-  `HackerOs-App-BoxedWine`, and others), created from `HackerOs-AppTemplate`
-  (ADR 0176, `hackeros-solution` template of ADR 0207; the template repository
-  is regenerated at the release that contains this template) and listed in `HackerOs-AppMarketPlace` (Hack Store catalog,
+  (`Os-App-Webamp`, `Os-App-IRC` with KiwiIRC,
+  `Os-App-BoxedWine`, and others), created from `Os-AppTemplate`
+  (ADR 0176, `kazoos-solution` template of ADR 0207; the template repository
+  is regenerated at the release that contains this template) and listed in `Os-AppMarketPlace` (Kazo OS Store catalog,
   ADR 0188).
 - Each repository's licence follows the wrapped project's (GPL-2.0 for
   BoxedWine, for example), not MIT by default.
@@ -68,14 +68,14 @@ Debate of 2026-10-19, recap validated by Benoit, nothing started:
   host.
 - **Native apps**: one disposable Hyper-V VM per user (the VM is the sandbox),
   guest OS chosen by the administrator, warm pool of 2 VMs, queue when full.
-  Install by the administrator only + a HackerOS declaration file; access by
+  Install by the administrator only + a Kazo OS declaration file; access by
   group (e.g. `hostapps`). An agent in the VM captures each window, H.264 over
   WebSocket + WebCodecs, input over a Hyper-V socket. v1: keyboard, mouse, text
   clipboard, secondary windows. Home folder through WinFsp from the sync
-  store. Internet through NAT, no local network. Closing the app in HackerOS
+  store. Internet through NAT, no local network. Closing the app in Kazo OS
   closes it; losing the browser = grace period. Shown in `ps`, `kill` and Task
   Manager as "host" processes.
-- **Server-side HackerOS apps**: a server execution flag in `[AppManifest]`,
+- **Server-side Kazo OS apps**: a server execution flag in `[AppManifest]`,
   installed by the administrator, a restricted process per user, same SDK,
   files = synced home, network through the relay rules. Greyed out offline.
 - Planned: 5 ADRs and 9 work items, starting with a proof of concept of
@@ -85,7 +85,7 @@ Debate of 2026-10-19, recap validated by Benoit, nothing started:
 ## Ideas taken from daedalOS
 
 Evaluation of 2026-10-28. Benoit chose "nothing for now": finish the current
-series first. What HackerOS lacks and could use: URL deep links (`?app=`,
+series first. What Kazo OS lacks and could use: URL deep links (`?app=`,
 `?open=`), a "Run" box (Super+R), screensaver
 and idle lock, file search in the launcher, hover preview (see #242), file
 thumbnails (`~/.cache/thumbnails`), viewers (Markdown, PDF, images, video),
@@ -114,5 +114,5 @@ viewers live, scope of `?app=`, Eruda or not.
 ## Known gaps
 
 - Window geometry is not saved at sign-out.
-- Chrome captures `Ctrl+Shift+T` and `Ctrl+Shift+W` unless HackerOS is
+- Chrome captures `Ctrl+Shift+T` and `Ctrl+Shift+W` unless Kazo OS is
   installed as a PWA (ADR 0061).

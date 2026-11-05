@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Kazo OS",
+  "classifications": [ "Kazo OS", "Service", "App" ],
+  "identity": "Kazo.Os.Templates.Service",
+  "groupIdentity": "Kazo.Os.Templates.Service",
+  "name": "Kazo OS service",
+  "description": "A Kazo OS background service (ServiceAppBase), started at login, built with Kazo.Os.App.Build.",
+  "shortName": "kazoos-service",
+  "sourceName": "Kazo.Os.Template.Service",
+  "preferNameDirectory": true,
+  "tags": { "language": "C#", "type": "project" },
+  "symbols": {
+    "appId": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "Application id (reverse-DNS, lowercase), unique in the catalog.",
+      "defaultValue": "com.example.my-app",
+      "replaces": "com.example.template-app"
+    },
+    "publisherId": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "Publisher id written in the manifest.",
+      "defaultValue": "pub.example",
+      "replaces": "pub.template"
+    }
+  }
+}

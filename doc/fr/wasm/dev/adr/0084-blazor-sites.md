@@ -6,7 +6,7 @@
 
 Accepté le 2026-10-16, avec le chantier `web/9-blazor-sites`.
 
-- **Phase du plan :** phase web ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Phase du plan :** phase web ([`asp-kazo-plan.md`](../plans/asp-kazo-plan.md)).
 - **Complète :** ADR 0073 §1 et §4 (site Blazor d'une app `Web`), ADR 0075 §5
   (choix de la vue selon la réponse), ADR 0081 §2 (contenu Blazor dans une
   fenêtre détachée). Ne remplace aucune décision.
@@ -139,7 +139,7 @@ site garde son état (compteurs, formulaires en cours).
 - `DisplaySurfaceContent.Surface` devient facultatif (section 7) : le
   navigateur rend sa zone de page une seule fois à travers le portail, et un
   site Blazor garde son état au détachement.
-- Le site d'exemple `HackerOs.Samples.BlazorSite` est installé dans les deux
+- Le site d'exemple `Kazo.Os.Samples.BlazorSite` est installé dans les deux
   hôtes (app cachée, `http://blazor-sample.hack/`) : c'est le seul site Blazor
   que le navigateur peut servir tant qu'aucune app n'en déclare.
 - Un site Blazor utilise les composants de navigation du SDK, pas ceux de

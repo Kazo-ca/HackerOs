@@ -1,4 +1,0 @@
-{
-  "name": "hackwebd",
-  "description": "Serveur web de HackerOS : sert les sites statiques déclarés dans /etc/hackweb/sites et ~/.config/hackweb/sites"
-}

@@ -3,7 +3,7 @@
   "configurations": [
     
     {     
-       "name": "Debug HackerGame (Chrome)",
+       "name": "Debug KazoGame (Chrome)",
       "type": "chrome",
       "request": "launch",
       "sourceMaps": true,
@@ -35,23 +35,23 @@
       }
     },
     {
-      // Hosted Blazor WASM debug harness (wasm2/HackerOs/test/test), with the WASM (Mono)
+      // Hosted Blazor WASM debug harness (wasm2/KazoOs/test/test), with the WASM (Mono)
       // debugger attached — lets you set breakpoints in client-side Razor/C# code. Note:
       // this is the debugger that can hit "fatal error loading metadata" flakiness in some
       // VS Code / .NET SDK combinations; use "wasm (Ecosystem, no debugger)" below if so.
       "name": "test (WASM debugging)",
       "type": "blazorwasm",
       "request": "launch",
-      "cwd": "${workspaceFolder}/wasm2/HackerOs/test/test",
+      "cwd": "${workspaceFolder}/wasm2/KazoOs/test/test",
       "url": "https://localhost:7240",
       "presentation": {
         "hidden": false,
-        "group": "hackeros",
+        "group": "kazoos",
         "order": 1
       }
     },
     {
-      // Standalone WASM app (wasm2/HackerOs/OS/HackerOs.Ecosystem) launched as a plain
+      // Standalone WASM app (wasm2/KazoOs/OS/Kazo.Os.Ecosystem) launched as a plain
       // .NET process — no WASM/Mono debugger is attached, only the thin dev-server host
       // process. Use this to run the WASM client without triggering WASM debugger issues;
       // breakpoints in client-side Razor/C# code will not be hit.
@@ -59,9 +59,9 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build-ecosystem",
-      "program": "${workspaceFolder}/wasm2/HackerOs/OS/HackerOs.Ecosystem/bin/Debug/net10.0/HackerOs.Ecosystem.dll",
+      "program": "${workspaceFolder}/wasm2/KazoOs/OS/Kazo.Os.Ecosystem/bin/Debug/net10.0/Kazo.Os.Ecosystem.dll",
       "args": [],
-      "cwd": "${workspaceFolder}/wasm2/HackerOs/OS/HackerOs.Ecosystem",
+      "cwd": "${workspaceFolder}/wasm2/KazoOs/OS/Kazo.Os.Ecosystem",
       "stopAtEntry": false,
       "env": {
         "ASPNETCORE_ENVIRONMENT": "Development"
@@ -72,21 +72,21 @@
       },
       "presentation": {
         "hidden": false,
-        "group": "hackeros",
+        "group": "kazoos",
         "order": 2
       }
     },
     {
-      // Optional ASP.NET Core server (wasm2/HackerOs/Server/HackerOs.Server) — Blazor
+      // Optional ASP.NET Core server (wasm2/KazoOs/Server/Kazo.Os.Server) — Blazor
       // Server render mode plus the sync/identity/proxy APIs. Standard CoreCLR debugging
       // (breakpoints work normally; there is no WASM client involved in this host).
-      "name": "server (HackerOs.Server)",
+      "name": "server (Kazo.Os.Server)",
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build-server",
-      "program": "${workspaceFolder}/wasm2/HackerOs/Server/HackerOs.Server/bin/Debug/net10.0/HackerOs.Server.dll",
+      "program": "${workspaceFolder}/wasm2/KazoOs/Server/Kazo.Os.Server/bin/Debug/net10.0/Kazo.Os.Server.dll",
       "args": [],
-      "cwd": "${workspaceFolder}/wasm2/HackerOs/Server/HackerOs.Server",
+      "cwd": "${workspaceFolder}/wasm2/KazoOs/Server/Kazo.Os.Server",
       "stopAtEntry": false,
       "env": {
         "ASPNETCORE_ENVIRONMENT": "Development"
@@ -97,7 +97,7 @@
       },
       "presentation": {
         "hidden": false,
-        "group": "hackeros",
+        "group": "kazoos",
         "order": 3
       }
     }

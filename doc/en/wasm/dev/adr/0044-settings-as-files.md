@@ -22,7 +22,7 @@ Today, settings live in the `settings` IndexedDB store
 (`IndexedDbSettingsDocumentService`). The `/etc/hackeros` mount that was meant to project them as files
 (`SettingsFileSystemProvider`, `SettingsFileProjection`)
 is never wired into the real OS: `FileSystemMountRouter` is created with the
-IndexedDB provider alone (`OS/HackerOs.Ecosystem/EcosystemServiceCollectionExtensions.cs`).
+IndexedDB provider alone (`OS/Kazo.Os.Ecosystem/EcosystemServiceCollectionExtensions.cs`).
 `nano /etc/hackeros/...` therefore sees nothing. Security comes from the settings
 service (`settings.*` capabilities, minimum authority per document), not from file
 permissions.
@@ -65,7 +65,7 @@ permissions decide access.
 | Local state, not synchronized | `~/.local/state/hackeros/...` | same |
 
 Consequences for capability resolution in `FileSystemService.ResolveCapability`
-(`Platform/HackerOs.Platform.Core/FileSystem/FileSystemService.cs`):
+(`Platform/Kazo.Os.Platform.Core/FileSystem/FileSystemService.cs`):
 
 - `~/.config/<appId>/` (read and write) corresponds to
   `filesystem.private.read/write` of that app. It replaces the current
@@ -120,7 +120,7 @@ Editor.tab-size=true
 The `.config` grammar of ADR 0011 is kept as is (`#`
 comment, `[Group]`, `key=value`, escapes `\#`, `\=`, `\\`, `\n`, `\r`,
 `\t`), as is the `ConfigDocumentFormat` parser
-(`Shared/HackerOs.Simulation.Abstractions/Settings/`). `schemaVersion` remains an
+(`Shared/Kazo.Os.Simulation.Abstractions/Settings/`). `schemaVersion` remains an
 optional root key.
 
 ### 5. Invalid file (D17)
@@ -143,7 +143,7 @@ optional root key.
 ### 6. Common merge engine
 
 A pure function, shared by the SDK and the platform, in
-`Shared/HackerOs.Simulation.Abstractions/Settings/LayeredConfigResolver.cs`:
+`Shared/Kazo.Os.Simulation.Abstractions/Settings/LayeredConfigResolver.cs`:
 
 ```csharp
 public static class LayeredConfigResolver
@@ -171,8 +171,8 @@ model (types `String`, `Integer`, `Boolean`, `Enum`).
 
 ### 7. Typed `HackSettings` API (SDK)
 
-Folder `Shared/HackerOs.AppSdk/Settings/`, public namespace
-**`HackerOs.AppSdk.Settings`**. It builds on the `Hack*` API of ADR 0043 and
+Folder `Shared/Kazo.Os.AppSdk/Settings/`, public namespace
+**`Kazo.Os.AppSdk.Settings`**. It builds on the `Hack*` API of ADR 0043 and
 on the ambient context, so it goes through the file gateway. The schema
 comes from `AppManifest.Settings` in phase 1, then from the `[AppManifest]` class in
 phase 2, with no API change.
@@ -223,7 +223,7 @@ public sealed class HackSettingLockedException : InvalidOperationException;
 ### 8. OS settings
 
 Platform services use the same engine through
-`IOsSettingsService` (`Platform/HackerOs.Platform.Core/Settings/OsSettingsService.cs`),
+`IOsSettingsService` (`Platform/Kazo.Os.Platform.Core/Settings/OsSettingsService.cs`),
 which reads and writes the `hackeros` files with the context of the
 session user:
 
@@ -246,7 +246,7 @@ installation is one machine, and `/etc` is its layer.
 
 ### 9. Migration on first boot
 
-Service `SettingsStoreToFilesMigration` (`Platform/HackerOs.Platform.Core/Settings/`):
+Service `SettingsStoreToFilesMigration` (`Platform/Kazo.Os.Platform.Core/Settings/`):
 
 1. **At boot**, after the file system is seeded and before any
    sign-in, with a system context: each `OsAdmin` record of the
@@ -286,7 +286,7 @@ no longer creates `~/.config/apps`.
 
 ### 11. Settings app
 
-The Settings app (`Apps/System/HackerOs.Apps.Settings`) reads and writes through
+The Settings app (`Apps/System/Kazo.Os.Apps.Settings`) reads and writes through
 `HackSettings` and `IOsSettingsService`. For each key it shows its
 originating layer and a padlock if the key is locked. A system change goes through
 the approval prompt of ADR 0042.

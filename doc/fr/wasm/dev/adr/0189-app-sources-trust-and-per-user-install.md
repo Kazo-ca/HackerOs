@@ -37,7 +37,7 @@ github=raw.githubusercontent.com
 
 # Catalogues (ADR 0188). Nom = adresse de catalog.json.
 [catalogs]
-official=https://raw.githubusercontent.com/Kazo-ca/HackerOs-AppMarketPlace/packages/catalog.json
+official=https://raw.githubusercontent.com/Kazo-ca/Os-AppMarketPlace/packages/catalog.json
 
 # Sources de confiance.
 [trusted]

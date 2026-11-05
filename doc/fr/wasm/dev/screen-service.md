@@ -16,7 +16,7 @@ seulement `screens.config`. Ce chantier montre l'offre « Restaurer les écrans 
 ```
 Onglet principal (écran 1)                          Fenêtre d'un écran secondaire (window.open)
 ──────────────────────────                          ───────────────────────────────────────────
-DesktopShell                                         <body class="hackeros-surface">
+DesktopShell                                         <body class="kazoos-surface">
  └─ ScreenLayer                                       └─ .secondary-screen[data-display=2]
      ├─ <DisplaySurfaceContent> par écran ─ déplace ►     ├─ bureau de l'écran (chantier 4 ; numéro en attendant)
      └─ carte « Restaurer les écrans »                    ├─ bandeau « onglet principal caché »
@@ -26,18 +26,18 @@ ScreenService ── AddDisplay / ChangeViewport / RemoveDisplay ──► Windo
  │                                                     └─ screens.js prepare / settle
  └─ screens.js : permission, getScreenDetails, screenschange, place lue chaque seconde,
                  plein écran, visibilitychange de l'onglet principal
-~/.config/hackeros/screens.config [screens] : open = 2,3 ; 2 = left,top,width,height
+~/.config/kazoos/screens.config [screens] : open = 2,3 ; 2 = left,top,width,height
 ```
 
 | Fichier | Rôle |
 | --- | --- |
-| `Platform/HackerOs.Platform.Blazor/Display/ScreenService.cs` | Le service : numéros, ouverture, restauration, fermeture, plein écran, mémoire, commandes envoyées à `WindowRuntime`. |
-| `Platform/HackerOs.Platform.Blazor/Display/ScreenLayer.razor(.css)` | Rendu des écrans par le portail des surfaces, bandeau, bouton plein écran, carte de restauration. |
-| `Platform/HackerOs.Platform.Blazor/Display/DisplaySurfaceService.cs` | `OpenScreenSurfaceAsync` (interne) : ouverture avec placement, notification de blocage facultative. |
-| `Platform/HackerOs.Platform.Blazor/wwwroot/screens.js` | API Window Management, choix du moniteur libre, déplacement après la permission, place, plein écran, onglet caché. |
-| `Platform/HackerOs.Platform.Blazor/wwwroot/displaySurfaces.js` | `open` reçoit un placement facultatif et appelle `screens.js` avant et après `window.open`. |
-| `Platform/HackerOs.Platform.Core/Shell/ScreensSettings.cs` | `ScreenGeometry` et `ScreensSettingsDocuments` : la section `[screens]` de `screens.config`. |
-| `OS/HackerOs.Ecosystem.Host/EcosystemServiceCollectionExtensions.cs` | `DisplaySurfaceService` (aussi sous `IDisplaySurfaceService`) et `ScreenService`, par session. |
+| `Platform/Kazo.Os.Platform.Blazor/Display/ScreenService.cs` | Le service : numéros, ouverture, restauration, fermeture, plein écran, mémoire, commandes envoyées à `WindowRuntime`. |
+| `Platform/Kazo.Os.Platform.Blazor/Display/ScreenLayer.razor(.css)` | Rendu des écrans par le portail des surfaces, bandeau, bouton plein écran, carte de restauration. |
+| `Platform/Kazo.Os.Platform.Blazor/Display/DisplaySurfaceService.cs` | `OpenScreenSurfaceAsync` (interne) : ouverture avec placement, notification de blocage facultative. |
+| `Platform/Kazo.Os.Platform.Blazor/wwwroot/screens.js` | API Window Management, choix du moniteur libre, déplacement après la permission, place, plein écran, onglet caché. |
+| `Platform/Kazo.Os.Platform.Blazor/wwwroot/displaySurfaces.js` | `open` reçoit un placement facultatif et appelle `screens.js` avant et après `window.open`. |
+| `Platform/Kazo.Os.Platform.Core/Shell/ScreensSettings.cs` | `ScreenGeometry` et `ScreensSettingsDocuments` : la section `[screens]` de `screens.config`. |
+| `OS/Kazo.Os.Ecosystem.Host/EcosystemServiceCollectionExtensions.cs` | `DisplaySurfaceService` (aussi sous `IDisplaySurfaceService`) et `ScreenService`, par session. |
 
 ## 2. API du service
 
@@ -52,7 +52,7 @@ ScreenService ── AddDisplay / ChangeViewport / RemoveDisplay ──► Windo
 | `TogglePrimaryFullScreenAsync()`, `IsPrimaryFullScreen` | Plein écran de l'onglet principal (écran 1), depuis un clic (ADR 0184). |
 | `IdentifyAsync()`, `IsIdentifying` | Montre le numéro de chaque écran pendant 3 s ; un nouvel appel repart à zéro (ADR 0184). |
 | `RequestPermissionAsync()` | Demande la permission `window-management` pendant un clic et rend la réponse (ADR 0184). |
-| `IsStarted` | Vrai après `StartAsync` et avant la fin : `ScreenControl` en déduit `HackScreens.IsSupported`. |
+| `IsStarted` | Vrai après `StartAsync` et avant la fin : `ScreenControl` en déduit `KazoScreens.IsSupported`. |
 | `Screens`, `RestorableScreens`, `Permission`, `IsPrimaryHidden`, `CanOpenScreen`, `Changed` | État lu par l'interface. |
 | `PrimaryTaskbar`, `SetPrimaryTaskbarAsync(mode)` | Réglage `primary-taskbar` de `[taskbar]`, suivi pendant la session (chantier 5, [`per-screen-taskbars.md`](per-screen-taskbars.md)). |
 
@@ -92,7 +92,7 @@ La place de l'écran reste dans sa ligne numérotée.
   [`secondary-screen-desktop.md`](secondary-screen-desktop.md)) ; sans lui, le numéro de l'écran
   sur la couleur du bureau.
 - **Plein écran** : bouton `⤢` en haut à droite, `⤡` pour en sortir (ou `Échap`).
-- **Bandeau** : « L'onglet principal de HackerOS est caché… » tant que l'onglet
+- **Bandeau** : « L'onglet principal de Kazo OS est caché… » tant que l'onglet
   principal est caché (`visibilitychange`).
 - **Zone de travail** : la taille intérieure de la fenêtre à l'ouverture, puis celle du
   bureau de l'écran, qu'il mesure lui-même (chantier 4) ; le service ne la change plus quand
@@ -100,14 +100,14 @@ La place de l'écran reste dans sa ligne numérotée.
 
 ## 6. Tests
 
-- `Tests/HackerOs.Platform.Blazor.Tests/Display/ScreenServiceTests.cs` : modules JS
+- `Tests/Kazo.Os.Platform.Blazor.Tests/Display/ScreenServiceTests.cs` : modules JS
   scriptés, `WindowRuntime` réel, réglages en mémoire.
-- `Tests/HackerOs.Platform.Core.Tests/Shell/ScreensSettingsTests.cs` : lecture et
+- `Tests/Kazo.Os.Platform.Core.Tests/Shell/ScreensSettingsTests.cs` : lecture et
   écriture de `[screens]` sur le disque virtuel.
-- `Tests/HackerOs.UI.E2E.Tests/ScreenServiceTests.cs` : Chromium réel ; le fichier est
+- `Tests/Kazo.Os.UI.E2E.Tests/ScreenServiceTests.cs` : Chromium réel ; le fichier est
   écrit au terminal, l'OS est rechargé, **Restore screens** ouvre l'écran 2 à
   900 × 700, puis l'écran fermé à la main n'est plus proposé.
-- `Tests/HackerOs.UI.E2E.Tests/BrowserDetachedWindowTests.cs` reste vert : sans
+- `Tests/Kazo.Os.UI.E2E.Tests/BrowserDetachedWindowTests.cs` reste vert : sans
   placement, `displaySurfaces.js` ouvre comme avant.
 
 ## 7. Limites

@@ -22,15 +22,15 @@ does not change.
 
 | File | Owner | Content |
 |---|---|---|
-| `/etc/hackeros/security.config` | `system:system 0644`, `SystemOnly` document | `dangerousCapabilities=prompt` (default) or `block` |
-| `/etc/hackeros/app-permissions.config` | `system:system 0644` | machine `allow` / `deny` decisions; **the only source of an `allow`** |
-| `~/.config/hackeros/app-permissions.config` | the user | refusals (`deny`) valid for that user only |
+| `/etc/kazoos/security.config` | `system:system 0644`, `SystemOnly` document | `dangerousCapabilities=prompt` (default) or `block` |
+| `/etc/kazoos/app-permissions.config` | `system:system 0644` | machine `allow` / `deny` decisions; **the only source of an `allow`** |
+| `~/.config/kazoos/app-permissions.config` | the user | refusals (`deny`) valid for that user only |
 
 The two `/etc` files are delivered commented out at first startup
 (`SettingsStoreToFilesMigration.MigrateSystemAsync`).
 
 ```text
-# /etc/hackeros/app-permissions.config
+# /etc/kazoos/app-permissions.config
 [permissions]
 org.example.scanner:network.real.access=allow
 org.example.scanner:filesystem.system.read=deny
@@ -43,7 +43,7 @@ org.example.scanner:filesystem.system.read=deny
   warning.
 - An invalid value of `dangerousCapabilities` is ignored (ADR 0044): `prompt`
   applies.
-- `cat /etc/hackeros/app-permissions.config` shows what an administrator has
+- `cat /etc/kazoos/app-permissions.config` shows what an administrator has
   approved; `sudo nano` allows editing it by hand.
 
 ## Decision table
@@ -75,7 +75,7 @@ A system app has the `System` state for all its dangerous capabilities
 | `IDangerousCapabilityApprovalPrompt` | Platform.Core/Policy | prompt contract (window or terminal) |
 | `DangerousCapabilityApprovalBroker` | Platform.Blazor/Security | host default prompt: request queue for the window |
 | `DangerousCapabilityApprovalOverlay` | Platform.Blazor/Security | the special window, rendered by `DesktopShell` and `MobileShell` |
-| `ShellHostPrompts` | Platform.Core/Shell | text mode for a command launched from a hosted shell (`HackShell`, [`shell-host.md`](../framework/shell-host.md)); written and read through the terminal's `HackCredentialPrompt` |
+| `ShellHostPrompts` | Platform.Core/Shell | text mode for a command launched from a hosted shell (`KazoShell`, [`shell-host.md`](../framework/shell-host.md)); written and read through the terminal's `KazoCredentialPrompt` |
 | `AppPermissionAdministration`, `AppPermissionsPanel` | Platform.Core/Policy, Apps.Settings | Settings Permissions tab |
 
 ### Launch
@@ -101,7 +101,7 @@ process:
    (ADR 0042).
 
 An app started without a capability receives
-`HackUnauthorizedAccessException` when it uses it, as for any missing
+`KazoUnauthorizedAccessException` when it uses it, as for any missing
 capability.
 
 ### Prompt
@@ -147,11 +147,11 @@ closed without a decision.
 
 ### Terminal text mode
 
-A shell hosted by `HackShell` (ADR 0056 §7) passes its `ShellHostPrompts` to
+A shell hosted by `KazoShell` (ADR 0056 §7) passes its `ShellHostPrompts` to
 the interpreter, which hands it to each command launch. It writes the warning
 banner and the capability list to the terminal, offers Yes (administrator) /
 No (deny) / Cancel, then asks for the name and password with the same box as
-`sudo` (through the terminal's `HackCredentialPrompt`:
+`sudo` (through the terminal's `KazoCredentialPrompt`:
 `TerminalCredentialPrompt` for `TerminalPanel`), up to three attempts ("Sorry,
 try again."). Host commands are system: only third-party commands see this
 mode.
@@ -205,7 +205,7 @@ never logged.
 
 ## Composition (hosts)
 
-`AddHackerOsEcosystem` (Ecosystem, `test/test` and the server) registers, as
+`AddKazoOsEcosystem` (Ecosystem, `test/test` and the server) registers, as
 `Scoped`: `IAppPermissionStore`, `DangerousCapabilityApprovalBroker` (also as
 `IDangerousCapabilityApprovalPrompt`), `IDangerousCapabilityGate`,
 `AppPermissionAdministration`, and passes the gate to
@@ -227,7 +227,7 @@ non-system app simply never holds a dangerous capability.
 
 ## Tests
 
-- `DangerousCapabilityApprovalTests` (`HackerOs.Platform.Core.Tests`): file
+- `DangerousCapabilityApprovalTests` (`Kazo.Os.Platform.Core.Tests`): file
   parsing, decision table, system app without a prompt, non-system app
   without a decision not granted and prompt called at launch, `allow` +
   `prompt` granted / + `block` refused, user `deny` takes priority, user
@@ -236,7 +236,7 @@ non-system app simply never holds a dangerous capability.
   user, denial, `deferred`, unverified approval rejected, revocation on
   switch to `block`, `block` that disables one-time approval but not `sudo`,
   default files, Settings administration.
-- `DangerousCapabilityApprovalOverlayTests` (`HackerOs.Platform.Blazor.Tests`,
+- `DangerousCapabilityApprovalOverlayTests` (`Kazo.Os.Platform.Blazor.Tests`,
   `HtmlRenderer` rendering, the solution not using bUnit): capabilities and
   risks displayed, prefilled name, Allow button disabled without a password,
   prompt unavailable without a window, request closed when the shell

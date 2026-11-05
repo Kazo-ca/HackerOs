@@ -9,7 +9,7 @@ Implementation of [ADR 0045](adr/0045-logs-as-files.md) and section 5.3 of the
 
 ## Role
 
-HackerOS logs are real text files. `cat`, `tail`, `grep` and Error Log Viewer
+Kazo OS logs are real text files. `cat`, `tail`, `grep` and Error Log Viewer
 read them with ordinary file permissions.
 
 | File | Content | Mode |
@@ -22,7 +22,7 @@ read them with ordinary file permissions.
 ## Architecture
 
 ```text
-ILogger<T> ──► HackerOsDiagnosticLoggerProvider ─┐
+ILogger<T> ──► KazoOsDiagnosticLoggerProvider ─┐
 IAppLoggingGateway ──► AppLoggingGateway ────────┼─► LogFileWriter ─► IFileSystemService ─► /var/log/…
 IAuditLog ──► FileAuditLog ──────────────────────┘        │ (bounded channel, grouped flush, rotation)
 HostExceptionReporter ───────────────────────────┘        ▼
@@ -48,7 +48,7 @@ HostExceptionReporter ───────────────────�
     missing.
   - Attaching a **different** filesystem abandons the previous one: its token
     is cancelled and later flushes no longer wait for it. On
-    `HackerOs.Server`, each circuit mounts its own; a reload can cut the old
+    `Kazo.Os.Server`, each circuit mounts its own; a reload can cut the old
     circuit in the middle of a flush (JS call with no response), and the
     startup of the new circuit stayed blocked behind it, about one time in
     five (found by `build/verify-hosts.sh`). The lines of the abandoned batch
@@ -70,7 +70,7 @@ HostExceptionReporter ───────────────────�
 - `IPersistentDiagnosticRepository` and `IndexedDbDiagnosticRepository` are no
   longer registered; the IndexedDB audit was already not wired. The classes
   and their stores remain, and the IndexedDB schema version does not change.
-- The `OS/HackerOs.Ecosystem` host no longer removes its `ILoggerProvider`:
+- The `OS/Kazo.Os.Ecosystem` host no longer removes its `ILoggerProvider`:
   all its dependencies are singletons. The server keeps its composition (the
   `ILogger` bridge remains removed there, no filesystem is attached to it).
 
@@ -92,21 +92,21 @@ HostExceptionReporter ───────────────────�
   it is refused, the window offers administrator approval (ADR 0042), then a
   second click succeeds.
 - **Temporary deviation from ADR 0045 §6:** the reader goes through
-  `IAppFileSystemGateway` and not `HackFile`/`HackFileSystemWatcher`, which
+  `IAppFileSystemGateway` and not `KazoFile`/`KazoFileSystemWatcher`, which
   arrive with the `rebuild/1-file-api` branch (ADR 0043). The switch to
-  `Hack*` will happen once that API is merged; the behavior does not change.
+  `Kazo*` will happen once that API is merged; the behavior does not change.
 
 ## Contract tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Diagnostics/LogLineFormatTests.cs`: format,
+- `Tests/Kazo.Os.Platform.Core.Tests/Diagnostics/LogLineFormatTests.cs`: format,
   exact ADR example, escapes, properties, audit, rejection of foreign lines.
 - `.../LogFileWriterTests.cs`: creation and modes, periodic and threshold
   flush, one write per file, rotation and archives, giant batch, line loss,
   non-recursive failures, logout, shutdown, read permissions, new attachment
   that does not wait for a flush blocked on the previous one.
 - `.../LogProducersTests.cs`: `ILogger`, `AppLoggingGateway`, `FileAuditLog`.
-- `Tests/HackerOs.Platform.Core.Tests/Time/SimulationClockDriverTests.cs`.
-- `Tests/HackerOs.Apps.ErrorLogViewer.Tests/`: manifest and `LogFileReader` on
+- `Tests/Kazo.Os.Platform.Core.Tests/Time/SimulationClockDriverTests.cs`.
+- `Tests/Kazo.Os.Apps.ErrorLogViewer.Tests/`: manifest and `LogFileReader` on
   a real `AppFileSystemGateway`.
 
 ## Task list
@@ -122,4 +122,4 @@ HostExceptionReporter ───────────────────�
 - [x] Error Log Viewer reads the files.
 - [x] Contract tests.
 - [x] Lines lost for lack of space, counted then reported (`v3/7`, ADR 0099 §2).
-- [ ] Move Error Log Viewer to `HackFile` after the ADR 0043 merge.
+- [ ] Move Error Log Viewer to `KazoFile` after the ADR 0043 merge.

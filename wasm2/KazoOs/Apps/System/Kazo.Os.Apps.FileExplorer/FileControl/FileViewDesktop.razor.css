@@ -1,0 +1,103 @@
+/* The desktop grid (ADR 0160 §3): transparent over the wallpaper, one icon per cell, light text with a
+   shadow so labels stay readable on any background. */
+.file-view-desktop {
+    position: relative;
+    display: grid;
+    grid-auto-flow: row;
+    align-content: start;
+    justify-content: start;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    overflow: hidden;
+    user-select: none;
+    color: var(--kos-desktop-icon-text, #f4f7ff);
+}
+
+.desktop-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.25rem;
+    margin: 2px;
+    padding: 0.35rem 0.2rem;
+    min-width: 0;
+    text-align: center;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    cursor: default;
+}
+
+.desktop-tile:hover {
+    background: color-mix(in srgb, var(--kos-accent, #39ff88) 12%, transparent);
+}
+
+.desktop-tile:focus-visible {
+    outline: 2px solid var(--kos-accent, #39ff88);
+    outline-offset: -2px;
+}
+
+.desktop-tile.selected {
+    background: color-mix(in srgb, var(--kos-accent, #39ff88) 26%, transparent);
+    border-color: color-mix(in srgb, var(--kos-accent, #39ff88) 60%, transparent);
+}
+
+.desktop-tile.cut,
+.desktop-tile.dimmed {
+    opacity: 0.5;
+}
+
+.desktop-tile.dimmed .desktop-tile-icon {
+    filter: grayscale(1);
+}
+
+.desktop-tile.file-view-drop-hover {
+    border-color: var(--kos-accent, #39ff88);
+    background: color-mix(in srgb, var(--kos-accent, #39ff88) 20%, transparent);
+}
+
+.desktop-tile-icon {
+    display: inline-flex;
+    filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.7));
+}
+
+.desktop-tile-label {
+    max-width: 100%;
+    max-height: 2.5em;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    font-size: 0.8rem;
+    line-height: 1.25;
+    text-shadow: 0 1px 2px rgb(0 0 0 / 0.9), 0 0 4px rgb(0 0 0 / 0.6);
+}
+
+.desktop-tile.selected .desktop-tile-label {
+    max-height: none;
+}
+
+.size-small .desktop-tile-label {
+    font-size: 0.72rem;
+}
+
+.size-large .desktop-tile-label {
+    font-size: 0.88rem;
+}
+
+.desktop-rename-input {
+    width: 100%;
+    font: inherit;
+    font-size: 0.8rem;
+    text-align: center;
+    color: #fff;
+    background: rgb(0 0 0 / 0.75);
+    border: 1px solid var(--kos-accent, #39ff88);
+    border-radius: 3px;
+}
+
+.file-view-marquee {
+    position: absolute;
+    border: 1px dashed var(--kos-accent, #39ff88);
+    background: color-mix(in srgb, var(--kos-accent, #39ff88) 12%, transparent);
+    pointer-events: none;
+}

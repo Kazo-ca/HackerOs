@@ -2,7 +2,7 @@
 
 # Aperçus des fenêtres de la barre des tâches et « peek »
 
-Chantier 5 de la série barre des tâches (issue [#242](https://github.com/Kazo-ca/HackerOs/issues/242)),
+Chantier 5 de la série barre des tâches (issue [#242](https://github.com/Kazo-ca/Os/issues/242)),
 mise en œuvre de l'[ADR 0199](adr/0199-taskbar-window-previews.md). Il s'appuie sur les barres
 par écran ([`per-screen-taskbars.md`](per-screen-taskbars.md)) et les menus de la barre
 ([`taskbar-context-menus.md`](taskbar-context-menus.md)).
@@ -27,13 +27,13 @@ par écran ([`per-screen-taskbars.md`](per-screen-taskbars.md)) et les menus de 
 
 | Pièce | Projet | Rôle |
 | --- | --- | --- |
-| `ITaskbarWindowPreviews` | `HackerOs.Taskbar.Blazor` | Contrat donné par l'hôte : `LiveCopySelector(id)` et `Peek(id?)`. |
-| `Taskbar.Previews` | `HackerOs.Taskbar.Blazor` | Paramètre ; sans lui, aucun aperçu. |
-| `TaskbarPreviewController` | `HackerOs.Taskbar.Blazor` (interne) | Minutage : ouverture (400 ms), passage d'un bouton à l'autre, fermeture (300 ms), peek (300 ms), toucher ignoré. |
-| `Taskbar.razor.js` | `HackerOs.Taskbar.Blazor` | Place la carte au-dessus du bouton, clone la fenêtre, retire identifiants et attributs actifs, copie les canevas et les défilements, recommence toutes les 500 ms. |
-| `TaskbarWindowInteraction.Show` | `HackerOs.Taskbar.Blazor` (interne) | Clic sur la vignette : restaurer si minimisée, puis activer. |
-| `TaskbarWindowPreviews` | `HackerOs.Platform.Blazor` (`Shell/`) | Implémentation du bureau : sélecteur `[data-window-id="…"]`, fenêtre du peek et événement `Changed`. Une instance pour toutes les barres. |
-| `DesktopArea.PeekWindowId`, `WindowHost.PeekState`, `WindowPeekState` | `HackerOs.Windowing.Blazor` | Le peek : `is-peek-shown` (la fenêtre et ses boîtes de dialogue, au-dessus, même minimisée) et `is-peek-see-through` (les autres fenêtres du même écran, contour seul, sans pointeur). |
+| `ITaskbarWindowPreviews` | `Kazo.Os.Taskbar.Blazor` | Contrat donné par l'hôte : `LiveCopySelector(id)` et `Peek(id?)`. |
+| `Taskbar.Previews` | `Kazo.Os.Taskbar.Blazor` | Paramètre ; sans lui, aucun aperçu. |
+| `TaskbarPreviewController` | `Kazo.Os.Taskbar.Blazor` (interne) | Minutage : ouverture (400 ms), passage d'un bouton à l'autre, fermeture (300 ms), peek (300 ms), toucher ignoré. |
+| `Taskbar.razor.js` | `Kazo.Os.Taskbar.Blazor` | Place la carte au-dessus du bouton, clone la fenêtre, retire identifiants et attributs actifs, copie les canevas et les défilements, recommence toutes les 500 ms. |
+| `TaskbarWindowInteraction.Show` | `Kazo.Os.Taskbar.Blazor` (interne) | Clic sur la vignette : restaurer si minimisée, puis activer. |
+| `TaskbarWindowPreviews` | `Kazo.Os.Platform.Blazor` (`Shell/`) | Implémentation du bureau : sélecteur `[data-window-id="…"]`, fenêtre du peek et événement `Changed`. Une instance pour toutes les barres. |
+| `DesktopArea.PeekWindowId`, `WindowHost.PeekState`, `WindowPeekState` | `Kazo.Os.Windowing.Blazor` | Le peek : `is-peek-shown` (la fenêtre et ses boîtes de dialogue, au-dessus, même minimisée) et `is-peek-see-through` (les autres fenêtres du même écran, contour seul, sans pointeur). |
 
 Le flux : survol → `TaskbarPreviewController` → rendu de la carte → `OnAfterRenderAsync`
 appelle `showPreview` du module. Repos sur la carte → `Peek(id)` → `TaskbarWindowPreviews.Changed`
@@ -51,21 +51,21 @@ appelle `showPreview` du module. Repos sur la carte → `Peek(id)` → `TaskbarW
 
 ## 4. Thèmes
 
-Jetons ajoutés : `--hos-taskbar-preview-width`, `--hos-taskbar-preview-height`,
-`--hos-taskbar-preview-background`, `--hos-taskbar-preview-border`,
-`--hos-taskbar-preview-radius`, `--hos-taskbar-preview-shadow`,
-`--hos-taskbar-preview-duration`, `--hos-taskbar-preview-close-hover-border`,
-`--hos-taskbar-preview-close-hover-background`, `--hos-window-peek-outline`, `--hos-window-peek-glass` et
-`--hos-window-peek-z`. L'apparition est coupée par « Réduire les animations »
+Jetons ajoutés : `--kos-taskbar-preview-width`, `--kos-taskbar-preview-height`,
+`--kos-taskbar-preview-background`, `--kos-taskbar-preview-border`,
+`--kos-taskbar-preview-radius`, `--kos-taskbar-preview-shadow`,
+`--kos-taskbar-preview-duration`, `--kos-taskbar-preview-close-hover-border`,
+`--kos-taskbar-preview-close-hover-background`, `--kos-window-peek-outline`, `--kos-window-peek-glass` et
+`--kos-window-peek-z`. L'apparition est coupée par « Réduire les animations »
 (`data-motion`) et `prefers-reduced-motion`.
 
 ## 5. Tests
 
-- `Tests/HackerOs.Taskbar.Blazor.Tests/TaskbarPreviewControllerTests.cs` : minutage, toucher,
+- `Tests/Kazo.Os.Taskbar.Blazor.Tests/TaskbarPreviewControllerTests.cs` : minutage, toucher,
   passage d'un bouton à l'autre, peek, fermeture, clic sur la vignette, attributs du rendu.
-- `Tests/HackerOs.Platform.Blazor.Tests/Shell/TaskbarWindowPreviewsTests.cs` : sélecteur, peek
+- `Tests/Kazo.Os.Platform.Blazor.Tests/Shell/TaskbarWindowPreviewsTests.cs` : sélecteur, peek
   annoncé une fois, classes de peek par fenêtre et par écran.
-- `Tests/HackerOs.UI.E2E.Tests/TaskbarWindowPreviewTests.cs` : dans Chromium, survol, copie sans
+- `Tests/Kazo.Os.UI.E2E.Tests/TaskbarWindowPreviewTests.cs` : dans Chromium, survol, copie sans
   identifiant, peek, « × ».
 
 ## 6. Liste des tâches

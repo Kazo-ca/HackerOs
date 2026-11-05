@@ -1,0 +1,21 @@
+@model ProfileForm
+@{ ViewData.Title = "Profile"; }
+<section class="panel narrow">
+    <h1>Profile</h1>
+    <p>The name is kept in the site's cookie session (<code>.KazoSession</code>) and written on the notes you save.
+       The board shows it too: the Blazor pages share the tab's cookies.</p>
+    @Html.ValidationSummary(excludePropertyErrors: true)
+    @using (Html.BeginForm("Profile", "Home", htmlAttributes: KazoRoute.Values(new { @class = "form", id = "profile-form" })))
+    {
+        <div class="field">
+            @Html.LabelFor(m => m.Name)
+            @Html.TextBoxFor(m => m.Name, KazoRoute.Values(new { autocomplete = "nickname", placeholder = "neo" }))
+            @Html.ValidationMessageFor(m => m.Name)
+        </div>
+        <button type="submit" class="button" id="profile-save">Save</button>
+    }
+    @using (Html.BeginForm("SignOut", "Home", htmlAttributes: KazoRoute.Values(new { @class = "form inline" })))
+    {
+        <button type="submit" class="button ghost" id="profile-forget">Forget me</button>
+    }
+</section>

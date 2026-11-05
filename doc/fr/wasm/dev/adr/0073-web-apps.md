@@ -7,7 +7,7 @@
 Accepté le 2026-10-16 (proposé le même jour, puis validé par Benoit avec le
 questionnaire de la section 4 du plan).
 
-- **Phase du plan :** phase web ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Phase du plan :** phase web ([`asp-kazo-plan.md`](../plans/asp-kazo-plan.md)).
 - **Complète :** ADR 0047 (manifeste en classe C#), ADR 0049 (capacités),
   ADR 0070 (hôte d'exécution).
 
@@ -24,7 +24,7 @@ du modèle d'app, d'où viennent ses fichiers et à quoi il a droit.
 ### 1. Nouveau genre d'app `Web`
 
 `AppKind` gagne `Web` (`"web"` dans `manifest.json`). La définition dérive de
-`WebAppDefinition` (bibliothèque `HackerOs.AppSdk.Web`) :
+`WebAppDefinition` (bibliothèque `Kazo.Os.AppSdk.Web`) :
 
 ```csharp
 [AppManifest]

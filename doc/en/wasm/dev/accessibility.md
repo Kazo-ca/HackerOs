@@ -9,7 +9,7 @@ manual checklist, dropped by Benoit).
 
 ## Purpose
 
-Three preferences, stored as files like every HackerOS setting, applied by the theme to the whole
+Three preferences, stored as files like every Kazo OS setting, applied by the theme to the whole
 desktop and read by apps that draw their own content:
 
 - **High contrast**: black surfaces, white text (21:1, and at least 7:1 for the palest text),
@@ -21,8 +21,8 @@ desktop and read by apps that draw their own content:
 ## Settings
 
 `accessibility.config`, layered ([`settings-files.md`](../framework/settings-files.md)):
-`/etc/hackeros/accessibility.config` (machine default, written as comments on first boot, also
-read by the sign-in screen) then `~/.config/hackeros/accessibility.config`.
+`/etc/kazoos/accessibility.config` (machine default, written as comments on first boot, also
+read by the sign-in screen) then `~/.config/kazoos/accessibility.config`.
 
 | Key | Values | Default | `auto` follows |
 |---|---|---|---|
@@ -35,8 +35,8 @@ is ignored (the next layer applies). An administrator can lock a key
 (`[locked]`).
 
 ```sh
-nano ~/.config/hackeros/accessibility.config      # highContrast=on
-sudo nano /etc/hackeros/accessibility.config      # machine default
+nano ~/.config/kazoos/accessibility.config      # highContrast=on
+sudo nano /etc/kazoos/accessibility.config      # machine default
 ```
 
 **Settings > Accessibility** shows the applied state and writes the user layer: three
@@ -52,7 +52,7 @@ groups of radio buttons (contrast, size, animations), each showing where its val
 | `AccessibilityPreferenceService` | Platform.Core | Reads and watches the document, follows `ThemePreferenceService` (for `animationsEnabled`) and the host probe; `Effective` and `Changed`. One per session. |
 | `IHostAccessibilityProbe`, `BrowserHostAccessibilityProbe`, `hostAccessibilityProbe.js` | Platform.Core, Platform.Blazor | Host media queries, with no decision logic. |
 | `AppAccessibilityGateway` | Platform.Core | An app's view, wired by `AppExecutionContextFactory`. |
-| `HackAccessibility`, `HackAccessibilityPreferences`, `IAppAccessibilityGateway` | AppSdk | Public API. |
+| `KazoAccessibility`, `KazoAccessibilityPreferences`, `IAppAccessibilityGateway` | AppSdk | Public API. |
 | `ThemeScope` (`HighContrast`, `TextScale`) | Theming.Blazor | `data-contrast` and `data-text-scale` attributes next to `data-motion`. |
 | `themes.css` | Theming.Blazor | High contrast layer, root font, reduced motion rule. |
 | `AccessibilityPanel` | Apps.Settings | The Accessibility page. |
@@ -67,32 +67,32 @@ The host's `App.razor` initializes the service after appearance and passes to `T
   user theme cannot remove it. `:focus-visible` gets a 3 px yellow outline.
 - **Text size**: text sizes are in `rem`;
   `:root:has(.theme-scope[data-text-scale="150"])` sets the root font to 150%. Frames in
-  `px` do not move. `--hos-text-scale` holds the factor.
+  `px` do not move. `--kos-text-scale` holds the factor.
 - **Reduced motion**: `data-motion="reduced"` sets transition tokens to 0 and brings every
   animation or transition duration down to 0.01 ms.
 
 New stylesheet: write text sizes in `rem`, never in `px`, and colors with the
-`--hos-*` tokens.
+`--kos-*` tokens.
 
 ### Apps that draw their own content
 
 | App | High contrast | Text size | Reduced motion |
 |---|---|---|---|
 | Terminal (xterm.js, [`terminal-emulator.md`](terminal-emulator.md)) | 7:1 ANSI palette, black background, yellow cursor and selection | Font re-read from the panel (in `rem`) | Steady cursor |
-| Code Editor (Monaco) | `hackeros-high-contrast` theme (base `hc-black`) | Font and line height × factor | Steady cursor, scrolling without animation |
-| Hack Paint | Visible frame and grid around the image (the image keeps its colors) | n/a (interface in `rem`) | Still "busy" indicator |
+| Code Editor (Monaco) | `kazoos-high-contrast` theme (base `hc-black`) | Font and line height × factor | Steady cursor, scrolling without animation |
+| Kazo Paint | Visible frame and grid around the image (the image keeps its colors) | n/a (interface in `rem`) | Still "busy" indicator |
 
 Each one reads `AppContext.Accessibility` on opening and follows `Changed`.
 
 ## API
 
 ```csharp
-using HackerOs.AppSdk.Accessibility;
+using Kazo.Os.AppSdk.Accessibility;
 
-HackAccessibilityPreferences a11y = await HackAccessibility.GetPreferencesAsync();
+KazoAccessibilityPreferences a11y = await KazoAccessibility.GetPreferencesAsync();
 int fontSize = a11y.Scale(14);                 // 28 at 200%
 bool blink = !a11y.ReducedMotion;
-HackAccessibility.PreferencesChanged += (_, _) => { /* re-read and redraw */ };
+KazoAccessibility.PreferencesChanged += (_, _) => { /* re-read and redraw */ };
 ```
 
 No capability. Without the service (tests, Web Worker processes), the default values apply.
@@ -100,9 +100,9 @@ No capability. Without the service (tests, Web Worker processes), the default va
 ## Tests
 
 - Unit: `AccessibilityPreferenceServiceTests` (Platform.Core: `auto` rules, layers,
-  invalid value, host, `animationsEnabled`), `HackAccessibilityTests` (AppSdk),
+  invalid value, host, `animationsEnabled`), `KazoAccessibilityTests` (AppSdk),
   `ThemeComponentRenderTests` (`ThemeScope` attributes).
-- E2E (`Tests/HackerOs.UI.E2E.Tests/AccessibilityPreferencesTests.cs`, see
+- E2E (`Tests/Kazo.Os.UI.E2E.Tests/AccessibilityPreferencesTests.cs`, see
   [`building-and-testing.md`](building-and-testing.md)):
   - axe scans of the Terminal, the browser, the calculator, the system monitor, Theme
     Editor, Settings > Backup and Settings > Accessibility, with and without high
@@ -131,10 +131,10 @@ outside the main thread.
 
 - [x] `accessibility.config` document (schema, default `/etc` file, OS document registry).
 - [x] `AccessibilityPreferenceService` and host media query probe.
-- [x] `HackAccessibility` in the SDK, gateway wired by the context factory.
+- [x] `KazoAccessibility` in the SDK, gateway wired by the context factory.
 - [x] `ThemeScope`: `data-contrast`, `data-text-scale`; effective reduced motion.
 - [x] `themes.css`: high contrast layer, root font, reduced motion rule; text sizes in `rem`.
 - [x] Settings > Accessibility (English and French); Animations setting removed from Appearance.
-- [x] Terminal, Code Editor and Hack Paint follow the preferences.
+- [x] Terminal, Code Editor and Kazo Paint follow the preferences.
 - [x] Unit tests, axe scans with and without high contrast, keyboard walkthrough, 200% test.
 - [x] Documentation, ADR 0112 and index.

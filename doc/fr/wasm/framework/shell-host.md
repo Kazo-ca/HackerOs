@@ -1,6 +1,6 @@
 > [English version](../../../en/wasm/framework/shell-host.md)
 
-# Hôte de shell : `HackShell` et capacité `shell.host`
+# Hôte de shell : `KazoShell` et capacité `shell.host`
 
 ## Objet
 
@@ -14,7 +14,7 @@ Comme sous Linux, `gnome-terminal` lance `bash` puis lui transmet les lignes :
 
 ```text
 Terminal (fenêtre, PID 12)
- └─ hsh (PID 13)            ← HackShell.StartAsync, un par panneau ou onglet
+ └─ hsh (PID 13)            ← KazoShell.StartAsync, un par panneau ou onglet
      ├─ ls (PID 14)          ← chaque commande, enfant du shell
      └─ grep (PID 15)
 ```
@@ -22,21 +22,21 @@ Terminal (fenêtre, PID 12)
 ## Utilisation
 
 ```csharp
-await using IHackShell shell = await HackShell.StartAsync(new HackShellOptions
+await using IKazoShell shell = await KazoShell.StartAsync(new KazoShellOptions
 {
     WorkingDirectory = "~/projets",       // facultatif ; absent ou illisible : répertoire de l'appelant
     CredentialPrompt = myTerminalPrompt,  // facultatif ; sans lui, sudo échoue
 });
 
 int status = await shell.ExecuteAsync("ls ~ | grep notes", stdin: null, stdout, stderr, ct);
-HackShellCompletion completion = await shell.CompleteAsync("ec", cursor: 2);
+KazoShellCompletion completion = await shell.CompleteAsync("ec", cursor: 2);
 string line = completion.ApplyTo("ec", out int cursor);   // "echo "
 ```
 
 Un composant Razor qui reçoit le contexte de son app en paramètre utilise
-`HackShell.StartAsync(AppContext, options, ct)`.
+`KazoShell.StartAsync(AppContext, options, ct)`.
 
-### `IHackShell`
+### `IKazoShell`
 
 | Membre | Rôle |
 |---|---|
@@ -48,10 +48,10 @@ Un composant Razor qui reçoit le contexte de son app en paramètre utilise
 | `History`, `AddHistory`, `NavigateHistory` | Historique du shell (exposé aussi aux commandes par `IShellSession.History`) ; ↑ et ↓ comme `readline`. |
 | `GetInstalledCommands()` | Commandes installées, triées (ce que liste `help`). |
 | `ExecuteAsync(ligne, stdin, stdout, stderr, ct)` | Exécute une ligne ; la sortie arrive au fil de l'eau. |
-| `ExecuteAsync(ligne, HackShellExecution, ct)` | Même chose avec l'écran alternatif (`FullScreen`) pour `nano`. |
+| `ExecuteAsync(ligne, KazoShellExecution, ct)` | Même chose avec l'écran alternatif (`FullScreen`) pour `nano`. |
 | `CompleteAsync(ligne, curseur, ct)` | Complétion par Tab (voir plus bas). |
 | `NeedsMoreInput(texte)` | ADR 0064 : la commande est-elle inachevée (`if` sans `fi`, guillemet ouvert, `\|` final…) ? Le terminal affiche alors l'invite `>` ([`terminal-emulator.md`](../dev/terminal-emulator.md)). |
-| `ExecuteAsync(…, HackShellExecution)` : `StandardInput` | ADR 0064 : l'entrée standard que le terminal donne à la ligne (`TerminalInputReader`). |
+| `ExecuteAsync(…, KazoShellExecution)` : `StandardInput` | ADR 0064 : l'entrée standard que le terminal donne à la ligne (`TerminalInputReader`). |
 | `DisposeAsync()` | Fermeture du terminal : tue les commandes encore en cours, puis termine `hsh` avec `$?`. La commande `exit [n]` fait de même depuis le shell (`HasExited` devient vrai, [`terminal-console.md`](../dev/terminal-console.md)). |
 
 Une seule ligne s'exécute à la fois ; une seconde attend la fin de la
@@ -76,30 +76,30 @@ section 4) :
   propose rien (chantier `4-terminal`, voir
   [`terminal-console.md`](../dev/terminal-console.md)).
 
-`HackShellCompletion` donne `WordStart`, `WordLength`, `Candidates` (triés,
+`KazoShellCompletion` donne `WordStart`, `WordLength`, `Candidates` (triés,
 un dossier finit par `/`) et `CommonPrefix`. `ApplyTo` applique la règle de
 Tab : un seul candidat est inséré suivi d'une espace (aucune après un `/`),
 plusieurs insèrent leur préfixe commun. `TerminalPanel` affiche la liste au
 second Tab sur la même ligne, avec `DisplayCandidates` (dernier segment de
 chaque chemin).
 
-### `HackCredentialPrompt`
+### `KazoCredentialPrompt`
 
 Les questions que le shell pose à son terminal :
 
 | Méthode | Utilisée pour | Défaut |
 |---|---|---|
-| `ReadCredentialAsync(HackCredentialRequest)` | `sudo`, approbation ponctuelle (ADR 0042), identifiants d'un administrateur pour les capacités dangereuses | abstraite |
-| `ConfirmAsync(HackConfirmationRequest)` | Oui / Non / Annuler de l'approbation en mode texte (ADR 0049 §5) | `Cancel` |
-| `WriteLineAsync(texte, HackPromptLineKind)` | bandeau d'avertissement, « Sorry, try again. » | ignoré |
+| `ReadCredentialAsync(KazoCredentialRequest)` | `sudo`, approbation ponctuelle (ADR 0042), identifiants d'un administrateur pour les capacités dangereuses | abstraite |
+| `ConfirmAsync(KazoConfirmationRequest)` | Oui / Non / Annuler de l'approbation en mode texte (ADR 0049 §5) | `Cancel` |
+| `WriteLineAsync(texte, KazoPromptLineKind)` | bandeau d'avertissement, « Sorry, try again. » | ignoré |
 
 Le terminal **lit** ; l'OS **vérifie**. `ShellHostPrompts` (Platform Core)
 transmet les identifiants à `IElevationService` (jeton `SudoRoot` ou
 `CapabilityApproval`) ou à `DangerousCapabilityApprovalRequest.ApproveAsync`,
-qui écrit `/etc/hackeros/app-permissions.config` et `/var/log/auth.log`.
-`HackCredential.ToString()` masque le mot de passe.
+qui écrit `/etc/kazoos/app-permissions.config` et `/var/log/auth.log`.
+`KazoCredential.ToString()` masque le mot de passe.
 
-`TerminalCredentialPrompt` (`HackerOs.AppSdk.Terminal`) est l'implémentation de
+`TerminalCredentialPrompt` (`Kazo.Os.AppSdk.Terminal`) est l'implémentation de
 `TerminalPanel` : boîte d'identifiants et boîte Oui / Non / Annuler de la
 plateforme (`IDialogService`), lignes écrites dans le terminal.
 
@@ -111,34 +111,34 @@ plateforme (`IDialogService`), lignes écrites dans le terminal.
 
 Une commande lancée par le shell s'exécute avec **ses** capacités et sans
 fenêtre : une app qui n'aurait que `notifications.post` pourrait sinon lire
-tout `~` par `cat`. Sans `shell.host`, `HackShell.StartAsync` lève
-`HackUnauthorizedAccessException` (`RequiredCapability = "shell.host"`) et
+tout `~` par `cat`. Sans `shell.host`, `KazoShell.StartAsync` lève
+`KazoUnauthorizedAccessException` (`RequiredCapability = "shell.host"`) et
 aucun processus n'est créé.
 
 Terminal et CodeEditor la déclarent ; les deux sont des apps système
 (`IsSystemApp="true"` sur leur `ProjectReference` dans
-`HackerOs.Ecosystem.csproj`, ADR 0048), donc la reçoivent sans approbation
+`Kazo.Os.Ecosystem.csproj`, ADR 0048), donc la reçoivent sans approbation
 d'administrateur.
 
 ## Architecture
 
 | Type | Projet | Rôle |
 |---|---|---|
-| `HackShell` | `Shared/HackerOs.AppSdk/Shell` | Façade ; traduit le refus de capacité en `HackUnauthorizedAccessException`. |
-| `IHackShell`, `HackShellOptions`, `HackShellExecution`, `HackShellCompletion` | idem | Contrats publics. |
-| `HackCredentialPrompt` et ses types | idem | Questions au terminal. |
+| `KazoShell` | `Shared/Kazo.Os.AppSdk/Shell` | Façade ; traduit le refus de capacité en `KazoUnauthorizedAccessException`. |
+| `IKazoShell`, `KazoShellOptions`, `KazoShellExecution`, `KazoShellCompletion` | idem | Contrats publics. |
+| `KazoCredentialPrompt` et ses types | idem | Questions au terminal. |
 | `IAppShellHostGateway` | idem | Passerelle `IAppExecutionContext.ShellHost` (par défaut : « non prise en charge »). |
-| `AppShellHostGateway` | `Platform/HackerOs.Platform.Core/Execution` | Vérifie `shell.host`, puis appelle le service. |
-| `ShellHostService` | `Platform/HackerOs.Platform.Core/Shell` | Crée le processus `hsh`, son contexte et sa `ShellSession` ; implémente `IHackShell`. |
-| `ShellHostPrompts` | idem | Adapte `HackCredentialPrompt` aux invites de `ShellInterpreter` et à `IDangerousCapabilityApprovalPrompt`. |
+| `AppShellHostGateway` | `Platform/Kazo.Os.Platform.Core/Execution` | Vérifie `shell.host`, puis appelle le service. |
+| `ShellHostService` | `Platform/Kazo.Os.Platform.Core/Shell` | Crée le processus `hsh`, son contexte et sa `ShellSession` ; implémente `IKazoShell`. |
+| `ShellHostPrompts` | idem | Adapte `KazoCredentialPrompt` aux invites de `ShellInterpreter` et à `IDangerousCapabilityApprovalPrompt`. |
 | `ShellCompletion` | idem | Complétion des noms de commande. |
-| `TerminalPanel`, `TerminalCredentialPrompt` | `Shared/HackerOs.AppSdk.Terminal` | Émulateur de terminal sur le SDK seul. |
+| `TerminalPanel`, `TerminalCredentialPrompt` | `Shared/Kazo.Os.AppSdk.Terminal` | Émulateur de terminal sur le SDK seul. |
 
 ### Démarrage d'un shell
 
 1. `AppShellHostGateway` vérifie `shell.host` par le vérificateur de capacités de
    l'app.
-2. `ShellHostService` démarre un processus `org.hackeros.hsh` (`argv[0]` =
+2. `ShellHostService` démarre un processus `org.kazoos.hsh` (`argv[0]` =
    `hsh`, nom `hsh` dans `/proc/<pid>/status`), enfant du processus de l'app.
    Le gestionnaire de processus lui copie le répertoire et l'environnement du
    parent (ADR 0050).
@@ -184,10 +184,10 @@ de lever `KeyNotFoundException`.
   §1) : deux onglets de l'éditeur de code partageaient leur répertoire. Chaque
   `TerminalPanel` a maintenant le sien. `ExecuteCommandIntent` garde le shell
   détaché ou celui de l'appelant de l'ADR 0050 §7 : il n'a pas de terminal.
-- **Historique et invite dans `IHackShell`**, en plus des membres listés par
+- **Historique et invite dans `IKazoShell`**, en plus des membres listés par
   l'ADR : l'historique est celui du shell (`IShellSession.History` le donne
   aux commandes), et l'invite dépend du répertoire du shell.
-- **`HackCredentialPrompt` est une classe abstraite** avec deux méthodes
+- **`KazoCredentialPrompt` est une classe abstraite** avec deux méthodes
   facultatives : un terminal minimal n'implémente que la saisie des
   identifiants.
 - **`sudo` ne fait qu'un essai** et écrit « Sorry, try again. » avant
@@ -197,18 +197,18 @@ de lever `KeyNotFoundException`.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Shell/ShellInterpreterTests.HostedShell.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Shell/ShellInterpreterTests.HostedShell.cs` :
   refus sans `shell.host`, processus enfant et parent des commandes, répertoires
   et `$?` séparés, `WorkingDirectory` et repli, fin du shell qui tue les
-  commandes, `sudo` par `HackCredentialPrompt`, entrée standard et historique,
+  commandes, `sudo` par `KazoCredentialPrompt`, entrée standard et historique,
   complétion (positions de commande, alias, casse).
-- `Tests/HackerOs.App.Abstractions.Tests/AppCapabilitiesTests.cs` : `shell.host`
+- `Tests/Kazo.Os.App.Abstractions.Tests/AppCapabilitiesTests.cs` : `shell.host`
   dangereuse.
 
 ## Liste des tâches du chantier `rebuild/4-sdk-shell-host`
 
 - [x] Capacité `shell.host` (dangereuse) dans `AppCapabilities`.
-- [x] `HackShell`, `IHackShell`, `HackShellOptions`, `HackShellExecution`, `HackShellCompletion`, `HackCredentialPrompt`, `IAppShellHostGateway` dans le SDK.
+- [x] `KazoShell`, `IKazoShell`, `KazoShellOptions`, `KazoShellExecution`, `KazoShellCompletion`, `KazoCredentialPrompt`, `IAppShellHostGateway` dans le SDK.
 - [x] `ShellHostService`, `ShellHostPrompts`, `ShellCompletion`, `AppShellHostGateway` ; passerelle branchée par `AppExecutionContextFactory` ; enregistrement dans l'Ecosystem.
 - [x] `ShellExecutionOptions.StandardInput`.
 - [x] `TerminalPanel` sur le SDK seul, `TerminalCredentialPrompt` à la place de `TerminalDangerousCapabilityApprovalPrompt`, référence `Platform.Core` retirée, exemption retirée.

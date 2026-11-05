@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "org.kazoos.intranet",
+  "name": "Intranet",
+  "version": "2.1.0",
+  "publisherId": "org.kazoos",
+  "description": "Internal web site of the agency.",
+  "kind": "web",
+  "entryPoint": {
+    "assembly": "Kazo.Os.Sites.Intranet",
+    "type": "Kazo.Os.Sites.Intranet.IntranetSite"
+  },
+  "sdkCompatibility": {
+    "minimumVersion": "1.0.0"
+  },
+  "presentation": {
+    "category": "system",
+    "launchVisibility": "hidden",
+    "iconAssetPaths": []
+  },
+  "capabilities": [],
+  "resources": {
+    "baselineCpuWeight": 0.02,
+    "burstCpuWeight": 0.08,
+    "baselineMemoryWeight": 0.03,
+    "burstMemoryWeight": 0.06,
+    "baselineStorageIoWeight": 0.0,
+    "burstStorageIoWeight": 0.01,
+    "baselineNetworkIoWeight": 0.0,
+    "burstNetworkIoWeight": 0.0
+  },
+  "singleInstancePerUser": true,
+  "execution": "web",
+  "web": {
+    "urls": [
+      "http://intranet.hack/",
+      "http://intranet.hack:8080/admin/"
+    ]
+  }
+}

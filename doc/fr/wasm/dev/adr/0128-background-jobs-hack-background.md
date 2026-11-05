@@ -33,7 +33,7 @@ sérialisables.
 ### 1. API (ajout du SDK 1.2, ADR 0132)
 
 ```csharp
-namespace HackerOs.AppSdk.Threading;
+namespace Kazo.Os.AppSdk.Threading;
 
 public static class HackBackground
 {
@@ -67,7 +67,7 @@ public static class HackBackground
 
 ### 2. Règles vérifiées au build
 
-Un analyseur Roslyn livré avec `HackerOs.AppSdk` (codes `HOSBG0001` et
+Un analyseur Roslyn livré avec `Kazo.Os.AppSdk` (codes `HOSBG0001` et
 suivants, choisis par le chantier) refuse :
 
 - un délégué qui n'est pas un **groupe de méthode statique** (lambda, méthode
@@ -124,7 +124,7 @@ ci-dessus. C'est le seul lancement d'enfant permis depuis un worker
 
 ## Conséquences
 
-- Nouvelle bibliothèque d'analyseur dans le paquet `HackerOs.AppSdk`,
+- Nouvelle bibliothèque d'analyseur dans le paquet `Kazo.Os.AppSdk`,
   testée comme le générateur de routes d'ASP.Hack (ADR 0082).
 - Exemple compilé dans `Apps/Samples` (une fenêtre qui lance un calcul long
   avec progression, annulation et `kill`).

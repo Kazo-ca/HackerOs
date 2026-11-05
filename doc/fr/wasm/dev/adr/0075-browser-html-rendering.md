@@ -7,7 +7,7 @@
 Accepté le 2026-10-16 (proposé le même jour, puis validé par Benoit avec le
 questionnaire de la section 4 du plan).
 
-- **Phase du plan :** phase web ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Phase du plan :** phase web ([`asp-kazo-plan.md`](../plans/asp-kazo-plan.md)).
 - **Dépend de :** ADR 0074 §1 (corps HTTP réels).
 
 ## Contexte
@@ -83,6 +83,6 @@ par ses URL absolues.
 
 - Nouvelle dépendance AngleSharp dans l'app Browser seulement.
 - Le code JS reste minimal et appartient à l'app Browser ; rien n'est ajouté aux
-  hôtes. Dans `HackerOs.Server` (rendu Interactive Server), le pont fonctionne
+  hôtes. Dans `Kazo.Os.Server` (rendu Interactive Server), le pont fonctionne
   de la même façon : le JS tourne dans le navigateur, le C# sur le serveur.
 - Les liens et formulaires des pages de `SimulatedPage` ne changent pas.

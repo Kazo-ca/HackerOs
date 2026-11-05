@@ -26,28 +26,28 @@ Une ADR par sujet, un chantier par ADR, multi-écran pris en compte partout
 
 ## Navigateur : afficher les vrais sites (issue #266)
 
-Analyse du 2026-10-29. Le proxy du serveur HackerOS est construit
+Analyse du 2026-10-29. Le proxy du serveur Kazo OS est construit
 ([ADR 0210](../dev/adr/0210-browser-real-sites-through-the-proxy.md), série
 `todo/base`) : droit du Navigateur, cookies, redirections, icône de source,
 « Non sécurisé », erreurs. Décisions encore à construire :
 
-- Ordre des sources : réseau simulé → proxy du serveur HackerOs (fait) → proxy
+- Ordre des sources : réseau simulé → proxy du serveur Kazo OS (fait) → proxy
   public tiers (désactivable) → Wayback Machine automatiquement en dernier
   recours. Une icône de source par nouvelle source (proxy public, archive).
 - Pas d'iframe directe vers le vrai site : tout passe par le `srcdoc` isolé.
 - Firefox et Safari : afficher « non supporté » quand une fonction exige
   Chrome/Edge.
 
-## Apps tierces portées (dépôts `Kazo-ca/HackerOs-App-*`)
+## Apps tierces portées (dépôts `Kazo-ca/Os-App-*`)
 
 Décidé le 2026-10-28 :
 
 - Chaque projet open source enveloppé vit dans son propre dépôt
-  (`HackerOs-App-Webamp`, `HackerOs-App-IRC` avec KiwiIRC,
-  `HackerOs-App-BoxedWine`, et d'autres), créé à partir de
-  `HackerOs-AppTemplate` (ADR 0176, modèle `hackeros-solution` de l'ADR 0207 ;
-  le dépôt template est régénéré à la release qui contient ce modèle) et listé dans `HackerOs-AppMarketPlace`
-  (catalogue du Hack Store, ADR 0188).
+  (`Os-App-Webamp`, `Os-App-IRC` avec KiwiIRC,
+  `Os-App-BoxedWine`, et d'autres), créé à partir de
+  `Os-AppTemplate` (ADR 0176, modèle `kazoos-solution` de l'ADR 0207 ;
+  le dépôt template est régénéré à la release qui contient ce modèle) et listé dans `Os-AppMarketPlace`
+  (catalogue du Kazo OS Store, ADR 0188).
 - La licence de chaque dépôt suit celle du projet enveloppé (GPL-2.0 pour
   BoxedWine, par exemple), pas MIT par défaut.
 - Ordre de difficulté évalué : Webamp (le plus simple : MIT, `renderInto(div)`,
@@ -72,14 +72,14 @@ Débat du 2026-10-19, récapitulatif validé par Benoit, rien de commencé :
 - **Apps natives** : une VM Hyper-V jetable par utilisateur (la VM est le bac
   à sable), OS invité au choix de l'administrateur, réserve chaude de 2 VM,
   file d'attente quand c'est plein. Installation par l'administrateur seulement
-  + fichier de déclaration HackerOS ; accès par groupe (ex. `hostapps`). Un
+  + fichier de déclaration Kazo OS ; accès par groupe (ex. `hostapps`). Un
   agent dans la VM capture chaque fenêtre, H.264 sur WebSocket + WebCodecs,
   entrées par socket Hyper-V. v1 : clavier, souris, presse-papiers texte,
   fenêtres secondaires. Dossier personnel par WinFsp depuis le stockage de
   synchronisation. Internet en NAT, pas de réseau local. Fermer l'app dans
-  HackerOS ferme l'app ; perte du navigateur = délai de grâce. Visibles dans
+  Kazo OS ferme l'app ; perte du navigateur = délai de grâce. Visibles dans
   `ps`, `kill` et le Gestionnaire des tâches comme processus « host ».
-- **Apps HackerOS côté serveur** : drapeau d'exécution serveur dans
+- **Apps Kazo OS côté serveur** : drapeau d'exécution serveur dans
   `[AppManifest]`, installées par l'administrateur, processus restreint par
   utilisateur, même SDK, fichiers = dossier synchronisé, réseau par les règles
   du relais. Grisées hors connexion.
@@ -90,7 +90,7 @@ Débat du 2026-10-19, récapitulatif validé par Benoit, rien de commencé :
 ## Idées tirées de daedalOS
 
 Évaluation du 2026-10-28. Benoit a choisi « rien pour l'instant » : finir les
-séries en cours d'abord. Ce qui manque à HackerOS et pourrait servir : liens
+séries en cours d'abord. Ce qui manque à Kazo OS et pourrait servir : liens
 profonds par URL (`?app=`, `?open=`), boîte « Exécuter » (Super+R), économiseur d'écran et verrouillage après
 inactivité, recherche de fichiers dans le lanceur, aperçu au survol (voir #242),
 miniatures de fichiers (`~/.cache/thumbnails`), visionneuses (Markdown, PDF,
@@ -119,5 +119,5 @@ Questions à reposer au démarrage : où vivent les visionneuses, portée de
 ## Lacunes connues
 
 - La géométrie des fenêtres n'est pas enregistrée à la déconnexion.
-- Chrome capture `Ctrl+Maj+T` et `Ctrl+Maj+W` sauf quand HackerOS est installé
+- Chrome capture `Ctrl+Maj+T` et `Ctrl+Maj+W` sauf quand Kazo OS est installé
   en PWA (ADR 0061).

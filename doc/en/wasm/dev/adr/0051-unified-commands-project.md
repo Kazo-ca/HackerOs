@@ -22,7 +22,7 @@ Accepted on 2026-10-10.
 
 ## Context
 
-The commands are 28 `Apps/Commands/HackerOs.Commands.*` projects, each with
+The commands are 28 `Apps/Commands/Kazo.Os.Commands.*` projects, each with
 a command class and a manifest class. The host has 24 `ProjectReference`s
 for them, the solution 28 projects, and four test projects reference
 some of them. `TerminalPanel.razor` intercepts `clear`, `pwd`, `cd`, `help` and
@@ -32,11 +32,11 @@ completion and `help` list these names as hard-coded values.
 
 ## Decision
 
-### 1. A single `HackerOs.Commands` project
+### 1. A single `Kazo.Os.Commands` project
 
-- New project `Apps/Commands/HackerOs.Commands/HackerOs.Commands.csproj`.
+- New project `Apps/Commands/Kazo.Os.Commands/Kazo.Os.Commands.csproj`.
   Each command occupies a folder (`Cat/CatApp.cs`, `Cat/CatCommand.cs`) and
-  keeps its namespace (`HackerOs.Commands.Cat`), its classes and its
+  keeps its namespace (`Kazo.Os.Commands.Cat`), its classes and its
   `[AppManifest]` declaration.
 - **App identifiers do not change** (`org.hackeros.commands.cat`...).
   The `apps.config` and `app-permissions.config` files and the aliases already
@@ -44,12 +44,12 @@ completion and `help` list these names as hard-coded values.
 - The generator writes `manifests/<appId>.json` for each command (ADR 0047);
   the `manifest.json` files of the old projects disappear with them.
 - The host has only **one** reference left:
-  `<ProjectReference Include="..\..\Apps\Commands\HackerOs.Commands\HackerOs.Commands.csproj" IsSystemApp="true" />`.
+  `<ProjectReference Include="..\..\Apps\Commands\Kazo.Os.Commands\Kazo.Os.Commands.csproj" IsSystemApp="true" />`.
   All built-in commands are therefore system apps, like the current 24.
   The assembly is loaded on demand as a single block.
 - The 28 old projects are removed from the solution and from disk. Test
   projects reference the new project. The samples
-  (`Apps/Samples/HackerOs.Samples.TerminalApp`) remain a separate project:
+  (`Apps/Samples/Kazo.Os.Samples.TerminalApp`) remain a separate project:
   it is the model for a third-party command.
 - **Third-party command format unchanged:** one project, one app of type
   `Terminal` with its manifest class. A third-party project can also group
@@ -70,7 +70,7 @@ As on Linux, `cd` and `export` must act on the shell itself, not on
 their own process. The SDK provides this access:
 
 - `TerminalExecutionContext.Shell`, of type `IShellSession?`
-  (`Shared/HackerOs.AppSdk/`).
+  (`Shared/Kazo.Os.AppSdk/`).
 - New capability **`shell.control`** (`AppCapabilities.ShellControl`),
   classified **normal** (ADR 0049): it only acts on the shell of the
   user who typed the command.
@@ -167,5 +167,5 @@ See ADR 0052 for the full phase 3 table. Work items of this ADR:
 - ADR 0034 (section 1 replaced), ADR 0042 (`sudo`, one-off approval),
   ADR 0047, ADR 0048, ADR 0049 (classification of `shell.control`), ADR 0050.
 - [`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), section 7.3.
-- `OS/HackerOs.Ecosystem/HackerOs.Ecosystem.csproj`, `Apps/Commands/`,
-  `Shared/HackerOs.AppSdk.Terminal/TerminalPanel.razor`.
+- `OS/Kazo.Os.Ecosystem/Kazo.Os.Ecosystem.csproj`, `Apps/Commands/`,
+  `Shared/Kazo.Os.AppSdk.Terminal/TerminalPanel.razor`.

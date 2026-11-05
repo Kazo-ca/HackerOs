@@ -26,7 +26,7 @@ Implementation: [`screen-service.md`](../screen-service.md).
 
 ## Decision
 
-1. **Service.** `ScreenService` (`HackerOs.Platform.Blazor.Display`) is an OS
+1. **Service.** `ScreenService` (`Kazo.Os.Platform.Blazor.Display`) is an OS
    service, one instance per session like `WindowRuntime`. Its types are public
    for the OS assemblies (`PublicAPI.Unshipped.txt`), but no app SDK API exposes
    them (Benoit's answer of 2026-10-28: later). It opens the surface through
@@ -91,14 +91,14 @@ Implementation: [`screen-service.md`](../screen-service.md).
 
 ## Verification
 
-- `Tests/HackerOs.Platform.Blazor.Tests/Display/ScreenServiceTests.cs`: screen 2
+- `Tests/Kazo.Os.Platform.Blazor.Tests/Display/ScreenServiceTests.cs`: screen 2
   registered with its size, area followed on resize, screen closed by the user, by
   the OS, unplugged monitor, restore in order at the remembered place, blocked
   window, dismissed offer, place written after a pause, states (hidden tab, full
   screen, permission), host without JavaScript.
-- `Tests/HackerOs.Platform.Core.Tests/Shell/ScreensSettingsTests.cs`: reading and
+- `Tests/Kazo.Os.Platform.Core.Tests/Shell/ScreensSettingsTests.cs`: reading and
   writing `[screens]`.
-- `Tests/HackerOs.UI.E2E.Tests/ScreenServiceTests.cs` (real Chromium, fallback):
+- `Tests/Kazo.Os.UI.E2E.Tests/ScreenServiceTests.cs` (real Chromium, fallback):
   offer after a reload, screen 2 opened at its remembered size, a screen closed by
   hand not offered afterwards.
 

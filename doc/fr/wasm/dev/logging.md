@@ -9,7 +9,7 @@ Mise en œuvre de l'[ADR 0045](adr/0045-logs-as-files.md) et de la section 5.3 d
 
 ## Rôle
 
-Les journaux de HackerOS sont de vrais fichiers texte. `cat`, `tail`, `grep` et
+Les journaux de Kazo OS sont de vrais fichiers texte. `cat`, `tail`, `grep` et
 Error Log Viewer les lisent avec les droits de fichier ordinaires.
 
 | Fichier | Contenu | Mode |
@@ -22,7 +22,7 @@ Error Log Viewer les lisent avec les droits de fichier ordinaires.
 ## Architecture
 
 ```text
-ILogger<T> ──► HackerOsDiagnosticLoggerProvider ─┐
+ILogger<T> ──► KazoOsDiagnosticLoggerProvider ─┐
 IAppLoggingGateway ──► AppLoggingGateway ────────┼─► LogFileWriter ─► IFileSystemService ─► /var/log/…
 IAuditLog ──► FileAuditLog ──────────────────────┘        │ (canal borné, vidage groupé, rotation)
 HostExceptionReporter ───────────────────────────┘        ▼
@@ -48,7 +48,7 @@ HostExceptionReporter ───────────────────�
     Le rédacteur crée lui-même `/var/log` et `/var/log/apps` s'ils manquent.
   - Attacher un **autre** système de fichiers abandonne le précédent : son
     jeton est annulé et les vidages suivants ne l'attendent plus. Sur
-    `HackerOs.Server`, chaque circuit monte le sien ; un rechargement peut
+    `Kazo.Os.Server`, chaque circuit monte le sien ; un rechargement peut
     couper l'ancien circuit au milieu d'un vidage (appel JS sans réponse), et
     le démarrage du nouveau circuit restait bloqué derrière, environ une fois
     sur cinq (trouvé par `build/verify-hosts.sh`). Les lignes du lot abandonné
@@ -70,7 +70,7 @@ HostExceptionReporter ───────────────────�
 - `IPersistentDiagnosticRepository` et `IndexedDbDiagnosticRepository` ne sont
   plus enregistrés ; l'audit IndexedDB n'était déjà pas branché. Les classes et
   leurs magasins restent, et la version du schéma IndexedDB ne change pas.
-- L'hôte `OS/HackerOs.Ecosystem` ne retire plus son `ILoggerProvider` : toutes ses
+- L'hôte `OS/Kazo.Os.Ecosystem` ne retire plus son `ILoggerProvider` : toutes ses
   dépendances sont des singletons. Le serveur garde sa composition (le pont
   `ILogger` y reste retiré, aucun système de fichiers n'y est attaché).
 
@@ -91,21 +91,21 @@ HostExceptionReporter ───────────────────�
   utilisateur ordinaire c'est refusé, la fenêtre propose l'approbation
   administrateur (ADR 0042), puis un second clic réussit.
 - **Écart temporaire avec l'ADR 0045 §6 :** le lecteur passe par
-  `IAppFileSystemGateway` et non par `HackFile`/`HackFileSystemWatcher`, qui
-  arrivent avec la branche `rebuild/1-file-api` (ADR 0043). Le passage à `Hack*`
+  `IAppFileSystemGateway` et non par `KazoFile`/`KazoFileSystemWatcher`, qui
+  arrivent avec la branche `rebuild/1-file-api` (ADR 0043). Le passage à `Kazo*`
   se fera une fois cette API mergée ; le comportement ne change pas.
 
 ## Tests de contrat
 
-- `Tests/HackerOs.Platform.Core.Tests/Diagnostics/LogLineFormatTests.cs` : format,
+- `Tests/Kazo.Os.Platform.Core.Tests/Diagnostics/LogLineFormatTests.cs` : format,
   exemple exact de l'ADR, échappements, propriétés, audit, rejet des lignes étrangères.
 - `.../LogFileWriterTests.cs` : création et modes, vidage périodique et par seuil,
   une écriture par fichier, rotation et archives, lot géant, perte de lignes,
   échecs non récursifs, déconnexion, arrêt, droits de lecture, nouvel attachement
   qui n'attend pas un vidage bloqué sur le précédent.
 - `.../LogProducersTests.cs` : `ILogger`, `AppLoggingGateway`, `FileAuditLog`.
-- `Tests/HackerOs.Platform.Core.Tests/Time/SimulationClockDriverTests.cs`.
-- `Tests/HackerOs.Apps.ErrorLogViewer.Tests/` : manifeste et `LogFileReader` sur un
+- `Tests/Kazo.Os.Platform.Core.Tests/Time/SimulationClockDriverTests.cs`.
+- `Tests/Kazo.Os.Apps.ErrorLogViewer.Tests/` : manifeste et `LogFileReader` sur un
   vrai `AppFileSystemGateway`.
 
 ## Liste des tâches
@@ -121,4 +121,4 @@ HostExceptionReporter ───────────────────�
 - [x] Error Log Viewer lit les fichiers.
 - [x] Tests de contrat.
 - [x] Lignes perdues faute de place, comptées puis signalées (`v3/7`, ADR 0099 §2).
-- [ ] Passer Error Log Viewer sur `HackFile` après le merge de l'ADR 0043.
+- [ ] Passer Error Log Viewer sur `KazoFile` après le merge de l'ADR 0043.

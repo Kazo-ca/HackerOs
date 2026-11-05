@@ -1,0 +1,84 @@
+@namespace Kazo.Os.Apps.FileExplorer.FileControl
+@using Microsoft.AspNetCore.Components.Web
+@implements IAsyncDisposable
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
+
+@*
+    Wrapping tile grid (FV-003). Supports marquee (rubber-band) multi-select: dragging from empty grid
+    space draws a selection rectangle and selects every tile it intersects, computed via
+    FileViewIcons.razor.js since C# has no access to getBoundingClientRect. Reuses the same select/
+    activate/rename/context-menu handlers as FileViewDetails — only layout differs.
+*@
+<div class="file-view-icons"
+     role="listbox"
+     aria-multiselectable="@(Owner.AllowMultiSelect ? "true" : "false")"
+     @ref="_gridElement"
+     @onmousedown="OnGridMouseDownAsync"
+     @onmousemove="OnGridMouseMove"
+     @onmouseup="OnGridMouseUpAsync"
+     @onmouseleave="OnGridMouseUpAsync">
+    @foreach (FileViewItem item in Owner.Items)
+    {
+        <div role="option"
+             @key="item.FullPath.Value"
+             data-item-path="@item.FullPath.Value"
+             aria-selected="@(item.IsSelected ? "true" : "false")"
+             class="file-view-tile @(item.IsSelected ? "selected" : null) @(item.IsCut ? "cut" : null) @(item.IsDimmed ? "dimmed" : null)"
+             data-drop-target="@(item.IsDirectory && Owner.AllowDragDrop ? "true" : null)"
+             tabindex="@(IsTabStop(item) ? 0 : -1)"
+             draggable="@(Owner.AllowDragDrop ? "true" : "false")"
+             @onmousedown:stopPropagation="true"
+             @onclick="@(args => OnTileClick(item, args))"
+             @ondblclick="@(() => OnTileDoubleClickAsync(item))"
+             @attributes="Owner.MenuAttributesFor(item)"
+             @oncontextmenu="@(args => OnTileContextMenuAsync(item, args))"
+             @oncontextmenu:preventDefault="Owner.UsesOwnMenu"
+             @oncontextmenu:stopPropagation="true"
+             @onkeydown="@(args => OnTileKeyDownAsync(item, args))"
+             @ondragstart="@(args => OnTileDragStartAsync(item, args))"
+             @ondragover:preventDefault="@(item.IsDirectory && Owner.AllowDragDrop)"
+             @ondrop="@(args => OnTileDropAsync(item, args))"
+             @ondrop:stopPropagation="@item.IsDirectory">
+            @* ADR 0185 §14: a folder shows the icons of its first entries once its tile was on screen. *@
+            @{ IReadOnlyList<ShellIconDescriptor>? preview = PreviewFor(item); }
+            <span class="file-view-tile-icon" data-folder-preview="@(WantsPreview(item) ? item.FullPath.Value : null)">
+                <ShellIcon Icon="@(preview is { Count: > 0 } ? OpenFolderIcon : ResolveIcon(item))" Size="32" />
+                @if (preview is { Count: > 0 })
+                {
+                    <span class="file-view-folder-preview" aria-hidden="true">
+                        @foreach (ShellIconDescriptor icon in preview)
+                        {
+                            <ShellIcon Icon="icon" Size="11" />
+                        }
+                    </span>
+                }
+            </span>
+            @if (item.IsRenaming)
+            {
+                <input class="file-view-rename-input"
+                       value="@GetRenameBuffer(item)"
+                       @oninput="@(args => SetRenameBuffer(item, args.Value?.ToString() ?? string.Empty))"
+                       @onkeydown="@(args => OnRenameKeyDownAsync(item, args))"
+                       @onkeydown:stopPropagation="true"
+                       @onblur="@(() => CommitRenameAsync(item))"
+                       @onclick:stopPropagation="true"
+                       @onmousedown:stopPropagation="true" />
+            }
+            else
+            {
+                <span class="file-view-tile-label">@item.Label</span>
+            }
+        </div>
+    }
+
+    @if (Owner.EmptyText is { } emptyText)
+    {
+        @* ADR 0185 §2: centred in the grid, which stays a drop target with its background menu. *@
+        <div class="file-view-empty" role="status">@emptyText</div>
+    }
+
+    @if (_isMarqueeActive)
+    {
+        <div class="file-view-marquee" @attributes="GetMarqueeAttributes()"></div>
+    }
+</div>

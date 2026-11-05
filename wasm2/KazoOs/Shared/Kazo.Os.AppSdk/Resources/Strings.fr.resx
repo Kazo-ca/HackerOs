@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Errno.FileTooLarge" xml:space="preserve">
+    <value>Fichier trop volumineux</value>
+  </data>
+  <data name="Errno.InvalidPath" xml:space="preserve">
+    <value>Chemin non valable</value>
+  </data>
+  <data name="Errno.IsDirectory" xml:space="preserve">
+    <value>Est un dossier</value>
+  </data>
+  <data name="Errno.TooManyOpenFiles" xml:space="preserve">
+    <value>Trop de fichiers ouverts</value>
+  </data>
+  <data name="Errno.NoSpace" xml:space="preserve">
+    <value>Aucun espace disponible sur le périphérique</value>
+  </data>
+  <data name="Errno.NoSuchFile" xml:space="preserve">
+    <value>Aucun fichier ou dossier de ce type</value>
+  </data>
+  <data name="Errno.NotDirectory" xml:space="preserve">
+    <value>N'est pas un dossier</value>
+  </data>
+  <data name="Errno.PermissionDenied" xml:space="preserve">
+    <value>Permission refusée</value>
+  </data>
+  <data name="Site.BadDefaultDocument" xml:space="preserve">
+    <value>« {0} » n'est pas un nom de fichier valable pour un document par défaut</value>
+  </data>
+  <data name="Site.DuplicateBinding" xml:space="preserve">
+    <value>la liaison « {0} » figure deux fois</value>
+  </data>
+  <data name="Site.HttpsBinding" xml:space="preserve">
+    <value>« {0} » : une liaison https a besoin d'un certificat de serveur, que kazowebd n'a pas encore</value>
+  </data>
+  <data name="Site.InvalidBinding" xml:space="preserve">
+    <value>« {0} » n'est pas une liaison valable : {1}</value>
+  </data>
+  <data name="Site.InvalidName" xml:space="preserve">
+    <value>« {0} » n'est pas un nom de site valable (lettres, chiffres, « . », « - » et « _ », {1} caractères au plus)</value>
+  </data>
+  <data name="Site.NoBinding" xml:space="preserve">
+    <value>un site a besoin d'au moins une liaison, comme « http://localhost:8080/ »</value>
+  </data>
+  <data name="Site.PrivilegedPort" xml:space="preserve">
+    <value>le port {0} de « {1} » est privilégié : un site d'utilisateur écoute sur les ports {2} et au-delà (un administrateur peut le déclarer dans {3})</value>
+  </data>
+  <data name="Site.RootNotAbsolute" xml:space="preserve">
+    <value>la racine doit être le chemin absolu d'un dossier</value>
+  </data>
+  <data name="Site.RootRefused" xml:space="preserve">
+    <value>« {0} » ne peut pas être la racine d'un site (« / » et « .. » sont refusés)</value>
+  </data>
+  <data name="Transfer.Error.AppNotAllowed" xml:space="preserve">
+    <value>cette app n'a pas le droit d'écrire ici</value>
+  </data>
+  <data name="Transfer.Error.CannotOpen" xml:space="preserve">
+    <value>impossible d'ouvrir « {0} » : {1}</value>
+  </data>
+  <data name="Transfer.Error.CopyIntoItself" xml:space="preserve">
+    <value>impossible de copier un dossier dans lui-même</value>
+  </data>
+  <data name="Transfer.Error.InvalidName" xml:space="preserve">
+    <value>nom de fichier non valable</value>
+  </data>
+  <data name="Transfer.Error.MoveIntoItself" xml:space="preserve">
+    <value>impossible de déplacer un dossier dans lui-même</value>
+  </data>
+  <data name="Transfer.Error.NameTaken" xml:space="preserve">
+    <value>ce nom est déjà pris</value>
+  </data>
+  <data name="Transfer.Error.NoLongerExists" xml:space="preserve">
+    <value>n'existe plus</value>
+  </data>
+  <data name="Transfer.Error.PermissionDenied" xml:space="preserve">
+    <value>permission refusée</value>
+  </data>
+  <data name="Transfer.Error.Protected" xml:space="preserve">
+    <value>élément système protégé</value>
+  </data>
+  <data name="Transfer.Error.ReadOnly" xml:space="preserve">
+    <value>système de fichiers en lecture seule</value>
+  </data>
+  <data name="Transfer.Error.Stopped" xml:space="preserve">
+    <value>arrêté avant cet élément</value>
+  </data>
+  <data name="Transfer.Error.TooLarge" xml:space="preserve">
+    <value>plus de {0} Mio</value>
+  </data>
+  <data name="Transfer.Failure.Item" xml:space="preserve">
+    <value>« {0} » : {1}</value>
+  </data>
+  <data name="Transfer.Failure.Many" xml:space="preserve">
+    <value>Impossible de {0} {1} éléments : {2}.</value>
+  </data>
+  <data name="Transfer.Failure.One" xml:space="preserve">
+    <value>Impossible de {0} {1}.</value>
+  </data>
+  <data name="Transfer.Verb.Copy" xml:space="preserve">
+    <value>copier</value>
+  </data>
+  <data name="Transfer.Verb.Move" xml:space="preserve">
+    <value>déplacer</value>
+  </data>
+  <data name="Transfer.Verb.Trash" xml:space="preserve">
+    <value>mettre à la Corbeille</value>
+  </data>
+  <data name="Transfer.Verb.Upload" xml:space="preserve">
+    <value>importer</value>
+  </data>
+</root>

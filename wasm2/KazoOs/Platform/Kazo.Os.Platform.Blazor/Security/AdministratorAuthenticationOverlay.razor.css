@@ -1,0 +1,203 @@
+/* OS authentication agent (ADR 0055 section 5): same secure-desktop family as the ADR 0049 approval. */
+.aaa-veil {
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background:
+        repeating-linear-gradient(135deg, rgb(255 60 60 / 4%) 0 12px, transparent 12px 24px),
+        rgb(2 4 6 / 86%);
+    backdrop-filter: blur(6px) grayscale(0.7);
+    font-family: var(--kos-font-mono, "Cascadia Mono", Consolas, monospace);
+    user-select: none;
+}
+
+.aaa-window {
+    width: min(100%, 34rem);
+    max-height: calc(100vh - 2rem);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 2px solid #e5484d;
+    border-radius: 0.5rem;
+    background: #10151a;
+    color: #f4f7f8;
+    box-shadow:
+        0 0 0 1px rgb(229 72 77 / 35%),
+        0 0 48px rgb(229 72 77 / 30%),
+        0 24px 64px rgb(0 0 0 / 70%);
+}
+
+.aaa-banner {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.9rem 1.1rem;
+    background: linear-gradient(90deg, #b4232a, #e5484d);
+    color: #fff;
+}
+
+.aaa-banner ::deep .aaa-key {
+    flex: none;
+    filter: drop-shadow(0 0 6px rgb(0 0 0 / 45%));
+}
+
+.aaa-banner h2 {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.aaa-banner p {
+    margin: 0.15rem 0 0;
+    font-size: 0.8rem;
+    opacity: 0.9;
+}
+
+.aaa-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    padding: 1.1rem;
+    overflow-y: auto;
+}
+
+.aaa-credentials {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    user-select: text;
+}
+
+.aaa-credentials label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: 0.78rem;
+    color: #a8bac4;
+}
+
+.aaa-credentials input {
+    padding: 0.5rem 0.6rem;
+    border: 1px solid #34444c;
+    border-radius: 0.3rem;
+    background: #0b0f12;
+    color: #f4f7f8;
+    font: inherit;
+    font-size: 0.9rem;
+}
+
+.aaa-credentials input:focus {
+    outline: 2px solid #e5484d;
+    outline-offset: 1px;
+}
+
+.aaa-error {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #ff9a91;
+}
+
+.aaa-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.6rem;
+    margin-top: 0.25rem;
+}
+
+.aaa-actions button {
+    padding: 0.5rem 1.1rem;
+    border-radius: 0.3rem;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.aaa-actions button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.aaa-cancel {
+    border: 1px solid #34444c;
+    background: #1a2228;
+    color: #f4f7f8;
+}
+
+.aaa-passkey {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid #4a6470;
+    background: #1f2d34;
+    color: #f4f7f8;
+}
+
+.aaa-authenticate {
+    border: 1px solid #ff6b70;
+    background: #c62a30;
+    color: #fff;
+}
+
+.aaa-authenticate:not(:disabled):hover {
+    background: #e5484d;
+}
+
+.aaa-footer {
+    padding: 0.6rem 1.1rem;
+    border-top: 1px solid #2a353c;
+    background: #0c1014;
+    font-size: 0.72rem;
+    color: #6f838e;
+}
+
+.aaa-operation {
+    margin: 0;
+    padding: 0.7rem 0.8rem;
+    border-left: 3px solid #e5484d;
+    border-radius: 0.3rem;
+    background: rgb(229 72 77 / 8%);
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.aaa-facts {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    font-size: 0.8rem;
+    color: #a8bac4;
+}
+
+.aaa-facts div {
+    display: flex;
+    gap: 0.6rem;
+}
+
+.aaa-facts dt {
+    min-width: 6.5rem;
+    color: #6f838e;
+}
+
+.aaa-facts dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.aaa-facts code {
+    color: #8aa0ab;
+}
+
+/* ADR 0187: the lone guest confirms without a password. */
+.aaa-guest-confirm {
+    margin: 0;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}

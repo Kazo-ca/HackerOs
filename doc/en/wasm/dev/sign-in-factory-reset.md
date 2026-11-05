@@ -5,7 +5,7 @@
 ## Purpose
 
 When nobody knows an administrator password any more, the sign-in screen
-offers to erase HackerOS in this browser and start over at the first-run
+offers to erase Kazo OS in this browser and start over at the first-run
 setup. Decision: [ADR 0226](adr/0226-forgot-password-factory-reset.md).
 
 ## For the user
@@ -16,7 +16,7 @@ setup. Decision: [ADR 0226](adr/0226-forgot-password-factory-reset.md).
    every setting, theme and log.
 3. Type `ERASE` (`EFFACER` in French) then **Erase and restart**. **Cancel**
    or Escape closes the box without erasing anything.
-4. The boot screen shows, the page reloads and HackerOS starts again on the
+4. The boot screen shows, the page reloads and Kazo OS starts again on the
    creation of the first account (or **Start as guest**).
 
 The link is not shown while the guest is the only account: it has no password
@@ -30,7 +30,7 @@ without rebuilding:
 
 ```json
 {
-  "HackerOs": {
+  "KazoOs": {
     "SignIn": {
       "FactoryReset": { "Enabled": false }
     }
@@ -38,7 +38,7 @@ without rebuilding:
 }
 ```
 
-The HackerOS server (`HackerOs.Server`) serves the OS's published files as
+The Kazo OS server (`Kazo.Os.Server`) serves the OS's published files as
 they are: the same key applies. A missing or unreadable value reads as
 `true`. An administrator can still erase the machine from Settings ▸ System.
 
@@ -46,13 +46,13 @@ The service worker caches `appsettings.json` without checking its hash: the
 edited file does not stop the offline install. A browser that already
 installed this release keeps the previous file until the next release; for a
 change to apply everywhere, make it before the first deployment (or in
-`OS/HackerOs.Ecosystem/wwwroot/appsettings.json` before `dotnet publish`).
+`OS/Kazo.Os.Ecosystem/wwwroot/appsettings.json` before `dotnet publish`).
 
 ## Architecture
 
 | Element | Role |
 | --- | --- |
-| `SignInFactoryResetSettings` (`Ecosystem.Host`) | Reads `HackerOs:SignIn:FactoryReset:Enabled` once at boot; registered by `AddHackerOsBrowserHost`. |
+| `SignInFactoryResetSettings` (`Ecosystem.Host`) | Reads `KazoOs:SignIn:FactoryReset:Enabled` once at boot; registered by `AddKazoOsBrowserHost`. |
 | `SignInFactoryReset` (`Ecosystem.Host`) | `IsOffered` (deployment key, `true` when the host registered nothing) and `RunAsync`, which checks the key again then calls the power service. |
 | `SignInFactoryResetPrompt` (`.razor`, `.razor.cs`, `.razor.css`) | Link and confirmation box; `IsConfirmationTyped` compares the typed word ignoring case and surrounding spaces. |
 | `SystemPowerService.FactoryResetFromSignInAsync` (`Platform.Core`) | Same sequence as `FactoryResetAsync` (logs flushed, session ended, IndexedDB database deleted, page reloaded); `system.factory-reset` audit with `origin = sign-in`. |
@@ -71,17 +71,17 @@ change to apply everywhere, make it before the first deployment (or in
 
 ## Tests
 
-- `Tests/HackerOs.Ecosystem.Tests/SignInFactoryResetTests.cs`: reading the
+- `Tests/Kazo.Os.Ecosystem.Tests/SignInFactoryResetTests.cs`: reading the
   key, the published `appsettings.json`, the confirmation word, a disabled
   deployment that erases nothing, closed and open rendering in English and
   French.
-- `Tests/HackerOs.Platform.Core.Tests/Administration/SystemAdministrationGatewayTests.cs`:
+- `Tests/Kazo.Os.Platform.Core.Tests/Administration/SystemAdministrationGatewayTests.cs`:
   erase then restart, `origin = sign-in` audit entry.
 
 ## Task list
 
 - [x] ADR 0226 and questions asked to Benoit.
-- [x] Deployment key `HackerOs:SignIn:FactoryReset:Enabled`.
+- [x] Deployment key `KazoOs:SignIn:FactoryReset:Enabled`.
 - [x] `SystemPowerService.FactoryResetFromSignInAsync` and its audit.
 - [x] Link and confirmation box on the sign-in screen (fr, en).
 - [x] Unit and rendering tests.

@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <Import Project="..\Packaging.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackageId>Kazo.Os.Theming.Blazor</PackageId>
+    <Description>Theme scope and token-driven previews shared by Kazo OS shell surfaces and reusable window/taskbar projects.</Description>
+    <PackageTags>kazoos;theming;blazor;desktop-shell</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.14" />
+    <!-- ADR 0104: IStringLocalizer<T>, resolved optionally (Localization/PackageStringLocalizer.cs). -->
+    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="10.0.14" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Kazo.Os.Theming.Abstractions\Kazo.Os.Theming.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -8,12 +8,12 @@ et ses ajustements dans l'[ADR 0108](adr/0108-server-relay-implementation-adjust
 
 ## But
 
-Le serveur optionnel (`Server/HackerOs.Server`) relaie vers le vrai réseau ce
+Le serveur optionnel (`Server/Kazo.Os.Server`) relaie vers le vrai réseau ce
 qu'un navigateur ne peut pas faire seul :
 
 - les requêtes HTTP de **toutes** les méthodes, avec leur corps ;
-- les **flux TCP** (`HackTcpClient.ConnectAsync`) ;
-- les **datagrammes UDP** (`HackUdpClient`).
+- les **flux TCP** (`KazoTcpClient.ConnectAsync`) ;
+- les **datagrammes UDP** (`KazoUdpClient`).
 
 Il vérifie lui-même que l'app a le droit d'utiliser le relais, applique une
 politique et des quotas configurés dans `appsettings.json`, et écrit un
@@ -29,13 +29,13 @@ le serveur (ADR 0102) : ce chantier ne touche pas au rendu, que reprend
 
 ```
 App (SDK)                         OS (Platform Core)                     Serveur
-HackHttpClient ──► AppNetworkGateway.SendRealAsync ──► IProxyClient ──► POST /api/proxy/http
-HackTcpClient  ──► AppNetworkGateway.ConnectTcpAsync ─┐                  GET  /api/proxy/tcp (WebSocket)
-HackUdpClient  ──► AppNetworkGateway.ConnectUdpAsync ─┴► OpenStreamAsync ► GET  /api/proxy/udp (WebSocket)
-Paramètres     ──► HackServerConnection.GetRelayPolicyAsync ────────────► GET  /api/proxy/policy
+KazoHttpClient ──► AppNetworkGateway.SendRealAsync ──► IProxyClient ──► POST /api/proxy/http
+KazoTcpClient  ──► AppNetworkGateway.ConnectTcpAsync ─┐                  GET  /api/proxy/tcp (WebSocket)
+KazoUdpClient  ──► AppNetworkGateway.ConnectUdpAsync ─┴► OpenStreamAsync ► GET  /api/proxy/udp (WebSocket)
+Paramètres     ──► KazoServerConnection.GetRelayPolicyAsync ────────────► GET  /api/proxy/policy
 ```
 
-### Contrats (`HackerOs.Server.Contracts/Proxy`)
+### Contrats (`Kazo.Os.Server.Contracts/Proxy`)
 
 | Type | Rôle |
 |---|---|
@@ -53,7 +53,7 @@ Nouveaux codes d'erreur : `GRANT_MISSING` (403), `RELAY_DISABLED` (503),
 
 | Classe | Rôle |
 |---|---|
-| `ProxyOptions`, `ProxyRelayPolicy` | section `HackerOs:Proxy` ; `ProxyRelayPolicy.From` pose les valeurs par défaut et calcule les limites effectives. |
+| `ProxyOptions`, `ProxyRelayPolicy` | section `KazoOs:Proxy` ; `ProxyRelayPolicy.From` pose les valeurs par défaut et calcule les limites effectives. |
 | `ProxyGrantAuthority` | `IsGrantedAsync` : l'app est dans `GrantedApps` ou un enregistrement `grants` synchronisé du compte lui donne `network.real.access`. |
 | `ProxyService` | validations communes (relais actif, app, accord, port, adresse épinglée, plages bloquées, quotas) ; `ExecuteHttpRequestAsync` envoie le corps ; `OpenStreamAsync` connecte le socket. |
 | `SocketProxyStreamConnector`, `SocketProxyStreamChannel` | connexion TCP/UDP (10 s), délai d'inactivité, compteurs d'octets, audit à la fermeture. |
@@ -67,7 +67,7 @@ Nouveaux codes d'erreur : `GRANT_MISSING` (403), `RELAY_DISABLED` (503),
 | `HttpProxyClient` | HTTP et flux (WebSocket `ws`/`wss`, jeton dans `access_token`). |
 | `WebSocketProxyStreamChannel` | attend la trame texte d'ouverture ou la fermeture `4001` ; découpe un envoi TCP en blocs de 64 Kio. |
 | `AppNetworkGateway` | `ConnectTcpAsync`, `ConnectUdpAsync`, relais HTTP avec corps. |
-| `RelayedSocket` | `IHackSocket` sur un flux : compte le trafic (`/proc/net/dev`) et la mémoire du noyau. |
+| `RelayedSocket` | `IKazoSocket` sur un flux : compte le trafic (`/proc/net/dev`) et la mémoire du noyau. |
 | `AppServerConnectionGateway.GetRelayPolicyAsync` | politique du serveur pour Paramètres, sans jamais exposer le jeton. |
 
 ## Protocole d'un flux
@@ -89,7 +89,7 @@ Nouveaux codes d'erreur : `GRANT_MISSING` (403), `RELAY_DISABLED` (503),
 ## Configuration (`appsettings.json`)
 
 ```json
-"HackerOs": {
+"KazoOs": {
   "Proxy": {
     "Enabled": true,
     "Http": { "AllowedPorts": [ 80, 443 ] },
@@ -107,9 +107,9 @@ Nouveaux codes d'erreur : `GRANT_MISSING` (403), `RELAY_DISABLED` (503),
       "StreamIdleTimeoutSeconds": 300
     },
     "GrantedApps": [
-      "org.hackeros.commands.curl", "org.hackeros.commands.wget",
-      "org.hackeros.commands.ping", "org.hackeros.cmd.cat",
-      "org.hackeros.commands.nmap", "org.hackeros.browser"
+      "org.kazoos.commands.curl", "org.kazoos.commands.wget",
+      "org.kazoos.commands.ping", "org.kazoos.cmd.cat",
+      "org.kazoos.commands.nmap", "org.kazoos.browser"
     ]
   }
 }
@@ -140,18 +140,18 @@ relais est coupé. Les mêmes phrases sont rendues dans
 
 ```csharp
 // TCP : un flux comme NetworkStream.
-await using HackNetworkStream stream = await HackTcpClient.ConnectAsync("example.com", 443);
+await using KazoNetworkStream stream = await KazoTcpClient.ConnectAsync("example.com", 443);
 await stream.WriteAsync(request);
 int read = await stream.ReadAsync(buffer); // 0 quand la cible a fermé
 
 // UDP : un socket « connecté » à une cible.
-await using HackUdpClient udp = await HackUdpClient.ConnectAsync("pool.ntp.org", 123);
+await using KazoUdpClient udp = await KazoUdpClient.ConnectAsync("pool.ntp.org", 123);
 await udp.SendAsync(ntpRequest);
-HackUdpReceiveResult answer = await udp.ReceiveAsync();
+KazoUdpReceiveResult answer = await udp.ReceiveAsync();
 
 // POST relayé avec son corps si l'hôte n'est pas simulé.
-using HackHttpClient http = new();
-HackHttpResponse response = await http.PostAsync(url, new HackStringContent(json, "application/json"));
+using KazoHttpClient http = new();
+KazoHttpResponse response = await http.PostAsync(url, new KazoStringContent(json, "application/json"));
 ```
 
 - Un socket demande `network.simulated.write` ; le relais demande en plus
@@ -171,7 +171,7 @@ HackHttpResponse response = await http.PostAsync(url, new HackStringContent(json
 | autre | `ConnectionFailed` (erreur réseau du SDK) |
 
 Paramètres (section du serveur) affiche la politique du serveur connecté avec
-`HackServerConnection.GetRelayPolicyAsync()` : ports, plages privées, quotas,
+`KazoServerConnection.GetRelayPolicyAsync()` : ports, plages privées, quotas,
 flux ouverts, apps accordées et avertissements.
 
 ## Décisions clés
@@ -195,21 +195,21 @@ flux ouverts, apps accordées et avertissements.
   `Host`, `Authorization`, `X-Forwarded-For` et `X-Real-IP` restent bloqués) ;
   avec `FollowRedirects = false`, le serveur rend la redirection telle quelle
   (`Location`, `Set-Cookie`) et l'OS suit les sauts ; le Navigateur
-  (`org.hackeros.browser`) est dans les `GrantedApps` par défaut. Le quota de
+  (`org.kazoos.browser`) est dans les `GrantedApps` par défaut. Le quota de
   8 requêtes par appareil reste un refus : l'OS en garde 6 au plus en cours et
   retente un `QUOTA_EXCEEDED`.
 
 ## Liste des tâches
 
 - [x] Corps des requêtes HTTP : contrat, vérification taille et hash, toutes les méthodes, redirections.
-- [x] Options `HackerOs:Proxy` (ports, plages privées, quotas, apps accordées) et politique effective.
+- [x] Options `KazoOs:Proxy` (ports, plages privées, quotas, apps accordées) et politique effective.
 - [x] Contrôle de l'accord côté serveur (`GrantedApps` et accords synchronisés).
 - [x] Flux TCP et UDP : connecteur, canal, pompe WebSocket, codes de fermeture, audit.
 - [x] Jeton dans la requête sur les routes de flux seulement.
 - [x] Avertissements au démarrage et dans la réponse de politique.
 - [x] Client WebSocket de l'OS et client direct du serveur.
-- [x] `HackTcpClient.ConnectAsync`, `HackNetworkStream`, `HackUdpClient`, erreurs d'une vraie pile.
-- [x] `HackServerConnection.GetRelayPolicyAsync` et panneau de Paramètres.
+- [x] `KazoTcpClient.ConnectAsync`, `KazoNetworkStream`, `KazoUdpClient`, erreurs d'une vraie pile.
+- [x] `KazoServerConnection.GetRelayPolicyAsync` et panneau de Paramètres.
 - [x] Tests : service, endpoints WebSocket, client direct, passerelle réseau, politique.
 - [x] ADR 0108 et documentation.
 

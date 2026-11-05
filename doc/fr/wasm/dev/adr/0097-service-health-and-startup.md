@@ -17,7 +17,7 @@ démarrent au boot.
 ## Contexte
 
 - `ServiceHealth` (`Unknown`, `Healthy`, `Degraded`, `Unhealthy`,
-  `Shared/HackerOs.Simulation.Abstractions/Processes/ProcessContracts.cs:115`)
+  `Shared/Kazo.Os.Simulation.Abstractions/Processes/ProcessContracts.cs:115`)
   vaut toujours `Unknown` : `InMemoryProcessManager` le pose à la création et
   rien ne le change. Rien ne l'affiche.
 - `HackServiceControllerStatus` (`Stopped`, `StartPending`, `StopPending`,

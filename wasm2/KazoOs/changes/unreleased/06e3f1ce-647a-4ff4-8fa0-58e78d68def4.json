@@ -1,0 +1,18 @@
+{
+  "id": "06e3f1ce-647a-4ff4-8fa0-58e78d68def4",
+  "category": "new",
+  "audience": [
+    "user"
+  ],
+  "title": {
+    "en": "Forgot password? Reset the machine from the sign-in screen",
+    "fr": "Mot de passe oublié ? Réinitialiser la machine depuis l'écran de connexion"
+  },
+  "description": {
+    "en": "When no password is remembered, the sign-in screen offers to erase Kazo OS in this browser and start over at the first-run setup, after typing ERASE to confirm. Whoever deploys the OS can turn it off with KazoOs:SignIn:FactoryReset:Enabled in appsettings.json.",
+    "fr": "Quand aucun mot de passe n'est retenu, l'écran de connexion propose d'effacer Kazo OS dans ce navigateur et de recommencer à la première configuration, après avoir tapé EFFACER pour confirmer. Celui qui déploie l'OS peut le désactiver avec KazoOs:SignIn:FactoryReset:Enabled dans appsettings.json."
+  },
+  "links": [
+    "doc/en/wasm/dev/sign-in-factory-reset.md"
+  ]
+}

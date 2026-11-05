@@ -93,7 +93,7 @@ Section `HackerOs:Proxy` de `appsettings.json`, lue au démarrage par des
 
 ## Conséquences
 
-- `v3/10` ajoute les contrats (`HackerOs.Server.Contracts/Proxy`), les deux
+- `v3/10` ajoute les contrats (`Kazo.Os.Server.Contracts/Proxy`), les deux
   points WebSocket, les options, le contrôle des accords, `HackUdpClient`, et des
   tests serveur (corps transmis, flux TCP aller-retour contre un écho local avec
   `AllowPrivateNetworks`, datagramme UDP, accord manquant, avertissements).

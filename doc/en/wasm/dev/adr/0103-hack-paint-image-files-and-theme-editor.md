@@ -18,7 +18,7 @@ verified tokens.
 
 ## Context
 
-- Hack Paint (`Apps/System/HackerOs.Apps.HackPaint`) declares the capabilities to
+- Hack Paint (`Apps/System/Kazo.Os.Apps.KazoPaint`) declares the capabilities to
   read and write the home folder and file dialogs, but
   has no Open, no Save, no Export: its JS draws RGBA pixels on a
   canvas.
@@ -55,7 +55,7 @@ verified tokens.
 #### 2.1 App
 
 New system app `org.hackeros.theme-editor`
-(`Apps/System/HackerOs.Apps.ThemeEditor`), on the public SDK only. It
+(`Apps/System/Kazo.Os.Apps.ThemeEditor`), on the public SDK only. It
 takes from `src/`: editing by token groups (colors, typography,
 spacing, windows, taskbar, animations), live preview, the help
 and the token documentation; it does not take the free CSS (§2.4).
@@ -89,14 +89,14 @@ and the token documentation; it does not take the free CSS (§2.4).
 
 #### 2.3 Applying the tokens
 
-- `HackerOs.Theming.Abstractions` publishes the **token list** with their type
+- `Kazo.Os.Theming.Abstractions` publishes the **token list** with their type
   (color, length, duration, font family, number); the editor's help
   is generated from this list.
 - On read, each value is checked according to its type; an invalid line
   or an unknown token is ignored with a warning (ADR 0044 §5).
 - `ThemeScope` applies a user theme's tokens through
   `style.setProperty` on its root element, via a small JS module of
-  `HackerOs.Theming.Blazor` (no `style="…"` in the markup, ADR 0007).
+  `Kazo.Os.Theming.Blazor` (no `style="…"` in the markup, ADR 0007).
 
 #### 2.4 No free CSS (Benoit's choice)
 

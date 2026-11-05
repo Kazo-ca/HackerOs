@@ -31,7 +31,7 @@ how the Start menu creates a shortcut. The usage guide is
 
 The file control runs with the rights of the app that displays it
 (ADR 0148 §4): it needs an app context. The desktop is therefore a system
-app, **Desktop** (`org.hackeros.desktop`, project `HackerOs.Apps.Desktop`),
+app, **Desktop** (`org.hackeros.desktop`, project `Kazo.Os.Apps.Desktop`),
 hidden from the Start menu, single instance, which uses only the public SDK.
 This is the role of `explorer.exe` under Windows or `xfdesktop` under Xfce.
 
@@ -70,7 +70,7 @@ This is the role of `explorer.exe` under Windows or `xfdesktop` under Xfce.
 
 The host (the Desktop app) reads and writes the file; the provider draws, places
 and moves. A third-party provider of the control (ADR 0156) receives the same
-parameters. The types are in `HackerOs.AppSdk.Files` (without Blazor):
+parameters. The types are in `Kazo.Os.AppSdk.Files` (without Blazor):
 `HackDesktopCell`, `HackDesktopIconSize`, `HackDesktopSort`,
 `HackDesktopOptions`, `HackDesktopItems`, `HackDesktopLayout`.
 
@@ -109,7 +109,7 @@ becomes new and is arranged in sort order.
   like a Linux desktop's configuration file under `~/.config/`: no
   OS document or `/etc` layer (the desktop is specific to each
   user, and `[positions]` has no schema). The format is read and written
-  by `HackDesktopSettings` (SDK, `HackerOs.AppSdk.Files`): `Parse`,
+  by `HackDesktopSettings` (SDK, `Kazo.Os.AppSdk.Files`): `Parse`,
   `WithOptions`, `WithPositions`, `ReadAsync`, `SaveOptionsAsync`,
   `SavePositionsAsync`, with the rights of the ambient app.
 - `[view]` (`icon-size`, `auto-arrange`, `align-to-grid`, `sort`, `show-home`,

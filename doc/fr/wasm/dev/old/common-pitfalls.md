@@ -10,20 +10,20 @@ treat a fresh occurrence as a regression, not a surprise.
 
 ## 1. A referenced Blazor WASM "app" project's static assets are unprefixed, not `_content/{Project}/...`
 
-`OS/HackerOs.Ecosystem` is a `Microsoft.NET.Sdk.BlazorWebAssembly` **app**, not
-a Razor Class Library, but `test/test` and `Server/HackerOs.Server` both
+`OS/Kazo.Os.Ecosystem` is a `Microsoft.NET.Sdk.BlazorWebAssembly` **app**, not
+a Razor Class Library, but `test/test` and `Server/Kazo.Os.Server` both
 `ProjectReference` it to reuse its component tree (ADR 0027). When a project
 reference is consumed this way, ASP.NET Core's static web assets pipeline
 exposes Ecosystem's own `wwwroot`-relative paths **unprefixed** at the
 composed host (e.g. `wwwroot/css/app.css` → route `css/app.css`), unlike a
 true Razor Class Library, whose assets get the `_content/{Library}/...`
-prefix you'd expect. `@Assets["app.css"]` and `_content/HackerOs.Ecosystem/css/app.css`
+prefix you'd expect. `@Assets["app.css"]` and `_content/Kazo.Os.Ecosystem/css/app.css`
 are both wrong keys for this file; the correct one is `css/app.css` (or
 `@Assets["css/app.css"]` if you want fingerprinting).
 
 > **Update (v3/6, ADR 0098 §2):** `wwwroot/css/app.css` moved to the Razor Class
-> Library `OS/HackerOs.Ecosystem.Host`, so every host (the Ecosystem PWA included)
-> now serves it at `_content/HackerOs.Ecosystem.Host/css/app.css`, the normal RCL
+> Library `OS/Kazo.Os.Ecosystem.Host`, so every host (the Ecosystem PWA included)
+> now serves it at `_content/Kazo.Os.Ecosystem.Host/css/app.css`, the normal RCL
 > prefix. The unprefixed-route behaviour below still applies to anything left in
 > the Ecosystem app's own `wwwroot` (service worker, web manifest, icons), and the
 > rule about decoy copies is unchanged.
@@ -34,13 +34,13 @@ scaffold `wwwroot/app.css`), the lookup silently resolves to *that* instead,
 and the host renders with no error, no missing-file warning, just visibly
 wrong styling (or worse, only subtly wrong colors from CSS custom-property
 fallbacks). This is exactly what happened: `test/test` and
-`Server/HackerOs.Server` each carried their own unmodified scaffold
+`Server/Kazo.Os.Server` each carried their own unmodified scaffold
 `wwwroot/app.css`, so `@Assets["app.css"]` "worked" and matched the decoy file
 for the life of both hosts, and neither host ever rendered the real
-`--hos-*` design tokens. See `webassembly-debugging.md` for the full writeup
+`--kos-*` design tokens. See `webassembly-debugging.md` for the full writeup
 and the fix.
 
-**Rule:** never give a host project (`test/test`, `Server/HackerOs.Server`) its
+**Rule:** never give a host project (`test/test`, `Server/Kazo.Os.Server`) its
 own physical copy of an asset that's supposed to come from a referenced
 project — a decoy file is what makes the wrong lookup key look correct. If you
 add a fourth host, verify its static-asset route by checking the referenced
@@ -60,9 +60,9 @@ ADR 0040 added `AppManifest.DeclaredTopicPermissions` (JSON:
 `declaredTopicPermissions`) without updating this allowlist, so
 `DeserializeStrict` rejected the canonical manifest fixture — and would reject
 any real manifest using the field — with `Unknown property
-'declaredTopicPermissions' at 'manifest'`. `HackerOs.App.Abstractions.Tests`
+'declaredTopicPermissions' at 'manifest'`. `Kazo.Os.App.Abstractions.Tests`
 didn't catch it because none of its tests round-trip the canonical fixture
-through `DeserializeStrict`; only `HackerOs.Infrastructure.Browser.Tests`
+through `DeserializeStrict`; only `Kazo.Os.Infrastructure.Browser.Tests`
 happened to exercise that path.
 
 **Rule:** any change that adds, renames, or nests a new `AppManifest` property
@@ -75,10 +75,10 @@ considering the change done.
 
 ## 3. Never hardcode an IndexedDB schema version literal — always reference `HackerOsIndexedDbSchema.CurrentVersion`
 
-Every real repository in `Infrastructure/HackerOs.Infrastructure.Browser`
+Every real repository in `Infrastructure/Kazo.Os.Infrastructure.Browser`
 correctly threads `HackerOsIndexedDbSchema.CurrentVersion` through
 `IndexedDbInteropAdapter.OpenAsync`/`ExecuteAsync`. But
-`Tests/HackerOs.BrowserHarness.Tests/App.razor`'s `VerifyOrphanCleanupAsync`
+`Tests/Kazo.Os.BrowserHarness.Tests/App.razor`'s `VerifyOrphanCleanupAsync`
 bypasses the adapter and calls the JS module's `executeTransaction` directly,
 with the database version hardcoded as the literal `2` — stale from before
 the schema was bumped to `4` (ADR 0028/0029) and never updated. The JS
@@ -105,7 +105,7 @@ browser-cache problem.
 
 ## 4. `dotnet run` for an E2E test harness needs `ASPNETCORE_ENVIRONMENT=Development` set explicitly
 
-Several E2E suites (`HackerOs.E2E.Tests`, `HackerOs.UI.E2E.Tests`) spawn a
+Several E2E suites (`Kazo.Os.E2E.Tests`, `Kazo.Os.UI.E2E.Tests`) spawn a
 host project as a child `dotnet run` process via `Process.Start`. A child
 process inherits environment variables from whatever shell invoked `dotnet
 test` — in an IDE that's often `Development` by convention, but in a plain
@@ -116,8 +116,8 @@ In `Production`, `app.MapStaticAssets()` still wires up
 `StaticAssetDevelopmentRuntimeHandler` (despite the name), which expects every
 static web asset to resolve to a physical file under the host's own
 `wwwroot` for its dev-time patching checks. Assets composed from a referenced
-project or NuGet package (MudBlazor, `HackerOs.Ecosystem`,
-`HackerOs.Platform.Blazor`) aren't physical files under the host's `wwwroot`
+project or NuGet package (MudBlazor, `Kazo.Os.Ecosystem`,
+`Kazo.Os.Platform.Blazor`) aren't physical files under the host's `wwwroot`
 — every one of them 500s, and the harness never finishes booting. From the
 test's side this looks like `net::ERR_CONNECTION_REFUSED` or "the browser
 harness did not become ready" — nothing points at the environment variable.
@@ -126,12 +126,12 @@ harness did not become ready" — nothing points at the environment variable.
 exec`/published binary) for one of the three host projects as a test harness
 must explicitly set `startInfo.Environment["ASPNETCORE_ENVIRONMENT"] =
 "Development"`. Don't rely on the invoking shell's environment. See
-`HackerOs.UI.E2E.Tests/E2ESupport.cs`'s `StartHarness` for the fix.
+`Kazo.Os.UI.E2E.Tests/E2ESupport.cs`'s `StartHarness` for the fix.
 
 ## 5. E2E test harnesses launched with `--configuration Release` need a Release build first
 
-`HackerOs.E2E.Tests` and `HackerOs.UI.E2E.Tests` both spawn their harness with
-`--configuration Release`. `dotnet build HackerOs.sln -c Debug` alone leaves
+`Kazo.Os.E2E.Tests` and `Kazo.Os.UI.E2E.Tests` both spawn their harness with
+`--configuration Release`. `dotnet build Kazo.Os.sln -c Debug` alone leaves
 every Release output directory empty, so the spawned process crashes
 immediately with `The static resources manifest file '...staticwebassets.
 endpoints.json' was not found` — which, again, surfaces to the test as a
@@ -139,18 +139,18 @@ endpoints.json' was not found` — which, again, surfaces to the test as a
 build error.
 
 **Rule:** before running any E2E suite locally, build both configurations:
-`dotnet build HackerOs.sln -c Debug` (for the test project itself) and
-`dotnet build HackerOs.sln -c Release` (for the spawned harness). CI presumably
+`dotnet build Kazo.Os.sln -c Debug` (for the test project itself) and
+`dotnet build Kazo.Os.sln -c Release` (for the spawned harness). CI presumably
 already does this as part of its normal build matrix; a fresh local clone or
 worktree will not have a Release output directory yet.
 
 ## 6. Don't run the E2E/UI-E2E/PWA-E2E suites in parallel against each other
 
-`dotnet test HackerOs.sln` runs every test project's suite concurrently by
-default. The three Playwright-based suites (`HackerOs.E2E.Tests`,
-`HackerOs.UI.E2E.Tests`, `HackerOs.Pwa.E2E.Tests`) each spawn their own
+`dotnet test Kazo.Os.sln` runs every test project's suite concurrently by
+default. The three Playwright-based suites (`Kazo.Os.E2E.Tests`,
+`Kazo.Os.UI.E2E.Tests`, `Kazo.Os.Pwa.E2E.Tests`) each spawn their own
 `dotnet run`/`dotnet publish` child processes and reserve their own ports —
-running all three at once under `dotnet test HackerOs.sln` produces spurious,
+running all three at once under `dotnet test Kazo.Os.sln` produces spurious,
 non-reproducible failures (`dotnet publish` failing with exit code 1,
 connection-refused harness boots) purely from resource contention, not from
 anything wrong in the code under test. The same tests reliably pass when run
@@ -158,8 +158,8 @@ one project at a time.
 
 **Rule:** when investigating an E2E failure, always reproduce it by running
 that one test project's suite in isolation
-(`dotnet test Tests/HackerOs.E2E.Tests -c Debug --no-build`, etc.) before
-concluding it's a real regression. If `dotnet test HackerOs.sln` reports E2E
+(`dotnet test Tests/Kazo.Os.E2E.Tests -c Debug --no-build`, etc.) before
+concluding it's a real regression. If `dotnet test Kazo.Os.sln` reports E2E
 failures but the same tests pass individually, that's resource contention in
 the environment, not a bug in the app — filter E2E projects out of routine
 solution-wide test runs (`--filter "FullyQualifiedName!~E2E.Tests&
@@ -196,7 +196,7 @@ attribute with an **empty** value and `false` drops it. That is right for
 strings `"true"`/`"false"`: `aria-checked="@isOn"` renders `aria-checked=""`
 (invalid, so axe reports `aria-required-attr` on a `role="radio"`) and nothing
 at all when off (a toggle button that loses `aria-pressed` is no longer a
-toggle for a screen reader). `HackerOs.UI.E2E.Tests` caught this in Settings,
+toggle for a screen reader). `Kazo.Os.UI.E2E.Tests` caught this in Settings,
 the Code Editor and the App Launcher (fixed on `rebuild/5-ui-a11y-mkdir`,
 2026-10-16, 37 attributes).
 
@@ -209,11 +209,11 @@ or a `string?` property when the attribute must disappear in some states
 
 ## 9. An app that won't open after a rebuild is a stale page, not a broken build
 
-Lazy-loaded apps fetch `_framework/HackerOs.Apps.<Name>.<fingerprint>.wasm`
+Lazy-loaded apps fetch `_framework/Kazo.Os.Apps.<Name>.<fingerprint>.wasm`
 with the fingerprint the page's `dotnet.js` knew at boot. Rebuild while a tab
 stays open (F5 in Visual Studio, hot reload, a deployment) and that file is
 gone or has another hash: the launch fails with
-`download '…/HackerOs.Apps.Settings.yesfevpgxl.wasm' failed 0 TypeError: Failed to fetch`
+`download '…/Kazo.Os.Apps.Settings.yesfevpgxl.wasm' failed 0 TypeError: Failed to fetch`
 (an SRI integrity error in the console). The build itself is fine.
 
 **Since ADR 0162** the OS notices it: the failed launch says "HackerOS was

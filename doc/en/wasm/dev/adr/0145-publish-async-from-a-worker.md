@@ -50,7 +50,7 @@ worker the publications outside the app's topics (C). Benoit chose B.
 - An app that needs to know the real result calls `PublishAsync`, everywhere.
   The SDK guide recommends this form for code that may run in a
   worker.
-- New line in `Shared/HackerOs.Simulation.Abstractions/PublicAPI.Unshipped.txt`;
+- New line in `Shared/Kazo.Os.Simulation.Abstractions/PublicAPI.Unshipped.txt`;
   `HackerOsVersion` stays `1.2.0` until the next publication.
 - Test: `RemoteEventsTests.PublishAsync_returns_the_outcome_and_the_subscriber_faults_decided_by_the_OS`
   checks the same result on the main thread and in a worker (delivered, refused,

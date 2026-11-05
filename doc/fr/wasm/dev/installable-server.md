@@ -7,7 +7,7 @@ Issue `TODO` #267, [ADR 0191](adr/0191-installable-local-server.md). Série
 
 ## But
 
-Le serveur HackerOS optionnel (`HackerOs.Server` : relais réseau HTTP, TCP et
+Le serveur Kazo OS optionnel (`Kazo.Os.Server` : relais réseau HTTP, TCP et
 UDP, comptes, appareils, synchronisation) s'installe sur l'ordinateur de
 l'utilisateur comme un **service** qui démarre avec la machine, sans .NET
 installé ni ligne de commande à connaître. L'OS reste utilisable sans lui
@@ -29,17 +29,17 @@ porte une archive par système, au nom de la version de l'OS :
 
 | Système | Archive |
 |---|---|
-| Windows x64 / ARM64 | `hackeros-server-<version>-win-x64.zip` / `win-arm64.zip` |
-| macOS Apple Silicon / Intel | `hackeros-server-<version>-osx-arm64.tar.gz` / `osx-x64.tar.gz` |
-| Linux x64 / ARM64 | `hackeros-server-<version>-linux-x64.tar.gz` / `linux-arm64.tar.gz` |
-| Docker (amd64, arm64) | `ghcr.io/kazo-ca/hackeros-server:<version>` (et `latest`) |
+| Windows x64 / ARM64 | `kazoos-server-<version>-win-x64.zip` / `win-arm64.zip` |
+| macOS Apple Silicon / Intel | `kazoos-server-<version>-osx-arm64.tar.gz` / `osx-x64.tar.gz` |
+| Linux x64 / ARM64 | `kazoos-server-<version>-linux-x64.tar.gz` / `linux-arm64.tar.gz` |
+| Docker (amd64, arm64) | `ghcr.io/kazo-ca/kazoos-server:<version>` (et `latest`) |
 
 Dans l'OS : **Paramètres > Connexion au serveur > Serveur local** liste ces
 téléchargements pour la version en cours, l'image Docker, la page des versions
 et ce guide.
 
 Chaque archive est un programme autonome (self-contained, un seul fichier) qui
-contient aussi l'OS publié : le serveur sert HackerOS lui-même
+contient aussi l'OS publié : le serveur sert Kazo OS lui-même
 ([`server-hosting.md`](server-hosting.md)).
 
 ## Installer
@@ -53,9 +53,9 @@ Décompresser l'archive, puis dans PowerShell **en administrateur** :
 .\install.ps1 -Lan 192.168.1.20    # aussi le réseau local en HTTPS
 ```
 
-- Programme dans `C:\Program Files\HackerOS Server`, données dans
-  `C:\ProgramData\HackerOS Server`.
-- Service Windows `HackerOSServer` (démarrage automatique), compte
+- Programme dans `C:\Program Files\Kazo OS Server`, données dans
+  `C:\ProgramData\Kazo OS Server`.
+- Service Windows `KazoOSServer` (démarrage automatique), compte
   `LocalService`.
 - Avec `-Lan` : règle de pare-feu entrante sur le port HTTPS, **profil Privé
   seulement**.
@@ -71,16 +71,16 @@ sudo ./install.sh                       # cet ordinateur seulement
 sudo ./install.sh --lan 192.168.1.20    # aussi le réseau local en HTTPS
 ```
 
-- Programme dans `/opt/hackeros-server`, données dans
-  `/var/lib/hackeros-server`.
-- Unité systemd `hackeros-server` (`Type=notify`), utilisateur système
-  `hackeros` sans shell.
+- Programme dans `/opt/kazoos-server`, données dans
+  `/var/lib/kazoos-server`.
+- Unité systemd `kazoos-server` (`Type=notify`), utilisateur système
+  `kazoos` sans shell.
 
 ### macOS
 
-Même commande que Linux. Programme dans `/usr/local/hackeros-server`, données
-dans `/usr/local/var/hackeros-server`, service launchd
-`ca.kazo.hackeros-server`. Le script retire la quarantaine du téléchargement et
+Même commande que Linux. Programme dans `/usr/local/kazoos-server`, données
+dans `/usr/local/var/kazoos-server`, service launchd
+`ca.kazo.kazoos-server`. Le script retire la quarantaine du téléchargement et
 signe le programme ad hoc (pas de signature Apple).
 
 Options de `install.sh` : `--lan <noms>` (adresses IP ou noms séparés par des
@@ -90,20 +90,20 @@ virgules), `--port`, `--https-port`, `--account`, `--prefix`, `--data`,
 ### Docker
 
 ```bash
-docker run -d --name hackeros-server -p 127.0.0.1:5888:8080 \
-  -v hackeros-data:/data ghcr.io/kazo-ca/hackeros-server
-docker exec hackeros-server ./HackerOs.Server pair admin
+docker run -d --name kazoos-server -p 127.0.0.1:5888:8080 \
+  -v kazoos-data:/data ghcr.io/kazo-ca/kazoos-server
+docker exec kazoos-server ./Kazo.Os.Server pair admin
 ```
 
 Le port publié est lié à `127.0.0.1` : le serveur reste sur cet ordinateur.
 L'image n'a pas de HTTPS ; pour le réseau local, mettre un proxy inverse
-HTTPS devant et ajouter son nom à `HACKEROS_AllowedHosts` et
-`HACKEROS_Cors__AllowedOrigins__*`.
+HTTPS devant et ajouter son nom à `KAZOOS_AllowedHosts` et
+`KAZOOS_Cors__AllowedOrigins__*`.
 
 ### Mise à jour et désinstallation
 
 Relancer le script d'installation d'une version plus récente remplace le
-programme et **garde** `hackeros-server.json` et les données
+programme et **garde** `kazoos-server.json` et les données
 (`--reconfigure` / `-Reconfigure` réécrit la configuration).
 
 `sudo ./uninstall.sh` ou `.\uninstall.ps1` retire le service et le programme ;
@@ -117,7 +117,7 @@ programme et **garde** `hackeros-server.json` et les données
 1. **Paramètres > Connexion au serveur > Serveur local**.
 2. Taper l'adresse (`http://localhost:5888` par défaut, ou
    `https://192.168.1.20:5889` depuis un autre appareil) et appuyer sur
-   **Tester** : l'OS indique si un serveur HackerOS répond et sa version.
+   **Tester** : l'OS indique si un serveur Kazo OS répond et sa version.
 3. Taper le code et appuyer sur **Appairer cet appareil**. L'appareil est
    connecté et une synchronisation démarre.
 
@@ -125,12 +125,12 @@ Pour un autre code (autre appareil, code expiré), sur la machine du serveur,
 dans le dossier du programme :
 
 ```bash
-sudo -u hackeros ./HackerOs.Server pair admin      # Linux
-./HackerOs.Server pair admin                        # macOS (utilisateur qui a installé)
+sudo -u kazoos ./Kazo.Os.Server pair admin      # Linux
+./Kazo.Os.Server pair admin                        # macOS (utilisateur qui a installé)
 ```
 
 ```powershell
-.\HackerOs.Server.exe pair admin                    # Windows, PowerShell en administrateur
+.\Kazo.Os.Server.exe pair admin                    # Windows, PowerShell en administrateur
 ```
 
 Un code :
@@ -146,7 +146,7 @@ Un code :
 L'API : `POST /api/auth/pair` avec `PairDeviceRequest(Code, DeviceName,
 DeviceFingerprint)` répond la même `LoginResponse` qu'une connexion par mot de
 passe, ou `401 INVALID_PAIRING_CODE`, ou `429`. Dans le SDK :
-`HackServerConnection.PairAsync` et `HackServerConnection.TestAsync`
+`KazoServerConnection.PairAsync` et `KazoServerConnection.TestAsync`
 (capacité `server.connection.manage`, [`sdk-reference.md`](../framework/sdk-reference.md)).
 
 ## HTTPS sur le réseau local
@@ -158,8 +158,8 @@ page `https://` (contenu mixte). Avec `--lan`, l'installation :
 2. signe avec elle un certificat de serveur pour les noms et adresses donnés ;
 3. **supprime la clé privée de la CA** : elle ne peut plus rien signer d'autre ;
 4. sert le certificat de la CA à
-   `https://<adresse>:5889/api/hackeros/local-ca.crt` (et
-   `http://localhost:5888/api/hackeros/local-ca.crt`).
+   `https://<adresse>:5889/api/kazoos/local-ca.crt` (et
+   `http://localhost:5888/api/kazoos/local-ca.crt`).
 
 Chaque autre appareil doit approuver ce certificat une fois :
 
@@ -189,14 +189,14 @@ L'ordinateur du serveur lui-même passe par `http://localhost:5888` et n'a rien
   Serveur local n'appelle l'adresse que sur **Tester** ou **Appairer**. Sinon
   Chrome afficherait sa question « Accès au réseau local » à chaque visiteur.
 - Le service tourne avec un compte sans privilège (`LocalService`,
-  `hackeros`) ; le dossier de données est en `750`.
+  `kazoos`) ; le dossier de données est en `750`.
 - Programmes non signés (pas de certificat de signature de code) : c'est dit
   dans le `README.txt` de l'archive.
 
 ## Configuration
 
-`hackeros-server.json`, à côté du programme, est lu **après**
-`appsettings.json` et **avant** les variables d'environnement `HACKEROS_` :
+`kazoos-server.json`, à côté du programme, est lu **après**
+`appsettings.json` et **avant** les variables d'environnement `KAZOOS_` :
 
 ```json
 {
@@ -207,11 +207,11 @@ L'ordinateur du serveur lui-même passe par `http://localhost:5888` et n'a rien
              "Certificate": { "Path": ".../certs/server.crt", "KeyPath": ".../certs/server.key" } }
   } },
   "Cors": { "AllowedOrigins": [ "https://kazo-ca.github.io", "https://192.168.1.20:5889" ] },
-  "ConnectionStrings": { "HackerOsDb": "Data Source=.../hackeros.db" },
+  "ConnectionStrings": { "KazoOsDb": "Data Source=.../kazoos.db" },
   "BlobStorage": { "Root": ".../blobs" },
   "ServerBackup": { "Root": ".../backups" },
-  "HackerOs": {
-    "LocalServer": { "CaCertificatePath": ".../certs/hackeros-local-ca.crt" },
+  "KazoOs": {
+    "LocalServer": { "CaCertificatePath": ".../certs/kazoos-local-ca.crt" },
     "Pairing": { "Root": ".../pairing" }
   }
 }
@@ -225,7 +225,7 @@ contenu (sinon ce serait `C:\Windows\System32`).
 
 | Symptôme | Cause et solution |
 |---|---|
-| **Tester** : l'adresse ne répond pas | Service arrêté (`systemctl status hackeros-server`, `Get-Service HackerOSServer`, `launchctl print system/ca.kazo.hackeros-server`), mauvais port, ou pare-feu. |
+| **Tester** : l'adresse ne répond pas | Service arrêté (`systemctl status kazoos-server`, `Get-Service KazoOSServer`, `launchctl print system/ca.kazo.kazoos-server`), mauvais port, ou pare-feu. |
 | `400 Bad Request` | Le nom tapé n'est pas dans `AllowedHosts` : relancer l'installation avec `--lan <ce nom> --reconfigure`. |
 | Erreur de certificat sur un autre appareil | La CA locale n'est pas approuvée sur cet appareil (voir le tableau plus haut), ou le nom tapé n'est pas dans le certificat. |
 | « L'appairage a échoué : … 401 » | Code expiré, déjà utilisé ou mal tapé : en créer un autre avec `pair`. |
@@ -234,10 +234,10 @@ contenu (sinon ce serait `C:\Windows\System32`).
 
 ## Construction et publication
 
-- `wasm2/HackerOs/build/publish-server.sh --rid <rid> --version <v> --output <dossier>`
+- `wasm2/KazoOs/build/publish-server.sh --rid <rid> --version <v> --output <dossier>`
   publie le serveur (self-contained, un seul fichier : `PublishSingleFile` est
   dans le `.csproj`), retire les `.pdb`/`.xml` et le proxy de débogage Blazor,
-  ajoute les scripts de `Server/HackerOs.Server/packaging/` et produit
+  ajoute les scripts de `Server/Kazo.Os.Server/packaging/` et produit
   l'archive.
 - `release.yml` : le job `server` publie les 6 archives et les attache à la
   version GitHub ; le job `server-image` construit l'image multi-architecture
@@ -257,13 +257,13 @@ contenu (sinon ce serait `C:\Windows\System32`).
 
 ## Tests
 
-- `Tests/HackerOs.Server.Tests/LocalServerTests.cs` : codes (usage unique,
+- `Tests/Kazo.Os.Server.Tests/LocalServerTests.cs` : codes (usage unique,
   expiration, forme tapée, limite de tentatives), ligne de commande, et de bout
   en bout : `pair` puis `POST /api/auth/pair`, `Host` inconnu refusé, CA servie,
   CORS GitHub Pages.
-- `Tests/HackerOs.Platform.Core.Tests/Administration/LocalServerGatewayTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Administration/LocalServerGatewayTests.cs` :
   passerelle d'appairage et de test, capacité requise.
-- `Tests/HackerOs.Apps.Settings.Tests/LocalServerPanelTests.cs` : panneau
+- `Tests/Kazo.Os.Apps.Settings.Tests/LocalServerPanelTests.cs` : panneau
   (téléchargements, rien appelé seul, Tester, Appairer, erreur en français).
 - Essai réel de `install.sh --no-service --lan ...` sous Linux. Les scripts
   PowerShell, macOS et l'image Docker n'ont pas pu être essayés dans le
@@ -272,14 +272,14 @@ contenu (sinon ce serait `C:\Windows\System32`).
 ## Liste des tâches
 
 - [x] Codes d'appairage à usage unique et `POST /api/auth/pair`.
-- [x] Commande `HackerOs.Server pair <compte>`.
-- [x] Service Windows et systemd, `hackeros-server.json`, racine de contenu.
-- [x] CA locale, certificat HTTPS, `GET /api/hackeros/local-ca.crt`.
+- [x] Commande `Kazo.Os.Server pair <compte>`.
+- [x] Service Windows et systemd, `kazoos-server.json`, racine de contenu.
+- [x] CA locale, certificat HTTPS, `GET /api/kazoos/local-ca.crt`.
 - [x] `AllowedHosts` et origine CORS GitHub Pages.
 - [x] Scripts d'installation et de désinstallation (Windows, Linux, macOS), `README.txt`.
 - [x] `Dockerfile` et `build/publish-server.sh`.
 - [x] Jobs `server` et `server-image` dans `release.yml`.
-- [x] SDK : `HackServerConnection.PairAsync` et `TestAsync`.
+- [x] SDK : `KazoServerConnection.PairAsync` et `TestAsync`.
 - [x] Paramètres > Serveur local.
 - [x] `index.html` servi par le serveur publié (voir [`pitfalls.md`](pitfalls.md)).
 - [ ] Essai réel sous Windows, macOS et Docker.

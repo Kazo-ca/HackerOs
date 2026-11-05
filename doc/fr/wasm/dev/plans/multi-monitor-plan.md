@@ -14,7 +14,7 @@ fusionner sur l'autorisation de Benoit seulement. ADR écrits :
 
 ## 1. Objet
 
-Donner à HackerOS un **bureau étendu sur plusieurs écrans**. Chaque écran de
+Donner à Kazo OS un **bureau étendu sur plusieurs écrans**. Chaque écran de
 plus est une surface d'affichage (`window.open` de la même instance) qui contient
 son propre bureau, sa barre des tâches et ses fenêtres. Une fenêtre passe d'un
 écran à l'autre sans perdre son état.
@@ -36,9 +36,9 @@ son propre bureau, sa barre des tâches et ses fenêtres. Une fenêtre passe d'u
 | Élément | État | Où |
 | --- | --- | --- |
 | Surfaces d'affichage | `IDisplaySurfaceService`, portail `DisplaySurfaceContent`, styles et thème recopiés, événements de taille et de focus, états de fin | ADR 0078, 0081, [`detached-display-windows.md`](../detached-display-windows.md) |
-| Gestionnaire de fenêtres | Une seule `WorkArea` (`ChangeViewportCommand`), agrandir et ancrer s'y rapportent | `Platform/HackerOs.Windowing.Core/WindowRuntime.cs` |
-| Bureau | Un seul `DesktopArea` dans `DesktopShell`, bureau (`org.hackeros.desktop`) en fond | `Platform/HackerOs.Platform.Blazor/Shell/` |
-| Barre des tâches | Un exemplaire, toutes les fenêtres | `Platform/HackerOs.Taskbar.Blazor` |
+| Gestionnaire de fenêtres | Une seule `WorkArea` (`ChangeViewportCommand`), agrandir et ancrer s'y rapportent | `Platform/Kazo.Os.Windowing.Core/WindowRuntime.cs` |
+| Bureau | Un seul `DesktopArea` dans `DesktopShell`, bureau (`org.kazoos.desktop`) en fond | `Platform/Kazo.Os.Platform.Blazor/Shell/` |
+| Barre des tâches | Un exemplaire, toutes les fenêtres | `Platform/Kazo.Os.Taskbar.Blazor` |
 | Menu de fenêtre | Liste à un niveau dans `WindowManagerOverlays` ; clic droit sur l'icône, `Alt+Space` | ADR 0095, 0164 |
 | Menu contextuel de l'OS | Multi-niveaux, clavier | ADR 0150 |
 
@@ -105,7 +105,7 @@ Les réponses seront reportées ici et dans les ADR.
   travail de l'écran de la fenêtre, et une fenêtre ancrée qui change d'écran
   reste ancrée sur la même moitié, avec sa géométrie d'avant l'ancrage
   convertie vers l'écran cible (deux tests dans `WindowRuntimeDisplayTests`).
-- **Build** : `HackerOs.sln` en Debug et en Release, 0 erreur, 0 avertissement.
+- **Build** : `Kazo.Os.sln` en Debug et en Release, 0 erreur, 0 avertissement.
 - **Tests** : toutes les suites, une à la fois, en Release. Échecs restants,
   tous connus avant la série ou instables :
   `E2E.Tests` `Window_runtime_renders_and_handles_mouse_and_touch_pointer_gestures`
@@ -116,10 +116,10 @@ Les réponses seront reportées ici et dans les ADR.
   relance).
 - **Publication trimmée** : `build/publish-trimmed.sh` publie et lance `TrimmedPublish.E2E` : 3 tests sur 4 verts (démarrage hors ligne, toutes les apps et les deux sites, mesure de la calculatrice). Le test de la calculatrice rendue dans un worker échoue sur axe `label-content-name-mismatch` des touches `MC`, `MR`, `M+`, `M-`, `AC` et `x²` (étiquettes « Memory clear », etc.) : même règle que l'échec connu du lanceur, dans une app que la série ne touche pas.
 - **SDK** : `SdkCompatibility.Tests` vert ; la série ne change pas le SDK des
-  apps (Q1). Les ajouts publics de `HackerOs.Windowing.*` sont dans
+  apps (Q1). Les ajouts publics de `Kazo.Os.Windowing.*` sont dans
   `PublicAPI.Unshipped.txt`, pour la prochaine version.
 - **Docs** : index général et index des dossiers, mémoire du projet
   ([`../../memory/README.md`](../../memory/README.md), prochain ADR libre 0185).
 - **Chantier 7b** (PR #236, après cette vérification) : API système des écrans
-  `HackScreens` pour les boutons de Paramètres ▸ Écrans
+  `KazoScreens` pour les boutons de Paramètres ▸ Écrans
   ([ADR 0184](../adr/0184-screens-administration-sdk.md)).

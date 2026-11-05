@@ -18,7 +18,7 @@ jetons vérifiés.
 
 ## Contexte
 
-- Hack Paint (`Apps/System/HackerOs.Apps.HackPaint`) déclare les capacités de
+- Hack Paint (`Apps/System/Kazo.Os.Apps.KazoPaint`) déclare les capacités de
   lecture et d'écriture du dossier personnel et des dialogues de fichiers, mais
   n'a ni Ouvrir, ni Enregistrer, ni Exporter : son JS dessine des pixels RGBA sur
   un canvas.
@@ -55,7 +55,7 @@ jetons vérifiés.
 #### 2.1 App
 
 Nouvelle app système `org.hackeros.theme-editor`
-(`Apps/System/HackerOs.Apps.ThemeEditor`), sur le SDK public seulement. Elle
+(`Apps/System/Kazo.Os.Apps.ThemeEditor`), sur le SDK public seulement. Elle
 reprend de `src/` : l'édition par groupes de jetons (couleurs, typographie,
 espacements, fenêtres, barre des tâches, animations), l'aperçu en direct, l'aide
 et la documentation des jetons ; elle ne reprend pas le CSS libre (§2.4).
@@ -89,14 +89,14 @@ et la documentation des jetons ; elle ne reprend pas le CSS libre (§2.4).
 
 #### 2.3 Application des jetons
 
-- `HackerOs.Theming.Abstractions` publie la **liste des jetons** avec leur type
+- `Kazo.Os.Theming.Abstractions` publie la **liste des jetons** avec leur type
   (couleur, longueur, durée, famille de polices, nombre) ; l'aide de l'éditeur
   est générée depuis cette liste.
 - À la lecture, chaque valeur est vérifiée selon son type ; une ligne invalide
   ou un jeton inconnu est ignoré avec un avertissement (ADR 0044 §5).
 - `ThemeScope` applique les jetons d'un thème utilisateur par
   `style.setProperty` sur son élément racine, via un petit module JS de
-  `HackerOs.Theming.Blazor` (pas de `style="…"` dans le balisage, ADR 0007).
+  `Kazo.Os.Theming.Blazor` (pas de `style="…"` dans le balisage, ADR 0007).
 
 #### 2.4 Pas de CSS libre (choix de Benoit)
 

@@ -5,7 +5,7 @@
 ## Statut
 
 Accepté le 2026-10-31, chantier `todo/5b-hackstore-no-badge` (série
-`todo/base`, issue `TODO` [#249](https://github.com/Kazo-ca/HackerOs/issues/249)).
+`todo/base`, issue `TODO` [#249](https://github.com/Kazo-ca/Os/issues/249)).
 Remplace l'[ADR 0212](0212-hack-store-app-build.md) §4 et §5, et le badge de
 l'[ADR 0188](0188-hack-store-and-app-catalog.md) §3 (« il met un badge sur son
 icône »). Le reste des ADR 0188 et 0212 ne change pas.

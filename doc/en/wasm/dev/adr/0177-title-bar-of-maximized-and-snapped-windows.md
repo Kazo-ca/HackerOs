@@ -64,7 +64,7 @@ Windows" for the Maximize button of a snapped window. Replaces the decision
 ## Consequences
 
 - Public API added (in `PublicAPI.Unshipped.txt`):
-  `HackerOs.Windowing.Abstractions.SnapWindowCommand`,
+  `Kazo.Os.Windowing.Abstractions.SnapWindowCommand`,
   `WindowRuntimeState.IsSnapped`, `WindowChrome.ReportDragRestoreAsync` and
   `WindowChrome.ReportTitleDoubleClickAsync`. Additions only, nothing changes for
   apps.

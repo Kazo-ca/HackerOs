@@ -1,0 +1,112 @@
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
+@using Kazo.Os.App.Abstractions
+@using Kazo.Os.AppSdk.Icons
+@implements IDisposable
+
+@*
+    The Search view of the side bar (Ctrl+Shift+F), as in VS Code: the search box with its three
+    toggles (match case, whole word, regular expression), "files to include/exclude" globs, and the
+    results grouped by file. A click on a match opens the file and selects the match.
+*@
+<div class="search-view">
+    <div class="view-title">
+        <span>@L["Search.Title"]</span>
+        <span class="title-actions">
+            <button type="button" class="icon-button" title="@L["Search.Refresh"]" aria-label="@L["Search.Refresh.Label"]" @onclick="RunNowAsync" disabled="@(Workspace is null)">
+                <KazoIcon Library="IconLibrary.Lucide" Name="refresh-cw" Size="15" />
+            </button>
+            <button type="button" class="icon-button" title="@L["Search.Clear"]" aria-label="@L["Search.Clear"]" @onclick="Clear">
+                <KazoIcon Library="IconLibrary.Lucide" Name="x" Size="15" />
+            </button>
+            <button type="button" class="icon-button" title="@L["Search.CollapseAll"]" aria-label="@L["Search.CollapseAll.Label"]" @onclick="CollapseAll">
+                <KazoIcon Library="IconLibrary.Lucide" Name="chevrons-down-up" Size="15" />
+            </button>
+        </span>
+    </div>
+
+    @if (Workspace is null)
+    {
+        <div class="search-empty">
+            <p>@L["Search.NoFolder"]</p>
+            <button type="button" class="primary-button" @onclick="OnOpenFolder">@L["Explorer.OpenFolder"]</button>
+        </div>
+    }
+    else
+    {
+        <div class="search-form">
+            <div class="search-box">
+                <input @ref="_searchInput"
+                       id="code-search-input"
+                       class="search-input"
+                       type="text"
+                       placeholder="@L["Search.Placeholder"]"
+                       aria-label="@L["Search.InFolder"]"
+                       spellcheck="false"
+                       value="@_text"
+                       @oninput="OnTextInput"
+                       @onkeydown="OnSearchKeyDownAsync" />
+                <span class="search-toggles">
+                    <button type="button" class="toggle @(_matchCase ? "is-on" : null)" title="@L["Search.MatchCase"]" aria-label="@L["Search.MatchCase"]" aria-pressed="@(_matchCase ? "true" : "false")" @onclick="ToggleMatchCase">
+                        <KazoIcon Library="IconLibrary.Lucide" Name="case-sensitive" Size="15" />
+                    </button>
+                    <button type="button" class="toggle @(_wholeWord ? "is-on" : null)" title="@L["Search.WholeWord"]" aria-label="@L["Search.WholeWord"]" aria-pressed="@(_wholeWord ? "true" : "false")" @onclick="ToggleWholeWord">
+                        <KazoIcon Library="IconLibrary.Lucide" Name="whole-word" Size="15" />
+                    </button>
+                    <button type="button" class="toggle @(_useRegex ? "is-on" : null)" title="@L["Search.Regex"]" aria-label="@L["Search.Regex"]" aria-pressed="@(_useRegex ? "true" : "false")" @onclick="ToggleRegex">
+                        <KazoIcon Library="IconLibrary.Lucide" Name="regex" Size="15" />
+                    </button>
+                </span>
+            </div>
+
+            <button type="button" class="details-toggle" aria-expanded="@(_showDetails ? "true" : "false")" @onclick="ToggleDetails">
+                @(_showDetails ? L["Search.HideDetails"] : L["Search.ToggleDetails"])
+            </button>
+            @if (_showDetails)
+            {
+                <label class="glob-label">
+                    @L["Search.Include"]
+                    <input id="code-search-include" class="glob-input" type="text" placeholder="@L["Search.Include.Placeholder"]" spellcheck="false"
+                           value="@_include" @oninput="OnIncludeInput" @onkeydown="OnSearchKeyDownAsync" />
+                </label>
+                <label class="glob-label">
+                    @L["Search.Exclude"]
+                    <input id="code-search-exclude" class="glob-input" type="text" placeholder="@L["Search.Exclude.Placeholder"]" spellcheck="false"
+                           value="@_exclude" @oninput="OnExcludeInput" @onkeydown="OnSearchKeyDownAsync" />
+                </label>
+            }
+        </div>
+
+        <div class="search-summary" role="status">@Summary()</div>
+
+        @if (_result.Error is not null)
+        {
+            <div class="search-error" role="alert">@_result.Error</div>
+        }
+
+        <div class="search-results" aria-label="@L["Search.Results"]">
+            @foreach (CodeEditorSearchFileResult file in _result.Files)
+            {
+                bool collapsed = _collapsed.Contains(file.File.RelativePath);
+                <div class="result-file" @key="file.File.RelativePath">
+                    <button type="button" class="file-row" title="@file.File.Path.Value" aria-expanded="@(!collapsed ? "true" : "false")" @onclick="() => ToggleFile(file.File.RelativePath)">
+                        <KazoIcon Library="IconLibrary.Lucide" Name="@(collapsed ? "chevron-right" : "chevron-down")" Size="14" />
+                        <KazoIcon Library="IconLibrary.Lucide" Name="file-text" Size="14" />
+                        <span class="file-name">@file.File.Name</span>
+                        <span class="file-directory">@file.File.Directory</span>
+                        <span class="match-count">@file.Matches.Count</span>
+                    </button>
+                    @if (!collapsed)
+                    {
+                        @foreach (CodeEditorSearchMatch match in file.Matches)
+                        {
+                            <button type="button" class="match-row" title="@L["Search.MatchPosition", match.Line, match.Column]"
+                                    @onclick="() => OpenMatchAsync(file.File, match)">
+                                <span class="match-before">@Before(match)</span><mark class="match-text">@Matched(match)</mark><span class="match-after">@After(match)</span>
+                            </button>
+                        }
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>

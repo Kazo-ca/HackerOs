@@ -40,7 +40,7 @@ arrive without breaking a 1.0 or 1.1 app.
 Applied while awaiting (recommended): **a single release, at the end**, in
 `exec/10-final`: `HackerOsVersion` goes to `1.2.0`, the `Unshipped` files
 are moved into `Shipped`, [`sdk-packages.md`](../../framework/sdk-packages.md) and
-[`building-on-hackeros.md`](../../framework/building-on-hackeros.md) list the additions.
+[`building-on-kazoos.md`](../../framework/building-on-kazoos.md) list the additions.
 During the series, `exec/base` stays at 1.1.0 with unreleased additions.
 
 The other choice: a minor version per work item that adds an API (1.2, 1.3,
@@ -68,7 +68,7 @@ GitHub Actions does not run in this repository (no runner since August
 - `build/verify-hosts.sh` on the three hosts, work item options enabled
   **and** turned off (plan, principle 6).
 - Trimmed publish (`build/publish-trimmed.sh` and
-  `HackerOs.TrimmedPublish.E2E.Tests`, ADR 0113) and SDK compatibility app,
+  `Kazo.Os.TrimmedPublish.E2E.Tests`, ADR 0113) and SDK compatibility app,
   as since `v3/14` and `v3/15`.
 - Docs and indexes up to date in the same change (AGENTS.md III.4).
 
@@ -88,4 +88,4 @@ adjustments takes the next free number that the coordinator reserves for it.
 
 - ADR 0098, 0113, 0114, 0117, 0124 to 0131.
 - [`sdk-packages.md`](../../framework/sdk-packages.md),
-  [`building-on-hackeros.md`](../../framework/building-on-hackeros.md).
+  [`building-on-kazoos.md`](../../framework/building-on-kazoos.md).

@@ -1,0 +1,532 @@
+#nullable enable
+Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample
+Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample.Busy.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample.CpuTimesSample() -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample.CpuTimesSample(long User, long Nice, long System, long Idle, long IoWait, long Irq, long SoftIrq, long Steal) -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample.Deconstruct(out long User, out long Nice, out long System, out long Idle, out long IoWait, out long Irq, out long SoftIrq, out long Steal) -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample.Equals(Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample other) -> bool
+Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample.Idle.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample.Idle.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample.IoWait.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample.IoWait.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample.Irq.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample.Irq.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample.Nice.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample.Nice.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample.SoftIrq.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample.SoftIrq.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample.Steal.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample.Steal.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample.System.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample.System.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample.Total.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample.UsagePercentSince(Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample previous) -> double
+Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample.User.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample.User.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.DiskActivity
+Kazo.Os.Apps.SystemMonitor.Metrics.DiskActivity.BusyPercent.get -> Kazo.Os.Apps.SystemMonitor.Metrics.MetricHistory!
+Kazo.Os.Apps.SystemMonitor.Metrics.DiskActivity.Counters.get -> Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat?
+Kazo.Os.Apps.SystemMonitor.Metrics.DiskActivity.Name.get -> string!
+Kazo.Os.Apps.SystemMonitor.Metrics.DiskActivity.ReadPerSecond.get -> Kazo.Os.Apps.SystemMonitor.Metrics.MetricHistory!
+Kazo.Os.Apps.SystemMonitor.Metrics.DiskActivity.WritePerSecond.get -> Kazo.Os.Apps.SystemMonitor.Metrics.MetricHistory!
+Kazo.Os.Apps.SystemMonitor.Metrics.MetricHistory
+Kazo.Os.Apps.SystemMonitor.Metrics.MetricHistory.Add(double value) -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.MetricHistory.Capacity.get -> int
+Kazo.Os.Apps.SystemMonitor.Metrics.MetricHistory.Latest.get -> double
+Kazo.Os.Apps.SystemMonitor.Metrics.MetricHistory.MetricHistory(int capacity) -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.MetricHistory.Values.get -> System.Collections.Generic.IReadOnlyList<double>!
+Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading
+Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading.<Clone>$() -> Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading!
+Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading.Deconstruct(out double TimestampSeconds, out Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat? Stat, out Kazo.Os.Apps.SystemMonitor.Metrics.ProcMemInfo? Memory, out Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage? Load, out double? UptimeSeconds, out System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat!>! Disks, out System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice!>! Network, out System.Collections.Generic.IReadOnlyDictionary<long, Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoSample>! ProcessIo, out Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorkers? Workers) -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading.Disks.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat!>!
+Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading.Disks.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading.Equals(Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading? other) -> bool
+Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading.Load.get -> Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage?
+Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading.Load.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading.Memory.get -> Kazo.Os.Apps.SystemMonitor.Metrics.ProcMemInfo?
+Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading.Memory.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading.MetricsReading(double TimestampSeconds, Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat? Stat, Kazo.Os.Apps.SystemMonitor.Metrics.ProcMemInfo? Memory, Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage? Load, double? UptimeSeconds, System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat!>! Disks, System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice!>! Network, System.Collections.Generic.IReadOnlyDictionary<long, Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoSample>! ProcessIo, Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorkers? Workers = null) -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading.Network.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice!>!
+Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading.Network.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading.ProcessIo.get -> System.Collections.Generic.IReadOnlyDictionary<long, Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoSample>!
+Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading.ProcessIo.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading.Stat.get -> Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat?
+Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading.Stat.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading.TimestampSeconds.get -> double
+Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading.TimestampSeconds.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading.UptimeSeconds.get -> double?
+Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading.UptimeSeconds.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading.Workers.get -> Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorkers?
+Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading.Workers.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.NetworkActivity
+Kazo.Os.Apps.SystemMonitor.Metrics.NetworkActivity.Counters.get -> Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice?
+Kazo.Os.Apps.SystemMonitor.Metrics.NetworkActivity.Name.get -> string!
+Kazo.Os.Apps.SystemMonitor.Metrics.NetworkActivity.ReceivePerSecond.get -> Kazo.Os.Apps.SystemMonitor.Metrics.MetricHistory!
+Kazo.Os.Apps.SystemMonitor.Metrics.NetworkActivity.TransmitPerSecond.get -> Kazo.Os.Apps.SystemMonitor.Metrics.MetricHistory!
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry.<Clone>$() -> Kazo.Os.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry!
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry.Deconstruct(out System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>! Fields) -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry.Equals(Kazo.Os.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry? other) -> bool
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry.Fields.get -> System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>!
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry.Fields.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry.ProcCpuInfoEntry(System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>! Fields) -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry.this[string! key].get -> string!
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.<Clone>$() -> Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat!
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.BytesRead.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.BytesWritten.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.Deconstruct(out int Major, out int Minor, out string! Name, out long ReadsCompleted, out long ReadsMerged, out long SectorsRead, out long MillisecondsReading, out long WritesCompleted, out long WritesMerged, out long SectorsWritten, out long MillisecondsWriting, out long IosInProgress, out long MillisecondsDoingIo, out long WeightedMillisecondsDoingIo) -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.Equals(Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat? other) -> bool
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.IosInProgress.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.IosInProgress.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.Major.get -> int
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.Major.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.MillisecondsDoingIo.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.MillisecondsDoingIo.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.MillisecondsReading.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.MillisecondsReading.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.MillisecondsWriting.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.MillisecondsWriting.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.Minor.get -> int
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.Minor.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.Name.get -> string!
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.Name.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.ProcDiskStat(int Major, int Minor, string! Name, long ReadsCompleted, long ReadsMerged, long SectorsRead, long MillisecondsReading, long WritesCompleted, long WritesMerged, long SectorsWritten, long MillisecondsWriting, long IosInProgress, long MillisecondsDoingIo, long WeightedMillisecondsDoingIo) -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.ReadsCompleted.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.ReadsCompleted.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.ReadsMerged.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.ReadsMerged.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.SectorsRead.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.SectorsRead.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.SectorsWritten.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.SectorsWritten.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.WeightedMillisecondsDoingIo.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.WeightedMillisecondsDoingIo.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.WritesCompleted.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.WritesCompleted.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.WritesMerged.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.WritesMerged.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcFiles
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage.<Clone>$() -> Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage!
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage.Deconstruct(out double OneMinute, out double FiveMinutes, out double FifteenMinutes, out long Running, out long Total, out long LastPid) -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage.Equals(Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage? other) -> bool
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage.FifteenMinutes.get -> double
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage.FifteenMinutes.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage.FiveMinutes.get -> double
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage.FiveMinutes.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage.LastPid.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage.LastPid.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage.OneMinute.get -> double
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage.OneMinute.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage.ProcLoadAverage(double OneMinute, double FiveMinutes, double FifteenMinutes, long Running, long Total, long LastPid) -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage.Running.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage.Running.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage.Total.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage.Total.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcMemInfo
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcMemInfo.<Clone>$() -> Kazo.Os.Apps.SystemMonitor.Metrics.ProcMemInfo!
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcMemInfo.AvailableKilobytes.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcMemInfo.AvailableKilobytes.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcMemInfo.Deconstruct(out long TotalKilobytes, out long FreeKilobytes, out long AvailableKilobytes, out System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>! Fields) -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcMemInfo.Equals(Kazo.Os.Apps.SystemMonitor.Metrics.ProcMemInfo? other) -> bool
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcMemInfo.Fields.get -> System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>!
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcMemInfo.Fields.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcMemInfo.FreeKilobytes.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcMemInfo.FreeKilobytes.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcMemInfo.ProcMemInfo(long TotalKilobytes, long FreeKilobytes, long AvailableKilobytes, System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string!>>! Fields) -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcMemInfo.TotalBytes.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcMemInfo.TotalKilobytes.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcMemInfo.TotalKilobytes.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcMemInfo.UsedBytes.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcMemInfo.UsedPercent.get -> double
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice.<Clone>$() -> Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice!
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice.Deconstruct(out string! Name, out long ReceiveBytes, out long ReceivePackets, out long ReceiveErrors, out long ReceiveDropped, out long TransmitBytes, out long TransmitPackets, out long TransmitErrors, out long TransmitDropped) -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice.Equals(Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice? other) -> bool
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice.Name.get -> string!
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice.Name.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice.ProcNetDevice(string! Name, long ReceiveBytes, long ReceivePackets, long ReceiveErrors, long ReceiveDropped, long TransmitBytes, long TransmitPackets, long TransmitErrors, long TransmitDropped) -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice.ReceiveBytes.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice.ReceiveBytes.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice.ReceiveDropped.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice.ReceiveDropped.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice.ReceiveErrors.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice.ReceiveErrors.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice.ReceivePackets.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice.ReceivePackets.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice.TransmitBytes.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice.TransmitBytes.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice.TransmitDropped.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice.TransmitDropped.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice.TransmitErrors.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice.TransmitErrors.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice.TransmitPackets.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice.TransmitPackets.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcReader
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh.<Clone>$() -> Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh!
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh.Deconstruct(out System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Diagnostics.KazoProcess!>! Processes, out Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading! Metrics) -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh.Equals(Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh? other) -> bool
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh.Metrics.get -> Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading!
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh.Metrics.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh.ProcRefresh(System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Diagnostics.KazoProcess!>! Processes, Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading! Metrics) -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh.Processes.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Diagnostics.KazoProcess!>!
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh.Processes.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat.<Clone>$() -> Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat!
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat.BootTime.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat.BootTime.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat.Cores.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample>!
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat.Cores.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat.Deconstruct(out Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample Total, out System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample>! Cores, out long BootTime, out long Processes, out long ProcessesRunning) -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat.Equals(Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat? other) -> bool
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat.ProcStat(Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample Total, System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample>! Cores, long BootTime, long Processes, long ProcessesRunning) -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat.Processes.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat.Processes.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat.ProcessesRunning.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat.ProcessesRunning.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat.Total.get -> Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat.Total.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker.<Clone>$() -> Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker!
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker.BusyMilliseconds.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker.BusyMilliseconds.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker.Core.get -> int?
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker.Core.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker.Deconstruct(out int Id, out string! Role, out string! State, out int? Core, out long MemoryKilobytes, out long? HeartbeatMilliseconds, out long BusyMilliseconds, out System.Collections.Generic.IReadOnlyList<long>! ProcessIds) -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker.Equals(Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker? other) -> bool
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker.HeartbeatMilliseconds.get -> long?
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker.HeartbeatMilliseconds.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker.Id.get -> int
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker.Id.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker.IsNotResponding.get -> bool
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker.MemoryKilobytes.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker.MemoryKilobytes.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker.ProcWorker(int Id, string! Role, string! State, int? Core, long MemoryKilobytes, long? HeartbeatMilliseconds, long BusyMilliseconds, System.Collections.Generic.IReadOnlyList<long>! ProcessIds) -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker.ProcessIds.get -> System.Collections.Generic.IReadOnlyList<long>!
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker.ProcessIds.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker.Role.get -> string!
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker.Role.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker.State.get -> string!
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker.State.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorkers
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorkers.<Clone>$() -> Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorkers!
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorkers.Capacity.get -> int
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorkers.Capacity.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorkers.Deconstruct(out int Capacity, out int PoolSize, out System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker!>! Workers) -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorkers.Equals(Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorkers? other) -> bool
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorkers.PoolSize.get -> int
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorkers.PoolSize.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorkers.ProcWorkers(int Capacity, int PoolSize, System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker!>! Workers) -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorkers.Workers.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker!>!
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorkers.Workers.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoRate
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoRate.Deconstruct(out double ReadPerSecond, out double WritePerSecond) -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoRate.Equals(Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoRate other) -> bool
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoRate.ProcessIoRate() -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoRate.ProcessIoRate(double ReadPerSecond, double WritePerSecond) -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoRate.ReadPerSecond.get -> double
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoRate.ReadPerSecond.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoRate.WritePerSecond.get -> double
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoRate.WritePerSecond.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoSample
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoSample.Deconstruct(out long ReadBytes, out long WriteBytes) -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoSample.Equals(Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoSample other) -> bool
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoSample.ProcessIoSample() -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoSample.ProcessIoSample(long ReadBytes, long WriteBytes) -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoSample.ReadBytes.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoSample.ReadBytes.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoSample.WriteBytes.get -> long
+Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoSample.WriteBytes.init -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.SystemMetrics
+Kazo.Os.Apps.SystemMonitor.Metrics.SystemMetrics.Apply(Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading! reading) -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.SystemMetrics.CpuCores.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Metrics.MetricHistory!>!
+Kazo.Os.Apps.SystemMonitor.Metrics.SystemMetrics.CpuTotal.get -> Kazo.Os.Apps.SystemMonitor.Metrics.MetricHistory!
+Kazo.Os.Apps.SystemMonitor.Metrics.SystemMetrics.Disks.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Metrics.DiskActivity!>!
+Kazo.Os.Apps.SystemMonitor.Metrics.SystemMetrics.Latest.get -> Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading?
+Kazo.Os.Apps.SystemMonitor.Metrics.SystemMetrics.MemoryUsedPercent.get -> Kazo.Os.Apps.SystemMonitor.Metrics.MetricHistory!
+Kazo.Os.Apps.SystemMonitor.Metrics.SystemMetrics.Network.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Metrics.NetworkActivity!>!
+Kazo.Os.Apps.SystemMonitor.Metrics.SystemMetrics.ProcessRates.get -> System.Collections.Generic.IReadOnlyDictionary<long, Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoRate>!
+Kazo.Os.Apps.SystemMonitor.Metrics.SystemMetrics.RateOf(long pid) -> Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoRate
+Kazo.Os.Apps.SystemMonitor.Metrics.SystemMetrics.ReadingCount.get -> int
+Kazo.Os.Apps.SystemMonitor.Metrics.SystemMetrics.SystemMetrics() -> void
+Kazo.Os.Apps.SystemMonitor.Metrics.Units
+Kazo.Os.Apps.SystemMonitor.Processes.EndTaskFailure
+Kazo.Os.Apps.SystemMonitor.Processes.EndTaskFailure.<Clone>$() -> Kazo.Os.Apps.SystemMonitor.Processes.EndTaskFailure!
+Kazo.Os.Apps.SystemMonitor.Processes.EndTaskFailure.Deconstruct(out long Pid, out string! Name, out string! Reason) -> void
+Kazo.Os.Apps.SystemMonitor.Processes.EndTaskFailure.EndTaskFailure(long Pid, string! Name, string! Reason) -> void
+Kazo.Os.Apps.SystemMonitor.Processes.EndTaskFailure.Equals(Kazo.Os.Apps.SystemMonitor.Processes.EndTaskFailure? other) -> bool
+Kazo.Os.Apps.SystemMonitor.Processes.EndTaskFailure.Name.get -> string!
+Kazo.Os.Apps.SystemMonitor.Processes.EndTaskFailure.Name.init -> void
+Kazo.Os.Apps.SystemMonitor.Processes.EndTaskFailure.Pid.get -> long
+Kazo.Os.Apps.SystemMonitor.Processes.EndTaskFailure.Pid.init -> void
+Kazo.Os.Apps.SystemMonitor.Processes.EndTaskFailure.Reason.get -> string!
+Kazo.Os.Apps.SystemMonitor.Processes.EndTaskFailure.Reason.init -> void
+Kazo.Os.Apps.SystemMonitor.Processes.EndTaskMode
+Kazo.Os.Apps.SystemMonitor.Processes.EndTaskMode.ForceKill = 1 -> Kazo.Os.Apps.SystemMonitor.Processes.EndTaskMode
+Kazo.Os.Apps.SystemMonitor.Processes.EndTaskMode.Terminate = 0 -> Kazo.Os.Apps.SystemMonitor.Processes.EndTaskMode
+Kazo.Os.Apps.SystemMonitor.Processes.EndTaskReport
+Kazo.Os.Apps.SystemMonitor.Processes.EndTaskReport.<Clone>$() -> Kazo.Os.Apps.SystemMonitor.Processes.EndTaskReport!
+Kazo.Os.Apps.SystemMonitor.Processes.EndTaskReport.Deconstruct(out System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow!>! Ended, out System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Processes.EndTaskFailure!>! Failures) -> void
+Kazo.Os.Apps.SystemMonitor.Processes.EndTaskReport.EndTaskReport(System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow!>! Ended, System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Processes.EndTaskFailure!>! Failures) -> void
+Kazo.Os.Apps.SystemMonitor.Processes.EndTaskReport.Ended.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow!>!
+Kazo.Os.Apps.SystemMonitor.Processes.EndTaskReport.Ended.init -> void
+Kazo.Os.Apps.SystemMonitor.Processes.EndTaskReport.Equals(Kazo.Os.Apps.SystemMonitor.Processes.EndTaskReport? other) -> bool
+Kazo.Os.Apps.SystemMonitor.Processes.EndTaskReport.Failures.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Processes.EndTaskFailure!>!
+Kazo.Os.Apps.SystemMonitor.Processes.EndTaskReport.Failures.init -> void
+Kazo.Os.Apps.SystemMonitor.Processes.EndTaskRunner
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessColumn
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessColumn.Cpu = 4 -> Kazo.Os.Apps.SystemMonitor.Processes.ProcessColumn
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessColumn.DiskRead = 6 -> Kazo.Os.Apps.SystemMonitor.Processes.ProcessColumn
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessColumn.DiskWrite = 7 -> Kazo.Os.Apps.SystemMonitor.Processes.ProcessColumn
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessColumn.Memory = 5 -> Kazo.Os.Apps.SystemMonitor.Processes.ProcessColumn
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessColumn.Name = 1 -> Kazo.Os.Apps.SystemMonitor.Processes.ProcessColumn
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessColumn.Pid = 0 -> Kazo.Os.Apps.SystemMonitor.Processes.ProcessColumn
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessColumn.Priority = 8 -> Kazo.Os.Apps.SystemMonitor.Processes.ProcessColumn
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessColumn.State = 3 -> Kazo.Os.Apps.SystemMonitor.Processes.ProcessColumn
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessColumn.User = 2 -> Kazo.Os.Apps.SystemMonitor.Processes.ProcessColumn
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.<Clone>$() -> Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow!
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.AppId.get -> string!
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.AppId.init -> void
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.CpuEstimated.get -> bool
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.CpuEstimated.init -> void
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.CpuPercent.get -> double
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.CpuPercent.init -> void
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.Deconstruct(out long Pid, out long? ParentPid, out string! Name, out string! AppId, out string! User, out string! State, out char StateCode, out double CpuPercent, out long MemoryBytes, out double ReadPerSecond, out double WritePerSecond, out bool CpuEstimated, out bool MemoryEstimated, out bool Responding) -> void
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.DisplayState.get -> string!
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.Equals(Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow? other) -> bool
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.MemoryBytes.get -> long
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.MemoryBytes.init -> void
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.MemoryEstimated.get -> bool
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.MemoryEstimated.init -> void
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.Name.get -> string!
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.Name.init -> void
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.Nice.get -> int
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.Nice.init -> void
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.ParentPid.get -> long?
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.ParentPid.init -> void
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.Pid.get -> long
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.Pid.init -> void
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.ProcessRow(long Pid, long? ParentPid, string! Name, string! AppId, string! User, string! State, char StateCode, double CpuPercent, long MemoryBytes, double ReadPerSecond, double WritePerSecond, bool CpuEstimated = false, bool MemoryEstimated = false, bool Responding = true) -> void
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.ReadPerSecond.get -> double
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.ReadPerSecond.init -> void
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.Responding.get -> bool
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.Responding.init -> void
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.State.get -> string!
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.State.init -> void
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.StateCode.get -> char
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.StateCode.init -> void
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.User.get -> string!
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.User.init -> void
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.WritePerSecond.get -> double
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.WritePerSecond.init -> void
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessTable
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessTable.ClearSelection() -> void
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessTable.Click(long pid, bool control, bool shift) -> void
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessTable.DetailPid.get -> long?
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessTable.DetailPid.set -> void
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessTable.Filter.get -> string!
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessTable.Filter.set -> void
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessTable.IsEstimated(Kazo.Os.Apps.SystemMonitor.Processes.ProcessColumn column) -> bool
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessTable.IsSelected(long pid) -> bool
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessTable.ProcessTable() -> void
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessTable.Rows.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow!>!
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessTable.SelectAll() -> void
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessTable.Selected.get -> System.Collections.Generic.IReadOnlySet<long>!
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessTable.SelectedRows.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow!>!
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessTable.SetRows(System.Collections.Generic.IEnumerable<Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow!>! rows) -> void
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessTable.ShowPriority.get -> bool
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessTable.ShowPriority.set -> void
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessTable.SortColumn.get -> Kazo.Os.Apps.SystemMonitor.Processes.ProcessColumn
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessTable.SortDescending.get -> bool
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessTable.ToggleSort(Kazo.Os.Apps.SystemMonitor.Processes.ProcessColumn column) -> void
+Kazo.Os.Apps.SystemMonitor.Processes.ProcessTable.Visible.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow!>!
+Kazo.Os.Apps.SystemMonitor.SystemMonitorApp
+Kazo.Os.Apps.SystemMonitor.SystemMonitorApp.SystemMonitorApp() -> void
+Kazo.Os.Apps.SystemMonitor.SystemMonitorWindow
+Kazo.Os.Apps.SystemMonitor.SystemMonitorWindow.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Apps.SystemMonitor.SystemMonitorWindow.SetWindowVisible(bool visible) -> System.Threading.Tasks.Task!
+Kazo.Os.Apps.SystemMonitor.SystemMonitorWindow.SystemMonitorWindow() -> void
+Kazo.Os.Apps.SystemMonitor.Tabs.DiskTab
+Kazo.Os.Apps.SystemMonitor.Tabs.DiskTab.DiskTab() -> void
+Kazo.Os.Apps.SystemMonitor.Tabs.DiskTab.Drives.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.IO.KazoDriveInfo!>!
+Kazo.Os.Apps.SystemMonitor.Tabs.DiskTab.Drives.set -> void
+Kazo.Os.Apps.SystemMonitor.Tabs.DiskTab.Metrics.get -> Kazo.Os.Apps.SystemMonitor.Metrics.SystemMetrics!
+Kazo.Os.Apps.SystemMonitor.Tabs.DiskTab.Metrics.set -> void
+Kazo.Os.Apps.SystemMonitor.Tabs.NetworkTab
+Kazo.Os.Apps.SystemMonitor.Tabs.NetworkTab.Metrics.get -> Kazo.Os.Apps.SystemMonitor.Metrics.SystemMetrics!
+Kazo.Os.Apps.SystemMonitor.Tabs.NetworkTab.Metrics.set -> void
+Kazo.Os.Apps.SystemMonitor.Tabs.NetworkTab.NetworkTab() -> void
+Kazo.Os.Apps.SystemMonitor.Tabs.PerformanceTab
+Kazo.Os.Apps.SystemMonitor.Tabs.PerformanceTab.CpuInfo.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry!>!
+Kazo.Os.Apps.SystemMonitor.Tabs.PerformanceTab.CpuInfo.set -> void
+Kazo.Os.Apps.SystemMonitor.Tabs.PerformanceTab.Metrics.get -> Kazo.Os.Apps.SystemMonitor.Metrics.SystemMetrics!
+Kazo.Os.Apps.SystemMonitor.Tabs.PerformanceTab.Metrics.set -> void
+Kazo.Os.Apps.SystemMonitor.Tabs.PerformanceTab.PerformanceTab() -> void
+Kazo.Os.Apps.SystemMonitor.Tabs.PerformanceTab.ProcessCount.get -> int
+Kazo.Os.Apps.SystemMonitor.Tabs.PerformanceTab.ProcessCount.set -> void
+Kazo.Os.Apps.SystemMonitor.Tabs.ProcessDetailPanel
+Kazo.Os.Apps.SystemMonitor.Tabs.ProcessDetailPanel.AllProcesses.get -> System.Collections.Generic.IEnumerable<Kazo.Os.AppSdk.Diagnostics.KazoProcess!>!
+Kazo.Os.Apps.SystemMonitor.Tabs.ProcessDetailPanel.AllProcesses.set -> void
+Kazo.Os.Apps.SystemMonitor.Tabs.ProcessDetailPanel.OnClose.get -> Microsoft.AspNetCore.Components.EventCallback
+Kazo.Os.Apps.SystemMonitor.Tabs.ProcessDetailPanel.OnClose.set -> void
+Kazo.Os.Apps.SystemMonitor.Tabs.ProcessDetailPanel.OnSelectProcess.get -> Microsoft.AspNetCore.Components.EventCallback<long>
+Kazo.Os.Apps.SystemMonitor.Tabs.ProcessDetailPanel.OnSelectProcess.set -> void
+Kazo.Os.Apps.SystemMonitor.Tabs.ProcessDetailPanel.Process.get -> Kazo.Os.AppSdk.Diagnostics.KazoProcess!
+Kazo.Os.Apps.SystemMonitor.Tabs.ProcessDetailPanel.Process.set -> void
+Kazo.Os.Apps.SystemMonitor.Tabs.ProcessDetailPanel.ProcessDetailPanel() -> void
+Kazo.Os.Apps.SystemMonitor.Tabs.ProcessesTab
+Kazo.Os.Apps.SystemMonitor.Tabs.ProcessesTab.EndTaskReport.get -> Kazo.Os.Apps.SystemMonitor.Processes.EndTaskReport?
+Kazo.Os.Apps.SystemMonitor.Tabs.ProcessesTab.EndTaskReport.set -> void
+Kazo.Os.Apps.SystemMonitor.Tabs.ProcessesTab.OnDismissReport.get -> Microsoft.AspNetCore.Components.EventCallback
+Kazo.Os.Apps.SystemMonitor.Tabs.ProcessesTab.OnDismissReport.set -> void
+Kazo.Os.Apps.SystemMonitor.Tabs.ProcessesTab.OnEndTask.get -> Microsoft.AspNetCore.Components.EventCallback<System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow!>!>
+Kazo.Os.Apps.SystemMonitor.Tabs.ProcessesTab.OnEndTask.set -> void
+Kazo.Os.Apps.SystemMonitor.Tabs.ProcessesTab.OnForceKill.get -> Microsoft.AspNetCore.Components.EventCallback<System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow!>!>
+Kazo.Os.Apps.SystemMonitor.Tabs.ProcessesTab.OnForceKill.set -> void
+Kazo.Os.Apps.SystemMonitor.Tabs.ProcessesTab.Processes.get -> System.Collections.Generic.IReadOnlyDictionary<long, Kazo.Os.AppSdk.Diagnostics.KazoProcess!>!
+Kazo.Os.Apps.SystemMonitor.Tabs.ProcessesTab.Processes.set -> void
+Kazo.Os.Apps.SystemMonitor.Tabs.ProcessesTab.ProcessesTab() -> void
+Kazo.Os.Apps.SystemMonitor.Tabs.ProcessesTab.Table.get -> Kazo.Os.Apps.SystemMonitor.Processes.ProcessTable!
+Kazo.Os.Apps.SystemMonitor.Tabs.ProcessesTab.Table.set -> void
+Kazo.Os.Apps.SystemMonitor.Tabs.ServicesTab
+Kazo.Os.Apps.SystemMonitor.Tabs.ServicesTab.Processes.get -> System.Collections.Generic.IReadOnlyDictionary<long, Kazo.Os.AppSdk.Diagnostics.KazoProcess!>!
+Kazo.Os.Apps.SystemMonitor.Tabs.ServicesTab.Processes.set -> void
+Kazo.Os.Apps.SystemMonitor.Tabs.ServicesTab.ServicesTab() -> void
+Kazo.Os.Apps.SystemMonitor._Imports
+Kazo.Os.Apps.SystemMonitor._Imports.Execute() -> void
+Kazo.Os.Apps.SystemMonitor._Imports._Imports() -> void
+const Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.SectorSize = 512 -> int
+const Kazo.Os.Apps.SystemMonitor.Metrics.SystemMetrics.HistoryLength = 60 -> int
+const Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.NotRespondingText = "Not responding" -> string!
+const Kazo.Os.Apps.SystemMonitor.SystemMonitorWindow.DriveRefreshEvery = 10 -> int
+override Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample.GetHashCode() -> int
+override Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading.Equals(object? obj) -> bool
+override Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading.GetHashCode() -> int
+override Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading.ToString() -> string!
+override Kazo.Os.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry.Equals(object? obj) -> bool
+override Kazo.Os.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry.GetHashCode() -> int
+override Kazo.Os.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry.ToString() -> string!
+override Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.Equals(object? obj) -> bool
+override Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.GetHashCode() -> int
+override Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.ToString() -> string!
+override Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage.Equals(object? obj) -> bool
+override Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage.GetHashCode() -> int
+override Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage.ToString() -> string!
+override Kazo.Os.Apps.SystemMonitor.Metrics.ProcMemInfo.Equals(object? obj) -> bool
+override Kazo.Os.Apps.SystemMonitor.Metrics.ProcMemInfo.GetHashCode() -> int
+override Kazo.Os.Apps.SystemMonitor.Metrics.ProcMemInfo.ToString() -> string!
+override Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice.Equals(object? obj) -> bool
+override Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice.GetHashCode() -> int
+override Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice.ToString() -> string!
+override Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh.Equals(object? obj) -> bool
+override Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh.GetHashCode() -> int
+override Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh.ToString() -> string!
+override Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat.Equals(object? obj) -> bool
+override Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat.GetHashCode() -> int
+override Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat.ToString() -> string!
+override Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker.Equals(object? obj) -> bool
+override Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker.GetHashCode() -> int
+override Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker.ToString() -> string!
+override Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorkers.Equals(object? obj) -> bool
+override Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorkers.GetHashCode() -> int
+override Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorkers.ToString() -> string!
+override Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoRate.GetHashCode() -> int
+override Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoSample.GetHashCode() -> int
+override Kazo.Os.Apps.SystemMonitor.Processes.EndTaskFailure.Equals(object? obj) -> bool
+override Kazo.Os.Apps.SystemMonitor.Processes.EndTaskFailure.GetHashCode() -> int
+override Kazo.Os.Apps.SystemMonitor.Processes.EndTaskFailure.ToString() -> string!
+override Kazo.Os.Apps.SystemMonitor.Processes.EndTaskReport.Equals(object? obj) -> bool
+override Kazo.Os.Apps.SystemMonitor.Processes.EndTaskReport.GetHashCode() -> int
+override Kazo.Os.Apps.SystemMonitor.Processes.EndTaskReport.ToString() -> string!
+override Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.Equals(object? obj) -> bool
+override Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.GetHashCode() -> int
+override Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.ToString() -> string!
+override Kazo.Os.Apps.SystemMonitor.SystemMonitorApp.Assets.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.AssetManifest!>!
+override Kazo.Os.Apps.SystemMonitor.SystemMonitorApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Apps.SystemMonitor.SystemMonitorApp.Category.get -> string!
+override Kazo.Os.Apps.SystemMonitor.SystemMonitorApp.Description.get -> string!
+override Kazo.Os.Apps.SystemMonitor.SystemMonitorApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Apps.SystemMonitor.SystemMonitorApp.Icons.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Apps.SystemMonitor.SystemMonitorApp.Id.get -> string!
+override Kazo.Os.Apps.SystemMonitor.SystemMonitorApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Apps.SystemMonitor.SystemMonitorApp.MobileEntryPoint.get -> System.Type?
+override Kazo.Os.Apps.SystemMonitor.SystemMonitorApp.Name.get -> string!
+override Kazo.Os.Apps.SystemMonitor.SystemMonitorApp.PublisherId.get -> string!
+override Kazo.Os.Apps.SystemMonitor.SystemMonitorApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Apps.SystemMonitor.SystemMonitorApp.SingleInstancePerUser.get -> bool
+override Kazo.Os.Apps.SystemMonitor.SystemMonitorWindow.OnAppAfterRenderAsync(bool firstRender) -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.SystemMonitor.Tabs.ProcessDetailPanel.OnParametersSetAsync() -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.SystemMonitor.Tabs.ServicesTab.OnInitializedAsync() -> System.Threading.Tasks.Task!
+override Kazo.Os.Apps.SystemMonitor.Tabs.ServicesTab.OnParametersSetAsync() -> System.Threading.Tasks.Task!
+static Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample.operator !=(Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample left, Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample right) -> bool
+static Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample.operator ==(Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample left, Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample right) -> bool
+static Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading.operator !=(Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading? left, Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading? right) -> bool
+static Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading.operator ==(Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading? left, Kazo.Os.Apps.SystemMonitor.Metrics.MetricsReading? right) -> bool
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry.operator !=(Kazo.Os.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry? left, Kazo.Os.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry? right) -> bool
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry.operator ==(Kazo.Os.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry? left, Kazo.Os.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry? right) -> bool
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.operator !=(Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat? left, Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat? right) -> bool
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat.operator ==(Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat? left, Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat? right) -> bool
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcFiles.ParseCpuInfo(string! text) -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry!>!
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcFiles.ParseDiskStats(string! text) -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Metrics.ProcDiskStat!>!
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcFiles.ParseLoadAverage(string! text) -> Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage!
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcFiles.ParseMemInfo(string! text) -> Kazo.Os.Apps.SystemMonitor.Metrics.ProcMemInfo!
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcFiles.ParseNetDev(string! text) -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice!>!
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcFiles.ParseStat(string! text) -> Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat!
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcFiles.ParseUptime(string! text) -> (double Uptime, double Idle)
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcFiles.ParseWorkers(string! text) -> Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorkers!
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage.operator !=(Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage? left, Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage? right) -> bool
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage.operator ==(Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage? left, Kazo.Os.Apps.SystemMonitor.Metrics.ProcLoadAverage? right) -> bool
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcMemInfo.operator !=(Kazo.Os.Apps.SystemMonitor.Metrics.ProcMemInfo? left, Kazo.Os.Apps.SystemMonitor.Metrics.ProcMemInfo? right) -> bool
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcMemInfo.operator ==(Kazo.Os.Apps.SystemMonitor.Metrics.ProcMemInfo? left, Kazo.Os.Apps.SystemMonitor.Metrics.ProcMemInfo? right) -> bool
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice.operator !=(Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice? left, Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice? right) -> bool
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice.operator ==(Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice? left, Kazo.Os.Apps.SystemMonitor.Metrics.ProcNetDevice? right) -> bool
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcReader.ReadAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh!>!
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcReader.ReadCpuInfoAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Metrics.ProcCpuInfoEntry!>!>!
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcReader.ReadDrivesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.IO.KazoDriveInfo!>!>!
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh.operator !=(Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh? left, Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh? right) -> bool
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh.operator ==(Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh? left, Kazo.Os.Apps.SystemMonitor.Metrics.ProcRefresh? right) -> bool
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat.operator !=(Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat? left, Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat? right) -> bool
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat.operator ==(Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat? left, Kazo.Os.Apps.SystemMonitor.Metrics.ProcStat? right) -> bool
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker.operator !=(Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker? left, Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker? right) -> bool
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker.operator ==(Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker? left, Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorker? right) -> bool
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorkers.operator !=(Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorkers? left, Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorkers? right) -> bool
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorkers.operator ==(Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorkers? left, Kazo.Os.Apps.SystemMonitor.Metrics.ProcWorkers? right) -> bool
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoRate.operator !=(Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoRate left, Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoRate right) -> bool
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoRate.operator ==(Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoRate left, Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoRate right) -> bool
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoSample.operator !=(Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoSample left, Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoSample right) -> bool
+static Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoSample.operator ==(Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoSample left, Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoSample right) -> bool
+static Kazo.Os.Apps.SystemMonitor.Metrics.Units.Bytes(double bytes) -> string!
+static Kazo.Os.Apps.SystemMonitor.Metrics.Units.Bytes(double bytes, System.Globalization.CultureInfo! culture) -> string!
+static Kazo.Os.Apps.SystemMonitor.Metrics.Units.Count(long value) -> string!
+static Kazo.Os.Apps.SystemMonitor.Metrics.Units.Count(long value, System.Globalization.CultureInfo! culture) -> string!
+static Kazo.Os.Apps.SystemMonitor.Metrics.Units.Duration(System.TimeSpan duration) -> string!
+static Kazo.Os.Apps.SystemMonitor.Metrics.Units.Duration(System.TimeSpan duration, System.Globalization.CultureInfo! culture) -> string!
+static Kazo.Os.Apps.SystemMonitor.Metrics.Units.Percent(double percent) -> string!
+static Kazo.Os.Apps.SystemMonitor.Metrics.Units.Percent(double percent, System.Globalization.CultureInfo! culture) -> string!
+static Kazo.Os.Apps.SystemMonitor.Metrics.Units.Rate(double bytesPerSecond) -> string!
+static Kazo.Os.Apps.SystemMonitor.Metrics.Units.Rate(double bytesPerSecond, System.Globalization.CultureInfo! culture) -> string!
+static Kazo.Os.Apps.SystemMonitor.Processes.EndTaskFailure.operator !=(Kazo.Os.Apps.SystemMonitor.Processes.EndTaskFailure? left, Kazo.Os.Apps.SystemMonitor.Processes.EndTaskFailure? right) -> bool
+static Kazo.Os.Apps.SystemMonitor.Processes.EndTaskFailure.operator ==(Kazo.Os.Apps.SystemMonitor.Processes.EndTaskFailure? left, Kazo.Os.Apps.SystemMonitor.Processes.EndTaskFailure? right) -> bool
+static Kazo.Os.Apps.SystemMonitor.Processes.EndTaskReport.operator !=(Kazo.Os.Apps.SystemMonitor.Processes.EndTaskReport? left, Kazo.Os.Apps.SystemMonitor.Processes.EndTaskReport? right) -> bool
+static Kazo.Os.Apps.SystemMonitor.Processes.EndTaskReport.operator ==(Kazo.Os.Apps.SystemMonitor.Processes.EndTaskReport? left, Kazo.Os.Apps.SystemMonitor.Processes.EndTaskReport? right) -> bool
+static Kazo.Os.Apps.SystemMonitor.Processes.EndTaskRunner.End(Kazo.Os.AppSdk.Diagnostics.KazoProcess! process, Kazo.Os.Apps.SystemMonitor.Processes.EndTaskMode mode, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+static Kazo.Os.Apps.SystemMonitor.Processes.EndTaskRunner.EndAsync(System.Collections.Generic.IReadOnlyList<Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow!>! rows, System.Func<Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow!, System.Threading.Tasks.Task!>! end) -> System.Threading.Tasks.Task<Kazo.Os.Apps.SystemMonitor.Processes.EndTaskReport!>!
+static Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.operator !=(Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow? left, Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow? right) -> bool
+static Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow.operator ==(Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow? left, Kazo.Os.Apps.SystemMonitor.Processes.ProcessRow? right) -> bool
+static readonly Kazo.Os.Apps.SystemMonitor.SystemMonitorWindow.RefreshInterval -> System.TimeSpan
+~override Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample.Equals(object obj) -> bool
+~override Kazo.Os.Apps.SystemMonitor.Metrics.CpuTimesSample.ToString() -> string
+~override Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoRate.Equals(object obj) -> bool
+~override Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoRate.ToString() -> string
+~override Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoSample.Equals(object obj) -> bool
+~override Kazo.Os.Apps.SystemMonitor.Metrics.ProcessIoSample.ToString() -> string
+~override Kazo.Os.Apps.SystemMonitor.SystemMonitorWindow.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.SystemMonitor.Tabs.DiskTab.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.SystemMonitor.Tabs.NetworkTab.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.SystemMonitor.Tabs.PerformanceTab.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.SystemMonitor.Tabs.ProcessDetailPanel.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.SystemMonitor.Tabs.ProcessesTab.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.Apps.SystemMonitor.Tabs.ServicesTab.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

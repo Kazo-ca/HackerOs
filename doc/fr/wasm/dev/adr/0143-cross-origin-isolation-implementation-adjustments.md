@@ -27,7 +27,7 @@ le fil principal attende, et comment attribuer la mémoire à un worker.
 
 ### 1. Constante d'audit et réglage
 
-- `CrossOriginIsolationPolicy.AuditPassed` (`HackerOs.Platform.Core`,
+- `CrossOriginIsolationPolicy.AuditPassed` (`Kazo.Os.Platform.Core`,
   espace `Isolation`) est la constante de build de l'ADR 0131 §1. Le service
   worker en garde une copie (`crossOriginIsolationAuditPassed`), puisqu'il ne
   peut pas lire un assembly ; un test unitaire vérifie que les deux disent la
@@ -48,7 +48,7 @@ le fil principal attende, et comment attribuer la mémoire à un worker.
   page n'est pas isolée, la page lui demande `require-corp` (`COI_STRICT`), le
   choix est gardé dans le cache du service worker, et la page se recharge
   **une seule fois** (garde dans `sessionStorage`).
-- **`test/test` et `HackerOs.Server`** : un intergiciel posé juste après
+- **`test/test` et `Kazo.Os.Server`** : un intergiciel posé juste après
   `builder.Build()` ajoute `COOP` et `COEP: credentialless` à toutes les
   réponses (`CrossOriginIsolationPolicy.ServerHeaders`), selon le réglage de
   l'hôte. Ces deux hôtes n'ont pas de repli `require-corp`.
@@ -127,7 +127,7 @@ page isolée au lieu de 100 µs. La sonde mesure la résolution réelle et
 
 ### 8. Ce que la page dit, et où
 
-- Au démarrage, `crossOriginIsolation.js` (`HackerOs.Infrastructure.Browser`)
+- Au démarrage, `crossOriginIsolation.js` (`Kazo.Os.Infrastructure.Browser`)
   renvoie ce qu'il a trouvé ; `CrossOriginIsolationProbe.Read` en fait un
   `CrossOriginIsolationStatus`. Raisons, dans l'ordre : `insecure-context`,
   `setting`, `browser` (le service worker a posé les en-têtes et le navigateur

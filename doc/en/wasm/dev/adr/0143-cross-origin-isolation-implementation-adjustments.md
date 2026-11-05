@@ -27,7 +27,7 @@ attribute memory to a worker.
 
 ### 1. Audit constant and setting
 
-- `CrossOriginIsolationPolicy.AuditPassed` (`HackerOs.Platform.Core`,
+- `CrossOriginIsolationPolicy.AuditPassed` (`Kazo.Os.Platform.Core`,
   namespace `Isolation`) is the build constant of ADR 0131 §1. The service
   worker keeps a copy (`crossOriginIsolationAuditPassed`), since it cannot
   read an assembly; a unit test checks that both say the same thing.
@@ -47,7 +47,7 @@ attribute memory to a worker.
   page is not isolated, the page asks it for `require-corp` (`COI_STRICT`), the
   choice is kept in the service worker's cache, and the page reloads
   **only once** (guard in `sessionStorage`).
-- **`test/test` and `HackerOs.Server`**: a middleware placed right after
+- **`test/test` and `Kazo.Os.Server`**: a middleware placed right after
   `builder.Build()` adds `COOP` and `COEP: credentialless` to all
   responses (`CrossOriginIsolationPolicy.ServerHeaders`), according to the
   host's setting. These two hosts have no `require-corp` fallback.
@@ -126,7 +126,7 @@ page instead of 100 µs. The probe measures the real resolution and
 
 ### 8. What the page says, and where
 
-- At startup, `crossOriginIsolation.js` (`HackerOs.Infrastructure.Browser`)
+- At startup, `crossOriginIsolation.js` (`Kazo.Os.Infrastructure.Browser`)
   returns what it found; `CrossOriginIsolationProbe.Read` turns it into a
   `CrossOriginIsolationStatus`. Reasons, in order: `insecure-context`,
   `setting`, `browser` (the service worker set the headers and the browser

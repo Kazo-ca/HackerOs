@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <!--
+      BL0005 ("component parameter set outside its component") fires for every [Parameter] property
+      these tests set directly on a FileView instance before attaching it to TestComponentRenderer, and
+      BL0006 fires for TestComponentRenderer's direct use of Microsoft.AspNetCore.Components.RenderTree —
+      both are the intended, supported way to drive a component under test without bUnit (which this
+      solution doesn't use). See FileViewTests.cs's TestComponentRenderer remarks.
+    -->
+    <NoWarn>$(NoWarn);BL0005;BL0006</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="10.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="10.0.14" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.14" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="4.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.FileExplorer\Kazo.Os.Apps.FileExplorer.csproj" />
+    <ProjectReference Include="..\..\Platform\Kazo.Os.Platform.Core\Kazo.Os.Platform.Core.csproj" />
+    <ProjectReference Include="..\Kazo.Os.Tests.Support\Kazo.Os.Tests.Support.csproj" />
+  </ItemGroup>
+
+</Project>

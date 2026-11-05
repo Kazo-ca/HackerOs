@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Panel.Fault" xml:space="preserve">
+    <value>Fault: {0}</value>
+  </data>
+  <data name="Panel.InputLabel" xml:space="preserve">
+    <value>Terminal command input</value>
+  </data>
+  <data name="Panel.ShellExited" xml:space="preserve">
+    <value>[hsh exited with status {0}]</value>
+  </data>
+  <data name="Panel.ShellGone" xml:space="preserve">
+    <value>the shell has exited</value>
+  </data>
+  <data name="Panel.StartFailed" xml:space="preserve">
+    <value>cannot start the shell: {0}</value>
+  </data>
+  <data name="Panel.Welcome" xml:space="preserve">
+    <value>Kazo OS Terminal v1.0.0 — Type 'help' for available commands.</value>
+  </data>
+  <data name="Screen.Label" xml:space="preserve">
+    <value>Full-screen terminal command</value>
+  </data>
+  <data name="Tabs.CloseHint" xml:space="preserve">
+    <value>Close tab (Ctrl+Shift+W)</value>
+  </data>
+  <data name="Tabs.CloseNamed" xml:space="preserve">
+    <value>Close tab {0}</value>
+  </data>
+  <data name="Tabs.Label" xml:space="preserve">
+    <value>Terminal tabs</value>
+  </data>
+  <data name="Tabs.New" xml:space="preserve">
+    <value>New tab</value>
+  </data>
+  <data name="Tabs.NewHint" xml:space="preserve">
+    <value>New tab (Ctrl+Shift+T)</value>
+  </data>
+</root>

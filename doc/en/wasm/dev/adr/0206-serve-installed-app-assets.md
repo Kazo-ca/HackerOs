@@ -6,8 +6,8 @@
 
 Accepted on 2026-10-30; Benoit confirmed choice A of question Q1 on
 2026-10-31. Issue
-[#247](https://github.com/Kazo-ca/HackerOs/issues/247), work item 2 of the
-[Hack Store plan](../plans/hackeros-store.md), `todo/base` series.
+[#247](https://github.com/Kazo-ca/Os/issues/247), work item 2 of the
+[Hack Store plan](../plans/kazoos-store.md), `todo/base` series.
 
 - **Lifts:** the first limit of [ADR 0182](0182-install-apps-from-github.md)
   ("the `wwwroot/` resources of an installed app are not served").
@@ -29,7 +29,7 @@ Accepted on 2026-10-30; Benoit confirmed choice A of question Q1 on
   scripts and a `.wasm` by relative paths) needs them. So does the Hack Store
   (ADR 0188).
 - `index.html` registers no service worker on `localhost` and `127.0.0.1`
-  (development, and `HackerOs.Server` run locally).
+  (development, and `Kazo.Os.Server` run locally).
 
 ## Decision
 
@@ -48,7 +48,7 @@ compiled. Every form of reference works: tags, `import()`, CSS `url()`,
   absolute address without query, with a `Content-Type` (from the extension) and
   `Cross-Origin-Resource-Policy: same-origin`.
 - Both service-worker files of the host load
-  `_content/HackerOs.Infrastructure.Browser/installedAppAssets.sw.js`
+  `_content/Kazo.Os.Infrastructure.Browser/installedAppAssets.sw.js`
   (`importScripts`). For a same-origin `GET` under `_content/`, the worker
   answers from this cache when it has the address, **before** the release cache;
   otherwise the request goes its usual way. The query is ignored
@@ -89,7 +89,7 @@ fallback through `blob:` addresses (choice B or C of Q1).
 ### 6. Hosts
 
 Only the WebAssembly host loads installed apps (ADR 0182): the publication
-exists only there. `HackerOs.Server` serves the same OS files, so the same
+exists only there. `Kazo.Os.Server` serves the same OS files, so the same
 service worker.
 
 ## Question asked to Benoit
@@ -120,5 +120,5 @@ service worker.
 - [x] `BrowserInstalledAppAssets` (JSImport), `IInstalledAppAssetCache`, `BrowserInstalledAppAssetCache`, `InstalledAppAssetPublisher`, `InstalledAppAssetContentTypes`.
 - [x] Call from `InstalledAppAssemblyTransport`; `index.html` keeps the `installed-apps` mode worker.
 - [x] Unit tests (`InstalledAppAssetPublisherTests`).
-- [x] Test package `Tests/fixtures/installed-app` and end-to-end tests in `HackerOs.TrimmedPublish.E2E.Tests` (installation by `hackpkg`, module, worker, `importScripts`, image; published service worker).
+- [x] Test package `Tests/fixtures/installed-app` and end-to-end tests in `Kazo.Os.TrimmedPublish.E2E.Tests` (installation by `hackpkg`, module, worker, `importScripts`, image; published service worker).
 - [x] Docs: `app-installation.md`, Hack Store plan, `features.md`.

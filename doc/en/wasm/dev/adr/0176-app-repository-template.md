@@ -17,28 +17,28 @@ templates, with no VSIX extension. Complements [ADR 0098](0098-sdk-versions-pack
 
 ## Context
 
-- `HackerOs.Templates` holds five **project** templates (`hackeros-window`,
+- `Kazo.Os.Templates` holds five **project** templates (`hackeros-window`,
   `-command`, `-service`, `-site`, `-host`). They go to nuget.org with every
   release, along with the 41 other packages, their symbols (`.snupkg`) and
   Source Link.
-- A third-party repository follows [`building-on-hackeros.md`](../../framework/building-on-hackeros.md):
+- A third-party repository follows [`building-on-kazoos.md`](../../framework/building-on-kazoos.md):
   it assembles its own solution. That guide still says the packages are never
   published to nuget.org, which is wrong since 2.1.0.
-- `build/HackerOs.Apps.targets` has two modes: the repository (project
+- `build/Kazo.Os.Apps.targets` has two modes: the repository (project
   references, manifest generator built in the solution) and package mode
-  (`HackerOsBuildFromPackage=true`, everything comes from `HackerOs.App.Build`).
+  (`HackerOsBuildFromPackage=true`, everything comes from `Kazo.Os.App.Build`).
 - Benoit wants a ready-to-use starting point: a solution that launches in the OS
   when debugging, whose deployment is controlled by the OS version it pins.
 
 ## Decision
 
 1. **The template's source stays in the main repository.** A new solution
-   template `hackeros-solution` (type `solution`) in `HackerOs.Templates`
+   template `hackeros-solution` (type `solution`) in `Kazo.Os.Templates`
    generates: `.sln`, a host (`src/<Name>.Os`, the `hackeros-host` one), a window
    app, a test project, `Directory.Build.props`, `global.json`, `.gitignore`,
    `.gitmodules`, a CI workflow and a `README.md`. It ships with the other
    templates, at the release's version.
-2. **GitHub template repository.** [`Kazo-ca/HackerOs-AppTemplate`](https://github.com/Kazo-ca/HackerOs-AppTemplate)
+2. **GitHub template repository.** [`Kazo-ca/Os-AppTemplate`](https://github.com/Kazo-ca/Os-AppTemplate)
    (created by Benoit on 2026-10-28), marked "Template repository", holds the output of `dotnet new hackeros-solution`.
    It is regenerated from the template, never edited by hand anywhere but in the
    template.
@@ -51,19 +51,19 @@ templates, with no VSIX extension. Complements [ADR 0098](0098-sdk-versions-pack
    giving `git submodule update --init`.
 4. **Two build profiles.**
    - **Production** (`Release`, CI, `dotnet publish`): `PackageReference` to the
-     `HackerOs.*` packages from nuget.org, at the submodule's version. This is
+     `Kazo.Os.*` packages from nuget.org, at the submodule's version. This is
      today's package mode, unchanged.
    - **Debugging** (`Debug`): the same references become `ProjectReference` items
-     to the submodule's projects (SDK, `HackerOs.Ecosystem.Host`, the host's base
+     to the submodule's projects (SDK, `Kazo.Os.Ecosystem.Host`, the host's base
      apps, manifest generator). You can step into the OS code and set breakpoints
      in it.
    - The `HackerOsUseSource` property picks the profile (true by default in
      `Debug`, false otherwise); it can be forced either way.
-5. **Third mode of `HackerOs.Apps.targets`: external source.** Turned on by
+5. **Third mode of `Kazo.Os.Apps.targets`: external source.** Turned on by
    `HackerOsUseSource=true` outside the main repository. The generator comes from
    the submodule's `Tools` project; the boundary rule on `ProjectReference` items
    (`HOSAPP0030`) is computed from `HackerOsSourceRoot` (by default
-   `external/HackerOs/wasm2/HackerOs`) instead of the repository's paths. The
+   `external/HackerOs/wasm2/KazoOs`) instead of the repository's paths. The
    inspections and `HOSAPP*` codes stay the same.
 6. **The OS is not modified from an app repository.** The submodule is read-only
    by convention. The template's CI checks that the submodule is clean and exactly
@@ -71,9 +71,9 @@ templates, with no VSIX extension. Complements [ADR 0098](0098-sdk-versions-pack
    cannot reach production.
 7. **Visual Studio.** Each template gets a `.template.config/ide.host.json`
    (icon, labels of the `appId` and `publisherId` parameters). Visual Studio and
-   Rider list the templates installed by `dotnet new install HackerOs.Templates`.
+   Rider list the templates installed by `dotnet new install Kazo.Os.Templates`.
    No VSIX extension.
-8. **Tested in the main repository.** `HackerOs.Templates.E2E.Tests` generates a
+8. **Tested in the main repository.** `Kazo.Os.Templates.E2E.Tests` generates a
    solution with `hackeros-solution`, points `HackerOsSourceRoot` at the
    repository itself, and builds both profiles: `Debug` (external source) and
    `Release` (local package feed).
@@ -82,7 +82,7 @@ templates, with no VSIX extension. Complements [ADR 0098](0098-sdk-versions-pack
 
 - The main repository stays the only source of the templates; the template
   repository is only a generated copy.
-- A third build mode has to be maintained in `HackerOs.Apps.targets`; the test in
+- A third build mode has to be maintained in `Kazo.Os.Apps.targets`; the test in
   point 8 guards it.
 - `Debug` and `Release` do not build the OS the same way. Since both come from
   the same tag, the expected behavior is identical; CI tests `Release`, which is
@@ -97,10 +97,10 @@ templates, with no VSIX extension. Complements [ADR 0098](0098-sdk-versions-pack
 Implemented by [ADR 0207](0207-solution-template-implementation.md) (work item `todo/1-hackstore-solution-template`).
 
 
-- [x] Fix `building-on-hackeros.md` (fr and en): packages and templates on nuget.org.
+- [x] Fix `building-on-kazoos.md` (fr and en): packages and templates on nuget.org.
 - [x] `ide.host.json` for the five existing templates.
-- [x] External source mode in `HackerOs.Apps.targets` (`HackerOsUseSource`, `HackerOsSourceRoot`).
+- [x] External source mode in `Kazo.Os.Apps.targets` (`HackerOsUseSource`, `HackerOsSourceRoot`).
 - [x] `hackeros-solution` template (submodule, `Versions.props` import, profiles, CI).
-- [x] Test of both profiles in `HackerOs.Templates.E2E.Tests`.
-- [x] Create the `Kazo-ca/HackerOs-AppTemplate` repository (Benoit, 2026-10-28).
+- [x] Test of both profiles in `Kazo.Os.Templates.E2E.Tests`.
+- [x] Create the `Kazo-ca/Os-AppTemplate` repository (Benoit, 2026-10-28).
 - [ ] Push the output of `dotnet new hackeros-solution` to it and mark it "Template repository" (draft PR, see ADR 0207 §11).

@@ -9,8 +9,8 @@ and shows it in the user's time zone. Decision: [ADR 0193](../dev/adr/0193-local
 
 | Layer | File | Key |
 | --- | --- | --- |
-| Machine (also the sign-in screen) | `/etc/hackeros/datetime.config` | `timeZone` |
-| User (wins) | `~/.config/hackeros/datetime.config` | `timeZone` |
+| Machine (also the sign-in screen) | `/etc/kazoos/datetime.config` | `timeZone` |
+| User (wins) | `~/.config/kazoos/datetime.config` | `timeZone` |
 
 `timeZone` is `auto` (the device's zone, given by the browser) or an IANA
 identifier (`America/Toronto`, `Europe/Paris`, `UTC`). An unknown name counts as
@@ -28,19 +28,19 @@ clock follows at once.
 ## In an app
 
 ```csharp
-using HackerOs.AppSdk.Globalization;
+using Kazo.Os.AppSdk.Globalization;
 
-TimeZoneInfo zone = AppContext.TimeZone;                // or HackTimeZone.Current
-DateTimeOffset now = HackTimeZone.Now;                  // the OS's time in that zone
-string modified = HackTimeZone.ToLocal(entry.ModifiedAtUtc).ToString("g", AppContext.FormatCulture);
-string offset = HackTimeZone.FormatOffset(zone, now);   // "UTC-04:00"
+TimeZoneInfo zone = AppContext.TimeZone;                // or KazoTimeZone.Current
+DateTimeOffset now = KazoTimeZone.Now;                  // the OS's time in that zone
+string modified = KazoTimeZone.ToLocal(entry.ModifiedAtUtc).ToString("g", AppContext.FormatCulture);
+string offset = KazoTimeZone.FormatOffset(zone, now);   // "UTC-04:00"
 ```
 
 - Do not use `DateTimeOffset.ToLocalTime()` or `TimeZoneInfo.Local`: they ignore
   the user's choice.
 - The format (12 h or 24 h, day/month order) comes from `FormatCulture`
   (`LC_TIME`, [`localization.md`](localization.md)).
-- `HackTimeZone.Available` lists the IANA `Region/City` zones and `UTC`, sorted;
+- `KazoTimeZone.Available` lists the IANA `Region/City` zones and `UTC`, sorted;
   `TryFind` and `Resolve` read a name; `GetId` gives the IANA identifier.
 - No capability is needed.
 

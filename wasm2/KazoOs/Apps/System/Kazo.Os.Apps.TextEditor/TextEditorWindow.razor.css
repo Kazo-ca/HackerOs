@@ -1,0 +1,384 @@
+.editor-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    background: var(--kos-window-content-background, var(--kos-bg-base, #0d1117));
+    color: var(--kos-text-primary, #e6edf3);
+    font-family: var(--kos-font-ui, "Inter", sans-serif);
+    overflow: hidden;
+    outline: none;
+}
+
+/* ─── Menu Bar ──────────────────────────────────────────────────────────────── */
+
+.editor-menubar {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 0 0.5rem;
+    height: 2rem;
+    background: var(--kos-toolbar-bg, var(--kos-bg-surface, #161b22));
+    border-bottom: var(--kos-toolbar-border, 1px solid var(--kos-border-subtle, #21262d));
+    flex-shrink: 0;
+    user-select: none;
+}
+
+.menu-group {
+    position: relative;
+}
+
+.menu-label {
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    font-size: 0.82rem;
+    color: var(--kos-text-secondary, #8b949e);
+    cursor: default;
+    border-radius: var(--kos-radius-sm, 4px);
+}
+
+.menu-group:hover .menu-label {
+    color: var(--kos-text-primary, #e6edf3);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.menu-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 200;
+    min-width: 140px;
+    background: var(--kos-bg-elevated, #21262d);
+    border: 1px solid var(--kos-border, #30363d);
+    border-radius: var(--kos-radius-sm, 6px);
+    box-shadow: var(--kos-shadow-md, 0 8px 24px rgba(0, 0, 0, 0.5));
+    padding: 0.25rem 0;
+}
+
+.menu-group:hover .menu-dropdown {
+    display: block;
+}
+
+.menu-item {
+    display: block;
+    width: 100%;
+    padding: 0.3rem 0.9rem;
+    text-align: left;
+    font-size: 0.82rem;
+    font-family: inherit;
+    background: transparent;
+    border: none;
+    color: var(--kos-text-primary, #e6edf3);
+    cursor: pointer;
+}
+
+.menu-item:hover:not(:disabled) {
+    background: var(--kos-accent-subtle, rgba(66, 211, 146, 0.12));
+    color: var(--kos-accent, #42d392);
+}
+
+.menu-item:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.editor-title-display {
+    margin-left: auto;
+    font-size: 0.82rem;
+    color: var(--kos-text-muted, #6e7681);
+    font-family: var(--kos-font-mono, monospace);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 320px;
+    padding-right: 0.5rem;
+}
+
+.title-error {
+    color: var(--kos-error, #ff9a91);
+}
+
+/* ─── Find / Replace panel ──────────────────────────────────────────────────── */
+
+.find-panel {
+    display: flex;
+    flex-direction: column;
+    background: var(--kos-toolbar-bg, var(--kos-bg-surface, #161b22));
+    border-bottom: var(--kos-toolbar-border, 1px solid var(--kos-border-subtle, #21262d));
+    flex-shrink: 0;
+}
+
+.find-panel--replace {
+    box-shadow: inset 2px 0 0 var(--kos-accent, #42d392);
+}
+
+.find-bar,
+.replace-bar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    padding: 0.3rem 0.75rem;
+}
+
+/* Indent the replace row so its input lines up with the search input (past the chevron). */
+.replace-bar {
+    padding-top: 0;
+    padding-left: calc(0.75rem + 1.4rem + 0.4rem);
+}
+
+.find-expand-btn {
+    width: 1.4rem;
+    height: 1.6rem;
+    border: none;
+    background: transparent;
+    color: var(--kos-text-muted, #6e7681);
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.find-expand-btn:hover {
+    color: var(--kos-accent, #42d392);
+}
+
+.find-option-btn {
+    min-width: 1.9rem;
+    height: 1.6rem;
+    padding: 0 0.3rem;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--kos-text-muted, #6e7681);
+    border-radius: var(--kos-btn-radius, var(--kos-radius-sm, 4px));
+    cursor: pointer;
+    font-family: var(--kos-font-mono, ui-monospace, monospace);
+    font-size: 0.75rem;
+    transition: background var(--kos-transition-fast, 120ms ease),
+                border-color var(--kos-transition-fast, 120ms ease);
+}
+
+.find-option-btn:hover {
+    color: var(--kos-text-primary, #e6edf3);
+    border-color: var(--kos-border, #30363d);
+}
+
+.find-option-btn--on {
+    color: var(--kos-accent, #42d392);
+    border-color: var(--kos-accent, #42d392);
+    background: var(--kos-btn-hover-bg, rgba(66, 211, 146, 0.12));
+}
+
+.replace-btn {
+    height: 1.6rem;
+    padding: 0 0.6rem;
+    border: var(--kos-btn-border, 1px solid var(--kos-border, #30363d));
+    background: var(--kos-btn-bg, #21262d);
+    color: var(--kos-btn-color, var(--kos-text-primary, #e6edf3));
+    border-radius: var(--kos-btn-radius, var(--kos-radius-sm, 4px));
+    box-shadow: var(--kos-btn-shadow, none);
+    cursor: pointer;
+    font-size: 0.78rem;
+    transition: background var(--kos-transition-fast, 120ms ease),
+                border-color var(--kos-transition-fast, 120ms ease);
+}
+
+.replace-btn:hover:not(:disabled) {
+    background: var(--kos-btn-hover-bg, rgba(66, 211, 146, 0.12));
+    border-color: var(--kos-btn-hover-border, var(--kos-accent, #42d392));
+    color: var(--kos-btn-hover-color, var(--kos-accent, #42d392));
+}
+
+.replace-btn:disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+.replace-summary {
+    font-size: 0.78rem;
+    color: var(--kos-accent, #42d392);
+}
+
+.find-input {
+    flex: 1;
+    max-width: 260px;
+    padding: var(--kos-input-padding, 0.2rem 0.5rem);
+    background: var(--kos-input-bg, #0d1117);
+    border: var(--kos-input-border, 1px solid var(--kos-border, #30363d));
+    border-radius: var(--kos-input-radius, var(--kos-radius-sm, 4px));
+    box-shadow: var(--kos-input-shadow, none);
+    color: var(--kos-input-color, var(--kos-text-primary, #e6edf3));
+    font-family: inherit;
+    font-size: 0.83rem;
+    outline: none;
+}
+
+.find-input:focus {
+    border-color: var(--kos-input-focus-border, var(--kos-accent, #42d392));
+    box-shadow: var(--kos-input-focus-ring, 0 0 0 1px var(--kos-accent, #42d392));
+}
+
+.find-match-count {
+    font-size: 0.78rem;
+    color: var(--kos-text-muted, #6e7681);
+    min-width: 70px;
+}
+
+.find-nav-btn {
+    width: 1.6rem;
+    height: 1.6rem;
+    border: var(--kos-btn-border, 1px solid var(--kos-border, #30363d));
+    background: var(--kos-btn-bg, #21262d);
+    color: var(--kos-btn-color, var(--kos-text-primary, #e6edf3));
+    border-radius: var(--kos-btn-radius, var(--kos-radius-sm, 4px));
+    box-shadow: var(--kos-btn-shadow, none);
+    cursor: pointer;
+    font-size: 0.82rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--kos-transition-fast, 120ms ease),
+                border-color var(--kos-transition-fast, 120ms ease);
+}
+
+.find-nav-btn:hover {
+    background: var(--kos-btn-hover-bg, rgba(66, 211, 146, 0.12));
+    border-color: var(--kos-btn-hover-border, var(--kos-accent, #42d392));
+    color: var(--kos-btn-hover-color, var(--kos-accent, #42d392));
+}
+
+.find-close-btn {
+    width: 1.4rem;
+    height: 1.4rem;
+    border: none;
+    background: transparent;
+    color: var(--kos-text-muted, #6e7681);
+    cursor: pointer;
+    font-size: 0.85rem;
+    margin-left: 0.2rem;
+}
+
+.find-close-btn:hover {
+    color: var(--kos-error, #ff9a91);
+}
+
+/* ─── Overlay states ────────────────────────────────────────────────────────── */
+
+.overlay-state {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--kos-text-muted, #6e7681);
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+.overlay-error {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    color: var(--kos-error, #ff9a91);
+    font-size: 0.9rem;
+    padding: 2rem;
+    text-align: center;
+}
+
+.retry-btn {
+    padding: var(--kos-btn-padding, 0.3rem 0.8rem);
+    border: var(--kos-btn-danger-border, 1px solid var(--kos-error, #ff9a91));
+    background: transparent;
+    color: var(--kos-error, #ff9a91);
+    border-radius: var(--kos-btn-radius, var(--kos-radius-sm, 4px));
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.82rem;
+    transition: background var(--kos-transition-fast, 120ms ease);
+}
+
+.retry-btn:hover {
+    background: color-mix(in srgb, var(--kos-error, #ff9a91) 15%, transparent);
+}
+
+/* ─── Main Text Area ────────────────────────────────────────────────────────── */
+
+.editor-textarea {
+    flex: 1;
+    width: 100%;
+    padding: 1rem 1.25rem;
+    resize: none;
+    background: var(--kos-window-content-background, var(--kos-bg-base, #0d1117));
+    color: var(--kos-text-primary, #e6edf3);
+    font-family: var(--kos-font-mono, "JetBrains Mono", "Fira Code", monospace);
+    font-size: 0.875rem;
+    line-height: 1.65;
+    border: none;
+    outline: none;
+    caret-color: var(--kos-accent, #42d392);
+    overflow-y: auto;
+    tab-size: 4;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    box-sizing: border-box;
+}
+
+.editor-textarea::placeholder {
+    color: var(--kos-text-muted, #6e7681);
+}
+
+.editor-textarea:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ─── Status Bar ────────────────────────────────────────────────────────────── */
+
+.editor-statusbar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    height: 1.6rem;
+    background: var(--kos-toolbar-bg, var(--kos-bg-surface, #161b22));
+    border-top: var(--kos-toolbar-border, 1px solid var(--kos-border-subtle, #21262d));
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    color: var(--kos-text-muted, #6e7681);
+    overflow: hidden;
+}
+
+.status-path {
+    font-family: var(--kos-font-mono, monospace);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 60%;
+}
+
+.status-sep {
+    color: var(--kos-border-subtle, #30363d);
+}
+
+.status-media {
+    color: var(--kos-accent, #42d392);
+}
+
+.status-conflict {
+    margin-left: auto;
+    color: var(--kos-warning, #e3b341);
+    font-weight: 600;
+    animation: blink-warn 1.5s ease-in-out infinite;
+}
+
+@keyframes blink-warn {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.4; }
+}
+
+/* A recovery draft was restored (ADR 0069). */
+.status-recovered {
+    margin-left: auto;
+    color: var(--kos-accent, #42d392);
+}

@@ -23,7 +23,7 @@ by the ADR or could not be as stated.
 ### 1. The typed host component: `HackContractComponent<TController>`
 
 The Blazor SDK gains an abstract base class
-`HackContractComponent<TController>` (`HackerOs.AppSdk.Blazor.Components`).
+`HackContractComponent<TController>` (`Kazo.Os.AppSdk.Blazor.Components`).
 A typed component (`HackFileView`, `HackContextMenu`) derives from it, declares its
 ordinary `[Parameter]`s and copies them by name in
 `AddProviderParameters`. It is rendered through `HackEmbeddedComponent<T>`, which gains
@@ -56,7 +56,7 @@ applied at resolution by `HackComponentHost`.
 
 ### 4. Reserved contracts: where the refusal happens
 
-The names live in `HackerOs.App.Abstractions`
+The names live in `Kazo.Os.App.Abstractions`
 (`AppComponentContracts`, `AppComponentProviderScope`) so that the
 validator knows them; the SDK repeats them in `HackComponentContracts`.
 

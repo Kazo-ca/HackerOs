@@ -4,7 +4,7 @@
 
 ## Goal
 
-Finding the entry for a path (`/home/<user>/.config/hackeros/<doc>.config`)
+Finding the entry for a path (`/home/<user>/.config/kazoos/<doc>.config`)
 cost dozens of round trips to IndexedDB: writing a setting took about 2
 seconds on a slow device. This document describes how a path is now looked up
 in one request, and how to measure it. Decision:
@@ -14,7 +14,7 @@ in one request, and how to measure it. Decision:
 
 Ecosystem host published in Release, served statically, headless Chromium,
 fresh profile, click on "Mobile" in the clock panel (the choice is written to
-`~/.config/hackeros/ui-platform-preference.config`, file creation included),
+`~/.config/kazoos/ui-platform-preference.config`, file creation included),
 until the mobile shell's "Back" button appears. Three runs, 2026-10-17:
 
 | | IndexedDB transactions | Duration | CPU throttled ×4 (CDP) |
@@ -59,15 +59,15 @@ FileSystemService.WriteAsync(path)
 
 ## Tests
 
-- `Tests/HackerOs.Infrastructure.Browser.Tests/IndexedDbFileSystemReaderTests.cs`:
+- `Tests/Kazo.Os.Infrastructure.Browser.Tests/IndexedDbFileSystemReaderTests.cs`:
   a single `resolvePath` transaction for a deep path, missing name, partial
   list, orphan link, disk count.
-- `Tests/HackerOs.Infrastructure.Browser.Tests/IndexedDbFileSystemProviderTests.cs`:
+- `Tests/Kazo.Os.Infrastructure.Browser.Tests/IndexedDbFileSystemProviderTests.cs`:
   provider scenarios adapted to the one-transaction walk.
-- `Tests/HackerOs.Platform.Core.Tests/FileSystem/FileSystemPathResolverTests.cs`:
+- `Tests/Kazo.Os.Platform.Core.Tests/FileSystem/FileSystemPathResolverTests.cs`:
   one-request walk, missing first component, traverse permission and restart
   on a link, path crossing a mount.
-- The E2E suites (`HackerOs.E2E.Tests`, `HackerOs.UI.E2E.Tests`) exercise
+- The E2E suites (`Kazo.Os.E2E.Tests`, `Kazo.Os.UI.E2E.Tests`) exercise
   `resolvePath` in a real browser on every startup.
 - Side effect on the UI tests: the faster filesystem revealed a race in
   `E2ESupport.SelectFileExplorerEntryAsync` (the click on a row arrived while

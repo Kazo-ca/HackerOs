@@ -10,7 +10,7 @@ Accepté le 2026-10-20.
   [`desktop-and-context-menu-plan.md`](../plans/desktop-and-context-menu-plan.md) §9
   et §12, chantier 6).
 - **Ajuste :** l'ADR 0149 (§2 retrait, §3 ajouts, §5 fixtures). Ses décisions
-  restent vraies : `HackerOs.AppSdk.FileView` quitte le SDK, la version passe à
+  restent vraies : `Kazo.Os.AppSdk.FileView` quitte le SDK, la version passe à
   `2.0.0`, une app 1.x est refusée. Cet ADR fixe ce qu'elles laissaient ouvert.
 - **Question posée à Benoit** (2026-10-20, fil « Desk 6 ») : où vivent les
   règles de copie et de déplacement (§2). Réponse de Benoit le 2026-10-20 :
@@ -28,11 +28,11 @@ que porte la nouvelle fixture.
 
 ### 1. Le code de `FileView` entre dans l'assemblage de l'explorateur
 
-- Les sources de `Shared/HackerOs.AppSdk.FileView` vont dans
-  `Apps/System/HackerOs.Apps.FileExplorer/FileControl/`, espace de noms
-  `HackerOs.Apps.FileExplorer.FileControl` (un espace `…FileExplorer.FileView`
+- Les sources de `Shared/Kazo.Os.AppSdk.FileView` vont dans
+  `Apps/System/Kazo.Os.Apps.FileExplorer/FileControl/`, espace de noms
+  `Kazo.Os.Apps.FileExplorer.FileControl` (un espace `…FileExplorer.FileView`
   masquerait le type `FileView` dans le code de l'explorateur). Le projet et le paquet
-  `HackerOs.AppSdk.FileView` disparaissent ; ses fichiers `PublicAPI` partent
+  `Kazo.Os.AppSdk.FileView` disparaissent ; ses fichiers `PublicAPI` partent
   avec lui (pas de lignes `*REMOVED*` : il n'y a plus de bibliothèque où les
   écrire). La rupture est listée dans
   [`sdk-packages.md`](../../framework/sdk-packages.md#sdk-20).
@@ -42,19 +42,19 @@ que porte la nouvelle fixture.
   l'explorateur est un assemblage chargé à la demande que les apps ne
   référencent pas.
 - Les scripts collocalisés sont servis sous
-  `_content/HackerOs.Apps.FileExplorer/FileControl/…` ; les textes passent dans
+  `_content/Kazo.Os.Apps.FileExplorer/FileControl/…` ; les textes passent dans
   `Resources/FileControl/Strings*.resx` de l'explorateur, et ceux des transferts
-  dans les `Strings*.resx` de `HackerOs.AppSdk`.
+  dans les `Strings*.resx` de `Kazo.Os.AppSdk`.
 - Devenus du code d'app (sous `Apps/`), ses composants suivent la règle du cadre
   ambiant (ADR 0066, 0067) : ils dérivent de `HackComponentBase` et le rappel
   JavaScript `OnPasteShortcutAsync` entre dans le cadre de l'app. Le temps de
   la vue est donc compté à l'app qui l'affiche, plus au compositeur.
-- L'hôte (`HackerOs.Ecosystem.Host`) n'enregistre plus `IShellIconProvider` :
+- L'hôte (`Kazo.Os.Ecosystem.Host`) n'enregistre plus `IShellIconProvider` :
   la vue prend `DefaultShellIconProvider` quand aucun n'est fourni. L'OS ne
   référence donc plus le code de la vue avant le chargement de l'explorateur.
-- Les tests `HackerOs.AppSdk.FileView.Tests` deviennent
-  `HackerOs.Apps.FileExplorer.FileControl.Tests` ; ceux de `FileTransfer`
-  deviennent `HackFileOperationsTests` (`HackerOs.AppSdk.Tests`).
+- Les tests `Kazo.Os.AppSdk.FileView.Tests` deviennent
+  `Kazo.Os.Apps.FileExplorer.FileControl.Tests` ; ceux de `FileTransfer`
+  deviennent `HackFileOperationsTests` (`Kazo.Os.AppSdk.Tests`).
 
 ### 2. Les règles de copie restent dans le SDK : `HackFileOperations`
 
@@ -66,14 +66,14 @@ visible, le dialogue « Remplacer / Garder les deux / Ignorer », passe déjà p
 les règles chez le fournisseur obligerait tout fournisseur tiers (ADR 0156) à
 les réécrire, et les rendrait inaccessibles à une commande dans un worker.
 
-- `HackFileOperations` (statique, `HackerOs.AppSdk.IO`, à côté de `HackFile`
+- `HackFileOperations` (statique, `Kazo.Os.AppSdk.IO`, à côté de `HackFile`
   et `HackDirectory`) porte `CopyAsync`, `MoveAsync`, `TransferAsync`,
   `ImportAsync`, `MoveToTrashAsync` et `GetCopyName`, avec les types
   `HackFileTransferMode`, `HackFileConflictChoice`,
   `HackFileConflictResolution`, `HackFileTransferConflict`,
   `HackFileConflictResolver`, `HackFileTransferResult`,
   `HackFileTransferItemResult`, `HackFileTransferFailure` et `HackHostFile`.
-- `IDialogService.AsFileConflictResolver(owner)` (`HackerOs.AppSdk.Blazor`)
+- `IDialogService.AsFileConflictResolver(owner)` (`Kazo.Os.AppSdk.Blazor`)
   donne le résolveur qui pose la question par le fournisseur de
   `hackeros.file-dialogs`.
 - L'explorateur, le bureau et tout fournisseur appellent ces règles ; elles ne
@@ -91,7 +91,7 @@ les réécrire, et les rendrait inaccessibles à une commande dans un worker.
   (`[RegisterFileContextMenu]`), sa commande copie un fichier par
   `HackFileOperations`. Les tests vérifient qu'elle est admise, qu'elle se lie
   et que sa commande tourne.
-- Le scénario de l'hôte généré par le modèle (`HackerOs.Templates.E2E.Tests`)
+- Le scénario de l'hôte généré par le modèle (`Kazo.Os.Templates.E2E.Tests`)
   vérifie qu'un hôte qui référence les deux fixtures 1.x ne se construit pas
   (`HOSAPP0021`, la règle du catalogue appliquée au build, ADR 0098 §3), puis
   qu'avec la fixture 2.0 il démarre, montre le contrôle de fichiers dans la

@@ -52,7 +52,7 @@ host is achievable, with specific constraints:
   `RunAOTCompilation` today, so this path is not blocked as things stand.
 - **Trimming**: Roslyn compilation needs the reference assemblies and
   reflection metadata intact. `PublishTrimmed` is already `false` on
-  `HackerOs.Ecosystem` and `HackerOs.Server` today; a future switch to
+  `Kazo.Os.Ecosystem` and `Kazo.Os.Server` today; a future switch to
   `true` on these projects would break this path without complete
   `[DynamicDependency]` annotations.
 - **Isolation**: WebAssembly provides **no** isolation against the host's own C#
@@ -68,7 +68,7 @@ host is achievable, with specific constraints:
 
 Modeled on `IGameDomainGateway` (ADR 0023):
 
-- A new shared project, e.g. `Shared/HackerOs.CodeExecution.Abstractions`,
+- A new shared project, e.g. `Shared/Kazo.Os.CodeExecution.Abstractions`,
   would define two distinct contracts:
   - **`ICompilationService`**: C# source → in-memory assembly + diagnostics.
     Can be **truly shared at 100%** between client and server: Roslyn
@@ -79,7 +79,7 @@ Modeled on `IGameDomainGateway` (ADR 0023):
       built through a dedicated Worker (see section 3).
     - Server side: OS-level isolated execution (container or separate
       process; modern .NET no longer has AppDomains), exposed by
-      `HackerOs.Server` and reached from the client through the proxy bridge already
+      `Kazo.Os.Server` and reached from the client through the proxy bridge already
       used for `curl`/`nmap` (same pattern family as the network proxy
       documented in `server-implementation-pass.md`).
 - Selection of the implementation (local vs server) at execution time,

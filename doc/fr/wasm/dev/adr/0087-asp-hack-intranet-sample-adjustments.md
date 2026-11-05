@@ -6,7 +6,7 @@
 
 Accepté le 2026-10-17, avec le chantier `web/11-sample-final`.
 
-- **Phase du plan :** phase web ([`asp-hack-plan.md`](../plans/asp-hack-plan.md), §5).
+- **Phase du plan :** phase web ([`asp-kazo-plan.md`](../plans/asp-kazo-plan.md), §5).
 - **Complète :** ADR 0084 §5 (navigation d'un site Blazor), ADR 0083 et 0086
   (classes de base des vues), ADR 0076 §6 (sous-ensemble d'ASP.NET retenu).
   Ne remplace aucune décision ; constate aussi ce que la phase n'a pas livré de
@@ -74,7 +74,7 @@ ajouté au sous-ensemble de l'ADR 0076 §6.
 
 ### 4. L'exemple est installé dans les hôtes ; ses données restent en mémoire
 
-`HackerOs.Samples.Intranet` est, comme le site d'exemple Blazor (ADR 0084), une
+`Kazo.Os.Samples.Intranet` est, comme le site d'exemple Blazor (ADR 0084), une
 app `Web` intégrée non système, cachée du lanceur, référencée par l'Ecosystem et
 `test/test` (chargement paresseux). Ses notes et ses cartes sont des singletons
 du processus du site : elles reviennent à leur état initial quand l'OS arrête le
@@ -93,5 +93,5 @@ restent valables ; elles demandent un chantier à part.
   §1 est celle de Blazor, donc un développeur ASP.NET la connaît.
 - Toute app livrée peut avoir des vues `.razor` et `.cshtml` ; une régression
   du §2 casse la build de l'Ecosystem.
-- Le guide du développeur ([`asp-hack-developer-guide.md`](../../framework/asp-hack-developer-guide.md))
+- Le guide du développeur ([`asp-kazo-developer-guide.md`](../../framework/asp-kazo-developer-guide.md))
   s'appuie sur l'exemple et signale le §4 dans ses limites.

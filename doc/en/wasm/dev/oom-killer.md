@@ -25,7 +25,7 @@ only if the OOM killer is enabled.
 | Component | Project | Role |
 | --- | --- | --- |
 | `OomKiller` | Platform.Core | Samples every simulated second; two consecutive samples below the threshold trigger the choice of a victim. Browser guard at 80% of the ceiling. `KillCount` counter. |
-| `OomKillerSettings`, `MemorySettingsDocuments` | Platform.Core | Document `/etc/hackeros/memory.config`, section `[oom-killer]`. |
+| `OomKillerSettings`, `MemorySettingsDocuments` | Platform.Core | Document `/etc/kazoos/memory.config`, section `[oom-killer]`. |
 | `SystemMemoryProbe` | Platform.Core | `MemTotal` (simulated profile), measured `MemAvailable` and `VmRSS` (ADR 0068), `oom_score`. |
 | `InMemoryProcessOomScoreTable` | Platform.Core | `oom_score_adj` of each process, with its floor (ADR 0142 §1-2). |
 | `KernelLog` | Platform.Core | Kernel buffer of the session (1,024 lines), copied to `/var/log/kern.log` and `syslog`; read by `/dev/kmsg`. |
@@ -46,7 +46,7 @@ once the catalog and the accounts are ready.
   PID.
 - No new victim as long as the previous one has not exited.
 - Browser guard: the victim is chosen only among the processes of the
-  targeted runtime (`CONSTRAINT_MEMCG`, `oom_memcg=/hackeros/<runtime>`).
+  targeted runtime (`CONSTRAINT_MEMCG`, `oom_memcg=/kazoos/<runtime>`).
 
 ### Traces
 
@@ -60,7 +60,7 @@ once the catalog and the accounts are ready.
 ### Enabling
 
 ```sh
-sudo nano /etc/hackeros/memory.config
+sudo nano /etc/kazoos/memory.config
 ```
 
 ```ini
@@ -83,7 +83,7 @@ The files `/proc/<pid>/oom_score`, `oom_score_adj`, `/proc/vmstat` and `/dev/kms
 
 ### Host setting
 
-`HackerOs:Hardware:MemoryMiB` (appsettings) sets `MemTotal` of the simulated profile.
+`KazoOs:Hardware:MemoryMiB` (appsettings) sets `MemTotal` of the simulated profile.
 `build/verify-hosts.sh` uses it in the `ecosystem-oom` scenario
 (`OOM_MEMORY_MIB`, 512 by default).
 
@@ -100,14 +100,14 @@ The files `/proc/<pid>/oom_score`, `oom_score_adj`, `/proc/vmstat` and `/dev/kms
 
 ## Task list
 
-- [x] `/etc/hackeros/memory.config` setting, migration and schema.
+- [x] `/etc/kazoos/memory.config` setting, migration and schema.
 - [x] Measurement of `MemAvailable`, `oom_score`, victim choice, `OutOfMemory` kill.
 - [x] `oom_score_adj` in a table, floor, inheritance, writing in `/proc`.
 - [x] Kernel log, `/dev/kmsg`, `kern.log`, `dmesg`.
 - [x] `/proc/vmstat` with `oom_kill`.
 - [x] Notification for a killed app with a window (English, French).
 - [x] Guard of the real browser, worker replacement.
-- [x] `AppDefinition.OomScoreAdjust`, `oomScoreAdj` of the manifest, `HOSAPP0024`, `-500` for system services.
+- [x] `AppDefinition.OomScoreAdjust`, `oomScoreAdj` of the manifest, `KOSAPP0024`, `-500` for system services.
 - [x] Memory tab of Settings.
 - [x] `stress --vm`.
 - [x] `ecosystem-oom` scenario of `build/verify-hosts.sh`.

@@ -1,0 +1,133 @@
+.app-chooser-dialog {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+    height: 100%;
+    padding: 1.25rem;
+    box-sizing: border-box;
+    color: var(--kos-text-primary, #d4f8e8);
+    background: var(--kos-window-content-background, #0d1819);
+    border: var(--kos-window-border, 1px solid var(--kos-border, #315249));
+    box-shadow: var(--kos-shadow-lg, 0 1.25rem 4rem rgba(0, 0, 0, 0.7));
+}
+
+.app-chooser-content {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.app-chooser-list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    overflow-y: auto;
+}
+
+button.app-chooser-option {
+    display: grid;
+    grid-template-columns: 1.4rem 1fr;
+    grid-template-areas: "mark name" "mark description" "mark id";
+    align-items: center;
+    width: 100%;
+    text-align: left;
+    column-gap: 0.5rem;
+    font-weight: 400;
+}
+
+button.app-chooser-option.selected {
+    border-color: var(--kos-accent, #55d6a1);
+    background: var(--kos-accent-subtle, #123a2b);
+}
+
+.app-chooser-mark {
+    grid-area: mark;
+    color: var(--kos-accent, #55d6a1);
+    font-family: var(--kos-font-mono, monospace);
+}
+
+.app-chooser-name {
+    grid-area: name;
+    font-weight: 600;
+}
+
+.app-chooser-description {
+    grid-area: description;
+    font-size: 0.8rem;
+    color: var(--kos-text-secondary, #9ac3b2);
+}
+
+.app-chooser-id {
+    grid-area: id;
+    font-size: 0.75rem;
+    font-family: var(--kos-font-mono, monospace);
+    color: var(--kos-text-muted, #6e9485);
+}
+
+.app-chooser-always {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.88rem;
+}
+
+.app-chooser-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.65rem;
+}
+
+button {
+    min-width: 5rem;
+    min-height: var(--kos-btn-min-height, 2.25rem);
+    padding: var(--kos-btn-padding, 0.4rem 0.9rem);
+    font-size: 0.88rem;
+    font-family: inherit;
+    font-weight: var(--kos-btn-font-weight, 500);
+    color: var(--kos-btn-color, var(--kos-text-primary, #d4f8e8));
+    background: var(--kos-btn-bg, #132522);
+    border: var(--kos-btn-border, 1px solid var(--kos-border, #315249));
+    border-radius: var(--kos-btn-radius, var(--kos-radius-sm, 0.25rem));
+    box-shadow: var(--kos-btn-shadow, none);
+    cursor: pointer;
+    transition: background var(--kos-transition-fast, 120ms ease),
+                border-color var(--kos-transition-fast, 120ms ease),
+                color var(--kos-transition-fast, 120ms ease);
+}
+
+button:hover:not(:disabled) {
+    background: var(--kos-btn-hover-bg, var(--kos-bg-elevated, #182825));
+    border-color: var(--kos-btn-hover-border, var(--kos-accent, #55d6a1));
+    color: var(--kos-btn-hover-color, var(--kos-text-primary, #ffffff));
+}
+
+button:active:not(:disabled) {
+    background: var(--kos-btn-active-bg, var(--kos-accent-subtle, #123a2b));
+    border-color: var(--kos-btn-active-border, var(--kos-accent, #55d6a1));
+    box-shadow: var(--kos-btn-active-shadow, none);
+}
+
+button.primary {
+    color: var(--kos-btn-primary-color, var(--kos-text-inverse, #07100d));
+    background: var(--kos-btn-primary-bg, var(--kos-accent, #55d6a1));
+    border: var(--kos-btn-primary-border, 1px solid var(--kos-accent, #55d6a1));
+    box-shadow: var(--kos-btn-primary-shadow, none);
+}
+
+button.primary:hover:not(:disabled) {
+    background: var(--kos-btn-primary-hover-bg, var(--kos-accent-hover, #75e8ba));
+    border-color: var(--kos-btn-primary-hover-border, var(--kos-accent-hover, #75e8ba));
+}
+
+button:focus-visible {
+    outline: 2px solid var(--kos-focus-ring, #55d6a1);
+    outline-offset: 2px;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

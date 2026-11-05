@@ -1,0 +1,15 @@
+@*
+    ASP.Kazo root imports of every .cshtml of a site (ADR 0086 §2), added by build/Kazo.Os.Apps.targets.
+    The Razor compiler of the SDK compiles .cshtml files in MVC mode; these lines replace MVC's base class
+    and its five implicit @inject properties by ASP.Kazo's, so the generated C# never needs ASP.NET MVC.
+    TModel is replaced by the type a view declares with @model (dynamic without @model).
+    Put a site's own imports in Views/_ViewImports.cshtml.
+*@
+@using Kazo.Os.AppSdk.Web.Views
+@using Kazo.Os.AppSdk.Web.Mvc
+@inherits Kazo.Os.AppSdk.Web.Views.KazoRazorPage<TModel>
+@inject Kazo.Os.AppSdk.Web.Views.KazoHtmlHelper<TModel> Html
+@inject Kazo.Os.AppSdk.Web.Views.KazoJsonHelper Json
+@inject Kazo.Os.AppSdk.Web.Views.KazoViewComponentHelper Component
+@inject Kazo.Os.AppSdk.Web.Mvc.IKazoUrlHelper Url
+@inject Kazo.Os.AppSdk.Web.Views.KazoModelExpressionProvider<TModel> ModelExpressionProvider

@@ -22,7 +22,7 @@ Accepted on 2026-10-10.
 ## Context
 
 The current shell is the `ExecuteInputAsync` method of
-`Shared/HackerOs.AppSdk.Terminal/TerminalPanel.razor`. It mixes
+`Shared/Kazo.Os.AppSdk.Terminal/TerminalPanel.razor`. It mixes
 grammar, resolution, `sudo`, aliases and display. Its parser
 (`ShellParser`) knows neither variable expansion nor operators.
 The line text is then rebuilt with spaces
@@ -43,7 +43,7 @@ environment: `ProcFileSystemProvider` returns the app identifier for
 ### 1. A headless interpreter, in Platform Core
 
 The shell becomes a headless engine in
-`Platform/HackerOs.Platform.Core/Shell/`:
+`Platform/Kazo.Os.Platform.Core/Shell/`:
 
 - `ShellParser` produces a tree (section 2) or a structured error (code,
   position, length), never throwing an exception for an input.
@@ -56,7 +56,7 @@ The shell becomes a headless engine in
 
 `TerminalPanel` keeps only line editing, display, keyboard
 history, completion and the credentials window. The old `ShellParser`
-and `TerminalSession` of `HackerOs.AppSdk.Terminal` disappear.
+and `TerminalSession` of `Kazo.Os.AppSdk.Terminal` disappear.
 `ExecuteCommandIntent` goes through the same interpreter, in non-interactive mode
 (section 7): no more splitting on spaces.
 
@@ -171,7 +171,7 @@ A process carries three new pieces of data, fixed at its creation:
 - its **environment**, ordinal dictionary name → value.
 
 They live in a separate table, `IProcessEnvironmentTable`
-(`Shared/HackerOs.Simulation.Abstractions/Processes/`), indexed by PID and
+(`Shared/Kazo.Os.Simulation.Abstractions/Processes/`), indexed by PID and
 emptied when the process ends. `ProcessRecord` remains an immutable
 snapshot and does not change.
 
@@ -215,7 +215,7 @@ link to the real current directory.
 
 ### 6. `HackEnvironment` in the SDK
 
-`Shared/HackerOs.AppSdk/HackEnvironment.cs`, static, modeled on
+`Shared/Kazo.Os.AppSdk/KazoEnvironment.cs`, static, modeled on
 `System.Environment`, and read from the ambient context of ADR 0043:
 
 ```csharp
@@ -278,7 +278,7 @@ See ADR 0052 for the full phase 3 table. Work items of this ADR:
 - ADR 0012 (processes), ADR 0014 (replaced), ADR 0042 (`sudo`), ADR 0043
   (ambient context), ADR 0046 (`/proc`), ADR 0051 (commands).
 - [`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), sections 7.1 and 7.2.
-- `Shared/HackerOs.AppSdk.Terminal/TerminalPanel.razor`, `ShellParser.cs`,
-  `TerminalSession.cs`; `Platform/HackerOs.Platform.Core/Intents/AppIntentDispatcher.cs`;
-  `Platform/HackerOs.Platform.Core/Lifecycle/AppLifecycleOrchestrator.cs`;
-  `Platform/HackerOs.Platform.Core/FileSystem/Virtual/ProcFileSystemProvider.cs`.
+- `Shared/Kazo.Os.AppSdk.Terminal/TerminalPanel.razor`, `ShellParser.cs`,
+  `TerminalSession.cs`; `Platform/Kazo.Os.Platform.Core/Intents/AppIntentDispatcher.cs`;
+  `Platform/Kazo.Os.Platform.Core/Lifecycle/AppLifecycleOrchestrator.cs`;
+  `Platform/Kazo.Os.Platform.Core/FileSystem/Virtual/ProcFileSystemProvider.cs`.

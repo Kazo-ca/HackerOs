@@ -1,0 +1,193 @@
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
+@using Kazo.Os.AppSdk.Administration
+
+@if (CurrentAccount is { IsGuest: true })
+{
+    @* ADR 0187 section 5: the guest is invited to create its account; the form belongs to the OS. *@
+    <div class="setting-group users-panel guest-banner" role="region" aria-label="@L["Users.Guest.Title"]">
+        <h4>@L["Users.Guest.Title"]</h4>
+        <p class="setting-desc">@L["Users.Guest.Description"]</p>
+        <p class="setting-desc">@L["Users.Guest.SignOutNotice"]</p>
+        <div class="form-actions">
+            <button type="button" class="btn-secondary" disabled="@_busy" @onclick="CreateMyAccountAsync">@L["Users.Guest.Create"]</button>
+        </div>
+        @if (!string.IsNullOrEmpty(_guestMessage))
+        {
+            <p class="dialog-error" role="alert">@_guestMessage</p>
+        }
+    </div>
+}
+
+<div class="setting-group users-panel">
+    <h4>@L["Users.List.Title"]</h4>
+    <p class="setting-desc">
+        @LocalizedMarkup.Format(L["Users.List.Description"], LocalizedMarkup.Code("passwd"), LocalizedMarkup.Code("sudo passwd"))
+    </p>
+    @if (_accounts.Count == 0)
+    {
+        <p class="setting-desc">@L["Users.List.Empty"]</p>
+    }
+    else
+    {
+        <ul class="account-list" aria-label="@L["Users.List.Title"]">
+            @foreach (KazoUserAccount account in _accounts)
+            {
+                <li class="@(account.IsCurrentUser ? "account is-current" : "account")">
+                    <span class="account-login">@account.LoginName</span>
+                    <span class="account-name">@account.DisplayName</span>
+                    <span class="account-badges">
+                        @if (account.IsAdministrator)
+                        {
+                            <span class="badge badge-admin">@L["Users.Badge.Administrator"]</span>
+                        }
+                        @if (account.IsCurrentUser)
+                        {
+                            <span class="badge">@L["Users.Badge.You"]</span>
+                        }
+                        @if (account.PasskeyCount > 0)
+                        {
+                            <span class="badge" title="@L["Users.Badge.PasskeysTitle"]">@L["Users.Badge.Passkeys", account.PasskeyCount]</span>
+                        }
+                        <span class="@StateClass(account)" title="@StateTitle(account)">@StateCode(account)</span>
+                        @if (CurrentIsAdministrator && !account.IsCurrentUser)
+                        {
+                            <button type="button" class="btn-link-danger" disabled="@_busy"
+                                    aria-label="@L["Users.Delete.Button", account.LoginName]"
+                                    @onclick="() => AskDelete(account.LoginName)">@L["Users.Delete.Short"]</button>
+                        }
+                    </span>
+                </li>
+            }
+        </ul>
+    }
+
+    @if (_deleteLogin is { } deleting)
+    {
+        <div class="delete-confirm" role="group" aria-label="@L["Users.Delete.Title", deleting]">
+            <p class="setting-desc">@L["Users.Delete.Description", deleting]</p>
+            <label class="check-field">
+                <input type="checkbox" @bind="_deleteHome" disabled="@_busy" />
+                <span>@LocalizedMarkup.Format(L["Users.Delete.RemoveHome"], LocalizedMarkup.Code("/home/" + deleting))</span>
+            </label>
+            <div class="form-actions">
+                <button type="button" class="btn-danger" disabled="@_busy" @onclick="DeleteAsync">@L["Users.Delete.Confirm", deleting]</button>
+                <button type="button" class="btn-secondary" disabled="@_busy" @onclick="CancelDelete">@L["Users.Delete.Cancel"]</button>
+            </div>
+        </div>
+    }
+    @if (!string.IsNullOrEmpty(_listMessage))
+    {
+        <p class="@(_listFailed ? "dialog-error" : "users-result")" role="@(_listFailed ? "alert" : "status")">@_listMessage</p>
+    }
+</div>
+
+@if (CurrentIsAdministrator && !GuestExists)
+{
+    <div class="setting-group users-panel">
+        <h4>@L["Users.Add.Title"]</h4>
+        <p class="setting-desc">@LocalizedMarkup.Format(L["Users.Add.Description"], LocalizedMarkup.Code("users.manage"))</p>
+        <form class="password-form" @onsubmit="AddAsync" @onsubmit:preventDefault>
+            <label class="field">
+                <span>@L["Users.Field.Login"]</span>
+                <input class="text-input" type="text" autocomplete="off" spellcheck="false" maxlength="32" @bind="_newLogin" disabled="@_busy" />
+            </label>
+            <label class="field">
+                <span>@L["Users.Field.DisplayName"]</span>
+                <input class="text-input" type="text" autocomplete="off" maxlength="128" @bind="_newDisplayName" disabled="@_busy" />
+            </label>
+            <label class="field">
+                <span>@L["Users.Field.Type"]</span>
+                <select class="text-input" @bind="_newIsAdministrator" disabled="@_busy">
+                    <option value="false">@L["Users.Type.Standard"]</option>
+                    <option value="true">@L["Users.Type.Administrator"]</option>
+                </select>
+            </label>
+            <label class="field">
+                <span>@L["Users.Field.InitialPassword"]</span>
+                <input class="text-input" type="password" autocomplete="new-password" @bind="_newPassword" disabled="@_busy" />
+            </label>
+            <label class="field">
+                <span>@L["Users.Field.Confirm"]</span>
+                <input class="text-input" type="password" autocomplete="new-password" @bind="_newConfirm" disabled="@_busy" />
+            </label>
+            <button type="submit" class="btn-secondary" disabled="@_busy">@L["Users.Add.Submit"]</button>
+        </form>
+        @if (!string.IsNullOrEmpty(_addMessage))
+        {
+            <p class="@(_addFailed ? "dialog-error" : "users-result")" role="@(_addFailed ? "alert" : "status")">@_addMessage</p>
+        }
+    </div>
+}
+
+<PasskeysPanel Changed="LoadAsync" />
+
+<div class="setting-group users-panel">
+    <h4>@L["Users.Own.Title"]</h4>
+    <p class="setting-desc">@L["Users.Own.Description"]</p>
+    <form class="password-form" @onsubmit="ChangeOwnAsync" @onsubmit:preventDefault>
+        @if (CurrentHasPassword)
+        {
+            <label class="field">
+                <span>@L["Users.Field.Current"]</span>
+                <input class="text-input" type="password" autocomplete="current-password" @bind="_current" disabled="@_busy" />
+            </label>
+        }
+        <label class="field">
+            <span>@L["Users.Field.New"]</span>
+            <input class="text-input" type="password" autocomplete="new-password" @bind="_ownNew" disabled="@_busy" />
+        </label>
+        <label class="field">
+            <span>@L["Users.Field.Confirm"]</span>
+            <input class="text-input" type="password" autocomplete="new-password" @bind="_ownConfirm" disabled="@_busy" />
+        </label>
+        <button type="submit" class="btn-secondary" disabled="@_busy">@L["Users.Own.Submit"]</button>
+    </form>
+    @if (!string.IsNullOrEmpty(_ownMessage))
+    {
+        <p class="@(_ownFailed ? "dialog-error" : "users-result")" role="@(_ownFailed ? "alert" : "status")">@_ownMessage</p>
+    }
+</div>
+
+@if (CurrentIsAdministrator && OtherAccounts.Count > 0)
+{
+    <div class="setting-group users-panel danger-zone">
+        <h4>@L["Users.Reset.Title"]</h4>
+        <p class="setting-desc">
+            @LocalizedMarkup.Format(L["Users.Reset.Description"],
+                LocalizedMarkup.Code("~/.local/share/keyrings/login.keyring.old"),
+                LocalizedMarkup.Code("users.manage"))
+        </p>
+        <form class="password-form" @onsubmit="ResetAsync" @onsubmit:preventDefault>
+            <label class="field">
+                <span>@L["Users.Field.Account"]</span>
+                <select class="text-input" @bind="_resetLogin" disabled="@_busy">
+                    @foreach (KazoUserAccount account in OtherAccounts)
+                    {
+                        <option value="@account.LoginName">@account.LoginName (@account.DisplayName)</option>
+                    }
+                </select>
+            </label>
+            <label class="field">
+                <span>@L["Users.Field.New"]</span>
+                <input class="text-input" type="password" autocomplete="new-password" @bind="_resetNew" disabled="@_busy" />
+            </label>
+            <label class="field">
+                <span>@L["Users.Field.Confirm"]</span>
+                <input class="text-input" type="password" autocomplete="new-password" @bind="_resetConfirm" disabled="@_busy" />
+            </label>
+            <div class="form-actions">
+                <button type="submit" class="btn-danger" disabled="@_busy">@L["Users.Reset.Submit"]</button>
+                <button type="button" class="btn-secondary" disabled="@_busy" @onclick="RemoveAsync">@L["Users.Reset.Remove"]</button>
+            </div>
+        </form>
+        @if (!string.IsNullOrEmpty(_resetMessage))
+        {
+            <p class="@(_resetFailed ? "dialog-error" : "users-result")" role="@(_resetFailed ? "alert" : "status")">@_resetMessage</p>
+        }
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(_loadError))
+{
+    <p class="dialog-error" role="alert">@_loadError</p>
+}

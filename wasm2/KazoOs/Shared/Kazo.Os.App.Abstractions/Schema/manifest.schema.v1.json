@@ -1,0 +1,425 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kazoos.org/schema/app-manifest/1/manifest.schema.json",
+  "title": "Kazo OS Application Manifest",
+  "description": "Canonical app.manifest.json schema, per ADR 0010. Schema version 1.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "name",
+    "version",
+    "publisherId",
+    "description",
+    "kind",
+    "sdkCompatibility",
+    "presentation",
+    "resources"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*(\\.[a-z][a-z0-9-]*){2,}$" },
+    "name": { "type": "string", "minLength": 1 },
+    "version": { "$ref": "#/$defs/semanticVersion" },
+    "publisherId": { "type": "string", "pattern": "^[a-z][a-z0-9-]*(\\.[a-z][a-z0-9-]*)+$" },
+    "description": { "type": "string", "minLength": 1 },
+    "kind": { "enum": ["window", "terminal", "service", "web"] },
+    "entryPoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["assembly", "type"],
+      "properties": {
+        "assembly": { "type": "string", "minLength": 1 },
+        "type": { "type": "string", "minLength": 1 }
+      }
+    },
+    "platform": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["supported", "entryPoints"],
+      "properties": {
+        "supported": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/platformId" }
+        },
+        "entryPoints": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["platforms", "assembly", "type"],
+            "properties": {
+              "platforms": {
+                "type": "array",
+                "minItems": 1,
+                "items": { "$ref": "#/$defs/platformId" }
+              },
+              "assembly": { "type": "string", "minLength": 1 },
+              "type": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    },
+    "sdkCompatibility": { "$ref": "#/$defs/versionRange" },
+    "osCompatibility": { "$ref": "#/$defs/versionRange" },
+    "presentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["category", "launchVisibility", "iconAssetPaths"],
+      "properties": {
+        "category": { "type": "string", "minLength": 1 },
+        "launchVisibility": { "enum": ["visible", "hidden"] },
+        "iconAssetPaths": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/packageRelativePath" }
+        }
+      }
+    },
+    "localizations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["culture", "resourcePath"],
+        "properties": {
+          "culture": { "type": "string", "minLength": 1 },
+          "resourcePath": { "$ref": "#/$defs/packageRelativePath" }
+        }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "declaredTopicPermissions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "description"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^(topic-publish|topic-subscribe):app/[a-z][a-z0-9-]*(\\.[a-z][a-z0-9-]*){2,}/[a-z0-9-]+(/[a-z0-9-]+)*$"
+          },
+          "description": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "resources": { "$ref": "#/$defs/resourceProfile" },
+    "settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion", "fields"],
+      "properties": {
+        "schemaVersion": { "type": "integer", "minimum": 1 },
+        "migrationIds": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "fields": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["key", "valueType", "defaultValue", "scope", "sensitivity"],
+            "properties": {
+              "key": { "type": "string", "minLength": 1 },
+              "valueType": { "enum": ["string", "integer", "boolean", "enum"] },
+              "defaultValue": { "type": "string" },
+              "scope": { "enum": ["appUser", "appDevice", "appUserDevice", "appRoamingUser", "osAdmin"] },
+              "sensitivity": { "enum": ["public", "private", "secretReference", "restricted"] },
+              "allowedValues": { "type": "array", "items": { "type": "string" } },
+              "group": { "type": "string", "minLength": 1 }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "required": ["valueType"],
+                  "properties": { "valueType": { "const": "enum" } }
+                },
+                "then": { "required": ["allowedValues"] }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "intents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["intentId"],
+        "properties": {
+          "intentId": { "type": "string", "minLength": 1 },
+          "payloadSchemaAssetPath": { "$ref": "#/$defs/packageRelativePath" }
+        }
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["appId", "minimumVersion"],
+        "properties": {
+          "appId": { "type": "string", "minLength": 1 },
+          "minimumVersion": { "$ref": "#/$defs/semanticVersion" },
+          "maximumVersion": { "$ref": "#/$defs/semanticVersion" },
+          "optional": { "type": "boolean" }
+        }
+      }
+    },
+    "assets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "kind", "sha256"],
+        "properties": {
+          "path": { "$ref": "#/$defs/packageRelativePath" },
+          "kind": { "enum": ["image", "css", "javaScriptModule", "localization", "data"] },
+          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "role": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "update": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["migrationIds"],
+      "properties": {
+        "migrationIds": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "minimumUpgradableVersion": { "$ref": "#/$defs/semanticVersion" }
+      }
+    },
+    "fileHandlers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["extensions", "actions"],
+        "properties": {
+          "mediaType": { "type": "string", "minLength": 1 },
+          "extensions": { "type": "array", "items": { "type": "string", "pattern": "^\\.[a-z0-9]+$" } },
+          "actions": { "type": "array", "items": { "enum": ["open", "edit"] } },
+          "priority": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "terminal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "aliases", "usage"],
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+        "aliases": { "type": "array", "items": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" } },
+        "usage": { "type": "string", "minLength": 1 }
+      }
+    },
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["contract", "assembly", "type"],
+        "properties": {
+          "contract": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*(\\.[a-z0-9]+(-[a-z0-9]+)*)+$" },
+          "assembly": { "type": "string", "minLength": 1 },
+          "type": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "contextMenus": {
+      "description": "Entries the app adds to the OS file menus (ADR 0151, ADR 0159), in declaration order.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "title", "titles", "target", "scopes", "selection", "first"],
+        "properties": {
+          "name": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+          "title": { "type": "string", "minLength": 1 },
+          "titles": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["culture", "text"],
+              "properties": {
+                "culture": { "type": "string", "minLength": 2 },
+                "text": { "type": "string", "minLength": 1 }
+              }
+            }
+          },
+          "target": { "type": "string", "minLength": 1 },
+          "intent": { "type": "string", "minLength": 1 },
+          "icon": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "source"],
+            "properties": {
+              "kind": { "enum": ["vector", "image"] },
+              "source": { "type": "string", "minLength": 1 },
+              "library": { "enum": ["bootstrap", "fontawesome", "lucide", "simpleicons"] }
+            }
+          },
+          "scopes": { "type": "array", "minItems": 1, "items": { "enum": ["file", "directory", "background", "desktop"] } },
+          "types": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+          "selection": { "enum": ["all", "each", "single"] },
+          "first": { "type": "boolean" },
+          "after": { "type": "string", "minLength": 1 },
+          "afterGroup": { "type": "string", "minLength": 1 },
+          "parent": { "type": "string", "minLength": 1 },
+          "screens": { "description": "ADR 0218: shown only with one open screen, or with two or more.", "enum": ["single", "multiple"] },
+          "screen": { "description": "ADR 0218: shown only while this secondary screen is open.", "type": "integer", "minimum": 2, "maximum": 9 }
+        }
+      }
+    },
+    "singleInstancePerUser": { "type": "boolean" },
+    "autoStart": { "type": "boolean" },
+    "serviceStartup": {
+      "description": "When an automatic service starts (ADR 0097): after a login (default) or at boot (system apps only).",
+      "enum": ["login", "boot"]
+    },
+    "supportsBack": { "type": "boolean" },
+    "window": {
+      "description": "Window sizes of a window app in CSS pixels (ADR 0095 §2). Omitted: 800x560, minimum 360x240, no maximum, resizable.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "defaultWidth": { "type": "integer", "minimum": 1 },
+        "defaultHeight": { "type": "integer", "minimum": 1 },
+        "minWidth": { "type": "integer", "minimum": 1 },
+        "minHeight": { "type": "integer", "minimum": 1 },
+        "maxWidth": { "type": "integer", "minimum": 1 },
+        "maxHeight": { "type": "integer", "minimum": 1 },
+        "resizable": { "type": "boolean" },
+        "rememberGeometry": { "description": "Whether the OS remembers the window size and maximized state, not its position (ADR 0116, ADR 0122). Omitted: true.", "type": "boolean" }
+      }
+    },
+    "execution": { "enum": ["mainThread", "pool", "dedicated", "web"] },
+    "oomScoreAdj": {
+      "description": "oom_score_adj the app's processes start with (ADR 0126): -1000 (never killed by the OOM killer) to 1000 (killed first). Negative values are reserved to system apps. Omitted: the OS default.",
+      "type": "integer",
+      "minimum": -1000,
+      "maximum": 1000
+    },
+    "web": {
+      "description": "Web part of a web app (ADR 0073): the URLs the site answers on, published by the OS resolver (ADR 0074).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["urls"],
+      "properties": {
+        "urls": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^https?://[a-z0-9.-]+(:[0-9]{1,5})?/([^?#\\s]*/)?$" }
+        },
+        "blazor": {
+          "description": "Root component of the site's interactive Blazor part (ADR 0084), in the entry-point assembly.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["assembly", "type"],
+          "properties": {
+            "assembly": { "type": "string", "minLength": 1 },
+            "type": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": ["kind"],
+        "properties": { "kind": { "const": "terminal" } }
+      },
+      "then": { "required": ["terminal"] }
+    },
+    {
+      "if": {
+        "required": ["kind"],
+        "properties": { "kind": { "const": "web" } }
+      },
+      "then": { "required": ["web"] },
+      "else": { "not": { "required": ["web"] } }
+    },
+    {
+      "if": {
+        "required": ["kind"],
+        "properties": { "kind": { "not": { "const": "window" } } }
+      },
+      "then": { "not": { "required": ["fileHandlers"] } }
+    },
+    {
+      "if": {
+        "required": ["kind"],
+        "properties": { "kind": { "not": { "const": "window" } } }
+      },
+      "then": { "not": { "required": ["window"] } }
+    },
+    {
+      "description": "Exactly one of entryPoint (legacy, single-platform) or platform (MOB-003, multi-platform) must be present. See doc/en/wasm/dev/old/mobile-interface-platform-plan.md §4.3.",
+      "oneOf": [
+        { "required": ["entryPoint"], "not": { "required": ["platform"] } },
+        { "required": ["platform"], "not": { "required": ["entryPoint"] } }
+      ]
+    }
+  ],
+  "$defs": {
+    "platformId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 32,
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "semanticVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z-.]+)?(\\+[0-9A-Za-z-.]+)?$"
+    },
+    "versionRange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minimumVersion"],
+      "properties": {
+        "minimumVersion": { "$ref": "#/$defs/semanticVersion" },
+        "maximumVersion": { "$ref": "#/$defs/semanticVersion" }
+      }
+    },
+    "packageRelativePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*\\.\\.)(?!.*://)[^\\\\?#]+$"
+    },
+    "resourceProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "baselineCpuWeight",
+        "burstCpuWeight",
+        "baselineMemoryWeight",
+        "burstMemoryWeight",
+        "baselineStorageIoWeight",
+        "burstStorageIoWeight",
+        "baselineNetworkIoWeight",
+        "burstNetworkIoWeight"
+      ],
+      "properties": {
+        "baselineCpuWeight": { "$ref": "#/$defs/unitWeight" },
+        "burstCpuWeight": { "$ref": "#/$defs/unitWeight" },
+        "baselineMemoryWeight": { "$ref": "#/$defs/unitWeight" },
+        "burstMemoryWeight": { "$ref": "#/$defs/unitWeight" },
+        "baselineStorageIoWeight": { "$ref": "#/$defs/unitWeight" },
+        "burstStorageIoWeight": { "$ref": "#/$defs/unitWeight" },
+        "baselineNetworkIoWeight": { "$ref": "#/$defs/unitWeight" },
+        "burstNetworkIoWeight": { "$ref": "#/$defs/unitWeight" }
+      }
+    },
+    "unitWeight": { "type": "number", "minimum": 0, "maximum": 1 }
+  }
+}

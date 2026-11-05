@@ -1,0 +1,34 @@
+@inherits WindowAppBase
+
+<div class="compat-window">
+    <header class="compat-header">SDK 3.0 Window</header>
+    <main class="compat-body">
+        <p>Compiled against SDK <strong>@CompatInfo.CompiledAgainst</strong>, running on SDK <strong>@KazoOsSdk.Version</strong>.</p>
+        <p class="compat-intent">@_intent</p>
+        <div class="compat-files">
+            <KazoFileView InitialDirectory="@AppContext.HomeDirectory"
+                          Mode="KazoFileViewMode.Details"
+                          Navigated="OnNavigated" />
+        </div>
+        <p class="compat-status">@_status</p>
+    </main>
+</div>
+
+@code {
+    private string _status = "Showing the home folder";
+    private string _intent = "Started without an intent";
+
+    // SDK 3.0 (ADR 0151 §6): started from "Inspect with SDK 3.0", the window receives the intent.
+    protected override Task OnAppInitializedAsync()
+    {
+        if (LaunchIntent is { } intent)
+        {
+            _intent = "Started for " + intent.IntentId;
+        }
+
+        return Task.CompletedTask;
+    }
+
+    // SDK 3.0 (ADR 0148): the OS file control reports the folder it shows.
+    private void OnNavigated(string directory) => _status = "Showing " + directory;
+}

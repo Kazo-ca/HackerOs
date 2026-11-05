@@ -2,7 +2,7 @@
 
 # Code editor
 
-`Apps/System/HackerOs.Apps.CodeEditor` (`org.hackeros.code-editor`): a
+`Apps/System/Kazo.Os.Apps.CodeEditor` (`org.kazoos.code-editor`): a
 VS Code-style code editor, on Monaco 0.55 (ADR 0020) and laid out as a
 workbench (ADR 0062), with a bottom dock (ADR 0063). It opens files and
 folders of the virtual filesystem, searches across a whole folder, and embeds
@@ -16,14 +16,14 @@ is archived in [`old/code-editor.md`](old/code-editor.md).
 | Area | What the user does |
 | --- | --- |
 | Folder | File › Open Folder… (or the empty explorer's button); the dialog's "New folder" button creates a new project's folder (ADR 0175); the folder tree appears in the sidebar; File › Close Folder. |
-| Explorer | A click shows a file without leaving the tree (arrows, Delete, F2 stay with the tree); double-click or Enter opens it and gives the focus to the editor. "New File…", "New Folder…", "Refresh" buttons; the name is typed in place in the selected folder. The tree is the OS file control (`HackFileView` in tree mode, provided by the explorer, ADR 0155): its menu is the OS one (Open, Open with, Cut, Copy, Paste into folder, Rename, Move to trash, Delete permanently, Properties), to which the editor adds New File…, New Folder…, Find in Folder… and Open in Integrated Terminal through `ContextMenuOpening`. Drag and drop, clipboard, trash and errors (to the status bar) are those of the control, with the handle of the chosen folder (`SelectedResource`). |
+| Explorer | A click shows a file without leaving the tree (arrows, Delete, F2 stay with the tree); double-click or Enter opens it and gives the focus to the editor. "New File…", "New Folder…", "Refresh" buttons; the name is typed in place in the selected folder. The tree is the OS file control (`KazoFileView` in tree mode, provided by the explorer, ADR 0155): its menu is the OS one (Open, Open with, Cut, Copy, Paste into folder, Rename, Move to trash, Delete permanently, Properties), to which the editor adds New File…, New Folder…, Find in Folder… and Open in Integrated Terminal through `ContextMenuOpening`. Drag and drop, clipboard, trash and errors (to the status bar) are those of the control, with the handle of the chosen folder (`SelectedResource`). |
 | Tabs | Several open files, each with its undo history, selection and scroll. A "●" dot on a modified tab, a cross on hover; middle click to close; folder name added when two tabs have the same name. Ctrl+Tab and Ctrl+Shift+Tab switch tabs. |
 | Search | Ctrl+Shift+F or the magnifier icon: search in all files of the folder, as you type. Options: case (Aa), whole word (ab), regular expression (.*), "files to include" and "files to exclude" (`*.cs`, `src/**`). Results grouped by file, collapsible; a click opens the file and selects the occurrence. The text selected in the editor serves as the initial search. |
 | Quick open | Ctrl+P: lists the files of the folder, filtered as a fuzzy subsequence (`edwin` finds `EditorWindow.razor`), arrows and Enter. With no folder open, Ctrl+P opens the "Open File" box. |
 | Editing | All of Monaco: find/replace in the file (Ctrl+F, Ctrl+H), go to line (Ctrl+G), comment (Ctrl+/), format, Monaco command palette (F1), multicursor, minimap. View › Word Wrap (Alt+Z), Show/Hide Minimap. |
 | Saving | Ctrl+S, Ctrl+Shift+S (Save As), File › Save All. Files in the open folder go through the access granted to the folder. Unsaved content is saved for recovery and restored at the next launch. |
 | Bottom dock | Ctrl+J shows or hides it (it is hidden, not destroyed: the shells keep running). **Status** tabs (folder, file, language, open and unsaved tabs, terminals, then a timestamped, clearable message log), **Terminal** and **Problems** (empty for now). |
-| Terminal | Ctrl+` or the icon at the bottom of the activity bar: Terminal tab of the dock. It is the terminal of the Terminal app, embedded through the `hackeros.terminal` contract (ADR 0063): one `hsh` per tab ("+"), started in the open folder, title = running command or folder, clear, kill. "Open in Integrated Terminal" does a visible `cd` in the active terminal if it is idle, otherwise opens a new terminal. `exit` closes the tab; the last one hides the dock. Without the Terminal app installed, the tab says why. |
+| Terminal | Ctrl+` or the icon at the bottom of the activity bar: Terminal tab of the dock. It is the terminal of the Terminal app, embedded through the `kazoos.terminal` contract (ADR 0063): one `hsh` per tab ("+"), started in the open folder, title = running command or folder, clear, kill. "Open in Integrated Terminal" does a visible `cd` in the active terminal if it is idle, otherwise opens a new terminal. `exit` closes the tab; the last one hides the dock. Without the Terminal app installed, the tab says why. |
 | Layout | Sidebar (Ctrl+B) and dock resizable by dragging; the Monaco area always takes all the remaining space; status bar with the last message (a click opens Status), Ln/Col, selection, encoding, line ending and language (changeable). Errors also stay above the editor until dismissed. |
 
 Out of scope (ADR 0062): compilation, execution, "go to definition",
@@ -33,13 +33,13 @@ cross-file IntelliSense, source control, debugger, extensions.
 
 | Element | Role |
 | --- | --- |
-| `CodeEditorWindow.razor` / `.razor.cs` / `.razor.css` | Workbench: menus, activity bar, sidebar, tabs, breadcrumb, Monaco area, watermark, bottom dock (Status, Terminal through `HackEmbeddedComponent<IHackTerminal>`, Problems), status bar. Owns the session, the workspace, recovery and the close guard. |
+| `CodeEditorWindow.razor` / `.razor.cs` / `.razor.css` | Workbench: menus, activity bar, sidebar, tabs, breadcrumb, Monaco area, watermark, bottom dock (Status, Terminal through `KazoEmbeddedComponent<IKazoTerminal>`, Problems), status bar. Owns the session, the workspace, recovery and the close guard. |
 | `CodeEditorWindow.razor.js` | Collocated module: `createEditor` (Monaco + accessible name), `attachWorkbench` (shortcuts captured before the browser and Monaco, then `OnShortcut(name)`; resize handles that set `--sidebar-width` and `--panel-height` on the root). |
-| `CodeEditor.monaco.entry.js` → `wwwroot/monaco/monaco.bundle.js` | `hackeros-dark` theme and `createCodeEditor`: one model per tab (`showDocument`, `closeDocument`), `setLanguage`, `reveal`, `runAction`, `getSelectedText`, `setOptions`, `flush`, `markSaved`, `layout`, `focus`, `destroy`; calls back `OnDirtyChanged(id, modified)` at each toggle, `OnEditorChanged(id, content)` after 400 ms without typing, and `OnCursorChanged(line, column, selection)` after 60 ms. |
+| `CodeEditor.monaco.entry.js` → `wwwroot/monaco/monaco.bundle.js` | `kazoos-dark` theme and `createCodeEditor`: one model per tab (`showDocument`, `closeDocument`), `setLanguage`, `reveal`, `runAction`, `getSelectedText`, `setOptions`, `flush`, `markSaved`, `layout`, `focus`, `destroy`; calls back `OnDirtyChanged(id, modified)` at each toggle, `OnEditorChanged(id, content)` after 400 ms without typing, and `OnCursorChanged(line, column, selection)` after 60 ms. |
 | `CodeEditorSession`, `CodeEditorDocument` | Tabs and content in C#; `RelocatePaths` follows a file or folder rename. |
 | `CodeEditorWorkspace` | Open folder: file list (exclusions `.git`, `.svn`, `.hg`, `node_modules`, `bin`, `obj`; at most 5,000), creation of files and folders, relative paths. |
 | `CodeEditorSearch.cs` | `CodeEditorTextSearch` (line by line, 1,000 occurrences per file, preview cut around the occurrence), `CodeEditorGlob`, `CodeEditorWorkspaceSearch` (5,000 occurrences in total, files over 1 MiB ignored), `CodeEditorQuickOpen` (fuzzy ranking). |
-| `CodeEditorExplorer`, `CodeEditorSearchView`, `CodeEditorQuickOpenPalette`, `CodeEditorCursorStatus` | Sidebar views, Ctrl+P box and cursor position, each with its collocated CSS. Since `desk/3`, `CodeEditorExplorer` displays `HackFileView` (no more reference to `HackerOs.AppSdk.FileView`): `Opening` opens a file in a tab (`Handled`), `SelectionChanged` shows it, `Renamed` makes the tabs follow. |
+| `CodeEditorExplorer`, `CodeEditorSearchView`, `CodeEditorQuickOpenPalette`, `CodeEditorCursorStatus` | Sidebar views, Ctrl+P box and cursor position, each with its collocated CSS. Since `desk/3`, `CodeEditorExplorer` displays `KazoFileView` (no more reference to `Kazo.Os.AppSdk.FileView`): `Opening` opens a file in a tab (`Handled`), `SelectionChanged` shows it, `Renamed` makes the tabs follow. |
 
 The content of each file belongs to `CodeEditorDocument` (C#). Monaco keeps a
 model per tab for the history and position; when a tab becomes active,
@@ -69,7 +69,7 @@ Stop requested by the OS (ADR 0069: logout, `kill`, "End task"):
 `OnAppStopRequestedAsync` cancels the 1.5 s wait and immediately writes the
 recovery copy if a tab is modified; the OS waits for this write before closing
 the window. The folder search and the folder walk call
-`HackProcess.CheckpointAsync` between two files or folders: the page stays
+`KazoProcess.CheckpointAsync` between two files or folders: the page stays
 fluid and the search stops on a stop request.
 
 Since `exec/5` (ADR 0140), the Search view launches the search as a
@@ -103,12 +103,12 @@ key down would let the end of the keystroke insert a line break in the file.
 
 In the terminal, only Ctrl+` and Ctrl+J are intercepted; the other keys go to
 the shell. Chrome keeps Ctrl+N, Ctrl+W and Ctrl+T for itself as long as
-HackerOS is not installed as a PWA; each command also has its menu entry.
+Kazo OS is not installed as a PWA; each command also has its menu entry.
 
 ## Updating Monaco
 
 As before: modify `package.json`, then in
-`Apps/System/HackerOs.Apps.CodeEditor` run `npm ci && npm run build`, and
+`Apps/System/Kazo.Os.Apps.CodeEditor` run `npm ci && npm run build`, and
 version `wwwroot/monaco/`. The .NET build does not run npm.
 
 ## Tasks
@@ -116,11 +116,11 @@ version `wwwroot/monaco/`. The .NET build does not run npm.
 - [x] Reproduce the defects (editing area reduced to one line, no creation in
   the tree, tabs that lose their state).
 - [x] Monaco: one model per tab, cursor, `reveal`, actions, options,
-  `hackeros-dark` theme.
+  `kazoos-dark` theme.
 - [x] `CodeEditorWorkspace`: file list, creation, relative paths.
 - [x] Folder search (case, whole word, regex, globs, unsaved content) and
   fuzzy quick open.
-- [x] Folder search as a `HackBackground` task (`exec/5`, ADR 0140).
+- [x] Folder search as a `KazoBackground` task (`exec/5`, ADR 0140).
 - [x] Explorer views (in-place creation, context menu, trash) and Search;
   Ctrl+P box.
 - [x] Workbench: menus, activity bar, resizable sidebar and terminal,
@@ -172,7 +172,7 @@ reviewed in the code on 2026-10-17:
 
 OS file control (`desk/3-file-control`, ADR 0155):
 
-- [x] Side explorer tree on `HackFileView` (tree mode, single selection,
+- [x] Side explorer tree on `KazoFileView` (tree mode, single selection,
   handle of the chosen folder through `SelectedResource`).
 - [x] Editor entries added to the OS menu through `ContextMenuOpening`
   (background: New File…/New Folder… in place of "New folder"; folder: the

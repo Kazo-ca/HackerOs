@@ -5,7 +5,7 @@
 ## Status
 
 Accepted on 2026-10-30 (series `todo/base`, work item `todo/9-cursor-themes`,
-issue [#257](https://github.com/Kazo-ca/HackerOs/issues/257)). This is the
+issue [#257](https://github.com/Kazo-ca/Os/issues/257)). This is the
 "new OS system, with its own ADR" that §4 of
 [ADR 0190](0190-theme-packs.md) asks for before the Hack Store accepts the
 `cursors/` folder of a pack.
@@ -75,7 +75,7 @@ text = ibeam.png 16 16
 - **HackerOS Neon** (`hackeros-neon`) and **Gothic Crimson**
   (`gothic-crimson`): 15 PNG cursors of 32 × 32 each (arrow, hand, I-beam,
   hourglass, busy arrow, help, crosshair, move, not allowed, open and closed
-  hand, four double arrows), shipped by `HackerOs.Theming.Blazor`
+  hand, four double arrows), shipped by `Kazo.Os.Theming.Blazor`
   (`wwwroot/cursors/<id>/`) and drawn by `build/tools/generate-cursor-themes.py`.
   Their hot spots are declared in `CursorThemeCatalog`; a test checks every
   file.
@@ -96,7 +96,7 @@ in a new installation.
   `id` against the built-in themes and the folders (read with the system's
   rights for `/etc` and the user's for `~`), and reads again when the file or
   the session changes.
-- `CursorThemeSurface` (`HackerOs.Theming.Blazor`), rendered once by
+- `CursorThemeSurface` (`Kazo.Os.Theming.Blazor`), rendered once by
   `App.razor`, passes the images to the library's `cursorTheme.js` module,
   which:
   1. rewrites every same-origin CSS rule whose `cursor` is a name of the theme
@@ -131,9 +131,9 @@ and reuses the checks of `CursorThemeFile`.
 
 ## Consequences
 
-- New public types in `HackerOs.Theming.Abstractions` (`CursorNames`,
+- New public types in `Kazo.Os.Theming.Abstractions` (`CursorNames`,
   `CursorImage`, `CursorTheme`, `CursorThemeCatalog`, `CursorThemeFile`,
-  `CursorThemeLibrary`) and `HackerOs.Theming.Blazor` (`CursorThemeSurface`),
+  `CursorThemeLibrary`) and `Kazo.Os.Theming.Blazor` (`CursorThemeSurface`),
   in `PublicAPI.Unshipped.txt` for the next minor version.
 - A theme copied into a folder shows in Settings the next time the page opens
   and applies when chosen; changing the images of the current theme needs

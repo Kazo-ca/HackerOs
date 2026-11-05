@@ -21,7 +21,7 @@ the screen where the user acts, secure dialogs on screen 1). It builds on the wi
 | `OnGesture` | `DesktopShell`'s handler: the area sends the screen's size (`ChangeViewportCommand(area, screen)`). |
 
 - **Wallpaper only** (Benoit's answer of 2026-10-28): no `BackgroundContent`, so no icons. The
-  wallpaper comes from the theme variables (`--hos-desktop-background`, grid), which the surface
+  wallpaper comes from the theme variables (`--kos-desktop-background`, grid), which the surface
   inherits from the main tab.
 - Windows stay rendered by screen 1's area, with its callbacks (focus, close, window menu): a
   secondary screen's area renders none.
@@ -58,9 +58,9 @@ ScreenLayer ─ per screen ─► .secondary-screen
 
 | File | Role |
 | --- | --- |
-| `Platform/HackerOs.Platform.Blazor/Display/ScreenOverlayHost.razor` | The overlays' container; connects `screenOverlays.js` on first render. |
-| `Platform/HackerOs.Platform.Blazor/wwwroot/screenOverlays.js` | Listens to `pointerdown`, `contextmenu` and `keydown` in the capture phase on each screen's window, and moves the container into that screen's slot **before** the overlays react. |
-| `Platform/HackerOs.Platform.Blazor/wwwroot/HackerOs.Platform.Blazor.lib.module.js` | The surface registry has `watch(…)`: a module learns when each surface opens (`attach`) and closes (`detach`). |
+| `Platform/Kazo.Os.Platform.Blazor/Display/ScreenOverlayHost.razor` | The overlays' container; connects `screenOverlays.js` on first render. |
+| `Platform/Kazo.Os.Platform.Blazor/wwwroot/screenOverlays.js` | Listens to `pointerdown`, `contextmenu` and `keydown` in the capture phase on each screen's window, and moves the container into that screen's slot **before** the overlays react. |
+| `Platform/Kazo.Os.Platform.Blazor/wwwroot/Kazo.Os.Platform.Blazor.lib.module.js` | The surface registry has `watch(…)`: a module learns when each surface opens (`attach`) and closes (`detach`). |
 
 Rules:
 
@@ -89,11 +89,11 @@ covers the whole screen and takes the clicks.
 
 ## 5. Tests
 
-- `Tests/HackerOs.Platform.Blazor.Tests/Display/ScreenLayerTests.cs`: screen 2's desktop and slot,
+- `Tests/Kazo.Os.Platform.Blazor.Tests/Display/ScreenLayerTests.cs`: screen 2's desktop and slot,
   the veil for a pending approval and for a pending authentication.
-- `Tests/HackerOs.Platform.Blazor.Tests/Display/ScreenServiceTests.cs`: a resized window no longer
+- `Tests/Kazo.Os.Platform.Blazor.Tests/Display/ScreenServiceTests.cs`: a resized window no longer
   changes the screen's work area.
-- `Tests/HackerOs.UI.E2E.Tests/ScreenServiceTests.cs`, real Chromium: restored screen 2 shows its
+- `Tests/Kazo.Os.UI.E2E.Tests/ScreenServiceTests.cs`, real Chromium: restored screen 2 shows its
   desktop (no icons, the window's size); `Alt+`` pressed in screen 2 opens the switcher in
   screen 2 and not in the main tab; back on screen 1 it opens in the tab; the closed screen gives
   the overlays back to screen 1.

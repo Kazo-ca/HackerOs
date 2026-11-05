@@ -9,8 +9,8 @@ This document describes the log files that an app, a command or a site produces,
 | File | Content | Mode |
 |---|---|---|
 | `/var/log/apps/<appId>.log` | The app's `IAppExecutionContext.Logging` | `system:system 0644` |
-| `/var/log/<daemon>/<file>.log` | `IAppLoggingGateway.AppendToLogFile` of a **system app** only, line written as is (ADR 0080 §3); for example `/var/log/hackweb/error.log` of `hackwebd` ([`static-sites.md`](../dev/static-sites.md)) | `system:system 0644` |
-| `/var/log/hackweb/<appId>.log` | Debug log of a **site** (`Web` app) that enables it with `builder.Logging.EnableDebugLog()`: `ILogger<T>`, requests, exceptions, through `IAppLoggingGateway.AppendToSiteDebugLog` (ADR 0088 §5, [`asp-hack-site-data.md`](asp-hack-site-data.md)) | `system:system 0644` |
+| `/var/log/<daemon>/<file>.log` | `IAppLoggingGateway.AppendToLogFile` of a **system app** only, line written as is (ADR 0080 §3); for example `/var/log/kazoweb/error.log` of `kazowebd` ([`static-sites.md`](../dev/static-sites.md)) | `system:system 0644` |
+| `/var/log/kazoweb/<appId>.log` | Debug log of a **site** (`Web` app) that enables it with `builder.Logging.EnableDebugLog()`: `ILogger<T>`, requests, exceptions, through `IAppLoggingGateway.AppendToSiteDebugLog` (ADR 0088 §5, [`asp-kazo-site-data.md`](asp-kazo-site-data.md)) | `system:system 0644` |
 
 ## Writing to a log
 
@@ -18,9 +18,9 @@ In an app, `IAppExecutionContext.Logging` (type `IAppLoggingGateway`) writes to 
 
 ## Line format
 
-- `LogLineFormat` (`Shared/HackerOs.Simulation.Abstractions/Diagnostics/`):
+- `LogLineFormat` (`Shared/Kazo.Os.Simulation.Abstractions/Diagnostics/`):
   `Format`, `FormatAudit` and `TryParse`. An entry fits on one line:
-  `2026-10-10T03:11:42.123Z WARN  org.hackeros.text-editor[42]: message {clé=valeur}`.
+  `2026-10-10T03:11:42.123Z WARN  org.kazoos.text-editor[42]: message {clé=valeur}`.
   The message escapes `\`, `\n`, `\r`, `\t` and also `{` (as `\{`), so that a
   message is never read back as a property block. Inside that block, keys and
   values additionally escape `,`, `=` and `}`. Spaces in a source become `_`.

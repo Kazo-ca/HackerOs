@@ -71,9 +71,9 @@ Déclaration dans le markup :
     <HackMenuGroup>
         <HackMenuItem Id="export" Title="@L["Menu.Export"]">
             <HackMenuItem Id="csv" Title="CSV" OnClick="item => ExportAsync((Row)item, "csv")" />
-        </HackMenuItem>
-    </HackMenuGroup>
-</HackContextMenu>
+        </KazoMenuItem>
+    </KazoMenuGroup>
+</KazoContextMenu>
 
 @foreach (Row row in _rows)
 {

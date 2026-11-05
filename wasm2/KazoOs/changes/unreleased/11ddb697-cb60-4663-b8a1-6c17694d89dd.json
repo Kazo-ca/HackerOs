@@ -1,0 +1,18 @@
+{
+  "id": "11ddb697-cb60-4663-b8a1-6c17694d89dd",
+  "category": "improved",
+  "audience": [
+    "user"
+  ],
+  "title": {
+    "en": "Your accounts, files and settings follow the move to Kazo OS",
+    "fr": "Vos comptes, fichiers et réglages suivent le passage à Kazo OS"
+  },
+  "description": {
+    "en": "At the first start of Kazo OS 3.0.0 in a browser used by an earlier version, the stored data moves to the new names before the OS starts: databases, settings, configuration files and app ids. Your documents are not changed. A backup made before 3.0.0 is migrated the same way when it is restored.",
+    "fr": "Au premier démarrage de Kazo OS 3.0.0 dans un navigateur utilisé par une version antérieure, les données enregistrées passent aux nouveaux noms avant le démarrage de l'OS : bases, réglages, fichiers de configuration et ids d'apps. Vos documents ne sont pas modifiés. Une sauvegarde faite avant 3.0.0 est migrée de la même façon à sa restauration."
+  },
+  "links": [
+    "doc/en/wasm/dev/rename-migration.md"
+  ]
+}

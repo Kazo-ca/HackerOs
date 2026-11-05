@@ -1,0 +1,49 @@
+@using Kazo.Os.Simulation.Abstractions.Settings
+@using Kazo.Os.AppSdk
+@using Kazo.Os.AppSdk.Globalization
+
+@* Shows where a layered setting's effective value comes from (ADR 0044 section 3). *@
+<span class="@CssClass" title="@Title">
+    @if (IsLocked)
+    {
+        <span class="origin-lock" aria-hidden="true">&#x1F512;</span>
+    }
+    @Label
+</span>
+
+@code {
+    /// <summary>Layer that provides the effective value.</summary>
+    [Parameter] public SettingLayer Source { get; set; } = SettingLayer.Default;
+
+    /// <summary>Whether the system layer's <c>[locked]</c> section fixes this key.</summary>
+    [Parameter] public bool IsLocked { get; set; }
+
+    /// <summary>The app showing the setting, cascaded by the window host: its language labels the badge (ADR 0104).</summary>
+    [CascadingParameter] private IAppExecutionContext? AppContext { get; set; }
+
+    private Microsoft.Extensions.Localization.IStringLocalizer<Kazo.Os.AppSdk.Blazor.Strings> L => AppContext is { } context
+        ? context.GetLocalizer<Kazo.Os.AppSdk.Blazor.Strings>()
+        : KazoLocalization.GetLocalizer<Kazo.Os.AppSdk.Blazor.Strings>();
+
+    private string Label => IsLocked
+        ? L["SettingOrigin.Locked"]
+        : Source switch
+        {
+            SettingLayer.User => L["SettingOrigin.User"],
+            SettingLayer.System => L["SettingOrigin.System"],
+            _ => L["SettingOrigin.BuiltIn"]
+        };
+
+    private string Title => IsLocked
+        ? L["SettingOrigin.Locked.Title"]
+        : Source switch
+        {
+            SettingLayer.User => L["SettingOrigin.User.Title"],
+            SettingLayer.System => L["SettingOrigin.System.Title"],
+            _ => L["SettingOrigin.BuiltIn.Title"]
+        };
+
+    private string CssClass => IsLocked
+        ? "setting-origin is-locked"
+        : $"setting-origin is-{Source.ToString().ToLowerInvariant()}";
+}

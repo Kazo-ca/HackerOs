@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <!--
+    ADR 0149 §5, ADR 0161 §3: a third-party app compiled once against the Kazo OS 2.0.0 packages,
+    which uses what SDK 2.0 added (the file control contract HackFileView, a file menu entry
+    registered with [RegisterFileContextMenu], HackFileOperations). Its package, kept in
+    ../../packages, is loaded by the current OS in the compatibility tests; it is never rebuilt
+    against a newer SDK.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsTrimmable>true</IsTrimmable>
+    <IsPackable>true</IsPackable>
+    <PackageId>Contoso.Sdk2Compat</PackageId>
+    <Version>$(HackerOsVersion)</Version>
+    <Authors>Contoso</Authors>
+    <Description>Kazo OS SDK compatibility fixture: a window app and a command compiled against SDK $(HackerOsVersion), using the SDK 2.0 additions.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AssemblyMetadata Include="HackerOsSdkCompiledAgainst" Value="$(HackerOsVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.13" />
+    <PackageReference Include="HackerOs.AppSdk" Version="$(HackerOsVersion)" />
+    <PackageReference Include="HackerOs.AppSdk.Blazor" Version="$(HackerOsVersion)" />
+    <PackageReference Include="HackerOs.App.Build" Version="$(HackerOsVersion)" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>

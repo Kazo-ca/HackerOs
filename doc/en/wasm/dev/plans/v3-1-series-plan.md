@@ -14,7 +14,7 @@ Two gaps from the starting list are handled elsewhere, by the original
 threads, in PRs to `v3/base`:
 
 - per-user file and scheme associations
-  (`~/.config/hackeros/file-associations.json`): thread "V3 4: intents";
+  (`~/.config/kazoos/file-associations.json`): thread "V3 4: intents";
 - the `passwd` command and the reset of a password by an administrator
   (Settings, keyring): thread "V3 8: sensitive settings".
 
@@ -37,7 +37,7 @@ Series v3.1 therefore keeps two code work items, plus the publication of 1.1.
 |---|---|---|---|
 | `v3.1/1-adr` | This plan and the series ADRs | 0116, 0117 | n/a |
 | `v3.1/2-window-geometry` | Size and maximized state saved and restored, not the position (ADR 0122, Benoit's answer); `WindowOptions.RememberGeometry` (**done**, see [`window-geometry.md`](../window-geometry.md)) | [0116](../adr/0116-window-geometry-restore.md), [0122](../adr/0122-window-size-only-not-position.md) | `v3.1/1` |
-| `v3.1/3-window-title` | `WindowAppBase.SetWindowTitleAsync`, `WindowTitleChanged` event, adoption by Hack Paint, the editors and the explorer | [0117](../adr/0117-sdk-window-title-and-sdk-1-1.md) §1-4, [0123](../adr/0123-window-title-implementation-adjustments.md) (done, see [`window-model.md`](../../framework/window-model.md) §4) | `v3.1/1` |
+| `v3.1/3-window-title` | `WindowAppBase.SetWindowTitleAsync`, `WindowTitleChanged` event, adoption by Kazo Paint, the editors and the explorer | [0117](../adr/0117-sdk-window-title-and-sdk-1-1.md) §1-4, [0123](../adr/0123-window-title-implementation-adjustments.md) (done, see [`window-model.md`](../../framework/window-model.md) §4) | `v3.1/1` |
 | `v3.1/sync-v3-base` | Merge of `v3/base` (per-user associations, `passwd`) into `v3.1/base` (**done**, PR #175) | n/a | these two PRs merged into `v3/base` |
 | `v3.1/4-sdk-1-1` | `Unshipped` moved into `Shipped`, version 1.1.0, compatibility app 1.0 loaded on 1.1, full verification, status report updated (**done**, see [`sdk-packages.md`](../../framework/sdk-packages.md#sdk-11)) | [0117](../adr/0117-sdk-window-title-and-sdk-1-1.md) §5 | `v3.1/2`, `v3.1/3`, `v3.1/sync-v3-base` |
 
@@ -55,7 +55,7 @@ Series v3.1 therefore keeps two code work items, plus the publication of 1.1.
 GitHub Actions does not run in the repository: the local suite is authoritative, as
 for the v3 series. Before merging, each work item builds the solution and
 passes the tests of the projects it touches, the UI E2E suite for windows,
-`HackerOs.SdkCompatibility.Tests` and `build/publish-trimmed.sh`.
+`Kazo.Os.SdkCompatibility.Tests` and `build/publish-trimmed.sh`.
 
 ## Tasks of this work item
 

@@ -1,0 +1,158 @@
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+    background: var(--kos-bg-base, #101417);
+}
+
+#blazor-error-ui {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    padding: 0.75rem 1rem;
+    background: #ffe8e6;
+    color: #48120e;
+    font-family: var(--kos-font-mono, "Cascadia Mono", Consolas, monospace);
+}
+
+#blazor-error-ui .dismiss {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.75rem;
+    cursor: pointer;
+}
+
+.loading-progress {
+    position: absolute;
+    inset: 20vh 0 auto;
+    display: block;
+    width: 8rem;
+    height: 8rem;
+    margin: 0 auto;
+}
+
+.loading-progress circle {
+    fill: none;
+    stroke: #36505d;
+    stroke-width: 0.6rem;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+}
+
+.loading-progress circle:last-child {
+    stroke: var(--kos-accent, #42d392);
+    stroke-dasharray: calc(3.141 * var(--blazor-load-percentage, 0%) * 0.8), 500%;
+}
+
+.loading-progress-text {
+    position: absolute;
+    inset: calc(20vh + 3.25rem) 0 auto;
+    color: var(--kos-text-primary, #f4f7f8);
+    font-family: var(--kos-font-mono, "Cascadia Mono", Consolas, monospace);
+    text-align: center;
+}
+
+.loading-progress-text::after {
+    content: var(--blazor-load-percentage-text, "Loading");
+}
+
+/* ADR 0099 §3: fatal boot-error screen of index.html (damaged PWA cache). The boot guard
+   adds .kazoos-boot-failed to <html> and sets data-state on the panel. Blazor's own
+   error bar and the progress ring are hidden: the panel explains the failure instead. */
+.kazoos-boot-failed .loading-progress,
+.kazoos-boot-failed .loading-progress-text,
+.kazoos-boot-failed #blazor-error-ui {
+    display: none !important;
+}
+
+#kazoos-boot-error {
+    position: fixed;
+    inset: 0;
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.75rem;
+    box-sizing: border-box;
+    max-width: 44rem;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    color: var(--kos-text-primary, #f4f7f8);
+    font-family: var(--kos-font-mono, "Cascadia Mono", Consolas, monospace);
+    line-height: 1.5;
+}
+
+#kazoos-boot-error[hidden] {
+    display: none;
+}
+
+#kazoos-boot-error h1 {
+    margin: 0 0 0.5rem;
+    padding-left: 0.75rem;
+    border-left: 0.25rem solid #ff5f56;
+    font-size: 1.35rem;
+    letter-spacing: 0.04em;
+}
+
+#kazoos-boot-error h1::before {
+    content: "[ boot ] ";
+    color: #ff5f56;
+}
+
+#kazoos-boot-error p {
+    display: none;
+    margin: 0;
+}
+
+#kazoos-boot-error[data-state="repairing"] .boot-error-repairing,
+#kazoos-boot-error[data-state="offline"] .boot-error-offline,
+#kazoos-boot-error[data-state="retrying"] .boot-error-retrying,
+#kazoos-boot-error[data-state="failed"] .boot-error-failed {
+    display: block;
+}
+
+#kazoos-boot-error[data-state="repairing"] .boot-error-repairing::after {
+    content: " _";
+    animation: kazoos-boot-cursor 1s steps(1) infinite;
+}
+
+#kazoos-boot-error .boot-error-detail:not(:empty) {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    overflow-wrap: anywhere;
+    background: #172025;
+    color: var(--kos-text-secondary, #a8bac4);
+    font-size: 0.8rem;
+}
+
+#kazoos-boot-error .boot-error-retry {
+    align-self: flex-start;
+    margin-top: 0.5rem;
+    padding: 0.5rem 1.25rem;
+    border: 1px solid var(--kos-accent, #42d392);
+    background: transparent;
+    color: var(--kos-accent, #42d392);
+    font: inherit;
+    cursor: pointer;
+}
+
+#kazoos-boot-error .boot-error-retry:hover,
+#kazoos-boot-error .boot-error-retry:focus-visible {
+    background: var(--kos-accent, #42d392);
+    color: #101417;
+    outline: none;
+}
+
+#kazoos-boot-error[data-state="repairing"] .boot-error-retry {
+    display: none;
+}
+
+@keyframes kazoos-boot-cursor {
+    50% {
+        opacity: 0;
+    }
+}
+

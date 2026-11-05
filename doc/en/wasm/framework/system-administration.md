@@ -21,11 +21,11 @@ Core or Infrastructure.Browser.
 
 | Layer | Files |
 |---|---|
-| SDK (contracts, facades) | `Shared/HackerOs.AppSdk/Administration/` (`HackPermissionAdministration`, `HackComponentProviders`, `HackServerConnection`, `HackSystem`, `HackStorageDiagnostics`, `HackScreens` and their contracts), `Shared/HackerOs.AppSdk/Settings/IAppSystemSettingsGateway.cs`, `SettingsDocumentStores.cs` |
-| Platform Core (gateways) | `Platform/HackerOs.Platform.Core/Administration/`: `AppSystemSettingsGateway`, `AppPermissionAdministrationGateway`, `AppServerConnectionGateway`, `AppSystemPowerGateway`, `AppStorageDiagnosticsGateway`, `AppSystemBackupGateway`, `AppUserAccountsGateway`, `AppScreensGateway` (over `IScreenControl`, ADR 0184), `AdministratorGate`, `SystemAdministrationGatewayServices` |
+| SDK (contracts, facades) | `Shared/Kazo.Os.AppSdk/Administration/` (`KazoPermissionAdministration`, `KazoComponentProviders`, `KazoServerConnection`, `KazoSystem`, `KazoStorageDiagnostics`, `KazoScreens` and their contracts), `Shared/Kazo.Os.AppSdk/Settings/IAppSystemSettingsGateway.cs`, `SettingsDocumentStores.cs` |
+| Platform Core (gateways) | `Platform/Kazo.Os.Platform.Core/Administration/`: `AppSystemSettingsGateway`, `AppPermissionAdministrationGateway`, `AppServerConnectionGateway`, `AppSystemPowerGateway`, `AppStorageDiagnosticsGateway`, `AppSystemBackupGateway`, `AppUserAccountsGateway`, `AppScreensGateway` (over `IScreenControl`, ADR 0184), `AdministratorGate`, `SystemAdministrationGatewayServices` |
 | Platform Core (services) | `Power/SystemPowerService.cs` (shutdown sequence, `RestartAfterAsync`), `Backup/SystemBackupService.cs`, `Sessions/LocalPasswordService.cs` (ADR 0120), `Settings/OsSettingsDocumentRegistry.cs`, `Policy/AppPermissionAdministration.cs` (`ApplyMachineDecisionAsync`, `ApplyPolicyAsync`) |
 | Ecosystem host | `Administration/BrowserSystemPowerDevice.cs` (`location.reload`, deletion of the IndexedDB database), `Administration/BrowserSystemBackupDevice.cs` (export, download, host picker), `Administration/IndexedDbStorageInspector.cs` (adapter for `IndexedDbInspectorService`) |
-| Blazor SDK | `Interop/BrowserClipboard.cs` and `wwwroot/clipboard.js` (host clipboard), `[Obsolete]` since ADR 0065 then removed when SDK 1.0 was frozen (ADR 0114): Diagnostics copies through `HackClipboard`, which the OS copies over to the host ([`clipboard.md`](../dev/clipboard.md)) |
+| Blazor SDK | `Interop/BrowserClipboard.cs` and `wwwroot/clipboard.js` (host clipboard), `[Obsolete]` since ADR 0065 then removed when SDK 1.0 was frozen (ADR 0114): Diagnostics copies through `KazoClipboard`, which the OS copies over to the host ([`clipboard.md`](../dev/clipboard.md)) |
 
 `AppExecutionContextFactory` receives a `SystemAdministrationGatewayServices`
 (lazy resolutions; `Passwords` is an `init` property added in 1.1) and creates, for each instance, the seven gateways
@@ -40,20 +40,20 @@ acts by itself.
 ### OS documents
 
 ```csharp
-await using HackSettingsDocument appearance = await HackSettings.OpenSystemAsync(AppContext, "appearance");
+await using KazoSettingsDocument appearance = await KazoSettings.OpenSystemAsync(AppContext, "appearance");
 await appearance.SetAsync("accent", "cyan");                               // couche utilisateur
 await appearance.SetManyAsync(values, SettingLayer.System);                // /etc : une seule approbation
 ```
 
-See [`settings-files.md`](settings-files.md#os-documents-hacksettingsopensystemasync-adr-0056-8).
+See [`settings-files.md`](settings-files.md#os-documents-kazosettingsopensystemasync-adr-0056-8).
 
 ### Permissions (`permissions.manage`)
 
 | Method | Effect | Administrator |
 |---|---|---|
 | `GetPolicyAsync`, `GetOverviewAsync` | policy and state of each dangerous capability of each app | no |
-| `SetPolicyAsync(Prompt / Block)` | writes `/etc/hackeros/security.config`, log `capability.policy` | yes (`permissions.policy`) |
-| `SetMachineDecisionAsync(app, capability, Allow / Deny / Ask)` | writes `/etc/hackeros/app-permissions.config`, log `capability.approve` / `capability.revoke` | yes (`permissions.machine-decision`) |
+| `SetPolicyAsync(Prompt / Block)` | writes `/etc/kazoos/security.config`, log `capability.policy` | yes (`permissions.policy`) |
+| `SetMachineDecisionAsync(app, capability, Allow / Deny / Ask)` | writes `/etc/kazoos/app-permissions.config`, log `capability.approve` / `capability.revoke` | yes (`permissions.machine-decision`) |
 | `RemoveOwnDenialAsync(app, capability)` | removes the user's denial, the question comes back at launch | no |
 
 A system app or a capability not declared by the app is refused **before**
@@ -66,27 +66,27 @@ any credentials request.
 (push, pull), `Grants` (pull only: `ArgumentException` otherwise),
 `FileAssociations` (push, pull). With no server configured: `NotConnected`, and
 synchronization does nothing. Network errors become
-`HackServerConnectionException`.
+`KazoServerConnectionException`.
 
 `GetRelayPolicyAsync` returns the network relay policy of the connected server
-(`HackServerRelayPolicy`: ports, private ranges, quotas, open streams, granted
+(`KazoServerRelayPolicy`: ports, private ranges, quotas, open streams, granted
 apps, warnings), or `null` without a server; Settings displays it
 in its server section ([`server-network-relay.md`](../dev/server-network-relay.md)).
 
 ADR 0101 (work item `v3/9-sync`): `GetConflictsAsync` reads the pending conflicts
-recorded in `~/.local/state/hackeros/sync-conflicts.json`
-(`HackSyncConflict` carries `DetectedAt`); `ShowConflictsAsync` opens the OS
-conflict dialog; `GetSyncStatusAsync` returns a `HackSyncStatus`
+recorded in `~/.local/state/kazoos/sync-conflicts.json`
+(`KazoSyncConflict` carries `DetectedAt`); `ShowConflictsAsync` opens the OS
+conflict dialog; `GetSyncStatusAsync` returns a `KazoSyncStatus`
 (periodic sync active, paused, online, last run, sent,
 received, last error, interval); `SetSyncPausedAsync` pauses or resumes
-the user's sync (`~/.config/hackeros/sync.config`);
+the user's sync (`~/.config/kazoos/sync.config`);
 `SyncNowAsync` launches a full run. Deletions, conflicts and
 periodic sync are described in
 [`synchronization.md`](../dev/synchronization.md).
 
 ### Power (`system.power`)
 
-`HackSystem.RebootAsync` and `HackSystem.FactoryResetAsync` always ask for
+`KazoSystem.RebootAsync` and `KazoSystem.FactoryResetAsync` always ask for
 an administrator (`system.reboot`, `system.factory-reset`). Sequence of
 `SystemPowerService`, like a `shutdown`:
 
@@ -98,21 +98,21 @@ an administrator (`system.reboot`, `system.factory-reset`). Sequence of
 
 ### Storage (`system.storage.inspect`)
 
-`HackStorageDiagnostics.GetSnapshotAsync` returns a `HackStorageSnapshot`
+`KazoStorageDiagnostics.GetSnapshotAsync` returns a `KazoStorageSnapshot`
 (stores, record count, JSON, resolved paths, links) and
 `ToExportJson()`. The snapshot bypasses file permissions: that is
 why Diagnostics, a non-system app, asks for an administrator on its first
 launch.
 
-`GetWebSiteDatabasesAsync` lists the sites' IndexedDB databases (`hackweb.<id>`:
+`GetWebSiteDatabasesAsync` lists the sites' IndexedDB databases (`kazoweb.<id>`:
 version, stores, record count, estimated size) and
 `DeleteWebSiteDatabaseAsync(name)` deletes one, with the same capability
-(ADR 0088 §4, [`asp-hack-site-data.md`](asp-hack-site-data.md)). Diagnostics shows them
+(ADR 0088 §4, [`asp-kazo-site-data.md`](asp-kazo-site-data.md)). Diagnostics shows them
 under *Website databases*.
 
 ### Backup (`system.backup`)
 
-`HackSystemBackup.CreateAsync` downloads a `.hosbak` archive of the whole
+`KazoSystemBackup.CreateAsync` downloads a `.kosbak` archive of the whole
 machine to the host computer; `RestoreAsync(Merge | Replace)` opens the
 host's picker, validates the archive, **then** asks for an administrator,
 closes the session, restores and restarts. Creation and restoration are logged in
@@ -120,7 +120,7 @@ closes the session, restores and restarts. Creation and restoration are logged i
 
 ### Screens (`screens.manage`)
 
-`HackScreens` (ADR 0184) lists, opens, restores, closes and identifies the
+`KazoScreens` (ADR 0184) lists, opens, restores, closes and identifies the
 session's secondary screens, puts the calling window's screen in full screen
 and asks for the `window-management` permission. A normal capability, with no
 administrator: the browser already confines each call to the user's click.
@@ -130,7 +130,7 @@ Host side: `ScreenControl` over `ScreenService`
 
 ### Accounts and passwords (`users.manage`)
 
-`HackUserAccounts.ListAsync` and `ChangePasswordAsync` (one's own password,
+`KazoUserAccounts.ListAsync` and `ChangePasswordAsync` (one's own password,
 after the current password) require no capability;
 `ResetPasswordAsync` and `RemovePasswordAsync` require `users.manage` and an
 administrator (actions `users.password-reset` and `users.password-delete`).
@@ -138,7 +138,7 @@ The target account's keyring is set aside. Details:
 [`sensitive-settings.md`](../dev/sensitive-settings.md#4-passwords-passwd-and-reset)
 and [ADR 0120](../dev/adr/0120-passwd-and-administrator-password-reset.md).
 
-`CreateAsync(new HackNewUserAccount(login, nomAffiché, autorité, motDePasse))`
+`CreateAsync(new KazoNewUserAccount(login, nomAffiché, autorité, motDePasse))`
 and `DeleteAsync(login, removeHome)` also require `users.manage` and an
 administrator (actions `users.add` and `users.delete`, ADR 0169). Creation
 gives the account its own group, and `administrators` for an administrator;
@@ -146,21 +146,21 @@ the home folder is born at first sign-in. Deletion refuses the
 session's account and the last active administrator, takes with it the account's
 passkeys and, with `removeHome`, its `/home/<login>` folder.
 `ValidateNewAccount` checks an account before sending (login name, display
-name of at most 128 characters, password). `HackUserAccount.PasskeyCount`
+name of at most 128 characters, password). `KazoUserAccount.PasskeyCount`
 gives the number of passkeys of each account.
 
 Session passkeys (ADR 0168), without a capability: `ListPasskeysAsync`,
 `AddPasskeyAsync(name)` (the browser asks for the user's presence;
 `OperationCanceledException` if the request is closed, `NotSupportedException`
-without WebAuthn) and `RemovePasskeyAsync(id)`. `HackPasskey.UnlocksKeyring` says whether
+without WebAuthn) and `RemovePasskeyAsync(id)`. `KazoPasskey.UnlocksKeyring` says whether
 the key opens the keyring. Details: [`passkeys.md`](../dev/passkeys.md).
 
 ## Decisions
 
 - See ADR 0060: `SystemPower` property (not `System`),
-  `HackPermissionDecision.Ask`, system layer written with the caller's
+  `KazoPermissionDecision.Ask`, system layer written with the caller's
   rights, `SetManyAsync`, host clipboard for Diagnostics
-  (the latter is replaced by ADR 0065: `HackClipboard` and
+  (the latter is replaced by ADR 0065: `KazoClipboard` and
   `clipboard.write`).
 - `IndexedDbInspectorService` stays in Infrastructure.Browser;
   the adapter to the SDK lives in the Ecosystem host.
@@ -169,7 +169,7 @@ the key opens the keyring. Details: [`passkeys.md`](../dev/passkeys.md).
 
 ## Tests
 
-`Tests/HackerOs.Platform.Core.Tests/Administration/SystemAdministrationGatewayTests.cs`:
+`Tests/Kazo.Os.Platform.Core.Tests/Administration/SystemAdministrationGatewayTests.cs`:
 OS document read and written without a capability, system layer refused to a
 simple user then written under root in one edit, unknown document;
 required capabilities; agent refusal without a write; machine decision and
@@ -179,10 +179,10 @@ in the order close, erase, restart; storage inspection;
 backup (capability, host without backup, administrator refusal,
 picker before administrator, restore order, failure logged at the next
 startup).
-`Tests/HackerOs.Platform.Core.Tests/Sessions/LocalPasswordServiceTests.cs`:
+`Tests/Kazo.Os.Platform.Core.Tests/Sessions/LocalPasswordServiceTests.cs`:
 adding and removing accounts through the gateway (`users.manage` and
 administrator), session passkeys without capability or administrator.
-`Tests/HackerOs.Platform.Core.Tests/Sessions/LocalAccountServiceTests.cs`:
+`Tests/Kazo.Os.Platform.Core.Tests/Sessions/LocalAccountServiceTests.cs`:
 groups, reserved or taken names, deletion with or without home folder, refusal for
 oneself and for the last administrator.
 

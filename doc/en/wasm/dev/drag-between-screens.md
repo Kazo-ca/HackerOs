@@ -19,10 +19,10 @@ as usual.
 
 | File | Role |
 | --- | --- |
-| `Platform/HackerOs.Windowing.Blazor/WindowChrome.razor.js` | Learns where each screen window's page starts on the physical desktop, finds the screen under the pointer on every movement of a move, draws and removes the outline, and on release calls `ReportScreenDropAsync` instead of the normal move. All in this one module: tests load it alone from a `data:` URL, where a relative import fails. |
-| `Platform/HackerOs.Windowing.Blazor/WindowChrome.razor` | `ReportScreenDropAsync(screen, x, y)`: `MoveWindowToDisplayCommand` then `MoveWindowCommand`. |
-| `Platform/HackerOs.Windowing.Blazor/DesktopArea.razor.css` | Style of the `.window-drop-preview` outline. |
-| `Platform/HackerOs.Platform.Blazor/Shell/DesktopShell.razor` | Ignores a drop on a screen already closed. |
+| `Platform/Kazo.Os.Windowing.Blazor/WindowChrome.razor.js` | Learns where each screen window's page starts on the physical desktop, finds the screen under the pointer on every movement of a move, draws and removes the outline, and on release calls `ReportScreenDropAsync` instead of the normal move. All in this one module: tests load it alone from a `data:` URL, where a relative import fails. |
+| `Platform/Kazo.Os.Windowing.Blazor/WindowChrome.razor` | `ReportScreenDropAsync(screen, x, y)`: `MoveWindowToDisplayCommand` then `MoveWindowCommand`. |
+| `Platform/Kazo.Os.Windowing.Blazor/DesktopArea.razor.css` | Style of the `.window-drop-preview` outline. |
+| `Platform/Kazo.Os.Platform.Blazor/Shell/DesktopShell.razor` | Ignores a drop on a screen already closed. |
 
 ## 3. Finding the screen under the pointer
 
@@ -55,14 +55,14 @@ pointermove (captured by the title bar, in the original browser window)
 
 ## 5. Tests
 
-- `Tests/HackerOs.Platform.Blazor.Tests/WindowPointerGeometryTests.cs`: `ReportScreenDropAsync` sends the
+- `Tests/Kazo.Os.Platform.Blazor.Tests/WindowPointerGeometryTests.cs`: `ReportScreenDropAsync` sends the
   screen change then the position; invalid screen number, non-finite value or maximized window: no
   command.
-- `Tests/HackerOs.E2E.Tests/IndexedDbBrowserContractTests.ScreenDrag.cs`, scenario
+- `Tests/Kazo.Os.E2E.Tests/IndexedDbBrowserContractTests.ScreenDrag.cs`, scenario
   `?scenario=screen-portal`: the window dragged onto screen 2 moves there without being recreated,
   at the drop point (within 2 px), stays live, does not change screen when released between the
   screens, and comes back to screen 1 the same way.
-- `Tests/HackerOs.UI.E2E.Tests/ScreenServiceTests.cs`, real Chromium: screen 2 restored, the Text
+- `Tests/Kazo.Os.UI.E2E.Tests/ScreenServiceTests.cs`, real Chromium: screen 2 restored, the Text
   Editor dragged out of the main tab to a point of screen 2; screen 2 shows the outline during the
   gesture, then the window. The test computes the point from both pages' origins (in headless
   mode the windows overlap: the chosen point is inside screen 2 and outside the main tab).

@@ -57,7 +57,7 @@ Consequences for this plan:
    `active`/`failed` state as under systemd; a backup is an archive that can
    be copied.
 2. **Public SDK only** for base apps (ADR 0055); any new
-   possibility goes through a `Hack*` facade documented in `sdk-reference.md`.
+   possibility goes through a `Kazo*` facade documented in `sdk-reference.md`.
 3. **Designed for a third-party repository.** Each addition to the SDK must be able to serve
    another repository without knowing anything about it.
 4. **The three hosts stay operational** after each work item
@@ -81,17 +81,17 @@ merged into `main` without Benoit.
 | `v3/2-game-removal` | Removal of the old out-of-scope domain code (three projects) from the solution and from the SDK boundary rules, and of its capability (32 → 31 capabilities); docs (`project-overview`, `capabilities`, `sdk-reference`, `app-sdk`). | n/a | `1` |
 | `v3/3-window-model` | Window events in `WindowAppBase` (focus, loss of focus, minimize, maximize, restore, resize); initial, minimum and maximum sizes declared in `AppDefinition` instead of hard-coded `360×240` (`WindowLaunchCoordinator.cs:77`); keyboard operations from ADR 0009: Alt+Tab, Alt+F4, Super+arrows, move and resize with the keyboard (window menu Alt+Space). | R7, R8 | `1` |
 | `v3/4-intents` | Real `RevealFileIntent` (the explorer opens the folder and selects the file); `Edit` reachable through `IAppIntentGateway`; `OpenUri` intents (default browser, `xdg-open`) and `ShowAppSettings`; intents declared by apps and routed by the dispatcher instead of `intent.unknown`; `xdg-open` command. | R6 | `1` |
-| `v3/5-services` | Service health (`ServiceHealth`: `active`, `activating`, `failed`, reason) reported by `HackServiceController`, `systemctl status` and the task manager; startup at OS boot (before login) or at login, declared in the manifest; clear message when uninstalling an app stops an active process. | R9, R23 | `1` |
-| `v3/6-sdk-versioning` | Versions on the SDK libraries; NuGet packages of the SDK and the platform in a local feed `artifacts/local-nupkg` so that another repository can build an app or an OS; `SdkCompatibility` range checked at load (`AppCatalog`); duplicate command names rejected at build and at load; Sha256 hash of assets verified; `BuildProfileManifest` removed (replaced by ADR 0047/0048); `dotnet new` templates (window app, command, service, ASP.Hack site). | R3, R4, R5, R20, R21 (in part) | `1` |
-| `v3/7-storage-backup` | OS backup and restore exposed (`IndexedDbBackupService` registered, page in Settings or Diagnostics, `hackbackup` command, archive in `~`); "low space" behavior (`IsLowSpace`: notification, write refused with `ENOSPC`, `df`); IndexedDB fixtures of previous versions and version upgrade test; corrupted PWA cache detected and reloaded, quota test. | R13, R14, R15 | `1` |
+| `v3/5-services` | Service health (`ServiceHealth`: `active`, `activating`, `failed`, reason) reported by `KazoServiceController`, `systemctl status` and the task manager; startup at OS boot (before login) or at login, declared in the manifest; clear message when uninstalling an app stops an active process. | R9, R23 | `1` |
+| `v3/6-sdk-versioning` | Versions on the SDK libraries; NuGet packages of the SDK and the platform in a local feed `artifacts/local-nupkg` so that another repository can build an app or an OS; `SdkCompatibility` range checked at load (`AppCatalog`); duplicate command names rejected at build and at load; Sha256 hash of assets verified; `BuildProfileManifest` removed (replaced by ADR 0047/0048); `dotnet new` templates (window app, command, service, ASP.Kazo site). | R3, R4, R5, R20, R21 (in part) | `1` |
+| `v3/7-storage-backup` | OS backup and restore exposed (`IndexedDbBackupService` registered, page in Settings or Diagnostics, `kazobackup` command, archive in `~`); "low space" behavior (`IsLowSpace`: notification, write refused with `ENOSPC`, `df`); IndexedDB fixtures of previous versions and version upgrade test; corrupted PWA cache detected and reloaded, quota test. | R13, R14, R15 | `1` |
 | `v3/8-settings-security` | `SettingSensitivity` values hidden on read by a non-administrator and in exports; encryption of sensitive settings (deferred decision no. 9, ADR); audit log of protected writes in `/etc` (`/var/log/audit.log`, `auditd` style). | R16, R17, R22 (no. 9) | `1` |
 | `v3/9-sync` | Synchronized deletions (tombstones instead of hard-coded `IsTombstone: false`); conflict resolution called and offered to the user; periodic sync; AppCatalog domain client. | R18 | `1` |
 | `v3/10-server-proxy` | Relay of the optional server: HTTP request bodies forwarded, TCP and UDP streams, server-side grant check, quotas and policy in `appsettings` (allow everything, disable quotas), startup warnings. | R19 | `1` |
-| `v3/11-apps` | Hack Paint opens and saves images in the OS files (PNG, dialogs, "Open with"); theme editor ported from `src/` (editing, preview, documentation, theme saved in `~/.config`); recheck of the Code Editor's open points (offline assets, large files, worker cleanup). | migration §2 | `1`, `3` |
+| `v3/11-apps` | Kazo Paint opens and saves images in the OS files (PNG, dialogs, "Open with"); theme editor ported from `src/` (editing, preview, documentation, theme saved in `~/.config`); recheck of the Code Editor's open points (offline assets, large files, worker cleanup). | migration §2 | `1`, `3` |
 | `v3/12-localization` | `IStringLocalizer` in apps and the platform, `.resx` resources; user language in `~/.config/locale.conf`, system language in `/etc/locale.conf`, `LANG` variable in the process environment (ADR 0050); language gateway in `IAppExecutionContext`; manifest `Localizations` used (app name in the launcher); translation of base apps and the platform; fix of `docs/old/localization.md`, which describes a nonexistent state. | R10 | `3`, `4`, `5`, `7`, `11` |
 | `v3/13-accessibility` | Accessibility preferences as files (high contrast, text size, reduced motion) read by the theme and exposed by the SDK; axe scans added for Terminal, Browser, Calculator, System Monitor and the apps of work items 7 and 11; keyboard navigation tested in E2E. | R11 | `3`, `12` |
 | `v3/14-trimming` | `PublishTrimmed=True` in the Ecosystem, trimming warnings fixed in all shipped projects, trimmed Release publication tested in E2E (boot, apps, sites). AOT out of scope. | R12 | `2` to `13` |
-| `v3/15-sdk-freeze` | `PublicAPI.Shipped.txt` for all SDK libraries; SDK 1.0 freeze; test of an app compiled against an earlier SDK version; guide "build on HackerOS from another repository". | R21 | `14` |
+| `v3/15-sdk-freeze` | `PublicAPI.Shipped.txt` for all SDK libraries; SDK 1.0 freeze; test of an app compiled against an earlier SDK version; guide "build on Kazo OS from another repository". | R21 | `14` |
 | `v3/16-final` | Final verification (three hosts, all suites), status added to `doc/en/wasm/dev/plans/wasm-v3-migration-analyse.md`, update of `docs/old/implementation-status.md`, `project-overview.md`, `sdk-reference.md`. | n/a | all |
 
 ### Order and parallelism
@@ -198,9 +198,9 @@ Answers from Benoit of 2026-10-17 05:52Z.
 - [x] `v3/8-settings-security` ([`sensitive-settings.md`](../sensitive-settings.md))
 - [x] `v3/9-sync` ([`synchronization.md`](../synchronization.md))
 - [x] `v3/10-server-proxy` ([`server-network-relay.md`](../server-network-relay.md), ADR 0108)
-- [x] `v3/11-apps` ([`hack-paint.md`](../hack-paint.md), [`theme-editor.md`](../theme-editor.md))
+- [x] `v3/11-apps` ([`kazo-paint.md`](../kazo-paint.md), [`theme-editor.md`](../theme-editor.md))
 - [x] `v3/12-localization` (ADR 0104, ADR 0111, [`localization.md`](../../framework/localization.md))
 - [x] `v3/13-accessibility` ([`accessibility.md`](../accessibility.md), ADR 0112)
-- [x] `v3/14-trimming` ([`trimmed-publish.md`](../trimmed-publish.md), ADR 0113; HackerOS assemblies kept whole)
-- [x] `v3/15-sdk-freeze` (ADR 0114, [`building-on-hackeros.md`](../../framework/building-on-hackeros.md))
+- [x] `v3/14-trimming` ([`trimmed-publish.md`](../trimmed-publish.md), ADR 0113; Kazo OS assemblies kept whole)
+- [x] `v3/15-sdk-freeze` (ADR 0114, [`building-on-kazoos.md`](../../framework/building-on-kazoos.md))
 - [x] `v3/16-final` (status report: [`wasm-v3-final-status.md`](wasm-v3-final-status.md))

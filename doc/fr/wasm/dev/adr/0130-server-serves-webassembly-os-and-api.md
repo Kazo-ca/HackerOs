@@ -1,6 +1,6 @@
 > [English version](../../../../en/wasm/dev/adr/0130-server-serves-webassembly-os-and-api.md)
 
-# ADR 0130 : `HackerOs.Server` sert l'OS en WebAssembly et ne garde que son API
+# ADR 0130 : `Kazo.Os.Server` sert l'OS en WebAssembly et ne garde que son API
 
 ## Statut
 
@@ -19,7 +19,7 @@ suit applique la réponse recommandée en attendant.
 
 ## Contexte
 
-Aujourd'hui (`Server/HackerOs.Server/Program.cs`), le serveur rend toute
+Aujourd'hui (`Server/Kazo.Os.Server/Program.cs`), le serveur rend toute
 l'interface de l'OS **côté serveur** (`AddInteractiveServerComponents`,
 `Components/App.razor`), un seul circuit à la fois, et l'OS y appelle les
 services du serveur en direct (`DirectServerConnectionClients`). Le code des
@@ -45,7 +45,7 @@ authentification). C'est ce que cet ADR décide.
 ### 2. Comment le serveur sert l'OS (question posée à Benoit)
 
 Appliqué en attendant (recommandé) : **les fichiers publiés de l'Ecosystem**,
-tels quels. Le serveur référence `OS/HackerOs.Ecosystem` comme client
+tels quels. Le serveur référence `OS/Kazo.Os.Ecosystem` comme client
 WebAssembly hébergé, sert `_framework/`, `index.html`, le manifeste PWA et le
 service worker de l'Ecosystem (`MapStaticAssets`, repli sur `index.html`), et
 n'a plus aucun composant Razor.
@@ -84,13 +84,13 @@ contredirait la règle « rien ne doit exiger le serveur ».
 
 | Hôte | Rôle |
 |---|---|
-| `OS/HackerOs.Ecosystem` | PWA autonome, hors ligne, sans serveur (inchangé). |
+| `OS/Kazo.Os.Ecosystem` | PWA autonome, hors ligne, sans serveur (inchangé). |
 | `test/test` | Débogage interactif des composants WebAssembly (inchangé). |
-| `Server/HackerOs.Server` | Sert l'OS de l'Ecosystem **et** l'API optionnelle. Plus de rendu côté serveur. |
+| `Server/Kazo.Os.Server` | Sert l'OS de l'Ecosystem **et** l'API optionnelle. Plus de rendu côté serveur. |
 
 ## Conséquences
 
-- `build/verify-hosts.sh` et `HackerOs.HostSmoke.Tests` : l'hôte Server a des
+- `build/verify-hosts.sh` et `Kazo.Os.HostSmoke.Tests` : l'hôte Server a des
   workers et `/proc/hackeros/workers` ; `kill -9` d'une boucle y est vérifié.
 - Les tests du serveur qui passaient par le client direct passent par HTTP.
 - Docs : `AGENTS.md` (section des hôtes), [`project-overview.md`](../project-overview.md),

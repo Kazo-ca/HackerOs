@@ -74,7 +74,7 @@ descriptor is produced.
 ### Schema and serialization
 
 Versioned schemas live under
-`Shared/HackerOs.App.Abstractions/Schema/` with a stable `$id` and JSON Schema
+`Shared/Kazo.Os.App.Abstractions/Schema/` with a stable `$id` and JSON Schema
 Draft 2020-12 declaration. Schema fixtures include one complete example for each
 app kind and invalid examples for every diagnostic family.
 

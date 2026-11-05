@@ -1,0 +1,27 @@
+#nullable enable
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigration
+const Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigration.ProgressKey = "kazoos.renameMigration" -> string!
+const Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigration.VersionKey = "kazoos.osVersion" -> string!
+static Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigration.RunAsync(Microsoft.JSInterop.IJSRuntime! runtime, string! currentVersion, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult!>!
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.RenamedStorageMigrationResult(bool Migrated, System.Collections.Generic.IReadOnlyList<string!>! CopiedDatabases, System.Collections.Generic.IReadOnlyList<string!>! KeptDatabases, int RenamedKeys, int RewrittenRecords) -> void
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.Migrated.get -> bool
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.Migrated.init -> void
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.CopiedDatabases.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.CopiedDatabases.init -> void
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.KeptDatabases.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.KeptDatabases.init -> void
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.RenamedKeys.get -> int
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.RenamedKeys.init -> void
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.RewrittenRecords.get -> int
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.RewrittenRecords.init -> void
+static Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.NotNeeded.get -> Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult!
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.<Clone>$() -> Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult!
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.Deconstruct(out bool Migrated, out System.Collections.Generic.IReadOnlyList<string!>! CopiedDatabases, out System.Collections.Generic.IReadOnlyList<string!>! KeptDatabases, out int RenamedKeys, out int RewrittenRecords) -> void
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.Equals(Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult? other) -> bool
+override Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.Equals(object? obj) -> bool
+override Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.GetHashCode() -> int
+override Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.ToString() -> string!
+static Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.operator !=(Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult? left, Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult? right) -> bool
+static Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.operator ==(Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult? left, Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult? right) -> bool
+const Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupService.LegacyArchiveExtension = ".hosbak" -> string!

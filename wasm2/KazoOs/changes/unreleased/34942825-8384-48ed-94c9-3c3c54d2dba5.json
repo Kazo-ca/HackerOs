@@ -1,0 +1,18 @@
+{
+  "id": "34942825-8384-48ed-94c9-3c3c54d2dba5",
+  "category": "fixed",
+  "audience": [
+    "user"
+  ],
+  "title": {
+    "en": "The Kazo OS Store lists the official catalog's apps on an older installation",
+    "fr": "Le Kazo OS Store affiche les apps du catalogue officiel sur une installation plus ancienne"
+  },
+  "description": {
+    "en": "An app-sources.config written before the [catalogs] section existed named no catalog, so the Kazo OS Store stayed empty. Such a file now gets the official catalog, verified; an empty [catalogs] section is still respected.",
+    "fr": "Un app-sources.config écrit avant l'existence de la section [catalogs] ne nommait aucun catalogue : le Kazo OS Store restait vide. Un tel fichier reçoit maintenant le catalogue officiel, vérifié ; une section [catalogs] vide reste respectée."
+  },
+  "links": [
+    "doc/en/wasm/dev/app-installation.md"
+  ]
+}

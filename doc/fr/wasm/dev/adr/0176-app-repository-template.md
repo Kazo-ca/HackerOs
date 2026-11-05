@@ -17,15 +17,15 @@ débogage (« les deux selon le profil ») ; Visual Studio par les modèles
 
 ## Contexte
 
-- `HackerOs.Templates` contient cinq modèles de **projet** (`hackeros-window`,
+- `Kazo.Os.Templates` contient cinq modèles de **projet** (`hackeros-window`,
   `-command`, `-service`, `-site`, `-host`). Ils partent sur nuget.org à chaque
   release, avec les 41 autres paquets, leurs symboles (`.snupkg`) et Source Link.
-- Un dépôt tiers suit [`building-on-hackeros.md`](../../framework/building-on-hackeros.md) :
+- Un dépôt tiers suit [`building-on-kazoos.md`](../../framework/building-on-kazoos.md) :
   il assemble lui-même sa solution. Ce guide dit encore que les paquets ne sont
   jamais publiés sur nuget.org, ce qui est faux depuis la 2.1.0.
-- `build/HackerOs.Apps.targets` a deux modes : le dépôt (références de projets,
+- `build/Kazo.Os.Apps.targets` a deux modes : le dépôt (références de projets,
   générateur de manifestes compilé dans la solution) et le mode paquet
-  (`HackerOsBuildFromPackage=true`, tout vient de `HackerOs.App.Build`).
+  (`HackerOsBuildFromPackage=true`, tout vient de `Kazo.Os.App.Build`).
 - Benoit veut un point de départ prêt à l'emploi : une solution qui se lance en
   débogage dans l'OS, et dont le déploiement est contrôlé par la version de l'OS
   qu'elle épingle.
@@ -33,12 +33,12 @@ débogage (« les deux selon le profil ») ; Visual Studio par les modèles
 ## Décision
 
 1. **La source du template reste dans le dépôt principal.** Un nouveau modèle de
-   solution `hackeros-solution` (type `solution`) dans `HackerOs.Templates` génère :
+   solution `hackeros-solution` (type `solution`) dans `Kazo.Os.Templates` génère :
    `.sln`, un hôte (`src/<Nom>.Os`, celui de `hackeros-host`), une app fenêtrée,
    un projet de tests, `Directory.Build.props`, `global.json`, `.gitignore`,
    `.gitmodules`, un workflow CI et un `README.md`. Il est publié avec les autres
    modèles, à la version de la release.
-2. **Dépôt template GitHub.** [`Kazo-ca/HackerOs-AppTemplate`](https://github.com/Kazo-ca/HackerOs-AppTemplate)
+2. **Dépôt template GitHub.** [`Kazo-ca/Os-AppTemplate`](https://github.com/Kazo-ca/Os-AppTemplate)
    (créé par Benoit le 2026-10-28), marqué « Template repository », contient la sortie de `dotnet new hackeros-solution`.
    Il est régénéré depuis le modèle, jamais modifié à la main ailleurs que dans
    le modèle.
@@ -51,19 +51,19 @@ débogage (« les deux selon le profil ») ; Visual Studio par les modèles
    qui donne `git submodule update --init`.
 4. **Deux profils de build.**
    - **Production** (`Release`, CI, `dotnet publish`) : `PackageReference` des
-     paquets `HackerOs.*` de nuget.org, à la version du sous-module. C'est le
+     paquets `Kazo.Os.*` de nuget.org, à la version du sous-module. C'est le
      mode paquet actuel, sans changement.
    - **Débogage** (`Debug`) : les mêmes références deviennent des
-     `ProjectReference` vers les projets du sous-module (SDK, `HackerOs.Ecosystem.Host`,
+     `ProjectReference` vers les projets du sous-module (SDK, `Kazo.Os.Ecosystem.Host`,
      apps de base de l'hôte, générateur de manifestes). On peut entrer dans le
      code de l'OS et y poser des points d'arrêt.
    - La propriété `HackerOsUseSource` choisit le profil (vraie par défaut en
      `Debug`, fausse sinon) ; on peut la forcer dans les deux sens.
-5. **Troisième mode de `HackerOs.Apps.targets` : la source externe.** Activé par
+5. **Troisième mode de `Kazo.Os.Apps.targets` : la source externe.** Activé par
    `HackerOsUseSource=true` hors du dépôt principal. Le générateur vient du projet
    `Tools` du sous-module ; la règle de frontière sur les `ProjectReference`
    (`HOSAPP0030`) se calcule à partir de `HackerOsSourceRoot` (par défaut
-   `external/HackerOs/wasm2/HackerOs`) au lieu des chemins du dépôt. Les
+   `external/HackerOs/wasm2/KazoOs`) au lieu des chemins du dépôt. Les
    inspections et les codes `HOSAPP*` restent identiques.
 6. **L'OS n'est pas modifié depuis un dépôt d'apps.** Le sous-module est en
    lecture seule par convention. La CI du template vérifie que le sous-module est
@@ -71,9 +71,9 @@ débogage (« les deux selon le profil ») ; Visual Studio par les modèles
    `Release` : une modification locale de l'OS ne peut pas partir en production.
 7. **Visual Studio.** Chaque modèle reçoit un `.template.config/ide.host.json`
    (icône, libellés des paramètres `appId` et `publisherId`). Visual Studio et
-   Rider listent les modèles installés par `dotnet new install HackerOs.Templates`.
+   Rider listent les modèles installés par `dotnet new install Kazo.Os.Templates`.
    Pas d'extension VSIX.
-8. **Test dans le dépôt principal.** `HackerOs.Templates.E2E.Tests` génère une
+8. **Test dans le dépôt principal.** `Kazo.Os.Templates.E2E.Tests` génère une
    solution avec `hackeros-solution`, pointe `HackerOsSourceRoot` vers le dépôt
    lui-même, et construit les deux profils : `Debug` (source externe) et
    `Release` (flux local des paquets).
@@ -82,7 +82,7 @@ débogage (« les deux selon le profil ») ; Visual Studio par les modèles
 
 - Le dépôt principal reste la seule source des modèles ; le dépôt template n'est
   qu'une copie générée.
-- Un troisième mode de build est à maintenir dans `HackerOs.Apps.targets` ; le
+- Un troisième mode de build est à maintenir dans `Kazo.Os.Apps.targets` ; le
   test du point 8 le protège.
 - `Debug` et `Release` ne compilent pas l'OS de la même façon. Comme les deux
   viennent du même tag, le comportement attendu est identique ; la CI teste
@@ -98,10 +98,10 @@ débogage (« les deux selon le profil ») ; Visual Studio par les modèles
 Mises en œuvre par l'[ADR 0207](0207-solution-template-implementation.md) (chantier `todo/1-hackstore-solution-template`).
 
 
-- [x] Corriger `building-on-hackeros.md` (fr et en) : paquets et modèles sur nuget.org.
+- [x] Corriger `building-on-kazoos.md` (fr et en) : paquets et modèles sur nuget.org.
 - [x] `ide.host.json` pour les cinq modèles existants.
-- [x] Mode source externe dans `HackerOs.Apps.targets` (`HackerOsUseSource`, `HackerOsSourceRoot`).
+- [x] Mode source externe dans `Kazo.Os.Apps.targets` (`HackerOsUseSource`, `HackerOsSourceRoot`).
 - [x] Modèle `hackeros-solution` (sous-module, import de `Versions.props`, profils, CI).
-- [x] Test des deux profils dans `HackerOs.Templates.E2E.Tests`.
-- [x] Créer le dépôt `Kazo-ca/HackerOs-AppTemplate` (Benoit, 2026-10-28).
+- [x] Test des deux profils dans `Kazo.Os.Templates.E2E.Tests`.
+- [x] Créer le dépôt `Kazo-ca/Os-AppTemplate` (Benoit, 2026-10-28).
 - [ ] Y pousser la sortie de `dotnet new hackeros-solution` et le marquer « Template repository » (PR en brouillon, voir l'ADR 0207 §11).

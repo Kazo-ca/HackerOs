@@ -11,7 +11,7 @@ Accepté le 2026-10-10.
 - **Applique :** ADR 0055 (une app n'obtient un service de l'OS que par le
   SDK ; agent d'authentification).
 - **Complète :** ADR 0049 : cinq capacités dangereuses entrent dans le
-  catalogue (section 11). ADR 0048 : `HackerOs.Apps.CodeEditor` rejoint la
+  catalogue (section 11). ADR 0048 : `Kazo.Os.Apps.CodeEditor` rejoint la
   liste de confiance de l'hôte (section 7). ADR 0044 : `HackSettings` ouvre
   aussi les documents de l'OS (section 8).
 - **S'appuie sur :** ADR 0043 (façades `Hack*`, exceptions), ADR 0046 et 0057
@@ -31,7 +31,7 @@ simplement pas utilisée :
 | Démarrer, arrêter, configurer un service | `IAppServiceControlGateway` (`services.manage`) |
 | Nom de l'utilisateur et de la machine, répertoire courant | `HackEnvironment` |
 | Presse-papiers (texte et références de fichiers) | `IAppClipboardGateway` |
-| Télécharger un fichier vers le navigateur | `BrowserFileDownloader` (`HackerOs.AppSdk.Blazor`) |
+| Télécharger un fichier vers le navigateur | `BrowserFileDownloader` (`Kazo.Os.AppSdk.Blazor`) |
 | Lire un paramètre, surveiller un fichier | `HackSettings`, `HackFileSystemWatcher` |
 
 ## Décision
@@ -195,14 +195,14 @@ IReadOnlyList<HackPortProbeResult> ports = await HackTcpClient.ProbeAsync("10.0.
   sondage ; `network.simulated.write` (normale) pour POST ;
   `network.real.access` (dangereuse) pour le repli réel. Classements
   inchangés.
-- `HackerOs.Commands` perd ses références à `Platform.Core` et
+- `Kazo.Os.Commands` perd ses références à `Platform.Core` et
   `Server.Contracts`. `ShellErrorText.Describe`, seul autre emprunt (`cd`),
-  passe dans le SDK (`HackerOs.AppSdk`, à côté de `IShellSession`).
+  passe dans le SDK (`Kazo.Os.AppSdk`, à côté de `IShellSession`).
 
 ### 7. Hôte de shell
 
 Remplace `ShellInterpreter`, `ISessionService` et `IElevationService` dans
-`TerminalPanel` (bibliothèque `HackerOs.AppSdk.Terminal`, utilisée par
+`TerminalPanel` (bibliothèque `Kazo.Os.AppSdk.Terminal`, utilisée par
 Terminal et CodeEditor).
 
 ```csharp
@@ -235,7 +235,7 @@ HackShellCompletion completion = await shell.CompleteAsync("cat ~/Doc", cursor: 
   fenêtre visible : une app qui n'a que `notifications.post` pourrait sinon
   lire tout `~` par `cat`. Risque : « Exécuter des commandes en votre nom, avec
   les droits de ces commandes. »
-- **Liste de confiance :** `HackerOs.Apps.CodeEditor` reçoit
+- **Liste de confiance :** `Kazo.Os.Apps.CodeEditor` reçoit
   `IsSystemApp="true"` dans l'hôte (ADR 0048), comme Terminal. C'est une app
   livrée avec l'OS, et son panneau terminal ne doit pas déclencher une
   approbation administrateur au premier lancement.
@@ -413,7 +413,7 @@ utilise. Une app système reçoit ces capacités d'office (ADR 0049).
   (D3, D4, D5, D16, D21), 8.1 et 8.2.
 - ADR 0019, 0023, 0035, 0042, 0043, 0044, 0045, 0046, 0048, 0049, 0050, 0051,
   0055, 0057, 0058.
-- `Shared/HackerOs.Simulation.Abstractions/Gateways/AppGatewayContracts.cs`,
-  `Shared/HackerOs.AppSdk/Clipboard/IAppClipboardGateway.cs`,
-  `Platform/HackerOs.Platform.Core/Policy/AppPermissionAdministration.cs`,
-  `Platform/HackerOs.Platform.Core/Apps/AppInstallationContracts.cs`.
+- `Shared/Kazo.Os.Simulation.Abstractions/Gateways/AppGatewayContracts.cs`,
+  `Shared/Kazo.Os.AppSdk/Clipboard/IAppClipboardGateway.cs`,
+  `Platform/Kazo.Os.Platform.Core/Policy/AppPermissionAdministration.cs`,
+  `Platform/Kazo.Os.Platform.Core/Apps/AppInstallationContracts.cs`.

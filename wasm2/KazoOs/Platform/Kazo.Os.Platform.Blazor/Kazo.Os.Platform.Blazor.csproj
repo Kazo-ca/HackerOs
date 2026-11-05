@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <ItemGroup>
+    <InternalsVisibleTo Include="Kazo.Os.Platform.Blazor.Tests" />
+  </ItemGroup>
+
+  <Import Project="../Packaging.props" />
+
+  <PropertyGroup>
+    <PackageId>Kazo.Os.Platform.Blazor</PackageId>
+    <Description>Kazo OS Blazor shell: desktop, launcher, window launching, dialogs and lazy app loading. For composing an OS host.</Description>
+    <PackageTags>kazoos;platform;blazor</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MudBlazor" Version="9.11.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kazo.Os.Platform.Core\Kazo.Os.Platform.Core.csproj" />
+    <ProjectReference Include="..\Kazo.Os.Windowing.Core\Kazo.Os.Windowing.Core.csproj" />
+    <ProjectReference Include="..\Kazo.Os.Windowing.Blazor\Kazo.Os.Windowing.Blazor.csproj" />
+    <ProjectReference Include="..\Kazo.Os.Taskbar.Blazor\Kazo.Os.Taskbar.Blazor.csproj" />
+    <ProjectReference Include="..\Kazo.Os.MobileShell.Blazor\Kazo.Os.MobileShell.Blazor.csproj" />
+    <ProjectReference Include="..\..\Shared\Kazo.Os.AppSdk.Blazor\Kazo.Os.AppSdk.Blazor.csproj" />
+    <!-- ADR 0084: the OS side of Blazor sites (IKazoWebSiteHost). -->
+    <ProjectReference Include="..\..\Shared\Kazo.Os.AppSdk.Web.Blazor\Kazo.Os.AppSdk.Web.Blazor.csproj" />
+    <ProjectReference Include="..\..\Shared\Kazo.Os.AppSdk.Icons\Kazo.Os.AppSdk.Icons.csproj" />
+    <ProjectReference Include="..\..\Shared\Kazo.Os.Simulation.Abstractions\Kazo.Os.Simulation.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

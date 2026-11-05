@@ -5,7 +5,7 @@
 ## Statut
 
 Accepté le 2026-10-31, chantier `todo/19-hackstore-later` (issue `TODO`
-[#251](https://github.com/Kazo-ca/HackerOs/issues/251), chantier 7 du plan du
+[#251](https://github.com/Kazo-ca/Os/issues/251), chantier 7 du plan du
 Hack Store). Réalise la réponse B à la Q5 de
 l'[ADR 0182](0182-install-apps-from-github.md) (« plus tard : ajout sans
 redémarrage »), la signature laissée ouverte par l'ADR 0182 (« Conséquences »)
@@ -101,8 +101,8 @@ posées à Benoit (Q1 à Q5 ci-dessous) ; il a choisi la réponse A à chacune l
    `hackpkg info` montre « Signature : aucune (SHA-256 seulement) ». Les clés
    d'une source `catalog:<nom>` sont celles de `catalog:<nom>` ; celles d'un dépôt
    `github:` sont celles de `github.com/<owner>` et de `github.com/<owner>/<repo>`.
-5. **(Q3 A) Catalogue officiel** : l'outil `HackerOs.MarketPlace.Tool` du dépôt
-   `Kazo-ca/HackerOs-AppMarketPlace` gagne `keygen` (crée la paire, écrit la clé
+5. **(Q3 A) Catalogue officiel** : l'outil `Kazo.Os.MarketPlace.Tool` du dépôt
+   `Kazo-ca/Os-AppMarketPlace` gagne `keygen` (crée la paire, écrit la clé
    privée PKCS#8 dans un fichier local, affiche la clé publique) et `sign` ; le
    workflow `publish.yml` signe chaque paquet avec le secret
    `HACK_STORE_SIGNING_KEY` quand il existe. Benoit crée la paire chez lui ; la
@@ -191,7 +191,7 @@ implémentation par défaut qui lève `NotSupportedException`.
   pour recevoir leur signature avant cette version de l'OS.
 - La signature d'un dépôt d'app (`github:`) est possible par le même format ; un
   outil pour les auteurs reste à faire (issue `TODO`
-  [#321](https://github.com/Kazo-ca/HackerOs/issues/321)).
+  [#321](https://github.com/Kazo-ca/Os/issues/321)).
 - Une mise à jour occupe deux versions sur le disque ; les sauvegardes de
   données comptent dans le quota de l'utilisateur.
 

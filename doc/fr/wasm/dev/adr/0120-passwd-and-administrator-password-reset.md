@@ -101,11 +101,11 @@ que son trousseau sera mis de côté).
 
 | Bibliothèque | Ajout |
 |---|---|
-| `HackerOs.Simulation.Abstractions` | `ILocalUserRepository.SetCredentialAsync` (membre par défaut qui lève `NotSupportedException`) |
-| `HackerOs.App.Abstractions` | `AppCapabilities.UsersManage` (`users.manage`, dangereuse) |
-| `HackerOs.AppSdk` | `HackUserAccounts`, `IAppUserAccountsGateway`, `HackUserAccount`, `IAppExecutionContext.UserAccounts` (membre par défaut), `ITerminalInputMode`, `TerminalExecutionContext.ReadSecretLineAsync` |
-| `HackerOs.AppSdk.Terminal` | `TerminalInputReader` implémente `ITerminalInputMode` |
-| `HackerOs.Platform.Core` | `LocalPasswordService`, `SystemAdministrationGatewayServices.Passwords` (propriété `init`) |
+| `Kazo.Os.Simulation.Abstractions` | `ILocalUserRepository.SetCredentialAsync` (membre par défaut qui lève `NotSupportedException`) |
+| `Kazo.Os.App.Abstractions` | `AppCapabilities.UsersManage` (`users.manage`, dangereuse) |
+| `Kazo.Os.AppSdk` | `HackUserAccounts`, `IAppUserAccountsGateway`, `HackUserAccount`, `IAppExecutionContext.UserAccounts` (membre par défaut), `ITerminalInputMode`, `TerminalExecutionContext.ReadSecretLineAsync` |
+| `Kazo.Os.AppSdk.Terminal` | `TerminalInputReader` implémente `ITerminalInputMode` |
+| `Kazo.Os.Platform.Core` | `LocalPasswordService`, `SystemAdministrationGatewayServices.Passwords` (propriété `init`) |
 
 ## Conséquences
 

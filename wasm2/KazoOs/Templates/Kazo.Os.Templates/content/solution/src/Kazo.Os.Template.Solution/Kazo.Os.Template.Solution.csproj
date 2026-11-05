@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <!--
+      ADR 0106 §4: the host that installs this app trims it when it publishes; the trim analysis
+      reports here, at build, any reflection the trimmer could not follow.
+    -->
+    <IsTrimmable>true</IsTrimmable>
+    <!-- A Kazo OS app: its manifest.json is generated after the build, in both profiles. -->
+    <KazoOsAppProject>true</KazoOsAppProject>
+  </PropertyGroup>
+
+  <!--
+    $(KazoOsVersion) comes from the submodule (Directory.Build.props). In Debug these references
+    become the submodule's projects (ADR 0176 §4).
+  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.14" />
+    <PackageReference Include="Kazo.Os.AppSdk" Version="$(KazoOsVersion)" />
+    <PackageReference Include="Kazo.Os.AppSdk.Blazor" Version="$(KazoOsVersion)" />
+    <!-- Generates manifest.json after the build and checks the SDK boundary (KOSAPP0030). -->
+    <PackageReference Include="Kazo.Os.App.Build" Version="$(KazoOsVersion)" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>

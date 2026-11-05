@@ -14,7 +14,7 @@ Deux lacunes de la liste de départ sont traitées ailleurs, par les fils
 d'origine, dans des PR vers `v3/base` :
 
 - les associations de fichiers et de schémas propres à chaque utilisateur
-  (`~/.config/hackeros/file-associations.json`) : fil « V3 4 : intents » ;
+  (`~/.config/kazoos/file-associations.json`) : fil « V3 4 : intents » ;
 - la commande `passwd` et la réinitialisation d'un mot de passe par un
   administrateur (Paramètres, trousseau) : fil « V3 8 : réglages sensibles ».
 
@@ -37,7 +37,7 @@ La série v3.1 garde donc deux chantiers de code, plus la publication de la 1.1.
 |---|---|---|---|
 | `v3.1/1-adr` | Ce plan et les ADR de la série | 0116, 0117 | — |
 | `v3.1/2-window-geometry` | Taille et état agrandi enregistrés et restaurés, pas la position (ADR 0122, réponse de Benoit) ; `WindowOptions.RememberGeometry` — **fait**, voir [`window-geometry.md`](../window-geometry.md) | [0116](../adr/0116-window-geometry-restore.md), [0122](../adr/0122-window-size-only-not-position.md) | `v3.1/1` |
-| `v3.1/3-window-title` | `WindowAppBase.SetWindowTitleAsync`, événement `WindowTitleChanged`, adoption par Hack Paint, les éditeurs et l'explorateur | [0117](../adr/0117-sdk-window-title-and-sdk-1-1.md) §1-4, [0123](../adr/0123-window-title-implementation-adjustments.md) (fait, voir [`window-model.md`](../../framework/window-model.md) §4) | `v3.1/1` |
+| `v3.1/3-window-title` | `WindowAppBase.SetWindowTitleAsync`, événement `WindowTitleChanged`, adoption par Kazo Paint, les éditeurs et l'explorateur | [0117](../adr/0117-sdk-window-title-and-sdk-1-1.md) §1-4, [0123](../adr/0123-window-title-implementation-adjustments.md) (fait, voir [`window-model.md`](../../framework/window-model.md) §4) | `v3.1/1` |
 | `v3.1/sync-v3-base` | Fusion de `v3/base` (associations par utilisateur, `passwd`) dans `v3.1/base` — **fait** (PR #175) | — | ces deux PR fusionnées dans `v3/base` |
 | `v3.1/4-sdk-1-1` | `Unshipped` versé dans `Shipped`, version 1.1.0, app de compatibilité 1.0 chargée sur 1.1, vérification complète, bilan mis à jour — **fait**, voir [`sdk-packages.md`](../../framework/sdk-packages.md#sdk-11) | [0117](../adr/0117-sdk-window-title-and-sdk-1-1.md) §5 | `v3.1/2`, `v3.1/3`, `v3.1/sync-v3-base` |
 
@@ -55,7 +55,7 @@ La série v3.1 garde donc deux chantiers de code, plus la publication de la 1.1.
 GitHub Actions ne tourne pas dans le dépôt : la suite locale fait foi, comme
 pour la série v3. Avant de fusionner, chaque chantier compile la solution et
 passe les tests des projets qu'il touche, la suite UI E2E pour les fenêtres,
-`HackerOs.SdkCompatibility.Tests` et `build/publish-trimmed.sh`.
+`Kazo.Os.SdkCompatibility.Tests` et `build/publish-trimmed.sh`.
 
 ## Tâches de ce chantier
 

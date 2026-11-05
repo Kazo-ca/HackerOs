@@ -4,7 +4,7 @@
 
 ## Statut
 
-Accepté le 2026-10-30 par Benoit. Issue [#290](https://github.com/Kazo-ca/HackerOs/issues/290)
+Accepté le 2026-10-30 par Benoit. Issue [#290](https://github.com/Kazo-ca/Os/issues/290)
 (étiquette `TODO`), série `todo/base`, chantier `todo/16-switch-user`.
 
 - **Complète :** [ADR 0195](0195-start-menu-power-button.md) §4 (« Changer

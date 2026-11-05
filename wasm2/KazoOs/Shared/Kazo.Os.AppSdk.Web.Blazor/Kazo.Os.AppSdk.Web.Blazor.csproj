@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <Import Project="../../Platform/Packaging.props" />
+
+  <PropertyGroup>
+    <PackageId>Kazo.Os.AppSdk.Web.Blazor</PackageId>
+    <Description>Interactive Blazor sites of ASP.Kazo: site router, navigation and the view the Kazo OS browser draws a site in.</Description>
+    <PackageTags>kazoos;app-sdk;asp-kazo;blazor</PackageTags>
+  </PropertyGroup>
+
+  <!--
+    Blazor sites of ASP.Kazo (ADR 0073 §4, ADR 0084): the components a site uses to navigate by the
+    URL of the browser tab (KazoSiteRouter, KazoSiteNavigationManager, KazoNavLink, KazoPageTitle),
+    the view the Kazo OS browser draws a site in (KazoWebSiteView) and the contract the platform
+    implements to start a site's renderer (IKazoWebSiteHost). An SDK library (ADR 0055): no
+    reference to Platform Core.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.14" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kazo.Os.App.Abstractions\Kazo.Os.App.Abstractions.csproj" />
+    <ProjectReference Include="..\Kazo.Os.AppSdk\Kazo.Os.AppSdk.csproj" />
+    <ProjectReference Include="..\Kazo.Os.AppSdk.Blazor\Kazo.Os.AppSdk.Blazor.csproj" />
+    <ProjectReference Include="..\Kazo.Os.AppSdk.Web\Kazo.Os.AppSdk.Web.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Kazo.Os.AppSdk.Web.Blazor.Tests" />
+  </ItemGroup>
+
+</Project>

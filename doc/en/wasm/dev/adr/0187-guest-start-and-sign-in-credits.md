@@ -23,7 +23,7 @@ Benoit asked for two things:
    button, then turning that guest session into a real account from Settings and from the
    welcome / sign-in page;
 2. showing credits on the sign-in page: `Author: Benoit Robin` (link to https://kazo.ca) and
-   `GitHub project: (GitHub icon) Kazo-ca/HackerOs` (link to the repository).
+   `GitHub project: (GitHub icon) Kazo-ca/Os` (link to the repository).
 
 State of the code at decision time (main `fd52528c`):
 
@@ -38,7 +38,7 @@ State of the code at decision time (main `fd52528c`):
 - An account cannot be renamed. The home folder is `/home/<login>` (`LocalUser.HomePath`).
 - App installations have a User scope and a Machine scope (administrator).
 - The `ProjectInformation.razor` footer shows `HackerOS <version>` and the raw URL
-  `https://github.com/Kazo-ca/HackerOs` on the first-run, sign-in, recovery and error
+  `https://github.com/Kazo-ca/Os` on the first-run, sign-in, recovery and error
   screens. Settings ▸ About shows the version and the repository URL.
 
 ## Decision
@@ -117,7 +117,7 @@ migrate / delete choice. Afterwards, adding accounts follows ADR 0169.
 
 #### 6. What the guest does not change
 
-- The server (`HackerOs.Server`, server accounts, ADR 0024 and 0134) is not involved: the
+- The server (`Kazo.Os.Server`, server accounts, ADR 0024 and 0134) is not involved: the
   guest is a local browser account, like the other local accounts.
 - The app SDK does not change for ordinary apps. `HackUserAccount` may expose a "guest" flag
   for Settings; if added, it goes through `PublicAPI.Unshipped.txt`.
@@ -132,7 +132,7 @@ recovery, error):
 ```
 HackerOS <version>
 Author: Benoit Robin                            → link https://kazo.ca
-GitHub project: [GitHub icon] Kazo-ca/HackerOs  → link https://github.com/Kazo-ca/HackerOs
+GitHub project: [GitHub icon] Kazo-ca/Os  → link https://github.com/Kazo-ca/Os
 ```
 
 The "GitHub project" line replaces the raw URL. Links open in a new tab
@@ -143,7 +143,7 @@ original-version notice (public domain) does not change.
 #### 8. Settings ▸ About (Q9: A)
 
 An "Author: Benoit Robin" line with the kazo.ca link, and the repository line in the same
-`[icon] Kazo-ca/HackerOs` format.
+`[icon] Kazo-ca/Os` format.
 
 #### 9. Language (Q10: A)
 
@@ -165,7 +165,7 @@ translated.
 
 ## To do
 
-Tracking: [issue #243](https://github.com/Kazo-ca/HackerOs/issues/243).
+Tracking: [issue #243](https://github.com/Kazo-ca/Os/issues/243).
 One PR per work item; credits first (small and independent).
 
 1. Credits in the host footer and in Settings ▸ About, FR/EN labels (§7 to §9).

@@ -19,12 +19,12 @@ Accepté le 2026-10-11.
   Problems) et ses terminaux sont ceux de l'app Terminal, embarqués par
   contrat, plus des `TerminalPanel` référencés directement.
 - **Respecte** l'ADR 0055 : l'éditeur n'utilise que le SDK public ; il ne
-  référence plus `HackerOs.AppSdk.Terminal`.
+  référence plus `Kazo.Os.AppSdk.Terminal`.
 
 ## Contexte
 
 Jusqu'ici, une app qui voulait un terminal référençait la bibliothèque
-`HackerOs.AppSdk.Terminal` et dessinait elle-même un `TerminalPanel`. Le
+`Kazo.Os.AppSdk.Terminal` et dessinait elle-même un `TerminalPanel`. Le
 terminal de l'éditeur et celui de la console avaient le même code, mais
 aucun lien avec l'app Terminal : rien ne permettait de le piloter
 (changer de dossier, lancer une commande, lire la sortie), et une autre app
@@ -56,7 +56,7 @@ manifeste généré porte `components: [{ contract, assembly, type }]`.
 
 ### 2. Le composant hérite de `HackEmbeddableComponent`
 
-Le composant dérive de `HackEmbeddableComponent` (`HackerOs.AppSdk.Blazor.Components`),
+Le composant dérive de `HackEmbeddableComponent` (`Kazo.Os.AppSdk.Blazor.Components`),
 qui dérive de `HackComponentBase`. Il reçoit :
 
 - le contexte de la fenêtre **hôte** (paramètre en cascade `AppContext`) : il
@@ -90,7 +90,7 @@ désinstallée, hôte de test), il affiche la raison ou le fragment
 ### 4. Le premier contrat : `hackeros.terminal`
 
 `HackComponentContracts.Terminal` désigne `IHackTerminal` et
-`HackTerminalOptions` (`HackerOs.AppSdk.Components`). L'app Terminal
+`HackTerminalOptions` (`Kazo.Os.AppSdk.Components`). L'app Terminal
 l'enregistre avec `TerminalEmbed`, qui rend le même `TerminalPanel` que sa
 fenêtre ; `TerminalPanel` implémente `IHackTerminal` :
 
@@ -134,7 +134,7 @@ Ctrl+J l'affiche ou le cache ; Ctrl+` va à l'onglet Terminal.
 
 ## Alternatives écartées
 
-- **Référencer `HackerOs.AppSdk.Terminal` dans chaque app** (l'existant) : pas
+- **Référencer `Kazo.Os.AppSdk.Terminal` dans chaque app** (l'existant) : pas
   de pilotage, et rien n'est enregistré auprès de l'OS.
 - **Un service DI global par composant** : il faudrait enregistrer chaque
   composant dans l'écosystème et charger toutes les apps au démarrage ; le

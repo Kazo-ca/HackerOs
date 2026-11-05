@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="App.Name" xml:space="preserve">
+    <value>Gestionnaire de serveur web</value>
+  </data>
+  <data name="Daemon.NotInstalled" xml:space="preserve">
+    <value>kazowebd non installé</value>
+  </data>
+  <data name="Daemon.Running" xml:space="preserve">
+    <value>kazowebd en cours d'exécution · pid {0}</value>
+  </data>
+  <data name="Daemon.StartType" xml:space="preserve">
+    <value>type de démarrage : {0}</value>
+  </data>
+  <data name="Daemon.Stopped" xml:space="preserve">
+    <value>kazowebd arrêté</value>
+  </data>
+  <data name="Dialog.Delete.Message" xml:space="preserve">
+    <value>Supprimer {0} ? kazowebd cesse immédiatement de servir « {1} ». Les fichiers du site sont conservés.</value>
+  </data>
+  <data name="Dialog.Delete.Title" xml:space="preserve">
+    <value>Supprimer le site</value>
+  </data>
+  <data name="Dialog.RootFolder" xml:space="preserve">
+    <value>Dossier racine du site</value>
+  </data>
+  <data name="External.After" xml:space="preserve">
+    <value>) servie par son propre processus, pas par kazowebd. Le système la démarre à la première requête vers l'une de ses adresses. Ses fichiers appartiennent à l'app : ils sont en lecture seule ici.</value>
+  </data>
+  <data name="External.Before" xml:space="preserve">
+    <value>Une app web (</value>
+  </data>
+  <data name="External.Tag" xml:space="preserve">
+    <value>externe</value>
+  </data>
+  <data name="Form.Bindings" xml:space="preserve">
+    <value>Liaisons</value>
+  </data>
+  <data name="Form.Bindings.Hint" xml:space="preserve">
+    <value>un préfixe d'écoute par ligne, le premier est l'adresse principale</value>
+  </data>
+  <data name="Form.Browse" xml:space="preserve">
+    <value>Parcourir…</value>
+  </data>
+  <data name="Form.Cancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="Form.DeclaredIn" xml:space="preserve">
+    <value>Déclaré dans</value>
+  </data>
+  <data name="Form.DefaultDocuments" xml:space="preserve">
+    <value>Documents par défaut</value>
+  </data>
+  <data name="Form.DefaultDocuments.Hint" xml:space="preserve">
+    <value>séparés par des virgules, essayés dans l'ordre</value>
+  </data>
+  <data name="Form.Delete" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="Form.DirectoryBrowsing" xml:space="preserve">
+    <value>Exploration de répertoire (« Index of » en l'absence de document par défaut)</value>
+  </data>
+  <data name="Form.Enabled" xml:space="preserve">
+    <value>Activé (kazowebd sert le site)</value>
+  </data>
+  <data name="Form.File" xml:space="preserve">
+    <value>fichier :</value>
+  </data>
+  <data name="Form.Name" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="Form.OpenInBrowser" xml:space="preserve">
+    <value>Ouvrir dans le navigateur</value>
+  </data>
+  <data name="Form.Root" xml:space="preserve">
+    <value>Dossier racine</value>
+  </data>
+  <data name="Form.Save" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="Form.Scope.System" xml:space="preserve">
+    <value>système</value>
+  </data>
+  <data name="Form.Scope.System.Hint" xml:space="preserve">
+    <value>(administrateur, servi en tant que www-data)</value>
+  </data>
+  <data name="Form.Scope.User" xml:space="preserve">
+    <value>mes sites</value>
+  </data>
+  <data name="Form.Scope.User.Hint" xml:space="preserve">
+    <value>(ports ≥ 1024)</value>
+  </data>
+  <data name="Form.StartSite" xml:space="preserve">
+    <value>Démarrer le site</value>
+  </data>
+  <data name="Form.StopSite" xml:space="preserve">
+    <value>Arrêter le site</value>
+  </data>
+  <data name="Group.External" xml:space="preserve">
+    <value>Externes</value>
+  </data>
+  <data name="Group.External.Hint" xml:space="preserve">
+    <value>apps web, en lecture seule</value>
+  </data>
+  <data name="Group.System" xml:space="preserve">
+    <value>Système</value>
+  </data>
+  <data name="Group.User" xml:space="preserve">
+    <value>Mes sites</value>
+  </data>
+  <data name="Logs.Access" xml:space="preserve">
+    <value>Accès</value>
+  </data>
+  <data name="Logs.Errors" xml:space="preserve">
+    <value>Erreurs</value>
+  </data>
+  <data name="Logs.NoErrors" xml:space="preserve">
+    <value>(rien de journalisé pour ce site)</value>
+  </data>
+  <data name="Logs.NoRequest" xml:space="preserve">
+    <value>(aucune requête pour l'instant)</value>
+  </data>
+  <data name="Logs.ReadFailed" xml:space="preserve">
+    <value>impossible de lire {0} : {1}</value>
+  </data>
+  <data name="Message.BrowserFailed" xml:space="preserve">
+    <value>Impossible d'ouvrir le navigateur : {0}</value>
+  </data>
+  <data name="Message.Daemon.Failed" xml:space="preserve">
+    <value>kazowebd : {0}</value>
+  </data>
+  <data name="Message.Daemon.Restarted" xml:space="preserve">
+    <value>kazowebd redémarré.</value>
+  </data>
+  <data name="Message.Daemon.Started" xml:space="preserve">
+    <value>kazowebd démarré.</value>
+  </data>
+  <data name="Message.Daemon.Stopped" xml:space="preserve">
+    <value>kazowebd arrêté.</value>
+  </data>
+  <data name="Message.DeleteFailed" xml:space="preserve">
+    <value>Impossible de supprimer : {0}</value>
+  </data>
+  <data name="Message.DeleteNeedsAdmin" xml:space="preserve">
+    <value>Supprimer un site système demande un administrateur. Une fois l'action approuvée, cliquez de nouveau sur Supprimer.</value>
+  </data>
+  <data name="Message.Deleted" xml:space="preserve">
+    <value>{0} supprimé.</value>
+  </data>
+  <data name="Message.NewSite" xml:space="preserve">
+    <value>Nouveau site pour {0} : vérifiez le nom et l'adresse, puis enregistrez.</value>
+  </data>
+  <data name="Message.ReadFailed" xml:space="preserve">
+    <value>Impossible de lire les sites : {0}</value>
+  </data>
+  <data name="Message.SaveDenied" xml:space="preserve">
+    <value>Accès refusé lors de l'écriture du fichier du site.</value>
+  </data>
+  <data name="Message.SaveFailed" xml:space="preserve">
+    <value>Impossible d'enregistrer : {0}</value>
+  </data>
+  <data name="Message.SaveNeedsAdmin" xml:space="preserve">
+    <value>Écrire dans /etc/kazoweb/sites demande un administrateur. Une fois l'action approuvée, cliquez de nouveau sur Enregistrer.</value>
+  </data>
+  <data name="Message.Saved" xml:space="preserve">
+    <value>{0} enregistré. kazowebd l'applique dès maintenant.</value>
+  </data>
+  <data name="Placeholder.Pick" xml:space="preserve">
+    <value>Choisissez un site, ou publiez un dossier avec</value>
+  </data>
+  <data name="Placeholder.PickEnd" xml:space="preserve">
+    <value>.</value>
+  </data>
+  <data name="Placeholder.PlainFiles" xml:space="preserve">
+    <value>Les sites sont de simples fichiers :</value>
+  </data>
+  <data name="Sites.Label" xml:space="preserve">
+    <value>Sites</value>
+  </data>
+  <data name="Sites.None" xml:space="preserve">
+    <value>aucun</value>
+  </data>
+  <data name="State.Down" xml:space="preserve">
+    <value>n'écoute pas</value>
+  </data>
+  <data name="State.External" xml:space="preserve">
+    <value>externe</value>
+  </data>
+  <data name="State.Invalid" xml:space="preserve">
+    <value>fichier non valide</value>
+  </data>
+  <data name="State.Partial" xml:space="preserve">
+    <value>partiellement lié</value>
+  </data>
+  <data name="State.Running" xml:space="preserve">
+    <value>en service</value>
+  </data>
+  <data name="State.Stopped" xml:space="preserve">
+    <value>arrêté</value>
+  </data>
+  <data name="Status.External.One" xml:space="preserve">
+    <value>{0} externe</value>
+  </data>
+  <data name="Status.External.Other" xml:space="preserve">
+    <value>{0} externes</value>
+  </data>
+  <data name="Status.Hosted.One" xml:space="preserve">
+    <value>{0} site hébergé</value>
+  </data>
+  <data name="Status.Hosted.Other" xml:space="preserve">
+    <value>{0} sites hébergés</value>
+  </data>
+  <data name="Status.Loading" xml:space="preserve">
+    <value>Chargement…</value>
+  </data>
+  <data name="Status.Running.One" xml:space="preserve">
+    <value>{0} en service</value>
+  </data>
+  <data name="Status.Running.Other" xml:space="preserve">
+    <value>{0} en service</value>
+  </data>
+  <data name="Status.Sockets.One" xml:space="preserve">
+    <value>{0} socket en écoute</value>
+  </data>
+  <data name="Status.Sockets.Other" xml:space="preserve">
+    <value>{0} sockets en écoute</value>
+  </data>
+  <data name="Status.Summary" xml:space="preserve">
+    <value>{0}, {1} · {2} · {3}</value>
+  </data>
+  <data name="Tab.Logs" xml:space="preserve">
+    <value>Journaux</value>
+  </data>
+  <data name="Tab.Settings" xml:space="preserve">
+    <value>Paramètres</value>
+  </data>
+  <data name="Toolbar.NewSite" xml:space="preserve">
+    <value>+ Nouveau site</value>
+  </data>
+  <data name="Toolbar.Refresh" xml:space="preserve">
+    <value>Actualiser</value>
+  </data>
+  <data name="Toolbar.Refresh.Title" xml:space="preserve">
+    <value>Relire les fichiers .site et les sockets</value>
+  </data>
+  <data name="Toolbar.Restart" xml:space="preserve">
+    <value>Redémarrer</value>
+  </data>
+  <data name="Toolbar.StartDaemon" xml:space="preserve">
+    <value>Démarrer kazowebd</value>
+  </data>
+  <data name="Toolbar.Stop" xml:space="preserve">
+    <value>Arrêter</value>
+  </data>
+  <data name="Warning.RootMissing" xml:space="preserve">
+    <value>{0} n'existe pas encore : le site répondra 404 en attendant.</value>
+  </data>
+  <data name="Warning.WwwDataCannotEnter" xml:space="preserve">
+    <value>{0} ne peut pas entrer dans {1} (un dossier du chemin n'a pas o+x, un dossier personnel est en 0700) : les requêtes répondront 403. Utilisez un site utilisateur, ou une racine comme /var/www.</value>
+  </data>
+</root>

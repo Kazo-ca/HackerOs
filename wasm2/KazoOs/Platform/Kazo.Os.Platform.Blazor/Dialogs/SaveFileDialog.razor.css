@@ -1,0 +1,130 @@
+.file-dialog {
+    display: grid;
+    grid-template-rows: auto minmax(6rem, 1fr) auto auto auto;
+    gap: 0.75rem;
+    /* The dialog is a platform window (FileDialogWindowAdapter): fill its content area so the
+       footer buttons stay visible; the folder list scrolls instead. */
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    padding: 0.9rem;
+    color: var(--kos-text-primary, #d4f8e8);
+    background: var(--kos-window-content-background, #0d1819);
+    border: var(--kos-window-border, 1px solid var(--kos-border, #55d6a1));
+    box-shadow: var(--kos-shadow-lg, 0 1.25rem 4rem rgba(0, 0, 0, 0.7));
+}
+
+header,
+footer,
+.name-control,
+.overwrite {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+h2 {
+    margin: 0;
+    font-size: 1.05rem;
+    letter-spacing: 0;
+    color: var(--kos-text-primary, #d4f8e8);
+}
+
+.name-control input {
+    flex: 1;
+    min-width: 0;
+}
+
+input,
+button {
+    min-height: var(--kos-control-height, 2.25rem);
+    padding: var(--kos-input-padding, 0.4rem 0.7rem);
+    font-family: inherit;
+    color: var(--kos-input-color, var(--kos-text-primary, #d4f8e8));
+    background: var(--kos-input-bg, #132522);
+    border: var(--kos-input-border, 1px solid var(--kos-border, #315249));
+    border-radius: var(--kos-input-radius, var(--kos-radius-sm, 0.25rem));
+    box-shadow: var(--kos-input-shadow, none);
+}
+
+button {
+    min-width: 5rem;
+    cursor: pointer;
+    color: var(--kos-btn-color, var(--kos-text-primary, #d4f8e8));
+    background: var(--kos-btn-bg, #132522);
+    border: var(--kos-btn-border, 1px solid var(--kos-border, #315249));
+    border-radius: var(--kos-btn-radius, var(--kos-radius-sm, 0.25rem));
+    box-shadow: var(--kos-btn-shadow, none);
+    font-weight: var(--kos-btn-font-weight, 500);
+    transition: background var(--kos-transition-fast, 120ms ease),
+                border-color var(--kos-transition-fast, 120ms ease),
+                color var(--kos-transition-fast, 120ms ease);
+}
+
+button:hover:not(:disabled) {
+    background: var(--kos-btn-hover-bg, var(--kos-bg-elevated, #182825));
+    border-color: var(--kos-btn-hover-border, var(--kos-accent, #55d6a1));
+    color: var(--kos-btn-hover-color, var(--kos-text-primary, #ffffff));
+}
+
+button:active:not(:disabled) {
+    background: var(--kos-btn-active-bg, var(--kos-accent-subtle, #123a2b));
+    border-color: var(--kos-btn-active-border, var(--kos-accent, #55d6a1));
+    box-shadow: var(--kos-btn-active-shadow, none);
+}
+
+footer {
+    justify-content: flex-end;
+}
+
+button.primary {
+    color: var(--kos-btn-primary-color, var(--kos-text-inverse, #07100d));
+    background: var(--kos-btn-primary-bg, var(--kos-accent, #55d6a1));
+    border: var(--kos-btn-primary-border, 1px solid var(--kos-accent, #55d6a1));
+    box-shadow: var(--kos-btn-primary-shadow, none);
+}
+
+button.primary:hover:not(:disabled) {
+    background: var(--kos-btn-primary-hover-bg, var(--kos-accent-hover, #75e8ba));
+    border-color: var(--kos-btn-primary-hover-border, var(--kos-accent-hover, #75e8ba));
+}
+
+button.danger {
+    color: var(--kos-btn-danger-color, #ffffff);
+    background: var(--kos-btn-danger-bg, var(--kos-error, #ff8f87));
+    border: var(--kos-btn-danger-border, 1px solid var(--kos-error, #ff8f87));
+}
+
+button.danger:hover:not(:disabled) {
+    background: var(--kos-btn-danger-hover-bg, color-mix(in srgb, var(--kos-error, #ff8f87) 80%, white));
+}
+
+button:focus-visible,
+input:focus-visible {
+    outline: 2px solid var(--kos-focus-ring, #55d6a1);
+    outline-offset: 2px;
+}
+
+.error {
+    margin: 0;
+    color: var(--kos-error, #ff8f87);
+}
+
+.overwrite {
+    padding: 0.55rem;
+    color: var(--kos-warning, #ffe1a3);
+    background: color-mix(in srgb, var(--kos-warning, #e0ad50) 18%, var(--kos-bg-base, #101417));
+    border: 1px solid var(--kos-warning, #8f7437);
+    border-radius: var(--kos-radius-sm, 0.25rem);
+}
+
+.overwrite span {
+    margin-right: auto;
+}
+
+@media (max-width: 36rem) {
+    .file-dialog {
+        padding: 0.6rem;
+    }
+}

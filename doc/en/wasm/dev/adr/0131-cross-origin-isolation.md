@@ -48,7 +48,7 @@ that does not allow setting headers, and offline.
   adds the headers to the responses it serves, navigation included; at the first
   load without an active service worker, the page registers then reloads
   **once**. This works offline and on static hosting.
-- **`test/test` and `HackerOs.Server`**: a middleware sets the same headers
+- **`test/test` and `Kazo.Os.Server`**: a middleware sets the same headers
   (the service worker remains, as for the Ecosystem served by the server, ADR
   0130).
 - `off`: no header, and the service worker adds none.

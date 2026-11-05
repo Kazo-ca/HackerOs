@@ -101,11 +101,11 @@ that its keyring will be set aside).
 
 | Library | Addition |
 |---|---|
-| `HackerOs.Simulation.Abstractions` | `ILocalUserRepository.SetCredentialAsync` (default member that throws `NotSupportedException`) |
-| `HackerOs.App.Abstractions` | `AppCapabilities.UsersManage` (`users.manage`, dangerous) |
-| `HackerOs.AppSdk` | `HackUserAccounts`, `IAppUserAccountsGateway`, `HackUserAccount`, `IAppExecutionContext.UserAccounts` (default member), `ITerminalInputMode`, `TerminalExecutionContext.ReadSecretLineAsync` |
-| `HackerOs.AppSdk.Terminal` | `TerminalInputReader` implements `ITerminalInputMode` |
-| `HackerOs.Platform.Core` | `LocalPasswordService`, `SystemAdministrationGatewayServices.Passwords` (`init` property) |
+| `Kazo.Os.Simulation.Abstractions` | `ILocalUserRepository.SetCredentialAsync` (default member that throws `NotSupportedException`) |
+| `Kazo.Os.App.Abstractions` | `AppCapabilities.UsersManage` (`users.manage`, dangerous) |
+| `Kazo.Os.AppSdk` | `HackUserAccounts`, `IAppUserAccountsGateway`, `HackUserAccount`, `IAppExecutionContext.UserAccounts` (default member), `ITerminalInputMode`, `TerminalExecutionContext.ReadSecretLineAsync` |
+| `Kazo.Os.AppSdk.Terminal` | `TerminalInputReader` implements `ITerminalInputMode` |
+| `Kazo.Os.Platform.Core` | `LocalPasswordService`, `SystemAdministrationGatewayServices.Passwords` (`init` property) |
 
 ## Consequences
 

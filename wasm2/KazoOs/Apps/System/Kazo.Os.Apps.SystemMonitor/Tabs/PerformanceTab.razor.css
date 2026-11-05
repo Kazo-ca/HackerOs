@@ -1,0 +1,103 @@
+.perf {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.perf-section h3 {
+    margin: 0 0 8px;
+    font-size: 0.8125rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--kos-accent, #42d392);
+}
+
+.perf-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.perf-section-header h3 {
+    margin: 0;
+}
+
+.perf-toggle {
+    display: inline-flex;
+    gap: 4px;
+}
+
+.perf-cores {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 8px;
+}
+
+.perf-hardware {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 10px;
+}
+
+.perf-workers {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 8px;
+}
+
+.perf-worker {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px 10px;
+    border: 1px solid var(--kos-border, rgba(66, 211, 146, 0.25));
+    border-left: 3px solid var(--kos-accent, #42d392);
+    border-radius: 6px;
+    background: var(--kos-surface-raised, rgba(255, 255, 255, 0.03));
+}
+
+.perf-worker-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 6px;
+    font-family: var(--kos-font-mono, monospace);
+    font-size: 0.75rem;
+}
+
+.perf-worker-name {
+    color: var(--kos-text, #e6edf3);
+    font-weight: 600;
+}
+
+.perf-worker-role {
+    color: var(--kos-text-muted, #8b949e);
+}
+
+.perf-worker-state {
+    font-size: 0.75rem;
+    color: var(--kos-accent, #42d392);
+}
+
+.worker-idle {
+    border-left-color: var(--kos-info, #58a6ff);
+}
+
+.worker-idle .perf-worker-state {
+    color: var(--kos-info, #58a6ff);
+}
+
+.worker-starting {
+    border-left-color: var(--kos-text-muted, #8b949e);
+    opacity: 0.8;
+}
+
+.worker-not-responding {
+    border-left-color: var(--kos-error, #ff7b72);
+}
+
+.worker-not-responding .perf-worker-state {
+    color: var(--kos-error, #ff7b72);
+    font-weight: 600;
+}

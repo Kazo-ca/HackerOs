@@ -38,7 +38,7 @@ Deux questions ont été posées à Benoit :
 ### 1. Signal de mort du parent
 
 `ProcessStartRequest` gagne la propriété `init` `ParentExitGracePeriod`
-(`TimeSpan?`, dans `HackerOs.Simulation.Abstractions`).
+(`TimeSpan?`, dans `Kazo.Os.Simulation.Abstractions`).
 
 Le modèle est `prctl(PR_SET_PDEATHSIG, SIGTERM)` sous Linux, suivi d'un
 `SIGKILL`. Le comportement dépend de la façon dont le parent se termine.
@@ -90,7 +90,7 @@ progression, ou par `ListProcesses` sur le fil principal (ADR 0140 §7).
 - `ProcessStartRequest.ParentExitGracePeriod` et
   `BackgroundJobService.ParentExitGracePeriod` s'ajoutent à
   `PublicAPI.Unshipped.txt`. Ils seront publiés avec la prochaine mineure, après
-  la 1.2.0. Le SDK de l'app (`HackerOs.AppSdk`) ne change pas.
+  la 1.2.0. Le SDK de l'app (`Kazo.Os.AppSdk`) ne change pas.
 - Pendant le délai, `ps` et le gestionnaire de tâches montrent la tâche à l'état
   `Stopping`. Son parent n'existe plus.
 - Documentation : [`background-jobs.md`](../../framework/background-jobs.md).

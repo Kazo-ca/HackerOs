@@ -40,7 +40,7 @@ analyseur au build. Quatre contraintes ont pesé sur la mise en œuvre :
   et les mêmes erreurs. Une app testée ainsi marche à l'identique sous l'OS.
 - La fabrique de confiance (`AppExecutionContextFactory.BackgroundJobs`, une
   propriété `init` pour ne pas toucher au constructeur livré) branche
-  `BackgroundJobService` de `HackerOs.Platform.Core`.
+  `BackgroundJobService` de `Kazo.Os.Platform.Core`.
 
 ### 2. Processus d'une tâche
 
@@ -121,9 +121,9 @@ peut communiquer son PID par sa progression (exemple de la fenêtre d'exemple).
 
 ### 8. Analyseur
 
-- Projet `Tools/HackerOs.Tools.BackgroundAnalyzer` (netstandard2.0), livré dans
-  le paquet `HackerOs.AppSdk` (`analyzers/dotnet/cs`) et branché sur les apps du
-  dépôt par `build/HackerOs.Apps.targets`.
+- Projet `Tools/Kazo.Os.Tools.BackgroundAnalyzer` (netstandard2.0), livré dans
+  le paquet `Kazo.Os.AppSdk` (`analyzers/dotnet/cs`) et branché sur les apps du
+  dépôt par `build/Kazo.Os.Apps.targets`.
 - Codes : `HOSBG0001` (pas un groupe de méthode statique : lambda, méthode
   anonyme, méthode d'instance, fonction locale non `static`, délégué passé par
   une variable), `HOSBG0002` (type d'entrée ou de résultat hors des contextes
@@ -147,7 +147,7 @@ peut communiquer son PID par sa progression (exemple de la fenêtre d'exemple).
 | Filtres de Hack Paint | Sans objet | Hack Paint n'a pas de filtre. Rotation et recadrage restent : une passe de copies, sur un tampon qui peut faire 64 Mio (4096 × 4096 en RGBA), quatre fois la limite d'une entrée. Un futur filtre passera par une tâche et un fichier temporaire. |
 
 L'exemple demandé est une section « Background Task » de
-`Apps/Samples/HackerOs.Samples.WindowApp` (compte des nombres premiers avec
+`Apps/Samples/Kazo.Os.Samples.WindowApp` (compte des nombres premiers avec
 progression, annulation et bouton Kill), plutôt qu'une nouvelle app : la
 fenêtre d'exemple est déjà celle qui montre le SDK d'une app à fenêtre.
 
@@ -157,9 +157,9 @@ fenêtre d'exemple est déjà celle qui montre le SDK d'une app à fenêtre.
   [`worker-processes.md`](../worker-processes.md),
   [`sdk-developer-guide.md`](../../framework/sdk-developer-guide.md),
   [`sdk-reference.md`](../../framework/sdk-reference.md), [`code-editor.md`](../code-editor.md),
-  [`file-explorer.md`](../file-explorer.md), [`hack-paint.md`](../hack-paint.md).
+  [`file-explorer.md`](../file-explorer.md), [`kazo-paint.md`](../kazo-paint.md).
 - Ajouts publics dans `PublicAPI.Unshipped.txt` du SDK, de
-  `HackerOs.Platform.Core` et de `HackerOs.Platform.WorkerHost` ; publiés avec
+  `Kazo.Os.Platform.Core` et de `Kazo.Os.Platform.WorkerHost` ; publiés avec
   le SDK 1.2 dans `exec/10` (ADR 0132).
 - `exec/4` branche l'ordonnancement par `nice` des tâches et la ligne `Nice`.
 - Deux questions à Benoit (délai de grâce à la fermeture de l'app, PID dans la

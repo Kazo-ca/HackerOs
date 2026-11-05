@@ -2,7 +2,7 @@
 
 # Taskbar window previews and "peek"
 
-Work item 5 of the taskbar series (issue [#242](https://github.com/Kazo-ca/HackerOs/issues/242)),
+Work item 5 of the taskbar series (issue [#242](https://github.com/Kazo-ca/Os/issues/242)),
 implementation of [ADR 0199](adr/0199-taskbar-window-previews.md). It builds on the per-screen
 taskbars ([`per-screen-taskbars.md`](per-screen-taskbars.md)) and the taskbar menus
 ([`taskbar-context-menus.md`](taskbar-context-menus.md)).
@@ -26,13 +26,13 @@ taskbars ([`per-screen-taskbars.md`](per-screen-taskbars.md)) and the taskbar me
 
 | Piece | Project | Role |
 | --- | --- | --- |
-| `ITaskbarWindowPreviews` | `HackerOs.Taskbar.Blazor` | Contract supplied by the host: `LiveCopySelector(id)` and `Peek(id?)`. |
-| `Taskbar.Previews` | `HackerOs.Taskbar.Blazor` | Parameter; no preview without it. |
-| `TaskbarPreviewController` | `HackerOs.Taskbar.Blazor` (internal) | Timing: opening (400 ms), moving between buttons, closing (300 ms), peek (300 ms), touch ignored. |
-| `Taskbar.razor.js` | `HackerOs.Taskbar.Blazor` | Places the card above the button, clones the window, strips ids and active attributes, copies canvases and scroll positions, again every 500 ms. |
-| `TaskbarWindowInteraction.Show` | `HackerOs.Taskbar.Blazor` (internal) | Click on the thumbnail: restore when minimized, then activate. |
-| `TaskbarWindowPreviews` | `HackerOs.Platform.Blazor` (`Shell/`) | The desktop's implementation: `[data-window-id="…"]` selector, peeked window and `Changed` event. One instance for every taskbar. |
-| `DesktopArea.PeekWindowId`, `WindowHost.PeekState`, `WindowPeekState` | `HackerOs.Windowing.Blazor` | The peek: `is-peek-shown` (the window and its dialogs, on top, even minimized) and `is-peek-see-through` (the other windows of the same screen, outline only, no pointer). |
+| `ITaskbarWindowPreviews` | `Kazo.Os.Taskbar.Blazor` | Contract supplied by the host: `LiveCopySelector(id)` and `Peek(id?)`. |
+| `Taskbar.Previews` | `Kazo.Os.Taskbar.Blazor` | Parameter; no preview without it. |
+| `TaskbarPreviewController` | `Kazo.Os.Taskbar.Blazor` (internal) | Timing: opening (400 ms), moving between buttons, closing (300 ms), peek (300 ms), touch ignored. |
+| `Taskbar.razor.js` | `Kazo.Os.Taskbar.Blazor` | Places the card above the button, clones the window, strips ids and active attributes, copies canvases and scroll positions, again every 500 ms. |
+| `TaskbarWindowInteraction.Show` | `Kazo.Os.Taskbar.Blazor` (internal) | Click on the thumbnail: restore when minimized, then activate. |
+| `TaskbarWindowPreviews` | `Kazo.Os.Platform.Blazor` (`Shell/`) | The desktop's implementation: `[data-window-id="…"]` selector, peeked window and `Changed` event. One instance for every taskbar. |
+| `DesktopArea.PeekWindowId`, `WindowHost.PeekState`, `WindowPeekState` | `Kazo.Os.Windowing.Blazor` | The peek: `is-peek-shown` (the window and its dialogs, on top, even minimized) and `is-peek-see-through` (the other windows of the same screen, outline only, no pointer). |
 
 The flow: hover → `TaskbarPreviewController` → card rendered → `OnAfterRenderAsync` calls the
 module's `showPreview`. Rest on the card → `Peek(id)` → `TaskbarWindowPreviews.Changed` →
@@ -50,21 +50,21 @@ module's `showPreview`. Rest on the card → `Peek(id)` → `TaskbarWindowPrevie
 
 ## 4. Themes
 
-Added tokens: `--hos-taskbar-preview-width`, `--hos-taskbar-preview-height`,
-`--hos-taskbar-preview-background`, `--hos-taskbar-preview-border`,
-`--hos-taskbar-preview-radius`, `--hos-taskbar-preview-shadow`,
-`--hos-taskbar-preview-duration`, `--hos-taskbar-preview-close-hover-border`,
-`--hos-taskbar-preview-close-hover-background`, `--hos-window-peek-outline`, `--hos-window-peek-glass` and
-`--hos-window-peek-z`. The appearance is turned off by "Reduce animations" (`data-motion`) and
+Added tokens: `--kos-taskbar-preview-width`, `--kos-taskbar-preview-height`,
+`--kos-taskbar-preview-background`, `--kos-taskbar-preview-border`,
+`--kos-taskbar-preview-radius`, `--kos-taskbar-preview-shadow`,
+`--kos-taskbar-preview-duration`, `--kos-taskbar-preview-close-hover-border`,
+`--kos-taskbar-preview-close-hover-background`, `--kos-window-peek-outline`, `--kos-window-peek-glass` and
+`--kos-window-peek-z`. The appearance is turned off by "Reduce animations" (`data-motion`) and
 `prefers-reduced-motion`.
 
 ## 5. Tests
 
-- `Tests/HackerOs.Taskbar.Blazor.Tests/TaskbarPreviewControllerTests.cs`: timing, touch, moving
+- `Tests/Kazo.Os.Taskbar.Blazor.Tests/TaskbarPreviewControllerTests.cs`: timing, touch, moving
   between buttons, peek, closing, click on the thumbnail, rendered attributes.
-- `Tests/HackerOs.Platform.Blazor.Tests/Shell/TaskbarWindowPreviewsTests.cs`: selector, peek
+- `Tests/Kazo.Os.Platform.Blazor.Tests/Shell/TaskbarWindowPreviewsTests.cs`: selector, peek
   announced once, peek classes per window and per screen.
-- `Tests/HackerOs.UI.E2E.Tests/TaskbarWindowPreviewTests.cs`: in Chromium, hover, copy without
+- `Tests/Kazo.Os.UI.E2E.Tests/TaskbarWindowPreviewTests.cs`: in Chromium, hover, copy without
   ids, peek, "×".
 
 ## 6. Task list

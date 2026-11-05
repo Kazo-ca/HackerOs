@@ -82,7 +82,7 @@ attend la réponse de l'OS au lieu d'un appel synchrone impossible.
 ### 7. Hôtes
 
 `test/test` exécute côté navigateur le `Program.cs` de l'Ecosystem : il a les
-workers comme l'Ecosystem. `HackerOs.Server` n'en a pas et l'écrit une fois
+workers comme l'Ecosystem. `Kazo.Os.Server` n'en a pas et l'écrit une fois
 dans `/var/log/syslog` (ADR 0070 §6) ; `/proc/hackeros` n'y existe pas.
 
 ## Conséquences

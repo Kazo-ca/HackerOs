@@ -10,7 +10,7 @@ The optional full-screen terminal contract lets interactive commands own a chara
 
 - `IFullScreenTerminalSession` enters and leaves the alternate screen, renders immutable `TerminalScreenFrame` values, exposes a `TerminalViewport`, and supplies cancellable `TerminalKeyEvent` values.
 - `TerminalScreenFrame` contains text rows, a cursor, and an accessible label.
-- Key and cursor types live in `HackerOs.AppSdk`; app commands do not depend on the browser.
+- Key and cursor types live in `Kazo.Os.AppSdk`; app commands do not depend on the browser.
 - Implementations must release alternate-screen ownership even when command execution, input, or rendering is cancelled.
 
 ## Nano behavior

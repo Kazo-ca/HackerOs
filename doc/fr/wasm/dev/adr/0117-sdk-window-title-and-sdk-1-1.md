@@ -25,7 +25,7 @@ recommandée en attendant.
 
 ## Contexte
 
-- `WindowRuntimeState.Title` (`Platform/HackerOs.Windowing.Abstractions/WindowRuntimeState.cs:98`)
+- `WindowRuntimeState.Title` (`Platform/Kazo.Os.Windowing.Abstractions/WindowRuntimeState.cs:98`)
   est fixé à l'ouverture par `WindowLaunchCoordinator` avec le nom de l'app et
   ne change plus. La barre de titre, la barre des tâches et le sélecteur Alt+`
   (`WindowManagerOverlays.razor`) le lisent.
@@ -63,7 +63,7 @@ recommandée en attendant.
 
 ### 2. API du SDK
 
-Dans `HackerOs.AppSdk.Blazor`, sur `WindowAppBase` :
+Dans `Kazo.Os.AppSdk.Blazor`, sur `WindowAppBase` :
 
 ```csharp
 /// Titre affiché par le gestionnaire de fenêtres (barre de titre, barre des tâches, Alt+`).
@@ -74,7 +74,7 @@ protected ValueTask SetWindowTitleAsync(string? title, CancellationToken cancell
 ```
 
 - L'appel passe par une passerelle de la plateforme (`IAppWindowGateway`,
-  interne), jamais par un type de `HackerOs.Windowing.*` dans le SDK
+  interne), jamais par un type de `Kazo.Os.Windowing.*` dans le SDK
   (ADR 0055). Aucune capacité n'est demandée : une app ne change que le titre
   de ses propres fenêtres.
 - Appelé avant le premier rendu (dans `OnAppInitializedAsync`), le titre est
@@ -130,7 +130,7 @@ les autres et après la fusion de `v3/base` dans `v3.1/base` (voir
   paquet n'est pas reconstruit ;
 - la section « Ruptures hors SDK » de [`sdk-packages.md`](../../framework/sdk-packages.md)
   liste les lignes `*REMOVED*` de la série, et
-  [`building-on-hackeros.md`](../../framework/building-on-hackeros.md) dit ce que la 1.1
+  [`building-on-kazoos.md`](../../framework/building-on-kazoos.md) dit ce que la 1.1
   ajoute ;
 - le chantier refait la vérification complète de `v3/16-final` (build Debug et
   Release, toutes les suites, `build/publish-trimmed.sh`, `build/verify-hosts.sh`)
@@ -146,7 +146,7 @@ les autres et après la fusion de `v3/base` dans `v3.1/base` (voir
   une image dans Hack Paint, voir son nom dans la barre de titre et la barre des
   tâches, la modifier et voir `*`.
 - `app-sdk.md`, `sdk-reference.md`, `sdk-developer-guide.md`, `window-model.md`
-  et `hack-paint.md` décrivent l'API et la convention.
+  et `kazo-paint.md` décrivent l'API et la convention.
 - Le dépôt du jeu (ADR 0092) peut utiliser l'API en compilant contre 1.1.0 ; ses
   apps compilées en 1.0.0 continuent de tourner.
 

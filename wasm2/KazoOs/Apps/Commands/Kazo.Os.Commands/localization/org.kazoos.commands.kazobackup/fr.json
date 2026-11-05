@@ -1,0 +1,5 @@
+{
+  "name": "kazobackup",
+  "description": "Sauvegarde toute la machine sur l'ordinateur hôte, ou la restaure",
+  "terminalUsage": "kazobackup create | restore [--merge|--replace]"
+}

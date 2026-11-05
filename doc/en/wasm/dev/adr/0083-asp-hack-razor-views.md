@@ -6,14 +6,14 @@
 
 Accepted on 2026-10-16, with the `web/7-razor-views` work item.
 
-- **Plan phase:** web phase ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Plan phase:** web phase ([`asp-kazo-plan.md`](../plans/asp-kazo-plan.md)).
 - **Completes:** [ADR 0076](0076-asp-hack-mvc.md) §5 (`View`, `PartialView`), §6
   (anti-forgery token) and §7 (`.razor` views); [ADR 0073](0073-web-apps.md)
   §2 (project `wwwroot`, read-only); [ADR 0082](0082-asp-hack-route-source-generator.md)
   (the generator also produces the view table).
 - **Amends:** [ADR 0007](0007-enforce-collocated-razor-assets.md): the build check
   admits a `<script src="...">` reference without a body (§6).
-- **Documentation:** [`asp-hack-razor-views.md`](../../framework/asp-hack-razor-views.md).
+- **Documentation:** [`asp-kazo-razor-views.md`](../../framework/asp-kazo-razor-views.md).
 
 ## Context
 
@@ -97,8 +97,8 @@ writes the hidden field unless `Antiforgery="false"` or `Method="get"`;
 
 ### 6. Embedded `wwwroot`, served read-only
 
-- `build/HackerOs.Apps.targets` embeds `wwwroot/**` of a project that references
-  `HackerOs.AppSdk.Web` as `wwwroot/<path>` resources (property
+- `build/Kazo.Os.Apps.targets` embeds `wwwroot/**` of a project that references
+  `Kazo.Os.AppSdk.Web` as `wwwroot/<path>` resources (property
   `HackerOsEmbedWebRoot` to force or forbid), and removes them from the content:
   a site's `wwwroot` is never a static web resource of the host
   (`_content/`). The Razor class library of a windowed app keeps its usual
@@ -116,7 +116,7 @@ writes the hidden field unless `Antiforgery="false"` or `Method="get"`;
 
 ## Consequences
 
-- `HackerOs.AppSdk.Web` references `Microsoft.AspNetCore.Components.Web` (for
+- `Kazo.Os.AppSdk.Web` references `Microsoft.AspNetCore.Components.Web` (for
   `HtmlRenderer` and the components); test projects that have views
   move to the `Microsoft.NET.Sdk.Razor` SDK.
 - `HackWebApplicationBuilder` and `HackWebHost` gain an overload with

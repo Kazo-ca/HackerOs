@@ -1,0 +1,96 @@
+.file-view-icons {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    width: 100%;
+    height: 100%;
+    user-select: none;
+}
+
+.file-view-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    width: 96px;
+    padding: 0.5rem 0.25rem;
+    text-align: center;
+    border-radius: 4px;
+    cursor: default;
+}
+
+.file-view-tile:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: -2px;
+}
+
+.file-view-tile.selected {
+    background: color-mix(in srgb, currentColor 15%, transparent);
+}
+
+.file-view-tile-label {
+    overflow-wrap: break-word;
+    word-break: break-word;
+    font-size: 0.85rem;
+    line-height: 1.2;
+    max-height: 2.4em;
+    overflow: hidden;
+}
+
+.file-view-marquee {
+    position: absolute;
+    border: 1px dashed currentColor;
+    background: color-mix(in srgb, currentColor 10%, transparent);
+    pointer-events: none;
+}
+
+.file-view-rename-input {
+    font: inherit;
+    color: inherit;
+    background: transparent;
+    border: 1px solid currentColor;
+    border-radius: 2px;
+    padding: 0 0.25rem;
+    width: 100%;
+    text-align: center;
+}
+
+/* ADR 0185 §2: the empty-folder or no-result message, centred in the grid. */
+.file-view-empty {
+    flex: 1 1 100%;
+    align-self: center;
+    margin-top: 2rem;
+    text-align: center;
+    color: var(--kos-text-secondary, #8b949e);
+    font-style: italic;
+    pointer-events: none;
+}
+
+/* ADR 0185 §14: the icons of a folder's first entries, in a small grid over the open folder. */
+.file-view-tile-icon {
+    position: relative;
+    display: inline-flex;
+}
+
+.file-view-folder-preview {
+    position: absolute;
+    right: -7px;
+    bottom: -5px;
+    display: grid;
+    grid-template-columns: repeat(2, 11px);
+    gap: 1px;
+    padding: 2px;
+    border: 1px solid var(--kos-border, #30363d);
+    border-radius: var(--kos-radius-sm, 4px);
+    background: var(--kos-bg-elevated, #1c2128);
+    pointer-events: none;
+}
+
+.file-view-folder-preview ::deep .shell-icon {
+    display: inline-flex;
+    width: 11px;
+    height: 11px;
+}

@@ -4,7 +4,7 @@
 
 ## Status
 
-Accepted on 2026-10-30 by Benoit. Issue [#290](https://github.com/Kazo-ca/HackerOs/issues/290)
+Accepted on 2026-10-30 by Benoit. Issue [#290](https://github.com/Kazo-ca/Os/issues/290)
 (`TODO` label), series `todo/base`, work item `todo/16-switch-user`.
 
 - **Completes:** [ADR 0195](0195-start-menu-power-button.md) §4 ("Switch user"

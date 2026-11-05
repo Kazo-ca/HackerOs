@@ -5,7 +5,7 @@
 ## Status
 
 Accepted on 2026-10-30, work item 1 of the taskbar series (issue
-[#242](https://github.com/Kazo-ca/HackerOs/issues/242), decisions 1 and 2 taken with
+[#242](https://github.com/Kazo-ca/Os/issues/242), decisions 1 and 2 taken with
 Benoit on 2026-10-29), done in the `todo/` series (branch `todo/11-notification-toasts`).
 Builds on the notification queue (`INotificationQueue`), the clock panel (`ClockPanel`),
 the per-screen taskbars
@@ -13,7 +13,7 @@ the per-screen taskbars
 stays on screen 1) and the restart after a new build
 ([ADR 0162](0162-restart-after-a-host-build-change.md),
 [ADR 0174](0174-announce-a-new-version-to-open-sessions.md)). Takes the unread
-notifications dot (ADR 0196, [PR #294](https://github.com/Kazo-ca/HackerOs/pull/294))
+notifications dot (ADR 0196, [PR #294](https://github.com/Kazo-ca/Os/pull/294))
 into account without depending on it. Implementation:
 [`notification-toasts.md`](../notification-toasts.md).
 

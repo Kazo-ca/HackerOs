@@ -83,9 +83,9 @@ Details on each:
   nothing provides for versioning/updating a third-party app independently
   of the rest.
 - **Local development loop (`S-016`)**: the SDK has a manifest validator
-  (`Tools/HackerOs.Tools.ManifestValidator`) and `dotnet new` templates, but
+  (`Tools/Kazo.Os.Tools.ManifestValidator`) and `dotnet new` templates, but
   nothing to run/test one's app *inside* HackerOS locally with hot-reload,
-  without going through the full build of `HackerOs.Ecosystem`.
+  without going through the full build of `Kazo.Os.Ecosystem`.
 
 ## 4. Gaps noted but not promoted (discussion only)
 
@@ -112,7 +112,7 @@ concrete scope. They are noted here so as not to lose them.
 - **Global search ("spotlight")**: no unified search across apps, files, and
   commands.
 - **Desktop widgets / mini-surfaces**: nothing beyond the full windows managed
-  by `HackerOs.Windowing.Core`.
+  by `Kazo.Os.Windowing.Core`.
 - **Monetization/licensing**: absent everywhere; relevant only if the
   ambition includes paid third-party developers.
 

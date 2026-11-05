@@ -18,15 +18,15 @@ les expansions POSIX, lance chaque commande comme processus enfant du shell et
 affiche la sortie au fil de l'eau.
 
 ```text
-alice@hackeros:~$ for f in *.log; do n=$(grep -c ERROR "$f"); [ "$n" -gt 0 ] && echo "$f: $n"; done | sort -t: -k2 -n
-alice@hackeros:~$ ./deploy.sh web db || echo "échec : $?" >&2
-alice@hackeros:~$ text-editor notes.txt &
+alice@kazoos:~$ for f in *.log; do n=$(grep -c ERROR "$f"); [ "$n" -gt 0 ] && echo "$f: $n"; done | sort -t: -k2 -n
+alice@kazoos:~$ ./deploy.sh web db || echo "échec : $?" >&2
+alice@kazoos:~$ text-editor notes.txt &
 [1] 214
 ```
 
 ## Architecture
 
-Tout est dans `Platform/HackerOs.Platform.Core/Shell/` :
+Tout est dans `Platform/Kazo.Os.Platform.Core/Shell/` :
 
 | Type | Rôle |
 |---|---|
@@ -44,11 +44,11 @@ Tout est dans `Platform/HackerOs.Platform.Core/Shell/` :
 | `ShellSessionAccess` | `IShellSession` remis aux commandes qui déclarent `shell.control` ([`shell-commands.md`](shell-commands.md)). |
 | `ShellErrorText` | Texte court d'une erreur de fichier (`No such file or directory`, `Permission denied`…), dans le SDK. |
 
-Côté terminal (`Shared/HackerOs.AppSdk.Terminal/`) :
+Côté terminal (`Shared/Kazo.Os.AppSdk.Terminal/`) :
 
 | Type | Rôle |
 |---|---|
-| `TerminalPanel` | Discipline de ligne et affichage dans un terminal xterm.js ([`terminal-emulator.md`](terminal-emulator.md), ADR 0061). Démarre son shell par `HackShell.StartAsync` ; chaque ligne passe par `IHackShell.ExecuteAsync`. |
+| `TerminalPanel` | Discipline de ligne et affichage dans un terminal xterm.js ([`terminal-emulator.md`](terminal-emulator.md), ADR 0061). Démarre son shell par `KazoShell.StartAsync` ; chaque ligne passe par `IKazoShell.ExecuteAsync`. |
 | `TerminalInputReader` | Entrée standard de la ligne en cours (ADR 0064 §6) : tty en mode canonique, Ctrl+D = fin d'entrée, entrée non lue rendue à l'invite. |
 | `TerminalOutputWriter` | `TextWriter` qui pousse chaque morceau écrit vers le terminal. |
 
@@ -117,7 +117,7 @@ Juste avant de lancer chaque commande simple, dans l'ordre POSIX :
 
 **Alias** : pour une ligne tapée (pas dans un script), si le premier mot est un
 mot simple non quoté qui n'est pas une fonction, le shell cherche `nom=valeur`
-dans `~/.hackeros/aliases` ; la valeur doit être une commande simple.
+dans `~/.kazoos/aliases` ; la valeur doit être une commande simple.
 
 ### Variables
 
@@ -133,7 +133,7 @@ variable exportée existante) ; les commandes ne l'héritent pas.
 - **Tubes** : toutes les étapes démarrent en même temps dans des copies du
   shell (sous-shells), reliées par des `ShellPipe`. Quand une étape se
   termine, son entrée se ferme : l'écrivain suivant reçoit
-  `HackIOException("Broken pipe")`, et une commande qui la laisse passer sort
+  `KazoIOException("Broken pipe")`, et une commande qui la laisse passer sort
   avec `141`.
 - **Flux** : entrée de la première étape = entrée standard du shell (celle du
   terminal, ADR 0064 §6) ; sortie de la dernière vers le terminal ; erreurs de
@@ -145,7 +145,7 @@ variable exportée existante) ; les commandes ne l'héritent pas.
   `>f 2>&1`, here-document = entrée ; `/dev/null`, `/dev/stdin`,
   `/dev/stdout`, `/dev/stderr`, `/dev/tty` sont les flux du shell. Échec :
   `hsh: <cible>: <raison>`, commande non lancée, code `1`. Les fichiers sont
-  publiés à la fin de la commande (`HackFileStream`).
+  publiés à la fin de la commande (`KazoFileStream`).
 - **Recherche d'une commande** : built-in spécial, puis fonction, puis chemin
   (nom contenant `/`), puis commande du catalogue (`[` = `test`), puis `sh`,
   `bash`, `hsh`, puis app fenêtrée par son nom court, sinon `127`.
@@ -225,7 +225,7 @@ dont le dernier segment de l'identifiant (sans l'espace de noms) est ce nom :
 `text-editor notes.txt`, `browser`, `terminal`, `calculator`. L'app est lancée
 comme enfant du shell, dans son dossier, avec ses arguments
 (`WindowAppBase.LaunchArguments`) et les flux du shell : ce qu'elle écrit par
-`HackConsole.WriteLine` apparaît dans le terminal. Comme un programme
+`KazoConsole.WriteLine` apparaît dans le terminal. Comme un programme
 graphique lancé depuis bash, **le shell attend la fermeture de la fenêtre** ;
 `text-editor notes.txt &` rend l'invite tout de suite ; Ctrl+C ferme la
 fenêtre (code 130). Une app à instance unique déjà ouverte est mise au premier
@@ -276,20 +276,20 @@ sinon `Dispatched` avec le code de sortie (une erreur de syntaxe donne
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Shell/ShellParserTests.cs` : guillemets,
+- `Tests/Kazo.Os.Platform.Core.Tests/Shell/ShellParserTests.cs` : guillemets,
   opérateurs, listes, redirections de descripteurs, here-documents, commandes
   composées, fonctions, saisies incomplètes, erreurs, morceaux de mots.
-- `Tests/HackerOs.Platform.Core.Tests/Shell/ShellPipeTests.cs`.
-- `Tests/HackerOs.Platform.Core.Tests/Shell/ShellInterpreterTests.cs` et
+- `Tests/Kazo.Os.Platform.Core.Tests/Shell/ShellPipeTests.cs`.
+- `Tests/Kazo.Os.Platform.Core.Tests/Shell/ShellInterpreterTests.cs` et
   `ShellInterpreterTests.Scripting.cs` : bout en bout avec orchestrateur,
   processus et fichiers réels (tubes, `;`, `||`, affectations, substitutions,
   arithmétique, `${x%motif}`, `if`/`for`/`while`/`until`/`case`, `break 2`,
   fonctions et `local`, `2>&1`, here-documents, `/dev/null`, chemins, scripts
   avec et sans `+x`, `#!`, `set -e`, erreur de syntaxe de script, `sh -c`,
-  `| bash`, `.`, jobs, apps par leur nom et `HackConsole`, Ctrl+C sur une app).
+  `| bash`, `.`, jobs, apps par leur nom et `KazoConsole`, Ctrl+C sur une app).
 - `ShellInterpreterTests.Commands.cs` : les commandes de
   [`linux-commands.md`](linux-commands.md) dans le vrai shell.
-- `Tests/HackerOs.Platform.Core.Tests/Shell/ShellCommandResolverTests.cs`.
+- `Tests/Kazo.Os.Platform.Core.Tests/Shell/ShellCommandResolverTests.cs`.
 
 ## Liste des tâches
 
@@ -310,6 +310,6 @@ sinon `Dispatched` avec le code de sortie (une erreur de syntaxe donne
 - [x] ADR 0064 : built-ins spéciaux (`break`, `return`, `set`, `local`, `eval`, `source`, `wait`, `fg`, `trap`…).
 - [x] ADR 0064 : scripts (`+x` et message `chmod +x`, `#!`, processus `hsh`), `sh`/`bash`.
 - [x] ADR 0064 : jobs (`&`, `$!`, `jobs`, `kill %n`, `wait`, `fg`).
-- [x] ADR 0064 : apps fenêtrées par leur nom court, `HackConsole`, attente de la fermeture.
+- [x] ADR 0064 : apps fenêtrées par leur nom court, `KazoConsole`, attente de la fermeture.
 - [x] ADR 0064 : entrée standard du terminal (`TerminalInputReader`).
-- [x] ADR 0064 : invite de continuation `>` pour une commande inachevée (`IHackShell.NeedsMoreInput`).
+- [x] ADR 0064 : invite de continuation `>` pour une commande inachevée (`IKazoShell.NeedsMoreInput`).

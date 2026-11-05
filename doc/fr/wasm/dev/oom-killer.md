@@ -25,7 +25,7 @@ tue que si l'OOM killer est activé.
 | Pièce | Projet | Rôle |
 | --- | --- | --- |
 | `OomKiller` | Platform.Core | Échantillonne chaque seconde simulée ; deux échantillons de suite sous le seuil déclenchent le choix d'une victime. Garde du navigateur à 80 % du plafond. Compteur `KillCount`. |
-| `OomKillerSettings`, `MemorySettingsDocuments` | Platform.Core | Document `/etc/hackeros/memory.config`, section `[oom-killer]`. |
+| `OomKillerSettings`, `MemorySettingsDocuments` | Platform.Core | Document `/etc/kazoos/memory.config`, section `[oom-killer]`. |
 | `SystemMemoryProbe` | Platform.Core | `MemTotal` (profil simulé), `MemAvailable` et `VmRSS` mesurés (ADR 0068), `oom_score`. |
 | `InMemoryProcessOomScoreTable` | Platform.Core | `oom_score_adj` de chaque processus, avec son plancher (ADR 0142 §1-2). |
 | `KernelLog` | Platform.Core | Tampon du noyau de la session (1 024 lignes), copié dans `/var/log/kern.log` et `syslog` ; lu par `/dev/kmsg`. |
@@ -46,7 +46,7 @@ une fois le catalogue et les comptes prêts.
   le plus haut.
 - Aucune nouvelle victime tant que la précédente n'est pas sortie.
 - Garde du navigateur : la victime est choisie parmi les processus du runtime
-  visé seulement (`CONSTRAINT_MEMCG`, `oom_memcg=/hackeros/<runtime>`).
+  visé seulement (`CONSTRAINT_MEMCG`, `oom_memcg=/kazoos/<runtime>`).
 
 ### Traces
 
@@ -60,7 +60,7 @@ une fois le catalogue et les comptes prêts.
 ### Activer
 
 ```sh
-sudo nano /etc/hackeros/memory.config
+sudo nano /etc/kazoos/memory.config
 ```
 
 ```ini
@@ -83,7 +83,7 @@ Les fichiers `/proc/<pid>/oom_score`, `oom_score_adj`, `/proc/vmstat` et `/dev/k
 
 ### Réglage d'hôte
 
-`HackerOs:Hardware:MemoryMiB` (appsettings) fixe `MemTotal` du profil simulé.
+`KazoOs:Hardware:MemoryMiB` (appsettings) fixe `MemTotal` du profil simulé.
 `build/verify-hosts.sh` l'utilise dans le parcours `ecosystem-oom`
 (`OOM_MEMORY_MIB`, 512 par défaut).
 
@@ -100,14 +100,14 @@ Les fichiers `/proc/<pid>/oom_score`, `oom_score_adj`, `/proc/vmstat` et `/dev/k
 
 ## Liste des tâches
 
-- [x] Réglage `/etc/hackeros/memory.config`, migration et schéma.
+- [x] Réglage `/etc/kazoos/memory.config`, migration et schéma.
 - [x] Mesure de `MemAvailable`, `oom_score`, choix de la victime, mise à mort `OutOfMemory`.
 - [x] `oom_score_adj` en table, plancher, héritage, écriture dans `/proc`.
 - [x] Journal du noyau, `/dev/kmsg`, `kern.log`, `dmesg`.
 - [x] `/proc/vmstat` avec `oom_kill`.
 - [x] Notification d'une app à fenêtre tuée (anglais, français).
 - [x] Garde du vrai navigateur, remplacement du worker.
-- [x] `AppDefinition.OomScoreAdjust`, `oomScoreAdj` du manifeste, `HOSAPP0024`, `-500` des services système.
+- [x] `AppDefinition.OomScoreAdjust`, `oomScoreAdj` du manifeste, `KOSAPP0024`, `-500` des services système.
 - [x] Onglet Mémoire de Paramètres.
 - [x] `stress --vm`.
 - [x] Parcours `ecosystem-oom` de `build/verify-hosts.sh`.

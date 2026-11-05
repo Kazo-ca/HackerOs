@@ -1,6 +1,6 @@
 > [Version française](../../../fr/wasm/dev/server-hosting.md)
 
-# OS served by `HackerOs.Server` and automatic connection
+# OS served by `Kazo.Os.Server` and automatic connection
 
 Work item `exec/8-server-wasm` (`exec` series), ADRs
 [0130](adr/0130-server-serves-webassembly-os-and-api.md),
@@ -9,9 +9,9 @@ Work item `exec/8-server-wasm` (`exec` series), ADRs
 
 ## Goal
 
-- `HackerOs.Server` serves **the same OS as the PWA**: the published files of
-  `OS/HackerOs.Ecosystem`, as is. The OS runs in the browser in
-  WebAssembly, with its Web Workers, its metrics and `/proc/hackeros`. The
+- `Kazo.Os.Server` serves **the same OS as the PWA**: the published files of
+  `OS/Kazo.Os.Ecosystem`, as is. The OS runs in the browser in
+  WebAssembly, with its Web Workers, its metrics and `/proc/kazoos`. The
   server keeps only its API (accounts, synchronization, network relay,
   administration).
 - An OS served by a server **connects to it on its own**, without asking, and an
@@ -21,60 +21,60 @@ Work item `exec/8-server-wasm` (`exec` series), ADRs
 ## Architecture
 
 ```text
- Navigateur                                        HackerOs.Server
+ Navigateur                                        Kazo.Os.Server
  ──────────                                        ───────────────
  index.html, _framework/, apps  ◄── MapStaticAssets ── fichiers publiés de l'Ecosystem
- GET hackeros-host.json         ◄── middleware ──────── {"isServer":true, ...}
+ GET kazoos-host.json         ◄── middleware ──────── {"isServer":true, ...}
  ServerPresenceService
-   GET /api/hackeros/host-info  ◄── VersionEndpoints ── version de l'API
+   GET /api/kazoos/host-info  ◄── VersionEndpoints ── version de l'API
    comptes, synchro, relais     ◄── API (HTTP, WebSocket)
  ServerStatusIndicator (barre des tâches, zone de notification)
 ```
 
 | Part | File |
 |---|---|
-| Server pipeline | `Server/HackerOs.Server/Program.cs` |
-| Rewriting pages to `index.html` | `Server/HackerOs.Server/Endpoints/OsPageRewrite.cs` |
-| `host-info` and `hackeros-host.json` | `Server/HackerOs.Server/Endpoints/VersionEndpoints.cs` |
-| Contract | `Server/HackerOs.Server.Contracts/Hosting/HostInfoContracts.cs` |
-| PWA "no server" file | `OS/HackerOs.Ecosystem/wwwroot/hackeros-host.json` |
-| Detection and verification | `Platform/HackerOs.Platform.Core/ServerConnection/HostInfoClient.cs` |
-| State and retry | `Platform/HackerOs.Platform.Core/ServerConnection/ServerPresenceService.cs` |
-| Icon and panel | `Platform/HackerOs.Platform.Blazor/Shell/ServerStatusIndicator.razor` (`.razor.cs`, `.razor.css`) |
-| Notification area | `Platform/HackerOs.Taskbar.Blazor/Taskbar.razor` (`NotificationAreaContent`) |
-| Composition | `OS/HackerOs.Ecosystem.Host/EcosystemServiceCollectionExtensions.cs`, `HackerOsBrowserHostExtensions.cs` |
+| Server pipeline | `Server/Kazo.Os.Server/Program.cs` |
+| Rewriting pages to `index.html` | `Server/Kazo.Os.Server/Endpoints/OsPageRewrite.cs` |
+| `host-info` and `kazoos-host.json` | `Server/Kazo.Os.Server/Endpoints/VersionEndpoints.cs` |
+| Contract | `Server/Kazo.Os.Server.Contracts/Hosting/HostInfoContracts.cs` |
+| PWA "no server" file | `OS/Kazo.Os.Ecosystem/wwwroot/kazoos-host.json` |
+| Detection and verification | `Platform/Kazo.Os.Platform.Core/ServerConnection/HostInfoClient.cs` |
+| State and retry | `Platform/Kazo.Os.Platform.Core/ServerConnection/ServerPresenceService.cs` |
+| Icon and panel | `Platform/Kazo.Os.Platform.Blazor/Shell/ServerStatusIndicator.razor` (`.razor.cs`, `.razor.css`) |
+| Notification area | `Platform/Kazo.Os.Taskbar.Blazor/Taskbar.razor` (`NotificationAreaContent`) |
+| Composition | `OS/Kazo.Os.Ecosystem.Host/EcosystemServiceCollectionExtensions.cs`, `KazoOsBrowserHostExtensions.cs` |
 
 ## Starting the server
 
 ```bash
-dotnet run --project Server/HackerOs.Server   # http://localhost:5000 par défaut
+dotnet run --project Server/Kazo.Os.Server   # http://localhost:5000 par défaut
 ```
 
 The browser opens the server's address and receives the OS. A middleware placed
 right after `builder.Build()` adds `Cross-Origin-Opener-Policy` and
 `Cross-Origin-Embedder-Policy: credentialless` to all responses, according to
-`HackerOs:CrossOriginIsolation` in the server's `appsettings.json` (`auto` by
+`KazoOs:CrossOriginIsolation` in the server's `appsettings.json` (`auto` by
 default; `off` adds nothing): the page is isolated (ADR 0131, 0143). In production,
-`dotnet publish Server/HackerOs.Server` copies the Ecosystem files into
+`dotnet publish Server/Kazo.Os.Server` copies the Ecosystem files into
 its `wwwroot`. Any page address (`/`, a deep link) receives
 `index.html`; `/api/...`, `/health`, `/openapi`, `/scalar` and files are
 never rewritten.
 
 ## Automatic connection
 
-1. At desktop startup, the OS reads `/etc/hackeros/server.config`. If
+1. At desktop startup, the OS reads `/etc/kazoos/server.config`. If
    `auto-connect` is not `false` (or `no`, `off`, `0`), it reads
-   `hackeros-host.json` on its own origin: the PWA answers "no
-   server", `HackerOs.Server` answers "server".
+   `kazoos-host.json` on its own origin: the PWA answers "no
+   server", `Kazo.Os.Server` answers "server".
 2. The chosen server is the one of the account linked to the device (Settings, ADR
    0028), otherwise the one that served the OS.
-3. The OS calls `GET /api/hackeros/host-info`: a response in API 1.x =
+3. The OS calls `GET /api/kazoos/host-info`: a response in API 1.x =
    connected; another version = **Error**; no response = **Offline**,
    retry after 5, 10, 20, 40 then 60 s. Once connected, it rechecks every
    30 s.
 
 ```ini
-# /etc/hackeros/server.config (facultatif, administrateur)
+# /etc/kazoos/server.config (facultatif, administrateur)
 [server]
 auto-connect=false
 ```
@@ -107,8 +107,8 @@ can no longer log in with a password.
 The server is also published as a self-contained program per system and as a
 Docker image, installed as a service (issue #267, ADR 0191):
 [`installable-server.md`](installable-server.md). It then reads
-`hackeros-server.json` (next to the program, after `appsettings.json`, before
-the `HACKEROS_` variables), links devices with a pairing code and, started as
+`kazoos-server.json` (next to the program, after `appsettings.json`, before
+the `KAZOOS_` variables), links devices with a pairing code and, started as
 a Windows service, uses the program folder as its content root. The published
 server serves `index.html` through a middleware (`UseOsPageFile`), because the
 published static assets manifest does not contain that page
@@ -125,23 +125,23 @@ published static assets manifest does not contain that page
 
 ## Tests
 
-- `Tests/HackerOs.Server.Tests/ServerOsHostingIntegrationTests.cs`: OS page
+- `Tests/Kazo.Os.Server.Tests/ServerOsHostingIntegrationTests.cs`: OS page
   on `/` and a deep link, 404 for an unknown API route, detection
   on both addresses, account created then used from a second device,
   wrong password refused.
-- `Tests/HackerOs.Platform.Core.Tests/ServerConnection/ServerPresenceServiceTests.cs`:
+- `Tests/Kazo.Os.Platform.Core.Tests/ServerConnection/ServerPresenceServiceTests.cs`:
   connection without account and without asking, static host without icon, server linked
   by hand, offline then retry with increasing delay, incompatible API,
   "Sign in", `auto-connect=false`, identical salt from one device to another.
-- `build/verify-hosts.sh` (`Tests/HackerOs.HostSmoke.Tests`): `server`
+- `build/verify-hosts.sh` (`Tests/Kazo.Os.HostSmoke.Tests`): `server`
   run with workers, metrics and icon; no icon on the others.
 
 ## Task list
 
-- [x] Serve the published Ecosystem files from `HackerOs.Server`.
+- [x] Serve the published Ecosystem files from `Kazo.Os.Server`.
 - [x] Remove Interactive Server, direct clients and references to apps.
 - [x] Rewrite OS pages to `index.html` in all environments.
-- [x] `host-info` and `hackeros-host.json` (server and PWA).
+- [x] `host-info` and `kazoos-host.json` (server and PWA).
 - [x] `ServerPresenceService`: detection, verification, retry, `auto-connect`.
 - [x] Icon and panel in the taskbar notification area.
 - [x] Stable client salt and device registered at login.

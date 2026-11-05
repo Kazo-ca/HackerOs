@@ -1,0 +1,295 @@
+@namespace Kazo.Os.Platform.Blazor.Dialogs
+@using Kazo.Os.App.Abstractions
+@using Kazo.Os.Simulation.Abstractions.FileSystem
+@using Kazo.Os.Simulation.Abstractions.Gateways
+@using Microsoft.AspNetCore.Components.Web
+@using MudBlazor
+@inject IStringLocalizer<Strings> L
+@implements IAsyncDisposable
+
+<section class="folder-browser" aria-label="@L["FolderBrowser.Label"]" aria-busy="@(_loading ? "true" : "false")">
+    <nav class="breadcrumbs" aria-label="@L["FolderBrowser.CurrentFolder"]">
+        @foreach (Breadcrumb breadcrumb in GetBreadcrumbs())
+        {
+            <button type="button"
+                    class="breadcrumb"
+                    disabled="@(breadcrumb.Path == _currentDirectory)"
+                    @onclick="() => NavigateAsync(breadcrumb.Path)">@breadcrumb.Label</button>
+        }
+    </nav>
+
+    @if (_loading)
+    {
+        <div class="browser-status" role="status">
+            <MudProgressCircular Indeterminate="true" Size="Size.Small" />
+            <span>@L["FolderBrowser.Loading"]</span>
+        </div>
+    }
+    else if (_errorCode is FileSystemErrorCode errorCode)
+    {
+        <div class="browser-status error" role="alert">
+            <MudIcon Icon="@Icons.Material.Filled.ErrorOutline" />
+            <span>@L["FolderBrowser.OpenFailed", errorCode.ToString()]</span>
+            <button type="button" @onclick="ReloadAsync">@L["Common.Retry"]</button>
+        </div>
+    }
+    else if (VisibleEntries.Count == 0)
+    {
+        <div class="browser-status" role="status">@L["FolderBrowser.Empty"]</div>
+    }
+    else
+    {
+        <div class="entry-list"
+             role="listbox"
+             aria-label="@L["FolderBrowser.Entries"]"
+             aria-activedescendant="@ActiveDescendantId"
+             tabindex="0"
+             @onkeydown="HandleKeyDownAsync">
+            @for (int index = 0; index < VisibleEntries.Count; index++)
+            {
+                int entryIndex = index;
+                FileSystemDirectoryItem entry = VisibleEntries[index];
+                VirtualPath path = Combine(_currentDirectory, entry.Name.Value);
+                <button @key="path.Value"
+                    id="@EntryId(entryIndex)"
+                        type="button"
+                    class="@EntryClass(entryIndex)"
+                        role="option"
+                        aria-selected="@(_selectedPaths.Contains(path) ? "true" : "false")"
+                        tabindex="-1"
+                    @onclick="args => SelectAsync(entryIndex, args.CtrlKey)"
+                    @ondblclick="() => ActivateAsync(entryIndex)">
+                    <MudIcon Icon="@(entry.Metadata.Kind == FileSystemEntryKind.Directory ? Icons.Material.Filled.Folder : Icons.Material.Filled.Description)" />
+                    <span class="entry-name">@entry.Name.Value</span>
+                    <span class="entry-kind">@KindLabel(entry.Metadata.Kind)</span>
+                </button>
+            }
+        </div>
+    }
+</section>
+
+@code {
+    /// <summary>Gets or sets the app-scoped filesystem gateway.</summary>
+    [Parameter, EditorRequired]
+    public IAppFileSystemGateway FileSystem { get; set; } = null!;
+
+    /// <summary>Gets or sets the directory first shown by the browser.</summary>
+    [Parameter]
+    public VirtualPath InitialDirectory { get; set; } = VirtualPath.Parse("/");
+
+    /// <summary>Gets or sets whether regular files may be selected.</summary>
+    [Parameter]
+    public bool AllowFileSelection { get; set; } = true;
+
+    /// <summary>Gets or sets whether directories may be selected.</summary>
+    [Parameter]
+    public bool AllowDirectorySelection { get; set; }
+
+    /// <summary>Gets or sets whether more than one entry may be selected.</summary>
+    [Parameter]
+    public bool AllowMultipleSelection { get; set; }
+
+    /// <summary>Gets or sets an optional regular-file visibility predicate.</summary>
+    [Parameter]
+    public Func<FileSystemDirectoryItem, bool>? FileFilter { get; set; }
+
+    /// <summary>Raised after a directory is opened successfully.</summary>
+    [Parameter]
+    public EventCallback<FileSystemDirectorySnapshot> DirectoryChanged { get; set; }
+
+    /// <summary>Raised when the current selected path changes.</summary>
+    [Parameter]
+    public EventCallback<IReadOnlyList<VirtualPath>> SelectionChanged { get; set; }
+
+    /// <summary>
+    /// Raised when a regular file is activated (double-click or Enter), after it is selected: an
+    /// Open dialog opens it, a Save dialog takes its name, as GTK/Windows file choosers do.
+    /// </summary>
+    [Parameter]
+    public EventCallback<FileSystemDirectoryItem> FileActivated { get; set; }
+
+    private readonly string _id = Guid.NewGuid().ToString("N");
+    private readonly HashSet<VirtualPath> _selectedPaths = [];
+    private IReadOnlyList<FileSystemDirectoryItem> _entries = [];
+    private VirtualPath _currentDirectory = VirtualPath.Parse("/");
+    private CancellationTokenSource? _loadCancellation;
+    private FileSystemErrorCode? _errorCode;
+    private int _selectedIndex = -1;
+    private long _loadVersion;
+    private bool _initialized;
+    private bool _loading;
+
+    private string? ActiveDescendantId => _selectedIndex >= 0 ? EntryId(_selectedIndex) : null;
+    private IReadOnlyList<FileSystemDirectoryItem> VisibleEntries =>
+        _entries.Where(entry => entry.Metadata.Kind == FileSystemEntryKind.Directory || FileFilter?.Invoke(entry) != false).ToArray();
+
+    /// <inheritdoc />
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!_initialized)
+        {
+            _initialized = true;
+            await NavigateAsync(InitialDirectory);
+        }
+    }
+
+    /// <inheritdoc />
+    public ValueTask DisposeAsync()
+    {
+        _loadCancellation?.Cancel();
+        _loadCancellation?.Dispose();
+        return ValueTask.CompletedTask;
+    }
+
+    /// <summary>Reloads the current directory through the authorized gateway.</summary>
+    public Task RefreshAsync() => NavigateAsync(_currentDirectory);
+
+    private async Task NavigateAsync(VirtualPath directory)
+    {
+        long loadVersion = ++_loadVersion;
+        _loadCancellation?.Cancel();
+        _loadCancellation?.Dispose();
+        CancellationTokenSource loadCancellation = new();
+        _loadCancellation = loadCancellation;
+        _loading = true;
+        _errorCode = null;
+        _selectedIndex = -1;
+        _selectedPaths.Clear();
+        await SelectionChanged.InvokeAsync([]);
+
+        FileSystemResult<FileSystemDirectorySnapshot> result;
+        try
+        {
+            result = await FileSystem.EnumerateAsync(
+                new FileSystemEnumerateRequest(directory),
+                loadCancellation.Token);
+        }
+            catch (OperationCanceledException) when (loadCancellation.IsCancellationRequested)
+        {
+            return;
+        }
+
+        if (loadVersion != _loadVersion)
+        {
+            return;
+        }
+
+        if (result is { Succeeded: true, Value: { } snapshot })
+        {
+            _currentDirectory = snapshot.Path;
+            _entries = snapshot.Entries;
+            await DirectoryChanged.InvokeAsync(snapshot);
+        }
+        else
+        {
+            _entries = [];
+            _errorCode = result.Error?.Code ?? FileSystemErrorCode.ProviderFailure;
+        }
+
+        _loading = false;
+    }
+
+    private Task ReloadAsync() => NavigateAsync(_currentDirectory);
+
+    private async Task SelectAsync(int index, bool extend = false)
+    {
+        if (index < 0 || index >= VisibleEntries.Count)
+        {
+            return;
+        }
+
+        FileSystemDirectoryItem entry = VisibleEntries[index];
+        _selectedIndex = index;
+        VirtualPath path = Combine(_currentDirectory, entry.Name.Value);
+        bool selectable = entry.Metadata.Kind == FileSystemEntryKind.Directory
+            ? AllowDirectorySelection
+            : AllowFileSelection;
+        if (!AllowMultipleSelection || !extend)
+        {
+            _selectedPaths.Clear();
+        }
+
+        if (selectable)
+        {
+            if (!_selectedPaths.Add(path) && AllowMultipleSelection && extend)
+            {
+                _selectedPaths.Remove(path);
+            }
+        }
+
+        await SelectionChanged.InvokeAsync(_selectedPaths.ToArray());
+    }
+
+    private async Task ActivateAsync(int index)
+    {
+        if (index < 0 || index >= VisibleEntries.Count)
+        {
+            return;
+        }
+
+        FileSystemDirectoryItem entry = VisibleEntries[index];
+        if (entry.Metadata.Kind == FileSystemEntryKind.Directory)
+        {
+            await NavigateAsync(Combine(_currentDirectory, entry.Name.Value));
+        }
+        else
+        {
+            await SelectAsync(index);
+            await FileActivated.InvokeAsync(entry);
+        }
+    }
+
+    private async Task HandleKeyDownAsync(KeyboardEventArgs args)
+    {
+        int next = args.Key switch
+        {
+            "ArrowDown" => Math.Min(_selectedIndex + 1, VisibleEntries.Count - 1),
+            "ArrowUp" => Math.Max(_selectedIndex - 1, 0),
+            "Home" => 0,
+            "End" => VisibleEntries.Count - 1,
+            _ => _selectedIndex,
+        };
+
+        if (args.Key is "Enter" or " ")
+        {
+            await ActivateAsync(_selectedIndex);
+        }
+        else if (next != _selectedIndex && next >= 0)
+        {
+            await SelectAsync(next);
+        }
+    }
+
+    private IReadOnlyList<Breadcrumb> GetBreadcrumbs()
+    {
+        List<Breadcrumb> breadcrumbs = [new("/", VirtualPath.Parse("/"))];
+        string path = string.Empty;
+        foreach (string segment in _currentDirectory.Value.Split('/', StringSplitOptions.RemoveEmptyEntries))
+        {
+            path += $"/{segment}";
+            breadcrumbs.Add(new Breadcrumb(segment, VirtualPath.Parse(path)));
+        }
+
+        return breadcrumbs;
+    }
+
+    private string EntryId(int index) => $"folder-browser-{_id}-entry-{index}";
+
+    /// <summary>The kind column in the session language (<c>FolderBrowser.Kind.Directory</c>…), the enum name for an unknown kind.</summary>
+    private string KindLabel(FileSystemEntryKind kind)
+    {
+        LocalizedString text = L[$"FolderBrowser.Kind.{kind}"];
+        return text.ResourceNotFound ? kind.ToString() : text.Value;
+    }
+
+    private string EntryClass(int index)
+    {
+        FileSystemDirectoryItem entry = VisibleEntries[index];
+        return _selectedPaths.Contains(Combine(_currentDirectory, entry.Name.Value)) ? "entry is-selected" : "entry";
+    }
+
+    private static VirtualPath Combine(VirtualPath directory, string name) =>
+        VirtualPath.Parse(directory.Value == "/" ? $"/{name}" : $"{directory.Value}/{name}");
+
+    private sealed record Breadcrumb(string Label, VirtualPath Path);
+}

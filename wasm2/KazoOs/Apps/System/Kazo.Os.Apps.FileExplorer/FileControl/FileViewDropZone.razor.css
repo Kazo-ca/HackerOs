@@ -1,0 +1,6 @@
+.file-view-drop-zone.file-view-drop-hover {
+    outline: 1px dashed var(--kos-accent, #42d392);
+    outline-offset: -2px;
+    background: color-mix(in srgb, var(--kos-accent, #42d392) 12%, transparent);
+    border-radius: 4px;
+}

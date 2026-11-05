@@ -24,8 +24,8 @@ que deviennent les titres que certaines apps affichaient déjà chez elles.
 
 ### 1. `IAppWindowGateway` est publique, transmise en valeur en cascade fixe
 
-- L'interface est dans `HackerOs.AppSdk.Blazor` et publique : `WindowAppBase` (SDK)
-  l'appelle et la plateforme (`HackerOs.Platform.Blazor`) l'implémente ; aucune
+- L'interface est dans `Kazo.Os.AppSdk.Blazor` et publique : `WindowAppBase` (SDK)
+  l'appelle et la plateforme (`Kazo.Os.Platform.Blazor`) l'implémente ; aucune
   `InternalsVisibleTo` ne relie ces deux paquets. Comme `IWindowAppEventTarget`,
   une app ne l'implémente ni ne l'appelle : elle passe par `WindowAppBase`.
 - Elle n'est **pas** dans l'injection de dépendances. `WindowAppRenderer` crée une

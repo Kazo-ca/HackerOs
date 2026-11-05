@@ -2,7 +2,7 @@
 
 # Process limits for apps
 
-This document describes what an app sees and can do with the limits of its process (`HackProcess`, `/proc/<pid>/limits`). The implementation (tables, controller, reading of `limits.conf`, shell commands) is in [`../dev/process-limits.md`](../dev/process-limits.md).
+This document describes what an app sees and can do with the limits of its process (`KazoProcess`, `/proc/<pid>/limits`). The implementation (tables, controller, reading of `limits.conf`, shell commands) is in [`../dev/process-limits.md`](../dev/process-limits.md).
 
 ## Role
 
@@ -45,16 +45,16 @@ Max open files            1024                 524288               files
 ```
 
 The `# enforcement:` line is `strict (worker)`, `best-effort (main thread)`
-or `off (HackerOs:ResourceLimits:Enabled=false)`. `/proc/<pid>/fd/` (folder
+or `off (KazoOs:ResourceLimits:Enabled=false)`. `/proc/<pid>/fd/` (folder
 `0500`) lists the open descriptors as links.
 
 ## SDK API
 
 ```csharp
-HackProcess self = await HackProcess.GetCurrentProcessAsync();
-HackResourceLimits limits = await self.GetResourceLimitsAsync();
+KazoProcess self = await KazoProcess.GetCurrentProcessAsync();
+KazoResourceLimits limits = await self.GetResourceLimitsAsync();
 await self.SetResourceLimitAsync(ResourceLimitKind.NoFile, 256, limits.NoFile.Hard);
 ```
 
-Errors: `ArgumentException` (`EINVAL`), `HackUnauthorizedAccessException`
+Errors: `ArgumentException` (`EINVAL`), `KazoUnauthorizedAccessException`
 (`EPERM`), `InvalidOperationException` (`ESRCH`).

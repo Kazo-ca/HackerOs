@@ -1,0 +1,926 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Approval.Allow" xml:space="preserve">
+    <value>Autoriser</value>
+  </data>
+  <data name="Approval.Capabilities" xml:space="preserve">
+    <value>Capacités demandées</value>
+  </data>
+  <data name="Approval.Deny" xml:space="preserve">
+    <value>Refuser</value>
+  </data>
+  <data name="Approval.Footer" xml:space="preserve">
+    <value>Cette décision sera inscrite dans /var/log/auth.log</value>
+  </data>
+  <data name="Approval.Identifier" xml:space="preserve">
+    <value>Identifiant</value>
+  </data>
+  <data name="Approval.NonSystemApp" xml:space="preserve">
+    <value>App non système</value>
+  </data>
+  <data name="Approval.Publisher" xml:space="preserve">
+    <value>Éditeur</value>
+  </data>
+  <data name="Approval.SaveFailed" xml:space="preserve">
+    <value>La décision n'a pas pu être enregistrée : {0}</value>
+  </data>
+  <data name="Approval.Subtitle" xml:space="preserve">
+    <value>Une application demande des capacités dangereuses.</value>
+  </data>
+  <data name="Approval.Title" xml:space="preserve">
+    <value>Autorisation administrateur requise</value>
+  </data>
+  <data name="Approval.Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="Auth.Application" xml:space="preserve">
+    <value>Application</value>
+  </data>
+  <data name="Auth.Authenticate" xml:space="preserve">
+    <value>Authentifier</value>
+  </data>
+  <data name="Auth.Footer" xml:space="preserve">
+    <value>Cette demande sera inscrite dans /var/log/auth.log</value>
+  </data>
+  <data name="Auth.RequestedBy" xml:space="preserve">
+    <value>Demandé par</value>
+  </data>
+  <data name="Auth.Subtitle" xml:space="preserve">
+    <value>Une application demande une opération réservée aux administrateurs.</value>
+  </data>
+  <data name="Auth.System" xml:space="preserve">
+    <value>système</value>
+  </data>
+  <data name="Auth.Title" xml:space="preserve">
+    <value>Authentification administrateur</value>
+  </data>
+  <data name="Category.Developer" xml:space="preserve">
+    <value>Développement</value>
+  </data>
+  <data name="Category.Games" xml:space="preserve">
+    <value>Jeux</value>
+  </data>
+  <data name="Category.Graphics" xml:space="preserve">
+    <value>Graphisme</value>
+  </data>
+  <data name="Category.Internet" xml:space="preserve">
+    <value>Internet</value>
+  </data>
+  <data name="Category.Network" xml:space="preserve">
+    <value>Réseau</value>
+  </data>
+  <data name="Category.System" xml:space="preserve">
+    <value>Système</value>
+  </data>
+  <data name="Category.Utilities" xml:space="preserve">
+    <value>Utilitaires</value>
+  </data>
+  <data name="Clock.ActivePlatform" xml:space="preserve">
+    <value>Actif : {0} ({1}).</value>
+  </data>
+  <data name="Clock.Auto" xml:space="preserve">
+    <value>Auto</value>
+  </data>
+  <data name="Clock.AutomaticDetection" xml:space="preserve">
+    <value>détection automatique</value>
+  </data>
+  <data name="Clock.Calendar" xml:space="preserve">
+    <value>Calendrier</value>
+  </data>
+  <data name="Clock.Desktop" xml:space="preserve">
+    <value>Bureau</value>
+  </data>
+  <data name="Clock.Dismiss" xml:space="preserve">
+    <value>Ignorer la notification</value>
+  </data>
+  <data name="Clock.ExplicitChoice" xml:space="preserve">
+    <value>choix explicite</value>
+  </data>
+  <data name="Clock.Mobile" xml:space="preserve">
+    <value>Mobile</value>
+  </data>
+  <data name="Clock.NoNotifications" xml:space="preserve">
+    <value>Aucune notification.</value>
+  </data>
+  <data name="Clock.Notifications" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
+  <data name="Clock.Panel" xml:space="preserve">
+    <value>Notifications et calendrier</value>
+  </data>
+  <data name="Clock.PlatformMode" xml:space="preserve">
+    <value>Mode de la plateforme</value>
+  </data>
+  <data name="Common.Cancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="Common.Close" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="Common.No" xml:space="preserve">
+    <value>Non</value>
+  </data>
+  <data name="Common.Ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Common.Open" xml:space="preserve">
+    <value>Ouvrir</value>
+  </data>
+  <data name="Common.Password" xml:space="preserve">
+    <value>Mot de passe</value>
+  </data>
+  <data name="Common.Retry" xml:space="preserve">
+    <value>Réessayer</value>
+  </data>
+  <data name="Common.Yes" xml:space="preserve">
+    <value>Oui</value>
+  </data>
+  <data name="ContextMenu.Back" xml:space="preserve">
+    <value>Retour</value>
+  </data>
+  <data name="ContextMenu.Label" xml:space="preserve">
+    <value>Menu contextuel</value>
+  </data>
+  <data name="Credential.Authorize" xml:space="preserve">
+    <value>Autoriser</value>
+  </data>
+  <data name="Credential.Login" xml:space="preserve">
+    <value>Identifiant de l'administrateur</value>
+  </data>
+  <data name="Credential.Required" xml:space="preserve">
+    <value>L'identifiant et le mot de passe sont obligatoires.</value>
+  </data>
+  <data name="Dialog.AlwaysUse" xml:space="preserve">
+    <value>Toujours utiliser cette application</value>
+  </data>
+  <data name="Dialog.Applications" xml:space="preserve">
+    <value>Applications</value>
+  </data>
+  <data name="Dialog.AuthorizationRequired" xml:space="preserve">
+    <value>Autorisation requise</value>
+  </data>
+  <data name="Dialog.ChooseApp" xml:space="preserve">
+    <value>Choisissez une application :</value>
+  </data>
+  <data name="Dialog.Input" xml:space="preserve">
+    <value>Saisie</value>
+  </data>
+  <data name="Dialog.Message" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="Dialog.OpenWith" xml:space="preserve">
+    <value>Ouvrir avec</value>
+  </data>
+  <data name="Dialog.Title" xml:space="preserve">
+    <value>Boîte de dialogue</value>
+  </data>
+  <data name="Display.Blocked.Message" xml:space="preserve">
+    <value>Votre navigateur a bloqué la fenêtre de « {0} ». Autorisez les fenêtres pop-up pour ce site (icône à droite de la barre d'adresse), puis réessayez.</value>
+  </data>
+  <data name="Display.Blocked.Title" xml:space="preserve">
+    <value>Fenêtre détachée bloquée</value>
+  </data>
+  <data name="FileDialog.AlreadyExists" xml:space="preserve">
+    <value>{0} existe déjà. Le remplacer ?</value>
+  </data>
+  <data name="FileDialog.ConfirmOverwrite" xml:space="preserve">
+    <value>Confirmer le remplacement</value>
+  </data>
+  <data name="FileDialog.CreateFolderFailed" xml:space="preserve">
+    <value>Impossible de créer le dossier ({0}).</value>
+  </data>
+  <data name="FileDialog.FileName" xml:space="preserve">
+    <value>Nom du fichier</value>
+  </data>
+  <data name="FileDialog.FileType" xml:space="preserve">
+    <value>Type de fichier</value>
+  </data>
+  <data name="FileDialog.FilesSelected" xml:space="preserve">
+    <value>{0} fichiers sélectionnés</value>
+  </data>
+  <data name="FileDialog.InspectFailed" xml:space="preserve">
+    <value>Impossible d'examiner la destination ({0}).</value>
+  </data>
+  <data name="FileDialog.NewFolder" xml:space="preserve">
+    <value>Nouveau dossier</value>
+  </data>
+  <data name="FileDialog.NewFolderName" xml:space="preserve">
+    <value>Nom du nouveau dossier</value>
+  </data>
+  <data name="FileDialog.NoFileSelected" xml:space="preserve">
+    <value>Aucun fichier sélectionné</value>
+  </data>
+  <data name="FileDialog.OpenFile" xml:space="preserve">
+    <value>Ouvrir un fichier</value>
+  </data>
+  <data name="FileDialog.Replace" xml:space="preserve">
+    <value>Remplacer</value>
+  </data>
+  <data name="FileDialog.Save" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="FileDialog.SaveFile" xml:space="preserve">
+    <value>Enregistrer le fichier</value>
+  </data>
+  <data name="FileDialog.Select" xml:space="preserve">
+    <value>Choisir</value>
+  </data>
+  <data name="FileDialog.SelectFolder" xml:space="preserve">
+    <value>Choisir un dossier</value>
+  </data>
+  <data name="FileDialog.Title" xml:space="preserve">
+    <value>Sélecteur de fichiers</value>
+  </data>
+  <data name="FileDialog.Up" xml:space="preserve">
+    <value>Dossier parent</value>
+  </data>
+  <data name="FileDialog.View" xml:space="preserve">
+    <value>Affichage</value>
+  </data>
+  <data name="FileDialog.ViewDetails" xml:space="preserve">
+    <value>Détails</value>
+  </data>
+  <data name="FileDialog.ViewIcons" xml:space="preserve">
+    <value>Icônes</value>
+  </data>
+  <data name="FolderBrowser.CurrentFolder" xml:space="preserve">
+    <value>Dossier courant</value>
+  </data>
+  <data name="FolderBrowser.Empty" xml:space="preserve">
+    <value>Ce dossier est vide.</value>
+  </data>
+  <data name="FolderBrowser.Entries" xml:space="preserve">
+    <value>Contenu du dossier</value>
+  </data>
+  <data name="FolderBrowser.Kind.CharacterDevice" xml:space="preserve">
+    <value>Périphérique caractère</value>
+  </data>
+  <data name="FolderBrowser.Kind.Directory" xml:space="preserve">
+    <value>Dossier</value>
+  </data>
+  <data name="FolderBrowser.Kind.File" xml:space="preserve">
+    <value>Fichier</value>
+  </data>
+  <data name="FolderBrowser.Kind.SymbolicLink" xml:space="preserve">
+    <value>Lien symbolique</value>
+  </data>
+  <data name="FolderBrowser.Label" xml:space="preserve">
+    <value>Navigateur du système de fichiers</value>
+  </data>
+  <data name="FolderBrowser.Loading" xml:space="preserve">
+    <value>Chargement du dossier</value>
+  </data>
+  <data name="FolderBrowser.OpenFailed" xml:space="preserve">
+    <value>Impossible d'ouvrir ce dossier ({0}).</value>
+  </data>
+  <data name="Launcher.AllCategories" xml:space="preserve">
+    <value>Toutes</value>
+  </data>
+  <data name="Launcher.AllPrograms" xml:space="preserve">
+    <value>Tous les programmes</value>
+  </data>
+  <data name="Launcher.AvailableApps" xml:space="preserve">
+    <value>Applications disponibles</value>
+  </data>
+  <data name="Launcher.Categories" xml:space="preserve">
+    <value>Catégories d'applications</value>
+  </data>
+  <data name="Launcher.ClearSearch" xml:space="preserve">
+    <value>Effacer la recherche d'applications</value>
+  </data>
+  <data name="Launcher.ClearSearchTitle" xml:space="preserve">
+    <value>Effacer la recherche</value>
+  </data>
+  <data name="Launcher.Close" xml:space="preserve">
+    <value>Fermer le menu Démarrer</value>
+  </data>
+  <data name="Launcher.FileExplorer" xml:space="preserve">
+    <value>Explorateur de fichiers</value>
+  </data>
+  <data name="Launcher.FileExplorerHint" xml:space="preserve">
+    <value>Parcourir vos fichiers personnels</value>
+  </data>
+  <data name="Launcher.LaunchApp" xml:space="preserve">
+    <value>Lancer {0}</value>
+  </data>
+  <data name="Launcher.LocalSession" xml:space="preserve">
+    <value>Session locale</value>
+  </data>
+  <data name="Launcher.LocalUser" xml:space="preserve">
+    <value>Utilisateur local</value>
+  </data>
+  <data name="Launcher.MoveAppDown" xml:space="preserve">
+    <value>Descendre {0}</value>
+  </data>
+  <data name="Launcher.MoveAppUp" xml:space="preserve">
+    <value>Monter {0}</value>
+  </data>
+  <data name="Launcher.MoveDown" xml:space="preserve">
+    <value>Descendre</value>
+  </data>
+  <data name="Launcher.MoveUp" xml:space="preserve">
+    <value>Monter</value>
+  </data>
+  <data name="Launcher.NoMatch" xml:space="preserve">
+    <value>Aucune application ne correspond à votre recherche.</value>
+  </data>
+  <data name="Launcher.OfflineSession" xml:space="preserve">
+    <value>Session hors ligne</value>
+  </data>
+  <data name="Launcher.OpenFileExplorer" xml:space="preserve">
+    <value>Ouvrir l'Explorateur de fichiers</value>
+  </data>
+  <data name="Launcher.OpenSettings" xml:space="preserve">
+    <value>Ouvrir les Paramètres</value>
+  </data>
+  <data name="Launcher.Pin" xml:space="preserve">
+    <value>Épingler au menu Démarrer</value>
+  </data>
+  <data name="Launcher.PinApp" xml:space="preserve">
+    <value>Épingler {0} au menu Démarrer</value>
+  </data>
+  <data name="Launcher.Pinned" xml:space="preserve">
+    <value>Épinglées</value>
+  </data>
+  <data name="Launcher.Power" xml:space="preserve">
+    <value>Marche/arrêt</value>
+  </data>
+  <data name="Launcher.Power.Menu" xml:space="preserve">
+    <value>Options d'alimentation</value>
+  </data>
+  <data name="Launcher.Power.Restart" xml:space="preserve">
+    <value>Redémarrer</value>
+  </data>
+  <data name="Launcher.Power.SignOut" xml:space="preserve">
+    <value>Se déconnecter</value>
+  </data>
+  <data name="Launcher.Power.SwitchUser" xml:space="preserve">
+    <value>Changer d'utilisateur</value>
+  </data>
+  <data name="Launcher.Power.SwitchUser.Guest" xml:space="preserve">
+    <value>Indisponible en session invité</value>
+  </data>
+  <data name="Launcher.Power.SwitchUser.Unavailable" xml:space="preserve">
+    <value>Bientôt disponible</value>
+  </data>
+  <data name="Launcher.QuickAccess" xml:space="preserve">
+    <value>Accès rapide</value>
+  </data>
+  <data name="Launcher.SearchLabel" xml:space="preserve">
+    <value>Rechercher des applications</value>
+  </data>
+  <data name="Launcher.SearchPlaceholder" xml:space="preserve">
+    <value>Rechercher des programmes et des fichiers</value>
+  </data>
+  <data name="Launcher.SearchResults" xml:space="preserve">
+    <value>Résultats de la recherche</value>
+  </data>
+  <data name="Launcher.SearchResultsList" xml:space="preserve">
+    <value>Résultats de la recherche d'applications</value>
+  </data>
+  <data name="Launcher.SearchStatus.Many" xml:space="preserve">
+    <value>{0} applications trouvées.</value>
+  </data>
+  <data name="Launcher.SearchStatus.One" xml:space="preserve">
+    <value>{0} application trouvée.</value>
+  </data>
+  <data name="Launcher.Settings" xml:space="preserve">
+    <value>Paramètres</value>
+  </data>
+  <data name="Launcher.SettingsHint" xml:space="preserve">
+    <value>Personnaliser Kazo OS</value>
+  </data>
+  <data name="Launcher.Title" xml:space="preserve">
+    <value>Menu Démarrer</value>
+  </data>
+  <data name="Launcher.Unpin" xml:space="preserve">
+    <value>Retirer du menu Démarrer</value>
+  </data>
+  <data name="Launcher.UnpinApp" xml:space="preserve">
+    <value>Retirer {0} du menu Démarrer</value>
+  </data>
+  <data name="Logout.Body" xml:space="preserve">
+    <value>Fermer votre session arrêtera toutes les applications et tous les processus en cours.</value>
+  </data>
+  <data name="Logout.Processes" xml:space="preserve">
+    <value>Processus actifs à arrêter ({0}) :</value>
+  </data>
+  <data name="Logout.Restart" xml:space="preserve">
+    <value>Redémarrer</value>
+  </data>
+  <data name="Logout.Restart.Body" xml:space="preserve">
+    <value>Le redémarrage ferme votre session comme une déconnexion, puis recharge Kazo OS depuis le serveur.</value>
+  </data>
+  <data name="Logout.Restart.Title" xml:space="preserve">
+    <value>Redémarrer Kazo OS</value>
+  </data>
+  <data name="Logout.Restarting" xml:space="preserve">
+    <value>Redémarrage...</value>
+  </data>
+  <data name="Logout.SignOut" xml:space="preserve">
+    <value>Se déconnecter</value>
+  </data>
+  <data name="Logout.SigningOut" xml:space="preserve">
+    <value>Déconnexion...</value>
+  </data>
+  <data name="Logout.Title" xml:space="preserve">
+    <value>Se déconnecter de Kazo OS</value>
+  </data>
+  <data name="Mobile.Shade" xml:space="preserve">
+    <value>Notifications, calendrier et mode de la plateforme</value>
+  </data>
+  <data name="Mobile.ShadeWithOneUnread" xml:space="preserve">
+    <value>Notifications, calendrier et mode de la plateforme : 1 notification non lue</value>
+  </data>
+  <data name="Mobile.ShadeWithUnread" xml:space="preserve">
+    <value>Notifications, calendrier et mode de la plateforme : {0} notifications non lues</value>
+  </data>
+  <data name="Security.AdministratorName" xml:space="preserve">
+    <value>Nom d'administrateur</value>
+  </data>
+  <data name="Security.InvalidCredentials" xml:space="preserve">
+    <value>Nom ou mot de passe incorrect. Essais restants : {0}.</value>
+  </data>
+  <data name="Security.NotAdministrator" xml:space="preserve">
+    <value>Ce compte n'est pas administrateur. Essais restants : {0}.</value>
+  </data>
+  <data name="Security.UserDisabled" xml:space="preserve">
+    <value>Ce compte est désactivé. Essais restants : {0}.</value>
+  </data>
+  <data name="Security.Verifying" xml:space="preserve">
+    <value>Vérification...</value>
+  </data>
+  <data name="Server.Account" xml:space="preserve">
+    <value>Compte</value>
+  </data>
+  <data name="Server.AccountName" xml:space="preserve">
+    <value>Nom du compte</value>
+  </data>
+  <data name="Server.Address" xml:space="preserve">
+    <value>Adresse</value>
+  </data>
+  <data name="Server.Cancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="Server.CreateAccount" xml:space="preserve">
+    <value>Créer un compte</value>
+  </data>
+  <data name="Server.Detail" xml:space="preserve">
+    <value>Détail</value>
+  </data>
+  <data name="Server.Identify" xml:space="preserve">
+    <value>S'identifier</value>
+  </data>
+  <data name="Server.IdentifyFailed" xml:space="preserve">
+    <value>Échec de l'identification : {0}</value>
+  </data>
+  <data name="Server.LastSync" xml:space="preserve">
+    <value>Dernière synchronisation</value>
+  </data>
+  <data name="Server.LogIn" xml:space="preserve">
+    <value>Se connecter</value>
+  </data>
+  <data name="Server.NoAccount" xml:space="preserve">
+    <value>Non identifié</value>
+  </data>
+  <data name="Server.Panel" xml:space="preserve">
+    <value>Serveur Kazo OS</value>
+  </data>
+  <data name="Server.Password" xml:space="preserve">
+    <value>Mot de passe</value>
+  </data>
+  <data name="Server.Reconnect" xml:space="preserve">
+    <value>Reconnecter</value>
+  </data>
+  <data name="Server.Settings" xml:space="preserve">
+    <value>Paramètres du serveur</value>
+  </data>
+  <data name="Server.State" xml:space="preserve">
+    <value>État</value>
+  </data>
+  <data name="Server.Status.Anonymous" xml:space="preserve">
+    <value>Connecté, non identifié</value>
+  </data>
+  <data name="Server.Status.Connected" xml:space="preserve">
+    <value>Connecté</value>
+  </data>
+  <data name="Server.Status.Connecting" xml:space="preserve">
+    <value>Connexion…</value>
+  </data>
+  <data name="Server.Status.Error" xml:space="preserve">
+    <value>Erreur</value>
+  </data>
+  <data name="Server.Status.Offline" xml:space="preserve">
+    <value>Hors ligne (serveur injoignable)</value>
+  </data>
+  <data name="Server.Tooltip" xml:space="preserve">
+    <value>Serveur Kazo OS {0} : {1}</value>
+  </data>
+  <data name="Shell.LaunchFailed" xml:space="preserve">
+    <value>L'application facultative n'a pas pu être chargée.</value>
+  </data>
+  <data name="Size.Bytes" xml:space="preserve">
+    <value>{0} o</value>
+  </data>
+  <data name="Size.KiB" xml:space="preserve">
+    <value>{0} Kio</value>
+  </data>
+  <data name="Size.MiB" xml:space="preserve">
+    <value>{0} Mio</value>
+  </data>
+  <data name="Switcher.Label" xml:space="preserve">
+    <value>Changer de fenêtre</value>
+  </data>
+  <data name="Sync.ApplyToAll" xml:space="preserve">
+    <value>Appliquer à tous</value>
+  </data>
+  <data name="Sync.ApplyToAllPrompt" xml:space="preserve">
+    <value>Appliquer à tous :</value>
+  </data>
+  <data name="Sync.Deleted" xml:space="preserve">
+    <value>Supprimé</value>
+  </data>
+  <data name="Sync.Device" xml:space="preserve">
+    <value>Appareil</value>
+  </data>
+  <data name="Sync.Footer" xml:space="preserve">
+    <value>La version écartée va dans la Corbeille ; « Garder les deux » renomme la vôtre en</value>
+  </data>
+  <data name="Sync.FooterEnd" xml:space="preserve">
+    <value>.</value>
+  </data>
+  <data name="Sync.KeepBoth" xml:space="preserve">
+    <value>Garder les deux</value>
+  </data>
+  <data name="Sync.KeepMine" xml:space="preserve">
+    <value>Garder la mienne</value>
+  </data>
+  <data name="Sync.KeepMineAll" xml:space="preserve">
+    <value>Garder les miennes</value>
+  </data>
+  <data name="Sync.KeepOther" xml:space="preserve">
+    <value>Garder celle de l'autre appareil</value>
+  </data>
+  <data name="Sync.KeepOtherAll" xml:space="preserve">
+    <value>Garder celles de l'autre appareil</value>
+  </data>
+  <data name="Sync.Later" xml:space="preserve">
+    <value>Plus tard</value>
+  </data>
+  <data name="Sync.Modified" xml:space="preserve">
+    <value>Modifié</value>
+  </data>
+  <data name="Sync.NotReceived" xml:space="preserve">
+    <value>Pas encore reçue : synchronisez à nouveau pour la voir.</value>
+  </data>
+  <data name="Sync.OtherDevice" xml:space="preserve">
+    <value>Autre appareil</value>
+  </data>
+  <data name="Sync.Pending.Many" xml:space="preserve">
+    <value>{0} fichiers attendent votre choix. Ouvrez Paramètres → Synchronisation pour les résoudre.</value>
+  </data>
+  <data name="Sync.Pending.One" xml:space="preserve">
+    <value>Un fichier attend votre choix. Ouvrez Paramètres → Synchronisation pour le résoudre.</value>
+  </data>
+  <data name="Sync.Pending.Title" xml:space="preserve">
+    <value>Conflits de synchronisation en attente</value>
+  </data>
+  <data name="Sync.Preview" xml:space="preserve">
+    <value>Aperçu</value>
+  </data>
+  <data name="Sync.ResolveFailed" xml:space="preserve">
+    <value>Le choix n'a pas pu être appliqué : {0}</value>
+  </data>
+  <data name="Sync.Size" xml:space="preserve">
+    <value>Taille</value>
+  </data>
+  <data name="Sync.Subtitle.Frozen" xml:space="preserve">
+    <value>Ils restent tels quels ici, et ne sont ni envoyés ni remplacés, jusqu'à votre choix.</value>
+  </data>
+  <data name="Sync.Subtitle.Many" xml:space="preserve">
+    <value>{0} fichiers ont été modifiés ici et sur un autre appareil.</value>
+  </data>
+  <data name="Sync.Subtitle.One" xml:space="preserve">
+    <value>Un fichier a été modifié ici et sur un autre appareil.</value>
+  </data>
+  <data name="Sync.ThisDevice" xml:space="preserve">
+    <value>Cet appareil</value>
+  </data>
+  <data name="Sync.Title" xml:space="preserve">
+    <value>Conflit de synchronisation</value>
+  </data>
+  <data name="Sync.Unknown" xml:space="preserve">
+    <value>inconnu</value>
+  </data>
+  <data name="Unresponsive.Message" xml:space="preserve">
+    <value>Vous pouvez attendre qu'elle réponde ou terminer l'application.</value>
+  </data>
+  <data name="Unresponsive.Terminate" xml:space="preserve">
+    <value>Terminer l'application</value>
+  </data>
+  <data name="Unresponsive.Title" xml:space="preserve">
+    <value>« {0} » ne répond pas.</value>
+  </data>
+  <data name="Unresponsive.Wait" xml:space="preserve">
+    <value>Attendre</value>
+  </data>
+  <data name="WindowMenu.Close" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="WindowMenu.ExitFullScreen" xml:space="preserve">
+    <value>Quitter le plein écran</value>
+  </data>
+  <data name="WindowMenu.FullScreen" xml:space="preserve">
+    <value>Plein écran (touches Linux)</value>
+  </data>
+  <data name="WindowMenu.Label" xml:space="preserve">
+    <value>Menu de la fenêtre</value>
+  </data>
+  <data name="WindowMenu.Maximize" xml:space="preserve">
+    <value>Agrandir</value>
+  </data>
+  <data name="WindowMenu.Minimize" xml:space="preserve">
+    <value>Réduire</value>
+  </data>
+  <data name="WindowMenu.Move" xml:space="preserve">
+    <value>Déplacer</value>
+  </data>
+  <data name="WindowMenu.Resize" xml:space="preserve">
+    <value>Redimensionner</value>
+  </data>
+  <data name="WindowMenu.Restore" xml:space="preserve">
+    <value>Restaurer</value>
+  </data>
+  <data name="WindowMenu.SnapLeft" xml:space="preserve">
+    <value>Ancrer à gauche</value>
+  </data>
+  <data name="WindowMenu.SnapRight" xml:space="preserve">
+    <value>Ancrer à droite</value>
+  </data>
+  <data name="WindowMode.Move" xml:space="preserve">
+    <value>Déplacer la fenêtre</value>
+  </data>
+  <data name="WindowMode.MoveHint" xml:space="preserve">
+    <value>Flèches : déplacer · Ctrl : 1 px · Entrée : valider · Échap : annuler</value>
+  </data>
+  <data name="WindowMode.Resize" xml:space="preserve">
+    <value>Redimensionner la fenêtre</value>
+  </data>
+  <data name="WindowMode.ResizeHint" xml:space="preserve">
+    <value>Flèches : redimensionner · Ctrl : 1 px · Entrée : valider · Échap : annuler</value>
+  </data>
+  <data name="Dialog.Properties" xml:space="preserve">
+    <value>Propriétés</value>
+  </data>
+  <data name="Dialog.FileConflict" xml:space="preserve">
+    <value>Nom déjà utilisé</value>
+  </data>
+  <data name="Dialog.FileDialogsUnavailable" xml:space="preserve">
+    <value>Les boîtes de dialogue de fichiers de l’OS sont indisponibles.</value>
+  </data>
+  <data name="Launcher.Menu.Open" xml:space="preserve">
+    <value>Ouvrir</value>
+  </data>
+  <data name="Launcher.Menu.SendTo" xml:space="preserve">
+    <value>Envoyer vers</value>
+  </data>
+  <data name="Launcher.Menu.Desktop" xml:space="preserve">
+    <value>Bureau (créer un raccourci)</value>
+  </data>
+<data name="MobileHome.Label" xml:space="preserve"><value>Écran d’accueil mobile</value></data>
+<data name="MobileHome.Title" xml:space="preserve"><value>Accueil</value></data>
+<data name="MobileHome.Edit" xml:space="preserve"><value>Modifier</value></data>
+<data name="MobileHome.Done" xml:space="preserve"><value>Terminé</value></data>
+<data name="MobileHome.Page" xml:space="preserve"><value>Page {0}</value></data>
+<data name="MobileHome.Pages" xml:space="preserve"><value>Pages de l’écran d’accueil</value></data>
+<data name="MobileHome.Empty" xml:space="preserve"><value>Ajoutez des applications depuis le tiroir pour personnaliser cette page.</value></data>
+<data name="MobileHome.MoveEarlier" xml:space="preserve"><value>Déplacer {0} avant</value></data>
+<data name="MobileHome.MoveLater" xml:space="preserve"><value>Déplacer {0} après</value></data>
+<data name="MobileHome.Remove" xml:space="preserve"><value>Retirer {0} de l’accueil</value></data>
+<data name="MobileHome.PreviousPageFor" xml:space="preserve"><value>Déplacer {0} vers la page précédente</value></data>
+<data name="MobileHome.NextPageFor" xml:space="preserve"><value>Déplacer {0} vers la page suivante</value></data>
+<data name="MobileHome.AddPage" xml:space="preserve"><value>Nouvelle page</value></data>
+<data name="MobileHome.RemovePage" xml:space="preserve"><value>Supprimer la page vide</value></data>
+<data name="MobileHome.PreviousPage" xml:space="preserve"><value>Page d’accueil précédente</value></data>
+<data name="MobileHome.NextPage" xml:space="preserve"><value>Page d’accueil suivante</value></data>
+<data name="MobileHome.Dock" xml:space="preserve"><value>Dock des applications mobiles</value></data>
+<data name="MobileHome.AllApps" xml:space="preserve"><value>Toutes les applications</value></data>
+<data name="MobileHome.CloseDrawer" xml:space="preserve"><value>Fermer le tiroir d’applications</value></data>
+<data name="MobileHome.Search" xml:space="preserve"><value>Rechercher des applications</value></data>
+<data name="MobileHome.GestureHint" xml:space="preserve"><value>Glissez vers le haut depuis Accueil ou le dock pour les apps. Glissez latéralement pour changer de page.</value></data>
+<data name="MobileHome.DrawerHint" xml:space="preserve"><value>Touchez une app pour l’ouvrir. + l’ajoute à l’accueil ; l’étoile l’épingle au dock.</value></data>
+<data name="MobileHome.AddHome" xml:space="preserve"><value>Ajouter {0} à l’accueil</value></data>
+<data name="MobileHome.PinDock" xml:space="preserve"><value>Épingler {0} au dock</value></data>
+<data name="MobileHome.UnpinDock" xml:space="preserve"><value>Détacher {0} du dock</value></data>
+<data name="MobileHome.NoApps" xml:space="preserve"><value>Aucune application correspondante.</value></data>
+<data name="MobileHome.StorageError" xml:space="preserve"><value>Impossible de charger ou enregistrer l’accueil. La dernière disposition enregistrée est conservée.</value></data>
+<data name="MobileHome.EditHint" xml:space="preserve"><value>Glissez les icônes ou utilisez leurs flèches. Retirer un raccourci ne désinstalle pas l’application.</value></data>
+<data name="MobileHome.Saved" xml:space="preserve"><value>Disposition enregistrée</value></data>
+  <data name="Auth.UsePasskey" xml:space="preserve">
+    <value>Utiliser une clé d’accès</value>
+  </data>
+  <data name="Security.NoPasskey" xml:space="preserve">
+    <value>Cet administrateur n’a pas de clé d’accès. Essais restants : {0}.</value>
+  </data>
+  <data name="Security.PasskeyCancelled" xml:space="preserve">
+    <value>La fenêtre de la clé d’accès a été fermée. Essais restants : {0}.</value>
+  </data>
+  <data name="Security.PasskeyUnsupported" xml:space="preserve">
+    <value>Ce navigateur ne peut pas utiliser de clé d’accès ici. Essais restants : {0}.</value>
+  </data>
+  <data name="Screens.WindowTitle" xml:space="preserve">
+    <value>Kazo OS — Écran {0}</value>
+  </data>
+  <data name="Screens.FullScreen" xml:space="preserve">
+    <value>Plein écran</value>
+  </data>
+  <data name="Screens.ExitFullScreen" xml:space="preserve">
+    <value>Quitter le plein écran</value>
+  </data>
+  <data name="Screens.PrimaryHidden" xml:space="preserve">
+    <value>L'onglet principal de Kazo OS est caché : le navigateur ralentit alors tout l'OS. Gardez-le visible.</value>
+  </data>
+  <data name="Screens.Restore.Message" xml:space="preserve">
+    <value>Les écrans de votre dernière session sont fermés.</value>
+  </data>
+  <data name="Screens.Restore.Action" xml:space="preserve">
+    <value>Restaurer les écrans</value>
+  </data>
+  <data name="Screens.Restore.Dismiss" xml:space="preserve">
+    <value>Ignorer</value>
+  </data>
+  <data name="Screens.SecureDialog.Message" xml:space="preserve">
+    <value>Une demande de sécurité attend sur l'écran 1. Répondez-y là pour continuer.</value>
+  </data>
+  <data name="Screens.SecureDialog.Action" xml:space="preserve">
+    <value>Aller à l'écran 1</value>
+  </data>
+  <data name="WindowMenu.OtherScreen" xml:space="preserve">
+    <value>Autre écran</value>
+  </data>
+  <data name="WindowMenu.Screen" xml:space="preserve">
+    <value>Écran {0}</value>
+  </data>
+  <data name="WindowMenu.NewScreen" xml:space="preserve">
+    <value>Nouvel écran</value>
+  </data>
+  <data name="TaskbarMenu.Label" xml:space="preserve">
+    <value>Menu de la barre des tâches</value>
+  </data>
+  <data name="TaskbarMenu.NewWindow" xml:space="preserve">
+    <value>Nouvelle fenêtre</value>
+  </data>
+  <data name="TaskbarMenu.TaskManager" xml:space="preserve">
+    <value>Gestionnaire des tâches</value>
+  </data>
+  <data name="TaskbarMenu.ShowDesktop" xml:space="preserve">
+    <value>Afficher le bureau</value>
+  </data>
+  <data name="TaskbarMenu.Cascade" xml:space="preserve">
+    <value>Fenêtres en cascade</value>
+  </data>
+  <data name="TaskbarMenu.Tile" xml:space="preserve">
+    <value>Fenêtres en mosaïque</value>
+  </data>
+  <data name="TaskbarMenu.Settings" xml:space="preserve">
+    <value>Paramètres de la barre des tâches</value>
+  </data>
+  <data name="Security.GuestConfirm" xml:space="preserve">
+    <value>Vous êtes connecté en invité, le seul compte de cet ordinateur : confirmez pour continuer, aucun mot de passe n'est demandé.</value>
+  </data>
+  <data name="Security.Confirm" xml:space="preserve">
+    <value>Confirmer</value>
+  </data>
+  <data name="Launcher.Guest.CreateAccount" xml:space="preserve">
+    <value>Invité · Créer mon compte</value>
+  </data>
+  <data name="Toast.Region" xml:space="preserve">
+    <value>Nouvelles notifications</value>
+  </data>
+  <data name="Toast.Close" xml:space="preserve">
+    <value>Masquer cette bulle</value>
+  </data>
+  <data name="InstallApproval.Title.Install" xml:space="preserve">
+    <value>Valider l'installation d'une app</value>
+  </data>
+  <data name="InstallApproval.Title.Update" xml:space="preserve">
+    <value>Valider la mise à jour d'une app</value>
+  </data>
+  <data name="InstallApproval.Title.Remove" xml:space="preserve">
+    <value>Valider le retrait d'une app</value>
+  </data>
+  <data name="InstallApproval.Subtitle" xml:space="preserve">
+    <value>Connecté en tant que {0}. Vérifiez ce qui va s'exécuter sur ce système.</value>
+  </data>
+  <data name="InstallApproval.Identifier" xml:space="preserve">
+    <value>Identifiant</value>
+  </data>
+  <data name="InstallApproval.Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="InstallApproval.Size" xml:space="preserve">
+    <value>Taille</value>
+  </data>
+  <data name="InstallApproval.Signature" xml:space="preserve">
+    <value>Signature</value>
+  </data>
+  <data name="InstallApproval.Signed" xml:space="preserve">
+    <value>Signé par sa source</value>
+  </data>
+  <data name="InstallApproval.Unsigned" xml:space="preserve">
+    <value>Non signé (vérifié par son SHA-256 seulement)</value>
+  </data>
+  <data name="InstallApproval.Source" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="InstallApproval.For" xml:space="preserve">
+    <value>Pour</value>
+  </data>
+  <data name="InstallApproval.ForEveryone" xml:space="preserve">
+    <value>tous les utilisateurs de ce système</value>
+  </data>
+  <data name="InstallApproval.ForUser" xml:space="preserve">
+    <value>{0} seulement</value>
+  </data>
+  <data name="InstallApproval.RequestedBy" xml:space="preserve">
+    <value>Demandé par</value>
+  </data>
+  <data name="InstallApproval.Trust.Verified" xml:space="preserve">
+    <value>Vérifiée</value>
+  </data>
+  <data name="InstallApproval.Trust.Trusted" xml:space="preserve">
+    <value>De confiance</value>
+  </data>
+  <data name="InstallApproval.Trust.Untrusted" xml:space="preserve">
+    <value>Non fiable</value>
+  </data>
+  <data name="InstallApproval.UntrustedWarning" xml:space="preserve">
+    <value>Cette source n'est pas de confiance : personne n'a relu cette app. Son code aura les mêmes droits que l'OS.</value>
+  </data>
+  <data name="InstallApproval.Blocked" xml:space="preserve">
+    <value>La liste noire de l'administrateur bloque l'installation pour soi ({0}) : seule l'installation pour tous est possible.</value>
+  </data>
+  <data name="InstallApproval.Capabilities" xml:space="preserve">
+    <value>Capacités demandées</value>
+  </data>
+  <data name="InstallApproval.NoCapability" xml:space="preserve">
+    <value>Aucune capacité.</value>
+  </data>
+  <data name="InstallApproval.Refuse" xml:space="preserve">
+    <value>Refuser</value>
+  </data>
+  <data name="InstallApproval.Approve.Install" xml:space="preserve">
+    <value>Installer</value>
+  </data>
+  <data name="InstallApproval.Approve.Update" xml:space="preserve">
+    <value>Mettre à jour</value>
+  </data>
+  <data name="InstallApproval.Approve.Remove" xml:space="preserve">
+    <value>Retirer</value>
+  </data>
+  <data name="InstallApproval.Footer" xml:space="preserve">
+    <value>Kazo OS demande cette validation à chaque fois (ADR 0189). Une app ne peut pas dessiner par-dessus cette fenêtre.</value>
+  </data>
+  <data name="InstallApproval.Bytes" xml:space="preserve">
+    <value>{0} octets</value>
+  </data>
+  <data name="InstallApproval.KiB" xml:space="preserve">
+    <value>{0} Kio</value>
+  </data>
+  <data name="InstallApproval.MiB" xml:space="preserve">
+    <value>{0} Mio</value>
+  </data>
+  <data name="InstallApproval.Title.Rollback" xml:space="preserve">
+    <value>Valider le retour à la version précédente d'une app</value>
+  </data>
+  <data name="InstallApproval.Approve.Rollback" xml:space="preserve">
+    <value>Revenir en arrière</value>
+  </data>
+  <data name="Dnd.Label" xml:space="preserve">
+    <value>Ne pas déranger</value>
+  </data>
+  <data name="Dnd.Hint" xml:space="preserve">
+    <value>Ni bulle ni son pour les nouvelles notifications ; elles restent dans cette liste.</value>
+  </data>
+  <data name="Dnd.Indicator" xml:space="preserve">
+    <value>Ne pas déranger est activé</value>
+  </data>
+  <data name="Dnd.Error" xml:space="preserve">
+    <value>Impossible d'enregistrer Ne pas déranger : {0}</value>
+  </data>
+  <data name="Mobile.ShadeWithDnd" xml:space="preserve">
+    <value>{0} (Ne pas déranger est activé)</value>
+  </data>
+</root>

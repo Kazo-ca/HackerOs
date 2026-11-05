@@ -1,0 +1,10 @@
+@inherits KazoView<Note>
+@* One note of the list (a partial view, also usable as <_NoteCard Model="note" />). *@
+<li class="card@(Model.Pinned ? " pinned" : string.Empty)" data-note-id="@Model.Id">
+    <div class="card-head">
+        <KazoLink Action="Details" Controller="Notes" RouteValues="@KazoRoute.Values(new { id = Model.Id })" class="card-title">@Model.Title</KazoLink>
+        <button type="button" class="pin" data-pinned="@(Model.Pinned ? "true" : "false")" aria-label="Pin">@(Model.Pinned ? "★" : "☆")</button>
+    </div>
+    <p class="card-body">@Model.Body</p>
+    <p class="card-meta">by @Model.Author · @Model.UpdatedAt.ToString("yyyy-MM-dd HH:mm") UTC</p>
+</li>

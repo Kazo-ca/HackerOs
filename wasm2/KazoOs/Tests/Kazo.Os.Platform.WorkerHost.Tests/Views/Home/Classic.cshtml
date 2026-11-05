@@ -1,0 +1,8 @@
+@model Kazo.Os.Platform.WorkerHost.Tests.Greeting
+@{ ViewData.Title = "classic"; }
+<h1>Hello @Model.Who</h1>
+@using (Html.BeginForm("Go"))
+{
+    <button>go</button>
+}
+@section Scripts {<script src="/js/classic.js"></script>}

@@ -1,5 +1,0 @@
-{
-  "name": "hackbackup",
-  "description": "Sauvegarde toute la machine sur l'ordinateur hôte, ou la restaure",
-  "terminalUsage": "hackbackup create | restore [--merge|--replace]"
-}

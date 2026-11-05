@@ -1,0 +1,74 @@
+@namespace Kazo.Os.Apps.FileExplorer.FileControl
+@using Kazo.Os.AppSdk.Files
+@using Microsoft.AspNetCore.Components.Web
+@implements IAsyncDisposable
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
+
+@*
+    The desktop grid (ADR 0152 §2, ADR 0160): every icon on a cell of its own, placed by
+    KazoDesktopLayout from the positions of desktop.config, with the Home and Trash system icons.
+    Click, Ctrl+click, Shift+click and the lasso select; a drag moves the icons to the cell under the
+    pointer (snapped), or drops them on a folder, on Home or on the Trash; F2 renames in place.
+    Behavior lives in FileViewDesktop.razor.cs; FileViewDesktop.razor.js measures the grid.
+*@
+<div class="file-view-desktop @SizeClass"
+     role="listbox"
+     aria-label="@Binding.GridLabel"
+     aria-multiselectable="@(Owner.AllowMultiSelect ? "true" : "false")"
+     @ref="_gridElement"
+     @attributes="GridAttributes"
+     @onmousedown="OnGridMouseDownAsync"
+     @onmousemove="OnGridMouseMove"
+     @onmouseup="OnGridMouseUpAsync"
+     @onmouseleave="OnGridMouseUpAsync"
+     @ondragover:preventDefault="Owner.AllowDragDrop"
+     @ondrop="OnGridDropAsync"
+     @ondrop:stopPropagation="true">
+    @foreach (DesktopTile tile in _tiles)
+    {
+        bool selected = IsSelected(tile);
+        <div role="option"
+             @key="tile.Key"
+             class="desktop-tile @(selected ? "selected" : null) @(tile.Item?.IsCut == true ? "cut" : null) @(tile.Item?.IsDimmed == true ? "dimmed" : null) @(tile.Item is null ? "system" : null)"
+             aria-selected="@(selected ? "true" : "false")"
+             tabindex="@(IsTabStop(tile) ? 0 : -1)"
+             draggable="@(Owner.AllowDragDrop ? "true" : "false")"
+             data-drop-target="@(tile.AcceptsDrop && Owner.AllowDragDrop ? "true" : null)"
+             @attributes="TileAttributes(tile)"
+             @onmousedown:stopPropagation="true"
+             @onclick="@(args => OnTileClick(tile, args))"
+             @ondblclick="@(() => OpenAsync(tile))"
+             @oncontextmenu="@(() => OnTileContextMenu(tile))"
+             @onkeydown="@(args => OnTileKeyDownAsync(tile, args))"
+             @ondragstart="@(args => OnTileDragStartAsync(tile, args))"
+             @ondragend="OnDragEnd"
+             @ondragover:preventDefault="@(tile.AcceptsDrop && Owner.AllowDragDrop)"
+             @ondrop="@(args => OnTileDropAsync(tile, args))"
+             @ondrop:stopPropagation="@tile.AcceptsDrop">
+            <span class="desktop-tile-icon">
+                <ShellIcon Icon="ResolveIcon(tile)" Size="IconPixels" />
+            </span>
+            @if (tile.Item is { IsRenaming: true } renaming)
+            {
+                <input class="file-view-rename-input desktop-rename-input"
+                       value="@GetRenameBuffer(renaming)"
+                       @oninput="@(args => SetRenameBuffer(renaming, args.Value?.ToString() ?? string.Empty))"
+                       @onkeydown="@(args => OnRenameKeyDownAsync(renaming, args))"
+                       @onkeydown:stopPropagation="true"
+                       @onblur="@(() => CommitRenameAsync(renaming))"
+                       @onclick:stopPropagation="true"
+                       @onmousedown:stopPropagation="true"
+                       @ondblclick:stopPropagation="true" />
+            }
+            else
+            {
+                <span class="desktop-tile-label">@tile.Label</span>
+            }
+        </div>
+    }
+
+    @if (_isMarqueeActive)
+    {
+        <div class="file-view-marquee" @attributes="MarqueeAttributes"></div>
+    }
+</div>

@@ -67,10 +67,10 @@ if (result.Status == TextInputStatus.Submitted && !string.IsNullOrWhiteSpace(res
 - [x] `DLG-001` Create dedicated Markdown documentation for Platform Dialogs and update `docs/README.md`.
 - [x] `DLG-002` Implement `DialogContracts.cs` (`IDialogService`, `MessageBoxType`, `MessageBoxResult`, `MessageboxType`, `MessageboxResult`, `MessageBoxDialogRequest`, `MessageBoxDialogResult`, `TextInputDialogRequest`, `TextInputStatus`, `TextInputDialogResult`).
 - [x] `DLG-003` Update `WindowAppBase` with `Dialogs` injection and helper methods (`base.MessageBox(...)`, `base.TextInput(...)`).
-- [x] `DLG-004` Implement `DialogCoordinator` in `Platform/HackerOs.Platform.Blazor/Dialogs/`.
+- [x] `DLG-004` Implement `DialogCoordinator` in `Platform/Kazo.Os.Platform.Blazor/Dialogs/`.
 - [x] `DLG-005` Create `MessageBoxDialog.razor` and `MessageBoxDialog.razor.css` with dark/hacker aesthetic.
 - [x] `DLG-006` Create `TextInputDialog.razor` and `TextInputDialog.razor.css` with dark/hacker aesthetic.
 - [x] `DLG-007` Update `FileDialogWindowAdapter` / `DialogWindowAdapter` and `DesktopShell.razor` for dialog rendering.
 - [x] `DLG-008` Update DI registration in `EcosystemServiceCollectionExtensions.cs`.
-- [x] `DLG-009` Add unit tests in `HackerOs.AppSdk.Blazor.Tests` and `HackerOs.Platform.Blazor.Tests`.
+- [x] `DLG-009` Add unit tests in `Kazo.Os.AppSdk.Blazor.Tests` and `Kazo.Os.Platform.Blazor.Tests`.
 - [x] `DLG-010` Verify full project build and zero inline CSS/JS violations.

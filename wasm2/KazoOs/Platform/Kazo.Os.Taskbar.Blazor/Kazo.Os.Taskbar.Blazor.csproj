@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <Import Project="..\Packaging.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackageId>Kazo.Os.Taskbar.Blazor</PackageId>
+    <Description>A taskbar Razor component driven entirely by host-supplied contracts (window source, command dispatcher, launcher, status, notifications, session commands) -- each optional, each cleanly absent from render when not supplied.</Description>
+    <PackageTags>kazoos;windowing;blazor;desktop-shell</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Native Blazor only. No MudBlazor: a consumer must be able to adopt the taskbar
+         without the window engine's chrome dependencies, per EXT-WIN-008. -->
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.14" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Kazo.Os.AppSdk.Icons\Kazo.Os.AppSdk.Icons.csproj" />
+    <ProjectReference Include="..\Kazo.Os.Theming.Blazor\Kazo.Os.Theming.Blazor.csproj" />
+    <ProjectReference Include="..\Kazo.Os.Windowing.Abstractions\Kazo.Os.Windowing.Abstractions.csproj" />
+    <ProjectReference Include="..\Kazo.Os.Windowing.Core\Kazo.Os.Windowing.Core.csproj" />
+  </ItemGroup>
+
+</Project>

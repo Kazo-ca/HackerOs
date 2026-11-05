@@ -27,10 +27,10 @@ mise en œuvre de l'[ADR 0095](../dev/adr/0095-window-events-sizes-and-keyboard.
 | --- | --- |
 | `OnWindowActivated[Async]()` | La fenêtre reçoit le focus. |
 | `OnWindowDeactivated[Async]()` | La fenêtre perd le focus (autre fenêtre, réduction, plus aucune fenêtre au premier plan). |
-| `OnWindowStateChanged[Async](previous, current)` | `HackWindowState` : `Normal`, `Minimized`, `Maximized`. |
-| `OnWindowResized[Async](HackWindowSize size)` | Taille de la zone client (sans la barre de titre), en pixels CSS, **une seule fois à la fin** d'un redimensionnement (geste à la souris, clavier, agrandissement, restauration, changement de la zone de travail). |
+| `OnWindowStateChanged[Async](previous, current)` | `KazoWindowState` : `Normal`, `Minimized`, `Maximized`. |
+| `OnWindowResized[Async](KazoWindowSize size)` | Taille de la zone client (sans la barre de titre), en pixels CSS, **une seule fois à la fin** d'un redimensionnement (geste à la souris, clavier, agrandissement, restauration, changement de la zone de travail). |
 | `IsWindowActive`, `WindowState`, `WindowSize` | Dernier état connu, à lire dans le rendu. |
-| `TrackDisplaySurface(IDisplaySurface)` | Fait suivre une fenêtre détachée (ADR 0078/0081) : son focus, sa perte de focus et sa taille déclenchent les mêmes crochets. `HackWindowSize.DisplaySurfaceId` indique alors la surface. Le résultat se libère quand la surface est rattachée. |
+| `TrackDisplaySurface(IDisplaySurface)` | Fait suivre une fenêtre détachée (ADR 0078/0081) : son focus, sa perte de focus et sa taille déclenchent les mêmes crochets. `KazoWindowSize.DisplaySurfaceId` indique alors la surface. Le résultat se libère quand la surface est rattachée. |
 
 Ordre garanti :
 
@@ -40,7 +40,7 @@ Ordre garanti :
 - quand l'app est rendue dans une fenêtre déjà agrandie ou déjà au premier plan, elle reçoit
   `OnWindowStateChanged(Normal, état actuel)` puis `OnWindowActivated` ;
 - la version synchrone est appelée avant la version `Async`, sur le répartiteur du composant, dans
-  le contexte ambiant de l'app (les façades `Hack*` marchent) ; un nouveau rendu suit.
+  le contexte ambiant de l'app (les façades `Kazo*` marchent) ; un nouveau rendu suit.
 
 Un crochet qui lève une exception est écrit dans le journal de l'app
 (`/var/log/apps/<appId>.log`, niveau `Error`, préfixe `window:`) ; la transition de la fenêtre a
@@ -53,7 +53,7 @@ déjà eu lieu et continue.
 
 @code {
     protected override Task OnWindowDeactivatedAsync() => PauseAnimationAsync();
-    protected override void OnWindowResized(HackWindowSize size) => _columns = (int)(size.Width / 120);
+    protected override void OnWindowResized(KazoWindowSize size) => _columns = (int)(size.Width / 120);
 }
 ```
 
@@ -135,7 +135,7 @@ public override WindowOptions? Window => new()
   les commandes clavier redimensionner, agrandir et ancrer ne font rien.
 - Taille retenue (ADR 0116 et 0122, [`window-geometry.md`](../dev/window-geometry.md)) : la taille et
   l'état agrandi de chaque fenêtre d'app, pas sa position, sont écrits dans
-  `~/.local/state/hackeros/windows/<appId>.config` et relus par
+  `~/.local/state/kazoos/windows/<appId>.config` et relus par
   `WindowLaunchCoordinator.PresentAsync`, qui corrige la taille pour l'écran et les tailles
   déclarées du moment ; la fenêtre s'ouvre toujours à sa place de cascade (`InitialBounds`).
   `WindowOptions.RememberGeometry = false` refuse.
@@ -146,8 +146,8 @@ public override WindowOptions? Window => new()
 ### Fichier `keybindings.config`
 
 Lu par `WindowKeyboardCommands` avec les couches habituelles
-([`settings-files.md`](settings-files.md)) : `/etc/hackeros/keybindings.config` (écrit au
-premier démarrage, tout en commentaires), puis `~/.config/hackeros/keybindings.config`. Une
+([`settings-files.md`](settings-files.md)) : `/etc/kazoos/keybindings.config` (écrit au
+premier démarrage, tout en commentaires), puis `~/.config/kazoos/keybindings.config`. Une
 modification du fichier s'applique tout de suite. Plusieurs combinaisons séparées par des virgules ;
 une valeur vide retire la touche.
 
@@ -229,7 +229,7 @@ fenêtrées fournissent chacune leur `icons/app.svg` ; le build calcule l'emprei
 de l'asset. Sans déclaration, un symbole de fenêtre sert de repli.
 
 Tous les thèmes de bureau affichent l'icône de titre sauf macOS, qui masque
-l'icône et son bouton contextuel avec `--hos-window-icon-display: none`.
+l'icône et son bouton contextuel avec `--kos-window-icon-display: none`.
 Le dock macOS garde les icônes d'apps. Le menu demeure accessible au clavier.
 Le choix Lucide du lanceur et des raccourcis reste indépendant des images du chrome.
 Voir l'[ADR 0164](../dev/adr/0164-app-icons-and-window-icon-context-menu.md).
@@ -277,7 +277,7 @@ les récents du bureau mobile et le nom accessible du cadre (`aria-labelledby`).
   nettoie le titre avec `WindowTitles.Sanitize` (Windowing.Abstractions) et publie
   `WindowTitleChangedEvent` ; un titre inchangé ne produit rien. Les surfaces relisent
   `WindowRuntimeState.Title` à chaque `StateChanged`.
-- `AppWindowGatewayFactory` (Platform.Blazor, enregistrée par `AddHackerOsEcosystem`) crée une
+- `AppWindowGatewayFactory` (Platform.Blazor, enregistrée par `AddKazoOsEcosystem`) crée une
   `IAppWindowGateway` par fenêtre, liée à son `WindowId`. `WindowAppRenderer` la reçoit
   (`WindowGateways`, passé par `DesktopShell` et `MobileShell`) et la donne à l'app par un
   `CascadingValue` fixe : l'app ne peut atteindre que sa propre fenêtre.
@@ -287,7 +287,7 @@ les récents du bureau mobile et le nom accessible du cadre (`aria-labelledby`).
 
 | App | Titre |
 | --- | --- |
-| Hack Paint | `photo.png — Hack Paint`, `*` si l'image est modifiée ; le nom quitte la barre d'outils. |
+| Kazo Paint | `photo.png — Kazo Paint`, `*` si l'image est modifiée ; le nom quitte la barre d'outils. |
 | Éditeur de texte | `*notes.txt — Éditeur de texte` ; le bandeau de l'app garde son affichage. |
 | Éditeur de code | Onglet actif, puis dossier ouvert : `*Program.cs — src — Éditeur de code`. |
 | Éditeur de thèmes | `*Nom — Éditeur de thèmes` (aussi dans sa barre d'outils). |
@@ -310,10 +310,10 @@ les récents du bureau mobile et le nom accessible du cadre (`aria-labelledby`).
 
 - **Plein écran ajouté** (`toggle-fullscreen`, `Alt+F11`, entrée du menu) : le verrouillage du
   clavier n'existe qu'en plein écran, il fallait un moyen d'y entrer.
-- **`HackWindowSize.DisplaySurfaceId`** : distingue le redimensionnement d'une fenêtre détachée de
+- **`KazoWindowSize.DisplaySurfaceId`** : distingue le redimensionnement d'une fenêtre détachée de
   celui de la fenêtre du bureau.
 - **Taille mesurée** dans le navigateur, estimée seulement en repli (tests, rendu serveur).
-- **`/etc/hackeros/keybindings.config` livré en commentaires** : les valeurs actives viennent du
+- **`/etc/kazoos/keybindings.config` livré en commentaires** : les valeurs actives viennent du
   code tant que personne n'écrit le fichier, comme les autres documents de l'OS.
 - **Ancrer garde la géométrie d'avant** (ADR 0177, remplace « Ancrer ne garde pas de géométrie de
   restauration ») : la fenêtre ancrée reste `Normal`, avec `IsSnapped` et `RestoreBounds`. La taille
@@ -349,7 +349,7 @@ les récents du bureau mobile et le nom accessible du cadre (`aria-labelledby`).
 - `WindowAppBaseWindowTitleTests` (SDK Blazor), `WindowTitleTests` (Windowing.Core),
   `AppWindowGatewayFactoryTests` (Platform.Blazor) : titre posé avant le premier rendu, même titre
   ignoré, nettoyage, retour au nom de l'app, une seule fenêtre visée, fenêtre fermée, surfaces.
-- E2E `HackPaintWindowTitleTests` (UI.E2E) : `Untitled — Hack Paint`, `*` après un trait, nom du
+- E2E `KazoPaintWindowTitleTests` (UI.E2E) : `Untitled — Kazo Paint`, `*` après un trait, nom du
   fichier après « Enregistrer sous » dans la barre de titre et la barre des tâches.
 - E2E `WindowKeyboardCommandsTests` (UI.E2E) : `` Alt+` `` change de fenêtre et `Alt+Q` ferme la
   fenêtre active dans un onglet Chromium.
@@ -359,7 +359,7 @@ les récents du bureau mobile et le nom accessible du cadre (`aria-labelledby`).
 - [x] Corriger le double déplacement au relâchement et la transition avant/après projection.
 - [x] Couvrir les images intermédiaires dans Chromium et dans le scénario OS de restauration.
 
-- [x] Crochets de fenêtre dans `WindowAppBase` et contrats du SDK (`HackWindowState`, `HackWindowSize`).
+- [x] Crochets de fenêtre dans `WindowAppBase` et contrats du SDK (`KazoWindowState`, `KazoWindowSize`).
 - [x] Faits du runtime : lot publié, fin de redimensionnement, correction de la réduction en arrière-plan.
 - [x] Répartiteur `WindowAppEventDispatcher` et mesure de la zone client.
 - [x] Fenêtres détachées suivies (`TrackDisplaySurface`, navigateur).
@@ -378,6 +378,6 @@ les récents du bureau mobile et le nom accessible du cadre (`aria-labelledby`).
 - [x] Commande `SetWindowTitleCommand`, événement `WindowTitleChangedEvent`, `WindowTitles.Sanitize`.
 - [x] `IAppWindowGateway`, `AppWindowGatewayFactory`, cascade dans `WindowAppRenderer` (bureau et mobile).
 - [x] `WindowTitle`, `SetWindowTitleAsync`, `FormatWindowTitle` dans `WindowAppBase` ; surfaces détachées suivies.
-- [x] Hack Paint, éditeur de texte, éditeur de code, éditeur de thèmes, explorateur.
+- [x] Kazo Paint, éditeur de texte, éditeur de code, éditeur de thèmes, explorateur.
 - [x] Tests unitaires et E2E.
 - [x] ADR 0123, documentation, référence du SDK et index.

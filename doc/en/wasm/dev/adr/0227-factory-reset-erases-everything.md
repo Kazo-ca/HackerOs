@@ -32,7 +32,7 @@ cross-origin isolation cache, `localStorage` (backup restore, sites),
    file system (OPFS), the cookies readable by script, and unregisters the
    service worker. The page then reloads.
 2. The work is done by the `hostFactoryReset.js` module (`eraseEverything`)
-   of `HackerOs.Ecosystem.Host`, called by `BrowserSystemPowerDevice` after
+   of `Kazo.Os.Ecosystem.Host`, called by `BrowserSystemPowerDevice` after
    deleting the OS database (through the module that holds its connections).
    Each step is independent: a failure is written to the console and does not
    stop the others.

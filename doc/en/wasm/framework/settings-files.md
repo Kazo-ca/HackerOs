@@ -5,7 +5,7 @@
 Mobile home uses `~/Desktop/.mobile/layout.conf` (text sections and keys,
 ADR 0166; read migration from the old JSON) for pages
 and the dock. The layered OS document `mobile.config` exposes `mouseHelpers`
-(default `true`) to Settings through `HackSettings.OpenSystemAsync(AppContext, "mobile")`.
+(default `true`) to Settings through `KazoSettings.OpenSystemAsync(AppContext, "mobile")`.
 See [mobile-home-screen.md](../dev/mobile-home-screen.md) and ADR 0165/0166.
 `OsSettingsFile` can now use `OsSettingsLocation.UserHome` to
 resolve a path under the session's home folder; access remains
@@ -28,32 +28,32 @@ migration, read-only.
 | Content | System layer | User layer |
 | --- | --- | --- |
 | An app's settings | `/etc/<appId>/<document>.config` | `~/.config/<appId>/<document>.config` |
-| OS settings (appearance, interface, Start menu) | `/etc/hackeros/<document>.config` | `~/.config/hackeros/<document>.config` |
-| Policy (`policy.config`) | `/etc/hackeros/policy.config` | none (`SystemOnly` document) |
-| Dangerous capability policy (`security.config`, ADR 0049) | `/etc/hackeros/security.config` | none (`SystemOnly` document) |
-| OOM killer (`[oom-killer]`: `enabled=false`, `min-free-percent=5`, ADR 0126, see [`oom-killer.md`](../dev/oom-killer.md)) | `/etc/hackeros/memory.config` | none (system layer only) |
-| Provider of the file control and file dialogs (`[providers]`, key = contract, value = app; absent = explorer; ADR 0156 and 0158, see [`embedded-components.md`](embedded-components.md)) | `/etc/hackeros/components.config` (read line by line, no schema) | none |
-| Entries that apps add to file menus (one JSON per app, written by the OS at startup and on each install change; ADR 0151, 0159) | `/etc/hackeros/context-menus.d/<appId>.json` | none |
-| File menu entries hidden by the user (`[hidden]`, `<appId>.<name>=true`; Settings ▸ File menus; ADR 0159 §8) | `~/.config/hackeros/context-menus.config` (read line by line each time a menu opens) | none |
-| Dangerous capability decisions (ADR 0049) | `/etc/hackeros/app-permissions.config` (`allow`/`deny`) | `~/.config/hackeros/app-permissions.config` (`deny` only) |
-| Accessibility (`highContrast`, `textScale`, `reducedMotion`, ADR 0105, see [`accessibility.md`](../dev/accessibility.md)) | `/etc/hackeros/accessibility.config` (also read by the sign-in screen) | `~/.config/hackeros/accessibility.config` |
-| Date and time (`timeZone`: `auto` or an IANA zone, ADR 0193, see [`time-zone.md`](time-zone.md)) | `/etc/hackeros/datetime.config` (also read by the sign-in screen) | `~/.config/hackeros/datetime.config` |
-| System sounds (`enabled`, `theme`, `volume`, ADR 0204, see [`system-sounds.md`](../dev/system-sounds.md)) | `/etc/hackeros/sound.config` | `~/.config/hackeros/sound.config` |
-| Do not disturb (`doNotDisturb`, ADR 0216, see [`notification-toasts.md`](../dev/notification-toasts.md)) | `/etc/hackeros/notifications.config` | `~/.config/hackeros/notifications.config` |
-| File associations | `/etc/hackeros/file-associations.json` | `~/.config/hackeros/file-associations.json` (same schema, read before the machine file, ADR 0121, [`user-file-associations.md`](../dev/user-file-associations.md)) |
-| Window manager shortcuts (`[linux]`, `[fallback]`, ADR 0095, see [`window-model.md`](window-model.md)) | `/etc/hackeros/keybindings.config` | `~/.config/hackeros/keybindings.config` |
-| "Not responding" box (`[unresponsive] dialog`, ADR 0127 §3, see [`process-priority-and-unresponsive-windows.md`](../dev/process-priority-and-unresponsive-windows.md)) | `/etc/hackeros/window-manager.config` | `~/.config/hackeros/window-manager.config` |
-| Window size (`width`, `height`, `maximized`, ADR 0116 and 0122, see [`window-geometry.md`](../dev/window-geometry.md)) | none | `~/.local/state/hackeros/windows/<appId>.config` |
-| Uninstalled apps (ADR 0048, see [`app-installation.md`](../dev/app-installation.md)) | `/etc/hackeros/apps.config` | `~/.config/hackeros/apps.config` |
-| Clipboard sharing with the host (key `sharing`, ADR 0065, see [`clipboard.md`](../dev/clipboard.md)) | `/etc/hackeros/clipboard.config` | `~/.config/hackeros/clipboard.config` |
-| Periodic sync (ADR 0101 §4, see [`synchronization.md`](../dev/synchronization.md)) | `/etc/hackeros/sync.config` (`intervalMinutes`, read only here) | `~/.config/hackeros/sync.config` (`paused`) |
-| Pending sync conflicts (ADR 0101 §2) | none | `~/.local/state/hackeros/sync-conflicts.json` |
-| Desktop (`[view]` size, rearrangement, sort, system icons; `[positions]` cell of each icon; read and written by `HackDesktopSettings`, no schema; ADR 0152, 0160, see [`desktop.md`](../dev/desktop.md)) | none | `~/.config/hackeros/desktop.config` |
+| OS settings (appearance, interface, Start menu) | `/etc/kazoos/<document>.config` | `~/.config/kazoos/<document>.config` |
+| Policy (`policy.config`) | `/etc/kazoos/policy.config` | none (`SystemOnly` document) |
+| Dangerous capability policy (`security.config`, ADR 0049) | `/etc/kazoos/security.config` | none (`SystemOnly` document) |
+| OOM killer (`[oom-killer]`: `enabled=false`, `min-free-percent=5`, ADR 0126, see [`oom-killer.md`](../dev/oom-killer.md)) | `/etc/kazoos/memory.config` | none (system layer only) |
+| Provider of the file control and file dialogs (`[providers]`, key = contract, value = app; absent = explorer; ADR 0156 and 0158, see [`embedded-components.md`](embedded-components.md)) | `/etc/kazoos/components.config` (read line by line, no schema) | none |
+| Entries that apps add to file menus (one JSON per app, written by the OS at startup and on each install change; ADR 0151, 0159) | `/etc/kazoos/context-menus.d/<appId>.json` | none |
+| File menu entries hidden by the user (`[hidden]`, `<appId>.<name>=true`; Settings ▸ File menus; ADR 0159 §8) | `~/.config/kazoos/context-menus.config` (read line by line each time a menu opens) | none |
+| Dangerous capability decisions (ADR 0049) | `/etc/kazoos/app-permissions.config` (`allow`/`deny`) | `~/.config/kazoos/app-permissions.config` (`deny` only) |
+| Accessibility (`highContrast`, `textScale`, `reducedMotion`, ADR 0105, see [`accessibility.md`](../dev/accessibility.md)) | `/etc/kazoos/accessibility.config` (also read by the sign-in screen) | `~/.config/kazoos/accessibility.config` |
+| Date and time (`timeZone`: `auto` or an IANA zone, ADR 0193, see [`time-zone.md`](time-zone.md)) | `/etc/kazoos/datetime.config` (also read by the sign-in screen) | `~/.config/kazoos/datetime.config` |
+| System sounds (`enabled`, `theme`, `volume`, ADR 0204, see [`system-sounds.md`](../dev/system-sounds.md)) | `/etc/kazoos/sound.config` | `~/.config/kazoos/sound.config` |
+| Do not disturb (`doNotDisturb`, ADR 0216, see [`notification-toasts.md`](../dev/notification-toasts.md)) | `/etc/kazoos/notifications.config` | `~/.config/kazoos/notifications.config` |
+| File associations | `/etc/kazoos/file-associations.json` | `~/.config/kazoos/file-associations.json` (same schema, read before the machine file, ADR 0121, [`user-file-associations.md`](../dev/user-file-associations.md)) |
+| Window manager shortcuts (`[linux]`, `[fallback]`, ADR 0095, see [`window-model.md`](window-model.md)) | `/etc/kazoos/keybindings.config` | `~/.config/kazoos/keybindings.config` |
+| "Not responding" box (`[unresponsive] dialog`, ADR 0127 §3, see [`process-priority-and-unresponsive-windows.md`](../dev/process-priority-and-unresponsive-windows.md)) | `/etc/kazoos/window-manager.config` | `~/.config/kazoos/window-manager.config` |
+| Window size (`width`, `height`, `maximized`, ADR 0116 and 0122, see [`window-geometry.md`](../dev/window-geometry.md)) | none | `~/.local/state/kazoos/windows/<appId>.config` |
+| Uninstalled apps (ADR 0048, see [`app-installation.md`](../dev/app-installation.md)) | `/etc/kazoos/apps.config` | `~/.config/kazoos/apps.config` |
+| Clipboard sharing with the host (key `sharing`, ADR 0065, see [`clipboard.md`](../dev/clipboard.md)) | `/etc/kazoos/clipboard.config` | `~/.config/kazoos/clipboard.config` |
+| Periodic sync (ADR 0101 §4, see [`synchronization.md`](../dev/synchronization.md)) | `/etc/kazoos/sync.config` (`intervalMinutes`, read only here) | `~/.config/kazoos/sync.config` (`paused`) |
+| Pending sync conflicts (ADR 0101 §2) | none | `~/.local/state/kazoos/sync-conflicts.json` |
+| Desktop (`[view]` size, rearrangement, sort, system icons; `[positions]` cell of each icon; read and written by `KazoDesktopSettings`, no schema; ADR 0152, 0160, see [`desktop.md`](../dev/desktop.md)) | none | `~/.config/kazoos/desktop.config` |
 
 `~/.local/state/` holds device-specific state: file system
 synchronization ignores it (`IFileSystemSyncService.IsDeviceLocal`).
 
-On first startup, `/etc/hackeros/` receives commented default files
+On first startup, `/etc/kazoos/` receives commented default files
 (mode `0644`, owner `root`). Since these files list all the
 keys, the displayed origin of an OS value is "system" and not
 "built-in" as long as nobody has changed anything.
@@ -75,7 +75,7 @@ keyring. OS documents only accept public keys. Details: [`sensitive-settings.md`
 | Simulation.Abstractions | `LayeredConfigResolver`, `LayeredConfigSnapshot` | Layer merging, locks, `settings: <path>:<line>: <message>` warnings. |
 | Simulation.Abstractions | `SettingsTextFile`, `SettingsFilesWatcher` | Reading, writing (creating missing folders) and watching the two files of a document through a file gateway. |
 | Simulation.Abstractions | `ILegacySettingsStore`, `LegacySettingsRecord` | Contract for reading the old store, for the migration. |
-| AppSdk | `HackSettings`, `HackSettingsDocument` | Typed API for apps. |
+| AppSdk | `KazoSettings`, `KazoSettingsDocument` | Typed API for apps. |
 | AppSdk.Blazor | `SettingOriginBadge` | Reusable badge "yours", "system default", "built-in", "locked by admin". |
 | Platform.Core | `IOsSettingsService`, `OsSettingsService` | OS documents (`OsSettingsDocument`) and whole files (`OsSettingsFile`), for the current session. |
 | Platform.Core | `SettingsStoreToFilesMigration` | One-time migration from IndexedDB, then default files. |
@@ -122,10 +122,10 @@ Another app has no access to an app's private folder `~/.config/<appId>/`.
 The schema comes from `AppManifest.Settings` (keys, types, default values,
 groups). Each method exists with the app's context as a parameter, and without
 it: it then uses the ambient context of ADR 0043
-(`HackExecutionContext.Current`), like the `Hack*` file API.
+(`KazoExecutionContext.Current`), like the `Kazo*` file API.
 
 ```csharp
-await using HackSettingsDocument settings = await HackSettings.OpenAsync(AppContext);
+await using KazoSettingsDocument settings = await KazoSettings.OpenAsync(AppContext);
 EditorTheme theme = settings.Get<EditorTheme>("theme");      // enum : "high-contrast" <-> HighContrast
 bool locked = settings.IsLocked("autosave");
 SettingLayer source = settings.GetSource("theme");          // Default, System ou User
@@ -133,12 +133,12 @@ settings.Changed += (_, e) => Refresh(e.ChangedKeys);       // édition externe 
 await settings.SetAsync("Editor.tab-size", 2);              // couche utilisateur
 await settings.ResetAsync("theme");                         // retire la valeur utilisateur
 
-int size = await HackSettings.GetAsync<int>(AppContext, "Editor.tab-size"); // lecture ponctuelle
-int same = await HackSettings.GetAsync<int>("Editor.tab-size");             // contexte ambiant
+int size = await KazoSettings.GetAsync<int>(AppContext, "Editor.tab-size"); // lecture ponctuelle
+int same = await KazoSettings.GetAsync<int>("Editor.tab-size");             // contexte ambiant
 ```
 
 - An undeclared key or an incompatible type throws `ArgumentException`.
-- Writing a locked key throws `HackSettingLockedException` (with the path
+- Writing a locked key throws `KazoSettingLockedException` (with the path
   of the system file).
 - A file error is translated into `UnauthorizedAccessException`,
   `FileNotFoundException` or `IOException`.
@@ -148,13 +148,13 @@ int same = await HackSettings.GetAsync<int>("Editor.tab-size");             // c
 Several keys of the same layer are written in a single file edit
 with `SetManyAsync(values, layer)` (a single approval for `/etc`).
 
-#### OS documents (`HackSettings.OpenSystemAsync`, ADR 0056 §8)
+#### OS documents (`KazoSettings.OpenSystemAsync`, ADR 0056 §8)
 
 ```csharp
-await using HackSettingsDocument appearance = await HackSettings.OpenSystemAsync(AppContext, "appearance");
+await using KazoSettingsDocument appearance = await KazoSettings.OpenSystemAsync(AppContext, "appearance");
 string accent = appearance.Get<string>("accent");
-await appearance.SetAsync("accent", "cyan");                       // ~/.config/hackeros/appearance.config
-await appearance.SetManyAsync(values, SettingLayer.System);        // /etc/hackeros : sudo ou approbation
+await appearance.SetAsync("accent", "cyan");                       // ~/.config/kazoos/appearance.config
+await appearance.SetManyAsync(values, SettingLayer.System);        // /etc/kazoos : sudo ou approbation
 ```
 
 - Documents opened: `appearance`, `accessibility` (ADR 0105), `ui-platform-preference`, `security`,
@@ -162,7 +162,7 @@ await appearance.SetManyAsync(values, SettingLayer.System);        // /etc/hacke
   `ArgumentException`.
 - In `appearance`, `desktopThemeId` and `mobileThemeId` are free strings
   since `v3/11` (ADR 0103): the id of a built-in theme or of a `.theme`
-  file in `/etc/hackeros/themes/` or `~/.config/hackeros/themes/`; an unknown
+  file in `/etc/kazoos/themes/` or `~/.config/kazoos/themes/`; an unknown
   id gives the default theme (see [`theme-editor.md`](../dev/theme-editor.md)).
 - In `appearance`, `wallpaper`, `wallpaperFit` and `wallpaperScreen2` to
   `wallpaperScreen9` choose the desktop wallpaper, `mobileWallpaper` and
@@ -196,21 +196,21 @@ The app offers two targets: "Only me" (user layer) and "All
 users (system default)". Each setting displays its origin; a locked
 setting is disabled for the user target. Writing the system layer
 requires administrator approval; a refusal displays a message instead of an
-error. Appearance goes through `HackSettings.OpenSystemAsync`
+error. Appearance goes through `KazoSettings.OpenSystemAsync`
 (work item `4-sdk-system-admin`). "Synchronize" pushes and pulls the file
 system, pulls permissions, pushes and pulls associations, then rereads
 appearance. The "Synchronization" tab (ADR 0101) shows the state of
 periodic sync, suspends it for the user (`paused` in
-`~/.config/hackeros/sync.config`), launches a run and lists pending
+`~/.config/kazoos/sync.config`), launches a run and lists pending
 conflicts with a button that opens the conflict dialog. The "Installed Apps" tab writes the `apps.config` files
 (see [`app-installation.md`](../dev/app-installation.md)).
 
-The "Language" tab (ADR 0104, `LanguagePanel`) does not use `HackSettings`:
+The "Language" tab (ADR 0104, `LanguagePanel`) does not use `KazoSettings`:
 the locale is a systemd file. It shows the language, `LANG`, the
 `LC_MESSAGES`/`LC_ALL` overrides and an example of the session's formats (read
 from the Settings process environment), then offers "Follow the system
-language" or one of the `HackLocale.AvailableLocales`. Choosing a locale writes
-`LANG=<locale>` in `~/.config/locale.conf` (`HackLocale.FormatLocaleConf`,
+language" or one of the `KazoLocale.AvailableLocales`. Choosing a locale writes
+`LANG=<locale>` in `~/.config/locale.conf` (`KazoLocale.FormatLocaleConf`,
 `~/.config` created if needed); "Follow the system language" removes `LANG` and
 deletes the file if it contains nothing else (a `LC_TIME` is kept).
 The change applies at the next sign-in, which the panel displays.
@@ -218,23 +218,23 @@ The change applies at the next sign-in, which the panel displays.
 `sudo localectl set-locale` hint. The app declares for this
 `filesystem.user-home.read` and `filesystem.user-home.write`. There is no
 "Sign out" button: the SDK does not expose sign-out to apps.
-Tests: `Tests/HackerOs.Apps.Settings.Tests/LanguagePanelTests.cs`.
+Tests: `Tests/Kazo.Os.Apps.Settings.Tests/LanguagePanelTests.cs`.
 
 ## Migration
 
 `SettingsStoreToFilesMigration` reads the old store only once:
 
 - at startup, the OS documents (`OsAdmin`) become files in
-  `/etc/hackeros/`. An invalid document is replaced by the default
-  value. The marker `/var/lib/hackeros/migrations/settings-to-files` prevents
+  `/etc/kazoos/`. An invalid document is replaced by the default
+  value. The marker `/var/lib/kazoos/migrations/settings-to-files` prevents
   a second copy, so the administrator's changes survive
   restarts;
 - at sign-in, only the signed-in user's values are copied:
   app settings to `~/.config/<appId>/`, Start menu pins to
-  `~/.config/hackeros/start-menu.json`, geometry to `~/.local/state/`. The
+  `~/.config/kazoos/start-menu.json`, geometry to `~/.local/state/`. The
   old `~/.config/apps/<appId>` folders are moved to
   `~/.config/<appId>`. The marker
-  `~/.local/state/hackeros/migrations/settings-to-files` avoids overwriting what
+  `~/.local/state/kazoos/migrations/settings-to-files` avoids overwriting what
   the user has changed since.
 
 A store read error is logged and prevents neither startup
@@ -258,12 +258,12 @@ nor sign-in. The IndexedDB schema does not change.
 
 ## Contract tests
 
-In `Tests/HackerOs.Platform.Core.Tests/Settings/`:
+In `Tests/Kazo.Os.Platform.Core.Tests/Settings/`:
 
 - `LayeredConfigResolverTests`: layers, locks, tolerant parsing, warning
   text, reserved group;
 - `ConfigDocumentEditorTests`: writing that preserves human text;
-- `HackSettingsTests`: SDK API on the real file system, owner
+- `KazoSettingsTests`: SDK API on the real file system, owner
   and mode, lock, reset, warnings, permissions on `/etc`,
   isolation between apps, change notification;
 - `SettingsStoreToFilesMigrationTests`: default files, one-time copy,
@@ -274,7 +274,7 @@ In `Tests/HackerOs.Platform.Core.Tests/Settings/`:
 ## Task list
 
 - [x] Layer engine, locks and tolerant parsing
-- [x] Typed `HackSettings` API in the SDK
+- [x] Typed `KazoSettings` API in the SDK
 - [x] `IOsSettingsService` service and OS documents as files
 - [x] Window geometry in `~/.local/state`, excluded from synchronization
 - [x] Migration from the IndexedDB store

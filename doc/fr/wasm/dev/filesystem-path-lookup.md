@@ -4,7 +4,7 @@
 
 ## But
 
-Trouver l'entrée d'un chemin (`/home/<user>/.config/hackeros/<doc>.config`)
+Trouver l'entrée d'un chemin (`/home/<user>/.config/kazoos/<doc>.config`)
 coûtait des dizaines d'allers-retours vers IndexedDB : écrire un réglage prenait
 environ 2 secondes sur un appareil lent. Ce document décrit comment un chemin est
 maintenant recherché en une requête, et comment le mesurer. Décision :
@@ -14,7 +14,7 @@ maintenant recherché en une requête, et comment le mesurer. Décision :
 
 Hôte Ecosystem publié en Release, servi en statique, Chromium sans tête,
 profil neuf, clic sur « Mobile » dans le panneau de l'horloge (le choix est écrit
-dans `~/.config/hackeros/ui-platform-preference.config`, création du fichier
+dans `~/.config/kazoos/ui-platform-preference.config`, création du fichier
 comprise), jusqu'à l'apparition du bouton « Back » du shell mobile. Trois essais,
 2026-10-17 :
 
@@ -61,15 +61,15 @@ FileSystemService.WriteAsync(path)
 
 ## Tests
 
-- `Tests/HackerOs.Infrastructure.Browser.Tests/IndexedDbFileSystemReaderTests.cs` :
+- `Tests/Kazo.Os.Infrastructure.Browser.Tests/IndexedDbFileSystemReaderTests.cs` :
   une seule transaction `resolvePath` pour un chemin profond, nom absent,
   liste partielle, lien orphelin, comptage disque.
-- `Tests/HackerOs.Infrastructure.Browser.Tests/IndexedDbFileSystemProviderTests.cs` :
+- `Tests/Kazo.Os.Infrastructure.Browser.Tests/IndexedDbFileSystemProviderTests.cs` :
   scénarios du fournisseur adaptés au parcours en une transaction.
-- `Tests/HackerOs.Platform.Core.Tests/FileSystem/FileSystemPathResolverTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/FileSystem/FileSystemPathResolverTests.cs` :
   parcours en une requête, premier composant absent, droit de traverser et
   redémarrage sur un lien, chemin qui traverse un montage.
-- Les suites E2E (`HackerOs.E2E.Tests`, `HackerOs.UI.E2E.Tests`) exercent
+- Les suites E2E (`Kazo.Os.E2E.Tests`, `Kazo.Os.UI.E2E.Tests`) exercent
   `resolvePath` dans un vrai navigateur à chaque démarrage.
 - Effet de bord sur les tests UI : le système de fichiers plus rapide a révélé
   une course dans `E2ESupport.SelectFileExplorerEntryAsync` (le clic sur une

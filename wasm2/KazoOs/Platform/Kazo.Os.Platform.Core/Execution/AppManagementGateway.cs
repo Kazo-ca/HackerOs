@@ -1,0 +1,261 @@
+using Kazo.Os.App.Abstractions;
+using Kazo.Os.AppSdk.Apps;
+using Kazo.Os.AppSdk.IO;
+using Kazo.Os.Platform.Core.Apps;
+using Kazo.Os.Platform.Core.Elevation;
+using Kazo.Os.Platform.Core.Settings;
+using Kazo.Os.Simulation.Abstractions.FileSystem;
+using Kazo.Os.Simulation.Abstractions.Gateways;
+using Kazo.Os.Simulation.Abstractions.Sessions;
+using Kazo.Os.Simulation.Abstractions.Time;
+
+namespace Kazo.Os.Platform.Core.Execution;
+
+/// <summary>
+/// Trusted <see cref="IAppManagementGateway"/> (ADR 0056, section 3) over
+/// <see cref="IAppInstallationService"/>.
+/// </summary>
+/// <remarks>
+/// <para>
+/// Every call requires <c>apps.manage</c>. A <see cref="KazoInstallScope.Machine"/> change then asks
+/// the OS authentication agent (ADR 0055, section 5); once an administrator authenticated, the OS
+/// writes <c>/etc/kazoos/apps.config</c> itself in an audited system context, as
+/// <c>pkexec</c> runs the helper as root. The app's own filesystem rights are never widened.
+/// </para>
+/// <para>
+/// A <see cref="KazoInstallScope.User"/> change is written as the session user, in their own
+/// <c>~/.config/kazoos/apps.config</c>.
+/// </para>
+/// </remarks>
+internal sealed partial class AppManagementGateway : IAppManagementGateway
+{
+    private readonly AppCatalog _catalog;
+    private readonly Func<IAppInstallationService> _installation;
+    private readonly Func<IAdministratorAuthenticationAgent>? _agent;
+    private readonly ICapabilityChecker _capabilities;
+    private readonly AppManifest _caller;
+    private readonly AuthenticatedPrincipal _principal;
+    private readonly bool _isRootElevated;
+    private readonly IFileSystemService _fileSystem;
+    private readonly ISimulationClock _clock;
+    private readonly Func<System.Globalization.CultureInfo> _language;
+    private readonly Func<AppAssetStore>? _assets;
+    private readonly Func<Apps.Packages.AppPackageInstaller?>? _packages;
+    private readonly Func<IAppInstallApprovalPrompt?>? _approval;
+    private readonly Func<Apps.Packages.InstalledPackageCatalog?>? _installedPackages;
+
+    /// <summary>Creates the gateway for one app instance.</summary>
+    /// <param name="catalog">The app catalog.</param>
+    /// <param name="installation">Lazily resolved installation service.</param>
+    /// <param name="agent">Lazily resolved authentication agent; <see langword="null"/> refuses machine changes.</param>
+    /// <param name="capabilities">The app's capability checker.</param>
+    /// <param name="caller">Manifest of the app asking.</param>
+    /// <param name="principal">Session user running the app.</param>
+    /// <param name="isRootElevated">Whether the app runs as root through <c>sudo</c>.</param>
+    /// <param name="fileSystem">Filesystem engine the OS writes <c>/etc/kazoos/apps.config</c> with.</param>
+    /// <param name="clock">Simulation clock.</param>
+    /// <param name="language">
+    /// Language of the calling process (ADR 0104) for the operation shown in the administrator
+    /// prompt; English when <see langword="null"/>.
+    /// </param>
+    /// <param name="assets">Integrity of the installed apps' assets (ADR 0098 §5), or <see langword="null"/>.</param>
+    /// <param name="packages">Installs apps from their repository (ADR 0182), or <see langword="null"/> to refuse it.</param>
+    /// <param name="approval">Window of the two-step approval (ADR 0189 §4); <see langword="null"/> refuses system installs.</param>
+    /// <param name="installedPackages">Installed apps of the running catalog, with who sees them (ADR 0189 §3).</param>
+    public AppManagementGateway(
+        AppCatalog catalog,
+        Func<IAppInstallationService> installation,
+        Func<IAdministratorAuthenticationAgent>? agent,
+        ICapabilityChecker capabilities,
+        AppManifest caller,
+        AuthenticatedPrincipal principal,
+        bool isRootElevated,
+        IFileSystemService fileSystem,
+        ISimulationClock clock,
+        Func<System.Globalization.CultureInfo>? language = null,
+        Func<AppAssetStore>? assets = null,
+        Func<Apps.Packages.AppPackageInstaller?>? packages = null,
+        Func<IAppInstallApprovalPrompt?>? approval = null,
+        Func<Apps.Packages.InstalledPackageCatalog?>? installedPackages = null)
+    {
+        _approval = approval;
+        _installedPackages = installedPackages;
+        _assets = assets;
+        _packages = packages;
+        _catalog = catalog ?? throw new ArgumentNullException(nameof(catalog));
+        _installation = installation ?? throw new ArgumentNullException(nameof(installation));
+        _agent = agent;
+        _capabilities = capabilities ?? throw new ArgumentNullException(nameof(capabilities));
+        _caller = caller ?? throw new ArgumentNullException(nameof(caller));
+        _principal = principal ?? throw new ArgumentNullException(nameof(principal));
+        _isRootElevated = isRootElevated;
+        _fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
+        _clock = clock ?? throw new ArgumentNullException(nameof(clock));
+        _language = language ?? (static () => Kazo.Os.AppSdk.Globalization.KazoLocale.DefaultLanguage);
+    }
+
+    /// <inheritdoc />
+    public ValueTask<IReadOnlyList<KazoAppInstallInfo>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        _capabilities.Require(AppCapabilities.AppsManage);
+        cancellationToken.ThrowIfCancellationRequested();
+        IAppInstallationService installation = _installation();
+        AppAssetStore? assets = _assets?.Invoke();
+        Apps.Packages.InstalledPackageCatalog? packages = _installedPackages?.Invoke();
+        // ADR 0189 §3: another user's personal apps are not listed for this session.
+        IEnumerable<KazoAppInstallInfo> loaded = _catalog.Manifests.Values
+            .Where(manifest => packages?.IsVisibleTo(manifest.Id, _principal.HomePath) != false)
+            .Select(manifest => new KazoAppInstallInfo(
+                KazoAppInfo.FromManifest(manifest, _catalog.IsSystemApp(manifest.Id)),
+                assets is not null && assets.IsDamaged(manifest.Id)
+                    ? KazoAppInstallState.Damaged
+                    : ToPublic(installation.GetState(manifest.Id)),
+                installation.GetUninstallClosure(manifest.Id))
+            {
+                Problem = assets is not null && assets.Damaged.TryGetValue(manifest.Id, out AppIntegrityProblem? problem)
+                    ? $"Asset '{problem.AssetPath}' does not match its manifest: {problem.Reason}."
+                    : null
+            });
+        // ADR 0098 §3: apps the OS refused to load are listed too, as incompatible, with the reason.
+        IEnumerable<KazoAppInstallInfo> refused = _catalog.Rejected.Select(rejection => new KazoAppInstallInfo(
+            KazoAppInfo.FromManifest(rejection.Manifest, _catalog.IsSystemApp(rejection.AppId)),
+            KazoAppInstallState.Incompatible,
+            [])
+        {
+            Problem = rejection.Message
+        });
+        IReadOnlyList<KazoAppInstallInfo> all = [.. loaded.Concat(refused)
+            .OrderBy(entry => entry.App.Name, StringComparer.OrdinalIgnoreCase)
+            .ThenBy(entry => entry.App.Id, StringComparer.Ordinal)];
+        return ValueTask.FromResult(all);
+    }
+
+    /// <inheritdoc />
+    public async ValueTask<IReadOnlyList<string>> UninstallAsync(
+        string appId, KazoInstallScope scope, CancellationToken cancellationToken = default)
+    {
+        AppManifest target = RequireApp(appId);
+        IAppFileSystemGateway? writer = await AuthorizeAsync(target, scope, uninstall: true, cancellationToken).ConfigureAwait(false);
+        AppInstallationResult result = await _installation()
+            .UninstallAsync(appId, ToInternal(scope), writer, cancellationToken)
+            .ConfigureAwait(false);
+        return Unwrap(result);
+    }
+
+    /// <inheritdoc />
+    public async ValueTask<KazoUninstallPlan> PlanUninstallAsync(string appId, CancellationToken cancellationToken = default)
+    {
+        RequireApp(appId);
+        AppUninstallPlan plan = await _installation().PlanUninstallAsync(appId, cancellationToken).ConfigureAwait(false);
+        return new KazoUninstallPlan(plan.AppIds, [.. plan.RunningProcesses.Select(ToPublic)]);
+    }
+
+    /// <inheritdoc />
+    public async ValueTask<KazoUninstallReport> UninstallWithReportAsync(
+        string appId, KazoInstallScope scope, CancellationToken cancellationToken = default)
+    {
+        AppManifest target = RequireApp(appId);
+        IAppFileSystemGateway? writer = await AuthorizeAsync(target, scope, uninstall: true, cancellationToken).ConfigureAwait(false);
+        AppInstallationResult result = await _installation()
+            .UninstallAsync(appId, ToInternal(scope), writer, cancellationToken)
+            .ConfigureAwait(false);
+        return new KazoUninstallReport(Unwrap(result), [.. (result.StoppedProcesses ?? []).Select(ToPublic)]);
+    }
+
+    private static KazoRunningProcessInfo ToPublic(Lifecycle.AppProcessInfo process) =>
+        new(process.Pid, process.AppId, process.Name, process.UserName, process.Forced);
+
+    /// <inheritdoc />
+    public async ValueTask<IReadOnlyList<string>> ReinstallAsync(
+        string appId, KazoInstallScope scope, CancellationToken cancellationToken = default)
+    {
+        AppManifest target = RequireApp(appId);
+        IAppFileSystemGateway? writer = await AuthorizeAsync(target, scope, uninstall: false, cancellationToken).ConfigureAwait(false);
+        AppInstallationResult result = await _installation()
+            .ReinstallAsync(appId, ToInternal(scope), writer, cancellationToken)
+            .ConfigureAwait(false);
+        return Unwrap(result);
+    }
+
+    private AppManifest RequireApp(string appId)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(appId);
+        _capabilities.Require(AppCapabilities.AppsManage);
+        return _catalog.Manifests.TryGetValue(appId, out AppManifest? manifest)
+            ? manifest
+            : throw new ArgumentException($"App '{appId}' is not in the catalog.", nameof(appId));
+    }
+
+    /// <summary>
+    /// For the machine scope, asks the authentication agent and returns the system writer the OS
+    /// then uses; for the user scope, returns <see langword="null"/> (the session user writes).
+    /// </summary>
+    private async ValueTask<IAppFileSystemGateway?> AuthorizeAsync(
+        AppManifest target, KazoInstallScope scope, bool uninstall, CancellationToken cancellationToken)
+    {
+        if (scope != KazoInstallScope.Machine)
+        {
+            return null;
+        }
+
+        // A system app is refused before any prompt: no password is asked for an impossible change.
+        if (uninstall && _catalog.IsSystemApp(target.Id))
+        {
+            throw new InvalidOperationException($"{target.Name} is a system app and cannot be uninstalled.");
+        }
+
+        IAdministratorAuthenticationAgent agent = _agent?.Invoke()
+            ?? throw new KazoUnauthorizedAccessException(
+                "No administrator authentication agent is available on this host.", path: AppsConfigDocument.MachinePath.Value);
+        System.Globalization.CultureInfo language = _language();
+        AdministratorAuthenticationResult authentication = await agent.AuthenticateAsync(
+            new AdministratorAuthenticationRequest(
+                _caller,
+                Strings.For(language)[uninstall ? "Admin.App.Uninstall" : "Admin.App.Reinstall", _catalog.Localize(target, language).Name],
+                uninstall ? "apps.uninstall.machine" : "apps.reinstall.machine",
+                _principal,
+                _isRootElevated),
+            cancellationToken).ConfigureAwait(false);
+        if (!authentication.Succeeded)
+        {
+            throw new KazoUnauthorizedAccessException(
+                $"Administrator authentication failed ({authentication.FailureReason}).",
+                path: AppsConfigDocument.MachinePath.Value);
+        }
+
+        return new AppFileSystemGateway(_fileSystem, _clock, OsSettingsService.CreateSystemOperation(), ["system"]);
+    }
+
+    private IReadOnlyList<string> Unwrap(AppInstallationResult result)
+    {
+        if (result.Success)
+        {
+            return result.AppIds;
+        }
+
+        string error = result.Errors.Count > 0 ? result.Errors[0] : "apps.unknown";
+        int separator = error.IndexOf(':');
+        string code = separator < 0 ? error : error[..separator];
+        string appId = separator < 0 ? string.Empty : error[(separator + 1)..];
+        string name = _catalog.Manifests.TryGetValue(appId, out AppManifest? manifest) ? manifest.Name : appId;
+        throw code switch
+        {
+            "apps.app.not-found" => new ArgumentException($"App '{appId}' is not in the catalog."),
+            "apps.app.system" => new InvalidOperationException($"{name} is a system app and cannot be uninstalled."),
+            "apps.closure.system-app" => new InvalidOperationException($"The system app {name} needs it, so it cannot be uninstalled."),
+            "apps.uninstalled-by-administrator" => new InvalidOperationException($"{name} was uninstalled by the administrator for every user."),
+            "apps.session.required" => new InvalidOperationException("No user session is active."),
+            _ => new InvalidOperationException($"The installation change failed ({error}).")
+        };
+    }
+
+    private static AppInstallationScope ToInternal(KazoInstallScope scope) =>
+        scope == KazoInstallScope.Machine ? AppInstallationScope.Machine : AppInstallationScope.User;
+
+    private static KazoAppInstallState ToPublic(AppInstallationState state) => state switch
+    {
+        AppInstallationState.UninstalledForUser => KazoAppInstallState.UninstalledForUser,
+        AppInstallationState.UninstalledForMachine => KazoAppInstallState.UninstalledForMachine,
+        _ => KazoAppInstallState.Installed
+    };
+}

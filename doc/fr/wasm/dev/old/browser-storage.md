@@ -8,7 +8,7 @@ Persist HackerOS state — users/sessions, canonical settings, the virtual
 filesystem (metadata and binary content), capability grants, the app catalog,
 and audit/diagnostic records — in the browser via IndexedDB, so the OS
 survives a page reload without a server. This document tracks section 10
-(`P2-IDB-*`) of `wasm2/HackerOs/docs/integration-task-list.md`.
+(`P2-IDB-*`) of `wasm2/KazoOs/docs/integration-task-list.md`.
 
 ## Status
 
@@ -17,7 +17,7 @@ IndexedDB adapter approach are decided in
 [ADR 0015](../adr/0015-browser-storage-and-indexeddb-adapter.md) (`D-008`), and
 the concrete database/object-store/index/transaction-boundary schema is
 declared in
-`Infrastructure/HackerOs.Infrastructure.Browser/Schema/HackerOsIndexedDbSchema.cs`.
+`Infrastructure/Kazo.Os.Infrastructure.Browser/Schema/HackerOsIndexedDbSchema.cs`.
 The minimal JavaScript transaction module (`P2-IDB-004`) and the internal C#
 interop adapter foundation for `P2-IDB-005` are implemented. Persistent C#
 repositories have started with the local-group repository; migrations and the
@@ -29,10 +29,10 @@ remaining domain repositories remain `P2-IDB-006` through `P2-IDB-014`.
   iOS), evergreen only. This is the oldest line with IndexedDB v2 and
   `navigator.storage.estimate()`/`persist()`.
 - **Adapter approach:** hand-written, minimal, collocated static JS module(s)
-  under `Infrastructure/HackerOs.Infrastructure.Browser/wwwroot/`, wrapping
+  under `Infrastructure/Kazo.Os.Infrastructure.Browser/wwwroot/`, wrapping
   native IndexedDB with transaction-oriented, batched primitives. No
   third-party IndexedDB NuGet package. C# repositories in
-  `HackerOs.Infrastructure.Browser` are the only callers of these modules and
+  `Kazo.Os.Infrastructure.Browser` are the only callers of these modules and
   the only place storage-related `IJSRuntime` is injected.
 - **Migration ownership:** schema version numbering and migration step
   ordering are owned by C# (`P2-IDB-006`), not embedded as JS
@@ -93,20 +93,20 @@ stores than its boundary declares:
 ## Architecture (planned, partially declared)
 
 ```text
-HackerOs.Simulation.Abstractions / HackerOs.App.Abstractions   (repository contracts)
-  <- HackerOs.Infrastructure.Browser                            (schema + future C# repositories)
+Kazo.Os.Simulation.Abstractions / Kazo.Os.App.Abstractions   (repository contracts)
+  <- Kazo.Os.Infrastructure.Browser                            (schema + future C# repositories)
        -> wwwroot/*.js                                          (future: raw IndexedDB primitives)
 ```
 
 App code and Platform Core business logic depend only on the existing
-repository interfaces; only `HackerOs.Infrastructure.Browser` references
+repository interfaces; only `Kazo.Os.Infrastructure.Browser` references
 IndexedDB or browser-storage `IJSRuntime`. The schema declaration itself has
 no `IJSRuntime` or repository-interface dependency yet.
 
 ## JavaScript transaction adapter (`P2-IDB-004`)
 
 The Razor SDK publishes `wwwroot/indexedDb.js` as
-`_content/HackerOs.Infrastructure.Browser/indexedDb.js`. It exports three
+`_content/Kazo.Os.Infrastructure.Browser/indexedDb.js`. It exports three
 functions, intended only for the C# infrastructure adapter introduced by
 `P2-IDB-005`:
 
@@ -134,7 +134,7 @@ multi-tab conflicts remain completion evidence for `P2-IDB-013` and
 ## Internal C# adapter (`P2-IDB-005`, partial)
 
 `Interop/IndexedDbInteropAdapter.cs` is internal to
-`HackerOs.Infrastructure.Browser`; neither app projects nor shared abstractions
+`Kazo.Os.Infrastructure.Browser`; neither app projects nor shared abstractions
 can receive `IJSRuntime`, `IJSObjectReference`, or this adapter. It:
 
 - lazily imports the static module once per adapter scope;
@@ -191,7 +191,7 @@ and future export actions under ADR 0018.
 ## Decisions in force (`P2-IDB-003`, `D-009`)
 
 The browser-storage content policy is now declared in
-`Infrastructure/HackerOs.Infrastructure.Browser/Schema/FileContentStoragePolicy.cs`.
+`Infrastructure/Kazo.Os.Infrastructure.Browser/Schema/FileContentStoragePolicy.cs`.
 It chooses a conservative, browser-safe policy for the provisional `fsContent`
 store:
 
@@ -233,6 +233,6 @@ rendering and real-browser recovery evidence remain separate tasks.
 - [ADR 0018](../adr/0018-indexeddb-failure-and-recovery-policy.md)
 - [IndexedDB migrations](indexeddb-migrations.md)
 - [IndexedDB backup and restore](indexeddb-backup-restore.md)
-- `Infrastructure/HackerOs.Infrastructure.Browser/Schema/HackerOsIndexedDbSchema.cs`
-- `Tests/HackerOs.Infrastructure.Browser.Tests/HackerOsIndexedDbSchemaTests.cs`
-- `wasm2/HackerOs/docs/integration-task-list.md` section 10
+- `Infrastructure/Kazo.Os.Infrastructure.Browser/Schema/HackerOsIndexedDbSchema.cs`
+- `Tests/Kazo.Os.Infrastructure.Browser.Tests/HackerOsIndexedDbSchemaTests.cs`
+- `wasm2/KazoOs/docs/integration-task-list.md` section 10

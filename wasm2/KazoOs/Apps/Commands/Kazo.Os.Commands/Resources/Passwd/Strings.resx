@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="BadPassword" xml:space="preserve">
+    <value>BAD PASSWORD: {0}</value>
+  </data>
+  <data name="Changing" xml:space="preserve">
+    <value>Changing password for {0}.</value>
+  </data>
+  <data name="CurrentPrompt" xml:space="preserve">
+    <value>Current password: </value>
+  </data>
+  <data name="Deleted" xml:space="preserve">
+    <value>passwd: password expiry information changed for {0}.</value>
+  </data>
+  <data name="Mismatch" xml:space="preserve">
+    <value>Sorry, passwords do not match.</value>
+  </data>
+  <data name="NewPrompt" xml:space="preserve">
+    <value>New password: </value>
+  </data>
+  <data name="NoRootAccount" xml:space="preserve">
+    <value>passwd: Kazo OS has no root password; name the account: sudo passwd &lt;user&gt;</value>
+  </data>
+  <data name="NotAllowed" xml:space="preserve">
+    <value>passwd: You may not view or modify password information for {0}.</value>
+  </data>
+  <data name="RetypePrompt" xml:space="preserve">
+    <value>Retype new password: </value>
+  </data>
+  <data name="TokenError" xml:space="preserve">
+    <value>passwd: Authentication token manipulation error</value>
+  </data>
+  <data name="Unchanged" xml:space="preserve">
+    <value>passwd: password unchanged</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>passwd: user '{0}' does not exist</value>
+  </data>
+  <data name="Updated" xml:space="preserve">
+    <value>passwd: password updated successfully</value>
+  </data>
+  <data name="Usage" xml:space="preserve">
+    <value>usage: passwd [-d] [-S] [user]</value>
+  </data>
+</root>

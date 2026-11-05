@@ -5,7 +5,7 @@
 ## Status
 
 Accepted on 2026-10-29, work item 4 of the taskbar series (issue
-[#242](https://github.com/Kazo-ca/HackerOs/issues/242), points 8 and 9 of the decisions made with
+[#242](https://github.com/Kazo-ca/Os/issues/242), points 8 and 9 of the decisions made with
 Benoit on 2026-10-29). Builds on the OS context menu ([ADR 0150](0150-os-context-menu.md)), the
 window menu with "Other screen ▸" ([ADR 0179](0179-per-screen-taskbars-and-other-screen-menus.md)
 §3-5) and the per-screen taskbars (ADR 0179 §1). Implementation:
@@ -13,7 +13,7 @@ window menu with "Other screen ▸" ([ADR 0179](0179-per-screen-taskbars-and-oth
 
 ## Context
 
-- The taskbar (`HackerOs.Taskbar.Blazor`) is a package with no dependency on the OS: it gets its
+- The taskbar (`Kazo.Os.Taskbar.Blazor`) is a package with no dependency on the OS: it gets its
   sources and commands through interfaces (`ITaskbarWindowSource`, `ITaskbarCommandDispatcher`,
   `ITaskbarLauncher`…). It has no context menu: a right click shows the browser's menu.
 - The window menu exists (`WindowManagerOverlays`): Maximize/Restore, Minimize, Move, Resize, Snap
@@ -63,7 +63,7 @@ window menu with "Other screen ▸" ([ADR 0179](0179-per-screen-taskbars-and-oth
      minimum size is still respected.
    The stacking order does not change, and each arranged window saves its geometry as after a
    manual move (ADR 0116).
-6. **Texts.** The new texts go into the resources of `HackerOs.Platform.Blazor` (English and
+6. **Texts.** The new texts go into the resources of `Kazo.Os.Platform.Blazor` (English and
    French), next to the window menu's.
 
 ## Consequences

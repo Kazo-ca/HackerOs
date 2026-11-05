@@ -1,0 +1,33 @@
+<Project>
+  <!-- ADR 0098 §1: one version for everything Kazo OS publishes. -->
+  <Import Project="$(MSBuildThisFileDirectory)build/Versions.props" />
+
+  <PropertyGroup>
+    <Version>$(KazoOsVersion)</Version>
+    <!--
+      Nothing is packed unless it imports Platform/Packaging.props (ADR 0098 §2), so
+      build/pack-local.sh can pack the whole solution and only get the published libraries.
+    -->
+    <IsPackable>false</IsPackable>
+    <Deterministic>true</Deterministic>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!--
+      ADR 0104: Kazo OS speaks English (neutral resources) and French. Only French satellite
+      assemblies are produced or copied from packages; the ICU shard holding en and fr (EFIGS) is
+      always loaded, whatever the browser's language, because formats follow each process's LANG.
+    -->
+    <SatelliteResourceLanguages>en;fr</SatelliteResourceLanguages>
+    <BlazorIcuDataFileName>icudt_EFIGS.dat</BlazorIcuDataFileName>
+  </PropertyGroup>
+
+  <!--
+    P1-GATE-004: every shipping (non-test) project is analyzed for trim/AOT-unsafe reflection
+    now, before any host publishes it, so warnings surface as regular build errors instead of
+    being deferred to a future WASM publish step.
+  -->
+  <PropertyGroup Condition="!$(MSBuildProjectName.EndsWith('.Tests'))">
+    <IsTrimmable>true</IsTrimmable>
+    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+  </PropertyGroup>
+
+</Project>

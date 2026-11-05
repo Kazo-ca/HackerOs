@@ -2,15 +2,15 @@
 
 # Sauvegarde de la machine et espace de stockage
 
-Ce document couvre la mise en œuvre de la sauvegarde et de l'espace de stockage. Ce qu'une app voit (API `HackSystemBackup`, archive `.hosbak`, codes `NoSpace` et `FileTooLarge`) est dans [`../framework/system-backup-api.md`](../framework/system-backup-api.md).
+Ce document couvre la mise en œuvre de la sauvegarde et de l'espace de stockage. Ce qu'une app voit (API `KazoSystemBackup`, archive `.kosbak`, codes `NoSpace` et `FileTooLarge`) est dans [`../framework/system-backup-api.md`](../framework/system-backup-api.md).
 
 ## Objet
 
 Chantier `v3/7-storage-backup`, d'après l'[ADR 0099](adr/0099-os-backup-and-low-storage.md) :
 
 - **Sauvegarde et restauration** de toute la machine (fichiers de tous les
-  utilisateurs, `/etc`, comptes) dans une archive `.hosbak` téléchargée sur
-  l'ordinateur hôte, depuis Paramètres ou la commande `hackbackup`.
+  utilisateurs, `/etc`, comptes) dans une archive `.kosbak` téléchargée sur
+  l'ordinateur hôte, depuis Paramètres ou la commande `kazobackup`.
 - **Espace faible** : une notification par session, `df` avec les vrais
   chiffres du navigateur, une réserve pour root comme les blocs réservés
   d'ext4.
@@ -22,10 +22,10 @@ Chantier `v3/7-storage-backup`, d'après l'[ADR 0099](adr/0099-os-backup-and-low
   [Montées de version](#montées-de-version-indexeddb-adr-0099-4).
 
 ```text
-alice@hackeros:~$ sudo hackbackup create
-hackbackup: exporting the whole machine...
-hackbackup: hackeros-20261017-071200Z.hosbak (1.2M, 3481 records) downloaded to the host computer
-alice@hackeros:~$ mkdir projets   # le libre est passé sous la réserve de root
+alice@kazoos:~$ sudo kazobackup create
+kazobackup: exporting the whole machine...
+kazobackup: kazoos-20261017-071200Z.kosbak (1.2M, 3481 records) downloaded to the host computer
+alice@kazoos:~$ mkdir projets   # le libre est passé sous la réserve de root
 mkdir: cannot create directory 'projets': No space left on device
 ```
 
@@ -33,17 +33,17 @@ mkdir: cannot create directory 'projets': No space left on device
 
 | Couche | Fichiers |
 |---|---|
-| Contrats de simulation | `Shared/HackerOs.Simulation.Abstractions/FileSystem/FileSystemResults.cs` (`NoSpace = 1800`, `FileTooLarge = 1801`), `Metrics/StorageSpaceContracts.cs` (`StorageCapacity`, `IStorageCapacityProbe`, `IStorageSpaceGuard`, `StorageSpacePolicy`), `Notifications/NotificationContracts.cs` (`NotificationAction.LaunchApp`) |
-| SDK | `Shared/HackerOs.AppSdk/Administration/HackSystemBackup.cs`, `SystemBackupContracts.cs` (`IAppSystemBackupGateway`, `HackBackupRestoreMode`, `HackBackupInfo`, `HackBackupInvalidException`) ; `IO/HackFileSystemErrorTranslator.cs` et `ShellErrorText.cs` pour les deux codes |
+| Contrats de simulation | `Shared/Kazo.Os.Simulation.Abstractions/FileSystem/FileSystemResults.cs` (`NoSpace = 1800`, `FileTooLarge = 1801`), `Metrics/StorageSpaceContracts.cs` (`StorageCapacity`, `IStorageCapacityProbe`, `IStorageSpaceGuard`, `StorageSpacePolicy`), `Notifications/NotificationContracts.cs` (`NotificationAction.LaunchApp`) |
+| SDK | `Shared/Kazo.Os.AppSdk/Administration/KazoSystemBackup.cs`, `SystemBackupContracts.cs` (`IAppSystemBackupGateway`, `KazoBackupRestoreMode`, `KazoBackupInfo`, `KazoBackupInvalidException`) ; `IO/KazoFileSystemErrorTranslator.cs` et `ShellErrorText.cs` pour les deux codes |
 | SDK Blazor | `Interop/BrowserFilePicker.cs` et `wwwroot/pickFile.js` (pendant de `download.js` pour ouvrir un fichier de l'hôte) |
 | Platform Core | `Backup/SystemBackupService.cs` (`ISystemBackupDevice`, séquence), `Administration/AppSystemBackupGateway.cs`, `Storage/StorageSpaceMonitor.cs`, `FileSystem/FileSystemService.cs` (réserve), `Diagnostics/LogFileWriter.cs` (lignes perdues), `Power/SystemPowerService.cs` (`RestartAfterAsync`) |
 | Infrastructure.Browser | `Backup/IndexedDbBackupService.cs` (gzip, `ReadArchive`, `Inspect`, fusion par `put`), `Storage/BrowserStorageManager.cs` (`IStorageCapacityProbe`), `FileSystem/IndexedDbFileSystemProvider.cs` (`QuotaExceededError` → `NoSpace`), `IndexedDbFileContentRepository.cs` (16 Mio → `FileTooLarge`), `IndexedDbStorageUsageProvider.cs` (`df`) |
 | Hôte Ecosystem | `Administration/BrowserSystemBackupDevice.cs`, `EcosystemServiceCollectionExtensions.cs` (enregistrements), `EcosystemBootCoordinator.cs` (surveillance de l'espace, entrée d'audit d'une restauration) |
-| Apps | `Apps/System/HackerOs.Apps.Settings/BackupPanel.razor` (onglet *Backup*), `Apps/Commands/HackerOs.Commands/Hackbackup/` ; `Platform/HackerOs.Platform.Blazor/Shell/ClockPanel.razor` (boutons d'action des notifications) |
+| Apps | `Apps/System/Kazo.Os.Apps.Settings/BackupPanel.razor` (onglet *Backup*), `Apps/Commands/Kazo.Os.Commands/Kazobackup/` ; `Platform/Kazo.Os.Platform.Blazor/Shell/ClockPanel.razor` (boutons d'action des notifications) |
 
-Les trois hôtes appellent `AddHackerOsEcosystem`. La sauvegarde n'est branchée
+Les trois hôtes appellent `AddKazoOsEcosystem`. La sauvegarde n'est branchée
 que dans un navigateur (`OperatingSystem.IsBrowser()`) : l'hôte Server en rendu
-serveur n'a pas IndexedDB, `HackSystemBackup.IsSupported` y vaut `false` et
+serveur n'a pas IndexedDB, `KazoSystemBackup.IsSupported` y vaut `false` et
 l'onglet est masqué (ADR 0099, conséquences).
 
 ## Sauvegarde et restauration (ADR 0099 §1)
@@ -57,12 +57,15 @@ L'archive, l'API du SDK et la capacité `system.backup` destinées aux apps sont
 
 **Restauration**, comme un outil de sauvegarde système :
 
-1. sélecteur de l'hôte et validation complète (rien n'est arrêté) ;
+1. sélecteur de l'hôte et validation complète (rien n'est arrêté) ; une
+   sauvegarde faite avant 3.0.0 (base `hackeros`, sans `osVersion`) est migrée
+   vers les noms de Kazo OS après la vérification de son SHA-256
+   ([`rename-migration.md`](rename-migration.md), ADR 0230) ;
 2. demande d'administrateur (`system.backup.restore`) ;
 3. `SystemPowerService.RestartAfterAsync` : vidage des journaux, fermeture
    de la session (chaque processus est annulé) ;
 4. l'entrée de restauration est gardée **hors de la base** (`localStorage`,
-   clé `hackeros.backup.restore-record`), état `started` ;
+   clé `kazoos.backup.restore-record`), état `started` ;
 5. restauration en une transaction IndexedDB : **fusion** = `put` de chaque
    enregistrement de l'archive (même clé : écrasé ; le reste est gardé),
    **remplacement** = `clear` de chaque magasin puis `put` ;
@@ -72,13 +75,13 @@ L'archive, l'API du SDK et la capacité `system.backup` destinées aux apps sont
    dans `/var/log/auth.log` (`system.backup.restore`, `mode`, `outcome`) puis
    l'efface.
 
-### Paramètres et `hackbackup`
+### Paramètres et `kazobackup`
 
 - **Paramètres → Backup** (onglet visible seulement si l'hôte sait
   sauvegarder) : « Create backup », choix *Merge* ou *Replace* en cartes,
   « Restore… », message d'erreur de l'archive refusée.
-- **`hackbackup create | restore [--merge|--replace]`** : doit tourner en
-  root (`sudo hackbackup …`), sinon `must be run as root` et code 1, sans
+- **`kazobackup create | restore [--merge|--replace]`** : doit tourner en
+  root (`sudo kazobackup …`), sinon `must be run as root` et code 1, sans
   ouvrir la demande graphique ; mode par défaut `--merge` ; sélecteur fermé :
   `no file chosen`, code 1 ; navigateur qui refuse le sélecteur : renvoi vers
   Paramètres ; usage invalide : code 2. La commande tourne sur le fil
@@ -156,7 +159,7 @@ Vidages des versions 2 et 3 dans `Tests/fixtures/indexeddb/` (la version 1 n'a j
   de changer sous lui.
 - **L'entrée de restauration attend hors de la base** : un remplacement
   écrase `/var/log/auth.log` lui-même. Elle est écrite au démarrage suivant.
-- **`hackbackup` exige `sudo`** au lieu d'ouvrir la demande graphique, comme
+- **`kazobackup` exige `sudo`** au lieu d'ouvrir la demande graphique, comme
   un outil système (`apt` : « are you root? »).
 - **Sélecteur avant administrateur** (voir plus haut).
 - La capacité **`system.backup`** est dangereuse (ADR 0049) : seul Paramètres,
@@ -164,13 +167,14 @@ Vidages des versions 2 et 3 dans `Tests/fixtures/indexeddb/` (la version 1 n'a j
 
 ## Tests
 
-- `Tests/HackerOs.Infrastructure.Browser.Tests` : `IndexedDbBackupServiceTests`
+- `Tests/Kazo.Os.Infrastructure.Browser.Tests` : `IndexedDbBackupServiceTests`
   (export puis remplacement atomique, archive falsifiée refusée sans
   écriture, fusion par `put` sans `clear`, aller-retour gzip et JSON brut,
-  gzip abîmé, autre version de schéma) ; `IndexedDbFileSystemProviderTests`
+  gzip abîmé, autre version de schéma) ; `RenamedStorageMigrationTests`
+  (sauvegarde d'avant 3.0.0 migrée, falsifiée refusée) ; `IndexedDbFileSystemProviderTests`
   (`QuotaExceededError` → `NoSpace` sans rien écrire, plus de 16 Mio →
   `FileTooLarge` avant toute écriture).
-- `Tests/HackerOs.Platform.Core.Tests` : `SystemAdministrationGatewayTests`
+- `Tests/Kazo.Os.Platform.Core.Tests` : `SystemAdministrationGatewayTests`
   (capacité, hôte sans sauvegarde, création téléchargée et journalisée, refus
   de l'administrateur sans téléchargement, sélecteur fermé ou archive
   invalide sans demande ni arrêt, ordre de la restauration, échec qui
@@ -179,28 +183,28 @@ Vidages des versions 2 et 3 dans `Tests/fixtures/indexeddb/` (la version 1 n'a j
   inconnu) ; `FileSystemServiceTests` (réserve : utilisateur refusé, système
   accepté, nouvelle mesure demandée) ; `LogFileWriterTests` (lignes perdues
   comptées puis signalées une fois).
-- `Tests/HackerOs.AppSdk.Tests/IO/HackErrorTranslationTests.cs` : deux codes
-  traduits en `HackIOException` et en message Linux.
-- `Tests/HackerOs.Commands.Wave5.Tests/HackbackupCommandTests.cs` : usage,
+- `Tests/Kazo.Os.AppSdk.Tests/IO/KazoErrorTranslationTests.cs` : deux codes
+  traduits en `KazoIOException` et en message Linux.
+- `Tests/Kazo.Os.Commands.Wave5.Tests/KazobackupCommandTests.cs` : usage,
   root exigé, création, fusion par défaut, remplacement, archive refusée,
   hôte sans sauvegarde.
-- `Tests/HackerOs.UI.E2E.Tests/LowStorageSpaceTests.cs` : quota de Chromium abaissé
+- `Tests/Kazo.Os.UI.E2E.Tests/LowStorageSpaceTests.cs` : quota de Chromium abaissé
   (`Storage.overrideQuotaForOrigin`) à 3 % de libre ; la notification arrive,
   l'action « Open Diagnostic » est là, et l'administrateur se reconnecte après
   un rechargement (le système écrit encore dans la réserve).
-- `Tests/HackerOs.App.Abstractions.Tests/AppCapabilitiesTests.cs` :
+- `Tests/Kazo.Os.App.Abstractions.Tests/AppCapabilitiesTests.cs` :
   `system.backup` dangereuse.
 
 ## Liste des tâches
 
 - [x] Codes `NoSpace` et `FileTooLarge`, traduits dans le SDK et le shell.
 - [x] `QuotaExceededError` et contenu de plus de 16 Mio traduits par le fournisseur IndexedDB.
-- [x] Archive `.hosbak` (gzip), validation complète, fusion par écrasement.
+- [x] Archive `.kosbak` (gzip), validation complète, fusion par écrasement.
 - [x] `StorageSpaceMonitor` : mesure, notification unique, réserve de root.
 - [x] Réserve appliquée par `FileSystemService` ; `df` avec les vrais chiffres.
 - [x] `LogFileWriter` : lignes perdues comptées puis signalées.
-- [x] `HackSystemBackup`, passerelle, `SystemBackupService`, appareil du navigateur, `pickFile.js`.
-- [x] Onglet *Backup* de Paramètres et commande `hackbackup`.
+- [x] `KazoSystemBackup`, passerelle, `SystemBackupService`, appareil du navigateur, `pickFile.js`.
+- [x] Onglet *Backup* de Paramètres et commande `kazobackup`.
 - [x] Actions de notification qui lancent une app.
 - [x] Cache PWA abîmé : vidage et rechargement une fois, écran hors ligne.
 - [x] Fixtures IndexedDB v2 et v3 (pas de v1, ADR 0110) et test de montée de version.

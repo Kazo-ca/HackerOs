@@ -20,7 +20,7 @@ chantier (§1) ; ce qui suit applique la réponse recommandée en attendant.
 ## Contexte
 
 - `WindowGeometryPersistence` et `WindowGeometrySettings`
-  (`Platform/HackerOs.Platform.Blazor/Windows/WindowGeometrySettings.cs`)
+  (`Platform/Kazo.Os.Platform.Blazor/Windows/WindowGeometrySettings.cs`)
   savent lire et écrire `x=`, `y=`, `width=`, `height=` dans le fichier d'état
   d'une app. Le service est enregistré dans l'injection de dépendances
   (`EcosystemServiceCollectionExtensions.cs:820`), mais **aucun code ne
@@ -43,7 +43,7 @@ chantier (§1) ; ce qui suit applique la réponse recommandée en attendant.
 
 - Chaque fenêtre d'app de genre `Window` retient, par app et par utilisateur,
   sa taille, sa position et le fait qu'elle était agrandie.
-- `WindowOptions` (`HackerOs.App.Abstractions`) reçoit
+- `WindowOptions` (`Kazo.Os.App.Abstractions`) reçoit
   `RememberGeometry` (booléen, vrai par défaut). Une app qui le met à faux
   (une calculatrice qui veut toujours s'ouvrir au même endroit, un assistant)
   s'ouvre toujours à sa place de cascade. Le générateur écrit

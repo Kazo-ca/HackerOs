@@ -6,14 +6,14 @@
 
 Accepté le 2026-10-29 par Benoit (fil « Évaluer un serveur local installable »),
 qui a retenu les options recommandées des questions Q1 à Q4 (§1, §2, §4). Issue de
-suivi [#267](https://github.com/Kazo-ca/HackerOs/issues/267).
+suivi [#267](https://github.com/Kazo-ca/Os/issues/267).
 
 - **Complète :** [ADR 0102](0102-server-network-relay-tcp-udp-and-policy.md) et
   [ADR 0108](0108-server-relay-implementation-adjustments.md) (relais),
   [ADR 0130](0130-server-serves-webassembly-os-and-api.md) (le serveur sert l'OS),
   [ADR 0134](0134-automatic-server-connection-and-status-icon.md) (connexion au
   serveur), [ADR 0173](0173-automatic-releases-from-the-version-file.md) (releases).
-- **Lié :** issue [#266](https://github.com/Kazo-ca/HackerOs/issues/266) (manques du
+- **Lié :** issue [#266](https://github.com/Kazo-ca/Os/issues/266) (manques du
   navigateur simulé avec le relais).
 
 ## Contexte
@@ -22,7 +22,7 @@ suivi [#267](https://github.com/Kazo-ca/HackerOs/issues/267).
   télécharge depuis Paramètres une application, l'installe sur son ordinateur ou
   sur une autre machine de son réseau local, sans l'exposer à internet, et ait
   ainsi le relais réseau (HTTP, TCP, UDP).
-- `HackerOs.Server` a déjà le relais, les comptes, les appareils, la synchro, un
+- `Kazo.Os.Server` a déjà le relais, les comptes, les appareils, la synchro, un
   CORS réglable (`Cors:AllowedOrigins`, aujourd'hui `http://localhost:5000` et
   `https://localhost:7000`), et il sert l'OS lui-même. L'OS sait se connecter à un
   serveur dont l'adresse est saisie dans Paramètres (ADR 0134).
@@ -47,7 +47,7 @@ suivi [#267](https://github.com/Kazo-ca/HackerOs/issues/267).
 
 ### 1. Un seul serveur, publié comme application installable
 
-On distribue `HackerOs.Server` tel quel (OS, comptes, synchro, relais), pas un
+On distribue `Kazo.Os.Server` tel quel (OS, comptes, synchro, relais), pas un
 programme « relais seulement » (Q3, option a). La version est celle de
 `build/Versions.props` : l'OS vérifie la compatibilité par `GET /api/version`.
 

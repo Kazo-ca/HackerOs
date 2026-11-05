@@ -1,0 +1,61 @@
+.virtual-keyboard {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.375rem calc(0.375rem + env(safe-area-inset-left)) calc(0.5rem + env(safe-area-inset-bottom)) calc(0.375rem + env(safe-area-inset-right));
+    background: var(--kos-mobile-nav-background, #0c1516);
+    border-top: var(--kos-mobile-nav-border, 1px solid #315249);
+    font-family: var(--kos-font-ui, system-ui, sans-serif);
+    touch-action: manipulation;
+}
+
+.vk-row {
+    display: flex;
+    gap: 0.25rem;
+    justify-content: center;
+}
+
+.vk-row-modifiers {
+    flex-wrap: wrap;
+}
+
+.vk-key {
+    flex: 1;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    border: 1px solid transparent;
+    border-radius: var(--kos-radius-md, 0.375rem);
+    background: var(--kos-btn-bg, var(--kos-bg-elevated, #1c242a));
+    color: var(--kos-text-primary, #e7f7f1);
+    font-size: 1rem;
+    cursor: pointer;
+    user-select: none;
+    transition: background var(--kos-transition-fast, 120ms ease);
+}
+
+.vk-key:hover,
+.vk-key:focus-visible {
+    background: var(--kos-btn-hover-bg, var(--kos-bg-elevated, #232d34));
+    outline-color: var(--kos-focus-ring, #55d6a1);
+}
+
+.vk-key:active {
+    background: var(--kos-btn-active-bg, var(--kos-accent-subtle, #16302a));
+}
+
+.vk-key-wide {
+    flex: 1.5;
+}
+
+.vk-key-space {
+    flex: 4;
+}
+
+.vk-key-enter {
+    flex: 2;
+}
+
+.vk-key-modifier.is-active {
+    background: var(--kos-accent, #55d6a1);
+    color: var(--kos-bg-base, #07100f);
+}

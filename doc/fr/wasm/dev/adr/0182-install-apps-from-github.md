@@ -27,11 +27,11 @@ décrit par l'[ADR 0188](0188-hack-store-and-app-catalog.md).
   `_framework` et sont chargées à la demande (`BlazorWebAssemblyLazyLoad`).
   « Installer » et « désinstaller » (ADR 0048) ne font qu'activer ou retirer
   une app déjà compilée dans l'hôte.
-- Le dépôt template `Kazo-ca/HackerOs-AppTemplate` (ADR 0176) produit une
+- Le dépôt template `Kazo-ca/Os-AppTemplate` (ADR 0176) produit une
   solution .NET : une app fenêtrée, ses ressources `wwwroot/` déclarées dans
   `Assets` (avec leur SHA-256), son `manifest.json` généré.
 - Chaque app tierce vit dans son propre dépôt GitHub (par exemple
-  `Kazo-ca/HackerOs-App-Webamp`, `Kazo-ca/HackerOs-App-IRC`). Une app qui
+  `Kazo-ca/Os-App-Webamp`, `Kazo-ca/Os-App-IRC`). Une app qui
   emballe un projet JavaScript le fait comme ressources d'une app .NET.
 - L'OS tourne sans serveur sur GitHub Pages (`hackos.kazo.ca`). Le réseau réel
   d'une app passe par le proxy du serveur optionnel et la capacité dangereuse
@@ -80,7 +80,7 @@ Les SHA-256 sont écrits en hexadécimal minuscule, sans préfixe. Le SDK visé
 n'est pas répété : c'est `sdkCompatibility` du manifeste. `lib/` ne contient que
 les assemblies que le manifeste nomme (points d'entrée et composants).
 
-La cible MSBuild `HackerOsPack` (paquet `HackerOs.App.Build`) produit le paquet :
+La cible MSBuild `HackerOsPack` (paquet `Kazo.Os.App.Build`) produit le paquet :
 `dotnet build -c Release -t:HackerOsPack` écrit
 `<version>/<appId>-<version>.hackapp` et met à jour `index.json` dans
 `HackerOsPackageOutput` (par défaut `bin/hackeros-packages/`), le contenu de la
@@ -141,8 +141,8 @@ hackpkg info <source>
 hackpkg sources
 ```
 
-`<source>` accepte `github:Kazo-ca/HackerOs-App-Webamp`,
-`Kazo-ca/HackerOs-App-Webamp` et `https://github.com/Kazo-ca/HackerOs-App-Webamp`.
+`<source>` accepte `github:Kazo-ca/Os-App-Webamp`,
+`Kazo-ca/Os-App-Webamp` et `https://github.com/Kazo-ca/Os-App-Webamp`.
 Sans version, la plus récente de `index.json`.
 
 Installer, retirer et mettre à jour sont des opérations **machine** : `sudo
@@ -177,7 +177,7 @@ hackpkg install ...`, ou l'agent d'authentification de l'OS (ADR 0055 §5).
 
    ```text
    [installed]
-   org.kazo.webamp=github:Kazo-ca/HackerOs-App-Webamp@1.0.0
+   org.kazo.webamp=github:Kazo-ca/Os-App-Webamp@1.0.0
    ```
 
 6. **(Q5)** Journaliser dans `/var/log/syslog` et proposer de redémarrer l'OS
@@ -185,7 +185,7 @@ hackpkg install ...`, ou l'agent d'authentification de l'OS (ADR 0055 §5).
    apparaît au lanceur, à la recherche, à « Ouvrir avec » et au terminal après le
    redémarrage. Le catalogue reste figé pendant une session ; l'ajout immédiat
    viendra dans un chantier séparé. Exemple de ligne
-   (`apps: org.kazo.webamp 1.0.0 installed from github:Kazo-ca/HackerOs-App-Webamp (by=alice)`).
+   (`apps: org.kazo.webamp 1.0.0 installed from github:Kazo-ca/Os-App-Webamp (by=alice)`).
 
 Au démarrage, avant que le catalogue ne serve, l'hôte relit `[installed]` et
 les manifestes de `/usr/lib/hackeros/apps/` et construit le catalogue avec les
@@ -205,9 +205,9 @@ intégrée sans rien effacer.
 ### 6. Suite : le HackerOs Store
 
 Hors de cette ADR. Une future app système « HackerOs Store », façon Play Store
-ou Microsoft Store, lira la liste du dépôt `Kazo-ca/HackerOs-AppMarketPlace` et
+ou Microsoft Store, lira la liste du dépôt `Kazo-ca/Os-AppMarketPlace` et
 installera par le même service que `hackpkg`. Note dans
-[`../plans/hackeros-store.md`](../plans/hackeros-store.md), à reprendre quand des
+[`../plans/kazoos-store.md`](../plans/kazoos-store.md), à reprendre quand des
 apps seront publiées.
 
 ## Réponses
@@ -275,8 +275,8 @@ Questions posées à Benoit le 2026-10-28 ; il a choisi **A** aux quatre premiè
 
 - [x] Réponses de Benoit à Q1 à Q5 (A aux quatre premières, C à Q5, 2026-10-28).
 - [ ] Plus tard : ajout au catalogue sans redémarrage (Q5 B).
-- [x] Cible `HackerOsPack` dans `HackerOs.App.Build` (commande `pack` du générateur de manifestes).
-- [ ] Workflow de publication dans `hackeros-solution` (dépôt `Kazo-ca/HackerOs-AppTemplate`).
+- [x] Cible `HackerOsPack` dans `Kazo.Os.App.Build` (commande `pack` du générateur de manifestes).
+- [ ] Workflow de publication dans `hackeros-solution` (dépôt `Kazo-ca/Os-AppTemplate`).
 - [x] `app-sources.config` (lecture, création au démarrage).
 - [x] Section `[installed]` dans `AppsConfigDocument` ; inscription au catalogue au démarrage.
 - [x] Chargement d'une assembly installée depuis le système de fichiers, ressources par `AppAssetStore`.

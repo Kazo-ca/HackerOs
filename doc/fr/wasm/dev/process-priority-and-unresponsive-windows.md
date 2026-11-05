@@ -2,7 +2,7 @@
 
 # Priorité `nice` et fenêtres qui ne répondent pas
 
-Ce document couvre la mise en œuvre de la priorité `nice` et de la détection des fenêtres qui ne répondent pas. Ce qu'une app voit et doit faire (API `HackProcess.Nice`, règles de la priorité, boîte « Ne répond pas », limites d'une boucle sur le fil principal) est dans [`../framework/app-responsiveness-api.md`](../framework/app-responsiveness-api.md).
+Ce document couvre la mise en œuvre de la priorité `nice` et de la détection des fenêtres qui ne répondent pas. Ce qu'une app voit et doit faire (API `KazoProcess.Nice`, règles de la priorité, boîte « Ne répond pas », limites d'une boucle sur le fil principal) est dans [`../framework/app-responsiveness-api.md`](../framework/app-responsiveness-api.md).
 
 Mise en œuvre de l'[ADR 0127](adr/0127-priority-and-not-responding-dialog.md),
 chantier `exec/4-not-responding-ui` de la série « suites de l'étape 5 »
@@ -38,7 +38,7 @@ $ renice -n 5 -p 42
 42 (process ID) old priority 0, new priority 5
 $ ps -l
 F S UID   PID  PPID  C PRI  NI     TIME CMD
-0 R alice   1     0  0  80   0 00:00:00 org.hackeros.terminal
+0 R alice   1     0  0  80   0 00:00:00 org.kazoos.terminal
 $ ps -o pid,ni,comm
 ```
 
@@ -55,17 +55,17 @@ Les règles de la priorité (plage, héritage, droits, effet sur la file des wor
 
 | Élément | Projet | Rôle |
 | --- | --- | --- |
-| `ProcessNice` | `Shared/HackerOs.Simulation.Abstractions` | Bornes, `Clamp`, `ToPriority` (`20 + nice`). |
+| `ProcessNice` | `Shared/Kazo.Os.Simulation.Abstractions` | Bornes, `Clamp`, `ToPriority` (`20 + nice`). |
 | `IProcessManager.GetNice/SetNice`, `ProcessStartRequest.Nice` | idem | Membres par défaut (0 / non pris en charge) pour les tables de processus qui n'en ont pas. |
-| `InMemoryProcessManager` | `Platform/HackerOs.Platform.Core` | Garde la valeur dans l'entrée du processus, l'hérite du parent. |
+| `InMemoryProcessManager` | `Platform/Kazo.Os.Platform.Core` | Garde la valeur dans l'entrée du processus, l'hérite du parent. |
 | `IAppProcessGateway.GetNice/SetNice`, `AppProcessGateway` | Abstractions / Core | Contrôles de `setpriority(2)` (root, propriétaire, capacités). |
 | `IShellSession.RunNicedAsync`, `ShellInterpreter.RunNicedAsync` | AppSdk / Core | Lance une commande à la gentillesse demandée (enfant du processus `nice`). |
-| `nice`, `renice` | `Apps/Commands/HackerOs.Commands` | Commandes (thread principal : elles ont besoin du shell ou de la table des processus). |
+| `nice`, `renice` | `Apps/Commands/Kazo.Os.Commands` | Commandes (thread principal : elles ont besoin du shell ou de la table des processus). |
 | `ps`, `top`, `htop` | idem | Colonnes `NI` et `PRI`/`PR`. |
 | `ProcFileSystemProvider` | Core | Champs 18 et 19 de `/proc/<pid>/stat`. |
-| `HackProcess.Nice`, `HackProcess.BasePriority`, `HackProcess.ParseStatNice` | `Shared/HackerOs.AppSdk` | Lus depuis `/proc/<pid>/stat`. |
-| `WorkerRunQueue` | `Platform/HackerOs.Platform.WorkerHost` | File des commandes en attente d'un worker, ordonnée par gentillesse puis arrivée. |
-| `ProcessTable.ShowPriority`, `ProcessColumn.Priority` | `Apps/System/HackerOs.Apps.SystemMonitor` | Colonne Priorité masquée par défaut. |
+| `KazoProcess.Nice`, `KazoProcess.BasePriority`, `KazoProcess.ParseStatNice` | `Shared/Kazo.Os.AppSdk` | Lus depuis `/proc/<pid>/stat`. |
+| `WorkerRunQueue` | `Platform/Kazo.Os.Platform.WorkerHost` | File des commandes en attente d'un worker, ordonnée par gentillesse puis arrivée. |
+| `ProcessTable.ShowPriority`, `ProcessColumn.Priority` | `Apps/System/Kazo.Os.Apps.SystemMonitor` | Colonne Priorité masquée par défaut. |
 
 ## 2. Fenêtre qui ne répond pas
 
@@ -106,7 +106,7 @@ Le suffixe « (Ne répond pas) », le contenu grisé, la boîte « Attendre | Te
 ### Réglage
 
 ```ini
-# /etc/hackeros/window-manager.config (et ~/.config/hackeros/window-manager.config)
+# /etc/kazoos/window-manager.config (et ~/.config/kazoos/window-manager.config)
 [unresponsive]
 dialog = true
 ```
@@ -115,20 +115,20 @@ dialog = true
 gris restent, et la croix ouvre encore la boîte. Le fichier système est créé
 au premier démarrage avec la valeur commentée ; un administrateur peut figer la
 clé avec `[locked]` (ADR 0044). Le seuil reste celui de la mesure CPU
-(`HackerOs:ResourceAccounting:Cpu:UnresponsiveThresholdMs`).
+(`KazoOs:ResourceAccounting:Cpu:UnresponsiveThresholdMs`).
 
 ### Architecture
 
 | Élément | Projet | Rôle |
 | --- | --- | --- |
-| `WindowRuntimeState.IsResponding`, `SetWindowRespondingCommand`, `WindowRespondingChangedEvent` | `Platform/HackerOs.Windowing.Abstractions` / `Core` | État d'affichage de la fenêtre, comme le drapeau « hung » d'un gestionnaire de fenêtres. |
-| `WindowChrome` | `Platform/HackerOs.Windowing.Blazor` | Suffixe localisé (`Chrome.NotResponding`). |
+| `WindowRuntimeState.IsResponding`, `SetWindowRespondingCommand`, `WindowRespondingChangedEvent` | `Platform/Kazo.Os.Windowing.Abstractions` / `Core` | État d'affichage de la fenêtre, comme le drapeau « hung » d'un gestionnaire de fenêtres. |
+| `WindowChrome` | `Platform/Kazo.Os.Windowing.Blazor` | Suffixe localisé (`Chrome.NotResponding`). |
 | `WindowHost.Overlay`, `DesktopArea.WindowOverlay`, `SingleSurfaceArea.WindowOverlay` | idem | Calque posé sur le contenu d'**une** fenêtre ; classe `is-not-responding` (gris), `aria-busy`. |
-| `WindowResponsivenessMonitor` | `Platform/HackerOs.Platform.Blazor/Windows` | Les trois cas, la fin de l'état, Attendre, Terminer, la croix ; sans minuterie ni JavaScript, testé avec une horloge factice. |
+| `WindowResponsivenessMonitor` | `Platform/Kazo.Os.Platform.Blazor/Windows` | Les trois cas, la fin de l'état, Attendre, Terminer, la croix ; sans minuterie ni JavaScript, testé avec une horloge factice. |
 | `WindowResponsivenessHost` (+ `.razor.js`) | idem | Échantillonne le moniteur chaque seconde et lui transmet l'attente des entrées (`performance.now() - event.timeStamp`), mesurée en phase de capture sur `.window-content`. |
 | `UnresponsiveWindowDialog` (+ `.razor.css`, `.razor.js` pour le piège du focus), `UnresponsiveWindowOverlay` | idem | La boîte et son branchement dans le calque de chaque fenêtre. |
-| `WindowManagerSettingsDocuments` | `Platform/HackerOs.Platform.Core/Shell` | Document `window-manager` (`[unresponsive] dialog`). |
-| `DesktopShell`, `MobileShell` | `Platform/HackerOs.Platform.Blazor/Shell` | Posent le calque et l'hôte ; la croix passe par `InterceptClose`. |
+| `WindowManagerSettingsDocuments` | `Platform/Kazo.Os.Platform.Core/Shell` | Document `window-manager` (`[unresponsive] dialog`). |
+| `DesktopShell`, `MobileShell` | `Platform/Kazo.Os.Platform.Blazor/Shell` | Posent le calque et l'hôte ; la croix passe par `InterceptClose`. |
 
 Les fenêtres détachées de l'ADR 0078 n'hébergent aujourd'hui que des onglets
 du navigateur (iframes), pas des fenêtres d'app : la boîte vit dans le
@@ -167,14 +167,14 @@ la rendra dans sa propre surface avec le même calque.
 
 | Projet | Couverture |
 | --- | --- |
-| `HackerOs.Platform.Core.Tests` (`InMemoryProcessManagerTests.Nice`, `ProcFileSystemProviderTests`) | Valeur 0, héritage, valeur explicite, bornes, processus terminé, règles root/propriétaire/capacités de la passerelle, champs 18 et 19 de `stat`. |
-| `HackerOs.Platform.WorkerHost.Tests` (`WorkerRunQueueTests`, `CommandParityTests`) | Ordre de la file (gentillesse puis arrivée, bornes), worker toujours prêt, parité de `nice`, `renice` et `ps -o` dans un worker. |
-| `HackerOs.Commands.Wave5.Tests` (`PsCommandTests`) | `ps -l` (`PRI` 85 pour `nice` 5), `ps -o pid,ni,comm`, champ inconnu. |
-| `HackerOs.AppSdk.Tests` (`HackProcessNiceTests`) | Lecture du champ 19, nom avec parenthèses, ligne courte ou invalide, bornes. |
-| `HackerOs.Apps.SystemMonitor.Tests` (`ProcessTableTests`) | Colonne Priorité masquée par défaut, tri, retour au tri CPU quand on la masque. |
-| `HackerOs.Windowing.Core.Tests` (`WindowRespondingTests`) | Drapeau, événement unique, titre inchangé, persistance jusqu'à l'effacement. |
-| `HackerOs.Platform.Blazor.Tests` (`WindowResponsivenessMonitorTests`) | Les trois cas avec horloge factice, vieux drapeau ignoré, attente imputée à un autre processus, fin par entrée rapide, tranche courte ou inactivité, Attendre puis retour, croix, Terminer (2 s, `Terminated`), sans mesure, fenêtre sans processus. |
-| `HackerOs.E2E.Tests` (`IndexedDbBrowserContractTests.Unresponsive`, scénario `?scenario=unresponsive` du harnais navigateur) | Dans Chromium : suffixe, gris, boîte, focus sur Attendre, `Tab` piégé, axe sans violation grave, `Échap`, retour de la boîte, croix, Terminer ; vrai gel du thread principal avec un clic en attente (cas 3) puis fin de l'état. |
+| `Kazo.Os.Platform.Core.Tests` (`InMemoryProcessManagerTests.Nice`, `ProcFileSystemProviderTests`) | Valeur 0, héritage, valeur explicite, bornes, processus terminé, règles root/propriétaire/capacités de la passerelle, champs 18 et 19 de `stat`. |
+| `Kazo.Os.Platform.WorkerHost.Tests` (`WorkerRunQueueTests`, `CommandParityTests`) | Ordre de la file (gentillesse puis arrivée, bornes), worker toujours prêt, parité de `nice`, `renice` et `ps -o` dans un worker. |
+| `Kazo.Os.Commands.Wave5.Tests` (`PsCommandTests`) | `ps -l` (`PRI` 85 pour `nice` 5), `ps -o pid,ni,comm`, champ inconnu. |
+| `Kazo.Os.AppSdk.Tests` (`KazoProcessNiceTests`) | Lecture du champ 19, nom avec parenthèses, ligne courte ou invalide, bornes. |
+| `Kazo.Os.Apps.SystemMonitor.Tests` (`ProcessTableTests`) | Colonne Priorité masquée par défaut, tri, retour au tri CPU quand on la masque. |
+| `Kazo.Os.Windowing.Core.Tests` (`WindowRespondingTests`) | Drapeau, événement unique, titre inchangé, persistance jusqu'à l'effacement. |
+| `Kazo.Os.Platform.Blazor.Tests` (`WindowResponsivenessMonitorTests`) | Les trois cas avec horloge factice, vieux drapeau ignoré, attente imputée à un autre processus, fin par entrée rapide, tranche courte ou inactivité, Attendre puis retour, croix, Terminer (2 s, `Terminated`), sans mesure, fenêtre sans processus. |
+| `Kazo.Os.E2E.Tests` (`IndexedDbBrowserContractTests.Unresponsive`, scénario `?scenario=unresponsive` du harnais navigateur) | Dans Chromium : suffixe, gris, boîte, focus sur Attendre, `Tab` piégé, axe sans violation grave, `Échap`, retour de la boîte, croix, Terminer ; vrai gel du thread principal avec un clic en attente (cas 3) puis fin de l'état. |
 
 ## Liste des tâches
 
@@ -182,7 +182,7 @@ la rendra dans sa propre surface avec le même calque.
 - [x] Passerelle des processus : contrôles root, propriétaire et capacités.
 - [x] `nice` et `renice` (en/fr), `IShellSession.RunNicedAsync`.
 - [x] `ps -l`, `ps -o`, `top`, `htop` : `NI` et `PRI`/`PR`.
-- [x] `/proc/<pid>/stat` champs 18 et 19 ; `HackProcess.Nice`/`BasePriority`.
+- [x] `/proc/<pid>/stat` champs 18 et 19 ; `KazoProcess.Nice`/`BasePriority`.
 - [x] File des workers ordonnée par gentillesse (`WorkerRunQueue`), worker toujours prêt laissé aux commandes interactives.
 - [x] Colonne Priorité masquée par défaut dans le gestionnaire de tâches.
 - [x] État `IsResponding` de la fenêtre, commande et événement.

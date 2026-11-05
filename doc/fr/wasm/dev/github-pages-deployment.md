@@ -4,10 +4,13 @@
 
 ## Objet
 
-Le dépôt public est [Kazo-ca/HackerOs](https://github.com/Kazo-ca/HackerOs).
+Le dépôt public est [Kazo-ca/Os](https://github.com/Kazo-ca/Os).
 La version WebAssembly autonome **2.2.2** est publiée à la racine de
-`https://hackos.kazo.ca/` ; la version TypeScript d'origine est conservée sous
-`https://hackos.kazo.ca/legacy/`. Voir l'[ADR 0167](adr/0167-combined-pages-deployment.md).
+`https://os.kazo.ca/` ; la version TypeScript d'origine est conservée sous
+`https://os.kazo.ca/legacy/`. Voir l'[ADR 0167](adr/0167-combined-pages-deployment.md).
+L'ancienne adresse `hackos.kazo.ca` n'est plus servie par Pages : un Worker
+Cloudflare la redirige vers `os.kazo.ca` ([`cloudflare-redirect.md`](cloudflare-redirect.md),
+[ADR 0229](adr/0229-kazo-os-display-name-and-new-address.md)).
 
 ## Workflow et builds indépendants
 
@@ -18,7 +21,7 @@ ce workflow changent, et peut être lancé manuellement.
 | Sortie | Entrées de sa clé de cache | Construction si la clé n'existe pas |
 | --- | --- | --- |
 | `dist/` (legacy) | `src/**`, `package*.json`, `tsconfig*.json`, `webpack.config.js` | Node 20, `npm ci`, `npm run build:prod -- --output-public-path /legacy/` |
-| `wasm2/HackerOs/artifacts/pages-publish/wwwroot/` | `wasm2/HackerOs/**`, hors `bin`, `obj`, `artifacts`, `node_modules`, `TestResults` | .NET 10, workload `wasm-tools`, `dotnet publish` de `OS/HackerOs.Ecosystem` en Release |
+| `wasm2/KazoOs/artifacts/pages-publish/wwwroot/` | `wasm2/KazoOs/**`, hors `bin`, `obj`, `artifacts`, `node_modules`, `TestResults` | .NET 10, workload `wasm-tools`, `dotnet publish` de `OS/Kazo.Os.Ecosystem` en Release |
 
 Les clés contiennent l'OS du runner et l'empreinte du contenu. Un cache exact
 permet de réutiliser les octets publiés et de sauter toute la chaîne de build
@@ -42,7 +45,7 @@ déploiement de `main`. Vue d'ensemble : [`ci-workflows.md`](ci-workflows.md).
 Playwright n'est exécuté ni par Pages, ni par les vérifications automatiques
 sur `main`. Les six projets de tests navigateur restent disponibles dans
 `.github/workflows/verify-browser-tests.yml`, lancé chaque nuit sur `main`
-quand `main` a changé, ou par **Actions → Verify HackerOS browser tests → Run
+quand `main` a changé, ou par **Actions → Verify Kazo OS browser tests → Run
 workflow** ([`ci-workflows.md`](ci-workflows.md#tests-navigateur-chaque-nuit)). Ce workflow
 conserve ses diagnostics et n'effectue aucun déploiement. Voir
 [les suites de tests](building-and-testing.md#tester) pour les commandes locales.
@@ -58,7 +61,7 @@ conserve ses diagnostics et n'effectue aucun déploiement. Voir
 
 `build/assemble-pages.ps1` copie la publication WASM sans la modifier dans
 `artifacts/pages/`, puis le bundle legacy dans `artifacts/pages/legacy/`. Il
-ajoute `.nojekyll` et le `CNAME` `hackos.kazo.ca`. Le dossier de destination
+ajoute `.nojekyll` et le `CNAME` `os.kazo.ca`. Le dossier de destination
 doit être vide ; une entrée requise absente interrompt la publication.
 
 La base HTML du WASM reste `/`. Le bundle legacy utilise le public path
@@ -74,14 +77,14 @@ d'isolation au legacy. Les autres chemins gardent la stratégie offline existant
 ## Informations visibles
 
 - Connexion et création du premier compte : version du build, « Auteur : Benoit Robin »
-  (lien vers https://kazo.ca) et « Projet GitHub : [icône] Kazo-ca/HackerOs » (lien vers
+  (lien vers https://kazo.ca) et « Projet GitHub : [icône] Kazo-ca/Os » (lien vers
   le dépôt), libellés dans la langue du système ([ADR 0187](adr/0187-guest-start-and-sign-in-credits.md)).
-  Si le nom d'hôte est exactement `hackos.kazo.ca`, un message indique le
-  déplacement de l'original vers `https://hackos.kazo.ca/legacy`. Les ports
+  Si le nom d'hôte est exactement `os.kazo.ca`, un message indique le
+  déplacement de l'original vers `https://os.kazo.ca/legacy`. Les ports
   n'affectent pas ce test ; les sous-domaines ressemblants et les paramètres
   d'URL ne l'activent pas.
 - Récupération et erreurs fatales du WASM : mêmes crédits et même version.
-- Paramètres, À propos : version courante via `HackerOsSdk.Version`, auteur (lien kazo.ca)
+- Paramètres, À propos : version courante via `KazoOsSdk.Version`, auteur (lien kazo.ca)
   et projet GitHub au même format.
 - Paramètres legacy, About : URL GitHub visible, version legacy inchangée.
 - Les métadonnées des paquets pointent aussi vers le nouveau dépôt. La version
@@ -94,16 +97,16 @@ Depuis la racine du dépôt, sur un dossier de sortie encore vide :
 ```powershell
 npm ci
 npm run build:prod -- --output-public-path /legacy/
-dotnet publish wasm2/HackerOs/OS/HackerOs.Ecosystem/HackerOs.Ecosystem.csproj -c Release -m:1 -o wasm2/HackerOs/artifacts/pages-publish
-./wasm2/HackerOs/build/assemble-pages.ps1
+dotnet publish wasm2/KazoOs/OS/Kazo.Os.Ecosystem/Kazo.Os.Ecosystem.csproj -c Release -m:1 -o wasm2/KazoOs/artifacts/pages-publish
+./wasm2/KazoOs/build/assemble-pages.ps1
 
-$env:HACKEROS_PAGES_ROOT = (Resolve-Path wasm2/HackerOs/artifacts/pages).Path
-dotnet test wasm2/HackerOs/Tests/HackerOs.Pwa.E2E.Tests/HackerOs.Pwa.E2E.Tests.csproj --filter FullyQualifiedName~PublishedPagesTests
+$env:KAZOOS_PAGES_ROOT = (Resolve-Path wasm2/KazoOs/artifacts/pages).Path
+dotnet test wasm2/KazoOs/Tests/Kazo.Os.Pwa.E2E.Tests/Kazo.Os.Pwa.E2E.Tests.csproj --filter FullyQualifiedName~PublishedPagesTests
 ```
 
 Le test sert l'artefact statique, active le vrai service worker, crée un compte,
 vérifie À propos, ouvre le legacy et son écran About, puis le recharge. Sans
-`HACKEROS_PAGES_ROOT`, ce test spécifique est ignoré lors des tests ordinaires.
+`KAZOOS_PAGES_ROOT`, ce test spécifique est ignoré lors des tests ordinaires.
 `ProjectInformationTests` couvre les domaines autorisés et refusés, et
 `ResourceParityTests` vérifie les traductions anglais/français.
 

@@ -1,0 +1,266 @@
+.theme-editor {
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+    height: 100%;
+    min-height: 0;
+    background: var(--kos-bg-base, #101417);
+    color: var(--kos-text-primary, #f4f7f8);
+    font-family: var(--kos-font-ui, system-ui, sans-serif);
+}
+
+/* Toolbar */
+.editor-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.25rem;
+    padding: 0.55rem 0.85rem;
+    border-bottom: 1px solid var(--kos-border-subtle, #27343a);
+    background: linear-gradient(90deg, var(--kos-bg-surface, #151c20), var(--kos-bg-base, #101417));
+}
+
+.editor-title {
+    flex: 1 1 14rem;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-family: var(--kos-font-mono, monospace);
+    font-size: 0.85rem;
+    color: var(--kos-accent, #42d392);
+}
+
+.toolbar-group {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.toolbar-label {
+    font-size: 0.78rem;
+    color: var(--kos-text-secondary, #a8bac4);
+}
+
+.toolbar-select,
+.field {
+    height: 2rem;
+    padding: 0 0.5rem;
+    border: 1px solid var(--kos-border, #3a4b53);
+    border-radius: var(--kos-radius-sm, 0.25rem);
+    background: var(--kos-bg-base, #101417);
+    color: var(--kos-text-primary, #f4f7f8);
+}
+
+.toolbar-button {
+    height: 2rem;
+    padding: 0 0.75rem;
+    border: 1px solid var(--kos-border, #3a4b53);
+    border-radius: var(--kos-radius-sm, 0.25rem);
+    background: var(--kos-bg-elevated, #1b252a);
+    color: var(--kos-text-primary, #f4f7f8);
+    cursor: pointer;
+    transition: background var(--kos-transition-fast, 120ms ease), border-color var(--kos-transition-fast, 120ms ease);
+}
+
+.toolbar-button:hover:not(:disabled) {
+    border-color: var(--kos-accent, #42d392);
+}
+
+.toolbar-button.is-primary {
+    border-color: var(--kos-accent, #42d392);
+    background: var(--kos-accent, #42d392);
+    color: var(--kos-text-inverse, #07100f);
+    font-weight: 600;
+}
+
+.toolbar-button.is-active {
+    border-color: var(--kos-accent, #42d392);
+    background: var(--kos-accent-subtle, #173b2c);
+}
+
+.toolbar-button:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.toolbar-button:focus-visible,
+.toolbar-select:focus-visible,
+.field:focus-visible,
+.theme-entry:focus-visible,
+.link-button:focus-visible {
+    outline: 2px solid var(--kos-focus-ring, #42d392);
+    outline-offset: 1px;
+}
+
+/* Messages */
+.editor-message {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.4rem 0.85rem;
+    font-size: 0.82rem;
+    border-bottom: 1px solid var(--kos-border-subtle, #27343a);
+}
+
+.editor-message.is-info {
+    background: color-mix(in srgb, var(--kos-accent, #42d392) 12%, var(--kos-bg-base, #101417));
+}
+
+.editor-message.is-error {
+    background: color-mix(in srgb, var(--kos-error, #ff8f87) 14%, var(--kos-bg-base, #101417));
+    color: var(--kos-error, #ff8f87);
+}
+
+.link-button {
+    border: 0;
+    background: none;
+    color: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* Three columns: identity, tokens, preview */
+.editor-body {
+    display: grid;
+    grid-template-columns: minmax(13rem, 16rem) minmax(0, 1fr) minmax(18rem, 24rem);
+    min-height: 0;
+}
+
+.editor-sidebar,
+.editor-preview {
+    display: grid;
+    align-content: start;
+    gap: 1rem;
+    padding: 0.85rem;
+    overflow-y: auto;
+    background: var(--kos-bg-surface, #151c20);
+}
+
+.editor-sidebar {
+    border-right: 1px solid var(--kos-border-subtle, #27343a);
+}
+
+.editor-preview {
+    border-left: 1px solid var(--kos-border-subtle, #27343a);
+}
+
+.sidebar-section {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.sidebar-section h3 {
+    margin: 0 0 0.25rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--kos-accent, #42d392);
+}
+
+.sidebar-section label {
+    font-size: 0.78rem;
+    color: var(--kos-text-secondary, #a8bac4);
+}
+
+.platforms {
+    display: flex;
+    gap: 0.75rem;
+    margin: 0.25rem 0 0;
+    padding: 0.4rem 0.5rem;
+    border: 1px solid var(--kos-border-subtle, #27343a);
+    border-radius: var(--kos-radius-sm, 0.25rem);
+}
+
+.platforms legend {
+    padding: 0 0.25rem;
+    font-size: 0.72rem;
+    color: var(--kos-text-muted, #6f838d);
+}
+
+.sidebar-hint {
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--kos-text-muted, #6f838d);
+    overflow-wrap: anywhere;
+}
+
+.mono {
+    font-family: var(--kos-font-mono, monospace);
+}
+
+.theme-list {
+    display: grid;
+    gap: 0.3rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.theme-entry {
+    display: grid;
+    width: 100%;
+    padding: 0.4rem 0.55rem;
+    border: 1px solid var(--kos-border-subtle, #27343a);
+    border-radius: var(--kos-radius-sm, 0.25rem);
+    background: var(--kos-bg-base, #101417);
+    color: var(--kos-text-primary, #f4f7f8);
+    text-align: left;
+    cursor: pointer;
+}
+
+.theme-entry.is-current {
+    border-color: var(--kos-accent, #42d392);
+}
+
+.theme-entry-meta {
+    font-size: 0.72rem;
+    color: var(--kos-text-muted, #6f838d);
+    font-family: var(--kos-font-mono, monospace);
+}
+
+.diagnostics {
+    font-size: 0.74rem;
+    color: var(--kos-warning, #e0ad50);
+}
+
+.diagnostics ul {
+    margin: 0.3rem 0 0;
+    padding-left: 1rem;
+}
+
+/* Tokens */
+.editor-tokens {
+    min-width: 0;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 0.5rem 0.85rem 1rem;
+}
+
+.group-intro {
+    margin: 0.5rem 0 0.75rem;
+    font-size: 0.82rem;
+    color: var(--kos-text-secondary, #a8bac4);
+}
+
+.token-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+    gap: 0.6rem;
+}
+
+.preview-switch {
+    display: flex;
+    gap: 0.4rem;
+}
+
+@media (max-width: 1100px) {
+    .editor-body {
+        grid-template-columns: minmax(12rem, 15rem) minmax(0, 1fr);
+    }
+
+    .editor-preview {
+        grid-column: 1 / -1;
+        border-left: 0;
+        border-top: 1px solid var(--kos-border-subtle, #27343a);
+    }
+}

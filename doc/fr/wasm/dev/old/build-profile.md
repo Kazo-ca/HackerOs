@@ -14,25 +14,25 @@ Phase 1 headless profile slice.
 ## Scope
 
 - The canonical `AppManifest` C# record
-  (`Shared/HackerOs.App.Abstractions/AppManifest.cs`) and its satellite types
+  (`Shared/Kazo.Os.App.Abstractions/AppManifest.cs`) and its satellite types
   now cover every field group from analysis section 7.2: identity, entry
   point, SDK/OS compatibility, presentation (category, launch visibility, icon
   assets), localizations, capabilities, resource profile, settings schema,
   intents, dependencies, assets, update/migration metadata, file handlers,
   terminal metadata, and the Service-only `AutoStart` flag.
 - A new build-profile model in
-  `Shared/HackerOs.App.Abstractions/BuildProfileManifest.cs` defines the
+  `Shared/Kazo.Os.App.Abstractions/BuildProfileManifest.cs` defines the
   build-time selection shape for included packages, boot-critical status,
   default-enabled apps, required grants, default associations, locales, themes,
   and optional server features.
-- The runtime built-in catalog is now `HackerOs.Theming.Abstractions.ThemeCatalog`
+- The runtime built-in catalog is now `Kazo.Os.Theming.Abstractions.ThemeCatalog`
   (see [`theming.md`](theming.md)). `BuildProfileManifest.Themes` remains a
   headless build-selection contract; it does not currently prune that catalog
   or its shared static CSS asset. Wiring those IDs into packaging/allowlisting
   requires explicit validation work rather than silently treating profile text
   as a selector.
 - A Draft 2020-12 JSON Schema document,
-  `Shared/HackerOs.App.Abstractions/Schema/manifest.schema.v1.json`, describes
+  `Shared/Kazo.Os.App.Abstractions/Schema/manifest.schema.v1.json`, describes
   the equivalent lower-camel-case JSON shape with a stable `$id`
   (`https://hackeros.org/schema/app-manifest/1/manifest.schema.json`).
 - `AppManifestValidator` (semantic validation) and the JSON Schema (structural
@@ -51,8 +51,8 @@ Phase 1 headless profile slice.
   - `kind != "window"` forbids `fileHandlers`.
   - A settings field with `valueType == "enum"` requires `allowedValues`.
 - **Embedding**: The schema file is embedded as a resource in
-  `HackerOs.App.Abstractions.csproj` (`LogicalName`
-  `HackerOs.App.Abstractions.Schema.manifest.schema.v1.json`) and loaded via
+  `Kazo.Os.App.Abstractions.csproj` (`LogicalName`
+  `Kazo.Os.App.Abstractions.Schema.manifest.schema.v1.json`) and loaded via
   `ManifestSchemaResource.LoadCurrentSchemaJson()`. This keeps the published
   schema and the assembly that defines the manifest shape in lock-step — there
   is exactly one copy of the schema text, not a duplicate maintained by
@@ -66,11 +66,11 @@ Phase 1 headless profile slice.
     missing its `terminal` block, file handlers declared on a service app, a
     malformed SHA-256 asset hash, an out-of-range resource weight, and an enum
     setting missing `allowedValues`.
-- **Conformance tests**: `Tests/HackerOs.App.Abstractions.Tests/Schema/ManifestSchemaConformanceTests.cs`
+- **Conformance tests**: `Tests/Kazo.Os.App.Abstractions.Tests/Schema/ManifestSchemaConformanceTests.cs`
   loads the embedded schema with `JsonSchema.Net`, evaluates every fixture, and
   asserts valid fixtures pass while invalid fixtures fail. Fixtures are read
-  directly from `Shared/HackerOs.App.Abstractions/Schema/Fixtures/` by walking
-  up from the test output directory to `HackerOs.sln`, so there is no
+  directly from `Shared/Kazo.Os.App.Abstractions/Schema/Fixtures/` by walking
+  up from the test output directory to `Kazo.Os.sln`, so there is no
   build-copy step to keep in sync.
 
 ## Key decisions
@@ -85,20 +85,20 @@ Phase 1 headless profile slice.
   layers are exercised by dedicated tests so a regression in either is caught
   independently.
 - **No second hand-maintained schema copy.** The schema is embedded directly
-  in `HackerOs.App.Abstractions` and loaded through `ManifestSchemaResource`
+  in `Kazo.Os.App.Abstractions` and loaded through `ManifestSchemaResource`
   rather than copied into the test project, so schema and code cannot drift
   apart silently.
 - **`JsonSchema.Net` chosen for schema evaluation.** It is the most complete
   Draft 2020-12 implementation available on NuGet for .NET and is scoped only
-  to the `HackerOs.App.Abstractions.Tests` project (a `<PackageReference>` in
+  to the `Kazo.Os.App.Abstractions.Tests` project (a `<PackageReference>` in
   that project's `.csproj`); no schema-validation dependency is added to any
   shipping (non-test) project.
 - **`System.Text.Json` source-generated (de)serialization now exists** via
   `AppManifestJsonSerializer` and `AppManifestJsonSerializerContext` in
-  `Shared/HackerOs.App.Abstractions/`. The serializer uses strict unmapped-member
+  `Shared/Kazo.Os.App.Abstractions/`. The serializer uses strict unmapped-member
   handling, lower-camel property names, lower-camel enum values, and a canonical
   single-LF output that is pinned by a golden fixture under
-  `Shared/HackerOs.App.Abstractions/Schema/Fixtures/`.
+  `Shared/Kazo.Os.App.Abstractions/Schema/Fixtures/`.
 - **Build-profile cross-reference, build-time asset-existence checks, and
   discovery-list generation are now implemented for the initial headless slice.**
   `P1-BLD-004` is represented by the first declarative profile model with
@@ -119,7 +119,7 @@ Phase 1 headless profile slice.
   intents, update, auto-start).
 - [x] Fix every existing test-project manifest factory broken by the two new
   required members (`Presentation`, `Resources`).
-- [x] Add the `JsonSchema.Net` package to `HackerOs.App.Abstractions.Tests`.
+- [x] Add the `JsonSchema.Net` package to `Kazo.Os.App.Abstractions.Tests`.
 - [x] Author `Schema/manifest.schema.v1.json` (Draft 2020-12, stable `$id`,
   `additionalProperties: false`, app-kind conditionals).
 - [x] Embed the schema as a resource and expose it via
@@ -128,7 +128,7 @@ Phase 1 headless profile slice.
   distinct structural violations.
 - [x] Add `ManifestSchemaConformanceTests` validating every fixture against
   the schema.
-- [x] Run `dotnet test HackerOs.sln --no-restore` with zero failures
+- [x] Run `dotnet test Kazo.Os.sln --no-restore` with zero failures
   (334 tests).
 - [x] Add a strict source-generated serializer plus canonical fixture tests for
   manifest round-tripping/fixture parity.
@@ -140,9 +140,9 @@ Phase 1 headless profile slice.
 ## Validation
 
 ```powershell
-dotnet test HackerOs.sln --no-restore
+dotnet test Kazo.Os.sln --no-restore
 ```
 
 339 tests pass, including 12 manifest JSON Schema conformance tests (3 valid
 fixtures, 9 invalid fixtures) and 68 app-manifest serializer tests inside
-`HackerOs.App.Abstractions.Tests`.
+`Kazo.Os.App.Abstractions.Tests`.

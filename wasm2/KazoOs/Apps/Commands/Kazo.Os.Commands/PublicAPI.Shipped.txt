@@ -1,0 +1,1173 @@
+#nullable enable
+Kazo.Os.Commands.Alias.AliasApp
+Kazo.Os.Commands.Alias.AliasApp.AliasApp() -> void
+Kazo.Os.Commands.Alias.AliasCommand
+Kazo.Os.Commands.Alias.AliasCommand.AliasCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Ausearch.AusearchApp
+Kazo.Os.Commands.Ausearch.AusearchApp.AusearchApp() -> void
+Kazo.Os.Commands.Ausearch.AusearchCommand
+Kazo.Os.Commands.Ausearch.AusearchCommand.AusearchCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Basename.BasenameApp
+Kazo.Os.Commands.Basename.BasenameApp.BasenameApp() -> void
+Kazo.Os.Commands.Basename.BasenameCommand
+Kazo.Os.Commands.Basename.BasenameCommand.BasenameCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Cat.CatApp
+Kazo.Os.Commands.Cat.CatApp.CatApp() -> void
+Kazo.Os.Commands.Cat.CatCommand
+Kazo.Os.Commands.Cat.CatCommand.CatCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Cd.CdApp
+Kazo.Os.Commands.Cd.CdApp.CdApp() -> void
+Kazo.Os.Commands.Cd.CdCommand
+Kazo.Os.Commands.Cd.CdCommand.CdCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Chmod.ChmodApp
+Kazo.Os.Commands.Chmod.ChmodApp.ChmodApp() -> void
+Kazo.Os.Commands.Chmod.ChmodCommand
+Kazo.Os.Commands.Chmod.ChmodCommand.ChmodCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Clear.ClearApp
+Kazo.Os.Commands.Clear.ClearApp.ClearApp() -> void
+Kazo.Os.Commands.Clear.ClearCommand
+Kazo.Os.Commands.Clear.ClearCommand.ClearCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Cp.CpApp
+Kazo.Os.Commands.Cp.CpApp.CpApp() -> void
+Kazo.Os.Commands.Cp.CpCommand
+Kazo.Os.Commands.Cp.CpCommand.CpCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Curl.CurlApp
+Kazo.Os.Commands.Curl.CurlApp.CurlApp() -> void
+Kazo.Os.Commands.Curl.CurlCommand
+Kazo.Os.Commands.Curl.CurlCommand.CurlCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Cut.CutApp
+Kazo.Os.Commands.Cut.CutApp.CutApp() -> void
+Kazo.Os.Commands.Cut.CutCommand
+Kazo.Os.Commands.Cut.CutCommand.CutCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Date.DateApp
+Kazo.Os.Commands.Date.DateApp.DateApp() -> void
+Kazo.Os.Commands.Date.DateCommand
+Kazo.Os.Commands.Date.DateCommand.DateCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Df.DfApp
+Kazo.Os.Commands.Df.DfApp.DfApp() -> void
+Kazo.Os.Commands.Df.DfCommand
+Kazo.Os.Commands.Df.DfCommand.DfCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Diff.DiffApp
+Kazo.Os.Commands.Diff.DiffApp.DiffApp() -> void
+Kazo.Os.Commands.Diff.DiffCommand
+Kazo.Os.Commands.Diff.DiffCommand.DiffCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Dirname.DirnameApp
+Kazo.Os.Commands.Dirname.DirnameApp.DirnameApp() -> void
+Kazo.Os.Commands.Dirname.DirnameCommand
+Kazo.Os.Commands.Dirname.DirnameCommand.DirnameCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Dmesg.DmesgApp
+Kazo.Os.Commands.Dmesg.DmesgApp.DmesgApp() -> void
+Kazo.Os.Commands.Dmesg.DmesgCommand
+Kazo.Os.Commands.Dmesg.DmesgCommand.DmesgCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Du.DuApp
+Kazo.Os.Commands.Du.DuApp.DuApp() -> void
+Kazo.Os.Commands.Du.DuCommand
+Kazo.Os.Commands.Du.DuCommand.DuCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Echo.EchoApp
+Kazo.Os.Commands.Echo.EchoApp.EchoApp() -> void
+Kazo.Os.Commands.Echo.EchoCommand
+Kazo.Os.Commands.Echo.EchoCommand.EchoCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Env.EnvApp
+Kazo.Os.Commands.Env.EnvApp.EnvApp() -> void
+Kazo.Os.Commands.Env.EnvCommand
+Kazo.Os.Commands.Env.EnvCommand.EnvCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Exit.ExitApp
+Kazo.Os.Commands.Exit.ExitApp.ExitApp() -> void
+Kazo.Os.Commands.Exit.ExitCommand
+Kazo.Os.Commands.Exit.ExitCommand.ExitCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Export.ExportApp
+Kazo.Os.Commands.Export.ExportApp.ExportApp() -> void
+Kazo.Os.Commands.Export.ExportCommand
+Kazo.Os.Commands.Export.ExportCommand.ExportCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.False.FalseApp
+Kazo.Os.Commands.False.FalseApp.FalseApp() -> void
+Kazo.Os.Commands.False.FalseCommand
+Kazo.Os.Commands.False.FalseCommand.FalseCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Find.FindApp
+Kazo.Os.Commands.Find.FindApp.FindApp() -> void
+Kazo.Os.Commands.Find.FindCommand
+Kazo.Os.Commands.Find.FindCommand.FindCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Grep.GrepApp
+Kazo.Os.Commands.Grep.GrepApp.GrepApp() -> void
+Kazo.Os.Commands.Grep.GrepCommand
+Kazo.Os.Commands.Grep.GrepCommand.GrepCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Kazobackup.KazobackupApp
+Kazo.Os.Commands.Kazobackup.KazobackupApp.KazobackupApp() -> void
+Kazo.Os.Commands.Kazobackup.KazobackupCommand
+Kazo.Os.Commands.Kazobackup.KazobackupCommand.KazobackupCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Kazopkg.KazopkgApp
+Kazo.Os.Commands.Kazopkg.KazopkgApp.KazopkgApp() -> void
+Kazo.Os.Commands.Kazopkg.KazopkgCommand
+Kazo.Os.Commands.Kazopkg.KazopkgCommand.KazopkgCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Head.HeadApp
+Kazo.Os.Commands.Head.HeadApp.HeadApp() -> void
+Kazo.Os.Commands.Head.HeadCommand
+Kazo.Os.Commands.Head.HeadCommand.HeadCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Help.HelpApp
+Kazo.Os.Commands.Help.HelpApp.HelpApp() -> void
+Kazo.Os.Commands.Help.HelpCommand
+Kazo.Os.Commands.Help.HelpCommand.HelpCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Htop.HtopApp
+Kazo.Os.Commands.Htop.HtopApp.HtopApp() -> void
+Kazo.Os.Commands.Htop.HtopCommand
+Kazo.Os.Commands.Htop.HtopCommand.HtopCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Ip.IpApp
+Kazo.Os.Commands.Ip.IpApp.IpApp() -> void
+Kazo.Os.Commands.Ip.IpCommand
+Kazo.Os.Commands.Ip.IpCommand.IpCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Jobs.JobsApp
+Kazo.Os.Commands.Jobs.JobsApp.JobsApp() -> void
+Kazo.Os.Commands.Jobs.JobsCommand
+Kazo.Os.Commands.Jobs.JobsCommand.JobsCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Kill.KillApp
+Kazo.Os.Commands.Kill.KillApp.KillApp() -> void
+Kazo.Os.Commands.Kill.KillCommand
+Kazo.Os.Commands.Kill.KillCommand.KillCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Launch.LaunchApp
+Kazo.Os.Commands.Launch.LaunchApp.LaunchApp() -> void
+Kazo.Os.Commands.Launch.LaunchCommand
+Kazo.Os.Commands.Launch.LaunchCommand.LaunchCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Ln.LnApp
+Kazo.Os.Commands.Ln.LnApp.LnApp() -> void
+Kazo.Os.Commands.Ln.LnCommand
+Kazo.Os.Commands.Ln.LnCommand.LnCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Localectl.LocalectlApp
+Kazo.Os.Commands.Localectl.LocalectlApp.LocalectlApp() -> void
+Kazo.Os.Commands.Localectl.LocalectlCommand
+Kazo.Os.Commands.Localectl.LocalectlCommand.LocalectlCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Locate.LocateApp
+Kazo.Os.Commands.Locate.LocateApp.LocateApp() -> void
+Kazo.Os.Commands.Locate.LocateCommand
+Kazo.Os.Commands.Locate.LocateCommand.LocateCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Ls.LsApp
+Kazo.Os.Commands.Ls.LsApp.LsApp() -> void
+Kazo.Os.Commands.Ls.LsCommand
+Kazo.Os.Commands.Ls.LsCommand.LsCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Mkdir.MkdirApp
+Kazo.Os.Commands.Mkdir.MkdirApp.MkdirApp() -> void
+Kazo.Os.Commands.Mkdir.MkdirCommand
+Kazo.Os.Commands.Mkdir.MkdirCommand.MkdirCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Mount.MountApp
+Kazo.Os.Commands.Mount.MountApp.MountApp() -> void
+Kazo.Os.Commands.Mount.MountCommand
+Kazo.Os.Commands.Mount.MountCommand.MountCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Mv.MvApp
+Kazo.Os.Commands.Mv.MvApp.MvApp() -> void
+Kazo.Os.Commands.Mv.MvCommand
+Kazo.Os.Commands.Mv.MvCommand.MvCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Nano.NanoApp
+Kazo.Os.Commands.Nano.NanoApp.NanoApp() -> void
+Kazo.Os.Commands.Nano.NanoCommand
+Kazo.Os.Commands.Nano.NanoCommand.NanoCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Netstat.NetstatApp
+Kazo.Os.Commands.Netstat.NetstatApp.NetstatApp() -> void
+Kazo.Os.Commands.Netstat.NetstatCommand
+Kazo.Os.Commands.Netstat.NetstatCommand.NetstatCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Nice.NiceApp
+Kazo.Os.Commands.Nice.NiceApp.NiceApp() -> void
+Kazo.Os.Commands.Nice.NiceCommand
+Kazo.Os.Commands.Nice.NiceCommand.NiceCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Nmap.NmapApp
+Kazo.Os.Commands.Nmap.NmapApp.NmapApp() -> void
+Kazo.Os.Commands.Nmap.NmapCommand
+Kazo.Os.Commands.Nmap.NmapCommand.NmapCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Nslookup.NslookupApp
+Kazo.Os.Commands.Nslookup.NslookupApp.NslookupApp() -> void
+Kazo.Os.Commands.Nslookup.NslookupCommand
+Kazo.Os.Commands.Nslookup.NslookupCommand.NslookupCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Passwd.PasswdApp
+Kazo.Os.Commands.Passwd.PasswdApp.PasswdApp() -> void
+Kazo.Os.Commands.Passwd.PasswdCommand
+Kazo.Os.Commands.Passwd.PasswdCommand.PasswdCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Ping.PingApp
+Kazo.Os.Commands.Ping.PingApp.PingApp() -> void
+Kazo.Os.Commands.Ping.PingCommand
+Kazo.Os.Commands.Ping.PingCommand.PingCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Printf.PrintfApp
+Kazo.Os.Commands.Printf.PrintfApp.PrintfApp() -> void
+Kazo.Os.Commands.Printf.PrintfCommand
+Kazo.Os.Commands.Printf.PrintfCommand.PrintfCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Prlimit.PrlimitApp
+Kazo.Os.Commands.Prlimit.PrlimitApp.PrlimitApp() -> void
+Kazo.Os.Commands.Prlimit.PrlimitCommand
+Kazo.Os.Commands.Prlimit.PrlimitCommand.PrlimitCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Ps.PsApp
+Kazo.Os.Commands.Ps.PsApp.PsApp() -> void
+Kazo.Os.Commands.Ps.PsCommand
+Kazo.Os.Commands.Ps.PsCommand.PsCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Pwd.PwdApp
+Kazo.Os.Commands.Pwd.PwdApp.PwdApp() -> void
+Kazo.Os.Commands.Pwd.PwdCommand
+Kazo.Os.Commands.Pwd.PwdCommand.PwdCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Read.ReadApp
+Kazo.Os.Commands.Read.ReadApp.ReadApp() -> void
+Kazo.Os.Commands.Read.ReadCommand
+Kazo.Os.Commands.Read.ReadCommand.ReadCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Renice.ReniceApp
+Kazo.Os.Commands.Renice.ReniceApp.ReniceApp() -> void
+Kazo.Os.Commands.Renice.ReniceCommand
+Kazo.Os.Commands.Renice.ReniceCommand.ReniceCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Rm.RmApp
+Kazo.Os.Commands.Rm.RmApp.RmApp() -> void
+Kazo.Os.Commands.Rm.RmCommand
+Kazo.Os.Commands.Rm.RmCommand.RmCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Seq.SeqApp
+Kazo.Os.Commands.Seq.SeqApp.SeqApp() -> void
+Kazo.Os.Commands.Seq.SeqCommand
+Kazo.Os.Commands.Seq.SeqCommand.SeqCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Sleep.SleepApp
+Kazo.Os.Commands.Sleep.SleepApp.SleepApp() -> void
+Kazo.Os.Commands.Sleep.SleepCommand
+Kazo.Os.Commands.Sleep.SleepCommand.SleepCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Sort.SortApp
+Kazo.Os.Commands.Sort.SortApp.SortApp() -> void
+Kazo.Os.Commands.Sort.SortCommand
+Kazo.Os.Commands.Sort.SortCommand.SortCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Stress.StressApp
+Kazo.Os.Commands.Stress.StressApp.StressApp() -> void
+Kazo.Os.Commands.Stress.StressCommand
+Kazo.Os.Commands.Stress.StressCommand.StressCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Sudo.SudoApp
+Kazo.Os.Commands.Sudo.SudoApp.SudoApp() -> void
+Kazo.Os.Commands.Sudo.SudoCommand
+Kazo.Os.Commands.Sudo.SudoCommand.SudoCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Systemctl.SystemctlApp
+Kazo.Os.Commands.Systemctl.SystemctlApp.SystemctlApp() -> void
+Kazo.Os.Commands.Systemctl.SystemctlCommand
+Kazo.Os.Commands.Systemctl.SystemctlCommand.SystemctlCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Tail.TailApp
+Kazo.Os.Commands.Tail.TailApp.TailApp() -> void
+Kazo.Os.Commands.Tail.TailCommand
+Kazo.Os.Commands.Tail.TailCommand.TailCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Tee.TeeApp
+Kazo.Os.Commands.Tee.TeeApp.TeeApp() -> void
+Kazo.Os.Commands.Tee.TeeCommand
+Kazo.Os.Commands.Tee.TeeCommand.TeeCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Test.TestApp
+Kazo.Os.Commands.Test.TestApp.TestApp() -> void
+Kazo.Os.Commands.Test.TestCommand
+Kazo.Os.Commands.Test.TestCommand.TestCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Top.TopApp
+Kazo.Os.Commands.Top.TopApp.TopApp() -> void
+Kazo.Os.Commands.Top.TopCommand
+Kazo.Os.Commands.Top.TopCommand.TopCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Touch.TouchApp
+Kazo.Os.Commands.Touch.TouchApp.TouchApp() -> void
+Kazo.Os.Commands.Touch.TouchCommand
+Kazo.Os.Commands.Touch.TouchCommand.TouchCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Trash.TrashApp
+Kazo.Os.Commands.Trash.TrashApp.TrashApp() -> void
+Kazo.Os.Commands.Trash.TrashCommand
+Kazo.Os.Commands.Trash.TrashCommand.TrashCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.True.TrueApp
+Kazo.Os.Commands.True.TrueApp.TrueApp() -> void
+Kazo.Os.Commands.True.TrueCommand
+Kazo.Os.Commands.True.TrueCommand.TrueCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Umount.UmountApp
+Kazo.Os.Commands.Umount.UmountApp.UmountApp() -> void
+Kazo.Os.Commands.Umount.UmountCommand
+Kazo.Os.Commands.Umount.UmountCommand.UmountCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Uniq.UniqApp
+Kazo.Os.Commands.Uniq.UniqApp.UniqApp() -> void
+Kazo.Os.Commands.Uniq.UniqCommand
+Kazo.Os.Commands.Uniq.UniqCommand.UniqCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Unset.UnsetApp
+Kazo.Os.Commands.Unset.UnsetApp.UnsetApp() -> void
+Kazo.Os.Commands.Unset.UnsetCommand
+Kazo.Os.Commands.Unset.UnsetCommand.UnsetCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Unzip.UnzipApp
+Kazo.Os.Commands.Unzip.UnzipApp.UnzipApp() -> void
+Kazo.Os.Commands.Unzip.UnzipCommand
+Kazo.Os.Commands.Unzip.UnzipCommand.UnzipCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Watch.WatchApp
+Kazo.Os.Commands.Watch.WatchApp.WatchApp() -> void
+Kazo.Os.Commands.Watch.WatchCommand
+Kazo.Os.Commands.Watch.WatchCommand.WatchCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Wc.WcApp
+Kazo.Os.Commands.Wc.WcApp.WcApp() -> void
+Kazo.Os.Commands.Wc.WcCommand
+Kazo.Os.Commands.Wc.WcCommand.WcCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Wget.WgetApp
+Kazo.Os.Commands.Wget.WgetApp.WgetApp() -> void
+Kazo.Os.Commands.Wget.WgetCommand
+Kazo.Os.Commands.Wget.WgetCommand.WgetCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Which.WhichApp
+Kazo.Os.Commands.Which.WhichApp.WhichApp() -> void
+Kazo.Os.Commands.Which.WhichCommand
+Kazo.Os.Commands.Which.WhichCommand.WhichCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Whoami.WhoamiApp
+Kazo.Os.Commands.Whoami.WhoamiApp.WhoamiApp() -> void
+Kazo.Os.Commands.Whoami.WhoamiCommand
+Kazo.Os.Commands.Whoami.WhoamiCommand.WhoamiCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.XdgMime.XdgMimeApp
+Kazo.Os.Commands.XdgMime.XdgMimeApp.XdgMimeApp() -> void
+Kazo.Os.Commands.XdgMime.XdgMimeCommand
+Kazo.Os.Commands.XdgMime.XdgMimeCommand.XdgMimeCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.XdgOpen.XdgOpenApp
+Kazo.Os.Commands.XdgOpen.XdgOpenApp.XdgOpenApp() -> void
+Kazo.Os.Commands.XdgOpen.XdgOpenCommand
+Kazo.Os.Commands.XdgOpen.XdgOpenCommand.XdgOpenCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+Kazo.Os.Commands.Zip.ZipApp
+Kazo.Os.Commands.Zip.ZipApp.ZipApp() -> void
+Kazo.Os.Commands.Zip.ZipCommand
+Kazo.Os.Commands.Zip.ZipCommand.ZipCommand(Kazo.Os.App.Abstractions.AppManifest! manifest) -> void
+const Kazo.Os.Commands.Ausearch.AusearchCommand.AuditLogPath = "/var/log/audit.log" -> string!
+const Kazo.Os.Commands.Clear.ClearCommand.ClearSequence = "\u001b[H\u001b[2J\u001b[3J" -> string!
+override Kazo.Os.Commands.Alias.AliasApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Alias.AliasApp.Description.get -> string!
+override Kazo.Os.Commands.Alias.AliasApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Alias.AliasApp.Id.get -> string!
+override Kazo.Os.Commands.Alias.AliasApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Alias.AliasApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Alias.AliasApp.Name.get -> string!
+override Kazo.Os.Commands.Alias.AliasApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Alias.AliasApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Alias.AliasApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Alias.AliasCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Ausearch.AusearchApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Ausearch.AusearchApp.Description.get -> string!
+override Kazo.Os.Commands.Ausearch.AusearchApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Ausearch.AusearchApp.Id.get -> string!
+override Kazo.Os.Commands.Ausearch.AusearchApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Ausearch.AusearchApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Ausearch.AusearchApp.Name.get -> string!
+override Kazo.Os.Commands.Ausearch.AusearchApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Ausearch.AusearchApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Ausearch.AusearchApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Ausearch.AusearchCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Basename.BasenameApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Basename.BasenameApp.Description.get -> string!
+override Kazo.Os.Commands.Basename.BasenameApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Basename.BasenameApp.Id.get -> string!
+override Kazo.Os.Commands.Basename.BasenameApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Basename.BasenameApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Basename.BasenameApp.Name.get -> string!
+override Kazo.Os.Commands.Basename.BasenameApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Basename.BasenameApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Basename.BasenameApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Basename.BasenameCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Cat.CatApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Cat.CatApp.Description.get -> string!
+override Kazo.Os.Commands.Cat.CatApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Cat.CatApp.Id.get -> string!
+override Kazo.Os.Commands.Cat.CatApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Cat.CatApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Cat.CatApp.Name.get -> string!
+override Kazo.Os.Commands.Cat.CatApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Cat.CatApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Cat.CatApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Cat.CatCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Cd.CdApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Cd.CdApp.Description.get -> string!
+override Kazo.Os.Commands.Cd.CdApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Cd.CdApp.Id.get -> string!
+override Kazo.Os.Commands.Cd.CdApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Cd.CdApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Cd.CdApp.Name.get -> string!
+override Kazo.Os.Commands.Cd.CdApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Cd.CdApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Cd.CdApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Cd.CdCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Chmod.ChmodApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Chmod.ChmodApp.Description.get -> string!
+override Kazo.Os.Commands.Chmod.ChmodApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Chmod.ChmodApp.Id.get -> string!
+override Kazo.Os.Commands.Chmod.ChmodApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Chmod.ChmodApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Chmod.ChmodApp.Name.get -> string!
+override Kazo.Os.Commands.Chmod.ChmodApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Chmod.ChmodApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Chmod.ChmodApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Chmod.ChmodCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Clear.ClearApp.Description.get -> string!
+override Kazo.Os.Commands.Clear.ClearApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Clear.ClearApp.Id.get -> string!
+override Kazo.Os.Commands.Clear.ClearApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Clear.ClearApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Clear.ClearApp.Name.get -> string!
+override Kazo.Os.Commands.Clear.ClearApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Clear.ClearApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Clear.ClearApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Clear.ClearCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Cp.CpApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Cp.CpApp.Description.get -> string!
+override Kazo.Os.Commands.Cp.CpApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Cp.CpApp.Id.get -> string!
+override Kazo.Os.Commands.Cp.CpApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Cp.CpApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Cp.CpApp.Name.get -> string!
+override Kazo.Os.Commands.Cp.CpApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Cp.CpApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Cp.CpApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Cp.CpCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Curl.CurlApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Curl.CurlApp.Category.get -> string!
+override Kazo.Os.Commands.Curl.CurlApp.Description.get -> string!
+override Kazo.Os.Commands.Curl.CurlApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Curl.CurlApp.Id.get -> string!
+override Kazo.Os.Commands.Curl.CurlApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Curl.CurlApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Curl.CurlApp.Name.get -> string!
+override Kazo.Os.Commands.Curl.CurlApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Curl.CurlApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Curl.CurlApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Curl.CurlCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Cut.CutApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Cut.CutApp.Description.get -> string!
+override Kazo.Os.Commands.Cut.CutApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Cut.CutApp.Id.get -> string!
+override Kazo.Os.Commands.Cut.CutApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Cut.CutApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Cut.CutApp.Name.get -> string!
+override Kazo.Os.Commands.Cut.CutApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Cut.CutApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Cut.CutApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Cut.CutCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Date.DateApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Date.DateApp.Description.get -> string!
+override Kazo.Os.Commands.Date.DateApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Date.DateApp.Id.get -> string!
+override Kazo.Os.Commands.Date.DateApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Date.DateApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Date.DateApp.Name.get -> string!
+override Kazo.Os.Commands.Date.DateApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Date.DateApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Date.DateApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Date.DateCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Df.DfApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Df.DfApp.Description.get -> string!
+override Kazo.Os.Commands.Df.DfApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Df.DfApp.Id.get -> string!
+override Kazo.Os.Commands.Df.DfApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Df.DfApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Df.DfApp.Name.get -> string!
+override Kazo.Os.Commands.Df.DfApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Df.DfApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Df.DfApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Df.DfCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Diff.DiffApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Diff.DiffApp.Description.get -> string!
+override Kazo.Os.Commands.Diff.DiffApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Diff.DiffApp.Id.get -> string!
+override Kazo.Os.Commands.Diff.DiffApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Diff.DiffApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Diff.DiffApp.Name.get -> string!
+override Kazo.Os.Commands.Diff.DiffApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Diff.DiffApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Diff.DiffApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Diff.DiffCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Dirname.DirnameApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Dirname.DirnameApp.Description.get -> string!
+override Kazo.Os.Commands.Dirname.DirnameApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Dirname.DirnameApp.Id.get -> string!
+override Kazo.Os.Commands.Dirname.DirnameApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Dirname.DirnameApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Dirname.DirnameApp.Name.get -> string!
+override Kazo.Os.Commands.Dirname.DirnameApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Dirname.DirnameApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Dirname.DirnameApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Dirname.DirnameCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Dmesg.DmesgApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Dmesg.DmesgApp.Description.get -> string!
+override Kazo.Os.Commands.Dmesg.DmesgApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Dmesg.DmesgApp.Id.get -> string!
+override Kazo.Os.Commands.Dmesg.DmesgApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Dmesg.DmesgApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Dmesg.DmesgApp.Name.get -> string!
+override Kazo.Os.Commands.Dmesg.DmesgApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Dmesg.DmesgApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Dmesg.DmesgApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Dmesg.DmesgCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Du.DuApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Du.DuApp.Description.get -> string!
+override Kazo.Os.Commands.Du.DuApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Du.DuApp.Id.get -> string!
+override Kazo.Os.Commands.Du.DuApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Du.DuApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Du.DuApp.Name.get -> string!
+override Kazo.Os.Commands.Du.DuApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Du.DuApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Du.DuApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Du.DuCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Echo.EchoApp.Description.get -> string!
+override Kazo.Os.Commands.Echo.EchoApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Echo.EchoApp.Id.get -> string!
+override Kazo.Os.Commands.Echo.EchoApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Echo.EchoApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Echo.EchoApp.Name.get -> string!
+override Kazo.Os.Commands.Echo.EchoApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Echo.EchoApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Echo.EchoApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Echo.EchoCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Env.EnvApp.Description.get -> string!
+override Kazo.Os.Commands.Env.EnvApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Env.EnvApp.Id.get -> string!
+override Kazo.Os.Commands.Env.EnvApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Env.EnvApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Env.EnvApp.Name.get -> string!
+override Kazo.Os.Commands.Env.EnvApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Env.EnvApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Env.EnvApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Env.EnvCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Exit.ExitApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Exit.ExitApp.Description.get -> string!
+override Kazo.Os.Commands.Exit.ExitApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Exit.ExitApp.Id.get -> string!
+override Kazo.Os.Commands.Exit.ExitApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Exit.ExitApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Exit.ExitApp.Name.get -> string!
+override Kazo.Os.Commands.Exit.ExitApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Exit.ExitApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Exit.ExitApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Exit.ExitCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Export.ExportApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Export.ExportApp.Description.get -> string!
+override Kazo.Os.Commands.Export.ExportApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Export.ExportApp.Id.get -> string!
+override Kazo.Os.Commands.Export.ExportApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Export.ExportApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Export.ExportApp.Name.get -> string!
+override Kazo.Os.Commands.Export.ExportApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Export.ExportApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Export.ExportApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Export.ExportCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.False.FalseApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.False.FalseApp.Description.get -> string!
+override Kazo.Os.Commands.False.FalseApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.False.FalseApp.Id.get -> string!
+override Kazo.Os.Commands.False.FalseApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.False.FalseApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.False.FalseApp.Name.get -> string!
+override Kazo.Os.Commands.False.FalseApp.PublisherId.get -> string!
+override Kazo.Os.Commands.False.FalseApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.False.FalseApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.False.FalseCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Find.FindApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Find.FindApp.Description.get -> string!
+override Kazo.Os.Commands.Find.FindApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Find.FindApp.Id.get -> string!
+override Kazo.Os.Commands.Find.FindApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Find.FindApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Find.FindApp.Name.get -> string!
+override Kazo.Os.Commands.Find.FindApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Find.FindApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Find.FindApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Find.FindCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Grep.GrepApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Grep.GrepApp.Description.get -> string!
+override Kazo.Os.Commands.Grep.GrepApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Grep.GrepApp.Id.get -> string!
+override Kazo.Os.Commands.Grep.GrepApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Grep.GrepApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Grep.GrepApp.Name.get -> string!
+override Kazo.Os.Commands.Grep.GrepApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Grep.GrepApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Grep.GrepApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Grep.GrepCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Kazobackup.KazobackupApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Kazobackup.KazobackupApp.Description.get -> string!
+override Kazo.Os.Commands.Kazobackup.KazobackupApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Kazobackup.KazobackupApp.Id.get -> string!
+override Kazo.Os.Commands.Kazobackup.KazobackupApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Kazobackup.KazobackupApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Kazobackup.KazobackupApp.Name.get -> string!
+override Kazo.Os.Commands.Kazobackup.KazobackupApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Kazobackup.KazobackupApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Kazobackup.KazobackupApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Kazobackup.KazobackupCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Kazopkg.KazopkgApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Kazopkg.KazopkgApp.Description.get -> string!
+override Kazo.Os.Commands.Kazopkg.KazopkgApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Kazopkg.KazopkgApp.Id.get -> string!
+override Kazo.Os.Commands.Kazopkg.KazopkgApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Kazopkg.KazopkgApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Kazopkg.KazopkgApp.Name.get -> string!
+override Kazo.Os.Commands.Kazopkg.KazopkgApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Kazopkg.KazopkgApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Kazopkg.KazopkgApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Kazopkg.KazopkgCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Head.HeadApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Head.HeadApp.Description.get -> string!
+override Kazo.Os.Commands.Head.HeadApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Head.HeadApp.Id.get -> string!
+override Kazo.Os.Commands.Head.HeadApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Head.HeadApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Head.HeadApp.Name.get -> string!
+override Kazo.Os.Commands.Head.HeadApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Head.HeadApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Head.HeadApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Head.HeadCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Help.HelpApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Help.HelpApp.Description.get -> string!
+override Kazo.Os.Commands.Help.HelpApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Help.HelpApp.Id.get -> string!
+override Kazo.Os.Commands.Help.HelpApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Help.HelpApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Help.HelpApp.Name.get -> string!
+override Kazo.Os.Commands.Help.HelpApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Help.HelpApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Help.HelpApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Help.HelpCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Htop.HtopApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Htop.HtopApp.Description.get -> string!
+override Kazo.Os.Commands.Htop.HtopApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Htop.HtopApp.Id.get -> string!
+override Kazo.Os.Commands.Htop.HtopApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Htop.HtopApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Htop.HtopApp.Name.get -> string!
+override Kazo.Os.Commands.Htop.HtopApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Htop.HtopApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Htop.HtopApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Htop.HtopCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Ip.IpApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Ip.IpApp.Description.get -> string!
+override Kazo.Os.Commands.Ip.IpApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Ip.IpApp.Id.get -> string!
+override Kazo.Os.Commands.Ip.IpApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Ip.IpApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Ip.IpApp.Name.get -> string!
+override Kazo.Os.Commands.Ip.IpApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Ip.IpApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Ip.IpApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Ip.IpCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Jobs.JobsApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Jobs.JobsApp.Description.get -> string!
+override Kazo.Os.Commands.Jobs.JobsApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Jobs.JobsApp.Id.get -> string!
+override Kazo.Os.Commands.Jobs.JobsApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Jobs.JobsApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Jobs.JobsApp.Name.get -> string!
+override Kazo.Os.Commands.Jobs.JobsApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Jobs.JobsApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Jobs.JobsApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Jobs.JobsCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Kill.KillApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Kill.KillApp.Description.get -> string!
+override Kazo.Os.Commands.Kill.KillApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Kill.KillApp.Id.get -> string!
+override Kazo.Os.Commands.Kill.KillApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Kill.KillApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Kill.KillApp.Name.get -> string!
+override Kazo.Os.Commands.Kill.KillApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Kill.KillApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Kill.KillApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Kill.KillCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Launch.LaunchApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Launch.LaunchApp.Description.get -> string!
+override Kazo.Os.Commands.Launch.LaunchApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Launch.LaunchApp.Id.get -> string!
+override Kazo.Os.Commands.Launch.LaunchApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Launch.LaunchApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Launch.LaunchApp.Name.get -> string!
+override Kazo.Os.Commands.Launch.LaunchApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Launch.LaunchApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Launch.LaunchApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Launch.LaunchCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Ln.LnApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Ln.LnApp.Description.get -> string!
+override Kazo.Os.Commands.Ln.LnApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Ln.LnApp.Id.get -> string!
+override Kazo.Os.Commands.Ln.LnApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Ln.LnApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Ln.LnApp.Name.get -> string!
+override Kazo.Os.Commands.Ln.LnApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Ln.LnApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Ln.LnApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Ln.LnCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Localectl.LocalectlApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Localectl.LocalectlApp.Description.get -> string!
+override Kazo.Os.Commands.Localectl.LocalectlApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Localectl.LocalectlApp.Id.get -> string!
+override Kazo.Os.Commands.Localectl.LocalectlApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Localectl.LocalectlApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Localectl.LocalectlApp.Name.get -> string!
+override Kazo.Os.Commands.Localectl.LocalectlApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Localectl.LocalectlApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Localectl.LocalectlApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Localectl.LocalectlCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Locate.LocateApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Locate.LocateApp.Description.get -> string!
+override Kazo.Os.Commands.Locate.LocateApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Locate.LocateApp.Id.get -> string!
+override Kazo.Os.Commands.Locate.LocateApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Locate.LocateApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Locate.LocateApp.Name.get -> string!
+override Kazo.Os.Commands.Locate.LocateApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Locate.LocateApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Locate.LocateApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Locate.LocateCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Ls.LsApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Ls.LsApp.Description.get -> string!
+override Kazo.Os.Commands.Ls.LsApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Ls.LsApp.Id.get -> string!
+override Kazo.Os.Commands.Ls.LsApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Ls.LsApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Ls.LsApp.Name.get -> string!
+override Kazo.Os.Commands.Ls.LsApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Ls.LsApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Ls.LsApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Ls.LsCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Mkdir.MkdirApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Mkdir.MkdirApp.Description.get -> string!
+override Kazo.Os.Commands.Mkdir.MkdirApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Mkdir.MkdirApp.Id.get -> string!
+override Kazo.Os.Commands.Mkdir.MkdirApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Mkdir.MkdirApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Mkdir.MkdirApp.Name.get -> string!
+override Kazo.Os.Commands.Mkdir.MkdirApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Mkdir.MkdirApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Mkdir.MkdirApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Mkdir.MkdirCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Mount.MountApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Mount.MountApp.Description.get -> string!
+override Kazo.Os.Commands.Mount.MountApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Mount.MountApp.Id.get -> string!
+override Kazo.Os.Commands.Mount.MountApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Mount.MountApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Mount.MountApp.Name.get -> string!
+override Kazo.Os.Commands.Mount.MountApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Mount.MountApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Mount.MountApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Mount.MountCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Mv.MvApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Mv.MvApp.Description.get -> string!
+override Kazo.Os.Commands.Mv.MvApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Mv.MvApp.Id.get -> string!
+override Kazo.Os.Commands.Mv.MvApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Mv.MvApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Mv.MvApp.Name.get -> string!
+override Kazo.Os.Commands.Mv.MvApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Mv.MvApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Mv.MvApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Mv.MvCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Nano.NanoApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Nano.NanoApp.Category.get -> string!
+override Kazo.Os.Commands.Nano.NanoApp.Description.get -> string!
+override Kazo.Os.Commands.Nano.NanoApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Nano.NanoApp.Id.get -> string!
+override Kazo.Os.Commands.Nano.NanoApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Nano.NanoApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Nano.NanoApp.Name.get -> string!
+override Kazo.Os.Commands.Nano.NanoApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Nano.NanoApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Nano.NanoApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Nano.NanoCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Netstat.NetstatApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Netstat.NetstatApp.Description.get -> string!
+override Kazo.Os.Commands.Netstat.NetstatApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Netstat.NetstatApp.Id.get -> string!
+override Kazo.Os.Commands.Netstat.NetstatApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Netstat.NetstatApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Netstat.NetstatApp.Name.get -> string!
+override Kazo.Os.Commands.Netstat.NetstatApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Netstat.NetstatApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Netstat.NetstatApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Netstat.NetstatCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Nice.NiceApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Nice.NiceApp.Description.get -> string!
+override Kazo.Os.Commands.Nice.NiceApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Nice.NiceApp.Id.get -> string!
+override Kazo.Os.Commands.Nice.NiceApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Nice.NiceApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Nice.NiceApp.Name.get -> string!
+override Kazo.Os.Commands.Nice.NiceApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Nice.NiceApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Nice.NiceApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Nice.NiceCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Nmap.NmapApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Nmap.NmapApp.Category.get -> string!
+override Kazo.Os.Commands.Nmap.NmapApp.Description.get -> string!
+override Kazo.Os.Commands.Nmap.NmapApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Nmap.NmapApp.Id.get -> string!
+override Kazo.Os.Commands.Nmap.NmapApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Nmap.NmapApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Nmap.NmapApp.Name.get -> string!
+override Kazo.Os.Commands.Nmap.NmapApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Nmap.NmapApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Nmap.NmapApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Nmap.NmapCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Nslookup.NslookupApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Nslookup.NslookupApp.Category.get -> string!
+override Kazo.Os.Commands.Nslookup.NslookupApp.Description.get -> string!
+override Kazo.Os.Commands.Nslookup.NslookupApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Nslookup.NslookupApp.Id.get -> string!
+override Kazo.Os.Commands.Nslookup.NslookupApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Nslookup.NslookupApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Nslookup.NslookupApp.Name.get -> string!
+override Kazo.Os.Commands.Nslookup.NslookupApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Nslookup.NslookupApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Nslookup.NslookupApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Nslookup.NslookupCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Passwd.PasswdApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Passwd.PasswdApp.Description.get -> string!
+override Kazo.Os.Commands.Passwd.PasswdApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Passwd.PasswdApp.Id.get -> string!
+override Kazo.Os.Commands.Passwd.PasswdApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Passwd.PasswdApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Passwd.PasswdApp.Name.get -> string!
+override Kazo.Os.Commands.Passwd.PasswdApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Passwd.PasswdApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Passwd.PasswdApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Passwd.PasswdCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Ping.PingApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Ping.PingApp.Category.get -> string!
+override Kazo.Os.Commands.Ping.PingApp.Description.get -> string!
+override Kazo.Os.Commands.Ping.PingApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Ping.PingApp.Id.get -> string!
+override Kazo.Os.Commands.Ping.PingApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Ping.PingApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Ping.PingApp.Name.get -> string!
+override Kazo.Os.Commands.Ping.PingApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Ping.PingApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Ping.PingApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Ping.PingCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Printf.PrintfApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Printf.PrintfApp.Description.get -> string!
+override Kazo.Os.Commands.Printf.PrintfApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Printf.PrintfApp.Id.get -> string!
+override Kazo.Os.Commands.Printf.PrintfApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Printf.PrintfApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Printf.PrintfApp.Name.get -> string!
+override Kazo.Os.Commands.Printf.PrintfApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Printf.PrintfApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Printf.PrintfApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Printf.PrintfCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Prlimit.PrlimitApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Prlimit.PrlimitApp.Description.get -> string!
+override Kazo.Os.Commands.Prlimit.PrlimitApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Prlimit.PrlimitApp.Id.get -> string!
+override Kazo.Os.Commands.Prlimit.PrlimitApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Prlimit.PrlimitApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Prlimit.PrlimitApp.Name.get -> string!
+override Kazo.Os.Commands.Prlimit.PrlimitApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Prlimit.PrlimitApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Prlimit.PrlimitApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Prlimit.PrlimitCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Ps.PsApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Ps.PsApp.Description.get -> string!
+override Kazo.Os.Commands.Ps.PsApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Ps.PsApp.Id.get -> string!
+override Kazo.Os.Commands.Ps.PsApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Ps.PsApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Ps.PsApp.Name.get -> string!
+override Kazo.Os.Commands.Ps.PsApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Ps.PsApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Ps.PsApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Ps.PsCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Pwd.PwdApp.Description.get -> string!
+override Kazo.Os.Commands.Pwd.PwdApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Pwd.PwdApp.Id.get -> string!
+override Kazo.Os.Commands.Pwd.PwdApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Pwd.PwdApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Pwd.PwdApp.Name.get -> string!
+override Kazo.Os.Commands.Pwd.PwdApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Pwd.PwdApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Pwd.PwdApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Pwd.PwdCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Read.ReadApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Read.ReadApp.Description.get -> string!
+override Kazo.Os.Commands.Read.ReadApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Read.ReadApp.Id.get -> string!
+override Kazo.Os.Commands.Read.ReadApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Read.ReadApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Read.ReadApp.Name.get -> string!
+override Kazo.Os.Commands.Read.ReadApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Read.ReadApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Read.ReadApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Read.ReadCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Renice.ReniceApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Renice.ReniceApp.Description.get -> string!
+override Kazo.Os.Commands.Renice.ReniceApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Renice.ReniceApp.Id.get -> string!
+override Kazo.Os.Commands.Renice.ReniceApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Renice.ReniceApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Renice.ReniceApp.Name.get -> string!
+override Kazo.Os.Commands.Renice.ReniceApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Renice.ReniceApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Renice.ReniceApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Renice.ReniceCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Rm.RmApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Rm.RmApp.Description.get -> string!
+override Kazo.Os.Commands.Rm.RmApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Rm.RmApp.Id.get -> string!
+override Kazo.Os.Commands.Rm.RmApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Rm.RmApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Rm.RmApp.Name.get -> string!
+override Kazo.Os.Commands.Rm.RmApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Rm.RmApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Rm.RmApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Rm.RmCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Seq.SeqApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Seq.SeqApp.Description.get -> string!
+override Kazo.Os.Commands.Seq.SeqApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Seq.SeqApp.Id.get -> string!
+override Kazo.Os.Commands.Seq.SeqApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Seq.SeqApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Seq.SeqApp.Name.get -> string!
+override Kazo.Os.Commands.Seq.SeqApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Seq.SeqApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Seq.SeqApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Seq.SeqCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Sleep.SleepApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Sleep.SleepApp.Description.get -> string!
+override Kazo.Os.Commands.Sleep.SleepApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Sleep.SleepApp.Id.get -> string!
+override Kazo.Os.Commands.Sleep.SleepApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Sleep.SleepApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Sleep.SleepApp.Name.get -> string!
+override Kazo.Os.Commands.Sleep.SleepApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Sleep.SleepApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Sleep.SleepApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Sleep.SleepCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Sort.SortApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Sort.SortApp.Description.get -> string!
+override Kazo.Os.Commands.Sort.SortApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Sort.SortApp.Id.get -> string!
+override Kazo.Os.Commands.Sort.SortApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Sort.SortApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Sort.SortApp.Name.get -> string!
+override Kazo.Os.Commands.Sort.SortApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Sort.SortApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Sort.SortApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Sort.SortCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Stress.StressApp.Description.get -> string!
+override Kazo.Os.Commands.Stress.StressApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Stress.StressApp.Id.get -> string!
+override Kazo.Os.Commands.Stress.StressApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Stress.StressApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Stress.StressApp.Name.get -> string!
+override Kazo.Os.Commands.Stress.StressApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Stress.StressApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Stress.StressApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Stress.StressCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Sudo.SudoApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Sudo.SudoApp.Description.get -> string!
+override Kazo.Os.Commands.Sudo.SudoApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Sudo.SudoApp.Id.get -> string!
+override Kazo.Os.Commands.Sudo.SudoApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Sudo.SudoApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Sudo.SudoApp.Name.get -> string!
+override Kazo.Os.Commands.Sudo.SudoApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Sudo.SudoApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Sudo.SudoApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Sudo.SudoCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Systemctl.SystemctlApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Systemctl.SystemctlApp.Description.get -> string!
+override Kazo.Os.Commands.Systemctl.SystemctlApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Systemctl.SystemctlApp.Id.get -> string!
+override Kazo.Os.Commands.Systemctl.SystemctlApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Systemctl.SystemctlApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Systemctl.SystemctlApp.Name.get -> string!
+override Kazo.Os.Commands.Systemctl.SystemctlApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Systemctl.SystemctlApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Systemctl.SystemctlApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Systemctl.SystemctlCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Tail.TailApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Tail.TailApp.Description.get -> string!
+override Kazo.Os.Commands.Tail.TailApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Tail.TailApp.Id.get -> string!
+override Kazo.Os.Commands.Tail.TailApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Tail.TailApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Tail.TailApp.Name.get -> string!
+override Kazo.Os.Commands.Tail.TailApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Tail.TailApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Tail.TailApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Tail.TailCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Tee.TeeApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Tee.TeeApp.Description.get -> string!
+override Kazo.Os.Commands.Tee.TeeApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Tee.TeeApp.Id.get -> string!
+override Kazo.Os.Commands.Tee.TeeApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Tee.TeeApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Tee.TeeApp.Name.get -> string!
+override Kazo.Os.Commands.Tee.TeeApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Tee.TeeApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Tee.TeeApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Tee.TeeCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Test.TestApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Test.TestApp.Description.get -> string!
+override Kazo.Os.Commands.Test.TestApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Test.TestApp.Id.get -> string!
+override Kazo.Os.Commands.Test.TestApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Test.TestApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Test.TestApp.Name.get -> string!
+override Kazo.Os.Commands.Test.TestApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Test.TestApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Test.TestApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Test.TestCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Top.TopApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Top.TopApp.Description.get -> string!
+override Kazo.Os.Commands.Top.TopApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Top.TopApp.Id.get -> string!
+override Kazo.Os.Commands.Top.TopApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Top.TopApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Top.TopApp.Name.get -> string!
+override Kazo.Os.Commands.Top.TopApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Top.TopApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Top.TopApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Top.TopCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Touch.TouchApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Touch.TouchApp.Description.get -> string!
+override Kazo.Os.Commands.Touch.TouchApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Touch.TouchApp.Id.get -> string!
+override Kazo.Os.Commands.Touch.TouchApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Touch.TouchApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Touch.TouchApp.Name.get -> string!
+override Kazo.Os.Commands.Touch.TouchApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Touch.TouchApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Touch.TouchApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Touch.TouchCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Trash.TrashApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Trash.TrashApp.Description.get -> string!
+override Kazo.Os.Commands.Trash.TrashApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Trash.TrashApp.Id.get -> string!
+override Kazo.Os.Commands.Trash.TrashApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Trash.TrashApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Trash.TrashApp.Name.get -> string!
+override Kazo.Os.Commands.Trash.TrashApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Trash.TrashApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Trash.TrashApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Trash.TrashCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.True.TrueApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.True.TrueApp.Description.get -> string!
+override Kazo.Os.Commands.True.TrueApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.True.TrueApp.Id.get -> string!
+override Kazo.Os.Commands.True.TrueApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.True.TrueApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.True.TrueApp.Name.get -> string!
+override Kazo.Os.Commands.True.TrueApp.PublisherId.get -> string!
+override Kazo.Os.Commands.True.TrueApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.True.TrueApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.True.TrueCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Umount.UmountApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Umount.UmountApp.Description.get -> string!
+override Kazo.Os.Commands.Umount.UmountApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Umount.UmountApp.Id.get -> string!
+override Kazo.Os.Commands.Umount.UmountApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Umount.UmountApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Umount.UmountApp.Name.get -> string!
+override Kazo.Os.Commands.Umount.UmountApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Umount.UmountApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Umount.UmountApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Umount.UmountCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Uniq.UniqApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Uniq.UniqApp.Description.get -> string!
+override Kazo.Os.Commands.Uniq.UniqApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Uniq.UniqApp.Id.get -> string!
+override Kazo.Os.Commands.Uniq.UniqApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Uniq.UniqApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Uniq.UniqApp.Name.get -> string!
+override Kazo.Os.Commands.Uniq.UniqApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Uniq.UniqApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Uniq.UniqApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Uniq.UniqCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Unset.UnsetApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Unset.UnsetApp.Description.get -> string!
+override Kazo.Os.Commands.Unset.UnsetApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Unset.UnsetApp.Id.get -> string!
+override Kazo.Os.Commands.Unset.UnsetApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Unset.UnsetApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Unset.UnsetApp.Name.get -> string!
+override Kazo.Os.Commands.Unset.UnsetApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Unset.UnsetApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Unset.UnsetApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Unset.UnsetCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Unzip.UnzipApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Unzip.UnzipApp.Description.get -> string!
+override Kazo.Os.Commands.Unzip.UnzipApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Unzip.UnzipApp.Id.get -> string!
+override Kazo.Os.Commands.Unzip.UnzipApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Unzip.UnzipApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Unzip.UnzipApp.Name.get -> string!
+override Kazo.Os.Commands.Unzip.UnzipApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Unzip.UnzipApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Unzip.UnzipApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Unzip.UnzipCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Watch.WatchApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Watch.WatchApp.Description.get -> string!
+override Kazo.Os.Commands.Watch.WatchApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Watch.WatchApp.Id.get -> string!
+override Kazo.Os.Commands.Watch.WatchApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Watch.WatchApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Watch.WatchApp.Name.get -> string!
+override Kazo.Os.Commands.Watch.WatchApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Watch.WatchApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Watch.WatchApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Watch.WatchCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Wc.WcApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Wc.WcApp.Description.get -> string!
+override Kazo.Os.Commands.Wc.WcApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Wc.WcApp.Id.get -> string!
+override Kazo.Os.Commands.Wc.WcApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Wc.WcApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Wc.WcApp.Name.get -> string!
+override Kazo.Os.Commands.Wc.WcApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Wc.WcApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Wc.WcApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Wc.WcCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Wget.WgetApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Wget.WgetApp.Description.get -> string!
+override Kazo.Os.Commands.Wget.WgetApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Wget.WgetApp.Id.get -> string!
+override Kazo.Os.Commands.Wget.WgetApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Wget.WgetApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Wget.WgetApp.Name.get -> string!
+override Kazo.Os.Commands.Wget.WgetApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Wget.WgetApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Wget.WgetApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Wget.WgetCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Which.WhichApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Which.WhichApp.Description.get -> string!
+override Kazo.Os.Commands.Which.WhichApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Which.WhichApp.Id.get -> string!
+override Kazo.Os.Commands.Which.WhichApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Which.WhichApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Which.WhichApp.Name.get -> string!
+override Kazo.Os.Commands.Which.WhichApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Which.WhichApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Which.WhichApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Which.WhichCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Whoami.WhoamiApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Whoami.WhoamiApp.Description.get -> string!
+override Kazo.Os.Commands.Whoami.WhoamiApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Whoami.WhoamiApp.Id.get -> string!
+override Kazo.Os.Commands.Whoami.WhoamiApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Whoami.WhoamiApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Whoami.WhoamiApp.Name.get -> string!
+override Kazo.Os.Commands.Whoami.WhoamiApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Whoami.WhoamiApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Whoami.WhoamiApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Whoami.WhoamiCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.XdgMime.XdgMimeApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.XdgMime.XdgMimeApp.Description.get -> string!
+override Kazo.Os.Commands.XdgMime.XdgMimeApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.XdgMime.XdgMimeApp.Id.get -> string!
+override Kazo.Os.Commands.XdgMime.XdgMimeApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.XdgMime.XdgMimeApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.XdgMime.XdgMimeApp.Name.get -> string!
+override Kazo.Os.Commands.XdgMime.XdgMimeApp.PublisherId.get -> string!
+override Kazo.Os.Commands.XdgMime.XdgMimeApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.XdgMime.XdgMimeApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.XdgMime.XdgMimeCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.XdgOpen.XdgOpenApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.XdgOpen.XdgOpenApp.Description.get -> string!
+override Kazo.Os.Commands.XdgOpen.XdgOpenApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.XdgOpen.XdgOpenApp.Id.get -> string!
+override Kazo.Os.Commands.XdgOpen.XdgOpenApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.XdgOpen.XdgOpenApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.XdgOpen.XdgOpenApp.Name.get -> string!
+override Kazo.Os.Commands.XdgOpen.XdgOpenApp.PublisherId.get -> string!
+override Kazo.Os.Commands.XdgOpen.XdgOpenApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.XdgOpen.XdgOpenApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.XdgOpen.XdgOpenCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>
+override Kazo.Os.Commands.Zip.ZipApp.Capabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.Commands.Zip.ZipApp.Description.get -> string!
+override Kazo.Os.Commands.Zip.ZipApp.EntryPoint.get -> System.Type!
+override Kazo.Os.Commands.Zip.ZipApp.Id.get -> string!
+override Kazo.Os.Commands.Zip.ZipApp.Kind.get -> Kazo.Os.App.Abstractions.AppKind
+override Kazo.Os.Commands.Zip.ZipApp.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
+override Kazo.Os.Commands.Zip.ZipApp.Name.get -> string!
+override Kazo.Os.Commands.Zip.ZipApp.PublisherId.get -> string!
+override Kazo.Os.Commands.Zip.ZipApp.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
+override Kazo.Os.Commands.Zip.ZipApp.Terminal.get -> Kazo.Os.App.Abstractions.TerminalCommand?
+override Kazo.Os.Commands.Zip.ZipCommand.ExecuteAsync(Kazo.Os.AppSdk.TerminalExecutionContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<int>

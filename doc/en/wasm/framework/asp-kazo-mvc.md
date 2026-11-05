@@ -1,0 +1,278 @@
+> [Version française](../../../fr/wasm/framework/asp-kazo-mvc.md)
+
+# ASP.Kazo MVC: pipeline, routing, controllers and session
+
+Work item `web/6-mvc-core` of the web phase. Decisions: [ADR 0076](../dev/adr/0076-asp-hack-mvc.md)
+(ASP.Kazo MVC) and [ADR 0082](../dev/adr/0082-asp-hack-route-source-generator.md) (route table
+produced by a source generator). Plan:
+[`asp-kazo-plan.md`](../dev/plans/asp-kazo-plan.md). Network foundation: [`listening-ports-and-dns.md`](listening-ports-and-dns.md).
+
+## Purpose
+
+`Shared/Kazo.Os.AppSdk.Web` makes it possible to write an internal Kazo OS site like
+an ASP.NET Core MVC site: a startup class, middlewares, controllers
+with `[HttpGet]`/`[HttpPost]`/`[HttpPut]`/`[HttpPatch]`/`[HttpDelete]`,
+model binding, `DataAnnotations` validation, JSON, text,
+file or redirect results, per-request dependency injection and a cookie
+session. The site is an app of kind `web` (ADR 0073): the OS starts it on the
+first access to one of its URLs and its code runs in the shared `web` worker.
+
+`.razor` views, `View()`, `PartialView()`, anti-forgery and `wwwroot`:
+[`asp-kazo-razor-views.md`](asp-kazo-razor-views.md) (`web/7`, ADR 0083). `.cshtml`
+views: [`asp-kazo-cshtml-views.md`](asp-kazo-cshtml-views.md) (`web/8`, ADR 0086).
+Out of this work item: Blazor sites (`web/9`).
+
+## Example
+
+```csharp
+[AppManifest]
+public sealed partial class IntranetApp : WebAppDefinition   // partial : le build donne l'EntryPoint
+{
+    public override string Id => "com.example.intranet";
+    public override string Name => "Intranet";
+    public override IReadOnlyList<string> Urls => ["http://intranet.hack/"];
+
+    public override void Configure(KazoWebApplicationBuilder builder)
+    {
+        builder.Services.AddSingleton<NoteStore>();
+        builder.Json.SerializerOptions.TypeInfoResolverChain.Insert(0, IntranetJsonContext.Default);
+        KazoWebApplication app = builder.Build();
+        app.UseExceptionPage();
+        app.UseCookieSession();
+        app.Use(async (context, next) => { context.Response.Headers["X-Powered-By"] = "ASP.Kazo"; await next(); });
+        app.MapGet("/health", () => KazoResults.Ok("up"));
+        app.MapControllers();          // routes d'attribut + {controller=Home}/{action=Index}/{id?}
+    }
+}
+
+[Route("api/[controller]")]
+public sealed class NotesController(NoteStore store) : KazoApiController
+{
+    [HttpGet] public IReadOnlyList<Note> List([FromQuery] bool? done = null) => ...;
+    [HttpGet("{id:int}", Name = "GetNote")]
+    public IKazoActionResult Get(int id) => store.Find(id) is Note n ? Ok(n) : NotFound();
+    [HttpPost] public IKazoActionResult Create(Note note) => CreatedAtAction(nameof(Get), new { id = store.Add(note).Id }, note);
+}
+
+public sealed class HomeController : KazoController
+{
+    public string Index() => "home";
+    [HttpPost, ActionName("Contact")]
+    public IKazoActionResult ContactPost(ContactForm form) =>
+        ModelState.IsValid ? RedirectToAction(nameof(Index)) : BadRequest(ModelState);
+}
+```
+
+`curl http://intranet.hack/api/notes/1` starts the site, then passes it the
+request through the local socket, as for any site (`web/3`).
+
+## Architecture
+
+```text
+KazoHttpListener (worker web)                                  web/3
+  └─ KazoWebHost.ProcessRequestAsync            Hosting/       requête du listener → KazoWebRequestData
+       └─ KazoWebApplication.ProcessAsync                       une portée DI par requête, KazoHttpContext
+            ├─ routage : KazoEndpointRouter.Match               Routing/  404, 405 + Allow, OPTIONS 204, HEAD → GET
+            ├─ middlewares (Use, UseMiddleware<T>, UseCookieSession, UseStatusCodePages)
+            └─ endpoint
+                 ├─ route minimale (MapGet/MapPost/... ou KazoRequestDelegate)
+                 └─ action : KazoActionInvoker.InvokeAsync      Mvc/
+                      ├─ CreateController (généré)              services de la portée
+                      ├─ BindArguments (généré) → KazoModelBinder, ModelState
+                      ├─ 415, puis 400 automatique d'une API
+                      ├─ filtres : contrôleur, globaux, contrôleur (attribut), action
+                      ├─ Invoke (généré)
+                      └─ IKazoActionResult.ExecuteResultAsync → KazoHttpResponse
+UseExceptionPage : toute exception du pipeline → page d'erreur (sinon « 500 Internal Server Error » nu)
+```
+
+| Folder | Content |
+|---|---|
+| `Hosting/` | `WebAppDefinition`, `KazoWebApplicationBuilder`, `KazoWebApplication`, `KazoWebHost`, `KazoWebJsonOptions`. |
+| `Http/` | `KazoHttpContext`, `KazoHttpRequest`, `KazoHttpResponse`, `KazoHeaderDictionary`, `KazoValueCollection` (request, form), cookies, `KazoWebRequestData` / `KazoWebResponseData` (transport-independent exchange). |
+| `Routing/` | `KazoRouteTemplate` (parser shared with the generator), `KazoRoutePattern` (matching, URL generation), `KazoEndpoint`, `KazoEndpointRouter`, `KazoEndpointDataSource`, `KazoLinkGenerator`, `KazoRouteValueDictionary`. |
+| `Mvc/` | Attributes, `KazoControllerBase` / `KazoController` / `KazoApiController`, `KazoModelBinder`, `KazoModelStateDictionary`, filters, results, `KazoUrlHelper`, `KazoActionInvoker`, `KazoResults`, `KazoControllerActionDescriptor` contract. |
+| `Sessions/` | `KazoSession`, `KazoSessionOptions`, `KazoSessionStore`. |
+| `Diagnostics/` | `KazoExceptionPage` (console-style error page). |
+| `Tools/Kazo.Os.Tools.WebRouteGenerator` | Roslyn source generator (ADR 0082): route table and `<Name>WebHost`, errors `KOSWEB0001` to `KOSWEB0007` (`KOSWEB0008`: `.razor` and `.cshtml` view at the same path, ADR 0086). |
+
+## Startup
+
+- `WebAppDefinition`: `Kind` is `Web` (sealed), `Category` `internet`,
+  `LaunchVisibility` `Hidden`, `Urls` to be provided. `Configure(builder)` runs in
+  the site's process at each startup; by default it calls
+  `builder.Build().MapControllers()`.
+- `KazoWebApplicationBuilder`: `Services` (`IServiceCollection`), `Json`
+  (`KazoWebJsonOptions.SerializerOptions`, web defaults: camelCase), `Mvc`
+  (`KazoMvcOptions.Filters`, global filters), `Build()`. The provider is
+  built with `ValidateScopes` and `ValidateOnBuild`.
+- `KazoWebApplication`: `Use(...)` (two forms, as in ASP.NET Core),
+  `UseMiddleware<T>` (`IKazoMiddleware`), `UseExceptionPage`,
+  `UseStatusCodePages`, `UseCookieSession(options)`, `Map`, `MapMethods`,
+  `MapGet`/`MapPost`/`MapPut`/`MapPatch`/`MapDelete`, `MapControllers`,
+  `MapControllerRoute(name, pattern[, defaults])`, `MapDefaultControllerRoute`,
+  `ProcessAsync(KazoWebRequestData)`, `UnhandledException` event.
+- `MapControllers()` adds the default conventional route
+  `{controller=Home}/{action=Index}/{id?}` if no `MapControllerRoute` is
+  called, when the pipeline is frozen (first request).
+- `KazoWebHost.CreateApplication(definition, routes)` builds the application
+  without an OS or listener: this is how tests call a site
+  (`ProcessAsync(KazoWebRequestData.Create("GET", "http://intranet.hack/"))`),
+  like ASP.NET Core's `TestServer`.
+
+## Routing
+
+ASP.NET Core templates: literals (case-insensitive), `{p}`, `{p?}`, `{p=default}`,
+`{*rest}` / `{**rest}`, constraints `int`, `long`, `bool`, `guid`, `double`,
+`decimal`, `float`, `datetime`, `alpha`, `required`, `min(n)`, `max(n)`,
+`range(a,b)`, `length(n)`/`length(a,b)`, `minlength(n)`, `maxlength(n)`,
+`regex(...)` (case-insensitive, 100 ms timeout). `{{` and `}}` escape a brace.
+No complex segments.
+
+Choice of the endpoint, like ASP.NET Core endpoint routing:
+
+1. lowest `Order` (attribute routes 0, conventional routes 1, 2...);
+2. then the most specific template, segment by segment: literal, constrained
+   parameter, parameter, optional, catch-all;
+3. then an endpoint limited to certain methods before an "all methods" endpoint;
+4. then registration order. Two indistinguishable candidates:
+   `KazoAmbiguousRouteException` (500).
+
+A known path but a refused method gives `405` with `Allow`; `OPTIONS`
+without an endpoint gives `204` with `Allow`; `HEAD` uses the `GET` endpoint and
+returns the headers without a body.
+
+Attribute routes: `[Route]` on the controller (prefix) and on the action,
+`[HttpGet("...")]`... (`Name`, `Order`), tokens `[controller]`, `[action]`,
+`[area]`, absolute template `/...` or `~/...` which ignores the prefix. An action
+without an attribute route in a view controller follows the conventional routes
+(`controller` and `action` as required values). An action of a
+`KazoApiController` must have an attribute route (`KOSWEB0007`).
+
+URL generation: `Url.Action(action, controller, values)`,
+`Url.RouteUrl(name, values)`, `Url.Content("~/...")`, `Url.IsLocalUrl`; default
+values at the end of the path are omitted, extra values go into
+the query (`/Home/Details/7?sort=asc`).
+
+## Controllers
+
+- A controller is a public, non-abstract, non-generic class derived
+  from `KazoControllerBase`, without `[NonController]`. Its name loses the
+  `Controller` suffix. Its actions: public, non-generic instance methods,
+  without `[NonAction]`, other than framework members and `Dispose`.
+  `[ActionName]` renames an action.
+- `KazoController` (pages): `Json(...)`, `OnActionExecuting` /
+  `OnActionExecuted` (the controller is the first filter).
+- `KazoApiController`: JSON body by default for complex types, automatic `400`
+  (`application/problem+json`, `errors`) if `ModelState` is
+  invalid, and any client error status without a body (`NotFound()`,
+  `BadRequest()`...) becomes a `KazoProblemDetails` (RFC 9457: `type`,
+  `title`, `status`, `traceId`).
+- Members of `KazoControllerBase`: `HttpContext`, `Request`, `Response`,
+  `RouteValues`, `ModelState`, `Url`, and the helpers `Ok`, `NoContent`,
+  `StatusCode`, `Content`, `File`, `Redirect`, `RedirectPermanent`,
+  `LocalRedirect` (refuses an external URL), `RedirectToAction`, `Created`,
+  `CreatedAtAction` (absolute URL), `NotFound`, `BadRequest` (including
+  `BadRequest(ModelState)`), `Unauthorized`, `Forbid`, `Conflict`, `Problem`,
+  `ValidationProblem`, and `TryValidateModel(model, prefix)` to validate a
+  model built or merged by the action (a `PATCH`, ADR 0087 §3).
+- An action returns `void`, `Task`, `ValueTask`, an `IKazoActionResult`, an object
+  (plain text for a `string`, JSON otherwise, `204` for `null`) or a task of
+  one of them. A `CancellationToken` parameter receives `RequestAborted`.
+
+## Model binding and validation
+
+| Parameter | Source |
+|---|---|
+| Simple type (`IParsable<T>`, `string`, `enum`, `Nullable<T>`, array) | form, then route, then query (as in ASP.NET Core); route then query for an API |
+| `[FromRoute]`, `[FromQuery]`, `[FromForm]`, `[FromHeader]` (`Name =`) | the named source |
+| Complex type of an API, or `[FromBody]` | JSON body (`415` if the body is not JSON) |
+| Complex type of a view controller | form properties (`Name=...&Tags=a&Tags=b`, checkbox `on`) |
+| `[FromServices]` | request DI scope |
+| `CancellationToken`, `KazoHttpContext` | special values |
+
+A non-nullable parameter without a default value is required. The `DataAnnotations`
+attributes of the parameter and of the model's properties are checked;
+errors go into `ModelState` (key: parameter or property name).
+
+## Filters
+
+`IKazoActionFilter` (`OnActionExecuting`, `OnActionExecuted`) and
+`IKazoAsyncActionFilter`, as an attribute (`KazoActionFilterAttribute`, `Order`) or
+global (`builder.Mvc.Filters`). Order: the controller itself, then global ones,
+controller attributes, action attributes; the return goes in reverse
+order. A filter that sets `context.Result` short-circuits the action.
+
+## Session
+
+`app.UseCookieSession()`: `.KazoSession` cookie (`HttpOnly`, `SameSite=Lax`,
+`Path=/`), identifier of 32 random bytes in base64url, values in the memory
+of the site's process, expiry after 20 minutes of inactivity. The cookie is
+set only if the session is written. `HttpContext.Session`: `GetString`,
+`SetString`, `GetInt32`, `SetInt32`, `TryGetValue`, `Set`, `Remove`, `Clear`,
+`Keys`, `Id`, `IsNew`. The session disappears when the site stops (like ASP.NET Core's
+in-memory session).
+
+## Contract for `web/7` and `web/9`
+
+`web/7` delivered its part of this contract ([`asp-kazo-razor-views.md`](asp-kazo-razor-views.md));
+the contract remains the reference for `web/9`.
+
+- **Results.** A view is an `IKazoActionResult`: `ExecuteResultAsync(KazoActionContext)`
+  receives `HttpContext`, `RouteValues`, `ActionDescriptor` and `ModelState`, and
+  writes to `HttpContext.Response`. `View()` and `PartialView()` will be added to
+  `KazoController` (the view controller), not to `KazoApiController`.
+- **View lookup.** `KazoControllerActionDescriptor.ControllerName` and
+  `ActionName` give `Views/<Controller>/<Action>`; the route generator
+  also writes the view table (`KazoWebGeneratedRoutes.Views`, ADR 0083 §2).
+- **URL.** `IKazoUrlHelper` (the controller's `Url`) is the basis of the view
+  helpers (`KazoLink`, `KazoForm`); `KazoLinkGenerator` is in the services.
+- **Middlewares.** `UseStaticFiles()` will be an ordinary middleware
+  (`Use(next => ...)`) that answers before controller routing; an endpoint
+  is chosen before the middlewares (`HttpContext.Endpoint`), like
+  ASP.NET Core's `UseRouting` at the start of the pipeline.
+- **Services.** The whole `web/7` part (view engine, anti-forgery)
+  registers in `builder.Services`; the builder already registers
+  `KazoWebJsonOptions`, `KazoMvcOptions`, `KazoLinkGenerator` and the session
+  store.
+- **Blazor (`web/9`, [`blazor-sites.md`](blazor-sites.md)).** A Blazor site
+  declares its root component through `BlazorRoot`; `KazoWebHost` then serves the
+  host page and `blazor.boot.json` as a fallback after the app's routes, which keeps
+  `KazoWebApplication` for its data routes (`MapGet`, API controllers).
+
+## Tests
+
+- `Tests/Kazo.Os.AppSdk.Web.Tests`: templates and router
+  (`RouteTemplateTests`, `EndpointRouterTests`), full pipeline of a test site
+  compiled with the generator (`MvcPipelineTests`: API CRUD, problems,
+  automatic `400`, `415`, filters, conventional routes, forms,
+  redirects, links, session, files, error page, per-request DI),
+  generator driven on code snippets (`WebRouteGeneratorTests`:
+  `KOSWEB0001` to `KOSWEB0007`, table and entry produced).
+- `Tests/Kazo.Os.Platform.WorkerHost.Tests/MvcSiteTests`: an MVC site started
+  by `curl` in a full OS, on the main thread and in the `web` worker.
+
+## Known limits
+
+- A single template parser: no complex segments, no parameter
+  transformers, no nested model binding
+  (`Address.City`) or dictionaries.
+- `HEAD` does not send a `Content-Length` of the body that would have been produced.
+- No environments (`Development`/`Production`) or `TempData`.
+- ~~`curl -H 'Cookie: ...'` is ignored by the network gateway (`web/3`).~~
+  Fixed by `web/14` (ADR 0089): the header reaches the site, merged with
+  the command's cookie jar.
+
+## Tasks
+
+- [x] `Kazo.Os.AppSdk.Web` library: project, solution, SDK boundary.
+- [x] HTTP: context, request, response, headers, cookies, form, transport-independent exchange.
+- [x] Routing: templates, constraints, precedence, `405`/`OPTIONS`/`HEAD`, URL generation.
+- [x] Source generator (ADR 0082) wired to the apps, errors `KOSWEB0001` to `KOSWEB0007`.
+- [x] Controllers, actions, filters, `OnActionExecuting`.
+- [x] Model binding, `DataAnnotations`, `ModelState`, automatic `400`, `415`.
+- [x] JSON, Content, File, Redirect results (including `LocalRedirect`, `RedirectToAction`), `Created*`, RFC 9457 problems.
+- [x] Per-request DI, cookie session, error page.
+- [x] `WebAppDefinition`, `KazoWebHost` and generated entry; manifest produced by the manifest generator.
+- [x] Unit, generator and end-to-end tests (`curl`, two modes).
+- [x] ADR 0082, this document, index, plan.

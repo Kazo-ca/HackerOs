@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    ADR 0133: the window renderer of the worker (WorkerWindowRenderer + DomPatchWriter) driven by
+    real Blazor components, its DOM operations applied to a fake DOM (FakeDom.cs) that mirrors the
+    page's executor (RemoteWindowHost.razor.js), and the event arguments read from the page's JSON.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="10.1.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="4.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Platform\Kazo.Os.Platform.RemoteRendering\Kazo.Os.Platform.RemoteRendering.csproj" />
+  </ItemGroup>
+
+</Project>

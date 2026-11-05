@@ -2,7 +2,7 @@
 
 # Packs d'icônes
 
-Décision : [ADR 0203](adr/0203-icon-packs.md). Issue : [#255](https://github.com/Kazo-ca/HackerOs/issues/255).
+Décision : [ADR 0203](adr/0203-icon-packs.md). Issue : [#255](https://github.com/Kazo-ca/Os/issues/255).
 
 ## Rôle
 
@@ -26,7 +26,7 @@ des tâches et l'accueil mobile changent tout de suite.
 
    | Fichier | Remplace |
    | --- | --- |
-   | `apps/<appId>.png` | une app, par exemple `apps/org.hackeros.terminal.png` |
+   | `apps/<appId>.png` | une app, par exemple `apps/org.kazoos.terminal.png` |
    | `categories/<catégorie>.png` | les apps d'une catégorie (`developer`, `graphics`, `internet`, `system`, `utilities`) |
    | `files/folder.png` | tous les dossiers |
    | `files/<extension>.png` | les fichiers d'une extension, par exemple `files/txt.png` |
@@ -46,19 +46,19 @@ nombre.
 
 | Élément | Projet | Rôle |
 | --- | --- | --- |
-| `IconPackLibrary`, `IconPack`, `IconPackInfo`, `IconPackFileAccess` | `HackerOs.Theming.Abstractions` | Lecture des dossiers par l'accès fichier de l'appelant, validation, URL `data:`, règles de recherche |
-| `IconPackSettingsDocuments` | `HackerOs.Platform.Core` | Document `icons` (`iconPackId`, `builtin` par défaut) déclaré dans `OsSettingsDocumentRegistry` |
-| `IconPackService` | `HackerOs.Platform.Core` | Pack choisi pour le shell, relu quand `icons.config` ou la session change, événement `Changed` |
-| `BuiltInIconPacks`, `FileSystemSeeder` | `HackerOs.Platform.Core` | Pack « Néon » embarqué, copié dans `/usr/share/icons/neon/` en arrière-plan après la connexion (`InstallIconPacksAsync`, lancé une fois par démarrage par `LocalSessionService`). Comme les fichiers `.list` de dpkg, `/var/lib/hackeros/installed/icon-packs.list` note les fichiers installés : un démarrage dont la liste correspond saute l'installation, et une installation coupée par un rechargement complète ses fichiers vides au démarrage suivant |
-| `ShellAppIcon` | `HackerOs.Platform.Blazor` | Icône d'app du menu Démarrer et de l'accueil mobile |
-| `WindowLaunchCoordinator.IconFor`, `SetWindowIconCommand` | `HackerOs.Platform.Blazor`, `HackerOs.Windowing.*` | Icône des fenêtres et de la barre des tâches, changée en direct |
+| `IconPackLibrary`, `IconPack`, `IconPackInfo`, `IconPackFileAccess` | `Kazo.Os.Theming.Abstractions` | Lecture des dossiers par l'accès fichier de l'appelant, validation, URL `data:`, règles de recherche |
+| `IconPackSettingsDocuments` | `Kazo.Os.Platform.Core` | Document `icons` (`iconPackId`, `builtin` par défaut) déclaré dans `OsSettingsDocumentRegistry` |
+| `IconPackService` | `Kazo.Os.Platform.Core` | Pack choisi pour le shell, relu quand `icons.config` ou la session change, événement `Changed` |
+| `BuiltInIconPacks`, `FileSystemSeeder` | `Kazo.Os.Platform.Core` | Pack « Néon » embarqué, copié dans `/usr/share/icons/neon/` en arrière-plan après la connexion (`InstallIconPacksAsync`, lancé une fois par démarrage par `LocalSessionService`). Comme les fichiers `.list` de dpkg, `/var/lib/kazoos/installed/icon-packs.list` note les fichiers installés : un démarrage dont la liste correspond saute l'installation, et une installation coupée par un rechargement complète ses fichiers vides au démarrage suivant |
+| `ShellAppIcon` | `Kazo.Os.Platform.Blazor` | Icône d'app du menu Démarrer et de l'accueil mobile |
+| `WindowLaunchCoordinator.IconFor`, `SetWindowIconCommand` | `Kazo.Os.Platform.Blazor`, `Kazo.Os.Windowing.*` | Icône des fenêtres et de la barre des tâches, changée en direct |
 | `ExplorerFileView` (partie `IconPack`), `IconPackShellIconProvider` | File Explorer | Fichiers, dossiers et raccourcis, lus avec les droits de l'app hôte par le SDK public |
 | `IconPackPanel` | Paramètres | Liste des packs, aperçu, écriture de la couche choisie |
 
 ## Décisions
 
 - Un pack est un dossier, pas une archive : on le crée avec `mkdir`, `cp` et
-  Hack Paint. Les packs de thèmes de l'ADR 0190 apportent leur dossier `icons/`.
+  Kazo Paint. Les packs de thèmes de l'ADR 0190 apportent leur dossier `icons/`.
 - Document `icons` séparé d'`appearance.config`, pour ne pas mêler le thème et
   les icônes (et ne pas changer le schéma d'`appearance`).
 - Les symboles de l'interface ne sont pas dans un pack (Q2).

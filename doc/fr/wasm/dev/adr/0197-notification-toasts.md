@@ -5,7 +5,7 @@
 ## Statut
 
 Accepté le 2026-10-30, chantier 1 de la série barre des tâches (issue
-[#242](https://github.com/Kazo-ca/HackerOs/issues/242), décisions 1 et 2 prises avec
+[#242](https://github.com/Kazo-ca/Os/issues/242), décisions 1 et 2 prises avec
 Benoit le 2026-10-29), fait dans la série `todo/` (branche `todo/11-notification-toasts`).
 S'appuie sur la file de notifications (`INotificationQueue`), le panneau de l'horloge
 (`ClockPanel`), les barres par écran
@@ -13,7 +13,7 @@ S'appuie sur la file de notifications (`INotificationQueue`), le panneau de l'ho
 reste sur l'écran 1) et le redémarrage après un nouveau build
 ([ADR 0162](0162-restart-after-a-host-build-change.md),
 [ADR 0174](0174-announce-a-new-version-to-open-sessions.md)). Tient compte du point des
-notifications non lues (ADR 0196, [PR #294](https://github.com/Kazo-ca/HackerOs/pull/294)),
+notifications non lues (ADR 0196, [PR #294](https://github.com/Kazo-ca/Os/pull/294)),
 sans en dépendre. Mise en œuvre : [`notification-toasts.md`](../notification-toasts.md).
 
 ## Contexte

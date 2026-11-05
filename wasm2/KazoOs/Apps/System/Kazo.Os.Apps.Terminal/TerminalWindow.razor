@@ -1,0 +1,34 @@
+@using Kazo.Os.AppSdk.Blazor
+@using Kazo.Os.AppSdk.Terminal
+@using Kazo.Os.Simulation.Abstractions.Processes
+@inherits WindowAppBase
+
+@*
+    Thin host around the reusable tabbed console (Shared/Kazo.Os.AppSdk.Terminal): each tab is a
+    TerminalPanel with its own hsh shell, child of this window's process (ADR 0058, section 4).
+    This window only supplies its AppContext and closes itself when the last tab closes.
+*@
+<TerminalTabs AppContext="AppContext" CallerAppId="org.kazoos.terminal" OnLastTabClosed="CloseWindowAsync" />
+
+@code {
+    /// <summary>
+    /// The last tab closed (<c>exit</c>, Ctrl+D, its ×): the console's own process stops, which
+    /// closes its window, as gnome-terminal quits with its last tab.
+    /// </summary>
+    private Task CloseWindowAsync()
+    {
+        // Not awaited: stopping this process disposes this very component.
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await AppContext.Processes.StopAsync(AppContext.ProcessId, TimeSpan.FromSeconds(2), ProcessExitReason.CloseRequested);
+            }
+            catch (Exception exception) when (exception is InvalidOperationException or KeyNotFoundException)
+            {
+                // Already stopping or gone.
+            }
+        });
+        return Task.CompletedTask;
+    }
+}

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Aliases" xml:space="preserve">
+    <value>alias : {0}</value>
+  </data>
+  <data name="Footer" xml:space="preserve">
+    <value>Tapez « help &lt;commande&gt; » pour son utilisation.</value>
+  </data>
+  <data name="Header" xml:space="preserve">
+    <value>Shell Kazo OS (hsh). Commandes installées :</value>
+  </data>
+  <data name="NoMatch" xml:space="preserve">
+    <value>help : aucune rubrique d'aide ne correspond à « {0} »</value>
+  </data>
+  <data name="NoShell" xml:space="preserve">
+    <value>help : aucune session de shell</value>
+  </data>
+  <data name="Operators" xml:space="preserve">
+    <value>Opérateurs : cmd | cmd, cmd &gt; fichier, cmd &gt;&gt; fichier, cmd &amp;&amp; cmd, $VAR, ${{VAR}}, $?, ~</value>
+  </data>
+  <data name="Usage" xml:space="preserve">
+    <value>utilisation : {0}</value>
+  </data>
+</root>

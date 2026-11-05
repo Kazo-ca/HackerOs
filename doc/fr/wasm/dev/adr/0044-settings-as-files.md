@@ -22,7 +22,7 @@ Aujourd'hui, les paramètres vivent dans le magasin IndexedDB `settings`
 (`IndexedDbSettingsDocumentService`). Le montage `/etc/hackeros` qui devait les
 projeter en fichiers (`SettingsFileSystemProvider`, `SettingsFileProjection`)
 n'est jamais branché dans l'OS réel : `FileSystemMountRouter` est créé avec le
-seul fournisseur IndexedDB (`OS/HackerOs.Ecosystem/EcosystemServiceCollectionExtensions.cs`).
+seul fournisseur IndexedDB (`OS/Kazo.Os.Ecosystem/EcosystemServiceCollectionExtensions.cs`).
 `nano /etc/hackeros/...` ne voit donc rien. La sécurité vient du service de
 paramètres (capacités `settings.*`, autorité minimale par document), et non des
 droits du fichier.
@@ -65,7 +65,7 @@ droits décident de l'accès.
 | État local, non synchronisé | `~/.local/state/hackeros/…` | idem |
 
 Conséquences sur la résolution des capacités dans `FileSystemService.ResolveCapability`
-(`Platform/HackerOs.Platform.Core/FileSystem/FileSystemService.cs`) :
+(`Platform/Kazo.Os.Platform.Core/FileSystem/FileSystemService.cs`) :
 
 - `~/.config/<appId>/` (lecture et écriture) correspond à
   `filesystem.private.read/write` de cette app. Il remplace l'actuel
@@ -121,7 +121,7 @@ Editor.tab-size=true
 La grammaire `.config` de l'ADR 0011 est conservée telle quelle (`#`
 commentaire, `[Groupe]`, `clé=valeur`, échappements `\#`, `\=`, `\\`, `\n`, `\r`,
 `\t`), ainsi que l'analyseur `ConfigDocumentFormat`
-(`Shared/HackerOs.Simulation.Abstractions/Settings/`). `schemaVersion` reste une
+(`Shared/Kazo.Os.Simulation.Abstractions/Settings/`). `schemaVersion` reste une
 clé de racine facultative.
 
 ### 5. Fichier invalide (D17)
@@ -144,7 +144,7 @@ clé de racine facultative.
 ### 6. Moteur de fusion commun
 
 Une fonction pure, partagée par le SDK et la plateforme, dans
-`Shared/HackerOs.Simulation.Abstractions/Settings/LayeredConfigResolver.cs` :
+`Shared/Kazo.Os.Simulation.Abstractions/Settings/LayeredConfigResolver.cs` :
 
 ```csharp
 public static class LayeredConfigResolver
@@ -172,8 +172,8 @@ schéma (types `String`, `Integer`, `Boolean`, `Enum`).
 
 ### 7. API typée `HackSettings` (SDK)
 
-Dossier `Shared/HackerOs.AppSdk/Settings/`, namespace public
-**`HackerOs.AppSdk.Settings`**. Elle s'appuie sur l'API `Hack*` de l'ADR 0043 et
+Dossier `Shared/Kazo.Os.AppSdk/Settings/`, namespace public
+**`Kazo.Os.AppSdk.Settings`**. Elle s'appuie sur l'API `Hack*` de l'ADR 0043 et
 sur le contexte ambiant, donc elle passe par la passerelle fichier. Le schéma
 vient de `AppManifest.Settings` en phase 1, puis de la classe `[AppManifest]` en
 phase 2, sans changement d'API.
@@ -224,7 +224,7 @@ public sealed class HackSettingLockedException : InvalidOperationException;
 ### 8. Paramètres de l'OS
 
 Les services de la plateforme utilisent le même moteur à travers
-`IOsSettingsService` (`Platform/HackerOs.Platform.Core/Settings/OsSettingsService.cs`),
+`IOsSettingsService` (`Platform/Kazo.Os.Platform.Core/Settings/OsSettingsService.cs`),
 qui lit et écrit les fichiers `hackeros` avec le contexte de l'utilisateur de
 la session :
 
@@ -247,7 +247,7 @@ installation est une machine, et `/etc` en est la couche.
 
 ### 9. Migration au premier démarrage
 
-Service `SettingsStoreToFilesMigration` (`Platform/HackerOs.Platform.Core/Settings/`) :
+Service `SettingsStoreToFilesMigration` (`Platform/Kazo.Os.Platform.Core/Settings/`) :
 
 1. **Au démarrage**, après l'amorçage du système de fichiers et avant toute
    connexion, avec un contexte système : chaque enregistrement `OsAdmin` du
@@ -287,7 +287,7 @@ ne crée plus `~/.config/apps`.
 
 ### 11. App Paramètres
 
-L'app Paramètres (`Apps/System/HackerOs.Apps.Settings`) lit et écrit par
+L'app Paramètres (`Apps/System/Kazo.Os.Apps.Settings`) lit et écrit par
 `HackSettings` et `IOsSettingsService`. Elle affiche pour chaque clé sa couche
 d'origine et un cadenas si la clé est verrouillée. Une modification système passe
 par l'invite d'approbation de l'ADR 0042.

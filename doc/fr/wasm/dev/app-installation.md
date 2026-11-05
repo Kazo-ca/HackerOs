@@ -22,14 +22,14 @@ IndexedDB `IsEnabled` de l'ADR 0032.
 
 | Portée | Fichier | Propriétaire et mode | Qui écrit |
 | --- | --- | --- | --- |
-| Machine | `/etc/hackeros/apps.config` | `system:system 0644` | un administrateur, par `sudo` ou l'agent d'authentification de l'OS (ADR 0055 §5) |
-| Utilisateur | `~/.config/hackeros/apps.config` | l'utilisateur, `0644` | l'utilisateur lui-même |
+| Machine | `/etc/kazoos/apps.config` | `system:system 0644` | un administrateur, par `sudo` ou l'agent d'authentification de l'OS (ADR 0055 §5) |
+| Utilisateur | `~/.config/kazoos/apps.config` | l'utilisateur, `0644` | l'utilisateur lui-même |
 
 ```text
-# /etc/hackeros/apps.config
+# /etc/kazoos/apps.config
 [uninstalled]
-org.hackeros.hack-paint=true
-org.hackeros.calculator=true
+org.kazoos.kazo-paint=true
+org.kazoos.calculator=true
 ```
 
 Règles de lecture (`AppsConfigDocument.Read`) :
@@ -65,11 +65,11 @@ non optionnelle, transitivement) d'une app ainsi désinstallée.
 
 | Type | Projet | Rôle |
 | --- | --- | --- |
-| `IAppInstallationService`, `AppInstallationService` | `Platform/HackerOs.Platform.Core/Apps` | lit, surveille et écrit les deux fichiers ; tient `AppEnablementRegistry` égal à l'état effectif |
+| `IAppInstallationService`, `AppInstallationService` | `Platform/Kazo.Os.Platform.Core/Apps` | lit, surveille et écrit les deux fichiers ; tient `AppEnablementRegistry` égal à l'état effectif |
 | `AppsConfigDocument` | idem | chemins, lecture tolérante, écriture ligne à ligne, fermetures de dépendances |
-| `AppEnablementToFilesMigration` | idem | crée `/etc/hackeros/apps.config` commenté et y recopie une fois les anciens `IsEnabled = false` |
-| `AppEnablementRegistry` | `Platform/HackerOs.Platform.Core/Lifecycle` | point de contrôle unique du lancement, désormais alimenté par le service ; événement `Changed` |
-| `InstalledAppsPanel` | `Apps/System/HackerOs.Apps.Settings` | onglet « Installed Apps » de l'app Paramètres |
+| `AppEnablementToFilesMigration` | idem | crée `/etc/kazoos/apps.config` commenté et y recopie une fois les anciens `IsEnabled = false` |
+| `AppEnablementRegistry` | `Platform/Kazo.Os.Platform.Core/Lifecycle` | point de contrôle unique du lancement, désormais alimenté par le service ; événement `Changed` |
+| `InstalledAppsPanel` | `Apps/System/Kazo.Os.Apps.Settings` | onglet « Installed Apps » de l'app Paramètres |
 
 Flux unique, quelle que soit l'origine du changement (app Paramètres, `nano`,
 synchronisation de `/home`, connexion, déconnexion) :
@@ -97,10 +97,10 @@ Toutes les voies consultent `IAppEnablementRegistry` :
 | --- | --- |
 | `AppLifecycleOrchestrator.LaunchAsync` | `AppLaunchStatus.Disabled` |
 | `AppIntentDispatcher` (intentions, `launch`) | refus ; `launch` répond « is not installed » |
-| `FileAssociationResolver` | ni défaut ni candidate ; les préférences de `/etc/hackeros/file-associations.json` et de `~/.config/hackeros/file-associations.json` ne sont **pas** réécrites (une entrée périmée est sautée, ADR 0121) |
+| `FileAssociationResolver` | ni défaut ni candidate ; les préférences de `/etc/kazoos/file-associations.json` et de `~/.config/kazoos/file-associations.json` ne sont **pas** réécrites (une entrée périmée est sautée, ADR 0121) |
 | Lanceur et recherche (`LauncherAppProjection`) | absente ; le menu ouvert se met à jour sur `Changed` |
 | Explorateur, « Open With... » | absente de la liste |
-| Contrôle de fichiers et dialogues (`HackComponentHost`) | sautée ; si c'était le fournisseur choisi, l'explorateur prend le relais (`component.fallback`) ; une désinstallation pour la machine retire sa ligne de `/etc/hackeros/components.config` (ADR 0156 §4, ADR 0158 §6) |
+| Contrôle de fichiers et dialogues (`KazoComponentHost`) | sautée ; si c'était le fournisseur choisi, l'explorateur prend le relais (`component.fallback`) ; une désinstallation pour la machine retire sa ligne de `/etc/kazoos/components.config` (ADR 0156 §4, ADR 0158 §6) |
 | Terminal (`ShellCommandResolver`, `ShellInterpreter`) | `command not found`, absente de `help` et de la complétion |
 
 ## Utilisation
@@ -125,8 +125,8 @@ public interface IAppInstallationService
   rien changer. Paramètres les liste dans la confirmation (« These processes
   will be stopped »). Le résultat de `UninstallAsync` donne
   `StoppedProcesses`, avec `Forced` pour ceux tués après leur délai ; chacun est
-  écrit dans `/var/log/syslog`. Dans le SDK : `HackAppManagement.PlanUninstallAsync`
-  et `UninstallWithReportAsync` (`HackUninstallPlan`, `HackUninstallReport`).
+  écrit dans `/var/log/syslog`. Dans le SDK : `KazoAppManagement.PlanUninstallAsync`
+  et `UninstallWithReportAsync` (`KazoUninstallPlan`, `KazoUninstallReport`).
 - `UninstallAsync` écrit toute la fermeture dans le fichier de la portée.
   Refus : `apps.app.system:<id>`, `apps.closure.system-app:<id système>`,
   `apps.app.not-found:<id>`, `apps.session.required`.
@@ -135,23 +135,23 @@ public interface IAppInstallationService
   désinstallée pour la machine : `apps.uninstalled-by-administrator:<id>`.
 - `writer` : passerelle dont les droits décident d'une écriture **machine**,
   normalement `AppContext.FileSystem` de l'app appelante. Un refus lève
-  `HackUnauthorizedAccessException`, ce qui déclenche l'invite d'approbation
+  `KazoUnauthorizedAccessException`, ce qui déclenche l'invite d'approbation
   administrateur de l'ADR 0042 ; l'app réessaie une fois l'approbation donnée.
   Sans `writer`, l'utilisateur de la session écrit avec ses propres droits. La
   portée utilisateur est toujours écrite comme l'utilisateur de la session.
 - Chaque changement est journalisé dans `/var/log/syslog`, par exemple
-  `apps: org.hackeros.calculator uninstalled (scope=machine, by=alice)`.
+  `apps: org.kazoos.calculator uninstalled (scope=machine, by=alice)`.
 
 Depuis la phase 4 (`rebuild/4-sdk-user-and-apps`), les apps n'utilisent plus ce
-service directement : elles passent par `HackAppManagement` du SDK, derrière la
+service directement : elles passent par `KazoAppManagement` du SDK, derrière la
 capacité dangereuse `apps.manage` (ADR 0056 §3, [`app-sdk.md`](../framework/app-sdk.md)).
 Pour la portée machine, la passerelle demande d'abord à l'agent
 d'authentification de l'OS de confirmer un administrateur
 ([`admin-authentication-agent.md`](admin-authentication-agent.md)), puis l'OS
-écrit `/etc/hackeros/apps.config` lui-même comme `system` : le paramètre
+écrit `/etc/kazoos/apps.config` lui-même comme `system` : le paramètre
 `writer` reçoit cette passerelle système, et l'invite de l'ADR 0042 n'est plus
 utilisée pour ce fichier. La liste des apps installées, elle, est lue par
-`HackApps` sans capacité.
+`KazoApps` sans capacité.
 
 ### App Paramètres, onglet « Installed Apps »
 
@@ -165,15 +165,15 @@ utilisée pour ce fichier. La liste des apps installées, elle, est lue par
   users » ouvre la fenêtre de l'agent d'authentification, où l'administrateur
   retape son mot de passe ;
 - pour un site (app `Web`) emporté par la désinstallation, la confirmation
-  annonce que sa base de navigateur `hackweb.<id>` sera supprimée ; elle l'est
+  annonce que sa base de navigateur `kazoweb.<id>` sera supprimée ; elle l'est
   après la désinstallation par `UninstallAsync`, seule donnée qu'une
-  désinstallation efface (ADR 0088 §4, [`asp-hack-site-data.md`](../framework/asp-hack-site-data.md)) ;
+  désinstallation efface (ADR 0088 §4, [`asp-kazo-site-data.md`](../framework/asp-kazo-site-data.md)) ;
 - **Reinstall** pour une app désinstallée dans une portée que l'utilisateur
   peut modifier ; sinon la mention « Uninstalled by the administrator » ;
 - l'ancien interrupteur activer/désactiver a disparu ;
 - depuis la phase 4, le panneau n'utilise que le SDK : `AppContext.AppManagement`
   pour la liste et les changements, `AppContext.Catalog.Changed` pour se
-  rafraîchir, `HackUser.Describe(AppContext)` pour savoir si l'utilisateur est
+  rafraîchir, `KazoUser.Describe(AppContext)` pour savoir si l'utilisateur est
   administrateur.
 
 ## Décisions de mise en œuvre
@@ -182,7 +182,7 @@ utilisée pour ce fichier. La liste des apps installées, elle, est lue par
   magasin IndexedDB garde l'instantané des manifestes, mais l'OS ne lit ni
   n'écrit plus `IsEnabled` ; sa version de schéma ne change pas.
 - **`DisableAsync` et `EnableAsync` deviennent internes** à
-  `HackerOs.Platform.Core` (visibles des tests par `InternalsVisibleTo`) : seul
+  `Kazo.Os.Platform.Core` (visibles des tests par `InternalsVisibleTo`) : seul
   le service d'installation les appelle. L'orchestrateur ne reçoit plus
   `IOsSettingsService` ni `IPersistentAppCatalogRepository`.
 - **Dépendants désinstallés implicitement.** Une ligne écrite à la main pour
@@ -201,7 +201,7 @@ utilisée pour ce fichier. La liste des apps installées, elle, est lue par
 - **Écart avec la signature de l'ADR :** `UninstallAsync` et `ReinstallAsync`
   prennent un paramètre `writer` en plus. « Le contexte de l'appelant » de
   l'ADR est ainsi transmis explicitement, comme pour `IOsSettingsService`
-  (ADR 0044), plutôt que par le contexte ambiant `Hack*`, qui n'existe pas dans
+  (ADR 0044), plutôt que par le contexte ambiant `Kazo*`, qui n'existe pas dans
   un gestionnaire d'événement Blazor.
 - **`GetState` d'un identifiant inconnu** lève `ArgumentException` : l'ADR ne
   prévoit pas d'état « inconnu ».
@@ -209,7 +209,7 @@ utilisée pour ce fichier. La liste des apps installées, elle, est lue par
 
 ## Tests de contrat
 
-`Tests/HackerOs.Platform.Core.Tests/Apps/AppInstallationServiceTests.cs`
+`Tests/Kazo.Os.Platform.Core.Tests/Apps/AppInstallationServiceTests.cs`
 (ADR 0048 section 7) :
 
 - désinstallation utilisateur : fichier écrit, lancement refusé, instance
@@ -218,7 +218,7 @@ utilisée pour ce fichier. La liste des apps installées, elle, est lue par
 - app système et fermeture contenant une app système refusées ;
 - lignes `apps.config` d'app système ou de valeur invalide ignorées avec
   avertissement, identifiant inconnu ignoré en silence ;
-- portée machine sans droit : `HackUnauthorizedAccessException` ; écriture
+- portée machine sans droit : `KazoUnauthorizedAccessException` ; écriture
   approuvée : fichier écrit, effet pour tous les utilisateurs ;
 - état effectif machine OU utilisateur, couche utilisateur retirée à la
   déconnexion, réinstallation utilisateur refusée pour une désinstallation
@@ -239,18 +239,18 @@ répartiteur d'intentions, qui s'appuient déjà sur le registre.
 
 L'ADR [0182](adr/0182-install-apps-from-github.md) ajoute une troisième
 origine d'app, à côté des apps système et des apps intégrées : un paquet
-`.hackapp` publié par le dépôt GitHub de l'app sur sa branche
-`hackeros-packages`, lu par `raw.githubusercontent.com`.
+`.kazoapp` publié par le dépôt GitHub de l'app sur sa branche
+`kazoos-packages`, lu par `raw.githubusercontent.com`.
 
 ```text
-hackpkg install Kazo-ca/HackerOs-App-Webamp            # pour soi si la source est de confiance
-hackpkg install Kazo-ca/HackerOs-App-Webamp@1.0.0 --system   # pour tous, validation admin
-hackpkg update                                         # toutes les apps installées
-hackpkg list | info <dépôt> | remove <appId> [--user|--system]
-hackpkg rollback <appId> [--user|--system]             # revient à la version gardée (ADR 0214)
-hackpkg repair [--system]                              # finit ou annule une installation interrompue
-hackpkg sources [add <source> [--trusted] | remove <source>]
-hackpkg policy [block|unblock app|category|capability <valeur>]
+kazopkg install Kazo-ca/Os-App-Webamp            # pour soi si la source est de confiance
+kazopkg install Kazo-ca/Os-App-Webamp@1.0.0 --system   # pour tous, validation admin
+kazopkg update                                         # toutes les apps installées
+kazopkg list | info <dépôt> | remove <appId> [--user|--system]
+kazopkg rollback <appId> [--user|--system]             # revient à la version gardée (ADR 0214)
+kazopkg repair [--system]                              # finit ou annule une installation interrompue
+kazopkg sources [add <source> [--trusted] | remove <source>]
+kazopkg policy [block|unblock app|category|capability <valeur>]
 ```
 
 L'ADR [0189](adr/0189-app-sources-trust-and-per-user-install.md) (mise en
@@ -258,7 +258,7 @@ L'ADR [0189](adr/0189-app-sources-trust-and-per-user-install.md) (mise en
 ajoute les sources de confiance, l'installation pour soi, la liste noire et la
 validation en deux étapes :
 
-- **Sources** : `/etc/hackeros/app-sources.config` (créé au démarrage, mode
+- **Sources** : `/etc/kazoos/app-sources.config` (créé au démarrage, mode
   0644) a quatre sections. `[hosts]` donne l'hôte de téléchargement ;
   `[catalogs]` les catalogues (`official=https://…/catalog.json`) ;
   `[trusted]` les sources (`catalog:<nom>`, `github.com/<owner>` ou
@@ -266,9 +266,9 @@ validation en deux étapes :
   (ajoutée mais non fiable) ; `[updates]` l'intervalle `interval-hours`
   (1 à 720, 6 par défaut). Les valeurs par défaut sont fixées à la compilation
   de l'hôte (catalogue officiel, `catalog:official` et `github.com/Kazo-ca` de
-  confiance) par les propriétés MSBuild `HackerOsAppCatalogs`,
-  `HackerOsTrustedAppSources` et `HackerOsAppUpdateIntervalHours`. Un
-  administrateur ajoute une source sans redéployer, par `hackpkg sources add`,
+  confiance) par les propriétés MSBuild `KazoOsAppCatalogs`,
+  `KazoOsTrustedAppSources` et `KazoOsAppUpdateIntervalHours`. Un
+  administrateur ajoute une source sans redéployer, par `kazopkg sources add`,
   Paramètres ▸ Apps ▸ Sources et liste noire, ou `sudo nano`. Le démarrage ne
   crée le fichier que s'il manque et ne le réécrit jamais : un fichier **sans
   aucune section `[catalogs]`** (écrit par un build de développement d'avant
@@ -277,15 +277,15 @@ validation en deux étapes :
   choix de l'administrateur et reste respectée.
 - **Niveaux de confiance** : *vérifiée* pour le catalogue officiel, *de
   confiance* pour une source intégrée ou marquée `true`, *non fiable* sinon.
-- **Liste noire** : `/etc/hackeros/app-policy.config` (créé au démarrage) a
+- **Liste noire** : `/etc/kazoos/app-policy.config` (créé au démarrage) a
   `[blocked-apps]`, `[blocked-categories]` et `[blocked-capabilities]`, avec des
-  défauts fixés à la compilation (`HackerOsBlockedApps`,
-  `HackerOsBlockedAppCategories`, `HackerOsBlockedAppCapabilities`). Une app
+  défauts fixés à la compilation (`KazoOsBlockedApps`,
+  `KazoOsBlockedAppCategories`, `KazoOsBlockedAppCapabilities`). Une app
   bloquée ne s'installe pas pour soi : seulement pour tous, après validation.
 - **Installation pour soi** : sans `--system`, une app d'une source de
   confiance, non bloquée et pas déjà installée pour le système s'installe dans
-  `~/.local/share/hackeros/apps/<appId>/<version>/` avec une ligne dans
-  `[installed]` de `~/.config/hackeros/installed-apps.config`, sans
+  `~/.local/share/kazoos/apps/<appId>/<version>/` avec une ligne dans
+  `[installed]` de `~/.config/kazoos/installed-apps.config`, sans
   administrateur. Une seule copie à la fois : une installation pour tous retire
   les copies personnelles, et une copie personnelle d'une app déjà installée
   pour le système est refusée.
@@ -294,7 +294,7 @@ validation en deux étapes :
   fois et même sous `sudo`, une connexion administrateur fraîche puis la
   fenêtre qui montre l'app, sa version, sa taille, sa source, son niveau de
   confiance et ses capacités (`AppInstallApprovalOverlay`). La même fenêtre sert
-  au Store et à `hackpkg`. `--allow-untrusted` n'existe plus. Modifier les
+  au Store et à `kazopkg`. `--allow-untrusted` n'existe plus. Modifier les
   sources ou la liste noire demande une seule authentification administrateur.
 - **Catalogue** : il est construit au démarrage de la page, avec les apps
   personnelles de tous les utilisateurs ; chaque session ne voit que les
@@ -303,21 +303,21 @@ validation en deux étapes :
 - **Vérifications avant la demande d'administrateur** : SHA-256 du paquet
   (`index.json`) et de chaque fichier, identifiant, `sdkCompatibility`, API
   présentes dans l'OS, app sur le fil principal.
-- **Écriture pour tous** : `/usr/lib/hackeros/apps/<appId>/<version>/` et une ligne
+- **Écriture pour tous** : `/usr/lib/kazoos/apps/<appId>/<version>/` et une ligne
   `<appId>=github:owner/repo@version` dans `[installed]` de
-  `/etc/hackeros/apps.config`. Le dossier de la version précédente est gardé pour
-  `hackpkg rollback` (une seule, [ADR 0214](adr/0214-hack-store-hot-add-signing-transactions.md)) ;
-  `hackpkg update` garde chaque copie là où elle est.
+  `/etc/kazoos/apps.config`. Le dossier de la version précédente est gardé pour
+  `kazopkg rollback` (une seule, [ADR 0214](adr/0214-hack-store-hot-add-signing-transactions.md)) ;
+  `kazopkg update` garde chaque copie là où elle est.
 - **Sans redémarrage** ([ADR 0214](adr/0214-hack-store-hot-add-signing-transactions.md)) :
   l'app apparaît tout de suite. Seule la mise à jour, le retrait ou le retour
-  arrière d'une app déjà chargée dans la page attend un redémarrage de HackerOS ;
-  `hackpkg list` affiche `(restart pending)` d'ici là.
+  arrière d'une app déjà chargée dans la page attend un redémarrage de Kazo OS ;
+  `kazopkg list` affiche `(restart pending)` d'ici là.
 - **Capacités dangereuses** : demandées au premier lancement, comme pour toute
   app non système.
-- **Publication** : `dotnet build -c Release -t:HackerOsPack` dans le projet de
-  l'app écrit le paquet et `index.json` dans `bin/hackeros-packages` (propriété
-  `HackerOsPackageOutput`), à pousser sur la branche `hackeros-packages` ; le
-  workflow `publish-packages.yml` du modèle `hackeros-solution` le fait sur un
+- **Publication** : `dotnet build -c Release -t:KazoOsPack` dans le projet de
+  l'app écrit le paquet et `index.json` dans `bin/kazoos-packages` (propriété
+  `KazoOsPackageOutput`), à pousser sur la branche `kazoos-packages` ; le
+  workflow `publish-packages.yml` du modèle `kazoos-solution` le fait sur un
   tag `v*` ([ADR 0219](adr/0219-app-authors-signing-tool.md)). Le
   paquet contient toutes les ressources statiques du projet, déclarées ou non :
   le `wwwroot/`, le JavaScript collocalisé (`.razor.js`) et le bundle du CSS
@@ -330,7 +330,7 @@ validation en deux étapes :
 - **Ressources `wwwroot/`** ([ADR 0206](adr/0206-serve-installed-app-assets.md)) :
   au premier lancement de l'app dans la session, chaque ressource déclarée est
   lue par `AppAssetStore` (empreinte vérifiée) et copiée dans le cache
-  `hackeros-installed-apps` ; le service worker la sert à
+  `kazoos-installed-apps` ; le service worker la sert à
   `_content/<assemblage>/<chemin>`, la même adresse qu'une app compilée dans
   l'OS (balises, `import()`, CSS, Web Workers et leurs `importScripts`). Sur
   `localhost`, l'OS enregistre `service-worker.js?mode=installed-apps`, qui ne
@@ -346,7 +346,7 @@ validation en deux étapes :
   feuille `styles.css` de l'hôte le fait pour une app compilée.
 - **Traductions** ([ADR 0222](adr/0222-installed-app-satellite-assemblies.md)) :
   avant de charger un assemblage de l'app, l'OS lit son satellite
-  `lib/<culture>/<assemblage>.resources.dll` pour chaque langue de HackerOS
+  `lib/<culture>/<assemblage>.resources.dll` pour chaque langue de Kazo OS
   (`InstalledAppSatellites`) et le charge : `IStringLocalizer` et
   `ResourceManager` trouvent ses textes traduits, quel que soit le `LANG` du
   processus. `AppPackage` refuse un satellite qui ne traduit aucun assemblage
@@ -358,25 +358,25 @@ validation en deux étapes :
 Tests : `AppPackageGatewayTests`, `AppSourcesAndPolicyTests`,
 `InstalledAppsImageTests`, `AppPackageWriterTests`, `AppPackageTests`
 (Platform.Core), `AppInstallApprovalOverlayTests` (Platform.Blazor),
-`HackpkgCommandTests` (Commands.Wave5), le scénario `hackpkg` de
+`KazopkgCommandTests` (Commands.Wave5), le scénario `kazopkg` de
 `CommandParityTests`, `InstalledAppAssetPublisherTests` (Ecosystem),
 `InstalledAppSatellitesTests` (Ecosystem), `PackagedWebAssetsTests` et
 `PackagedSatellitesTests` (Tools.ManifestGenerator) et
 `TrimmedPublishTests.InstalledApps.cs` (paquet de test
-`Tests/fixtures/installed-app` installé par `hackpkg` dans la publication
+`Tests/fixtures/installed-app` installé par `kazopkg` dans la publication
 réduite, lancé par `build/publish-trimmed.sh`).
 
-## Le Hack Store et les catalogues
+## Le Kazo OS Store et les catalogues
 
-L'ADR [0212](adr/0212-hack-store-app-build.md) met en œuvre l'app **Hack
-Store** (`org.hackeros.store`, ADR [0188](adr/0188-hack-store-and-app-catalog.md)) :
+L'ADR [0212](adr/0212-hack-store-app-build.md) met en œuvre l'app **Kazo
+Store** (`org.kazoos.store`, ADR [0188](adr/0188-hack-store-and-app-catalog.md)) :
 app système, non désinstallable, épinglée par défaut dans le menu Démarrer.
 
 ```text
-hackpkg install org.example.notes          # cherché dans les catalogues
-hackpkg install org.example.notes@1.0.0    # une version publiée
-hackpkg install catalog:official/org.example.notes
-hackpkg info org.example.notes
+kazopkg install org.example.notes          # cherché dans les catalogues
+kazopkg install org.example.notes@1.0.0    # une version publiée
+kazopkg install catalog:official/org.example.notes
+kazopkg info org.example.notes
 ```
 
 - **Catalogues** : chaque entrée de `[catalogs]` désigne un `catalog.json`
@@ -411,27 +411,27 @@ hackpkg info org.example.notes
 
 Tests : `AppCatalogDocumentTests`, les tests de catalogue
 d'`AppPackageGatewayTests`, `StartMenuPreferencesServiceTests`
-(Platform.Core) et `HackerOs.Apps.Store.Tests` (`StoreCatalog`,
+(Platform.Core) et `Kazo.Os.Apps.Store.Tests` (`StoreCatalog`,
 `StoreMarkdown`, manifeste).
 
 ## Ajout sans redémarrage, signature et transactions
 
 L'ADR [0214](adr/0214-hack-store-hot-add-signing-transactions.md) (issue #251)
-termine le Hack Store.
+termine le Kazo OS Store.
 
 - **Catalogue en direct** : après chaque installation, mise à jour, retrait ou
   retour arrière, la passerelle appelle `IInstalledAppsActivator`
-  (`InstalledAppsActivator` dans `HackerOs.Ecosystem.Host`). Il relit les apps
+  (`InstalledAppsActivator` dans `Kazo.Os.Ecosystem.Host`). Il relit les apps
   installées, remplace le contenu de l'unique `AppCatalog` de la page
   (`InstalledAppsBoot.Live`, `AppCatalog.ReplaceContents`, évènement
   `AppCatalog.Changed`) et ajoute les assemblies au registre de chargement
   paresseux. Une app dont une assembly est déjà chargée garde sa version jusqu'au
-  redémarrage (`HackPackageInstallReport.RestartRequired`).
+  redémarrage (`KazoPackageInstallReport.RestartRequired`).
 - **Signature** : champ `signature` facultatif de chaque version (`index.json`,
   `catalog.json`), ECDSA P-256 / SHA-256 en IEEE P1363, base64. Les clés
-  publiques sont dans `[signing-keys]` de `/etc/hackeros/app-sources.config`
+  publiques sont dans `[signing-keys]` de `/etc/kazoos/app-sources.config`
   (`catalog:official=MFkw…`, plusieurs clés séparées par des virgules) et dans la
-  propriété MSBuild `HackerOsAppSigningKeys` de l'hôte, toujours exigées. Une
+  propriété MSBuild `KazoOsAppSigningKeys` de l'hôte, toujours exigées. Une
   source qui a une clé refuse un paquet non signé (`apps.package.unsigned`) ou mal
   signé (`apps.package.bad-signature`). La vérification passe par Web Crypto
   dans le navigateur (`BrowserAppPackageSignatureVerifier`, `webAuthn.js`
@@ -439,22 +439,22 @@ termine le Hack Store.
 - **Clé du catalogue officiel** : depuis le 2026-11-01, la clé publique du
   catalogue officiel est compilée dans l'OS
   (`AppPackageDefaults.OfficialCatalogSigningKey`, `catalog:official`). Tout
-  paquet du Hack Store officiel doit porter la signature que `publish.yml` du
+  paquet du Kazo OS Store officiel doit porter la signature que `publish.yml` du
   catalogue pose avec le secret `HACK_STORE_SIGNING_KEY` ; un paquet non signé ou
   falsifié est refusé. Pour changer de clé sans coupure : ajouter la nouvelle
-  dans `[signing-keys]` (ou `HackerOsAppSigningKeys`), republier avec elle, puis
+  dans `[signing-keys]` (ou `KazoOsAppSigningKeys`), republier avec elle, puis
   remplacer la constante.
 - **Signature par l'auteur d'une app** ([ADR 0219](adr/0219-app-authors-signing-tool.md),
-  issue #321) : `dotnet build -t:HackerOsKeyGen -p:HackerOsSigningKeyFile=<fichier.pem>`
+  issue #321) : `dotnet build -t:KazoOsKeyGen -p:KazoOsSigningKeyFile=<fichier.pem>`
   crée la paire (clé privée dans un nouveau fichier, clé publique affichée,
-  `HOSAPP0061` sans la propriété) ; `HackerOsPack` signe chaque paquet avec la
+  `KOSAPP0061` sans la propriété) ; `KazoOsPack` signe chaque paquet avec la
   variable `HACKEROS_APP_SIGNING_KEY` (secret du dépôt de l'app) ou
-  `HackerOsSigningKeyFile`, et vérifie la signature avant de l'écrire. Sans clé,
-  le paquet est publié non signé avec l'avertissement `HOSAPP0063`.
+  `KazoOsSigningKeyFile`, et vérifie la signature avant de l'écrire. Sans clé,
+  le paquet est publié non signé avec l'avertissement `KOSAPP0063`.
   `index.json` garde les signatures des versions déjà publiées. Commandes du
-  générateur : `keygen --private-key <fichier.pem>`, `sign --package <fichier.hackapp>`.
+  générateur : `keygen --private-key <fichier.pem>`, `sign --package <fichier.kazoapp>`.
   Pour exiger la signature d'un auteur, un administrateur ajoute sa clé
-  publique avec `sudo nano /etc/hackeros/app-sources.config` :
+  publique avec `sudo nano /etc/kazoos/app-sources.config` :
 
   ```text
   [signing-keys]
@@ -465,23 +465,23 @@ termine le Hack Store.
   seul ; deux clés séparées par une virgule pendant un changement de clé.
 - **Transactions** : journal `<racine>/<appId>/.transaction`, fichiers écrits
   dans `<version>.partial/` puis renommés, ligne `[installed]` comme point de
-  validation, ménage après. `hackpkg repair [--system]` finit ou annule ce
+  validation, ménage après. `kazopkg repair [--system]` finit ou annule ce
   qu'une coupure a laissé (`AppPackageInstaller.RecoverAsync`, `RepairAsync`).
   `update.minimumUpgradableVersion` refuse la mise à jour en place d'une version
   trop ancienne (`apps.package.reinstall-required`).
 - **Retour arrière** : une mise à jour garde la version qu'elle remplace ;
-  `hackpkg rollback <appId>` et le bouton « Revenir à <version> » du Store la
+  `kazopkg rollback <appId>` et le bouton « Revenir à <version> » du Store la
   remettent, avec les approbations d'une installation de la même portée.
 - **Données** : au lancement d'une app installée dont la version a changé,
   `AppDataGuard` copie `~/.config/<appId>/` et `~/.local/share/<appId>/` dans
-  `~/.local/share/hackeros/app-backups/<appId>/<ancienne version>/`, puis donne
-  `HACKEROS_PREVIOUS_VERSION` à l'app (mise à jour) ou remet la sauvegarde de la
+  `~/.local/share/kazoos/app-backups/<appId>/<ancienne version>/`, puis donne
+  `KAZOOS_PREVIOUS_VERSION` à l'app (mise à jour) ou remet la sauvegarde de la
   version retrouvée (retour arrière). La dernière version lancée est notée dans
-  `~/.config/hackeros/app-data-versions.config`. Deux sauvegardes au plus par app.
+  `~/.config/kazoos/app-data-versions.config`. Deux sauvegardes au plus par app.
 
 Tests : `AppPackageGatewayTests.Transactions.cs`, `AppDataGuardTests`,
 `AppPackageSignatureTests`, `AppCatalogTests` (Platform.Core),
-`InstalledAppsBootTests` (Ecosystem), `HackpkgCommandTests` (Commands.Wave5).
+`InstalledAppsBootTests` (Ecosystem), `KazopkgCommandTests` (Commands.Wave5).
 
 ## Tâches
 
@@ -495,5 +495,5 @@ Tests : `AppPackageGatewayTests.Transactions.cs`, `AppDataGuardTests`,
 - [x] Retrait d'`AppCatalogSyncService` et de son contrat.
 - [x] Onglet « Installed Apps » refait (`InstalledAppsPanel`).
 - [x] Tests de contrat et documentation.
-- [x] Hack Store : catalogues, `hackpkg install <appId>`, mises à jour par notification, épinglage par défaut (ADR 0212, ADR 0215).
-- [x] Ajout sans redémarrage, signature, installation transactionnelle, `hackpkg rollback` et `repair`, sauvegarde des données (ADR 0214).
+- [x] Kazo OS Store : catalogues, `kazopkg install <appId>`, mises à jour par notification, épinglage par défaut (ADR 0212, ADR 0215).
+- [x] Ajout sans redémarrage, signature, installation transactionnelle, `kazopkg rollback` et `repair`, sauvegarde des données (ADR 0214).

@@ -1,0 +1,7 @@
+{
+  "repository": "https://github.com/example/Os-App-Template",
+  "project": "src/Kazo.Os.Template.Solution/Kazo.Os.Template.Solution.csproj",
+  "category": "productivity",
+  "tags": ["sample"],
+  "license": "MIT"
+}

@@ -30,7 +30,7 @@ non dangereuse (C). Benoit a choisi C.
 
 ## Décision
 
-1. **API** (`HackerOs.AppSdk`, espace `Diagnostics`) :
+1. **API** (`Kazo.Os.AppSdk`, espace `Diagnostics`) :
    - `HackCrossOriginIsolation.GetStatusAsync(CancellationToken)` rend un
      `HackCrossOriginIsolationStatus` : `IsIsolated`, `Reason`
      (`HackCrossOriginIsolationReason` : `None`, `Setting`, `MissingHeaders`,
@@ -72,8 +72,8 @@ non dangereuse (C). Benoit a choisi C.
   `/etc/hackeros/app-permissions.config`. Elle ne sert plus, puisque le
   manifeste ne déclare plus cette capacité. Aucune nouvelle fenêtre
   d'approbation n'apparaît.
-- Nouvelles lignes dans `Shared/HackerOs.AppSdk/PublicAPI.Unshipped.txt` et
-  `Platform/HackerOs.Platform.Core/PublicAPI.Unshipped.txt` ; `HackerOsVersion`
+- Nouvelles lignes dans `Shared/Kazo.Os.AppSdk/PublicAPI.Unshipped.txt` et
+  `Platform/Kazo.Os.Platform.Core/PublicAPI.Unshipped.txt` ; `HackerOsVersion`
   reste `1.2.0`.
 - Tests :
   - `CrossOriginIsolationStatusTests` (WorkerHost) : même réponse sur le fil

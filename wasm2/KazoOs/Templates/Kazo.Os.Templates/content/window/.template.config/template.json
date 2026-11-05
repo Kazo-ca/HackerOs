@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Kazo OS",
+  "classifications": [ "Kazo OS", "Blazor", "App" ],
+  "identity": "Kazo.Os.Templates.Window",
+  "groupIdentity": "Kazo.Os.Templates.Window",
+  "name": "Kazo OS window app",
+  "description": "A Kazo OS app with a window (Blazor component over WindowAppBase), built with Kazo.Os.App.Build.",
+  "shortName": "kazoos-window",
+  "sourceName": "Kazo.Os.Template.Window",
+  "preferNameDirectory": true,
+  "tags": { "language": "C#", "type": "project" },
+  "symbols": {
+    "appId": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "Application id (reverse-DNS, lowercase), unique in the catalog.",
+      "defaultValue": "com.example.my-app",
+      "replaces": "com.example.template-app"
+    },
+    "publisherId": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "Publisher id written in the manifest.",
+      "defaultValue": "pub.example",
+      "replaces": "pub.template"
+    }
+  }
+}

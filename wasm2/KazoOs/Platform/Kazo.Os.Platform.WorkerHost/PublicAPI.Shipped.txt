@@ -1,0 +1,119 @@
+#nullable enable
+Kazo.Os.Platform.WorkerHost.Browser.BrowserWorkerEntryPoint
+Kazo.Os.Platform.WorkerHost.Host.RemoteWindowProcess
+Kazo.Os.Platform.WorkerHost.Host.RemoteWindowProcess.CloseAsync(System.Action<System.Text.Json.Utf8JsonWriter!>! close) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.WorkerHost.Host.RemoteWindowProcess.Exit.get -> System.Threading.Tasks.Task<Kazo.Os.Platform.Core.Execution.RemoteProcessExit!>!
+Kazo.Os.Platform.WorkerHost.Host.RemoteWindowProcess.Pid.get -> long
+Kazo.Os.Platform.WorkerHost.Host.RemoteWindowProcess.Send(System.Action<System.Text.Json.Utf8JsonWriter!>! write) -> void
+Kazo.Os.Platform.WorkerHost.Host.RemoteWindowProcess.WorkerId.get -> int
+Kazo.Os.Platform.WorkerHost.Host.RemoteWindowProcess.WorkerMemoryBytes.get -> long
+Kazo.Os.Platform.WorkerHost.Host.WorkerAwareCpuTimeAccountant
+Kazo.Os.Platform.WorkerHost.Host.WorkerAwareCpuTimeAccountant.IsMeasuring.get -> bool
+Kazo.Os.Platform.WorkerHost.Host.WorkerAwareCpuTimeAccountant.TryGetCpuUsage(Kazo.Os.Simulation.Abstractions.Processes.ProcessId pid, out double coreEquivalents) -> bool
+Kazo.Os.Platform.WorkerHost.Host.WorkerAwareCpuTimeAccountant.TryGetProcessTimes(Kazo.Os.Simulation.Abstractions.Processes.ProcessId pid, out Kazo.Os.Simulation.Abstractions.Processes.ProcessCpuTimes times) -> bool
+Kazo.Os.Platform.WorkerHost.Host.WorkerAwareCpuTimeAccountant.TryGetThreadTimes(out Kazo.Os.Simulation.Abstractions.Processes.MeasuredThreadCpuTimes times) -> bool
+Kazo.Os.Platform.WorkerHost.Host.WorkerAwareCpuTimeAccountant.WorkerAwareCpuTimeAccountant(Kazo.Os.Simulation.Abstractions.Processes.ICpuTimeAccountant! inner, Kazo.Os.Platform.WorkerHost.Host.WorkerPool! pool) -> void
+Kazo.Os.Platform.WorkerHost.Host.WorkerAwareMemoryAccountant
+Kazo.Os.Platform.WorkerHost.Host.WorkerAwareMemoryAccountant.IsMeasuring.get -> bool
+Kazo.Os.Platform.WorkerHost.Host.WorkerAwareMemoryAccountant.TryGetProcessMemory(Kazo.Os.Simulation.Abstractions.Processes.ProcessRecord! process, System.Collections.Generic.IReadOnlyList<Kazo.Os.Simulation.Abstractions.Processes.ProcessRecord!>! active, out Kazo.Os.Simulation.Abstractions.Processes.ProcessMemoryUsage usage) -> bool
+Kazo.Os.Platform.WorkerHost.Host.WorkerAwareMemoryAccountant.TryGetSystemMemory(System.Collections.Generic.IReadOnlyList<Kazo.Os.Simulation.Abstractions.Processes.ProcessRecord!>! active, out Kazo.Os.Simulation.Abstractions.Processes.SystemMemoryUsage usage) -> bool
+Kazo.Os.Platform.WorkerHost.Host.WorkerAwareMemoryAccountant.WorkerAwareMemoryAccountant(Kazo.Os.Simulation.Abstractions.Processes.IMemoryAccountant! inner, Kazo.Os.Platform.WorkerHost.Host.WorkerPool! pool) -> void
+Kazo.Os.Platform.WorkerHost.Host.WorkerPool
+Kazo.Os.Platform.WorkerHost.Host.WorkerPool.Capacity.get -> int
+Kazo.Os.Platform.WorkerHost.Host.WorkerPool.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Kazo.Os.Platform.WorkerHost.Host.WorkerPool.GetWorkers() -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Simulation.Abstractions.Workers.WorkerSnapshot!>!
+Kazo.Os.Platform.WorkerHost.Host.WorkerPool.IsStarted.get -> bool
+Kazo.Os.Platform.WorkerHost.Host.WorkerPool.Options.get -> Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions!
+Kazo.Os.Platform.WorkerHost.Host.WorkerPool.PoolSize.get -> int
+Kazo.Os.Platform.WorkerHost.Host.WorkerPool.RecycleAfterOomKill(long pid) -> bool
+Kazo.Os.Platform.WorkerHost.Host.WorkerPool.StartAsync() -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.WorkerHost.Host.WorkerPool.WorkerPool(Kazo.Os.Simulation.Abstractions.Workers.IWebWorkerRuntime! runtime, Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions! options, Kazo.Os.Simulation.Abstractions.Time.ISimulationClock! clock, System.Func<Kazo.Os.Simulation.Abstractions.Processes.IProcessManager?>? processes = null, System.Action<string!, long?>? log = null, Kazo.Os.Platform.Core.Lifecycle.SystemStartupSignal? startup = null) -> void
+Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions
+Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.<Clone>$() -> Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions!
+Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.BusyThreshold.get -> System.TimeSpan
+Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.BusyThreshold.init -> void
+Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.EntryAssembly.get -> string!
+Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.EntryAssembly.init -> void
+Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.Equals(Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions? other) -> bool
+Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.HeartbeatPeriod.get -> System.TimeSpan
+Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.HeartbeatPeriod.init -> void
+Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.IdleWaitTimeout.get -> System.TimeSpan
+Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.IdleWaitTimeout.init -> void
+Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.KillAcknowledgeTimeout.get -> System.TimeSpan
+Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.KillAcknowledgeTimeout.init -> void
+Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.KnownAssemblies.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.KnownAssemblies.init -> void
+Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.MemoryMeasurePeriod.get -> System.TimeSpan
+Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.MemoryMeasurePeriod.init -> void
+Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.MeterCpu.get -> bool
+Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.MeterCpu.init -> void
+Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.OverflowIdleTimeout.get -> System.TimeSpan
+Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.OverflowIdleTimeout.init -> void
+Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.PreloadAssemblies.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.PreloadAssemblies.init -> void
+Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.UnresponsiveThreshold.get -> System.TimeSpan
+Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.UnresponsiveThreshold.init -> void
+Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.VirtualCores.get -> int
+Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.VirtualCores.init -> void
+Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.WorkerPoolOptions() -> void
+Kazo.Os.Platform.WorkerHost.Host.WorkerRemoteProcessHost
+Kazo.Os.Platform.WorkerHost.Host.WorkerRemoteProcessHost.CanRunBackgroundJobs.get -> bool
+Kazo.Os.Platform.WorkerHost.Host.WorkerRemoteProcessHost.RunBackgroundJobAsync(Kazo.Os.Platform.Core.Execution.RemoteBackgroundJobLaunch! launch, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Kazo.Os.Platform.Core.Execution.RemoteProcessExit!>!
+Kazo.Os.Platform.WorkerHost.Host.WorkerRemoteProcessHost.RunTerminalAsync(Kazo.Os.Platform.Core.Execution.RemoteProcessLaunch! launch, Kazo.Os.AppSdk.TerminalExecutionContext! terminal, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Kazo.Os.Platform.Core.Execution.RemoteProcessExit!>!
+Kazo.Os.Platform.WorkerHost.Host.WorkerRemoteProcessHost.ShouldRunRemotely(Kazo.Os.App.Abstractions.AppManifest! manifest) -> bool
+Kazo.Os.Platform.WorkerHost.Host.WorkerRemoteProcessHost.StartService(Kazo.Os.Platform.Core.Execution.RemoteProcessLaunch! launch) -> Kazo.Os.Platform.Core.Execution.IRemoteService!
+Kazo.Os.Platform.WorkerHost.Host.WorkerRemoteProcessHost.StartWindowAsync(Kazo.Os.Platform.Core.Execution.RemoteProcessLaunch! launch, System.Type! runnerType, System.Action<System.Text.Json.JsonElement>! receiver, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Kazo.Os.Platform.WorkerHost.Host.RemoteWindowProcess!>!
+Kazo.Os.Platform.WorkerHost.Host.WorkerRemoteProcessHost.WorkerRemoteProcessHost(Kazo.Os.Platform.WorkerHost.Host.WorkerPool! pool) -> void
+Kazo.Os.Platform.WorkerHost.Loopback.LoopbackWebWorkerRuntime
+Kazo.Os.Platform.WorkerHost.Loopback.LoopbackWebWorkerRuntime.AliveCount.get -> int
+Kazo.Os.Platform.WorkerHost.Loopback.LoopbackWebWorkerRuntime.HardwareConcurrency.get -> int
+Kazo.Os.Platform.WorkerHost.Loopback.LoopbackWebWorkerRuntime.IdleWaited.get -> bool
+Kazo.Os.Platform.WorkerHost.Loopback.LoopbackWebWorkerRuntime.LoopbackWebWorkerRuntime(int hardwareConcurrency = 4, System.TimeSpan? startupDelay = null, System.Func<Kazo.Os.Platform.WorkerHost.Worker.IWorkerAssemblyLoader!>? loaderFactory = null) -> void
+Kazo.Os.Platform.WorkerHost.Loopback.LoopbackWebWorkerRuntime.LoopbackWebWorkerRuntime(int hardwareConcurrency, System.TimeSpan? startupDelay, System.Func<Kazo.Os.Platform.WorkerHost.Worker.IWorkerAssemblyLoader!>? loaderFactory, bool synchronousCalls) -> void
+Kazo.Os.Platform.WorkerHost.Loopback.LoopbackWebWorkerRuntime.StartAsync(Kazo.Os.Simulation.Abstractions.Workers.WebWorkerStartOptions! options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Simulation.Abstractions.Workers.IWebWorker!>!
+Kazo.Os.Platform.WorkerHost.Loopback.LoopbackWebWorkerRuntime.StartedCount.get -> int
+Kazo.Os.Platform.WorkerHost.Loopback.LoopbackWebWorkerRuntime.StartedWith.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Simulation.Abstractions.Workers.WebWorkerStartOptions!>!
+Kazo.Os.Platform.WorkerHost.Loopback.LoopbackWebWorkerRuntime.StartupDelay.get -> System.TimeSpan
+Kazo.Os.Platform.WorkerHost.Loopback.LoopbackWebWorkerRuntime.SynchronousCalls.get -> bool
+Kazo.Os.Platform.WorkerHost.Loopback.LoopbackWebWorkerRuntime.WhenIdleAsync(System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.WorkerHost.Protocol.WorkerRemoteException
+Kazo.Os.Platform.WorkerHost.Protocol.WorkerRemoteException.RemoteType.get -> string!
+Kazo.Os.Platform.WorkerHost.Protocol.WorkerRemoteException.WorkerRemoteException(string! remoteType, string! message) -> void
+Kazo.Os.Platform.WorkerHost.Worker.IWorkerAssemblyLoader
+Kazo.Os.Platform.WorkerHost.Worker.IWorkerAssemblyLoader.LoadEntryTypeAsync(string! assemblyFile, string! typeName) -> System.Threading.Tasks.Task<System.Type!>!
+Kazo.Os.Platform.WorkerHost.Worker.IWorkerAssemblyLoader.PreloadAsync(System.Collections.Generic.IReadOnlyList<string!>! assemblyFiles) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.WorkerHost.Worker.IWorkerWindowRunner
+Kazo.Os.Platform.WorkerHost.Worker.IWorkerWindowRunner.RunAsync(Kazo.Os.Platform.WorkerHost.Worker.WorkerWindowRun! run, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<int>!
+Kazo.Os.Platform.WorkerHost.Worker.RemoteBrokenPipeException
+Kazo.Os.Platform.WorkerHost.Worker.RemoteBrokenPipeException.RemoteBrokenPipeException() -> void
+Kazo.Os.Platform.WorkerHost.Worker.ResolvedAssemblyLoader
+Kazo.Os.Platform.WorkerHost.Worker.ResolvedAssemblyLoader.ResolvedAssemblyLoader() -> void
+Kazo.Os.Platform.WorkerHost.Worker.WorkerProcessHost
+Kazo.Os.Platform.WorkerHost.Worker.WorkerProcessHost.ProcessCount.get -> int
+Kazo.Os.Platform.WorkerHost.Worker.WorkerProcessHost.Receive(string! message) -> void
+Kazo.Os.Platform.WorkerHost.Worker.WorkerProcessHost.Shutdown() -> void
+Kazo.Os.Platform.WorkerHost.Worker.WorkerProcessHost.WorkerProcessHost(System.Action<string!>! post, Kazo.Os.Platform.WorkerHost.Worker.IWorkerAssemblyLoader! loader, bool canMeterCpu) -> void
+Kazo.Os.Platform.WorkerHost.Worker.WorkerProcessHost.WorkerProcessHost(System.Action<string!>! post, Kazo.Os.Platform.WorkerHost.Worker.IWorkerAssemblyLoader! loader, bool canMeterCpu, Kazo.Os.Platform.WorkerHost.Worker.WorkerSynchronousCall? callSync) -> void
+Kazo.Os.Platform.WorkerHost.Worker.WorkerSynchronousCall
+Kazo.Os.Platform.WorkerHost.Worker.WorkerWindowRun
+Kazo.Os.Platform.WorkerHost.Worker.WorkerWindowRun.Context.get -> Kazo.Os.AppSdk.IAppExecutionContext!
+Kazo.Os.Platform.WorkerHost.Worker.WorkerWindowRun.EntryPointType.get -> System.Type!
+Kazo.Os.Platform.WorkerHost.Worker.WorkerWindowRun.Log(string! line) -> void
+Kazo.Os.Platform.WorkerHost.Worker.WorkerWindowRun.Pid.get -> long
+Kazo.Os.Platform.WorkerHost.Worker.WorkerWindowRun.Send(System.Action<System.Text.Json.Utf8JsonWriter!>! write) -> void
+Kazo.Os.Platform.WorkerHost.Worker.WorkerWindowRun.SetReceiver(System.Action<System.Text.Json.JsonElement>! receiver) -> void
+Kazo.Os.Platform.WorkerHost.WorkerProcessServiceCollectionExtensions
+const Kazo.Os.Platform.WorkerHost.WorkerProcessServiceCollectionExtensions.LogCategory = "workers" -> string!
+override Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.Equals(object? obj) -> bool
+override Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.GetHashCode() -> int
+override Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.ToString() -> string!
+static Kazo.Os.Platform.WorkerHost.Browser.BrowserWorkerEntryPoint.Receive(string! message) -> void
+static Kazo.Os.Platform.WorkerHost.Browser.BrowserWorkerEntryPoint.Start() -> void
+static Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.operator !=(Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions? left, Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions? right) -> bool
+static Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions.operator ==(Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions? left, Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions? right) -> bool
+static Kazo.Os.Platform.WorkerHost.Worker.ResolvedAssemblyLoader.ResolveType(string! assemblyFile, string! typeName) -> System.Type!
+static Kazo.Os.Platform.WorkerHost.WorkerProcessServiceCollectionExtensions.AddKazoOsWorkerProcesses(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services, System.Func<Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions!, Kazo.Os.Platform.WorkerHost.Host.WorkerPoolOptions!>? configure = null) -> Microsoft.Extensions.DependencyInjection.IServiceCollection!
+static readonly Kazo.Os.Platform.WorkerHost.Host.RemoteWindowProcess.CloseTimeout -> System.TimeSpan
+virtual Kazo.Os.Platform.WorkerHost.Worker.ResolvedAssemblyLoader.LoadEntryTypeAsync(string! assemblyFile, string! typeName) -> System.Threading.Tasks.Task<System.Type!>!
+virtual Kazo.Os.Platform.WorkerHost.Worker.ResolvedAssemblyLoader.PreloadAsync(System.Collections.Generic.IReadOnlyList<string!>! assemblyFiles) -> System.Threading.Tasks.Task!
+virtual Kazo.Os.Platform.WorkerHost.Worker.WorkerSynchronousCall.Invoke(int callId, string! message, System.TimeSpan timeout) -> string?

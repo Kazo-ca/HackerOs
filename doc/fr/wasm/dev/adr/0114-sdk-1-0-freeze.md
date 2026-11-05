@@ -17,7 +17,7 @@ réponse recommandée en attendant.
   une version, `[Obsolete]`, puis sera retiré ») et par l'ADR 0056 §12
   (formes `Get/SetFileReferencesAsync`).
 - **Document :** [`sdk-packages.md`](../../framework/sdk-packages.md),
-  [`building-on-hackeros.md`](../../framework/building-on-hackeros.md).
+  [`building-on-kazoos.md`](../../framework/building-on-kazoos.md).
 
 ## Contexte
 
@@ -32,7 +32,7 @@ réponse recommandée en attendant.
   dans n'importe laquelle force donc, sous SemVer strict, une nouvelle majeure
   de tout, SDK compris.
 - Le SDK contenait encore trois API `[Obsolete]` : `BrowserClipboard`
-  (`HackerOs.AppSdk.Blazor`, remplacé par `HackClipboard.SetTextAsync`) et
+  (`Kazo.Os.AppSdk.Blazor`, remplacé par `HackClipboard.SetTextAsync`) et
   `IAppClipboardGateway.GetFileReferencesAsync` / `SetFileReferencesAsync`
   (remplacées par `Get/SetFileDropListAsync`). Aucune app du dépôt ne les
   utilise (règle vérifiée par `app-sdk.md`).
@@ -62,7 +62,7 @@ frontière lui permet (`HOSAPP0030`), hors apps :
 
 | Couvert (rupture = majeure) | Versionné avec, sans promesse (rupture possible en mineure) |
 |---|---|
-| `HackerOs.App.Abstractions`, `HackerOs.Simulation.Abstractions`, `HackerOs.Theming.Abstractions`, `HackerOs.AppSdk`, `.Blazor`, `.Terminal`, `.Web`, `.Web.Blazor`, `.FileView`, `.Icons`, `.VirtualKeyboard`, `HackerOs.Theming.Blazor` ; le contrat de build de `HackerOs.App.Build` (propriétés, éléments, codes `HOSAPP*`) ; le format du manifeste | `HackerOs.Platform.*`, `HackerOs.Windowing.*`, `HackerOs.Infrastructure.Browser`, `HackerOs.Taskbar.Blazor`, `HackerOs.MobileShell.Blazor`, `HackerOs.Server.Contracts`, `HackerOs.Ecosystem.Host`, les types publics des apps de base (`HackerOs.Apps.*`, `HackerOs.Commands`) |
+| `Kazo.Os.App.Abstractions`, `Kazo.Os.Simulation.Abstractions`, `Kazo.Os.Theming.Abstractions`, `Kazo.Os.AppSdk`, `.Blazor`, `.Terminal`, `.Web`, `.Web.Blazor`, `.FileView`, `.Icons`, `.VirtualKeyboard`, `Kazo.Os.Theming.Blazor` ; le contrat de build de `Kazo.Os.App.Build` (propriétés, éléments, codes `HOSAPP*`) ; le format du manifeste | `Kazo.Os.Platform.*`, `Kazo.Os.Windowing.*`, `Kazo.Os.Infrastructure.Browser`, `Kazo.Os.Taskbar.Blazor`, `Kazo.Os.MobileShell.Blazor`, `Kazo.Os.Server.Contracts`, `Kazo.Os.Ecosystem.Host`, les types publics des apps de base (`Kazo.Os.Apps.*`, `Kazo.Os.Commands`) |
 
 - Une rupture hors du SDK reste écrite `*REMOVED*` et est décrite dans la
   section « Ruptures hors SDK » de [`sdk-packages.md`](../../framework/sdk-packages.md)
@@ -93,7 +93,7 @@ apps preview (contexte). La 1.0 ne contient aucune API `[Obsolete]`.
   un dossier temporaire et un cache NuGet isolé, et écrit
   `packages/Contoso.Sdk1Compat.1.0.0.nupkg`, **committé et jamais
   reconstruit** (le `.gitignore` du dossier lève l'exclusion des `.nupkg`).
-- `Tests/HackerOs.SdkCompatibility.Tests` (suite unitaire, sans navigateur) :
+- `Tests/Kazo.Os.SdkCompatibility.Tests` (suite unitaire, sans navigateur) :
   le catalogue courant admet ses manifestes ; chaque type et membre HackerOS
   référencé par ses métadonnées existe encore ; chaque méthode est compilée par
   le JIT contre le SDK courant (`RuntimeHelpers.PrepareMethod`, qui lève
@@ -101,7 +101,7 @@ apps preview (contexte). La 1.0 ne contient aucune API `[Obsolete]`.
   comme l'OS la crée, tourne. Vérifié : changer le type de retour de
   `HackFile.ReadAllTextAsync(string, CancellationToken)` fait échouer deux de
   ces tests.
-- `HackerOs.Templates.E2E.Tests` : un hôte généré par `hackeros-host`, avec
+- `Kazo.Os.Templates.E2E.Tests` : un hôte généré par `hackeros-host`, avec
   `PackageReference` vers ce paquet (source `hackeros-sdk-fixtures`), démarre
   dans Chromium ; la fenêtre et la commande de la 1.0 fonctionnent.
 - À une 2.0 : `produce-fixture.sh` produit une app `2.0.0` ; celle de la 1.0
@@ -110,7 +110,7 @@ apps preview (contexte). La 1.0 ne contient aucune API `[Obsolete]`.
 
 ### 5. Guide du dépôt tiers
 
-[`building-on-hackeros.md`](../../framework/building-on-hackeros.md) décrit un dépôt qui
+[`building-on-kazoos.md`](../../framework/building-on-kazoos.md) décrit un dépôt qui
 construit des apps et un hôte sur HackerOS : flux local, `nuget.config`,
 version épinglée, modèles, apps et hôte, paquets d'apps, publication trimmée,
 tests, montée de version et ce que la promesse couvre.
@@ -122,8 +122,8 @@ tests, montée de version et ce que la promesse couvre.
   contre les paquets `1.0.0` (le dépôt du jeu, ADR 0092).
 - Chaque chantier qui touche une API publique met à jour `Unshipped` ; la
   publication suivante choisit la version d'après ce fichier (§1, §2).
-- La suite unitaire `HackerOs.SdkCompatibility.Tests` tourne avec
-  `dotnet test HackerOs.sln` ; le test E2E avec la suite des modèles.
+- La suite unitaire `Kazo.Os.SdkCompatibility.Tests` tourne avec
+  `dotnet test Kazo.Os.sln` ; le test E2E avec la suite des modèles.
 
 ## Options écartées
 

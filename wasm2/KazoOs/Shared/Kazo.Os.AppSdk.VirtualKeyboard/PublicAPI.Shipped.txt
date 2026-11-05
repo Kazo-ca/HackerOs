@@ -1,0 +1,79 @@
+#nullable enable
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey.ArrowDown = 9 -> Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey.ArrowLeft = 6 -> Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey.ArrowRight = 7 -> Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey.ArrowUp = 8 -> Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey.Backspace = 2 -> Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey.Character = 0 -> Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey.Delete = 3 -> Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey.End = 11 -> Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey.Enter = 1 -> Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey.Escape = 5 -> Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey.Home = 10 -> Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey.PageDown = 13 -> Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey.PageUp = 12 -> Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey.Tab = 4 -> Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.<Clone>$() -> Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent!
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.Alt.get -> bool
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.Alt.init -> void
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.Control.get -> bool
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.Control.init -> void
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.Deconstruct(out Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey Key, out string? Text, out bool Control, out bool Alt, out bool Shift) -> void
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.Equals(Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent? other) -> bool
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.Key.get -> Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.Key.init -> void
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.Shift.get -> bool
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.Shift.init -> void
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.Text.get -> string?
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.Text.init -> void
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.VirtualKeyPressedEvent(Kazo.Os.AppSdk.VirtualKeyboard.VirtualKey Key, string? Text = null, bool Control = false, bool Alt = false, bool Shift = false) -> void
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboard
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboard.Dispose() -> void
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboard.OnKeyPressed.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent!>
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboard.OnKeyPressed.set -> void
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboard.Options.get -> Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardOptions!
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboard.Options.set -> void
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboard.VirtualKeyboard() -> void
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardHost
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardHost.ChildContent.get -> Microsoft.AspNetCore.Components.RenderFragment?
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardHost.ChildContent.set -> void
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardHost.IsKeyboardVisible.get -> bool
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardHost.IsKeyboardVisible.set -> void
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardHost.OnKeyPressed.get -> Microsoft.AspNetCore.Components.EventCallback<Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent!>
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardHost.OnKeyPressed.set -> void
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardHost.Options.get -> Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardOptions!
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardHost.Options.set -> void
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardHost.VirtualKeyboardHost() -> void
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardOptions
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.<Clone>$() -> Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardOptions!
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.AltLabel.get -> string!
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.AltLabel.init -> void
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.ControlLabel.get -> string!
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.ControlLabel.init -> void
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.Equals(Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardOptions? other) -> bool
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.ShiftLabel.get -> string!
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.ShiftLabel.init -> void
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.ShowArrowKeys.get -> bool
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.ShowArrowKeys.init -> void
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.ShowModifierRow.get -> bool
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.ShowModifierRow.init -> void
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.ShowSymbolRow.get -> bool
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.ShowSymbolRow.init -> void
+Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.VirtualKeyboardOptions() -> void
+Kazo.Os.AppSdk.VirtualKeyboard._Imports
+Kazo.Os.AppSdk.VirtualKeyboard._Imports.Execute() -> void
+Kazo.Os.AppSdk.VirtualKeyboard._Imports._Imports() -> void
+override Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.Equals(object? obj) -> bool
+override Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.GetHashCode() -> int
+override Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.ToString() -> string!
+override Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.Equals(object? obj) -> bool
+override Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.GetHashCode() -> int
+override Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.ToString() -> string!
+static Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.operator !=(Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent? left, Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent? right) -> bool
+static Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent.operator ==(Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent? left, Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyPressedEvent? right) -> bool
+static Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.operator !=(Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardOptions? left, Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardOptions? right) -> bool
+static Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardOptions.operator ==(Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardOptions? left, Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardOptions? right) -> bool
+~override Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboard.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
+~override Kazo.Os.AppSdk.VirtualKeyboard.VirtualKeyboardHost.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

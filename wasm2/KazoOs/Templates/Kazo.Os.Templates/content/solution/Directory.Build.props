@@ -1,0 +1,31 @@
+<Project>
+  <!--
+    Kazo OS app repository (kazoos-solution template, ADR 0176, ADR 0207).
+
+    external/KazoOs is the Kazo OS repository as a submodule, on a release tag v<version>. Its
+    build/Versions.props is THE version of this repository: every Kazo.Os.* package reference uses
+    $(KazoOsVersion). Changing the Kazo OS version = moving the submodule to another tag.
+
+    Two profiles (ADR 0176 §4):
+      Debug    KazoOsUseSource=true: the Kazo OS packages become references to the projects of the
+               submodule, so you can step into the SDK and the OS. Never edit the submodule: CI
+               refuses a modified one.
+      Release  KazoOsUseSource=false: the packages from nuget.org, at the submodule's version.
+               This is what CI builds and what the Kazo OS Store compiles.
+    Force either one with -p:KazoOsUseSource=true|false.
+  -->
+  <PropertyGroup>
+    <KazoOsSourceRoot Condition="'$(KazoOsSourceRoot)' == ''">$(MSBuildThisFileDirectory)external/KazoOs/wasm2/KazoOs/</KazoOsSourceRoot>
+    <KazoOsSourceRoot>$([MSBuild]::EnsureTrailingSlash('$(KazoOsSourceRoot)'))</KazoOsSourceRoot>
+    <KazoOsUseSource Condition="'$(KazoOsUseSource)' == '' and ('$(Configuration)' == '' or '$(Configuration)' == 'Debug')">true</KazoOsUseSource>
+    <KazoOsUseSource Condition="'$(KazoOsUseSource)' == ''">false</KazoOsUseSource>
+    <!--
+      Each profile restores its own references (projects or packages), so it keeps its own restore
+      output: obj/source/ for the sources, obj/ for the packages.
+    -->
+    <BaseIntermediateOutputPath Condition="'$(KazoOsUseSource)' == 'true'">obj/source/</BaseIntermediateOutputPath>
+    <DefaultItemExcludes>$(DefaultItemExcludes);obj/**</DefaultItemExcludes>
+  </PropertyGroup>
+
+  <Import Project="$(KazoOsSourceRoot)build/Versions.props" Condition="Exists('$(KazoOsSourceRoot)build/Versions.props')" />
+</Project>

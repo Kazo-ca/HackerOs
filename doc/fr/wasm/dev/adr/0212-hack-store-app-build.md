@@ -5,7 +5,7 @@
 ## Statut
 
 Accepté le 2026-10-31, chantier `todo/5-hackstore-app` (issue `TODO`
-[#249](https://github.com/Kazo-ca/HackerOs/issues/249), Hack Store 5). Met en
+[#249](https://github.com/Kazo-ca/Os/issues/249), Hack Store 5). Met en
 œuvre l'[ADR 0188](0188-hack-store-and-app-catalog.md) §1 à §3 et §8, sur les
 sources et la confiance de l'[ADR 0208](0208-hack-store-sources-trust-build.md).
 Ne change aucune décision de l'ADR 0188 ; fixe ce qu'elle laissait ouvert.
@@ -20,7 +20,7 @@ l'[ADR 0215](0215-hack-store-answers-notification-and-ambiguous-app-id.md).
 L'ADR 0188 décide l'app Hack Store, son épinglage par défaut, ses mises à jour
 et la lecture des catalogues par `hackpkg`. Le format de `catalog.json` est
 celui de la branche `catalog/1-initial-catalog` de
-`Kazo-ca/HackerOs-AppMarketPlace` (`schemaVersion` 1, chemins relatifs à la
+`Kazo-ca/Os-AppMarketPlace` (`schemaVersion` 1, chemins relatifs à la
 racine de la branche `packages`, à côté de `catalog.json`). Il restait à
 fixer : comment une installation depuis un catalogue est écrite dans
 `[installed]`, qui peut « Redémarrer pour terminer », où se montre le badge,
@@ -79,7 +79,7 @@ qu'un profil a déjà reçu l'épinglage par défaut.
    `HackPackageUpdate`. Les nouveaux membres de `IAppManagementGateway` ont une
    implémentation par défaut qui lève `NotSupportedException`. `InstallAsync`
    et `GetInfoAsync` acceptent `catalog:<nom>/<appId>` et un appId seul.
-8. **L'app.** `HackerOs.Apps.Store`, app système (`IsSystemApp="true"`, non
+8. **L'app.** `Kazo.Os.Apps.Store`, app système (`IsSystemApp="true"`, non
    désinstallable), capacités `apps.manage` et `apps.launch`, une instance par
    utilisateur, même écran sur le bureau et le mobile (requête de conteneur).
 
@@ -91,7 +91,7 @@ qu'un profil a déjà reçu l'épinglage par défaut.
 - Une app installée par le Store ou par `hackpkg install <appId>` apparaît
   toujours après un redémarrage (ADR 0182 Q5 C) ; l'ajout à chaud reste
   l'issue #251.
-- Le modèle d'hôte (`HackerOs.Templates`) référence `HackerOs.Apps.Store`, qui
+- Le modèle d'hôte (`Kazo.Os.Templates`) référence `Kazo.Os.Apps.Store`, qui
   est publié avec la version suivante.
 
 ## Questions posées à Benoit

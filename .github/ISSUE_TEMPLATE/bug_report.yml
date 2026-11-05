@@ -1,13 +1,13 @@
 name: "Rapport de bogue / Bug report"
-description: "Signaler un problème dans HackerOS. / Report a problem in HackerOS."
+description: "Signaler un problème dans Kazo OS. / Report a problem in Kazo OS."
 labels: ["bug"]
 body:
   - type: markdown
     attributes:
       value: |
-        Merci ! Vérifiez d'abord les [issues ouvertes](https://github.com/Kazo-ca/HackerOs/issues). Vous pouvez écrire en français ou en anglais.
+        Merci ! Vérifiez d'abord les [issues ouvertes](https://github.com/Kazo-ca/Os/issues). Vous pouvez écrire en français ou en anglais.
 
-        Thank you! Check the [open issues](https://github.com/Kazo-ca/HackerOs/issues) first. You may write in French or in English.
+        Thank you! Check the [open issues](https://github.com/Kazo-ca/Os/issues) first. You may write in French or in English.
   - type: textarea
     id: steps
     attributes:
@@ -33,7 +33,7 @@ body:
   - type: input
     id: version
     attributes:
-      label: "Version de HackerOS / HackerOS version"
+      label: "Version de Kazo OS / Kazo OS version"
       description: "Paramètres ▸ À propos. / Settings ▸ About."
       placeholder: "2.2.2"
   - type: input

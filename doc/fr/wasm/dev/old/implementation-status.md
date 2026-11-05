@@ -31,10 +31,10 @@ This file is archived; the current state lives in
 The former accent-only, Settings-window-owned DOM mutation has been replaced by
 a startup-owned shared theme boundary:
 
-- `HackerOs.Theming.Abstractions` defines seven desktop themes (HackerOS,
+- `Kazo.Os.Theming.Abstractions` defines seven desktop themes (HackerOS,
   Windows 98/XP/7/10, macOS, Ubuntu), two mobile themes (Android, iOS), and the
   bounded HackerOS accents.
-- `HackerOs.Theming.Blazor` publishes one static token asset plus reusable
+- `Kazo.Os.Theming.Blazor` publishes one static token asset plus reusable
   `ThemeScope`/`ThemePreview` components. Windowing, taskbar, desktop/launcher,
   and mobile-shell components consume the same semantic contract.
 - Appearance schema v2 persists independent desktop/mobile selections and
@@ -63,16 +63,16 @@ green Release solution. The first remediation wave is now verified:
 - The optional ASP.NET Core/EF Core server has a documented server-only no-trim
   policy; WASM and shared shipping libraries retain trim analysis.
 - Server dependencies are pinned to non-vulnerable compatible versions, restore
-  is warning-free, and `dotnet list HackerOs.sln package --vulnerable
+  is warning-free, and `dotnet list Kazo.Os.sln package --vulnerable
   --include-transitive --no-restore` reports no vulnerable packages.
 - `WindowHost` no longer contains a Razor inline-style attribute or validator
   exception. An invalid fixture proves the build rejects inline Razor assets.
 - Keyed window identity and deterministic cumulative pointer deltas repair all
   edge/corner resizing and pointer focus/z-order behavior.
-- `dotnet build HackerOs.sln --configuration Release --no-restore` passes with
+- `dotnet build Kazo.Os.sln --configuration Release --no-restore` passes with
   0 warnings and 0 errors. This includes trim-safe manifest validation and the
   corrected Browser app lifecycle hooks.
-- `dotnet test HackerOs.sln --configuration Release --no-build` passes 622
+- `dotnet test Kazo.Os.sln --configuration Release --no-build` passes 622
   tests with 0 failed and 0 skipped. The three window browser scenarios also
   pass three consecutive Release repetitions without product-level retries.
 - The trimmed Release ecosystem publish succeeds, the Terminal and Nano
@@ -99,22 +99,22 @@ build-profile validation error code all pass in the headless solution test suite
 The Phase 1 exit gate (`P1-GATE-001` through `P1-GATE-004`) is now satisfied: a
 Release build with the trim analyzer enabled on every shipping project reports
 zero warnings, and a new headless kernel integration test
-(`Tests/HackerOs.Platform.Core.Tests/HeadlessKernelIntegrationTests.cs`) proves
+(`Tests/Kazo.Os.Platform.Core.Tests/HeadlessKernelIntegrationTests.cs`) proves
 boot, session login, real assembly-based discovery, app launch/command
 execution, capability-checked filesystem and settings gateway use, service
 shutdown, app disable, and session logout compose correctly with no Blazor or
-browser dependency. Fresh verification: `dotnet test HackerOs.sln --no-restore`
+browser dependency. Fresh verification: `dotnet test Kazo.Os.sln --no-restore`
 completed with 378 tests passed and 0 failed.
 
 Phase 2A has started: `P2-IDB-001` through `P2-IDB-004` are complete. ADR 0015
 decides the browser support baseline (Chromium 89+, Firefox 90+, Safari 15+,
 evergreen only) and the IndexedDB adapter approach (hand-written minimal
 collocated JS module(s) under
-`Infrastructure/HackerOs.Infrastructure.Browser/wwwroot/`, batched
+`Infrastructure/Kazo.Os.Infrastructure.Browser/wwwroot/`, batched
 transaction-oriented primitives, no third-party IndexedDB NuGet package,
 C#-owned schema/migration ordering). The new
-`Infrastructure/HackerOs.Infrastructure.Browser` project (with its
-`Tests/HackerOs.Infrastructure.Browser.Tests` project) now declares the
+`Infrastructure/Kazo.Os.Infrastructure.Browser` project (with its
+`Tests/Kazo.Os.Infrastructure.Browser.Tests` project) now declares the
 concrete `hackeros` database schema version 2: 12 object stores (`users`,
 `groups`, `sessions`, `settings`, `fsEntries`, `fsLinks`, `fsContent`, `catalog`,
 `grants`, `audit`, `diagnostics`, `syncMetadata`) and 10 named cross-store
@@ -217,8 +217,8 @@ multi-selection, overwrite, folder creation, filesystem denial, modality, focus
 return, cancellation, and clean console/network behavior. `P2-DLG-001` through
 `P2-DLG-010` are complete.
 
-The standalone `OS/HackerOs.Ecosystem` .NET 10 Blazor WebAssembly PWA now
-provides the Phase 2 host boundary. It is included in `HackerOs.sln`, contains no
+The standalone `OS/Kazo.Os.Ecosystem` .NET 10 Blazor WebAssembly PWA now
+provides the Phase 2 host boundary. It is included in `Kazo.Os.sln`, contains no
 template sample pages/assets, retains only boot-critical global styles, and
 builds with repository trimming analysis and warnings-as-errors. Composition
 references now point only to Platform Core/Blazor and Browser Infrastructure;
@@ -228,19 +228,19 @@ composition remains under `P2-HOST-003` and `P2-HOST-004`.
 ## Implemented architecture
 
 ```text
-HackerOs.App.Abstractions
-  <- HackerOs.AppSdk
+Kazo.Os.App.Abstractions
+  <- Kazo.Os.AppSdk
 
-HackerOs.App.Abstractions
-  <- HackerOs.App.Abstractions.Tests
+Kazo.Os.App.Abstractions
+  <- Kazo.Os.App.Abstractions.Tests
 
-HackerOs.AppSdk
-  <- HackerOs.AppSdk.Tests
+Kazo.Os.AppSdk
+  <- Kazo.Os.AppSdk.Tests
 
-HackerOs.App.Abstractions
-  <- HackerOs.Simulation.Abstractions
-  <- HackerOs.Platform.Core
-  <- HackerOs.Platform.Core.Tests
+Kazo.Os.App.Abstractions
+  <- Kazo.Os.Simulation.Abstractions
+  <- Kazo.Os.Platform.Core
+  <- Kazo.Os.Platform.Core.Tests
 ```
 
 The abstractions projects have no UI, browser, dependency injection, or concrete
@@ -317,7 +317,7 @@ canonical settings document under `/etc/hackeros/policy.config`.
 
 ## Task list
 
-- [x] Create the .NET 10 solution under `wasm2/HackerOs/`.
+- [x] Create the .NET 10 solution under `wasm2/KazoOs/`.
 - [x] Create app abstractions and headless App SDK projects.
 - [x] Define app kinds and `System > Administrator > User` ordering.
 - [x] Define the initial canonical app manifest.
@@ -335,7 +335,7 @@ canonical settings document under `/etc/hackeros/policy.config`.
   change audit events.
 - [x] Implement the manifest catalog and deterministic dependency graph.
 - [x] Implement Semantic Version 2.0.0 precedence for dependency ranges.
-- [x] Create `HackerOs.AppSdk.Blazor` and define `WindowAppBase`.
+- [x] Create `Kazo.Os.AppSdk.Blazor` and define `WindowAppBase`.
 - [x] Seal framework lifecycle methods and expose app lifecycle hooks.
 - [x] Define typed file-open, file-save, and folder-selection contracts.
 - [x] Enforce no inline CSS/JavaScript in Razor builds.
@@ -430,24 +430,24 @@ canonical settings document under `/etc/hackeros/policy.config`.
 - [x] Implement the platform window runtime and modal file dialog renderer (`P2-WIN`, `P2-DLG`).
 - [x] Scaffold and complete the PWA host composition root, boot coordinator, error boundary, recovery UI, shared RCL theme scope, and Release trim analyzer smoke tests (`P2-HOST-001` through `P2-HOST-010`).
 - [x] Implement Desktop Shell, Taskbar, App Launcher, Notification Center, and Session Logout UX (`P2-SHELL-001` through `P2-SHELL-009`).
-- [x] Establish Phase 2B App Project Standard (`P2-APPSTD-001` through `P2-APPSTD-005`) and implement the Terminal application (`org.hackeros.terminal`) under `Apps/System/HackerOs.Apps.Terminal/` (`P2-TERM-001` through `P2-TERM-009`).
+- [x] Establish Phase 2B App Project Standard (`P2-APPSTD-001` through `P2-APPSTD-005`) and implement the Terminal application (`org.hackeros.terminal`) under `Apps/System/Kazo.Os.Apps.Terminal/` (`P2-TERM-001` through `P2-TERM-009`).
 - [x] Implement Core Terminal Command Apps (`pwd`, `ls`, `cd`, `cat`, `echo`) under `Apps/Commands/` (`P2-CMD-001` through `P2-CMD-006`).
-- [x] Implement File Explorer Application (`org.hackeros.file-explorer`) under `Apps/System/HackerOs.Apps.FileExplorer/` (`P2-FEX-001` through `P2-FEX-009`).
-- [x] Implement Text Editor Window App (`org.hackeros.text-editor`) under `Apps/System/HackerOs.Apps.TextEditor/` (`P2-TEXT-001` through `P2-TEXT-007`).
-- [x] Implement First Session Service App (`org.hackeros.samples.service-app`) under `Apps/Samples/HackerOs.Samples.ServiceApp/` (`P2-SVC-001` through `P2-SVC-003`).
-- [x] Implement PWA Packaging, Offline Operation, and Updates (`OS/HackerOs.Ecosystem/wwwroot/`) (`P2-PWA-001` through `P2-PWA-007`).
+- [x] Implement File Explorer Application (`org.hackeros.file-explorer`) under `Apps/System/Kazo.Os.Apps.FileExplorer/` (`P2-FEX-001` through `P2-FEX-009`).
+- [x] Implement Text Editor Window App (`org.hackeros.text-editor`) under `Apps/System/Kazo.Os.Apps.TextEditor/` (`P2-TEXT-001` through `P2-TEXT-007`).
+- [x] Implement First Session Service App (`org.hackeros.samples.service-app`) under `Apps/Samples/Kazo.Os.Samples.ServiceApp/` (`P2-SVC-001` through `P2-SVC-003`).
+- [x] Implement PWA Packaging, Offline Operation, and Updates (`OS/Kazo.Os.Ecosystem/wwwroot/`) (`P2-PWA-001` through `P2-PWA-007`).
 - [ ] Complete Phase 2 Acceptance and Exit Gate (`P2-ACC-SETUP-001` through `P2-GATE-005`). The evidence matrix exists, but published-PWA, accessibility, CI, and explicit approval gates remain reopened in `docs/phase-2-acceptance.md`.
-- [x] Implement Public SDK 1.0 Candidate (`P3-SDK-001` through `P3-SDK-010`). Created sample Window app, Terminal app, Service app, ADR 0019 (`docs/adr/0019-sdk-versioning-and-compatibility.md`), Manifest Validator CLI (`Tools/HackerOs.Tools.ManifestValidator/`), and Developer Guide (`docs/sdk/developer-guide.md`).
+- [x] Implement Public SDK 1.0 Candidate (`P3-SDK-001` through `P3-SDK-010`). Created sample Window app, Terminal app, Service app, ADR 0019 (`docs/adr/0019-sdk-versioning-and-compatibility.md`), Manifest Validator CLI (`Tools/Kazo.Os.Tools.ManifestValidator/`), and Developer Guide (`docs/sdk/developer-guide.md`).
 - [x] Implement Accessibility, Localization, Theming, and Design System (`P3-UX-001` through `P3-UX-007`). The theming slice was expanded on 2026-08-19 into the shared nine-theme catalog documented by `docs/theming.md`; `docs/design-system.md`, `docs/localization.md`, and `docs/accessibility.md` remain the related contracts.
 - [ ] Implement Build-Known Lazy Loading (`P3-LAZY-001` through `P3-LAZY-007`). Hack Paint is declared as the first lazy assembly and has a typed, coalescing browser loader; deterministic descriptor registration and published/offline evidence remain open.
 - [x] Implement Migration Rules for Every Legacy Feature (`P4-RULE-001` through `P4-RULE-006`). Published `docs/migration/rules.md`. Phase 4 started.
 - [x] Implement Wave 2 OS Fundamentals (`P4-W2-001` through `P4-W2-008`). Ported Settings app (`org.hackeros.settings`), System Monitor (`org.hackeros.system-monitor`), and Error Log Viewer (`org.hackeros.error-log-viewer`). Published `docs/migration/wave-2.md`.
-- [ ] Complete Wave 3 Editing, Clipboard, and Drag/Drop (`P4-W3-001` through `P4-W3-007`). ADR 0020, the clipboard gateway, and drag payload exist. Nano is revalidated with its full-screen contract, VFS editor, Blazor Terminal adapter, lifecycle propagation, and browser key/render/cleanup evidence. Code Editor was reworked on 2026-08-21 from local CodeMirror 6 to local Monaco Editor (matching the legacy JS app), adding an Open Folder tree view (shared `FileView` control) and an embedded, tabbed terminal (new shared `HackerOs.AppSdk.Terminal` library, also now backing the standalone Terminal app — see ADR 0020's amendment). C# tab/document models, VFS-backed recovery, platform whole-window dirty-close protection, focused tests, Chromium interaction/disposal, and axe evidence remain in place under Monaco. A real rendered reload test plus published/offline integration remain open. Hack Paint remains a separate reopened Wave 5 item.
+- [ ] Complete Wave 3 Editing, Clipboard, and Drag/Drop (`P4-W3-001` through `P4-W3-007`). ADR 0020, the clipboard gateway, and drag payload exist. Nano is revalidated with its full-screen contract, VFS editor, Blazor Terminal adapter, lifecycle propagation, and browser key/render/cleanup evidence. Code Editor was reworked on 2026-08-21 from local CodeMirror 6 to local Monaco Editor (matching the legacy JS app), adding an Open Folder tree view (shared `FileView` control) and an embedded, tabbed terminal (new shared `Kazo.Os.AppSdk.Terminal` library, also now backing the standalone Terminal app — see ADR 0020's amendment). C# tab/document models, VFS-backed recovery, platform whole-window dirty-close protection, focused tests, Chromium interaction/disposal, and axe evidence remain in place under Monaco. A real rendered reload test plus published/offline integration remain open. Hack Paint remains a separate reopened Wave 5 item.
 - [x] Implement Wave 4 Simulated Network, Browser, and Websites (`P4-W4-001` through `P4-W4-007`). Created ADR 0021 (`docs/adr/0021-simulated-network-and-browser-rendering.md`), implemented simulated network domain, DNS, website controllers (`HackerSearch`, `HackMail`, `CryptoBank`, `DarkNet Market`, `HackerZ Forum`), Browser app (`org.hackeros.browser`), terminal commands (`ping`, `nmap`, `curl`), and unit test suite verifying zero real network calls. Published `docs/migration/wave-4.md`.
 - [ ] Complete Wave 5 Utility Apps and Commands (`P4-W5-APP-001` through `P4-W5-CMD-009`). Calculator, the bounded Settings theme picker, and terminal commands are implemented. Hack Paint is reopened: its core now has authoritative RGBA history, pixel drawing, crop, and rotation tests, but canvas rendering, image/VFS round trips, browser dialogs, and Playwright pixel evidence remain outstanding.
 - [x] Create Gameplay V3 Analysis (`P4-W6-GATE-001`). Published `doc/fr/wasm/gameplay-v3-analyse.md` defining gameplay domain architecture, contract generator, hardware simulation, exploit engine, player scripting sandbox, and encrypted save engine.
 - [x] Obtain Gameplay Domain Approval (`P4-W6-GATE-002`). Created ADR 0023 (`docs/adr/0023-optional-game-domain-and-proxy-fallback.md`) establishing optional Game Domain build dependency, capability `gameplay.domain.access`, and server proxy fallback routing for network commands (`ping`, `curl`, `cat`).
-- [x] Implement Wave 6 Gameplay Domains (`P4-W6-001` through `P4-W6-006`). Built `HackerOs.Game.Abstractions`, `HackerOs.Game.Core` (`InMemoryGameDomainGateway`, `NullGameDomainGateway`), contracts generator, hardware upgrade tree, economy payout engine, and automated unit test suite `HackerOs.Game.Tests`. Published `docs/migration/wave-6.md`.
+- [x] Implement Wave 6 Gameplay Domains (`P4-W6-001` through `P4-W6-006`). Built `Kazo.Os.Game.Abstractions`, `Kazo.Os.Game.Core` (`InMemoryGameDomainGateway`, `NullGameDomainGateway`), contracts generator, hardware upgrade tree, economy payout engine, and automated unit test suite `Kazo.Os.Game.Tests`. Published `docs/migration/wave-6.md`.
 
 ## Validation
 
@@ -455,7 +455,7 @@ The 2026-08-19 integrated gate builds every project and all three host
 compositions in Release with zero warnings/errors:
 
 ```powershell
-dotnet build HackerOs.sln --configuration Release --no-restore
+dotnet build Kazo.Os.sln --configuration Release --no-restore
 ```
 
 The shared-theme/Start-menu slice has 533 passing focused tests: Platform Core
@@ -467,7 +467,7 @@ Code Editor, Hack Paint, a live HackerOS → Windows 7 → HackerOS scope change
 and a 375×812 viewport; it reports no serious/critical axe finding.
 
 Both the offline Ecosystem PWA and the package-only sample publish successfully.
-Their output contains `_content/HackerOs.Theming.Blazor/themes.css`; the PWA
+Their output contains `_content/Kazo.Os.Theming.Blazor/themes.css`; the PWA
 service-worker manifest includes that exact asset. The reusable desktop closure
 also restores/builds/publishes from seven local `0.1.0-local` packages with no
 remaining project dependency.
@@ -498,7 +498,7 @@ server is absent.
 | ID | Title | Status |
 |---|---|---|
 | P5-UI-001 | Render-mode-agnostic environment/lazy-load transport seam (`IEcosystemHostEnvironment`, `InProcessAssemblyTransport`) | ✅ Done |
-| P5-UI-002 | Interactive Server component hosting in `HackerOs.Server` (`Components/App.razor`, `Program.cs` composition) | ✅ Done — single-tenant/single-active-circuit only |
+| P5-UI-002 | Interactive Server component hosting in `Kazo.Os.Server` (`Components/App.razor`, `Program.cs` composition) | ✅ Done — single-tenant/single-active-circuit only |
 | P5-UI-003 | Multi-tenant scoped-service conversion and EF-backed browser-storage replacement | ⬜ Not started — needs its own ADR |
 | P5-UI-004 | Direct injection of `IAccountService`/`ISyncService`/`IProxyService` into UI code instead of HTTP | ⬜ Not started — needs its own ADR and shared client abstraction |
 
@@ -525,7 +525,7 @@ to every host.
 
 | ID | Description | Status |
 | --- | --- | --- |
-| P5-CMD-001 | Wire 24 of 28 `Apps/Commands/*` projects into `HackerOs.Ecosystem.csproj` (`ProjectReference`/`EmbeddedResource`/`BlazorWebAssemblyLazyLoad`), excluding `cd`/`pwd`/`clear`/`help` (terminal built-ins) | ✅ Done |
+| P5-CMD-001 | Wire 24 of 28 `Apps/Commands/*` projects into `Kazo.Os.Ecosystem.csproj` (`ProjectReference`/`EmbeddedResource`/`BlazorWebAssemblyLazyLoad`), excluding `cd`/`pwd`/`clear`/`help` (terminal built-ins) | ✅ Done |
 | P5-CMD-002 | `AppLifecycleOrchestrator` constructs terminal/service apps via `ActivatorUtilities.CreateInstance` so commands needing injected services (`ping`, `curl`, `nmap`) actually launch | ✅ Done |
 | P5-CMD-003 | Register `ISimulatedNetworkService` with `SmokeTestNetworkSeed` (`example.hackeros`, `empty.hackeros`) — first production registration/seed of any kind | ✅ Done — deliberately minimal, not the ADR 0023 "Game domain" content pack |
 | P5-CMD-004 | Fix incomplete capability declarations found during live verification: `mkdir`/`touch`/`rm`/`chmod` missing `filesystem.user-home.read`, `alias`'s JSON manifest missing both capabilities its C# manifest already declared | ✅ Done |
@@ -562,7 +562,7 @@ All five domains named in the original roadmap now have a client-side adapter.
 | P5-SYNC-002 | Push with durable idempotency and content-hash verification | ⬜ Reopened: idempotency is not restart-safe |
 | P5-SYNC-003 | Per-domain conflict rules (ADR 0025 / D-018) | ⬜ Reopened for ownership/conflict evidence |
 | P5-SYNC-004 | Grant domain security block (ServerWins only) | ⬜ Reopened for complete authorization evidence |
-| P5-SYNC-005 | Chunked resumable file content transfer with SHA-256 deduplication | ⬜ Reopened for restart/resume evidence — upload and content-addressed download both now work end-to-end (`GetChunkAsync` was a stub returning zero bytes until ADR 0030 fixed it, `Tests/HackerOs.Server.Tests/ContentBlobServiceTests.cs`); restart-mid-transfer resumption specifically still lacks test evidence |
+| P5-SYNC-005 | Chunked resumable file content transfer with SHA-256 deduplication | ⬜ Reopened for restart/resume evidence — upload and content-addressed download both now work end-to-end (`GetChunkAsync` was a stub returning zero bytes until ADR 0030 fixed it, `Tests/Kazo.Os.Server.Tests/ContentBlobServiceTests.cs`); restart-mid-transfer resumption specifically still lacks test evidence |
 | P5-SYNC-006 | Complete sync integration/security matrix | ⬜ Reopened |
 
 ### P5-PROXY — HTTP/TCP/UDP Proxy
@@ -594,14 +594,14 @@ All five domains named in the original roadmap now have a client-side adapter.
 ### Solution structure
 ```
 Server/
-  HackerOs.Server.Contracts/       — shared contracts (versioning, identity, sync, proxy, admin)
-  HackerOs.Server/                 — ASP.NET Core server (EF Core SQLite, bearer auth, minimal API)
+  Kazo.Os.Server.Contracts/       — shared contracts (versioning, identity, sync, proxy, admin)
+  Kazo.Os.Server/                 — ASP.NET Core server (EF Core SQLite, bearer auth, minimal API)
     Data/                          — DbContext + entity models
     Services/                      — AuthServices, AccountService, SyncService, ProxyService, AuditService, ContentBlobService
     Endpoints/                     — VersionEndpoints, IdentityEndpoints, SyncEndpoints, ProxyEndpoints, AdminEndpoints
     Components/                    — Server-hosted Blazor UI (ADR 0027): App.razor, Interactive Server render mode
 Tests/
-  HackerOs.Server.Tests/           — focused unit tests for sync, proxy, versioning, and identity
+  Kazo.Os.Server.Tests/           — focused unit tests for sync, proxy, versioning, and identity
 ```
 
 The 2026-08-03 focused server run passes 39 tests. That total is evidence for the
@@ -612,5 +612,5 @@ See `docs/server-security.md` for the implemented boundary and remaining work.
 - 39 focused server tests pass; the expanded integration matrix remains open.
 - Verification command:
   ```powershell
-  dotnet test Tests/HackerOs.Server.Tests/HackerOs.Server.Tests.csproj --configuration Release --no-restore
+  dotnet test Tests/Kazo.Os.Server.Tests/Kazo.Os.Server.Tests.csproj --configuration Release --no-restore
   ```

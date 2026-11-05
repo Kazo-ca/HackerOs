@@ -2,8 +2,8 @@
 
 # Historical BlazorWindowManager lessons
 
-- The prior `wasm2/HackerOs/Ecosystem/HackerOs.Ecosystem` implementation is not present on the `wasm-total-conversion` branch as of 2026-08-01. Do not treat the old project paths or run commands as current.
-- The clean v3 solution is `wasm2/HackerOs/HackerOs.sln`, targets .NET 10, and as of 2026-08-02 contains app/simulation abstractions, headless and Blazor App SDKs, Platform Core (catalog, canonical settings/policy projection, virtual filesystem, Section 7 session/process/clock/event/diagnostics/resource-simulation, Section 7.1 app execution context + scoped gateways, Section 8 app entry-point discovery/lifecycle orchestration/capability-gated intent dispatch/file-association resolution — see `docs/app-intents-and-associations.md` — and the Section 9 canonical manifest JSON Schema/build profile — see `docs/build-profile.md`), 344 passing tests across 4 test projects (`dotnet test HackerOs.sln --no-restore` runs all of them; `HackerOs.Platform.Core.Tests` alone reports 255, `HackerOs.App.Abstractions.Tests` reports 75). **The Phase 1 exit gate (`P1-GATE-001` through `P1-GATE-005`) is fully complete** — see the dedicated section below before touching Phase 2 tasks. The exhaustive remaining execution plan is `wasm2/HackerOs/docs/integration-task-list.md` and must be maintained during implementation.
+- The prior `wasm2/KazoOs/Ecosystem/Kazo.Os.Ecosystem` implementation is not present on the `wasm-total-conversion` branch as of 2026-08-01. Do not treat the old project paths or run commands as current.
+- The clean v3 solution is `wasm2/KazoOs/Kazo.Os.sln`, targets .NET 10, and as of 2026-08-02 contains app/simulation abstractions, headless and Blazor App SDKs, Platform Core (catalog, canonical settings/policy projection, virtual filesystem, Section 7 session/process/clock/event/diagnostics/resource-simulation, Section 7.1 app execution context + scoped gateways, Section 8 app entry-point discovery/lifecycle orchestration/capability-gated intent dispatch/file-association resolution — see `docs/app-intents-and-associations.md` — and the Section 9 canonical manifest JSON Schema/build profile — see `docs/build-profile.md`), 344 passing tests across 4 test projects (`dotnet test Kazo.Os.sln --no-restore` runs all of them; `Kazo.Os.Platform.Core.Tests` alone reports 255, `Kazo.Os.App.Abstractions.Tests` reports 75). **The Phase 1 exit gate (`P1-GATE-001` through `P1-GATE-005`) is fully complete** — see the dedicated section below before touching Phase 2 tasks. The exhaustive remaining execution plan is `wasm2/KazoOs/docs/integration-task-list.md` and must be maintained during implementation.
 - `WindowAppBase` now seals Blazor lifecycle overrides and exposes `OnApp*` hooks, preventing the historical skipped-base-call bug. The platform window runtime and drag/resize interop are not implemented yet.
 
 ## ROOT CAUSE of "drag/resize don't work" bug (found via Playwright runtime debugging, 2026-07-01)
@@ -20,8 +20,8 @@ errors and NO exceptions. This was very hard to detect because:
   - Diagnosis required adding temporary `JSRuntime.InvokeVoidAsync("console.log", ...)` instrumentation
     directly in `OnAfterRenderAsync` and `OnTitleBarMouseDown` to prove the import never ran.
 Fixed by adding `await base.OnAfterRenderAsync(firstRender);` at the end of the override in:
-  - `HackerOs.Ecosystem/Modules/WelcomeApp.razor.cs`
-  - `HackerOs.Ecosystem/Modules/SystemMonitorApp.razor.cs`
+  - `Kazo.Os.Ecosystem/Modules/WelcomeApp.razor.cs`
+  - `Kazo.Os.Ecosystem/Modules/SystemMonitorApp.razor.cs`
 **Lesson**: Any new `WindowAppBase`/`WindowBase`-derived component that overrides `OnAfterRenderAsync`,
 `OnInitializedAsync`, etc. MUST call the base method, or window chrome features (drag, resize, keyboard nav)
 silently break with zero errors. Worth grepping for `override.*OnAfterRenderAsync` in new app modules and
@@ -33,16 +33,16 @@ verifying `base.OnAfterRenderAsync` is called.
 Mixing pageIds between them causes "Page not found". Stick to one family per session; Family B is required for drag/resize testing.
 
 ## Project reference direction (checked 2026-08-01)
-`HackerOs.App.Abstractions` has ZERO ProjectReferences (base project). `HackerOs.Simulation.Abstractions`
-references `App.Abstractions`. `HackerOs.Platform.Core` references both. Rule: any new type that needs both
+`Kazo.Os.App.Abstractions` has ZERO ProjectReferences (base project). `Kazo.Os.Simulation.Abstractions`
+references `App.Abstractions`. `Kazo.Os.Platform.Core` references both. Rule: any new type that needs both
 an App.Abstractions concept (e.g. `AppOperationContext`, `AppCapabilities`, `AppAuthority`) AND a
 Simulation.Abstractions concept (e.g. `SettingsScope`) MUST live in `Simulation.Abstractions` or higher —
 never in `App.Abstractions`. Before creating cross-cutting policy/settings code, check
-`wasm2/HackerOs/docs/implementation-status.md`'s dependency diagram or the csproj files first to avoid
+`wasm2/KazoOs/docs/implementation-status.md`'s dependency diagram or the csproj files first to avoid
 creating a file in the wrong project and having to delete/relocate it.
 
 ## `.config` settings document `schemaVersion` gotcha
-`ConfigDocumentFormat.Serialize()` (Shared/HackerOs.Simulation.Abstractions/Settings/ConfigDocumentFormat.cs)
+`ConfigDocumentFormat.Serialize()` (Shared/Kazo.Os.Simulation.Abstractions/Settings/ConfigDocumentFormat.cs)
 always writes `schemaVersion=N` as the first line of every document, but no `SettingsSchema` declares
 `schemaVersion` as a field. `SettingsSchema.Validate()` MUST special-case and skip the literal key
 `"schemaVersion"` in its unknown-key check, otherwise every schema-validated document (including at
@@ -55,7 +55,7 @@ It produces a cascade of ~80 confusing CS1001/CS1014/CS1513/CS8124 errors pointi
 The actual codebase convention (see `FileSystemEntryMetadata.cs`'s `FileSystemTimestamps`) is: declare the
 record WITHOUT a positional parameter list, write an explicit constructor with lowercase parameter names that
 validates and assigns, and declare each property as a manual `public T X { get; }`. Follow this pattern for
-every validated record in `Shared/HackerOs.Simulation.Abstractions/` and similar contract projects
+every validated record in `Shared/Kazo.Os.Simulation.Abstractions/` and similar contract projects
 (e.g. `LocalUser`, `AuthenticatedPrincipal`, `LocalPasswordCredential` in `Sessions/`).
 
 ## Section 7 (Session/Process/Clock/Events/Diagnostics) — completed 2026-08-01
@@ -66,7 +66,7 @@ All of `P1-SYS-001` through `P1-SYS-011` in `docs/integration-task-list.md` are 
   source leaves `IsCancellationRequested` false forever. Any process/session teardown path that needs
   observers to see cancellation MUST call `.Cancel()` explicitly before `.Dispose()`. This bug caused
   `InMemoryProcessManager`'s `Kill`/`Complete`/`Fault` to fail a test until fixed (`Finish()` helper in
-  `Platform/HackerOs.Platform.Core/Processes/InMemoryProcessManager.cs`).
+  `Platform/Kazo.Os.Platform.Core/Processes/InMemoryProcessManager.cs`).
 - `SeededSimulationRandom.GetStream(domainKey)` creates a BRAND NEW `Random` instance every call — it does
   NOT cache/remember previous state per key. Calling it repeatedly with the same key always replays the
   same first value(s). To get a progressing/evolving deterministic sequence across simulation ticks (e.g.
@@ -78,12 +78,12 @@ All of `P1-SYS-001` through `P1-SYS-011` in `docs/integration-task-list.md` are 
   `FileSystemAuthorizer` + `FileSystemSeeder` wiring used in `FileSystemSeederTests.cs` — copy that pattern
   rather than re-deriving it (session login seeds `/home/{loginName}` via the seeder).
 - Cross-cutting tests combining session + process manager + event bus + audit log + resource simulator live
-  in `Tests/HackerOs.Platform.Core.Tests/Processes/CrossCuttingLifecycleTests.cs` — good template for future
+  in `Tests/Kazo.Os.Platform.Core.Tests/Processes/CrossCuttingLifecycleTests.cs` — good template for future
   end-to-end Section-spanning test files.
 
 ## Section 7.1 (App Execution Context and Scoped Gateways) — completed 2026-08-01
 All of `P1-EXEC-001` through `P1-EXEC-008` implemented and tested (16 new tests; 293 total solution
-tests). See `wasm2/HackerOs/docs/app-execution-context.md`. Key gotchas found:
+tests). See `wasm2/KazoOs/docs/app-execution-context.md`. Key gotchas found:
 
 - **Records with get-only properties (the standard validated-record pattern here) cannot use `with`
   expressions** — confirmed again this section on `FileSystemSelectedResourceHandle`. Always reconstruct
@@ -143,8 +143,8 @@ security policy) that ordinary user-context code should never even be able to re
 
 ## Section 9 manifest JSON Schema (`P1-BLD-001`/`P1-BLD-003`) — completed 2025-06
 `AppManifest` expanded with Presentation, OsCompatibility, Localizations, Resources, Settings,
-Intents, Assets, Update, AutoStart (7 new files in `Shared/HackerOs.App.Abstractions/`). Draft
-2020-12 schema at `Shared/HackerOs.App.Abstractions/Schema/manifest.schema.v1.json`, embedded as a
+Intents, Assets, Update, AutoStart (7 new files in `Shared/Kazo.Os.App.Abstractions/`). Draft
+2020-12 schema at `Shared/Kazo.Os.App.Abstractions/Schema/manifest.schema.v1.json`, embedded as a
 resource (`ManifestSchemaResource.LoadCurrentSchemaJson()`), fixtures in `Schema/Fixtures/`. 334
 total solution tests (up from 322). See `docs/build-profile.md`. Key gotchas:
 
@@ -167,12 +167,12 @@ total solution tests (up from 322). See `docs/build-profile.md`. Key gotchas:
   Anything expressible declaratively (shape, enum membership, `additionalProperties: false`, app-kind
   conditionals via `allOf`/`if`/`then`) goes in the schema; cross-field business rules (e.g. "icon path must
   reference a declared asset") stay in the C# validator. `JsonSchema.Net` (NuGet) is the library used, scoped
-  only to `HackerOs.App.Abstractions.Tests` — do not add JSON-schema packages to shipping projects.
+  only to `Kazo.Os.App.Abstractions.Tests` — do not add JSON-schema packages to shipping projects.
 - **sha256 placeholder fixture strings are easy to miscount by hand** — always verify hex-string fixture
   lengths programmatically (e.g. `$json.field.Length` in PowerShell) rather than eyeballing repeated `0`
   characters; a 62-vs-64-char mistake silently fails schema pattern validation with a confusing message.
 - **Test fixtures are read directly from source (not copied to output)** — `ManifestSchemaConformanceTests`
-  walks up from `AppContext.BaseDirectory` to find `HackerOs.sln`, then combines with the known relative path
+  walks up from `AppContext.BaseDirectory` to find `Kazo.Os.sln`, then combines with the known relative path
   to `Schema/Fixtures`. This avoids any MSBuild content-copy wiring; reuse this pattern for any future
   test needing fixture files that live outside the test project.
 
@@ -191,7 +191,7 @@ try to force it complete before Phase 2 starts. Key reusable notes for future ga
   </PropertyGroup>
   ```
   Combined with the solution-wide `TreatWarningsAsErrors=true`, this turns IL2026/IL2072/etc into
-  Release build errors immediately (`dotnet build HackerOs.sln -c Release --no-incremental`) — no
+  Release build errors immediately (`dotnet build Kazo.Os.sln -c Release --no-incremental`) — no
   need to wait for an actual WASM publish step to catch trim-unsafe reflection.
 - **How the 3 real warnings this surfaced were fixed (not suppressed-and-forgotten):**
   `AppEntryPointDiscovery.Discover` (calls `Assembly.GetType(string, bool)` by manifest-declared
@@ -206,7 +206,7 @@ try to force it complete before Phase 2 starts. Key reusable notes for future ga
   trim root descriptors. Test projects are excluded from the analyzer, so test code calling
   `Discover` does not need to itself carry `[RequiresUnreferencedCode]`.
 - **Reusable end-to-end integration test template:** see
-  `Tests/HackerOs.Platform.Core.Tests/HeadlessKernelIntegrationTests.cs` for a template covering
+  `Tests/Kazo.Os.Platform.Core.Tests/HeadlessKernelIntegrationTests.cs` for a template covering
   boot → login → home seed → capability grant → discovery → launch (Terminal + Service) → real FS
   create/write/read through scoped gateways → settings read → `StopAllAsync(Shutdown)` → `DisableAsync`
   → `LogoutAsync`, asserting audit log entries. **Important ordering lesson:** call
@@ -215,17 +215,17 @@ try to force it complete before Phase 2 starts. Key reusable notes for future ga
   cancellation cascade racing with cooperative service shutdown is not guaranteed to have completed
   by the time a synchronous assertion runs right after `LogoutAsync()` returns.
 
-## `P2-IDB-002` complete (2026-08-02) — new `HackerOs.Infrastructure.Browser` project
-Created `Infrastructure/HackerOs.Infrastructure.Browser/` (added to `HackerOs.sln`
+## `P2-IDB-002` complete (2026-08-02) — new `Kazo.Os.Infrastructure.Browser` project
+Created `Infrastructure/Kazo.Os.Infrastructure.Browser/` (added to `Kazo.Os.sln`
 via `dotnet sln add`, no ProjectReferences yet — schema is self-contained) plus
-`Tests/HackerOs.Infrastructure.Browser.Tests/`. Schema lives in
+`Tests/Kazo.Os.Infrastructure.Browser.Tests/`. Schema lives in
 `Schema/IndexedDbSchemaModel.cs` (validated `IndexedDbIndexDefinition`/
 `IndexedDbObjectStoreDefinition`/`IndexedDbTransactionBoundary` records, same
 explicit-constructor-with-validation pattern as `FileSystemEntryMetadata`) and
-`Schema/HackerOsIndexedDbSchema.cs` (static class: `DatabaseName="hackeros"`,
+`Schema/KazoOsIndexedDbSchema.cs` (static class: `DatabaseName="kazoos"`,
 `CurrentVersion=1`, 11 stores, 10 transaction boundaries). Solution is now 357
 tests (was 344; +13). Key facts for the next `P2-IDB-*` session:
-- Store name constants are on `HackerOsIndexedDbSchema` (e.g. `UserStoreName`,
+- Store name constants are on `KazoOsIndexedDbSchema` (e.g. `UserStoreName`,
   `GrantStoreName`) — reference those constants, don't re-type string literals.
 - `fsContent`'s key path (currently just `["entryId"]`) is EXPLICITLY provisional
   pending `P2-IDB-003`/`D-009` (chunking/hashing/dedup) — expect to revise it,
@@ -246,7 +246,7 @@ tests (was 344; +13). Key facts for the next `P2-IDB-*` session:
 ADR 0015 (`docs/adr/0015-browser-storage-and-indexeddb-adapter.md`) resolves D-008:
 supported browsers = Chromium 89+/Firefox 90+/Safari 15+ (evergreen only); IndexedDB
 adapter = hand-written minimal collocated JS module(s) under
-`Infrastructure/HackerOs.Infrastructure.Browser/wwwroot/` with batched
+`Infrastructure/Kazo.Os.Infrastructure.Browser/wwwroot/` with batched
 transaction-oriented primitives (mirrors the ADR 0009 `WindowChrome.razor.js`
 isolation precedent), NOT a third-party IndexedDB NuGet package; C# owns schema
 version/migration ordering. Dedicated doc: `docs/browser-storage.md`. Solution
@@ -259,11 +259,11 @@ through P1-ADR-007). Only phase-GATE approval (section 0.4) requires explicit
 user sign-off, not each individual ADR. Next open Phase 2A decision task in file
 order is `P2-UI-001` (MudBlazor version/usage boundary, ADR 0016, `D-013`) in
 section 10.1, then `P2-IDB-002` (needs the ADR 0015 decision just made).
-`Infrastructure/HackerOs.Infrastructure.Browser/` project does not exist yet —
+`Infrastructure/Kazo.Os.Infrastructure.Browser/` project does not exist yet —
 create it as part of `P2-IDB-002` onward, not before.
 
 ## `AppEnablementRegistry` mutators (`MarkDisabled`/`MarkEnabled`) are `public`, not `internal`
-No `InternalsVisibleTo` is declared between `HackerOs.Platform.Core` and its Tests project, so any
+No `InternalsVisibleTo` is declared between `Kazo.Os.Platform.Core` and its Tests project, so any
 `internal` member on a concrete class (as opposed to on `IAppEnablementRegistry`, the public read-only
 interface) is invisible to test fixtures in a separate project. `AppEnablementRegistry.MarkDisabled`/
 `MarkEnabled` were deliberately made `public` on the concrete class (while `IAppEnablementRegistry` itself

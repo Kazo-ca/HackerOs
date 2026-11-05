@@ -69,7 +69,7 @@ l'inscription de toutes les entrées de l'app (rien de partiel).
 ### 3. Inscription à l'installation
 
 1. **Apps intégrées** : le générateur de manifeste
-   (`HackerOs.Tools.ManifestGenerator`) appelle la méthode **au build** et
+   (`Kazo.Os.Tools.ManifestGenerator`) appelle la méthode **au build** et
    écrit le résultat dans `manifest.json` (propriété facultative
    `contextMenus`, omise sans entrée) et `BuiltInApplications.json`. Le
    schéma, la liste blanche de `AppManifestJsonSerializer`, le canonique de

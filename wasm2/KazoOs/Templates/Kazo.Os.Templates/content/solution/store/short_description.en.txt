@@ -1,0 +1,1 @@
+A Kazo OS window app made with the kazoos-solution template.

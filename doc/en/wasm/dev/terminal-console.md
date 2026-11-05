@@ -8,7 +8,7 @@ Work item `rebuild/4-terminal` of phase 4 (ADR 0058, section 4). The console
 reaches parity with a Linux terminal:
 
 - **Tab also completes paths**, and it is the shell that does it
-  (`IHackShell.CompleteAsync`), not the terminal emulator;
+  (`IKazoShell.CompleteAsync`), not the terminal emulator;
 - **`exit [n]`** is a catalog command that ends the shell;
 - **several tabs**, each with its own `hsh` shell.
 
@@ -26,7 +26,7 @@ in [`terminal-emulator.md`](terminal-emulator.md) (ADR 0061).
 
 Computed by `ShellCompletion` (Platform Core) in the shell's execution context:
 a relative path starts from the **shell's** directory, and reading the folder
-goes through the public `HackDirectoryInfo` API with the shell's permissions,
+goes through the public `KazoDirectoryInfo` API with the shell's permissions,
 like an `ls` it would launch.
 
 | Word under the cursor | Candidates |
@@ -50,7 +50,7 @@ Path rules:
 - a missing or unreadable folder (permissions, capability) offers nothing,
   without an error.
 
-`HackShellCompletion.DisplayCandidates` gives what the terminal lists on the
+`KazoShellCompletion.DisplayCandidates` gives what the terminal lists on the
 second Tab: the last segment, without its escapes (`My Notes.txt`, `sub/`),
 like `bash`.
 
@@ -64,11 +64,11 @@ like `bash`.
 | `exit 1 2` | `exit: too many arguments`, code `1`, the shell stays. |
 | `exit 4 \| cat` | In a pipe, the request reaches a copy of the shell and is lost, like `bash`'s subshell. |
 
-The command (`org.hackeros.commands.exit`, capability `shell.control`) calls
+The command (`org.kazoos.commands.exit`, capability `shell.control`) calls
 `IShellSession.Exit(int?)`. `ShellSession.RequestExit` notes the status; the
 interpreter does not execute the rest of the line (`exit 0 && echo late` prints
 nothing), then the shell host (`ShellHostService`) ends the `hsh` process with
-that status. `IHackShell.HasExited` becomes true and `ExecuteAsync` then throws
+that status. `IKazoShell.HasExited` becomes true and `ExecuteAsync` then throws
 `ObjectDisposedException`.
 
 **Ctrl+D** on an empty line, with no command running, does the same thing: the
@@ -77,12 +77,12 @@ terminal prints `exit` and ends the shell with `$?`.
 `TerminalPanel.OnExitRequested` is called when the shell has exited. Without a
 subscriber, the panel stays open and prints `[hsh exited with status n]`. A
 host that embeds the terminal by contract (ADR 0063) also receives the
-`IHackTerminal.Exited` event: the code editor closes the integrated terminal's
+`IKazoTerminal.Exited` event: the code editor closes the integrated terminal's
 tab, and hides the dock for the last one.
 
 ## Tabs
 
-`TerminalTabs` (`Shared/HackerOs.AppSdk.Terminal`) is a reusable component:
+`TerminalTabs` (`Shared/Kazo.Os.AppSdk.Terminal`) is a reusable component:
 each tab is a `TerminalPanel`, hence a distinct `hsh` with its directory,
 environment, history and `$?`. The Terminal window is now only a host of
 `TerminalTabs`.
@@ -131,21 +131,21 @@ up to `TerminalTabs`.
   window" API, and the desktop already closes the window of a stopped process.
 - **CodeEditor keeps its own tabs** (ADR 0058); since ADR 0063, each embeds the
   Terminal app's terminal by contract, and the editor reacts to `exit` through
-  `IHackTerminal.Exited`.
+  `IKazoTerminal.Exited`.
 - **`;` is not recognized by the parser**: completion treats it as a separator
   to be ready, but the examples use `&&`.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Shell/ShellInterpreterTests.HostedShell.cs`:
+- `Tests/Kazo.Os.Platform.Core.Tests/Shell/ShellInterpreterTests.HostedShell.cs`:
   paths (relative, `~`, `../`, absolute, escapes, hidden, redirections, `./`,
   missing folder, case), shell directory, unreadable folder,
   `DisplayCandidates`, `exit` (statuses, modulo, non-numeric, end of process,
   rest of the line, pipe, too many arguments, `$?`).
-- `Tests/HackerOs.Commands.Tests/CoreCommandsTests.cs`: `ExitCommand`.
-- `Tests/HackerOs.AppSdk.Terminal.Tests/TerminalTabSetTests.cs`: order,
+- `Tests/Kazo.Os.Commands.Tests/CoreCommandsTests.cs`: `ExitCommand`.
+- `Tests/Kazo.Os.AppSdk.Terminal.Tests/TerminalTabSetTests.cs`: order,
   closing, tab switching.
-- `Tests/HackerOs.Ecosystem.Tests/BuildKnownLazyAppsTests.cs`: `exit` in the
+- `Tests/Kazo.Os.Ecosystem.Tests/BuildKnownLazyAppsTests.cs`: `exit` in the
   catalog (75 apps, 63 commands since `stress`, ADR 0070).
 - Verification in the browser (Release publication): `cd pro` + Tab →
   `cd projets/`, second Tab lists `alpha/  notes.txt`, focus stays on the line,
@@ -155,9 +155,9 @@ up to `TerminalTabs`.
 ## Task list for work item `rebuild/4-terminal`
 
 - [x] Path completion in `ShellCompletion`, with the shell's permissions and directory.
-- [x] `HackShellCompletion.DisplayCandidates`, short list on the second Tab.
+- [x] `KazoShellCompletion.DisplayCandidates`, short list on the second Tab.
 - [x] `IShellSession.Exit`, `ShellSession.RequestExit`, stop of the line, end of the `hsh` process.
-- [x] `exit [n]` command in `HackerOs.Commands`.
+- [x] `exit [n]` command in `Kazo.Os.Commands`.
 - [x] `TerminalTabs`, `TerminalTabSet`, shortcuts, tab titles; Terminal window on `TerminalTabs`, closed with the last tab.
 - [x] Ctrl+D ends the shell; Tab no longer moves focus.
 - [x] CodeEditor closes the tab whose shell exits.

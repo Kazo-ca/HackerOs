@@ -1,0 +1,24 @@
+/* ADR 0216 §5: the moon of the taskbar's notification area, styled like the server icon. */
+.dnd-indicator {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--kos-taskbar-button-height, 2.1rem);
+    height: var(--kos-taskbar-button-height, 2.1rem);
+    padding: 0;
+    border: var(--kos-taskbar-button-border, 1px solid var(--kos-border-subtle, #212c32));
+    border-radius: var(--kos-taskbar-button-radius, 0.25rem);
+    background: var(--kos-taskbar-button-background, var(--kos-bg-base, #101417));
+    color: var(--kos-info, #5fb4e6);
+    cursor: pointer;
+}
+
+.dnd-indicator:hover {
+    border-color: var(--kos-border, #34444c);
+    background: var(--kos-bg-elevated, #172025);
+}
+
+.dnd-indicator:focus-visible {
+    outline: 2px solid var(--kos-focus-ring, var(--kos-accent, #42d392));
+    outline-offset: 1px;
+}

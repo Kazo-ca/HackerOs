@@ -4,10 +4,10 @@
 
 ## Objet
 
-Décrit le compte invité de HackerOS : essayer l'OS sans créer de compte, puis
+Décrit le compte invité de Kazo OS : essayer l'OS sans créer de compte, puis
 créer son propre compte en gardant ou non le travail de l'invité. Décision :
 [ADR 0187](adr/0187-guest-start-and-sign-in-credits.md), partie A. Suivi :
-[issue #243](https://github.com/Kazo-ca/HackerOs/issues/243).
+[issue #243](https://github.com/Kazo-ca/Os/issues/243).
 
 ## Pour l'utilisateur
 
@@ -49,7 +49,7 @@ créer son propre compte en gardant ou non le travail de l'invité. Décision :
 | `GuestAccountService` | `Platform.Core/Sessions` | `CanCreateAsync` (aucun compte), `CreateAsync` (compte `guest`, groupe `guest` + `administrators`, sans mot de passe), `FindLoneGuestAsync`, `MigrateAsync`, `ReplaceAsync`. |
 | `AdminElevationVerifier` | `Platform.Core/Elevation` | Accepte un mot de passe vide seulement pour l'invité seul, sans mot de passe et actif ; `CanConfirmWithoutPasswordAsync` fait afficher **Confirmer** par les fenêtres de l'agent. |
 | `GuestAccountRequests` | `Platform.Core/Sessions` | Une app demande le formulaire à l'hôte (`CreateAccountRequested`) ; l'hôte possède le formulaire, l'app ne voit jamais le mot de passe. |
-| `HackUserAccounts.RequestGuestAccountCreationAsync` | SDK | Utilisée par Paramètres ▸ Utilisateurs ; acceptée seulement pour la session de l'invité. `HackUserAccount.IsGuest` marque l'invité dans la liste. |
+| `KazoUserAccounts.RequestGuestAccountCreationAsync` | SDK | Utilisée par Paramètres ▸ Utilisateurs ; acceptée seulement pour la session de l'invité. `KazoUserAccount.IsGuest` marque l'invité dans la liste. |
 | `App.razor` | `Ecosystem.Host` | Boutons invité, formulaire « Créer mon compte », fermeture de la session invité à la demande de Paramètres. |
 | `AppLauncher` | `Platform.Blazor/Shell` | Rappel dans la tuile utilisateur (`OnCreateAccount`), qui ouvre `--page=users`. |
 
@@ -58,7 +58,7 @@ créer son propre compte en gardant ou non le travail de l'invité. Décision :
 `MigrateAsync` fait l'équivalent de `usermod -l NOUVEAU -d /home/NOUVEAU -m`,
 `groupmod -n NOUVEAU guest` puis `passwd NOUVEAU` :
 
-1. vérifie le formulaire (`HackUserAccounts.ValidateNewAccount`), le nom
+1. vérifie le formulaire (`KazoUserAccounts.ValidateNewAccount`), le nom
    réservé ou déjà pris, et refuse si la session de l'invité est ouverte ;
 2. **copie** `/home/guest` vers `/home/<login>` au nom du nouveau login, en
    gardant le mode de chaque entrée. Les chemins `/home/guest` des fichiers

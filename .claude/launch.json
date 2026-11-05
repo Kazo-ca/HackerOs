@@ -2,33 +2,33 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "hackeros-test-harness",
+      "name": "kazoos-test-harness",
       "runtimeExecutable": "dotnet",
-      "runtimeArgs": ["run", "--configuration", "Release", "--project", "wasm2/HackerOs/test/test/test.csproj", "--urls", "http://127.0.0.1:5251"],
+      "runtimeArgs": ["run", "--configuration", "Release", "--project", "wasm2/KazoOs/test/test/test.csproj", "--urls", "http://127.0.0.1:5251"],
       "port": 5251
     },
     {
-      "name": "hackeros-browser-harness",
+      "name": "kazoos-browser-harness",
       "runtimeExecutable": "dotnet",
-      "runtimeArgs": ["run", "--project", "wasm2/HackerOs/Tests/HackerOs.BrowserHarness.Tests/HackerOs.BrowserHarness.Tests.csproj", "--urls", "http://127.0.0.1:5253"],
+      "runtimeArgs": ["run", "--project", "wasm2/KazoOs/Tests/Kazo.Os.BrowserHarness.Tests/Kazo.Os.BrowserHarness.Tests.csproj", "--urls", "http://127.0.0.1:5253"],
       "port": 5253
     },
     {
-      "name": "hackeros-windowing-sample-host",
+      "name": "kazoos-windowing-sample-host",
       "runtimeExecutable": "dotnet",
-      "runtimeArgs": ["run", "--project", "wasm2/HackerOs/Samples/HackerOs.Windowing.SampleHost/HackerOs.Windowing.SampleHost.csproj", "--urls", "http://127.0.0.1:5254"],
+      "runtimeArgs": ["run", "--project", "wasm2/KazoOs/Samples/Kazo.Os.Windowing.SampleHost/Kazo.Os.Windowing.SampleHost.csproj", "--urls", "http://127.0.0.1:5254"],
       "port": 5254
     },
     {
-      "name": "hackeros-server",
+      "name": "kazoos-server",
       "runtimeExecutable": "dotnet",
-      "runtimeArgs": ["run", "--project", "wasm2/HackerOs/Server/HackerOs.Server/HackerOs.Server.csproj", "--urls", "http://127.0.0.1:5255"],
+      "runtimeArgs": ["run", "--project", "wasm2/KazoOs/Server/Kazo.Os.Server/Kazo.Os.Server.csproj", "--urls", "http://127.0.0.1:5255"],
       "port": 5255
     },
     {
-      "name": "hackeros-ecosystem",
+      "name": "kazoos-ecosystem",
       "runtimeExecutable": "dotnet",
-      "runtimeArgs": ["run", "--project", "wasm2/HackerOs/OS/HackerOs.Ecosystem/HackerOs.Ecosystem.csproj", "--urls", "http://127.0.0.1:5256"],
+      "runtimeArgs": ["run", "--project", "wasm2/KazoOs/OS/Kazo.Os.Ecosystem/Kazo.Os.Ecosystem.csproj", "--urls", "http://127.0.0.1:5256"],
       "port": 5256
     }
   ]

@@ -48,7 +48,7 @@ qui ne permet pas de poser des en-têtes, et hors ligne.
   ajoute les en-têtes aux réponses qu'il sert, navigation comprise ; au premier
   chargement sans service worker actif, la page s'enregistre puis se recharge
   **une fois**. Cela marche hors ligne et sur un hébergement statique.
-- **`test/test` et `HackerOs.Server`** : un intergiciel pose les mêmes en-têtes
+- **`test/test` et `Kazo.Os.Server`** : un intergiciel pose les mêmes en-têtes
   (le service worker reste, comme pour l'Ecosystem servi par le serveur, ADR
   0130).
 - `off` : aucun en-tête, et le service worker n'en ajoute pas.

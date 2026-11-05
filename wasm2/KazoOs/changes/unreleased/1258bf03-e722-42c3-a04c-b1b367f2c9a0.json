@@ -1,0 +1,18 @@
+{
+  "id": "1258bf03-e722-42c3-a04c-b1b367f2c9a0",
+  "category": "improved",
+  "audience": [
+    "user"
+  ],
+  "title": {
+    "en": "Kazo OS now lives at os.kazo.ca",
+    "fr": "Kazo OS habite maintenant os.kazo.ca"
+  },
+  "description": {
+    "en": "The site is published at https://os.kazo.ca/ and the original version at https://os.kazo.ca/legacy/. Links in the project point to the new address.",
+    "fr": "Le site est publié sur https://os.kazo.ca/ et la version d'origine sur https://os.kazo.ca/legacy/. Les liens du projet pointent vers la nouvelle adresse."
+  },
+  "links": [
+    "doc/en/wasm/dev/github-pages-deployment.md"
+  ]
+}

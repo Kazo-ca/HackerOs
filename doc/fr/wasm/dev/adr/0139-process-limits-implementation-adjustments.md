@@ -134,7 +134,7 @@ message.
 - `/proc/<pid>/limits` gagne la ligne
   `# enforcement: off (HackerOs:ResourceLimits:Enabled=false)` quand l'hôte a
   coupé les limites.
-- Chaque hôte qui compose l'OS (l'Ecosystem et `test/test` ; `HackerOs.Server`
+- Chaque hôte qui compose l'OS (l'Ecosystem et `test/test` ; `Kazo.Os.Server`
   sert l'Ecosystem depuis l'ADR 0130) lit le réglage par
   `AddHackerOsResourceLimits(configuration)`, avant `AddHackerOsEcosystem`.
 

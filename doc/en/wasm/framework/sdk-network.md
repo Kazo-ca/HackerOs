@@ -11,8 +11,8 @@ exist there, the real network through the optional server's proxy, when it is al
 possible. The app sees neither the access token, nor the server address, nor even
 whether a server exists.
 
-This document describes the `HackDns`, `HackPing`, `HackHttpClient` and
-`HackTcpClient` facades, the `IAppNetworkGateway` gateway that carries them and its
+This document describes the `KazoDns`, `KazoPing`, `KazoHttpClient` and
+`KazoTcpClient` facades, the `IAppNetworkGateway` gateway that carries them and its
 `AppNetworkGateway` implementation in Platform Core. It was written by the
 work item `rebuild/4-sdk-network` (ADR 0058).
 
@@ -20,8 +20,8 @@ work item `rebuild/4-sdk-network` (ADR 0058).
 
 ```text
 App (Browser, ping, curl, cat, nmap)
-  └─ HackDns / HackPing / HackHttpClient / HackTcpClient     (HackerOs.AppSdk.Net)
-       └─ HackExecutionContext.Current.Network : IAppNetworkGateway
+  └─ KazoDns / KazoPing / KazoHttpClient / KazoTcpClient     (Kazo.Os.AppSdk.Net)
+       └─ KazoExecutionContext.Current.Network : IAppNetworkGateway
             └─ AppNetworkGateway                             (Platform.Core/Network)
                  ├─ capacité (ICapabilityChecker de l'instance)
                  ├─ ISimulatedNetworkService                 (toujours essayé en premier)
@@ -31,10 +31,10 @@ App (Browser, ping, curl, cat, nmap)
 
 | Type | Project | Role |
 |---|---|---|
-| `IAppNetworkGateway` | `HackerOs.AppSdk` (`Net/`) | Instance gateway: `ResolveAsync`, `ReverseLookupAsync`, `PingAsync`, `SendAsync`, `ProbeTcpAsync`, `DetectOperatingSystemAsync`. Network failures are a result (`HackNetworkResult<T>`, `HackNetworkError`), never an exception. |
-| `IAppExecutionContext.Network` | `HackerOs.AppSdk` | Member with a "not supported" default implementation, so that existing contexts compile. |
-| `HackDns`, `HackPing`, `HackHttpClient`, `HackCookieContainer`, `HackTcpClient` | `HackerOs.AppSdk` (`Net/`) | Facades modeled on `System.Net`: they read the ambient context (ADR 0043) and throw .NET exceptions. |
-| `AppNetworkGateway` | `HackerOs.Platform.Core` (`Network/`) | Trusted implementation: capabilities, simulated network, real fallback decision, server token. Built by `AppExecutionContextFactory` for each instance. |
+| `IAppNetworkGateway` | `Kazo.Os.AppSdk` (`Net/`) | Instance gateway: `ResolveAsync`, `ReverseLookupAsync`, `PingAsync`, `SendAsync`, `ProbeTcpAsync`, `DetectOperatingSystemAsync`. Network failures are a result (`KazoNetworkResult<T>`, `KazoNetworkError`), never an exception. |
+| `IAppExecutionContext.Network` | `Kazo.Os.AppSdk` | Member with a "not supported" default implementation, so that existing contexts compile. |
+| `KazoDns`, `KazoPing`, `KazoHttpClient`, `KazoCookieContainer`, `KazoTcpClient` | `Kazo.Os.AppSdk` (`Net/`) | Facades modeled on `System.Net`: they read the ambient context (ADR 0043) and throw .NET exceptions. |
+| `AppNetworkGateway` | `Kazo.Os.Platform.Core` (`Network/`) | Trusted implementation: capabilities, simulated network, real fallback decision, server token. Built by `AppExecutionContextFactory` for each instance. |
 
 `AppExecutionContextFactory` receives `ISimulatedNetworkService`,
 `IServerConnectionService` and `IProxyClient` (optional parameters). Without a simulated
@@ -42,7 +42,7 @@ network, `Network` throws `NotSupportedException`; without a server or proxy, th
 fallback is simply absent.
 
 Since `web/3-listener-dns`, `AppNetworkGateway` first goes through the
-local `hackdns` resolver (`/etc/hosts`, loopback, web apps, hosted sites):
+local `kazodns` resolver (`/etc/hosts`, loopback, web apps, hosted sites):
 a local target is served by the OS port table, on `lo`, and a `.hack`
 name is never relayed to the real network. See
 [`listening-ports-and-dns.md`](listening-ports-and-dns.md).
@@ -54,7 +54,7 @@ name is never relayed to the real network. See
 | DNS, ping, `GET`, `HEAD`, port probing, OS detection | `network.simulated.read` (normal) | `UnauthorizedAccessException` (internal: `AppGatewayAccessDeniedException`) |
 | `POST` and any other HTTP method, TCP or UDP socket (`ConnectAsync`) | `network.simulated.write` (normal) | same |
 | Fallback to the real network | `network.real.access` (dangerous), also checked by the server (ADR 0102 §4) | no fallback: "host not found" |
-| Listen on a port (`HackHttpListener`) outside its `web.urls` | `network.listen` (normal), plus `network.listen.privileged` (dangerous) below 1024 | `UnauthorizedAccessException` |
+| Listen on a port (`KazoHttpListener`) outside its `web.urls` | `network.listen` (normal), plus `network.listen.privileged` (dangerous) below 1024 | `UnauthorizedAccessException` |
 
 Classifications are unchanged (ADR 0049). A system app receives its capabilities
 automatically.
@@ -62,21 +62,21 @@ automatically.
 ## Usage
 
 ```csharp
-IPAddress[] ips = await HackDns.GetHostAddressesAsync("hackmail.com");      // SocketException(HostNotFound) si inconnu
-HackHostEntry entry = await HackDns.GetHostEntryAsync(IPAddress.Parse("192.168.1.90"));
+IPAddress[] ips = await KazoDns.GetHostAddressesAsync("hackmail.com");      // SocketException(HostNotFound) si inconnu
+KazoHostEntry entry = await KazoDns.GetHostEntryAsync(IPAddress.Parse("192.168.1.90"));
 
-HackPingReply reply = await HackPing.SendAsync("hackersearch.net");          // HackPingException si le nom ne résout pas
+KazoPingReply reply = await KazoPing.SendAsync("hackersearch.net");          // KazoPingException si le nom ne résout pas
 // reply.Status : Success, DestinationHostUnreachable, TimedOut ; reply.RoundtripTime : TimeSpan
 
-using HackHttpClient http = new(cookies);                                    // HackCookieContainer gardé par l'app
-HackHttpResponse page = await http.GetAsync("https://hackmail.com/inbox");
-HackHttpResponse login = await http.PostAsync("https://hackmail.com/login", [new("username", "agent")]);
-HackHttpResponse put = await http.PutAsync("https://api.hack/items/7", HackJsonContent.FromJson("{\"done\":true}"));
+using KazoHttpClient http = new(cookies);                                    // KazoCookieContainer gardé par l'app
+KazoHttpResponse page = await http.GetAsync("https://hackmail.com/inbox");
+KazoHttpResponse login = await http.PostAsync("https://hackmail.com/login", [new("username", "agent")]);
+KazoHttpResponse put = await http.PutAsync("https://api.hack/items/7", KazoJsonContent.FromJson("{\"done\":true}"));
 // page.StatusCode, ReasonPhrase, RequestUri (finale), Headers, ContentType, Content (texte),
 // ContentBytes (octets), Page (site historique), RedirectCount — corps HTTP : http-bodies.md
 
-IReadOnlyList<HackPortProbeResult> ports = await HackTcpClient.ProbeAsync("10.0.0.5", 1, 1024);
-HackOsFingerprint? os = await HackTcpClient.DetectOperatingSystemAsync("10.0.0.5");
+IReadOnlyList<KazoPortProbeResult> ports = await KazoTcpClient.ProbeAsync("10.0.0.5", 1, 1024);
+KazoOsFingerprint? os = await KazoTcpClient.DetectOperatingSystemAsync("10.0.0.5");
 ```
 
 HTTP behavior:
@@ -85,17 +85,17 @@ HTTP behavior:
   302 continues as `GET`, 303 turns any method except `HEAD` into `GET`, 307 and
   308 keep the method and the body, like a browser and `HttpClient`
   (ADR 0074 §1, [`http-bodies.md`](http-bodies.md));
-- cookies set along the way are stored in the client's `HackCookieContainer`
+- cookies set along the way are stored in the client's `KazoCookieContainer`
   (the browser has one per window); a `Cookie` header put in
   `DefaultRequestHeaders` is sent along with them (it wins over a cookie of the same
   name), for the requested host only, and is never stored (ADR 0089);
 - an error status (404, 500) is a response, not an exception;
   `EnsureSuccessStatusCode` and `GetStringAsync` throw `HttpRequestException`;
 - no response (unknown host, host down, too many redirects) throws
-  `HackHttpRequestException`, which inherits from `HttpRequestException` and carries
+  `KazoHttpRequestException`, which inherits from `HttpRequestException` and carries
   `NetworkError` and `ErrorCode` (`ERR_NAME_NOT_RESOLVED`..., displayed by the
   browser);
-- every method carries a typed body (`HackHttpContent`) and every response returns
+- every method carries a typed body (`KazoHttpContent`) and every response returns
   its bytes with their `Content-Type` ([`http-bodies.md`](http-bodies.md));
 - the body of a historical site's page is its text rendering
   (`SimulatedPageTextFormatter`, `text/plain`), the one `curl` and
@@ -113,10 +113,10 @@ server also checks agreement on its side and relays:
 |---|---|
 | `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `OPTIONS`... | proxy request with the request body (size and hash checked) and the response body |
 | `HEAD` | proxy request without a response body |
-| `HackPing.SendAsync` | timed `HEAD`: a browser cannot send ICMP; `Address` is `null` |
-| `HackTcpClient.ProbeAsync` on **a single** port | proxy TCP probe (ADR 0035); a range is never relayed |
-| `HackTcpClient.ConnectAsync` | TCP stream over WebSocket (`HackNetworkStream`) |
-| `HackUdpClient.ConnectAsync` | UDP datagrams over WebSocket |
+| `KazoPing.SendAsync` | timed `HEAD`: a browser cannot send ICMP; `Address` is `null` |
+| `KazoTcpClient.ProbeAsync` on **a single** port | proxy TCP probe (ADR 0035); a range is never relayed |
+| `KazoTcpClient.ConnectAsync` | TCP stream over WebSocket (`KazoNetworkStream`) |
+| `KazoUdpClient.ConnectAsync` | UDP datagrams over WebSocket |
 | DNS, OS detection | never: "host not found" |
 
 For HTTP, a proxy error becomes the error a browser would show
@@ -134,13 +134,13 @@ gateway.
 
 - The OS asks the server **not to follow** redirects
   (`ProxyHttpRequest.FollowRedirects = false`) and follows the hops itself, as
-  for the simulated network: each hop sends the `HackCookieContainer` cookies of
+  for the simulated network: each hop sends the `KazoCookieContainer` cookies of
   the host and stores the `Set-Cookie` headers of the response.
 - A `Set-Cookie` with `Domain=example.com` is stored under the key
   `.example.com` and sent to that domain and its subdomains
-  (`HackCookieContainer.DomainMatches`). `Max-Age=0` or an `Expires` in the past
+  (`KazoCookieContainer.DomainMatches`). `Max-Age=0` or an `Expires` in the past
   deletes it; `Path`, `Secure`, `HttpOnly` and `SameSite` are not kept.
-- `HackHttpResponse.Source` tells where the final response came from:
+- `KazoHttpResponse.Source` tells where the final response came from:
   `Simulated`, `LocalSite` (a site of this machine) or `RealNetwork` (relay). It
   says nothing about the server nor its token.
 - `HttpProxyClient` keeps at most 6 relay calls in flight for the whole OS and
@@ -148,40 +148,40 @@ gateway.
 
 ### TCP and UDP sockets
 
-`HackTcpClient.ConnectAsync(host, port)` returns a `HackNetworkStream`
+`KazoTcpClient.ConnectAsync(host, port)` returns a `KazoNetworkStream`
 (`ReadAsync`, `WriteAsync`, `RemoteEndPoint`, `0` read when the target has closed);
-`HackUdpClient.ConnectAsync(host, port)` returns a "connected" UDP socket
-(`SendAsync`, `ReceiveAsync` → `HackUdpReceiveResult`, 65,507 bytes at
+`KazoUdpClient.ConnectAsync(host, port)` returns a "connected" UDP socket
+(`SendAsync`, `ReceiveAsync` → `KazoUdpReceiveResult`, 65,507 bytes at
 most). Both require `network.simulated.write`. The simulated network has no
 raw streams: a host it knows, or this machine, refuses the connection.
 Synchronous calls throw `NotSupportedException`.
 
 ## Migrated apps
 
-- **Browser**: no more injection; `HackHttpClient` and one `HackCookieContainer`
+- **Browser**: no more injection; `KazoHttpClient` and one `KazoCookieContainer`
   per window. A login (redirected `POST` form) lands directly
   on the target page. Since `web/4-browser-html` (ADR 0075), the browser
   renders HTML in an isolated iframe and relays `fetch`, XHR, links,
   forms and `document.cookie` through this same client; `document.cookie`
-  deletes an expired cookie with `HackCookieContainer.Remove`; details in
+  deletes an expired cookie with `KazoCookieContainer.Remove`; details in
   [`browser-html-rendering.md`](../dev/browser-html-rendering.md).
-- **`ping`**: four `HackPing.SendAsync`, statistics computed over the
+- **`ping`**: four `KazoPing.SendAsync`, statistics computed over the
   replies received (min/avg/max/deviation).
-- **`curl`**: `HackHttpClient.SendAsync`; `-I` sends a `HEAD` and displays
+- **`curl`**: `KazoHttpClient.SendAsync`; `-I` sends a `HEAD` and displays
   the headers; `-d` now follows the redirect, like `curl -L` (`-L`
   already had no effect). Since `web/2-http-bodies` (ADR 0074 §1), `curl`
   writes the raw body, sends `-d`/`--json` as is and, like the real
   `curl`, fails (code 22, no body) on a status ≥ 400 only with `-f`;
   details in [`http-bodies.md`](http-bodies.md).
-- **`cat <url>`**: `HackHttpClient.GetAsync`, same rendering as `curl`.
-- **`nmap`**: `HackDns` for the address, `HackPing` for host
-  discovery, `HackTcpClient` for probing and `-O`. `-p 80` and `-p 80-80` are
+- **`cat <url>`**: `KazoHttpClient.GetAsync`, same rendering as `curl`.
+- **`nmap`**: `KazoDns` for the address, `KazoPing` for host
+  discovery, `KazoTcpClient` for probing and `-O`. `-p 80` and `-p 80-80` are
   equivalent for the real fallback (a single port).
 - **`cd`**: `ShellErrorText` moved from Platform Core to the SDK
-  (`HackerOs.AppSdk`, next to `IShellSession`).
+  (`Kazo.Os.AppSdk`, next to `IShellSession`).
 
-`HackerOs.Commands` no longer references `Platform.Core` or `Server.Contracts`;
-`HackerOs.Apps.Browser` and `HackerOs.Commands` left the SDK boundary
+`Kazo.Os.Commands` no longer references `Platform.Core` or `Server.Contracts`;
+`Kazo.Os.Apps.Browser` and `Kazo.Os.Commands` left the SDK boundary
 exemption list.
 
 ## Decisions
@@ -189,10 +189,10 @@ exemption list.
 - **Network failures as a result in the gateway, as .NET exceptions in the
   facades.** The gateway stays simple to test and implement; app code
   reads like .NET code (`SocketException`, `HttpRequestException`).
-- **`HackTcpClient.DetectOperatingSystemAsync`**, absent from ADR 0056:
+- **`KazoTcpClient.DetectOperatingSystemAsync`**, absent from ADR 0056:
   `nmap -O` needs it and it is a detection through the TCP/IP stack, so it belongs
   next to port probing. Simulated only.
-- **`HackPingReply.RoundtripTime` is a `TimeSpan`**, not whole milliseconds
+- **`KazoPingReply.RoundtripTime` is a `TimeSpan`**, not whole milliseconds
   like `PingReply`: simulated latencies have decimals.
 - **Ping jitter in the OS**, not in the command: ±5% of the host's latency,
   deterministic and cyclic per instance, as a real link varies.
@@ -206,12 +206,12 @@ exemption list.
 
 ## Task list for work item `rebuild/4-sdk-network`
 
-- [x] `IAppNetworkGateway`, `HackNetworkResult<T>`, `HackNetworkError` and `IAppExecutionContext.Network`.
-- [x] `HackDns`, `HackPing`, `HackHttpClient` (`HackCookieContainer`, `HackHttpResponse`, `HackHttpRequestException`), `HackTcpClient` facades.
+- [x] `IAppNetworkGateway`, `KazoNetworkResult<T>`, `KazoNetworkError` and `IAppExecutionContext.Network`.
+- [x] `KazoDns`, `KazoPing`, `KazoHttpClient` (`KazoCookieContainer`, `KazoHttpResponse`, `KazoHttpRequestException`), `KazoTcpClient` facades.
 - [x] `AppNetworkGateway` in Platform Core: capabilities, simulated network, real fallback and token handled by the OS.
 - [x] Wiring in `AppExecutionContextFactory` and the Ecosystem host.
 - [x] `ShellErrorText` moved into the SDK.
-- [x] Migration of Browser, `ping`, `curl`, `cat`, `nmap`; `HackerOs.Commands` without `Platform.Core` or `Server.Contracts`.
-- [x] Exemptions for `HackerOs.Apps.Browser` and `HackerOs.Commands` removed.
+- [x] Migration of Browser, `ping`, `curl`, `cat`, `nmap`; `Kazo.Os.Commands` without `Platform.Core` or `Server.Contracts`.
+- [x] Exemptions for `Kazo.Os.Apps.Browser` and `Kazo.Os.Commands` removed.
 - [x] Tests: commands on the real gateway, facades, capabilities, real fallback refused without `network.real.access`.
 - [x] Documentation: this document, `app-sdk.md`, `shell-interpreter.md`, index.

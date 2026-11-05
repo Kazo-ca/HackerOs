@@ -1,10 +1,10 @@
 > [English version](../../../en/wasm/framework/sdk-developer-guide.md)
 
-# Guide du développeur d'apps HackerOS
+# Guide du développeur d'apps Kazo OS
 
 ## Objet
 
-Ce guide explique comment écrire une app pour HackerOS avec le SDK public :
+Ce guide explique comment écrire une app pour Kazo OS avec le SDK public :
 une fenêtre, une commande du shell ou un service. Il part de zéro et va
 jusqu'à l'installation et aux tests. La liste complète des API est dans la
 [référence du SDK](sdk-reference.md) ; les règles de la frontière du SDK sont
@@ -20,7 +20,7 @@ section exécuté contre le code de `rebuild/base` (2026-10-11).
 | `Window` | composant Razor dérivé de `WindowAppBase` | Text Editor, File Explorer, Calculator |
 | `Terminal` | classe dérivée de `TerminalAppBase`, lancée par le shell | `ls`, `cat`, `grep`, `nano` |
 | `Service` | classe dérivée de `ServiceAppBase`, sans interface, liée à la session | services démarrés à la connexion |
-| `Web` | classe dérivée de `WebServerAppBase`, URL dans `Urls` (`web.urls`), démarrée à la première requête dans le worker `web` partagé ; avec ASP.Hack, une `WebAppDefinition` | sites internes `.hack` : [guide ASP.Hack](asp-hack-developer-guide.md), exemple Intranet |
+| `Web` | classe dérivée de `WebServerAppBase`, URL dans `Urls` (`web.urls`), démarrée à la première requête dans le worker `web` partagé ; avec ASP.Kazo, une `WebAppDefinition` | sites internes `.hack` : [guide ASP.Kazo](asp-kazo-developer-guide.md), exemple Intranet |
 
 Une app est décrite par une classe `[AppManifest]` dérivée d'`AppDefinition`.
 Le build en tire `manifest.json` ; l'OS ne lit que ce fichier, jamais la classe.
@@ -31,7 +31,7 @@ Des apps complètes servent de modèles dans `Apps/Samples/` (une par genre) et
 ## 1. Créer le projet
 
 Un projet d'app vit sous `Apps/` : c'est ce qui en fait un projet d'app
-(`HackerOsAppProject`), avec génération du manifeste et contrôle de la
+(`KazoOsAppProject`), avec génération du manifeste et contrôle de la
 frontière du SDK.
 
 `Apps/Samples/Example.Notes/Example.Notes.csproj` :
@@ -46,26 +46,26 @@ frontière du SDK.
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.13" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.14" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Shared\HackerOs.App.Abstractions\HackerOs.App.Abstractions.csproj" />
-    <ProjectReference Include="..\..\..\Shared\HackerOs.Simulation.Abstractions\HackerOs.Simulation.Abstractions.csproj" />
-    <ProjectReference Include="..\..\..\Shared\HackerOs.AppSdk\HackerOs.AppSdk.csproj" />
-    <ProjectReference Include="..\..\..\Shared\HackerOs.AppSdk.Blazor\HackerOs.AppSdk.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Kazo.Os.App.Abstractions\Kazo.Os.App.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Kazo.Os.Simulation.Abstractions\Kazo.Os.Simulation.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Kazo.Os.AppSdk\Kazo.Os.AppSdk.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Kazo.Os.AppSdk.Blazor\Kazo.Os.AppSdk.Blazor.csproj" />
   </ItemGroup>
 
 </Project>
 ```
 
 - Une commande ou un service sans interface peut utiliser
-  `Microsoft.NET.Sdk` et se passer de `HackerOs.AppSdk.Blazor`.
+  `Microsoft.NET.Sdk` et se passer de `Kazo.Os.AppSdk.Blazor`.
 - Références permises : les quatre `Shared/*.Abstractions`, les bibliothèques
-  `Shared/HackerOs.AppSdk*`, `Platform/HackerOs.Theming.Blazor` et d'autres
+  `Shared/Kazo.Os.AppSdk*`, `Platform/Kazo.Os.Theming.Blazor` et d'autres
   projets sous `Apps/`. Toute autre référence de projet échoue au build
-  (`HOSAPP0030`). Les `PackageReference` (MudBlazor par exemple) sont libres.
-- Ajouter le projet à `HackerOs.sln` (`dotnet sln add`).
+  (`KOSAPP0030`). Les `PackageReference` (MudBlazor par exemple) sont libres.
+- Ajouter le projet à `Kazo.Os.sln` (`dotnet sln add`).
 
 ### Depuis un autre dépôt (paquets locaux)
 
@@ -76,23 +76,23 @@ produit dans `artifacts/local-nupkg`, un `nuget.config` (modèle
 projet :
 
 ```bash
-dotnet new install <HackerOS>/artifacts/local-nupkg/HackerOs.Templates.2.2.2.nupkg
-dotnet new hackeros-window -n Contoso.Notes --appId com.contoso.notes
-dotnet new hackeros-host -n Contoso.Os          # un hôte qui lance tout l'OS
+dotnet new install <Kazo OS>/artifacts/local-nupkg/Kazo.Os.Templates.2.2.2.nupkg
+dotnet new kazoos-window -n Contoso.Notes --appId com.contoso.notes
+dotnet new kazoos-host -n Contoso.Os          # un hôte qui lance tout l'OS
 ```
 
-Le projet référence `HackerOs.AppSdk*` et `HackerOs.App.Build`
+Le projet référence `Kazo.Os.AppSdk*` et `Kazo.Os.App.Build`
 (`PrivateAssets="all"`), qui apporte la génération du manifeste, le générateur
-de routes ASP.Hack et la règle de frontière sur les paquets (`HOSAPP0030`).
+de routes ASP.Kazo et la règle de frontière sur les paquets (`KOSAPP0030`).
 Un hôte ajoute l'app par une `ProjectReference` ou une `PackageReference`.
 Le guide complet d'un dépôt tiers (disposition, version épinglée, hôte, tests,
 publication, montée de version, ce que la promesse du SDK 1.0 couvre) est
-[`building-on-hackeros.md`](building-on-hackeros.md).
+[`building-on-kazoos.md`](building-on-kazoos.md).
 
 ## 2. Décrire l'app : `AppDefinition`
 
 ```csharp
-using HackerOs.App.Abstractions;
+using Kazo.Os.App.Abstractions;
 
 namespace Example.Notes;
 
@@ -142,13 +142,13 @@ plus utiles :
 | `Capabilities` | Droits demandés, pris dans `AppCapabilities` ([référence](sdk-reference.md#capacités)). Ne demander que le nécessaire : une capacité dangereuse impose une approbation administrateur au premier lancement. |
 | `FileHandlers` | Types de fichiers que l'app sait ouvrir ; le chemin arrive dans `LaunchFile`. |
 | `Terminal` | Pour une commande : nom, usage et alias (`new("wc-notes", "wc-notes [-l] FILE...", ["wcn"])`). |
-| `Settings` | Schéma des paramètres lus par `HackSettings`. |
+| `Settings` | Schéma des paramètres lus par `KazoSettings`. |
 | `SingleInstancePerUser` | Une seule fenêtre ; un second lancement l'active. |
 | `AutoStart` | Pour un service : démarré à la connexion. |
 | `LaunchVisibility` | `Hidden` pour ne pas apparaître dans le menu Démarrer (commandes, services). |
 | `Icons` | Images relatives à `wwwroot/`, aussi déclarées dans `Assets` ; la première apparaît dans la barre de titre et la taskbar (ADR 0164). macOS masque celle du titre. Le build calcule l'empreinte de l'asset. |
 | `Category`, `Version` | Présentation et classement de l'app. |
-| `OomScoreAdjust` | `oom_score_adj` de départ (SDK 1.2) ; une valeur négative, qui protège de l'OOM killer, est réservée aux apps système (`HOSAPP0024`, [`oom-killer.md`](../dev/oom-killer.md)). |
+| `OomScoreAdjust` | `oom_score_adj` de départ (SDK 1.2) ; une valeur négative, qui protège de l'OOM killer, est réservée aux apps système (`KOSAPP0024`, [`oom-killer.md`](../dev/oom-killer.md)). |
 
 Règles imposées par le générateur : classe publique, non abstraite, avec un
 constructeur sans paramètre ; getters purs (le générateur instancie la classe
@@ -169,7 +169,7 @@ build refuse `style="..."`, `<style>`, `<script>` et `onclick="..."`).
 
 ```razor
 @inherits WindowAppBase
-@using HackerOs.AppSdk.Blazor
+@using Kazo.Os.AppSdk.Blazor
 
 <div class="notes">
     <header class="notes-toolbar">
@@ -185,12 +185,12 @@ build refuse `style="..."`, `<style>`, `<script>` et `onclick="..."`).
 `NotesWindow.razor.cs` :
 
 ```csharp
-using HackerOs.AppSdk;
-using HackerOs.AppSdk.Blazor;
-using HackerOs.AppSdk.IO;
-using HackerOs.AppSdk.Settings;
-using HackerOs.Simulation.Abstractions.Diagnostics;
-using HackerOs.Simulation.Abstractions.Notifications;
+using Kazo.Os.AppSdk;
+using Kazo.Os.AppSdk.Blazor;
+using Kazo.Os.AppSdk.IO;
+using Kazo.Os.AppSdk.Settings;
+using Kazo.Os.Simulation.Abstractions.Diagnostics;
+using Kazo.Os.Simulation.Abstractions.Notifications;
 
 namespace Example.Notes;
 
@@ -205,29 +205,29 @@ public partial class NotesWindow
     {
         // Ouverte depuis l'explorateur ou par `open notes.md` : le fichier est le premier argument.
         _path = LaunchFile?.Value
-            ?? HackPath.Combine(HackEnvironment.GetFolderPath(HackSpecialFolder.MyDocuments), "notes.txt");
+            ?? KazoPath.Combine(KazoEnvironment.GetFolderPath(KazoSpecialFolder.MyDocuments), "notes.txt");
 
-        if (await HackFile.ExistsAsync(_path))
+        if (await KazoFile.ExistsAsync(_path))
         {
-            _text = await HackFile.ReadAllTextAsync(_path);
+            _text = await KazoFile.ReadAllTextAsync(_path);
         }
 
-        _fontSize = await HackSettings.GetAsync<int>("font-size");
+        _fontSize = await KazoSettings.GetAsync<int>("font-size");
     }
 
     private async Task SaveAsync()
     {
         try
         {
-            await HackFile.WriteAllTextAsync(_path, _text);
+            await KazoFile.WriteAllTextAsync(_path, _text);
             AppContext.Logging.Log(DiagnosticSeverity.Information, $"Saved {_path}");   // /var/log/apps/com.example.notes.log
             _status = "Enregistré.";
         }
-        catch (HackUnauthorizedAccessException ex)
+        catch (KazoUnauthorizedAccessException ex)
         {
             _status = $"Accès refusé ({ex.RequiredCapability ?? "droits du fichier"}).";
         }
-        catch (HackIOException ex)
+        catch (KazoIOException ex)
         {
             _status = $"Erreur : {ex.Message}";
         }
@@ -238,7 +238,7 @@ public partial class NotesWindow
         SaveFileDialogResult result = await SaveFileAsync(new SaveFileDialogRequest
         {
             Title = "Enregistrer la note",
-            SuggestedFileName = HackPath.GetFileName(_path),
+            SuggestedFileName = KazoPath.GetFileName(_path),
             DefaultExtension = ".txt",
         });
 
@@ -252,7 +252,7 @@ public partial class NotesWindow
 }
 ```
 
-`NotesWindow.razor.css` utilise les jetons du thème (`--hos-*`), pour suivre
+`NotesWindow.razor.css` utilise les jetons du thème (`--kos-*`), pour suivre
 le thème choisi par l'utilisateur :
 
 ```css
@@ -260,17 +260,17 @@ le thème choisi par l'utilisateur :
     display: flex;
     flex-direction: column;
     height: 100%;
-    background: var(--hos-bg-base);
-    color: var(--hos-text-primary);
-    font-family: var(--hos-font-ui);
+    background: var(--kos-bg-base);
+    color: var(--kos-text-primary);
+    font-family: var(--kos-font-ui);
 }
 
 .notes-text {
     flex: 1;
-    font-family: var(--hos-font-mono);
-    background: var(--hos-input-bg);
-    color: var(--hos-input-color);
-    border: 1px solid var(--hos-border);
+    font-family: var(--kos-font-mono);
+    background: var(--kos-input-bg);
+    color: var(--kos-input-color);
+    border: 1px solid var(--kos-border);
 }
 ```
 
@@ -285,7 +285,7 @@ le thème choisi par l'utilisateur :
 | `MessageBox`, `TextInput` | Boîte de message et saisie de texte. `MessageBox(titre, message, MessageBoxType.Ok, MessageBoxIcon.Error)` affiche une erreur avec son icône (prochaine version du SDK). |
 | `WindowTitle`, `SetWindowTitleAsync`, `FormatWindowTitle` | Titre de la fenêtre (ADR 0117, SDK 1.1) : l'app écrit tout le titre, par convention `document — App` avec `*` en tête si le document est modifié ; `null` rend le nom de l'app. Voir ci-dessous. |
 | `OnPermissionErrorRaised` | Surcharger pour afficher soi-même une erreur de permission (mettre `ErrorHandled = true`) au lieu de la notification de l'OS. |
-| `OnAppStopRequestedAsync(e)` | L'OS demande l'arrêt (`kill`, « End task », déconnexion ; ADR 0069) : finir ou annuler l'opération en cours, écrire un brouillon des modifications non enregistrées (`HackRecoveryDraft`). La fenêtre se ferme quand la tâche renvoyée se termine, au plus tard à `e.Deadline`. |
+| `OnAppStopRequestedAsync(e)` | L'OS demande l'arrêt (`kill`, « End task », déconnexion ; ADR 0069) : finir ou annuler l'opération en cours, écrire un brouillon des modifications non enregistrées (`KazoRecoveryDraft`). La fenêtre se ferme quand la tâche renvoyée se termine, au plus tard à `e.Deadline`. |
 
 Le composant peut aussi implémenter :
 
@@ -335,15 +335,15 @@ des crochets et raccourcis clavier du gestionnaire de fenêtres :
 Taper le dernier segment de l'identifiant de l'app dans le terminal la lance
 (ADR 0064) : `my-app --verbose notes.txt` pour `com.example.my-app`. Les mots
 qui suivent arrivent dans `LaunchArguments` (relatifs au dossier du shell :
-`HackPath.GetFullPath` les résout), et `HackConsole` écrit dans ce terminal,
+`KazoPath.GetFullPath` les résout), et `KazoConsole` écrit dans ce terminal,
 comme `printf` d'un programme graphique Linux :
 
 ```csharp
 protected override void OnAppInitialized()
 {
-    if (HackConsole.IsAttached)
+    if (KazoConsole.IsAttached)
     {
-        HackConsole.WriteLine($"my-app: opening {string.Join(' ', LaunchArguments)}");
+        KazoConsole.WriteLine($"my-app: opening {string.Join(' ', LaunchArguments)}");
     }
 }
 ```
@@ -354,35 +354,35 @@ lancée du bureau, l'app écrit dans `/dev/null`. Voir
 
 ### Contexte ambiant et composants enfants
 
-Les façades `Hack*` savent quelle app les appelle grâce à un contexte ambiant
+Les façades `Kazo*` savent quelle app les appelle grâce à un contexte ambiant
 que l'OS ouvre autour du cycle de vie, des gestionnaires d'événements
 (`@onclick`…) et du rendu de `WindowAppBase`. **Tout composant enfant** hérite
-de `HackComponentBase` : il reçoit le même contexte en cascade. Depuis la
-phase 5, c'est vrai même s'il n'appelle pas `Hack*` : le temps du code exécuté
+de `KazoComponentBase` : il reçoit le même contexte en cascade. Depuis la
+phase 5, c'est vrai même s'il n'appelle pas `Kazo*` : le temps du code exécuté
 hors contexte est compté au compositeur, pas à l'app (ADR 0067), et un test
 (`AmbientFrameSourceTests`) le vérifie pour les apps de `Apps/`. Un dialogue
 MudBlazor, rendu hors de la fenêtre, reçoit le contexte de la fenêtre en
-paramètre et l'adopte avant le cycle de vie de `HackComponentBase` (comme le
+paramètre et l'adopte avant le cycle de vie de `KazoComponentBase` (comme le
 faisait `FileExplorerDialogBase`, retiré par l'ADR 0155 : les dialogues de
 fichiers de l'OS passent maintenant par `IDialogService`). Une méthode `[JSInvokable]` ou un
 rappel de minuterie .NET (hors `AppContext.Clock`) ouvre le contexte lui-même,
 dès sa première instruction :
 
 ```csharp
-using (HackExecutionContext.Enter(AppContext))
+using (KazoExecutionContext.Enter(AppContext))
 {
-    await HackFile.WriteAllTextAsync("~/autosave.txt", _text);
+    await KazoFile.WriteAllTextAsync("~/autosave.txt", _text);
 }
 ```
 
-Sans contexte, l'API lève `HackExecutionContextMissingException` ; elle ne
+Sans contexte, l'API lève `KazoExecutionContextMissingException` ; elle ne
 retombe jamais sur une identité système.
 
 ### JavaScript
 
 À n'utiliser que pour une API du navigateur inaccessible en C#. Le module est
 un fichier `MonComposant.razor.js` à côté du composant (ou sous `wwwroot/` du
-projet), importé ainsi et uniquement ainsi (vérifié au build, `HOSAPP0031`) :
+projet), importé ainsi et uniquement ainsi (vérifié au build, `KOSAPP0031`) :
 
 ```csharp
 [Inject] private IJSRuntime JS { get; set; } = default!;
@@ -399,8 +399,8 @@ Une app fenêtrée tourne sur le fil principal du navigateur, comme tout le
 bureau. Une boucle longue sans `await` gèle alors tout l'OS : la souris, les
 autres fenêtres et même la boîte « L'application ne répond pas », qui ne peut
 s'afficher qu'après le gel. Mettez un calcul lourd dans
-`HackBackground.RunAsync` (ADR 0128, il tourne dans un worker), ou appelez
-`HackProcess.CheckpointAsync` souvent dans la boucle. Quand la fenêtre reste
+`KazoBackground.RunAsync` (ADR 0128, il tourne dans un worker), ou appelez
+`KazoProcess.CheckpointAsync` souvent dans la boucle. Quand la fenêtre reste
 occupée plus de 5 s, l'OS lui ajoute « (Not responding) » et propose
 « Attendre » ou « Terminer l'application » (arrêt demandé puis forcé après
 2 s). Voir [`process-priority-and-unresponsive-windows.md`](../dev/process-priority-and-unresponsive-windows.md).
@@ -444,10 +444,10 @@ public sealed class WordCountCommand(AppManifest manifest) : TerminalAppBase(man
             try
             {
                 // Un chemin relatif part du répertoire courant du shell.
-                string text = await HackFile.ReadAllTextAsync(file, cancellationToken);
+                string text = await KazoFile.ReadAllTextAsync(file, cancellationToken);
                 await context.StandardOutput.WriteLineAsync($"{Count(text, lines),8} {file}");
             }
-            catch (HackFileNotFoundException)
+            catch (KazoFileNotFoundException)
             {
                 await context.StandardError.WriteLineAsync($"wc-notes: {file}: No such file or directory");
                 exitCode = 1;
@@ -472,7 +472,7 @@ outils GNU. Voir [`shell-commands.md`](../dev/shell-commands.md) et
 [`shell-interpreter.md`](../dev/shell-interpreter.md).
 
 Une boucle longue (parcours d'arborescence, gros fichier ligne à ligne) appelle
-`await HackProcess.CheckpointAsync(cancellationToken)` à chaque tour (ADR
+`await KazoProcess.CheckpointAsync(cancellationToken)` à chaque tour (ADR
 0069) : elle rend la main au-delà de 8 ms, ce qui garde l'OS fluide, et
 s'arrête dès que `kill` le demande. Sans arrêt demandé et dans sa tranche,
 l'appel ne coûte qu'une lecture d'horloge. Une commande arrêtée sur son jeton
@@ -504,16 +504,16 @@ public sealed class CleanupService(AppManifest manifest) : ServiceAppBase(manife
 {
     protected override async Task RunCoreAsync(IAppExecutionContext context, CancellationToken sessionCancellationToken)
     {
-        string tmp = HackPath.GetFullPath("~/tmp");
+        string tmp = KazoPath.GetFullPath("~/tmp");
         try
         {
             while (!sessionCancellationToken.IsCancellationRequested)
             {
-                if (await HackDirectory.ExistsAsync(tmp, sessionCancellationToken))
+                if (await KazoDirectory.ExistsAsync(tmp, sessionCancellationToken))
                 {
-                    foreach (string file in await HackDirectory.GetFilesAsync(tmp))
+                    foreach (string file in await KazoDirectory.GetFilesAsync(tmp))
                     {
-                        await HackFile.DeleteAsync(file, sessionCancellationToken);
+                        await KazoFile.DeleteAsync(file, sessionCancellationToken);
                     }
 
                     context.Logging.Log(DiagnosticSeverity.Information, $"Cleaned {tmp}");
@@ -546,14 +546,14 @@ démarrage ou à `systemctl reset-failed`. Pendant qu'il tourne, il peut dire
 qu'il va mal sans s'arrêter :
 
 ```csharp
-ReportHealth(HackServiceHealth.Degraded, "database unreachable");
+ReportHealth(KazoServiceHealth.Degraded, "database unreachable");
 ```
 
 Démarrage automatique (`AutoStart => true`, mode `Automatic`) : après chaque
 connexion, sous l'utilisateur ; arrêté à la déconnexion. Une **app système**
 peut déclarer `public override AppServiceStartup? ServiceStartup =>
 AppServiceStartup.Boot;` : elle démarre alors à la fin du boot, avant l'écran
-de connexion, sous le compte `hackeros-svc` (maison `/var/lib/hackeros-svc`),
+de connexion, sous le compte `kazoos-svc` (maison `/var/lib/kazoos-svc`),
 continue après la déconnexion et ne s'arrête qu'à l'extinction. Une autre app
 qui demande `Boot` démarre à la connexion, avec un avertissement dans
 `/var/log/syslog`.
@@ -561,72 +561,72 @@ qui demande `Boot` démarre à la connexion, avec un avertissement dans
 Le service apparaît dans l'onglet Services du gestionnaire de tâches et dans
 `/proc`. Il communique avec les autres apps par les sujets du bus
 d'événements (`context.Events.Publish(topic, payload)` dans son propre espace
-de noms, ADR 0038) : voir `Apps/Samples/HackerOs.Samples.ServiceApp`. Un
+de noms, ADR 0038) : voir `Apps/Samples/Kazo.Os.Samples.ServiceApp`. Un
 service tourne par défaut dans un Web Worker dédié (ADR 0070) : le type de ses
-charges doit alors être déclaré par `[assembly: HackWireContext(typeof(…))]`
+charges doit alors être déclaré par `[assembly: KazoWireContext(typeof(…))]`
 (SDK 1.2, ADR 0124), comme le fait `SampleTickerJsonContext` de l'exemple ;
 voir [`app-sdk.md`](app-sdk.md#processus-dans-des-web-workers-adr-0070-et-0071).
 
 ## 6. Utiliser les services de l'OS
 
 Une app n'obtient un service de l'OS que par le SDK : une **façade statique**
-`Hack*` (forme recommandée, elle lit le contexte ambiant) ou une **passerelle**
+`Kazo*` (forme recommandée, elle lit le contexte ambiant) ou une **passerelle**
 de `AppContext`. L'injection d'un service de la plateforme est refusée au
-build (`HOSAPP0031`). Les tâches courantes :
+build (`KOSAPP0031`). Les tâches courantes :
 
 | Besoin | API | Capacité |
 |---|---|---|
-| Lire, écrire, copier, déplacer des fichiers | `HackFile`, `HackDirectory`, `HackPath`, `HackFileInfo` | `filesystem.user-home.*` pour `~`, `filesystem.system.*` (dangereuses) ailleurs |
-| Copier ou déplacer comme l'explorateur (conflits de noms, « (copie) », annulation) | `HackFileOperations.CopyAsync`, `MoveAsync`, `ImportAsync` ; `IDialogService.AsFileConflictResolver(AppContext)` pose la question (SDK 2.0, ADR 0161 §2) | celles des fichiers |
-| Mettre à la corbeille | `HackTrash.MoveToTrashAsync` | celles du fichier |
-| Afficher des fichiers dans sa fenêtre (liste, icônes, arbre) | `<HackFileView>` (contrat `hackeros.file-view`, fourni par l'explorateur ou l'app choisie par l'administrateur, [`embedded-components.md`](embedded-components.md)) | celles du dossier |
-| Surveiller un dossier | `HackFileSystemWatcher` | celles du dossier |
-| Paramètres de l'app | `HackSettings.OpenAsync`, `GetAsync`, `SetAsync` | `filesystem.private.read` / `.write` |
-| Garder un mot de passe ou un jeton | `HackKeyring.SetAsync`, `GetAsync`, ou une clé `SecretReference` avec `HackSettingsDocument.SetSecretAsync` ([`sensitive-settings.md`](../dev/sensitive-settings.md)) | aucune pour ses propres entrées |
+| Lire, écrire, copier, déplacer des fichiers | `KazoFile`, `KazoDirectory`, `KazoPath`, `KazoFileInfo` | `filesystem.user-home.*` pour `~`, `filesystem.system.*` (dangereuses) ailleurs |
+| Copier ou déplacer comme l'explorateur (conflits de noms, « (copie) », annulation) | `KazoFileOperations.CopyAsync`, `MoveAsync`, `ImportAsync` ; `IDialogService.AsFileConflictResolver(AppContext)` pose la question (SDK 2.0, ADR 0161 §2) | celles des fichiers |
+| Mettre à la corbeille | `KazoTrash.MoveToTrashAsync` | celles du fichier |
+| Afficher des fichiers dans sa fenêtre (liste, icônes, arbre) | `<KazoFileView>` (contrat `kazoos.file-view`, fourni par l'explorateur ou l'app choisie par l'administrateur, [`embedded-components.md`](embedded-components.md)) | celles du dossier |
+| Surveiller un dossier | `KazoFileSystemWatcher` | celles du dossier |
+| Paramètres de l'app | `KazoSettings.OpenAsync`, `GetAsync`, `SetAsync` | `filesystem.private.read` / `.write` |
+| Garder un mot de passe ou un jeton | `KazoKeyring.SetAsync`, `GetAsync`, ou une clé `SecretReference` avec `KazoSettingsDocument.SetSecretAsync` ([`sensitive-settings.md`](../dev/sensitive-settings.md)) | aucune pour ses propres entrées |
 | Journaliser | `AppContext.Logging.Log` → `/var/log/apps/<appId>.log` | aucune |
 | Notifier l'utilisateur | `AppContext.Notifications.Post` | `notifications.post` |
-| Utilisateur, dossiers spéciaux, variables, arguments | `HackUser`, `HackEnvironment` | aucune |
-| Lancer une app, ouvrir un fichier avec son app | `HackApps.LaunchAsync`, `HackApps.OpenFileAsync` | `apps.launch` |
-| Ouvrir une page dans le navigateur, ou dans une fenêtre détachée | `HackBrowser.OpenAsync`, `HackBrowser.OpenDetachedAsync` | `apps.launch` |
+| Utilisateur, dossiers spéciaux, variables, arguments | `KazoUser`, `KazoEnvironment` | aucune |
+| Lancer une app, ouvrir un fichier avec son app | `KazoApps.LaunchAsync`, `KazoApps.OpenFileAsync` | `apps.launch` |
+| Ouvrir une page dans le navigateur, ou dans une fenêtre détachée | `KazoBrowser.OpenAsync`, `KazoBrowser.OpenDetachedAsync` | `apps.launch` |
 | Afficher une partie de sa fenêtre dans une fenêtre détachée | `IDisplaySurfaceService` (injecté) et `<DisplaySurfaceContent>` | aucune |
-| Presse-papiers | `HackClipboard` | `clipboard.read` / `.write` |
-| Réseau simulé (et réel si l'OS l'autorise) | `HackDns`, `HackPing`, `HackHttpClient`, `HackTcpClient`, `HackUdpClient` | `network.simulated.*`, `network.real.access` (dangereuse) |
-| Processus et services | `HackProcess`, `HackServiceController` | `process.list`, `process.manage`, `services.manage` |
-| Lire ou baisser les limites de son processus (`ulimit`) | `HackProcess.GetResourceLimitsAsync`, `SetResourceLimitAsync` (SDK 1.2, [`process-limits.md`](../dev/process-limits.md)) | aucune pour son processus ; `process.manage` pour un autre |
-| Héberger un shell (terminal, éditeur de code) | `HackShell.StartAsync` | `shell.host` (dangereuse) |
-| Sauvegarder ou restaurer toute la machine (apps système) | `HackSystemBackup.CreateAsync`, `RestoreAsync` | `system.backup` (dangereuse) + administrateur |
+| Presse-papiers | `KazoClipboard` | `clipboard.read` / `.write` |
+| Réseau simulé (et réel si l'OS l'autorise) | `KazoDns`, `KazoPing`, `KazoHttpClient`, `KazoTcpClient`, `KazoUdpClient` | `network.simulated.*`, `network.real.access` (dangereuse) |
+| Processus et services | `KazoProcess`, `KazoServiceController` | `process.list`, `process.manage`, `services.manage` |
+| Lire ou baisser les limites de son processus (`ulimit`) | `KazoProcess.GetResourceLimitsAsync`, `SetResourceLimitAsync` (SDK 1.2, [`process-limits.md`](../dev/process-limits.md)) | aucune pour son processus ; `process.manage` pour un autre |
+| Héberger un shell (terminal, éditeur de code) | `KazoShell.StartAsync` | `shell.host` (dangereuse) |
+| Sauvegarder ou restaurer toute la machine (apps système) | `KazoSystemBackup.CreateAsync`, `RestoreAsync` | `system.backup` (dangereuse) + administrateur |
 | Temps simulé, minuteries | `AppContext.Clock` | aucune |
-| Sortir un calcul lourd de la fenêtre (filtre, recherche, compression) | `HackBackground.RunAsync` (SDK 1.2) | aucune ; la tâche a les capacités de l'app |
+| Sortir un calcul lourd de la fenêtre (filtre, recherche, compression) | `KazoBackground.RunAsync` (SDK 1.2) | aucune ; la tâche a les capacités de l'app |
 
 Les chemins acceptent `~` et les chemins relatifs (au répertoire courant du
-processus). Les erreurs suivent `System.IO` : `HackFileNotFoundException`,
-`HackDirectoryNotFoundException`, `HackFileConflictException` (révision
-concurrente), `HackIOException`, `HackUnauthorizedAccessException` (avec
+processus). Les erreurs suivent `System.IO` : `KazoFileNotFoundException`,
+`KazoDirectoryNotFoundException`, `KazoFileConflictException` (révision
+concurrente), `KazoIOException`, `KazoUnauthorizedAccessException` (avec
 `RequiredCapability`). Une écriture peut échouer faute de place :
-`HackIOException` avec `ErrorCode` `NoSpace` (`ENOSPC` : quota du navigateur
+`KazoIOException` avec `ErrorCode` `NoSpace` (`ENOSPC` : quota du navigateur
 atteint, ou réserve de root atteinte pour un utilisateur simple) ou
 `FileTooLarge` (`EFBIG`, plus de 16 Mio) ; `ShellErrorText.Describe` donne le
 message Linux ([`system-backup.md`](../dev/system-backup.md)). Une ouverture au-delà
-de la limite `nofile` du processus lève `HackIOException` avec
+de la limite `nofile` du processus lève `KazoIOException` avec
 `TooManyOpenFiles` (`EMFILE`, SDK 1.2) ; un lancement au-delà de `nproc`
 échoue avec « Resource temporarily unavailable » (`EAGAIN`)
 ([`process-limits.md`](../dev/process-limits.md)).
 
-Exemples détaillés par domaine : [`hack-file-api.md`](hack-file-api.md),
+Exemples détaillés par domaine : [`kazo-file-api.md`](kazo-file-api.md),
 [`settings-files.md`](settings-files.md), [`logging.md`](../dev/logging.md),
 [`trash.md`](../dev/trash.md), [`process-environment.md`](../dev/process-environment.md),
 [`sdk-network.md`](sdk-network.md), [`task-manager.md`](../dev/task-manager.md),
 [`shell-host.md`](shell-host.md), [`system-administration.md`](system-administration.md).
 
-### Calculs lourds : `HackBackground`
+### Calculs lourds : `KazoBackground`
 
 Une app fenêtrée tourne sur le fil principal, qui dessine aussi le bureau : une
-boucle longue y gèle tout. `HackBackground.RunAsync` confie le travail à un
+boucle longue y gèle tout. `KazoBackground.RunAsync` confie le travail à un
 processus enfant de l'app, dans un Web Worker quand l'hôte en a, et attend son
 résultat ; la progression revient dans le contexte de la fenêtre.
 
 ```csharp
-[assembly: HackWireContext(typeof(MyJobsJsonContext))]
+[assembly: KazoWireContext(typeof(MyJobsJsonContext))]
 
 [JsonSerializable(typeof(PrimeCountInput))]
 [JsonSerializable(typeof(PrimeCountResult))]
@@ -634,27 +634,27 @@ internal sealed partial class MyJobsJsonContext : JsonSerializerContext;
 
 public static class MyJobs
 {
-    public static async Task<PrimeCountResult> CountPrimes(PrimeCountInput input, HackBackgroundContext context)
+    public static async Task<PrimeCountResult> CountPrimes(PrimeCountInput input, KazoBackgroundContext context)
     {
         // ... calcul, avec context.Report(fraction, message) et await context.CheckpointAsync() ...
     }
 }
 
-PrimeCountResult result = await HackBackground.RunAsync<PrimeCountInput, PrimeCountResult>(
-    MyJobs.CountPrimes, new PrimeCountInput(3_000_000), new Progress<HackBackgroundProgress>(Show), cancellationToken: ct);
+PrimeCountResult result = await KazoBackground.RunAsync<PrimeCountInput, PrimeCountResult>(
+    MyJobs.CountPrimes, new PrimeCountInput(3_000_000), new Progress<KazoBackgroundProgress>(Show), cancellationToken: ct);
 ```
 
 La tâche est une **méthode statique** de l'app (pas de lambda : elle ne peut pas
 capturer les objets de la fenêtre) et ses types passent en JSON par un
-contexte `HackWireContext`. L'analyseur du SDK le vérifie au build
-(`HOSBG0001` à `HOSBG0004`). Annulation : `OperationCanceledException` ; tâche
-tuée depuis `kill` ou le gestionnaire de tâches : `HackProcessKilledException`
+contexte `KazoWireContext`. L'analyseur du SDK le vérifie au build
+(`KOSBG0001` à `KOSBG0004`). Annulation : `OperationCanceledException` ; tâche
+tuée depuis `kill` ou le gestionnaire de tâches : `KazoProcessKilledException`
 (à attraper **avant** l'annulation) ; exception de la tâche :
-`HackBackgroundJobException`. Quand l'app se ferme, la tâche voit son jeton
+`KazoBackgroundJobException`. Quand l'app se ferme, la tâche voit son jeton
 annulé et a 5 s pour finir avant d'être tuée (ADR 0147). Dans les tests de l'app, la tâche s'exécute en
 ligne avec la même sérialisation. Guide complet et exemple :
 [`background-jobs.md`](background-jobs.md) et la section « Background Task » de
-`Apps/Samples/HackerOs.Samples.WindowApp`.
+`Apps/Samples/Kazo.Os.Samples.WindowApp`.
 
 ### Ajouter des entrées aux menus des fichiers
 
@@ -662,10 +662,10 @@ Une app peut ajouter « Convertir en PNG », « Extraire ici »… aux menus des
 fichiers de tout l'OS (explorateur, dialogues de fichiers, bureau) : elle
 demande la capacité `shell.context-menu` et déclare dans sa classe
 `[AppManifest]` une méthode statique `[RegisterFileContextMenu]` qui appelle
-`context.Register(title, name, intent: …, types: […], after: HackFileMenuItems.Open)`.
+`context.Register(title, name, intent: …, types: […], after: KazoFileMenuItems.Open)`.
 Le titre est une clé de `Resources/AppManifest.resx` (anglais, obligatoire) et
 de `Resources/AppManifest.fr.resx`. La méthode s'exécute au build ; au clic,
-l'app reçoit l'intent et lit les chemins par `HackFileMenuIntent.ReadPaths`.
+l'app reçoit l'intent et lit les chemins par `KazoFileMenuIntent.ReadPaths`.
 Guide complet : [`context-menu.md`](context-menu.md#entrées-des-apps-dans-les-menus-des-fichiers-chantier-4).
 
 ### Capacités dangereuses
@@ -675,13 +675,13 @@ Guide complet : [`context-menu.md`](context-menu.md#entrées-des-apps-dans-les-m
 **dangereuses** : pour une app non système, l'OS demande à un administrateur
 de les approuver au premier lancement, et l'app peut être lancée sans elles si
 l'administrateur refuse. Le code doit donc s'attendre à
-`HackUnauthorizedAccessException` et dégrader proprement. Détails :
+`KazoUnauthorizedAccessException` et dégrader proprement. Détails :
 [`capabilities.md`](capabilities.md),
 [`dangerous-capability-approval.md`](../dev/dangerous-capability-approval.md).
 
 ## 7. Installer l'app dans l'OS
 
-Ajouter une `ProjectReference` dans `OS/HackerOs.Ecosystem/HackerOs.Ecosystem.csproj` :
+Ajouter une `ProjectReference` dans `OS/Kazo.Os.Ecosystem/Kazo.Os.Ecosystem.csproj` :
 
 ```xml
 <ProjectReference Include="..\..\Apps\Samples\Example.Notes\Example.Notes.csproj" />
@@ -695,7 +695,7 @@ de base de l'OS.
 
 ## 8. Tester une app
 
-`Tests/HackerOs.Tests.Support` fournit `MinimalAppExecutionContext` et des
+`Tests/Kazo.Os.Tests.Support` fournit `MinimalAppExecutionContext` et des
 passerelles factices (`FakeAppFileSystemGateway`, `FakeAppClockGateway`,
 `FakeAppLoggingGateway`, `FakeAppIntentGateway`, `FakeAppEnvironmentGateway`,
 `FakeShellSession`…). Le manifeste vient de la définition elle-même.
@@ -718,7 +718,7 @@ public sealed class WordCountCommandTests
             new Dictionary<string, string>());
 
         // L'OS ouvre le contexte ambiant autour d'ExecuteAsync ; un test le fait lui-même.
-        using (HackExecutionContext.Enter(app, "/home/alice"))
+        using (KazoExecutionContext.Enter(app, "/home/alice"))
         {
             int exitCode = await new WordCountCommand(Manifest).ExecuteAsync(terminal, CancellationToken.None);
             Assert.Equal(0, exitCode);
@@ -729,13 +729,13 @@ public sealed class WordCountCommandTests
 }
 ```
 
-Le projet de tests référence le projet de l'app et `HackerOs.Tests.Support`
+Le projet de tests référence le projet de l'app et `Kazo.Os.Tests.Support`
 (xUnit 2.9). Les composants fenêtrés se testent avec bUnit (voir
-`Tests/HackerOs.Apps.*.Tests`).
+`Tests/Kazo.Os.Apps.*.Tests`).
 
 ## 8 bis. Traduire son app
 
-HackerOS parle anglais (par défaut) et français ; chaque processus suit son
+Kazo OS parle anglais (par défaut) et français ; chaque processus suit son
 propre `LANG` (ADR 0104). Pour traduire une app :
 
 1. Ajouter une classe marqueur `internal sealed class Strings` dans l'espace
@@ -745,7 +745,7 @@ propre `LANG` (ADR 0104). Pour traduire une app :
 2. Lire les textes dans la langue du processus :
 
    ```razor
-   @using HackerOs.AppSdk.Globalization
+   @using Kazo.Os.AppSdk.Globalization
    @using Microsoft.Extensions.Localization
 
    <button aria-label="@L["Toolbar.NewFolder"]">@L["Toolbar.NewFolder"]</button>
@@ -768,18 +768,18 @@ en anglais. Le guide complet est [`localization.md`](localization.md).
 
 ## 9. Liste de contrôle avant de livrer
 
-- [ ] Le projet est sous `Apps/`, dans `HackerOs.sln`, et ne référence que le SDK.
+- [ ] Le projet est sous `Apps/`, dans `Kazo.Os.sln`, et ne référence que le SDK.
 - [ ] La classe `[AppManifest]` ne demande que les capacités nécessaires.
 - [ ] `manifest.json` (ou `manifests/*.json`) régénéré est committé.
-- [ ] Pas de CSS ni de JavaScript en ligne ; styles sur les jetons `--hos-*`.
+- [ ] Pas de CSS ni de JavaScript en ligne ; styles sur les jetons `--kos-*`.
 - [ ] Les erreurs de permission et de fichier sont gérées et affichées.
-- [ ] Une demande d'arrêt ne perd rien en silence (`OnAppStopRequestedAsync`, `OnStoppingAsync`) et les boucles longues appellent `HackProcess.CheckpointAsync` (ADR 0069).
+- [ ] Une demande d'arrêt ne perd rien en silence (`OnAppStopRequestedAsync`, `OnStoppingAsync`) et les boucles longues appellent `KazoProcess.CheckpointAsync` (ADR 0069).
 - [ ] Des tests couvrent la logique de l'app.
 - [ ] Les textes visibles sont dans `Resources/Strings.resx` et `Strings.fr.resx` (mêmes clés), le nom dans `AppManifest.fr.resx`.
 - [ ] L'app fonctionne avec le seul hôte Ecosystem, sans serveur.
 - [ ] Un document décrit l'app sous `docs/`, ajouté à l'index [`README.md`](../README.md).
 
-Un hôte d'un autre dépôt (modèle `hackeros-host`) installe une app de la même
+Un hôte d'un autre dépôt (modèle `kazoos-host`) installe une app de la même
 façon : `ProjectReference` ou `PackageReference` (paquet d'app produit par
 `dotnet pack`, qui embarque ses manifestes), avec la même métadonnée
 `IsSystemApp`.
@@ -796,9 +796,9 @@ façon : `ProjectReference` ou `PackageReference` (paquet d'app produit par
 - [x] Installation dans l'hôte et test unitaire d'une commande.
 - [x] Compiler les exemples et exécuter le test contre `rebuild/base`.
 - [x] Construire une app ou un hôte depuis un autre dépôt avec les paquets locaux et les modèles (v3/6).
-- [x] Guide complet du dépôt tiers, SDK 1.0 (`v3/15`, ADR 0114) : [`building-on-hackeros.md`](building-on-hackeros.md).
+- [x] Guide complet du dépôt tiers, SDK 1.0 (`v3/15`, ADR 0114) : [`building-on-kazoos.md`](building-on-kazoos.md).
 - [x] Sauvegarde de la machine et erreurs `NoSpace`/`FileTooLarge` (`v3/7-storage-backup`).
 - [x] Traduire son app : ressources, `GetLocalizer<T>`, `AppManifest.fr.resx` (`v3/12`, ADR 0104).
-- [x] Calculs lourds hors de la fenêtre avec `HackBackground` (`exec/5`, ADR 0128 et 0140).
-- [x] SDK 1.2 : `HackWireContext` d'un service en worker, `OomScoreAdjust`, limites de processus, `TooManyOpenFiles` (`exec/10-final`).
-- [x] SDK 2.0 : modèles 2.0.0, `HackFileView` et `HackFileOperations` dans la table des services (`desk/6-sdk-2`, ADR 0161) ; migration d'une app 1.x dans [`sdk-packages.md`](sdk-packages.md#sdk-20).
+- [x] Calculs lourds hors de la fenêtre avec `KazoBackground` (`exec/5`, ADR 0128 et 0140).
+- [x] SDK 1.2 : `KazoWireContext` d'un service en worker, `OomScoreAdjust`, limites de processus, `TooManyOpenFiles` (`exec/10-final`).
+- [x] SDK 2.0 : modèles 2.0.0, `KazoFileView` et `KazoFileOperations` dans la table des services (`desk/6-sdk-2`, ADR 0161) ; migration d'une app 1.x dans [`sdk-packages.md`](sdk-packages.md#sdk-20).

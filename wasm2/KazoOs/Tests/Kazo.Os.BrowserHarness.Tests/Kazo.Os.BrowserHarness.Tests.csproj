@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsTestProject>false</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.14" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.14" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Infrastructure\Kazo.Os.Infrastructure.Browser\Kazo.Os.Infrastructure.Browser.csproj" />
+    <ProjectReference Include="..\..\Platform\Kazo.Os.Taskbar.Blazor\Kazo.Os.Taskbar.Blazor.csproj" />
+    <ProjectReference Include="..\..\Platform\Kazo.Os.Windowing.Blazor\Kazo.Os.Windowing.Blazor.csproj" />
+    <ProjectReference Include="..\..\Platform\Kazo.Os.Platform.Blazor\Kazo.Os.Platform.Blazor.csproj" />
+    <ProjectReference Include="..\..\Platform\Kazo.Os.Windowing.Core\Kazo.Os.Windowing.Core.csproj" />
+    <ProjectReference Include="..\..\Platform\Kazo.Os.Windowing.Abstractions\Kazo.Os.Windowing.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.Terminal\Kazo.Os.Apps.Terminal.csproj" />
+    <ProjectReference Include="..\..\Shared\Kazo.Os.AppSdk.VirtualKeyboard\Kazo.Os.AppSdk.VirtualKeyboard.csproj" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.CodeEditor\Kazo.Os.Apps.CodeEditor.csproj" />
+    <ProjectReference Include="..\..\Apps\System\Kazo.Os.Apps.KazoPaint\Kazo.Os.Apps.KazoPaint.csproj" />
+  </ItemGroup>
+
+</Project>

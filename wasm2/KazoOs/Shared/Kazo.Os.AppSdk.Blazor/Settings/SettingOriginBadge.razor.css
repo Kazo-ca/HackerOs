@@ -1,0 +1,35 @@
+.setting-origin {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 8px;
+    padding: 1px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--kos-border, #3a4b53);
+    font-family: var(--kos-font-mono, ui-monospace, monospace);
+    font-size: 0.7rem;
+    font-weight: normal;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    vertical-align: middle;
+    color: var(--kos-text-secondary, #a9b6bc);
+}
+
+.setting-origin.is-user {
+    border-color: var(--kos-accent, #42d392);
+    color: var(--kos-accent, #42d392);
+}
+
+.setting-origin.is-system {
+    border-color: var(--kos-info, #5fa8d3);
+    color: var(--kos-info, #5fa8d3);
+}
+
+.setting-origin.is-locked {
+    border-color: var(--kos-warning, #e0a43a);
+    color: var(--kos-warning, #e0a43a);
+}
+
+.origin-lock {
+    font-size: 0.75rem;
+}

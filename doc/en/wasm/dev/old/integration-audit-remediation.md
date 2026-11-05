@@ -5,8 +5,8 @@
 **Status:** Remediation in progress  
 **Audit date:** 2026-08-03  
 **Last progress update:** 2026-08-04
-**Target solution:** `wasm2/HackerOs/HackerOs.sln`  
-**Source plan:** `wasm2/HackerOs/docs/integration-task-list.md`  
+**Target solution:** `wasm2/KazoOs/Kazo.Os.sln`  
+**Source plan:** `wasm2/KazoOs/docs/integration-task-list.md`  
 **Architecture reference:** `doc/en/wasm/dev/plans/wasm-v3-migration-analyse.md`
 
 ## Progress summary
@@ -20,7 +20,7 @@ closing their remaining evidence gates.
 
 - [x] Standalone .NET 10 Release build: 0 warnings and 0 errors.
 - [x] Standalone Release solution test: 622 passed, 0 failed, 0 skipped.
-- [x] Trimmed `HackerOs.Ecosystem` Release publish succeeds.
+- [x] Trimmed `Kazo.Os.Ecosystem` Release publish succeeds.
 - [x] Transitive vulnerability scan reports no vulnerable packages.
 - [x] All window resize/focus scenarios pass, including three repeated runs of
   the three affected browser scenarios.
@@ -38,7 +38,7 @@ closing their remaining evidence gates.
 
 ### Implemented but still gated
 
-- CI now targets .NET 10 and `wasm2/HackerOs/HackerOs.sln`, but a successful
+- CI now targets .NET 10 and `wasm2/KazoOs/Kazo.Os.sln`, but a successful
   GitHub-hosted run has not yet been presented.
 - Code Editor now has a locally bundled Monaco Editor surface (replacing
   CodeMirror on 2026-08-21, plus an Open Folder tree view and an embedded
@@ -82,7 +82,7 @@ proof that runtime behavior has been implemented or tested.
 
 ## 2. Mandatory working rules
 
-- Make all source changes under `wasm2/HackerOs/`.
+- Make all source changes under `wasm2/KazoOs/`.
 - Do not modify legacy code under `src/`.
 - Prefer C# and Blazor; JavaScript is limited to browser APIs and isolated browser
   integrations.
@@ -104,11 +104,11 @@ proof that runtime behavior has been implemented or tested.
 - [x] **A-001 — Make the complete Release solution build and test successfully.**
   - Reopen at least `P2-GATE-001` while this work is incomplete.
   - Fix the unused exception variable in
-    `Server/HackerOs.Server/Endpoints/IdentityEndpoints.cs`.
+    `Server/Kazo.Os.Server/Endpoints/IdentityEndpoints.cs`.
   - Resolve the server trimming diagnostics instead of suppressing them globally.
     In particular, review EF Core construction, minimal API endpoint mapping,
     configuration binding, and reflection-based JSON serialization.
-  - Fix `Tests/HackerOs.Commands.Nano.Tests/NanoCommandTests.cs` to construct
+  - Fix `Tests/Kazo.Os.Commands.Nano.Tests/NanoCommandTests.cs` to construct
     `NanoCommand` with its manifest and pass a cancellation token to
     `ExecuteAsync`.
   - Resolve `Scalar.AspNetCore` version drift rather than allowing NuGet to choose
@@ -116,7 +116,7 @@ proof that runtime behavior has been implemented or tested.
   - Update or remove vulnerable dependencies reported for `Microsoft.OpenApi`
     2.0.0 and `SQLitePCLRaw.lib.e_sqlite3` 2.1.11. Document any unavoidable
     temporary exception with owner and expiry.
-  - **Acceptance:** `dotnet test HackerOs.sln --configuration Release` exits zero
+  - **Acceptance:** `dotnet test Kazo.Os.sln --configuration Release` exits zero
     with warnings treated as errors and with no failed test project.
   - **Evidence 2026-08-03:** standalone Release build completed with 0 warnings
     and 0 errors; the subsequent `--no-build` run passed 622 tests with 0 failed
@@ -144,7 +144,7 @@ proof that runtime behavior has been implemented or tested.
 - [x] **B-001 — Fix real-browser resize behavior.**
   - Reopen `P2-WIN-013`, `P2-ACC-004`, and dependent Phase 2 gates.
   - Diagnose the failing all-edge resize scenario in
-    `Tests/HackerOs.E2E.Tests/IndexedDbBrowserContractTests.cs` where the expected
+    `Tests/Kazo.Os.E2E.Tests/IndexedDbBrowserContractTests.cs` where the expected
     Y coordinate is 85 but the rendered value remains 70.
   - Verify all eight edges/corners with mouse, touch, and pen pointer types.
   - Keep geometry authoritative in C# and make gesture deltas deterministic.
@@ -168,7 +168,7 @@ proof that runtime behavior has been implemented or tested.
 
 - [x] **B-003 — Remove the `WindowHost.razor` inline-style exception.**
   - Reopen `BASE-011` and `P2-WIN-004` until the violation is removed.
-  - `Platform/HackerOs.Platform.Blazor/Windows/WindowHost.razor` currently renders
+  - `Platform/Kazo.Os.Platform.Blazor/Windows/WindowHost.razor` currently renders
     `style="@GeometryStyle"`.
   - `Directory.Build.targets` explicitly excludes `WindowHost.razor` from Razor
     asset validation. Remove this filename exception.
@@ -204,7 +204,7 @@ proof that runtime behavior has been implemented or tested.
   - The repository workflow `.github/workflows/deploy-wasm.yml` currently installs
     .NET 9 and publishes `wasm/HackerSimulator.Wasm.sln`.
   - Add or update CI to restore, build, test, publish, and exercise
-    `wasm2/HackerOs/HackerOs.sln` using .NET 10.
+    `wasm2/KazoOs/Kazo.Os.sln` using .NET 10.
   - Include warnings-as-errors, Razor asset validation, Playwright browser setup,
     E2E execution, published PWA tests, and artifact retention.
   - Do not mark `P2-ACC-017` complete merely because unit tests run locally.
@@ -212,7 +212,7 @@ proof that runtime behavior has been implemented or tested.
     and all required jobs pass on a clean runner.
   - **Progress 2026-08-03 — PARTIAL:** `.github/workflows/deploy-wasm.yml` now
     restores, builds, tests, scans, publishes, installs Playwright, and retains
-    diagnostics for the .NET 10 `wasm2/HackerOs/HackerOs.sln`. It also performs
+    diagnostics for the .NET 10 `wasm2/KazoOs/Kazo.Os.sln`. It also performs
     the production Razor source scan before browser execution. Awaiting an actual
     successful GitHub runner execution; published-PWA coverage is still absent.
 
@@ -307,7 +307,7 @@ proof that runtime behavior has been implemented or tested.
     Editor (own esbuild pipeline, per-worker bundles, no CDN dependency) to
     match the legacy JS app's editor. An Open Folder tree view (shared
     `FileView` control) and an embedded tabbed terminal (new shared
-    `HackerOs.AppSdk.Terminal` library, also now backing the standalone
+    `Kazo.Os.AppSdk.Terminal` library, also now backing the standalone
     Terminal app) were added. The Chromium contract test was updated for
     Monaco's DOM (`.monaco-editor`/`.native-edit-context`) and a recovery-path
     bug (using the opaque user ID instead of the home path, so saves silently
@@ -456,13 +456,13 @@ unchecked.
 
 ## 5. Required verification commands
 
-Run commands from `wasm2/HackerOs/` unless noted otherwise.
+Run commands from `wasm2/KazoOs/` unless noted otherwise.
 
 ```powershell
-dotnet restore HackerOs.sln
-dotnet build HackerOs.sln --configuration Release --no-restore
-dotnet test HackerOs.sln --configuration Release --no-build
-dotnet publish OS/HackerOs.Ecosystem/HackerOs.Ecosystem.csproj --configuration Release --no-restore
+dotnet restore Kazo.Os.sln
+dotnet build Kazo.Os.sln --configuration Release --no-restore
+dotnet test Kazo.Os.sln --configuration Release --no-build
+dotnet publish OS/Kazo.Os.Ecosystem/Kazo.Os.Ecosystem.csproj --configuration Release --no-restore
 ```
 
 Run the repository's updated Playwright/PWA workflow against published output.
@@ -494,7 +494,7 @@ This remediation is complete only when:
 - [x] All real-browser window tests pass reliably.
 - [x] No Razor component bypasses scoped-asset validation.
 - [ ] Published PWA offline and update behavior is proven in a real browser.
-- [x] Active CI targets `wasm2/HackerOs/HackerOs.sln` on .NET 10. A green hosted
+- [x] Active CI targets `wasm2/KazoOs/Kazo.Os.sln` on .NET 10. A green hosted
   run is still required by C-002.
 - [x] Lazy loading is implemented as documented or its tasks are left unchecked.
 - [ ] Accessibility claims are backed by automated and manual evidence.
@@ -512,7 +512,7 @@ This remediation is complete only when:
 The 2026-08-03 audit observed:
 
 - 305 checked tasks in `integration-task-list.md`.
-- `dotnet test HackerOs.sln --configuration Release --no-restore` exited nonzero.
+- `dotnet test Kazo.Os.sln --configuration Release --no-restore` exited nonzero.
 - Server build/analyzer failures and stale Nano tests prevented a green solution.
 - Two Playwright window tests failed: all-edge resize and pointer focus/z-order.
 - `WindowHost.razor` used inline geometry styling and was explicitly exempted from
@@ -532,40 +532,40 @@ verification after repository changes.
 
 ## 8. Latest executable evidence
 
-Evidence collected on 2026-08-04 from `wasm2/HackerOs/`:
+Evidence collected on 2026-08-04 from `wasm2/KazoOs/`:
 
 ```text
-dotnet restore HackerOs.sln
+dotnet restore Kazo.Os.sln
   PASS
 
-dotnet build HackerOs.sln --configuration Release --no-restore
+dotnet build Kazo.Os.sln --configuration Release --no-restore
   PASS — 0 warnings, 0 errors
 
-dotnet test HackerOs.sln --configuration Release --no-build
+dotnet test Kazo.Os.sln --configuration Release --no-build
   PASS — 622 passed, 0 failed, 0 skipped
 
-dotnet publish OS/HackerOs.Ecosystem/HackerOs.Ecosystem.csproj --configuration Release --no-restore
+dotnet publish OS/Kazo.Os.Ecosystem/Kazo.Os.Ecosystem.csproj --configuration Release --no-restore
   PASS — trimmed Release output produced
 
-dotnet publish Server/HackerOs.Server/HackerOs.Server.csproj --configuration Release --no-restore --output artifacts/server-publish
+dotnet publish Server/Kazo.Os.Server/Kazo.Os.Server.csproj --configuration Release --no-restore --output artifacts/server-publish
   PASS — non-trimmed optional-server publish produced; local startup migration and GET /health returned 200 healthy
 
-dotnet list HackerOs.sln package --vulnerable --include-transitive --no-restore
+dotnet list Kazo.Os.sln package --vulnerable --include-transitive --no-restore
   PASS — no vulnerable packages reported
 
-dotnet test Tests/HackerOs.Server.Tests/HackerOs.Server.Tests.csproj --configuration Release --no-restore
+dotnet test Tests/Kazo.Os.Server.Tests/Kazo.Os.Server.Tests.csproj --configuration Release --no-restore
   PASS — 40 passed, 0 failed, 0 skipped (includes startup migration and health integration test)
 
-dotnet test Tests/HackerOs.Commands.Nano.Tests/HackerOs.Commands.Nano.Tests.csproj --configuration Release --no-restore
+dotnet test Tests/Kazo.Os.Commands.Nano.Tests/Kazo.Os.Commands.Nano.Tests.csproj --configuration Release --no-restore
   PASS — 5 passed, 0 failed, 0 skipped
 
-dotnet test Tests/HackerOs.Apps.Terminal.Tests/HackerOs.Apps.Terminal.Tests.csproj --configuration Release --no-restore
+dotnet test Tests/Kazo.Os.Apps.Terminal.Tests/Kazo.Os.Apps.Terminal.Tests.csproj --configuration Release --no-restore
   PASS — 6 passed, 0 failed, 0 skipped
 
-dotnet test Tests/HackerOs.Apps.CodeEditor.Tests/HackerOs.Apps.CodeEditor.Tests.csproj --configuration Release --no-restore
+dotnet test Tests/Kazo.Os.Apps.CodeEditor.Tests/Kazo.Os.Apps.CodeEditor.Tests.csproj --configuration Release --no-restore
   PASS — 20 passed, 0 failed, 0 skipped
 
-dotnet test Tests/HackerOs.Platform.Blazor.Tests/HackerOs.Platform.Blazor.Tests.csproj --configuration Release --no-restore
+dotnet test Tests/Kazo.Os.Platform.Blazor.Tests/Kazo.Os.Platform.Blazor.Tests.csproj --configuration Release --no-restore
   PASS — 28 passed, 0 failed, 0 skipped
 ```
 

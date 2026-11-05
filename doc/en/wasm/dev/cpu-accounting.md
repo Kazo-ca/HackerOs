@@ -2,7 +2,7 @@
 
 # Measured CPU time per process and "Not responding"
 
-This document covers the implementation of CPU time measurement. What an app sees (`HackProcess`, `/proc/<pid>/stat`, `/proc/<pid>/status`, `/proc/stat`) and the rules to follow are in [`../framework/process-resources-api.md`](../framework/process-resources-api.md).
+This document covers the implementation of CPU time measurement. What an app sees (`KazoProcess`, `/proc/<pid>/stat`, `/proc/<pid>/status`, `/proc/stat`) and the rules to follow are in [`../framework/process-resources-api.md`](../framework/process-resources-api.md).
 
 Implementation of the `rebuild/5-cpu-accounting` work item of phase 5
 ([`execution-isolation-plan.md`](plans/execution-isolation-plan.md)):
@@ -21,24 +21,24 @@ context-switch hook of ADR 0066
   state (a slice longer than `UnresponsiveThresholdMs`), without ever
   interrupting anything.
 - Expose these measurements where Linux exposes them: `/proc/<pid>/stat`,
-  `/proc/<pid>/status`, `/proc/stat`, and `HackProcess` like
+  `/proc/<pid>/status`, `/proc/stat`, and `KazoProcess` like
   `System.Diagnostics.Process`.
 
 ## Architecture
 
 | Element | Project | Role |
 |---|---|---|
-| `ProcessCpuTimes`, `MeasuredThreadCpuTimes`, `ICpuTimeAccountant.TryGetProcessTimes` / `TryGetThreadTimes` | `Shared/HackerOs.Simulation.Abstractions` (`Processes/ResourceAccountingContracts.cs`) | contracts read by `/proc` and `CpuTimeAccounting` |
+| `ProcessCpuTimes`, `MeasuredThreadCpuTimes`, `ICpuTimeAccountant.TryGetProcessTimes` / `TryGetThreadTimes` | `Shared/Kazo.Os.Simulation.Abstractions` (`Processes/ResourceAccountingContracts.cs`) | contracts read by `/proc` and `CpuTimeAccounting` |
 | `ExecutionContextSwitch.FromKernel` / `ToKernel`, `IExecutionModeSwitchObserver` | same | mode (user or kernel) of the process left and of the process entered; mode change without process change |
-| `HackExecutionContext.EnterKernel` (internal) | `Shared/HackerOs.AppSdk` | "kernel" sub-frame of the current process; does nothing without a hook |
-| `AppFileSystemGateway`, `AppNetworkGateway`, `AppClipboardGateway`, `AppDriveGateway` | `Platform/HackerOs.Platform.Core` | open the kernel sub-frame around each call |
-| `MeasuredCpuTimeAccountant` | `Platform/HackerOs.Platform.ResourceAccounting` | the accountant: slices, `utime`/`stime`, compositor, `idle`, long tasks, responsiveness |
+| `KazoExecutionContext.EnterKernel` (internal) | `Shared/Kazo.Os.AppSdk` | "kernel" sub-frame of the current process; does nothing without a hook |
+| `AppFileSystemGateway`, `AppNetworkGateway`, `AppClipboardGateway`, `AppDriveGateway` | `Platform/Kazo.Os.Platform.Core` | open the kernel sub-frame around each call |
+| `MeasuredCpuTimeAccountant` | `Platform/Kazo.Os.Platform.ResourceAccounting` | the accountant: slices, `utime`/`stime`, compositor, `idle`, long tasks, responsiveness |
 | `ContextSwitchDispatcher` | same | also broadcasts mode changes to the measurements that observe them |
-| `ResourceAccountingServiceCollectionExtensions` | `OS/HackerOs.Ecosystem` | creates the accountant when CPU measurement is active and registers it on the dispatcher |
-| `CpuTimeAccounting` | `Platform/HackerOs.Platform.Core/Metrics` | real `/proc/stat` when the accountant measures |
-| `ProcFileSystemProvider` | `Platform/HackerOs.Platform.Core/FileSystem/Virtual` | `/proc/<pid>/stat` (new), measured fields of `status` |
-| `HackProcess` | `Shared/HackerOs.AppSdk/Diagnostics` | `UserProcessorTime`, `PrivilegedProcessorTime`, `TotalProcessorTime`, `Responding` |
-| `ProcessRow.Responding`, `ProcessesTab` | `Apps/System/HackerOs.Apps.SystemMonitor` | "Not responding" in the status column |
+| `ResourceAccountingServiceCollectionExtensions` | `OS/Kazo.Os.Ecosystem` | creates the accountant when CPU measurement is active and registers it on the dispatcher |
+| `CpuTimeAccounting` | `Platform/Kazo.Os.Platform.Core/Metrics` | real `/proc/stat` when the accountant measures |
+| `ProcFileSystemProvider` | `Platform/Kazo.Os.Platform.Core/FileSystem/Virtual` | `/proc/<pid>/stat` (new), measured fields of `status` |
+| `KazoProcess` | `Shared/Kazo.Os.AppSdk/Diagnostics` | `UserProcessorTime`, `PrivilegedProcessorTime`, `TotalProcessorTime`, `Responding` |
+| `ProcessRow.Responding`, `ProcessesTab` | `Apps/System/Kazo.Os.Apps.SystemMonitor` | "Not responding" in the status column |
 
 ### What the accountant sees
 
@@ -85,7 +85,7 @@ created: `user + system + idle` always equals the elapsed time.
   `nonvoluntary_ctxt_switches` stays at `0`: nothing is preempted.
 - A slice longer than **50 ms** is a *long task* (`LongTasks:`).
 - A slice longer than `UnresponsiveThresholdMs` (5 s by default,
-  `HackerOs:ResourceAccounting:Cpu:UnresponsiveThresholdMs`) puts the process
+  `KazoOs:ResourceAccounting:Cpu:UnresponsiveThresholdMs`) puts the process
   in **Not responding** (`Responding: 0`); it becomes `1` again as soon as it
   finishes a slice under the threshold, that is, it responds quickly to the
   next event.
@@ -106,7 +106,7 @@ created: `user + system + idle` always equals the elapsed time.
 
 Resolution: in the browser, `Stopwatch.GetTimestamp` reads
 `performance.now()`, rounded to 100 µs, or 5 µs when the page is isolated
-(ADR 0131 §4, ADR 0143 §7); `/proc/hackeros/workers` displays the measured
+(ADR 0131 §4, ADR 0143 §7); `/proc/kazoos/workers` displays the measured
 value (`timer-resolution-us`).
 
 The hot path reads the clock (`Stopwatch.GetTimestamp`), a few `[ThreadStatic]`
@@ -126,7 +126,7 @@ How an app reads these measurements is described in [`../framework/process-resou
 ### Configure
 
 See [`resource-accounting.md`](resource-accounting.md): MSBuild property
-`HackerOsCpuAccounting`, `HackerOs:ResourceAccounting:Cpu` section of the
+`KazoOsCpuAccounting`, `KazoOs:ResourceAccounting:Cpu` section of the
 `appsettings.json` files (`Enabled`, `UnresponsiveThresholdMs`). When off,
 the measurement installs nothing (if memory is off too, no hook) and `/proc`
 returns exactly the files from before phase 5, plus the new simulated `stat`.
@@ -157,26 +157,26 @@ returns exactly the files from before phase 5, plus the new simulated `stat`.
 
 | Suite | Covers |
 |---|---|
-| `HackerOs.Platform.ResourceAccounting.Tests` (`MeasuredCpuTimeAccountantTests`) | `utime` in a scope, `stime` in a real gateway (directly and through the composed dispatcher as in the OS), nested processes, long tasks and "Not responding" then return, compositor and budget, `idle` after a continuation, sum equal to elapsed time, usage over the last second, never-run process, array growth, real async continuations |
+| `Kazo.Os.Platform.ResourceAccounting.Tests` (`MeasuredCpuTimeAccountantTests`) | `utime` in a scope, `stime` in a real gateway (directly and through the composed dispatcher as in the OS), nested processes, long tasks and "Not responding" then return, compositor and budget, `idle` after a continuation, sum equal to elapsed time, usage over the last second, never-run process, array growth, real async continuations |
 | same (`RealAppsMeasurementTests`) | plan section 5.1: the real Calculator (window), the real `echo` (command) and the sample service, without changing their code; `/proc/<pid>/stat` (52 fields, `utime`/`stime`) and `status` (`CpuSource: measured`, `Responding: 1`) |
 | same (`CpuAccountingOverheadTests`, `Performance` category) | reference scenario (ten windows, typing in an editor with rendering on each key and gateway calls, `echo \| grep` pipeline) with and without measurement: a gap of more than 5% fails the test (best of 9 alternating rounds, three attempts) |
-| `HackerOs.Platform.Core.Tests` | format of measured and simulated `/proc/<pid>/stat`, fields added to `status` only when measured, measured `/proc/stat` on one core, `HackProcess.*ProcessorTime`, `Responding`, `ParseStatTimes` |
-| `HackerOs.Ecosystem.Tests` | accountant created and registered only if CPU measurement is active (16 combinations), threshold read from configuration, `/proc/stat` composed with the measurement |
-| `HackerOs.Apps.SystemMonitor.Tests` | "Not responding" in the status column and the sort |
+| `Kazo.Os.Platform.Core.Tests` | format of measured and simulated `/proc/<pid>/stat`, fields added to `status` only when measured, measured `/proc/stat` on one core, `KazoProcess.*ProcessorTime`, `Responding`, `ParseStatTimes` |
+| `Kazo.Os.Ecosystem.Tests` | accountant created and registered only if CPU measurement is active (16 combinations), threshold read from configuration, `/proc/stat` composed with the measurement |
+| `Kazo.Os.Apps.SystemMonitor.Tests` | "Not responding" in the status column and the sort |
 
-Checked by hand: a `HackerOs.Ecosystem` build with
-`-p:HackerOsCpuAccounting=false -p:HackerOsMemoryAccounting=false` contains no
-`HackerOs.Platform.ResourceAccounting*` file.
+Checked by hand: a `Kazo.Os.Ecosystem` build with
+`-p:KazoOsCpuAccounting=false -p:KazoOsMemoryAccounting=false` contains no
+`Kazo.Os.Platform.ResourceAccounting*` file.
 
 ## Task list
 
 - [x] Contracts: `ProcessCpuTimes`, `MeasuredThreadCpuTimes`, `TryGetProcessTimes`, `TryGetThreadTimes`, kernel mode in `ExecutionContextSwitch`, `IExecutionModeSwitchObserver`.
-- [x] Kernel sub-frame `HackExecutionContext.EnterKernel`, no cost when the hook is absent.
+- [x] Kernel sub-frame `KazoExecutionContext.EnterKernel`, no cost when the hook is absent.
 - [x] File, network, clipboard and disk gateways in kernel mode.
 - [x] `MeasuredCpuTimeAccountant`: `utime`/`stime`, compositor, `idle`, slices, long tasks, "Not responding".
 - [x] Mode change broadcast by `ContextSwitchDispatcher`; composition when CPU measurement is active.
 - [x] `/proc/<pid>/stat` (`proc(5)` format), measured fields of `/proc/<pid>/status`, real `/proc/stat` through `CpuTimeAccounting`.
-- [x] `HackProcess.UserProcessorTime`, `PrivilegedProcessorTime`, `TotalProcessorTime`, `Responding`.
+- [x] `KazoProcess.UserProcessorTime`, `PrivilegedProcessorTime`, `TotalProcessorTime`, `Responding`.
 - [x] "Not responding" status column of the task manager (display only).
 - [x] Measurement off: previous behavior (verified at build and by tests).
 - [x] Overhead test (< 5%).

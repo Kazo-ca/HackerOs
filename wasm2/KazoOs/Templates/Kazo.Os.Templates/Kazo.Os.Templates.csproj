@@ -1,0 +1,67 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Kazo.Os.Templates (ADR 0098 §6): the dotnet new templates of Kazo OS, packed locally by
+    build/pack-local.sh with every other package:
+
+      kazoos-window    window app (Blazor component over WindowAppBase)
+      kazoos-command   terminal command (TerminalAppBase)
+      kazoos-service   background service started at login (ServiceAppBase)
+      kazoos-site      ASP.Kazo site (WebAppDefinition)
+      kazoos-host      Blazor WebAssembly host running Kazo.Os.Ecosystem.Host with the base apps
+      kazoos-solution  a whole app repository (ADR 0176, ADR 0207): app, host, tests, Kazo OS
+                         submodule (sources in Debug, packages in Release), CI and the Kazo OS Store
+                         publishing workflow. Its projects take $(KazoOsVersion) from the submodule.
+
+    Each template has .template.config/ide.host.json (icon, parameter labels) for Visual Studio and
+    Rider (ADR 0176 §7).
+
+    Each template project declares <KazoOsVersion>0.0.0-dev</KazoOsVersion>; packing stages
+    content/ under obj/ and writes this repository's $(KazoOsVersion) there, so a generated
+    project references exactly the packages packed with it. The content is never compiled here.
+    Tests/Kazo.Os.Templates.E2E.Tests runs dotnet new and dotnet build for each one against the
+    local feed.
+  -->
+  <Import Project="..\..\Platform\Packaging.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <PackageId>Kazo.Os.Templates</PackageId>
+    <PackageType>Template</PackageType>
+    <Description>dotnet new templates for Kazo OS: window app, terminal command, service, ASP.Kazo site, host and app repository solution.</Description>
+    <PackageTags>kazoos;dotnet-new;templates</PackageTags>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <IncludeSymbols>false</IncludeSymbols>
+    <NoDefaultExcludes>true</NoDefaultExcludes>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <IsTrimmable>false</IsTrimmable>
+    <EnableTrimAnalyzer>false</EnableTrimAnalyzer>
+    <!-- No assembly, so nothing for the public API analyzer to track. -->
+    <NoWarn>$(NoWarn);NU5128;NU5100;RS0016;RS0017;RS0037</NoWarn>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_KazoOsPackTemplates</TargetsForTfmSpecificContentInPackage>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <_KazoOsTemplateSource Include="content/**" Exclude="content/**/bin/**;content/**/obj/**" />
+    <None Include="@(_KazoOsTemplateSource)" />
+  </ItemGroup>
+
+  <Target Name="_KazoOsPackTemplates">
+    <PropertyGroup>
+      <_KazoOsTemplateStage>$([MSBuild]::NormalizeDirectory('$(MSBuildProjectDirectory)', '$(IntermediateOutputPath)', 'template-content'))</_KazoOsTemplateStage>
+    </PropertyGroup>
+    <RemoveDir Directories="$(_KazoOsTemplateStage)" />
+    <Copy SourceFiles="@(_KazoOsTemplateSource)" DestinationFiles="@(_KazoOsTemplateSource->'$(_KazoOsTemplateStage)%(RecursiveDir)%(Filename)%(Extension)')" />
+    <ItemGroup>
+      <_KazoOsStagedProject Include="$(_KazoOsTemplateStage)**/*.csproj" />
+    </ItemGroup>
+    <XmlPoke XmlInputPath="%(_KazoOsStagedProject.Identity)" Query="/Project/PropertyGroup/KazoOsVersion" Value="$(KazoOsVersion)" />
+    <ItemGroup>
+      <_KazoOsStagedFile Include="$(_KazoOsTemplateStage)**" />
+      <TfmSpecificPackageFile Include="@(_KazoOsStagedFile)" PackagePath="content/%(RecursiveDir)%(Filename)%(Extension)" />
+    </ItemGroup>
+  </Target>
+
+</Project>

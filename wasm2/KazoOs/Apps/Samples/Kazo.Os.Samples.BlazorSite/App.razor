@@ -1,0 +1,15 @@
+@namespace Kazo.Os.Samples.BlazorSite
+@inherits KazoComponentBase
+@*
+    The root component of the site (ADR 0084 §5): the site's router, as a Blazor WebAssembly
+    App.razor, over the pages of this assembly.
+*@
+<KazoSiteRouter AppAssembly="typeof(App).Assembly" DefaultLayout="typeof(MainLayout)">
+    <NotFound>
+        <section class="not-found" role="alert">
+            <h1>404</h1>
+            <p>There is nothing at this address.</p>
+            <a href="/">Back to the home page</a>
+        </section>
+    </NotFound>
+</KazoSiteRouter>

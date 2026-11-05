@@ -7,7 +7,7 @@
 Accepté le 2026-10-16 (proposé le même jour, puis validé par Benoit avec le
 questionnaire de la section 4 du plan).
 
-- **Phase du plan :** phase web ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Phase du plan :** phase web ([`asp-kazo-plan.md`](../plans/asp-kazo-plan.md)).
 - **Dépend de :** ADR 0075 (iframe isolée).
 
 ## Contexte
@@ -18,7 +18,7 @@ tard un deuxième écran dans une autre fenêtre ; ce chantier doit le préparer
 
 Démarrer une seconde instance de HackerOS dans la nouvelle fenêtre donnerait un
 second OS : ses processus, sa mémoire et son état seraient séparés, et
-`HackerOs.Server` n'accepte qu'un circuit actif.
+`Kazo.Os.Server` n'accepte qu'un circuit actif.
 
 ## Décision
 

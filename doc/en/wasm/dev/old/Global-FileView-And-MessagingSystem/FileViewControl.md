@@ -10,7 +10,7 @@ Parent document: [`../Global-FileView-And-MessagingSystem.md`](../Global-FileVie
 directory and lets the user browse, select, rename, and rearrange its entries. It is the one control
 every file-listing surface in HackerOS is meant to build on:
 
-- `HackerOs.Apps.FileExplorer` hosts it today's Details/Grid/(new) Tree area, wrapped in its own
+- `Kazo.Os.Apps.FileExplorer` hosts it today's Details/Grid/(new) Tree area, wrapped in its own
   toolbar, breadcrumb bar, address bar, and dialogs (properties, open-with) — none of which move into
   `FileView` itself; those stay host chrome.
 - The Desktop background is a **future** host (explicitly out of scope for the current integration
@@ -21,15 +21,15 @@ every file-listing surface in HackerOS is meant to build on:
 
 ## Project & dependencies
 
-New Razor class library `Shared/HackerOs.AppSdk.FileView/HackerOs.AppSdk.FileView.csproj`, following the
-existing `HackerOs.AppSdk.Blazor` pattern (see [`../blazor-app-sdk.md`](../blazor-app-sdk.md)):
+New Razor class library `Shared/Kazo.Os.AppSdk.FileView/Kazo.Os.AppSdk.FileView.csproj`, following the
+existing `Kazo.Os.AppSdk.Blazor` pattern (see [`../blazor-app-sdk.md`](../blazor-app-sdk.md)):
 
-- References `HackerOs.App.Abstractions` (for `VirtualPath`, `AppCapabilities`), `HackerOs.AppSdk`
-  (for `IAppExecutionContext`/gateway types), `HackerOs.AppSdk.Icons` (for `IIconCatalog`/`HackerIcon`,
-  the vector half of icon rendering), and `HackerOs.Simulation.Abstractions` (for
+- References `Kazo.Os.App.Abstractions` (for `VirtualPath`, `AppCapabilities`), `Kazo.Os.AppSdk`
+  (for `IAppExecutionContext`/gateway types), `Kazo.Os.AppSdk.Icons` (for `IIconCatalog`/`HackerIcon`,
+  the vector half of icon rendering), and `Kazo.Os.Simulation.Abstractions` (for
   `IAppFileSystemGateway`, `FileSystemEntrySnapshot`, `FileSystemDirectorySnapshot`, and the topic/watch
   contracts from [`MessagingSystem.md`](MessagingSystem.md)).
-- Does **not** reference `HackerOs.Platform.Core` or any concrete platform implementation —
+- Does **not** reference `Kazo.Os.Platform.Core` or any concrete platform implementation —
   `FileView` only ever talks to gateway interfaces handed to it by its host, exactly like every other app
   boundary in this codebase (see `app-execution-context.md`).
 - May reference `MudBlazor` for the Details table (sortable columns) and context-menu rendering, per
@@ -166,7 +166,7 @@ happened," which matters for UI feedback even though the underlying filesystem o
 - **Inter-control drag**: dragging out of one `FileView` and dropping onto another (e.g. two
   `FileExplorer` windows) — the drop target only needs to be a `FileView`; it does not need to know the
   source. The drag payload reuses the existing, currently-unused
-  `Shared/HackerOs.AppSdk/DragDrop/VirtualFileDragPayload.cs` records
+  `Shared/Kazo.Os.AppSdk/DragDrop/VirtualFileDragPayload.cs` records
   (`VirtualFileDragPayload`/`VirtualFolderDragPayload`), serialized into the HTML5 `DataTransfer` as
   `application/json` under a stable custom MIME type (`application/vnd.hackeros.file-drag+json`) so a
   drop handler can distinguish a HackerOS-internal drag from an OS-level file drag before attempting to
@@ -211,7 +211,7 @@ public sealed record ShellIconDescriptor(ShellIconKind Kind, string? LibraryOrPa
 ```
 
 - The default `IShellIconProvider` (`Platform`-registered, DI singleton, same registration pattern as
-  `IIconCatalog` today) maps well-known extensions to `HackerOs.AppSdk.Icons` Lucide icons (folder, generic
+  `IIconCatalog` today) maps well-known extensions to `Kazo.Os.AppSdk.Icons` Lucide icons (folder, generic
   file, and a curated per-extension table: `.txt`→`file-text`, `.zip`→`file-archive`, `.exe`→`app-window`,
   etc.), and falls back to a generic file/folder icon for anything unrecognized. This mirrors — and
   replaces — `FileExplorerWindow`'s current hardcoded two-icon `if`.
@@ -245,7 +245,7 @@ public sealed record ShellIconDescriptor(ShellIconKind Kind, string? LibraryOrPa
    `../app-intents-and-associations.md`) decide which app opens the folder — "let the Shell manage it,"
    per the original request. See `integrationPlan.md` for the manifest/media-type work this requires;
    `FileView` itself only needs an `IAppIntentGateway` parameter and this one call. Today that resolves to
-   `HackerOs.Apps.FileExplorer` once it declares itself as the directory handler; nothing about `FileView`
+   `Kazo.Os.Apps.FileExplorer` once it declares itself as the directory handler; nothing about `FileView`
    hardcodes that app ID.
 3. **`Custom`**: `FileView` calls `OnCustomFolderActivate(item)` instead of doing anything itself. The
    host is fully responsible for what "opening" a folder means (e.g. a custom explorer step in a wizard).
@@ -285,7 +285,7 @@ handler must not prevent the rest from running or corrupt `FileView`'s own state
 ## Context menu customization
 
 There is no reusable `ContextMenu` component in the codebase today; this control introduces the first
-one, `Shared/HackerOs.AppSdk.FileView`'s `FileViewContextMenu.razor` (MudBlazor `MudMenu`-backed, per the
+one, `Shared/Kazo.Os.AppSdk.FileView`'s `FileViewContextMenu.razor` (MudBlazor `MudMenu`-backed, per the
 existing `FileExplorerWindow` pattern, just extracted and made generic).
 
 Customization is provider-based, not markup-based, so a host app can compose menu changes without owning

@@ -2,7 +2,7 @@
 
 # Rendu HTML du navigateur
 
-**Phase web, chantier `web/4-browser-html`** ([`asp-hack-plan.md`](plans/asp-hack-plan.md),
+**Phase web, chantier `web/4-browser-html`** ([`asp-kazo-plan.md`](plans/asp-kazo-plan.md),
 section 5). Décision : [ADR 0075](adr/0075-browser-html-rendering.md), ajustée
 par l'[ADR 0079](adr/0079-browser-html-rendering-adjustments.md). S'appuie sur
 les corps HTTP réels de [`http-bodies.md`](../framework/http-bodies.md).
@@ -15,7 +15,7 @@ structurés et affichait le HTML brut comme du texte. Désormais, une réponse
 devient une **vraie page web** : son CSS s'applique, son JavaScript s'exécute,
 ses `fetch`, ses `XMLHttpRequest`, ses formulaires, ses cookies et son
 `localStorage` fonctionnent. La page reste prisonnière : elle n'atteint ni
-HackerOS, ni Internet, ni les fichiers de l'utilisateur. Tout ce qu'elle
+Kazo OS, ni Internet, ni les fichiers de l'utilisateur. Tout ce qu'elle
 demande passe par le navigateur, qui décide en C#, comme un vrai navigateur
 applique la politique de même origine et CORS.
 
@@ -33,8 +33,8 @@ Le navigateur gagne aussi :
 
 ```
 BrowserWindow ── NavigateAsync ──► BrowserResourceLoader ──► SdkBrowserTransport
-     │                                  │  (journal Network/Console)   ├─ http(s) : HackHttpClient + cookies de l'onglet
-     │                                  ▼                              └─ file:   : HackFile / HackDirectoryInfo
+     │                                  │  (journal Network/Console)   ├─ http(s) : KazoHttpClient + cookies de l'onglet
+     │                                  ▼                              └─ file:   : KazoFile / KazoDirectoryInfo
      │                            DevToolsLog ◄── DevToolsPanel
      ▼
 HtmlPageComposer (AngleSharp) ── SubresourceFetcher + CssResourceRewriter
@@ -45,16 +45,16 @@ BrowserPageView (.razor.js) ── iframe sandbox="allow-scripts allow-forms", s
      │            ▼
 PageBridgeHandler ◄── PageBridge.js (dans la page) : fetch, XHR, liens, formulaires,
      │                 cookies, localStorage, console, history, titre, raccourcis
-     └── PageStorage (~/.local/share/hackeros/browser/storage/<site>/local-storage.json)
+     └── PageStorage (~/.local/share/kazoos/browser/storage/<site>/local-storage.json)
 ```
 
-Tous les fichiers sont sous `Apps/System/HackerOs.Apps.Browser/` :
+Tous les fichiers sont sous `Apps/System/Kazo.Os.Apps.Browser/` :
 
 | Dossier / fichier | Rôle |
 |---|---|
 | `Net/BrowserTransport.cs` | `BrowserRequest`, `BrowserResponse`, `BrowserFetchResult`, `IBrowserTransport`, codes `BrowserErrorCodes`. |
-| `Net/SdkBrowserTransport.cs` | Transport réel : `HackHttpClient` (cookies de l'onglet ou conteneur vide selon les credentials, en-têtes interdits filtrés) et `file:` (fichier ou listing). |
-| `Net/BrowserUrl.cs` | Barre d'adresse (`view-source:`, `about:blank`, chemins `/…` et `~/…`, recherche HackerSearch), résolution relative, origine, clé de stockage par site. |
+| `Net/SdkBrowserTransport.cs` | Transport réel : `KazoHttpClient` (cookies de l'onglet ou conteneur vide selon les credentials, en-têtes interdits filtrés) et `file:` (fichier ou listing). |
+| `Net/BrowserUrl.cs` | Barre d'adresse (`view-source:`, `about:blank`, chemins `/…` et `~/…`, recherche KazoSearch), résolution relative, origine, clé de stockage par site. |
 | `Net/DirectoryListingPage.cs` | Page « Index of » d'un dossier local. |
 | `Net/BrowserResourceLoader.cs` | Point de passage unique : chaque requête produit une ligne Network et, en échec, un message Console « Failed to load resource ». |
 | `Rendering/HtmlPageComposer.cs` | Analyse le HTML (AngleSharp), inline les sous-ressources, retire `<base>` et les cadres, ajoute charset, `<base href>`, CSP et le script du pont. |
@@ -68,9 +68,9 @@ Tous les fichiers sont sous `Apps/System/HackerOs.Apps.Browser/` :
 | `BrowserPageView.razor(.js)` | Crée l'iframe isolée, relaie les messages, détecte une navigation par script. |
 | `BrowserErrorPages.cs`, `BrowserDownloads.cs` | Pages d'erreur et téléchargements. |
 
-`SimulatedFileTypes` (`Shared/HackerOs.Simulation.Abstractions/Network/`)
+`SimulatedFileTypes` (`Shared/Kazo.Os.Simulation.Abstractions/Network/`)
 donne le type MIME d'un fichier local d'après son extension.
-`HackCookieContainer.Remove` (SDK) supprime un cookie expiré par la page.
+`KazoCookieContainer.Remove` (SDK) supprime un cookie expiré par la page.
 
 ## Fonctionnement
 
@@ -94,7 +94,7 @@ l'historique « suivant ».
 
 ### Vrais sites et barre d'adresse (ADR 0210)
 
-Un hôte inconnu du réseau simulé passe par le proxy du serveur HackerOS quand un
+Un hôte inconnu du réseau simulé passe par le proxy du serveur Kazo OS quand un
 serveur est connecté ([ADR 0210](adr/0210-browser-real-sites-through-the-proxy.md)) :
 le Navigateur est une app système avec `network.real.access`. La page suit le
 même chemin que les autres (récupération en C#, `srcdoc` isolé), ses
@@ -112,7 +112,7 @@ serveur.
 
 L'iframe est en `srcdoc` avec `sandbox="allow-scripts allow-forms"`, sans
 `allow-same-origin` : la page a une origine opaque et ne peut lire ni le DOM
-de HackerOS ni son stockage. Une meta CSP interdit toute connexion
+de Kazo OS ni son stockage. Une meta CSP interdit toute connexion
 (`connect-src 'none'`, `img-src data: blob:`…) : la page ne charge rien
 elle-même, tout ce dont elle a besoin a été inliné en URL `data:` ou passe par
 le pont.
@@ -126,14 +126,14 @@ Une réponse qui arrive après que l'onglet a changé de page est jetée.
 |---|---|
 | `fetch`, `XMLHttpRequest`, `navigator.sendBeacon` | Envoyés au navigateur. Même origine : en-têtes complets. Origine différente : CORS vérifié (`Access-Control-Allow-Origin`, `-Allow-Credentials`, `-Expose-Headers`), `no-cors` donne une réponse opaque. `file:` toujours refusé. |
 | `document.cookie` | Cookies de l'onglet pour l'URL de la page (`Max-Age` et `Expires` gérés). Vide sur une page `file:`. |
-| `localStorage` | Persisté par site dans `~/.local/share/hackeros/browser/storage/<clé>/local-storage.json` (clés `https_hôte`, `http_hôte_port`, `file`). Quota 5 Mi, `QuotaExceededError` au-delà. |
+| `localStorage` | Persisté par site dans `~/.local/share/kazoos/browser/storage/<clé>/local-storage.json` (clés `https_hôte`, `http_hôte_port`, `file`). Quota 5 Mi, `QuotaExceededError` au-delà. |
 | `sessionStorage` | En mémoire, le temps de l'onglet. |
 | Liens et formulaires | Interceptés : `GET`, `POST` urlencoded, multipart, `text/plain` ; fragment `#` local ; `download` enregistre le fichier. |
 | `history.pushState`/`replaceState` | Met à jour la barre d'adresse et l'historique. |
 | `document.URL`, `document.referrer` | L'URL réelle de la page, pas `about:srcdoc`. |
 | `console.*`, erreurs non gérées | Onglet Console des outils de développement. |
 | `alert` | Bannière au-dessus de la page ; `confirm` renvoie `false`, `prompt` `null`. |
-| Saisie semi-automatique | À l'envoi d'un formulaire, les champs texte nommés (ni mot de passe, ni caché, ni `autocomplete="off"`, ni numéro de carte) vont dans `~/.local/share/hackeros/browser/form-history.json` ; au focus d'un champ, ses valeurs passées sont proposées par une `<datalist>` ; `Ctrl+Maj+Suppr` efface l'historique (ADR 0088 §6, [`asp-hack-site-data.md`](../framework/asp-hack-site-data.md#saisie-semi-automatique)). |
+| Saisie semi-automatique | À l'envoi d'un formulaire, les champs texte nommés (ni mot de passe, ni caché, ni `autocomplete="off"`, ni numéro de carte) vont dans `~/.local/share/kazoos/browser/form-history.json` ; au focus d'un champ, ses valeurs passées sont proposées par une `<datalist>` ; `Ctrl+Maj+Suppr` efface l'historique (ADR 0088 §6, [`asp-kazo-site-data.md`](../framework/asp-kazo-site-data.md#saisie-semi-automatique)). |
 | `WebSocket`, `EventSource`, `window.open`, géolocalisation | Refusés. |
 | Éléments ajoutés après coup (`img.src = …`, `appendChild`) | Chargés par le navigateur à la demande. |
 
@@ -164,13 +164,13 @@ page y est recréée et son pont continue de parler à ce navigateur.
 
 ## Utilisation
 
-- Taper `example.hackeros/page.html` ou un chemin (`~/Documents/site/index.html`)
+- Taper `example.kazoos/page.html` ou un chemin (`~/Documents/site/index.html`)
   dans la barre d'adresse.
 - `Ctrl+U` ou le bouton `</>` : vue source ; `F12` : outils de développement ;
   `F5` : recharger ; `Alt+←`/`Alt+→` : historique. Ces raccourcis marchent
   aussi quand le focus est dans la page.
 - Un site qui veut être appelé depuis une autre origine renvoie
-  `Access-Control-Allow-Origin` (HackerSearch le fait sur `/api/search`).
+  `Access-Control-Allow-Origin` (KazoSearch le fait sur `/api/search`).
 
 ## Décisions clés
 
@@ -197,21 +197,21 @@ page y est recréée et son pont continue de parler à ce navigateur.
 
 ## Tests
 
-- `Tests/HackerOs.Apps.Browser.Tests` : composition HTML, réécriture CSS, pont
+- `Tests/Kazo.Os.Apps.Browser.Tests` : composition HTML, réécriture CSS, pont
   (CORS, credentials, cookies), URL, stockage, pages d'erreur, listing,
   téléchargements, journal des outils de développement.
-- `Tests/HackerOs.UI.E2E.Tests/BrowserHtmlRenderingTests.cs` : dans Chromium,
+- `Tests/Kazo.Os.UI.E2E.Tests/BrowserHtmlRenderingTests.cs` : dans Chromium,
   page web avec CSS, script, `fetch` et cookie ; sandbox vérifié ; onglet
   Network ; vue source ; XHR et formulaire `POST` ; site local `file://` avec
   `localStorage`, `fetch` CORS, lien et retour ; page d'erreur DNS.
-- `Tests/HackerOs.Apps.Browser.Tests/FormHistoryTests.cs` et
-  `Tests/HackerOs.UI.E2E.Tests/BrowserSiteDataTests.cs` : historique de
+- `Tests/Kazo.Os.Apps.Browser.Tests/FormHistoryTests.cs` et
+  `Tests/Kazo.Os.UI.E2E.Tests/BrowserSiteDataTests.cs` : historique de
   formulaires (fichier, limites, `<datalist>` dans Chromium).
-- `Tests/HackerOs.UI.E2E.Tests/BrowserHomePageTests.cs` : hors mode démo, le
-  navigateur s'ouvre sur HackerSearch et une recherche tapée dans la barre
+- `Tests/Kazo.Os.UI.E2E.Tests/BrowserHomePageTests.cs` : hors mode démo, le
+  navigateur s'ouvre sur KazoSearch et une recherche tapée dans la barre
   d'adresse affiche ses résultats (ADR 0085 : le catalogue réseau par défaut
   est branché dans l'OS).
-- Pages de test : `example.hackeros` (`/page.html`, `/form.html`, `/echo`,
+- Pages de test : `example.kazoos` (`/page.html`, `/form.html`, `/echo`,
   `/api/ping`) dans `SmokeTestNetworkSeed`, et le site
   `~/Documents/e2e-site` du mode démo E2E.
 

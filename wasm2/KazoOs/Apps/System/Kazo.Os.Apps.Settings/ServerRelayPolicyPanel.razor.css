@@ -1,0 +1,48 @@
+.relay-policy {
+    margin-top: 0.9rem;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid var(--kos-border, #34444c);
+    border-radius: var(--kos-radius-sm, 0.3rem);
+    background: var(--kos-bg-surface, #151c20);
+}
+
+.relay-policy h5 {
+    margin: 0 0 0.5rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--kos-accent, #3ee6a8);
+}
+
+.relay-grid {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.3rem 1rem;
+    margin: 0;
+    font-size: 0.82rem;
+}
+
+.relay-grid dt {
+    color: var(--kos-text-secondary, #9fb0b8);
+}
+
+.relay-grid dd {
+    margin: 0;
+    color: var(--kos-text-primary, #f4f7f8);
+    font-family: var(--kos-font-mono, ui-monospace, monospace);
+    word-break: break-word;
+}
+
+.relay-warning,
+.relay-error,
+.relay-off {
+    margin: 0.5rem 0 0;
+    padding: 0.4rem 0.6rem;
+    border-left: 3px solid var(--kos-warning, #f2b84b);
+    font-size: 0.8rem;
+    color: var(--kos-text-primary, #f4f7f8);
+}
+
+.relay-error {
+    border-left-color: var(--kos-error, #ff8f87);
+}

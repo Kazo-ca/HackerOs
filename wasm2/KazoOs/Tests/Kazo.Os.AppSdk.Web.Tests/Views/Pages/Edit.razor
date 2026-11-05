@@ -1,0 +1,11 @@
+@inherits KazoView<ContactForm>
+@layout _Layout
+<KazoValidationSummary ModelOnly="true" />
+<KazoForm Action="Edit" class="edit">
+    <label>Name <input name="Name" value="@Model.Name" /></label>
+    <KazoValidationMessage For="Name" />
+    <label>Age <input name="Age" value="@Model.Age" /></label>
+    <KazoValidationMessage For="Age" />
+    <button type="submit">Save</button>
+</KazoForm>
+<KazoForm Href="~/search" Method="get"><input name="q" /></KazoForm>

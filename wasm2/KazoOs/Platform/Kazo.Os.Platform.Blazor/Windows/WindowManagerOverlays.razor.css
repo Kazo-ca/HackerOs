@@ -1,0 +1,114 @@
+/* ADR 0095 §3: window switcher, keyboard move/resize banner and window menu, in the hacker console look. */
+
+.window-switcher-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    display: grid;
+    place-items: center;
+    background: color-mix(in srgb, var(--kos-bg-base, #070b0c) 35%, transparent);
+    pointer-events: none;
+}
+
+.window-switcher {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem;
+    max-width: min(54rem, calc(100vw - 2rem));
+    padding: 0.9rem;
+    border: 1px solid var(--kos-window-focused-border, #55d6a1);
+    border-radius: var(--kos-radius-md, 0.45rem);
+    background: color-mix(in srgb, var(--kos-bg-elevated, #0f1a1b) 94%, transparent);
+    box-shadow:
+        0 0 0 1px rgb(0 0 0 / 40%),
+        0 0 2.2rem color-mix(in srgb, var(--kos-window-focused-border, #55d6a1) 22%, transparent);
+    font-family: var(--kos-font-ui, system-ui, sans-serif);
+}
+
+.window-switcher-item {
+    display: grid;
+    justify-items: center;
+    gap: 0.45rem;
+    width: 7.5rem;
+    padding: 0.7rem 0.5rem 0.55rem;
+    border: 1px solid transparent;
+    border-radius: var(--kos-radius-sm, 0.3rem);
+    color: var(--kos-text-secondary, #9fb7b0);
+}
+
+.window-switcher-item.is-selected {
+    border-color: var(--kos-window-focused-border, #55d6a1);
+    background: color-mix(in srgb, var(--kos-window-focused-border, #55d6a1) 14%, transparent);
+    color: var(--kos-text-primary, #f4f7f8);
+}
+
+.window-switcher-item.is-minimized .window-switcher-glyph {
+    opacity: 0.55;
+}
+
+.window-switcher-glyph {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border: 1px solid var(--kos-window-border-color, #315249);
+    border-radius: var(--kos-radius-sm, 0.3rem);
+    background: var(--kos-window-background, #0c1516);
+    color: var(--kos-accent, #55d6a1);
+    font-family: var(--kos-font-mono, ui-monospace, monospace);
+    font-size: 1.35rem;
+    font-weight: 700;
+}
+
+.window-switcher-glyph img {
+    width: 2rem;
+    height: 2rem;
+    object-fit: contain;
+}
+
+.window-switcher-title {
+    max-width: 100%;
+    overflow: hidden;
+    font-size: 0.78rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.window-mode-banner {
+    position: fixed;
+    top: 0.75rem;
+    left: 50%;
+    z-index: 9000;
+    display: flex;
+    gap: 0.75rem;
+    align-items: baseline;
+    padding: 0.45rem 0.85rem;
+    transform: translateX(-50%);
+    border: 1px solid var(--kos-window-focused-border, #55d6a1);
+    border-radius: var(--kos-radius-sm, 0.3rem);
+    background: var(--kos-bg-elevated, #0f1a1b);
+    color: var(--kos-text-primary, #f4f7f8);
+    font-family: var(--kos-font-mono, ui-monospace, monospace);
+    font-size: 0.78rem;
+    box-shadow: 0 0 1.2rem color-mix(in srgb, var(--kos-window-focused-border, #55d6a1) 20%, transparent);
+}
+
+.window-mode-banner strong {
+    color: var(--kos-accent, #55d6a1);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .window-switcher {
+        animation: window-overlay-in 90ms ease-out;
+    }
+}
+
+@keyframes window-overlay-in {
+    from {
+        opacity: 0;
+        transform: scale(0.98);
+    }
+}

@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "org.kazoos.text-editor",
+  "name": "Text Editor",
+  "version": "1.4.0",
+  "publisherId": "org.kazoos",
+  "description": "A plain text and source code editor window application.",
+  "kind": "window",
+  "entryPoint": {
+    "assembly": "Kazo.Os.Apps.TextEditor",
+    "type": "Kazo.Os.Apps.TextEditor.TextEditorApp"
+  },
+  "sdkCompatibility": { "minimumVersion": "1.0.0" },
+  "presentation": {
+    "category": "productivity",
+    "launchVisibility": "visible",
+    "iconAssetPaths": ["assets/icon-32.png"]
+  },
+  "resources": {
+    "baselineCpuWeight": 0.05,
+    "burstCpuWeight": 0.2,
+    "baselineMemoryWeight": 0.05,
+    "burstMemoryWeight": 0.15,
+    "baselineStorageIoWeight": 0.05,
+    "burstStorageIoWeight": 0.1,
+    "baselineNetworkIoWeight": 0.0,
+    "burstNetworkIoWeight": 0.0
+  },
+  "assets": [
+    { "path": "assets/icon-32.png", "kind": "image", "sha256": "not-a-valid-sha256-hash" }
+  ]
+}

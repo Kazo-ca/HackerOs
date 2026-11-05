@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppCannotHandle" xml:space="preserve">
+    <value>application '{0}' does not declare '{1}'</value>
+  </data>
+  <data name="AppNotFound" xml:space="preserve">
+    <value>no installed application '{0}'</value>
+  </data>
+  <data name="BadCommandLine" xml:space="preserve">
+    <value>syntax error</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>xdg-mime: {0}</value>
+  </data>
+  <data name="FileInvalid" xml:space="preserve">
+    <value>~/.config/kazoos/file-associations.json is not valid; fix it or remove it first</value>
+  </data>
+  <data name="FileMissing" xml:space="preserve">
+    <value>file '{0}' does not exist</value>
+  </data>
+  <data name="InvalidPath" xml:space="preserve">
+    <value>invalid path '{0}'</value>
+  </data>
+  <data name="InvalidType" xml:space="preserve">
+    <value>'{0}' is neither a media type (type/subtype) nor an extension (.ext)</value>
+  </data>
+  <data name="Usage" xml:space="preserve">
+    <value>usage: xdg-mime query { default &lt;type&gt; | filetype &lt;file&gt; }
+       xdg-mime default &lt;app-id&gt; &lt;type&gt;...</value>
+  </data>
+  <data name="WriteFailed" xml:space="preserve">
+    <value>~/.config/kazoos/file-associations.json could not be written</value>
+  </data>
+</root>

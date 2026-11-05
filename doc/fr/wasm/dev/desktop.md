@@ -2,7 +2,7 @@
 
 # Bureau : icônes, raccourcis et `desktop.config`
 
-Les types `HackDesktop*`, le fichier `desktop.config`, les raccourcis `.desktop` et l'intent de création de raccourci destinés aux apps sont dans [`desktop-api.md`](../framework/desktop-api.md).
+Les types `KazoDesktop*`, le fichier `desktop.config`, les raccourcis `.desktop` et l'intent de création de raccourci destinés aux apps sont dans [`desktop-api.md`](../framework/desktop-api.md).
 
 Chantier `desk/5-desktop` du plan
 [`desktop-and-context-menu-plan.md`](plans/desktop-and-context-menu-plan.md) (§5).
@@ -21,7 +21,7 @@ les icônes système **Dossier perso** et **Corbeille**, comme le bureau de
 Windows ou de Xfce :
 
 - chaque icône garde sa case, mémorisée dans
-  `~/.config/hackeros/desktop.config` ; un fichier nouveau prend la première
+  `~/.config/kazoos/desktop.config` ; un fichier nouveau prend la première
   case libre ; « Réorganiser automatiquement » range tout sans trou ;
 - glisser pour déplacer (aimanté à la grille), sélection au lasso, Ctrl et Maj
   pour étendre, flèches, Entrée, F2 et Suppr ;
@@ -40,9 +40,9 @@ Sur mobile, il n'y a pas d'icônes de bureau (ADR 0152 §7).
 
 ```text
 DesktopShell ──► DesktopArea.BackgroundContent (BackgroundInteractive)
-                   └─ DesktopSurfaceHost ── lance org.hackeros.desktop (processus réel)
+                   └─ DesktopSurfaceHost ── lance org.kazoos.desktop (processus réel)
                         └─ DesktopSurface (app Bureau, droits de son manifeste)
-                             └─ HackFileView Mode=Desktop ──► registre ──► ExplorerFileView
+                             └─ KazoFileView Mode=Desktop ──► registre ──► ExplorerFileView
                                                                 └─ FileView ─► FileViewDesktop (grille)
 ```
 
@@ -50,10 +50,10 @@ DesktopShell ──► DesktopArea.BackgroundContent (BackgroundInteractive)
 | --- | --- | --- |
 | `DesktopSurfaceHost` | `Platform.Blazor` (`Shell/`) | Réserve l'app comme surface de la coquille (`WindowLaunchCoordinator.ReserveShellSurface`), la lance pour l'utilisateur de la session, rend son composant d'entrée hors fenêtre avec le contexte d'app et une portée de menus, la relance une fois si elle plante. `CreateShortcutAsync(appId)` envoie l'intent de raccourci. |
 | `DesktopArea.BackgroundInteractive` | `Windowing.Blazor` | Rend la couche de fond cliquable et lisible ; la couche des fenêtres laisse passer le pointeur hors des fenêtres. |
-| App **Bureau** (`org.hackeros.desktop`) | `Apps/System/HackerOs.Apps.Desktop` | App système cachée, à instance unique, SDK public seulement. Crée `~/Desktop` s'il manque, lit et écrit `desktop.config`, suit `~/.config/hackeros`, complète le menu du fond, reçoit l'intent de raccourci. |
+| App **Bureau** (`org.kazoos.desktop`) | `Apps/System/Kazo.Os.Apps.Desktop` | App système cachée, à instance unique, SDK public seulement. Crée `~/Desktop` s'il manque, lit et écrit `desktop.config`, suit `~/.config/kazoos`, complète le menu du fond, reçoit l'intent de raccourci. |
 | `FileViewDesktop` | explorateur, `FileControl/` (`AppSdk.FileView` avant le SDK 2.0) | Le mode Bureau du contrôle interne : grille mesurée (`ResizeObserver`), sélection, lasso, clavier, glisser-déposer, icônes système. Script collocalisé `FileViewDesktop.razor.js`. |
 | `ExplorerFileView` (`ExplorerFileView.Desktop.cs`) | `Apps.FileExplorer` | Le fournisseur : menus et actions de Dossier perso et Corbeille, état plein ou vide de la Corbeille, décor des raccourcis (nom et icône de l'app, grisé si l'app manque), lancement d'un raccourci, création de raccourcis à un dépôt d'app. |
-| Menu Démarrer (`AppLauncher.Menu.cs`, `AppLauncher.razor.js`) | `Platform.Blazor` | Menu de l'OS sur chaque app (Ouvrir, Épingler, Envoyer vers ▸ Bureau) et glisser d'une app (`application/vnd.hackeros.app+json`). |
+| Menu Démarrer (`AppLauncher.Menu.cs`, `AppLauncher.razor.js`) | `Platform.Blazor` | Menu de l'OS sur chaque app (Ouvrir, Épingler, Envoyer vers ▸ Bureau) et glisser d'une app (`application/vnd.kazoos.app+json`). |
 | `DesktopPanel` | `Apps.Settings` | L'onglet Paramètres ▸ Bureau. |
 
 Le bureau étant un processus, il apparaît dans `ps` et le gestionnaire des
@@ -99,29 +99,29 @@ Paramètres s'ouvre directement sur une page avec `--page=appearance` ou
 - **Cases, pas pixels** : une case reste juste quand la taille des icônes
   change.
 - **Raccourci écrit par le bureau** : « Envoyer vers ▸ Bureau » passe par
-  l'intent `org.hackeros.desktop.create-shortcut.v1`, et le fichier est écrit
+  l'intent `org.kazoos.desktop.create-shortcut.v1`, et le fichier est écrit
   avec les droits de l'app Bureau, pas de la coquille.
 
 ## Tests
 
-- `HackerOs.AppSdk.Tests/Files/HackDesktopTests.cs` : ordre, placement,
+- `Kazo.Os.AppSdk.Tests/Files/KazoDesktopTests.cs` : ordre, placement,
   collisions, hors écran, réorganisation automatique, déplacements, raccourcis
   (lecture, écriture, rejet, noms numérotés), `desktop.config` (lecture,
   écriture, clés encodées, création du dossier).
-- `HackerOs.Apps.FileExplorer.FileControl.Tests/FileViewDesktopTests.cs` : charge d'un glisser
+- `Kazo.Os.Apps.FileExplorer.FileControl.Tests/FileViewDesktopTests.cs` : charge d'un glisser
   d'app.
-- `HackerOs.Platform.Blazor.Tests/WindowLaunchCoordinatorTests.cs` :
+- `Kazo.Os.Platform.Blazor.Tests/WindowLaunchCoordinatorTests.cs` :
   réservation de surface.
-- `HackerOs.Apps.Settings.Tests/SettingsWindowTests.cs` : `--page=`.
-- `HackerOs.Ecosystem.Tests/BuildKnownLazyAppsTests.cs` : l'app Bureau est
+- `Kazo.Os.Apps.Settings.Tests/SettingsWindowTests.cs` : `--page=`.
+- `Kazo.Os.Ecosystem.Tests/BuildKnownLazyAppsTests.cs` : l'app Bureau est
   une app système chargée à la demande.
 
 ## Tâches (chantier `desk/5-desktop`)
 
 - [x] ADR 0160 (ajustements de l'ADR 0152).
-- [x] Contrat SDK : `HackDesktop*`, `HackDesktopEntry`, `HackDesktopSettings`,
-  `HackAppIcons`, `HackFileMenuItems.EmptyTrash`.
-- [x] `HackFileView` : `HackFileViewMode.Desktop`, `DesktopOptions`,
+- [x] Contrat SDK : `KazoDesktop*`, `KazoDesktopEntry`, `KazoDesktopSettings`,
+  `KazoAppIcons`, `KazoFileMenuItems.EmptyTrash`.
+- [x] `KazoFileView` : `KazoFileViewMode.Desktop`, `DesktopOptions`,
   `DesktopPositions`, `DesktopPositionsChanged`.
 - [x] `FileViewDesktop` : grille, sélection, lasso, clavier, renommage,
   glisser-déposer, icônes système.

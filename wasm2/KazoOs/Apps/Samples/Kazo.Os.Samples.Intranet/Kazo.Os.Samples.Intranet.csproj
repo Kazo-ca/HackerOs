@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <!--
+    Sample "Intranet" of ASP.Kazo (web/11, doc/en/wasm/framework/asp-kazo-developer-guide.md): one web app at
+    http://intranet.hack/ that brings the bricks of the web phase together. MVC pages written as
+    .cshtml and .razor views over a shared layout, a REST API, JavaScript from the embedded wwwroot
+    (run by the browser's isolated page), a cookie session with anti-forgery forms, and an interactive
+    Blazor task board under /board. The route generator (build/Kazo.Os.Apps.targets) compiles
+    IntranetSiteWebHost, the route table and the view table from IntranetSite.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.14" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The tests run the site in process with its generated route and view tables (internal). -->
+    <InternalsVisibleTo Include="Kazo.Os.Samples.Intranet.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\Kazo.Os.App.Abstractions\Kazo.Os.App.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Kazo.Os.AppSdk\Kazo.Os.AppSdk.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Kazo.Os.AppSdk.Blazor\Kazo.Os.AppSdk.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Kazo.Os.AppSdk.Web\Kazo.Os.AppSdk.Web.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Kazo.Os.AppSdk.Web.Blazor\Kazo.Os.AppSdk.Web.Blazor.csproj" />
+  </ItemGroup>
+
+</Project>

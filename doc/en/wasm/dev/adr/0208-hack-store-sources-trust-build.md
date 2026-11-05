@@ -5,7 +5,7 @@
 ## Status
 
 Accepted on 2026-10-30, work item `todo/3-hackstore-sources-trust` (`TODO`
-issue [#248](https://github.com/Kazo-ca/HackerOs/issues/248), Hack Store 3).
+issue [#248](https://github.com/Kazo-ca/Os/issues/248), Hack Store 3).
 Implements [ADR 0189](0189-app-sources-trust-and-per-user-install.md). Changes
 none of its decisions but one: the catalog is not built "when the session
 opens" but when the page starts, with a per-session hiding (§3 below). Benoit
@@ -32,8 +32,8 @@ sources and of the block list ask for.
    repository is never "Verified" on its own: that level is kept for the apps
    of the official catalog installed by the Store (Hack Store 4, issue #249).
 2. **Compile-time values.** The host (`HackerOsAppHost=true`) sets MSBuild
-   properties that `build/HackerOs.Apps.targets` turns into `AssemblyMetadata`
-   (prefix `HackerOs.AppPackages.`) of its assembly;
+   properties that `build/Kazo.Os.Apps.targets` turns into `AssemblyMetadata`
+   (prefix `Kazo.Os.AppPackages.`) of its assembly;
    `AppPackageDefaults.FromAssembly` reads them at startup. An empty property
    keeps the standard value (official catalog, `catalog:official` and
    `github.com/Kazo-ca` trusted, 6 h, nothing blocked):
@@ -101,7 +101,7 @@ sources and of the block list ask for.
 ## Tasks
 
 - [x] `app-sources.config`: `[catalogs]`, `[updates]`, untrusted sources,
-      compile-time values (`AppPackageDefaults`, `HackerOs.Apps.targets`).
+      compile-time values (`AppPackageDefaults`, `Kazo.Os.Apps.targets`).
 - [x] `app-policy.config`: reading, defaults, creation at startup (`FileSystemSeeder`).
 - [x] Install for oneself, one copy at a time, per-session catalog (`InstalledPackageCatalog`).
 - [x] Two-step approval window (`AppInstallApprovalBroker`, `AppInstallApprovalOverlay`).

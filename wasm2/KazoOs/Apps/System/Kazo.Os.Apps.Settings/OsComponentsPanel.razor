@@ -1,0 +1,102 @@
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
+@using Kazo.Os.AppSdk.Administration
+
+@*
+    Settings > OS components (ADR 0156 §3): which app provides the OS's file view and file dialogs
+    for the whole machine. A third-party app goes through the OS's approval window.
+*@
+<div class="os-components-panel">
+    @if (!_isAvailable)
+    {
+        <p class="setting-desc">@L["Components.Unavailable"]</p>
+    }
+    else
+    {
+        <p class="setting-desc">
+            @LocalizedMarkup.Format(L["Components.Description"], LocalizedMarkup.Code("/etc/kazoos/components.config"))
+        </p>
+
+        @if (!string.IsNullOrEmpty(_message))
+        {
+            <div class="@(_messageIsError ? "components-message error" : "components-message")" role="status">@_message</div>
+        }
+
+        @foreach (KazoComponentContractInfo contract in _overview)
+        {
+            <section key="@contract.Contract" class="setting-group components-contract">
+                <header class="components-contract-header">
+                    <h4>@ContractTitle(contract.Contract)</h4>
+                    <code>@contract.Contract</code>
+                </header>
+                <p class="setting-desc">@ContractDescription(contract.Contract)</p>
+
+                <div class="components-providers" role="radiogroup" aria-label="@ContractTitle(contract.Contract)">
+                    @foreach (KazoComponentProviderInfo provider in contract.Providers)
+                    {
+                        bool active = IsActive(contract, provider);
+                        <button type="button" role="radio" key="@provider.AppId"
+                                class="@ProviderClass(contract, provider)"
+                                aria-checked="@(active ? "true" : "false")"
+                                disabled="@(_isBusy || !provider.IsInstalled)"
+                                @onclick="() => Choose(contract, provider)">
+                            <span class="components-provider-name">@provider.Name</span>
+                            <code class="components-provider-id">@provider.AppId</code>
+                            <span class="components-provider-tags">
+                                <span class="@(provider.IsSystemApp ? "app-kind-badge system" : "app-kind-badge")">
+                                    @(provider.IsSystemApp ? L["Permissions.SystemApp"] : L["Permissions.NonSystemApp"])
+                                </span>
+                                @if (provider.AppId == contract.DefaultAppId)
+                                {
+                                    <span class="components-tag">@L["Components.Default"]</span>
+                                }
+                                @if (!provider.IsInstalled)
+                                {
+                                    <span class="components-tag muted">@L["Components.NotInstalled"]</span>
+                                }
+                            </span>
+                        </button>
+                    }
+                </div>
+
+                @if (contract.SelectedAppId is not null && !contract.Providers.Any(provider => provider.AppId == contract.SelectedAppId && provider.IsInstalled))
+                {
+                    <p class="components-warning">@L["Components.SelectedMissing", contract.SelectedAppId]</p>
+                }
+
+                @if (_pending is { } pending && pending.Contract == contract.Contract)
+                {
+                    <div class="components-confirm">
+                        <p>
+                            @(pending.AppId is null
+                                ? L["Components.Confirm.Default", ContractTitle(contract.Contract)]
+                                : L["Components.Confirm.Set", pending.AppName, ContractTitle(contract.Contract)])
+                        </p>
+                        @if (pending.OtherContract is { } other)
+                        {
+                            <label class="components-both">
+                                <input type="checkbox" @bind="_applyToOther" disabled="@_isBusy" />
+                                <span>@L["Components.AlsoFor", ContractTitle(other)]</span>
+                            </label>
+                        }
+                        @if (pending.NeedsApproval)
+                        {
+                            <p class="components-risk">@L["Components.Risk"]</p>
+                        }
+                        <div class="components-actions">
+                            <button type="button" class="@(pending.NeedsApproval ? "btn-danger" : "btn-primary")" disabled="@_isBusy"
+                                    @onclick="ApplyAsync">@L["Components.Apply"]</button>
+                            <button type="button" class="btn-secondary" disabled="@_isBusy" @onclick="Cancel">@L["Common.Cancel"]</button>
+                        </div>
+                    </div>
+                }
+                else if (contract.SelectedAppId is not null)
+                {
+                    <div class="components-actions">
+                        <button type="button" class="btn-secondary" disabled="@_isBusy"
+                                @onclick="() => ChooseDefault(contract)">@L["Components.ResetToDefault"]</button>
+                    </div>
+                }
+            </section>
+        }
+    }
+</div>

@@ -1,0 +1,379 @@
+@using Kazo.Os.App.Abstractions
+@using Kazo.Os.Infrastructure.Browser.Backup
+@using Kazo.Os.Infrastructure.Browser.FileSystem
+@using Kazo.Os.Infrastructure.Browser.Schema
+@using Kazo.Os.Infrastructure.Browser.Sessions
+@using Kazo.Os.Infrastructure.Browser.Settings
+@using Kazo.Os.Infrastructure.Browser.Storage
+@using Kazo.Os.Platform.Blazor.Windows
+@using Kazo.Os.Simulation.Abstractions
+@using Kazo.Os.Simulation.Abstractions.FileSystem
+@using Kazo.Os.Simulation.Abstractions.Sessions
+@using Kazo.Os.Simulation.Abstractions.Settings
+@using Kazo.Os.Windowing.Core
+@using Kazo.Os.Windowing.Abstractions
+@using Microsoft.JSInterop
+@inject IJSRuntime JsRuntime
+@inject NavigationManager Navigation
+
+<main>
+    <MudThemeProvider />
+    <MudPopoverProvider />
+    <MudDialogProvider />
+    <MudSnackbarProvider />
+    @if (IsDialogScenario)
+    {
+        <FileDialogBrowserScenario />
+    }
+    else if (IsScreenPortalScenario)
+    {
+        <ScreenPortalBrowserScenario />
+    }
+    else if (IsWindowScenario)
+    {
+        <WindowBrowserScenario />
+    }
+    else if (IsTerminalFullScreenScenario)
+    {
+        <TerminalFullScreenBrowserScenario />
+    }
+    else if (IsVirtualKeyboardTerminalScenario)
+    {
+        <VirtualKeyboardTerminalBrowserScenario />
+    }
+    else if (IsCodeEditorScenario)
+    {
+        <CodeEditorBrowserScenario />
+    }
+    else if (IsKazoPaintScenario)
+    {
+        <KazoPaintBrowserScenario />
+    }
+    else if (IsTaskbarScenario)
+    {
+        <TaskbarBrowserScenario />
+    }
+    else if (IsUnresponsiveScenario)
+    {
+        <UnresponsiveWindowBrowserScenario />
+    }
+    else
+    {
+        <h1>Kazo OS IndexedDB contract harness</h1>
+        <output id="contract-result" data-status="@_status">@_message</output>
+        <PlatformComplexControlsProof />
+    }
+</main>
+
+@code {
+    private const string DatabaseName = "kazoos";
+    private string _status = "running";
+    private string _message = "Running browser storage contracts.";
+    private bool _started;
+    private bool IsScreenPortalScenario => new Uri(Navigation.Uri).Query.Contains("scenario=screen-portal", StringComparison.Ordinal);
+    private bool IsWindowScenario => new Uri(Navigation.Uri).Query.Contains("scenario=window", StringComparison.Ordinal);
+    private bool IsDialogScenario => new Uri(Navigation.Uri).Query.Contains("scenario=dialog", StringComparison.Ordinal);
+    private bool IsTerminalFullScreenScenario => new Uri(Navigation.Uri).Query.Contains("scenario=terminal-full-screen", StringComparison.Ordinal);
+    private bool IsVirtualKeyboardTerminalScenario => new Uri(Navigation.Uri).Query.Contains("scenario=virtual-keyboard-terminal", StringComparison.Ordinal);
+    private bool IsCodeEditorScenario => new Uri(Navigation.Uri).Query.Contains("scenario=code-editor", StringComparison.Ordinal);
+    private bool IsKazoPaintScenario => new Uri(Navigation.Uri).Query.Contains("scenario=kazo-paint", StringComparison.Ordinal);
+    private bool IsTaskbarScenario => new Uri(Navigation.Uri).Query.Contains("scenario=taskbar", StringComparison.Ordinal);
+    private bool IsUnresponsiveScenario => new Uri(Navigation.Uri).Query.Contains("scenario=unresponsive", StringComparison.Ordinal);
+
+    /// <inheritdoc />
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender || _started)
+        {
+            return;
+        }
+
+        _started = true;
+        try
+        {
+            string query = new Uri(Navigation.Uri).Query;
+            if (query.Contains("scenario=window", StringComparison.Ordinal)
+                || query.Contains("scenario=screen-portal", StringComparison.Ordinal)
+                || query.Contains("scenario=dialog", StringComparison.Ordinal)
+                || query.Contains("scenario=terminal-full-screen", StringComparison.Ordinal)
+                || query.Contains("scenario=virtual-keyboard-terminal", StringComparison.Ordinal)
+                || query.Contains("scenario=code-editor", StringComparison.Ordinal)
+                || query.Contains("scenario=kazo-paint", StringComparison.Ordinal)
+                || query.Contains("scenario=taskbar", StringComparison.Ordinal)
+                || query.Contains("scenario=unresponsive", StringComparison.Ordinal))
+            {
+                return;
+            }
+
+            if (query.Contains("scenario=quota", StringComparison.Ordinal))
+            {
+                await VerifyQuotaFailureAsync();
+                _status = "passed";
+                _message = "Native quota exhaustion mapped to BrowserStorageQuotaException.";
+                StateHasChanged();
+                return;
+            }
+
+            if (query.Contains("scenario=idle", StringComparison.Ordinal))
+            {
+                _status = "passed";
+                _message = "Browser harness is ready.";
+                StateHasChanged();
+                return;
+            }
+
+            if (query.Contains("scenario=reload", StringComparison.Ordinal))
+            {
+                await VerifyReloadPersistenceAsync();
+                _status = "passed";
+                _message = "Filesystem data survived a page reload.";
+                StateHasChanged();
+                return;
+            }
+
+            await ResetDatabaseAsync();
+            await VerifyGroupRepositoryAsync();
+            await VerifyLegacySettingsStoreAsync();
+            await VerifyFileSystemProviderAsync();
+            await VerifyBackupRestoreAsync();
+            await VerifyOrphanCleanupAsync();
+            _status = "passed";
+            _message = "Repository, filesystem, backup, and cleanup IndexedDB contracts passed.";
+        }
+        catch (Exception exception)
+        {
+            _status = "failed";
+            _message = $"{exception.GetType().Name}: {exception.Message}";
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task VerifyQuotaFailureAsync()
+    {
+        await ResetDatabaseAsync();
+        await using IndexedDbLocalGroupRepository repository = new(JsRuntime);
+        try
+        {
+            await repository.CreateGroupAsync(LocalLoginName.Parse("quota-proof"));
+        }
+        catch (BrowserStorageQuotaException)
+        {
+            return;
+        }
+
+        throw new InvalidOperationException("Quota-limited IndexedDB write unexpectedly committed.");
+    }
+
+    private async Task ResetDatabaseAsync()
+    {
+        await using IJSObjectReference module = await JsRuntime.InvokeAsync<IJSObjectReference>(
+            "import",
+            "./_content/Kazo.Os.Infrastructure.Browser/indexedDb.js");
+        await module.InvokeVoidAsync("deleteDatabase", DatabaseName);
+    }
+
+    private async Task VerifyGroupRepositoryAsync()
+    {
+        await using IndexedDbLocalGroupRepository repository = new(JsRuntime);
+        LocalGroup created = await repository.CreateGroupAsync(LocalLoginName.Parse("browser-users"));
+        LocalGroup? loaded = await repository.FindByIdAsync(created.Id);
+        Require(loaded == created, "Group create/find did not round-trip.");
+        Require(
+            await repository.FindByIdAsync(LocalGroupId.FromGuid(Guid.NewGuid())) is null,
+            "Missing group lookup did not return null.");
+    }
+
+    /// <summary>
+    /// Settings are files since ADR 0044; the retired IndexedDB store is only read once by the
+    /// migration. Reading it through the real browser module must work on an unchanged schema.
+    /// </summary>
+    private async Task VerifyLegacySettingsStoreAsync()
+    {
+        await using IndexedDbLegacySettingsStore store = new(JsRuntime);
+        IReadOnlyList<Kazo.Os.Simulation.Abstractions.Settings.LegacySettingsRecord> records = await store.ReadAllAsync();
+        Require(records.Count == 0, "A fresh database exposed legacy settings records.");
+    }
+
+    private async Task VerifyFileSystemProviderAsync()
+    {
+        await using (IndexedDbFileSystemBootstrapper bootstrapper = new(JsRuntime))
+        {
+            await bootstrapper.EnsureRootAsync();
+            await bootstrapper.EnsureRootAsync();
+        }
+
+        FileSystemAuthorizationContext context = CreateFileSystemContext();
+        VirtualPath rootPath = VirtualPath.Parse("/");
+        VirtualPath sourcePath = VirtualPath.Parse("/browser.txt");
+        VirtualPath destinationPath = VirtualPath.Parse("/renamed.txt");
+        await using IndexedDbFileSystemProvider provider = new(JsRuntime);
+
+        FileSystemResult<FileSystemEntrySnapshot> root = await provider.StatAsync(
+            new FileSystemStatRequest(rootPath),
+            context);
+        Require(root.Succeeded, "Filesystem root was not initialized.");
+
+        FileSystemMutationResult created = await provider.CreateAsync(
+            new FileSystemCreateRequest(
+                sourcePath,
+                FileSystemEntryKind.File,
+                FileSystemPermissions.FromMode(0x01A4),
+                root.Value!.Metadata.Revision),
+            context);
+        Require(created.Succeeded, "Filesystem file creation failed.");
+
+        FileSystemResult<FileSystemDirectorySnapshot> afterCreate = await provider.EnumerateAsync(
+            new FileSystemEnumerateRequest(rootPath),
+            context);
+        Require(
+            afterCreate.Succeeded && afterCreate.Value!.Entries.Any(item => item.Name.Value == "browser.txt"),
+            "Created file was not enumerated.");
+
+        FileSystemMutationResult moved = await provider.MoveAsync(
+            new FileSystemMoveRequest(
+                sourcePath,
+                destinationPath,
+                created.Entry!.Metadata.Revision,
+                afterCreate.Value!.Revision,
+                afterCreate.Value.Revision),
+            context);
+        Require(moved.Succeeded, "Filesystem rename failed.");
+
+        FileSystemResult<FileSystemEntrySnapshot> sourceAfterMove = await provider.StatAsync(
+            new FileSystemStatRequest(sourcePath),
+            context);
+        FileSystemResult<FileSystemEntrySnapshot> destination = await provider.StatAsync(
+            new FileSystemStatRequest(destinationPath),
+            context);
+        Require(!sourceAfterMove.Succeeded, "Rename retained the source path.");
+        Require(destination.Succeeded, "Rename did not create the destination path.");
+
+        FileSystemResult<FileSystemDirectorySnapshot> beforeDelete = await provider.EnumerateAsync(
+            new FileSystemEnumerateRequest(rootPath),
+            context);
+        FileSystemMutationResult deleted = await provider.DeleteAsync(
+            new FileSystemDeleteRequest(
+                destinationPath,
+                destination.Value!.Metadata.Revision,
+                beforeDelete.Value!.Revision),
+            context);
+        Require(deleted.Succeeded, "Filesystem delete failed.");
+
+        FileSystemResult<FileSystemEntrySnapshot> destinationAfterDelete = await provider.StatAsync(
+            new FileSystemStatRequest(destinationPath),
+            context);
+        Require(!destinationAfterDelete.Succeeded, "Deleted path remained visible.");
+
+        FileSystemResult<FileSystemDirectorySnapshot> afterDelete = await provider.EnumerateAsync(
+            new FileSystemEnumerateRequest(rootPath),
+            context);
+        FileSystemMutationResult reloadProof = await provider.CreateAsync(
+            new FileSystemCreateRequest(
+                VirtualPath.Parse("/reload-proof.txt"),
+                FileSystemEntryKind.File,
+                FileSystemPermissions.FromMode(0x01A4),
+                afterDelete.Value!.Revision),
+            context);
+        Require(reloadProof.Succeeded, "Reload proof file creation failed.");
+    }
+
+    private async Task VerifyReloadPersistenceAsync()
+    {
+        await using IndexedDbFileSystemProvider provider = new(JsRuntime);
+        FileSystemResult<FileSystemEntrySnapshot> file = await provider.StatAsync(
+            new FileSystemStatRequest(VirtualPath.Parse("/reload-proof.txt")),
+            CreateFileSystemContext());
+        Require(file.Succeeded, "Filesystem marker did not survive reload.");
+    }
+
+    private async Task VerifyBackupRestoreAsync()
+    {
+        string backup;
+        await using (IndexedDbBackupService backupService = new(JsRuntime))
+        {
+            backup = await backupService.ExportAsync();
+        }
+
+        LocalGroup transient;
+        await using (IndexedDbLocalGroupRepository groups = new(JsRuntime))
+        {
+            transient = await groups.CreateGroupAsync(LocalLoginName.Parse("transient-after-backup"));
+        }
+
+        await using (IndexedDbBackupService backupService = new(JsRuntime))
+        {
+            IndexedDbRestoreResult replaced = await backupService.RestoreAsync(
+                backup,
+                IndexedDbRestoreMode.Replace);
+            Require(replaced.RecordCount > 0, "Replacement restore reported no records.");
+            IndexedDbRestoreResult merged = await backupService.RestoreAsync(
+                backup,
+                IndexedDbRestoreMode.Merge);
+            Require(merged.RecordCount == replaced.RecordCount, "Idempotent merge count differs.");
+        }
+
+        await using IndexedDbLocalGroupRepository verification = new(JsRuntime);
+        Require(
+            await verification.FindByIdAsync(transient.Id) is null,
+            "Replacement restore retained a post-backup record.");
+    }
+
+    private async Task VerifyOrphanCleanupAsync()
+    {
+        const string orphanHash = "0000000000000000000000000000000000000000000000000000000000000000";
+        await using (IJSObjectReference module = await JsRuntime.InvokeAsync<IJSObjectReference>(
+            "import",
+            "./_content/Kazo.Os.Infrastructure.Browser/indexedDb.js"))
+        {
+            await module.InvokeAsync<object[]>(
+                "executeTransaction",
+                DatabaseName,
+                KazoOsIndexedDbSchema.CurrentVersion,
+                new[] { "fsContent" },
+                "readwrite",
+                new[]
+                {
+                    new
+                    {
+                        kind = "add",
+                        objectStoreName = "fsContent",
+                        value = new
+                        {
+                            contentHash = orphanHash,
+                            chunkIndex = 0,
+                            dataBase64 = string.Empty,
+                            createdUtcMs = 0
+                        }
+                    }
+                });
+        }
+
+        await using IndexedDbFileSystemMaintenance maintenance = new(JsRuntime);
+        IndexedDbFileContentCleanupResult result = await maintenance.CleanupAsync();
+        Require(result.CandidateHashes == 1, "Orphan cleanup did not select the stale hash.");
+        Require(result.DeletedChunks == 1, "Orphan cleanup did not delete the stale chunk.");
+        Require(result.RetainedReferencedHashes == 0, "Orphan cleanup treated stale data as referenced.");
+    }
+
+    private static FileSystemAuthorizationContext CreateFileSystemContext()
+    {
+        AppOperationContext operation = new()
+        {
+            AppId = "org.kazoos.browser-harness",
+            UserId = "user",
+            UserAuthority = AppAuthority.Administrator,
+            GrantedCapabilities = new HashSet<string>(AppCapabilities.All, StringComparer.Ordinal),
+            IsSystemOperation = true
+        };
+        return new FileSystemAuthorizationContext(operation, ["users"], DateTimeOffset.UtcNow);
+    }
+
+    private static void Require(bool condition, string message)
+    {
+        if (!condition)
+        {
+            throw new InvalidOperationException(message);
+        }
+    }
+}

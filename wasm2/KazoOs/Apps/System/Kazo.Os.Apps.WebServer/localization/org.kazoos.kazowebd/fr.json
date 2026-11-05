@@ -1,0 +1,4 @@
+{
+  "name": "kazowebd",
+  "description": "Serveur web de Kazo OS : sert les sites statiques déclarés dans /etc/kazoweb/sites et ~/.config/kazoweb/sites"
+}

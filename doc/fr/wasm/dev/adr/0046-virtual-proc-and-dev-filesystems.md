@@ -29,8 +29,8 @@ ne monte aujourd'hui que le fournisseur IndexedDB.
 | `/proc` | `ProcFileSystemProvider` | `procfs` |
 | `/dev` | `DevFileSystemProvider` | `devfs` |
 
-- Emplacement : `Platform/HackerOs.Platform.Core/FileSystem/Virtual/`, namespace
-  `HackerOs.Platform.Core.FileSystem.Virtual`. Les deux implémentent
+- Emplacement : `Platform/Kazo.Os.Platform.Core/FileSystem/Virtual/`, namespace
+  `Kazo.Os.Platform.Core.FileSystem.Virtual`. Les deux implémentent
   `IFileSystemProvider`.
 - **Calculés à chaque lecture.** Aucun appel au stockage, rien n'est écrit dans
   IndexedDB (D20).
@@ -122,7 +122,7 @@ Sources des chiffres :
   borné.
 
 Pour connaître l'appelant (`/proc/self`), on ajoute à `AppOperationContext`
-(`Shared/HackerOs.App.Abstractions/AppOperationContext.cs`) une propriété
+(`Shared/Kazo.Os.App.Abstractions/AppOperationContext.cs`) une propriété
 `long? ProcessId { get; init; }`. C'est la valeur brute, parce que
 `App.Abstractions` ne référence pas le type `ProcessId`.
 `AppExecutionContextFactory` la renseigne.
@@ -160,7 +160,7 @@ dans la plateforme et les apps de base doivent être revus pour ce nouveau cas.
 
 ### 6. Tests de contrat
 
-Dans `Tests/HackerOs.Platform.Core.Tests/FileSystem/Virtual/` :
+Dans `Tests/Kazo.Os.Platform.Core.Tests/FileSystem/Virtual/` :
 
 - listage de `/` contenant `proc` et `dev` ;
 - format exact de `status`, `meminfo`, `uptime` et `loadavg` avec une horloge et
@@ -188,4 +188,4 @@ Dans `Tests/HackerOs.Platform.Core.Tests/FileSystem/Virtual/` :
 - ADR 0012 : processus, horloge, ressources et aléa.
 - ADR 0043 : API `Hack*`.
 - [`ecosystem-rebuild-plan.md`](../plans/ecosystem-rebuild-plan.md), sections 5.4, 7.2 et 8.2.
-- `Platform/HackerOs.Platform.Core/FileSystem/FileSystemMountRouter.cs`, `Platform/HackerOs.Platform.Core/Processes/`.
+- `Platform/Kazo.Os.Platform.Core/FileSystem/FileSystemMountRouter.cs`, `Platform/Kazo.Os.Platform.Core/Processes/`.

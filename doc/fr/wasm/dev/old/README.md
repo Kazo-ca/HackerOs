@@ -14,7 +14,7 @@ doc, update this index in the same change — see the documentation-maintenance
 rule in the repository root [`AGENTS.md`](../../../../../AGENTS.md).
 
 Every doc listed here documents the browser-first WASM solution under
-`wasm2/HackerOs/`. The legacy TypeScript app in `src/` is a separate,
+`wasm2/KazoOs/`. The legacy TypeScript app in `src/` is a separate,
 read-only behavioral reference and is not covered by this index.
 
 ## Start here
@@ -23,7 +23,7 @@ Read these first regardless of what you're about to work on.
 
 | Doc | What it's for |
 | --- | --- |
-| [`../README.md`](../../../../../wasm2/HackerOs/README.md) | Solution layout and build/test commands. |
+| [`../README.md`](../../../../../wasm2/KazoOs/README.md) | Solution layout and build/test commands. |
 | [`../../../AGENTS.md`](../../../../../AGENTS.md) | Binding rules: directory boundaries, collocated Razor assets, file naming, doc-maintenance. |
 | [`hosting-model.md`](hosting-model.md) | The three host projects (Ecosystem PWA, `test/test` debug harness, optional Server) and how they relate. |
 | [`implementation-status.md`](implementation-status.md) | The current, authoritative state of the migration — what's built, what's open, test counts. |
@@ -79,7 +79,7 @@ itself — filesystem, settings, security, window runtime, storage.
 | [`desktop-shell.md`](desktop-shell.md) | Desktop workspace, taskbar, launcher, and notifications. |
 | [`start-menu.md`](start-menu.md) | Windows 7-inspired Start menu, quick links, and ordered per-user application pins. |
 | [`Global-FileView-And-MessagingSystem.md`](Global-FileView-And-MessagingSystem.md) | Design entry point for the reusable `FileView` control and the topic-based messaging/filesystem-watch extension to `IEventBus`; see the linked `FileViewControl.md`, `MessagingSystem.md`, and `integrationPlan.md`. |
-| [`ecosystem-host.md`](ecosystem-host.md) | The standalone `HackerOs.Ecosystem` PWA composition root. |
+| [`ecosystem-host.md`](ecosystem-host.md) | The standalone `Kazo.Os.Ecosystem` PWA composition root. |
 | [`lazy-loading.md`](lazy-loading.md) | Build-known lazy assembly loading architecture. |
 | [`startup-performance.md`](startup-performance.md) | The WASM startup path and its performance budget. |
 | [`web-crypto-password-hasher.md`](web-crypto-password-hasher.md) | Hardware-accelerated PBKDF2 hashing via the Web Crypto API. |

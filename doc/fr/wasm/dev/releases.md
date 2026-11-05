@@ -1,21 +1,21 @@
 > [English version](../../../en/wasm/dev/releases.md)
 
-# Publier une version de HackerOS
+# Publier une version de Kazo OS
 
 Une nouvelle version se publie en changeant **un seul fichier** :
-`wasm2/HackerOs/build/Versions.props`. Une fois la modification fusionnée dans
+`wasm2/KazoOs/build/Versions.props`. Une fois la modification fusionnée dans
 `main`, GitHub Actions crée le tag, la GitHub Release et pousse les paquets sur
 nuget.org ([ADR 0173](adr/0173-automatic-releases-from-the-version-file.md)).
 
 ## Le fichier de version
 
 ```xml
-<HackerOsVersion>2.2.2</HackerOsVersion>
+<KazoOsVersion>2.2.2</KazoOsVersion>
 ```
 
 `Directory.Build.props` l'importe : chaque assembly, chacun des 42 paquets
-`HackerOs.*`, les modèles `dotnet new`, les manifestes générés
-(`sdkCompatibility.minimumVersion`) et `HackerOsSdk.Version` (affichée dans
+`Kazo.Os.*`, les modèles `dotnet new`, les manifestes générés
+(`sdkCompatibility.minimumVersion`) et `KazoOsSdk.Version` (affichée dans
 Paramètres ▸ À propos et sur l'écran d'accueil) en découlent. Aucun code ni
 test ne répète le numéro.
 
@@ -34,28 +34,28 @@ Choisir le numéro selon SemVer
 1. Créer une branche depuis `main`.
 2. Pour une mineure ou une majeure, verser l'API publique :
    `build/tools/ship-public-api.sh` (`--check` pour voir sans rien changer).
-3. Changer `HackerOsVersion` dans `build/Versions.props`.
+3. Changer `KazoOsVersion` dans `build/Versions.props`.
    Dans la même PR, regrouper les entrées de `changes/unreleased/` dans
    `changes/<version>.json` ([`change-list.md`](change-list.md), ADR 0186).
-4. (Conseillé) compiler une fois (`dotnet build HackerOs.sln -c Release`) et
+4. (Conseillé) compiler une fois (`dotnet build Kazo.Os.sln -c Release`) et
    committer les manifestes réécrits ; le build les régénère de toute façon.
 5. Ouvrir la PR vers `main`, attendre la vérification verte, fusionner.
-6. Suivre l'onglet **Actions** : *Verify HackerOS WASM* tourne sur `main`, puis
-   *Release HackerOS*. La Release apparaît sous **Releases** avec le tag
+6. Suivre l'onglet **Actions** : *Verify Kazo OS WASM* tourne sur `main`, puis
+   *Release Kazo OS*. La Release apparaît sous **Releases** avec le tag
    `v<version>`.
 
-## Ce que fait le workflow `Release HackerOS`
+## Ce que fait le workflow `Release Kazo OS`
 
-Fichier : `.github/workflows/release.yml`. Il démarre quand *Verify HackerOS
+Fichier : `.github/workflows/release.yml`. Il démarre quand *Verify Kazo OS
 WASM* se termine **avec succès** après un push sur `main`, puis :
 
-1. lit `HackerOsVersion` du commit vérifié ; si le tag `v<version>` existe
+1. lit `KazoOsVersion` du commit vérifié ; si le tag `v<version>` existe
    déjà, il s'arrête (rien à publier) ;
 2. empaquette avec `build/pack-local.sh --ci` ;
-3. garde uniquement les `HackerOs.*.<version>.nupkg` et `.snupkg` ;
-4. publie la PWA (`dotnet publish`) et la zippe en `hackeros-wasm-<version>.zip` ;
+3. garde uniquement les `Kazo.Os.*.<version>.nupkg` et `.snupkg` ;
+4. publie la PWA (`dotnet publish`) et la zippe en `kazoos-wasm-<version>.zip` ;
 5. pousse les paquets sur nuget.org si c'est configuré (voir plus bas) ;
-6. crée le tag et la GitHub Release : titre `HackerOS <version>`, notes
+6. crée le tag et la GitHub Release : titre `Kazo OS <version>`, notes
    générées par GitHub depuis les PR fusionnées, paquets et zip joints.
 
 Le tag est créé en dernier : si une étape échoue, relancer le workflow
@@ -64,7 +64,7 @@ sont sautés (`--skip-duplicate`).
 
 ### Lancer à la main
 
-Onglet **Actions** ▸ *Release HackerOS* ▸ *Run workflow* (branche `main`) :
+Onglet **Actions** ▸ *Release Kazo OS* ▸ *Run workflow* (branche `main`) :
 
 - sans option : publie la version de `main` si elle n'est pas encore taguée ;
 - avec **republish** : ré-empaquette la version déjà taguée et la pousse sur
@@ -73,10 +73,10 @@ Onglet **Actions** ▸ *Release HackerOS* ▸ *Run workflow* (branche `main`) :
 
 ## Annonce aux sessions ouvertes
 
-Le site publié contient `/version.json` (`{ "product": "HackerOS", "version": "2.1.0" }`),
+Le site publié contient `/version.json` (`{ "product": "Kazo OS", "version": "2.1.0" }`),
 écrit par le build depuis `build/Versions.props`. Chaque session ouverte le relit
 toutes les 5 minutes ; quand le site sert une autre version, un bandeau dit
-« HackerOS <version> est disponible » avec « Redémarrer pour mettre à jour »
+« Kazo OS <version> est disponible » avec « Redémarrer pour mettre à jour »
 ([ADR 0174](adr/0174-announce-a-new-version-to-open-sessions.md)).
 
 ## Configurer la publication sur nuget.org
@@ -91,15 +91,15 @@ renouveler).
 2. Menu du compte (en haut à droite) ▸ **Trusted Publishing** ▸ **Create**
    (ou *Add new trusted publishing policy*).
 3. Remplir :
-   - *Policy name* : `HackerOs release` ;
+   - *Policy name* : `Kazo OS release` ;
    - *Package owner* : votre compte (ou l'organisation nuget.org qui
      possédera les paquets) ;
    - *Publisher* : **GitHub Actions** ;
    - *Repository owner* : `Kazo-ca` ;
-   - *Repository* : `HackerOs` ;
+   - *Repository* : `Os` ;
    - *Workflow file* : `release.yml` (le nom seul, sans `.github/workflows/`) ;
    - *Environment* : laisser vide.
-4. Dans GitHub : dépôt `Kazo-ca/HackerOs` ▸ **Settings** ▸ **Secrets and
+4. Dans GitHub : dépôt `Kazo-ca/Os` ▸ **Settings** ▸ **Secrets and
    variables** ▸ **Actions** ▸ onglet **Variables** ▸ **New repository
    variable** : nom `NUGET_USER`, valeur = votre **nom d'utilisateur**
    nuget.org (le nom du profil, pas l'adresse courriel).
@@ -110,9 +110,9 @@ contre une clé valable une heure.
 ### Option B : clé d'API
 
 1. nuget.org ▸ menu du compte ▸ **API Keys** ▸ **Create**.
-2. *Key name* : `HackerOs GitHub Actions` ; *Expires in* : 365 jours ;
+2. *Key name* : `Kazo OS GitHub Actions` ; *Expires in* : 365 jours ;
    *Select scopes* : **Push** ▸ *Push new packages and package versions* ;
-   *Glob pattern* : `HackerOs.*`. Créer, puis **Copy**.
+   *Glob pattern* : `Kazo.Os.*`. Créer, puis **Copy**.
 3. GitHub ▸ **Settings** ▸ **Secrets and variables** ▸ **Actions** ▸ onglet
    **Secrets** ▸ **New repository secret** : nom `NUGET_API_KEY`, valeur = la
    clé copiée.
@@ -122,27 +122,27 @@ Si `NUGET_USER` existe, le workflow prend l'option A ; sinon `NUGET_API_KEY` ;
 sans les deux, il publie la Release GitHub seule avec l'avertissement « nuget.org
 publishing is not configured ».
 
-### Facultatif : réserver le préfixe `HackerOs.`
+### Facultatif : réserver le préfixe `Kazo.Os.`
 
 Une réservation de préfixe affiche le badge « vérifié » et empêche un tiers de
-publier un paquet `HackerOs.*`. Elle se demande par courriel à
+publier un paquet `Kazo.Os.*`. Elle se demande par courriel à
 `account@nuget.org` (voir la page *ID prefix reservation* de la documentation
 NuGet), après la première publication.
 
 ## Vérifier une publication
 
-- **Releases** du dépôt : la Release `HackerOS <version>`, ses `.nupkg`,
-  `.snupkg` et `hackeros-wasm-<version>.zip`.
-- Résumé du job *Release HackerOS* : la liste des paquets et la ligne
+- **Releases** du dépôt : la Release `Kazo OS <version>`, ses `.nupkg`,
+  `.snupkg` et `kazoos-wasm-<version>.zip`.
+- Résumé du job *Release Kazo OS* : la liste des paquets et la ligne
   « NuGet: packages pushed to nuget.org » (ou « not configured »).
 - nuget.org : un paquet récent est indexé en quelques minutes
-  (`https://www.nuget.org/packages/HackerOs.AppSdk`).
+  (`https://www.nuget.org/packages/Kazo.Os.AppSdk`).
 
 ## Dépannage
 
 | Symptôme | Cause et solution |
 | --- | --- |
-| *Release HackerOS* ne démarre pas | *Verify HackerOS WASM* a échoué ou a été annulé sur ce commit ; corriger, ou attendre le commit suivant de `main` (même version, pas encore taguée). |
+| *Release Kazo OS* ne démarre pas | *Verify Kazo OS WASM* a échoué ou a été annulé sur ce commit ; corriger, ou attendre le commit suivant de `main` (même version, pas encore taguée). |
 | « already released » dans le résumé | Le tag `v<version>` existe : changer la version. |
 | `403` à l'envoi NuGet | Clé expirée, mauvaise portée (glob), ou politique Trusted Publishing qui ne correspond pas au dépôt ou au fichier `release.yml`. |
 | `NuGet/login` échoue | `NUGET_USER` ne correspond pas au nom du profil nuget.org, ou la politique n'existe pas. |

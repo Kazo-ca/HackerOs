@@ -8,7 +8,7 @@ Accepted on 2026-08-14.
 
 ## Context
 
-`Server/HackerOs.Server` already implements two capabilities the browser-local
+`Server/Kazo.Os.Server` already implements two capabilities the browser-local
 HackerOS is meant to reach when the optional server is available: an
 HTTP/TCP/UDP proxy (`IProxyService`, real network access for apps like
 `curl`/`ping`/`nmap`) and a sync/backup bridge (`ISyncService`, versioned
@@ -24,11 +24,11 @@ This design intent is already documented and partially seeded in the code:
   side (`ISyncService`/`SyncRecordEntity`) already implements it.
 - ADR 0023 (accepted) already names the intended fallback — "network commands
   fall back to the Phase 5 Server Proxy ... when Game Domain is unavailable" —
-  but `Apps/Commands/HackerOs.Commands.Curl/CurlCommand.cs` today only calls
+  but `Apps/Commands/Kazo.Os.Commands.Curl/CurlCommand.cs` today only calls
   `ISimulatedNetworkService`; its own docstring states "Makes zero real
   network or HTTP calls." No gateway abstraction for a *real* proxy call
   exists yet, only the documented intent to add one.
-- `Infrastructure/HackerOs.Infrastructure.Browser/Schema/HackerOsIndexedDbSchema.cs`
+- `Infrastructure/Kazo.Os.Infrastructure.Browser/Schema/KazoOsIndexedDbSchema.cs`
   already reserves a `syncMetadata` object store, but its own doc comment
   scopes it to "local revision/consistency bookkeeping only — it is not
   multi-device network sync, which remains excluded."
@@ -36,7 +36,7 @@ This design intent is already documented and partially seeded in the code:
   Browser Infrastructure" as in-scope, but every relevant task (`P5-SYNC-003`
   through `006`, `P5-PROXY-002` through `007`) is still open, and a
   repository-wide search found zero `HttpClient`/`IHttpClientFactory`/
-  `HackerOs.Server.Contracts` references anywhere outside `Server/`.
+  `Kazo.Os.Server.Contracts` references anywhere outside `Server/`.
 
 So the client-to-server networking itself is greenfield. The one genuinely new
 decision this ADR makes — not previously decided anywhere — is how a
@@ -78,9 +78,9 @@ local user is logged in.
 ### 2. Discovery/configuration: explicit opt-in, no auto-discovery
 
 The user enters a server URL and either creates an account or logs into an
-existing one, via a new panel in `Apps/System/HackerOs.Apps.Settings`
+existing one, via a new panel in `Apps/System/Kazo.Os.Apps.Settings`
 (reusing the `CreateAccountRequest`/`LoginRequest` shapes already defined in
-`HackerOs.Server.Contracts` — no new wire DTOs needed). Until this is done,
+`Kazo.Os.Server.Contracts` — no new wire DTOs needed). Until this is done,
 every network command and every future sync attempt behaves exactly as today
 (pure simulation / local-only). This is strictly additive — no existing
 behavior changes for a user who never connects a server.
@@ -96,7 +96,7 @@ flow through it).
 
 ### 4. HTTP client shape
 
-`Infrastructure/HackerOs.Infrastructure.Browser/ServerConnection/` hosts:
+`Infrastructure/Kazo.Os.Infrastructure.Browser/ServerConnection/` hosts:
 
 - `IServerConnectionService` — connect (create-or-login, persist tokens) /
   disconnect (clear the repository) / `EnsureAccessTokenAsync()` (refresh
@@ -107,13 +107,13 @@ flow through it).
 - `IProxyClient` — thin `HttpClient` wrapper over `/api/proxy/http`,
   `/api/proxy/policy`.
 
-Both clients take only `Guid`/string/`HackerOs.Server.Contracts` DTO
+Both clients take only `Guid`/string/`Kazo.Os.Server.Contracts` DTO
 parameters — no ASP.NET-specific types — mirroring the shape their
 server-side counterparts (`IAccountService`/`IProxyService`) already have.
 This is deliberate: it means a future direct-injection implementation of the
 same interfaces for the server-hosted host (ADR 0027's other deferred item)
 does not require redesigning them, even though building one is not part of
-this ADR. `HackerOs.Server.Contracts` already documents this intent in its
+this ADR. `Kazo.Os.Server.Contracts` already documents this intent in its
 own project file: "Referenced by both the ASP.NET Core server and the browser
 client adapter" — this ADR is the first thing to actually reference it from
 the browser side.
@@ -182,11 +182,11 @@ Two findings from actually implementing this ADR, not just designing it:
   entirely) and to land one well-tested integration rather than four thin
   ones. Tracked as Pass N+1a in `docs/server-implementation-pass.md`.
 - **`IAccountClient`/`IProxyClient`/`IServerConnectionService` live in
-  `Platform/HackerOs.Platform.Core/ServerConnection/`, not
+  `Platform/Kazo.Os.Platform.Core/ServerConnection/`, not
   `Infrastructure.Browser`.** All three are plain `HttpClient`-based with no
   JS interop — placing them in Infrastructure.Browser as first drafted would
   have forced every consumer (including browser-independent terminal command
-  projects like `HackerOs.Commands.Ping`) to take an unnecessary
+  projects like `Kazo.Os.Commands.Ping`) to take an unnecessary
   `Microsoft.JSInterop` dependency. `IServerConnectionService`'s password
   hashing goes through the same optional `KeyDerivationAsyncDelegate` seam
   `LocalPasswordHasher` already uses (falling back to managed PBKDF2), rather

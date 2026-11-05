@@ -1,15 +1,15 @@
 > [Version française](../../../fr/wasm/dev/project-overview.md)
 
-# HackerOS project overview
+# Kazo OS project overview
 
 ## Purpose
 
-HackerOS simulates a Linux-like operating system in the browser,
+Kazo OS simulates a Linux-like operating system in the browser,
 to serve as an environment in which to develop applications. **No game in this repository** ([ADR 0135](adr/0135-no-game-in-this-repository.md)). It is
 the C# and Blazor WebAssembly port of the original JavaScript simulator
 (`src/`, kept read-only as a behavior reference).
 
-This document is the entry point for understanding the code of `wasm2/HackerOs`:
+This document is the entry point for understanding the code of `wasm2/KazoOs`:
 the solution's projects, their layers, the hosts, what happens at
 startup and the rules that apply at build. To build and run the
 project, see [`building-and-testing.md`](building-and-testing.md). To write
@@ -19,7 +19,7 @@ Two principles guide everything else
 ([`ecosystem-rebuild-plan.md`](plans/ecosystem-rebuild-plan.md), section 1):
 
 1. **For the app developer**, adding an app is simple: the file API
-   looks like `System.IO` (`HackFile`, `HackDirectory`…), the manifest is a
+   looks like `System.IO` (`KazoFile`, `KazoDirectory`…), the manifest is a
    C# class, and a single `ProjectReference` installs the app.
 2. **For the user**, the OS behaves like a real Linux: everything is a
    file (settings in `/etc` and `~/.config`, logs in `/var/log`,
@@ -30,51 +30,51 @@ Two principles guide everything else
 Dependencies always go from top to bottom. An app sees only the SDK.
 
 ```text
- Hôtes            OS/HackerOs.Ecosystem (PWA)   test/test (débogage)   Server/HackerOs.Server
+ Hôtes            OS/Kazo.Os.Ecosystem (PWA)   test/test (débogage)   Server/Kazo.Os.Server
                          │
- Apps             Apps/System/*   Apps/Commands/HackerOs.Commands   Apps/Samples/*
+ Apps             Apps/System/*   Apps/Commands/Kazo.Os.Commands   Apps/Samples/*
                          │   (SDK public uniquement, vérifié au build : ADR 0055)
- SDK              Shared/HackerOs.AppSdk*  (Hack*, IAppExecutionContext, composants)
+ SDK              Shared/Kazo.Os.AppSdk*  (Kazo*, IAppExecutionContext, composants)
                          │
- Contrats         Shared/HackerOs.App.Abstractions   Shared/HackerOs.Simulation.Abstractions
-                  Shared/HackerOs.Theming.Abstractions
+ Contrats         Shared/Kazo.Os.App.Abstractions   Shared/Kazo.Os.Simulation.Abstractions
+                  Shared/Kazo.Os.Theming.Abstractions
                          │
- Plateforme       Platform/HackerOs.Platform.Core (services de l'OS, sans interface)
-                  Platform/HackerOs.Platform.Blazor (bureau, fenêtres, dialogues)
-                  Platform/HackerOs.Windowing.*, Taskbar.Blazor, MobileShell.Blazor, Theming.Blazor
+ Plateforme       Platform/Kazo.Os.Platform.Core (services de l'OS, sans interface)
+                  Platform/Kazo.Os.Platform.Blazor (bureau, fenêtres, dialogues)
+                  Platform/Kazo.Os.Windowing.*, Taskbar.Blazor, MobileShell.Blazor, Theming.Blazor
                          │
- Infrastructure   Infrastructure/HackerOs.Infrastructure.Browser (IndexedDB, interop navigateur)
+ Infrastructure   Infrastructure/Kazo.Os.Infrastructure.Browser (IndexedDB, interop navigateur)
 ```
 
 The platform implements the contracts; the SDK knows only their
 interfaces. Apps receive an `IAppExecutionContext` built by the
 platform and never reference `Platform.*` or `Infrastructure.*`
-(errors `HOSAPP0030`, `HOSAPP0031`, `HOSSDK0001`, see
+(errors `KOSAPP0030`, `KOSAPP0031`, `KOSSDK0001`, see
 [`app-sdk.md`](../framework/app-sdk.md)).
 
 ## Solution projects
 
-`HackerOs.sln` groups all the projects below (.NET 10, `global.json`).
+`Kazo.Os.sln` groups all the projects below (.NET 10, `global.json`).
 
 ### Contracts (`Shared/`)
 
 | Project | Content |
 |---|---|
-| `HackerOs.App.Abstractions` | App model: `AppDefinition` and `[AppManifest]`, `AppManifest` and its validator, `AppKind`, capability catalog `AppCapabilities`, intents, platforms, canonical serialization of manifests. |
-| `HackerOs.Simulation.Abstractions` | Contracts of the simulated system: file system (`VirtualPath`, requests and results), app gateways (`IAppFileSystemGateway`, `IAppEventGateway`, `IAppLoggingGateway`…), processes, sessions, settings, network, notifications, clock, metrics. |
-| `HackerOs.Theming.Abstractions` | Theme contracts (tokens, appearance). |
+| `Kazo.Os.App.Abstractions` | App model: `AppDefinition` and `[AppManifest]`, `AppManifest` and its validator, `AppKind`, capability catalog `AppCapabilities`, intents, platforms, canonical serialization of manifests. |
+| `Kazo.Os.Simulation.Abstractions` | Contracts of the simulated system: file system (`VirtualPath`, requests and results), app gateways (`IAppFileSystemGateway`, `IAppEventGateway`, `IAppLoggingGateway`…), processes, sessions, settings, network, notifications, clock, metrics. |
+| `Kazo.Os.Theming.Abstractions` | Theme contracts (tokens, appearance). |
 
-### App SDK (`Shared/HackerOs.AppSdk*`)
+### App SDK (`Shared/Kazo.Os.AppSdk*`)
 
 | Project | Content |
 |---|---|
-| `HackerOs.AppSdk` | `Hack*` facades (files, environment, settings, network, processes, clipboard, administration…), `IAppExecutionContext`, base classes `TerminalAppBase`, `ServiceAppBase` and `WebServerAppBase`. |
-| `HackerOs.AppSdk.Blazor` | `WindowAppBase`, `HackComponentBase`, dialogs (files, message, input, "Open with", properties, name conflict), `HackLineChart` charts, browser download and clipboard; contracts provided by the OS at runtime (`HackContractComponent<T>`, `HackFileView`), OS context menu (`Menus.Attach`) and `[RegisterFileContextMenu]` (SDK 2.0). |
-| `HackerOs.AppSdk.Icons` | Icon libraries and `HackerIcon` component. |
-| `HackerOs.AppSdk.Terminal` | xterm.js terminal emulator (`TerminalPanel`, `TerminalTabs`). |
-| `HackerOs.AppSdk.Web` | ASP.Hack: internal sites in the style of ASP.NET Core MVC (pipeline, routing, controllers, session; [`asp-hack-mvc.md`](../framework/asp-hack-mvc.md)). |
-| `HackerOs.AppSdk.Web.Blazor` | Interactive Blazor sites: router, navigation, site view drawn by the browser ([`blazor-sites.md`](../framework/blazor-sites.md)). |
-| `HackerOs.AppSdk.VirtualKeyboard` | Virtual keyboard for mobile. |
+| `Kazo.Os.AppSdk` | `Kazo*` facades (files, environment, settings, network, processes, clipboard, administration…), `IAppExecutionContext`, base classes `TerminalAppBase`, `ServiceAppBase` and `WebServerAppBase`. |
+| `Kazo.Os.AppSdk.Blazor` | `WindowAppBase`, `KazoComponentBase`, dialogs (files, message, input, "Open with", properties, name conflict), `KazoLineChart` charts, browser download and clipboard; contracts provided by the OS at runtime (`KazoContractComponent<T>`, `KazoFileView`), OS context menu (`Menus.Attach`) and `[RegisterFileContextMenu]` (SDK 2.0). |
+| `Kazo.Os.AppSdk.Icons` | Icon libraries and `KazoIcon` component. |
+| `Kazo.Os.AppSdk.Terminal` | xterm.js terminal emulator (`TerminalPanel`, `TerminalTabs`). |
+| `Kazo.Os.AppSdk.Web` | ASP.Kazo: internal sites in the style of ASP.NET Core MVC (pipeline, routing, controllers, session; [`asp-kazo-mvc.md`](../framework/asp-kazo-mvc.md)). |
+| `Kazo.Os.AppSdk.Web.Blazor` | Interactive Blazor sites: router, navigation, site view drawn by the browser ([`blazor-sites.md`](../framework/blazor-sites.md)). |
+| `Kazo.Os.AppSdk.VirtualKeyboard` | Virtual keyboard for mobile. |
 
 The detail of each API is in the [SDK reference](../framework/sdk-reference.md).
 
@@ -82,19 +82,19 @@ The detail of each API is in the [SDK reference](../framework/sdk-reference.md).
 
 | Project | Content |
 |---|---|
-| `HackerOs.Platform.Core` | OS services, with no graphical interface: app catalog, lifecycle and processes, file system and mounts (`/proc`, `/dev`), file-based settings, logs, policy and capabilities, elevation (`sudo`), sessions, `hsh` shell and its interpreter, simulated network, clipboard, notifications, clock, metrics. The SDK gateways are implemented there ([`platform-core.md`](platform-core.md): folder map). |
-| `HackerOs.Platform.ResourceAccounting` | Optional per-process CPU and memory measurement (ADR 0066 to 0068): context-switch hook on the ambient frame, broadcaster to the measurements, switches. Depends on Platform Core; a host references it only if `HackerOsCpuAccounting` or `HackerOsMemoryAccounting` is `true` ([`resource-accounting.md`](resource-accounting.md)). |
-| `HackerOs.Platform.WorkerHost` | Processes without an interface in Web Workers (ADR 0070, 0071): on the OS side, the worker pool (one per virtual core, ready worker, overflow, dedicated workers), the sessions that serve calls under the same capability checks, the heartbeat and escalation; on the worker side, the .NET runtime that runs the command or service with remote gateways. Referenced by the Ecosystem host in the browser only ([`worker-processes.md`](worker-processes.md)). |
-| `HackerOs.Platform.RemoteRendering` | Trial of ADR 0129, verdict "we stop here" (ADR 0133): a Blazor window rendered by a `Renderer` in a worker, its batches translated into DOM operations applied by `RemoteWindowHost` on the page. Off by default (`HackerOs:RemoteWindowRendering`); no app must depend on it ([`remote-window-rendering.md`](remote-window-rendering.md)). |
-| `HackerOs.Platform.Blazor` | OS interface: desktop, Start menu, window host (`WindowAppRenderer`), dialogs, approval window for dangerous capabilities, authentication agent, lazy loading of apps. |
-| `HackerOs.Windowing.Abstractions`, `.Core`, `.Blazor` | Window manager (state, moving, resizing, snapping). |
-| `HackerOs.Taskbar.Blazor` | Taskbar. |
-| `HackerOs.MobileShell.Blazor` | Mobile interface. |
-| `HackerOs.Theming.Blazor` | Theme application. |
+| `Kazo.Os.Platform.Core` | OS services, with no graphical interface: app catalog, lifecycle and processes, file system and mounts (`/proc`, `/dev`), file-based settings, logs, policy and capabilities, elevation (`sudo`), sessions, `hsh` shell and its interpreter, simulated network, clipboard, notifications, clock, metrics. The SDK gateways are implemented there ([`platform-core.md`](platform-core.md): folder map). |
+| `Kazo.Os.Platform.ResourceAccounting` | Optional per-process CPU and memory measurement (ADR 0066 to 0068): context-switch hook on the ambient frame, broadcaster to the measurements, switches. Depends on Platform Core; a host references it only if `KazoOsCpuAccounting` or `KazoOsMemoryAccounting` is `true` ([`resource-accounting.md`](resource-accounting.md)). |
+| `Kazo.Os.Platform.WorkerHost` | Processes without an interface in Web Workers (ADR 0070, 0071): on the OS side, the worker pool (one per virtual core, ready worker, overflow, dedicated workers), the sessions that serve calls under the same capability checks, the heartbeat and escalation; on the worker side, the .NET runtime that runs the command or service with remote gateways. Referenced by the Ecosystem host in the browser only ([`worker-processes.md`](worker-processes.md)). |
+| `Kazo.Os.Platform.RemoteRendering` | Trial of ADR 0129, verdict "we stop here" (ADR 0133): a Blazor window rendered by a `Renderer` in a worker, its batches translated into DOM operations applied by `RemoteWindowHost` on the page. Off by default (`KazoOs:RemoteWindowRendering`); no app must depend on it ([`remote-window-rendering.md`](remote-window-rendering.md)). |
+| `Kazo.Os.Platform.Blazor` | OS interface: desktop, Start menu, window host (`WindowAppRenderer`), dialogs, approval window for dangerous capabilities, authentication agent, lazy loading of apps. |
+| `Kazo.Os.Windowing.Abstractions`, `.Core`, `.Blazor` | Window manager (state, moving, resizing, snapping). |
+| `Kazo.Os.Taskbar.Blazor` | Taskbar. |
+| `Kazo.Os.MobileShell.Blazor` | Mobile interface. |
+| `Kazo.Os.Theming.Blazor` | Theme application. |
 
 ### Infrastructure (`Infrastructure/`)
 
-`HackerOs.Infrastructure.Browser`: IndexedDB persistence (files in deduplicated
+`Kazo.Os.Infrastructure.Browser`: IndexedDB persistence (files in deduplicated
 blocks, legacy settings, catalog, sessions), backup and
 restore, connection to the optional server, browser interop, startup of
 Web Workers (`workerHost.js`, `workerBootstrap.js`). Everything that touches the
@@ -104,9 +104,9 @@ browser is here ([`browser-infrastructure.md`](browser-infrastructure.md)).
 
 | Folder | Content |
 |---|---|
-| `Apps/System/` | The 15 base window apps: Desktop (hidden surface rendered by the shell under the windows, [`desktop.md`](desktop.md)), Terminal, File Explorer, Text Editor, Code Editor, Settings ([`settings-app.md`](settings-app.md)), System Monitor (task manager), Error Log Viewer, Diagnostic, Browser, Calculator, HackPaint ([`hack-paint.md`](hack-paint.md)), Theme Editor ([`theme-editor.md`](theme-editor.md)), Icon Viewer, Web Server Manager (with the `hackwebd` service, [`static-sites.md`](static-sites.md)). |
-| `Apps/Commands/HackerOs.Commands` | The 74 shell commands in a single project (`ls`, `cat`, `cd`, `cp`, `mv`, `rm`, `grep`, `nano`, `sudo`, `ping`, `curl`, `nmap`, and since ADR 0064 `sort`, `cut`, `zip`, `top`, `htop`, `systemctl`, `ip`, `test`, `read`…: [`linux-commands.md`](linux-commands.md)), one `[AppManifest]` class per command (ADR 0051); they run in the Web Worker pool except the 18 marked `Execution = AppExecutionHost.MainThread` (ADR 0070). |
-| `Apps/Samples/` | Sample apps, one per kind (window, terminal, service, platform, Blazor site, full ASP.Hack site); they are not installed in the host, except the two sites `HackerOs.Samples.BlazorSite` (`http://blazor-sample.hack/`, ADR 0084) and `HackerOs.Samples.Intranet` (`http://intranet.hack/`, ADR 0087, [ASP.Hack guide](../framework/asp-hack-developer-guide.md)), hidden apps installed so that the browser can serve them. |
+| `Apps/System/` | The 15 base window apps: Desktop (hidden surface rendered by the shell under the windows, [`desktop.md`](desktop.md)), Terminal, File Explorer, Text Editor, Code Editor, Settings ([`settings-app.md`](settings-app.md)), System Monitor (task manager), Error Log Viewer, Diagnostic, Browser, Calculator, KazoPaint ([`kazo-paint.md`](kazo-paint.md)), Theme Editor ([`theme-editor.md`](theme-editor.md)), Icon Viewer, Web Server Manager (with the `kazowebd` service, [`static-sites.md`](static-sites.md)). |
+| `Apps/Commands/Kazo.Os.Commands` | The 74 shell commands in a single project (`ls`, `cat`, `cd`, `cp`, `mv`, `rm`, `grep`, `nano`, `sudo`, `ping`, `curl`, `nmap`, and since ADR 0064 `sort`, `cut`, `zip`, `top`, `htop`, `systemctl`, `ip`, `test`, `read`…: [`linux-commands.md`](linux-commands.md)), one `[AppManifest]` class per command (ADR 0051); they run in the Web Worker pool except the 18 marked `Execution = AppExecutionHost.MainThread` (ADR 0070). |
+| `Apps/Samples/` | Sample apps, one per kind (window, terminal, service, platform, Blazor site, full ASP.Kazo site); they are not installed in the host, except the two sites `Kazo.Os.Samples.BlazorSite` (`http://blazor-sample.hack/`, ADR 0084) and `Kazo.Os.Samples.Intranet` (`http://intranet.hack/`, ADR 0087, [ASP.Kazo guide](../framework/asp-kazo-developer-guide.md)), hidden apps installed so that the browser can serve them. |
 
 An app is **system** when the host declares it so on its `ProjectReference`
 (`IsSystemApp="true"`): it cannot be uninstalled and automatically receives its
@@ -116,11 +116,11 @@ dangerous capabilities. List and rules: [`app-model.md`](../framework/app-model.
 
 | Project | Role |
 |---|---|
-| `OS/HackerOs.Ecosystem` | **The shipped host**: standalone Blazor WebAssembly PWA (`wwwroot/index.html`, service worker), no server. It references `HackerOs.Ecosystem.Host` and the apps, aggregates their manifests into `BuiltInApplications.json` at build, and its `Program.cs` calls `AddHackerOsBrowserHost`. Everything must work with it alone, offline. |
-| `OS/HackerOs.Ecosystem.Host` | **The OS itself**, as a Razor library published as a package (ADR 0098 §2): desktop (`App.razor`), progress screen, `EcosystemBootCoordinator`, service composition (`AddHackerOsEcosystem`, `AddHackerOsBrowserHost`), resource measurement, browser adapters, design tokens (`_content/HackerOs.Ecosystem.Host/css/app.css`), `HostAppCatalog`. A host from another repository references it ([`sdk-packages.md`](../framework/sdk-packages.md)). |
+| `OS/Kazo.Os.Ecosystem` | **The shipped host**: standalone Blazor WebAssembly PWA (`wwwroot/index.html`, service worker), no server. It references `Kazo.Os.Ecosystem.Host` and the apps, aggregates their manifests into `BuiltInApplications.json` at build, and its `Program.cs` calls `AddKazoOsBrowserHost`. Everything must work with it alone, offline. |
+| `OS/Kazo.Os.Ecosystem.Host` | **The OS itself**, as a Razor library published as a package (ADR 0098 §2): desktop (`App.razor`), progress screen, `EcosystemBootCoordinator`, service composition (`AddKazoOsEcosystem`, `AddKazoOsBrowserHost`), resource measurement, browser adapters, design tokens (`_content/Kazo.Os.Ecosystem.Host/css/app.css`), `HostAppCatalog`. A host from another repository references it ([`sdk-packages.md`](../framework/sdk-packages.md)). |
 | `test/test` | Debug Blazor Web App: renders the same component tree in `InteractiveWebAssembly` to benefit from the debugger. Not a distribution target. |
-| `Server/HackerOs.Server` | **Optional** ASP.NET Core server: synchronization, accounts, HTTP/TCP/UDP relay to the real network ([`server-network-relay.md`](server-network-relay.md), policy and quotas in `appsettings.json`). It also serves the Ecosystem's OS as is, run in WebAssembly in the browser like the PWA; this OS connects to it on its own and shows the state in the notification area (ADR 0130, 0134, [`server-hosting.md`](server-hosting.md)). No app must depend on it. |
-| `Server/HackerOs.Server.Contracts` | Contracts shared between the server and the client. |
+| `Server/Kazo.Os.Server` | **Optional** ASP.NET Core server: synchronization, accounts, HTTP/TCP/UDP relay to the real network ([`server-network-relay.md`](server-network-relay.md), policy and quotas in `appsettings.json`). It also serves the Ecosystem's OS as is, run in WebAssembly in the browser like the PWA; this OS connects to it on its own and shows the state in the notification area (ADR 0130, 0134, [`server-hosting.md`](server-hosting.md)). No app must depend on it. |
+| `Server/Kazo.Os.Server.Contracts` | Contracts shared between the server and the client. |
 
 More details on the hosts in [`old/hosting-model.md`](old/hosting-model.md)
 (predates the plan, still accurate on this point).
@@ -129,18 +129,18 @@ More details on the hosts in [`old/hosting-model.md`](old/hosting-model.md)
 
 | Folder | Content |
 |---|---|
-| `Tools/HackerOs.Tools.ManifestGenerator` | Generates `manifest.json` from each app's `[AppManifest]` class, checks the SDK boundary and aggregates `BuiltInApplications.json` in the host ([`app-model.md`](../framework/app-model.md)). |
-| `Tools/HackerOs.Tools.WebRouteGenerator` | Roslyn source generator wired into each app: route table of ASP.Hack controllers and site entry, `HOSWEB*` errors (ADR 0082, [`asp-hack-mvc.md`](../framework/asp-hack-mvc.md)). |
-| `Tools/HackerOs.App.Build` | Build integration package for another repository: `build/HackerOs.Apps.targets`, manifest generator, route generator ([`sdk-packages.md`](../framework/sdk-packages.md)). |
-| `Templates/HackerOs.Templates` | `dotnet new` templates: `hackeros-window`, `-command`, `-service`, `-site`, `-host` (ADR 0098 §6). |
-| `Tools/HackerOs.Tools.BackgroundAnalyzer` | Roslyn analyzer for calls to `HackBackground.RunAsync`: checks each call against the rules for background tasks (ADR 0128). |
+| `Tools/Kazo.Os.Tools.ManifestGenerator` | Generates `manifest.json` from each app's `[AppManifest]` class, checks the SDK boundary and aggregates `BuiltInApplications.json` in the host ([`app-model.md`](../framework/app-model.md)). |
+| `Tools/Kazo.Os.Tools.WebRouteGenerator` | Roslyn source generator wired into each app: route table of ASP.Kazo controllers and site entry, `KOSWEB*` errors (ADR 0082, [`asp-kazo-mvc.md`](../framework/asp-kazo-mvc.md)). |
+| `Tools/Kazo.Os.App.Build` | Build integration package for another repository: `build/Kazo.Os.Apps.targets`, manifest generator, route generator ([`sdk-packages.md`](../framework/sdk-packages.md)). |
+| `Templates/Kazo.Os.Templates` | `dotnet new` templates: `kazoos-window`, `-command`, `-service`, `-site`, `-host` (ADR 0098 §6). |
+| `Tools/Kazo.Os.Tools.BackgroundAnalyzer` | Roslyn analyzer for calls to `KazoBackground.RunAsync`: checks each call against the rules for background tasks (ADR 0128). |
 | `Tools/icon-import` | Node script for importing icon libraries. |
-| `Samples/HackerOs.Windowing.SampleHost` | Sample host for the window manager alone. |
-| `Tests/` | One xUnit test project per code project, MSBuild integration tests of the generator, Playwright E2E suites (`HackerOs.E2E.Tests`, `HackerOs.UI.E2E.Tests`, `HackerOs.Pwa.E2E.Tests`), the startup test of the three hosts (`HackerOs.HostSmoke.Tests`, launched by `build/verify-hosts.sh`), the trimmed publication test (`HackerOs.TrimmedPublish.E2E.Tests`, launched by `build/publish-trimmed.sh`), the templates test (`HackerOs.Templates.E2E.Tests`) and the SDK compatibility test (`HackerOs.SdkCompatibility.Tests`, compatibility apps kept in `Tests/fixtures/sdk-compat`: 1.0.0 and 1.1.0 refused, 2.0.0 admitted; ADR 0114, ADR 0149). `HackerOs.Tests.Support` provides fake contexts and gateways; `HackerOs.E2E.Support`, the Chromium launch shared by the Playwright suites. |
-| `build/HackerOs.Apps.targets` | MSBuild targets of the app model (generation, aggregation, SDK boundary, manifest packaging). |
+| `Samples/Kazo.Os.Windowing.SampleHost` | Sample host for the window manager alone. |
+| `Tests/` | One xUnit test project per code project, MSBuild integration tests of the generator, Playwright E2E suites (`Kazo.Os.E2E.Tests`, `Kazo.Os.UI.E2E.Tests`, `Kazo.Os.Pwa.E2E.Tests`), the startup test of the three hosts (`Kazo.Os.HostSmoke.Tests`, launched by `build/verify-hosts.sh`), the trimmed publication test (`Kazo.Os.TrimmedPublish.E2E.Tests`, launched by `build/publish-trimmed.sh`), the templates test (`Kazo.Os.Templates.E2E.Tests`) and the SDK compatibility test (`Kazo.Os.SdkCompatibility.Tests`, compatibility apps kept in `Tests/fixtures/sdk-compat`: 1.0.0 and 1.1.0 refused, 2.0.0 admitted; ADR 0114, ADR 0149). `Kazo.Os.Tests.Support` provides fake contexts and gateways; `Kazo.Os.E2E.Support`, the Chromium launch shared by the Playwright suites. |
+| `build/Kazo.Os.Apps.targets` | MSBuild targets of the app model (generation, aggregation, SDK boundary, manifest packaging). |
 | `build/Versions.props`, `build/pack-local.sh`/`.ps1` | Single version of everything published and production of local packages in `artifacts/local-nupkg` ([`sdk-packages.md`](../framework/sdk-packages.md)). |
-| `build/HackerOs.ResourceAccounting.targets` | Properties `HackerOsCpuAccounting` and `HackerOsMemoryAccounting` ([`resource-accounting.md`](resource-accounting.md)). |
-| `build/asp-hack/`, `build/tools/ship-public-api.sh`, `build/nuget.config.sample`, `build/run-test-suite.ps1`, `build/assemble-pages.ps1` | ASP.Hack generators and checks (`HackRazorCompat.cs`, `_ViewImports.cshtml`), publication of the SDK's public surface, `nuget.config` template for another repository, full test suite, assembly of the Pages site (ADR 0167). |
+| `build/Kazo.Os.ResourceAccounting.targets` | Properties `KazoOsCpuAccounting` and `KazoOsMemoryAccounting` ([`resource-accounting.md`](resource-accounting.md)). |
+| `build/asp-kazo/`, `build/tools/ship-public-api.sh`, `build/nuget.config.sample`, `build/run-test-suite.ps1`, `build/assemble-pages.ps1` | ASP.Kazo generators and checks (`KazoRazorCompat.cs`, `_ViewImports.cshtml`), publication of the SDK's public surface, `nuget.config` template for another repository, full test suite, assembly of the Pages site (ADR 0167). |
 
 ## The simulated system
 
@@ -154,14 +154,14 @@ The locations to know:
 |---|---|
 | `/home/<login>` | Home folder; `~/.config/<appId>/` app settings, `~/.local/share/Trash` trash, `~/.local/share/keyrings/login.keyring` encrypted keyring (ADR 0100). |
 | `/root` | `root`'s folder (processes launched by `sudo`). |
-| `/etc/hackeros/` | OS configuration: `apps.config`, `security.config`, `app-permissions.config`, `appearance.config`, `policy.config`, `ui-platform-preference.config`, `file-associations.json`; `themes/` (machine-wide `.theme` themes, ADR 0103). |
+| `/etc/kazoos/` | OS configuration: `apps.config`, `security.config`, `app-permissions.config`, `appearance.config`, `policy.config`, `ui-platform-preference.config`, `file-associations.json`; `themes/` (machine-wide `.theme` themes, ADR 0103). |
 | `/etc/<appId>/` | System layer of an app's settings, with the `[locked]` section; sensitive keys in `<doc>.private.config` (`0600`, ADR 0100). |
 | `/etc/environment`, `/etc/hostname` | Login environment and machine name. |
 | `/var/log/` | `syslog`, `auth.log`, `audit.log` (writes under `/etc`, `/bin`, `/var`, ADR 0100), `apps/<appId>.log`, with rotation. |
 | `/proc/` | Virtual: processes, `stat`, `diskstats`, `net/dev`, `mounts`… |
 | `/dev/` | Virtual: `null`, `zero`, `random`, `urandom`. |
 
-Documents: [`hack-file-api.md`](../framework/hack-file-api.md),
+Documents: [`kazo-file-api.md`](../framework/kazo-file-api.md),
 [`settings-files.md`](../framework/settings-files.md), [`logging.md`](logging.md),
 [`virtual-proc-and-dev.md`](virtual-proc-and-dev.md),
 [`trash.md`](trash.md).
@@ -179,7 +179,7 @@ Documents: [`hack-file-api.md`](../framework/hack-file-api.md),
 - In the browser, commands and services run in **Web Workers** (one per
   virtual core, plus a ready worker): an infinite loop no longer freezes the OS,
   `kill -9` terminates the worker
-  ([`worker-processes.md`](worker-processes.md), `/proc/hackeros/workers`).
+  ([`worker-processes.md`](worker-processes.md), `/proc/kazoos/workers`).
 - An app declares **capabilities** in its definition. Normal capabilities
   are granted at login; a **dangerous** capability of a non-system app
   requires an administrator's approval
@@ -191,11 +191,11 @@ Documents: [`hack-file-api.md`](../framework/hack-file-api.md),
 
 ### Startup
 
-1. The host's `Program.cs` calls `AddHackerOsBrowserHost`, which registers the
-   services (`AddHackerOsEcosystem`) and the catalog read from
+1. The host's `Program.cs` calls `AddKazoOsBrowserHost`, which registers the
+   services (`AddKazoOsEcosystem`) and the catalog read from
    `BuiltInApplications.json` (`HostAppCatalog`, `BuildKnownLazyApps` in the Ecosystem).
 2. `EcosystemBootCoordinator` mounts storage, attaches the log writer
-   to `/var/log`, installs `/etc/hackeros/apps.config`, starts the simulated
+   to `/var/log`, installs `/etc/kazoos/apps.config`, starts the simulated
    clock and the metrics sampling, then validates policy, sessions and
    catalog.
 3. On first startup, the screen asks to create the local administrator
@@ -209,15 +209,15 @@ Documents: [`hack-file-api.md`](../framework/hack-file-api.md),
 | Rule | Where | Document |
 |---|---|---|
 | Warnings treated as errors, trimming compatibility analysis | `Directory.Build.props` | n/a |
-| Trimmed Release publication of the host: roots generated from the manifests, whole `HackerOs.*` assemblies (ADR 0106, 0113) | `build/HackerOs.Apps.targets`, tested by `build/publish-trimmed.sh` | [`trimmed-publish.md`](trimmed-publish.md) |
-| No inline CSS or JavaScript in a `.razor` (ADR 0007) | target `ValidateHackerOsRazorAssets`, `Directory.Build.targets` | [`AGENTS.md`](../../../../AGENTS.md) |
-| Each project under `Apps/` has a valid `[AppManifest]` class; `manifest.json` is regenerated (`HOSAPP0001`…) | `build/HackerOs.Apps.targets` | [`app-model.md`](../framework/app-model.md) |
-| An app uses only the SDK (`HOSAPP0030`, `HOSAPP0031`, `HOSSDK0001`) | `build/HackerOs.Apps.targets` and generator | [`app-sdk.md`](../framework/app-sdk.md) |
-| The SDK's public surface does not change without a trace: `PublicAPI.Shipped.txt`/`Unshipped.txt` (RS0016, RS0017); an app compiled against the current major (2.x) is admitted, a 1.x app refused (ADR 0114, ADR 0149) | public API analyzer, `Tests/HackerOs.SdkCompatibility.Tests` | [`sdk-packages.md`](../framework/sdk-packages.md) |
+| Trimmed Release publication of the host: roots generated from the manifests, whole `Kazo.Os.*` assemblies (ADR 0106, 0113) | `build/Kazo.Os.Apps.targets`, tested by `build/publish-trimmed.sh` | [`trimmed-publish.md`](trimmed-publish.md) |
+| No inline CSS or JavaScript in a `.razor` (ADR 0007) | target `ValidateKazoOsRazorAssets`, `Directory.Build.targets` | [`AGENTS.md`](../../../../AGENTS.md) |
+| Each project under `Apps/` has a valid `[AppManifest]` class; `manifest.json` is regenerated (`KOSAPP0001`…) | `build/Kazo.Os.Apps.targets` | [`app-model.md`](../framework/app-model.md) |
+| An app uses only the SDK (`KOSAPP0030`, `KOSAPP0031`, `KOSSDK0001`) | `build/Kazo.Os.Apps.targets` and generator | [`app-sdk.md`](../framework/app-sdk.md) |
+| The SDK's public surface does not change without a trace: `PublicAPI.Shipped.txt`/`Unshipped.txt` (RS0016, RS0017); an app compiled against the current major (2.x) is admitted, a 1.x app refused (ADR 0114, ADR 0149) | public API analyzer, `Tests/Kazo.Os.SdkCompatibility.Tests` | [`sdk-packages.md`](../framework/sdk-packages.md) |
 
 ## Work organization
 
-- New code goes **only** in `wasm2/HackerOs/`; `src/` is read-only
+- New code goes **only** in `wasm2/KazoOs/`; `src/` is read-only
   ([`AGENTS.md`](../../../../AGENTS.md)).
 - The direction is set by [`ecosystem-rebuild-plan.md`](plans/ecosystem-rebuild-plan.md);
   architecture decisions are ADRs in [`adr/`](adr/), never
@@ -227,7 +227,7 @@ Documents: [`hack-file-api.md`](../framework/hack-file-api.md),
   both languages. Any addition or renaming of a document updates the index
   [`README.md`](../README.md) in the same change.
 - Each series of work items has its integration branch: `rebuild/base`
-  (phases 1 to 4, merged into `main`), `web/base` (ASP.Hack and Blazor sites),
+  (phases 1 to 4, merged into `main`), `web/base` (ASP.Kazo and Blazor sites),
   then `v3/base` (end of the wasm v3 migration, started from `web/base`), `v3.1/base`
   and `exec/base` (follow-ups of phase 5, started from `v3.1/base`). Each
   work item starts from its series' branch (`v3/<n>-<subject>`…) and returns to it;
@@ -245,8 +245,8 @@ Documents: [`hack-file-api.md`](../framework/hack-file-api.md),
   (limits, OOM killer, priorities, background tasks, Server host in WebAssembly,
   cross-origin isolation) in
   [`execution-followups-plan.md`](plans/execution-followups-plan.md#11-final-verification). The version is **2.2.2** (`build/Versions.props`, published by the
-  `Release HackerOS` workflow when its PR is merged into `main`; 2.1.0 of 2026-10-26 was the first automatic release, ADR 0173); another repository can build on SDK 2.x
-  ([`building-on-hackeros.md`](../framework/building-on-hackeros.md)).
+  `Release Kazo OS` workflow when its PR is merged into `main`; 2.1.0 of 2026-10-26 was the first automatic release, ADR 0173); another repository can build on SDK 2.x
+  ([`building-on-kazoos.md`](../framework/building-on-kazoos.md)).
 
 ## Tasks of this document
 

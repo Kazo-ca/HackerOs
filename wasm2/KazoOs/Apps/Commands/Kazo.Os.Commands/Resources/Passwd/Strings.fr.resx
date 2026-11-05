@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="BadPassword" xml:space="preserve">
+    <value>MOT DE PASSE INCORRECT : {0}</value>
+  </data>
+  <data name="Changing" xml:space="preserve">
+    <value>Changement du mot de passe pour {0}.</value>
+  </data>
+  <data name="CurrentPrompt" xml:space="preserve">
+    <value>Mot de passe actuel : </value>
+  </data>
+  <data name="Deleted" xml:space="preserve">
+    <value>passwd : informations d'expiration du mot de passe modifiées pour {0}.</value>
+  </data>
+  <data name="Mismatch" xml:space="preserve">
+    <value>Désolé, les mots de passe ne correspondent pas.</value>
+  </data>
+  <data name="NewPrompt" xml:space="preserve">
+    <value>Nouveau mot de passe : </value>
+  </data>
+  <data name="NoRootAccount" xml:space="preserve">
+    <value>passwd : Kazo OS n'a pas de mot de passe root ; nommez le compte : sudo passwd &lt;utilisateur&gt;</value>
+  </data>
+  <data name="NotAllowed" xml:space="preserve">
+    <value>passwd : Vous ne pouvez pas afficher ni modifier les informations du mot de passe de {0}.</value>
+  </data>
+  <data name="RetypePrompt" xml:space="preserve">
+    <value>Retapez le nouveau mot de passe : </value>
+  </data>
+  <data name="TokenError" xml:space="preserve">
+    <value>passwd : Erreur de manipulation du jeton d'authentification</value>
+  </data>
+  <data name="Unchanged" xml:space="preserve">
+    <value>passwd : mot de passe inchangé</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>passwd : l'utilisateur « {0} » n'existe pas</value>
+  </data>
+  <data name="Updated" xml:space="preserve">
+    <value>passwd : mot de passe mis à jour avec succès</value>
+  </data>
+  <data name="Usage" xml:space="preserve">
+    <value>utilisation : passwd [-d] [-S] [utilisateur]</value>
+  </data>
+</root>

@@ -6,14 +6,14 @@
 
 Accepted on 2026-10-16, with the `web/8-cshtml-views` work item.
 
-- **Plan phase:** web phase ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Plan phase:** web phase ([`asp-kazo-plan.md`](../plans/asp-kazo-plan.md)).
 - **Completes:** [ADR 0076](0076-asp-hack-mvc.md) §8 (the feasibility proof succeeded:
   the fallback interpreted engine is not built); [ADR 0083](0083-asp-hack-razor-views.md)
   (same view engine, same generated table, same sections).
 - **Amends:** [ADR 0007](0007-enforce-collocated-razor-assets.md): the build check
   also covers `.cshtml` files (§6); [ADR 0083](0083-asp-hack-razor-views.md): a missing key
   of `ViewData` reads as `null`, as in ASP.NET (§3).
-- **Documentation:** [`asp-hack-cshtml-views.md`](../../framework/asp-hack-cshtml-views.md).
+- **Documentation:** [`asp-kazo-cshtml-views.md`](../../framework/asp-kazo-cshtml-views.md).
 
 ## Context
 
@@ -54,13 +54,13 @@ ASP.NET Core. ASP.Hack provides neither a compiler nor a view analyzer.
 
 ### 2. What the build adds to a site
 
-For a project that references `HackerOs.AppSdk.Web` and contains `.cshtml` files, the
-target `_HackerOsAspHackRazorViews` of `build/HackerOs.Apps.targets` adds:
+For a project that references `Kazo.Os.AppSdk.Web` and contains `.cshtml` files, the
+target `_HackerOsAspHackRazorViews` of `build/Kazo.Os.Apps.targets` adds:
 
 - a **root** `_ViewImports.cshtml` (SDK file, `build/asp-hack/_ViewImports.cshtml`,
   linked into the project under that name): `@inherits HackRazorPage<TModel>` and the five
   implicit `@inject`s replaced by ASP.Hack's helpers;
-- a C# file (`build/asp-hack/HackRazorCompat.cs`) of types **internal to the
+- a C# file (`build/asp-hack/KazoRazorCompat.cs`) of types **internal to the
   site**, with the names the generated C# expects: the attributes above, the class
   `HelperResult` (derived from `HackHelperResult`), an empty type in each of the
   three `using` namespaces, and the two assembly attributes that the
@@ -68,7 +68,7 @@ target `_HackerOsAspHackRazorViews` of `build/HackerOs.Apps.targets` adds:
   (`ProvideApplicationPartFactoryAttribute`, `RelatedAssemblyAttribute`).
 
 These `Microsoft.AspNetCore.*` names never leave the site: they are internal,
-the `HackerOs.AppSdk.Web` library declares none of them, and a site cannot
+the `Kazo.Os.AppSdk.Web` library declares none of them, and a site cannot
 reference ASP.NET MVC. The project must not have its own root
 `_ViewImports.cshtml` (build error): its imports go in
 `Views/_ViewImports.cshtml`. The `RAZORSDK1004` warning ("no MVC
@@ -76,7 +76,7 @@ support") is silenced: the absence of MVC is intended.
 
 ### 3. Base class and activation
 
-`HackRazorPage` / `HackRazorPage<TModel>` (`HackerOs.AppSdk.Web.Views`) offers what
+`HackRazorPage` / `HackRazorPage<TModel>` (`Kazo.Os.AppSdk.Web.Views`) offers what
 the generated C# calls and what an MVC view uses: `Model`, `ViewData`,
 `ViewContext`, `Context`, `Request`, `ModelState`, `Layout` (a view name),
 `RenderBody()`, `RenderSection(...)`, `IsSectionDefined`, `IgnoreBody`,

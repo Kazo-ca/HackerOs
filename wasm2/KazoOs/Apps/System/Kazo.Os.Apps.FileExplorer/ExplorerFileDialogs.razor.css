@@ -1,0 +1,160 @@
+.explorer-file-dialog {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+    height: 100%;
+    padding: 1.25rem;
+    box-sizing: border-box;
+    color: var(--kos-text-primary, #d4f8e8);
+    background: var(--kos-window-content-background, #0d1819);
+}
+
+.dialog-prompt,
+.dialog-detail,
+.dialog-status,
+.dialog-warning {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.4;
+}
+
+.dialog-heading {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--kos-accent, #55d6a1);
+    word-break: break-all;
+}
+
+.dialog-status {
+    color: var(--kos-text-secondary, #9ac3b2);
+}
+
+.dialog-warning {
+    color: var(--kos-danger, #ff6b6b);
+}
+
+.mono {
+    font-family: var(--kos-font-mono, "JetBrains Mono", ui-monospace, monospace);
+    font-size: 0.82rem;
+    word-break: break-all;
+}
+
+.app-list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    overflow-y: auto;
+}
+
+button.app-option {
+    display: grid;
+    grid-template-columns: 1.4rem 1fr;
+    grid-template-areas: "mark name" "mark id";
+    align-items: center;
+    width: 100%;
+    column-gap: 0.5rem;
+    text-align: left;
+    font-weight: 400;
+}
+
+button.app-option.selected {
+    border-color: var(--kos-accent, #55d6a1);
+    background: var(--kos-accent-subtle, #123a2b);
+}
+
+.app-mark {
+    grid-area: mark;
+    color: var(--kos-accent, #55d6a1);
+    font-family: var(--kos-font-mono, monospace);
+}
+
+.app-name {
+    grid-area: name;
+    font-weight: 600;
+}
+
+.app-id {
+    grid-area: id;
+    font-size: 0.75rem;
+    font-family: var(--kos-font-mono, monospace);
+    color: var(--kos-text-muted, #6e9485);
+}
+
+.property-list {
+    flex: 1;
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.4rem 1rem;
+    margin: 0;
+    overflow-y: auto;
+    font-size: 0.88rem;
+}
+
+.property-list dt {
+    color: var(--kos-text-secondary, #9ac3b2);
+}
+
+.property-list dd {
+    margin: 0;
+}
+
+.dialog-check {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.88rem;
+}
+
+.dialog-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.65rem;
+    margin-top: auto;
+}
+
+button {
+    min-width: 5rem;
+    min-height: var(--kos-btn-min-height, 2.25rem);
+    padding: var(--kos-btn-padding, 0.4rem 0.9rem);
+    font-size: 0.88rem;
+    font-family: inherit;
+    font-weight: var(--kos-btn-font-weight, 500);
+    color: var(--kos-btn-color, var(--kos-text-primary, #d4f8e8));
+    background: var(--kos-btn-bg, #132522);
+    border: var(--kos-btn-border, 1px solid var(--kos-border, #315249));
+    border-radius: var(--kos-btn-radius, var(--kos-radius-sm, 0.25rem));
+    cursor: pointer;
+    transition: background var(--kos-transition-fast, 120ms ease),
+                border-color var(--kos-transition-fast, 120ms ease);
+}
+
+button:hover:not(:disabled),
+button:focus-visible {
+    background: var(--kos-btn-hover-bg, var(--kos-bg-elevated, #182825));
+    border-color: var(--kos-btn-hover-border, var(--kos-accent, #55d6a1));
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+button.primary {
+    color: var(--kos-btn-primary-color, var(--kos-text-inverse, #07100d));
+    background: var(--kos-btn-primary-bg, var(--kos-accent, #55d6a1));
+    border-color: var(--kos-accent, #55d6a1);
+}
+
+button.primary:hover:not(:disabled) {
+    color: var(--kos-btn-primary-color, var(--kos-text-inverse, #07100d));
+    background: var(--kos-accent-hover, #6fe3b4);
+}
+
+button.danger {
+    color: var(--kos-danger, #ff6b6b);
+    border-color: var(--kos-danger, #ff6b6b);
+}

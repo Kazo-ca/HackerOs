@@ -11,7 +11,7 @@ Accepted on 2026-10-10.
 - **Applies:** ADR 0055 (an app gets an OS service only through the SDK;
   authentication agent).
 - **Completes:** ADR 0049: five dangerous capabilities enter the catalog
-  (section 11). ADR 0048: `HackerOs.Apps.CodeEditor` joins the host's trust
+  (section 11). ADR 0048: `Kazo.Os.Apps.CodeEditor` joins the host's trust
   list (section 7). ADR 0044: `HackSettings` also opens the OS documents
   (section 8).
 - **Builds on:** ADR 0043 (`Hack*` facades, exceptions), ADR 0046 and 0057
@@ -31,7 +31,7 @@ used:
 | Start, stop, configure a service | `IAppServiceControlGateway` (`services.manage`) |
 | User and machine name, current directory | `HackEnvironment` |
 | Clipboard (text and file references) | `IAppClipboardGateway` |
-| Download a file to the browser | `BrowserFileDownloader` (`HackerOs.AppSdk.Blazor`) |
+| Download a file to the browser | `BrowserFileDownloader` (`Kazo.Os.AppSdk.Blazor`) |
 | Read a setting, watch a file | `HackSettings`, `HackFileSystemWatcher` |
 
 ## Decision
@@ -194,14 +194,14 @@ IReadOnlyList<HackPortProbeResult> ports = await HackTcpClient.ProbeAsync("10.0.
   probing; `network.simulated.write` (normal) for POST;
   `network.real.access` (dangerous) for the real fallback. Classifications
   unchanged.
-- `HackerOs.Commands` loses its references to `Platform.Core` and
+- `Kazo.Os.Commands` loses its references to `Platform.Core` and
   `Server.Contracts`. `ShellErrorText.Describe`, the only other borrowing (`cd`),
-  moves into the SDK (`HackerOs.AppSdk`, next to `IShellSession`).
+  moves into the SDK (`Kazo.Os.AppSdk`, next to `IShellSession`).
 
 ### 7. Shell host
 
 Replaces `ShellInterpreter`, `ISessionService` and `IElevationService` in
-`TerminalPanel` (library `HackerOs.AppSdk.Terminal`, used by
+`TerminalPanel` (library `Kazo.Os.AppSdk.Terminal`, used by
 Terminal and CodeEditor).
 
 ```csharp
@@ -234,7 +234,7 @@ HackShellCompletion completion = await shell.CompleteAsync("cat ~/Doc", cursor: 
   a visible window: an app that only has `notifications.post` could otherwise
   read all of `~` through `cat`. Risk: "Run commands on your behalf, with
   the rights of those commands."
-- **Trust list:** `HackerOs.Apps.CodeEditor` receives
+- **Trust list:** `Kazo.Os.Apps.CodeEditor` receives
   `IsSystemApp="true"` in the host (ADR 0048), like Terminal. It is an app
   shipped with the OS, and its terminal panel must not trigger an
   administrator approval on first launch.
@@ -412,7 +412,7 @@ uses. A system app receives these capabilities automatically (ADR 0049).
   (D3, D4, D5, D16, D21), 8.1 and 8.2.
 - ADR 0019, 0023, 0035, 0042, 0043, 0044, 0045, 0046, 0048, 0049, 0050, 0051,
   0055, 0057, 0058.
-- `Shared/HackerOs.Simulation.Abstractions/Gateways/AppGatewayContracts.cs`,
-  `Shared/HackerOs.AppSdk/Clipboard/IAppClipboardGateway.cs`,
-  `Platform/HackerOs.Platform.Core/Policy/AppPermissionAdministration.cs`,
-  `Platform/HackerOs.Platform.Core/Apps/AppInstallationContracts.cs`.
+- `Shared/Kazo.Os.Simulation.Abstractions/Gateways/AppGatewayContracts.cs`,
+  `Shared/Kazo.Os.AppSdk/Clipboard/IAppClipboardGateway.cs`,
+  `Platform/Kazo.Os.Platform.Core/Policy/AppPermissionAdministration.cs`,
+  `Platform/Kazo.Os.Platform.Core/Apps/AppInstallationContracts.cs`.

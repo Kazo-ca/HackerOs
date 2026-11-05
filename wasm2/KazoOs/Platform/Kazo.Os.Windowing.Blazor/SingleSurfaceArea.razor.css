@@ -1,0 +1,17 @@
+.single-surface-area {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    color: var(--kos-window-text, var(--kazoos-window-text, #e7f7f1));
+    background: var(--kos-mobile-surface-background, var(--kos-desktop-background, #07100f));
+    font-family: var(--kos-font-ui, system-ui, sans-serif);
+    isolation: isolate;
+}
+
+/* ADR 0171 §3: the surface stacks a window and its dialogs in document order, the dialog last on top,
+   whatever z-order the runtime gave them. Each host is its own stacking context, so nothing inside a
+   window (a floating button) can rise above the dialog shown over it. */
+.single-surface-area ::deep .window-host {
+    z-index: 0;
+}

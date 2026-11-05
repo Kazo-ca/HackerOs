@@ -1,0 +1,279 @@
+@inherits Kazo.Os.AppSdk.Blazor.KazoComponentBase
+@using System.Collections.Immutable
+@using Kazo.Os.Simulation.Abstractions.Network
+@using Microsoft.AspNetCore.Components
+
+@* SimulatedPageRenderer — renders a SimulatedPage's typed sections as Blazor
+   markup using Kazo OS Gothic/Hacker design tokens from the page theme.
+   No raw HTML is ever injected; all content comes from typed C# records.
+*@
+
+<div class="simulated-page theme-@(Page.PageTheme ?? "default")" role="main">
+    <header class="sim-page-header">
+        <h1 class="sim-page-title">@Page.Title</h1>
+    </header>
+
+    <div class="sim-page-body">
+        @foreach (var section in Page.Sections)
+        {
+            @RenderSection(section)
+        }
+    </div>
+</div>
+
+@code {
+    private IStringLocalizer<Strings>? _localizer;
+
+    /// <summary>The browser's texts in its own process's language (ADR 0104); the page's content is not translated.</summary>
+    private IStringLocalizer<Strings> L => _localizer ??= AppContext.GetLocalizer<Strings>();
+
+    /// <summary>The structured page to render.</summary>
+    [Parameter, EditorRequired] public SimulatedPage Page { get; set; } = default!;
+
+    /// <summary>
+    /// Raised when the user clicks an internal or external navigation link
+    /// within the rendered page. The string value is the href target.
+    /// </summary>
+    [Parameter] public EventCallback<string> OnNavigate { get; set; }
+
+    /// <summary>
+    /// Raised when the user submits a login or generic form within the rendered page, carrying
+    /// the form's relative post path and the field values entered so far.
+    /// </summary>
+    [Parameter] public EventCallback<(string PostPath, ImmutableDictionary<string, string> FormBody)> OnSubmit { get; set; }
+
+    private readonly Dictionary<string, string> _fieldValues = new(StringComparer.Ordinal);
+    private SimulatedPage? _lastPage;
+
+    protected override void OnParametersSet()
+    {
+        if (!ReferenceEquals(_lastPage, Page))
+        {
+            _fieldValues.Clear();
+            _lastPage = Page;
+        }
+    }
+
+    private string GetFieldValue(string id) => _fieldValues.TryGetValue(id, out string? value) ? value : string.Empty;
+
+    private void SetFieldValue(string id, ChangeEventArgs args) => _fieldValues[id] = args.Value as string ?? string.Empty;
+
+    private async Task HandleSubmitAsync(string postPath) =>
+        await OnSubmit.InvokeAsync((postPath, _fieldValues.ToImmutableDictionary(StringComparer.Ordinal)));
+
+    private RenderFragment RenderSection(SimulatedPageSection section) => section switch
+    {
+        HeroSection hero         => RenderHero(hero),
+        ParagraphSection para    => RenderParagraph(para),
+        ListSection list         => RenderList(list),
+        AlertSection alert       => RenderAlert(alert),
+        NavigationSection nav    => RenderNavigation(nav),
+        LoginFormSection login   => RenderLoginForm(login),
+        FormSection form         => RenderForm(form),
+        ProductGridSection grid  => RenderProductGrid(grid),
+        TableSection table       => RenderTable(table),
+        ForumSection forum       => RenderForum(forum),
+        EmailListSection email   => RenderEmailList(email),
+        _                        => RenderUnknown(section)
+    };
+
+    // ── Section renderers ─────────────────────────────────────────────────
+
+    private RenderFragment RenderHero(HeroSection h) => __builder =>
+    {
+        <div class="sim-section sim-hero">
+            <h2 class="sim-hero-headline">@h.Headline</h2>
+            @if (h.Subtitle is not null)
+            {
+                <p class="sim-hero-subtitle">@h.Subtitle</p>
+            }
+        </div>
+    };
+
+    private RenderFragment RenderParagraph(ParagraphSection p) => __builder =>
+    {
+        <div class="sim-section sim-paragraph">
+            <p>@p.Text</p>
+        </div>
+    };
+
+    private RenderFragment RenderList(ListSection l) => __builder =>
+    {
+        <div class="sim-section sim-list">
+            @if (l.Title is not null)
+            {
+                <h3 class="sim-list-title">@l.Title</h3>
+            }
+            <ul class="sim-list-items">
+                @foreach (var item in l.Items)
+                {
+                    <li>@item</li>
+                }
+            </ul>
+        </div>
+    };
+
+    private RenderFragment RenderAlert(AlertSection a) => __builder =>
+    {
+        var cls = a.Level switch
+        {
+            AlertLevel.Error   => "sim-alert-error",
+            AlertLevel.Warning => "sim-alert-warning",
+            _                  => "sim-alert-info"
+        };
+        <div class="sim-section sim-alert @cls" role="alert">
+            @a.Message
+        </div>
+    };
+
+    private RenderFragment RenderNavigation(NavigationSection n) => __builder =>
+    {
+        <nav class="sim-section sim-nav" aria-label="@L["Page.Navigation"]">
+            @foreach (var link in n.Links)
+            {
+                <a class="sim-nav-link @(link.IsActive ? "active" : "")"
+                   href="@link.Href"
+                   @onclick:preventDefault="true"
+                   @onclick="() => OnNavigate.InvokeAsync(link.Href)">
+                    @link.Label
+                </a>
+            }
+        </nav>
+    };
+
+    private RenderFragment RenderLoginForm(LoginFormSection f) => __builder =>
+    {
+        <div class="sim-section sim-form sim-login-form">
+            @if (!string.IsNullOrEmpty(f.Title))
+            {
+                <h3 class="sim-form-title">@f.Title</h3>
+            }
+            <form class="sim-form-body" @onsubmit="() => HandleSubmitAsync(f.PostPath)" @onsubmit:preventDefault="true">
+                <div class="sim-field">
+                    <label for="sim-username">@f.UsernameLabel</label>
+                    <input id="sim-username" type="text"     class="sim-input" autocomplete="username"
+                           value='@GetFieldValue("username")' @oninput='e => SetFieldValue("username", e)' />
+                </div>
+                <div class="sim-field">
+                    <label for="sim-password">@f.PasswordLabel</label>
+                    <input id="sim-password" type="password" class="sim-input" autocomplete="current-password"
+                           value='@GetFieldValue("password")' @oninput='e => SetFieldValue("password", e)' />
+                </div>
+                <button type="submit" class="sim-submit-btn">@f.SubmitLabel</button>
+            </form>
+        </div>
+    };
+
+    private RenderFragment RenderForm(FormSection f) => __builder =>
+    {
+        <div class="sim-section sim-form">
+            @if (!string.IsNullOrEmpty(f.Title))
+            {
+                <h3 class="sim-form-title">@f.Title</h3>
+            }
+            <form class="sim-form-body" @onsubmit="() => HandleSubmitAsync(f.PostPath)" @onsubmit:preventDefault="true">
+                @foreach (var field in f.Fields)
+                {
+                    <div class="sim-field">
+                        @if (!string.IsNullOrEmpty(field.Label))
+                        {
+                            <label for="sim-field-@field.Id">@field.Label</label>
+                        }
+                        <input id="sim-field-@field.Id"
+                               type="@field.InputType"
+                               class="sim-input @(field.InputType == "search" ? "sim-input-search" : "")"
+                               placeholder="@(field.Placeholder ?? "")"
+                               required="@field.Required"
+                               value="@GetFieldValue(field.Id)"
+                               @oninput="e => SetFieldValue(field.Id, e)" />
+                    </div>
+                }
+                <button type="submit" class="sim-submit-btn">@f.SubmitLabel</button>
+            </form>
+        </div>
+    };
+
+    private RenderFragment RenderProductGrid(ProductGridSection g) => __builder =>
+    {
+        <div class="sim-section sim-product-grid">
+            @foreach (var product in g.Products)
+            {
+                <div class="sim-product-card">
+                    @if (product.Badge is not null)
+                    {
+                        <span class="sim-badge">@product.Badge</span>
+                    }
+                    <div class="sim-product-title">@product.Title</div>
+                    <div class="sim-product-desc">@product.Description</div>
+                    <div class="sim-product-price">@product.Price</div>
+                </div>
+            }
+        </div>
+    };
+
+    private RenderFragment RenderTable(TableSection t) => __builder =>
+    {
+        <div class="sim-section sim-table-section">
+            @if (t.Title is not null)
+            {
+                <h3 class="sim-table-title">@t.Title</h3>
+            }
+            <table class="sim-table" role="grid">
+                <thead>
+                    <tr>
+                        @foreach (var header in t.Headers)
+                        {
+                            <th scope="col">@header</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in t.Rows)
+                    {
+                        <tr>
+                            @foreach (var cell in row)
+                            {
+                                <td>@cell</td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    };
+
+    private RenderFragment RenderForum(ForumSection f) => __builder =>
+    {
+        <div class="sim-section sim-forum-section">
+            <div class="sim-forum-header">@f.SectionTitle</div>
+            @foreach (var thread in f.Threads)
+            {
+                <div class="sim-thread @(thread.IsHot ? "hot" : "")">
+                    <span class="sim-thread-title">@thread.Title</span>
+                    <span class="sim-thread-meta">@thread.Author &bull; @thread.TimestampDisplay &bull; @thread.Views views</span>
+                </div>
+            }
+        </div>
+    };
+
+    private RenderFragment RenderEmailList(EmailListSection e) => __builder =>
+    {
+        <div class="sim-section sim-email-list">
+            @foreach (var email in e.Emails)
+            {
+                <div class="sim-email-row @(email.IsRead ? "" : "unread")">
+                    <div class="sim-email-subject">@email.Subject</div>
+                    <div class="sim-email-sender">@email.Sender</div>
+                    <div class="sim-email-snippet">@email.Snippet</div>
+                </div>
+            }
+        </div>
+    };
+
+    private RenderFragment RenderUnknown(SimulatedPageSection section) => __builder =>
+    {
+        <div class="sim-section sim-unknown">
+            <em>@L["Page.UnknownSection", section.GetType().Name]</em>
+        </div>
+    };
+}

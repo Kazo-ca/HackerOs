@@ -1,0 +1,96 @@
+@namespace Kazo.Os.AppSdk.Terminal
+@using Kazo.Os.AppSdk
+@using Kazo.Os.AppSdk.Globalization
+@using Microsoft.AspNetCore.Components.Web
+
+<div class="terminal-full-screen"
+     @ref="_root"
+     data-terminal-full-screen
+     tabindex="0"
+     role="textbox"
+     aria-multiline="true"
+     aria-label="@(Frame?.AccessibleLabel ?? L["Screen.Label"])"
+     @onkeydown="HandleKeyDownAsync"
+     @onkeydown:preventDefault="true"
+     @onkeydown:stopPropagation="true">
+    @if (Frame is not null)
+    {
+        @for (int row = 0; row < Frame.Lines.Count; row++)
+        {
+            int renderedRow = row;
+            string text = Frame.Lines[row];
+            <div class="terminal-screen-line">
+                @for (int column = 0; column < text.Length; column++)
+                {
+                    int renderedColumn = column;
+                    if (IsCursorCell(renderedColumn, renderedRow))
+                    {
+                        <span class="terminal-screen-cursor">@text[column]</span>
+                    }
+                    else
+                    {
+                        @text[column]
+                    }
+                }
+                @if (IsCursorCell(text.Length, renderedRow))
+                {
+                    <span class="terminal-screen-cursor">&nbsp;</span>
+                }
+            </div>
+        }
+    }
+</div>
+
+@code {
+    private ElementReference _root;
+
+    /// <summary>Gets or sets the app the screen belongs to, cascaded by the window host (its language labels the screen).</summary>
+    [CascadingParameter]
+    public IAppExecutionContext? AppContext { get; set; }
+
+    /// <summary>Gets the screen's label texts in the app's language, or the ambient app's without a cascaded one.</summary>
+    private Microsoft.Extensions.Localization.IStringLocalizer<Strings> L => AppContext is { } context
+        ? context.GetLocalizer<Strings>()
+        : KazoLocalization.GetLocalizer<Strings>();
+
+    /// <summary>Gets or sets the immutable frame currently owned by the command.</summary>
+    [Parameter]
+    public TerminalScreenFrame? Frame { get; set; }
+
+    /// <summary>Receives renderer-independent key events from this screen.</summary>
+    [Parameter]
+    public EventCallback<TerminalKeyEvent> OnKey { get; set; }
+
+    /// <summary>Moves DOM focus into the alternate screen for keyboard ownership.</summary>
+    public ValueTask FocusAsync() => _root.FocusAsync();
+
+    private Task HandleKeyDownAsync(KeyboardEventArgs args) =>
+        OnKey.InvokeAsync(ToTerminalKey(args));
+
+    private bool IsCursorCell(int column, int row) =>
+        Frame?.Cursor.Visible == true
+        && Frame.Cursor.Column == column
+        && Frame.Cursor.Row == row;
+
+    private static TerminalKeyEvent ToTerminalKey(KeyboardEventArgs args)
+    {
+        TerminalKey key = args.Key switch
+        {
+            "Enter" => TerminalKey.Enter,
+            "Backspace" => TerminalKey.Backspace,
+            "Delete" => TerminalKey.Delete,
+            "ArrowLeft" => TerminalKey.ArrowLeft,
+            "ArrowRight" => TerminalKey.ArrowRight,
+            "ArrowUp" => TerminalKey.ArrowUp,
+            "ArrowDown" => TerminalKey.ArrowDown,
+            "Home" => TerminalKey.Home,
+            "End" => TerminalKey.End,
+            "PageUp" => TerminalKey.PageUp,
+            "PageDown" => TerminalKey.PageDown,
+            "Escape" => TerminalKey.Escape,
+            _ => TerminalKey.Character
+        };
+        string? text = key is TerminalKey.Character && args.Key.Length == 1 ? args.Key : null;
+        return new TerminalKeyEvent(key, text, args.CtrlKey, args.AltKey, args.ShiftKey);
+    }
+}

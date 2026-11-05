@@ -1,0 +1,29 @@
+@inherits KazoView<IReadOnlyList<Note>>
+@layout _Layout
+@*
+    The notes list: a .razor view rendered to static HTML. The pin buttons are wired by
+    wwwroot/js/notes.js, which calls PATCH /api/notes/{id} and updates the page without reloading.
+*@
+@{ ViewData.Title = "Notes"; }
+<section class="panel">
+    <div class="panel-head">
+        <h1>Notes <span class="muted" id="notes-count">@Model.Count</span></h1>
+        <KazoLink Action="Create" class="button" id="note-new">New note</KazoLink>
+    </div>
+    @if (Model.Count == 0)
+    {
+        <p class="muted">No note yet.</p>
+    }
+    else
+    {
+        <ul class="cards" id="notes-list" data-api="@Url.Content("~/api/notes")">
+            @foreach (Note note in Model)
+            {
+                <KazoPartial Name="_NoteCard" Model="note" />
+            }
+        </ul>
+    }
+</section>
+<KazoSection Name="Scripts">
+    <script src="@Url.Content("~/js/notes.js")"></script>
+</KazoSection>

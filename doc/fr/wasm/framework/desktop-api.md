@@ -2,17 +2,17 @@
 
 # Bureau : API pour les apps
 
-Ce document décrit ce qu'une app utilise pour le bureau : les types `HackDesktop*` du SDK, le fichier `desktop.config`, les raccourcis `.desktop`, le mode Bureau du contrôle de fichiers et l'intent de création de raccourci. L'app Bureau, la coquille, les menus et les surfaces de l'OS sont décrits dans [`dev/desktop.md`](../dev/desktop.md).
+Ce document décrit ce qu'une app utilise pour le bureau : les types `KazoDesktop*` du SDK, le fichier `desktop.config`, les raccourcis `.desktop`, le mode Bureau du contrôle de fichiers et l'intent de création de raccourci. L'app Bureau, la coquille, les menus et les surfaces de l'OS sont décrits dans [`dev/desktop.md`](../dev/desktop.md).
 
 ## Types du SDK
 
 | Élément | Projet | Rôle |
 | --- | --- | --- |
-| `HackDesktopLayout`, `HackDesktopCell`, `HackDesktopOptions`, `HackDesktopItems` | `AppSdk` (`Files/HackDesktop.cs`) | La grille en fonctions pures, partagée par tout fournisseur. |
-| `HackDesktopEntry` | `AppSdk` (`Files/HackDesktopEntry.cs`) | Lecture et écriture des `.desktop`, `CreateShortcutAsync`. |
-| `HackDesktopLink` | `AppSdk` (`Files/HackDesktopLink.cs`) | Raccourci vers un fichier ou un dossier (`Type=Link`), `CreateLinkAsync` (ADR 0185 §13). |
-| `HackDesktopSettings` | `AppSdk` (`Files/HackDesktopSettings.cs`) | Lecture et écriture de `desktop.config`. |
-| `HackAppIcons.LucideName` | `AppSdk` (`Apps/`) | Icône Lucide d'une app (celle du menu Démarrer), reprise par les raccourcis. |
+| `KazoDesktopLayout`, `KazoDesktopCell`, `KazoDesktopOptions`, `KazoDesktopItems` | `AppSdk` (`Files/KazoDesktop.cs`) | La grille en fonctions pures, partagée par tout fournisseur. |
+| `KazoDesktopEntry` | `AppSdk` (`Files/KazoDesktopEntry.cs`) | Lecture et écriture des `.desktop`, `CreateShortcutAsync`. |
+| `KazoDesktopLink` | `AppSdk` (`Files/KazoDesktopLink.cs`) | Raccourci vers un fichier ou un dossier (`Type=Link`), `CreateLinkAsync` (ADR 0185 §13). |
+| `KazoDesktopSettings` | `AppSdk` (`Files/KazoDesktopSettings.cs`) | Lecture et écriture de `desktop.config`. |
+| `KazoAppIcons.LucideName` | `AppSdk` (`Apps/`) | Icône Lucide d'une app (celle du menu Démarrer), reprise par les raccourcis. |
 
 ## Fichier `desktop.config`
 
@@ -41,11 +41,11 @@ notes.txt=1,0
   les icônes.
 
 ```csharp
-HackDesktopSettingsDocument settings = await HackDesktopSettings.ReadAsync();
-await HackDesktopSettings.SaveOptionsAsync(settings.Options with { IconSize = HackDesktopIconSize.Large });
+KazoDesktopSettingsDocument settings = await KazoDesktopSettings.ReadAsync();
+await KazoDesktopSettings.SaveOptionsAsync(settings.Options with { IconSize = KazoDesktopIconSize.Large });
 ```
 
-## Grille (`HackDesktopLayout`)
+## Grille (`KazoDesktopLayout`)
 
 
 | Membre | Rôle |
@@ -59,13 +59,13 @@ await HackDesktopSettings.SaveOptionsAsync(settings.Options with { IconSize = Ha
 
 Les cases vont de haut en bas, puis de gauche à droite.
 
-## Raccourcis (`HackDesktopEntry`)
+## Raccourcis (`KazoDesktopEntry`)
 
 ```ini
 [Desktop Entry]
 Type=Application
 Name=Text Editor
-Exec=org.hackeros.text-editor "/home/alice/My notes.txt"
+Exec=org.kazoos.text-editor "/home/alice/My notes.txt"
 Icon=file-text
 ```
 
@@ -78,7 +78,7 @@ Dans tout contrôle de fichiers fourni par l'explorateur, un raccourci montre le
 nom et l'icône de l'app, sans extension ; l'ouvrir lance l'app avec ses
 arguments ; une app absente grise l'icône et l'ouvrir l'explique.
 
-## Raccourcis vers un fichier ou un dossier (`HackDesktopLink`)
+## Raccourcis vers un fichier ou un dossier (`KazoDesktopLink`)
 
 « Envoyer vers ▸ Bureau » de l'explorateur écrit un raccourci de type `Link`
 (ADR 0185 §13), au format freedesktop.org :
@@ -106,8 +106,8 @@ cible disparue l'explique. Le lien ne suit pas une cible déplacée.
 ## Contrôle de fichiers en mode Bureau
 
 ```razor
-<HackFileView InitialDirectory="@desktop"
-              Mode="HackFileViewMode.Desktop"
+<KazoFileView InitialDirectory="@desktop"
+              Mode="KazoFileViewMode.Desktop"
               DesktopOptions="@_options"
               DesktopPositions="@_positions"
               DesktopPositionsChanged="SavePositionsAsync"
@@ -125,6 +125,6 @@ Paramètres s'ouvre directement sur un onglet avec `--page=appearance` ou
 `--page=desktop`.
 
 
-« Envoyer vers ▸ Bureau (créer un raccourci) » passe par l'intent `org.hackeros.desktop.create-shortcut.v1`, et le fichier est écrit avec les droits de l'app Bureau.
+« Envoyer vers ▸ Bureau (créer un raccourci) » passe par l'intent `org.kazoos.desktop.create-shortcut.v1`, et le fichier est écrit avec les droits de l'app Bureau.
 
 Les entrées `background` et `desktop` des apps (ADR 0159) s'ajoutent au menu du fond ; voir [`context-menu.md`](context-menu.md).

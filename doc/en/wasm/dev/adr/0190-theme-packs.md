@@ -89,7 +89,7 @@ soon as the Store handles packs.
 
 ## Tasks
 
-- [x] `.hacktheme` format and install checks ([ADR 0213](0213-theme-packs-build.md)); catalog CI: [AppMarketPlace #4](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/4).
+- [x] `.hacktheme` format and install checks ([ADR 0213](0213-theme-packs-build.md)); catalog CI: [AppMarketPlace #4](https://github.com/Kazo-ca/Os-AppMarketPlace/issues/4).
 - [x] Per-user and system install, catalogs that read packs ([ADR 0213](0213-theme-packs-build.md)).
 - [x] Hack Store Themes tab ([ADR 0213](0213-theme-packs-build.md)).
 - [x] Work item: image wallpapers ([ADR 0202](0202-desktop-wallpaper-images.md)).

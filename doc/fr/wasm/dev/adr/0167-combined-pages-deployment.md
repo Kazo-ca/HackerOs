@@ -9,7 +9,7 @@ restreint l'interception du service worker de l'ADR 0131 pour le sous-site legac
 
 ## Décision
 
-- Dépôt public : `https://github.com/Kazo-ca/HackerOs`.
+- Dépôt public : `https://github.com/Kazo-ca/Os`.
 - Release WASM : `2.0.3`, via la version unique existante de l'ADR 0098.
 - Le workflow Pages publie un seul artefact : PWA autonome à `/`, ancien bundle
   TypeScript à `/legacy/`, domaine `hackos.kazo.ca`.

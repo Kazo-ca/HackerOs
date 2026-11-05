@@ -73,18 +73,18 @@ clé l'efface des deux fichiers. Le fichier privé est écrit en premier (créé
 ### API du SDK
 
 ```csharp
-await using HackSettingsDocument mail = await HackSettings.OpenAsync(AppContext);
-HackSettingValue server = mail.GetValue("Account.server");   // IsMasked, Source, IsLocked, Sensitivity
+await using KazoSettingsDocument mail = await KazoSettings.OpenAsync(AppContext);
+KazoSettingValue server = mail.GetValue("Account.server");   // IsMasked, Source, IsLocked, Sensitivity
 string shown = server.DisplayText;                            // "••••••••" si masquée ou secrète
 bool masked = mail.IsMasked("Account.server");
-string host = mail.Get<string>("Account.server");             // HackSettingMaskedException si masquée
+string host = mail.Get<string>("Account.server");             // KazoSettingMaskedException si masquée
 
 await mail.SetSecretAsync("Account.password", "s3cr3t");      // trousseau + référence dans le fichier privé
 string? password = await mail.GetSecretAsync("Account.password");
 await mail.SetSecretAsync("Account.password", null);          // efface l'entrée et la référence
 ```
 
-- `HackSettingMaskedException` dérive de `UnauthorizedAccessException` et donne
+- `KazoSettingMaskedException` dérive de `UnauthorizedAccessException` et donne
   `QualifiedKey` et `PrivatePath`.
 - La référence d'un secret est `settings:<document>:<groupe.clé>`.
 - `GetSecretAsync`/`SetSecretAsync` exigent une clé `SecretReference` et ne
@@ -107,9 +107,9 @@ réservée à root, garde tout.
 | --- | --- |
 | Fichier | `~/.local/share/keyrings/login.keyring` (`0600`, dossier `0700`) |
 | Chiffrement | AES-256-GCM, nonce de 12 octets neuf à chaque écriture |
-| Clé | Clé maîtresse aléatoire de 32 octets, enveloppée (AES-256-GCM) dans des emplacements : un emplacement mot de passe (PBKDF2-SHA-256, 210 000 itérations, sel de 16 octets) et un emplacement par clé d'accès PRF (SHA-256 de `hackeros-keyring-prf-v1` et de la sortie PRF, ADR 0168) |
+| Clé | Clé maîtresse aléatoire de 32 octets, enveloppée (AES-256-GCM) dans des emplacements : un emplacement mot de passe (PBKDF2-SHA-256, 210 000 itérations, sel de 16 octets) et un emplacement par clé d'accès PRF (SHA-256 de `kazoos-keyring-prf-v1` et de la sortie PRF, ADR 0168) |
 | Moteur | Web Crypto (`cryptoHasher.js`, `WebCryptoKeyringCipher`) dans l'hôte, `ManagedKeyringCipher` (.NET) dans les tests |
-| Format | JSON `hackeros-keyring` v2 : `cipher`, `slots` (`kind` `password` avec `kdf`, `iterations`, `salt` ; ou `passkey` avec `credentialId` ; puis `nonce`, `wrappedKey`), `nonce`, `ciphertext` (base64). Un fichier v1 (entrées scellées directement sous la clé du mot de passe) est lu et réécrit en v2 à la prochaine connexion par mot de passe (`keyring.upgrade`) |
+| Format | JSON `kazoos-keyring` v2 : `cipher`, `slots` (`kind` `password` avec `kdf`, `iterations`, `salt` ; ou `passkey` avec `credentialId` ; puis `nonce`, `wrappedKey`), `nonce`, `ciphertext` (base64). Un fichier v1 (entrées scellées directement sous la clé du mot de passe) est lu et réécrit en v2 à la prochaine connexion par mot de passe (`keyring.upgrade`) |
 
 ### Cycle de vie (`UserKeyringService`)
 
@@ -138,25 +138,25 @@ réservée à root, garde tout.
   l'administrateur), `keyring.rekey` et `keyring.upgrade` (passage au format 2),
   sans aucun secret.
 
-### API du SDK (`HackKeyring`)
+### API du SDK (`KazoKeyring`)
 
 ```csharp
-if (HackKeyring.IsUnlocked(AppContext))
+if (KazoKeyring.IsUnlocked(AppContext))
 {
-    await HackKeyring.SetAsync(AppContext, "imap", "s3cr3t", label: "Compte IMAP");
-    string? secret = await HackKeyring.GetAsync(AppContext, "imap");
-    IReadOnlyList<HackKeyringEntry> mine = await HackKeyring.ListAsync(AppContext);
-    await HackKeyring.DeleteAsync(AppContext, "imap");
+    await KazoKeyring.SetAsync(AppContext, "imap", "s3cr3t", label: "Compte IMAP");
+    string? secret = await KazoKeyring.GetAsync(AppContext, "imap");
+    IReadOnlyList<KazoKeyringEntry> mine = await KazoKeyring.ListAsync(AppContext);
+    await KazoKeyring.DeleteAsync(AppContext, "imap");
 }
 
 // Gestionnaire de mots de passe seulement (capacité dangereuse keyring.read-all) :
-IReadOnlyList<HackKeyringEntry> all = await HackKeyring.ListAllAsync(AppContext);
-string? other = await HackKeyring.GetAsync(AppContext, "org.example.mail", "imap");
+IReadOnlyList<KazoKeyringEntry> all = await KazoKeyring.ListAllAsync(AppContext);
+string? other = await KazoKeyring.GetAsync(AppContext, "org.example.mail", "imap");
 ```
 
 - Une app ne voit que ses propres entrées. Lire celles d'une autre app ou tout
   lister demande `keyring.read-all` ; sans elle, `UnauthorizedAccessException`.
-- Un trousseau verrouillé lève `HackKeyringLockedException`.
+- Un trousseau verrouillé lève `KazoKeyringLockedException`.
 - Un identifiant fait au plus 256 caractères, sans caractère de contrôle.
 - Chaque méthode existe aussi sans contexte (contexte ambiant de l'ADR 0043).
 - `IAppExecutionContext.Keyring` (`IAppKeyringGateway`) est la passerelle ; elle
@@ -176,23 +176,23 @@ une ligne est mise en file pour l'écrivain unique de journaux (ADR 0045) vers
 `LogFileTarget.AuditLog` : `/var/log/audit.log`, `0600`, rotation 1 Mio × 5.
 
 ```
-type=PATH msg=audit(1792218000.123:42): op=write path="/etc/hosts" uid=0 auid=1000 pid=231 comm="nano" app="org.hackeros.commands.nano" res=success UID="root" AUID="alice"
+type=PATH msg=audit(1792218000.123:42): op=write path="/etc/hosts" uid=0 auid=1000 pid=231 comm="nano" app="org.kazoos.commands.nano" res=success UID="root" AUID="alice"
 ```
 
 - `uid` : l'identité qui écrit (`root` pour une opération système ou élevée par
   `sudo`/approbation) ; `auid` : l'humain d'origine, `unset` pour l'OS.
-- HackerOS n'a pas d'identifiants numériques : `root` vaut `0`, un utilisateur
+- Kazo OS n'a pas d'identifiants numériques : `root` vaut `0`, un utilisateur
   `1000`, `unset` `4294967295` ; les champs `UID=` et `AUID=` donnent les noms,
   comme les champs enrichis d'`auditd`.
 - Un refus ajoute `err=<code>` (par exemple `err=PermissionDenied`). Le contenu
   n'est jamais écrit.
-- HackerOS n'a pas d'opération `chown` : il n'y a donc rien à auditer pour elle.
+- Kazo OS n'a pas d'opération `chown` : il n'y a donc rien à auditer pour elle.
 
 `AuditLineFormat` (Simulation.Abstractions) écrit et relit ces lignes.
 
 ### Lecture
 
-- **`ausearch`** (`org.hackeros.commands.ausearch`, avec `sudo`) : `-f chemin`
+- **`ausearch`** (`org.kazoos.commands.ausearch`, avec `sudo`) : `-f chemin`
   (le chemin, un fichier dessous, ou un nom de fichier), `-ua`, `-ui`, `-ul`
   (utilisateur, `uid`, `auid`), `-c comm`, `--success yes|no` (`-sv`),
   `-if fichier`, `-i` (accepté). Lit les archives `.5` à `.1` puis le journal ;
@@ -225,7 +225,7 @@ Décision : [ADR 0120](adr/0120-passwd-and-administrator-password-reset.md).
   de la session, il est re-chiffré (réinitialisation) ou mis de côté puis
   verrouillé (retrait). Retirer le mot de passe du dernier administrateur
   actif qui en a un est refusé.
-- **SDK** : `HackUserAccounts` (`ListAsync`, `ChangePasswordAsync`,
+- **SDK** : `KazoUserAccounts` (`ListAsync`, `ChangePasswordAsync`,
   `ResetPasswordAsync`, `RemovePasswordAsync`, `ValidateNewPassword`) sur
   `IAppExecutionContext.UserAccounts`, branché par
   `SystemAdministrationGatewayServices.Passwords`.
@@ -245,35 +245,35 @@ Décision : [ADR 0120](adr/0120-passwd-and-administrator-password-reset.md).
 - Les documents de l'OS (`OsSettingsDocument`) n'acceptent que des clés
   publiques : un schéma avec une clé non publique lève `ArgumentException`.
 - L'app Paramètres n'a pas encore d'écran pour les réglages des apps ; une UI
-  qui en affiche utilise `HackSettingValue.DisplayText` pour le masque.
+  qui en affiche utilise `KazoSettingValue.DisplayText` pour le masque.
 - Un fichier créé par une approbation ou `sudo` appartient à l'utilisateur
   humain (comportement existant de l'ADR 0042), y compris un fichier privé de
   `/etc` créé ainsi ; son mode reste `0600`.
 
 ## Tests
 
-- `Tests/HackerOs.Platform.Core.Tests/Settings/SensitiveSettingsTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Settings/SensitiveSettingsTests.cs` :
   fichier privé `0600`, masquage d'une valeur système, valeur utilisateur
   prioritaire, déplacement d'une clé mal placée, `Restricted` refusée côté
   utilisateur, secret dans le trousseau, avertissements du résolveur.
-- `Tests/HackerOs.Platform.Core.Tests/Keyring/UserKeyringServiceTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Keyring/UserKeyringServiceTests.cs` :
   création et modes, reconnexion, mise à l'écart sur un autre mot de passe,
   changement de mot de passe, mise à l'écart par l'administrateur, utilisateur
   sans mot de passe, confinement par app et `keyring.read-all`, chiffrement.
-- `Tests/HackerOs.Platform.Core.Tests/Sessions/PasskeyServiceTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/Sessions/PasskeyServiceTests.cs` :
   emplacement PRF, ouverture par clé d'accès, clé sans PRF, changement de mot
   de passe qui garde les emplacements, migration du format 1.
-- `Tests/HackerOs.Platform.Core.Tests/FileSystem/FileSystemAuditTests.cs` :
+- `Tests/Kazo.Os.Platform.Core.Tests/FileSystem/FileSystemAuditTests.cs` :
   politique, format aller-retour, écritures acceptées et refusées dans
   `audit.log` (`0600`), `uid`/`auid` sous `sudo`.
-- `Tests/HackerOs.Commands.Tests/CoreCommandsTests.cs` : filtres d'`ausearch`.
-- `Tests/HackerOs.Platform.Core.Tests/Sessions/LocalPasswordServiceTests.cs` :
+- `Tests/Kazo.Os.Commands.Tests/CoreCommandsTests.cs` : filtres d'`ausearch`.
+- `Tests/Kazo.Os.Platform.Core.Tests/Sessions/LocalPasswordServiceTests.cs` :
   changement avec trousseau conservé, mauvais mot de passe courant, règles,
   réinitialisation qui met le trousseau de côté, retrait refusé au dernier
   administrateur, passerelle (`users.manage` et administrateur).
-- `Tests/HackerOs.Commands.Wave5.Tests/PasswdCommandTests.cs` : invites écho
+- `Tests/Kazo.Os.Commands.Wave5.Tests/PasswdCommandTests.cs` : invites écho
   coupé, confirmation différente, `sudo passwd NOM`, `-d`, `-S`.
-- `Tests/HackerOs.UI.E2E.Tests/PasswdTerminalTests.cs` : `passwd` dans le vrai
+- `Tests/Kazo.Os.UI.E2E.Tests/PasswdTerminalTests.cs` : `passwd` dans le vrai
   terminal n'affiche rien de ce qui est tapé, puis seule la nouvelle valeur
   ouvre la session.
 
@@ -281,12 +281,12 @@ Décision : [ADR 0120](adr/0120-passwd-and-administrator-password-reset.md).
 
 - [x] Fichier compagnon `<doc>.private.config` (`0600`) et rangement des clés à l'écriture
 - [x] Lecture des quatre fichiers, avertissements des clés mal placées, masquage
-- [x] `HackSettingValue`, `HackSettingMaskedException`, `GetSecretAsync`/`SetSecretAsync`
+- [x] `KazoSettingValue`, `KazoSettingMaskedException`, `GetSecretAsync`/`SetSecretAsync`
 - [x] Trousseau `login.keyring` chiffré AES-GCM (Web Crypto) sous une clé PBKDF2
 - [x] Déverrouillage à la connexion, verrouillage à la déconnexion, mise à l'écart `.old`
-- [x] `HackKeyring` et capacité dangereuse `keyring.read-all`
+- [x] `KazoKeyring` et capacité dangereuse `keyring.read-all`
 - [x] Masquage des fichiers privés et du trousseau dans les instantanés de diagnostic
 - [x] Journal `/var/log/audit.log` écrit par le système de fichiers
 - [x] Commande `ausearch` et lecture du journal d'audit par l'Error Log Viewer
 - [x] Tests
-- [x] Commande `passwd` et réinitialisation par un administrateur (ADR 0120 : `LocalPasswordService`, `HackUserAccounts`, onglet « Utilisateurs »)
+- [x] Commande `passwd` et réinitialisation par un administrateur (ADR 0120 : `LocalPasswordService`, `KazoUserAccounts`, onglet « Utilisateurs »)

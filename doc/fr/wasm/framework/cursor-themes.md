@@ -6,19 +6,19 @@ Décision : [ADR 0205](../dev/adr/0205-cursor-themes.md).
 
 ## À quoi ça sert
 
-Un thème de curseurs remplace le pointeur de toute la surface de HackerOS
+Un thème de curseurs remplace le pointeur de toute la surface de Kazo OS
 (bureau, barre des tâches, fenêtres et apps) par des images PNG. On le choisit
 dans **Paramètres ▸ Apparence ▸ Curseurs**. Trois thèmes sont intégrés :
-**Système** (les curseurs de l'appareil, par défaut), **HackerOS Néon** et
+**Système** (les curseurs de l'appareil, par défaut), **Kazo OS Néon** et
 **Gothique Pourpre** ; chacun peut ajouter les siens.
 
 ## Créer un thème
 
-1. Créez un dossier dans `~/.config/hackeros/cursors/` (pour vous) ou, en
-   administrateur, dans `/etc/hackeros/cursors/` (pour tous) :
+1. Créez un dossier dans `~/.config/kazoos/cursors/` (pour vous) ou, en
+   administrateur, dans `/etc/kazoos/cursors/` (pour tous) :
 
    ```sh
-   mkdir -p ~/.config/hackeros/cursors/neon-crypt
+   mkdir -p ~/.config/kazoos/cursors/neon-crypt
    ```
 
 2. Copiez-y vos images PNG (au plus 128 × 128 pixels et 64 Kio chacune ;
@@ -41,13 +41,13 @@ dans **Paramètres ▸ Apparence ▸ Curseurs**. Trois thèmes sont intégrés :
    ```
 
 4. Ouvrez Paramètres ▸ Apparence : le thème apparaît sous **Curseurs** ;
-   choisissez-le. Le choix est écrit dans `~/.config/hackeros/cursors.config`
+   choisissez-le. Le choix est écrit dans `~/.config/kazoos/cursors.config`
    (`theme=neon-crypt`) et s'applique tout de suite.
 
-Un pack de thèmes du Hack Store apporte son thème de curseurs dans son dossier
+Un pack de thèmes du Kazo OS Store apporte son thème de curseurs dans son dossier
 `cursors/` ; il est lu là où le pack est installé
-(`/usr/share/hackeros/theme-packs/<pack>/cursors/` puis
-`~/.local/share/hackeros/theme-packs/<pack>/cursors/`,
+(`/usr/share/kazoos/theme-packs/<pack>/cursors/` puis
+`~/.local/share/kazoos/theme-packs/<pack>/cursors/`,
 [ADR 0213](../dev/adr/0213-theme-packs-build.md)), sans copie.
 
 Règles :
@@ -90,7 +90,7 @@ Ne posez pas de curseur par un attribut `style` ni par JavaScript
 
 ## API
 
-Paquet `HackerOs.Theming.Abstractions` :
+Paquet `Kazo.Os.Theming.Abstractions` :
 
 - `CursorNames` : la liste des noms (`All`), l'aperçu de Paramètres
   (`Preview`) et les replis (`GetFallback`).
@@ -98,21 +98,21 @@ Paquet `HackerOs.Theming.Abstractions` :
   (vérifie un PNG sans le décoder), `ToDataUrl`, limites `MaxImageBytes` et
   `MaxImageSize`.
 - `CursorThemeLibrary.LoadAsync` : lit les dossiers de `/etc` et `~` avec vos
-  propres fonctions de lecture (`HackDirectory`/`HackFile` dans une app).
+  propres fonctions de lecture (`KazoDirectory`/`KazoFile` dans une app).
 - `CursorThemeCatalog` : les thèmes intégrés ; `CursorTheme.Resolve` et
   `ResolveAll` appliquent les replis.
 
-Paquet `HackerOs.Theming.Blazor` : `CursorThemeSurface`, composant sans rendu
+Paquet `Kazo.Os.Theming.Blazor` : `CursorThemeSurface`, composant sans rendu
 qu'un hôte place une fois dans sa racine (`Theme="…"`).
 
-Réglage : document `cursors` (`HackSettings.OpenSystemAsync(context, "cursors")`),
+Réglage : document `cursors` (`KazoSettings.OpenSystemAsync(context, "cursors")`),
 clé `theme`.
 
 ## Thèmes intégrés
 
-Les images de HackerOS Néon et Gothique Pourpre sont dans
-`wasm2/HackerOs/Platform/HackerOs.Theming.Blazor/wwwroot/cursors/<id>/` et sont
-dessinées par `wasm2/HackerOs/build/tools/generate-cursor-themes.py` (Pillow).
+Les images de Kazo OS Néon et Gothique Pourpre sont dans
+`wasm2/KazoOs/Platform/Kazo.Os.Theming.Blazor/wwwroot/cursors/<id>/` et sont
+dessinées par `wasm2/KazoOs/build/tools/generate-cursor-themes.py` (Pillow).
 Changer un dessin ou un point actif demande de modifier ensemble le script et
 `CursorThemeCatalog` ; le test `Every_built_in_cursor_is_a_shipped_png_whose_hot_spot_is_inside`
 vérifie qu'ils s'accordent.

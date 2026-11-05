@@ -1,6 +1,6 @@
 > [English version](../../../../en/wasm/dev/adr/0137-server-hosting-implementation-adjustments.md)
 
-# ADR 0137 : ajustements de la mise en œuvre de l'OS servi par `HackerOs.Server`
+# ADR 0137 : ajustements de la mise en œuvre de l'OS servi par `Kazo.Os.Server`
 
 ## Statut
 
@@ -32,7 +32,7 @@ Chromium écrit « Failed to load resource » dans la console à chaque démarra
   (`{"product":"HackerOS","isServer":false}`), lu par l'OS à côté de son
   `index.html` (`HttpHostInfoClient.FindServingServerAsync`, délai de 5 s,
   toute erreur vaut « pas de serveur »).
-- `HackerOs.Server` répond lui-même à cette adresse (`isServer: true`, version
+- `Kazo.Os.Server` répond lui-même à cette adresse (`isServer: true`, version
   du serveur et de l'API, `Cache-Control: no-store`) par un middleware placé
   avant le routage : `MapStaticAssets` publie aussi le fichier de l'Ecosystem
   à la même adresse.
@@ -54,8 +54,8 @@ empreintées dans tous les environnements. Une route inconnue de l'API reste un
 404.
 
 Le SDK Razor ne transmet jamais le paquet CSS isolé d'un projet
-(`HackerOs.Ecosystem.styles.css`, actif du seul projet courant) à un projet qui
-le référence : la même réécriture sert à sa place `HackerOs.Server.styles.css`,
+(`Kazo.Os.Ecosystem.styles.css`, actif du seul projet courant) à un projet qui
+le référence : la même réécriture sert à sa place `Kazo.Os.Server.styles.css`,
 qui importe le CSS isolé des mêmes projets (le serveur ne référence que
 l'Ecosystem).
 
@@ -77,7 +77,7 @@ l'Ecosystem).
   l'icône, et « Paramètres du serveur » ouvre l'app Paramètres. Le SDK ne
   change pas.
 - La zone de notification est un nouveau paramètre de la barre des tâches,
-  `Taskbar.NotificationAreaContent` (ajout public de `HackerOs.Taskbar.Blazor`).
+  `Taskbar.NotificationAreaContent` (ajout public de `Kazo.Os.Taskbar.Blazor`).
 
 ### 4. Un compte existant marche depuis n'importe quel appareil
 
@@ -100,7 +100,7 @@ Comme l'ADR 0130 §3 : composants Razor, `AddInteractiveServerComponents`,
 clients directs, transport d'assemblies en processus, environnement d'hôte
 ASP.NET Core, références aux apps, et la section `HackerOs:ResourceAccounting`
 de son `appsettings.json` (l'OS lit celle de l'Ecosystem). Le serveur garde
-une seule référence de projet vers l'OS : `OS/HackerOs.Ecosystem`.
+une seule référence de projet vers l'OS : `OS/Kazo.Os.Ecosystem`.
 
 ## Conséquences
 
@@ -109,7 +109,7 @@ une seule référence de projet vers l'OS : `OS/HackerOs.Ecosystem`.
   identified » seul, puis « Connected » après création d'un compte depuis le
   panneau) ; les autres parcours vérifient qu'aucune icône de serveur
   n'apparaît.
-- Ajouts publics non publiés (ADR 0132 §1) : `HackerOs.Server.Contracts.Hosting`
+- Ajouts publics non publiés (ADR 0132 §1) : `Kazo.Os.Server.Contracts.Hosting`
   (`HostInfoResponse`, `HostInfoRoutes`), `IHostInfoClient`,
   `HttpHostInfoClient`, `ServerPresence*` (Platform Core),
   `ServerStatusIndicator` (Platform Blazor), `Taskbar.NotificationAreaContent`.

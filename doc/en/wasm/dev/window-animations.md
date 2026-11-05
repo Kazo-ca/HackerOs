@@ -2,7 +2,7 @@
 
 # Window animations
 
-Work item 3 of issue [#242](https://github.com/Kazo-ca/HackerOs/issues/242), implementation
+Work item 3 of issue [#242](https://github.com/Kazo-ca/Os/issues/242), implementation
 of [ADR 0198](adr/0198-window-animations.md).
 
 ## 1. What the user sees
@@ -20,7 +20,7 @@ preference turns everything off. Nothing is animated on mobile (one surface, no 
 
 ## 2. Architecture
 
-Everything is in `Platform/HackerOs.Windowing.Blazor`:
+Everything is in `Platform/Kazo.Os.Windowing.Blazor`:
 
 - **`WindowHost.razor`** compares, at each `OnParametersSet`, the window's previous snapshot
   with the new one and picks the animation of the render: `open` (first render),
@@ -45,15 +45,15 @@ Everything is in `Platform/HackerOs.Windowing.Blazor`:
     layer of the window's screen, else the bottom of the screen.
 - **`WindowChrome.razor.js`** remembers, during a drag, the drawn box (`__hosPreviewBox`):
   a drag that ends in a snap animates from there.
-- **`HackerOs.Taskbar.Blazor`**: each window button carries `data-taskbar-window-id`.
+- **`Kazo.Os.Taskbar.Blazor`**: each window button carries `data-taskbar-window-id`.
 
 ## 3. Theme variables
 
 | Variable | Default | Where to change it |
 | --- | --- | --- |
-| `--hos-window-anim-duration` | `180ms` | theme editor (Animations), theme, pack |
-| `--hos-window-anim-easing` | `cubic-bezier(0.2, 0, 0, 1)` | theme sheet or pack |
-| `--hos-window-anim-scale` | `0.95` | theme sheet or pack |
+| `--kos-window-anim-duration` | `180ms` | theme editor (Animations), theme, pack |
+| `--kos-window-anim-easing` | `cubic-bezier(0.2, 0, 0, 1)` | theme sheet or pack |
+| `--kos-window-anim-scale` | `0.95` | theme sheet or pack |
 
 `themes.css` sets the duration to `0ms` under `data-motion="reduced"` and
 `prefers-reduced-motion: reduce`. A zero duration, or a missing variable with
@@ -71,11 +71,11 @@ replaced by the default curve.
 
 ## 5. Tests
 
-- `Tests/HackerOs.Platform.Blazor.Tests/WindowAnimationTests.cs`: rendering of
+- `Tests/Kazo.Os.Platform.Blazor.Tests/WindowAnimationTests.cs`: rendering of
   `WindowHost` (`is-opening` class, `hidden` after the minimize ends, animation passed to
   the script).
-- `Tests/HackerOs.Apps.ThemeEditor.Tests`: the `--hos-window-anim-duration` token is translated.
-- `Tests/HackerOs.UI.E2E.Tests/WindowAnimationTests.cs`: in Chromium, each animation ends with the window opaque and untransformed, the close copy is an inert `div` with no `data-window-id` that leaves the page, and nothing is animated with `prefers-reduced-motion: reduce`. `WindowTitleBarTests` waits for the animation to end before measuring the buttons.
+- `Tests/Kazo.Os.Apps.ThemeEditor.Tests`: the `--kos-window-anim-duration` token is translated.
+- `Tests/Kazo.Os.UI.E2E.Tests/WindowAnimationTests.cs`: in Chromium, each animation ends with the window opaque and untransformed, the close copy is an inert `div` with no `data-window-id` that leaves the page, and nothing is animated with `prefers-reduced-motion: reduce`. `WindowTitleBarTests` waits for the animation to end before measuring the buttons.
 
 ## 6. Task list
 

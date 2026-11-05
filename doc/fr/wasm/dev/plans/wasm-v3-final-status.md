@@ -30,11 +30,11 @@ Les seize chantiers sont fusionnés dans `v3/base` (PR #152 à #167) :
 | `v3/8-settings-security` | #155 | ADR 0100 | [`sensitive-settings.md`](../sensitive-settings.md) |
 | `v3/9-sync` | #156 | ADR 0101 | [`synchronization.md`](../synchronization.md) |
 | `v3/10-server-proxy` | #158 | ADR 0102, 0108 | [`server-network-relay.md`](../server-network-relay.md) |
-| `v3/11-apps` | #162 | ADR 0103 | [`hack-paint.md`](../hack-paint.md), [`theme-editor.md`](../theme-editor.md) |
+| `v3/11-apps` | #162 | ADR 0103 | [`kazo-paint.md`](../kazo-paint.md), [`theme-editor.md`](../theme-editor.md) |
 | `v3/12-localization` | #164 | ADR 0104, 0111 | [`localization.md`](../../framework/localization.md) |
 | `v3/13-accessibility` | #165 | ADR 0105, 0112 | [`accessibility.md`](../accessibility.md) |
 | `v3/14-trimming` | #166 | ADR 0106, 0113 | [`trimmed-publish.md`](../trimmed-publish.md) |
-| `v3/15-sdk-freeze` | #167 | ADR 0098 §8, 0114 | [`building-on-hackeros.md`](../../framework/building-on-hackeros.md) |
+| `v3/15-sdk-freeze` | #167 | ADR 0098 §8, 0114 | [`building-on-kazoos.md`](../../framework/building-on-kazoos.md) |
 | `v3/16-final` | ce chantier | aucune | ce document |
 
 En chiffres, sur `v3/base` : 14 apps fenêtrées système, 68 commandes du
@@ -56,21 +56,21 @@ Chromium de `/opt/pw-browsers`. GitHub Actions est en panne dans tout le dépôt
 
 | Étape | Résultat |
 |---|---|
-| `dotnet build HackerOs.sln`, Debug puis Release | réussi, 0 avertissement, 0 erreur |
-| Tests unitaires et d'intégration, 40 projets (`--no-build -c Debug`) | 3 397 réussis, 0 échec (dont `HackerOs.SdkCompatibility.Tests` 5/5, `HackerOs.Platform.Core.Tests` 1 125/1 125, `HackerOs.Tools.ManifestGenerator.Tests` 67/67) |
-| `HackerOs.E2E.Tests` | 16/16 |
-| `HackerOs.UI.E2E.Tests` | 24/24 |
-| `HackerOs.Templates.E2E.Tests` (dont l'hôte qui charge l'app de compatibilité 1.0.0) | 6/6 |
-| `HackerOs.Pwa.E2E.Tests` | 5/6 au premier passage, puis 6/6 deux fois de suite après la correction ci-dessous |
+| `dotnet build Kazo.Os.sln`, Debug puis Release | réussi, 0 avertissement, 0 erreur |
+| Tests unitaires et d'intégration, 40 projets (`--no-build -c Debug`) | 3 397 réussis, 0 échec (dont `Kazo.Os.SdkCompatibility.Tests` 5/5, `Kazo.Os.Platform.Core.Tests` 1 125/1 125, `Kazo.Os.Tools.ManifestGenerator.Tests` 67/67) |
+| `Kazo.Os.E2E.Tests` | 16/16 |
+| `Kazo.Os.UI.E2E.Tests` | 24/24 |
+| `Kazo.Os.Templates.E2E.Tests` (dont l'hôte qui charge l'app de compatibilité 1.0.0) | 6/6 |
+| `Kazo.Os.Pwa.E2E.Tests` | 5/6 au premier passage, puis 6/6 deux fois de suite après la correction ci-dessous |
 | `build/publish-trimmed.sh` (porte de fusion) | PASS : 134 fichiers `.wasm`, 26,4 Mio (8,0 Mio Brotli) ; connexion, chaque app fenêtrée du menu Démarrer, tube dans le pool de workers, Intranet, site Blazor d'exemple, redémarrage hors ligne |
-| `build/verify-hosts.sh` (trois hôtes) | PASS : Ecosystem publié (mesures actives, coupées au build, coupées par réglage), `test/test`, `HackerOs.Server` |
+| `build/verify-hosts.sh` (trois hôtes) | PASS : Ecosystem publié (mesures actives, coupées au build, coupées par réglage), `test/test`, `Kazo.Os.Server` |
 
 Seule correction de code de ce chantier : le test PWA
 `Reload_fully_offline_boots_the_app_and_preserves_a_saved_file` cliquait la
 ligne du fichier une seule fois ; quand la liste de l'explorateur se
 rechargeait juste après la navigation, la sélection tombait et le bouton
 « Download » restait désactivé. `PwaTestSupport.AssertFileContentAsync` reprend
-la boucle de `SelectFileExplorerEntryAsync` de `HackerOs.UI.E2E.Tests` : cliquer
+la boucle de `SelectFileExplorerEntryAsync` de `Kazo.Os.UI.E2E.Tests` : cliquer
 jusqu'à ce que la ligne soit sélectionnée. C'était l'échec « hors ligne »
 relevé sur `v3/base` depuis `v3/12`. Sans IPv6, la suite se replie sur
 `127.0.0.2` depuis `v3/7` ([`pwa-cache-recovery.md`](../pwa-cache-recovery.md)).
@@ -89,14 +89,14 @@ conteneur, .NET SDK 10.0.402) :
 
 | Étape | Résultat |
 |---|---|
-| `dotnet build HackerOs.sln`, Debug puis Release | réussi, 0 avertissement, 0 erreur |
-| Tests unitaires et d'intégration, 40 projets (`--no-build -c Debug`) | 3 510 réussis, 0 échec (dont `HackerOs.SdkCompatibility.Tests` 5/5) |
-| `HackerOs.E2E.Tests` | 16/16 |
-| `HackerOs.UI.E2E.Tests` | 27/27 |
-| `HackerOs.Templates.E2E.Tests` (dont l'hôte qui charge l'app 1.0.0) | 6/6 |
-| `HackerOs.Pwa.E2E.Tests` | 6/6 |
+| `dotnet build Kazo.Os.sln`, Debug puis Release | réussi, 0 avertissement, 0 erreur |
+| Tests unitaires et d'intégration, 40 projets (`--no-build -c Debug`) | 3 510 réussis, 0 échec (dont `Kazo.Os.SdkCompatibility.Tests` 5/5) |
+| `Kazo.Os.E2E.Tests` | 16/16 |
+| `Kazo.Os.UI.E2E.Tests` | 27/27 |
+| `Kazo.Os.Templates.E2E.Tests` (dont l'hôte qui charge l'app 1.0.0) | 6/6 |
+| `Kazo.Os.Pwa.E2E.Tests` | 6/6 |
 | `build/publish-trimmed.sh` | PASS : 134 fichiers `.wasm`, 26,6 Mio (8,0 Mio Brotli), chaque app fenêtrée, pool de workers, Intranet, site Blazor, redémarrage hors ligne |
-| `build/verify-hosts.sh` (trois hôtes) | PASS : Ecosystem (trois modes de mesure), `test/test`, `HackerOs.Server` |
+| `build/verify-hosts.sh` (trois hôtes) | PASS : Ecosystem (trois modes de mesure), `test/test`, `Kazo.Os.Server` |
 
 Pendant la fusion de `v3/base`, l'escalade de `kill -9` a échoué une fois
 (test instable connu, voir plus bas) ; elle passe dans la série complète.
@@ -117,11 +117,11 @@ plus bas).
 | ~~La géométrie des fenêtres est enregistrée mais jamais relue : une fenêtre ne rouvre pas à sa dernière position.~~ Corrigé par `v3.1/2-window-geometry` (ADR 0116 et 0122 : taille et état agrandi, pas la position ; [`window-geometry.md`](../window-geometry.md)). | `v3/3` | Écart avec l'ADR 0095, résolu. |
 | Une touche pressée dans une iframe (navigateur, sites) reste dans l'iframe ; les raccourcis de l'OS n'y marchent pas. | `v3/3` | Choix d'implémentation, non validé. |
 | ~~Pas de couche utilisateur pour les associations de fichiers et de schémas.~~ Comblée par `v3/4b` (ADR 0121, [`user-file-associations.md`](../user-file-associations.md)). « Afficher dans le dossier » demande la capacité `apps.launch`. | `v3/4` | Fermée pour les associations. |
-| `hackwebd` démarre à la connexion, pas au boot. | `v3/5` | Question ouverte ; un passage au boot demande son ADR. |
-| `hackbackup` exige `sudo` ; une restauration en mode fusion redémarre aussi la machine ; pas de fixture IndexedDB v1 (jamais commitée). | `v3/7` | Documenté dans [`system-backup.md`](../system-backup.md). |
+| `kazowebd` démarre à la connexion, pas au boot. | `v3/5` | Question ouverte ; un passage au boot demande son ADR. |
+| `kazobackup` exige `sudo` ; une restauration en mode fusion redémarre aussi la machine ; pas de fixture IndexedDB v1 (jamais commitée). | `v3/7` | Documenté dans [`system-backup.md`](../system-backup.md). |
 | ~~Pas de commande `passwd` ni de réinitialisation d'un mot de passe par un administrateur.~~ Comblée par `v3/8` (PR #172, ADR 0120, [`sensitive-settings.md`](../sensitive-settings.md)). | `v3/8` | Fermée. |
 | Sur un même appareil, le curseur de synchronisation est commun à tous les utilisateurs. | `v3/9` | Documenté dans [`synchronization.md`](../synchronization.md). |
-| Le SDK n'a pas d'API pour changer le titre d'une fenêtre ; Hack Paint affiche le nom du fichier dans l'app. | `v3/11` | Corrigé par `v3.1/3-window-title` (ADR 0117, 0123) : `SetWindowTitleAsync`, publié dans le SDK 1.1.0 par `v3.1/4-sdk-1-1`. Fermée. |
+| Le SDK n'a pas d'API pour changer le titre d'une fenêtre ; Kazo Paint affiche le nom du fichier dans l'app. | `v3/11` | Corrigé par `v3.1/3-window-title` (ADR 0117, 0123) : `SetWindowTitleAsync`, publié dans le SDK 1.1.0 par `v3.1/4-sdk-1-1`. Fermée. |
 | Les menus internes de Monaco (Code Editor) restent en anglais. | `v3/12` | Question ouverte (défaut : anglais). |
 | Une app compilée contre `0.9.0-preview` est refusée par l'OS 1.0. | `v3/15` | Voulu (autre version majeure) ; une app d'un autre dépôt se reconstruit contre 1.0.0. |
 | Installation d'apps au runtime. | plan, question 1 | Reportée à un plan à part. |
@@ -134,13 +134,13 @@ donnent dans le fil du chantier.
 | Chantier | Question | Défaut appliqué |
 |---|---|---|
 | ~~`v3/4`~~ | ~~Ajouter des associations de fichiers propres à chaque utilisateur ?~~ Répondue par Benoit : faites (PR #171, ADR 0121). | — |
-| `v3/5` | `hackwebd` doit-il démarrer au boot ? (Garder à la connexion / Boot + recharge des sites utilisateur / Boot + seconde instance sous l'utilisateur) | Garder à la connexion |
-| `v3/5` | Comment créer le compte de service `hackeros-svc` ? (Compte intégré / Magasin d'utilisateurs IndexedDB / Magasin + `/etc/passwd` généré) | Compte intégré (ADR 0107) |
+| `v3/5` | `kazowebd` doit-il démarrer au boot ? (Garder à la connexion / Boot + recharge des sites utilisateur / Boot + seconde instance sous l'utilisateur) | Garder à la connexion |
+| `v3/5` | Comment créer le compte de service `kazoos-svc` ? (Compte intégré / Magasin d'utilisateurs IndexedDB / Magasin + `/etc/passwd` généré) | Compte intégré (ADR 0107) |
 | ~~`v3/8`~~ | ~~Ajouter `passwd` et la réinitialisation par un administrateur ?~~ Répondue par Benoit : faits (PR #172, ADR 0120). | — |
 | `v3/10` | D'où le serveur tient-il l'accord `network.real.access` d'une app ? (Liste du serveur / Accords poussés par l'OS / Vrai réseau coupé pour toutes les apps) | Liste du serveur (`Proxy:GrantedApps`) |
 | `v3/12` | 1. Nom français « Gestionnaire de serveur web » (garder / nom anglais) ; 2. boutons d'accès d'un site au stockage (suivent la langue / forcer le français) ; 3. menus de Monaco (anglais / pack de langue, plusieurs centaines de Kio) ; 4. noms des thèmes intégrés (anglais / traduits) | 1A 2A 3A 4A |
 | `v3/13` | 1. La page Accessibilité modifie l'utilisateur seul ou aussi « Tous les utilisateurs » ; 2. le contraste élevé recouvre les aperçus de thèmes ; 3. « Réduire les animations » en Auto/Activé/Désactivé ou simple interrupteur | 1A 2A 3A |
-| `v3/14` | Garder les assemblies HackerOS entières dans la publication élaguée, ou tout élaguer plus tard (~280 appels d'interop à rendre sûrs, ~0,4 Mio Brotli de gain) ? | Garder entières (ADR 0113) |
+| `v3/14` | Garder les assemblies Kazo OS entières dans la publication élaguée, ou tout élaguer plus tard (~280 appels d'interop à rendre sûrs, ~0,4 Mio Brotli de gain) ? | Garder entières (ADR 0113) |
 | `v3/15` | Retirer les trois API `[Obsolete]` avant la 1.0 ? | Retirer (fait) |
 | `v3/15` | Quels paquets la promesse de compatibilité 1.0 couvre-t-elle ? (SDK seulement / tout) | SDK seulement (ADR 0114) |
 
@@ -150,18 +150,18 @@ Ils échouaient ou vacillaient déjà sur `v3/base` avant ce chantier ; aucun
 n'a échoué pendant cette vérification, et aucun n'est une régression de la
 migration :
 
-- `A_command_that_spins_at_once` (`HackerOs.Platform.WorkerHost.Tests`) échouait
+- `A_command_that_spins_at_once` (`Kazo.Os.Platform.WorkerHost.Tests`) échouait
   à chaque exécution sur `v3/base` en cours de journée ; il passe ici, sous une
   machine moins chargée, ce qui le range parmi les tests sensibles à la charge ;
 - l'escalade de `kill -9`, `CommandParityTests` (`zip` puis `unzip`),
   `CpuAccountingOverheadTests` et `AppInstallationService` sont instables sous
   charge ;
-- le test hors ligne de `HackerOs.Pwa.E2E.Tests` échouait sur `v3/base`
+- le test hors ligne de `Kazo.Os.Pwa.E2E.Tests` échouait sur `v3/base`
   depuis `v3/12` ; il est corrigé par ce chantier (voir plus haut) ;
-- `HackerOs.Pwa.E2E.Tests` publie l'OS avec les versions `1.0.0-pwatest-v1` et
+- `Kazo.Os.Pwa.E2E.Tests` publie l'OS avec les versions `1.0.0-pwatest-v1` et
   `-v2` ; le générateur réécrit alors les `manifest.json` commités des apps
   avec `sdkCompatibility.minimumVersion` = `1.0.0-pwatest-v2` (85 fichiers). Il
-  faut annuler ces modifications (`git checkout -- wasm2/HackerOs/Apps`) avant
+  faut annuler ces modifications (`git checkout -- wasm2/KazoOs/Apps`) avant
   de commiter après cette suite ;
 - le banc UI des fenêtres détachées démarre parfois mal quand les suites
   s'enchaînent.

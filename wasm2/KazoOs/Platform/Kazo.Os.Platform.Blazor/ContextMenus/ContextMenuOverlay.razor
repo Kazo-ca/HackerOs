@@ -1,0 +1,124 @@
+@namespace Kazo.Os.Platform.Blazor.ContextMenus
+@using Kazo.Os.AppSdk.Blazor.ContextMenus
+@using Kazo.Os.AppSdk.Icons
+@implements IAsyncDisposable
+
+@* ADR 0150 §6: the one context menu of the OS, drawn above every window. The menu comes from
+   ContextMenuService; keys and pointer go through ContextMenuNavigator; the script places the
+   panels and catches the requests. *@
+
+<div @ref="_layer" class="kazo-context-menu-layer @(IsSheet ? "is-sheet" : null)" data-context-menu-layer="">
+    @if (_session is { } session && _navigator is { } navigator)
+    {
+        @if (IsSheet)
+        {
+            int active = navigator.Levels.Count - 1;
+            <div class="kazo-context-menu-backdrop" @onclick="DismissAsync"></div>
+            <div @ref="_panels[active]"
+                 class="kazo-context-menu-panel kazo-context-menu-sheet"
+                 role="menu"
+                 tabindex="-1"
+                 aria-label="@MenuLabel(session)"
+                 aria-activedescendant="@ActiveDescendant(active)"
+                 data-context-menu="@session.Name"
+                 data-menu-sheet-level="@active"
+                 @onkeydown="HandleKeyAsync"
+                 @onkeydown:preventDefault="true"
+                 @onkeydown:stopPropagation="true"
+                 @oncontextmenu:preventDefault="true">
+                @if (active > 0)
+                {
+                    <div class="kazo-context-menu-item kazo-context-menu-back"
+                         role="menuitem"
+                         tabindex="-1"
+                         aria-disabled="false"
+                         @onclick="Back">
+                        <span class="kazo-context-menu-icon" aria-hidden="true">
+                            <KazoIcon Library="IconLibrary.Lucide" Name="chevron-left" Size="16" />
+                        </span>
+                        <span class="kazo-context-menu-title">@L["ContextMenu.Back"]</span>
+                    </div>
+                    <div class="kazo-context-menu-separator" role="separator"></div>
+                }
+                @{ RenderRows(__builder, active); }
+            </div>
+        }
+        else
+        {
+            @for (int index = 0; index < navigator.Levels.Count; index++)
+            {
+                int level = index;
+                ContextMenuNavigator.OpenLevel open = navigator.Levels[level];
+                <div @ref="_panels[level]"
+                     class="kazo-context-menu-panel"
+                     role="menu"
+                     tabindex="-1"
+                     aria-label="@(level == 0 ? MenuLabel(session) : navigator.Levels[level - 1].Level.Rows[open.ParentRow].Item!.Title)"
+                     aria-activedescendant="@ActiveDescendant(level)"
+                     data-context-menu="@session.Name"
+                     data-menu-level="@level"
+                     data-parent-row="@(level == 0 ? null : RowId(level - 1, open.ParentRow))"
+                     @onkeydown="HandleKeyAsync"
+                     @onkeydown:preventDefault="true"
+                     @onkeydown:stopPropagation="true"
+                     @oncontextmenu:preventDefault="true">
+                    @{ RenderRows(__builder, level); }
+                </div>
+            }
+        }
+    }
+</div>
+
+@code {
+    /// <summary>Draws the rows of one open level.</summary>
+    private void RenderRows(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int level)
+    {
+        ContextMenuNavigator.OpenLevel open = _navigator!.Levels[level];
+        bool hasSubmenuOpen = level + 1 < _navigator.Levels.Count;
+        for (int index = 0; index < open.Level.Rows.Count; index++)
+        {
+            int row = index;
+            ContextMenuRow menuRow = open.Level.Rows[row];
+            if (menuRow.Item is not { } item)
+            {
+                <div class="kazo-context-menu-separator" role="separator"></div>
+                continue;
+            }
+
+            bool expanded = hasSubmenuOpen && _navigator.Levels[level + 1].ParentRow == row;
+            <div id="@RowId(level, row)"
+                 class="kazo-context-menu-item @(row == open.Highlight ? "is-highlighted" : null) @(item.IsDisabled ? "is-disabled" : null)"
+                 role="menuitem"
+                 tabindex="-1"
+                 aria-disabled="@(item.IsDisabled ? "true" : "false")"
+                 aria-haspopup="@(menuRow.Submenu is null ? null : "menu")"
+                 aria-expanded="@(menuRow.Submenu is null ? null : expanded ? "true" : "false")"
+                 data-menu-item="@item.Id"
+                 @onpointerenter="() => Hover(level, row)"
+                 @onpointerleave="() => Unhover(level, row)"
+                 @onclick="() => ClickAsync(level, row)">
+                <span class="kazo-context-menu-icon" aria-hidden="true">
+                    @if (item.Icon is { Kind: KazoIconKind.Vector } vector)
+                    {
+                        <KazoIcon Library="vector.Library" Name="@vector.Source" Size="16" />
+                    }
+                    else if (item.Icon is { Kind: KazoIconKind.Image } image)
+                    {
+                        <img src="@image.Source" alt="" />
+                    }
+                </span>
+                <span class="kazo-context-menu-title">@item.Title</span>
+                @if (item.Shortcut is { Length: > 0 } shortcut)
+                {
+                    <kbd class="kazo-context-menu-shortcut">@shortcut</kbd>
+                }
+                @if (menuRow.Submenu is not null)
+                {
+                    <span class="kazo-context-menu-chevron" aria-hidden="true">
+                        <KazoIcon Library="IconLibrary.Lucide" Name="chevron-right" Size="14" />
+                    </span>
+                }
+            </div>
+        }
+    }
+}

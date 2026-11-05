@@ -1,0 +1,1120 @@
+#nullable enable
+Kazo.Os.Server.Contracts.Admin.AccountDataExportRequest
+Kazo.Os.Server.Contracts.Admin.AccountDataExportRequest.<Clone>$() -> Kazo.Os.Server.Contracts.Admin.AccountDataExportRequest!
+Kazo.Os.Server.Contracts.Admin.AccountDataExportRequest.AccountDataExportRequest(System.Collections.Generic.IReadOnlyList<string!>? IncludeDomains, bool IncludeFileContent, bool IncludeAuditLog, string! Format) -> void
+Kazo.Os.Server.Contracts.Admin.AccountDataExportRequest.Deconstruct(out System.Collections.Generic.IReadOnlyList<string!>? IncludeDomains, out bool IncludeFileContent, out bool IncludeAuditLog, out string! Format) -> void
+Kazo.Os.Server.Contracts.Admin.AccountDataExportRequest.Equals(Kazo.Os.Server.Contracts.Admin.AccountDataExportRequest? other) -> bool
+Kazo.Os.Server.Contracts.Admin.AccountDataExportRequest.Format.get -> string!
+Kazo.Os.Server.Contracts.Admin.AccountDataExportRequest.Format.init -> void
+Kazo.Os.Server.Contracts.Admin.AccountDataExportRequest.IncludeAuditLog.get -> bool
+Kazo.Os.Server.Contracts.Admin.AccountDataExportRequest.IncludeAuditLog.init -> void
+Kazo.Os.Server.Contracts.Admin.AccountDataExportRequest.IncludeDomains.get -> System.Collections.Generic.IReadOnlyList<string!>?
+Kazo.Os.Server.Contracts.Admin.AccountDataExportRequest.IncludeDomains.init -> void
+Kazo.Os.Server.Contracts.Admin.AccountDataExportRequest.IncludeFileContent.get -> bool
+Kazo.Os.Server.Contracts.Admin.AccountDataExportRequest.IncludeFileContent.init -> void
+Kazo.Os.Server.Contracts.Admin.AccountDataExportStatus
+Kazo.Os.Server.Contracts.Admin.AccountDataExportStatus.<Clone>$() -> Kazo.Os.Server.Contracts.Admin.AccountDataExportStatus!
+Kazo.Os.Server.Contracts.Admin.AccountDataExportStatus.AccountDataExportStatus(System.Guid JobId, string! Status, string? DownloadUrl, System.DateTimeOffset? ExpiresUtc, string? FailureReason) -> void
+Kazo.Os.Server.Contracts.Admin.AccountDataExportStatus.Deconstruct(out System.Guid JobId, out string! Status, out string? DownloadUrl, out System.DateTimeOffset? ExpiresUtc, out string? FailureReason) -> void
+Kazo.Os.Server.Contracts.Admin.AccountDataExportStatus.DownloadUrl.get -> string?
+Kazo.Os.Server.Contracts.Admin.AccountDataExportStatus.DownloadUrl.init -> void
+Kazo.Os.Server.Contracts.Admin.AccountDataExportStatus.Equals(Kazo.Os.Server.Contracts.Admin.AccountDataExportStatus? other) -> bool
+Kazo.Os.Server.Contracts.Admin.AccountDataExportStatus.ExpiresUtc.get -> System.DateTimeOffset?
+Kazo.Os.Server.Contracts.Admin.AccountDataExportStatus.ExpiresUtc.init -> void
+Kazo.Os.Server.Contracts.Admin.AccountDataExportStatus.FailureReason.get -> string?
+Kazo.Os.Server.Contracts.Admin.AccountDataExportStatus.FailureReason.init -> void
+Kazo.Os.Server.Contracts.Admin.AccountDataExportStatus.JobId.get -> System.Guid
+Kazo.Os.Server.Contracts.Admin.AccountDataExportStatus.JobId.init -> void
+Kazo.Os.Server.Contracts.Admin.AccountDataExportStatus.Status.get -> string!
+Kazo.Os.Server.Contracts.Admin.AccountDataExportStatus.Status.init -> void
+Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse
+Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse.<Clone>$() -> Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse!
+Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse.AccountDataSummaryResponse(System.Guid AccountId, string! Username, System.DateTimeOffset CreatedUtc, int RegisteredDevices, System.Collections.Generic.IReadOnlyList<string!>! SyncedDomains, long TotalSyncedRecords, long StoredContentBytes, long AuditEntryCount, string! DataRetentionPolicy, bool EncryptionAtRest) -> void
+Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse.AccountId.get -> System.Guid
+Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse.AccountId.init -> void
+Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse.AuditEntryCount.get -> long
+Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse.AuditEntryCount.init -> void
+Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse.CreatedUtc.get -> System.DateTimeOffset
+Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse.CreatedUtc.init -> void
+Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse.DataRetentionPolicy.get -> string!
+Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse.DataRetentionPolicy.init -> void
+Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse.Deconstruct(out System.Guid AccountId, out string! Username, out System.DateTimeOffset CreatedUtc, out int RegisteredDevices, out System.Collections.Generic.IReadOnlyList<string!>! SyncedDomains, out long TotalSyncedRecords, out long StoredContentBytes, out long AuditEntryCount, out string! DataRetentionPolicy, out bool EncryptionAtRest) -> void
+Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse.EncryptionAtRest.get -> bool
+Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse.EncryptionAtRest.init -> void
+Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse.Equals(Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse? other) -> bool
+Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse.RegisteredDevices.get -> int
+Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse.RegisteredDevices.init -> void
+Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse.StoredContentBytes.get -> long
+Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse.StoredContentBytes.init -> void
+Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse.SyncedDomains.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse.SyncedDomains.init -> void
+Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse.TotalSyncedRecords.get -> long
+Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse.TotalSyncedRecords.init -> void
+Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse.Username.get -> string!
+Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse.Username.init -> void
+Kazo.Os.Server.Contracts.Admin.AdminContractsJsonContext
+Kazo.Os.Server.Contracts.Admin.AdminContractsJsonContext.AdminContractsJsonContext() -> void
+Kazo.Os.Server.Contracts.Admin.AdminContractsJsonContext.AdminContractsJsonContext(System.Text.Json.JsonSerializerOptions! options) -> void
+Kazo.Os.Server.Contracts.Admin.ComponentHealth
+Kazo.Os.Server.Contracts.Admin.ComponentHealth.<Clone>$() -> Kazo.Os.Server.Contracts.Admin.ComponentHealth!
+Kazo.Os.Server.Contracts.Admin.ComponentHealth.ComponentHealth(string! Name, string! Status, string? Message) -> void
+Kazo.Os.Server.Contracts.Admin.ComponentHealth.Deconstruct(out string! Name, out string! Status, out string? Message) -> void
+Kazo.Os.Server.Contracts.Admin.ComponentHealth.Equals(Kazo.Os.Server.Contracts.Admin.ComponentHealth? other) -> bool
+Kazo.Os.Server.Contracts.Admin.ComponentHealth.Message.get -> string?
+Kazo.Os.Server.Contracts.Admin.ComponentHealth.Message.init -> void
+Kazo.Os.Server.Contracts.Admin.ComponentHealth.Name.get -> string!
+Kazo.Os.Server.Contracts.Admin.ComponentHealth.Name.init -> void
+Kazo.Os.Server.Contracts.Admin.ComponentHealth.Status.get -> string!
+Kazo.Os.Server.Contracts.Admin.ComponentHealth.Status.init -> void
+Kazo.Os.Server.Contracts.Admin.DeleteAccountRequest
+Kazo.Os.Server.Contracts.Admin.DeleteAccountRequest.<Clone>$() -> Kazo.Os.Server.Contracts.Admin.DeleteAccountRequest!
+Kazo.Os.Server.Contracts.Admin.DeleteAccountRequest.ConfirmationPhrase.get -> string!
+Kazo.Os.Server.Contracts.Admin.DeleteAccountRequest.ConfirmationPhrase.init -> void
+Kazo.Os.Server.Contracts.Admin.DeleteAccountRequest.Deconstruct(out string! ConfirmationPhrase, out int RetainExportDays) -> void
+Kazo.Os.Server.Contracts.Admin.DeleteAccountRequest.DeleteAccountRequest(string! ConfirmationPhrase, int RetainExportDays) -> void
+Kazo.Os.Server.Contracts.Admin.DeleteAccountRequest.Equals(Kazo.Os.Server.Contracts.Admin.DeleteAccountRequest? other) -> bool
+Kazo.Os.Server.Contracts.Admin.DeleteAccountRequest.RetainExportDays.get -> int
+Kazo.Os.Server.Contracts.Admin.DeleteAccountRequest.RetainExportDays.init -> void
+Kazo.Os.Server.Contracts.Admin.DeleteAccountResponse
+Kazo.Os.Server.Contracts.Admin.DeleteAccountResponse.<Clone>$() -> Kazo.Os.Server.Contracts.Admin.DeleteAccountResponse!
+Kazo.Os.Server.Contracts.Admin.DeleteAccountResponse.Deconstruct(out bool Deleted, out string! FinalExportDownloadUrl, out System.DateTimeOffset ExportExpiresUtc) -> void
+Kazo.Os.Server.Contracts.Admin.DeleteAccountResponse.DeleteAccountResponse(bool Deleted, string! FinalExportDownloadUrl, System.DateTimeOffset ExportExpiresUtc) -> void
+Kazo.Os.Server.Contracts.Admin.DeleteAccountResponse.Deleted.get -> bool
+Kazo.Os.Server.Contracts.Admin.DeleteAccountResponse.Deleted.init -> void
+Kazo.Os.Server.Contracts.Admin.DeleteAccountResponse.Equals(Kazo.Os.Server.Contracts.Admin.DeleteAccountResponse? other) -> bool
+Kazo.Os.Server.Contracts.Admin.DeleteAccountResponse.ExportExpiresUtc.get -> System.DateTimeOffset
+Kazo.Os.Server.Contracts.Admin.DeleteAccountResponse.ExportExpiresUtc.init -> void
+Kazo.Os.Server.Contracts.Admin.DeleteAccountResponse.FinalExportDownloadUrl.get -> string!
+Kazo.Os.Server.Contracts.Admin.DeleteAccountResponse.FinalExportDownloadUrl.init -> void
+Kazo.Os.Server.Contracts.Admin.ServerHealthResponse
+Kazo.Os.Server.Contracts.Admin.ServerHealthResponse.<Clone>$() -> Kazo.Os.Server.Contracts.Admin.ServerHealthResponse!
+Kazo.Os.Server.Contracts.Admin.ServerHealthResponse.Components.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Admin.ComponentHealth!>!
+Kazo.Os.Server.Contracts.Admin.ServerHealthResponse.Components.init -> void
+Kazo.Os.Server.Contracts.Admin.ServerHealthResponse.Deconstruct(out string! Status, out string! Version, out string! Uptime, out System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Admin.ComponentHealth!>! Components) -> void
+Kazo.Os.Server.Contracts.Admin.ServerHealthResponse.Equals(Kazo.Os.Server.Contracts.Admin.ServerHealthResponse? other) -> bool
+Kazo.Os.Server.Contracts.Admin.ServerHealthResponse.ServerHealthResponse(string! Status, string! Version, string! Uptime, System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Admin.ComponentHealth!>! Components) -> void
+Kazo.Os.Server.Contracts.Admin.ServerHealthResponse.Status.get -> string!
+Kazo.Os.Server.Contracts.Admin.ServerHealthResponse.Status.init -> void
+Kazo.Os.Server.Contracts.Admin.ServerHealthResponse.Uptime.get -> string!
+Kazo.Os.Server.Contracts.Admin.ServerHealthResponse.Uptime.init -> void
+Kazo.Os.Server.Contracts.Admin.ServerHealthResponse.Version.get -> string!
+Kazo.Os.Server.Contracts.Admin.ServerHealthResponse.Version.init -> void
+Kazo.Os.Server.Contracts.Hosting.HostInfoResponse
+Kazo.Os.Server.Contracts.Hosting.HostInfoResponse.<Clone>$() -> Kazo.Os.Server.Contracts.Hosting.HostInfoResponse!
+Kazo.Os.Server.Contracts.Hosting.HostInfoResponse.ApiVersion.get -> string?
+Kazo.Os.Server.Contracts.Hosting.HostInfoResponse.ApiVersion.init -> void
+Kazo.Os.Server.Contracts.Hosting.HostInfoResponse.Deconstruct(out string! Product, out bool IsServer, out string? ServerVersion, out string? ApiVersion) -> void
+Kazo.Os.Server.Contracts.Hosting.HostInfoResponse.Equals(Kazo.Os.Server.Contracts.Hosting.HostInfoResponse? other) -> bool
+Kazo.Os.Server.Contracts.Hosting.HostInfoResponse.HostInfoResponse(string! Product, bool IsServer, string? ServerVersion = null, string? ApiVersion = null) -> void
+Kazo.Os.Server.Contracts.Hosting.HostInfoResponse.IsServer.get -> bool
+Kazo.Os.Server.Contracts.Hosting.HostInfoResponse.IsServer.init -> void
+Kazo.Os.Server.Contracts.Hosting.HostInfoResponse.Product.get -> string!
+Kazo.Os.Server.Contracts.Hosting.HostInfoResponse.Product.init -> void
+Kazo.Os.Server.Contracts.Hosting.HostInfoResponse.ServerVersion.get -> string?
+Kazo.Os.Server.Contracts.Hosting.HostInfoResponse.ServerVersion.init -> void
+Kazo.Os.Server.Contracts.Hosting.HostInfoRoutes
+Kazo.Os.Server.Contracts.Hosting.HostingContractsJsonContext
+Kazo.Os.Server.Contracts.Hosting.HostingContractsJsonContext.HostingContractsJsonContext() -> void
+Kazo.Os.Server.Contracts.Hosting.HostingContractsJsonContext.HostingContractsJsonContext(System.Text.Json.JsonSerializerOptions! options) -> void
+Kazo.Os.Server.Contracts.Identity.CreateAccountRequest
+Kazo.Os.Server.Contracts.Identity.CreateAccountRequest.<Clone>$() -> Kazo.Os.Server.Contracts.Identity.CreateAccountRequest!
+Kazo.Os.Server.Contracts.Identity.CreateAccountRequest.CreateAccountRequest(string! Username, string! PasswordHash, string! Salt, string! DeviceName, string! DeviceFingerprint) -> void
+Kazo.Os.Server.Contracts.Identity.CreateAccountRequest.Deconstruct(out string! Username, out string! PasswordHash, out string! Salt, out string! DeviceName, out string! DeviceFingerprint) -> void
+Kazo.Os.Server.Contracts.Identity.CreateAccountRequest.DeviceFingerprint.get -> string!
+Kazo.Os.Server.Contracts.Identity.CreateAccountRequest.DeviceFingerprint.init -> void
+Kazo.Os.Server.Contracts.Identity.CreateAccountRequest.DeviceName.get -> string!
+Kazo.Os.Server.Contracts.Identity.CreateAccountRequest.DeviceName.init -> void
+Kazo.Os.Server.Contracts.Identity.CreateAccountRequest.Equals(Kazo.Os.Server.Contracts.Identity.CreateAccountRequest? other) -> bool
+Kazo.Os.Server.Contracts.Identity.CreateAccountRequest.PasswordHash.get -> string!
+Kazo.Os.Server.Contracts.Identity.CreateAccountRequest.PasswordHash.init -> void
+Kazo.Os.Server.Contracts.Identity.CreateAccountRequest.Salt.get -> string!
+Kazo.Os.Server.Contracts.Identity.CreateAccountRequest.Salt.init -> void
+Kazo.Os.Server.Contracts.Identity.CreateAccountRequest.Username.get -> string!
+Kazo.Os.Server.Contracts.Identity.CreateAccountRequest.Username.init -> void
+Kazo.Os.Server.Contracts.Identity.CreateAccountResponse
+Kazo.Os.Server.Contracts.Identity.CreateAccountResponse.<Clone>$() -> Kazo.Os.Server.Contracts.Identity.CreateAccountResponse!
+Kazo.Os.Server.Contracts.Identity.CreateAccountResponse.AccountId.get -> System.Guid
+Kazo.Os.Server.Contracts.Identity.CreateAccountResponse.AccountId.init -> void
+Kazo.Os.Server.Contracts.Identity.CreateAccountResponse.CreateAccountResponse(System.Guid AccountId, string! Username, System.DateTimeOffset CreatedUtc, System.Guid DeviceId) -> void
+Kazo.Os.Server.Contracts.Identity.CreateAccountResponse.CreatedUtc.get -> System.DateTimeOffset
+Kazo.Os.Server.Contracts.Identity.CreateAccountResponse.CreatedUtc.init -> void
+Kazo.Os.Server.Contracts.Identity.CreateAccountResponse.Deconstruct(out System.Guid AccountId, out string! Username, out System.DateTimeOffset CreatedUtc, out System.Guid DeviceId) -> void
+Kazo.Os.Server.Contracts.Identity.CreateAccountResponse.DeviceId.get -> System.Guid
+Kazo.Os.Server.Contracts.Identity.CreateAccountResponse.DeviceId.init -> void
+Kazo.Os.Server.Contracts.Identity.CreateAccountResponse.Equals(Kazo.Os.Server.Contracts.Identity.CreateAccountResponse? other) -> bool
+Kazo.Os.Server.Contracts.Identity.CreateAccountResponse.Username.get -> string!
+Kazo.Os.Server.Contracts.Identity.CreateAccountResponse.Username.init -> void
+Kazo.Os.Server.Contracts.Identity.DeviceSummary
+Kazo.Os.Server.Contracts.Identity.DeviceSummary.<Clone>$() -> Kazo.Os.Server.Contracts.Identity.DeviceSummary!
+Kazo.Os.Server.Contracts.Identity.DeviceSummary.Deconstruct(out System.Guid DeviceId, out string! DeviceName, out System.DateTimeOffset RegisteredUtc, out System.DateTimeOffset? LastSeenUtc, out bool IsCurrentDevice) -> void
+Kazo.Os.Server.Contracts.Identity.DeviceSummary.DeviceId.get -> System.Guid
+Kazo.Os.Server.Contracts.Identity.DeviceSummary.DeviceId.init -> void
+Kazo.Os.Server.Contracts.Identity.DeviceSummary.DeviceName.get -> string!
+Kazo.Os.Server.Contracts.Identity.DeviceSummary.DeviceName.init -> void
+Kazo.Os.Server.Contracts.Identity.DeviceSummary.DeviceSummary(System.Guid DeviceId, string! DeviceName, System.DateTimeOffset RegisteredUtc, System.DateTimeOffset? LastSeenUtc, bool IsCurrentDevice) -> void
+Kazo.Os.Server.Contracts.Identity.DeviceSummary.Equals(Kazo.Os.Server.Contracts.Identity.DeviceSummary? other) -> bool
+Kazo.Os.Server.Contracts.Identity.DeviceSummary.IsCurrentDevice.get -> bool
+Kazo.Os.Server.Contracts.Identity.DeviceSummary.IsCurrentDevice.init -> void
+Kazo.Os.Server.Contracts.Identity.DeviceSummary.LastSeenUtc.get -> System.DateTimeOffset?
+Kazo.Os.Server.Contracts.Identity.DeviceSummary.LastSeenUtc.init -> void
+Kazo.Os.Server.Contracts.Identity.DeviceSummary.RegisteredUtc.get -> System.DateTimeOffset
+Kazo.Os.Server.Contracts.Identity.DeviceSummary.RegisteredUtc.init -> void
+Kazo.Os.Server.Contracts.Identity.IdentityContractsJsonContext
+Kazo.Os.Server.Contracts.Identity.IdentityContractsJsonContext.IdentityContractsJsonContext() -> void
+Kazo.Os.Server.Contracts.Identity.IdentityContractsJsonContext.IdentityContractsJsonContext(System.Text.Json.JsonSerializerOptions! options) -> void
+Kazo.Os.Server.Contracts.Identity.LoginRequest
+Kazo.Os.Server.Contracts.Identity.LoginRequest.<Clone>$() -> Kazo.Os.Server.Contracts.Identity.LoginRequest!
+Kazo.Os.Server.Contracts.Identity.LoginRequest.Deconstruct(out string! Username, out string! PasswordHash, out string! DeviceFingerprint) -> void
+Kazo.Os.Server.Contracts.Identity.LoginRequest.DeviceFingerprint.get -> string!
+Kazo.Os.Server.Contracts.Identity.LoginRequest.DeviceFingerprint.init -> void
+Kazo.Os.Server.Contracts.Identity.LoginRequest.Equals(Kazo.Os.Server.Contracts.Identity.LoginRequest? other) -> bool
+Kazo.Os.Server.Contracts.Identity.LoginRequest.LoginRequest(string! Username, string! PasswordHash, string! DeviceFingerprint) -> void
+Kazo.Os.Server.Contracts.Identity.LoginRequest.PasswordHash.get -> string!
+Kazo.Os.Server.Contracts.Identity.LoginRequest.PasswordHash.init -> void
+Kazo.Os.Server.Contracts.Identity.LoginRequest.Username.get -> string!
+Kazo.Os.Server.Contracts.Identity.LoginRequest.Username.init -> void
+Kazo.Os.Server.Contracts.Identity.LoginResponse
+Kazo.Os.Server.Contracts.Identity.LoginResponse.<Clone>$() -> Kazo.Os.Server.Contracts.Identity.LoginResponse!
+Kazo.Os.Server.Contracts.Identity.LoginResponse.AccessToken.get -> string!
+Kazo.Os.Server.Contracts.Identity.LoginResponse.AccessToken.init -> void
+Kazo.Os.Server.Contracts.Identity.LoginResponse.AccessTokenExpiresUtc.get -> System.DateTimeOffset
+Kazo.Os.Server.Contracts.Identity.LoginResponse.AccessTokenExpiresUtc.init -> void
+Kazo.Os.Server.Contracts.Identity.LoginResponse.AccountId.get -> System.Guid
+Kazo.Os.Server.Contracts.Identity.LoginResponse.AccountId.init -> void
+Kazo.Os.Server.Contracts.Identity.LoginResponse.Deconstruct(out System.Guid AccountId, out System.Guid DeviceId, out string! AccessToken, out string! RefreshToken, out System.DateTimeOffset AccessTokenExpiresUtc, out System.DateTimeOffset RefreshTokenExpiresUtc) -> void
+Kazo.Os.Server.Contracts.Identity.LoginResponse.DeviceId.get -> System.Guid
+Kazo.Os.Server.Contracts.Identity.LoginResponse.DeviceId.init -> void
+Kazo.Os.Server.Contracts.Identity.LoginResponse.Equals(Kazo.Os.Server.Contracts.Identity.LoginResponse? other) -> bool
+Kazo.Os.Server.Contracts.Identity.LoginResponse.LoginResponse(System.Guid AccountId, System.Guid DeviceId, string! AccessToken, string! RefreshToken, System.DateTimeOffset AccessTokenExpiresUtc, System.DateTimeOffset RefreshTokenExpiresUtc) -> void
+Kazo.Os.Server.Contracts.Identity.LoginResponse.RefreshToken.get -> string!
+Kazo.Os.Server.Contracts.Identity.LoginResponse.RefreshToken.init -> void
+Kazo.Os.Server.Contracts.Identity.LoginResponse.RefreshTokenExpiresUtc.get -> System.DateTimeOffset
+Kazo.Os.Server.Contracts.Identity.LoginResponse.RefreshTokenExpiresUtc.init -> void
+Kazo.Os.Server.Contracts.Identity.PairDeviceRequest
+Kazo.Os.Server.Contracts.Identity.PairDeviceRequest.<Clone>$() -> Kazo.Os.Server.Contracts.Identity.PairDeviceRequest!
+Kazo.Os.Server.Contracts.Identity.PairDeviceRequest.Code.get -> string!
+Kazo.Os.Server.Contracts.Identity.PairDeviceRequest.Code.init -> void
+Kazo.Os.Server.Contracts.Identity.PairDeviceRequest.Deconstruct(out string! Code, out string! DeviceName, out string! DeviceFingerprint) -> void
+Kazo.Os.Server.Contracts.Identity.PairDeviceRequest.DeviceFingerprint.get -> string!
+Kazo.Os.Server.Contracts.Identity.PairDeviceRequest.DeviceFingerprint.init -> void
+Kazo.Os.Server.Contracts.Identity.PairDeviceRequest.DeviceName.get -> string!
+Kazo.Os.Server.Contracts.Identity.PairDeviceRequest.DeviceName.init -> void
+Kazo.Os.Server.Contracts.Identity.PairDeviceRequest.Equals(Kazo.Os.Server.Contracts.Identity.PairDeviceRequest? other) -> bool
+Kazo.Os.Server.Contracts.Identity.PairDeviceRequest.PairDeviceRequest(string! Code, string! DeviceName, string! DeviceFingerprint) -> void
+Kazo.Os.Server.Contracts.Identity.RefreshTokenRequest
+Kazo.Os.Server.Contracts.Identity.RefreshTokenRequest.<Clone>$() -> Kazo.Os.Server.Contracts.Identity.RefreshTokenRequest!
+Kazo.Os.Server.Contracts.Identity.RefreshTokenRequest.Deconstruct(out string! RefreshToken, out string! DeviceFingerprint) -> void
+Kazo.Os.Server.Contracts.Identity.RefreshTokenRequest.DeviceFingerprint.get -> string!
+Kazo.Os.Server.Contracts.Identity.RefreshTokenRequest.DeviceFingerprint.init -> void
+Kazo.Os.Server.Contracts.Identity.RefreshTokenRequest.Equals(Kazo.Os.Server.Contracts.Identity.RefreshTokenRequest? other) -> bool
+Kazo.Os.Server.Contracts.Identity.RefreshTokenRequest.RefreshToken.get -> string!
+Kazo.Os.Server.Contracts.Identity.RefreshTokenRequest.RefreshToken.init -> void
+Kazo.Os.Server.Contracts.Identity.RefreshTokenRequest.RefreshTokenRequest(string! RefreshToken, string! DeviceFingerprint) -> void
+Kazo.Os.Server.Contracts.Identity.RefreshTokenResponse
+Kazo.Os.Server.Contracts.Identity.RefreshTokenResponse.<Clone>$() -> Kazo.Os.Server.Contracts.Identity.RefreshTokenResponse!
+Kazo.Os.Server.Contracts.Identity.RefreshTokenResponse.AccessToken.get -> string!
+Kazo.Os.Server.Contracts.Identity.RefreshTokenResponse.AccessToken.init -> void
+Kazo.Os.Server.Contracts.Identity.RefreshTokenResponse.AccessTokenExpiresUtc.get -> System.DateTimeOffset
+Kazo.Os.Server.Contracts.Identity.RefreshTokenResponse.AccessTokenExpiresUtc.init -> void
+Kazo.Os.Server.Contracts.Identity.RefreshTokenResponse.Deconstruct(out string! AccessToken, out System.DateTimeOffset AccessTokenExpiresUtc, out string! RefreshToken, out System.DateTimeOffset RefreshTokenExpiresUtc) -> void
+Kazo.Os.Server.Contracts.Identity.RefreshTokenResponse.Equals(Kazo.Os.Server.Contracts.Identity.RefreshTokenResponse? other) -> bool
+Kazo.Os.Server.Contracts.Identity.RefreshTokenResponse.RefreshToken.get -> string!
+Kazo.Os.Server.Contracts.Identity.RefreshTokenResponse.RefreshToken.init -> void
+Kazo.Os.Server.Contracts.Identity.RefreshTokenResponse.RefreshTokenExpiresUtc.get -> System.DateTimeOffset
+Kazo.Os.Server.Contracts.Identity.RefreshTokenResponse.RefreshTokenExpiresUtc.init -> void
+Kazo.Os.Server.Contracts.Identity.RefreshTokenResponse.RefreshTokenResponse(string! AccessToken, System.DateTimeOffset AccessTokenExpiresUtc, string! RefreshToken, System.DateTimeOffset RefreshTokenExpiresUtc) -> void
+Kazo.Os.Server.Contracts.Identity.RegisterDeviceRequest
+Kazo.Os.Server.Contracts.Identity.RegisterDeviceRequest.<Clone>$() -> Kazo.Os.Server.Contracts.Identity.RegisterDeviceRequest!
+Kazo.Os.Server.Contracts.Identity.RegisterDeviceRequest.Deconstruct(out string! DeviceName, out string! DeviceFingerprint) -> void
+Kazo.Os.Server.Contracts.Identity.RegisterDeviceRequest.DeviceFingerprint.get -> string!
+Kazo.Os.Server.Contracts.Identity.RegisterDeviceRequest.DeviceFingerprint.init -> void
+Kazo.Os.Server.Contracts.Identity.RegisterDeviceRequest.DeviceName.get -> string!
+Kazo.Os.Server.Contracts.Identity.RegisterDeviceRequest.DeviceName.init -> void
+Kazo.Os.Server.Contracts.Identity.RegisterDeviceRequest.Equals(Kazo.Os.Server.Contracts.Identity.RegisterDeviceRequest? other) -> bool
+Kazo.Os.Server.Contracts.Identity.RegisterDeviceRequest.RegisterDeviceRequest(string! DeviceName, string! DeviceFingerprint) -> void
+Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse
+Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse.<Clone>$() -> Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse!
+Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse.Deconstruct(out System.Guid DeviceId, out string! DeviceName, out System.DateTimeOffset RegisteredUtc) -> void
+Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse.DeviceId.get -> System.Guid
+Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse.DeviceId.init -> void
+Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse.DeviceName.get -> string!
+Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse.DeviceName.init -> void
+Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse.Equals(Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse? other) -> bool
+Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse.RegisterDeviceResponse(System.Guid DeviceId, string! DeviceName, System.DateTimeOffset RegisteredUtc) -> void
+Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse.RegisteredUtc.get -> System.DateTimeOffset
+Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse.RegisteredUtc.init -> void
+Kazo.Os.Server.Contracts.Proxy.IProxyStreamChannel
+Kazo.Os.Server.Contracts.Proxy.IProxyStreamChannel.Closure.get -> Kazo.Os.Server.Contracts.Proxy.ProxyStreamClosure?
+Kazo.Os.Server.Contracts.Proxy.IProxyStreamChannel.Protocol.get -> Kazo.Os.Server.Contracts.Proxy.ProxyProtocol
+Kazo.Os.Server.Contracts.Proxy.IProxyStreamChannel.ReceiveAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<byte[]?>
+Kazo.Os.Server.Contracts.Proxy.IProxyStreamChannel.Remote.get -> Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened!
+Kazo.Os.Server.Contracts.Proxy.IProxyStreamChannel.SendAsync(System.ReadOnlyMemory<byte> data, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext
+Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.ProxyContractsJsonContext() -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.ProxyContractsJsonContext(System.Text.Json.JsonSerializerOptions! options) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode
+Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse
+Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse.<Clone>$() -> Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse!
+Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse.AuditId.get -> System.Guid
+Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse.AuditId.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse.Deconstruct(out System.Guid? RequestId, out string! ErrorCode, out string! Message, out System.Guid AuditId) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse.Equals(Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse? other) -> bool
+Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse.ErrorCode.get -> string!
+Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse.ErrorCode.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse.Message.get -> string!
+Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse.Message.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse.ProxyErrorResponse(System.Guid? RequestId, string! ErrorCode, string! Message, System.Guid AuditId) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse.RequestId.get -> System.Guid?
+Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse.RequestId.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyHeader
+Kazo.Os.Server.Contracts.Proxy.ProxyHeader.<Clone>$() -> Kazo.Os.Server.Contracts.Proxy.ProxyHeader!
+Kazo.Os.Server.Contracts.Proxy.ProxyHeader.Deconstruct(out string! Name, out string! Value) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyHeader.Equals(Kazo.Os.Server.Contracts.Proxy.ProxyHeader? other) -> bool
+Kazo.Os.Server.Contracts.Proxy.ProxyHeader.Name.get -> string!
+Kazo.Os.Server.Contracts.Proxy.ProxyHeader.Name.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyHeader.ProxyHeader(string! Name, string! Value) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyHeader.Value.get -> string!
+Kazo.Os.Server.Contracts.Proxy.ProxyHeader.Value.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.<Clone>$() -> Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest!
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.AppId.get -> string!
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.AppId.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.Body.get -> byte[]?
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.Body.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.BodyBytes.get -> long
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.BodyBytes.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.BodyHash.get -> string?
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.BodyHash.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.ContentType.get -> string?
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.ContentType.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.Deconstruct(out System.Guid RequestId, out Kazo.Os.Server.Contracts.Proxy.ProxyProtocol Protocol, out string! TargetUrl, out string? HttpMethod, out System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Proxy.ProxyHeader!>! Headers, out string? BodyHash, out long BodyBytes, out int TimeoutSeconds, out string! AppId, out bool IncludeBody, out byte[]? Body, out string? ContentType) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.Equals(Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest? other) -> bool
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.FollowRedirects.get -> bool
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.FollowRedirects.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.Headers.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Proxy.ProxyHeader!>!
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.Headers.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.HttpMethod.get -> string?
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.HttpMethod.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.IncludeBody.get -> bool
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.IncludeBody.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.Protocol.get -> Kazo.Os.Server.Contracts.Proxy.ProxyProtocol
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.Protocol.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.ProxyHttpRequest(System.Guid RequestId, Kazo.Os.Server.Contracts.Proxy.ProxyProtocol Protocol, string! TargetUrl, string? HttpMethod, System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Proxy.ProxyHeader!>! Headers, string? BodyHash, long BodyBytes, int TimeoutSeconds, string! AppId, bool IncludeBody = false, byte[]? Body = null, string? ContentType = null) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.RequestId.get -> System.Guid
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.RequestId.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.TargetUrl.get -> string!
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.TargetUrl.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.TimeoutSeconds.get -> int
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.TimeoutSeconds.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse.<Clone>$() -> Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse!
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse.BodyBase64.get -> string?
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse.BodyBase64.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse.BodyBytes.get -> long
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse.BodyBytes.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse.BodyHash.get -> string?
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse.BodyHash.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse.Deconstruct(out System.Guid RequestId, out int StatusCode, out string! ReasonPhrase, out System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Proxy.ProxyHeader!>! Headers, out string? BodyHash, out long BodyBytes, out string! FinalUrl, out int RedirectHops, out long DurationMs, out string? BodyBase64) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse.DurationMs.get -> long
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse.DurationMs.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse.Equals(Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse? other) -> bool
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse.FinalUrl.get -> string!
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse.FinalUrl.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse.Headers.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Proxy.ProxyHeader!>!
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse.Headers.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse.ProxyHttpResponse(System.Guid RequestId, int StatusCode, string! ReasonPhrase, System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Proxy.ProxyHeader!>! Headers, string? BodyHash, long BodyBytes, string! FinalUrl, int RedirectHops, long DurationMs, string? BodyBase64 = null) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse.ReasonPhrase.get -> string!
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse.ReasonPhrase.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse.RedirectHops.get -> int
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse.RedirectHops.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse.RequestId.get -> System.Guid
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse.RequestId.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse.StatusCode.get -> int
+Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse.StatusCode.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.<Clone>$() -> Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse!
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.AllowAllPorts.get -> bool
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.AllowAllPorts.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.AllowPrivateNetworks.get -> bool
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.AllowPrivateNetworks.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.AllowedProtocols.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.AllowedProtocols.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.AuditRetentionDays.get -> int
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.AuditRetentionDays.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.CurrentConcurrentRequests.get -> int
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.CurrentConcurrentRequests.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.CurrentStreams.get -> int
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.CurrentStreams.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.Deconstruct(out System.Guid DeviceId, out int MaxConcurrentRequests, out int CurrentConcurrentRequests, out long MaxPayloadBytes, out int MaxDurationSeconds, out int MaxRedirectHops, out System.Collections.Generic.IReadOnlyList<string!>! AllowedProtocols, out int AuditRetentionDays, out System.Collections.Generic.IReadOnlyList<string!>! OperatorWeakeningWarnings, out bool Enabled, out System.Collections.Generic.IReadOnlyList<int>? HttpPorts, out System.Collections.Generic.IReadOnlyList<int>? TcpPorts, out System.Collections.Generic.IReadOnlyList<int>? UdpPorts, out bool AllowAllPorts, out bool AllowPrivateNetworks, out bool QuotasEnabled, out long MaxRequestBytes, out int MaxStreamsPerDevice, out int CurrentStreams, out int StreamIdleTimeoutSeconds, out System.Collections.Generic.IReadOnlyList<string!>? GrantedApps) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.DeviceId.get -> System.Guid
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.DeviceId.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.Enabled.get -> bool
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.Enabled.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.Equals(Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse? other) -> bool
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.GrantedApps.get -> System.Collections.Generic.IReadOnlyList<string!>?
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.GrantedApps.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.HttpPorts.get -> System.Collections.Generic.IReadOnlyList<int>?
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.HttpPorts.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.MaxConcurrentRequests.get -> int
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.MaxConcurrentRequests.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.MaxDurationSeconds.get -> int
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.MaxDurationSeconds.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.MaxPayloadBytes.get -> long
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.MaxPayloadBytes.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.MaxRedirectHops.get -> int
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.MaxRedirectHops.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.MaxRequestBytes.get -> long
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.MaxRequestBytes.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.MaxStreamsPerDevice.get -> int
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.MaxStreamsPerDevice.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.OperatorWeakeningWarnings.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.OperatorWeakeningWarnings.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.ProxyPolicyResponse(System.Guid DeviceId, int MaxConcurrentRequests, int CurrentConcurrentRequests, long MaxPayloadBytes, int MaxDurationSeconds, int MaxRedirectHops, System.Collections.Generic.IReadOnlyList<string!>! AllowedProtocols, int AuditRetentionDays, System.Collections.Generic.IReadOnlyList<string!>! OperatorWeakeningWarnings, bool Enabled = true, System.Collections.Generic.IReadOnlyList<int>? HttpPorts = null, System.Collections.Generic.IReadOnlyList<int>? TcpPorts = null, System.Collections.Generic.IReadOnlyList<int>? UdpPorts = null, bool AllowAllPorts = false, bool AllowPrivateNetworks = false, bool QuotasEnabled = true, long MaxRequestBytes = 0, int MaxStreamsPerDevice = 0, int CurrentStreams = 0, int StreamIdleTimeoutSeconds = 0, System.Collections.Generic.IReadOnlyList<string!>? GrantedApps = null) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.QuotasEnabled.get -> bool
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.QuotasEnabled.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.StreamIdleTimeoutSeconds.get -> int
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.StreamIdleTimeoutSeconds.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.TcpPorts.get -> System.Collections.Generic.IReadOnlyList<int>?
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.TcpPorts.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.UdpPorts.get -> System.Collections.Generic.IReadOnlyList<int>?
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.UdpPorts.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyProtocol
+Kazo.Os.Server.Contracts.Proxy.ProxyProtocol.Http = 0 -> Kazo.Os.Server.Contracts.Proxy.ProxyProtocol
+Kazo.Os.Server.Contracts.Proxy.ProxyProtocol.HttpConnect = 1 -> Kazo.Os.Server.Contracts.Proxy.ProxyProtocol
+Kazo.Os.Server.Contracts.Proxy.ProxyProtocol.Tcp = 2 -> Kazo.Os.Server.Contracts.Proxy.ProxyProtocol
+Kazo.Os.Server.Contracts.Proxy.ProxyProtocol.Udp = 3 -> Kazo.Os.Server.Contracts.Proxy.ProxyProtocol
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamCloseCodes
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamClosure
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamClosure.<Clone>$() -> Kazo.Os.Server.Contracts.Proxy.ProxyStreamClosure!
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamClosure.CloseCode.get -> int
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamClosure.CloseCode.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamClosure.Deconstruct(out int CloseCode, out string? Reason) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamClosure.Equals(Kazo.Os.Server.Contracts.Proxy.ProxyStreamClosure? other) -> bool
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamClosure.ProxyStreamClosure(int CloseCode, string? Reason) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamClosure.Reason.get -> string?
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamClosure.Reason.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamException
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamException.ErrorCode.get -> string!
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamException.ProxyStreamException() -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamException.ProxyStreamException(string! errorCode, string! message) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamException.ProxyStreamException(string! message) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamException.ProxyStreamException(string! message, System.Exception! innerException) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened.<Clone>$() -> Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened!
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened.Deconstruct(out string! RemoteAddress, out int RemotePort) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened.Equals(Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened? other) -> bool
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened.ProxyStreamOpened(string! RemoteAddress, int RemotePort) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened.RemoteAddress.get -> string!
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened.RemoteAddress.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened.RemotePort.get -> int
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened.RemotePort.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest.<Clone>$() -> Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest!
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest.AppId.get -> string!
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest.AppId.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest.Deconstruct(out string! Host, out int Port, out string! AppId) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest.Equals(Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest? other) -> bool
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest.Host.get -> string!
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest.Host.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest.Port.get -> int
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest.Port.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest.ProxyStreamRequest(string! Host, int Port, string! AppId) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamRoutes
+Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeRequest
+Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeRequest.<Clone>$() -> Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeRequest!
+Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeRequest.AppId.get -> string!
+Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeRequest.AppId.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeRequest.Deconstruct(out System.Guid RequestId, out string! Host, out int Port, out int TimeoutSeconds, out string! AppId) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeRequest.Equals(Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeRequest? other) -> bool
+Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeRequest.Host.get -> string!
+Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeRequest.Host.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeRequest.Port.get -> int
+Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeRequest.Port.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeRequest.ProxyTcpProbeRequest(System.Guid RequestId, string! Host, int Port, int TimeoutSeconds, string! AppId) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeRequest.RequestId.get -> System.Guid
+Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeRequest.RequestId.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeRequest.TimeoutSeconds.get -> int
+Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeRequest.TimeoutSeconds.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeResponse
+Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeResponse.<Clone>$() -> Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeResponse!
+Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeResponse.Deconstruct(out System.Guid RequestId, out Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeState State, out long DurationMs) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeResponse.DurationMs.get -> long
+Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeResponse.DurationMs.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeResponse.Equals(Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeResponse? other) -> bool
+Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeResponse.ProxyTcpProbeResponse(System.Guid RequestId, Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeState State, long DurationMs) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeResponse.RequestId.get -> System.Guid
+Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeResponse.RequestId.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeResponse.State.get -> Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeState
+Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeResponse.State.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeState
+Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeState.Closed = 1 -> Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeState
+Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeState.Filtered = 2 -> Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeState
+Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeState.Open = 0 -> Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeState
+Kazo.Os.Server.Contracts.Sync.ConflictResolution
+Kazo.Os.Server.Contracts.Sync.ConflictResolution.ClientWins = 0 -> Kazo.Os.Server.Contracts.Sync.ConflictResolution
+Kazo.Os.Server.Contracts.Sync.ConflictResolution.Merge = 2 -> Kazo.Os.Server.Contracts.Sync.ConflictResolution
+Kazo.Os.Server.Contracts.Sync.ConflictResolution.ServerWins = 1 -> Kazo.Os.Server.Contracts.Sync.ConflictResolution
+Kazo.Os.Server.Contracts.Sync.ContentTransferContractsJsonContext
+Kazo.Os.Server.Contracts.Sync.ContentTransferContractsJsonContext.ContentTransferContractsJsonContext() -> void
+Kazo.Os.Server.Contracts.Sync.ContentTransferContractsJsonContext.ContentTransferContractsJsonContext(System.Text.Json.JsonSerializerOptions! options) -> void
+Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadRequest
+Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadRequest.<Clone>$() -> Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadRequest!
+Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadRequest.ContentHash.get -> string!
+Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadRequest.ContentHash.init -> void
+Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadRequest.Deconstruct(out string! ContentHash, out long StartByteOffset) -> void
+Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadRequest.Equals(Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadRequest? other) -> bool
+Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadRequest.InitiateContentDownloadRequest(string! ContentHash, long StartByteOffset) -> void
+Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadRequest.StartByteOffset.get -> long
+Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadRequest.StartByteOffset.init -> void
+Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadResponse
+Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadResponse.<Clone>$() -> Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadResponse!
+Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadResponse.ChunkSizeBytes.get -> int
+Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadResponse.ChunkSizeBytes.init -> void
+Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadResponse.ContentHash.get -> string!
+Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadResponse.ContentHash.init -> void
+Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadResponse.Deconstruct(out string! DownloadSessionId, out string! ContentHash, out long TotalBytes, out long RemainingBytes, out int ChunkSizeBytes, out System.DateTimeOffset ExpiresUtc) -> void
+Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadResponse.DownloadSessionId.get -> string!
+Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadResponse.DownloadSessionId.init -> void
+Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadResponse.Equals(Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadResponse? other) -> bool
+Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadResponse.ExpiresUtc.get -> System.DateTimeOffset
+Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadResponse.ExpiresUtc.init -> void
+Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadResponse.InitiateContentDownloadResponse(string! DownloadSessionId, string! ContentHash, long TotalBytes, long RemainingBytes, int ChunkSizeBytes, System.DateTimeOffset ExpiresUtc) -> void
+Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadResponse.RemainingBytes.get -> long
+Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadResponse.RemainingBytes.init -> void
+Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadResponse.TotalBytes.get -> long
+Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadResponse.TotalBytes.init -> void
+Kazo.Os.Server.Contracts.Sync.InitiateContentUploadRequest
+Kazo.Os.Server.Contracts.Sync.InitiateContentUploadRequest.<Clone>$() -> Kazo.Os.Server.Contracts.Sync.InitiateContentUploadRequest!
+Kazo.Os.Server.Contracts.Sync.InitiateContentUploadRequest.ContentHash.get -> string!
+Kazo.Os.Server.Contracts.Sync.InitiateContentUploadRequest.ContentHash.init -> void
+Kazo.Os.Server.Contracts.Sync.InitiateContentUploadRequest.Deconstruct(out string! ContentHash, out long TotalBytes, out System.Guid OwnerAccountId) -> void
+Kazo.Os.Server.Contracts.Sync.InitiateContentUploadRequest.Equals(Kazo.Os.Server.Contracts.Sync.InitiateContentUploadRequest? other) -> bool
+Kazo.Os.Server.Contracts.Sync.InitiateContentUploadRequest.InitiateContentUploadRequest(string! ContentHash, long TotalBytes, System.Guid OwnerAccountId) -> void
+Kazo.Os.Server.Contracts.Sync.InitiateContentUploadRequest.OwnerAccountId.get -> System.Guid
+Kazo.Os.Server.Contracts.Sync.InitiateContentUploadRequest.OwnerAccountId.init -> void
+Kazo.Os.Server.Contracts.Sync.InitiateContentUploadRequest.TotalBytes.get -> long
+Kazo.Os.Server.Contracts.Sync.InitiateContentUploadRequest.TotalBytes.init -> void
+Kazo.Os.Server.Contracts.Sync.InitiateContentUploadResponse
+Kazo.Os.Server.Contracts.Sync.InitiateContentUploadResponse.<Clone>$() -> Kazo.Os.Server.Contracts.Sync.InitiateContentUploadResponse!
+Kazo.Os.Server.Contracts.Sync.InitiateContentUploadResponse.AlreadyExists.get -> bool
+Kazo.Os.Server.Contracts.Sync.InitiateContentUploadResponse.AlreadyExists.init -> void
+Kazo.Os.Server.Contracts.Sync.InitiateContentUploadResponse.ChunkSizeBytes.get -> int
+Kazo.Os.Server.Contracts.Sync.InitiateContentUploadResponse.ChunkSizeBytes.init -> void
+Kazo.Os.Server.Contracts.Sync.InitiateContentUploadResponse.ContentHash.get -> string!
+Kazo.Os.Server.Contracts.Sync.InitiateContentUploadResponse.ContentHash.init -> void
+Kazo.Os.Server.Contracts.Sync.InitiateContentUploadResponse.Deconstruct(out string! UploadSessionId, out string! ContentHash, out bool AlreadyExists, out int ChunkSizeBytes, out int TotalChunks, out System.DateTimeOffset ExpiresUtc) -> void
+Kazo.Os.Server.Contracts.Sync.InitiateContentUploadResponse.Equals(Kazo.Os.Server.Contracts.Sync.InitiateContentUploadResponse? other) -> bool
+Kazo.Os.Server.Contracts.Sync.InitiateContentUploadResponse.ExpiresUtc.get -> System.DateTimeOffset
+Kazo.Os.Server.Contracts.Sync.InitiateContentUploadResponse.ExpiresUtc.init -> void
+Kazo.Os.Server.Contracts.Sync.InitiateContentUploadResponse.InitiateContentUploadResponse(string! UploadSessionId, string! ContentHash, bool AlreadyExists, int ChunkSizeBytes, int TotalChunks, System.DateTimeOffset ExpiresUtc) -> void
+Kazo.Os.Server.Contracts.Sync.InitiateContentUploadResponse.TotalChunks.get -> int
+Kazo.Os.Server.Contracts.Sync.InitiateContentUploadResponse.TotalChunks.init -> void
+Kazo.Os.Server.Contracts.Sync.InitiateContentUploadResponse.UploadSessionId.get -> string!
+Kazo.Os.Server.Contracts.Sync.InitiateContentUploadResponse.UploadSessionId.init -> void
+Kazo.Os.Server.Contracts.Sync.PullRequest
+Kazo.Os.Server.Contracts.Sync.PullRequest.<Clone>$() -> Kazo.Os.Server.Contracts.Sync.PullRequest!
+Kazo.Os.Server.Contracts.Sync.PullRequest.Cursor.get -> string?
+Kazo.Os.Server.Contracts.Sync.PullRequest.Cursor.init -> void
+Kazo.Os.Server.Contracts.Sync.PullRequest.Deconstruct(out string! Domain, out string? Cursor, out int MaxRecords) -> void
+Kazo.Os.Server.Contracts.Sync.PullRequest.Domain.get -> string!
+Kazo.Os.Server.Contracts.Sync.PullRequest.Domain.init -> void
+Kazo.Os.Server.Contracts.Sync.PullRequest.Equals(Kazo.Os.Server.Contracts.Sync.PullRequest? other) -> bool
+Kazo.Os.Server.Contracts.Sync.PullRequest.MaxRecords.get -> int
+Kazo.Os.Server.Contracts.Sync.PullRequest.MaxRecords.init -> void
+Kazo.Os.Server.Contracts.Sync.PullRequest.PullRequest(string! Domain, string? Cursor, int MaxRecords) -> void
+Kazo.Os.Server.Contracts.Sync.PullResponse
+Kazo.Os.Server.Contracts.Sync.PullResponse.<Clone>$() -> Kazo.Os.Server.Contracts.Sync.PullResponse!
+Kazo.Os.Server.Contracts.Sync.PullResponse.Deconstruct(out string! Domain, out System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope!>! Records, out string? NextCursor, out bool HasMore, out System.DateTimeOffset PulledAtUtc) -> void
+Kazo.Os.Server.Contracts.Sync.PullResponse.Domain.get -> string!
+Kazo.Os.Server.Contracts.Sync.PullResponse.Domain.init -> void
+Kazo.Os.Server.Contracts.Sync.PullResponse.Equals(Kazo.Os.Server.Contracts.Sync.PullResponse? other) -> bool
+Kazo.Os.Server.Contracts.Sync.PullResponse.HasMore.get -> bool
+Kazo.Os.Server.Contracts.Sync.PullResponse.HasMore.init -> void
+Kazo.Os.Server.Contracts.Sync.PullResponse.NextCursor.get -> string?
+Kazo.Os.Server.Contracts.Sync.PullResponse.NextCursor.init -> void
+Kazo.Os.Server.Contracts.Sync.PullResponse.PullResponse(string! Domain, System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope!>! Records, string? NextCursor, bool HasMore, System.DateTimeOffset PulledAtUtc) -> void
+Kazo.Os.Server.Contracts.Sync.PullResponse.PulledAtUtc.get -> System.DateTimeOffset
+Kazo.Os.Server.Contracts.Sync.PullResponse.PulledAtUtc.init -> void
+Kazo.Os.Server.Contracts.Sync.PullResponse.Records.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope!>!
+Kazo.Os.Server.Contracts.Sync.PullResponse.Records.init -> void
+Kazo.Os.Server.Contracts.Sync.PushOutcome
+Kazo.Os.Server.Contracts.Sync.PushOutcome.Accepted = 0 -> Kazo.Os.Server.Contracts.Sync.PushOutcome
+Kazo.Os.Server.Contracts.Sync.PushOutcome.AlreadyProcessed = 2 -> Kazo.Os.Server.Contracts.Sync.PushOutcome
+Kazo.Os.Server.Contracts.Sync.PushOutcome.ConflictsDetected = 1 -> Kazo.Os.Server.Contracts.Sync.PushOutcome
+Kazo.Os.Server.Contracts.Sync.PushOutcome.SchemaIncompatible = 3 -> Kazo.Os.Server.Contracts.Sync.PushOutcome
+Kazo.Os.Server.Contracts.Sync.PushRequest
+Kazo.Os.Server.Contracts.Sync.PushRequest.<Clone>$() -> Kazo.Os.Server.Contracts.Sync.PushRequest!
+Kazo.Os.Server.Contracts.Sync.PushRequest.Deconstruct(out string! Domain, out System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope!>! Records, out System.Guid IdempotencyKey) -> void
+Kazo.Os.Server.Contracts.Sync.PushRequest.Domain.get -> string!
+Kazo.Os.Server.Contracts.Sync.PushRequest.Domain.init -> void
+Kazo.Os.Server.Contracts.Sync.PushRequest.Equals(Kazo.Os.Server.Contracts.Sync.PushRequest? other) -> bool
+Kazo.Os.Server.Contracts.Sync.PushRequest.IdempotencyKey.get -> System.Guid
+Kazo.Os.Server.Contracts.Sync.PushRequest.IdempotencyKey.init -> void
+Kazo.Os.Server.Contracts.Sync.PushRequest.PushRequest(string! Domain, System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope!>! Records, System.Guid IdempotencyKey) -> void
+Kazo.Os.Server.Contracts.Sync.PushRequest.Records.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope!>!
+Kazo.Os.Server.Contracts.Sync.PushRequest.Records.init -> void
+Kazo.Os.Server.Contracts.Sync.PushResponse
+Kazo.Os.Server.Contracts.Sync.PushResponse.<Clone>$() -> Kazo.Os.Server.Contracts.Sync.PushResponse!
+Kazo.Os.Server.Contracts.Sync.PushResponse.AcceptedCount.get -> int
+Kazo.Os.Server.Contracts.Sync.PushResponse.AcceptedCount.init -> void
+Kazo.Os.Server.Contracts.Sync.PushResponse.Conflicts.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Sync.SyncConflict!>!
+Kazo.Os.Server.Contracts.Sync.PushResponse.Conflicts.init -> void
+Kazo.Os.Server.Contracts.Sync.PushResponse.Deconstruct(out Kazo.Os.Server.Contracts.Sync.PushOutcome Outcome, out int AcceptedCount, out System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Sync.SyncConflict!>! Conflicts) -> void
+Kazo.Os.Server.Contracts.Sync.PushResponse.Equals(Kazo.Os.Server.Contracts.Sync.PushResponse? other) -> bool
+Kazo.Os.Server.Contracts.Sync.PushResponse.Outcome.get -> Kazo.Os.Server.Contracts.Sync.PushOutcome
+Kazo.Os.Server.Contracts.Sync.PushResponse.Outcome.init -> void
+Kazo.Os.Server.Contracts.Sync.PushResponse.PushResponse(Kazo.Os.Server.Contracts.Sync.PushOutcome Outcome, int AcceptedCount, System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Sync.SyncConflict!>! Conflicts) -> void
+Kazo.Os.Server.Contracts.Sync.QueryUploadProgressRequest
+Kazo.Os.Server.Contracts.Sync.QueryUploadProgressRequest.<Clone>$() -> Kazo.Os.Server.Contracts.Sync.QueryUploadProgressRequest!
+Kazo.Os.Server.Contracts.Sync.QueryUploadProgressRequest.Deconstruct(out string! UploadSessionId) -> void
+Kazo.Os.Server.Contracts.Sync.QueryUploadProgressRequest.Equals(Kazo.Os.Server.Contracts.Sync.QueryUploadProgressRequest? other) -> bool
+Kazo.Os.Server.Contracts.Sync.QueryUploadProgressRequest.QueryUploadProgressRequest(string! UploadSessionId) -> void
+Kazo.Os.Server.Contracts.Sync.QueryUploadProgressRequest.UploadSessionId.get -> string!
+Kazo.Os.Server.Contracts.Sync.QueryUploadProgressRequest.UploadSessionId.init -> void
+Kazo.Os.Server.Contracts.Sync.QueryUploadProgressResponse
+Kazo.Os.Server.Contracts.Sync.QueryUploadProgressResponse.<Clone>$() -> Kazo.Os.Server.Contracts.Sync.QueryUploadProgressResponse!
+Kazo.Os.Server.Contracts.Sync.QueryUploadProgressResponse.Deconstruct(out string! UploadSessionId, out System.Collections.Generic.IReadOnlyList<int>! ReceivedChunks, out bool IsComplete) -> void
+Kazo.Os.Server.Contracts.Sync.QueryUploadProgressResponse.Equals(Kazo.Os.Server.Contracts.Sync.QueryUploadProgressResponse? other) -> bool
+Kazo.Os.Server.Contracts.Sync.QueryUploadProgressResponse.IsComplete.get -> bool
+Kazo.Os.Server.Contracts.Sync.QueryUploadProgressResponse.IsComplete.init -> void
+Kazo.Os.Server.Contracts.Sync.QueryUploadProgressResponse.QueryUploadProgressResponse(string! UploadSessionId, System.Collections.Generic.IReadOnlyList<int>! ReceivedChunks, bool IsComplete) -> void
+Kazo.Os.Server.Contracts.Sync.QueryUploadProgressResponse.ReceivedChunks.get -> System.Collections.Generic.IReadOnlyList<int>!
+Kazo.Os.Server.Contracts.Sync.QueryUploadProgressResponse.ReceivedChunks.init -> void
+Kazo.Os.Server.Contracts.Sync.QueryUploadProgressResponse.UploadSessionId.get -> string!
+Kazo.Os.Server.Contracts.Sync.QueryUploadProgressResponse.UploadSessionId.init -> void
+Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictRequest
+Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictRequest.<Clone>$() -> Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictRequest!
+Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictRequest.Deconstruct(out System.Guid RecordId, out string! Domain, out Kazo.Os.Server.Contracts.Sync.ConflictResolution Resolution, out string? MergedPayloadJson, out string? MergedContentHash) -> void
+Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictRequest.Domain.get -> string!
+Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictRequest.Domain.init -> void
+Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictRequest.Equals(Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictRequest? other) -> bool
+Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictRequest.MergedContentHash.get -> string?
+Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictRequest.MergedContentHash.init -> void
+Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictRequest.MergedPayloadJson.get -> string?
+Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictRequest.MergedPayloadJson.init -> void
+Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictRequest.RecordId.get -> System.Guid
+Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictRequest.RecordId.init -> void
+Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictRequest.Resolution.get -> Kazo.Os.Server.Contracts.Sync.ConflictResolution
+Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictRequest.Resolution.init -> void
+Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictRequest.ResolveSyncConflictRequest(System.Guid RecordId, string! Domain, Kazo.Os.Server.Contracts.Sync.ConflictResolution Resolution, string? MergedPayloadJson, string? MergedContentHash) -> void
+Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictResponse
+Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictResponse.<Clone>$() -> Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictResponse!
+Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictResponse.Deconstruct(out bool Resolved, out string? Reason, out long FinalRevision) -> void
+Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictResponse.Equals(Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictResponse? other) -> bool
+Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictResponse.FinalRevision.get -> long
+Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictResponse.FinalRevision.init -> void
+Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictResponse.Reason.get -> string?
+Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictResponse.Reason.init -> void
+Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictResponse.ResolveSyncConflictResponse(bool Resolved, string? Reason, long FinalRevision) -> void
+Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictResponse.Resolved.get -> bool
+Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictResponse.Resolved.init -> void
+Kazo.Os.Server.Contracts.Sync.SyncConflict
+Kazo.Os.Server.Contracts.Sync.SyncConflict.<Clone>$() -> Kazo.Os.Server.Contracts.Sync.SyncConflict!
+Kazo.Os.Server.Contracts.Sync.SyncConflict.ClientRevision.get -> long
+Kazo.Os.Server.Contracts.Sync.SyncConflict.ClientRevision.init -> void
+Kazo.Os.Server.Contracts.Sync.SyncConflict.ConflictCode.get -> string!
+Kazo.Os.Server.Contracts.Sync.SyncConflict.ConflictCode.init -> void
+Kazo.Os.Server.Contracts.Sync.SyncConflict.Deconstruct(out System.Guid RecordId, out long ClientRevision, out long ServerRevision, out System.DateTimeOffset ServerModifiedUtc, out string! ConflictCode) -> void
+Kazo.Os.Server.Contracts.Sync.SyncConflict.Equals(Kazo.Os.Server.Contracts.Sync.SyncConflict? other) -> bool
+Kazo.Os.Server.Contracts.Sync.SyncConflict.RecordId.get -> System.Guid
+Kazo.Os.Server.Contracts.Sync.SyncConflict.RecordId.init -> void
+Kazo.Os.Server.Contracts.Sync.SyncConflict.ServerModifiedUtc.get -> System.DateTimeOffset
+Kazo.Os.Server.Contracts.Sync.SyncConflict.ServerModifiedUtc.init -> void
+Kazo.Os.Server.Contracts.Sync.SyncConflict.ServerRevision.get -> long
+Kazo.Os.Server.Contracts.Sync.SyncConflict.ServerRevision.init -> void
+Kazo.Os.Server.Contracts.Sync.SyncConflict.SyncConflict(System.Guid RecordId, long ClientRevision, long ServerRevision, System.DateTimeOffset ServerModifiedUtc, string! ConflictCode) -> void
+Kazo.Os.Server.Contracts.Sync.SyncContractsJsonContext
+Kazo.Os.Server.Contracts.Sync.SyncContractsJsonContext.SyncContractsJsonContext() -> void
+Kazo.Os.Server.Contracts.Sync.SyncContractsJsonContext.SyncContractsJsonContext(System.Text.Json.JsonSerializerOptions! options) -> void
+Kazo.Os.Server.Contracts.Sync.SyncDomain
+Kazo.Os.Server.Contracts.Sync.SyncRecord<T>
+Kazo.Os.Server.Contracts.Sync.SyncRecord<T>.<Clone>$() -> Kazo.Os.Server.Contracts.Sync.SyncRecord<T>!
+Kazo.Os.Server.Contracts.Sync.SyncRecord<T>.ContentHash.get -> string!
+Kazo.Os.Server.Contracts.Sync.SyncRecord<T>.ContentHash.init -> void
+Kazo.Os.Server.Contracts.Sync.SyncRecord<T>.Deconstruct(out System.Guid RecordId, out string! Domain, out int SchemaVersion, out System.Guid OwnerAccountId, out System.Guid OriginDeviceId, out long Revision, out System.DateTimeOffset ModifiedUtc, out System.DateTimeOffset? ServerReceivedUtc, out string! ContentHash, out bool IsTombstone, out T? Payload) -> void
+Kazo.Os.Server.Contracts.Sync.SyncRecord<T>.Domain.get -> string!
+Kazo.Os.Server.Contracts.Sync.SyncRecord<T>.Domain.init -> void
+Kazo.Os.Server.Contracts.Sync.SyncRecord<T>.Equals(Kazo.Os.Server.Contracts.Sync.SyncRecord<T>? other) -> bool
+Kazo.Os.Server.Contracts.Sync.SyncRecord<T>.IsTombstone.get -> bool
+Kazo.Os.Server.Contracts.Sync.SyncRecord<T>.IsTombstone.init -> void
+Kazo.Os.Server.Contracts.Sync.SyncRecord<T>.ModifiedUtc.get -> System.DateTimeOffset
+Kazo.Os.Server.Contracts.Sync.SyncRecord<T>.ModifiedUtc.init -> void
+Kazo.Os.Server.Contracts.Sync.SyncRecord<T>.OriginDeviceId.get -> System.Guid
+Kazo.Os.Server.Contracts.Sync.SyncRecord<T>.OriginDeviceId.init -> void
+Kazo.Os.Server.Contracts.Sync.SyncRecord<T>.OwnerAccountId.get -> System.Guid
+Kazo.Os.Server.Contracts.Sync.SyncRecord<T>.OwnerAccountId.init -> void
+Kazo.Os.Server.Contracts.Sync.SyncRecord<T>.Payload.get -> T?
+Kazo.Os.Server.Contracts.Sync.SyncRecord<T>.Payload.init -> void
+Kazo.Os.Server.Contracts.Sync.SyncRecord<T>.RecordId.get -> System.Guid
+Kazo.Os.Server.Contracts.Sync.SyncRecord<T>.RecordId.init -> void
+Kazo.Os.Server.Contracts.Sync.SyncRecord<T>.Revision.get -> long
+Kazo.Os.Server.Contracts.Sync.SyncRecord<T>.Revision.init -> void
+Kazo.Os.Server.Contracts.Sync.SyncRecord<T>.SchemaVersion.get -> int
+Kazo.Os.Server.Contracts.Sync.SyncRecord<T>.SchemaVersion.init -> void
+Kazo.Os.Server.Contracts.Sync.SyncRecord<T>.ServerReceivedUtc.get -> System.DateTimeOffset?
+Kazo.Os.Server.Contracts.Sync.SyncRecord<T>.ServerReceivedUtc.init -> void
+Kazo.Os.Server.Contracts.Sync.SyncRecord<T>.SyncRecord(System.Guid RecordId, string! Domain, int SchemaVersion, System.Guid OwnerAccountId, System.Guid OriginDeviceId, long Revision, System.DateTimeOffset ModifiedUtc, System.DateTimeOffset? ServerReceivedUtc, string! ContentHash, bool IsTombstone, T? Payload) -> void
+Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope
+Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope.<Clone>$() -> Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope!
+Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope.ContentHash.get -> string!
+Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope.ContentHash.init -> void
+Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope.Deconstruct(out System.Guid RecordId, out string! Domain, out int SchemaVersion, out System.Guid OwnerAccountId, out System.Guid OriginDeviceId, out long Revision, out System.DateTimeOffset ModifiedUtc, out System.DateTimeOffset? ServerReceivedUtc, out string! ContentHash, out bool IsTombstone, out string? PayloadJson) -> void
+Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope.Domain.get -> string!
+Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope.Domain.init -> void
+Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope.Equals(Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope? other) -> bool
+Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope.IsTombstone.get -> bool
+Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope.IsTombstone.init -> void
+Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope.ModifiedUtc.get -> System.DateTimeOffset
+Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope.ModifiedUtc.init -> void
+Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope.OriginDeviceId.get -> System.Guid
+Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope.OriginDeviceId.init -> void
+Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope.OwnerAccountId.get -> System.Guid
+Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope.OwnerAccountId.init -> void
+Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope.PayloadJson.get -> string?
+Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope.PayloadJson.init -> void
+Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope.RecordId.get -> System.Guid
+Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope.RecordId.init -> void
+Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope.Revision.get -> long
+Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope.Revision.init -> void
+Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope.SchemaVersion.get -> int
+Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope.SchemaVersion.init -> void
+Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope.ServerReceivedUtc.get -> System.DateTimeOffset?
+Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope.ServerReceivedUtc.init -> void
+Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope.SyncRecordEnvelope(System.Guid RecordId, string! Domain, int SchemaVersion, System.Guid OwnerAccountId, System.Guid OriginDeviceId, long Revision, System.DateTimeOffset ModifiedUtc, System.DateTimeOffset? ServerReceivedUtc, string! ContentHash, bool IsTombstone, string? PayloadJson) -> void
+Kazo.Os.Server.Contracts.Versioning.ApiVersionEntry
+Kazo.Os.Server.Contracts.Versioning.ApiVersionEntry.<Clone>$() -> Kazo.Os.Server.Contracts.Versioning.ApiVersionEntry!
+Kazo.Os.Server.Contracts.Versioning.ApiVersionEntry.ApiVersionEntry(string! Version, string! Status, System.DateTimeOffset? SunsetUtc, int MinPwaSchemaVersion, int MaxPwaSchemaVersion) -> void
+Kazo.Os.Server.Contracts.Versioning.ApiVersionEntry.Deconstruct(out string! Version, out string! Status, out System.DateTimeOffset? SunsetUtc, out int MinPwaSchemaVersion, out int MaxPwaSchemaVersion) -> void
+Kazo.Os.Server.Contracts.Versioning.ApiVersionEntry.Equals(Kazo.Os.Server.Contracts.Versioning.ApiVersionEntry? other) -> bool
+Kazo.Os.Server.Contracts.Versioning.ApiVersionEntry.MaxPwaSchemaVersion.get -> int
+Kazo.Os.Server.Contracts.Versioning.ApiVersionEntry.MaxPwaSchemaVersion.init -> void
+Kazo.Os.Server.Contracts.Versioning.ApiVersionEntry.MinPwaSchemaVersion.get -> int
+Kazo.Os.Server.Contracts.Versioning.ApiVersionEntry.MinPwaSchemaVersion.init -> void
+Kazo.Os.Server.Contracts.Versioning.ApiVersionEntry.Status.get -> string!
+Kazo.Os.Server.Contracts.Versioning.ApiVersionEntry.Status.init -> void
+Kazo.Os.Server.Contracts.Versioning.ApiVersionEntry.SunsetUtc.get -> System.DateTimeOffset?
+Kazo.Os.Server.Contracts.Versioning.ApiVersionEntry.SunsetUtc.init -> void
+Kazo.Os.Server.Contracts.Versioning.ApiVersionEntry.Version.get -> string!
+Kazo.Os.Server.Contracts.Versioning.ApiVersionEntry.Version.init -> void
+Kazo.Os.Server.Contracts.Versioning.ApiVersionResponse
+Kazo.Os.Server.Contracts.Versioning.ApiVersionResponse.<Clone>$() -> Kazo.Os.Server.Contracts.Versioning.ApiVersionResponse!
+Kazo.Os.Server.Contracts.Versioning.ApiVersionResponse.ApiVersionResponse(string! ServerVersion, string! CurrentApiVersion, System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Versioning.ApiVersionEntry!>! SupportedVersions, int MinCompatiblePwaSchema) -> void
+Kazo.Os.Server.Contracts.Versioning.ApiVersionResponse.CurrentApiVersion.get -> string!
+Kazo.Os.Server.Contracts.Versioning.ApiVersionResponse.CurrentApiVersion.init -> void
+Kazo.Os.Server.Contracts.Versioning.ApiVersionResponse.Deconstruct(out string! ServerVersion, out string! CurrentApiVersion, out System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Versioning.ApiVersionEntry!>! SupportedVersions, out int MinCompatiblePwaSchema) -> void
+Kazo.Os.Server.Contracts.Versioning.ApiVersionResponse.Equals(Kazo.Os.Server.Contracts.Versioning.ApiVersionResponse? other) -> bool
+Kazo.Os.Server.Contracts.Versioning.ApiVersionResponse.MinCompatiblePwaSchema.get -> int
+Kazo.Os.Server.Contracts.Versioning.ApiVersionResponse.MinCompatiblePwaSchema.init -> void
+Kazo.Os.Server.Contracts.Versioning.ApiVersionResponse.ServerVersion.get -> string!
+Kazo.Os.Server.Contracts.Versioning.ApiVersionResponse.ServerVersion.init -> void
+Kazo.Os.Server.Contracts.Versioning.ApiVersionResponse.SupportedVersions.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Versioning.ApiVersionEntry!>!
+Kazo.Os.Server.Contracts.Versioning.ApiVersionResponse.SupportedVersions.init -> void
+Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckRequest
+Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckRequest.<Clone>$() -> Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckRequest!
+Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckRequest.ClientPwaSchemaVersion.get -> int
+Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckRequest.ClientPwaSchemaVersion.init -> void
+Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckRequest.CompatibilityCheckRequest(int ClientPwaSchemaVersion, string! DesiredApiVersion) -> void
+Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckRequest.Deconstruct(out int ClientPwaSchemaVersion, out string! DesiredApiVersion) -> void
+Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckRequest.DesiredApiVersion.get -> string!
+Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckRequest.DesiredApiVersion.init -> void
+Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckRequest.Equals(Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckRequest? other) -> bool
+Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckResponse
+Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckResponse.<Clone>$() -> Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckResponse!
+Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckResponse.CompatibilityCheckResponse(bool Compatible, string? Reason, bool UpgradeRequired, bool VersionSunset) -> void
+Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckResponse.Compatible.get -> bool
+Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckResponse.Compatible.init -> void
+Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckResponse.Deconstruct(out bool Compatible, out string? Reason, out bool UpgradeRequired, out bool VersionSunset) -> void
+Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckResponse.Equals(Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckResponse? other) -> bool
+Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckResponse.Reason.get -> string?
+Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckResponse.Reason.init -> void
+Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckResponse.UpgradeRequired.get -> bool
+Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckResponse.UpgradeRequired.init -> void
+Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckResponse.VersionSunset.get -> bool
+Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckResponse.VersionSunset.init -> void
+Kazo.Os.Server.Contracts.Versioning.VersioningContractsJsonContext
+Kazo.Os.Server.Contracts.Versioning.VersioningContractsJsonContext.VersioningContractsJsonContext() -> void
+Kazo.Os.Server.Contracts.Versioning.VersioningContractsJsonContext.VersioningContractsJsonContext(System.Text.Json.JsonSerializerOptions! options) -> void
+const Kazo.Os.Server.Contracts.Hosting.HostInfoRoutes.ApiPath = "/api/kazoos/host-info" -> string!
+const Kazo.Os.Server.Contracts.Hosting.HostInfoRoutes.DiscoveryFile = "kazoos-host.json" -> string!
+const Kazo.Os.Server.Contracts.Hosting.HostInfoRoutes.ServerProduct = "Kazo OS Server" -> string!
+const Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode.BlockedAddress = "BLOCKED_ADDRESS" -> string!
+const Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode.BlockedPort = "BLOCKED_PORT" -> string!
+const Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode.BodyMismatch = "BODY_MISMATCH" -> string!
+const Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode.CapabilityDenied = "CAPABILITY_DENIED" -> string!
+const Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode.ConnectionRefused = "CONNECTION_REFUSED" -> string!
+const Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode.DnsRebindingBlocked = "DNS_REBINDING_BLOCKED" -> string!
+const Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode.GrantMissing = "GRANT_MISSING" -> string!
+const Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode.HostUnreachable = "HOST_UNREACHABLE" -> string!
+const Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode.MalformedRequest = "MALFORMED_REQUEST" -> string!
+const Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode.PayloadTooLarge = "PAYLOAD_TOO_LARGE" -> string!
+const Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode.QuotaExceeded = "QUOTA_EXCEEDED" -> string!
+const Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode.RelayDisabled = "RELAY_DISABLED" -> string!
+const Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode.SimulatedDomainBlocked = "SIMULATED_DOMAIN_BLOCKED" -> string!
+const Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode.Timeout = "TIMEOUT" -> string!
+const Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode.TooManyRedirects = "TOO_MANY_REDIRECTS" -> string!
+const Kazo.Os.Server.Contracts.Proxy.ProxyStreamCloseCodes.IdleTimeout = 4002 -> int
+const Kazo.Os.Server.Contracts.Proxy.ProxyStreamCloseCodes.Rejected = 4001 -> int
+const Kazo.Os.Server.Contracts.Proxy.ProxyStreamCloseCodes.RemoteClosed = 4000 -> int
+const Kazo.Os.Server.Contracts.Proxy.ProxyStreamRoutes.AccessTokenParameter = "access_token" -> string!
+const Kazo.Os.Server.Contracts.Proxy.ProxyStreamRoutes.AppIdParameter = "appId" -> string!
+const Kazo.Os.Server.Contracts.Proxy.ProxyStreamRoutes.HostParameter = "host" -> string!
+const Kazo.Os.Server.Contracts.Proxy.ProxyStreamRoutes.MaxChunkBytes = 65536 -> int
+const Kazo.Os.Server.Contracts.Proxy.ProxyStreamRoutes.MaxDatagramBytes = 65507 -> int
+const Kazo.Os.Server.Contracts.Proxy.ProxyStreamRoutes.PortParameter = "port" -> string!
+const Kazo.Os.Server.Contracts.Proxy.ProxyStreamRoutes.TcpPath = "api/proxy/tcp" -> string!
+const Kazo.Os.Server.Contracts.Proxy.ProxyStreamRoutes.UdpPath = "api/proxy/udp" -> string!
+const Kazo.Os.Server.Contracts.Sync.SyncDomain.AppCatalog = "app_catalog" -> string!
+const Kazo.Os.Server.Contracts.Sync.SyncDomain.FileAssociations = "file_associations" -> string!
+const Kazo.Os.Server.Contracts.Sync.SyncDomain.FileSystem = "filesystem" -> string!
+const Kazo.Os.Server.Contracts.Sync.SyncDomain.Grants = "grants" -> string!
+const Kazo.Os.Server.Contracts.Sync.SyncDomain.Settings = "settings" -> string!
+override Kazo.Os.Server.Contracts.Admin.AccountDataExportRequest.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Admin.AccountDataExportRequest.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Admin.AccountDataExportRequest.ToString() -> string!
+override Kazo.Os.Server.Contracts.Admin.AccountDataExportStatus.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Admin.AccountDataExportStatus.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Admin.AccountDataExportStatus.ToString() -> string!
+override Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse.ToString() -> string!
+override Kazo.Os.Server.Contracts.Admin.AdminContractsJsonContext.GetTypeInfo(System.Type! type) -> System.Text.Json.Serialization.Metadata.JsonTypeInfo?
+override Kazo.Os.Server.Contracts.Admin.ComponentHealth.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Admin.ComponentHealth.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Admin.ComponentHealth.ToString() -> string!
+override Kazo.Os.Server.Contracts.Admin.DeleteAccountRequest.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Admin.DeleteAccountRequest.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Admin.DeleteAccountRequest.ToString() -> string!
+override Kazo.Os.Server.Contracts.Admin.DeleteAccountResponse.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Admin.DeleteAccountResponse.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Admin.DeleteAccountResponse.ToString() -> string!
+override Kazo.Os.Server.Contracts.Admin.ServerHealthResponse.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Admin.ServerHealthResponse.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Admin.ServerHealthResponse.ToString() -> string!
+override Kazo.Os.Server.Contracts.Hosting.HostInfoResponse.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Hosting.HostInfoResponse.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Hosting.HostInfoResponse.ToString() -> string!
+override Kazo.Os.Server.Contracts.Hosting.HostingContractsJsonContext.GetTypeInfo(System.Type! type) -> System.Text.Json.Serialization.Metadata.JsonTypeInfo?
+override Kazo.Os.Server.Contracts.Identity.CreateAccountRequest.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Identity.CreateAccountRequest.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Identity.CreateAccountRequest.ToString() -> string!
+override Kazo.Os.Server.Contracts.Identity.CreateAccountResponse.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Identity.CreateAccountResponse.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Identity.CreateAccountResponse.ToString() -> string!
+override Kazo.Os.Server.Contracts.Identity.DeviceSummary.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Identity.DeviceSummary.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Identity.DeviceSummary.ToString() -> string!
+override Kazo.Os.Server.Contracts.Identity.IdentityContractsJsonContext.GetTypeInfo(System.Type! type) -> System.Text.Json.Serialization.Metadata.JsonTypeInfo?
+override Kazo.Os.Server.Contracts.Identity.LoginRequest.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Identity.LoginRequest.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Identity.LoginRequest.ToString() -> string!
+override Kazo.Os.Server.Contracts.Identity.LoginResponse.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Identity.LoginResponse.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Identity.LoginResponse.ToString() -> string!
+override Kazo.Os.Server.Contracts.Identity.PairDeviceRequest.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Identity.PairDeviceRequest.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Identity.PairDeviceRequest.ToString() -> string!
+override Kazo.Os.Server.Contracts.Identity.RefreshTokenRequest.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Identity.RefreshTokenRequest.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Identity.RefreshTokenRequest.ToString() -> string!
+override Kazo.Os.Server.Contracts.Identity.RefreshTokenResponse.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Identity.RefreshTokenResponse.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Identity.RefreshTokenResponse.ToString() -> string!
+override Kazo.Os.Server.Contracts.Identity.RegisterDeviceRequest.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Identity.RegisterDeviceRequest.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Identity.RegisterDeviceRequest.ToString() -> string!
+override Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse.ToString() -> string!
+override Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.GetTypeInfo(System.Type! type) -> System.Text.Json.Serialization.Metadata.JsonTypeInfo?
+override Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse.ToString() -> string!
+override Kazo.Os.Server.Contracts.Proxy.ProxyHeader.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Proxy.ProxyHeader.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Proxy.ProxyHeader.ToString() -> string!
+override Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.ToString() -> string!
+override Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse.ToString() -> string!
+override Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.ToString() -> string!
+override Kazo.Os.Server.Contracts.Proxy.ProxyStreamClosure.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Proxy.ProxyStreamClosure.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Proxy.ProxyStreamClosure.ToString() -> string!
+override Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened.ToString() -> string!
+override Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest.ToString() -> string!
+override Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeRequest.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeRequest.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeRequest.ToString() -> string!
+override Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeResponse.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeResponse.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeResponse.ToString() -> string!
+override Kazo.Os.Server.Contracts.Sync.ContentTransferContractsJsonContext.GetTypeInfo(System.Type! type) -> System.Text.Json.Serialization.Metadata.JsonTypeInfo?
+override Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadRequest.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadRequest.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadRequest.ToString() -> string!
+override Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadResponse.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadResponse.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadResponse.ToString() -> string!
+override Kazo.Os.Server.Contracts.Sync.InitiateContentUploadRequest.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Sync.InitiateContentUploadRequest.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Sync.InitiateContentUploadRequest.ToString() -> string!
+override Kazo.Os.Server.Contracts.Sync.InitiateContentUploadResponse.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Sync.InitiateContentUploadResponse.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Sync.InitiateContentUploadResponse.ToString() -> string!
+override Kazo.Os.Server.Contracts.Sync.PullRequest.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Sync.PullRequest.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Sync.PullRequest.ToString() -> string!
+override Kazo.Os.Server.Contracts.Sync.PullResponse.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Sync.PullResponse.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Sync.PullResponse.ToString() -> string!
+override Kazo.Os.Server.Contracts.Sync.PushRequest.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Sync.PushRequest.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Sync.PushRequest.ToString() -> string!
+override Kazo.Os.Server.Contracts.Sync.PushResponse.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Sync.PushResponse.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Sync.PushResponse.ToString() -> string!
+override Kazo.Os.Server.Contracts.Sync.QueryUploadProgressRequest.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Sync.QueryUploadProgressRequest.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Sync.QueryUploadProgressRequest.ToString() -> string!
+override Kazo.Os.Server.Contracts.Sync.QueryUploadProgressResponse.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Sync.QueryUploadProgressResponse.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Sync.QueryUploadProgressResponse.ToString() -> string!
+override Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictRequest.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictRequest.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictRequest.ToString() -> string!
+override Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictResponse.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictResponse.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictResponse.ToString() -> string!
+override Kazo.Os.Server.Contracts.Sync.SyncConflict.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Sync.SyncConflict.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Sync.SyncConflict.ToString() -> string!
+override Kazo.Os.Server.Contracts.Sync.SyncContractsJsonContext.GetTypeInfo(System.Type! type) -> System.Text.Json.Serialization.Metadata.JsonTypeInfo?
+override Kazo.Os.Server.Contracts.Sync.SyncRecord<T>.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Sync.SyncRecord<T>.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Sync.SyncRecord<T>.ToString() -> string!
+override Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope.ToString() -> string!
+override Kazo.Os.Server.Contracts.Versioning.ApiVersionEntry.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Versioning.ApiVersionEntry.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Versioning.ApiVersionEntry.ToString() -> string!
+override Kazo.Os.Server.Contracts.Versioning.ApiVersionResponse.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Versioning.ApiVersionResponse.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Versioning.ApiVersionResponse.ToString() -> string!
+override Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckRequest.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckRequest.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckRequest.ToString() -> string!
+override Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckResponse.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckResponse.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckResponse.ToString() -> string!
+override Kazo.Os.Server.Contracts.Versioning.VersioningContractsJsonContext.GetTypeInfo(System.Type! type) -> System.Text.Json.Serialization.Metadata.JsonTypeInfo?
+static Kazo.Os.Server.Contracts.Admin.AccountDataExportRequest.operator !=(Kazo.Os.Server.Contracts.Admin.AccountDataExportRequest? left, Kazo.Os.Server.Contracts.Admin.AccountDataExportRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Admin.AccountDataExportRequest.operator ==(Kazo.Os.Server.Contracts.Admin.AccountDataExportRequest? left, Kazo.Os.Server.Contracts.Admin.AccountDataExportRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Admin.AccountDataExportStatus.operator !=(Kazo.Os.Server.Contracts.Admin.AccountDataExportStatus? left, Kazo.Os.Server.Contracts.Admin.AccountDataExportStatus? right) -> bool
+static Kazo.Os.Server.Contracts.Admin.AccountDataExportStatus.operator ==(Kazo.Os.Server.Contracts.Admin.AccountDataExportStatus? left, Kazo.Os.Server.Contracts.Admin.AccountDataExportStatus? right) -> bool
+static Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse.operator !=(Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse? left, Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse.operator ==(Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse? left, Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Admin.AdminContractsJsonContext.Default.get -> Kazo.Os.Server.Contracts.Admin.AdminContractsJsonContext!
+static Kazo.Os.Server.Contracts.Admin.ComponentHealth.operator !=(Kazo.Os.Server.Contracts.Admin.ComponentHealth? left, Kazo.Os.Server.Contracts.Admin.ComponentHealth? right) -> bool
+static Kazo.Os.Server.Contracts.Admin.ComponentHealth.operator ==(Kazo.Os.Server.Contracts.Admin.ComponentHealth? left, Kazo.Os.Server.Contracts.Admin.ComponentHealth? right) -> bool
+static Kazo.Os.Server.Contracts.Admin.DeleteAccountRequest.operator !=(Kazo.Os.Server.Contracts.Admin.DeleteAccountRequest? left, Kazo.Os.Server.Contracts.Admin.DeleteAccountRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Admin.DeleteAccountRequest.operator ==(Kazo.Os.Server.Contracts.Admin.DeleteAccountRequest? left, Kazo.Os.Server.Contracts.Admin.DeleteAccountRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Admin.DeleteAccountResponse.operator !=(Kazo.Os.Server.Contracts.Admin.DeleteAccountResponse? left, Kazo.Os.Server.Contracts.Admin.DeleteAccountResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Admin.DeleteAccountResponse.operator ==(Kazo.Os.Server.Contracts.Admin.DeleteAccountResponse? left, Kazo.Os.Server.Contracts.Admin.DeleteAccountResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Admin.ServerHealthResponse.operator !=(Kazo.Os.Server.Contracts.Admin.ServerHealthResponse? left, Kazo.Os.Server.Contracts.Admin.ServerHealthResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Admin.ServerHealthResponse.operator ==(Kazo.Os.Server.Contracts.Admin.ServerHealthResponse? left, Kazo.Os.Server.Contracts.Admin.ServerHealthResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Hosting.HostInfoResponse.operator !=(Kazo.Os.Server.Contracts.Hosting.HostInfoResponse? left, Kazo.Os.Server.Contracts.Hosting.HostInfoResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Hosting.HostInfoResponse.operator ==(Kazo.Os.Server.Contracts.Hosting.HostInfoResponse? left, Kazo.Os.Server.Contracts.Hosting.HostInfoResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Hosting.HostingContractsJsonContext.Default.get -> Kazo.Os.Server.Contracts.Hosting.HostingContractsJsonContext!
+static Kazo.Os.Server.Contracts.Identity.CreateAccountRequest.operator !=(Kazo.Os.Server.Contracts.Identity.CreateAccountRequest? left, Kazo.Os.Server.Contracts.Identity.CreateAccountRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Identity.CreateAccountRequest.operator ==(Kazo.Os.Server.Contracts.Identity.CreateAccountRequest? left, Kazo.Os.Server.Contracts.Identity.CreateAccountRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Identity.CreateAccountResponse.operator !=(Kazo.Os.Server.Contracts.Identity.CreateAccountResponse? left, Kazo.Os.Server.Contracts.Identity.CreateAccountResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Identity.CreateAccountResponse.operator ==(Kazo.Os.Server.Contracts.Identity.CreateAccountResponse? left, Kazo.Os.Server.Contracts.Identity.CreateAccountResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Identity.DeviceSummary.operator !=(Kazo.Os.Server.Contracts.Identity.DeviceSummary? left, Kazo.Os.Server.Contracts.Identity.DeviceSummary? right) -> bool
+static Kazo.Os.Server.Contracts.Identity.DeviceSummary.operator ==(Kazo.Os.Server.Contracts.Identity.DeviceSummary? left, Kazo.Os.Server.Contracts.Identity.DeviceSummary? right) -> bool
+static Kazo.Os.Server.Contracts.Identity.IdentityContractsJsonContext.Default.get -> Kazo.Os.Server.Contracts.Identity.IdentityContractsJsonContext!
+static Kazo.Os.Server.Contracts.Identity.LoginRequest.operator !=(Kazo.Os.Server.Contracts.Identity.LoginRequest? left, Kazo.Os.Server.Contracts.Identity.LoginRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Identity.LoginRequest.operator ==(Kazo.Os.Server.Contracts.Identity.LoginRequest? left, Kazo.Os.Server.Contracts.Identity.LoginRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Identity.LoginResponse.operator !=(Kazo.Os.Server.Contracts.Identity.LoginResponse? left, Kazo.Os.Server.Contracts.Identity.LoginResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Identity.LoginResponse.operator ==(Kazo.Os.Server.Contracts.Identity.LoginResponse? left, Kazo.Os.Server.Contracts.Identity.LoginResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Identity.PairDeviceRequest.operator !=(Kazo.Os.Server.Contracts.Identity.PairDeviceRequest? left, Kazo.Os.Server.Contracts.Identity.PairDeviceRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Identity.PairDeviceRequest.operator ==(Kazo.Os.Server.Contracts.Identity.PairDeviceRequest? left, Kazo.Os.Server.Contracts.Identity.PairDeviceRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Identity.RefreshTokenRequest.operator !=(Kazo.Os.Server.Contracts.Identity.RefreshTokenRequest? left, Kazo.Os.Server.Contracts.Identity.RefreshTokenRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Identity.RefreshTokenRequest.operator ==(Kazo.Os.Server.Contracts.Identity.RefreshTokenRequest? left, Kazo.Os.Server.Contracts.Identity.RefreshTokenRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Identity.RefreshTokenResponse.operator !=(Kazo.Os.Server.Contracts.Identity.RefreshTokenResponse? left, Kazo.Os.Server.Contracts.Identity.RefreshTokenResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Identity.RefreshTokenResponse.operator ==(Kazo.Os.Server.Contracts.Identity.RefreshTokenResponse? left, Kazo.Os.Server.Contracts.Identity.RefreshTokenResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Identity.RegisterDeviceRequest.operator !=(Kazo.Os.Server.Contracts.Identity.RegisterDeviceRequest? left, Kazo.Os.Server.Contracts.Identity.RegisterDeviceRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Identity.RegisterDeviceRequest.operator ==(Kazo.Os.Server.Contracts.Identity.RegisterDeviceRequest? left, Kazo.Os.Server.Contracts.Identity.RegisterDeviceRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse.operator !=(Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse? left, Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse.operator ==(Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse? left, Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.Default.get -> Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext!
+static Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse.operator !=(Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse? left, Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse.operator ==(Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse? left, Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Proxy.ProxyHeader.operator !=(Kazo.Os.Server.Contracts.Proxy.ProxyHeader? left, Kazo.Os.Server.Contracts.Proxy.ProxyHeader? right) -> bool
+static Kazo.Os.Server.Contracts.Proxy.ProxyHeader.operator ==(Kazo.Os.Server.Contracts.Proxy.ProxyHeader? left, Kazo.Os.Server.Contracts.Proxy.ProxyHeader? right) -> bool
+static Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.Create(System.Guid requestId, string! targetUrl, string! httpMethod, System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Proxy.ProxyHeader!>! headers, byte[]? body, string? contentType, int timeoutSeconds, string! appId, bool includeBody) -> Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest!
+static Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.operator !=(Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest? left, Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest.operator ==(Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest? left, Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse.operator !=(Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse? left, Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse.operator ==(Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse? left, Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.operator !=(Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse? left, Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.operator ==(Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse? left, Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Proxy.ProxyStreamClosure.operator !=(Kazo.Os.Server.Contracts.Proxy.ProxyStreamClosure? left, Kazo.Os.Server.Contracts.Proxy.ProxyStreamClosure? right) -> bool
+static Kazo.Os.Server.Contracts.Proxy.ProxyStreamClosure.operator ==(Kazo.Os.Server.Contracts.Proxy.ProxyStreamClosure? left, Kazo.Os.Server.Contracts.Proxy.ProxyStreamClosure? right) -> bool
+static Kazo.Os.Server.Contracts.Proxy.ProxyStreamException.FromCloseReason(string? reason) -> Kazo.Os.Server.Contracts.Proxy.ProxyStreamException!
+static Kazo.Os.Server.Contracts.Proxy.ProxyStreamException.ToCloseReason(string! errorCode, string! message) -> string!
+static Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened.operator !=(Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened? left, Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened? right) -> bool
+static Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened.operator ==(Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened? left, Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened? right) -> bool
+static Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest.operator !=(Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest? left, Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest.operator ==(Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest? left, Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Proxy.ProxyStreamRoutes.PathOf(Kazo.Os.Server.Contracts.Proxy.ProxyProtocol protocol) -> string!
+static Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeRequest.operator !=(Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeRequest? left, Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeRequest.operator ==(Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeRequest? left, Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeResponse.operator !=(Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeResponse? left, Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeResponse.operator ==(Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeResponse? left, Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Sync.ContentTransferContractsJsonContext.Default.get -> Kazo.Os.Server.Contracts.Sync.ContentTransferContractsJsonContext!
+static Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadRequest.operator !=(Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadRequest? left, Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadRequest.operator ==(Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadRequest? left, Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadResponse.operator !=(Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadResponse? left, Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadResponse.operator ==(Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadResponse? left, Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Sync.InitiateContentUploadRequest.operator !=(Kazo.Os.Server.Contracts.Sync.InitiateContentUploadRequest? left, Kazo.Os.Server.Contracts.Sync.InitiateContentUploadRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Sync.InitiateContentUploadRequest.operator ==(Kazo.Os.Server.Contracts.Sync.InitiateContentUploadRequest? left, Kazo.Os.Server.Contracts.Sync.InitiateContentUploadRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Sync.InitiateContentUploadResponse.operator !=(Kazo.Os.Server.Contracts.Sync.InitiateContentUploadResponse? left, Kazo.Os.Server.Contracts.Sync.InitiateContentUploadResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Sync.InitiateContentUploadResponse.operator ==(Kazo.Os.Server.Contracts.Sync.InitiateContentUploadResponse? left, Kazo.Os.Server.Contracts.Sync.InitiateContentUploadResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Sync.PullRequest.operator !=(Kazo.Os.Server.Contracts.Sync.PullRequest? left, Kazo.Os.Server.Contracts.Sync.PullRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Sync.PullRequest.operator ==(Kazo.Os.Server.Contracts.Sync.PullRequest? left, Kazo.Os.Server.Contracts.Sync.PullRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Sync.PullResponse.operator !=(Kazo.Os.Server.Contracts.Sync.PullResponse? left, Kazo.Os.Server.Contracts.Sync.PullResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Sync.PullResponse.operator ==(Kazo.Os.Server.Contracts.Sync.PullResponse? left, Kazo.Os.Server.Contracts.Sync.PullResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Sync.PushRequest.operator !=(Kazo.Os.Server.Contracts.Sync.PushRequest? left, Kazo.Os.Server.Contracts.Sync.PushRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Sync.PushRequest.operator ==(Kazo.Os.Server.Contracts.Sync.PushRequest? left, Kazo.Os.Server.Contracts.Sync.PushRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Sync.PushResponse.operator !=(Kazo.Os.Server.Contracts.Sync.PushResponse? left, Kazo.Os.Server.Contracts.Sync.PushResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Sync.PushResponse.operator ==(Kazo.Os.Server.Contracts.Sync.PushResponse? left, Kazo.Os.Server.Contracts.Sync.PushResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Sync.QueryUploadProgressRequest.operator !=(Kazo.Os.Server.Contracts.Sync.QueryUploadProgressRequest? left, Kazo.Os.Server.Contracts.Sync.QueryUploadProgressRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Sync.QueryUploadProgressRequest.operator ==(Kazo.Os.Server.Contracts.Sync.QueryUploadProgressRequest? left, Kazo.Os.Server.Contracts.Sync.QueryUploadProgressRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Sync.QueryUploadProgressResponse.operator !=(Kazo.Os.Server.Contracts.Sync.QueryUploadProgressResponse? left, Kazo.Os.Server.Contracts.Sync.QueryUploadProgressResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Sync.QueryUploadProgressResponse.operator ==(Kazo.Os.Server.Contracts.Sync.QueryUploadProgressResponse? left, Kazo.Os.Server.Contracts.Sync.QueryUploadProgressResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictRequest.operator !=(Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictRequest? left, Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictRequest.operator ==(Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictRequest? left, Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictResponse.operator !=(Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictResponse? left, Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictResponse.operator ==(Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictResponse? left, Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Sync.SyncConflict.operator !=(Kazo.Os.Server.Contracts.Sync.SyncConflict? left, Kazo.Os.Server.Contracts.Sync.SyncConflict? right) -> bool
+static Kazo.Os.Server.Contracts.Sync.SyncConflict.operator ==(Kazo.Os.Server.Contracts.Sync.SyncConflict? left, Kazo.Os.Server.Contracts.Sync.SyncConflict? right) -> bool
+static Kazo.Os.Server.Contracts.Sync.SyncContractsJsonContext.Default.get -> Kazo.Os.Server.Contracts.Sync.SyncContractsJsonContext!
+static Kazo.Os.Server.Contracts.Sync.SyncRecord<T>.operator !=(Kazo.Os.Server.Contracts.Sync.SyncRecord<T>? left, Kazo.Os.Server.Contracts.Sync.SyncRecord<T>? right) -> bool
+static Kazo.Os.Server.Contracts.Sync.SyncRecord<T>.operator ==(Kazo.Os.Server.Contracts.Sync.SyncRecord<T>? left, Kazo.Os.Server.Contracts.Sync.SyncRecord<T>? right) -> bool
+static Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope.operator !=(Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope? left, Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope? right) -> bool
+static Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope.operator ==(Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope? left, Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope? right) -> bool
+static Kazo.Os.Server.Contracts.Versioning.ApiVersionEntry.operator !=(Kazo.Os.Server.Contracts.Versioning.ApiVersionEntry? left, Kazo.Os.Server.Contracts.Versioning.ApiVersionEntry? right) -> bool
+static Kazo.Os.Server.Contracts.Versioning.ApiVersionEntry.operator ==(Kazo.Os.Server.Contracts.Versioning.ApiVersionEntry? left, Kazo.Os.Server.Contracts.Versioning.ApiVersionEntry? right) -> bool
+static Kazo.Os.Server.Contracts.Versioning.ApiVersionResponse.operator !=(Kazo.Os.Server.Contracts.Versioning.ApiVersionResponse? left, Kazo.Os.Server.Contracts.Versioning.ApiVersionResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Versioning.ApiVersionResponse.operator ==(Kazo.Os.Server.Contracts.Versioning.ApiVersionResponse? left, Kazo.Os.Server.Contracts.Versioning.ApiVersionResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckRequest.operator !=(Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckRequest? left, Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckRequest.operator ==(Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckRequest? left, Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckResponse.operator !=(Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckResponse? left, Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckResponse.operator ==(Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckResponse? left, Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Versioning.VersioningContractsJsonContext.Default.get -> Kazo.Os.Server.Contracts.Versioning.VersioningContractsJsonContext!
+~Kazo.Os.Server.Contracts.Admin.AdminContractsJsonContext.AccountDataExportRequest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Admin.AccountDataExportRequest>
+~Kazo.Os.Server.Contracts.Admin.AdminContractsJsonContext.AccountDataExportStatus.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Admin.AccountDataExportStatus>
+~Kazo.Os.Server.Contracts.Admin.AdminContractsJsonContext.AccountDataSummaryResponse.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Admin.AccountDataSummaryResponse>
+~Kazo.Os.Server.Contracts.Admin.AdminContractsJsonContext.Boolean.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<bool>
+~Kazo.Os.Server.Contracts.Admin.AdminContractsJsonContext.ComponentHealth.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Admin.ComponentHealth>
+~Kazo.Os.Server.Contracts.Admin.AdminContractsJsonContext.DateTimeOffset.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.DateTimeOffset>
+~Kazo.Os.Server.Contracts.Admin.AdminContractsJsonContext.DeleteAccountRequest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Admin.DeleteAccountRequest>
+~Kazo.Os.Server.Contracts.Admin.AdminContractsJsonContext.DeleteAccountResponse.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Admin.DeleteAccountResponse>
+~Kazo.Os.Server.Contracts.Admin.AdminContractsJsonContext.Guid.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Guid>
+~Kazo.Os.Server.Contracts.Admin.AdminContractsJsonContext.IReadOnlyListComponentHealth.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Admin.ComponentHealth>>
+~Kazo.Os.Server.Contracts.Admin.AdminContractsJsonContext.IReadOnlyListString.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<string>>
+~Kazo.Os.Server.Contracts.Admin.AdminContractsJsonContext.Int32.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<int>
+~Kazo.Os.Server.Contracts.Admin.AdminContractsJsonContext.Int64.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<long>
+~Kazo.Os.Server.Contracts.Admin.AdminContractsJsonContext.NullableDateTimeOffset.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.DateTimeOffset?>
+~Kazo.Os.Server.Contracts.Admin.AdminContractsJsonContext.ServerHealthResponse.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Admin.ServerHealthResponse>
+~Kazo.Os.Server.Contracts.Admin.AdminContractsJsonContext.String.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<string>
+~Kazo.Os.Server.Contracts.Hosting.HostingContractsJsonContext.Boolean.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<bool>
+~Kazo.Os.Server.Contracts.Hosting.HostingContractsJsonContext.HostInfoResponse.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Hosting.HostInfoResponse>
+~Kazo.Os.Server.Contracts.Hosting.HostingContractsJsonContext.String.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<string>
+~Kazo.Os.Server.Contracts.Identity.IdentityContractsJsonContext.Boolean.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<bool>
+~Kazo.Os.Server.Contracts.Identity.IdentityContractsJsonContext.CreateAccountRequest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Identity.CreateAccountRequest>
+~Kazo.Os.Server.Contracts.Identity.IdentityContractsJsonContext.CreateAccountResponse.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Identity.CreateAccountResponse>
+~Kazo.Os.Server.Contracts.Identity.IdentityContractsJsonContext.DateTimeOffset.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.DateTimeOffset>
+~Kazo.Os.Server.Contracts.Identity.IdentityContractsJsonContext.DeviceSummary.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Identity.DeviceSummary>
+~Kazo.Os.Server.Contracts.Identity.IdentityContractsJsonContext.Guid.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Guid>
+~Kazo.Os.Server.Contracts.Identity.IdentityContractsJsonContext.IReadOnlyListDeviceSummary.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Identity.DeviceSummary>>
+~Kazo.Os.Server.Contracts.Identity.IdentityContractsJsonContext.LoginRequest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Identity.LoginRequest>
+~Kazo.Os.Server.Contracts.Identity.IdentityContractsJsonContext.LoginResponse.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Identity.LoginResponse>
+~Kazo.Os.Server.Contracts.Identity.IdentityContractsJsonContext.NullableDateTimeOffset.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.DateTimeOffset?>
+~Kazo.Os.Server.Contracts.Identity.IdentityContractsJsonContext.PairDeviceRequest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Identity.PairDeviceRequest>
+~Kazo.Os.Server.Contracts.Identity.IdentityContractsJsonContext.RefreshTokenRequest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Identity.RefreshTokenRequest>
+~Kazo.Os.Server.Contracts.Identity.IdentityContractsJsonContext.RefreshTokenResponse.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Identity.RefreshTokenResponse>
+~Kazo.Os.Server.Contracts.Identity.IdentityContractsJsonContext.RegisterDeviceRequest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Identity.RegisterDeviceRequest>
+~Kazo.Os.Server.Contracts.Identity.IdentityContractsJsonContext.RegisterDeviceResponse.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse>
+~Kazo.Os.Server.Contracts.Identity.IdentityContractsJsonContext.String.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<string>
+~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.Boolean.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<bool>
+~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.ByteArray.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<byte[]>
+~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.Guid.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Guid>
+~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.IReadOnlyListInt32.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<int>>
+~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.IReadOnlyListProxyHeader.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Proxy.ProxyHeader>>
+~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.IReadOnlyListString.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<string>>
+~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.Int32.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<int>
+~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.Int64.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<long>
+~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.NullableGuid.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Guid?>
+~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.ProxyErrorResponse.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse>
+~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.ProxyHeader.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Proxy.ProxyHeader>
+~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.ProxyHttpRequest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest>
+~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.ProxyHttpResponse.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Proxy.ProxyHttpResponse>
+~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.ProxyPolicyResponse.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse>
+~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.ProxyProtocol.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Proxy.ProxyProtocol>
+~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.ProxyStreamOpened.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened>
+~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.ProxyTcpProbeRequest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeRequest>
+~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.ProxyTcpProbeResponse.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeResponse>
+~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.ProxyTcpProbeState.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeState>
+~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.String.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<string>
+~Kazo.Os.Server.Contracts.Sync.ContentTransferContractsJsonContext.Boolean.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<bool>
+~Kazo.Os.Server.Contracts.Sync.ContentTransferContractsJsonContext.DateTimeOffset.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.DateTimeOffset>
+~Kazo.Os.Server.Contracts.Sync.ContentTransferContractsJsonContext.Guid.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Guid>
+~Kazo.Os.Server.Contracts.Sync.ContentTransferContractsJsonContext.IReadOnlyListInt32.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<int>>
+~Kazo.Os.Server.Contracts.Sync.ContentTransferContractsJsonContext.InitiateContentDownloadRequest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadRequest>
+~Kazo.Os.Server.Contracts.Sync.ContentTransferContractsJsonContext.InitiateContentDownloadResponse.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Sync.InitiateContentDownloadResponse>
+~Kazo.Os.Server.Contracts.Sync.ContentTransferContractsJsonContext.InitiateContentUploadRequest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Sync.InitiateContentUploadRequest>
+~Kazo.Os.Server.Contracts.Sync.ContentTransferContractsJsonContext.InitiateContentUploadResponse.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Sync.InitiateContentUploadResponse>
+~Kazo.Os.Server.Contracts.Sync.ContentTransferContractsJsonContext.Int32.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<int>
+~Kazo.Os.Server.Contracts.Sync.ContentTransferContractsJsonContext.Int64.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<long>
+~Kazo.Os.Server.Contracts.Sync.ContentTransferContractsJsonContext.QueryUploadProgressRequest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Sync.QueryUploadProgressRequest>
+~Kazo.Os.Server.Contracts.Sync.ContentTransferContractsJsonContext.QueryUploadProgressResponse.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Sync.QueryUploadProgressResponse>
+~Kazo.Os.Server.Contracts.Sync.ContentTransferContractsJsonContext.String.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<string>
+~Kazo.Os.Server.Contracts.Sync.SyncContractsJsonContext.Boolean.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<bool>
+~Kazo.Os.Server.Contracts.Sync.SyncContractsJsonContext.ConflictResolution.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Sync.ConflictResolution>
+~Kazo.Os.Server.Contracts.Sync.SyncContractsJsonContext.DateTimeOffset.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.DateTimeOffset>
+~Kazo.Os.Server.Contracts.Sync.SyncContractsJsonContext.Guid.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Guid>
+~Kazo.Os.Server.Contracts.Sync.SyncContractsJsonContext.IReadOnlyListSyncConflict.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Sync.SyncConflict>>
+~Kazo.Os.Server.Contracts.Sync.SyncContractsJsonContext.IReadOnlyListSyncRecordEnvelope.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope>>
+~Kazo.Os.Server.Contracts.Sync.SyncContractsJsonContext.Int32.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<int>
+~Kazo.Os.Server.Contracts.Sync.SyncContractsJsonContext.Int64.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<long>
+~Kazo.Os.Server.Contracts.Sync.SyncContractsJsonContext.NullableDateTimeOffset.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.DateTimeOffset?>
+~Kazo.Os.Server.Contracts.Sync.SyncContractsJsonContext.PullRequest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Sync.PullRequest>
+~Kazo.Os.Server.Contracts.Sync.SyncContractsJsonContext.PullResponse.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Sync.PullResponse>
+~Kazo.Os.Server.Contracts.Sync.SyncContractsJsonContext.PushOutcome.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Sync.PushOutcome>
+~Kazo.Os.Server.Contracts.Sync.SyncContractsJsonContext.PushRequest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Sync.PushRequest>
+~Kazo.Os.Server.Contracts.Sync.SyncContractsJsonContext.PushResponse.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Sync.PushResponse>
+~Kazo.Os.Server.Contracts.Sync.SyncContractsJsonContext.ResolveSyncConflictRequest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictRequest>
+~Kazo.Os.Server.Contracts.Sync.SyncContractsJsonContext.ResolveSyncConflictResponse.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Sync.ResolveSyncConflictResponse>
+~Kazo.Os.Server.Contracts.Sync.SyncContractsJsonContext.String.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<string>
+~Kazo.Os.Server.Contracts.Sync.SyncContractsJsonContext.SyncConflict.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Sync.SyncConflict>
+~Kazo.Os.Server.Contracts.Sync.SyncContractsJsonContext.SyncRecordEnvelope.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Sync.SyncRecordEnvelope>
+~Kazo.Os.Server.Contracts.Versioning.VersioningContractsJsonContext.ApiVersionEntry.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Versioning.ApiVersionEntry>
+~Kazo.Os.Server.Contracts.Versioning.VersioningContractsJsonContext.ApiVersionResponse.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Versioning.ApiVersionResponse>
+~Kazo.Os.Server.Contracts.Versioning.VersioningContractsJsonContext.Boolean.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<bool>
+~Kazo.Os.Server.Contracts.Versioning.VersioningContractsJsonContext.CompatibilityCheckRequest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckRequest>
+~Kazo.Os.Server.Contracts.Versioning.VersioningContractsJsonContext.CompatibilityCheckResponse.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Versioning.CompatibilityCheckResponse>
+~Kazo.Os.Server.Contracts.Versioning.VersioningContractsJsonContext.DateTimeOffset.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.DateTimeOffset>
+~Kazo.Os.Server.Contracts.Versioning.VersioningContractsJsonContext.IReadOnlyListApiVersionEntry.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Versioning.ApiVersionEntry>>
+~Kazo.Os.Server.Contracts.Versioning.VersioningContractsJsonContext.Int32.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<int>
+~Kazo.Os.Server.Contracts.Versioning.VersioningContractsJsonContext.NullableDateTimeOffset.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.DateTimeOffset?>
+~Kazo.Os.Server.Contracts.Versioning.VersioningContractsJsonContext.String.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<string>

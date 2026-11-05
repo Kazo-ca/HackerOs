@@ -93,7 +93,7 @@ peut être accepté dès que le Store gère les packs.
 
 ## Tâches
 
-- [x] Format `.hacktheme` et vérifications à l'installation ([ADR 0213](0213-theme-packs-build.md)) ; CI du catalogue : [AppMarketPlace #4](https://github.com/Kazo-ca/HackerOs-AppMarketPlace/issues/4).
+- [x] Format `.hacktheme` et vérifications à l'installation ([ADR 0213](0213-theme-packs-build.md)) ; CI du catalogue : [AppMarketPlace #4](https://github.com/Kazo-ca/Os-AppMarketPlace/issues/4).
 - [x] Installation pour soi et pour le système, catalogues qui lisent les packs ([ADR 0213](0213-theme-packs-build.md)).
 - [x] Onglet Thèmes du Hack Store ([ADR 0213](0213-theme-packs-build.md)).
 - [x] Chantier : fonds d'écran en image ([ADR 0202](0202-desktop-wallpaper-images.md)).

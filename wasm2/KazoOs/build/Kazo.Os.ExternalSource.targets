@@ -1,0 +1,60 @@
+<Project>
+  <!--
+    External source mode (ADR 0176 §4-5, ADR 0207 §2-3): the third build mode of an app, next to the
+    repository mode and the package mode of Kazo.Os.Apps.targets.
+
+    A repository made with the kazoos-solution template keeps this repository as a submodule
+    (external/KazoOs, on a release tag) and imports this file from its Directory.Build.targets when
+    $(KazoOsUseSource) is true (by default in Debug). It then turns every PackageReference to a
+    Kazo OS package into a ProjectReference to the project of the same name in the submodule, so a
+    debugger steps into the SDK and the OS, and imports Kazo.Os.Apps.targets in place of the
+    Kazo.Os.App.Build package for the projects that are apps or hosts.
+
+    There is no list to keep in sync: every Kazo OS package is the project of the same name, one
+    folder below an area of this repository (Shared/, Platform/, OS/, Infrastructure/, Server/,
+    Tools/) or two folders below Apps/ (Apps/System, Apps/Commands). The Release profile is the
+    package mode, unchanged.
+
+    Properties (set by the template's Directory.Build.props):
+      KazoOsSourceRoot   the Kazo OS root in the submodule (folder of Kazo.Os.sln), trailing slash.
+      KazoOsUseSource    true for this mode.
+      KazoOsAppProject   true in an app project (the templates write it), KazoOsAppHost in a host.
+  -->
+
+  <PropertyGroup>
+    <KazoOsExternalSource>true</KazoOsExternalSource>
+    <_KazoOsExternalSourceRoot>$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)..'))</_KazoOsExternalSourceRoot>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Every project of the submodule that may be a package, keyed by its file name (= its package id). -->
+    <_KazoOsSourceProjectFile Include="$(_KazoOsExternalSourceRoot)Shared/*/*.csproj;$(_KazoOsExternalSourceRoot)Platform/*/*.csproj;$(_KazoOsExternalSourceRoot)OS/*/*.csproj;$(_KazoOsExternalSourceRoot)Infrastructure/*/*.csproj;$(_KazoOsExternalSourceRoot)Server/*/*.csproj;$(_KazoOsExternalSourceRoot)Tools/*/*.csproj;$(_KazoOsExternalSourceRoot)Apps/*/*/*.csproj">
+      <SourceProject>%(FullPath)</SourceProject>
+    </_KazoOsSourceProjectFile>
+    <_KazoOsSourceProject Include="@(_KazoOsSourceProjectFile->'%(Filename)')" />
+
+    <!-- The Kazo OS packages this project references (an intersection by package id). -->
+    <_KazoOsSourceUnreferenced Include="@(_KazoOsSourceProject)" />
+    <_KazoOsSourceUnreferenced Remove="@(PackageReference)" />
+    <_KazoOsSourceReferenced Include="@(_KazoOsSourceProject)" />
+    <_KazoOsSourceReferenced Remove="@(_KazoOsSourceUnreferenced)" />
+    <!-- Kazo.Os.App.Build becomes the import below: its project is the package's builder, not a library. -->
+    <_KazoOsSourceReferenced Remove="Kazo.Os.App.Build" />
+
+    <!-- A host's base apps keep their IsSystemApp metadata (ADR 0048) on the project reference. -->
+    <_KazoOsSourceSystemPackage Include="@(PackageReference->WithMetadataValue('IsSystemApp', 'true'))" />
+    <_KazoOsSourceUserReferenced Include="@(_KazoOsSourceReferenced)" />
+    <_KazoOsSourceUserReferenced Remove="@(_KazoOsSourceSystemPackage)" />
+    <_KazoOsSourceSystemReferenced Include="@(_KazoOsSourceReferenced)" />
+    <_KazoOsSourceSystemReferenced Remove="@(_KazoOsSourceUserReferenced)" />
+
+    <ProjectReference Include="@(_KazoOsSourceUserReferenced->'%(SourceProject)')" />
+    <ProjectReference Include="@(_KazoOsSourceSystemReferenced->'%(SourceProject)')" IsSystemApp="true" />
+
+    <PackageReference Remove="@(_KazoOsSourceReferenced)" />
+    <PackageReference Remove="Kazo.Os.App.Build" />
+  </ItemGroup>
+
+  <Import Project="$(MSBuildThisFileDirectory)Kazo.Os.Apps.targets"
+          Condition="'$(KazoOsAppProject)' == 'true' or '$(KazoOsAppHost)' == 'true'" />
+</Project>

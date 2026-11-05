@@ -24,7 +24,7 @@ Class Library `wwwroot/` content or embedded resources instead.
 
 ## Decision
 
-Add a new Shared SDK-tier project, `HackerOs.AppSdk.Icons`, that any app or OS shell
+Add a new Shared SDK-tier project, `Kazo.Os.AppSdk.Icons`, that any app or OS shell
 surface can reference directly (it takes no dependency on `App.Abstractions`,
 `AppSdk`, or MudBlazor, so it cannot create a layering violation). It provides:
 
@@ -51,7 +51,7 @@ surface can reference directly (it takes no dependency on `App.Abstractions`,
 Material Design icons are deliberately **not** duplicated here: MudBlazor 9.7.0 (already
 an eager dependency, per ADR 0016) already bundles `Icons.Material.Filled/Outlined/
 Rounded/Sharp/TwoTone` as the same kind of path-string constants, at zero additional
-payload. `HackerOs.Apps.IconViewer` (see below) surfaces Material alongside the four
+payload. `Kazo.Os.Apps.IconViewer` (see below) surfaces Material alongside the four
 new libraries for browsing, by reflecting over MudBlazor's own `Icons.Material.Filled`
 type directly — that reflection stays local to the viewer app; it is not part of the
 shared `IIconCatalog` contract.
@@ -62,7 +62,7 @@ Each library's icon set (name, SVG `viewBox`, inner markup, stroke-vs-fill, and 
 human-readable display name) is generated from the upstream npm package
 (`bootstrap-icons`, `@fortawesome/fontawesome-free`, `lucide-static`, `simple-icons`)
 into a compact JSON file, embedded as a .NET manifest resource in
-`HackerOs.AppSdk.Icons` (`Shared/HackerOs.AppSdk.Icons/Data/*.json`, see
+`Kazo.Os.AppSdk.Icons` (`Shared/Kazo.Os.AppSdk.Icons/Data/*.json`, see
 `docs/icon-library.md` for the generation tooling). `IconCatalog` parses these lazily,
 once, on first use, via a source-generated `JsonSerializerContext`
 (`IconCatalogJsonSerializerContext`) — consistent with the trim-safe JSON pattern
@@ -85,15 +85,15 @@ delivery mechanism) because:
 ### Payload cost — measured, not assumed
 
 Per the evidence-based precedent set by ADR 0016's MudBlazor proof, this was measured
-with a Release publish of `HackerOs.Ecosystem` (`dotnet publish -c Release`):
+with a Release publish of `Kazo.Os.Ecosystem` (`dotnet publish -c Release`):
 
 | Asset | Raw bytes | Brotli bytes |
 | --- | ---: | ---: |
-| `HackerOs.AppSdk.Icons.wasm` | 8,670,489 | 2,413,151 |
+| `Kazo.Os.AppSdk.Icons.wasm` | 8,670,489 | 2,413,151 |
 | `MudBlazor.wasm` (for scale) | 340,245 | 109,401 |
 
-`HackerOs.AppSdk.Icons` is referenced directly by `HackerOs.Ecosystem` (like
-`HackerOs.Platform.Core`/`HackerOs.AppSdk.Blazor`) rather than being declared
+`Kazo.Os.AppSdk.Icons` is referenced directly by `Kazo.Os.Ecosystem` (like
+`Kazo.Os.Platform.Core`/`Kazo.Os.AppSdk.Blazor`) rather than being declared
 `BlazorWebAssemblyLazyLoad`, so — unlike the individual System apps — it is part of the
 eager initial download, not deferred until an app that uses it launches.
 
@@ -103,7 +103,7 @@ This was a deliberate, disclosed tradeoff, not an oversight:
   `BuildKnownLazyAppDescriptorRegistry`) only loads **one** assembly per app —
   exactly `manifest.EntryPoint.Assembly` — keyed off the app catalog. It has no
   concept of "an app's additional shared-library dependencies" today. Making
-  `HackerOs.AppSdk.Icons` lazy-loadable so that only `HackerOs.Apps.IconViewer` (or a
+  `Kazo.Os.AppSdk.Icons` lazy-loadable so that only `Kazo.Os.Apps.IconViewer` (or a
   future consumer) pays for it would require extending that platform lifecycle
   mechanism — real surgery on well-tested, security-relevant infrastructure — which is
   out of proportion to this change.
@@ -112,12 +112,12 @@ This was a deliberate, disclosed tradeoff, not an oversight:
 - If payload becomes a concern later, the fix is scoped and known: extend
   `BuildKnownLazyAppDescriptorRegistry`/`BuildKnownAssemblyLoaderRegistry` to support
   loading a declared set of extra assemblies per app (not just the entry point), then
-  mark `HackerOs.AppSdk.Icons.dll` lazy. This ADR intentionally does not attempt that
+  mark `Kazo.Os.AppSdk.Icons.dll` lazy. This ADR intentionally does not attempt that
   extension now.
 
 ### The Icon Viewer app
 
-`HackerOs.Apps.IconViewer` (`org.hackeros.icon-viewer`) is a new first-party System
+`Kazo.Os.Apps.IconViewer` (`org.hackeros.icon-viewer`) is a new first-party System
 app, built the same way as every other window app (references `App.Abstractions` +
 `AppSdk.Blazor` + `Platform.Core`, plus `AppSdk.Icons`). It lets a user or developer
 search and filter every bundled icon (including Material, via local MudBlazor
@@ -136,25 +136,25 @@ capability, so it was the compliant choice available today.
 
 `Shell/AppLauncher.razor` and `Shell/Taskbar.razor` still draw hardcoded emoji. Wiring
 them to `IIconCatalog`/`HackerIcon` is a natural follow-up this ADR does not attempt,
-because both live in `HackerOs.Platform.Blazor`, which `HackerOs.Ecosystem` already
+because both live in `Kazo.Os.Platform.Blazor`, which `Kazo.Os.Ecosystem` already
 loads eagerly — adopting icons there does not change the payload math above (the data
 is already eager), but it is a shell-behavior change with its own visual-regression
 surface, deserving its own review rather than being bundled into this addition.
 
-**Update 2026-08-13:** the taskbar moved to the standalone `HackerOs.Taskbar.Blazor`
+**Update 2026-08-13:** the taskbar moved to the standalone `Kazo.Os.Taskbar.Blazor`
 package (`docs/window-taskbar-export-plan.md`, `EXT-WIN-007`/`008`); its hardcoded
-emoji now live in `Platform/HackerOs.Taskbar.Blazor/Taskbar.razor`, not
-`HackerOs.Platform.Blazor`. Adopting `IIconCatalog`/`HackerIcon` there would add an
+emoji now live in `Platform/Kazo.Os.Taskbar.Blazor/Taskbar.razor`, not
+`Kazo.Os.Platform.Blazor`. Adopting `IIconCatalog`/`HackerIcon` there would add an
 `AppSdk.Icons` dependency to a package designed to be consumable outside HackerOS —
 worth weighing against the emoji-icon tradeoff explicitly if this follow-up is picked
-up. `Shell/AppLauncher.razor` is unaffected and remains in `HackerOs.Platform.Blazor`.
+up. `Shell/AppLauncher.razor` is unaffected and remains in `Kazo.Os.Platform.Blazor`.
 
 ## Consequences
 
 - Any app, and the OS shell, can now draw a themeable, inline-SVG icon from five
   libraries (four new plus Material via MudBlazor) through one small, dependency-light
   contract (`IIconCatalog`/`HackerIcon`).
-- `HackerOs.AppSdk.Icons` adds a measured ~2.3 MB brotli to the eager initial payload;
+- `Kazo.Os.AppSdk.Icons` adds a measured ~2.3 MB brotli to the eager initial payload;
   this is disclosed above rather than silently absorbed.
 - Font Awesome Free icons carry a CC-BY-4.0 attribution requirement; see
   `docs/icon-library.md` for how that's satisfied.

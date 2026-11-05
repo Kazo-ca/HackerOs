@@ -1,0 +1,132 @@
+.mobile-shell {
+    display: flex;
+    flex-direction: column;
+    /* Anchored directly to the viewport rather than height:100% -- ThemeScope (a parent several
+       levels up) renders as `display: contents`, which does not reliably propagate a percentage
+       height basis to descendants across browsers. Without this, .mobile-shell silently collapses
+       to its content's natural height (the nav bar's ~61px) instead of filling the screen, and
+       .mobile-shell-workspace (flex: 1) is squeezed to 0 -- nothing below the nav bar is visible or
+       reachable. position: fixed sidesteps the percentage chain entirely, matching how the shade/
+       Recent backdrops already anchor themselves the same way. */
+    position: fixed;
+    inset: 0;
+    background: var(--kos-mobile-surface-background, var(--kos-desktop-background, #07100f));
+    color: var(--kos-text-primary, #e7f7f1);
+    font-family: var(--kos-font-ui, system-ui, sans-serif);
+}
+
+.mobile-shell-workspace {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+}
+
+.mobile-home-layer, .mobile-app-layer { position: absolute; inset: 0; }
+
+/* ADR 0217 §2: with a wallpaper, the home screen lets it show and keeps its texts readable on it. */
+.mobile-shell-workspace:has(> .desktop-wallpaper) ::deep .mobile-home-screen {
+    background: transparent;
+}
+
+.mobile-shell-workspace:has(> .desktop-wallpaper) ::deep :is(.mobile-home-heading, .mobile-home-app span, .mobile-gesture-hint) {
+    text-shadow: 0 1px 3px rgb(0 0 0 / 85%), 0 0 1px rgb(0 0 0 / 90%);
+}
+.mobile-home-layer[hidden], .mobile-app-layer[hidden] { display: none; }
+.mobile-launch-error { position: absolute; bottom: 1rem; left: 1rem; right: 1rem; z-index: 1050; padding: .8rem; border-radius: .8rem; color: var(--kos-error, #fda4af); background: var(--kos-bg-surface, #151c20); }
+
+.mobile-shade-handle {
+    position: absolute;
+    top: env(safe-area-inset-top);
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    height: 1.75rem;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    z-index: 1000;
+    touch-action: none;
+}
+
+.mobile-shade-grabber {
+    margin-top: 0.4rem;
+    width: 2.5rem;
+    height: 0.25rem;
+    border-radius: 999px;
+    background: var(--kos-mobile-shade-grabber, rgb(231 247 241 / 45%));
+    transition: background var(--kos-transition-fast, 120ms ease);
+}
+
+/* ADR 0196: notifications the user has not looked at yet, right of the grabber. */
+.mobile-shade-attention {
+    position: relative;
+    top: 0.25rem;
+    margin-left: 0.4rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--kos-taskbar-attention, var(--kos-warning, #d5a84f));
+    box-shadow: 0 0 0 2px var(--kos-mobile-shade-attention-ring, rgb(7 16 15 / 70%));
+}
+
+/* ADR 0216 §5: the moon of "Do not disturb", beside the grabber. */
+.mobile-shade-dnd {
+    display: inline-flex;
+    margin-left: 0.4rem;
+    margin-top: 0.1rem;
+    color: var(--kos-info, #5fb4e6);
+}
+
+.mobile-shade-handle:hover .mobile-shade-grabber,
+.mobile-shade-handle:focus-visible .mobile-shade-grabber {
+    background: var(--kos-mobile-shade-grabber-hover, rgb(231 247 241 / 75%));
+}
+
+.mobile-shade-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1100;
+    display: flex;
+    justify-content: center;
+    padding: calc(1rem + env(safe-area-inset-top)) 1rem 1rem;
+    background: var(--kos-mobile-shade-backdrop, rgb(7 16 15 / 55%));
+    animation: mobile-shade-fade-in var(--kos-transition-fast, 120ms ease-out);
+}
+
+.mobile-shade-panel {
+    width: 100%;
+    max-width: 24rem;
+    max-height: 100%;
+    overflow: hidden;
+    border: 1px solid var(--kos-border, #315249);
+    border-radius: var(--kos-mobile-shade-panel-radius, 1rem);
+    background: var(--kos-mobile-shade-panel-background, var(--kos-bg-surface, #151c20));
+    box-shadow: var(--kos-shadow-lg, 0 20px 48px rgb(0 0 0 / 52%));
+    backdrop-filter: var(--kos-taskbar-backdrop-filter, none);
+    animation: mobile-shade-slide-down var(--kos-transition-normal, 160ms ease-out);
+}
+
+@keyframes mobile-shade-fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes mobile-shade-slide-down {
+    from {
+        transform: translateY(-0.75rem);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

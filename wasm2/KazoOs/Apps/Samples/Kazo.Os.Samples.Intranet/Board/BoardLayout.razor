@@ -1,0 +1,23 @@
+@namespace Kazo.Os.Samples.Intranet.Board
+@inherits KazoSiteLayoutBase
+@*
+    The layout of the board. Links within /board change the tab's address without a request; the
+    links back to the MVC pages carry target="_top", so they load a new document, as in Blazor.
+*@
+<div class="board-site">
+    <header class="board-header">
+        <a class="board-brand" href="/" target="_top" id="board-home">intranet<span>.hack</span></a>
+        <nav class="board-nav" aria-label="Board">
+            <KazoNavLink id="board-nav-board" href="/board" Match="NavLinkMatch.All">Board</KazoNavLink>
+            <a href="/Notes" target="_top" id="board-nav-notes">Notes</a>
+            <a href="/People" target="_top">People</a>
+        </nav>
+        <span class="board-who" id="board-who">@(Visitor ?? "anonymous")</span>
+    </header>
+    <main class="board-body">
+        <CascadingValue TValue="BoardSession" Value="_session" IsFixed="true">
+            @Body
+        </CascadingValue>
+    </main>
+    <footer class="board-footer">Blazor site drawn by the Kazo OS browser · renderer process of the intranet</footer>
+</div>

@@ -1,0 +1,16 @@
+@namespace Kazo.Os.Theming.Blazor
+
+<HeadContent>
+    <link rel="stylesheet" href="_content/Kazo.Os.Theming.Blazor/themes.css" />
+</HeadContent>
+
+<div @ref="_root"
+     class="theme-scope"
+     data-theme="@RenderState.Theme.Id"
+     data-form-factor="@RenderState.FormFactorId"
+     data-accent="@RenderState.AccentId"
+     data-motion="@RenderState.MotionId"
+     data-contrast="@RenderState.ContrastId"
+     data-text-scale="@RenderState.TextScaleId">
+    @ChildContent
+</div>

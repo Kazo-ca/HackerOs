@@ -1,20 +1,20 @@
 > [English version](../../../en/wasm/framework/static-site-files.md)
 
-# Fichiers de site statique (`.site`) et API `HackWebSiteFile`
+# Fichiers de site statique (`.site`) et API `KazoWebSiteFile`
 
-Ce document décrit le format des fichiers `.site` qu'une app ou un outil écrit pour publier un dossier comme site web, et l'API du SDK qui les lit et les écrit. Le service `hackwebd` qui sert ces fichiers, ses journaux et Web Server Manager sont décrits dans [`dev/static-sites.md`](../dev/static-sites.md).
+Ce document décrit le format des fichiers `.site` qu'une app ou un outil écrit pour publier un dossier comme site web, et l'API du SDK qui les lit et les écrit. Le service `kazowebd` qui sert ces fichiers, ses journaux et Web Server Manager sont décrits dans [`dev/static-sites.md`](../dev/static-sites.md).
 
 ## Emplacements
 
-- `/etc/hackweb/sites/<nom>.site` : sites système, tous ports, servis avec les droits de `www-data`.
-- `~/.config/hackweb/sites/<nom>.site` : sites de l'utilisateur, ports 1024 et plus.
+- `/etc/kazoweb/sites/<nom>.site` : sites système, tous ports, servis avec les droits de `www-data`.
+- `~/.config/kazoweb/sites/<nom>.site` : sites de l'utilisateur, ports 1024 et plus.
 
 ## Types du SDK
 
 | Élément | Projet | Rôle |
 |---|---|---|
-| `HackWebSite`, `HackWebSiteDeclaration`, `HackWebSiteScope` | `Shared/HackerOs.AppSdk/Net/Hosting` | Contenu d'un `.site` et fichier lu (chemin, portée, propriétaire, erreurs). |
-| `HackWebSiteFile` | idem | Emplacements, `Parse`, `Validate`, `Serialize`, `TryParseBinding`, `ReadAllAsync`. Partagé par le démon, le Manager et le résolveur. |
+| `KazoWebSite`, `KazoWebSiteDeclaration`, `KazoWebSiteScope` | `Shared/Kazo.Os.AppSdk/Net/Hosting` | Contenu d'un `.site` et fichier lu (chemin, portée, propriétaire, erreurs). |
+| `KazoWebSiteFile` | idem | Emplacements, `Parse`, `Validate`, `Serialize`, `TryParseBinding`, `ReadAllAsync`. Partagé par le démon, le Manager et le résolveur. |
 
 ## Le fichier `.site`
 
@@ -34,7 +34,7 @@ Ce document décrit le format des fichiers `.site` qu'une app ou un outil écrit
   et les virgules finales sont tolérés (fichier édité à la main).
 - `root` : chemin absolu, ni `/`, ni `..`.
 - `bindings` : préfixes `http://hôte[:port]/chemin/` normalisés comme ceux de
-  `HackHttpListener` (`+`, `*` acceptés). `https://` refusé (pas de
+  `KazoHttpListener` (`+`, `*` acceptés). `https://` refusé (pas de
   certificats, ADR 0080). Un site d'utilisateur ne peut pas prendre un port
   < 1024 : l'erreur va dans `error.log`.
 - Un site invalide ou désactivé n'est pas servi ; il reste listé (état
@@ -52,7 +52,7 @@ Ce document décrit le format des fichiers `.site` qu'une app ou un outil écrit
 Pour un développeur d'app, le format est dans le SDK :
 
 ```csharp
-IReadOnlyList<HackWebSiteDeclaration> sites = await HackWebSiteFile.ReadAllAsync();
-HackWebSiteDeclaration parsed = HackWebSiteFile.Parse(path, json, HackWebSiteScope.User, "alice");
-IReadOnlyList<string> errors = HackWebSiteFile.Validate(site, HackWebSiteScope.User);
+IReadOnlyList<KazoWebSiteDeclaration> sites = await KazoWebSiteFile.ReadAllAsync();
+KazoWebSiteDeclaration parsed = KazoWebSiteFile.Parse(path, json, KazoWebSiteScope.User, "alice");
+IReadOnlyList<string> errors = KazoWebSiteFile.Validate(site, KazoWebSiteScope.User);
 ```

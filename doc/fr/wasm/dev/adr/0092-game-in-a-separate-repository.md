@@ -20,8 +20,8 @@ et `doc/fr/wasm/gameplay-v3-analyse.md` prévoyaient de construire le jeu
 (missions, contrats, économie, améliorations matérielles, sécurité simulée,
 scripts du joueur, sauvegarde de partie) dans cette solution, sous forme d'un
 domaine optionnel (ADR 0023). Il n'en existe qu'une ébauche :
-`Game/HackerOs.Game.Core` (en mémoire, référencé par aucun hôte),
-`Shared/HackerOs.Game.Abstractions`, `Tests/HackerOs.Game.Tests` et la capacité
+`Game/Kazo.Os.Game.Core` (en mémoire, référencé par aucun hôte),
+`Shared/Kazo.Os.Game.Abstractions`, `Tests/Kazo.Os.Game.Tests` et la capacité
 `gameplay.domain.access`. La propriété `<EnableGameDomain>` n'a jamais existé.
 
 ## Décision

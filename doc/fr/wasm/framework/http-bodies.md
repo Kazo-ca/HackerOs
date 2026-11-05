@@ -2,7 +2,7 @@
 
 # Corps HTTP réels dans le réseau simulé
 
-**Phase web, chantier `web/2-http-bodies`** ([`asp-hack-plan.md`](../dev/plans/asp-hack-plan.md),
+**Phase web, chantier `web/2-http-bodies`** ([`asp-kazo-plan.md`](../dev/plans/asp-kazo-plan.md),
 section 5). Décision : [ADR 0074](../dev/adr/0074-listening-ports-and-name-resolution.md)
 §1. Complète [`sdk-network.md`](sdk-network.md) (ADR 0056 §6).
 
@@ -22,8 +22,8 @@ Désormais, comme sur le fil d'un vrai serveur HTTP :
 - `curl` écrit le corps brut ; le navigateur affiche un corps qui n'est pas une
   page structurée selon son type.
 
-`SimulatedPage` reste une réponse valide : les sites historiques (HackMail,
-HackerSearch, banque, forum, darknet) ne changent pas de modèle. C'est la base
+`SimulatedPage` reste une réponse valide : les sites historiques (KazoMail,
+KazoSearch, banque, forum, darknet) ne changent pas de modèle. C'est la base
 sur laquelle `web/3-listener-dns` (sites qui écoutent un port) et
 `web/4-browser-html` (rendu HTML isolé) s'appuient.
 
@@ -31,7 +31,7 @@ sur laquelle `web/3-listener-dns` (sites qui écoutent un port) et
 
 ```
 App (navigateur, curl, wget, app tierce)
-  └─ HackHttpClient ── HackHttpRequest(Method, Uri, Headers, Content, Cookies)   (HackerOs.AppSdk.Net)
+  └─ KazoHttpClient ── KazoHttpRequest(Method, Uri, Headers, Content, Cookies)   (Kazo.Os.AppSdk.Net)
        └─ IAppNetworkGateway.SendAsync   (Web Worker : WireCodec "ct" + "bd", ADR 0070)
             └─ AppNetworkGateway          capacité, boucle de redirections, comptage /proc/net/dev
                  └─ ISimulatedNetworkService.Send(method, url, headers, body, jar)
@@ -39,7 +39,7 @@ App (navigateur, curl, wget, app tierce)
                            → SimulatedHttpResponse(Status, Page?, RedirectUrl?, SetCookies, Headers, Body?)
 ```
 
-### Contrats simulés (`HackerOs.Simulation.Abstractions.Network`)
+### Contrats simulés (`Kazo.Os.Simulation.Abstractions.Network`)
 
 | Type | Rôle |
 |---|---|
@@ -98,18 +98,18 @@ navigateur, une app à fenêtre, l'affiche.
 ## Utilisation (SDK)
 
 ```csharp
-using HackHttpClient http = new();
+using KazoHttpClient http = new();
 
 // Corps typés, calqués sur System.Net.Http.
-HackHttpResponse created = await http.PostAsync("https://api.hack/items", new HackStringContent("hello"));
-HackHttpResponse updated = await http.PutAsync("https://api.hack/items/7", HackJsonContent.FromJson("{\"done\":true}"));
-HackHttpResponse patched = await http.PatchAsync("https://api.hack/items/7",
-    new HackFormUrlEncodedContent([new("title", "nouveau titre")]));
-HackHttpResponse deleted = await http.DeleteAsync("https://api.hack/items/7");      // 204, sans Content-Type
+KazoHttpResponse created = await http.PostAsync("https://api.hack/items", new KazoStringContent("hello"));
+KazoHttpResponse updated = await http.PutAsync("https://api.hack/items/7", KazoJsonContent.FromJson("{\"done\":true}"));
+KazoHttpResponse patched = await http.PatchAsync("https://api.hack/items/7",
+    new KazoFormUrlEncodedContent([new("title", "nouveau titre")]));
+KazoHttpResponse deleted = await http.DeleteAsync("https://api.hack/items/7");      // 204, sans Content-Type
 
 // JSON sans réflexion (trim-safe) avec un contexte source-généré.
 Item? item = await http.GetFromJsonAsync("https://api.hack/items/7", MyJsonContext.Default.Item);
-HackHttpResponse posted = await http.PostAsJsonAsync("https://api.hack/items", item!, MyJsonContext.Default.Item);
+KazoHttpResponse posted = await http.PostAsJsonAsync("https://api.hack/items", item!, MyJsonContext.Default.Item);
 
 // Lecture de la réponse.
 string type = updated.ContentType!;          // "application/json; charset=utf-8"
@@ -121,20 +121,20 @@ string? allow = updated.GetHeader("Allow");  // premier en-tête de ce nom, sans
 
 | Type | Équivalent .NET | Type par défaut |
 |---|---|---|
-| `HackHttpContent` | `HttpContent` | `application/octet-stream` |
-| `HackStringContent(text, encoding?, mediaType?)` | `StringContent` | `text/plain; charset=utf-8` |
-| `HackByteArrayContent(bytes, contentType?)` | `ByteArrayContent` | `application/octet-stream` |
-| `HackFormUrlEncodedContent(fields)` | `FormUrlEncodedContent` | `application/x-www-form-urlencoded` |
-| `HackJsonContent.Create(value, JsonTypeInfo)` / `FromJson(json)` | `JsonContent.Create` | `application/json; charset=utf-8` |
+| `KazoHttpContent` | `HttpContent` | `application/octet-stream` |
+| `KazoStringContent(text, encoding?, mediaType?)` | `StringContent` | `text/plain; charset=utf-8` |
+| `KazoByteArrayContent(bytes, contentType?)` | `ByteArrayContent` | `application/octet-stream` |
+| `KazoFormUrlEncodedContent(fields)` | `FormUrlEncodedContent` | `application/x-www-form-urlencoded` |
+| `KazoJsonContent.Create(value, JsonTypeInfo)` / `FromJson(json)` | `JsonContent.Create` | `application/json; charset=utf-8` |
 
-`HackJsonContent.Create<T>(value, options)` et `HackHttpResponse.ReadFromJson<T>(options)`
+`KazoJsonContent.Create<T>(value, options)` et `KazoHttpResponse.ReadFromJson<T>(options)`
 existent aussi par réflexion, marqués `[RequiresUnreferencedCode]` : préférer
 les surcharges `JsonTypeInfo<T>` dans une app publiée en WebAssembly.
 
-Changement de contrat : `HackHttpRequest.Form` est remplacé par `Content` ;
-`HackHttpResponse.Content` (octets) devient `ContentBytes`, et `Content` donne
+Changement de contrat : `KazoHttpRequest.Form` est remplacé par `Content` ;
+`KazoHttpResponse.Content` (octets) devient `ContentBytes`, et `Content` donne
 le texte (ADR 0074 §1). `SendAsync(method, uri, content)` prend un
-`HackHttpContent` au lieu d'une liste de champs ;
+`KazoHttpContent` au lieu d'une liste de champs ;
 `PostAsync(uri, champs)` reste.
 
 ## Côté site simulé
@@ -155,7 +155,7 @@ public sealed class ApiController : SimulatedWebsiteControllerBase
 }
 ```
 
-Sites historiques adaptés dans ce chantier : HackerSearch sert
+Sites historiques adaptés dans ce chantier : KazoSearch sert
 `/api/search?q=…` (JSON écrit avec `Utf8JsonWriter`), `/robots.txt`
 (`text/plain`), et son formulaire de recherche, qui postait vers une route
 inexistante, reçoit un `POST /search` qui redirige vers `GET /search?q=…`.
@@ -203,7 +203,7 @@ archive) n'est pas écrit dans le terminal : `curl` affiche l'avertissement
 
 - **`SimulatedHttpBody` est une classe, pas un `record`** : l'égalité d'un
   record sur un tableau d'octets serait une égalité de références, trompeuse.
-- **`HackHttpRequest.Form` disparaît** au lieu de cohabiter avec `Content` :
+- **`KazoHttpRequest.Form` disparaît** au lieu de cohabiter avec `Content` :
   une seule source de vérité pour le corps ; `PostAsync(uri, champs)` reste
   comme raccourci.
 - **Les redirections sont décidées par la passerelle**, plus par
@@ -221,11 +221,11 @@ archive) n'est pas écrit dans le terminal : `curl` affiche l'avertissement
 
 ## Pour `web/3` et `web/4`
 
-- Un listener (`HackHttpListener`, `web/3`) reçoit un `SimulatedHttpRequest`
+- Un listener (`KazoHttpListener`, `web/3`) reçoit un `SimulatedHttpRequest`
   avec `Body` et répond un `SimulatedHttpResponse` avec `Body` : le format sur
   le fil des workers existe déjà pour le client (`ct`, `bd`, `b`).
 - Le navigateur (`web/4`) remplace la branche `Html` de `ResponseBodyViewer`
-  par l'iframe isolée ; `HackHttpClient` sait déjà charger CSS, JS et images
+  par l'iframe isolée ; `KazoHttpClient` sait déjà charger CSS, JS et images
   avec leur type, et relayer `fetch` avec n'importe quelle méthode et corps.
 
 ## Liste des tâches
@@ -233,12 +233,12 @@ archive) n'est pas écrit dans le terminal : `curl` affiche l'avertissement
 - [x] `SimulatedHttpBody`, `SimulatedMediaTypes`, corps dans `SimulatedHttpRequest` et `SimulatedHttpResponse`.
 - [x] `ISimulatedNetworkService.Send` et `SimulatedExchangeResult` ; `Post` et `Navigate` adaptés.
 - [x] Routeur des sites : `Map`, `Put`, `Patch`, `Delete`, `HEAD` sur `GET`, 405 avec `Allow`, `OPTIONS`.
-- [x] `HackHttpContent` et variantes ; `HackHttpRequest.Content` ; `HackHttpResponse.ContentType`, `Content`, `ContentBytes`, `GetHeader`, `ReadFromJson`.
-- [x] `HackHttpClient` : `PutAsync`, `PatchAsync`, `DeleteAsync`, `GetByteArrayAsync`, `GetFromJsonAsync`, `PostAsJsonAsync`, `SendAsync` avec contenu.
+- [x] `KazoHttpContent` et variantes ; `KazoHttpRequest.Content` ; `KazoHttpResponse.ContentType`, `Content`, `ContentBytes`, `GetHeader`, `ReadFromJson`.
+- [x] `KazoHttpClient` : `PutAsync`, `PatchAsync`, `DeleteAsync`, `GetByteArrayAsync`, `GetFromJsonAsync`, `PostAsJsonAsync`, `SendAsync` avec contenu.
 - [x] Passerelle : capacité par méthode sûre, boucle de redirections (303/307/308), en-têtes du site, `Content-Type` réel.
 - [x] Protocole des workers (`WireCodec`) et comptage réseau.
 - [x] `curl` : corps brut, `-i`, `--json`, `--data-*`, `@fichier`, `-f` facultatif, refus du binaire ; `wget` sur `ContentBytes`.
 - [x] Navigateur : `ResponseBodyPresenter` et `ResponseBodyViewer`.
-- [x] HackerSearch : `/api/search`, `/robots.txt`, `POST /search`.
+- [x] KazoSearch : `/api/search`, `/robots.txt`, `POST /search`.
 - [x] Tests : réseau et SDK (`Wave4NetworkTests.HttpBodies`), `curl`, protocole des workers (`WireCodecHttpTests`), navigateur (`ResponseBodyPresenterTests`).
 - [x] Documentation : ce document, `sdk-network.md`, `sdk-reference.md`, `linux-commands.md`, plan, statut de l'ADR 0021, index.

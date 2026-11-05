@@ -1,0 +1,9 @@
+@inherits KazoView
+<p class="from-razor">razor in cshtml layout</p>
+<KazoSection Name="Scripts"><script src="/js/from-razor.js"></script></KazoSection>
+<ul><KazoPartial Name="_CshtmlCard" Model="_nine" /></ul>
+@code {
+    private readonly Note _nine = new() { Id = 9, Title = "Nine" };
+
+    protected override void OnInitialized() => Layout = typeof(AspNetCoreGeneratedDocument.Views_Shared__CshtmlLayout);
+}

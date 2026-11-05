@@ -16,7 +16,7 @@ Benoit asked for an overview page of HackerOS, linked from the root
 `readme.md`, that will later be used to build the product web site. It lists
 the available features, the goal of the ecosystem, the ways to deploy the OS,
 and an "In development" section with ADRs and issues. He asked to list the
-apps ported in their own repositories (`Kazo-ca/HackerOs-App-*`) as optional
+apps ported in their own repositories (`Kazo-ca/Os-App-*`) as optional
 features in development, and chose to also name Chess and EmulatorJS, despite
 ADR 0135 §2.
 

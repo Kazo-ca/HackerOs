@@ -6,7 +6,7 @@
 
 Accepted on 2026-10-16, with the `web/9-blazor-sites` work item.
 
-- **Plan phase:** web phase ([`asp-hack-plan.md`](../plans/asp-hack-plan.md)).
+- **Plan phase:** web phase ([`asp-kazo-plan.md`](../plans/asp-kazo-plan.md)).
 - **Completes:** ADR 0073 §1 and §4 (Blazor site of a `Web` app), ADR 0075 §5
   (choice of view according to the response), ADR 0081 §2 (Blazor content in a
   detached window). Replaces no decision.
@@ -138,7 +138,7 @@ site keeps its state (counters, forms in progress).
 - `DisplaySurfaceContent.Surface` becomes optional (section 7): the
   browser renders its page area only once through the portal, and a
   Blazor site keeps its state on detaching.
-- The sample site `HackerOs.Samples.BlazorSite` is installed in both
+- The sample site `Kazo.Os.Samples.BlazorSite` is installed in both
   hosts (hidden app, `http://blazor-sample.hack/`): it is the only Blazor site
   that the browser can serve as long as no app declares one.
 - A Blazor site uses the SDK's navigation components, not Blazor's;

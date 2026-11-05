@@ -6,8 +6,8 @@
 
 Accepté le 2026-10-30 ; Benoit a confirmé le choix A de la question Q1 le
 2026-10-31. Issue
-[#247](https://github.com/Kazo-ca/HackerOs/issues/247), chantier 2 du
-[plan du Hack Store](../plans/hackeros-store.md), série `todo/base`.
+[#247](https://github.com/Kazo-ca/Os/issues/247), chantier 2 du
+[plan du Hack Store](../plans/kazoos-store.md), série `todo/base`.
 
 - **Lève :** la première limite de l'[ADR 0182](0182-install-apps-from-github.md)
   (« les ressources `wwwroot/` d'une app installée ne sont pas servies »).
@@ -29,7 +29,7 @@ Accepté le 2026-10-30 ; Benoit a confirmé le choix A de la question Q1 le
   charge des scripts et un `.wasm` par des chemins relatifs) en a besoin. Le Hack
   Store (ADR 0188) aussi.
 - `index.html` n'enregistre aucun service worker sur `localhost` et `127.0.0.1`
-  (développement, et `HackerOs.Server` lancé en local).
+  (développement, et `Kazo.Os.Server` lancé en local).
 
 ## Décision
 
@@ -48,7 +48,7 @@ en CSS, `new Worker(...)`, `importScripts` et `fetch` relatifs dans le worker,
   adresse absolue sans requête, avec `Content-Type` (d'après l'extension) et
   `Cross-Origin-Resource-Policy: same-origin`.
 - Les deux fichiers du service worker de l'hôte chargent
-  `_content/HackerOs.Infrastructure.Browser/installedAppAssets.sw.js`
+  `_content/Kazo.Os.Infrastructure.Browser/installedAppAssets.sw.js`
   (`importScripts`). Pour une requête `GET` de même origine sous `_content/`, le
   worker répond depuis ce cache s'il a l'adresse, **avant** le cache de la
   version ; sinon la requête suit son chemin habituel. La requête est ignorée
@@ -90,7 +90,7 @@ par adresses `blob:` (choix B ou C de Q1).
 ### 6. Hôtes
 
 Seul l'hôte WebAssembly charge des apps installées (ADR 0182) : la publication
-n'existe que là. `HackerOs.Server` sert les mêmes fichiers d'OS, donc le même
+n'existe que là. `Kazo.Os.Server` sert les mêmes fichiers d'OS, donc le même
 service worker.
 
 ## Question posée à Benoit
@@ -122,5 +122,5 @@ service worker.
 - [x] `BrowserInstalledAppAssets` (JSImport), `IInstalledAppAssetCache`, `BrowserInstalledAppAssetCache`, `InstalledAppAssetPublisher`, `InstalledAppAssetContentTypes`.
 - [x] Appel depuis `InstalledAppAssemblyTransport` ; `index.html` garde le worker du mode `installed-apps`.
 - [x] Tests unitaires (`InstalledAppAssetPublisherTests`).
-- [x] Paquet de test `Tests/fixtures/installed-app` et tests de bout en bout dans `HackerOs.TrimmedPublish.E2E.Tests` (installation par `hackpkg`, module, worker, `importScripts`, image ; service worker publié).
+- [x] Paquet de test `Tests/fixtures/installed-app` et tests de bout en bout dans `Kazo.Os.TrimmedPublish.E2E.Tests` (installation par `hackpkg`, module, worker, `importScripts`, image ; service worker publié).
 - [x] Docs : `app-installation.md`, plan du Hack Store, `features.md`.

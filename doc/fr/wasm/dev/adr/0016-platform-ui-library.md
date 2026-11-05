@@ -43,7 +43,7 @@ Native Blazor markup and scoped CSS remain authoritative for:
 MudBlazor never owns process, app lifecycle, capability, intent, filesystem,
 window, modality, or recovery domain state. Public App SDK contracts do not
 expose MudBlazor types. Reusable complex controls are wrapped by components in
-`HackerOs.Platform.Blazor`; apps consume those wrappers when a platform control
+`Kazo.Os.Platform.Blazor`; apps consume those wrappers when a platform control
 exists and may use approved MudBlazor components locally only without leaking
 them through cross-project contracts.
 

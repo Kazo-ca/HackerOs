@@ -52,7 +52,7 @@ Blazor WebAssembly sont réalisables, avec des contraintes précises :
   `RunAOTCompilation` aujourd'hui, donc ce chemin n'est pas bloqué en l'état.
 - **Trimming** : la compilation Roslyn a besoin des reference assemblies et de
   métadonnées de réflexion intactes. `PublishTrimmed` est déjà à `false` sur
-  `HackerOs.Ecosystem` et `HackerOs.Server` aujourd'hui ; un futur passage à
+  `Kazo.Os.Ecosystem` et `Kazo.Os.Server` aujourd'hui ; un futur passage à
   `true` sur ces projets casserait ce chemin sans annotations
   `[DynamicDependency]` complètes.
 - **Isolation** : WebAssembly n'apporte **aucune** isolation contre le propre
@@ -68,7 +68,7 @@ Blazor WebAssembly sont réalisables, avec des contraintes précises :
 
 Sur le modèle de `IGameDomainGateway` (ADR 0023) :
 
-- Un nouveau projet partagé, p. ex. `Shared/HackerOs.CodeExecution.Abstractions`,
+- Un nouveau projet partagé, p. ex. `Shared/Kazo.Os.CodeExecution.Abstractions`,
   définirait deux contrats distincts :
   - **`ICompilationService`** — source C# → assembly en mémoire + diagnostics.
     Peut être **réellement partagé à 100 %** entre client et serveur : Roslyn
@@ -79,7 +79,7 @@ Sur le modèle de `IGameDomainGateway` (ADR 0023) :
       construite via Worker dédié (voir section 3).
     - Côté serveur : exécution isolée au niveau OS (conteneur ou processus
       séparé — .NET moderne n'a plus d'AppDomains), exposée par
-      `HackerOs.Server` et atteinte depuis le client via le pont proxy déjà
+      `Kazo.Os.Server` et atteinte depuis le client via le pont proxy déjà
       utilisé pour `curl`/`nmap` (même famille de pattern que le proxy réseau
       documenté dans `server-implementation-pass.md`).
 - Sélection de l'implémentation (locale vs serveur) au moment de l'exécution,

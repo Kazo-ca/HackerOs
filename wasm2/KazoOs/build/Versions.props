@@ -1,0 +1,47 @@
+<Project>
+  <!--
+    ADR 0098 §1: the single version of everything Kazo OS publishes (SDK, platform, base apps,
+    Kazo.Os.App.Build, Kazo.Os.Ecosystem.Host, templates). Imported by Directory.Build.props, so
+    every project of the solution carries it; Platform/Packaging.props inherits it.
+
+    Before the SDK 1.0 freeze: 0.9.0-preview.<n>. Since the freeze (chantier v3/15, ADR 0114):
+    SemVer (ADR 0019) - patch with no API change, minor for an addition, major for a breaking
+    change of the SDK. PublicAPI.Unshipped.txt of each library says which one a release needs.
+    1.1.0 (chantier v3.1/4-sdk-1-1, ADR 0117 §5): window title, window geometry opt-out, user
+    accounts and passwd, per-user default handlers.
+    1.2.0 (chantier exec/10-final, ADR 0132 §2): process limits, niceness, OOM score adjustment,
+    KazoBackground and its analyzer, KazoWireContext for remote gateways, all published once at the
+    end of the exec series.
+    2.0.0 (chantier desk/6-sdk-2, ADR 0149, ADR 0161): Kazo.Os.AppSdk.FileView leaves the SDK for
+    the contracts the OS provides at run time (KazoFileView, the OS context menu, file menu entries,
+    desktop settings) and KazoFileOperations; an app built on 1.x is refused and must be rebuilt.
+    2.1.0 (ADR 0173, first automatic release): additions since 2.0 (passkeys, user administration,
+    KazoFileView.OpenOnTap, ParentExitGracePeriod...) folded into PublicAPI.Shipped.txt. Since ADR
+    0173, changing this number and merging into main is the whole release: the Release Kazo OS
+    workflow tags the commit, creates the GitHub Release and pushes the packages to nuget.org.
+    2.2.0 (series todo/base, Kazo OS Store ADR 0206 to 0208, 0212, 0213): kazoos-solution template
+    and its external-source build (Kazo.Os.ExternalSource.targets), installed-app wwwroot served by
+    the service worker, trusted sources, per-user installs and build-time source/block-list defaults,
+    the Kazo OS Store app and catalog installs, theme packs, plus wallpaper images, icon packs, cursor
+    themes, system sounds, notification toasts, window animations and taskbar previews, all folded
+    into PublicAPI.Shipped.txt (ADR 0207 §11: the template's Release profile needs this version).
+    2.2.1 (Benoit's choice of a patch number, 2026-11-01, although the public API grows): every
+    static resource of an app in its package and an installed app's scoped CSS (ADR 0221), the
+    satellite assemblies of installed apps (ADR 0222), the authors' signing tool (ADR 0219), mouse
+    Back/Forward buttons (ADR 0220), restart onto the new version (ADR 0223), do not disturb,
+    wallpaper menus and the mobile home wallpaper (ADR 0216 to 0218), all folded into
+    PublicAPI.Shipped.txt. Apps waiting for the Kazo OS Store build their packages with it.
+    2.2.2 (2026-11-01): the official catalog's public key compiled into the OS
+    (AppPackageDefaults.OfficialCatalogSigningKey): every Kazo OS Store package must carry the
+    catalog's signature. No SDK change: only that Platform.Core constant moves in the API files.
+    3.0.0 (series rename/base, ADR 0228, ADR 0229): HackerOS becomes Kazo OS. Every package moves
+    from HackerOs.* to Kazo.Os.* and every SDK type from Hack* to Kazo* (HackFile -> KazoFile...);
+    an app built on 2.x is refused and must be rebuilt against Kazo.Os.AppSdk.
+
+    The App SDK version an app is compiled against comes from this number (KazoOsSdk.Version), and
+    the manifest generator writes it as the app's sdkCompatibility.minimumVersion (ADR 0098 §3).
+  -->
+  <PropertyGroup>
+    <KazoOsVersion>3.0.0</KazoOsVersion>
+  </PropertyGroup>
+</Project>

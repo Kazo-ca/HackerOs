@@ -1,0 +1,200 @@
+/* ==========================================================================
+   KazoPaintWindow.razor.css — scoped styles for Kazo Paint app.
+   Dark canvas surround with Kazo OS semantic theme tokens.
+   ========================================================================== */
+
+.paint-root {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: var(--kos-bg-base, #0d0d0d);
+    color: var(--kos-text-primary, #33ff33);
+    font-family: var(--kos-font-mono, "Cascadia Mono", Consolas, monospace);
+    user-select: none;
+}
+
+.paint-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    background: var(--kos-toolbar-bg, var(--kos-bg-surface, #111));
+    border-bottom: var(--kos-toolbar-border, 1px solid var(--kos-border-subtle, #2a2a2a));
+    flex-shrink: 0;
+}
+
+.tool-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    border-right: 1px solid var(--kos-border-subtle, #222);
+    padding-right: 8px;
+}
+
+.tool-group:last-child {
+    border-right: none;
+}
+
+.paint-btn {
+    background: var(--kos-btn-bg, transparent);
+    border: var(--kos-btn-border, 1px solid var(--kos-border, #2a2a2a));
+    color: var(--kos-btn-color, var(--kos-text-primary, #33ff33));
+    font-family: inherit;
+    font-size: 0.75rem;
+    font-weight: var(--kos-btn-font-weight, 500);
+    padding: var(--kos-btn-padding, 4px 10px);
+    border-radius: var(--kos-btn-radius, var(--kos-radius-sm, 3px));
+    box-shadow: var(--kos-btn-shadow, none);
+    cursor: pointer;
+    transition: background var(--kos-transition-fast, 0.12s),
+                border-color var(--kos-transition-fast, 0.12s);
+}
+
+.paint-btn:hover:not(:disabled) {
+    background: var(--kos-btn-hover-bg, var(--kos-bg-elevated, #1e1e1e));
+    border-color: var(--kos-btn-hover-border, var(--kos-accent, #33ff33));
+    color: var(--kos-btn-hover-color, var(--kos-text-primary, #fff));
+}
+
+.paint-btn.active {
+    background: var(--kos-btn-primary-bg, var(--kos-accent, #33ff33));
+    border-color: var(--kos-btn-primary-border, var(--kos-accent, #33ff33));
+    color: var(--kos-btn-primary-color, var(--kos-text-inverse, #0d0d0d));
+    box-shadow: var(--kos-btn-primary-shadow, none);
+    font-weight: 700;
+}
+
+.paint-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.tool-label {
+    font-size: 0.6875rem;
+    color: var(--kos-text-secondary, #a8bac4);
+    opacity: 0.8;
+}
+
+.zoom-label, .size-label {
+    font-size: 0.6875rem;
+    min-width: 36px;
+    color: var(--kos-text-primary, #f4f7f8);
+}
+
+.color-picker {
+    width: 28px;
+    height: 24px;
+    border: var(--kos-input-border, 1px solid var(--kos-border, #2a2a2a));
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    border-radius: var(--kos-input-radius, var(--kos-radius-sm, 3px));
+}
+
+.size-range {
+    width: 70px;
+    accent-color: var(--kos-accent, #33ff33);
+}
+
+.paint-viewport {
+    flex: 1;
+    overflow: auto;
+    background: var(--kos-window-content-background, #1a1a1a);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    position: relative;
+}
+
+.paint-viewport.grid-overlay {
+    background-image:
+        linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+.canvas-frame {
+    transform-origin: center center;
+    box-shadow: var(--kos-shadow-lg, 0 0 20px rgba(0,0,0,0.7));
+    border: 1px solid var(--kos-border, #444);
+}
+
+.paint-canvas {
+    display: block;
+    cursor: crosshair;
+}
+
+.paint-statusbar {
+    display: flex;
+    gap: 16px;
+    padding: 4px 10px;
+    font-size: 0.6875rem;
+    background: var(--kos-toolbar-bg, var(--kos-bg-surface, #111));
+    border-top: var(--kos-toolbar-border, 1px solid var(--kos-border-subtle, #2a2a2a));
+    color: var(--kos-text-secondary, #a8bac4);
+    opacity: 0.8;
+    flex-shrink: 0;
+}
+
+/* ADR 0103 §1: busy state and file errors; the document title is the window's (ADR 0117 §4). */
+.paint-busy {
+    color: var(--kos-accent, #42d392);
+    animation: paint-busy-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes paint-busy-pulse {
+    50% { opacity: 0.45; }
+}
+
+.paint-error {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.4rem 0.75rem;
+    border-bottom: 1px solid var(--kos-error, #ff8f87);
+    background: color-mix(in srgb, var(--kos-error, #ff8f87) 14%, var(--kos-bg-base, #101417));
+    color: var(--kos-error, #ff8f87);
+    font-size: 0.85rem;
+}
+
+.quality-input {
+    width: 4.2rem;
+    padding: 0.2rem 0.35rem;
+    border: 1px solid var(--kos-border, #3a4b53);
+    border-radius: var(--kos-radius-sm, 0.25rem);
+    background: var(--kos-bg-base, #101417);
+    color: var(--kos-text-primary, #f4f7f8);
+}
+
+.paint-statusbar #paint-path {
+    margin-left: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .paint-busy { animation: none; }
+}
+
+/* ADR 0105, through KazoAccessibility: the session's reduced-motion preference stills the busy
+   marker, and high contrast draws a solid frame and a visible grid around the picture (the picture
+   itself keeps its colours). */
+.is-reduced-motion .paint-busy {
+    animation: none;
+}
+
+.is-high-contrast .canvas-frame {
+    box-shadow: none;
+    outline: 2px solid var(--kos-border, #ffffff);
+    outline-offset: 2px;
+}
+
+.is-high-contrast .paint-viewport.grid-overlay {
+    background-image:
+        linear-gradient(to right, rgb(255 255 255 / 45%) 1px, transparent 1px),
+        linear-gradient(to bottom, rgb(255 255 255 / 45%) 1px, transparent 1px);
+}

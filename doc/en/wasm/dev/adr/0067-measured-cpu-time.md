@@ -106,7 +106,7 @@ state column, and `/proc/<pid>/status` adds `Responding: 0|1`.
 
 ### 6. Server host
 
-On `HackerOs.Server` (Interactive Server rendering), several threads run
+On `Kazo.Os.Server` (Interactive Server rendering), several threads run
 code at the same time: the callback remains correct per thread, but `idle`
 time and the compositor no longer have a simple meaning. The measurement is disabled there by
 default (ADR 0066) until an ADR specific to this host.
@@ -122,8 +122,8 @@ default (ADR 0066) until an ADR specific to this host.
 ## References
 
 - [`execution-isolation-plan.md`](../plans/execution-isolation-plan.md)
-- `Shared/HackerOs.AppSdk/HackExecutionContext.cs`,
-  `Shared/HackerOs.AppSdk.Blazor/AmbientComponentDispatch.cs`,
-  `Platform/HackerOs.Platform.Core/FileSystem/Virtual/ProcFileSystemProvider.cs`.
+- `Shared/Kazo.Os.AppSdk/KazoExecutionContext.cs`,
+  `Shared/Kazo.Os.AppSdk.Blazor/AmbientComponentDispatch.cs`,
+  `Platform/Kazo.Os.Platform.Core/FileSystem/Virtual/ProcFileSystemProvider.cs`.
 - `proc(5)`: `/proc/<pid>/stat`, `/proc/stat`.
 - ADR 0043, 0057, 0066, 0068, 0070.
