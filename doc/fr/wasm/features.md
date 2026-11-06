@@ -152,6 +152,11 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
 - **Dossier de l'ordinateur monté comme lecteur réseau** : un vrai dossier de
   l'ordinateur apparaît dans l'OS (Chrome et Edge sur ordinateur).
   ([ADR 0181](dev/adr/0181-host-folder-mounted-as-a-network-drive.md))
+- **Lecteurs réseau lisibles par les apps** : une app qui a
+  `filesystem.user-home.*` lit et écrit les lecteurs réseau de l'utilisateur
+  comme ses fichiers personnels, sans capacité dangereuse ; le lecteur d'un
+  autre utilisateur et `/mnt` restent des fichiers du système.
+  ([ADR 0231](dev/adr/0231-network-drives-count-as-personal-files.md))
 - **Sauvegarde et restauration** de toute la machine dans une archive
   téléchargée. ([`system-backup.md`](dev/system-backup.md))
 
@@ -367,7 +372,6 @@ dans `main`, le lien mène à sa PR.
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Changer d'utilisateur | Ouvrir une autre session sans fermer la première. Reste grisé dans le menu Marche/arrêt par choix de Benoit : une session à la fois, Se déconnecter pour changer de compte. | [0195](dev/adr/0195-start-menu-power-button.md), [0201](dev/adr/0201-switch-user-stays-greyed.md) | [#290](https://github.com/Kazo-ca/Os/issues/290) |
-| Lecteurs réseau lisibles par les apps | Les apps lisent et écrivent les lecteurs réseau de l'utilisateur comme ses fichiers personnels, sans capacité dangereuse (pour ouvrir une musique ou une partie depuis `/mnt`). | [0231](dev/adr/0231-network-drives-count-as-personal-files.md) | [#381](https://github.com/Kazo-ca/Os/issues/381) |
 | Fenêtres d'app sans cadre | Option de fenêtre sans barre de titre ni bordure de l'OS, fond transparent, pour qu'une app comme Webamp fasse flotter ses propres fenêtres sur le bureau. | À écrire | [#378](https://github.com/Kazo-ca/Os/issues/378) |
 | Adresse de fichier servie à la demande | Une app reçoit une adresse pour lire un gros fichier (audio, vidéo) sans le copier en mémoire, avec lecture partielle pour avancer dans un morceau. | À écrire | [#379](https://github.com/Kazo-ca/Os/issues/379) |
 | Glisser des fichiers vers une app | Contrat public du SDK pour recevoir des fichiers glissés depuis l'explorateur ou le bureau. | À écrire | [#380](https://github.com/Kazo-ca/Os/issues/380) |

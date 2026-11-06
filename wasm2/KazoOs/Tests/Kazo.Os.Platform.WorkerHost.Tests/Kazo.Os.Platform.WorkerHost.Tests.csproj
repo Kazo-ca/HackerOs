@@ -21,6 +21,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- ADR 0231: the in-memory host folder of the ADR 0181 tests, for a network drive read from a worker. -->
+    <Compile Include="..\Kazo.Os.Platform.Core.Tests\FileSystem\HostFolders\FakeHostFolder.cs" Link="HostFolders\FakeHostFolder.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Platform\Kazo.Os.Platform.WorkerHost\Kazo.Os.Platform.WorkerHost.csproj" />
     <!-- ADR 0070, section 5.1 of the plan: every built-in command runs in both modes. -->
     <ProjectReference Include="..\..\Apps\Commands\Kazo.Os.Commands\Kazo.Os.Commands.csproj" />

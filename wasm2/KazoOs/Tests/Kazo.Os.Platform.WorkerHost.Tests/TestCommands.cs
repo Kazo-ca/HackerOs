@@ -23,6 +23,7 @@ internal static class TestCommands
         Command<DedicatedEchoCommand>("dedicated-echo", AppExecutionHost.Dedicated),
         Command<ThrowCommand>("throw"),
         Command<ListenCommand>("listen") with { Capabilities = [AppCapabilities.NetworkListen] },
+        Command<ReadFileCommand>("readfile") with { Capabilities = [AppCapabilities.FileSystemUserHomeRead] },
         Service<TestService>("org.test.ticker"),
         Web<EchoSite>("org.test.intranet", "http://intranet.hack/"),
         Web<EchoSite>("org.test.wiki", "http://wiki.hack/"),
@@ -136,6 +137,28 @@ internal static class TestCommands
             string where = context.App.GetType().Name == "RemoteAppExecutionContext" ? "worker" : "main";
             context.StandardOutput.WriteLine($"{where} pid={context.App.ProcessId.Value} cwd={KazoEnvironment.CurrentDirectory} user={context.App.UserLoginName}");
             return ValueTask.FromResult(where == "worker" ? 0 : 1);
+        }
+    }
+
+    /// <summary>
+    /// <c>readfile &lt;path&gt;</c>: prints a file read by <c>KazoFile.ReadAllBytesAsync</c>, with
+    /// <c>filesystem.user-home.read</c> as its only capability (ADR 0231); a refusal prints the error.
+    /// </summary>
+    public sealed class ReadFileCommand(AppManifest manifest) : TerminalAppBase(manifest)
+    {
+        public override async ValueTask<int> ExecuteAsync(TerminalExecutionContext context, CancellationToken cancellationToken)
+        {
+            try
+            {
+                byte[] bytes = await Kazo.Os.AppSdk.IO.KazoFile.ReadAllBytesAsync(context.Arguments[0], cancellationToken);
+                context.StandardOutput.Write(System.Text.Encoding.UTF8.GetString(bytes));
+                return 0;
+            }
+            catch (Exception exception) when (exception is UnauthorizedAccessException or IOException)
+            {
+                context.StandardError.WriteLine($"{exception.GetType().Name}: {exception.Message}");
+                return 1;
+            }
         }
     }
 

@@ -64,6 +64,28 @@ d'app qui les cite ne compile plus, et un `manifest.json` qui les nomme est
 rejeté par le validateur (`manifest.capability.unknown`). `SettingsScopePolicy`,
 qui ne servait qu'aux tests et lisait `settings.system.*`, est supprimé.
 
+### Capacité demandée selon le chemin
+
+`FileSystemService.ResolveCapability` (Platform Core) choisit la capacité qu'une
+opération de fichier demande, avant les bits de permission :
+
+| Chemin | Lecture | Écriture |
+|---|---|---|
+| `~/.config/<appId>/` (ses paramètres, ADR 0044) | `filesystem.private.read` | `filesystem.private.write` |
+| `/etc/<appId>/` | `filesystem.private.read` | `filesystem.system.write` (et l'autorité d'administrateur) |
+| `/home/<utilisateur>/` de l'utilisateur qui agit | `filesystem.user-home.read` | `filesystem.user-home.write` |
+| un lecteur réseau (`hostfs`, ADR 0181) monté par l'utilisateur qui agit ([ADR 0231](../dev/adr/0231-network-drives-count-as-personal-files.md)) | `filesystem.user-home.read` | `filesystem.user-home.write` |
+| tout le reste : `/mnt` lui-même, le lecteur d'un autre utilisateur, `/etc`, `/var`… | `filesystem.system.read` | `filesystem.system.write` |
+
+Pour son propre lecteur réseau, une app qui n'a que `filesystem.system.*`
+(`mount`, `umount`, `df`…) garde l'accès qu'elle avait : l'ADR 0231 élargit,
+elle ne retire rien. Les bits de permission et le propriétaire s'appliquent
+ensuite comme partout (le lecteur reste en `0700`). Le résultat est le même pour
+une app dans un Web Worker, dont chaque opération de fichier passe par ce
+service. À l'installation, `filesystem.user-home.read` s'affiche « Lire vos
+fichiers, y compris vos lecteurs réseau » et `.write` « Écrire dans vos
+fichiers, y compris vos lecteurs réseau » (`Strings.fr.resx`, `Strings.resx`).
+
 ## API
 
 ```csharp
@@ -120,6 +142,15 @@ clé inconnue.
 - `BuildKnownLazyAppsTests.No_non_system_app_of_the_host_declares_a_dangerous_capability`
   (`Kazo.Os.Ecosystem.Tests`).
 - `PolicySettingsDocumentsTests` : `capabilityGrantsLocked` absent du schéma.
+- `NetworkDriveAppAccessTests` (`Kazo.Os.Platform.Core.Tests`, ADR 0231) :
+  `filesystem.user-home.*` pour son propre lecteur réseau, `filesystem.system.*`
+  pour le lecteur d'un autre utilisateur et pour `/mnt`, une app qui n'a que
+  `filesystem.system.read` garde l'accès, un lecteur déconnecté répond comme
+  avant.
+- `NetworkDriveWorkerTests` (`Kazo.Os.Platform.WorkerHost.Tests`) : une commande
+  qui n'a que `filesystem.user-home.read` lit son lecteur par
+  `KazoFile.ReadAllBytesAsync`, dans un Web Worker et sur le fil principal, et
+  ne lit pas celui d'un autre utilisateur.
 
 ## Tâches
 

@@ -90,6 +90,7 @@ internal sealed class OsFixture : IAsyncDisposable
             router, new FileSystemPathResolver(router), new FileSystemAuthorizer(), topicBus,
             () => new Guid(_transactionId++, 0, 0, new byte[8]));
         FileSystem = fileSystem;
+        Router = router;
         FileSystemSeeder seeder = new(fileSystem, timeProvider);
 
         InMemoryLocalUserRepository users = new(() => Now);
@@ -225,6 +226,9 @@ internal sealed class OsFixture : IAsyncDisposable
     public InMemoryTopicMessageBus TopicBus { get; }
 
     public IFileSystemService FileSystem { get; }
+
+    /// <summary>Gets the mount table, where a test mounts a network drive (ADR 0181, ADR 0231).</summary>
+    public FileSystemMountRouter Router { get; }
 
     public LogFileWriter Log { get; }
 
