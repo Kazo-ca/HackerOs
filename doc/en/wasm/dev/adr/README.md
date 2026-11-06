@@ -227,5 +227,6 @@ next free number is given in
 | [`0228-rename-to-kazoos.md`](0228-rename-to-kazoos.md) | ADR 0228: HackerOS becomes KazoOS (`Kazo.Os.*` namespaces and packages, `Kazo` prefix instead of `Hack`, SDK 3.0.0, migration of the browser data, series `rename/base`) |
 | [`0229-kazo-os-display-name-and-new-address.md`](0229-kazo-os-display-name-and-new-address.md) | ADR 0229: displayed name "Kazo OS" with a space, `Os-App-*` app repositories, `hackos.kazo.ca` redirected to `os.kazo.ca` by Cloudflare with no data recovery; complements ADR 0228 and replaces its displayed name and its work item 7 |
 | [`0230-rename-migration-by-previous-version.md`](0230-rename-migration-by-previous-version.md) | ADR 0230: rename migration at first start or at a restore, based on the previous version (< 3.0.0), every mention of HackerOS replaced by context (replaces the "User data" point of ADR 0228). |
+| [`0231-network-drives-count-as-personal-files.md`](0231-network-drives-count-as-personal-files.md) | ADR 0231: the user's network drives count as their personal files (`filesystem.user-home.*`) for apps; replaces ADR 0181 §6 for one's own drive. |
 
 Parent folder index: [`../README.md`](../README.md).

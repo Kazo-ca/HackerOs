@@ -367,6 +367,10 @@ dans `main`, le lien mène à sa PR.
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Changer d'utilisateur | Ouvrir une autre session sans fermer la première. Reste grisé dans le menu Marche/arrêt par choix de Benoit : une session à la fois, Se déconnecter pour changer de compte. | [0195](dev/adr/0195-start-menu-power-button.md), [0201](dev/adr/0201-switch-user-stays-greyed.md) | [#290](https://github.com/Kazo-ca/Os/issues/290) |
+| Lecteurs réseau lisibles par les apps | Les apps lisent et écrivent les lecteurs réseau de l'utilisateur comme ses fichiers personnels, sans capacité dangereuse (pour ouvrir une musique ou une partie depuis `/mnt`). | [0231](dev/adr/0231-network-drives-count-as-personal-files.md) | [#381](https://github.com/Kazo-ca/Os/issues/381) |
+| Fenêtres d'app sans cadre | Option de fenêtre sans barre de titre ni bordure de l'OS, fond transparent, pour qu'une app comme Webamp fasse flotter ses propres fenêtres sur le bureau. | À écrire | [#378](https://github.com/Kazo-ca/Os/issues/378) |
+| Adresse de fichier servie à la demande | Une app reçoit une adresse pour lire un gros fichier (audio, vidéo) sans le copier en mémoire, avec lecture partielle pour avancer dans un morceau. | À écrire | [#379](https://github.com/Kazo-ca/Os/issues/379) |
+| Glisser des fichiers vers une app | Contrat public du SDK pour recevoir des fichiers glissés depuis l'explorateur ou le bureau. | À écrire | [#380](https://github.com/Kazo-ca/Os/issues/380) |
 
 ### Kazo OS Store
 
@@ -400,7 +404,7 @@ par `kazopkg` puis par le Kazo OS Store.
 | Application | Description | Dépôt | Issue |
 | --- | --- | --- | --- |
 | Chess | Échecs, basés sur chess.js ; première application prévue du catalogue. | [Os-App-Chess](https://github.com/Kazo-ca/Os-App-Chess) | [#2](https://github.com/Kazo-ca/Os-App-Chess/issues/2), [#3](https://github.com/Kazo-ca/Os-App-Chess/issues/3) |
-| Webamp | Lecteur de musique dans le style de Winamp. | [Os-App-Webamp](https://github.com/Kazo-ca/Os-App-Webamp) | À venir |
+| Webamp | Lecteur de musique dans le style de Winamp, associé aux fichiers audio, aux listes `.m3u`/`.pls` et aux skins `.wsz` ; ouvre aussi les fichiers des lecteurs réseau (ADR 0231). Plan en discussion. | [Os-App-Webamp](https://github.com/Kazo-ca/Os-App-Webamp) | [#1](https://github.com/Kazo-ca/Os-App-Webamp/issues/1), [#381](https://github.com/Kazo-ca/Os/issues/381) |
 | IRC | Client de discussion IRC (KiwiIRC). | [Os-App-IRC](https://github.com/Kazo-ca/Os-App-IRC) | À venir |
 | EmulatorJS | Émulateur de consoles rétro. | [Os-App-EmulatorJS](https://github.com/Kazo-ca/Os-App-EmulatorJS) | À venir |
 | BoxedWine | Exécuter d'anciens programmes Windows dans l'OS. | [Os-App-BoxedWine](https://github.com/Kazo-ca/Os-App-BoxedWine) | À venir |
