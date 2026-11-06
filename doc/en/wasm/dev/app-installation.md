@@ -435,7 +435,7 @@ completes the Kazo OS Store.
 - **Official catalog key**: since 2026-11-01, the official catalog's public key
   is compiled into the OS (`AppPackageDefaults.OfficialCatalogSigningKey`,
   `catalog:official`). Every package of the official Kazo OS Store must carry the
-  signature the catalog's `publish.yml` makes with the `HACK_STORE_SIGNING_KEY`
+  signature the catalog's `publish.yml` makes with the `KAZO_STORE_SIGNING_KEY`
   secret; an unsigned or forged package is refused. To change keys without a
   break: add the new one to `[signing-keys]` (or `KazoOsAppSigningKeys`),
   republish with it, then replace the constant.

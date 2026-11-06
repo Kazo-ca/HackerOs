@@ -483,9 +483,10 @@ adresse `hackos.kazo.ca` et son worker de redirection, les noms des ADR
 acceptés et des branches passées, les fixtures enregistrées
 (`Tests/fixtures/indexeddb`, `Tests/fixtures/sdk-compat`), le sel
 `hackeros-server-account` (il dérive des mots de passe déjà enregistrés), et
-les secrets GitHub `HACKEROS_APP_SIGNING_KEY`, `HACK_STORE_TOKEN`,
-`HACK_STORE_SIGNING_KEY` (les renommer obligerait chaque dépôt à recréer son
-secret).
+les secrets GitHub `HACKEROS_APP_SIGNING_KEY` et `HACK_STORE_TOKEN` (les
+renommer obligerait chaque dépôt à recréer son secret). Le secret de signature
+du catalogue, présent dans un seul dépôt, est renommé `KAZO_STORE_SIGNING_KEY`
+(2026-11-06, même clé que `HACK_STORE_SIGNING_KEY`).
 
 ### Noms courts (chantier 9)
 

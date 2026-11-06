@@ -440,7 +440,7 @@ termine le Kazo OS Store.
   catalogue officiel est compilée dans l'OS
   (`AppPackageDefaults.OfficialCatalogSigningKey`, `catalog:official`). Tout
   paquet du Kazo OS Store officiel doit porter la signature que `publish.yml` du
-  catalogue pose avec le secret `HACK_STORE_SIGNING_KEY` ; un paquet non signé ou
+  catalogue pose avec le secret `KAZO_STORE_SIGNING_KEY` ; un paquet non signé ou
   falsifié est refusé. Pour changer de clé sans coupure : ajouter la nouvelle
   dans `[signing-keys]` (ou `KazoOsAppSigningKeys`), republier avec elle, puis
   remplacer la constante.

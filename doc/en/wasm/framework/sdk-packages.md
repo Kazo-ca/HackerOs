@@ -479,9 +479,10 @@ wallpaper and the "hacker console" look (a style, not the name of the OS), the
 old address `hackos.kazo.ca` and its redirect worker, the names of accepted
 ADRs and of past branches, the recorded fixtures (`Tests/fixtures/indexeddb`,
 `Tests/fixtures/sdk-compat`), the salt `hackeros-server-account` (it derives
-passwords already stored), and the GitHub secrets `HACKEROS_APP_SIGNING_KEY`,
-`HACK_STORE_TOKEN`, `HACK_STORE_SIGNING_KEY` (renaming them would make every
-repository recreate its secret).
+passwords already stored), and the GitHub secrets `HACKEROS_APP_SIGNING_KEY` and
+`HACK_STORE_TOKEN` (renaming them would make every repository recreate its
+secret). The catalog's own signing secret, set in one repository only, is renamed
+`KAZO_STORE_SIGNING_KEY` (2026-11-06, same key as `HACK_STORE_SIGNING_KEY`).
 
 ### Short names (work item 9)
 
