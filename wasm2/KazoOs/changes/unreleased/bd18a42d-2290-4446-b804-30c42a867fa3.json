@@ -1,0 +1,18 @@
+{
+  "id": "bd18a42d-2290-4446-b804-30c42a867fa3",
+  "category": "developer",
+  "audience": [
+    "developer"
+  ],
+  "title": {
+    "en": "App repositories can tag a release from GitHub",
+    "fr": "Les dépôts d'app peuvent poser le tag d'une version depuis GitHub"
+  },
+  "description": {
+    "en": "The kazoos-solution template has a Tag a release workflow: it tags a commit of main with the app's version and starts the two publishing workflows, so a person or an agent can release without pushing a tag from a computer.",
+    "fr": "Le modèle kazoos-solution a un workflow Tag a release : il pose sur un commit de main le tag de la version de l'app et lance les deux workflows de publication, pour publier sans pousser de tag depuis un ordinateur, que ce soit une personne ou un agent."
+  },
+  "links": [
+    "doc/en/wasm/framework/app-repository.md"
+  ]
+}

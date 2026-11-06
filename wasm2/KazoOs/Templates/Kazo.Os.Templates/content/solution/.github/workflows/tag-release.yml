@@ -1,0 +1,77 @@
+# Creates the release tag v<version> (the "version" of the app's manifest.json) on a commit of
+# main, from GitHub: a person runs it from the Actions tab, an agent through the GitHub API. Nobody
+# has to push a tag from a computer.
+#
+# A tag pushed with the workflow token does not start other workflows (a GitHub rule), so when
+# "publish" is on, this workflow starts the two publishing workflows on the new tag itself. Turn
+# "publish" off to tag a version that is already published.
+name: Tag a release
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: Commit of main to tag (empty for the head of main)
+        required: false
+        default: ''
+      publish:
+        description: Start the publishing workflows on the tag
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: tag-release
+  cancel-in-progress: false
+
+env:
+  APP_DIRECTORY: src/Kazo.Os.Template.Solution
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Create the tag
+        env:
+          COMMIT: ${{ inputs.commit }}
+        run: |
+          if [[ -n "$COMMIT" && ! "$COMMIT" =~ ^[0-9a-f]{7,40}$ ]]; then
+            echo "::error::\"$COMMIT\" is not a commit hash."
+            exit 1
+          fi
+          commit="$(git rev-parse --verify "${COMMIT:-HEAD}^{commit}")"
+          if ! git merge-base --is-ancestor "$commit" HEAD; then
+            echo "::error::Commit $commit is not on main."
+            exit 1
+          fi
+          version="$(git show "$commit:$APP_DIRECTORY/manifest.json" | jq -r .version)"
+          tag="v$version"
+          if existing="$(git rev-parse -q --verify "refs/tags/$tag^{commit}")"; then
+            if [[ "$existing" != "$commit" ]]; then
+              echo "::error::Tag $tag already exists on $existing: change the version in the manifest first."
+              exit 1
+            fi
+            echo "Tag $tag is already on $commit."
+          else
+            git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              tag -a "$tag" -m "Version $version" "$commit"
+            git push origin "refs/tags/$tag"
+            echo "Tag $tag created on $commit."
+          fi
+          echo "TAG=$tag" >> "$GITHUB_ENV"
+
+      - name: Start the publishing workflows
+        if: inputs.publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run publish-packages.yml --ref "$TAG"
+          gh workflow run publish-to-kazoos-store.yml --ref "$TAG"
