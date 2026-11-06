@@ -53,7 +53,10 @@ Forcez l'un ou l'autre avec `-p:KazoOsUseSource=true` ou `false`.
 ## Publier dans le Kazo OS Store
 
 1. Remplissez `store/` (icône, descriptions courtes, descriptions, catégorie et étiquettes dans `store.json`).
-2. Changez `Version` dans la classe `[AppManifest]` de l'app, validez, puis posez un tag : `git tag v1.0.0 && git push --tags`.
+2. Changez `Version` dans la classe `[AppManifest]` de l'app et validez-la dans `main`, puis posez le
+   tag : lancez le workflow **Tag a release** (onglet Actions, ou l'API GitHub pour un agent), qui pose
+   sur la tête de `main` le tag de la version du manifeste et lance les deux workflows de
+   publication ; ou poussez le tag vous-même : `git tag v1.0.0 && git push --tags`.
 3. Le workflow **Publish to the Kazo OS Store** compile l'app et produit le dossier du catalogue
    `apps/<appId>_<version>/`. Avec un secret `HACK_STORE_TOKEN` (un jeton qui peut créer un fork et
    ouvrir des pull requests), il ouvre la pull request vers `Kazo-ca/Os-AppMarketPlace` depuis

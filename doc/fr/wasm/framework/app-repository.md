@@ -50,6 +50,7 @@ Deux façons, même résultat :
 | `store/` | `icon.png` (256×256), `short_description.{en,fr}.txt`, `description.{en,fr}.md`, `store.json`, `screenshots/` facultatif |
 | `.github/workflows/ci.yml` | CI : sous-module vérifié, build et tests en `Release` |
 | `.github/workflows/publish-to-kazoos-store.yml` | soumission au catalogue sur un tag `v*` |
+| `.github/workflows/tag-release.yml` | pose sur un commit de `main` le tag de la version du manifeste et lance les deux workflows ci-dessus (`workflow_dispatch`) |
 | `.github/workflows/publish-packages.yml` | paquet signé poussé sur la branche `kazoos-packages` sur un tag `v*` ([ADR 0219](../dev/adr/0219-app-authors-signing-tool.md)) |
 | `README.md`, `readme-fr.md` | ces étapes, pour le dépôt créé |
 
@@ -104,8 +105,14 @@ déclare déjà `KazoOsAppProject=true` ; ajoutez-la à l'hôte par
    `--repository` ; `project` nomme le `.csproj` de l'app, que le catalogue
    compile (à la racine, `KazoOsPack` tournerait aussi sur le projet de tests,
    qui n'a pas cette cible).
-2. Changer `Version` dans la classe `[AppManifest]`, valider, poser le tag
-   `v<version>` et le pousser.
+2. Changer `Version` dans la classe `[AppManifest]`, valider dans `main`, puis
+   poser le tag : lancer le workflow **Tag a release** (`tag-release.yml`, depuis
+   l'onglet Actions ou, pour un agent, via l'API GitHub), ou poser le tag
+   `v<version>` et le pousser soi-même. Le workflow pose sur un commit de `main`
+   (la tête par défaut) le tag de la version du manifeste et y lance les deux
+   workflows de publication, car un tag poussé avec le jeton du workflow ne les
+   lance pas ; avec `publish` désactivé, il pose seulement le tag (version déjà
+   publiée).
 3. Le workflow **Publish to the Kazo OS Store** vérifie le sous-module, compile
    l'app en `Release`, la met en paquet (`KazoOsPack`), refuse un tag qui
    n'est pas la version du manifeste et produit `apps/<appId>_<version>/`
