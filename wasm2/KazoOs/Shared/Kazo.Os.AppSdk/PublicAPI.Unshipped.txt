@@ -1,1 +1,21 @@
 #nullable enable
+Kazo.Os.AppSdk.Net.IAppNetworkGateway.ConnectWebSocketAsync(System.Uri! uri, System.Collections.Generic.IReadOnlyList<string!>! subProtocols, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<System.Net.WebSockets.WebSocket!>!>
+Kazo.Os.AppSdk.Net.KazoClientWebSocket
+Kazo.Os.AppSdk.Net.KazoClientWebSocket.ConnectAsync(System.Uri! uri, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Net.KazoClientWebSocket.KazoClientWebSocket() -> void
+Kazo.Os.AppSdk.Net.KazoClientWebSocket.Options.get -> Kazo.Os.AppSdk.Net.KazoClientWebSocketOptions!
+Kazo.Os.AppSdk.Net.KazoClientWebSocketOptions
+Kazo.Os.AppSdk.Net.KazoClientWebSocketOptions.AddSubProtocol(string! subProtocol) -> void
+Kazo.Os.AppSdk.Net.KazoClientWebSocketOptions.SubProtocols.get -> System.Collections.Generic.IReadOnlyList<string!>!
+override Kazo.Os.AppSdk.Net.KazoClientWebSocket.Abort() -> void
+override Kazo.Os.AppSdk.Net.KazoClientWebSocket.CloseAsync(System.Net.WebSockets.WebSocketCloseStatus closeStatus, string? statusDescription, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task!
+override Kazo.Os.AppSdk.Net.KazoClientWebSocket.CloseOutputAsync(System.Net.WebSockets.WebSocketCloseStatus closeStatus, string? statusDescription, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task!
+override Kazo.Os.AppSdk.Net.KazoClientWebSocket.CloseStatus.get -> System.Net.WebSockets.WebSocketCloseStatus?
+override Kazo.Os.AppSdk.Net.KazoClientWebSocket.CloseStatusDescription.get -> string?
+override Kazo.Os.AppSdk.Net.KazoClientWebSocket.Dispose() -> void
+override Kazo.Os.AppSdk.Net.KazoClientWebSocket.ReceiveAsync(System.ArraySegment<byte> buffer, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.Net.WebSockets.WebSocketReceiveResult!>!
+override Kazo.Os.AppSdk.Net.KazoClientWebSocket.ReceiveAsync(System.Memory<byte> buffer, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Net.WebSockets.ValueWebSocketReceiveResult>
+override Kazo.Os.AppSdk.Net.KazoClientWebSocket.SendAsync(System.ArraySegment<byte> buffer, System.Net.WebSockets.WebSocketMessageType messageType, bool endOfMessage, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task!
+override Kazo.Os.AppSdk.Net.KazoClientWebSocket.SendAsync(System.ReadOnlyMemory<byte> buffer, System.Net.WebSockets.WebSocketMessageType messageType, bool endOfMessage, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+override Kazo.Os.AppSdk.Net.KazoClientWebSocket.State.get -> System.Net.WebSockets.WebSocketState
+override Kazo.Os.AppSdk.Net.KazoClientWebSocket.SubProtocol.get -> string?

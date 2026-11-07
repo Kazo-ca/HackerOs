@@ -392,6 +392,7 @@ dans `main`, le lien mène à sa PR.
 
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
+| Vrai réseau pour les apps de discussion | `KazoClientWebSocket` dans le SDK : une app joint un vrai serveur WebSocket par le navigateur, sans serveur Kazo OS (fait dans la série `real-network/base`) ; puis TLS ouvert par le relais et ports déclarés par l'app. | [0235](dev/adr/0235-real-network-for-chat-apps.md) | [#395](https://github.com/Kazo-ca/Os/issues/395) |
 
 ### Nom du projet
 

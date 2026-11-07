@@ -106,6 +106,26 @@ public interface IAppNetworkGateway
     ValueTask<KazoNetworkResult<IKazoSocket>> ConnectUdpAsync(
         string hostNameOrAddress, int port, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException("This network gateway cannot open UDP sockets.");
+
+    /// <summary>
+    /// Opens a WebSocket to a real server, as <c>ClientWebSocket.ConnectAsync</c> does
+    /// (ADR 0235 §1). Apps use it through <see cref="KazoClientWebSocket"/>.
+    /// </summary>
+    /// <remarks>
+    /// Needs <c>network.real.access</c>. The OS opens the browser's own <c>WebSocket</c>, so no
+    /// server is needed, with the browser's limits (no custom headers, <c>wss://</c> only when the
+    /// OS is served over <c>https</c>). A host of the simulated network, this machine or the
+    /// internal domain answers <see cref="KazoNetworkError.ConnectionRefused"/> (the simulated
+    /// network carries no WebSocket yet); a server that refuses or cannot be reached answers
+    /// <see cref="KazoNetworkError.ConnectionFailed"/>, without detail, as a browser reports it.
+    /// The returned socket's traffic is counted in <c>/proc/net/dev</c>.
+    /// </remarks>
+    /// <param name="uri">Absolute <c>ws://</c> or <c>wss://</c> address.</param>
+    /// <param name="subProtocols">Sub-protocols offered to the server, in order of preference.</param>
+    /// <param name="cancellationToken">Cancels the handshake.</param>
+    ValueTask<KazoNetworkResult<System.Net.WebSockets.WebSocket>> ConnectWebSocketAsync(
+        Uri uri, IReadOnlyList<string> subProtocols, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This network gateway cannot open WebSockets.");
 }
 
 /// <summary>
@@ -323,5 +343,9 @@ internal sealed class UnsupportedAppNetworkGateway : IAppNetworkGateway
 
     public ValueTask<KazoNetworkResult<IKazoSocket>> ConnectUdpAsync(
         string hostNameOrAddress, int port, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException(Reason);
+
+    public ValueTask<KazoNetworkResult<System.Net.WebSockets.WebSocket>> ConnectWebSocketAsync(
+        Uri uri, IReadOnlyList<string> subProtocols, CancellationToken cancellationToken = default) =>
         throw new NotSupportedException(Reason);
 }

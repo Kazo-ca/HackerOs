@@ -11,8 +11,8 @@ exist there, the real network through the optional server's proxy, when it is al
 possible. The app sees neither the access token, nor the server address, nor even
 whether a server exists.
 
-This document describes the `KazoDns`, `KazoPing`, `KazoHttpClient` and
-`KazoTcpClient` facades, the `IAppNetworkGateway` gateway that carries them and its
+This document describes the `KazoDns`, `KazoPing`, `KazoHttpClient`,
+`KazoTcpClient` and `KazoClientWebSocket` facades, the `IAppNetworkGateway` gateway that carries them and its
 `AppNetworkGateway` implementation in Platform Core. It was written by the
 work item `rebuild/4-sdk-network` (ADR 0058).
 
@@ -31,7 +31,7 @@ App (Browser, ping, curl, cat, nmap)
 
 | Type | Project | Role |
 |---|---|---|
-| `IAppNetworkGateway` | `Kazo.Os.AppSdk` (`Net/`) | Instance gateway: `ResolveAsync`, `ReverseLookupAsync`, `PingAsync`, `SendAsync`, `ProbeTcpAsync`, `DetectOperatingSystemAsync`. Network failures are a result (`KazoNetworkResult<T>`, `KazoNetworkError`), never an exception. |
+| `IAppNetworkGateway` | `Kazo.Os.AppSdk` (`Net/`) | Instance gateway: `ResolveAsync`, `ReverseLookupAsync`, `PingAsync`, `SendAsync`, `ProbeTcpAsync`, `DetectOperatingSystemAsync`, then `ConnectTcpAsync`, `ConnectUdpAsync` (ADR 0102) and `ConnectWebSocketAsync` (ADR 0235 §1). Network failures are a result (`KazoNetworkResult<T>`, `KazoNetworkError`), never an exception. |
 | `IAppExecutionContext.Network` | `Kazo.Os.AppSdk` | Member with a "not supported" default implementation, so that existing contexts compile. |
 | `KazoDns`, `KazoPing`, `KazoHttpClient`, `KazoCookieContainer`, `KazoTcpClient` | `Kazo.Os.AppSdk` (`Net/`) | Facades modeled on `System.Net`: they read the ambient context (ADR 0043) and throw .NET exceptions. |
 | `AppNetworkGateway` | `Kazo.Os.Platform.Core` (`Network/`) | Trusted implementation: capabilities, simulated network, real fallback decision, server token. Built by `AppExecutionContextFactory` for each instance. |
@@ -54,6 +54,7 @@ name is never relayed to the real network. See
 | DNS, ping, `GET`, `HEAD`, port probing, OS detection | `network.simulated.read` (normal) | `UnauthorizedAccessException` (internal: `AppGatewayAccessDeniedException`) |
 | `POST` and any other HTTP method, TCP or UDP socket (`ConnectAsync`) | `network.simulated.write` (normal) | same |
 | Fallback to the real network | `network.real.access` (dangerous), also checked by the server (ADR 0102 §4) | no fallback: "host not found" |
+| WebSocket to a real server (`KazoClientWebSocket`) | `network.real.access` (dangerous), the same as for the relay (ADR 0235 §1) | `UnauthorizedAccessException` |
 | Listen on a port (`KazoHttpListener`) outside its `web.urls` | `network.listen` (normal), plus `network.listen.privileged` (dangerous) below 1024 | `UnauthorizedAccessException` |
 
 Classifications are unchanged (ADR 0049). A system app receives its capabilities
@@ -156,6 +157,53 @@ most). Both require `network.simulated.write`. The simulated network has no
 raw streams: a host it knows, or this machine, refuses the connection.
 Synchronous calls throw `NotSupportedException`.
 
+### WebSocket to a real server (ADR 0235 §1)
+
+`KazoClientWebSocket` follows `System.Net.WebSockets.ClientWebSocket` and
+derives from `WebSocket`: an app can pass it wherever a `WebSocket` is
+expected. Work item `real-network/1-websocket`, issue
+[#395](https://github.com/Kazo-ca/Os/issues/395).
+
+```csharp
+using KazoClientWebSocket socket = new();
+socket.Options.AddSubProtocol("text.ircv3.net");
+await socket.ConnectAsync(new Uri("wss://irc.example.org/webirc"));   // UnauthorizedAccessException without network.real.access
+await socket.SendAsync("NICK kazo"u8.ToArray(), WebSocketMessageType.Text, endOfMessage: true);
+byte[] buffer = new byte[4096];
+ValueWebSocketReceiveResult received = await socket.ReceiveAsync(buffer.AsMemory());
+// socket.State, socket.SubProtocol, socket.CloseStatus, socket.CloseStatusDescription
+await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "bye", CancellationToken.None);
+```
+
+- **No server.** The OS opens the browser's `WebSocket` for the app
+  (`AppNetworkGateway.ConnectWebSocketAsync`, a .NET `ClientWebSocket`, which
+  is the browser's `WebSocket` under WebAssembly). It works in the Ecosystem
+  host alone; the server's relay is not used.
+- **Browser limits.** Only sub-protocols can be set
+  (`Options.AddSubProtocol`): no headers, cookies or client certificate.
+  `wss://` is required when the OS is served over `https` (mixed content). A
+  refusal by the server, an unknown name or a page that does not accept the
+  upgrade all give `WebSocketException` with `WebSocketError.Faulted` and the
+  message "Unable to connect to the remote server …", without the HTTP status,
+  as a browser does.
+- **Simulated host refused.** An address of the simulated network, of this
+  machine (`localhost`, 127.0.0.0/8) or of the internal `.hack` domain is
+  refused before anything is opened: `WebSocketException` (`Faulted`), message
+  "simulated host … (issue #393)". The simulated network carries no WebSocket
+  yet ([#393](https://github.com/Kazo-ca/Os/issues/393)).
+- **Traffic counted.** Every frame goes through `MeteredWebSocket` (Platform
+  Core): the handshake counts the SYN, the SYN-ACK, the `Upgrade` request and
+  the `101` answer; each frame counts one TCP segment of its RFC 6455 header
+  (2, 4 or 10 bytes, plus 4 of mask for a sent frame) and its bytes, on `eth0`
+  and in the `rchar`/`wchar` of the process; the socket buffers (144 KiB) are
+  charged to the process until it is closed (ADR 0068).
+- **Web Worker.** The gateway of an app running in a Web Worker
+  (`RemoteNetworkGateway`) opens no socket yet, as for
+  `KazoTcpClient.ConnectAsync`: `ConnectAsync` throws `NotSupportedException`.
+- **Compatibility.** `IAppNetworkGateway.ConnectWebSocketAsync` has a default
+  implementation that throws `NotSupportedException`: a gateway written for
+  SDK 3.0 still compiles and loads.
+
 ## Migrated apps
 
 - **Browser**: no more injection; `KazoHttpClient` and one `KazoCookieContainer`
@@ -203,6 +251,25 @@ exemption list.
   each public method counts its exchange on `eth0` and in the `rchar`/`wchar`
   of the app's process (`NetworkTrafficMeter`); a call refused for lack of a
   capability counts nothing. Details: [`system-metrics.md`](../dev/system-metrics.md).
+
+- **.NET `ClientWebSocket` rather than a JavaScript module** (work item
+  `real-network/1-websocket`): ADR 0235 §1 planned a JavaScript module of
+  Browser Infrastructure. Under WebAssembly, `ClientWebSocket` *is* the
+  browser's `WebSocket` (the relay already uses it in `HttpProxyClient`),
+  opened by the OS and never by the app: no JavaScript to write (AGENTS.md
+  §I.2), the xUnit tests talk to a real WebSocket server (Kestrel), and the
+  same class will serve in a Web Worker. `AppNetworkGateway.WebSocketConnector`
+  lets tests point at their server.
+
+## Task list for work item `real-network/1-websocket`
+
+- [x] `KazoClientWebSocket` and `KazoClientWebSocketOptions` (`Kazo.Os.AppSdk.Net`), modelled on `ClientWebSocket`.
+- [x] `IAppNetworkGateway.ConnectWebSocketAsync` with a default implementation (SDK 3.0 compatibility).
+- [x] `AppNetworkGateway.ConnectWebSocketAsync`: `network.real.access`, simulated host refused, the browser's `WebSocket`.
+- [x] `MeteredWebSocket`: frames counted in `/proc/net/dev` and `/proc/<pid>/io`, buffers charged.
+- [x] `PublicAPI.Unshipped.txt` of the SDK and of Platform Core.
+- [x] Tests (`Wave4NetworkTests.WebSocket.cs`): refusal without the capability, simulated host refused, frame exchange and sub-protocol with a real WebSocket server, refused handshake, traffic counted, context without WebSocket.
+- [x] Documentation: this document, `capabilities.md`, `server-network-relay.md`, `app-sdk.md`, `sdk-reference.md`, `features.md`, indexes, `changes/unreleased` entry.
 
 ## Task list for work item `rebuild/4-sdk-network`
 
