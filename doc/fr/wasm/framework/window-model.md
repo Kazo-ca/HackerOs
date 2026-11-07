@@ -116,7 +116,8 @@ public override WindowOptions? Window => new()
 - `WindowOptions` (App.Abstractions) : tailles extérieures (barre de titre comprise) en pixels
   CSS. Sans déclaration : `WindowOptions.Default`, 800×560 et minimum 360×240, comme avant.
 - Manifeste : objet facultatif `window` (`defaultWidth`, `defaultHeight`, `minWidth`, `minHeight`,
-  `maxWidth`, `maxHeight`, `resizable`), produit par le générateur et absent si l'app ne déclare
+  `maxWidth`, `maxHeight`, `resizable`, et depuis le SDK 3.1 `style`, `showIcon`, `maximizeBox`,
+  `minimizeBox`, `showInTaskbar`, `modal`, voir §6), produit par le générateur et absent si l'app ne déclare
   rien. Un champ omis prend sa valeur par défaut. Le schéma `manifest.schema.v1.json` interdit
   `window` hors des apps de genre `window`.
 - Codes du validateur :
@@ -306,6 +307,76 @@ les récents du bureau mobile et le nom accessible du cadre (`aria-labelledby`).
 - Le moniteur `WindowResponsivenessMonitor`, la boîte et le réglage
   `window-manager.config` sont décrits dans [`process-priority-and-unresponsive-windows.md`](../dev/process-priority-and-unresponsive-windows.md).
 
+## 6. Styles de fenêtre et options façon WinForms (ADR 0234)
+
+### Pour l'app
+
+```csharp
+public override WindowOptions? Window => new()
+{
+    DefaultWidth = 400, DefaultHeight = 300,
+    Resizable = false,
+    Style = WindowStyle.Tool,     // Normal (défaut), Tool, None
+    ShowIcon = true,              // icône dans la barre de titre
+    MaximizeBox = true,           // bouton Agrandir
+    MinimizeBox = true,           // bouton Réduire
+    ShowInTaskbar = true,         // bouton dans la barre des tâches
+    Modal = false,                // fenêtres enfants (chantier 5)
+};
+```
+
+| Style | Barre de titre | Bordure et poignées | Boutons |
+| --- | --- | --- | --- |
+| `Normal` | oui | oui | selon les booléens |
+| `Tool` | oui, plus basse (`--kos-tool-titlebar-height`) | non | Fermer seulement |
+| `None` | non | non | aucun : l'app dessine les siens |
+
+- Manifeste : `style` (`"normal"`, `"tool"`, `"none"`) et les booléens ne sont écrits que s'ils
+  diffèrent de leur défaut ; un manifeste existant reste identique octet pour octet.
+- `ShowInTaskbar = false` retire le bouton de la barre des tâches **et** le bouton Réduire :
+  l'utilisateur ne peut plus réduire la fenêtre (réponse B de Benoit à la question 6). Elle reste
+  dans Alt+` et le sélecteur.
+- `MaximizeBox = false` retire aussi le double-clic sur la barre ; `MinimizeBox = false` retire
+  aussi « Réduire » du menu de fenêtre et de la commande clavier. `Tool` et `None` retirent les
+  poignées, Agrandir et Réduire ; le menu de fenêtre reste au clic droit sur la barre et à Alt+Espace.
+- Sans icône (`ShowIcon = false` ou `Tool`), le clic droit sur le titre ouvre le menu de fenêtre.
+- Une fenêtre `None` se déplace par tout élément marqué `data-kazo-window-drag` (les champs, liens
+  et éléments éditables à l'intérieur restent cliquables).
+
+Ce que l'app demande à **sa** fenêtre, sans capacité (#384) :
+
+| Méthode de `WindowAppBase` | Effet |
+| --- | --- |
+| `WindowOptions` | Options actuelles (le manifeste tant que l'app ne les change pas). |
+| `MinimizeWindowAsync`, `MaximizeWindowAsync`, `RestoreWindowAsync` | État de la fenêtre ; une fenêtre de taille fixe n'est jamais agrandie. |
+| `MoveWindowAsync(x, y)` | Coin haut gauche, relatif à la zone de travail de son écran ; la fenêtre reste sur l'écran. |
+| `ResizeWindowAsync(w, h)` | Taille extérieure, bornée aux tailles déclarées et à l'écran ; il faut une fenêtre redimensionnable à l'état normal. |
+| `SetWindowStyleAsync(style)`, `SetWindowOptionsAsync(options)` | Style, booléens et tailles à l'exécution (partir de `WindowOptions with { … }`). |
+
+Chaque méthode renvoie `true` si la demande est appliquée, `false` sinon (fenêtre fermée,
+fenêtre détachée, demande refusée par l'état de la fenêtre, plateforme d'avant le SDK 3.1). Les
+booléens règlent ce que voit l'utilisateur, pas ce que l'app peut faire : une app avec
+`MinimizeBox = false` peut quand même réduire sa fenêtre.
+
+### Architecture
+
+- `WindowFrame` (Windowing.Abstractions) : style (`WindowFrameStyle`) et booléens dans
+  `WindowRuntimeState.Frame`, avec `UserCanMinimize`, `UserCanMaximize(constraints)`,
+  `UserCanResize(constraints)`. Le cadre, les commandes clavier, l'arrangement des fenêtres et la
+  barre des tâches lisent ces règles ; `WindowRuntime` ne limite que ce que les contraintes
+  interdisent, pour que l'app garde ses demandes.
+- `SetWindowFrameCommand` et `WindowFrameChangedEvent` : change le cadre et les contraintes ; une
+  fenêtre agrandie qui devient de taille fixe est restaurée.
+- `WindowLaunchCoordinator.ToFrame(options)` traduit le manifeste ; `AppWindowGatewayFactory`
+  applique les demandes de l'app par les commandes du runtime.
+- `WindowRuntime.ActivationTarget(id)` : la fenêtre modale la plus haute d'une propriétaire. Un
+  dialogue sans bouton dans la barre des tâches revient au premier plan par le bouton de sa
+  propriétaire.
+- Dialogues de l'OS (MessageBox, ouvrir, enregistrer, dossier, saisie, choix d'app, « ne répond
+  pas ») : `WindowFrame.Dialog`, style `Tool` sans bouton dans la barre des tâches (§6 de l'ADR).
+  Sur mobile, ils restent en plein écran.
+- `WindowHost` ajoute `is-tool` ou `is-frameless` ; la transparence de `None` vient au chantier 6.
+
 ## Décisions de mise en œuvre
 
 - **Plein écran ajouté** (`toggle-fullscreen`, `Alt+F11`, entrée du menu) : le verrouillage du
@@ -354,6 +425,11 @@ les récents du bureau mobile et le nom accessible du cadre (`aria-labelledby`).
 - E2E `WindowKeyboardCommandsTests` (UI.E2E) : `` Alt+` `` change de fenêtre et `Alt+Q` ferme la
   fenêtre active dans un onglet Chromium.
 
+- `WindowFrameTests` (Windowing.Core), `WindowStyleOptionsTests` (Platform.Blazor),
+  `WindowAppBaseWindowFrameTests` (SDK Blazor), sérialiseur (App.Abstractions) : styles et
+  booléens (ADR 0234), cadre dessiné par style, barre des tâches, demandes de l'app (#384),
+  dialogue au premier plan par sa propriétaire, champs écrits seulement hors défaut.
+
 ## Liste des tâches
 
 - [x] Corriger le double déplacement au relâchement et la transition avant/après projection.
@@ -381,3 +457,13 @@ les récents du bureau mobile et le nom accessible du cadre (`aria-labelledby`).
 - [x] Kazo Paint, éditeur de texte, éditeur de code, éditeur de thèmes, explorateur.
 - [x] Tests unitaires et E2E.
 - [x] ADR 0123, documentation, référence du SDK et index.
+
+### Chantier `os-3-1/4-window-style-options` (ADR 0234 §1, §2, §4, §6)
+
+- [x] `WindowStyle` et booléens dans `WindowOptions`, manifeste, schéma, sérialiseur.
+- [x] `WindowFrame`, `SetWindowFrameCommand`, `ActivationTarget` dans le runtime.
+- [x] Cadre, poignées, clavier, arrangement et barre des tâches suivent le style.
+- [x] Dialogues de l'OS en `Tool` sans bouton dans la barre des tâches.
+- [x] `IAppWindowGateway` et méthodes de `WindowAppBase` (#384).
+- [x] Tests et documentation.
+

@@ -1,1 +1,19 @@
 #nullable enable
+Kazo.Os.App.Abstractions.WindowOptions.MaximizeBox.get -> bool
+Kazo.Os.App.Abstractions.WindowOptions.MaximizeBox.init -> void
+Kazo.Os.App.Abstractions.WindowOptions.MinimizeBox.get -> bool
+Kazo.Os.App.Abstractions.WindowOptions.MinimizeBox.init -> void
+Kazo.Os.App.Abstractions.WindowOptions.ShowIcon.get -> bool
+Kazo.Os.App.Abstractions.WindowOptions.ShowIcon.init -> void
+Kazo.Os.App.Abstractions.WindowOptions.ShowInTaskbar.get -> bool
+Kazo.Os.App.Abstractions.WindowOptions.Style.get -> Kazo.Os.App.Abstractions.WindowStyle
+Kazo.Os.App.Abstractions.WindowOptions.Style.init -> void
+Kazo.Os.App.Abstractions.WindowStyle.Normal = 0 -> Kazo.Os.App.Abstractions.WindowStyle
+Kazo.Os.App.Abstractions.WindowStyle.Tool = 1 -> Kazo.Os.App.Abstractions.WindowStyle
+Kazo.Os.App.Abstractions.WindowOptions.Modal.get -> bool
+Kazo.Os.App.Abstractions.WindowOptions.Modal.init -> void
+Kazo.Os.App.Abstractions.WindowOptions.ShowInTaskbar.init -> void
+Kazo.Os.App.Abstractions.WindowStyle
+Kazo.Os.App.Abstractions.WindowStyle.None = 2 -> Kazo.Os.App.Abstractions.WindowStyle
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.NullableWindowStyle.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.WindowStyle?>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.WindowStyle.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.WindowStyle>

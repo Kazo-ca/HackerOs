@@ -227,7 +227,10 @@ public sealed class WindowKeyboardCommands : IDisposable
             return false;
         }
 
-        bool resizable = window.Constraints.IsResizable;
+        // ADR 0234 §2: the frame's switches decide what the user may do, keyboard included.
+        bool resizable = window.Frame.UserCanResize(window.Constraints);
+        bool maximizable = window.Frame.UserCanMaximize(window.Constraints);
+        bool minimizable = window.Frame.UserCanMinimize;
         switch (action)
         {
             case WindowKeyboardAction.SwitchNext or WindowKeyboardAction.SwitchPrevious:
@@ -248,20 +251,20 @@ public sealed class WindowKeyboardCommands : IDisposable
             case WindowKeyboardAction.Resize:
                 return BeginMode(window, WindowKeyboardMode.Resizing);
             case WindowKeyboardAction.Minimize:
-                return Apply(new MinimizeWindowCommand(windowId));
+                return minimizable && Apply(new MinimizeWindowCommand(windowId));
             case WindowKeyboardAction.Maximize:
-                return resizable && window.VisualState != WindowVisualState.Maximized && Apply(new MaximizeWindowCommand(windowId));
+                return maximizable && window.VisualState != WindowVisualState.Maximized && Apply(new MaximizeWindowCommand(windowId));
             case WindowKeyboardAction.RestoreOrMinimize:
                 return window.VisualState == WindowVisualState.Maximized || window.IsSnapped
                     ? Apply(new RestoreWindowCommand(windowId))
-                    : Apply(new MinimizeWindowCommand(windowId));
+                    : minimizable && Apply(new MinimizeWindowCommand(windowId));
             case WindowKeyboardAction.ToggleMaximize:
                 if (window.VisualState == WindowVisualState.Maximized)
                 {
                     return Apply(new RestoreWindowCommand(windowId));
                 }
 
-                return resizable && Apply(new MaximizeWindowCommand(windowId));
+                return maximizable && Apply(new MaximizeWindowCommand(windowId));
             case WindowKeyboardAction.SnapLeft or WindowKeyboardAction.SnapRight:
                 return resizable && Snap(window, action == WindowKeyboardAction.SnapLeft);
             case WindowKeyboardAction.ToggleFullScreen:
@@ -380,11 +383,12 @@ public sealed class WindowKeyboardCommands : IDisposable
 
         bool normal = window.VisualState == WindowVisualState.Normal;
         bool maximized = window.VisualState == WindowVisualState.Maximized;
-        bool resizable = window.Constraints.IsResizable;
+        bool resizable = window.Frame.UserCanResize(window.Constraints);
+        bool maximizable = window.Frame.UserCanMaximize(window.Constraints);
         return
         [
-            new(WindowKeyboardAction.ToggleMaximize, _text[maximized ? "WindowMenu.Restore" : "WindowMenu.Maximize"], ShortcutOf(WindowKeyboardAction.ToggleMaximize), maximized || resizable),
-            new(WindowKeyboardAction.Minimize, _text["WindowMenu.Minimize"], ShortcutOf(WindowKeyboardAction.Minimize), true),
+            new(WindowKeyboardAction.ToggleMaximize, _text[maximized ? "WindowMenu.Restore" : "WindowMenu.Maximize"], ShortcutOf(WindowKeyboardAction.ToggleMaximize), maximized || maximizable),
+            new(WindowKeyboardAction.Minimize, _text["WindowMenu.Minimize"], ShortcutOf(WindowKeyboardAction.Minimize), window.Frame.UserCanMinimize),
             new(WindowKeyboardAction.Move, _text["WindowMenu.Move"], ShortcutOf(WindowKeyboardAction.Move), normal && window.Constraints.IsMovable),
             new(WindowKeyboardAction.Resize, _text["WindowMenu.Resize"], ShortcutOf(WindowKeyboardAction.Resize), normal && resizable),
             new(WindowKeyboardAction.SnapLeft, _text["WindowMenu.SnapLeft"], ShortcutOf(WindowKeyboardAction.SnapLeft), resizable),
@@ -592,7 +596,7 @@ public sealed class WindowKeyboardCommands : IDisposable
     private bool BeginMode(WindowRuntimeState window, WindowKeyboardMode mode)
     {
         bool allowed = window.VisualState == WindowVisualState.Normal
-            && (mode == WindowKeyboardMode.Moving ? window.Constraints.IsMovable : window.Constraints.IsResizable);
+            && (mode == WindowKeyboardMode.Moving ? window.Constraints.IsMovable : window.Frame.UserCanResize(window.Constraints));
         if (!allowed)
         {
             return false;

@@ -1,1 +1,70 @@
 #nullable enable
+Kazo.Os.Windowing.Abstractions.SetWindowFrameCommand
+Kazo.Os.Windowing.Abstractions.SetWindowFrameCommand.Constraints.get -> Kazo.Os.Windowing.Abstractions.WindowConstraints?
+Kazo.Os.Windowing.Abstractions.SetWindowFrameCommand.Constraints.init -> void
+Kazo.Os.Windowing.Abstractions.SetWindowFrameCommand.Deconstruct(out Kazo.Os.Windowing.Abstractions.WindowId WindowId, out Kazo.Os.Windowing.Abstractions.WindowFrame! Frame, out Kazo.Os.Windowing.Abstractions.WindowConstraints? Constraints) -> void
+Kazo.Os.Windowing.Abstractions.SetWindowFrameCommand.Equals(Kazo.Os.Windowing.Abstractions.SetWindowFrameCommand? other) -> bool
+Kazo.Os.Windowing.Abstractions.SetWindowFrameCommand.Frame.get -> Kazo.Os.Windowing.Abstractions.WindowFrame!
+Kazo.Os.Windowing.Abstractions.SetWindowFrameCommand.Frame.init -> void
+Kazo.Os.Windowing.Abstractions.SetWindowFrameCommand.SetWindowFrameCommand(Kazo.Os.Windowing.Abstractions.WindowId WindowId, Kazo.Os.Windowing.Abstractions.WindowFrame! Frame, Kazo.Os.Windowing.Abstractions.WindowConstraints? Constraints = null) -> void
+Kazo.Os.Windowing.Abstractions.SetWindowFrameCommand.WindowId.get -> Kazo.Os.Windowing.Abstractions.WindowId
+Kazo.Os.Windowing.Abstractions.SetWindowFrameCommand.WindowId.init -> void
+Kazo.Os.Windowing.Abstractions.WindowFrame
+Kazo.Os.Windowing.Abstractions.WindowFrame.<Clone>$() -> Kazo.Os.Windowing.Abstractions.WindowFrame!
+Kazo.Os.Windowing.Abstractions.WindowFrame.Deconstruct(out Kazo.Os.Windowing.Abstractions.WindowFrameStyle Style, out bool ShowIcon, out bool MaximizeBox, out bool MinimizeBox, out bool ShowInTaskbar) -> void
+Kazo.Os.Windowing.Abstractions.WindowFrame.Equals(Kazo.Os.Windowing.Abstractions.WindowFrame? other) -> bool
+Kazo.Os.Windowing.Abstractions.WindowFrame.HasTitleBar.get -> bool
+Kazo.Os.Windowing.Abstractions.WindowFrame.MaximizeBox.get -> bool
+Kazo.Os.Windowing.Abstractions.WindowFrame.MaximizeBox.init -> void
+Kazo.Os.Windowing.Abstractions.WindowFrame.MinimizeBox.get -> bool
+Kazo.Os.Windowing.Abstractions.WindowFrame.MinimizeBox.init -> void
+Kazo.Os.Windowing.Abstractions.WindowFrame.ShowIcon.get -> bool
+Kazo.Os.Windowing.Abstractions.WindowFrame.ShowIcon.init -> void
+Kazo.Os.Windowing.Abstractions.WindowFrame.ShowInTaskbar.get -> bool
+Kazo.Os.Windowing.Abstractions.WindowFrame.ShowInTaskbar.init -> void
+Kazo.Os.Windowing.Abstractions.WindowFrame.ShowsIcon.get -> bool
+Kazo.Os.Windowing.Abstractions.WindowFrame.Style.get -> Kazo.Os.Windowing.Abstractions.WindowFrameStyle
+Kazo.Os.Windowing.Abstractions.WindowFrame.Style.init -> void
+Kazo.Os.Windowing.Abstractions.WindowFrame.UserCanMaximize(Kazo.Os.Windowing.Abstractions.WindowConstraints! constraints) -> bool
+Kazo.Os.Windowing.Abstractions.WindowFrame.UserCanMinimize.get -> bool
+Kazo.Os.Windowing.Abstractions.WindowFrame.UserCanResize(Kazo.Os.Windowing.Abstractions.WindowConstraints! constraints) -> bool
+Kazo.Os.Windowing.Abstractions.WindowFrame.WindowFrame(Kazo.Os.Windowing.Abstractions.WindowFrameStyle Style = Kazo.Os.Windowing.Abstractions.WindowFrameStyle.Normal, bool ShowIcon = true, bool MaximizeBox = true, bool MinimizeBox = true, bool ShowInTaskbar = true) -> void
+Kazo.Os.Windowing.Abstractions.WindowFrameChangedEvent
+Kazo.Os.Windowing.Abstractions.WindowFrameChangedEvent.Constraints.get -> Kazo.Os.Windowing.Abstractions.WindowConstraints!
+Kazo.Os.Windowing.Abstractions.WindowFrameChangedEvent.Constraints.init -> void
+Kazo.Os.Windowing.Abstractions.WindowFrameChangedEvent.Deconstruct(out Kazo.Os.Windowing.Abstractions.WindowId WindowId, out Kazo.Os.Windowing.Abstractions.WindowFrame! PreviousFrame, out Kazo.Os.Windowing.Abstractions.WindowFrame! Frame, out Kazo.Os.Windowing.Abstractions.WindowConstraints! Constraints) -> void
+Kazo.Os.Windowing.Abstractions.WindowFrameChangedEvent.Equals(Kazo.Os.Windowing.Abstractions.WindowFrameChangedEvent? other) -> bool
+Kazo.Os.Windowing.Abstractions.WindowFrameChangedEvent.Frame.get -> Kazo.Os.Windowing.Abstractions.WindowFrame!
+Kazo.Os.Windowing.Abstractions.WindowFrameChangedEvent.Frame.init -> void
+Kazo.Os.Windowing.Abstractions.WindowFrameChangedEvent.PreviousFrame.get -> Kazo.Os.Windowing.Abstractions.WindowFrame!
+Kazo.Os.Windowing.Abstractions.WindowFrameChangedEvent.PreviousFrame.init -> void
+Kazo.Os.Windowing.Abstractions.WindowFrameChangedEvent.WindowFrameChangedEvent(Kazo.Os.Windowing.Abstractions.WindowId WindowId, Kazo.Os.Windowing.Abstractions.WindowFrame! PreviousFrame, Kazo.Os.Windowing.Abstractions.WindowFrame! Frame, Kazo.Os.Windowing.Abstractions.WindowConstraints! Constraints) -> void
+Kazo.Os.Windowing.Abstractions.WindowFrameChangedEvent.WindowId.get -> Kazo.Os.Windowing.Abstractions.WindowId
+Kazo.Os.Windowing.Abstractions.WindowFrameChangedEvent.WindowId.init -> void
+Kazo.Os.Windowing.Abstractions.WindowFrameStyle
+Kazo.Os.Windowing.Abstractions.WindowFrameStyle.None = 2 -> Kazo.Os.Windowing.Abstractions.WindowFrameStyle
+Kazo.Os.Windowing.Abstractions.WindowFrameStyle.Normal = 0 -> Kazo.Os.Windowing.Abstractions.WindowFrameStyle
+Kazo.Os.Windowing.Abstractions.WindowFrameStyle.Tool = 1 -> Kazo.Os.Windowing.Abstractions.WindowFrameStyle
+Kazo.Os.Windowing.Abstractions.WindowRuntimeState.Frame.get -> Kazo.Os.Windowing.Abstractions.WindowFrame!
+Kazo.Os.Windowing.Abstractions.WindowRuntimeState.Frame.init -> void
+override Kazo.Os.Windowing.Abstractions.SetWindowFrameCommand.<Clone>$() -> Kazo.Os.Windowing.Abstractions.SetWindowFrameCommand!
+override Kazo.Os.Windowing.Abstractions.SetWindowFrameCommand.Equals(object? obj) -> bool
+override Kazo.Os.Windowing.Abstractions.SetWindowFrameCommand.GetHashCode() -> int
+override Kazo.Os.Windowing.Abstractions.SetWindowFrameCommand.ToString() -> string!
+override Kazo.Os.Windowing.Abstractions.WindowFrame.Equals(object? obj) -> bool
+override Kazo.Os.Windowing.Abstractions.WindowFrame.GetHashCode() -> int
+override Kazo.Os.Windowing.Abstractions.WindowFrame.ToString() -> string!
+override Kazo.Os.Windowing.Abstractions.WindowFrameChangedEvent.<Clone>$() -> Kazo.Os.Windowing.Abstractions.WindowFrameChangedEvent!
+override Kazo.Os.Windowing.Abstractions.WindowFrameChangedEvent.Equals(object? obj) -> bool
+override Kazo.Os.Windowing.Abstractions.WindowFrameChangedEvent.GetHashCode() -> int
+override Kazo.Os.Windowing.Abstractions.WindowFrameChangedEvent.ToString() -> string!
+override sealed Kazo.Os.Windowing.Abstractions.SetWindowFrameCommand.Equals(Kazo.Os.Windowing.Abstractions.WindowCommand? other) -> bool
+override sealed Kazo.Os.Windowing.Abstractions.WindowFrameChangedEvent.Equals(Kazo.Os.Windowing.Abstractions.WindowEvent? other) -> bool
+static Kazo.Os.Windowing.Abstractions.SetWindowFrameCommand.operator !=(Kazo.Os.Windowing.Abstractions.SetWindowFrameCommand? left, Kazo.Os.Windowing.Abstractions.SetWindowFrameCommand? right) -> bool
+static Kazo.Os.Windowing.Abstractions.SetWindowFrameCommand.operator ==(Kazo.Os.Windowing.Abstractions.SetWindowFrameCommand? left, Kazo.Os.Windowing.Abstractions.SetWindowFrameCommand? right) -> bool
+static Kazo.Os.Windowing.Abstractions.WindowFrame.Default.get -> Kazo.Os.Windowing.Abstractions.WindowFrame!
+static Kazo.Os.Windowing.Abstractions.WindowFrame.Dialog.get -> Kazo.Os.Windowing.Abstractions.WindowFrame!
+static Kazo.Os.Windowing.Abstractions.WindowFrame.operator !=(Kazo.Os.Windowing.Abstractions.WindowFrame? left, Kazo.Os.Windowing.Abstractions.WindowFrame? right) -> bool
+static Kazo.Os.Windowing.Abstractions.WindowFrame.operator ==(Kazo.Os.Windowing.Abstractions.WindowFrame? left, Kazo.Os.Windowing.Abstractions.WindowFrame? right) -> bool
+static Kazo.Os.Windowing.Abstractions.WindowFrameChangedEvent.operator !=(Kazo.Os.Windowing.Abstractions.WindowFrameChangedEvent? left, Kazo.Os.Windowing.Abstractions.WindowFrameChangedEvent? right) -> bool
+static Kazo.Os.Windowing.Abstractions.WindowFrameChangedEvent.operator ==(Kazo.Os.Windowing.Abstractions.WindowFrameChangedEvent? left, Kazo.Os.Windowing.Abstractions.WindowFrameChangedEvent? right) -> bool

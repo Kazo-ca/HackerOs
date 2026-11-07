@@ -1,1 +1,2 @@
 #nullable enable
+static Kazo.Os.Platform.Blazor.Windows.WindowLaunchCoordinator.ToFrame(Kazo.Os.App.Abstractions.WindowOptions! options) -> Kazo.Os.Windowing.Abstractions.WindowFrame!

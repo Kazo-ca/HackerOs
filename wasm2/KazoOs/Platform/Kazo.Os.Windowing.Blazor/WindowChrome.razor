@@ -5,9 +5,14 @@
 @inject IServiceProvider LocalizationServices
 
 <div class="chrome-interaction-layer" @ref="_interactionLayer" @onpointerdown:stopPropagation>
-<header class="window-chrome @(Window.IsFocused ? "is-focused" : "is-background")"
+@if (Window.Frame.HasTitleBar)
+{
+@* ADR 0234 §1: a None window draws no title bar; a Tool window a shorter one with Close only. *@
+<header class="window-chrome @(Window.IsFocused ? "is-focused" : "is-background") @(Window.Frame.Style == WindowFrameStyle.Tool ? "is-tool" : null)"
         data-window-gesture="@(Window.Constraints.IsMovable ? "move" : null)">
-    <div class="window-identity">
+    <div class="window-identity"
+         @oncontextmenu="OpenWindowMenuFromTitleAsync"
+         @oncontextmenu:preventDefault="@(OnWindowMenu.HasDelegate && !ShowsIconButton)">
         @if (Window.SupportsBack)
         {
             <button type="button" class="chrome-button chrome-button-back" aria-label="@L["Chrome.Back"]" title="@L["Chrome.Back"]" @onclick="BackAsync">
@@ -16,7 +21,7 @@
                 </svg>
             </button>
         }
-        @if (OnWindowMenu.HasDelegate)
+        @if (OnWindowMenu.HasDelegate && ShowsIconButton)
         {
             @* The app icon opens its system menu on right click; left click only activates the window. *@
             <button type="button" class="chrome-button chrome-button-menu" aria-label="@L["Chrome.WindowMenu"]" title="@L["Chrome.WindowMenuHint"]" aria-haspopup="menu"
@@ -37,7 +42,7 @@
                 }
             </button>
         }
-        else if (!string.IsNullOrWhiteSpace(Window.IconAssetPath))
+        else if (ShowsIconButton && !string.IsNullOrWhiteSpace(Window.IconAssetPath))
         {
             <img class="window-icon" src="@Window.IconAssetPath" alt="" />
         }
@@ -48,12 +53,15 @@
             }</h2>
     </div>
     <div class="window-actions" aria-label="@L["Chrome.Controls"]">
+        @if (Window.Frame.UserCanMinimize)
+        {
         <button type="button" class="chrome-button chrome-button-minimize" aria-label="@L["Chrome.Minimize"]" title="@L["Chrome.Minimize"]" @onclick="MinimizeAsync">
             <svg viewBox="0 0 12 12" aria-hidden="true" focusable="false">
                 <line x1="2" y1="9" x2="10" y2="9" />
             </svg>
         </button>
-        @if (Window.Constraints.IsResizable)
+        }
+        @if (Window.Frame.UserCanMaximize(Window.Constraints))
         {
         @* ADR 0179 §4: right click opens snap, full screen and « Autre écran »; left click is unchanged (ADR 0177). *@
         <button type="button" class="chrome-button chrome-button-maximize" aria-label="@ToggleLabel" title="@ToggleLabel" @onclick="ToggleMaximizeAsync"
@@ -83,7 +91,8 @@
         </button>
     </div>
 </header>
-@if (Window.Constraints.IsResizable && Window.VisualState == WindowVisualState.Normal)
+}
+@if (Window.Frame.UserCanResize(Window.Constraints) && Window.VisualState == WindowVisualState.Normal)
 {
     @* A maximized window has no edge to drag: no handle may sit over its title bar buttons. *@
     @foreach (string edge in ResizeEdges)
@@ -142,6 +151,9 @@
     private IJSObjectReference? _module;
     private DotNetObjectReference<WindowChrome>? _selfReference;
 
+    /// <summary>Gets whether the title bar shows the app icon (ADR 0234 §2, <c>ShowIcon</c>).</summary>
+    private bool ShowsIconButton => Window.Frame.ShowsIcon;
+
     private string ToggleLabel => Window.VisualState == WindowVisualState.Maximized ? L["Chrome.Restore"] : L["Chrome.Maximize"];
 
     /// <summary>Gets the package's texts: the host's session language, or English without localization (ADR 0104).</summary>
@@ -175,6 +187,20 @@
 
         await OnFocus.InvokeAsync(Window.Id);
         await OnWindowMenu.InvokeAsync(new WindowMenuRequest(Window.Id, args.ClientX, args.ClientY));
+    }
+
+    /// <summary>
+    /// Without its icon (ADR 0234 §2), the title bar itself opens the window menu on right click, as
+    /// Windows does for a form whose <c>ShowIcon</c> is off.
+    /// </summary>
+    private async Task OpenWindowMenuFromTitleAsync(MouseEventArgs args)
+    {
+        if (ShowsIconButton)
+        {
+            return;
+        }
+
+        await OpenWindowMenuAtPointerAsync(args);
     }
 
     private async Task OpenMaximizeMenuAtPointerAsync(MouseEventArgs args)
@@ -270,7 +296,7 @@
     [JSInvokable]
     public async Task ReportTitleDoubleClickAsync()
     {
-        if (Window.VisualState != WindowVisualState.Maximized && !Window.Constraints.IsResizable)
+        if (Window.VisualState != WindowVisualState.Maximized && !Window.Frame.UserCanMaximize(Window.Constraints))
         {
             return;
         }
@@ -356,7 +382,7 @@
             return;
         }
 
-        if (!Window.Constraints.IsResizable)
+        if (!Window.Frame.UserCanResize(Window.Constraints))
         {
             // Defense in depth: the resize handles are hidden for a non-resizable window, but a
             // drag gesture already in flight when constraints change should still no-op rather

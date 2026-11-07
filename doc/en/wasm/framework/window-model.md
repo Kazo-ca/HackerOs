@@ -116,7 +116,8 @@ public override WindowOptions? Window => new()
 - `WindowOptions` (App.Abstractions): outer sizes (title bar included) in CSS
   pixels. Without a declaration: `WindowOptions.Default`, 800×560 and minimum 360×240, as before.
 - Manifest: optional `window` object (`defaultWidth`, `defaultHeight`, `minWidth`, `minHeight`,
-  `maxWidth`, `maxHeight`, `resizable`), produced by the generator and absent if the app declares
+  `maxWidth`, `maxHeight`, `resizable`, and since SDK 3.1 `style`, `showIcon`, `maximizeBox`,
+  `minimizeBox`, `showInTaskbar`, `modal`, see §6), produced by the generator and absent if the app declares
   nothing. An omitted field takes its default value. The `manifest.schema.v1.json` schema forbids
   `window` outside apps of the `window` kind.
 - Validator codes:
@@ -306,6 +307,74 @@ the mobile desktop's recents and the frame's accessible name (`aria-labelledby`)
 - The `WindowResponsivenessMonitor` monitor, the box and the `window-manager.config`
   setting are described in [`process-priority-and-unresponsive-windows.md`](../dev/process-priority-and-unresponsive-windows.md).
 
+## 6. WinForms-style window styles and options (ADR 0234)
+
+### For the app
+
+```csharp
+public override WindowOptions? Window => new()
+{
+    DefaultWidth = 400, DefaultHeight = 300,
+    Resizable = false,
+    Style = WindowStyle.Tool,     // Normal (default), Tool, None
+    ShowIcon = true,              // icon in the title bar
+    MaximizeBox = true,           // Maximize button
+    MinimizeBox = true,           // Minimize button
+    ShowInTaskbar = true,         // taskbar button
+    Modal = false,                // child windows (work item 5)
+};
+```
+
+| Style | Title bar | Border and handles | Buttons |
+| --- | --- | --- | --- |
+| `Normal` | yes | yes | per the booleans |
+| `Tool` | yes, shorter (`--kos-tool-titlebar-height`) | no | Close only |
+| `None` | no | no | none: the app draws its own |
+
+- Manifest: `style` (`"normal"`, `"tool"`, `"none"`) and the booleans are written only when they
+  differ from their default; an existing manifest stays byte-identical.
+- `ShowInTaskbar = false` removes the taskbar button **and** the Minimize button: the user can no
+  longer minimize the window (Benoit's answer B to question 6). It stays in Alt+` and the switcher.
+- `MaximizeBox = false` also removes double-click on the bar; `MinimizeBox = false` also removes
+  "Minimize" from the window menu and the keyboard command. `Tool` and `None` remove the handles,
+  Maximize and Minimize; the window menu stays on right click on the bar and on Alt+Space.
+- Without an icon (`ShowIcon = false` or `Tool`), right click on the title opens the window menu.
+- A `None` window moves through any element marked `data-kazo-window-drag` (fields, links and
+  editable elements inside it stay clickable).
+
+What the app asks of **its own** window, with no capability (#384):
+
+| `WindowAppBase` member | Effect |
+| --- | --- |
+| `WindowOptions` | Current options (the manifest until the app changes them). |
+| `MinimizeWindowAsync`, `MaximizeWindowAsync`, `RestoreWindowAsync` | Window state; a fixed-size window is never maximized. |
+| `MoveWindowAsync(x, y)` | Top-left corner, relative to its screen's work area; the window stays on the screen. |
+| `ResizeWindowAsync(w, h)` | Outer size, bounded by the declared sizes and the screen; needs a resizable window in its normal state. |
+| `SetWindowStyleAsync(style)`, `SetWindowOptionsAsync(options)` | Style, booleans and sizes at run time (start from `WindowOptions with { … }`). |
+
+Each method returns `true` when the request is applied, `false` otherwise (closed window,
+detached window, request refused by the window's state, platform older than SDK 3.1). The
+booleans set what the user sees, not what the app may do: an app with `MinimizeBox = false` can
+still minimize its window.
+
+### Architecture
+
+- `WindowFrame` (Windowing.Abstractions): style (`WindowFrameStyle`) and booleans in
+  `WindowRuntimeState.Frame`, with `UserCanMinimize`, `UserCanMaximize(constraints)`,
+  `UserCanResize(constraints)`. The chrome, keyboard commands, window arrangement and taskbar read
+  these rules; `WindowRuntime` only limits what the constraints forbid, so the app keeps its
+  requests.
+- `SetWindowFrameCommand` and `WindowFrameChangedEvent`: change the frame and constraints; a
+  maximized window that becomes fixed-size is restored.
+- `WindowLaunchCoordinator.ToFrame(options)` maps the manifest; `AppWindowGatewayFactory` applies
+  the app's requests through the runtime commands.
+- `WindowRuntime.ActivationTarget(id)`: the topmost modal window of an owner. A dialog with no
+  taskbar button comes forward through its owner's button.
+- OS dialogs (MessageBox, open, save, folder, text input, app chooser, "not responding"):
+  `WindowFrame.Dialog`, `Tool` style with no taskbar button (ADR §6). On mobile they stay full
+  screen.
+- `WindowHost` adds `is-tool` or `is-frameless`; `None` transparency comes with work item 6.
+
 ## Implementation decisions
 
 - **Full screen added** (`toggle-fullscreen`, `Alt+F11`, menu entry): keyboard
@@ -354,6 +423,11 @@ the mobile desktop's recents and the frame's accessible name (`aria-labelledby`)
 - E2E `WindowKeyboardCommandsTests` (UI.E2E): `` Alt+` `` switches window and `Alt+Q` closes the
   active window in a Chromium tab.
 
+- `WindowFrameTests` (Windowing.Core), `WindowStyleOptionsTests` (Platform.Blazor),
+  `WindowAppBaseWindowFrameTests` (SDK Blazor), serializer (App.Abstractions): styles and booleans
+  (ADR 0234), chrome drawn per style, taskbar, app requests (#384), dialog brought forward by its
+  owner, fields written only when not default.
+
 ## Task list
 
 - [x] Fix the double move on release and the transition before/after projection.
@@ -381,3 +455,13 @@ the mobile desktop's recents and the frame's accessible name (`aria-labelledby`)
 - [x] Kazo Paint, text editor, code editor, theme editor, explorer.
 - [x] Unit and E2E tests.
 - [x] ADR 0123, documentation, SDK reference and index.
+
+### Work item `os-3-1/4-window-style-options` (ADR 0234 §1, §2, §4, §6)
+
+- [x] `WindowStyle` and booleans in `WindowOptions`, manifest, schema, serializer.
+- [x] `WindowFrame`, `SetWindowFrameCommand`, `ActivationTarget` in the runtime.
+- [x] Chrome, handles, keyboard, arrangement and taskbar follow the style.
+- [x] OS dialogs as `Tool` with no taskbar button.
+- [x] `IAppWindowGateway` and `WindowAppBase` methods (#384).
+- [x] Tests and documentation.
+

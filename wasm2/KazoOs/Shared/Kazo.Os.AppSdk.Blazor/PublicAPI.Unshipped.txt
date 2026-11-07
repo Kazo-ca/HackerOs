@@ -1,1 +1,16 @@
 #nullable enable
+Kazo.Os.AppSdk.Blazor.IAppWindowGateway.MaximizeAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.AppSdk.Blazor.IAppWindowGateway.MinimizeAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.AppSdk.Blazor.IAppWindowGateway.MoveAsync(double x, double y, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.AppSdk.Blazor.IAppWindowGateway.Options.get -> Kazo.Os.App.Abstractions.WindowOptions!
+Kazo.Os.AppSdk.Blazor.IAppWindowGateway.ResizeAsync(double width, double height, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.AppSdk.Blazor.IAppWindowGateway.RestoreAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.AppSdk.Blazor.IAppWindowGateway.SetOptionsAsync(Kazo.Os.App.Abstractions.WindowOptions! options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.AppSdk.Blazor.WindowAppBase.MaximizeWindowAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.AppSdk.Blazor.WindowAppBase.MinimizeWindowAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.AppSdk.Blazor.WindowAppBase.MoveWindowAsync(double x, double y, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.AppSdk.Blazor.WindowAppBase.ResizeWindowAsync(double width, double height, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.AppSdk.Blazor.WindowAppBase.RestoreWindowAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.AppSdk.Blazor.WindowAppBase.SetWindowOptionsAsync(Kazo.Os.App.Abstractions.WindowOptions! options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.AppSdk.Blazor.WindowAppBase.SetWindowStyleAsync(Kazo.Os.App.Abstractions.WindowStyle style, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.AppSdk.Blazor.WindowAppBase.WindowOptions.get -> Kazo.Os.App.Abstractions.WindowOptions!
