@@ -15,6 +15,11 @@ qu'un navigateur ne peut pas faire seul :
 - les **flux TCP** (`KazoTcpClient.ConnectAsync`) ;
 - les **datagrammes UDP** (`KazoUdpClient`).
 
+Une app qui joint un serveur **WebSocket** n'a pas besoin du relais :
+`KazoClientWebSocket` ouvre le `WebSocket` du navigateur, sans serveur, avec la
+même capacité `network.real.access` (ADR 0235 §1,
+[`sdk-network.md`](../framework/sdk-network.md#websocket-vers-un-vrai-serveur-adr-0235-1)).
+
 Il vérifie lui-même que l'app a le droit d'utiliser le relais, applique une
 politique et des quotas configurés dans `appsettings.json`, et écrit un
 avertissement au démarrage quand cette politique est affaiblie. Sans serveur,
@@ -40,23 +45,25 @@ Paramètres     ──► KazoServerConnection.GetRelayPolicyAsync ────�
 | Type | Rôle |
 |---|---|
 | `ProxyHttpRequest` | porte `Body` et `ContentType` ; `Create(...)` calcule `BodyBytes` et `BodyHash` (SHA-256 hexadécimal minuscule). |
-| `ProxyPolicyResponse` | politique effective : relais actif, ports HTTP/TCP/UDP, plages privées, quotas, flux ouverts, apps accordées, avertissements. |
+| `ProxyPolicyResponse` | politique effective : relais actif, ports HTTP/TCP/UDP, ports bloqués TCP/UDP, plages privées, quotas, flux ouverts, apps accordées, ports approuvés par app (`AppPorts`), avertissements. |
 | `ProxyStreamRoutes`, `ProxyStreamCloseCodes` | routes, paramètres de requête et codes de fermeture des flux. |
-| `ProxyStreamRequest`, `ProxyStreamOpened`, `ProxyStreamClosure` | ouverture d'un flux, adresse épinglée, raison de la fermeture. |
+| `ProxyStreamRequest`, `ProxyStreamOpened`, `ProxyStreamClosure` | ouverture d'un flux (avec `UseTls` et `TargetHost`, ADR 0235 §2), adresse épinglée (avec `TlsProtocol` et `CertificateSubject`), raison de la fermeture. |
 | `IProxyStreamChannel` | un flux ouvert : `SendAsync`, `ReceiveAsync` (`null` à la fin), `Closure`. |
 | `ProxyStreamException` | refus d'ouverture avec son `ProxyErrorCode`. |
 
 Nouveaux codes d'erreur : `GRANT_MISSING` (403), `RELAY_DISABLED` (503),
-`BODY_MISMATCH` (400), `CONNECTION_REFUSED` et `HOST_UNREACHABLE` (502).
+`BODY_MISMATCH` (400), `CONNECTION_REFUSED` et `HOST_UNREACHABLE` (502),
+`TLS_FAILED` (flux refusé, fermeture `4001`, ADR 0235 §2).
 
 ### Serveur
 
 | Classe | Rôle |
 |---|---|
 | `ProxyOptions`, `ProxyRelayPolicy` | section `KazoOs:Proxy` ; `ProxyRelayPolicy.From` pose les valeurs par défaut et calcule les limites effectives. |
-| `ProxyGrantAuthority` | `IsGrantedAsync` : l'app est dans `GrantedApps` ou un enregistrement `grants` synchronisé du compte lui donne `network.real.access`. |
+| `ProxyGrantAuthority` | `GetGrantAsync` : l'app est dans `GrantedApps` ou un enregistrement `grants` synchronisé du compte lui donne `network.real.access` ; rend aussi les ports approuvés de cet enregistrement (`realNetworkPorts`, ADR 0235 §3). `ListGrantsWithPortsAsync` les liste pour la politique. |
 | `ProxyService` | validations communes (relais actif, app, accord, port, adresse épinglée, plages bloquées, quotas) ; `ExecuteHttpRequestAsync` envoie le corps ; `OpenStreamAsync` connecte le socket. |
-| `SocketProxyStreamConnector`, `SocketProxyStreamChannel` | connexion TCP/UDP (10 s), délai d'inactivité, compteurs d'octets, audit à la fermeture. |
+| `SocketProxyStreamConnector`, `SocketProxyStreamChannel` | connexion TCP/UDP (10 s), délai d'inactivité, compteurs d'octets, audit à la fermeture ; le canal lit et écrit dans la session TLS quand il y en a une. |
+| `IProxyTlsNegotiator`, `SslStreamProxyTlsNegotiator` | négociation TLS avec la cible (`SslStream`, 10 s), certificat vérifié par le magasin du système et le nom `TargetHost` ; `TLS_FAILED` sinon. |
 | `ProxyStreamWebSocketPump` | accepte le WebSocket et pompe les trames dans les deux sens. |
 | `ProxyPolicyStartupReporter` | avertissements au démarrage (événements 1020 à 1022). |
 
@@ -74,17 +81,48 @@ Nouveaux codes d'erreur : `GRANT_MISSING` (403), `RELAY_DISABLED` (503),
 
 1. Le client ouvre `GET /api/proxy/tcp?host=…&port=…&appId=…&access_token=…`
    (ou `/udp`) en WebSocket. Le paramètre `access_token` n'est accepté que sur
-   ces deux routes ; ailleurs seul l'en-tête `Authorization` compte.
+   ces deux routes ; ailleurs seul l'en-tête `Authorization` compte. En TCP,
+   `tls=1` demande TLS vers la cible et `targetHost=…` donne le nom à vérifier
+   quand il diffère de `host` (ADR 0235 §2).
 2. Le serveur valide la requête et connecte le socket **avant** d'accepter le
-   WebSocket.
+   WebSocket. Avec `tls=1`, il fait aussi la négociation TLS avec la cible
+   avant d'accepter.
 3. Succès : la première trame est une trame **texte** JSON
-   `ProxyStreamOpened` (adresse épinglée, port). Toutes les suivantes sont
+   `ProxyStreamOpened` (adresse épinglée, port ; avec TLS, `tlsProtocol`, par
+   exemple `TLS 1.3`, et `certificateSubject`). Toutes les suivantes sont
    binaires : un message TCP est une suite d'octets (64 Kio au plus), un
    message UDP est un datagramme (65 507 octets au plus, vide permis).
 4. Refus : le WebSocket est accepté puis fermé avec `4001` et la raison
    `« <ProxyErrorCode> <message> »` ; le client lève `ProxyStreamException`.
 5. Fin : `4000` quand la cible ferme, `4002` après l'inactivité, `1000` quand
    le client ferme.
+
+## TLS ouvert par le relais (ADR 0235 §2)
+
+Le navigateur n'a pas de `SslStream` : une app ne peut pas chiffrer elle-même
+un flux TCP. Avec `UseTls`, le serveur ouvre TLS vers la cible et l'app lit et
+écrit du texte en clair dans le flux ; le chiffrement est entre le serveur et
+la cible, et le trajet navigateur → serveur est protégé par le `https` du
+serveur.
+
+- Ordre : socket connecté, puis négociation TLS (SNI = `TargetHost`, ou `host`
+  sans lui), puis seulement le WebSocket accepté. Une cible refusée ne donne
+  jamais un octet à l'app.
+- Vérification : la chaîne doit finir à une racine du magasin du système du
+  serveur, le nom doit correspondre, le certificat doit être valide à cette
+  date. Les versions sont celles que le système accepte (TLS 1.2 et 1.3).
+  La révocation suit la valeur par défaut de `SslStream` (pas de requête
+  OCSP/CRL), comme `HttpClient`.
+- **Aucune option pour accepter un certificat invalide**, ni dans
+  `appsettings.json`, ni dans le SDK.
+- Refus : certificat non approuvé, expiré ou pour un autre nom, cible en
+  clair, ou négociation qui ne finit pas en 10 s → `TLS_FAILED`, fermeture
+  `4001`, audit `PROXY_TLS_FAILED`. TLS sur UDP (DTLS) ou un `TargetHost` qui
+  n'est pas un nom d'hôte → `MALFORMED_REQUEST` ; un `TargetHost` simulé →
+  `SIMULATED_DOMAIN_BLOCKED`.
+- L'audit `PROXY_TCP_OPEN` note la version TLS (`"tls":"TLS 1.3"`, ou `null`).
+- Les ports restent filtrés par `Tcp:AllowedPorts` (6697 n'est pas livré ;
+  les ports déclarés par l'app viennent avec l'ADR 0235 §3).
 
 ## Configuration (`appsettings.json`)
 
@@ -93,8 +131,14 @@ Nouveaux codes d'erreur : `GRANT_MISSING` (403), `RELAY_DISABLED` (503),
   "Proxy": {
     "Enabled": true,
     "Http": { "AllowedPorts": [ 80, 443 ] },
-    "Tcp":  { "AllowedPorts": [ 80, 443 ] },
-    "Udp":  { "AllowedPorts": [ 53, 123 ] },
+    "Tcp":  {
+      "AllowedPorts": [ 80, 443 ],
+      "BlockedPorts": [ 25, 111, 135, 137, 138, 139, 445, 465, 587, 2049 ]
+    },
+    "Udp":  {
+      "AllowedPorts": [ 53, 123 ],
+      "BlockedPorts": [ 19, 111, 137, 138, 389, 1900, 11211 ]
+    },
     "AllowAllPorts": false,
     "AllowPrivateNetworks": false,
     "Quotas": {
@@ -131,10 +175,62 @@ les défauts sont posés par `ProxyRelayPolicy.From`.
   `RELAY_DISABLED`.
 
 Au démarrage, le serveur journalise un avertissement par affaiblissement
-(`AllowAllPorts`, `AllowPrivateNetworks`, quotas désactivés), un rappel que le
+(`AllowAllPorts`, `AllowPrivateNetworks`, quotas désactivés, `BlockedPorts`
+vide en TCP ou en UDP), un rappel que le
 serveur est mono-utilisateur s'il y en a au moins un, et un avertissement si le
 relais est coupé. Les mêmes phrases sont rendues dans
 `ProxyPolicyResponse.Warnings` et affichées par Paramètres.
+
+## Ports déclarés par l'app et `BlockedPorts` (ADR 0235 §3)
+
+Une app qui a besoin d'autres ports que `AllowedPorts` (IRC : 6697 et 6667)
+les déclare dans sa définition, avec `network.real.access` :
+
+```csharp
+public override IReadOnlyList<string> Capabilities => [AppCapabilities.NetworkRealAccess];
+public override IReadOnlyList<string> RealNetworkPorts => ["tcp/6697", "tcp/6667"];
+```
+
+Le générateur écrit `"realNetworkPorts": ["tcp/6667", "tcp/6697"]` dans
+`manifest.json` (triés, absent quand la liste est vide). Le validateur du
+manifeste, donc le générateur et `kazopkg`, refuse un port mal écrit (forme
+`tcp/N` ou `udp/N`, N de 1 à 65535, sans plage ni zéro en tête), un port
+répété, une liste vide, ou des ports sans `network.real.access`.
+
+La fenêtre d'approbation de `network.real.access` et le mode texte du terminal
+affichent ces ports sous la capacité (« Vrais serveurs sur les ports : TCP 6667,
+TCP 6697 », `RealNetworkPortText`).
+
+Le relais décide ainsi, pour un flux TCP ou UDP :
+
+1. port dans le `BlockedPorts` du protocole : **refusé** (`BLOCKED_PORT`), même
+   s'il est dans `AllowedPorts`, déclaré et approuvé, ou avec `AllowAllPorts` ;
+2. sinon `AllowAllPorts`, ou port dans `AllowedPorts` : accepté ;
+3. sinon port déclaré par l'app **et** présent dans les `realNetworkPorts` de
+   son accord synchronisé (`GrantsSyncPayload.RealNetworkPorts`) : accepté ;
+4. sinon refusé (`BLOCKED_PORT`).
+
+Un port TCP déclaré n'ouvre pas le même port UDP. Une entrée invalide d'un
+accord est ignorée, jamais élargie. Une requête HTTP suit le `BlockedPorts`
+TCP (HTTP passe par TCP) ; la sonde d'un seul port de `nmap` (ADR 0035) n'est
+pas concernée.
+
+Listes livrées : TCP 25, 465, 587 (courriel, contre le pourriel envoyé depuis
+l'adresse du serveur), 111, 135, 137, 138, 139, 445, 2049 (RPC, partage de
+fichiers Windows, NFS) ; UDP 19, 111, 137, 138, 389, 1900, 11211 (services
+connus pour l'amplification d'attaques). Une liste absente garde ces valeurs ;
+`"BlockedPorts": []` la vide (`ProxyOptions.KeepExplicitEmptyLists`, le binder
+ne sait pas lier un tableau vide) et le serveur en avertit au démarrage.
+
+Paramètres (section du serveur) affiche les ports bloqués TCP et UDP et, pour
+chaque app dont l'accord porte des ports, ces ports.
+
+**Limite actuelle** : aucun code n'émet encore d'accord synchronisé avec ses
+ports. L'OS ne pousse jamais d'accord (ADR 0031) et le serveur n'a pas de route
+pour en émettre ; la façon dont l'approbation de l'OS arrive au serveur est une
+question posée à Benoit dans le fil « Accepter les ports déclarés par les
+apps ». Jusque-là, seules les apps de `GrantedApps` utilisent le relais, avec
+`AllowedPorts`.
 
 ## Utilisation dans une app
 
@@ -143,6 +239,12 @@ relais est coupé. Les mêmes phrases sont rendues dans
 await using KazoNetworkStream stream = await KazoTcpClient.ConnectAsync("example.com", 443);
 await stream.WriteAsync(request);
 int read = await stream.ReadAsync(buffer); // 0 quand la cible a fermé
+
+// TLS ouvert par le relais (ADR 0235 §2) : l'app lit et écrit du texte en clair.
+await using KazoNetworkStream irc = await KazoTcpClient.ConnectAsync(
+    "irc.libera.chat", 6697, new KazoTcpConnectOptions { UseTls = true }, cancellationToken);
+string? version = irc.TlsProtocol;               // « TLS 1.3 »
+string? subject = irc.RemoteCertificateSubject;  // « CN=irc.libera.chat »
 
 // UDP : un socket « connecté » à une cible.
 await using KazoUdpClient udp = await KazoUdpClient.ConnectAsync("pool.ntp.org", 123);
@@ -167,12 +269,15 @@ KazoHttpResponse response = await http.PostAsync(url, new KazoStringContent(json
 |---|---|
 | `BLOCKED_PORT`, `BLOCKED_ADDRESS`, `CONNECTION_REFUSED` | `ConnectionRefused` |
 | `HOST_UNREACHABLE` | `HostUnreachable` |
+| `TLS_FAILED` | `AuthenticationException` (comme `SslStream`), `KazoNetworkError.TlsFailed` dans la passerelle |
 | `GRANT_MISSING`, `RELAY_DISABLED`, `SIMULATED_DOMAIN_BLOCKED` | `HostNotFound` |
 | autre | `ConnectionFailed` (erreur réseau du SDK) |
 
 Paramètres (section du serveur) affiche la politique du serveur connecté avec
-`KazoServerConnection.GetRelayPolicyAsync()` : ports, plages privées, quotas,
-flux ouverts, apps accordées et avertissements.
+`KazoServerConnection.GetRelayPolicyAsync()` : ports, ports bloqués
+(`TcpBlockedPorts`, `UdpBlockedPorts`), plages privées, quotas, flux ouverts,
+apps accordées, ports déclarés par les apps approuvées (`AppPorts`) et
+avertissements.
 
 ## Décisions clés
 
@@ -212,5 +317,8 @@ flux ouverts, apps accordées et avertissements.
 - [x] `KazoServerConnection.GetRelayPolicyAsync` et panneau de Paramètres.
 - [x] Tests : service, endpoints WebSocket, client direct, passerelle réseau, politique.
 - [x] ADR 0108 et documentation.
+- [x] Ports déclarés par l'app (ADR 0235 §3) : `RealNetworkPorts` du manifeste, validation, fenêtre d'approbation et terminal, relais (`BlockedPorts`, ports approuvés de l'accord), politique et Paramètres, avertissement de liste vide, tests.
+- [ ] Émission par le serveur de l'accord avec ses ports (question 1 du fil « Accepter les ports déclarés par les apps »).
+- [x] TLS ouvert par le relais (ADR 0235 §2, chantier `real-network/2-relay-tls`) : `tls=1`, `targetHost`, `SslStream` avant d'accepter le WebSocket, `TLS_FAILED`, `ProxyStreamOpened` avec la session, `KazoTcpConnectOptions`, tests avec un serveur TLS de test (certificat approuvé, non approuvé, mauvais nom, cible en clair, flux en clair inchangé).
 
 Voir aussi l'[ADR 0191](adr/0191-installable-local-server.md) : serveur installable sur l'ordinateur ou le réseau local.

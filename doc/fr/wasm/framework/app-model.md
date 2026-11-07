@@ -40,6 +40,7 @@ Valeurs par défaut des membres facultatifs :
 | `SingleInstancePerUser`, `AutoStart`, `SupportsBack` | `false` |
 | `ServiceStartup` | `null` (= `Login`) ; `serviceStartup` est alors omis du manifeste. `Boot` ne vaut que pour une app système de genre `Service` (ADR 0097 §4, ADR 0107) |
 | `OomScoreAdjust` | `null` (hérite ; `-500` pour un service système) ; `oomScoreAdj` est alors omis du manifeste. Négatif seulement pour une app système (`KOSAPP0024`, ADR 0126 §4, ADR 0142, [`oom-killer.md`](../dev/oom-killer.md)) |
+| `RealNetworkPorts` | vide ; `realNetworkPorts` est alors omis du manifeste. Ports réels `tcp/N` ou `udp/N` dont l'app a besoin par le relais du serveur, hors `AllowedPorts` ; exige `network.real.access`, affichés à l'approbation, refusés par le serveur s'ils sont dans `BlockedPorts` (ADR 0235 §3, [relais réseau](../dev/server-network-relay.md)) |
 | `Resources` | `AppResourceProfileManifest.None` |
 | `Window` | `null` : la fenêtre prend `WindowOptions.Default` (800×560, minimum 360×240) ; l'objet `window` est alors omis du manifeste (ADR 0095, [`window-model.md`](window-model.md)). Déclaré seulement par une app de genre `Window` (`manifest.window.*`). |
 

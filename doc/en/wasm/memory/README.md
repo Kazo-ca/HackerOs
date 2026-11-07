@@ -15,9 +15,9 @@ at the end of each series or when a convention changes.
 - **Version**: Kazo OS and the SDK move to **3.1.0** (`build/Versions.props`),
   prepared on 2026-11-07 by the `os-3-1/7-release-3-1-0` work item of the
   `os-3-1/base` series; it is published (`v3.1.0` tag, GitHub Release,
-  nuget.org) when `os-3-1/base` lands in `main`. It folds 247 API lines into
-  `Shipped` (WinForms window styles, child windows, ADRs 0231 to 0234) and
-  gathers 11 entries into `changes/3.1.0.json`. 3.0.0 (2026-11-05, published,
+  nuget.org) when `os-3-1/base` lands in `main`. It folds 366 API lines into
+  `Shipped` (WinForms window styles, child windows, real network for chat apps,
+  ADRs 0231 to 0235) and gathers 15 entries into `changes/3.1.0.json`. 3.0.0 (2026-11-05, published,
   rename to Kazo OS) had not gathered its 15 entries: they are filed afterwards
   in `changes/3.0.0.json`. 2.2.2 (2026-11-01) compiles the official catalog's public key into the OS
   (`AppPackageDefaults.OfficialCatalogSigningKey`, PR #349): every Kazo OS Store
@@ -129,7 +129,7 @@ at the end of each series or when a convention changes.
   (`[signing-keys]`, `KazoOsAppSigningKeys`), `.transaction` journal,
   `kazopkg rollback`/`repair`, `AppDataGuard`. Five questions asked to Benoit,
   answer A to each. Benoit created the official catalog key on 2026-11-01
-  (`keygen`, the catalog's `HACK_STORE_SIGNING_KEY` secret); its public key is in
+  (`keygen`, the catalog's `KAZO_STORE_SIGNING_KEY` secret); its public key is in
   `AppPackageDefaults.OfficialCatalogSigningKey`; tool for authors: `TODO`
   issue #321.
 - **Notification bubbles** (ADR 0197, work item 1 of #242, series

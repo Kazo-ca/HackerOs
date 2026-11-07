@@ -69,7 +69,8 @@ public static class AppManifestJsonSerializer
             "window",
             "execution",
             "web",
-            "oomScoreAdj"
+            "oomScoreAdj",
+            "realNetworkPorts"
         });
 
         return JsonSerializer.Deserialize(document.RootElement.GetRawText(), AppManifestJsonSerializerContext.Default.AppManifest)
@@ -150,6 +151,9 @@ public static class AppManifestJsonSerializer
             Platform = platform,
             Localizations = [.. manifest.Localizations.OrderBy(item => item.Culture, StringComparer.Ordinal)],
             Capabilities = [.. manifest.Capabilities.OrderBy(value => value, StringComparer.Ordinal)],
+            RealNetworkPorts = manifest.RealNetworkPorts is null
+                ? null
+                : [.. manifest.RealNetworkPorts.OrderBy(value => value, StringComparer.Ordinal)],
             Dependencies = [.. manifest.Dependencies.OrderBy(item => item.AppId, StringComparer.Ordinal)
                 .ThenBy(item => item.MinimumVersion, StringComparer.Ordinal)
                 .ThenBy(item => item.MaximumVersion ?? string.Empty, StringComparer.Ordinal)

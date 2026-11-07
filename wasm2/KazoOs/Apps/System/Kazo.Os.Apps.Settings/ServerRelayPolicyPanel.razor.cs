@@ -55,6 +55,10 @@ public sealed partial class ServerRelayPolicyPanel
     private string Ports(IReadOnlyList<int> ports) =>
         _policy is { AllowAllPorts: true } || ports.Count == 0 ? L["Relay.AllPorts"] : string.Join(", ", ports);
 
+    /// <summary>A block-list, or "none" when the server blocks no port of that protocol by list.</summary>
+    private string BlockedPorts(IReadOnlyList<int> ports) =>
+        ports.Count == 0 ? L["Relay.NoBlockedPorts"] : string.Join(", ", ports);
+
     private string Quotas(KazoServerRelayPolicy policy) =>
         policy.QuotasEnabled
             ? L["Relay.QuotasValue",

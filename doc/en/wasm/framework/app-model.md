@@ -40,6 +40,7 @@ Default values of the optional members:
 | `SingleInstancePerUser`, `AutoStart`, `SupportsBack` | `false` |
 | `ServiceStartup` | `null` (= `Login`); `serviceStartup` is then omitted from the manifest. `Boot` only applies to a system app of kind `Service` (ADR 0097 §4, ADR 0107) |
 | `OomScoreAdjust` | `null` (inherits; `-500` for a system service); `oomScoreAdj` is then omitted from the manifest. Negative only for a system app (`KOSAPP0024`, ADR 0126 §4, ADR 0142, [`oom-killer.md`](../dev/oom-killer.md)) |
+| `RealNetworkPorts` | empty; `realNetworkPorts` is then omitted from the manifest. Real ports `tcp/N` or `udp/N` the app needs through the server relay, outside `AllowedPorts`; requires `network.real.access`, shown at approval, refused by the server when in `BlockedPorts` (ADR 0235 §3, [network relay](../dev/server-network-relay.md)) |
 | `Resources` | `AppResourceProfileManifest.None` |
 | `Window` | `null`: the window takes `WindowOptions.Default` (800×560, minimum 360×240); the `window` object is then omitted from the manifest (ADR 0095, [`window-model.md`](window-model.md)). Declared only by an app of kind `Window` (`manifest.window.*`). |
 

@@ -12,7 +12,7 @@ namespace Kazo.Os.Network.Tests;
 
 /// <summary>
 /// ADR 0102 on the OS side: request bodies relayed to the real network, and the TCP/UDP sockets
-/// of <see cref="KazoTcpClient.ConnectAsync"/> and <see cref="KazoUdpClient"/> over the relay.
+/// of <see cref="KazoTcpClient.ConnectAsync(string, int, CancellationToken)"/> and <see cref="KazoUdpClient"/> over the relay.
 /// </summary>
 public sealed partial class Wave4NetworkTests
 {
@@ -127,6 +127,69 @@ public sealed partial class Wave4NetworkTests
     }
 
     [Fact]
+    public async Task KazoTcpClient_connect_with_tls_asks_the_relay_for_tls_and_reports_the_session()
+    {
+        RecordingStreamProxyClient relay = new() { NegotiatedTls = ("TLS 1.3", "CN=irc.real-external-site.example") };
+        UseServer(new ConnectedServerConnectionService(), relay);
+        EnterApp(new GrantAllCapabilityChecker());
+
+        await using KazoNetworkStream stream = await KazoTcpClient.ConnectAsync(
+            "real-external-site.example", 6697, new KazoTcpConnectOptions { UseTls = true, TargetHost = "irc.real-external-site.example" }, CancellationToken.None);
+        await stream.WriteAsync(Encoding.ASCII.GetBytes("NICK kazo\r\n"));
+        byte[] buffer = new byte[32];
+        int read = await stream.ReadAsync(buffer);
+
+        ProxyStreamRequest sent = relay.Requests.Single();
+        Assert.True(sent.UseTls);
+        Assert.Equal("irc.real-external-site.example", sent.TargetHost);
+        Assert.Equal("NICK kazo\r\n", Encoding.ASCII.GetString(buffer, 0, read));
+        Assert.True(stream.IsEncrypted);
+        Assert.Equal("TLS 1.3", stream.TlsProtocol);
+        Assert.Equal("CN=irc.real-external-site.example", stream.RemoteCertificateSubject);
+    }
+
+    [Fact]
+    public async Task KazoTcpClient_connect_without_tls_stays_clear_text()
+    {
+        RecordingStreamProxyClient relay = new();
+        UseServer(new ConnectedServerConnectionService(), relay);
+        EnterApp(new GrantAllCapabilityChecker());
+
+        await using KazoNetworkStream stream = await KazoTcpClient.ConnectAsync(
+            "real-external-site.example", 6667, new KazoTcpConnectOptions { TargetHost = "ignored.example" }, CancellationToken.None);
+
+        ProxyStreamRequest sent = relay.Requests.Single();
+        Assert.False(sent.UseTls);
+        Assert.Null(sent.TargetHost);
+        Assert.False(stream.IsEncrypted);
+        Assert.Null(stream.TlsProtocol);
+        Assert.Null(stream.RemoteCertificateSubject);
+    }
+
+    [Fact]
+    public async Task KazoTcpClient_tls_refused_by_the_relay_throws_an_AuthenticationException()
+    {
+        UseServer(new ConnectedServerConnectionService(), new RecordingStreamProxyClient { Refusal = ProxyErrorCode.TlsFailed });
+        EnterApp(new GrantAllCapabilityChecker());
+
+        var failure = await Assert.ThrowsAsync<System.Security.Authentication.AuthenticationException>(() => KazoTcpClient.ConnectAsync(
+            "real-external-site.example", 6697, new KazoTcpConnectOptions { UseTls = true }, CancellationToken.None));
+
+        Assert.Contains("refused by the test relay", failure.Message);
+    }
+
+    [Fact]
+    public async Task KazoTcpClient_tls_without_a_server_finds_no_host()
+    {
+        EnterApp(new GrantAllCapabilityChecker());
+
+        SocketException unknown = await Assert.ThrowsAsync<SocketException>(() => KazoTcpClient.ConnectAsync(
+            "real-external-site.example", 6697, new KazoTcpConnectOptions { UseTls = true }, CancellationToken.None));
+
+        Assert.Equal(SocketError.HostNotFound, unknown.SocketErrorCode);
+    }
+
+    [Fact]
     public async Task KazoUdpClient_sends_and_receives_one_datagram_through_the_relay()
     {
         RecordingStreamProxyClient relay = new();
@@ -156,6 +219,10 @@ public sealed partial class Wave4NetworkTests
 
         public string? Refusal { get; init; }
 
+        public (string Protocol, string Subject)? NegotiatedTls { get; init; }
+
+        public List<ProxyStreamRequest> Requests { get; } = [];
+
         public EchoChannel? LastChannel { get; private set; }
 
         public Task<ProxyHttpResponse> ExecuteHttpRequestAsync(
@@ -177,12 +244,17 @@ public sealed partial class Wave4NetworkTests
             Uri serverBaseUrl, string accessToken, ProxyProtocol protocol, ProxyStreamRequest request, CancellationToken cancellationToken = default)
         {
             Streams.Add((protocol, request.Host, request.Port));
+            Requests.Add(request);
             if (Refusal is not null)
             {
                 throw new ProxyStreamException(Refusal, "refused by the test relay");
             }
 
-            LastChannel = new EchoChannel(protocol, new ProxyStreamOpened("93.184.216.34", request.Port));
+            LastChannel = new EchoChannel(protocol, new ProxyStreamOpened("93.184.216.34", request.Port)
+            {
+                TlsProtocol = request.UseTls ? NegotiatedTls?.Protocol : null,
+                CertificateSubject = request.UseTls ? NegotiatedTls?.Subject : null
+            });
             return Task.FromResult<IProxyStreamChannel>(LastChannel);
         }
     }

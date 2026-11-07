@@ -52,6 +52,8 @@ public static class AppDefinitionMapper
             Presentation = new PresentationManifest(definition.Category, definition.LaunchVisibility, [.. definition.Icons]),
             Localizations = [.. definition.Localizations],
             Capabilities = [.. definition.Capabilities],
+            // ADR 0235 §3: copied as declared (the validator refuses a bad entry), omitted when empty.
+            RealNetworkPorts = definition.RealNetworkPorts.Count == 0 ? null : [.. definition.RealNetworkPorts],
             DeclaredTopicPermissions = [.. definition.DeclaredTopicPermissions],
             Resources = definition.Resources,
             Settings = definition.Settings,
