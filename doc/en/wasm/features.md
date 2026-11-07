@@ -386,7 +386,7 @@ points to its PR.
 
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
-| Real network for chat apps | `KazoClientWebSocket` in the SDK: an app reaches a real WebSocket server through the browser, without a Kazo OS server (done in the `real-network/base` series); TLS opened by the relay with `KazoTcpClient.ConnectAsync(host, port, new KazoTcpConnectOptions { UseTls = true }, ct)`, the server checking the certificate, no option accepting an invalid one (done in the series); then ports declared by the app. | [0235](dev/adr/0235-real-network-for-chat-apps.md) | [#395](https://github.com/Kazo-ca/Os/issues/395) |
+| Real network for chat apps | `KazoClientWebSocket` in the SDK: an app reaches a real WebSocket server through the browser, without a Kazo OS server (done in the `real-network/base` series); TLS opened by the relay with `KazoTcpClient.ConnectAsync(host, port, new KazoTcpConnectOptions { UseTls = true }, ct)`, the server checking the certificate, no option accepting an invalid one (done in the series); ports declared by the app in its manifest, accepted by the relay unless `BlockedPorts` (done in the series); then the grant with its ports issued by the server. | [0235](dev/adr/0235-real-network-for-chat-apps.md), [0233](dev/adr/0233-server-issued-real-network-grants.md) | [#395](https://github.com/Kazo-ca/Os/issues/395) |
 
 ### Project name
 
