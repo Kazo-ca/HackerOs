@@ -64,6 +64,28 @@ that cites them no longer compiles, and a `manifest.json` that names them is
 rejected by the validator (`manifest.capability.unknown`). `SettingsScopePolicy`,
 which was only used by tests and read `settings.system.*`, is removed.
 
+### Capability asked for by path
+
+`FileSystemService.ResolveCapability` (Platform Core) picks the capability a
+file operation asks for, before the permission bits:
+
+| Path | Read | Write |
+|---|---|---|
+| `~/.config/<appId>/` (its settings, ADR 0044) | `filesystem.private.read` | `filesystem.private.write` |
+| `/etc/<appId>/` | `filesystem.private.read` | `filesystem.system.write` (and administrator authority) |
+| `/home/<user>/` of the acting user | `filesystem.user-home.read` | `filesystem.user-home.write` |
+| a network drive (`hostfs`, ADR 0181) mounted by the acting user ([ADR 0231](../dev/adr/0231-network-drives-count-as-personal-files.md)) | `filesystem.user-home.read` | `filesystem.user-home.write` |
+| everything else: `/mnt` itself, another user's drive, `/etc`, `/var`… | `filesystem.system.read` | `filesystem.system.write` |
+
+On their own network drive, an app that holds only `filesystem.system.*`
+(`mount`, `umount`, `df`…) keeps the access it had: ADR 0231 widens, it takes
+nothing away. The permission bits and the owner then apply as everywhere (the
+drive stays `0700`). The result is the same for an app in a Web Worker, whose
+every file operation goes through this service. At installation,
+`filesystem.user-home.read` shows as "Read your files, including your network
+drives" and `.write` as "Write your files, including your network drives"
+(`Strings.resx`, `Strings.fr.resx`).
+
 ## API
 
 ```csharp
@@ -120,6 +142,15 @@ unknown key.
 - `BuildKnownLazyAppsTests.No_non_system_app_of_the_host_declares_a_dangerous_capability`
   (`Kazo.Os.Ecosystem.Tests`).
 - `PolicySettingsDocumentsTests`: `capabilityGrantsLocked` absent from the schema.
+- `NetworkDriveAppAccessTests` (`Kazo.Os.Platform.Core.Tests`, ADR 0231):
+  `filesystem.user-home.*` for one's own network drive, `filesystem.system.*`
+  for another user's drive and for `/mnt`, an app with only
+  `filesystem.system.read` keeps its access, a disconnected drive answers as
+  before.
+- `NetworkDriveWorkerTests` (`Kazo.Os.Platform.WorkerHost.Tests`): a command
+  with only `filesystem.user-home.read` reads its drive through
+  `KazoFile.ReadAllBytesAsync`, in a Web Worker and on the main thread, and
+  does not read another user's.
 
 ## Tasks
 

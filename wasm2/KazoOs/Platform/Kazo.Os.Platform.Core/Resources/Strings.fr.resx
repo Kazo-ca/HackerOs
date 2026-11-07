@@ -214,10 +214,10 @@
     <value>Modifier les fichiers du système</value>
   </data>
   <data name="Capability.filesystem.user-home.read.Title" xml:space="preserve">
-    <value>Lire le dossier personnel</value>
+    <value>Lire vos fichiers, y compris vos lecteurs réseau</value>
   </data>
   <data name="Capability.filesystem.user-home.write.Title" xml:space="preserve">
-    <value>Écrire dans le dossier personnel</value>
+    <value>Écrire dans vos fichiers, y compris vos lecteurs réseau</value>
   </data>
   <data name="Capability.filesystem.user-selected.read.Title" xml:space="preserve">
     <value>Lire les fichiers choisis par l'utilisateur</value>

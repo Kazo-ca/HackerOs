@@ -148,6 +148,10 @@ This section lists what is released in the `main` branch and online.
 - **Computer folder mounted as a network drive**: a real folder of the
   computer appears in the OS (Chrome and Edge on desktop).
   ([ADR 0181](dev/adr/0181-host-folder-mounted-as-a-network-drive.md))
+- **Network drives readable by apps**: an app with `filesystem.user-home.*`
+  reads and writes the user's network drives like their personal files,
+  without a dangerous capability; another user's drive and `/mnt` stay system
+  files. ([ADR 0231](dev/adr/0231-network-drives-count-as-personal-files.md))
 - **Backup and restore** of the whole machine in a downloaded archive.
   ([`system-backup.md`](dev/system-backup.md))
 
@@ -358,7 +362,6 @@ points to its PR.
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Switch user | Open another session without closing the first one. Stays greyed out in the Power menu by Benoit's choice: one session at a time, Sign out to change account. | [0195](dev/adr/0195-start-menu-power-button.md), [0201](dev/adr/0201-switch-user-stays-greyed.md) | [#290](https://github.com/Kazo-ca/Os/issues/290) |
-| Network drives readable by apps | Apps read and write the user's network drives like their personal files, without a dangerous capability (to open music or a game from `/mnt`). | [0231](dev/adr/0231-network-drives-count-as-personal-files.md) | [#381](https://github.com/Kazo-ca/Os/issues/381) |
 | Frameless app windows | A window option without the OS title bar or border, with a transparent background, so that an app like Webamp makes its own windows float on the desktop. | To write | [#378](https://github.com/Kazo-ca/Os/issues/378) |
 | File address served on demand | An app gets an address to read a large file (audio, video) without copying it in memory, with partial reads to seek in a track. | To write | [#379](https://github.com/Kazo-ca/Os/issues/379) |
 | Drag files onto an app | Public SDK contract to receive files dragged from the File Explorer or the desktop. | To write | [#380](https://github.com/Kazo-ca/Os/issues/380) |

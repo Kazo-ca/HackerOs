@@ -214,10 +214,10 @@
     <value>Modify system files</value>
   </data>
   <data name="Capability.filesystem.user-home.read.Title" xml:space="preserve">
-    <value>Read the home folder</value>
+    <value>Read your files, including your network drives</value>
   </data>
   <data name="Capability.filesystem.user-home.write.Title" xml:space="preserve">
-    <value>Write to the home folder</value>
+    <value>Write your files, including your network drives</value>
   </data>
   <data name="Capability.filesystem.user-selected.read.Title" xml:space="preserve">
     <value>Read files the user picks</value>

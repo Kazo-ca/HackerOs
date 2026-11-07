@@ -199,8 +199,8 @@ public static class AppCapabilities
         Normal(FileSystemPrivateWrite, "Écrire ses données privées"),
         Normal(FileSystemUserSelectedRead, "Lire les fichiers choisis par l'utilisateur"),
         Normal(FileSystemUserSelectedWrite, "Écrire les fichiers choisis par l'utilisateur"),
-        Normal(FileSystemUserHomeRead, "Lire le dossier personnel"),
-        Normal(FileSystemUserHomeWrite, "Écrire dans le dossier personnel"),
+        Normal(FileSystemUserHomeRead, "Lire vos fichiers, y compris vos lecteurs réseau"),
+        Normal(FileSystemUserHomeWrite, "Écrire dans vos fichiers, y compris vos lecteurs réseau"),
         Dangerous(
             FileSystemSystemRead,
             "Lire les fichiers du système",
