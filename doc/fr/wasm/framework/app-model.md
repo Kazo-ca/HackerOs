@@ -81,7 +81,11 @@ public sealed class TextEditorApp : AppDefinition
   `_content/<assembly>/…` ; le fichier doit être dans `wwwroot/` et déclaré dans
   `Assets`. Les apps système fenêtrées déclarent chacune `icons/app.svg`, avec
   une empreinte calculée au build. macOS masque seulement l'icône de la barre
-  de titre ; son dock garde l'icône de l'app.
+  de titre ; son dock garde l'icône de l'app. Depuis l'ADR 0232, la même image
+  sert aussi au menu Démarrer, aux raccourcis et à l'accueil mobile. Style
+  conseillé : tuile `32×32` à coins `rx="7"`, dégradé sombre `#26303a` vers
+  `#0a0e12`, dessin en couleur lisible à 16 px, SVG sans police ni lien
+  externe.
 - `TerminalCommand.Aliases` nul devient une liste vide.
 - `sdkCompatibility` (ADR 0098 §3) : par défaut, `minimumVersion` est la version
   du SDK contre laquelle l'app a été compilée. Le générateur la lit dans

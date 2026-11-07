@@ -53,3 +53,7 @@ override Kazo.Os.AppSdk.Net.KazoClientWebSocket.SendAsync(System.ArraySegment<by
 override Kazo.Os.AppSdk.Net.KazoClientWebSocket.SendAsync(System.ReadOnlyMemory<byte> buffer, System.Net.WebSockets.WebSocketMessageType messageType, bool endOfMessage, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
 override Kazo.Os.AppSdk.Net.KazoClientWebSocket.State.get -> System.Net.WebSockets.WebSocketState
 override Kazo.Os.AppSdk.Net.KazoClientWebSocket.SubProtocol.get -> string?
+Kazo.Os.AppSdk.Apps.KazoAppAssets
+Kazo.Os.AppSdk.Apps.KazoAppInfo.IconUrl.get -> string?
+Kazo.Os.AppSdk.Apps.KazoAppInfo.IconUrl.init -> void
+static Kazo.Os.AppSdk.Apps.KazoAppAssets.RelativeUrl(Kazo.Os.App.Abstractions.AppManifest! manifest, string! assetPath) -> string!

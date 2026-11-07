@@ -317,7 +317,7 @@ public sealed partial class ExplorerFileView
             {
                 KazoAppInfo? app = _apps?.GetValueOrDefault(entry.AppId);
                 item.DisplayName = entry.Name;
-                item.IconOverride = AppShortcutIcon(entry.AppId, app?.Category);
+                item.IconOverride = AppShortcutIcon(entry.AppId, app);
                 item.IsDimmed = app is null;
             }
             else if (state.Link is { } link)

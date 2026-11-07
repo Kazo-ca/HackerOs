@@ -21,12 +21,22 @@ public sealed class WindowAppIconTests(ITestOutputHelper output)
             List<string> errors = E2ESupport.AttachDiagnostics(page, output);
             await E2ESupport.NavigateWhenReadyAsync(page, address, output);
             await E2ESupport.CreateLocalProfileAndReachDesktopAsync(page, output);
+            const string editorIcon = "_content/Kazo.Os.Apps.TextEditor/icons/app.svg";
+
+            // ADR 0232 §2: the Start menu draws the app's own icon, not the Lucide icon of its category.
+            await page.GetByRole(AriaRole.Button, new() { Name = "App launcher" }).ClickAsync();
+            await page.GetByRole(AriaRole.Combobox, new() { Name = "Search applications" }).FillAsync("Text Editor");
+            ILocator launcherIcon = page.GetByRole(AriaRole.Button, new() { Name = "Launch Text Editor", Exact = true })
+                .Locator(".shell-app-icon-image");
+            await Assertions.Expect(launcherIcon).ToHaveAttributeAsync("src", editorIcon);
+            await WaitForImageAsync(launcherIcon);
+            await page.Keyboard.PressAsync("Escape");
+
             await E2ESupport.OpenAppAsync(page, "Text Editor", output);
             ILocator window = page.Locator("article.window-host.is-focused");
             await Assertions.Expect(window).ToBeVisibleAsync();
             ILocator icon = window.Locator(".chrome-button-menu .window-icon");
             ILocator taskbarIcon = page.Locator(".taskbar-item.is-active .item-icon-image");
-            const string editorIcon = "_content/Kazo.Os.Apps.TextEditor/icons/app.svg";
             await Assertions.Expect(icon).ToHaveAttributeAsync("src", editorIcon);
             await Assertions.Expect(taskbarIcon).ToHaveAttributeAsync("src", editorIcon);
             await WaitForImageAsync(icon);

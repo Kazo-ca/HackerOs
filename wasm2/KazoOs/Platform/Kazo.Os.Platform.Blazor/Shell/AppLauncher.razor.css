@@ -262,6 +262,20 @@
     border-radius: var(--kos-radius-sm, 0.35rem);
 }
 
+/* ADR 0232 §2: an app's own icon is already a tile; it fills the slot without a second frame. */
+.app-icon-shell:has(.shell-app-icon-image),
+.quick-icon:has(.shell-app-icon-image) {
+    background: none;
+    border-color: transparent;
+    box-shadow: none;
+}
+
+.app-icon-shell ::deep .shell-app-icon-image,
+.quick-icon ::deep .shell-app-icon-image {
+    width: 1.75rem;
+    height: 1.75rem;
+}
+
 .app-copy {
     min-width: 0;
     flex: 1 1 auto;
