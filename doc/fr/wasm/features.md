@@ -257,6 +257,10 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
 
 ### Personnalisation
 
+- **Icônes d'apps illustrées** : les apps système ont des icônes en couleur
+  qui montrent ce que fait chaque app, et le menu Démarrer, le bureau et
+  l'explorateur affichent l'icône propre de chaque app, y compris installée.
+  ([ADR 0232](dev/adr/0232-illustrated-app-icons-everywhere.md))
 - **Thèmes** de l'OS, et éditeur pour créer les siens.
   ([`theme-files.md`](framework/theme-files.md))
 - **Fonds d'écran en image** : une image PNG, JPEG ou WebP (4 livrées avec
@@ -386,7 +390,6 @@ dans `main`, le lien mène à sa PR.
 
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
-| Icônes d'apps illustrées | Icônes des apps système redessinées (tuile sombre, dessin en couleur qui montre ce que fait l'app), et icône propre de chaque app, y compris installée, dans le menu Démarrer, sur le bureau et dans l'explorateur. | [0232](dev/adr/0232-illustrated-app-icons-everywhere.md) | Série `icons/base` |
 | Vérification des packs de thèmes par le catalogue | La CI du catalogue vérifie les entrées `kind: "theme-pack"` comme l'OS à l'installation. | [0213](dev/adr/0213-theme-packs-build.md) | [AppMarketPlace #4](https://github.com/Kazo-ca/Os-AppMarketPlace/issues/4) |
 
 ### Réseau et serveur
