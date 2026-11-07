@@ -128,7 +128,7 @@ jour à la fin de chaque série ou quand une convention change.
   (`[signing-keys]`, `KazoOsAppSigningKeys`), journal `.transaction`,
   `kazopkg rollback`/`repair`, `AppDataGuard`. Cinq questions posées à Benoit,
   réponse A à chacune. La clé du catalogue officiel a été créée par Benoit le
-  2026-11-01 (`keygen`, secret `HACK_STORE_SIGNING_KEY` du catalogue) ; sa clé
+  2026-11-01 (`keygen`, secret `KAZO_STORE_SIGNING_KEY` du catalogue) ; sa clé
   publique est dans `AppPackageDefaults.OfficialCatalogSigningKey` ; outil pour les auteurs :
   issue `TODO` #321.
 - **Bulles de notification** (ADR 0197, chantier 1 de #242, série
