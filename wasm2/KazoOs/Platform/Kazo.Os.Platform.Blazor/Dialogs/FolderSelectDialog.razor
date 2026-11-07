@@ -66,7 +66,7 @@
     private VirtualPath SelectedPath => _selectedChild ?? _currentDirectory;
 
     private VirtualPath EffectiveInitialDirectory =>
-        Presentation.Request.InitialDirectory ?? VirtualPath.Parse($"/home/{Presentation.UserId}");
+        Presentation.Request.InitialDirectory ?? VirtualPath.Parse(Presentation.Context?.HomeDirectory ?? "/");
 
     /// <inheritdoc />
     protected override void OnParametersSet()

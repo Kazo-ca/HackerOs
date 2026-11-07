@@ -38,6 +38,21 @@ public sealed class FileViewTests
     }
 
     [Fact]
+    public async Task A_missing_start_folder_opens_its_nearest_existing_ancestor_instead_of_failing()
+    {
+        // Issue #385: an unlistable InitialDirectory threw out of the first render and took the OS down.
+        FileViewTestFixture fixture = await FileViewTestFixture.CreateAsync();
+        await fixture.CreateFileAsync("/home/user/notes.txt");
+        TestComponentRenderer renderer = new(EmptyServices());
+
+        TestableFileView view = new() { FileSystem = fixture.FileSystem, InitialDirectory = VirtualPath.Parse("/home/user/gone/deeper") };
+        await renderer.RenderAsync(view);
+
+        Assert.Equal(VirtualPath.Parse("/home/user"), view.CurrentDirectory);
+        Assert.Contains(view.Items, item => item.FileName == "notes.txt");
+    }
+
+    [Fact]
     public async Task NavigateAsync_applies_the_Filter_predicate()
     {
         FileViewTestFixture fixture = await FileViewTestFixture.CreateAsync();
