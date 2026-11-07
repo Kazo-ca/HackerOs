@@ -13,6 +13,7 @@ namespace Kazo.Os.Server.Endpoints;
 /// GET  /api/proxy/tcp       → WebSocket: one relayed TCP stream (ADR 0102 §2)
 /// GET  /api/proxy/udp       → WebSocket: one relayed "connected" UDP socket (ADR 0102 §3)
 /// GET  /api/proxy/policy    → read the effective relay policy (ADR 0102 §5)
+/// POST /api/proxy/grants    → issue or withdraw the grant an OS administrator approved (ADR 0233)
 /// </summary>
 public static class ProxyEndpoints
 {
@@ -27,6 +28,8 @@ public static class ProxyEndpoints
             .WithSummary("Executes a server-validated single-port TCP reachability probe.");
         proxyGroup.MapGet("/policy", GetPolicyAsync).WithName("GetProxyPolicy")
             .WithSummary("Returns current proxy quotas and policy for the authenticated device.");
+        proxyGroup.MapPost("/grants", IssueGrantAsync).WithName("IssueProxyGrant")
+            .WithSummary("Issues or withdraws the network.real.access grant an OS administrator approved, with its ports.");
         proxyGroup.MapGet("/tcp", (HttpContext context, IProxyService proxy) =>
                 ProxyStreamWebSocketPump.AcceptAsync(context, proxy, ProxyProtocol.Tcp))
             .WithName("ProxyTcpStream")
@@ -110,11 +113,26 @@ public static class ProxyEndpoints
         return Results.Json(policy, ProxyContractsJsonContext.Default.ProxyPolicyResponse);
     }
 
+    private static async Task<IResult> IssueGrantAsync(
+        ProxyGrantIssueRequest request, IProxyGrantIssuer issuer, ClaimsPrincipal user, CancellationToken ct)
+    {
+        try
+        {
+            ProxyGrantIssued issued = await issuer.IssueAsync(GetAccountId(user), GetDeviceId(user), request, ct);
+            return Results.Json(issued, ProxyContractsJsonContext.Default.ProxyGrantIssued);
+        }
+        catch (ProxyRequestException ex)
+        {
+            var error = new ProxyErrorResponse(null, ex.ErrorCode, ex.Message, Guid.NewGuid());
+            return Results.Json(error, ProxyContractsJsonContext.Default.ProxyErrorResponse, statusCode: StatusCodeOf(ex.ErrorCode));
+        }
+    }
+
     /// <summary>Maps a relay error code to its HTTP status.</summary>
     /// <param name="errorCode">One of <see cref="ProxyErrorCode"/>.</param>
     public static int StatusCodeOf(string errorCode) => errorCode switch
     {
-        ProxyErrorCode.CapabilityDenied or ProxyErrorCode.GrantMissing => StatusCodes.Status403Forbidden,
+        ProxyErrorCode.CapabilityDenied or ProxyErrorCode.GrantMissing or ProxyErrorCode.GrantIssuingDisabled => StatusCodes.Status403Forbidden,
         ProxyErrorCode.QuotaExceeded => StatusCodes.Status429TooManyRequests,
         ProxyErrorCode.Timeout => StatusCodes.Status504GatewayTimeout,
         ProxyErrorCode.PayloadTooLarge => StatusCodes.Status502BadGateway,

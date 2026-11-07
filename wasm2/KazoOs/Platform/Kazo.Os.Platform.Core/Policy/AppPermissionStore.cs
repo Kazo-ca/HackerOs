@@ -31,6 +31,17 @@ public interface IAppPermissionStore
         AppPermissionDecision? decision,
         CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Records, in the <c>[real-network-ports]</c> section of the machine file, the real-network ports
+    /// an administrator approved with <c>network.real.access</c> (ADR 0233 §4), as an audited system
+    /// operation like <see cref="WriteMachineDecisionsAsync"/>.
+    /// </summary>
+    /// <param name="appId">App identifier.</param>
+    /// <param name="ports">The approved declarations (<c>tcp/6697</c>), or <see langword="null"/> to remove the line.</param>
+    /// <param name="cancellationToken">Cancels the write.</param>
+    ValueTask WriteApprovedRealNetworkPortsAsync(
+        string appId, IReadOnlyCollection<string>? ports, CancellationToken cancellationToken = default) => ValueTask.CompletedTask;
+
     /// <summary>Records <c>deny</c> lines in the session user's own file.</summary>
     /// <param name="appId">App identifier.</param>
     /// <param name="capabilities">Dangerous capabilities the user refused.</param>
@@ -120,6 +131,27 @@ public sealed class AppPermissionStore : IAppPermissionStore
 
         // writer: null on a System file = audited system operation (OsSettingsService.WriteFileAsync).
         await _settings.WriteFileAsync(AppPermissionsDocument.MachineFile, edited, writer: null, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public async ValueTask WriteApprovedRealNetworkPortsAsync(
+        string appId, IReadOnlyCollection<string>? ports, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(appId);
+        string? content = await _settings.ReadFileAsync(AppPermissionsDocument.MachineFile, cancellationToken).ConfigureAwait(false);
+        if (ports is null && content is null)
+        {
+            return;
+        }
+
+        string edited = ports is null
+            ? AppPermissionsDocument.RemoveRealNetworkPorts(content, appId)
+            : AppPermissionsDocument.SetRealNetworkPorts(content, appId, ports);
+        if (!string.Equals(edited, content, StringComparison.Ordinal))
+        {
+            // writer: null on a System file = audited system operation (OsSettingsService.WriteFileAsync).
+            await _settings.WriteFileAsync(AppPermissionsDocument.MachineFile, edited, writer: null, cancellationToken).ConfigureAwait(false);
+        }
     }
 
     /// <inheritdoc />

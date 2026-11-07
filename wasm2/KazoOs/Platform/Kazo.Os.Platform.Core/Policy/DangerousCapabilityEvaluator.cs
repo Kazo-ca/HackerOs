@@ -46,7 +46,10 @@ public sealed record DangerousCapabilityStatus(CapabilityDescription Description
 /// <item>policy <c>block</c> → <see cref="DangerousCapabilityState.BlockedByPolicy"/> (existing <c>allow</c> lines are ignored);</item>
 /// <item>machine <c>deny</c> → <see cref="DangerousCapabilityState.DeniedByAdministrator"/>;</item>
 /// <item>user <c>deny</c> → <see cref="DangerousCapabilityState.DeniedByUser"/> (it beats a machine <c>allow</c>);</item>
-/// <item>machine <c>allow</c> → <see cref="DangerousCapabilityState.Allowed"/>;</item>
+/// <item>machine <c>allow</c> → <see cref="DangerousCapabilityState.Allowed"/>, except
+/// <c>network.real.access</c> when the manifest declares a real-network port the administrator did
+/// not approve (<c>[real-network-ports]</c>, ADR 0233 §4): then it is pending again, so the window
+/// lists the new ports;</item>
 /// <item>otherwise <see cref="DangerousCapabilityState.Pending"/>.</item>
 /// </list>
 /// A system app gets <see cref="DangerousCapabilityState.System"/> for every dangerous capability:
@@ -78,7 +81,7 @@ public static class DangerousCapabilityEvaluator
 
             statuses.Add(new DangerousCapabilityStatus(
                 AppCapabilities.Describe(capability),
-                isSystemApp ? DangerousCapabilityState.System : EvaluateOne(manifest.Id, capability, policy, decisions)));
+                isSystemApp ? DangerousCapabilityState.System : EvaluateOne(manifest, capability, policy, decisions)));
         }
 
         return statuses;
@@ -92,9 +95,24 @@ public static class DangerousCapabilityEvaluator
         return manifest.Capabilities.Any(AppCapabilities.IsDangerous);
     }
 
-    private static DangerousCapabilityState EvaluateOne(
-        string appId, string capability, DangerousCapabilityPolicy policy, AppPermissionDecisions decisions)
+    /// <summary>
+    /// Gets the real-network ports <paramref name="manifest"/> declares that the machine file does not
+    /// approve yet (ADR 0233 §4); empty when every declared port was approved.
+    /// </summary>
+    /// <param name="manifest">App manifest.</param>
+    /// <param name="decisions">Parsed machine and user decisions.</param>
+    public static IReadOnlyList<RealNetworkPort> UnapprovedRealNetworkPorts(AppManifest manifest, AppPermissionDecisions decisions)
     {
+        ArgumentNullException.ThrowIfNull(manifest);
+        ArgumentNullException.ThrowIfNull(decisions);
+        IReadOnlySet<RealNetworkPort> approved = decisions.GetApprovedRealNetworkPorts(manifest.Id);
+        return [.. RealNetworkPorts.ParseValid(manifest.RealNetworkPorts).Where(port => !approved.Contains(port))];
+    }
+
+    private static DangerousCapabilityState EvaluateOne(
+        AppManifest manifest, string capability, DangerousCapabilityPolicy policy, AppPermissionDecisions decisions)
+    {
+        string appId = manifest.Id;
         if (policy == DangerousCapabilityPolicy.Block)
         {
             return DangerousCapabilityState.BlockedByPolicy;
@@ -111,8 +129,15 @@ public static class DangerousCapabilityEvaluator
             return DangerousCapabilityState.DeniedByUser;
         }
 
-        return machine == AppPermissionDecision.Allow
-            ? DangerousCapabilityState.Allowed
-            : DangerousCapabilityState.Pending;
+        if (machine != AppPermissionDecision.Allow)
+        {
+            return DangerousCapabilityState.Pending;
+        }
+
+        // ADR 0233 §4: an update that declares a new port asks again, like a widened permission.
+        return string.Equals(capability, AppCapabilities.NetworkRealAccess, StringComparison.Ordinal)
+            && UnapprovedRealNetworkPorts(manifest, decisions).Count > 0
+                ? DangerousCapabilityState.Pending
+                : DangerousCapabilityState.Allowed;
     }
 }

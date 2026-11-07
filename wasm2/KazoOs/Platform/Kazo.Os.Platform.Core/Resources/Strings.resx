@@ -444,6 +444,9 @@ Cancel: decide at the next launch.</value>
   <data name="Relay.Warning.TcpBlockedPortsEmpty" xml:space="preserve">
     <value>KazoOs:Proxy:Tcp:BlockedPorts is empty: the relay may open every TCP port an app declares or the allow-list names, mail (25) included.</value>
   </data>
+  <data name="Relay.Warning.OsGrantsWithAllPorts" xml:space="preserve">
+    <value>KazoOs:Proxy:AcceptOsGrants and AllowAllPorts are both on: any app an OS administrator approves reaches every port that BlockedPorts does not refuse.</value>
+  </data>
   <data name="Relay.Warning.UdpBlockedPortsEmpty" xml:space="preserve">
     <value>KazoOs:Proxy:Udp:BlockedPorts is empty: the relay may open every UDP port an app declares or the allow-list names, amplification services included.</value>
   </data>

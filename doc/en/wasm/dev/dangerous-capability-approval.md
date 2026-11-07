@@ -147,6 +147,26 @@ is shown when the app declares none. The server relay opens these ports when
 the grant carries them, except those of `BlockedPorts`
 ([network relay](server-network-relay.md)).
 
+The approval writes these ports in the `[real-network-ports]` section of the
+machine file (ADR 0233 §4), and the OS asks the connected server to issue the
+grant with them:
+
+```text
+# /etc/kazoos/app-permissions.config
+[permissions]
+ca.kazo.irc:network.real.access=allow
+
+[real-network-ports]
+ca.kazo.irc=tcp/6667,tcp/6697
+```
+
+When an update of the app declares a port missing from that line,
+`network.real.access` goes back to `Pending`: the window comes back at the next
+interactive launch and lists the new ports. An `allow` given in the Permissions
+tab of Settings approves the ports the manifest declares at that time; a
+denial or a reset removes the line. Only the machine file approves ports: such
+a line in the user's file is ignored with a warning, like a badly written line.
+
 `DangerousCapabilityApprovalBroker` shows one request at a time. Without an
 attached window, a request ends as `Unavailable` (hence
 `capability.deferred`); if the shell disappears (logout), pending requests are

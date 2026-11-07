@@ -54,7 +54,9 @@ public interface IProxyGrantAuthority
 /// system commands that declare <c>network.real.access</c>), and to an app named by a non-revoked
 /// <c>network.real.access</c> record in the account's synchronized grants (ADR 0031: grants are
 /// server-authoritative and the client never pushes them). Such a record may carry the app's
-/// approved real-network ports (<c>realNetworkPorts</c>, ADR 0235 §3).
+/// approved real-network ports (<c>realNetworkPorts</c>, ADR 0235 §3). The server writes those records
+/// itself when the OS asks (<see cref="ProxyGrantIssuer"/>, ADR 0233); with
+/// <see cref="ProxyRelayPolicy.AcceptOsGrants"/> off they are ignored.
 /// </summary>
 /// <param name="policy">The effective relay policy.</param>
 /// <param name="db">The server database holding the synchronized grants.</param>
@@ -92,6 +94,12 @@ public sealed class ProxyGrantAuthority(ProxyRelayPolicy policy, KazoOsServerDbC
     /// </summary>
     private async Task<IReadOnlyList<ProxyAppGrant>> ReadSynchronizedGrantsAsync(Guid accountId, CancellationToken cancellationToken)
     {
+        if (!policy.AcceptOsGrants)
+        {
+            // ADR 0233 §2: the operator closed the door; only GrantedApps counts.
+            return [];
+        }
+
         List<SyncRecordEntity> records = await db.SyncRecords.AsNoTracking()
             .Where(record => record.OwnerAccountId == accountId && record.Domain == SyncDomain.Grants && !record.IsTombstone)
             .ToListAsync(cancellationToken)

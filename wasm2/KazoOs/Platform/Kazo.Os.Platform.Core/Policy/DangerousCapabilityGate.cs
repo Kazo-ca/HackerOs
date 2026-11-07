@@ -65,6 +65,12 @@ public sealed class DangerousCapabilityGate : IDangerousCapabilityGate
         _clock = clock ?? (() => DateTimeOffset.UtcNow);
     }
 
+    /// <summary>
+    /// Issues or withdraws the app's <c>network.real.access</c> grant on the connected server once a
+    /// decision was taken (ADR 0233 §3); <see langword="null"/> without a server connection layer.
+    /// </summary>
+    public ServerConnection.IRealNetworkGrantReconciler? RealNetworkGrants { get; init; }
+
     /// <inheritdoc />
     public async Task<DangerousCapabilityGateResult> EnsureDecidedAsync(
         AppManifest manifest,
@@ -133,6 +139,13 @@ public sealed class DangerousCapabilityGate : IDangerousCapabilityGate
         }
 
         AlignGrants(manifest.Id, principal.UserId.ToString(), statuses);
+        if (outcome is not null && RealNetworkGrants is ServerConnection.IRealNetworkGrantReconciler reconciler
+            && statuses.Any(static status => status.Capability == AppCapabilities.NetworkRealAccess))
+        {
+            // ADR 0233 §3: tell the server, without making the launch wait for it.
+            _ = reconciler.ReconcileAsync(principal.UserId.ToString(), manifest.Id, CancellationToken.None);
+        }
+
         return new DangerousCapabilityGateResult(statuses, policy, false, outcome);
     }
 
@@ -186,6 +199,13 @@ public sealed class DangerousCapabilityGate : IDangerousCapabilityGate
                 await _permissions
                     .WriteMachineDecisionsAsync(manifest.Id, pending, AppPermissionDecision.Allow, ct)
                     .ConfigureAwait(false);
+                if (pending.Contains(AppCapabilities.NetworkRealAccess, StringComparer.Ordinal))
+                {
+                    // ADR 0233 §4: the ports the window listed are the ones approved.
+                    await _permissions
+                        .WriteApprovedRealNetworkPortsAsync(manifest.Id, RealNetworkPorts.Normalize(manifest.RealNetworkPorts) ?? [], ct)
+                        .ConfigureAwait(false);
+                }
                 approved = true;
                 RecordApprove(manifest.Id, capabilityList, principal, verification.LoginName ?? login ?? string.Empty, null, AuditOutcome.Success);
                 return new DangerousCapabilityApprovalAttempt(true, DangerousCapabilityApprovalRequest.MaxAttempts - failures);

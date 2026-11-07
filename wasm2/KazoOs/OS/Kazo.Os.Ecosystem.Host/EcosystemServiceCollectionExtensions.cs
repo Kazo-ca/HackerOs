@@ -376,7 +376,19 @@ public static class EcosystemServiceCollectionExtensions
             provider.GetRequiredService<IPersistentCapabilityGrantRepository>(),
             provider.GetRequiredService<IServerConnectionService>(),
             provider.GetRequiredService<ISyncClient>(),
-            provider.GetRequiredService<ISyncCursorRepository>()));
+            provider.GetRequiredService<ISyncCursorRepository>())
+        {
+            // ADR 0233 §3: the server issues the real-network grants the OS approved, before the pull.
+            RealNetworkGrants = provider.GetRequiredService<IRealNetworkGrantReconciler>(),
+            CurrentUserId = () => provider.GetRequiredService<ISessionService>().CurrentPrincipal?.UserId.ToString()
+        });
+        services.AddScoped<IRealNetworkGrantReconciler>(provider => new RealNetworkGrantReconciler(
+            provider.GetRequiredService<AppCatalog>(),
+            provider.GetRequiredService<IAppPermissionStore>(),
+            provider.GetRequiredService<IOsSettingsService>(),
+            provider.GetRequiredService<IServerConnectionService>(),
+            provider.GetRequiredService<IProxyClient>(),
+            provider.GetService<ILogger<RealNetworkGrantReconciler>>()));
 
         // FileAssociations domain sync (ADR 0033): /etc/kazoos/file-associations.json under its own
         // domain string. The AppCatalog domain is retired by ADR 0048: uninstalls are apps.config
@@ -436,7 +448,10 @@ public static class EcosystemServiceCollectionExtensions
             provider.GetRequiredService<IOsSettingsService>(),
             provider.GetRequiredService<IAdminElevationVerifier>(),
             provider.GetRequiredService<IAuditLog>(),
-            provider.GetRequiredService<IDangerousCapabilityApprovalPrompt>()));
+            provider.GetRequiredService<IDangerousCapabilityApprovalPrompt>())
+        {
+            RealNetworkGrants = provider.GetRequiredService<IRealNetworkGrantReconciler>()
+        });
         // OS authentication agent (ADR 0055 section 5, polkit-like): gateways that need an
         // administrator ask it; its secure-desktop overlay is rendered by the shell.
         services.AddScoped<AdministratorAuthenticationBroker>();
@@ -460,7 +475,10 @@ public static class EcosystemServiceCollectionExtensions
             provider.GetRequiredService<IAppPermissionStore>(),
             provider.GetRequiredService<IOsSettingsService>(),
             provider.GetRequiredService<IAdminElevationVerifier>(),
-            provider.GetRequiredService<IAuditLog>()));
+            provider.GetRequiredService<IAuditLog>())
+        {
+            RealNetworkGrants = provider.GetRequiredService<IRealNetworkGrantReconciler>()
+        });
         // Reboot and factory reset (ADR 0056 section 11): the browser reloads the page and deletes
         // the OS database; KazoSystem reaches them only after the authentication agent agreed.
         services.AddScoped<ISystemPowerDevice>(provider =>
