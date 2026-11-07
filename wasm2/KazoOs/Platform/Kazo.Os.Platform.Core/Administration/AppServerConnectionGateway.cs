@@ -66,6 +66,7 @@ internal sealed class AppServerConnectionGateway : IAppServerConnectionGateway
     private static readonly Dictionary<string, string> RelayWarningKeys = new(StringComparer.Ordinal)
     {
         ["KazoOs:Proxy:AllowAllPorts is on: the relay reaches every TCP and UDP port."] = "Relay.Warning.AllowAllPorts",
+        ["KazoOs:Proxy:AcceptOsGrants and AllowAllPorts are both on: any app an OS administrator approves reaches every port that BlockedPorts does not refuse."] = "Relay.Warning.OsGrantsWithAllPorts",
         ["KazoOs:Proxy:AllowPrivateNetworks is on: the relay reaches the private networks of the server's machine (loopback and cloud metadata stay blocked)."] = "Relay.Warning.AllowPrivateNetworks",
         ["KazoOs:Proxy:Quotas:Enabled is off: no size, concurrency, stream or idle limit applies."] = "Relay.Warning.QuotasDisabled",
         ["KazoOs:Proxy:Tcp:BlockedPorts is empty: the relay may open every TCP port an app declares or the allow-list names, mail (25) included."] = "Relay.Warning.TcpBlockedPortsEmpty",

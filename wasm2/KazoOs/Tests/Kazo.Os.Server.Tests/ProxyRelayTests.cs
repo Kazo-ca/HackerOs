@@ -290,7 +290,8 @@ public sealed class ProxyRelayTests : IDisposable
 
         Assert.Empty(defaults.Weakenings());
         Assert.Equal(ProxyRelayPolicy.DefaultGrantedApps, defaults.GrantedApps);
-        Assert.Equal(3, weak.Weakenings().Count);
+        // AllowAllPorts, AllowPrivateNetworks, quotas off, and AllowAllPorts with AcceptOsGrants (ADR 0233 §2).
+        Assert.Equal(4, weak.Weakenings().Count);
         Assert.Equal(int.MaxValue, weak.EffectiveMaxStreamsPerDevice);
         Assert.Equal(Timeout.InfiniteTimeSpan, weak.EffectiveStreamIdleTimeout);
     }
@@ -304,7 +305,8 @@ public sealed class ProxyRelayTests : IDisposable
 
         await reporter.StartAsync(CancellationToken.None);
 
-        Assert.Equal(3, logger.Entries.Count(entry => entry.Level == LogLevel.Warning));
+        // AllowAllPorts, AllowPrivateNetworks, AllowAllPorts with AcceptOsGrants (ADR 0233 §2), single-user reminder.
+        Assert.Equal(4, logger.Entries.Count(entry => entry.Level == LogLevel.Warning));
         Assert.Contains(logger.Entries, entry => entry.Message.Contains("single-user", StringComparison.Ordinal));
     }
 
