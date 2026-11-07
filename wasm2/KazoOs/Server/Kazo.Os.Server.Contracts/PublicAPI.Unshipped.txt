@@ -7,3 +7,36 @@ const Kazo.Os.Server.Contracts.Hosting.KazoOsConfigurationNames.LegacyEnvironmen
 const Kazo.Os.Server.Contracts.Hosting.KazoOsConfigurationNames.LegacySection = "HackerOs" -> string!
 const Kazo.Os.Server.Contracts.Hosting.KazoOsConfigurationNames.Section = "KazoOs" -> string!
 static Kazo.Os.Server.Contracts.Hosting.KazoOsConfigurationNames.MapLegacySettings(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string!, string?>>! settings) -> System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string?>>!
+Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts
+Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts.<Clone>$() -> Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts!
+Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts.AppId.get -> string!
+Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts.AppId.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts.Deconstruct(out string! AppId, out System.Collections.Generic.IReadOnlyList<string!>! Ports) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts.Equals(Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts? other) -> bool
+Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts.Ports.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts.Ports.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts.ProxyAppPorts(string! AppId, System.Collections.Generic.IReadOnlyList<string!>! Ports) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.AppPorts.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts!>?
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.AppPorts.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.TcpBlockedPorts.get -> System.Collections.Generic.IReadOnlyList<int>?
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.TcpBlockedPorts.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.UdpBlockedPorts.get -> System.Collections.Generic.IReadOnlyList<int>?
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.UdpBlockedPorts.init -> void
+override Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts.ToString() -> string!
+static Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts.operator !=(Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts? left, Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts? right) -> bool
+static Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts.operator ==(Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts? left, Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts? right) -> bool
+~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.IReadOnlyListProxyAppPorts.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts>>
+~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.ProxyAppPorts.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts>
+const Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode.TlsFailed = "TLS_FAILED" -> string!
+const Kazo.Os.Server.Contracts.Proxy.ProxyStreamRoutes.TargetHostParameter = "targetHost" -> string!
+const Kazo.Os.Server.Contracts.Proxy.ProxyStreamRoutes.TlsParameter = "tls" -> string!
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened.CertificateSubject.get -> string?
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened.CertificateSubject.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened.TlsProtocol.get -> string?
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened.TlsProtocol.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest.TargetHost.get -> string?
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest.TargetHost.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest.UseTls.get -> bool
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest.UseTls.init -> void

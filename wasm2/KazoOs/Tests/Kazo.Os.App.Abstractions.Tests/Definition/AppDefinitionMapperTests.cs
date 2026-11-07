@@ -194,6 +194,28 @@ public sealed class AppDefinitionMapperTests
         Assert.True(AppManifestValidator.Validate(manifest).IsValid);
     }
 
+    [Fact]
+    public void ToManifest_copies_the_declared_real_network_ports_and_omits_them_when_empty()
+    {
+        AppManifest chat = AppDefinitionMapper.ToManifest(new ChatApp(), "1.0.0");
+        AppManifest sized = AppDefinitionMapper.ToManifest(new SizedWindowApp(), "1.0.0");
+
+        Assert.Equal(["tcp/6697", "tcp/6667"], chat.RealNetworkPorts);
+        Assert.True(AppManifestValidator.Validate(chat).IsValid);
+        Assert.Null(sized.RealNetworkPorts);
+    }
+
+    /// <summary>ADR 0235 section 3: an app that reaches real servers on its own ports.</summary>
+    private sealed class ChatApp : AppDefinition
+    {
+        public override string Id => "org.kazoos.tests.chat";
+        public override string Name => "Chat";
+        public override AppKind Kind => AppKind.Window;
+        public override Type EntryPoint => typeof(FakeWindow);
+        public override IReadOnlyList<string> Capabilities => [AppCapabilities.NetworkRealAccess];
+        public override IReadOnlyList<string> RealNetworkPorts => ["tcp/6697", "tcp/6667"];
+    }
+
     private sealed class SizedWindowApp : AppDefinition
     {
         public override string Id => "org.kazoos.tests.sized";

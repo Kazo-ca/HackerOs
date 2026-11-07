@@ -120,6 +120,14 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
         _meter = new NetworkTrafficMeter(statistics, processIo, pid);
     }
 
+    /// <summary>
+    /// Gets how a real WebSocket is opened (ADR 0235 §1): by default a
+    /// <see cref="System.Net.WebSockets.ClientWebSocket"/>, which under WebAssembly is the browser's
+    /// own <c>WebSocket</c>. Tests point it at their test server.
+    /// </summary>
+    public Func<Uri, IReadOnlyList<string>, CancellationToken, Task<System.Net.WebSockets.WebSocket>> WebSocketConnector { get; init; } =
+        ConnectBrowserWebSocketAsync;
+
     /// <inheritdoc />
     public async ValueTask<KazoNetworkResult<KazoHostEntry>> ResolveAsync(string hostName, CancellationToken cancellationToken = default)
     {
@@ -282,20 +290,29 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
     /// <inheritdoc />
     public ValueTask<KazoNetworkResult<IKazoSocket>> ConnectTcpAsync(
         string hostNameOrAddress, int port, CancellationToken cancellationToken = default) =>
-        ConnectAsync(ProxyProtocol.Tcp, hostNameOrAddress, port, cancellationToken);
+        ConnectAsync(ProxyProtocol.Tcp, hostNameOrAddress, port, null, cancellationToken);
+
+    /// <inheritdoc />
+    public ValueTask<KazoNetworkResult<IKazoSocket>> ConnectTcpAsync(
+        string hostNameOrAddress, int port, KazoTcpConnectOptions options, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+        return ConnectAsync(ProxyProtocol.Tcp, hostNameOrAddress, port, options, cancellationToken);
+    }
 
     /// <inheritdoc />
     public ValueTask<KazoNetworkResult<IKazoSocket>> ConnectUdpAsync(
         string hostNameOrAddress, int port, CancellationToken cancellationToken = default) =>
-        ConnectAsync(ProxyProtocol.Udp, hostNameOrAddress, port, cancellationToken);
+        ConnectAsync(ProxyProtocol.Udp, hostNameOrAddress, port, null, cancellationToken);
 
     /// <summary>
     /// Opens a TCP or connected UDP socket (ADR 0102 §2, §3). The simulated network has no raw
     /// sockets, so a target it knows (or this machine) refuses; an unknown target goes to the
-    /// optional relay, which only exists for an app holding <c>network.real.access</c>.
+    /// optional relay, which only exists for an app holding <c>network.real.access</c>. TLS
+    /// (<paramref name="options"/>, ADR 0235 §2) is opened by the relay, so it needs the server too.
     /// </summary>
     private async ValueTask<KazoNetworkResult<IKazoSocket>> ConnectAsync(
-        ProxyProtocol protocol, string hostNameOrAddress, int port, CancellationToken cancellationToken)
+        ProxyProtocol protocol, string hostNameOrAddress, int port, KazoTcpConnectOptions? options, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(hostNameOrAddress);
         ArgumentOutOfRangeException.ThrowIfLessThan(port, 1);
@@ -327,7 +344,12 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
         try
         {
             IProxyStreamChannel channel = await _proxy!.OpenStreamAsync(
-                real.ServerBaseUrl, real.AccessToken, protocol, new ProxyStreamRequest(hostNameOrAddress, port, _appId), cancellationToken)
+                real.ServerBaseUrl, real.AccessToken, protocol, new ProxyStreamRequest(hostNameOrAddress, port, _appId)
+                {
+                    UseTls = options?.UseTls == true,
+                    TargetHost = options?.UseTls == true ? options.TargetHost : null
+                },
+                cancellationToken)
                 .ConfigureAwait(false);
             // The handshake: a SYN out and a SYN-ACK back (a UDP "connect" sends nothing).
             if (!udp)
@@ -352,6 +374,85 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
         }
     }
 
+    /// <inheritdoc />
+    /// <remarks>
+    /// ADR 0235 §1: the browser's own WebSocket, opened by the OS for the app, without the server.
+    /// The simulated network carries no WebSocket yet (issue #393): a target it knows, this machine
+    /// or the internal domain is refused before anything leaves the machine.
+    /// </remarks>
+    public async ValueTask<KazoNetworkResult<System.Net.WebSockets.WebSocket>> ConnectWebSocketAsync(
+        Uri uri, IReadOnlyList<string> subProtocols, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(uri);
+        ArgumentNullException.ThrowIfNull(subProtocols);
+        if (!uri.IsAbsoluteUri || (uri.Scheme != "ws" && uri.Scheme != "wss"))
+        {
+            throw new ArgumentException("Only Uris starting with 'ws://' or 'wss://' are supported.", nameof(uri));
+        }
+
+        cancellationToken.ThrowIfCancellationRequested();
+        using Kazo.Os.AppSdk.KazoExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.KazoExecutionContext.EnterKernel();
+        // One grant says "this app talks to the real network", relay or WebSocket alike.
+        _capabilities.Require(AppCapabilities.NetworkRealAccess);
+
+        string host = uri.DnsSafeHost;
+        Route route = await RouteAsync(host, cancellationToken).ConfigureAwait(false);
+        if (route.IsLocal || route.Host is not null || !CanRelay(host))
+        {
+            _meter.ConnectFailed(udp: false);
+            return KazoNetworkResult<System.Net.WebSockets.WebSocket>.Failure(
+                KazoNetworkError.ConnectionRefused,
+                $"{uri.GetLeftPart(UriPartial.Authority)}: simulated host; the simulated network carries no WebSocket yet (issue #393)");
+        }
+
+        KernelMemoryCharge buffers = OpenSocket();
+        System.Net.WebSockets.WebSocket socket;
+        try
+        {
+            socket = await WebSocketConnector(uri, subProtocols, cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception exception) when (exception is System.Net.WebSockets.WebSocketException or HttpRequestException
+            or PlatformNotSupportedException or InvalidOperationException)
+        {
+            // The browser tells a page nothing more than "the connection failed" (mixed content,
+            // refused handshake, unknown host): neither does the OS.
+            buffers.Dispose();
+            _meter.ConnectFailed(udp: false);
+            return KazoNetworkResult<System.Net.WebSockets.WebSocket>.Failure(
+                KazoNetworkError.ConnectionFailed, $"Unable to connect to the remote server {uri.GetLeftPart(UriPartial.Authority)}");
+        }
+        catch
+        {
+            buffers.Dispose();
+            throw;
+        }
+
+        MeteredWebSocket.CountHandshake(_meter, uri, subProtocols, socket.SubProtocol);
+        return KazoNetworkResult<System.Net.WebSockets.WebSocket>.Success(new MeteredWebSocket(socket, _meter, buffers));
+    }
+
+    /// <summary>Opens the browser's WebSocket (a <see cref="System.Net.WebSockets.ClientWebSocket"/> under WebAssembly).</summary>
+    private static async Task<System.Net.WebSockets.WebSocket> ConnectBrowserWebSocketAsync(
+        Uri uri, IReadOnlyList<string> subProtocols, CancellationToken cancellationToken)
+    {
+        System.Net.WebSockets.ClientWebSocket socket = new();
+        try
+        {
+            foreach (string subProtocol in subProtocols)
+            {
+                socket.Options.AddSubProtocol(subProtocol);
+            }
+
+            await socket.ConnectAsync(uri, cancellationToken).ConfigureAwait(false);
+            return socket;
+        }
+        catch
+        {
+            socket.Dispose();
+            throw;
+        }
+    }
+
     /// <summary>
     /// What an app sees of a relay refusal: a policy refusal (port, address range) is a firewall
     /// REJECT, a missing server grant or a disabled relay is no route at all.
@@ -361,6 +462,7 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
         ProxyErrorCode.ConnectionRefused or ProxyErrorCode.BlockedPort or ProxyErrorCode.BlockedAddress => KazoNetworkError.ConnectionRefused,
         ProxyErrorCode.HostUnreachable => KazoNetworkError.HostUnreachable,
         ProxyErrorCode.GrantMissing or ProxyErrorCode.RelayDisabled or ProxyErrorCode.SimulatedDomainBlocked => KazoNetworkError.HostNotFound,
+        ProxyErrorCode.TlsFailed => KazoNetworkError.TlsFailed,
         _ => KazoNetworkError.ConnectionFailed
     };
 

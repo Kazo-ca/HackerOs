@@ -11,8 +11,8 @@ pas, le réseau réel par le proxy du serveur optionnel, quand c'est permis et
 possible. L'app ne voit ni le jeton d'accès, ni l'adresse du serveur, ni même
 s'il existe un serveur.
 
-Ce document décrit les façades `KazoDns`, `KazoPing`, `KazoHttpClient` et
-`KazoTcpClient`, la passerelle `IAppNetworkGateway` qui les porte et son
+Ce document décrit les façades `KazoDns`, `KazoPing`, `KazoHttpClient`,
+`KazoTcpClient` et `KazoClientWebSocket`, la passerelle `IAppNetworkGateway` qui les porte et son
 implémentation `AppNetworkGateway` dans Platform Core. Il a été écrit par le
 chantier `rebuild/4-sdk-network` (ADR 0058).
 
@@ -31,7 +31,7 @@ App (Browser, ping, curl, cat, nmap)
 
 | Type | Projet | Rôle |
 |---|---|---|
-| `IAppNetworkGateway` | `Kazo.Os.AppSdk` (`Net/`) | Passerelle de l'instance : `ResolveAsync`, `ReverseLookupAsync`, `PingAsync`, `SendAsync`, `ProbeTcpAsync`, `DetectOperatingSystemAsync`. Les échecs réseau sont un résultat (`KazoNetworkResult<T>`, `KazoNetworkError`), jamais une exception. |
+| `IAppNetworkGateway` | `Kazo.Os.AppSdk` (`Net/`) | Passerelle de l'instance : `ResolveAsync`, `ReverseLookupAsync`, `PingAsync`, `SendAsync`, `ProbeTcpAsync`, `DetectOperatingSystemAsync`, puis `ConnectTcpAsync`, `ConnectUdpAsync` (ADR 0102) et `ConnectWebSocketAsync` (ADR 0235 §1). Les échecs réseau sont un résultat (`KazoNetworkResult<T>`, `KazoNetworkError`), jamais une exception. |
 | `IAppExecutionContext.Network` | `Kazo.Os.AppSdk` | Membre avec une implémentation par défaut « non prise en charge », pour que les contextes existants compilent. |
 | `KazoDns`, `KazoPing`, `KazoHttpClient`, `KazoCookieContainer`, `KazoTcpClient` | `Kazo.Os.AppSdk` (`Net/`) | Façades calquées sur `System.Net` : elles lisent le contexte ambiant (ADR 0043) et lèvent les exceptions de .NET. |
 | `AppNetworkGateway` | `Kazo.Os.Platform.Core` (`Network/`) | Implémentation de confiance : capacités, réseau simulé, décision du repli réel, jeton du serveur. Construite par `AppExecutionContextFactory` pour chaque instance. |
@@ -54,6 +54,7 @@ une cible locale est servie par la table des ports de l'OS, sur `lo`, et un nom
 | DNS, ping, `GET`, `HEAD`, sondage de ports, détection d'OS | `network.simulated.read` (normale) | `UnauthorizedAccessException` (interne : `AppGatewayAccessDeniedException`) |
 | `POST` et toute autre méthode HTTP, socket TCP ou UDP (`ConnectAsync`) | `network.simulated.write` (normale) | idem |
 | Repli sur le réseau réel | `network.real.access` (dangereuse), vérifiée aussi par le serveur (ADR 0102 §4) | aucun repli : « hôte introuvable » |
+| WebSocket vers un vrai serveur (`KazoClientWebSocket`) | `network.real.access` (dangereuse), la même que pour le relais (ADR 0235 §1) | `UnauthorizedAccessException` |
 | Écouter un port (`KazoHttpListener`) hors de ses `web.urls` | `network.listen` (normale), plus `network.listen.privileged` (dangereuse) sous 1024 | `UnauthorizedAccessException` |
 
 Les classements sont inchangés (ADR 0049). Une app système reçoit ses capacités
@@ -157,6 +158,61 @@ plus). Les deux demandent `network.simulated.write`. Le réseau simulé n'a pas
 de flux bruts : un hôte qu'il connaît, ou cette machine, refuse la connexion.
 Les appels synchrones lèvent `NotSupportedException`.
 
+`KazoTcpClient.ConnectAsync(host, port, new KazoTcpConnectOptions { UseTls = true }, ct)`
+demande au relais du serveur d'ouvrir TLS vers la cible (ADR 0235 §2) :
+l'app lit et écrit du texte en clair, le certificat est vérifié par le serveur
+contre `TargetHost` (le `host` par défaut). Un certificat refusé lève
+`AuthenticationException`, comme `SslStream` ; `IsEncrypted`, `TlsProtocol`
+(`TLS 1.3`) et `RemoteCertificateSubject` disent ce qui a été négocié. Sans
+serveur, l'hôte n'est pas trouvé. Détails : [relais réseau](../dev/server-network-relay.md#tls-ouvert-par-le-relais-adr-0235-2).
+### WebSocket vers un vrai serveur (ADR 0235 §1)
+
+`KazoClientWebSocket` suit `System.Net.WebSockets.ClientWebSocket` et hérite
+de `WebSocket` : une app peut le passer partout où un `WebSocket` est attendu.
+Chantier `real-network/1-websocket`, issue
+[#395](https://github.com/Kazo-ca/Os/issues/395).
+
+```csharp
+using KazoClientWebSocket socket = new();
+socket.Options.AddSubProtocol("text.ircv3.net");
+await socket.ConnectAsync(new Uri("wss://irc.example.org/webirc"));   // UnauthorizedAccessException sans network.real.access
+await socket.SendAsync("NICK kazo"u8.ToArray(), WebSocketMessageType.Text, endOfMessage: true);
+byte[] buffer = new byte[4096];
+ValueWebSocketReceiveResult received = await socket.ReceiveAsync(buffer.AsMemory());
+// socket.State, socket.SubProtocol, socket.CloseStatus, socket.CloseStatusDescription
+await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "bye", CancellationToken.None);
+```
+
+- **Sans serveur.** L'OS ouvre le `WebSocket` du navigateur pour l'app
+  (`AppNetworkGateway.ConnectWebSocketAsync`, un `ClientWebSocket` de .NET, qui
+  est le `WebSocket` du navigateur sous WebAssembly). Il marche dans l'hôte
+  Ecosystem seul ; le relais du serveur n'est pas utilisé.
+- **Limites du navigateur.** Seuls les sous-protocoles se règlent
+  (`Options.AddSubProtocol`) : pas d'en-têtes, de cookies ni de certificat
+  client. `wss://` est obligatoire quand l'OS est servi en `https` (contenu
+  mixte). Un refus du serveur, un nom inconnu ou une page qui n'accepte pas la
+  mise à niveau donnent tous `WebSocketException` avec
+  `WebSocketError.Faulted` et le message « Unable to connect to the remote
+  server … », sans le code HTTP, comme un navigateur.
+- **Hôte simulé refusé.** Une adresse du réseau simulé, de cette machine
+  (`localhost`, 127.0.0.0/8) ou du domaine interne `.hack` est refusée avant
+  d'ouvrir quoi que ce soit : `WebSocketException` (`Faulted`), message
+  « simulated host … (issue #393) ». Le réseau simulé ne porte pas encore de
+  WebSocket ([#393](https://github.com/Kazo-ca/Os/issues/393)).
+- **Trafic compté.** Chaque trame passe par `MeteredWebSocket` (Platform
+  Core) : la poignée de main compte le SYN, le SYN-ACK, la requête `Upgrade` et
+  la réponse `101` ; chaque trame compte un segment TCP de son en-tête
+  RFC 6455 (2, 4 ou 10 octets, plus 4 de masque pour une trame envoyée) et de
+  ses octets, sur `eth0` et dans `rchar`/`wchar` du processus ; les tampons du
+  socket (144 Kio) sont imputés au processus jusqu'à la fermeture (ADR 0068).
+- **Web Worker.** La passerelle d'une app qui tourne dans un Web Worker
+  (`RemoteNetworkGateway`) n'ouvre pas encore de socket, comme pour
+  `KazoTcpClient.ConnectAsync` : `ConnectAsync` lève
+  `NotSupportedException`.
+- **Compatibilité.** `IAppNetworkGateway.ConnectWebSocketAsync` a une
+  implémentation par défaut qui lève `NotSupportedException` : une passerelle
+  écrite pour le SDK 3.0 compile et se charge toujours.
+
 ## Apps migrées
 
 - **Browser** : plus d'injection ; `KazoHttpClient` et un `KazoCookieContainer`
@@ -204,6 +260,25 @@ d'exemptions de la frontière du SDK.
   chaque méthode publique compte son échange sur `eth0` et dans `rchar`/`wchar`
   du processus de l'app (`NetworkTrafficMeter`) ; un appel refusé faute de
   capacité ne compte rien. Détails : [`system-metrics.md`](../dev/system-metrics.md).
+
+- **`ClientWebSocket` de .NET plutôt qu'un module JavaScript** (chantier
+  `real-network/1-websocket`) : l'ADR 0235 §1 prévoyait un module JavaScript
+  de Browser Infrastructure. Sous WebAssembly, `ClientWebSocket` *est* le
+  `WebSocket` du navigateur (le relais l'utilise déjà dans `HttpProxyClient`),
+  ouvert par l'OS et jamais par l'app : aucun JavaScript à écrire (AGENTS.md
+  §I.2), les tests xUnit parlent à un vrai serveur WebSocket (Kestrel), et la
+  même classe servira dans un Web Worker. `AppNetworkGateway.WebSocketConnector`
+  permet aux tests de viser leur serveur.
+
+## Liste des tâches du chantier `real-network/1-websocket`
+
+- [x] `KazoClientWebSocket` et `KazoClientWebSocketOptions` (`Kazo.Os.AppSdk.Net`), calqués sur `ClientWebSocket`.
+- [x] `IAppNetworkGateway.ConnectWebSocketAsync` avec implémentation par défaut (compatibilité du SDK 3.0).
+- [x] `AppNetworkGateway.ConnectWebSocketAsync` : `network.real.access`, hôte simulé refusé, `WebSocket` du navigateur.
+- [x] `MeteredWebSocket` : trames comptées dans `/proc/net/dev` et `/proc/<pid>/io`, tampons imputés.
+- [x] `PublicAPI.Unshipped.txt` du SDK et de Platform Core.
+- [x] Tests (`Wave4NetworkTests.WebSocket.cs`) : refus sans capacité, hôte simulé refusé, échange de trames et sous-protocole avec un vrai serveur WebSocket, refus de la poignée de main, trafic compté, contexte sans WebSocket.
+- [x] Documentation : ce document, `capabilities.md`, `server-network-relay.md`, `app-sdk.md`, `sdk-reference.md`, `features.md`, index, entrée `changes/unreleased`.
 
 ## Liste des tâches du chantier `rebuild/4-sdk-network`
 

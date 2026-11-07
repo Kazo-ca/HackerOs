@@ -140,6 +140,13 @@ field takes the focus on opening. The labels follow the session language
 (ADR 0104): those quoted here are the English ones, the default language; in a
 French session the window shows the French equivalents.
 
+Under `network.real.access`, the window and the terminal's text mode list the
+real ports the app declares in its manifest (`realNetworkPorts`, ADR 0235 §3):
+"Real servers on ports: TCP 6667, TCP 6697" (`RealNetworkPortText`). Nothing
+is shown when the app declares none. The server relay opens these ports when
+the grant carries them, except those of `BlockedPorts`
+([network relay](server-network-relay.md)).
+
 `DangerousCapabilityApprovalBroker` shows one request at a time. Without an
 attached window, a request ends as `Unavailable` (hence
 `capability.deferred`); if the shell disappears (logout), pending requests are

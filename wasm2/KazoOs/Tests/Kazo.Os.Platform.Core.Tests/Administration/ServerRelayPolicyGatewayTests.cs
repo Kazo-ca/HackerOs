@@ -46,6 +46,12 @@ public sealed class ServerRelayPolicyGatewayTests
         Assert.Equal(TimeSpan.FromSeconds(300), policy.StreamIdleTimeout);
         Assert.Equal(["warning"], policy.Warnings);
         Assert.Equal(1, policy.OpenStreams);
+        // ADR 0235 section 3: block-lists and the approved ports of each app reach Settings.
+        Assert.Equal([25, 445], policy.TcpBlockedPorts);
+        Assert.Empty(policy.UdpBlockedPorts);
+        KazoServerAppPorts irc = Assert.Single(policy.AppPorts);
+        Assert.Equal("ca.kazo.irc", irc.AppId);
+        Assert.Equal(["tcp/6667", "tcp/6697"], irc.Ports);
     }
 
     private sealed class Capabilities(params string[] granted) : ICapabilityChecker
@@ -107,7 +113,12 @@ public sealed class ServerRelayPolicyGatewayTests
                 MaxStreamsPerDevice: 4,
                 CurrentStreams: 1,
                 StreamIdleTimeoutSeconds: 300,
-                GrantedApps: ["org.kazoos.commands.curl"]));
+                GrantedApps: ["org.kazoos.commands.curl"])
+            {
+                TcpBlockedPorts = [25, 445],
+                UdpBlockedPorts = [],
+                AppPorts = [new ProxyAppPorts("ca.kazo.irc", ["tcp/6667", "tcp/6697"])]
+            });
         }
     }
 }

@@ -21,6 +21,9 @@
   <data name="Approval.Deny" xml:space="preserve">
     <value>Refuser</value>
   </data>
+  <data name="Approval.RealNetworkPorts" xml:space="preserve">
+    <value>Vrais serveurs sur les ports : {0}</value>
+  </data>
   <data name="Approval.Footer" xml:space="preserve">
     <value>Cette décision sera inscrite dans /var/log/auth.log</value>
   </data>

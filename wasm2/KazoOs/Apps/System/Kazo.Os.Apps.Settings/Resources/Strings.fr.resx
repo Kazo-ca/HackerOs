@@ -645,6 +645,21 @@
   <data name="Relay.Disabled" xml:space="preserve">
     <value>Désactivés</value>
   </data>
+  <data name="Relay.TcpBlockedPorts" xml:space="preserve">
+    <value>Ports TCP bloqués</value>
+  </data>
+  <data name="Relay.UdpBlockedPorts" xml:space="preserve">
+    <value>Ports UDP bloqués</value>
+  </data>
+  <data name="Relay.AppPorts" xml:space="preserve">
+    <value>Ports déclarés par les apps</value>
+  </data>
+  <data name="Relay.NoAppPorts" xml:space="preserve">
+    <value>Aucune app approuvée ne déclare de port</value>
+  </data>
+  <data name="Relay.NoBlockedPorts" xml:space="preserve">
+    <value>Aucun (le serveur en avertit)</value>
+  </data>
   <data name="Relay.GrantedApps" xml:space="preserve">
     <value>Apps autorisées</value>
   </data>

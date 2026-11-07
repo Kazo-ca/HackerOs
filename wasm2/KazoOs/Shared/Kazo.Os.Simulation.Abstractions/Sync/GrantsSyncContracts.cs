@@ -25,7 +25,16 @@ public sealed record GrantsSyncPayload(
     string Capability,
     string Source,
     IReadOnlyList<GrantConstraintPayload> Constraints,
-    bool IsRevoked);
+    bool IsRevoked)
+{
+    /// <summary>
+    /// For a <c>network.real.access</c> grant, the real-network ports the app declared and an
+    /// administrator approved (ADR 0235 §3), written <c>tcp/6697</c>; the server's relay opens them
+    /// unless its <c>BlockedPorts</c> refuses them. <see langword="null"/> (omitted) otherwise. An init
+    /// property, not a constructor parameter, so older payloads and callers stay valid.
+    /// </summary>
+    public IReadOnlyList<string>? RealNetworkPorts { get; init; }
+}
 
 /// <summary>
 /// Flattened structured resource constraint. Exactly one of the kind-specific field groups is

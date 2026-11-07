@@ -1,1 +1,4 @@
 #nullable enable
+Kazo.Os.Simulation.Abstractions.Sync.GrantsSyncPayload.RealNetworkPorts.get -> System.Collections.Generic.IReadOnlyList<string!>?
+Kazo.Os.Simulation.Abstractions.Sync.GrantsSyncPayload.RealNetworkPorts.init -> void
+~Kazo.Os.Simulation.Abstractions.Sync.GrantsSyncContractsJsonContext.IReadOnlyListString.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<string>>

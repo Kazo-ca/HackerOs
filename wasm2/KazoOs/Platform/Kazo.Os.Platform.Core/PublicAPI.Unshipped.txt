@@ -4,3 +4,9 @@ const Kazo.Os.Platform.Core.Apps.Packages.AppPackage.LegacyDescriptionFileName =
 const Kazo.Os.Platform.Core.Apps.Packages.AppPackage.LegacyExtension = ".hackapp" -> string!
 static Kazo.Os.Platform.Core.Apps.Packages.AppPackage.HasPackageExtension(string! path) -> bool
 const Kazo.Os.Platform.Core.Apps.Packages.AppDataGuard.LegacyPreviousVersionVariable = "HACKEROS_PREVIOUS_VERSION" -> string!
+Kazo.Os.Platform.Core.Policy.RealNetworkPortText
+static Kazo.Os.Platform.Core.Policy.RealNetworkPortText.For(Kazo.Os.App.Abstractions.AppManifest! manifest, string! capability) -> string?
+Kazo.Os.Platform.Core.Network.AppNetworkGateway.ConnectTcpAsync(string! hostNameOrAddress, int port, Kazo.Os.AppSdk.Net.KazoTcpConnectOptions! options, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<Kazo.Os.AppSdk.Net.IKazoSocket!>!>
+Kazo.Os.Platform.Core.Network.AppNetworkGateway.ConnectWebSocketAsync(System.Uri! uri, System.Collections.Generic.IReadOnlyList<string!>! subProtocols, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<System.Net.WebSockets.WebSocket!>!>
+Kazo.Os.Platform.Core.Network.AppNetworkGateway.WebSocketConnector.get -> System.Func<System.Uri!, System.Collections.Generic.IReadOnlyList<string!>!, System.Threading.CancellationToken, System.Threading.Tasks.Task<System.Net.WebSockets.WebSocket!>!>!
+Kazo.Os.Platform.Core.Network.AppNetworkGateway.WebSocketConnector.init -> void

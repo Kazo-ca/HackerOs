@@ -112,7 +112,31 @@ public sealed record KazoServerRelayPolicy(
     int OpenStreams,
     TimeSpan StreamIdleTimeout,
     IReadOnlyList<string> GrantedApps,
-    IReadOnlyList<string> Warnings);
+    IReadOnlyList<string> Warnings)
+{
+    /// <summary>
+    /// TCP ports the server never opens, HTTP included, even for an app that declared them
+    /// (<c>BlockedPorts</c>, ADR 0235 §3). Empty when the list is empty or the server predates it.
+    /// </summary>
+    public IReadOnlyList<int> TcpBlockedPorts { get; init; } = [];
+
+    /// <summary>UDP ports the server never opens (<c>BlockedPorts</c>, ADR 0235 §3).</summary>
+    public IReadOnlyList<int> UdpBlockedPorts { get; init; } = [];
+
+    /// <summary>
+    /// The account's apps whose approved grant opens declared real-network ports (ADR 0235 §3),
+    /// with those ports.
+    /// </summary>
+    public IReadOnlyList<KazoServerAppPorts> AppPorts { get; init; } = [];
+}
+
+/// <summary>
+/// The real-network ports the connected server opens for one app (ADR 0235 §3): what the app
+/// declared in its manifest (<c>realNetworkPorts</c>) and an administrator approved.
+/// </summary>
+/// <param name="AppId">The app.</param>
+/// <param name="Ports">Its ports, written <c>tcp/6697</c>.</param>
+public sealed record KazoServerAppPorts(string AppId, IReadOnlyList<string> Ports);
 
 /// <summary>
 /// The server refused a request or could not be reached while the user asked for it (connect,

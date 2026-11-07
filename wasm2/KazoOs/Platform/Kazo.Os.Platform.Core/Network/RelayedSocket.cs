@@ -38,6 +38,12 @@ internal sealed class RelayedSocket : IKazoSocket
     public IPEndPoint RemoteEndPoint { get; }
 
     /// <inheritdoc />
+    public string? TlsProtocol => _channel.Remote.TlsProtocol;
+
+    /// <inheritdoc />
+    public string? RemoteCertificateSubject => _channel.Remote.CertificateSubject;
+
+    /// <inheritdoc />
     public async ValueTask SendAsync(ReadOnlyMemory<byte> data, CancellationToken cancellationToken = default)
     {
         using Kazo.Os.AppSdk.KazoExecutionContext.KernelScope kernel = Kazo.Os.AppSdk.KazoExecutionContext.EnterKernel();

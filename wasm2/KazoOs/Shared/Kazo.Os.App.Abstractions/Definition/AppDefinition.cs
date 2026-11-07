@@ -56,6 +56,14 @@ public abstract class AppDefinition
     /// <summary>Gets the capabilities the app requests; granting them stays a policy decision.</summary>
     public virtual IReadOnlyList<string> Capabilities => [];
 
+    /// <summary>
+    /// Gets the real-network ports the app needs through the server's relay (ADR 0235 §3), each
+    /// written <c>tcp/6697</c> or <c>udp/5353</c>. Requires <c>network.real.access</c> in
+    /// <see cref="Capabilities"/>; the approval window lists them and the relay accepts them once
+    /// approved, unless the server's <c>BlockedPorts</c> refuses them. Empty by default.
+    /// </summary>
+    public virtual IReadOnlyList<string> RealNetworkPorts => [];
+
     /// <summary>Gets the file types a window app opens or edits.</summary>
     public virtual IReadOnlyList<FileHandler> FileHandlers => [];
 

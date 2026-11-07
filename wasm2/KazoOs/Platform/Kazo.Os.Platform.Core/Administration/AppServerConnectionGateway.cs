@@ -67,7 +67,9 @@ internal sealed class AppServerConnectionGateway : IAppServerConnectionGateway
     {
         ["KazoOs:Proxy:AllowAllPorts is on: the relay reaches every TCP and UDP port."] = "Relay.Warning.AllowAllPorts",
         ["KazoOs:Proxy:AllowPrivateNetworks is on: the relay reaches the private networks of the server's machine (loopback and cloud metadata stay blocked)."] = "Relay.Warning.AllowPrivateNetworks",
-        ["KazoOs:Proxy:Quotas:Enabled is off: no size, concurrency, stream or idle limit applies."] = "Relay.Warning.QuotasDisabled"
+        ["KazoOs:Proxy:Quotas:Enabled is off: no size, concurrency, stream or idle limit applies."] = "Relay.Warning.QuotasDisabled",
+        ["KazoOs:Proxy:Tcp:BlockedPorts is empty: the relay may open every TCP port an app declares or the allow-list names, mail (25) included."] = "Relay.Warning.TcpBlockedPortsEmpty",
+        ["KazoOs:Proxy:Udp:BlockedPorts is empty: the relay may open every UDP port an app declares or the allow-list names, amplification services included."] = "Relay.Warning.UdpBlockedPortsEmpty"
     };
 
     /// <summary>Creates the gateway for one app instance.</summary>
@@ -257,7 +259,13 @@ internal sealed class AppServerConnectionGateway : IAppServerConnectionGateway
                 policy.CurrentStreams,
                 TimeSpan.FromSeconds(policy.StreamIdleTimeoutSeconds),
                 policy.GrantedApps ?? [],
-                LocalizeRelayWarnings(policy.OperatorWeakeningWarnings));
+                LocalizeRelayWarnings(policy.OperatorWeakeningWarnings))
+            {
+                // ADR 0235 §3; absent from an older server, which blocks nothing by list.
+                TcpBlockedPorts = policy.TcpBlockedPorts ?? [],
+                UdpBlockedPorts = policy.UdpBlockedPorts ?? [],
+                AppPorts = [.. (policy.AppPorts ?? []).Select(static app => new KazoServerAppPorts(app.AppId, app.Ports))]
+            };
         }
         catch (Exception exception) when (exception is ServerConnectionException or HttpRequestException)
         {

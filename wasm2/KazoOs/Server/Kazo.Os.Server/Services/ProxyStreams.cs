@@ -71,10 +71,13 @@ public sealed class SocketProxyStreamConnector : IProxyStreamConnector
 /// The stream closes itself after <c>StreamIdleTimeoutSeconds</c> without a byte in either
 /// direction, like a NAT forgetting an idle mapping. The close callback runs exactly once,
 /// whatever closed it, with the byte counts for the audit log and to release the device's slot.
+/// With a TLS session (ADR 0235 §2) bytes go through its stream instead of the raw socket, so the
+/// app exchanges clear text and the target sees TLS; the byte counts are the clear-text ones.
 /// </remarks>
 public sealed class SocketProxyStreamChannel : IProxyStreamChannel
 {
     private readonly Socket socket;
+    private readonly Stream? secureStream;
     private readonly TimeSpan idleTimeout;
     private readonly Action<ProxyStreamClosure, long, long> onClosed;
     private readonly CancellationTokenSource _idle;
@@ -89,14 +92,25 @@ public sealed class SocketProxyStreamChannel : IProxyStreamChannel
     /// <param name="remote">The validated address and port.</param>
     /// <param name="idleTimeout">Idle timeout, or <see cref="Timeout.InfiniteTimeSpan"/>.</param>
     /// <param name="onClosed">Called once on close with (closure, bytes sent to the target, bytes received from it).</param>
+    /// <param name="secureStream">
+    /// The TLS stream opened over <paramref name="socket"/> (TCP only), or <see langword="null"/>
+    /// for clear text; owned by the channel.
+    /// </param>
     public SocketProxyStreamChannel(
         Socket socket,
         ProxyProtocol protocol,
         ProxyStreamOpened remote,
         TimeSpan idleTimeout,
-        Action<ProxyStreamClosure, long, long> onClosed)
+        Action<ProxyStreamClosure, long, long> onClosed,
+        Stream? secureStream = null)
     {
         this.socket = socket ?? throw new ArgumentNullException(nameof(socket));
+        if (secureStream is not null && protocol != ProxyProtocol.Tcp)
+        {
+            throw new ArgumentException("TLS is only relayed over TCP.", nameof(secureStream));
+        }
+
+        this.secureStream = secureStream;
         this.idleTimeout = idleTimeout;
         this.onClosed = onClosed ?? throw new ArgumentNullException(nameof(onClosed));
         Protocol = protocol;
@@ -131,22 +145,30 @@ public sealed class SocketProxyStreamChannel : IProxyStreamChannel
         using CancellationTokenSource linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _idle.Token);
         try
         {
-            // TCP: a send may be partial, as send(2); loop until the kernel took every byte.
-            int offset = 0;
-            do
+            if (secureStream is not null)
             {
-                offset += await socket.SendAsync(data[offset..], SocketFlags.None, linked.Token).ConfigureAwait(false);
+                // SslStream encrypts the whole buffer into records and writes them all.
+                await secureStream.WriteAsync(data, linked.Token).ConfigureAwait(false);
             }
-            while (Protocol == ProxyProtocol.Tcp && offset < data.Length);
+            else
+            {
+                // TCP: a send may be partial, as send(2); loop until the kernel took every byte.
+                int offset = 0;
+                do
+                {
+                    offset += await socket.SendAsync(data[offset..], SocketFlags.None, linked.Token).ConfigureAwait(false);
+                }
+                while (Protocol == ProxyProtocol.Tcp && offset < data.Length);
+            }
 
             Interlocked.Add(ref _sent, data.Length);
             Touch();
         }
-        catch (Exception exception) when (exception is SocketException or ObjectDisposedException
+        catch (Exception exception) when (exception is SocketException or ObjectDisposedException or IOException
             || (exception is OperationCanceledException && !cancellationToken.IsCancellationRequested))
         {
-            Close(ProxyStreamCloseCodes.RemoteClosed, exception is SocketException socketError
-                ? $"send failed: {socketError.SocketErrorCode}"
+            Close(ProxyStreamCloseCodes.RemoteClosed, SocketErrorOf(exception) is { } error
+                ? $"send failed: {error}"
                 : "the stream was closed");
             throw new InvalidOperationException("The stream is closed.", exception);
         }
@@ -164,7 +186,9 @@ public sealed class SocketProxyStreamChannel : IProxyStreamChannel
         using CancellationTokenSource linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _idle.Token);
         try
         {
-            int read = await socket.ReceiveAsync(buffer, SocketFlags.None, linked.Token).ConfigureAwait(false);
+            int read = secureStream is not null
+                ? await secureStream.ReadAsync(buffer, linked.Token).ConfigureAwait(false)
+                : await socket.ReceiveAsync(buffer, SocketFlags.None, linked.Token).ConfigureAwait(false);
             if (read == 0 && Protocol == ProxyProtocol.Tcp)
             {
                 Close(ProxyStreamCloseCodes.RemoteClosed, "closed by the remote host");
@@ -181,12 +205,16 @@ public sealed class SocketProxyStreamChannel : IProxyStreamChannel
             Close(ProxyStreamCloseCodes.IdleTimeout, $"idle for {idleTimeout.TotalSeconds:0} s");
             return null;
         }
-        catch (Exception exception) when (exception is SocketException or ObjectDisposedException)
+        catch (Exception exception) when (exception is SocketException or ObjectDisposedException or IOException)
         {
-            // An ICMP port unreachable answering a UDP datagram surfaces here as ConnectionRefused.
-            Close(ProxyStreamCloseCodes.RemoteClosed, exception is SocketException socketError
-                ? socketError.SocketErrorCode == SocketError.ConnectionRefused ? "port unreachable" : $"receive failed: {socketError.SocketErrorCode}"
-                : "the stream was closed");
+            // An ICMP port unreachable answering a UDP datagram surfaces here as ConnectionRefused;
+            // through TLS, a reset or a broken record surfaces as an IOException.
+            Close(ProxyStreamCloseCodes.RemoteClosed, SocketErrorOf(exception) switch
+            {
+                SocketError.ConnectionRefused => "port unreachable",
+                { } error => $"receive failed: {error}",
+                null => exception is IOException ? "the TLS session broke" : "the stream was closed"
+            });
             return null;
         }
     }
@@ -222,9 +250,18 @@ public sealed class SocketProxyStreamChannel : IProxyStreamChannel
             // Already reset by the peer: nothing left to shut down.
         }
 
+        secureStream?.Dispose();
         socket.Dispose();
         onClosed(_closure!, Interlocked.Read(ref _sent), Interlocked.Read(ref _received));
     }
+
+    /// <summary>The socket error behind a failure, directly or wrapped by the TLS stream.</summary>
+    private static SocketError? SocketErrorOf(Exception exception) => exception switch
+    {
+        SocketException socketError => socketError.SocketErrorCode,
+        IOException { InnerException: SocketException inner } => inner.SocketErrorCode,
+        _ => null
+    };
 
     private void Touch()
     {
