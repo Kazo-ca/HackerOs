@@ -116,6 +116,7 @@ Kazo.Os.Server.Contracts.Hosting.HostInfoRoutes
 Kazo.Os.Server.Contracts.Hosting.HostingContractsJsonContext
 Kazo.Os.Server.Contracts.Hosting.HostingContractsJsonContext.HostingContractsJsonContext() -> void
 Kazo.Os.Server.Contracts.Hosting.HostingContractsJsonContext.HostingContractsJsonContext(System.Text.Json.JsonSerializerOptions! options) -> void
+Kazo.Os.Server.Contracts.Hosting.KazoOsConfigurationNames
 Kazo.Os.Server.Contracts.Identity.CreateAccountRequest
 Kazo.Os.Server.Contracts.Identity.CreateAccountRequest.<Clone>$() -> Kazo.Os.Server.Contracts.Identity.CreateAccountRequest!
 Kazo.Os.Server.Contracts.Identity.CreateAccountRequest.CreateAccountRequest(string! Username, string! PasswordHash, string! Salt, string! DeviceName, string! DeviceFingerprint) -> void
@@ -737,6 +738,12 @@ Kazo.Os.Server.Contracts.Versioning.VersioningContractsJsonContext.VersioningCon
 const Kazo.Os.Server.Contracts.Hosting.HostInfoRoutes.ApiPath = "/api/kazoos/host-info" -> string!
 const Kazo.Os.Server.Contracts.Hosting.HostInfoRoutes.DiscoveryFile = "kazoos-host.json" -> string!
 const Kazo.Os.Server.Contracts.Hosting.HostInfoRoutes.ServerProduct = "Kazo OS Server" -> string!
+const Kazo.Os.Server.Contracts.Hosting.KazoOsConfigurationNames.ConnectionStringName = "KazoOsDb" -> string!
+const Kazo.Os.Server.Contracts.Hosting.KazoOsConfigurationNames.EnvironmentPrefix = "KAZOOS_" -> string!
+const Kazo.Os.Server.Contracts.Hosting.KazoOsConfigurationNames.LegacyConnectionStringName = "HackerOsDb" -> string!
+const Kazo.Os.Server.Contracts.Hosting.KazoOsConfigurationNames.LegacyEnvironmentPrefix = "HACKEROS_" -> string!
+const Kazo.Os.Server.Contracts.Hosting.KazoOsConfigurationNames.LegacySection = "HackerOs" -> string!
+const Kazo.Os.Server.Contracts.Hosting.KazoOsConfigurationNames.Section = "KazoOs" -> string!
 const Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode.BlockedAddress = "BLOCKED_ADDRESS" -> string!
 const Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode.BlockedPort = "BLOCKED_PORT" -> string!
 const Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode.BodyMismatch = "BODY_MISMATCH" -> string!
@@ -934,6 +941,7 @@ static Kazo.Os.Server.Contracts.Admin.ServerHealthResponse.operator ==(Kazo.Os.S
 static Kazo.Os.Server.Contracts.Hosting.HostInfoResponse.operator !=(Kazo.Os.Server.Contracts.Hosting.HostInfoResponse? left, Kazo.Os.Server.Contracts.Hosting.HostInfoResponse? right) -> bool
 static Kazo.Os.Server.Contracts.Hosting.HostInfoResponse.operator ==(Kazo.Os.Server.Contracts.Hosting.HostInfoResponse? left, Kazo.Os.Server.Contracts.Hosting.HostInfoResponse? right) -> bool
 static Kazo.Os.Server.Contracts.Hosting.HostingContractsJsonContext.Default.get -> Kazo.Os.Server.Contracts.Hosting.HostingContractsJsonContext!
+static Kazo.Os.Server.Contracts.Hosting.KazoOsConfigurationNames.MapLegacySettings(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string!, string?>>! settings) -> System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string?>>!
 static Kazo.Os.Server.Contracts.Identity.CreateAccountRequest.operator !=(Kazo.Os.Server.Contracts.Identity.CreateAccountRequest? left, Kazo.Os.Server.Contracts.Identity.CreateAccountRequest? right) -> bool
 static Kazo.Os.Server.Contracts.Identity.CreateAccountRequest.operator ==(Kazo.Os.Server.Contracts.Identity.CreateAccountRequest? left, Kazo.Os.Server.Contracts.Identity.CreateAccountRequest? right) -> bool
 static Kazo.Os.Server.Contracts.Identity.CreateAccountResponse.operator !=(Kazo.Os.Server.Contracts.Identity.CreateAccountResponse? left, Kazo.Os.Server.Contracts.Identity.CreateAccountResponse? right) -> bool

@@ -1,6 +1,7 @@
 #nullable enable
 Kazo.Os.Windowing.Core.SingleSurfacePresentationPolicy
 Kazo.Os.Windowing.Core.WindowRuntime
+Kazo.Os.Windowing.Core.WindowRuntime.ActivationTarget(Kazo.Os.Windowing.Abstractions.WindowId id) -> Kazo.Os.Windowing.Abstractions.WindowId
 Kazo.Os.Windowing.Core.WindowRuntime.Apply(Kazo.Os.Windowing.Abstractions.WindowCommand! command) -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Windowing.Abstractions.WindowEvent!>!
 Kazo.Os.Windowing.Core.WindowRuntime.Displays.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Windowing.Abstractions.DisplayId>!
 Kazo.Os.Windowing.Core.WindowRuntime.EventsApplied -> System.Action<System.Collections.Generic.IReadOnlyList<Kazo.Os.Windowing.Abstractions.WindowEvent!>!>?

@@ -92,6 +92,15 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   bords de l'écran, avec des animations sobres pour ouvrir, fermer, minimiser
   vers la barre, agrandir et ancrer, coupées par « Réduire les animations ».
   ([`window-model.md`](framework/window-model.md), [`window-animations.md`](dev/window-animations.md))
+- **Styles de fenêtre inspirés de WinForms** (version 3.1.0) : une app choisit
+  le style `Normal`, `Tool` (fermer seulement, celui des dialogues de l'OS) ou
+  `None` (zone cliente seule, transparente : un clic là où l'app ne dessine rien
+  atteint le bureau), et les options `ShowIcon`, `Resizable`, `MaximizeBox`,
+  `MinimizeBox`, `ShowInTaskbar` et `Modal`, dans son manifeste ou pendant
+  l'exécution. Elle ouvre ses propres fenêtres et dialogues modaux
+  (`ShowWindowAsync`, `ShowDialogAsync`) et réduit, agrandit, déplace ou
+  redimensionne sa fenêtre. ([ADR 0234](dev/adr/0234-window-styles-inspired-by-winforms.md),
+  [`window-model.md`](framework/window-model.md))
 - **Barre des tâches et menu Démarrer** avec les applications épinglées et les
   fenêtres ouvertes. Un clic droit sur la barre donne le menu de la fenêtre,
   « Nouvelle fenêtre », le gestionnaire des tâches, « Afficher le bureau » et
@@ -376,7 +385,6 @@ dans `main`, le lien mène à sa PR.
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Changer d'utilisateur | Ouvrir une autre session sans fermer la première. Reste grisé dans le menu Marche/arrêt par choix de Benoit : une session à la fois, Se déconnecter pour changer de compte. | [0195](dev/adr/0195-start-menu-power-button.md), [0201](dev/adr/0201-switch-user-stays-greyed.md) | [#290](https://github.com/Kazo-ca/Os/issues/290) |
-| Styles de fenêtre inspirés de WinForms | Styles `Normal`, `Tool` (fermer seulement, pour les dialogues) et `None` (zone cliente seule, fond transparent, pour qu'une app comme Webamp fasse flotter ses propres fenêtres), options `ShowIcon`, `Resizable`, `MaximizeBox`, `MinimizeBox`, `ShowInTaskbar` et `Modal`, fenêtres enfants et dialogues des apps, une app réduit sa propre fenêtre. Prévu pour la version 3.1.0. | [0234](dev/adr/0234-window-styles-inspired-by-winforms.md) | [#378](https://github.com/Kazo-ca/Os/issues/378), [#384](https://github.com/Kazo-ca/Os/issues/384) |
 | Adresse de fichier servie à la demande | Une app reçoit une adresse pour lire un gros fichier (audio, vidéo) sans le copier en mémoire, avec lecture partielle pour avancer dans un morceau. | À écrire | [#379](https://github.com/Kazo-ca/Os/issues/379) |
 | Glisser des fichiers vers une app | Contrat public du SDK pour recevoir des fichiers glissés depuis l'explorateur ou le bureau. | À écrire | [#380](https://github.com/Kazo-ca/Os/issues/380) |
 

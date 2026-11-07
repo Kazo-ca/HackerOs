@@ -1,9 +1,1 @@
 #nullable enable
-Kazo.Os.Server.Contracts.Hosting.KazoOsConfigurationNames
-const Kazo.Os.Server.Contracts.Hosting.KazoOsConfigurationNames.ConnectionStringName = "KazoOsDb" -> string!
-const Kazo.Os.Server.Contracts.Hosting.KazoOsConfigurationNames.EnvironmentPrefix = "KAZOOS_" -> string!
-const Kazo.Os.Server.Contracts.Hosting.KazoOsConfigurationNames.LegacyConnectionStringName = "HackerOsDb" -> string!
-const Kazo.Os.Server.Contracts.Hosting.KazoOsConfigurationNames.LegacyEnvironmentPrefix = "HACKEROS_" -> string!
-const Kazo.Os.Server.Contracts.Hosting.KazoOsConfigurationNames.LegacySection = "HackerOs" -> string!
-const Kazo.Os.Server.Contracts.Hosting.KazoOsConfigurationNames.Section = "KazoOs" -> string!
-static Kazo.Os.Server.Contracts.Hosting.KazoOsConfigurationNames.MapLegacySettings(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string!, string?>>! settings) -> System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string?>>!

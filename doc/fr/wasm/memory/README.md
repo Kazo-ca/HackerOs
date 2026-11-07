@@ -12,10 +12,14 @@ jour à la fin de chaque série ou quand une convention change.
 - **Code actif** : `wasm2/KazoOs/` (OS simulé en Blazor WebAssembly, .NET 10,
   solution `Kazo.Os.sln`). `src/` est l'ancienne version, gardée comme
   référence.
-- **Version** : Kazo OS et le SDK passent en **2.2.2** (`build/Versions.props`),
-  préparée le 2026-11-01 dans la PR `release/2.2.2` vers `main` ; elle est
-  publiée (tag `v2.2.2`, GitHub Release, nuget.org) quand cette PR arrive dans
-  `main`. Elle compile la clé publique du catalogue officiel dans l'OS
+- **Version** : Kazo OS et le SDK passent en **3.1.0** (`build/Versions.props`),
+  préparée le 2026-11-07 par le chantier `os-3-1/7-release-3-1-0` de la série
+  `os-3-1/base` ; elle est publiée (tag `v3.1.0`, GitHub Release, nuget.org)
+  quand `os-3-1/base` arrive dans `main`. Elle replie 247 lignes d'API dans
+  `Shipped` (styles de fenêtre WinForms, fenêtres enfants, ADR 0231 à 0234) et
+  regroupe 11 entrées dans `changes/3.1.0.json`. La 3.0.0 (2026-11-05, publiée,
+  renommage en Kazo OS) n'avait pas regroupé ses 15 entrées : elles sont rangées
+  après coup dans `changes/3.0.0.json`. La 2.2.2 (2026-11-01) compile la clé publique du catalogue officiel dans l'OS
   (`AppPackageDefaults.OfficialCatalogSigningKey`, PR #349) : tout paquet du Kazo
   Store doit porter la signature du catalogue. La 2.2.1 (2026-11-01, publiée) a un numéro de correctif choisi par Benoit bien que l'API grandisse : elle
   verse dans `Shipped` 190 lignes d'API (boutons Précédent/Suivant de la

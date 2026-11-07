@@ -1,4 +1,1 @@
 #nullable enable
-static Kazo.Os.Platform.Blazor.Windows.WindowLaunchCoordinator.ToFrame(Kazo.Os.App.Abstractions.WindowOptions! options) -> Kazo.Os.Windowing.Abstractions.WindowFrame!
-Kazo.Os.Platform.Blazor.Windows.AppWindowGatewayFactory.AppWindowGatewayFactory(Kazo.Os.Windowing.Core.WindowRuntime! runtime, Kazo.Os.Platform.Blazor.Windows.WindowLaunchCoordinator! launchCoordinator, System.IServiceProvider! services) -> void
-Kazo.Os.Platform.Blazor.Windows.AppWindowGatewayFactory.Create(Kazo.Os.Windowing.Abstractions.WindowId windowId, Kazo.Os.AppSdk.IAppExecutionContext! context) -> Kazo.Os.AppSdk.Blazor.IAppWindowGateway!

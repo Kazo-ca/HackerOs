@@ -164,6 +164,22 @@ Kazo.Os.Infrastructure.Browser.Policy.IndexedDbCapabilityGrantRepository.ImportA
 Kazo.Os.Infrastructure.Browser.Policy.IndexedDbCapabilityGrantRepository.IndexedDbCapabilityGrantRepository(Microsoft.JSInterop.IJSRuntime! runtime, System.TimeProvider? timeProvider = null, System.Func<System.Guid>? guidFactory = null) -> void
 Kazo.Os.Infrastructure.Browser.Policy.IndexedDbCapabilityGrantRepository.RevokeAsync(Kazo.Os.App.Abstractions.Policy.CapabilityGrantId grantId, Kazo.Os.App.Abstractions.AppAuthority actingAuthority, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.App.Abstractions.Policy.CapabilityGrantMutationResult!>
 Kazo.Os.Infrastructure.Browser.Recovery.BrowserStorageRecoveryClassifier
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigration
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.<Clone>$() -> Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult!
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.CopiedDatabases.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.CopiedDatabases.init -> void
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.Deconstruct(out bool Migrated, out System.Collections.Generic.IReadOnlyList<string!>! CopiedDatabases, out System.Collections.Generic.IReadOnlyList<string!>! KeptDatabases, out int RenamedKeys, out int RewrittenRecords) -> void
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.Equals(Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult? other) -> bool
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.KeptDatabases.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.KeptDatabases.init -> void
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.Migrated.get -> bool
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.Migrated.init -> void
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.RenamedKeys.get -> int
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.RenamedKeys.init -> void
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.RenamedStorageMigrationResult(bool Migrated, System.Collections.Generic.IReadOnlyList<string!>! CopiedDatabases, System.Collections.Generic.IReadOnlyList<string!>! KeptDatabases, int RenamedKeys, int RewrittenRecords) -> void
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.RewrittenRecords.get -> int
+Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.RewrittenRecords.init -> void
 Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy
 Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.<Clone>$() -> Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy!
 Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.ChunkCountFor(long fileSizeBytes) -> int
@@ -175,7 +191,6 @@ Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.MaxChunkSizeBytes
 Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.MaxFileSizeBytes.get -> long
 Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.OrphanRetention.get -> System.TimeSpan
 Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.RequiresChunking(long fileSizeBytes) -> bool
-Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema
 Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition
 Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.<Clone>$() -> Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition!
 Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.Equals(Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition? other) -> bool
@@ -200,6 +215,7 @@ Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary.Equals(Kazo.O
 Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary.IndexedDbTransactionBoundary(string! name, System.Collections.Generic.IReadOnlyList<string!>! objectStoreNames, string! description) -> void
 Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary.Name.get -> string!
 Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary.ObjectStoreNames.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema
 Kazo.Os.Infrastructure.Browser.ServerConnection.IndexedDbServerConnectionRepository
 Kazo.Os.Infrastructure.Browser.ServerConnection.IndexedDbServerConnectionRepository.ClearAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
 Kazo.Os.Infrastructure.Browser.ServerConnection.IndexedDbServerConnectionRepository.DisposeAsync() -> System.Threading.Tasks.ValueTask
@@ -286,6 +302,9 @@ Kazo.Os.Infrastructure.Browser.Workers.BrowserWebWorkerRuntime.MeasureWorkersAsy
 Kazo.Os.Infrastructure.Browser.Workers.BrowserWebWorkerRuntime.StartAsync(Kazo.Os.Simulation.Abstractions.Workers.WebWorkerStartOptions! options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Simulation.Abstractions.Workers.IWebWorker!>!
 Kazo.Os.Infrastructure.Browser.Workers.BrowserWebWorkerRuntime.WhenIdleAsync(System.TimeSpan timeout, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 const Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupService.ArchiveExtension = ".kosbak" -> string!
+const Kazo.Os.Infrastructure.Browser.Backup.IndexedDbBackupService.LegacyArchiveExtension = ".hosbak" -> string!
+const Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigration.ProgressKey = "kazoos.renameMigration" -> string!
+const Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigration.VersionKey = "kazoos.osVersion" -> string!
 const Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.DefaultContentHashAlgorithm = "SHA-256" -> string!
 const Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.DefaultDeduplicateChunks = true -> bool
 const Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.DefaultMaxChunkSizeBytes = 262144 -> long
@@ -324,6 +343,9 @@ override Kazo.Os.Infrastructure.Browser.Diagnostics.IndexedDbStoreSnapshot.ToStr
 override Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.Equals(object? obj) -> bool
 override Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.GetHashCode() -> int
 override Kazo.Os.Infrastructure.Browser.FileSystem.IndexedDbFileContentCleanupResult.ToString() -> string!
+override Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.Equals(object? obj) -> bool
+override Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.GetHashCode() -> int
+override Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.ToString() -> string!
 override Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.Equals(object? obj) -> bool
 override Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.GetHashCode() -> int
 override Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.ToString() -> string!
@@ -360,17 +382,21 @@ static Kazo.Os.Infrastructure.Browser.Globalization.BrowserSatelliteAssemblies.L
 static Kazo.Os.Infrastructure.Browser.Isolation.BrowserCrossOriginIsolation.ProbeAsync(bool wanted) -> System.Threading.Tasks.Task<string?>!
 static Kazo.Os.Infrastructure.Browser.Recovery.BrowserStorageRecoveryClassifier.AwaitDestructiveConfirmation(Kazo.Os.Simulation.Abstractions.Recovery.StorageRecoveryActions action, string! affectedData, System.Guid correlationId) -> Kazo.Os.Simulation.Abstractions.Recovery.StorageRecoveryPresentation!
 static Kazo.Os.Infrastructure.Browser.Recovery.BrowserStorageRecoveryClassifier.Classify(System.Exception! exception, Kazo.Os.Simulation.Abstractions.Recovery.StorageRecoveryContext context, System.Guid correlationId) -> Kazo.Os.Simulation.Abstractions.Recovery.StorageRecoveryPresentation!
+static Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigration.RunAsync(Microsoft.JSInterop.IJSRuntime! runtime, string! currentVersion, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult!>!
+static Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.NotNeeded.get -> Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult!
+static Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.operator !=(Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult? left, Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult? right) -> bool
+static Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult.operator ==(Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult? left, Kazo.Os.Infrastructure.Browser.Rename.RenamedStorageMigrationResult? right) -> bool
 static Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.Default.get -> Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy!
 static Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.operator !=(Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy? left, Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy? right) -> bool
 static Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy.operator ==(Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy? left, Kazo.Os.Infrastructure.Browser.Schema.FileContentStoragePolicy? right) -> bool
-static Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.ObjectStores.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition!>!
-static Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.TransactionBoundaries.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary!>!
 static Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.operator !=(Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition? left, Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition? right) -> bool
 static Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition.operator ==(Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition? left, Kazo.Os.Infrastructure.Browser.Schema.IndexedDbIndexDefinition? right) -> bool
 static Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition.operator !=(Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition? left, Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition? right) -> bool
 static Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition.operator ==(Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition? left, Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition? right) -> bool
 static Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary.operator !=(Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary? left, Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary? right) -> bool
 static Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary.operator ==(Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary? left, Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary? right) -> bool
+static Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.ObjectStores.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Infrastructure.Browser.Schema.IndexedDbObjectStoreDefinition!>!
+static Kazo.Os.Infrastructure.Browser.Schema.KazoOsIndexedDbSchema.TransactionBoundaries.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Infrastructure.Browser.Schema.IndexedDbTransactionBoundary!>!
 static Kazo.Os.Infrastructure.Browser.Settings.IndexedDbLegacySettingsStore.TryRead(System.Text.Json.JsonElement element, out Kazo.Os.Simulation.Abstractions.Settings.LegacySettingsRecord? record) -> bool
 static Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus.operator !=(Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus? left, Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus? right) -> bool
 static Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus.operator ==(Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus? left, Kazo.Os.Infrastructure.Browser.Storage.BrowserStorageStatus? right) -> bool
