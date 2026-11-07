@@ -176,7 +176,7 @@ Static facades that existed at the start of phase 4:
 | `KazoEnvironment` | arguments, current directory, variables | [`process-environment.md`](../dev/process-environment.md) |
 | `KazoSettings` | settings as files | [`settings-files.md`](settings-files.md) |
 | `KazoTrash` | trash | [`trash.md`](../dev/trash.md), [`trash-api.md`](trash-api.md) |
-| `KazoDns`, `KazoPing`, `KazoHttpClient`, `KazoTcpClient`, `KazoUdpClient` | network, real fallback decided by the OS (`4-sdk-network`), relayed sockets (`v3/10`) | [`sdk-network.md`](sdk-network.md) |
+| `KazoDns`, `KazoPing`, `KazoHttpClient`, `KazoTcpClient`, `KazoUdpClient`, `KazoClientWebSocket` | network, real fallback decided by the OS (`4-sdk-network`), relayed sockets (`v3/10`), the browser's WebSocket without a server (`real-network/1-websocket`) | [`sdk-network.md`](sdk-network.md) |
 | `KazoDriveInfo` | disk size and free space (`4-proc-metrics`) | [`system-metrics.md`](../dev/system-metrics.md) |
 | `KazoCrossOriginIsolation` | isolated page or not, and what that enables (ADR 0146, SDK 2.0) | [`worker-processes.md`](../dev/worker-processes.md#cross-origin-isolation-adr-0131-adr-0143) |
 | `KazoClipboard` | session clipboard, text and file list (`4-file-explorer`) | [`file-explorer.md`](../dev/file-explorer.md), [`clipboard-api.md`](clipboard-api.md) |
