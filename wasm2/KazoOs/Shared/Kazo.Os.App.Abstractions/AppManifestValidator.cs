@@ -47,6 +47,7 @@ public static partial class AppManifestValidator
 
         ValidateCapabilities(manifest.Capabilities, errors);
         ValidateCapabilityKindCompatibility(manifest.Kind, manifest.Capabilities, errors);
+        ValidateRealNetworkPorts(manifest, errors);
         ValidateDeclaredTopicPermissions(manifest.Id, manifest.DeclaredTopicPermissions, errors);
         ValidateDependencies(manifest.Dependencies, errors);
         ValidateAssets(manifest.Assets, errors);
@@ -859,6 +860,47 @@ public static partial class AppManifestValidator
                     $"Capability '{capability}' is not recognized by this App SDK version and is not a " +
                     "well-formed topic permission.");
             }
+        }
+    }
+
+    /// <summary>
+    /// ADR 0235 §3: each declared real-network port is <c>tcp/N</c> or <c>udp/N</c> with N from 1 to
+    /// 65535, declared once, and only by an app that requests <c>network.real.access</c> (the ports
+    /// mean nothing without the relay, and the approval window shows them with that capability).
+    /// </summary>
+    private static void ValidateRealNetworkPorts(AppManifest manifest, List<ManifestValidationError> errors)
+    {
+        if (manifest.RealNetworkPorts is not { } declared)
+        {
+            return;
+        }
+
+        if (declared.Count == 0)
+        {
+            AddError(errors, "manifest.realNetworkPorts.empty", "realNetworkPorts", "realNetworkPorts must list at least one port, or be omitted (ADR 0235).");
+            return;
+        }
+
+        HashSet<RealNetworkPort> seen = [];
+        foreach (string value in declared)
+        {
+            if (!Abstractions.RealNetworkPorts.TryParse(value, out RealNetworkPort port, out string? error))
+            {
+                AddError(errors, "manifest.realNetworkPort.invalid", "realNetworkPorts", error!);
+            }
+            else if (!seen.Add(port))
+            {
+                AddError(errors, "manifest.realNetworkPort.duplicate", "realNetworkPorts", $"Real-network port '{port}' is declared twice.");
+            }
+        }
+
+        if (!manifest.Capabilities.Contains(AppCapabilities.NetworkRealAccess, StringComparer.Ordinal))
+        {
+            AddError(
+                errors,
+                "manifest.realNetworkPorts.capability",
+                "realNetworkPorts",
+                $"Declaring real-network ports requires the '{AppCapabilities.NetworkRealAccess}' capability (ADR 0235).");
         }
     }
 

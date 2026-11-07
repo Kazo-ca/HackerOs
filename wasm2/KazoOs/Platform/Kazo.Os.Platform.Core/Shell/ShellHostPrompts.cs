@@ -114,6 +114,12 @@ internal sealed class ShellHostPrompts : IDangerousCapabilityApprovalPrompt
             {
                 await WriteAsync($"    {capability.RiskDescription}", KazoPromptLineKind.Warning).ConfigureAwait(false);
             }
+
+            // ADR 0235 section 3: the real ports the relay will open for this app.
+            if (RealNetworkPortText.For(app, capability.Capability) is { } ports)
+            {
+                await WriteAsync($"    {text["Prompt.Dangerous.RealNetworkPorts", ports]}", KazoPromptLineKind.Warning).ConfigureAwait(false);
+            }
         }
 
         await WriteAsync(text["Prompt.Dangerous.AuditNotice"], KazoPromptLineKind.Info).ConfigureAwait(false);

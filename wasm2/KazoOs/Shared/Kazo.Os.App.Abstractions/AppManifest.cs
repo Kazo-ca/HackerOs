@@ -63,6 +63,14 @@ public sealed record AppManifest
     public IReadOnlyList<string> Capabilities { get; init; } = [];
 
     /// <summary>
+    /// Gets the real-network ports the app needs through the server's relay (ADR 0235 §3), each
+    /// written <c>tcp/6697</c> or <c>udp/5353</c> (<see cref="Abstractions.RealNetworkPorts"/>), or
+    /// <see langword="null"/> (omitted from <c>manifest.json</c>) when it needs none beyond the
+    /// relay's own <c>AllowedPorts</c>. Declaring any requires <c>network.real.access</c>.
+    /// </summary>
+    public IReadOnlyList<string>? RealNetworkPorts { get; init; }
+
+    /// <summary>
     /// Gets the custom topic permissions this app declares and exports, gating its own shared messaging
     /// channels. Purely optional per <c>doc/en/wasm/dev/adr/0040-declared-topic-permissions.md</c> — most apps
     /// declare none and rely on the default owner-only/open channel access instead. Every identifier must

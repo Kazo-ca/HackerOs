@@ -15,7 +15,8 @@ namespace Kazo.Os.Server.Services;
 ///   - Always blocked: loopback, link-local and cloud metadata, unspecified, multicast; private
 ///     ranges unless KazoOs:Proxy:AllowPrivateNetworks.
 ///   - Ports: per-protocol allow-lists from KazoOs:Proxy (HTTP 80/443, TCP 80/443, UDP 53/123)
-///     unless AllowAllPorts.
+///     unless AllowAllPorts, plus the ports an app declared and had approved (ADR 0235 §3); the
+///     TCP and UDP block-lists (BlockedPorts) always win.
 ///   - Max redirects: 5 (server follows; client sees final URL).
 ///   - Simulated domain suffixes (.kazoos.local, .sim, .kazoos) → always refused.
 ///   - DNS rebinding: validate every DNS answer and pin the selected address for the socket connect.
@@ -34,7 +35,11 @@ public interface IProxyService
     Task<ProxyTcpProbeResponse> ExecuteTcpProbeAsync(
         Guid accountId, Guid deviceId, ProxyTcpProbeRequest request, CancellationToken ct);
 
-    Task<ProxyPolicyResponse> GetPolicyAsync(Guid deviceId, CancellationToken ct);
+    /// <summary>
+    /// The effective policy for <c>GET /api/proxy/policy</c>: ports, block-lists, quotas, the device's
+    /// open requests and streams, and the ports approved for the account's apps (ADR 0235 §3).
+    /// </summary>
+    Task<ProxyPolicyResponse> GetPolicyAsync(Guid accountId, Guid deviceId, CancellationToken ct);
 
     /// <summary>
     /// Validates and opens one TCP or UDP stream (ADR 0102 §2, §3): the socket is connected when
@@ -192,7 +197,7 @@ public sealed class ProxyService : IProxyService
             // No port allow-list here — probing an arbitrary port is the entire point (unlike the
             // HTTP proxy, which only ever needs 80/443). Address-range and simulated-domain
             // protection still fully apply.
-            var pinnedAddress = await ResolveAndValidateAddressAsync(request.Host, request.Port, allowedPorts: null, ct);
+            var pinnedAddress = await ResolveAndValidateAddressAsync(request.Host, request.Port, allowedPorts: null, blockedPorts: [], approvedForApp: false, ct);
 
             var timeout = TimeSpan.FromSeconds(Math.Clamp(request.TimeoutSeconds, 1, MaxTcpProbeTimeoutSeconds));
             var sw = System.Diagnostics.Stopwatch.StartNew();
@@ -212,10 +217,11 @@ public sealed class ProxyService : IProxyService
     }
 
     /// <inheritdoc />
-    public Task<ProxyPolicyResponse> GetPolicyAsync(Guid deviceId, CancellationToken ct)
+    public async Task<ProxyPolicyResponse> GetPolicyAsync(Guid accountId, Guid deviceId, CancellationToken ct)
     {
         var current = _activeCounts.GetValueOrDefault(deviceId, 0);
-        return Task.FromResult(new ProxyPolicyResponse(
+        IReadOnlyList<ProxyAppGrant> appGrants = await _grants.ListGrantsWithPortsAsync(accountId, ct);
+        return new ProxyPolicyResponse(
             deviceId,
             _policy.MaxConcurrentPerDevice,
             current,
@@ -236,7 +242,15 @@ public sealed class ProxyService : IProxyService
             _policy.MaxStreamsPerDevice,
             _streamCounts.GetValueOrDefault(deviceId, 0),
             _policy.StreamIdleTimeoutSeconds,
-            _policy.GrantedApps));
+            _policy.GrantedApps)
+        {
+            TcpBlockedPorts = _policy.TcpBlockedPorts,
+            UdpBlockedPorts = _policy.UdpBlockedPorts,
+            AppPorts = [.. appGrants.Select(static grant => new ProxyAppPorts(
+                grant.AppId,
+                [.. Kazo.Os.App.Abstractions.RealNetworkPorts.ParseValid(grant.ApprovedPorts.Select(static port => port.ToString()))
+                    .Select(static port => port.ToString())]))]
+        };
     }
 
     /// <inheritdoc />
@@ -256,10 +270,14 @@ public sealed class ProxyService : IProxyService
         ValidateAppId(request.AppId);
         ValidateSimulatedDomain(request.Host);
         string? tlsHost = ValidateTls(protocol, request);
-        await ValidateGrantAsync(accountId, request.AppId, ct);
+        ProxyAppGrant grant = await ValidateGrantAsync(accountId, request.AppId, ct);
 
+        // ADR 0235 §3: a port opens if the policy allows it or the app declared it and that was
+        // approved, and never if the protocol's block-list names it.
+        string protocolName = protocol == ProxyProtocol.Tcp ? Kazo.Os.App.Abstractions.RealNetworkPorts.Tcp : Kazo.Os.App.Abstractions.RealNetworkPorts.Udp;
         IReadOnlyList<int> allowedPorts = protocol == ProxyProtocol.Tcp ? _policy.TcpPorts : _policy.UdpPorts;
-        var pinnedAddress = await ResolveAndValidateAddressAsync(request.Host, request.Port, allowedPorts, ct);
+        var pinnedAddress = await ResolveAndValidateAddressAsync(
+            request.Host, request.Port, allowedPorts, _policy.BlockedPortsOf(protocolName), grant.Approves(protocolName, request.Port), ct);
 
         // ── Stream quota: a slot is held from the connect to the close ────────
         var open = _streamCounts.AddOrUpdate(deviceId, 1, (_, v) => v + 1);
@@ -392,8 +410,9 @@ public sealed class ProxyService : IProxyService
         {
             while (true)
             {
+                // HTTP runs over TCP: the TCP block-list applies to every hop (ADR 0235 §3).
                 var pinnedAddress = await ResolveAndValidateAddressAsync(
-                    currentUri.Host, currentUri.Port, _policy.HttpPorts, cts.Token);
+                    currentUri.Host, currentUri.Port, _policy.HttpPorts, _policy.TcpBlockedPorts, approvedForApp: false, cts.Token);
                 using var httpRequest = BuildHttpRequest(request, method, body, currentUri);
                 lastResponse?.Dispose();
                 using (_connectionPin.Push(pinnedAddress))
@@ -521,12 +540,17 @@ public sealed class ProxyService : IProxyService
     /// The protocol's allow-list; <see langword="null"/> for the single-port probe (ADR 0035), where
     /// an arbitrary target port is the entire point — but the port must still be a valid number.
     /// </param>
+    /// <param name="blockedPorts">The protocol's block-list (ADR 0235 §3); it always wins.</param>
+    /// <param name="approvedForApp">Whether the app declared this port and the declaration was approved.</param>
     private async Task<IPAddress> ResolveAndValidateAddressAsync(
-        string host, int port, IReadOnlyList<int>? allowedPorts, CancellationToken ct)
+        string host, int port, IReadOnlyList<int>? allowedPorts, IReadOnlyList<int> blockedPorts, bool approvedForApp, CancellationToken ct)
     {
-        if (allowedPorts is null ? port is < 1 or > 65535 : !_policy.IsPortAllowed(allowedPorts, port))
+        if (allowedPorts is not null && blockedPorts.Contains(port))
             throw new ProxyRequestException(ProxyErrorCode.BlockedPort,
-                $"Port {port} is not in the proxy allow-list.");
+                $"Port {port} is in the proxy block-list (BlockedPorts).");
+        if (allowedPorts is null ? port is < 1 or > 65535 : !_policy.IsPortAllowed(allowedPorts, blockedPorts, port, approvedForApp))
+            throw new ProxyRequestException(ProxyErrorCode.BlockedPort,
+                $"Port {port} is not in the proxy allow-list and not a port this app declared and had approved.");
 
         // Resolve and validate address.
         IPAddress[] addresses;
@@ -583,10 +607,10 @@ public sealed class ProxyService : IProxyService
                 "A valid registered application identifier is required.");
     }
 
-    private async Task ValidateGrantAsync(Guid accountId, string appId, CancellationToken ct)
+    private async Task<ProxyAppGrant> ValidateGrantAsync(Guid accountId, string appId, CancellationToken ct)
     {
-        if (!await _grants.IsGrantedAsync(accountId, appId, ct))
-            throw new ProxyRequestException(ProxyErrorCode.GrantMissing,
+        return await _grants.GetGrantAsync(accountId, appId, ct)
+            ?? throw new ProxyRequestException(ProxyErrorCode.GrantMissing,
                 $"The server does not grant 'network.real.access' to '{appId}'.");
     }
 

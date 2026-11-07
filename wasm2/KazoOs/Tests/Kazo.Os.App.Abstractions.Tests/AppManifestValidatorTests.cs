@@ -80,6 +80,91 @@ public sealed class AppManifestValidatorTests
         Assert.Equal(-500, AppManifestJsonSerializer.DeserializeStrict(json).OomScoreAdj);
     }
 
+    // ── ADR 0235 §3: real-network ports declared by the app ────────────────────
+
+    [Theory]
+    [InlineData("tcp/6697", true)]
+    [InlineData("UDP/5353", true)]
+    [InlineData("tcp/65535", true)]
+    [InlineData("tcp/0", false)]
+    [InlineData("tcp/65536", false)]
+    [InlineData("tcp/06697", false)]
+    [InlineData("tcp/6660-6669", false)]
+    [InlineData("tcp/ 6697", false)]
+    [InlineData("sctp/6697", false)]
+    [InlineData("6697", false)]
+    [InlineData("", false)]
+    public void RealNetworkPorts_parse_only_protocol_slash_port(string value, bool valid)
+    {
+        Assert.Equal(valid, RealNetworkPorts.TryParse(value, out RealNetworkPort port, out string? error));
+        Assert.Equal(valid, error is null);
+        if (valid)
+        {
+            Assert.Equal(value.ToLowerInvariant(), port.ToString());
+        }
+    }
+
+    [Fact]
+    public void Validate_accepts_declared_ports_with_network_real_access()
+    {
+        AppManifest manifest = CreateValidManifest() with
+        {
+            Capabilities = [AppCapabilities.NetworkRealAccess],
+            RealNetworkPorts = ["tcp/6697", "tcp/6667"]
+        };
+
+        Assert.True(AppManifestValidator.Validate(manifest).IsValid);
+    }
+
+    [Theory]
+    [InlineData("manifest.realNetworkPort.invalid", "tcp/6697", "tcp/99999")]
+    [InlineData("manifest.realNetworkPort.duplicate", "tcp/6697", "TCP/6697")]
+    public void Validate_refuses_an_invalid_or_repeated_port(string code, string first, string second)
+    {
+        AppManifest manifest = CreateValidManifest() with
+        {
+            Capabilities = [AppCapabilities.NetworkRealAccess],
+            RealNetworkPorts = [first, second]
+        };
+
+        Assert.Contains(AppManifestValidator.Validate(manifest).Errors, error => error.Code == code && error.Path == "realNetworkPorts");
+    }
+
+    [Fact]
+    public void Validate_refuses_declared_ports_without_network_real_access_and_an_empty_list()
+    {
+        AppManifest withoutCapability = CreateValidManifest() with { RealNetworkPorts = ["tcp/6697"] };
+        AppManifest empty = CreateValidManifest() with { Capabilities = [AppCapabilities.NetworkRealAccess], RealNetworkPorts = [] };
+
+        Assert.Contains(AppManifestValidator.Validate(withoutCapability).Errors, error => error.Code == "manifest.realNetworkPorts.capability");
+        Assert.Contains(AppManifestValidator.Validate(empty).Errors, error => error.Code == "manifest.realNetworkPorts.empty");
+    }
+
+    [Fact]
+    public void RealNetworkPorts_are_omitted_when_undeclared_and_round_trip_sorted_when_declared()
+    {
+        AppManifest plain = CreateValidManifest();
+        Assert.DoesNotContain("realNetworkPorts", AppManifestJsonSerializer.SerializeCanonical(plain), StringComparison.Ordinal);
+
+        string json = AppManifestJsonSerializer.SerializeCanonical(plain with
+        {
+            Capabilities = [AppCapabilities.NetworkRealAccess],
+            RealNetworkPorts = ["tcp/6697", "tcp/6667"]
+        });
+
+        Assert.Contains("\"realNetworkPorts\":[\"tcp/6667\",\"tcp/6697\"]", json, StringComparison.Ordinal);
+        Assert.Equal(["tcp/6667", "tcp/6697"], AppManifestJsonSerializer.DeserializeStrict(json).RealNetworkPorts);
+    }
+
+    [Fact]
+    public void RealNetworkPorts_ParseValid_drops_bad_entries_and_orders_tcp_first()
+    {
+        IReadOnlyList<RealNetworkPort> ports = RealNetworkPorts.ParseValid(["udp/5353", "tcp/6697", "bad", "tcp/6667", "tcp/6697"]);
+
+        Assert.Equal(["tcp/6667", "tcp/6697", "udp/5353"], ports.Select(static port => port.ToString()));
+        Assert.Null(RealNetworkPorts.Normalize(["bad"]));
+    }
+
     [Fact]
     public void Validate_accepts_supportsBack_for_window_apps()
     {

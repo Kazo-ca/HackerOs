@@ -1,0 +1,20 @@
+{
+  "id": "26f9ee83-7fc0-4f4a-8c51-f9773f0e5042",
+  "category": "new",
+  "audience": [
+    "developer",
+    "user"
+  ],
+  "title": {
+    "en": "Apps declare the real-network ports they need; the server relay blocks dangerous ports",
+    "fr": "Les apps déclarent les vrais ports réseau dont elles ont besoin ; le relais du serveur bloque les ports dangereux"
+  },
+  "description": {
+    "en": "An app lists its real-network ports in its definition (RealNetworkPorts = [\"tcp/6697\"], written realNetworkPorts in manifest.json, checked by the generator and kazopkg). The approval window of network.real.access shows them, and the server relay opens a declared port whose grant carries it on top of AllowedPorts. The new KazoOs:Proxy Tcp and Udp BlockedPorts lists (mail 25/465/587, file sharing and RPC, amplification services) always win; Settings shows them with each app's ports, and the server warns at startup when a list is empty.",
+    "fr": "Une app liste ses vrais ports réseau dans sa définition (RealNetworkPorts = [\"tcp/6697\"], écrit realNetworkPorts dans manifest.json, vérifié par le générateur et kazopkg). La fenêtre d'approbation de network.real.access les affiche, et le relais du serveur ouvre un port déclaré que porte l'accord de l'app, en plus d'AllowedPorts. Les nouvelles listes BlockedPorts de KazoOs:Proxy (Tcp et Udp : courriel 25/465/587, partage de fichiers et RPC, services d'amplification) gagnent toujours ; Paramètres les affiche avec les ports de chaque app, et le serveur avertit au démarrage quand une liste est vide."
+  },
+  "links": [
+    "doc/en/wasm/dev/server-network-relay.md",
+    "doc/en/wasm/dev/adr/0235-real-network-for-chat-apps.md"
+  ]
+}

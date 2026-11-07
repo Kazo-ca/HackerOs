@@ -1,4 +1,24 @@
 #nullable enable
+Kazo.Os.AppSdk.Administration.KazoServerAppPorts
+Kazo.Os.AppSdk.Administration.KazoServerAppPorts.<Clone>$() -> Kazo.Os.AppSdk.Administration.KazoServerAppPorts!
+Kazo.Os.AppSdk.Administration.KazoServerAppPorts.AppId.get -> string!
+Kazo.Os.AppSdk.Administration.KazoServerAppPorts.AppId.init -> void
+Kazo.Os.AppSdk.Administration.KazoServerAppPorts.Deconstruct(out string! AppId, out System.Collections.Generic.IReadOnlyList<string!>! Ports) -> void
+Kazo.Os.AppSdk.Administration.KazoServerAppPorts.Equals(Kazo.Os.AppSdk.Administration.KazoServerAppPorts? other) -> bool
+Kazo.Os.AppSdk.Administration.KazoServerAppPorts.KazoServerAppPorts(string! AppId, System.Collections.Generic.IReadOnlyList<string!>! Ports) -> void
+Kazo.Os.AppSdk.Administration.KazoServerAppPorts.Ports.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.AppSdk.Administration.KazoServerAppPorts.Ports.init -> void
+Kazo.Os.AppSdk.Administration.KazoServerRelayPolicy.AppPorts.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Administration.KazoServerAppPorts!>!
+Kazo.Os.AppSdk.Administration.KazoServerRelayPolicy.AppPorts.init -> void
+Kazo.Os.AppSdk.Administration.KazoServerRelayPolicy.TcpBlockedPorts.get -> System.Collections.Generic.IReadOnlyList<int>!
+Kazo.Os.AppSdk.Administration.KazoServerRelayPolicy.TcpBlockedPorts.init -> void
+Kazo.Os.AppSdk.Administration.KazoServerRelayPolicy.UdpBlockedPorts.get -> System.Collections.Generic.IReadOnlyList<int>!
+Kazo.Os.AppSdk.Administration.KazoServerRelayPolicy.UdpBlockedPorts.init -> void
+override Kazo.Os.AppSdk.Administration.KazoServerAppPorts.Equals(object? obj) -> bool
+override Kazo.Os.AppSdk.Administration.KazoServerAppPorts.GetHashCode() -> int
+override Kazo.Os.AppSdk.Administration.KazoServerAppPorts.ToString() -> string!
+static Kazo.Os.AppSdk.Administration.KazoServerAppPorts.operator !=(Kazo.Os.AppSdk.Administration.KazoServerAppPorts? left, Kazo.Os.AppSdk.Administration.KazoServerAppPorts? right) -> bool
+static Kazo.Os.AppSdk.Administration.KazoServerAppPorts.operator ==(Kazo.Os.AppSdk.Administration.KazoServerAppPorts? left, Kazo.Os.AppSdk.Administration.KazoServerAppPorts? right) -> bool
 Kazo.Os.AppSdk.Net.IAppNetworkGateway.ConnectTcpAsync(string! hostNameOrAddress, int port, Kazo.Os.AppSdk.Net.KazoTcpConnectOptions! options, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<Kazo.Os.AppSdk.Net.IKazoSocket!>!>
 Kazo.Os.AppSdk.Net.IKazoSocket.RemoteCertificateSubject.get -> string?
 Kazo.Os.AppSdk.Net.IKazoSocket.TlsProtocol.get -> string?

@@ -122,7 +122,34 @@ public sealed class DangerousCapabilityApprovalOverlayTests
         });
     }
 
-    private static DangerousCapabilityApprovalRequest CreateRequest(string? suggestedLogin)
+    [Fact]
+    public async Task Overlay_lists_the_real_network_ports_the_app_declares_under_network_real_access()
+    {
+        DangerousCapabilityApprovalBroker broker = new();
+        using IDisposable host = broker.Attach();
+        _ = broker.RequestAsync(CreateRequest(suggestedLogin: "root", realNetworkPorts: ["tcp/6697", "tcp/6667"]));
+
+        string english = System.Net.WebUtility.HtmlDecode(await RenderAsync(broker));
+        string french = System.Net.WebUtility.HtmlDecode(
+            await RenderAsync(broker, TestLocalization.CreateSessionLocale("fr_FR.UTF-8")));
+
+        // ADR 0235 section 3: ordered TCP first then by port, once, under the capability.
+        Assert.Contains("Real servers on ports: TCP 6667, TCP 6697", english, StringComparison.Ordinal);
+        Assert.Contains("Vrais serveurs sur les ports : TCP 6667, TCP 6697", french, StringComparison.Ordinal);
+        Assert.Single(System.Text.RegularExpressions.Regex.Matches(english, "dca-capability-ports"));
+    }
+
+    [Fact]
+    public async Task Overlay_shows_no_port_line_when_the_app_declares_none()
+    {
+        DangerousCapabilityApprovalBroker broker = new();
+        using IDisposable host = broker.Attach();
+        _ = broker.RequestAsync(CreateRequest(suggestedLogin: "root"));
+
+        Assert.DoesNotContain("dca-capability-ports", await RenderAsync(broker), StringComparison.Ordinal);
+    }
+
+    private static DangerousCapabilityApprovalRequest CreateRequest(string? suggestedLogin, IReadOnlyList<string>? realNetworkPorts = null)
     {
         AppManifest manifest = new()
         {
@@ -136,7 +163,8 @@ public sealed class DangerousCapabilityApprovalOverlayTests
             SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
             Presentation = new PresentationManifest("test", AppLaunchVisibility.Visible, []),
             Resources = AppResourceProfileManifest.None,
-            Capabilities = [AppCapabilities.NetworkRealAccess, AppCapabilities.ProcessManage]
+            Capabilities = [AppCapabilities.NetworkRealAccess, AppCapabilities.ProcessManage],
+            RealNetworkPorts = realNetworkPorts
         };
         LocalGroupId group = LocalGroupId.FromGuid(Guid.NewGuid());
         AuthenticatedPrincipal principal = new(

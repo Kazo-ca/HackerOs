@@ -330,7 +330,28 @@ public sealed record ProxyPolicyResponse(
     int MaxStreamsPerDevice = 0,
     int CurrentStreams = 0,
     int StreamIdleTimeoutSeconds = 0,
-    IReadOnlyList<string>? GrantedApps = null);
+    IReadOnlyList<string>? GrantedApps = null)
+{
+    // ADR 0235 §3 adds these as init properties, not constructor parameters, so the contract keeps
+    // its shipped constructor and an older server's response (fields absent) still reads.
+
+    /// <summary>TCP ports never opened, HTTP included, whatever else allows them (ADR 0235 §3); <see langword="null"/> from an older server.</summary>
+    public IReadOnlyList<int>? TcpBlockedPorts { get; init; }
+
+    /// <summary>UDP ports never opened (ADR 0235 §3); <see langword="null"/> from an older server.</summary>
+    public IReadOnlyList<int>? UdpBlockedPorts { get; init; }
+
+    /// <summary>The account's apps whose synchronized grant approves declared ports (ADR 0235 §3).</summary>
+    public IReadOnlyList<ProxyAppPorts>? AppPorts { get; init; }
+}
+
+/// <summary>
+/// The real-network ports approved for one app in the account's synchronized grants (ADR 0235 §3),
+/// as <c>GET /api/proxy/policy</c> reports them.
+/// </summary>
+/// <param name="AppId">The app.</param>
+/// <param name="Ports">Its approved ports, <c>tcp/6697</c>, in canonical order.</param>
+public sealed record ProxyAppPorts(string AppId, IReadOnlyList<string> Ports);
 
 /// <summary>
 /// Source-generated JSON context for proxy contracts.
@@ -341,6 +362,7 @@ public sealed record ProxyPolicyResponse(
 [JsonSerializable(typeof(ProxyTcpProbeResponse))]
 [JsonSerializable(typeof(ProxyErrorResponse))]
 [JsonSerializable(typeof(ProxyPolicyResponse))]
+[JsonSerializable(typeof(ProxyAppPorts))]
 [JsonSerializable(typeof(ProxyHeader))]
 [JsonSerializable(typeof(ProxyStreamOpened))]
 [JsonSerializable(typeof(IReadOnlyList<int>))]

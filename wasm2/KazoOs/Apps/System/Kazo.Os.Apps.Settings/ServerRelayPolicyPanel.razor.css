@@ -46,3 +46,18 @@
 .relay-error {
     border-left-color: var(--kos-error, #ff8f87);
 }
+
+/* ADR 0235 section 3: one line per approved app, its id then its declared ports. */
+.relay-app-ports {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.relay-app-ports code {
+    color: var(--kos-accent, #59d0ff);
+}
+
+.relay-app-port-list {
+    margin-left: 0.4rem;
+}
