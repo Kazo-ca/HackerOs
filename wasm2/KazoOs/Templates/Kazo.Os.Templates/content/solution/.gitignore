@@ -7,5 +7,5 @@ obj/
 TestResults/
 artifacts/
 
-# Private signing keys (ADR 0219): never in the repository.
+# Private keys: never in the repository.
 *.pem

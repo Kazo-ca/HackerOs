@@ -1,9 +1,9 @@
 namespace Kazo.Os.AppSdk.Apps;
 
 /// <summary>
-/// The icon the shell draws for an app (ADR 0160 §6): the Start menu, the desktop shortcuts and the
-/// file control show the same one. A Lucide icon name, from the app's id for the explorer and Settings,
-/// else from its category.
+/// The fallback icon the shell draws for an app with no declared image (ADR 0160 §6, ADR 0232 §2): the
+/// Start menu, the desktop shortcuts and the file control show the same one. A Lucide icon name, from the
+/// app's id for the explorer and Settings, else from its category.
 /// </summary>
 public static class KazoAppIcons
 {

@@ -1,0 +1,19 @@
+{
+  "id": "4e4c99f7-b4d3-4dbc-a851-4f1c6e47e44e",
+  "category": "improved",
+  "audience": [
+    "user",
+    "developer"
+  ],
+  "title": {
+    "en": "New illustrated app icons, shown everywhere",
+    "fr": "Nouvelles icônes d'apps illustrées, affichées partout"
+  },
+  "description": {
+    "en": "The system apps have new colour icons that show what each app does. The Start menu, the desktop shortcuts and the explorer now draw each app's own icon, installed apps included, instead of one icon per category; an icon pack still replaces them. Apps can read the icon address with KazoAppInfo.IconUrl.",
+    "fr": "Les apps système ont de nouvelles icônes en couleur qui montrent ce que fait chaque app. Le menu Démarrer, les raccourcis du bureau et l'explorateur dessinent maintenant l'icône propre de chaque app, y compris les apps installées, au lieu d'une icône par catégorie ; un pack d'icônes les remplace toujours. Les apps lisent l'adresse de l'icône avec KazoAppInfo.IconUrl."
+  },
+  "links": [
+    "doc/en/wasm/dev/adr/0232-illustrated-app-icons-everywhere.md"
+  ]
+}

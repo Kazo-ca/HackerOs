@@ -12,7 +12,8 @@ Ce document décrit ce qu'une app utilise pour le bureau : les types `KazoDeskto
 | `KazoDesktopEntry` | `AppSdk` (`Files/KazoDesktopEntry.cs`) | Lecture et écriture des `.desktop`, `CreateShortcutAsync`. |
 | `KazoDesktopLink` | `AppSdk` (`Files/KazoDesktopLink.cs`) | Raccourci vers un fichier ou un dossier (`Type=Link`), `CreateLinkAsync` (ADR 0185 §13). |
 | `KazoDesktopSettings` | `AppSdk` (`Files/KazoDesktopSettings.cs`) | Lecture et écriture de `desktop.config`. |
-| `KazoAppIcons.LucideName` | `AppSdk` (`Apps/`) | Icône Lucide d'une app (celle du menu Démarrer), reprise par les raccourcis. |
+| `KazoAppIcons.LucideName` | `AppSdk` (`Apps/`) | Icône Lucide d'une app, repli du menu Démarrer et des raccourcis quand l'app ne déclare pas d'image (ADR 0232). |
+| `KazoAppInfo.IconUrl` | `AppSdk` (`Apps/`) | URL de l'icône déclarée d'une app, dessinée par les raccourcis après l'image du pack d'icônes (ADR 0232). |
 
 ## Fichier `desktop.config`
 
