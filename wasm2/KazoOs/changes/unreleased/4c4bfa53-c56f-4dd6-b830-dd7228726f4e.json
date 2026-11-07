@@ -1,0 +1,19 @@
+{
+  "id": "4c4bfa53-c56f-4dd6-b830-dd7228726f4e",
+  "category": "new",
+  "audience": [
+    "user",
+    "developer"
+  ],
+  "title": {
+    "en": "Frameless windows float on the desktop",
+    "fr": "Les fenêtres sans cadre flottent sur le bureau"
+  },
+  "description": {
+    "en": "A window with the None style is transparent: a click where its app draws nothing reaches the desktop or the window below, so an app with its own skin can float on the desktop (issue #378).",
+    "fr": "Une fenêtre de style None est transparente : un clic là où son app ne dessine rien atteint le bureau ou la fenêtre dessous, et une app avec son propre habillage peut flotter sur le bureau (issue #378)."
+  },
+  "links": [
+    "doc/en/wasm/framework/window-model.md"
+  ]
+}
