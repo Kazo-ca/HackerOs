@@ -1,0 +1,18 @@
+{
+  "id": "41e239ea-8d46-4610-a399-8014028a67bf",
+  "category": "new",
+  "audience": [
+    "developer"
+  ],
+  "title": {
+    "en": "Child windows and dialogs for apps",
+    "fr": "Fenêtres enfants et dialogues pour les apps"
+  },
+  "description": {
+    "en": "A window app can open its own windows with ShowWindowAsync and its own modal dialogs with ShowDialogAsync, like Form.Show and Form.ShowDialog in WinForms. The window's component derives from KazoWindowBase and closes with CloseAsync(result); it belongs to the same app and closes with its owner.",
+    "fr": "Une app fenêtrée peut ouvrir ses propres fenêtres avec ShowWindowAsync et ses propres dialogues modaux avec ShowDialogAsync, comme Form.Show et Form.ShowDialog en WinForms. Le composant de la fenêtre hérite de KazoWindowBase et se ferme avec CloseAsync(result) ; il appartient à la même app et se ferme avec sa propriétaire."
+  },
+  "links": [
+    "doc/en/wasm/framework/window-model.md"
+  ]
+}

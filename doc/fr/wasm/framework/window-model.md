@@ -377,6 +377,51 @@ booléens règlent ce que voit l'utilisateur, pas ce que l'app peut faire : une 
   Sur mobile, ils restent en plein écran.
 - `WindowHost` ajoute `is-tool` ou `is-frameless` ; la transparence de `None` vient au chantier 6.
 
+## 7. Fenêtres enfants et dialogues d'une app (ADR 0234 §3)
+
+```csharp
+// Dans un WindowAppBase : équivalent de Form.ShowDialog(owner).
+KazoDialogResult result = await ShowDialogAsync<RenameDialog>(new KazoWindowRequest
+{
+    Title = "Renommer",
+    Options = new WindowOptions { DefaultWidth = 360, DefaultHeight = 180, MinWidth = 300, MinHeight = 160, Style = WindowStyle.Tool },
+    Parameters = new Dictionary<string, object?> { [nameof(RenameDialog.Name)] = fileName },
+});
+if (result.IsAccepted) { fileName = result.ValueAs<string>()!; }
+
+// Fenêtre non modale : équivalent de Form.Show(owner).
+IKazoWindow palette = await ShowWindowAsync<PaletteWindow>(new KazoWindowRequest { Title = "Palette" });
+```
+
+```razor
+@inherits KazoWindowBase
+<input @bind="Name" />
+<button @onclick="() => CloseAsync(KazoDialogResult.Ok(Name))">OK</button>
+<button @onclick="() => CloseAsync(KazoDialogResult.Cancel)">Annuler</button>
+@code { [Parameter] public string? Name { get; set; } }
+```
+
+- La fenêtre enfant appartient à l'instance de l'app : même processus, mêmes droits, même
+  `AppContext`, mêmes menus contextuels. Sa propriétaire est la fenêtre qui l'ouvre. Elle s'ouvre
+  centrée sur sa propriétaire, sur le même écran, et se ferme avec son app ou sa propriétaire
+  (résultat `None`).
+- `ShowDialogAsync` impose `Modal = true` : la propriétaire est bloquée, le bouton de la
+  propriétaire dans la barre des tâches ramène le dialogue. Annuler le jeton ferme le dialogue
+  (`Cancel`).
+- Le bouton Fermer, Alt+F4 et la barre des tâches donnent `KazoDialogResult.Cancel`.
+- `KazoWindowBase` (hérite de `KazoComponentBase`) : `CloseAsync(result)`, `WindowTitle`,
+  `SetWindowTitleAsync`, `WindowOptions` et les méthodes de fenêtre du §6, et ses propres
+  `ShowWindowAsync` et `ShowDialogAsync` pour une fenêtre enfant d'une fenêtre enfant.
+- `KazoDialogResult` : `Kind` (`None`, `Ok`, `Cancel`, `Abort`, `Retry`, `Ignore`, `Yes`, `No`,
+  comme `DialogResult`) et `Value` facultatif.
+- Sans gestionnaire de fenêtres (tests, fenêtre détachée, plateforme d'avant le SDK 3.1),
+  `ShowWindowAsync` et `ShowDialogAsync` lèvent `InvalidOperationException`.
+
+Architecture : `IAppChildWindowGateway.OpenWindowAsync`, implémentée par la passerelle de
+`AppWindowGatewayFactory.Create(windowId, context)`. La fenêtre est un `WindowRuntimeState` avec
+`Content` (comme les dialogues de l'OS) qui met en cascade le contexte de l'app, ses menus, sa
+propre passerelle et son `IKazoWindow`. Elle n'a pas de taille retenue (ADR 0116).
+
 ## Décisions de mise en œuvre
 
 - **Plein écran ajouté** (`toggle-fullscreen`, `Alt+F11`, entrée du menu) : le verrouillage du
@@ -429,6 +474,9 @@ booléens règlent ce que voit l'utilisateur, pas ce que l'app peut faire : une 
   `WindowAppBaseWindowFrameTests` (SDK Blazor), sérialiseur (App.Abstractions) : styles et
   booléens (ADR 0234), cadre dessiné par style, barre des tâches, demandes de l'app (#384),
   dialogue au premier plan par sa propriétaire, champs écrits seulement hors défaut.
+- `ChildWindowTests` (Platform.Blazor), `WindowAppBaseChildWindowTests` (SDK Blazor) : fenêtre
+  enfant centrée, modale, résultat, bouton Fermer, fermeture avec la propriétaire, paramètres et
+  cascade du composant, `Modal` imposé par `ShowDialogAsync`, jeton annulé.
 
 ## Liste des tâches
 
@@ -465,5 +513,12 @@ booléens règlent ce que voit l'utilisateur, pas ce que l'app peut faire : une 
 - [x] Cadre, poignées, clavier, arrangement et barre des tâches suivent le style.
 - [x] Dialogues de l'OS en `Tool` sans bouton dans la barre des tâches.
 - [x] `IAppWindowGateway` et méthodes de `WindowAppBase` (#384).
+- [x] Tests et documentation.
+
+### Chantier `os-3-1/5-child-windows` (ADR 0234 §3)
+
+- [x] `KazoWindowRequest`, `KazoDialogResult`, `IKazoWindow`, `IAppChildWindowGateway`, `KazoWindowBase`.
+- [x] `ShowWindowAsync` et `ShowDialogAsync` dans `WindowAppBase` et `KazoWindowBase`.
+- [x] Fenêtres enfants dans `AppWindowGatewayFactory` : cascade, modale, fermeture avec la propriétaire.
 - [x] Tests et documentation.
 
