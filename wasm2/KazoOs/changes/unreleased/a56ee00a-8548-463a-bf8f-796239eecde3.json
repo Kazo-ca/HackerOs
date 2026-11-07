@@ -2,8 +2,8 @@
   "id": "a56ee00a-8548-463a-bf8f-796239eecde3",
   "category": "new",
   "audience": [
-    "administrator",
-    "developer"
+    "developer",
+    "user"
   ],
   "title": {
     "en": "The server issues the real-network grant approved in the OS, with its ports",
