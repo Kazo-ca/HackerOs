@@ -138,6 +138,7 @@ target, and the browser → server trip is protected by the server's own `https`
       "BlockedPorts": [ 19, 111, 137, 138, 389, 1900, 11211 ]
     },
     "AllowAllPorts": false,
+    "AcceptOsGrants": true,
     "AllowPrivateNetworks": false,
     "Quotas": {
       "Enabled": true,
@@ -223,11 +224,28 @@ empty array) and the server warns about it at startup.
 Settings (server section) shows the blocked TCP and UDP ports and, for each
 app whose grant carries ports, those ports.
 
-**Current limit**: no code issues a synchronized grant with its ports yet.
-The OS never pushes a grant (ADR 0031) and the server has no route to issue
-one; how the OS approval reaches the server is a question put to Benoit in the
-thread "Accepter les ports déclarés par les apps". Until then, only the apps of
-`GrantedApps` use the relay, with `AllowedPorts`.
+**Issuing the grant ([ADR 0233](adr/0233-server-issued-real-network-grants.md))**:
+the server writes the synchronized grant with its ports itself when the OS asks,
+through `POST /api/proxy/grants` (`ProxyGrantIssueRequest`: `AppId`, `UserId`,
+`RealNetworkPorts`, `Revoked`). It checks the shape (at most 64 well-written
+ports, no duplicate), then writes a revision of one `grants` record per
+account, app and user (source `AdministratorApproval`) and records it in the
+audit log (`PROXY_GRANT_ISSUE`, `PROXY_GRANT_REVOKE`); a request identical to
+the latest revision writes nothing (`ProxyGrantIssued.Changed`). A port of
+`BlockedPorts` is kept in the grant and stays refused on use.
+The OS calls the route after an approval (window, terminal, Permissions tab of
+Settings) and at each sync (`RealNetworkGrantReconciler`, before the grants
+pull): it issues the grant of every allowed app with the ports of
+`[real-network-ports]` ([approval](dangerous-capability-approval.md)) and
+withdraws it for an app denied, blocked or pending again. A server failure
+blocks neither the approval nor the launch: it is written to `/var/log/syslog`
+and retried at the next sync.
+
+`"AcceptOsGrants": false` closes this door: the route answers
+`403 GRANT_ISSUING_DISABLED` and the relay ignores synchronized grants; only
+the apps of `GrantedApps` count then. `AcceptOsGrants` (true by default) with
+`AllowAllPorts` gives a startup warning: every app approved in the OS then
+reaches every port that `BlockedPorts` does not refuse.
 
 ## Usage in an app
 
@@ -313,7 +331,7 @@ granted apps, ports declared by the approved apps (`AppPorts`) and warnings.
 - [x] Tests: service, WebSocket endpoints, direct client, network gateway, policy.
 - [x] ADR 0108 and documentation.
 - [x] Ports declared by the app (ADR 0235 §3): manifest `RealNetworkPorts`, validation, approval window and terminal, relay (`BlockedPorts`, approved ports of the grant), policy and Settings, empty-list warning, tests.
-- [ ] Server-side issuing of the grant with its ports (question 1 of the thread "Accepter les ports déclarés par les apps").
+- [x] Server-side issuing of the grant with its ports (ADR 0233): `POST /api/proxy/grants`, `AcceptOsGrants`, `[real-network-ports]` section, asking again when the app adds a port, reconciliation at each sync, tests.
 - [x] TLS opened by the relay (ADR 0235 §2, work item `real-network/2-relay-tls`): `tls=1`, `targetHost`, `SslStream` before accepting the WebSocket, `TLS_FAILED`, `ProxyStreamOpened` with the session, `KazoTcpConnectOptions`, tests with a test TLS server (trusted, untrusted and wrong-name certificate, clear-text target, clear-text stream unchanged).
 
 See also [ADR 0191](adr/0191-installable-local-server.md): server installable on the computer or the local network.

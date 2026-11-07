@@ -27,9 +27,23 @@ public sealed class GrantsSyncService(
     ISyncClient syncClient,
     ISyncCursorRepository cursors) : IGrantsSyncService
 {
+    /// <summary>
+    /// Issues or withdraws the session user's <c>network.real.access</c> grants on the server before
+    /// each pull (ADR 0233 §3), so the pull brings them back; <see langword="null"/> skips it.
+    /// </summary>
+    public IRealNetworkGrantReconciler? RealNetworkGrants { get; init; }
+
+    /// <summary>Gives the session user the reconciliation runs for; <see langword="null"/> without a session.</summary>
+    public Func<string?>? CurrentUserId { get; init; }
+
     /// <inheritdoc />
     public async Task PullAsync(CancellationToken cancellationToken = default)
     {
+        if (RealNetworkGrants is not null && CurrentUserId?.Invoke() is { Length: > 0 } userId)
+        {
+            await RealNetworkGrants.ReconcileAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+
         ServerConnectionState? state = await connection.GetStateAsync(cancellationToken).ConfigureAwait(false);
         string? accessToken = state is null ? null : await connection.EnsureAccessTokenAsync(cancellationToken).ConfigureAwait(false);
         if (state is null || accessToken is null)

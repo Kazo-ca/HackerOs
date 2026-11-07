@@ -43,6 +43,14 @@ public sealed class ProxyOptions
     public string[]? GrantedApps { get; set; }
 
     /// <summary>
+    /// Whether the server issues, on the OS's request, the <c>network.real.access</c> grant an OS
+    /// administrator approved, with its ports (<c>POST /api/proxy/grants</c>, ADR 0233), and whether
+    /// the relay reads the account's synchronized grants at all. Default <see langword="true"/>;
+    /// <see langword="false"/> leaves <see cref="GrantedApps"/> as the only source of grants.
+    /// </summary>
+    public bool AcceptOsGrants { get; set; } = true;
+
+    /// <summary>
     /// Turns an explicit empty <c>BlockedPorts</c> (<c>"BlockedPorts": []</c>) into an empty list.
     /// The JSON provider stores an empty array as a key with a <see langword="null"/> value, which the
     /// binder leaves unbound, so without this an operator could not empty the list: the key is found
@@ -126,6 +134,9 @@ public sealed class ProxyQuotaOptions
 /// <param name="GrantedApps">App ids granted <c>network.real.access</c> by the server itself.</param>
 /// <param name="TcpBlockedPorts">TCP ports never opened, HTTP requests included (ADR 0235 §3).</param>
 /// <param name="UdpBlockedPorts">UDP ports never opened (ADR 0235 §3).</param>
+/// <param name="AcceptOsGrants">
+/// Whether the server issues the grants the OS asks for and reads the synchronized grants (ADR 0233 §2).
+/// </param>
 public sealed record ProxyRelayPolicy(
     bool Enabled,
     IReadOnlyList<int> HttpPorts,
@@ -142,7 +153,8 @@ public sealed record ProxyRelayPolicy(
     int StreamIdleTimeoutSeconds,
     IReadOnlyList<string> GrantedApps,
     IReadOnlyList<int> TcpBlockedPorts,
-    IReadOnlyList<int> UdpBlockedPorts)
+    IReadOnlyList<int> UdpBlockedPorts,
+    bool AcceptOsGrants = true)
 {
     /// <summary>Default HTTP ports.</summary>
     public static readonly IReadOnlyList<int> DefaultHttpPorts = [80, 443];
@@ -226,7 +238,8 @@ public sealed record ProxyRelayPolicy(
                 ? [.. apps.Where(static app => !string.IsNullOrWhiteSpace(app)).Select(static app => app.Trim()).Distinct(StringComparer.Ordinal)]
                 : DefaultGrantedApps,
             BlockedPorts(options.Tcp?.BlockedPorts, DefaultTcpBlockedPorts),
-            BlockedPorts(options.Udp?.BlockedPorts, DefaultUdpBlockedPorts));
+            BlockedPorts(options.Udp?.BlockedPorts, DefaultUdpBlockedPorts),
+            options.AcceptOsGrants);
     }
 
     /// <summary>
@@ -264,6 +277,11 @@ public sealed record ProxyRelayPolicy(
         if (AllowAllPorts)
         {
             warnings.Add("KazoOs:Proxy:AllowAllPorts is on: the relay reaches every TCP and UDP port.");
+        }
+
+        if (AllowAllPorts && AcceptOsGrants)
+        {
+            warnings.Add("KazoOs:Proxy:AcceptOsGrants and AllowAllPorts are both on: any app an OS administrator approves reaches every port that BlockedPorts does not refuse.");
         }
 
         if (AllowPrivateNetworks)

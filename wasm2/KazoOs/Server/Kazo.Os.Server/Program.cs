@@ -96,6 +96,7 @@ builder.Services.AddSingleton<IProxyTcpConnector, SocketProxyTcpConnector>();
 builder.Services.AddSingleton<IProxyStreamConnector, SocketProxyStreamConnector>();
 builder.Services.AddSingleton<IProxyTlsNegotiator, SslStreamProxyTlsNegotiator>();
 builder.Services.AddScoped<IProxyGrantAuthority, ProxyGrantAuthority>();
+builder.Services.AddScoped<IProxyGrantIssuer, ProxyGrantIssuer>();
 // ADR 0191 §6: one-time pairing codes of an installed server.
 builder.Services.AddLocalServer(builder.Configuration, builder.Environment.ContentRootPath);
 

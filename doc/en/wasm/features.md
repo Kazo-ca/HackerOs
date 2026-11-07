@@ -201,6 +201,14 @@ This section lists what is released in the `main` branch and online.
   [`blazor-sites.md`](framework/blazor-sites.md))
 - **Access to the real network** through the optional server, for allowed
   applications. ([`server-network-relay.md`](dev/server-network-relay.md))
+- **Real network for chat apps**: `KazoClientWebSocket` reaches a real
+  WebSocket server through the browser, without a Kazo OS server; through the
+  relay, TLS to the target (`KazoTcpConnectOptions { UseTls = true }`,
+  certificate checked by the server) and ports declared by the app in its
+  manifest, approved in the OS then issued by the server, unless `BlockedPorts`.
+  ([`server-network-relay.md`](dev/server-network-relay.md),
+  [ADR 0235](dev/adr/0235-real-network-for-chat-apps.md),
+  [ADR 0233](dev/adr/0233-server-issued-real-network-grants.md))
 - **Installable local server**: the Kazo OS server installs as a service
   (Windows, Linux, macOS, Docker) on your computer or on a machine of your
   local network in HTTPS, and the OS, even online on GitHub Pages, links to it
@@ -389,12 +397,6 @@ points to its PR.
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Catalog checks of theme packs | The catalog CI checks the `kind: "theme-pack"` entries as the OS does at install. | [0213](dev/adr/0213-theme-packs-build.md) | [AppMarketPlace #4](https://github.com/Kazo-ca/Os-AppMarketPlace/issues/4) |
-
-### Network and server
-
-| Feature | Description | ADR | Issue |
-| --- | --- | --- | --- |
-| Real network for chat apps | `KazoClientWebSocket` in the SDK: an app reaches a real WebSocket server through the browser, without a Kazo OS server (done in the `real-network/base` series); TLS opened by the relay with `KazoTcpClient.ConnectAsync(host, port, new KazoTcpConnectOptions { UseTls = true }, ct)`, the server checking the certificate, no option accepting an invalid one (done in the series); then ports declared by the app. | [0235](dev/adr/0235-real-network-for-chat-apps.md) | [#395](https://github.com/Kazo-ca/Os/issues/395) |
 
 ### Project name
 

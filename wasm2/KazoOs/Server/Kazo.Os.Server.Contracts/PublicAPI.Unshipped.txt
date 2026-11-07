@@ -1,1 +1,46 @@
 #nullable enable
+~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.ProxyGrantIssueRequest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssueRequest>
+~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.ProxyGrantIssued.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssued>
+const Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode.GrantIssuingDisabled = "GRANT_ISSUING_DISABLED" -> string!
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssueRequest
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssueRequest.<Clone>$() -> Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssueRequest!
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssueRequest.AppId.get -> string!
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssueRequest.AppId.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssueRequest.Deconstruct(out string! AppId, out string! UserId, out System.Collections.Generic.IReadOnlyList<string!>? RealNetworkPorts, out bool Revoked) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssueRequest.Equals(Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssueRequest? other) -> bool
+override Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssueRequest.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssueRequest.GetHashCode() -> int
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssueRequest.ProxyGrantIssueRequest(string! AppId, string! UserId, System.Collections.Generic.IReadOnlyList<string!>? RealNetworkPorts, bool Revoked = false) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssueRequest.RealNetworkPorts.get -> System.Collections.Generic.IReadOnlyList<string!>?
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssueRequest.RealNetworkPorts.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssueRequest.Revoked.get -> bool
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssueRequest.Revoked.init -> void
+override Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssueRequest.ToString() -> string!
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssueRequest.UserId.get -> string!
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssueRequest.UserId.init -> void
+static Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssueRequest.operator !=(Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssueRequest? left, Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssueRequest? right) -> bool
+static Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssueRequest.operator ==(Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssueRequest? left, Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssueRequest? right) -> bool
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssued
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssued.<Clone>$() -> Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssued!
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssued.AppId.get -> string!
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssued.AppId.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssued.Changed.get -> bool
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssued.Changed.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssued.Deconstruct(out string! AppId, out string! UserId, out System.Guid RecordId, out long Revision, out bool Changed, out System.Collections.Generic.IReadOnlyList<string!>! RealNetworkPorts, out bool Revoked) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssued.Equals(Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssued? other) -> bool
+override Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssued.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssued.GetHashCode() -> int
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssued.ProxyGrantIssued(string! AppId, string! UserId, System.Guid RecordId, long Revision, bool Changed, System.Collections.Generic.IReadOnlyList<string!>! RealNetworkPorts, bool Revoked) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssued.RealNetworkPorts.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssued.RealNetworkPorts.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssued.RecordId.get -> System.Guid
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssued.RecordId.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssued.Revision.get -> long
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssued.Revision.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssued.Revoked.get -> bool
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssued.Revoked.init -> void
+override Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssued.ToString() -> string!
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssued.UserId.get -> string!
+Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssued.UserId.init -> void
+static Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssued.operator !=(Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssued? left, Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssued? right) -> bool
+static Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssued.operator ==(Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssued? left, Kazo.Os.Server.Contracts.Proxy.ProxyGrantIssued? right) -> bool

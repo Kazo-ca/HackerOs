@@ -207,6 +207,14 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   [`blazor-sites.md`](framework/blazor-sites.md))
 - **Accès au vrai réseau** par le serveur optionnel, pour les applications
   autorisées. ([`server-network-relay.md`](dev/server-network-relay.md))
+- **Vrai réseau pour les apps de discussion** : `KazoClientWebSocket` joint un
+  vrai serveur WebSocket par le navigateur, sans serveur Kazo OS ; par le
+  relais, TLS vers la cible (`KazoTcpConnectOptions { UseTls = true }`,
+  certificat vérifié par le serveur) et ports déclarés par l'app dans son
+  manifeste, approuvés dans l'OS puis émis par le serveur, sauf `BlockedPorts`.
+  ([`server-network-relay.md`](dev/server-network-relay.md),
+  [ADR 0235](dev/adr/0235-real-network-for-chat-apps.md),
+  [ADR 0233](dev/adr/0233-server-issued-real-network-grants.md))
 - **Serveur local installable** : le serveur Kazo OS s'installe comme service
   (Windows, Linux, macOS, Docker) sur son ordinateur ou sur une machine du
   réseau local en HTTPS, et l'OS, même en ligne sur GitHub Pages, s'y relie
@@ -399,12 +407,6 @@ dans `main`, le lien mène à sa PR.
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Vérification des packs de thèmes par le catalogue | La CI du catalogue vérifie les entrées `kind: "theme-pack"` comme l'OS à l'installation. | [0213](dev/adr/0213-theme-packs-build.md) | [AppMarketPlace #4](https://github.com/Kazo-ca/Os-AppMarketPlace/issues/4) |
-
-### Réseau et serveur
-
-| Fonctionnalité | Description | ADR | Issue |
-| --- | --- | --- | --- |
-| Vrai réseau pour les apps de discussion | `KazoClientWebSocket` dans le SDK : une app joint un vrai serveur WebSocket par le navigateur, sans serveur Kazo OS (fait dans la série `real-network/base`) ; TLS ouvert par le relais avec `KazoTcpClient.ConnectAsync(host, port, new KazoTcpConnectOptions { UseTls = true }, ct)`, le serveur vérifiant le certificat, aucune option n'acceptant un certificat invalide (fait dans la série) ; puis ports déclarés par l'app. | [0235](dev/adr/0235-real-network-for-chat-apps.md) | [#395](https://github.com/Kazo-ca/Os/issues/395) |
 
 ### Nom du projet
 

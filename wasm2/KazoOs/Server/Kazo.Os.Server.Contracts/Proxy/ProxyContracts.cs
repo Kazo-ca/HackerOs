@@ -270,6 +270,12 @@ public static class ProxyErrorCode
 
     /// <summary>The request was malformed or contained an unsupported protocol variant.</summary>
     public const string MalformedRequest = "MALFORMED_REQUEST";
+
+    /// <summary>
+    /// The operator turned off the grants the OS asks for (<c>KazoOs:Proxy:AcceptOsGrants</c> is
+    /// <c>false</c>, ADR 0233 §2): <c>POST /api/proxy/grants</c> answers it with <c>403</c>.
+    /// </summary>
+    public const string GrantIssuingDisabled = "GRANT_ISSUING_DISABLED";
 }
 
 /// <summary>
@@ -354,6 +360,46 @@ public sealed record ProxyPolicyResponse(
 public sealed record ProxyAppPorts(string AppId, IReadOnlyList<string> Ports);
 
 /// <summary>
+/// Asks the server to issue, or withdraw, the <c>network.real.access</c> grant an OS administrator
+/// approved, with its approved ports (<c>POST /api/proxy/grants</c>, ADR 0233 §1). The server checks
+/// the shape and writes the account's synchronized grant record itself; the OS reads it back through
+/// the usual pull.
+/// </summary>
+/// <param name="AppId">The approved app.</param>
+/// <param name="UserId">The OS user the grant applies to.</param>
+/// <param name="RealNetworkPorts">
+/// The approved ports, written <c>tcp/6697</c> (at most 64, no duplicates); empty or
+/// <see langword="null"/> for an app that declares none.
+/// </param>
+/// <param name="Revoked"><see langword="true"/> to withdraw the grant.</param>
+public sealed record ProxyGrantIssueRequest(
+    string AppId,
+    string UserId,
+    IReadOnlyList<string>? RealNetworkPorts,
+    bool Revoked = false);
+
+/// <summary>
+/// The server's answer to <see cref="ProxyGrantIssueRequest"/> (ADR 0233 §1).
+/// </summary>
+/// <param name="AppId">The app.</param>
+/// <param name="UserId">The OS user.</param>
+/// <param name="RecordId">The stable id of the grant record (one per account, app and user).</param>
+/// <param name="Revision">The record's latest revision after the request.</param>
+/// <param name="Changed">
+/// <see langword="false"/> when the request matched the latest revision and nothing was written.
+/// </param>
+/// <param name="RealNetworkPorts">The ports the grant now approves, in canonical order.</param>
+/// <param name="Revoked">Whether the grant is now withdrawn.</param>
+public sealed record ProxyGrantIssued(
+    string AppId,
+    string UserId,
+    Guid RecordId,
+    long Revision,
+    bool Changed,
+    IReadOnlyList<string> RealNetworkPorts,
+    bool Revoked);
+
+/// <summary>
 /// Source-generated JSON context for proxy contracts.
 /// </summary>
 [JsonSerializable(typeof(ProxyHttpRequest))]
@@ -363,6 +409,8 @@ public sealed record ProxyAppPorts(string AppId, IReadOnlyList<string> Ports);
 [JsonSerializable(typeof(ProxyErrorResponse))]
 [JsonSerializable(typeof(ProxyPolicyResponse))]
 [JsonSerializable(typeof(ProxyAppPorts))]
+[JsonSerializable(typeof(ProxyGrantIssueRequest))]
+[JsonSerializable(typeof(ProxyGrantIssued))]
 [JsonSerializable(typeof(ProxyHeader))]
 [JsonSerializable(typeof(ProxyStreamOpened))]
 [JsonSerializable(typeof(IReadOnlyList<int>))]

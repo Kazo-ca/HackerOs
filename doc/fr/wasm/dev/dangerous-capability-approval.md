@@ -146,6 +146,27 @@ ADR 0235 §3) : « Vrais serveurs sur les ports : TCP 6667, TCP 6697 »
 relais du serveur ouvre ces ports quand l'accord les porte, sauf ceux de
 `BlockedPorts` ([relais réseau](server-network-relay.md)).
 
+L'approbation écrit ces ports dans la section `[real-network-ports]` du
+fichier machine (ADR 0233 §4), et l'OS demande au serveur connecté d'émettre
+l'accord avec eux :
+
+```text
+# /etc/kazoos/app-permissions.config
+[permissions]
+ca.kazo.irc:network.real.access=allow
+
+[real-network-ports]
+ca.kazo.irc=tcp/6667,tcp/6697
+```
+
+Quand une mise à jour de l'app déclare un port absent de cette ligne,
+`network.real.access` repasse en `Pending` : la fenêtre revient au lancement
+interactif suivant et liste les nouveaux ports. Un `allow` donné dans l'onglet
+Permissions des Paramètres approuve les ports que le manifeste déclare à ce
+moment ; un refus ou une remise à zéro retire la ligne. Seul le fichier machine
+approuve des ports : une telle ligne dans le fichier de l'utilisateur est
+ignorée avec un avertissement, comme une ligne mal écrite.
+
 `DangerousCapabilityApprovalBroker` montre une demande à la fois. Sans fenêtre
 attachée, une demande finit en `Unavailable` (donc `capability.deferred`) ; si
 la coque disparaît (déconnexion), les demandes en cours sont fermées sans
