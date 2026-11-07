@@ -35,7 +35,7 @@ migration, read-only.
 | Provider of the file control and file dialogs (`[providers]`, key = contract, value = app; absent = explorer; ADR 0156 and 0158, see [`embedded-components.md`](embedded-components.md)) | `/etc/kazoos/components.config` (read line by line, no schema) | none |
 | Entries that apps add to file menus (one JSON per app, written by the OS at startup and on each install change; ADR 0151, 0159) | `/etc/kazoos/context-menus.d/<appId>.json` | none |
 | File menu entries hidden by the user (`[hidden]`, `<appId>.<name>=true`; Settings ▸ File menus; ADR 0159 §8) | `~/.config/kazoos/context-menus.config` (read line by line each time a menu opens) | none |
-| Dangerous capability decisions (ADR 0049) | `/etc/kazoos/app-permissions.config` (`allow`/`deny`) | `~/.config/kazoos/app-permissions.config` (`deny` only) |
+| Dangerous capability decisions (ADR 0049) | `/etc/kazoos/app-permissions.config` (`allow`/`deny`, and the approved real ports in `[real-network-ports]`, ADR 0233) | `~/.config/kazoos/app-permissions.config` (`deny` only) |
 | Accessibility (`highContrast`, `textScale`, `reducedMotion`, ADR 0105, see [`accessibility.md`](../dev/accessibility.md)) | `/etc/kazoos/accessibility.config` (also read by the sign-in screen) | `~/.config/kazoos/accessibility.config` |
 | Date and time (`timeZone`: `auto` or an IANA zone, ADR 0193, see [`time-zone.md`](time-zone.md)) | `/etc/kazoos/datetime.config` (also read by the sign-in screen) | `~/.config/kazoos/datetime.config` |
 | System sounds (`enabled`, `theme`, `volume`, ADR 0204, see [`system-sounds.md`](../dev/system-sounds.md)) | `/etc/kazoos/sound.config` | `~/.config/kazoos/sound.config` |

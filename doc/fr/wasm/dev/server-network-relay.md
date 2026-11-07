@@ -140,6 +140,7 @@ serveur.
       "BlockedPorts": [ 19, 111, 137, 138, 389, 1900, 11211 ]
     },
     "AllowAllPorts": false,
+    "AcceptOsGrants": true,
     "AllowPrivateNetworks": false,
     "Quotas": {
       "Enabled": true,
@@ -225,12 +226,29 @@ ne sait pas lier un tableau vide) et le serveur en avertit au démarrage.
 Paramètres (section du serveur) affiche les ports bloqués TCP et UDP et, pour
 chaque app dont l'accord porte des ports, ces ports.
 
-**Limite actuelle** : aucun code n'émet encore d'accord synchronisé avec ses
-ports. L'OS ne pousse jamais d'accord (ADR 0031) et le serveur n'a pas de route
-pour en émettre ; la façon dont l'approbation de l'OS arrive au serveur est une
-question posée à Benoit dans le fil « Accepter les ports déclarés par les
-apps ». Jusque-là, seules les apps de `GrantedApps` utilisent le relais, avec
-`AllowedPorts`.
+**Émission de l'accord ([ADR 0233](adr/0233-server-issued-real-network-grants.md))** :
+le serveur écrit lui-même l'accord synchronisé avec ses ports quand l'OS le lui
+demande, par `POST /api/proxy/grants` (`ProxyGrantIssueRequest` : `AppId`,
+`UserId`, `RealNetworkPorts`, `Revoked`). Il vérifie la forme (au plus 64 ports
+bien écrits, sans doublon), puis écrit une révision d'un seul enregistrement
+`grants` par compte, app et utilisateur (source `AdministratorApproval`), et
+l'inscrit au journal (`PROXY_GRANT_ISSUE`, `PROXY_GRANT_REVOKE`) ; une demande
+identique à la dernière révision n'écrit rien (`ProxyGrantIssued.Changed`). Un
+port de `BlockedPorts` est gardé dans l'accord et reste refusé à l'usage.
+L'OS appelle la route après une approbation (fenêtre, terminal, onglet
+Permissions des Paramètres) et à chaque synchronisation
+(`RealNetworkGrantReconciler`, avant le tirage des accords) : il émet l'accord
+de chaque app autorisée avec les ports de `[real-network-ports]`
+([approbation](dangerous-capability-approval.md)) et le retire pour une app
+refusée, bloquée ou de nouveau en attente. Une panne du serveur ne bloque ni
+l'approbation ni le lancement : elle est écrite dans `/var/log/syslog` et
+réessayée à la synchronisation suivante.
+
+`"AcceptOsGrants": false` ferme cette porte : la route répond
+`403 GRANT_ISSUING_DISABLED` et le relais ignore les accords synchronisés ;
+seules les apps de `GrantedApps` comptent alors. `AcceptOsGrants` (vrai par
+défaut) avec `AllowAllPorts` donne un avertissement au démarrage : toute app
+approuvée dans l'OS joint alors chaque port que `BlockedPorts` ne refuse pas.
 
 ## Utilisation dans une app
 
@@ -318,7 +336,7 @@ avertissements.
 - [x] Tests : service, endpoints WebSocket, client direct, passerelle réseau, politique.
 - [x] ADR 0108 et documentation.
 - [x] Ports déclarés par l'app (ADR 0235 §3) : `RealNetworkPorts` du manifeste, validation, fenêtre d'approbation et terminal, relais (`BlockedPorts`, ports approuvés de l'accord), politique et Paramètres, avertissement de liste vide, tests.
-- [ ] Émission par le serveur de l'accord avec ses ports (question 1 du fil « Accepter les ports déclarés par les apps »).
+- [x] Émission par le serveur de l'accord avec ses ports (ADR 0233) : `POST /api/proxy/grants`, `AcceptOsGrants`, section `[real-network-ports]`, nouvelle demande quand l'app ajoute un port, réconciliation à chaque synchronisation, tests.
 - [x] TLS ouvert par le relais (ADR 0235 §2, chantier `real-network/2-relay-tls`) : `tls=1`, `targetHost`, `SslStream` avant d'accepter le WebSocket, `TLS_FAILED`, `ProxyStreamOpened` avec la session, `KazoTcpConnectOptions`, tests avec un serveur TLS de test (certificat approuvé, non approuvé, mauvais nom, cible en clair, flux en clair inchangé).
 
 Voir aussi l'[ADR 0191](adr/0191-installable-local-server.md) : serveur installable sur l'ordinateur ou le réseau local.

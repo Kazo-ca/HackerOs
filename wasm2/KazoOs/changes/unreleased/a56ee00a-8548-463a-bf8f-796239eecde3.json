@@ -1,0 +1,20 @@
+{
+  "id": "a56ee00a-8548-463a-bf8f-796239eecde3",
+  "category": "new",
+  "audience": [
+    "administrator",
+    "developer"
+  ],
+  "title": {
+    "en": "The server issues the real-network grant approved in the OS, with its ports",
+    "fr": "Le serveur émet l'accord de vrai réseau approuvé dans l'OS, avec ses ports"
+  },
+  "description": {
+    "en": "Once an administrator approves network.real.access, the OS asks the connected server to issue the grant (POST /api/proxy/grants) with the approved ports, kept in the new [real-network-ports] section of /etc/kazoos/app-permissions.config, and checks it again at each sync. An app update that declares a new port asks for approval again. The operator can refuse these grants with KazoOs:Proxy:AcceptOsGrants = false.",
+    "fr": "Quand un administrateur approuve network.real.access, l'OS demande au serveur connecté d'émettre l'accord (POST /api/proxy/grants) avec les ports approuvés, gardés dans la nouvelle section [real-network-ports] de /etc/kazoos/app-permissions.config, et le vérifie à chaque synchronisation. Une mise à jour de l'app qui déclare un nouveau port redemande l'approbation. L'opérateur peut refuser ces accords avec KazoOs:Proxy:AcceptOsGrants = false."
+  },
+  "links": [
+    "doc/en/wasm/dev/server-network-relay.md",
+    "doc/en/wasm/dev/adr/0233-server-issued-real-network-grants.md"
+  ]
+}
