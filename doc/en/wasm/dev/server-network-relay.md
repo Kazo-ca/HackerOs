@@ -15,6 +15,11 @@ a browser cannot do alone:
 - **TCP streams** (`KazoTcpClient.ConnectAsync`);
 - **UDP datagrams** (`KazoUdpClient`).
 
+An app that reaches a **WebSocket** server does not need the relay:
+`KazoClientWebSocket` opens the browser's `WebSocket`, without the server, with
+the same `network.real.access` capability (ADR 0235 §1,
+[`sdk-network.md`](../framework/sdk-network.md#websocket-to-a-real-server-adr-0235-1)).
+
 It checks itself that the app is allowed to use the relay, applies a
 policy and quotas configured in `appsettings.json`, and writes a
 warning at startup when that policy is weakened. Without a server,
